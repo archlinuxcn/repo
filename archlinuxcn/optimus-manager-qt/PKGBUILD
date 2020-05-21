@@ -1,18 +1,19 @@
-# Maintainer: Shatur <genaloner@gmail.com>
+# Maintainer: Rasphino <im@rasphino.cn>
+# Contributor: Shatur <genaloner@gmail.com>
 
 pkgbase=optimus-manager-qt
 pkgname=(optimus-manager-qt optimus-manager-qt-kde)
-pkgver=1.5.0
+pkgver=1.5.1
 pkgrel=1
 pkgdesc="A Qt interface for Optimus Manager that allows to configure and switch GPUs on Optimus laptops using the tray menu"
 arch=('x86_64')
 url="https://github.com/Shatur95/optimus-manager-qt"
 license=('GPL3')
-depends=('qt5-base' 'optimus-manager>=0.8')
-makedepends=('qt5-tools' 'git' 'knotifications' 'kiconthemes')
+depends=('qt5-base' 'qt5-svg' 'qt5-x11extras' 'optimus-manager>=1.3')
+makedepends=('cmake' 'git' 'qt5-tools' 'extra-cmake-modules' 'knotifications' 'kiconthemes')
 source=(${pkgname}-${pkgver}.tar.gz::"https://github.com/Shatur95/optimus-manager-qt/archive/${pkgver}.tar.gz"
         "git+https://github.com/itay-grudev/SingleApplication.git")
-sha256sums=('5e1c81b5e0291b69e16a23c4f681031aa77312885d0649d548e80874c33e9a23'
+sha256sums=('3067d6dad33bdaf838eec01b1f5c02f9a2b4897e0e7304ca2a0a1bed6f7e7bd8'
             'SKIP')
 
 # Move submodules into the project
@@ -24,33 +25,30 @@ prepare() {
 }
 
 build() {
-  mkdir build
-  cd build
-  qmake "../${pkgname}-${pkgver}"
-  make
+  mkdir -p $pkgname-$pkgver/build
+  cd $pkgname-$pkgver/build
+  cmake -D CMAKE_INSTALL_PREFIX="$pkgdir/usr" ..
+  cmake --build .
 
   cd ..
   mkdir build-kf5
   cd build-kf5
-  qmake "DEFINES += PLASMA" "../${pkgname}-${pkgver}"
-  make
+  cmake -D CMAKE_INSTALL_PREFIX="$pkgdir/usr" -D PLASMA=ON ..
+  cmake --build .
 }
 
 package_optimus-manager-qt() {
-    cd "build"
-    make INSTALL_ROOT="${pkgdir}/" install
-    install -Dm755 optimus-manager-qt "${pkgdir}/usr/bin/optimus-manager-qt"
+    cd $pkgname-$pkgver/build
+    cmake --install .
 }
 
 package_optimus-manager-qt-kde() {
     _pkgname=optimus-manager-qt-kf5
     replaces=($_pkgname)
-    depends+=('knotifications' 'kiconthemes')
     pkgdesc="optimus-manager-qt with KDE API features."
     provides=(optimus-manager-qt)
     conflicts=(optimus-manager-qt)
-    cd "build-kf5"
-    make INSTALL_ROOT="${pkgdir}/" install
-    install -Dm755 optimus-manager-qt "${pkgdir}/usr/bin/optimus-manager-qt"
-} 
 
+    cd optimus-manager-qt-$pkgver/build-kf5
+    cmake --install .
+} 
