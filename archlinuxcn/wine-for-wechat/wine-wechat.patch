@@ -1,0 +1,19 @@
+--- a/dlls/user32/win.c  2020-04-09 22:20:30.459968806 +0800
++++ b/dlls/user32/win.c  2020-04-09 21:54:09.588643751 +0800
+@@ -1795,6 +1795,17 @@
+     cs.lpszClass      = className;
+     cs.dwExStyle      = exStyle;
+ 
++    if (exStyle == 0x080800a0) // WeChat/WxWork shadow hwnd
++    {
++        FIXME("hack %x\n", cs.dwExStyle);
++        return NULL;
++    }
++    if (exStyle == 0x000800a0) // Netease Cloudmusic shadow wnd
++    {
++        FIXME("hack %x\n", cs.dwExStyle);
++        return NULL;
++    }
++
+     return wow_handlers.create_window( &cs, className, instance, TRUE );
+ }
