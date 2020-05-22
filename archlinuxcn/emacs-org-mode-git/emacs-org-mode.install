@@ -1,0 +1,44 @@
+INFODIR=/usr/share/info
+
+pre_install() {
+##!   for file in {org,org-?.gz} ; do
+##!      if [ -e $INFODIR/$file ] ; then
+##!         echo "Removing $INFODIR/$file"
+##!         install-info --delete $INFODIR/$file $INFODIR/dir 2> /dev/null
+##!         rm -f $INFODIR/$file
+##!      fi
+##!   done
+   cat << EOM
+To enable this version of org-mode instead of the one shipped with emacs,
+add the line:
+    (require 'org-install)
+to your .emacs file. 
+
+NOTE: info documentation for emacs-org-mode goes now as 'orgmode' in /usr/share/info,
+      It does NOT replace the 'org' info files shipped with emacs:
+        $ info orgmode ## this version 
+        $ info org     ## emacs' org version 
+EOM
+}
+
+post_install() {
+##!  mv $INFODIR/orgmode.gz $INFODIR/org.gz
+##!  install-info $INFODIR/org.gz $INFODIR/dir 2> /dev/null 
+##! and comment out the following line:
+  install-info --name='orgmode' --description='Org Mode provided by emacs-org-mode (AUR)' $INFODIR/orgmode.gz $INFODIR/dir 2> /dev/null
+  echo "For odt export, define a variable org-odt-data-dir to point "
+  echo "to an existing directory, e.g."
+  echo "(defvar org-odt-data-dir \"~/.emacs.d/org/etc\")"
+}
+
+post_upgrade() {
+  post_install 
+}
+
+
+pre_remove() {
+  install-info --delete $INFODIR/orgmode.gz $INFODIR/dir 2> /dev/null
+##! comment out the line above and uncomment the following:
+##!  install-info --delete $INFODIR/org.gz $INFODIR/dir 2> /dev/null
+##!  rm $INFODIR/org.gz 2> /dev/null
+}
