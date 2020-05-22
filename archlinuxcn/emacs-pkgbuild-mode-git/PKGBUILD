@@ -1,0 +1,37 @@
+# Contributor: Kyle Sexton <ks@mocker.org>
+# Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
+
+pkgname=emacs-pkgbuild-mode-git
+pkgver=0.14.1.r8.gd237beb
+pkgrel=4
+pkgdesc="A major mode for creating packages with emacs"
+arch=('any')
+url="https://gitlab.com/stefanhusmann/pkgbuild-mode"
+license=('GPL')
+depends=('emacs')
+makedepends=('git')
+provides=('emacs-pkgbuild-mode')
+conflicts=('emacs-pkgbuild-mode')
+install=emacs-pkgbuild-mode.install
+source=("git+$url.git")
+md5sums=('SKIP')
+_gitname="pkgbuild-mode"
+
+pkgver() {
+  cd $_gitname
+
+  git describe --tag | sed -e 's/^[^0-9]*//' -e 's/_/./g' -e 's/-/.r/' -e 's/-/./g'
+}
+
+build() {
+  cd $_gitname
+  emacs -batch -f batch-byte-compile pkgbuild-mode.el
+}
+
+package() {
+  install -d "$pkgdir"/usr/share/emacs/site-lisp
+  install -m644 "$srcdir"/$_gitname/*.el* \
+          "$pkgdir"/usr/share/emacs/site-lisp/
+  install -Dm755 "$srcdir"/$_gitname/prepare_4_aur4.sh \
+          "$pkgdir"/usr/bin/prepare_4_aur4.sh
+}
