@@ -15,7 +15,7 @@ arch=(i686 x86_64)
 url='https://www.gnu.org/software/binutils/'
 license=(GPL)
 depends=(glibc zlib elfutils)
-makedepends=('elfutils')
+makedepends=('git' 'elfutils')
 options=(staticlibs !distcc !ccache)
 source=('git://sourceware.org/git/binutils-gdb#commit=a72427b1ae01304da0b5170e1e53f68c6d46c1de')
 md5sums=('SKIP')

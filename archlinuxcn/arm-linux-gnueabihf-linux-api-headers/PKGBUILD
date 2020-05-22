@@ -13,6 +13,7 @@ pkgdesc="Kernel headers sanitized for use in userspace (${_target})"
 arch=(any)
 url='http://www.gnu.org/software/libc'
 license=(GPL2)
+makedepends=(rsync)
 source=(https://www.kernel.org/pub/linux/kernel/v${pkgver:0:1}.x/linux-${pkgver}.tar.xz)
 md5sums=('1941f86c38e5c81b87dddeb808710b9f')
 
