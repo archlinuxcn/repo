@@ -10,8 +10,8 @@ url="https://github.com/damianavila/RISE"
 license=('BSD')
 conflicts=(python-rise jupyter-rise)
 provides=(python-rise jupyter-rise)
-depends=('jupyter' 'python>=3.8' 'python<3.9')
-makedepends=('python-setuptools')
+depends=('jupyter')
+makedepends=('python' 'python-setuptools')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
 sha256sums=('1343f068d01adc4dd0226d9b278ce93fc92f365d827431a57e8d5679eb39f4d6')
 
@@ -30,4 +30,8 @@ package() {
   # No need to call `jupyter nbextension install rise`, it is handled in setup.py
   # however, change the path from /usr/etc to /etc
   mv "$pkgdir/"{usr/etc,etc}
+
+  pymin_ver=$(python -c 'import sys; print(sys.version_info.minor)')
+  ((pynext_min=pymin_ver + 1))
+  depends+=("python>=3.${pymin_ver}.0" "python<3.${pynext_min}.0")
 }
