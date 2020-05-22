@@ -1,43 +1,38 @@
-# Maintainer: Frederik Schwan <frederik dot schwan at linux dot com>
+# Maintainer: Frederik Schwan <freswa at archlinux dot org>
 # Contributor: Ghost of Kendo <ghostofkendo at gmail dot com>
 # Contributor: Thomas Dziedzic < gostrc at gmail >
 # Contributor: Pierre Chapuis <catwell@archlinux.us>
 # Contributor: Earnest <zibeon@gmail.com>
 
 pkgname=spin
-pkgver=6.4.5
-pkgrel=1
+pkgver=6.5.2
+pkgrel=3
 pkgdesc='Tool for the formal verification of distributed software systems'
 arch=('i686' 'x86_64')
-url='http://spinroot.com/'
-license=('custom:SPIN')
+url='https://spinroot.com/'
+license=('custom:BSD3')
 depends=('glibc')
 optdepends=('tcl: ispin graphical interface'
             'swarm: improved performance on large verification problems'
-            'modex: extract verification models from implementation C code'
             'ispin: GUI for Spin')
-source=("http://spinroot.com/spin/Src/spin${pkgver//./}.tar.gz"
-        'LICENSE.txt')
-sha512sums=('77bc35bb852c0448915c655bf11910d0b226d30d66abaa63311e6227de03f920ca026e7399cbeebdae631368fd8091f1e8330bd3094bd4febdf7d5c7a81834ad'
-            'a5b63fc7136a2631c9a27619953abe2e9d6cab179042dd56bb76afbffe1966ad7edb41a131af5d6663f3cdbf77128833232e9174c0ef817b8522bfd978add595')
+source=("https://github.com/nimble-code/Spin/archive/version-${pkgver}.tar.gz")
+b2sums=('a075043c55609de5860c3a428d356a9618a4062667e06d92797e1fb87cb4c805ac90ac580c7d9dfac1d5be1dda4c7f9c9f72927826b921c23710a858adb3eb4d')
 
 build() {
-  cd Spin/Src${pkgver}
+  cd Spin-version-${pkgver}/Src
   make
 }
 
 package() {
-  cd Spin/Src${pkgver}
-
   # install binary and license file
-  install -D spin "${pkgdir}"/usr/bin/spin
-  install -D -m644 "${srcdir}"/LICENSE.txt \
-          "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE.txt
+  cd Spin-version-${pkgver}/Src
+  install -Dm755 spin "${pkgdir}"/usr/bin/spin
+  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE.txt
 
   # install manpage and docs
-  install -d "${pkgdir}"/usr/share/man/man1/
-  install -d "${pkgdir}"/usr/share/doc/spin/examples
+  cd "${srcdir}"/Spin-version-${pkgver}
+  install -Dm644 -t "${pkgdir}"/usr/share/man/man1/ Man/spin.1
 
-  gzip -9c "${srcdir}"/Spin/Man/spin.1 > "${pkgdir}"/usr/share/man/man1/spin.1.gz
-  cp -a "${srcdir}"/Spin/Examples/* "${pkgdir}"/usr/share/doc/spin/examples/
+  install -dm755 "${pkgdir}"/usr/share/doc/${pkgname}/examples
+  cp -a Examples/* "${pkgdir}"/usr/share/doc/${pkgname}/examples/
 }
