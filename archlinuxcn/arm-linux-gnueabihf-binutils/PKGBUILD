@@ -3,27 +3,28 @@
 # Contributor: Allan McRae <allan@archlinux.org>
 # Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
 # Contributor: Kevin Mihelich <kevin@archlinuxarm.org>
+# Contributor: Felipe Balbi <felipe@balbi.sh>
 # Maintainer: Tavian Barnes <tavianator@tavianator.com>
 
 _target="arm-linux-gnueabihf"
 pkgname=${_target}-binutils
-pkgver=2.32
-pkgrel=2
+pkgver=2.34
+pkgrel=3
 pkgdesc="A set of programs to assemble and manipulate binary and object files (${_target})"
 arch=(i686 x86_64)
 url='https://www.gnu.org/software/binutils/'
 license=(GPL)
-depends=(glibc zlib)
+depends=(glibc zlib elfutils)
+makedepends=('elfutils')
 options=(staticlibs !distcc !ccache)
-source=(https://ftp.gnu.org/gnu/binutils/binutils-$pkgver.tar.xz)
-md5sums=('0d174cdaf85721c5723bf52355be41e6')
+source=('git://sourceware.org/git/binutils-gdb#commit=a72427b1ae01304da0b5170e1e53f68c6d46c1de')
+md5sums=('SKIP')
 
 prepare() {
-  rm -rf binutils-build
   mkdir -p binutils-build
 
-  # cd binutils-gdb
-  cd binutils-$pkgver
+  cd binutils-gdb
+  # cd binutils-$pkgver
 
   # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
@@ -32,7 +33,7 @@ prepare() {
 build() {
   cd binutils-build
 
-  "$srcdir/binutils-$pkgver/configure" \
+  "$srcdir/binutils-gdb/configure" \
       --prefix=/usr \
       --program-prefix=${_target}- \
       --with-lib-path=/usr/lib/binutils/${_target} \
@@ -48,6 +49,7 @@ build() {
       --enable-threads \
       --disable-gdb \
       --disable-werror \
+      --with-debuginfod \
       --with-pic \
       --with-system-zlib \
       --disable-sim \
@@ -55,7 +57,6 @@ build() {
       --host=${CHOST} \
       --build=${CHOST}
 
-  # check the host environment and makes sure all the necessary tools are available
   make configure-host
   make tooldir=/usr
 }
@@ -65,7 +66,8 @@ package() {
   make DESTDIR="$pkgdir" install
 
   # Remove unwanted files
+  rm -rf "$pkgdir/usr/share"
+  rm -rf "$pkgdir/usr/include"
+  rm -rf "$pkgdir/usr/lib"
   rm -f "$pkgdir/usr/bin/"{ar,as,ld,nm,objdump,ranlib,readelf,strip,objcopy}
-  rm -f "$pkgdir"/usr/lib/libiberty.a
-  rm -rf "$pkgdir"/usr/{share,man}
 }
