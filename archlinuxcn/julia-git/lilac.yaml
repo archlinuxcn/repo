@@ -6,14 +6,14 @@ build_prefix: extra-x86_64
 repo_depends:
   - libunwind-git
   - openspecfun-git
-  - openblas-git
+  - openblas-lapack-git: openblas-git
   - openblas-lapack-git
   - libutf8proc-git
   - openlibm-git
   - llvm-julia
-  - llvm-libs-julia
+  - llvm-julia: llvm-libs-julia
   - libgit2-julia
 
 update_on:
   - vcs
-  - manual: 1
+  - manual: 2
