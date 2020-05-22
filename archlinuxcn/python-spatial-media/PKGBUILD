@@ -8,7 +8,7 @@ pkgdesc="Specifications and tools for 360º video and spatial audio."
 arch=('any')
 url="https://github.com/google/spatial-media"
 license=('APACHE2')
-depends=('python')
+makedepends=('python')
 optdepends=('tk: for spatialmedia-gui')
 source=("https://github.com/google/spatial-media/archive/v${pkgver}.tar.gz"
         0001-python3.patch
@@ -32,4 +32,8 @@ package() {
 
   mkdir -p "$pkgdir/usr/bin"
   install -Dm755 ../spatialmedia ../spatialmedia-gui "$pkgdir/usr/bin"
+
+  pymin_ver=$(python -c 'import sys; print(sys.version_info.minor)')
+  ((pynext_min=pymin_ver + 1))
+  depends+=("python>=3.${pymin_ver}.0" "python<3.${pynext_min}.0")
 }
