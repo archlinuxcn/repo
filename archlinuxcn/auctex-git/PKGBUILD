@@ -1,0 +1,36 @@
+# Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
+
+pkgname=auctex-git
+pkgver=12.2.r50.gc31faf7a
+pkgrel=1
+epoch=1
+pkgdesc="TeX/LaTeX writing environment for Emacs - git checkout"
+arch=('any')
+url="http://savannah.gnu.org/projects/auctex"
+license=('GPL3')
+depends=('texlive-core' 'emacs')
+makedepends=('git' 'texinfo' 'perl')
+provides=('auctex')
+conflicts=('auctex')
+install=auctex.install
+source=('git://git.sv.gnu.org/auctex.git')
+md5sums=('SKIP')
+
+pkgver() {
+  cd auctex
+
+  git describe --tag | sed -e 's/^[^0-9]*//' -e 's/_/./g' -e 's/-/.r/' -e 's/-/./g'
+}
+
+build() {
+  cd auctex
+  ./autogen.sh
+  ./configure --prefix=/usr --localstatedir=/var --with-texmf-dir=/usr/share/texmf
+  make
+}
+
+package() {
+  cd auctex
+  make DESTDIR="$pkgdir" install
+  rm -rf "$pkgdir"/var/auctex
+}
