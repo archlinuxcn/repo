@@ -81,9 +81,6 @@ build() {
   cmake_opts=(
     -DBUILD_SHARED_LIBS=ON
     -DBUILD_TESTING=OFF
-    -DCMAKE_C_COMPILER=/opt/cuda/bin/gcc
-    -DCMAKE_CUDA_HOST_COMPILER=/opt/cuda/bin/g++
-    -DCMAKE_CXX_COMPILER=/opt/cuda/bin/g++
     -DCMAKE_INSTALL_LIBDIR=lib
     -DCMAKE_INSTALL_PREFIX=/usr
     -DCMAKE_SKIP_INSTALL_RPATH=ON
@@ -92,6 +89,7 @@ build() {
     -DVTK_LEGACY_REMOVE=ON
     -DVTK_MODULE_ENABLE_VTK_FiltersOpenTURNS=YES
     -DVTK_MODULE_ENABLE_VTK_IOLAS=NO
+    -DVTK_MODULE_ENABLE_VTK_PoissonReconstruction=NO
     -DVTK_MODULE_ENABLE_VTK_RenderingOpenVR=NO
     -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps=OFF
     -DVTK_MODULE_USE_EXTERNAL_VTK_libharu=OFF
@@ -101,7 +99,6 @@ build() {
     -DVTK_USE_LARGE_DATA=ON
     -DVTK_USE_MPI=ON
     -DVTK_WRAP_PYTHON=ON
-    -DVTKm_CUDA_Architecture=all
 )
   
   cmake -B "${srcdir}/build-vtk-git" -S "${srcdir}/vtk" \
@@ -111,6 +108,10 @@ build() {
   
   cmake -B "${srcdir}/build-vtk-cuda-git" -S "${srcdir}/vtk" \
     -DVTK_USE_CUDA=ON \
+    -DCMAKE_C_COMPILER=/opt/cuda/bin/gcc \
+    -DCMAKE_CXX_COMPILER=/opt/cuda/bin/g++ \
+    -DCMAKE_CUDA_HOST_COMPILER=/opt/cuda/bin/g++ \
+    -DVTKm_CUDA_Architecture=all \
     ${cmake_opts[@]}
   make -C "${srcdir}/build-vtk-cuda-git"
 }
