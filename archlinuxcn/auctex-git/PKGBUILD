@@ -25,7 +25,7 @@ pkgver() {
 build() {
   cd auctex
   ./autogen.sh
-  ./configure --prefix=/usr --localstatedir=/var --with-texmf-dir=/usr/share/texmf
+  ./configure --prefix=/usr --localstatedir=/var --with-texmf-dir=/usr/share/texmf-dist
   make
 }
 
