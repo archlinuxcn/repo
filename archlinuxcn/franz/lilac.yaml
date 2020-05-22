@@ -1,0 +1,15 @@
+#
+
+maintainers:
+  - github: yuyichao
+
+build_prefix: extra-x86_64
+
+pre_build: aur_pre_build
+post_build: aur_post_build
+
+update_on:
+  - aur: franz
+  - archpkg: electron
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
