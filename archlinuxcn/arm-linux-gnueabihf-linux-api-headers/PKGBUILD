@@ -7,14 +7,14 @@
 _target_arch=arm
 _target=${_target_arch}-linux-gnueabihf
 pkgname=${_target}-linux-api-headers
-pkgver=5.1
+pkgver=5.6.14
 pkgrel=1
 pkgdesc="Kernel headers sanitized for use in userspace (${_target})"
 arch=(any)
 url='http://www.gnu.org/software/libc'
 license=(GPL2)
 source=(https://www.kernel.org/pub/linux/kernel/v${pkgver:0:1}.x/linux-${pkgver}.tar.xz)
-md5sums=('15fbdff95ff98483069ac6e215b9f4f9')
+md5sums=('1941f86c38e5c81b87dddeb808710b9f')
 
 build() {
   cd linux-$pkgver
