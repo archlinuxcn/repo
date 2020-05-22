@@ -6,6 +6,7 @@ maintainers:
 build_prefix: multilib
 
 pre_build: vcs_update
+post_build: git_pkgbuild_commit
 
 update_on:
   - vcs
