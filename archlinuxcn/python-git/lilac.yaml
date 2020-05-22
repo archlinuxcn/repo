@@ -5,8 +5,6 @@ build_prefix: extra-x86_64
 
 pre_build: vcs_update
 
-post_build: git_pkgbuild_commit
-
 # 1970-01-01 is Thursday
 # The following command triggers builds on 16:00 each Friday for UTC, or 00:00 each Saturday for CST
 update_on:
