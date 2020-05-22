@@ -1,0 +1,38 @@
+# Maintainer: Olivier Galibert <galibert@pobox.com>
+# Contributor: Philip Mueller <mail at philip.in-aachen dot net>
+# Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
+
+pkgname=emacs-yaml-mode-git
+pkgver=0.0.14.0.20.g34648f2
+pkgrel=2
+pkgdesc="Emacs major mode for editing files in the YAML data serialization format"
+arch=('any')
+url="https://github.com/yoshiki/yaml-mode"
+license=('GPL')
+depends=('emacs')
+makedepends=('git')
+provides=('emacs-yaml-mode')
+conflicts=('emacs-yaml-mode')
+install=emacs-yaml-mode.install
+source=("git://github.com/yoshiki/yaml-mode")
+md5sums=('SKIP')
+
+pkgver() {
+  cd yaml-mode
+
+  git describe --tag | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd yaml-mode
+
+  emacs -batch -q -f batch-byte-compile yaml-mode.el
+}
+
+package() {
+  cd yaml-mode
+
+  # Install the mode for Emacs
+  install -D -m644 yaml-mode.el $pkgdir/usr/share/emacs/site-lisp/yaml-mode.el
+  install -D -m644 yaml-mode.elc $pkgdir/usr/share/emacs/site-lisp/yaml-mode.elc
+}
