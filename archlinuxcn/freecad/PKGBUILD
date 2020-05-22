@@ -9,10 +9,10 @@
 
 pkgname=freecad-oce
 _pkgver=0.18
-_count=16155
-_commit=9ae129705652eec6be426211e5eaaa16c847b7c5
+_count=16158
+_commit=783e1346c7a078f5265c3f0c6a927d09a8c1fe70
 pkgver=$_pkgver.$_count
-pkgrel=12
+pkgrel=1
 pkgdesc='A general purpose 3D CAD modeler'
 arch=('x86_64')
 url='https://www.freecadweb.org/'
@@ -33,13 +33,10 @@ sha256sums=('SKIP'
             '1d98fa4e62f352966eb357c93f54b1f0bf562931e8323bf70a83b5e221a5fb14')
 
 _backports=(
+  299368b1b278f94f579c110be179cf6023882ca5 # Workaround for messy SHIBOKEN_MICRO_VERSION definition.
   17ed2b196a58afbbc3cc1bb99f6eb76060171ad2 # [Cmake] Update FindPySide2Tools for PySide2 5.14 - issue #4229
   1666b28836baa79b26b707afb1e97c2a0855eb1f # Change IF(...LESS...) into IF(...VERSION_LESS...)
   6eacb17b3e03d20039b85c9daebab9e44386d6bf # Update swigpyrun.in for Python 3.8
-  851e3d9847c5043a604a544b502c51e8c628e96c # add missing std:: namespace to build on Debian 10
-  bf5923c0f360f43703bf0c2d8b1e52ac246a9c11 # add missing std:: namespace to build on Debian 10
-  2a92051192782930f53f8e3dab011dd8382ca8c3 # add missing std:: namespace to build on Debian 10
-  50957037764de76bdc0244e5d49f8c5bdcbc4e45 # add missing std:: namespace to build on Debian 10
 )
 
 prepare() {
@@ -47,10 +44,14 @@ prepare() {
 
   if ((${#_backports[@]})); then
     git cherry-pick --quit
-    git cherry-pick -n -x -Xours -Xignore-space-change "${_backports[@]}" \
-      || true # Kind of a hack, but the last commit does not apply cleanly
-    git rm src/Mod/TechDraw/App/Cosmetic.cpp # Fix file not present in 0.18
+    git cherry-pick -n -x -Xours -Xignore-space-change "${_backports[@]}"
   fi
+
+  # Sigh… Why can't upstream backport properly?
+  sed -i '38a using namespace std\;\r' src/Mod/Raytracing/App/RayFeature.cpp # Fixup d13e777 by partial application of 5095703
+
+  # Fix for Qt 5.15
+  sed -i 's/\(.*\)include <QPainter>$/&\n\1include <QPainterPath>/' src/Mod/Image/Gui/OpenGLImageBox.cpp
 }
 
 build() {
@@ -60,14 +61,14 @@ build() {
 
   cmake .. -Wno-dev \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        -DCMAKE_INSTALL_PREFIX=/usr/lib/freecad \
-        -DCMAKE_INSTALL_LIBDIR=/usr/lib/freecad/lib \
-        -DCMAKE_INSTALL_DOCDIR=/usr/share/freecad/doc \
-        -DCMAKE_INSTALL_DATADIR=/usr/share/freecad \
-        -DCMAKE_INSTALL_INCLUDEDIR=/usr/include \
+        -DCMAKE_INSTALL_PREFIX="/usr/lib/freecad" \
+        -DCMAKE_INSTALL_LIBDIR="/usr/lib/freecad/lib" \
+        -DCMAKE_INSTALL_DOCDIR="/usr/share/freecad/doc" \
+        -DCMAKE_INSTALL_DATADIR="/usr/share/freecad" \
+        -DCMAKE_INSTALL_INCLUDEDIR="/usr/include" \
+        -DFREECAD_USE_OCC_VARIANT="Official Version" \
         -DOCC_INCLUDE_DIR=/usr/include/oce/ \
         -DOCE_DIR=/usr/lib/oce-0.18-dev/ \
-        -DFREECAD_USE_OCC_VARIANT="Official Version" \
         -DFREECAD_USE_EXTERNAL_PIVY=ON \
         -DFREECAD_USE_QT_FILEDIALOG=ON \
         -DBUILD_QT5=ON \

@@ -1,4 +1,13 @@
 maintainers:
   - github: yuyichao
 
-managed: false
+build_prefix: extra-x86_64
+
+update_on:
+  - manual: 0.18.16158
+  - alias: boost
+  - alias: python
+
+repo_depends:
+  - python-pivy
+  - oce-git
