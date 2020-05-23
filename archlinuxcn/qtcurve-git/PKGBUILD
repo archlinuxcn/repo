@@ -1,0 +1,58 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+
+pkgname=qtcurve-git
+_realver=1.8.18
+pkgver=1.9.0.rc1.56.ge2525633
+pkgrel=1
+pkgdesc='A configurable set of widget styles for KDE and Gtk.'
+arch=('i686' 'x86_64')
+url="https://github.com/QtCurve/qtcurve"
+license=('GPL')
+groups=(qtcurve)
+depends=(qt5-base qt5-svg libxcb qt5-x11extras
+         libx11 gcc-libs kinit karchive kconfig kconfigwidgets frameworkintegration ki18n
+         kguiaddons kio kiconthemes kwidgetsaddons kwindowsystem kxmlgui)
+optdepends=(gtk2 qt4)
+makedepends=(cmake git python mesa extra-cmake-modules gtk2 qt4)
+provides=(
+  "qtcurve-utils=${_realver}"
+  "qtcurve-gtk2=${_realver}"
+  "qtcurve-qt4=${_realver}"
+  "qtcurve-qt5=${_realver}"
+  "qtcurve-utils-git"
+  "qtcurve-gtk2-git"
+  "qtcurve-qt4-git"
+  "qtcurve-qt5-git")
+conflicts=("qtcurve-qt5" "qtcurve-qt4" "qtcurve-gtk2" "qtcurve-utils")
+options=('debug' 'strip')
+source=("git+https://invent.kde.org/system/qtcurve.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd qtcurve
+
+  git describe --tags | sed -e 's/-/./g'
+}
+
+build() {
+  cd qtcurve
+
+  mkdir -p build
+  cd build
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DENABLE_QT4=On \
+    -DENABLE_QT5=On \
+    -DENABLE_GTK2=On \
+    -DQTC_QT4_ENABLE_KDE=Off \
+    -DQTC_QT5_ENABLE_KDE=On
+  make
+}
+
+package() {
+  cd qtcurve/build
+
+  make DESTDIR="$pkgdir/" install
+}
