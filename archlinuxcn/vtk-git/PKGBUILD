@@ -70,6 +70,12 @@ get_pyver() {
 prepare() {
   cd "${srcdir}/vtk"
   git submodule update --init --recursive
+  # remove old GPU archs
+  sed -i -e '242,248s/--generate-code=arch=compute_30,code=sm_30//' \
+    -e '242,248s/--generate-code=arch=compute_35,code=sm_35//' \
+    -e '242,248s/--generate-code=arch=compute_50,code=sm_50//' \
+    -e '242,248{/^[[:space:]]*$/d}' \
+    "${srcdir}/vtk/ThirdParty/vtkm/vtkvtkm/vtk-m/CMake/VTKmDeviceAdapters.cmake"
 }
 
 pkgver() {
