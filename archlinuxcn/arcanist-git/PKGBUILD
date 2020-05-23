@@ -5,19 +5,13 @@
 
 _pkgname=arcanist
 pkgname="${_pkgname}-git"
-
-pkgver() {
-  cd "$_pkgname"
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-}
-
 pkgver=r2169.e3030ebc
-pkgrel=2
+pkgrel=3
 pkgdesc='The command line interface for Phabricator'
 arch=('any')
 url="https://www.phacility.com/phabricator/"
 license=('Apache')
-depends=('libphutil' 'php' 'python')
+depends=('php' 'python')
 optdepends=('git: Git VCS support'
             'subversion: Subversion VCS support'
             'mercurial: Mercurial VCS support')
@@ -26,6 +20,11 @@ provides=("$_pkgname=$pkgver")
 conflicts=("$_pkgname")
 source=("git+https://github.com/phacility/arcanist.git")
 sha256sums=('SKIP')
+
+pkgver() {
+  cd "$_pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
 
 package() {
   install -d "$pkgdir/usr/share/php/$_pkgname/" "$pkgdir/usr/bin/"
