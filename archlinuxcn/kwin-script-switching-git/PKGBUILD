@@ -1,0 +1,26 @@
+# Maintainer: Evgeniy "arcanis" Alexeev <arcanis.arch at gmail dot com>
+# Contributor: urbanslug
+
+pkgname=kwin-script-switching-git
+pkgver=0.1.0.0.1.gd35ab79
+pkgrel=2
+pkgdesc="Window switching for kwin"
+arch=('any')
+url="https://github.com/yuyichao/kwin_switching"
+license=('GPL')
+depends=('kwin')
+source=("git://github.com/yuyichao/kwin_switching")
+md5sums=('SKIP')
+
+pkgver() {
+  cd kwin_switching
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd kwin_switching
+  install -d "${pkgdir}/usr/share/kwin/scripts/kwin-script-switching"
+  cp -r contents metadata.desktop "${pkgdir}/usr/share/kwin/scripts/kwin-script-switching"
+  install -Dm644 metadata.desktop "${pkgdir}/usr/share/kservices5/kwin-script-switching.desktop"
+}
