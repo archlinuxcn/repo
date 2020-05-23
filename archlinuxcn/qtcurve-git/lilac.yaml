@@ -1,0 +1,19 @@
+maintainers:
+  - github: yuyichao
+
+build_prefix: extra-x86_64
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - qt4
+
+update_on:
+  - vcs
+  - archpkg: qt5-base
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - archpkg: kconfig # Any of the kf5 libraries should work...
+    from_pattern: '^(\d+\.\d+\.\d+).*'
+    to_pattern: '\1'
