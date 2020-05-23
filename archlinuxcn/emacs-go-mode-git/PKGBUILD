@@ -1,0 +1,38 @@
+# Maintainer: Chris Zimmermann <monochromec@gmail.com>
+
+pkgname=emacs-go-mode-git
+replaces=('go-mode.el')
+pkgver=1.5.0.r84.g734d5232
+pkgrel=1
+pkgdesc="Go mode for emacs"
+arch=(any)
+url='https://github.com/dominikh/go-mode.el'
+license=('GPL')
+makedepends=('git')
+depends=('emacs')
+provides=('emacs-go-mode' 'emacs-go-mode.el')
+conflicts=('emacs-go-mode' 'emacs-go-mode.el')
+install=${pkgname}.install
+source=(git://github.com/dominikh/go-mode.el)
+md5sums=('SKIP')
+
+pkgver() {
+  cd go-mode.el
+
+  git describe --tag | sed -e 's/^[^0-9]*//' -e 's/_/./g' -e 's/-/.r/' -e 's/-/./g'
+}
+
+build() {
+  cd go-mode.el
+
+  for f in *.el; do
+    emacs -batch -q -f batch-byte-compile "$f"
+  done
+}
+
+package() {
+  cd go-mode.el
+
+  mkdir -p "$pkgdir/usr/share/emacs/site-lisp/go-mode"
+  install -Dm644 *.el{,c} "$pkgdir/usr/share/emacs/site-lisp/go-mode"
+}

@@ -1,0 +1,14 @@
+post_install() {
+    cat <<EOF
+==> Add this code to your Emacs init to use markdown-mode:
+
+(autoload 'go-mode "go-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode))
+
+EOF
+}
+
+
+post_upgrade() {
+    post_install $1
+}
