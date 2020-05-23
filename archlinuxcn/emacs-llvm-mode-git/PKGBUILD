@@ -1,6 +1,6 @@
 # Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
 pkgname=emacs-llvm-mode-git
-pkgver=186941.2c4ca6832fa
+pkgver=355054.174322c2737
 pkgrel=1
 pkgdesc="Emacs major mode for llvm IR"
 arch=('any')
@@ -9,28 +9,30 @@ license=('GPL')
 makedepends=('git' 'emacs')
 provides=('emacs-llvm-mode')
 conflicts=('emacs-llvm-mode')
-source=('git://github.com/llvm-mirror/llvm')
+source=('git://github.com/llvm/llvm-project')
 md5sums=('SKIP')
 
 pkgver() {
-  cd llvm
+  cd llvm-project
 
   echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 build() {
-  cd llvm/utils/emacs
+  cd llvm-project/llvm/utils/emacs
 
   emacs --batch --eval \
         '(progn
-         (push "." load-path)
-         (byte-compile-file "llvm-mode.el"))'
+          (push "." load-path)
+          (batch-byte-compile))' llvm-mode.el tablegen-mode.el
 }
 
 package() {
-  cd llvm/utils/emacs
+  cd llvm-project/llvm/utils/emacs
 
   mkdir -p "$pkgdir/usr/share/emacs/site-lisp"
   install -m644 llvm-mode.el "$pkgdir/usr/share/emacs/site-lisp"
   install -m644 llvm-mode.elc "$pkgdir/usr/share/emacs/site-lisp"
+  install -m644 tablegen-mode.el "$pkgdir/usr/share/emacs/site-lisp"
+  install -m644 tablegen-mode.elc "$pkgdir/usr/share/emacs/site-lisp"
 }

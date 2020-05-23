@@ -29,11 +29,7 @@ build() {
   emacs --batch --eval \
         '(progn
           (push "." load-path)
-          (byte-compile-file "julia-mode.el"))'
-  emacs --batch --eval \
-        '(progn
-          (push "." load-path)
-          (byte-compile-file "julia-mode-latexsubs.el"))'
+          (batch-byte-compile))' julia-mode.el julia-mode-latexsubs.el
 }
 
 package() {
@@ -46,5 +42,5 @@ package() {
   install -m644 julia-mode-latexsubs.elc "$pkgdir/usr/share/emacs/site-lisp"
 
   install -dm755 "${pkgdir}/usr/share/licenses/$pkgname/"
-  install LICENSE.md "${pkgdir}/usr/share/licenses/$pkgname/"
+  install -m644 LICENSE.md "${pkgdir}/usr/share/licenses/$pkgname/"
 }

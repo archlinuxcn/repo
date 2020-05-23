@@ -10,3 +10,6 @@ post_build: git_pkgbuild_commit
 
 update_on:
   - vcs
+  - archpkg: emacs
+    from_pattern: '^(\d+\.\d+).*'
+    to_pattern: '\1'

@@ -26,9 +26,7 @@ pkgver() {
 build() {
   cd markdown-mode
 
-  for f in *.el; do
-    emacs -batch -q -f batch-byte-compile "$f"
-  done
+  emacs -batch -q -f batch-byte-compile *.el
 }
 
 package() {

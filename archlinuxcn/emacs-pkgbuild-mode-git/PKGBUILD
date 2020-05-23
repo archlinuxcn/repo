@@ -25,7 +25,7 @@ pkgver() {
 
 build() {
   cd $_gitname
-  emacs -batch -f batch-byte-compile pkgbuild-mode.el
+  emacs -batch -f batch-byte-compile *.el
 }
 
 package() {
