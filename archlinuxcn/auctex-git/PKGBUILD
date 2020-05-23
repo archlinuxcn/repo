@@ -2,7 +2,7 @@
 
 pkgname=auctex-git
 pkgver=12.2.r50.gc31faf7a
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="TeX/LaTeX writing environment for Emacs - git checkout"
 arch=('any')
@@ -10,6 +10,7 @@ url="http://savannah.gnu.org/projects/auctex"
 license=('GPL3')
 depends=('texlive-core' 'emacs')
 makedepends=('git' 'texinfo' 'perl')
+optdepends=('texlive-latexextra: for preview-latex')
 provides=('auctex')
 conflicts=('auctex')
 install=auctex.install
@@ -33,4 +34,6 @@ package() {
   cd auctex
   make DESTDIR="$pkgdir" install
   rm -rf "$pkgdir"/var/auctex
+  # provided by texlive-latexextra
+  rm -rf "$pkgdir"/usr/share/texmf-dist
 }
