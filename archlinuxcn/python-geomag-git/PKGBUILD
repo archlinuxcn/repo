@@ -1,0 +1,27 @@
+# Mainintainer : Lucas Rooyakkers <lucas dot rooyakkers at queensu at ca>
+
+pkgname=python-geomag-git
+pkgver=31.421564e
+pkgrel=3
+pkgdesc='Calculates magnetic variation/declination for any latitude/longitude/altitude, for any date.'
+arch=('any')
+url="https://github.com/todd-dembrey/geomag"
+license=('BSD')
+depends=('python')
+source=('git://github.com/todd-dembrey/geomag')
+md5sums=('SKIP')
+
+pkgver() {
+  cd geomag
+
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+package() {
+  cd geomag
+
+  python setup.py install --root="$pkgdir"
+  site=$(python -c 'from distutils.sysconfig import get_python_lib; print(get_python_lib())')
+  mkdir -p "${pkgdir}/${site}/geomag/"
+  cp -r geomag/model_data "${pkgdir}/${site}/geomag/"
+}
