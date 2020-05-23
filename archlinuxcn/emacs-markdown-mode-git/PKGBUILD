@@ -33,6 +33,6 @@ build() {
 
 package() {
   cd markdown-mode
-  mkdir -p $pkgdir/usr/share/emacs/site-lisp/markdown-mode
-  install -Dm644 *.el{,c} $pkgdir/usr/share/emacs/site-lisp/markdown-mode
+  mkdir -p "$pkgdir/usr/share/emacs/site-lisp/markdown-mode"
+  install -Dm644 *.el{,c} "$pkgdir/usr/share/emacs/site-lisp/markdown-mode"
 }
