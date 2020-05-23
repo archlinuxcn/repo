@@ -1,0 +1,36 @@
+# Contributor: David Pernot <dpernot@gmail.com>
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+
+pkgname=emacs-web-mode-git
+pkgver=17.r1.g186a7c2
+pkgrel=1
+pkgdesc='web template editing mode for emacs'
+arch=('any')
+url='http://web-mode.org'
+license=('GPLv3+')
+depends=(emacs)
+provides=(emacs-web-mode)
+makedepends=(git)
+install="emacs-web-mode-git.install"
+source=(git://github.com/fxbois/web-mode)
+md5sums=('SKIP')
+
+pkgver() {
+  cd web-mode
+
+  git describe --tag | sed -e 's/^[^0-9]*//' -e 's/_/./g' -e 's/-/.r/' -e 's/-/./g'
+}
+
+build() {
+  cd web-mode
+
+  emacs -batch -L . -f batch-byte-compile web-mode.el || true
+}
+
+package() {
+  cd web-mode
+
+  install -Ddm755 "${pkgdir}/usr/share/emacs/site-lisp/"
+  install -Dm644 -t "${pkgdir}/usr/share/emacs/site-lisp/" \
+    web-mode.el{,c}
+}
