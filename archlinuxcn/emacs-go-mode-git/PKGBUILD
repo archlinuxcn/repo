@@ -25,9 +25,10 @@ pkgver() {
 build() {
   cd go-mode.el
 
-  for f in *.el; do
-    emacs -batch -q -f batch-byte-compile "$f"
-  done
+  emacs --batch --eval \
+        '(progn
+          (push "." load-path)
+          (batch-byte-compile))' *.el
 }
 
 package() {
