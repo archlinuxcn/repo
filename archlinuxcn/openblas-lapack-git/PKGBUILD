@@ -4,7 +4,7 @@
 # Contributor: Giuseppe Borzi <gborzi _AT_ ieee _DOT_ org>
 
 pkgbase=openblas-git
-pkgname=(openblas-git--dummy-for-debug openblas-git openblas-lapack-git)
+pkgname=(openblas-git openblas-lapack-git)
 _pkgname=OpenBLAS
 pkgver=v0.2.20.r2073.g729ac6bd
 pkgrel=1
@@ -62,8 +62,6 @@ build() {
   cd "${_pkgname}"
 
   export FFLAGS="-g -O2"
-  echo "MAKEFLAGS='$MAKEFLAGS'"
-  env
 
   # The OpenBLAS build system doesn't handle update very well.
   git clean -fdx
@@ -73,20 +71,12 @@ build() {
   }
 }
 
-package_openblas-git--dummy-for-debug() {
-  provides=()
-  conflicts=()
-  # This dummy package is provided to work around FS#59378
-}
-
 package_openblas-git() {
   depends=('gcc-libs')
   provides=('openblas')
   conflicts=('openblas')
 
   cd "${_pkgname}"
-  echo "MAKEFLAGS='$MAKEFLAGS'"
-  env
 
   make "${_config[@]}" PREFIX="${pkgdir}/usr" install &> install.log || {
     cat install.log
@@ -111,7 +101,6 @@ package_openblas-lapack-git() {
   rm -rf pkg
   mkdir -p "${pkgdir}/usr/"{include,lib}/
   cd "${_pkgname}"
-  echo "MAKEFLAGS='$MAKEFLAGS'"
 
   make "${_config[@]}" PREFIX="${srcdir}/pkg" install
 
