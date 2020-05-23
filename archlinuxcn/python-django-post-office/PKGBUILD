@@ -1,27 +1,26 @@
-# Maintainer: Joffrey <j-off@live.fr>
-
-pkgname=('python-django-post-office' 'python2-django-post-office')
-pkgbase='python-django-post-office'
-pkgver='3.3.1'
+_name=django-post-office
+pkgname=python-django-post-office
+pkgver=3.4.1
 pkgrel=1
-pkgdesc='A simple app to send and manage your emails in Django'
-arch=('any')
-url='https://github.com/ui/django-post_office'
+pkgdesc="A Django app to monitor and send mail asynchronously, complete with template support."
+arch=(any)
+url="https://github.com/ui/django-post_office"
 license=('MIT')
-makedepends=('python-setuptools' 'python2-setuptools')
-source=("$pkgbase-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('050f72fb379f9af13f53cfb37d2ed290e51e7fa6fd0ad05fb920eac6a411a4cf')
+depends=('python' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/django-post_office-3.4.1.tar.gz")
+sha256sums=('f45aadb08c4c2e7d6fa558c2f17a6b70dc81e10241b7d0ffe25524a15e67d763')
 
-package_python-django-post-office() {
-    depends=('python-django-jsonfield')
-    cd "$srcdir/django-post_office-$pkgver"
-    install -Dm644 './LICENSE.txt' "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-    python './setup.py' install --root="$pkgdir" --optimize=1
+build() {
+  cd "$srcdir/django-post_office-3.4.1"
+  python3 setup.py build
 }
 
-package_python2-django-post-office() {
-    depends=('python2-django-jsonfield')
-    cd "$srcdir/django-post_office-$pkgver"
-    install -Dm644 './LICENSE.txt' "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-    python2 './setup.py' install --root="$pkgdir" --optimize=1
+package() {
+  cd "$srcdir/django-post_office-3.4.1"
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+
+  # make sure we don't install annoying files
+  local _site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rf "$pkgdir/$_site_packages/tests/"
 }
+
