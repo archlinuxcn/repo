@@ -1,0 +1,67 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+pkgname="brother-mfcj450dw"
+pkgver="3.0.0"
+pkgrel=2
+pkgdesc="LPR and CUPS driver for the Brother MFC-J450DW"
+arch=('i686' 'x86_64')
+url="http://solutions.brother.com/linux/en_us/"
+license=('GPL custom:brother commercial license')
+depends=('cups')
+source=(
+  "http://download.brother.com/welcome/dlf007003/mfcj450dw_cupswrapper_GPL_source_${pkgver}-1.tar.gz"
+  "http://download.brother.com/welcome/dlf007000/mfcj450dwlpr-${pkgver}-1.i386.deb"
+  'lpr-license.txt')
+md5sums=('4082fb18c65d4b96187e8a340145bdc2'
+         '1140c998578afccff84cfa39efdf7341'
+         '5e87a3dc0f3e3438c088eda0f3565f0d')
+
+if [[ "$CARCH" = x86_64 ]]; then
+  depends+=('lib32-glibc')
+fi
+
+prepare() {
+  rm -rf "${srcdir}/mfcj450dwlpr-${pkgver}"
+  mkdir "${srcdir}/mfcj450dwlpr-${pkgver}"
+  cd  "${srcdir}/mfcj450dwlpr-${pkgver}"
+  tar xf "${srcdir}/data.tar.gz"
+}
+
+build_cupswrapper() {
+  cd "$srcdir/mfcj450dw_cupswrapper_GPL_source_${pkgver}-1"
+
+  make -C brcupsconfpt1
+  mv brcupsconfpt1/brcupsconfpt1 PPD/brother_mfcj450dw_printer_en.ppd \
+    "${srcdir}/pkg/opt/brother/Printers/mfcj450dw/cupswrapper"
+  cp cupswrapper/cupswrappermfcj450dw "$srcdir"
+}
+
+build_mfcj450dwlpr() {
+  cd "$srcdir/mfcj450dwlpr-${pkgver}"
+  cp -a opt usr "${srcdir}/pkg"
+  rm "${srcdir}/pkg/opt/brother/Printers/mfcj450dw/inf/setupPrintcapij"
+}
+
+build() {
+  cd "$srcdir"
+  rm -rf "pkg"
+  mkdir -p pkg/opt/brother/Printers/mfcj450dw/cupswrapper
+  mkdir -p pkg/usr/{bin,share/cups/model,lib/cups/filter}
+
+  (build_cupswrapper)
+  (build_mfcj450dwlpr)
+  _wrapper_source="${srcdir}/cupswrappermfcj450dw"
+  sed -i -e '/^\/etc\/init.d\/cups/d' -e '/^sleep/d' -e '/^lpadmin/d' \
+    -e 's|/usr|$_srcdir/usr|g' -e 's|/opt|$_srcdir/opt|g' \
+    -e 's|/model/Brother|/model|g' -e 's|lpinfo|echo|g' $_wrapper_source
+  export _srcdir="$srcdir/pkg"
+  "$_wrapper_source"
+  sed -i -e 's|$_srcdir||g' -e "s|$_srcdir||g" \
+    "$srcdir/pkg/usr/lib/cups/filter/brother_lpdwrapper_mfcj450dw"
+}
+
+package() {
+  cp -a "${srcdir}/pkg"{/usr,/opt} "$pkgdir"
+
+  install -Dm644 lpr-license.txt \
+    "$pkgdir/usr/share/licenses/${pkgname}/lpr-licence.txt"
+}
