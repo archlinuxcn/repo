@@ -11,45 +11,63 @@ license=('custom:brother commercial license')
 depends=('cups')
 install='brother-hl3170cdw.install'
 source=(
-	"http://www.brother.com/pub/bsc/linux/dlf/hl3170cdwlpr-1.1.2-$pkgrel.i386.rpm"
-  "http://download.brother.com/welcome/dlf007057/hl3170cdwcupswrapper-${pkgver}-0.i386.rpm"
-	'cupswrapper-license.txt'
-	'lpr-license.txt'
+  "https://download.brother.com/welcome/dlf006743/hl3170cdw_cupswrapper_GPL_source_${pkgver}-0.tar.gz"
+  "http://www.brother.com/pub/bsc/linux/dlf/hl3170cdwlpr-1.1.2-1.i386.deb"
+  'lpr-license.txt'
 )
-sha512sums=('e21417ff2d44ae1d6c0af2254b29921acd029acaf2df45568e5a2722e2575b924d5260c706b03a3e4f97045e0009d3aa70d07a67c7bdebe697225dabf905ad68'
-            'b05a5969f27e0340d0be794c54a87c5b09dcf399438c3380634dc60b27ec7b895e528c3bee3ea4504ea500ce71b4aadd5ab11b27b42f5ca8aedb4a0099d3b9ee'
-            'bd035acc69734d954c132df67e80476094044d2c929e97bd6e0467aacfeefa9883da7474af8d8ff7fa65c3043ec6e1d8e0386e032c3f2121c36b0f6bfd079c86'
+sha512sums=('d0282a7d6c9486e927ab6e50a86fd20b26e97fa9861061796125b955922929688c5808a3ef07918f114be3ec678bb0b264700f0c8dc30e197e583375e56eeb0c'
+            '56b97b9d120c00a5ebff316859840bed88558872914b5079c1f13529e5361a3d360abb0379989ddf6f121dee02478fe1e5974d353ba72cd969097336785ee608'
             'bf555e3622b68cc8a4d89f9fbb26ca09f29acf66c07d517be8aa7b58d985e1408d0d1bde408ba3b0e0aa842a69d6ebf0b4a1d194673203f42a3cbcecdcfaca06')
-if test "$CARCH" == x86_64; then
-	depends+=('lib32-glibc')
+
+if [[ "$CARCH" == x86_64 ]]; then
+  depends+=('lib32-glibc')
 fi
+
+
 prepare() {
-	# setup cups-directories
-	install -d $srcdir/usr/share/cups/model
-	install -d $srcdir/usr/lib/cups/filter
-	#  go to the cupswrapper directory and find the source file from wich to generate a ppd- and wrapper-file
-	cd `find . -type d -name 'cupswrapper'`
-	if [ -f cupswrapper* ]; then
-		_wrapper_source=`ls cupswrapper*`
-		sed -i '/^\/etc\/init.d\/cups/d' $_wrapper_source
-		sed -i '/^sleep/d' $_wrapper_source
-		sed -i '/^lpadmin/d' $_wrapper_source
-		sed -i 's|/usr|$srcdir/usr|g' $_wrapper_source
-		sed -i 's|/opt|$srcdir/opt|g' $_wrapper_source
-		sed -i 's|/model/Brother|/model|g' $_wrapper_source
-		sed -i 's|lpinfo|echo|g' $_wrapper_source
-		export srcdir=$srcdir
-		./$_wrapper_source
-		sed -i 's|$srcdir||' $srcdir/usr/lib/cups/filter/*lpdwrapper*
-		sed -i "s|$srcdir||" $srcdir/usr/lib/cups/filter/*lpdwrapper*
-		rm $_wrapper_source
-	fi
-	#  /etc/printcap is managed by cups
-	rm `find $srcdir -type f -name 'setupPrintcap*'`
+  rm -rf "${srcdir}/hl3170cdwlpr-${pkgver}"
+  mkdir "${srcdir}/hl3170cdwlpr-${pkgver}"
+  cd  "${srcdir}/hl3170cdwlpr-${pkgver}"
+  tar xf "${srcdir}/data.tar.gz"
 }
+
+build_cupswrapper() {
+  cd "$srcdir/hl3170cdw_cupswrapper_GPL_source_${pkgver}-0"
+
+  make -C brcupsconfig
+  mv brcupsconfig/brcupsconfpt1 PPD/brother_hl3170cdw_printer_en.ppd \
+     "${srcdir}/pkg/opt/brother/Printers/hl3170cdw/cupswrapper"
+  cp cupswrapper/cupswrapperhl3170cdw "$srcdir"
+  chmod +x "$srcdir/cupswrapperhl3170cdw"
+}
+
+build_hl3170cdwlpr() {
+  cd "$srcdir/hl3170cdwlpr-${pkgver}"
+  cp -a opt usr "${srcdir}/pkg"
+  rm "${srcdir}/pkg/opt/brother/Printers/hl3170cdw/inf/setupPrintcapij"
+}
+
+build() {
+  cd "$srcdir"
+  rm -rf "pkg"
+  mkdir -p pkg/opt/brother/Printers/hl3170cdw/cupswrapper
+  mkdir -p pkg/usr/{bin,share/cups/model,lib/cups/filter}
+
+  (build_cupswrapper)
+  (build_hl3170cdwlpr)
+  _wrapper_source="${srcdir}/cupswrapperhl3170cdw"
+  sed -i -e '/^\/etc\/init.d\/cups/d' -e '/^sleep/d' -e '/^lpadmin/d' \
+    -e 's|/usr|$_srcdir/usr|g' -e 's|/opt|$_srcdir/opt|g' \
+    -e 's|/model/Brother|/model|g' -e 's|lpinfo|echo|g' $_wrapper_source
+  export _srcdir="$srcdir/pkg"
+  "$_wrapper_source"
+  sed -i -e 's|$_srcdir||g' -e "s|$_srcdir||g" \
+    "$srcdir/pkg/usr/lib/cups/filter/brother_lpdwrapper_hl3170cdw"
+}
+
 package() {
-	cp -R $srcdir/usr $pkgdir
-	if [ -d $srcdir/opt ]; then cp -R $srcdir/opt $pkgdir; fi
-	install -m 644 -D cupswrapper-license.txt $pkgdir/usr/share/licenses/${pkgname}/cupswrapper-licence.txt
-	install -m 644 -D lpr-license.txt $pkgdir/usr/share/licenses/${pkgname}/lpr-licence.txt
+  cp -a "${srcdir}/pkg"{/usr,/opt} "$pkgdir"
+
+  install -Dm644 lpr-license.txt \
+    "$pkgdir/usr/share/licenses/${pkgname}/lpr-licence.txt"
 }
