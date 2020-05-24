@@ -1,5 +1,5 @@
 pkgname=purescript
-pkgver=0.13.6
+pkgver=0.13.8
 pkgrel=1
 pkgdesc="A small strongly, statically typed programming language with expressive types, inspired by Haskell and compiling to JavaScript."
 arch=('x86_64')
@@ -7,7 +7,7 @@ url="https://hackage.haskell.org/package/purescript"
 license=('custom:BSD3')
 makedepends=('stack')
 source=(${pkgname}-${pkgver}.tar.gz::"https://hackage.haskell.org/package/${pkgname}-${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('12f5efa2e157a8d57e6f5a4318d08ff57796802ec3e404f5436371b32f1f5af7')
+sha256sums=('701fac49de867ec01252b067185e8bbd1b72e4b96997044bac3cca91e3f8096a')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
