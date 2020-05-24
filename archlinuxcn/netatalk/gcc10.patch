@@ -1,0 +1,11 @@
+--- etc/afpd/directory.h.orig	2020-05-24 00:27:06.961472043 +0300
++++ etc/afpd/directory.h	2020-05-24 00:27:46.456137788 +0300
+@@ -91,7 +91,7 @@
+ #define	AR_UWRITE	(1<<2)
+ #define	AR_UOWN		(1<<7)
+ 
+-q_t *invalid_dircache_entries;
++extern q_t *invalid_dircache_entries;
+ 
+ typedef int (*dir_loop)(struct dirent *, char *, void *);
+ 

@@ -6,7 +6,7 @@
 
 pkgname=netatalk
 pkgver=3.1.12
-pkgrel=2
+pkgrel=3
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
 url='http://netatalk.sourceforge.net'
@@ -17,13 +17,16 @@ backup=('etc/afp.conf'
 	'etc/extmap.conf')
 install=$pkgname.install
 source=(http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver.tar.bz2
+	gcc10.patch
 	python2.patch)
 md5sums=('021d2330cb7f7cd2977aec46299dcc1b'
+  '9e0c57f07b100bcdf5229224edf25a2b'
 	'97bc0467dd8a866d9f0835d6440e3c19')
 
 prepare() {
 	cd "$srcdir/$pkgname-$pkgver"
 	patch -p0 < "$srcdir/python2.patch"
+	patch -p0 < "$srcdir/gcc10.patch"
 }
 
 build() {
