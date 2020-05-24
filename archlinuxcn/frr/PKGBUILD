@@ -3,13 +3,13 @@
 # Contributor: Evgeny Cherkashin <eugeneai@irnok.net>
 
 pkgname='frr'
-pkgver='7.3'
+pkgver='7.3.1'
 pkgrel='1'
 pkgdesc='FRRouting (quagga fork) supports BGP4, OSPFv2, OSPFv3, ISIS, RIP, RIPng, PIM, LDP, BFD, VRRP, NHRP and EIGRP.'
 arch=('x86_64')
 url="https://frrouting.org/"
 license=('GPL2')
-depends=('libcap' 'libnl' 'readline' 'ncurses' 'perl' 'pam' 'json-c' 'net-snmp'
+depends=('json-c' 'libcap' 'libnl' 'ncurses' 'net-snmp' 'pam' 'perl' 'readline' 'systemd'
 	 'rtrlib' 'libyang' 'libunwind' 'c-ares')
 makedepends=('patch' 'gcc' 'net-snmp' 'bison' 'perl-xml-libxml' 'python-sphinx')
 checkdepends=('python-pytest')
@@ -22,9 +22,9 @@ backup=("etc/${pkgname}/${pkgname}.conf"
 source=("https://github.com/FRRouting/${pkgname}/archive/${pkgname}-${pkgver}.tar.gz"
         "${pkgname}.sysusers"
         "${pkgname}.tmpfiles"
-        "${pkgname}_${pkgver}_Archlinux.patch"
+        "${pkgname}_7.3_Archlinux.patch"
 	"frr-init-functions")
-sha256sums=('c209ed66a0331221649b8c21dc8c6704ce1696e2017ef4d48f8c2ac6b1fa01b7'
+sha256sums=('81129f83ce9ae31c983bb02b3d8e3e457604bab46f01411c945d9c2cfef1f5c8'
             '9371cc0522d13621c623b5da77719052bdebdceb7ffdbdc06fc32a2f07118e7e'
             '6f8dd86ef9c600763faead3052908531e8dc8ef67058e6f7f8da01bf0fe4eb89'
             '71017b61fac82ff69f9ed8fe4a74c8380c2206d209c60a64e16ba31dd5735049'
@@ -32,7 +32,7 @@ sha256sums=('c209ed66a0331221649b8c21dc8c6704ce1696e2017ef4d48f8c2ac6b1fa01b7'
 
 prepare() {
   cd "${srcdir}/${pkgname}-${pkgname}-${pkgver}"
-  patch -p1 -i "${srcdir}/${pkgname}_${pkgver}_Archlinux.patch"
+  patch -p1 -i "${srcdir}/${pkgname}_7.3_Archlinux.patch"
 
   autoreconf -fvi
   ./configure \
