@@ -23,6 +23,10 @@ ac_add_options --disable-updater
   
 ac_add_options --x-libraries=/usr/lib
 
+# source doesn't build with gcc10, explicitly use gcc8 from [community]
+export CC=gcc-8
+export CXX=g++-8
+
 # Use python2
 mk_add_options PYTHON=/usr/bin/python2
 
