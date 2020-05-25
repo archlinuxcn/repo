@@ -5,9 +5,8 @@
 
 pkgbase=openblas-git
 pkgname=(openblas-git openblas-lapack-git)
-_pkgname=OpenBLAS
-pkgver=v0.2.20.r2073.g729ac6bd
-pkgrel=2
+pkgver=0.3.9.dev.r708.gf1a18d24
+pkgrel=1
 pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://xianyi.github.com/OpenBLAS/"
@@ -16,7 +15,6 @@ makedepends=('git' 'perl' 'gcc-fortran')
 options=(!emptydirs debug strip)
 source=("git://github.com/xianyi/OpenBLAS")
 md5sums=('SKIP')
-_lapack_ver=3.7.1
 
 _config=(
   'SMP=1'
@@ -31,16 +29,16 @@ _config=(
 
 case "$CARCH" in
   x86_64)
-    _config=("${_config[@]}" 'DYNAMIC_ARCH=1' 'NUM_THREAD=16')
+    _config=("${_config[@]}" 'DYNAMIC_ARCH=1' 'NUM_THREAD=64')
     ;;
   i686)
-    _config=("${_config[@]}" 'DYNAMIC_ARCH=1' 'NUM_THREAD=8')
+    _config=("${_config[@]}" 'DYNAMIC_ARCH=1' 'NUM_THREAD=64')
     ;;
   armv7h)
-    _config=("${_config[@]}" 'TARGET=CORTEXA9' 'NUM_THREAD=8')
+    _config=("${_config[@]}" 'TARGET=CORTEXA9' 'NUM_THREAD=64')
     ;;
   aarch64)
-    _config=("${_config[@]}" 'TARGET=CORTEXA57' 'NUM_THREAD=8')
+    _config=("${_config[@]}" 'TARGET=CORTEXA57' 'NUM_THREAD=64')
     ;;
   *)
     echo "Unknown CARCH: ${CARCH}"
@@ -48,18 +46,24 @@ case "$CARCH" in
 esac
 
 pkgver() {
-  cd "${_pkgname}"
-  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+  cd OpenBLAS
+
+  _last_tag=$(git describe --tags --abbrev=0)
+  _commit_short=$(git rev-parse --short HEAD)
+  _build_number=$(git rev-list --count HEAD "^$_last_tag")
+  _ver=$(sed -ne 's/^VERSION\s*=\s*\([^[:space:]]*\).*/\1/p' Makefile.rule)
+
+  printf "%s.r%s.g%s" "$_ver" "$_build_number" "$_commit_short"
 }
 
 prepare() {
-  cd ${_pkgname}
+  cd OpenBLAS
 
   # patch -Np1 < ../.patch
 }
 
 build() {
-  cd "${_pkgname}"
+  cd OpenBLAS
 
   export FFLAGS="-g -O2"
 
@@ -76,7 +80,7 @@ package_openblas-git() {
   provides=('openblas')
   conflicts=('openblas')
 
-  cd "${_pkgname}"
+  cd OpenBLAS
 
   make "${_config[@]}" PREFIX="${pkgdir}/usr" install &> install.log || {
     cat install.log
@@ -95,12 +99,13 @@ package_openblas-git() {
 
 package_openblas-lapack-git() {
   depends=('openblas-git')
-  provides=('openblas-lapack' "blas=${_lapack_ver}" "lapack=${_lapack_ver}"
-            "cblas=${_lapack_ver}" "lapacke=${_lapack_ver}")
-  conflicts=('blas' 'lapack' 'cblas')
+  provides=('openblas-lapack')
+  conflicts=('openblas-lapack' 'blas' 'lapack' 'cblas' 'lapacke')
   rm -rf pkg
   mkdir -p "${pkgdir}/usr/"{include,lib}/
-  cd "${_pkgname}"
+  cd OpenBLAS
+
+  _lapack_ver=$(sed -ne 's/^PROJECT_NUMBER\s*=\s*\([0-9][0-9.]*\).*/\1/p' lapack-netlib/DOCS/Doxyfile)
 
   make "${_config[@]}" PREFIX="${srcdir}/pkg" install
 
@@ -110,7 +115,15 @@ package_openblas-lapack-git() {
   cd "${pkgdir}/usr/lib/"
   for lib in blas cblas lapack lapacke; do
     ln -sf libopenblas.so lib$lib.so
-    ln -sf libopenblas.so lib$lib.so.${_lapack_ver:0:1}
+    ln -sf libopenblas.so lib$lib.so.${_lapack_ver%%.*}
     ln -sf libopenblas.so lib$lib.so.${_lapack_ver}
   done
+
+  # `makepkg` has a really stupid check for `provides=` **BEFORE**
+  # compiling the package and will complain that we have an empty pkgver here.
+  # Disable that check by using a variable that is not recognized by `makepkg`...
+  _provides=("blas=${_lapack_ver}" "lapack=${_lapack_ver}"
+             "cblas=${_lapack_ver}" "lapacke=${_lapack_ver}")
+
+  provides+=("${_provides[@]}")
 }
