@@ -6,19 +6,19 @@ pkgname=hmcl
 _pkgname=HMCL
 pkgver=3.2.149
 _commit=8b16e8be4de9e7c81d62cea2fa665d6b1bbac6fd
-pkgrel=1
+pkgrel=2
 pkgdesc="A Minecraft Launcher which is multi-functional, cross-platform and popular"
 arch=('any')
 url="https://github.com/huanghongxun/HMCL"
 license=('GPL3')
 provides=('hmcl')
 conflicts=('hmcl')
-depends=('java8-openjfx')
-makedepends=('imagemagick' 'jdk8-openjdk')
+depends=('java8-openjfx'
+         'jdk8-openjdk')
 source=("hmcl-launch-script"
         "${pkgname}.desktop"
         "${pkgname}-${pkgver}.tgz::${url}/archive/${_commit}.tar.gz")
-sha256sums=('c6310315a7bc5f0512d1d307bdf1c4fffa3c55707f019274b32f9b2d132688d1'
+sha256sums=('5565dafda05a2f15e6d6c58aedc3a4c9191fa2f165796c9d9fc32fdf5efa1ab2'
             '5780cf70f1afec0eb3cd8fc43297d361903c7204e274a28c5edf9b8ac3eea83e'
             '673d65ccf9790d62b1a6a771bb2ed09ddcd3e768408e01de2104813c960555a9')
 
@@ -49,3 +49,4 @@ package() {
   # install icon
   install -Dm644 "resources/main/assets/img/craft_table.png" "${pkgdir}/usr/share/icons/hicolor/48x48/apps/${pkgname}.png"
 }
+makedepends=('imagemagick')
