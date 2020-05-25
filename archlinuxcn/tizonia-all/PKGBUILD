@@ -2,12 +2,13 @@
 
 _githubname=tizonia-openmax-il
 pkgname=tizonia-all
-pkgver=0.21.0
-pkgrel=5
-pkgdesc="Command-line cloud music player for Linux with support for Spotify, Google Play Music, YouTube, SoundCloud, Plex servers and Chromecast devices."
+pkgver=0.22.0
+pkgrel=1
+pkgdesc="Command-line cloud music player for Linux with support for Spotify, Google Play Music, YouTube, SoundCloud, TuneIn, iHeartRadio, Plex servers and Chromecast devices."
 arch=('x86_64')
-url="https://www.tizonia.org"
+url="https://tizonia.org"
 license=('LGPL')
+makedepends=(git boost meson ninja)
 depends=(
     # official repositories:
     'libmad'
@@ -31,13 +32,13 @@ depends=(
     'libsndfile'
     'alsa-lib'
     'libpulse'
-    'boost'
-    'check'
+    'boost-libs'
+    'hicolor-icon-theme'
     'python-pafy'
-    'python-joblib'
     'python-eventlet'
     'youtube-dl'
     'python-levenshtein'
+    'python-joblib'
 
     # AUR:
     'log4c'
@@ -50,7 +51,7 @@ depends=(
     'python-spotipy'
 )
 source=("${_githubname}-${pkgver}.tar.gz"::"https://github.com/tizonia/${_githubname}/archive/v${pkgver}.tar.gz")
-md5sums=('5380afc416a16e14aa76f6845259813b')
+md5sums=('236dd33a25700bf8d752af17b95bd50f')
 
 prepare() {
   command -v tizonia &> /dev/null \
@@ -63,19 +64,15 @@ prepare() {
 
 build() {
     cd "${_githubname}-${pkgver}"
-    autoreconf -ifs
-    ./configure \
-        --prefix=/usr \
-        --sysconfdir=/etc \
-        --localstatedir=/var \
-        --silent \
-        --enable-silent-rules \
-        CFLAGS='-O2 -s -DNDEBUG' \
-        CXXFLAGS='-O2 -s -DNDEBUG -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security'
-    make
+    pwd
+    CFLAGS='-O2 -s -DNDEBUG' \
+    CXXFLAGS='-O2 -s -DNDEBUG -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security' \
+    arch-meson build -Dbashcompletiondir=/usr/share/bash-completion/completions -Dzshcompletiondir=/usr/share/zsh/site-functions
+    ninja -j1 -C build
 }
 
 package() {
     cd "${_githubname}-${pkgver}"
-    make DESTDIR="$pkgdir/" install
+    pwd
+    DESTDIR=$pkgdir ninja -C build install
 }
