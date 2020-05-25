@@ -3,24 +3,24 @@
 # Contributor: Gordin <9ordin @t gmail d@t com>
 
 pkgname=screenkey
-pkgver=0.9
-pkgrel=4
+pkgver=1.0
+pkgrel=1
 pkgdesc="A screencast tool to display your keys inspired by Screenflick"
 arch=('any')
-url="https://gitlab.com/wavexx/screenkey"
+url="https://gitlab.com/screenkey/screenkey"
 license=('GPL3')
-depends=('python2' 'pygtk' 'libx11')
-makedepends=('python2-distutils-extra' 'python2-setuptools')
-optdepends=('slop' 'ttf-font-awesome' 'python2-libappindicator')
-source=("https://github.com/wavexx/$pkgname/archive/$pkgname-$pkgver.tar.gz")
-sha256sums=('20f0b5415906cfb5cf41ca4f61c4ca22d4a13413aed87980d4d1a03dc92e7157')
+depends=('python' 'python-gobject' 'gtk3' 'python-cairo' 'libx11')
+makedepends=('python-setuptools' 'python-distutils-extra')
+optdepends=('slop' 'ttf-font-awesome' 'libappindicator-gtk3')
+source=("https://gitlab.com/$pkgname/$pkgname/-/archive/v$pkgver/$pkgname-v$pkgver.tar.gz")
+sha256sums=('e4d841ed599c73b71b99f7e06482995addc2e626215be0a12d4e3ca66cdee3c2')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgname-$pkgver"
-  python2 setup.py build
+  cd "$srcdir/$pkgname-v$pkgver"
+  python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgname-$pkgver"
-  python2 setup.py install --skip-build --optimize=1 --root="$pkgdir/"
+  cd "$srcdir/$pkgname-v$pkgver"
+  python3 setup.py install --skip-build --optimize=1 --root="$pkgdir/"
 }
