@@ -2,8 +2,7 @@
 
 pkgname=motrix-git
 _pkgname=motrix
-_pkgver=1.4.1
-pkgver=1.4.1.r749.8df97b8
+pkgver=1.5.12.r4.g8df97b8
 pkgrel=1
 pkgdesc='A full-featured download manager'
 arch=('any')
@@ -27,13 +26,12 @@ sha256sums=('SKIP')
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
-  ver=$(printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)")
-  echo "${_pkgver}.${ver}"
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
   sed -i 's/"postinstall"/"ignore"/' "${srcdir}/${_pkgname}/package.json"
-  sed -i "s/4.2.4/7.1.4/g" "${srcdir}/${_pkgname}/package.json"
+#  sed -i "s/4.2.4/7.1.4/g" "${srcdir}/${_pkgname}/package.json"
   rm -vf "${srcdir}/${_pkgname}/package-lock.json"
   echo "Creating desktop file..."
   gendesk -f -n --pkgname ${_pkgname} \
@@ -56,7 +54,7 @@ package() {
   ln -s /usr/bin/aria2c "${pkgdir}/usr/lib/${_pkgname}/engine/aria2c"
   cp -r "${srcdir}/${_pkgname}/dist" "${pkgdir}/usr/lib/${_pkgname}/app"
   cp -r "${srcdir}/${_pkgname}/node_modules" "${pkgdir}/usr/lib/${_pkgname}/app/node_modules"
-  echo '{"name": "'${_pkgname}'", "version": "v'${_pkgver}'", "main": "./electron/main.js"}' > "${pkgdir}/usr/lib/${_pkgname}/app/package.json"
+  echo '{"name": "'${_pkgname}'", "version": "v'${pkgver}'", "main": "./electron/main.js"}' > "${pkgdir}/usr/lib/${_pkgname}/app/package.json"
   install -Dm644 "${srcdir}/${_pkgname}/static/512x512.png" "${pkgdir}/usr/share/pixmaps/${_pkgname}.png"
   # launch script
   cat << EOF > "${pkgdir}/usr/bin/${_pkgname}"
