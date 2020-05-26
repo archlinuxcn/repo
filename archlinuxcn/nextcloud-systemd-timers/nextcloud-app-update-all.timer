@@ -1,0 +1,10 @@
+[Unit]
+Description=Nextcloud; update all applications daily
+
+[Timer]
+OnBootSec=15min
+OnCalendar=daily
+Persistent=True
+
+[Install]
+WantedBy=timers.target

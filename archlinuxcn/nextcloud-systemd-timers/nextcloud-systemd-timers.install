@@ -1,7 +1,3 @@
-# This is a default template for a post-install scriptlet.
-# Uncomment only required functions and remove any functions
-# you don't need (and this header).
-
 ## arg 1:  the new package version
 #pre_install() {
 	# do something here
@@ -9,7 +5,6 @@
 
 ## arg 1:  the new package version
 post_install() {
-	  # do something here
     echo "In order to complete installation, manual steps are necessary."
     echo "The timers can be activated individually and according to your needs."
     echo "--"
@@ -21,6 +16,8 @@ post_install() {
     echo '$ systemctl enable TIMER'
     echo "--"
     echo "Available timers."
+    echo "- nextcloud-app-update-all.timer"
+    echo "      Periodic (daily and after boot) update of all applications."
     echo "- nextcloud-cron.timer"
     echo "      Periodic (every 15 min) execution of cron.php."
     echo "- nextcloud-files-scan-all.timer"
@@ -28,7 +25,7 @@ post_install() {
     echo "- nextcloud-preview-generate-all.timer"
     echo "      Activate periodic (weekly and after boot) preview generation of ALL files."
     echo "- nextcloud-preview-pre-generate.timer"
-    echo "      Activate periodic (after boot and every 15 min)preview generation of NEW files."
+    echo "      Activate periodic (every 15 min and after boot) preview generation of NEW files."
     echo "--"
     echo "Check status and activation of timers."
     echo '$ systemctl list-timers'
@@ -43,6 +40,13 @@ pre_upgrade() {
 	      echo "The systemd unit directory has changed from"
         echo "/etc/systemd/system to /usr/lib/systemd/system."
         echo "Please ensure that your timers work after the upgrade."
+        echo
+    elif [[ "$1" == "0.6.3-1" ]]
+    then
+        echo
+	      echo "A new timer was added:"
+        echo "- nextcloud-app-update-all.timer"
+        echo "      Periodic (daily) update all applications."
         echo
     fi
 }

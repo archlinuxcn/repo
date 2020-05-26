@@ -1,0 +1,9 @@
+[Unit]
+Description=Nextcloud; update all applications
+
+[Service]
+User=http
+ExecStart=/usr/share/webapps/nextcloud/occ app:update --all
+
+[Install]
+WantedBy=basic.target
