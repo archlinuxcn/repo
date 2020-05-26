@@ -3,12 +3,12 @@
 
 pkgname=java-service-wrapper
 pkgver=3.5.43
-pkgrel=1
+pkgrel=2
 pkgdesc="Enables a Java Application to be run as a Windows Service or Unix Daemon"
 url="https://wrapper.tanukisoftware.com/doc/english/introduction.html"
 arch=('i686' 'x86_64' 'aarch64' 'armv6h' 'armv7h')
 license=('GPL2' 'custom:tanuki-community')
-makedepends=('ant' 'java-environment>=8')
+makedepends=('ant' 'jdk8-openjdk')
 source=("https://wrapper.tanukisoftware.com/download/${pkgver}/wrapper_${pkgver}_src.tar.gz"
         'java10.patch')
 sha256sums=('4b802ee036541eed97f0fab3a36579ba464d9cedfba26f0a10ebcc4c0a1a9da5'
@@ -19,7 +19,7 @@ prepare() {
 
     _ver=$(javac -version 2>&1 |awk '{print $2}')
     msg "Detected Java $_ver"
-    [[ "$_ver" =~ ^1[0-4]\. ]] &&
+    [[ "$_ver" =~ ^1[0-6] ]] &&
         patch -Np0 -i "$srcdir/java10.patch"
 
     # Prevent building the testsuite on the x64, this requires the cunit pkg
