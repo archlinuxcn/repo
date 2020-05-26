@@ -54,7 +54,7 @@ package_kcm-fcitx5-git() {
 package_fcitx5-config-qt-git(){
   pkgdesc="Qt5 Config Module for Fcitx5"
   depends=('fcitx5-qt5-git' 'kitemviews' 'kwidgetsaddons')
-  conflicts=("fcitx5-config-qt")
+  conflicts=("fcitx5-config-qt" "$pkgbase")
   provides=("fcitx5-config-qt")
 
   cd build
@@ -64,7 +64,7 @@ package_fcitx5-config-qt-git(){
 package_kbd-layout-viewer5-git(){
   pkgdesc="Keyboard layout viewer from Fcitx5"
   depends=('fcitx5-qt5-git')
-  conflicts=("kbd-layout-viewer5")
+  conflicts=("kbd-layout-viewer5" "$pkgbase")
   provides=("kbd-layout-viewer5")
 
   cd build
