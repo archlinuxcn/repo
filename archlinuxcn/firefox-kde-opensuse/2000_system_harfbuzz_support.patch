@@ -1,5 +1,5 @@
-From: Jan Beich <jbeich@FreeBSD.org>
-
+# HG changeset patch
+# Parent  7b4a61d079f0d07c410e5f143ca666791349432f
 Add ability to use system-harfbuzz instead of bundled.
 
 https://bugzilla.mozilla.org/show_bug.cgi?id=847568
@@ -7,7 +7,7 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=847568
 diff --git a/config/system-headers.mozbuild b/config/system-headers.mozbuild
 --- a/config/system-headers.mozbuild
 +++ b/config/system-headers.mozbuild
-@@ -1228,16 +1228,23 @@ if CONFIG['OS_TARGET'] == 'Android':
+@@ -1227,16 +1227,23 @@ if CONFIG['OS_TARGET'] == 'Android':
          'utils/TypeHelpers.h',
          'utils/Unicode.h',
          'utils/Vector.h',
@@ -34,7 +34,7 @@ diff --git a/config/system-headers.mozbuild b/config/system-headers.mozbuild
 diff --git a/dom/base/moz.build b/dom/base/moz.build
 --- a/dom/base/moz.build
 +++ b/dom/base/moz.build
-@@ -538,13 +538,16 @@ include('/ipc/chromium/chromium-config.m
+@@ -537,16 +537,19 @@ include('/ipc/chromium/chromium-config.m
  FINAL_LIBRARY = 'xul'
  
  if CONFIG['MOZ_BUILD_APP'] in ['browser', 'mobile/android', 'xulrunner']:
@@ -48,6 +48,9 @@ diff --git a/dom/base/moz.build b/dom/base/moz.build
 +
  GeneratedFile('UseCounterList.h', script='gen-usecounters.py',
                entry_point='use_counter_list', inputs=['UseCounters.conf'])
+ 
+ GeneratedFile('UseCounterWorkerList.h', script='gen-usecounters.py',
+               entry_point='use_counter_list', inputs=['UseCountersWorker.conf'])
  
  if CONFIG['CC_TYPE'] in ('clang', 'gcc'):
      CXXFLAGS += ['-Wno-error=shadow']
@@ -87,7 +90,7 @@ diff --git a/gfx/moz.build b/gfx/moz.build
 diff --git a/gfx/skia/generate_mozbuild.py b/gfx/skia/generate_mozbuild.py
 --- a/gfx/skia/generate_mozbuild.py
 +++ b/gfx/skia/generate_mozbuild.py
-@@ -112,16 +112,19 @@ if CONFIG['CC_TYPE'] == 'gcc':
+@@ -93,16 +93,19 @@ if CONFIG['CC_TYPE'] == 'gcc':
  if CONFIG['CC_TYPE'] in ('clang', 'clang-cl'):
      CXXFLAGS += [
          '-Wno-implicit-fallthrough',
@@ -110,7 +113,7 @@ diff --git a/gfx/skia/generate_mozbuild.py b/gfx/skia/generate_mozbuild.py
 diff --git a/gfx/skia/moz.build b/gfx/skia/moz.build
 --- a/gfx/skia/moz.build
 +++ b/gfx/skia/moz.build
-@@ -488,16 +488,19 @@ if CONFIG['CC_TYPE'] == 'gcc':
+@@ -485,16 +485,19 @@ if CONFIG['CC_TYPE'] == 'gcc':
  if CONFIG['CC_TYPE'] in ('clang', 'clang-cl'):
      CXXFLAGS += [
          '-Wno-implicit-fallthrough',
@@ -133,7 +136,7 @@ diff --git a/gfx/skia/moz.build b/gfx/skia/moz.build
 diff --git a/gfx/thebes/moz.build b/gfx/thebes/moz.build
 --- a/gfx/thebes/moz.build
 +++ b/gfx/thebes/moz.build
-@@ -281,11 +281,14 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk'
+@@ -283,11 +283,14 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk'
  
  if CONFIG['MOZ_WAYLAND']:
      CXXFLAGS += CONFIG['MOZ_WAYLAND_CFLAGS']
@@ -167,13 +170,8 @@ diff --git a/intl/unicharutil/util/moz.build b/intl/unicharutil/util/moz.build
 diff --git a/netwerk/dns/moz.build b/netwerk/dns/moz.build
 --- a/netwerk/dns/moz.build
 +++ b/netwerk/dns/moz.build
-@@ -77,12 +77,15 @@ FINAL_LIBRARY = 'xul'
- GeneratedFile('etld_data.inc', script='prepare_tlds.py',
-               inputs=['effective_tld_names.dat'])
- 
- # need to include etld_data.inc
- LOCAL_INCLUDES += [
-     '/netwerk/base',
+@@ -84,6 +84,9 @@
+     '/netwerk/protocol/http',
  ]
  
 +if CONFIG['MOZ_SYSTEM_HARFBUZZ']:
@@ -182,7 +180,7 @@ diff --git a/netwerk/dns/moz.build b/netwerk/dns/moz.build
  USE_LIBS += ['icu']
  
  if CONFIG['CC_TYPE'] in ('clang', 'gcc'):
-     CXXFLAGS += ['-Wno-error=shadow']
+
 diff --git a/toolkit/library/moz.build b/toolkit/library/moz.build
 --- a/toolkit/library/moz.build
 +++ b/toolkit/library/moz.build
@@ -209,7 +207,7 @@ diff --git a/toolkit/library/moz.build b/toolkit/library/moz.build
 diff --git a/toolkit/moz.configure b/toolkit/moz.configure
 --- a/toolkit/moz.configure
 +++ b/toolkit/moz.configure
-@@ -394,16 +394,26 @@ def freetype2_combined_info(fontconfig_i
+@@ -399,16 +399,26 @@ def freetype2_combined_info(fontconfig_i
      return namespace(
          cflags=freetype2_info.cflags + fontconfig_info.cflags,
          libs=freetype2_info.libs + fontconfig_info.libs,

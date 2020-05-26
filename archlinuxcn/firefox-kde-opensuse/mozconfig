@@ -12,6 +12,7 @@ ac_add_options --enable-official-branding
 ac_add_options --enable-update-channel=release
 ac_add_options --with-distribution-id=org.archlinux
 ac_add_options --with-unsigned-addon-scopes=app,system
+ac_add_options --allow-addon-sideload
 export MOZILLA_OFFICIAL=1
 export MOZ_TELEMETRY_REPORTING=1
 export MOZ_SOURCE_REPO=https://hg.mozilla.org/mozilla-unified
@@ -29,7 +30,7 @@ ac_add_options --with-system-webp
 ac_add_options --with-system-zlib
 ac_add_options --with-system-bz2
 ac_add_options --with-system-libevent
-#ac_add_options --with-system-libvpx
+ac_add_options --with-system-libvpx
 ac_add_options --with-system-harfbuzz
 ac_add_options --with-system-graphite2
 #ac_add_options --enable-system-hunspell
@@ -46,8 +47,8 @@ ac_add_options --enable-jack
 ac_add_options --enable-alsa
 ac_add_options --enable-startup-notification
 ac_add_options --enable-crashreporter
-ac_add_options --disable-updater
 
+ac_add_options --disable-updater
 ac_add_options --disable-gconf
 ac_add_options --disable-tests
 

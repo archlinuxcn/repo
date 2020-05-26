@@ -3,7 +3,7 @@
 pkgname=motrix-git
 _pkgname=motrix
 pkgver=1.5.13.r0.g402185e
-pkgrel=1
+pkgrel=2
 pkgdesc='A full-featured download manager'
 arch=('any')
 url='https://motrix.app/'
@@ -31,7 +31,6 @@ pkgver() {
 
 prepare() {
   sed -i 's/"postinstall"/"ignore"/' "${srcdir}/${_pkgname}/package.json"
-#  sed -i "s/4.2.4/7.1.4/g" "${srcdir}/${_pkgname}/package.json"
   rm -vf "${srcdir}/${_pkgname}/package-lock.json"
   echo "Creating desktop file..."
   gendesk -f -n --pkgname ${_pkgname} \
@@ -51,10 +50,10 @@ build() {
 package() {
   install -d "${pkgdir}/usr/bin" "${pkgdir}/usr/lib/${_pkgname}" "${pkgdir}/usr/share/applications" "${pkgdir}/usr/share/pixmaps"
   install -Dm644 "${srcdir}/${_pkgname}/extra/linux/engine/aria2.conf" "${pkgdir}/usr/lib/${_pkgname}/engine/aria2.conf"
+  install -Dm644 "${srcdir}/${_pkgname}/package.json" "${pkgdir}/usr/lib/${_pkgname}/app/package.json"
   ln -s /usr/bin/aria2c "${pkgdir}/usr/lib/${_pkgname}/engine/aria2c"
   cp -r "${srcdir}/${_pkgname}/dist" "${pkgdir}/usr/lib/${_pkgname}/app"
   cp -r "${srcdir}/${_pkgname}/node_modules" "${pkgdir}/usr/lib/${_pkgname}/app/node_modules"
-  echo '{"name": "'${_pkgname}'", "version": "v'${pkgver}'", "main": "./electron/main.js"}' > "${pkgdir}/usr/lib/${_pkgname}/app/package.json"
   install -Dm644 "${srcdir}/${_pkgname}/static/512x512.png" "${pkgdir}/usr/share/pixmaps/${_pkgname}.png"
   # launch script
   cat << EOF > "${pkgdir}/usr/bin/${_pkgname}"
