@@ -3,7 +3,7 @@
 # Github Contributor: Michael Herold <https://github.com/michaelherold>
 
 pkgname=heroku-cli
-pkgver=7.40.0
+pkgver=7.41.1
 _builddir=cli-${pkgver}
 pkgrel=1
 pkgdesc="a tool for creating and managing Heroku apps from the command line"
@@ -15,13 +15,13 @@ makedepends=('npm')
 optdepends=('git: Deploying to Heroku')
 conflicts=('heroku-client-standalone' 'heroku-toolbelt' 'ruby-heroku')
 source=("https://registry.npmjs.org/heroku/-/heroku-$pkgver.tgz")
-sha256sums=('95d3836e08f666b828e16caeaf59f3d68f7abf608a6510d495d1d6306f29e520')
-sha512sums=('1d2b89c81f61c809a0996e9f261361a0c56c8e48212e0b9a4f810f7eac06051fbfa4bf197a46d9a44a6aa9080b010fda9e88e9f862a2fd36a081f0ff78ddadd3')
+sha256sums=('2111270b3152793856f4aaf759116019479e1930ebb266fc1c8621f4e8db0adc')
+sha512sums=('f5d55e1914bdf177e1c01e2639a3f853d49c509062668eee7cf3a0fcddf928f1cdaaebcdeb2289199bca787a690b17578f276484e95f65f513d3a2dc18e18a10')
 noextract=("heroku-$pkgver.tgz")
 options=('!strip')
 
 package() {
-  npm install -g --no-progress --user root --prefix "$pkgdir/usr" --cache "$srcdir/npm-cache" heroku-$pkgver.tgz
+  npm install -g --user root --prefix "$pkgdir/usr" --cache "$srcdir/npm-cache" heroku-$pkgver.tgz
   mkdir -p "$pkgdir/usr/share/licenses/$pkgname"
   ln -s "../../../lib/node_modules/heroku/LICENSE" "$pkgdir/usr/share/licenses/$pkgname"
 
