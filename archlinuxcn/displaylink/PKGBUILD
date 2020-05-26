@@ -5,12 +5,12 @@
 
 pkgname=displaylink
 pkgver=5.3.1.34
-pkgrel=1
+pkgrel=2
 pkgdesc="Linux driver for DL-6xxx, DL-5xxx, DL-41xx and DL-3x00"
 arch=('i686' 'x86_64')
 url="http://www.displaylink.com/downloads/ubuntu.php"
 license=('custom' 'GPL2' 'LGPL2.1')
-depends=('evdi>=1.5.0' 'libusb>=1.0.0')
+depends=('evdi>=1.7.0' 'libusb>=1.0.0')
 makedepends=('grep' 'gawk' 'wget')
 install=
 changelog='DisplayLink USB Graphics Software for Ubuntu 5.3.1-Release Notes.txt'
@@ -59,14 +59,6 @@ package() {
   echo "Installing DisplayLink Manager $ARCH"
   install -D -m755 $ARCH/DisplayLinkManager $COREDIR/DisplayLinkManager
 
-  # I wonder if this is even necessary but I'm too lazy to find out
-  echo "Creating symlinks for evdi and libusb"
-  ln -s $(ldconfig -p | grep libevdi | awk 'NR==1{print $4}') $COREDIR/libevdi.so
-
-  ln -s $(ldconfig -p | grep libusb- | awk 'NR==1{print $4}') $COREDIR/libusb-1.0.so.0.1.0
-  ln -s $(ldconfig -p | grep libusb- | awk 'NR==1{print $4}') $COREDIR/libusb-1.0.so.0
-  ln -s $(ldconfig -p | grep libusb- | awk 'NR==1{print $4}') $COREDIR/libusb-1.0.so
-  
   echo "Installing firmware packages"
   install -D -m644 *.spkg $COREDIR
 
