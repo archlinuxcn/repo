@@ -1,6 +1,6 @@
 # HG changeset patch
 # User Thomas Deutschmann <whissi@gentoo.org>
-# Parent  3a154721ac07532973fcfa0dbec3e648bd5077c7
+# Parent  a58801e9e29b0db9da0b5d90b96f2e05ff062de1
 
 # Parent  66f9c84511dda432587261f6b9ebf07c4771aad8
 Add ability to use system-av1 (media-libs/libaom and media-libs/dav1d) instead of bundled.
@@ -8,7 +8,7 @@ Add ability to use system-av1 (media-libs/libaom and media-libs/dav1d) instead o
 diff --git a/config/external/moz.build b/config/external/moz.build
 --- a/config/external/moz.build
 +++ b/config/external/moz.build
-@@ -32,18 +32,19 @@ if CONFIG['MOZ_TREMOR']:
+@@ -34,18 +34,19 @@ if CONFIG['MOZ_TREMOR']:
  
  if CONFIG['MOZ_WEBM_ENCODER']:
      external_dirs += ['media/libmkv']
@@ -33,7 +33,7 @@ diff --git a/config/external/moz.build b/config/external/moz.build
 diff --git a/config/system-headers.mozbuild b/config/system-headers.mozbuild
 --- a/config/system-headers.mozbuild
 +++ b/config/system-headers.mozbuild
-@@ -1302,16 +1302,24 @@ else:
+@@ -1291,16 +1291,24 @@ else:
          'sys/event.h',
      ]
  
@@ -86,7 +86,7 @@ diff --git a/dom/media/platforms/moz.build b/dom/media/platforms/moz.build
 diff --git a/toolkit/moz.configure b/toolkit/moz.configure
 --- a/toolkit/moz.configure
 +++ b/toolkit/moz.configure
-@@ -473,32 +473,49 @@ imply_option('--enable-fmp4', ffmpeg, '-
+@@ -480,17 +480,33 @@ imply_option('--enable-fmp4', ffmpeg, '-
  option('--disable-av1',
          help='Disable av1 video support')
  
@@ -118,22 +118,6 @@ diff --git a/toolkit/moz.configure b/toolkit/moz.configure
          if target.cpu == 'aarch64':
              return True
          elif target.cpu in ('x86', 'x86_64'):
-             if nasm_version < '2.13':
-                 die('nasm 2.13 or greater is required for AV1 support. '
+             if nasm_version < '2.14':
+                 die('nasm 2.14 or greater is required for AV1 support. '
                      'Either install nasm or add --disable-av1 to your configure options.')
-             return True
- 
- 
- set_config('MOZ_DAV1D_ASM', dav1d_asm)
- set_define('MOZ_DAV1D_ASM', dav1d_asm)
- set_config('MOZ_AV1', av1)
- set_define('MOZ_AV1', av1)
-+set_config('MOZ_SYSTEM_AV1', depends_if(system_av1)(lambda _: True))
- 
- # Built-in fragmented MP4 support.
- # ==============================================================
- option('--disable-fmp4', env='MOZ_FMP4',
-        help='Disable support for in built Fragmented MP4 parsing')
- 
- @depends('--disable-fmp4', target, wmf, applemedia)
- def fmp4(value, target, wmf, applemedia):

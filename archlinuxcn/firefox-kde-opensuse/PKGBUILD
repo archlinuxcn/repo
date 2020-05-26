@@ -19,8 +19,8 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=72.0.2
-pkgrel=4
+pkgver=76.0.1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -34,7 +34,7 @@ depends=('mozilla-common' 'libxt' 'startup-notification' 'mime-types'
          # system harfbuzz
          'harfbuzz'
          # system graphite
-         'graphite'
+         'graphite-mozilla'
          # system webp
          'libwebp'
          # system libevent
@@ -51,7 +51,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'pulseaudio: Audio support')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=4c5d44d40a03
+_patchrev=3fd9346c90a6
 options=('!emptydirs')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -69,7 +69,6 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
-        Bug_1584000___Migrate_glyph_to_character_association_code.patch
         2000_system_harfbuzz_support.patch
         2001_system_graphite2_support.patch
         pgo.patch
@@ -77,9 +76,15 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         7002_system_av1_support.patch
         # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
         0001-Use-remoting-name-for-GDK-application-names.patch
-        # Workaround objects no being allocated with the correct alignment
-        # inside dom/indexedDB/ActorsParent.cpp
-        workaround_dom_indexdb_actorsparent_allignment.patch
+        # reenable system sqlite
+        5022efe33088.patch
+        # https://bugs.archlinux.org/task/66549
+        0001-Bug-1624128-Update-CK_GCM_PARAMS-uses-for-PKCS11-v3..patch
+        # Fix MOZILLA#1516803
+        # https://bugzilla.mozilla.org/show_bug.cgi?id=1516803
+        mozilla-1516803.patch
+        # Force disable elfhack to fix build errors
+        build-disable-elfhack.patch
 )
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -120,10 +125,6 @@ prepare() {
   
   # add globalmenu support
   patch -Np1 -i "$srcdir/unity-menubar.patch"
-
-  # Revert https://bugzilla.mozilla.org/show_bug.cgi?id=1584000
-  # To fix system graphite2
-  patch -R -p1 -i "$srcdir"/Bug_1584000___Migrate_glyph_to_character_association_code.patch
   
   patch -Np1 -i "$srcdir"/2000_system_harfbuzz_support.patch
   patch -Np1 -i "$srcdir"/2001_system_graphite2_support.patch
@@ -132,9 +133,18 @@ prepare() {
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
   patch -Np1 -i "$srcdir"/0001-Use-remoting-name-for-GDK-application-names.patch
 
-  # Workaround objects no being allocated with the correct alignment
-  # inside dom/indexedDB/ActorsParent.cpp
-  patch -Np1 -i "$srcdir"/workaround_dom_indexdb_actorsparent_allignment.patch
+  # https://bugs.archlinux.org/task/66549
+  patch -Np1 -i ../0001-Bug-1624128-Update-CK_GCM_PARAMS-uses-for-PKCS11-v3..patch
+  # reenable system sqlite
+  patch -R -p1 -i "$srcdir"/5022efe33088.patch
+
+  # Fix MOZILLA#1516803
+  # sandbox needs to be built with --param lto-partitions=1 when
+  # GCC LTO is enabled
+  patch -Np1 -i "$srcdir"/mozilla-1516803.patch
+
+  # Force disable elfhack to fix build errors
+  patch -Np1 -i "$srcdir"/build-disable-elfhack.patch
   
   if [[ $_pgo ]] ; then
     # add missing rule for pgo builds
@@ -146,7 +156,6 @@ prepare() {
     patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
 
     echo "ac_add_options --enable-lto" >> .mozconfig
-    echo "ac_add_options --disable-elf-hack" >> .mozconfig
   fi
 }
 
@@ -232,21 +241,23 @@ END
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 md5sums=('SKIP'
-         'f758e064e1463b90878790124f398197'
+         '141299821a0a0fb744a187750b01e1b6'
          'a26a061efb4def6572d5b319d657f1d6'
          '4c23d9c0a691d70919beb1dafbbecbd3'
          '05bb69d25fb3572c618e3adf1ee7b670'
-         'ad055db454c9263623fdbc857e8290fe'
-         '0756f1b090f9c3371df957257907b0c7'
-         '3bc553e23a3578991c7e205bfff1bb14'
-         'e083ae314eaa9355aa2d4aa75a7fc277'
-         '4ced0c5110d6471b79aaa6e4215a183c'
+         '6821ee347a094765776d8aec0a1d07e2'
+         '9fbeda9d97bdd05082e1b9b954839c65'
+         '69a4e699468346c47457186205c6316f'
+         '0f9fcd2ec38e339e4f2d602e1b13e3ef'
+         'dab1119e8575751064cd616718ce3eb4'
          'fe24f5ea463013bb7f1c12d12dce41b2'
-         '3fa8bd22d97248de529780f5797178af'
-         '0ca36620e6004703a3d0354ac5625576'
-         '28c2eff56d3d95da6e9ba444fc60e90b'
-         '8d0c0ebc805e4e52a3cb2c0dc64ea2de'
+         '39f19e3fc4acb7dd5ff92c656228c244'
+         'fc2299d95a9230c5bfe79462a7b1bfc6'
+         '86bf0a147c5d07b57caf81456db4bdc6'
          'f867ae41a722630cc5567e2dcc51676d'
-         'd87270bfe02ea30e2fde3fcae5daf18d'
+         '215e69f9941a0855e005a7b5a351df60'
          '0ffabb81dd8a5fe98bb8afe47d6541d3'
-         'a8b9025375443d1f41ae94360f495798')
+         'cae73e7bbb8496192bee5aa83dfa2e8d'
+         'b3955b522692ff778b571ae5014b4841'
+         'efcddfb6595b356b3faaf6b93313659e'
+         'aa9261c4d407cf809bf8275e6f2e52c7')

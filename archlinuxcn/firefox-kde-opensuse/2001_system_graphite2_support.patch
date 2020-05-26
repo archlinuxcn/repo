@@ -1,5 +1,5 @@
-From: Jan Beich <jbeich@FreeBSD.org>
-
+# HG changeset patch
+# Parent  6a7e586f839ddc687046e2b1fea168d7ad9b72bd
 Allow building against system-wide graphite2.
 
 https://bugzilla.mozilla.org/show_bug.cgi?id=847568
@@ -7,7 +7,7 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=847568
 diff --git a/config/system-headers.mozbuild b/config/system-headers.mozbuild
 --- a/config/system-headers.mozbuild
 +++ b/config/system-headers.mozbuild
-@@ -1235,16 +1235,22 @@ if CONFIG['OS_TARGET'] == 'Android':
+@@ -1234,16 +1234,22 @@ if CONFIG['OS_TARGET'] == 'Android':
  
  if CONFIG['MOZ_SYSTEM_HARFBUZZ']:
      system_headers += [
@@ -30,6 +30,32 @@ diff --git a/config/system-headers.mozbuild b/config/system-headers.mozbuild
  
  if CONFIG['MOZ_SYSTEM_JPEG']:
      system_headers += [
+diff --git a/gfx/graphite2/geckoextra/moz.build b/gfx/graphite2/geckoextra/moz.build
+new file mode 100644
+--- /dev/null
++++ b/gfx/graphite2/geckoextra/moz.build
+@@ -0,0 +1,21 @@
++# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
++# vim: set filetype=python:
++# This Source Code Form is subject to the terms of the Mozilla Public
++# License, v. 2.0. If a copy of the MPL was not distributed with this
++# file, You can obtain one at http://mozilla.org/MPL/2.0/.
++
++EXPORTS.graphite2 += [
++    'include/GraphiteExtra.h',
++    'include/GraphiteStructsForRLBox.h',
++]
++
++UNIFIED_SOURCES += [
++    '../geckoextra/src/GraphiteExtra.cpp',
++]
++
++CXXFLAGS += CONFIG['MOZ_GRAPHITE2_CFLAGS']
++
++# Match bundled graphite2 configuration
++AllowCompilerWarnings()
++
++FINAL_LIBRARY = 'gkmedias'
 diff --git a/gfx/graphite2/moz-gr-update.sh b/gfx/graphite2/moz-gr-update.sh
 --- a/gfx/graphite2/moz-gr-update.sh
 +++ b/gfx/graphite2/moz-gr-update.sh
@@ -77,7 +103,7 @@ diff --git a/gfx/graphite2/moz-gr-update.sh b/gfx/graphite2/moz-gr-update.sh
 diff --git a/gfx/moz.build b/gfx/moz.build
 --- a/gfx/moz.build
 +++ b/gfx/moz.build
-@@ -8,28 +8,30 @@ with Files('**'):
+@@ -8,28 +8,32 @@ with Files('**'):
      BUG_COMPONENT = ('Core', 'Graphics')
      SCHEDULES.inclusive += ['android-hw-gfx']
  with Files('wr/**'):
@@ -86,7 +112,9 @@ diff --git a/gfx/moz.build b/gfx/moz.build
  if CONFIG['MOZ_TREE_CAIRO']:
      DIRS += ['cairo']
  
-+if not CONFIG['MOZ_SYSTEM_GRAPHITE2']:
++if CONFIG['MOZ_SYSTEM_GRAPHITE2']:
++    DIRS += ['graphite2/geckoextra']
++else:
 +    DIRS += ['graphite2/src' ]
 +
  if not CONFIG['MOZ_SYSTEM_HARFBUZZ']:
@@ -112,7 +140,7 @@ diff --git a/gfx/moz.build b/gfx/moz.build
 diff --git a/gfx/thebes/moz.build b/gfx/thebes/moz.build
 --- a/gfx/thebes/moz.build
 +++ b/gfx/thebes/moz.build
-@@ -279,16 +279,19 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] in ('and
+@@ -281,16 +281,19 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] in ('and
  if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk':
      CXXFLAGS += CONFIG['MOZ_PANGO_CFLAGS']
  
@@ -136,7 +164,7 @@ diff --git a/gfx/thebes/moz.build b/gfx/thebes/moz.build
 diff --git a/old-configure.in b/old-configure.in
 --- a/old-configure.in
 +++ b/old-configure.in
-@@ -2649,16 +2649,37 @@ if test "$USE_FC_FREETYPE"; then
+@@ -2595,16 +2595,37 @@ if test "$USE_FC_FREETYPE"; then
          CPPFLAGS="$CPPFLAGS $FT2_CFLAGS $XCFLAGS"
          MOZ_CHECK_HEADERS([fontconfig/fcfreetype.h], ,
              [AC_MSG_ERROR(Can't find header fontconfig/fcfreetype.h.)], [#include <fontconfig/fontconfig.h>])
@@ -177,7 +205,7 @@ diff --git a/old-configure.in b/old-configure.in
 diff --git a/toolkit/library/moz.build b/toolkit/library/moz.build
 --- a/toolkit/library/moz.build
 +++ b/toolkit/library/moz.build
-@@ -240,16 +240,19 @@ if CONFIG['MOZ_ANDROID_GOOGLE_VR']:
+@@ -234,16 +234,19 @@ if CONFIG['MOZ_ANDROID_GOOGLE_VR']:
      OS_LIBS += [
          '-L%s' % CONFIG['MOZ_ANDROID_GOOGLE_VR_LIBS'],
          '-lgvr',
@@ -200,7 +228,7 @@ diff --git a/toolkit/library/moz.build b/toolkit/library/moz.build
 diff --git a/toolkit/moz.configure b/toolkit/moz.configure
 --- a/toolkit/moz.configure
 +++ b/toolkit/moz.configure
-@@ -390,16 +390,30 @@ def freetype2_combined_info(fontconfig_i
+@@ -399,16 +399,30 @@ def freetype2_combined_info(fontconfig_i
      return namespace(
          cflags=freetype2_info.cflags + fontconfig_info.cflags,
          libs=freetype2_info.libs + fontconfig_info.libs,
