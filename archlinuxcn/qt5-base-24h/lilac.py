@@ -1,4 +1,3 @@
-# Trimmed lilac.py
 #!/usr/bin/env python3
 
 from types import SimpleNamespace
@@ -12,6 +11,11 @@ g = SimpleNamespace()
 def pre_build():
   g.files = download_official_pkgbuild('qt5-base')
 
+  conflict_string=""
+  for line in open('qt5-pkgs').readlines():
+    p = line.strip()
+    conflict_string = conflict_string + "'" + p + ">$pkgver' "
+
   prepare = False
   checks = ''
   for line in edit_file('PKGBUILD'):
@@ -19,7 +23,7 @@ def pre_build():
       line = 'pkgbase=qt5-base-24h' + '\n' + '_origpkgname=qt5-base'
       checks = checks + '0'
     elif line.startswith('pkgrel='):
-      line = line + '.1'
+      line = line + '.2'
     elif line.startswith('pkgname='):
       line = 'pkgname=(qt5-base-24h)'
       checks = checks + '1'
@@ -30,7 +34,7 @@ def pre_build():
       line = line.replace('(', "('python2' ")
       checks = checks + '2'
     elif line.startswith('conflicts=('):
-      line = line.replace('(', '("qt5-base" ')
+      line = line.replace('(', '("qt5-base" ' + conflict_string)
       checks = checks + '3'
     elif line.startswith('groups=('):
       line = '''
