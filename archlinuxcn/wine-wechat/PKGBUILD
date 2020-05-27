@@ -2,13 +2,13 @@
 
 pkgname=wine-wechat
 pkgver=2.9.0
-pkgrel=3
+pkgrel=4
 pkgdesc='Run WeChat Windows version with Wine (Chinese version)'
 url='https://weixin.qq.com/'
 arch=('i686' 'x86_64')
 license=('custom')
 depends=('libarchive' 'zstd' 'python' 'winetricks'
-        'wine' 'lib32-libldap' 'wine_gecko')
+        'wine' 'lib32-libldap' 'wine_gecko' 'lib32-libpulse')
 
 source=("${pkgname}.tar.zst"
         "${pkgname}.desktop"
