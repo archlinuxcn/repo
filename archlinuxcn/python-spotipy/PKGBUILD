@@ -3,7 +3,7 @@
 
 pkgname=python-spotipy
 _pkgname=spotipy
-pkgver=2.11.2
+pkgver=2.12.0
 pkgrel=1
 pkgdesc='Simple client for the Spotify Web API'
 arch=(any)
@@ -31,4 +31,4 @@ package() {
   install -Dm644 LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
-sha256sums=('9473201662ae72f0defcf95ff3ebfee57dfa2183955f9f90d7796b8ba7d81530')
+sha256sums=('b0458d6acc1256e907c4e093d435c0081fabdc2cc78ad6c4aa0b581a2cd01dd0')
