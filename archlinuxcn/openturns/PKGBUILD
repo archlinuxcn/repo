@@ -1,14 +1,15 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=openturns
-pkgver=1.14
-pkgrel=2
+pkgver=1.15
+pkgrel=1
 pkgdesc='Uncertainty treatment library'
 license=('LGPL')
 arch=('x86_64')
 url='http://www.openturns.org'
 depends=(
   'blas'
+  'eigen'
   'intel-tbb'
   'lapack'
   'libxml2'
@@ -32,7 +33,7 @@ optdepends=(
   'python-matplotlib'
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/openturns/openturns/archive/v${pkgver}.tar.gz")
-sha256sums=('22f55bb3bc6e94a5308d94ad6b6272ea74145ba172746fdc1252a5869eb492a8')
+sha256sums=('116f30b36f5c1df15cffbbfa4b5dc103d42e746d85d5b9f9c7c3bcc02155934a')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
