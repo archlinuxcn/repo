@@ -1,6 +1,6 @@
 _name=httpx
 pkgname=python-httpx
-pkgver=0.13.2
+pkgver=0.13.3
 pkgrel=1
 pkgdesc="The next generation HTTP client."
 arch=(any)
@@ -9,11 +9,11 @@ license=('BSD')
 depends=('python-urllib3' 'python-h11' 'python-h2' 'python-chardet' 'python-hstspreload' 'python-idna' 'python-rfc3986' 'python-sniffio')
 makedepends=('python-setuptools')
 optdepends=('python-brotlipy: decoding for "brotli" compressed responses')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/httpx-0.13.2.tar.gz")
-sha256sums=('4387a6601839fb71f5aea57042e6b476f24ca118cc05c55f1e52ed8baaf0a45f')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/httpx-0.13.3.tar.gz")
+sha256sums=('3642bd13e90b80ba8a243a730275eb10a4c26ec96f5fc16b87e458d4ab21efae')
 
 prepare() {
-  cd "$srcdir/httpx-0.13.2"
+  cd "$srcdir/httpx-0.13.3"
   sed -i '/certifi/d' setup.py
   sed -e '/import certifi/d' \
       -e 's|certifi.where()|"/etc/ssl/certs/ca-certificates.crt"|' \
@@ -21,12 +21,12 @@ prepare() {
 }
 
 build() {
-  cd "$srcdir/httpx-0.13.2"
+  cd "$srcdir/httpx-0.13.3"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/httpx-0.13.2"
+  cd "$srcdir/httpx-0.13.3"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install annoying files
