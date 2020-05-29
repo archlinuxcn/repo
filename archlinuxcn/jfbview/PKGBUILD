@@ -3,15 +3,15 @@
 
 pkgname=jfbview
 pkgver=0.6.0
-pkgrel=1
+pkgrel=2
 pkgdesc="PDF and image viewer for the Linux framebuffer"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/jichu4n/jfbview"
 license=('Apache')
 makedepends=('cmake')
 depends=('ncurses' 'imlib2' 'libjpeg-turbo')
-conflicts=('jfbpdf' 'jfbview')
-replaces=('jfbpdf' 'jfbview')
+conflicts=('jfbpdf')
+replaces=('jfbpdf')
 source=("https://github.com/jichu4n/jfbview/releases/download/${pkgver}/jfbview-${pkgver}-full-source.zip")
 md5sums=('ac41da35a97c008424662d7dc489b841')
 
