@@ -1,4 +1,4 @@
-From eb56565511342bb166d227243b308af266c2d32d Mon Sep 17 00:00:00 2001
+From 7a8090e535edb22064b432a0a03b60a3b4c16b78 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Thu, 1 Aug 2019 14:18:17 -0400
 Subject: [PATCH 2/2] add back native style
@@ -10,38 +10,38 @@ Subject: [PATCH 2/2] add back native style
  3 files changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/mscore/musescore.cpp b/mscore/musescore.cpp
-index c2e67bf92..6d78aaaf9 100644
+index 0b917252f..c11a996e7 100644
 --- a/mscore/musescore.cpp
 +++ b/mscore/musescore.cpp
-@@ -7093,7 +7093,8 @@ bool MuseScore::saveMp3(Score* score, QIODevice* device, bool& wasCanceled)
+@@ -7613,7 +7613,8 @@ void tryToRequestTelemetryPermission()
  void MuseScore::updateUiStyleAndTheme()
-       {
-       // set UI Theme
--      QApplication::setStyle(QStyleFactory::create("Fusion"));
-+      if (preferences.globalStyle() != MuseScoreStyleType::NATIVE)
-+          QApplication::setStyle(QStyleFactory::create("Fusion"));
+ {
+     // set UI Theme
+-    QApplication::setStyle(QStyleFactory::create("Fusion"));
++    if (preferences.globalStyle() != MuseScoreStyleType::NATIVE)
++        QApplication::setStyle(QStyleFactory::create("Fusion"));
  
-       QString wd      = QString("%1/%2").arg(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).arg(QCoreApplication::applicationName());
-       // set UI Color Palette
+     QString wd = QString("%1/%2").arg(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).arg(
+         QCoreApplication::applicationName());
 diff --git a/mscore/preferences.h b/mscore/preferences.h
-index 0a78d00d8..3b3c50d49 100644
+index 1de43a5e1..fa50ac716 100644
 --- a/mscore/preferences.h
 +++ b/mscore/preferences.h
-@@ -64,7 +64,8 @@ enum {
+@@ -65,7 +65,8 @@ enum {
  
  enum class MuseScoreStyleType : char {
-       DARK_FUSION = 0,
--      LIGHT_FUSION
-+      LIGHT_FUSION,
-+      NATIVE
-       };
+     DARK_FUSION = 0,
+-    LIGHT_FUSION
++    LIGHT_FUSION,
++    NATIVE
+ };
  
  // MusicXML export break values
 diff --git a/mscore/prefsdialog.ui b/mscore/prefsdialog.ui
-index 3882f91d0..803a37d03 100644
+index d8a518ed6..d50c53926 100644
 --- a/mscore/prefsdialog.ui
 +++ b/mscore/prefsdialog.ui
-@@ -732,6 +732,11 @@
+@@ -474,6 +474,11 @@
                <string>Light</string>
               </property>
              </item>
@@ -54,5 +54,5 @@ index 3882f91d0..803a37d03 100644
            </item>
            <item row="2" column="3">
 -- 
-2.22.0
+2.26.2
 

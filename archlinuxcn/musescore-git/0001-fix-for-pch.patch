@@ -1,4 +1,4 @@
-From 7a59c7c28edc195b171865b8e8618eb879db98d3 Mon Sep 17 00:00:00 2001
+From 2abfb48ef7f38cc5bc2fce02950007117fed4ae3 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 20 Sep 2014 12:13:37 -0400
 Subject: [PATCH 1/2] fix for pch
@@ -8,10 +8,10 @@ Subject: [PATCH 1/2] fix for pch
  1 file changed, 1 insertion(+)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8cdf3b1d0..0f09888f2 100644
+index bf12993a1..c97afd993 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -724,6 +724,7 @@ if (NOT MSVC)
+@@ -730,6 +730,7 @@ if (NOT MSVC)
        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
        )
  endif (NOT MSVC)
@@ -20,5 +20,5 @@ index 8cdf3b1d0..0f09888f2 100644
  precompiled_header(QT_INCLUDES all ${BUILD_PCH})
  
 -- 
-2.22.0
+2.26.2
 
