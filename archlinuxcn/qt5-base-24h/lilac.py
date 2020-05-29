@@ -14,7 +14,7 @@ def pre_build():
   conflict_string=""
   for line in open('qt5-pkgs').readlines():
     p = line.strip()
-    conflict_string = conflict_string + "'" + p + ">$pkgver' "
+    conflict_string = conflict_string + '"' + p + '>$pkgver" '
 
   prepare = False
   checks = ''

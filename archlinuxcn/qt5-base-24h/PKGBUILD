@@ -6,7 +6,7 @@ _origpkgname=qt5-base
 pkgname=(qt5-base-24h)
 _qtver=5.14.2
 pkgver=${_qtver/-/}
-pkgrel=3.2
+pkgrel=3.3
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -26,7 +26,7 @@ optdepends=('qt5-svg: to use SVG icon themes'
             'freetds: MS SQL driver'
             'gtk3: GTK platform plugin'
             'perl: for fixqt4headers and syncqt')
-conflicts=("qt5-base" 'qt5-3d>$pkgver' 'qt5-charts>$pkgver' 'qt5-connectivity>$pkgver' 'qt5-datavis3d>$pkgver' 'qt5-declarative>$pkgver' 'qt5-doc>$pkgver' 'qt5-examples>$pkgver' 'qt5-gamepad>$pkgver' 'qt5-graphicaleffects>$pkgver' 'qt5-imageformats>$pkgver' 'qt5-location>$pkgver' 'qt5-lottie>$pkgver' 'qt5-multimedia>$pkgver' 'qt5-networkauth>$pkgver' 'qt5-purchasing>$pkgver' 'qt5-quick3d>$pkgver' 'qt5-quickcontrols>$pkgver' 'qt5-quickcontrols2>$pkgver' 'qt5-remoteobjects>$pkgver' 'qt5-script>$pkgver' 'qt5-scxml>$pkgver' 'qt5-sensors>$pkgver' 'qt5-serialbus>$pkgver' 'qt5-serialport>$pkgver' 'qt5-speech>$pkgver' 'qt5-svg>$pkgver' 'qt5-tools>$pkgver' 'qt5-translations>$pkgver' 'qt5-virtualkeyboard>$pkgver' 'qt5-wayland>$pkgver' 'qt5-webchannel>$pkgver' 'qt5-webengine>$pkgver' 'qt5-webglplugin>$pkgver' 'qt5-websockets>$pkgver' 'qt5-webview>$pkgver' 'qt5-x11extras>$pkgver' 'qt5-xmlpatterns>$pkgver' 'qtchooser')
+conflicts=("qt5-base" "qt5-3d>$pkgver" "qt5-charts>$pkgver" "qt5-connectivity>$pkgver" "qt5-datavis3d>$pkgver" "qt5-declarative>$pkgver" "qt5-doc>$pkgver" "qt5-examples>$pkgver" "qt5-gamepad>$pkgver" "qt5-graphicaleffects>$pkgver" "qt5-imageformats>$pkgver" "qt5-location>$pkgver" "qt5-lottie>$pkgver" "qt5-multimedia>$pkgver" "qt5-networkauth>$pkgver" "qt5-purchasing>$pkgver" "qt5-quick3d>$pkgver" "qt5-quickcontrols>$pkgver" "qt5-quickcontrols2>$pkgver" "qt5-remoteobjects>$pkgver" "qt5-script>$pkgver" "qt5-scxml>$pkgver" "qt5-sensors>$pkgver" "qt5-serialbus>$pkgver" "qt5-serialport>$pkgver" "qt5-speech>$pkgver" "qt5-svg>$pkgver" "qt5-tools>$pkgver" "qt5-translations>$pkgver" "qt5-virtualkeyboard>$pkgver" "qt5-wayland>$pkgver" "qt5-webchannel>$pkgver" "qt5-webengine>$pkgver" "qt5-webglplugin>$pkgver" "qt5-websockets>$pkgver" "qt5-webview>$pkgver" "qt5-x11extras>$pkgver" "qt5-xmlpatterns>$pkgver" 'qtchooser')
 
 provides=("qt5-base=$pkgver")
 
