@@ -49,7 +49,6 @@ source=('git://github.com/JuliaLang/julia'
         0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
         0002-Revert-deprecation-warning-for-old-parametric-method.patch
         0001-Optimize-GC-frame-push-pop-insertion.patch
-        35232.patch
         julia-compile-pkgs.jl
         julia-clear-precompile.sh
         julia-precompile.hook
@@ -60,7 +59,6 @@ md5sums=('SKIP'
          'f13c0f5ddd2ad990bb4560d9af1203ac'
          'f90e6a0139600b182d6c36e6c7cf3492'
          '3dbb81b1dae3a9d977bd69f8354b3007'
-         '566f8c29977e9f81cfe7956e6344dce5'
          '0b3bfcd680da2dc47d861b04ee695f52'
          '6e7fcba300512df8ab8ab65d3e1eb847'
          'f1f6ffc7ddcbc7fa0000d6f5fdbbe925'
@@ -149,7 +147,6 @@ EOF
   # patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
   # patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
   # patch -Np1 < ../0001-Optimize-GC-frame-push-pop-insertion.patch
-  patch -Np1 < ../35232.patch
 
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' src/Makefile ui/Makefile
 }
