@@ -23,7 +23,7 @@ def pre_build():
       line = 'pkgbase=qt5-base-24h' + '\n' + '_origpkgname=qt5-base'
       checks = checks + '0'
     elif line.startswith('pkgrel='):
-      line = line + '.2'
+      line = line + '.3'
     elif line.startswith('pkgname='):
       line = 'pkgname=(qt5-base-24h)'
       checks = checks + '1'
