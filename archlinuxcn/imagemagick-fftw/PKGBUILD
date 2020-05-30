@@ -3,7 +3,7 @@
 
 pkgbase=imagemagick-fftw
 pkgname=(imagemagick-fftw)
-pkgver=7.0.10.14
+pkgver=7.0.10.15
 pkgrel=1
 pkgdesc="An image viewing/manipulation program"
 url="https://www.imagemagick.org/"
@@ -17,7 +17,7 @@ _tarname=ImageMagick-${pkgver%.*}-${pkgver##*.}
 source=(https://imagemagick.org/download/$_tarname.tar.xz{,.asc}
         arch-fonts.diff
         imagemagick-inkscape-1.0.patch)
-sha256sums=('f7abbc65cce01caa314ef4cc9acf8adfa7b633689901a52f29d681230a997c59'
+sha256sums=('957f1468d152350e6160b8138a18e26fff87f73da775fe6f34fdfd63621e99e5'
             'SKIP'
             'a85b744c61b1b563743ecb7c7adad999d7ed9a8af816650e3ab9321b2b102e73'
             'dd856b0d7b5b98535d2bc61dfa995f4162677486c1eac14b384668a28a60af30')
