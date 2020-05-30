@@ -6,7 +6,7 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome-dev
-pkgver=84.0.4147.21
+pkgver=85.0.4158.4
 pkgrel=1
 pkgdesc="The popular and trusted web browser by Google (Dev Channel)"
 arch=('x86_64')
@@ -30,7 +30,7 @@ _channel=unstable
 source=("http://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-${_channel}/google-chrome-${_channel}_${pkgver}-1_amd64.deb"
 	'eula_text.html'
 	"google-chrome-$_channel.sh")
-sha512sums=('24c23a8cd9a930b4df43fde4e531a2ca6980c295d254229cd3adc0cc6683b2feccecdbc6a27acc98a92f89964e311800440b85bf03ea0ff55f3a8015c451a11c'
+sha512sums=('665e3fa8c2b1eab21ebb68ca6184af781e1b2b89cbef1f20d8cbf0f71eccbb46e32e47130f0d16c20450a817baf31c89e7d63a26c9f6dc92469515ba3e64cfb0'
             'a225555c06b7c32f9f2657004558e3f996c981481dbb0d3cd79b1d59fa3f05d591af88399422d3ab29d9446c103e98d567aeafe061d9550817ab6e7eb0498396'
             '349fc419796bdea83ebcda2c33b262984ce4d37f2a0a13ef7e1c87a9f619fd05eb8ff1d41687f51b907b43b9a2c3b4a33b9b7c3a3b28c12cf9527ffdbd1ddf2e')
 
