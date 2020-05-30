@@ -17,7 +17,7 @@ pkgname=(rust-nightly
          rust-std-nightly-x86_64-unknown-linux-musl
         )
 pkgver=1.45.0_20200530
-pkgrel=1
+pkgrel=2
 epoch=4
 pkgdesc="A safe, concurrent, practical language from Mozilla (nightly version)"
 arch=('i686' 'x86_64')
@@ -116,7 +116,7 @@ package_rust-nightly() {
   rm -r "$pkgdir/usr/share/doc"
   cd "$pkgdir"/usr/lib
   for so in *.so; do
-    if [[ $so = librustc_* ]]; then
+    if [[ $so != libstd-* && $so != libtest-* ]]; then
       continue
     fi
     rm $so

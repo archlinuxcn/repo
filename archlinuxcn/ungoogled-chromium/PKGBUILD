@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=81.0.4044.138
+pkgver=83.0.4103.61
 _rel=1
 pkgrel=1
 _launcher_ver=6
@@ -18,7 +18,8 @@ depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-liberation' 'systemd' 'dbus' 'libpulse' 'pciutils' 'json-glib'
          'desktop-file-utils' 'hicolor-icon-theme')
 makedepends=('python' 'python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git'
-             'libpipewire02' 'clang' 'lld' 'gn' 'java-runtime-headless')
+             'libpipewire02' 'clang' 'lld' 'gn' 'java-runtime-headless'
+             'python2-setuptools')
 optdepends=('pepper-flash: support for Flash content'
             'libpipewire02: WebRTC desktop sharing under Wayland'
             'kdialog: needed for file dialogs in KDE'
@@ -30,13 +31,17 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
         https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-${_rel}.tar.gz
         https://github.com/ungoogled-software/ungoogled-chromium-archlinux/archive/${_archver}.tar.gz
-        rename-Relayout-in-DesktopWindowTreeHostPlatform.patch
-        rebuild-Linux-frame-button-cache-when-activation.patch
         vdpau-support.patch
-        icu67.patch
         clean-up-a-call-to-set_utf8.patch
+        iwyu-std-numeric_limits-is-defined-in-limits.patch
+        add-missing-algorithm-header-in-crx_install_error.cc.patch
+        libstdc-fix-incomplete-type-in-AXTree-for-NodeSetSiz.patch
+        include-memory-header-to-get-the-definition-of-std-u.patch
+        make-some-of-blink-custom-iterators-STL-compatible.patch
+        avoid-double-destruction-of-ServiceWorkerObjectHost.patch
+        v8-remove-soon-to-be-removed-getAllFieldPositions.patch
+        chromium-83-gcc-10.patch
         vaapi-build-fix.patch
-        chromium-widevine.patch
         chromium-skia-harmony.patch)
 sha256sums=('f478f28b8111cb70231df4c36e754d812ad7a94b7c844e9d0515345a71fd77a6'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
@@ -91,16 +96,12 @@ prepare() {
     third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
     third_party/libxml/chromium/*.cc
 
-  # https://crbug.com/1049258
-  patch -Np1 -i ../rename-Relayout-in-DesktopWindowTreeHostPlatform.patch
-  patch -Np1 -i ../rebuild-Linux-frame-button-cache-when-activation.patch
 
-   # https://crbug.com/v8/10393
-  patch -Np3 -d v8 <../icu67.patch
+  # https://crbug.com/v8/10393
+  patch -Np1 -d v8 <../v8-remove-soon-to-be-removed-getAllFieldPositions.patch
 
-  # Load bundled Widevine CDM if available (see chromium-widevine in the AUR)
-  # M79 is supposed to download it as a component but it doesn't seem to work
-  patch -Np1 -i ../chromium-widevine.patch
+  # Fixes from Gentoo
+  patch -Np1 -i ../chromium-83-gcc-10.patch
 
   # https://crbug.com/skia/6663#c10
   patch -Np0 -i ../chromium-skia-harmony.patch
@@ -108,11 +109,27 @@ prepare() {
   # Fix VA-API on Nvidia
   patch -Np1 -i ../vdpau-support.patch
 
-  # Fix VAAPI build on chromium 81+
-  patch -Np1 -i ../vaapi-build-fix.patch
 
   # https://chromium-review.googlesource.com/c/chromium/src/+/2145261
   patch -Np1 -i ../clean-up-a-call-to-set_utf8.patch
+
+  # https://chromium-review.googlesource.com/c/chromium/src/+/2153111
+  patch -Np1 -F3 -i ../iwyu-std-numeric_limits-is-defined-in-limits.patch
+
+  # https://chromium-review.googlesource.com/c/chromium/src/+/2152333
+  patch -Np1 -i ../add-missing-algorithm-header-in-crx_install_error.cc.patch
+
+  # https://chromium-review.googlesource.com/c/chromium/src/+/2132403
+  patch -Np1 -i ../libstdc-fix-incomplete-type-in-AXTree-for-NodeSetSiz.patch
+
+  # https://chromium-review.googlesource.com/c/chromium/src/+/2164645
+  patch -Np1 -i ../include-memory-header-to-get-the-definition-of-std-u.patch
+
+  # https://chromium-review.googlesource.com/c/chromium/src/+/2174199
+  patch -Np1 -i ../make-some-of-blink-custom-iterators-STL-compatible.patch
+
+  # https://chromium-review.googlesource.com/c/chromium/src/+/2094496
+  patch -Np1 -i ../avoid-double-destruction-of-ServiceWorkerObjectHost.patch
 
   # Ungoogled chromium stuff
   _ungoogled_repo="$srcdir/$pkgname-$pkgver-${_rel}"
@@ -139,6 +156,7 @@ prepare() {
     find "third_party/$_lib" -type f \
       \! -path "third_party/$_lib/chromium/*" \
       \! -path "third_party/$_lib/google/*" \
+      \! -path "third_party/harfbuzz-ng/utils/hb_scoped.h" \
       \! -path 'third_party/yasm/run_yasm.py' \
       \! -regex '.*\.\(gn\|gni\|isolate\)' \
       -delete

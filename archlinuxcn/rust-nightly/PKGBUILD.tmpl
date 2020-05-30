@@ -58,7 +58,7 @@ package_rust-nightly() {
   rm -r "$pkgdir/usr/share/doc"
   cd "$pkgdir"/usr/lib
   for so in *.so; do
-    if [[ $so = librustc_* ]]; then
+    if [[ $so != libstd-* && $so != libtest-* ]]; then
       continue
     fi
     rm $so
