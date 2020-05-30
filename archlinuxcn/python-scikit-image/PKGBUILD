@@ -41,7 +41,7 @@ build() {
 }
 
 package() {
-  cd ${srcdir}/${_pyname}-${pkgver}
+  cd ${srcdir}/${_name}-${pkgver}
   install -D -m644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}"
   python setup.py install --root=${pkgdir} --prefix=/usr --optimize=1 --skip-build
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
