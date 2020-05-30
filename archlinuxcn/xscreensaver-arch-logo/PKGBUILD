@@ -5,7 +5,7 @@
 
 pkgname=xscreensaver-arch-logo
 pkgver=5.44
-pkgrel=2
+pkgrel=3
 pkgdesc='Screen saver and locker for the X Window System with Arch Linux branding'
 url='https://www.jwz.org/xscreensaver/'
 arch=('x86_64')
@@ -16,7 +16,7 @@ optdepends=('gdm: for login manager support')
 conflicts=('xscreensaver')
 provides=('xscreensaver')
 backup=('etc/pam.d/xscreensaver')
-source=(http://www.jwz.org/xscreensaver/${pkgname%%-*}-${pkgver}.tar.gz
+source=(https://www.jwz.org/xscreensaver/${pkgname%%-*}-${pkgver}.tar.gz
 LICENSE logo-50.xpm logo-180.xpm logo-50.png logo-180.png)
 sha1sums=('3e93aa745aa986cf521de31b6e731f990302c920'
           '3eedb8b91b13c29df9b1fe5cbb027e1470b802d2'
