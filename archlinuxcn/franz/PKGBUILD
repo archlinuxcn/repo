@@ -5,7 +5,7 @@
 pkgname=franz
 #pkgver=${_pkgver//-/_} # Leaving it here for possible dev/beta package :)
 pkgver=5.5.0
-pkgrel=2
+pkgrel=4
 # Due to the previous "_beta" naming
 epoch=1
 pkgdesc='Free messaging app for services like WhatsApp, Slack, Messenger and many more.'
@@ -20,14 +20,18 @@ depends=($_electron)
 makedepends=(expac git npm python)
 source=("git+https://github.com/meetfranz/$pkgname#tag=v$pkgver"
         'franz.desktop'
-        'franz.sh')
+        'franz.sh'
+        0001-.patch)
 sha512sums=('SKIP'
             '049c4bf2e0f362f892e8eef28dd18a6c321251c686a9c9e49e4abfb778057de2fc68b95b4ff7bb8030a828a48b58554a56b810aba078c220cb01d5837083992e'
-            '8584507cfc2736f4736637925536b2c06063c59cd943346717633564ae88b64c5eea294c8897f1250812478ed493f54a470501e98e99d084a2ff012dff9671f8')
+            '8584507cfc2736f4736637925536b2c06063c59cd943346717633564ae88b64c5eea294c8897f1250812478ed493f54a470501e98e99d084a2ff012dff9671f8'
+            '463b07949c789d2be7568b93e0c7f79ab5fc753aef4c869c40ba29444ba10c12db4ad1bc0353d8b73a51619bcd8666ed3c72c070cb24b05087604e04791bda52')
 
 prepare() {
   # Small patching
   cd $pkgname
+
+  patch -Np1 --no-backup-if-mismatch < ../0001-.patch
 
   # Prevent franz from being launched in dev mode
   sed -i \
