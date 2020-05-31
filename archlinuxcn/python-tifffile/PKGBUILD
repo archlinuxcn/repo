@@ -1,0 +1,35 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+# Contributor: Francois Boulogne <fboulogne at april dot org>
+
+_name=tifffile
+pkgname=python-tifffile
+pkgver=2020.5.25
+pkgrel=2
+pkgdesc="Read and write image data from and to TIFF files"
+arch=('any')
+url="https://pypi.python.org/pypi/tifffile"
+license=('BSD')
+depends=(
+  python-numpy
+)
+optdepends=(
+  "python-matplotlib: for plotting"
+)
+makedepends=(
+  python-setuptools
+)
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha256sums=('12a9ffc702de8f5ea6a7c39f69654143fb419059773e964be6293a16a0b2cbf9')
+
+build() {
+  cd "${srcdir}/${_name}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${srcdir}/${_name}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+
+# vim:ts=2:sw=2:et:

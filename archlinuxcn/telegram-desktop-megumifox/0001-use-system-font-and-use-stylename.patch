@@ -1,0 +1,49 @@
+From fb1f741c2dfa6631bd15f9d094d40cd5e7a7a9b7 Mon Sep 17 00:00:00 2001
+From: Megumi_fox <i@megumifox.com>
+Date: Thu, 14 May 2020 19:17:55 +0800
+Subject: [PATCH] use system font and use stylename
+
+---
+ ui/style/style_core_font.cpp | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/ui/style/style_core_font.cpp b/ui/style/style_core_font.cpp
+index 4209fd4..41df7be 100644
+--- a/ui/style/style_core_font.cpp
++++ b/ui/style/style_core_font.cpp
+@@ -106,6 +106,15 @@ bool LoadCustomFont(const QString &filePath, const QString &familyName, int flag
+ 	return QString();
+ }
+ 
++QString GeneralFont() {
++	static const auto family = [&]() -> QString {
++	const auto type = QFontDatabase::GeneralFont;
++	return QFontDatabase::systemFont(type).family();
++	}();
++
++	return family;
++}
++
+ QString MonospaceFont() {
+ 	static const auto family = [&]() -> QString {
+ 		const auto manual = ManualMonospaceFont();
+@@ -274,7 +283,7 @@ QString GetPossibleEmptyOverride(int32 flags) {
+ 
+ QString GetFontOverride(int32 flags) {
+ 	const auto result = GetPossibleEmptyOverride(flags);
+-	return result.isEmpty() ? "Open Sans" : result;
++	return result.isEmpty() ? GeneralFont() : result;
+ }
+ 
+ void destroyFonts() {
+@@ -320,6 +329,7 @@ FontData::FontData(int size, uint32 flags, int family, Font *other)
+ 	if ((_flags & FontBold) || (_flags & FontSemibold)) {
+ #ifdef DESKTOP_APP_USE_PACKAGED_FONTS
+ 		f.setWeight(QFont::DemiBold);
++        f.setStyleName("Medium");
+ #else // DESKTOP_APP_USE_PACKAGED_FONTS
+ 		f.setBold(true);
+ 		f.setStyleName("Semibold");
+-- 
+2.26.2
+

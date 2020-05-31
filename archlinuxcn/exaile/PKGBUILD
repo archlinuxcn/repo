@@ -7,48 +7,53 @@
 # Contributor: Joshua Stiefer <facedelajunk@gmail.com>
 
 pkgname=exaile
-pkgver=4.0.2
+_pkgver=4.1.0-alpha1
+pkgver=${_pkgver//-/}
 pkgrel=2
 pkgdesc="A full-featured Amarok-style media player for GTK+"
 arch=('any')
 url="https://www.exaile.org/"
 license=('GPL2')
-depends=('python2>=2.7'
-	'gtk3>=3.10.0'
-	'gst-python2>=1.4.0'
-	'gst-plugins-base>=1.6.0'
-	'gst-plugins-good>=1.4.0'
-	'python2-mutagen>=1.10.0'
-	'python2-dbus'
-	'pygobject-devel>=3.13.2'
-	'python2-cairo')
-makedepends=('help2man')
-#checkdepends=('python-mox3' 'python-pytest')
+depends=('python>=3.6'
+	'python-bsddb'
+	'gtk3>=3.22.0'
+	'gst-python>=1.14.0'
+	'gst-plugins-base>=1.14.0'
+	'gst-plugins-good>=1.14.0'
+	'python-mutagen>=1.38.0'
+	'python-dbus'
+	'python-cairo'
+	'python-gobject')
+makedepends=('pygobject-devel>=3.22.0' 'help2man')
+checkdepends=('python-mox3' 'python-pytest')
 optdepends=('udisks2: device detection'
 	'cddb-py: CD info'
-	'spydaap: DAAP plugins (daapserver and daapclient)'
-	'python2-pylast: Last.FM integration'
-	'python2-beautifulsoup4: lyrics from lyrics.wikia.com (lyricwiki)'
-	'python2-musicbrainzngs: Musicbrainz covers'
-	'python2-feedparser: podcast plugin'
+	'python-zeroconf: DAAP plugins (daapserver and daapclient)'
+	'python-pylast: Last.FM integration'
+	'python-lxml: lyrics from lyricsmania.com (lyricsmania)'
+	'python-beautifulsoup4: lyrics from lyrics.wikia.com (lyricwiki)'
+	'python-musicbrainzngs: Musicbrainz covers'
+	'python-feedparser: podcast plugin'
 	'webkit2gtk: Wikipedia info'
 	'libkeybinder3: Xlib-based hotkeys'
-	'librsvg: scalable icons')
-source=("https://github.com/$pkgname/$pkgname/releases/download/$pkgver/$pkgname-$pkgver.tar.gz")
-sha512sums=('4b0629d68d426493b8ba9295c755919c9d9919ee916952339b06206b8e1eb86145e5c5975cc21ecd8b9ab6b266eaaff0855e9a5154beb951033564a6dcf0ca37')
+	'librsvg: scalable icons'
+	'libnotify: recording streams'
+	'moodbar: moodbar plugin'
+	'gst-plugins-bad: BPM Counter plugin')
+source=("$pkgname-$_pkgver.tar.gz::https://github.com/exaile/exaile/archive/$_pkgver.tar.gz")
+sha512sums=('56e73f7cc4d250fbc30870170b50f65f0f99d27e97a8f28dd043af9eb93c919a8de3ed790cbd6c441133232afb3c405fa830cb62c8c33bb0a6e4d97b79d5b54d')
 
 build() {
-	cd "$srcdir/$pkgname-$pkgver"
+	cd "$srcdir/$pkgname-$_pkgver"
 	make PREFIX="/usr"
 }
 
-# Tests are broken (python2-mox3 package has been removed)
-#check() {
-#	cd "$srcdir/$pkgname-$pkgver"
-#	make test
-#}
+check() {
+	cd "$srcdir/$pkgname-$_pkgver"
+	make PYTEST=py.test test
+}
 
 package() {
-	cd "$srcdir/$pkgname-$pkgver"
+	cd "$srcdir/$pkgname-$_pkgver"
 	make PREFIX="/usr" DESTDIR="$pkgdir" install
 }

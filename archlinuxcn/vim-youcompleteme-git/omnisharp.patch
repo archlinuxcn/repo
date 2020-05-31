@@ -1,8 +1,8 @@
 diff --git a/ycmd/completers/cs/cs_completer.py b/ycmd/completers/cs/cs_completer.py
-index 7eda0496..6db93fb8 100644
+index a80e6989..00fe03f7 100644
 --- a/ycmd/completers/cs/cs_completer.py
 +++ b/ycmd/completers/cs/cs_completer.py
-@@ -42,12 +42,9 @@ SERVER_NOT_FOUND_MSG = ( 'OmniSharp server binary not found at {0}. ' +
+@@ -38,12 +38,9 @@ SERVER_NOT_FOUND_MSG = ( 'OmniSharp server binary not found at {0}. ' +
                           '"./install.py --cs-completer".' )
  INVALID_FILE_MESSAGE = 'File is invalid.'
  NO_DIAGNOSTIC_MESSAGE = 'No diagnostic for current line!'
@@ -11,9 +11,9 @@ index 7eda0496..6db93fb8 100644
 -  '..', '..', '..', 'third_party', 'omnisharp-roslyn'
 -)
 +PATH_TO_ROSLYN_OMNISHARP = os.path.join('/','opt','omnisharp-roslyn-http')
- PATH_TO_ROSLYN_OMNISHARP_BINARY = os.path.join(
+ PATH_TO_OMNISHARP_ROSLYN_BINARY = os.path.join(
 -  PATH_TO_ROSLYN_OMNISHARP, 'Omnisharp.exe' )
 +  PATH_TO_ROSLYN_OMNISHARP, 'OmniSharp.exe' )
- if ( not os.path.isfile( PATH_TO_ROSLYN_OMNISHARP_BINARY )
+ if ( not os.path.isfile( PATH_TO_OMNISHARP_ROSLYN_BINARY )
       and os.path.isfile( os.path.join( PATH_TO_ROSLYN_OMNISHARP, 'run' ) ) ):
-   PATH_TO_ROSLYN_OMNISHARP_BINARY = (
+   PATH_TO_OMNISHARP_ROSLYN_BINARY = (

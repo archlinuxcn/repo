@@ -1,0 +1,52 @@
+# Maintainer: Megumi_fox <megumifox@archlinuxcn.org>
+# Contributor: Sven-Hendrik Haase <svenstaro@gmail.com>
+# Contributor: hexchain <i@hexchain.org>
+pkgname=telegram-desktop-megumifox
+_pkgname=telegram-desktop
+pkgver=2.1.7
+pkgrel=2
+pkgdesc='Official Telegram Desktop client with megumifox patch'
+arch=('x86_64')
+url="https://desktop.telegram.org/"
+license=('GPL3')
+depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
+         'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5')
+makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected')
+optdepends=('ttf-opensans: default Open Sans font family')
+provides=('telegram-desktop')
+conflicts=('telegram-desktop')
+source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
+         telegram-desktop-qt5.15.patch
+         "0001-use-system-font-and-use-stylename.patch")
+sha512sums=('f942ce93d9671f3bb95a8fbba107fc851bfe3f28871c9651f6f2d97d711602f8a671f7b74750894b2175d33a67c25017562cd4ee455da7aa9b86755d1c3f1cfb'
+            '6bbe0583103d575a1413141799985c7c7b590d8a9856c727320ce322679a3d38343a144c314eee54fa9776c8f3a084627a333e6860d1b8cb8f496b1702070ac0'
+            '4d7b3ac50095ca933af83af5ea15f844ecea4d7510a4a3c97dd31240cb1cf67b39f15ffa2665a9bdcb57d85890ab02bd21ac0281e07ae93e06ea5811684b7205')
+
+prepare() {
+    patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-use-system-font-and-use-stylename.patch
+    patch -d tdesktop-$pkgver-full -p1 -i ../telegram-desktop-qt5.15.patch
+}
+
+build() {
+    cd tdesktop-$pkgver-full
+
+    # export CXXFLAGS="$CXXFLAGS -ffile-prefix-map=$srcdir/tdesktop-$pkgver-full="
+    cmake -B build -G Ninja . \
+        -DCMAKE_INSTALL_PREFIX="/usr" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DTDESKTOP_API_TEST=ON \
+        -DDESKTOP_APP_USE_PACKAGED_RLOTTIE=OFF \
+        -DDESKTOP_APP_USE_PACKAGED_VARIANT=OFF \
+        -DDESKTOP_APP_USE_PACKAGED_GSL=OFF \
+        -DDESKTOP_APP_USE_PACKAGED_FONTS=ON \
+        -DTDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME=ON \
+        -DTDESKTOP_USE_PACKAGED_TGVOIP=OFF \
+        -DDESKTOP_APP_SPECIAL_TARGET="" \
+        -DTDESKTOP_LAUNCHER_BASENAME="telegramdesktop"
+    ninja -C build
+}
+
+package() {
+    cd tdesktop-$pkgver-full
+    DESTDIR=$pkgdir ninja -C build install
+}

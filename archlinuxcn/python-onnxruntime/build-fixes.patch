@@ -29,6 +29,32 @@ index 3cee60f3..3328fc06 100644
  
  if(onnxruntime_PREFER_SYSTEM_LIB)
    find_package(re2)  
+@@ -1009,18 +1009,19 @@
+ # some of the tests rely on the shared libs to be
+ # built; hence the ordering
+ if (onnxruntime_BUILD_UNIT_TESTS)
+-  if (onnxruntime_ENABLE_PYTHON)
+-    if(UNIX)
+-      set(CMAKE_SKIP_BUILD_RPATH ON)
+-    endif()
+-    include(onnxruntime_python.cmake)
+-  endif()
+   # we need to make sure this is turned off since it
+   # turned ON by the previous step when building a shared lib
+   set(CMAKE_SKIP_BUILD_RPATH OFF)
+   include(onnxruntime_unittests.cmake)
+ endif()
+ 
++if (onnxruntime_ENABLE_PYTHON)
++  if(UNIX)
++    set(CMAKE_SKIP_BUILD_RPATH ON)
++  endif()
++  include(onnxruntime_python.cmake)
++endif()
++
+ if (onnxruntime_ENABLE_TRAINING)
+   include(onnxruntime_training.cmake)
+   if (onnxruntime_ENABLE_TRAINING_E2E_TESTS)
 diff --git a/cmake/external/Findre2.cmake b/cmake/external/Findre2.cmake
 new file mode 100644
 index 00000000..4c91696c
@@ -46,11 +72,11 @@ index d33e9e14..5770e818 100644
      endif()
  endif()
  
--onnxruntime_add_include_to_target(onnxruntime_common date_interface safeint_interface)
-+onnxruntime_add_include_to_target(onnxruntime_common date::date safeint_interface)
- target_include_directories(onnxruntime_common PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${ONNXRUNTIME_ROOT}
-         PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/external/nsync/public")
- 
+-onnxruntime_add_include_to_target(onnxruntime_common date_interface wil)
++onnxruntime_add_include_to_target(onnxruntime_common date::date wil)
+ target_include_directories(onnxruntime_common
+     PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${ONNXRUNTIME_ROOT} ${eigen_INCLUDE_DIRS}
+     # safeint is part of onnxruntime_common public interface, so we want to propagate its includes
 diff --git a/cmake/onnxruntime_python.cmake b/cmake/onnxruntime_python.cmake
 index 7dce1309..7102975b 100644
 --- a/cmake/onnxruntime_python.cmake
@@ -71,6 +97,15 @@ index 7dce1309..7102975b 100644
  )
  set_property(TARGET onnxruntime_pybind11_state APPEND_STRING PROPERTY LINK_FLAGS ${ONNXRUNTIME_SO_LINK_FLAG} ${onnxruntime_DELAYLOAD_FLAGS})
  add_dependencies(onnxruntime_pybind11_state ${onnxruntime_pybind11_state_dependencies})
+@@ -192,7 +190,7 @@
+     "${ONNXRUNTIME_ROOT}/python/datasets/*.onnx"
+ )
+ 
+-set(test_data_target onnxruntime_test_all)
++set(test_data_target onnxruntime_pybind11_state)
+ 
+ add_custom_command(
+   TARGET onnxruntime_pybind11_state POST_BUILD
 diff --git a/cmake/onnxruntime_unittests.cmake b/cmake/onnxruntime_unittests.cmake
 index d1bd347c..0c4b81e4 100644
 --- a/cmake/onnxruntime_unittests.cmake
@@ -79,8 +114,8 @@ index d1bd347c..0c4b81e4 100644
    else()
      target_link_libraries(${_UT_TARGET} PRIVATE ${_UT_LIBS} GTest::gtest GTest::gmock ${onnxruntime_EXTERNAL_LIBRARIES})
    endif()
--  onnxruntime_add_include_to_target(${_UT_TARGET} date_interface safeint_interface)
-+  onnxruntime_add_include_to_target(${_UT_TARGET} date::date safeint_interface)
+-  onnxruntime_add_include_to_target(${_UT_TARGET} date_interface)
++  onnxruntime_add_include_to_target(${_UT_TARGET} date::date)
    target_include_directories(${_UT_TARGET} PRIVATE ${TEST_INC_DIR})
    if (onnxruntime_USE_CUDA)
      target_include_directories(${_UT_TARGET} PRIVATE ${CUDA_INCLUDE_DIRS} ${onnxruntime_CUDNN_HOME}/include)
@@ -89,37 +124,11 @@ index 57159083..9fa7dce0 100644
 --- a/onnxruntime/core/session/inference_session_utils.h
 +++ b/onnxruntime/core/session/inference_session_utils.h
 @@ -6,7 +6,7 @@
- #include "core/session/inference_session.h"
- #include "core/framework/session_options.h"
- #include "core/common/common.h"
+ #pragma warning(push)
+ #pragma warning(disable : 28020)
+ #endif
 -#include "single_include/nlohmann/json.hpp"
 +#include <nlohmann/json.hpp>
- 
- using json = nlohmann::json;
- 
-diff --git a/onnxruntime/test/providers/cpu/ml/linearregressor_test.cc b/onnxruntime/test/providers/cpu/ml/linearregressor_test.cc
-index c6eb3f5f..2b6dff61 100644
---- a/onnxruntime/test/providers/cpu/ml/linearregressor_test.cc
-+++ b/onnxruntime/test/providers/cpu/ml/linearregressor_test.cc
-@@ -73,7 +73,7 @@ TEST_P(LinearRegressorTest, LinearRegressorUniTarget) {
- }
- 
- // For PROBIT, all the output values are NaN.
--INSTANTIATE_TEST_SUITE_P(
-+INSTANTIATE_TEST_CASE_P(
-     LinearRegressorTest, LinearRegressorTest,
-     testing::Values(LinearRegressorParam("NONE", {32.0f, 14.0f, -166.0f}, 1),
-                     LinearRegressorParam("SOFTMAX", {32.0f, 14.0f, -166.0f}, 1),
-diff --git a/onnxruntime/test/shared_lib/test_inference.cc b/onnxruntime/test/shared_lib/test_inference.cc
-index 4b5b6731..08726f8b 100644
---- a/onnxruntime/test/shared_lib/test_inference.cc
-+++ b/onnxruntime/test/shared_lib/test_inference.cc
-@@ -184,7 +184,7 @@ TEST(CApiTest, dim_param) {
-   ASSERT_EQ(strcmp(dim_param, ""), 0);
- }
- 
--INSTANTIATE_TEST_SUITE_P(CApiTestWithProviders,
-+INSTANTIATE_TEST_CASE_P(CApiTestWithProviders,
-                         CApiTestWithProvider,
-                         ::testing::Values(0, 1, 2, 3, 4));
- 
+ #ifdef _WIN32
+ #pragma warning(pop)
+ #endif

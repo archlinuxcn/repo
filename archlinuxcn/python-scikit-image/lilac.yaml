@@ -2,18 +2,19 @@ maintainers:
   - github: Universebenzene
     email: universebenzene@sina.com 
   - github: MarvelousBlack
+  - github: hubutui
 
 build_prefix: extra-x86_64
-
-pre_build: aur_pre_build
-
-post_build: aur_post_build
 
 repo_depends:
   - python-imageio
   - python-pywavelets
+  - python-tifffile
 
 update_on:
-  - aur: python-scikit-image
+  - github: scikit-image/scikit-image
+    use_max_tag: true
   - alias: python
+
+# vim:set ts=2 sw=2 et:
 
