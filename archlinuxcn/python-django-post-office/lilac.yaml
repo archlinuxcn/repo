@@ -5,7 +5,10 @@ build_prefix: extra-x86_64
 
 post_build: pypi_post_build
 
+repo_depends:
+  - python-django-jsonfield
+
 update_on:
   - pypi: django-post-office
   - alias: python
-  - manual: 3
+  - manual: 4
