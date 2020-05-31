@@ -3,7 +3,7 @@
 _py=cp38
 _modules='itk itk-core itk-filtering itk-io itk-numerics itk-registration itk-segmentation'
 pkgname=python-itk
-pkgver=5.1.0.post1
+pkgver=5.1.0.post2
 pkgrel=1
 pkgdesc="An open-source toolkit for multidimensional image analysis. This package include itk-core, itk-filtering, itk-io, itk-numerics, itk-registration, and itk-segmentation module."
 arch=('x86_64')
@@ -16,13 +16,13 @@ for _name in ${_modules}; do
   source+=("https://files.pythonhosted.org/packages/${_py}/${_name::1}/${_name}/${_name/-/_}-${pkgver}-${_py}-${_py}-manylinux1_x86_64.whl")
 done
 
-sha512sums=('57620af52e331f8e1f089459dd186ac792b8b11ae4f4d31e6ba8cc3fa0fbdb2f8e577c62cd4c3a6fa407790b97a3d9e61ad4321c39a793eba6970d6e6c6a8532'
-            'fa973429758cd7412ccafd45cc2a4d675819c7335ab0d6442ffa16c846d0a791debd0d518172100ec9a87c3839ea36d2b6d616d6a0ab2b9fd9f1be21bf69e573'
-            '2fa0c976372b8cf4d9a287b0793b2adb73da62fbea8d3194ede1a81eab27e97bd81cb063d7d1ec4e4514a6c6943f8425b335865e2987be23dc7fad2cfe5b681c'
-            'e1fac08e93343fe7ace764c35a2a664db2c72dc0586178c621151629162770b6e7b50db20f59ef23e7348ec160855f6544a19c5685472bcd315681dfc248db02'
-            '7021401f2828766cbc4e1f3d3c61f9138a105346511ae9d2e530dc7341821be005977a1156ae0f9e2470e1f4c7a955d075a09ecb89057b3ff85480d5853ed1bc'
-            '49faabf0cf7b0be846efecae2507449df68a2db855603cfb0c4c70b98e3d3cdf5722bc0de536e8fb5486534e19f9acb17c4a8998df0d8f6fd512e0209d4217e5'
-            '4d9e36c6d4c6362a7f9cb1ebbdc8842ec5e501747b25f2885ad487707a825dcd8ad492ab36bb7af5f840f1a4689d5f0094effcbfcbdfa4147234fcd931160125')
+sha512sums=('f57736440ffde8a463e08df037fe748feeba09211b24447703c07fc34b8e3c57fb2194b0bcd25c29f1f6cdae58f4bf79213b667003ef9074b439c934efbd5c15'
+            '6559fd135dbaac192d836a05f97cfbf8ee67a4b0bfbc3b0f8fd10e1e7082ff466b360eaaa3006a7d1d8b6771c2f926ff78e96b5ddb0cb04f67c690c83932a122'
+            '0e1d49a79327bc4c7dcb84471bbfc4c0e953fe3413c6950ff0c6c4f46a22851d50bb70ce00005f3e9c3eee58972e22eeacc5168c3ab8478179f5630cc020cb6b'
+            '0dd5246452004aae33459ec141ad0548d481cf6d474b7778dda6c33a4fb6698ae62b0a422f6899455c17131c8977152eab7041ddc6e0f954ddbb2d7f954a460f'
+            '49a6109eaff9a6f44d9a4fa99fbcfdb35cb757b36aa19a5fa394f21fe476a612712743061e52ef48171e9db1242aa002135b1954165e03c98f46547975628a2c'
+            'd923a98ea830eaa68504fea587a140c2d03976a65767c3ab05bddbc2e8e5a059999e468cde5d886a311c8b4b2f0820a8c2ba93726c2c3b6b6ae25d1d97ca03da'
+            'd7aacf397da14c6ce8c938e9b1700ca127e6a3bf2fc3d5a302fd9f3a992f863a6fb58de52c7945008e07916639479574178ce0489666a5c27151f32210c1b130')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
