@@ -18,18 +18,17 @@ source=(
 sha256sums=('1f76d3c981b361e16d52851cb27bc97552630d6e25c832af617af88e2d322ca2')
 
 build() {
-  cd "skychart-4.2.1-4073-src"
+  cd "skychart-$pkgver-$pkg_commit-src"
   fpc="/usr/lib/fpc/""`fpc -iV`""/units/x86_64-linux/"
   echo fpc=$fpc
   echo ./configure fpc="$fpc" lazarus=/usr/lib/lazarus prefix="$pkgdir/usr" target=x86_64-linux 
   ./configure fpc="$fpc" lazarus=/usr/lib/lazarus prefix="$pkgdir/usr" target=x86_64-linux 
-  make CPU_TARGET=x86_64 OS_TARGET=linux clean -j 1
+  make CPU_TARGET=x86_64 OS_TARGET=linux clean
   make CPU_TARGET=x86_64 OS_TARGET=linux -j 1
 }
 
 package() {
-  cd "skychart-4.2.1-4073-src"
-  pwd
+  cd "skychart-$pkgver-$pkg_commit-src"
   echo pkgdir $pkgdir
   mkdir -p "$pkgdir/usr"
   make install

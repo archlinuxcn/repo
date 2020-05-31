@@ -3,7 +3,7 @@
 # NOTE: If you are experiencing segmentation fault, delete the ".rstudio-desktop" folder from your home directory then restart the program should fix the issue.
 
 pkgname=rstudio-desktop-bin
-pkgver=1.2.5042
+pkgver=1.3.959
 pkgrel=1
 pkgdesc="An integrated development environment (IDE) for R (binary from RStudio official repository)"
 arch=('x86_64')
@@ -22,7 +22,7 @@ provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
 md5sums_x86_64=(
-2567879411893d7c72765abd5cf3d71e
+4deee7e17700cf1d64a106b707f1c6d8
 #84e61f5eda991b978fa168d6762f7990
 #391ba54997d6faddbfe41a185a823ee4
 )
