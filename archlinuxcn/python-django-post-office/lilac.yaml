@@ -1,12 +1,12 @@
 maintainers:
   - github: yuyichao
 
-build_prefix: extra-x86_64
+build_prefix: archlinuxcn-x86_64
 
 post_build: pypi_post_build
 
-repo_depends:
-  - python-django-jsonfield
+# repo_depends:
+#   - python-django-jsonfield # not managed yet
 
 update_on:
   - pypi: django-post-office
