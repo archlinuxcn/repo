@@ -6,7 +6,7 @@ import re
 from pyalpm import vercmp
 from functools import cmp_to_key
 
-github_repo = "00-Evan/shattered-pixel-dungeon-gdx"
+github_repo = "00-Evan/shattered-pixel-dungeon"
 from_pattern = r'(\d+\.\d+\.\d+)([a-z])'
 to_pattern = r'\1.\2'
 prefix = 'v'
