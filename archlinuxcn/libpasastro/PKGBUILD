@@ -24,6 +24,6 @@ build() {
 
 package() {
   cd "$srcdir/$pkgname"
-  ./install.sh "$pkgdir/usr"
+  make install PREFIX="$pkgdir/usr"
 }
 
