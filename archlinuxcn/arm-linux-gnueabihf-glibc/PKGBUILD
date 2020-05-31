@@ -7,7 +7,7 @@
 
 _target="arm-linux-gnueabihf"
 pkgname=${_target}-glibc
-pkgver=2.30
+pkgver=2.31
 pkgrel=1
 pkgdesc="GNU C Library (${_target})"
 arch=('any')
@@ -19,18 +19,16 @@ provides=("${_target}-glibc-headers=${pkgver}" "${_target}-eglibc")
 conflicts=("${_target}-glibc-headers" "${_target}-eglibc")
 replaces=("${_target}-glibc-headers")
 options=(!buildflags !strip staticlibs)
-_commit=a6aaabd036d735a1b412f441bf6c706832655598
+_commit=18fdba553dd9b907e9812b90d2cea593f776058f
 #source=(https://ftp.gnu.org/gnu/glibc/glibc-$pkgver.tar.xz
 source=(git+https://sourceware.org/git/glibc.git#commit=$_commit
         sdt.h
         sdt-config.h
-        bz20338.patch
-        file-truncated-while-reading-soname-after-patchelf.patch)
+        bz20338.patch)
 md5sums=('SKIP'
          '91fec3b7e75510ae2ac42533aa2e695e'
          '680df504c683640b02ed4a805797c0b2'
-         '430673eccc78e52c249aa4b0f1786450'
-         '0820504d2e83ee15f74a656771361872')
+         '430673eccc78e52c249aa4b0f1786450')
 
 prepare() {
   rm -rf glibc-build
@@ -42,7 +40,7 @@ prepare() {
   local i; for i in ${source[@]}; do
     case ${i%::*} in
       *.patch)
-        msg2 "Applying ${i}"
+        echo "  -> Applying ${i}"
         patch -p1 -i "$srcdir/${i}"
         ;;
     esac
@@ -59,6 +57,7 @@ build() {
       --disable-multi-arch
       --enable-stack-protector=strong
       --enable-stackguard-randomization
+      --enable-systemtap
       --disable-profile
       --disable-werror
   )

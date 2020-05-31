@@ -1,4 +1,11 @@
 maintainers:
   - github: yuyichao
 
-managed: false
+build_prefix: archlinuxcn-x86_64
+
+repo_depends:
+  - arm-linux-gnueabihf-linux-api-headers
+  # - arm-linux-gnueabihf-gcc-stage2 # use arm-linux-gnueabihf-gcc from repo
+
+update_on:
+  - manual: 2.31
