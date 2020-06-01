@@ -6,19 +6,19 @@
 
 pkgname=mattermost-desktop
 pkgver=4.4.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Mattermost Desktop application for Linux'
 arch=('x86_64' 'i686')
 url="https://github.com/${pkgname/-//}"
 license=('Apache')
-depends=('electron')
+depends=('electron7')
 makedepends=('git' 'jq' 'npm')
 #optdepends=('hunspell: spell checking')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
         "$pkgname.sh"
         "${pkgname/-/.}")
 sha256sums=('8b9ae9cd8b0be9816a8a8fff7900141386fdff54f5f4370d9b98e4ef8801de3b'
-            '2b42741faf1938d0eb0418b1e6ba9104fe5ed5c4368bdf62908c84089074164d'
+            '0f18f87764465f1fc5a9fdfb6ef2834af4623c13bc95fce58da6cb0d8d39a75e'
             'e628268d3393aac0d5b7237c6b8818d2e362c373f99874a19171bf96a25e4ffa')
 
 prepare() {
@@ -39,7 +39,7 @@ prepare() {
     mv electron-builder-new.json electron-builder.json
 
     # Prepend to system electron in order to avoid an unneeded download.
-    local electronDist="/usr/lib/electron"
+    local electronDist="/usr/lib/electron7"
     local electronVersion="$(<"$electronDist"/version)"
     jq '{"electronDist": $electronDist, "electronVersion": $electronVersion} + .' \
         --arg electronDist "$electronDist" \
