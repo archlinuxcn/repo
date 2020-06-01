@@ -3,8 +3,8 @@
 # Contributor: Gordin <9ordin @t gmail d@t com>
 
 pkgname=screenkey
-pkgver=1.0
-pkgrel=1
+pkgver=1.1
+pkgrel=2
 pkgdesc="A screencast tool to display your keys inspired by Screenflick"
 arch=('any')
 url="https://gitlab.com/screenkey/screenkey"
@@ -12,15 +12,18 @@ license=('GPL3')
 depends=('python' 'python-gobject' 'gtk3' 'python-cairo' 'libx11')
 makedepends=('python-setuptools' 'python-distutils-extra')
 optdepends=('slop' 'ttf-font-awesome' 'libappindicator-gtk3')
-source=("https://gitlab.com/$pkgname/$pkgname/-/archive/v$pkgver/$pkgname-v$pkgver.tar.gz")
-sha256sums=('e4d841ed599c73b71b99f7e06482995addc2e626215be0a12d4e3ca66cdee3c2')
+source=("https://www.thregr.org/~wavexx/software/$pkgname/releases/$pkgname-$pkgver.tar.gz"
+        "https://www.thregr.org/~wavexx/software/$pkgname/releases/$pkgname-$pkgver.tar.gz.asc")
+sha256sums=('0f382e485bf185d9f4f549eab9cfe1a48c53d66dc9c362e6ab433e51c6842ed7'
+            'SKIP')
+validpgpkeys=('41958F4116FDD1B43DEE754A2BB7D6F2153410EC')
 
 build() {
-  cd "$srcdir/$pkgname-v$pkgver"
+  cd "$srcdir/$pkgname-$pkgver"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/$pkgname-v$pkgver"
+  cd "$srcdir/$pkgname-$pkgver"
   python3 setup.py install --skip-build --optimize=1 --root="$pkgdir/"
 }
