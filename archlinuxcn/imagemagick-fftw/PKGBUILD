@@ -4,13 +4,13 @@
 pkgbase=imagemagick-fftw
 pkgname=(imagemagick-fftw)
 pkgver=7.0.10.16
-pkgrel=1
+pkgrel=2
 pkgdesc="An image viewing/manipulation program"
 url="https://www.imagemagick.org/"
 arch=(x86_64)
 license=(custom)
 makedepends=(ghostscript openexr libwmf librsvg libxml2 openjpeg2 libraw opencl-headers libwebp
-             chrpath ocl-icd glu ghostpcl ghostxps libheif jbigkit lcms2 libxext liblqr libraqm libpng 'fftw')
+             chrpath ocl-icd glu ghostpcl ghostxps libheif jbigkit lcms2 libxext liblqr libraqm libpng djvulibre 'fftw')
 checkdepends=(gsfonts ttf-dejavu)
 _relname=ImageMagick-${pkgver%%.*}
 _tarname=ImageMagick-${pkgver%.*}-${pkgver##*.}
@@ -50,6 +50,7 @@ build() {
     --enable-hdri \
     --enable-opencl \
     --without-gslib \
+    --with-djvu \
     --with-lqr \
     --with-modules \
     --with-openexr \
@@ -61,7 +62,6 @@ build() {
     --with-wmf \
     --with-xml \
     --without-autotrace \
-    --without-djvu \
     --without-dps \
     --with-fftw \
     --without-fpx \
@@ -89,6 +89,7 @@ package_imagemagick-fftw() {
               'ocl-icd: OpenCL support'
               'openexr: OpenEXR support'
               'openjpeg2: JPEG2000 support'
+              'djvulibre: DJVU support'
               'pango: Text rendering'
               'imagemagick-doc: manual and API docs')
   options=(!emptydirs libtool)
