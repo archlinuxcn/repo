@@ -1,0 +1,10 @@
+maintainers:
+  - github: yuyichao
+
+build_prefix: extra-x86_64
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - github: MisterTea/EternalTerminal
+    use_latest_release: true

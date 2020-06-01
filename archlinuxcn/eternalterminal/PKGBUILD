@@ -1,0 +1,86 @@
+# Maintainer: Jason Gauci <contact+jgmath2000@gmail.com>
+# Contributor: Joel Goguen <contact+aur@jgoguen.ca>
+
+_ghname='EternalTerminal'
+_tarname='et'
+pkgbase='eternalterminal'
+pkgname=('eternalterminal-client' 'eternalterminal-server' 'eternalterminal')
+pkgver='6.0.7'
+pkgrel=2
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+depends=(
+  'libsodium' 'protobuf' 'libutempter'
+)
+makedepends=(
+  'cmake' 'unzip' 'wget'
+)
+url='https://mistertea.github.io/EternalTerminal/'
+license=('Apache')
+
+source=(
+  "https://github.com/MisterTea/EternalTerminal/archive/et-v${pkgver}.tar.gz"
+)
+sha256sums=(
+  '3dc6b5336231db1e2ddedfcaf7ac244e33e0edb90241dcb4d3646142bd31b4fe'
+)
+
+prepare() {
+  cd EternalTerminal-et-v${pkgver}
+
+  echo '=> Preparing directories'
+  mkdir -p build
+}
+
+build() {
+  cd EternalTerminal-et-v${pkgver}/build
+
+  echo '=> Running cmake'
+  cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+
+  echo '=> Building EternalTerminal'
+  make
+}
+
+_install_client() {
+  mkdir -p "${pkgdir}/usr/local/bin/"
+  # /usr/bin/et conflicts with wps...
+  # put it in /usr/local/bin and use ett as the real name for now.
+  # Ref. https://github.com/MisterTea/EternalTerminal/issues/316
+  ln -sf ../../bin/ett "${pkgdir}/usr/local/bin/et"
+  install -D -m 0755 et "${pkgdir}/usr/bin/ett"
+  install -D -m 0755 htm "${pkgdir}/usr/bin/htm"
+  install -D -m 0755 etterminal "${pkgdir}/usr/bin/etterminal"
+}
+
+_install_server() {
+  install -D -m 0755 etserver "${pkgdir}/usr/bin/etserver"
+  install -D -m 0755 htmd "${pkgdir}/usr/bin/htmd"
+  install -D -m 0644 ../systemctl/et.service "${pkgdir}/usr/lib/systemd/system/et.service"
+  install -D -m 0644 ../etc/et.cfg "${pkgdir}/etc/et.cfg"
+}
+
+package_eternalterminal-client() {
+  pkgdesc='Re-Connectable Terminal connection. (client)'
+
+  cd EternalTerminal-et-v${pkgver}/build
+  _install_client
+}
+
+package_eternalterminal-server() {
+  pkgdesc='Re-Connectable Terminal connection. (server)'
+
+  cd EternalTerminal-et-v${pkgver}/build
+
+  _install_server
+}
+
+package_eternalterminal() {
+  pkgdesc='Re-Connectable Terminal connection. (both client and server)'
+  provides=("eternalterminal-client=${pkgver}" "eternalterminal-server=${pkgver}")
+  conflicts=('eternalterminal-client' 'eternalterminal-server')
+
+  cd EternalTerminal-et-v${pkgver}/build
+
+  _install_client
+  _install_server
+}
