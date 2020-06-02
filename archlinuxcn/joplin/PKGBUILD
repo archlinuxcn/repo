@@ -5,8 +5,8 @@
 # https://github.com/masterkorp/joplin-pkgbuild
 
 pkgname=joplin
-pkgver=1.0.201
-pkgrel=1.1
+pkgver=1.0.216
+pkgrel=1
 pkgdesc="A note taking and to-do application with synchronization capabilities"
 arch=('x86_64' 'i686')
 depends=('gtk3' 'libexif' 'libgsf' 'libjpeg-turbo' 'libwebp' 'libxss' 'nodejs'
@@ -17,10 +17,10 @@ url="https://joplinapp.org/"
 license=('MIT')
 source=("${pkgname}.desktop" "${pkgname}-desktop.sh" "${pkgname}.sh"
         "${pkgname}-${pkgver}.tar.gz::https://github.com/laurent22/joplin/archive/v${pkgver}.tar.gz")
-sha256sums=('f981b7777393c33784d39ec7fca2c83ee429c542d462f2b421b73f7ba6ca7702'
+sha256sums=('f915b42c3c35b22fc9bd1525953be2363319edfa2e95288f87edfb2833ec45f1'
             '41bfdc95a6ee285eb644d05eb3bded72a83950d4720c3c8058ddd3c605cd625d'
             '5245da6f5f647d49fbe044b747994c9f5a8e98b3c2cd02757dd189426a677276'
-            '85dac14984fbeb5a9c7c4e49db90a5a87b970f8c4cb5e1f3805751c6c1268925')
+            '80a29192ee7f051c051b728f159d4f782ce3750308ee03f3e1370b57a69a48a5')
 
 build() {
   # Remove husky (git hooks) from dependencies
