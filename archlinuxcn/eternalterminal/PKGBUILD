@@ -4,7 +4,8 @@
 _ghname='EternalTerminal'
 _tarname='et'
 pkgbase='eternalterminal'
-pkgname=('eternalterminal-client' 'eternalterminal-server' 'eternalterminal')
+pkgname=('eternalterminal-client' 'eternalterminal-server'
+         'eternalterminal-htm' 'eternalterminal')
 pkgver='6.0.7'
 pkgrel=2
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -49,12 +50,16 @@ _install_client() {
   ln -sf ../../bin/ett "${pkgdir}/usr/local/bin/et"
   install -D -m 0755 et "${pkgdir}/usr/bin/ett"
   install -D -m 0755 htm "${pkgdir}/usr/bin/htm"
-  install -D -m 0755 etterminal "${pkgdir}/usr/bin/etterminal"
+}
+
+_install_htm() {
+  install -D -m 0755 htm "${pkgdir}/usr/bin/htm"
+  install -D -m 0755 htmd "${pkgdir}/usr/bin/htmd"
 }
 
 _install_server() {
   install -D -m 0755 etserver "${pkgdir}/usr/bin/etserver"
-  install -D -m 0755 htmd "${pkgdir}/usr/bin/htmd"
+  install -D -m 0755 etterminal "${pkgdir}/usr/bin/etterminal"
   install -D -m 0644 ../systemctl/et.service "${pkgdir}/usr/lib/systemd/system/et.service"
   install -D -m 0644 ../etc/et.cfg "${pkgdir}/etc/et.cfg"
 }
@@ -72,6 +77,13 @@ package_eternalterminal-server() {
   cd EternalTerminal-et-v${pkgver}/build
 
   _install_server
+}
+
+package_eternalterminal-client() {
+  pkgdesc='Re-Connectable Terminal connection. (headless terminal multiplexer)'
+
+  cd EternalTerminal-et-v${pkgver}/build
+  _install_htm
 }
 
 package_eternalterminal() {
