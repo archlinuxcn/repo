@@ -1,6 +1,6 @@
 # Maintainer: lsf
 # Contributor: Adam Hose <adis@blad.is>
-pkgver=20200405.551_24ede1c
+pkgver=20200601.601_36a11b4
 pkgrel=1
 _pkgname=opensnitch
 pkgname=opensnitch-git
@@ -26,6 +26,12 @@ pkgver() {
         local count=$(git rev-list --count HEAD)
         local commit=$(git rev-parse --short HEAD)
         echo "$date.${count}_$commit"
+}
+
+prepare() {
+        cd "$srcdir/$_pkgname"
+        sed -i "s/sudo //g" Makefile
+        sed -i "s/sudo pip3 install -r requirements.txt/echo dep/g" ui/Makefile
 }
 
 build() {
@@ -54,7 +60,13 @@ package(){
         cd "$srcdir/.go/src/$_pkgname/"
         mkdir -p "${pkgdir}"/usr/lib/systemd/system
         mkdir -p "${pkgdir}"/usr/bin
-        make DESTDIR="$pkgdir/" install
+        #make DESTDIR="$pkgdir/" install
+        cd daemon
+        install -Dm755 opensnitchd "$pkgdir/usr/bin/opensnitched"
+        install -dm755 "$pkgdir/etc/opensitchd/rules"
+        install -Dm644 opensnitchd.service "$pkgdir/etc/systemd/system/opensnitchd.service"
+        install -dm644 default-config.json "$pkgdir/etc/opensitchd/default-config.json"
+        cd ..
         cd ui
         pip install --isolated --root="$pkgdir" --ignore-installed --no-deps .
 }
