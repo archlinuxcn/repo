@@ -2,7 +2,7 @@
 
 pkgname=python-geomag-git
 pkgver=31.421564e
-pkgrel=4
+pkgrel=5
 pkgdesc='Calculates magnetic variation/declination for any latitude/longitude/altitude, for any date.'
 arch=('any')
 url="https://github.com/todd-dembrey/geomag"
@@ -25,4 +25,8 @@ package() {
   site=$(python -c 'from distutils.sysconfig import get_python_lib; print(get_python_lib())')
   mkdir -p "${pkgdir}/${site}/geomag/"
   cp -r geomag/model_data "${pkgdir}/${site}/geomag/"
+
+  pymin_ver=$(python -c 'import sys; print(sys.version_info.minor)')
+  ((pynext_min=pymin_ver + 1))
+  depends+=("python>=3.${pymin_ver}.0" "python<3.${pynext_min}.0")
 }

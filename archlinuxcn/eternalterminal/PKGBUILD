@@ -7,13 +7,13 @@ pkgbase='eternalterminal'
 pkgname=('eternalterminal-client' 'eternalterminal-server'
          'eternalterminal-htm' 'eternalterminal')
 pkgver=6.0.7
-pkgrel=3
+pkgrel=5
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 depends=(
-  'libsodium' 'protobuf' 'libutempter'
+  'libsodium' 'libutempter'
 )
 makedepends=(
-  'cmake' 'unzip' 'wget'
+  'protobuf' 'cmake' 'unzip' 'wget'
 )
 url='https://mistertea.github.io/EternalTerminal/'
 license=('Apache')
@@ -38,6 +38,12 @@ build() {
 
   echo '=> Building EternalTerminal'
   make
+}
+
+_add_protobuf_depends() {
+  protobufver=$(objdump -p /usr/lib/libprotobuf.so | \
+                  grep SONAME | sed -e 's/.*protobuf\.so\.//')
+  depends+=("libprotobuf.so=${protobufver}")
 }
 
 _install_client() {
@@ -67,6 +73,7 @@ package_eternalterminal-client() {
 
   cd EternalTerminal-et-v${pkgver}/build
   _install_client
+  _add_protobuf_depends
 }
 
 package_eternalterminal-server() {
@@ -75,6 +82,7 @@ package_eternalterminal-server() {
   cd EternalTerminal-et-v${pkgver}/build
 
   _install_server
+  _add_protobuf_depends
 }
 
 package_eternalterminal-htm() {
@@ -82,6 +90,7 @@ package_eternalterminal-htm() {
 
   cd EternalTerminal-et-v${pkgver}/build
   _install_htm
+  _add_protobuf_depends
 }
 
 package_eternalterminal() {
@@ -93,4 +102,5 @@ package_eternalterminal() {
 
   _install_client
   _install_server
+  _add_protobuf_depends
 }
