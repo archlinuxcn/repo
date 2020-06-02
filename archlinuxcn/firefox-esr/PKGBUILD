@@ -4,7 +4,7 @@
 # Contributor: Jakub Schmidtke <sjakub@gmail.com>
 
 pkgname=firefox-esr
-pkgver=68.8.0
+pkgver=68.9.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, Extended Support Release"
 arch=(x86_64)
@@ -20,12 +20,12 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'pulseaudio: Audio support'
             'speech-dispatcher: Text-to-Speech'
             'hunspell-en_US: Spell checking, American English')
-provides=(firefox)
+provides=(firefox=${pkgver})
 conflicts=(firefox)
 options=(!emptydirs !makeflags)
 source=(https://ftp.mozilla.org/pub/firefox/releases/${pkgver}esr/source/firefox-${pkgver}esr.source.tar.xz
         firefox.desktop firefox-symbolic.svg 0001-Use-remoting-name-for-GDK-application-names.patch)
-sha256sums=('fa5b2266d225878d4b35694678f79fd7e7a6d3c62759a40326129bd90f63e842'
+sha256sums=('935105e1a8a97d64daffb372690e2b566b5f07641f01470929dbbc82d20d4407'
             'ba8a1610fe3ccc65cb58f2651df0ae9df632ecc17b3af8d13670950e9e2d27d8'
             'a2474b32b9b2d7e0fb53a4c89715507ad1c194bef77713d798fa39d507def9e9'
             'ab07ab26617ff76fce68e07c66b8aa9b96c2d3e5b5517e51a3c3eac2edd88894')
