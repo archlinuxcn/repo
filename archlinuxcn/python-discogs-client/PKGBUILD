@@ -5,8 +5,8 @@
 # Contributor: Ariel AxionL <i at axionl dot me>
 
 pkgname=python-discogs-client
-pkgver=2.2.2
-pkgrel=6
+pkgver=2.3.0
+pkgrel=1
 pkgdesc="This is the official Discogs API client for Python. You can use it to query the Discogs music database for metadata on artists, releases, and more."
 arch=('any')
 url="https://github.com/discogs/discogs_client"
@@ -17,7 +17,7 @@ makedepends=('python-setuptools')
 source=("discogs-client-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
   "LICENSE::https://raw.githubusercontent.com/discogs/discogs_client/master/LICENSE")
 
-sha256sums=('0caa24cbacb003fe07175894ba10cafe1f908d7a6ad75e1f013bf8b8794ea408'
+sha256sums=('6bd9e78f7e5d589433dfd736f97de57d40f81a2ce0f650986411e5985f9e1abb'
             '1af62aeddccb57134218ddbdc67d0473524ca736703d7cce01db59b2e07da542')
 
 package() {
