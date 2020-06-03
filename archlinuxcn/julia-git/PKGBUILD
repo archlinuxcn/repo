@@ -256,6 +256,13 @@ package-julia-in() {
       cp -- "$f" "${pkgdir}/${t%/*}"
     done < <(_source_files "$binary")
   done
+  (
+    cd "${pkgdir}/usr/include/julia"
+    mkdir -p "${pkgdir}/${dbgsrcdir}/julia/src/julia/$f"
+    for f in *; do
+      ln -sf "/usr/include/julia/$f" "${pkgdir}/${dbgsrcdir}/julia/src/julia/$f"
+    done
+  )
 }
 
 package_julia-git() {
