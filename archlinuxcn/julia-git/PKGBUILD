@@ -258,9 +258,9 @@ package-julia-in() {
   done
   (
     cd "${pkgdir}/usr/include/julia"
-    mkdir -p "${pkgdir}/${dbgsrcdir}/julia/src/julia/$f"
+    mkdir -p "${pkgdir}/${dbgsrcdir}/julia/src/"
     for f in *; do
-      ln -sf "/usr/include/julia/$f" "${pkgdir}/${dbgsrcdir}/julia/src/julia/$f"
+      ln -sf "/usr/include/julia/$f" "${pkgdir}/${dbgsrcdir}/julia/src/$f"
     done
   )
 }
