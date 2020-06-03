@@ -44,25 +44,27 @@ makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
              gcc-fortran git patchelf python)
 options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
-        0001-Revert-Replace-quiet-with-banner-23343.patch
         0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
-        0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
-        0002-Revert-deprecation-warning-for-old-parametric-method.patch
         0001-Optimize-GC-frame-push-pop-insertion.patch
+        llvm_x64.patch
+        source-translate.patch
+        gdb-debug.patch
         julia-compile-pkgs.jl
         julia-clear-precompile.sh
         julia-precompile.hook
-        julia-clear-precompile.hook)
+        julia-clear-precompile.hook
+        arch-source-translate.cpp)
 md5sums=('SKIP'
-         'b3c5a4ba02fbbfa53b7043beb0242156'
          '2222d3eabfe6040a8cca466303c86d2b'
-         'f13c0f5ddd2ad990bb4560d9af1203ac'
-         'f90e6a0139600b182d6c36e6c7cf3492'
          '3dbb81b1dae3a9d977bd69f8354b3007'
+         'f0948a20a71b844948fde82c607ec57c'
+         '3ed82ad8c42c746f0ff77dc946873cc9'
+         'effd2c21ffb69e66b43d4b7fbe074a51'
          '0b3bfcd680da2dc47d861b04ee695f52'
          '6e7fcba300512df8ab8ab65d3e1eb847'
          'f1f6ffc7ddcbc7fa0000d6f5fdbbe925'
-         'f9d0b11988630599dc860a5b33a7ba13')
+         'f9d0b11988630599dc860a5b33a7ba13'
+         '900d38f83bf735a81896f14d59bbc47f')
 
 pkgver() {
   cd julia
@@ -144,15 +146,18 @@ EOF
   git clean -fdx
 
   # patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
-  # patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
-  # patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
   # patch -Np1 < ../0001-Optimize-GC-frame-push-pop-insertion.patch
+  patch -Np1 < ../llvm_x64.patch
+  patch -Np1 < ../source-translate.patch
+  patch -Np1 < ../gdb-debug.patch
 
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' src/Makefile ui/Makefile
 }
 
 build_in() {
   cd "$1"
+
+  export JL_MAKEPKG_SRCDIR="${PWD}"
 
   opts=("${@:3}")
   export PATH="${srcdir}/bin:${PATH}"
@@ -166,19 +171,29 @@ build_in() {
   make "${opts[@]}" -C base version_git.jl.phony
   make "${opts[@]}" -C deps
   make "${opts[@]}" julia-ui-release
+  make "${opts[@]}" release debug
   if (($2)); then
-      make "${opts[@]}" release debug docs
-  else
-    make "${opts[@]}" release debug
+    JL_MAKEPKG_SRCDIR= make "${opts[@]}" docs
   fi
 
   # Check to detect issues like JuliaLang/julia#13820
-  usr/bin/julia -e '0'
-  usr/bin/julia-debug -e '0'
+  LD_PRELOAD= JL_MAKEPKG_SRCDIR= usr/bin/julia -e '0'
+  LD_PRELOAD= JL_MAKEPKG_SRCDIR= usr/bin/julia-debug -e '0'
 }
 
 build() {
-  build_in julia $BUILD_DOC "${julia_opts[@]}"
+  g++ -fPIC -Wall -Wextra -shared -o libarch-source-translate.so -O2 \
+      -std=gnu++20 arch-source-translate.cpp
+  _ld_preload="${srcdir}/libarch-source-translate.so"
+  if [[ -n $LD_PRELOAD ]]; then
+    _ld_preload="${_ld_preload}:$LD_PRELOAD"
+  fi
+  (LD_PRELOAD="${_ld_preload}" build_in julia $BUILD_DOC "${julia_opts[@]}")
+}
+
+_source_files() {
+  LANG=C readelf "$1" --debug-dump | \
+    awk '/DW_AT_name +:/{name=$8}/DW_AT_comp_dir +:/{{if (name == "<artificial>") next}{if (name !~ /^[<\/]/) {printf "%s/", $8}}{print name}}'
 }
 
 package-julia-in() {
@@ -188,6 +203,8 @@ package-julia-in() {
   opts=("${@:2}")
 
   cd "$1"
+
+  export JL_MAKEPKG_SRCDIR="${PWD}"
 
   if ((BUILD_DOC)); then
     make install DESTDIR="$pkgdir" "${opts[@]}"
@@ -225,13 +242,28 @@ package-julia-in() {
   sed "s|@VER@|$ver_short|" ../julia-clear-precompile.hook |
     install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-clear-precompile.hook"
   mkdir -p "${pkgdir}/usr/share/julia/compiled/v$ver_short"
+
+  # Without stripping, makepkg doesn't copy the source for us...
+  dbgsrcdir="${DBGSRCDIR:-/usr/src/debug}"
+  for binary in usr/bin/julia usr/bin/julia-debug \
+                              usr/lib/libjulia.so usr/lib/libjulia-debug.so; do
+    binary="${pkgdir}/${binary}"
+    # copy source files to debug directory
+    local f t
+    while IFS= read -r t; do
+      f=${t/${dbgsrcdir}/"$srcdir"}
+      mkdir -p  "${pkgdir}/${t%/*}"
+      cp -- "$f" "${pkgdir}/${t%/*}"
+    done < <(_source_files "$binary")
+  done
 }
 
 package_julia-git() {
+  export LD_PRELOAD="${srcdir}/libarch-source-translate.so:$LD_PRELOAD"
   package-julia-in julia "${julia_opts[@]}"
   depends+=(openlibm)
   if [[ "$CARCH" = x86_64 ]]; then
-      replaces=(julia-git-avx2)
+    replaces=(julia-git-avx2)
   fi
 }
 
@@ -246,4 +278,5 @@ package_julia-git-docs() {
 
   mkdir -p "$pkgdir"/usr/share/doc/julia/
   cp -dpr --no-preserve=ownership html "$pkgdir"/usr/share/doc/julia/
+  find "$pkgdir/usr/share/doc/julia/" -type f -exec sed -i -e "s|$srcdir/julia||g" '{}' \+
 }

@@ -1,0 +1,14 @@
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index ab4b8522c4..11107aa82b 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -7503,9 +7503,7 @@ extern "C" void jl_init_llvm(void)
+     jl_data_layout.reset(DL);
+ 
+ // Register GDB event listener
+-#ifdef JL_DEBUG_BUILD
+     jl_ExecutionEngine->RegisterJITEventListener(JITEventListener::createGDBRegistrationListener());
+-#endif
+ 
+ #ifdef JL_USE_INTEL_JITEVENTS
+     if (jl_using_intel_jitevents)
