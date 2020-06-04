@@ -8,6 +8,9 @@ build_prefix: extra-x86_64
 update_on:
   - github: openconnect/ocserv
     use_max_tag: true
+  - archpkg: nettle
+  - manual: 1
+
 repo_depends:
   - libpcl
   - freeradius-client
