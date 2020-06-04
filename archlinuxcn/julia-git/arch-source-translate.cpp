@@ -5,7 +5,6 @@
 #include <stdio.h>
 
 #include <string>
-#include <filesystem>
 
 static std::string get_srcdir(void)
 {
@@ -19,28 +18,8 @@ static std::string get_srcdir(void)
     return {};
 }
 static auto srcdir = get_srcdir();
-static std::filesystem::path basedir = "/usr/share/julia/base";
-
-extern "C" __attribute__((weak)) void *jl_cstr_to_string(const char *str);
-
-extern "C" void *jl_prepend_cwd(void *str)
-{
-    std::string cwd = std::filesystem::current_path();
-    const char *_filename = (char*)str + sizeof(void*);
-    while (_filename[0] == '.' && _filename[1] == '/')
-        _filename += 2;
-    std::string path = cwd + '/' + _filename;
-    if (srcdir.empty()) {
-        // Skip
-    }
-    else if (path.starts_with(srcdir + "/base/")) {
-        path = "/usr/share/julia" + path.substr(srcdir.size());
-    }
-    else if (path.starts_with(srcdir + "/")) {
-        path = path.substr(srcdir.size());
-    }
-    return jl_cstr_to_string(std::string(path).c_str());
-}
+static std::string juliadir = "/usr/share/julia";
+static std::string basedir = "/usr/share/julia/base";
 
 extern "C" const char *jl_archlinux_translate_filename(const char *_filename)
 {
@@ -51,15 +30,16 @@ extern "C" const char *jl_archlinux_translate_filename(const char *_filename)
     static std::string filename;
     filename = _filename;
     if (filename[0] != '/') {
-        filename = basedir / filename;
+        // relative path, assume to be base
+        filename = basedir + '/' + filename;
     }
-    else if (filename.starts_with(srcdir + "/doc/")) {
-        // no op
+    else if (filename.starts_with(srcdir + "/contrib/")) {
+        filename = juliadir + filename.substr(srcdir.size());
     }
-    else if (filename.starts_with(srcdir + "/etc/")) {
-        // no op
+    else if (filename.starts_with(srcdir + "/base/")) {
+        filename = juliadir + filename.substr(srcdir.size());
     }
-    else if (filename.starts_with(srcdir + '/')) {
+    else if (filename.starts_with(srcdir + "/usr/")) {
         filename = filename.substr(srcdir.size());
     }
     return filename.c_str();
