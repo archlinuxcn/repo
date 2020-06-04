@@ -124,7 +124,8 @@ prepare() {
    
     msg2 'Applying local config'
     cp "$srcdir/LocalConfig.kmk" .
-
+    
+    sed -i 's/# YASM macros/VBOX_GCC_VERSION = 101000/g' Config.kmk
     msg2 'Use our CFLAGS'
     echo "VBOX_GCC_OPT=$CXXFLAGS" >> LocalConfig.kmk
 }
