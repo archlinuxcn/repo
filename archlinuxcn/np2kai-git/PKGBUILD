@@ -1,7 +1,7 @@
 # Maintainer: Gustavo Alvarez Lopez <sl1pkn07@gmail.com>
 
 pkgname=np2kai-git
-pkgver=918.9ef6181
+pkgver=943.6d461af
 pkgrel=1
 pkgdesc="Neko Project II Kai, a PC-9801 emulator. (GIT version)"
 arch=('x86_64')
@@ -13,7 +13,7 @@ depends=('gtk2'
          'libxxf86vm'
          'libsm'
          )
-makedepends=('git' 'sdl_mixer' 'unzip' 'nasm')
+makedepends=('git' 'cmake' 'sdl_mixer' 'unzip' 'nasm')
 conflicts=('np2kai')
 provides=('np2kai')
 source=('np2kai::git+https://github.com/AZO234/NP2kai.git')
@@ -24,29 +24,23 @@ pkgver() {
   printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
-prepare() {
-  cd np2kai/x11
-
-  ./autogen.sh
-}
-
 build() {
-  cd np2kai/x11
-
-  ./configure \
-    --prefix=/usr \
-    --enable-build-all \
-    --enable-ia32
-
+  cd np2kai
+  [ -d "build" ] && rm -rf build
+  mkdir build
+  cd build
+  
+  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
   make
 }
 
 package() {
-  make -C np2kai/x11 DESTDIR="${pkgdir}" install
+  cd np2kai/build
+  make DESTDIR=${pkgdir} install
 
-  install -Dm644 np2kai/sdl2/opk/default_opendingux_np2kai_desktop "${pkgdir}/usr/share/applications/np2kai.desktop"
-  install -Dm644 np2kai/sdl2/opk/default_opendingux_np21kai_desktop "${pkgdir}/usr/share/applications/np21kai.desktop"
-  install -Dm644 np2kai/sdl2/opk/np2.png "${pkgdir}/usr/share/pixmaps/np2.png"
+#  install -Dm644 np2kai/sdl2/opk/default_opendingux_np2kai_desktop "${pkgdir}/usr/share/applications/np2kai.desktop"
+#  install -Dm644 np2kai/sdl2/opk/default_opendingux_np21kai_desktop "${pkgdir}/usr/share/applications/np21kai.desktop"
+#  install -Dm644 np2kai/sdl2/opk/np2.png "${pkgdir}/usr/share/pixmaps/np2.png"
 
-  install -Dm644 np2kai/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 ../LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
