@@ -23,7 +23,7 @@ def pre_build():
       line = 'pkgbase=qt5-base-24h' + '\n' + '_origpkgname=qt5-base'
       checks = checks + '0'
     elif line.startswith('pkgrel='):
-      line = line + '.3'
+      line = line + '.4'
     elif line.startswith('pkgname='):
       line = 'pkgname=(qt5-base-24h)'
       checks = checks + '1'
@@ -52,7 +52,7 @@ provides=("qt5-base=$pkgver")
       checks = checks + '6'
     elif line.startswith('sha256sums=('):
       line = line.replace('=(', '''=(
-      '311cd7a963327c9d008ffd8ec49e3f48e9771b4d4b4e52d09778e8efd2bd25dd'
+      '901a764c896559bb472d5ecee4af9ee006b235f73e56959de9ded477a10e5fc6'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       ''')
       checks = checks + '7'
@@ -64,7 +64,7 @@ provides=("qt5-base=$pkgver")
   patch -p1 -i ../oldherl-24h.patch
   cd util/locale_database
   echo "This is slow. It takes about 4 minutes on my desktop."
-  ./cldr2qlocalexml.py ../../../common/main > ./24h.xml
+  ./cldr2qlocalexml.py ../../../ > ./24h.xml
   ./qlocalexml2cpp.py ./24h.xml ../..
 ''' + line
       prepare = False
