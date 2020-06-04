@@ -1,10 +1,8 @@
 # Maintainer:  Yigit Dallilar <yigit.dallilar at gmail dot com>
 
 pkgname=ds9
-pkgver=8.0.1
-# need the grab a legacy openssl source and build ds9 against it
-_sslver=1.0.2r
-pkgrel=2
+pkgver=8.1
+pkgrel=1
 pkgdesc="SAOImage DS9: Astronomical Data Visualization Application"
 url="http://hea-www.harvard.edu/RD/ds9/"
 arch=('x86_64')
@@ -18,28 +16,13 @@ conflicts=()
 replaces=()
 backup=()
 source=("https://github.com/SAOImageDS9/SAOImageDS9/archive/v${pkgver}.tar.gz"
-        "https://www.openssl.org/source/openssl-${_sslver}.tar.gz"
         "ds9.desktop"
         "ds9.png")
-md5sums=('a145746d507396f3a5a9fec05def3319'
-         '0d2baaf04c56d542f6cc757b9c2a2aac'
+md5sums=('9a4d89aaec92cf08d8093064629d8d06'
          'f1738e4ec665ae9afd1b65b86e6a07f1'
          '9297d5738f5f462831075c483dc785d5')
 
-prepare() {
-
-    cd ${srcdir}
-    sed -i "s|@SSLLIBS@|-L$(pwd)/openssl-${_sslver} -lssl|g" SAOImageDS9-${pkgver}/ds9/unix/Makefile.in
-    sed -i "s|\$(TLSFLAGS)|\$(TLSFLAGS) --with-ssl-dir=$(pwd)/openssl-${_sslver} --disable-shared --prefix=$(pwd)/SAOImageDS9-${pkgver}/tmp|g" SAOImageDS9-${pkgver}/make.include
-
-}
-
 build() {
-
-    cd ${srcdir}/openssl-${_sslver}
-    ./config
-    make
-
     cd ${srcdir}/SAOImageDS9-${pkgver}
     unix/configure
     make
