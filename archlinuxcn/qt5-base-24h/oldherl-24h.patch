@@ -1,16 +1,13 @@
-diff -u -r qtbase-everywhere-src-5.14.2/util/locale_database/cldr2qlocalexml.py qtbase-everywhere-src-5.14.2_oldherl/util/locale_database/cldr2qlocalexml.py
---- qtbase-everywhere-src-5.14.2/util/locale_database/cldr2qlocalexml.py	2020-03-27 17:49:31.000000000 +0800
-+++ qtbase-everywhere-src-5.14.2_oldherl/util/locale_database/cldr2qlocalexml.py	2020-05-05 19:40:36.691224213 +0800
-@@ -327,9 +327,9 @@
-     result['am'] = findEntry(path, "dates/calendars/calendar[gregorian]/dayPeriods/dayPeriodContext[format]/dayPeriodWidth[wide]/dayPeriod[am]", draft)
-     result['pm'] = findEntry(path, "dates/calendars/calendar[gregorian]/dayPeriods/dayPeriodContext[format]/dayPeriodWidth[wide]/dayPeriod[pm]", draft)
-     result['longDateFormat'] = convert_date(findEntry(path, "dates/calendars/calendar[gregorian]/dateFormats/dateFormatLength[full]/dateFormat/pattern"))
--    result['shortDateFormat'] = convert_date(findEntry(path, "dates/calendars/calendar[gregorian]/dateFormats/dateFormatLength[short]/dateFormat/pattern"))
--    result['longTimeFormat'] = convert_date(findEntry(path, "dates/calendars/calendar[gregorian]/timeFormats/timeFormatLength[full]/timeFormat/pattern"))
--    result['shortTimeFormat'] = convert_date(findEntry(path, "dates/calendars/calendar[gregorian]/timeFormats/timeFormatLength[short]/timeFormat/pattern"))
-+    result['shortDateFormat'] = "yyyy-MM-dd"
-+    result['longTimeFormat'] = "HH:mm:ss t"
-+    result['shortTimeFormat'] = "HH:mm"
+diff -Naur qtbase-everywhere-src-5.15.0/util/locale_database/qlocalexml.py qtbase-everywhere-src-5.15.0_oldherl/util/locale_database/qlocalexml.py
+--- qtbase-everywhere-src-5.15.0/util/locale_database/qlocalexml.py	2020-05-11 16:15:08.000000000 +0800
++++ qtbase-everywhere-src-5.15.0_oldherl/util/locale_database/qlocalexml.py	2020-06-04 09:01:52.422017489 +0800
+@@ -487,6 +487,9 @@
  
-     endonym = None
-     if country_code and script_code:
+         for k in cls.__asfmt:
+             data[k] = convertFormat(lookup(k))
++        data['shortDateFormat'] = "yyyy-MM-dd"
++        data['longTimeFormat'] = "HH:mm:ss t"
++        data['shortTimeFormat'] = "HH:mm"
+ 
+         for k in cls.__astxt + tuple(cls.propsMonthDay('days')):
+             data[k] = lookup(k)
