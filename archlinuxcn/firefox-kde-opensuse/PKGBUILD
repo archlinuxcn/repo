@@ -19,8 +19,8 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=76.0.1
-pkgrel=3
+pkgver=77.0.1
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -51,7 +51,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'pulseaudio: Audio support')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=3fd9346c90a6
+_patchrev=d5b284f833d5
 options=('!emptydirs')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -78,8 +78,6 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         0001-Use-remoting-name-for-GDK-application-names.patch
         # reenable system sqlite
         5022efe33088.patch
-        # https://bugs.archlinux.org/task/66549
-        0001-Bug-1624128-Update-CK_GCM_PARAMS-uses-for-PKCS11-v3..patch
         # Fix MOZILLA#1516803
         # https://bugzilla.mozilla.org/show_bug.cgi?id=1516803
         mozilla-1516803.patch
@@ -133,8 +131,6 @@ prepare() {
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
   patch -Np1 -i "$srcdir"/0001-Use-remoting-name-for-GDK-application-names.patch
 
-  # https://bugs.archlinux.org/task/66549
-  patch -Np1 -i ../0001-Bug-1624128-Update-CK_GCM_PARAMS-uses-for-PKCS11-v3..patch
   # reenable system sqlite
   patch -R -p1 -i "$srcdir"/5022efe33088.patch
 
@@ -241,23 +237,22 @@ END
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 md5sums=('SKIP'
-         '141299821a0a0fb744a187750b01e1b6'
+         '095f1d0cd7de36e7ad3340699fce45b8'
          'a26a061efb4def6572d5b319d657f1d6'
          '4c23d9c0a691d70919beb1dafbbecbd3'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6821ee347a094765776d8aec0a1d07e2'
-         '9fbeda9d97bdd05082e1b9b954839c65'
-         '69a4e699468346c47457186205c6316f'
+         'ac9ce8934b4553fc42cb110c9c04350e'
+         '625fe05879952550fe3468e7a6465a07'
          '0f9fcd2ec38e339e4f2d602e1b13e3ef'
-         'dab1119e8575751064cd616718ce3eb4'
+         '0442f4a7524e5229611009372369f1f4'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '39f19e3fc4acb7dd5ff92c656228c244'
-         'fc2299d95a9230c5bfe79462a7b1bfc6'
-         '86bf0a147c5d07b57caf81456db4bdc6'
+         'd24681f9a46ae23689b2867f4ab6eaae'
+         'dbb578ee6ef93f0d28584d38904fac70'
          'f867ae41a722630cc5567e2dcc51676d'
          '215e69f9941a0855e005a7b5a351df60'
-         '0ffabb81dd8a5fe98bb8afe47d6541d3'
-         'cae73e7bbb8496192bee5aa83dfa2e8d'
-         'b3955b522692ff778b571ae5014b4841'
+         'e8585d1477f5f057603f38fcceec5c3f'
+         '91ef22b0393dd313dce0e5ffe042a369'
          'efcddfb6595b356b3faaf6b93313659e'
          'aa9261c4d407cf809bf8275e6f2e52c7')

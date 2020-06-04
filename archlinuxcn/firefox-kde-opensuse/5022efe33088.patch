@@ -309,12 +309,7 @@ diff --git a/storage/mozStorageService.cpp b/storage/mozStorageService.cpp
 diff --git a/third_party/sqlite3/src/moz.build b/third_party/sqlite3/src/moz.build
 --- a/third_party/sqlite3/src/moz.build
 +++ b/third_party/sqlite3/src/moz.build
-@@ -76,27 +76,25 @@ if CONFIG['OS_ARCH'] == 'WINNT' and CONF
- # Omit unused functions to save some library footprint.
- DEFINES['SQLITE_OMIT_DEPRECATED'] = True
- DEFINES['SQLITE_OMIT_BUILTIN_TEST'] = True
- DEFINES['SQLITE_OMIT_DECLTYPE'] = True
- 
+@@ -80,7 +80,6 @@
  # Try to use a MEMORY temp store when possible. That allows for better
  # performance and doesn't suffer from a full separate tmp partition.
  # Exclude 32bit platforms due to address space fragmentation issues.
@@ -322,9 +317,7 @@ diff --git a/third_party/sqlite3/src/moz.build b/third_party/sqlite3/src/moz.bui
  if CONFIG['OS_TARGET'] == 'Android':
      # On Android there's no tmp partition, so always use a MEMORY temp store.
      DEFINES['SQLITE_TEMP_STORE'] = 3
- elif CONFIG['HAVE_64BIT_BUILD']:
-     # On 64bit platforms default to a MEMORY temp store for performance.
-     DEFINES['SQLITE_TEMP_STORE'] = 2
+@@ -90,7 +89,6 @@
  
  # Change the default temp files prefix, to easily distinguish files we created
  # vs files created by other Sqlite instances in the system.
@@ -332,11 +325,7 @@ diff --git a/third_party/sqlite3/src/moz.build b/third_party/sqlite3/src/moz.bui
  DEFINES['SQLITE_TEMP_FILE_PREFIX'] = '"mz_etilqs_"'
  
  # Suppress warnings in third-party code.
- if CONFIG['CC_TYPE'] in ('clang', 'gcc'):
-     CFLAGS += [
-         '-Wno-sign-compare',
-         '-Wno-type-limits',
-     ]
+
 diff --git a/third_party/sqlite3/src/sqlite.symbols b/third_party/sqlite3/src/sqlite.symbols
 --- a/third_party/sqlite3/src/sqlite.symbols
 +++ b/third_party/sqlite3/src/sqlite.symbols

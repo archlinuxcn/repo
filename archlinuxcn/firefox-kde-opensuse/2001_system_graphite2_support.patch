@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent  6a7e586f839ddc687046e2b1fea168d7ad9b72bd
+# Parent  df5c5a8c44bbf84528429a29aa78de4488884713
 Allow building against system-wide graphite2.
 
 https://bugzilla.mozilla.org/show_bug.cgi?id=847568
@@ -135,12 +135,12 @@ diff --git a/gfx/moz.build b/gfx/moz.build
      'vr',
      'config',
      'webrender_bindings',
+     'wgpu_bindings',
  ]
- 
 diff --git a/gfx/thebes/moz.build b/gfx/thebes/moz.build
 --- a/gfx/thebes/moz.build
 +++ b/gfx/thebes/moz.build
-@@ -281,16 +281,19 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] in ('and
+@@ -283,16 +283,19 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] in ('and
  if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk':
      CXXFLAGS += CONFIG['MOZ_PANGO_CFLAGS']
  
@@ -164,7 +164,7 @@ diff --git a/gfx/thebes/moz.build b/gfx/thebes/moz.build
 diff --git a/old-configure.in b/old-configure.in
 --- a/old-configure.in
 +++ b/old-configure.in
-@@ -2595,16 +2595,37 @@ if test "$USE_FC_FREETYPE"; then
+@@ -2528,16 +2528,37 @@ if test "$USE_FC_FREETYPE"; then
          CPPFLAGS="$CPPFLAGS $FT2_CFLAGS $XCFLAGS"
          MOZ_CHECK_HEADERS([fontconfig/fcfreetype.h], ,
              [AC_MSG_ERROR(Can't find header fontconfig/fcfreetype.h.)], [#include <fontconfig/fontconfig.h>])
@@ -228,7 +228,7 @@ diff --git a/toolkit/library/moz.build b/toolkit/library/moz.build
 diff --git a/toolkit/moz.configure b/toolkit/moz.configure
 --- a/toolkit/moz.configure
 +++ b/toolkit/moz.configure
-@@ -399,16 +399,30 @@ def freetype2_combined_info(fontconfig_i
+@@ -397,16 +397,30 @@ def freetype2_combined_info(fontconfig_i
      return namespace(
          cflags=freetype2_info.cflags + fontconfig_info.cflags,
          libs=freetype2_info.libs + fontconfig_info.libs,

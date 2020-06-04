@@ -14,7 +14,7 @@
              <menu id="file-menu" data-l10n-id="menu-file">
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -6373,11 +6373,17 @@ function onViewToolbarsPopupShowing(aEve
+@@ -6296,11 +6296,17 @@ function onViewToolbarsPopupShowing(aEve
  
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
  
@@ -34,7 +34,7 @@
        toolbar.getAttribute("type") == "menubar" ? "autohide" : "collapsed";
 --- a/browser/components/places/content/places.xhtml
 +++ b/browser/components/places/content/places.xhtml
-@@ -171,7 +171,7 @@
+@@ -169,7 +169,7 @@
          <toolbarbutton type="menu" class="tabbable"
                onpopupshowing="document.getElementById('placeContent').focus()"
  #else
@@ -84,7 +84,7 @@
  if CONFIG['CC_TYPE'] in ('clang', 'gcc'):
 --- a/layout/build/moz.build
 +++ b/layout/build/moz.build
-@@ -69,6 +69,10 @@ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'an
+@@ -68,6 +68,10 @@ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'an
          '/dom/system',
          '/dom/system/android',
      ]
@@ -97,7 +97,7 @@
      'components.conf',
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -317,6 +317,9 @@ pref("dom.mouseevent.click.hack.use_lega
+@@ -309,6 +309,9 @@ pref("dom.mouseevent.click.hack.use_lega
  // of content viewers to cache based on the amount of available memory.
  pref("browser.sessionhistory.max_total_viewers", -1);
  
@@ -319,7 +319,7 @@
 +#endif /* __nsDbusmenu_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenu.cpp
-@@ -0,0 +1,797 @@
+@@ -0,0 +1,796 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -338,7 +338,6 @@
 +#include "mozilla/MouseEvents.h"
 +#include "mozilla/PresShell.h"
 +#include "mozilla/PresShellInlines.h"
-+#include "nsAutoPtr.h"
 +#include "nsComponentManagerUtils.h"
 +#include "nsContentUtils.h"
 +#include "nsCSSValue.h"
@@ -1245,7 +1244,7 @@
 +#endif /* __nsMenu_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenuBar.cpp
-@@ -0,0 +1,549 @@
+@@ -0,0 +1,548 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -1261,7 +1260,6 @@
 +#include "mozilla/dom/KeyboardEvent.h"
 +#include "mozilla/dom/KeyboardEventBinding.h"
 +#include "mozilla/Preferences.h"
-+#include "nsAutoPtr.h"
 +#include "nsContentUtils.h"
 +#include "nsIDOMEventListener.h"
 +#include "nsIRunnable.h"
@@ -2050,7 +2048,7 @@
 +                                                 index));
 +    }
 +
-+    MOZ_ALWAYS_TRUE(mChildren.InsertElementAt(index, std::move(aChild)));
++    mChildren.InsertElementAt(index, std::move(aChild));
 +}
 +
 +void
@@ -2064,7 +2062,7 @@
 +                                           aChild->GetNativeData()));
 +    }
 +
-+    MOZ_ALWAYS_TRUE(mChildren.AppendElement(std::move(aChild)));
++    mChildren.AppendElement(std::move(aChild));
 +}
 +
 +bool
@@ -2157,7 +2155,7 @@
 +#endif /* __nsMenuContainer_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenuItem.cpp
-@@ -0,0 +1,767 @@
+@@ -0,0 +1,766 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -2173,7 +2171,6 @@
 +#include "mozilla/dom/XULCommandEvent.h"
 +#include "mozilla/Preferences.h"
 +#include "mozilla/TextEvents.h"
-+#include "nsAutoPtr.h"
 +#include "nsContentUtils.h"
 +#include "nsCRT.h"
 +#include "nsGkAtoms.h"
@@ -3849,7 +3846,7 @@
 +#endif /* __nsMenuObject_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenuSeparator.cpp
-@@ -0,0 +1,83 @@
+@@ -0,0 +1,82 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -3858,7 +3855,6 @@
 + * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 +
 +#include "mozilla/Assertions.h"
-+#include "nsAutoPtr.h"
 +#include "nsCRT.h"
 +#include "nsGkAtoms.h"
 +
@@ -4057,7 +4053,7 @@
 +        return;
 +    }
 +
-+    MutationRecord *m = *mPendingMutations.AppendElement(new MutationRecord);
++    MutationRecord *m = mPendingMutations.AppendElement(MakeUnique<MutationRecord>())->get();
 +    m->mType = MutationRecord::eAttributeChanged;
 +    m->mTarget = aElement;
 +    m->mAttribute = aAttribute;
@@ -4088,7 +4084,7 @@
 +        return;
 +    }
 +
-+    MutationRecord *m = *mPendingMutations.AppendElement(new MutationRecord);
++    MutationRecord *m = mPendingMutations.AppendElement(MakeUnique<MutationRecord>())->get();
 +    m->mType = MutationRecord::eContentInserted;
 +    m->mTarget = container;
 +    m->mChild = aChild;
@@ -4111,7 +4107,7 @@
 +        return;
 +    }
 +
-+    MutationRecord *m = *mPendingMutations.AppendElement(new MutationRecord);
++    MutationRecord *m = mPendingMutations.AppendElement(MakeUnique<MutationRecord>())->get();
 +    m->mType = MutationRecord::eContentRemoved;
 +    m->mTarget = container;
 +    m->mChild = aChild;
@@ -4181,7 +4177,7 @@
 +    bool inUpdateSequence = false;
 +
 +    while (mPendingMutations.Length() > 0) {
-+        MutationRecord *m = mPendingMutations[0];
++        MutationRecord *m = mPendingMutations[0].get();
 +
 +        if (m->mTarget != currentTarget) {
 +            if (inUpdateSequence) {
@@ -4342,7 +4338,7 @@
 +#include "mozilla/Attributes.h"
 +#include "mozilla/GuardObjects.h"
 +#include "mozilla/RefPtr.h"
-+#include "nsAutoPtr.h"
++#include "mozilla/UniquePtr.h"
 +#include "nsDataHashtable.h"
 +#include "nsStubMutationObserver.h"
 +#include "nsTArray.h"
@@ -4453,7 +4449,7 @@
 +    mozilla::dom::Document *mDocument;
 +    nsIContent *mLastSource;
 +    nsNativeMenuChangeObserver *mLastTarget;
-+    nsTArray<nsAutoPtr<MutationRecord> > mPendingMutations;
++    nsTArray<mozilla::UniquePtr<MutationRecord> > mPendingMutations;
 +    nsDataHashtable<nsPtrHashKey<nsIContent>, nsNativeMenuChangeObserver *> mContentToObserverTable;
 +
 +    static uint32_t sUpdateBlockersCount;
@@ -4488,7 +4484,7 @@
 +#endif /* __nsNativeMenuDocListener_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsNativeMenuService.cpp
-@@ -0,0 +1,504 @@
+@@ -0,0 +1,503 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -4499,7 +4495,6 @@
 +#include "mozilla/Assertions.h"
 +#include "mozilla/Preferences.h"
 +#include "mozilla/UniquePtr.h"
-+#include "nsAutoPtr.h"
 +#include "nsCOMPtr.h"
 +#include "nsCRT.h"
 +#include "nsGtkUtils.h"
@@ -5082,7 +5077,7 @@
 +#endif /* __nsNativeMenuService_h__ */
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
-@@ -5793,6 +5793,10 @@ void nsWindow::HideWindowChrome(bool aSh
+@@ -6008,6 +6008,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5113,7 +5108,7 @@
    /**
     * GetLastUserInputTime returns a timestamp for the most recent user input
     * event.  This is intended for pointer grab requests (including drags).
-@@ -712,6 +716,8 @@ class nsWindow final : public nsBaseWidg
+@@ -721,6 +725,8 @@ class nsWindow final : public nsBaseWidg
  
    mozilla::UniquePtr<mozilla::CurrentX11TimeGetter> mCurrentTimeGetter;
    static CSDSupportLevel sCSDSupportLevel;
@@ -5159,7 +5154,7 @@
  import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
-@@ -2537,7 +2538,7 @@ STATIC_ATOMS = [
+@@ -2552,7 +2553,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
      # END ATOMS
@@ -5187,7 +5182,7 @@
  if defined('MOZ_X11'):
 --- a/xpfe/appshell/AppWindow.cpp
 +++ b/xpfe/appshell/AppWindow.cpp
-@@ -66,7 +66,7 @@
+@@ -67,7 +67,7 @@
  #  include "mozilla/XULStore.h"
  #endif
  
