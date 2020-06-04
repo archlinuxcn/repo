@@ -33,6 +33,9 @@ extern "C" const char *jl_archlinux_translate_filename(const char *_filename)
         // relative path, assume to be base
         filename = basedir + '/' + filename;
     }
+    else if (filename.starts_with(srcdir + "/contrib/")) {
+        filename = juliadir + filename.substr(srcdir.size());
+    }
     else if (filename.starts_with(srcdir + "/base/")) {
         filename = juliadir + filename.substr(srcdir.size());
     }

@@ -64,7 +64,7 @@ md5sums=('SKIP'
          '6e7fcba300512df8ab8ab65d3e1eb847'
          'f1f6ffc7ddcbc7fa0000d6f5fdbbe925'
          'f9d0b11988630599dc860a5b33a7ba13'
-         '68dd69299b37d84f38e861c3d2922508')
+         '1bf92fe1bc71f4b052deaf7fc7505501')
 
 pkgver() {
   cd julia
@@ -242,6 +242,9 @@ package-julia-in() {
   sed "s|@VER@|$ver_short|" ../julia-clear-precompile.hook |
     install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-clear-precompile.hook"
   mkdir -p "${pkgdir}/usr/share/julia/compiled/v$ver_short"
+
+  mkdir -p "${pkgdir}/usr/share/julia/contrib"
+  install -m644 -t "${pkgdir}/usr/share/julia/contrib" contrib/generate_precompile.jl
 
   # Without stripping, makepkg doesn't copy the source for us...
   dbgsrcdir="${DBGSRCDIR:-/usr/src/debug}"
