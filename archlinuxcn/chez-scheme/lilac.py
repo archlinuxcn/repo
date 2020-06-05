@@ -16,7 +16,9 @@ def pre_build():
   except FileNotFoundError:
     return
 
-post_build = aur_post_build
+def post_build():
+    _G.aur_building_files.remove('build')
+    aur_post_build()
 
 if __name__ == '__main__':
   single_main()
