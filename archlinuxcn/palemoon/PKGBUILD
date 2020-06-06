@@ -4,8 +4,8 @@
 # Contributor: American_Jesus
 pkgname=palemoon
 _repo=Pale-Moon
-pkgver=28.9.3
-_commit=1e9e1f61221f5787ecae01a0be622bc7a4d23d6a
+pkgver=28.10.0
+_commit=8e8224f57a9f8d527302d9104f11ed58b8f20690
 pkgrel=2
 pkgdesc="Open source web browser based on Firefox focusing on efficiency."
 arch=('i686' 'x86_64')
@@ -23,7 +23,8 @@ source=(git+"https://github.com/MoonchildProductions/${_repo}?signed#commit=${_c
 sha1sums=('SKIP'
           'SKIP'
           '576882a0b88a3353d07f1db16af7445d4e61bb66')
-validpgpkeys=('3059E09144F56804F0FBF4E126B40624BDBFD9F3')
+validpgpkeys=('3059E09144F56804F0FBF4E126B40624BDBFD9F3'
+              '3DAD8CD107197488D2A2A0BD40481E7B8FCF9CEC')
 
 prepare() {
   sed 's#%SRCDIR%#'"${srcdir}"'#g' mozconfig.in > mozconfig
