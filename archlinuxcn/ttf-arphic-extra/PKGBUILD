@@ -1,0 +1,35 @@
+# Maintainer: oldherl <oldherl@gmail.com>
+# Contributer: Robert Ma (Hexcles) <bob1211@gmail.com>
+
+pkgname=ttf-arphic-extra
+pkgver=20100309
+pkgrel=3
+pkgdesc="Extra fonts released under revised Arphic Public License for non-profit use only"
+arch=('any')
+url="http://www.arphic.com.tw/en/home/index"
+license=('custom:Arphic_Public_License_nonprofit')
+makedepends=('unzip-iconv')
+source=(
+        "s.zip::http://www.arphic.com.tw/wp-content/uploads/2019/03/arplbaosong2gbklt.zip"
+        "m.zip::http://www.arphic.com.tw/wp-content/uploads/2019/03/arplmingu20lt.zip"
+)
+noextract=('s.zip' 'm.zip')
+sha256sums=('249c6f192801f530b83df056b0f0b88519d5c00f80b983e70bf557f4fd429491'
+            '8f8af623ee58817a861558fd30471dd82d0644141fccb692f958b4f558f2c2ff')
+
+prepare()
+{
+    unzip -j -o -O BIG5 s.zip # no keep path, overwrite, Dos/Win encoding
+    unzip -j -o -O BIG5 m.zip
+}
+
+package()
+{
+    cd "${srcdir}"
+    _fdir="${pkgdir}/usr/share/fonts/TTF"
+    install -m 644 -D arplmingu20lt.ttf "${_fdir}/arplmingu20lt.ttf"
+    install -m 644 -D arplbaosong2gbklt.ttf "${_fdir}/arplbaosong2gbklt.ttf"
+    install -m 644 -D 'ARPHIC PUBLIC LICENSE_20190320-同20100309版-僅改地址.doc' "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.en.doc"
+    install -m 644 -D "文鼎公眾授權書-繁體_20190320-同20100309版-僅改地址.doc" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.zh_Hant.doc"
+    install -m 644 -D "文鼎公眾授權書-簡體_20190320-同20100309版-僅改地址.doc" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.zh_Hans.doc"
+}
