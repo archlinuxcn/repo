@@ -23,10 +23,14 @@ build() {
     
     # NOTE: uncomment the following line if you are in mainland china
     # export GOPROXY="https://goproxy.cn,direct"
-    export CGO_ENABLED=0
+    export CGO_ENABLED=1
     export GO111MODULE=on
 
-    go build -v -tags "full" -ldflags="-s -w" -o trojan-go .
+    go build -v \
+        -buildmode=pie -trimpath -mod=readonly -modcacherw \
+        -tags "full" \
+        -ldflags="-s -w -extldflags=-Wl,-z,now,-z,relro" \
+        -o trojan-go .
 }
 
 package() {
