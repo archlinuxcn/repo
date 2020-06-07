@@ -1,18 +1,18 @@
 # Maintainer: Bruce Zhang <zttt183525594@gmail.com>
-_name=fuo_kuwo
-pkgname=feeluown-kuwo
-pkgver=0.1.1
-pkgrel=4
-pkgdesc="Kuwo music provider for FeelUOwn music player"
+_name=fuo_netease
+pkgname=feeluown-netease
+pkgver=0.4.2
+pkgrel=1
+pkgdesc="feeluown netease plugin"
 arch=('any')
-url="https://github.com/feeluown/feeluown-kuwo"
+url="https://github.com/feeluown/feeluown-netease"
 license=('GPL3')
-depends=('feeluown' 'python-marshmallow' 'python-requests')
+depends=('feeluown' 'python-pycryptodome' 'python-requests' 'python-marshmallow' 'python-beautifulsoup4')
 makedepends=('python-setuptools' 'python-pip')
 source=(
 	"https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz"
 )
-sha256sums=('d34902a43b3f381ec969ef1127883960736f535bd6233b7984c86d0af684f948')
+sha256sums=('e0b9e1132c64ee9d11a1d881d1418646c1bfd244bae6db42aed46427d1b568b2')
 groups=('feeluown-full')
 
 build() {

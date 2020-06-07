@@ -5,11 +5,9 @@ maintainers:
 build_prefix: extra-x86_64
 
 repo_depends:
+  - feeluown
   - python-fuzzywuzzy
-  - python-janus
-  - python-qasync
 
 update_on:
-  - pypi: feeluown
-    use_pre_release: true
+  - pypi: fuo-local
   - alias: python

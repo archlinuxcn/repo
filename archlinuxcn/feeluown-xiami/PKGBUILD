@@ -1,18 +1,18 @@
 # Maintainer: Bruce Zhang <zttt183525594@gmail.com>
-_name=fuo_kuwo
-pkgname=feeluown-kuwo
-pkgver=0.1.1
-pkgrel=4
-pkgdesc="Kuwo music provider for FeelUOwn music player"
+_name=fuo_xiami
+pkgname=feeluown-xiami
+pkgver=0.2.3
+pkgrel=1
+pkgdesc="feeluown xiami plugin"
 arch=('any')
-url="https://github.com/feeluown/feeluown-kuwo"
+url="https://github.com/feeluown/feeluown-xiami"
 license=('GPL3')
 depends=('feeluown' 'python-marshmallow' 'python-requests')
 makedepends=('python-setuptools' 'python-pip')
 source=(
 	"https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz"
 )
-sha256sums=('d34902a43b3f381ec969ef1127883960736f535bd6233b7984c86d0af684f948')
+sha256sums=('9467161e66dd8183424dfcd0752fbfb607e2efd92173805635e001181c1a6f14')
 groups=('feeluown-full')
 
 build() {
