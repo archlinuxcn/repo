@@ -6,7 +6,7 @@
 
 pkgname=i2p
 pkgver=0.9.46
-pkgrel=1
+pkgrel=2
 pkgdesc="A distributed anonymous network"
 url="https://geti2p.net"
 license=('GPL2')
@@ -32,7 +32,7 @@ source=("${_url}/i2psource_${pkgver}.tar.bz2"{,.sig}
         #"https://download.db-ip.com/free/dbip-country-lite-$(date +%Y-%m).mmdb.gz"
         'i2prouter.service' 'i2p.tmpfiles' 'wrapper.config' 'router.config'
         'i2prouter.bash' 'i2prouter.sh' 'chromium-i2p.sh'
-        #upstream.patch::'https://github.com/i2p/i2p.i2p/commit/0bec84a.patch'
+        upstream.patch::'https://github.com/i2p/i2p.i2p/commit/6c0e18d3.patch'
 )
 
 sha256sums=('ab0eb691b2753277738fe16ddc46349a24fd66b6323deae987f7c927272befd8'
@@ -45,11 +45,12 @@ sha256sums=('ab0eb691b2753277738fe16ddc46349a24fd66b6323deae987f7c927272befd8'
             '90f202e5b66d5a5b425522b409e71fb892d34c534e32ce2d6fe5284015cacf94'
             '7a19b9f90c8792460fd58e8b8aa435a065e34d29a942479850472510e9d3078a'
             '8d39f080c7a2e49226db3a785f3e18583159ef2f95e1ab467fd9984c4e38c9f5'
-            '77e359cf880ccc09f504372ef85c8ad3ab7d1186106a4ae92c4ff4f37ae650e0')
+            '77e359cf880ccc09f504372ef85c8ad3ab7d1186106a4ae92c4ff4f37ae650e0'
+            '9e1d016b6044645a433bf3380d22d64b169127194e621f7dbf0e1c056bf7cb1c')
 
 prepare() {
     cd "$pkgname-$pkgver"
-    #patch -Np1 -i ../upstream.patch
+    patch -Np1 -i ../upstream.patch ||true
     #cp -f ../dbip-country-lite-$(date +%Y-%m).mmdb.gz installer/resources/GeoLite2-Country.mmdb.gz
 }
 
