@@ -1,0 +1,83 @@
+# Maintainer: DuckSoft <realducksoft@gmail.com>
+
+pkgname=naiveproxy-git
+_pkgname=naiveproxy
+pkgdesc='A Proxy using Chrome's network stack to camouflage traffic with strong censorship resistence and low detectablility.'
+pkgver=83.0.4103.61.r51.cc7da21ff
+pkgrel=1
+arch=('x86_64')
+url='https://github.com/klzgrad/naiveproxy'
+license=('BSD')
+depends=('nss' 'glib2')
+source=('git+https://github.com/klzgrad/naiveproxy.git')
+makedepends=('clang' 'git' 'gn' 'gtk3' 'libgnome-keyring' 'lld' 'llvm' 'ninja' 'python2')
+backup=(etc/naiveproxy/config.json)
+md5sums=('SKIP')
+provides=('naiveproxy')
+conflicts=('naiveproxy' 'naiveproxy-bin')
+
+pkgver(){
+  cd ${srcdir}/${_pkgname}
+  printf "%s.r%s.%s" "$(cat CHROMIUM_VERSION)" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build(){
+  cd ${srcdir}/${_pkgname}/src
+  
+  flags='is_official_build=true
+    exclude_unwind_tables=true
+    enable_resource_whitelist_generation=false
+    symbol_level=0
+    
+    is_clang=true
+    linux_use_bundled_binutils=false
+
+    fatal_linker_warnings=false
+    treat_warnings_as_errors=false
+    use_sysroot=false
+
+    fieldtrial_testing_like_official_build=true
+
+    use_cups=false
+    use_dbus=false
+    use_gio=false
+    use_platform_icu_alternatives=true
+    use_gtk=false
+
+    disable_file_support=true
+    enable_websockets=false
+    disable_ftp_support=true
+    use_kerberos=false
+    enable_mdns=false
+    enable_reporting=false
+    include_transport_security_state_preload_list=false
+    
+    use_ozone=true
+    ozone_auto_platforms=false
+    ozone_platform="headless"
+    ozone_platform_headless=true
+    
+    clang_base_path=""
+    clang_use_chrome_plugins=false
+    clang_use_default_sample_profile=false
+  '
+
+  out=out/Release
+  rm -rf "./$out"
+  mkdir -p out
+
+  export DEPOT_TOOLS_WIN_TOOLCHAIN=0
+  gn gen "$out" --args="$flags" --script-executable=/usr/bin/python2
+
+  cp -v /usr/lib/gcc/$(gcc -dumpmachine)/$(gcc -dumpversion)/crtbeginS.o "$out"
+  cp -v /usr/lib/gcc/$(gcc -dumpmachine)/$(gcc -dumpversion)/crtendS.o "$out"
+  ninja -C "$out" naive
+}
+
+package(){
+  cd ${srcdir}/${_pkgname}
+  install -Dm755 src/out/Release/naive ${pkgdir}/usr/bin/naiveproxy
+  install -Dm644 src/config.json ${pkgdir}/etc/naiveproxy/config.json
+  install -Dm644 README.md ${pkgdir}/usr/share/doc/naiveproxy/README.md
+  install -Dm644 USAGE.txt ${pkgdir}/usr/share/doc/naiveproxy/USAGE.txt
+}
