@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=83.0.4103.61
+pkgver=83.0.4103.97
 _rel=1
 pkgrel=1
 _launcher_ver=6
@@ -30,7 +30,6 @@ conflicts=('chromium')
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
         https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-${_rel}.tar.gz
-        https://github.com/ungoogled-software/ungoogled-chromium-archlinux/archive/${_archver}.tar.gz
         vdpau-support.patch
         clean-up-a-call-to-set_utf8.patch
         iwyu-std-numeric_limits-is-defined-in-limits.patch
@@ -43,17 +42,20 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-83-gcc-10.patch
         vaapi-build-fix.patch
         chromium-skia-harmony.patch)
-sha256sums=('f478f28b8111cb70231df4c36e754d812ad7a94b7c844e9d0515345a71fd77a6'
+sha256sums=('12c405f61284cfc78f8c2b6600f3c1ae61a83b639c41087bb4f74fcaab036f83'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
-            'a01a35454dcd3c789e4e536751ecd655959b544b56ffd241a7942d9912749da1'
-            '41fd58307cc83f35dc133204b8e99a76e7e2d7711cf44893010478b0edc18aa4'
-            'ae3bf107834bd8eda9a3ec7899fe35fde62e6111062e5def7d24bf49b53db3db'
-            '46f7fc9768730c460b27681ccf3dc2685c7e1fd22d70d3a82d9e57e3389bb014'
+            '21767f015d14d024884b8780a975f0d8b4b2e31dd11d5eaec6a09938a5a2480f'
             '0ec6ee49113cc8cc5036fa008519b94137df6987bf1f9fbffb2d42d298af868a'
-            '5315977307e69d20b3e856d3f8724835b08e02085a4444a5c5cefea83fd7d006'
             '58c41713eb6fb33b6eef120f4324fa1fb8123b1fbc4ecbe5662f1f9779b9b6af'
+            '675fb3d6276cce569a641436465f58d5709d1d4a5f62b7052989479fd4aaea24'
+            '0e2a78e4aa7272ab0ff4a4c467750e01bad692a026ad9828aaf06d2a9418b9d8'
+            '50687079426094f2056d1f4806dc30fc8d6bad16190520e57ba087ec5db1d778'
+            '071326135bc25226aa165639dff80a03670a17548f2d2ff5cc4f40982b39c52a'
+            '3d7f20e1d2ee7d73ed25e708c0d59a0cb215fcce10a379e3d48a856533c4b0b7'
+            'd793842e9584bf75e3779918297ba0ffa6dd05394ef5b2bf5fb73aa9c86a7e2f'
+            'e042024423027ad3ef729a7e4709bdf9714aea49d64cfbbf46a645a05703abc2'
+            '3e5ba8c0a70a4bc673deec0c61eb2b58f05a4c784cbdb7c8118be1eb6580db6d'
             'fad5e678d62de0e45db1c2aa871628fdc981f78c26392c1dccc457082906a350'
-            '709e2fddba3c1f2ed4deb3a239fc0479bfa50c46e054e7f32db4fb1365fed070'
             '771292942c0901092a402cc60ee883877a99fb804cb54d568c8c6c94565a48e1')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
@@ -181,14 +183,20 @@ build() {
   export AR=ar
   export NM=nm
 
-  _ungoogled_repo="$srcdir/$pkgname-$pkgver-${_rel}"
-  _ungoogled_archlinux_repo="$srcdir/$pkgname-archlinux-${_archver}"
-  mkdir -p out/Release
-  # Assemble GN flags
-  cp "$_ungoogled_repo/flags.gn" "out/Release/args.gn"
-  printf '\n' >> "out/Release/args.gn"
-  cat "$_ungoogled_archlinux_repo/flags.archlinux.gn" >> "out/Release/args.gn"
-  sed -i '/use_system_libopenjpeg2=true/d' "out/Release/args.gn"
+  local _flags=(
+    'custom_toolchain="//build/toolchain/linux/unbundle:default"'
+    'host_toolchain="//build/toolchain/linux/unbundle:default"'
+    'is_official_build=true' # implies is_cfi=true on x86_64
+    'ffmpeg_branding="Chrome"'
+    'proprietary_codecs=true'
+    'rtc_use_pipewire=true'
+    'link_pulseaudio=true'
+    'use_gnome_keyring=false'
+    'use_sysroot=false'
+    'linux_use_bundled_binutils=false'
+    'use_custom_libcxx=false'
+    'use_vaapi=true'
+  )
 
   if [[ -n ${_system_libs[icu]+set} ]]; then
     _flags+=('icu_use_data_file=false')
@@ -207,7 +215,11 @@ build() {
   CFLAGS+='   -Wno-unknown-warning-option'
   CXXFLAGS+=' -Wno-unknown-warning-option'
 
-  gn gen out/Release  --script-executable=/usr/bin/python2 --fail-on-unused-args
+  _ungoogled_repo="$srcdir/$pkgname-$pkgver-${_rel}"
+  mkdir -p out/Release
+  readarray -t -O ${#_flags[@]} _flags < "${_ungoogled_repo}/flags.gn"
+
+  gn gen out/Release  -args="${_flags[*]}" --script-executable=/usr/bin/python2 --script-executable=/usr/bin/python2 --fail-on-unused-args
   ninja -C out/Release chrome chrome_sandbox chromedriver
 }
 
@@ -228,21 +240,41 @@ package() {
   install -Dm644 chrome/app/resources/manpage.1.in \
     "$pkgdir/usr/share/man/man1/chromium.1"
   sed -i \
-    -e "s/@@MENUNAME@@/Chromium/g" \
-    -e "s/@@PACKAGE@@/chromium/g" \
-    -e "s/@@USR_BIN_SYMLINK_NAME@@/chromium/g" \
+    -e 's/@@MENUNAME@@/Chromium/g' \
+    -e 's/@@PACKAGE@@/chromium/g' \
+    -e 's/@@USR_BIN_SYMLINK_NAME@@/chromium/g' \
     "$pkgdir/usr/share/applications/chromium.desktop" \
     "$pkgdir/usr/share/man/man1/chromium.1"
 
-  cp \
-    out/Release/{chrome_{100,200}_percent,resources}.pak \
-    out/Release/{*.bin,chromedriver} \
-    "$pkgdir/usr/lib/chromium/"
-  install -Dm644 -t "$pkgdir/usr/lib/chromium/locales" out/Release/locales/*.pak
+  install -Dm644 chrome/installer/linux/common/chromium-browser/chromium-browser.appdata.xml \
+    "$pkgdir/usr/share/metainfo/chromium.appdata.xml"
+  sed -ni \
+    -e 's/chromium-browser\.desktop/chromium.desktop/' \
+    -e '/<update_contact>/d' \
+    -e '/<p>/N;/<p>\n.*\(We invite\|Chromium supports Vorbis\)/,/<\/p>/d' \
+    -e '/^<?xml/,$p' \
+    "$pkgdir/usr/share/metainfo/chromium.appdata.xml"
+
+  local toplevel_files=(
+    chrome_100_percent.pak
+    chrome_200_percent.pak
+    resources.pak
+    v8_context_snapshot.bin
+
+    # ANGLE
+    libEGL.so
+    libGLESv2.so
+
+    chromedriver
+  )
 
   if [[ -z ${_system_libs[icu]+set} ]]; then
-    cp out/Release/icudtl.dat "$pkgdir/usr/lib/chromium/"
+     toplevel_files+=(icudtl.dat)
   fi
+
+  cp "${toplevel_files[@]/#/out/Release/}" "$pkgdir/usr/lib/chromium/"
+  install -Dm644 -t "$pkgdir/usr/lib/chromium/locales" out/Release/locales/*.pak
+  install -Dm755 -t "$pkgdir/usr/lib/chromium/swiftshader" out/Release/swiftshader/*.so
 
   for size in 24 48 64 128 256; do
     install -Dm644 "chrome/app/theme/chromium/product_logo_$size.png" \
