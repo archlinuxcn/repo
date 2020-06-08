@@ -1,0 +1,32 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+pkgname=git-delta-git
+pkgver=0.2.0.20200607
+pkgrel=1
+pkgdesc="A syntax-highlighter for git and diff output"
+arch=('x86_64')
+url="https://github.com/dandavison/delta"
+license=('MIT')
+makedepends=('rust' 'cargo' 'git')
+source=("git+$url")
+sha256sums=('SKIP')
+conflicts=(git-delta)
+provides=(git-delta=$pkgver)
+
+pkgver () {
+  cd delta
+  echo $(grep -oPm1 '(?<=^version = ")[^"]+' Cargo.toml).$(TZ=UTC git log -1 --pretty='%cd' --date=short-local | tr -d '-')
+}
+
+build () {
+  cd delta
+  sed -i '/profile.release/alto = true' Cargo.toml
+  cargo build --release
+  git checkout Cargo.toml
+}
+
+package () {
+  cd delta
+
+  install -Dm755 "target/release/delta" "$pkgdir/usr/bin/delta"
+  install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname"
+}
