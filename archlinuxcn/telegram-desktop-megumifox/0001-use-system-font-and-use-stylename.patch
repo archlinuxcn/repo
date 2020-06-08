@@ -1,49 +1,41 @@
-From fb1f741c2dfa6631bd15f9d094d40cd5e7a7a9b7 Mon Sep 17 00:00:00 2001
+From 6ffdab7e81dc7b5afdf12730e58822cba8ea215d Mon Sep 17 00:00:00 2001
 From: Megumi_fox <i@megumifox.com>
-Date: Thu, 14 May 2020 19:17:55 +0800
+Date: Mon, 8 Jun 2020 23:13:04 +0800
 Subject: [PATCH] use system font and use stylename
 
 ---
- ui/style/style_core_font.cpp | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ ui/style/style_core_custom_font.cpp | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/ui/style/style_core_font.cpp b/ui/style/style_core_font.cpp
-index 4209fd4..41df7be 100644
---- a/ui/style/style_core_font.cpp
-+++ b/ui/style/style_core_font.cpp
-@@ -106,6 +106,15 @@ bool LoadCustomFont(const QString &filePath, const QString &familyName, int flag
- 	return QString();
- }
+diff --git a/ui/style/style_core_custom_font.cpp b/ui/style/style_core_custom_font.cpp
+index 570d169..6b7be9f 100644
+--- a/ui/style/style_core_custom_font.cpp
++++ b/ui/style/style_core_custom_font.cpp
+@@ -28,6 +28,11 @@ void SetCustomFonts(const CustomFont &regular, const CustomFont &bold) {
+ QFont ResolveFont(uint32 flags, int size) {
+ 	static auto Database = QFontDatabase();
  
-+QString GeneralFont() {
-+	static const auto family = [&]() -> QString {
-+	const auto type = QFontDatabase::GeneralFont;
-+	return QFontDatabase::systemFont(type).family();
-+	}();
++    RegularFont.family = QApplication::font().family();
++    RegularFont.style = "Regular";
++    BoldFont.family = QApplication::font().family();
++    BoldFont.style = "DemiBold";
 +
-+	return family;
-+}
-+
- QString MonospaceFont() {
- 	static const auto family = [&]() -> QString {
- 		const auto manual = ManualMonospaceFont();
-@@ -274,7 +283,7 @@ QString GetPossibleEmptyOverride(int32 flags) {
- 
- QString GetFontOverride(int32 flags) {
- 	const auto result = GetPossibleEmptyOverride(flags);
--	return result.isEmpty() ? "Open Sans" : result;
-+	return result.isEmpty() ? GeneralFont() : result;
- }
- 
- void destroyFonts() {
-@@ -320,6 +329,7 @@ FontData::FontData(int size, uint32 flags, int family, Font *other)
- 	if ((_flags & FontBold) || (_flags & FontSemibold)) {
- #ifdef DESKTOP_APP_USE_PACKAGED_FONTS
- 		f.setWeight(QFont::DemiBold);
-+        f.setStyleName("Medium");
- #else // DESKTOP_APP_USE_PACKAGED_FONTS
- 		f.setBold(true);
- 		f.setStyleName("Semibold");
+ 	const auto bold = ((flags & FontBold) || (flags & FontSemibold));
+ 	const auto italic = (flags & FontItalic);
+ 	const auto &custom = bold ? BoldFont : RegularFont;
+@@ -43,6 +48,12 @@ QFont ResolveFont(uint32 flags, int size) {
+ 			: sizes;
+ 		const auto point = good.isEmpty() ? size : good.front();
+ 		result = Database.font(custom.family, custom.style, point);
++        if (bold){
++            if (result.weight() < 56){
++            result.setStyleName("");
++			result.setWeight(QFont::DemiBold);
++            }
++        }
+ 	} else {
+ 		result.setFamily(GetFontOverride(flags));
+ 		if (bold) {
 -- 
-2.26.2
+2.27.0
 
