@@ -1,9 +1,10 @@
-# Maintainer: David Birks <david@birks.dev>
+# Maintainer: Arturo Penen <apenen@gmail.com>
+# Contributor: David Birks <david@birks.dev>
 # Contributor: Jacob Mason <jacob@jacobmason.net>
 
 pkgname=jx
 pkgver=2.1.59
-pkgrel=1
+pkgrel=2
 pkgdesc='Command line tool for working with Jenkins X'
 arch=('x86_64')
 url='https://github.com/jenkins-x/jx'
