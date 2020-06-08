@@ -110,6 +110,7 @@ build() {
     add_binary /usr/bin/sulogin
 
     map add_binary \
+        /usr/bin/journalctl \
         /usr/bin/systemd-tmpfiles \
         /usr/lib/systemd/systemd-hibernate-resume \
         /usr/lib/systemd/systemd-shutdown \
@@ -117,9 +118,6 @@ build() {
         /usr/lib/systemd/system-generators/systemd-fstab-generator \
         /usr/lib/systemd/system-generators/systemd-gpt-auto-generator \
         /usr/lib/systemd/system-generators/systemd-hibernate-resume-generator
-
-    # for journalctl in emergency shell
-    add_binary journalctl
 
     # udev rules and systemd units
     map add_udev_rule "$rules" \
@@ -172,14 +170,8 @@ build() {
         'shadow: files'
 
     echo "root:x:0:0:root:/:/bin/sh" >"$BUILDROOT/etc/passwd"
-    echo "root:x:0:root" >"$BUILDROOT/etc/group"
     echo "root::::::::" >"$BUILDROOT/etc/shadow"
-
-    add_systemd_drop_in systemd-udevd.service resolve-names <<EOF
-[Service]
-ExecStart=
-ExecStart=/usr/lib/systemd/systemd-udevd --resolve-names=never
-EOF
+    getent group root audio disk input kmem kvm lp optical render storage tty uucp video | awk -F: ' { print $1 ":x:" $3 ":" }' >"$BUILDROOT/etc/group"
 
     add_dir "/etc/modules-load.d"
     (

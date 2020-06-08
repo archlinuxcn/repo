@@ -1,0 +1,52 @@
+From 40206f9698b4e52dca642b5f6010cff6fa35351e Mon Sep 17 00:00:00 2001
+From: axionl <i@axionl.me>
+Date: Mon, 8 Jun 2020 23:43:01 +0800
+Subject: [PATCH] make-homed-userdbd-repart-services-installable
+
+---
+ presets/90-systemd.preset       | 1 +
+ units/meson.build               | 3 +--
+ units/systemd-repart.service.in | 4 ++++
+ 3 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/presets/90-systemd.preset b/presets/90-systemd.preset
+index dd268ae1b5..8dc18f12cc 100644
+--- a/presets/90-systemd.preset
++++ b/presets/90-systemd.preset
+@@ -19,6 +19,7 @@ enable getty@.service
+ enable systemd-timesyncd.service
+ enable systemd-networkd.service
+ enable systemd-resolved.service
++enable systemd-repart.service
+ enable systemd-homed.service
+ enable systemd-userdbd.socket
+ enable systemd-pstore.service
+diff --git a/units/meson.build b/units/meson.build
+index c641900c66..21ab43685d 100644
+--- a/units/meson.build
++++ b/units/meson.build
+@@ -228,8 +228,7 @@ in_units = [
+          'multi-user.target.wants/'],
+         ['systemd-vconsole-setup.service',       'ENABLE_VCONSOLE'],
+         ['systemd-volatile-root.service',        'ENABLE_INITRD'],
+-        ['systemd-repart.service',               'ENABLE_REPART',
+-         'sysinit.target.wants/ initrd-root-fs.target.wants/'],
++        ['systemd-repart.service',               'ENABLE_REPART'],
+         ['user-runtime-dir@.service',            ''],
+         ['user@.service',                        ''],
+ ]
+diff --git a/units/systemd-repart.service.in b/units/systemd-repart.service.in
+index 9393a64f00..7aadc511dc 100644
+--- a/units/systemd-repart.service.in
++++ b/units/systemd-repart.service.in
+@@ -27,3 +27,7 @@ ExecStart=@rootbindir@/systemd-repart --dry-run=no
+ 
+ # The tool returns 77 if there's no existing GPT partition table
+ SuccessExitStatus=77
++
++[Install]
++WantedBy=sysinit.target
++WantedBy=initrd-root-fs.target
+-- 
+2.27.0
+
