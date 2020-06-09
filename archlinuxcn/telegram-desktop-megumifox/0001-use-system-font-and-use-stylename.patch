@@ -11,13 +11,14 @@ diff --git a/ui/style/style_core_custom_font.cpp b/ui/style/style_core_custom_fo
 index 570d169..6b7be9f 100644
 --- a/ui/style/style_core_custom_font.cpp
 +++ b/ui/style/style_core_custom_font.cpp
-@@ -28,6 +28,11 @@ void SetCustomFonts(const CustomFont &regular, const CustomFont &bold) {
+@@ -28,6 +28,12 @@ void SetCustomFonts(const CustomFont &regular, const CustomFont &bold) {
  QFont ResolveFont(uint32 flags, int size) {
  	static auto Database = QFontDatabase();
  
-+    RegularFont.family = QApplication::font().family();
++    const auto type = QFontDatabase::GeneralFont;
++    RegularFont.family = QFontDatabase::systemFont(type).family();
 +    RegularFont.style = "Regular";
-+    BoldFont.family = QApplication::font().family();
++    BoldFont.family = QFontDatabase::systemFont(type).family();
 +    BoldFont.style = "DemiBold";
 +
  	const auto bold = ((flags & FontBold) || (flags & FontSemibold));
