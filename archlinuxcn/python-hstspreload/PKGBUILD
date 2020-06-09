@@ -1,6 +1,6 @@
 _name=hstspreload
 pkgname=python-hstspreload
-pkgver=2020.6.5
+pkgver=2020.6.9
 pkgrel=1
 pkgdesc="Chromium HSTS Preload list as a Python package and updated daily"
 arch=(any)
@@ -8,16 +8,16 @@ url="https://github.com/sethmlarson/hstspreload"
 license=('BSD-3')
 depends=('python')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/hstspreload-2020.6.5.tar.gz")
-sha256sums=('2858151b4f77322c6a61312abccead20217b1169ae0855753c0da45da2049329')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/hstspreload-2020.6.9.tar.gz")
+sha256sums=('1534715db2f5224debb605a82e3f79ee9f891031b748cdcf0441eb672d5f3aa2')
 
 build() {
-  cd "$srcdir/hstspreload-2020.6.5"
+  cd "$srcdir/hstspreload-2020.6.9"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/hstspreload-2020.6.5"
+  cd "$srcdir/hstspreload-2020.6.9"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install annoying files
