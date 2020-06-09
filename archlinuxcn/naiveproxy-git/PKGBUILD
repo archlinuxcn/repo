@@ -4,7 +4,7 @@ pkgname=naiveproxy-git
 _pkgname=naiveproxy
 pkgdesc="A Proxy using Chrome's network stack to camouflage traffic with strong censorship resistence and low detectablility."
 pkgver=83.0.4103.61.r51.cc7da21ff
-pkgrel=2
+pkgrel=2.1
 arch=('x86_64')
 url='https://github.com/klzgrad/naiveproxy'
 license=('BSD')
@@ -82,4 +82,5 @@ package(){
   install -Dm644 src/config.json ${pkgdir}/etc/naiveproxy/config.json
   install -Dm644 README.md ${pkgdir}/usr/share/doc/naiveproxy/README.md
   install -Dm644 USAGE.txt ${pkgdir}/usr/share/doc/naiveproxy/USAGE.txt
+  install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/naiveproxy-git/LICENSE
 }
