@@ -9,6 +9,7 @@ license=('GPL2')
 depends=('dkms')
 makedepends=('git')
 conflicts=("${_pkgname}-dkms")
+provides=("${_pkgname}-dkms")
 source=("${pkgname}::git+https://github.com/paroj/xpad.git"
         "Kbuild"
         "dkms.conf")
