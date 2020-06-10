@@ -1,0 +1,34 @@
+_pkgname='xpad'
+pkgname='xpad-dkms-git'
+pkgver=r72.fc1f7e7
+pkgrel=1
+pkgdesc="Driver for the Xbox/ Xbox 360/ Xbox 360 Wireless/ Xbox One Controllers"
+arch=('x86_64')
+url="https://github.com/paroj/xpad"
+license=('GPL2')
+depends=('dkms')
+makedepends=('git')
+conflicts=("${_pkgname}-dkms")
+source=("${pkgname}::git+https://github.com/paroj/xpad.git"
+        "Kbuild"
+        "dkms.conf")
+md5sums=('SKIP'
+         'ad2034ce407b25284ca0968275f6f338'
+         '164622db102a9c6ea9bf65fe60358bc1')
+
+pkgver() {
+    cd "$srcdir/${pkgname}"
+    ( set -o pipefail
+      git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+      printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    )
+}
+
+package() {
+    cd "$srcdir/$pkgname"
+    install -dm 755 "${pkgdir}/usr/src/${_pkgname}-${pkgver}"
+    install -m 644 -T xpad.c "${pkgdir}/usr/src/${_pkgname}-${pkgver}/xpad.c"
+    install -m 644 -T "$srcdir/Kbuild" "${pkgdir}/usr/src/${_pkgname}-${pkgver}/Kbuild"
+    install -m 644 -T "$srcdir/dkms.conf" "${pkgdir}/usr/src/${_pkgname}-${pkgver}/dkms.conf"
+}
+
