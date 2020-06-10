@@ -1,0 +1,12 @@
+post_install() {
+   echo ""
+   echo "If you want to enable and start the service please run:"
+   echo "systemctl enable --now xow.service"
+   echo ""
+   echo "If you want udev rules to take effect please run:"
+   echo "udevadm control --reload; udevadm trigger"
+   echo ""
+   echo "If this is the first time installing this package it is recommended to"
+   echo " restart the system to make the module blacklist take effect"
+   echo ""
+}
