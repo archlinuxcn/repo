@@ -2,26 +2,15 @@
 # Contributor: Philip Goto <philip.goto@gmail.com>
 
 pkgname=flutter
-pkgver=1.17.2
+pkgver=1.17.3
 pkgrel=1
 pkgdesc="A new mobile app SDK to help developers and designers build modern mobile apps for iOS and Android."
 arch=("x86_64")
 url="https://${pkgname}.io"
 license=("custom" "BSD" "CCPL")
-depends=("glu" "java-environment" "lib32-libglvnd")
-optdepends=(
-  "android-sdk"
-  "android-studio"
-  "bash"
-  "dart"
-  "git"
-  "intellij-idea-community-edition"
-  "intellij-idea-ultimate-edition"
-  "perl"
-  "python"
-  "sh"
-)
-makedepends=("git" "python")
+depends=("bash" "git" "glu" "java-environment" "lib32-libglvnd" "unzip")
+optdepends=("android-sdk" "android-studio" "dart" "intellij-idea-community-edition" "intellij-idea-ultimate-edition" "perl" "python")
+makedepends=("python")
 backup=("opt/${pkgname}/packages/${pkgname}_test/pubspec.yaml" "opt/${pkgname}/packages/${pkgname}/pubspec.yaml")
 options=("!emptydirs")
 install="${pkgname}.install"
@@ -31,7 +20,7 @@ source=(
   "${pkgname}.csh"
 )
 sha256sums=(
-  "c74e72a190766a1ecd5b8922bcbb66d0e698e7bcb66533c645659d1e66cd52bc"
+  "3fa0d658d651a16ccfb4be1c4f609bab1b93abfd5e13627772b803a8e0b5d59b"
   "1dea1952d386c43948b9970382c2da5b65b7870684b8ad2ad89124e873aa485a"
   "7ef10d753cfaac52d243549764a793f44f8284a1f4b11715ccd2fa915b026a6f"
 )
