@@ -5,7 +5,7 @@
 
 pkgname=webkitgtk
 pkgver=2.4.11
-pkgrel=18
+pkgrel=19
 epoch=3
 pkgdesc="Legacy Web content engine for GTK+ 3"
 arch=("armv7h" "i686" "x86_64")
