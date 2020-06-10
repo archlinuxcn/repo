@@ -6,10 +6,7 @@ build_prefix: extra-x86_64
 repo_depends:
   - openslide
 
-pre_build: aur_pre_build
-
-post_build: aur_post_build
-
 update_on:
-  - aur: python-openslide
+  - github: openslide/python-openslide
+    use_max_tag: true
   - alias: python
