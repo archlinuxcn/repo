@@ -4,7 +4,7 @@
 _pkgname=openslide-python
 pkgname=python-openslide
 pkgver=1.1.1
-pkgrel=2
+pkgrel=3
 pkgdesc='Python bindings to OpenSlide'
 arch=('x86_64')
 url='https://github.com/openslide/openslide-python'
@@ -19,7 +19,7 @@ source=(
   "${_pkgname}-${pkgver}.tar.gz::https://github.com/openslide/openslide-python/archive/v${pkgver}.tar.gz"
   "0001-fix-setup-script.patch::https://github.com/openslide/openslide-python/commit/298b5a9a163eb2a371d90770b71706cc4cb0003a.patch"
 )
-sha256sums=('e3c1f27e4704221327d3c74b0960742079b18fea2d1896eda71a3efdd3f9d3f7'
+sha256sums=('33c390fe43e3d7d443fafdd66969392d3e9efd2ecd5d4af73c3dbac374485ed5'
             'a84489927980ebb0d64d4a4ea146a4c709d6b77848e6e145869bf6f12d875c9c')
 
 prepare() {
