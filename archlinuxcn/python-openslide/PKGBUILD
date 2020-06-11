@@ -16,7 +16,7 @@ depends=(
   python-pillow
 )
 source=(
-  "https://github.com/openslide/openslide-python/releases/download/v${pkgver}/${_pkgname}-${pkgver}.tar.xz"
+  "${_pkgname}-${pkgver}.tar.gz::https://github.com/openslide/openslide-python/archive/v${pkgver}.tar.gz"
   "0001-fix-setup-script.patch::https://github.com/openslide/openslide-python/commit/298b5a9a163eb2a371d90770b71706cc4cb0003a.patch"
 )
 sha256sums=('e3c1f27e4704221327d3c74b0960742079b18fea2d1896eda71a3efdd3f9d3f7'
