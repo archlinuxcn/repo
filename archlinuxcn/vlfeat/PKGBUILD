@@ -17,6 +17,11 @@ makedepends=(
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/vlfeat/vlfeat/archive/v${pkgver}.tar.gz")
 sha512sums=('ba7f83392d778a4a8c121aed10ae98693d8d61ae127e627322324c245cd1984ab8c0c3e3afe743075e7c022b3efb78e7dfc653bc488c8f19c93b3aa0f87e803e')
 
+prepare() {
+  # fix https://github.com/vlfeat/vlfeat/issues/168
+  sed -i "s,if(! (max_value >= 65536)),if(max_value >= 65536)," "${srcdir}/${pkgname}-${pkgver}/vl/pgm.c"
+}
+
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   make CC=clang CXX=clang++ DISABLE_OPENMP=no
