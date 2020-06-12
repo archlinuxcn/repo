@@ -1,20 +1,48 @@
 # Maintainer: Nick Boughton <nicholasboughton@gmail.com>
 # Contributor: Jean Lucas <jean@4ray.co>
+# Contributor: GFdevelop
 
-pkgname=vue-cli
-pkgver=4.4.1
-pkgrel=1
+_npmscope=vue
+_npmname=cli
+_npmid="@$_npmscope/$_npmname"
+
+pkgname="${_npmscope}-${_npmname}"
+pkgver=4.4.3
+pkgrel=2
 pkgdesc='Standard tooling for Vue.js development'
-arch=(i686 x86_64)
-url=https://cli.vuejs.org
-license=(MIT)
-depends=(nodejs)
-makedepends=(npm)
+arch=('any')
+url='https://cli.vuejs.org'
+license=('MIT')
+depends=('nodejs')
+makedepends=('npm')
 optdepends=()
-conflicts=(nodejs-vue-cli)
-options=(!strip)
+conflicts=('nodejs-vue-cli')
+source=("$pkgname-$pkgver.tar.gz::https://registry.npmjs.org/$_npmid/-/$_npmname-$pkgver.tgz")
+noextract=("${source[@]%%::*}")
+# Get SHASUM:  curl -s "https://registry.npmjs.org/@vue/cli" | jq '.versions."4.4.3".dist.shasum'
+sha1sums=('f8bbdad39dc3508001dd43d54c97a39df81f4e44')
 
 package() {
-  npm install -g --prefix="$pkgdir"/usr @vue/cli@$pkgver
-  find "$pkgdir"/usr -type d -exec chmod 755 {} +
+  # Setting temporary cache
+  npm install -g --user root --cache "$srcdir/npm-cache" --prefix "$pkgdir/usr" "${source[@]%%::*}"
+
+  # Non-deterministic race in npm gives 777 permissions to random directories.
+  # See https://github.com/npm/npm/issues/9359 for details.
+  find "${pkgdir}"/usr -type d -execdir chmod 755 {} \+
+
+  # npm gives ownership of ALL FILES to build user
+  # https://bugs.archlinux.org/task/63396
+  chown -R root:root $pkgdir
+
+  # Package contains reference to $srcdir/$pkgdir
+  find "${pkgdir}" -type f -name package.json -execdir sed -i '/_where/d' {} \+
+  
+  # print first line (the '{' symbol) and lines from the first non-underscored key to the end
+  # (npm internal keys are underscored but we don't need these keys)
+  sed -i -n '1p;/  "[^_].*": {$/,$p' "$pkgdir"/usr/lib/node_modules/"$_npmid"/package.json
+  sed -i "s|$pkgdir||" "$pkgdir"/usr/lib/node_modules/"$_npmid"/node_modules/sshpk/package.json
+  sed -i "s|$pkgdir||" "$pkgdir"/usr/lib/node_modules/"$_npmid"/node_modules/he/package.json
+
+  # Add license
+  install -Dm644 "$pkgdir/usr/lib/node_modules/$_npmid/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
