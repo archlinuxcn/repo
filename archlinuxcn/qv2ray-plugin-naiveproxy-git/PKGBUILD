@@ -2,16 +2,15 @@
 
 pkgname=qv2ray-plugin-naiveproxy-git
 _pkgname=qv2ray-plugin-naiveproxy
-pkgver=20200612.r12.d924872
+pkgver=20200611.r19.507eb2d
 pkgrel=1
 pkgdesc="Qv2ray Plugin: NaiveProxy (for Qv2ray v2.6.0-rc2+ only)"
 arch=('x86_64')
 url='https://github.com/Qv2ray/QvPlugin-NaiveProxy'
 license=('GPL3')
 # _virtualdepends=('qv2ray-plugin-host=2')
-depends=('qt5-base>5.11.0' 'qv2ray-dev-git')
+depends=('qt5-base')
 makedepends=('git' 'make' 'qt5-tools' 'which' 'gcc' 'cmake' 'ninja' 'libffi')
-optdepends=('naiveproxy')
 provides=('qv2ray-plugin-naiveproxy')
 groups=('qv2ray-plugin')
 conflicts=('qv2ray-plugin-naiveproxy')
@@ -37,6 +36,9 @@ build() {
     ninja
 }
 package() {
+    # NOTE: This is used to circumvent the fact that you don't have Qv2ray packages in extra-x86_64-build.
+    depends+=('qv2ray-dev-git' 'naiveproxy')
+    
     cd "$srcdir"/"$_pkgname"/build
     install -Dm644 -t "$pkgdir"/usr/share/qv2ray/plugins/ libQvPlugin-NaiveProxy.so
     # NOTE: This virtual dependency will be introduced after Qv2ray stablize its interface.
