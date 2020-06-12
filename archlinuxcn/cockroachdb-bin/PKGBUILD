@@ -3,14 +3,14 @@
 # Contributor: Marcel O'Neil <marcel@marceloneil.com>
 
 pkgname=cockroachdb-bin
-conflicts=('cockroachdb')
-provides=('cockroachdb')
-pkgver=19.2.6
+pkgver=20.1.1
 pkgrel=1
 pkgdesc='An open source, survivable, strongly consistent, scale-out SQL database'
 arch=('x86_64')
 url='https://www.cockroachlabs.com'
 license=('Apache' 'custom:BSL' 'custom:CCL')
+conflicts=('cockroachdb')
+provides=('cockroachdb')
 depends=('glibc')
 source=("${pkgname}-${pkgver}.tgz::https://binaries.cockroachdb.com/cockroach-v${pkgver}.linux-amd64.tgz"
         "LICENSE::https://raw.githubusercontent.com/cockroachdb/cockroach/v${pkgver}/LICENSE"
@@ -18,8 +18,8 @@ source=("${pkgname}-${pkgver}.tgz::https://binaries.cockroachdb.com/cockroach-v$
         'cockroach.default'
         'cockroach.sysusers'
         'cockroach.tmpfiles')
-sha256sums=('66f9f9819453efca62ef752f5bc93cc53d5c514856463dde0da231e22102d0f4'
-         '8a2fba9d26592ff3538f44c96d1b894ef44649058b4d04f3fda49518a9c4ae11'
+sha256sums=('28959c60a3f14f86fe50c373997b85a538e12f32f04f7a74821fc0441442f340'
+            '8a2fba9d26592ff3538f44c96d1b894ef44649058b4d04f3fda49518a9c4ae11'
             'SKIP'
             'SKIP'
             'SKIP'
