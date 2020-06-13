@@ -2,7 +2,7 @@
 # Previous Maintainer: 2bluesc <2bluesc gmail.com>
 # Maintainer: Vadzim Dambrouski <pftbest gmail.com>
 pkgname=gcc-arm-none-eabi-bin
-pkgver=9_2019_q4_major
+pkgver=9_2020_q2_update
 pkgrel=1
 pkgdesc="GNU Tools ARM Embedded Processors (binary distribution, includes newlib, does NOT include GDB)"
 arch=('x86_64')
@@ -21,11 +21,11 @@ conflicts=('gcc-arm-none-eabi'
 	  'arm-none-eabi-newlib'
     )
 url="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm"
-source=("https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/9-2019q4/RC2.1/gcc-arm-none-eabi-9-2019-q4-major-x86_64-linux.tar.bz2")
+source=("https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2")
 license=('custom')
 options=(!strip staticlibs)
-sha256sums=('bcd840f839d5bf49279638e9f67890b2ef3a7c9c7a9b25271e83ec4ff41d177a')
-md5sums=('fe0029de4f4ec43cf7008944e34ff8cc')
+sha256sums=('5adc2ee03904571c2de79d5cfc0f7fe2a5c5f54f44da5b645c17ee57b217f11f')
+md5sums=('2b9eeccc33470f9d3cda26983b9d2dc6')
 
 package() {
   mkdir -p $pkgdir/usr
