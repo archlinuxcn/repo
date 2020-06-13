@@ -1,14 +1,18 @@
 # Maintainer: edward-p <edward At edward-p Dot xyz>
 
 pkgname=proxmark3-iceman-git
+<<<<<<< HEAD
 pkgver=9577.020c6882
+=======
+pkgver=9581.25fb6df2
+>>>>>>> da8247a118... proxmark3-iceman-git: switch back to arm-none-eabi-gcc and arm-none-eabi-newlib
 pkgrel=1
 pkgdesc='RRG / Iceman repo - Proxmark3 RDV4.0 and other Proxmark3 platforms.'
 arch=('x86_64')
 url='https://github.com/RfidResearchGroup/proxmark3'
 license=('GPL2')
 depends=('perl' 'python' 'libsndfile')
-makedepends=('git' 'gcc-arm-none-eabi-bin')
+makedepends=('git' 'arm-none-eabi-gcc' 'arm-none-eabi-newlib')
 options=(!buildflags)
 provides=('proxmark3' 'proxmark3-iceman')
 conflicts=('proxmark3' 'proxmark3-iceman')
