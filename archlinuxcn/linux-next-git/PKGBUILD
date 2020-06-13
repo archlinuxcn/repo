@@ -47,7 +47,7 @@ _1k_HZ_ticks=
 ### Do not edit below this line unless you know what you're doing
 
 pkgbase=linux-next-git
-pkgver=20200605.r0.gaf30725c132e
+pkgver=20200608.r0.g1713116fa907
 _srcname=linux-next
 pkgrel=1
 pkgdesc='Linux NEXT'
@@ -56,7 +56,7 @@ url="http://www.kernel.org/"
 license=('GPL2')
 options=('!strip')
 makedepends=('kmod' 'bc' 'libelf' 'git' 'python-sphinx' 'python-sphinx_rtd_theme'
-             'graphviz' 'imagemagick')
+             'graphviz' 'imagemagick' 'pahole')
 _lucjanver=5.6
 #_lucjanpath="https://raw.githubusercontent.com/sirlucjan/kernel-patches/master/${_lucjanver}"
 _lucjanpath="https://gitlab.com/sirlucjan/kernel-patches/raw/master/${_lucjanver}"
@@ -198,7 +198,7 @@ _package() {
   echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
   echo "Installing modules..."
-  make INSTALL_MOD_PATH="$pkgdir/usr" modules_install
+  make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 modules_install
 
   # remove build and source links
   rm "$modulesdir"/{source,build}
@@ -206,6 +206,7 @@ _package() {
 
 _package-headers() {
    pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
+   depends=('linux-next-git')
 
   cd $_srcname
   local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
@@ -274,6 +275,9 @@ _package-headers() {
     esac
   done < <(find "$builddir" -type f -perm -u+x ! -name vmlinux -print0)
 
+  echo "Stripping vmlinux..."
+  strip -v $STRIP_STATIC "$builddir/vmlinux"
+
   echo "Adding symlink..."
   mkdir -p "$pkgdir/usr/src"
   ln -sr "$builddir" "$pkgdir/usr/src/$pkgbase"
@@ -281,6 +285,7 @@ _package-headers() {
 
 _package-docs() {
     pkgdesc="Documentation for the $pkgdesc kernel"
+    depends=('linux-next-git')
 
   cd $_srcname
   local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
