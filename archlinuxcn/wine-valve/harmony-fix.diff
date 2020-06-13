@@ -1,0 +1,63 @@
+diff -u -r wine/dlls/gdi32/freetype.c wine-ft281/dlls/gdi32/freetype.c
+--- wine/dlls/gdi32/freetype.c	2017-10-04 18:01:36.000000000 +0200
++++ wine-ft281/dlls/gdi32/freetype.c	2017-10-10 10:29:17.506632615 +0200
+@@ -996,18 +996,23 @@
+ 
+ static BOOL is_subpixel_rendering_enabled( void )
+ {
+-#ifdef FT_LCD_FILTER_H
+     static int enabled = -1;
+     if (enabled == -1)
+     {
+-        enabled = (pFT_Library_SetLcdFilter &&
+-                   pFT_Library_SetLcdFilter( NULL, 0 ) != FT_Err_Unimplemented_Feature);
++        /* >= 2.8.1 provides LCD rendering without filters */
++        if (FT_Version.major > 2 ||
++            FT_Version.major == 2 && FT_Version.minor > 8 ||
++            FT_Version.major == 2 && FT_Version.minor == 8 && FT_Version.patch >= 1)
++            enabled = TRUE;
++#ifdef FT_LCD_FILTER_H
++        else if (pFT_Library_SetLcdFilter &&
++                 pFT_Library_SetLcdFilter( NULL, 0 ) != FT_Err_Unimplemented_Feature)
++            enabled = TRUE;
++#endif
++        else enabled = FALSE;
+         TRACE("subpixel rendering is %senabled\n", enabled ? "" : "NOT ");
+     }
+     return enabled;
+-#else
+-    return FALSE;
+-#endif
+ }
+ 
+ 
+@@ -7271,7 +7276,6 @@
+     case WINE_GGO_HBGR_BITMAP:
+     case WINE_GGO_VRGB_BITMAP:
+     case WINE_GGO_VBGR_BITMAP:
+-#ifdef FT_LCD_FILTER_H
+       {
+         switch (ft_face->glyph->format)
+         {
+@@ -7357,8 +7361,11 @@
+             if ( needsTransform )
+                 pFT_Outline_Transform (&ft_face->glyph->outline, &transMatTategaki);
+ 
++#ifdef FT_LCD_FILTER_H
+             if ( pFT_Library_SetLcdFilter )
+                 pFT_Library_SetLcdFilter( library, FT_LCD_FILTER_DEFAULT );
++#endif
++
+             pFT_Render_Glyph (ft_face->glyph, render_mode);
+ 
+             src = ft_face->glyph->bitmap.buffer;
+@@ -7439,9 +7446,6 @@
+ 
+         break;
+       }
+-#else
+-      return GDI_ERROR;
+-#endif
+ 
+     case GGO_NATIVE:
+       {

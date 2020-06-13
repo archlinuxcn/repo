@@ -1,0 +1,7 @@
+post_install() {
+  printf '%s\n' "Run 'systemctl restart systemd-binfmt' in order to make the wine binfmt available on your system."
+}
+
+post_remove() {
+  printf '%s\n' "binfmt binary formats will be updated at reboot"
+}
