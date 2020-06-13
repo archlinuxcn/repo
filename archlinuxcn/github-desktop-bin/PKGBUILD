@@ -2,15 +2,15 @@
 
 _pkgname='github-desktop'
 pkgname="${_pkgname}-bin"
-pkgver=2.4.0
-_pkgver="${pkgver}-linux2"
+pkgver=2.5.2
+_pkgver="${pkgver}-linux1"
 gitname="release-${_pkgver}"
-pkgrel=2
+pkgrel=1
 pkgdesc="GUI for managing Git and GitHub."
 arch=('x86_64')
 url="https://desktop.github.com"
 license=('MIT')
-depends=('gnome-keyring' 'libsecret' 'git' 'curl' 'libxss' 'gconf' 'nss' 'nspr')
+depends=('gnome-keyring' 'libsecret' 'git' 'curl' 'libxss' 'gconf' 'nss' 'nspr' 'unzip')
 optdepends=('hub: CLI interface for GitHub.')
 provides=(${_pkgname})
 conflicts=(${_pkgname})
@@ -19,12 +19,13 @@ source=(
     ${_pkgname}.desktop
 )
 sha256sums=(
-    50dad19df211b726cf145121656aa608103b994d8de611977d95e0ef09ca2b25
-    2758e15659f5770ae2ac948250372135029e7ac2d4b6bf431a112dfdbcc681d1
+    b99151f297dadc7a290be076ab8ae3a47aa791393bf0827641686733d02c0075
+    932e4c456e8c6db03d27172cf0daa37806bf025bb560d8b3d758c0997d1a618c
 )
 package() {
     tar xf data.tar.xz -C "${pkgdir}"
-    mv "${pkgdir}/opt/GitHub Desktop" "${pkgdir}/opt/${_pkgname}"
+    install -d "${pkgdir}/opt/${_pkgname}"
+    mv "${pkgdir}/usr/lib/github-desktop" "${pkgdir}/opt/${_pkgname}"
     rm "${pkgdir}/usr/share/applications/github-desktop.desktop"
     install -Dm644 "${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
     printf "#!/bin/sh\n\n/opt/${_pkgname}/github-desktop \"\$@\"\n" | install -Dm755 /dev/stdin "${pkgdir}/usr/bin/${_pkgname}"
