@@ -1,12 +1,9 @@
 from lilaclib import *
 
 def pre_build():
-  update_pkgver_and_pkgrel(_G.newver.lstrip('proton-'))
-  for line in edit_file('PKGBUILD'):
-      if line.startwith('pkgver='):
-          line = line.replace("-",".")
-      
-      print(line)
+  newver = _G.newver.lstrip('proton-')
+  newver = newver.replace("-",".")
+  update_pkgver_and_pkgrel(newver)
 
 def post_build():
   git_add_files('PKGBUILD')
