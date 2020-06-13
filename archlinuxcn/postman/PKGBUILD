@@ -1,7 +1,7 @@
 # Maintainer: Bruce Zhang
 pkgname=postman
 pkgver=7.26.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Build, test, and document your APIs faster'
 arch=('x86_64')
 url='https://www.getpostman.com/downloads/'
@@ -14,11 +14,11 @@ source_x86_64=(
   "$pkgname-$pkgver-x86_64.orig.tar.gz::https://dl.pstmn.io/download/version/$pkgver/linux64"
 )
 source=(
-  "EULA.pdf::https://www.getpostman.com/terms/Postman_EULA_May_2018.pdf"
+  "EULA.html::https://www.postman.com/licenses/postman-eula/"
   "postman.desktop"
   "postman.sh"
 )
-sha1sums=('64f19df66b8f9e687dad443d8973364fff88d90a'
+sha1sums=('SKIP'
           '35194ee810e13d3a21f224c6d46104fc201631c1'
           'a05406aa53b310b183b98cd70ff64c4d09e95d50')
 sha1sums_x86_64=('1832e4dd949ab452807e5d97d7933a914582b92f')
