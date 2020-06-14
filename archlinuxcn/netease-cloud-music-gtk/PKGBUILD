@@ -1,6 +1,6 @@
 # Maintainer: Bruce Zhang
 pkgname=netease-cloud-music-gtk
-pkgver=1.1.1
+pkgver=1.1.2
 pkgrel=1
 pkgdesc="Linux 平台下基于 Rust + GTK 开发的网易云音乐播放器"
 arch=('i686' 'x86_64')
@@ -12,7 +12,7 @@ optdepends=(
 	'osdlyrics: Show lyrics'
 )
 source=("https://github.com/gmg137/$pkgname/archive/$pkgver.tar.gz")
-sha256sums=('da8019e9b7535294d513e03436859be2caa62ffabb02c1b0c3707d61fa8ecffe')
+sha256sums=('d0ca2bec894ba967af0f1cc1fe1feae44f01cd002ece6abe554da7d3538b15f3')
 
 build() {
 	cd "$pkgname-$pkgver"
