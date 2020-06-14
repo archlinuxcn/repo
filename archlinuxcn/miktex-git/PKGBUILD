@@ -13,6 +13,8 @@ depends=('apr' 'apr-util' 'bzip2' 'cairo' 'expat' 'fontconfig' 'freetype2'
          'poppler' 'popt' 'potrace' 'uriparser' 'zziplib' 'poppler-qt5' 'qt5-script')
 makedepends=('git' 'cmake' 'coreutils' 'fop' 'sed' 'libxslt' 'qt5-tools')
 source=('miktex::git+https://github.com/MiKTeX/miktex.git')
+provides=('miktex')
+conflicts=('miktex')
 md5sums=('SKIP')
 
 pkgver() {
