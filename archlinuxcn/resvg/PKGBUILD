@@ -1,7 +1,7 @@
 # Maintainer: Philipp A. <flying-sheep@web.de>
 pkgname=resvg
-pkgver=0.9.0
-pkgrel=2
+pkgver=0.9.1
+pkgrel=1
 pkgdesc='SVG rendering library and CLI'
 arch=(i686 x86_64)
 url="https://github.com/RazrFalcon/$pkgname"
@@ -13,8 +13,19 @@ optdepends=(
 	'kio: For the dolphin thumbnailer'
 )
 makedepends=(cargo qt5-base qt5-tools kio cairo pango cmake extra-cmake-modules)
-source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('8da2c0463cb76ab2a75c597be9f83384daf27a2d6162b95310b8f68763dfcc47')
+source=(
+	"$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
+	"qt-5.15.patch::$url/commit/8ea12d08a4402eb49a8d371cf7dde1a7e047bb47.patch"
+)
+sha256sums=(
+	'678e2bb453bd1b979fe1371f6a68da830f300067717604d8b9e83a196528bf36'
+	'10f8ac12ac63c12905c7ac4f373e619653ed772e34c60bcaabe180364c5f7f13'
+)
+
+prepare() {
+	cd "$pkgname-$pkgver"
+	patch --forward --strip=1 --input="$srcdir/qt-5.15.patch"
+}
 
 build() {
 	cd "$pkgname-$pkgver"
