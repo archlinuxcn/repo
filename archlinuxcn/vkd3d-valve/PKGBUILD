@@ -6,7 +6,7 @@
 
 pkgname=vkd3d-valve
 pkgver=1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="D3D12 to Vulkan translation library (Valve version)"
 arch=('x86_64')
 url='https://github.com/ValveSoftware/vkd3d'
@@ -24,7 +24,7 @@ makedepends=( # Prevent out-of-date SPIRV headers error
 conflicts=('vkd3d')
 provides=('vkd3d')
 source=("https://github.com/ValveSoftware/vkd3d/archive/vkd3d-$pkgver.tar.gz")
-sha256sums=('SKIP')
+sha256sums=('da223b0ec80570c096317d15c0d29deda8fcf571a539a83eb4e33c5a97c226bb')
 
 prepare() {
     cd vkd3d-vkd3d-$pkgver
