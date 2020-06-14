@@ -1,7 +1,7 @@
 # Maintainer: surefire@cryptomile.net
 
 pkgname=keeweb
-pkgver=1.14.2
+pkgver=1.15.5
 pkgrel=1
 pkgdesc="Desktop password manager compatible with KeePass databases"
 arch=('any')
@@ -27,6 +27,13 @@ source=(
 sha1sums=('SKIP'
           'c925527f25e732d58438ee16b1c93b33be7bf9c4'
           'd64a29202b71f30b1c4eaef5c01cee574b55894a')
+
+case "$CARCH" in
+	i686)    _keeweb_arch=ia32;;
+	x86_64)  _keeweb_arch=x64;;
+	aarch64) _keeweb_arch=arm64;;
+	*)       _keeweb_arch=DUMMY;;
+esac
 
 prepare() {
 	cd "${pkgname}"
@@ -71,6 +78,9 @@ package() {
 
 	install -Dm0755 ../keeweb.sh "${pkgdir}/usr/bin/keeweb"
 	install -Dm0644 -t "${pkgdir}/usr/lib/keeweb" tmp/app.asar
+
+	#TODO: requires a rebuild from source code
+	install -Dm0644 -t "${pkgdir}/usr/lib/keeweb/node_modules/@keeweb/keeweb-native-modules" node_modules/@keeweb/keeweb-native-modules/*-linux-${_keeweb_arch}.node
 
 	install -Dm0644 -t "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE DEPS-LICENSE
 
