@@ -3,7 +3,7 @@
 
 pkgname=miktex
 pkgver=2.9.7440
-pkgrel=1
+pkgrel=3
 pkgdesc="a distribution of the TeX/LaTeX typesetting system"
 arch=('x86_64')
 url="https://miktex.org"
@@ -42,5 +42,5 @@ package() {
     cp -R opt/miktex/share/applications/icons usr/share/
 
     mv opt/miktex/man usr/share/man
-    rm -f usr/share/man/man5/updmap.cfg.5.gz
+    rm $pkgdir/usr/share/man/man5/updmap.cfg.5.gz
 }
