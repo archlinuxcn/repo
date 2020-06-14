@@ -2,7 +2,7 @@
 
 # arg 1:  the new package version
 post_install() {
-  EXTPACK="/usr/share/virtualbox/extensions/VNC-${1%%-*}.vbox-extpack"
+  EXTPACK="/usr/share/virtualbox/extensions/VNC-svn.vbox-extpack"
   ACCEPT="$(bsdtar --to-stdout -xf "${EXTPACK}" ./ExtPack-license.txt | sha256sum | head --bytes=64)"
   VBoxManage extpack install "${EXTPACK}" --accept-license="${ACCEPT}" >/dev/null
 }

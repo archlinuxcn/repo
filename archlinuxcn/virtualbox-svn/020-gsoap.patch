@@ -1,0 +1,13 @@
+diff --git a/src/VBox/Main/webservice/vboxweb.cpp b/src/VBox/Main/webservice/vboxweb.cpp
+index 8dd3ca1b..9d5c9138 100644
+--- a/src/VBox/Main/webservice/vboxweb.cpp
++++ b/src/VBox/Main/webservice/vboxweb.cpp
+@@ -944,7 +944,7 @@ static void doQueuesLoop()
+                 if (rv == 0)
+                     continue; // timeout, not necessary to bother gsoap
+                 // r < 0, errno
+-                if (soap_socket_errno(soap.master) == SOAP_EINTR)
++                if (soap_socket_errno == SOAP_EINTR)
+                     rv = 0; // re-check if we should terminate
+                 break;
+             }

@@ -1,0 +1,13 @@
+diff --git a/src/VBox/Frontends/VirtualBox/src/extradata/UIExtraDataManager.cpp b/src/VBox/Frontends/VirtualBox/src/extradata/UIExtraDataManager.cpp
+index da373c92..18fb69a7 100644
+--- a/src/VBox/Frontends/VirtualBox/src/extradata/UIExtraDataManager.cpp
++++ b/src/VBox/Frontends/VirtualBox/src/extradata/UIExtraDataManager.cpp
+@@ -2349,7 +2349,7 @@ QString UIExtraDataManager::preventBetaBuildWarningForVersion()
+ bool UIExtraDataManager::applicationUpdateEnabled()
+ {
+     /* 'True' unless 'restriction' feature allowed: */
+-    return !isFeatureAllowed(GUI_PreventApplicationUpdate);
++    return false;
+ }
+ 
+ QString UIExtraDataManager::applicationUpdateData()

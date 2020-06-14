@@ -1,23 +1,21 @@
-# $Id$
 # Maintainer: Sébastien "Seblu" Luttringer
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 
-pkgbase=virtualbox-svn
-pkgname=('virtualbox-svn'
-         'virtualbox-host-dkms-svn'
-         'virtualbox-guest-dkms-svn'
-         'virtualbox-sdk-svn'
-         'virtualbox-guest-utils-svn'
-         'virtualbox-guest-utils-nox-svn'
-         'virtualbox-ext-vnc-svn')
-pkgver=84727
+pkgbase=virtualbox
+pkgname=('virtualbox'
+         'virtualbox-host-dkms'
+         'virtualbox-guest-dkms'
+         'virtualbox-sdk'
+         'virtualbox-guest-utils'
+         'virtualbox-guest-utils-nox'
+         'virtualbox-ext-vnc')
+pkgver=6.1.10
 pkgrel=1
 _vboxsf_commit='5aba938bcabd978e4615186ad7d8617d633e6f30'
 arch=('x86_64')
-url='http://virtualbox.org'
+url='https://virtualbox.org/'
 license=('GPL' 'custom')
-makedepends=('subversion'
-             'alsa-lib'
+makedepends=('alsa-lib'
              'bin86'
              'cdrkit'
              'curl'
@@ -54,7 +52,7 @@ makedepends=('subversion'
              'xalan-c'
              'xorgproto'
              'xorg-server-devel')
-source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
+source=("https://download.virtualbox.org/virtualbox/${pkgver}/VirtualBox-${pkgver}.tar.bz2"
         # We need to build a modified version of vboxsf for Linux 4.16
         # https://bugzilla.redhat.com/show_bug.cgi?id=1481630#c65
         "git+https://github.com/jwrdegoede/vboxsf#commit=$_vboxsf_commit"
@@ -80,7 +78,7 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         '018-work-around-black-screen.patch'
         '019-qt-5-15.patch'
         '020-gsoap.patch')
-sha256sums=('SKIP'
+sha256sums=('37d8b30c0be82a50c858f3fc70cde967882239b6212bb32e138d3615b423c477'
             'SKIP'
             '76d98ea062fcad9e5e3fa981d046a6eb12a3e718a296544a68b66f4b65cb56db'
             'c1ccfaa3a37d6b227cd65de944df2d68cbf178a857b6ab15c04b8fa05693f252'
@@ -102,17 +100,11 @@ sha256sums=('SKIP'
             '100c9e14e9cfb12ae65364e830153d2481cf272ceeb39d11c6b203bc6e35bf0c'
             '5aac692909a0a0ec56b08bdece9e42cf7463abdca9da2f990d441ff463be6a99'
             'c64a4f284a4e91a42df5b30939d9190127ea5aa25470b5d31507a8309c20e1fc'
-            '24d73181ad544233a5e9365c911940a162f7bb0ed7ffde592f91f59ec555dcce'
+            '7a6b21f33952d46c5253acb6ada5c76fc579c50df2602dadcd9bd0d381cd9335'
             'c6892a3561a72a9b308cb33fa6647cc53e54a3bd40cb41780cad7f8e9d7df9f6')
 
-pkgver() {
-  cd "VirtualBox"
-  local ver="$(svnversion)"
-  printf "%s" "${ver//[[:alpha:]]}"
-}
-
 prepare() {
-    cd "VirtualBox"
+    cd "VirtualBox-$pkgver"
 
     # apply patch from the source array (should be a pacman feature)
     local filename
@@ -122,17 +114,16 @@ prepare() {
             patch -p1 -N -i "$srcdir/${filename##*/}"
         fi
     done
-    
-    sed -i '#include<QPainter>/a #include<QPainterPath>' src/VBox/Frontends/VirtualBox/src/monitor/UIMonitorCommon.cpp
+
     echo 'Applying local config'
     cp "$srcdir/LocalConfig.kmk" .
-    
+
     echo 'Use our CFLAGS'
     echo "VBOX_GCC_OPT=$CXXFLAGS" >> LocalConfig.kmk
 }
 
 build() {
-    cd "VirtualBox"
+    cd "VirtualBox-$pkgver"
 
     echo 'Build virtualbox'
     ./configure \
@@ -158,24 +149,23 @@ build() {
     kmk -C src/VBox/ImageMounter/vboximg-mount
 }
 
-package_virtualbox-svn() {
+package_virtualbox() {
     pkgdesc='Powerful x86 virtualization for enterprise as well as home use'
     depends=('glibc' 'openssl' 'curl' 'gcc-libs' 'libpng' 'python' 'sdl'
              'libvpx' 'libxml2' 'procps-ng' 'shared-mime-info' 'zlib'
              'libxcursor' 'libxinerama' 'libx11' 'libxext' 'libxmu' 'libxt'
-             'opus' 'desktop-file-utils' 'hicolor-icon-theme' 'qt5-base' 'qt5-x11extras' 'VIRTUALBOX-HOST-MODULES-SVN')
+             'opus' 'qt5-base' 'qt5-x11extras' 'VIRTUALBOX-HOST-MODULES')
     optdepends=('vde2: Virtual Distributed Ethernet support'
                 'virtualbox-guest-iso: Guest Additions CD image'
                 'virtualbox-ext-vnc: VNC server support'
                 'virtualbox-sdk: Developer kit')
     backup=('etc/vbox/vbox.cfg')
-    provides=('virtualbox')
     replaces=('virtualbox-ose')
-    conflicts=('virtualbox-ose' 'virtualbox')
+    conflicts=('virtualbox-ose')
     install=virtualbox.install
 
-    source "VirtualBox/env.sh"
-    cd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin"
+    source "VirtualBox-$pkgver/env.sh"
+    cd "VirtualBox-$pkgver/out/linux.$BUILD_PLATFORM_ARCH/release/bin"
 
     # binaries
     install -dm0755 "$pkgdir/usr/bin"
@@ -199,7 +189,7 @@ package_virtualbox-svn() {
 
     # components
     install -dm0755 "$pkgdir/usr/lib/virtualbox/components"
-    #rm components/VBoxREM.so # TODO: remove when dead link is fixed
+    rm components/VBoxREM.so # TODO: remove when dead link is fixed
     install -m0755 components/* -t "$pkgdir/usr/lib/virtualbox/components"
 
     # extensions packs
@@ -244,7 +234,7 @@ package_virtualbox-svn() {
     cd "$srcdir"
 
     #licence
-    install -Dm0644 VirtualBox/COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm0644 VirtualBox-$pkgver/COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
     # install systemd stuff
     install -Dm0644 60-vboxdrv.rules "$pkgdir/usr/lib/udev/rules.d/60-vboxdrv.rules"
@@ -256,16 +246,14 @@ package_virtualbox-svn() {
     ln -s vboxreload "$pkgdir/usr/bin/rcvboxdrv"
 }
 
-package_virtualbox-sdk-svn() {
+package_virtualbox-sdk() {
     pkgdesc='VirtualBox Software Developer Kit (SDK)'
     depends=('python')
-    provides=('virtualbox-sdk')
-    conflicts=('virtualbox-sdk')
 
     install -dm0755 "$pkgdir/usr/lib/virtualbox"
 
-    source "VirtualBox/env.sh"
-    cd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin"
+    source "VirtualBox-$pkgver/env.sh"
+    cd "VirtualBox-$pkgver/out/linux.$BUILD_PLATFORM_ARCH/release/bin"
 
     install -Dm0755 vboxshell.py "$pkgdir/usr/lib/virtualbox/vboxshell.py"
     # python sdk
@@ -275,91 +263,90 @@ package_virtualbox-sdk-svn() {
     cp -r sdk "$pkgdir/usr/lib/virtualbox"
     rm -r "$pkgdir/usr/lib/virtualbox/sdk/installer"
     # licence
-    install -Dm0644 "$srcdir/VirtualBox/COPYING" \
+    install -Dm0644 "$srcdir/VirtualBox-$pkgver/COPYING" \
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-package_virtualbox-host-dkms-svn() {
+package_virtualbox-host-dkms() {
     pkgdesc='VirtualBox Host kernel modules sources'
     depends=('dkms' 'gcc' 'make')
     replaces=('virtualbox-source'
               'virtualbox-host-source'
               'virtualbox-host-modules-lts')
-    conflicts=('virtualbox-source' 'virtualbox-host-source' 'virtualbox-host-dkms')
-    provides=('VIRTUALBOX-HOST-MODULES-SVN')
+    conflicts=('virtualbox-source' 'virtualbox-host-source')
+    provides=('VIRTUALBOX-HOST-MODULES')
     optdepends=('linux-headers: build modules against Arch kernel'
                 'linux-lts-headers: build modules against LTS kernel'
                 'linux-zen-headers: build modules against ZEN kernel')
     install=virtualbox-host-dkms.install
 
     install -dm0755 "$pkgdir/usr/src"
-    source "VirtualBox/env.sh"
-    cd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin"
-    cp -r src "$pkgdir/usr/src/vboxhost-svn_OSE"
+    source "VirtualBox-$pkgver/env.sh"
+    cd "VirtualBox-$pkgver/out/linux.$BUILD_PLATFORM_ARCH/release/bin"
+    cp -r src "$pkgdir/usr/src/vboxhost-${pkgver}_OSE"
     # licence
-    install -Dm0644 "$srcdir/VirtualBox/COPYING" \
+    install -Dm0644 "$srcdir/VirtualBox-$pkgver/COPYING" \
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     # module loading
-    local _p="$pkgdir/usr/lib/modules-load.d/virtualbox-host-dkms.conf"
+    local _p="$pkgdir/usr/lib/modules-load.d/$pkgname.conf"
     install -Dm0644 /dev/null "$_p"
     printf "vboxdrv\nvboxnetadp\nvboxnetflt\n" > "$_p"
     # starting vbox 5.1, dkms.conf file was dropped
-    local _p="$pkgdir/usr/src/vboxhost-svn_OSE/dkms.conf"
-    install -Dm0644 "$srcdir/virtualbox-host-dkms.conf" "$_p"
-    sed -i "s,@VERSION@,svn," "$_p"
+    local _p="$pkgdir/usr/src/vboxhost-${pkgver}_OSE/dkms.conf"
+    install -Dm0644 "$srcdir/$pkgname.conf" "$_p"
+    sed -i "s,@VERSION@,$pkgver," "$_p"
 }
 
-package_virtualbox-guest-dkms-svn() {
+package_virtualbox-guest-dkms() {
     pkgdesc='VirtualBox Guest kernel modules sources'
     depends=('dkms' 'gcc' 'make')
     replaces=('virtualbox-archlinux-source'
               'virtualbox-guest-source'
               'virtualbox-guest-modules-lts')
-    provides=('VIRTUALBOX-GUEST-MODULES-SVN')
-    conflicts=('virtualbox-archlinux-source' 'virtualbox-guest-source' 'virtualbox-guest-dkms')
+    provides=('VIRTUALBOX-GUEST-MODULES')
+    conflicts=('virtualbox-archlinux-source' 'virtualbox-guest-source')
     optdepends=('linux-headers: build modules against Arch kernel'
                 'linux-lts-headers: build modules against LTS kernel'
                 'linux-zen-headers: build modules against ZEN kernel')
     install=virtualbox-guest-dkms.install
 
     install -dm0755 "$pkgdir/usr/src"
-    source "VirtualBox/env.sh"
-    cd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin/additions"
-    cp -r src "$pkgdir/usr/src/vboxguest-svn_OSE"
+    source "VirtualBox-$pkgver/env.sh"
+    cd "VirtualBox-$pkgver/out/linux.$BUILD_PLATFORM_ARCH/release/bin/additions"
+
     # licence
-    install -Dm0644 "$srcdir/VirtualBox/COPYING" \
+    install -Dm0644 "$srcdir/VirtualBox-$pkgver/COPYING" \
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     # module loading
-    local _p="$pkgdir/usr/lib/modules-load.d/virtualbox-guest-dkms.conf"
+    local _p="$pkgdir/usr/lib/modules-load.d/$pkgname.conf"
     install -Dm0644 /dev/null "$_p"
     printf "vboxguest\nvboxsf\nvboxvideo\n" > "$_p"
 
     # vboxsf module for Linux 4.16 to Linux 5.5
-    install -d "$pkgdir/usr/src/vboxsf-svn_OSE"
-    cp -rT "$srcdir/vboxsf" "$pkgdir/usr/src/vboxsf-svn_OSE/vboxsf"
-    rm -rf "$pkgdir/usr/src/vboxsf-svn_OSE/vboxsf/.git"
-    echo "obj-m = vboxsf/" >"$pkgdir/usr/src/vboxsf-svn_OSE/Makefile"
-    local _p="$pkgdir/usr/src/vboxsf-svn_OSE/dkms.conf"
+    install -d "$pkgdir/usr/src/vboxsf-${pkgver}_OSE"
+    cp -rT "$srcdir/vboxsf" "$pkgdir/usr/src/vboxsf-${pkgver}_OSE/vboxsf"
+    rm -rf "$pkgdir/usr/src/vboxsf-${pkgver}_OSE/vboxsf/.git"
+    echo "obj-m = vboxsf/" >"$pkgdir/usr/src/vboxsf-${pkgver}_OSE/Makefile"
+    local _p="$pkgdir/usr/src/vboxsf-${pkgver}_OSE/dkms.conf"
     install -Dm0644 "$srcdir/virtualbox-vboxsf-dkms.conf" "$_p"
-    sed -i "s,@VERSION@,svn," "$_p"
+    sed -i "s,@VERSION@,$pkgver," "$_p"
 }
 
-package_virtualbox-guest-utils-svn() {
+package_virtualbox-guest-utils() {
     pkgdesc='VirtualBox Guest userspace utilities'
     depends=('glibc' 'pam' 'libx11' 'libxcomposite'
              'libxdamage' 'libxext' 'libxfixes' 'libxmu' 'libxt' 'xorg-xrandr'
-             'VIRTUALBOX-GUEST-MODULES-SVN')
+             'VIRTUALBOX-GUEST-MODULES')
     replaces=('virtualbox-archlinux-additions' 'virtualbox-guest-additions')
-    provides=('virtualbox-guest-utils')
-    conflicts=('virtualbox-archlinux-additions' 'virtualbox-guest-additions' 'virtualbox-guest-utils-nox' 'virtualbox-guest-utils')
+    conflicts=('virtualbox-archlinux-additions' 'virtualbox-guest-additions' 'virtualbox-guest-utils-nox')
 
-    source "VirtualBox/env.sh"
-    pushd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin/additions"
+    source "VirtualBox-$pkgver/env.sh"
+    pushd "VirtualBox-$pkgver/out/linux.$BUILD_PLATFORM_ARCH/release/bin/additions"
     install -d "$pkgdir/usr/bin"
     install -m0755 VBoxClient VBoxControl VBoxService "$pkgdir/usr/bin"
-    install -m0755 -D "$srcdir"/VirtualBox/src/VBox/Additions/x11/Installer/98vboxadd-xclient \
+    install -m0755 -D "$srcdir"/VirtualBox-$pkgver/src/VBox/Additions/x11/Installer/98vboxadd-xclient \
         "$pkgdir"/usr/bin/VBoxClient-all
-    install -m0644 -D "$srcdir"/VirtualBox/src/VBox/Additions/x11/Installer/vboxclient.desktop \
+    install -m0644 -D "$srcdir"/VirtualBox-$pkgver/src/VBox/Additions/x11/Installer/vboxclient.desktop \
         "$pkgdir"/etc/xdg/autostart/vboxclient.desktop
     install -d "$pkgdir/usr/lib/xorg/modules/dri"
     install -m0755 -D pam_vbox.so "$pkgdir/usr/lib/security/pam_vbox.so"
@@ -369,17 +356,16 @@ package_virtualbox-guest-utils-svn() {
     install -Dm0644 vboxservice.service "$pkgdir/usr/lib/systemd/system/vboxservice.service"
     install -Dm0644 virtualbox-guest-utils.sysusers "$pkgdir/usr/lib/sysusers.d/virtualbox-guest-utils.conf"
     # licence
-    install -Dm0644 VirtualBox/COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm0644 VirtualBox-$pkgver/COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-package_virtualbox-guest-utils-nox-svn() {
+package_virtualbox-guest-utils-nox() {
     pkgdesc='VirtualBox Guest userspace utilities without X support'
-    depends=('glibc' 'pam' 'VIRTUALBOX-GUEST-MODULES-SVN')
-    provides=('virtualbox-guest-utils-nox')
-    conflicts=('virtualbox-guest-utils' 'virtualbox-guest-utils-nox')
+    depends=('glibc' 'pam' 'VIRTUALBOX-GUEST-MODULES')
+    conflicts=('virtualbox-guest-utils')
 
-    source "VirtualBox/env.sh"
-    pushd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin/additions"
+    source "VirtualBox-$pkgver/env.sh"
+    pushd "VirtualBox-$pkgver/out/linux.$BUILD_PLATFORM_ARCH/release/bin/additions"
     install -d "$pkgdir/usr/bin"
     install -m0755 VBoxControl VBoxService "$pkgdir/usr/bin"
     install -m0755 -D pam_vbox.so "$pkgdir/usr/lib/security/pam_vbox.so"
@@ -389,24 +375,20 @@ package_virtualbox-guest-utils-nox-svn() {
     install -Dm0644 vboxservice-nox.service "$pkgdir/usr/lib/systemd/system/vboxservice.service"
     install -Dm0644 virtualbox-guest-utils.sysusers "$pkgdir/usr/lib/sysusers.d/virtualbox-guest-utils.conf"
     # licence
-    install -Dm0644 "$srcdir/VirtualBox/COPYING" \
+    install -Dm0644 "$srcdir/VirtualBox-$pkgver/COPYING" \
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-package_virtualbox-ext-vnc-svn() {
+package_virtualbox-ext-vnc() {
     pkgdesc='VirtualBox VNC extension pack'
     depends=('virtualbox' 'libvncserver')
     optdepends=('tigervnc: vnc client')
-    provides=('virtualbox-ext-vnc')
-    conflicts=('virtualbox-ext-vnc')
     install=virtualbox-ext-vnc.install
 
-    source "VirtualBox/env.sh"
-    cd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/packages"
-    install -Dm0644 VNC-*.vbox-extpack "$pkgdir/usr/share/virtualbox/extensions/VNC-svn.vbox-extpack"
+    source "VirtualBox-$pkgver/env.sh"
+    cd "VirtualBox-$pkgver/out/linux.$BUILD_PLATFORM_ARCH/release/packages"
+    install -Dm0644 VNC-*.vbox-extpack "$pkgdir/usr/share/virtualbox/extensions/VNC-${pkgver}.vbox-extpack"
     # licence
-    install -Dm0644 "$srcdir/VirtualBox/COPYING" \
+    install -Dm0644 "$srcdir/VirtualBox-$pkgver/COPYING" \
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
-
-# vim:set ts=4 sw=4 et:
