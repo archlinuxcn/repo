@@ -3,6 +3,10 @@ maintainers:
 
 build_prefix: extra-x86_64
 
+repo_depends:
+  - nsync
+  - python-onnx
+
 update_on:
   - github: microsoft/onnxruntime
     use_latest_release: true
