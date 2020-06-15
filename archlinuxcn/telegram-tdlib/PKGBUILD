@@ -3,7 +3,7 @@
 _pkgname=telegram-tdlib
 pkgname=${_pkgname}
 pkgver=1.6.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Cross-platform library for building Telegram clients'
 arch=('i686' 'x86_64')
 url='https://core.telegram.org/tdlib'
@@ -28,4 +28,3 @@ package() {
   mkdir -p ${pkgdir}/usr
   cmake --build . --target install
 }
- 
