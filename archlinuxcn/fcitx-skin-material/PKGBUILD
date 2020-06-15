@@ -1,15 +1,15 @@
-# Maintainer: HRKo <ootaharuki99[at]gmail.com>
+# Maintainer: HRKo <hrko[at]r-c.dev>
 _skinname='material'
 pkgname='fcitx-skin-material'
-pkgver=0.4
+pkgver=0.5
 pkgrel=1
 pkgdesc='A Material Design-like skin for Fcitx.'
 arch=('any')
-url="https://github.com/ootaharuki99/fcitx-skin-material"
+url="https://github.com/hrko99/fcitx-skin-material"
 license=('Apache')
 depends=('fcitx')
-source=("https://github.com/ootaharuki99/fcitx-skin-material/archive/v${pkgver}.tar.gz")
-md5sums=('a10d2da69c04fb57f702d174395fe38c')
+source=("https://github.com/hrko99/fcitx-skin-material/archive/v${pkgver}.tar.gz")
+md5sums=('d75a7dbb3c9a3a257b400c48b4cc91a7')
 
 package() {
     install -dm755 ${pkgdir}/usr/share/fcitx/skin/${_skinname}
