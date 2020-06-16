@@ -2,7 +2,7 @@
 
 
 pkgname=haskell-ide-engine-git
-pkgver=r3899.fe630a1e
+pkgver=r3901.a9005b2b
 pkgrel=1
 pkgdesc="The engine for haskell ide-integration. Not an IDE"
 arch=('x86_64')
@@ -11,12 +11,13 @@ license=('custom:BSD3')
 provides=('haskell-ide-engine')
 makedepends=('git' 'stack')
 source=("${pkgname}::git://github.com/haskell/haskell-ide-engine.git")
+conflicts=('haskell-ide-engine')
 noextract=()
 md5sums=('SKIP')
 
 # supported ghc versions: 8.4.{2,3,4} 8.6.{4,5} 8.8.{1,2}
 
-_enabled_ghc_versions=('8.6.5' '8.8.2')
+_enabled_ghc_versions=('8.6.5' '8.8.3')
 
 pkgver() {
   cd "${srcdir}/${pkgname}"
