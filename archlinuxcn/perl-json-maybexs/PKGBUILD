@@ -3,18 +3,18 @@
 # Generator  : CPANPLUS::Dist::Arch 1.32
 
 pkgname='perl-json-maybexs'
-pkgver='1.004000'
-pkgrel=1
+pkgver='1.004001'
+pkgrel='1'
 pkgdesc="Use Cpanel::JSON::XS with a fallback to JSON::XS and JSON::PP"
 arch=('any')
 license=('PerlArtistic' 'GPL')
 options=('!emptydirs')
-depends=('perl-cpanel-json-xs' 'perl>=5.006')
+depends=('perl>=5.006')
 makedepends=()
+optdepends=('perl-cpanel-json-xs: Using Cpanel-JSON-XS')
 url='https://metacpan.org/release/JSON-MaybeXS'
-source=("https://cpan.metacpan.org/authors/id/H/HA/HAARG/JSON-MaybeXS-$pkgver.tar.gz")
-md5sums=('db61fb5515f8e2f19709a317e26dde42')
-sha512sums=('caebd00e49f4bd79f9a9a748077d58d963f53b656e4f48f9577a14fb36a80e956ff393f0ccdf7066129bcd7ebcec73a201c1c6fc778ce2488522b4e3886d2bbb')
+source=("https://cpan.metacpan.org/authors/id/E/ET/ETHER/JSON-MaybeXS-$pkgver.tar.gz")
+md5sums=('1deedaa568615fb8230d909c694a33c4')
 _distdir="JSON-MaybeXS-$pkgver"
 
 build() {
@@ -43,9 +43,3 @@ package() {
 
   find "$pkgdir" -name .packlist -o -name perllocal.pod -delete
 }
-
-# Local Variables:
-# mode: shell-script
-# sh-basic-offset: 2
-# End:
-# vim:set ts=2 sw=2 et:
