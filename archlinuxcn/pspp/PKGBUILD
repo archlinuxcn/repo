@@ -2,7 +2,7 @@
 # Contributor: joyfulgirl <joyfulgirl (at) archlinux.us>
 pkgname=pspp
 pkgver=1.2.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Statistical analysis program. Free replacement for SPSS."
 arch=('i686' 'x86_64')
 url="http://www.gnu.org/software/pspp/"
@@ -26,7 +26,7 @@ prepare() {
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
 
-    make
+    make CFLAGS="$CFLAGS -fcommon"
 }
 
 package() {
@@ -36,5 +36,6 @@ package() {
     install -d "${pkgdir}"/usr/share/pspp/contrib
     install -m 644 pspp-mode.el "${pkgdir}"/usr/share/pspp/contrib/pspp-mode.el
 }
+
 
 # End of file
