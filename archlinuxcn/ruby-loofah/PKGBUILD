@@ -2,7 +2,7 @@
 
 _gemname=loofah
 pkgname=ruby-$_gemname
-pkgver=2.5.0
+pkgver=2.6.0
 pkgrel=1
 pkgdesc='HTML sanitization for Rails applications'
 arch=(any)
@@ -12,7 +12,7 @@ depends=('ruby' 'ruby-crass' 'ruby-nokogiri')
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha256sums=('80009b1f65d6f3e8a9a7d6ef7957fbe768b5f15c2f848affc6eb7b55ec73694a')
+sha256sums=('62f9bab371b3ee82f70f2518ab9e42fdd8a786cdd17f3b32dee5197b17c230e9')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
