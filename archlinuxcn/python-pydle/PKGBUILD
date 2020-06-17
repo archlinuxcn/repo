@@ -1,16 +1,15 @@
 _name=pydle
 pkgname=python-pydle
-pkgver=0.9.3
+pkgver=0.9.4
 pkgrel=1
 pkgdesc="A compact, flexible and standards-abiding IRC library for Python 3."
 arch=(any)
 url="https://github.com/Shizmob/pydle"
-license=(BSD)
+license=('BSD')
 depends=('python-tornado' 'python-setuptools')
 makedepends=('python-pip')
-
-source=("https://files.pythonhosted.org/packages/py3/${_name::1}/$_name/pydle-0.9.3-py3-none-any.whl")
-sha256sums=('b2d40b76f3f98c49f4ca0753af9cf672d758843455359d27875f70e18facf4c9')
+source=("https://files.pythonhosted.org/packages/py3/${_name::1}/$_name/pydle-0.9.4-py3-none-any.whl")
+sha256sums=('4e7e31ec6affd05d090b1c0133d5e541c0bd3cf9966f82478124feeb1c468665')
 
 build() {
   true
@@ -18,7 +17,10 @@ build() {
 
 package() {
   cd "$srcdir"
-  pip install 'pydle-0.9.3-py3-none-any.whl' --root="$pkgdir" --no-deps --install-option="--optimize=1"
-}
+  pip install 'pydle-0.9.4-py3-none-any.whl' --root="$pkgdir" --no-deps --install-option="--optimize=1"
 
+  # make sure we don't install annoying files
+  local _site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rf "$pkgdir/$_site_packages/tests/"
+}
 
