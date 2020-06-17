@@ -1,7 +1,3 @@
 post_install() {
-	ln -s /opt/bilibili-live-helper/bilibili-live-helper /usr/bin/bilibili-live-helper
 	echo "For transparent support, please add these arguments: --enable-transparent-visuals and --disable-gpu"
-}
-pre_remove() {
-	rm /usr/bin/bilibili-live-helper
 }
