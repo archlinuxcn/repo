@@ -36,14 +36,15 @@ build() {
   cmake "${srcdir}/${_pkgname}-${pkgver}" \
   -DCMAKE_INSTALL_PREFIX=/usr \
   -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
+  -DADIOS2_USE_DataMan:BOOL=OFF \
   -DSZ_ROOT=/usr/include/sz
   make
 }
 
-#check() {
-#  cd "${_pkgname}-${pkgver}/build"
-#  ctest -v
-#}
+check() {
+  cd "build"
+  ctest -v
+}
 
 package() {
   cd build
