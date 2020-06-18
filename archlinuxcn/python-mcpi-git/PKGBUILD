@@ -1,0 +1,30 @@
+# Maintainer: OriginCode <self@origincode.me>
+
+pkgname=python-mcpi-git
+_pkgname=mcpi
+pkgver=r13.47c6d5b
+pkgrel=1
+pkgdesc="Minecraft: Pi Edition API Python Library"
+arch=('any')
+url="https://github.com/martinohanlon/mcpi"
+license=('custom')
+depends=('python')
+makedepends=('python-setuptools' 'git')
+source=('git+https://github.com/martinohanlon/mcpi.git')
+md5sums=('SKIP')
+
+pkgver() {
+    cd "$srcdir/$_pkgname"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd "$srcdir/$_pkgname"
+    python setup.py build
+}
+
+package() {
+    cd "$srcdir/$_pkgname"
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+}
