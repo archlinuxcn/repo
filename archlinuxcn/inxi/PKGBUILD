@@ -3,7 +3,7 @@
 # Contributor: Florian Pritz <f-p@gmx.at>
 
 pkgname=inxi
-pkgver=3.1.01
+pkgver=3.1.03
 pkgrel=1
 pkgdesc="Full featured CLI system information tool"
 arch=(any)
@@ -34,7 +34,7 @@ optdepends=(
             "xorg-xrandr: inxi -G single screen resolution"
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/smxi/inxi/archive/${pkgver}-1.tar.gz")
-sha256sums=('0b46e0dd3e5391c7005d08fa52365037f27bd8d7d0a56a6900d18e11720b1c7c')
+sha256sums=('af6843ee886a95e7e35cec8ffb2877b9c9b7b11ed4e9a129fab66b07a536d2a9')
 
 package() {
   cd "${pkgname}-${pkgver}-1"
