@@ -2,8 +2,8 @@
 
 _pkgname=ADIOS2
 pkgname=adios2
-pkgver=2.5.0
-pkgrel=2
+pkgver=2.6.0
+pkgrel=1
 pkgdesc='Next generation of ADIOS developed in the Exascale Computing Program'
 license=('Apache')
 arch=('x86_64')
@@ -28,7 +28,7 @@ optdepends=(
   'python-mpi4py: python binding'  
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ornladios/ADIOS2/archive/v${pkgver}.tar.gz")
-sha256sums=('7c8ff3bf5441dd662806df9650c56a669359cb0185ea232ecb3578de7b065329')
+sha256sums=('45b41889065f8b840725928db092848b8a8b8d1bfae1b92e72f8868d1c76216c')
 
 build() {
   mkdir build
