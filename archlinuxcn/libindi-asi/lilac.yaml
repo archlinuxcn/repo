@@ -1,0 +1,13 @@
+maintainers:
+  - github: oldherl
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - libasi
+
+update_on:
+  - aur: libindi-asi
+
+pre_build:  aur_pre_build
+post_build:  aur_post_build
