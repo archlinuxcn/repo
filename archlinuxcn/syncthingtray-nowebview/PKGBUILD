@@ -24,7 +24,7 @@ _enable_plasmoid=${SYNCTHING_TRAY_ENABLE_PLASMOID:-1}
 
 _reponame=syncthingtray
 pkgname=syncthingtray-nowebview
-pkgver=0.10.9
+pkgver=0.10.10
 pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing'
@@ -43,7 +43,7 @@ checkdepends=('cppunit' 'syncthing' 'iproute2')
 [[ $_enable_plasmoid ]] && makedepends+=('plasma-framework' 'extra-cmake-modules')
 url="https://github.com/Martchus/${_reponame}"
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('543faca6f3b3e2ce813a4f2cad9346da1d8e90cfd1736b99284670626a82c2e3')
+sha256sums=('057873e4fe7dc07dc98f003db2eb6c26336c751da6444a24b5cf184fb553ebd0')
 
 ephemeral_port() {
   comm -23 <(seq 49152 65535) <(ss -tan | awk '{print $4}' | cut -d':' -f2 | grep "[0-9]\{1,5\}" | sort | uniq) | shuf | head -n 1
