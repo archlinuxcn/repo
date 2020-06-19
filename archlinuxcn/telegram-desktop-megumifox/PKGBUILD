@@ -3,8 +3,8 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
-pkgver=2.1.11
-pkgrel=2
+pkgver=2.1.12
+pkgrel=1.1
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
@@ -39,6 +39,7 @@ build() {
         -DTDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME=ON \
         -DTDESKTOP_USE_PACKAGED_TGVOIP=OFF \
         -DDESKTOP_APP_SPECIAL_TARGET="" \
+        -DTDESKTOP_DISABLE_GTK_INTEGRATION=ON \
         -DTDESKTOP_LAUNCHER_BASENAME="telegramdesktop"
     ninja -C build
 }
