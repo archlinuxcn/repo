@@ -1,7 +1,7 @@
 # Maintainer: Pavan Rikhi <pavan.rikhi@gmail.com>
 pkgname=pencil
 pkgver=3.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Sketching and GUI prototyping/wireframing tool"
 arch=('any')
 license=('GPL2')
@@ -39,7 +39,7 @@ package() {
     cp -r dist/linux-unpacked/* "$pkgdir/usr/share/$pkgname/"
     cp app/css/images/logo-shadow.png "$pkgdir/usr/share/$pkgname/icon.png"
 
-    cp "$srcdir/pencil.desktop" "$pkgdir/usr/share/applications/"
+    install -m644 "$srcdir/pencil.desktop" "$pkgdir/usr/share/applications/"
     cp "$srcdir/pencil-mime.xml" "$pkgdir/usr/share/mime/packages/"
 
     ln -s "/usr/share/$pkgname/pencil" "$pkgdir/usr/bin/"
