@@ -7,8 +7,8 @@
 
 _pkgname=pcsclite
 pkgname=lib32-$_pkgname
-pkgver=1.8.26
-pkgrel=2
+pkgver=1.9.0
+pkgrel=1
 pkgdesc="PC/SC Architecture smartcard middleware library (for proprietary 32-bit drivers)"
 arch=('x86_64')
 url='https://pcsclite.apdu.fr/'
@@ -18,7 +18,7 @@ makedepends=('pkg-config' 'lib32-gcc-libs')
 options=('!docs')
 validpgpkeys=('F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E') # Ludovic Rousseau <rousseau@debian.org>
 source=("https://pcsclite.apdu.fr/files/pcsc-lite-${pkgver}.tar.bz2"{,.asc})
-sha256sums=('3eb7be7d6ef618c0a444316cf5c1f2f9d7227aedba7a192f389fe3e7c0dfbbd9'
+sha256sums=('0148d403137124552c5d0f10f8cdab2cbb8dfc7c6ce75e018faf667be34f2ef9'
             'SKIP')
 
 prepare() {
