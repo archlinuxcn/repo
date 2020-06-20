@@ -2,7 +2,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=proftpd
-pkgver=1.3.6c
+pkgver=1.3.6d
 pkgrel=1
 epoch=2
 pkgdesc='High-performance, scalable FTP server'
@@ -15,7 +15,7 @@ options=('!emptydirs')
 source=("ftp://ftp.proftpd.org/distrib/source/${pkgname}-${pkgver}.tar.gz"
         'proftpd.logrotate' 'proftpd.service'
         'proftpd.tmpfiles')
-md5sums=('5680a462144e94770d6e5478ffd60254'
+md5sums=('ed5580e9e02c5308dc9283fc83434530'
          '4d7a3eedc1852d4fa9faafc072fb8320'
          'f7e0c3a402a845ba8d546b2801f77ed2'
          '907b149a120b046f05647c73502e23c9')
@@ -27,7 +27,7 @@ build() {
     --sbindir=/usr/bin \
     --libexecdir=/usr/lib \
     --disable-pam \
-    --with-modules=mod_sftp:mod_quotatab:mod_quotatab_sql:mod_quotatab_file:mod_tls:mod_ldap:mod_sql:mod_sql_mysql:mod_sql_postgres:mod_facl:mod_dynmasq \
+    --with-modules=mod_sftp:mod_quotatab:mod_quotatab_sql:mod_quotatab_file:mod_tls:mod_tls_shmcache:mod_ldap:mod_sql:mod_sql_mysql:mod_sql_postgres:mod_facl:mod_dynmasq \
     --sysconfdir=/etc \
     --localstatedir=/run/proftpd \
     --enable-ctrls \
@@ -39,7 +39,7 @@ build() {
     --enable-facl \
     --with-systemd
 
-  make
+  make CFLAGS="$CFLAGS -fcommon"
 }
 
 package() {
