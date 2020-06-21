@@ -1,0 +1,45 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_name=imread
+pkgname=python-imread
+pkgver=0.7.3
+pkgrel=1
+pkgdesc='Read images to numpy arrays'
+arch=('x86_64')
+url='https://github.com/luispedro/imread'
+license=('MIT')
+makedepends=(
+  cython
+  python-setuptools
+)
+depends=(
+  libjpeg
+  libpng
+  libwebp
+  python-numpy
+)
+checkdepends=(
+  python-nose
+)
+
+source=("${_name}-${pkgver}.tar.gz::https://github.com/luispedro/imread/archive/v${pkgver}.tar.gz")
+sha256sums=('221586a4e8f22ecf3efd74d2b985f344054dc8b4d3ee564775e3c0a780b7e67b')
+
+build() {
+  cd "${srcdir}/${_name}-${pkgver}"
+  python setup.py build_ext --inplace
+  python setup.py build
+}
+
+check() {
+  cd "${_name}-${pkgver}"
+  nosetests -v
+}
+
+package() {
+  cd ${srcdir}/${_name}-${pkgver}
+  install -D -m644 COPYING.MIT -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  python setup.py install --root=${pkgdir} --prefix=/usr --optimize=1 --skip-build
+}
+# vim:set ts=2 sw=2 et:
+
