@@ -5,7 +5,7 @@
 _name=scikit-image
 pkgname=python-scikit-image
 pkgver=0.17.2
-pkgrel=2
+pkgrel=3
 pkgdesc="Image processing routines for SciPy"
 arch=('x86_64')
 url="http://scikit-image.org/"
@@ -24,7 +24,14 @@ depends=(
   python-scipy
   python-tifffile
 )
+checkdepends=(
+  python-pytest
+  python-pytest-cov
+  python-pytest-flake8
+  python-pytest-localserver
+)
 optdepends=('python-pyqt5: for imshow(x, fancy=True) and skivi'
+            'python-imagecodecs: for reading image formats with various compression algorithm'
             'python-qtpy'
             'freeimage: for reading various types of image file formats'
             'python-pyamg: fast cg_mg mode of random walker segmentation'
@@ -37,7 +44,13 @@ sha256sums=('bd954c0588f0f7e81d9763dc95e06950e68247d540476e06cb77bcbcd8c2d8b3')
 
 build() {
   cd "${srcdir}/${_name}-${pkgver}"
+  python setup.py build_ext --inplace
   python setup.py build
+}
+
+check() {
+  cd "${_name}-${pkgver}"
+  pytest -v
 }
 
 package() {
