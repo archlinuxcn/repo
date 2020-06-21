@@ -1,0 +1,33 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=brunsli
+pkgver=0.1
+pkgrel=1
+pkgdesc='Practical JPEG Repacker'
+arch=('x86_64')
+url='https://github.com/google/brunsli'
+license=('MIT')
+depends=(gcc-libs)
+makedepends=(
+  cmake
+  git
+)
+source=("${pkgname}::git+https://github.com/google/brunsli.git#tag=v${pkgver}")
+sha256sums=('SKIP')
+
+prepare() {
+  cd "${srcdir}/${pkgname}"
+  git submodule update --init --recursive
+}
+
+build() {
+	cmake -B build -S "${srcdir}/${pkgname}" \
+    -DCMAKE_INSTALL_PREFIX=/usr
+	make -C build
+}
+
+package() {
+	make -C build DESTDIR="${pkgdir}" install
+  install -Dm644 "${pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
