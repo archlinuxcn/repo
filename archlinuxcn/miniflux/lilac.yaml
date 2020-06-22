@@ -2,7 +2,5 @@ maintainers:
   - github: oldherl
 
 update_on:
-  - aur: miniflux
-
-pre_build:  aur_pre_build
-post_build:  aur_post_build
+    - github: miniflux/miniflux
+      use_latest_release: true
