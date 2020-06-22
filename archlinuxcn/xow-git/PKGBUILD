@@ -23,8 +23,7 @@ pkgver() {
 
 build() {
   cd $srcdir/$_pkgname
-  make PREFIX=/usr BUILD=RELEASE
-  make PREFIX=/usr BUILD=RELEASE xow.service
+  make BUILD=RELEASE
 }
 
 package() {
