@@ -2,14 +2,14 @@
 # Maintainer: wszqkzqk <wszqkzqk@gmail.com>
 pkgname=deepin.com.qq.office
 pkgver=2.0.0deepin4
-pkgrel=2
+pkgrel=3
 epoch=
 pkgdesc="Deepin Wine TIM 2.0.0"
 arch=('i686' 'x86_64')
 url="http://office.qq.com/"
 license=('Proprietary')
 groups=()
-depends=('deepin-wine' 'wqy-microhei')
+depends=('deepin-wine')
 makedepends=('tar')
 checkdepends=()
 optdepends=()
@@ -20,7 +20,7 @@ backup=()
 options=()
 install=
 changelog=
-source=("https://mirrors.ustc.edu.cn/deepin/pool/non-free/d/${pkgname}/${pkgname}_${pkgver}_i386.deb")
+source=("https://community-packages.deepin.com/deepin/pool/non-free/d/${pkgname}/${pkgname}_${pkgver}_i386.deb")
 noextract=("${pkgname}_${pkgver}_i386.deb")
 md5sums=('d5c37cb4f960e13111ce24dbc0dd2d58')
 validpgpkeys=()
