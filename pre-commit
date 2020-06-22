@@ -385,6 +385,10 @@ class RepoTreeTest(TestCase):
                     lilac_yaml = yaml.load(lilac_yaml_file.read(), Loader=yaml.SafeLoader)
                     for dep in lilac_yaml.get('repo_depends', []):
                         if isinstance(dep, dict):
+                            # When `dep` is a dict, this repo_depends entry
+                            # has the form `pkgbase: pkgname`. Here I assume
+                            # split packages are successfully packaged. so only
+                            # the pkgbase needs to be checked.
                             dep_package = list(dep.keys())[0]
                         else:
                             dep_package = dep
