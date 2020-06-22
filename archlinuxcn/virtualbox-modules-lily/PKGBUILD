@@ -2,63 +2,35 @@
 # Contribuitor: Sébastien Luttringer
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 
-pkgbase=virtualbox-modules-lily
-pkgname=('virtualbox-host-modules-lily')
+pkgname='virtualbox-host-modules-lily'
 pkgver=6.1.10
-pkgrel=1
+pkgrel=2
+pkgdesc='Virtualbox host kernel modules for linux-lily Kernel'
 arch=('x86_64')
-url='https://virtualbox.org'
+url='https://virtualbox.org/'
 license=('GPL')
 depends=("linux-lily=5.4.42-1")
 makedepends=('linux-lily-headers'
              "virtualbox-host-dkms>=$pkgver")
+conflicts=('virtualbox-host-dkms')
+provides=('VIRTUALBOX-HOST-MODULES')
 
 build() {
-    _kernver=$(</usr/src/linux-lily/version)
+  _kernver="$(</usr/src/linux-lily/version)"
 
-    dkms build --dkmstree "$srcdir" -m vboxhost/${pkgver}_OSE -k $_kernver
+  dkms build --dkmstree "$srcdir" -m vboxhost/${pkgver}_OSE -k ${_kernver}
 }
 
-
-package_virtualbox-host-modules-lily(){
+package(){
   _kernver="$(</usr/src/linux-lily/version)"
-  pkgdesc='Virtualbox host kernel modules for linux-lily Kernel'
-  conflicts=('virtualbox-host-dkms')
-  provides=('VIRTUALBOX-HOST-MODULES')
 
   install -Dt "$pkgdir/usr/lib/modules/$_kernver/extramodules" -m0644 \
-    vboxhost/${pkgver}_OSE/$_kernver/$CARCH/module/*
+    vboxhost/${pkgver}_OSE/${_kernver}/${CARCH}/module/*
 
   # compress each module individually
   find "$pkgdir" -name '*.ko' -exec xz -T1 {} +
 
   # systemd module loading
-  printf '%s\n' vboxdrv vboxpci vboxnetadp vboxnetflt |
+  printf '%s\n' vboxdrv vboxnetadp vboxnetflt |
     install -D -m0644 /dev/stdin "$pkgdir/usr/lib/modules-load.d/$pkgname.conf"
 }
-
-package_virtualbox-guest-modules-lily(){
-  _kernver="$(</usr/src/linux-lily/version)"
-  pkgdesc='Virtualbox guest kernel modules for linux-lily Kernel'
-  conflicts=('virtualbox-guest-dkms')
-  provides=('VIRTUALBOX-GUEST-MODULES')
-
-  install -Dt "$pkgdir/usr/lib/modules/$_kernver/extramodules" -m0644 \
-    vboxsf/${pkgver}_OSE/$_kernver/$CARCH/module/*
-
-  # compress each module individually
-  find "$pkgdir" -name '*.ko' -exec xz -T1 {} +
-}
-
-# vim:set sw=2 et:
-
-
-
-
-
-
-
-
-
-
-
