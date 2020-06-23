@@ -1,13 +1,8 @@
-# Trimmed lilac.py
-#!/usr/bin/env python3
-
 from types import SimpleNamespace
 
 from lilaclib import *
 
 g = SimpleNamespace()
-
-#build_prefix = 'extra-x86_64'
 
 def pre_build():
   _, old_pkgrel = get_pkgver_and_pkgrel()
@@ -18,9 +13,8 @@ def pre_build():
     if line.startswith('pkgname='):
       line = 'pkgname=rsync-noatime'
     elif line.startswith('depends=('):
-      line = line + '''
-conflicts=('rsync')
-provides=("rsync=$pkgver")'''
+      line = '''conflicts=('rsync')
+provides=("rsync=$pkgver")\n''' + line
     elif line.startswith('build('):
       line = '''\
 prepare() {
@@ -44,6 +38,3 @@ prepare() {
 def post_build():
   git_add_files(g.files)
   git_commit()
-
-#if __name__ == '__main__':
-#  single_main()
