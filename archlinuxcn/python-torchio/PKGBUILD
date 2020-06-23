@@ -10,6 +10,8 @@ url='https://github.com/fepegar/torchio'
 license=(MIT)
 depends=(
   'python-click'
+  'python-deprecated'
+  'python-humanize'
   'python-nibabel'
   'python-numpy'
   'python-pytorch'
@@ -23,7 +25,6 @@ makedepends=(
 )
 checkdepends=(
   'python-pytest'    
-  'python-deprecated'
 )
 
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/fepegar/torchio/archive/v${pkgver}.tar.gz")
