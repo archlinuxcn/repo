@@ -3,8 +3,8 @@
 # Contributor: angelsl
 _pkgbase=r8168
 pkgname=${_pkgbase}-dkms
-pkgver=8.048.02
-pkgrel=4
+pkgver=8.048.03
+pkgrel=1
 pkgdesc="A kernel module for Realtek 8168 network cards (DKMS version)"
 url="https://github.com/simonbcn/r8168-dkms"
 license=("GPL")
