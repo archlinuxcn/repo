@@ -2,7 +2,7 @@
 
 _npmname=web-ext
 pkgname=nodejs-$_npmname
-pkgver=4.2.0
+pkgver=4.3.0
 pkgrel=1
 pkgdesc='A command line tool to help build, run, and test web extensions'
 arch=(any)
