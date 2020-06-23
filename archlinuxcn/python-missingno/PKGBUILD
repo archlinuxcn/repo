@@ -1,0 +1,31 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=python-missingno
+_pkgname=missingno
+pkgver=0.4.2
+pkgrel=1
+pkgdesc='Missing data visualization module for Python'
+arch=('any')
+url='https://github.com/ResidentMario/missingno'
+license=('MIT')
+depends=(
+  python-matplotlib
+  python-numpy
+  python-seaborn
+  python-scipy
+)
+makedepends=(python-setuptools)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ResidentMario/missingno/archive/${pkgver}.tar.gz")
+sha512sums=('92177ed3439694ab8e23bff4e3e8f040e31a253f6c3460f28757e09896a7051416419ce81b032e1fc714c264b9f69e65c8d63bcc6989a0d29d27d9b7d6452efa')
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
