@@ -1,0 +1,28 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=python-confuse
+_pkgname=confuse
+pkgver=1.1.0
+pkgrel=1
+pkgdesc='Painless YAML config files for Python'
+arch=('any')
+url='https://github.com/beetbox/confuse'
+license=('MIT')
+depends=(
+  python-yaml
+)
+makedepends=(python-setuptools)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/beetbox/confuse/archive/v${pkgver}.tar.gz")
+sha512sums=('3ddb895e73d70d695bf9728b20739728e1f5b8aa5498fd7c822f9576014acc81ba1f5a75ec3d52dfd87965ade92fd32f53cb711b2e2b61b4510fda9513bc5ed6')
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
