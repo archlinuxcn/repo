@@ -5,7 +5,7 @@
 
 set -u
 pkgbase="linux-lts316"
-pkgver="3.16.84"
+pkgver="3.16.85"
 _srcname="linux-${pkgver%.*}"
 pkgrel='1'
 arch=('i686' 'x86_64')
@@ -42,7 +42,7 @@ source=(
   'update.sh'
 )
 md5sums=('5c569ed649a0c9711879f333e90c5386'
-         'ffbe5fe453f1d9ed939e3b661178a7fe'
+         'd832656d9ccfb770f6b1965ca6750b1a'
          '5c85a1cef25029a8eb87d0edeec0cb04'
          'f45197ec50bb5f7a85991f6e99ad49c6'
          '90cd68710e3064d9b65f5549570f7821'
@@ -53,7 +53,7 @@ md5sums=('5c569ed649a0c9711879f333e90c5386'
          '4f2248545c0a3997a1d301195b7dcfe7'
          'e6a1be64b190d846648d671c012d6dd3')
 sha256sums=('4813ad7927a7d92e5339a873ab16201b242b2748934f12cb5df9ba2cfe1d77a0'
-            'b638fb0082ea344f152a49bdaee807484bfb1cd4974f484e5b137c604cc8643e'
+            'f1ce2bad77b41758874485ca0a7e29a1bd4ce8a13ff721bcec1fe6fafd926bfb'
             '3bce3e9adce8ae3f826eebab75e9784ca92a914e526ae352de61c1da93aab8d3'
             '328539797005cb43362b75ca9965791a1ed34525101c286e4fb49694faa40e4c'
             '834bd254b56ab71d73f59b3221f056c72f559553c04718e350ab2a3e2991afe0'
@@ -111,7 +111,7 @@ prepare() {
   sed -i '2iexit 0' scripts/depmod.sh
 
   # gcc-10
-  if [ "${pkgver}" = '3.16.84' ]; then
+  if [ "${pkgver}" = '3.16.85' ]; then
     sed -e 's:^HOSTCFLAGS   =.*$:& -fcommon:g' -i 'Makefile'
   fi
 
