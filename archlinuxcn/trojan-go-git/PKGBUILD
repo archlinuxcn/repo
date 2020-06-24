@@ -1,7 +1,7 @@
 pkgname=trojan-go-git
 _pkgname=trojan-go
 pkgver=0.7.6.r0.g7feba10
-pkgrel=1
+pkgrel=2
 pkgdesc="A Trojan proxy written in Go (git version)."
 depends=(glibc v2ray-geoip v2ray-domain-list-community)
 provides=(trojan-go)
@@ -36,7 +36,7 @@ build() {
 }
 
 package() {
-    sed -i "10s/bin/lib/g" "$srcdir"/$_pkgname/example/trojan-go.service
+    sed -i "10s/bin/lib\/trojan-go/g" "$srcdir"/$_pkgname/example/trojan-go{,@}.service
     
     install -Dm755 -t "$pkgdir"/usr/lib/trojan-go/      "$srcdir"/$_pkgname/trojan-go
     install -Dm644 -t "$pkgdir"/usr/lib/systemd/system/ "$srcdir"/$_pkgname/example/trojan-go{,@}.service
