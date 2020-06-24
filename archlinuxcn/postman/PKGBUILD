@@ -35,5 +35,6 @@ package() {
 
   # Install icons & EULA
   install -Dm644 "$srcdir/Postman/app/resources/app/assets/icon.png" "$pkgdir/usr/share/icons/hicolor/128x128/apps/postman.png"
+  mkdir -p "$pkgdir/usr/share/licenses/postman"
   echo "https://www.postman.com/licenses/postman-eula/" > "$pkgdir/usr/share/licenses/postman/EULA.txt"
 }
