@@ -18,7 +18,7 @@ provides=("rsync=$pkgver")\n''' + line
     elif line.startswith('build('):
       line = '''\
 prepare() {
-	cd "$srcdir/rsync-$pkgver"
+	cd "$srcdir/rsync"
 	patch -p1 -i "${srcdir}/noatime.diff"
 }
 
