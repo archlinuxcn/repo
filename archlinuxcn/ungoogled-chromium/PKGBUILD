@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=83.0.4103.97
+pkgver=83.0.4103.106
 _rel=1
 pkgrel=1
 _launcher_ver=6
@@ -19,7 +19,7 @@ depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'desktop-file-utils' 'hicolor-icon-theme')
 makedepends=('python' 'python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git'
              'libpipewire02' 'clang' 'lld' 'gn' 'java-runtime-headless'
-             'python2-setuptools')
+             'python2-setuptools' 'libva')
 optdepends=('pepper-flash: support for Flash content'
             'libpipewire02: WebRTC desktop sharing under Wayland'
             'kdialog: needed for file dialogs in KDE'
@@ -42,9 +42,9 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-83-gcc-10.patch
         vaapi-build-fix.patch
         chromium-skia-harmony.patch)
-sha256sums=('12c405f61284cfc78f8c2b6600f3c1ae61a83b639c41087bb4f74fcaab036f83'
+sha256sums=('cfd153a2e10b0bb0fb3b7e6be543aef0915181f5fbdbea893d08465afd097e2f'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
-            '21767f015d14d024884b8780a975f0d8b4b2e31dd11d5eaec6a09938a5a2480f'
+            '0f4a0466e098184f850c167b29d2a25b99136a414104d47e58133f88271edb17'
             '0ec6ee49113cc8cc5036fa008519b94137df6987bf1f9fbffb2d42d298af868a'
             '58c41713eb6fb33b6eef120f4324fa1fb8123b1fbc4ecbe5662f1f9779b9b6af'
             '675fb3d6276cce569a641436465f58d5709d1d4a5f62b7052989479fd4aaea24'
