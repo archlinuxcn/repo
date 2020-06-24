@@ -7,7 +7,7 @@ _npmname=cli
 _npmid="@$_npmscope/$_npmname"
 
 pkgname="${_npmscope}-${_npmname}"
-pkgver=4.4.5
+pkgver=4.4.6
 pkgrel=1
 pkgdesc='Standard tooling for Vue.js development'
 arch=('any')
@@ -19,8 +19,8 @@ optdepends=()
 conflicts=('nodejs-vue-cli')
 source=("$pkgname-$pkgver.tar.gz::https://registry.npmjs.org/$_npmid/-/$_npmname-$pkgver.tgz")
 noextract=("${source[@]%%::*}")
-# Get SHASUM:  curl -s "https://registry.npmjs.org/@vue/cli" | jq '.versions."4.4.5".dist.shasum'
-sha1sums=('19fa0aab207b3c648c0c81a0e7f795b643b95c1e')
+# Get SHASUM:  curl -s "https://registry.npmjs.org/@vue/cli" | jq '.versions."4.4.6".dist.shasum'
+sha1sums=('61510b5a673f1e505ff6139d15850ca0238baee9')
 
 package() {
   # Setting temporary cache
