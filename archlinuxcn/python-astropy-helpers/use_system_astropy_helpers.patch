@@ -1,0 +1,11 @@
+--- a/astropy_helpers/commands/build_sphinx.py	2019-10-27 07:50:58.000000000 +0800
++++ b/astropy_helpers/commands/build_sphinx.py	2019-11-19 13:15:32.433597270 +0800
+@@ -143,7 +143,7 @@
+         build_cmd = self.get_finalized_command('build')
+         build_cmd_path = os.path.abspath(build_cmd.build_lib)
+ 
+-        ah_importer = pkgutil.get_importer('astropy_helpers')
++        ah_importer = pkgutil.get_importer('/usr/lib/python3.8/site-packages/astropy_helpers')
+         if ah_importer is None:
+             ah_path = '.'
+         else:
