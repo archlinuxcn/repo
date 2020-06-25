@@ -17,15 +17,13 @@ $ ./pre-commit -a
 
 import os
 import sys
-import re
 import ast
 import gzip
 import json
 from time import strftime
 from subprocess import Popen, PIPE
-from unittest import TestCase, TestLoader, TextTestRunner, skip, skipIf
+from unittest import TestCase, TestLoader, TextTestRunner, skip
 from io import StringIO
-from configparser import ConfigParser
 
 # need python-yaml package
 import yaml
@@ -274,7 +272,7 @@ def load_lilac_yaml_schema():
         YAML_SCHEMA = yaml.load(schema, Loader=yaml.SafeLoader)
 
 
-def list_packages():
+def iter_packages():
     packagesfolder = SUBFOLDER
     if not git_isdir(packagesfolder):
         packagesfolder = '.'
@@ -292,7 +290,7 @@ class RepoTreeTest(TestCase):
 
     @skip("PKGBUILDs may be added later by lilac")
     def test_pkgbuild_exists(self):
-        for package in list_packages():
+        for package in iter_packages():
             with self.subTest(package=package):
                 self.assertTrue(git_isfile(pkgpath(package), "PKGBUILD"),
                                 msg=('package "\033[1;31m{0}\033[m" does '
@@ -300,7 +298,7 @@ class RepoTreeTest(TestCase):
 
     @skip("lilac can now check and drop packages in official repos")
     def test_package_in_official(self):
-        for package in list_packages():
+        for package in iter_packages():
             with self.subTest(package=package):
                 self.assertFalse(package in PACKAGES,
                                 msg=('package "\033[1;31m{0}\033[m" exists in '
@@ -308,7 +306,7 @@ class RepoTreeTest(TestCase):
 
 
     def test_lilac_yaml_schema(self):
-        for package in list_packages():
+        for package in iter_packages():
             if not git_isfile(pkgpath(package), 'lilac.yaml'):
                 continue
             with self.subTest(package=package):
@@ -329,7 +327,7 @@ class RepoTreeTest(TestCase):
                                   ''.format(package))
 
     def test_lilac_py_has_update_on_or_managed_false(self):
-        for package in list_packages():
+        for package in iter_packages():
             #if not any([git_isfile(pkgpath(package), 'lilac.py'),
             #            git_isfile(pkgpath(package), 'lilac.yaml')]):
             #    continue
@@ -358,7 +356,7 @@ class RepoTreeTest(TestCase):
                                 'contains "\033[1;31m{1} = {2}\033[m" in '
                                 '"{3}" repo').format(package, var, pkg,
                                                      ','.join(against[pkg])))
-        for package in list_packages():
+        for package in iter_packages():
             if IGNORE_SRCINFO:
                 continue
             pkgbuild_path = os.path.join(pkgpath(package), 'PKGBUILD')
@@ -373,7 +371,7 @@ class RepoTreeTest(TestCase):
                     check_var_srcinfo('groups', package, GROUPS, line)
 
     def test_repo_depends_valid(self):
-        pkgs = list(list_packages())
+        pkgs = list(iter_packages())
         for package in pkgs:
             with self.subTest(package=package):
                 self.assertFalse(
