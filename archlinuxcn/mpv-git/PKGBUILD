@@ -7,33 +7,33 @@ _opt_features=(
 
   # Disabled by default, need to be enabled every build:
 
-  #dvd
-  #cd
-  #sdl2
-  #openal
+  dvd
+  cd
+  sdl2
+  openal
 
   # Lua is automatically detected, so you don't need to enable these if you
   # already have it installed. If you have both lua52 and luajit installed, mpv
   # will use the former. Uncommenting luajit below will tell mpv to use that
   # even if lua52 is also installed.
 
-  #lua
+  lua
   #luajit
 
   # The rest of these are autodetected, and are just provided to set
   # dependencies the first time you build. If you have the dependencies
   # installed, subsequent builds will pick them up automatically.
 
-  #x11
-  #wayland
+  x11
+  wayland
 
-  #uchardet
-  #rubberband
+  uchardet
+  rubberband
 
   # Features disabled by default, but don't require any extra dependencies on an
   # Arch system: (should these just be default?)
 
-  #dvbin
+  dvbin
 
 )
 
