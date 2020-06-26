@@ -1,0 +1,61 @@
+# Maintainer: oldherl <oldherl@gmail.com>
+# Contributor: Miguel de Val-Borro <miguel dot deval at gmail dot com>
+# Contributor: Astro Benzene <universebenzene at sina dot com>
+
+pkgname=astrometry.net
+pkgver=0.80
+pkgrel=1
+pkgdesc="Automatic recognition of astronomical images"
+arch=('x86_64')
+url="http://astrometry.net/"
+license=("GPL")
+depends=('bzip2' 'cairo' 'libpng' 'libjpeg-turbo' 'python-astropy' 'netpbm' 'cfitsio' 'gsl' 'swig')
+optdepends=(
+'astrometry.net-data-4108-wide: index data for wide field'
+'astrometry.net-data-5007: index data for features 22 to 30 arcmin'
+'astrometry.net-data-5006: index data for features 16 to 22 arcmin'
+)
+backup=(etc/astrometry.cfg)
+install=astrometry.net.install
+source=("https://github.com/dstndstn/astrometry.net/releases/download/${pkgver}/astrometry.net-${pkgver}.tar.gz")
+sha1sums=('f8836172a80c599bec7a6a5fb1bb1d3ccde0bc0b')
+
+prepare() {
+    cd ${pkgname}-${pkgver}
+    sed -e 's/NETPBM_INC\ ?=/NETPBM_INC\ ?=\ -I\/usr\/include\/netpbm/g' -i util/makefile.netpbm
+    sed -e 's/-L.\ -lnetpbm/-L\/usr\/lib\ -lnetpbm/g' -i util/makefile.netpbm
+}
+
+build() {
+    cd ${pkgname}-${pkgver}
+    # Parrallel build is broken and upstream is not going to fix it.
+    # https://github.com/dstndstn/astrometry.net/issues/178#issuecomment-650149535
+    make -j 1 SYSTEM_GSL=yes all py extra
+}
+
+check() {
+    cd ${pkgname}-${pkgver}
+    make -j 1 SYSTEM_GSL=yes test
+}
+
+package() {
+    cd ${pkgname}-${pkgver}
+    _pyver=$(python -c 'import sys; print("%d.%d" % sys.version_info[:2])')
+
+    make INSTALL_DIR="${pkgdir}/usr" \
+         ETC_INSTALL_DIR="${pkgdir}/etc" \
+         DOC_INSTALL_DIR="${pkgdir}/usr/share/doc/astrometry" \
+         EXAMPLE_INSTALL_DIR="${pkgdir}/usr/share/astrometry/examples" \
+         DATA_INSTALL_DIR="${pkgdir}/usr/share/astrometry/data" \
+         PY_BASE_INSTALL_DIR="${pkgdir}/usr/lib/python${_pyver}/site-packages/astrometry" \
+         PY_BASE_LINK_DIR="../lib/python${_pyver}/site-packages/astrometry" \
+         install
+
+    # fix data path and enable inparallel by default
+    sed -e "s|${pkgdir}/usr/data|/usr/share/astrometry/data|" -e 's|#inparallel|inparallel|' -i ${pkgdir}/etc/astrometry.cfg
+    # remove useless file
+    rm ${pkgdir}/usr/share/doc/astrometry/report.txt
+    # those two executables are included in cfitsio package
+    rm ${pkgdir}/usr/bin/fitscopy
+    rm ${pkgdir}/usr/bin/imcopy
+}
