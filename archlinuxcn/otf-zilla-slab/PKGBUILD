@@ -3,11 +3,10 @@
 pkgbase=otf-zilla-slab
 pkgname=('otf-zilla-slab' 'ttf-zilla-slab')
 pkgver=1.002
-pkgrel=2
+pkgrel=3
 pkgdesc="Mozilla's Zilla Slab Type Family"
 url=https://github.com/mozilla/zilla-slab
 arch=('any')
-depends=('fontconfig' 'xorg-font-utils')
 source=($pkgname.tar.gz::https://github.com/mozilla/zilla-slab/releases/download/v$pkgver/Zilla-Slab-Fonts-v$pkgver.zip)
 sha256sums=('62490dc19cd17e2951fe88ba3e662089ca14077634cacf1f12926374281dcf42')
 license=("custom:SIL")
