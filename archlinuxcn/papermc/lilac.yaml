@@ -6,4 +6,4 @@ build_prefix: extra-x86_64
 post_build: git_pkgbuild_commit
 
 update_on:
-  - github: PaperMC/Paper
+  - cmd: API='https://papermc.io/api/v1/paper' && VER="$(curl -s $API | jq -r '.versions[0]')" && echo "$VER+b$(curl -s $API/$VER | jq -r '.builds.latest')"
