@@ -359,6 +359,9 @@ class RepoTreeTest(TestCase):
         for package in iter_packages():
             if IGNORE_SRCINFO:
                 continue
+            if not git_isfile(pkgpath(package), 'PKGBUILD'):
+                # PKGBUILD may be added later by lilac
+                continue
             pkgbuild_path = os.path.join(pkgpath(package), 'PKGBUILD')
             with git_open(pkgbuild_path) as pkgbuild_file:
                 pkgbuild = pkgbuild_file.read()
