@@ -1,0 +1,13 @@
+maintainers:
+  - github: oldherl
+
+repo_depends:
+  - python-astropy-helpers
+  - erfa
+
+update_on:
+  - aur: python-astropy
+  - alias: python
+
+pre_build:  aur_pre_build
+post_build:  aur_post_build
