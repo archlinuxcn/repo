@@ -6,7 +6,7 @@ _gradle_ver=6.1.1 # This package does not work with system gradle
 pkgver=3.9.6.REL
 _pkgver=${pkgver%.*}-patch${pkgver##*.}
 _pkgver=${_pkgver/-patchREL/}
-pkgrel=1
+pkgrel=2
 _srcdir=$_pkgname-$_pkgver
 pkgdesc="Open-source remake of Civilization V"
 url="https://github.com/yairm210/Unciv"
@@ -31,7 +31,8 @@ prepare() {
   sed -i "6s|https\\\://services.gradle.org/distributions|../../../|" $_srcdir/gradle/wrapper/gradle-wrapper.properties
   # Get rid of the Android part (it somehow always asks for Android SDK)
   gawk -i inplace 'BEGIN { doPrint = 1; } /project\(":android"\) {/ { doPrint = 0; } /^}$/ { if (doPrint != 1) { doPrint = 1; next }} { if (doPrint) print $0;}' $_srcdir/build.gradle.kts
-  rm -rf $_srcdir/android
+  # We cannot just get rid of the android/ folder becuase we need assets from it
+  rm -rf $_srcdir/android/{res,src,build.gradle.kts,gradle.properties,project.properties}
 }
 
 build() {
