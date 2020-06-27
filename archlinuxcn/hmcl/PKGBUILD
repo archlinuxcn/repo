@@ -4,9 +4,9 @@
 
 pkgname=hmcl
 _pkgname=HMCL
-pkgver=3.2.149
-_commit=8b16e8be4de9e7c81d62cea2fa665d6b1bbac6fd
-pkgrel=2
+pkgver=3.3.172
+_commit=bd18355a1a02a8f6a927edd7dadadbf18857e6e9
+pkgrel=1
 pkgdesc="A Minecraft Launcher which is multi-functional, cross-platform and popular"
 arch=('any')
 url="https://github.com/huanghongxun/HMCL"
@@ -20,7 +20,7 @@ source=("hmcl-launch-script"
         "${pkgname}-${pkgver}.tgz::${url}/archive/${_commit}.tar.gz")
 sha256sums=('5565dafda05a2f15e6d6c58aedc3a4c9191fa2f165796c9d9fc32fdf5efa1ab2'
             '5780cf70f1afec0eb3cd8fc43297d361903c7204e274a28c5edf9b8ac3eea83e'
-            '673d65ccf9790d62b1a6a771bb2ed09ddcd3e768408e01de2104813c960555a9')
+            'e8e092205541e142b3d31975afc89330fb27b1d367f90d5a66758b1b08816290')
 
 prepare() {
   cd "${_pkgname}-${_commit}"
