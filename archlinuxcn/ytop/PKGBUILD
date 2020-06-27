@@ -1,0 +1,23 @@
+# Maintainer: DuckSoft <realducksoft at gmail dot com>
+
+pkgname=ytop
+pkgver=0.6.2
+pkgrel=1
+pkgdesc="A TUI system monitor written in Rust"
+arch=('any')
+url="https://github.com/cjbassi/ytop"
+license=("MIT")
+makedepends=("cargo")
+provides=(${pkgname})
+conflicts=(${pkgname})
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
+sha256sums=("d9fd6ce00e27de894bc0790947fbeab40e81e34afa5ead5a53d126c458d50e99")
+
+build() {
+	cd "${pkgname}-${pkgver}"
+	cargo build --release --locked --all-features
+}
+
+package() {
+	install -Dm755 "${pkgname}-${pkgver}/target/release/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+}
