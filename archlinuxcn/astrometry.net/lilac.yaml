@@ -7,3 +7,10 @@ repo_depends:
 update_on:
   - github: dstndstn/astrometry.net
     use_latest_release: true
+  - alias: python
+  - archpkg: wcslib
+    strip-release: true
+  - archpkg: gsl
+    strip-release: true
+  - archpkg: cfitsio
+    strip-release: true
