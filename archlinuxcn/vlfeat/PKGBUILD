@@ -3,26 +3,36 @@
 _pkgname=vlfeat
 pkgname=(vlfeat octave-vlfeat)
 pkgver=0.9.21
-pkgrel=6
+pkgrel=7
 pkgdesc='An open library of computer vision algorithms'
 arch=('x86_64')
 url='https://www.vlfeat.org/'
 license=('BSD')
 depends=(
-  openmp
+  gcc-libs
 )
 makedepends=(
-  clang
   git
   octave
   patchelf
 )
-source=("${_pkgname}::git+https://github.com/vlfeat/vlfeat.git")
-sha512sums=('SKIP')
+source=("${_pkgname}::git+https://github.com/vlfeat/vlfeat.git"
+    "0001-fix-openmp-building-with-gcc.patch::https://github.com/vlfeat/vlfeat/pull/200.patch"i
+    "0002-fix-pgm-max-value.patch::https://github.com/vlfeat/vlfeat/pull/170.patch"
+    "0003-fix-typo-in-makefile.patch::https://github.com/vlfeat/vlfeat/pull/191.patch")
+sha512sums=('SKIP'
+            '181814a521b28e3c6fcdcff354f66f32f597db24a738e6db3bbb6418f62d4ab80a13b7b99707851f4e33d887cf906ce823f707d9cee20e2a34e4db9896a9b880'
+            'd6c11b979785b1ed26655fbfc20ecfc0cce249c03fe54168a6580503b54e325a85c3e841a0e230a57c9fb21f73884d38a22020bd999b1a68841e09a8cd8c506e'
+            '420c032aab1b6f32f6aabf319ad27bd66749a587deb36f7e60d3efa1512f6c3c56b680ffa5b510cb40c9bf895b1fd408599eda5ed23cdaec7626640bd69085f3')
 
 prepare() {
+  # fix building with openmp using gcc > 9.0
+  cd ${_pkgname}
+  patch -p1 -i "${srcdir}/0001-fix-openmp-building-with-gcc.patch"
   # fix https://github.com/vlfeat/vlfeat/issues/168
-  sed -i "s,if(! (max_value >= 65536)),if(max_value >= 65536)," "${srcdir}/${_pkgname}/vl/pgm.c"
+  patch -p1 -i "${srcdir}/0002-fix-pgm-max-value.patch"
+  # fix Makefile typo
+  patch -p1 -i "${srcdir}/0003-fix-typo-in-makefile.patch"
   # fix octave building, see https://github.com/vlfeat/vlfeat/issues/188
   mkdir -p "${srcdir}/${_pkgname}/toolbox/mex/octave/mexa64"
   sed -i '32,35d' "${srcdir}/${_pkgname}/toolbox/mexutils.h"
@@ -30,7 +40,7 @@ prepare() {
 
 build() {
   cd "${srcdir}/${_pkgname}"
-  make CC=clang CXX=clang++ DISABLE_OPENMP=no MKOCTFILE=mkoctfile
+  make MKOCTFILE=$(which mkoctfile)
 }
 
 package_vlfeat() {
