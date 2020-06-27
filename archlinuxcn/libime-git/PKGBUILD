@@ -11,6 +11,7 @@ url="https://github.com/fcitx/libime"
 license=('GPL')
 depends=('boost-libs' 'fcitx5-git')
 makedepends=('boost' 'extra-cmake-modules' 'git' 'python')
+provides=('libime')
 conflicts=('libime')
 source=("git+$url.git")
 sha512sums=('SKIP')
