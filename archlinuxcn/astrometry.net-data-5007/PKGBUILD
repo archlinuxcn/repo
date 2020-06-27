@@ -1,0 +1,44 @@
+# Maintainer: oldherl <oldherl@gmail.com>
+
+pkgname=astrometry.net-data-5007
+pkgver=0.74
+pkgrel=1
+pkgdesc="Index files for astrometry.net. 5007 series from Gaia-DR2 for features 22 to 30 arcmin"
+arch=('any')
+url="http://astrometry.net/"
+license=("GPL")
+source=(
+"http://data.astrometry.net/5000/index-5007-00.fits"
+"http://data.astrometry.net/5000/index-5007-01.fits"
+"http://data.astrometry.net/5000/index-5007-02.fits"
+"http://data.astrometry.net/5000/index-5007-03.fits"
+"http://data.astrometry.net/5000/index-5007-04.fits"
+"http://data.astrometry.net/5000/index-5007-05.fits"
+"http://data.astrometry.net/5000/index-5007-06.fits"
+"http://data.astrometry.net/5000/index-5007-07.fits"
+"http://data.astrometry.net/5000/index-5007-08.fits"
+"http://data.astrometry.net/5000/index-5007-09.fits"
+"http://data.astrometry.net/5000/index-5007-10.fits"
+"http://data.astrometry.net/5000/index-5007-11.fits"
+"http://data.astrometry.net/5000/README"
+)
+sha256sums=('ca19d39ba01718dcf42ecf2090fd918453e3dc1a110f8e651beca8216cf98b97'
+            'd94c38579246e80e64d2696a3dee78f4531740cced918bb44af4574d72a4f2e8'
+            '6f43f578c5bd712e7ea5c7561c78c4f63e9ebf71c2ed7e4f569990f9bfb9032e'
+            'd46cd9df2de2980def21602745ec8a1d99c2242044048ee9f1f1bc51c92e6fc5'
+            '4c65acde9675f6f942b84724ca04e8f05ce6782203b21e35669e3fbb91aee293'
+            'efd5f1e71b0b15bbe0f6b01e96783970a02a5a1396d8ed0a3d21fba68de9a5c6'
+            '63715581187f848964e6ed765840ec0bbe6351df5528b2953230a801997593d9'
+            'bc06fb134deedcc86fce39401dc61592e07ae7e2e7c7cd84f075f9f1dfac1414'
+            'bd2d0e5811917b73b9a95f4197a41a9350a3a1e86642282b1cbe500505fd3c36'
+            'fedaf457187cdb2f14455d05871216061ada0c8832ec65eafbf9e41107c1ac9f'
+            '79821d6b270f9f4dae456cd8afc5e39a3d3777d8a1ba0b113ef94129a7b5a664'
+            'e3ab4e903b821ff6f42327657ab95a9a13aa668632c7760602e68ee10975a0c8'
+            'a5d6f9b95234ddca56812bee1ce0cf7acde9e9bebeec908ea154ba43e4fbc039')
+
+package() {
+    install -dm755 $pkgdir/usr/share/astrometry/data
+    install -m644 *.fits $pkgdir/usr/share/astrometry/data
+    install -dm755 $pkgdir/usr/share/doc/astrometry
+    install -m644 README $pkgdir/usr/share/doc/astrometry/5000-README
+}
