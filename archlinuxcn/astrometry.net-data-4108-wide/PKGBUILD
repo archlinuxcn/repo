@@ -1,0 +1,44 @@
+# Maintainer: oldherl <oldherl@gmail.com>
+
+pkgname=astrometry.net-data-4108-wide
+pkgver=0.47
+pkgrel=1
+pkgdesc="Index files for astrometry.net. 4108 and above generated from Tycho-2 for wide fields."
+arch=('any')
+url="http://astrometry.net/"
+license=("GPL")
+source=(
+"http://data.astrometry.net/4100/index-4108.fits"
+"http://data.astrometry.net/4100/index-4109.fits"
+"http://data.astrometry.net/4100/index-4110.fits"
+"http://data.astrometry.net/4100/index-4111.fits"
+"http://data.astrometry.net/4100/index-4112.fits"
+"http://data.astrometry.net/4100/index-4113.fits"
+"http://data.astrometry.net/4100/index-4114.fits"
+"http://data.astrometry.net/4100/index-4115.fits"
+"http://data.astrometry.net/4100/index-4116.fits"
+"http://data.astrometry.net/4100/index-4117.fits"
+"http://data.astrometry.net/4100/index-4118.fits"
+"http://data.astrometry.net/4100/index-4119.fits"
+"http://data.astrometry.net/4100/README"
+)
+sha256sums=('192086ee4ba56b6f74e3bc313d1bf56cbbbb486b23b66686a6e121978a06cdf2'
+            '855bc69ae651d7e83fc0e817faa4db9a9df4a389fc12ffd9d2881c22b5f91916'
+            'ca5f9470d259c95d1c9ad73facf999de8aa0c97b2c94b700fcbfbf7d350c0169'
+            'b0d76303ff1aa4cee1894a4d5bb5209f2a16f683882200cd5bd428e82c213120'
+            '59745b09bb8197acf8d3736ef58716017926837a1ae45021af85591bfd30dd33'
+            '241d4547e7c2de49286f1d5cddd6d3b66535fa3a485b136e21a9af8b091af841'
+            'f4ebfbd1a5c05693967f38171bfb86476afc14e5e534054739ec206c7725a1b4'
+            '548f6c438b5062519e27e83bc7cdc1743705068e327fabe4cc039a4319542953'
+            'de811b8513cb2499ace8ce26a79ed8082e5ec19972f2a5d967e5c3b93c475b5a'
+            '7de4d4f8827d5622ff1ed5252ab8b18d6b576b48f63a8927b5887bc8fa418f45'
+            '5e79c1812ac6fdf11a360b04e82079b87e318ed36a618c21de23441195e67d0f'
+            '79b36eea45b72448c8471f6e8af0e1c8635a3821d04f1a23d6cf5ecd5f59d31c'
+            'b9e54a9d783a770aba46d7f5f0f1037afd88a5509fb7b89657013a2f2433ce16')
+
+package() {
+    install -dm755 $pkgdir/usr/share/astrometry/data
+    install -m644 *.fits $pkgdir/usr/share/astrometry/data
+    install -dm755 $pkgdir/usr/share/doc/astrometry
+    install -m644 README $pkgdir/usr/share/doc/astrometry/4100-README
+}
