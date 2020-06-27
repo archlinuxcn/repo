@@ -13,7 +13,7 @@ optdepends=("tar: needed in order to create world backups"
 conflicts=('papermc-git')
 backup=('etc/conf.d/papermc')
 install="${pkgname}.install"
-source=("papermc.${pkgver}.jar"::"https://papermc.io/api/v1/paper/${_pkgver}/${_build}/download"
+source=("papermc.${pkgver}.jar"::"https://papermc.io/api/v1/paper/${pkgver%%+*}/${pkgver##*b}/download"
 	"papermc-backup.service"
 	"papermc-backup.timer"
 	"papermc.service"
