@@ -2,7 +2,7 @@
 
 pkgname=python-confuse
 _pkgname=confuse
-pkgver=1.2.0
+pkgver=1.3.0
 pkgrel=1
 pkgdesc='Painless YAML config files for Python'
 arch=('any')
@@ -16,7 +16,7 @@ makedepends=(
   python-pip
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/beetbox/confuse/archive/v${pkgver}.tar.gz")
-sha512sums=('b2615cf70288a43596504a3664281912414857e4a786b4e1bf2b9f5f19a29b4bf601505ded64a18a486d7451037b176cc92944f2053eb989b16b57dac514e8cf')
+sha512sums=('d3d05342216abab03d6109af5042aa5535dd07ab18959dcff6d37f4cba644b9585c037f43e0ace20778a2aaccef71efef3561f3ea94c851119c7c8135a7bf692')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
