@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=83.0.4103.106
+pkgver=83.0.4103.116
 _rel=1
 pkgrel=1
 _launcher_ver=6
@@ -38,6 +38,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         include-memory-header-to-get-the-definition-of-std-u.patch
         make-some-of-blink-custom-iterators-STL-compatible.patch
         avoid-double-destruction-of-ServiceWorkerObjectHost.patch
+        force-mp3-files-to-have-a-start-time-of-zero.patch
         v8-remove-soon-to-be-removed-getAllFieldPositions.patch
         chromium-83-gcc-10.patch
         vaapi-build-fix.patch
@@ -98,6 +99,8 @@ prepare() {
     third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
     third_party/libxml/chromium/*.cc
 
+  # https://chromium-review.googlesource.com/c/chromium/src/+/2268221
+  patch -Np1 -i ../force-mp3-files-to-have-a-start-time-of-zero.patch
 
   # https://crbug.com/v8/10393
   patch -Np1 -d v8 <../v8-remove-soon-to-be-removed-getAllFieldPositions.patch
