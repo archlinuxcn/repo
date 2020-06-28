@@ -11,18 +11,21 @@ license=('MIT')
 depends=(
   python-yaml
 )
-makedepends=(python-setuptools)
+makedepends=(
+  python-flit
+  python-pip
+)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/beetbox/confuse/archive/v${pkgver}.tar.gz")
 sha512sums=('b2615cf70288a43596504a3664281912414857e4a786b4e1bf2b9f5f19a29b4bf601505ded64a18a486d7451037b176cc92944f2053eb989b16b57dac514e8cf')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  python setup.py build
+  flit build --format sdist
 }
 
 package() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  pip install "dist/${_pkgname}-${pkgver}.tar.gz" --root="${pkgdir}" --no-deps
 }
 # vim:set ts=2 sw=2 et:
