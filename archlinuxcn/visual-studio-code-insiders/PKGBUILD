@@ -1,7 +1,7 @@
 # Maintainer: D. Can Celasun <can[at]dcc[dot]im>
 
 pkgname=visual-studio-code-insiders
-pkgver=1593198709
+pkgver=1593414285
 pkgrel=1
 pkgdesc="Editor for building and debugging modern web and cloud applications (insiders version)"
 arch=('x86_64' 'i686')
@@ -11,10 +11,19 @@ license=('custom: commercial')
 depends=(libxkbfile gnupg gtk3 libsecret nss gcc-libs libnotify libxss glibc lsof)
 optdepends=('glib2: Needed for move to trash functionality'
             'libdbusmenu-glib: Needed for KDE global menu')
-source_x86_64=(code_x64_${pkgver}.tar.gz::https://vscode-update.azurewebsites.net/latest/linux-x64/insider
+
+pkgver() {
+    if [ "${CARCH}" = "x86_64" ]; then
+        IFS='/' read -ra ADDR <<< $(curl -ILs -o /dev/null -w %{url_effective} https://vscode-update.azurewebsites.net/latest/linux-x64/insider); echo "${ADDR[5]}" | sed 's/code-insider-//g' | sed 's/.tar.gz//g' | sed 's/-/./g'
+    else
+        IFS='/' read -ra ADDR <<< $(curl -ILs -o /dev/null -w %{url_effective} https://vscode-update.azurewebsites.net/latest/linux-ia32/insider); echo "${ADDR[5]}" | sed 's/code-insider-//g' | sed 's/.tar.gz//g' | sed 's/-/./g'
+    fi
+}
+
+source_x86_64=(code_x64_$(pkgver).tar.gz::https://vscode-update.azurewebsites.net/latest/linux-x64/insider
                ${pkgname}.desktop ${pkgname}-url-handler.desktop
                )
-source_i686=(code_ia32_${pkgver}.tar.gz::https://vscode-update.azurewebsites.net/latest/linux-ia32/insider
+source_i686=(code_ia32_$(pkgver).tar.gz::https://vscode-update.azurewebsites.net/latest/linux-ia32/insider
               ${pkgname}.desktop ${pkgname}-url-handler.desktop
               )
 sha256sums_x86_64=('SKIP'
@@ -23,13 +32,6 @@ sha256sums_x86_64=('SKIP'
 sha256sums_i686=('SKIP'
                  'edfeb13aa50d35fbae748ff545b5bd126be916dbfeda682157e3d5ce81574db2'
                  'd06d9d057b507d1747a8ed8ae304beb5e20c7bf887c362c941d85b02c893069e')
-pkgver() {
-    if [ "${CARCH}" = "x86_64" ]; then
-        IFS='/' read -ra ADDR <<< $(curl -ILs -o /dev/null -w %{url_effective} https://vscode-update.azurewebsites.net/latest/linux-x64/insider); echo "${ADDR[5]}" | sed 's/code-insider-//g' | sed 's/.tar.gz//g' | sed 's/-/./g'
-    else
-        IFS='/' read -ra ADDR <<< $(curl -ILs -o /dev/null -w %{url_effective} https://vscode-update.azurewebsites.net/latest/linux-ia32/insider); echo "${ADDR[5]}" | sed 's/code-insider-//g' | sed 's/.tar.gz//g' | sed 's/-/./g'
-    fi
-}
 package() {
   _pkg=VSCode-linux-x64
   if [ "${CARCH}" = "i686" ]; then
