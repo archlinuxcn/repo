@@ -5,7 +5,7 @@ pkgname="${_pkgname}-bin"
 pkgver=2.5.2
 _pkgver="${pkgver}-linux1"
 gitname="release-${_pkgver}"
-pkgrel=1
+pkgrel=2
 pkgdesc="GUI for managing Git and GitHub."
 arch=('x86_64')
 url="https://desktop.github.com"
@@ -25,7 +25,7 @@ sha256sums=(
 package() {
     tar xf data.tar.xz -C "${pkgdir}"
     install -d "${pkgdir}/opt/${_pkgname}"
-    mv "${pkgdir}/usr/lib/github-desktop" "${pkgdir}/opt/${_pkgname}"
+    mv "${pkgdir}/usr/lib/github-desktop" "${pkgdir}/opt/"
     rm "${pkgdir}/usr/share/applications/github-desktop.desktop"
     install -Dm644 "${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
     printf "#!/bin/sh\n\n/opt/${_pkgname}/github-desktop \"\$@\"\n" | install -Dm755 /dev/stdin "${pkgdir}/usr/bin/${_pkgname}"
