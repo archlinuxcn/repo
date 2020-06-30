@@ -3,10 +3,10 @@
 pkgname=unciv
 _pkgname=Unciv
 _gradle_ver=6.1.1 # This package does not work with system gradle
-pkgver=3.9.6.REL
+pkgver=3.9.7.REL
 _pkgver=${pkgver%.*}-patch${pkgver##*.}
 _pkgver=${_pkgver/-patchREL/}
-pkgrel=3
+pkgrel=1
 _srcdir=$_pkgname-$_pkgver
 pkgdesc="Open-source remake of Civilization V"
 url="https://github.com/yairm210/Unciv"
@@ -21,7 +21,7 @@ source=(
   "$pkgname.desktop"
 )
 noextract=("gradle-$_gradle_ver-all.zip")
-md5sums=('17a6ea0f0ec0b05bf434d1ce0ef53fe1'
+md5sums=('f907ed2e0910d2165b64f046ec69eefb'
          'd1df7d94816bbedb2ab45187fceda7e5'
          'f8eab098f20681b8db232cc5709713d3'
          '42d5f7ea8ee48d2d643d070786f039ba')
