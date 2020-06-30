@@ -2,13 +2,12 @@
 
 pkgname=terminusmod
 pkgver=1.9.9
-pkgrel=2
+pkgrel=3
 pkgdesc="Modified Terminus Font"
 arch=('any')
 url="http://sourceforge.net/projects/terminusmod"
-license=('GPLv2')
-depends=('fontconfig' 'xorg-fonts-encodings')
-install=terminusmod.install
+license=('GPL2')
+depends=('fontconfig')
 source=("http://sourceforge.net/projects/terminusmod/files/$pkgname-$pkgver.tar.gz")
 
 package () {
