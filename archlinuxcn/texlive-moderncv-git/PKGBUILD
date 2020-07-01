@@ -1,0 +1,34 @@
+# Maintainer: fclad <fcladera at fcladera.com>
+
+pkgname=texlive-moderncv-git
+pkgver=v2.0.0.r10.g2033517
+pkgrel=4
+pkgdesc=" A modern curriculum vitae class for LaTeX"
+arch=('any')
+url="https://github.com/xdanaux/moderncv"
+license=('The LaTeX Project Public Li­cense, version 1.3c')
+depends=('texlive-core' 'texlive-latexextra' 'texlive-fontsextra' 'ttf-font-awesome')
+makedepends=('git')
+conflicts=('texlive-moderncv')
+provides=('texlive-moderncv')
+source=("git+https://github.com/xdanaux/moderncv.git")
+md5sums=('SKIP')
+
+prepare() {
+  cd moderncv
+  sed -i "/l3regex/d" moderncv.cls
+}
+
+pkgver() {
+  cd moderncv
+  git describe --long | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+}
+
+package() {
+  cd moderncv
+  # Install only cls and sty files
+  install -Dm644 moderncv.cls "$pkgdir/usr/share/texmf/tex/latex/moderncv/moderncv.cls"
+  for file in *.sty; do
+    install -m644 $file "$pkgdir/usr/share/texmf/tex/latex/moderncv/$file"
+  done
+}
