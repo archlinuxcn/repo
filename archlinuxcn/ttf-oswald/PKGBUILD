@@ -3,12 +3,12 @@
 pkgname=ttf-oswald
 _commit='dbb34644e36024fef3def6d268d30ead8f0ce113'
 pkgver=4.101
-pkgrel=1
+pkgrel=2
 pkgdesc='Sans-serif typeface from Google by Vernon Adams'
 arch=('any')
 url='https://fonts.google.com/specimen/Oswald'
 license=('custom:SIL Open Font License v1.1')
-depends=('fontconfig' 'xorg-fonts-encodings' 'xorg-font-utils')
+depends=('xorg-fonts-encodings')
 conflicts=('ttf-google-fonts-opinionated-git' 'otf-oswald-ib')
 source=("Oswald-Bold-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/oswald/static/Oswald-Bold.ttf"
         "Oswald-ExtraLight-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/oswald/static/Oswald-ExtraLight.ttf"
