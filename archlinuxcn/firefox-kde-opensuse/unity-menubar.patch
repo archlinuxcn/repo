@@ -14,7 +14,7 @@
              <menu id="file-menu" data-l10n-id="menu-file">
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -6296,11 +6296,17 @@ function onViewToolbarsPopupShowing(aEve
+@@ -6301,11 +6301,17 @@ function onViewToolbarsPopupShowing(aEve
  
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
  
@@ -35,7 +35,7 @@
 --- a/browser/components/places/content/places.xhtml
 +++ b/browser/components/places/content/places.xhtml
 @@ -169,7 +169,7 @@
-         <toolbarbutton type="menu" class="tabbable"
+         <toolbarbutton type="menu" class="tabbable" wantdropmarker="true"
                onpopupshowing="document.getElementById('placeContent').focus()"
  #else
 -      <menubar id="placesMenu">
@@ -97,7 +97,7 @@
      'components.conf',
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -309,6 +309,9 @@ pref("dom.mouseevent.click.hack.use_lega
+@@ -313,6 +313,9 @@ pref("dom.mouseevent.click.hack.use_lega
  // of content viewers to cache based on the amount of available memory.
  pref("browser.sessionhistory.max_total_viewers", -1);
  
@@ -109,7 +109,7 @@
  pref("ui.android.mouse_as_touch", 1);
 --- a/toolkit/content/xul.css
 +++ b/toolkit/content/xul.css
-@@ -204,6 +204,13 @@ toolbar[type="menubar"] {
+@@ -200,6 +200,13 @@ toolbar[type="menubar"] {
  }
  %endif
  
@@ -141,7 +141,7 @@
      'nsWindow.cpp', # conflicts with X11 headers
      'WaylandVsyncSource.cpp', # conflicts with X11 headers
  ]
-@@ -132,6 +141,7 @@ FINAL_LIBRARY = 'xul'
+@@ -134,6 +143,7 @@ FINAL_LIBRARY = 'xul'
  LOCAL_INCLUDES += [
      '/layout/base',
      '/layout/generic',
@@ -3255,7 +3255,7 @@
 +                          nullptr, 0, loadGroup, this, nullptr, nullptr,
 +                          nsIRequest::LOAD_NORMAL, nullptr,
 +                          nsIContentPolicy::TYPE_IMAGE, EmptyString(),
-+                          false, getter_AddRefs(mImageRequest));
++                          false, false, getter_AddRefs(mImageRequest));
 +    }
 +}
 +
@@ -5077,7 +5077,7 @@
 +#endif /* __nsNativeMenuService_h__ */
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
-@@ -6008,6 +6008,10 @@ void nsWindow::HideWindowChrome(bool aSh
+@@ -6069,6 +6069,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5130,8 +5130,8 @@
 +if toolkit in ('cocoa', 'gtk'):
 +    EXPORTS += ['nsINativeMenuService.h']
  
- TEST_DIRS += ['tests']
- 
+ TEST_DIRS += [
+     'tests',
 --- /dev/null
 +++ b/xpcom/ds/NativeMenuAtoms.py
 @@ -0,0 +1,9 @@
@@ -5154,7 +5154,7 @@
  import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
-@@ -2552,7 +2553,7 @@ STATIC_ATOMS = [
+@@ -2553,7 +2554,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
      # END ATOMS

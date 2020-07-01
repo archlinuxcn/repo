@@ -19,13 +19,13 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=77.0.1
-pkgrel=2
+pkgver=78.0
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
 url="https://build.opensuse.org/package/show/mozilla:Factory/MozillaFirefox"
-depends=('mozilla-common' 'libxt' 'startup-notification' 'mime-types'
+depends=('mozilla-common' 'libxt' 'mime-types'
          'dbus-glib' 'hicolor-icon-theme'
 	 'libvpx' 'icu'  'libevent' 'nss>=3.28.3' 'nspr>=4.10.6' 'hunspell'
 	 'sqlite' 'libnotify' 'kmozillahelper' 'ffmpeg' 'gtk3'
@@ -41,17 +41,17 @@ depends=('mozilla-common' 'libxt' 'startup-notification' 'mime-types'
          'libevent'
         )
 
-makedepends=('unzip' 'zip' 'diffutils' 'python2-setuptools' 'yasm' 'mesa' 'imake'
+makedepends=('unzip' 'zip' 'diffutils' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13' 'rust'
-             'cargo' 'mercurial' 'llvm' 'clang'
-             'gtk2' 'nodejs' 'cbindgen' 'nasm' 'python' 'python2-psutil' 'xz')
+             'cargo' 'mercurial' 'llvm' 'clang' 'jack'
+             'gtk2' 'nodejs' 'cbindgen' 'nasm' 'python' 'python-psutil' 'xz')
 
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech'
             'pulseaudio: Audio support')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=d5b284f833d5
+_patchrev=082b9d2dfd7d
 options=('!emptydirs')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -237,22 +237,22 @@ END
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 md5sums=('SKIP'
-         '095f1d0cd7de36e7ad3340699fce45b8'
+         'd7bf65ba1d9f606545dcf887d23bec9f'
          'a26a061efb4def6572d5b319d657f1d6'
          '4c23d9c0a691d70919beb1dafbbecbd3'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6821ee347a094765776d8aec0a1d07e2'
          'ac9ce8934b4553fc42cb110c9c04350e'
-         '625fe05879952550fe3468e7a6465a07'
+         '36137f20b42e797cf4694e4e6e0f5b83'
          '0f9fcd2ec38e339e4f2d602e1b13e3ef'
-         '0442f4a7524e5229611009372369f1f4'
+         'e9e1d302d2be62192e96944610f2e14a'
          'fe24f5ea463013bb7f1c12d12dce41b2'
-         '39f19e3fc4acb7dd5ff92c656228c244'
+         '3c383d371d7f6ede5983a40310518715'
          'd24681f9a46ae23689b2867f4ab6eaae'
          'dbb578ee6ef93f0d28584d38904fac70'
          'f867ae41a722630cc5567e2dcc51676d'
          '215e69f9941a0855e005a7b5a351df60'
          'e8585d1477f5f057603f38fcceec5c3f'
-         '91ef22b0393dd313dce0e5ffe042a369'
+         'e7924ef6bf5fda799f369b75f98aaf00'
          'efcddfb6595b356b3faaf6b93313659e'
          'aa9261c4d407cf809bf8275e6f2e52c7')

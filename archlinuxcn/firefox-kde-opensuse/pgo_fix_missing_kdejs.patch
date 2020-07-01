@@ -1,10 +1,12 @@
 --- b/browser/app/Makefile.in	2016-02-14 15:57:50.000000000 +0100
 +++ a/browser/app/Makefile.in	2016-02-14 16:08:29.823744590 +0100
-@@ -57,6 +57,7 @@
+@@ -56,8 +56,9 @@
+ # steps. See bug 1431342.
  libs:: $(srcdir)/profile/channel-prefs.js
  	$(NSINSTALL) -D $(DIST)/bin/defaults/pref
- 	$(call py3_action,preprocessor,-Fsubstitution $(PREF_PPFLAGS) $(ACDEFINES) $^ -o $(DIST)/bin/defaults/pref/channel-prefs.js)
-+	cp $(topsrcdir)/../kde.js $(DIST)/bin/defaults/pref/kde.js
++	cp $(topsrcdir)/../kde.js $(DIST)/bin/defaults/pref/kde.js	
+ 	$(call py_action,preprocessor,-Fsubstitution $(PREF_PPFLAGS) $(ACDEFINES) $^ -o $(DIST)/bin/defaults/pref/channel-prefs.js)
  
  ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))
+ 
  
