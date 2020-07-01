@@ -24,8 +24,6 @@ source=(
         'https://static.rust-lang.org/dist/{{version_date_raw}}/rust-src-nightly.tar.xz.asc'
         '{{ clippy_url }}'
         '{{ clippy_url }}.asc'
-        '{{ rls_url }}'
-        '{{ rls_url }}.asc'
 {% for x in stds %}
         {{ "'%s'" % x.url }}
         {{ "'%s.asc'" % x.url }}{% end %}
@@ -95,17 +93,6 @@ package_rust-clippy-nightly() {
   depends=("rust-nightly=$epoch:$pkgver")
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/clippy-preview
-  mkdir -p "$pkgdir/usr"
-  cp -r bin "$pkgdir/usr"
-}
-
-package_rust-rls-nightly() {
-  pkgdesc="Rust language server (nightly version)"
-  provides=('rust-rls={{rls_version}}')
-  conflicts=('rustup')
-  depends=("rust-nightly=$epoch:$pkgver")
-
-  cd rust-nightly-$CARCH-unknown-linux-gnu/rls-preview
   mkdir -p "$pkgdir/usr"
   cp -r bin "$pkgdir/usr"
 }
