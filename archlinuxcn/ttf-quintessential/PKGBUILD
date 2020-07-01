@@ -3,12 +3,12 @@
 pkgname=ttf-quintessential
 _commit='883939708704a19a295e0652036369d22469e8dc'
 pkgver=1.001
-pkgrel=4
+pkgrel=5
 pkgdesc='Calligraphic typeface from Google by Brian J. Bonislawsky'
 arch=('any')
 url='https://fonts.google.com/specimen/Quintessential'
 license=('custom:SIL Open Font License v1.1')
-depends=('fontconfig' 'xorg-fonts-encodings' 'xorg-font-utils')
+depends=('xorg-fonts-encodings')
 conflicts=('ttf-google-fonts-opinionated-git' 'otf-quintessential-ib')
 source=("Quintessential-Regular-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/quintessential/Quintessential-Regular.ttf"
         "${pkgname}-${pkgver}-OFL.txt::https://github.com/google/fonts/raw/${_commit}/ofl/quintessential/OFL.txt")
