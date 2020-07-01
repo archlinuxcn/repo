@@ -21,10 +21,10 @@ verlt $oldpkgver $pkgver
 if [ $? -eq 0 ]; then
     wget $downloadLink
     wget $checksumLink
-    
+
     checksumFile=$(sed -r 's|.*/(.*\.tar\.gz\.sha256)|\1|' <<< $checksumLink)
     downloadFile=$(sed -r 's|.*/(.*\.tar\.gz)|\1|' <<< $downloadLink)
-    
+
     sha256sum --status -c "$checksumFile"
     if [ $? -eq 0 ]; then
         checksum=`sha256sum "TeamCity-$pkgver.tar.gz" | cut -d " " -f1`
@@ -34,8 +34,7 @@ if [ $? -eq 0 ]; then
         makepkg --printsrcinfo > .SRCINFO
         rm $checksumFile
         rm $downloadFile
-        printf "Built updated TeamCity package.\n\nOld version: %s\nNew version: %s" "$oldpkgver" "$pkgver" | mail -s "TeamCity package was updated" "qg83d18rbg@pomail.net"
-        printf "Built updated TeamCity package.\n\nOld version: %s\nNew version: %s" "$oldpkgver" "$pkgver" | mail -s "TeamCity package was updated" "mastacheata+aur@gmail.com"
+        printf "Built updated TeamCity package.\n\nOld version: %s\nNew version: %s" "$oldpkgver" "$pkgver"
     else
         echo "An error occured"
     fi
