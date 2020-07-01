@@ -3,13 +3,13 @@
 pkgname=ttf-merriweather
 _commit='ae0bf55e53517ac98cc74c375a383ad4c36f937a'
 pkgver=2.005
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc='A typeface that is pleasant to read on screens by Sorkin Type Co'
 arch=('any')
 url='http://sorkintype.com/'
 license=('custom:SIL Open Font License v1.1')
-depends=('fontconfig' 'xorg-fonts-encodings' 'xorg-font-utils')
+depends=('xorg-fonts-encodings')
 conflicts=('ttf-google-fonts-opinionated-git' 'ttf-merriweather-ib')
 source=("Merriweather-Black-${pkgver}.ttf::https://github.com/SorkinType/Merriweather/raw/${_commit}/fonts/ttfs/Merriweather-Black.ttf"
         "Merriweather-BlackItalic-${pkgver}.ttf::https://github.com/SorkinType/Merriweather/raw/${_commit}/fonts/ttfs/Merriweather-BlackItalic.ttf"
