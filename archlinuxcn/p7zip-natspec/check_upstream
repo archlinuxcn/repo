@@ -1,11 +1,14 @@
 #!/bin/bash
 
-. $(dirname $0)/PKGBUILD
-arch=x86_64
-mirror=http://mirrors.kernel.org/archlinux
+. PKGBUILD
 
-url=$mirror/extra/os/$arch/$_pkgname-$pkgver-$_upstream_pkgrel-$arch.pkg.tar.xz
-if ! curl -# --head $url | head -n1 | grep -e '200 OK'; then
-  echo upstream seems to be changed
+set -e
+
+fname=$_pkgname-$pkgver-$_upstream_pkgrel-${arch[0]}.pkg.tar.xz
+url=https://www.archlinux.org/packages/extra/${arch[0]}/$_pkgname/download/
+remote_fname=$(curl -s -I "$url" | tr -d '\r' | awk -F/ 'tolower($0) ~ /^location:/ {print $NF}')
+
+if [ "$fname" != "$remote_fname" ]; then
+  echo upstream is not "$fname" but "$remote_fname" 1>&2
   exit 1
 fi

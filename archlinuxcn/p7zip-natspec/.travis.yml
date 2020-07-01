@@ -1,0 +1,19 @@
+language: minimal
+
+sudo: required
+
+services:
+  - docker
+
+jobs:
+  include:
+    - stage: test
+      script: make ci_test
+    - stage: check_upstream
+      script: make check_upstream
+
+stages:
+  - name: test
+    if: type != cron
+  - name: check_upstream
+    if: type = cron
