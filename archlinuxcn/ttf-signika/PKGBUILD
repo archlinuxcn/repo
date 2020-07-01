@@ -3,12 +3,12 @@
 pkgname=ttf-signika
 _commit='d774fc0799fdeddbd8720616a6d2d791be29fafa'
 pkgver=1.002
-pkgrel=2
+pkgrel=3
 pkgdesc='Sans-serif typeface from Google by Anna Giedryś'
 arch=('any')
 url='https://fonts.google.com/specimen/Signika'
 license=('custom:SIL Open Font License v1.1')
-depends=('fontconfig' 'xorg-fonts-encodings' 'xorg-font-utils')
+depends=('xorg-fonts-encodings')
 conflicts=('ttf-google-fonts-opinionated-git' 'ttf-signika-family-ib')
 source=("Signika-Bold-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/signika/Signika-Bold.ttf"
         "Signika-Light-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/signika/Signika-Light.ttf"
