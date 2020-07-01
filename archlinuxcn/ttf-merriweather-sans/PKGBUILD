@@ -3,12 +3,12 @@
 pkgname=ttf-merriweather-sans
 _commit='8a1b078e3aeec6aecc856c3422898816af9b9dc7'
 pkgver=1.008
-pkgrel=1
+pkgrel=2
 pkgdesc='A sans-serif typeface that is pleasant to read on screens by Sorkin Type Co'
 arch=('any')
 url='https://fonts.google.com/specimen/Merriweather+Sans'
 license=('custom:SIL Open Font License v1.1')
-depends=('fontconfig' 'xorg-fonts-encodings' 'xorg-font-utils')
+depends=('xorg-fonts-encodings')
 conflicts=('ttf-google-fonts-opinionated-git' 'ttf-merriweather-sans-ib')
 source=("MerriweatherSans-Black-${pkgver}.ttf::https://github.com/SorkinType/Merriweather-Sans/raw/${_commit}/fonts/ttfs/MerriweatherSans-Black.ttf"
         "MerriweatherSans-Bold-${pkgver}.ttf::https://github.com/SorkinType/Merriweather-Sans/raw/${_commit}/fonts/ttfs/MerriweatherSans-Bold.ttf"
