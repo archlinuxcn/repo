@@ -32,7 +32,7 @@ import yaml
 # need python-jsonschema package
 import jsonschema
 
-DIRS, FILES = None, None
+DIRS, FILES, COMMITS = None, None, None
 GIT_BRANCH = 'HEAD'
 ORIGIN_BRANCH = 'origin/master'
 CHANGED_PACKAGES = set()
@@ -92,6 +92,7 @@ def git_ls_tree():
     # -z \0 line termination on output and do not quote filenames.
     dirs = []
     files = []
+    commits = []
     with Popen(cmd, stdout=PIPE) as p:
         alllines = readutf8(p.stdout)
         for line in alllines.split('\0')[:-1]:  # ignore last \0
@@ -103,7 +104,9 @@ def git_ls_tree():
                 dirs.append(path)
             elif t == 'blob':
                 files.append(path)
-        return dirs, files
+            elif t == 'commit':
+                commits.append(path)
+        return dirs, files, commits
 
 
 def git_open(filename):
@@ -401,6 +404,10 @@ class RepoTreeTest(TestCase):
                                  '"\033[1;31m{1}\033[m", which does not exist '
                                  'or is unmanaged').format(package, dep_package))
 
+    def test_no_commit_objects(self):
+        # Fails if an embedded git repo (e.g., a submodule) is commited
+        self.assertFalse(COMMITS, msg='Unexpected commit objects: {!r}'.format(COMMITS))
+
 
 def run_test(testcase, msg):
     output = StringIO()
@@ -429,7 +436,7 @@ if __name__ == '__main__':
     dump_groups()
     load_lilac_yaml_schema()
     git_write_tree_index()
-    DIRS, FILES = git_ls_tree()
+    DIRS, FILES, COMMITS = git_ls_tree()
     git_diff_tree()
     run_test(RepoTreeTest,
              msg=('\033[1;31mThere are {0} error(s) inside repo, ' +
