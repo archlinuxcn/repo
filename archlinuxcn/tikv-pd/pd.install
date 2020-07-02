@@ -1,0 +1,10 @@
+post_upgrade() {
+    if [[ $(vercmp $2 4.0.2-1) -le 0 ]]; then
+        echo ':: NOTICE:'
+        echo '    - Starting from v4.0.2, TiDB components has added a new telemetry'
+        echo '      feature enabled by default, which will send usage information'
+        echo '      of TiDB clusters to PingCAP.'
+        echo '      See the official documentation about what is collected and how to'
+        echo '      disable it: https://docs.pingcap.com/tidb/v4.0/telemetry'
+    fi
+}
