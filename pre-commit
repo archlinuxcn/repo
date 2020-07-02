@@ -24,6 +24,7 @@ from time import strftime
 from subprocess import Popen, PIPE
 from unittest import TestCase, TestLoader, TextTestRunner, skip
 from io import StringIO
+from typing import Generator
 
 # need python-yaml package
 import yaml
@@ -272,7 +273,7 @@ def load_lilac_yaml_schema():
         YAML_SCHEMA = yaml.load(schema, Loader=yaml.SafeLoader)
 
 
-def iter_packages():
+def iter_packages(all_pkgs: bool = False) -> Generator[str, None, None]:
     packagesfolder = SUBFOLDER
     if not git_isdir(packagesfolder):
         packagesfolder = '.'
@@ -281,7 +282,7 @@ def iter_packages():
             continue
         if package[0] == '.':
             continue
-        if not(package in CHANGED_PACKAGES or CHECK_ALL):
+        if not(package in CHANGED_PACKAGES or CHECK_ALL or all_pkgs):
             continue
         yield package
 
@@ -375,6 +376,7 @@ class RepoTreeTest(TestCase):
 
     def test_repo_depends_valid(self):
         pkgs = list(iter_packages())
+        all_pkgs = list(iter_packages(all_pkgs=True))
         for package in pkgs:
             with self.subTest(package=package):
                 self.assertFalse(
@@ -394,7 +396,7 @@ class RepoTreeTest(TestCase):
                         else:
                             dep_package = dep
                         self.assertTrue(
-                            dep_package in pkgs,
+                            dep_package in all_pkgs,
                             msg=('package "\033[1;31m{0}\033[m" depends on '
                                  '"\033[1;31m{1}\033[m", which does not exist '
                                  'or is unmanaged').format(package, dep_package))
