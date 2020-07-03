@@ -3,11 +3,11 @@
 
 pkgname=shattered-pixel-dungeon
 _pkgname=$pkgname
-pkgver=0.8.1.REL
+pkgver=0.8.1.a
 _pkgver=${pkgver%.*}${pkgver##*.}
 _pkgver=${_pkgver/REL/}
 _srcdir=$_pkgname-$_pkgver
-pkgrel=2
+pkgrel=1
 pkgdesc='Shattered fork of the popular rogue-like game'
 url='https://shatteredpixel.com/'
 license=('GPL3')
@@ -20,7 +20,7 @@ source=(
   "$pkgname.sh"
   "$pkgname.desktop"
 )
-sha512sums=('86d1ca48ad7a5bc93724c84516e58d0ca23909d70da755d14ffd2204b6f54e5c88aed5717ddd4a98998bcdb175106f8cfce474565b14efea2d862c10d0e168dd'
+sha512sums=('898cacd77aec9d41bd5c63befd02d73bd6edad7c6249bc04f6019a950673f4764a8382b34699e2fcf7dd5d07773e776dabdd43f288cf42fe8cd4af8a94bd882d'
             '586ac3e1357495434e318dbda539792565a423ca59768b4e1aee8c81764ad6daea75365b4714fdac76a098b0ffc42da91cf5f2a5ab83fa0dc1beb7abf99f2607'
             '204a7bcedbbc14bdad6586e4b759b326191a7fd2c344dadc7032495d4caa5fe32edac4118d7294229a6fe24f6684416fff37e260bbc9dde9e50846a03ba77db8')
 
