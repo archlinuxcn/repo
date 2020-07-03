@@ -3,7 +3,7 @@
 # Contributor: Marcel O'Neil <marcel@marceloneil.com>
 
 pkgname=cockroachdb-bin
-pkgver=20.1.1
+pkgver=20.1.3
 pkgrel=1
 pkgdesc='An open source, survivable, strongly consistent, scale-out SQL database'
 arch=('x86_64')
@@ -18,7 +18,7 @@ source=("${pkgname}-${pkgver}.tgz::https://binaries.cockroachdb.com/cockroach-v$
         'cockroach.default'
         'cockroach.sysusers'
         'cockroach.tmpfiles')
-sha256sums=('28959c60a3f14f86fe50c373997b85a538e12f32f04f7a74821fc0441442f340'
+sha256sums=('8290c06f123ba1018f1c8702d3b66c774d5f93a78086550028473af838a22828'
             '8a2fba9d26592ff3538f44c96d1b894ef44649058b4d04f3fda49518a9c4ae11'
             'SKIP'
             'SKIP'
