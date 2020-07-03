@@ -6,7 +6,7 @@ _origpkgname=qt5-base
 pkgname=(qt5-base-24h)
 _qtver=5.15.0
 pkgver=${_qtver/-/}
-pkgrel=3.4
+pkgrel=4.4
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -38,7 +38,8 @@ source=(
         "qt5-base-QTBUG-82910.patch::https://codereview.qt-project.org/gitweb?p=qt/qtbase.git;a=patch;h=54aa63be9b74e8de72db9efbe6809ab1a97b29a7"
          qt5-base-cflags.patch
          qtbug-74252.patch
-         qtbug-78966.patch::"https://code.qt.io/cgit/qt/qtbase.git/patch/?id=777f2a1c")
+         qtbug-78966.patch::"https://code.qt.io/cgit/qt/qtbase.git/patch/?id=777f2a1c"
+         qtbug-84619.patch::"https://code.qt.io/cgit/qt/qtbase.git/patch/?id=9d2b474b")
 sha256sums=(
       '901a764c896559bb472d5ecee4af9ee006b235f73e56959de9ded477a10e5fc6'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
@@ -46,7 +47,8 @@ sha256sums=(
             'abb94453c9fe54fde4811bc5475b88796c8db1f5cd75ddc68918aff20139b1aa'
             'cf707cd970650f8b60f8897692b36708ded9ba116723ec8fcd885576783fe85c'
             '0c489d2faedd35670232a2c028c5c78a606ab81bb6f40f58e3cfe2bc6b6ac3b2'
-            'd7d58b2cadd6e79c3dfb69da664ecac9c95a78d6e142cb8687fce68e24a10776')
+            'd7d58b2cadd6e79c3dfb69da664ecac9c95a78d6e142cb8687fce68e24a10776'
+            'eec8234c7e4d5bb583f39f2cf735536be350296b93af8b469260424ad7ccdb04')
 
 prepare() {
   cd ${_pkgfqn}
@@ -54,6 +56,7 @@ prepare() {
   patch -p1 -i ../qt5-base-QTBUG-82910.patch # https://codereview.qt-project.org/c/qt/qtbase/+/299182
   patch -p1 -i ../qtbug-74252.patch # Fix displaying custom icons
   patch -p1 -i ../qtbug-78966.patch # Fix QToolButton menus on multi-screen systems
+  patch -p1 -i ../qtbug-84619.patch # Fix deadlock
   patch -p1 -i ../qt5-base-cflags.patch # Use system CFLAGS
 
   patch -p1 -i ../oldherl-24h.patch
