@@ -3,7 +3,7 @@
 
 pkgname=shattered-pixel-dungeon
 _pkgname=$pkgname
-pkgver=0.8.0.b
+pkgver=0.8.1.REL
 _pkgver=${pkgver%.*}${pkgver##*.}
 _pkgver=${_pkgver/REL/}
 _srcdir=$_pkgname-$_pkgver
@@ -20,22 +20,16 @@ source=(
   "$pkgname.sh"
   "$pkgname.desktop"
 )
-sha512sums=('8dbd1a40dd0e777b1de48014e4b988a28a8fa9aa6430a1dca64aa0743c6260ab25140b7add06e7a6bdc670465e434a96feeab728a5ba6bf3add5814564c6f29c'
+sha512sums=('86d1ca48ad7a5bc93724c84516e58d0ca23909d70da755d14ffd2204b6f54e5c88aed5717ddd4a98998bcdb175106f8cfce474565b14efea2d862c10d0e168dd'
             '586ac3e1357495434e318dbda539792565a423ca59768b4e1aee8c81764ad6daea75365b4714fdac76a098b0ffc42da91cf5f2a5ab83fa0dc1beb7abf99f2607'
             '204a7bcedbbc14bdad6586e4b759b326191a7fd2c344dadc7032495d4caa5fe32edac4118d7294229a6fe24f6684416fff37e260bbc9dde9e50846a03ba77db8')
-
-prepare() {
-  # Hack to use system gradle (thanks to @jonathon on AUR)
-  sed -i '160c/usr/bin/gradle "$@"' "$_srcdir"/gradlew
-  chmod +x "$_srcdir"/gradlew
-}
 
 build() {
   cd $_srcdir
   unset _JAVA_OPTIONS
   # Force the system to build the package using JDK8
   export PATH=/usr/lib/jvm/java-8-openjdk/jre/bin/:$PATH
-  GRADLE_USER_HOME="$srcdir" ./gradlew desktop:release
+  GRADLE_USER_HOME="$srcdir" gradle desktop:release
 }
 
 package() {

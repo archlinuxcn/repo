@@ -1,0 +1,62 @@
+# Maintainer: Daniel Peukert <dan.peukert@gmail.com>
+# Contributor: Martin Kröning <m dot kroening at hotmail dot de>
+# Contributor: Matthew McGinn <mamcgi@gmail.com>
+_projectname='electron'
+_pkgname="${_projectname}4"
+pkgname="$_pkgname-bin"
+pkgver='4.2.12'
+pkgrel=4
+pkgdesc='Build cross platform desktop apps with web technologies - version 4 - binary version'
+arch=('x86_64' 'i686' 'armv7h' 'aarch64')
+url="https://${_projectname}js.org/"
+license=('MIT')
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+depends=('c-ares' 'ffmpeg' 'gtk3' 'http-parser' 'libevent' 'libnghttp2' 'libxslt' 'libxss' 'minizip' 'nss' 're2' 'snappy')
+optdepends=(
+	'kde-cli-tools: file deletion support (kioclient5)'
+	'trash-cli: file deletion support (trash-put)'
+	"xdg-utils: open URLs with desktop's default (xdg-email, xdg-open)"
+)
+_releaseurl="https://github.com/$_projectname/$_projectname/releases/download/v$pkgver"
+source_x86_64=(
+	"$pkgname-chromedriver-$pkgver-$pkgrel-x86_64.zip::$_releaseurl/chromedriver-v$pkgver-linux-x64.zip"
+	"$pkgname-$pkgver-$pkgrel-x86_64.zip::$_releaseurl/$_projectname-v$pkgver-linux-x64.zip"
+)
+source_i686=(
+	"$pkgname-chromedriver-$pkgver-$pkgrel-i686.zip::$_releaseurl/chromedriver-v$pkgver-linux-ia32.zip"
+	"$pkgname-$pkgver-$pkgrel-i686.zip::$_releaseurl/$_projectname-v$pkgver-linux-ia32.zip"
+)
+source_armv7h=(
+	"$pkgname-chromedriver-$pkgver-$pkgrel-armv7h.zip::$_releaseurl/chromedriver-v$pkgver-linux-armv7l.zip"
+	"$pkgname-$pkgver-$pkgrel-armv7h.zip::$_releaseurl/$_projectname-v$pkgver-linux-armv7l.zip"
+)
+source_aarch64=(
+	"$pkgname-chromedriver-$pkgver-$pkgrel-aarch64.zip::$_releaseurl/chromedriver-v$pkgver-linux-arm64.zip"
+	"$pkgname-$pkgver-$pkgrel-aarch64.zip::$_releaseurl/$_projectname-v$pkgver-linux-arm64.zip"
+)
+sha256sums_x86_64=('9a251bdaa4dcde8fa444b312793a136662e11f4d6ecbb28f89d1284f7adf985b'
+                   '72c5319c92baa7101bea3254a036c0cd3bcf257f4a03a0bb153668b7292ee2dd')
+sha256sums_i686=('9a3b22a63d6317e2b9e71905a8a98e0439e3c3b425515302f8ab00810886eca4'
+                 'bf96b1736141737bb064e48bdb543302fd259de634b1790b7cf930525f47859f')
+sha256sums_armv7h=('51a0b9902c621c8456967b3a090968a439e6593e0bbb9847a0a27892f78e4b58'
+                   '2d970b3020627e5381fd4916dd8fa50ca9556202c118ab4cba09c293960689e9')
+sha256sums_aarch64=('e4a3a1059909d3c5a6d32dca34ab3492db302fbe507e0422b27ed8352d269a55'
+                    '938b7cc5f917247a120920df30374f86414b0c06f9f3dc7ab02be1cadc944e55')
+
+package() {
+	cd "$srcdir/"
+	install -dm755 "$pkgdir/usr/lib/$_pkgname/"
+	find . -mindepth 1 -maxdepth 1 -type f ! -name "*.zip" ! -name "LICENSE*" -exec cp -r --no-preserve=ownership --preserve=mode -t "$pkgdir/usr/lib/$_pkgname/." {} +
+
+	for _folder in 'locales' 'resources' 'swiftshader'; do
+		cp -r --no-preserve=ownership --preserve=mode "$_folder/" "$pkgdir/usr/lib/$_pkgname/$_folder/"
+	done
+
+	install -dm755 "$pkgdir/usr/bin"
+	ln -nfs "/usr/lib/$_pkgname/$_projectname" "$pkgdir/usr/bin/$_pkgname"
+
+	for _license in 'LICENSE' 'LICENSES.chromium.html'; do
+		install -Dm644 "$_license" "$pkgdir/usr/share/licenses/$pkgname/$_license"
+	done
+}

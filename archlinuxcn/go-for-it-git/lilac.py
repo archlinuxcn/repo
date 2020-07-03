@@ -12,6 +12,7 @@ from lilaclib import *
 #post_build = aur_post_build
 
 def pre_build():
+    run_cmd(["rm", "-rf", "go-for-it-git"])
     aur_pre_build()
     for line in edit_file('PKGBUILD'):
         if line.startswith('makedepends'):
