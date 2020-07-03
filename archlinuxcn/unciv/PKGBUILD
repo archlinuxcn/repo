@@ -3,7 +3,7 @@
 pkgname=unciv
 _pkgname=Unciv
 _gradle_ver=6.1.1 # This package does not work with system gradle
-pkgver=3.9.7.REL
+pkgver=3.9.8.REL
 _pkgver=${pkgver%.*}-patch${pkgver##*.}
 _pkgver=${_pkgver/-patchREL/}
 pkgrel=1
@@ -21,7 +21,7 @@ source=(
   "$pkgname.desktop"
 )
 noextract=("gradle-$_gradle_ver-all.zip")
-md5sums=('f907ed2e0910d2165b64f046ec69eefb'
+md5sums=('4ee25ba500ac46f10ee71400e8f05c82'
          'd1df7d94816bbedb2ab45187fceda7e5'
          'f8eab098f20681b8db232cc5709713d3'
          '42d5f7ea8ee48d2d643d070786f039ba')
