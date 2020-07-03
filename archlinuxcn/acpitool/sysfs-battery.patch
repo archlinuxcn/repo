@@ -1,0 +1,52 @@
+diff -wbBur acpitool-0.5.1/src/acpitool.h acpitool-0.5.1.my/src/acpitool.h
+--- acpitool-0.5.1/src/acpitool.h	2008-10-16 19:38:12.000000000 +0400
++++ acpitool-0.5.1.my/src/acpitool.h	2011-11-10 21:55:23.000000000 +0400
+@@ -29,11 +29,11 @@
+ 
+ struct Battery_Info {
+     int  Battery_Present;
+-    char Charging_State[12];
+-    char Remaining_Cap[10];
+-    char Design_Cap[10];
+-    char LastFull_Cap[10];
+-    char Present_Rate[10];
++    char Charging_State[13];
++    char Remaining_Cap[13];
++    char Design_Cap[13];
++    char LastFull_Cap[13];
++    char Present_Rate[13];
+     char Technology[13];
+     char Model[13];
+     char Serial[13];
+diff -wbBur acpitool-0.5.1/src/battery.cpp acpitool-0.5.1.my/src/battery.cpp
+--- acpitool-0.5.1/src/battery.cpp	2009-08-13 23:42:43.000000000 +0400
++++ acpitool-0.5.1.my/src/battery.cpp	2011-11-10 21:48:22.000000000 +0400
+@@ -614,7 +614,7 @@
+     	}
+     	
+     	memset(str, '\0', 100);
+-	for(int t=0; t<5; t++)
++	for(int t=0; t<1; t++)
+ 	    fgets(str, 100, power_fp);            /* skip first 5 lines */
+     	
+     	/* get battery status (full, charging, ...) */
+@@ -664,8 +664,8 @@
+     	
+     	
+ 
+-	fgets(str, 100, power_fp);    	/* skip 1 line */	
+-
++	fgets(str, 100, power_fp);    	/* cycle count - skip 1 line */	
++	fgets(str, 100, power_fp);    	/* voltage_min - skip 1 line */	
+ 
+ 	/* get voltage_now */    
+ 	memset(str, '\0', 100);
+@@ -756,7 +756,7 @@
+     	else
+     	    strncpy(batt_info->Model, "unknown", 7);
+ 
+-	fgets(str, 100, power_fp);   
++	fgets(str, 100, power_fp);   /* manufacturer - skip 1 line */
+ 	
+ 	/* get serial */    
+ 	memset(str, '\0', 100);

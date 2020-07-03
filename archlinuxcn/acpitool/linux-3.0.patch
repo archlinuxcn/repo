@@ -1,0 +1,18 @@
+diff -wbBur acpitool-0.5.1/src/acpitool.cpp acpitool-0.5.1.my/src/acpitool.cpp
+--- acpitool-0.5.1/src/acpitool.cpp	2009-08-13 23:37:48.000000000 +0400
++++ acpitool-0.5.1.my/src/acpitool.cpp	2011-08-11 21:53:17.000000000 +0400
+@@ -205,8 +205,12 @@
+ 	Kernel_24 = 1;           
+ 	Kernel_26 = 0;
+     }
+-        
+-    if(strncmp(str,"2.6",3)==0)
++    else if(strncmp(str,"2.6",3)==0)
++    {
++	Kernel_24 = 0;
++	Kernel_26 = 1;
++    }
++    else
+     {
+ 	Kernel_24 = 0;           
+ 	Kernel_26 = 1;
