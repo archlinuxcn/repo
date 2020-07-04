@@ -10,21 +10,22 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=83.0.4103.97
-pkgrel=1
+pkgver=83.0.4103.116
+pkgrel=2
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
 url="https://www.chromium.org/Home"
 license=('BSD')
 depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
-         'ttf-liberation' 'systemd' 'dbus' 'libpulse' 'pciutils' 'json-glib' 'libva'
+         'ttf-liberation' 'systemd' 'dbus' 'libpulse' 'pciutils' 'json-glib'
          'desktop-file-utils' 'hicolor-icon-theme')
 makedepends=('python' 'python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git'
-             'libpipewire02' 'clang' 'lld' 'gn' 'java-runtime-headless'
+             'libpipewire02' 'libva' 'clang' 'lld' 'gn' 'java-runtime-headless'
              'python2-setuptools')
 optdepends=('pepper-flash: support for Flash content'
             'libpipewire02: WebRTC desktop sharing under Wayland'
+            'libva: hardware-accelerated video decode (experimental)'
             'kdialog: needed for file dialogs in KDE'
             'org.freedesktop.secrets: password storage backend on GNOME / Xfce'
             'kwallet: for storing passwords in KWallet on KDE desktops')
@@ -33,8 +34,6 @@ conflicts=('chromium')
 install=chromium.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
-        chromium-drirc-disable-10bpc-color-configs.conf
-        vdpau-support.patch
         clean-up-a-call-to-set_utf8.patch
         iwyu-std-numeric_limits-is-defined-in-limits.patch
         add-missing-algorithm-header-in-crx_install_error.cc.patch
@@ -42,13 +41,15 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         include-memory-header-to-get-the-definition-of-std-u.patch
         make-some-of-blink-custom-iterators-STL-compatible.patch
         avoid-double-destruction-of-ServiceWorkerObjectHost.patch
+        force-mp3-files-to-have-a-start-time-of-zero.patch
         v8-remove-soon-to-be-removed-getAllFieldPositions.patch
+        intel-vp9-quirk.patch
+        wayland-egl.patch
+        nvidia-vdpau.patch
         chromium-83-gcc-10.patch
         chromium-skia-harmony.patch)
-sha256sums=('12c405f61284cfc78f8c2b6600f3c1ae61a83b639c41087bb4f74fcaab036f83'
+sha256sums=('bb0c7e8dfee9f3a5e30eca7f34fc9f21caefa82a86c058c552f52b1ae2da2ac3'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
-            'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
-            '0ec6ee49113cc8cc5036fa008519b94137df6987bf1f9fbffb2d42d298af868a'
             '58c41713eb6fb33b6eef120f4324fa1fb8123b1fbc4ecbe5662f1f9779b9b6af'
             '675fb3d6276cce569a641436465f58d5709d1d4a5f62b7052989479fd4aaea24'
             '0e2a78e4aa7272ab0ff4a4c467750e01bad692a026ad9828aaf06d2a9418b9d8'
@@ -56,7 +57,11 @@ sha256sums=('12c405f61284cfc78f8c2b6600f3c1ae61a83b639c41087bb4f74fcaab036f83'
             '071326135bc25226aa165639dff80a03670a17548f2d2ff5cc4f40982b39c52a'
             '3d7f20e1d2ee7d73ed25e708c0d59a0cb215fcce10a379e3d48a856533c4b0b7'
             'd793842e9584bf75e3779918297ba0ffa6dd05394ef5b2bf5fb73aa9c86a7e2f'
+            'abc3fad113408332c3b187b083bf33eba59eb5c87fa3ce859023984b5804623c'
             'e042024423027ad3ef729a7e4709bdf9714aea49d64cfbbf46a645a05703abc2'
+            '326b8ad8f1100ad11213ee916effab43dfd7b0229ee8bed2c1c8c3132866bcae'
+            '34d08ea93cb4762cb33c7cffe931358008af32265fc720f2762f0179c3973574'
+            '8095bf73afbca7c2b07306c5b4dd8f79b66e1053fa4e58b07f71ef938be603f1'
             '3e5ba8c0a70a4bc673deec0c61eb2b58f05a4c784cbdb7c8118be1eb6580db6d'
             '771292942c0901092a402cc60ee883877a99fb804cb54d568c8c6c94565a48e1')
 
@@ -107,7 +112,7 @@ prepare() {
     third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
     third_party/libxml/chromium/*.cc
 
- # https://chromium-review.googlesource.com/c/chromium/src/+/2145261
+  # https://chromium-review.googlesource.com/c/chromium/src/+/2145261
   patch -Np1 -i ../clean-up-a-call-to-set_utf8.patch
 
   # https://chromium-review.googlesource.com/c/chromium/src/+/2153111
@@ -128,17 +133,24 @@ prepare() {
   # https://chromium-review.googlesource.com/c/chromium/src/+/2094496
   patch -Np1 -i ../avoid-double-destruction-of-ServiceWorkerObjectHost.patch
 
+  # https://chromium-review.googlesource.com/c/chromium/src/+/2268221
+  patch -Np1 -i ../force-mp3-files-to-have-a-start-time-of-zero.patch
+
   # https://crbug.com/v8/10393
   patch -Np1 -d v8 <../v8-remove-soon-to-be-removed-getAllFieldPositions.patch
-
-  # https://crbug.com/skia/6663#c10
-  patch -Np0 -i ../chromium-skia-harmony.patch
 
   # Fixes from Gentoo
   patch -Np1 -i ../chromium-83-gcc-10.patch
 
-  # Fix VA-API on Nvidia
-  patch -Np1 -i ../vdpau-support.patch
+  # https://crbug.com/skia/6663#c10
+  patch -Np0 -i ../chromium-skia-harmony.patch
+
+  # Intel KabyLake/GeminiLake VP9 quirk
+  patch -Np1 -i ../intel-vp9-quirk.patch
+  # Wayland/EGL regression (crbug #1071528 #1071550)
+  patch -Np1 -i ../wayland-egl.patch
+  # NVIDIA vdpau-wrapper
+  patch -Np1 -i ../nvidia-vdpau.patch
 
   # Force script incompatible with Python 3 to use /usr/bin/python2
   sed -i '1s|python$|&2|' third_party/dom_distiller_js/protoc_plugins/*.py
@@ -198,6 +210,7 @@ build() {
     'enable_widevine=true'
     'use_vaapi=true'
     'enable_nacl=false'
+    'enable_swiftshader=false'
     "google_api_key=\"${_google_api_key}\""
     "google_default_client_id=\"${_google_default_client_id}\""
     "google_default_client_secret=\"${_google_default_client_secret}\""
@@ -221,7 +234,7 @@ build() {
   CXXFLAGS+=' -Wno-unknown-warning-option'
 
   gn gen out/Release --args="${_flags[*]}" --script-executable=/usr/bin/python2
-  ninja  -C out/Release chrome chrome_sandbox chromedriver
+  ninja -C out/Release chrome chrome_sandbox chromedriver
 }
 
 package() {
@@ -235,9 +248,6 @@ package() {
   install -D out/Release/chrome "$pkgdir/usr/lib/chromium/chromium"
   install -Dm4755 out/Release/chrome_sandbox "$pkgdir/usr/lib/chromium/chrome-sandbox"
   ln -s /usr/lib/chromium/chromedriver "$pkgdir/usr/bin/chromedriver"
-
-  install -Dm644 ../chromium-drirc-disable-10bpc-color-configs.conf \
-    "$pkgdir/usr/share/drirc.d/10-$pkgname.conf"
 
   install -Dm644 chrome/installer/linux/common/desktop.template \
     "$pkgdir/usr/share/applications/chromium.desktop"
@@ -264,11 +274,6 @@ package() {
     chrome_200_percent.pak
     resources.pak
     v8_context_snapshot.bin
-
-    # ANGLE
-    libEGL.so
-    libGLESv2.so
-
     chromedriver
   )
 
@@ -278,7 +283,6 @@ package() {
 
   cp "${toplevel_files[@]/#/out/Release/}" "$pkgdir/usr/lib/chromium/"
   install -Dm644 -t "$pkgdir/usr/lib/chromium/locales" out/Release/locales/*.pak
-  install -Dm755 -t "$pkgdir/usr/lib/chromium/swiftshader" out/Release/swiftshader/*.so
 
   for size in 24 48 64 128 256; do
     install -Dm644 "chrome/app/theme/chromium/product_logo_$size.png" \
