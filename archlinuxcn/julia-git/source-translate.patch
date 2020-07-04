@@ -18,14 +18,17 @@ index 6cb6b1249f..afa4a46299 100644
  end
  
 diff --git a/contrib/generate_precompile.jl b/contrib/generate_precompile.jl
-index be9ad9fb13..9d974b38d8 100644
+index be9ad9fb13..06d5c975d5 100644
 --- a/contrib/generate_precompile.jl
 +++ b/contrib/generate_precompile.jl
-@@ -200,6 +200,7 @@ function generate_precompile_statements()
+@@ -200,6 +200,10 @@ function generate_precompile_statements()
  end
  
  generate_precompile_statements()
-+Sys.__init__()
++@eval Sys begin
++    BINDIR = "/usr/bin"
++    STDLIB = abspath("usr", "share", "julia", "stdlib", "v$(VERSION.major).$(VERSION.minor)")
++end
  
  end # @eval
  end
@@ -77,16 +80,3 @@ index 3b4b3e5d78..5947828001 100644
      value_t fl_filename = cvalue_static_cstrn(fl_ctx, jl_string_data(filename),
                                                jl_string_len(filename));
      fl_gc_handle(fl_ctx, &fl_filename);
-diff --git a/sysimage.mk b/sysimage.mk
-index 3f3b7e82dc..e51f5ba9c4 100644
---- a/sysimage.mk
-+++ b/sysimage.mk
-@@ -75,7 +75,7 @@ $(build_private_libdir)/sys.ji: $(build_private_libdir)/corecompiler.ji $(JULIAH
- define sysimg_builder
- $$(build_private_libdir)/sys$1-o.a $$(build_private_libdir)/sys$1-bc.a : $$(build_private_libdir)/sys$1-%.a : $$(build_private_libdir)/sys.ji
- 	@$$(call PRINT_JULIA, cd $$(JULIAHOME)/base && \
--	if ! JULIA_BINDIR=$$(call cygpath_w,$(build_bindir)) $$(call spawn, $3) $2 -C "$$(JULIA_CPU_TARGET)" --output-$$* $$(call cygpath_w,$$@).tmp $$(JULIA_SYSIMG_BUILD_FLAGS) \
-+	if ! JULIA_BINDIR=/usr/bin $$(call spawn, $3) $2 -C "$$(JULIA_CPU_TARGET)" --output-$$* $$(call cygpath_w,$$@).tmp $$(JULIA_SYSIMG_BUILD_FLAGS) \
- 		--startup-file=no --warn-overwrite=yes --sysimage $$(call cygpath_w,$$<) $$(call cygpath_w,$$(JULIAHOME)/contrib/generate_precompile.jl) $(JULIA_PRECOMPILE); then \
- 		echo '*** This error is usually fixed by running `make clean`. If the error persists$$(COMMA) try `make cleanall`. ***'; \
- 		false; \
