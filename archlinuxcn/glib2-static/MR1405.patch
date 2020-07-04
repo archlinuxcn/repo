@@ -1,0 +1,24 @@
+diff --git a/glib/tests/meson.build b/glib/tests/meson.build
+index 3dedafcdb77e7ee484d600ee0d7c3aa66c85476e..8da477d1910aed30f3aae4c6081c3d458aa452d4 100644
+--- a/glib/tests/meson.build
++++ b/glib/tests/meson.build
+@@ -47,7 +47,10 @@ glib_tests = {
+   'markup-collect' : {},
+   'markup-escape' : {},
+   'markup-subparser' : {},
+-  'mem-overflow' : {},
++  'mem-overflow' : {
++    'link_args' : cc.get_id() == 'gcc' and cc.version().version_compare('> 6')
++      ? ['-Wno-alloc-size-larger-than'] : [],
++  },
+   'mutex' : {},
+   'node' : {},
+   'once' : {},
+@@ -220,6 +223,7 @@ foreach test_name, extra_args : glib_tests
+ 
+   exe = executable(test_name, source,
+     c_args : test_cargs + extra_args.get('c_args', []),
++    link_args : extra_args.get('link_args', []),
+     dependencies : test_deps + extra_args.get('dependencies', []),
+     install_dir: installed_tests_execdir,
+     install: install,
