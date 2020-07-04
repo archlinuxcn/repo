@@ -31,10 +31,10 @@ index c88dc55278..d4c31f4838 100644
  # helper to avoid triggering precompile warnings
  
 diff --git a/contrib/generate_precompile.jl b/contrib/generate_precompile.jl
-index be9ad9fb13..d514d43750 100644
+index 001b7972d9..ab3893ff95 100644
 --- a/contrib/generate_precompile.jl
 +++ b/contrib/generate_precompile.jl
-@@ -200,6 +200,10 @@ function generate_precompile_statements()
+@@ -209,6 +209,10 @@ function generate_precompile_statements()
  end
  
  generate_precompile_statements()
@@ -63,10 +63,10 @@ index a81908b96a..4c463db143 100644
          write(io, filename)
          write(io, UInt64(sizeof(src)))
 diff --git a/src/ast.c b/src/ast.c
-index 3b4b3e5d78..5947828001 100644
+index 7add2573a6..a38d22fb2c 100644
 --- a/src/ast.c
 +++ b/src/ast.c
-@@ -782,6 +782,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v)
+@@ -786,6 +786,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v)
      return julia_to_scm_noalloc2(fl_ctx, v);
  }
  
@@ -85,7 +85,7 @@ index 3b4b3e5d78..5947828001 100644
  // Parse `text` starting at 0-based `offset` and attributing the content to
  // `filename`. Return an svec of (parsed_expr, final_offset)
  JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
-@@ -806,6 +818,7 @@ JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
+@@ -810,6 +822,7 @@ JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
      fl_context_t *fl_ctx = &ctx->fl;
      value_t fl_text = cvalue_static_cstrn(fl_ctx, text, text_len);
      fl_gc_handle(fl_ctx, &fl_text);
@@ -93,3 +93,17 @@ index 3b4b3e5d78..5947828001 100644
      value_t fl_filename = cvalue_static_cstrn(fl_ctx, jl_string_data(filename),
                                                jl_string_len(filename));
      fl_gc_handle(fl_ctx, &fl_filename);
+diff --git a/src/mk_julia_flisp_boot.scm b/src/mk_julia_flisp_boot.scm
+index 59985106d9..5074abe211 100644
+--- a/src/mk_julia_flisp_boot.scm
++++ b/src/mk_julia_flisp_boot.scm
+@@ -1,5 +1,5 @@
+-(set! lastpwd (path.cwd))
+-(path.cwd (cadr *argv*))
+-(load (caddr *argv*))
+-(path.cwd lastpwd)
++(let ((lastpwd (path.cwd)))
++  (path.cwd (cadr *argv*))
++  (load (caddr *argv*))
++  (path.cwd lastpwd))
+ (make-system-image (cadddr *argv*))
