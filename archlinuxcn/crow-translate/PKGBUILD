@@ -1,50 +1,50 @@
-# Maintainer: Bruce Zhang <zttt183525594@gmail.com>
+# Maintainer: Shatur95 <genaloner@gmail.com>
+
+# Submodule versions
+_qonlinetranslator=1.2.4
+_qhotkey=1.4.1
+_qtaskbarcontrol=2.0.1
+_singleapplication=3.1.4
 
 pkgname=crow-translate
-pkgver=2.3.2
-pkgrel=2
-pkgdesc="A simple and lightweight translator that allows to translate and speak text using Google, Yandex and Bing."
-arch=('x86_64')
-url="https://github.com/crow-translate/crow-translate"
-license=('GPL3')
-depends=('qt5-base' 'qt5-multimedia' 'qt5-x11extras' 'gst-plugins-good' 'openssl')
-makedepends=('qt5-tools' 'git')
-source=(
-    "https://github.com/crow-translate/crow-translate/archive/$pkgver.tar.gz"
-    'git://github.com/crow-translate/QGitTag'
-    'git://github.com/Skycoder42/QHotkey'
-    'git://github.com/itay-grudev/SingleApplication'
-    'git://github.com/crow-translate/QOnlineTranslator'
-    'git://github.com/Skycoder42/QTaskbarControl.git'
-)
-sha256sums=('81f40f4e2813dd1b56b7593ddfd52273ee9454b032d492e059da9ce86b50545a'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP')
+pkgver=2.4.1
+pkgrel=1
+pkgdesc='A simple and lightweight translator that allows to translate and say selected text using Google, Yandex and Bing translate API'
+arch=(x86_64)
+url=https://github.com/crow-translate/crow-translate
+license=(GPL3)
+depends=(qt5-base qt5-svg qt5-multimedia qt5-x11extras gst-plugins-good openssl)
+makedepends=(qt5-tools extra-cmake-modules)
+source=($pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz
+        QOnlineTranslator-$_qonlinetranslator.tar.gz::https://github.com/Shatur95/QOnlineTranslator/archive/$_qonlinetranslator.tar.gz
+        QHotkey-$_qhotkey.tar.gz::https://github.com/Skycoder42/QHotkey/archive/$_qhotkey.tar.gz
+        QTaskbarControl-$_qtaskbarcontrol.tar.gz::https://github.com//Skycoder42/QTaskbarControl/archive/$_qtaskbarcontrol.tar.gz
+        SingleApplication-$_singleapplication.tar.gz::https://github.com/itay-grudev/SingleApplication/archive/v$_singleapplication.tar.gz)
+sha256sums=(dc2f61eccd42741e68a342578edf62c91430decec5d1ef168426b67e052fcf90
+            2d1839aecc0e5a540941aa65653a4d5edad24f73771cef8dd564304b131671bf
+            516726432ba21aeab11c37d979d80a300108b774ee43be078dddd2e6055226d8
+            b2f956bdc5fdba1477ca7f4bde9759a120055407e4a7cc0c9efbc3934ae72b01
+            e3b75de67999d340e17f224286622ed8ffc3ed023bc573e369309181c1a365a9)
 
+# Move submodules into the project
 prepare() {
-    cd "$pkgname-$pkgver"
-    rmdir src/qonlinetranslator
-    rmdir src/third-party/singleapplication
-    rmdir src/third-party/qhotkey
-    rmdir src/qgittag
-    rmdir src/third-party/qtaskbarcontrol
-    mv "$srcdir/QOnlineTranslator" src/qonlinetranslator
-    mv "$srcdir/SingleApplication" src/third-party/singleapplication
-    mv "$srcdir/QHotkey" src/third-party/qhotkey
-    mv "$srcdir/QGitTag" src/qgittag
-    mv "$srcdir/QTaskbarControl" src/third-party/qtaskbarcontrol
+  mv QOnlineTranslator-$_qonlinetranslator/* $pkgname-$pkgver/src/qonlinetranslator
+  mv QHotkey-$_qhotkey/* $pkgname-$pkgver/src/third-party/qhotkey
+  mv QTaskbarControl-$_qtaskbarcontrol/* $pkgname-$pkgver/src/third-party/qtaskbarcontrol
+  mv SingleApplication-$_singleapplication/* $pkgname-$pkgver/src/third-party/singleapplication
 }
 
 build() {
-    cd "$pkgname-$pkgver"
-    qmake
-    make
+  mkdir -p $pkgname-$pkgver/build
+  cd $pkgname-$pkgver/build
+
+  cmake -D CMAKE_INSTALL_PREFIX="$pkgdir/usr" ..
+  cmake --build .
 }
 
 package() {
-    cd "$pkgname-$pkgver"
-    make INSTALL_ROOT="$pkgdir/" install
-}
+  cd $pkgname-$pkgver/build
+
+  cmake --install .
+  rm -f "${pkgdir}/usr/share/icons/hicolor/icon-theme.cache"
+} 
