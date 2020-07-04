@@ -31,10 +31,10 @@ index c88dc55278..d4c31f4838 100644
  # helper to avoid triggering precompile warnings
  
 diff --git a/contrib/generate_precompile.jl b/contrib/generate_precompile.jl
-index 001b7972d9..ab3893ff95 100644
+index 001b7972d9..0c4977475e 100644
 --- a/contrib/generate_precompile.jl
 +++ b/contrib/generate_precompile.jl
-@@ -209,6 +209,10 @@ function generate_precompile_statements()
+@@ -209,6 +209,15 @@ function generate_precompile_statements()
  end
  
  generate_precompile_statements()
@@ -42,6 +42,11 @@ index 001b7972d9..ab3893ff95 100644
 +    BINDIR = "/usr/bin"
 +    STDLIB = abspath("/usr/share/julia/stdlib", "v$(VERSION.major).$(VERSION.minor)")
 +end
++@eval Base begin
++    PROGRAM_FILE = ""
++end
++empty!(Base.ARGS)
++empty!(Core.ARGS)
  
  end # @eval
  end
