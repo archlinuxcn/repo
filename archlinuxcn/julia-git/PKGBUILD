@@ -57,7 +57,7 @@ source=('git://github.com/JuliaLang/julia'
 md5sums=('SKIP'
          '2222d3eabfe6040a8cca466303c86d2b'
          '3dbb81b1dae3a9d977bd69f8354b3007'
-         'bf627f4c328522633ab33698bf67cf32'
+         'cbdf9ca6d231139407bf6f65d9ee514d'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          '9ae7674f74afbece37d6250fdd265aa6'
          '0b3bfcd680da2dc47d861b04ee695f52'
@@ -165,8 +165,14 @@ build_in() {
       CFLAGS="${CFLAGS//-march=i686/-march=pentium4} -march=pentium4"
       CXXFLAGS="${CXXFLAGS//-march=i686/-march=pentium4} -march=pentium4"
   fi
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   export CFLAGS+=' -Wno-pedantic -Wno-clobbered'
   export CXXFLAGS+=' -Wno-pedantic -Wno-clobbered'
+
+  ver=$(cat VERSION | cut -f 1-2 -d '.')
 
   make "${opts[@]}" -C base version_git.jl.phony
   make "${opts[@]}" -C deps
