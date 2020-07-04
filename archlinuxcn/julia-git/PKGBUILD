@@ -46,7 +46,6 @@ options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
         0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
         0001-Optimize-GC-frame-push-pop-insertion.patch
-        llvm_x64.patch
         source-translate.patch
         gdb-debug.patch
         36502.patch
@@ -58,7 +57,6 @@ source=('git://github.com/JuliaLang/julia'
 md5sums=('SKIP'
          '2222d3eabfe6040a8cca466303c86d2b'
          '3dbb81b1dae3a9d977bd69f8354b3007'
-         'f0948a20a71b844948fde82c607ec57c'
          'bf627f4c328522633ab33698bf67cf32'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          '9ae7674f74afbece37d6250fdd265aa6'
@@ -150,7 +148,6 @@ EOF
   # patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
   # patch -Np1 < ../0001-Optimize-GC-frame-push-pop-insertion.patch
   patch -Np1 < ../36502.patch
-  patch -Np1 < ../llvm_x64.patch
   patch -Np1 < ../source-translate.patch
   patch -Np1 < ../gdb-debug.patch
 
