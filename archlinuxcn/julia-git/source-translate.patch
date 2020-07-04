@@ -17,8 +17,21 @@ index 6cb6b1249f..afa4a46299 100644
  end
  end
  
+diff --git a/base/sysinfo.jl b/base/sysinfo.jl
+index c88dc55278..d4c31f4838 100644
+--- a/base/sysinfo.jl
++++ b/base/sysinfo.jl
+@@ -51,7 +51,7 @@ A string containing the full path to the directory containing the `stdlib` packa
+ STDLIB = "$BINDIR/../share/julia/stdlib/v$(VERSION.major).$(VERSION.minor)" # for bootstrap
+ # In case STDLIB change after julia is built, the variable below can be used
+ # to update cached method locations to updated ones.
+-const BUILD_STDLIB_PATH = STDLIB
++const BUILD_STDLIB_PATH = "/usr/share/julia/stdlib/v$(VERSION.major).$(VERSION.minor)"
+ 
+ # helper to avoid triggering precompile warnings
+ 
 diff --git a/contrib/generate_precompile.jl b/contrib/generate_precompile.jl
-index be9ad9fb13..06d5c975d5 100644
+index be9ad9fb13..d514d43750 100644
 --- a/contrib/generate_precompile.jl
 +++ b/contrib/generate_precompile.jl
 @@ -200,6 +200,10 @@ function generate_precompile_statements()
@@ -27,7 +40,7 @@ index be9ad9fb13..06d5c975d5 100644
  generate_precompile_statements()
 +@eval Sys begin
 +    BINDIR = "/usr/bin"
-+    STDLIB = abspath("usr", "share", "julia", "stdlib", "v$(VERSION.major).$(VERSION.minor)")
++    STDLIB = abspath("/usr/share/julia/stdlib", "v$(VERSION.major).$(VERSION.minor)")
 +end
  
  end # @eval
