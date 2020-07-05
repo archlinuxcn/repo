@@ -1,0 +1,34 @@
+# Maintainer: Simon Wilper <sxw@chronowerks.de>
+# Contributor: Ariel AxionL <i@axionl.me>
+pkgname=xtensor
+pkgver=0.21.5
+pkgrel=2
+pkgdesc="C++ tensors with broadcasting and lazy computing"
+arch=('x86_64')
+url="https://github.com/xtensor-stack/${pkgname}"
+license=('Custom')
+depends=('xtl')
+makedepends=('gcc' 'cmake')
+
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz"
+        "LICENSE::https://raw.githubusercontent.com/xtensor-stack/xtl/master/LICENSE")
+
+sha512sums=('d06f96225bf82ead7dfcc202a3bfdc61b99e470a4e5ae29f3108c51607e8b2f82e2fc2250ece20e42224d37a464d8b56d212b792e26c5d80c6a01328cf7506c8'
+            '5699df3613806f6148e7a37f4b01c3452e86759ba74971be571c9cb95070f80171412f2525c32099221f1c3f03b3cbf02fe0248d4023cd8692ab5c3a4a1eb49c')
+
+build() {
+	cd "${pkgname}-${pkgver}"
+  [ ! -d build ] && mkdir build
+  cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=${pkgdir}/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    ..
+  make
+}
+
+package() {
+	cd "${pkgname}-${pkgver}/build"
+  make install
+  install -Dm644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/xtensor/LICENSES"
+}
