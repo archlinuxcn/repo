@@ -31,7 +31,6 @@ build() {
   CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CXXFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  export CPPFLAGS
   export CFLAGS
   export CXXFLAGS
   # LIEF doesn't use cmake install for python plugin so it'll have
