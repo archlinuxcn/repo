@@ -11,9 +11,23 @@ depends=('gcc-libs' 'openlibm')
 provides=(openspecfun)
 conflicts=(openspecfun)
 makedepends=('gcc-fortran' 'git')
-options=('!emptydirs' '!strip')
+options=('!emptydirs' '!strip' 'debug')
 source=('git://github.com/JuliaLang/openspecfun')
 md5sums=('SKIP')
+
+_make() {
+  CFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  FFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  LDFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  FFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  LDFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  make prefix=/usr bindir=/usr/bin libdir=/usr/lib includedir=/usr/include \
+       USE_OPENLIBM=1 CFLAGS="$CFLAGS -std=c99 -Wall -O3 -g -flto" \
+       LDFLAGS="$LDFLAGS -g -O3 -flto  -fno-plt -Wl,-Bsymbolic-functions" \
+       FFLAGS="$FFLAGS -O3 -g -flto" "$@"
+}
 
 pkgver() {
   cd openspecfun
@@ -24,17 +38,12 @@ pkgver() {
 build() {
   cd openspecfun
 
-  make prefix=/usr bindir=/usr/bin libdir=/usr/lib includedir=/usr/include \
-       USE_OPENLIBM=1 CFLAGS="-std=c99 -Wall -O3 -g -flto" \
-       LDFLAGS="$LDFLAGS -g -O3 -flto  -fno-plt -Wl,-Bsymbolic-functions" \
-       FFLAGS="-O3 -g -flto"
+  _make
 }
 
 package() {
   cd openspecfun
 
-  make DESTDIR="$pkgdir" prefix=/usr bindir=/usr/bin libdir=/usr/lib \
-       includedir=/usr/include install CFLAGS="-std=c99 -Wall -O3 -g -flto" \
-       LDFLAGS="$LDFLAGS -g -O3 -flto" FFLAGS="-O3 -g -flto"
+  _make DESTDIR="$pkgdir" install
   install -Dm644 LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
