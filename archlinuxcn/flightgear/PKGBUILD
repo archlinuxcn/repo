@@ -4,7 +4,7 @@
 # Contributor: Hans Janssen <hans@janserv.xs4all.nl>
 
 pkgname=flightgear
-pkgver=2020.1.1
+pkgver=2020.1.3
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc="An open-source, multi-platform flight simulator"
@@ -18,11 +18,13 @@ optdepends=('qt5-base: fgfs --launcher'
 license=("GPL")
 url="http://www.flightgear.org/"
 options=('makeflags')
-source=("http://downloads.sourceforge.net/project/flightgear/release-${_pkgver}/${pkgname}-${pkgver}.tar.bz2")
-sha256sums=('5143b1546f4b79772d932cfed4aad225ebc6064f6a565a9c3eefaf65795e7799')
+source=("http://downloads.sourceforge.net/project/flightgear/release-${_pkgver}/${pkgname}-${pkgver}.tar.bz2"
+        "https://downloads.sourceforge.net/project/flightgear/release-${_pkgver}/FlightGear-${pkgver}-data.tar.bz2")
+sha256sums=('1f07e8ef2c558dae3b9738e313b57e711d38e569f85d49fc2c5ae647e3949a17'
+            '2196f4ffcdeaae3a8b0a2b6ebf62a456bfd0198abb6c0619f763204d89804a03')
 
 prepare() {
-  cd "$srcdir"/flightgear-$pkgver
+  cd flightgear-$pkgver
   sed -i 's|Exec=.*|Exec=fgfs --launcher --fg-root=/usr/share/flightgear/data|' package/org.flightgear.FlightGear.desktop
 
   rm -rf build
@@ -30,12 +32,18 @@ prepare() {
 }
 
 build() {
-  cd "$srcdir"/flightgear-$pkgver/build
+  cd flightgear-$pkgver/build
   # no -DSYSTEM_FLITE since flite1 is required
+  CFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   cmake .. -Wno-dev \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=lib \
-        -DFG_DATA_DIR:STRING="/usr/share/flightgear/data" \
+        -DFG_DATA_DIR="/usr/share/flightgear/data" \
         -DCMAKE_BUILD_TYPE=Release \
         -DFG_BUILD_TYPE=Release \
         -DEVENT_INPUT=On \
@@ -45,12 +53,13 @@ build() {
         -DSYSTEM_GSM=On \
         -DSYSTEM_FLITE=Off \
         -DSYSTEM_HTS_ENGINE=Off \
-        -DENABLE_AUTOTESTING=Off
+        -DENABLE_AUTOTESTING=Off \
+        -DTRANSLATIONS_SRC_DIR="${srcdir}"/fgdata/Translations
   make
 }
 
 package() {
-  cd "$srcdir"/flightgear-$pkgver/build
+  cd flightgear-$pkgver/build
   make DESTDIR="$pkgdir" install
 
   install -Dm0644 ../package/flightgear.ico "$pkgdir"/usr/share/icons/flightgear.ico
