@@ -9,18 +9,26 @@ arch=('i686' 'x86_64')
 url="https://sleef.org"
 license=('custom')
 depends=()
-makedepends=('cmake' 'git')
+makedepends=(cmake git)
 provides=(
   "sleef=${_realver}")
 conflicts=("sleef")
 options=('debug' 'strip')
-source=("git://github.com/shibatch/sleef")
-md5sums=('SKIP')
+source=("git://github.com/shibatch/sleef"
+        cflags.patch)
+md5sums=('SKIP'
+         'c91ad1089e9213dd7da438bfc5de9e32')
 
 pkgver() {
   cd sleef
 
   git describe --tags | sed -e 's/-/./g'
+}
+
+prepare() {
+  cd sleef
+
+  patch -Np1 < ../cflags.patch
 }
 
 build() {
@@ -29,9 +37,15 @@ build() {
   mkdir -p build
   cd build
 
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  export CFLAGS
+
   cmake .. \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_TESTS=Off \
+    -DBUILD_QUAD=On
   make
 }
 
