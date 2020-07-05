@@ -3,7 +3,7 @@
 # Contributor: Dave Reisner <d@falconindy.com>
 
 pkgname=libgit2-julia
-pkgver=1.0.0
+pkgver=1.0.1
 pkgrel=1
 epoch=1
 pkgdesc='A linkable library for Git'
@@ -17,7 +17,7 @@ license=('GPL2')
 source=("libgit2-$pkgver.tar.gz::https://github.com/libgit2/libgit2/archive/v${pkgver}.tar.gz"
         "libgit2-0.99.0-remove_http-parse_incompatible_tests.patch"
         libgit2-agent-nonfatal.patch)
-sha256sums=('6a1fa16a7f6335ce8b2630fbdbb5e57c4027929ebc56fcd1ac55edb141b409b4'
+sha256sums=('1775427a6098f441ddbaa5bd4e9b8a043c7401e450ed761e69a415530fea81d2'
             '0a597176a551dfe8dda56a46362ff1ef614928206a162d78fdf2d3074c9273ca'
             'a60e169812b802e3fcb4ee7501786346eb87db9ffa3c8ae3311de47ce5a15f10')
 options=(!strip)
@@ -25,7 +25,8 @@ options=(!strip)
 prepare() {
   cd "libgit2-$pkgver"
   mkdir -p build
-
+  # removing tests that are only compatible with the (modified) vendored
+  # version of http-parser, but not with upstream http-parser
   patch -Np1 -i "../libgit2-0.99.0-remove_http-parse_incompatible_tests.patch"
   patch -p1 < ../libgit2-agent-nonfatal.patch
 }
@@ -34,12 +35,19 @@ prepare() {
 build() {
   cd "libgit2-$pkgver"
   export LANG=en_US.UTF-8
+  CFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   export CFLAGS+=' -g'
   export CXXFLAGS+=' -g'
   cmake -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_BUILD_TYPE=Release \
         -DUSE_HTTP_PARSER=system \
         -DTHREADSAFE=ON \
+        -Wno-dev \
         -B build \
         -S .
   make -C build
@@ -50,5 +58,5 @@ package() {
   cd "libgit2-$pkgver"
   make -C build DESTDIR="$pkgdir" install
   install -vDm 644 {AUTHORS,README.md} \
-    -t "${pkgdir}/usr/share/doc/${pkgname}"
+    -t "${pkgdir}/usr/share/doc/libgit2"
 }
