@@ -7,7 +7,7 @@ pkgbase='eternalterminal'
 pkgname=('eternalterminal-client' 'eternalterminal-server'
          'eternalterminal-htm' 'eternalterminal')
 pkgver=6.0.7
-pkgrel=6
+pkgrel=7
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 depends=(
   'libsodium' 'libutempter'
@@ -32,6 +32,15 @@ prepare() {
 
 build() {
   cd EternalTerminal-et-v${pkgver}/build
+
+  CFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  export CFLAGS
+  export CXXFLAGS
 
   echo '=> Running cmake'
   cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
