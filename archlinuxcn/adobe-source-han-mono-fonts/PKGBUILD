@@ -2,13 +2,12 @@ _pkgbase=adobe-source-han-mono
 pkgbase=$_pkgbase-fonts
 pkgname=($_pkgbase-jp-fonts $_pkgbase-kr-fonts $_pkgbase-cn-fonts $_pkgbase-tw-fonts $_pkgbase-hk-fonts $_pkgbase-otc-fonts)
 pkgver=1.002
-pkgrel=4
+pkgrel=5
 pkgdesc='Adobe Source Han Mono - A set of Pan-CJK fonts designed to complement Source Code Pro'
 arch=('any')
 license=('custom:OFL')
 url='https://github.com/adobe-fonts/source-han-mono'
-depends=('fontconfig')
-_commit=9a10a4fe9797b9777dd9b77cd093e8f76dd55e1d
+_commit=9a10a4fe9797b9777dd9b77cd093e8f76dd55e1d #tag=1.002
 source=(44-source-han-mono-otc.conf
 $url/releases/download/1.002/SourceHanMono.ttc
 44-source-han-mono-jp.conf
@@ -50,7 +49,8 @@ $url/raw/$_commit/Heavy/OTC/SourceHanMonoHC-Heavy.otf
 $url/raw/$_commit/Light/OTC/SourceHanMonoHC-Light.otf
 $url/raw/$_commit/Medium/OTC/SourceHanMonoHC-Medium.otf
 $url/raw/$_commit/Normal/OTC/SourceHanMonoHC-Normal.otf
-$url/raw/$_commit/Regular/OTC/SourceHanMonoHC-Regular.otf)
+$url/raw/$_commit/Regular/OTC/SourceHanMonoHC-Regular.otf
+$url/raw/$_commit/LICENSE.md)
 
 _jp=(
 SourceHanMono-Bold.otf
@@ -144,10 +144,13 @@ function _package {
         install -m644 "$srcdir/$font" "$pkgdir/usr/share/fonts/adobe-source-han-sans"
     done
 
-    # Install fontconfig fix
+    # Install fontconfig files
     install -d "$pkgdir/etc/fonts/conf.d"
     install -Dm644 "$srcdir/$_fontconfig_filename" "$pkgdir/etc/fonts/conf.avail/$_fontconfig_filename"
     ln -s ../conf.avail/$_fontconfig_filename "$pkgdir/etc/fonts/conf.d/$_fontconfig_filename"
+    
+    # Install license file
+    install -Dt "$pkgdir/usr/share/licenses/$_pkgname" -m644 LICENSE.md
 }
 
 for _pkgname in ${pkgname[@]}; do
@@ -195,4 +198,5 @@ sha256sums=('34eb9b5060f6eaece4995aa51e6a6be9fcf2a8cd1e2a5388f1d8d2283585abfa'
             '209f75513446c0edd253b4e1c22205c46ce1a1a0c46eaf32ffeb5a18d0e1ffc2'
             '2eec8c27fc357a120c9aff40a7d4a08af9a07586ae42007b2f261fe8d285b5c9'
             'e82cad8e32048ec757cdef92f0f150d12ffd2fb310b3fb7b0b7b9d0b88897f77'
-            '920351def2dfff03955a5b2f9044800049920cf19a7696d59ba263fe11780e9d')
+            '920351def2dfff03955a5b2f9044800049920cf19a7696d59ba263fe11780e9d'
+            '0983abed9371adc8958c321bf8d8036324b4a2e8cc324682b0fe0c699e63a009')
