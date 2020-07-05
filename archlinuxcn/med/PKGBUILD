@@ -1,6 +1,6 @@
 pkgname=('med' 'med-docs')
 pkgver=4.0.0
-pkgrel=7
+pkgrel=8
 pkgdesc="Modelisation et Echanges de Donnees, i.e. Data Modelization and Exchanges - code-aster exchange module linked to hdf5. Without openmpi."
 url="https://www.salome-platform.org/downloads"
 license=('LGPL')
@@ -9,44 +9,58 @@ makedepends=('gcc-fortran' 'swig' 'cmake')
 optdepends=()
 arch=('x86_64')
 source=("http://files.salome-platform.org/Salome/other/${pkgname}-${pkgver}.tar.gz"
-    "https://gist.githubusercontent.com/jedbrown/527ef81ff59a0dccf833da40fdd15a47/raw/7482f9a42fdd277f5f9cf0167ea7a3381032ca7a/hdf5-1.12.patch")
+        "https://gist.githubusercontent.com/jedbrown/527ef81ff59a0dccf833da40fdd15a47/raw/7482f9a42fdd277f5f9cf0167ea7a3381032ca7a/hdf5-1.12.patch"
+        pycompile.patch)
 sha256sums=('a474e90b5882ce69c5e9f66f6359c53b8b73eb448c5f631fa96e8cd2c14df004'
-    '82d28b6ae2ee6ceb3c6de9acb861a49741e2e759c7c556217f7d284216788206')
+            '82d28b6ae2ee6ceb3c6de9acb861a49741e2e759c7c556217f7d284216788206'
+            'fec659efc391376eeb73c2e749d98ae504a178dde2d2e9d7b81d26537a043300')
 
 prepare() {
-    cd ${pkgbase}-${pkgver}
-    patch -p1 -i "$srcdir/hdf5-1.12.patch"
+  rm -rf pkg
+
+  cd ${pkgbase}-${pkgver}
+  patch -p1 -i ../hdf5-1.12.patch
+  patch -p1 -i ../pycompile.patch
+
+  rm -rf build
+  mkdir build
 }
 
 build() {
-  cd ${pkgname}-${pkgver}
+  cd ${pkgname}-${pkgver}/build
+
+  CFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  FFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  LDFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  FFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  LDFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  export CFLAGS
+  export CXXFLAGS
+  # fortran's print statement will still include srcdir without respecting
+  # -ffile-prefix-map. Ref https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96069
+  export FFLAGS
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr \
-      -DMEDFILE_BUILD_PYTHON=ON .
+        -DMEDFILE_BUILD_PYTHON=On -DMEDFILE_BUILD_TESTS=Off ..
   make
+
+  make DESTDIR="${srcdir}/pkg" install
+  # rm -rf "${srcdir}/pkg/usr/bin"test*
 }
 
-# I got 37 tests failed out of 91…
-#check() {
-    #cd "$pkgname-$pkgver"
-    #make test
-#}
-
 package_med() {
-  cd ${pkgbase}-${pkgver}
-  make DESTDIR=${pkgdir} install
-
-  rm -rf $pkgdir/usr/share/doc
+  cp -a pkg/* "${pkgdir}/"
+  rm -rf "$pkgdir"/usr/share/doc
 }
 
 package_med-docs() {
   arch=('any')
   depends=()
 
-  cd ${pkgbase}-${pkgver}
-  make DESTDIR=${pkgdir} install
-
-  rm -rf $pkgdir/usr/share/cmake
-  rm -rf $pkgdir/usr/lib
-  rm -rf $pkgdir/usr/include
-  rm -rf $pkgdir/usr/bin
+  install -dm755 "$pkgdir/usr/share/"
+  cp -a pkg/usr/share/doc "${pkgdir}/usr/share/"
 }
