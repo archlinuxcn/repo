@@ -92,6 +92,12 @@ build() {
   cd "$srcdir/llvm-$pkgver.src/build"
 
   export PATH="${srcdir}/bin:${PATH}"
+  CFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CFLAGS+=' -ggdb1 -O3 -fasynchronous-unwind-tables'
   CXXFLAGS+=' -ggdb1 -O3 -fasynchronous-unwind-tables'
   LDFLAGS+=' -O3 -fasynchronous-unwind-tables'
