@@ -55,6 +55,11 @@ build() {
   #     Seems to cause GCC to ignore the PCH file.
   # `-Wno-invalid-pch`:
   #     Suppresses invalid PCH warning (doesn't seem to work....).
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  export CFLAGS
   export CXXFLAGS+=" -fPIC -std=gnu++11 -Wno-unused-local-typedefs -Wno-unused-parameter -Wno-maybe-uninitialized -Wno-unused-function -Wno-invalid-pch"
   mkdir -p build.release
   cd build.release
