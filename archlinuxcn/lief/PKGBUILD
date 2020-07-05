@@ -16,13 +16,28 @@ prepare() {
 
   sed -i 's/class  *BuildToolVersion/class LIEF_API BuildToolVersion/g' \
       include/LIEF/MachO/BuildVersion.hpp
+  # Try to delete first to make sure it exists
+  rm cmake/strip.cmake
+  # Don't strip
+  echo > cmake/strip.cmake
 }
 
 build() {
   cd LIEF
-  mkdir build
-
-  cmake . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1
+  mkdir -p build
+  CFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  export CPPFLAGS
+  export CFLAGS
+  export CXXFLAGS
+  # LIEF doesn't use cmake install for python plugin so it'll have
+  # the build time RPATH with it. Avoid it by not setting it during build time.
+  cmake . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1 \
+        -DCMAKE_SKIP_BUILD_RPATH=On
   make -C build
   python setup.py build --build-temp=build
 }
