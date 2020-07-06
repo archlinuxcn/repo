@@ -2,12 +2,12 @@
 # Contributor: Ariel AxionL <i@axionl.me>
 pkgname=xtensor
 pkgver=0.21.5
-pkgrel=2
+pkgrel=3
 pkgdesc="C++ tensors with broadcasting and lazy computing"
-arch=('x86_64')
+arch=('any')
 url="https://github.com/xtensor-stack/${pkgname}"
 license=('Custom')
-depends=('xtl')
+depends=('xtl' 'nlohmann-json')
 makedepends=('gcc' 'cmake')
 
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz"
@@ -23,6 +23,8 @@ build() {
   cmake \
     -DCMAKE_INSTALL_PREFIX=${pkgdir}/usr \
     -DCMAKE_INSTALL_LIBDIR=lib \
+    -DXTENSOR_USE_OPENMP=ON \
+    -DCPP17=ON \
     ..
   make
 }

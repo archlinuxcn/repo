@@ -2,17 +2,17 @@
 # Contributor: Ariel AxionL <i@axionl.me>
 pkgname=xtl
 pkgver=0.6.13
-pkgrel=2
+pkgrel=3
 pkgdesc="The x template library"
-arch=('x86_64')
+arch=('any')
 url="https://github.com/xtensor-stack/${pkgname}"
 license=('Custom')
-depends=('gcc')
+depends=('gcc' 'nlohmann-json')
 makedepends=('cmake')
 
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz"
         "LICENSE::https://raw.githubusercontent.com/xtensor-stack/xtl/master/LICENSE")
-        
+
 sha512sums=('80c9abf8bb13356757eb8a3d72a81675f88f81fdb45a1ac4f650d0ce64b6c95874ed30a80016b0e6b1e8d3bb6eb42b1ded4bff583de8c4d99c8d2dc3cde953af'
             '5699df3613806f6148e7a37f4b01c3452e86759ba74971be571c9cb95070f80171412f2525c32099221f1c3f03b3cbf02fe0248d4023cd8692ab5c3a4a1eb49c')
 
