@@ -4,7 +4,7 @@
 
 pkgname=nushell-git
 pkgver=0.16.0.r2435.g9e82e5a2
-pkgrel=2
+pkgrel=3
 pkgdesc="A modern shell written in Rust"
 arch=('x86_64')
 url="https://www.nushell.sh"
@@ -14,7 +14,7 @@ provides=('nu' 'nushell')
 conflicts=('nushell')
 license=('MIT')
 source=("$pkgname::git+https://github.com/nushell/nushell.git"
-		"LICENSE::https://raw.githubusercontent.com/nushell/nushell/master/LICENSE")
+		"LICENSE::https://raw.githubusercontent.com/nushell/nushell/main/LICENSE")
 sha256sums=('SKIP'
             '57fdb6634a2372af0978dd178f8e157f227d96f3ca27ae9c73f1320f6c0c41d4')
 
