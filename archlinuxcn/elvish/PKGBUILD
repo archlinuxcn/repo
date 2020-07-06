@@ -1,7 +1,7 @@
 # Maintainer: Haochen Tong <i at hexchain dot org>
 
 pkgname=elvish
-pkgver=0.13.1
+pkgver=0.14.0
 pkgrel=2
 pkgdesc="A friendly and expressive Unix shell."
 arch=('i686' 'x86_64')
@@ -34,7 +34,7 @@ build() {
 check() {
     export GOPATH="$srcdir/build"
     export CGO_LDFLAGS="$LDFLAGS"
-    export GOFLAGS="-buildmode=pie -trimpath -mod=vendor -modcacherw"
+    export GOFLAGS="-trimpath -mod=vendor -modcacherw"
     cd "$srcdir/elvish"
     make test
 }
