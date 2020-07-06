@@ -10,12 +10,11 @@ pkgname=android-platform
 _apilevel=30
 _rev=r01
 pkgver=${_apilevel}_${_rev}
-pkgrel=3
+pkgrel=4
 pkgdesc="Android SDK Platform, latest API"
 arch=('any')
 url="http://developer.android.com/sdk/index.html"
 license=('custom')
-depends=('android-sdk' 'android-sdk-platform-tools')
 provides=("${pkgname}-${_apilevel}")
 conflicts=("${pkgname}-${_apilevel}")
 options=('!strip')
@@ -27,6 +26,8 @@ sha384sums=('c3d9fe96b6d9a36f91a123689465f7c33d4ff2035b2de7510f596ace9f4f1f15135
             '801ca80cee0aec1f658a121dfce88a111675a629df96da8a8d694210d33c8e03cb9e1bb364d259633c47c89003e29510')
 
 package() {
+  depends=('android-sdk' 'android-sdk-platform-tools')
+  
   mkdir -p "${pkgdir}/opt/android-sdk/platforms/"
   find "${srcdir}" -maxdepth 1 -mindepth 1 -type d | grep -P 'android-[0-9]+(\.[0-9]*)*$' | while read directory; do
       mv "${directory}" "${pkgdir}/opt/android-sdk/platforms/android-${_apilevel}"
