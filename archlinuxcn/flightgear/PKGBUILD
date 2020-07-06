@@ -11,17 +11,17 @@ pkgdesc="An open-source, multi-platform flight simulator"
 arch=(x86_64)
 depends=(libxmu libxi zlib openscenegraph libxrandr glu glew openal "simgear=$pkgver"
          systemd-libs speex speexdsp gsm sqlite libevent)
-makedepends=(boost cmake mesa sharutils plib qt5-base qt5-declarative qt5-svg qt5-tools)
+# flightgear-data used at compile time for translation
+makedepends=(boost cmake mesa sharutils plib qt5-base qt5-declarative qt5-svg qt5-tools
+             flightgear-data)
 optdepends=('qt5-base: fgfs --launcher'
             'qt5-declarative: fgfs --launcher'
             'flightgear-data')
 license=("GPL")
 url="http://www.flightgear.org/"
 options=('makeflags')
-source=("http://downloads.sourceforge.net/project/flightgear/release-${_pkgver}/${pkgname}-${pkgver}.tar.bz2"
-        "https://downloads.sourceforge.net/project/flightgear/release-${_pkgver}/FlightGear-${pkgver}-data.tar.bz2")
-sha256sums=('1f07e8ef2c558dae3b9738e313b57e711d38e569f85d49fc2c5ae647e3949a17'
-            '2196f4ffcdeaae3a8b0a2b6ebf62a456bfd0198abb6c0619f763204d89804a03')
+source=("http://downloads.sourceforge.net/project/flightgear/release-${_pkgver}/${pkgname}-${pkgver}.tar.bz2")
+sha256sums=('1f07e8ef2c558dae3b9738e313b57e711d38e569f85d49fc2c5ae647e3949a17')
 
 prepare() {
   cd flightgear-$pkgver
@@ -34,12 +34,8 @@ prepare() {
 build() {
   cd flightgear-$pkgver/build
   # no -DSYSTEM_FLITE since flite1 is required
-  CFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CXXFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CXXFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   cmake .. -Wno-dev \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=lib \
@@ -53,8 +49,7 @@ build() {
         -DSYSTEM_GSM=On \
         -DSYSTEM_FLITE=Off \
         -DSYSTEM_HTS_ENGINE=Off \
-        -DENABLE_AUTOTESTING=Off \
-        -DTRANSLATIONS_SRC_DIR="${srcdir}"/fgdata/Translations
+        -DENABLE_AUTOTESTING=Off
   make
 }
 
