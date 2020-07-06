@@ -1,0 +1,32 @@
+pkgname="rustpython-git"
+pkgver=r1018.d3158f3
+pkgrel=1
+pkgdesc='A Python3 Interpreter written in Rust'
+arch=('x86_64' 'i686')
+url='https://github.com/RustPython/RustPython'
+#depends=('')
+makedepends=('rust')
+license=('MIT')
+source=('git+https://github.com/RustPython/RustPython.git')
+md5sums=('SKIP')
+
+pkgver() {
+  cd RustPython
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd "$srcdir/RustPython"
+    cargo build --release --locked
+}
+
+check() {
+    cd "$srcdir/RustPython"
+    cargo test --release --locked
+}
+
+package() {
+    cd "$srcdir/RustPython"
+    install -Dm755 target/release/rustpython -t "$pkgdir/usr/bin"
+    install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+}
