@@ -10,7 +10,7 @@ license=('GPL-3.0')
 makedepends=('rust' 'cargo')
 depends=()
 provides=("$_pkgname")
-source=($_pkgname.tar.gz::"https://crates.io//api/v1/crates/$_pkgname/$pkgver/download")
+source=($_pkgname.tar.gz::"https://crates.io/api/v1/crates/$_pkgname/$pkgver/download")
 sha256sums=('6821159741d437f12e636bb86975255079f9188766ab167f61fa674329579bfe')
 
 build() {
