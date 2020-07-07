@@ -1,0 +1,25 @@
+post_install() {
+  groupadd -r clickhouse &>/dev/null
+  useradd -r -g clickhouse -d /var/lib/clickhouse -s /bin/false clickhouse &>/dev/null
+  mkdir -p /var/lib/clickhouse/data/default /var/lib/clickhouse/metadata/default /var/lib/clickhouse/tmp
+  mkdir -p /var/log/clickhouse-server
+  chown clickhouse:clickhouse -R /var/lib/clickhouse /var/log/clickhouse-server
+  ldconfig
+}
+
+post_remove() {
+  if getent passwd clickhouse &>/dev/null; then
+    userdel clickhouse
+  fi
+  if getent group clickhouse &>/dev/null; then
+    groupdel clickhouse
+  fi
+}
+
+post_upgrade() {
+  ldconfig
+}
+
+post_remove() {
+  ldconfig
+}

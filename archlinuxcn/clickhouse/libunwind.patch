@@ -1,0 +1,10 @@
+--- a/contrib/libunwind/src/x86_64/Gos-linux.c	2017-10-09 14:13:11.126198905 +0300
++++ b/contrib/libunwind/src/x86_64/Gos-linux.c	2017-10-09 14:13:18.736311245 +0300
+@@ -29,6 +29,7 @@
+ #include "ucontext_i.h"
+ 
+ #include <sys/syscall.h>
++#include <asm-generic/ucontext.h>
+ 
+ HIDDEN void
+ tdep_fetch_frame (struct dwarf_cursor *dw, unw_word_t ip, int need_unwind_info)
