@@ -39,8 +39,8 @@ index 001b7972d9..0c4977475e 100644
  
  generate_precompile_statements()
 +@eval Sys begin
-+    BINDIR = "/usr/bin"
-+    STDLIB = abspath("/usr/share/julia/stdlib", "v$(VERSION.major).$(VERSION.minor)")
++    BINDIR = ""
++    STDLIB = ""
 +end
 +@eval Base begin
 +    PROGRAM_FILE = ""
@@ -98,17 +98,3 @@ index 7add2573a6..a38d22fb2c 100644
      value_t fl_filename = cvalue_static_cstrn(fl_ctx, jl_string_data(filename),
                                                jl_string_len(filename));
      fl_gc_handle(fl_ctx, &fl_filename);
-diff --git a/src/mk_julia_flisp_boot.scm b/src/mk_julia_flisp_boot.scm
-index 59985106d9..5074abe211 100644
---- a/src/mk_julia_flisp_boot.scm
-+++ b/src/mk_julia_flisp_boot.scm
-@@ -1,5 +1,5 @@
--(set! lastpwd (path.cwd))
--(path.cwd (cadr *argv*))
--(load (caddr *argv*))
--(path.cwd lastpwd)
-+(let ((lastpwd (path.cwd)))
-+  (path.cwd (cadr *argv*))
-+  (load (caddr *argv*))
-+  (path.cwd lastpwd))
- (make-system-image (cadddr *argv*))
