@@ -1,7 +1,10 @@
+# Inspired by https://aur.archlinux.org/account/kmeaw
+
 post_install() {
   groupadd -r clickhouse &>/dev/null
   useradd -r -g clickhouse -d /var/lib/clickhouse -s /bin/false clickhouse &>/dev/null
-  mkdir -p /var/lib/clickhouse/data/default /var/lib/clickhouse/metadata/default /var/lib/clickhouse/tmp
+  mkdir -p /var/lib/clickhouse/
+  chmod 0750 /var/lib/clickhouse
   mkdir -p /var/log/clickhouse-server
   chown clickhouse:clickhouse -R /var/lib/clickhouse /var/log/clickhouse-server
   ldconfig
@@ -14,12 +17,4 @@ post_remove() {
   if getent group clickhouse &>/dev/null; then
     groupdel clickhouse
   fi
-}
-
-post_upgrade() {
-  ldconfig
-}
-
-post_remove() {
-  ldconfig
 }
