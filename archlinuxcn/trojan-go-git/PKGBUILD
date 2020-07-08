@@ -47,6 +47,10 @@ package() {
     ln -sf /usr/lib/v2ray/geosite.dat   "$pkgdir"/usr/lib/trojan-go/geosite.dat
     ln -sf /usr/lib/v2ray/geoip.dat     "$pkgdir"/usr/lib/trojan-go/geoip.dat
     
+    mkdir -p "$pkgdir"/usr/share/trojan-go
+    ln -sf /usr/lib/v2ray/geosite.dat   "$pkgdir"/usr/share/trojan-go/geosite.dat
+    ln -sf /usr/lib/v2ray/geoip.dat     "$pkgdir"/usr/share/trojan-go/geoip.dat
+    
     mkdir -p "$pkgdir"/usr/share/doc/trojan-go
     cp -r "$srcdir"/$_pkgname/docs/public/* "$pkgdir"/usr/share/doc/trojan-go/
 }
