@@ -7,7 +7,7 @@
 pkgname=ungoogled-chromium
 pkgver=83.0.4103.116
 _rel=1
-pkgrel=1
+pkgrel=2
 _launcher_ver=6
 _archver=7ce267da626a5a178d60aad2c11638b62042bd23
 pkgdesc="A lightweight approach to removing Google web service dependency"
@@ -41,7 +41,6 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         force-mp3-files-to-have-a-start-time-of-zero.patch
         v8-remove-soon-to-be-removed-getAllFieldPositions.patch
         chromium-83-gcc-10.patch
-        vaapi-build-fix.patch
         chromium-skia-harmony.patch)
 sha256sums=('cfd153a2e10b0bb0fb3b7e6be543aef0915181f5fbdbea893d08465afd097e2f'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
@@ -56,7 +55,6 @@ sha256sums=('cfd153a2e10b0bb0fb3b7e6be543aef0915181f5fbdbea893d08465afd097e2f'
             'd793842e9584bf75e3779918297ba0ffa6dd05394ef5b2bf5fb73aa9c86a7e2f'
             'e042024423027ad3ef729a7e4709bdf9714aea49d64cfbbf46a645a05703abc2'
             '3e5ba8c0a70a4bc673deec0c61eb2b58f05a4c784cbdb7c8118be1eb6580db6d'
-            'fad5e678d62de0e45db1c2aa871628fdc981f78c26392c1dccc457082906a350'
             '771292942c0901092a402cc60ee883877a99fb804cb54d568c8c6c94565a48e1')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
