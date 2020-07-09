@@ -10,4 +10,4 @@ def pre_build():
             continue
         print(line)
 
-    vcs_update(keep_version = True) # Avoid lilac cache for git sources
+    vcs_update() # Avoid lilac cache for git sources
