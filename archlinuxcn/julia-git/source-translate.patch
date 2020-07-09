@@ -1,12 +1,11 @@
 diff --git a/base/sysimg.jl b/base/sysimg.jl
-index 6cb6b1249f..afa4a46299 100644
+index 3b1ad52621..8a8fbcc278 100644
 --- a/base/sysimg.jl
 +++ b/base/sysimg.jl
-@@ -72,6 +72,14 @@ let
+@@ -76,6 +76,13 @@ let
  
-         print_time("Stdlibs total", Base.tot_time_stdlib[])
+         print_time("Stdlibs total", tot_time_stdlib)
      end
-+
 +    for i in 1:length(Base._included_files)
 +        dep = Base._included_files[i]
 +        newfile = ccall(:jl_map_source_filename, Ref{String}, (Any,), dep[2])
@@ -14,9 +13,9 @@ index 6cb6b1249f..afa4a46299 100644
 +            Base._included_files[i] = (dep[1], newfile)
 +        end
 +    end
- end
- end
  
+     # Clear global state
+     empty!(Core.ARGS)
 diff --git a/base/sysinfo.jl b/base/sysinfo.jl
 index c88dc55278..d4c31f4838 100644
 --- a/base/sysinfo.jl
@@ -31,7 +30,7 @@ index c88dc55278..d4c31f4838 100644
  # helper to avoid triggering precompile warnings
  
 diff --git a/contrib/generate_precompile.jl b/contrib/generate_precompile.jl
-index 001b7972d9..0c4977475e 100644
+index 001b7972d9..d3df7b595d 100644
 --- a/contrib/generate_precompile.jl
 +++ b/contrib/generate_precompile.jl
 @@ -209,6 +209,15 @@ function generate_precompile_statements()
