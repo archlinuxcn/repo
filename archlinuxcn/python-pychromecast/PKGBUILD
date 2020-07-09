@@ -1,11 +1,12 @@
-# Maintainer: Sibren Vasse <arch@sibrenvasse.nl>
+# Maintainer: Felix Golatofski <contact@xdfr.de>
+# Contributor: Sibren Vasse <arch@sibrenvasse.nl>
 # Contributor: Daniel M. Capella <polyzen@archlinux.info>
 # Contributor: Morten Linderud <morten@linderud.pw>
 
 pkgname=python-pychromecast
 _name=${pkgname#python-}
-pkgver=7.1.0
-pkgrel=1
+pkgver=7.1.1
+pkgrel=2
 pkgdesc='Library for Python 3 to communicate with the Google Chromecast'
 arch=('any')
 url=https://github.com/balloob/pychromecast
@@ -13,7 +14,8 @@ license=('MIT')
 depends=('python' 'python-protobuf' 'python-requests' 'python-zeroconf' 'python-six' 'python-setuptools' 'python-casttube')
 makedepends=('python-setuptools')
 source=("https://github.com/balloob/pychromecast/archive/$pkgver.tar.gz")
-sha512sums=('4a25011b9751c8f60e0b52f10d2ab15cdb6d44bed727c0cdd5b5c1f17c23ba242a8a6210b71dfaa43fb94814a8da25a153d2f3f598d62aae989882e0eec5007e')
+sha512sums=('f654e83af0f76c84407f84757a4a81ffaff82f7b944053e1c29c36cfc0eb7ebb4b2598928f458e1fd268239ba660d77276a03159809f1f25f8a5b5ffb9c327b3')
+conflicts=('python-pychromecast6')
 
 build() {
   cd "$_name-$pkgver"
