@@ -1,7 +1,7 @@
 # Maintainer: Fredy García <frealgagu at gmail dot com>
 
 pkgname=whatsapp-nativefier
-pkgver=0.4.2080
+pkgver=2.2027.10
 pkgrel=1
 pkgdesc="WhatsApp desktop built with nativefier (electron)"
 arch=("armv7l" "i686" "x86_64")
@@ -30,10 +30,12 @@ build() {
     --width "800px" \
     --height "600px" \
     --inject "${pkgname}-inject.js" \
+    --browserwindow-options '{ "webPreferences": { "spellcheck": true } }' \
     --verbose \
     --single-instance \
     --tray \
-    "https://web.${pkgname%-nativefier}.com"
+    --electron-version 9.0.2 \
+    "${url}"
 }
 
 package() {
@@ -50,6 +52,6 @@ package() {
   for _size in "192x192" "128x128" "96x96" "64x64" "48x48" "32x32" "24x24" "22x22" "20x20" "16x16" "8x8"
   do
     install -dm755 "${pkgdir}/usr/share/icons/hicolor/${_size}/apps"
-    convert "${srcdir}/${pkgname}.png" -resize "${_size}" "${pkgdir}/usr/share/icons/hicolor/${_size}/apps/${pkgname}.png"
+    convert "${srcdir}/${pkgname}.png" -strip -resize "${_size}" "${pkgdir}/usr/share/icons/hicolor/${_size}/apps/${pkgname}.png"
   done
 }
