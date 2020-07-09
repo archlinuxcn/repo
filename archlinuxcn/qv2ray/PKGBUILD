@@ -2,8 +2,8 @@
 # Contributor: ArielAxionL <i at axionl dot me>
 # Contributor: Leroy.H.Y <me at lhy0403 dot top>
 pkgname=qv2ray
-pkgver=2.5.0
-pkgrel=4
+pkgver=2.6.0
+pkgrel=1
 pkgdesc="Cross-platform V2ray Client written in Qt (Stable Release)"
 arch=('x86_64')
 url='https://github.com/Qv2ray/Qv2ray'
@@ -15,17 +15,9 @@ makedepends=('git' 'make' 'qt5-tools' 'which' 'gcc' 'qt5-declarative'
 provides=('qv2ray')
 conflicts=('qv2ray')
 
-source=(
-    'Qv2ray::git+https://github.com/Qv2ray/Qv2ray'
-    'QNodeEditor::git+https://github.com/Qv2ray/QNodeEditor'
-    'SingleApplication::git+https://github.com/itay-grudev/SingleApplication'
-    'x2struct::git+https://github.com/xyz347/x2struct'
-)
+source=('Qv2ray::git+https://github.com/Qv2ray/Qv2ray')
 
-sha512sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP')
+sha512sums=('SKIP')
 
 pkgver() {
     printf "%s" $(cat ${srcdir}/Qv2ray/makespec/VERSION)
@@ -34,12 +26,6 @@ pkgver() {
 prepare() {
     cd "${srcdir}/Qv2ray"
     git submodule init
-    submodules=('QNodeEditor' 'SingleApplication' 'x2struct' 'cpp-httplib')
-    for module in ${submodules[@]}; do
-        git config submodule."3rdparty/$module".url "${srcdir}/$module"
-    done
-    
-    git config submodule."libs/libqvb".active false
     git config submodule."3rdparty/zxing-cpp".active false
     git submodule update
 }
