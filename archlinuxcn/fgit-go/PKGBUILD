@@ -28,7 +28,7 @@ build() {
 package() {
     cd "$srcdir"/$pkgname-$pkgver
     
-    install -Dm755 -t "$pkgdir"/usr/bin/                ./fgit-go
+    install -Dm755 -t "$pkgdir"/usr/bin/                ./fgit
     install -Dm644 -t "$pkgdir"/usr/share/doc/fgit-go   ./README.md
 }
 
