@@ -10,6 +10,7 @@ arch=('x86_64')
 url="https://github.com/fastgitorg/fgit-go"
 license=('GPL3')
 depends=('git' 'glibc')
+makedepends=('go')
 provides=('fgit')
 conflicts=('fgit')
 source=("$pkgname-$pkgver::git+$url#tag=$pkgver")
