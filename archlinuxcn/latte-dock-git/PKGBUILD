@@ -3,18 +3,18 @@
 
 pkgname=latte-dock-git
 _gitname=latte-dock
-pkgver=0.9.11.r4244.6af99fcb
+pkgver=0.9.11.r4287.bf2c7ebb
 pkgrel=1
 pkgdesc='Latte is a dock based on plasma frameworks that provides an elegant and intuitive experience for your tasks and plasmoids'
 arch=('i686' 'x86_64')
-url='https://cgit.kde.org/latte-dock.git/'
+url='https://invent.kde.org/plasma/latte-dock'
 license=('GPL')
-depends=('plasma-framework>=5.38.0' 'plasma-desktop')
+depends=('plasma-framework>=5.38.0' 'knewstuff' 'hicolor-icon-theme' )
+makedepends=('git' 'cmake' 'extra-cmake-modules' 'appstream')
 optdepends=('libunity: quicklists, counters, and progress bars for apps using libunity')
-makedepends=('git' 'cmake' 'extra-cmake-modules' 'python' 'subversion')
 conflicts=('latte-dock')
 provides=('latte-dock')
-source=("git://anongit.kde.org/latte-dock.git")
+source=("git+https://invent.kde.org/plasma/latte-dock.git")
 
 sha256sums=('SKIP')
 
@@ -23,21 +23,19 @@ pkgver() {
     printf "%s.r%s.%s" $(git describe --tags $(git rev-list --tags --max-count=1) | sed 's/^v//g') $(git rev-list --count HEAD) $(git rev-parse --short HEAD)
 }
 
+prepare() {
+    mkdir -p build
+}
+
 build() {
-    cd ${_gitname}
-    mkdir -p build && cd build
+    cd build
 
-    # Upstream requirements do not currently support ruby 2.7.0, disable translations.
     cmake -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_BUILD_TYPE=Release ..
-
-    # cmake -DCMAKE_INSTALL_PREFIX=/usr \
-    #     -DKDE_L10N_BRANCH=trunk \
-    #     -DKDE_L10N_AUTO_TRANSLATIONS=OFF \
-    #     -DCMAKE_BUILD_TYPE=Release ..
-    # make fetch-translations
+        -DCMAKE_BUILD_TYPE=Release ../${_gitname}
+    make
 }
 
 package() {
-    make -C ${_gitname}/build DESTDIR=${pkgdir} install
+    cd build
+    make DESTDIR="${pkgdir}" install
 }
