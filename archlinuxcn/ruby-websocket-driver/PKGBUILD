@@ -3,7 +3,7 @@
 
 _gemname=websocket-driver
 pkgname=ruby-$_gemname
-pkgver=0.7.2
+pkgver=0.7.3
 pkgrel=1
 pkgdesc='WebSocket protocol handler with pluggable I/O'
 arch=('i686' 'x86_64')
@@ -14,7 +14,7 @@ makedepends=('ruby-rdoc')
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha1sums=('9699886dea8a79fe5139226a94f16e40622407f4')
+sha1sums=('6c5bd5f6921d55a0b25b37bc7317a110a724b88d')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
