@@ -14,10 +14,8 @@ provides=(
   "sleef=${_realver}")
 conflicts=("sleef")
 options=('debug' 'strip')
-source=("git://github.com/shibatch/sleef"
-        cflags.patch)
-md5sums=('SKIP'
-         'c91ad1089e9213dd7da438bfc5de9e32')
+source=("git://github.com/shibatch/sleef")
+md5sums=('SKIP')
 
 pkgver() {
   cd sleef
@@ -25,11 +23,9 @@ pkgver() {
   git describe --tags | sed -e 's/-/./g'
 }
 
-prepare() {
-  cd sleef
-
-  patch -Np1 < ../cflags.patch
-}
+# prepare() {
+#   cd sleef
+# }
 
 build() {
   cd sleef
@@ -38,7 +34,6 @@ build() {
   cd build
 
   CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   export CFLAGS
 
   cmake .. \
