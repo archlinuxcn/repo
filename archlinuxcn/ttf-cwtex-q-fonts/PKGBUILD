@@ -3,7 +3,7 @@
 
 pkgname=ttf-cwtex-q-fonts
 pkgver=0.4
-pkgrel=5
+pkgrel=5.1
 pkgdesc="Set of five Traditional Chinese truetype fonts derived from cwTeX."
 arch=('any')
 url="https://github.com/l10n-tw/cwtex-q-fonts"
@@ -12,8 +12,8 @@ source=("https://github.com/l10n-tw/cwtex-q-fonts-TTFs/archive/v$pkgver.tar.gz")
 
 package() {
   cd "$srcdir/cwtex-q-fonts-TTFs-$pkgver/"
-  install -Dm644 copying.txt "$pkgdir/usr/share/license/$pkgname/AUTHORS"
-  install -Dm644 license.txt "$pkgdir/usr/share/license/$pkgname/LICENSE"
+  install -Dm644 copying.txt "$pkgdir/usr/share/licenses/$pkgname/AUTHORS"
+  install -Dm644 license.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
   cd ttf
   install -Dm644 cwTeXQFangsong-Medium.ttf "$pkgdir/usr/share/fonts/cwttf/cwTeXQFangsong-Medium.ttf"
