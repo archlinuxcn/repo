@@ -73,6 +73,7 @@ provides=("qt5-base=$pkgver")
       # single package now
       # provide symlink to be used by qt5-* packages
       line = line.replace('_qt5-base', '') + '''
+install -dm755 "$pkgdir"/usr/share/licenses/
 ln -s /usr/share/licenses/${pkgname} "$pkgdir"/usr/share/licenses/qt5-base
 '''
       checks = checks + 'a'
