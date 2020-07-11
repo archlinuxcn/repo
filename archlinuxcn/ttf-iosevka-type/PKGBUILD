@@ -6,7 +6,7 @@ pkgdesc='A slender monospace typeface. Shape: default'
 arch=('any')
 url='https://be5invis.github.io/Iosevka/'
 license=('custom:OFL')
-depends=('fontconfig' 'xorg-font-utils')
+depends=('fontconfig')
 conflicts=('ttf-iosevka-pack')
 source=("https://github.com/be5invis/Iosevka/releases/download/v${pkgver}/03-iosevka-type-${pkgver}.zip"
         "${pkgname}-${pkgver}-${pkgrel}-LICENSE.md::https://raw.githubusercontent.com/be5invis/Iosevka/v${pkgver}/LICENSE.md")
