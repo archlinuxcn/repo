@@ -1,0 +1,24 @@
+# Maintainer: oldherl <oldherl@gmail.com>
+# Contributer: Ma Jiehong <email@majiehong.com>
+
+pkgname=ttf-cwtex-q-fonts
+pkgver=0.4
+pkgrel=4
+pkgdesc="Set of five Traditional Chinese truetype fonts derived from cwTeX."
+arch=('any')
+url="https://github.com/l10n-tw/cwtex-q-fonts"
+license=('GPL2' 'custom:"font embedding exception"')
+source=("https://github.com/l10n-tw/cwtex-q-fonts-TTFs/archive/v$pkgver.tar.gz")
+
+package() {
+  cd "$srcdir/cwtex-q-fonts-TTFs-$pkgver/"
+  install -Dm644 copying.txt "$pkgdir/usr/share/license/AUTHORS"
+  install -Dm644 license.txt "$pkgdir/usr/share/license/LICENSE"
+
+  cd ttf
+  install -Dm644 cwTeXQFangsong-Medium.ttf "$pkgdir/usr/share/fonts/cwttf/cwTeXQFangsong-Medium.ttf"
+  install -Dm644 cwTeXQHei-Bold.ttf "$pkgdir/usr/share/fonts/cwttf/cwTeXQHei-Bold.ttf"
+  install -Dm644 cwTeXQKai-Medium.ttf "$pkgdir/usr/share/fonts/cwttf/cwTeXQKai-Medium.ttf"
+  install -Dm644 cwTeXQMing-Medium.ttf "$pkgdir/usr/share/fonts/cwttf/cwTeXQMing-Medium.ttf"
+  install -Dm644 cwTeXQYuan-Medium.ttf "$pkgdir/usr/share/fonts/cwttf/cwTeXQYuan-Medium.ttf"
+}
