@@ -23,7 +23,7 @@ def pre_build():
       line = 'pkgbase=qt5-base-24h' + '\n' + '_origpkgname=qt5-base'
       checks = checks + '0'
     elif line.startswith('pkgrel='):
-      line = line + '.4'
+      line = line + '.5'
     elif line.startswith('pkgname='):
       line = 'pkgname=(qt5-base-24h)'
       checks = checks + '1'
@@ -71,7 +71,10 @@ provides=("qt5-base=$pkgver")
       checks = checks + '9'
     elif line.startswith('package_qt5-base('):
       # single package now
-      line = line.replace('_qt5-base', '')
+      # provide symlink to be used by qt5-* packages
+      line = line.replace('_qt5-base', '') + '''
+ln -s /usr/share/licenses/${pkgname} "$pkgdir"/usr/share/licenses/qt5-base
+'''
       checks = checks + 'a'
     elif line.startswith('package_'):
       # other split packages. do not build them.
