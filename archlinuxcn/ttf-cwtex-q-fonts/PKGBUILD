@@ -12,8 +12,8 @@ source=("https://github.com/l10n-tw/cwtex-q-fonts-TTFs/archive/v$pkgver.tar.gz")
 
 package() {
   cd "$srcdir/cwtex-q-fonts-TTFs-$pkgver/"
-  install -Dm644 copying.txt "$pkgdir/usr/share/license/AUTHORS"
-  install -Dm644 license.txt "$pkgdir/usr/share/license/LICENSE"
+  install -Dm644 copying.txt "$pkgdir/usr/share/license/$pkgname/AUTHORS"
+  install -Dm644 license.txt "$pkgdir/usr/share/license/$pkgname/LICENSE"
 
   cd ttf
   install -Dm644 cwTeXQFangsong-Medium.ttf "$pkgdir/usr/share/fonts/cwttf/cwTeXQFangsong-Medium.ttf"
@@ -22,3 +22,4 @@ package() {
   install -Dm644 cwTeXQMing-Medium.ttf "$pkgdir/usr/share/fonts/cwttf/cwTeXQMing-Medium.ttf"
   install -Dm644 cwTeXQYuan-Medium.ttf "$pkgdir/usr/share/fonts/cwttf/cwTeXQYuan-Medium.ttf"
 }
+sha256sums=('c336e028cccf86121694e5c534566741994569701ddea194697932e6e992b8a2')
