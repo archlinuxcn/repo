@@ -1,8 +1,10 @@
 # Maintainer: wszqkzqk <wszqkzqk@gmail.com>
 # Maintainer: Skywol <skywol@qq.com>
+# Maintainer: luosoy <249799588@qq.com>
+
 pkgname=deepin-wine-plugin-virtual
-_pkgver=1.0deepin3
-pkgver=1.0.3
+_pkgver=1.0deepin5
+pkgver=1.0.5
 pkgrel=1
 epoch=
 pkgdesc="Deepin Wine plugin virtual package"
@@ -21,9 +23,9 @@ backup=()
 options=()
 install=
 changelog=
-source=("https://mirrors.ustc.edu.cn/deepin/pool/non-free/d/${pkgname}/${pkgname}_${_pkgver}_all.deb")
+source=("https://community-packages.deepin.com/deepin/pool/non-free/d/${pkgname}/${pkgname}_${_pkgver}_all.deb")
 noextract=("${pkgname}_${_pkgver}_all.deb")
-md5sums=('8440fa5e1920d3ba801230a2ff4df75e')
+md5sums=('eba265581c776930a955d0029b1c50c0')
 validpgpkeys=()
 
 prepare() {
