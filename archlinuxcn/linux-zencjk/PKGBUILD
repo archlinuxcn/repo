@@ -1,7 +1,7 @@
 # Maintainer: OriginCode <self@origincode.me>
 
 pkgbase=linux-zencjk
-pkgver=5.7.8.zen1
+pkgver=5.7.8.zen2
 pkgrel=1
 pkgdesc='Linux ZEN with CJK Patch'
 _srctag=v${pkgver%.*}-${pkgver##*.}
