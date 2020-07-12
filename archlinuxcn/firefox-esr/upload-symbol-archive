@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+die() {
+  echo >&2 "$@"
+  exit 1
+}
+
+(( $# >= 2 )) || die "Usage: $0 TOKEN-FILE SYMBOL-ARCHIVE..."
+token="$1"
+shift
+
+[[ -f $token && -s $token ]] || die "Invalid TOKEN-FILE ${token@Q}"
+
+for zip; do
+  [[ $(file -SEbi "$zip") == application/zip* ]] || die "Invalid SYMBOL-ARCHIVE ${zip@Q}"
+done
+
+for zip; do
+  echo >&2 "Uploading ${zip@Q} ..."
+  curl -X POST -H "Auth-Token: $(<"$token")" -F "${zip##*/}=@$zip" \
+    --retry 4 --retry-connrefused --connect-timeout 120 \
+    https://symbols.mozilla.org/upload/
+  echo
+  mv -v "$zip" "$zip.uploaded"
+done
