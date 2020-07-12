@@ -6,14 +6,14 @@
 pkgname=python-pychromecast
 _name=${pkgname#python-}
 pkgver=7.1.1
-pkgrel=2
+pkgrel=3
 pkgdesc='Library for Python 3 to communicate with the Google Chromecast'
 arch=('any')
-url=https://github.com/balloob/pychromecast
+url="https://github.com/home-assistant-libs/pychromecast"
 license=('MIT')
 depends=('python' 'python-protobuf' 'python-requests' 'python-zeroconf' 'python-six' 'python-setuptools' 'python-casttube')
 makedepends=('python-setuptools')
-source=("https://github.com/balloob/pychromecast/archive/$pkgver.tar.gz")
+source=("https://github.com/home-assistant-libs/pychromecast/archive/$pkgver.tar.gz")
 sha512sums=('f654e83af0f76c84407f84757a4a81ffaff82f7b944053e1c29c36cfc0eb7ebb4b2598928f458e1fd268239ba660d77276a03159809f1f25f8a5b5ffb9c327b3')
 conflicts=('python-pychromecast6')
 
