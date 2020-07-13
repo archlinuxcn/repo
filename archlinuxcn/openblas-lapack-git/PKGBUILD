@@ -38,7 +38,7 @@ case "$CARCH" in
     _config=("${_config[@]}" 'TARGET=CORTEXA9' 'NUM_THREAD=64')
     ;;
   aarch64)
-    _config=("${_config[@]}" 'TARGET=CORTEXA57' 'NUM_THREAD=64')
+    _config=("${_config[@]}" 'DYNAMIC_ARCH=1' 'NUM_THREAD=64')
     ;;
   *)
     echo "Unknown CARCH: ${CARCH}"
