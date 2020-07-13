@@ -1,0 +1,56 @@
+From 1cab10b39cfda068100cab8c598f1ca0f50e4131 Mon Sep 17 00:00:00 2001
+Message-Id: <1cab10b39cfda068100cab8c598f1ca0f50e4131.1553597287.git.jan.steffens@gmail.com>
+From: "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
+Date: Mon, 25 Mar 2019 20:30:11 +0100
+Subject: [PATCH] Use remoting name for GDK application names
+
+---
+ toolkit/xre/nsAppRunner.cpp | 6 +-----
+ widget/gtk/nsAppShell.cpp   | 7 +++----
+ 2 files changed, 4 insertions(+), 9 deletions(-)
+
+diff --git a/toolkit/xre/nsAppRunner.cpp b/toolkit/xre/nsAppRunner.cpp
+index 0b808ef215f06..28911c0ffeaec 100644
+--- a/toolkit/xre/nsAppRunner.cpp
++++ b/toolkit/xre/nsAppRunner.cpp
+@@ -3728,11 +3728,7 @@ int XREMain::XRE_mainStartup(bool* aExitFlag) {
+   // consistently.
+ 
+   // Set program name to the one defined in application.ini.
+-  {
+-    nsAutoCString program(gAppData->name);
+-    ToLowerCase(program);
+-    g_set_prgname(program.get());
+-  }
++  g_set_prgname(gAppData->remotingName);
+ 
+   // Initialize GTK here for splash.
+ 
+diff --git a/widget/gtk/nsAppShell.cpp b/widget/gtk/nsAppShell.cpp
+index 0686ff814916b..ae4a4ea55f420 100644
+--- a/widget/gtk/nsAppShell.cpp
++++ b/widget/gtk/nsAppShell.cpp
+@@ -24,6 +24,7 @@
+ #  include "WakeLockListener.h"
+ #endif
+ #include "gfxPlatform.h"
++#include "nsAppRunner.h"
+ #include "ScreenHelperGTK.h"
+ #include "HeadlessScreenHelper.h"
+ #include "mozilla/widget/ScreenManager.h"
+@@ -171,10 +172,8 @@ nsresult nsAppShell::Init() {
+     // option when program uses gdk_set_program_class().
+     //
+     // See https://bugzilla.gnome.org/show_bug.cgi?id=747634
+-    nsAutoString brandName;
+-    mozilla::widget::WidgetUtils::GetBrandShortName(brandName);
+-    if (!brandName.IsEmpty()) {
+-      gdk_set_program_class(NS_ConvertUTF16toUTF8(brandName).get());
++    if (gAppData) {
++      gdk_set_program_class(gAppData->remotingName);
+     }
+   }
+ 
+-- 
+2.21.0
+
