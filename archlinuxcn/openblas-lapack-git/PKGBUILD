@@ -82,7 +82,7 @@ package_openblas-git() {
 
   cd OpenBLAS
 
-  make "${_config[@]}" PREFIX="${pkgdir}/usr" install &> install.log || {
+  make "${_config[@]}" DESTDIR="${pkgdir}" PREFIX="/usr" install &> install.log || {
     cat install.log
     return 1
   }
@@ -91,10 +91,10 @@ package_openblas-git() {
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
   # Remove reference to ${pkgdir}
-  sed -i -e "s%${pkgdir}%%" \
-      "${pkgdir}/usr/lib/cmake/openblas/OpenBLASConfig.cmake"
+  # sed -i -e "s%${pkgdir}%%" \
+  #     "${pkgdir}/usr/lib/cmake/openblas/OpenBLASConfig.cmake"
 
-  rm "${pkgdir}/usr/include/"{lapacke,cblas}*
+  rm "${pkgdir}/usr/include/"{lapack,cblas}*
 }
 
 package_openblas-lapack-git() {
@@ -107,9 +107,9 @@ package_openblas-lapack-git() {
 
   _lapack_ver=$(sed -ne 's/^PROJECT_NUMBER\s*=\s*\([0-9][0-9.]*\).*/\1/p' lapack-netlib/DOCS/Doxyfile)
 
-  make "${_config[@]}" PREFIX="${srcdir}/pkg" install
+  make "${_config[@]}" DESTDIR="${srcdir}/pkg" PREFIX="/usr" install
 
-  mv "${srcdir}/pkg/include/"{lapacke,cblas}* "${pkgdir}/usr/include/"
+  mv "${srcdir}/pkg/usr/include/"{lapack,cblas}* "${pkgdir}/usr/include/"
 
   # Symlink to provide blas, cblas and lapack
   cd "${pkgdir}/usr/lib/"
