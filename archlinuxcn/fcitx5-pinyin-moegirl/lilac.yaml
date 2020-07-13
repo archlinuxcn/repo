@@ -1,0 +1,11 @@
+maintainers:
+  - github: imlonghao
+    email: imlonghao@archlinuxcn.org
+
+build_prefix: extra-x86_64
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - github: outloudvi/fcitx5-pinyin-moegirl
+    use_latest_release: true

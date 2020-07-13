@@ -1,0 +1,22 @@
+# Maintainer: Hao Long <imlonghao@archlinuxcn.org>
+
+pkgbase=fcitx5-pinyin-moegirl
+pkgname=('fcitx5-pinyin-moegirl' 'fcitx5-pinyin-moegirl-rime')
+pkgver=20200711
+pkgrel=1
+pkgdesc="Fcitx 5 Pinyin Dictionary from zh.moegirl.org"
+arch=('any')
+url="https://github.com/outloudvi/fcitx5-pinyin-moegirl"
+license=('CCPL:by-nc-sa-3.0')
+source=("${url}/releases/download/${pkgver}/moegirl.dict"
+        "${url}/releases/download/${pkgver}/moegirl.dict.yaml")
+sha256sums=('c32ca7ecf2db4595a09598477258bb03e388be1f6b293b7e23270b742e752073'
+            '447e76271da0ad115166da3543fa1eb668e748695a0f1cd3d56c3b32068a6da9')
+
+package_fcitx5-pinyin-moegirl() {
+  install -Dm644 moegirl.dict -t ${pkgdir}/usr/share/fcitx5/pinyin/dictionaries/
+}
+
+package_fcitx5-pinyin-moegirl-rime() {
+  install -Dm644 moegirl.dict.yaml -t ${pkgdir}/usr/share/rime-data/
+}
