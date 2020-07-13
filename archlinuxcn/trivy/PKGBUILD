@@ -1,7 +1,7 @@
 # Maintainer: Hao Long <imlonghao@archlinuxcn.org>
 
 pkgname=trivy
-pkgver=0.9.1
+pkgver=0.9.2
 pkgrel=1
 pkgdesc="A Simple and Comprehensive Vulnerability Scanner for Containers, Suitable for CI"
 arch=("x86_64" "i686")
@@ -9,11 +9,11 @@ url="https://github.com/aquasecurity/trivy"
 license=("Apache")
 depends=("device-mapper")
 optdepends=("rpm: RHEL/CentOS based image support")
-makedepends=("go-pie" "btrfs-progs")
+makedepends=("go" "btrfs-progs")
 provides=('trivy')
 conflicts=('trivy')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('368c68f8c36b3ee0772198d676e91056e7315e03f58e12bce4750fe261451036')
+sha256sums=('0a01523d860a29affd5f7a735682f2f3b02078aa96c6266c55f2feb344d20be2')
 
 build() {
   cd ${pkgname}-${pkgver}/cmd/trivy
