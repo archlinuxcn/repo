@@ -54,6 +54,8 @@ def prepare():
   version = toml['pkg']['rust']['version'].split('-', 1)[0]
   cargo_version = toml['pkg']['cargo']['version'].split('-', 1)[0]
   rustfmt_version = toml['pkg']['rustfmt-preview']['version'].split('-', 1)[0]
+  if not rustfmt_version:
+    return 'no rustfmt available'
 
   clippy_version = toml['pkg']['clippy-preview']['version'].split('-', 1)[0]
   try:
