@@ -10,7 +10,7 @@ license=('MIT')
 makedepends=('rust' 'cargo')
 depends=()
 provides=("$_pkgname")
-source=($_pkgname.tar.gz::"https://crates.io//api/v1/crates/$_pkgname/$pkgver/download")
+source=($_pkgname.tar.gz::"https://crates.io/api/v1/crates/$_pkgname/$pkgver/download")
 sha256sums=('45492db1c582fc53acc13287242e39cc164adb1c87834117377d14c71f683d21')
 
 install=${pkgname}.install

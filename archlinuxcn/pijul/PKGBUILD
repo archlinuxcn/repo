@@ -10,7 +10,7 @@ license=('GPL-2.0+')
 makedepends=('rust' 'cargo' 'clang')
 depends=('libsodium')
 provides=("$_pkgname")
-source=($_pkgname.tar.gz::"https://crates.io//api/v1/crates/$_pkgname/$pkgver/download")
+source=($_pkgname.tar.gz::"https://crates.io/api/v1/crates/$_pkgname/$pkgver/download")
 sha256sums=('f92a3f4063e780ca45c161ceb0f42baf34dfeddf3359ebf6c2e0442d9abb5889')
 
 build() {
