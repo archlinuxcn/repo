@@ -3,8 +3,10 @@
 maintainers:
   - github: ykelvis
 
-build_prefix: archlinuxcn-x86_64
+build_prefix: extra-x86_64
 
+repo_depends:
+  - libgccjit
 post_build: aur_post_build
 
 update_on:
