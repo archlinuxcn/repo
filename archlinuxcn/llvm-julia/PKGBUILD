@@ -3,7 +3,7 @@
 
 pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia')
 pkgver=10.0.0
-pkgrel=3
+pkgrel=4
 _ocaml_ver=4.10.0
 arch=(i686 x86_64 armv7h aarch64)
 url="https://llvm.org/"
@@ -26,6 +26,7 @@ source=($_source_base/llvm-$pkgver.src.tar.xz
         llvm-D75072-SCEV-add-type.patch
         llvm-10.0-PPC_SELECT_CC.patch
         llvm-10.0-PPC-LI-Elimination.patch
+        0001-Support-PC-relative-relocation-on-AArch64-and-PPC64-.patch
         llvm-config.h)
 sha256sums=('df83a44b3a9a71029049ec101fb0077ecbbdf5fe41e395215025779099a98fdf'
             '9f4851adbd9353c4d362ea604d07bcf8c565e1b06ea312986f5ad98d69853ae3'
@@ -40,6 +41,7 @@ sha256sums=('df83a44b3a9a71029049ec101fb0077ecbbdf5fe41e395215025779099a98fdf'
             '1fdc23b8e530d75829389997c31a28ad4522948d4c5744dc1e4354cdbd1b2a09'
             '40e5b55f6b6074fad2c454819256248f97c21c12d85b22dab3c47b2883bbc8d5'
             '8412ba6775765c6af3d49cb482a698d7b78e21ed85d9e978393ff2d8694b8481'
+            'e62c60d8c223a788cdbe633bbc1505bda60a56189ec085d4251be0ac94b332a7'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
 _FLTO=''
@@ -83,6 +85,7 @@ EOF
   apply_julia_patch llvm-D75072-SCEV-add-type
   apply_julia_patch llvm-10.0-PPC_SELECT_CC
   apply_julia_patch llvm-10.0-PPC-LI-Elimination
+  apply_julia_patch 0001-Support-PC-relative-relocation-on-AArch64-and-PPC64-
 
   # Arch patches
   # msg "Applying Arch patches"

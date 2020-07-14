@@ -1,0 +1,55 @@
+From 965569e0cddd9cef4fee816a4bd44320515c4878 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 14 Jul 2020 14:12:47 -0400
+Subject: [PATCH] Support PC relative relocation on AArch64 and PPC64 in
+ RelocationResolver
+
+---
+ lib/Object/RelocationResolver.cpp | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/lib/Object/RelocationResolver.cpp b/lib/Object/RelocationResolver.cpp
+index 3f3f79b0f4f..8d930708bfa 100644
+--- a/lib/Object/RelocationResolver.cpp
++++ b/lib/Object/RelocationResolver.cpp
+@@ -62,6 +62,8 @@ static bool supportsAArch64(uint64_t Type) {
+   switch (Type) {
+   case ELF::R_AARCH64_ABS32:
+   case ELF::R_AARCH64_ABS64:
++  case ELF::R_AARCH64_PREL32:
++  case ELF::R_AARCH64_PREL64:
+     return true;
+   default:
+     return false;
+@@ -74,6 +76,9 @@ static uint64_t resolveAArch64(RelocationRef R, uint64_t S, uint64_t A) {
+     return (S + getELFAddend(R)) & 0xFFFFFFFF;
+   case ELF::R_AARCH64_ABS64:
+     return S + getELFAddend(R);
++  case ELF::R_AARCH64_PREL32:
++  case ELF::R_AARCH64_PREL64:
++    return S + getELFAddend(R) - R.getOffset();
+   default:
+     llvm_unreachable("Invalid relocation type");
+   }
+@@ -152,6 +157,8 @@ static bool supportsPPC64(uint64_t Type) {
+   switch (Type) {
+   case ELF::R_PPC64_ADDR32:
+   case ELF::R_PPC64_ADDR64:
++  case ELF::R_PPC64_REL32:
++  case ELF::R_PPC64_REL64:
+     return true;
+   default:
+     return false;
+@@ -164,6 +171,9 @@ static uint64_t resolvePPC64(RelocationRef R, uint64_t S, uint64_t A) {
+     return (S + getELFAddend(R)) & 0xFFFFFFFF;
+   case ELF::R_PPC64_ADDR64:
+     return S + getELFAddend(R);
++  case ELF::R_PPC64_REL32:
++  case ELF::R_PPC64_REL64:
++    return S + getELFAddend(R) - R.getOffset();
+   default:
+     llvm_unreachable("Invalid relocation type");
+   }
+-- 
+2.27.0
+
