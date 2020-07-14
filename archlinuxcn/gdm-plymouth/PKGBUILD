@@ -7,7 +7,7 @@
 _pkgbase=gdm
 pkgbase=gdm-plymouth
 pkgname=(gdm-plymouth libgdm-plymouth)
-pkgver=3.36.2
+pkgver=3.36.3
 pkgrel=1
 pkgdesc="Display manager and login screen with plymouth support"
 url="https://wiki.gnome.org/Projects/GDM"
@@ -16,11 +16,11 @@ license=(GPL)
 depends=(plymouth gnome-shell gnome-session upower xorg-xrdb xorg-server xorg-xhost)
 makedepends=(yelp-tools gobject-introspection git docbook-xsl)
 checkdepends=(check)
-_commit=02c42c1ca84bc28928618b773c12f2cea67ed71e  # tags/3.36.2^0
+_commit=24a4c0afe337a7a381397c87a39e3a666c0ae6cc  # tags/3.36.3^0
 source=("git+https://gitlab.gnome.org/GNOME/gdm.git#commit=$_commit"
-        0001-Xsession-Don-t-start-ssh-agent-by-default.patch
-        0002-pam-arch-Don-t-check-greeter-account-for-expiry.patch
-        0003-pam-arch-Restrict-greeter-service-to-the-gdm-user.patch)
+        '0001-Xsession-Don-t-start-ssh-agent-by-default.patch'
+        '0002-pam-arch-Don-t-check-greeter-account-for-expiry.patch'
+        '0003-pam-arch-Restrict-greeter-service-to-the-gdm-user.patch')
 sha256sums=('SKIP'
             '7a9a60ac3ec2a7ba8625ebd8974ac19469412e596d823d889628c971d3a27463'
             '15c8d7e0a0e03cb45f6bb33b3d91e0332d5d1b835b4aee726118085a35f3b046'
