@@ -1,8 +1,8 @@
 # Maintainer: BennyYip <yebenmy@protonmail.com>
 pkgname=mcfly
 _pkgname=mcfly
-pkgver=0.2.4
-pkgrel=1
+pkgver=0.4.0
+pkgrel=2
 pkgdesc="McFly replaces your default ctrl-r Bash history search with an intelligent search engine that takes into account your working directory and the context of recently executed commands. McFly's suggestions are prioritized in real time with a small neural network."
 arch=('x86_64')
 url="https://github.com/cantino/mcfly"
@@ -11,19 +11,20 @@ makedepends=('rust' 'cargo')
 depends=()
 provides=("$_pkgname")
 source=($_pkgname.tar.gz::"https://crates.io/api/v1/crates/$_pkgname/$pkgver/download")
-sha256sums=('45492db1c582fc53acc13287242e39cc164adb1c87834117377d14c71f683d21')
+sha256sums=('51acd05e3cd4b7aeaf2e9d6f2555a7c8ad434e5a4970dc18abc87506a75d1865')
 
 install=${pkgname}.install
 
 build() {
   cd $srcdir/$_pkgname-$pkgver
-  CARGO_INCREMENTAL=0 cargo build --release
+  CARGO_BUILD_TARGET_DIR="target" CARGO_INCREMENTAL=0 cargo build --release
 }
 
 package() {
   cd $srcdir/$_pkgname-$pkgver
   install -Dm 755 "target/release/$pkgname" "$pkgdir/usr/bin/$pkgname"
   install -Dm 644 "mcfly.bash" "$pkgdir/usr/share/mcfly/mcfly.bash"
+  install -Dm 644 "mcfly.zsh" "$pkgdir/usr/share/mcfly/mcfly.zsh"
 }
 
 
