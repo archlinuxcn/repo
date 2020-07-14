@@ -73,8 +73,8 @@ PROFILING=        # Enable gprof profiling support.
 
 ################################################################################
 pkgname="emacs-native-comp-git"
-pkgver=28.0.50.141945
-pkgrel=2
+pkgver=28.0.50.142670
+pkgrel=1
 pkgdesc="GNU Emacs. Development native-comp branch."
 arch=('x86_64' )
 url="http://www.gnu.org/software/emacs/"
@@ -83,7 +83,6 @@ depends=('alsa-lib' 'gnutls' 'libxml2' 'jansson' 'libotf' 'harfbuzz' 'gpm' 'libg
 makedepends=('git')
 provides=('emacs' 'emacs-seq')
 conflicts=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-git' 'emacs-seq')
-replaces=('emacs26-git' 'emacs27-git' 'emacs-git' 'emacs-seq')
 source=("emacs-git::git://git.savannah.gnu.org/emacs.git#branch=feature/native-comp")
 # If Savannah access is blocked for reasons, use Github instead.
 # Edit the config file of your local repo copy as well.
@@ -327,4 +326,3 @@ package() {
 
 ################################################################################
 # vim:set ft=sh ts=2 sw=2 et:
-
