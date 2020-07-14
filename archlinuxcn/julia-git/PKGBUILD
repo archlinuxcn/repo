@@ -175,9 +175,8 @@ build_in() {
   make "${opts[@]}" -C deps
   make "${opts[@]}" julia-ui-release
   make "${opts[@]}" release debug
-  if (($2)); then
-    JL_MAKEPKG_SRCDIR= make "${opts[@]}" docs
-  fi
+  # TODO docless build
+  JL_MAKEPKG_SRCDIR= make "${opts[@]}" docs
 
   # Check to detect issues like JuliaLang/julia#13820
   LD_PRELOAD= JL_MAKEPKG_SRCDIR= usr/bin/julia -e '0'
@@ -185,8 +184,13 @@ build_in() {
 }
 
 build() {
+  if [[ $(vercmp $(g++ -dumpversion) 10) = -1 ]]; then
+    g20=gnu++2a
+  else
+    g20=gnu++20
+  fi
   g++ -fPIC -Wall -Wextra -shared -o libarch-source-translate.so -O2 \
-      -std=gnu++20 arch-source-translate.cpp
+      -std=$g20 arch-source-translate.cpp
   _ld_preload="${srcdir}/libarch-source-translate.so"
   if [[ -n $LD_PRELOAD ]]; then
     _ld_preload="${_ld_preload}:$LD_PRELOAD"
@@ -209,14 +213,15 @@ package-julia-in() {
 
   export JL_MAKEPKG_SRCDIR="${PWD}"
 
-  if ((BUILD_DOC)); then
-    make install DESTDIR="$pkgdir" "${opts[@]}"
-  else
-    make install-nodoc DESTDIR="$pkgdir" "${opts[@]}"
-    # Manually install man pages
-    mkdir -p "$pkgdir"/usr/share/man/man1/
-    install -m644 -t "$pkgdir"/usr/share/man/man1/ usr/share/man/man1/julia.1
-  fi
+  # TODO docless build
+  # if ((BUILD_DOC)); then
+  make install DESTDIR="$pkgdir" "${opts[@]}"
+  # else
+  #   make install-nodoc DESTDIR="$pkgdir" "${opts[@]}"
+  #   # Manually install man pages
+  #   mkdir -p "$pkgdir"/usr/share/man/man1/
+  #   install -m644 -t "$pkgdir"/usr/share/man/man1/ usr/share/man/man1/julia.1
+  # fi
 
   # Remove doc files (should be non for nodoc install)
   rm -rf "$pkgdir/usr/share/doc/julia"
