@@ -1,20 +1,15 @@
 post_install() {
+  groupadd -f flutterusers
+  chgrp -R flutterusers /opt/flutter
+  chmod -R g+w /opt/flutter
   printf "$(tput setaf 4)Flutter was installed on $(tput setaf 2)/opt/flutter$(tput sgr0)\n"
+  printf "$(tput setaf 4)$(tput sgr0)\n"
+  printf "$(tput setaf 4)If you intend to use it as a regular user, add your user into the group flutterusers:$(tput sgr0)\n"
+  printf "$(tput setaf 2)gpasswd -a <user> flutterusers$(tput sgr0)\n"
   printf "$(tput setaf 4)$(tput sgr0)\n"
   printf "$(tput setaf 4)You need to source $(tput setaf 2)/etc/profile$(tput setaf 4) or relogin to add flutter to your path.$(tput sgr0)\n"
   printf "$(tput setaf 4)$(tput sgr0)\n"
-  printf "$(tput setaf 4)This folder has root permissions, so keep in mind to run flutter as root,$(tput sgr0)\n"
-  printf "$(tput setaf 4)otherwise you will not be able to modify anything in this directory.$(tput sgr0)\n"
-  printf "$(tput setaf 4)$(tput sgr0)\n"
-  printf "$(tput setaf 4)If you intend to use it as a regular user, create the Flutter users group:$(tput sgr0)\n"
-  printf "$(tput setaf 2)groupadd flutterusers$(tput sgr0)\n"
-  printf "$(tput setaf 4)Add your user into this group:$(tput sgr0)\n"
-  printf "$(tput setaf 2)gpasswd -a <user> flutterusers$(tput sgr0)\n"
-  printf "$(tput setaf 4)Change folder's group.$(tput sgr0)\n"
-  printf "$(tput setaf 2)chown -R :flutterusers /opt/flutter$(tput sgr0)\n"
-  printf "$(tput setaf 4)Change permissions of the folder so the user that was just added to the group will be able to write in it:$(tput sgr0)\n"
-  printf "$(tput setaf 2)chmod -R g+w /opt/flutter$(tput sgr0)\n"
-  printf "$(tput setaf 4)Re-login your terminal in to the newly created group:$(tput sgr0)\n"
+  printf "$(tput setaf 4)Re-login your terminal in to the group flutterusers:$(tput sgr0)\n"
   printf "$(tput setaf 2)newgrp flutterusers$(tput sgr0)\n"
 }
 
@@ -23,6 +18,7 @@ post_upgrade() {
 }
 
 post_remove() {
+  groupdel flutterusers
   printf "$(tput setaf 4)If you had added/modified files or permissions in folder /opt/flutter is possible you need to delete it manually.$(tput sgr0)\n"
   printf "$(tput setaf 2)rm -rf /opt/flutter$(tput sgr0)\n"
 }
