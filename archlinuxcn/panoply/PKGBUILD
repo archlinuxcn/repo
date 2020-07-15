@@ -1,6 +1,6 @@
 # Maintainer: MadPhysicist <jfoxrabinovitz at gmail dot com>
 pkgname=panoply
-pkgver=4.11.4
+pkgver=4.11.5
 pkgrel=1
 pkgdesc='NetCDF, HDF and GRIB Data Viewer by NASA GISS'
 arch=('any')
