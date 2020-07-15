@@ -50,6 +50,8 @@ build() {
 	# Flag to fix SDL exceptions occurring in some users' builds
 	CXXFLAGS+=" -I/usr/include/SDL2 -D_REENTRANT -pthread -lSDL2"
 
+  CXXFLAGS+=" -I/usr/include/libusb-1.0"
+
 	mkdir -p build && cd build
 	cmake -GNinja .. \
 	  -DCMAKE_INSTALL_PREFIX=/usr \
