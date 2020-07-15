@@ -3,7 +3,7 @@
 
 pkgname=minecraft
 _pkgname=minecraft-launcher
-pkgver=2.1.15166
+pkgver=2.1.15852
 pkgrel=1
 pkgdesc="Minecraft Launcher"
 arch=(any)
@@ -14,7 +14,7 @@ optdepends=('flite: narrator support')
 conflicts=("$_pkgname" "$_pkgname-beta")
 provides=("$_pkgname" "$_pkgname-beta")
 source=("minecraft-${pkgver}.deb::https://launcher.mojang.com/download/Minecraft.deb")
-sha256sums=('0f91dfae743cd32652ba4d44cafac78350643e639033a740fc1b3d808c1f2a1c')
+sha256sums=('e286687f2c9e40654af02235684d691d0d61051c5e1ae8fa27eaed6c98c41410')
 
 prepare() {
     tar xpf data.tar.xz
