@@ -1,6 +1,6 @@
 pkgname=gnome-shell-extension-appindicator
 pkgver=33
-pkgrel=1
+pkgrel=2
 pkgdesc="Integrates AppIndicators into GNOME Shell"
 arch=('any')
 url="https://github.com/ubuntu/gnome-shell-extension-appindicator"
@@ -23,4 +23,3 @@ package() {
 	install -d "$_destdir"
 	cp --parents -t "$_destdir" metadata.json *.js interfaces-xml/*.xml
 }
-
