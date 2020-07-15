@@ -46,7 +46,7 @@ properties:
         - type: object
           description: nvchecker configuration section
         - type: string
-          description: Shorthand for simple check sources (e.g. "aur").
+          description: Shorthand for simple check sources (e.g. "aur")
     minItems: 1
   maintainers:
     description: List of maintainers for receiving email notifications
@@ -70,7 +70,7 @@ properties:
           required:
             - github
             - email
-    minItems: 1
+    minItems: 0
   managed:
     description: Whether the package should be built by lilac or not
     type: boolean
