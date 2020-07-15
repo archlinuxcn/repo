@@ -279,7 +279,6 @@ package-julia-in() {
 package_julia-git() {
   export LD_PRELOAD="${srcdir}/libarch-source-translate.so:$LD_PRELOAD"
   package-julia-in julia "${julia_opts[@]}"
-  depends+=(openlibm)
   if [[ "$CARCH" = x86_64 ]]; then
     replaces=(julia-git-avx2)
   fi
