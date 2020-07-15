@@ -2,7 +2,7 @@
 
 _name=rich
 pkgname=python-rich
-pkgver=3.3.1
+pkgver=3.3.2
 pkgrel=1
 pkgdesc="Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
 arch=(any)
@@ -15,7 +15,7 @@ depends=('python-colorama'
          'python-commonmark')
 makedepends=('python-setuptools')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha256sums=('1a71bf5b9d16a9b42f29e307a5cb8d8273e6b8e0dad433667d1e7227e75acc55')
+sha256sums=('bc8a5aa11fb1b11199b24c7f670bdb183b4de2504526767980fff2be553c3efc')
 
 build() {
   cd "$srcdir/$_name-$pkgver"
