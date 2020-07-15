@@ -3,7 +3,7 @@
 # Contributor: Ariel AxionL <i [at] axionl [dot] me>
 
 pkgname=annie
-pkgver=0.10.2
+pkgver=0.10.3
 pkgrel=1
 arch=('x86_64')
 pkgdesc="A fast, simple and clean video downloader written in Go"
@@ -14,7 +14,7 @@ depends=("ffmpeg")
 provides=("annie")
 conflicts=("annie")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('62ce7ecad18b09970048537fc62be2ad75e1936d57710b3058c9c8a866675aae')
+sha256sums=('a5252317113cf90e687a532b2e961126206b29829c61d6507fc69881e85d1d34')
 
 build(){
   cd "${pkgname}-${pkgver}"
