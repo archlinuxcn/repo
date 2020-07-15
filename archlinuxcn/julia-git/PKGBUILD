@@ -31,7 +31,7 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=1.6.0.DEV.464.g29826c2c089
+pkgver=1.6.0.DEV.465.g77487611fd9
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -48,6 +48,7 @@ source=('git://github.com/JuliaLang/julia'
         0001-Optimize-GC-frame-push-pop-insertion.patch
         source-translate.patch
         gdb-debug.patch
+        arm-section.patch
         julia-compile-pkgs.jl
         julia-clear-precompile.sh
         julia-precompile.hook
@@ -58,6 +59,7 @@ md5sums=('SKIP'
          '3dbb81b1dae3a9d977bd69f8354b3007'
          '6556afd401a9203295a066f9155352c3'
          'effd2c21ffb69e66b43d4b7fbe074a51'
+         '7d9b7adaff06af97ce0491b3f206e84e'
          '0b3bfcd680da2dc47d861b04ee695f52'
          '6e7fcba300512df8ab8ab65d3e1eb847'
          'f1f6ffc7ddcbc7fa0000d6f5fdbbe925'
@@ -147,6 +149,7 @@ EOF
   # patch -Np1 < ../0001-Optimize-GC-frame-push-pop-insertion.patch
   patch -Np1 < ../source-translate.patch
   patch -Np1 < ../gdb-debug.patch
+  patch -Np1 < ../arm-section.patch
 
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' src/Makefile ui/Makefile
 }
