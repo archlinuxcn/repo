@@ -1,7 +1,7 @@
 # Maintainer: Tommaso Sardelli <lacapannadelloziotom at gmail dot com>
 pkgname=bpftrace
-pkgver=0.10.0
-pkgrel=4
+pkgver=0.11.0
+pkgrel=1
 pkgdesc='High-level tracing language for Linux eBPF'
 arch=('i686' 'x86_64')
 url='https://github.com/iovisor/bpftrace'
@@ -12,7 +12,7 @@ optdepends=('libbpf>=0.0.5: BTF support (required at compile time)')
 conflicts=('bpftrace-git')
 provides=('bpftrace')
 source=("https://github.com/iovisor/${pkgname}/archive/v${pkgver}.tar.gz")
-sha512sums=('da400efe78cea505a32deead594b047ec4394d3eefe86e7b6853fe2dc715c5847a3abcbd26c1fac39d0a534f1e57d6c0bc3625e0c3f1054b0d84b7b1d6eb69b9')
+sha512sums=('32bf0c23a7b0e1a57d0e0b8fc845a9e184e201ac3f6018a3d3cee8c97096093b333578cb898ede02fb3ab8d55ba9bcd2bb67ac70b81a49461c0f6e5c03c2a6f5')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
