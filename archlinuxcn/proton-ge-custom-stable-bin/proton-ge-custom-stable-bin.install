@@ -1,0 +1,21 @@
+_fix_perms() {
+    getent group games > /dev/null 2>&1 || groupadd papermc
+    chown :games /usr/share/steam/compatibilitytools.d/proton-ge-custom-stable/user_settings.py
+    chown -R :games /var/games/pfx_proton-ge-custom-stable
+}
+
+post_install() {
+    _fix_perms
+    echo 'Sugguest: add your user to group "games"'
+    echo 'User settings is at: "/usr/share/steam/compatibilitytools.d/proton-ge-custom-stable/user_settings.py"'
+    echo 'default pfx dir is "/var/games/pfx_proton-ge-custom-stable"'
+}
+
+post_upgrade() {
+    _fix_perms
+}
+
+post_remove() {
+    echo '"proton-ge-custom-stable-bin" has been removed.'
+    echo 'You may want to delete the pfx dir: "/var/games/pfx_proton-ge-custom-stable"'
+}

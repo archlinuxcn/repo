@@ -1,0 +1,9 @@
+maintainers:
+  - github: edward-p
+
+build_prefix: extra-x86_64
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - cmd: curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases | jq -r ".[].tag_name" | grep -E "[0-9]\.[0-9]+-GE-[0-9]+-ST" | head -1 | sed 's,-,_,g'
