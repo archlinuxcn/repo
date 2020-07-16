@@ -9,8 +9,8 @@
 # Contributor: Alexander De Sousa <archaur.xandy21@spamgourmet.com>
 
 pkgname=ttf-google-fonts-git
-pkgver=r1935.5f3675b8
-pkgrel=2
+pkgver=r1994.30383ff6
+pkgrel=1
 epoch=1
 pkgdesc="TrueType fonts from the Google Fonts project (git version)"
 arch=('any')
@@ -32,7 +32,7 @@ depends=('noto-fonts'
          'ttf-oswald'
          'ttf-quintessential'
          'ttf-signika')
-makedepends=('git')
+makedepends=('git' 'fontconfig')
 conflicts=('adobe-source-code-pro-fonts'
            'adobe-source-sans-pro-fonts'
            'jsmath-fonts'
