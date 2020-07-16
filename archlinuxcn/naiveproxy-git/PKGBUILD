@@ -9,11 +9,10 @@ arch=('x86_64')
 url='https://github.com/klzgrad/naiveproxy'
 license=('BSD')
 depends=('nss' 'glib2')
-source=('git+https://github.com/klzgrad/naiveproxy.git' 'warnings.patch')
+source=('git+https://github.com/klzgrad/naiveproxy.git')
 makedepends=('clang' 'git' 'gn' 'gtk3' 'libgnome-keyring' 'lld' 'llvm' 'ninja' 'python2')
 backup=(etc/naiveproxy/config.json)
-sha512sums=('SKIP'
-            'fb88182daa3157b8c82ff8effbe2656f16e9e0f562874afa1b3262cd54772256c8a01cc04eb6b8e2c378c84e8a63051afe3bbef3018ebd79651fae209be6d9c5')
+sha512sums=('SKIP')
 provides=('naiveproxy')
 conflicts=('naiveproxy' 'naiveproxy-bin')
 
@@ -24,7 +23,6 @@ pkgver(){
 
 build(){
   cd ${srcdir}/${_pkgname}/src
-  patch -p1 < "$srcdir"/warnings.patch
   
   flags='is_official_build=true
     exclude_unwind_tables=true
