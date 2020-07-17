@@ -1,40 +1,36 @@
 # Maintainer: Evangelos Foutras <evangelos@foutrelis.com>
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 
-pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia')
+pkgname=(llvm-julia llvm-libs-julia llvm-ocaml-julia)
 pkgver=10.0.0
 pkgrel=4
-_ocaml_ver=4.10.0
 arch=(i686 x86_64 armv7h aarch64)
 url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
-makedepends=('cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
-             "ocaml=$_ocaml_ver" 'ocaml-ctypes' 'ocaml-findlib'
-             'python-sphinx' 'python-recommonmark')
+makedepends=(cmake ninja libffi libedit ncurses libxml2 ocaml ocaml-ctypes ocaml-findlib
+             python-sphinx python-recommonmark)
 options=('staticlibs' '!strip')
 _source_base=https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver
 source=($_source_base/llvm-$pkgver.src.tar.xz
         llvm-D27629-AArch64-large_model.patch
         llvm-D34078-vectorize-fdiv.patch
-        llvm-6.0-NVPTX-addrspaces.patch
         llvm-7.0-D44650.patch
         llvm9-D50010-VNCoercion-ni.patch
-        llvm8-WASM-addrspaces.patch
         llvm-exegesis-mingw.patch
         llvm-test-plugin-mingw.patch
         llvm7-revert-D44485.patch
         llvm-D75072-SCEV-add-type.patch
-        llvm-10.0-PPC_SELECT_CC.patch
-        llvm-10.0-PPC-LI-Elimination.patch
-        0001-Support-PC-relative-relocation-on-AArch64-and-PPC64-.patch
+        llvm-10.0-PPC_SELECT_CC.patch # LLVM 11
+        llvm-10.0-PPC-LI-Elimination.patch # LLVM 11
+        0001-Support-PC-relative-relocation-on-AArch64-and-PPC64-.patch # LLVM 12?
+        clear-gep.patch # LLVM 12?
+        stack-color.patch # LLVM 12
         llvm-config.h)
 sha256sums=('df83a44b3a9a71029049ec101fb0077ecbbdf5fe41e395215025779099a98fdf'
             '9f4851adbd9353c4d362ea604d07bcf8c565e1b06ea312986f5ad98d69853ae3'
             '0218121facb405a70f85b3b09a13d9d335d568da8fdd97740ff62bdd07c357a7'
-            '0c333d25d9e48d3270d0c0bb7a8c239649283cf55bec4f1004326b99eb17b1e1'
             '390ec9982d778383566fc87e56acd94027c99670d19434b5914ec738eb9ca5c0'
             'bd55ecb3e743e43d7154380e4d0d66bbf8f74df9ac7866cfeb9be0a8a51e2de8'
-            'd81c8f8e119758a8c5f551a64e0d1e4b37f60559745a2a6ad3ec4098e453e684'
             '778fb63f1025de7d4c7ecc4647026d9781971c3e9975817b703bab238364015e'
             'd2bee469b78630a513ae543a9b619aa686db2188a7c68086356e4165191ae78b'
             '1629672afa288b89c09559ecd3c18b8606603f89ebfaa9ebd2fcd671079ea938'
@@ -42,6 +38,8 @@ sha256sums=('df83a44b3a9a71029049ec101fb0077ecbbdf5fe41e395215025779099a98fdf'
             '40e5b55f6b6074fad2c454819256248f97c21c12d85b22dab3c47b2883bbc8d5'
             '8412ba6775765c6af3d49cb482a698d7b78e21ed85d9e978393ff2d8694b8481'
             'e62c60d8c223a788cdbe633bbc1505bda60a56189ec085d4251be0ac94b332a7'
+            '84a312c921de24f9d3736f9ad31a5c3af4461708a5ea2a1d62e6b9b62d4e26b4'
+            '72e0870b215a13d498a5f6b7ddc64d45a48464bed4b2eef1b62fae5b5fe54dbf'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
 _FLTO=''
@@ -75,10 +73,8 @@ EOF
 
   apply_julia_patch llvm-D27629-AArch64-large_model
   apply_julia_patch llvm-D34078-vectorize-fdiv
-  apply_julia_patch llvm-6.0-NVPTX-addrspaces
   apply_julia_patch llvm-7.0-D44650
   apply_julia_patch llvm9-D50010-VNCoercion-ni
-  apply_julia_patch llvm8-WASM-addrspaces
   apply_julia_patch llvm-exegesis-mingw
   apply_julia_patch llvm-test-plugin-mingw
   apply_julia_patch llvm7-revert-D44485
@@ -86,21 +82,18 @@ EOF
   apply_julia_patch llvm-10.0-PPC_SELECT_CC
   apply_julia_patch llvm-10.0-PPC-LI-Elimination
   apply_julia_patch 0001-Support-PC-relative-relocation-on-AArch64-and-PPC64-
+  apply_julia_patch clear-gep
 
   # Arch patches
   # msg "Applying Arch patches"
 }
 
 build() {
-  cd "$srcdir/llvm-$pkgver.src/build"
+  cd llvm-$pkgver.src/build
 
   export PATH="${srcdir}/bin:${PATH}"
-  CFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CXXFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CXXFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CFLAGS+=' -ggdb1 -O3 -fasynchronous-unwind-tables'
   CXXFLAGS+=' -ggdb1 -O3 -fasynchronous-unwind-tables'
   LDFLAGS+=' -O3 -fasynchronous-unwind-tables'
@@ -126,12 +119,12 @@ build() {
 
 package_llvm-julia() {
   pkgdesc="Collection of modular and reusable compiler and toolchain technologies (with patch for julia)"
-  depends=("llvm-libs-julia=$pkgver-$pkgrel" 'perl')
+  depends=("llvm-libs-julia=$pkgver-$pkgrel" perl)
   optdepends=('python-setuptools: for using lit (LLVM Integrated Tester)')
-  conflicts=("llvm")
+  conflicts=(llvm)
   provides=("llvm=$pkgver-$pkgrel")
 
-  cd "$srcdir/llvm-$pkgver.src/build"
+  cd llvm-$pkgver.src/build
 
   DESTDIR="$pkgdir" ninja install
 
@@ -164,7 +157,7 @@ package_llvm-julia() {
 
 package_llvm-libs-julia() {
   pkgdesc="LLVM runtime libraries (with patch for julia)"
-  depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'ncurses' 'libxml2')
+  depends=(gcc-libs zlib libffi libedit ncurses libxml2)
   conflicts=("llvm-libs")
   provides=("llvm-libs=$pkgver-$pkgrel")
 
@@ -184,8 +177,10 @@ package_llvm-libs-julia() {
 }
 
 package_llvm-ocaml-julia() {
+  _ocaml_ver=$(ocamlc --version)
+
   pkgdesc="OCaml bindings for LLVM (with patch for julia)"
-  depends=("llvm-julia=$pkgver-$pkgrel" "ocaml=$_ocaml_ver" 'ocaml-ctypes')
+  depends=("llvm-julia=$pkgver-$pkgrel" "ocaml=$_ocaml_ver" ocaml-ctypes)
   conflicts=("llvm-ocaml")
   provides=("llvm-ocaml=$pkgver-$pkgrel")
 
@@ -194,5 +189,5 @@ package_llvm-ocaml-julia() {
   cp -a "$srcdir/ocaml.doc" "$pkgdir/usr/share/doc/llvm-ocaml/html"
 
   install -Dm644 "$srcdir/llvm-$pkgver.src/LICENSE.TXT" \
-    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+          "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
