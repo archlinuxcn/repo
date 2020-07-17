@@ -3,14 +3,14 @@
 pkgname=naiveproxy-git
 _pkgname=naiveproxy
 pkgdesc="A Proxy using Chrome's network stack to camouflage traffic with strong censorship resistence and low detectablility."
-pkgver=83.0.4103.61.r63.369269a12
+pkgver=84.0.4147.89.r53.3ea38ad05
 pkgrel=1
 arch=('x86_64')
 url='https://github.com/klzgrad/naiveproxy'
 license=('BSD')
-depends=('nss' 'glib2')
+depends=('nss') 
 source=('git+https://github.com/klzgrad/naiveproxy.git')
-makedepends=('clang' 'git' 'gn' 'gtk3' 'libgnome-keyring' 'lld' 'llvm' 'ninja' 'python2')
+makedepends=('clang' 'fuse' 'git' 'gn' 'lld' 'llvm' 'ninja' 'python2')
 backup=(etc/naiveproxy/config.json)
 sha512sums=('SKIP')
 provides=('naiveproxy')
@@ -38,11 +38,22 @@ build(){
 
     fieldtrial_testing_like_official_build=true
 
+    enable_nacl=false
+    enable_print_preview = false
+    use_alsa=false
     use_cups=false
     use_dbus=false
     use_gio=false
     use_platform_icu_alternatives=true
     use_gtk=false
+    use_gnome_keyring=false
+    use_system_libdrm=false
+    use_libpci=false
+    use_pangocairo=false
+    use_aura=false
+    use_glib=false
+    use_pulseaudio=false
+    use_udev=false
 
     disable_file_support=true
     enable_websockets=false
@@ -51,7 +62,9 @@ build(){
     enable_mdns=false
     enable_reporting=false
     include_transport_security_state_preload_list=false
+    rtc_use_pipewire=false
     
+    use_xkbcommon=false    
     use_ozone=true
     ozone_auto_platforms=false
     ozone_platform="headless"
@@ -69,8 +82,6 @@ build(){
   export DEPOT_TOOLS_WIN_TOOLCHAIN=0
   gn gen "$out" --args="$flags" --script-executable=/usr/bin/python2
 
-  cp -v /usr/lib/gcc/$(gcc -dumpmachine)/$(gcc -dumpversion)/crtbeginS.o "$out"
-  cp -v /usr/lib/gcc/$(gcc -dumpmachine)/$(gcc -dumpversion)/crtendS.o "$out"
   ninja -C "$out" naive
 }
 
