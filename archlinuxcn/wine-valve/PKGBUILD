@@ -7,7 +7,7 @@
 # Contributor: heavysink <winstonwu91 at gmail>
 pkgname=wine-valve
 pkgver=5.12
-pkgrel=1
+pkgrel=2
 pkgdesc='A compatibility layer for running Windows programs (Valve version)'
 arch=('i686' 'x86_64')
 url='https://github.com/ValveSoftware/wine.git'
@@ -29,6 +29,7 @@ _depends=(
     'libpcap'               'lib32-libpcap'
     'desktop-file-utils'
     'libgphoto2'
+    'faudio'                'lib32-faudio'
     'vkd3d-valve'
 )
 makedepends=('autoconf' 'ncurses' 'bison' 'perl' 'fontforge' 'flex'
