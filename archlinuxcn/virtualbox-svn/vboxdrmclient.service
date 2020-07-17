@@ -1,0 +1,7 @@
+[Unit]
+Description=VirtualBox Guest VMSVGA resize client
+ConditionVirtualization=oracle
+ConditionPathExistsGlob=/dev/dri/renderD*
+
+[Service]
+ExecStart=/usr/bin/VBoxDRMClient

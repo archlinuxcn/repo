@@ -67,6 +67,7 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         'LocalConfig.kmk'
         'vboxservice.service'
         'vboxservice-nox.service'
+        'vboxdrmclient.service'
         'vboxweb.service'
         'vboxreload'
         '001-disable-update.patch'
@@ -77,33 +78,8 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         '013-Makefile.patch'
         '016-VBoxServiceAutoMount-Change-Linux-mount-code-to-use-.patch'
         '017-fix-narrowing-conversion.patch'
-        '018-work-around-black-screen.patch'
-        '019-qt-5-15.patch'
+        '018-xclient.patch'
         '020-gsoap.patch')
-sha256sums=('SKIP'
-            'SKIP'
-            '76d98ea062fcad9e5e3fa981d046a6eb12a3e718a296544a68b66f4b65cb56db'
-            'c1ccfaa3a37d6b227cd65de944df2d68cbf178a857b6ab15c04b8fa05693f252'
-            '2101ebb58233bbfadf3aa74381f22f7e7e508559d2b46387114bc2d8e308554c'
-            'da4c49f6ca94e047e196cdbcba2c321199f4760056ea66e0fbc659353e128c9e'
-            '9c5238183019f9ebc7d92a8582cad232f471eab9d3278786225abc1a1c7bf66e'
-            '033c597e0f5285d2ddb0490868e5b6f945f45c7b1b1152a02a9e6fea438b2c95'
-            '2be313b98bffde482aad93b00c419f1d5f7645fd9e6053175ffb0d925067f96a'
-            '94a808f46909a51b2d0cf2c6e0a6c9dea792034943e6413bf9649a036c921b21'
-            '01dbb921bd57a852919cc78be5b73580a564f28ebab2fe8d6c9b8301265cbfce'
-            'e6e875ef186578b53106d7f6af48e426cdaf1b4e86834f01696b8ef1c685787f'
-            '4001b5927348fe669a541e80526d4f9ea91b883805f102f7d571edbb482a9b9d'
-            '9ee947c9b5ec5b25f52d3e72340fc3a57ca6e65a604e15b669ac582a3fb0dc1b'
-            '7d2da8fe10a90f76bbfc80ad1f55df4414f118cd10e10abfb76070326abebd46'
-            '13c6ca9be0f91582445fd2a14a8c58a0625a15d9cb98cb6e8c2736d77ea976ab'
-            '053bfeee8863f3ffdf2f0e3f9f0d77dc61dd32764700a97a7635fd8611e20491'
-            '81900e13d36630488accd8c0bfd2ceb69563fb2c4f0f171caba1cca59d438024'
-            'da7e58ed37dc23c6202aab3017864579a99e78417f3421ddcc98a198198fe2c9'
-            '100c9e14e9cfb12ae65364e830153d2481cf272ceeb39d11c6b203bc6e35bf0c'
-            '5aac692909a0a0ec56b08bdece9e42cf7463abdca9da2f990d441ff463be6a99'
-            'c64a4f284a4e91a42df5b30939d9190127ea5aa25470b5d31507a8309c20e1fc'
-            '24d73181ad544233a5e9365c911940a162f7bb0ed7ffde592f91f59ec555dcce'
-            'c6892a3561a72a9b308cb33fa6647cc53e54a3bd40cb41780cad7f8e9d7df9f6')
 
 pkgver() {
   cd "VirtualBox"
@@ -348,7 +324,7 @@ package_virtualbox-guest-utils-svn() {
     pkgdesc='VirtualBox Guest userspace utilities'
     depends=('glibc' 'pam' 'libx11' 'libxcomposite'
              'libxdamage' 'libxext' 'libxfixes' 'libxmu' 'libxt' 'xorg-xrandr'
-             'VIRTUALBOX-GUEST-MODULES-SVN')
+             'xf86-video-vmware' 'VIRTUALBOX-GUEST-MODULES-SVN')
     replaces=('virtualbox-archlinux-additions' 'virtualbox-guest-additions')
     provides=('virtualbox-guest-utils')
     conflicts=('virtualbox-archlinux-additions' 'virtualbox-guest-additions' 'virtualbox-guest-utils-nox' 'virtualbox-guest-utils')
@@ -356,16 +332,16 @@ package_virtualbox-guest-utils-svn() {
     source "VirtualBox/env.sh"
     pushd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin/additions"
     install -d "$pkgdir/usr/bin"
-    install -m0755 VBoxClient VBoxControl VBoxService "$pkgdir/usr/bin"
+    install -m0755 VBoxClient VBoxControl VBoxDRMClient VBoxService "$pkgdir/usr/bin"
     install -m0755 -D "$srcdir"/VirtualBox/src/VBox/Additions/x11/Installer/98vboxadd-xclient \
         "$pkgdir"/usr/bin/VBoxClient-all
     install -m0644 -D "$srcdir"/VirtualBox/src/VBox/Additions/x11/Installer/vboxclient.desktop \
         "$pkgdir"/etc/xdg/autostart/vboxclient.desktop
-    install -d "$pkgdir/usr/lib/xorg/modules/dri"
     install -m0755 -D pam_vbox.so "$pkgdir/usr/lib/security/pam_vbox.so"
     popd
     # systemd stuff
     install -Dm0644 60-vboxguest.rules "$pkgdir/usr/lib/udev/rules.d/60-vboxguest.rules"
+    install -Dm0644 vboxdrmclient.service "$pkgdir/usr/lib/systemd/system/vboxdrmclient.service"
     install -Dm0644 vboxservice.service "$pkgdir/usr/lib/systemd/system/vboxservice.service"
     install -Dm0644 virtualbox-guest-utils.sysusers "$pkgdir/usr/lib/sysusers.d/virtualbox-guest-utils.conf"
     # licence
@@ -409,4 +385,27 @@ package_virtualbox-ext-vnc-svn() {
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-# vim:set ts=4 sw=4 et:
+md5sums=('SKIP'
+         'SKIP'
+         'c24e71d845e06f153fa263af0384fc8c'
+         '050736b0edbf942776022bfca61a5754'
+         '984412a63aa9c07ddc3cfd970381d5df'
+         '4833c8e0524fd2272b24ba0d94aef006'
+         '6e2722bfd7013c1b0174382626ac1b8d'
+         'ed1341881437455d9735875ddf455fbe'
+         '9a72e6635976513f442f418431dc6151'
+         '8ba9179c4a3516904417d773816dd992'
+         'fcf6bcef98b16849d5c9f048592739c0'
+         '6ab29654246a060561ad2de675105072'
+         'bc9efed88e0469cd7fc460d5a5cd7b4b'
+         '6a4e9581a6240b64feee765a1f19e5c3'
+         'b709cf16ffe9af2f5147fb2ef3fef529'
+         'e8a0b47e61ddcffdeed71086585a1ef3'
+         '08add9a5974c7212b783840dd6db1cc7'
+         'b71d308001ad15bfc1f0267de9be6c37'
+         '1b473941fd972a300219c211e389b5a1'
+         '481d456c8c4e2e0833dceefaed62a305'
+         '82db7666c0034c5388995bd062dc35e1'
+         '7be927b4626f8b3df77d4d2e8c8c25a0'
+         '62a5ae2264adf5de908fcfcb906c2648'
+         '57884d1997df56d1082d5f979891e8c9')
