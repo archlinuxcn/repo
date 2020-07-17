@@ -1,0 +1,15 @@
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index 7a8b6e2cb4..8f962e52c5 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -7492,6 +7492,10 @@ extern "C" void jl_init_llvm(void)
+ #if defined(_CPU_X86_) || defined(_CPU_X86_64_)
+     const char *const argv_avoidsfb[] = {"", "-x86-disable-avoid-SFB"}; // llvm bug 41629, see https://gist.github.com/vtjnash/192cab72a6cfc00256ff118238163b55
+     cl::ParseCommandLineOptions(sizeof(argv_avoidsfb)/sizeof(argv_avoidsfb[0]), argv_avoidsfb, "disable-avoidsfb\n");
++#endif
++#if defined(_CPU_ARM_)
++    const char *const argv_lsr[] = {"", "-disable-lsr"};
++    cl::ParseCommandLineOptions(sizeof(argv_lsr)/sizeof(argv_lsr[0]), argv_lsr, "disable-lsr\n");
+ #endif
+     cl::ParseEnvironmentOptions("Julia", "JULIA_LLVM_ARGS");
+ 
