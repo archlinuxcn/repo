@@ -48,7 +48,6 @@ source=('git://github.com/JuliaLang/julia'
         0001-Optimize-GC-frame-push-pop-insertion.patch
         source-translate.patch
         gdb-debug.patch
-        arm-section.patch
         disable-lsr.patch
         julia-compile-pkgs.jl
         julia-clear-precompile.sh
@@ -60,7 +59,6 @@ md5sums=('SKIP'
          '3dbb81b1dae3a9d977bd69f8354b3007'
          '6556afd401a9203295a066f9155352c3'
          'effd2c21ffb69e66b43d4b7fbe074a51'
-         '7d9b7adaff06af97ce0491b3f206e84e'
          'a3055c5192a7cba6b7c6cda60376c616'
          '0b3bfcd680da2dc47d861b04ee695f52'
          '6e7fcba300512df8ab8ab65d3e1eb847'
@@ -151,7 +149,6 @@ EOF
   # patch -Np1 < ../0001-Optimize-GC-frame-push-pop-insertion.patch
   patch -Np1 < ../source-translate.patch
   patch -Np1 < ../gdb-debug.patch
-  patch -Np1 < ../arm-section.patch
   patch -Np1 < ../disable-lsr.patch
 
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' src/Makefile ui/Makefile
