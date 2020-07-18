@@ -3,9 +3,9 @@
 @@ -1,7 +1,7 @@
  [Desktop Entry]
  Name=baidunetdisk
- Comment=百度网盘
--Exec="/opt/baidunetdisk/baidunetdisk" %U
-+Exec=/usr/bin/baidunetdisk %U
+-Exec=/opt/baidunetdisk/baidunetdisk --no-sandbox %U
++Exec=/usr/lib/baidunetdisk/baidunetdisk --no-sandbox %U
  Terminal=false
  Type=Application
  Icon=baidunetdisk
+ StartupWMClass=baidunetdisk
