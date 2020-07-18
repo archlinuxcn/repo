@@ -1,0 +1,8 @@
+#!/bin/sh
+
+post_install(){
+cat <<'DOC'
+    to start service:
+            systemctl enable --now cgproxy.service
+DOC
+}
