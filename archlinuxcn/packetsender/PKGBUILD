@@ -2,7 +2,7 @@
 # Contributor: Shane Utt <shaneutt at linux.com>
 
 pkgname=packetsender
-pkgver=6.1.25
+pkgver=6.2.3
 pkgrel=1
 pkgdesc="Network utility for sending / receiving TCP and UDP packets"
 _basename=PacketSender
@@ -12,7 +12,7 @@ license=('GPL')
 depends=('qt5-base')
 makedepends=('qt5-base')
 source=("https://github.com/dannagle/PacketSender/archive/v${pkgver}.tar.gz" "${pkgname}.desktop" "${pkgname}.png")
-sha256sums=('eb1a23aae5e51832ef20d2cecaf73f0cfa87fce445fe5cc8b8948b523484e090'
+sha256sums=('30f8087300938ebd2c09abe805b5397322996585061a1e2701a1f304b2ac8ab6'
             '8a9c06f1ce7a0d7a919fb9664d2d5b83d957c34ef2357b0fd89ce0d638380370'
             '31f00a13c2823ddfadcf5cb3be90acc547c188ae3f3b30acde148eb8fce62ba8')
 
