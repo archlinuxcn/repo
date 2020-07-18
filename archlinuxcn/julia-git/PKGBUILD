@@ -271,8 +271,13 @@ package-julia-in() {
     done < <(_source_files "$binary")
   done
   (
+    # Files that are not compiled directly aren't being copied by the code above.
+    # This include all headers as well as come cpp files
+    # (e.g. `cgutils.cpp`, `processor_*.cpp` etc)
+    # that are included from other files. Copy these directly for now.
     cd "${pkgdir}/usr/include/julia"
     mkdir -p "${pkgdir}/${dbgsrcdir}/julia/src/"
+    cp src/*.{c,cpp} "${pkgdir}/${dbgsrcdir}/julia/src/"
     for f in *; do
       ln -sf "/usr/include/julia/$f" "${pkgdir}/${dbgsrcdir}/julia/src/$f"
     done
