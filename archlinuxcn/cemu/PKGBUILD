@@ -1,7 +1,7 @@
 # Contributor: chrisl echo archlinux@c2h0r1i2s4t5o6p7h8e9r-l3u4n1a.com|sed 's/[0-9]//g'
 
 pkgname=cemu
-pkgver=1.19.2
+pkgver=1.20.0
 pkgrel=1
 pkgdesc="Wii U emulator (via wine). Includes the Cemuhook plugin"
 arch=(x86_64)
@@ -21,13 +21,12 @@ source=(
 noextract=("cemuhook_${_cemuhookver}.zip")
 install=${pkgname}.install
 
-# If the cemuhook md5 is wrong, is because the cemuhook team every once in a while
-# updates the cemuhook zip file, but without giving it a new name. And that new file has, of course, a different md5.
+# Sometimes, they update the zip file without changing its name, which causes the md5sum to fail.
 # If you notice this, please mark this package as out-of-date in the aur website and I'll fix it.
 md5sums=('cb1dbf192ad3237a087260aa16758e95'
          '54d70005a8975812ab54fcfef53f7bde'
-         'cf317027a66681f96edef084edd197cc'
-         'e29ba3f023391735e951328c0bf31867'
+         '8699f37c14fbd0817512b63297dbeab2'
+         '1f611bddc4f5a112a30c60f204df5dd5'
          'f5f0de02b9df62d5b6018c7a82e6d43b'
          '336a0bc0e44eede4ddf613a0eebf3bb9')
 
