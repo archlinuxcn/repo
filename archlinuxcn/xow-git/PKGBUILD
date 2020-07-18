@@ -1,14 +1,13 @@
 pkgname=xow-git
 _pkgname=xow
 pkgver=r133.189c806
-pkgrel=1
+pkgrel=2
 pkgdesc="Linux driver for the Xbox One wireless dongle"
 arch=(x86_64)
 url=https://github.com/medusalix/xow
 license=('GPL2')
 depends=(libusb)
 makedepends=('git' 'curl' 'cabextract')
-optdepends=('xpad-dkms: for input mapping')
 install=xow.install
 source=('git+https://github.com/medusalix/xow')
 md5sums=('SKIP')
