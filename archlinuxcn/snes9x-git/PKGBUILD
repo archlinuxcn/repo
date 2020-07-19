@@ -10,7 +10,7 @@ url="http://www.snes9x.com/"
 license=('LGPL')
 depends=('minizip')
 makedepends=('git' 'portaudio' 'glslang' 'intltool' 'nasm' 'mesa' 'libpulse'  'libpng' 'sdl2' 'gtk3' 'libxv'
-             'adwaita-icon-theme' 'autogen' 'meson' 'minizip')
+             'adwaita-icon-theme' 'autogen' 'meson' 'minizip' 'gtkmm3')
 source=("$pkgname"::'git://github.com/snes9xgit/snes9x.git')
 sha1sums=('SKIP')
 
@@ -63,7 +63,7 @@ package_snes9x-gtk-git() {
 
   pkgdesc="A portable Emulator for the Super Nintendo Entertainment System - GTK version"
   license=('custom' 'LGPL')
-  depends=('sdl2' 'glslang' 'portaudio' 'libpulse' 'gtk3' 'libxv' 'adwaita-icon-theme' 'minizip' 'libgl')
+  depends=('sdl2' 'glslang' 'portaudio' 'libpulse' 'gtk3' 'libxv' 'adwaita-icon-theme' 'minizip' 'libgl' 'gtkmm3')
   conflicts=('snes9x-gtk')
   provides=('snes9x-gtk')
 
