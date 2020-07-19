@@ -1,5 +1,17 @@
+From 3de45c10a579ebd962b2e81ebb0e1761ffc3aa69 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 19 Jul 2020 09:40:32 -0400
+Subject: [PATCH] Fix source file paths
+
+---
+ base/sysimg.jl          |  7 +++++++
+ base/sysinfo.jl         |  2 +-
+ etc/write_base_cache.jl |  6 +++++-
+ src/ast.c               | 13 +++++++++++++
+ 4 files changed, 26 insertions(+), 2 deletions(-)
+
 diff --git a/base/sysimg.jl b/base/sysimg.jl
-index 3b1ad52621..8a8fbcc278 100644
+index 0d0b59c4db..f251d86294 100644
 --- a/base/sysimg.jl
 +++ b/base/sysimg.jl
 @@ -76,6 +76,13 @@ let
@@ -17,7 +29,7 @@ index 3b1ad52621..8a8fbcc278 100644
      # Clear global state
      empty!(Core.ARGS)
 diff --git a/base/sysinfo.jl b/base/sysinfo.jl
-index c88dc55278..d4c31f4838 100644
+index 4a16d4b17b..6a338dfdde 100644
 --- a/base/sysinfo.jl
 +++ b/base/sysinfo.jl
 @@ -51,7 +51,7 @@ A string containing the full path to the directory containing the `stdlib` packa
@@ -29,26 +41,6 @@ index c88dc55278..d4c31f4838 100644
  
  # helper to avoid triggering precompile warnings
  
-diff --git a/contrib/generate_precompile.jl b/contrib/generate_precompile.jl
-index 001b7972d9..d3df7b595d 100644
---- a/contrib/generate_precompile.jl
-+++ b/contrib/generate_precompile.jl
-@@ -209,6 +209,15 @@ function generate_precompile_statements()
- end
- 
- generate_precompile_statements()
-+@eval Sys begin
-+    BINDIR = ""
-+    STDLIB = ""
-+end
-+@eval Base begin
-+    PROGRAM_FILE = ""
-+end
-+empty!(Base.ARGS)
-+empty!(Core.ARGS)
- 
- end # @eval
- end
 diff --git a/etc/write_base_cache.jl b/etc/write_base_cache.jl
 index a81908b96a..4c463db143 100644
 --- a/etc/write_base_cache.jl
@@ -67,7 +59,7 @@ index a81908b96a..4c463db143 100644
          write(io, filename)
          write(io, UInt64(sizeof(src)))
 diff --git a/src/ast.c b/src/ast.c
-index 7add2573a6..a38d22fb2c 100644
+index 17977f6f0e..6176e999a9 100644
 --- a/src/ast.c
 +++ b/src/ast.c
 @@ -786,6 +786,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v)
@@ -97,3 +89,6 @@ index 7add2573a6..a38d22fb2c 100644
      value_t fl_filename = cvalue_static_cstrn(fl_ctx, jl_string_data(filename),
                                                jl_string_len(filename));
      fl_gc_handle(fl_ctx, &fl_filename);
+-- 
+2.27.0
+
