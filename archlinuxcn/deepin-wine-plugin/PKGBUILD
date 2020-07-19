@@ -1,9 +1,11 @@
 # Maintainer: wszqkzqk <wszqkzqk@gmail.com>
 # Maintainer: Skywol <skywol@qq.com>
+# Maintainer: luosoy <249799588@qq.com>
+
 pkgname=deepin-wine-plugin
-_pkgver=1.0deepin2
-pkgver=1.0.2
-pkgrel=2
+_pkgver=1.0deepin4
+pkgver=1.0.4
+pkgrel=4
 epoch=
 pkgdesc="Deepin Wine plugin"
 arch=('i686' 'x86_64')
@@ -22,11 +24,11 @@ options=('!emptydirs')
 install=
 changelog=
 [[ "$CARCH" = "i686" ]] && _archext=i386 || _archext=amd64
-source_i686=("https://mirrors.ustc.edu.cn/deepin/pool/non-free/d/${pkgname}/${pkgname}_${_pkgver}_i386.deb")
-source_x86_64=("https://mirrors.ustc.edu.cn/deepin/pool/non-free/d/${pkgname}/${pkgname}_${_pkgver}_amd64.deb")
+source_i686=("https://community-packages.deepin.com/deepin/pool/non-free/d/${pkgname}/${pkgname}_${_pkgver}_i386.deb")
+source_x86_64=("https://community-packages.deepin.com/deepin/pool/non-free/d/${pkgname}/${pkgname}_${_pkgver}_amd64.deb")
 noextract=("${pkgname}_${_pkgver}_${_archext}.deb")
-md5sums_i686=('954c963c03c20e2729b8c4e73306bbae')
-md5sums_x86_64=('47b248b17f0bad43aeab5464f646e0d4')
+md5sums_i686=('89066af2323d471bd03512c28708dc8b')
+md5sums_x86_64=('8f18569625c93790b9d1b46b9e03afcd')
 validpgpkeys=()
 
 prepare() {
