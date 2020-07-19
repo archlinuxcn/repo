@@ -7,27 +7,29 @@
 # If you want to help keep it up to date, please open a Pull Request there.
 
 pkgname=libsepol
-pkgver=3.0
-pkgrel=2
+pkgver=3.1
+pkgrel=1
 pkgdesc="SELinux binary policy manipulation library"
 arch=('i686' 'x86_64' 'armv6h')
-url='http://userspace.selinuxproject.org'
+url='https://github.com/SELinuxProject/selinux'
 license=('LGPL2.1')
 groups=('selinux')
-makedepends=('clang' 'flex')
+makedepends=('flex')
 depends=('glibc')
 options=(staticlibs)
 conflicts=("selinux-usr-${pkgname}")
 provides=("selinux-usr-${pkgname}=${pkgver}-${pkgrel}")
-source=("https://github.com/SELinuxProject/selinux/releases/download/20191204/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('5b7ae1881909f1048b06f7a0c364c5c8a86ec12e0ec76e740fe9595a6033eb79')
+source=("https://github.com/SELinuxProject/selinux/releases/download/20200710/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('ae6778d01443fdd38cd30eeee846494e19f4d407b09872580372f4aa4bf8a3cc')
 
 build() {
   cd "${pkgname}-${pkgver}"
-  make CC=clang
+
+  export CFLAGS="${CFLAGS} -fno-semantic-interposition"
+  make
 }
 
 package() {
   cd "${pkgname}-${pkgver}"
-  make CC=clang DESTDIR="${pkgdir}" SHLIBDIR=/usr/lib install
+  make DESTDIR="${pkgdir}" SHLIBDIR=/usr/lib install
 }
