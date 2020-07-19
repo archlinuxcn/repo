@@ -38,6 +38,12 @@ provides=('deadbeef')
 source=('git+https://github.com/DeaDBeeF-Player/deadbeef')
 md5sums=('SKIP')
 
+prepare() {
+  cd "$srcdir/deadbeef"
+  # skip osx/deps submodule
+  git -c submodule."osx/deps".update=none submodule update --init --recursive
+}
+
 build() {
   cd "$srcdir/deadbeef"
   ./autogen.sh
