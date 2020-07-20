@@ -3,7 +3,7 @@
 
 pkgname=(llvm-julia llvm-libs-julia llvm-ocaml-julia)
 pkgver=10.0.0
-pkgrel=4
+pkgrel=6
 arch=(i686 x86_64 armv7h aarch64)
 url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
@@ -83,6 +83,7 @@ EOF
   apply_julia_patch llvm-10.0-PPC-LI-Elimination
   apply_julia_patch 0001-Support-PC-relative-relocation-on-AArch64-and-PPC64-
   apply_julia_patch clear-gep
+  apply_julia_patch stack-color
 
   # Arch patches
   # msg "Applying Arch patches"
