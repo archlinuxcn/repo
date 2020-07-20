@@ -1,6 +1,6 @@
 # Maintainer Xuanwo <xuanwo@archlinucn.org>
 pkgname=clickup
-pkgver=2.0.11
+pkgver=2.0.12
 pkgrel=1
 pkgdesc="Desktop app for clickup.com"
 arch=('x86_64')
@@ -14,7 +14,6 @@ options=('!strip')
 source=("https://attachments3.clickup.com/desktop/$_downloadname")
 
 prepare() {
-  cd "$srcdir/$_dirname"
   rm -rf squashfs-root
   chmod +x $_filename
   ./$_filename --appimage-extract
@@ -22,11 +21,10 @@ prepare() {
 }
 
 package() {
-  cd "$srcdir/$_dirname"
   install -Dm755 $_filename "$pkgdir/opt/$_filename"
   install -Dm644 squashfs-root/clickup-desktop.desktop "$pkgdir/usr/share/applications/clickup.desktop"
   install -dm755 "$pkgdir/usr/share/icons/hicolor"
   cp -av squashfs-root/usr/share/icons/hicolor/* "$pkgdir/usr/share/icons/hicolor/"
   chmod -R a+rX "$pkgdir/usr/share/icons/hicolor"
 }
-sha256sums=('5d1f5c5c510b190da08c81736f3678372f3e8299f21ef3dd4ff608cae4585888')
+sha256sums=('a8dc26c26b6faf239c899d5633a6ab07116356505433de6b10dd9151da0c7783')
