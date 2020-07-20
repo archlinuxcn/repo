@@ -3,23 +3,23 @@
 
 # 方法来自https://github.com/cytle/wechat_web_devtools重新打包
 
-_wechat_devtools_ver="1.02.1907300"
-_wechat_devtools_url="https://dldir1.qq.com/WechatWebDev/1.2.0/201907300/wechat_devtools_1.02.1907300_x64.exe"
+_wechat_devtools_ver="1.02.2004020"
+_wechat_devtools_url="https://dldir1.qq.com/WechatWebDev/nightly/p-ae42ee2cde4d42ee80ac60b35f183a99/wechat_devtools_1.02.2004020_x64.ex"
 
 _wechat_devtools_exe="wechat_devtools_${_wechat_devtools_ver}_x64.exe"
-_nwjs_ver="0.38.0"
+_nwjs_ver="0.39.3"
 _install_dir="/opt/wechat-devtools"
-_node_version="v11.14.0"
+_node_version="v12.6.0"
 
 pkgname=wechat-devtools
 pkgver=${_wechat_devtools_ver}
-pkgrel=4
+pkgrel=1
 epoch=2
 pkgdesc="WeChat Devtools Linux version."
 arch=("x86_64")
 url="https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/devtools.html"
 license=('unknown')
-depends=('wine' 'gconf')
+depends=('wine')
 makedepends=('p7zip' 'nvm' 'python2')
 source=("nwjs.tar.gz::https://npm.taobao.org/mirrors/nwjs/v${_nwjs_ver}/nwjs-sdk-v${_nwjs_ver}-linux-x64.tar.gz"
         "${_wechat_devtools_exe}::${_wechat_devtools_url}"
