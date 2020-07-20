@@ -1,43 +1,49 @@
-# Maintainer: Honghao Li <im@rasphino.cn>
+# Maintainer: Frederik Schwan <freswa at archlinux dot org>
+# Contributor: Honghao Li <im@rasphino.cn>
 
 pkgname=sublime-merge
-pkgver=1119
+pkgver=2020
 pkgrel=1
-pkgdesc="Meet a new Git Client, from the makers of Sublime Text"
+pkgdesc='Meet a new Git Client, from the makers of Sublime Text'
 arch=('x86_64')
-url="https://www.sublimemerge.com"
+url='https://www.sublimemerge.com'
 license=('custom')
 depends=('gtk3')
-optdepends=()
-conflicts=('sublime-merge-dev')
-#install=${pkgname}.install
-
-source=('smerge'
-        https://download.sublimetext.com/sublime_merge_build_${pkgver}_x64.tar.xz
-        https://download.sublimetext.com/sublime_merge_build_${pkgver}_x64.tar.xz.asc)
-
-sha256sums=('ddd804f64fa218d053f00ca82b5bb2625f9812d3530c2f2f88049dac9bb41a7d'
-            '64b06320c0300923ade0901493cfd78e7f28598324f99d4c3609b3c85c5f1cea'
-            'SKIP')
-
+source=("https://download.sublimetext.com/sublime_merge_build_${pkgver}_x64.tar.xz"
+        "https://download.sublimetext.com/sublime_merge_build_${pkgver}_x64.tar.xz.asc"
+        LICENSE)
+b2sums=('e80ddf340afc5ccd199cc9e9b17b71003fa9af96426efa4d9348dd9679a6e035281fe1e8b9c74712e12d937aab30b84458c1cdac06a0e6bf86acb20de8d82969'
+        'SKIP'
+        'e17f9223fc423b385d20f78fd54bf8bdc0722134cb89e1a12f9105a4d130e9ae12f81997904b52ce6d6db45810d23db53c8f90c8a9bc1ac0ae4a8532d1097396')
 validpgpkeys=('1EDDE2CDFC025D17F6DA9EC0ADAE6AD28A8F901A')
 
 package() {
-  cd "${srcdir}"
+  cd sublime_merge
+  install -dm755 "${pkgdir}"/usr/bin
 
-  install -dm755 "${pkgdir}/opt"
-  cp --preserve=mode -r "sublime_merge" "${pkgdir}/opt/sublime_merge"
+  # Install binaries
+  install -Dm755 -t "${pkgdir}"/opt/sublime_merge/ \
+    crash_reporter \
+    git-credential-sublime \
+    ssh-askpass-sublime \
+    sublime_merge
 
-  for res in 128x128 16x16 256x256 32x32 48x48; do
-    install -dm755 "${pkgdir}/usr/share/icons/hicolor/${res}/apps"
-    ln -s "/opt/sublime_merge/Icon/${res}/sublime-merge.png" "${pkgdir}/usr/share/icons/hicolor/${res}/apps/sublime-merge.png"
+  # link executable to /usr/bin/
+  ln -s /opt/sublime_merge/sublime_merge "${pkgdir}"/usr/bin/smerge
+
+  # copy misc files
+  cp --preserve=mode -r -t "${pkgdir}"/opt/sublime_merge/ \
+    changelog.txt \
+    Packages \
+    Icon
+
+  # link app icons to system folder
+  for res in 256x256 128x128 48x48 32x32 16x16; do
+    install -dm755 "${pkgdir}"/usr/share/icons/hicolor/${res}/apps
+    ln -s /opt/sublime_merge/Icon/${res}/sublime-merge.png "${pkgdir}"/usr/share/icons/hicolor/${res}/apps/sublime-merge.png
   done
 
-  install -dm755 "${pkgdir}/usr/share/applications"
-  mv "${pkgdir}/opt/sublime_merge/sublime_merge.desktop" "${pkgdir}/usr/share/applications/sublime_merge.desktop"
-
-  install -dm755 "${pkgdir}/usr/bin"
-  install -Dm755 "smerge" "${pkgdir}/usr/bin/smerge"
-
+  # install desktop file and license
+  install -Dm644 -t "${pkgdir}"/usr/share/applications/ "${srcdir}"/sublime_merge/sublime_merge.desktop
+  install -Dm644 -t "${pkgdir}"/usr/share/licenses/${pkgname}/ "${srcdir}"/LICENSE
 }
-
