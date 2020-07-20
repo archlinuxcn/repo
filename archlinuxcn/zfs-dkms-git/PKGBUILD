@@ -4,7 +4,7 @@
 # All my PKGBUILDs are managed at https://github.com/eli-schwartz/pkgbuilds
 
 pkgname=zfs-dkms-git
-pkgver=0.8.0.r858.g1c08fa8b5b
+pkgver=0.8.0.r932.g317dbea173
 pkgrel=1
 epoch=1
 pkgdesc="Kernel modules for the Zettabyte File System."
@@ -50,7 +50,8 @@ build() {
 
     ./scripts/dkms.mkconf -n zfs -v ${pkgver} -f dkms.conf
     # update metadata
-    ./scripts/make_gitrev.sh
+    printf '#define\tZFS_META_GITREV "%s"\n' "$(git describe --always --long --dirty)" \
+        > include/zfs_gitrev.h
     _meta_release=${pkgver#*.r}
     sed -i -e "s/Release:[[:print:]]*/Release:      ${_meta_release/./_}/" META
 }
