@@ -1,0 +1,35 @@
+# Maintainer: megumifox <i@megumifox.com>
+
+pkgname=megacmd
+pkgver=1.3.0
+pkgrel=1
+pkgdesc="MEGA Command Line Interactive and Scriptable Application"
+url="https://github.com/meganz/MEGAcmd"
+arch=('x86_64')
+license=('custom')
+depends=('crypto++' 'zlib' 'sqlite' 'openssl' 'curl' 'c-ares' 'freeimage' 'libsodium'
+         'readline' 'libmediainfo' 'pcre' 'ffmpeg' 'libuv')
+_sdk="3.7.1"
+source=("MEGAcmd-${pkgver}.tar.gz::https://github.com/meganz/MEGAcmd/archive/${pkgver}_Linux.tar.gz"
+        "sdk-v${_sdk}.tar.gz::https://github.com/meganz/sdk/archive/v${_sdk}.tar.gz")
+
+sha512sums=('2fd3a3e76d3466d7b20c97a868f9af9d1189fa220e1f632bf37bd131a61f4db16f52fd8c7ff73875af98429d8e26106a16955350a8e92aeecd25c6d6c95de54c'
+            'f6ce9e286e69c1560d1f7a7b13b28e8e2ba77802e777a29bef132a09f32f5fc379e5c7f64845424081d682723c53760593442e0a71d01a497b83723c875b2d9a')
+
+prepare() {
+  cd "MEGAcmd-${pkgver}_Linux"
+  rm -r sdk
+  ln -sf "../sdk-${_sdk}" sdk
+}
+build() {
+  cd "MEGAcmd-${pkgver}_Linux"
+  sh autogen.sh
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "MEGAcmd-${pkgver}_Linux"
+  make DESTDIR="$pkgdir" install
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
