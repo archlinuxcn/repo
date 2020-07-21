@@ -1,8 +1,10 @@
 # Maintainer: Dct Mei <dctxmei@gmail.com>
+# Co-Maintainer: xosdy <xosdy.t@gmail.com>
+# Co-Maintainer: ohmyarch <ohmyarchlinux@protonmail.com>
 
 pkgname=geph-client
 pkgver=0.22.2
-pkgrel=2
+pkgrel=3
 pkgdesc='A command-line Geph client'
 arch=('x86_64')
 url="https://github.com/geph-official/geph2"
