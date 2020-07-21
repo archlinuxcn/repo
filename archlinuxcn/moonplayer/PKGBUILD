@@ -3,7 +3,7 @@
 # contributer: rob.til.freedman@googlemail.com
 
 pkgname=moonplayer
-pkgver=3.3
+pkgver=3.3.2
 pkgrel=1
 pkgdesc="A qt font-end for mplayer with the abilities of watching and downloading videos from chinese network"
 arch=('i686' 'x86_64')
@@ -14,7 +14,7 @@ makedepends=('cmake' 'git' 'qt5-tools')
 source=(
 	$pkgname-$pkgver.tar.gz::https://github.com/coslyk/moonplayer/archive/v$pkgver.tar.gz
 	)
-sha1sums=('27278249ba1a3e29fe4eb926374b3a9d5ae361e3')
+sha1sums=('89916679310a21bfbc85e847d4dd83a94871c030')
 
 build() {
 	cd $srcdir/$pkgname-$pkgver
