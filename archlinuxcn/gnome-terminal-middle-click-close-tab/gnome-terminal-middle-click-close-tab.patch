@@ -1,0 +1,38 @@
+diff --git a/src/terminal-window.c b/src/terminal-window.c
+index 7573ae01..3409d584 100644
+--- a/src/terminal-window.c
++++ b/src/terminal-window.c
+@@ -2686,9 +2686,12 @@ notebook_button_press_cb (GtkWidget *widget,
+ {
+   GtkNotebook *notebook = GTK_NOTEBOOK (widget);
+   int tab_clicked;
++  GtkWidget *page;
++  TerminalScreen *screen;
+ 
+   if (event->type != GDK_BUTTON_PRESS ||
+-      event->button != GDK_BUTTON_SECONDARY ||
++      (event->button != GDK_BUTTON_SECONDARY &&
++       event->button != GDK_BUTTON_MIDDLE) ||
+       (event->state & gtk_accelerator_get_default_mod_mask ()) != 0)
+     return FALSE;
+ 
+@@ -2696,10 +2699,15 @@ notebook_button_press_cb (GtkWidget *widget,
+   if (tab_clicked < 0)
+     return FALSE;
+ 
+-  /* switch to the page the mouse is over */
+-  gtk_notebook_set_current_page (notebook, tab_clicked);
+-
+-  notebook_show_context_menu (window, (GdkEvent*)event, event->button, event->time);
++  if (event->button == GDK_BUTTON_MIDDLE) {
++    page = gtk_notebook_get_nth_page (notebook, tab_clicked);
++    screen = terminal_screen_container_get_screen (TERMINAL_SCREEN_CONTAINER (page));
++    g_signal_emit_by_name (notebook, "screen-close-request", screen);
++  } else if (event->button == GDK_BUTTON_SECONDARY) {
++    /* switch to the page the mouse is over */
++    gtk_notebook_set_current_page (notebook, tab_clicked);
++    notebook_show_context_menu (window, (GdkEvent*)event, event->button, event->time);
++  }
+   return TRUE;
+ }
+ 
