@@ -9,7 +9,7 @@ arch=('i686' 'x86_64')
 license=('custom')
 depends=('libarchive' 'zstd' 'python' 'winetricks'
         'wine' 'lib32-libldap' 'wine_gecko' 'lib32-libpulse')
-
+optdepends=('wine-for-wechat: get rid of those border shades')
 source=("${pkgname}.tar.zst"
         "${pkgname}.desktop"
         "${pkgname}-cfg.desktop"
