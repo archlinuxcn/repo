@@ -6,7 +6,7 @@
 
 pkgbase=wps-office-cn
 pkgname=('wps-office-cn' 'wps-office-mime-cn' 'wps-office-mui-zh-cn')
-pkgver=11.1.0.9604
+pkgver=11.1.0.9615
 pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) CN version - an office productivity suite"
 arch=('x86_64' 'aarch64')
@@ -15,8 +15,8 @@ url="https://linux.wps.cn"
 options=('!emptydirs')
 source_x86_64=("https://wdl1.cache.wps.cn/wps/download/ep/Linux2019/${pkgver##*.}/wps-office_${pkgver}_amd64.deb")
 source_aarch64=("https://wdl1.cache.wps.cn/wps/download/ep/Linux2019/${pkgver##*.}/wps-office_${pkgver}_arm64.deb")
-sha1sums_x86_64=('a9d5d60c40567b6dc62bfcbcca6ed3116daf5e93')
-sha1sums_aarch64=('ba2320ce58b390300c5bcb2652913081d0ac2af0')
+sha1sums_x86_64=('244473ac738e88c3392f280cddea5bc211335431')
+sha1sums_aarch64=('b7c8a7dc0fd43dd157560ee79615d50ca577e06a')
 
 prepare() {
     bsdtar -xpf data.tar.xz
