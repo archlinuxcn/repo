@@ -15,7 +15,7 @@ sha256sums=('SKIP')
 pkgver() {
   cd devtools-arm
 
-  echo "0.0.0.$(git rev-list --count master).$(git rev-parse --short master)"
+  echo "0.0.0.$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 build() {
