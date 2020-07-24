@@ -1,0 +1,34 @@
+pkgname=devtools-arm-git
+pkgver=0.0.0.3.15bb1b7
+pkgrel=1
+pkgdesc='Tools for Arch Linux ARM package maintainers'
+arch=('any')
+url='http://github.com/yuyichao/devtools-arm'
+license=('GPL')
+depends=('devtools')
+makedepends=('cmake' 'git')
+provides=('devtools-arm')
+conflicts=('devtools-arm')
+source=('git://github.com/yuyichao/devtools-arm')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd devtools-arm
+
+  echo "0.0.0.$(git rev-list --count master).$(git rev-parse --short master)"
+}
+
+build() {
+  cd devtools-arm
+  mkdir -p build
+  cd build
+
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package() {
+  cd devtools-arm/build
+
+  make DESTDIR="${pkgdir}" install
+}
