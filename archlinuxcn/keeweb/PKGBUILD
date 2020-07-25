@@ -2,12 +2,15 @@
 
 pkgname=keeweb
 pkgver=1.15.5
-pkgrel=1
+pkgrel=2
 pkgdesc="Desktop password manager compatible with KeePass databases"
 arch=('any')
 url="https://keeweb.info"
 license=('MIT')
-depends=('electron')
+depends=(
+	'electron'
+	'org.freedesktop.secrets'
+)
 makedepends=(
 	'asar'
 	'git'
