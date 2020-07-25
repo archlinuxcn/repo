@@ -1,0 +1,144 @@
+From 7044d3306aa96c02e070fe23e1f500b953e8ba6f Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 25 Jul 2020 15:44:41 -0400
+Subject: [PATCH 2/2] Optimize Int8 and UInt8 boxing.
+
+---
+ src/cgutils.cpp | 24 ++++++++++++++++++++++--
+ src/codegen.cpp | 14 ++++++++++++--
+ src/datatype.c  | 12 ++++++------
+ 3 files changed, 40 insertions(+), 10 deletions(-)
+
+diff --git a/src/cgutils.cpp b/src/cgutils.cpp
+index c743336650..734f2880ab 100644
+--- a/src/cgutils.cpp
++++ b/src/cgutils.cpp
+@@ -294,6 +294,15 @@ static Value *literal_pointer_val_slot(jl_codectx_t &ctx, jl_value_t *p)
+         gv->setUnnamedAddr(GlobalValue::UnnamedAddr::Global);
+         return gv;
+     }
++    if (jl_is_int8(p) || jl_is_uint8(p)) {
++        auto jvar = jl_is_int8(p) ? jlboxed_int8_cache : jlboxed_uint8_cache;
++        Constant *gv = prepare_global_in(jl_Module, jvar);
++        uint8_t value;
++        memcpy(&value, p, 1);
++        Constant *idx[] = {ConstantInt::get(T_int32, 0), ConstantInt::get(T_int32, value)};
++        return ConstantExpr::getInBoundsGetElementPtr(jvar->_type(jl_Module->getContext()),
++                                                      gv, idx);
++    }
+     if (JuliaVariable *gv = julia_const_gv(p)) {
+         // if this is a known special object, use the existing GlobalValue
+         return prepare_global_in(jl_Module, gv);
+@@ -2193,6 +2202,17 @@ static Value *as_value(jl_codectx_t &ctx, Type *to, const jl_cgval_t &v)
+     return emit_unbox(ctx, to, v, v.typ);
+ }
+ 
++static Value *load_i8box(jl_codectx_t &ctx, Value *v, jl_datatype_t *ty)
++{
++    auto jvar = ty == jl_int8_type ? jlboxed_int8_cache : jlboxed_uint8_cache;
++    Constant *gv = prepare_global_in(jl_Module, jvar);
++    Value *idx[] = {ConstantInt::get(T_int32, 0), v};
++    auto slot = ctx.builder.CreateInBoundsGEP(gv, idx);
++    return tbaa_decorate(tbaa_const, maybe_mark_load_dereferenceable(
++            ctx.builder.CreateAlignedLoad(T_pjlvalue, slot, sizeof(void*)), false,
++            (jl_value_t*)ty));
++}
++
+ // some types have special boxing functions with small-value caches
+ static Value *_boxed_special(jl_codectx_t &ctx, const jl_cgval_t &vinfo, Type *t)
+ {
+@@ -2216,7 +2236,7 @@ static Value *_boxed_special(jl_codectx_t &ctx, const jl_cgval_t &vinfo, Type *t
+     assert(jl_is_datatype(jb));
+     Value *box = NULL;
+     if (jb == jl_int8_type)
+-        box = call_with_attrs(ctx, box_int8_func, as_value(ctx, t, vinfo));
++        box = load_i8box(ctx, as_value(ctx, t, vinfo), jb);
+     else if (jb == jl_int16_type)
+         box = call_with_attrs(ctx, box_int16_func, as_value(ctx, t, vinfo));
+     else if (jb == jl_int32_type)
+@@ -2229,7 +2249,7 @@ static Value *_boxed_special(jl_codectx_t &ctx, const jl_cgval_t &vinfo, Type *t
+     //  box = ctx.builder.CreateCall(box_float64_func, as_value(ctx, t, vinfo);
+     // for Float64, fall through to generic case below, to inline alloc & init of Float64 box. cheap, I know.
+     else if (jb == jl_uint8_type)
+-        box = call_with_attrs(ctx, box_uint8_func, as_value(ctx, t, vinfo));
++        box = load_i8box(ctx, as_value(ctx, t, vinfo), jb);
+     else if (jb == jl_uint16_type)
+         box = call_with_attrs(ctx, box_uint16_func, as_value(ctx, t, vinfo));
+     else if (jb == jl_uint32_type)
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index c504920fd0..0bfa9e35aa 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -404,6 +404,18 @@ static const auto jlgetworld_global = new JuliaVariable{
+     [](LLVMContext &C) { return (Type*)T_size; },
+ };
+ 
++static const auto jlboxed_int8_cache = new JuliaVariable{
++    "jl_boxed_int8_cache",
++    true,
++    [](LLVMContext &C) { return (Type*)ArrayType::get(T_pjlvalue, 256); },
++};
++
++static const auto jlboxed_uint8_cache = new JuliaVariable{
++    "jl_boxed_uint8_cache",
++    true,
++    [](LLVMContext &C) { return (Type*)ArrayType::get(T_pjlvalue, 256); },
++};
++
+ static const auto jltls_states_func = new JuliaFunction{
+     "julia.ptls_states",
+     [](LLVMContext &C) { return FunctionType::get(PointerType::get(T_ppjlvalue, 0), false); },
+@@ -726,8 +738,6 @@ static const auto box_##ct##_func = new JuliaFunction{                        \
+             {at}, false); },                                                  \
+     attrs,                                                                    \
+ }
+-BOX_FUNC(int8, T_pjlvalue, T_int8, get_attrs_sext);
+-BOX_FUNC(uint8, T_pjlvalue, T_int8, get_attrs_zext);
+ BOX_FUNC(int16, T_prjlvalue, T_int16, get_attrs_sext);
+ BOX_FUNC(uint16, T_prjlvalue, T_int16, get_attrs_zext);
+ BOX_FUNC(int32, T_prjlvalue, T_int32, get_attrs_sext);
+diff --git a/src/datatype.c b/src/datatype.c
+index 7e78ba8a69..dc09a4bf74 100644
+--- a/src/datatype.c
++++ b/src/datatype.c
+@@ -819,15 +819,15 @@ JL_DLLEXPORT jl_value_t *jl_box_char(uint32_t x)
+     return v;
+ }
+ 
+-static jl_value_t *boxed_int8_cache[256];
++JL_DLLEXPORT jl_value_t *jl_boxed_int8_cache[256];
+ JL_DLLEXPORT jl_value_t *jl_box_int8(int8_t x)
+ {
+-    return boxed_int8_cache[(uint8_t)x];
++    return jl_boxed_int8_cache[(uint8_t)x];
+ }
+-static jl_value_t *boxed_uint8_cache[256];
++JL_DLLEXPORT jl_value_t *jl_boxed_uint8_cache[256];
+ JL_DLLEXPORT jl_value_t *jl_box_uint8(uint8_t x)
+ {
+-    return boxed_uint8_cache[x];
++    return jl_boxed_uint8_cache[x];
+ }
+ 
+ void jl_init_int32_int64_cache(void)
+@@ -845,7 +845,7 @@ void jl_init_int32_int64_cache(void)
+ #endif
+     }
+     for(i=0; i < 256; i++) {
+-        boxed_uint8_cache[i] = jl_permbox8(jl_uint8_type, i);
++        jl_boxed_uint8_cache[i] = jl_permbox8(jl_uint8_type, i);
+     }
+ }
+ 
+@@ -856,7 +856,7 @@ void jl_init_box_caches(void)
+         boxed_char_cache[i] = jl_permbox32(jl_char_type, i << 24);
+     }
+     for(i=0; i < 256; i++) {
+-        boxed_int8_cache[i] = jl_permbox8(jl_int8_type, i);
++        jl_boxed_int8_cache[i] = jl_permbox8(jl_int8_type, i);
+     }
+     for(i=0; i < NBOX_C; i++) {
+         boxed_int16_cache[i]  = jl_permbox16(jl_int16_type, i-NBOX_C/2);
+-- 
+2.27.0
+

@@ -44,6 +44,8 @@ makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
              gcc-fortran git patchelf python)
 options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
+        0001-Alloc-Opt-pass-clean-up.patch
+        0002-Optimize-Int8-and-UInt8-boxing.patch
         0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
         0001-Optimize-GC-frame-push-pop-insertion.patch
         source-translate.patch
@@ -54,6 +56,8 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
+         '79bbdbbbe7c0e395c8a4ca82bfc9c964'
+         '9a71fe0bea64757d30b7dfe9560d4d74'
          '2222d3eabfe6040a8cca466303c86d2b'
          '3dbb81b1dae3a9d977bd69f8354b3007'
          '42f2b44768927a7ed2296b15161ba21c'
@@ -145,6 +149,8 @@ EOF
 
   # patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
   # patch -Np1 < ../0001-Optimize-GC-frame-push-pop-insertion.patch
+  patch -Np1 < ../0001-Alloc-Opt-pass-clean-up.patch
+  patch -Np1 < ../0002-Optimize-Int8-and-UInt8-boxing.patch
   patch -Np1 < ../source-translate.patch
   patch -Np1 < ../gdb-debug.patch
 
