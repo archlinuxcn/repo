@@ -1,0 +1,51 @@
+--- configure.ac	2009-02-26 04:06:20.000000000 +0100
++++ configure.ac.patched	2016-01-30 11:24:14.906672000 +0100
+@@ -69,7 +69,7 @@
+    fi
+ fi
+ 
+-# Check for rsvg or ksvgtopng for creating large scale bitmaps from svg
++# Check for imagemagick for creating large scale bitmaps from svg
+ AC_ARG_ENABLE(png-creation,
+    AC_HELP_STRING([--enable-png-creation],
+                    [enable creating png images from svg [default=disabled]]),
+@@ -79,17 +79,13 @@
+ SVGCONVERT=""
+ AC_MSG_CHECKING([SVG to PNG conversion method])
+ if test "x$enable_large_bitmaps" = "xyes"; then
+-   PKG_CHECK_EXISTS([librsvg-2.0 >= 2.12.3],
++   PKG_CHECK_EXISTS([imagemagick],
+                     [enable_large_bitmaps=yes], [enable_large_bitmaps=no])
+-   if test "x$enable_large_bitmaps" = "xyes"; then
+-      svgconvert_prog="rsvg"
+-   else
+-      svgconvert_prog="ksvgtopng"
+-   fi
++   svgconvert_prog="convert"
+    AC_MSG_RESULT([$svgconvert_prog])
+    AC_PATH_PROG(SVGCONVERT, $svgconvert_prog)
+    if test -z "$SVGCONVERT"; then
+-      AC_MSG_ERROR([You need librsvg >= 2.12.3 or ksvgtopng installed to create large scale bitmaps])
++      AC_MSG_ERROR([You need imagemagick installed to create large scale bitmaps])
+    else
+       enable_large_bitmaps=yes
+    fi
+--- svg2png.sh.in	2007-02-16 21:04:29.000000000 +0100
++++ svg2png.sh.in.patched	2016-01-30 11:30:53.446678000 +0100
+@@ -9,12 +9,9 @@
+ 
+ ICONFILE=`basename ${3}`
+ ICONNAME=`echo ${ICONFILE} | sed -e "s/.svg//"`
+-if test `basename $SVGCONVERT` = "rsvg"; then
+-    OPTIONS="-w ${1} -h ${1}"
+-else
+-    OPTIONS="${1} ${1}"
+-fi
++OPTIONS="-background none"
++OUTPUT="-resize ${1}x${1}"
+ 
+-echo "${SVGCONVERT} ${OPTIONS} ${3} ${2}/${ICONNAME}.png"
+-${SVGCONVERT} ${OPTIONS} ${3} ${2}/${ICONNAME}.png
++echo "${SVGCONVERT} ${OPTIONS} ${3} ${OUTPUT} ${2}/${ICONNAME}.png"
++${SVGCONVERT} ${OPTIONS} ${3} ${OUTPUT} ${2}/${ICONNAME}.png
+ 
