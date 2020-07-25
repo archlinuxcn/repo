@@ -1,4 +1,4 @@
-From 7044d3306aa96c02e070fe23e1f500b953e8ba6f Mon Sep 17 00:00:00 2001
+From 65f53e99140d06e3a4a62296a33480ca04f524d9 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 25 Jul 2020 15:44:41 -0400
 Subject: [PATCH 2/2] Optimize Int8 and UInt8 boxing.
@@ -10,7 +10,7 @@ Subject: [PATCH 2/2] Optimize Int8 and UInt8 boxing.
  3 files changed, 40 insertions(+), 10 deletions(-)
 
 diff --git a/src/cgutils.cpp b/src/cgutils.cpp
-index c743336650..734f2880ab 100644
+index c743336650..52a423682c 100644
 --- a/src/cgutils.cpp
 +++ b/src/cgutils.cpp
 @@ -294,6 +294,15 @@ static Value *literal_pointer_val_slot(jl_codectx_t &ctx, jl_value_t *p)
@@ -37,7 +37,7 @@ index c743336650..734f2880ab 100644
 +{
 +    auto jvar = ty == jl_int8_type ? jlboxed_int8_cache : jlboxed_uint8_cache;
 +    Constant *gv = prepare_global_in(jl_Module, jvar);
-+    Value *idx[] = {ConstantInt::get(T_int32, 0), v};
++    Value *idx[] = {ConstantInt::get(T_int32, 0), ctx.builder.CreateZExt(v, T_int32)};
 +    auto slot = ctx.builder.CreateInBoundsGEP(gv, idx);
 +    return tbaa_decorate(tbaa_const, maybe_mark_load_dereferenceable(
 +            ctx.builder.CreateAlignedLoad(T_pjlvalue, slot, sizeof(void*)), false,
