@@ -1,5 +1,5 @@
 pkgname=mingw-w64-binutils
-pkgver=2.34
+pkgver=2.35
 pkgrel=1
 pkgdesc="Cross binutils for the MinGW-w64 cross-compiler"
 arch=('x86_64')
@@ -10,7 +10,7 @@ depends=('zlib')
 options=('!libtool' '!emptydirs')
 validpgpkeys=('3A24BC1E8FB409FA9F14371813FCEF89DD9E3C4F')  # Nick Clifton (Chief Binutils Maintainer) <nickc@redhat.com>
 source=("https://ftp.gnu.org/gnu/binutils/binutils-${pkgver}.tar.gz"{,.sig})
-sha256sums=('53537d334820be13eeb8acb326d01c7c81418772d626715c7ae927a7d401cab3'
+sha256sums=('a3ac62bae4f339855b5449cfa9b49df90c635adbd67ecb8a0e7f3ae86a058da6'
             'SKIP')
 
 _targets="i686-w64-mingw32 x86_64-w64-mingw32"
