@@ -1,20 +1,20 @@
 # Maintainer: Dct Mei <dctxmei@gmail.com>
 
 pkgname=ariang-allinone
-pkgver=1.1.5
-pkgrel=2
+pkgver=1.1.6
+pkgrel=1
 pkgdesc="A modern web frontend making aria2 easier to use (all-in-one version)"
 arch=('any')
 url="https://github.com/mayswind/AriaNg"
 license=('MIT')
-depends=('bash')
+depends=('xdg-utils')
 makedepends=('git' 'nvm')
-source=("$url/archive/1.1.5.tar.gz"
+source=("$url/archive/$pkgver.tar.gz"
         "$pkgname.desktop"
         "$pkgname.sh")
-sha512sums=('ca41d9012ba5fcec5efbdae2d670064e08f4a2949087b3c4b5a62c9375060834d02f13451f3371695835258b13d1380b7142e25203556b2153850b2b32c927c2'
-            '135e1c1a2316228277e7019619285be2a43d0ad93191d7273dfdb6087566727c6037e9686fa87a13426136cd721b221c8732f4ff761af04cfa12468d8bf4ec3b'
-            '2fa24e140565396feb0b502476b1de6e83fae1d77316c64167653cf460fe4e39b6159fd7c11ae1d242b5372a01527fcaef55d735fe9392569da1af8b60cdf9db')
+sha256sums=('832b951120dc6974c7104fd6ee5887f3b1f9a467b2c6fc2c0257340e9123c82c'
+            '37ddfc79173070226c053a6e4efcae5113162e152a3d472ceb2408b886311a5a'
+            'c6c617a9bc32885b8f89c8b7120b67f98f6df52e141db6cfd24ffcd89435ec6a')
 
 build() {
     cd "AriaNg-$pkgver"
