@@ -3,21 +3,21 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
-pkgver=2.1.13
+pkgver=2.2.0
 pkgrel=1
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL3')
 depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
-         'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5')
+         'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5' 'qt5-wayland')
 makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'gtk3')
 optdepends=('ttf-opensans: default Open Sans font family')
 provides=('telegram-desktop')
 conflicts=('telegram-desktop')
 source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
          "0001-use-system-font-and-use-stylename.patch")
-sha512sums=('f28ae7c8c9a9eb8094fc52784742b470235234a3df7487902152858bc7c297b2dcfe5c8b939cdb9653a356b3835609e7289f53cdf7d5fb3f009823d3dbeb1bd8'
+sha512sums=('2aeca83be7bc385bd7537d56ecf66996facedd0af588e743fedbb08c3158fc76436d6cf3b1fb5dd7c8d37b4471f739872ca54ba300aa1d0e0202e87c005703fd'
             '0a4206f3d16589ba476d85381bf7984a28b74e0623e02a82ce2d586eec337808f66261dd0f2116ee513403223ac7707734b3fa17d082b5ebf88481bc22636f6f')
 
 prepare() {
