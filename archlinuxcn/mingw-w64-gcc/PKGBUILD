@@ -1,9 +1,9 @@
 pkgname=mingw-w64-gcc
-pkgver=10.1.0
+pkgver=10.2.0
 _islver=0.21
 pkgrel=1
 pkgdesc="Cross GCC for the MinGW-w64 cross-compiler"
-arch=('x86_64')
+arch=('x86_64' 'aarch64')
 url="https://gcc.gnu.org"
 license=('GPL' 'LGPL' 'FDL' 'custom')
 groups=('mingw-w64-toolchain' 'mingw-w64')
@@ -13,8 +13,9 @@ provides=('mingw-w64-gcc-base')
 options=('!strip' 'staticlibs' '!emptydirs' '!buildflags')
 source=(https://ftp.gnu.org/gnu/gcc/gcc-$pkgver/gcc-$pkgver.tar.xz{,.sig}
        "http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2")
-validpgpkeys=(33C235A34C46AA3FFB293709A328C3A2C3C45C06) # Jakub Jelinek <jakub@redhat.com>
-sha256sums=('b6898a23844b656f1b68691c5c012036c2e694ac4b53a8918d4712ad876e7ea2'
+validpgpkeys=(33C235A34C46AA3FFB293709A328C3A2C3C45C06  # Jakub Jelinek <jakub@redhat.com>
+              13975A70E63C361C73AE69EF6EEB81F8981C74C7)  # richard.guenther@gmail.com
+sha256sums=('b8dd4368bb9c7f0b98188317ee0254dd8cc99d1e3a18d0ff146c855fe16c1d8c'
             'SKIP'
             'd18ca11f8ad1a39ab6d03d3dcb3365ab416720fcb65b42d69f34f51bf0a0e859')
 
