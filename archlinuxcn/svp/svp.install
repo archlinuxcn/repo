@@ -1,0 +1,35 @@
+# SVP Install Actions:
+
+## arg 1:  the new package version
+#pre_install() {
+	# do something here
+#}
+
+## arg 1:  the new package version
+post_install() {
+	echo $pkgname
+	/opt/svp/add-menuitem.sh
+}
+
+## arg 1:  the new package version
+## arg 2:  the old package version
+pre_upgrade() {
+	/opt/svp/remove-menuitem.sh
+}
+
+## arg 1:  the new package version
+## arg 2:  the old package version
+post_upgrade() {
+	echo $pkgname
+	/opt/svp/add-menuitem.sh
+}
+
+## arg 1:  the old package version
+pre_remove() {
+	/opt/svp/remove-menuitem.sh
+}
+
+## arg 1:  the old package version
+#post_remove() {
+	# do something here
+#}
