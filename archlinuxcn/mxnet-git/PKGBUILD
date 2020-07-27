@@ -57,6 +57,8 @@ prepare() {
 
   # do not use 3rd party openmp
   rm -rfv "${srcdir}/${_pkgname}/3rdparty/openmp"
+  # CUB is now available in CUDA
+  rm -rfv "${srcdir}/${_pkgname}/3rdparty/nvidia_cub"
   # the latest cmake set OpenMP_FOUND instead of OPENMP_FOUND
   sed -i 's/OPENMP_FOUND/OpenMP_FOUND/g' "${srcdir}/${_pkgname}/CMakeLists.txt"
 
