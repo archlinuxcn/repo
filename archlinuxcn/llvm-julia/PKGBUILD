@@ -2,8 +2,8 @@
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 
 pkgname=(llvm-julia llvm-libs-julia llvm-ocaml-julia)
-pkgver=10.0.0
-pkgrel=6
+pkgver=10.0.1
+pkgrel=1
 arch=(i686 x86_64 armv7h aarch64)
 url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
@@ -26,7 +26,7 @@ source=($_source_base/llvm-$pkgver.src.tar.xz
         clear-gep.patch # LLVM 12?
         stack-color.patch # LLVM 12
         llvm-config.h)
-sha256sums=('df83a44b3a9a71029049ec101fb0077ecbbdf5fe41e395215025779099a98fdf'
+sha256sums=('c5d8e30b57cbded7128d78e5e8dad811bff97a8d471896812f57fa99ee82cdf3'
             '9f4851adbd9353c4d362ea604d07bcf8c565e1b06ea312986f5ad98d69853ae3'
             '0218121facb405a70f85b3b09a13d9d335d568da8fdd97740ff62bdd07c357a7'
             '390ec9982d778383566fc87e56acd94027c99670d19434b5914ec738eb9ca5c0'
@@ -100,21 +100,21 @@ build() {
   LDFLAGS+=' -O3 -fasynchronous-unwind-tables'
 
   cmake .. -G Ninja \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DLLVM_HOST_TRIPLE=$CHOST \
-    -DLLVM_BUILD_LLVM_DYLIB=ON \
-    -DLLVM_LINK_LLVM_DYLIB=ON \
-    -DLLVM_INSTALL_UTILS=ON \
-    -DLLVM_ENABLE_RTTI=ON \
-    -DLLVM_ENABLE_FFI=ON \
-    -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=AVR \
-    -DLLVM_BUILD_TESTS=ON \
-    -DLLVM_BUILD_DOCS=ON \
-    -DLLVM_ENABLE_SPHINX=ON \
-    -DLLVM_ENABLE_DOXYGEN=OFF \
-    -DSPHINX_WARNINGS_AS_ERRORS=OFF \
-    -DLLVM_BINUTILS_INCDIR=/usr/include
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DLLVM_HOST_TRIPLE=$CHOST \
+        -DLLVM_BUILD_LLVM_DYLIB=ON \
+        -DLLVM_LINK_LLVM_DYLIB=ON \
+        -DLLVM_INSTALL_UTILS=ON \
+        -DLLVM_ENABLE_RTTI=ON \
+        -DLLVM_ENABLE_FFI=ON \
+        -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=AVR \
+        -DLLVM_BUILD_TESTS=ON \
+        -DLLVM_BUILD_DOCS=ON \
+        -DLLVM_ENABLE_SPHINX=ON \
+        -DLLVM_ENABLE_DOXYGEN=OFF \
+        -DSPHINX_WARNINGS_AS_ERRORS=OFF \
+        -DLLVM_BINUTILS_INCDIR=/usr/include
   ninja all ocaml_doc
 }
 
@@ -164,9 +164,9 @@ package_llvm-libs-julia() {
 
   install -d "$pkgdir/usr/lib"
   cp -P \
-    "$srcdir"/lib{LLVM,LTO,Remarks}*.so* \
-    "$srcdir"/LLVMgold.so \
-    "$pkgdir/usr/lib/"
+     "$srcdir"/lib{LLVM,LTO,Remarks}*.so* \
+     "$srcdir"/LLVMgold.so \
+     "$pkgdir/usr/lib/"
 
   # Symlink LLVMgold.so from /usr/lib/bfd-plugins
   # https://bugs.archlinux.org/task/28479
@@ -174,7 +174,7 @@ package_llvm-libs-julia() {
   ln -s ../LLVMgold.so "$pkgdir/usr/lib/bfd-plugins/LLVMgold.so"
 
   install -Dm644 "$srcdir/llvm-$pkgver.src/LICENSE.TXT" \
-    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+          "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_llvm-ocaml-julia() {
