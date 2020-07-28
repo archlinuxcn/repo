@@ -29,16 +29,10 @@ prepare() {
 build() {
   cd ${pkgname}-${pkgver}/build
 
-  CFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CXXFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  FFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  LDFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   FFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   LDFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CXXFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   export CFLAGS
   export CXXFLAGS
   # fortran's print statement will still include srcdir without respecting

@@ -32,13 +32,9 @@ build() {
 
   cd build
   CPPFLAGS+=" -U_FORTIFY_SOURCE"
-  ASMFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   ASMFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  ASMFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CXXFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   export ASMFLAGS
   export CPPFLAGS
   export CFLAGS

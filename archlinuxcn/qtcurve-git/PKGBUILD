@@ -42,8 +42,6 @@ build() {
 
   CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CXXFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
 
   export CFLAGS
   export CXXFLAGS

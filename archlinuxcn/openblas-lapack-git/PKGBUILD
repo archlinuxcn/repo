@@ -65,7 +65,7 @@ prepare() {
 build() {
   cd OpenBLAS
 
-  export FFLAGS="-g -O3 -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  export FFLAGS="-g -O3 -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
 
   # The OpenBLAS build system doesn't handle update very well.
   git clean -fdx

@@ -25,12 +25,8 @@ prepare() {
 build() {
   cd LIEF
   mkdir -p build
-  CFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CXXFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CXXFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   export CFLAGS
   export CXXFLAGS
   # LIEF doesn't use cmake install for python plugin so it'll have

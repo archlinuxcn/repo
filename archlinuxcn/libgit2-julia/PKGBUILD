@@ -35,12 +35,8 @@ prepare() {
 build() {
   cd "libgit2-$pkgver"
   export LANG=en_US.UTF-8
-  CFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CXXFLAGS+=" -fdebug-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-  CXXFLAGS+=" -fmacro-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   export CFLAGS+=' -g'
   export CXXFLAGS+=' -g'
   cmake -DCMAKE_INSTALL_PREFIX=/usr \
