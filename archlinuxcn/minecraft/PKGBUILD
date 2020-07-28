@@ -4,12 +4,12 @@
 pkgname=minecraft
 _pkgname=minecraft-launcher
 pkgver=2.1.16102
-pkgrel=1
+pkgrel=2
 pkgdesc="Minecraft Launcher"
 arch=(any)
 license=('custom')
 url="https://www.minecraft.net/"
-depends=('java-runtime' 'xorg-xrandr' 'libxss' 'libx11' 'libxcb' 'alsa-lib' 'gtk2' 'gtk3' 'gconf' 'libxtst' 'nss')
+depends=('java-runtime' 'xorg-xrandr' 'libxss' 'libx11' 'libxcb' 'alsa-lib' 'gtk2' 'gtk3' 'libxtst' 'nss')
 optdepends=('flite: narrator support')
 conflicts=("$_pkgname" "$_pkgname-beta")
 provides=("$_pkgname" "$_pkgname-beta")
