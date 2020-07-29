@@ -1,0 +1,83 @@
+# Maintainer: Dct Mei <dctxmei@gmail.com>
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Contributor: pandada8 <pandada8@gmail.com>
+
+pkgname=v2ray-dctxmei
+_pkgname=v2ray
+pkgver=4.26.0
+pkgrel=1
+pkgdesc="A platform for building proxies to bypass network restrictions"
+arch=('x86_64')
+url="https://github.com/v2fly/v2ray-core"
+license=('MIT')
+depends=('glibc' 'v2ray-domain-list-community' 'v2ray-geoip')
+makedepends=('git' 'go')
+provides=("v2ray=$pkgver")
+conflicts=('v2ray')
+backup=('etc/v2ray/00_log.json'
+        'etc/v2ray/01_api.json'
+        'etc/v2ray/02_dns.json'
+        'etc/v2ray/03_routing.json'
+        'etc/v2ray/04_policy.json'
+        'etc/v2ray/05_inbounds.json'
+        'etc/v2ray/06_outbounds.json'
+        'etc/v2ray/07_transport.json'
+        'etc/v2ray/08_stats.json'
+        'etc/v2ray/09_reverse.json')
+source=("$_pkgname-$pkgver.tar.gz::https://github.com/v2fly/v2ray-core/archive/v$pkgver.tar.gz"
+        "v2ray.service"
+        "v2ray.sysusers"
+        "v2ray.tmpfiles")
+md5sums=('1cf6663920252ec01e883e077270fd13'
+         'f92b3efe4ae5da14aecaaab4696778e5'
+         'dcedd0c251ed94eb3cec17f507b5347f'
+         'e495ffdee4f818e5375bb5b0fc7f89df')
+sha1sums=('f15e07f1b0ae673bb297e29d19cd95e86f461e78'
+          '244aee49261c093f1ee4fbef64432dcbf90c5992'
+          'ff5437de189273c6cd7b6e871cca7753b0d46b88'
+          'ed7a68294322c5d53f64aa671d840456aafb6b12')
+sha256sums=('233e5acaf69a612c130655fea21291ffcce81a52771310ef97871b641e5f29d6'
+            '75e84968b8af5729ab4d7c9b5b286c26ade40fa6febcb52974847731c3ff73ea'
+            'caca9d88eff50ce7cd695b6fcab4d253344e92c966780f7de6d5c531d48ed80e'
+            'ae55077bcf7140a7460f192adb03009b4573ec4420af84f4cbe9828cf8ca8e06')
+
+build() {
+    cd "v2ray-core-$pkgver/"
+
+    export GOFLAGS='-buildmode=pie -trimpath'
+    export CGO_LDFLAGS="$LDFLAGS"
+    export CGO_CFLAGS="$CFLAGS"
+    export CGO_CPPFLAGS="$CPPFLAGS"
+
+    go build -o 'v2ray' './main/'
+    go build -o 'v2ctl' './infra/control/main/'
+}
+
+check() {
+    cd "v2ray-core-$pkgver/"
+
+    go test -p 1 -tags json -v -timeout 30m 'v2ray.com/core/...'
+}
+
+package() {
+    cd "v2ray-core-$pkgver/"
+
+    install -Dm 755 'v2ray' -t "$pkgdir/usr/bin/"
+    install -Dm 755 'v2ctl' -t "$pkgdir/usr/bin/"
+
+    install -d "$pkgdir/etc/v2ray/"
+    for BASE in 00_log 01_api 02_dns 03_routing 04_policy 05_inbounds 06_outbounds 07_transport 08_stats 09_reverse; do
+        echo '{}' > "$pkgdir/etc/v2ray/$BASE.json"
+    done
+
+    install -Dm 644 "$srcdir/v2ray.service" -t "$pkgdir/usr/lib/systemd/system/"
+    cp "$srcdir/v2ray.service" "$srcdir/v2ray@.service"
+    sed -i 's/-confdir/-config/' "$srcdir/v2ray@.service"
+    sed -i 's|/etc/v2ray/|/etc/v2ray/%i.json|' "$srcdir/v2ray@.service"
+    install -Dm 644 "$srcdir/v2ray@.service" -t "$pkgdir/usr/lib/systemd/system/"
+
+    install -Dm 644 "$srcdir/v2ray.sysusers" "$pkgdir/usr/lib/sysusers.d/v2ray.conf"
+    install -Dm 644 "$srcdir/v2ray.tmpfiles" "$pkgdir/usr/lib/tmpfiles.d/v2ray.conf"
+
+    install -Dm 644 'LICENSE' -t "$pkgdir/usr/share/licenses/v2ray/"
+}
