@@ -1,0 +1,63 @@
+# Maintainer: Dct Mei <dctxmei@gmail.com>
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Contributor: GreaterFire <GreaterFire at protonmail dot com>
+
+pkgname=trojan-dctxmei
+_pkgname=trojan
+pkgver=1.16.0
+pkgrel=1
+pkgdesc="An unidentifiable mechanism that helps you bypass GFW"
+arch=('x86_64')
+url="https://github.com/trojan-gfw/trojan"
+license=('GPL3')
+depends=('boost-libs' 'mariadb-libs' 'openssl')
+makedepends=('cmake' 'boost' 'mariadb-libs' 'openssl')
+checkdepends=('curl' 'netcat' 'openssl' 'python')
+optdepends=('ca-certificates: server certificate verification'
+            'mariadb: advanced user management')
+provides=("trojan=$pkgver")
+conflicts=('trojan')
+backup=('etc/trojan/config.json')
+source=("$_pkgname-$pkgver.tar.gz::https://github.com/trojan-gfw/$_pkgname/archive/v$pkgver.tar.gz"
+        "trojan.service"
+        "trojan.sysusers"
+        "trojan.tmpfiles")
+md5sums=('7c6bd024faa51edd43d7f822b0bdeed5'
+         'd5b2a8cd9873b883eb7c734775faa9eb'
+         '37d5847bf4d2248357da49d1b4df13b9'
+         '0905be14a4f746ef0cd8b040f1edcc36')
+sha1sums=('c6da1b7b94d0d8f72d2df43690d2437377daf7e1'
+          'fec88fb6374b53210b38f07678a63af97459c54c'
+          'eadd7f6bd5a3d31fa6a2ba7eede950f92a19e28f'
+          'f71e966d9ee827365d2ec347198a230347c40c48')
+sha256sums=('86cdb2685bb03a63b62ce06545c41189952f1ec4a0cd9147450312ed70956cbc'
+            '033f3f282579df44561fcadd5fea73ae3fb6cf4c681a299cba053a3f4608a4c9'
+            '23598d4ff8d1bd02b16341f1de71d32daddfcca40407aa457334151f0aa01149'
+            '665734c2babcb53d62294033b1f4f268da092a0f06fef67b21aa97ddf103ade7')
+
+build() {
+    cd "$_pkgname-$pkgver"
+    cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr .
+    make
+}
+
+check() {
+    cd "$_pkgname-$pkgver"
+    ctest
+}
+
+package() {
+    cd "$_pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    install -Dm 644 "$srcdir/trojan.service" -t "$pkgdir/usr/lib/systemd/system/"
+    cp "$srcdir/trojan.service" "$srcdir/trojan@.service"
+    sed -i 's/config.json/%i.json/' "$srcdir/trojan@.service"
+    sed -i 's/trojan.log/%i.log/' "$srcdir/trojan@.service"
+    install -Dm 644 "$srcdir/trojan@.service" -t "$pkgdir/usr/lib/systemd/system/"
+
+    install -Dm 644 "$srcdir/trojan.sysusers" "$pkgdir/usr/lib/sysusers.d/trojan.conf"
+    install -Dm 644 "$srcdir/trojan.tmpfiles" "$pkgdir/usr/lib/tmpfiles.d/trojan.conf"
+
+    install -Dm 644 'LICENSE' -t "$pkgdir/usr/share/licenses/trojan/"
+}
