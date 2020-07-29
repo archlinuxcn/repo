@@ -1,22 +1,22 @@
 _name=cli_helpers
 pkgname=python-cli_helpers
-pkgver=2.0.1
+pkgver=2.1.0
 pkgrel=1
 pkgdesc="Helpers for building command-line apps"
 arch=(any)
 url="https://github.com/dbcli/cli_helpers"
 license=(BSD)
 depends=('python' 'python-terminaltables' 'python-tabulate' 'python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/cli_helpers-2.0.1.tar.gz")
-sha256sums=('18f7d8c5a22d85fc685d56a9f301d8b9f7f0d7d4e9033a27563b066c2ab41833')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/cli_helpers-2.1.0.tar.gz")
+sha256sums=('dd6f164310f7d86fa3da1f82043a9c784e44a02ad49be932a80624261e56979b')
 
 build() {
-  cd "$srcdir/cli_helpers-2.0.1"
+  cd "$srcdir/cli_helpers-2.1.0"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/cli_helpers-2.0.1"
+  cd "$srcdir/cli_helpers-2.1.0"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install annoying files
