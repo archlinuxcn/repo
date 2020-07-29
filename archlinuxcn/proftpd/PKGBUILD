@@ -2,7 +2,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=proftpd
-pkgver=1.3.6d
+pkgver=1.3.7a
 pkgrel=1
 epoch=2
 pkgdesc='High-performance, scalable FTP server'
@@ -15,7 +15,7 @@ options=('!emptydirs')
 source=("ftp://ftp.proftpd.org/distrib/source/${pkgname}-${pkgver}.tar.gz"
         'proftpd.logrotate' 'proftpd.service'
         'proftpd.tmpfiles')
-md5sums=('ed5580e9e02c5308dc9283fc83434530'
+md5sums=('4a9b8877b2e9b08d70e71ad56c19e2c9'
          '4d7a3eedc1852d4fa9faafc072fb8320'
          'f7e0c3a402a845ba8d546b2801f77ed2'
          '907b149a120b046f05647c73502e23c9')
