@@ -10,7 +10,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=84.0.4147.89
+pkgver=84.0.4147.105
 pkgrel=1
 _launcher_ver=6
 _gcc_patchset=3
@@ -44,7 +44,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         wayland-egl.patch
         nvidia-vdpau.patch
         chromium-skia-harmony.patch)
-sha256sums=('17970d998c125b40765141f2cd346d1674f05dbd4a28fdcf31f9e3540890c679'
+sha256sums=('caf4ebeb2a2333454c3067a2534aeecaab5029aa78fc0d8b27f79ad3b9c5ccac'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'f77088dd59b170b767ba91c6b410abb778ff2e68553433b24124d398fa4d3ce7'
             '3b10917f646f88ae988ca18be9cbef82025abb6a6e5cb00b77a11077192ce32c'
