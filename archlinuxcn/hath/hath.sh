@@ -1,2 +1,8 @@
-#!/bin/sh
-exec /usr/bin/java -jar /usr/share/java/hath/hath.jar --data-dir=/var/lib/hath/data --cache-dir=/var/lib/hath/cache --temp-dir=/var/lib/hath/temp --log-dir=/var/lib/hath/log "$@"
+#!/bin/bash
+
+exec /usr/bin/java -jar /usr/share/java/hath/hath.jar \
+     --cache-dir=/var/lib/hath/cache \
+     --data-dir=/var/lib/hath/data \
+     --log-dir=/var/lib/hath/log \
+     --temp-dir=/var/lib/hath/temp \
+     "$@"

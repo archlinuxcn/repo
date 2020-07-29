@@ -1,16 +1,16 @@
 [Unit]
 Description=Hentai@Home Service
 After=network-online.target
+Wants=network-online.target
 
 [Service]
-#User=nobody
+User=hath
 WorkingDirectory=/var/lib/hath/ 
 ExecStart=/usr/bin/java -Xms16m -Xmx512m -jar /usr/share/java/hath/hath.jar 
 SuccessExitStatus=143
 TimeoutStopSec=10
-Restart=on-failure
+Restart=always
 RestartSec=5
-
 
 [Install]
 WantedBy=multi-user.target

@@ -1,15 +1,14 @@
 post_install() {
-  cat >&2 << 'EOF'
+cat << EOF
 
-    ##                                                   ##
-    ## To use this package, you must have a ID & token.  ##
-    ## Register at https://e-hentai.org/hentaiathome.php ##
-    ## when used as a downloader, your files will be in  ##
-    ## /var/lib/hath/download/                           ##
-    ##                                                   ##
-    ## Do not manually delete the cache; this adversely  ##
-    ## impacts the H@H network. For more information:	 ##		
-    ## https://ehwiki.org/wiki/Hentai@Home               ##
+## To use this package, you must have a ID & token.  ##
+## Register at https://e-hentai.org/hentaiathome.php ##
+## when used as a downloader, your files will be in  ##
+## /var/lib/hath/download/                           ##
+##                                                   ##
+## Do not manually delete the cache; this adversely  ##
+## impacts the H@H network. For more information:    ##
+## https://ehwiki.org/wiki/Hentai@Home               ##
 
 EOF
 }
