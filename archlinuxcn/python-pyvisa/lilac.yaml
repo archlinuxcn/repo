@@ -3,7 +3,10 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-# TODO: upstream this PKGBUILD when the next release (0.11) is out
+pre_build: aur_pre_build
+
+post_build: aur_post_build
+
 update_on:
-  - pypi: PyVISA
+  - aur
   - alias: python
