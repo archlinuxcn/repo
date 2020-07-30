@@ -1,8 +1,8 @@
 # Maintainer: XavierCLL <xavier.corredor.llano (a) gmail.com>
 
 pkgname=pycharm-professional
-pkgver=2020.1.4
-_pkgver=2020.1.4
+pkgver=2020.2.0
+_pkgver=2020.2
 pkgrel=1
 pkgdesc="Python IDE for Professional Developers. Professional Edition"
 arch=('x86_64')
@@ -15,18 +15,16 @@ backup=(
     "opt/$pkgname/bin/pycharm64.vmoptions"
     "opt/$pkgname/bin/idea.properties"
 )
-depends=('giflib' 'glibc' 'sh' 'libxtst' 'libxslt' 'python')
+depends=('giflib' 'glibc' 'sh' 'libxtst' 'libxslt' 'python' 'libdbusmenu-glib')
 source=("https://download.jetbrains.com/python/$pkgname-$_pkgver.tar.gz"
         "pycharm-professional.desktop"
-        "pycharm"
         "charm.desktop"
         "charm")
 # https://download.jetbrains.com/python/pycharm-professional-${_pkgver}.tar.gz.sha256
-sha256sums=('fe22d6b12b02eaa694c0003da2f09e27147feb6848c77c5220adc680008ec33f'
+sha256sums=('5301e54af750d45bd53456c8330b76e5ce92977b75be45436587f930d4b20077'
             'aaf7113e8c56e4d977eca204d57350d9493eda2710abefd2488a2b5d47c53344'
-            '818ed42f4200ae13315587abf6f247f93e68c658a94794f73924c985cdc145d0'
             'b026ef96831448be743f86e7e44bfa676629e8c3eb418c893fd87515c06263a7'
-            'db54c71d65ac938bb0e4c058481463b71d784ba113a872e419c66975cbc94a3f')
+            '36068b05bebafa9aad6f043745f7764ed108c99f7b8f74cea2163da56bd2bc0c')
 makedepends=('python-setuptools')
 optdepends=('python2: Python 2 support'
             'ipython2: For enhanced interactive Python shell v2 inside Pycharm'
@@ -70,7 +68,7 @@ package() {
   
   # exec
   install -dm 755 "$pkgdir/usr/bin/"
-  install -Dm 755 pycharm "$pkgdir/usr/bin/"
+  ln -s /opt/pycharm-professional/bin/pycharm.sh "$pkgdir/usr/bin/pycharm"
   
   # licenses
   install -dm 755 "$pkgdir/usr/share/licenses/$pkgname/"

@@ -10,8 +10,8 @@ import traceback
 # See com.intellij.idea.SocketLock for the server side of this interface.
 
 RUN_PATH = u'/opt/pycharm-professional/bin/pycharm.sh'
-CONFIG_PATH = u'~/.config/JetBrains/PyCharm2020.1'
-SYSTEM_PATH = u'~/.cache/JetBrains/PyCharm2020.1'
+CONFIG_PATH = u'~/.config/JetBrains/PyCharm2020.2'
+SYSTEM_PATH = u'~/.cache/JetBrains/PyCharm2020.2'
 
 
 def print_usage(cmd):
@@ -64,6 +64,8 @@ def process_args(argv):
             skip_next = True
         elif arg == '-w' or arg == '--wait':
             args.append('--wait')
+        elif arg == '-p' or arg == '--project':
+            args.append(arg)
         elif skip_next:
             args.append(arg)
             skip_next = False
