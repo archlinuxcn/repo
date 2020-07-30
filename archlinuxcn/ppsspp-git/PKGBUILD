@@ -45,6 +45,7 @@ source=(
   git+https://github.com/Tencent/rapidjson.git
   git+https://github.com/KhronosGroup/SPIRV-Cross.git
   armips-tinyformat::git+https://github.com/Kingcom/tinyformat.git
+  miniupnp::git+https://github.com/hrydgard/miniupnp.git
   ppsspp.sh
   ppsspp-headless.sh
   ppsspp-qt.sh
@@ -53,6 +54,7 @@ source=(
   ppsspp-flags.patch
 )
 sha256sums=('SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -84,7 +86,7 @@ prepare() {
     git config submodule.${submodule}.url ../ppsspp-${submodule#*/}
     git submodule update ${submodule}
   done
-  for submodule in ext/{armips,discord-rpc,rapidjson,SPIRV-Cross}; do
+  for submodule in ext/{armips,discord-rpc,rapidjson,SPIRV-Cross,miniupnp}; do
     git submodule init ${submodule}
     git config submodule.${submodule}.url ../${submodule#*/}
     git submodule update ${submodule}
