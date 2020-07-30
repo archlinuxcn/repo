@@ -19,7 +19,7 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=78.0.2
+pkgver=79.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -51,9 +51,9 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'pulseaudio: Audio support')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=082b9d2dfd7d
+_patchrev=15e73dbe1b5290bb8c4a36a4e808199c07de3d83
 options=('!emptydirs')
-_patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
+_patchurl=https://raw.githubusercontent.com/openSUSE/firefox-maintenance/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
 source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         mozconfig
@@ -61,8 +61,8 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         vendor.js
         kde.js
 	# Firefox patchset
-	firefox-branded-icons-$_patchrev.patch::$_patchurl/firefox-branded-icons.patch
-	firefox-kde-$_patchrev.patch::$_patchurl/firefox-kde.patch
+	firefox-branded-icons-$_patchrev.patch::$_patchurl/firefox/firefox-branded-icons.patch
+	firefox-kde-$_patchrev.patch::$_patchurl/firefox/firefox-kde.patch
 	# Gecko/toolkit patchset
 	mozilla-kde-$_patchrev.patch::$_patchurl/mozilla-kde.patch
 	mozilla-nongnome-proxies-$_patchrev.patch::$_patchurl/mozilla-nongnome-proxies.patch
@@ -81,6 +81,8 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         # Fix MOZILLA#1516803
         # https://bugzilla.mozilla.org/show_bug.cgi?id=1516803
         mozilla-1516803.patch
+        # https://bugzilla.mozilla.org/show_bug.cgi?id=1654465
+        mozilla-1654465.patch
         # Force disable elfhack to fix build errors
         build-disable-elfhack.patch
 )
@@ -138,6 +140,9 @@ prepare() {
   # sandbox needs to be built with --param lto-partitions=1 when
   # GCC LTO is enabled
   patch -Np1 -i "$srcdir"/mozilla-1516803.patch
+
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1654465
+  patch -Np1 -i "$srcdir"/mozilla-1654465.patch
 
   # Force disable elfhack to fix build errors
   patch -Np1 -i "$srcdir"/build-disable-elfhack.patch
@@ -243,9 +248,9 @@ md5sums=('SKIP'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6821ee347a094765776d8aec0a1d07e2'
          'ac9ce8934b4553fc42cb110c9c04350e'
-         '36137f20b42e797cf4694e4e6e0f5b83'
+         '968ee82e3c0f10aa8385b5434331fe2f'
          '0f9fcd2ec38e339e4f2d602e1b13e3ef'
-         'e9e1d302d2be62192e96944610f2e14a'
+         'e39e0ef54382538feae6c6b1276451ac'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3c383d371d7f6ede5983a40310518715'
          'd24681f9a46ae23689b2867f4ab6eaae'
@@ -255,4 +260,5 @@ md5sums=('SKIP'
          'e8585d1477f5f057603f38fcceec5c3f'
          'e7924ef6bf5fda799f369b75f98aaf00'
          'efcddfb6595b356b3faaf6b93313659e'
+         '293097ecb67691c45afde91843462c80'
          'aa9261c4d407cf809bf8275e6f2e52c7')
