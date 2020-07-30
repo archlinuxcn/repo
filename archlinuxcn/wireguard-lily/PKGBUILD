@@ -16,7 +16,7 @@ provides=('WIREGUARD-MODULE')
 build() {
     _kernver=$(</usr/src/linux-lily/version)
 
-    dkms build --dkmstree "$srcdir" -m wireguard/$pkgver -k $_kernver
+    fakeroot dkms build --dkmstree "$srcdir" -m wireguard/$pkgver -k $_kernver
 }
 
 package() {
