@@ -2,16 +2,16 @@
 # Contributor : Immae <ismael.bouya@normalesup.org>
 # Contributor : Martin Wimpress <code@flexion.org>
 pkgname=anaconda
-pkgver=2020.02
+pkgver=2020.07
 pkgrel=1
 pkgdesc="Completely free enterprise-ready Python distribution for large-scale data processing, predictive analytics, and scientific computing."
 arch=('x86_64')
 url='https://www.anaconda.com/'
 license=("BSD")
-source=("http://repo.continuum.io/archive/Anaconda3-${pkgver}-Linux-x86_64.sh"
+source=("https://repo.anaconda.com/archive/Anaconda3-${pkgver}-Linux-x86_64.sh"
 "$pkgname.install")
 options=(!strip libtool staticlibs)
-sha256sums=('2b9f088b2022edb474915d9f69a803d6449d5fdb4c303041f60ac4aefcc208bb'
+sha256sums=('38ce717758b95b3bd0b1797cc6ccfb76f29a90c25bdfa50ee45f11e583edfdbf'
             '72e3066ba033c8e59684331f2d9ea8ea2dc1855d51a7a4ea2fa5565b7dd6cc60')
 install="$pkgname.install"
 
