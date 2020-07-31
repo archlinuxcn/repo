@@ -1,0 +1,72 @@
+--- Proton-proton-5.0-9.orig/lsteamclient/steamclient_main.c	2020-06-11 00:04:52.000000000 +0200
++++ Proton-proton-5.0-9/lsteamclient/steamclient_main.c	2020-07-31 12:08:42.483353936 +0200
+@@ -475,37 +475,37 @@
+         path[PATH_MAX - 1] = 0;
+     }
+ #endif
+-    steamclient_lib = wine_dlopen(path, RTLD_NOW, NULL, 0);
++    steamclient_lib = dlopen(path, RTLD_NOW);
+     if(!steamclient_lib){
+         ERR("unable to load native steamclient library\n");
+         return 0;
+     }
+ 
+-    steamclient_CreateInterface = wine_dlsym(steamclient_lib, "CreateInterface", NULL, 0);
++    steamclient_CreateInterface = dlsym(steamclient_lib, "CreateInterface");
+     if(!steamclient_CreateInterface){
+         ERR("unable to load CreateInterface method\n");
+         return 0;
+     }
+ 
+-    steamclient_BGetCallback = wine_dlsym(steamclient_lib, "Steam_BGetCallback", NULL, 0);
++    steamclient_BGetCallback = dlsym(steamclient_lib, "Steam_BGetCallback");
+     if(!steamclient_BGetCallback){
+         ERR("unable to load BGetCallback method\n");
+         return 0;
+     }
+ 
+-    steamclient_GetAPICallResult = wine_dlsym(steamclient_lib, "Steam_GetAPICallResult", NULL, 0);
++    steamclient_GetAPICallResult = dlsym(steamclient_lib, "Steam_GetAPICallResult");
+     if(!steamclient_GetAPICallResult){
+         ERR("unable to load GetAPICallResult method\n");
+         return 0;
+     }
+ 
+-    steamclient_FreeLastCallback = wine_dlsym(steamclient_lib, "Steam_FreeLastCallback", NULL, 0);
++    steamclient_FreeLastCallback = dlsym(steamclient_lib, "Steam_FreeLastCallback");
+     if(!steamclient_FreeLastCallback){
+         ERR("unable to load FreeLastCallback method\n");
+         return 0;
+     }
+ 
+-    steamclient_ReleaseThreadLocalMemory = wine_dlsym(steamclient_lib, "Steam_ReleaseThreadLocalMemory", NULL, 0);
++    steamclient_ReleaseThreadLocalMemory = dlsym(steamclient_lib, "Steam_ReleaseThreadLocalMemory");
+     if(!steamclient_ReleaseThreadLocalMemory){
+         ERR("unable to load ReleaseThreadLocalMemory method\n");
+         return 0;
+diff -Naur Proton-proton-5.0-9.orig/vrclient_x64/vrclient_x64/vrclient_main.c Proton-proton-5.0-9/vrclient_x64/vrclient_x64/vrclient_main.c
+--- Proton-proton-5.0-9.orig/vrclient_x64/vrclient_x64/vrclient_main.c	2020-06-11 00:04:52.000000000 +0200
++++ Proton-proton-5.0-9/vrclient_x64/vrclient_x64/vrclient_main.c	2020-07-31 12:09:06.463354192 +0200
+@@ -258,19 +258,19 @@
+ 
+     TRACE("got openvr runtime path: %s\n", pathU);
+ 
+-    vrclient_lib = wine_dlopen(pathU, RTLD_NOW, NULL, 0);
++    vrclient_lib = dlopen(pathU, RTLD_NOW);
+     if(!vrclient_lib){
+         TRACE("unable to load vrclient.so\n");
+         return 0;
+     }
+ 
+-    vrclient_HmdSystemFactory = wine_dlsym(vrclient_lib, "HmdSystemFactory", NULL, 0);
++    vrclient_HmdSystemFactory = dlsym(vrclient_lib, "HmdSystemFactory");
+     if(!vrclient_HmdSystemFactory){
+         ERR("unable to load HmdSystemFactory method\n");
+         return 0;
+     }
+ 
+-    vrclient_VRClientCoreFactory = wine_dlsym(vrclient_lib, "VRClientCoreFactory", NULL, 0);
++    vrclient_VRClientCoreFactory = dlsym(vrclient_lib, "VRClientCoreFactory");
+     if(!vrclient_VRClientCoreFactory){
+         ERR("unable to load VRClientCoreFactory method\n");
+         return 0;

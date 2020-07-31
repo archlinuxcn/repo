@@ -6,7 +6,7 @@ pkgname=proton
 _pkgver='5.0-9'
 # Arch - no hyphens
 pkgver=5.0.9
-pkgrel=4
+pkgrel=5
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 arch=('x86_64')
 url="https://github.com/ValveSoftware/Proton/"
@@ -18,19 +18,22 @@ depends=(
 makedepends=(
 	'vulkan-headers'
 )
-source=("https://github.com/ValveSoftware/Proton/archive/$pkgname-$_pkgver.tar.gz")
+source=("https://github.com/ValveSoftware/Proton/archive/$pkgname-$_pkgver.tar.gz"
+        "wined3d-interop.h"
+        "wine-dynamic_load_wrapper.patch")
 
-#prepare() {
-#	cd "Proton-$pkgname-$_pkgver"
-#	cp $srcdir/wined3d-interop.h vrclient_x64/vrclient_x64/
-#}
-
+prepare() {
+  cd "Proton-$pkgname-$_pkgver"
+  cp $srcdir/wined3d-interop.h vrclient_x64/vrclient_x64/
+  patch -p1 < $srcdir/wine-dynamic_load_wrapper.patch
+}
 build() {
 	cd "Proton-$pkgname-$_pkgver"
 
 	export CXXFLAGS="$CXXFLAGS -Wno-attributes"
-	export WINEMAKEFLAGS="--nosource-fix --nolower-include --nodlls --nomsvcrt --dll"
+	export WINEMAKEFLAGS="--nosource-fix --nolower-include --nodlls --nomsvcrt --dll -ldl"
 	export WINEMAKEFLAGS32="$WINEMAKEFLAGS --wine32"
+  export LDFLAGS="$LDFLAGS -L/usr/lib32/wine -lntdll.dll"
 
 	# The build script provided has so much cruft that it's easier to make everything manually
 	mkdir -p build/lsteamclient.win32
@@ -97,4 +100,6 @@ package() {
 	install -m644 build/vrclient.win64/vrclient_x64/vrclient_x64.dll.fake $pkgdir/usr/lib/wine/fakedlls/vrclient_x64.dll
 }
 
-md5sums=('8737560d53ab3d7bc49b0d463e47387a')
+md5sums=('8737560d53ab3d7bc49b0d463e47387a'
+         '1f6f0f5e4679418d4976e0cf9589a8d9'
+         '38464f9805e4423ba5f92f8864168f97')
