@@ -12,7 +12,7 @@ arch=('x86_64')
 url="https://github.com/fcitx/fcitx5-qt"
 license=('GPL')
 depends=('fcitx5-git')
-makedepends=('extra-cmake-modules' 'git' 'qt4' 'qt5-x11extras' 'qt5-quickcontrols')
+makedepends=('extra-cmake-modules' 'git' 'qt4' 'qt5-base')
 source=("git+$url.git")
 sha512sums=('SKIP')
 
@@ -37,7 +37,7 @@ _mv_pkg(){
 }
 
 package_fcitx5-qt5-git(){
-  depends=('fcitx5-git' 'qt5-x11extras' 'qt5-quickcontrols')
+  depends=('fcitx5-git' 'qt5-base')
   provides=('fcitx5-qt5' 'fcitx5-qt')
   conflicts=('fcitx5-qt5' 'fcitx5-qt')
   pkgdesc="Fcitx Qt Library, for Qt5"
