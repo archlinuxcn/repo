@@ -1,0 +1,110 @@
+Author: DuckSoft <realducksoft@gmail.com>
+
+I just cannot stand such a dirty package. 
+Let me do some optimisations.
+
+If you are interested to improve this patch, welcome to mail me.
+
+--- Ventoy2Disk.sh
++++ Ventoy2Disk.sh
+@@ -8,43 +8,4 @@
+ echo '***********************************************************'
+ echo ''
+ 
+-OLDDIR=$PWD
+-
+-if ! [ -f ./tool/xzcat ]; then
+-    if [ -f ${0%Ventoy2Disk.sh}/tool/xzcat ]; then
+-        cd ${0%Ventoy2Disk.sh}    
+-    fi
+-fi
+-
+-if ! [ -f ./boot/boot.img ]; then
+-    if [ -d ./grub ]; then
+-        echo "Don't run Ventoy2Disk.sh here, please download the released install package, and run the script in it."
+-    else
+-        echo "Please run under the correct directory!" 
+-    fi
+-    exit 1
+-fi
+-
+-echo "############# Ventoy2Disk $* ################" >> ./log.txt
+-
+-#decompress tool
+-if ! [ -f ./tool/ash ]; then
+-    cd tool
+-    chmod +x ./xzcat
+-    for file in $(ls *.xz); do
+-        ./xzcat $file > ${file%.xz}
+-        chmod +x ${file%.xz}
+-    done
+-    cd ../
+-
+-    if ! [ -f ./tool/ash ]; then
+-        echo 'Failed to decompress tools ...'
+-        cd $OLDDIR
+-        exit 1
+-    fi
+-fi
+-
+-./tool/ash ./tool/VentoyWorker.sh $*
+-
+-cd $OLDDIR
+-
++./tool/VentoyWorker.sh $*
+--- tool/ventoy_lib.sh
++++ tool/ventoy_lib.sh
+@@ -37,7 +37,7 @@
+ }
+ 
+ vtdebug() {
+-    echo "$*" >> ./log.txt
++    true
+ }
+ 
+ check_tool_work_ok() {
+@@ -52,30 +52,6 @@
+         vtoyfat=vtoyfat_32
+     fi
+     
+-    if echo 1 | ./tool/hexdump > /dev/null; then
+-        vtdebug "hexdump test ok ..."
+-    else
+-        vtdebug "hexdump test fail ..."
+-        ventoy_false
+-        return
+-    fi
+-   
+-    if ./tool/$mkexfatfs -V > /dev/null; then
+-        vtdebug "$mkexfatfs test ok ..."
+-    else
+-        vtdebug "$mkexfatfs test fail ..."
+-        ventoy_false
+-        return
+-    fi
+-    
+-    if ./tool/$vtoyfat -T; then
+-        vtdebug "$vtoyfat test ok ..."
+-    else
+-        vtdebug "$vtoyfat test fail ..."
+-        ventoy_false
+-        return
+-    fi
+-    
+     vtdebug "tool check success ..."
+     ventoy_true
+ }
+@@ -137,13 +113,6 @@
+         fi
+     fi
+     
+-    # PART1_TYPE=$(dd if=$DISK bs=1 count=1 skip=450 status=none | ./tool/hexdump -n1 -e  '1/1 "%02X"')
+-    # if [ "$PART1_TYPE" != "07" ]; then
+-        # vtdebug "part1 type is $PART2_TYPE not 07"
+-        # ventoy_false
+-        # return
+-    # fi
+-    
+     if [ -e /sys/class/block/${PART1#/dev/}/start ]; then
+         PART1_START=$(cat /sys/class/block/${PART1#/dev/}/start)
+     fi
