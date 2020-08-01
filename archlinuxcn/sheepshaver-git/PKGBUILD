@@ -2,7 +2,7 @@
 
 pkgbase=sheepshaver-git
 pkgname=(basiliskii-git sheepshaver-git sheepnet-dkms-git)
-pkgver=r2623.g5cbf07e9
+pkgver=r2660.g29bb3d5a
 pkgrel=1
 pkgdesc="An Open Source PowerMac and Classic Macintosh Emulator"
 arch=('x86_64')
@@ -32,8 +32,11 @@ build() {
   cd macemu/SheepShaver/src/Unix
   ./autogen.sh \
     --prefix=/usr \
+    --enable-addressing=direct \
+    --enable-standalone-gui \
     --enable-sdl-audio \
     --enable-sdl-video \
+    --enable-addressing=real \
     --enable-tuntap \
     --with-bincue \
     --with-vdeplug \
