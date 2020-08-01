@@ -2,14 +2,14 @@
 # Co-Maintainer: Felix Yan <felixonmars@archlinux.org>
 # Contributor: poplarch <poplarch@gmail.com>
 
-_pkgname=kcm-fcitx5
+_pkgname=fcitx5-configtool
 pkgbase=$_pkgname-git
-pkgname=(kcm-fcitx5-git fcitx5-config-qt-git kbd-layout-viewer5-git)
+pkgname=(fcitx5-configtool-git fcitx5-config-qt-git kbd-layout-viewer5-git)
 pkgver=r310.7cc587d
 pkgrel=1
-pkgdesc="KDE Config Module for Fcitx5"
+pkgdesc="Config tools for Fcitx5, nightly build from git"
 arch=('i686' 'x86_64')
-url="https://github.com/fcitx/kcm-fcitx5"
+url="https://github.com/fcitx/fcitx5-configtool"
 license=('GPL')
 depends=('fcitx5-qt5-git' 'kconfigwidgets' 'kitemviews' 'kirigami2' 'kpackage')
 makedepends=('extra-cmake-modules' 'python' 'git' 'kcmutils')
@@ -40,15 +40,18 @@ build() {
   make
 }
 
-package_kcm-fcitx5-git() {
+package_fcitx5-configtool-git() {
   conflicts=("$_pkgname")
   provides=("$_pkgname")
+  replaces=("kcm-fcitx5-git")
 
   cd build
   make DESTDIR="$pkgdir" install
   mv "$pkgdir/usr/bin/fcitx5-config-qt" .
   mv "$pkgdir/usr/bin/kbd-layout-viewer5" .
+  rmdir "$pkgdir/usr/bin/"
   mv "$pkgdir/usr/share/applications/kbd-layout-viewer5.desktop" .
+  rmdir "$pkgdir/usr/share/applications/"
 }
 
 package_fcitx5-config-qt-git(){
