@@ -22,6 +22,15 @@ properties:
   post_build_always:
     description: Name of function to be used as the post_build_always function.
     type: string
+  pre_build_script:
+    description: Body of the pre_build function. lilac2.api functions are available.
+    type: string
+  post_build_script:
+    description: Body of the post_build function. lilac2.api functions are available.
+    type: string
+  post_build_always_script:
+    description: Body of the post_build_always function. lilac2.api functions are available.
+    type: string
   time_limit_hours:
     description: Time limit in hours. The build will be aborted if it doesn't finish in time. Default is one hour.
     type: number
