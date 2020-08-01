@@ -1,0 +1,5 @@
+#!/bin/bash
+
+pushd /opt/ventoy || exit 1
+/opt/ventoy/Ventoy2Disk.sh "$@"
+popd || exit 1
