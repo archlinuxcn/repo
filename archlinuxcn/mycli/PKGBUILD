@@ -3,8 +3,8 @@
 # Contributor: Aaron Abbott <aabmass at gmail dot com>
 
 pkgname=mycli
-pkgver=1.21.1
-pkgrel=2
+pkgver=1.22.1
+pkgrel=1
 pkgdesc='A Terminal Client for MySQL with AutoCompletion and Syntax Highlighting'
 arch=('any')
 url='https://github.com/dbcli/mycli'
@@ -24,18 +24,11 @@ makedepends=('python-setuptools')
 optdepends=('python-paramiko: SSH support')
 options=(!emptydirs)
 
-source=(
-    "$pkgname-$pkgver.tar.gz::https://github.com/dbcli/mycli/archive/v${pkgver}.tar.gz"
-    "setup.py.patch"
-)
-sha256sums=(
-    '89592e9e3f73044b75324c0dac2fd47e0c867ed8f9562cd4af5050a3b9c44177'
-    '3641a91a4f71d23b39ff832aa5979dc21b07b1823633b91e5781f97fa6bc79dd'
-)
+source=("$pkgname-$pkgver.tar.gz::https://github.com/dbcli/mycli/archive/v${pkgver}.tar.gz")
+sha256sums=('52d107105a922de883572b518019477338343d1c7c8618da1c4db2cedb20d912')
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"
-    patch -N -p1 -i "$srcdir/setup.py.patch"
 }
 
 build() {
