@@ -7,7 +7,7 @@ If you are interested to improve this patch, welcome to mail me.
 
 --- Ventoy2Disk.sh
 +++ Ventoy2Disk.sh
-@@ -8,43 +8,4 @@
+@@ -8,48 +8,4 @@
  echo '***********************************************************'
  echo ''
  
@@ -42,14 +42,19 @@ If you are interested to improve this patch, welcome to mail me.
 -
 -    if ! [ -f ./tool/ash ]; then
 -        echo 'Failed to decompress tools ...'
--        cd $OLDDIR
+-        if [ -n "$OLDDIR" ]; then 
+-            cd $OLDDIR
+-        fi
 -        exit 1
 -    fi
 -fi
 -
 -./tool/ash ./tool/VentoyWorker.sh $*
 -
--cd $OLDDIR
+-if [ -n "$OLDDIR" ]; then 
+-    cd $OLDDIR
+-fi
+-
 -
 +./tool/VentoyWorker.sh $*
 --- tool/ventoy_lib.sh
@@ -95,8 +100,8 @@ If you are interested to improve this patch, welcome to mail me.
      ventoy_true
  }
 @@ -137,13 +113,6 @@
-         fi
-     fi
+         # fi
+     # fi
      
 -    # PART1_TYPE=$(dd if=$DISK bs=1 count=1 skip=450 status=none | ./tool/hexdump -n1 -e  '1/1 "%02X"')
 -    # if [ "$PART1_TYPE" != "07" ]; then
