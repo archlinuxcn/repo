@@ -1,7 +1,9 @@
+# Maintainer: DuckSoft <realducksoft@gmail.com>
+
 pkgname=trojan-go-git
 _pkgname=trojan-go
 pkgver=0.8.1.r0.gc010e7d
-pkgrel=1
+pkgrel=2
 pkgdesc="A Trojan proxy written in Go (git version)."
 depends=(glibc v2ray-geoip v2ray-domain-list-community)
 provides=(trojan-go)
@@ -25,10 +27,17 @@ build() {
     export GO111MODULE=on
 
     cd "$srcdir"/$_pkgname
+
+    # generate metadata for building
+    GO_PKGNAME=github.com/p4gefau1t/trojan-go
+    VERSION=`git describe --dirty`
+    COMMIT=`git rev-parse HEAD`
+    GO_VARS="-X $GO_PKGNAME/constant.Version=$VERSION -X $GO_PKGNAME/constant.Commit=$COMMIT"
+
     go build -v \
         -buildmode=pie -trimpath -mod=readonly -modcacherw \
         -tags "full" \
-        -ldflags="-s -w -extldflags=-Wl,-z,now,-z,relro" \
+        -ldflags="-s -w $GO_VARS -extldflags=-Wl,-z,now,-z,relro" \
         -o trojan-go .
     
     cd "$srcdir"/$_pkgname/docs/
