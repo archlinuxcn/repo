@@ -4,7 +4,7 @@
 pkgbase=python-portalocker
 pkgname=python-portalocker
 _pkgname=portalocker
-pkgver=1.7.1
+pkgver=2.0.0
 pkgrel=1
 pkgdesc='An extended version of portalocker to lock files in Python using the with statement'
 arch=('any')
@@ -12,7 +12,7 @@ url='https://github.com/WoLpH/portalocker'
 license=('PSF')
 makedepends=('python-setuptools')
 source=("${_pkgname}-${pkgver}.tar.gz::https://pypi.python.org/packages/source/p/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha256sums=('6d6f5de5a3e68c4dd65a98ec1babb26d28ccc5e770e07b672d65d5a35e4b2d8a')
+sha256sums=('14487eed81aa914127edf0284e29c7ca8842c05bb33d96dc7e4bdb47282d26e4')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
