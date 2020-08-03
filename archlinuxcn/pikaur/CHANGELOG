@@ -1690,3 +1690,19 @@ Sun May 10 13:02:32 2020 +0200
      2020-04-29 7a90820 actionless fix(install_info_fetcher: get_aur_pkgs_info): support version matchers (fixes #474)
      2020-04-27 51b05bf actionless fix(search_cli): correct sorting of repo (repo, name) and aur (rating, name) pkgs
      2020-04-25 58fbc55 actionless fix(info_cli): show 'outofdate' as human-readable date (fixes #476)
+
+
+Mon Aug 3 09:28:24 2020 +0200
+-------------------------------------------------
+1.6.11          Release 1.6.11
+    
+    Notable changes:
+     cbfe592 actionless fix(aur_deps: find_aur_deps): don't add explicitly requested package a dep in case of circular dep (fixes #495)
+     b5efc4e actionless fix(install cli): handle CloneError in all clone_aur_repos usages (fixes #501)
+     b0f54b1 actionless fix(progressbar): use different terminal escape sequence (fixes #497)
+     31e1605 actionless fix(build: get_latest_dev_sources): honor SkipFailedBuild config option (fixes #489)
+     513f3e2 kasmide Add Japanese translations
+     e808886 kasmide Make package information text aligned correctly even if there are full-width characters
+     b0b128f actionless fix(install_info_fetcher): preceding aur pkgnames with `aur/` (fixes #484)
+     9f6586d actionless fix(main: get_pkgbuild cli): require `asp` only when need to download from ABS (fixes #485, #486)
+     2501ef6 actionless fix(makepkg_config): handle $HOME in PKGDEST path (fixes #479)
