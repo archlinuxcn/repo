@@ -1,0 +1,74 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=ASAP
+pkgname=asap
+pkgver=1.9
+pkgrel=1
+pkgdesc='Program for the analysis and visualization of whole-slide images in digital pathology'
+arch=('x86_64')
+url='https://github.com/computationalpathologygroup/ASAP'
+license=('GPL')
+depends=(
+  boost
+  libtiff
+  libjpeg
+  gcc-libs
+  opencv
+  openslide
+  qt5-base
+  qt5-tools
+  pugixml
+  python
+  swig
+)
+makedepends=(
+  cmake
+  gendesk
+  git
+)
+source=("${pkgname}::git+https://github.com/computationalpathologygroup/ASAP.git"
+  "pugixml::git+https://github.com/zeux/pugixml.git"
+)
+sha256sums=('SKIP'
+            'SKIP')
+
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
+
+prepare() {
+  # fix building with Qt 5.15
+  # TODO: correct me if https://github.com/computationalpathologygroup/ASAP/issues/176 is fixed
+  sed -i "1 i #include <QPainterPath>" "${srcdir}/asap/ASAP/MiniMap.cpp"
+  echo "Creating desktop file"
+  gendesk -f -n --pkgname ${pkgname} \
+    --pkgdesc "${pkgdesc}" \
+    --categories "Graphics;MedicalSoftware;Science;" \
+    --icon "${pkgname}" \
+    --exec "${_pkgname}"
+}
+
+build() {
+  cmake -B build -S "${srcdir}/${pkgname}" \
+    -DBUILD_ASAP=ON \
+    -DBUILD_EXECUTABLES=ON \
+    -DBUILD_IMAGEPROCESSING=ON \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_SKIP_INSTALL_RPATH=ON \
+    -DOPENSLIDE_INCLUDE_DIR=/usr/include/openslide \
+    -DPugiXML_INCLUDE_DIR=${srcdir}/pugixml/src \
+    -DWRAP_WHOLESLIDEFILTERS_PYTHON=ON
+  make -C build
+}
+
+package() {
+  make -C build DESTDIR="${pkgdir}" install
+  install -Dm644 "${pkgname}/Copyright.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -Dm755 "${pkgdir}/usr/bin/_wholeslidefilters.so" -t "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
+  rm -vf "${pkgdir}/usr/bin/_wholeslidefilters.so"
+  install -d "${pkgdir}/usr/lib/cmake" "${pkgdir}/usr/share/pixmaps"
+  mv "${pkgdir}/usr/cmake" "${pkgdir}/usr/lib/cmake/${pkgname}"
+  install -Dm644 "${srcdir}/${pkgname}.desktop" -t "${pkgdir}/usr/share/applications"
+  install -Dm644 "${srcdir}/${pkgname}/ASAP/resources/application.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+}
+# vim:set ts=2 sw=2 et:
