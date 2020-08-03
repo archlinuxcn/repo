@@ -1,12 +1,3 @@
-post_install() {
-  echo "==>   FIRST TIME SETUP"
-  echo "::  1. First time run as root:  /var/lib/adguardhome/AdGuardHome"
-  echo "::  2. Log in to web interface to create config: http://ip.of.server:3000"
-  echo "::     Stop AdGuardHome with ctrl+c when complete"
-  echo "::  3. Fix permissions:  chown -R adguardhome:adguardhome /var/lib/adguardhome"
-  echo "==>   Now you can start AdGuardHome.service via systemd and run as the unprivileged user"
-}
-
 post_remove() {
   echo "==> Optionally delete the adguardhome user and its home directory"
   echo "==>   if you are certain no processes are running under it."
