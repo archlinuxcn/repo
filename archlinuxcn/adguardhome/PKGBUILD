@@ -3,7 +3,7 @@
 pkgname=adguardhome
 _pkgname=AdGuardHome
 pkgver=0.103.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Network-wide ads and trackers blocking DNS server"
 arch=('x86_64')
 url="https://github.com/AdguardTeam/AdGuardHome"
@@ -20,6 +20,7 @@ sha256sums=('57db560d722d085709d27d7d15f9ae060b938fdd5ae0fb534b858e4bf55dba8f'
 
 build(){
   cd "$_pkgname-$pkgver"
+  # -j1 can be dropped once 5188da6 is incorporated into a stable release
   make -j1
 }
 
