@@ -1,0 +1,32 @@
+# First Linux Arch packager: Serge Victor <arch@random.re>
+
+_pkgname=addict
+pkgname=python-addict
+pkgver=2.2.1
+pkgrel=1
+pkgdesc="the Python Dict that's better than heroin"
+arch=('any')
+depends=(python)
+makedepends=(python-setuptools)
+checkdepends=(python-pytest)
+url='https://github.com/mewwts/addict'
+license=('MIT')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mewwts/addict/archive/v${pkgver}.tar.gz")
+sha512sums=('7f4694ea3290bbe7b0951066f85c863c7966e74e7ba7f5f4ff88f7c02b328a310e4f029e66d2946f75902ed1fbcbe21835a6065781d614a8d271055fcd52cdd1')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+check() {
+  cd "${_pkgname}-${pkgver}"
+  pytest -v
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
