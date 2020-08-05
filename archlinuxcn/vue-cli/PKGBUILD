@@ -7,7 +7,7 @@ _npmname=cli
 _npmid="@$_npmscope/$_npmname"
 
 pkgname="${_npmscope}-${_npmname}"
-pkgver=4.4.6
+pkgver=4.5.0
 pkgrel=1
 pkgdesc='Standard tooling for Vue.js development'
 arch=('any')
@@ -19,8 +19,8 @@ optdepends=()
 conflicts=('nodejs-vue-cli')
 source=("$pkgname-$pkgver.tar.gz::https://registry.npmjs.org/$_npmid/-/$_npmname-$pkgver.tgz")
 noextract=("${source[@]%%::*}")
-# Get SHASUM:  curl -s "https://registry.npmjs.org/@vue/cli" | jq '.versions."4.4.6".dist.shasum'
-sha1sums=('61510b5a673f1e505ff6139d15850ca0238baee9')
+# Get SHASUM:  curl -s "https://registry.npmjs.org/@vue/cli" | jq '.versions."4.5.0".dist.shasum'
+sha1sums=('a1ea38f857c854b572f66ad920e10ed7a6f1b9b3')
 
 package() {
   # Setting temporary cache
@@ -41,7 +41,7 @@ package() {
   # (npm internal keys are underscored but we don't need these keys)
   sed -i -n '1p;/  "[^_].*": {$/,$p' "$pkgdir"/usr/lib/node_modules/"$_npmid"/package.json
   sed -i "s|$pkgdir||" "$pkgdir"/usr/lib/node_modules/"$_npmid"/node_modules/sshpk/package.json
-  sed -i "s|$pkgdir||" "$pkgdir"/usr/lib/node_modules/"$_npmid"/node_modules/he/package.json
+  # sed -i "s|$pkgdir||" "$pkgdir"/usr/lib/node_modules/"$_npmid"/node_modules/he/package.json
 
   # Add license
   install -Dm644 "$pkgdir/usr/lib/node_modules/$_npmid/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
