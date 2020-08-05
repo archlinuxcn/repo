@@ -3,7 +3,7 @@
 # Maintainer: meepzh <meep.aur@meepzh.com>
 
 pkgname=minify
-pkgver=2.7.6
+pkgver=2.8.0
 pkgrel=1
 pkgdesc="Minifier CLI for HTML, CSS, JS, JSON, SVG and XML"
 arch=('x86_64')
@@ -12,7 +12,7 @@ license=('MIT')
 makedepends=('go')
 optdepends=('bash-completion: command-line autocomplete with bash')
 source=("$url/archive/v$pkgver.tar.gz")
-sha256sums=('ecf1a48c23eb434c2160d289f6d31fe34056a667e4d92cd689bf145b5a12da11')
+sha256sums=('4c833a23414d161059292232550238c054383e4a9558a2c4cd1ec6c96698b44c')
 
 prepare() {
   cd "$pkgname-$pkgver"
@@ -37,8 +37,8 @@ check() {
 package() {
   cd "$pkgname-$pkgver"
   install -Dm755 "build/$pkgname" "$pkgdir/usr/bin/$pkgname"
-  install -Dm644 "LICENSE.md" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-  install -Dm644 "cmd/minify/minify_bash_tab_completion" "$pkgdir/usr/share/bash-completion/completions/$pkgname"
-  source cmd/minify/minify_bash_tab_completion
+  install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 "cmd/minify/bash_completion" "$pkgdir/usr/share/bash-completion/completions/$pkgname"
+  source cmd/minify/bash_completion
 }
 
