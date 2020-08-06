@@ -33,7 +33,12 @@ build() {
 	add_binary ${PLYMOUTH_PLUGIN_PATH}/renderers/frame-buffer.so
 
 	if [ -d ${DATADIR}/plymouth/themes/${PLYMOUTH_THEME_NAME} ]; then
-            add_full_dir ${DATADIR}/plymouth/themes/${PLYMOUTH_THEME_NAME}
+        add_full_dir ${DATADIR}/plymouth/themes/${PLYMOUTH_THEME_NAME}
+
+		# BGRT theme depends on Spinner theme
+		if [ "${PLYMOUTH_THEME_NAME}" == "bgrt" ] && [ -d ${DATADIR}/plymouth/themes/spinner ]; then
+			add_full_dir ${DATADIR}/plymouth/themes/spinner
+		fi
 	fi
 	
 	add_file /usr/lib/udev/rules.d/70-uaccess.rules

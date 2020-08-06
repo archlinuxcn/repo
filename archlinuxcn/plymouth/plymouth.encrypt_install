@@ -14,7 +14,6 @@ build() {
 
     add_binary "cryptsetup"
     add_binary "dmsetup"
-    add_binary "plymouth"
     add_file "/usr/lib/udev/rules.d/10-dm.rules"
     add_file "/usr/lib/udev/rules.d/13-dm-disk.rules"
     add_file "/usr/lib/udev/rules.d/95-dm-notify.rules"
@@ -22,6 +21,8 @@ build() {
     add_binary "/usr/lib/plymouth/label.so"
     add_binary "/usr/lib/plymouth/text.so"
     add_file "/usr/share/fonts/TTF/DejaVuSans.ttf"
+    add_file "/usr/share/fonts/cantarell/Cantarell-Thin.otf"
+    add_file "/usr/share/fonts/cantarell/Cantarell-Regular.otf"
     add_file "/etc/fonts/fonts.conf"
     add_file "/etc/fonts/conf.d/60-latin.conf"
 
