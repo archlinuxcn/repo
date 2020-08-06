@@ -1,0 +1,13 @@
+diff -ur -Nur devilspie2-0.43.orig/src/script_functions.c devilspie2-0.43/src/script_functions.c
+--- devilspie2-0.43.orig/src/script_functions.c	2017-09-26 15:03:36.000000000 +0200
++++ devilspie2-0.43/src/script_functions.c	2020-06-30 15:29:15.024643740 +0200
+@@ -470,8 +470,7 @@
+ 		lua_call(lua, 1, 1);
+ 		s = lua_tostring(lua, -1);  /* get result */
+ 		if (s == NULL)
+-			return luaL_error(lua, LUA_QL("tostring") " must return a string to "
+-			                  LUA_QL("print"));
++			return luaL_error(lua, "'tostring' must return a string to 'print'");
+ 		if (i > 1) {
+ 			if (devilspie2_debug) fputs("\t", stdout);
+ 		}
