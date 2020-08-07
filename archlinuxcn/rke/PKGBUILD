@@ -1,11 +1,11 @@
 # Maintainer: Michael William Le Nguyen <michael at mail dot ttp dot codes>
 pkgname=rke
-pkgver=1.1.2
+pkgver=1.1.4
 pkgrel=1
 pkgdesc="An extremely simple, lightning fast Kubernetes installer that works everywhere."
 arch=('x86_64')
 url="https://github.com/rancher/rke"
-license=('apache')
+license=('Apache')
 
 makedepends=(
 	"git"
