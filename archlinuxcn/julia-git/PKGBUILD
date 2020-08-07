@@ -31,7 +31,7 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=1.6.0.DEV.593.gaaf57b1af47
+pkgver=1.6.0.DEV.604.gdffc8895b89
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -44,7 +44,7 @@ makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
              gcc-fortran git patchelf python)
 options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
-        0002-Optimize-Int8-and-UInt8-boxing.patch
+        0001-Optimize-Int8-and-UInt8-boxing.patch
         0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
         0001-Optimize-GC-frame-push-pop-insertion.patch
         source-translate.patch
@@ -55,7 +55,7 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '2976f2b5f4836c0a16c62ceda684d3a1'
+         '14b20ab0be65df4c70d6550a55379bce'
          '2222d3eabfe6040a8cca466303c86d2b'
          '3dbb81b1dae3a9d977bd69f8354b3007'
          '42f2b44768927a7ed2296b15161ba21c'
@@ -147,7 +147,7 @@ EOF
 
   # patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
   # patch -Np1 < ../0001-Optimize-GC-frame-push-pop-insertion.patch
-  patch -Np1 < ../0002-Optimize-Int8-and-UInt8-boxing.patch
+  patch -Np1 < ../0001-Optimize-Int8-and-UInt8-boxing.patch
   patch -Np1 < ../source-translate.patch
   patch -Np1 < ../gdb-debug.patch
 
