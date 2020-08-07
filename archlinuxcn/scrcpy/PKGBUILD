@@ -1,7 +1,7 @@
 # Contributor: Andrew Rabert <ar@nullsum.net>
 
 pkgname=scrcpy
-pkgver=1.14
+pkgver=1.15
 pkgrel=1
 pkgdesc='Display and control your Android device'
 arch=('i686' 'x86_64')
@@ -11,8 +11,8 @@ depends=('android-tools' 'ffmpeg' 'sdl2')
 makedepends=('meson')
 source=("https://github.com/Genymobile/scrcpy/archive/v${pkgver}.tar.gz"
         "https://github.com/Genymobile/scrcpy/releases/download/v${pkgver}/scrcpy-server-v${pkgver}")
-sha256sums=('45353b6e6cf1efbc8aadf2a51103242460562f6a55c6772037f492716b3fca07'
-            '1d1b18a2b80e956771fd63b99b414d2d028713a8f12ddfa5a369709ad4295620')
+sha256sums=('f229ba0b8fca184ab0063ee214e56a2a651d665d4a1c7ac941e111190852c555'
+            'e160c46784f30566eae621cad88bfb34e124f945cb8274b8dfc615b613b86dd8')
 
 build() {
     cd "${pkgname}-${pkgver}"
