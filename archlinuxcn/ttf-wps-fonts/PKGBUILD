@@ -3,12 +3,13 @@
 
 pkgname=ttf-wps-fonts
 pkgver=1.0
-pkgrel=4
+pkgrel=5
 pkgdesc="Symbol fonts required by wps-office."
 arch=(any)
 license=("custom")
 depends=()
 makedepends=()
+url="https://github.com/IamDH4/ttf-wps-fonts"
 source=("$pkgname.zip::https://github.com/IamDH4/$pkgname/archive/master.zip"
         "license.txt")
 sha1sums=('cbc7d2c733b5d3461f3c2200756d4efce9e951d5'
