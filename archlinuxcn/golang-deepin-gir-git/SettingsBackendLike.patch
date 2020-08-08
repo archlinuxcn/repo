@@ -1,0 +1,42 @@
+From 55ad8df560b2a8aec3462e61edff781f11cf86a9 Mon Sep 17 00:00:00 2001
+From: jouyouyun <jouyouwen717@gmail.com>
+Date: Mon, 24 Oct 2016 19:43:32 +0800
+Subject: [PATCH] Fix 'SettingsBackendLike' undefined
+
+Change-Id: I9b817b3a6ec26ce8023e26a6b2c7abc67074d53f
+---
+
+diff --git a/lib.in/gio-2.0/config.json b/lib.in/gio-2.0/config.json
+index aaf75ed..7733140 100644
+--- a/lib.in/gio-2.0/config.json
++++ b/lib.in/gio-2.0/config.json
+@@ -35,6 +35,7 @@
+ 			"AppLaunchContext",
+ 			"Emblem",
+ 			"Settings",
++			"SettingsBackend",
+ 			"FileMonitor",
+ 			"FileInfo",
+ 			"InputStream",
+@@ -52,7 +53,6 @@
+ 			"FileAttributeInfoList",
+ 			"FileAttributeMatcher",
+ 			"ActionEntry",
+-			"SettingsBackend",
+ 			"MountIface",
+ 			"OutputVector"
+ 		    //"SettingsSchema"
+diff --git a/lib.in/glib-2.0/config.json b/lib.in/glib-2.0/config.json
+index 88a8314..4290004 100644
+--- a/lib.in/glib-2.0/config.json
++++ b/lib.in/glib-2.0/config.json
+@@ -11,7 +11,8 @@
+ 	    "KeyFile",
+ 	    "Variant",
+ 	    "VariantType",
+-	    "PollFD"
++	    "PollFD",
++	    "Tree"
+ 	],
+ 	"functions": [
+ 	    "get_user_cache_dir",
