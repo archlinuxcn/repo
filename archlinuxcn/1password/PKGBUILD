@@ -1,8 +1,8 @@
 # Maintainer: Winston Astrachan <winston dot astrachan at gmail dot com>
 
 pkgname=1password
-pkgver=0.8.0.22506
-pkgrel=4
+pkgver=0.8.1.23078
+pkgrel=1
 pkgdesc="The world's most-loved password manager - read-only development preview"
 arch=('x86_64')
 url='https://1password.com/'
@@ -14,7 +14,7 @@ _appimage="${pkgname}-${pkgver}.AppImage"
 changelog='CHANGELOG'
 source=("${_appimage}::https://onepassword.s3.amazonaws.com/linux/appimage/1password-latest.AppImage")
 noextract=("${_appimage}")
-sha256sums=('09d3812f1ca81074f0677ce329647fdbf3ce2a1d6f0132ae99031271badf46e4')
+sha256sums=('046e32056111ed19a3dc9d4e5937189d15f741e7dae6778cc3fd58a92114eca1')
 validpgpkeys=('3FEF9748469ADBE15DA7CA80AC2D62742012EA22')
 
 prepare() {
