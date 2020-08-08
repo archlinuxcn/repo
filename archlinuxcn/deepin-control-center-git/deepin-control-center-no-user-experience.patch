@@ -1,0 +1,29 @@
+From 15a3b5101853ee0b1b62e5e7dde217cbf9a454bf Mon Sep 17 00:00:00 2001
+From: wangwei <wangwei@uniontech.com>
+Date: Fri, 10 Apr 2020 22:55:46 +0800
+Subject: [PATCH] =?UTF-8?q?feat(commoninfo):=20=E7=A4=BE=E5=8C=BA=E7=89=88?=
+ =?UTF-8?q?=E6=B2=A1=E6=9C=89=E2=80=9C=E7=94=A8=E6=88=B7=E4=BD=93=E9=AA=8C?=
+ =?UTF-8?q?=E8=AE=A1=E5=88=92=E2=80=9D=E9=A1=B9?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Feat(19420) 社区版去掉用户体验计划
+---
+ src/frame/window/modules/commoninfo/commoninfowidget.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/frame/window/modules/commoninfo/commoninfowidget.cpp b/src/frame/window/modules/commoninfo/commoninfowidget.cpp
+index 1c0b4b4fa..aec40194a 100644
+--- a/src/frame/window/modules/commoninfo/commoninfowidget.cpp
++++ b/src/frame/window/modules/commoninfo/commoninfowidget.cpp
+@@ -78,10 +78,7 @@ void CommonInfoWidget::initData()
+                                            QMetaMethod::fromSignal(&CommonInfoWidget::requestShowDeveloperModeWidget)});
+                     }
+         }
+-        //~ contents_path /commoninfo/User Experience Program
+-        m_itemList.append({"dcc_ue_plan", tr("User Experience Program"),
+-                           QMetaMethod::fromSignal(&CommonInfoWidget::requestShowUEPlanWidget)});
+ 
+ #if 0
+         m_itemList.append({"", tr("Tablet Mode"),
