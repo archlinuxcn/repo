@@ -2,13 +2,13 @@
 
 pkgname=qv2ray-plugin-trojan
 pkgver=2.0.0
-pkgrel=4
+pkgrel=5
 pkgdesc="Qv2ray Plugin: Trojan"
 arch=('x86_64')
 url="https://github.com/Qv2ray/QvPlugin-Trojan"
 license=('GPL3')
-depends=('boost-libs' 'openssl' 'qt5-base' 'qv2ray')
-makedepends=('boost' 'cmake' 'git' 'libffi' 'ninja' 'qt5-tools')
+depends=('openssl' 'qt5-base' 'qv2ray')
+makedepends=('boost' 'cmake' 'git' 'ninja')
 groups=('qv2ray-plugin')
 source=("$pkgname-$pkgver::git+$url.git#tag=v$pkgver")
 sha256sums=('SKIP')
@@ -29,5 +29,5 @@ build() {
 
 package() {
     cd "$srcdir/$pkgname-$pkgver/build/"
-    install -Dm 644 libQvTrojanPlugin.so -t "$pkgdir/usr/share/qv2ray/plugins/"
+    install -Dm 755 libQvTrojanPlugin.so -t "$pkgdir/usr/share/qv2ray/plugins/"
 }
