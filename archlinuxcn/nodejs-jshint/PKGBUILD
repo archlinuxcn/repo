@@ -3,7 +3,7 @@
 
 _npmname=jshint
 pkgname=nodejs-"$_npmname"
-pkgver=2.11.1
+pkgver=2.12.0
 pkgrel=1
 pkgdesc='Static analysis tool for JavaScript'
 arch=('any')
@@ -12,7 +12,7 @@ license=('MIT')
 depends=('nodejs')
 makedepends=('npm' 'jq' 'moreutils')
 source=("https://registry.npmjs.org/$_npmname/-/$_npmname-$pkgver.tgz")
-sha256sums=('4fe606547383c377e41314eee52f52dc22890ded8ff532dcb38bbb14bdd74b4f')
+sha256sums=('82a255d6580c17682f35da20bfa424299b3f9d7c734f02e97a0a32e8e1242f69')
 noextract=("${source[@]##*/}")
 
 package() {
