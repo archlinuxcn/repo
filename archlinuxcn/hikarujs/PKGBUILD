@@ -1,7 +1,7 @@
 # Maintainer: Alynx Zhou <alynx.zhou@gmail.com>
 
 pkgname=hikarujs
-pkgver=1.4.4
+pkgver=1.5.1
 pkgrel=1
 pkgdesc='A static site generator that generates routes based on directories naturally.'
 arch=('any')
@@ -11,7 +11,7 @@ depends=('nodejs>=8.9.0')
 makedepends=('npm' 'jq')
 source=("https://registry.npmjs.org/${pkgname}/-/${pkgname}-${pkgver}.tgz")
 noextract=("${pkgname}-${pkgver}.tgz")
-sha512sums=('a227cf608ae4f3b43c3b63e096e31b926d2b0cee049ccfaba45d8e808e595bc108e3ee571b19bbd173e1fafc9c8e35c0ee8cd739dfdf4175048dbd20ade7383f')
+sha512sums=('431d4cf4545d53a5d219ab5371425389fd31020bf89e7f932fe962b2a593537810318caecff09d01681cc8cd76c953dc48b0b30b69b83b05e9320174ef45dc38')
 
 package() {
   # Use `--cache="${srcdir}/.npm"` to prevent npm from generating cache in home.
