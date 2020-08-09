@@ -20,3 +20,15 @@
 +CC_OPTS += $(call vm_check_gcc,-mindirect-branch-register,)
  
  include $(SRCROOT)/Makefile.kernel
+ 
+--- a/vmmon/linux/driver.c
++++ b/vmmon/linux/driver.c
+@@ -38,6 +38,8 @@
+ 
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 32)
+ #error Linux kernels before 2.6.32 are not supported
++#elif LINUX_VERSION_CODE >= KERNEL_VERSION(5, 8, 0)
++#error Linux kernels from 5.8.0 are not supported
+ #endif
+ 
+ #include <asm/io.h>

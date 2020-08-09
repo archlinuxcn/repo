@@ -21,7 +21,7 @@ pkgname=('vmware-workstation'
 pkgver=15.5.6
 _buildver=16341506
 _pkgver=${pkgver}_${_buildver}
-pkgrel=1
+pkgrel=2
 pkgdesc='The industry standard for running multiple operating systems as virtual machines on a single Linux PC.'
 arch=(x86_64)
 url='https://www.vmware.com/products/workstation-for-linux.html'
@@ -97,7 +97,7 @@ sha256sums=(
 
   '05e26d8b21d190ebabb7f693998114d9d5991d9dfb71acb4d990293a65b6b487'
   '6ce902b1dab8fc69be253abd8e79017011985eca850ff7acc7282f9ab668e35d'
-  'f23aa17b29cc95b9e78f27d862a95f5f3da6608096646d175f305f9ac1b8f54a'
+  '9156b7905f1431cd5c4e208abb5276a9a2959ee5cc5bf890e24a95c3c2b1a8e5'
   'c1302d45008865537583b99d53ed0ea4a1d672227f190177fc63fc0c2f980151'
 )
 options=(!strip emptydirs)
@@ -108,7 +108,7 @@ _isovirtualprinterimages=(Linux Windows)
 
 if [ -n "$_enable_macOS_guests" ]; then
 
-_vmware_fusion_ver=11.5.5_16269456
+_vmware_fusion_ver=11.5.6_16696540
 # List of VMware Fusion versions: https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/
 
 _unlocker_ver=3.0.3
@@ -126,7 +126,7 @@ source+=(
   "efi-unlocker-patch-${_efi_unlocker_ver}.txt"
 )
 sha256sums+=(
-  'fedd67ec2a50ffcc71376dbeeea1f5c0577dfcfcd2bcc7bf91239f3c18d7dcf9'
+  '8205f598be56ebbe5ddf23e2484ff067fd4a0a8543cd5408c390ea6bb1ae0364'
   '1c27547dcf6fb2f436c96ee62ae8c7f5cfd14b40d8bbd35dc385e247c4fb7e0f'
   '392c1effcdec516000e9f8ffc97f2586524d8953d3e7d6f2c5f93f2acd809d91'
 )
