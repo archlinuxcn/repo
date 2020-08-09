@@ -10,7 +10,7 @@ build() {
 	PLYMOUTH_LOGO_FILE="${DATADIR}/arch-logo.png"
 	PLYMOUTH_THEME_NAME="$(/usr/bin/plymouth-set-default-theme)"
 	PLYMOUTH_THEME_DIR="${DATADIR}/themes/${PLYMOUTH_THEME_NAME}"
-    PLYMOUTH_IMAGE_DIR=$(grep "ImageDir *= *" ${PLYMOUTH_THEME_DIR}/${PLYMOUTH_THEME_NAME}.plymouth | sed 's/ImageDir *= *//')
+	PLYMOUTH_IMAGE_DIR=$(grep "ImageDir *= *" ${PLYMOUTH_THEME_DIR}/${PLYMOUTH_THEME_NAME}.plymouth | sed 's/ImageDir *= *//')
 	PLYMOUTH_PLUGIN_PATH="$(plymouth --get-splash-plugin-path)"
 	PLYMOUTH_MODULE_NAME="$(grep "ModuleName *= *" ${PLYMOUTH_THEME_DIR}/${PLYMOUTH_THEME_NAME}.plymouth | sed 's/ModuleName *= *//')"
 
@@ -21,21 +21,32 @@ build() {
 	add_binary ${PLYMOUTH_PLUGIN_PATH}/text.so
 	add_file ${DATADIR}/themes/details/details.plymouth
 	add_binary ${PLYMOUTH_PLUGIN_PATH}/details.so
-	add_binary ${PLYMOUTH_PLUGIN_PATH}/label.so
-    add_file "/usr/share/fonts/TTF/DejaVuSans.ttf"
-    add_file "/usr/share/fonts/cantarell/Cantarell-Thin.otf"
-    add_file "/usr/share/fonts/cantarell/Cantarell-Regular.otf"
-    add_file "/etc/fonts/fonts.conf"
-    add_file "/etc/fonts/conf.d/60-latin.conf"
 
 	add_file "${PLYMOUTH_LOGO_FILE}"
 	add_file /etc/os-release
 	add_file /etc/plymouth/plymouthd.conf
-    add_file ${DATADIR}/plymouthd.defaults
+	add_file ${DATADIR}/plymouthd.defaults
+	
+	
+	if [ -f "/usr/share/fonts/TTF/DejaVuSans.ttf" -o -f "/usr/share/fonts/cantarell/Cantarell-Thin.otf" ]; then
+		add_binary ${PLYMOUTH_PLUGIN_PATH}/label.so
+		add_file "/etc/fonts/fonts.conf"
+	fi
+	
+	if [ -f "/usr/share/fonts/TTF/DejaVuSans.ttf" ]; then
+		add_file "/usr/share/fonts/TTF/DejaVuSans.ttf"
+		add_file "/etc/fonts/conf.d/57-dejavu-sans.conf"
+	fi
+	
+	if [ -f "/usr/share/fonts/cantarell/Cantarell-Thin.otf" ]; then
+		add_file "/usr/share/fonts/cantarell/Cantarell-Thin.otf"
+		add_file "/usr/share/fonts/cantarell/Cantarell-Regular.otf"
+		add_file "/etc/fonts/conf.d/60-latin.conf"
+	fi
 
 	if [ ! -f ${PLYMOUTH_PLUGIN_PATH}/${PLYMOUTH_MODULE_NAME}.so ]; then
-	    echo "The default plymouth plugin (${PLYMOUTH_MODULE_NAME}) doesn't exist" > /dev/stderr
-	    exit 1
+		echo "The default plymouth plugin (${PLYMOUTH_MODULE_NAME}) doesn't exist" > /dev/stderr
+		exit 1
 	fi
 
 	add_binary ${PLYMOUTH_PLUGIN_PATH}/${PLYMOUTH_MODULE_NAME}.so
@@ -44,11 +55,11 @@ build() {
 	add_binary ${PLYMOUTH_PLUGIN_PATH}/renderers/frame-buffer.so
 
 	if [ -d ${PLYMOUTH_THEME_DIR} ]; then
-        add_full_dir ${PLYMOUTH_THEME_DIR}
+		add_full_dir ${PLYMOUTH_THEME_DIR}
 	fi
 
-	if [ -d ${PLYMOUTH_IMAGE_DIR} ]; then
-        add_full_dir ${PLYMOUTH_IMAGE_DIR}
+	if [ "${PLYMOUTH_IMAGE_DIR}" != "${PLYMOUTH_THEME_DIR}" -a -d ${PLYMOUTH_IMAGE_DIR} ]; then
+		add_full_dir ${PLYMOUTH_IMAGE_DIR}
 	fi
 	
 	add_udev_rule 70-uaccess.rules

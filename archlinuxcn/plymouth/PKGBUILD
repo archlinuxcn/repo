@@ -6,7 +6,7 @@
 
 pkgname=plymouth
 pkgver=0.9.5
-pkgrel=2
+pkgrel=3
 pkgdesc="A graphical boot splash screen with kernel mode-setting support"
 url="https://www.freedesktop.org/wiki/Software/Plymouth/"
 arch=('i686' 'x86_64')
@@ -23,22 +23,22 @@ backup=('etc/plymouth/plymouthd.conf')
 options=('!libtool' '!emptydirs')
 
 source=("https://gitlab.freedesktop.org/${pkgname}/${pkgname}/-/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz"
-        'arch-logo.png'
-	'plymouth.encrypt_hook'
-	'plymouth.encrypt_install'
-	'gdm-plymouth.service'
-	'lxdm-plymouth.service'
-	'lightdm-plymouth.service'
-	'slim-plymouth.service'
-	'sddm-plymouth.service'
-	'plymouth-deactivate.service'
-	'plymouth-start.service.in.patch'
-	'plymouth-start.path'
-	'plymouth.initcpio_hook'
-	'plymouth.initcpio_install'
-	'sd-plymouth.initcpio_install'
-	'plymouth-quit.service.in.patch'
-	'plymouth-update-initrd.patch'
+       'arch-logo.png'
+       'plymouth.encrypt_hook'
+       'plymouth.encrypt_install'
+       'gdm-plymouth.service'
+       'lxdm-plymouth.service'
+       'lightdm-plymouth.service'
+       'slim-plymouth.service'
+       'sddm-plymouth.service'
+       'plymouth-deactivate.service'
+       'plymouth-start.service.in.patch'
+       'plymouth-start.path'
+       'plymouth.initcpio_hook'
+       'plymouth.initcpio_install'
+       'sd-plymouth.initcpio_install'
+       'plymouth-quit.service.in.patch'
+       'plymouth-update-initrd.patch'
 )
 
 sha256sums=('55a461003ece0a4daeffb8b7ac2178977c5ce024a7e688d24f6d2230465b50ba'
@@ -54,8 +54,8 @@ sha256sums=('55a461003ece0a4daeffb8b7ac2178977c5ce024a7e688d24f6d2230465b50ba'
             '3a46f7faced877a913506d59757f0af60ad3d5f0bc365c56ed7ecc7aef75c5eb'
             'ce3d62f4c5a1b5c0ccadd15406c7430251d1a42b232721bfbfc747da1b13e3ff'
             '2a80e2cad8de428358647677afa166219589d3338c5f94838146c804a29e2769'
-            '897c2f1c9ec5e369dd11cba3ce6f5cb3d3d9a863a2016b6fa6bcc7df202cc030'
-            '4b81e5bd380aa0b61d12925b498c5d307d78484feec02254f3fcc6c667eed7f2'
+            '2dd996a86beb1dc1fa5e45a14e98daa8fc505c5d1dff94bc5fdb3246a113d5ca'
+            '50a32014540c6603910b95ce0e40097089dde11fdde3f502c721b6b160a0b997'
             'a1766e3fae000e5158a23b5c01d2c615894e6c3f9923877ccc5ca1bcb36351fa'
             '74908ba59cea53c6a9ab67bb6dec1de1616f3851a0fd89bb3c157a1c54e6633a')
 
@@ -89,29 +89,29 @@ build() {
 		--with-background-end-color-stop=0x4D4D4D \
 		--without-rhgb-compat-link \
 		--without-system-root-install \
-        --with-runtimedir=/run
+		--with-runtimedir=/run
 
 	make
 }
 
 package() {
-  cd "$srcdir"/${pkgname}-${pkgver}
+	cd "$srcdir"/${pkgname}-${pkgver}
 
-  make DESTDIR="$pkgdir" install
+	make DESTDIR="$pkgdir" install
 
-  install -Dm644 "$srcdir/arch-logo.png" "$pkgdir/usr/share/plymouth/arch-logo.png"
+	install -Dm644 "$srcdir/arch-logo.png" "$pkgdir/usr/share/plymouth/arch-logo.png"
 
-  install -Dm644 "$srcdir/plymouth.encrypt_hook" "$pkgdir/usr/lib/initcpio/hooks/plymouth-encrypt"
-  install -Dm644 "$srcdir/plymouth.encrypt_install" "$pkgdir/usr/lib/initcpio/install/plymouth-encrypt"
-  install -Dm644 "$srcdir/plymouth.initcpio_hook" "$pkgdir/usr/lib/initcpio/hooks/plymouth"
-  install -Dm644 "$srcdir/plymouth.initcpio_install" "$pkgdir/usr/lib/initcpio/install/plymouth"
-  install -Dm644 "$srcdir/sd-plymouth.initcpio_install" "$pkgdir/usr/lib/initcpio/install/sd-plymouth"
+	install -Dm644 "$srcdir/plymouth.encrypt_hook" "$pkgdir/usr/lib/initcpio/hooks/plymouth-encrypt"
+	install -Dm644 "$srcdir/plymouth.encrypt_install" "$pkgdir/usr/lib/initcpio/install/plymouth-encrypt"
+	install -Dm644 "$srcdir/plymouth.initcpio_hook" "$pkgdir/usr/lib/initcpio/hooks/plymouth"
+	install -Dm644 "$srcdir/plymouth.initcpio_install" "$pkgdir/usr/lib/initcpio/install/plymouth"
+	install -Dm644 "$srcdir/sd-plymouth.initcpio_install" "$pkgdir/usr/lib/initcpio/install/sd-plymouth"
 
-  for i in {gdm,sddm,lxdm,slim,lightdm}-plymouth.service; do
-    install -Dm644 "$srcdir/$i" "$pkgdir/usr/lib/systemd/system/$i"
-  done
+	for i in {gdm,sddm,lxdm,slim,lightdm}-plymouth.service; do
+		install -Dm644 "$srcdir/$i" "$pkgdir/usr/lib/systemd/system/$i"
+	done
 
-  install -Dm644 "$srcdir/plymouth-deactivate.service" 	"$pkgdir/usr/lib/systemd/system/plymouth-deactivate.service"
-  install -Dm644 "$srcdir/plymouth-start.path" 	"$pkgdir/usr/lib/systemd/system/plymouth-start.path"
-  install -Dm644 "$pkgdir/usr/share/plymouth/plymouthd.defaults" "$pkgdir/etc/plymouth/plymouthd.conf"
+	install -Dm644 "$srcdir/plymouth-deactivate.service" 	"$pkgdir/usr/lib/systemd/system/plymouth-deactivate.service"
+	install -Dm644 "$srcdir/plymouth-start.path" 	"$pkgdir/usr/lib/systemd/system/plymouth-start.path"
+	install -Dm644 "$pkgdir/usr/share/plymouth/plymouthd.defaults" "$pkgdir/etc/plymouth/plymouthd.conf"
 }
