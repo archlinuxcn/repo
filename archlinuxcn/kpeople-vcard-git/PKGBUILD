@@ -1,17 +1,18 @@
 # Maintainer: Rihards Skuja <rhssk at posteo eu>
+_remotename=kpeoplevcard
 _pkgname=kpeople-vcard
 pkgname=$_pkgname-git
 pkgver=r38.32d50a9
-pkgrel=1
+pkgrel=2
 pkgdesc="KPeople VCard Support"
 arch=(x86_64)
-url="https://github.com/KDE/kpeoplevcard"
+url="https://phabricator.kde.org/source/$_remotename/"
 license=("GPL")
 depends=(kpeople kcontacts)
 makedepends=('extra-cmake-modules' 'git')
-provides=($_pkgname)
-conflicts=($_pkgname)
-source=("git+${url}.git")
+provides=($_remotename)
+conflicts=($_remotename)
+source=("git+git://anongit.kde.org/$_remotename")
 md5sums=("SKIP")
 
 pkgver() {
