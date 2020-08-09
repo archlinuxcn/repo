@@ -1,0 +1,175 @@
+From e1baa5bba189d3be882b86f34bf0e201ea17c91a Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 9 Aug 2020 02:09:15 -0400
+Subject: [PATCH 3/3] Allow LLVM to optimize GC write barriers for new objects
+
+---
+ src/aotcompile.cpp            | 11 +++++-
+ src/ccall.cpp                 |  5 ++-
+ src/cgutils.cpp               |  5 +++
+ src/codegen.cpp               |  9 +++--
+ src/llvm-late-gc-lowering.cpp | 67 ++++++++++++++++++++++++++++++++---
+ 5 files changed, 88 insertions(+), 9 deletions(-)
+
+diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
+index ba16df1414..8f1d1a0043 100644
+--- a/src/aotcompile.cpp
++++ b/src/aotcompile.cpp
+@@ -753,13 +753,22 @@ void addOptimizationPasses(legacy::PassManagerBase *PM, int opt_level,
+         PM->add(createGCInvariantVerifierPass(false));
+         PM->add(createLateLowerGCFramePass());
+         PM->add(createFinalLowerGCPass());
++        PM->add(createRemoveNIPass());
++        // We need these two passes and the instcombine below
++        // after GC lowering to let LLVM optimize do some constant propagation on the tags.
++        // and remove some unnecessary write barrier checks.
++        PM->add(createGVNPass());
++        PM->add(createSCCPPass());
+         // Remove dead use of ptls
+         PM->add(createDeadCodeEliminationPass());
+         PM->add(createLowerPTLSPass(dump_native));
++        PM->add(createInstructionCombiningPass());
+         // Clean up write barrier and ptls lowering
+         PM->add(createCFGSimplificationPass());
+     }
+-    PM->add(createRemoveNIPass());
++    else {
++        PM->add(createRemoveNIPass());
++    }
+     PM->add(createCombineMulAddPass());
+     PM->add(createDivRemPairsPass());
+ #if defined(JL_ASAN_ENABLED)
+diff --git a/src/ccall.cpp b/src/ccall.cpp
+index d3c7e13f03..6db857566c 100644
+--- a/src/ccall.cpp
++++ b/src/ccall.cpp
+@@ -378,7 +378,10 @@ static Value *runtime_apply_type_env(jl_codectx_t &ctx, jl_value_t *ty)
+                 ctx.spvals_ptr,
+                 ConstantInt::get(T_size, sizeof(jl_svec_t) / sizeof(jl_value_t*)))
+     };
+-    return ctx.builder.CreateCall(prepare_call(jlapplytype_func), makeArrayRef(args));
++    auto call = ctx.builder.CreateCall(prepare_call(jlapplytype_func), makeArrayRef(args));
++    call->addAttribute(AttributeList::ReturnIndex,
++                       Attribute::getWithAlignment(jl_LLVMContext, Align(16)));
++    return call;
+ }
+ 
+ static const std::string make_errmsg(const char *fname, int n, const char *err)
+diff --git a/src/cgutils.cpp b/src/cgutils.cpp
+index 4794a7d6f3..3c21436f0c 100644
+--- a/src/cgutils.cpp
++++ b/src/cgutils.cpp
+@@ -335,6 +335,11 @@ static unsigned julia_alignment(jl_value_t *jt)
+         // Array always has this alignment
+         return JL_SMALL_BYTE_ALIGNMENT;
+     }
++    if (jt == (jl_value_t*)jl_datatype_type) {
++        // types are never allocated in julia code/on the stack
++        // and this is the guarantee we have for the GC bits
++        return 16;
++    }
+     assert(jl_is_datatype(jt) && ((jl_datatype_t*)jt)->layout);
+     unsigned alignment = jl_datatype_align(jt);
+     if (alignment > JL_HEAP_ALIGNMENT)
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index ba5c621cdc..5809b17d0c 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -659,10 +659,13 @@ static const auto jlapplytype_func = new JuliaFunction{
+     "jl_instantiate_type_in_env",
+     [](LLVMContext &C) { return FunctionType::get(T_prjlvalue,
+             {T_pjlvalue, T_pjlvalue, T_pprjlvalue}, false); },
+-    [](LLVMContext &C) { return AttributeList::get(C,
++    [](LLVMContext &C) {
++        return AttributeList::get(C,
+             AttributeSet(),
+-            Attributes(C, {Attribute::NonNull}),
+-            None); },
++            AttributeSet::get(C, makeArrayRef({Attribute::get(C, Attribute::NonNull),
++                                               Attribute::getWithAlignment(C, Align(16))})),
++            None);
++    },
+ };
+ static const auto jl_object_id__func = new JuliaFunction{
+     "jl_object_id_",
+diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
+index ba3a2a9365..0343cb09d7 100644
+--- a/src/llvm-late-gc-lowering.cpp
++++ b/src/llvm-late-gc-lowering.cpp
+@@ -2107,10 +2107,69 @@ bool LateLowerGCFrame::CleanupIR(Function &F, State *S) {
+                 newI->takeName(CI);
+ 
+                 // Set the tag.
+-                StoreInst *store = builder.CreateAlignedStore(
+-                    CI->getArgOperand(2),
+-                    EmitTagPtr(builder, T_prjlvalue, newI),
+-                    sizeof(size_t));
++                // LLVM alignment/bit check is not happy about addrspacecast and refuse
++                // to remove write barrier because of it.
++                // We pretty much only load using `T_size` so try our best to strip
++                // as many cast as possible.
++                // Creating an alignment assumption does not seem to work and this
++                // seems to cover at least the most important cases,
++                // i.e. type tag returned by `literal_pointer_val`.
++                // Another common case is handled by the return alignment attribute
++                // on function calls which should be relatively robust.
++                // The reinstallation of aligned metadata below isn't very robust.
++                // Maybe we could add another pass to make sure they are added back
++                // at least for global variables after passes that might remove them.
++                StoreInst *store = nullptr;
++                auto tag = CI->getArgOperand(2);
++                if (auto C = dyn_cast<ConstantExpr>(tag)) {
++                    if (C->getOpcode() == Instruction::AddrSpaceCast) {
++                        auto orig = C->getOperand(0);
++                        if (getValueAddrSpace(orig) == 0) {
++                            if (isa<ConstantExpr>(orig) &&
++                                cast<ConstantExpr>(orig)->getOpcode() == Instruction::IntToPtr) {
++                                store = builder.CreateAlignedStore(
++                                    orig->getOperand(0),
++                                    EmitTagPtr(builder, T_size, newI),
++                                    sizeof(size_t));
++                            }
++                            else {
++                                store = builder.CreateAlignedStore(
++                                    orig, EmitTagPtr(builder, T_pjlvalue, newI),
++                                    sizeof(size_t));
++                            }
++                        }
++                    }
++                }
++                else if (auto ASCI = dyn_cast<AddrSpaceCastInst>(tag)) {
++                    auto orig = ASCI->getPointerOperand();
++                    if (auto LI = dyn_cast<LoadInst>(orig)) {
++                        // Make sure the load is correctly marked as aligned
++                        // since LLVM might have removed them.
++                        // We can't do this in general since the load might not be
++                        // a type in other branches.
++                        // However, it should be safe for us to do this on const globals
++                        // which should be the important cases as well.
++                        MDNode *md = LI->getMetadata(LLVMContext::MD_align);
++                        if (isLoadFromConstGV(LI) &&
++                            (!md || mdconst::extract<ConstantInt>(
++                                md->getOperand(0))->getLimitedValue() < 16)) {
++                            Type *T_int64 = Type::getInt64Ty(LI->getContext());
++                            auto op = ConstantAsMetadata::get(ConstantInt::get(T_int64, 16));
++                            LI->setMetadata(LLVMContext::MD_align,
++                                            MDNode::get(LI->getContext(), { op }));
++                        }
++                    }
++                    if (getValueAddrSpace(orig) == 0) {
++                        store = builder.CreateAlignedStore(
++                            orig, EmitTagPtr(builder, T_pjlvalue, newI),
++                            sizeof(size_t));
++                    }
++                }
++                if (!store) {
++                    store = builder.CreateAlignedStore(
++                        tag, EmitTagPtr(builder, T_prjlvalue, newI),
++                        sizeof(size_t));
++                }
+                 store->setOrdering(AtomicOrdering::Unordered);
+                 store->setMetadata(LLVMContext::MD_tbaa, tbaa_tag);
+ 
+-- 
+2.28.0
+
