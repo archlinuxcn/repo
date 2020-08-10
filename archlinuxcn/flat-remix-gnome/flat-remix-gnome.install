@@ -1,0 +1,15 @@
+
+post_install() {
+	post_upgrade
+}
+
+post_upgrade() {
+	cd /usr/share/flat-remix-gnome
+	make
+	make install
+}
+
+pre_remove() {
+	cd /usr/share/flat-remix-gnome
+	make uninstall
+}
