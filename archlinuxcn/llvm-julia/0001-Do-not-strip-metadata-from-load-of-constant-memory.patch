@@ -1,17 +1,17 @@
-From 3c56ed5daa36f0feae495aa2b1cfdef37abfecd7 Mon Sep 17 00:00:00 2001
+From 0952751c2cb80f05dbc61b2fbd4e262081f9909a Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 9 Aug 2020 02:28:53 -0400
 Subject: [PATCH] Do not strip metadata from load of constant memory.
 
 These load should always return the same result.
 ---
- llvm/lib/Transforms/Scalar/LICM.cpp | 16 +++++++++-------
+ lib/Transforms/Scalar/LICM.cpp | 16 +++++++++-------
  1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/llvm/lib/Transforms/Scalar/LICM.cpp b/llvm/lib/Transforms/Scalar/LICM.cpp
+diff --git a/lib/Transforms/Scalar/LICM.cpp b/lib/Transforms/Scalar/LICM.cpp
 index a1c012fddde..db7bc9ecc16 100644
---- a/llvm/lib/Transforms/Scalar/LICM.cpp
-+++ b/llvm/lib/Transforms/Scalar/LICM.cpp
+--- a/lib/Transforms/Scalar/LICM.cpp
++++ b/lib/Transforms/Scalar/LICM.cpp
 @@ -139,7 +139,7 @@ static bool isNotUsedOrFreeInLoop(const Instruction &I, const Loop *CurLoop,
  static void hoist(Instruction &I, const DominatorTree *DT, const Loop *CurLoop,
                    BasicBlock *Dest, ICFLoopSafetyInfo *SafetyInfo,
