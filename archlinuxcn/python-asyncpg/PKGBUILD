@@ -1,22 +1,22 @@
 _name=asyncpg
 pkgname=python-asyncpg
-pkgver=0.20.1
+pkgver=0.21.0
 pkgrel=1
 pkgdesc="An asyncio PostgreSQL driver"
 arch=(any)
 url="https://github.com/MagicStack/asyncpg"
-license=(Apache License, Version 2.0)
+license=('Apache License, Version 2.0')
 depends=('python' 'python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha256sums=('394bf19bdddbba07a38cd6fb526ebf66e120444d6b3097332b78efd5b26495b0')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/asyncpg-0.21.0.tar.gz")
+sha256sums=('53cb2a0eb326f61e34ef4da2db01d87ce9c0ebe396f65a295829df334e31863f')
 
 build() {
-  cd "$srcdir/$_name-$pkgver"
+  cd "$srcdir/asyncpg-0.21.0"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/$_name-$pkgver"
+  cd "$srcdir/asyncpg-0.21.0"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install annoying files
