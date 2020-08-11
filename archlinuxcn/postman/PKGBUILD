@@ -1,6 +1,6 @@
 # Maintainer: Bruce Zhang
 pkgname=postman
-pkgver=7.30.0
+pkgver=7.30.1
 pkgrel=1
 pkgdesc='Build, test, and document your APIs faster'
 arch=('x86_64')
@@ -19,7 +19,7 @@ source=(
 )
 sha1sums=('35194ee810e13d3a21f224c6d46104fc201631c1'
           '7c00d44372bea7447ee8ef2acb03dcbdd3a9a279')
-sha1sums_x86_64=('31c9a991513ffc5556f23a002e4101c09d87064e')
+sha1sums_x86_64=('c1242e68d2708074c88c530282f7ec6bd1571cd7')
 
 package() {
   cd "$srcdir/Postman/app/resources/app"
