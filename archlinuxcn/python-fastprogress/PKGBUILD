@@ -2,7 +2,7 @@
 
 pkgname=python-fastprogress
 _pkgname=fastprogress
-pkgver=0.2.5
+pkgver=0.2.6
 pkgrel=1
 pkgdesc='Simple and flexible progress bar for Jupyter Notebook and console'
 arch=('any')
@@ -12,7 +12,7 @@ makedepends=(
   'python-setuptools'
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha512sums=('eab71ae0805676df2efb8df05bec9b522c6776c00bfa1ea92e60a2043ab603a1b17dea09f951bd99f58104490626de35501c6b0c688b72345c64db9f5026518f')
+sha512sums=('6576dbf51efcc20c75298bd9be847f72c386dc53b16f662402fc9d9245137aaed8804c691c98f06524d74940969ea71e89d69d7248068790a5bee748e8a15713')
 
 build() {
   cd "${_pkgname}-${pkgver}"
