@@ -44,7 +44,6 @@ makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
              gcc-fortran git patchelf python)
 options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
-        0001-Make-sure-global-constants-are-recognized-as-such-in.patch
         0003-Allow-LLVM-to-optimize-GC-write-barriers-for-new-obj.patch
         0004-Optimize-write-barrier-when-the-child-is-a-perminate.patch
         0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
@@ -57,7 +56,6 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         'b095baa44ee646f7a982d1b63a6e8fe0'
          'fe1dcfc5521b396cc1aa77c848d82a5b'
          'd11a5f1b889d422e8bf808c1a0a42e2b'
          '2222d3eabfe6040a8cca466303c86d2b'
@@ -151,7 +149,6 @@ EOF
 
   # patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
   # patch -Np1 < ../0001-Optimize-GC-frame-push-pop-insertion.patch
-  patch -Np1 < ../0001-Make-sure-global-constants-are-recognized-as-such-in.patch
   patch -Np1 < ../0003-Allow-LLVM-to-optimize-GC-write-barriers-for-new-obj.patch
   patch -Np1 < ../0004-Optimize-write-barrier-when-the-child-is-a-perminate.patch
   patch -Np1 < ../source-translate.patch
