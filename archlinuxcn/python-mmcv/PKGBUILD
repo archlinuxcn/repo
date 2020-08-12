@@ -3,7 +3,7 @@
 _pkgname=mmcv
 pkgname=(python-mmcv python-mmcv-full)
 pkgver=1.0.5
-pkgrel=1
+pkgrel=2
 pkgdesc='OpenMMLab Computer Vision Foundation'
 arch=('x86_64')
 url='https://github.com/open-mmlab/mmcv'
@@ -50,7 +50,7 @@ package_python-mmcv-full() {
   provides=(python-mmcv=${pkgver})
   conflicts=(python-mmcv)
 
-  cd "${_pkgname}-${pkgver}"
+  cd "${_pkgname}-full-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
 }
 # vim:set ts=2 sw=2 et:
