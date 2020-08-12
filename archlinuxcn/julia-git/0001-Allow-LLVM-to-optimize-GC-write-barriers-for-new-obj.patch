@@ -1,32 +1,54 @@
-From c302b5ec578ed2647102e9434515db7f1d6563cc Mon Sep 17 00:00:00 2001
+From 22be474b4d8599413448fbd48cebcf6e137fee81 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 9 Aug 2020 02:09:15 -0400
-Subject: [PATCH 3/4] Allow LLVM to optimize GC write barriers for new objects
+Subject: [PATCH 1/5] Allow LLVM to optimize GC write barriers for new objects
 
 Make alignment of tag more obvious for LLVM and
 add a few optimization passes after GC lowering to let LLVM
 delete some write barriers.
 
-This fixes a regression from LLVM < 5.
+This fixes a regression from LLVM < 5 where the pass ordering makes this
+happen automatically.
 ---
- src/aotcompile.cpp            | 11 +++++++-
- src/ccall.cpp                 |  5 +++-
- src/cgutils.cpp               |  5 ++++
- src/codegen.cpp               |  9 ++++---
- src/llvm-late-gc-lowering.cpp | 50 ++++++++++++++++++++++++++++++++---
- 5 files changed, 72 insertions(+), 8 deletions(-)
+ src/aotcompile.cpp               | 18 ++++++++--
+ src/ccall.cpp                    |  5 ++-
+ src/cgutils.cpp                  |  5 +++
+ src/codegen.cpp                  |  9 +++--
+ src/llvm-late-gc-lowering.cpp    | 57 ++++++++++++++++++++++++++++++--
+ test/llvmpasses/late-lower-gc.ll |  2 +-
+ 6 files changed, 86 insertions(+), 10 deletions(-)
 
 diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
-index ba16df1414..8f1d1a0043 100644
+index 6b70547c25..d374084429 100644
 --- a/src/aotcompile.cpp
 +++ b/src/aotcompile.cpp
-@@ -753,13 +753,22 @@ void addOptimizationPasses(legacy::PassManagerBase *PM, int opt_level,
+@@ -627,11 +627,14 @@ void addOptimizationPasses(legacy::PassManagerBase *PM, int opt_level,
+             PM->add(createBarrierNoopPass());
+             PM->add(createLowerExcHandlersPass());
+             PM->add(createGCInvariantVerifierPass(false));
++            PM->add(createRemoveNIPass());
+             PM->add(createLateLowerGCFramePass());
+             PM->add(createFinalLowerGCPass());
+             PM->add(createLowerPTLSPass(dump_native));
+         }
+-        PM->add(createRemoveNIPass());
++        else {
++            PM->add(createRemoveNIPass());
++        }
+         PM->add(createLowerSimdLoopPass()); // Annotate loop marked with "loopinfo" as LLVM parallel loop
+         if (dump_native)
+             PM->add(createMultiVersioningPass());
+@@ -751,15 +754,26 @@ void addOptimizationPasses(legacy::PassManagerBase *PM, int opt_level,
+         PM->add(createBarrierNoopPass());
+         PM->add(createLowerExcHandlersPass());
          PM->add(createGCInvariantVerifierPass(false));
++        // Needed **before** LateLowerGCFrame on LLVM < 12
++        // due to bug in `CreateAlignmentAssumption`.
++        PM->add(createRemoveNIPass());
          PM->add(createLateLowerGCFramePass());
          PM->add(createFinalLowerGCPass());
-+        PM->add(createRemoveNIPass());
 +        // We need these two passes and the instcombine below
-+        // after GC lowering to let LLVM optimize do some constant propagation on the tags.
++        // after GC lowering to let LLVM do some constant propagation on the tags.
 +        // and remove some unnecessary write barrier checks.
 +        PM->add(createGVNPass());
 +        PM->add(createSCCPPass());
@@ -45,10 +67,10 @@ index ba16df1414..8f1d1a0043 100644
      PM->add(createDivRemPairsPass());
  #if defined(JL_ASAN_ENABLED)
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index d3c7e13f03..6db857566c 100644
+index 6aa05fd7af..cae9f6586d 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
-@@ -378,7 +378,10 @@ static Value *runtime_apply_type_env(jl_codectx_t &ctx, jl_value_t *ty)
+@@ -381,7 +381,10 @@ static Value *runtime_apply_type_env(jl_codectx_t &ctx, jl_value_t *ty)
                  ctx.spvals_ptr,
                  ConstantInt::get(T_size, sizeof(jl_svec_t) / sizeof(jl_value_t*)))
      };
@@ -77,7 +99,7 @@ index 4794a7d6f3..3c21436f0c 100644
      unsigned alignment = jl_datatype_align(jt);
      if (alignment > JL_HEAP_ALIGNMENT)
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index ba5c621cdc..5809b17d0c 100644
+index 32ca20e900..582a50fcd1 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -659,10 +659,13 @@ static const auto jlapplytype_func = new JuliaFunction{
@@ -98,7 +120,7 @@ index ba5c621cdc..5809b17d0c 100644
  static const auto jl_object_id__func = new JuliaFunction{
      "jl_object_id_",
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index ba3a2a9365..c4acbe2aa5 100644
+index ba3a2a9365..593a932b41 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
 @@ -1133,6 +1133,14 @@ static bool isLoadFromConstGV(LoadInst *LI)
@@ -116,7 +138,7 @@ index ba3a2a9365..c4acbe2aa5 100644
  static bool LooksLikeFrameRef(Value *V) {
      if (isSpecialPtr(V->getType()))
          return false;
-@@ -2106,11 +2114,47 @@ bool LateLowerGCFrame::CleanupIR(Function &F, State *S) {
+@@ -2106,11 +2114,54 @@ bool LateLowerGCFrame::CleanupIR(Function &F, State *S) {
                      });
                  newI->takeName(CI);
  
@@ -124,7 +146,11 @@ index ba3a2a9365..c4acbe2aa5 100644
 +                // to remove write barrier because of it.
 +                // We pretty much only load using `T_size` so try our best to strip
 +                // as many cast as possible.
++#if JL_LLVM_VERSION >= 100000
 +                auto tag = CI->getArgOperand(2)->stripPointerCastsAndAliases();
++#else
++                auto tag = CI->getArgOperand(2)->stripPointerCasts();
++#endif
 +                if (auto C = dyn_cast<ConstantExpr>(tag)) {
 +                    if (C->getOpcode() == Instruction::IntToPtr) {
 +                        tag = C->getOperand(0);
@@ -155,6 +181,9 @@ index ba3a2a9365..c4acbe2aa5 100644
 +                    auto align = tag->getPointerAlignment(DL);
 +#endif
 +                    if (align < 16) {
++                        // On 5 <= LLVM < 12, it is illegal to call this on
++                        // non-integral pointer. This relies on stripping the
++                        // non-integralness from datalayout before this pass
 +                        builder.CreateAlignmentAssumption(DL, tag, 16);
 +                    }
 +                }
@@ -167,6 +196,18 @@ index ba3a2a9365..c4acbe2aa5 100644
                  store->setOrdering(AtomicOrdering::Unordered);
                  store->setMetadata(LLVMContext::MD_tbaa, tbaa_tag);
  
+diff --git a/test/llvmpasses/late-lower-gc.ll b/test/llvmpasses/late-lower-gc.ll
+index ae2dfc9c57..a23081dd1e 100644
+--- a/test/llvmpasses/late-lower-gc.ll
++++ b/test/llvmpasses/late-lower-gc.ll
+@@ -1,6 +1,6 @@
+ ; RUN: opt -load libjulia%shlibext -LateLowerGCFrame -S %s | FileCheck %s
+ 
+-@tag = external addrspace(10) global {}
++@tag = external addrspace(10) global {}, align 16
+ 
+ declare void @boxed_simple({} addrspace(10)*, {} addrspace(10)*)
+ declare {} addrspace(10)* @jl_box_int64(i64)
 -- 
 2.28.0
 

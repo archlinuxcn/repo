@@ -1,7 +1,7 @@
-From 1a0148e151c7edab759121db2e9309ffa6ab5bc2 Mon Sep 17 00:00:00 2001
+From a41c863b3b84d541c4c292e3f6b1f8bb44f841d3 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 25 Jul 2020 18:25:49 -0400
-Subject: [PATCH 4/4] Optimize write barrier when the child is a perminately
+Subject: [PATCH 2/5] Optimize write barrier when the child is a perminately
  allocated object
 
 Currently support `Int8`, `UInt8` and `Symbol`.
@@ -123,7 +123,7 @@ index 0606cd167d..ee11870874 100644
  
  static inline void llvm_dump(llvm::Value *v)
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index c4acbe2aa5..217f72958b 100644
+index 593a932b41..a82b5c94e8 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
 @@ -1591,15 +1591,49 @@ static Value *ExtractScalar(Value *V, Type *VTy, bool isptr, ArrayRef<unsigned>
