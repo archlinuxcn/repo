@@ -1,2 +1,2 @@
 #!/bin/sh
-/opt/discord-canary/DiscordCanary --no-sandbox "$@"
+/opt/discord-canary/DiscordCanary "$@"
