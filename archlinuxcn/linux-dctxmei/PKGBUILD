@@ -69,7 +69,7 @@ build() {
 }
 
 _package() {
-  pkgdesc="The $pkgdesc kernel and modules (disable ipv6, default bbr)"
+  pkgdesc="The $pkgdesc kernel and modules (disable nouveau, disable uvcvideo, disable ipv6, default bbr)"
   depends=(coreutils kmod initramfs)
   optdepends=('crda: to set the correct wireless channels of your country'
               'linux-firmware: firmware images needed for some devices')
