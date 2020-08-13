@@ -3,7 +3,7 @@
 # Github Contributor: Michael Herold <https://github.com/michaelherold>
 
 pkgname=heroku-cli
-pkgver=7.42.4
+pkgver=7.42.6
 _builddir=cli-${pkgver}
 pkgrel=1
 pkgdesc="a tool for creating and managing Heroku apps from the command line"
@@ -15,8 +15,8 @@ makedepends=('npm')
 optdepends=('git: Deploying to Heroku')
 conflicts=('heroku-client-standalone' 'heroku-toolbelt' 'ruby-heroku')
 source=("https://registry.npmjs.org/heroku/-/heroku-$pkgver.tgz")
-sha256sums=('b469b048340898ebfa01926ae00794394189878c45fcff1443b81213e09eb727')
-sha512sums=('894813e632f426af3303219cfd51e9904836f26a47b6031aeb4899b84dd020bb53735b163b066b0a546c87e8339c544af2c5211f8faf3d682e88238a8930f017')
+sha256sums=('afc4183006267e39fb5ff8d6ea5e11f5cf0f606bd1183189ceb13099ae4d4abd')
+sha512sums=('f43f8fa699436e7ebf4b14d2612f2a9ea4f8da01f75d75e1411822fdec4535ea4c04cde7d2ac208d1b68d518180b6cf1cf66e3296942009c8c14f800b15023e2')
 noextract=("heroku-$pkgver.tgz")
 options=('!strip')
 
