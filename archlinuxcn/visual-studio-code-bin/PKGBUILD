@@ -2,7 +2,7 @@
 
 pkgname=visual-studio-code-bin
 _pkgname=visual-studio-code
-pkgver=1.47.3
+pkgver=1.48.0
 pkgrel=1
 pkgdesc="Visual Studio Code (vscode): Editor for building and debugging modern web and cloud applications (official binary version)"
 arch=('x86_64')
@@ -16,7 +16,7 @@ optdepends=('glib2: Needed for move to trash functionality'
             'libdbusmenu-glib: Needed for KDE global menu')
 source=(code_x64_${pkgver}.tar.gz::https://vscode-update.azurewebsites.net/${pkgver}/linux-x64/stable
                ${_pkgname}.desktop ${_pkgname}-url-handler.desktop)
-sha256sums=('7e8262884322e030a35d3ec111b86b17b31c83496b41e919bd3f0d52abe45898'
+sha256sums=('b2a0fa2d29a9946388879e7fede700eb4884666d45eb1bb7f49dc27ed2163a67'
             '0deefcb638e06c35a52e7e9fb8e19b2dc393f01e5c1c122d2938cddeb22cf8de'
             'be3d123aacd575d8f836728266eb421ea70399d713d1fc30378dbc5602b519fb')
 package() {
