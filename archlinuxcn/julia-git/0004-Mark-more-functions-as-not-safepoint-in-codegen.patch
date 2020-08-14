@@ -1,0 +1,242 @@
+From 6081f7df91bf7269fbbc16790e1ada2ec1723b64 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 13 Aug 2020 02:24:27 -0400
+Subject: [PATCH 4/4] Mark more functions as not safepoint in codegen.
+
+In particular, most error throwing function doesn't require
+the input arguments to be rooted.
+---
+ src/array.c                   |  2 +-
+ src/gc.c                      |  6 +++---
+ src/jlapi.c                   |  2 +-
+ src/julia.h                   |  8 ++++----
+ src/julia_internal.h          |  4 ++--
+ src/llvm-late-gc-lowering.cpp | 37 ++++++++++++++++++++++++++++++++++-
+ src/rtutils.c                 | 17 +++++++++-------
+ 7 files changed, 57 insertions(+), 19 deletions(-)
+
+diff --git a/src/array.c b/src/array.c
+index dd57c09edc..6c53f5ddb5 100644
+--- a/src/array.c
++++ b/src/array.c
+@@ -1274,7 +1274,7 @@ JL_DLLEXPORT void jl_array_ptr_1d_append(jl_array_t *a, jl_array_t *a2)
+     }
+ }
+ 
+-JL_DLLEXPORT jl_value_t *(jl_array_data_owner)(jl_array_t *a)
++JL_DLLEXPORT jl_value_t *(jl_array_data_owner)(jl_array_t *a) JL_NOTSAFEPOINT
+ {
+     return jl_array_data_owner(a);
+ }
+diff --git a/src/gc.c b/src/gc.c
+index 9cacfb5fa5..c3244df5c3 100644
+--- a/src/gc.c
++++ b/src/gc.c
+@@ -2761,7 +2761,7 @@ JL_DLLEXPORT int jl_gc_is_enabled(void)
+     return !ptls->disable_gc;
+ }
+ 
+-JL_DLLEXPORT void jl_gc_get_total_bytes(int64_t *bytes)
++JL_DLLEXPORT void jl_gc_get_total_bytes(int64_t *bytes) JL_NOTSAFEPOINT
+ {
+     jl_gc_num_t num = gc_num;
+     combine_thread_gc_counts(&num);
+@@ -2782,7 +2782,7 @@ JL_DLLEXPORT jl_gc_num_t jl_gc_num(void)
+ }
+ 
+ // TODO: these were supposed to be thread local
+-JL_DLLEXPORT int64_t jl_gc_diff_total_bytes(void)
++JL_DLLEXPORT int64_t jl_gc_diff_total_bytes(void) JL_NOTSAFEPOINT
+ {
+     int64_t oldtb = last_gc_total_bytes;
+     int64_t newtb;
+@@ -2791,7 +2791,7 @@ JL_DLLEXPORT int64_t jl_gc_diff_total_bytes(void)
+     return newtb - oldtb;
+ }
+ 
+-JL_DLLEXPORT int64_t jl_gc_sync_total_bytes(int64_t offset)
++JL_DLLEXPORT int64_t jl_gc_sync_total_bytes(int64_t offset) JL_NOTSAFEPOINT
+ {
+     int64_t oldtb = last_gc_total_bytes;
+     int64_t newtb;
+diff --git a/src/jlapi.c b/src/jlapi.c
+index 54d9befbdf..72f59f3fe3 100644
+--- a/src/jlapi.c
++++ b/src/jlapi.c
+@@ -122,7 +122,7 @@ JL_DLLEXPORT jl_value_t *jl_eval_string(const char *str)
+     return r;
+ }
+ 
+-JL_DLLEXPORT jl_value_t *jl_current_exception(void) JL_GLOBALLY_ROOTED
++JL_DLLEXPORT jl_value_t *jl_current_exception(void) JL_GLOBALLY_ROOTED JL_NOTSAFEPOINT
+ {
+     jl_excstack_t *s = jl_get_ptls_states()->current_task->excstack;
+     return s && s->top != 0 ? jl_excstack_exception(s, s->top) : jl_nothing;
+diff --git a/src/julia.h b/src/julia.h
+index 6ee5c5bce6..e1da5c729f 100644
+--- a/src/julia.h
++++ b/src/julia.h
+@@ -1577,7 +1577,7 @@ JL_DLLEXPORT void JL_NORETURN jl_exceptionf(jl_datatype_t *ty,
+ JL_DLLEXPORT void JL_NORETURN jl_too_few_args(const char *fname, int min);
+ JL_DLLEXPORT void JL_NORETURN jl_too_many_args(const char *fname, int max);
+ JL_DLLEXPORT void JL_NORETURN jl_type_error(const char *fname,
+-                                            jl_value_t *expected,
++                                            jl_value_t *expected JL_MAYBE_UNROOTED,
+                                             jl_value_t *got JL_MAYBE_UNROOTED);
+ JL_DLLEXPORT void JL_NORETURN jl_type_error_rt(const char *fname,
+                                                const char *context,
+@@ -1604,7 +1604,7 @@ JL_DLLEXPORT void JL_NORETURN jl_eof_error(void);
+ // enclosing JL_CATCH.
+ // FIXME: Teach the static analyzer about this rather than using
+ // JL_GLOBALLY_ROOTED which is far too optimistic.
+-JL_DLLEXPORT jl_value_t *jl_current_exception(void) JL_GLOBALLY_ROOTED;
++JL_DLLEXPORT jl_value_t *jl_current_exception(void) JL_GLOBALLY_ROOTED JL_NOTSAFEPOINT;
+ JL_DLLEXPORT jl_value_t *jl_exception_occurred(void);
+ JL_DLLEXPORT void jl_exception_clear(void) JL_NOTSAFEPOINT;
+ 
+@@ -1841,8 +1841,8 @@ JL_DLLEXPORT void JL_NORETURN jl_no_exc_handler(jl_value_t *e);
+ JL_DLLEXPORT void jl_enter_handler(jl_handler_t *eh);
+ JL_DLLEXPORT void jl_eh_restore_state(jl_handler_t *eh);
+ JL_DLLEXPORT void jl_pop_handler(int n);
+-JL_DLLEXPORT size_t jl_excstack_state(void);
+-JL_DLLEXPORT void jl_restore_excstack(size_t state);
++JL_DLLEXPORT size_t jl_excstack_state(void) JL_NOTSAFEPOINT;
++JL_DLLEXPORT void jl_restore_excstack(size_t state) JL_NOTSAFEPOINT;
+ 
+ #if defined(_OS_WINDOWS_)
+ #if defined(_COMPILER_GCC_)
+diff --git a/src/julia_internal.h b/src/julia_internal.h
+index 12ecbb9d28..180c8fe9fa 100644
+--- a/src/julia_internal.h
++++ b/src/julia_internal.h
+@@ -339,8 +339,8 @@ JL_DLLEXPORT void *jl_gc_counted_malloc(size_t sz);
+ JL_DLLEXPORT void JL_NORETURN jl_throw_out_of_memory_error(void);
+ 
+ 
+-JL_DLLEXPORT int64_t jl_gc_diff_total_bytes(void);
+-JL_DLLEXPORT int64_t jl_gc_sync_total_bytes(int64_t offset);
++JL_DLLEXPORT int64_t jl_gc_diff_total_bytes(void) JL_NOTSAFEPOINT;
++JL_DLLEXPORT int64_t jl_gc_sync_total_bytes(int64_t offset) JL_NOTSAFEPOINT;
+ void jl_gc_track_malloced_array(jl_ptls_t ptls, jl_array_t *a) JL_NOTSAFEPOINT;
+ void jl_gc_count_allocd(size_t sz) JL_NOTSAFEPOINT;
+ void jl_gc_run_all_finalizers(jl_ptls_t ptls);
+diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
+index 0dcdccfcd3..544b0be164 100644
+--- a/src/llvm-late-gc-lowering.cpp
++++ b/src/llvm-late-gc-lowering.cpp
+@@ -225,6 +225,41 @@ using namespace llvm;
+       simply sink the alloca into the GCFrame.
+ */
+ 
++static bool isNoSafepointFunc(Function *f)
++{
++    // Some of these do have safepoint, but only in error path
++    // and never needs the input argument to be rooted in those cases.
++    const char *const names[] = {
++        "memcmp",
++        "jl_throw",
++        "jl_error",
++        "jl_type_error",
++        "jl_undefined_var_error",
++        "jl_bounds_error_ints",
++        "jl_bounds_error_int",
++        "jl_bounds_error_unboxed_int",
++        "jl_current_exception",
++        "jl_restore_excstack",
++        "jl_excstack_state",
++        "julia.loopinfo_marker",
++        "jl_object_id_",
++        "jl_gc_diff_total_bytes",
++        "jl_gc_sync_total_bytes",
++        "jl_array_data_owner",
++        "jl_f_typeof",
++        "jl_f_ifelse",
++        "jl_f_throw",
++        "jl_f_setfield",
++    };
++    auto name = f->getName();
++    for (auto f: names) {
++        if (name == f) {
++            return true;
++        }
++    }
++    return false;
++}
++
+ struct BBState {
+     // Uses in this BB
+     // These do not get updated after local analysis
+@@ -1496,7 +1531,7 @@ State LateLowerGCFrame::LocalScan(Function &F) {
+                     if (callee == pointer_from_objref_func || callee == gc_preserve_begin_func ||
+                         callee == gc_preserve_end_func || callee == typeof_func ||
+                         callee == ptls_getter ||
+-                        callee == write_barrier_func || callee->getName() == "memcmp") {
++                        callee == write_barrier_func || isNoSafepointFunc(callee)) {
+                         continue;
+                     }
+                     if (callee->hasFnAttribute(Attribute::ReadNone) ||
+diff --git a/src/rtutils.c b/src/rtutils.c
+index a7ef36ee9f..332aa1ed96 100644
+--- a/src/rtutils.c
++++ b/src/rtutils.c
+@@ -109,7 +109,8 @@ JL_DLLEXPORT void JL_NORETURN jl_too_many_args(const char *fname, int max)
+ 
+ // with function name / location description, plus extra context
+ JL_DLLEXPORT void JL_NORETURN jl_type_error_rt(const char *fname, const char *context,
+-                                               jl_value_t *expected, jl_value_t *got)
++                                               jl_value_t *expected JL_MAYBE_UNROOTED,
++                                               jl_value_t *got JL_MAYBE_UNROOTED)
+ {
+     jl_value_t *ctxt=NULL;
+     JL_GC_PUSH3(&ctxt, &expected, &got);
+@@ -119,8 +120,9 @@ JL_DLLEXPORT void JL_NORETURN jl_type_error_rt(const char *fname, const char *co
+ }
+ 
+ // with function name or description only
+-JL_DLLEXPORT void JL_NORETURN jl_type_error(const char *fname, jl_value_t *expected,
+-                                            jl_value_t *got)
++JL_DLLEXPORT void JL_NORETURN jl_type_error(const char *fname,
++                                            jl_value_t *expected JL_MAYBE_UNROOTED,
++                                            jl_value_t *got JL_MAYBE_UNROOTED)
+ {
+     jl_type_error_rt(fname, "", expected, got);
+ }
+@@ -162,7 +164,7 @@ JL_DLLEXPORT void JL_NORETURN jl_bounds_error_unboxed_int(void *data, jl_value_t
+     jl_throw(jl_new_struct((jl_datatype_t*)jl_boundserror_type, v, t));
+ }
+ 
+-JL_DLLEXPORT void JL_NORETURN jl_bounds_error_int(jl_value_t *v, size_t i)
++JL_DLLEXPORT void JL_NORETURN jl_bounds_error_int(jl_value_t *v JL_MAYBE_UNROOTED, size_t i)
+ {
+     jl_value_t *t = NULL;
+     JL_GC_PUSH2(&v, &t); // root arguments so the caller doesn't need to
+@@ -170,7 +172,8 @@ JL_DLLEXPORT void JL_NORETURN jl_bounds_error_int(jl_value_t *v, size_t i)
+     jl_throw(jl_new_struct((jl_datatype_t*)jl_boundserror_type, v, t));
+ }
+ 
+-JL_DLLEXPORT void JL_NORETURN jl_bounds_error_ints(jl_value_t *v, size_t *idxs, size_t nidxs)
++JL_DLLEXPORT void JL_NORETURN jl_bounds_error_ints(jl_value_t *v JL_MAYBE_UNROOTED,
++                                                   size_t *idxs, size_t nidxs)
+ {
+     size_t i;
+     jl_value_t *t = NULL;
+@@ -274,14 +277,14 @@ JL_DLLEXPORT void jl_pop_handler(int n)
+     jl_eh_restore_state(eh);
+ }
+ 
+-JL_DLLEXPORT size_t jl_excstack_state(void)
++JL_DLLEXPORT size_t jl_excstack_state(void) JL_NOTSAFEPOINT
+ {
+     jl_ptls_t ptls = jl_get_ptls_states();
+     jl_excstack_t *s = ptls->current_task->excstack;
+     return s ? s->top : 0;
+ }
+ 
+-JL_DLLEXPORT void jl_restore_excstack(size_t state)
++JL_DLLEXPORT void jl_restore_excstack(size_t state) JL_NOTSAFEPOINT
+ {
+     jl_ptls_t ptls = jl_get_ptls_states();
+     jl_excstack_t *s = ptls->current_task->excstack;
+-- 
+2.28.0
+

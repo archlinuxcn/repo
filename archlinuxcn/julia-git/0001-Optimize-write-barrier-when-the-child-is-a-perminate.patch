@@ -1,27 +1,31 @@
-From a41c863b3b84d541c4c292e3f6b1f8bb44f841d3 Mon Sep 17 00:00:00 2001
+From c93d86a12696aa184c4b28b818bdce8836546692 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 25 Jul 2020 18:25:49 -0400
-Subject: [PATCH 2/5] Optimize write barrier when the child is a perminately
+Subject: [PATCH 1/4] Optimize write barrier when the child is a perminately
  allocated object
 
 Currently support `Int8`, `UInt8` and `Symbol`.
 Most useful for `Symbol` since box with known `Int8` or `UInt8` types are almost always allocated locally.
 ---
- src/cgutils.cpp               | 45 ++++++++++++++++++++++++++++++-----
+ src/cgutils.cpp               | 49 ++++++++++++++++++++++++++++++-----
  src/codegen_shared.h          |  5 ++--
- src/llvm-late-gc-lowering.cpp | 38 +++++++++++++++++++++++++++--
- 3 files changed, 78 insertions(+), 10 deletions(-)
+ src/llvm-late-gc-lowering.cpp | 38 +++++++++++++++++++++++++--
+ 3 files changed, 82 insertions(+), 10 deletions(-)
 
 diff --git a/src/cgutils.cpp b/src/cgutils.cpp
-index 3c21436f0c..ae7f32a5df 100644
+index 08860410fb..345a56ccba 100644
 --- a/src/cgutils.cpp
 +++ b/src/cgutils.cpp
-@@ -462,6 +462,13 @@ static Value *julia_binding_gv(jl_codectx_t &ctx, jl_binding_t *b)
+@@ -462,6 +462,17 @@ static Value *julia_binding_gv(jl_codectx_t &ctx, jl_binding_t *b)
  
  // --- mapping between julia and llvm types ---
  
 +static bool type_is_permalloc(jl_value_t *typ)
 +{
++    // Singleton should almost always be handled by the later optimization passes.
++    // Also do it here since it is cheap and save some effort in LLVM passes.
++    if (jl_is_datatype(typ) && jl_is_datatype_singleton((jl_datatype_t*)typ))
++        return true;
 +    return typ == (jl_value_t*)jl_symbol_type ||
 +        typ == (jl_value_t*)jl_int8_type ||
 +        typ == (jl_value_t*)jl_uint8_type;
@@ -30,7 +34,7 @@ index 3c21436f0c..ae7f32a5df 100644
  static unsigned convert_struct_offset(Type *lty, unsigned byte_offset)
  {
      const DataLayout &DL = jl_data_layout;
-@@ -1277,7 +1284,7 @@ static Value *emit_bounds_check(jl_codectx_t &ctx, const jl_cgval_t &ainfo, jl_v
+@@ -1277,7 +1288,7 @@ static Value *emit_bounds_check(jl_codectx_t &ctx, const jl_cgval_t &ainfo, jl_v
  static Value *emit_unbox(jl_codectx_t &ctx, Type *to, const jl_cgval_t &x, jl_value_t *jt, Value* dest = NULL, MDNode *tbaa_dest = nullptr, bool isVolatile = false);
  static void emit_write_barrier(jl_codectx_t&, Value*, ArrayRef<Value*>);
  static void emit_write_barrier(jl_codectx_t&, Value*, Value*);
@@ -39,7 +43,7 @@ index 3c21436f0c..ae7f32a5df 100644
  
  std::vector<unsigned> first_ptr(Type *T)
  {
-@@ -1399,8 +1406,8 @@ static void typed_store(jl_codectx_t &ctx,
+@@ -1399,8 +1410,8 @@ static void typed_store(jl_codectx_t &ctx,
          tbaa_decorate(tbaa, store);
      if (parent != NULL) {
          if (!isboxed)
@@ -50,7 +54,7 @@ index 3c21436f0c..ae7f32a5df 100644
              emit_write_barrier(ctx, parent, r);
      }
  }
-@@ -2605,9 +2612,35 @@ static void emit_write_barrier(jl_codectx_t &ctx, Value *parent, ArrayRef<Value*
+@@ -2605,9 +2616,35 @@ static void emit_write_barrier(jl_codectx_t &ctx, Value *parent, ArrayRef<Value*
      ctx.builder.CreateCall(prepare_call(jl_write_barrier_func), decay_ptrs);
  }
  
@@ -88,7 +92,7 @@ index 3c21436f0c..ae7f32a5df 100644
      emit_write_barrier(ctx, parent, ptrs);
  }
  
-@@ -2633,7 +2666,7 @@ static void emit_setfield(jl_codectx_t &ctx,
+@@ -2633,7 +2670,7 @@ static void emit_setfield(jl_codectx_t &ctx,
                          emit_bitcast(ctx, addr, T_pprjlvalue),
                          sizeof(jl_value_t*))))
                      ->setOrdering(AtomicOrdering::Unordered);
@@ -123,7 +127,7 @@ index 0606cd167d..ee11870874 100644
  
  static inline void llvm_dump(llvm::Value *v)
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index 593a932b41..a82b5c94e8 100644
+index c55a0b75ad..9a7da9fee9 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
 @@ -1591,15 +1591,49 @@ static Value *ExtractScalar(Value *V, Type *VTy, bool isptr, ArrayRef<unsigned>

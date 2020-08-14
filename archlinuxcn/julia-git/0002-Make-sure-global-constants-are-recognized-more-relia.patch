@@ -1,7 +1,7 @@
-From 1738763bfc2821834a8f6e99ca83af6363b79469 Mon Sep 17 00:00:00 2001
+From c663ab87478e6648a3b2b81e72ef5576db88d227 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 11 Aug 2020 18:13:06 -0400
-Subject: [PATCH 4/5] Make sure global constants are recognized more reliably
+Subject: [PATCH 2/4] Make sure global constants are recognized more reliably
  as such during GC lowering.
 
 Some of the pointer chasing duplicates the logic in the rest of the pass but are never the less
