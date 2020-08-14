@@ -2,7 +2,7 @@
 # Contributor: Rocka <i at Rocka dot me>
 
 pkgname=electron-netease-cloud-music
-pkgver=0.9.23
+pkgver=0.9.24
 pkgrel=1
 pkgdesc="UNOFFICIAL client for music.163.com . Powered by Electron, Vue, and Muse-UI."
 arch=('any')
@@ -17,7 +17,7 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/Rocket1184/$pkgname/archive
         'electron-netease-cloud-music.sh'
 )
 
-md5sums=('a2d105cc1c4d7ad8c4062bf42bac8f10'
+md5sums=('990ef73241854bcaea568f07f719d270'
          '7f35c2dbfc5cd0fd63cd0be16cf35f3c'
          '155178854f344b3d56283beb739c8730')
 
