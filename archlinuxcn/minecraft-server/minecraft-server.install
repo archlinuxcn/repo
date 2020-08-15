@@ -3,33 +3,9 @@ _user="minecraft"
 _server_root="/srv/minecraft"
 
 post_install() {
-	getent group "${_user}" &>/dev/null
-	if [ $? -ne 0 ]; then
-		echo "Adding ${_user} system group..."
-		groupadd -r ${_user} 1>/dev/null
-	fi
-
-	getent passwd "${_user}" &>/dev/null
-	if [ $? -ne 0 ]; then
-		echo "Adding ${_user} system user..."
-		useradd -r -g ${_user} -d "${_server_root}" ${_user} 1>/dev/null
-	fi
-
-	chown -R ${_user}:${_user} "${_server_root}"
-
 	echo "The world data is stored under ${_server_root} and the server runs as ${_user} user to increase security."
 	echo "Use the ${_game} script under /usr/bin/${_game}d to start, stop or backup the server."
 	echo "Adjust the configuration file under /etc/conf.d/${_game} to your liking."
 	echo "For the server to start you have to accept the EULA in ${_server_root}/eula.txt !"
 	echo "The EULA file is generated after the first server start."
-}
-
-post_upgrade() {
-	chown -R ${_user}:${_user} "${_server_root}"
-}
-
-post_remove() {
-	# Notifying the user of kept dirs
-	[[ -d "${_server_root}" ]] && echo "Game saves in ${_server_root} were kept on your system."
-	echo "The ${_user} user was preserved on your system."
 }
