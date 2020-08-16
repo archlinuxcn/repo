@@ -1,0 +1,9 @@
+post_install() {
+    echo "==> The default data directory is /usr/share/astrometry/data. You can edit it in /etc/astrometry.cfg if you like. Then go to http://astrometry.net/doc/readme.html#getting-index-files to downloads indexes and place them in the data directory. "
+    echo "==> Alternatively, you can install packages astrometry.net-data-* for index data."
+    echo "==> The example files are located in /usr/share/astrometry/examples. You can test your installation by the command \"solve-field -D output /usr/share/astrometry/examples/apod4.jpg\""
+}
+
+post_upgrade() {
+    post_install
+}
