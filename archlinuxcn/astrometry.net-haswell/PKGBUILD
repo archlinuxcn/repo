@@ -9,8 +9,8 @@ pkgdesc="Automatic recognition of astronomical images. Compiled with -march=hasw
 arch=('x86_64')
 url="http://astrometry.net/"
 license=("GPL")
-provides="astrometry.net"
-conflicts="astrometry.net"
+provides=("astrometry.net")
+conflicts=("astrometry.net")
 depends=('bzip2' 'cairo' 'libpng' 'libjpeg-turbo' 'python-astropy' 'netpbm' 'cfitsio' 'gsl' 'swig')
 optdepends=(
 'astrometry.net-data-4108-wide: index data for wide field'
