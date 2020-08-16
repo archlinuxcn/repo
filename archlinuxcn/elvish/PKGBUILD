@@ -1,8 +1,8 @@
 # Maintainer: Haochen Tong <i at hexchain dot org>
 
 pkgname=elvish
-pkgver=0.14.0
-pkgrel=3
+pkgver=0.14.1
+pkgrel=1
 pkgdesc="A friendly and expressive Unix shell."
 arch=('i686' 'x86_64')
 url="https://github.com/elves/elvish"
