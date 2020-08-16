@@ -4,8 +4,8 @@
 
 pkgname=astrometry.net
 pkgver=0.82
-pkgrel=1
-pkgdesc="Automatic recognition of astronomical images"
+pkgrel=2
+pkgdesc="Automatic recognition of astronomical images. Compiled with -march=x86-64 -mtune=core2 for most modern x86-64 CPUs."
 arch=('x86_64')
 url="http://astrometry.net/"
 license=("GPL")
@@ -30,7 +30,8 @@ build() {
     cd ${pkgname}-${pkgver}
     # Parrallel build is broken and upstream is not going to fix it.
     # https://github.com/dstndstn/astrometry.net/issues/178#issuecomment-650149535
-    make -j 1 SYSTEM_GSL=yes all py extra
+    # If no ARCH_FLAGS, it would compile with -march=native and not usable on older CPUs.
+    ARCH_FLAGS='-march=x86-64 -mtune=core2' make -j 1 SYSTEM_GSL=yes all py extra
 }
 
 check() {
