@@ -3,7 +3,7 @@
 # Contributor : Martin Wimpress <code@flexion.org>
 pkgname=anaconda
 pkgver=2020.07
-pkgrel=1
+pkgrel=2
 pkgdesc="Completely free enterprise-ready Python distribution for large-scale data processing, predictive analytics, and scientific computing."
 arch=('x86_64')
 url='https://www.anaconda.com/'
@@ -29,6 +29,9 @@ package() {
 
 	msg2 "Stripping \$pkgdir"
 	sed -e "s|${pkgdir}||g" -i $(grep "${pkgdir}" . -rIl 2>/dev/null)
+
+	msg2 "Removing external apps"
+	echo 'apps = {}' >> "${prefix}/lib/python3.8/site-packages/anaconda_navigator/api/external_apps/__init__.py"
 
 	msg2 "Installing license"
 	install -D -m644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
