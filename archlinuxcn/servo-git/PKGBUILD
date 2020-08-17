@@ -1,9 +1,12 @@
-# Maintainer: Vlad M. <vlad@archlinux.net>
-# COntributor: beatgammit
+# Maintainer: Jiachen YANG <farseerfc@gmail.com>
+# Contributor: Vlad M. <vlad@archlinux.net>
+# Contributor: beatgammit
+
+_install_libs=false
 
 pkgname=servo-git
 _pkgname=servo
-pkgver=43069.85df7f95059
+pkgver=43073.62c7cb4c79
 pkgrel=1
 pkgdesc="Parallel Browser Project: web browser written in Rust"
 arch=('i686' 'x86_64')
@@ -39,16 +42,18 @@ package() {
   servopath=$_branch/target/release
   install -Dm755 "$servopath/servo" "$pkgdir/opt/servo/servo"
 
-  mkdir -p "$pkgdir/usr/lib"
+  if [ "$_install_libs" = true ] ; then
+      mkdir -p "$pkgdir/usr/lib"
 
-  find "$servopath/deps" -name "*-*.so" -exec basename {} \; | sort | uniq | while read _f; do
-	  _file=$(find "$servopath/deps" -name "$_f" -print | head -n 1)
-	  if [ -z "$_file" ]; then
-		  echo "Skipping: $_f"
-		  continue
-	  fi
-	  install -Dm644 "$_file" "$pkgdir/usr/lib"
-  done
+      find "$servopath/deps" -name "*-*.so" -exec basename {} \; | sort | uniq | while read _f; do
+          _file=$(find "$servopath/deps" -name "$_f" -print | head -n 1)
+          if [ -z "$_file" ]; then
+       	      echo "Skipping: $_f"
+              continue
+          fi
+          install -Dm644 "$_file" "$pkgdir/usr/lib"
+      done
+  fi
 
   mkdir -p "$pkgdir/opt/servo/resources"
   cp -r $_branch/resources/* "$pkgdir/opt/servo/resources"
