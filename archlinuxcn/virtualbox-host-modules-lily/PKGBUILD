@@ -18,7 +18,7 @@ provides=('VIRTUALBOX-HOST-MODULES')
 build() {
   _kernver="$(</usr/src/linux-lily/version)"
 
-  dkms build --dkmstree "$srcdir" -m vboxhost/${pkgver}_OSE -k ${_kernver}
+  fakeroot dkms build --dkmstree "$srcdir" -m vboxhost/${pkgver}_OSE -k ${_kernver}
 }
 
 package(){
