@@ -6,3 +6,4 @@ update_on:
   from_pattern: ^([^-]+).*
   to_pattern: \1
 - cmd: LANG=C pacman --dbpath ~/.lilac/pacmandb -Si linux-lily | awk '$1 == "Version" { print $3 }'
+- manual: 1
