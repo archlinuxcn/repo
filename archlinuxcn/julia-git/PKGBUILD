@@ -31,8 +31,8 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=1.6.0.DEV.650.g327b2e32067
-pkgrel=2
+pkgver=1.6.0.DEV.660.g72ffbf17589
+pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -46,9 +46,7 @@ options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
         0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
         0001-Optimize-GC-frame-push-pop-insertion.patch
-        0001-Optimize-write-barrier-when-the-child-is-a-perminate.patch
         0002-Make-sure-global-constants-are-recognized-more-relia.patch
-        0003-Mark-load-from-DataType-as-constant.patch
         0004-Mark-more-functions-as-not-safepoint-in-codegen.patch
         source-translate.patch
         gdb-debug.patch
@@ -60,9 +58,7 @@ source=('git://github.com/JuliaLang/julia'
 md5sums=('SKIP'
          '2222d3eabfe6040a8cca466303c86d2b'
          '3dbb81b1dae3a9d977bd69f8354b3007'
-         'fc2e0681c340c4ac719e7d5d71d0c6f0'
          '69cd1b261df876f2f011718af2aaa6b3'
-         '3a43b4057ba9f1a7434151f318fa2bb3'
          '27797adfd16485ead165cd3b7ff7de0e'
          '42f2b44768927a7ed2296b15161ba21c'
          'effd2c21ffb69e66b43d4b7fbe074a51'
@@ -153,9 +149,7 @@ EOF
 
   # patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
   # patch -Np1 < ../0001-Optimize-GC-frame-push-pop-insertion.patch
-  patch -Np1 < ../0001-Optimize-write-barrier-when-the-child-is-a-perminate.patch
   patch -Np1 < ../0002-Make-sure-global-constants-are-recognized-more-relia.patch
-  patch -Np1 < ../0003-Mark-load-from-DataType-as-constant.patch
   patch -Np1 < ../0004-Mark-more-functions-as-not-safepoint-in-codegen.patch
   patch -Np1 < ../source-translate.patch
   patch -Np1 < ../gdb-debug.patch
