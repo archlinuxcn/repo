@@ -5,8 +5,8 @@
 # Based on original tikzit-aur-package made by pippin
 
 pkgname=tikzit
-pkgver=2.1.5
-pkgrel=2
+pkgver=2.1.6
+pkgrel=1
 pkgdesc="Allows the creation and modification of TeX diagrams written using the pgf/TikZ macro library"
 arch=('i686' 'x86_64')
 url="https://tikzit.github.io/"
@@ -14,7 +14,7 @@ license=('GPL2')
 depends=('qt5-base' 'poppler-qt5' 'hicolor-icon-theme')
 optdepends=('texlive-core: previews')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/tikzit/tikzit/archive/v$pkgver.tar.gz")
-sha256sums=('f2c3ff7d8f7eb9fd4f5b29d8105e0d2930b1b736d2c06efddb6f20122a9a85ca')
+sha256sums=('40e160f654a25a3a36d6a5361eef71a51f9d3b5eec3b42dd9246ec26402149d1')
 
 build() {
   cd $pkgname-$pkgver
