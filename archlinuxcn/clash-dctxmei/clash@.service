@@ -1,0 +1,12 @@
+[Unit]
+Description=Clash Service
+After=network.target nss-lookup.target
+
+[Service]
+Type=exec
+User=%i
+ExecStart=/usr/bin/clash
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
