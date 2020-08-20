@@ -1,12 +1,12 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=python-fastai
-_pkgname=fastai
+_pkgname=fastai1
 pkgver=1.0.63
 pkgrel=1
-pkgdesc='Deep learning library build on PyTorch'
+pkgdesc='Deep learning library build on PyTorch (legacy v1 release)'
 arch=('any')
-url='https://github.com/fastai/fastai'
+url='https://github.com/fastai/fastai1'
 license=('BSD')
 depends=(
   python-beautifulsoup4
@@ -28,8 +28,8 @@ depends=(
 makedepends=(
   python-setuptools
 )
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/fastai/fastai/archive/${pkgver}.tar.gz")
-sha512sums=('76dc765ffd88c82c0df7f915a3c190b3c1e13ea3f533bf9edf7e4f240ac4e662fda63b318cb05b40ed1dcfe94391ba72c72097b664e1efab9c18d6b51bd084cb')
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/fastai/fastai1/archive/${pkgver}.tar.gz")
+sha512sums=('711b2007199192cf9d8495a8c7c2cc084a2ab62ab40765bc1963be8bc23b154ab4874bf8204535b345db3c3c57912808126d142de6f5b19bde2a7f4e44271de3')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
