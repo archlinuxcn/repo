@@ -1,7 +1,7 @@
 From a9c2cb0ae478caf40cc24001fbf6cfbbcc19196e Mon Sep 17 00:00:00 2001
 From: "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
 Date: Tue, 10 Sep 2019 20:37:08 +0000
-Subject: [PATCH 2/3] pam-arch: Don't check greeter account for expiry
+Subject: [PATCH] pam-arch: Don't check greeter account for expiry
 
 systemd-sysusers now creates expired accounts, which broke the greeter
 on new installations.
@@ -24,6 +24,3 @@ index 618a7d3a..89521472 100644
 +account  optional  pam_permit.so
  
  password required  pam_deny.so
- 
--- 
-2.23.0

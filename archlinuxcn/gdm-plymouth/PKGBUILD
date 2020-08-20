@@ -8,7 +8,7 @@ _pkgbase=gdm
 pkgbase=gdm-plymouth
 pkgname=(gdm-plymouth libgdm-plymouth)
 pkgver=3.36.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Display manager and login screen with plymouth support"
 url="https://wiki.gnome.org/Projects/GDM"
 arch=(x86_64)
@@ -20,11 +20,13 @@ _commit=24a4c0afe337a7a381397c87a39e3a666c0ae6cc  # tags/3.36.3^0
 source=("git+https://gitlab.gnome.org/GNOME/gdm.git#commit=$_commit"
         '0001-Xsession-Don-t-start-ssh-agent-by-default.patch'
         '0002-pam-arch-Don-t-check-greeter-account-for-expiry.patch'
-        '0003-pam-arch-Restrict-greeter-service-to-the-gdm-user.patch')
+        '0003-pam-arch-Restrict-greeter-service-to-the-gdm-user.patch'
+        '0004-pam-arch-Update-to-match-pambase-20200721.1-2.patch')
 sha256sums=('SKIP'
-            '7a9a60ac3ec2a7ba8625ebd8974ac19469412e596d823d889628c971d3a27463'
-            '15c8d7e0a0e03cb45f6bb33b3d91e0332d5d1b835b4aee726118085a35f3b046'
-            '58105ba0634279e00729180831f82e85342167c6ac324a26e6f8b16483fb4018')
+            '6f386e5e7ca09adaa6f9309c40dd32c6ff85990ce4a7bb9da70cc2a3de1f320b'
+            '88129b13ba9196d93d1c434ae8e3c48d2eee3e28fb2594b2c1c5f4385f05b15d'
+            '2e27b0d16311f4e139ee77a8ad752517a715a4f85312810a7c401bba85576b70'
+            'a999d49759fbe8b9a09598cc2a744b86c220486ae202e2bc351d170741142062')
 install=gdm.install
 
 pkgver() {
@@ -40,6 +42,9 @@ prepare() {
 # https://bugs.archlinux.org/task/63706
   patch -Np1 -i ../0002-pam-arch-Don-t-check-greeter-account-for-expiry.patch
   patch -Np1 -i ../0003-pam-arch-Restrict-greeter-service-to-the-gdm-user.patch
+  
+  # https://bugs.archlinux.org/task/67485
+  patch -Np1 -i ../0004-pam-arch-Update-to-match-pambase-20200721.1-2.patch
 
   NOCONFIGURE=1 ./autogen.sh
 }
