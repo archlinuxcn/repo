@@ -2,8 +2,8 @@
 
 pkgname=python-fastprocess
 _pkgname=fastprocess
-pkgver=1.0.1
-pkgrel=2
+pkgver=2.0.0
+pkgrel=1
 pkgdesc='A fast subprocess library'
 arch=('any')
 url='https://github.com/dstathis/fastprocess'
@@ -12,7 +12,7 @@ makedepends=(
   'python-setuptools'
 )
 source=("https://github.com/dstathis/fastprocess/archive/${pkgver}.tar.gz")
-sha512sums=('4378a2019bfe5d4c5580f4c4ba3fbd98d2c573c97cdd22fbd7e86ec353cfc18e6f93851b3a5c34b79a33ebfe03ec1005f95bedd79cf9524cf5c41645021426d8')
+sha512sums=('194bcf0b1ee094a836df624514b8125712431ef57f01063e6cf799dd3cae3e45b1573756cd8c8eec03837632159a5cd99e0d0cbab864d0dea0ab9527eb4d6a1f')
 
 build() {
   cd "${_pkgname}-${pkgver}"
