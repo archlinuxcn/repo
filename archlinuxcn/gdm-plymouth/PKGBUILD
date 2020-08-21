@@ -8,7 +8,7 @@ _pkgbase=gdm
 pkgbase=gdm-plymouth
 pkgname=(gdm-plymouth libgdm-plymouth)
 pkgver=3.36.3
-pkgrel=2
+pkgrel=3
 pkgdesc="Display manager and login screen with plymouth support"
 url="https://wiki.gnome.org/Projects/GDM"
 arch=(x86_64)
@@ -18,16 +18,15 @@ makedepends=(yelp-tools gobject-introspection git docbook-xsl)
 checkdepends=(check)
 _commit=24a4c0afe337a7a381397c87a39e3a666c0ae6cc  # tags/3.36.3^0
 source=("git+https://gitlab.gnome.org/GNOME/gdm.git#commit=$_commit"
-        '0001-Xsession-Don-t-start-ssh-agent-by-default.patch'
-        '0002-pam-arch-Don-t-check-greeter-account-for-expiry.patch'
-        '0003-pam-arch-Restrict-greeter-service-to-the-gdm-user.patch'
-        '0004-pam-arch-Update-to-match-pambase-20200721.1-2.patch')
+        0001-Xsession-Don-t-start-ssh-agent-by-default.patch
+        0002-pam-arch-Don-t-check-greeter-account-for-expiry.patch
+        0003-pam-arch-Restrict-greeter-service-to-the-gdm-user.patch
+        0004-pam-arch-Update-to-match-pambase-20200721.1-2.patch)
 sha256sums=('SKIP'
-            '6f386e5e7ca09adaa6f9309c40dd32c6ff85990ce4a7bb9da70cc2a3de1f320b'
-            '88129b13ba9196d93d1c434ae8e3c48d2eee3e28fb2594b2c1c5f4385f05b15d'
-            '2e27b0d16311f4e139ee77a8ad752517a715a4f85312810a7c401bba85576b70'
-            'a999d49759fbe8b9a09598cc2a744b86c220486ae202e2bc351d170741142062')
-install=gdm.install
+            '5a32db412fc5256e16691e8f2db0b460bafbbb2be8eb9b9bcc71b5cd49688f9e'
+            'e879a982467a62c4c1557067dbdef6b56a774273df1368a60c4b036015111cdd'
+            '4648e7b920ccb14d8a87634c3c98d51ff13163ae2fc9fc4a3c2e9ec876515469'
+            'ba98385cf1de00560f77d75a241b1895567c6b8d4babf230d10ae7fd19739fda')
 
 pkgver() {
   cd gdm
@@ -39,10 +38,10 @@ prepare() {
   cd gdm
   patch -Np1 -i ../0001-Xsession-Don-t-start-ssh-agent-by-default.patch
 
-# https://bugs.archlinux.org/task/63706
+  # https://bugs.archlinux.org/task/63706
   patch -Np1 -i ../0002-pam-arch-Don-t-check-greeter-account-for-expiry.patch
   patch -Np1 -i ../0003-pam-arch-Restrict-greeter-service-to-the-gdm-user.patch
-  
+
   # https://bugs.archlinux.org/task/67485
   patch -Np1 -i ../0004-pam-arch-Update-to-match-pambase-20200721.1-2.patch
 
@@ -84,6 +83,7 @@ package_gdm-plymouth() {
   backup=(etc/pam.d/gdm-autologin etc/pam.d/gdm-fingerprint etc/pam.d/gdm-launch-environment
           etc/pam.d/gdm-password etc/pam.d/gdm-smartcard etc/gdm/custom.conf
           etc/gdm/Xsession etc/gdm/PostSession/Default etc/gdm/PreSession/Default)
+  install=gdm.install
 
   DESTDIR="$pkgdir" make -C build install
 

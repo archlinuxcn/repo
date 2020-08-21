@@ -95,12 +95,12 @@ index d59c9cb9..2ff5ae56 100644
  
 -account  required  pam_succeed_if.so audit quiet_success user = gdm
 -account  optional  pam_permit.so
-+auth       required                    pam_succeed_if.so    audit quiet_success user=gdm
++auth       required                    pam_succeed_if.so    audit quiet_success user = gdm
 +auth       optional                    pam_permit.so
 +auth       required                    pam_env.so
  
 -password required  pam_deny.so
-+account    required                    pam_succeed_if.so    audit quiet_success user=gdm
++account    required                    pam_succeed_if.so    audit quiet_success user = gdm
 +account    optional                    pam_permit.so
  
 -session  optional  pam_keyinit.so force revoke
@@ -111,7 +111,7 @@ index d59c9cb9..2ff5ae56 100644
 +
 +session    optional                    pam_loginuid.so
 +session    optional                    pam_keyinit.so       force revoke
-+session    required                    pam_succeed_if.so    audit quiet_success user=gdm
++session    required                    pam_succeed_if.so    audit quiet_success user = gdm
 +session    optional                    pam_permit.so
 +-session   optional                    pam_systemd.so
 +session    required                    pam_env.so           user_readenv=1
