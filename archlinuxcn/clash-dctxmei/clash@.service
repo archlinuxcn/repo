@@ -3,9 +3,8 @@ Description=Clash Service
 After=network.target nss-lookup.target
 
 [Service]
-Type=exec
-User=%i
-ExecStart=/usr/bin/clash
+User=clash
+ExecStart=/usr/bin/clash -f /etc/clash/%i.yaml
 Restart=on-abort
 
 [Install]
