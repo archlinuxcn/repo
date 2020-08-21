@@ -22,6 +22,11 @@ makedepends=(
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmdetection/archive/v${pkgver}.tar.gz")
 sha512sums=('80a865d65f42e886e6a358702dc49d9df39f700069047d287e70647e81dbcf2b9d1fd27b2b01087b738b96a25c2251618dd8f4d59b7a428c621f6fbff79c6e02')
 
+prepare() {
+  # relax mmcv version requirement
+  sed -i '23,26d' "${_pkgname}-${pkgver}/mmdet/__init__.py"
+}
+
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
   python setup.py build
