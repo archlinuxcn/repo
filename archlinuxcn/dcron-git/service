@@ -5,6 +5,7 @@ Description=Periodic Command Scheduler
 Type=forking
 EnvironmentFile=/etc/conf.d/crond
 ExecStart=/usr/bin/crond $CROND_ARGS
+KillMode=process
 Restart=always
 
 [Install]
