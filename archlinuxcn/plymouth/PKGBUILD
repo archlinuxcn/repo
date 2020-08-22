@@ -6,7 +6,7 @@
 
 pkgname=plymouth
 pkgver=0.9.5
-pkgrel=4
+pkgrel=5
 pkgdesc="A graphical boot splash screen with kernel mode-setting support"
 url="https://www.freedesktop.org/wiki/Software/Plymouth/"
 arch=('i686' 'x86_64')
@@ -27,7 +27,9 @@ source=("https://gitlab.freedesktop.org/${pkgname}/${pkgname}/-/archive/${pkgver
        'plymouth.encrypt_hook'
        'plymouth.encrypt_install'
        'lxdm-plymouth.service'
+       'lightdm-plymouth.service'
        'slim-plymouth.service'
+       'sddm-plymouth.service'
        'plymouth-deactivate.service'
        'plymouth-start.service.in.patch'
        'plymouth-start.path'
@@ -43,7 +45,9 @@ sha256sums=('55a461003ece0a4daeffb8b7ac2178977c5ce024a7e688d24f6d2230465b50ba'
             '7afa97d21444cbac7a6213edda09d9fa73ecbef1a6cea1e745f56669760c6120'
             '373ec20fe4c47e693a0c45cc06dd906e35dd1d70a85546bd1d571391de11763a'
             '06b31999cf60f49e536c7a12bc1c4f75f2671feb848bf5ccb91a963147e2680d'
+            '4b7e47fb8d1e00d8b550c1fa21c193480643dfc40965bc7b925657f720bd189f'
             '9b5534921c5bf92a9285ba53b323209e812145c204ac5fed6899b7aad78300ef'
+            'e22c526ea25a3ff508a91eccfa1681341dd21186666aa60c8b473aa16c58a0fe'
             '3b17ed58b59a4b60d904c60bba52bae7ad685aa8273f6ceaae08a15870c0a9eb'
             '3a46f7faced877a913506d59757f0af60ad3d5f0bc365c56ed7ecc7aef75c5eb'
             'ce3d62f4c5a1b5c0ccadd15406c7430251d1a42b232721bfbfc747da1b13e3ff'
@@ -101,13 +105,11 @@ package() {
 	install -Dm644 "$srcdir/plymouth.initcpio_install" "$pkgdir/usr/lib/initcpio/install/plymouth"
 	install -Dm644 "$srcdir/sd-plymouth.initcpio_install" "$pkgdir/usr/lib/initcpio/install/sd-plymouth"
 
-	for i in {lxdm,slim}-plymouth.service; do
+	for i in {sddm,lxdm,slim,lightdm}-plymouth.service; do
 		install -Dm644 "$srcdir/$i" "$pkgdir/usr/lib/systemd/system/$i"
 	done
 	
-	for i in {gdm,sddm,lightdm}; do
-		ln -s "/usr/lib/systemd/system/$i.service" "$pkgdir/usr/lib/systemd/system/$i-plymouth.service"
-	done
+	ln -s "/usr/lib/systemd/system/gdm.service" "$pkgdir/usr/lib/systemd/system/gdm-plymouth.service"
 
 	install -Dm644 "$srcdir/plymouth-deactivate.service" 	"$pkgdir/usr/lib/systemd/system/plymouth-deactivate.service"
 	install -Dm644 "$srcdir/plymouth-start.path" 	"$pkgdir/usr/lib/systemd/system/plymouth-start.path"

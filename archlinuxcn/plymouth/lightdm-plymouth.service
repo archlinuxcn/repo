@@ -1,7 +1,8 @@
 [Unit]
 Description=Light Display Manager
+Documentation=man:lightdm(1)
 Conflicts=getty@tty1.service plymouth-quit.service
-After=systemd-user-sessions.service getty@tty1.service plymouth-quit.service
+After=getty@tty1.service systemd-user-sessions.service plymouth-quit.service acpid.service
 
 [Service]
 ExecStart=/usr/bin/lightdm
