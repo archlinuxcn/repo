@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 
 pkgbase=linux-lily
-pkgver=5.4.27
+pkgver=5.4.60
 pkgrel=1
 pkgdesc='Linux-lily'
 url="https://www.kernel.org/"
@@ -17,7 +17,9 @@ _srcname=archlinux-linux
 source=(
   # https://www.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
   # config         # the main kernel config file
-  0001-add-sysctl-and-CONFIG-for-unprivileged_userns_clone.patch
+  0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
+  0002-virt-vbox-Add-support-for-the-new-VBG_IOCTL_ACQUIRE_.patch
+  sphinx-workaround.patch
 )
 validpgpkeys=(
   'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds
@@ -27,8 +29,11 @@ validpgpkeys=(
 sha256sums=(# '669a74f4aeef07645061081d9c05d23216245702b4095afb3d957f79098f0daf'
             # 'SKIP'
             # '7a58467b4cf628306a0048993f43508e5da39d8495801602b25b035372651697'
-            'a13581d3c6dc595206e4fe7fcf6b542e7a1bdbe96101f0f010fc5be49f99baf2')
+            'b3f2777462517abd75039fc56a63dfa3f5eb6b3865e02fe9e0c3512381eed54b'
+            '4fd74bb2a7101d700fba91806141339d8c9e46a14f8fc1fe276cfb68f1eec0f5'
+            'b7c814c8183e4645947a6dcc3cbf80431de8a8fd4e895b780f9a5fd92f82cb8e')
 
+export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
 # to remove the plus sign
@@ -107,9 +112,6 @@ _package() {
 
   msg2 "Running depmod..."
   depmod -b "$pkgdir/usr" -E Module.symvers -e "$kernver"
-
-  echo "Fixing permissions..."
-  chmod -Rc u=rwX,go=rX "$pkgdir"
 }
 
 _package-headers() {
@@ -186,9 +188,6 @@ _package-headers() {
   echo "Adding symlink..."
   mkdir -p "$pkgdir/usr/src"
   ln -sr "$builddir" "$pkgdir/usr/src/$pkgbase"
-
-  echo "Fixing permissions..."
-  chmod -Rc u=rwX,go=rX "$pkgdir"
 }
 
 _package-docs() {
@@ -208,9 +207,6 @@ _package-docs() {
   echo "Adding symlink..."
   mkdir -p "$pkgdir/usr/share/doc"
   ln -sr "$builddir/Documentation" "$pkgdir/usr/share/doc/$pkgbase"
-
-  echo "Fixing permissions..."
-  chmod -Rc u=rwX,go=rX "$pkgdir"
 }
 
 pkgname=("$pkgbase" "$pkgbase-headers") # "$pkgbase-docs")
