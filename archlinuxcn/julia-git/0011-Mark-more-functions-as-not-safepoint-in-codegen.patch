@@ -1,25 +1,26 @@
-From 6081f7df91bf7269fbbc16790e1ada2ec1723b64 Mon Sep 17 00:00:00 2001
+From b6b04d8638d890536b60db78192d23a1c8526913 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Thu, 13 Aug 2020 02:24:27 -0400
-Subject: [PATCH 4/4] Mark more functions as not safepoint in codegen.
+Subject: [PATCH 11/11] Mark more functions as not safepoint in codegen.
 
 In particular, most error throwing function doesn't require
 the input arguments to be rooted.
 ---
  src/array.c                   |  2 +-
- src/gc.c                      |  6 +++---
+ src/codegen.cpp               |  6 ++---
+ src/gc.c                      |  6 ++---
  src/jlapi.c                   |  2 +-
- src/julia.h                   |  8 ++++----
+ src/julia.h                   |  8 +++----
  src/julia_internal.h          |  4 ++--
- src/llvm-late-gc-lowering.cpp | 37 ++++++++++++++++++++++++++++++++++-
- src/rtutils.c                 | 17 +++++++++-------
- 7 files changed, 57 insertions(+), 19 deletions(-)
+ src/llvm-late-gc-lowering.cpp | 45 ++++++++++++++++++++++++++++++++++-
+ src/rtutils.c                 | 17 +++++++------
+ 8 files changed, 68 insertions(+), 22 deletions(-)
 
 diff --git a/src/array.c b/src/array.c
-index dd57c09edc..6c53f5ddb5 100644
+index b7bf788363..41c44305e3 100644
 --- a/src/array.c
 +++ b/src/array.c
-@@ -1274,7 +1274,7 @@ JL_DLLEXPORT void jl_array_ptr_1d_append(jl_array_t *a, jl_array_t *a2)
+@@ -1278,7 +1278,7 @@ JL_DLLEXPORT void jl_array_ptr_1d_append(jl_array_t *a, jl_array_t *a2)
      }
  }
  
@@ -28,6 +29,37 @@ index dd57c09edc..6c53f5ddb5 100644
  {
      return jl_array_data_owner(a);
  }
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index 8fc87a0f48..92afffa8a8 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -638,7 +638,7 @@ static const auto jlenter_func = new JuliaFunction{
+ static const auto jl_current_exception_func = new JuliaFunction{
+     "jl_current_exception",
+     [](LLVMContext &C) { return FunctionType::get(T_prjlvalue, false); },
+-    nullptr,
++    [](LLVMContext &C) { return get_attrs_rdonly(C, {}, false); },
+ };
+ static const auto jlleave_func = new JuliaFunction{
+     "jl_pop_handler",
+@@ -655,7 +655,7 @@ static const auto jl_restore_excstack_func = new JuliaFunction{
+ static const auto jl_excstack_state_func = new JuliaFunction{
+     "jl_excstack_state",
+     [](LLVMContext &C) { return FunctionType::get(T_size, false); },
+-    nullptr,
++    [](LLVMContext &C) { return get_attrs_rdonly(C, {}, false); },
+ };
+ static const auto jlegal_func = new JuliaFunction{
+     "jl_egal",
+@@ -819,7 +819,7 @@ static const auto jlarray_data_owner_func = new JuliaFunction{
+     [](LLVMContext &C) { return FunctionType::get(T_prjlvalue,
+             {T_prjlvalue}, false); },
+     [](LLVMContext &C) { return AttributeList::get(C,
+-            Attributes(C, {Attribute::ReadOnly, Attribute::NoUnwind}),
++            Attributes(C, {Attribute::ReadOnly, Attribute::NoUnwind, Attribute::ArgMemOnly}),
+             Attributes(C, {Attribute::NonNull}),
+             None); },
+ };
 diff --git a/src/gc.c b/src/gc.c
 index 9cacfb5fa5..c3244df5c3 100644
 --- a/src/gc.c
@@ -73,10 +105,10 @@ index 54d9befbdf..72f59f3fe3 100644
      jl_excstack_t *s = jl_get_ptls_states()->current_task->excstack;
      return s && s->top != 0 ? jl_excstack_exception(s, s->top) : jl_nothing;
 diff --git a/src/julia.h b/src/julia.h
-index 6ee5c5bce6..e1da5c729f 100644
+index 5738661c53..312af51030 100644
 --- a/src/julia.h
 +++ b/src/julia.h
-@@ -1577,7 +1577,7 @@ JL_DLLEXPORT void JL_NORETURN jl_exceptionf(jl_datatype_t *ty,
+@@ -1578,7 +1578,7 @@ JL_DLLEXPORT void JL_NORETURN jl_exceptionf(jl_datatype_t *ty,
  JL_DLLEXPORT void JL_NORETURN jl_too_few_args(const char *fname, int min);
  JL_DLLEXPORT void JL_NORETURN jl_too_many_args(const char *fname, int max);
  JL_DLLEXPORT void JL_NORETURN jl_type_error(const char *fname,
@@ -85,7 +117,7 @@ index 6ee5c5bce6..e1da5c729f 100644
                                              jl_value_t *got JL_MAYBE_UNROOTED);
  JL_DLLEXPORT void JL_NORETURN jl_type_error_rt(const char *fname,
                                                 const char *context,
-@@ -1604,7 +1604,7 @@ JL_DLLEXPORT void JL_NORETURN jl_eof_error(void);
+@@ -1605,7 +1605,7 @@ JL_DLLEXPORT void JL_NORETURN jl_eof_error(void);
  // enclosing JL_CATCH.
  // FIXME: Teach the static analyzer about this rather than using
  // JL_GLOBALLY_ROOTED which is far too optimistic.
@@ -94,7 +126,7 @@ index 6ee5c5bce6..e1da5c729f 100644
  JL_DLLEXPORT jl_value_t *jl_exception_occurred(void);
  JL_DLLEXPORT void jl_exception_clear(void) JL_NOTSAFEPOINT;
  
-@@ -1841,8 +1841,8 @@ JL_DLLEXPORT void JL_NORETURN jl_no_exc_handler(jl_value_t *e);
+@@ -1842,8 +1842,8 @@ JL_DLLEXPORT void JL_NORETURN jl_no_exc_handler(jl_value_t *e);
  JL_DLLEXPORT void jl_enter_handler(jl_handler_t *eh);
  JL_DLLEXPORT void jl_eh_restore_state(jl_handler_t *eh);
  JL_DLLEXPORT void jl_pop_handler(int n);
@@ -106,7 +138,7 @@ index 6ee5c5bce6..e1da5c729f 100644
  #if defined(_OS_WINDOWS_)
  #if defined(_COMPILER_GCC_)
 diff --git a/src/julia_internal.h b/src/julia_internal.h
-index 12ecbb9d28..180c8fe9fa 100644
+index e0a9befbba..01f6fd1e79 100644
 --- a/src/julia_internal.h
 +++ b/src/julia_internal.h
 @@ -339,8 +339,8 @@ JL_DLLEXPORT void *jl_gc_counted_malloc(size_t sz);
@@ -121,10 +153,10 @@ index 12ecbb9d28..180c8fe9fa 100644
  void jl_gc_count_allocd(size_t sz) JL_NOTSAFEPOINT;
  void jl_gc_run_all_finalizers(jl_ptls_t ptls);
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index 0dcdccfcd3..544b0be164 100644
+index 5777fb1b69..02fd56aca5 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
-@@ -225,6 +225,41 @@ using namespace llvm;
+@@ -227,6 +227,49 @@ using namespace llvm;
        simply sink the alloca into the GCFrame.
  */
  
@@ -134,6 +166,13 @@ index 0dcdccfcd3..544b0be164 100644
 +    // and never needs the input argument to be rooted in those cases.
 +    const char *const names[] = {
 +        "memcmp",
++        "strncmp",
++        "strcmp",
++        "strlen",
++        "strchr",
++        "strrchr",
++        "memchr",
++        "memrchr",
 +        "jl_throw",
 +        "jl_error",
 +        "jl_type_error",
@@ -145,6 +184,7 @@ index 0dcdccfcd3..544b0be164 100644
 +        "jl_restore_excstack",
 +        "jl_excstack_state",
 +        "julia.loopinfo_marker",
++        "jl_object_id",
 +        "jl_object_id_",
 +        "jl_gc_diff_total_bytes",
 +        "jl_gc_sync_total_bytes",
@@ -166,7 +206,7 @@ index 0dcdccfcd3..544b0be164 100644
  struct BBState {
      // Uses in this BB
      // These do not get updated after local analysis
-@@ -1496,7 +1531,7 @@ State LateLowerGCFrame::LocalScan(Function &F) {
+@@ -1501,7 +1544,7 @@ State LateLowerGCFrame::LocalScan(Function &F) {
                      if (callee == pointer_from_objref_func || callee == gc_preserve_begin_func ||
                          callee == gc_preserve_end_func || callee == typeof_func ||
                          callee == ptls_getter ||

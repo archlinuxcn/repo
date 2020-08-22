@@ -9,11 +9,11 @@ pkgbase=julia-git
 pkgname=(julia-git)
 
 if [[ $CARCH != x86_64 ]]; then
-    BUILD_DOC=0
+  BUILD_DOC=0
 fi
 
 if ((BUILD_DOC)); then
-    pkgname+=('julia-git-docs')
+  pkgname+=('julia-git-docs')
 fi
 
 case $CARCH in
@@ -43,24 +43,39 @@ depends_libs=(arpack fftw gmp libgit2-julia libunwind-git mpfr pcre2 suitesparse
 makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
              gcc-fortran git patchelf python)
 options=('debug' '!strip' '!buildflags')
+_patches=(
+  0001-Fix-source-file-paths.patch
+  0002-Symbol-clean-up-and-strlen-fixes.patch
+  0003-Remove-an-unnecessary-second-pass-during-liveset-ref.patch
+  0004-Refine-out-callee-rooted-values-from-live-set-at-the.patch
+  0005-More-optimization-based-on-constant-array-size.patch
+  0006-Optimize-codegen-of-access-functions-for-SimpleVecto.patch
+  0007-Optimize-allocation-of-arrays.patch
+  0008-Make-sure-global-constants-are-recognized-more-relia.patch
+  0009-Add-ccall-special-cases-for-a-few-more-libc-function.patch
+  0010-Optimize-objectid-in-codegen.patch
+  0011-Mark-more-functions-as-not-safepoint-in-codegen.patch
+)
 source=('git://github.com/JuliaLang/julia'
-        0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
-        0001-Optimize-GC-frame-push-pop-insertion.patch
-        0002-Make-sure-global-constants-are-recognized-more-relia.patch
-        0004-Mark-more-functions-as-not-safepoint-in-codegen.patch
-        source-translate.patch
-        gdb-debug.patch
+        "${_patches[@]}"
+        gdb-debug.diff
         julia-compile-pkgs.jl
         julia-clear-precompile.sh
         julia-precompile.hook
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '2222d3eabfe6040a8cca466303c86d2b'
-         '3dbb81b1dae3a9d977bd69f8354b3007'
-         '69cd1b261df876f2f011718af2aaa6b3'
-         '27797adfd16485ead165cd3b7ff7de0e'
-         '42f2b44768927a7ed2296b15161ba21c'
+         '54eba3a53d1204cabf413e6d813b530e'
+         '6b1259b568e490fb6a66b4d3bdefdf05'
+         'e84a7916b1f446fe1bdef529a12db04f'
+         '66ffea188eccd7434eabfccebaed0167'
+         'da0d7ecc99a6d0eea2e85b317bce5a48'
+         'de0f548354edd17970339f3e4f761b31'
+         '486cfef8d3a821ad7144fc3d4d2aa6f8'
+         '375e89389520f2156b4c942cf2ced131'
+         '3db112071d44dacb68dccf3de704890b'
+         '371d019a6ea6067ee97c9533b7e4fbd2'
+         'b848d729167a513cd1996c95f1842242'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          '0b3bfcd680da2dc47d861b04ee695f52'
          '6e7fcba300512df8ab8ab65d3e1eb847'
@@ -131,6 +146,11 @@ case "$CARCH" in
     ;;
 esac
 
+_apply_patch() {
+  echo "Applying $1"
+  patch -Np1 < "../$1"
+}
+
 prepare() {
   rm -rf bin/
   mkdir -p bin/
@@ -147,12 +167,9 @@ EOF
   git reset --hard HEAD
   git clean -fdx
 
-  # patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
-  # patch -Np1 < ../0001-Optimize-GC-frame-push-pop-insertion.patch
-  patch -Np1 < ../0002-Make-sure-global-constants-are-recognized-more-relia.patch
-  patch -Np1 < ../0004-Mark-more-functions-as-not-safepoint-in-codegen.patch
-  patch -Np1 < ../source-translate.patch
-  patch -Np1 < ../gdb-debug.patch
+  for p in "${_patches[@]}" gdb-debug.diff; do
+    _apply_patch "$p"
+  done
 
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' src/Makefile ui/Makefile
 }
@@ -165,8 +182,8 @@ build_in() {
   opts=("${@:3}")
   export PATH="${srcdir}/bin:${PATH}"
   if [[ $CARCH = i686 ]]; then
-      CFLAGS="${CFLAGS//-march=i686/-march=pentium4} -march=pentium4"
-      CXXFLAGS="${CXXFLAGS//-march=i686/-march=pentium4} -march=pentium4"
+    CFLAGS="${CFLAGS//-march=i686/-march=pentium4} -march=pentium4"
+    CXXFLAGS="${CXXFLAGS//-march=i686/-march=pentium4} -march=pentium4"
   fi
   CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
@@ -231,11 +248,11 @@ package-julia-in() {
   rm -rf "$pkgdir/usr/share/doc/julia"
 
   ver=$("$pkgdir/usr/bin/julia" \
-            --startup-file=no \
-            -e 'print(VERSION.major, ".", VERSION.minor, ".", VERSION.patch)')
+          --startup-file=no \
+          -e 'print(VERSION.major, ".", VERSION.minor, ".", VERSION.patch)')
   ver_short=$("$pkgdir/usr/bin/julia" \
-            --startup-file=no \
-            -e 'print(VERSION.major, ".", VERSION.minor)')
+                --startup-file=no \
+                -e 'print(VERSION.major, ".", VERSION.minor)')
   stdlib_dir="$pkgdir/usr/share/julia/stdlib/v$ver_short"
   builtin_pkgs=()
   for pkg in $(ls -1 "$stdlib_dir"); do

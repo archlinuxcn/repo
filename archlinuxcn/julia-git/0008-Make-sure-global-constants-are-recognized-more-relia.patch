@@ -1,7 +1,7 @@
-From c663ab87478e6648a3b2b81e72ef5576db88d227 Mon Sep 17 00:00:00 2001
+From ad5def17ca32ddcc6ad2dbb08c740d9d714a072d Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 11 Aug 2020 18:13:06 -0400
-Subject: [PATCH 2/4] Make sure global constants are recognized more reliably
+Subject: [PATCH 08/11] Make sure global constants are recognized more reliably
  as such during GC lowering.
 
 Some of the pointer chasing duplicates the logic in the rest of the pass but are never the less
@@ -11,10 +11,10 @@ necessary to handle operation in the untracked address space.
  1 file changed, 76 insertions(+), 11 deletions(-)
 
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index 9a7da9fee9..0dcdccfcd3 100644
+index 1ebed6fa31..5777fb1b69 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
-@@ -1119,17 +1119,77 @@ static bool isLoadFromImmut(LoadInst *LI)
+@@ -1124,17 +1124,77 @@ static bool isLoadFromImmut(LoadInst *LI)
      return false;
  }
  
@@ -98,7 +98,7 @@ index 9a7da9fee9..0dcdccfcd3 100644
      return false;
  }
  
-@@ -1465,6 +1525,7 @@ State LateLowerGCFrame::LocalScan(Function &F) {
+@@ -1488,6 +1548,7 @@ State LateLowerGCFrame::LocalScan(Function &F) {
                  // from.
                  SmallVector<int, 1> RefinedPtr{};
                  Type *Ty = LI->getType()->getScalarType();
@@ -106,7 +106,7 @@ index 9a7da9fee9..0dcdccfcd3 100644
                  if (isLoadFromImmut(LI) && isSpecialPtr(LI->getPointerOperand()->getType())) {
                      RefinedPtr.push_back(Number(S, LI->getPointerOperand()));
                  } else if (LI->getType()->isPointerTy() &&
-@@ -1473,10 +1534,12 @@ State LateLowerGCFrame::LocalScan(Function &F) {
+@@ -1496,10 +1557,12 @@ State LateLowerGCFrame::LocalScan(Function &F) {
                      // Loads from a jlcall argument array
                      RefinedPtr.push_back(-1);
                  }
@@ -121,7 +121,7 @@ index 9a7da9fee9..0dcdccfcd3 100644
                  }
                  if (!Ty->isPointerTy() || Ty->getPointerAddressSpace() != AddressSpace::Loaded) {
                      MaybeNoteDef(S, BBS, LI, BBS.Safepoints, std::move(RefinedPtr));
-@@ -1533,10 +1596,11 @@ State LateLowerGCFrame::LocalScan(Function &F) {
+@@ -1556,10 +1619,11 @@ State LateLowerGCFrame::LocalScan(Function &F) {
              } else if (auto *ASCI = dyn_cast<AddrSpaceCastInst>(&I)) {
                  if (isTrackedValue(ASCI)) {
                      SmallVector<int, 1> RefinedPtr{};
@@ -135,7 +135,7 @@ index 9a7da9fee9..0dcdccfcd3 100644
                          }
                      }
                      MaybeNoteDef(S, BBS, ASCI, BBS.Safepoints, std::move(RefinedPtr));
-@@ -2169,7 +2233,8 @@ bool LateLowerGCFrame::CleanupIR(Function &F, State *S) {
+@@ -2201,7 +2265,8 @@ bool LateLowerGCFrame::CleanupIR(Function &F, State *S) {
                      // a type in other branches.
                      // However, it should be safe for us to do this on const globals
                      // which should be the important cases as well.
