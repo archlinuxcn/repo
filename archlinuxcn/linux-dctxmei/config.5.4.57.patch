@@ -1,5 +1,5 @@
 diff --git a/archlinuxcn/linux-dctxmei/config b/archlinuxcn/linux-dctxmei/config
-index 8216172052..4b317b295b 100644
+index 8216172052..9e81eb482d 100644
 --- a/archlinuxcn/linux-dctxmei/config
 +++ b/archlinuxcn/linux-dctxmei/config
 @@ -179,7 +179,6 @@ CONFIG_NAMESPACES=y
@@ -222,3 +222,12 @@ index 8216172052..4b317b295b 100644
  CONFIG_DRM_I915=m
  CONFIG_DRM_I915_ALPHA_SUPPORT=y
  CONFIG_DRM_I915_FORCE_PROBE="*"
+@@ -9923,7 +9825,7 @@ CONFIG_LOCK_DOWN_KERNEL_FORCE_NONE=y
+ # CONFIG_DEFAULT_SECURITY_TOMOYO is not set
+ # CONFIG_DEFAULT_SECURITY_APPARMOR is not set
+ CONFIG_DEFAULT_SECURITY_DAC=y
+-CONFIG_LSM="lockdown,yama"
++CONFIG_LSM="lockdown,yama,apparmor"
+ 
+ #
+ # Kernel hardening options
