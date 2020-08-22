@@ -1,15 +1,15 @@
-From 85f5cbe52f19a753623e23deacbefea0729418fd Mon Sep 17 00:00:00 2001
+From c92c36393082fae58977ebae4be3de49d81d91c7 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 19 Aug 2020 01:05:14 -0400
 Subject: [PATCH 06/11] Optimize codegen of access functions for SimpleVector
 
 ---
- base/essentials.jl   | 17 +++--------------
- src/ccall.cpp        | 44 ++++++++++++++++++++++++++++++++++++++++++++
- src/codegen.cpp      | 13 ++++++++++++-
+ base/essentials.jl   | 17 +++-------------
+ src/ccall.cpp        | 48 ++++++++++++++++++++++++++++++++++++++++++++
+ src/codegen.cpp      | 13 +++++++++++-
  src/julia_internal.h |  8 ++++++++
- src/simplevector.c   | 18 ++++++++++++++++++
- 5 files changed, 85 insertions(+), 15 deletions(-)
+ src/simplevector.c   | 18 +++++++++++++++++
+ 5 files changed, 89 insertions(+), 15 deletions(-)
 
 diff --git a/base/essentials.jl b/base/essentials.jl
 index 044ecd013e..62e942ddc2 100644
@@ -50,10 +50,10 @@ index 044ecd013e..62e942ddc2 100644
  
  
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index 336c1b375c..41c5e2e1ce 100644
+index 336c1b375c..9e35a7d99d 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
-@@ -1481,6 +1481,50 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+@@ -1481,6 +1481,54 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
          ctx.builder.SetInsertPoint(contBB);
          return ghostValue(jl_nothing_type);
      }
@@ -76,8 +76,10 @@ index 336c1b375c..41c5e2e1ce 100644
 +        Value *idx = emit_unbox(ctx, T_size, idxv, (jl_value_t*)jl_long_type);
 +        idx = ctx.builder.CreateAdd(idx, ConstantInt::get(T_size, 1));
 +        auto ptr = emit_bitcast(ctx, boxed(ctx, svecv), T_pprjlvalue);
-+        Value *slot_addr = ctx.builder.CreateInBoundsGEP(T_prjlvalue, ptr, idx);
-+        LoadInst *load = ctx.builder.CreateAlignedLoad(T_prjlvalue, slot_addr, sizeof(void*));
++        Value *slot_addr = ctx.builder.CreateInBoundsGEP(T_prjlvalue,
++                                                         decay_derived(ctx, ptr), idx);
++        LoadInst *load = ctx.builder.CreateAlignedLoad(T_prjlvalue, slot_addr,
++                                                       Align(sizeof(void*)));
 +        load->setAtomic(AtomicOrdering::Unordered);
 +        tbaa_decorate(tbaa_const, load);
 +        Value *res = ctx.builder.CreateZExt(ctx.builder.CreateICmpNE(load, V_rnull), T_int8);
@@ -93,8 +95,10 @@ index 336c1b375c..41c5e2e1ce 100644
 +        Value *idx = emit_unbox(ctx, T_size, idxv, (jl_value_t*)jl_long_type);
 +        idx = ctx.builder.CreateAdd(idx, ConstantInt::get(T_size, 1));
 +        auto ptr = emit_bitcast(ctx, boxed(ctx, svecv), T_pprjlvalue);
-+        Value *slot_addr = ctx.builder.CreateInBoundsGEP(T_prjlvalue, ptr, idx);
-+        LoadInst *load = ctx.builder.CreateAlignedLoad(T_prjlvalue, slot_addr, sizeof(void*));
++        Value *slot_addr = ctx.builder.CreateInBoundsGEP(T_prjlvalue,
++                                                         decay_derived(ctx, ptr), idx);
++        LoadInst *load = ctx.builder.CreateAlignedLoad(T_prjlvalue, slot_addr,
++                                                       Align(sizeof(void*)));
 +        load->setAtomic(AtomicOrdering::Unordered);
 +        tbaa_decorate(tbaa_const, load);
 +        null_pointer_check(ctx, load);

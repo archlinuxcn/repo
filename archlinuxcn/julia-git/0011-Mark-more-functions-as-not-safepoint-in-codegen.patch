@@ -1,4 +1,4 @@
-From b6b04d8638d890536b60db78192d23a1c8526913 Mon Sep 17 00:00:00 2001
+From f82498aec3954de50116a2a5e179d26ecbcdc266 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Thu, 13 Aug 2020 02:24:27 -0400
 Subject: [PATCH 11/11] Mark more functions as not safepoint in codegen.
@@ -153,7 +153,7 @@ index e0a9befbba..01f6fd1e79 100644
  void jl_gc_count_allocd(size_t sz) JL_NOTSAFEPOINT;
  void jl_gc_run_all_finalizers(jl_ptls_t ptls);
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index 5777fb1b69..02fd56aca5 100644
+index a6b375f398..a77bcb3d02 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
 @@ -227,6 +227,49 @@ using namespace llvm;
@@ -206,7 +206,7 @@ index 5777fb1b69..02fd56aca5 100644
  struct BBState {
      // Uses in this BB
      // These do not get updated after local analysis
-@@ -1501,7 +1544,7 @@ State LateLowerGCFrame::LocalScan(Function &F) {
+@@ -1500,7 +1543,7 @@ State LateLowerGCFrame::LocalScan(Function &F) {
                      if (callee == pointer_from_objref_func || callee == gc_preserve_begin_func ||
                          callee == gc_preserve_end_func || callee == typeof_func ||
                          callee == ptls_getter ||

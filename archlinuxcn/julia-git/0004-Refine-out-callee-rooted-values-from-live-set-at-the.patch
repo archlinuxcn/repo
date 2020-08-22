@@ -1,4 +1,4 @@
-From 052d78a0cd1d5cec5b2dd513b258cc3bb2b51153 Mon Sep 17 00:00:00 2001
+From 9932b0478b76f05efd6776e0d4d1313e6564adcf Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 21 Aug 2020 21:43:27 -0400
 Subject: [PATCH 04/11] Refine out callee rooted values from live set at the
@@ -10,7 +10,7 @@ Subject: [PATCH 04/11] Refine out callee rooted values from live set at the
  2 files changed, 56 insertions(+), 5 deletions(-)
 
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index 542ce544b4..1ebed6fa31 100644
+index e564dadb24..240f2747e0 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
 @@ -295,6 +295,8 @@ struct State {
@@ -48,7 +48,7 @@ index 542ce544b4..1ebed6fa31 100644
      return Number;
  }
  
-@@ -1455,7 +1458,25 @@ State LateLowerGCFrame::LocalScan(Function &F) {
+@@ -1454,7 +1457,25 @@ State LateLowerGCFrame::LocalScan(Function &F) {
                      // Intrinsics are never safepoints.
                      continue;
                  }
@@ -75,7 +75,7 @@ index 542ce544b4..1ebed6fa31 100644
                  BBS.HasSafepoint = true;
                  BBS.TopmostSafepoint = SafepointNumber;
                  BBS.Safepoints.push_back(SafepointNumber);
-@@ -1781,12 +1802,18 @@ JL_USED_FUNC static void dumpSafepointsForBBName(Function &F, State &S, const ch
+@@ -1780,12 +1801,18 @@ JL_USED_FUNC static void dumpSafepointsForBBName(Function &F, State &S, const ch
      }
  }
  
@@ -95,7 +95,7 @@ index 542ce544b4..1ebed6fa31 100644
      bool changed;
      do {
          changed = false;
-@@ -1827,6 +1854,11 @@ void LateLowerGCFrame::RefineLiveSet(BitVector &LS, State &S)
+@@ -1826,6 +1853,11 @@ void LateLowerGCFrame::RefineLiveSet(BitVector &LS, State &S)
              LS[Idx] = 0;
          }
      }
@@ -107,7 +107,7 @@ index 542ce544b4..1ebed6fa31 100644
  }
  
  void LateLowerGCFrame::ComputeLiveSets(State &S) {
-@@ -1845,7 +1877,7 @@ void LateLowerGCFrame::ComputeLiveSets(State &S) {
+@@ -1844,7 +1876,7 @@ void LateLowerGCFrame::ComputeLiveSets(State &S) {
              if (HasBitSet(BBS.LiveOut, Live))
                  LS[Live] = 1;
          }

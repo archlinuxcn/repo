@@ -1,4 +1,4 @@
-From 8bcc43d2def9fcaeead5a27f11267d61f15654bd Mon Sep 17 00:00:00 2001
+From a437bf4b06e7a47efda513ef5903beabc124c1e7 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 22 Aug 2020 10:19:15 -0400
 Subject: [PATCH 07/11] Optimize allocation of arrays
@@ -63,7 +63,7 @@ index dd57c09edc..b7bf788363 100644
  {
      jl_array_t *a = jl_alloc_array_1d(jl_array_uint8_type, len);
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index 41c5e2e1ce..e1180a8e43 100644
+index 9e35a7d99d..9eca2b5dcb 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
 @@ -1164,6 +1164,55 @@ static const std::string verify_ccall_sig(jl_value_t *&rt, jl_value_t *at,
@@ -122,7 +122,7 @@ index 41c5e2e1ce..e1180a8e43 100644
  // Expr(:foreigncall, pointer, rettype, (argtypes...), nreq, cconv, args..., roots...)
  static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
  {
-@@ -1525,6 +1574,13 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+@@ -1529,6 +1578,13 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
          JL_GC_POP();
          return mark_or_box_ccall_result(ctx, load, retboxed, rt, unionall, static_rt);
      }

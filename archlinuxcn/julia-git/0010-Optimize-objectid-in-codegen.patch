@@ -1,4 +1,4 @@
-From da934c36be54f7ca71d4f5c1dbfe1b9c6fa01b1e Mon Sep 17 00:00:00 2001
+From f750bf6c77270d12a6994f961e430c120dbf97aa Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 21 Aug 2020 13:15:02 -0400
 Subject: [PATCH 10/11] Optimize objectid in codegen
@@ -12,10 +12,10 @@ Subject: [PATCH 10/11] Optimize objectid in codegen
  5 files changed, 64 insertions(+), 8 deletions(-)
 
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index c7b259a34b..58edc1615c 100644
+index 6eba327ab6..b55ff4e64d 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
-@@ -1786,6 +1786,7 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+@@ -1790,6 +1790,7 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
      else if (is_libjulia_func(jl_object_id) && nccallargs == 1 &&
              rt == (jl_value_t*)jl_ulong_type) {
          jl_cgval_t val = argv[0];
@@ -23,7 +23,7 @@ index c7b259a34b..58edc1615c 100644
          if (!val.isboxed) {
              // If the value is not boxed, try to compute the object id without
              // reboxing it.
-@@ -1799,10 +1800,13 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+@@ -1803,10 +1804,13 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
                          decay_derived(ctx, data_pointer(ctx, val)),
                          T_pint8_derived)
              };
