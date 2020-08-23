@@ -1,7 +1,7 @@
-From a437bf4b06e7a47efda513ef5903beabc124c1e7 Mon Sep 17 00:00:00 2001
+From 8bd50b85749aec877791aaab0cfcfd87f3646c29 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 22 Aug 2020 10:19:15 -0400
-Subject: [PATCH 07/11] Optimize allocation of arrays
+Subject: [PATCH 07/10] Optimize allocation of arrays
 
 ---
  base/boot.jl    | 12 ++---------
@@ -63,7 +63,7 @@ index dd57c09edc..b7bf788363 100644
  {
      jl_array_t *a = jl_alloc_array_1d(jl_array_uint8_type, len);
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index 9e35a7d99d..9eca2b5dcb 100644
+index 82845e4673..4d66cb7610 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
 @@ -1164,6 +1164,55 @@ static const std::string verify_ccall_sig(jl_value_t *&rt, jl_value_t *at,
@@ -97,7 +97,7 @@ index 9e35a7d99d..9eca2b5dcb 100644
 +                              (jl_value_t*)jl_long_type);
 +        // Otherwise, go through memory since we know it's a `size_t*`
 +        auto ptr = ctx.builder.CreateConstInBoundsGEP1_32(T_size, dimsv(), i);
-+        return ctx.builder.CreateAlignedLoad(T_size, ptr, sizeof(void*));
++        return ctx.builder.CreateAlignedLoad(T_size, ptr, Align(sizeof(void*)));
 +    };
 +    size_t ndims;
 +    bool known_dim = typ.constant && arraytype_constdim(typ.constant, &ndims);
@@ -122,7 +122,7 @@ index 9e35a7d99d..9eca2b5dcb 100644
  // Expr(:foreigncall, pointer, rettype, (argtypes...), nreq, cconv, args..., roots...)
  static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
  {
-@@ -1529,6 +1578,13 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+@@ -1530,6 +1579,13 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
          JL_GC_POP();
          return mark_or_box_ccall_result(ctx, load, retboxed, rt, unionall, static_rt);
      }

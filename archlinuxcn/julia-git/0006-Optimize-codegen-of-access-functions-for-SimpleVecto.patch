@@ -1,15 +1,15 @@
-From c92c36393082fae58977ebae4be3de49d81d91c7 Mon Sep 17 00:00:00 2001
+From 8e70921856cbc84ed74ffc792a687ee1201fb386 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 19 Aug 2020 01:05:14 -0400
-Subject: [PATCH 06/11] Optimize codegen of access functions for SimpleVector
+Subject: [PATCH 06/10] Optimize codegen of access functions for SimpleVector
 
 ---
- base/essentials.jl   | 17 +++-------------
- src/ccall.cpp        | 48 ++++++++++++++++++++++++++++++++++++++++++++
+ base/essentials.jl   | 17 +++------------
+ src/ccall.cpp        | 49 ++++++++++++++++++++++++++++++++++++++++++++
  src/codegen.cpp      | 13 +++++++++++-
  src/julia_internal.h |  8 ++++++++
- src/simplevector.c   | 18 +++++++++++++++++
- 5 files changed, 89 insertions(+), 15 deletions(-)
+ src/simplevector.c   | 18 ++++++++++++++++
+ 5 files changed, 90 insertions(+), 15 deletions(-)
 
 diff --git a/base/essentials.jl b/base/essentials.jl
 index 044ecd013e..62e942ddc2 100644
@@ -50,10 +50,10 @@ index 044ecd013e..62e942ddc2 100644
  
  
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index 336c1b375c..9e35a7d99d 100644
+index 336c1b375c..82845e4673 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
-@@ -1481,6 +1481,54 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+@@ -1481,6 +1481,55 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
          ctx.builder.SetInsertPoint(contBB);
          return ghostValue(jl_nothing_type);
      }
@@ -61,7 +61,8 @@ index 336c1b375c..9e35a7d99d 100644
 +        assert(!isVa && !llvmcall && nccallargs == 1);
 +        const jl_cgval_t &svecv = argv[0];
 +        auto ptr = emit_bitcast(ctx, boxed(ctx, svecv), T_psize);
-+        Value *len = tbaa_decorate(tbaa_const, ctx.builder.CreateAlignedLoad(T_size, ptr, sizeof(size_t)));
++        Value *len = tbaa_decorate(tbaa_const, ctx.builder.CreateAlignedLoad(
++                                       T_size, ptr, Align(sizeof(size_t))));
 +        MDBuilder MDB(jl_LLVMContext);
 +        auto rng = MDB.createRange(V_size0, ConstantInt::get(T_size, INTPTR_MAX / sizeof(void*) - 1));
 +        cast<LoadInst>(len)->setMetadata(LLVMContext::MD_range, rng);

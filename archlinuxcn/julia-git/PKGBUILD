@@ -51,10 +51,9 @@ _patches=(
   0005-More-optimization-based-on-constant-array-size.patch
   0006-Optimize-codegen-of-access-functions-for-SimpleVecto.patch
   0007-Optimize-allocation-of-arrays.patch
-  0008-Make-sure-global-constants-are-recognized-more-relia.patch
-  0009-Add-ccall-special-cases-for-a-few-more-libc-function.patch
-  0010-Optimize-objectid-in-codegen.patch
-  0011-Mark-more-functions-as-not-safepoint-in-codegen.patch
+  0008-Add-ccall-special-cases-for-a-few-more-libc-function.patch
+  0009-Optimize-objectid-in-codegen.patch
+  0010-Mark-more-functions-as-not-safepoint-in-codegen.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -65,17 +64,16 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '65cb63e269713729a31ffc6adeef5b0c'
-         'fe15450097b661d8e3f1c9cf59ca8c0d'
-         '8dc47629ba4d8190f35fcef1552ffa0a'
-         'd654bfc00ed7e219381cd1a059f47b8c'
-         'fec5973aec4581725b7c532334764f3a'
-         '23cba73eaa3979408f9081f0ea5f1085'
-         '262f7bd74a38bddd108428292b1ec438'
-         '02f87f027da3239de9bc514921a179c0'
-         '3753b086fc4175526120b45bb4acbdcf'
-         '57b422683e9ff9bf78f2778a6c576ee8'
-         '9cb0a734e4f6a30f0cafffad068056c0'
+         '6b03d12479f897f1e8ef659ab534ecae'
+         'c0496410b64fc171bec0a0ef02fb84e2'
+         '4f597c877fb3511b2aeb28cfffbd6c01'
+         '25c43d102a9cd482dfce7b3f63aea5e2'
+         'b56211861b1550eb56f35bb8739082f0'
+         '619150762d67f25fafcb33fe94f6af5f'
+         '7a5eb166e0506c8a2fce820f44d0b3fc'
+         '02cacb8f2a4e414f2aa0b51f4593123a'
+         'ff90b8c16fc34f2ac84b28552b7ee6e8'
+         'c1fa975934e4ba28bac5249111690d6d'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          '0b3bfcd680da2dc47d861b04ee695f52'
          '6e7fcba300512df8ab8ab65d3e1eb847'
