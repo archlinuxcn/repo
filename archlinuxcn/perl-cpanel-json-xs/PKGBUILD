@@ -3,13 +3,13 @@
 
 pkgname='perl-cpanel-json-xs'
 pkgver='4.21'
-pkgrel='2'
+pkgrel='3'
 pkgdesc="cPanel fork of JSON::XS, fast and correct serializing"
 arch=('i686' 'x86_64')
 license=('PerlArtistic' 'GPL')
 options=('!emptydirs')
 depends=('perl>=0')
-makedepends=()
+makedepends=('libxcrypt')
 url='https://metacpan.org/release/Cpanel-JSON-XS'
 source=("https://search.cpan.org/CPAN/authors/id/R/RU/RURBAN/Cpanel-JSON-XS-${pkgver}.tar.gz")
 md5sums=('b73da14f46c9a1c1a6b462284e1cb4cc')
