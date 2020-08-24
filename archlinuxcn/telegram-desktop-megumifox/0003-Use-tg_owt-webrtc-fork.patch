@@ -1,0 +1,61 @@
+From 4c8956027de8e8e8b984c5daa643aacb14a89123 Mon Sep 17 00:00:00 2001
+From: John Preston <johnprestonmail@gmail.com>
+Date: Thu, 20 Aug 2020 16:06:55 +0400
+Subject: [PATCH] Use tg_owt webrtc fork.
+
+---
+ external/webrtc/CMakeLists.txt | 8 ++++----
+ init_target.cmake              | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/external/webrtc/CMakeLists.txt b/external/webrtc/CMakeLists.txt
+index 2a09508..1273291 100644
+--- a/external/webrtc/CMakeLists.txt
++++ b/external/webrtc/CMakeLists.txt
+@@ -10,10 +10,10 @@ add_library(desktop-app::external_webrtc ALIAS external_webrtc)
+ if (DESKTOP_APP_WEBRTC_LOCATION)
+     set(webrtc_loc ${DESKTOP_APP_WEBRTC_LOCATION})
+ else()
+-    set(webrtc_loc ${libs_loc}/webrtc/src)
++    set(webrtc_loc ${libs_loc}/tg_owt/src)
+ endif()
+ 
+-set(webrtc_build_loc ${webrtc_loc}/out/$<CONFIG>/obj)
++set(webrtc_build_loc ${libs_loc}/tg_owt/out/$<CONFIG>)
+ 
+ target_compile_definitions(external_webrtc
+ INTERFACE
+@@ -64,7 +64,7 @@ INTERFACE
+ )
+ 
+ set(webrtc_libs
+-    ${webrtc_lib_prefix}webrtc
++    ${webrtc_lib_prefix}tg_owt
+ )
+ if (APPLE)
+     target_include_directories(external_webrtc
+@@ -87,7 +87,7 @@ if (WIN32)
+         wmcodecdspuuid.lib
+         amstrmid.lib
+         msdmo.lib
+-  )
++    )
+ elseif (APPLE)
+     target_link_libraries(external_webrtc
+     INTERFACE
+diff --git a/init_target.cmake b/init_target.cmake
+index 936a364..3a4806b 100644
+--- a/init_target.cmake
++++ b/init_target.cmake
+@@ -17,7 +17,7 @@ endfunction()
+ 
+ function(init_target target_name) # init_target(my_target folder_name)
+     if (ARGC GREATER 1)
+-        if (${ARGV1} STREQUAL cxx_std_14 OR ${ARGV1} STREQUAL cxx_std_11)
++        if (${ARGV1} STREQUAL cxx_std_14 OR ${ARGV1} STREQUAL cxx_std_11 OR ${ARGV1} STREQUAL cxx_std_17)
+             target_compile_features(${target_name} PUBLIC ${ARGV1})
+         else()
+             target_compile_features(${target_name} PUBLIC ${MAXIMUM_CXX_STANDARD})
+-- 
+2.28.0
+
