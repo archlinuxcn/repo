@@ -46,14 +46,13 @@ options=('debug' '!strip' '!buildflags')
 _patches=(
   0001-Fix-source-file-paths.patch
   0002-Symbol-clean-up-and-strlen-fixes.patch
-  0003-Remove-an-unnecessary-second-pass-during-liveset-ref.patch
-  0004-Refine-out-callee-rooted-values-from-live-set-at-the.patch
-  0005-More-optimization-based-on-constant-array-size.patch
-  0006-Optimize-codegen-of-access-functions-for-SimpleVecto.patch
-  0007-Optimize-allocation-of-arrays.patch
-  0008-Add-ccall-special-cases-for-a-few-more-libc-function.patch
-  0009-Optimize-objectid-in-codegen.patch
-  0010-Mark-more-functions-as-not-safepoint-in-codegen.patch
+  0003-Refine-out-callee-rooted-values-from-live-set-at-the.patch
+  0004-More-optimization-based-on-constant-array-size.patch
+  0005-Optimize-codegen-of-access-functions-for-SimpleVecto.patch
+  0006-Optimize-allocation-of-arrays.patch
+  0007-Add-ccall-special-cases-for-a-few-more-libc-function.patch
+  0008-Optimize-objectid-in-codegen.patch
+  0009-Mark-more-functions-as-not-safepoint-in-codegen.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -64,16 +63,15 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '6b03d12479f897f1e8ef659ab534ecae'
-         'c0496410b64fc171bec0a0ef02fb84e2'
-         '4f597c877fb3511b2aeb28cfffbd6c01'
-         '25c43d102a9cd482dfce7b3f63aea5e2'
-         'b56211861b1550eb56f35bb8739082f0'
-         '619150762d67f25fafcb33fe94f6af5f'
-         '7a5eb166e0506c8a2fce820f44d0b3fc'
-         '02cacb8f2a4e414f2aa0b51f4593123a'
-         'ff90b8c16fc34f2ac84b28552b7ee6e8'
-         'c1fa975934e4ba28bac5249111690d6d'
+         'ae1969aa364c18480939f466c6e5a915'
+         '133b6931276091c519d401a33e3b65f9'
+         'c181a1f9ee1d9033677602849f0ccefe'
+         'a7b94293c4cbae3533cc8a5bd80dac95'
+         '9155c03f3bf9c869fe86faae1cc27f96'
+         'e94acdd80f6949db24a7a9c7c17abc33'
+         '369e3e4df0e580abee01a4cbf3896806'
+         '28ccf6c0a73f9be19643f03cacb56046'
+         'de169a67696c163b9998a4dd8576e26c'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          '0b3bfcd680da2dc47d861b04ee695f52'
          '6e7fcba300512df8ab8ab65d3e1eb847'

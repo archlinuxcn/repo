@@ -1,7 +1,7 @@
-From d249e088746179e30fcc83865f13953b9cfce95c Mon Sep 17 00:00:00 2001
+From b8e46a50f2dc21d01d7002756a335ee2ac73136c Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 21 Aug 2020 13:15:02 -0400
-Subject: [PATCH 09/10] Optimize objectid in codegen
+Subject: [PATCH 8/9] Optimize objectid in codegen
 
 ---
  src/ccall.cpp             | 10 +++++++---
@@ -78,7 +78,7 @@ index 078e3fdccb..8fc87a0f48 100644
  static const auto setjmp_func = new JuliaFunction{
      jl_setjmp_name,
 diff --git a/src/llvm-alloc-opt.cpp b/src/llvm-alloc-opt.cpp
-index 6f2a69dea9..b95c963e34 100644
+index 5ce8ef3c00..f0055e467b 100644
 --- a/src/llvm-alloc-opt.cpp
 +++ b/src/llvm-alloc-opt.cpp
 @@ -118,6 +118,8 @@ struct AllocOpt : public FunctionPass, public JuliaPassContext {
@@ -117,7 +117,7 @@ index 6f2a69dea9..b95c963e34 100644
              if (pass.typeof_func == callee) {
                  call->replaceAllUsesWith(tag);
                  call->eraseFromParent();
-@@ -1470,6 +1483,15 @@ bool AllocOpt::doInitialization(Module &M)
+@@ -1471,6 +1484,15 @@ bool AllocOpt::doInitialization(Module &M)
      if (!alloc_obj_func)
          return false;
  
