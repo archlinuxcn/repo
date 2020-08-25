@@ -2,37 +2,39 @@
 
 pkgbase=vmware-horizon-client
 pkgname=('vmware-horizon-client'
+	'vmware-horizon-integrated-printing'
+	'vmware-horizon-mmr'
 	'vmware-horizon-rtav'
 	'vmware-horizon-smartcard'
-	'vmware-horizon-usb'
-	'vmware-horizon-virtual-printing'
 	'vmware-horizon-tsdr'
-	'vmware-horizon-mmr')
+	'vmware-horizon-usb')
 _bundled_with_client=('vmware-horizon-pcoip'
 	'vmware-horizon-seamless-window')
-	# Currently unused bundled packages:
-	#  vmware-horizon-media-provider
-	#  vmware-horizon-serialportclient
-pkgver=5.4.1
-_build=15988340
-_cart='CART21FQ1'
+  # Currently unused bundled packages:
+  #  vmware-horizon-html5mmr
+  #  vmware-horizon-media-provider
+  #  vmware-horizon-scannerclient
+  #  vmware-horizon-serialportclient
+  #  vmware-horizon-url-redirection
+pkgver=2006
+_build1=8.0.0
+_build2=16522670
+_cart='CART21FQ2'
 pkgrel=1
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
 url='https://www.vmware.com/go/viewclients'
 license=('custom')
 makedepends=('libxslt' 'patchelf' 'librsvg')
-source=("${pkgbase}-${pkgver}-${_build}-x86_64.bundle::https://download3.vmware.com/software/view/viewclients/${_cart}/VMware-Horizon-Client-${pkgver}-${_build}.x64.bundle"
+source=("${pkgbase}-${pkgver}-${_build1}-${_build2}-x86_64.bundle::https://download3.vmware.com/software/view/viewclients/${_cart}/VMware-Horizon-Client-${pkgver}-${_build1}-${_build2}.x64.bundle"
         'http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/eclass/vmware-bundle.eclass'
         'vmware-horizon-usb'
         'vmware-horizon-usb.service'
-        'vmware-horizon-virtual-printing.service'
         'vmware-horizon.svg')
-sha256sums=('c115e8417ffaef6a4b74cbe70a7f4280891eee7e654cae74daa0bbffc58c14d3'
+sha256sums=('77aa390140316956c21910108d440fac6a261fe5e57110ebce5229c9b9a95ccd'
             'd8794c22229afdeb698dae5908b7b2b3880e075b19be38e0b296bb28f4555163'
             '008b60ebf45f7d1e033c8ad8ce1688d5e1c59fc0668493067fb89b563b1dc00f'
             'a897c1b9e8928fc222880ebbfc7bb6aff940bff4acf4e4e0cd4002fff81c7226'
-            'e47e770a1e19ed321de7c2765b2d682f59ac466aef92b2e4ea5e65cacf56de36'
             'cea92d3ed97b717c631fed5664c06fc71a6deac21ba32da78970c582ed48c747')
 
 # We need these functions for the Gentoo eclass...
@@ -50,7 +52,7 @@ prepare() {
 	source "${srcdir}/vmware-bundle.eclass"
 
 	for bundle in "${pkgname[@]}" "${_bundled_with_client[@]}"; do
-	        vmware-bundle_extract-bundle-component "${srcdir}/${pkgbase}-${pkgver}-${_build}-${CARCH}.bundle" "${bundle}" "${srcdir}/extract/${bundle}"
+	        vmware-bundle_extract-bundle-component "${srcdir}/${pkgbase}-${pkgver}-${_build1}-${_build2}-${CARCH}.bundle" "${bundle}" "${srcdir}/extract/${bundle}"
 	done
 
 	# remove legacy stuff
@@ -109,12 +111,12 @@ package_vmware-horizon-client() {
 		'freerdp: RDP remote desktop connections'
 		'libpulse: audio support via pulse sound server'
 		'rdesktop: RDP remote desktop connections'
+		'vmware-horizon-integrated-printing: integrated printing'
+		'vmware-horizon-mmr: multimedia redirection'
 		'vmware-horizon-rtav: Real-Time Audio-Video (webcam and audio-in)'
 		'vmware-horizon-smartcard: smartcard authentication'
-		'vmware-horizon-usb: USB device redirection'
-		'vmware-horizon-virtual-printing: virtual printing'
 		'vmware-horizon-tsdr: folder sharing'
-		'vmware-horizon-mmr: multimedia redirection')
+		'vmware-horizon-usb: USB device redirection')
 	install=vmware-horizon-client.install
 
 	cd "${srcdir}/extract/vmware-horizon-client/"
@@ -132,7 +134,6 @@ package_vmware-horizon-client() {
 
 	mkdir -p "${pkgdir}/usr/"
 	cp -a pcoip/lib/ "${pkgdir}/usr/"
-	cp -a pcoip/bin/ "${pkgdir}/usr/"
 
 	cd "${srcdir}/extract/vmware-horizon-seamless-window/"
 
@@ -145,6 +146,31 @@ package_vmware-horizon-client() {
 		install -d "${pkgdir}/usr/share/icons/hicolor/${SIZE}x${SIZE}/apps/"
 		rsvg-convert -w "${SIZE}" -h "${SIZE}" "${srcdir}/vmware-horizon.svg" > "${pkgdir}/usr/share/icons/hicolor/${SIZE}x${SIZE}/apps/vmware-horizon.png"
 	done
+}
+
+package_vmware-horizon-integrated-printing() {
+	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - integrated printing'
+	depends=('vmware-horizon-client' 'libcups' 'zlib')
+	conflicts=('vmware-horizon-virtual-printing')
+	replaces=('vmware-horizon-virtual-printing')
+
+	cd "${srcdir}/extract/vmware-horizon-integrated-printing/"
+
+	mkdir -p "${pkgdir}/usr/"
+	cp -a bin/ "${pkgdir}/usr/"
+	cp -a lib/ "${pkgdir}/usr/"
+}
+
+package_vmware-horizon-mmr() {
+	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - multimedia redirection'
+	depends=('vmware-horizon-client' 'gst-plugins-base' 'libpulse' 'libxml2' 'glib2')
+	optdepends=('gstreamer-vaapi: MMR with Intel VAAPI'
+	            'gst-plugins-bad: MMR with NVIDIA VDPAU')
+
+	cd "${srcdir}/extract/vmware-horizon-mmr/"
+
+	mkdir -p "${pkgdir}/usr/"
+	cp -a lib/ "${pkgdir}/usr/"
 }
 
 package_vmware-horizon-rtav() {
@@ -166,6 +192,16 @@ package_vmware-horizon-smartcard() {
 	cp -a lib/ "${pkgdir}/usr/"
 }
 
+package_vmware-horizon-tsdr() {
+	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - folder sharing'
+	depends=('vmware-horizon-client' 'glibmm' 'glib2')
+
+	cd "${srcdir}/extract/vmware-horizon-tsdr/"
+
+	mkdir -p "${pkgdir}/usr/"
+	cp -a lib/ "${pkgdir}/usr/"
+}
+
 package_vmware-horizon-usb() {
 	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - USB device redirection'
 	depends=('vmware-horizon-client' 'glib2')
@@ -180,47 +216,3 @@ package_vmware-horizon-usb() {
 	install -D -m0755 "${srcdir}/vmware-horizon-usb" "${pkgdir}/usr/lib/systemd/scripts/vmware-horizon-usb"
 	install -D -m0644 "${srcdir}/vmware-horizon-usb.service" "${pkgdir}/usr/lib/systemd/system/vmware-horizon-usb.service"
 }
-
-package_vmware-horizon-virtual-printing() {
-	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - virtual printing'
-	depends=('vmware-horizon-client' 'libcups' 'zlib')
-	install=vmware-horizon-virtual-printing.install
-
-	cd "${srcdir}/extract/vmware-horizon-virtual-printing/"
-
-	mkdir -p "${pkgdir}/usr/bin/"
-
-	cp -a bin/x86_64-linux-NOSSL/thnu* "${pkgdir}/usr/bin/"
-	install -D -m0755 bin/x86_64-linux-NOSSL/.thnumod "${pkgdir}/etc/thnuclnt/.thnumod"
-
-	install -D -m0755 lib/tprdp.so "${pkgdir}/usr/lib/vmware/rdpvcbridge/tprdp.so"
-
-	install -D -m0644 bin/conf/thnuclnt.convs "${pkgdir}/usr/share/cups/mime/thnuclnt.convs"
-	install -D -m0644 bin/conf/thnuclnt.types "${pkgdir}/usr/share/cups/mime/thnuclnt.types"
-
-	install -D -m0644 "${srcdir}/vmware-horizon-virtual-printing.service" \
-		"${pkgdir}/usr/lib/systemd/system/vmware-horizon-virtual-printing.service"
-}
-
-package_vmware-horizon-tsdr() {
-	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - folder sharing'
-	depends=('vmware-horizon-client' 'glibmm' 'glib2')
-
-	cd "${srcdir}/extract/vmware-horizon-tsdr/"
-
-	mkdir -p "${pkgdir}/usr/"
-	cp -a lib/ "${pkgdir}/usr/"
-}
-
-package_vmware-horizon-mmr() {
-	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - multimedia redirection'
-	depends=('vmware-horizon-client' 'gst-plugins-base' 'libpulse' 'libxml2' 'glib2')
-	optdepends=('gstreamer-vaapi: MMR with Intel VAAPI'
-	            'gst-plugins-bad: MMR with NVIDIA VDPAU')
-
-	cd "${srcdir}/extract/vmware-horizon-mmr/"
-
-	mkdir -p "${pkgdir}/usr/"
-	cp -a lib/ "${pkgdir}/usr/"
-}
-
