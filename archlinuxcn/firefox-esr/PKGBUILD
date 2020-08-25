@@ -3,7 +3,7 @@
 # Contributor: Jakub Schmidtke <sjakub@gmail.com>
 
 pkgname=firefox-esr
-pkgver=78.1.0
+pkgver=78.2.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, Extended Support Release"
 arch=(x86_64)
@@ -22,14 +22,13 @@ provides=(firefox=${pkgver})
 conflicts=(firefox)
 options=(!emptydirs !makeflags !strip)
 source=(https://archive.mozilla.org/pub/firefox/releases/${pkgver}esr/source/firefox-${pkgver}esr.source.tar.xz{,.asc}
-        ${pkgname}.desktop 0001-Use-remoting-name-for-GDK-application-names.patch upload-symbol-archive
-        rust-145.patch::https://hg.mozilla.org/integration/autoland/raw-rev/e5d2a6d5187b)
-sha256sums=('3600a396d9312c5e9f637b267926ca4771d84a56b26b960cc7d72e98683b64a2'
+        ${pkgname}.desktop 0001-Use-remoting-name-for-GDK-application-names.patch upload-symbol-archive)
+        #rust-145.patch::https://hg.mozilla.org/integration/autoland/raw-rev/e5d2a6d5187b)
+sha256sums=('965ccfcbb8c0aa97639911997c54be0fcf896fd388b03138952089af675ea918'
             'SKIP'
             'd86fe1636346ff003744b65e73cd3a7182618faedf3ee57023bb942e325cc726'
             '3bb7463471fb43b2163a705a79a13a3003d70fff4bbe44f467807ca056de9a75'
-            'eb9b9c058d1505e5b82526a8cad63f98e04fc17c4715f6b4cfc778e10fcfaf27'
-            'afc0a66777dc38d8b697b0eeacdf7a723b2e324ce5864a9c79b8b2eb83e27388')
+            'eb9b9c058d1505e5b82526a8cad63f98e04fc17c4715f6b4cfc778e10fcfaf27')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -52,8 +51,8 @@ prepare() {
   patch -Np1 -i ../0001-Use-remoting-name-for-GDK-application-names.patch
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1654465
-  patch -Np1 -i ../rust-145.patch || true
-  sed -e 's/1.31.0/1.38.0/' -i build/moz.configure/rust.configure
+  #patch -Np1 -i ../rust-145.patch || true
+  #sed -e 's/1.31.0/1.38.0/' -i build/moz.configure/rust.configure
 
   echo -n "$_google_api_key" >google-api-key
   echo -n "$_mozilla_api_key" >mozilla-api-key
