@@ -1,7 +1,7 @@
-From 4a5aa0aab9e7b470b2e73c7e7b8c572859e79c0e Mon Sep 17 00:00:00 2001
+From 87f28e28aca0c64822aae3132122df58d608219b Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Thu, 13 Aug 2020 02:24:27 -0400
-Subject: [PATCH 9/9] Mark more functions as not safepoint in codegen.
+Subject: [PATCH 8/8] Mark more functions as not safepoint in codegen.
 
 In particular, most error throwing function doesn't require
 the input arguments to be rooted.

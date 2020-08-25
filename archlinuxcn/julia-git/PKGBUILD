@@ -45,14 +45,13 @@ makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
 options=('debug' '!strip' '!buildflags')
 _patches=(
   0001-Fix-source-file-paths.patch
-  0002-Symbol-clean-up-and-strlen-fixes.patch
-  0003-Refine-out-callee-rooted-values-from-live-set-at-the.patch
-  0004-More-optimization-based-on-constant-array-size.patch
-  0005-Optimize-codegen-of-access-functions-for-SimpleVecto.patch
-  0006-Optimize-allocation-of-arrays.patch
-  0007-Add-ccall-special-cases-for-a-few-more-libc-function.patch
-  0008-Optimize-objectid-in-codegen.patch
-  0009-Mark-more-functions-as-not-safepoint-in-codegen.patch
+  0002-Refine-out-callee-rooted-values-from-live-set-at-the.patch
+  0003-More-optimization-based-on-constant-array-size.patch
+  0004-Optimize-codegen-of-access-functions-for-SimpleVecto.patch
+  0005-Optimize-allocation-of-arrays.patch
+  0006-Add-ccall-special-cases-for-a-few-more-libc-function.patch
+  0007-Optimize-objectid-in-codegen.patch
+  0008-Mark-more-functions-as-not-safepoint-in-codegen.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -63,15 +62,14 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         'ae1969aa364c18480939f466c6e5a915'
-         '133b6931276091c519d401a33e3b65f9'
-         'c181a1f9ee1d9033677602849f0ccefe'
-         'a7b94293c4cbae3533cc8a5bd80dac95'
-         '9155c03f3bf9c869fe86faae1cc27f96'
-         'e94acdd80f6949db24a7a9c7c17abc33'
-         '369e3e4df0e580abee01a4cbf3896806'
-         '28ccf6c0a73f9be19643f03cacb56046'
-         'de169a67696c163b9998a4dd8576e26c'
+         '233497af485d20b213095d6096eacb41'
+         '2512021922b22dedff5850927afd69cd'
+         'ad3b4e12b33271ba92f5a53adcb78f6e'
+         '86ee988c406f6b2ed1de487470085d35'
+         '40a27102b6d0741fd9804125f44ceb27'
+         'cc7635caeaf6866068f0f3a6cd4c335e'
+         '7f479a46a7d25ffde3aa52ec5f9e8d6a'
+         '918ca11e9a6a4f1ae1d1f98aa05000e7'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          '0b3bfcd680da2dc47d861b04ee695f52'
          '6e7fcba300512df8ab8ab65d3e1eb847'

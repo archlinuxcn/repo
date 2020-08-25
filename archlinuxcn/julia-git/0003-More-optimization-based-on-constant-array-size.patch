@@ -1,7 +1,7 @@
-From 780b94c6279423b45ce758388ec6ba43e686922f Mon Sep 17 00:00:00 2001
+From b9f52cd365591b4acf74cb1498edd33592a54b9e Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 17 Aug 2020 03:01:46 -0400
-Subject: [PATCH 4/9] More optimization based on constant array size
+Subject: [PATCH 3/8] More optimization based on constant array size
 
 1. 0-dim array always have size 1.
 2. High dimensional array with unknown eltype also have fixed size.
