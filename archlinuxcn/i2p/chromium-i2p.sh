@@ -27,7 +27,7 @@ source "$DATADIR/.config"
     --disk-cache-size="$CACHESIZE" \
     --proxy-server="$PROXY" \
     --proxy-bypass-list=127.0.0.1,localhost \
-    --{connectivity-check,gcm-checkin,gcm-registration,crash-server,google-apis,google-base,override-metrics-upload,realtime-reporting,test-logging}-url=null \
+    --{connectivity-check,gcm-checkin,gcm-registration,crash-server,google-apis,google-base,override-metrics-upload,realtime-reporting,test-logging}-url="http://0.0.0.0" \
     --disable-3d-apis \
     --disable-account-consistency \
     --disable-background-networking \

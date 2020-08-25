@@ -5,8 +5,8 @@
 #export LG2=en
 
 pkgname=i2p
-pkgver=0.9.46
-pkgrel=2
+pkgver=0.9.47
+pkgrel=1
 pkgdesc="A distributed anonymous network"
 url="https://geti2p.net"
 license=('GPL2')
@@ -27,30 +27,25 @@ validpgpkeys=('2D3D2D03910C6504C1210C65EE60C0C8EE7256A8')
 _url="https://launchpad.net/i2p/trunk/${pkgver}/+download"
 
 source=("${_url}/i2psource_${pkgver}.tar.bz2"{,.sig}
-        "modern-dark.zip::https://github.com/eyedeekay/modern-dark/archive/master.zip"
-        # use in .46 if it hasnt been updated by then
         #"https://download.db-ip.com/free/dbip-country-lite-$(date +%Y-%m).mmdb.gz"
         'i2prouter.service' 'i2p.tmpfiles' 'wrapper.config' 'router.config'
         'i2prouter.bash' 'i2prouter.sh' 'chromium-i2p.sh'
-        upstream.patch::'https://github.com/i2p/i2p.i2p/commit/6c0e18d3.patch'
+        #upstream.patch::'https://github.com/i2p/i2p.i2p/commit/6c0e18d3.patch'
 )
 
-sha256sums=('ab0eb691b2753277738fe16ddc46349a24fd66b6323deae987f7c927272befd8'
+sha256sums=('dbccada6a353b54ceb844fe8cb0912c0363375a2f57214d23fcf463c4e6d2c4f'
             'SKIP'
-            'SKIP'
-            #'SKIP'
             '644b771ec7f5db3efab3206bf1f896566cdb00d410a54608fda85bdb4c2ad876'
             'fc30dd32f48fe1c93bf36c8297ca48203a1479e4e221ebe62c57cf3c3c0347d3'
             'ba4bcb8d9aef307045d1d24385a456d096ea45f69d95a474467728ea140188ec'
             '90f202e5b66d5a5b425522b409e71fb892d34c534e32ce2d6fe5284015cacf94'
             '7a19b9f90c8792460fd58e8b8aa435a065e34d29a942479850472510e9d3078a'
             '8d39f080c7a2e49226db3a785f3e18583159ef2f95e1ab467fd9984c4e38c9f5'
-            '77e359cf880ccc09f504372ef85c8ad3ab7d1186106a4ae92c4ff4f37ae650e0'
-            '9e1d016b6044645a433bf3380d22d64b169127194e621f7dbf0e1c056bf7cb1c')
+            'a7076156703e2b949331e450455813432caeb4e5712f1c7b668974eb06a69fb9')
 
 prepare() {
     cd "$pkgname-$pkgver"
-    patch -Np1 -i ../upstream.patch ||true
+    #patch -Np1 -i ../upstream.patch ||true
     #cp -f ../dbip-country-lite-$(date +%Y-%m).mmdb.gz installer/resources/GeoLite2-Country.mmdb.gz
 }
 
@@ -103,8 +98,4 @@ package() {
         -e "s:clientApp.4.startOnLoad=.*:clientApp.4.startOnLoad=false:"
 
     rm -r opt/i2p/{osid,postinstall.sh,runplain.sh,INSTALL-headless.txt,LICENSE.txt,licenses,man,lib/wrapper*}
-
-    cp -rf "$srcdir"/modern-dark-master/themes "opt/i2p/docs/"
-    cd opt/i2p/docs/themes/console/dark-modern/images
-    ln -sf ../../dark/images/i2plogo.png i2plogo.png
 }
