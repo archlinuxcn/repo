@@ -51,7 +51,7 @@ index ee72ebe..e347047 100644
  /*
   * This is a quirk for the Ricoh MMC controller found as a part of some
   * multifunction chips.
-@@ -4665,6 +4672,24 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
+@@ -5099,6 +5106,24 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
  }
  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
  
@@ -73,9 +73,9 @@ index ee72ebe..e347047 100644
 +}
 +DECLARE_PCI_FIXUP_ASSIGN(PCI_VENDOR_ID_INTEL, 0x8c10, quirk_mac_disable_mmio_bar);
 +
- /* FLR may cause some 82579 devices to hang */
- static void quirk_intel_no_flr(struct pci_dev *dev)
- {
+ /*
+  * FLR may cause the following to devices to hang:
+  *
 diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
 index 55641a3..730d6fd 100644
 --- a/drivers/pci/setup-bus.c
