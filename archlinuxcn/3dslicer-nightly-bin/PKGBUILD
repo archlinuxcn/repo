@@ -2,7 +2,7 @@
 
 pkgname=3dslicer-nightly-bin
 _pkgname=3dslicer
-pkgver=4.11.0.r20200821
+pkgver=4.11.0.r20200826
 pkgrel=1
 pkgdesc="A multi-platform, free open source software package for visualization and medical image computing (nightly build)"
 arch=('x86_64')
@@ -20,7 +20,7 @@ source=(
     "${_pkgname}.svg::https://github.com/Slicer/Slicer/raw/master/Resources/3DSlicerLogo-app-icon.svg"
 )
 noextract=("${_pkgname}.tar.gz")
-sha512sums=('70b641cb7223a0154c671f32be65ee9ea4504043e2ea483273b22947a8ae42d12b030415de6cbf3fde3d32abb445ddc15fd65bb49d4e1414e949d503cdc82842'
+sha512sums=('113edc39509243c19f1b3cb0f3db131cc2fef1f819e69c81b711d5ecb0279cd12f00a77195126cb826b63ebe2bf885751a9249f9405bbb7b706f5ef807fbaa26'
             'c23104efcbec3d49b5c26ad5514ed74316423db4aa9e6c7894f02f7ddbe509b577de358dfdd2f7c492963f312b7c146f03d5e41a89ab1298811894dc18746225')
 options=('!strip')
 
