@@ -1,13 +1,13 @@
 # Maintainer: BlackEagle
 # Contributor: Christian Hesse <mail@eworm.de>
-# Contributor: ruario 
+# Contributor: ruario
 # Contributor: RobertMe
 # Contributor: Skunnyk
 # Contributor: totoloco
 
 pkgname=opera-developer
-pkgver=72.0.3784.0
-pkgrel=1
+pkgver=72.0.3791.0
+pkgrel=2
 pkgdesc='A fast and secure web browser and Internet suite - developer stream'
 arch=('x86_64')
 url='https://www.opera.com/computer'
@@ -24,7 +24,7 @@ source=(
     "opera"
     "default"
 )
-sha256sums=('9ea218990b1258d8872e67c4b8b2b27bd1a03ecbd10a7318ac89dba55b9d007d'
+sha256sums=('541091a19d087911c52e4bf6fa22a34f7347507465c8c47664bc63a825aa3bc4'
             '508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
             '99fc0d2822edd14e234d451995db47148125e4580221a292598959421d131231')
 
