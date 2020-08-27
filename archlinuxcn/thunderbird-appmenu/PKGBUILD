@@ -11,7 +11,7 @@
 
 _pkgname=thunderbird
 pkgname=thunderbird-appmenu
-pkgver=68.10.0
+pkgver=68.11.0
 pkgrel=1
 pkgdesc="Thunderbird from extra with appmenu patch"
 arch=(x86_64)
@@ -28,7 +28,7 @@ options=(!emptydirs !makeflags)
 source=(https://ftp.mozilla.org/pub/mozilla.org/thunderbird/releases/$pkgver/source/thunderbird-$pkgver.source.tar.xz{,.asc}
         $_pkgname.desktop
         unity-menubar.patch)
-sha512sums=('8db4e363b1542190d647babbeb2bca4f258e6bfe3bb67c4a4c8eedad702f956c6e2e1daaa552a45912b55215fa5f6fe0be77025de324ea6a0082ca849d132c89'
+sha512sums=('a98a3e427868b46213a05b71b476d963b019d6904a1ef3ec1de6ceac012a2ebd3693fa24691bc6b3c34961bec9cc7d11c3f634ce952d7427c0a76e0defc7de72'
             'SKIP'
             'fa28ec547f87658cf72d160e9c2a7867d3e8a9b8c76ffa29d1098fddfc9331f65cc6dbf24c15da28c5d1b4ffa587d14d529d5da522a8805b073ad89986a552c9'
             'f3aa468974780016de60fa61a61f7e67a2cc51b4f888b223d16b9afaa42e82100c3b3d7f9491dfd0de3c5667ad4ac0fc58b96d81ef448ccf6e924cdc49066ad5')
