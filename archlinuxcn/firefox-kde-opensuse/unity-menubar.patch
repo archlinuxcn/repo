@@ -14,7 +14,7 @@
              <menu id="file-menu" data-l10n-id="menu-file">
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -6301,11 +6301,17 @@ function onViewToolbarsPopupShowing(aEve
+@@ -6289,11 +6289,17 @@ function onViewToolbarsPopupShowing(aEve
  
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
  
@@ -84,7 +84,7 @@
  if CONFIG['CC_TYPE'] in ('clang', 'gcc'):
 --- a/layout/build/moz.build
 +++ b/layout/build/moz.build
-@@ -68,6 +68,10 @@ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'an
+@@ -67,6 +67,10 @@ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'an
          '/dom/system',
          '/dom/system/android',
      ]
@@ -97,7 +97,7 @@
      'components.conf',
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -313,6 +313,9 @@ pref("dom.mouseevent.click.hack.use_lega
+@@ -312,6 +312,9 @@ pref("dom.mouseevent.click.hack.use_lega
  // Fastback caching - if this pref is negative, then we calculate the number
  // of content viewers to cache based on the amount of available memory.
  pref("browser.sessionhistory.max_total_viewers", -1);
@@ -141,14 +141,14 @@
      'nsWindow.cpp', # conflicts with X11 headers
      'WaylandVsyncSource.cpp', # conflicts with X11 headers
  ]
-@@ -134,6 +143,7 @@ FINAL_LIBRARY = 'xul'
+@@ -135,6 +144,7 @@ FINAL_LIBRARY = 'xul'
  LOCAL_INCLUDES += [
      '/layout/base',
      '/layout/generic',
 +    '/layout/style',
      '/layout/xul',
      '/other-licenses/atk-1.0',
-     '/widget',
+     '/third_party/cups/include',
 --- /dev/null
 +++ b/widget/gtk/nsDbusmenu.cpp
 @@ -0,0 +1,61 @@
@@ -444,13 +444,13 @@
 +    nsAutoString state;
 +    switch (aState) {
 +        case ePopupState_Showing:
-+            state.Assign(NS_LITERAL_STRING("showing"));
++            state.Assign(u"showing"_ns);
 +            break;
 +        case ePopupState_Open:
-+            state.Assign(NS_LITERAL_STRING("open"));
++            state.Assign(u"open"_ns);
 +            break;
 +        case ePopupState_Hiding:
-+            state.Assign(NS_LITERAL_STRING("hiding"));
++            state.Assign(u"hiding"_ns);
 +            break;
 +        default:
 +            break;
@@ -488,12 +488,12 @@
 +
 +    nsAutoCString event(name);
 +
-+    if (event.Equals(NS_LITERAL_CSTRING("closed"))) {
++    if (event.Equals("closed"_ns)) {
 +        self->OnClose();
 +        return;
 +    }
 +
-+    if (event.Equals(NS_LITERAL_CSTRING("opened"))) {
++    if (event.Equals("opened"_ns)) {
 +        self->OnOpen();
 +        return;
 +    }
@@ -557,7 +557,7 @@
 +        DispatchMouseEvent(mPopupContent, eXULPopupShowing);
 +
 +        ContentNode()->AsElement()->SetAttr(kNameSpaceID_None, nsGkAtoms::open,
-+                                            NS_LITERAL_STRING("true"), true);
++                                            u"true"_ns, true);
 +    }
 +
 +    if (!self) {
@@ -1361,9 +1361,9 @@
 +    nsAutoString type;
 +    aEvent->GetType(type);
 +
-+    if (type.Equals(NS_LITERAL_STRING("focus"))) {
++    if (type.Equals(u"focus"_ns)) {
 +        mOwner->Focus();
-+    } else if (type.Equals(NS_LITERAL_STRING("blur"))) {
++    } else if (type.Equals(u"blur"_ns)) {
 +        mOwner->Blur();
 +    }
 +
@@ -1372,11 +1372,11 @@
 +        return NS_OK;
 +    }
 +
-+    if (type.Equals(NS_LITERAL_STRING("keypress"))) {
++    if (type.Equals(u"keypress"_ns)) {
 +        return mOwner->Keypress(keyEvent);
-+    } else if (type.Equals(NS_LITERAL_STRING("keydown"))) {
++    } else if (type.Equals(u"keydown"_ns)) {
 +        return mOwner->KeyDown(keyEvent);
-+    } else if (type.Equals(NS_LITERAL_STRING("keyup"))) {
++    } else if (type.Equals(u"keyup"_ns)) {
 +        return mOwner->KeyUp(keyEvent);
 +    }
 +
@@ -1417,7 +1417,7 @@
 +    g_object_ref(mTopLevel);
 +
 +    nsAutoCString path;
-+    path.Append(NS_LITERAL_CSTRING("/com/canonical/menu/"));
++    path.Append("/com/canonical/menu/"_ns);
 +    char xid[10];
 +    sprintf(xid, "%X", static_cast<uint32_t>(
 +        GDK_WINDOW_XID(gtk_widget_get_window(mTopLevel))));
@@ -1475,19 +1475,19 @@
 +void
 +nsMenuBar::DisconnectDocumentEventListeners()
 +{
-+    mDocument->RemoveEventListener(NS_LITERAL_STRING("focus"),
++    mDocument->RemoveEventListener(u"focus"_ns,
 +                                   mEventListener,
 +                                   true);
-+    mDocument->RemoveEventListener(NS_LITERAL_STRING("blur"),
++    mDocument->RemoveEventListener(u"blur"_ns,
 +                                   mEventListener,
 +                                   true);
-+    mDocument->RemoveEventListener(NS_LITERAL_STRING("keypress"),
++    mDocument->RemoveEventListener(u"keypress"_ns,
 +                                   mEventListener,
 +                                   false);
-+    mDocument->RemoveEventListener(NS_LITERAL_STRING("keydown"),
++    mDocument->RemoveEventListener(u"keydown"_ns,
 +                                   mEventListener,
 +                                   false);
-+    mDocument->RemoveEventListener(NS_LITERAL_STRING("keyup"),
++    mDocument->RemoveEventListener(u"keyup"_ns,
 +                                   mEventListener,
 +                                   false);
 +}
@@ -1497,7 +1497,7 @@
 +{
 +    ContentNode()->OwnerDoc()->GetRootElement()->SetAttr(
 +        kNameSpaceID_None, nsGkAtoms::shellshowingmenubar,
-+        aShowing ? NS_LITERAL_STRING("true") : NS_LITERAL_STRING("false"),
++        aShowing ? u"true"_ns : u"false"_ns,
 +        true);
 +}
 +
@@ -1506,7 +1506,7 @@
 +{
 +    ContentNode()->AsElement()->SetAttr(kNameSpaceID_None,
 +                                        nsGkAtoms::openedwithkey,
-+                                        NS_LITERAL_STRING("false"), true);
++                                        u"false"_ns, true);
 +}
 +
 +void
@@ -1584,7 +1584,7 @@
 +
 +    ContentNode()->AsElement()->SetAttr(kNameSpaceID_None,
 +                                        nsGkAtoms::openedwithkey,
-+                                        NS_LITERAL_STRING("true"), true);
++                                        u"true"_ns, true);
 +    static_cast<nsMenu *>(found)->OpenMenu();
 +
 +    aEvent->StopPropagation();
@@ -1751,26 +1751,26 @@
 +
 +    mIsActive = true;
 +
-+    mDocument->AddEventListener(NS_LITERAL_STRING("focus"),
++    mDocument->AddEventListener(u"focus"_ns,
 +                                mEventListener,
 +                                true);
-+    mDocument->AddEventListener(NS_LITERAL_STRING("blur"),
++    mDocument->AddEventListener(u"blur"_ns,
 +                                mEventListener,
 +                                true);
-+    mDocument->AddEventListener(NS_LITERAL_STRING("keypress"),
++    mDocument->AddEventListener(u"keypress"_ns,
 +                                mEventListener,
 +                                false);
-+    mDocument->AddEventListener(NS_LITERAL_STRING("keydown"),
++    mDocument->AddEventListener(u"keydown"_ns,
 +                                mEventListener,
 +                                false);
-+    mDocument->AddEventListener(NS_LITERAL_STRING("keyup"),
++    mDocument->AddEventListener(u"keyup"_ns,
 +                                mEventListener,
 +                                false);
 +
 +    // Clear this. Not sure if we really need to though
 +    ContentNode()->AsElement()->SetAttr(kNameSpaceID_None,
 +                                        nsGkAtoms::openedwithkey,
-+                                        NS_LITERAL_STRING("false"), true);
++                                        u"false"_ns, true);
 +
 +    DocListener()->Start();
 +    Build();
@@ -2502,20 +2502,20 @@
 +        ContentNode()->AsElement()->SetAttr(kNameSpaceID_None,
 +                                            nsGkAtoms::checked,
 +                                            mIsChecked ?
-+                                                NS_LITERAL_STRING("false")
-+                                                : NS_LITERAL_STRING("true"),
++                                                u"false"_ns
++                                                : u"true"_ns,
 +                                            true);
 +    }
 +
 +    dom::Document *doc = ContentNode()->OwnerDoc();
 +    ErrorResult rv;
 +    RefPtr<dom::Event> event =
-+        doc->CreateEvent(NS_LITERAL_STRING("xulcommandevent"),
++        doc->CreateEvent(u"xulcommandevent"_ns,
 +                         dom::CallerType::System, rv);
 +    if (!rv.Failed()) {
 +        RefPtr<dom::XULCommandEvent> command = event->AsXULCommandEvent();
 +        if (command) {
-+            command->InitCommandEvent(NS_LITERAL_STRING("command"), true, true,
++            command->InitCommandEvent(u"command"_ns, true, true,
 +                                      nsGlobalWindowInner::Cast(doc->GetInnerWindow()),
 +                                      0, false, false, false, false, nullptr, 0, rv);
 +            if (!rv.Failed()) {
@@ -2791,7 +2791,7 @@
 +                                                 eCaseMatters)) {
 +        ContentNode()->AsElement()->SetAttr(kNameSpaceID_None,
 +                                            nsGkAtoms::disabled,
-+                                            NS_LITERAL_STRING("true"), true);
++                                            u"true"_ns, true);
 +    } else {
 +        ContentNode()->AsElement()->UnsetAttr(kNameSpaceID_None,
 +                                              nsGkAtoms::disabled, true);
@@ -5077,7 +5077,7 @@
 +#endif /* __nsNativeMenuService_h__ */
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
-@@ -6069,6 +6069,10 @@ void nsWindow::HideWindowChrome(bool aSh
+@@ -6159,6 +6159,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5099,7 +5099,7 @@
  #undef LOG
  #ifdef MOZ_LOGGING
  
-@@ -186,6 +188,8 @@ class nsWindow final : public nsBaseWidg
+@@ -187,6 +189,8 @@ class nsWindow final : public nsBaseWidg
                                    nsIScreen* aTargetScreen = nullptr) override;
    virtual void HideWindowChrome(bool aShouldHide) override;
  
@@ -5154,7 +5154,7 @@
  import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
-@@ -2553,7 +2554,7 @@ STATIC_ATOMS = [
+@@ -2541,7 +2542,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
      # END ATOMS
@@ -5182,7 +5182,7 @@
  if defined('MOZ_X11'):
 --- a/xpfe/appshell/AppWindow.cpp
 +++ b/xpfe/appshell/AppWindow.cpp
-@@ -67,7 +67,7 @@
+@@ -66,7 +66,7 @@
  #  include "mozilla/XULStore.h"
  #endif
  

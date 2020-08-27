@@ -74,30 +74,15 @@ diff --git a/config/external/sqlite/moz.build b/config/external/sqlite/moz.build
 diff --git a/old-configure.in b/old-configure.in
 --- a/old-configure.in
 +++ b/old-configure.in
-@@ -57,17 +57,16 @@ GLIB_VERSION=2.22
- # The macro won't be used when compiling with earlier versions anyway.
- GLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_26
- CAIRO_VERSION=1.10
- GTK2_VERSION=2.18.0
- GTK3_VERSION=3.4.0
- GDK_VERSION_MAX_ALLOWED=GDK_VERSION_3_4
+@@ -58,7 +58,6 @@
+ GDK_VERSION_MAX_ALLOWED=GDK_VERSION_3_14
  W32API_VERSION=3.14
  DBUS_VERSION=0.60
 -SQLITE_VERSION=3.31.1
  
  dnl Set various checks
  dnl ========================================================
- MISSING_X=
- 
- dnl Initialize the Pthread test variables early so they can be
- dnl  overridden by each platform.
- dnl ========================================================
-@@ -2127,45 +2126,21 @@ AC_SUBST(MOZ_SANDBOX)
- 
- dnl ========================================================
- dnl =
- dnl = Module specific options
- dnl =
+@@ -2038,35 +2037,11 @@
  dnl ========================================================
  MOZ_ARG_HEADER(Individual module options)
  
@@ -138,11 +123,6 @@ diff --git a/old-configure.in b/old-configure.in
  
  dnl ========================================================
  dnl = Disable zipwriter
- dnl ========================================================
- MOZ_ARG_DISABLE_BOOL(zipwriter,
- [  --disable-zipwriter     Disable zipwriter component],
-     MOZ_ZIPWRITER=,
-     MOZ_ZIPWRITER=1 )
 diff --git a/storage/SQLiteMutex.h b/storage/SQLiteMutex.h
 --- a/storage/SQLiteMutex.h
 +++ b/storage/SQLiteMutex.h
@@ -210,57 +190,30 @@ diff --git a/storage/moz.build b/storage/moz.build
  
  CXXFLAGS += CONFIG['SQLITE_CFLAGS']
 diff --git a/storage/mozStorageConnection.cpp b/storage/mozStorageConnection.cpp
---- a/storage/mozStorageConnection.cpp
-+++ b/storage/mozStorageConnection.cpp
-@@ -761,20 +761,16 @@ nsresult Connection::initializeInternal(
-   nsAutoCString cacheSizeQuery(MOZ_STORAGE_UNIQUIFY_QUERY_STR
-                                "PRAGMA cache_size = ");
-   cacheSizeQuery.AppendInt(-MAX_CACHE_SIZE_KIBIBYTES);
-   srv = executeSql(mDBConn, cacheSizeQuery.get());
-   if (srv != SQLITE_OK) {
+@@ -750,10 +749,6 @@ nsresult Connection::initializeInternal(
      return convertResultCode(srv);
    }
  
 -#if defined(MOZ_MEMORY_TEMP_STORE_PRAGMA)
--  (void)ExecuteSimpleSQL(NS_LITERAL_CSTRING("PRAGMA temp_store = 2;"));
+-  (void)ExecuteSimpleSQL(nsAutoCString("PRAGMA temp_store = 2;"));
 -#endif
 -
    // Register our built-in SQL functions.
    srv = registerFunctions(mDBConn);
    if (srv != SQLITE_OK) {
-     return convertResultCode(srv);
-   }
- 
-   // Register our built-in SQL collating sequences.
-   srv = registerCollations(mDBConn, mStorageService);
 diff --git a/storage/mozStorageService.cpp b/storage/mozStorageService.cpp
 --- a/storage/mozStorageService.cpp
 +++ b/storage/mozStorageService.cpp
-@@ -27,18 +27,16 @@
- #include "sqlite3.h"
- #include "mozilla/AutoSQLiteLifetime.h"
- 
- #ifdef XP_WIN
- // "windows.h" was included and it can #define lots of things we care about...
+@@ -30,8 +30,6 @@
  #  undef CompareString
  #endif
  
 -#include "nsIPromptService.h"
 -
- ////////////////////////////////////////////////////////////////////////////////
- //// Defines
+ namespace mozilla {
+ namespace storage {
  
- #define PREF_TS_SYNCHRONOUS "toolkit.storage.synchronous"
- #define PREF_TS_SYNCHRONOUS_DEFAULT 1
- 
- #define PREF_TS_PAGESIZE "toolkit.storage.pageSize"
- 
-@@ -179,41 +177,16 @@ NS_IMPL_ISUPPORTS(Service, mozIStorageSe
- 
- Service* Service::gService = nullptr;
- 
- already_AddRefed<Service> Service::getSingleton() {
-   if (gService) {
+@@ -164,31 +162,6 @@
      return do_AddRef(gService);
    }
  
@@ -292,11 +245,6 @@ diff --git a/storage/mozStorageService.cpp b/storage/mozStorageService.cpp
    // The first reference to the storage service must be obtained on the
    // main thread.
    NS_ENSURE_TRUE(NS_IsMainThread(), nullptr);
-   RefPtr<Service> service = new Service();
-   if (NS_SUCCEEDED(service->initialize())) {
-     // Note: This is cleared in the Service destructor.
-     gService = service.get();
-     return service.forget();
 diff --git a/third_party/sqlite3/src/moz.build b/third_party/sqlite3/src/moz.build
 --- a/third_party/sqlite3/src/moz.build
 +++ b/third_party/sqlite3/src/moz.build

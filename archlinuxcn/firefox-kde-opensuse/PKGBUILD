@@ -19,8 +19,8 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=79.0
-pkgrel=2
+pkgver=80.0
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -51,7 +51,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'pulseaudio: Audio support')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=15e73dbe1b5290bb8c4a36a4e808199c07de3d83
+_patchrev=0d8818883a2a1d201d7eb40ca0094be91432d2a1
 options=('!emptydirs')
 _patchurl=https://raw.githubusercontent.com/openSUSE/firefox-maintenance/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -66,6 +66,7 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
 	# Gecko/toolkit patchset
 	mozilla-kde-$_patchrev.patch::$_patchurl/mozilla-kde.patch
 	mozilla-nongnome-proxies-$_patchrev.patch::$_patchurl/mozilla-nongnome-proxies.patch
+        mozilla-system-nspr-$_patchrev.patch::$_patchurl/mozilla-system-nspr.patch
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
@@ -81,8 +82,6 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         # Fix MOZILLA#1516803
         # https://bugzilla.mozilla.org/show_bug.cgi?id=1516803
         mozilla-1516803.patch
-        # https://bugzilla.mozilla.org/show_bug.cgi?id=1654465
-        mozilla-1654465.patch
         # Force disable elfhack to fix build errors
         build-disable-elfhack.patch
 )
@@ -141,8 +140,8 @@ prepare() {
   # GCC LTO is enabled
   patch -Np1 -i "$srcdir"/mozilla-1516803.patch
 
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1654465
-  patch -Np1 -i "$srcdir"/mozilla-1654465.patch
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1661096
+  patch -Np1 -i "$srcdir/mozilla-system-nspr-$_patchrev.patch"
 
   # Force disable elfhack to fix build errors
   patch -Np1 -i "$srcdir"/build-disable-elfhack.patch
@@ -184,7 +183,10 @@ build() {
   if [[ -n $_pgo ]]; then
     export DISPLAY=:99
     export MOZ_PGO=1
-    
+
+    export TMPDIR="$srcdir/tmp"
+    mkdir "$TMPDIR"
+
     xvfb-run \
       -a \
       -s "-extension GLX -screen 0 1280x1024x24" \
@@ -246,19 +248,19 @@ md5sums=('SKIP'
          'a26a061efb4def6572d5b319d657f1d6'
          '4c23d9c0a691d70919beb1dafbbecbd3'
          '05bb69d25fb3572c618e3adf1ee7b670'
-         '6821ee347a094765776d8aec0a1d07e2'
-         'ac9ce8934b4553fc42cb110c9c04350e'
-         '968ee82e3c0f10aa8385b5434331fe2f'
-         '0f9fcd2ec38e339e4f2d602e1b13e3ef'
-         'e39e0ef54382538feae6c6b1276451ac'
+         'c0f68250d27f208efcdee710207cd3e4'
+         '77c039d55aa155391db518afd638a0b9'
+         'cd69565c4ac2696d5245229974a296da'
+         '0a5733b7a457a2786c2dd27626a1bf88'
+         'cd9d97a39bf001217a7a2f0973e64ecd'
+         '20526c2f149f05cd2bcf29366f4af149'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3c383d371d7f6ede5983a40310518715'
          'd24681f9a46ae23689b2867f4ab6eaae'
          'dbb578ee6ef93f0d28584d38904fac70'
          'f867ae41a722630cc5567e2dcc51676d'
-         '215e69f9941a0855e005a7b5a351df60'
+         '1e473ebbf9e5d648e498c58dd6c789e6'
          'e8585d1477f5f057603f38fcceec5c3f'
-         'e7924ef6bf5fda799f369b75f98aaf00'
+         '129f1d0a83a9034e49c8ff62f5e0013d'
          'efcddfb6595b356b3faaf6b93313659e'
-         '293097ecb67691c45afde91843462c80'
          'aa9261c4d407cf809bf8275e6f2e52c7')

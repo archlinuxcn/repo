@@ -86,12 +86,7 @@ diff --git a/dom/media/platforms/moz.build b/dom/media/platforms/moz.build
 diff --git a/toolkit/moz.configure b/toolkit/moz.configure
 --- a/toolkit/moz.configure
 +++ b/toolkit/moz.configure
-@@ -480,17 +480,33 @@ imply_option('--enable-fmp4', ffmpeg, '-
- option('--disable-av1',
-         help='Disable av1 video support')
- 
- @depends('--enable-av1')
- def av1(value):
+@@ -491,7 +491,24 @@
      if value:
          return True
  
@@ -112,12 +107,8 @@ diff --git a/toolkit/moz.configure b/toolkit/moz.configure
 +        has_av1_libs = True
 +    return has_av1_libs
 +
++
 +@depends(target, nasm_version, when=av1 & depends(system_av1)(lambda v: not v) & compile_environment)
  def dav1d_asm(target, nasm_version):
-     if target.os != 'Android':
-         if target.cpu == 'aarch64':
-             return True
-         elif target.cpu in ('x86', 'x86_64'):
-             if nasm_version < '2.14':
-                 die('nasm 2.14 or greater is required for AV1 support. '
-                     'Either install nasm or add --disable-av1 to your configure options.')
+     if target.cpu == 'aarch64':
+         return True
