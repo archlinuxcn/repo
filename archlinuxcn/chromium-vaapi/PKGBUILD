@@ -10,10 +10,10 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=84.0.4147.135
+pkgver=85.0.4183.83
 pkgrel=1
 _launcher_ver=6
-_gcc_patchset=3
+_gcc_patchset=2
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
 url="https://www.chromium.org/Home"
@@ -36,21 +36,15 @@ install=chromium.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
         https://github.com/stha09/chromium-patches/releases/download/chromium-${pkgver%%.*}-patchset-$_gcc_patchset/chromium-${pkgver%%.*}-patchset-$_gcc_patchset.tar.xz
-        remove-NotifyError-calls-and-just-send-a-normal-message.patch
-        avoid-calling-DeleteForCurrentDocument-from-destructor.patch
-        force-mp3-files-to-have-a-start-time-of-zero.patch
-        chromium-ffmpeg-4.3.patch
+        media-Set-allocation-limit-compatible-with-FFmpeg-4.3.patch
         intel-vp9-quirk.patch
         wayland-egl.patch
         nvidia-vdpau.patch
         chromium-skia-harmony.patch)
-sha256sums=('dd41001596d0e17051ddcece3db6c0cdbe92fe23375d56fbcfba624a5f4996d8'
+sha256sums=('2064aa4502b87c025f2233b59d94e9e3d1c00bfeaf891e1d973687de5740e73b'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
-            'f77088dd59b170b767ba91c6b410abb778ff2e68553433b24124d398fa4d3ce7'
-            '3b10917f646f88ae988ca18be9cbef82025abb6a6e5cb00b77a11077192ce32c'
-            '4e41cb637e96bcef98c119ed052ba1aeab45fca5b89d65955583dab002de783e'
-            'abc3fad113408332c3b187b083bf33eba59eb5c87fa3ce859023984b5804623c'
-            '5390304b5f544868985ce00a3ec082d4ece2dacb1c73cdb35dd4facfea12449a'
+            '2194fe22b9e5ccdc4a86da4e3572214f670c561486671f57c90636fd3cbfa43e'
+            '0f041d655335cd2a4773ae7ca5e301a0ff12c6c53f57b7cf6651c268e0420a1c'
             'a25fc6fccb84fd0a58a799661cd9c4ffeb2731fa49268f43aa7108f1542c5af6'
             '34d08ea93cb4762cb33c7cffe931358008af32265fc720f2762f0179c3973574'
             '8095bf73afbca7c2b07306c5b4dd8f79b66e1053fa4e58b07f71ef938be603f1'
@@ -68,7 +62,7 @@ declare -gA _system_libs=(
   [libdrm]=
   [libjpeg]=libjpeg
   [libpng]=libpng
-  [libvpx]=libvpx
+  #[libvpx]=libvpx
   [libwebp]=libwebp
   [libxml]=libxml2
   [libxslt]=libxslt
@@ -102,26 +96,13 @@ prepare() {
     third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
     third_party/libxml/chromium/*.cc
 
-  # https://chromium-review.googlesource.com/c/chromium/src/+/2223010
-  patch -Np1 -i ../remove-NotifyError-calls-and-just-send-a-normal-message.patch
-
-  # https://chromium-review.googlesource.com/c/chromium/src/+/2224737
-  patch -Np1 -i ../avoid-calling-DeleteForCurrentDocument-from-destructor.patch
-
-  # https://chromium-review.googlesource.com/c/chromium/src/+/2268221
-  patch -Np1 -i ../force-mp3-files-to-have-a-start-time-of-zero.patch
+  # https://crbug.com/1095962
+  patch -Np1 -i ../media-Set-allocation-limit-compatible-with-FFmpeg-4.3.patch
 
   # Fixes for building with libstdc++ instead of libc++
-  patch -Np1 -i ../patches/chromium-84-AXObject-stl-iterator.patch
-  patch -Np1 -i ../patches/chromium-84-ListContainerHelper-include-cstring.patch
-  patch -Np1 -i ../patches/chromium-84-crashpad-include-cstring.patch
-  patch -Np1 -i ../patches/chromium-84-gcc-10-include-stddef.patch
-  patch -Np1 -i ../patches/chromium-84-gcc-10-webrtc-include-stddef.patch
-  patch -Np1 -i ../patches/chromium-84-gcc-DCHECK_EQ-unique_ptr.patch
-  patch -Np1 -i ../patches/chromium-84-std-vector-const.patch
+  patch -Np1 -i ../patches/chromium-85-NearbyShareEncryptedMetadataKey-include.patch
+  patch -Np1 -i ../patches/chromium-85-sim_hash-include.patch
 
-  # https://crbug.com/1095962
-  patch -Np1 -i ../chromium-ffmpeg-4.3.patch
 
   # https://crbug.com/skia/6663#c10
   patch -Np0 -i ../chromium-skia-harmony.patch
@@ -135,9 +116,6 @@ prepare() {
 
   # Force script incompatible with Python 3 to use /usr/bin/python2
   sed -i '1s|python$|&2|' third_party/dom_distiller_js/protoc_plugins/*.py
-
-  # Make xcbgen available to ui/gfx/x/gen_xproto.py running under Python 2
-  ln -s /usr/lib/python3.*/site-packages/xcbgen "$srcdir/"
 
   mkdir -p third_party/node/linux/node-linux-x64/bin
   ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
@@ -168,9 +146,6 @@ build() {
     # Avoid falling back to preprocessor mode when sources contain time macros
     export CCACHE_SLOPPINESS=time_macros
   fi
-
-  # ui/gfx/x/gen_xproto.py needs xcbgen
-  export PYTHONPATH=$srcdir
 
   export CC=clang
   export CXX=clang++
