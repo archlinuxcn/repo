@@ -1,0 +1,53 @@
+# Maintainer: Lukas Fleischer <lfleischer@archlinux.org>
+# Contributor: Dan McGee <dan@archlinux.org>
+# Contributor: Tom Newsom <Jeepster@gmx.co.uk>
+# Contributor: Jason Chu <jason@archlinux.org>
+
+pkgname=cscope-git
+pkgver=15.9.0.15.geaea31c
+pkgrel=1
+pkgdesc="A developers tool for browsing program code"
+arch=('x86_64')
+url="http://cscope.sourceforge.net/"
+license=('BSD')
+depends=('ncurses' 'sh')
+provides=('cscope')
+conflicts=('cscope')
+source=('git+https://git.code.sf.net/p/cscope/cscope'
+        'symlink-file.patch')
+sha512sums=('SKIP'
+            'f308cf550a7de77290fb92f861cb6e00d00b555ae194dc5b9a856b2999fbb7f4757e42aa9c72a8e91ebf381d8699ed00b5b5a4f1af0f67c92fd09776f4ab3c54')
+
+pkgver() {
+  cd cscope
+
+  git describe --tag | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+prepare() {
+  cd cscope
+
+  sed -i 's|/usr/local/lib/cs|/usr/lib/cs|' contrib/ocs
+  patch -Np1 < ../symlink-file.patch
+}
+
+build() {
+  cd cscope
+
+  autoreconf -fi
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd cscope
+
+  make DESTDIR="${pkgdir}" install
+
+  install -d "${pkgdir}"/usr/lib/cs
+  install -Dm644 COPYING "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+
+  cd contrib/xcscope
+  install -Dm644 xcscope.el "${pkgdir}"/usr/share/emacs/site-lisp/xcscope.el
+  install -m755 cscope-indexer "${pkgdir}"/usr/bin
+}
