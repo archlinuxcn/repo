@@ -3,7 +3,7 @@
 _pkgname=mmdetection
 pkgname=python-mmdetection
 pkgver=2.3.0
-pkgrel=4
+pkgrel=5
 pkgdesc='OpenMMLab Detection Toolbox and Benchmark'
 arch=('any')
 url='https://github.com/open-mmlab/mmdetection'
@@ -18,6 +18,12 @@ depends=(
 )
 makedepends=(
   python-setuptools
+)
+optdepends=(
+  python-albumentations
+  python-cityscapesscripts
+  python-imagecorruptions
+  python-lvis-openmm
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmdetection/archive/v${pkgver}.tar.gz"
 "0001-fix-ClassBalancedDataset.patch::https://github.com/open-mmlab/mmdetection/pull/3577.patch")
