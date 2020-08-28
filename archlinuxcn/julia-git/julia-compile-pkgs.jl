@@ -38,11 +38,17 @@ function add_compile_pkg(pkgs, pkg)
     push!(pkgs, pkg)
 end
 
+if isdefined(Base, :TOMLCache)
+    project_deps_get(pkg) = Base.project_deps_get(Sys.STDLIB, pkg, Base.TOMLCache())
+else
+    project_deps_get(pkg) = Base.project_deps_get(Sys.STDLIB, pkg)
+end
+
 function get_compile_list()
     # Get a topologically sorted list of packages to compile
     pkgs = String[]
     for pkg in readdir(Sys.STDLIB)
-        id = Base.project_deps_get(Sys.STDLIB, pkg)
+        id = project_deps_get(pkg)
         id === nothing && continue
         Base.root_module_exists(id) && continue # Already loaded, this is a stdlib library.
         add_compile_pkg(pkgs, pkg)
@@ -93,7 +99,7 @@ function precompile(path)
         pkg in compiled && continue
         path = check_src(pkg)
         path === nothing && continue
-        id = Base.project_deps_get(Sys.STDLIB, pkg)
+        id = project_deps_get(pkg)
         id === nothing && continue
         Base.root_module_exists(id) && continue # Already loaded, this is a stdlib library.
         push!(compiled, pkg)
