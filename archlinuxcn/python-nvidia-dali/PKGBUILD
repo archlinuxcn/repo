@@ -2,7 +2,7 @@
 
 pkgname=python-nvidia-dali
 _pkgname=dali
-pkgver=0.21.0
+pkgver=0.24.0
 pkgrel=1
 pkgdesc='A library containing both highly optimized building blocks and an execution engine for data pre-processing in deep learning applications'
 arch=('x86_64')
@@ -30,9 +30,6 @@ get_pyver() {
 prepare() {
   cd "${srcdir}/${pkgname}"
   git submodule update --init --recursive
-
-  export CC=gcc
-  export CXX=g++
 }
 
 build() {
@@ -41,7 +38,7 @@ build() {
   cmake \
     -DBUILD_LMDB:BOOL=ON \
     -DCMAKE_BUILD_TYPE:String=Release \
-    -DCMAKE_CUDA_HOST_COMPILER=/usr/bin/g++ \
+    -DCMAKE_CUDA_HOST_COMPILER=/opt/cuda/bin/g++ \
     -DCMAKE_INSTALL_PREFIX:PATH=/usr \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DProtobuf_USE_STATIC_LIBS:BOOL=OFF \
@@ -56,11 +53,11 @@ package() {
   make DESTDIR="${pkgdir}" install
   cd 'dali/python'
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
-  # create softlink for libdali.so
-  ln -s "/usr/lib/python$(get_pyver)/site-packages/nvidia/dali/libdali.so" "${pkgdir}/usr/lib/libdali.so"
-  ln -s "/usr/lib/python$(get_pyver)/site-packages/nvidia/dali/libdali_core.so" "${pkgdir}/usr/lib/libdali_core.so"
-  ln -s "/usr/lib/python$(get_pyver)/site-packages/nvidia/dali/libdali_kernels.so" "${pkgdir}/usr/lib/libdali_kernels.so"
-  ln -s "/usr/lib/python$(get_pyver)/site-packages/nvidia/dali/libdali_operators.so" "${pkgdir}/usr/lib/libdali_operators.so"
+  # create softlink to save space
+  ln -sf "/usr/lib/python$(get_pyver)/site-packages/nvidia/dali/libdali.so" "${pkgdir}/usr/lib/libdali.so"
+  ln -sf "/usr/lib/python$(get_pyver)/site-packages/nvidia/dali/libdali_core.so" "${pkgdir}/usr/lib/libdali_core.so"
+  ln -sf "/usr/lib/python$(get_pyver)/site-packages/nvidia/dali/libdali_kernels.so" "${pkgdir}/usr/lib/libdali_kernels.so"
+  ln -sf "/usr/lib/python$(get_pyver)/site-packages/nvidia/dali/libdali_operators.so" "${pkgdir}/usr/lib/libdali_operators.so"
 }
 # vim:set ts=2 sw=2 et:
 
