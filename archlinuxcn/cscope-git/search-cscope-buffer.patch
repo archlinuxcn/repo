@@ -1,0 +1,39 @@
+From a048ba9fd45767688378aa0feddc1c1a9b20dba9 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 27 Aug 2020 22:17:02 -0400
+Subject: [PATCH] Fix searching when only the cscope output buffer is open
+
+---
+ contrib/xcscope/xcscope.el | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/contrib/xcscope/xcscope.el b/contrib/xcscope/xcscope.el
+index 859dff5..c65ea27 100644
+--- a/contrib/xcscope/xcscope.el
++++ b/contrib/xcscope/xcscope.el
+@@ -2033,13 +2033,15 @@ SENTINEL-FUNC are optional process filter and sentinel, respectively."
+                      (or cscope-initial-directory directory)))
+     (if (eq outbuf old-buffer) ;; In the *cscope* buffer.
+ 	(if cscope-marker-window
+-	    (progn
+-	      ;; Assume that cscope-marker-window is the window, from the
+-	      ;; users perspective, from which the search was launched and the
+-	      ;; window that should be returned to upon cscope-pop-mark.
+-	      (set-buffer (window-buffer cscope-marker-window))
+-	      (setq cscope-marker (point-marker))
+-	      (set-buffer old-buffer)))
++	    (let ((cscope-marker-window-buffer (window-buffer cscope-marker-window)))
++	      (if cscope-marker-window-buffer
++	          (progn
++	            ;; Assume that cscope-marker-window is the window, from the
++	            ;; users perspective, from which the search was launched and the
++	            ;; window that should be returned to upon cscope-pop-mark.
++	            (set-buffer cscope-marker-window-buffer)
++	            (setq cscope-marker (point-marker))
++	            (set-buffer old-buffer)))))
+ 	(progn ;; Not in the *cscope buffer.
+ 	  ;; Set the cscope-marker-window to whichever window this search
+ 	  ;; was launched from.
+-- 
+2.28.0
+
