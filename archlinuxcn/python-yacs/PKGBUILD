@@ -2,7 +2,7 @@
 
 _pkgname=yacs
 pkgname=python-yacs
-pkgver=0.1.7
+pkgver=0.1.8
 pkgrel=1
 pkgdesc='Yet Another Configuration System'
 arch=('any')
@@ -12,7 +12,7 @@ makedepends=(
   python-setuptools
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/rbgirshick/yacs/archive/v${pkgver}.tar.gz")
-sha512sums=('aa00e6eedbdbffbb11d9302ea723ed010e22920dc73e466fe403cfd65c8ede80f95153cf0fd8ef06bedb392c741c259aeae7b87bd9b95df5e4d0d1d0ac2d4486')
+sha512sums=('1f68b38e4ef382c4df5019416181f3fee2ce0b2b006b088a8deb450e711bda4d0debf831008d039bff83e133870ee911fe7e796350848952be692fa67c0a59ae')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
