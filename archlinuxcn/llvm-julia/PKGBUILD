@@ -3,7 +3,7 @@
 
 pkgname=(llvm-julia llvm-libs-julia llvm-ocaml-julia)
 pkgver=10.0.1
-pkgrel=4
+pkgrel=6
 arch=(i686 x86_64 armv7h aarch64)
 url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
@@ -26,6 +26,7 @@ source=($_source_base/llvm-$pkgver.src.tar.xz
         clear-gep.patch # LLVM 12?
         stack-color.patch # LLVM 12
         0001-Do-not-strip-metadata-from-load-of-constant-memory.patch
+        0001-Backportable-version-of-D86837.patch
         llvm-config.h)
 sha256sums=('c5d8e30b57cbded7128d78e5e8dad811bff97a8d471896812f57fa99ee82cdf3'
             '9f4851adbd9353c4d362ea604d07bcf8c565e1b06ea312986f5ad98d69853ae3'
@@ -42,6 +43,7 @@ sha256sums=('c5d8e30b57cbded7128d78e5e8dad811bff97a8d471896812f57fa99ee82cdf3'
             '84a312c921de24f9d3736f9ad31a5c3af4461708a5ea2a1d62e6b9b62d4e26b4'
             '72e0870b215a13d498a5f6b7ddc64d45a48464bed4b2eef1b62fae5b5fe54dbf'
             '20bd582f4eb78a5a7a1e1ec04beeefd9ef2b193f340ef744c4a4f5ec0deddaed'
+            'acfafd123eec92242c0412358b1d08ca20ade97c5e0195c68d050d1fd7a8f265'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
 _FLTO=''
@@ -87,6 +89,7 @@ EOF
   apply_julia_patch clear-gep
   apply_julia_patch stack-color
   apply_julia_patch 0001-Do-not-strip-metadata-from-load-of-constant-memory
+  apply_julia_patch 0001-Backportable-version-of-D86837.patch
 
   # Arch patches
   # msg "Applying Arch patches"
