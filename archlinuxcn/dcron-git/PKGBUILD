@@ -3,7 +3,7 @@
 pkgname="dcron-git"
 epoch=1
 pkgver=4.5.r9.g6186237
-pkgrel=5
+pkgrel=6
 pkgdesc="dillon's lightweight cron daemon, git version"
 arch=("i686" "x86_64" "armv6h" "armv7h")
 license=("GPL")
@@ -16,12 +16,14 @@ provides=("cron")
 conflicts=("cron")
 source=("git+https://github.com/dubiousjim/dcron.git#commit=6186237"
         "subreap.patch"
+        "systemd.patch"
         "dcron.hook"
         "service")
 md5sums=('SKIP'
          '571eab9300e7bd25191950d3dfe55db5'
+         '08a4d7146fb67b1398c562d5a1aa2ab2'
          '509724f00d1fa3ce7a98b92afb294b5a'
-         'e1feff866d02d410ea4814dd8886d1a1')
+         'bb46f57f84aabf81d33eb6f756272725')
 
 pkgver() {
   cd "$srcdir/dcron"
@@ -35,6 +37,7 @@ build() {
   sed -i 's=/usr/sbin/sendmail=/usr/bin/sendmail=g' defs.h
   sed -i 's=/usr/sbin/run-cron=/usr/bin/run-cron=g' extra/root.crontab
   patch -Np1 < ../subreap.patch
+  patch -Np1 < ../systemd.patch
 
   # by default, any member of group "users" can edit their own crontab
   make \

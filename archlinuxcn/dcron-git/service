@@ -2,9 +2,9 @@
 Description=Periodic Command Scheduler
 
 [Service]
-Type=forking
+Type=simple
 EnvironmentFile=/etc/conf.d/crond
-ExecStart=/usr/bin/crond $CROND_ARGS
+ExecStart=/usr/bin/crond -S -f $CROND_ARGS
 KillMode=process
 Restart=always
 
