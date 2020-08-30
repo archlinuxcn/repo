@@ -1,7 +1,7 @@
-From 83946b59cc912af9603bf5e845b62311f5c71119 Mon Sep 17 00:00:00 2001
+From ce172e61d3a4e41d91aba0d3116085f7119a1a0c Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 22 Aug 2020 10:19:15 -0400
-Subject: [PATCH 5/8] Optimize allocation of arrays
+Subject: [PATCH 04/10] Optimize allocation of arrays
 
 ---
  base/boot.jl    | 12 ++---------
@@ -11,7 +11,7 @@ Subject: [PATCH 5/8] Optimize allocation of arrays
  4 files changed, 115 insertions(+), 12 deletions(-)
 
 diff --git a/base/boot.jl b/base/boot.jl
-index ffb04d42ae..62d9123d8e 100644
+index 6d0627cfca..ea040a4f59 100644
 --- a/base/boot.jl
 +++ b/base/boot.jl
 @@ -430,19 +430,11 @@ const NTuple{N,T} = Tuple{Vararg{T,N}}
@@ -37,7 +37,7 @@ index ffb04d42ae..62d9123d8e 100644
  Array{T}(::UndefInitializer, m::Int) where {T} = Array{T,1}(undef, m)
  Array{T}(::UndefInitializer, m::Int, n::Int) where {T} = Array{T,2}(undef, m, n)
 diff --git a/src/array.c b/src/array.c
-index dd57c09edc..b7bf788363 100644
+index 3bf67890c0..4d0e7b8692 100644
 --- a/src/array.c
 +++ b/src/array.c
 @@ -451,8 +451,7 @@ JL_DLLEXPORT jl_array_t *jl_ptr_to_array(jl_value_t *atype, void *data,
@@ -63,7 +63,7 @@ index dd57c09edc..b7bf788363 100644
  {
      jl_array_t *a = jl_alloc_array_1d(jl_array_uint8_type, len);
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index 82845e4673..4d66cb7610 100644
+index 4a9c38c167..b676126c90 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
 @@ -1164,6 +1164,55 @@ static const std::string verify_ccall_sig(jl_value_t *&rt, jl_value_t *at,
@@ -137,10 +137,10 @@ index 82845e4673..4d66cb7610 100644
               argv[1].typ == (jl_value_t*)jl_ulong_type) {
          assert(!isVa && !llvmcall && nccallargs == 2);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index a1106f4d59..c0d40a9d80 100644
+index 7f6289dd15..3f769d3391 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -438,6 +438,57 @@ static const auto jlsplatnew_func = new JuliaFunction{
+@@ -439,6 +439,57 @@ static const auto jlsplatnew_func = new JuliaFunction{
              {T_prjlvalue, T_prjlvalue}, false); },
      get_func_attrs,
  };

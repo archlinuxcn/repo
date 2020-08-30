@@ -45,13 +45,15 @@ makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
 options=('debug' '!strip' '!buildflags')
 _patches=(
   0001-Fix-source-file-paths.patch
-  0002-Refine-out-callee-rooted-values-from-live-set-at-the.patch
-  0003-More-optimization-based-on-constant-array-size.patch
-  0004-Optimize-codegen-of-access-functions-for-SimpleVecto.patch
-  0005-Optimize-allocation-of-arrays.patch
+  0002-More-optimization-based-on-constant-array-size.patch
+  0003-Optimize-codegen-of-access-functions-for-SimpleVecto.patch
+  0004-Optimize-allocation-of-arrays.patch
+  0005-More-GC-annotation-in-C-code.patch
   0006-Add-ccall-special-cases-for-a-few-more-libc-function.patch
   0007-Optimize-objectid-in-codegen.patch
   0008-Mark-more-functions-as-not-safepoint-in-codegen.patch
+  0009-Improve-alias-analysis-on-julia.typeof-and-memcmp.patch
+  0010-Implement-store-to-load-forwarding-from-allocation-t.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -62,14 +64,16 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '233497af485d20b213095d6096eacb41'
-         '2512021922b22dedff5850927afd69cd'
-         'ad3b4e12b33271ba92f5a53adcb78f6e'
-         '86ee988c406f6b2ed1de487470085d35'
-         '40a27102b6d0741fd9804125f44ceb27'
-         'cc7635caeaf6866068f0f3a6cd4c335e'
-         '7f479a46a7d25ffde3aa52ec5f9e8d6a'
-         '918ca11e9a6a4f1ae1d1f98aa05000e7'
+         '22f524687e5739f48d6f33b4881a9cea'
+         '271b13fc62f0d7b0f12addad801f2709'
+         '962ca1af072ffce61d35b5535380785b'
+         '81a6c45b1fef0ce825e39f01cc7c2f06'
+         'b22d8ace7bc371b51cd9018aff801899'
+         'd58a0b212ce34b425a15b9b3029dea83'
+         '0808c88c5232a50b97082e40211d5867'
+         '8933f66c2196937db1d4172b972f4ae5'
+         '3f84b7e0305345287396bb7780669785'
+         'a3961d122a6737e8a29e5255844245a0'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          'bde100b283ea5b7aaf80613abec98a57'
          '6e7fcba300512df8ab8ab65d3e1eb847'

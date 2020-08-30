@@ -1,7 +1,7 @@
-From b9f52cd365591b4acf74cb1498edd33592a54b9e Mon Sep 17 00:00:00 2001
+From 8572c93e4476676f14f3b13a2a9569ef87d32889 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 17 Aug 2020 03:01:46 -0400
-Subject: [PATCH 3/8] More optimization based on constant array size
+Subject: [PATCH 02/10] More optimization based on constant array size
 
 1. 0-dim array always have size 1.
 2. High dimensional array with unknown eltype also have fixed size.
@@ -14,10 +14,10 @@ Subject: [PATCH 3/8] More optimization based on constant array size
  1 file changed, 41 insertions(+), 5 deletions(-)
 
 diff --git a/src/cgutils.cpp b/src/cgutils.cpp
-index 8a6204c54a..8596463921 100644
+index c6506731cc..573d809244 100644
 --- a/src/cgutils.cpp
 +++ b/src/cgutils.cpp
-@@ -1823,10 +1823,21 @@ static Value *emit_n_varargs(jl_codectx_t &ctx)
+@@ -1826,10 +1826,21 @@ static Value *emit_n_varargs(jl_codectx_t &ctx)
  #endif
  }
  
@@ -41,7 +41,7 @@ index 8a6204c54a..8596463921 100644
  }
  
  static bool arraytype_constelsize(jl_datatype_t *ty, size_t *elsz)
-@@ -1863,9 +1874,21 @@ static intptr_t arraytype_maxsize(jl_value_t *ty)
+@@ -1866,9 +1877,21 @@ static intptr_t arraytype_maxsize(jl_value_t *ty)
  
  static Value *emit_arraysize(jl_codectx_t &ctx, const jl_cgval_t &tinfo, Value *dim)
  {
@@ -64,7 +64,7 @@ index 8a6204c54a..8596463921 100644
      auto load = emit_nthptr_recast(ctx,
              t,
              ctx.builder.CreateAdd(dim, ConstantInt::get(dim->getType(), o)),
-@@ -1888,13 +1911,23 @@ static Value *emit_vectormaxsize(jl_codectx_t &ctx, const jl_cgval_t &ary)
+@@ -1891,13 +1914,23 @@ static Value *emit_vectormaxsize(jl_codectx_t &ctx, const jl_cgval_t &ary)
  
  static Value *emit_arraylen_prim(jl_codectx_t &ctx, const jl_cgval_t &tinfo)
  {
@@ -90,7 +90,7 @@ index 8a6204c54a..8596463921 100644
      LoadInst *len = ctx.builder.CreateAlignedLoad(addr, Align(sizeof(size_t)));
      len->setOrdering(AtomicOrdering::NotAtomic);
      MDBuilder MDB(jl_LLVMContext);
-@@ -1902,6 +1935,7 @@ static Value *emit_arraylen_prim(jl_codectx_t &ctx, const jl_cgval_t &tinfo)
+@@ -1905,6 +1938,7 @@ static Value *emit_arraylen_prim(jl_codectx_t &ctx, const jl_cgval_t &tinfo)
      len->setMetadata(LLVMContext::MD_range, rng);
      return tbaa_decorate(tbaa, len);
  #else
@@ -98,7 +98,7 @@ index 8a6204c54a..8596463921 100644
      jl_value_t *p1 = jl_tparam1(ty); // FIXME: check that ty is an array type
      if (jl_is_long(p1)) {
          size_t nd = jl_unbox_long(p1);
-@@ -1932,6 +1966,8 @@ static Value *emit_arrayptr_internal(jl_codectx_t &ctx, const jl_cgval_t &tinfo,
+@@ -1935,6 +1969,8 @@ static Value *emit_arrayptr_internal(jl_codectx_t &ctx, const jl_cgval_t &tinfo,
          ctx.builder.CreateStructGEP(jl_array_llvmt,
              emit_bitcast(ctx, t, jl_parray_llvmt),
              0); // index (not offset) of data field in jl_parray_llvmt

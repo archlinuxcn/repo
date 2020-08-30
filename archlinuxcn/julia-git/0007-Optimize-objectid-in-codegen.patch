@@ -1,7 +1,7 @@
-From 00d88b1f764874b39d8278e6fdf824804288477b Mon Sep 17 00:00:00 2001
+From 8de60fcd564ad1fa12d4446685c3b5ad89585356 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 21 Aug 2020 13:15:02 -0400
-Subject: [PATCH 7/8] Optimize objectid in codegen
+Subject: [PATCH 07/10] Optimize objectid in codegen
 
 ---
  src/ccall.cpp             | 10 +++++++---
@@ -12,10 +12,10 @@ Subject: [PATCH 7/8] Optimize objectid in codegen
  5 files changed, 64 insertions(+), 8 deletions(-)
 
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index 26e7cc8417..33889b3233 100644
+index c29e6b20d3..5d4a7a2e7a 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
-@@ -1791,6 +1791,7 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+@@ -1807,6 +1807,7 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
      else if (is_libjulia_func(jl_object_id) && nccallargs == 1 &&
              rt == (jl_value_t*)jl_ulong_type) {
          jl_cgval_t val = argv[0];
@@ -23,7 +23,7 @@ index 26e7cc8417..33889b3233 100644
          if (!val.isboxed) {
              // If the value is not boxed, try to compute the object id without
              // reboxing it.
-@@ -1804,10 +1805,13 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+@@ -1820,10 +1821,13 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
                          decay_derived(ctx, data_pointer(ctx, val)),
                          T_pint8_derived)
              };
@@ -41,10 +41,10 @@ index 26e7cc8417..33889b3233 100644
  
      jl_cgval_t retval = sig.emit_a_ccall(
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 078e3fdccb..8fc87a0f48 100644
+index d001d36968..03755c96aa 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -375,12 +375,14 @@ static AttributeList get_attrs_zext(LLVMContext &C)
+@@ -376,12 +376,14 @@ static AttributeList get_attrs_zext(LLVMContext &C)
  
  // For libc functions that only read argument memory and not capturing them
  // e.g. memcmp, strlen, etc.
@@ -62,7 +62,7 @@ index 078e3fdccb..8fc87a0f48 100644
      for (auto arg: ptrargs)
          attrs = attrs.addParamAttribute(C, arg, Attribute::NoCapture);
      return attrs;
-@@ -735,7 +737,13 @@ static const auto jl_object_id__func = new JuliaFunction{
+@@ -736,7 +738,13 @@ static const auto jl_object_id__func = new JuliaFunction{
      "jl_object_id_",
      [](LLVMContext &C) { return FunctionType::get(T_size,
              {T_prjlvalue, PointerType::get(T_int8, AddressSpace::Derived)}, false); },
@@ -78,7 +78,7 @@ index 078e3fdccb..8fc87a0f48 100644
  static const auto setjmp_func = new JuliaFunction{
      jl_setjmp_name,
 diff --git a/src/llvm-alloc-opt.cpp b/src/llvm-alloc-opt.cpp
-index 5ce8ef3c00..f0055e467b 100644
+index cd75392dee..f4e1373a72 100644
 --- a/src/llvm-alloc-opt.cpp
 +++ b/src/llvm-alloc-opt.cpp
 @@ -118,6 +118,8 @@ struct AllocOpt : public FunctionPass, public JuliaPassContext {
@@ -90,7 +90,7 @@ index 5ce8ef3c00..f0055e467b 100644
  
      Type *T_int64;
  
-@@ -595,7 +597,7 @@ void Optimizer::checkInst(Instruction *I)
+@@ -614,7 +616,7 @@ void Optimizer::checkInst(Instruction *I)
                      return true;
                  }
              }
@@ -99,7 +99,7 @@ index 5ce8ef3c00..f0055e467b 100644
                  use_info.addrescaped = true;
                  return true;
              }
-@@ -989,6 +991,17 @@ void Optimizer::moveToStack(CallInst *orig_inst, size_t sz, bool has_ref)
+@@ -1008,6 +1010,17 @@ void Optimizer::moveToStack(CallInst *orig_inst, size_t sz, bool has_ref)
                  call->eraseFromParent();
                  return;
              }
@@ -117,7 +117,7 @@ index 5ce8ef3c00..f0055e467b 100644
              if (pass.typeof_func == callee) {
                  call->replaceAllUsesWith(tag);
                  call->eraseFromParent();
-@@ -1471,6 +1484,15 @@ bool AllocOpt::doInitialization(Module &M)
+@@ -1490,6 +1503,15 @@ bool AllocOpt::doInitialization(Module &M)
      if (!alloc_obj_func)
          return false;
  
