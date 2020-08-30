@@ -1,12 +1,12 @@
 # Maintainer: BlackEagle
 # Contributor: Christian Hesse <mail@eworm.de>
-# Contributor: ruario 
+# Contributor: ruario
 # Contributor: RobertMe
 # Contributor: Skunnyk
 # Contributor: totoloco
 
 pkgname=opera-beta
-pkgver=71.0.3770.50
+pkgver=71.0.3770.81
 pkgrel=1
 pkgdesc='A fast and secure web browser and Internet suite - beta stream'
 arch=('x86_64')
@@ -20,11 +20,11 @@ optdepends=(
     'upower: opera battery save'
 )
 source=(
-    "http://deb.opera.com/opera/pool/non-free/o/${pkgname}/${pkgname}_${pkgver}_amd64.deb"
+    "https://get.geo.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64.deb"
     "opera"
     "default"
 )
-sha256sums=('784e3c600c67a69b508e4c1f8d91750773e3366f8f80a1cc8c0ec215f4f01f5e'
+sha256sums=('eecbc98a3aa46128bdb116f3e8b6633f1f236ca9430bdeb4b085029b829c37a3'
             '508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
             '99fc0d2822edd14e234d451995db47148125e4580221a292598959421d131231')
 
