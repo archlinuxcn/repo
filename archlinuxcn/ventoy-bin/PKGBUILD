@@ -3,7 +3,7 @@
 # Contributor: KokaKiwi <kokakiwi+aur@kokakiwi.net>
 
 pkgname=ventoy-bin
-pkgver=1.0.19
+pkgver=1.0.20
 pkgrel=1
 pkgdesc='A new multiboot USB solution (Binary)'
 url='http://www.ventoy.net/'
@@ -14,14 +14,14 @@ provides=("${pkgname%-bin}")
 conflicts=("${pkgname%-bin}")
 source=("https://github.com/ventoy/Ventoy/releases/download/v${pkgver}/${pkgname%-bin}-${pkgver}-linux.tar.gz"
         "${pkgname%-bin}" 'sanitize.patch')
-sha256sums=('7686dadc21917b3cb543340d8206cf675b15984e0ac3dcda18c7ae8ee4dcc1e8'
+sha256sums=('9e3fc538a5e831998e33e05693949333e6a369ec829279954b8a7ec556e91959'
             'f9f333e21ec211318ab40018e0da3a44d8bae16e36dd6132e7891f8c9df52f1c'
-            'b042d5b525427a65b566aaf6bef5fd3091c4f543fcd8e3e23055fd35b7d73dbb')
+            'ebd54e274c4c38ea70242f34c2e3de3f48b378d4af9bd6706ba5e1d8676363ef')
 
 prepare() {
   msg2 "Decompress tools..."
   cd "$srcdir/${pkgname%-bin}-${pkgver}/tool"
-  for file in $(ls *.xz); do
+  for file in *.xz; do
     xzcat $file > ${file%.xz}
     chmod +x ${file%.xz}
   done
@@ -47,10 +47,10 @@ package() {
   install -Dm755 -t "$pkgdir/opt/${pkgname%-bin}/"                 *.sh
 
   msg2 "Linking system binaries..."
-  ln -svf /usr/bin/xzcat   "$pkgdir/opt/${pkgname%-bin}/tool/"
-  ln -svf /usr/bin/hexdump "$pkgdir/opt/${pkgname%-bin}/tool/"
-  ln -svf /usr/bin/mkfs.exfat "$pkgdir/opt/${pkgname%-bin}/tool/mkextfatfs_32"
-  ln -svf /usr/bin/mkfs.exfat "$pkgdir/opt/${pkgname%-bin}/tool/mkextfatfs_64"
+  ln -svf /usr/bin/xzcat            "$pkgdir/opt/${pkgname%-bin}/tool/"
+  ln -svf /usr/bin/hexdump          "$pkgdir/opt/${pkgname%-bin}/tool/"
+  ln -svf /usr/bin/mkfs.exfat       "$pkgdir/opt/${pkgname%-bin}/tool/mkextfatfs_32"
+  ln -svf /usr/bin/mkfs.exfat       "$pkgdir/opt/${pkgname%-bin}/tool/mkextfatfs_64"
   ln -svf /usr/bin/mount.exfat-fuse "$pkgdir/opt/${pkgname%-bin}/tool/mount.exfat-fuse_32"
   ln -svf /usr/bin/mount.exfat-fuse "$pkgdir/opt/${pkgname%-bin}/tool/mount.exfat-fuse_64"
 
