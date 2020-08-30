@@ -9,5 +9,7 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 update_on:
-  - aur: mysql
-  - archpkg: libevent
+  - source: aur
+    aur: mysql
+  - source: archpkg
+    archpkg: libevent

@@ -8,9 +8,9 @@ post_build: aur_post_build
 time_limit_hours: 8
 
 update_on:
-  - aur: chromium-vaapi
+  - source: aur
+    aur: chromium-vaapi
   - alias: icu
-  - archpkg: re2
-    strip-release: true
-
-
+  - source: archpkg
+    archpkg: re2
+    strip_release: true

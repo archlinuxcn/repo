@@ -7,9 +7,10 @@ repo_depends:
   - python-pydicom
 
 update_on:
-  - github: nipy/nibabel
+  - source: github
+    github: nipy/nibabel
     use_max_tag: true
-    include_regex: "[^rc]+"
+    include_regex: '[^rc]+'
   - alias: python
 # vim:set ts=2 sw=2 et:
 

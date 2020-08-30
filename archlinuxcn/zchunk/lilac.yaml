@@ -2,7 +2,7 @@ maintainers:
   - github: farseerfc
 
 update_on:
-  - aur: zchunk
-
-pre_build:  aur_pre_build
-post_build:  aur_post_build
+  - source: aur
+    aur: zchunk
+pre_build: aur_pre_build
+post_build: aur_post_build

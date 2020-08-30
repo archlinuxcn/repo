@@ -10,5 +10,7 @@ repo_depends:
 post_build: aur_post_build
 
 update_on:
-  - vcs
-  - aur
+  - source: vcs
+    vcs:
+  - source: aur
+    aur:

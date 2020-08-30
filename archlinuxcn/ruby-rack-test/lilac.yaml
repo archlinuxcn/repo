@@ -2,8 +2,9 @@ maintainers:
   - github: a-wing
 
 update_on:
-  - gems: rack-test
-  - aur: ruby-rack-test
-
+  - source: gems
+    gems: rack-test
+  - source: aur
+    aur: ruby-rack-test
 post_build: git_pkgbuild_commit
 

@@ -8,7 +8,7 @@ pre_build: vcs_update
 post_build: aur_post_build
 
 update_on:
-  - vcs: https://gitlab.linphone.org/BC/public/linphone-desktop.git
-
+  - source: vcs
+    vcs: https://gitlab.linphone.org/BC/public/linphone-desktop.git
 repo_depends:
   - python-pystache

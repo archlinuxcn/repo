@@ -6,7 +6,7 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-repo_depends: 
+repo_depends:
   - babl-git
 
 pre_build: vcs_update
@@ -14,4 +14,5 @@ pre_build: vcs_update
 post_build: git_pkgbuild_commit
 
 update_on:
-  - vcs: git+https://gitlab.gnome.org/GNOME/gegl.git
+  - source: vcs
+    vcs: git+https://gitlab.gnome.org/GNOME/gegl.git

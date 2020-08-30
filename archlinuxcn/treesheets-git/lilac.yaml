@@ -8,5 +8,7 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 update_on:
-    - github: aardappel/treesheets
-    - aur: treesheets-git
+  - source: github
+    github: aardappel/treesheets
+  - source: aur
+    aur: treesheets-git

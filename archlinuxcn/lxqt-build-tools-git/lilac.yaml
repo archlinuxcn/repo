@@ -18,6 +18,8 @@ post_build: git_pkgbuild_commit
 # the second `github` key.
 # [1] https://github.com/lxqt/lxqt-build-tools/commit/3934e9cd7ae20b7ecb1829b9007c201cb1211b77
 update_on:
-  - github: lxqt/lxqt-build-tools
-  - github: lxqt/lxqt-build-tools
+  - source: github
+    github: lxqt/lxqt-build-tools
+  - source: github
+    github: lxqt/lxqt-build-tools
     use_max_tag: true

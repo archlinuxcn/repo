@@ -10,5 +10,7 @@ build_prefix: extra-x86_64
 post_build: aur_post_build
 
 update_on:
-  - github: mank319/Go-For-It
-  - aur: go-for-it-git
+  - source: github
+    github: mank319/Go-For-It
+  - source: aur
+    aur: go-for-it-git

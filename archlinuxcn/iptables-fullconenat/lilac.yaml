@@ -4,8 +4,8 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-  - archpkg: iptables
-    strip-release: true
-
+  - source: archpkg
+    archpkg: iptables
+    strip_release: true
 repo_depends:
   - netfilter-fullconenat-dkms-git

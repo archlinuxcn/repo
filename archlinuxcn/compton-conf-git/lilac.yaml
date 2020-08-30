@@ -9,5 +9,7 @@ repo_depends:
 post_build: aur_post_build
 
 update_on:
-  - vcs
-  - aur: compton-conf-git
+  - source: vcs
+    vcs:
+  - source: aur
+    aur: compton-conf-git

@@ -12,5 +12,7 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 update_on:
-  - vcs
-  - aur: lxqt-openssh-askpass-git
+  - source: vcs
+    vcs:
+  - source: aur
+    aur: lxqt-openssh-askpass-git

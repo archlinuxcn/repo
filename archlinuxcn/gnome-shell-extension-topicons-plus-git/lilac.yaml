@@ -2,7 +2,9 @@ maintainers:
   - github: petronny
 build_prefix: extra-x86_64
 update_on:
-  - aur: gnome-shell-extension-topicons-plus-git
+  - source: aur
+    aur: gnome-shell-extension-topicons-plus-git
     use_last_modified: true
-  - github: phocean/TopIcons-plus
+  - source: github
+    github: phocean/TopIcons-plus
 post_build: aur_post_build

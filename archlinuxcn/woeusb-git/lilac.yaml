@@ -2,7 +2,9 @@ maintainers:
   - github: petronny
 build_prefix: extra-x86_64
 update_on:
-  - aur: woeusb-git
-  - github: slacka/WoeUSB
+  - source: aur
+    aur: woeusb-git
+  - source: github
+    github: slacka/WoeUSB
 pre_build: aur_pre_build
 post_build: aur_post_build

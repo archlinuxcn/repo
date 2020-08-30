@@ -11,8 +11,9 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 repo_depends:
-    - python-magic-ahupp
+  - python-magic-ahupp
 
 update_on:
-  - aur: beancount
+  - source: aur
+    aur: beancount
   - alias: python

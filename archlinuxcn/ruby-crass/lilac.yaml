@@ -2,8 +2,9 @@ maintainers:
   - github: a-wing
 
 update_on:
-  - gems: crass
-  - aur: ruby-crass
-
+  - source: gems
+    gems: crass
+  - source: aur
+    aur: ruby-crass
 post_build: git_pkgbuild_commit
 

@@ -10,8 +10,9 @@ pre_build: aur_pre_build
 
 post_build: aur_post_build
 
-repo_depends: 
+repo_depends:
   - tikv
 
 update_on:
-  - aur: tidb
+  - source: aur
+    aur: tidb

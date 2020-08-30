@@ -9,7 +9,9 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-  - manual: 4.2
-  - archpkg: readline
+  - source: manual
+    manual: 4.2
+  - source: archpkg
+    archpkg: readline
     from_pattern: ^(\d+)\..*
     to_pattern: \1

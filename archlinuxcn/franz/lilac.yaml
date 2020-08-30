@@ -9,7 +9,9 @@ build_prefix: extra-x86_64
 # post_build: aur_post_build
 
 update_on:
-  - manual: 5.5.0
-  - archpkg: electron
-    from_pattern: '^(\d+\.\d+)\..*'
-    to_pattern: '\1'
+  - source: manual
+    manual: 5.5.0
+  - source: archpkg
+    archpkg: electron
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1

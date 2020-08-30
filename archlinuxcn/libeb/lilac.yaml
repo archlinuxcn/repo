@@ -2,7 +2,7 @@ maintainers:
   - github: masakichi
 
 update_on:
-  - aur: libeb
-
-pre_build:  aur_pre_build
-post_build:  aur_post_build
+  - source: aur
+    aur: libeb
+pre_build: aur_pre_build
+post_build: aur_post_build

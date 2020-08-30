@@ -8,8 +8,10 @@ repo_depends:
   - libldac
 
 update_on:
-  - github: EHfive/pulseaudio-modules-bt
+  - source: github
+    github: EHfive/pulseaudio-modules-bt
     use_latest_release: true
-  - archpkg: pulseaudio
-    from_pattern: '^(\d+\.\d+)\..*'
-    to_pattern: '\1'
+  - source: archpkg
+    archpkg: pulseaudio
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1

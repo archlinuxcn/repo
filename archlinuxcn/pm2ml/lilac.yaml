@@ -10,7 +10,8 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 update_on:
-  - aur: pm2ml
+  - source: aur
+    aur: pm2ml
   - alias: python
 repo_depends:
   - python3-xcgf

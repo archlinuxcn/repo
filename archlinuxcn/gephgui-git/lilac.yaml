@@ -6,8 +6,11 @@ repo_depends:
     - geph-client-git
 
 update_on:
-    - github: geph-official/gephgui
-    - aur
+    - source: github
+      github: geph-official/gephgui
+    -
 
+      source: aur
+      aur:
 maintainers:
     - github: dctxmei

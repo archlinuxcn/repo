@@ -11,9 +11,10 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 repo_depends:
-    - beancount
-    - python-markdown2
+  - beancount
+  - python-markdown2
 
 update_on:
-  - aur: fava
+  - source: aur
+    aur: fava
   - alias: python

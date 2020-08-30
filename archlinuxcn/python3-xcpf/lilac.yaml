@@ -10,7 +10,8 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 update_on:
-  - aur: python3-xcpf
+  - source: aur
+    aur: python3-xcpf
   - alias: python
 repo_depends:
   - python3-memoizedb

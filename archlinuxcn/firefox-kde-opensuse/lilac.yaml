@@ -5,9 +5,13 @@ repo_depends:
   - kmozillahelper
   - graphite-mozilla
 update_on:
-  - aur: firefox-kde-opensuse
-  - archpkg: firefox
+  - source: aur
+    aur: firefox-kde-opensuse
+  - source: archpkg
+    archpkg: firefox
   - alias: icu
-  - archpkg: dav1d
-  - archpkg: libffi
+  - source: archpkg
+    archpkg: dav1d
+  - source: archpkg
+    archpkg: libffi
 post_build: aur_post_build

@@ -10,11 +10,15 @@ repo_depends:
   - qt4
 
 update_on:
-  - vcs
-  - archpkg: qt5-base
-    from_pattern: '^(\d+\.\d+)\..*'
-    to_pattern: '\1'
-  - archpkg: kconfig # Any of the kf5 libraries should work...
-    from_pattern: '^(\d+\.\d+\.\d+).*'
-    to_pattern: '\1'
-  - manual: 1
+  - source: vcs
+    vcs:
+  - source: archpkg
+    archpkg: qt5-base
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+  - source: archpkg
+    archpkg: kconfig
+    from_pattern: ^(\d+\.\d+\.\d+).*
+    to_pattern: \1
+  - source: manual
+    manual: 1

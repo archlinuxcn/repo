@@ -6,6 +6,6 @@ build_prefix: extra-x86_64
 post_build: aur_post_build
 
 update_on:
-  - regex: <span class="versions">.*<span class="package-version">(\d+\.\d+\.\d+)<\/span>
+  - source: regex
+    regex: <span class="versions">.*<span class="package-version">(\d+\.\d+\.\d+)<\/span>
     url: https://opam.ocaml.org/packages/google-drive-ocamlfuse/
-

@@ -11,8 +11,8 @@ pre_build: vcs_update
 post_build: git_pkgbuild_commit
 
 update_on:
-  - vcs: git+https://gitlab.gnome.org/GNOME/gimp.git
-
+  - source: vcs
+    vcs: git+https://gitlab.gnome.org/GNOME/gimp.git
 repo_depends:
   - babl-git
   - gegl-git

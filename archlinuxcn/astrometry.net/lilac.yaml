@@ -5,13 +5,18 @@ repo_depends:
   - python-astropy
 
 update_on:
-  - github: dstndstn/astrometry.net
+  - source: github
+    github: dstndstn/astrometry.net
     use_latest_release: true
   - alias: python
-  - archpkg: wcslib
-    strip-release: true
-  - archpkg: gsl
-    strip-release: true
-  - archpkg: cfitsio
-    strip-release: true
-  - manual: 1
+  - source: archpkg
+    archpkg: wcslib
+    strip_release: true
+  - source: archpkg
+    archpkg: gsl
+    strip_release: true
+  - source: archpkg
+    archpkg: cfitsio
+    strip_release: true
+  - source: manual
+    manual: 1

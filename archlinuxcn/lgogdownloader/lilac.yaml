@@ -10,7 +10,8 @@ repo_depends:
   - htmlcxx
 
 update_on:
-  - aur: lgogdownloader
-  - alias: boost 
+  - source: aur
+    aur: lgogdownloader
+  - alias: boost
 
 post_build: aur_post_build

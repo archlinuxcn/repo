@@ -7,9 +7,10 @@ repo_depends:
   - python-nibabel
 
 update_on:
-  - github: nipy/nipy
+  - source: github
+    github: nipy/nipy
     use_max_tag: true
-    include_regex: "[^rc]+"
+    include_regex: '[^rc]+'
   - alias: python
 # vim:set ts=2 sw=2 et:
 

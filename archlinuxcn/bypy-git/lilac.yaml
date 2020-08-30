@@ -4,8 +4,10 @@ build_prefix: extra-x86_64
 repo_depends:
   - python-multiprocess
 update_on:
-  - aur: bypy-git
-  - github: houtianze/bypy
+  - source: aur
+    aur: bypy-git
+  - source: github
+    github: houtianze/bypy
   - alias: python
 pre_build: aur_pre_build
 post_build: aur_post_build

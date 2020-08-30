@@ -6,12 +6,13 @@ maintainers:
 build_prefix: multilib
 
 repo_depends:
-    - mcpelauncher-linux-git
+  - mcpelauncher-linux-git
 
 pre_build: aur_pre_build
 
 post_build: aur_post_build
 
 update_on:
-  - aur: mcpelauncher-ui-git
+  - source: aur
+    aur: mcpelauncher-ui-git
   - alias: protobuf

@@ -7,4 +7,6 @@ maintainers:
 build_prefix: multilib-archlinuxcn
 
 update_on:
-  - cmd: curl -n https://download.nvidia.com/XFree86/Linux-x86_64/ | grep -Po "(\d+\.)+\d+" | tail -1
+  - source: cmd
+    cmd: curl -n https://download.nvidia.com/XFree86/Linux-x86_64/ | grep -Po "(\d+\.)+\d+"
+        | tail -1

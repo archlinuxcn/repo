@@ -5,11 +5,11 @@ repo_depends:
   - rust-nightly: rust-nightly
   - rust-nightly: cargo-nightly
   - rust-nightly: rust-std-nightly-x86_64-unknown-linux-gnu
-  
+
 
 update_on:
-  - github: nushell/nushell
-
+  - source: github
+    github: nushell/nushell
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
 

@@ -10,10 +10,11 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 update_on:
-  - aur: python-pivy
+  - source: aur
+    aur: python-pivy
   - alias: python
-  - manual: 1
-
+  - source: manual
+    manual: 1
 repo_depends:
   - coin
   - soqt

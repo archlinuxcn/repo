@@ -4,8 +4,6 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-  - url: https://downloads.imagej.net/fiji/archive/
+  - source: regex
     regex: \d{8}-\d+
-
-# vim:set ts=2 sw=2 et:
-
+    url: https://downloads.imagej.net/fiji/archive/

@@ -1,6 +1,6 @@
 maintainers:
   - github: Universebenzene
-    email: universebenzene@sina.com 
+    email: universebenzene@sina.com
   - github: hubutui
 
 build_prefix: extra-x86_64
@@ -16,7 +16,8 @@ repo_depends:
   - zfp
 
 update_on:
-  - github: scikit-image/scikit-image
+  - source: github
+    github: scikit-image/scikit-image
     use_max_tag: true
   - alias: python
 

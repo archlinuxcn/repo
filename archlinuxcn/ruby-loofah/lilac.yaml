@@ -6,8 +6,10 @@ repo_depends:
   - ruby-crass
 
 update_on:
-  - gems: loofah
-  - aur: ruby-loofah
+  - source: gems
+    gems: loofah
+  - source: aur
+    aur: ruby-loofah
   - alias: ruby
 
 post_build: git_pkgbuild_commit

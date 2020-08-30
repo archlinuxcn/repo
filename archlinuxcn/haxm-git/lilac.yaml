@@ -9,5 +9,7 @@ pre_build: vcs_update
 post_build: git_pkgbuild_commit
 
 update_on:
-  - github: intel/haxm
-  - archpkg: linux-headers
+  - source: github
+    github: intel/haxm
+  - source: archpkg
+    archpkg: linux-headers

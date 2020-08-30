@@ -6,11 +6,12 @@ maintainers:
 build_prefix: multilib
 
 repo_depends:
-    - lib32-libevdev
+  - lib32-libevdev
 
 pre_build: aur_pre_build
 
 post_build: aur_post_build
 
 update_on:
-  - aur: mcpelauncher-linux-git
+  - source: aur
+    aur: mcpelauncher-linux-git

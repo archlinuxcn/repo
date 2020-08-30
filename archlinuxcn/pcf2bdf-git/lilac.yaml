@@ -2,7 +2,7 @@ maintainers:
   - github: oldherl
 
 update_on:
-  - aur: pcf2bdf-git
-
-pre_build:  aur_pre_build
-post_build:  aur_post_build
+  - source: aur
+    aur: pcf2bdf-git
+pre_build: aur_pre_build
+post_build: aur_post_build

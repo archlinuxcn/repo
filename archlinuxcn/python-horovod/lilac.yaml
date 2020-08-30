@@ -4,7 +4,8 @@ build_prefix: extra-x86_64
 repo_depends:
   - mxnet-git: mxnet-cuda-git
 update_on:
-  - github: horovod/horovod
+  - source: github
+    github: horovod/horovod
     use_max_tag: true
   - alias: python
 # vim:set ts=2 sw=2 et:

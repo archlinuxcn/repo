@@ -2,12 +2,15 @@ maintainers:
   - github: farseerfc
 
 update_on:
-  - archpkg: thunderbird
-    strip-release: true
-  - aur: thunderbird-appmenu
+  - source: archpkg
+    archpkg: thunderbird
+    strip_release: true
+  - source: aur
+    aur: thunderbird-appmenu
   - alias: icu
-  - archpkg: dav1d
-  - archpkg: libffi
-
+  - source: archpkg
+    archpkg: dav1d
+  - source: archpkg
+    archpkg: libffi
 pre_build: aur_pre_build
 post_build: aur_post_build

@@ -2,11 +2,11 @@ maintainers:
 - github: masakichi
 
 repo_depends:
-  - mecab-git
-  - mecab-ipadic
+- mecab-git
+- mecab-ipadic
 
 update_on:
-- github: neologd/mecab-ipadic-neologd
-
+- source: github
+  github: neologd/mecab-ipadic-neologd
 pre_build: vcs_update
 post_build: git_pkgbuild_commit

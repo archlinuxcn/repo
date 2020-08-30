@@ -4,11 +4,12 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-    - github: fcitx/fcitx5-gtk
-    - archpkg: gtk3
+    - source: github
+      github: fcitx/fcitx5-gtk
+    - source: archpkg
+      archpkg: gtk3
       from_pattern: ^(\d+\.\d+)\..*
       to_pattern: \1
-
 repo_depends:
     - xcb-imdkit-git
     - fcitx5-git

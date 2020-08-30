@@ -11,8 +11,9 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 repo_depends:
-    - libsepol
+  - libsepol
 
 update_on:
-  - aur: libselinux
+  - source: aur
+    aur: libselinux
   - alias: python

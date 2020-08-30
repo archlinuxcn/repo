@@ -5,7 +5,8 @@ repo_depends:
   - ngs
 
 update_on:
-  - github: ncbi/ncbi-vdb
+  - source: github
+    github: ncbi/ncbi-vdb
     use_max_tag: true
-  - aur: ncbi-vdb
-
+  - source: aur
+    aur: ncbi-vdb

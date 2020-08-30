@@ -9,7 +9,10 @@ repo_depends:
 post_build: aur_post_build
 
 update_on:
-  - vcs
-  - aur
-  - archpkg: qt5-base
-    strip-release: true
+  - source: vcs
+    vcs:
+  - source: aur
+    aur:
+  - source: archpkg
+    archpkg: qt5-base
+    strip_release: true

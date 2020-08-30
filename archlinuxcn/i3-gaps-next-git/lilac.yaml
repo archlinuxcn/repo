@@ -6,6 +6,8 @@ build_prefix: extra-x86_64
 post_build: aur_post_build
 
 update_on:
-  - github: Airblader/i3
+  - source: github
+    github: Airblader/i3
     branch: gaps-next
-  - aur: i3-gaps-next-git
+  - source: aur
+    aur: i3-gaps-next-git

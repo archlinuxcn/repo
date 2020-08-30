@@ -8,7 +8,8 @@ build_prefix: extra-x86_64
 post_build: aur_post_build
 
 update_on:
-  - aur: powerpill
+  - source: aur
+    aur: powerpill
   - alias: python
 repo_depends:
   - python3-memoizedb

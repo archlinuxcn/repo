@@ -8,7 +8,9 @@ build_prefix: extra-x86_64
 post_build: git_pkgbuild_commit
 
 update_on:
-  - github: Jguer/yay
-  - archpkg: pacman
+  - source: github
+    github: Jguer/yay
+  - source: archpkg
+    archpkg: pacman
     from_pattern: ^(\d+)\..*
     to_pattern: \1

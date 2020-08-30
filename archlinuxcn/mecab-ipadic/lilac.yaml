@@ -5,7 +5,7 @@ repo_depends:
   - mecab-git
 
 update_on:
-  - aur: mecab-ipadic
-
-pre_build:  aur_pre_build
-post_build:  aur_post_build
+  - source: aur
+    aur: mecab-ipadic
+pre_build: aur_pre_build
+post_build: aur_post_build

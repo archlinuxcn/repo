@@ -9,7 +9,9 @@ pre_build: vcs_update
 post_build: git_pkgbuild_commit
 
 update_on:
-  - vcs
-  - archpkg: emacs
-    from_pattern: '^(\d+\.\d+).*'
-    to_pattern: '\1'
+  - source: vcs
+    vcs:
+  - source: archpkg
+    archpkg: emacs
+    from_pattern: ^(\d+\.\d+).*
+    to_pattern: \1

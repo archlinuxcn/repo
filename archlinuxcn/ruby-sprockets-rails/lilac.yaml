@@ -9,8 +9,10 @@ repo_depends:
   - ruby-sprockets
 
 update_on:
-  - gems: sprockets-rails
-  - aur: ruby-sprockets-rails
+  - source: gems
+    gems: sprockets-rails
+  - source: aur
+    aur: ruby-sprockets-rails
   - alias: ruby
 
 post_build: git_pkgbuild_commit

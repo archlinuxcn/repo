@@ -2,6 +2,8 @@ maintainers:
   - github: oldherl
 
 update_on:
-    - github: miniflux/miniflux
-      use_latest_release: true
-    - manual: 1
+  - source: github
+    github: miniflux/miniflux
+    use_latest_release: true
+  - source: manual
+    manual: 1

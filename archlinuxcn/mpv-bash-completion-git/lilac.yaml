@@ -10,5 +10,7 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 update_on:
-  - github: 2ion/mpv-bash-completion
-  - aur: mpv-bash-completion-git
+  - source: github
+    github: 2ion/mpv-bash-completion
+  - source: aur
+    aur: mpv-bash-completion-git

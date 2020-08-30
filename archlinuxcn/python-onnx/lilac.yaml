@@ -8,7 +8,8 @@ repo_depends:
   - python-nbval
 
 update_on:
-  - github: onnx/onnx
+  - source: github
+    github: onnx/onnx
     use_max_tag: true
   - alias: python
   - alias: protobuf

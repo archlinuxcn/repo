@@ -2,8 +2,9 @@ maintainers:
   - github: a-wing
 
 update_on:
-  - gems: thread_safe
-  - aur: ruby-thread_safe
-
+  - source: gems
+    gems: thread_safe
+  - source: aur
+    aur: ruby-thread_safe
 post_build: git_pkgbuild_commit
 

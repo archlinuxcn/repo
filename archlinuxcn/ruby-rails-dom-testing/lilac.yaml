@@ -8,8 +8,10 @@ repo_depends:
   - ruby-nokogiri
 
 update_on:
-  - gems: rails-dom-testing
-  - aur: ruby-rails-dom-testing
+  - source: gems
+    gems: rails-dom-testing
+  - source: aur
+    aur: ruby-rails-dom-testing
   - alias: ruby
 
 post_build: git_pkgbuild_commit

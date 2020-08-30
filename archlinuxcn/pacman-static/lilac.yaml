@@ -7,16 +7,29 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 update_on:
-    - aur: pacman-static
-    - archpkg: c-ares
-    - archpkg: libnghttp2
-    - archpkg: curl
-    - archpkg: openssl
-    - archpkg: xz
-    - archpkg: bzip2
-    - archpkg: zstd
-    - archpkg: libarchive
-    - archpkg: libgpg-error
-    - archpkg: libassuan
-    - archpkg: gpgme
-    - archpkg: gnupg
+    - source: aur
+      aur: pacman-static
+    - source: archpkg
+      archpkg: c-ares
+    - source: archpkg
+      archpkg: libnghttp2
+    - source: archpkg
+      archpkg: curl
+    - source: archpkg
+      archpkg: openssl
+    - source: archpkg
+      archpkg: xz
+    - source: archpkg
+      archpkg: bzip2
+    - source: archpkg
+      archpkg: zstd
+    - source: archpkg
+      archpkg: libarchive
+    - source: archpkg
+      archpkg: libgpg-error
+    - source: archpkg
+      archpkg: libassuan
+    - source: archpkg
+      archpkg: gpgme
+    - source: archpkg
+      archpkg: gnupg

@@ -10,5 +10,7 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 update_on:
-  - github: felixonmars/dnsmasq-china-list
-  - aur: dnsmasq-china-list-git
+  - source: github
+    github: felixonmars/dnsmasq-china-list
+  - source: aur
+    aur: dnsmasq-china-list-git

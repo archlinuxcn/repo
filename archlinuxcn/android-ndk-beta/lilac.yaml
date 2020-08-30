@@ -6,8 +6,9 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-  - url: https://developer.android.com/ndk/downloads/index.html
+  - source: regex
     regex: Latest Beta Version \((r\d+ Beta \d)\)
+    url: https://developer.android.com/ndk/downloads/index.html
     from_pattern: r(\d+) Beta (\d)
     to_pattern: r\1_beta\2
     missing_ok: true

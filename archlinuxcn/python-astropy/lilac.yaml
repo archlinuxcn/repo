@@ -6,8 +6,9 @@ repo_depends:
   - erfa
 
 update_on:
-  - aur: python-astropy
+  - source: aur
+    aur: python-astropy
   - alias: python
 
-pre_build:  aur_pre_build
-post_build:  aur_post_build
+pre_build: aur_pre_build
+post_build: aur_post_build

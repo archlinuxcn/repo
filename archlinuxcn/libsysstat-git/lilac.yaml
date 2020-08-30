@@ -7,8 +7,11 @@ repo_depends:
   - lxqt-build-tools-git
 
 update_on:
-  - github: lxqt/libsysstat
-  - aur
+  - source: github
+    github: lxqt/libsysstat
+  -
 
+    source: aur
+    aur:
 pre_build: aur_pre_build
 post_build: aur_post_build

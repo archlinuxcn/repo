@@ -2,6 +2,8 @@ maintainers:
   - github: petronny
 build_prefix: extra-x86_64
 update_on:
-  - aur: gnome-shell-extension-volume-mixer-git
-  - github: aleho/gnome-shell-volume-mixer
+  - source: aur
+    aur: gnome-shell-extension-volume-mixer-git
+  - source: github
+    github: aleho/gnome-shell-volume-mixer
 post_build: aur_post_build

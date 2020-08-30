@@ -4,7 +4,8 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-  - github: NVIDIA/DALI
+  - source: github
+    github: NVIDIA/DALI
     use_max_tag: true
     include_regex: ^v[^-]+
   - alias: python

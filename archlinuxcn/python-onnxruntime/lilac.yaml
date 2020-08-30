@@ -8,11 +8,13 @@ repo_depends:
   - python-onnx
 
 update_on:
-  - github: microsoft/onnxruntime
+  - source: github
+    github: microsoft/onnxruntime
     use_latest_release: true
     prefix: v
   - alias: protobuf
   - alias: python
   # re2 does not provide sodepends (yet)
-  - archpkg: re2
-    strip-release: true
+  - source: archpkg
+    archpkg: re2
+    strip_release: true

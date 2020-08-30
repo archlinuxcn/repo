@@ -4,8 +4,9 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-- use_max_tag: true
+- source: vcs
   vcs: git+http://repo.or.cz/socat.git
+  use_max_tag: true
   from_pattern: tag-(.*)-b(\d)
   to_pattern: \1_b\2
 - alias: readline

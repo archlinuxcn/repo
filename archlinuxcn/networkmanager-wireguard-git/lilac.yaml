@@ -10,5 +10,7 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 update_on:
-  - aur: networkmanager-wireguard-git
-  - github: max-moser/network-manager-wireguard
+  - source: aur
+    aur: networkmanager-wireguard-git
+  - source: github
+    github: max-moser/network-manager-wireguard

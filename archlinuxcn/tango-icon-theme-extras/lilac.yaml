@@ -5,7 +5,7 @@ repo_depends:
   - tango-icon-theme
 
 update_on:
-  - aur: tango-icon-theme-extras
-
-pre_build:  aur_pre_build
-post_build:  aur_post_build
+  - source: aur
+    aur: tango-icon-theme-extras
+pre_build: aur_pre_build
+post_build: aur_post_build

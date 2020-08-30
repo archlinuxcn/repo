@@ -7,7 +7,7 @@ repo_depends:
   - libasi
 
 update_on:
-  - aur: libindi-asi
-
-pre_build:  aur_pre_build
-post_build:  aur_post_build
+  - source: aur
+    aur: libindi-asi
+pre_build: aur_pre_build
+post_build: aur_post_build

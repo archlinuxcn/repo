@@ -4,8 +4,11 @@ build_prefix: extra-x86_64
 repo_depends:
   - libchardet
 update_on:
-  - aur: bomi-git
-  - github: demokritos/bomi
-  - archpkg: libdvdread
+  - source: aur
+    aur: bomi-git
+  - source: github
+    github: demokritos/bomi
+  - source: archpkg
+    archpkg: libdvdread
 pre_build: aur_pre_build
 post_build: aur_post_build

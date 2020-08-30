@@ -4,9 +4,8 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-  - github: iawia002/annie
+  - source: github
+    github: iawia002/annie
     use_latest_release: true
-#  - aur: annie
-
 post_build: git_pkgbuild_commit
 
