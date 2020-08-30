@@ -8,14 +8,14 @@ Keep ABI compatibility by exporting wrapper functions with the old signature.
 ---
  .../llvm/Transforms/Utils/BuildLibCalls.h     | 106 ++++--
  .../llvm/Transforms/Utils/SimplifyLibCalls.h  |   3 +-
- llvm/lib/Transforms/Utils/BuildLibCalls.cpp   | 223 ++++++++++---
+ lib/Transforms/Utils/BuildLibCalls.cpp   | 223 ++++++++++---
  .../lib/Transforms/Utils/SimplifyLibCalls.cpp | 307 ++++++++++++------
  4 files changed, 483 insertions(+), 156 deletions(-)
 
-diff --git a/llvm/include/llvm/Transforms/Utils/BuildLibCalls.h b/llvm/include/llvm/Transforms/Utils/BuildLibCalls.h
+diff --git a/include/llvm/Transforms/Utils/BuildLibCalls.h b/include/llvm/Transforms/Utils/BuildLibCalls.h
 index 3d15b2a7bf2..0fb09ee4905 100644
---- a/llvm/include/llvm/Transforms/Utils/BuildLibCalls.h
-+++ b/llvm/include/llvm/Transforms/Utils/BuildLibCalls.h
+--- a/include/llvm/Transforms/Utils/BuildLibCalls.h
++++ b/include/llvm/Transforms/Utils/BuildLibCalls.h
 @@ -48,102 +48,166 @@ namespace llvm {
    /// pointer. Ptr is required to be some pointer type, and the return value has
    /// 'intptr_t' type.
@@ -204,10 +204,10 @@ index 3d15b2a7bf2..0fb09ee4905 100644
    Value *emitVSPrintf(Value *Dest, Value *Fmt, Value *VAList, IRBuilder<> &B,
                        const TargetLibraryInfo *TLI);
  
-diff --git a/llvm/include/llvm/Transforms/Utils/SimplifyLibCalls.h b/llvm/include/llvm/Transforms/Utils/SimplifyLibCalls.h
+diff --git a/include/llvm/Transforms/Utils/SimplifyLibCalls.h b/include/llvm/Transforms/Utils/SimplifyLibCalls.h
 index 610668adcfa..220af22ea89 100644
---- a/llvm/include/llvm/Transforms/Utils/SimplifyLibCalls.h
-+++ b/llvm/include/llvm/Transforms/Utils/SimplifyLibCalls.h
+--- a/include/llvm/Transforms/Utils/SimplifyLibCalls.h
++++ b/include/llvm/Transforms/Utils/SimplifyLibCalls.h
 @@ -227,7 +227,8 @@ private:
    Value *optimizePuts(CallInst *CI, IRBuilder<> &B);
  
@@ -218,10 +218,10 @@ index 610668adcfa..220af22ea89 100644
    void classifyArgUse(Value *Val, Function *F, bool IsFloat,
                        SmallVectorImpl<CallInst *> &SinCalls,
                        SmallVectorImpl<CallInst *> &CosCalls,
-diff --git a/llvm/lib/Transforms/Utils/BuildLibCalls.cpp b/llvm/lib/Transforms/Utils/BuildLibCalls.cpp
+diff --git a/lib/Transforms/Utils/BuildLibCalls.cpp b/lib/Transforms/Utils/BuildLibCalls.cpp
 index 71316ce8f75..9d504638b8d 100644
---- a/llvm/lib/Transforms/Utils/BuildLibCalls.cpp
-+++ b/llvm/lib/Transforms/Utils/BuildLibCalls.cpp
+--- a/lib/Transforms/Utils/BuildLibCalls.cpp
++++ b/lib/Transforms/Utils/BuildLibCalls.cpp
 @@ -824,11 +824,143 @@ Value *llvm::castToCStr(Value *V, IRBuilder<> &B) {
    return B.CreateBitCast(V, B.getInt8PtrTy(AS), "cstr");
  }
@@ -592,10 +592,10 @@ index 71316ce8f75..9d504638b8d 100644
  }
  
  /// Append a suffix to the function name according to the type of 'Op'.
-diff --git a/llvm/lib/Transforms/Utils/SimplifyLibCalls.cpp b/llvm/lib/Transforms/Utils/SimplifyLibCalls.cpp
+diff --git a/lib/Transforms/Utils/SimplifyLibCalls.cpp b/lib/Transforms/Utils/SimplifyLibCalls.cpp
 index fa3a9d21f3d..8d8ad8b5eae 100644
---- a/llvm/lib/Transforms/Utils/SimplifyLibCalls.cpp
-+++ b/llvm/lib/Transforms/Utils/SimplifyLibCalls.cpp
+--- a/lib/Transforms/Utils/SimplifyLibCalls.cpp
++++ b/lib/Transforms/Utils/SimplifyLibCalls.cpp
 @@ -270,14 +270,16 @@ Value *LibCallSimplifier::optimizeStrCat(CallInst *CI, IRBuilder<> &B) {
    if (Len == 0)
      return Dst;
