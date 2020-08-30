@@ -2,7 +2,6 @@
 from lilaclib import *
 import datetime
 
-update_on = [{'aur':None}, {'github':'ternjs/tern_for_vim'}]
 build_prefix = 'extra-x86_64'
 
 def pre_build():

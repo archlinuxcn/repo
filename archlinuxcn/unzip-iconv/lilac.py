@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from lilaclib import *
 
-update_on = [{'archpkg': 'unzip'}]
 build_prefix = 'extra-x86_64'
 
 def pre_build():
