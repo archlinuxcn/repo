@@ -2,7 +2,7 @@
 
 # Expiremental System electron package, set ELECTRON env to electron
 pkgname=typora
-pkgver=0.9.92
+pkgver=0.9.94
 pkgrel=1
 pkgdesc="Typora will give you a seamless experience as both a reader and a writer."
 arch=('x86_64')
@@ -14,7 +14,7 @@ optdepends=(
 	'noto-fonts-emoji: Or some other emoji font to see emojis'
 	'pandoc: Import/export for extra file formats')
 source=("https://typora.io/linux/$filename")
-sha512sums=('c3879c36bebb858cea74544fa94e0a79c183c97b271e10c349ba88b9b1116b9275b987ce8f1a9089f7cca9a1216af116c30f8d17abc1d18e4de0d1c17ee101f4')
+sha512sums=('fe926366cd854459574ca2a554782a4f2f802f180b62259b7b3ca316bd61d00d3afcd6a867e222fe3b1a29e8be002335427ad60f3fdcbfa2e120f298085b5d6d')
 
 if [[ ! -z $ELECTRON ]]; then
 	depends+=($ELECTRON)
