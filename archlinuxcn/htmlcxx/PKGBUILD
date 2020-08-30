@@ -3,14 +3,14 @@
 
 pkgname=htmlcxx
 pkgver=0.87
-pkgrel=1
+pkgrel=2
 pkgdesc="A simple non-validating CSS1 and HTML parser for C++."
 arch=('i686' 'x86_64')
 url="http://htmlcxx.sourceforge.net/"
 license=('LGPL')
 depends=()
 makedepends=()
-conflicts=('htmlcxx' 'libhtmlcxx' 'libcss_parser')
+conflicts=()
 provides=('htmlcxx' 'libhtmlcxx' 'libcss_parser')
 source=("https://sourceforge.net/projects/${pkgname}/files/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('5d38f938cf4df9a298a5346af27195fffabfef9f460fc2a02233cbcfa8fc75c8')
