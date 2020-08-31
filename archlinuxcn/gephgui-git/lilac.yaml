@@ -3,14 +3,13 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 repo_depends:
-    - geph-client-git
+  - geph-client-git
 
 update_on:
-    - source: github
-      github: geph-official/gephgui
-    -
+  - source: github
+    github: geph-official/gephgui
+  - source: aur
+    aur: gephgui-git
 
-      source: aur
-      aur:
 maintainers:
-    - github: dctxmei
+  - github: dctxmei

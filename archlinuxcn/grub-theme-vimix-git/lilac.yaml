@@ -3,11 +3,10 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 update_on:
-    - source: github
-      github: vinceliuice/grub2-themes
-    -
+  - source: github
+    github: vinceliuice/grub2-themes
+  - source: aur
+    aur: grub-theme-vimix-git
 
-      source: aur
-      aur:
 maintainers:
-    - github: dctxmei
+  - github: dctxmei

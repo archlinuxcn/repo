@@ -3,12 +3,11 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 repo_depends:
-    - libfixposix
+  - libfixposix
 
 update_on:
-    -
+  - source: aur
+    aur: next-browser
 
-      source: aur
-      aur:
 maintainers:
-    - github: dctxmei
+  - github: dctxmei

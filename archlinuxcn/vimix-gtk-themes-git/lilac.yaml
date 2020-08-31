@@ -3,11 +3,10 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 update_on:
-    - source: github
-      github: vinceliuice/vimix-gtk-themes
-    -
+  - source: github
+    github: vinceliuice/vimix-gtk-themes
+  - source: aur
+    aur: vimix-gtk-themes-git
 
-      source: aur
-      aur:
 maintainers:
-    - github: dctxmei
+  - github: dctxmei
