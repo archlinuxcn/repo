@@ -1,36 +1,66 @@
 # Maintainer: Taiko2k <captain dot gxj at gmail dot com>
 pkgname='tauon-music-box'
-pkgver=5.5.5
+_pkgname=tauonmb
+_gitname=TauonMusicBox
+pkgver=6.2.5
 pkgrel=1
 pkgdesc='A streamlined music player that uses BASS'
 arch=('x86_64')
 url="https://github.com/Taiko2k/TauonMusicBox"
 license=('GPL3')
 
-depends=('python3' 'noto-fonts' 'noto-fonts-emoji' 'noto-fonts-extra' 'sdl2_image' 'python-pillow' 'python-pylast' 'python-gobject'
-  'xdg-utils' 'python-beautifulsoup4' 'python-requests' 'python-cairo' 'python-stagger' 'python-hsaudiotag3k'
-  'python-flask' 'python-setproctitle' 'flac' 'python-musicbrainzngs' 'python-discogs-client' 'alsa-plugins' 'gstreamer' 'gst-plugins-base')
+depends=('python-pillow'
+         'python-pylast'
+         'python-hsaudiotag3k'
+         'python-pysdl2' # AUR
+         'python-stagger' # AUR
+         'python-send2trash'
+         'python-pylyrics' # AUR
+         'python-musicbrainzngs'
+         'python-isounidecode' # AUR
+         'python-setproctitle'
+         'python-gobject'
+         'python-cairo'
+         'python-beautifulsoup4'
+         'python-requests'
+         'python-dbus'
+         'alsa-plugins'
+         'ffmpeg'
+         'flac'
+         'gst-plugins-bad'
+         'gst-plugins-ugly'
+         'noto-fonts-extra'
+         'noto-fonts-cjk'
+         'sdl2_image'
+         'xdg-utils')
 
-optdepends=('ffmpeg: File transcoding'
-  'noto-fonts-cjk: Matching font for CJK characters'
-  'p7zip: 7z archive extraction support'
-  'unrar: RAR archive extraction support'
-  'python-plexapi: PLEX client streaming'
-  'picard: Tag editing'
-  'gst-plugins-good: Extra GStreamer codecs'
-  'gst-plugins-bad: Extra GStreamer codecs'
-  'gst-plugins-ugly: Extra GStreamer codecs')
+optdepends=('p7zip: 7z archive extraction support'
+            'unrar: RAR archive extraction support'
+            'python-plexapi: Plex streaming'
+            'python-pypresence: Discord status support'
+            'python-tekore: Spotify playback control'
+            'picard: Tag editing')
 
-source=("${url}/releases/download/v${pkgver}/Tauon.Music.Box.v${pkgver}.Linux.zip")
+source=("$pkgname-$pkgver.tar.gz::https://github.com/Taiko2k/TauonMusicBox/archive/v$pkgver.tar.gz")
 
-sha256sums=('c49c304f401824ff1069c8769b4d6a691192165bc26c1f87bb007ed0729b715a')
+sha256sums=('c7814cc731a836bf48bd51c94425896f0bcb3031030fd944222b8793a3dfacdb')
 
 package() {
-  install -dm755 "$pkgdir/opt/"
-  install -D -m755 "$srcdir/$pkgname/extra/tauonmb.desktop" "$pkgdir/usr/share/applications/tauonmb.desktop"
-  install -D -m755 "$srcdir/$pkgname/extra/tauonmb-symbolic.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/tauonmb-symbolic.svg"
-  install -D -m755 "$srcdir/$pkgname/extra/tauonmb.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/tauonmb.svg"
-  install -D -m644 "$srcdir/$pkgname/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-  cp -R "$srcdir/$pkgname/" "$pkgdir/opt/$pkgname"
-  install -D -m755 "$srcdir/$pkgname/extra/tauonmb.sh" "$pkgdir/opt/$pkgname/tauonmb.sh"
+    cd "$_gitname-$pkgver"
+    install -Dm755 tauon.py -t "$pkgdir/opt/$pkgname"
+    install -d "$pkgdir/usr/bin"
+    ln -s "/opt/$pkgname/tauon.py" "$pkgdir/usr/bin/$_pkgname"
+ 
+    install -Dm644 input.txt -t "$pkgdir/opt/$pkgname"
+    cp -r  assets templates theme t_modules "$pkgdir/opt/$pkgname"
+ 
+    for t in de fr_FR ja_JP nb_NO pt_BR pt_PT sv zh_CN; do
+        install -Dm644 locale/${t}/LC_MESSAGES/*.po -t "$pkgdir/usr/share/locale/${t}/LC_MESSAGES"
+    done
+ 
+    install -Dm644 "extra/$_pkgname.desktop" -t "$pkgdir/usr/share/applications"
+    install -Dm644 "extra/$_pkgname-symbolic.svg" -t "$pkgdir/usr/share/icons/hicolor/symbolic/apps"
+    install -Dm644 "extra/$_pkgname.svg" -t "$pkgdir/usr/share/icons/hicolor/scalable/apps"
+    install -Dm755 "extra/tauonmb.sh" "$pkgdir/opt/$pkgname/tauonmb.sh"
+    install -Dm755 "extra/tauonmb.sh" "$pkgdir/usr/bin/tauon"
 }
