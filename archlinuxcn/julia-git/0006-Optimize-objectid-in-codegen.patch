@@ -1,7 +1,7 @@
-From 8de60fcd564ad1fa12d4446685c3b5ad89585356 Mon Sep 17 00:00:00 2001
+From b9f005796359f0421c3090a1a8ec243c404978a2 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 21 Aug 2020 13:15:02 -0400
-Subject: [PATCH 07/10] Optimize objectid in codegen
+Subject: [PATCH 6/9] Optimize objectid in codegen
 
 ---
  src/ccall.cpp             | 10 +++++++---
@@ -41,7 +41,7 @@ index c29e6b20d3..5d4a7a2e7a 100644
  
      jl_cgval_t retval = sig.emit_a_ccall(
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index d001d36968..03755c96aa 100644
+index d74dbca310..8c2cec1f7c 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -376,12 +376,14 @@ static AttributeList get_attrs_zext(LLVMContext &C)

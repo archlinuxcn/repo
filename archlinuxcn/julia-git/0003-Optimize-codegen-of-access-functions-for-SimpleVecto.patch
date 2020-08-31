@@ -1,7 +1,7 @@
-From d4fd40c21042eedf3220c74cc04dbd2854d19916 Mon Sep 17 00:00:00 2001
+From 1e01ee55944ec711f1e0f13d94c04cfddb0c2457 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 19 Aug 2020 01:05:14 -0400
-Subject: [PATCH 03/10] Optimize codegen of access functions for SimpleVector
+Subject: [PATCH 3/9] Optimize codegen of access functions for SimpleVector
 
 ---
  base/essentials.jl   | 17 +++------------
@@ -110,10 +110,10 @@ index fa7aa70564..4a9c38c167 100644
               argv[1].typ == (jl_value_t*)jl_ulong_type) {
          assert(!isVa && !llvmcall && nccallargs == 2);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index aff6e2cf37..7f6289dd15 100644
+index dc8680630a..18f03304f7 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -3051,9 +3051,20 @@ static bool emit_builtin_call(jl_codectx_t &ctx, jl_cgval_t *ret, jl_value_t *f,
+@@ -3046,9 +3046,20 @@ static bool emit_builtin_call(jl_codectx_t &ctx, jl_cgval_t *ret, jl_value_t *f,
          jl_datatype_t *sty = (jl_datatype_t*)jl_unwrap_unionall(obj.typ);
          assert(jl_string_type->mutabl);
          if (sty == jl_string_type || sty == jl_simplevector_type) {
@@ -136,7 +136,7 @@ index aff6e2cf37..7f6289dd15 100644
              if (sty == jl_simplevector_type) {
                  auto rng = MDB.createRange(
 diff --git a/src/julia_internal.h b/src/julia_internal.h
-index 5f30c07d62..d0809e2c06 100644
+index 141ba057bd..1e5399a28d 100644
 --- a/src/julia_internal.h
 +++ b/src/julia_internal.h
 @@ -1187,6 +1187,14 @@ struct typemap_intersection_env {

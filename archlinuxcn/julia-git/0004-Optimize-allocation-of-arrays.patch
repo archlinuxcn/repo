@@ -1,7 +1,7 @@
-From ce172e61d3a4e41d91aba0d3116085f7119a1a0c Mon Sep 17 00:00:00 2001
+From 2f49e9c3f1593b409fa7926f291e20a70a14df1c Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 22 Aug 2020 10:19:15 -0400
-Subject: [PATCH 04/10] Optimize allocation of arrays
+Subject: [PATCH 4/9] Optimize allocation of arrays
 
 ---
  base/boot.jl    | 12 ++---------
@@ -37,7 +37,7 @@ index 6d0627cfca..ea040a4f59 100644
  Array{T}(::UndefInitializer, m::Int) where {T} = Array{T,1}(undef, m)
  Array{T}(::UndefInitializer, m::Int, n::Int) where {T} = Array{T,2}(undef, m, n)
 diff --git a/src/array.c b/src/array.c
-index 3bf67890c0..4d0e7b8692 100644
+index b38b38188b..d3d27a4bdd 100644
 --- a/src/array.c
 +++ b/src/array.c
 @@ -451,8 +451,7 @@ JL_DLLEXPORT jl_array_t *jl_ptr_to_array(jl_value_t *atype, void *data,
@@ -137,7 +137,7 @@ index 4a9c38c167..b676126c90 100644
               argv[1].typ == (jl_value_t*)jl_ulong_type) {
          assert(!isVa && !llvmcall && nccallargs == 2);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 7f6289dd15..3f769d3391 100644
+index 18f03304f7..0392ac5dbd 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -439,6 +439,57 @@ static const auto jlsplatnew_func = new JuliaFunction{

@@ -48,12 +48,11 @@ _patches=(
   0002-More-optimization-based-on-constant-array-size.patch
   0003-Optimize-codegen-of-access-functions-for-SimpleVecto.patch
   0004-Optimize-allocation-of-arrays.patch
-  0005-More-GC-annotation-in-C-code.patch
-  0006-Add-ccall-special-cases-for-a-few-more-libc-function.patch
-  0007-Optimize-objectid-in-codegen.patch
-  0008-Mark-more-functions-as-not-safepoint-in-codegen.patch
-  0009-Improve-alias-analysis-on-julia.typeof-and-memcmp.patch
-  0010-Implement-store-to-load-forwarding-from-allocation-t.patch
+  0005-Add-ccall-special-cases-for-a-few-more-libc-function.patch
+  0006-Optimize-objectid-in-codegen.patch
+  0007-Mark-more-functions-as-not-safepoint-in-codegen.patch
+  0008-Improve-alias-analysis-on-julia.typeof-and-memcmp.patch
+  0009-Implement-store-to-load-forwarding-from-allocation-t.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -64,16 +63,15 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '22f524687e5739f48d6f33b4881a9cea'
-         '271b13fc62f0d7b0f12addad801f2709'
-         '962ca1af072ffce61d35b5535380785b'
-         '81a6c45b1fef0ce825e39f01cc7c2f06'
-         'b22d8ace7bc371b51cd9018aff801899'
-         'd58a0b212ce34b425a15b9b3029dea83'
-         '0808c88c5232a50b97082e40211d5867'
-         '8933f66c2196937db1d4172b972f4ae5'
-         '3f84b7e0305345287396bb7780669785'
-         'a3961d122a6737e8a29e5255844245a0'
+         '311d571b9ff8118644c3e0841651aa16'
+         '1471354152d49d5ceaf5eba9e8fcaeb7'
+         'cb45aae714d5f55192a23c6f15703ea3'
+         'bad99e9199633fc3776e89004a7f8704'
+         'c49e8dd92efcf1ccc36f443bbe82d51e'
+         '22e6573d2a5d63e79acac3683e6e0fc6'
+         '2b579c79f0b51131b4e0f6b8800ebab9'
+         '1f86ef2babcefdd3a9a479bbf8a71a81'
+         'e2d57330e5793cf1f96135a9cb71f4ba'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          'bde100b283ea5b7aaf80613abec98a57'
          '6e7fcba300512df8ab8ab65d3e1eb847'
