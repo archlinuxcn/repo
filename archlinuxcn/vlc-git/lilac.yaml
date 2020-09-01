@@ -10,9 +10,6 @@ pre_build: vcs_update
 
 post_build: git_pkgbuild_commit
 
-repo_depends:
-  - libmicrodns-git
-
 update_on:
   - source: vcs
     vcs: git+https://git.videolan.org/git/vlc.git
