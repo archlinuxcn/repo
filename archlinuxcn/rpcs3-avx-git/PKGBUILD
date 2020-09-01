@@ -2,8 +2,8 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-avx-git
-pkgver=0.0.11.10790.d000d648b
-pkgrel=2
+pkgver=0.0.12.10811.a86a3d2fe
+pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator (AVX1 Optimized, for using Sandybridge/Ivybridge cpus)'
 arch=(x86_64)
 url=https://github.com/RPCS3/rpcs3
@@ -69,8 +69,8 @@ prepare() {
   git config submodule.glslang.url ../glslang
   git config submodule.llvm.url ../rpcs3-llvm
   
-  SUBMODULES=$(git config --file .gitmodules --get-regexp path | awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/wolfssl/ && !/llvm/ && !/glslang/ { print $2 }')
-  
+  SUBMODULES=$(git config --file .gitmodules --get-regexp path | awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/llvm/ && !/glslang/ { print $2 }')
+
   git submodule update --init --depth=1 $SUBMODULES
   
   git submodule update Vulkan/glslang llvm

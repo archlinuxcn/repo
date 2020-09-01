@@ -69,7 +69,7 @@ prepare() {
   git config submodule.glslang.url ../glslang
   git config submodule.llvm.url ../rpcs3-llvm
   
-  SUBMODULES=$(git config --file .gitmodules --get-regexp path | awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/wolfssl/ && !/llvm/ && !/glslang/ { print $2 }')
+  SUBMODULES=$(git config --file .gitmodules --get-regexp path | awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/llvm/ && !/glslang/ { print $2 }')
   
   git submodule update --init --depth=1 $SUBMODULES
   
