@@ -1,8 +1,8 @@
 # Maintainer: Iwan Timmer <irtimmer@gmail.com>
 pkgname=('anbox-git' 'anbox-modules-dkms-git')
 _pkgname=anbox
-pkgver=1223.4b8f89b
-pkgrel=2
+pkgver=1240.c1e7550
+pkgrel=1
 epoch=1
 arch=('x86_64')
 url="http://anbox.io/"
@@ -42,6 +42,7 @@ prepare() {
   truncate -s 0 cmake/FindGMock.cmake
   truncate -s 0 tests/CMakeLists.txt
   
+  git submodule update --init --remote
   cd src/anbox/graphics/
 
   echo '#include <stdexcept> '$'\n'"$(cat program_family.cpp)" > program_family.cpp
