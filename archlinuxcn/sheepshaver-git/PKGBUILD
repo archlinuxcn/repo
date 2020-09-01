@@ -14,20 +14,26 @@ source=('git+https://github.com/cebix/macemu'
         'SheepShaver.desktop'
         'SheepShaver.png'
         'BasiliskII.desktop'
-        'BasiliskII.png')
+        'BasiliskII.png'
+        'ss_configure.patch')
 makedepends=('git')
 sha256sums=('SKIP'
             'a4aa858b95d29906873693988d5db42d5a4da8aa94a72c79374f59fc488efd51'
             'cb002e73e864a6ca271e0bbaa6df6eb89dc1df86856fc575c20bf79367458c39'
             'b7f67b1f8424f3e0ffa1a5e57597f368c4c4f93ea1f871ec0a76700b7519b241'
             '9adf6c8a64191ef54c98db071685743ef0badd0deb58204b8ca4ab256e326444'
-            '66635f63471e314fcc587d1a14b6caf87ed582ba80525e12462da0dba87eec60')
+            '66635f63471e314fcc587d1a14b6caf87ed582ba80525e12462da0dba87eec60'
+            'SKIP')
 
 pkgver() {
   cd macemu
   echo "r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
 }
 
+prepare() {
+  cd macemu/SheepShaver/src/Unix
+  patch -p0 -i ${srcdir}/ss_configure.patch
+}
 build() {
   cd macemu/SheepShaver/src/Unix
   ./autogen.sh \
