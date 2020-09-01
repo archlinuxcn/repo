@@ -6,8 +6,8 @@
 # Contributor: totoloco
 
 pkgname=opera-developer
-pkgver=72.0.3791.0
-pkgrel=2
+pkgver=72.0.3798.0
+pkgrel=1
 pkgdesc='A fast and secure web browser and Internet suite - developer stream'
 arch=('x86_64')
 url='https://www.opera.com/computer'
@@ -20,11 +20,11 @@ optdepends=(
     'upower: opera battery save'
 )
 source=(
-    "http://deb.opera.com/opera/pool/non-free/o/${pkgname}/${pkgname}_${pkgver}_amd64.deb"
+    "https://get.geo.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64.deb"
     "opera"
     "default"
 )
-sha256sums=('541091a19d087911c52e4bf6fa22a34f7347507465c8c47664bc63a825aa3bc4'
+sha256sums=('1e02f0f0817a14dae26a28afe07df106157efb0d93186c2e1233df8d7fe760e1'
             '508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
             '99fc0d2822edd14e234d451995db47148125e4580221a292598959421d131231')
 
