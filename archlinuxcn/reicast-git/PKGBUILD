@@ -2,8 +2,8 @@
 # Contributor: Holzhaus <jan.holthuis@ruhr-uni-bochum.de>
 
 pkgname=reicast-git
-pkgver=r3318.201bf154
-pkgrel=16
+pkgver=r4007.2712a007
+pkgrel=1
 pkgdesc="A multiplatform Sega Dreamcast emulator (development version)"
 arch=('i686' 'x86_64' 'armv7h')
 url="http://reicast.com/"
@@ -11,9 +11,13 @@ license=('GPL2' 'BSD' 'MIT')
 conflicts=('reicast')
 provides=('reicast')
 makedepends=('git')
-depends=('libgl' 'alsa-lib' 'python')
+depends=('libgl' 'alsa-lib' 'python' 'systemd')
 source=(reicast::"git+https://github.com/reicast/reicast-emulator.git")
 md5sums=('SKIP')
+
+prepare() {
+  sed "s/CFLAGS :=/CFLAGS := ${CFLAGS}/; s/LDFLAGS :=/LDFLAGS := ${LDFLAGS}/" -i reicast/reicast/linux/Makefile
+}
 
 pkgver() {
   cd reicast
@@ -21,9 +25,9 @@ pkgver() {
 }
 
 build () {
-  make -C reicast/shell/linux PREFIX=/usr
+  make -C reicast/reicast/linux PREFIX=/usr
 }
 
 package () {
-  make -C reicast/shell/linux DESTDIR="$pkgdir/" PREFIX=/usr install
+  make -C reicast/reicast/linux DESTDIR="$pkgdir/" PREFIX=/usr install
 }
