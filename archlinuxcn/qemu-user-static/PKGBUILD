@@ -4,15 +4,17 @@
 pkgname=qemu-user-static
 pkgdesc="Statically linked binaries of Qemu with user emulation. Useful for containers/chroot environment with binfmt."
 pkgver=5.0.0
-pkgrel=1
+pkgrel=2
 arch=(x86_64)
 license=(GPL2 LGPL2.1)
 url="http://wiki.qemu.org/"
 depends=()
 makedepends=(python glib2-static pcre-static)
-source=(https://download.qemu.org/qemu-$pkgver.tar.xz{,.sig})
+source=(https://download.qemu.org/qemu-$pkgver.tar.xz{,.sig}
+        semtimedop-support.patch::"https://git.qemu.org/?p=qemu.git;a=patch;h=d8c08b1e6c7b1a5be1ec70e339437823a41b1946")
 sha512sums=('21ef0cbe107c468a40f0fa2635db2a40048c8790b629dfffca5cd62bb1b502ea8eb133bfc40df5ecf1489e2bffe87f6829aee041cb8a380ff04a8afa23b39fcf'
-            'SKIP')
+            'SKIP'
+            '23699f9d14ab8b9168a5564a42946934720521fae8517f04f2180b8853a6012fa0b3f43f759ad628022224f5331a18ccb3abab7c2ea945af103c930bfe9e36db')
 validpgpkeys=('CEACC9E15534EBABB82D3FA03353C9CEF108B584')
 
 case $CARCH in
@@ -27,6 +29,7 @@ prepare() {
   mkdir -p build-user-static
 
   cd qemu-${pkgver}
+  patch -p1 -i ../semtimedop-support.patch
   #sed -i 's/vte-2\.90/vte-2.91/g' configure
 }
 
