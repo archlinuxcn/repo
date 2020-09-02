@@ -22,6 +22,7 @@ build() {
 	cd "$srcdir/${_prjname}/makehuman"
 
 	# Build as detailed on readme
+  sed -i "s/extraargs=['--depth=1']/extraargs='--depth=1'/g" download_assets_git.py
 	python download_assets_git.py
 	python compile_models.py
 	python compile_proxies.py
