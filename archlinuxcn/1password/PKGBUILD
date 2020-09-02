@@ -2,12 +2,12 @@
 
 pkgname=1password
 pkgver=0.8.4.24947
-pkgrel=1
+pkgrel=2
 pkgdesc="The world's most-loved password manager - read-only development preview"
 arch=('x86_64')
 url='https://1password.com/'
 license=('unknown')
-depends=('fuse3' 'zlib' 'hicolor-icon-theme')
+depends=('fuse2' 'zlib' 'hicolor-icon-theme')
 options=(!strip)
 _appimage="${pkgname}-${pkgver}.AppImage"
 source=("${_appimage}::https://onepassword.s3.amazonaws.com/linux/appimage/1password-latest.AppImage")
