@@ -1,8 +1,8 @@
 # Maintainer: Arthur Zamarin <arthurzam@gmail.com>
 
 pkgname=openlibm-git
-pkgver=0.7.0.11.g878948d
-pkgrel=2
+pkgver=0.7.1
+pkgrel=1
 pkgdesc="standalone implementation of C mathematical functions"
 arch=(i686 x86_64 armv7h aarch64)
 url="https://github.com/JuliaLang/openlibm"
@@ -39,7 +39,7 @@ prepare() {
   git clean -fdx
 
   if [[ $CARCH = x86_64 ]] || [[ $CARCH = i686 ]]; then
-    find -iname '*.c' -exec sed -i 's/OLM_DLLEXPORT/OLM_DLLEXPORT __attribute__((flatten, target_clones("default,avx2,avx512f")))/' {} \;
+    find -iname '*.c' -not -name 'fenv.c' -exec sed -i -e 's/OLM_DLLEXPORT/OLM_DLLEXPORT __attribute__((flatten, target_clones("default,avx2,avx512f")))/' {} \;
   fi
 
   sed -i "s@/usr/local@/usr@" Make.inc
