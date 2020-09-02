@@ -1,7 +1,7 @@
-From 1521138c06565e34198f6e28307d3688dc34a0a1 Mon Sep 17 00:00:00 2001
+From 595f5f269c2c22c666c18ac27f8b02457f4837bc Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Thu, 13 Aug 2020 02:24:27 -0400
-Subject: [PATCH 7/9] Mark more functions as not safepoint in codegen.
+Subject: [PATCH 6/8] Mark more functions as not safepoint in codegen.
 
 ---
  src/ccall.cpp                 |  24 ++-
@@ -77,7 +77,7 @@ index 5d4a7a2e7a..47d8772f42 100644
      if (cc != CallingConv::C)
          ((CallInst*)ret)->setCallingConv(cc);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 8c2cec1f7c..9aa0353424 100644
+index e5dd67760d..9ec881712a 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -639,7 +639,7 @@ static const auto jlenter_func = new JuliaFunction{

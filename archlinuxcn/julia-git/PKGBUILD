@@ -45,14 +45,13 @@ makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
 options=('debug' '!strip' '!buildflags')
 _patches=(
   0001-Fix-source-file-paths.patch
-  0002-More-optimization-based-on-constant-array-size.patch
-  0003-Optimize-codegen-of-access-functions-for-SimpleVecto.patch
-  0004-Optimize-allocation-of-arrays.patch
-  0005-Add-ccall-special-cases-for-a-few-more-libc-function.patch
-  0006-Optimize-objectid-in-codegen.patch
-  0007-Mark-more-functions-as-not-safepoint-in-codegen.patch
-  0008-Improve-alias-analysis-on-julia.typeof-and-memcmp.patch
-  0009-Implement-store-to-load-forwarding-from-allocation-t.patch
+  0002-Optimize-codegen-of-access-functions-for-SimpleVecto.patch
+  0003-Optimize-allocation-of-arrays.patch
+  0004-Add-ccall-special-cases-for-a-few-more-libc-function.patch
+  0005-Optimize-objectid-in-codegen.patch
+  0006-Mark-more-functions-as-not-safepoint-in-codegen.patch
+  0007-Improve-alias-analysis-on-julia.typeof-and-memcmp.patch
+  0008-Implement-store-to-load-forwarding-from-allocation-t.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -63,15 +62,14 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '311d571b9ff8118644c3e0841651aa16'
-         '1471354152d49d5ceaf5eba9e8fcaeb7'
-         'cb45aae714d5f55192a23c6f15703ea3'
-         'bad99e9199633fc3776e89004a7f8704'
-         'c49e8dd92efcf1ccc36f443bbe82d51e'
-         '22e6573d2a5d63e79acac3683e6e0fc6'
-         '2b579c79f0b51131b4e0f6b8800ebab9'
-         '1f86ef2babcefdd3a9a479bbf8a71a81'
-         'e2d57330e5793cf1f96135a9cb71f4ba'
+         '8f508bb258255c388496b06867a90f53'
+         '8a04b120a65db705482cb2bf06f57615'
+         'a7c6db1d6d3ba16928ee56c0e52290dc'
+         '2ec14737ee5630ed0484a4c5a102e447'
+         '171927c76d503b636448f7df7b77f941'
+         '5220c536656976f016b6ce1179f73b90'
+         'd1c4a53e3c46dc232ba87ce2a17fe7a0'
+         '3b4aaaf750d630b973ea26daeabf1905'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          'bde100b283ea5b7aaf80613abec98a57'
          '6e7fcba300512df8ab8ab65d3e1eb847'
