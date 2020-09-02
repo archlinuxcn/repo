@@ -1,7 +1,7 @@
 # Maintainer: Gustavo Alvarez Lopez <sl1pkn07@gmail.com>
 
 pkgname=np2kai-git
-pkgver=993.09e3426
+pkgver=996.593f855
 pkgrel=1
 pkgdesc="Neko Project II Kai, a PC-9801 emulator. (GIT version)"
 arch=('x86_64')
@@ -24,23 +24,24 @@ pkgver() {
   printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
+prepare() {
+  mkdir -p np2kai/build
+}
+
 build() {
-  cd np2kai
-  [ -d "build" ] && rm -rf build
-  mkdir build
-  cd build
-  
-  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+  cd np2kai/build
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_X=ON \
+    -DBUILD_I286=ON \
+    -DBUILD_HAXM=ON
+
   make
 }
 
 package() {
-  cd np2kai/build
-  make DESTDIR=${pkgdir} install
+  make -C np2kai/build DESTDIR="${pkgdir}" install
 
-#  install -Dm644 np2kai/sdl2/opk/default_opendingux_np2kai_desktop "${pkgdir}/usr/share/applications/np2kai.desktop"
-#  install -Dm644 np2kai/sdl2/opk/default_opendingux_np21kai_desktop "${pkgdir}/usr/share/applications/np21kai.desktop"
-#  install -Dm644 np2kai/sdl2/opk/np2.png "${pkgdir}/usr/share/pixmaps/np2.png"
-
-  install -Dm644 ../LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 np2kai/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

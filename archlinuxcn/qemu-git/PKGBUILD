@@ -8,17 +8,17 @@ pkgbase=qemu-git
 _gitname=qemu
 pkgname=(qemu-git qemu-headless-git qemu-arch-extra-git qemu-headless-arch-extra-git qemu-block-{iscsi-git,rbd-git,gluster-git} qemu-guest-agent-git)
 pkgdesc="A generic and open source machine emulator and virtualizer. Git version."
-pkgver=v5.1.0.rc3.r0.ge1d322c405
+pkgver=5.1.0.r4.g1d806cef0e
 pkgrel=1
 epoch=11
 arch=(i686 x86_64)
 license=(GPL2 LGPL2.1)
 url="http://wiki.qemu.org/"
-_headlessdeps=(seabios gnutls libpng libaio numactl jemalloc libnfs
+_headlessdeps=(seabios gnutls libpng libaio numactl libnfs
                lzo snappy curl vde2 libcap-ng spice libcacard usbredir libslirp
                libssh zstd liburing)
 depends=(dtc virglrenderer sdl2 vte3 libpulse brltty "${_headlessdeps[@]}")
-makedepends=(git spice-protocol python ceph libiscsi glusterfs python-sphinx xfsprogs)
+makedepends=(spice-protocol python ceph libiscsi glusterfs python-sphinx xfsprogs)
 source=(git://git.qemu.org/qemu.git
         qemu-ga.service
         65-kvm.rules)
@@ -33,7 +33,7 @@ esac
 
 pkgver() {
   cd "${srcdir}/${_gitname}"
-  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g' | cut -c2-48
 }
 
 prepare() {
@@ -41,8 +41,6 @@ prepare() {
   mkdir build-{full,headless}
   mkdir -p extra-arch-{full,headless}/usr/{bin,share/qemu}
 
-  #cd "${srcdir}/${_gitname}"
-  #sed -i 's/vte-2\.90/vte-2.91/g' configure
 }
 
 build() {
@@ -62,12 +60,6 @@ build() {
 _build() (
   cd ${srcdir}/${_gitname}/build-$1
 
-  # qemu vs. make 4 == bad
-  export ARFLAGS=rv
-
-  # http://permalink.gmane.org/gmane.comp.emulators.qemu/238740
-  export CFLAGS+=" -fPIC"
-
   ../configure \
     --prefix=/usr \
     --sysconfdir=/etc \
@@ -77,8 +69,8 @@ _build() (
     --smbd=/usr/bin/smbd \
     --enable-modules \
     --enable-sdl \
-    --enable-jemalloc \
     --disable-werror \
+    --enable-vhost-user \
     --enable-slirp=system \
     --enable-xfsctl \
     "${@:2}"
@@ -111,7 +103,7 @@ _package() {
                'qemu-block-rbd-git: RBD block support'
                'qemu-block-gluster-git: glusterfs block support')
   install=qemu.install
-  options=(!strip)
+  options=(!strip !emptydirs)
 
   make -C ${srcdir}/${_gitname}/build-$1 DESTDIR="$pkgdir" install "${@:2}"
 
@@ -123,7 +115,6 @@ _package() {
   rm -r var
 
   cd usr/lib
-  tidy_strip
 
   # bridge_helper needs suid
   # https://bugs.archlinux.org/task/32565
@@ -144,7 +135,7 @@ _package() {
       ga) rm "$_bin"; continue ;;
 
       # tools
-      img|io|nbd) continue ;;
+      edid|img|io|keymap|nbd|pr-helper|storage-daemon) continue ;;
 
       # core emu
       system-${_corearch}) continue ;;
@@ -159,26 +150,32 @@ _package() {
 
    case $_blob in
       # provided by seabios package
-      bios.bin|acpi-dsdt.aml|bios-256k.bin|vgabios-cirrus.bin|vgabios-qxl.bin|\
+      bios.bin|bios-256k.bin|vgabios-cirrus.bin|vgabios-qxl.bin|\
       vgabios-stdvga.bin|vgabios-vmware.bin|vgabios-virtio.bin|vgabios-bochs-display.bin|\
       vgabios-ramfb.bin) rm "$_blob"; continue ;;
 
+      # provided by edk2-ovmf package
+      edk2-*) rm "$_blob"; continue ;;
    
-  # iPXE ROMs
+      # iPXE ROMs
       efi-*|pxe-*) continue ;;
 
       # core blobs
-      kvmvapic.bin|linuxboot*|multiboot.bin|sgabios.bin|vgabios*) continue ;;
+      bios-microvm.bin|kvmvapic.bin|linuxboot*|multiboot.bin|sgabios.bin|vgabios*) continue ;;
 
       # Trace events definitions
       trace-events*) continue ;;
 
-      # Logos
-      *.bmp|*.svg) continue ;;
-    esac
+     esac
 
     mv "$_blob" "$srcdir/$_gitname/extra-arch-$1/usr/share/qemu"
   done
+
+   # provided by edk2-ovmf package
+   rm -r firmware
+ 
+   cd ..
+   if [ "$1" = headless ]; then rm -r {applications,icons}; fi
 }
 
 package_qemu-arch-extra-git() {
@@ -203,7 +200,7 @@ package_qemu-headless-arch-extra-git() {
 
 package_qemu-block-iscsi-git() {
   pkgdesc="QEMU iSCSI block module. Git version."
-  depends=(glib2 libiscsi jemalloc)
+  depends=(glib2 libiscsi)
   conflicts=(qemu-block-iscsi)
   provides=(qemu-block-iscsi)
 
@@ -238,3 +235,5 @@ package_qemu-guest-agent-git() {
   install -Dm644 $srcdir/qemu-ga.service "$pkgdir/usr/lib/systemd/system/qemu-ga.service"
   install -Dm755 "$srcdir/$_gitname/scripts/qemu-guest-agent/fsfreeze-hook" "$pkgdir/etc/qemu/fsfreeze-hook"
 }
+
+# vim:set ts=2 sw=2 et:
