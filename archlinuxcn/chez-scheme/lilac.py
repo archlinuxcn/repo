@@ -17,7 +17,6 @@ def pre_build():
     return
 
 def post_build():
-    _G.aur_building_files.remove('build')
     aur_post_build()
 
 if __name__ == '__main__':
