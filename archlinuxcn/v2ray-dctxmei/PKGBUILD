@@ -4,7 +4,7 @@
 
 pkgname=v2ray-dctxmei
 _pkgname=v2ray
-pkgver=4.27.4
+pkgver=4.27.5
 pkgrel=1
 pkgdesc="A platform for building proxies to bypass network restrictions"
 arch=('x86_64')
@@ -19,17 +19,7 @@ source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/v2fly/v2ray-core/archi
         "v2ray.tmpfiles"
         "v2ray.service"
         "v2ray@.service")
-md5sums=('f6422846dd9d27582dae0f3b022a891d'
-         'dcedd0c251ed94eb3cec17f507b5347f'
-         'e495ffdee4f818e5375bb5b0fc7f89df'
-         'c91a0b174ccb31d0f7fd2a2e9dd14e65'
-         '7b0df1e8aef2de64a730e06b0a12acd4')
-sha1sums=('37bb0758906892549994faafae4c125a0062dc5b'
-          'ff5437de189273c6cd7b6e871cca7753b0d46b88'
-          'ed7a68294322c5d53f64aa671d840456aafb6b12'
-          'bb49a49ed667a2d1d55888dafa86109c03fcb842'
-          'b17ff4040658f437acb08f9cfd813ec66c027554')
-sha256sums=('4259e6b66b2c035054f4fe4416ba5109f3ac5f4bc82d42e6998e716f06ced531'
+sha256sums=('f289d8d85ab0851851a6e3c101226e77bed0052fd60f9185df8852b601e657f8'
             'caca9d88eff50ce7cd695b6fcab4d253344e92c966780f7de6d5c531d48ed80e'
             'ae55077bcf7140a7460f192adb03009b4573ec4420af84f4cbe9828cf8ca8e06'
             '385d1d65164bea96db4ad4975cd50128c72944334f3c12ddd6ac3b1f33f957e1'
@@ -52,6 +42,7 @@ check() {
 
 package() {
     cd "v2ray-core-$pkgver"/
+    install -d "${pkgdir}"/etc/v2ray/
     install -Dm 755 v2ray -t "${pkgdir}"/usr/bin/
     install -Dm 755 v2ctl -t "${pkgdir}"/usr/bin/
     install -Dm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/v2ray/
