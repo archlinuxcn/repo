@@ -4,7 +4,7 @@
 
 pkgname=geph-client
 pkgver=0.22.2
-pkgrel=4
+pkgrel=5
 pkgdesc='A command-line Geph client'
 arch=('x86_64')
 url="https://github.com/geph-official/geph2"
@@ -17,18 +17,10 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "geph-client.sysusers"
         "geph-client.service"
         "geph-client@.service")
-md5sums=('72e7e2ef7f830d889f4a4e41114ea8af'
-         'bbed6d787ce1a3effce8526980cfc9c0'
-         'a21a8d9b7f58976fc535915cc78bac0c'
-         'f9320a346f40b9f9da98aca263ec328d')
-sha1sums=('a3ede2f10b1a621225eed7ce479e64f661f7adc9'
-          '7ae4f2a4f2d175bb74d6ede2015f9d915f648712'
-          '6890658fe3b898331387192feb2a22d32e921872'
-          '47a9059879940d1ffb4ec045b3771df561fb96ba')
 sha256sums=('dd1ccd9c5aac06b46d57b9ba7aab00b6f42b3ec8fde85d00f09e2e474e7c1dc1'
             'cc30df4975a26a602eb3a1623c4a2eb3d70cb18364b6e08e86616a93df0235f4'
-            'c1e659db23ed9cdfeaa54f7c1051f7f50a48a7cdb138cbf60159d4cdd66cf11c'
-            '2e5ace2b7be8bb3da72e8061a34c54e84abb35a6ab9f9b2602f2018aab8f7e53')
+            'f994c3ec484adbb340089f85582c6239c58a475f3d853fd849c95d5359ecc67e'
+            '1b78dc6e079aa3a9edcd94ce16609d259221b2199ce8981549b8dea7cedd3926')
 
 build() {
     cd "geph2-${pkgver}/cmd/${pkgname}/"
