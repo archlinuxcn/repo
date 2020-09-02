@@ -6,5 +6,10 @@
 
 from lilaclib import *
 
+def pre_build():
+  # do a pkgrel bump due to archpkg triggered rebuild
+  update_pkgrel()
+  aur_pre_build()
+
 if __name__ == '__main__':
   single_main()
