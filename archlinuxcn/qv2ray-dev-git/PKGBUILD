@@ -3,7 +3,7 @@
 # Contributor: DuckSoft <realducksoft@gmail.com>
 pkgname=qv2ray-dev-git
 pkgver=2.6.3.5899.r2494.0ab039cc
-pkgrel=1
+pkgrel=2
 pkgdesc="Cross-platform V2ray Client written in Qt (Development Release)"
 arch=('x86_64')
 url='https://github.com/Qv2ray/Qv2ray'
@@ -57,8 +57,8 @@ build() {
         -DCMAKE_INSTALL_PREFIX=${pkgdir}/usr \
         -DQV2RAY_ZXING_PROVIDER="module" \
         -DQV2RAY_TRANSLATION_PATH="/usr/share/qv2ray/lang" \
-        -DQV2RAY_DEFAULT_VASSETS_PATH="/usr/lib/v2ray" \
-        -DQV2RAY_DEFAULT_VCORE_PATH="/usr/lib/v2ray/v2ray" \
+        -DQV2RAY_DEFAULT_VASSETS_PATH="/usr/share/v2ray" \
+        -DQV2RAY_DEFAULT_VCORE_PATH="/usr/bin/v2ray" \
         -DQV2RAY_DISABLE_AUTO_UPDATE=on \
         -DCMAKE_BUILD_TYPE=Release \
         -GNinja
