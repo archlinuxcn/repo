@@ -19,11 +19,11 @@ fi
 
 post_install() {    
     if [[ $_64 ]]; then
-        note "The launcher is called 'google-earth'." "1"
+        note "The launcher is called 'google-earth-pro'." "1"
         note "If experiencing graphical corruption:
            $ rm -r ~/.googleearth/Cache/" "2"
     else
-        note "The launcher is called 'google-earth'."
+        note "The launcher is called 'google-earth-pro'."
     fi
 }
 
