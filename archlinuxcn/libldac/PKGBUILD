@@ -2,8 +2,8 @@
 
 pkgname=libldac
 pkgver=2.0.2.3
-pkgrel=2
-pkgdesc="AOSP libldac dispatcher "
+pkgrel=3
+pkgdesc="LDAC encoder and LDAC Adaptive Bit Rate(ABR) libraries"
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
 url="https://github.com/EHfive/ldacBT"
 license=('Apache 2.0')
