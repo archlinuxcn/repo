@@ -1,7 +1,7 @@
-From 502a3f77a1585f92595ba442787b4ab76a926d63 Mon Sep 17 00:00:00 2001
+From dcedcdd75ab3500c594d2e34d62c7dd34e41645b Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 22 Aug 2020 10:19:15 -0400
-Subject: [PATCH 3/8] Optimize allocation of arrays
+Subject: [PATCH 2/7] Optimize allocation of arrays
 
 ---
  base/boot.jl    | 12 ++---------
@@ -11,10 +11,10 @@ Subject: [PATCH 3/8] Optimize allocation of arrays
  4 files changed, 115 insertions(+), 12 deletions(-)
 
 diff --git a/base/boot.jl b/base/boot.jl
-index 099a9e8639..06242103bd 100644
+index e653a82399..f23621a966 100644
 --- a/base/boot.jl
 +++ b/base/boot.jl
-@@ -431,19 +431,11 @@ const NTuple{N,T} = Tuple{Vararg{T,N}}
+@@ -430,19 +430,11 @@ const NTuple{N,T} = Tuple{Vararg{T,N}}
  struct UndefInitializer end
  const undef = UndefInitializer()
  # type and dimensionality specified, accepting dims as series of Ints
@@ -63,10 +63,10 @@ index b38b38188b..d3d27a4bdd 100644
  {
      jl_array_t *a = jl_alloc_array_1d(jl_array_uint8_type, len);
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index 4a9c38c167..b676126c90 100644
+index b2de56f195..b42d09696a 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
-@@ -1164,6 +1164,55 @@ static const std::string verify_ccall_sig(jl_value_t *&rt, jl_value_t *at,
+@@ -1224,6 +1224,55 @@ static const std::string verify_ccall_sig(jl_value_t *&rt, jl_value_t *at,
      return "";
  }
  
@@ -122,7 +122,7 @@ index 4a9c38c167..b676126c90 100644
  // Expr(:foreigncall, pointer, rettype, (argtypes...), nreq, cconv, args..., roots...)
  static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
  {
-@@ -1530,6 +1579,13 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+@@ -1606,6 +1655,13 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
          JL_GC_POP();
          return mark_or_box_ccall_result(ctx, load, retboxed, rt, unionall, static_rt);
      }
@@ -137,7 +137,7 @@ index 4a9c38c167..b676126c90 100644
               argv[1].typ == (jl_value_t*)jl_ulong_type) {
          assert(!isVa && !llvmcall && nccallargs == 2);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 1b45b163f0..e96bcd2667 100644
+index 532426fd7a..0f392813ba 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -439,6 +439,57 @@ static const auto jlsplatnew_func = new JuliaFunction{

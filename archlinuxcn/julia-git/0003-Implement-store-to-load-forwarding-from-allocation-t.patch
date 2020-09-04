@@ -1,7 +1,7 @@
-From cccb3257914b0a54cddcf048be04d9322915f627 Mon Sep 17 00:00:00 2001
+From 2ffb8639413ff635f10aebe92d88a8ac0e47ef8f Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 29 Aug 2020 23:56:05 -0400
-Subject: [PATCH 8/8] Implement store to load forwarding from allocation to
+Subject: [PATCH 3/7] Implement store to load forwarding from allocation to
  typeof
 
 Also remove unused and unmaintained (missing in `reset`) `hasmemset`.
@@ -10,10 +10,10 @@ Also remove unused and unmaintained (missing in `reset`) `hasmemset`.
  1 file changed, 36 insertions(+), 5 deletions(-)
 
 diff --git a/src/llvm-alloc-opt.cpp b/src/llvm-alloc-opt.cpp
-index f4e1373a72..5d3f3606a0 100644
+index 5ce8ef3c00..bd9f37aea8 100644
 --- a/src/llvm-alloc-opt.cpp
 +++ b/src/llvm-alloc-opt.cpp
-@@ -161,6 +161,7 @@ private:
+@@ -159,6 +159,7 @@ private:
      void removeAlloc(CallInst *orig_inst);
      void moveToStack(CallInst *orig_inst, size_t sz, bool has_ref);
      void splitOnStack(CallInst *orig_inst);
@@ -21,7 +21,7 @@ index f4e1373a72..5d3f3606a0 100644
  
      Function &F;
      AllocOpt &pass;
-@@ -262,8 +263,9 @@ private:
+@@ -260,8 +261,9 @@ private:
          bool refload:1;
          // There are objects fields being stored
          bool refstore:1;
@@ -33,7 +33,7 @@ index f4e1373a72..5d3f3606a0 100644
          // There are store/load/memset on this object with offset or size (or value for memset)
          // that cannot be statically computed.
          // This is a weaker form of `addrescaped` since `hasload` can still be used
-@@ -277,6 +279,7 @@ private:
+@@ -275,6 +277,7 @@ private:
              haspreserve = false;
              refload = false;
              refstore = false;
@@ -41,7 +41,7 @@ index f4e1373a72..5d3f3606a0 100644
              hasunknownmem = false;
              uses.clear();
              preserves.clear();
-@@ -329,8 +332,11 @@ void Optimizer::optimizeAll()
+@@ -327,8 +330,11 @@ void Optimizer::optimizeAll()
          auto orig = item.first;
          size_t sz = item.second;
          checkInst(orig);
@@ -54,7 +54,7 @@ index f4e1373a72..5d3f3606a0 100644
          if (!use_info.addrescaped && !use_info.hasload && (!use_info.haspreserve ||
                                                             !use_info.refstore)) {
              // No one took the address, no one reads anything and there's no meaningful
-@@ -360,6 +366,8 @@ void Optimizer::optimizeAll()
+@@ -358,6 +364,8 @@ void Optimizer::optimizeAll()
          if (has_ref) {
              if (use_info.memops.size() != 1 || has_refaggr ||
                  use_info.memops.begin()->second.size != sz) {
@@ -63,7 +63,7 @@ index f4e1373a72..5d3f3606a0 100644
                  continue;
              }
              // The object only has a single field that's a reference with only one kind of access.
-@@ -593,7 +601,6 @@ void Optimizer::checkInst(Instruction *I)
+@@ -572,7 +580,6 @@ void Optimizer::checkInst(Instruction *I)
                  if (auto id = II->getIntrinsicID()) {
                      if (id == Intrinsic::memset) {
                          assert(call->getNumArgOperands() == 4);
@@ -71,7 +71,7 @@ index f4e1373a72..5d3f3606a0 100644
                          if (cur.offset == UINT32_MAX ||
                              !isa<ConstantInt>(call->getArgOperand(2)) ||
                              !isa<ConstantInt>(call->getArgOperand(1)) ||
-@@ -620,7 +627,12 @@ void Optimizer::checkInst(Instruction *I)
+@@ -599,7 +606,12 @@ void Optimizer::checkInst(Instruction *I)
                  use_info.addrescaped = true;
                  return true;
              }
@@ -85,7 +85,7 @@ index f4e1373a72..5d3f3606a0 100644
                  return true;
              auto opno = use->getOperandNo();
              // Uses in `jl_roots` operand bundle are not counted as escaping, everything else is.
-@@ -1177,6 +1189,25 @@ void Optimizer::removeAlloc(CallInst *orig_inst)
+@@ -1145,6 +1157,25 @@ void Optimizer::removeAlloc(CallInst *orig_inst)
      }
  }
  

@@ -45,13 +45,12 @@ makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
 options=('debug' '!strip' '!buildflags')
 _patches=(
   0001-Fix-source-file-paths.patch
-  0002-Optimize-codegen-of-access-functions-for-SimpleVecto.patch
-  0003-Optimize-allocation-of-arrays.patch
-  0004-Add-ccall-special-cases-for-a-few-more-libc-function.patch
-  0005-Optimize-objectid-in-codegen.patch
-  0006-Mark-more-functions-as-not-safepoint-in-codegen.patch
-  0007-Improve-alias-analysis-on-julia.typeof-and-memcmp.patch
-  0008-Implement-store-to-load-forwarding-from-allocation-t.patch
+  0002-Optimize-allocation-of-arrays.patch
+  0003-Implement-store-to-load-forwarding-from-allocation-t.patch
+  0004-Enable-basic-AA-in-O2.patch
+  0005-Add-ccall-special-cases-for-a-few-more-libc-function.patch
+  0006-Optimize-objectid-in-codegen.patch
+  0007-Mark-more-functions-as-not-safepoint-in-codegen.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -62,14 +61,13 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '8f508bb258255c388496b06867a90f53'
-         '8a04b120a65db705482cb2bf06f57615'
-         'a7c6db1d6d3ba16928ee56c0e52290dc'
-         '2ec14737ee5630ed0484a4c5a102e447'
-         '171927c76d503b636448f7df7b77f941'
-         '5220c536656976f016b6ce1179f73b90'
-         'd1c4a53e3c46dc232ba87ce2a17fe7a0'
-         '3b4aaaf750d630b973ea26daeabf1905'
+         '17a65e742819d005d62947cd266599e4'
+         '43fa18970be18759df990f46b5127047'
+         '21fa2b4697df891ef53aa3241b43f351'
+         '8a88a3a0cbd841f36f13a555e5a6cc5c'
+         '2c8097749d8b7d1b56349759041f3ba8'
+         'ad23ef27b05a9167ecf933eec8ef1f88'
+         '5ce5b2b6f5f95a90da99a47d36269dce'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          'bde100b283ea5b7aaf80613abec98a57'
          '6e7fcba300512df8ab8ab65d3e1eb847'
