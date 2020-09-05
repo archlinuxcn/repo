@@ -1,4 +1,9 @@
 maintainers:
   - github: colinkeenan
-
-managed: false
+  - github: hubutui
+build_prefix: extra-x86_64
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+update_on:
+  - source: github
+    github: ytdl-org/youtube-dl
