@@ -1,8 +1,8 @@
 # Contributor: chrisl echo archlinux@c2h0r1i2s4t5o6p7h8e9r-l3u4n1a.com|sed 's/[0-9]//g'
 
 pkgname=cemu
-pkgver=1.20.2
-pkgrel=2
+pkgver=1.21.0
+pkgrel=0
 pkgdesc="Wii U emulator (via wine). Includes the Cemuhook plugin"
 arch=(x86_64)
 url="http://cemu.info/"
@@ -23,10 +23,11 @@ install=${pkgname}.install
 
 # Sometimes, they update the zip file without changing its name, which causes the md5sum to fail.
 # If you notice this, please mark this package as out-of-date in the aur website and I'll fix it.
+
 md5sums=('cb1dbf192ad3237a087260aa16758e95'
          '54d70005a8975812ab54fcfef53f7bde'
-         '7b5024b2ed4beb04059be0dd326a498c'
-         '75a5bba8833dc42acb59fd0e3273f4ec'
+         '64aaaa4348240658ad9b3b85ce7c203f'
+         '8c4ffe2c92f189753aeab9e6fc484332'
          'f5f0de02b9df62d5b6018c7a82e6d43b'
          '336a0bc0e44eede4ddf613a0eebf3bb9')
 
