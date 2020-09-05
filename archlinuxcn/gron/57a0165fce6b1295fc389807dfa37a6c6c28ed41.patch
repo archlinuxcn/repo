@@ -1,0 +1,43 @@
+From 57a0165fce6b1295fc389807dfa37a6c6c28ed41 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Mateusz=20Czapli=C5=84ski?= <czapkofan@gmail.com>
+Date: Fri, 7 Dec 2018 00:04:39 +0100
+Subject: [PATCH] add go.mod & go.sum for go modules support
+
+---
+ go.mod |  9 +++++++++
+ go.sum | 10 ++++++++++
+ 2 files changed, 19 insertions(+)
+ create mode 100644 go.mod
+ create mode 100644 go.sum
+
+diff --git a/go.mod b/go.mod
+new file mode 100644
+index 0000000..b8841ce
+--- /dev/null
++++ b/go.mod
+@@ -0,0 +1,9 @@
++module github.com/tomnomnom/gron
++
++require (
++	github.com/fatih/color v1.7.0
++	github.com/mattn/go-colorable v0.0.9
++	github.com/mattn/go-isatty v0.0.4 // indirect
++	github.com/nwidger/jsoncolor v0.0.0-20170215171346-75a6de4340e5
++	github.com/pkg/errors v0.8.0
++)
+diff --git a/go.sum b/go.sum
+new file mode 100644
+index 0000000..192ec59
+--- /dev/null
++++ b/go.sum
+@@ -0,0 +1,10 @@
++github.com/fatih/color v1.7.0 h1:DkWD4oS2D8LGGgTQ6IvwJJXSL5Vp2ffcQg58nFV38Ys=
++github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
++github.com/mattn/go-colorable v0.0.9 h1:UVL0vNpWh04HeJXV0KLcaT7r06gOH2l4OW6ddYRUIY4=
++github.com/mattn/go-colorable v0.0.9/go.mod h1:9vuHe8Xs5qXnSaW/c/ABM9alt+Vo+STaOChaDxuIBZU=
++github.com/mattn/go-isatty v0.0.4 h1:bnP0vzxcAdeI1zdubAl5PjU6zsERjGZb7raWodagDYs=
++github.com/mattn/go-isatty v0.0.4/go.mod h1:M+lRXTBqGeGNdLjl/ufCoiOlB5xdOkqRJdNxMWT7Zi4=
++github.com/nwidger/jsoncolor v0.0.0-20170215171346-75a6de4340e5 h1:d+C3xJdxZT7wNlxqEwbXn3R355CwAhYBL9raVNfSnK0=
++github.com/nwidger/jsoncolor v0.0.0-20170215171346-75a6de4340e5/go.mod h1:GYFm0zZgTNeoK1QxuIofRDasy2ibmaJZhZLzwsMXUF4=
++github.com/pkg/errors v0.8.0 h1:WdK/asTD0HN+q6hsWO3/vpuAkAr+tw6aNJNDFFf0+qw=
++github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
