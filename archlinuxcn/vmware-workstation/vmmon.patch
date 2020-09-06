@@ -21,14 +21,96 @@
  
  include $(SRCROOT)/Makefile.kernel
  
---- a/vmmon/linux/driver.c
-+++ b/vmmon/linux/driver.c
-@@ -38,6 +38,8 @@
- 
- #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 32)
- #error Linux kernels before 2.6.32 are not supported
-+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(5, 8, 0)
-+#error Linux kernels from 5.8.0 are not supported
- #endif
- 
+From 2da85cbe6d9c0bc5c7c2008748bd12e70ce0f310 Mon Sep 17 00:00:00 2001
+From: Jan Andres <jandres@gmx.net>
+Date: Fri, 4 Sep 2020 10:53:10 +0200
+Subject: [PATCH] Fix NX bit handling for Linux 5.8+
+
+Do not use vmap() to map the cross page, it needs to be executable and
+vmap() unconditionally sets the NX bit starting with 5.8.x.
+
+Emulate previous behavior of vmap() by using alloc_vm_area() and
+explicitly setting the PTE.
+---
+ vmmon-only/linux/hostif.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/vmmon-only/linux/hostif.c b/vmmon-only/linux/hostif.c
+index 3a48505..ec6856a 100644
+--- a/vmmon-only/linux/hostif.c
++++ b/vmmon-only/linux/hostif.c
+@@ -47,6 +47,7 @@
+ #include <asm/asm.h>
  #include <asm/io.h>
+ #include <asm/page.h>
++#include <asm/tlbflush.h>
+ #include <asm/uaccess.h>
+ #include <linux/capability.h>
+ #include <linux/kthread.h>
+@@ -634,7 +635,24 @@ HostIF_FastClockUnlock(int callerID) // IN
+ static void *
+ MapCrossPage(struct page *p)  // IN:
+ {
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 8, 0)
+    return vmap(&p, 1, VM_MAP, VM_PAGE_KERNEL_EXEC);
++#else
++   /* Starting with 5.8, vmap() always sets the NX bit, but the cross
++    * page needs to be executable. */
++   pte_t *ptes[1];
++   struct vm_struct *area = alloc_vm_area(1UL << PAGE_SHIFT, ptes);
++   if (area == NULL)
++      return NULL;
++
++   set_pte(ptes[0], mk_pte(p, VM_PAGE_KERNEL_EXEC));
++
++   preempt_disable();
++   __flush_tlb_all();
++   preempt_enable();
++
++   return area->addr;
++#endif
+ }
+ 
+ 
+From c71e377757f20dc78a99d42a127124bb2c49e865 Mon Sep 17 00:00:00 2001
+From: Jan Andres <jandres@gmx.net>
+Date: Fri, 4 Sep 2020 10:59:19 +0200
+Subject: [PATCH] Fix NULL pointer dereference in eventfd read call
+
+Starting with 5.8, the "read" function pointer in eventfd's
+file_operations is NULL, "read_iter" is available instead.
+
+Use kernel_read() and kernel_write() instead of directly calling the
+function pointers to handle this correctly.
+---
+ vmmon-only/linux/hostif.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/vmmon-only/linux/hostif.c b/vmmon-only/linux/hostif.c
+index ec6856a..4a7afb1 100644
+--- a/vmmon-only/linux/hostif.c
++++ b/vmmon-only/linux/hostif.c
+@@ -2609,7 +2609,11 @@ HostIF_SemaphoreWait(VMDriver *vm,   // IN:
+     * reading no bytes (EAGAIN - non blocking fd) or sizeof(uint64).
+     */
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 8, 0)
++   res = kernel_read(file, (char *) &value, sizeof value, &file->f_pos);
++#else
+    res = file->f_op->read(file, (char *) &value, sizeof value, &file->f_pos);
++#endif
+ 
+    if (res == sizeof value) {
+       res = MX_WAITNORMAL;
+@@ -2726,7 +2730,11 @@ HostIF_SemaphoreSignal(uint64 *args)  // IN:
+     * it be present.
+     */
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 8, 0)
++   res = kernel_write(file, (char *) &value, sizeof value, &file->f_pos);
++#else
+    res = file->f_op->write(file, (char *) &value, sizeof value, &file->f_pos);
++#endif
+ 
+    if (res == sizeof value) {
+       res = MX_WAITNORMAL;
