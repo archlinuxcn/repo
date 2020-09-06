@@ -1,14 +1,14 @@
 # Maintainer: DuckSoft <realducksoft at gmail dot com>
 pkgname=qv2ray-plugin-command-dev-git
 _pkgname=qv2ray-plugin-command
-pkgver=20200729.r8.4c8f96c
+pkgver=20200816.r12.912291b
 pkgrel=1
 pkgdesc="Qv2ray Plugin: Command (Development Build)"
 arch=('x86_64')
 url='https://github.com/Qv2ray/QvPlugin-Command'
 license=('GPL3')
 depends=('qt5-base')
-# _virtualdepends=('qv2ray-plugin-host=2')
+# _virtualdepends=('qv2ray-plugin-host=3')
 makedepends=('git' 'make' 'qt5-tools' 'which' 'gcc' 'cmake' 'ninja')
 provides=('qv2ray-plugin-command')
 conflicts=('qv2ray-plugin-command')
@@ -39,7 +39,7 @@ package() {
     depends+=('qv2ray-dev-git')
 
     cd "$srcdir"/"$_pkgname"/build
-    install -Dm644 libQvCommandPlugin.so "$pkgdir"/usr/share/qv2ray/plugins/libQvCommandPlugin.so
+    install -Dm644 libQvPlugin-Command.so "$pkgdir"/usr/share/qv2ray/plugins/libQvPlugin-Command.so
     # NOTE: This virtual dependency will be introduced after Qv2ray stablize its interface.
     #     depends+=(${_virtualdepends[@]})
 } 
