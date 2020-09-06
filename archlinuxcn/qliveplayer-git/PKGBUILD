@@ -1,8 +1,8 @@
-# Maintainer: Megumi_fox <megumifox@archlinuxcn.org>
+# Maintainer: Megumi_fox <i@megumifox.com>
 
 pkgname=qliveplayer-git
 pkgver=3.15.0.r2.g7691a05
-pkgrel=2
+pkgrel=1
 pkgdesc='Cute and useful Live Stream Player with danmaku support.'
 arch=('x86_64')
 url="https://github.com/IsoaSFlus/QLivePlayer"
@@ -19,6 +19,9 @@ depends=('mpv'
 makedepends=('cmake'
              'git'
              'extra-cmake-modules' )
+optdepends=('python-protobuf: for YouTube LiveChat support'
+            'streamlink: for foreign streaming service support')
+
 source=(
     "QLivePlayer::git+https://github.com/IsoaSFlus/QLivePlayer.git"
 )
