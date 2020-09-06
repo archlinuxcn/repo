@@ -7,7 +7,7 @@ pkgdesc="Qv2ray Plugin: ShadowsocksR (Development Build)"
 arch=('x86_64')
 url='https://github.com/Qv2ray/QvPlugin-SSR'
 license=('GPL3')
-# _virtualdepends=('qv2ray-plugin-host=2')
+# _virtualdepends=('qv2ray-plugin-host=3')
 depends=('qt5-base>5.11.0' 'openssl' 'libuv' 'libsodium')
 makedepends=('git' 'make' 'qt5-tools' 'which' 'gcc' 'cmake' 'ninja' 'libffi')
 provides=('qv2ray-plugin-ssr')
@@ -45,7 +45,7 @@ package() {
     depends+=('qv2ray')
 
     cd "$srcdir"/"$_pkgname"/build
-    install -Dm644 libQvSSRPlugin.so "$pkgdir"/usr/share/qv2ray/plugins/libQvSSRPlugin.so
+    install -Dm644 libQvPlugin-SSR.so "$pkgdir"/usr/share/qv2ray/plugins/libQvPlugin-SSR.so
     # NOTE: This virtual dependency will be introduced after Qv2ray stablize its interface.
     #     depends+=(${_virtualdepends[@]})
 } 
