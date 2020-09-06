@@ -7,7 +7,7 @@
 
 pkgname=megasync
 pkgver=4.3.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Easy automated syncing between your computers and your MEGA cloud drive"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/MEGAsync"
@@ -19,16 +19,20 @@ makedepends=('qt5-tools' 'swig' 'doxygen' 'lsb-release' 'git')
 _extname="_Linux"
 source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}${_extname}"
         "meganz-sdk::git+https://github.com/meganz/sdk.git"
-        "pdfium.patch")
+        "pdfium.patch"
+        "strsignal.patch")
 sha256sums=('SKIP'
             'SKIP'
-            '3a03d20165ebfb523644229bd650a2d0e51506c9555a1a9b28c61d07b8f28d7a')
+            '3a03d20165ebfb523644229bd650a2d0e51506c9555a1a9b28c61d07b8f28d7a'
+            '5b7553fdf68d6350b7e255553285e002dc643f04e8aae9d891d0f9802f6cf27a')
 
 prepare() {
     cd "MEGAsync"
     git submodule init
     git config submodule.src/MEGASync/mega.url "../meganz-sdk"
     git submodule update
+
+    patch -Np1 -i "../strsignal.patch"
 
     cd "src/MEGASync/mega"
     patch -Np1 -i "../../../../pdfium.patch"
