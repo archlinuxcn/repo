@@ -1,3 +1,0 @@
-update__rpmversion=$(curl -m10 https://vivaldi.com/download/ | grep 'x86_64.rpm' | sed 's/.*vivaldi-stable-\(.*\).x86_64.rpm.*/\1/')
-update_pkgver=${update__rpmversion/-*/}
-echo $update__rpmversion
