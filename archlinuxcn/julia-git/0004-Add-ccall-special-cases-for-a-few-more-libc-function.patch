@@ -1,7 +1,7 @@
-From f189b87f7919155cfb17df9b20b7ddd692d2ee07 Mon Sep 17 00:00:00 2001
+From 175fe6455c9c02ed747a99e0f1f3656c6a0256bf Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 21 Aug 2020 10:29:29 -0400
-Subject: [PATCH 5/7] Add ccall special cases for a few more libc functions
+Subject: [PATCH 4/9] Add ccall special cases for a few more libc functions
  that LLVM is aware of
 
 Includes ones that are used in base and ones that LLVM can most likely
@@ -20,10 +20,10 @@ and add comment to emphasize the difference with the similar concept in other pa
  3 files changed, 166 insertions(+), 9 deletions(-)
 
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index b42d09696a..19514a159d 100644
+index a3509b7587..e2600385b1 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
-@@ -1273,6 +1273,13 @@ static Value *emit_new_array(jl_codectx_t &ctx, jl_cgval_t *argv)
+@@ -1272,6 +1272,13 @@ static Value *emit_new_array(jl_codectx_t &ctx, jl_cgval_t *argv)
      return ctx.builder.CreateCall(prepare_call(jl_new_array_func), {typv, dimsv()});
  }
  
@@ -37,7 +37,7 @@ index b42d09696a..19514a159d 100644
  // Expr(:foreigncall, pointer, rettype, (argtypes...), nreq, cconv, args..., roots...)
  static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
  {
-@@ -1310,7 +1317,7 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+@@ -1309,7 +1316,7 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
      };
  
      auto _is_libjulia_func = [&] (uintptr_t ptr, const char *name) {
@@ -46,7 +46,7 @@ index b42d09696a..19514a159d 100644
              return true;
          return (!f_lib || f_lib == JL_DL_LIBNAME) && f_name && !strcmp(f_name, name);
      };
-@@ -1750,6 +1757,129 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+@@ -1749,6 +1756,129 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
          return rt == (jl_value_t*)jl_nothing_type ? ghostValue(jl_nothing_type) :
              mark_or_box_ccall_result(ctx, destp, retboxed, rt, unionall, static_rt);
      }
@@ -176,7 +176,7 @@ index b42d09696a..19514a159d 100644
      else if (is_libjulia_func(jl_object_id) && nccallargs == 1 &&
              rt == (jl_value_t*)jl_ulong_type) {
          jl_cgval_t val = argv[0];
-@@ -1944,11 +2074,10 @@ jl_cgval_t function_sig_t::emit_a_ccall(
+@@ -1943,11 +2073,10 @@ jl_cgval_t function_sig_t::emit_a_ccall(
          }
      }
  

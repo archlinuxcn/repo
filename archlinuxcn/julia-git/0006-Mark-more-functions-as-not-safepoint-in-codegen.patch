@@ -1,7 +1,7 @@
-From 4b2d3cd4ad7dc612a3f85f1c9ed60fe9531e53a7 Mon Sep 17 00:00:00 2001
+From 9ee9f7ddecafef142b307ba3e0edde736696ae71 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Thu, 13 Aug 2020 02:24:27 -0400
-Subject: [PATCH 7/7] Mark more functions as not safepoint in codegen.
+Subject: [PATCH 6/9] Mark more functions as not safepoint in codegen.
 
 ---
  src/ccall.cpp                 |  22 ++-
@@ -11,7 +11,7 @@ Subject: [PATCH 7/7] Mark more functions as not safepoint in codegen.
  4 files changed, 293 insertions(+), 10 deletions(-)
 
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index 3e6ea18601..91ba834735 100644
+index 0cb2c4e1a2..000bf9a8f8 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
 @@ -126,6 +126,7 @@ static Value *runtime_sym_lookup(
@@ -22,7 +22,7 @@ index 3e6ea18601..91ba834735 100644
      StoreInst *store = irbuilder.CreateAlignedStore(llvmf, llvmgv, Align(sizeof(void*)));
      store->setAtomic(AtomicOrdering::Release);
      irbuilder.CreateBr(ccall_bb);
-@@ -1476,13 +1477,15 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+@@ -1475,13 +1476,15 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
  #elif defined(_CPU_X86_64_) || defined(_CPU_X86_)  /* !__MIC__ */
          static auto pauseinst = InlineAsm::get(FunctionType::get(T_void, false), "pause",
                                                 "~{memory}", true);
@@ -40,7 +40,7 @@ index 3e6ea18601..91ba834735 100644
          JL_GC_POP();
          return ghostValue(jl_nothing_type);
  #else
-@@ -1500,7 +1503,8 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+@@ -1499,7 +1502,8 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
  #elif defined(_CPU_AARCH64_) || (defined(_CPU_ARM_) && __ARM_ARCH >= 7)
          static auto sevinst = InlineAsm::get(FunctionType::get(T_void, false), "sev",
                                               "~{memory}", true);
@@ -50,7 +50,7 @@ index 3e6ea18601..91ba834735 100644
          JL_GC_POP();
          return ghostValue(jl_nothing_type);
  #endif
-@@ -2109,11 +2113,21 @@ jl_cgval_t function_sig_t::emit_a_ccall(
+@@ -2108,11 +2112,21 @@ jl_cgval_t function_sig_t::emit_a_ccall(
          }
      }
  

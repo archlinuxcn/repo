@@ -46,11 +46,13 @@ options=('debug' '!strip' '!buildflags')
 _patches=(
   0001-Fix-source-file-paths.patch
   0002-Optimize-allocation-of-arrays.patch
-  0003-Implement-store-to-load-forwarding-from-allocation-t.patch
-  0004-Enable-basic-AA-in-O2.patch
-  0005-Add-ccall-special-cases-for-a-few-more-libc-function.patch
-  0006-Optimize-objectid-in-codegen.patch
-  0007-Mark-more-functions-as-not-safepoint-in-codegen.patch
+  0003-Enable-basic-AA-in-O2.patch
+  0004-Add-ccall-special-cases-for-a-few-more-libc-function.patch
+  0005-Optimize-objectid-in-codegen.patch
+  0006-Mark-more-functions-as-not-safepoint-in-codegen.patch
+  0007-Optimize-codegen-of-isa-Union-type.patch
+  0008-Fix-elimination-of-PiNode-for-Argument.patch
+  0009-Optimize-copy-of-Expr.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -61,13 +63,15 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '17a65e742819d005d62947cd266599e4'
-         '43fa18970be18759df990f46b5127047'
-         '21fa2b4697df891ef53aa3241b43f351'
-         '8a88a3a0cbd841f36f13a555e5a6cc5c'
-         '2c8097749d8b7d1b56349759041f3ba8'
-         'ad23ef27b05a9167ecf933eec8ef1f88'
-         '5ce5b2b6f5f95a90da99a47d36269dce'
+         '9e827f39229fb02793c28061eacc6d41'
+         '42af0bf3251f1ed33e3ec5596f06a814'
+         'fd7b24e34b7f963e9b9d9fb071d04b1b'
+         '614ee5ed83bbd9b5d19984787d233dca'
+         'd4d8d3e7e32cb9c816c6b99435eed48d'
+         'f2190a005b72d413628269201577fc43'
+         '82c342a942f75900a98c01c3778dba37'
+         '401a6b92b00e647f5adc772492c45aab'
+         '547cdc45d00979d3452e3a31d937a2c5'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          'bde100b283ea5b7aaf80613abec98a57'
          '6e7fcba300512df8ab8ab65d3e1eb847'

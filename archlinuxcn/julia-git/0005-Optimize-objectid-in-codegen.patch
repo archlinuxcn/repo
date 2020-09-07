@@ -1,7 +1,7 @@
-From b2dfa19931a4ad2d89a561df1fdd42faf96ec534 Mon Sep 17 00:00:00 2001
+From 830ee2568e230474415f2cd0b5e4d86a031d8e97 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 21 Aug 2020 13:15:02 -0400
-Subject: [PATCH 6/7] Optimize objectid in codegen
+Subject: [PATCH 5/9] Optimize objectid in codegen
 
 ---
  src/builtins.c            | 53 +++++++++++++++++++++++++++++++++------
@@ -99,10 +99,10 @@ index a0f28fb70c..1b0b966220 100644
  
  // eq hash table --------------------------------------------------------------
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index 19514a159d..3e6ea18601 100644
+index e2600385b1..0cb2c4e1a2 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
-@@ -1883,7 +1883,39 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+@@ -1882,7 +1882,39 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
      else if (is_libjulia_func(jl_object_id) && nccallargs == 1 &&
              rt == (jl_value_t*)jl_ulong_type) {
          jl_cgval_t val = argv[0];
@@ -143,7 +143,7 @@ index 19514a159d..3e6ea18601 100644
              // If the value is not boxed, try to compute the object id without
              // reboxing it.
              auto T_pint8_derived = PointerType::get(T_int8, AddressSpace::Derived);
-@@ -1896,10 +1928,13 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+@@ -1895,10 +1927,13 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
                          decay_derived(ctx, data_pointer(ctx, val)),
                          T_pint8_derived)
              };
