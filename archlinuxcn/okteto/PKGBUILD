@@ -1,6 +1,6 @@
 # Maintainer: simonsmh <simonsmh@gmail.com>
 pkgname=okteto
-pkgver=1.8.19
+pkgver=1.8.21
 pkgrel=1
 pkgdesc="Build better applications by developing and testing your code directly in Kubernetes."
 arch=(x86_64 aarch64)
@@ -9,7 +9,7 @@ license=(Apache)
 optdepends=(kubectl)
 makedepends=(go-pie)
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/okteto/okteto/archive/${pkgver}.tar.gz")
-sha256sums=('079010fe72bab6ed6b1f7cbe90d870234e27dc4e20269c658e4fd656251ecb4c')
+sha256sums=('10392ac98fe9d3ec18714b7fe1b1320a16f604820fc948f863a9c361d0804dd6')
 
 build() {
   cd "$pkgname-$pkgver"
