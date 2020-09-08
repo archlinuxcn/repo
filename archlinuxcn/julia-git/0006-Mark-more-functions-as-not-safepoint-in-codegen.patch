@@ -1,7 +1,7 @@
-From 9ee9f7ddecafef142b307ba3e0edde736696ae71 Mon Sep 17 00:00:00 2001
+From f648636bb814cef0c53c3eb089f2aade8ec1eaa8 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Thu, 13 Aug 2020 02:24:27 -0400
-Subject: [PATCH 6/9] Mark more functions as not safepoint in codegen.
+Subject: [PATCH 6/6] Mark more functions as not safepoint in codegen.
 
 ---
  src/ccall.cpp                 |  22 ++-
@@ -125,7 +125,7 @@ index ee11870874..8fc9b94924 100644
  static inline void llvm_dump(llvm::Value *v)
  {
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index 05ec7d24f8..971f722c5b 100644
+index ecf93e50ee..d6d816bec4 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
 @@ -39,6 +39,8 @@
@@ -409,7 +409,7 @@ index 05ec7d24f8..971f722c5b 100644
  struct BBState {
      // Uses in this BB
      // These do not get updated after local analysis
-@@ -1501,7 +1768,7 @@ State LateLowerGCFrame::LocalScan(Function &F) {
+@@ -1527,7 +1794,7 @@ State LateLowerGCFrame::LocalScan(Function &F) {
                      if (callee == pointer_from_objref_func || callee == gc_preserve_begin_func ||
                          callee == gc_preserve_end_func || callee == typeof_func ||
                          callee == ptls_getter ||
@@ -418,7 +418,7 @@ index 05ec7d24f8..971f722c5b 100644
                          continue;
                      }
                      if (callee->hasFnAttribute(Attribute::ReadNone) ||
-@@ -1514,7 +1781,8 @@ State LateLowerGCFrame::LocalScan(Function &F) {
+@@ -1540,7 +1807,8 @@ State LateLowerGCFrame::LocalScan(Function &F) {
                      }
                  }
                  if (isa<IntrinsicInst>(CI) || CI->hasFnAttr(Attribute::ArgMemOnly) ||

@@ -50,9 +50,6 @@ _patches=(
   0004-Add-ccall-special-cases-for-a-few-more-libc-function.patch
   0005-Optimize-objectid-in-codegen.patch
   0006-Mark-more-functions-as-not-safepoint-in-codegen.patch
-  0007-Optimize-codegen-of-isa-Union-type.patch
-  0008-Fix-elimination-of-PiNode-for-Argument.patch
-  0009-Optimize-copy-of-Expr.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -63,15 +60,12 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '9e827f39229fb02793c28061eacc6d41'
-         '42af0bf3251f1ed33e3ec5596f06a814'
-         'fd7b24e34b7f963e9b9d9fb071d04b1b'
-         '614ee5ed83bbd9b5d19984787d233dca'
-         'd4d8d3e7e32cb9c816c6b99435eed48d'
-         'f2190a005b72d413628269201577fc43'
-         '82c342a942f75900a98c01c3778dba37'
-         '401a6b92b00e647f5adc772492c45aab'
-         '547cdc45d00979d3452e3a31d937a2c5'
+         '514e14736322a3474024111970d8438f'
+         '1c129cb2d39c194b7b6774d00d6e404b'
+         '69b8e90715979a96441174a39aec9785'
+         '0b9e6b1cf9f4c0c82d8f77463a3dd996'
+         'e3ed39d760b410c590e3a6004c7980a8'
+         '36f27a6175377102da5c30738fcb5766'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          'bde100b283ea5b7aaf80613abec98a57'
          '6e7fcba300512df8ab8ab65d3e1eb847'
