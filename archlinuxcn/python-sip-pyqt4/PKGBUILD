@@ -7,14 +7,14 @@
 
 pkgbase='python-sip-pyqt4'
 pkgname=('python-sip-pyqt4' 'python2-sip-pyqt4')
-pkgver=4.19.22
+pkgver=4.19.24
 pkgrel=1
 arch=('x86_64')
 url='https://www.riverbankcomputing.com/software/sip/intro'
 license=('custom:"sip"')
 makedepends=('python' 'python2')
 source=("https://www.riverbankcomputing.com/static/Downloads/sip/$pkgver/sip-$pkgver.tar.gz")
-sha256sums=('e1b768824ec1a2ee38dd536b6b6b3d06de27b00a2f5f55470d1b512306e3be45')
+sha256sums=('edcd3790bb01938191eef0f6117de0bf56d1136626c0ddb678f3a558d62e41e5')
 
 prepare() {
   mkdir -p build-pyqt4{,-py2}
