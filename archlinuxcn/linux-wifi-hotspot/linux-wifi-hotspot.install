@@ -1,0 +1,11 @@
+post_install() {
+  # Execute create_ap without asking for a password
+  echo "ALL ALL=NOPASSWD: /usr/bin/create_ap" | (sudo su -c 'EDITOR="tee -a" visudo -f /etc/sudoers.d/create_ap')
+}
+
+post_remove() {
+  sudo rm /etc/sudoers.d/create_ap
+
+  echo "Optionally remove config file:"
+  echo "sudo rm /etc/wh.config"
+}
