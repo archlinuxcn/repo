@@ -11,10 +11,6 @@ build_prefix = 'extra-x86_64'
 def pre_build():
   aur_pre_build()
   add_into_array('conflicts', ['mit-scheme'])
-  try:
-    os.unlink('build')
-  except FileNotFoundError:
-    return
 
 def post_build():
     aur_post_build()
