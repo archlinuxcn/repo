@@ -4,11 +4,9 @@
 # Contributor: Lazaros Koromilas <koromilaz@gmail.com>
 
 pkgname=saxon-he
-_major=9.9
-_minor=1.6
-pkgver=${_major}.${_minor}
+pkgver=10.2
 _pkgver=${pkgver//./-}
-pkgrel=2
+pkgrel=1
 pkgdesc="XSLT 2.0 / XPath 2.0 and 3.0 / XQuery 1.0 and 3.0 processor for Java - Home Edition"
 url="http://saxon.sourceforge.net"
 license=('MPL')
@@ -19,16 +17,16 @@ conflicts=('java-saxon')
 source=("https://downloads.sourceforge.net/saxon/SaxonHE${_pkgver}J.zip"
         "saxon-xslt.sh"
         "saxon-xquery.sh")
-sha256sums=('e94d8bbbb9a3a3dc9518c1923c436b2eb5ddc0e74bfd0bec1a07ac63e0e31b92'
+sha256sums=('1cdb9edc158159e940937035464ad4e188bc342e2eda8a1c72e2d02d170d3aa1'
             '355cf52e3e3b35e4db5dd098fbd57335d20ed10ae070c57a6de214859d04719f'
             'dd42ecae1ef7ff371642148b4ed49fadee0d5b2333c14e138edaae7269ab2199')
 
 package() {
-    cd "${srcdir}"
-    install -Dm644 saxon9he.jar "${pkgdir}/usr/share/java/saxon/saxon9he.jar"
-    install -Dm755 saxon-xslt.sh "${pkgdir}/usr/bin/saxon-xslt"
-    install -Dm755 saxon-xquery.sh "${pkgdir}/usr/bin/saxon-xquery"
+    cd "$srcdir"
+    install -Dm644 $pkgname-$pkgver.jar "$pkgdir/usr/share/java/saxon/$pkgname-$pkgver.jar"
+    install -Dm755 saxon-xslt.sh "$pkgdir/usr/bin/saxon-xslt"
+    install -Dm755 saxon-xquery.sh "$pkgdir/usr/bin/saxon-xquery"
     # link with simpler name for compat with others
-    ln -s saxon9he.jar "${pkgdir}/usr/share/java/saxon/saxon.jar"
-    ln -s saxon-xslt "${pkgdir}/usr/bin/saxon"
+    ln -s $pkgname-$pkgver.jar "$pkgdir/usr/share/java/saxon/saxon.jar"
+    ln -s saxon-xslt "$pkgdir/usr/bin/saxon"
 }
