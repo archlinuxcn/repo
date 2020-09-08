@@ -2,7 +2,7 @@
 
 pkgname=ariang-allinone
 pkgver=1.1.7
-pkgrel=1
+pkgrel=2
 pkgdesc="A modern web frontend making aria2 easier to use (all-in-one version)"
 arch=('any')
 url="https://github.com/mayswind/AriaNg"
@@ -29,6 +29,8 @@ package() {
     install -Dm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/"${pkgname}"/
     install -Dm 644 dist/index.html -t "${pkgdir}"/usr/share/"${pkgname}"/
     install -Dm 644 src/favicon.png "${pkgdir}"/usr/share/icons/hicolor/32x32/apps/"${pkgname}.png"
+    install -Dm 644 src/touchicon.png "${pkgdir}"/usr/share/icons/hicolor/114x114/apps/"${pkgname}.png"
+    install -Dm 644 src/tileicon.png "${pkgdir}"/usr/share/icons/hicolor/144x144/apps/"${pkgname}.png"
     install -Dm 644 "${srcdir}"/"${pkgname}.desktop" -t "${pkgdir}"/usr/share/applications/
     install -Dm 755 "${srcdir}"/"${pkgname}.sh" "${pkgdir}"/usr/bin/"${pkgname}"
 }
