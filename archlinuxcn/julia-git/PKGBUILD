@@ -50,6 +50,7 @@ _patches=(
   0004-Add-ccall-special-cases-for-a-few-more-libc-function.patch
   0005-Optimize-objectid-in-codegen.patch
   0006-Mark-more-functions-as-not-safepoint-in-codegen.patch
+  0007-More-conservative-CPU-name-based-feature-detection.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -60,12 +61,13 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '514e14736322a3474024111970d8438f'
-         '1c129cb2d39c194b7b6774d00d6e404b'
-         '69b8e90715979a96441174a39aec9785'
-         '0b9e6b1cf9f4c0c82d8f77463a3dd996'
-         'e3ed39d760b410c590e3a6004c7980a8'
-         '36f27a6175377102da5c30738fcb5766'
+         '981bfa86071dc6ba1c2a918c78f5813c'
+         '5edd526cc59c58e9416ed6e4806cdc18'
+         'fa91be840f629977b0da1361a2519057'
+         '42a1b81d19c00f7358041e4fe4d85150'
+         '2996dd79756d303de06bc8529ef0aaa6'
+         '05c83092254543d347b2cabc4da4cde2'
+         'c941b6862d81f59494da74d811b4b48d'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          'bde100b283ea5b7aaf80613abec98a57'
          '6e7fcba300512df8ab8ab65d3e1eb847'
