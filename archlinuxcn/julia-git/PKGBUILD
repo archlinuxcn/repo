@@ -51,6 +51,7 @@ _patches=(
   0005-Optimize-objectid-in-codegen.patch
   0006-Mark-more-functions-as-not-safepoint-in-codegen.patch
   0007-More-conservative-CPU-name-based-feature-detection.patch
+  0008-Workaround-compiler-error-on-GCC10-on-AArch64.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -61,13 +62,14 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '981bfa86071dc6ba1c2a918c78f5813c'
-         '5edd526cc59c58e9416ed6e4806cdc18'
-         'fa91be840f629977b0da1361a2519057'
-         '42a1b81d19c00f7358041e4fe4d85150'
-         '2996dd79756d303de06bc8529ef0aaa6'
-         '05c83092254543d347b2cabc4da4cde2'
-         'c941b6862d81f59494da74d811b4b48d'
+         '2f1c2e68d58306d8a6ceffe8a7e077a5'
+         'c9daf7984d876952f87f2a5eb6973f7c'
+         '1d2efdb6fff93e33237e6395470588c8'
+         '78a70bdba9130af27e3d6fc7332a4436'
+         '6a2de7c06601d5947ac0935988b0ed1a'
+         'e7df65ae9a0c7ec36c9faf6c8a6899ce'
+         'aec81754768b0269c1d7bbc765a9e3ef'
+         'b627dad3ee5a2a44a43a156f13763d1b'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          'bde100b283ea5b7aaf80613abec98a57'
          '6e7fcba300512df8ab8ab65d3e1eb847'
