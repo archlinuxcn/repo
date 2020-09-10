@@ -6,7 +6,7 @@
 pkgname=saxon-he
 pkgver=10.2
 _pkgver=${pkgver//./-}
-pkgrel=1
+pkgrel=2
 pkgdesc="XSLT 2.0 / XPath 2.0 and 3.0 / XQuery 1.0 and 3.0 processor for Java - Home Edition"
 url="http://saxon.sourceforge.net"
 license=('MPL')
@@ -18,8 +18,8 @@ source=("https://downloads.sourceforge.net/saxon/SaxonHE${_pkgver}J.zip"
         "saxon-xslt.sh"
         "saxon-xquery.sh")
 sha256sums=('1cdb9edc158159e940937035464ad4e188bc342e2eda8a1c72e2d02d170d3aa1'
-            '355cf52e3e3b35e4db5dd098fbd57335d20ed10ae070c57a6de214859d04719f'
-            'dd42ecae1ef7ff371642148b4ed49fadee0d5b2333c14e138edaae7269ab2199')
+            '53519c8a4ea91ea4c6fe4b4799ccd630f6c4023e8611f3e65d1fee2672bddcbe'
+            'f7bf71426e30e6d528cdab885fd27191b9697163e3e447c8644a81de193b6311')
 
 package() {
     cd "$srcdir"
