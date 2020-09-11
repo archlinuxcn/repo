@@ -1,0 +1,27 @@
+From 7bcbe6506f676e7df4e037b617442ab8c2888b01 Mon Sep 17 00:00:00 2001
+From: Chris Mayo <aklhfex@gmail.com>
+Date: Sun, 3 Jul 2016 17:52:24 +0100
+Subject: [PATCH 3/3] provide script for user to clone parts library
+
+---
+ tools/user_parts_clone.sh | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+ create mode 100755 tools/user_parts_clone.sh
+
+diff --git a/tools/user_parts_clone.sh b/tools/user_parts_clone.sh
+new file mode 100755
+index 00000000..ce171b86
+--- /dev/null
++++ b/tools/user_parts_clone.sh
+@@ -0,0 +1,8 @@
++#!/bin/sh
++#
++# enable user to override installed parts library with GitHub clone
++
++REPODIR="${HOME}/.local/share/fritzing/fritzing-parts"
++mkdir -p "${REPODIR}"
++git clone --branch master --single-branch https://github.com/fritzing/fritzing-parts.git "${REPODIR}" || exit 1
++Fritzing -db "${REPODIR}/parts.db"
+-- 
+2.24.0
+

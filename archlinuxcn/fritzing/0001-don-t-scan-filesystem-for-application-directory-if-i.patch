@@ -1,0 +1,103 @@
+From 3724a283c88a5ed964ec6f23beddbb273ddbdda0 Mon Sep 17 00:00:00 2001
+From: Chris Mayo <aklhfex@gmail.com>
+Date: Sun, 3 Jul 2016 17:52:24 +0100
+Subject: [PATCH 1/3] don't scan filesystem for application directory if
+ installed
+
+Look for application files in the order:
+~/.local/share/fritzing - user override
+/usr/local/share/fritzing - adminstrator override
+PKGDATADIR - default installation (PKGDATADIR could be
+  /usr/local/share/fritzing)
+
+Use the definition of PKGDATADIR as an indicator that Fritzing will be
+installed.
+---
+ src/utils/folderutils.cpp             | 17 ++++++++++-------
+ tools/deploy_fritzing_mac.sh          |  3 +++
+ tools/linux_release_script/release.sh |  3 +++
+ 3 files changed, 16 insertions(+), 7 deletions(-)
+
+diff --git a/src/utils/folderutils.cpp b/src/utils/folderutils.cpp
+index 6afce9a2..567b5cf4 100644
+--- a/src/utils/folderutils.cpp
++++ b/src/utils/folderutils.cpp
+@@ -74,6 +74,7 @@ QDir  FolderUtils::getApplicationSubFolder(QString search) {
+ 	path += "/" + search;
+ 	//DebugDialog::debug(QString("path %1").arg(path) );
+ 	QDir dir(path);
++#ifndef PKGDATADIR
+ 	while (!dir.exists()) {
+ 		// if we're running from the debug or release folder, try go up one to find things
+ 		dir.cdUp();
+@@ -85,7 +86,7 @@ QDir  FolderUtils::getApplicationSubFolder(QString search) {
+ 
+ 		dir.setPath(dir.absolutePath() + "/" + search);
+ 	}
+-
++#endif
+ 	return dir;
+ }
+ 
+@@ -215,8 +216,15 @@ const QString FolderUtils::applicationDirPath() {
+ #ifdef Q_OS_WIN
+ 		m_appPath = QCoreApplication::applicationDirPath();
+ #else
+-		// look in standard Fritzing location (applicationDirPath and parent folders) then in standard linux locations
+ 		QStringList candidates;
++		// Look in standard Linux user and local administrator locations
++		candidates.append(QDir::homePath() + "/.local/share/fritzing");
++		candidates.append("/usr/local/share/fritzing");
++#ifdef PKGDATADIR
++		// look in installed location
++		candidates.append(QLatin1String(PKGDATADIR));
++#else
++		// look in standard Fritzing location (applicationDirPath and parent folders)
+ 		candidates.append(QCoreApplication::applicationDirPath());
+ 		QDir dir(QCoreApplication::applicationDirPath());
+ 		if (dir.cdUp()) {
+@@ -229,13 +237,8 @@ const QString FolderUtils::applicationDirPath() {
+ 			}
+ 		}
+ 
+-#ifdef PKGDATADIR
+-		candidates.append(QLatin1String(PKGDATADIR));
+-#else
+ 		candidates.append("/usr/share/fritzing");
+-		candidates.append("/usr/local/share/fritzing");
+ #endif
+-		candidates.append(QDir::homePath() + "/.local/share/fritzing");
+ 		foreach (QString candidate, candidates) {
+ 			//DebugDialog::debug(QString("candidate:%1").arg(candidate));
+ 			QDir dir(candidate);
+diff --git a/tools/deploy_fritzing_mac.sh b/tools/deploy_fritzing_mac.sh
+index ead7e8e4..5eb2de8e 100755
+--- a/tools/deploy_fritzing_mac.sh
++++ b/tools/deploy_fritzing_mac.sh
+@@ -19,6 +19,9 @@ builddir=$workingdir/../release64  # this is pre-defined by Qt
+ echo ">> build directory"
+ echo "$builddir"
+ 
++# not building for installation into filesystem
++sed -i 's:PKGDATADIR=\\\\\\"\$\$PKGDATADIR\\\\\\"::' phoenix.pro || exit 1
++
+ echo ">> building fritzing from working directory"
+ $QTBIN/qmake -o Makefile phoenix.pro
+ make "-j$(sysctl -n machdep.cpu.thread_count)" release  # release is the type of build
+diff --git a/tools/linux_release_script/release.sh b/tools/linux_release_script/release.sh
+index a383c8d9..8c40c5aa 100755
+--- a/tools/linux_release_script/release.sh
++++ b/tools/linux_release_script/release.sh
+@@ -54,6 +54,9 @@ else
+   arch='i386'
+ fi
+ 
++# not building for installation into filesystem
++sed -i 's:PKGDATADIR=\\\\\\"\$\$PKGDATADIR\\\\\\"::' phoenix.pro || exit 1
++
+ quazip='QUAZIP_LIB'
+ echo "using src/lib/quazip"
+ 
+-- 
+2.24.0
+

@@ -1,0 +1,67 @@
+From f037cc1a6f12912660ca5df347cdfa2256f73a9d Mon Sep 17 00:00:00 2001
+From: Chris Mayo <aklhfex@gmail.com>
+Date: Sun, 3 Jul 2016 17:52:24 +0100
+Subject: [PATCH 2/3] allow user and administrator to install parts library
+
+Fritzing may be installed in a location that is read-only but the user
+may want to control their own parts library e.g. to keep up-to-date
+using the new Git facility.
+
+Look for parts directory in the order:
+~/.local/share/fritzing - user override
+/usr/local/share/fritzing - adminstrator override
+<m_appPath> - the location of translations and help directories, could
+be either of the above but as installed will default to PKGDATADIR, may
+be set at runtime with -f
+
+Default to <m_appPath>/parts
+
+Use the definition of PKGDATADIR as an indicator that Fritzing will be
+installed.
+---
+ src/utils/folderutils.cpp | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/src/utils/folderutils.cpp b/src/utils/folderutils.cpp
+index 567b5cf4..dcf43913 100644
+--- a/src/utils/folderutils.cpp
++++ b/src/utils/folderutils.cpp
+@@ -118,6 +118,23 @@ QDir FolderUtils::getAppPartsSubFolder(QString search) {
+ 
+ QDir FolderUtils::getAppPartsSubFolder2(QString search) {
+ 	if (m_partsPath.isEmpty()) {
++#ifdef PKGDATADIR
++		QStringList candidates;
++		candidates.append(QDir::homePath() + "/.local/share/fritzing");
++		candidates.append("/usr/local/share/fritzing");
++		candidates.append(m_appPath);
++		foreach (const QString &candidate, candidates) {
++			QList<QDir> dirList;
++			dirList.append(QDir(candidate + "/fritzing-parts"));
++			dirList.append(QDir(candidate + "/parts"));
++			foreach (const QDir &dir, dirList) {
++				m_partsPath = dir.absolutePath();
++				if (dir.exists()) {
++					goto setpath;
++				}
++			}
++		}
++#else
+ 		QDir dir = getApplicationSubFolder("fritzing-parts");
+ 		if (dir.exists()) {
+ 			m_partsPath = dir.absolutePath();
+@@ -128,9 +145,10 @@ QDir FolderUtils::getAppPartsSubFolder2(QString search) {
+ 				m_partsPath = dir.absolutePath();
+ 			}
+ 		}
++#endif
+ 	}
+ 
+-
++setpath:
+ 	QString path = search.isEmpty() ? m_partsPath : m_partsPath + "/" + search;
+ 	//DebugDialog::debug(QString("path %1").arg(path) );
+ 	QDir dir(path);
+-- 
+2.24.0
+
