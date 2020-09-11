@@ -1,31 +1,30 @@
-diff -aur conan-1.28.0-pristine/conans/requirements_server.txt conan-1.28.0-new/conans/requirements_server.txt
---- conan-1.28.0-pristine/conans/requirements_server.txt	2020-07-30 11:30:59.000000000 +0200
-+++ conan-1.28.0-new/conans/requirements_server.txt	2020-08-03 20:20:41.573333330 +0200
+diff -aur conan-1.29.0-pristine/conans/requirements_server.txt conan-1.29.0-new/conans/requirements_server.txt
+--- conan-1.29.0-pristine/conans/requirements_server.txt	2020-09-11 14:16:09.861691758 +0200
++++ conan-1.29.0-new/conans/requirements_server.txt	2020-09-11 14:17:47.101970124 +0200
 @@ -1,3 +1,3 @@
  # Server
 -bottle>=0.12.8, < 0.13
 +bottle>=0.12.8
  pluginbase>=0.5
-diff -aur conan-1.28.0-pristine/conans/requirements.txt conan-1.28.0-new/conans/requirements.txt
---- conan-1.28.0-pristine/conans/requirements.txt	2020-07-30 11:30:59.000000000 +0200
-+++ conan-1.28.0-new/conans/requirements.txt	2020-08-03 20:20:09.506666663 +0200
+diff -aur conan-1.29.0-pristine/conans/requirements.txt conan-1.29.0-new/conans/requirements.txt
+--- conan-1.29.0-pristine/conans/requirements.txt	2020-09-11 14:16:09.861691758 +0200
++++ conan-1.29.0-new/conans/requirements.txt	2020-09-11 14:17:37.471942297 +0200
 @@ -1,19 +1,19 @@
 -PyJWT>=1.4.0, <2.0.0
 -requests>=2.8.1, <3.0.0
--urllib3!=1.25.4,!=1.25.5
++PyJWT>=1.4.0
++requests>=2.8.1
+ urllib3!=1.25.4,!=1.25.5
 -colorama>=0.3.3, <0.5.0
 -PyYAML>=3.11, <6.0
 -patch-ng>=1.17.4, <1.18
-+PyJWT>=1.4.0
-+requests>=2.8.1
-+urllib3>=1.25.6
 +colorama>=0.3.3
 +PyYAML>=3.11
 +patch-ng>=1.17.4
  fasteners>=0.14.1
--six>=1.10.0,<=1.14.0
+-six>=1.10.0,<=1.15.0
 -node-semver==0.6.1
--distro>=1.0.2, <1.2.0
+-distro>=1.0.2, <=1.5.0
 -future>=0.16.0, <0.19.0
 -pygments>=2.0, <3.0
 -deprecation>=2.0, <2.1
