@@ -2,7 +2,7 @@
 # Co-maintainer: Tyler Langlois <ty |at| tjll |dot| net>
 
 pkgname=nomad
-pkgver=0.12.1
+pkgver=0.12.4
 pkgrel=1
 pkgdesc="A Distributed, Highly Available, Datacenter-Aware Scheduler"
 arch=('x86_64' 'aarch64' 'armv7h' 'armv7l')
@@ -17,7 +17,7 @@ optdepends=('docker: enables docker driver'
 backup=(etc/nomad/{server,client}.conf)
 source=(https://github.com/hashicorp/nomad/archive/v$pkgver/$pkgname-$pkgver.tar.gz
         nomad-{server,client}.{service,conf})
-sha256sums=('02f7b2319d5ab7bab644f51de1c248e534498aefe50bf26291a888a99d993359'
+sha256sums=('c22edb15cfe5e8a6cd948c0d465676156e94e3f55dd298af0626e27a6930ccde'
             '52b0a22c3c0c72c642a8728cb48bd8797f4f6a12990e11bbb2342edcc2a9a206'
             'da475bc4aa3b1493eb62f09e7f99dcc171e8ce6d74df3da30514cfdfe72a5714'
             '4c8fb7c18c67ca20e3ee07f25cf2f0c82b66c4c173275ae8d643c91cce3c0ceb'
