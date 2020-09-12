@@ -1,8 +1,8 @@
-maintainers: []
+maintainers: 
+  - github: ykelvis
+
 build_prefix: extra-x86_64
 
-post_build: update_aur_repo
-
 update_on:
-  - source: manual
-    manual: 1
+  - source: aur
+    aur: gconf
