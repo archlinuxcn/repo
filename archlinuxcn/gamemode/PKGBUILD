@@ -1,7 +1,7 @@
 # Maintainer: Ysblokje <ysblokje at gmail dot com>
 pkgname=('gamemode')
-pkgver=1.5.1
-pkgrel=2
+pkgver=1.6
+pkgrel=1
 pkgdesc="A daemon/lib combo for Linux that allows games to request a set of optimisations be temporarily applied to the host OS"
 arch=('x86_64')
 url="https://github.com/FeralInteractive/gamemode.git"
@@ -11,7 +11,7 @@ depends=('polkit')
 makedepends=('meson' 'ninja' 'pkg-config')
 source=("https://github.com/FeralInteractive/gamemode/releases/download/$pkgver/$pkgname-$pkgver.tar.xz"
 )
-sha256sums=('3a5ea5aafe1b7ec69ac2c054198e9aa6b6fd4dd8ee7a8bcfb71d0b0a40313101'
+sha256sums=('4fec5a0900e8f559b37cf1711ca7dcea7e1cebfe1237ce314001f65c1e346a5d'
 )
 
 build() {
