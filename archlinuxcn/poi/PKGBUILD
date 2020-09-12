@@ -3,13 +3,13 @@
 pkgname=poi
 _pkgname=poi
 pkgver=10.6.0.0.g1f164297
-pkgrel=1
+pkgrel=2
 pkgdesc="Scalable KanColle browser and tool"
 arch=('any')
 url="https://github.com/poooi/poi/"
 license=('MIT')
-depends=('electron' 'nodejs')
-makedepends=('git' 'nodejs' 'imagemagick' 'zlib' 'unzip' 'gulp' 'npm' 'python2')
+depends=('nodejs')
+makedepends=('git' 'nodejs' 'imagemagick' 'zlib' 'unzip' 'gulp' 'npm' 'python2' 'jq')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("git+https://github.com/poooi/poi.git"
@@ -36,6 +36,9 @@ build() {
     git clean -xdf
     npm install
     gulp build
+    # bundle electron
+    cd app_compiled
+    npm i electron@$(jq -r '.devDependencies.electron' ../package.json)
 }
 
 package() {
