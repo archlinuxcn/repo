@@ -1,29 +1,24 @@
 pkgname=libsolv
-pkgver=0.7.14
+pkgver=0.7.15
 pkgrel=1
 pkgdesc="Library for solving packages and reading repositories"
 arch=('i686' 'x86_64')
 url="https://github.com/openSUSE/$pkgname"
 license=('custom:BSD')
 depends=('bzip2' 'expat' 'rpm-tools' 'xz' 'zchunk' 'zlib' 'zstd')
-makedepends=('cmake' 'perl' 'python' 'ruby' 'swig')
+makedepends=('cmake>=3.13' 'perl' 'python' 'ruby' 'swig')
 optdepends=('perl: for perl bindings'
             'python: for python bindings'
             'ruby: for ruby bindings')
 source=("$url/archive/$pkgver/$pkgname-$pkgver.tar.gz")
-md5sums=('a7a991fa70c310c31fabedc5b12453af')
-
-prepare() {
-	cd "$pkgname-$pkgver"
-	rm -rf build
-	mkdir build
-}
+md5sums=('81bf541831904ceb77ce041730dfeade')
 
 build() {
-	cd "$pkgname-$pkgver"/build
+	cd "$pkgname-$pkgver"
 
-	cmake -DCMAKE_BUILD_TYPE=Release \
-	      -DCMAKE_C_FLAGS="$CFLAGS $CPPFLAGS" \
+	cmake -B build \
+	      -DCMAKE_BUILD_TYPE=Release \
+	      -DCMAKE_C_FLAGS_RELEASE='-DNDEBUG' \
 	      -DCMAKE_INSTALL_PREFIX=/usr \
 	      -DCMAKE_INSTALL_LIBDIR=lib \
 	      -DUSE_VENDORDIRS=ON \
@@ -56,22 +51,23 @@ build() {
 	      -DENABLE_ZSTD_COMPRESSION=ON \
 	      -DMULTI_SEMANTICS=ON \
 	      -DWITH_LIBXML2=OFF \
-	      ..
 
-	make
+	make -C build
 }
 
 check() {
-	cd "$pkgname-$pkgver"/build
-	make ARGS="-V" test
+	cd "$pkgname-$pkgver"
+
+	make -C build ARGS="-V" test
 }
 
 package() {
-	cd "$pkgname-$pkgver"/build
-	make DESTDIR="$pkgdir/" install
+	cd "$pkgname-$pkgver"
 
-	install -Dp -m644 ../LICENSE.BSD "$pkgdir/usr/share/licenses/$pkgname/LICENSE.BSD"
-	install -Dp -m644 ../README      "$pkgdir/usr/share/doc/$pkgname/README"
+	make -C build DESTDIR="$pkgdir/" install
+
+	install -Dp -m644 LICENSE.BSD "$pkgdir/usr/share/licenses/$pkgname/LICENSE.BSD"
+	install -Dp -m644 README      "$pkgdir/usr/share/doc/$pkgname/README"
 }
 
 # vim: set ft=sh ts=4 sw=4 noet:
