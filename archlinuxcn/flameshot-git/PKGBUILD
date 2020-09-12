@@ -2,17 +2,17 @@
 
 _pkgname=flameshot
 pkgname=flameshot-git
-pkgver=r549.91ba28c
+pkgver=r651.c3c5bd2
 pkgrel=1
 pkgdesc="Powerful yet simple to use screenshot software"
 arch=('i686' 'x86_64')
 url="https://github.com/lupoDharkael/flameshot"
 license=('GPL')
 depends=('qt5-base' 'qt5-svg')
-makedepends=('qt5-tools' 'git')
+makedepends=('qt5-tools' 'git' 'cmake')
 provides=('flameshot-git')
 conflicts=('flameshot')
-source=("git+https://github.com/lupoDharkael/flameshot.git")
+source=("git+https://github.com/flameshot-org/flameshot.git")
 sha256sums=('SKIP')
 
 pkgver() {
@@ -24,11 +24,11 @@ pkgver() {
 
 build() {
   cd "${srcdir}/${_pkgname}"
-  qmake CONFIG+=packaging
+  cmake -DCMAKE_INSTALL_PREFIX=/usr
   make
 }
 
 package() {
   cd "${srcdir}/${_pkgname}"
-  make INSTALL_ROOT="${pkgdir}" install
+  make DESTDIR="${pkgdir}" install
 }
