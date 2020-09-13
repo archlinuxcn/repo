@@ -1,8 +1,8 @@
 # Maintainer: j1simon <stemp@ono.com>
 
-_pkgname=flameshot-org
+_pkgname=flameshot
 pkgname=flameshot-git
-pkgver=r654.5f2132f
+pkgver=r651.c3c5bd2
 pkgrel=1
 pkgdesc="Powerful yet simple to use screenshot software"
 arch=('i686' 'x86_64')
@@ -12,7 +12,7 @@ depends=('qt5-base' 'qt5-svg')
 makedepends=('qt5-tools' 'git' 'cmake')
 provides=('flameshot-git')
 conflicts=('flameshot')
-source=("${_pkgname}::git+https://github.com/flameshot-org/flameshot.git")
+source=("git+https://github.com/flameshot-org/flameshot.git")
 sha256sums=('SKIP')
 
 pkgver() {
