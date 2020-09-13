@@ -1,8 +1,9 @@
-# Maintainer: Jan de Groot <jan@archlinux.org>
+# Maintainer: João Figueiredo <jf dot mundox at gmail dot com>
+# Contributor: Jan de Groot <jan@archlinux.org>
 
 pkgname=gconf
 pkgver=3.2.6+11+g07808097
-pkgrel=6.1
+pkgrel=9
 pkgdesc="An obsolete configuration database system"
 url="https://projects-old.gnome.org/gconf/"
 arch=(x86_64)
@@ -10,7 +11,7 @@ license=(LGPL)
 depends=(libxml2 polkit libldap dbus-glib python)
 makedepends=(intltool gtk-doc gobject-introspection git gnome-common)
 install=gconf.install
-_commit=0780809731c8ab1c364202b1900d3df106b28626  # master
+_commit=0780809731c8ab1c364202b1900d3df106b28626 # The latest and last commit, dug out from deep within the waves of time...
 source=("git+https://gitlab.gnome.org/Archive/gconf.git#commit=$_commit"
         01_xml-gettext-domain.patch gconf-reload.patch
         gconf-merge-schema gconfpkg gconf-{install,remove}.hook)
@@ -21,11 +22,6 @@ sha256sums=('SKIP'
             'bf1928718caa5df2b9e54a13cfd0f15a8fe0e09e86b84385ce023616a114e898'
             '2732b2a6b187c5620105a036bde12edee99669605f70cbde56fe5f39619c3dc0'
             '436a65ff290095bc3d35d7d6297cf4d647f61e9f9922cea7ef9f1e251b447ff7')
-
-pkgver() {
-  cd $pkgname
-  git describe --tags | sed 's/-/+/g'
-}
 
 prepare() {
   cd $pkgname
@@ -70,10 +66,10 @@ package() {
 
   install -d "$pkgdir/etc/gconf/gconf.xml.system"
   install -Dt "$pkgdir/usr/bin" gconf-merge-schema gconfpkg
-  install -Dt "$pkgdir/usr/share/libalpm/hooks" -m644 *.hook
+  install -Dt "$pkgdir/usr/share/libalpm/hooks" -m644 ./*.hook
 
   # fix dbus policy location - --with-dbusdir doens't work
-  install -dm755 ${pkgdir}/usr/share/dbus-1/system.d
-  mv ${pkgdir}/etc/dbus-1/system.d/* ${pkgdir}/usr/share/dbus-1/system.d
-  rm -rf ${pkgdir}/etc/dbus-1
+  install -dm755 "$pkgdir/usr/share/dbus-1/system.d"
+  mv "$pkgdir"/etc/dbus-1/system.d/* "$pkgdir/usr/share/dbus-1/system.d"
+  rm -rf "$pkgdir/etc/dbus-1"
 }
