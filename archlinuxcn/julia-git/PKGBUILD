@@ -50,8 +50,6 @@ _patches=(
   0004-Add-ccall-special-cases-for-a-few-more-libc-function.patch
   0005-Optimize-objectid-in-codegen.patch
   0006-Mark-more-functions-as-not-safepoint-in-codegen.patch
-  0007-More-conservative-CPU-name-based-feature-detection.patch
-  0008-Workaround-compiler-error-on-GCC10-on-AArch64.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -68,8 +66,6 @@ md5sums=('SKIP'
          '78a70bdba9130af27e3d6fc7332a4436'
          '6a2de7c06601d5947ac0935988b0ed1a'
          'e7df65ae9a0c7ec36c9faf6c8a6899ce'
-         'aec81754768b0269c1d7bbc765a9e3ef'
-         'e7128733ba36abb5a3e8f5eee3859cfd'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          'bde100b283ea5b7aaf80613abec98a57'
          '6e7fcba300512df8ab8ab65d3e1eb847'
