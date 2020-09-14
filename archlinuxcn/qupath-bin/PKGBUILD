@@ -2,7 +2,7 @@
 
 pkgname=qupath-bin
 _pkgname=QuPath
-pkgver=0.2.0_m12
+pkgver=0.2.3
 pkgrel=1
 pkgdesc="An open, powerful, flexible, extensible software platform for whole slide image analysis."
 arch=('x86_64')
@@ -15,6 +15,8 @@ depends=(
   'libnet'
   'libtiff'
   'libxml2'
+  'libxrender'
+  'libxtst'
   'sqlite'
 )
 makedepends=('gendesk')
@@ -24,7 +26,7 @@ options=(!strip)
 source=(
     "${pkgname}-${pkgver}.tar.xz::https://github.com/qupath/qupath/releases/download/v${pkgver//_/-}/${_pkgname}-${pkgver//_/-}-Linux.tar.xz"
 )
-sha512sums=('dca984b97ab5590a353319d663b26bca543352410eb8f6bfcd2e6805f0f08d512834169f3316b9057c5b7d6e784e342e35ad744d04c85d0bc513eda848853eff')
+sha512sums=('283b954a76e921e4c12d162af6d7687c512056700ce66b12dd692555a6af0595b0fc619fead173ff18df441f359c3c2a0260b6e2883f40e4851f3e0919aa5a73')
 
 prepare() {
   msg2 "Creating desktop file"
