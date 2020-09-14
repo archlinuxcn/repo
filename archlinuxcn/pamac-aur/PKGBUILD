@@ -5,12 +5,12 @@ ENABLE_FLATPAK=0
 ENABLE_SNAPD=0
 
 pkgname=pamac-aur
-pkgver=9.5.9
+pkgver=9.5.10
 pkgrel=1
 _pkgfixver=$pkgver
 
-_commit='f76ac697b46d26968a05b9525d9cbac33e98d698'
-sha256sums=('0e16fcc30f25c1de59d13b5be05dc1ba46a17c1abcc62ba5b0506571a41702ed')
+_commit='a474a10f2d5c67dfa971b6af1272869518e22c99'
+sha256sums=('e8e1abd1e4cf23341687a250c67988de5aadd021bd3371a12283c3f142aa5d2b')
 
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
