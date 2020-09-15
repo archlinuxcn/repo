@@ -1,7 +1,7 @@
 _name=aiogram
 pkgname=python-aiogram
-pkgver=2.9.2
-pkgrel=2
+pkgver=2.10.1
+pkgrel=1
 pkgdesc="Is a pretty simple and fully asynchronous framework for Telegram Bot API"
 arch=(any)
 url="https://github.com/aiogram/aiogram"
@@ -9,11 +9,11 @@ license=('MIT')
 depends=('python-aiohttp' 'python-babel')
 makedepends=('python-setuptools')
 optdepends=('python-aiohttp-socks: support for socks proxy')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/aiogram-2.9.2.tar.gz")
-sha256sums=('3bbe4237b8e11a347bbc47a07c1cf331ceceda2881317e8760d1e330af191dcb')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/aiogram-2.10.1.tar.gz")
+sha256sums=('f37dd5906052af1120862f8ec7d23110e724dacc8c111b0ced9ddcdc9ca3ff3f')
 
 prepare() {
-  cd "$srcdir/aiogram-2.9.2"
+  cd "$srcdir/aiogram-2.10.1"
   sed -i '/certifi/d' setup.py
   sed -e '/import certifi/d' \
       -e 's|certifi.where()|"/etc/ssl/certs/ca-certificates.crt"|' \
@@ -21,12 +21,12 @@ prepare() {
 }
 
 build() {
-  cd "$srcdir/aiogram-2.9.2"
+  cd "$srcdir/aiogram-2.10.1"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/aiogram-2.9.2"
+  cd "$srcdir/aiogram-2.10.1"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install annoying files
