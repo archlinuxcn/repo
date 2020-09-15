@@ -6,7 +6,7 @@
 # Contributor: Anthony Anderson <aantony4122@gmail.com>
 
 pkgname=discord-canary
-pkgver=0.0.112
+pkgver=0.0.113
 pkgrel=1
 pkgdesc="All-in-one voice and text chat for gamers that's free and secure."
 arch=('x86_64')
@@ -22,7 +22,7 @@ optdepends=('libpulse: For pulseaudio support'
 source=("https://dl-canary.discordapp.net/apps/linux/${pkgver}/${pkgname}-${pkgver}.tar.gz"
         'LICENSE'
         "${pkgname}.sh")
-sha256sums=('40855abbabdc3df2368d43e71f87c45e15824512e8ec749679c08030351d7cc5'
+sha256sums=('f2c4ffe9e5da24303d4cfdb03446550a59d7d7085d2f04b2894d5be84eef58c3'
             '9be5f85421c9094c390c25bf1f45157c3c8dcf592feb8acb0810a61f11d80b90'
             '7119a3345162d39bf86813d19546b488a1bdba12d38c3d39749f86bd587f0a0c')
 
