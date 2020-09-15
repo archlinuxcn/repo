@@ -3,7 +3,7 @@
 _pkgname=onedrive
 pkgname=$_pkgname-abraunegg
 pkgver=2.4.5
-pkgrel=1
+pkgrel=2
 epoch=
 pkgdesc="Free OneDrive client written in D - abraunegg's fork. Follows the releases on https://github.com/abraunegg/onedrive/releases"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -17,7 +17,7 @@ makedepends=('d-compiler')
 
 build() {
 	cd "$_pkgname-$pkgver"
-        ./configure --sysconfdir=/etc --prefix=/usr --with-systemdsystemunitdir=/usr/lib/systemd/system --with-systemduserunitdir=/usr/lib/systemd/user --enable-notifications --enable-completions
+        ./configure --sysconfdir=/etc --prefix=/usr --with-systemdsystemunitdir=/usr/lib/systemd/system --with-systemduserunitdir=/usr/lib/systemd/user --enable-notifications --enable-completions --with-zsh-completion-dir=/usr/share/zsh/site-functions --with-fish-completion-dir=/usr/share/fish/vendor_completions.d --with-bash-completion-dir=/usr/share/bash-completion/completions
         make
 }
 
