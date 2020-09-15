@@ -1,7 +1,7 @@
 # Maintainer: Alejandro Valdes <alejandrovaldes@live.com>
 
 pkgname=plasma5-applets-window-appmenu
-pkgver=0.6.0
+pkgver=0.6.0.r36.g57e999f
 pkgrel=1
 pkgdesc="Plasma 5 applet in order to show the window appmenu"
 arch=(x86_64)
@@ -13,8 +13,8 @@ optdepends=(
   'libdbusmenu-gtk3: gtk3 appmenu support'
   'libdbusmenu-gtk2: gtk2 appmenu support'
 )
-source=($pkgname-$pkgver.tar.gz::"https://github.com/psifidotos/applet-window-appmenu/archive/v$pkgver.tar.gz")
-sha256sums=('cc08e2a3d6c8a624064c5332f832e4fafdea541173ee8fcbd80ff410d8caac8e')
+source=($pkgname-$pkgver.zip::"https://github.com/psifidotos/applet-window-appmenu/archive/57e999f01f8bbbb60de1f4fef9e73a6437bb4667.zip")
+sha256sums=('4ac39c3c9575f104c5db9a55b271f24f97d42d54d86cb734740bd828a851c4fe')
 
 prepare() {
   mkdir -p build
@@ -22,7 +22,7 @@ prepare() {
 
 build() {
   cd build
-  cmake ../applet-window-appmenu-$pkgver \
+  cmake ../applet-window-appmenu-57e999f01f8bbbb60de1f4fef9e73a6437bb4667 \
     -DCMAKE_INSTALL_PREFIX=/usr
 }
 
