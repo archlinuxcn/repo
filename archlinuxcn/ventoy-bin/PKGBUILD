@@ -4,12 +4,12 @@
 
 pkgname=ventoy-bin
 pkgver=1.0.21
-pkgrel=1
+pkgrel=2
 pkgdesc='A new multiboot USB solution (Binary)'
 url='http://www.ventoy.net/'
 arch=('i686' 'x86_64')
 license=('GPL3')
-depends=('bash' 'util-linux' 'xz' 'exfat-utils')
+depends=('bash' 'util-linux' 'xz' 'exfat-utils' 'dosfstools' 'lib32-glibc')
 provides=("${pkgname%-bin}")
 conflicts=("${pkgname%-bin}")
 source=("https://github.com/ventoy/Ventoy/releases/download/v${pkgver}/${pkgname%-bin}-${pkgver}-linux.tar.gz"
