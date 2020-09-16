@@ -5,6 +5,9 @@ post_build: aur_post_build
 update_on:
   - source: aur
     aur: r8125
+  - source: archpkg
+    archpkg: linux
+    strip_release: true
 
 maintainers:
   - github: dctxmei
