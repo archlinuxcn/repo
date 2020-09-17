@@ -1,38 +1,102 @@
 # Maintainer : Daniel Bermond <dbermond@archlinux.org>
 # Contributor: Det <nimetonmaili g-mail>
 
-pkgname=jdk
-pkgver=14.0.2
-_build=12
-_hash=205943a0976c4ed48cb16f1043c5c647
+pkgbase=jdk
+pkgname=('jre' 'jdk')
+pkgver=15
+_build=36
+_hash=779bf45e88a44cbd9ea6621d33e33db1
 _majver="${pkgver%%.*}"
 _next="$((_majver + 1))"
 pkgrel=1
-pkgdesc='Oracle Java Development Kit'
+pkgdesc='Oracle Java'
 arch=('x86_64')
 url='https://www.oracle.com/java/'
 license=('custom')
-depends=('java-environment-common' "jre>=${_majver}" "jre<${_next}" 'zlib' 'hicolor-icon-theme')
-provides=("java-environment=${_majver}" "java-environment-jdk=${_majver}")
-install="${pkgname}.install"
-source=("https://download.oracle.com/otn-pub/java/jdk/${pkgver}+${_build}/${_hash}/${pkgname}-${pkgver}_linux-x64_bin.tar.gz"
+source=("https://download.oracle.com/otn-pub/java/jdk/${pkgver}+${_build}/${_hash}/jdk-${pkgver}_linux-x64_bin.tar.gz"
         'java.desktop'
         'jconsole.desktop'
         'jshell.desktop'
         'java_16.png'
         'java_48.png')
-sha256sums=('cb811a86926cc0f529d16bec7bd2e25fb73e75125bbd1775cdb9a96998593dde'
-            '4b38647428fc576f423197104a5721c0a07c825196dad426359c78fd19d1f823'
-            'b517c7883a81a9951b3b1ddae0427619212808324482b5f02a9b7810328c2ce6'
-            '3061d6d325067b6a0e7f900ee699322741b53fd6da200209844edc54530e2bef'
+sha256sums=('300538e0c227c268f14957294d5c44abb5e7e476debc9d07e8d892c417ac8f0d'
+            '15a35fe1ef4c672ca56489d0a1aaa23f260dfc58dfad3b64f73accdf5dd3a174'
+            '8dde78d1da7d22daebb7067ff29d3ad92c267b2b2b0369ee28e418816adcca8b'
+            '419d7b48f3267ce6a8dd969f6ae45411be42f3e123bc344b26e29201319df632'
             'd27fec1d74f7a3081c3d175ed184d15383666dc7f02cc0f7126f11549879c6ed'
             '7cf8ca096e6d6e425b3434446b0835537d0fc7fe64b3ccba7a55f7bd86c7e176')
-            
+
 DLAGENTS=('https::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -b oraclelicense=a -o %o %u')
 
-package() {
-    cd "jdk-${pkgver}"
+package_jre() {
+    pkgdesc='Oracle Java Runtime Environment'
+    depends=('java-runtime-common' 'ca-certificates-utils' 'freetype2' 'libxtst'
+             'libxrender' 'libnet')
+    optdepends=('alsa-lib: for basic sound support')
+    provides=("java-runtime=${_majver}" "java-runtime-headless=${_majver}"
+              "java-runtime-jre=${_majver}" "java-runtime-headless-jre=${_majver}")
+    backup=("etc/java-${pkgbase}/management/jmxremote.access"
+            "etc/java-${pkgbase}/management/jmxremote.password.template"
+            "etc/java-${pkgbase}/management/management.properties"
+            "etc/java-${pkgbase}/security/policy/limited/default_US_export.policy"
+            "etc/java-${pkgbase}/security/policy/limited/default_local.policy"
+            "etc/java-${pkgbase}/security/policy/limited/exempt_local.policy"
+            "etc/java-${pkgbase}/security/policy/unlimited/default_US_export.policy"
+            "etc/java-${pkgbase}/security/policy/unlimited/default_local.policy"
+            "etc/java-${pkgbase}/security/policy/README.txt"
+            "etc/java-${pkgbase}/security/java.policy"
+            "etc/java-${pkgbase}/security/java.security"
+            "etc/java-${pkgbase}/logging.properties"
+            "etc/java-${pkgbase}/net.properties"
+            "etc/java-${pkgbase}/sound.properties")
+    install=jre.install
     
+    cd "jdk-${pkgver}"
+    local _jvmdir="/usr/lib/jvm/java-${_majver}-jdk"
+    
+    install -d -m755 "${pkgdir}/etc"
+    install -d -m755 "${pkgdir}/${_jvmdir}"
+    install -d -m755 "${pkgdir}/usr/share/licenses/${pkgname}"
+    
+    # conf
+    cp -a conf "${pkgdir}/etc/java-${pkgbase}"
+    ln -s "../../../../etc/java-${pkgbase}" "${pkgdir}/${_jvmdir}/conf"
+    
+    # bin
+    install -D -m755 bin/{java,jpackage,jrunscript} -t "${pkgdir}/${_jvmdir}/bin"
+    install -D -m755 bin/{keytool,rmid,rmiregistry}     -t "${pkgdir}/${_jvmdir}/bin"
+    
+    # libs
+    cp -a lib "${pkgdir}/${_jvmdir}"
+    rm -r "${pkgdir}/${_jvmdir}/lib/jfr"
+    rm "${pkgdir}/${_jvmdir}/lib/"{ct.sym,libattach.so,libsaproc.so,src.zip}
+    
+    # man pages
+    local _file
+    for _file in man/man1/{java,jpackage,jrunscript,keytool,rmid,rmiregistry}.1
+    do
+        install -D -m644 "$_file" "${pkgdir}/usr/share/${_file%.1}-jdk${_majver}.1"
+    done
+    
+    install -D -m644 release -t "${pkgdir}/${_jvmdir}"
+    
+    # replace JKS keystore with ca-certificates-utils
+    rm "${pkgdir}${_jvmdir}/lib/security/cacerts"
+    ln -s /etc/ssl/certs/java/cacerts "${pkgdir}${_jvmdir}/lib/security/cacerts"
+    
+    # legal/licenses
+    cp -a legal/* "${pkgdir}/usr/share/licenses/${pkgname}"
+    ln -s "$pkgname" "${pkgdir}/usr/share/licenses/java-${pkgname}"
+    ln -s "../../../share/licenses/${pkgname}" "${pkgdir}/${_jvmdir}/legal"
+}
+
+package_jdk() {
+    pkgdesc='Oracle Java Development Kit'
+    depends=('java-environment-common' "jre>=${_majver}" "jre<${_next}" 'zlib' 'hicolor-icon-theme')
+    provides=("java-environment=${_majver}" "java-environment-jdk=${_majver}")
+    install=jdk.install
+    
+    cd "jdk-${pkgver}"
     local _jvmdir="/usr/lib/jvm/java-${_majver}-${pkgname}"
     
     install -d -m755 "${pkgdir}/${_jvmdir}"
@@ -40,7 +104,7 @@ package() {
     
     # bin
     cp -a bin "${pkgdir}/${_jvmdir}"
-    rm "${pkgdir}/${_jvmdir}/bin/"{java,jjs,jpackage,jrunscript,keytool,rmid,rmiregistry}
+    rm "${pkgdir}/${_jvmdir}/bin/"{java,jpackage,jrunscript,keytool,rmid,rmiregistry}
     
     # libs
     install -D -m644 lib/ct.sym       -t "${pkgdir}/${_jvmdir}/lib"
@@ -54,11 +118,11 @@ package() {
     install -D -m644 lib/src.zip -t "${pkgdir}/${_jvmdir}/lib"
     
     # desktop and icons
-    install -D -m644 "${srcdir}/java.desktop"     "${pkgdir}/usr/share/applications/java-java${_majver}-jdk.desktop"
-    install -D -m644 "${srcdir}/jconsole.desktop" "${pkgdir}/usr/share/applications/jconsole-java${_majver}-jdk.desktop"
-    install -D -m644 "${srcdir}/jshell.desktop"   "${pkgdir}/usr/share/applications/jshell-java${_majver}-jdk.desktop"
-    install -D -m644 "${srcdir}/java_16.png" "${pkgdir}/usr/share/icons/hicolor/16x16/apps/java${_majver}-jdk.png"
-    install -D -m644 "${srcdir}/java_48.png" "${pkgdir}/usr/share/icons/hicolor/48x48/apps/java${_majver}-jdk.png"
+    install -D -m644 "${srcdir}/java.desktop"     "${pkgdir}/usr/share/applications/java-java-jdk.desktop"
+    install -D -m644 "${srcdir}/jconsole.desktop" "${pkgdir}/usr/share/applications/jconsole-java-jdk.desktop"
+    install -D -m644 "${srcdir}/jshell.desktop"   "${pkgdir}/usr/share/applications/jshell-java-jdk.desktop"
+    install -D -m644 "${srcdir}/java_16.png" "${pkgdir}/usr/share/icons/hicolor/16x16/apps/java-jdk.png"
+    install -D -m644 "${srcdir}/java_48.png" "${pkgdir}/usr/share/icons/hicolor/48x48/apps/java-jdk.png"
     
     # man pages
     local _file
@@ -66,9 +130,9 @@ package() {
     do
         install -D -m644 "$_file" "${pkgdir}/usr/share/${_file%.1}-jdk${_majver}.1"
     done < <(find man/man1 -type f -print0)
-    rm "${pkgdir}/usr/share/man/man1/"{java,jjs,jpackage,jrunscript,keytool,rmid,rmiregistry}-jdk"${_majver}".1
+    rm "${pkgdir}/usr/share/man/man1/"{java,jpackage,jrunscript,keytool,rmid,rmiregistry}-jdk"${_majver}".1
     
     # legal/licenses
     cp -a legal/* "${pkgdir}/usr/share/licenses/${pkgname}"
-    ln -s "$pkgname" "${pkgdir}/usr/share/licenses/java${_majver}-${pkgname}"
+    ln -s "$pkgname" "${pkgdir}/usr/share/licenses/java-${pkgname}"
 }
