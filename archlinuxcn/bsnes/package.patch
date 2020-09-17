@@ -1,0 +1,27 @@
+diff --unified --recursive bsnes_v108-source.orig/bsnes/GNUmakefile bsnes_v108-source.new/bsnes/GNUmakefile
+--- bsnes_v108-source.orig/bsnes/GNUmakefile	2019-03-10 01:42:30.163599022 -0700
++++ bsnes_v108-source.new/bsnes/GNUmakefile	2019-03-10 01:45:20.179375447 -0700
+@@ -1,6 +1,9 @@
++flags = $(CFLAGS)
++options = $(LDFLAGS)
++
+ target := bsnes
+ binary := application
+-build := performance
++build := release
+ openmp := true
+ flags += -I. -I..
+ 
+
+diff --unified --recursive bsnes_v113-source.orig/bsnes/target-bsnes/GNUmakefile bsnes_v113-source.new/bsnes/target-bsnes/GNUmakefile
+--- bsnes_v113-source.orig/bsnes/target-bsnes/GNUmakefile       2019-12-11 12:19:18.782618740 -0700
++++ bsnes_v113-source.new/bsnes/target-bsnes/GNUmakefile        2019-12-11 12:20:36.969034855 -0700
+@@ -40,8 +40,6 @@
+
+ install: all
+ ifeq ($(platform),windows)
+-else ifeq ($(shell id -un),root)
+-       $(error "make install should not be run as root")
+ else ifeq ($(platform),macos)
+        mkdir -p ~/Library/Application\ Support/$(name)/
+        mkdir -p ~/Library/Application\ Support/$(name)/Database/
