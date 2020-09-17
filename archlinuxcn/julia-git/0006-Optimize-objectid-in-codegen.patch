@@ -1,7 +1,7 @@
-From 20a4bcb769f2a648fcdd3a62dc42935d6c4350a9 Mon Sep 17 00:00:00 2001
+From 8072e1a0126187c4518498b59729cb871354c5fd Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 21 Aug 2020 13:15:02 -0400
-Subject: [PATCH 5/8] Optimize objectid in codegen
+Subject: [PATCH 6/7] Optimize objectid in codegen
 
 ---
  src/builtins.c            | 53 +++++++++++++++++++++++++++++++++------
@@ -14,10 +14,10 @@ Subject: [PATCH 5/8] Optimize objectid in codegen
  7 files changed, 156 insertions(+), 17 deletions(-)
 
 diff --git a/src/builtins.c b/src/builtins.c
-index a0f28fb70c..1b0b966220 100644
+index 6d5f3f2779..f38aeef648 100644
 --- a/src/builtins.c
 +++ b/src/builtins.c
-@@ -280,7 +280,7 @@ static uintptr_t type_object_id_(jl_value_t *v, jl_varidx_t *env) JL_NOTSAFEPOIN
+@@ -290,7 +290,7 @@ static uintptr_t type_object_id_(jl_value_t *v, jl_varidx_t *env) JL_NOTSAFEPOIN
          }
          return h;
      }
@@ -26,7 +26,7 @@ index a0f28fb70c..1b0b966220 100644
  }
  
  static uintptr_t immut_id_(jl_datatype_t *dt, jl_value_t *v, uintptr_t h) JL_NOTSAFEPOINT
-@@ -321,13 +321,12 @@ static uintptr_t immut_id_(jl_datatype_t *dt, jl_value_t *v, uintptr_t h) JL_NOT
+@@ -340,13 +340,12 @@ static uintptr_t immut_id_(jl_datatype_t *dt, jl_value_t *v, uintptr_t h) JL_NOT
      return h;
  }
  
@@ -43,7 +43,7 @@ index a0f28fb70c..1b0b966220 100644
      if (dt == jl_datatype_type) {
          jl_datatype_t *dtv = (jl_datatype_t*)v;
          if (dtv->isconcretetype)
-@@ -346,12 +345,52 @@ JL_DLLEXPORT uintptr_t jl_object_id_(jl_value_t *tv, jl_value_t *v) JL_NOTSAFEPO
+@@ -365,12 +364,52 @@ JL_DLLEXPORT uintptr_t jl_object_id_(jl_value_t *tv, jl_value_t *v) JL_NOTSAFEPO
      }
      if (dt->mutabl)
          return inthash((uintptr_t)v);
@@ -161,7 +161,7 @@ index e2600385b1..0cb2c4e1a2 100644
  
      jl_cgval_t retval = sig.emit_a_ccall(
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index a81380b9e4..9d01a23bfd 100644
+index 40e1dca5e6..d3e7aa0705 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -376,12 +376,14 @@ static AttributeList get_attrs_zext(LLVMContext &C)

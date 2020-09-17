@@ -39,17 +39,18 @@ url="http://julialang.org"
 license=('GPL')
 depends_libs=(arpack fftw gmp libgit2-julia libunwind-git mpfr pcre2 suitesparse
               openspecfun openblas-lapack libutf8proc-git
-              openlibm mbedtls libssh2 zlib p7zip)
+              openlibm mbedtls libssh2 zlib p7zip curl libnghttp2 ca-certificates-utils)
 makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
              gcc-fortran git patchelf python)
 options=('debug' '!strip' '!buildflags')
 _patches=(
-  0001-Fix-source-file-paths.patch
-  0002-Optimize-allocation-of-arrays.patch
-  0003-Enable-basic-AA-in-O2.patch
-  0004-Add-ccall-special-cases-for-a-few-more-libc-function.patch
-  0005-Optimize-objectid-in-codegen.patch
-  0006-Mark-more-functions-as-not-safepoint-in-codegen.patch
+  0001-Allow-system-libnghttp2.patch
+  0002-Fix-source-file-paths.patch
+  0003-Optimize-allocation-of-arrays.patch
+  0004-Enable-basic-AA-in-O2.patch
+  0005-Add-ccall-special-cases-for-a-few-more-libc-function.patch
+  0006-Optimize-objectid-in-codegen.patch
+  0007-Mark-more-functions-as-not-safepoint-in-codegen.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -60,12 +61,13 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '2f1c2e68d58306d8a6ceffe8a7e077a5'
-         'c9daf7984d876952f87f2a5eb6973f7c'
-         '1d2efdb6fff93e33237e6395470588c8'
-         '78a70bdba9130af27e3d6fc7332a4436'
-         '6a2de7c06601d5947ac0935988b0ed1a'
-         'e7df65ae9a0c7ec36c9faf6c8a6899ce'
+         '80a3feb505691352da0ca23339d3dd41'
+         'b634ce07d9b70b0762660248d462c23f'
+         '2a1968a1dbeb305e146639797594762a'
+         '949522f85f0bbe9f3dcd664e41d54eb3'
+         '65fd12926465f42eb022cce47f7fd804'
+         '28c977ecb6a4d1e8624cae979e54cd5f'
+         '0d4bcd3b02457d49dfaa2b82de21d2b4'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          'bde100b283ea5b7aaf80613abec98a57'
          '6e7fcba300512df8ab8ab65d3e1eb847'
@@ -108,6 +110,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_PATCHELF=1
             USE_SYSTEM_ZLIB=1
             USE_SYSTEM_P7ZIP=1
+            USE_SYSTEM_NGHTTP2=1
             USE_LLVM_SHLIB=1
             USE_BINARYBUILDER=0
             LLVM_USE_CMAKE=0 # Workaround LLVM linking with system LLVM
@@ -264,6 +267,9 @@ package-julia-in() {
 
   mkdir -p "${pkgdir}/usr/share/julia/contrib"
   install -m644 -t "${pkgdir}/usr/share/julia/contrib" contrib/generate_precompile.jl
+
+  # From ca-certificates-utils, needed by Download stdlib
+  ln -sf /etc/ssl/cert.pem "${pkgdir}/usr/share/julia/cert.pem"
 
   # Without stripping, makepkg doesn't copy the source for us...
   dbgsrcdir="${DBGSRCDIR:-/usr/src/debug}"
