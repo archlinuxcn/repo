@@ -3,4 +3,5 @@
 from lilaclib import *
 
 def pre_build():
+    aur_pre_build()
     run_cmd(['sh', '-c', 'sed \'/vim-plugins/d\' -i PKGBUILD'])
