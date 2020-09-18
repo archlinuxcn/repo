@@ -437,7 +437,8 @@ if __name__ == '__main__':
     load_lilac_yaml_schema()
     git_write_tree_index()
     DIRS, FILES, COMMITS = git_ls_tree()
-    git_diff_tree()
+    if not CHECK_ALL:
+        git_diff_tree()
     run_test(RepoTreeTest,
              msg=('\033[1;31mThere are {0} error(s) inside repo, ' +
                   'blocking git commit. Please fix the errors and commit ' +
