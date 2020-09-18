@@ -7,11 +7,11 @@ pkgdesc='A library containing many useful go routines for things such as glib, g
 arch=('any')
 url="https://github.com/linuxdeepin/go-lib"
 license=('GPL3')
-depends=('dbus' 'go' 'libpulse' 'gdk-pixbuf2' 'mobile-broadband-provider-info' 'libx11'
+depends=('dbus' 'libpulse' 'gdk-pixbuf2' 'mobile-broadband-provider-info' 'libx11'
          'golang-gopkg-alecthomas-kingpin.v2' 'golang-deepin-gir-git'
          'golang-github-linuxdeepin-go-x11-client-git' 'golang-golang-x-net' 'golang-golang-x-image')
          # 'golang-github-cryptix-wav' not packaged yet, paused until our go packaging standards formed
-makedepends=('iso-codes' 'golang-gopkg-check.v1' 'git') # git needed only for go get
+makedepends=('iso-codes' 'golang-gopkg-check.v1' 'git' 'go') # git needed only for go get
 conflicts=('golang-deepin-lib')
 provides=('golang-deepin-lib')
 groups=('deepin-git')
