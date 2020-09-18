@@ -9,4 +9,7 @@ build_prefix: extra-x86_64
 pre_build: vcs_update
 
 update_on:
-  - github: linuxdeepin/go-dbus-factory
+  - source: github
+    github: linuxdeepin/go-dbus-factory
+  - source: aur
+    aur: golang-github-linuxdeepin-go-dbus-factory-git

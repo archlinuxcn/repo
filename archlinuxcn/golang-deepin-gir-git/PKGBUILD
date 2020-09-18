@@ -14,19 +14,19 @@ provides=('golang-deepin-gir')
 conflicts=('golang-deepin-gir')
 replaces=('golang-deepin-gir')
 groups=('deepin-git')
-source=('git://github.com/linuxdeepin/go-gir-generator'
+source=("$pkgname::git://github.com/linuxdeepin/go-gir-generator"
         SettingsBackendLike.patch glib-2.63.patch)
 sha512sums=('SKIP'
             'bd97770e2a345bc1fe4248238f13bd741c157629c5e097c56039326fe7fa4d550c8030272c18c2adc1c0dce35dd72c8d4e6fc394bf4d659076794e6a375d045a'
             '0cdf4e2251eb6c88f37cea12af8db9e2e7465bebb4636ce90c86cce994b5b9a82ff332964735ae8349d8a67e5146ff26a42802ce46f33def5c9452fe6eda92f3')
 
 pkgver() {
-    cd go-gir-generator
+    cd $pkgname
     git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
-  cd go-gir-generator
+  cd $pkgname
   mkdir -p "$srcdir"/build/src/pkg.deepin.io
 
   # Should be fixed upstream
@@ -50,7 +50,7 @@ build() {
   export CGO_LDFLAGS="${LDFLAGS}"
   export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
 
-  cd go-gir-generator
+  cd $pkgname
   rm -r gogtk-demo
   make
 
@@ -63,7 +63,7 @@ check() {
   cd "$srcdir"/build/src/pkg.deepin.io/gir
   go test -v $(go list ./...)
 
-  cd "$srcdir"/go-gir-generator
+  cd "$srcdir/$pkgname"
   go run test/memory.go
 }
 

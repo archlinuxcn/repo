@@ -9,4 +9,7 @@ build_prefix: extra-x86_64
 pre_build: vcs_update
 
 update_on:
-  - github: linuxdeepin/go-lib
+  - source: github
+    github: linuxdeepin/go-lib
+  - source: aur
+    aur: golang-deepin-lib-git
