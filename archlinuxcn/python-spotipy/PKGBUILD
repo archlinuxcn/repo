@@ -4,7 +4,7 @@
 
 _pkgname=spotipy
 pkgname=python-spotipy
-pkgver=2.15.0
+pkgver=2.16.0
 pkgrel=1
 pkgdesc='A light weight Python library for the Spotify Web API'
 arch=('any')
@@ -26,4 +26,4 @@ package() {
   install -Dm644 LICENSE.md -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
-sha256sums=('9bca5d3138d617d3d7a38a66949dac266cfd67f5c78f0f163e9b438f6db56419')
+sha256sums=('77e04db8a6a067bb4e15a9592eda8430648774b4d157d59b5e1533b75caa09ec')
