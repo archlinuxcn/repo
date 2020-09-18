@@ -4,8 +4,8 @@
 
 pkgname=v2ray-dctxmei
 _pkgname=v2ray
-pkgver=4.27.5
-pkgrel=2
+pkgver=4.28.2
+pkgrel=1
 pkgdesc="A platform for building proxies to bypass network restrictions"
 arch=('x86_64')
 url="https://github.com/v2fly/v2ray-core"
@@ -15,31 +15,19 @@ makedepends=('git' 'go')
 provides=("v2ray=${pkgver}")
 conflicts=('v2ray')
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/v2fly/v2ray-core/archive/v${pkgver}.tar.gz"
-        "v2ray-fix-assets-tests.patch::https://github.com/v2fly/v2ray-core/pull/160.patch"
-        "v2ray-fix-assets-tests-again.patch::https://github.com/v2fly/v2ray-core/pull/161.patch"
         "v2ray.sysusers"
         "v2ray.tmpfiles"
         "v2ray.service"
         "v2ray@.service")
-sha256sums=('f289d8d85ab0851851a6e3c101226e77bed0052fd60f9185df8852b601e657f8'
-            '3fc90c6809fda06f36621cab6153b87d10ec1fa321f6ce88c718db842da2182b'
-            'ca0d27ce835938d55dcc7454e1031bc0dea9b66f085fa967e54fc723e717bca9'
+sha256sums=('e78446333fd28ef8a3ec2c25612458bfc024a226008888ed5277201136f4ca97'
             'caca9d88eff50ce7cd695b6fcab4d253344e92c966780f7de6d5c531d48ed80e'
             'ae55077bcf7140a7460f192adb03009b4573ec4420af84f4cbe9828cf8ca8e06'
             'ffe8c832fac5772fd700e39460e41cf59bac544c7a16e0b9a7fcee53d4e4bb9d'
             '7d8cd2309f3cb54d888128e9e8150432756b60cf7e759da46ad8e848c0b0a386')
 
-prepare() {
-    cd "v2ray-core-${pkgver}"/
-    # https://github.com/v2fly/v2ray-core/pull/160
-    patch -p1 -i ../v2ray-fix-assets-tests.patch
-    # https://github.com/v2fly/v2ray-core/pull/161
-    patch -p1 -i ../v2ray-fix-assets-tests-again.patch
-}
-
 build() {
     cd "v2ray-core-${pkgver}"/
-    export GOFLAGS="-buildmode=pie -trimpath"
+    export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external"
     export CGO_LDFLAGS="${LDFLAGS}"
     export CGO_CFLAGS="${CFLAGS}"
     export CGO_CPPFLAGS="${CPPFLAGS}"
