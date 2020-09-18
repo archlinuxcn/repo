@@ -1,23 +1,23 @@
 _name=django-statici18n
 pkgname=python-django-statici18n
-pkgver=1.9.0
-pkgrel=3
+pkgver=2.0.0
+pkgrel=1
 pkgdesc="A Django app that provides helper for generating Javascript catalog to static files."
 arch=(any)
 url="http://django-statici18n.readthedocs.org/"
 license=('BSD')
 depends=('python-django-appconf')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha256sums=('913dd056c1abcbe129b1db806cb4cfb821c4077d7e857d6eb29043ea64f4d1d0')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/django-statici18n-2.0.0.tar.gz")
+sha256sums=('6749fea2506cfef5e43e91913e982a4be5e883581bda813d75dbdf51f8435ef1')
 
 build() {
-  cd "$srcdir/$_name-$pkgver"
+  cd "$srcdir/django-statici18n-2.0.0"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/$_name-$pkgver"
+  cd "$srcdir/django-statici18n-2.0.0"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install annoying files
