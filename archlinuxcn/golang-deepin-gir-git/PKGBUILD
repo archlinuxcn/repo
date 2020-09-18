@@ -12,7 +12,6 @@ makedepends=('git' 'go' 'gobject-introspection')
 checkdepends=('golang-gopkg-check.v1')
 provides=('golang-deepin-gir')
 conflicts=('golang-deepin-gir')
-replaces=('golang-deepin-gir')
 groups=('deepin-git')
 source=("$pkgname::git://github.com/linuxdeepin/go-gir-generator"
         SettingsBackendLike.patch glib-2.63.patch)
