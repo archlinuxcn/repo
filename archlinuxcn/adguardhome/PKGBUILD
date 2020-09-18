@@ -2,36 +2,30 @@
 
 pkgname=adguardhome
 _pkgname=AdGuardHome
-pkgver=0.103.3
-pkgrel=3
+pkgver=0.104.0.beta1
+_pkgver=${pkgver/.b/-b}
+pkgrel=1
 pkgdesc="Network-wide ads and trackers blocking DNS server"
 arch=('x86_64')
 url="https://github.com/AdguardTeam/AdGuardHome"
 license=('GPL')
-source=("$pkgname-$pkgver.tar.gz::https://github.com/AdguardTeam/AdGuardHome/archive/v$pkgver.tar.gz"
+source=("$pkgname-$pkgver.tar.gz::https://github.com/AdguardTeam/AdGuardHome/archive/v$_pkgver.tar.gz"
   "$_pkgname.service" sysusers.conf tmpfiles.conf
-  001-Makefile-support-running-with-multiple-parallel-jobs.patch::https://github.com/AdguardTeam/AdGuardHome/commit/e57cbc36d944b6c4ebe99f397eb55976d786d5f8.patch
 )
 makedepends=(go npm git)
 install=readme.install
-sha256sums=('57db560d722d085709d27d7d15f9ae060b938fdd5ae0fb534b858e4bf55dba8f'
-            '3eb76cc878f544bfc276929096c1d7d233e2e3d613886ee9a78b306ac3cd763e'
-            'e9a50b7004218803ecf44c0be8c7fb28d584e8b7b3a821f26ff3478816ab0afd'
-            '7cacae3dad7042f331208a47f7177a27b03a45984659df900ac175d715883aad'
-            '758e7967badd0b17f4a8389e01872e9f9d643e753149d129477f6b1c888f5f29')
-
-prepare(){
-  cd "$_pkgname-$pkgver"
-  patch -Np1 -i ../001-Makefile-support-running-with-multiple-parallel-jobs.patch
-}
+b2sums=('56f5d7f8fcd6abbe058667bb6224fe639986087bbf75b0929665928f6cce5e7580e5a685bf4006ad13e89656c26babab1b8fb6429fb0763b6bddbf71fc74c84a'
+        '4a337bcaf7a1c0530b51a0c436a4cd4f9ff37564f92a6ae29e5587a839c2c92aab5e669c58d52929d9517df6053ef459f23259e3bd57367cd800974db6777010'
+        'ae0b990800fbf1468c261def013a1d06cc6185dd2bb85cf1a6f7a6834f3ba29c390f052b8871f2a49b2a83f297a565772c4de73649b24bdc94efd87946ef88a2'
+        '430f32020a6077951fc98f8375fffed3b304645f398de4f5ce38ef2233439e23a1e3919fa9e7c93472eb2da75629c7d7ccaae9fe2c48dfe42315020c524a4053')
 
 build(){
-  cd "$_pkgname-$pkgver"
+  cd "$_pkgname-$_pkgver"
   make
 }
 
 package() {
-  install -Dm755 "$_pkgname-$pkgver/$_pkgname" "$pkgdir/var/lib/adguardhome/$_pkgname"
+  install -Dm755 "$_pkgname-$_pkgver/$_pkgname" "$pkgdir/var/lib/adguardhome/$_pkgname"
   install -Dm644 "$_pkgname.service" "$pkgdir/usr/lib/systemd/system/$_pkgname.service"
   install -Dm644 "$srcdir"/sysusers.conf "$pkgdir/usr/lib/sysusers.d/$pkgname.conf"
   install -Dm644 "$srcdir"/tmpfiles.conf "$pkgdir/usr/lib/tmpfiles.d/$pkgname.conf"
