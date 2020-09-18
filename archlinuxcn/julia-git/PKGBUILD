@@ -44,7 +44,6 @@ makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
              gcc-fortran git patchelf python)
 options=('debug' '!strip' '!buildflags')
 _patches=(
-  0001-Allow-system-libnghttp2.patch
   0002-Fix-source-file-paths.patch
   0003-Optimize-allocation-of-arrays.patch
   0004-Enable-basic-AA-in-O2.patch
@@ -61,7 +60,6 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '80a3feb505691352da0ca23339d3dd41'
          'b634ce07d9b70b0762660248d462c23f'
          '2a1968a1dbeb305e146639797594762a'
          '949522f85f0bbe9f3dcd664e41d54eb3'
