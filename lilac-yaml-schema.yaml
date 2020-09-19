@@ -51,11 +51,14 @@ properties:
     description: Configure how nvchecker should check for updates / rebuilds? The first should check for updates and others for rebuilds.
     type: array
     items:
-      anyOf:
-        - type: object
-          description: nvchecker configuration section
-        - type: string
-          description: Shorthand for simple check sources (e.g. "aur")
+      type: object
+      description: nvchecker configuration section
+      properties:
+        source:
+          type: string
+          description: nvchecker source name
+      required:
+        - source
     minItems: 1
   maintainers:
     description: List of maintainers for receiving email notifications
