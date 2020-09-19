@@ -51,14 +51,24 @@ properties:
     description: Configure how nvchecker should check for updates / rebuilds? The first should check for updates and others for rebuilds.
     type: array
     items:
-      type: object
-      description: nvchecker configuration section
-      properties:
-        source:
-          type: string
-          description: nvchecker source name
-      required:
-        - source
+      anyOf:
+        - type: object
+          description: nvchecker configuration section
+          properties:
+            source:
+              type: string
+              description: nvchecker source name
+          required:
+            - source
+        - type: object
+          description: use an alias for nvchecker configuration section
+          properties:
+            alias:
+              type: string
+              description: alias name
+          required:
+            - alias
+          additionalProperties: false
     minItems: 1
   maintainers:
     description: List of maintainers for receiving email notifications
