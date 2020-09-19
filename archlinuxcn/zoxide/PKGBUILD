@@ -1,0 +1,24 @@
+# Maintainer: Hao Long <imlonghao@archlinuxcn.org>
+
+pkgname=zoxide
+pkgver=0.4.3
+pkgrel=0
+pkgdesc="A fast cd command that learns your habits"
+arch=("x86_64" "i686")
+url="https://github.com/ajeetdsouza/zoxide"
+license=("MIT")
+depends=("gcc-libs")
+makedepends=("cargo")
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('cfcbbe7b73a2a149e2b38ac6dd4bd4a6c1bdd6cf6f2a2bab49f6aeec3c705357')
+
+build() {
+  cd ${pkgname}-${pkgver}
+  cargo build --release --locked --all-features --target-dir=target
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+  install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+  install -Dm755 target/release/zoxide -t "${pkgdir}/usr/bin"
+}
