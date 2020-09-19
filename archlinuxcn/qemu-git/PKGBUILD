@@ -8,7 +8,7 @@ pkgbase=qemu-git
 _gitname=qemu
 pkgname=(qemu-git qemu-headless-git qemu-arch-extra-git qemu-headless-arch-extra-git qemu-block-{iscsi-git,rbd-git,gluster-git} qemu-guest-agent-git)
 pkgdesc="A generic and open source machine emulator and virtualizer. Git version."
-pkgver=5.1.0.r4.g1d806cef0e
+pkgver=5.1.0.r1429.g053a417781
 pkgrel=1
 epoch=11
 arch=(i686 x86_64)
@@ -17,7 +17,7 @@ url="http://wiki.qemu.org/"
 _headlessdeps=(seabios gnutls libpng libaio numactl libnfs
                lzo snappy curl vde2 libcap-ng spice libcacard usbredir libslirp
                libssh zstd liburing)
-depends=(dtc virglrenderer sdl2 vte3 libpulse brltty "${_headlessdeps[@]}")
+depends=(virglrenderer sdl2 vte3 libpulse brltty "${_headlessdeps[@]}")
 makedepends=(git spice-protocol python ceph libiscsi glusterfs python-sphinx xfsprogs)
 source=(git://git.qemu.org/qemu.git
         qemu-ga.service
@@ -70,12 +70,11 @@ _build() (
     --enable-modules \
     --enable-sdl \
     --disable-werror \
-    --enable-vhost-user \
     --enable-slirp=system \
     --enable-xfsctl \
     "${@:2}"
 
-  make
+  make -j1
 )
 
 package_qemu-git() {
@@ -124,7 +123,6 @@ _package() {
   rm qemu/block-{iscsi,rbd,gluster}.so
 
   cd ../bin
-  tidy_strip
 
   # remove extra arch
   for _bin in qemu-*; do
