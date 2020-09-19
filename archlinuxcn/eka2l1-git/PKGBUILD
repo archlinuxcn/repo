@@ -1,0 +1,64 @@
+# Maintainer: heavysink <winstonwu91@gmail.com>
+_pkgname=eka2l1
+pkgname="${_pkgname}-git"
+pkgver=3247.c95b2068
+pkgrel=1
+pkgdesc="Experimental Symbian OS emulator"
+arch=('x86_64')
+url="https://github.com/EKA2L1/EKA2L1"
+license=('GPL2')
+makedepends=(
+	'boost'
+	'cmake'
+	'git'
+	'ccache'
+	'ninja'
+    'glfw'
+    'vulkan-headers'
+    'python'
+)
+depends=(
+	'boost-libs'
+	'gtk3'
+    'freetype2'
+    'pango'
+	'vulkan-icd-loader'
+)
+provides=('eka2l1')
+conflicts=('eka2l1')
+source=(
+	"${_pkgname}::git+https://github.com/EKA2L1/EKA2L1.git"
+)
+md5sums=(
+	'SKIP'
+)
+
+pkgver() {
+	cd "${_pkgname}"
+	printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+	cd "${_pkgname}"
+	git submodule update --recursive --init
+  find src/ -type f -exec sed -i 's/std::int16_t/int16_t/g' {} +
+  find src/ -type f -exec sed -i 's/std::uint32_t/uint32_t/g' {} +
+  find src/ -type f -exec sed -i 's/std::uint8_t/uint8_t/g' {} +
+  sed -i 's/std::uint64_t surface_handle_64/std::uint32_t surface_handle_64/g' src/emu/drivers/src/graphics/backend/vulkan/graphics_vulkan.cpp
+}
+
+build() {
+	cd "${_pkgname}"
+
+	mkdir -p build
+	cd build/
+	cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DGLFW_INSTALL=OFF ..
+	ninja
+}
+
+package() {
+	cd "${_pkgname}/build/bin"
+
+	install -d -m 755 "${pkgdir}/usr/bin/"
+    install -m755 eka2l1 "${pkgdir}/usr/bin"
+}
