@@ -1,0 +1,21 @@
+--- src/CMakeLists.txt.orig	2020-05-12 13:16:34.317545662 +0300
++++ src/CMakeLists.txt	2020-05-12 13:16:41.670936116 +0300
+@@ -1,8 +1,3 @@
+-
+-if(NOT CMAKE_SYSTEM_NAME STREQUAL Darwin)
+-  add_subdirectory(BlocksRuntime)
+-endif()
+-
+ add_library(dispatch
+   allocator.c
+   apply.c
+--- CMakeLists.txt.orig	2020-05-12 13:24:24.764607466 +0300
++++ CMakeLists.txt	2020-05-12 13:24:27.634630553 +0300
+@@ -114,6 +114,7 @@
+ endif()
+ 
+ find_package(LibRT)
++find_package(BlocksRuntime)
+ 
+ check_function_exists(_pthread_workqueue_init HAVE__PTHREAD_WORKQUEUE_INIT)
+ check_function_exists(getprogname HAVE_GETPROGNAME)
