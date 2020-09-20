@@ -2,8 +2,8 @@
 
 pkgname=python-mmpycocotools
 _pkgname=mmpycocotools
-pkgver=12.0.2
-pkgrel=2
+pkgver=12.0.3
+pkgrel=1
 pkgdesc='Official APIs for the MS-COCO dataset (openmm lab fork)'
 arch=(x86_64)
 url='https://pypi.org/project/mmpycocotools'
@@ -24,7 +24,7 @@ source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/s
 "
         "https://github.com/open-mmlab/cocoapi/raw/master/license.txt"
 )
-sha512sums=('34a866568d3b1dcd5d6b24255ce73171a9cd3df19308532062d664c70bd562f8d314298adc524fa8474813cc2b1b84e0288cc781d7753f648403d7c52de4a8f1'
+sha512sums=('8eb699757531edbb689f28895d0613d1f7bea88a6a6fadb4d4d30021ba7af8bd9e72f307c635746388b67817a6149b14fd82d1b03a84ca77adade4c4bfa77281'
             'b0dc48c4d0fa9eaa101bf94dd75df4b23a9281ba714b0c1f01204d2d48c6f1de14cbe093590b16ef614168621146c9f708f6af2543561a56c76c81b66113c435')
 
 build() {
