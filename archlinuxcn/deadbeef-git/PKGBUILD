@@ -1,41 +1,52 @@
-# Maintainer: Heavysink <winstonwu91@gmail.com>
-# Maintainer: Soukyuu <chrno-sphered at hotmail dot com>
+# Maintainer: ToadKing <toadking at toadking dot com>
+# Contributor: Soukyuu <chrno-sphered at hotmail dot com>
 # Contributor: archtux <antonio dot arias99999 at gmail dot com>
 pkgname=deadbeef-git
-pkgver=r9436.d9a342b6d
+pkgver=r9665.b4e867ec3
 pkgrel=1
 pkgdesc="A GTK+ audio player for GNU/Linux (devel branch)"
-url="http://deadbeef.sourceforge.net"
-arch=('x86_64')
-url='http://deadbeef.sourceforge.net'
-license=('GPL2')
-depends=('alsa-lib' 'hicolor-icon-theme' 'desktop-file-utils' 'jansson')
-makedepends=('libvorbis' 'libmad' 'flac' 'curl' 'imlib2' 'wavpack' 'libsndfile' 'libcdio' 'libcddb'
-             'libx11' 'faad2' 'zlib' 'intltool' 'pkgconfig' 'libpulse' 'libzip' 'libsamplerate'
-             'yasm' 'ffmpeg' 'gtk2' 'gtk3' 'git' 'intltool')
+url="https://deadbeef.sourceforge.io/"
+arch=('i686' 'x86_64')
+license=('GPL2'
+         'LGPL2.1'
+         'ZLIB')
+depends=('alsa-lib' 'hicolor-icon-theme' 'jansson' 'libblocksruntime' 'libdispatch')
+makedepends=('curl' 'faad2' 'flac' 'git' 'intltool' 'imlib2' 'libcddb' 'libcdio' 'libmad' 'libpulse' 
+             'libsamplerate' 'libvorbis' 'libx11' 'libzip' 'wavpack' 'yasm'
+             'ffmpeg' 'gtk2' 'gtk3' 'clang')
 optdepends=('gtk2: for the GTK2 interface'
             'gtk3: for the GTK3 interface'
-            'libsamplerate: for Resampler plugin'
-            'libvorbis: for Ogg Vorbis playback'
-            'libmad: for MP1/MP2/MP3 playback'
-            'mpg123: for MP1/MP2/MP3 playback'
-            'flac: for FLAC playback'
-            'curl: for Last.fm scrobbler, SHOUTcast, Icecast, Podcast support'
+            'libsamplerate: for dsp_libsrc plugin (resampler)'
+            'libsm: optional dependency for gtkui session client support'
+            'libice: optional dependency for gtkui session client support'
+            'alsa-lib: ALSA support'
+            'alsa-oss: for OSS output plugin'
+            'libvorbis: for ogg vorbis plugin'
+            'libogg: for ogg vorbis plugin'
+            'libmad: for mp3 plugin (mpeg1,2 layers1,2,3)'
+            'flac: for flac plugin'
+            'curl: for last.fm, vfs_curl (shoutcast/icecast), artwork plugins'
             'imlib2: for artwork plugin'
-            'wavpack: for WavPack playback'
-            'libsndfile: for Wave playback'
-            'libcdio: audio cd plugin'
-            'libcddb: audio cd plugin'
-            'faad2: for AAC/MP4 support'
-            'dbus: for OSD notifications support'
+            'wavpack: for wavpack plugin'
+            'libsndfile: for sndfile plugin'
+            'libcdio: for cd audio plugin'
+            'libcddb: for cd audio plugin'
+            'cdparanoia: for cd audio plugin'
+            'faad2: for AAC plugin'
+            'dbus: for notification daemon support (OSD current song notifications)'
             'pulseaudio: for PulseAudio output plugin'
             'libx11: for global hotkeys plugin'
-            'zlib: for Audio Overload plugin'
+            'zlib: for Audio Overload plugin (psf, psf2, etc), GME (for vgz)'
+            'libsidplay: for SID player plugin'
+            'yasm: required to build assembly portions of ffap plugin'
             'libzip: for vfs_zip plugin'
-            'ffmpeg: for ffmpeg plugin')
+            'ffmpeg: for ffmpeg plugin'
+            'opusfile: for opus plugin'
+            'mpg123: for MP1/MP2/MP3 playback')
+options=('!libtool')
 conflicts=('deadbeef')
 provides=('deadbeef')
-source=('git+https://github.com/DeaDBeeF-Player/deadbeef')
+source=('git+https://github.com/DeaDBeeF-Player/deadbeef.git')
 md5sums=('SKIP')
 
 prepare() {
@@ -46,9 +57,9 @@ prepare() {
 
 build() {
   cd "$srcdir/deadbeef"
-  ./autogen.sh
-  ./configure --prefix=/usr
 
+  ./autogen.sh
+  CC=clang CXX=clang++ ./configure --prefix=/usr
   make
 }
 
@@ -56,6 +67,7 @@ package() {
   cd "$srcdir/deadbeef"
 
   make DESTDIR="$pkgdir" install
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
 }
 
 pkgver() {
