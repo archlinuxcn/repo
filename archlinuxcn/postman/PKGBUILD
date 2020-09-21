@@ -1,12 +1,12 @@
 # Maintainer: Bruce Zhang
 pkgname=postman
 pkgver=7.32.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Build, test, and document your APIs faster'
 arch=('x86_64')
 url='https://www.getpostman.com/downloads/'
 license=('custom:Postman EULA')
-depends=('electron7')
+depends=('electron8')
 provides=('postman')
 conflicts=('postman-bin')
 options=('!strip')
@@ -18,7 +18,7 @@ source=(
   "postman.sh"
 )
 sha1sums=('35194ee810e13d3a21f224c6d46104fc201631c1'
-          '7c00d44372bea7447ee8ef2acb03dcbdd3a9a279')
+          'SKIP')
 sha1sums_x86_64=('06ae0cea9c476df25f48de8c84b298985391e9b7')
 
 package() {

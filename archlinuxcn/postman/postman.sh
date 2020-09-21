@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-exec electron7 /usr/share/postman/app $@
+exec electron8 /usr/share/postman/app $@
