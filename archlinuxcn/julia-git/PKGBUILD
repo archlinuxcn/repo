@@ -44,7 +44,6 @@ makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
              gcc-fortran git patchelf python)
 options=('debug' '!strip' '!buildflags')
 _patches=(
-  0001-Fix-debug-build.patch
   0002-Fix-source-file-paths.patch
   0003-Optimize-allocation-of-arrays.patch
   0004-Enable-basic-AA-in-O2.patch
@@ -61,7 +60,6 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '17f98ba13ad9726c7167581d81409158'
          '69eacc96dbfd27ae8103bf6171e28619'
          '60e6d3ae62adc938f3e4aed050769696'
          '4bfae9c17499c322d1b8fc2b0167f052'
