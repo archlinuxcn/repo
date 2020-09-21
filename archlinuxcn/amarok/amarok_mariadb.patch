@@ -1,0 +1,22 @@
+diff --git a/cmake/modules/FindMySQL.cmake b/cmake/modules/FindMySQL.cmake
+index 0bd7fdfd07..0216668731 100644
+--- a/cmake/modules/FindMySQL.cmake
++++ b/cmake/modules/FindMySQL.cmake
+@@ -42,7 +42,16 @@ if(MYSQLCONFIG_EXECUTABLE)
+         # At least on OpenSUSE and FreeBSD --libmysql-libs doesn't exist, so we just use
+         # MYSQL_LIBRARIES for that. We'll see if that's enough when testing
+         # below.
+-        set(MYSQL_EMBEDDED_LIBRARIES ${MYSQL_LIBRARIES})
++        # mysql-config removed --libmysql-libs, but amarok need libmysqld other
++        # than libmysqlclient to run mysql embedded server.
++        find_library(MYSQL_EMBEDDED_LIBRARIES NAMES mysqld libmysqld
++            PATHS
++                $ENV{MYSQL_DIR}/libmysql_r/.libs
++                $ENV{MYSQL_DIR}/lib
++                $ENV{MYSQL_DIR}/lib/mysql
++            PATH_SUFFIXES
++                mysql
++        )
+     else()
+         set(MYSQL_EMBEDDED_LIBRARIES ${MC_MYSQL_EMBEDDED_LIBRARIES})
+     endif()
