@@ -1,6 +1,6 @@
 # Maintainer: Brian Bidulock <bidulock@openss7.org>
 pkgname=ocserv
-pkgver=1.1.0
+pkgver=1.1.1
 pkgrel=1
 pkgdesc="OpenConnect VPN Server"
 arch=('i686' 'x86_64')
@@ -10,7 +10,7 @@ depends=('autogen' 'libpcl' 'http-parser' 'libnl' 'libsystemd' 'protobuf-c' 'tal
 makedepends=('freeradius' 'gperf' 'tcp-wrappers')
 backup=('etc/ocserv.config' 'etc/ocserv-passwd')
 source=("$pkgname-$pkgver.tar.gz::https://gitlab.com/ocserv/ocserv/repository/archive.tar.gz?ref=${pkgver}")
-sha256sums=('fa37d435933784366eb540b345a1b08dc3324ca8466782d7f0c3548ef854e65e')
+sha256sums=('2042f1f777c81d6fad76222fa26684497a1e2ec2deb7bb2228ef012a2c6436f5')
 
 prepare() {
   cd ${pkgname}-${pkgver}-*
