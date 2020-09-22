@@ -2,17 +2,23 @@
 
 pkgname=1password
 pkgver=0.8.7.26947
-pkgrel=1
+pkgrel=4
+_appimagver=0.8.7-1
+_appimage="${pkgname}-${pkgver}-${pkgrel}.AppImage"
 pkgdesc="The world's most-loved password manager - read-only development preview"
 arch=('x86_64')
 url='https://1password.com/'
 license=('unknown')
 depends=('fuse2' 'zlib' 'hicolor-icon-theme')
 options=(!strip)
-_appimage="${pkgname}-${pkgver}.AppImage"
-source=("${_appimage}::https://onepassword.s3.amazonaws.com/linux/appimage/1password-latest.AppImage")
+source=("${_appimage}::https://onepassword.s3.amazonaws.com/linux/appimage/1password-${_appimagver}.AppImage"
+        "${_appimage}.sig::https://onepassword.s3.amazonaws.com/linux/appimage/1password-${_appimagver}.AppImage.sig"
+)
 noextract=("${_appimage}")
-sha256sums=('32914f56660d8ba23fe04df8762035deb397448243e1875c8d88fead7cc10184')
+sha256sums=('e98de64e42a25172569c7303b253450c831fe011eb1e7a7152b770ef0caae224'
+            'SKIP'
+)
+validpgpkeys=('3FEF9748469ADBE15DA7CA80AC2D62742012EA22')
 
 prepare() {
     chmod +x "${_appimage}"
