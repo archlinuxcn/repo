@@ -1,10 +1,10 @@
 # Maintainer: D. Can Celasun <can[at]dcc[dot]im>
 
 pkgname=visual-studio-code-insiders
-pkgver=1600676069
+pkgver=1600799391
 pkgrel=1
 pkgdesc="Editor for building and debugging modern web and cloud applications (insiders version)"
-arch=('x86_64' 'i686')
+arch=('x86_64' 'i686' 'aarch64' 'armv7h')
 url="https://code.visualstudio.com/"
 license=('custom: commercial')
 # lsof: need for terminal splitting, see https://github.com/Microsoft/vscode/issues/62991
@@ -15,6 +15,10 @@ optdepends=('glib2: Needed for move to trash functionality'
 pkgver() {
     if [ "${CARCH}" = "x86_64" ]; then
         IFS='/' read -ra ADDR <<< $(curl -ILs -o /dev/null -w %{url_effective} https://vscode-update.azurewebsites.net/latest/linux-x64/insider); echo "${ADDR[5]}" | sed 's/code-insider-x64-//g' | sed 's/.tar.gz//g' | sed 's/-/./g'
+    elif [ "${CARCH}" = "aarch64" ]; then
+        IFS='/' read -ra ADDR <<< $(curl -ILs -o /dev/null -w %{url_effective} https://vscode-update.azurewebsites.net/latest/linux-arm64/insider); echo "${ADDR[5]}" | sed 's/code-insider-arm64-//g' | sed 's/.tar.gz//g' | sed 's/-/./g'
+    elif [ "${CARCH}" = "armv7h" ]; then
+        IFS='/' read -ra ADDR <<< $(curl -ILs -o /dev/null -w %{url_effective} https://vscode-update.azurewebsites.net/latest/linux-armhf/insider); echo "${ADDR[5]}" | sed 's/code-insider-armhf-//g' | sed 's/.tar.gz//g' | sed 's/-/./g'
     else
         IFS='/' read -ra ADDR <<< $(curl -ILs -o /dev/null -w %{url_effective} https://vscode-update.azurewebsites.net/latest/linux-ia32/insider); echo "${ADDR[5]}" | sed 's/code-insider-//g' | sed 's/.tar.gz//g' | sed 's/-/./g'
     fi
@@ -23,10 +27,22 @@ pkgver() {
 source_x86_64=(code_x64_$(pkgver).tar.gz::https://vscode-update.azurewebsites.net/latest/linux-x64/insider
                ${pkgname}.desktop ${pkgname}-url-handler.desktop
                )
+source_aarch64=(code_arm64_$(pkgver).tar.gz::https://vscode-update.azurewebsites.net/latest/linux-arm64/insider
+               ${pkgname}.desktop ${pkgname}-url-handler.desktop
+               )
+source_armv7h=(code_armhf_$(pkgver).tar.gz::https://vscode-update.azurewebsites.net/latest/linux-armhf/insider
+               ${pkgname}.desktop ${pkgname}-url-handler.desktop
+               )
 source_i686=(code_ia32_$(pkgver).tar.gz::https://vscode-update.azurewebsites.net/latest/linux-ia32/insider
               ${pkgname}.desktop ${pkgname}-url-handler.desktop
               )
 sha256sums_x86_64=('SKIP'
+                   'edfeb13aa50d35fbae748ff545b5bd126be916dbfeda682157e3d5ce81574db2'
+                   'd06d9d057b507d1747a8ed8ae304beb5e20c7bf887c362c941d85b02c893069e')
+sha256sums_aarch64=('SKIP'
+                   'edfeb13aa50d35fbae748ff545b5bd126be916dbfeda682157e3d5ce81574db2'
+                   'd06d9d057b507d1747a8ed8ae304beb5e20c7bf887c362c941d85b02c893069e')
+sha256sums_armv7h=('SKIP'
                    'edfeb13aa50d35fbae748ff545b5bd126be916dbfeda682157e3d5ce81574db2'
                    'd06d9d057b507d1747a8ed8ae304beb5e20c7bf887c362c941d85b02c893069e')
 sha256sums_i686=('SKIP'
@@ -34,6 +50,12 @@ sha256sums_i686=('SKIP'
                  'd06d9d057b507d1747a8ed8ae304beb5e20c7bf887c362c941d85b02c893069e')
 package() {
   _pkg=VSCode-linux-x64
+  if [ "${CARCH}" = "aarch64" ]; then
+    _pkg=VSCode-linux-arm64
+  fi
+  if [ "${CARCH}" = "armv7h" ]; then
+    _pkg=VSCode-linux-armhf
+  fi
   if [ "${CARCH}" = "i686" ]; then
     _pkg=VSCode-linux-ia32
   fi
