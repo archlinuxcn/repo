@@ -25,11 +25,11 @@ set -e
 # CONSTANTS AND VARIABLES
 
 # filled by PKGBUILD
-_TB_PKGNAME_='__REPL_NAME__'
-_TB_VERSION_='__REPL_VERSION__'
-_TB_RELEASE_='__REPL_RELEASE__'
-_TB_LANGUAGE_="__REPL_LANGUAGE__"
-_TB_ARCH_='__REPL_ARCH__'
+_TB_PKGNAME_='@PACKAGE_NAME@'
+_TB_VERSION_='@PACKAGE_VERSION@'
+_TB_RELEASE_='@PACKAGE_RELEASE@'
+_TB_LANGUAGE_="@PACKAGE_LANGUAGE@"
+_TB_ARCH_='@PACKAGE_ARCH@'
 
 # other constants and variables
 _TB_HOME_DIR_=~/".${_TB_PKGNAME_}"
@@ -177,8 +177,7 @@ cd "${_TB_HOME_DIR_}"
 [[ ! -f "${_TB_VER_FILE_}" ]] && echo 0 > "${_TB_VER_FILE_}"
 
 # get the installed version
-while read _TB_VER_LINE_
-do
+while read _TB_VER_LINE_; do
 	_TB_INSTALLED_VERSION_="${_TB_VER_LINE_}"
 done < "${_TB_VER_FILE_}"
 

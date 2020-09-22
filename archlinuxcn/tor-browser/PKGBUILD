@@ -18,7 +18,7 @@
 
 pkgname='tor-browser'
 pkgver='9.5.4'
-pkgrel='1'
+pkgrel='2'
 pkgdesc='Tor Browser Bundle: anonymous browsing using Firefox and Tor (international PKGBUILD)'
 url='https://www.torproject.org/projects/torbrowser.html'
 arch=('i686' 'x86_64')
@@ -77,19 +77,26 @@ _dist_checksum() {
 
 }
 
+# Make a string suitable for `sed`, by escaping "[]/&$.*^\" - syntax: `_sed_escape STRING`
+_sed_escape() {
+	echo "${1}" | sed 's/[]\/&.*$^[]/\\&/g'
+}
+
 source_i686=("${_urlbase}/${pkgname}-${_tag_i686}-${pkgver}_${_language}.tar.xz"{,.asc})
 source_x86_64=("${_urlbase}/${pkgname}-${_tag_x86_64}-${pkgver}_${_language}.tar.xz"{,.asc})
-source=("${pkgname}.desktop"
+source=("${pkgname}.desktop.in"
+	"${pkgname}.in"
 	"${pkgname}.png"
-	"${pkgname}.sh")
+	"${pkgname}.svg")
 
 ### IMPORTANT #################################################################
 # No need for `makepkg -g`: the following sha256sums¸don't need to be updated #
 # with each release, everything is done automatically! Leave them like this!  #
 ###############################################################################
-sha256sums=('9ee0a4672e2d0835ffb94bcf26e17b56432030496a9cdf019b70c96083c24340'
+sha256sums=('0b0614d04d55ac3748775fd34cb6c1f244fd05b5a16cc1e3ae70d887f7eedbc6'
+            '8a6e0945571c332c1fc8b1cef11d15f699a752da2bb403bd0b65ee44821cc643'
             'f25ccf68b47f5eb14c6fec0664c74f30ea9c6c58d42fc6abac3b64670aaa3152'
-            '89118837e6db1d7b089e0067a6430e9a1a8602a64e00b7ea94382abfb0d3e502')
+            '7b28b5dbe8ad573bb46e61b4d542b33e01ca240825ca640b4893fee6203b021f')
 sha256sums_i686=($(_dist_checksum "${_tag_i686}")
                  'SKIP')
 sha256sums_x86_64=($(_dist_checksum "${_tag_x86_64}")
@@ -119,32 +126,34 @@ prepare() {
 		echo -e "\n        ${_COL_LIGHTGREY_}TORBROWSER_PKGLANG='en-US' makepkg${_COL_DEFAULT_}\n"
 	fi
 
-	# we search and replace using sed with / as delimiter below so don't allow slashes in these vars.
-	# makepkg already enforces that there're no slashes in ${pkgname}, so we don't check that again here.
-	if [[ ${pkgver} = */* || ${_language} = */* || ${pkgdesc} = */* ]]; then
-		error '${pkgver}, ${_language} and ${pkgdesc} for this package are not allowed to contain /' >&2
-		return 1
-	fi
-
 }
 
 package() {
 
 	cd "${srcdir}"
 
-	sed -i "s/__REPL_LANGUAGE__/${_language}/g" "${pkgname}.desktop"
+	local _sed_subst="
+		s/@PACKAGE_NAME@/$(_sed_escape "${pkgname}")/g
+		s/@PACKAGE_VERSION@/$(_sed_escape "${pkgver}")/g
+		s/@PACKAGE_RELEASE@/$(_sed_escape "${pkgrel}")/g
+		s/@PACKAGE_LANGUAGE@/$(_sed_escape "${_language}")/g
+		s/@PACKAGE_ARCH@/$(_sed_escape "${_archstr}")/g
+	"
 
-	sed -i "s/__REPL_NAME__/${pkgname}/g"		"${pkgname}.sh"
-	sed -i "s/__REPL_VERSION__/${pkgver}/g"	"${pkgname}.sh"
-	sed -i "s/__REPL_RELEASE__/${pkgrel}/g"	"${pkgname}.sh"
-	sed -i "s/__REPL_LANGUAGE__/${_language}/g"	"${pkgname}.sh"
-	sed -i "s/__REPL_ARCH__/${_archstr}/g"		"${pkgname}.sh"
+	install -dm755 "${pkgdir}/usr/bin"
+	sed "${_sed_subst}" "${pkgname}.in" > "${pkgdir}/usr/bin/${pkgname}"
+	chmod +x "${pkgdir}/usr/bin/${pkgname}"
 
-	install -Dm 644 "${pkgname}.desktop"		"${pkgdir}/usr/share/applications/${pkgname}.desktop"
-	install -Dm 644 "${pkgname}.png"		"${pkgdir}/usr/share/pixmaps/${pkgname}.png"
-	install -Dm 755 "${pkgname}.sh"		"${pkgdir}/usr/bin/${pkgname}"
+	install -Dm 644 "${pkgname}.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
 
-	install -Dm 644 "${pkgname}-${_archstr}-${pkgver}_${_language}.tar.xz" "${pkgdir}/opt/${pkgname}/${pkgname}-${_archstr}-${pkgver}_${_language}.tar.xz"
+	install -Dm 644 "${pkgname}.svg" "${pkgdir}/usr/share/pixmaps/${pkgname}.svg"
+
+	install -dm755 "${pkgdir}/usr/share/applications"
+	sed "${_sed_subst}" "${pkgname}.desktop.in" > \
+		"${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+	install -Dm 644 "${pkgname}-${_archstr}-${pkgver}_${_language}.tar.xz" \
+		"${pkgdir}/opt/${pkgname}/${pkgname}-${_archstr}-${pkgver}_${_language}.tar.xz"
 
 }
 
