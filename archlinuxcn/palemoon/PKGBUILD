@@ -6,7 +6,7 @@ pkgname=palemoon
 _repo=Pale-Moon
 pkgver=28.13.0
 _commit=9aceb39b3e672080757d34923de2c64c9fd67d79
-pkgrel=1
+pkgrel=2
 pkgdesc="Open source web browser based on Firefox focusing on efficiency."
 arch=('i686' 'x86_64')
 url="https://www.palemoon.org/"
@@ -22,7 +22,7 @@ source=(git+"https://github.com/MoonchildProductions/${_repo}?signed#commit=${_c
         mozconfig.in)
 sha1sums=('SKIP'
           'SKIP'
-          'a5349fbf751e13951352f5d0f8cba00465d043bb')
+          '3269db35d05a04e5edfca9e2562a094425d82d96')
 validpgpkeys=('3059E09144F56804F0FBF4E126B40624BDBFD9F3'
               '3DAD8CD107197488D2A2A0BD40481E7B8FCF9CEC')
 
