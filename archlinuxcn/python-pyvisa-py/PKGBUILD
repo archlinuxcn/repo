@@ -1,22 +1,29 @@
 # Maintainer: Grey Christoforo <first name [at] last name [dot] net>
 
 pkgname=python-pyvisa-py
-pkgver=0.4.1
+pkgver=0.5.0
 pkgrel=1
 pkgdesc="A pure python backend for PyVISA"
 arch=('any')
 license=('MIT')
 depends=('python' 'python-pyvisa')
+makedepends=('python-setuptools-scm')
 conflicts=('python-pyvisa-py-git')
 
-_gitproject='pyvisa-py'
-
 source=(https://github.com/pyvisa/pyvisa-py/archive/${pkgver}.tar.gz)
-md5sums=('e698c626b04924cbc261c979564d053b')
+md5sums=('5fa46bd2eda3b8f2893caea1f2219447')
 url="https://github.com/pyvisa/pyvisa-py"
 
+prepare() {
+  cd "pyvisa-py-${pkgver}"
+  sed "/^author =.*/i version = ${pkgver}" -i setup.cfg
+  sed -i "s,use_scm_version=True,use_scm_version=False,g" setup.py
+
+  sed '/\[tool.setuptools_scm\]/d' -i pyproject.toml
+}
+
 package() {
-  cd ${_gitproject}-${pkgver}
+  cd pyvisa-py-${pkgver}
   python setup.py install --prefix=/usr --root="$pkgdir/" --optimize=1
 }
 
