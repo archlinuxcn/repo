@@ -4,7 +4,7 @@
 
 pkgbase=libc++
 pkgname=(${pkgbase}{,abi,experimental})
-pkgver=10.0.0
+pkgver=10.0.1
 pkgrel=1
 url="https://libcxx.llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
@@ -15,11 +15,11 @@ source=("https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver/
         "https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver/libcxx-$pkgver.src.tar.xz"{,.sig}
         "https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver/libcxxabi-$pkgver.src.tar.xz"{,.sig})
 noextract=("${source[@]##*/}")
-sha512sums=('7dc961aacee3a01ecc002ff2b688a2ef50661856d2abd5ecc90566ffcad7566e4976736cd339ea96592e452cd5a17aaceba9712b2effec805661cca8ff020ee7'
+sha512sums=('cf34d037c1684d09e7e38d5fc131714eac93c78353d6186b2f806a8fb22dcae0f4748ce22d6faf178c95cfcf20bdc3fa7c5238518a154b3112781f5ab70edaa4'
             'SKIP'
-            '8cbcbea23c50f0d7020386d11af5b736b8b43291146c11ccc543118ed1877a88adc381be2573594236e97bcf75c47408f986e5e9644a4fce57758cde47e5b641'
+            'edc756751c8386f1868582d1974ef817ca5de34283474e0df3ce5df8ae213ca0601a5a1e089d09bdbfa8fca6c3f2fb2daa5cca8ca134f47dad738cc90f3c3f71'
             'SKIP'
-            'e58be156f924b0e613a69872c1d42190a4123e9c7a4de973e3f735a23992487df91549756c8acee81a35f9575f5b3001e748f8b01439f233660a18f4a45b0f32'
+            '1c58081e11746d5b63123dfb81b562eba925b31dc1a09413663c622a2cd56e8d17a2f184f6c3d78be292719fcc13f08aecaf9442f15b50682bd031416fe58a45'
             'SKIP')
 validpgpkeys=('474E22316ABF4785A88C6E8EA2C794A986419D8A') # Tom Stellard <tstellar@redhat.com> (.1 releases)
 validpgpkeys+=('B6C8F98282B944E3B0D5C2530FC3042E345AD05D') # Hans Wennborg <hans@chromium.org> (.0 releases)
