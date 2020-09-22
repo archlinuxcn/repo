@@ -5,9 +5,9 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=68.12.0
+pkgver=78.3.0
 pkgrel=1
-_commit=15a7c3d991a670b6489d4f432b52a188358f4ca5
+_commit=df6b2146f13fc90ad3c11136115ada077383ee2a
 pkgdesc="GNU version of the Firefox browser."
 arch=(x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
@@ -26,12 +26,12 @@ options=(!emptydirs !makeflags !strip)
 
 source=(https://git.savannah.gnu.org/cgit/gnuzilla.git/snapshot/gnuzilla-${_commit}.tar.gz
         icecat.desktop icecat-safe.desktop
-        "0001-Use-remoting-name-for-GDK-application-names.patch::https://git.archlinux.org/svntogit/packages.git/plain/trunk/0001-Use-remoting-name-for-GDK-application-names.patch?h=packages/firefox&id=3dac00b6aefd97b66f13af0ad8761a3765094368")
+        "0001-Use-remoting-name-for-GDK-application-names.patch::https://git.archlinux.org/svntogit/packages.git/plain/trunk/0001-Use-remoting-name-for-GDK-application-names.patch?h=packages/firefox&id=92b3303bf777c103ae2cb1470e8ff2e1437e88b2")
 
-sha256sums=('b738a0b63a504bff36ad48f7aa4010ff0f9767d49688a481130de916dfd6b27f'
+sha256sums=('49a37f93de1f3112c69b479272075c224196b7fb279960214725149a0673cb82'
             'e00dbf01803cdd36fd9e1c0c018c19bb6f97e43016ea87062e6134bdc172bc7d'
             '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208'
-            'ab07ab26617ff76fce68e07c66b8aa9b96c2d3e5b5517e51a3c3eac2edd88894')
+            '3bb7463471fb43b2163a705a79a13a3003d70fff4bbe44f467807ca056de9a75')
 
 prepare() {
   cd gnuzilla-${_commit}
@@ -53,22 +53,25 @@ prepare() {
 
   # rename patches
   patch --ignore-whitespace << 'EOF'
---- makeicecat	2020-01-10 09:32:39.000000000 +0100
-+++ makeicecat_new	2020-01-10 09:38:50.216370585 +0100
-@@ -274,8 +274,10 @@
+--- makeicecat	2020-09-21 23:59:38.942240104 +0200
++++ makeicecat.new	2020-09-22 00:06:29.240253121 +0200
+@@ -270,9 +270,12 @@
  ###############################################################################
  
  # Replace Firefox branding
 -find . | tac | grep -i fennec  | prename --nofullpath -E 's/fennec/icecatmobile/;' -E 's/Fennec/IceCatMobile/;'
 -find . | tac | grep -i firefox | prename --nofullpath -E 's/firefox/icecat/;' -E 's/Firefox/IceCat/;'
+-find services/fxaccounts/rust-bridge | tac | prename --nofullpath -E 's/icecat-accounts/firefox-accounts/;' -E 's/IceCatAccounts/FirefoxAccounts/;'
 +find . -iname "*fennec*" | tac | xargs -i rename -v 'fennec' 'icecatmobile' "{}" || true
 +find . -iname "*fennec*" | tac | xargs -i rename -v 'Fennec' 'IceCatMobile' "{}" || true
 +find . -iname "*firefox*" | tac | xargs -i rename -v 'firefox' 'icecat' "{}" || true
 +find . -iname "*firefox*" | tac | xargs -i rename -v 'Firefox' 'IceCat' "{}" || true
++find services/fxaccounts/rust-bridge -iname "*icecat-accounts*" | tac | xargs -i rename -v 'icecat-accounts' 'firefox-accounts' "{}" || true
++find services/fxaccounts/rust-bridge -iname "*icecat-accounts*" | tac | xargs -i rename -v 'IceCatAccounts' 'FirefoxAccounts' "{}" || true
  
- rm browser/components/newtab/data/content/assets/icecat-wordmark.svg
- cp $DATA/branding/icecat-wordmark.svg browser/components/newtab/data/content/assets/
-@@ -340,7 +342,7 @@
+ echo "Running batch rebranding"
+ SEDSCRIPT="
+@@ -337,7 +337,7 @@
  
  sed 's/mozilla-bin/icecat-bin/' -i build/unix/run-mozilla.sh
  
@@ -129,9 +132,7 @@ ac_add_options --with-system-nss
 # Features
 ac_add_options --enable-alsa
 ac_add_options --enable-jack
-ac_add_options --enable-startup-notification
 ac_add_options --disable-crashreporter
-ac_add_options --disable-gconf
 ac_add_options --disable-updater
 ac_add_options --disable-tests
 ac_add_options --disable-eme
