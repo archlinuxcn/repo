@@ -17,8 +17,8 @@
 
 
 pkgname='tor-browser'
-pkgver='9.5.4'
-pkgrel='2'
+pkgver='10.0'
+pkgrel='1'
 pkgdesc='Tor Browser Bundle: anonymous browsing using Firefox and Tor (international PKGBUILD)'
 url='https://www.torproject.org/projects/torbrowser.html'
 arch=('i686' 'x86_64')
@@ -77,7 +77,7 @@ _dist_checksum() {
 
 }
 
-# Make a string suitable for `sed`, by escaping "[]/&$.*^\" - syntax: `_sed_escape STRING`
+# Make a string suitable for `sed`, by escaping `[]/&$.*^\` - syntax: `_sed_escape STRING`
 _sed_escape() {
 	echo "${1}" | sed 's/[]\/&.*$^[]/\\&/g'
 }
