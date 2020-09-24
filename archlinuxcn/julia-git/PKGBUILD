@@ -185,7 +185,7 @@ build_in() {
 
   make "${opts[@]}" -C base version_git.jl.phony
   make "${opts[@]}" -C deps
-  make "${opts[@]}" julia-ui-release
+  make "${opts[@]}" julia-cli-release
   make "${opts[@]}" release debug
   # TODO docless build
   JL_MAKEPKG_SRCDIR= make "${opts[@]}" docs
