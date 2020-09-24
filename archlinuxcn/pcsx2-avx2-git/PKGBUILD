@@ -2,17 +2,39 @@
 # Contributor: josephgbr <rafael.f.f1@gmail.com>
 # Contributor: Themaister <maister@archlinux.us>
 
-pkgname=pcsx2-avx2-git
-pkgver=1.7.0.r322.73b02c204
+pkgname=pcsx2-avx-git
+pkgver=1.7.0.r327.79f246895
 pkgrel=1
-pkgdesc='A Sony PlayStation 2 emulator (AVX2 instruction set, Haswell and up CPU required)'
-arch=('x86_64')
-url='http://www.pcsx2.net'
-license=('GPL2' 'GPL3' 'LGPL2.1' 'LGPL3')
-depends=('lib32-glew' 'lib32-libaio' 'lib32-libcanberra' 'lib32-libjpeg-turbo'
-         'lib32-libpulse' 'lib32-nvidia-cg-toolkit' 'lib32-portaudio'
-         'lib32-sdl2' 'lib32-soundtouch' 'lib32-wxgtk2' 'lib32-llvm-libs' 'lib32-gtk2' 'lib32-libpcap' 'lib32-libxml2')
-makedepends=('cmake' 'git' 'png++')
+pkgdesc='A Sony PlayStation 2 emulator'
+arch=(x86_64)
+url=https://www.pcsx2.net
+license=(
+  GPL2
+  GPL3
+  LGPL2.1
+  LGPL3
+)
+depends=(
+  lib32-glew
+  lib32-libaio
+  lib32-libcanberra
+  lib32-libjpeg-turbo
+  lib32-libpcap
+  lib32-libpulse
+  lib32-libxml2
+  lib32-nvidia-cg-toolkit
+  lib32-ocl-icd
+  lib32-portaudio
+  lib32-sdl2
+  lib32-soundtouch
+  lib32-wxgtk3
+)
+makedepends=(
+  cmake
+  git
+  opencl-headers
+  png++
+)
 provides=('pcsx2' 'pcsx2-git')
 conflicts=('pcsx2' 'pcsx2-git')
 source=('git+https://github.com/PCSX2/pcsx2.git')
@@ -24,40 +46,33 @@ pkgver() {
   git describe --tags | sed 's/^v//; s/-dev//; s/-/.r/; s/-g/./'
 }
 
-prepare() {
-  # Disable ZZOgl-PG
-  rm -rf pcsx2/plugins/zzogl-pg
-}
-
 build() {
-  cd pcsx2
-
-  if [[ -d build ]]; then
-    rm -rf build
-  fi
-  mkdir build && cd build
-
-  CXXFLAGS+=' -I/usr/include/harfbuzz' cmake .. \
-    -DCMAKE_BUILD_TYPE='Release' \
-    -DCMAKE_TOOLCHAIN_FILE='cmake/linux-compiler-i386-multilib.cmake' \
-    -DCMAKE_INSTALL_PREFIX='/usr' \
-    -DCMAKE_LIBRARY_PATH='/usr/lib32' \
-    -DPLUGIN_DIR='/usr/lib32/pcsx2' \
-    -DGAMEINDEX_DIR='/usr/share/pcsx2' \
-    -DEXTRA_PLUGINS='TRUE' \
-    -DREBUILD_SHADER='TRUE' \
-    -DGLSL_API='TRUE' \
-    -DPACKAGE_MODE='TRUE' \
-    -DXDG_STD='TRUE' \
-    -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config32
-
-  make
+  cmake -S pcsx2 -B build \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_TOOLCHAIN_FILE=cmake/linux-compiler-i386-multilib.cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_LIBRARY_PATH=/usr/lib32 \
+    -DGAMEINDEX_DIR=/usr/share/pcsx2 \
+    -DPLUGIN_DIR=/usr/lib32/pcsx2 \
+    -DDISABLE_BUILD_DATE=ON \
+    -DDISABLE_PCSX2_WRAPPER=ON \
+    -DEXTRA_PLUGINS=ON \
+    -DEGL_API=OFF \
+    -DGLSL_API=ON \
+    -DGTK3_API=ON \
+    -DOPENCL_API=ON \
+    -DSDL2_API=ON \
+    -DPACKAGE_MODE=ON \
+    -DREBUILD_SHADER=ON \
+    -DUSE_LTO=OFF \
+    -DUSE_VTUNE=OFF \
+    -DXDG_STD=ON \
+    -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config32 \
+    -Wno-dev
+  make -C build
 }
 
 package() {
-  cd pcsx2/build
-
-  make DESTDIR="${pkgdir}" install
+  make DESTDIR="${pkgdir}" -C build install
 }
-
 # vim: ts=2 sw=2 et:

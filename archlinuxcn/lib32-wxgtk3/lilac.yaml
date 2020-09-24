@@ -6,13 +6,10 @@ maintainers:
 
 build_prefix: multilib
 
-pre_build: vcs_update
+pre_build: aur_pre_build
 
-post_build: git_pkgbuild_commit
-
-repo_depends:
-  - lib32-wxgtk3
+post_build: aur_post_build
 
 update_on:
-  - source: github
-    github: PCSX2/pcsx2
+  - source: aur
+    aur: lib32-wxgtk3 
