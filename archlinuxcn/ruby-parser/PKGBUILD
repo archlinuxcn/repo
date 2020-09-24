@@ -4,8 +4,8 @@
 
 _gemname=parser
 pkgname=ruby-${_gemname}
-pkgver=2.7.1.4
-pkgrel=2
+pkgver=2.7.1.5
+pkgrel=1
 pkgdesc="A Ruby parser written in pure Ruby."
 arch=('any')
 depends=(ruby ruby-ast)
@@ -15,7 +15,7 @@ license=('MIT')
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 options=(!emptydirs)
 noextract=($_gemname-$pkgver.gem)
-sha256sums=('b6629f5772e6e4d1c83ce56dfb48a20f9ad589c5462ebe751ad64db8a1fd6080')
+sha256sums=('d4c4794be14b4ffe89510648265ebfded5da107eb571422287a4c66a08b7966e')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
