@@ -2,7 +2,7 @@
 
 pkgname=python-pyptt
 _pkgname=PyPtt
-pkgver=0.9.24
+pkgver=0.9.25
 pkgrel=1
 pkgdesc='A PTT library that support PTT and PTT2'
 arch=(any)
@@ -12,7 +12,7 @@ depends=(python python-progressbar python-websockets python-uao
          python-beautifulsoup4 python-requests)
 makedepends=(python-setuptools)
 source=("https://files.pythonhosted.org/packages/source/P/$_pkgname/$_pkgname-$pkgver.tar.gz")
-sha256sums=('f222cefc097e95829501d2499a6ad813f6e7abab3fc4a24de17f97674dc39226')
+sha256sums=('d927e69e329d0e1184799c7bfd97ee9a32e953facb56f1bd0ba0183c682c83b9')
 
 build() {
   cd $_pkgname-$pkgver
