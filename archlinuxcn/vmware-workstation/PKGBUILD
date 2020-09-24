@@ -18,10 +18,10 @@ pkgbase=vmware-workstation
 pkgname=('vmware-workstation'
         'vmware-workstation-macos'
         'vmware-keymaps')
-pkgver=15.5.6
-_buildver=16341506
+pkgver=16.0.0
+_buildver=16894299
 _pkgver=${pkgver}_${_buildver}
-pkgrel=4
+pkgrel=1
 pkgdesc='The industry standard for running multiple operating systems as virtual machines on a single Linux PC.'
 arch=(x86_64)
 url='https://www.vmware.com/products/workstation-for-linux.html'
@@ -54,14 +54,6 @@ source=(
   'configure-initscript.sh'
   'vmware-environment.sh'
 
-  'config.xml'
-  'datastores.xml'
-  'environments.xml'
-  'proxy.xml'
-  'vmAutoStart.xml'
-
-  'vmware-hostd-certificates.service'
-  'vmware-hostd.service'
   'vmware-authd.service'
   'vmware-networks-configuration.service'
   'vmware-networks.service'
@@ -73,32 +65,24 @@ source=(
   'vmnet.patch'
 )
 sha256sums=(
-  'a62d89bfb29aefd0e3d4d60f31b3734aa7ba3adc48cbc612cfc032593d3c7593'
+  '8db6237d3271fe57ddcce0bcc17befbb49eb378e784bde120f1a516cbd0f69cb'
 
   '12e7b16abf8d7e858532edabb8868919c678063c566a6535855b194aac72d55e'
   'da1698bf4e73ae466c1c7fc93891eba4b9c4581856649635e6532275dbfea141'
-  'ce3b1a82d9ed023b7591168bd49b218040ef70d1752a07792b0af6ac15a68453'
+  'bfd2aa7d85d9fd029b8bc59072d5102458a21a9b03b1c835ac4901e0787c09f5'
   'd50aa0a3fe94025178965d988e18d41eb60aa1ce2b28ee6e3ca15edeabfa2ca7'
-  '8e4d08668a66be79a900521792b39c16a026cc90659241edee80b64e701bfbcd'
+  '48d203450db426e8780f3696a2cf85ee08db004e93f8aca50a9aa24129b1e839'
   'b94959a11b28e51b541321be0588190eb10825e9ff55cbd16eb01483a839a69f'
 
-  'ce1fd2916c7dde0ed0fa3158c0e3055bbc84f6c397464e3a10776aeb35d9828f'
-  '434cd4aa440d36b75ee20e0b588aaad874bb0d796173990bc4046667c66f5099'
-  'cceaec1837fce1e03fa76cf0bf39eb01b19f4ffa45eb986d62221282682deb82'
-  '3c802523606184a5e8ebbe931d9c6c70d83ff8c6833b9f48aa264f0bd5a18a88'
-  'ad522a8cbc6103134ce5e677a01b503cd21875cbceb37bd13fd870ebd9ad0e6d'
-
-  'f9440479f3ae5ad0a39bba3150276627878bf83d6879444fb327c53a1dbb5a4d'
-  '42594b60085d0bbef01ab07b9f8b0d18640001107ce61cc0ddf02d0ab415140f'
   'e4c2e97acf07c52de570dd4333d67acfb593db719937a563c6075ab773dcce33'
   '9b4fbe0ba83f761a2eb9ecd05d48428f8b0a5b3abd8404ccbd928408e682f02b'
   'c0a5aea785db06921fb350d36d5e0fd9a14f5eee0c835686ec6fea1af8c92245'
   'd7a9fbf39a0345ae2f14f7f389f30b1110f605d187e0c241e99bbb18993c250d'
 
-  '05e26d8b21d190ebabb7f693998114d9d5991d9dfb71acb4d990293a65b6b487'
-  '6ce902b1dab8fc69be253abd8e79017011985eca850ff7acc7282f9ab668e35d'
-  '18b8258ec674c4a8c32114a4984baf1a00d62dbe750e877fd1e4dfa83bf51293'
-  'c1302d45008865537583b99d53ed0ea4a1d672227f190177fc63fc0c2f980151'
+  '10562d11d50edab9abc2b29c8948714edcb9b084f99b3766d07ddd21259e372e'
+  '273d4357599a3e54259c78cc49054fef8ecfd2c2eda35cbcde3a53a62777a5ac'
+  '1060b5d45caeda5119b220fab4e1ece398af34d75131139a5dc6f74ee06672c3'
+  '7c3b6a7871b19e31fafdcc2631751dd9569196740d8e7c2026653d155c0c8da0'
 )
 options=(!strip emptydirs)
 
@@ -108,7 +92,7 @@ _isovirtualprinterimages=(Linux Windows)
 
 if [ -n "$_enable_macOS_guests" ]; then
 
-_vmware_fusion_ver=11.5.6_16696540
+_vmware_fusion_ver=12.0.0_16880131
 # List of VMware Fusion versions: https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/
 
 _unlocker_ver=3.0.3
@@ -116,17 +100,18 @@ _efi_unlocker_ver=1.0.0
 
 makedepends+=(
   python
-  unzip
+  dmg2img
+  p7zip
   uefitool-git
 )
 
 source+=(
-  "VMware-Fusion-${_vmware_fusion_ver/_/-}.zip.tar::https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/${_vmware_fusion_ver/_//}/core/com.vmware.fusion.zip.tar"
+  "https://download3.vmware.com/software/fusion/file/VMware-Fusion-${_vmware_fusion_ver/_/-}.dmg"
   "unlocker-${_unlocker_ver}.py::https://raw.githubusercontent.com/paolo-projects/unlocker/${_unlocker_ver}/unlocker.py"
   "efi-unlocker-patch-${_efi_unlocker_ver}.txt"
 )
 sha256sums+=(
-  '8205f598be56ebbe5ddf23e2484ff067fd4a0a8543cd5408c390ea6bb1ae0364'
+  'b7ce08983c1aab3218327a1a14343a77f23b4acfb3b9dd178594048b12eb63d8'
   '1c27547dcf6fb2f436c96ee62ae8c7f5cfd14b40d8bbd35dc385e247c4fb7e0f'
   '392c1effcdec516000e9f8ffc97f2586524d8953d3e7d6f2c5f93f2acd809d91'
 )
@@ -167,12 +152,8 @@ prepare() {
     --extract "$extracted_dir"
 
 if [ -n "$_enable_macOS_guests" ]; then
-  unzip -q com.vmware.fusion.zip
-  for isoimage in ${_fusion_isoimages[@]}
-  do
-    install -Dm 644 "$srcdir/payload/VMware Fusion.app/Contents/Library/isoimages/$isoimage.iso" "$srcdir/fusion-isoimages/$isoimage.iso"
-  done
-  rm -rf __MACOSX payload manifest.plist preflight postflight
+  dmg2img VMware-Fusion-${_vmware_fusion_ver/_/-}.dmg VMware-Fusion-${_vmware_fusion_ver/_/-}.iso > /dev/null
+  7z e -y VMware-Fusion-${_vmware_fusion_ver/_/-}.iso VMware\ Fusion/VMware\ Fusion.app/Contents/Library/isoimages/\* -o"fusion-isoimages" > /dev/null 2>&1 || true
 
   sed -i -e "s|/usr/lib/vmware/|${pkgdir/%vmware-workstation/vmware-workstation-macos}/usr/lib/vmware/|" "$srcdir/unlocker-${_unlocker_ver}.py"
 fi
@@ -184,10 +165,10 @@ _realpackage() {
   # Make directories and copy files.
 
   mkdir -p \
-    "$pkgdir/etc"/{cups,pam.d,modprobe.d,profile.d,thnuclnt,vmware} \
+    "$pkgdir/etc"/{cups,pam.d,modprobe.d,thnuclnt,vmware} \
     "$pkgdir/usr"/{share,bin} \
     "$pkgdir/usr/include/vmware-vix" \
-    "$pkgdir/usr/lib"/{vmware/{setup,lib/libvmware-vim-cmd.so},vmware-vix,vmware-ovftool,vmware-installer/"$vmware_installer_version",cups/filter,modules-load.d} \
+    "$pkgdir/usr/lib"/{vmware/setup,vmware-vix,vmware-ovftool,vmware-installer/"$vmware_installer_version",cups/filter,modules-load.d} \
     "$pkgdir/usr/share"/{doc/vmware-vix,licenses/"$pkgname"} \
     "$pkgdir/var/lib/vmware/Shared VMs"
 
@@ -205,7 +186,6 @@ _realpackage() {
     vmware-vmx/{,s}bin/* \
     vmware-vix-core/bin/* \
     vmware-vprobe/bin/* \
-    vmware-workstation-server/{vmware-hostd,vmware-vim-cmd,vmware-wssc-adminTool} \
     vmware-player-app/bin/* \
     "$pkgdir/usr/bin"
 
@@ -214,7 +194,6 @@ _realpackage() {
     vmware-player-app/lib/* \
     vmware-vmx/{lib/*,roms} \
     vmware-vprobe/lib/* \
-    vmware-workstation-server/{bin,lib,hostd} \
     vmware-usbarbitrator/bin \
     vmware-network-editor/lib \
     "$pkgdir/usr/lib/vmware"
@@ -223,13 +202,8 @@ _realpackage() {
     vmware-player-setup/vmware-config \
     "$pkgdir/usr/lib/vmware/setup"
 
-  cp -rL \
-    vmware-workstation-server/config/etc/vmware/* \
-    vmware-workstation-server/etc/vmware/* \
-    "$pkgdir/etc/vmware"
-
   cp -r \
-    vmware-vix-lib-Workstation1500/lib/Workstation-15.0.0 \
+    vmware-vix-lib-Workstation1600/lib/Workstation-16.0.0 \
     vmware-vix-core/{lib/*,vixwrapper-config.txt} \
     "$pkgdir/usr/lib/vmware-vix"
 
@@ -292,17 +266,11 @@ if [ -z "$_remove_vmware_keymaps_dependency" ]; then
   rm -r "$pkgdir/usr/lib/vmware/xkeymap" # these files are provided by vmware-keymaps package
 fi
 
-  for hostd_file in config datastores environments proxy vmAutoStart; do
-    install -Dm 644 "$srcdir/$hostd_file.xml" "$pkgdir/etc/vmware/hostd/$hostd_file.xml"
-  done
-
   install -Dm 644 "$srcdir/pam.d-vmware-authd" "$pkgdir/etc/pam.d/vmware-authd"
 
   echo -e "vmw_vmci\nvmmon" > "$pkgdir/usr/lib/modules-load.d/vmware.conf"
 
   for service_file in \
-    vmware-hostd-certificates.service \
-    vmware-hostd.service \
     vmware-authd.service \
     vmware-networks-configuration.service \
     vmware-networks.service \
@@ -327,7 +295,6 @@ fi
     "$pkgdir/usr/lib/vmware-vix/setup"/* \
     "$pkgdir/etc/thnuclnt/.thnumod"
 
-  chmod -R 600 "$pkgdir/etc/vmware/ssl"
   chmod +s \
     "$pkgdir/usr/bin"/vmware-authd \
     "$pkgdir/usr/lib/vmware/bin"/{vmware-vmx,vmware-vmx-debug,vmware-vmx-stats}
@@ -343,17 +310,14 @@ fi
     vmware-enter-serial \
     vmware-fuseUI \
     vmware-gksu \
-    vmware-hostd \
     vmware-modconfig \
     vmware-modconfig-console \
     vmware-mount \
     vmware-netcfg \
     vmware-setup-helper \
     vmware-tray \
-    vmware-vim-cmd \
     vmware-vmblock-fuse \
     vmware-vprobe \
-    vmware-wssc-adminTool \
     vmware-zenity
   do
     ln -s /usr/lib/vmware/bin/appLoader "$pkgdir/usr/lib/vmware/bin/$link"
@@ -375,8 +339,6 @@ fi
   done
 
   ln -s /usr/lib/vmware/icu "$pkgdir/etc/vmware/icu"
-  ln -s /usr/lib/vmware/lib/diskLibWrapper.so/diskLibWrapper.so "$pkgdir/usr/lib/diskLibWrapper.so"
-  ln -s /usr/lib/vmware/lib/libvmware-hostd.so/libvmware-hostd.so "$pkgdir/usr/lib/vmware/lib/libvmware-vim-cmd.so/libvmware-vim-cmd.so"
   ln -s /usr/lib/vmware-ovftool/ovftool "$pkgdir/usr/bin/ovftool"
   ln -s /usr/lib/vmware-vix/libvixAllProducts.so "$pkgdir/usr/lib/libvixAllProducts.so"
 
@@ -393,7 +355,6 @@ fi
   sed -i 's,@@BINARY@@,/usr/bin/vmplayer,' "$pkgdir/usr/share/applications/vmware-player.desktop"
   sed -i 's,@@BINARY@@,/usr/bin/vmware-netcfg,' "$pkgdir/usr/share/applications/vmware-netcfg.desktop"
 
-  sed -i 's,@@AUTHD_PORT@@,902,' "$pkgdir/usr/lib/vmware/hostd/docroot/client/clients.xml"
 
   sed \
     -e "s/@@VERSION@@/$vmware_installer_version/" \

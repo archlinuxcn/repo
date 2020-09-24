@@ -1,0 +1,12 @@
+maintainers:
+  - github: farseerfc
+
+build_prefix: extra-x86_64
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: uefitool-git
+  - source: github
+    github: LongSoft/UEFITool

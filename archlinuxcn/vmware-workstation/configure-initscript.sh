@@ -9,12 +9,6 @@ stopLevel="$4"
 # This package does not need a vmware service to make VMware usable, so this script says that vmware service is always started.
 # vmware-workstation-server service is named vmware-hostd in this package.
 
-case "$serviceName" in
-   vmware-workstation-server)
-      serviceName="vmware-hostd"
-      ;;
-esac
-
 #echo $serviceName && exit # DEBUG
 
 addService() {
