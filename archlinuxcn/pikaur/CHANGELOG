@@ -1706,3 +1706,14 @@ Mon Aug 3 09:28:24 2020 +0200
      b0b128f actionless fix(install_info_fetcher): preceding aur pkgnames with `aur/` (fixes #484)
      9f6586d actionless fix(main: get_pkgbuild cli): require `asp` only when need to download from ABS (fixes #485, #486)
      2501ef6 actionless fix(makepkg_config): handle $HOME in PKGDEST path (fixes #479)
+
+
+Thu Sep 24 18:58:54 2020 +0200
+-------------------------------------------------
+1.6.12          Release 1.6.12
+    
+    Notables changes:
+     2020-09-16 26bd196 actionless feat(config, urllib, build): add new config options for proxying only aur but not downloadable build sources
+     2020-09-03 b50f393 actionless fix(aur: get_repo_url): use aur base url from config
+     2020-08-18 d56f705 Felix Glaser fix(locale): update german translations and fix command-shortcuts (#510)
+     2020-08-11 c76b5e1 actionless fix(install cli: clone aur repos): don't give up until canceled (fixes #509)
