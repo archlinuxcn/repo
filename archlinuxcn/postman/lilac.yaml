@@ -4,6 +4,9 @@ maintainers:
 
 build_prefix: extra-x86_64
 
+repo_depends:
+  - electron8-bin
+
 update_on:
   - source: cmd
     cmd: curl -I https://dl.pstmn.io/download/latest/linux64 | grep -o '[0-9]*\.[0-9]*\.[0-9]'
