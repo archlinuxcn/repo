@@ -1,14 +1,14 @@
 # Maintainer: Nikita Puzyryov <PuzyryovN@gmail.com>
 pkgname=zchunk
 pkgver=1.1.6
-pkgrel=1
+pkgrel=2
 pkgdesc="A file format that allows easy deltas while maintaining good compression"
 arch=(x86 x86_64)
 url="https://github.com/zchunk/zchunk"
 license=('BSD')
 depends=('libcurl.so' 'zstd')
 provides=('libzck.so')
-makedepends=('meson')
+makedepends=('meson' 'ninja')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
 sha256sums=('7068fbf30b613b3e4ac80ec291ebdbc08c70c7ce81af1f689d9eaf32bac3a027')
 
