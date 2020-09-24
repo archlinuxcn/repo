@@ -162,7 +162,7 @@ EOF
     _apply_patch "$p"
   done
 
-  sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' src/Makefile ui/Makefile
+  sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' */Makefile
 }
 
 build_in() {
