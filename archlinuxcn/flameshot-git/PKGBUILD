@@ -12,23 +12,14 @@ depends=('qt5-base' 'qt5-svg')
 makedepends=('qt5-tools' 'git' 'cmake')
 provides=('flameshot-git')
 conflicts=('flameshot')
-source=(
-  "git+https://github.com/flameshot-org/flameshot.git"
-  "0001-correct-position-of-QScreen-geometry-on-HiDPI-multi-.patch"
-)
-sha256sums=('SKIP'
-            'bee0669d3a16a1a7fabf97cec1f562b09471b9ebd2b283f8d7bbe6436d5f96fa')
+source=("git+https://github.com/flameshot-org/flameshot.git")
+sha256sums=('SKIP')
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
 
   # Get the version number.
   printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-}
-
-prepare() {
-  cd "${srcdir}/${_pkgname}"
-  patch -p1 -N < "${srcdir}/0001-correct-position-of-QScreen-geometry-on-HiDPI-multi-.patch"
 }
 
 build() {
