@@ -1,28 +1,28 @@
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
 # Maintainer: Allen Zhong <zhongbenli@pingcap.com>
 pkgname=tikv-pd
-pkgver=4.0.4
+pkgver=4.0.6
 pkgrel=1
 pkgdesc='Manage and schedule the TiKV cluster.'
 makedepends=('go' 'make' 'git' 'unzip')
 arch=('x86_64')
-url='https://github.com/pingcap/pd'
+url='https://github.com/tikv/pd'
 license=('Apache')
 provides=('pd-server')
 backup=(etc/pd/pd.toml)
 install=pd.install
-source=(pd-${pkgver}.tar.gz::https://github.com/pingcap/pd/archive/v${pkgver}.tar.gz
+source=(pd-${pkgver}.tar.gz::https://github.com/tikv/pd/archive/v${pkgver}.tar.gz
         pd.service
         pd-sysusers.conf
         pd-tmpfiles.conf
         pd.toml)
-sha256sums=('85003b3c06f24a913385186dc1f3cf5328e972ee15bbed65eddb6e65b4dcfbbf'
+sha256sums=('9ecb4e09c2b441ab38a876e826bb9d1978cb94b2e3a0984965b855d44c6eced1'
             'b03d12f2f8d6eb2e9d654d6258ca39000225cdf1418840f7e35081631bc4d924'
             '5edd250ba9e70a4f8d27581ed658f0fbfeca58ca62429dec12bb5fffc0919b67'
             '15633aaa2d7726375112a1b5af88105878f09c176a542cde6d0e5f0c4eee4495'
             'dd3097d7f72da151d792894d2f3bb4188bfe9d445df8955d0f6f9b5c36980249')
 
-_gopkgname='github.com/pingcap/pd'
+_gopkgname='github.com/tikv/pd'
 
 prepare() {
   export GOPATH="$srcdir/build"
@@ -48,7 +48,7 @@ build() {
 
   cd $GOPATH/src/$_gopkgname
 
-  _LDFLAGS="-X $_gopkgname/v4/server.PDReleaseVersion=$pkgver -X $_gopkgname/v4/server.PDGitBranch=release -X $_gopkgname/v4/server.PDGitHash=v$pkgver"
+  _LDFLAGS="-X $_gopkgname/server/versioninfo.PDReleaseVersion=$pkgver -X $_gopkgname/server/versioninfo.PDGitBranch=release -X $_gopkgname/server/versioninfo.PDGitHash=v$pkgver"
 
   LDFLAGS=$_LDFLAGS make build tools
 }
