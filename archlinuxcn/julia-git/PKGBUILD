@@ -44,6 +44,7 @@ makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
              gcc-fortran git patchelf python)
 options=('debug' '!strip' '!buildflags')
 _patches=(
+  0001-Fix-broken-linking-and-initialization-due-to-36588.patch
   0002-Fix-source-file-paths.patch
   0003-Optimize-allocation-of-arrays.patch
   0004-Enable-basic-AA-in-O2.patch
@@ -60,12 +61,13 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '69eacc96dbfd27ae8103bf6171e28619'
-         '60e6d3ae62adc938f3e4aed050769696'
-         '4bfae9c17499c322d1b8fc2b0167f052'
-         'd6e7afc5e3755ae8116738238b455063'
-         'fc1d741c0e2ebd0c80bbf9762b9e9a4f'
-         'aa6424e67a790c65b4d0d28d66befcd2'
+         '3b4e9222b2f75587f822df0b95eb0a00'
+         '3ce8db2b6b13c891acfd39d98daa51bc'
+         '7ea0764315f173971f240aac51e53ade'
+         'e21fcad49073286a119cc7a471449d3f'
+         '435c34f51e3934fd15266bec801cc07d'
+         '818c161a5d25d276c5a990d5883ec564'
+         '6eca32e71f0a21aac66ca30821fd7bbe'
          'effd2c21ffb69e66b43d4b7fbe074a51'
          'bde100b283ea5b7aaf80613abec98a57'
          '6e7fcba300512df8ab8ab65d3e1eb847'

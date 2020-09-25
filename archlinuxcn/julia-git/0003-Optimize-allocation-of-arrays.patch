@@ -1,4 +1,4 @@
-From 245461fb6c105700c13354818a298de194052901 Mon Sep 17 00:00:00 2001
+From 7a167f64eb72a3f505b42b31fcc22bfbd32a9c2d Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 22 Aug 2020 10:19:15 -0400
 Subject: [PATCH 3/7] Optimize allocation of arrays
@@ -11,10 +11,10 @@ Subject: [PATCH 3/7] Optimize allocation of arrays
  4 files changed, 115 insertions(+), 12 deletions(-)
 
 diff --git a/base/boot.jl b/base/boot.jl
-index e653a82399..f23621a966 100644
+index 7c8d05cc13..c6db3a37e5 100644
 --- a/base/boot.jl
 +++ b/base/boot.jl
-@@ -430,19 +430,11 @@ const NTuple{N,T} = Tuple{Vararg{T,N}}
+@@ -445,19 +445,11 @@ const NTuple{N,T} = Tuple{Vararg{T,N}}
  struct UndefInitializer end
  const undef = UndefInitializer()
  # type and dimensionality specified, accepting dims as series of Ints
