@@ -56,6 +56,7 @@ if __name__ == '__main__':
   env['WINEDLLOVERRIDES'] = 'winemenubuilder.exe=d'
   env['WINEARCH'] = 'win32'
   env['WINEPREFIX'] = str(prefix)
+  env['LANG'] = 'zh_CN.UTF-8'
 
   may_extract(prefix, tarball, env)
 
