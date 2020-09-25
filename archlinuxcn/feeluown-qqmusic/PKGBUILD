@@ -1,7 +1,7 @@
 # Maintainer: Bruce Zhang <zttt183525594@gmail.com>
 _name=fuo_qqmusic
 pkgname=feeluown-qqmusic
-pkgver=0.3
+pkgver=0.3.1
 pkgrel=1
 pkgdesc="feeluown qqmusic plugin"
 arch=('any')
@@ -12,7 +12,7 @@ makedepends=('python-setuptools' 'python-pip')
 source=(
 	"https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz"
 )
-sha256sums=('0abb5bbadc2aa1d903b5f9652da04d40c426ad500d26e9ed98f0175966bb96dc')
+sha256sums=('1ee5a01fc684d08fcc43e0968e1b38477b24b7d5a0bbefcdd843970e9850701a')
 groups=('feeluown-full')
 
 build() {
