@@ -319,7 +319,7 @@
 +#endif /* __nsDbusmenu_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenu.cpp
-@@ -0,0 +1,796 @@
+@@ -0,0 +1,795 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -334,7 +334,6 @@
 +#include "mozilla/Assertions.h"
 +#include "mozilla/ComputedStyleInlines.h"
 +#include "mozilla/EventDispatcher.h"
-+#include "mozilla/GuardObjects.h"
 +#include "mozilla/MouseEvents.h"
 +#include "mozilla/PresShell.h"
 +#include "mozilla/PresShellInlines.h"
@@ -3971,7 +3970,7 @@
 +#endif /* __nsMenuSeparator_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsNativeMenuDocListener.cpp
-@@ -0,0 +1,350 @@
+@@ -0,0 +1,348 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -4006,10 +4005,9 @@
 +public:
 +    DispatchHelper(nsNativeMenuDocListener *aListener,
 +                   nsIContent *aContent
-+                   MOZ_GUARD_OBJECT_NOTIFIER_PARAM) :
++                   ) :
 +                   mObserver(nullptr)
 +    {
-+        MOZ_GUARD_OBJECT_NOTIFIER_INIT;
 +        if (aContent == aListener->mLastSource) {
 +            mObserver = aListener->mLastTarget;
 +        } else {
@@ -4029,7 +4027,6 @@
 +
 +private:
 +    nsNativeMenuChangeObserver *mObserver;
-+    MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
 +};
 +
 +NS_IMPL_ISUPPORTS(nsNativeMenuDocListener, nsIMutationObserver)
@@ -4324,7 +4321,7 @@
 +}
 --- /dev/null
 +++ b/widget/gtk/nsNativeMenuDocListener.h
-@@ -0,0 +1,157 @@
+@@ -0,0 +1,154 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -4336,7 +4333,6 @@
 +#define __nsNativeMenuDocListener_h__
 +
 +#include "mozilla/Attributes.h"
-+#include "mozilla/GuardObjects.h"
 +#include "mozilla/RefPtr.h"
 +#include "mozilla/UniquePtr.h"
 +#include "nsDataHashtable.h"
@@ -4391,9 +4387,8 @@
 +    class MOZ_STACK_CLASS BlockUpdatesScope
 +    {
 +    public:
-+        BlockUpdatesScope(MOZ_GUARD_OBJECT_NOTIFIER_ONLY_PARAM)
++        BlockUpdatesScope()
 +        {
-+            MOZ_GUARD_OBJECT_NOTIFIER_INIT;
 +            nsNativeMenuDocListener::AddUpdateBlocker();
 +        }
 +
@@ -4403,7 +4398,6 @@
 +        }
 +
 +    private:
-+        MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
 +    };
 +
 +private:

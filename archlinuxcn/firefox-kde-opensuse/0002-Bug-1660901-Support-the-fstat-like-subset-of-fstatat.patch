@@ -1,0 +1,46 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jed Davis <jld@mozilla.com>
+Date: Fri, 28 Aug 2020 09:23:58 +0000
+Subject: [PATCH] Bug 1660901 - Support the fstat-like subset of fstatat in the
+ Linux sandbox policies. r=gcp
+
+Differential Revision: https://phabricator.services.mozilla.com/D88499
+---
+ security/sandbox/linux/SandboxFilter.cpp           | 6 ++++++
+ security/sandbox/linux/broker/SandboxBrokerUtils.h | 2 ++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/security/sandbox/linux/SandboxFilter.cpp b/security/sandbox/linux/SandboxFilter.cpp
+index e522d61e065c..4087bdc07e01 100644
+--- a/security/sandbox/linux/SandboxFilter.cpp
++++ b/security/sandbox/linux/SandboxFilter.cpp
+@@ -243,6 +243,12 @@ class SandboxPolicyCommon : public SandboxPolicyBase {
+     auto path = reinterpret_cast<const char*>(aArgs.args[1]);
+     auto buf = reinterpret_cast<statstruct*>(aArgs.args[2]);
+     auto flags = static_cast<int>(aArgs.args[3]);
++
++    if (fd != AT_FDCWD && (flags & AT_EMPTY_PATH) != 0 &&
++        strcmp(path, "") == 0) {
++      return ConvertError(fstatsyscall(fd, buf));
++    }
++
+     if (fd != AT_FDCWD && path[0] != '/') {
+       SANDBOX_LOG_ERROR("unsupported fd-relative fstatat(%d, \"%s\", %p, %d)",
+                         fd, path, buf, flags);
+diff --git a/security/sandbox/linux/broker/SandboxBrokerUtils.h b/security/sandbox/linux/broker/SandboxBrokerUtils.h
+index 85a006740c2c..db33b5028e77 100644
+--- a/security/sandbox/linux/broker/SandboxBrokerUtils.h
++++ b/security/sandbox/linux/broker/SandboxBrokerUtils.h
+@@ -19,10 +19,12 @@
+ typedef struct stat64 statstruct;
+ #  define statsyscall stat64
+ #  define lstatsyscall lstat64
++#  define fstatsyscall fstat64
+ #elif defined(__NR_stat)
+ typedef struct stat statstruct;
+ #  define statsyscall stat
+ #  define lstatsyscall lstat
++#  define fstatsyscall fstat
+ #else
+ #  error Missing stat syscall include.
+ #endif
