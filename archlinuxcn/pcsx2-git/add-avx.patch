@@ -1,0 +1,11 @@
+diff --color -rupN pcsx2.orig/plugins/GSdx/CMakeLists.txt pcsx2/plugins/GSdx/CMakeLists.txt
+--- pcsx2.orig/plugins/GSdx/CMakeLists.txt	2020-09-26 20:03:01.706937811 +0800
++++ pcsx2/plugins/GSdx/CMakeLists.txt	2020-09-26 20:04:00.800389425 +0800
+@@ -262,6 +262,7 @@ else()
+         # Don't append -SSE2 on the first build to keep same name as SIMD build
+         add_pcsx2_plugin("${Output}" "${GSdxFinalSources}" "${GSdxFinalLibs}" "${GSdxFinalFlags}")
+         add_pcsx2_plugin("${Output}-SSE4" "${GSdxFinalSources}" "${GSdxFinalLibs}" "${GSdxFinalFlags} -mssse3 -msse4 -msse4.1")
++        add_pcsx2_plugin("${Output}-AVX" "${GSdxFinalSources}" "${GSdxFinalLibs}" "${GSdxFinalFlags} -mavx")
+         add_pcsx2_plugin("${Output}-AVX2" "${GSdxFinalSources}" "${GSdxFinalLibs}" "${GSdxFinalFlags} -mavx -mavx2 -mbmi -mbmi2")
+     else()
+         add_pcsx2_plugin(${Output} "${GSdxFinalSources}" "${GSdxFinalLibs}" "${GSdxFinalFlags}")

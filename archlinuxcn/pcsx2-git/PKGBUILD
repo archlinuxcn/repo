@@ -37,8 +37,9 @@ makedepends=(
 )
 provides=('pcsx2' 'pcsx2-git')
 conflicts=('pcsx2' 'pcsx2-git')
-source=('git+https://github.com/PCSX2/pcsx2.git')
-sha256sums=('SKIP')
+replaces=('pcsx2-avx-git' 'pcsx2-avx2-git')
+source=('git+https://github.com/PCSX2/pcsx2.git' 'add-avx.patch')
+sha256sums=('SKIP' 'afbcabc1f558991ffde680515a562da6fc6f2e2259f0b6bdcbc649613adc8a03')
 
 pkgver() {
   cd pcsx2
@@ -46,6 +47,9 @@ pkgver() {
   git describe --tags | sed 's/^v//; s/-dev//; s/-/.r/; s/-g/./'
 }
 
+prepare() {
+  patch -p0 -i add-avx.patch 
+}
 build() {
   cmake -S pcsx2 -B build \
     -DCMAKE_BUILD_TYPE=Release \
