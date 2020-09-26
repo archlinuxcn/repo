@@ -1,0 +1,19 @@
+post_install() {
+	cat <<- EOF
+	depot_tools is installed in /opt/depot_tools/.
+	This directory is not in \$PATH by default, so make sure to export PATH=/opt/depot_tools:\$PATH before using it.
+	Also, this directory has root permissions, so either use it as root, or if you want to use it as your currect user:
+
+	# groupadd depot_tools
+	# gpasswd -a \$(whoami) depot_tools
+	# setfacl -m g:depot_tools:rwX /opt/depot_tools/
+
+	Then re-login as your current user or log your terminal in to the newly created group:
+
+	$ newgrp depot_tools
+	EOF
+}
+
+post_remove() {
+	rm -r opt/depot_tools/
+}
