@@ -28,7 +28,6 @@ htpdate_default = ("# This file is used to configure htpdate daemon. Most users 
         'HTP_OPTIONS="-D -s"')
 
 def pre_build():
-
     aur_pre_build()
     run_cmd(['sh', '-c', 'sed \'/^$/d\' -i htpdate.service'])
     for line in edit_file('htpdate.service'):
