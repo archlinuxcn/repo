@@ -16,8 +16,7 @@ updpkgsums
 makepkg --printsrcinfo > .SRCINFO
 git add .
 git commit -m "Upgrade to v${VERSION}"
-makepkg
-sudo pacman -U nvm-${VERSION}-1-any.pkg.tar.xz
+makepkg -i
 
 set +x
 
