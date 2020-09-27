@@ -2,7 +2,7 @@
 
 pkgname=python-pyvisa-py
 pkgver=0.5.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A pure python backend for PyVISA"
 arch=('any')
 license=('MIT')
@@ -20,6 +20,12 @@ prepare() {
   sed -i "s,use_scm_version=True,use_scm_version=False,g" setup.py
 
   sed '/\[tool.setuptools_scm\]/d' -i pyproject.toml
+
+  # fix serial device name bug
+  curl https://patch-diff.githubusercontent.com/raw/pyvisa/pyvisa-py/pull/269.patch | patch -p1
+
+  # fix broken serial writes
+  curl https://patch-diff.githubusercontent.com/raw/greyltc/pyvisa-py/pull/1.patch | patch -p1
 }
 
 package() {
