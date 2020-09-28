@@ -40,10 +40,10 @@ def pre_build():
         elif line.startswith('PIDFile='):
             line = line + '\n' + 'EnvironmentFile=/etc/default/htpdate'
         elif line.startswith('ExecStart='):
-            line = ('ExecStart=/usr/bin/htpdate ${HTP_OPTIONS} ${HTP_PROXY}'
+            line = ('ExecStart=/usr/bin/htpdate $HTP_OPTIONS $HTP_PROXY'
                     ' '
-                    '-i /run/htpdate.pid ${HTP_SERVERS}' + '\n'
-                    'ExecReload=/bin/kill -HUP ${MAINPID}' + '\n'
+                    '-i /run/htpdate.pid $HTP_SERVERS' + '\n'
+                    'ExecReload=/bin/kill -HUP $MAINPID' + '\n'
                     '# Security' + '\n'
                     'InaccessibleDirectories='
                     '/boot /home /media /mnt /root /opt /srv' + '\n'
