@@ -3,8 +3,8 @@
 # Contributor: KokaKiwi <kokakiwi+aur@kokakiwi.net>
 
 pkgname=ventoy-bin
-pkgver=1.0.21
-pkgrel=2
+pkgver=1.0.22
+pkgrel=1
 pkgdesc='A new multiboot USB solution (Binary)'
 url='http://www.ventoy.net/'
 arch=('i686' 'x86_64')
@@ -14,9 +14,9 @@ provides=("${pkgname%-bin}")
 conflicts=("${pkgname%-bin}")
 source=("https://github.com/ventoy/Ventoy/releases/download/v${pkgver}/${pkgname%-bin}-${pkgver}-linux.tar.gz"
         "${pkgname%-bin}" 'sanitize.patch')
-sha256sums=('170953248d5b30688d88ceae44cdc95d86a869fe3f58623b494e8ee60b5d2e1e'
+sha256sums=('e7d16d14dd3fb067c3b42574d2ffc7356b6e36dab71ae060e336ce89fb9a1d3e'
             'f9f333e21ec211318ab40018e0da3a44d8bae16e36dd6132e7891f8c9df52f1c'
-            'ebd54e274c4c38ea70242f34c2e3de3f48b378d4af9bd6706ba5e1d8676363ef')
+            'f01eee34e2b8ea1c026b62be3dd0d021b6aca15a37fff62dc0d1881aadfd29bd')
 
 prepare() {
   msg2 "Decompress tools..."
