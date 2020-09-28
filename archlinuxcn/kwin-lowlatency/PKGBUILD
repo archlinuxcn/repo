@@ -5,7 +5,7 @@
 
 pkgname=kwin-lowlatency
 pkgver=5.19.5
-pkgrel=1
+pkgrel=2
 pkgdesc='the compositor, with added stutter/latency reductions'
 arch=(x86_64)
 url='https://github.com/tildearrow/kwin-lowlatency'
