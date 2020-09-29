@@ -1,0 +1,37 @@
+# Maintainer: Hans-Nikolai Viessmann <hans AT viess DOT mn>
+# Contributor: Jakob Gahde <j5lx@fmail.co.uk>
+# Contributor: Bruno Pagani <archange@archlinux.org>
+
+pkgname=cppo
+pkgver=1.6.6
+pkgrel=2
+pkgdesc="C-style preprocessor for OCaml"
+arch=('x86_64')
+url="https://github.com/ocaml-community/cppo"
+license=('BSD')
+depends=('glibc')
+optdepends=('ocamlbuild: ocamlbuild plugin')
+makedepends=('dune' 'ocamlbuild')
+changelog=Changes
+source=("https://github.com/ocaml-community/cppo/releases/download/v${pkgver}/${pkgname}-v${pkgver}.tbz")
+sha512sums=('44ecf9d225d9e45490a2feac0bde04865ca398dba6c3579e3370fcd1ea255707b8883590852af8b2df87123801062b9f3acce2455c092deabf431f9c4fb8d8eb')
+
+build() {
+  cd "${srcdir}/${pkgname}-v${pkgver}"
+
+  dune build --profile release
+}
+
+check() {
+  cd "${srcdir}/${pkgname}-v${pkgver}"
+
+  dune runtest
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-v${pkgver}"
+  DESTDIR="${pkgdir}" dune install --prefix "/usr" --libdir "lib/ocaml"
+
+  install -Dm644 LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.md"
+  mv "${pkgdir}/usr/doc" "${pkgdir}/usr/share/"
+}
