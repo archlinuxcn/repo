@@ -3,7 +3,7 @@
 pkgbase=vmessping
 pkgname=('vmessconv' 'vmessping' 'vmessspeed')
 pkgver=0.3.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A ping prober for vmess:// links in common seen formats"
 arch=('x86_64')
 url="https://github.com/v2fly/vmessping"
@@ -21,10 +21,11 @@ prepare() {
 }
 
 build() {
-    export GOFLAGS="-buildmode=pie -trimpath"
-    export CGO_LDFLAGS="${LDFLAGS}"
-    export CGO_CFLAGS="${CFLAGS}"
+    export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
     export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
     for VMESSPING in vmessconv vmessping vmessspeed; do
         cd "$srcdir"/"$pkgbase-$pkgver"/
         cd cmd/"${VMESSPING}"/
