@@ -24,6 +24,8 @@ package() {
 
   install -D target/release/tldr -t "${pkgdir}/usr/bin"
   install -Dm644 bash_tealdeer "${pkgdir}/usr/share/bash-completion/completions/tldr"
+  install -Dm644 fish_tealdeer "${pkgdir}/usr/share/fish/completions/tldr.fish"
+  install -Dm644 zsh_tealdeer "${pkgdir}/usr/share/zsh/site-functions/_tldr"
 }
 
 # vim:set ts=2 sw=2 et:
