@@ -5,6 +5,10 @@ post_build: aur_post_build
 update_on:
   - source: aur
     aur: ocaml-sexplib0
+  - source: archpkg
+    archpkg: ocaml
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
 
 maintainers:
   - github: dctxmei
