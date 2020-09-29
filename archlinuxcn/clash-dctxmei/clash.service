@@ -6,6 +6,7 @@ After=network.target nss-lookup.target
 User=clash
 ExecStart=/usr/bin/clash -d /etc/clash/
 Restart=on-abort
+StandardOutput=file:/var/log/clash/clash.log
 
 [Install]
 WantedBy=multi-user.target
