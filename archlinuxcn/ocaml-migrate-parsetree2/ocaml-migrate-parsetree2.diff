@@ -1,0 +1,27 @@
+diff --git a/dune-project b/dune-project
+index 1d96e92..b700019 100644
+--- a/dune-project
++++ b/dune-project
+@@ -1,4 +1,4 @@
+ (lang dune 1.11)
+-(name ocaml-migrate-parsetree)
++(name ocaml-migrate-parsetree2)
+ (allow_approximate_merlin)
+ (using cinaps 1.0)
+diff --git a/ocaml-migrate-parsetree.opam b/ocaml-migrate-parsetree2.opam
+similarity index 100%
+rename from ocaml-migrate-parsetree.opam
+rename to ocaml-migrate-parsetree2.opam
+diff --git a/src/dune b/src/dune
+index 8dd06f0..3a8ec9d 100644
+--- a/src/dune
++++ b/src/dune
+@@ -1,6 +1,6 @@
+ (library
+- (name migrate_parsetree)
+- (public_name ocaml-migrate-parsetree)
++ (name migrate_parsetree2)
++ (public_name ocaml-migrate-parsetree2)
+  (libraries compiler-libs.common)
+  (preprocess (action (run %{exe:../tools/pp.exe} %{read:ast-version} %{input-file}))))
+ 
