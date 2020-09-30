@@ -14,6 +14,8 @@ depends=('fcitx5-qt5-git' 'kconfigwidgets' 'kitemviews' 'kirigami2' 'kpackage')
 makedepends=('extra-cmake-modules' 'python' 'git' 'kcmutils')
 conflicts=("$_pkgname" "fcitx5-config-qt" "kbd-layout-viewer5")
 provides=("$_pkgname" "fcitx5-config-qt" "kbd-layout-viewer5")
+optdepends=("kdeclarative: for KCM support"
+            "kirigami2: for KCM support")
 replaces=("kcm-fcitx5-git" "kbd-layout-viewer5-git<=r332.734741d-2" "fcitx5-config-qt-git<=r332.734741d-2")
 source=("git+$url.git")
 sha512sums=('SKIP')
@@ -36,9 +38,6 @@ build() {
 }
 
 package() {
-  conflicts=("$_pkgname")
-  provides=("$_pkgname")
-
   cd build
   make DESTDIR="$pkgdir" install
 }
