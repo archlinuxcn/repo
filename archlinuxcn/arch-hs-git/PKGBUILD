@@ -1,13 +1,13 @@
 # Maintainer: berberman <hatsue@typed.icu>
 
 pkgname=arch-hs-git
-pkgver=r141.05d016f
+pkgver=r143.f64aada
 pkgrel=1
 pkgdesc="Generating PKGBUILD for hackage packages."
 arch=('x86_64')
 url="https://github.com/berberman/arch-hs"
 license=('MIT')
-depends=('ghc-libs' 'haskell-aeson' 'haskell-req' 'haskell-hackage-db' 'haskell-megaparsec' 'haskell-algebraic-graphs' 'haskell-conduit' 'haskell-tar-conduit' 'haskell-conduit-extra' 'haskell-split' 'haskell-neat-interpolation' 'haskell-microlens' 'haskell-microlens-th' 'haskell-polysemy' 'haskell-colourista' 'haskell-optparse-applicative' 'haskell-csv')
+depends=('ghc-libs' 'haskell-aeson' 'haskell-req' 'haskell-hackage-db' 'haskell-megaparsec' 'haskell-algebraic-graphs' 'haskell-conduit' 'haskell-tar-conduit' 'haskell-conduit-extra' 'haskell-split' 'haskell-neat-interpolation' 'haskell-microlens' 'haskell-microlens-th' 'haskell-polysemy' 'haskell-colourista' 'haskell-optparse-applicative')
 makedepends=('ghc' 'git')
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}") 
