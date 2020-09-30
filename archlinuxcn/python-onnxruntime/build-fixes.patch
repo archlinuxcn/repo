@@ -20,6 +20,16 @@ index 3cee60f3..3328fc06 100644
  
  if(onnxruntime_PREFER_SYSTEM_LIB)
    find_package(re2)  
+@@ -802,7 +802,8 @@
+ set(FLATBUFFERS_INSTALL OFF CACHE BOOL "FLATBUFFERS_INSTALL" FORCE)
+ set(FLATBUFFERS_BUILD_FLATHASH OFF CACHE BOOL "FLATBUFFERS_BUILD_FLATHASH" FORCE)
+ set(FLATBUFFERS_BUILD_FLATLIB ON CACHE BOOL "FLATBUFFERS_BUILD_FLATLIB" FORCE)
+-add_subdirectory(external/flatbuffers EXCLUDE_FROM_ALL)
++find_package(Flatbuffers REQUIRED)
++add_library(flatbuffers ALIAS flatbuffers::flatbuffers_shared)
+ list(APPEND onnxruntime_EXTERNAL_DEPENDENCIES flatbuffers)
+ list(APPEND onnxruntime_EXTERNAL_LIBRARIES flatbuffers)
+ 
 diff --git a/cmake/external/Findre2.cmake b/cmake/external/Findre2.cmake
 new file mode 100644
 index 00000000..4c91696c
@@ -50,8 +60,8 @@ index d1bd347c..0c4b81e4 100644
    else()
      target_link_libraries(${_UT_TARGET} PRIVATE ${_UT_LIBS} GTest::gtest GTest::gmock ${onnxruntime_EXTERNAL_LIBRARIES})
    endif()
--  onnxruntime_add_include_to_target(${_UT_TARGET} date_interface)
-+  onnxruntime_add_include_to_target(${_UT_TARGET} date::date)
+-  onnxruntime_add_include_to_target(${_UT_TARGET} date_interface flatbuffers)
++  onnxruntime_add_include_to_target(${_UT_TARGET} date::date flatbuffers)
    target_include_directories(${_UT_TARGET} PRIVATE ${TEST_INC_DIR})
    if (onnxruntime_USE_CUDA)
      target_include_directories(${_UT_TARGET} PRIVATE ${CUDA_INCLUDE_DIRS} ${onnxruntime_CUDNN_HOME}/include)

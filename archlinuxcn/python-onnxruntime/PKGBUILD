@@ -1,13 +1,13 @@
 # Maintainer: Chih-Hsuan Yen <yan12125@gmail.com>
 
 pkgname=python-onnxruntime
-pkgver=1.4.0
+pkgver=1.5.1
 pkgdesc='Cross-platform, high performance scoring engine for ML models'
-pkgrel=3
+pkgrel=1
 arch=(x86_64)
 url='https://github.com/microsoft/onnxruntime'
 license=(MIT)
-depends=(nsync re2 python-numpy python-onnx python-protobuf)
+depends=(nsync re2 flatbuffers python-numpy python-onnx python-protobuf)
 makedepends=(git cmake gtest gmock pybind11 python-setuptools nlohmann-json chrono-date)
 # not de-vendored libraries
 # eigen: API changes a lot since extra/eigen 3.3.7 to the commit onnxruntime uses
@@ -24,7 +24,7 @@ sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            '6e696c527fb616145910689d5b7ac2090365cedd5e4d9c76baaacbe55ac9bc8d6acc8759874e1eb0f817e0ecaa29e6b66ad2e967785fa00b2d5da50b8c1ffb15')
+            '978d01b73610aa75fe2c02046f8bce4d26b35a7e0d499bebbb067ba7397388b4bb50280ddd1ae639207478a395c577a343f41c3e2954a1ca7155c98fa91a2cf8')
 
 prepare() {
   cd onnxruntime
