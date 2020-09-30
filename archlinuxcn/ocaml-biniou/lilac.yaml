@@ -1,0 +1,17 @@
+pre_build: aur_pre_build
+
+post_build: aur_post_build
+
+repo_depends:
+  - ocaml-easy-format
+
+update_on:
+  - source: aur
+    aur: ocaml-biniou
+  - source: archpkg
+    archpkg: ocaml
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+
+maintainers:
+  - github: dctxmei
