@@ -6,7 +6,7 @@ _origpkgname=qt5-base
 pkgname=(qt5-base-24h)
 _qtver=5.15.1
 pkgver=${_qtver/-/}
-pkgrel=1.5
+pkgrel=2.5
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -35,17 +35,20 @@ source=(
       oldherl-24h.patch
       'ftp://unicode.org/Public/cldr/36/core.zip'
       "https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
-         qt5-base-cflags.patch)
+         qt5-base-cflags.patch
+         qtbug-86604.patch::"https://code.qt.io/cgit/qt/qtbase.git/patch/?id=65243ad7")
 sha256sums=(
       '901a764c896559bb472d5ecee4af9ee006b235f73e56959de9ded477a10e5fc6'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       '33960404d579675b7210de103ed06a72613bfc4305443e278e2d32a3eb1f3d8c'
-            'cf707cd970650f8b60f8897692b36708ded9ba116723ec8fcd885576783fe85c')
+            'cf707cd970650f8b60f8897692b36708ded9ba116723ec8fcd885576783fe85c'
+            '840242a2fdbafa86454c7d3805fcc69e8ae0f2e7db75ea5aa7f90cfef65825a4')
 
 prepare() {
   cd ${_pkgfqn}
 
   patch -p1 -i ../qt5-base-cflags.patch # Use system CFLAGS
+  patch -p1 -i ../qtbug-86604.patch # Fix multiscreen issues in Plasma
 
   patch -p1 -i ../oldherl-24h.patch
   cd util/locale_database
