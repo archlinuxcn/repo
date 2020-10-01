@@ -1,8 +1,8 @@
 # Maintainer: Greyson Christoforo <grey@christoforo.net>
 # Contributor: Alex Forencich <alex@alexforencich.com>
 pkgname=python-pyvisa 
-pkgver=1.11.0
-pkgrel=2
+pkgver=1.11.1
+pkgrel=1
 pkgdesc="A Python package with bindings to the 'Virtual Instrument Software Architecture' VISA library"
 arch=('any')
 url="https://github.com/pyvisa/pyvisa"
@@ -11,7 +11,7 @@ depends=('python' 'python-distribute' 'python-docutils' 'python-setuptools-scm' 
 optdepends=('python-pyvisa-py: Pure Python backend')
 
 source=("https://github.com/pyvisa/pyvisa/archive/$pkgver.tar.gz")
-md5sums=('1922d2631d370c4dd83118da22842d76')
+md5sums=('419fd12860e84ad068d43aa3dc18f165')
 
 prepare() {
   cd "pyvisa-${pkgver}"
@@ -22,10 +22,10 @@ prepare() {
   sed '/\[tool.setuptools_scm\]/d' -i pyproject.toml
 
   # fix list backends
-  curl https://patch-diff.githubusercontent.com/raw/pyvisa/pyvisa/pull/545.patch | patch -p1
+  #curl https://patch-diff.githubusercontent.com/raw/pyvisa/pyvisa/pull/545.patch | patch -p1
 
   # fix to prevent the need for an API change when connecting to serial devices
-  curl https://patch-diff.githubusercontent.com/raw/pyvisa/pyvisa/pull/547.patch | patch -p1
+  #curl https://patch-diff.githubusercontent.com/raw/pyvisa/pyvisa/pull/547.patch | patch -p1
 }
 
 build() {
