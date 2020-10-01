@@ -1,0 +1,27 @@
+# Maintainer: Dct Mei <dctxmei@gmail.com>
+
+pkgname=star
+_pkgname=STAR
+pkgver=2.7.6a
+pkgrel=1
+pkgdesc="Spliced Transcripts Alignment to a Reference"
+arch=('x86_64')
+url="https://github.com/alexdobin/STAR"
+license=('MIT')
+depends=('gcc-libs' 'zlib')
+provides=('STAR')
+source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
+sha256sums=('9320797c604673debea0fe8f2e3762db364915cc59755de1a0d87c8018f97d51')
+
+build() {
+    cd "${_pkgname}-${pkgver}"/
+    cd source/
+    make
+}
+
+package() {
+    cd "${_pkgname}-${pkgver}/"
+    install -Dm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/"${pkgname}/"
+    cd source/
+    install -Dm 755 STAR -t "${pkgdir}"/usr/bin/
+}
