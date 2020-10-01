@@ -4,12 +4,12 @@
 # Contributor: Eothred <yngve.levinsen@gmail.com>
 
 pkgname=spotify
-pkgver=1.1.10.546
+pkgver=1.1.42.622
 epoch=1
-_commit=ge08ef575
-_ver_x86_64=19
+_commit=gbd112320
+_ver_x86_64=37
 #_ver_i686=10
-pkgrel=4
+pkgrel=1
 pkgdesc='A proprietary music streaming service'
 arch=('x86_64')
 license=('custom')
@@ -36,10 +36,10 @@ source_x86_64=("${pkgname}-${pkgver}-x86_64.deb::http://repository.spotify.com/p
 #              "${pkgname}-${pkgver}-i686-Packages::http://repository.spotify.com/dists/stable/non-free/binary-i386/Packages")
 sha512sums=('999abe46766a4101e27477f5c9f69394a4bb5c097e2e048ec2c6cb93dfa1743eb436bde3768af6ba1b90eaac78ea8589d82e621f9cbe7d9ab3f41acee6e8ca20'
             '2e16f7c7b09e9ecefaa11ab38eb7a792c62ae6f33d95ab1ff46d68995316324d8c5287b0d9ce142d1cf15158e61f594e930260abb8155467af8bc25779960615'
-            'SKIP'
+            '70ff7e4e90e2aa96c1a1ff9cb4e09d86852c2fff7fa5a8acf58c3c36fd081bb190e0e1de09f2c77bc1f7c792c3ea33612e709d2f2ac3f5a0e6bb9bcbd6ada37b'
             'SKIP')
-sha512sums_x86_64=('f004083eee00600a51e50d7dee03846293b5ccd6966786e91055564c7963917b9aaa917de41f299a0f5b7baecea5f466fb37722b8631743ff2ca15f43851f5f4'
-                   '39074e57abb9a647b4b27cc09bf91dd80a16589c8503b17061c23277b7718e778834bb79c168c771b9615d9e247f1ce9c5c597a10db905874a5d5c79f1109856')
+sha512sums_x86_64=('a3fe98d69460ffd641df3219c2a3d164a33e2b52c86a56276e473dd5c3a43d6304df3b77fefcf0ca6c09cb6e2c8dacab65573cf7543725b6c8d402832149e122'
+                   'af7eb8c50e003638cab04ef1cad36f43379e678a1071c65844a6ff8963434b427044b76159e51c1383698c309c814261ed85aab02ffb86ac73ee86181aada5e9')
 validpgpkeys=('931FF8E79F0876134EDDBDCCA87FF9DF48BF1C90'
               '2EBF997C15BDA244B6EBF5D84773BD5E130D1D45') # Spotify <tux@spotify.com>
 
