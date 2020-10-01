@@ -3,8 +3,8 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
-pkgver=2.3.2
-pkgrel=3
+pkgver=2.4.0
+pkgrel=1
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
@@ -19,20 +19,19 @@ source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver
 "0001-use-system-font-and-use-stylename.patch"
 "0002-fix-webrtc-integration-build-missing-libx11.patch"
 "0003-Use-tg_owt-webrtc-fork.patch"
-"Fix_xcb_wayland.patch")
-sha512sums=('757e57389ce24656c1d6676d6f0808e3d444785394e916b9f5fb47511662f01b6742c88c2a27274c4d9bb58263ae281218579c78cce7db119e2c863c1eaacc90'
+"0004-Update-webrtc-packaged-build-for-tg_owt.patch")
+sha512sums=('8b62caadc97aacfc4d5313f3420dd258162d8ffd77acfbf27b7561b3dd7274248d90e37d304160d5bc0f5fedf7dbaa5b51e3b2b3cb8213c2ea4bb4c9b43ef6b1'
             '0a4206f3d16589ba476d85381bf7984a28b74e0623e02a82ce2d586eec337808f66261dd0f2116ee513403223ac7707734b3fa17d082b5ebf88481bc22636f6f'
             'c8c55b2afee8c8dad33ec5daff5c1d8520f485e3a95061ab0442768976f62922387afe93c0dee4e7026e8cc74d12dd6a03314700a1cbacbcec6c6b28f288abb8'
             '071591c6bb71435f8186dcaf570703718051f00366dbbe3f13c4df3706d3de1f168bff4bfa707ad1d6f09f5505c925f0b01d76fd65efe904f3ba7db693d63f43'
-            'b318ae7a78bcacc27d3cbfce34b60f16197d8fdb9f8fcc8a9125ecf0d0760a1ed3bb526167013de61c5b6cf9a53102a901826d019bf6e9ba879953ede7d07823')
+            'eae8cf7480d9d48a1313301c8012dc351eb526bc61634b24ffdfddb03d5bdb7eedb33de0226133661a365d55bd047ad9dea0f38ebc7b584030a498115f9e9117')
 
 prepare() {
     patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-use-system-font-and-use-stylename.patch
     patch -b -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0002-fix-webrtc-integration-build-missing-libx11.patch
+    patch -b -d tdesktop-$pkgver-full/cmake -R -Np1 -i ${srcdir}/0004-Update-webrtc-packaged-build-for-tg_owt.patch
     patch -b -d tdesktop-$pkgver-full/cmake -R -Np1 -i ${srcdir}/0003-Use-tg_owt-webrtc-fork.patch
-    cd tdesktop-$pkgver-full
-    patch -p1 < ${srcdir}/Fix_xcb_wayland.patch
-    cd cmake
+    cd tdesktop-$pkgver-full/cmake
     sed 's|set(webrtc_build_loc ${webrtc_loc}/out/$<CONFIG>/obj)|set(webrtc_build_loc /usr/lib)|' -i external/webrtc/CMakeLists.txt
 }
 
