@@ -3,19 +3,19 @@
 
 _pkgname=libcpuid
 pkgname=$_pkgname-git
-epoch=2
+epoch=3
 pkgver=0.5.0.r3.g52c5f50
 pkgrel=1
-pkgdesc="Provides CPU identification for x86 (and x86_64)"
+pkgdesc="A small C library for x86 CPU detection and feature extraction"
 arch=('i686' 'x86_64')
-url="https://github.com/anrieff/libcpuid"
+url="http://libcpuid.sourceforge.net"
 license=('BSD')
 depends=('glibc')
-makedepends=('git' 'libtool' 'autoconf' 'doxygen')
-conflicts=('libcpuid')
+makedepends=('git' 'cmake' 'ninja' 'doxygen')
 provides=('libcpuid')
-source=("git+https://github.com/anrieff/$_pkgname.git")
-sha256sums=('SKIP')
+conflicts=('libcpuid')
+source=("git+https://github.com/anrieff/libcpuid.git")
+sha512sums=('SKIP')
 
 pkgver() {
 	cd "$srcdir/$_pkgname"
@@ -23,24 +23,11 @@ pkgver() {
 }
 
 build() {
-	cd "$srcdir/$_pkgname"
-	msg2 "Run 'libtoolize'..."
-	libtoolize
-
-	msg2 "Run 'autoreconf --install'..."
-	autoreconf --install
-
-	msg2 "Run './configure'..."
-	./configure --prefix=/usr
-
-	msg2 "Run 'make'..."
-	make
+	cmake -S "$srcdir/$_pkgname" -B build -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/usr
+	cmake --build build
 }
 
 package() {
-	cd "$srcdir/$_pkgname"
-	make DESTDIR="$pkgdir" install
-
-	msg2 "Install license..."
-	install -Dvm644 "$srcdir/libcpuid/COPYING" "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+	DESTDIR="$pkgdir" cmake --install build
+	install -Dvm644 "$srcdir/$_pkgname/COPYING" "$pkgdir/usr/share/licenses/$pkgname/COPYING"
 }
