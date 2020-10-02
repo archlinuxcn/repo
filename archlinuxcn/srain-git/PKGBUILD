@@ -1,13 +1,13 @@
 # Maintainer: Shengyu Zhang <la@archlinuxcn.org>
 
 pkgname=srain-git
-pkgver=1.1.2
+pkgver=1.1.2.17.gc8ecddb
 pkgrel=1
 pkgdesc="Modern IRC client written in GTK, git version"
 arch=('i686' 'x86_64')
 license=('GPL')
 url="https://srain.im"
-makedepends=('git' 'make' 'gcc' 'pkg-config' 'gettext' 'python-sphinx')
+makedepends=('git' 'meson' 'gcc' 'pkg-config' 'gettext' 'python-sphinx')
 depends=('glib2' 'gtk3' 'libconfig' 'libsoup')
 optdepends=(
     'glib-networking: TLS connection support'
@@ -27,18 +27,17 @@ pkgver() {
 build() {
     cd ${pkgname%-git}
 
-    ./configure                         \
+    meson setup                         \
         --prefix="${_prefix}"           \
         --datadir="${_prefix}/share"    \
         --sysconfdir="/etc"             \
-        --disable-debug
-    make
-    make doc
+        --buildtype=release             \
+        builddir
+    ninja -C builddir
 }
 
 package() {
     cd ${pkgname%-git}
 
-    make DESTDIR="${pkgdir}" install
-    make DESTDIR="${pkgdir}" install-doc
+    DESTDIR="${pkgdir}" ninja -C builddir install
 }
