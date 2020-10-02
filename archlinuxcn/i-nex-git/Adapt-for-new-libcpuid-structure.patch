@@ -1,0 +1,18 @@
+---
+ I-Nex/i-nex/.src/CPU/MLibcpuid14.module | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/I-Nex/i-nex/.src/CPU/MLibcpuid14.module b/I-Nex/i-nex/.src/CPU/MLibcpuid14.module
+index 8df4621..8c9cd2f 100644
+--- a/I-Nex/i-nex/.src/CPU/MLibcpuid14.module
++++ b/I-Nex/i-nex/.src/CPU/MLibcpuid14.module
+@@ -11,6 +11,7 @@ Public Struct cpu_raw_data_t
+   intel_fn11[4, 4] As Integer
+   intel_fn12h[4, 4] As Integer
+   intel_fn14h[4, 4] As Integer
++  amd_fn8000001dh[4, 4] As Integer
+ End Struct
+ 
+ Public Struct cpu_mark_t
+-- 
+2.26.2

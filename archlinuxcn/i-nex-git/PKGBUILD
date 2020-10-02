@@ -2,8 +2,9 @@
 # Based on the PKGBUILD from eloaders <eloaders at linux dot pl>
 
 pkgname=i-nex-git
-pkgver=7.6.1.r0.gcd1b78d
-pkgrel=1
+_pkgname=i-nex
+pkgver=7.6.1
+pkgrel=5
 pkgdesc="System information tool like hardinfo, sysinfo"
 arch=('i686' 'x86_64')
 url="http://i-nex.linux.pl/"
@@ -18,13 +19,18 @@ depends=('gambas3-runtime'
          'libcpuid-git'
          'lsb-release'
          'curl'
-         'pastebinit'
          'procps-ng')
-makedepends=('gambas3-devel' 'gcc' 'imagemagick' 'git')
-source=($pkgname::'git://github.com/i-nex/I-Nex.git')
-sha256sums=('SKIP')
-provides=('i-nex')
+makedepends=('gambas3-devel' 'gcc' 'imagemagick')
+source=(${_pkgname}::"git+https://github.com/i-nex/I-Nex.git"
+        "Fix-error-if-proc-mtrr-doesn-t-exist.patch"
+		"Fix-libcpuid-SOVERSION.patch"
+		"Adapt-for-new-libcpuid-structure.patch")
+sha256sums=('SKIP'
+            '5c812da66cf8627e1749722d8e98f0871e6b3dbc30efbce29b785912ff39e96b'
+            'a6cee05fcf07c2d2ddbabd4012a3975178c07e0f9d1e876425567d9504eb99cd'
+            'fb286cf3bc0b1104e59219e0ba9a236129b20db52b70cd44d65f578404a93cbe')
 conflicts=('i-nex')
+provides=('i-nex')
 backup=('etc/i-nex/Database/i2c/devices.json'
         'etc/i-nex/Database/A6.json'
         'etc/i-nex/Database/amd.json'
@@ -43,7 +49,12 @@ pkgver() {
 }
 
 prepare() {
-    cd $pkgname
+    cd "${srcdir}/${_pkgname}"
+
+	patch -Np1 -i "${srcdir}/Fix-error-if-proc-mtrr-doesn-t-exist.patch"
+	patch -Np1 -i "${srcdir}/Fix-libcpuid-SOVERSION.patch"
+	patch -Np1 -i "${srcdir}/Adapt-for-new-libcpuid-structure.patch"
+
     sed -i -e 's|^STATIC.*|STATIC = false|' i-nex.mk
     sed -i -e 's|^UDEV_RULES_DIR.*|UDEV_RULES_DIR = /usr/lib/udev/rules.d|' i-nex.mk
     cd "I-Nex"
@@ -51,14 +62,14 @@ prepare() {
 }
 
 build() {
-    cd $pkgname
+    cd "${srcdir}/${_pkgname}"
     cd "I-Nex"
     ./configure --prefix=/usr
     cd ..
-    make -j1
+    MAGICK_OCL_DEVICE=OFF make -j1
 }
 
 package() {
-    cd $pkgname
-    make -j1 DESTDIR="${pkgdir}/" install
+    cd "${srcdir}/${_pkgname}"
+    MAGICK_OCL_DEVICE=OFF make -j1 DESTDIR="${pkgdir}/" install
 }

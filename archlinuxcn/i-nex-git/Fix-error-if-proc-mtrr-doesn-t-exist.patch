@@ -1,0 +1,28 @@
+---
+ Finfosys.class | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/I-Nex/i-nex/.src/MAIN/Finfosys.class b/I-Nex/i-nex/.src/MAIN/Finfosys.class
+index c2778eb..cccc602 100644
+--- a/I-Nex/i-nex/.src/MAIN/Finfosys.class
++++ b/I-Nex/i-nex/.src/MAIN/Finfosys.class
+@@ -66,6 +66,8 @@ Public Sub Form_Open()
+   Logs("Call to MLibcpuid14", Logger.Info)
+        Object.Call(MLibcpuid14, "main")
+   
++  If False Then
++
+   Try data = Open "/proc/mtrr" For Input
+ 
+   While Not Eof(data)
+@@ -75,6 +77,8 @@ Public Sub Form_Open()
+   Wend
+   
+   Try Close #data
++
++  Endif
+   
+   ' If Exist("/proc/mtrr", True) Then
+   '    For i = 1 To MaxCount
+-- 
+2.25.1
