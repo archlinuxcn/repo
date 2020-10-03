@@ -1,7 +1,7 @@
-From 2a57b5286e544ad4178de9d652e05e70df15bdcc Mon Sep 17 00:00:00 2001
+From 597f0ad9bcc60d631451b168d1654675b94b8f6f Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 21 Aug 2020 13:15:02 -0400
-Subject: [PATCH 6/7] Optimize objectid in codegen
+Subject: [PATCH 7/8] Optimize objectid in codegen
 
 ---
  src/builtins.c            | 53 +++++++++++++++++++++++++++++++++------
@@ -161,7 +161,7 @@ index e2600385b1..0cb2c4e1a2 100644
  
      jl_cgval_t retval = sig.emit_a_ccall(
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 40e1dca5e6..d3e7aa0705 100644
+index afa598421c..b7bef3f1e4 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -376,12 +376,14 @@ static AttributeList get_attrs_zext(LLVMContext &C)
@@ -210,10 +210,10 @@ index 40e1dca5e6..d3e7aa0705 100644
  static const auto setjmp_func = new JuliaFunction{
      jl_setjmp_name,
 diff --git a/src/julia_internal.h b/src/julia_internal.h
-index 79079504c9..d0e676e6d1 100644
+index 85774c745e..2a674c67a6 100644
 --- a/src/julia_internal.h
 +++ b/src/julia_internal.h
-@@ -1102,8 +1102,9 @@ JL_DLLEXPORT int jl_stored_inline(jl_value_t *el_type);
+@@ -1103,8 +1103,9 @@ JL_DLLEXPORT int jl_stored_inline(jl_value_t *el_type);
  JL_DLLEXPORT jl_value_t *(jl_array_data_owner)(jl_array_t *a);
  JL_DLLEXPORT int jl_array_isassigned(jl_array_t *a, size_t i);
  

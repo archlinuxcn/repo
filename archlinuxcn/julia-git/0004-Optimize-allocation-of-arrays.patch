@@ -1,7 +1,7 @@
-From 7a167f64eb72a3f505b42b31fcc22bfbd32a9c2d Mon Sep 17 00:00:00 2001
+From 479a4b4de04ef8e8bca717f0adc1d8aa10d39652 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 22 Aug 2020 10:19:15 -0400
-Subject: [PATCH 3/7] Optimize allocation of arrays
+Subject: [PATCH 4/8] Optimize allocation of arrays
 
 ---
  base/boot.jl    | 12 ++---------
@@ -137,7 +137,7 @@ index 5763239248..a3509b7587 100644
               argv[1].typ == (jl_value_t*)jl_ulong_type) {
          assert(!isVa && !llvmcall && nccallargs == 2);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 01f4b0086e..20fbf1f4fe 100644
+index be9aaf0758..ffcbe5db05 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -439,6 +439,57 @@ static const auto jlsplatnew_func = new JuliaFunction{

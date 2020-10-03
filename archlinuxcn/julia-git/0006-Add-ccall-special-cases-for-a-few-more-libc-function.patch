@@ -1,7 +1,7 @@
-From 5a0feed8efc1476e7d0faa40d4addfc847a4eaf9 Mon Sep 17 00:00:00 2001
+From 7e598b155991f883b2fb7a7541e5501101d16607 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 21 Aug 2020 10:29:29 -0400
-Subject: [PATCH 5/7] Add ccall special cases for a few more libc functions
+Subject: [PATCH 6/8] Add ccall special cases for a few more libc functions
  that LLVM is aware of
 
 Includes ones that are used in base and ones that LLVM can most likely
@@ -190,7 +190,7 @@ index a3509b7587..e2600385b1 100644
  
      if (cc != CallingConv::C)
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 20fbf1f4fe..40e1dca5e6 100644
+index ffcbe5db05..afa598421c 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -374,6 +374,18 @@ static AttributeList get_attrs_zext(LLVMContext &C)

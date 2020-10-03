@@ -45,30 +45,30 @@ makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
 options=('debug' '!strip' '!buildflags')
 _patches=(
   0001-Fix-broken-linking-and-initialization-due-to-36588.patch
-  0002-Fix-source-file-paths.patch
-  0003-Optimize-allocation-of-arrays.patch
-  0004-Enable-basic-AA-in-O2.patch
-  0005-Add-ccall-special-cases-for-a-few-more-libc-function.patch
-  0006-Optimize-objectid-in-codegen.patch
-  0007-Mark-more-functions-as-not-safepoint-in-codegen.patch
+  0002-Force-enable-GDB-debug-info-registration.patch
+  0003-Fix-source-file-paths.patch
+  0004-Optimize-allocation-of-arrays.patch
+  0005-Enable-basic-AA-in-O2.patch
+  0006-Add-ccall-special-cases-for-a-few-more-libc-function.patch
+  0007-Optimize-objectid-in-codegen.patch
+  0008-Mark-more-functions-as-not-safepoint-in-codegen.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
-        gdb-debug.diff
         julia-compile-pkgs.jl
         julia-clear-precompile.sh
         julia-precompile.hook
         julia-clear-precompile.hook
         arch-source-translate.cpp)
 md5sums=('SKIP'
-         '3b4e9222b2f75587f822df0b95eb0a00'
-         '3ce8db2b6b13c891acfd39d98daa51bc'
-         '7ea0764315f173971f240aac51e53ade'
-         'e21fcad49073286a119cc7a471449d3f'
-         '435c34f51e3934fd15266bec801cc07d'
-         '818c161a5d25d276c5a990d5883ec564'
-         '6eca32e71f0a21aac66ca30821fd7bbe'
-         'effd2c21ffb69e66b43d4b7fbe074a51'
+         '98b408bd7519637b7ee93b4e4f9d7f84'
+         '28857429d085416d3758e70f769373b0'
+         '42d3a95811f8d22b41d499ad10553bca'
+         '1a110a6399b18680bb0dd7ad175d61e3'
+         'e96a21704a7501a7d9cc15781eefda67'
+         'a60ec5646014f228dac4d60e5b18f083'
+         '58a807854523dad5148c9e5da2128b87'
+         '0b4e4f0fc115ffcc632a19b98f415eeb'
          'bde100b283ea5b7aaf80613abec98a57'
          '6e7fcba300512df8ab8ab65d3e1eb847'
          'f1f6ffc7ddcbc7fa0000d6f5fdbbe925'
@@ -160,7 +160,7 @@ EOF
   git reset --hard HEAD
   git clean -fdx
 
-  for p in "${_patches[@]}" gdb-debug.diff; do
+  for p in "${_patches[@]}"; do
     _apply_patch "$p"
   done
 

@@ -1,0 +1,25 @@
+From cebf21f39ccebd2afba0371f187acecd2caccf86 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 3 Oct 2020 08:45:51 -0400
+Subject: [PATCH 2/8] Force enable GDB debug info registration
+
+---
+ src/init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/init.c b/src/init.c
+index 9f54a3ffa8..1198fb63ef 100644
+--- a/src/init.c
++++ b/src/init.c
+@@ -694,7 +694,7 @@ void _julia_init(JL_IMAGE_SEARCH rel)
+     }
+ #endif
+ 
+-#if defined(JL_DEBUG_BUILD)
++#if defined(JL_DEBUG_BUILD) || 1
+     jl_using_gdb_jitevents = 1;
+ # else
+     const char *jit_gdb = getenv("ENABLE_GDBLISTENER");
+-- 
+2.28.0
+
