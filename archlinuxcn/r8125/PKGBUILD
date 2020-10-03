@@ -4,12 +4,12 @@
 _pkgbase=r8125
 pkgname=(r8125 r8125-dkms)
 pkgver=9.003.05
-pkgrel=4
+pkgrel=5
 pkgdesc="r8125 kernel driver for linux"
 arch=('x86_64')
 url="https://www.realtek.com/"
 license=('GPL2')
-depends=('linux=5.8.12.arch1-1')
+depends=('linux=5.8.13.arch1-1')
 makedepends=(linux-headers)
 source=("https://github.com/ibmibmibm/r8125/archive/${pkgver}.tar.gz"
         'dkms.conf')
