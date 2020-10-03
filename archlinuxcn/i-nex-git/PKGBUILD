@@ -3,8 +3,8 @@
 
 pkgname=i-nex-git
 _pkgname=i-nex
-pkgver=7.6.1
-pkgrel=5
+pkgver=7.6.1.r0.gcd1b78d
+pkgrel=1
 pkgdesc="System information tool like hardinfo, sysinfo"
 arch=('i686' 'x86_64')
 url="http://i-nex.linux.pl/"
@@ -20,7 +20,7 @@ depends=('gambas3-runtime'
          'lsb-release'
          'curl'
          'procps-ng')
-makedepends=('gambas3-devel' 'gcc' 'imagemagick')
+makedepends=('git' 'gambas3-devel' 'gcc' 'imagemagick')
 source=(${_pkgname}::"git+https://github.com/i-nex/I-Nex.git"
         "Fix-error-if-proc-mtrr-doesn-t-exist.patch"
 		"Fix-libcpuid-SOVERSION.patch"
@@ -44,7 +44,7 @@ backup=('etc/i-nex/Database/i2c/devices.json'
         'etc/i-nex/Database/Xeon.json')
 
 pkgver() {
-    cd $pkgname
+    cd $_pkgname
     git describe --long --tags | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
 }
 
