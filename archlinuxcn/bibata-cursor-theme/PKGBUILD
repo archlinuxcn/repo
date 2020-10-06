@@ -1,38 +1,38 @@
 # Maintainer: Shatur95 <genaloner@gmail.com>
-# Co-Maintainer: Mark Wagie <mark.wagie@tutanota.com>
+# Co-Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
+# Contributor: ful1e5 <kaizmandhu at gmail dot com>
 
 pkgname=bibata-cursor-theme
-pkgver=0.4.2
-pkgrel=2
+pkgver=1.0.0
+pkgrel=3
 pkgdesc="Material Based Cursor Theme"
 arch=('any')
-url="https://github.com/KaizIqbal/Bibata_Cursor"
+url="https://github.com/ful1e5/Bibata_Cursor"
 license=('GPL3')
-makedepends=('python-pillow' 'inkscape' 'xorg-xcursorgen')
-source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('d00f91ebefa34d5c7d578c78a17825238fcb90540de0dbf4cf3ffb587e1ae976')
+makedepends=('python-clickgen')
+options=('!strip')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
+        "$pkgname-bitmaps-$pkgver.zip::$url/releases/download/v$pkgver/bitmaps.zip")
+noextract=('bitmaps.zip')
+sha256sums=('5e694dafa6d0a338bb744d43d09b0d31fc55f105b3659754ea226d170b590999'
+            '629f7a5042d704c6aa5518e4327ef62e20528625354aaf459eda75765a0a7fa8')
 
-_variants=(Bibata_Amber Bibata_Classic Bibata_Ice Bibata_Oil)
+prepare() {
+  cd Bibata_Cursor-$pkgver
+  mkdir -p bitmaps
+  bsdtar -xvf "$srcdir/$pkgname-bitmaps-$pkgver.zip" -C bitmaps
+
+  rm -rf themes
+}
 
 build() {
-  cd "$srcdir/Bibata_Cursor-$pkgver"
-  
-  for variant in ${_variants[*]}
-  do
-    echo "Building $variant..."
-    python render-cursors.py ./src/$variant/source-cursors.svg -o -a --name $variant
-    ./tweak.sh $variant
-    ./x11-make.sh $variant
-    cp src/$variant/*.theme $variant/out/X11/$variant
-  done
+  cd Bibata_Cursor-$pkgver
+  python build.py
 }
 
 package() {
-  cd "$srcdir/Bibata_Cursor-$pkgver"
-  
-  install -d "$pkgdir/usr/share/icons"
-  for variant in ${_variants[*]}
-  do
-    cp -a $variant/out/X11/$variant "$pkgdir/usr/share/icons"
-  done
+  cd Bibata_Cursor-$pkgver
+  install -d "$pkgdir"/usr/share/icons
+  cp -r themes/Bibata-* "$pkgdir"/usr/share/icons
+  chmod -R 755 "$pkgdir"/usr/share/icons/Bibata-*
 }
