@@ -2,7 +2,7 @@
 
 _pkgname=SZ
 pkgname=sz
-pkgver=2.1.9
+pkgver=2.1.10
 pkgrel=1
 pkgdesc='Error-bounded Lossy Data Compressor (for floating-point/integer datasets)'
 license=('BSD')
@@ -23,7 +23,7 @@ checkdepends=(
   'cunit'
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/disheng222/SZ/archive/v${pkgver}.tar.gz")
-sha256sums=('491724ff1c0eaaab5e1a7a28e36aba6da9dcbeddb29d8d21a6d1388383d4891e')
+sha256sums=('faaab9d15472f3c6cb3867758e454706aee9fdf358db8ae3be965f38fe73e098')
 
 build() {
   mkdir build
