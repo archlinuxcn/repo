@@ -7,72 +7,52 @@
 _pkgbase=gdm
 pkgbase=gdm-plymouth
 pkgname=(gdm-plymouth libgdm-plymouth)
-pkgver=3.36.3
-pkgrel=3
+pkgver=3.38.0
+pkgrel=1
 pkgdesc="Display manager and login screen with plymouth support"
 url="https://wiki.gnome.org/Projects/GDM"
 arch=(x86_64)
 license=(GPL)
-depends=(plymouth gnome-shell gnome-session upower xorg-xrdb xorg-server xorg-xhost)
-makedepends=(yelp-tools gobject-introspection git docbook-xsl)
+depends=(plymouth gnome-shell gnome-session upower systemd xorg-xrdb xorg-server xorg-xhost libxdmcp)
+makedepends=(yelp-tools gobject-introspection git docbook-xsl meson)
 checkdepends=(check)
-_commit=24a4c0afe337a7a381397c87a39e3a666c0ae6cc  # tags/3.36.3^0
+_commit=6fc40ac6aa37c8ad87c32f0b1a5d813d34bf7770  # tags/3.38.0^0
 source=("git+https://gitlab.gnome.org/GNOME/gdm.git#commit=$_commit"
         0001-Xsession-Don-t-start-ssh-agent-by-default.patch
-        0002-pam-arch-Don-t-check-greeter-account-for-expiry.patch
-        0003-pam-arch-Restrict-greeter-service-to-the-gdm-user.patch
-        0004-pam-arch-Update-to-match-pambase-20200721.1-2.patch)
+        0002-pam-arch-Update-to-match-pambase-20200721.1-2.patch
+        default.pa)
 sha256sums=('SKIP'
             '5a32db412fc5256e16691e8f2db0b460bafbbb2be8eb9b9bcc71b5cd49688f9e'
-            'e879a982467a62c4c1557067dbdef6b56a774273df1368a60c4b036015111cdd'
-            '4648e7b920ccb14d8a87634c3c98d51ff13163ae2fc9fc4a3c2e9ec876515469'
-            'ba98385cf1de00560f77d75a241b1895567c6b8d4babf230d10ae7fd19739fda')
+            '723bf4462ea4eed4193a891e95137687abfeefe6a170ec5822921bffdfc1f412'
+            'a18ea3a17bf1c52011cb15f500973946625586786ad8f7c7eec1808f80ffd939')
 
 pkgver() {
-  cd gdm
+  cd $_pkgbase
   git describe --tags | sed 's/-/+/g'
 }
 
 prepare() {
-  mkdir -p build
-  cd gdm
-  patch -Np1 -i ../0001-Xsession-Don-t-start-ssh-agent-by-default.patch
-
-  # https://bugs.archlinux.org/task/63706
-  patch -Np1 -i ../0002-pam-arch-Don-t-check-greeter-account-for-expiry.patch
-  patch -Np1 -i ../0003-pam-arch-Restrict-greeter-service-to-the-gdm-user.patch
+  cd $_pkgbase
+  git apply -3 ../0001-Xsession-Don-t-start-ssh-agent-by-default.patch
 
   # https://bugs.archlinux.org/task/67485
-  patch -Np1 -i ../0004-pam-arch-Update-to-match-pambase-20200721.1-2.patch
-
-  NOCONFIGURE=1 ./autogen.sh
+  git apply -3 ../0002-pam-arch-Update-to-match-pambase-20200721.1-2.patch
 }
 
 build() {
-  cd build
-  ../gdm/configure \
-    --prefix=/usr \
-    --sysconfdir=/etc \
-    --localstatedir=/var \
-    --sbindir=/usr/bin \
-    --libexecdir=/usr/lib \
-    with_dbus_sys=/usr/share/dbus-1/system.d \
-    --disable-schemas-compile \
-    --disable-static \
-    --enable-gdm-xsession \
-    --enable-ipv6 \
-    --with-default-pam-config=arch \
-    --with-default-path=/usr/local/bin:/usr/local/sbin:/usr/bin \
-    --with-plymouth \
-    --without-tcp-wrappers
-
-  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
-
-  make
+  arch-meson gdm build \
+    -D dbus-sys="/usr/share/dbus-1/system.d" \
+    -D default-pam-config=arch \
+    -D default-path="/usr/local/bin:/usr/local/sbin:/usr/bin" \
+    -D gdm-xsession=true \
+    -D ipv6=true \
+    -D run-dir=/run/gdm \
+    -D selinux=disabled
+  meson compile -C build
 }
 
 check() {
-  make -C build check
+    meson test -C build --print-errorlogs
 }
 
 package_gdm-plymouth() {
@@ -85,12 +65,18 @@ package_gdm-plymouth() {
           etc/gdm/Xsession etc/gdm/PostSession/Default etc/gdm/PreSession/Default)
   install=gdm.install
 
-  DESTDIR="$pkgdir" make -C build install
+  DESTDIR="$pkgdir" meson install -C build
 
-  chown -Rc 120:120 "$pkgdir/var/lib/gdm"
+  install -d "$pkgdir/var/lib"
+  install -d "$pkgdir/var/lib/gdm"                           -o120 -g120 -m1770
+  install -d "$pkgdir/var/lib/gdm/.config"                   -o120 -g120 -m700
+  install -d "$pkgdir/var/lib/gdm/.config/pulse"             -o120 -g120
+  install -d "$pkgdir/var/lib/gdm/.local"                    -o120 -g120 -m700
+  install -d "$pkgdir/var/lib/gdm/.local/share"              -o120 -g120
+  install -d "$pkgdir/var/lib/gdm/.local/share/applications" -o120 -g120
 
-  # Unused or created at start
-  rm -r "$pkgdir"/var/{cache,log,run}
+  # https://src.fedoraproject.org/rpms/gdm/blob/master/f/default.pa-for-gdm
+  install -Dt "$pkgdir/var/lib/gdm/.config/pulse" -o120 -g120 -m644 default.pa
 
   install -Dm644 /dev/stdin "$pkgdir/usr/lib/sysusers.d/gdm.conf" <<END
 g gdm 120 -

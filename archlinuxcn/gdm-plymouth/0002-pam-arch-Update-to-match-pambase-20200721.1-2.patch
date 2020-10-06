@@ -5,15 +5,28 @@ Subject: [PATCH] pam-arch: Update to match pambase 20200721.1-2
 
 https://bugs.archlinux.org/task/67485
 ---
+ data/meson.build                         |  1 -
  data/pam-arch/gdm-autologin.pam          | 22 +++++++++--------
  data/pam-arch/gdm-fingerprint.pam        | 31 +++++++++++++++---------
  data/pam-arch/gdm-launch-environment.pam | 24 ++++++++++--------
  data/pam-arch/gdm-password.pam           | 17 +++++++------
  data/pam-arch/gdm-pin.pam                | 13 ----------
  data/pam-arch/gdm-smartcard.pam          | 31 +++++++++++++++---------
- 6 files changed, 75 insertions(+), 63 deletions(-)
+ 7 files changed, 75 insertions(+), 64 deletions(-)
  delete mode 100644 data/pam-arch/gdm-pin.pam
 
+diff --git a/data/meson.build b/data/meson.build
+index 05a20117..5d9e2847 100644
+--- a/data/meson.build
++++ b/data/meson.build
+@@ -135,7 +135,6 @@ pam_data_files_map = {
+     'gdm-fingerprint',
+     'gdm-smartcard',
+     'gdm-password',
+-    'gdm-pin',
+   ],
+   'none': [],
+   # We should no longer have 'autodetect' at this point
 diff --git a/data/pam-arch/gdm-autologin.pam b/data/pam-arch/gdm-autologin.pam
 index 99b14209..30bdf529 100644
 --- a/data/pam-arch/gdm-autologin.pam
@@ -198,4 +211,3 @@ index ec6f75d5..e6ec1299 100644
 +
 +session    include                     system-local-login
 +session    optional                    pam_gnome_keyring.so auto_start
-
