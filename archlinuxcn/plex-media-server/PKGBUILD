@@ -9,11 +9,11 @@
 # Contributor: Praekon <praekon@googlemail.com>
 
 pkgname=plex-media-server
-pkgver=1.20.1.3252
-_pkgsum=a78fef9a9
+pkgver=1.20.2.3402
+_pkgsum=0fec14d92
 pkgrel=1
 pkgdesc='The back-end media server component of Plex.'
-arch=('x86_64' 'armv7h' 'aarch64')
+arch=('x86_64' 'i686' 'armv7h' 'aarch64')
 url='https://plex.tv/'
 license=('custom')
 options=('!emptydirs'  '!strip' 'staticlibs')
@@ -30,6 +30,7 @@ source=('plexmediaserver.conf.d'
 source_aarch64=("https://downloads.plex.tv/plex-media-server-new/${pkgver}-${_pkgsum}/debian/plexmediaserver_${pkgver}-${_pkgsum}_arm64.deb")
 source_armv7h=("https://downloads.plex.tv/plex-media-server-new/${pkgver}-${_pkgsum}/debian/plexmediaserver_${pkgver}-${_pkgsum}_armhf.deb")
 source_x86_64=("https://downloads.plex.tv/plex-media-server-new/${pkgver}-${_pkgsum}/redhat/plexmediaserver-${pkgver}-${_pkgsum}.x86_64.rpm")
+source_i686=("https://downloads.plex.tv/plex-media-server-new/${pkgver}-${_pkgsum}/redhat/plexmediaserver-${pkgver}-${_pkgsum}.i686.rpm")
 
 sha256sums=('398ba7958598609453f5289b3d5f2389d2756158b340cf28e83c39d9ed60280b'
             '348075917da3bac9659d047a45c264c556475e66779ecd84cf00d178a5b7bebf'
@@ -37,9 +38,10 @@ sha256sums=('398ba7958598609453f5289b3d5f2389d2756158b340cf28e83c39d9ed60280b'
             'c597bee0bcbb59ed791651555a904e5f7e9d2e82f6c6986b6352e5fc38e5b557'
             'b7ff6525a3c7a8be885edc85bb523095f8e25ddb38873127e2a4e97b28f2c7ad'
             'dbfb5a9a7146a975863c0932f1a68c4b040ec5d7e693361f39ddfbf60885e631')
-sha256sums_x86_64=('bd4a5024ac6ab4283392e6d458a9e47375d270a42b16d390bce177fda661a07c')
-sha256sums_armv7h=('0333d5bd46f3d277c5875f17048bb5c24105334574b2433a2c14baf1b15c29e0')
-sha256sums_aarch64=('590243d3dfce6bc08fc5233a884c889b15f5965b7b38c5ddb3916391c49bc9dc')
+sha256sums_x86_64=('2ca4d6d784565ce2c27b3f9c7bc311dcbc3b0af5e04dd2bb65441033a754d46f')
+sha256sums_i686=('df491b70efd4c09ba7312a7d01cfee35b2a157595e8fa2e3904fc9655f835cfd')
+sha256sums_armv7h=('42ef5e1dd3fb79888cb9e215f20ddd4f3fac9bb1df6c8d93b93a63ef0c762de1')
+sha256sums_aarch64=('31a82a1695c69de49555deae3d1937e3919633ef4282692c63b99f4bbbd68da8')
 
 prepare() {
   if [[ $CARCH = armv7h ]] || [[ $CARCH = aarch64 ]]; then
