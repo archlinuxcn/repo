@@ -2,7 +2,7 @@
 
 pkgbase=linux-froidzen
 pkgver=5.8.13.zen1
-pkgrel=3
+pkgrel=4
 pkgdesc='Linux ZEN with Patches'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/zen-kernel/zen-kernel/commits/$_srctag"
@@ -54,12 +54,14 @@ prepare() {
 
   echo "Setting config..."
   cp ../config .config
+
+  # Enable MUQSS
   sed -i "s/# CONFIG_SCHED_MUQSS is not set/CONFIG_SCHED_MUQSS=y/g" .config
-  sed -i "s/# CONFIG_ANDROID is not set/CONFIG_ANDROID=y/g" .config
-  echo "CONFIG_ASHMEM=y
-CONFIG_ANDROID_BINDER_IPC=y
-CONFIG_ANDROID_BINDERFS=y
-CONFIG_ANDROID_BINDER_DEVICES=\"binder,hwbinder,vndbinder\"" >> .config
+  
+  # Enable kernel debug message
+  sed -i "s/CONFIG_CONSOLE_LOGLEVEL_DEFAULT=1/CONFIG_CONSOLE_LOGLEVEL_DEFAULT=7/g" .config
+  sed -i "s/CONFIG_MESSAGE_LOGLEVEL_DEFAULT=1/CONFIG_MESSAGE_LOGLEVEL_DEFAULT=7/g" .config
+
   make olddefconfig
 
   make -s kernelrelease > version
