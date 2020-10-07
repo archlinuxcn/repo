@@ -14,7 +14,9 @@ udevd_live() {
   fi
 }
 
-case $1 in
+op="$1"; shift
+
+case "$op" in
   catalog)  /usr/bin/journalctl --update-catalog ;;
   hwdb)     /usr/bin/systemd-hwdb --usr update ;;
   update)   touch -c /usr ;;
@@ -26,7 +28,10 @@ case $1 in
   binfmt)        systemd_live; /usr/lib/systemd/systemd-binfmt ;;
   sysctl)        systemd_live; /usr/lib/systemd/systemd-sysctl ;;
 
-  *) echo >&2 "  Invalid operation '$1'"; exit 1 ;;
+  # For use by other packages
+  reload)        systemd_live; /usr/bin/systemctl try-reload-or-restart "$@" ;;
+
+  *) echo >&2 "  Invalid operation '$op'"; exit 1 ;;
 esac
 
 exit 0

@@ -69,10 +69,13 @@ add_systemd_unit() {
                 map add_systemd_unit "${values[@]}"
                 ;;
             Exec*)
-                # don't add binaries unless they are required
-                if [[ ${values[0]:0:1} != '-' ]]; then
-                    add_binary "${values[0]}"
-                fi
+                # do not add binaries unless they are required,
+                # strip special executable prefixes
+                case ${values[0]} in
+                    -*)  ;;
+                    !!*) add_binary "${values[0]#!!}" ;;
+                    *)   add_binary "${values[0]#[@!:+]}" ;;
+                esac
                 ;;
         esac
 
@@ -169,8 +172,8 @@ build() {
         'group: files' \
         'shadow: files'
 
-    echo "root:x:0:0:root:/:/bin/sh" >"$BUILDROOT/etc/passwd"
-    echo "root::::::::" >"$BUILDROOT/etc/shadow"
+    echo "root:x:0:0:root:/root:/bin/sh" >"$BUILDROOT/etc/passwd"
+    echo 'root:*:::::::' >"$BUILDROOT/etc/shadow"
     getent group root audio disk input kmem kvm lp optical render storage tty uucp video | awk -F: ' { print $1 ":x:" $3 ":" }' >"$BUILDROOT/etc/group"
 
     add_dir "/etc/modules-load.d"
