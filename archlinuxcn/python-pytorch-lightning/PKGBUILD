@@ -1,16 +1,17 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=python-pytorch-lightning
-_name=${pkgname#python-}
 _pkgname=pytorch-lightning
 pkgver=0.10.0
 pkgrel=1
-pkgdesc="Rapid research framework for PyTorch. The researcher's version of Keras"
+pkgdesc="The lightweight PyTorch wrapper for high-performance AI research"
 arch=('any')
-url='https://github.com/williamFalcon/pytorch-lightning'
+url='https://github.com/PyTorchLightning/pytorch-lightning'
 license=('Apache')
 depends=(
+  'python-fsspec'
   'python-pandas'
+  'python-pyaml'
   'python-numpy'
   'python-scikit-learn'
   'python-pytorch'
@@ -20,10 +21,12 @@ depends=(
 )
 optdepends=(
   'python-apex: mixed precision support'    
+  'python-tensorboard: tensorboard support'
+  'python-horovod: for distributed training'
 )
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha512sums=('6eb2b11ae5c389cb4324d9ba30e21619052216ab126f2eec76bbda3fe93b775dc709ab314202aad2dd67f9cc32ed9858a7eafd1f6a54d7cc34907ea75fb593e5')
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/PyTorchLightning/pytorch-lightning/archive/${pkgver}.tar.gz")
+sha512sums=('8d548cfb9f473b3e20e227ae9338c9d72c8059fb587cd5519ada6cb37c5b93e148d6e78040fc1fd98eb86a46e093fabdb190fa240c3d771c5de19a8246d8b900')
 
 build() {
   cd "${_pkgname}-${pkgver}"
@@ -33,6 +36,5 @@ build() {
 package() {
   cd "${_pkgname}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
-  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:

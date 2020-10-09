@@ -7,6 +7,7 @@ repo_depends:
   - python-torchvision
 
 update_on:
-  - source: pypi
-    pypi: pytorch-lightning
+  - source: github
+    pypi: PyTorchLightning/pytorch-lightning
+    use_latest_release: true
   - alias: python
