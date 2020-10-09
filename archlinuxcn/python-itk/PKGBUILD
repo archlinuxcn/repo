@@ -1,36 +1,40 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
-_py=cp38
-_modules='itk itk-core itk-filtering itk-io itk-numerics itk-registration itk-segmentation'
+_pkgname=ITKPythonPackage
 pkgname=python-itk
 pkgver=5.1.1
-pkgrel=1
-pkgdesc="An open-source toolkit for multidimensional image analysis. This package include itk-core, itk-filtering, itk-io, itk-numerics, itk-registration, and itk-segmentation module."
+pkgrel=2
+pkgdesc='An open-source toolkit for multidimensional image analysis. This package provides only the python binding'
 arch=('x86_64')
 url='https://itk.org/'
 license=('Apache')
-depends=('gcc-libs')
-makedepends=('python-pip')
+depends=(gcc-libs)
+makedepends=(
+  clang
+  doxygen
+  git
+  python-setuptools
+  python-scikit-build
+)
 
-for _name in ${_modules}; do
-  source+=("https://files.pythonhosted.org/packages/${_py}/${_name::1}/${_name}/${_name/-/_}-${pkgver}-${_py}-${_py}-manylinux1_x86_64.whl")
-done
-
-sha512sums=('d84f27c3210843388c76e8ec6c93d815a9eeccbbddccc07f23507db41ceb6976b40523fbc9a0bc290cd0cd567adcac9d7580f1478eb8f0cfd53b6df9cd93a66b'
-            '7247f1ef8aba639c2fbdf6218240b279226ae4a4d4a5db829fe4e02cd3903463190da12fea8703e131fda3934efcf896c72986242ee79f084779ea0697a15cd9'
-            '5ab3e52bb64bead9784ed60d3a8301791e57757b747e0acf8a0f0de3008d17c05d04e897f444f1c24fe1bb4c8dfdc2c792bb02761dec6cf8e94a99436c26f392'
-            '5f60234e29adffc10878052190188006987ba59f3e2e8f543cc7a6ba3d0b8ab23e580259b0e2b2ae9c02cbaa83fe8596c96af27228143ff3722f44f5786646b9'
-            '17db6d1e97fedfaa661f066e47e93cef3ec7b388ac7653d45df83f9607eb66f6995a17049210ed1c05b77af0182e18f7dee35b545c09d3ab7185dc2775ca82f8'
-            '5c99fa4b7169860444c45ad1f916e79b20ae8ceeece3e1c69e53e6cd61ebc82878e5c0741d897d8e961724e175ba0392b6bfe542d2adbe260eca293ad30dc383'
-            '7a85410ac2ebaddd532588532f3e9ba48d74e7f449a209e1cb90736210a0e6c548e00cb1b34a6aeb607c0246803bcdd66fe761f7ae742a2fb38d52f90a259cd1')
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/InsightSoftwareConsortium/ITKPythonPackage/archive/v${pkgver}.tar.gz")
+sha512sums=('e7d6b65c508795fc032f1cadf30abb0b208c775b850ad1b64f4baa790c09f7a676a955761c3296714a214925cacd33043a074cd4abf52909c35531a5246ce683')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
 }
 
+build() {
+  export CC=clang
+  export CXX=clang++
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
 package() {
-	PIP_CONFIG_FILE=/dev/null pip install --isolated --root="${pkgdir}" --ignore-installed --no-deps *.whl
-	python -O -m compileall "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/itk"
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  mv "${pkgdir}/usr/itkHelpers.py" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/itkHelpers.py"
 }
 # vim:set ts=2 sw=2 et:
 
