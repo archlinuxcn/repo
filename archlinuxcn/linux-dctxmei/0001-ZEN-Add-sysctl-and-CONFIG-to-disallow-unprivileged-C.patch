@@ -40,7 +40,7 @@ index 6db3e310a5e4..2dd7dd1b6b0d 100644
  	bool "PID Namespaces"
  	default y
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 9180f4416dba..a02f83b1d9b4 100644
+index 594272569a80..96a55931654c 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -106,6 +106,11 @@
@@ -55,7 +55,7 @@ index 9180f4416dba..a02f83b1d9b4 100644
  
  /*
   * Minimum number of threads to boot the kernel
-@@ -1779,6 +1784,10 @@ static __latent_entropy struct task_struct *copy_process(
+@@ -1780,6 +1785,10 @@ static __latent_entropy struct task_struct *copy_process(
  	if ((clone_flags & (CLONE_NEWUSER|CLONE_FS)) == (CLONE_NEWUSER|CLONE_FS))
  		return ERR_PTR(-EINVAL);
  
@@ -66,7 +66,7 @@ index 9180f4416dba..a02f83b1d9b4 100644
  	/*
  	 * Thread groups must share signals as well, and detached threads
  	 * can only be started up within the thread group.
-@@ -2837,6 +2846,12 @@ int ksys_unshare(unsigned long unshare_flags)
+@@ -2838,6 +2847,12 @@ int ksys_unshare(unsigned long unshare_flags)
  	if (unshare_flags & CLONE_NEWNS)
  		unshare_flags |= CLONE_FS;
  

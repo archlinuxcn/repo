@@ -2,7 +2,7 @@
 # Maintainer: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=linux-dctxmei
-pkgver=5.4.64
+pkgver=5.4.70
 pkgrel=1
 pkgdesc='LTS Linux - Dct Mei'
 url="https://www.kernel.org/"
@@ -15,7 +15,7 @@ makedepends=(
 options=('!strip')
 _srcname=linux-$pkgver
 source=(
-  https://www.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
+  https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
   config         # the main kernel config file
   0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
   0002-virt-vbox-Add-support-for-the-new-VBG_IOCTL_ACQUIRE_.patch
@@ -26,10 +26,10 @@ validpgpkeys=(
   '647F28654894E3BD457199BE38DBBDC86092693E'  # Greg Kroah-Hartman
 )
 # https://www.kernel.org/pub/linux/kernel/v5.x/sha256sums.asc
-sha256sums=('b9d3c2938466f388a70fd190fd6691baa8b757393b267e9f7b06c4730d85d5ef'
+sha256sums=('c0b3d8085c5ba235df38b00b740e053659709e8a5ca21957a239f6bc22c45007'
             'SKIP'
             '6a2ee8f822810f594921aa85087e4cf0a17c68518d395586fd9c56b6c7e63dad'
-            'b3f2777462517abd75039fc56a63dfa3f5eb6b3865e02fe9e0c3512381eed54b'
+            '0279e6c1a7f233110393995eccca1371edf11680fa5d6b8916dcb9ce098fb7fb'
             '4fd74bb2a7101d700fba91806141339d8c9e46a14f8fc1fe276cfb68f1eec0f5'
             'b7c814c8183e4645947a6dcc3cbf80431de8a8fd4e895b780f9a5fd92f82cb8e')
 
@@ -69,7 +69,7 @@ build() {
 }
 
 _package() {
-  pkgdesc="The $pkgdesc kernel and modules (disable nouveau, disable uvcvideo, default apparmor, disable ipv6, default bbr)"
+  pkgdesc="The $pkgdesc kernel and modules (disable nouveau, disable uvcvideo, default apparmor, default bbr)"
   depends=(coreutils kmod initramfs)
   optdepends=('crda: to set the correct wireless channels of your country'
               'linux-firmware: firmware images needed for some devices')
