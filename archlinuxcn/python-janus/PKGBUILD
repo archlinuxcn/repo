@@ -1,7 +1,7 @@
 # Maintainer: Bruce Zhang <zttt183525594@gmail.com>
 pkgname=python-janus
 _name=${pkgname#python-}
-pkgver=0.5.0
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="Thread-safe asyncio-aware queue for Python"
 arch=('any')
@@ -14,7 +14,7 @@ checkdepends=('python-pytest')
 source=(
 	"https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz" 
 )
-sha256sums=('0700f5537d076521851d19b7625545c5e76f6d5792ab17984f28230adcc3b34c')
+sha256sums=('7bc6a9b99f401978113937f477b30ef5a104897e92f6f831aa5b95b57d103eb1')
 
 build() {
 	cd "$_name-$pkgver"
