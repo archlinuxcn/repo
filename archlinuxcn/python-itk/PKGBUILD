@@ -8,7 +8,10 @@ pkgdesc='An open-source toolkit for multidimensional image analysis. This packag
 arch=('x86_64')
 url='https://itk.org/'
 license=('Apache')
-depends=(gcc-libs)
+depends=(
+  gcc-libs
+  python-numpy
+)
 makedepends=(
   clang
   doxygen
