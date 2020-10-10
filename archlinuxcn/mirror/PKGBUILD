@@ -3,21 +3,21 @@
 
 pkgname=mirror
 pkgdesc="rsync scheduler for open source mirror site"
-pkgver=0.8.0
-pkgrel=2
+pkgver=0.8.2
+pkgrel=1
 arch=('any')
 license=('GPL')
 url="https://github.com/ideal/mirror"
-depends=('rsync' 'python2-chardet')
+depends=('rsync' 'python-chardet')
 source=(https://github.com/ideal/mirror/archive/$pkgver.tar.gz)
-md5sums=('fcdb64eed85e17475cc737a9de288cb7')
+md5sums=('7b45a00295533afc7fb1f2ec3aa9d899')
 
 build() {
     cd $srcdir/$pkgname-$pkgver
-    python2 setup.py build
+    python setup.py build
 }
 
 package() {
     cd $srcdir/$pkgname-$pkgver
-    python2 setup.py install --root=$pkgdir
+    python setup.py install --root=$pkgdir
 }
