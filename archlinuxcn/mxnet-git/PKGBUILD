@@ -1,7 +1,6 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
-#_cudaarch="3.7;5.0;5.2;5.2+PTX;5.3;5.3+PTX;6.0;6.0+PTX;6.1;6.1+PTX;6.2;6.2+PTX;7.0;7.0+PTX;7.2;7.2+PTX;7.5;7.5+PTX"
-_cudaarch="6.0;6.1;7.0;7.5"
+_cudaarch="5.2;6.0;6.1;7.0;7.2;7.5;8.0"
 _pkgname=mxnet
 pkgname=('mxnet-git' 'mxnet-cuda-git')
 _pkgver=2.0.0
@@ -134,6 +133,7 @@ _package() {
     install -Dm755 "${srcdir}/${pkgname}/build/im2rec" "${pkgdir}/usr/bin/im2rec"
     chrpath --delete "${pkgdir}/usr/bin/im2rec"
   fi
+  find "${pkgdir}" -type f -name '*.so' -exec chrpath --delete {} \;
 
   # install python binding
   cd "${srcdir}/${pkgname}/python"
@@ -144,14 +144,15 @@ _package() {
   ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/mxnet/libmxnet.so"
   ln -s "/usr/include" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/mxnet/include"
 
+  mv "${pkgdir}/mkldnn" "${pkgdir}/usr/include"
+
   # remove unwantted files
-  rm -rfv "${pkgdir}/mkldnn"
   rm -rfv "${pkgdir}/usr/mxnet"
-  rm -rfv "${pkgdir}/usr/lib/cmake" "${pkgdir}/usr/share/doc"
-  find "${pkgdir}" -type f -name '*dnn*' -delete
+  rm -rfv "${pkgdir}/usr/lib/cmake/dnnl"
+  rm -rfv "${pkgdir}/usr/lib/cmake/mkldnn"
+  rm -rfv "${pkgdir}/usr/share/doc"
   find "${pkgdir}" -name '*.a' -delete
 }
-
 
 package_mxnet-git() {
   depends+=(opencv)
@@ -161,7 +162,7 @@ package_mxnet-git() {
 
 package_mxnet-cuda-git() {
   pkgdesc="${pkgdesc} (with CUDA)"
-  depends+=(cuda cudnn nccl)
+  depends+=(cuda cudnn nccl opencv)
   provides+=(mxnet-cuda=${pkgver})
   conflicts+=(mxnet-cuda)
 
