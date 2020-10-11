@@ -3,21 +3,26 @@
 # contributer: rob.til.freedman@googlemail.com
 
 pkgname=moonplayer
-pkgver=3.3.2
+pkgver=3.4
 pkgrel=1
 pkgdesc="A qt font-end for mplayer with the abilities of watching and downloading videos from chinese network"
 arch=('i686' 'x86_64')
 url="https://github.com/coslyk/moonplayer"
 license=('GPL')
-depends=('python' 'qt5-x11extras' 'qt5-base' 'qt5-declarative' 'qt5-quickcontrols' 'qt5-quickcontrols2' 'mpv')
+depends=('python' 'qt5-x11extras' 'qt5-base' 'qt5-declarative' 'mpv')
 makedepends=('cmake' 'git' 'qt5-tools')
 source=(
-	$pkgname-$pkgver.tar.gz::https://github.com/coslyk/moonplayer/archive/v$pkgver.tar.gz
+	git+https://github.com/coslyk/moonplayer.git#tag=v$pkgver
 	)
-sha1sums=('89916679310a21bfbc85e847d4dd83a94871c030')
+sha1sums=('SKIP')
+
+prepare() {
+  cd $srcdir/$pkgname
+  git submodule update --init --recursive
+}
 
 build() {
-	cd $srcdir/$pkgname-$pkgver
+	cd $srcdir/$pkgname
   mkdir build
   cd build
 
@@ -27,12 +32,9 @@ build() {
 }
 
 package() {
-	cd $srcdir/$pkgname-$pkgver/build
+	cd $srcdir/$pkgname/build
 
 	make DESTDIR="${pkgdir}" install
-
-	#clean pyc
-	#rm $pkgdir/usr/share/moonplayer/plugins/*.pyc
 
 	cd $pkgdir/usr/share
 
