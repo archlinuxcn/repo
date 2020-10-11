@@ -1,12 +1,9 @@
 # Maintainer: Dct Mei <dctxmei@gmail.com>
-# Maintainer: Felix Yan <felixonmars@archlinux.org>
-# Contributor: Ariel AxionL <i@axionl.me>
-# Contributor: Luke Yue <lukedyue@gmail.com>
 
 pkgname=clash-dctxmei
 _pkgname=clash
-pkgver=1.1.0
-pkgrel=4
+pkgver=1.2.0
+pkgrel=1
 pkgdesc="A rule-based tunnel in Go"
 arch=('x86_64')
 url="https://github.com/Dreamacro/clash"
@@ -22,19 +19,7 @@ source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "clash.tmpfiles"
         "clash.service"
         "clash@.service")
-md5sums=('82e0279d23d67628b0a30f510c944d69'
-         '6c517b62529e4d8890753922c1fa25f1'
-         '8bddb4b9711be51b6324d81ed30c2115'
-         'c7207134abc1e99376b0645b0f93a269'
-         'f0aa4d2ca141f44bf297bfd3e64ab83f'
-         'a7bd3e32171f26a68498cf5890b4155f')
-sha1sums=('c4e34df6960579a65e2a9269d48df8c4f01e1386'
-          '6dea4739c49700262a1b3edf670e6777f3fdb645'
-          '374426626729f302af503ef4efafb2badebf2b96'
-          '46548ccd4b7e5449287325115b1e9d24ccfcd541'
-          '670d7f5e45ef145a8d7af8e83a73a867b19e4b2b'
-          '638983329eb64aac8ed2e68b71e9c06f76c1110b')
-sha256sums=('00c19e27981dd0d6e9235d588a6e913d569157879b150da1f596682f5e525cae'
+sha256sums=('7278c8e28641c452c275bb5e1f1216b35e0b5d4a85374fa01d21d8defa282452'
             '62ed4460cd2ed4b400193ad04b0cccb76d7558f87c377a0033041841a73f7945'
             '149c6448a5630af1065ea230707331ac12663128568d6cf0e9d5480e94d1d104'
             '006bea79c75de78dcd4f3991bb9c4e6f706443131aeeccf8db076f8738f24ccd'
