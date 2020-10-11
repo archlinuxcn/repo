@@ -5,18 +5,18 @@
 
 _reponame=cpp-utilities
 pkgname=c++utilities
-pkgver=5.6.0
+pkgver=5.7.0
 pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Common C++ classes and routines such as argument parser, IO and conversion utilities'
 license=('GPL')
-depends=()
+depends=('gcc-libs')
 optdepends=("$pkgname-doc: API documentation")
-makedepends=('cmake')
+makedepends=('cmake' 'ninja')
 checkdepends=('cppunit')
 url="https://github.com/Martchus/${_reponame}"
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('31fd1de5279c1267c049bf8d900a85d38af11d3c8757a934e694dab46f52fc56')
+sha256sums=('971f0b6f3474411215190867250f619db5728dad4e3e7834b3761a14d4477f7c')
 
 prepare() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
@@ -25,19 +25,20 @@ prepare() {
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
   cmake \
+    -G Ninja \
     -DCMAKE_BUILD_TYPE:STRING='Release' \
     -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
     -DBUILD_SHARED_LIBS:BOOL=ON \
     .
-  make
+  ninja
 }
 
 check() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  make check
+  ninja check
 }
 
 package() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  make DESTDIR="${pkgdir}" install
+  DESTDIR="${pkgdir}" ninja install
 }
