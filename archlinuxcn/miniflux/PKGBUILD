@@ -1,9 +1,10 @@
 # Maintainer: Thor77 <thor77 at thor77 dot org>
 # Maintainer: Clar Charr <clar@charr.xyz>
+# Contributor: somini <dev at somini dot xyz>
 
 pkgname=miniflux
 pkgver=2.0.24
-pkgrel=1
+pkgrel=2
 pkgdesc='Minimalist Feed Reader'
 arch=('x86_64')
 _target='amd64'
@@ -21,7 +22,7 @@ source=(
 )
 sha256sums=('4f0fa176b80bc8c34e4bfa954eebb3dc49c38c38c057b60831cda3162de43637'
             '1247a3cfe0307f5f1bb070e616f57344d8f16201070ecf7dda243b3fa1fbd8b8'
-            '2b3b50d9b50581a80e85e23011c8b5dd048247206083615f213d63b70f8f13be'
+            'b0b26d629ebb3a7b4c65d4a293dbc272f4e9695c0803989604519ccac3454402'
             'd1ce5acf1e633b04b92bf9330bd64d97c19d8f8d39c7bb4b64e11a96be4b73e2')
 
 prepare() {
@@ -31,13 +32,21 @@ prepare() {
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
-  GOPATH="${srcdir}" PATH="${PATH}:${GOPATH}/bin/" make linux-$_target
+
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+
+  GOPATH="${srcdir}" PATH="${PATH}:${GOPATH}/bin/" make VERSION="$pkgver" linux-$_target
 }
 
 package() {
   install -Dm644 "${srcdir}/miniflux.conf" "${pkgdir}/etc/miniflux.conf"
   install -Dm644 "${srcdir}/miniflux.service" "${pkgdir}/usr/lib/systemd/system/miniflux.service"
   install -Dm644 "${srcdir}/miniflux.sysusers" "${pkgdir}/usr/lib/sysusers.d/miniflux.conf"
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}/miniflux.1" "${pkgdir}/usr/share/man/man1/miniflux.1"
   install -Dm755 "${srcdir}/${pkgname}-${pkgver}/miniflux-linux-${_target}" "${pkgdir}/usr/bin/miniflux"
 }
 
