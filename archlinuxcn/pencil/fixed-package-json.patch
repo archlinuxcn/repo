@@ -1,0 +1,30 @@
+--- a/package.json	2019-10-18 19:38:10.000000000 +0800
++++ b/package.json	2020-10-12 11:52:41.353799990 +0800
+@@ -1,9 +1,6 @@
+ {
+   "name": "Pencil",
+   "devDependencies": {
+-    "electron": "6.0.1",
+-    "electron-builder": "20.28.4",
+-    "electron-rebuild": "^1.8.5",
+     "rimraf": "^2.5.4"
+   },
+   "build": {
+@@ -55,9 +52,6 @@
+       "perMachine": true,
+       "allowToChangeInstallationDirectory": true
+     },
+-    "electronDownload": {
+-      "cache": ".electron-cache"
+-    },
+     "fileAssociations": {
+       "ext": [
+         "ep",
+@@ -68,7 +62,6 @@
+     }
+   },
+   "scripts": {
+-    "postinstall": "install-app-deps",
+     "install-app-deps": "node ./node_modules/electron-builder/out/install-app-deps.js",
+     "start": "./node_modules/.bin/electron ./app",
+     "start:dev": "./node_modules/.bin/electron ./app --enable-dev --enable-transparent-visuals --disable-gpu",
