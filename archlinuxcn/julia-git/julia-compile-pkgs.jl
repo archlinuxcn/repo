@@ -38,7 +38,7 @@ function add_compile_pkg(pkgs, pkg)
     push!(pkgs, pkg)
 end
 
-if isdefined(Base, :TOMLCache)
+if isdefined(Base, :TOMLCache) && !isdefined(Base, :CachedTOMLDict)
     project_deps_get(pkg) = Base.project_deps_get(Sys.STDLIB, pkg, Base.TOMLCache())
 else
     project_deps_get(pkg) = Base.project_deps_get(Sys.STDLIB, pkg)
