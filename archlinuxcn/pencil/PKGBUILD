@@ -3,12 +3,12 @@
 
 pkgname=pencil
 pkgver=3.1.0
-pkgrel=5
+pkgrel=6
 pkgdesc="Sketching and GUI prototyping/wireframing tool"
 arch=('any')
 license=('GPL2')
 url="https://github.com/evolus/pencil"
-depends=(electron)
+depends=(electron9)
 makedepends=(yarn)
 source=("https://github.com/evolus/pencil/archive/v$pkgver.tar.gz"
         'fixed-package-json.patch')
@@ -57,7 +57,7 @@ package() {
 
     install -Dm755 /dev/stdin "${pkgdir}/usr/bin/${pkgname}" <<END
 #!/bin/sh
-exec electron /${_destdir} "\$@"
+exec electron9 /${_destdir} "\$@"
 END
 
     cd "${srcdir}/${pkgname}-${pkgver}"
