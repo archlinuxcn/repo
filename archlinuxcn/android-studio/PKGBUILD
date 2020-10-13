@@ -8,9 +8,9 @@
 # Maintainer: Kordian Bruck <k@bruck.me>
 
 pkgname=android-studio
-pkgver=4.0.2.0
+pkgver=4.1.0.19
 pkgrel=1
-_build=193.6821437
+_build=201.6858069
 pkgdesc="The official Android IDE (Stable branch)"
 arch=('i686' 'x86_64')
 url="https://developer.android.com/"
@@ -23,7 +23,7 @@ options=('!strip')
 source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.tar.gz"
         "$pkgname.desktop"
         "license.html")
-sha256sums=('bf796e83c5c2978b5e90c04fe0dd704bddb91670da48c0dfe922098702b27736'
+sha256sums=('4b9521fc4a6313ad65ff3e14b0f3fb50427d464fe14227555565f46e0ffad202'
             '73cd2dde1d0f99aaba5baad1e2b91c834edd5db3c817f6fb78868d102360d3c4'
             '9a7563f7fb88c9a83df6cee9731660dc73a039ab594747e9e774916275b2e23e')
 
