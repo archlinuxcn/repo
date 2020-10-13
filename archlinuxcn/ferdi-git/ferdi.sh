@@ -1,3 +1,3 @@
 #!/bin/sh
 
-exec electron '/usr/lib/ferdi/app.asar' "$@"
+exec electron9 '/usr/lib/ferdi/app.asar' "$@"
