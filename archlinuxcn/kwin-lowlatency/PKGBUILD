@@ -4,13 +4,13 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=kwin-lowlatency
-pkgver=5.19.5
-pkgrel=2
+pkgver=5.20.0
+pkgrel=1
 pkgdesc='the compositor, with added stutter/latency reductions'
 arch=(x86_64)
 url='https://github.com/tildearrow/kwin-lowlatency'
 license=(LGPL)
-depends=(kscreenlocker xcb-util-cursor plasma-framework kcmutils kwayland-server breeze kinit qt5-sensors qt5-script)
+depends=(kscreenlocker xcb-util-cursor plasma-framework kcmutils kwayland-server breeze qt5-sensors qt5-script pipewire libqaccessibilityclient)
 makedepends=(git extra-cmake-modules qt5-tools kdoctools)
 optdepends=('qt5-virtualkeyboard: virtual keyboard support for kwin-wayland')
 provides=(kwin)
