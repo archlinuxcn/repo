@@ -1,6 +1,7 @@
 [Unit]
 Description=VirtualBox Guest Service
 ConditionVirtualization=oracle
+Wants=vboxdrmclient.path
 
 [Service]
 ExecStartPre=-/usr/bin/modprobe vboxguest
