@@ -2,7 +2,7 @@
 
 pkgbase=linux-froidzen
 pkgver=5.9.zen1
-pkgrel=2
+pkgrel=3
 pkgdesc='Linux ZEN with Patches'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/zen-kernel/zen-kernel/commits/$_srctag"
@@ -59,8 +59,8 @@ prepare() {
   sed -i "s/# CONFIG_SCHED_MUQSS is not set/CONFIG_SCHED_MUQSS=y/g" .config
   
   # Enable kernel info message
-  sed -i "s/CONFIG_CONSOLE_LOGLEVEL_DEFAULT=1/CONFIG_CONSOLE_LOGLEVEL_DEFAULT=6/g" .config
-  sed -i "s/CONFIG_MESSAGE_LOGLEVEL_DEFAULT=1/CONFIG_MESSAGE_LOGLEVEL_DEFAULT=6/g" .config
+  sed -i "s/CONFIG_CONSOLE_LOGLEVEL_DEFAULT=4/CONFIG_CONSOLE_LOGLEVEL_DEFAULT=7/g" .config
+  sed -i "s/CONFIG_MESSAGE_LOGLEVEL_DEFAULT=4/CONFIG_MESSAGE_LOGLEVEL_DEFAULT=7/g" .config
 
   # Use BBR by default
   sed -i "s/CONFIG_TCP_CONG_BBR=m/CONFIG_TCP_CONG_BBR=y/g" .config
