@@ -2,8 +2,8 @@
 
 pkgname=unciv
 _pkgname=Unciv
-_gradle_ver=6.1.1 # This package does not work with system gradle
-pkgver=3.11.3.1
+_gradle_ver=6.5 # This package does not work with system gradle
+pkgver=3.11.4.REL
 _pkgver=${pkgver%.*}-patch${pkgver##*.}
 _pkgver=${_pkgver/-patchREL/}
 pkgrel=1
@@ -16,13 +16,13 @@ makedepends=('jdk8-openjdk')
 arch=('any')
 source=(
   "https://github.com/yairm210/Unciv/archive/$_pkgver.zip"
-  "https://services.gradle.org/distributions/gradle-$_gradle_ver-all.zip"
+  "https://services.gradle.org/distributions/gradle-$_gradle_ver-bin.zip"
   "$_pkgname.sh"
   "$pkgname.desktop"
 )
-noextract=("gradle-$_gradle_ver-all.zip")
-md5sums=('3099922ae345ffae6304f26779c20cc8'
-         'd1df7d94816bbedb2ab45187fceda7e5'
+noextract=("gradle-$_gradle_ver-bin.zip")
+md5sums=('c737f01d304aacc3f01a903a91c50dba'
+         '32994c65fe691784c9e4a04ce1a9cfb1'
          'f8eab098f20681b8db232cc5709713d3'
          '42d5f7ea8ee48d2d643d070786f039ba')
 
