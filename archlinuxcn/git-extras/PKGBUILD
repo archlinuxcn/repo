@@ -4,7 +4,7 @@
 # All my PKGBUILDs are managed at https://github.com/eli-schwartz/pkgbuilds
 
 pkgname=git-extras
-pkgver=6.0.0
+pkgver=6.1.0
 pkgrel=1
 pkgdesc="GIT utilities -- repo summary, commit counting, repl, changelog population and more"
 arch=('any')
@@ -12,8 +12,8 @@ url="https://github.com/tj/${pkgname}"
 license=('MIT')
 depends=('git')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('a823c12e4bf74e2f07ee80e597500e5f5120dcd8fa345e67e2c03544fd706ffe')
-b2sums=('2b9152303f3b27f343727e95100147588e941c51d3a6c09888644cdfa49e007603c5f9b4f4fccdab4497ec94e85b925519b2ca05c30f23cf7c1092aff47c1dea')
+sha256sums=('7be0b15ee803d76d2c2e8036f5d9db6677f2232bb8d2c4976691ff7ae026a22f')
+b2sums=('3450edecb3116e19ffcf918b118aee04f025c06d812e29e8701f35a3c466b13d2578d41c8e1ee93327743d0019bf98bb3f397189e19435f89e3a259ff1b82747')
 
 package() {
     cd "${srcdir}/${pkgname}-${pkgver}"
