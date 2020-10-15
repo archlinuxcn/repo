@@ -6,9 +6,9 @@
 # Contributor: Pieter Goetschalckx <3.14.e.ter <at> gmail <dot> com>
 _pkgname='ferdi'
 pkgname="$_pkgname-git"
-pkgver=20201011_181618
+pkgver=20201014_215953
 epoch=1
-pkgrel=3
+pkgrel=1
 pkgdesc='A messaging browser that allows you to combine your favorite messaging services into one application - git version'
 arch=('x86_64' 'i686' 'armv7h' 'aarch64')
 url="https://get$_pkgname.com"
@@ -65,6 +65,12 @@ prepare() {
 	export npm_config_cache="$srcdir/$pkgname-npm-cache"
 
 	npx lerna bootstrap
+
+	# Build recipe archives ($HOME has been set earlier)
+	cd "$srcdir/$_sourcedirectory/recipes/"
+	npm install
+	npm run package
+	cd "$srcdir/$_sourcedirectory/"
 }
 
 build() {
