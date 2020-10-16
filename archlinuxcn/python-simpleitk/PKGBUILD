@@ -1,25 +1,43 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 _name=SimpleITK
-_py=cp38
 pkgname=python-simpleitk
 pkgver=2.0.0
-pkgrel=1
-pkgdesc='A simplified interface to the Insight Toolkit (ITK) for image registration and segmentation'
+pkgrel=2
+pkgdesc="A layer built on top of the Insight Toolkit (ITK), intended to simplify and facilitate ITK's use in rapid prototyping, education and interpreted languages. This is the python binding."
 arch=('x86_64')
 url='http://www.simpleitk.org'
 license=('Apache')
-depends=('python')
-makedepends=('python-pip')
-options=('!strip')
-source=("https://files.pythonhosted.org/packages/${_py}/${_name::1}/${_name}/${_name/-/_}-${pkgver}-${_py}-${_py}-manylinux1_x86_64.whl")
-sha512sums=('d839ff019c4e8ef7b19fc3acbec2c960fa92a5253a4a2a97bed56d24c033952f800c503f0df7dca77bf64dbcf07714679ef50f8fae214bec6ae2971f0aaf48f3')
+depends=(python-numpy)
+makedepends=(
+  clang
+  doxygen
+  git
+  python-scikit-build
+  python-setuptools
+)
+source=("${pkgname}-${pkgver}::git+https://github.com/SimpleITK/SimpleITKPythonPackage.git"
+  git+https://github.com/SimpleITK/SimpleITK.git#tag=v${pkgver})
+sha512sums=('SKIP'
+            'SKIP')
+
+prepare() {
+  cd "${pkgname}-${pkgver}"
+  git submodule init
+  git config submodule.${_name}.url "${srcdir}/${_name}"
+  git submodule update
+}
+
+build() {
+  export CC=clang
+  export CXX=clang++
+  cd "${pkgname}-${pkgver}"
+  python setup.py build
+}
 
 package() {
-	PIP_CONFIG_FILE=/dev/null pip install --isolated --root="${pkgdir}" --ignore-installed --no-deps *.whl
-	python -O -m compileall "${pkgdir}/usr/lib/python3.8/site-packages/SimpleITK"
-	# remove uneeded files
-	rm -vf "${pkgdir}/usr/LICENSE" "${pkgdir}/usr/NOTICE" "${pkgdir}/usr/Readme.md"
+  cd "${pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
 }
 # vim:set ts=2 sw=2 et:
 
