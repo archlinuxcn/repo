@@ -2,13 +2,13 @@
 
 pkgname=keeweb
 pkgver=1.15.7
-pkgrel=1
+pkgrel=2
 pkgdesc="Desktop password manager compatible with KeePass databases"
 arch=('any')
 url="https://keeweb.info"
 license=('MIT')
 depends=(
-	'electron'
+	'electron9'
 	'org.freedesktop.secrets'
 )
 makedepends=(
@@ -28,7 +28,7 @@ source=(
 )
 
 sha1sums=('SKIP'
-          'c925527f25e732d58438ee16b1c93b33be7bf9c4'
+          '7793e6391d2160458ca54648daa63bb2f1717e4c'
           'd64a29202b71f30b1c4eaef5c01cee574b55894a')
 
 case "$CARCH" in
