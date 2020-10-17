@@ -66,6 +66,17 @@ properties:
             alias:
               type: string
               description: alias name
+              enum:
+                - python
+                - ruby
+                - perl
+                - boost
+                - icu
+                - readline
+                - clang
+                - protobuf
+                - jsoncpp
+                - mediawiki
           required:
             - alias
           additionalProperties: false
