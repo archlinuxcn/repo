@@ -2,7 +2,7 @@
 
 pkgname=python-cityscapesscripts
 _pkgname=cityscapesScripts
-pkgver=2.1.6
+pkgver=2.1.7
 pkgrel=1
 pkgdesc='README and scripts for the Cityscapes Dataset'
 arch=('any')
@@ -21,7 +21,7 @@ makedepends=(
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"
 "LICENSE::https://github.com/mcordts/cityscapesScripts/raw/master/license.txt")
-sha512sums=('a16c3570d36b900a0566201387eccfc1c5e973d7b9f67139354b4e0b9734a4617f8d51c9fecaca66d3d68c823fe0fd463ac645abeb1a61c94882f9bd36db561c'
+sha512sums=('8f93d623a500b7c19a44158f64fb88e781db8c2d55756c6d7fe2fd61435bbaa9e57f5e2b288624db990b4e89c0e8c936e267effb5efc8b33d6344cbf1b1ca020'
             '2b8be7037da1a4609b610fad32f16bd047049270337cecf20d092a6716b01e9435ef5e44dc09ad63b267d30d4ff4011666c62b7055988181ff381af825d046e3')
 
 build() {
