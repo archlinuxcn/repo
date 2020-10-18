@@ -15,7 +15,7 @@ license=(Apache)
 # Allow to easily switch between Electron versions.
 # Expected one is 'electron'. May change soon.
 _electron='electron'
-depends=($_electron)
+depends=($_electron bash)
 makedepends=(expac git npm python $_electron)
 source=("git+https://github.com/meetfranz/$pkgname#tag=v$_pkgver"
         'franz.desktop'
