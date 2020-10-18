@@ -3,37 +3,33 @@
 # Contributor: Pieter Goetschalckx <3.14.e.ter <at> gmail <dot> com>
 
 pkgname=franz
-#pkgver=${_pkgver//-/_} # Leaving it here for possible dev/beta package :)
-pkgver=5.5.0
-pkgrel=6
+_pkgver=5.6.0-beta.1
+pkgver=${_pkgver//-/} # Leaving it here for possible dev/beta package :)
+pkgrel=1
 # Due to the previous "_beta" naming
 epoch=1
 pkgdesc='Free messaging app for services like WhatsApp, Slack, Messenger and many more.'
-arch=(x86_64 i686)
+arch=(x86_64 i686 armv7h aarch64)
 url='https://meetfranz.com'
 license=(Apache)
 # Allow to easily switch between Electron versions.
-# Expected one is 'electron' (Electron 8). May change soon.
-# Remember to replace it also in `franz.sh`.
+# Expected one is 'electron'. May change soon.
 _electron='electron'
 depends=($_electron)
-makedepends=(expac git npm python)
-source=("git+https://github.com/meetfranz/$pkgname#tag=v$pkgver"
+makedepends=(expac git npm python $_electron)
+source=("git+https://github.com/meetfranz/$pkgname#tag=v$_pkgver"
         'franz.desktop'
-        'franz.sh'
-        0001-.patch
+        'franz.sh.in'
         0001-Add-cmdline-option-to-open-with-window-closed.patch)
 sha512sums=('SKIP'
             '049c4bf2e0f362f892e8eef28dd18a6c321251c686a9c9e49e4abfb778057de2fc68b95b4ff7bb8030a828a48b58554a56b810aba078c220cb01d5837083992e'
-            '4bf3c692b216909afa98eae2d4e29106b8a53ede43ea12745b86517057af845a34c7e87aaa5024c29ce7cd3440d04cfd0dc881db8e35f85d1428de26db326585'
-            '463b07949c789d2be7568b93e0c7f79ab5fc753aef4c869c40ba29444ba10c12db4ad1bc0353d8b73a51619bcd8666ed3c72c070cb24b05087604e04791bda52'
+            '47b546304e10f8c8768fd0077f9d0b943c819cad6447fe86d05d069c6317fd276896dbaa16e947b81b601f077e71a4142fff8b8b448c24bd5c9ec6f368cc41f4'
             '8f59b911eccd4f8c965f60ae4ba111195f48a76326e1c63391b1ab61b74d74dcb021fdb835da07037b28823cac1c3fd3b01f5ace501b6b6b7fe6db5e2aef8068')
 
 prepare() {
   # Small patching
   cd $pkgname
 
-  patch -Np1 --no-backup-if-mismatch < ../0001-.patch
   patch -Np1 --no-backup-if-mismatch < ../0001-Add-cmdline-option-to-open-with-window-closed.patch
 
   # Prevent franz from being launched in dev mode
@@ -45,7 +41,7 @@ prepare() {
     src/index.js
 
   # Adjust the electron version to use when building
-  electron_version="`expac %v $_electron | cut -d'-' -f1`"
+  electron_version=$(expac %v $_electron | cut -d'-' -f1)
   sed -i "s|\(\s\+\"electron\":\).*,|\1 \"$electron_version\",|" package.json
 
   # Better configuration for npm cache and calling installed binaries
@@ -72,6 +68,8 @@ build() {
 
 package() {
   cd $pkgname
+  electron_version=$(expac %v $_electron | cut -d'-' -f1)
+  depends+=("$_electron=${electron_version}")
 
   # Install the .asar files
   install -dm 755 "$pkgdir"/usr/lib/$pkgname
@@ -82,5 +80,6 @@ package() {
   install -Dm 644 build-helpers/images/icon.png "$pkgdir"/usr/share/icons/franz.png
 
   # Install run script
-  install -Dm 755 "$srcdir"/franz.sh "$pkgdir"/usr/bin/franz
+  sed 's/@electron@/electron/g' "$srcdir"/franz.sh.in > "$srcdir"/franz.sh
+  install -Dm 755 "$srcdir"/franz.sh.in "$pkgdir"/usr/bin/franz
 }
