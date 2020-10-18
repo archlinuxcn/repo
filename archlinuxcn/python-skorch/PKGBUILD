@@ -3,21 +3,23 @@
 _pkgname=skorch
 pkgname=python-skorch
 pkgver=0.9.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A scikit-learn compatible neural network library that wraps pytorch'
 arch=(any)
 url=https://github.com/skorch-dev/skorch
 license=(BSD)
-depends=(python-numpy python-pytorch python-scikit-learn python-scipy python-tabulate python-tqdm)
+depends=(
+  python-numpy
+  python-pandas
+  python-pytorch
+  python-scikit-learn
+  python-scipy
+  python-tabulate
+  python-tqdm)
 makedepends=(python-setuptools)
 checkdepends=(flake8 python-flaky python-pytest python-pytest-cov)
 source=("${_pkgname}-${pkgver}.tar.gz"::"https://github.com/skorch-dev/skorch/archive/v${pkgver}.tar.gz")
 sha512sums=('7276c829c3c087e232b1deff07a595ba9f35d24fa0c7963b9f5b695dc76c025a99bf99a9cea9d8e56c18ad2f07fb5c78bb762293f1defb5a4651bbe3a0596fb4')
-
-prepare() {
-# dirty hack to pass all the tests, might be removed once upstream fix it
-  sed -i "s/max_runs=3/max_runs=5/" "${srcdir}/${_pkgname}-${pkgver}/${_pkgname}/tests/test_classifier.py"
-}
 
 build() {
   cd "${_pkgname}-${pkgver}"
