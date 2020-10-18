@@ -1,9 +1,9 @@
 # Maintainer: OriginCode <self@origincode.me>
 
 pkgbase=linux-froidzen
-pkgver=5.9.1.zen1
+pkgver=5.9.1.zen2
 pkgrel=1
-pkgdesc='Linux ZEN with Patches'
+pkgdesc='Linux ZEN with Patches and Modifications'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/zen-kernel/zen-kernel/commits/$_srctag"
 arch=(x86_64)
