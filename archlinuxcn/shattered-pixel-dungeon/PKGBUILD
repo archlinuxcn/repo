@@ -3,7 +3,7 @@
 
 pkgname=shattered-pixel-dungeon
 _pkgname=$pkgname
-pkgver=0.9.0.a
+pkgver=0.9.0.b
 _pkgver=${pkgver%.*}${pkgver##*.}
 _pkgver=${_pkgver/REL/}
 _srcdir=$_pkgname-$_pkgver
@@ -20,7 +20,7 @@ source=(
   "$pkgname.sh"
   "$pkgname.desktop"
 )
-sha512sums=('d38bae4db3984c7a29533a22e2898a6545c203b46379a4e56e5a1be14f25682491c262442df9cfe7a0ebc88c6b0e046e483d601b269de6724c41d16dd5be89c8'
+sha512sums=('f2cb49a02322ce67a5aa51bb976e1b7a227be264911719d55a3bc15a738d27bb43d444726b663a24cef5d996c4c0855ca7b077b1cdbb3780b983f43e7c521b91'
             '586ac3e1357495434e318dbda539792565a423ca59768b4e1aee8c81764ad6daea75365b4714fdac76a098b0ffc42da91cf5f2a5ab83fa0dc1beb7abf99f2607'
             '204a7bcedbbc14bdad6586e4b759b326191a7fd2c344dadc7032495d4caa5fe32edac4118d7294229a6fe24f6684416fff37e260bbc9dde9e50846a03ba77db8')
 
