@@ -80,6 +80,6 @@ package() {
   install -Dm 644 build-helpers/images/icon.png "$pkgdir"/usr/share/icons/franz.png
 
   # Install run script
-  sed 's/@electron@/electron/g' "$srcdir"/franz.sh.in > "$srcdir"/franz.sh
-  install -Dm 755 "$srcdir"/franz.sh.in "$pkgdir"/usr/bin/franz
+  sed -e "s/@electron@/$_electron/g" "$srcdir"/franz.sh.in > "$srcdir"/franz.sh
+  install -Dm 755 "$srcdir"/franz.sh "$pkgdir"/usr/bin/franz
 }
