@@ -2,7 +2,7 @@
 
 pkgname=python-visions
 _pkgname=visions
-pkgver=0.4.6
+pkgver=0.6.4
 pkgrel=1
 pkgdesc='Type System for Data Analysis in Python'
 arch=('any')
@@ -27,6 +27,7 @@ makedepends=(
 checkdepends=(
   python-imagehash
   python-matplotlib
+  python-multimethod
   python-pillow
   python-pydot
   python-pytest
@@ -36,7 +37,7 @@ checkdepends=(
   twine
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/dylan-profiler/visions/archive/v${pkgver}.tar.gz")
-sha512sums=('3a150b8d613421bdbc615ce73f7a6ed85b6b6a03345008632a0e67cad2efa774264f64adfe7cc99aefae41d523e51fbe77dab449f050495dddfbb2123d75c1e5')
+sha512sums=('0b6cdc58654039739ffeb882c565bf6b2e2ee3b9222730295e06ed0043ee9bba016ffa96113692736e95e05bbdd60c5ca7be442cf8e80b36837923c197560d5d')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
@@ -45,7 +46,7 @@ build() {
 
 check() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  pytest -v
+  PYTHONPATH="${PWD}/build/lib" pytest -v
 }
 
 package() {
