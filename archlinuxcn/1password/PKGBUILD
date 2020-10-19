@@ -1,9 +1,9 @@
 # Maintainer: Winston Astrachan <winston dot astrachan at gmail dot com>
 
 pkgname=1password
-pkgver=0.8.10.29215
+pkgver=0.8.11.29814
 pkgrel=1
-_appimagver=0.8.10
+_appimagver=0.8.11
 _appimage="${pkgname}-${pkgver}-${pkgrel}.AppImage"
 pkgdesc="The world's most-loved password manager - development preview"
 arch=('x86_64')
@@ -15,7 +15,7 @@ source=("${_appimage}::https://onepassword.s3.amazonaws.com/linux/appimage/1pass
         "${_appimage}.sig::https://onepassword.s3.amazonaws.com/linux/appimage/1password-${_appimagver}.AppImage.sig"
 )
 noextract=("${_appimage}")
-sha256sums=('b59ea9b1dc6e7bb2db19e45d7d1b136c1ce8209fab1490f9d8d4891ad83bb84b'
+sha256sums=('24c18484c271e18aa6a908867b2dd48dd2e4569927615b38f4b5c02231b609ee'
             'SKIP'
 )
 validpgpkeys=('3FEF9748469ADBE15DA7CA80AC2D62742012EA22')
