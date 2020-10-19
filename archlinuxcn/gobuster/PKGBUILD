@@ -1,8 +1,8 @@
 # Maintainer: Hao Long <aur@esd.cc>
 
 pkgname=gobuster
-pkgver=3.0.1
-pkgrel=3
+pkgver=3.1.0
+pkgrel=1
 pkgdesc="Directory/File, DNS and VHost busting tool written in Go"
 arch=("x86_64" "i686")
 url="https://github.com/OJ/gobuster"
@@ -12,7 +12,7 @@ conflicts=('gobuster')
 depends=('glibc')
 makedepends=('go-pie')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/OJ/gobuster/archive/v${pkgver}.tar.gz")
-sha256sums=('9c70c73b4c08b02d1fc722cd82eda3d8ce683de53b08c8bddd31fc5c4d90a977')
+sha256sums=('a49e597412a0be68020f2836c4f33276cb653d00543f59d4cff34b053b8d9a10')
 
 build() {
   cd ${pkgname}-${pkgver}
