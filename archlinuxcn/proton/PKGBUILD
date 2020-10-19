@@ -19,13 +19,12 @@ makedepends=(
 	'vulkan-headers'
 )
 source=("https://github.com/ValveSoftware/Proton/archive/$pkgname-$_pkgver.tar.gz"
-        "wined3d-interop.h"
-        "wine-dynamic_load_wrapper.patch")
+        "wined3d-interop.h")
 
 prepare() {
   cd "Proton-$pkgname-$_pkgver"
   cp $srcdir/wined3d-interop.h vrclient_x64/vrclient_x64/
-  patch -p1 < $srcdir/wine-dynamic_load_wrapper.patch
+  #patch -p1 < $srcdir/wine-dynamic_load_wrapper.patch
 }
 build() {
 	cd "Proton-$pkgname-$_pkgver"
@@ -100,6 +99,5 @@ package() {
 	install -m644 build/vrclient.win64/vrclient_x64/vrclient_x64.dll.fake $pkgdir/usr/lib/wine/fakedlls/vrclient_x64.dll
 }
 
-md5sums=('8737560d53ab3d7bc49b0d463e47387a'
-         '1f6f0f5e4679418d4976e0cf9589a8d9'
-         '38464f9805e4423ba5f92f8864168f97')
+md5sums=('29a1a6095ea917bdd774656b64bb19af'
+         '1f6f0f5e4679418d4976e0cf9589a8d9')
