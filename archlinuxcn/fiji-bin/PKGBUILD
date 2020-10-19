@@ -2,7 +2,7 @@
 
 _pkgname=fiji
 pkgname=fiji-bin
-pkgver=20201015.2013
+pkgver=20201018.2014
 pkgrel=1
 epoch=2
 pkgdesc="ImageJ distribution with a lot of plugins for scientific (especially biology related) image processing."
@@ -16,7 +16,7 @@ depends=(
 makedepends=('gendesk')
 
 source=("${pkgname}-${pkgver}.zip::https://downloads.imagej.net/fiji/archive/${pkgver/./-}/fiji-linux64.zip")
-sha256sums=('10d4dd495793ba0e75920f8e1a0800551d1e46bd6b6d8880ad569dbf5007e76f')
+sha256sums=('c82b13807d12951d8160636544caa4b73df2f2147028932f2f4ae10db21d5bd2')
 
 
 prepare() {
