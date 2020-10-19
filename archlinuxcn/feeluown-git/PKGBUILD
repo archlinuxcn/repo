@@ -1,0 +1,45 @@
+# Maintainer: Bruce Zhang <zttt183525594@gmail.com>
+_pkgname=feeluown
+pkgname=${_pkgname}-git
+pkgver=r1176.0ffa777
+pkgrel=1
+epoch=2
+pkgdesc="FeelUOwn Music Player (Master branch)"
+arch=('any')
+url="https://github.com/cosven/FeelUOwn"
+license=('GPL3')
+groups=('feeluown-full')
+provides=('feeluown')
+conflicts=('feeluown')
+depends=('python-qasync' 'python-pyqt5' 'mpv' 'python-opengl' 'python-janus' 'python-requests')
+makedepends=('git' 'python-setuptools' 'python-pip')
+optdepends=(
+	'feeluown-local'
+	'feeluown-netease'
+	'feeluown-kuwo'
+	'feeluown-xiami'
+	'feeluown-qqmusic'
+)
+source=(
+	"$_pkgname::git+https://github.com/feeluown/FeelUOwn.git"
+	"$_pkgname.desktop"
+)
+sha256sums=('SKIP'
+            'f093cccd74e29115782b30fcda28fb0c3b935091673b50882b332c934ed56065')
+
+pkgver() {
+    cd "$srcdir/$_pkgname"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+	cd "$srcdir/$_pkgname"
+	LANG=en_US.UTF-8 python setup.py build
+}
+
+package() {
+	cd "$srcdir/$_pkgname"
+	LANG=en_US.UTF-8 python setup.py install --root="$pkgdir/" --optimize=1 --skip-build
+	install -D -m644 "$srcdir/$_pkgname/feeluown/feeluown.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/feeluown.png"
+	install -D -m644 "$srcdir/feeluown.desktop" "$pkgdir/usr/share/applications/FeelUOwn.desktop"
+}
