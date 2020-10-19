@@ -1,40 +1,37 @@
-# Maintainer: mzz2017 <m@mzz.pub>
+# Maintainer: Dct Mei <dctxmei@gmail.com>
 
 pkgname=v2raya
-pkgver=1.0.1
+_pkgname=v2rayA
+pkgver=1.0.3
 pkgrel=1
-install=.INSTALL
-pkgdesc="A web GUI client of Project V which supports V2Ray, SS, SSR, Trojan and Pingtunnel protocols"
-arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
+pkgdesc="A Linux web GUI client of Project V"
+arch=('x86_64')
 url="https://github.com/mzz2017/v2rayA"
-license=('GPL')
+license=('GPL3')
 depends=('glibc' 'v2ray')
-makedepends=('go>=2:1.12.3-1' 'nodejs>=14' 'yarn')
-source=("$pkgname-$pkgver.tar.gz::https://github.com/mzz2017/v2rayA/archive/v$pkgver.tar.gz")
-sha512sums=('SKIP')
+makedepends=('go>=2:1.12.3-1' 'nodejs>=14' 'yarn' 'python2')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('9be6dc07b610fbbce775f5f09cc51673c9f6a3cfcd3f326cad5aace0eaa17781')
 
 build() {
-    cd "$srcdir/v2rayA-$pkgver/gui"
-    yarn config set registry https://registry.npm.taobao.org
-    yarn config set sass_binary_site https://cdn.npm.taobao.org/dist/node-sass -g
+    cd "${srcdir}"/"${_pkgname}-${pkgver}"/gui/
     yarn
     yarn build
-
-    cd "$srcdir/v2rayA-$pkgver/service"
-    export GO111MODULE=on
-    export GOPROXY=https://goproxy.io
-    go build -ldflags="-X github.com/mzz2017/v2rayA/global.Version=$pkgver" -o v2raya
+    export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
+    cd "$srcdir"/"v2rayA-${pkgver}"/service/
+    go build -ldflags="-X=github.com/v2rayA/v2rayA/global.Version=${pkgver} -linkmode=external" -o v2raya
 }
 
 package() {
-    cd "$srcdir/v2rayA-$pkgver"
-    
-    install -Dm644 "install/universal/v2raya.service" "$pkgdir/usr/lib/systemd/system/v2raya.service"
-    install -Dm755 "service/v2raya" -t "$pkgdir/usr/bin/"
-
-    install -Dm644 "gui/public/img/icons/android-chrome-512x512.png" "$pkgdir/usr/share/icons/v2raya.png"
-    install -Dm755 "install/universal/v2raya.desktop" -t "$pkgdir/usr/share/applications/"
-
-    install -d -Dm755 "web" "$pkgdir/etc/v2raya/web"
-    cp -r web/* "$pkgdir/etc/v2raya/web"
+    cd "${srcdir}"/"${_pkgname}-${pkgver}"/
+    install -Dm 755 service/v2raya -t "${pkgdir}"/usr/bin/
+    find web -type d -exec install -vd "${pkgdir}"/etc/v2raya/{} \;
+    find web -type f -exec install -vm 644 {} "${pkgdir}"/etc/v2raya/{} \;
+    install -Dm 644 install/universal/v2raya.desktop -t "${pkgdir}"/usr/share/applications/
+    install -Dm 644 install/universal/v2raya.service -t "${pkgdir}"/usr/lib/systemd/system/
+    install -Dm 644 gui/public/img/icons/android-chrome-512x512.png "${pkgdir}"/usr/share/icons/hicolor/512x512/apps/v2raya.png
 }
