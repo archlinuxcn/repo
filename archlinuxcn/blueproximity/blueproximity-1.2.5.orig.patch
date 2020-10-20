@@ -1,0 +1,36 @@
+diff -aur blueproximity-1.2.5.orig.pristine//proximity.py blueproximity-1.2.5.orig.new//proximity.py
+--- blueproximity-1.2.5.orig.pristine//proximity.py	2008-02-28 16:59:01.000000000 +0100
++++ blueproximity-1.2.5.orig.new//proximity.py	2010-11-19 19:13:00.866906260 +0100
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # coding: utf-8
+ 
+ # blueproximity
+@@ -1257,7 +1257,7 @@
+         if filename.endswith('.conf'):
+             try:
+ 		# add every valid .conf file to the array of configs
+-                config = ConfigObj(os.path.join(conf_dir,filename),{'create_empty':False,'file_error':True,'configspec':conf_specs})
++                config = ConfigObj(os.path.join(conf_dir,filename),**{'create_empty':False,'file_error':True,'configspec':conf_specs})
+                 # first validate it
+                 config.validate(vdt, copy=True)
+                 # rewrite it in a secure manner
+@@ -1271,7 +1271,7 @@
+ 
+     # no previous configuration could be found so let's create a new one
+     if new_config:
+-        config = ConfigObj(os.path.join(conf_dir, _('standard') + '.conf'),{'create_empty':True,'file_error':False,'configspec':conf_specs})
++        config = ConfigObj(os.path.join(conf_dir, _('standard') + '.conf'),**{'create_empty':True,'file_error':False,'configspec':conf_specs})
+         # next line fixes a problem with creating empty strings in default values for configobj
+         config['device_mac'] = ''
+         config.validate(vdt, copy=True)
+diff -aur blueproximity-1.2.5.orig.pristine//start_proximity.sh blueproximity-1.2.5.orig.new//start_proximity.sh
+--- blueproximity-1.2.5.orig.pristine//start_proximity.sh	2008-02-28 16:59:01.000000000 +0100
++++ blueproximity-1.2.5.orig.new//start_proximity.sh	2010-11-19 19:12:35.706681756 +0100
+@@ -2,4 +2,4 @@
+ PRG="$0"
+ P=`dirname $PRG`
+ cd $P
+-python proximity.py
++python2 proximity.py
