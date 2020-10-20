@@ -1,0 +1,8 @@
+[Unit]
+Description=HP laptop freefall disk protection daemon
+[Service]
+Type=forking
+ExecStart=/usr/bin/hpfall
+ExecReload=/bin/kill -HUP $MAINPID
+[Install]
+WantedBy=multi-user.target
