@@ -2,7 +2,7 @@
 
 _pkgname=albumentations
 pkgname=python-albumentations
-pkgver=0.4.6
+pkgver=0.5.0
 pkgrel=1
 pkgdesc='Fast image augmentation library and easy to use wrapper around other libraries'
 arch=(any)
@@ -25,7 +25,7 @@ checkdepends=(
   qt5-base
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/albumentations-team/albumentations/archive/${pkgver}.tar.gz")
-sha512sums=('c70b5621636f554171910ffa4bfd9e21100f5130d56ffe0e4e0a6bdc09816e492a705deb4780e40cb4b9bd919bf60f7f153a7feb2f3048e403f08d4de0f73ac8')
+sha512sums=('49b63987ee4f81bb495cf77c196327feb86bb285182798b1ba326145d5956e12901728fdb7d4f1a276c9eecd30ecb34d967d803eef17dc9aec6817667e0f1d80')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
