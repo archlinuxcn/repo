@@ -4,22 +4,22 @@
 
 pkgname=pygtk
 pkgver=2.24.0
-pkgrel=13
+pkgrel=14
 pkgdesc="Python bindings for the GTK widget set"
-url="http://www.pygtk.org/"
+url='http://www.pygtk.org'
 arch=('x86_64')
 license=('LGPL')
 depends=('libglade' 'python2-cairo' 'python2-gobject2')
-makedepends=('python2-numpy' 'pygobject2-devel' 'pango')
+makedepends=('python2-numpy' 'pygobject2-devel')
 optdepends=('python2-numpy')
-source=("https://download.gnome.org/sources/${pkgname}/${pkgver%.*}/${pkgname}-${pkgver}.tar.bz2"
-        "https://gitlab.gnome.org/Archive/pygtk/-/commit/4aaa48eb80c6802aec6d03e5695d2a0ff20e0fc2.patch"
+source=("${pkgname}-${pkgver}.tar.bz2::https://download.gnome.org/sources/${pkgname}/${pkgver%.*}/${pkgname}-${pkgver}.tar.bz2"
+        'drop-pangofont.patch'
         'python27.patch'
         'fix-leaks-of-pango-objects.patch')
-md5sums=('a1051d5794fd7696d3c1af6422d17a49'
-         '377827fd28a29347644d5960623f3d79'
-         '12acfacd26f19c504a0a2d0edeb66121'
-         'd7bbcdacd34b16dbf94e7f4df9e27b88')
+sha256sums=('cd1c1ea265bd63ff669e92a2d3c2a88eb26bcd9e5363e0f82c896e649f206912'
+         'SKIP'
+         'SKIP'
+         'SKIP')
 
 prepare() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -29,7 +29,7 @@ prepare() {
   patch -Np1 -i "${srcdir}/fix-leaks-of-pango-objects.patch"
   # fix build with new pango:
   # https://gitlab.gnome.org/Archive/pygtk/-/merge_requests/1
-  patch -p1 -i ../4aaa48eb80c6802aec6d03e5695d2a0ff20e0fc2.patch
+  patch -p1 -i ../drop-pangofont.patch
   # Python 2
   sed -i -e 's#env python$#env python2#' examples/pygtk-demo/{,demos/}*.py
   # No docs

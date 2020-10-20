@@ -15,7 +15,7 @@ index c0e1493..aa8cf10 100644
 +#endif
 +    PyDict_SetItemString(d, "_PyGtk_API", o);
      Py_DECREF(o);
- 	
+  
      PyGtkDeprecationWarning = PyErr_NewException("gtk.GtkDeprecationWarning",
 diff --git a/gtk/pygtk.h b/gtk/pygtk.h
 index 573c3b9..e4c680f 100644
