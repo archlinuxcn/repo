@@ -1,3 +1,2 @@
 #!/bin/sh
-
-/opt/Insomnia/insomnia.bin
+exec electron /usr/share/insomnia/app.asar \$@
