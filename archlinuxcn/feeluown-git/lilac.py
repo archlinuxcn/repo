@@ -1,7 +1,9 @@
 from lilaclib import *
 
 def pre_build():
-    for line in edit_file('PKGBUILD'):
-        if line.strip().startswith('groups=('):
-            continue
-    vcs_update()
+  update_pkgrel()
+  vcs_update()
+
+def post_build():
+  git_pkgbuild_commit()
+  update_aur_repo()
