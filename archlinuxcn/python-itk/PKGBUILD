@@ -2,8 +2,8 @@
 
 _pkgname=ITKPythonPackage
 pkgname=python-itk
-pkgver=5.1.1
-pkgrel=3
+pkgver=5.1.1.post1
+pkgrel=1
 pkgdesc='An open-source toolkit for multidimensional image analysis. This package provides only the python binding'
 arch=('x86_64')
 url='https://itk.org/'
@@ -21,7 +21,7 @@ makedepends=(
 )
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/InsightSoftwareConsortium/ITKPythonPackage/archive/v${pkgver}.tar.gz")
-sha512sums=('e7d6b65c508795fc032f1cadf30abb0b208c775b850ad1b64f4baa790c09f7a676a955761c3296714a214925cacd33043a074cd4abf52909c35531a5246ce683')
+sha512sums=('4a88a4ea348f53847a52a4061e6765cfd0218665392df014d58cb0196a715ac8b5f015dbbb5255008d555ededa10668706ab04380b809712b31cd7c3cfa5075f')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
