@@ -6,7 +6,7 @@
 
 pkgbase=wps-office
 pkgname=('wps-office' 'wps-office-mime')
-pkgver=11.1.0.9662
+pkgver=11.1.0.9711
 #_pkgver=8372
 pkgrel=1
 #_pkgrel=1
@@ -22,7 +22,7 @@ options=('!emptydirs')
 source=("http://wdl1.pcfg.cache.wpscdn.com/wpsdl/wpsoffice/download/linux/${pkgver##*.}/wps-office_${pkgver}.XA_amd64.deb")
 #sha1sums_i686=('60b1c9e33ee6fc1edcefe40dc9ec529d4a668825'
 #               'dd8b5283ee17a88a3eb0531976abccd6e5e08c48')
-sha1sums=('4447ca4d0e39ab30b89aa7d7381263114068ae60')
+sha1sums=('ebcdcfc99914c6443aea55ccb0dd76cb6d0d32e1')
 
 prepare() {
     bsdtar -xpf data.tar.xz
@@ -65,7 +65,7 @@ package_wps-office() {
     cp -r office6 "${pkgdir}/usr/lib"
 #   chmod -x "${pkgdir}/usr/lib/office6/wpsoffice"
 #   ln -rTsf "${pkgdir}/usr/lib/office6"/{libcef.so,addons/cef/libcef.so}
-    install -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" office6/mui/default/*.txt
+    install -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" office6/mui/default/*.html
 
     install -d "${pkgdir}/usr/bin"
     cd "${srcdir}/usr/bin"
@@ -99,5 +99,5 @@ package_wps-office-mime() {
     cp -r mime/* "${pkgdir}/usr/share/mime"
 
     cd "${srcdir}/opt/kingsoft/wps-office/"
-    install -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" office6/mui/default/*.txt
+    install -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" office6/mui/default/*.html
 }
