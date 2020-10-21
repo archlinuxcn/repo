@@ -1,0 +1,10 @@
+source:
+    github: 'xolox/python-humanfriendly'
+
+format: 'archlinux'
+
+script:
+    - sed -i "s|^pkgver.*|pkgver=$RELEASE_VERSION|" PKGBUILD
+    - cp "$RELEASE_FILE" $RELEASE_VERSION.tar.gz
+    - updpkgsums
+    - mksrcinfo
