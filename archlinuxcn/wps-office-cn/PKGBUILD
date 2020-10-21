@@ -6,7 +6,7 @@
 
 pkgbase=wps-office-cn
 pkgname=('wps-office-cn' 'wps-office-mime-cn' 'wps-office-mui-zh-cn')
-pkgver=11.1.0.9662
+pkgver=11.1.0.9711
 pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) CN version - an office productivity suite"
 arch=('x86_64' 'aarch64')
@@ -15,8 +15,8 @@ url="https://linux.wps.cn"
 options=('!emptydirs')
 source_x86_64=("https://wdl1.cache.wps.cn/wps/download/ep/Linux2019/${pkgver##*.}/wps-office_${pkgver}_amd64.deb")
 source_aarch64=("https://wdl1.cache.wps.cn/wps/download/ep/Linux2019/${pkgver##*.}/wps-office_${pkgver}_arm64.deb")
-sha1sums_x86_64=('a62490083b087e735b1cd89dab75b49d2ddf3bbc')
-sha1sums_aarch64=('42858b85a1298d0a7cdd0b2ca2392c0a5f75eba4')
+sha1sums_x86_64=('de4c1115b2b20d89be34f79f59cbc5468bca7c52')
+sha1sums_aarch64=('dfb31330b73cb37e648c220719fe50abb261f908')
 
 prepare() {
     bsdtar -xpf data.tar.xz
@@ -51,7 +51,7 @@ package_wps-office-cn() {
 
     install -d "${pkgdir}/usr/lib"
     cp -r office6 "${pkgdir}/usr/lib"
-    install -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" office6/mui/default/*.txt
+    install -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" office6/mui/default/*.html
     rm -r "${pkgdir}/usr/lib/office6/mui/en_US/resource/help"
     rm -r "${pkgdir}/usr/lib/office6/mui/zh_CN"
 
@@ -84,7 +84,7 @@ package_wps-office-mui-zh-cn() {
     cp -r zh_CN "${pkgdir}/usr/lib/office6/mui"
 
     cd "${srcdir}/opt/kingsoft/wps-office/"
-    install -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" office6/mui/default/*.txt
+    install -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" office6/mui/default/*.html
 }
 
 package_wps-office-mime-cn() {
@@ -98,5 +98,5 @@ package_wps-office-mime-cn() {
     cp -r mime/* "${pkgdir}/usr/share/mime"
 
     cd "${srcdir}/opt/kingsoft/wps-office/"
-    install -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" office6/mui/default/*.txt
+    install -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" office6/mui/default/*.html
 }
