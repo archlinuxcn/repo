@@ -10,6 +10,7 @@ depends=()
 makedepends=('rust' 'git')
 source=("git+https://github.com/BurntSushi/xsv.git")
 md5sums=('SKIP')
+conflicts=("${_pkgname}" "${_pkgname}-bin")
 
 pkgver() {
     cd "$srcdir/$_pkgname"
