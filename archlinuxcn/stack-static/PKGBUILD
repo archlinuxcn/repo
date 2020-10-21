@@ -1,0 +1,38 @@
+# Maintainer:  <me@sfxr.de>
+
+_arch=$(uname -m)
+pkgname=stack-static
+pkgver=2.5.1
+pkgrel=1
+pkgdesc="The Haskell Tool Stack (linked statically)"
+arch=('x86_64')
+url="https://github.com/commercialhaskell/stack"
+license=('custom:BSD3')
+provides=( stack )
+conflicts=( stack stack-bin haskell-stack )
+depends=( gmp gcc-libs zlib ) # needed for working ghc downloaded by stack
+optdepends=(
+  'bash-completion'
+  "ncurses5-compat-libs: using older ghc's linking against libtinfo.so.5"
+)
+source=(
+  "stack.bash"
+  "https://github.com/commercialhaskell/stack/releases/download/v${pkgver}/stack-${pkgver}-linux-x86_64.tar.gz"
+  "https://github.com/commercialhaskell/stack/releases/download/v${pkgver}/stack-${pkgver}-linux-x86_64.tar.gz.asc"
+)
+sha256sums=('df46833a748574d01f38d4120e5021ee6fac9b8a70995674ca0bd2cacbd3e3c2'
+            'c83b6c93d6541c0bce2175085a04062020f4160a86116e20f3b343b562f2d1e8'
+            'SKIP')
+validpgpkeys=('C5705533DA4F78D8664B5DC0575159689BEFB442')
+
+package() {
+  cd "${srcdir}"
+  local d="stack-${pkgver}-linux-x86_64"
+  mkdir -p "${pkgdir}"/usr/{{bin,share/{doc,licenses}/"${pkgname}"},share/bash-completion/completions}
+  cp "${d}/stack" "${pkgdir}/usr/bin"
+  cp -R "${d}/doc/." "${pkgdir}/usr/share/doc/${pkgname}/"
+  cp "${d}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/"
+  cp "stack.bash" "${pkgdir}/usr/share/bash-completion/completions/stack"
+}
+
+# vim:set ts=2 sw=2 et:
