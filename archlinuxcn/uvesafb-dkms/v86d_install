@@ -1,0 +1,14 @@
+build() {
+    add_module 'uvesafb'
+
+    add_binary "v86d"
+    add_file "/usr/lib/modprobe.d/uvesafb.conf"
+
+    add_runscript
+}
+
+help() {
+    echo "This hook sets up v86d, the userspace helper for uvesafb."
+}
+
+# vim: set ft=sh ts=4 sw=4 expandtab:
