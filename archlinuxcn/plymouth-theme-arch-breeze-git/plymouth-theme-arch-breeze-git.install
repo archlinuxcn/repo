@@ -1,0 +1,9 @@
+_themedir="/usr/share/plymouth/themes/arch-breeze"
+
+post_install() {
+  [ -e "${_themedir}/logo.png" ] || ln -s ${_themedir}/logo{_full_blue,}.png
+}
+
+pre_remove() {
+  rm -f ${_themedir}/logo.png
+}
