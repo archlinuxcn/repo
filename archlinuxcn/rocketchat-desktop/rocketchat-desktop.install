@@ -1,0 +1,7 @@
+post_install() {
+  echo 'The dictionaries are downloaded from Google CDN.
+https://github.com/RocketChat/Rocket.Chat.Electron/issues/1766#issuecomment-702821373 
+https://www.electronjs.org/docs/tutorial/spellchecker#does-the-spellchecker-use-any-google-services'
+}
+
+post_upgrade() { post_install; }
