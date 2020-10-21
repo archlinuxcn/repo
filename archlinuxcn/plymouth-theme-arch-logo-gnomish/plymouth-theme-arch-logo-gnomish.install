@@ -1,0 +1,12 @@
+post_install() {
+  cat << _EOF 
+
+==> To activate run: 
+==> sudo plymouth-set-default-theme -R arch-logo-gnomish
+
+_EOF
+}
+
+post_upgrade() {
+  post_install $1
+} 
