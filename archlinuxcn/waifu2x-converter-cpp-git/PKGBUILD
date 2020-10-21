@@ -1,0 +1,44 @@
+# shellcheck disable=SC2034,SC2154,SC2164
+pkgname=('waifu2x-converter-cpp-git')
+_srcname='waifu2x-converter-cpp'
+pkgdesc='Image Super-Resolution for Anime-Style Art'
+pkgver='r718'
+pkgrel='1'
+arch=('i686' 'x86_64')
+url="https://github.com/DeadSix27/${_srcname}"
+license=('MIT')
+
+depends=('opencv' 'ocl-icd')
+makedepends=('git' 'cmake' 'opencl-headers')
+provides=("${pkgname[0]%-git}")
+conflicts=("${pkgname[0]%-git}")
+
+source=("${_srcname}::git+${url}.git")
+sha512sums=('SKIP')
+
+pkgver() {
+    cd "${srcdir}/${_srcname}"
+
+    printf 'r%s.%s.%s\n' \
+        "$( git rev-list --count 'HEAD' )" \
+        "$( git log --max-count='1' --pretty='format:%ct' )" \
+        "$( git rev-parse --short 'HEAD' )"
+}
+
+build() {
+    cd "${srcdir}/${_srcname}"
+
+    cmake \
+        -DCMAKE_INSTALL_PREFIX='/usr' \
+        -DCMAKE_BUILD_TYPE='Release' \
+        -DINSTALL_MODELS='ON' \
+        -DOPENCV_PREFIX='/usr' \
+        .
+    make
+}
+
+package() {
+    cd "${srcdir}/${_srcname}"
+
+    make DESTDIR="${pkgdir}" install
+}
