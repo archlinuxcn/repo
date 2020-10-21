@@ -1,0 +1,35 @@
+function post_install {
+  echo "
+To use dein, put the following into ~/.vimrc or ~/.config/nvim/init.vim:
+
+if &compatible
+  set nocompatible
+endif
+filetype off
+\" append to runtime path
+set rtp+=/usr/share/vim/vimfiles
+\" initialize dein, plugins are installed to this directory
+call dein#begin(expand('~/.cache/dein'))
+\" add packages here, e.g:
+call dein#add('qwelyt/TrippingRobot')
+\" exit dein
+call dein#end()
+\" auto-install missing packages on startup
+if dein#check_install()
+  call dein#install()
+endif
+filetype plugin on
+
+See the documentation at https://github.com/Shougo/dein.vim for more details.
+"
+}
+
+function post_upgrade {
+  post_install
+}
+
+function post_remove {
+  echo "
+Remember to remove dein calls from ~/.vimrc or ~/.config/nvim/init.vim for cleanup.
+"
+}
