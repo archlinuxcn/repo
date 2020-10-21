@@ -1,0 +1,10 @@
+post_install() {
+    cat << EOF
+    ==> You should enable the service by running:
+    # systemctl enable numLockOnTty
+
+    To disable:
+    # systemctl disable numLockOnTty
+EOF
+}
+
