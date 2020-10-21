@@ -1,0 +1,10 @@
+post_install(){
+    post_upgrade
+}
+post_upgrade(){
+    cat << EOF
+    This is the premium core of clash which is close-sourced.
+    You can find the manual at https://github.com/Dreamacro/clash/wiki/Premium-Core-Features
+EOF
+
+}
