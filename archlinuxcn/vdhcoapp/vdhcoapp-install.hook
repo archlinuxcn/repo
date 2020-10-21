@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = vdhcoapp
+
+[Action]
+Description = Installing JSON configuration file ...
+When = PostTransaction
+Exec = /usr/bin/vdhcoapp install --system
