@@ -1,0 +1,8 @@
+post_install() {
+    printf "\nSet monoarch as plymouth theme in order to use it:\n" 
+    printf "# plymouth-set-default-theme -R monoarch\n\n"
+}
+
+post_upgrade() {
+  post_install
+} 
