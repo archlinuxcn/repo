@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Snapper GUI
+GenericName=Snapper GUI
+Comment=Managing BTRFS and LVM snapshots
+Exec=[ -f /usr/bin/gksu ] && exec gksu snapper-gui || exec kdesu snapper-gui
+Icon=snapper-gui
+Categories=System;Filesystem;
