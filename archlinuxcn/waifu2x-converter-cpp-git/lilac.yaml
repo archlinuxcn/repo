@@ -8,3 +8,7 @@ update_on:
     aur: waifu2x-converter-cpp-git
   - source: github
     github: DeadSix27/waifu2x-converter-cpp
+  - source: archpkg
+    archpkg: opencv
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1

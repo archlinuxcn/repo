@@ -1,10 +1,16 @@
 maintainers:
   - github: DDoSolitary
 build_prefix: extra-x86_64
-pre_build: aur_pre_build
-post_build: aur_post_build
 update_on:
   - source: aur
     aur: jbig2enc-git
   - source: github
     github: agl/jbig2enc
+  - source: archpkg
+    archpkg: giflib
+    provided: libgif.so
+    strip_release: true
+  - source: archpkg
+    archpkg: libjpeg-turbo
+    provided: libjpeg.so
+    strip_release: true

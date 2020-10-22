@@ -1,8 +1,26 @@
 maintainers:
   - github: DDoSolitary
 build_prefix: extra-x86_64
-pre_build: aur_pre_build
-post_build: aur_post_build
 update_on:
   - source: aur
     aur: bluez-utils-compat
+  - source: archpkg
+    archpkg: dbus
+    provided: libdbus-1.so
+    strip_release: true
+  - source: archpkg
+    archpkg: glib2
+    provided: libglib-2.0.so
+    strip_release: true
+  - source: archpkg
+    archpkg: json-c
+    provided: libjson-c.so
+    strip_release: true
+  - source: archpkg
+    archpkg: readline
+    provided: libreadline.so
+    strip_release: true
+  - source: archpkg
+    archpkg: systemd-libs
+    provided: libudev.so
+    strip_release: true
