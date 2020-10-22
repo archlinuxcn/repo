@@ -27,7 +27,7 @@ pkgver () {
 build () {
   cd ripgrep
   echo "lto = true" >> Cargo.toml
-  RUSTFLAGS="-C target-cpu=skylake" cargo build --release --features 'simd-accel pcre2'
+  RUSTFLAGS="-C target-cpu=skylake" cargo build --release --features pcre2
   git checkout Cargo.toml
 }
 
