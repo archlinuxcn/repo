@@ -2,8 +2,8 @@
 # Contributor: Jakob Gahde <j5lx@fmail.co.uk> (ocaml-migrate-parsetree PKGBUILD)
 _projectname='ocaml-migrate-parsetree'
 pkgname="${_projectname}2"
-pkgver='2.0.0'
-pkgrel='2'
+pkgver='2.1.0'
+pkgrel='1'
 pkgdesc='Convert OCaml parsetrees between different major versions - 2.x.x version'
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/ocaml-ppx/$_projectname"
@@ -15,7 +15,7 @@ source=(
 	"$pkgname-$pkgver-$pkgrel.tar.gz::$url/archive/v$pkgver.tar.gz"
 	"$pkgname.diff"
 )
-sha256sums=('e18ac992a6f6e8ed7d337d26efcfa46cf4864e6567f63d6ea23d972947e78296'
+sha256sums=('526e72f4bcbbe4dfb9d775338784b255a8200ae5244529329112028c6f981776'
             '3831b60723b68f5d70bfb5a12402491b0518e1642a2e2d9ec529c4c0b021e6e0')
 
 _sourcedirectory="$_projectname-$pkgver"
