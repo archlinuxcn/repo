@@ -2,7 +2,7 @@
 _pkgname="code-minimap"
 pkgname="${_pkgname}-git"
 pkgver=0.4.3.48.g7099262
-pkgrel=1
+pkgrel=2
 pkgdesc="A high performance code minimap render"
 arch=(i686 x86_64)
 url="https://github.com/wfxr/${_pkgname}"
@@ -11,7 +11,7 @@ makedepends=("git" "rust" "cargo")
 conflicts=("${_pkgname}" "${_pkgname}-bin")
 
 source=("${_pkgname}::git+https://github.com/wfxr/${_pkgname}.git")
-sha256sums=("SKIP")
+sha256sums=('SKIP')
 
 pkgver() {
     cd "${_pkgname}"
