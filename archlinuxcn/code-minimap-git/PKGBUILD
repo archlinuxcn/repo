@@ -9,6 +9,7 @@ url="https://github.com/wfxr/${_pkgname}"
 license=("MIT" "APACHE")
 makedepends=("git" "rust" "cargo")
 conflicts=("${_pkgname}" "${_pkgname}-bin")
+provides=("${_pkgname}")
 
 source=("${_pkgname}::git+https://github.com/wfxr/${_pkgname}.git")
 sha256sums=('SKIP')
