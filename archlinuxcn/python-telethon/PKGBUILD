@@ -13,13 +13,13 @@ sha256sums=('edba701f63187d12707f09303dbd0f2515864bb7326c330a18adde12ef4ea635')
 
 build() {
   cd "$srcdir/Telethon-1.17.4"
-  chmod u=rwX,go=rX -R Telethon.egg-info
   python3 setup.py build
 }
 
 package() {
   cd "$srcdir/Telethon-1.17.4"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  chmod u=rwX,go=rX -R "$pkgdir"
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
   # make sure we don't install annoying files
