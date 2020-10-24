@@ -3,7 +3,7 @@
 # Contributor: KokaKiwi <kokakiwi+aur@kokakiwi.net>
 
 pkgname=ventoy-bin
-pkgver=1.0.25
+pkgver=1.0.26
 pkgrel=1
 pkgdesc='A new multiboot USB solution (Binary)'
 url='http://www.ventoy.net/'
@@ -14,7 +14,7 @@ provides=("${pkgname%-bin}")
 conflicts=("${pkgname%-bin}")
 source=("https://github.com/ventoy/Ventoy/releases/download/v${pkgver}/${pkgname%-bin}-${pkgver}-linux.tar.gz"
         "${pkgname%-bin}" 'sanitize.patch')
-sha256sums=('43c1600df4d1b0980262761f5ba30c834a75a0fa0504cba29ef5fdb274a508e8'
+sha256sums=('76165dba2af8cfdd5a4040e9f188d5421763e1a6456a14d0183edf1cb3fb9ad3'
             'f9f333e21ec211318ab40018e0da3a44d8bae16e36dd6132e7891f8c9df52f1c'
             'f01eee34e2b8ea1c026b62be3dd0d021b6aca15a37fff62dc0d1881aadfd29bd')
 
