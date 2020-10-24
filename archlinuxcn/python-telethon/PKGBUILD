@@ -1,7 +1,7 @@
 _name=Telethon
 pkgname=python-telethon
 pkgver=1.17.4
-pkgrel=1
+pkgrel=2
 pkgdesc="Full-featured Telegram client library for Python 3"
 arch=(any)
 url="https://github.com/LonamiWebs/Telethon"
@@ -13,6 +13,7 @@ sha256sums=('edba701f63187d12707f09303dbd0f2515864bb7326c330a18adde12ef4ea635')
 
 build() {
   cd "$srcdir/Telethon-1.17.4"
+  chmod u=rwX,go=rX -R Telethon.egg-info
   python3 setup.py build
 }
 
