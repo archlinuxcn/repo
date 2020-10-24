@@ -31,7 +31,7 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=1.6.0.DEV.1300.gf39cb43032e
+pkgver=1.6.0.DEV.1324.gae789ca1df4
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -162,6 +162,10 @@ EOF
 
   for p in "${_patches[@]}"; do
     _apply_patch "$p"
+  done
+  for f in stdlib/*/Artifacts.toml; do
+    echo "Clearing $f"
+    echo > "$f"
   done
 
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' */Makefile
