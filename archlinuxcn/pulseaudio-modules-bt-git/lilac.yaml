@@ -7,6 +7,8 @@ build_prefix: extra-x86_64
 repo_depends:
   - libldac
 
+pre_build: vcs_update
+
 post_build: aur_post_build
 
 update_on:
