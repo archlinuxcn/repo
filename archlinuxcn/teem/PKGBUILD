@@ -1,0 +1,46 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+# Contributor: Martino Pilia <martino.pilia@gmail.com>
+
+pkgname=teem
+pkgver=1.11.0
+pkgrel=1
+pkgdesc='A coordinated group of libraries for representing, processing, and visualizing scientific raster data'
+arch=('x86_64')
+url='http://teem.sourceforge.net/index.html'
+license=('LGPL')
+depends=(
+  bzip2
+  fftw
+  libpng
+)
+makedepends=(cmake)
+source=("${pkgname}-${pkgver}.tar.gz::https://sourceforge.net/projects/teem/files/teem/${pkgver}/teem-${pkgver}-src.tar.gz")
+sha512sums=('48b171a12db0f02dcfdaa87aa84464c651d661fa66201dc966b3cd5a8134c5bad1dad8987ffcc5d7c21c5d14c2eb617d48200410a1bda19008ef743c093ed575')
+
+build() {
+  cmake -S "${srcdir}/${pkgname}-${pkgver}-src" -B "build" \
+    -DBUILD_EXPERIMENTAL_APPS=ON \
+    -DBUILD_EXPERIMENTAL_LIBS=ON \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
+    -DCMAKE_BUILD_TYPE:STRING=Release \
+    -DCMAKE_INSTALL_PREFIX:PATH="/usr" \
+    -DCMAKE_SKIP_INSTALL_RPATH=ON \
+    -DTeem_USE_LIB_INSTALL_SUBDIR=ON \
+    -DTeem_FFTW3=ON
+  make -C "build"
+}
+
+check() {
+  cd "build"
+  ctest -v
+}
+
+package() {
+  cd "build"
+  make DESTDIR="${pkgdir}" install
+  ln -s "/usr/lib/Teem-${pkgver}/libteem.so" "${pkgdir}/usr/lib/libteem.so"
+  ln -s "/usr/lib/Teem-${pkgver}/libteem.so.1" "${pkgdir}/usr/lib/libteem.so.1"
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}-src/LICENSE.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:
