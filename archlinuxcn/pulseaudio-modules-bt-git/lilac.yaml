@@ -9,7 +9,7 @@ repo_depends:
 
 pre_build: vcs_update
 
-post_build: aur_post_build
+post_build: git_pkgbuild_commit
 
 update_on:
   - source: github
