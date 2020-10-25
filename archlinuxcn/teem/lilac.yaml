@@ -1,8 +1,9 @@
 maintainers:
   - github: hubutui
-
 build_prefix: extra-x86_64
-
-managed: false
+post_build: git_pkgbuild_commit
+update_on:
+  - source: manual
+    manual: 1.11.0-2
 # vim:set ts=2 sw=2 et:
 
