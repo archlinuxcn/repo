@@ -7,6 +7,7 @@ build_prefix: extra-x86_64
 
 # pre_build: aur_pre_build
 # post_build: aur_post_build
+post_build: git_pkgbuild_commit
 
 update_on:
   - source: manual
@@ -16,4 +17,4 @@ update_on:
     from_pattern: ^(\d+\.\d+.\d+).*
     to_pattern: \1
   - source: manual
-    manual: 7
+    manual: 8
