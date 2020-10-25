@@ -1,0 +1,86 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=3dslicer
+pkgver=4.11.20200930
+pkgrel=1
+pkgdesc="A multi-platform, free and open source software package for visualization and medical image computing"
+arch=('x86_64')
+url="https://www.slicer.org/"
+license=('BSD')
+depends=(
+  bzip2
+  curl
+  dcmtk
+  libxt
+  openssl
+  qt5-base
+  qt5-multimedia
+  qt5-script
+  qt5-svg
+  qt5-tools
+  qt5-webengine
+  qt5-x11extras
+  qt5-xmlpatterns
+  rapidjson
+  sqlite
+  teem
+)
+makedepends=(
+  clang
+  cmake
+  gendesk
+  git
+  subversion
+)
+options=(!emptydirs !strip)
+source=("${pkgname}-${pkgver}::git+https://github.com/Slicer/Slicer.git#tag=v${pkgver}"
+        "${pkgname}.svg::https://github.com/Slicer/Slicer/raw/master/Resources/3DSlicerLogo-app-icon.svg")
+sha512sums=('SKIP'
+            'c23104efcbec3d49b5c26ad5514ed74316423db4aa9e6c7894f02f7ddbe509b577de358dfdd2f7c492963f312b7c146f03d5e41a89ab1298811894dc18746225')
+
+prepare() {
+  # find sqlite with cmake's FindSQLite3
+  sed -i 's/find_package(${proj} REQUIRED)/find_package(SQLite3 REQUIRED)/' "${srcdir}/${pkgname}-${pkgver}/SuperBuild/External_sqlite.cmake"
+
+  echo "Creating desktop file"
+  gendesk -f -n --pkgname ${pkgname} \
+    --pkgdesc "${pkgdesc}" \
+    --categories "Graphics;MedicalSoftware;Science;" \
+    --icon "${pkgname}" \
+    --exec "Slicer"
+}
+
+build() {
+  cmake -B build -S "${srcdir}/${pkgname}-${pkgver}" \
+    -DBUILD_TESTING=OFF \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DSlicer_BUILD_DOCUMENTATION=OFF \
+    -DSlicer_BUILD_I18N_SUPPORT=ON \
+    -DSlicer_USE_SimpleITK_SHARED=ON \
+    -DSlicer_USE_SYSTEM_bzip2=ON \
+    -DSlicer_USE_SYSTEM_curl=ON \
+    -DSlicer_USE_SYSTEM_DCMTK=ON \
+    -DSlicer_USE_SYSTEM_LZMA=ON \
+    -DSlicer_USE_SYSTEM_OpenSSL=ON \
+    -DSlicer_USE_SYSTEM_QT=ON \
+    -DSlicer_USE_SYSTEM_RapidJSON=ON \
+    -DSlicer_USE_SYSTEM_sqlite=ON \
+    -DSlicer_USE_SYSTEM_teem=ON \
+    -DSlicer_USE_SYSTEM_VTK=OFF \
+    -DSlicer_USE_SYSTEM_zlib=ON
+  make -C "build"
+}
+
+package() {
+  cd "${srcdir}/build/Slicer-build"
+  make package
+  install -d "${pkgdir}/opt/${pkgname}" "${pkgdir}/usr/bin"
+  tar xvf "${srcdir}/build/Slicer-build/"*.tar.gz -C "${pkgdir}/opt/${pkgname}" --strip-components 1
+  ln -s /opt/${pkgname}/Slicer "${pkgdir}/usr/bin"
+  install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  install -Dm644 "${srcdir}/${pkgname}.svg" "${pkgdir}/usr/share/pixmaps/${pkgname}.svg"
+}
+# vim:set ts=2 sw=2 et:
