@@ -19,8 +19,8 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=81.0
-pkgrel=2
+pkgver=82.0
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -84,10 +84,6 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         mozilla-1516803.patch
         # Force disable elfhack to fix build errors
         build-disable-elfhack.patch
-        # Fix MOZILLA1#1660901
-        # Support the fstat-like subset of fstatat in the Linux sandbox policies
-        0002-Bug-1660901-Support-the-fstat-like-subset-of-fstatat.patch
-        0003-Bug-1660901-ignore-AT_NO_AUTOMOUNT-in-fstatat-system.patch
         # Revert patch from MOZILLA#1644409 to fix issue casused by this patch
         mozilla-1644409.patch::https://hg.mozilla.org/mozilla-central/raw-rev/795c8762b16b
 )
@@ -149,16 +145,11 @@ prepare() {
   # Force disable elfhack to fix build errors
   patch -Np1 -i "$srcdir"/build-disable-elfhack.patch
 
-  # https://bugs.archlinux.org/task/67978
-  # Fix MOZILLA#1660901
-  # Support the fstat-like subset of fstatat in the Linux sandbox policies
-  patch -p1 -i "$srcdir"/0002-Bug-1660901-Support-the-fstat-like-subset-of-fstatat.patch
-  patch -p1 -i "$srcdir"/0003-Bug-1660901-ignore-AT_NO_AUTOMOUNT-in-fstatat-system.patch
 
   # Revert patch from MOZILLA#1644409 to fix issue casused by this patch
   patch -R -p1 -i "$srcdir"/mozilla-1644409.patch
 
-  
+
   if [[ $_pgo ]] ; then
     # add missing rule for pgo builds
     patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
@@ -266,7 +257,7 @@ md5sums=('SKIP'
          '77c039d55aa155391db518afd638a0b9'
          '93fc217bcdc9d936727a1c3446e72650'
          '0a5733b7a457a2786c2dd27626a1bf88'
-         '39cf2f916317bae3edb7133d681684bd'
+         '2a23fc0920f7b2cb4f9a2a751fa060eb'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3c383d371d7f6ede5983a40310518715'
          'd24681f9a46ae23689b2867f4ab6eaae'
@@ -277,6 +268,4 @@ md5sums=('SKIP'
          '129f1d0a83a9034e49c8ff62f5e0013d'
          'efcddfb6595b356b3faaf6b93313659e'
          'aa9261c4d407cf809bf8275e6f2e52c7'
-         'ad9899e50a611d007ff17387deea6139'
-         '680ab9eee674476e1c10c998996a7f73'
          '7c42a1e4928330d82409283e9af6422c')
