@@ -2,20 +2,20 @@
 
 pkgname=v2raya
 _pkgname=v2rayA
-pkgver=1.0.3
+pkgver=1.1.1
 pkgrel=1
 pkgdesc="A Linux web GUI client of Project V"
 arch=('x86_64')
-url="https://github.com/mzz2017/v2rayA"
+url="https://github.com/v2rayA/v2rayA"
 license=('GPL3')
 depends=('glibc' 'v2ray')
 makedepends=('go>=2:1.12.3-1' 'nodejs>=14' 'yarn' 'python2')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('9be6dc07b610fbbce775f5f09cc51673c9f6a3cfcd3f326cad5aace0eaa17781')
+sha256sums=('ff6be2b26694648891a9d5b3a35490924e3d2432082697753a3b521aa1481db8')
 
 build() {
     cd "${srcdir}"/"${_pkgname}-${pkgver}"/gui/
-    yarn
+    yarn --check-files
     yarn build
     export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
     export CGO_CPPFLAGS="${CPPFLAGS}"
