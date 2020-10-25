@@ -3,7 +3,7 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.0.r455.ab0fc3952
+pkgver=1.7.0.r475.418974a28
 pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
@@ -49,7 +49,10 @@ pkgver() {
 }
 
 prepare() {
-  patch -p0 -i add-avx.patch 
+  patch -p0 -i add-avx.patch
+
+  cd pcsx2
+  git submodule update --init --recursive
 }
 build() {
   cmake -S pcsx2 -B build \
