@@ -7,7 +7,6 @@ pkgbase=openblas-git
 pkgname=(openblas-git openblas-lapack-git)
 pkgver=0.3.12.r1.gaddf7593
 pkgrel=1
-epoch=1
 pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://xianyi.github.com/OpenBLAS/"
@@ -52,8 +51,11 @@ pkgver() {
   _last_tag=$(git describe --tags --abbrev=0)
   _commit_short=$(git rev-parse --short HEAD)
   _build_number=$(git rev-list --count HEAD "^$_last_tag")
+  # openblas versions goes as 0.0.1 -> 0.0.1.dev -> 0.0.2
+  # Change the .dev into .1dev so that it is treated as a newer version
+  # after adding the .0.* suffix
   _ver=$(sed -ne 's/^VERSION\s*=\s*\([^[:space:]]*\).*/\1/p' Makefile.rule |
-           sed 's/\.\([a-zA-Z]\)/\1/')
+      sed -e 's/\.dev/.1dev/')
 
   printf "%s.0.%s.g%s" "$_ver" "$_build_number" "$_commit_short"
 }
