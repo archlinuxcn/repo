@@ -1,0 +1,38 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Arch Haskell Team <arch-haskell@haskell.org>
+
+_hkgname=ShellCheck
+pkgname=shellcheck-static
+pkgver=0.7.1
+pkgrel=1
+pkgdesc="Shell script analysis tool (static version not depending on GHC libraries)"
+url="https://www.shellcheck.net"
+license=("GPL")
+arch=('x86_64')
+depends=('gmp')
+makedepends=('stack' 'pandoc')
+provides=("shellcheck=$pkgver")
+conflicts=(shellcheck)
+source=("$_hkgname-$pkgver.tar.gz::https://github.com/koalaman/shellcheck/archive/v$pkgver.tar.gz")
+sha512sums=('95ca827f50035e352eabfbee9eb1791278f7c18c10c3a6c2656c5b9e87396b7b6c088f4cefa3d6f954ac6c2765ea50e232985b9f3eeea2dbe77c17473cc4a437')
+
+build() {
+    cd shellcheck-$pkgver
+
+    stack upgrade
+    stack build --ghc-options="-j$(nproc)"
+    ./manpage
+}
+
+check() {
+    cd shellcheck-$pkgver
+    stack test
+}
+
+package() {
+    cd shellcheck-$pkgver
+
+    install -D -m644 shellcheck.1 "${pkgdir}/usr/share/man/man1/shellcheck.1"
+    stack install --local-bin-path="${pkgdir}/usr/bin"
+}
