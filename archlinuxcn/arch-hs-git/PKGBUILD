@@ -1,13 +1,13 @@
 # Maintainer: berberman <hatsue@typed.icu>
 
 pkgname=arch-hs-git
-pkgver=r169.f1f2c76
-pkgrel=2
-pkgdesc="Generating PKGBUILD for hackage packages."
+pkgver=r170.bdb080e
+pkgrel=1
+pkgdesc="Distribute hackage packages to archlinux"
 arch=('x86_64')
 url="https://github.com/berberman/arch-hs"
 license=('MIT')
-depends=('ghc-libs' 'haskell-aeson' 'haskell-req' 'haskell-hackage-db' 'haskell-megaparsec' 'haskell-algebraic-graphs' 'haskell-conduit' 'haskell-tar-conduit' 'haskell-conduit-extra' 'haskell-split' 'haskell-neat-interpolation' 'haskell-microlens' 'haskell-microlens-th' 'haskell-polysemy' 'haskell-colourista' 'haskell-optparse-applicative')
+depends=('ghc-libs' 'haskell-aeson' 'haskell-req' 'haskell-hackage-db' 'haskell-megaparsec' 'haskell-algebraic-graphs' 'haskell-conduit' 'haskell-tar-conduit' 'haskell-conduit-extra' 'haskell-split' 'haskell-neat-interpolation' 'haskell-microlens' 'haskell-microlens-th' 'haskell-polysemy' 'haskell-colourista' 'haskell-optparse-applicative' 'libalpm.so')
 makedepends=('ghc' 'git')
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}") 
@@ -38,7 +38,8 @@ build() {
     --prefix=/usr --docdir=/usr/share/doc/$pkgname \
     --dynlibdir=/usr/lib --libsubdir=\$compiler/site-local/\$pkgid \
     --ghc-option=-optl-Wl\,-z\,relro\,-z\,now \
-    --ghc-option='-pie'
+    --ghc-option='-pie' \
+    -f alpm
 
   runhaskell Setup build
   runhaskell Setup register --gen-script
