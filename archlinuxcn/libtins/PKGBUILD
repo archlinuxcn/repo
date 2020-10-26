@@ -2,12 +2,12 @@
 
 pkgname=libtins
 pkgver=4.2
-pkgrel=2
+pkgrel=3
 pkgdesc="A high-level, multiplatform C++ network packet sniffing and crafting library"
 arch=('i686' 'x86_64')
 url="http://libtins.github.io/"
 license=('BSD')
-depends=('libpcap' 'openssl' 'boost')
+depends=("boost" "libpcap" "libpcap.so" "openssl")
 makedepends=('cmake')
 options=('!libtool')
 source=("https://github.com/mfontanini/libtins/archive/v${pkgver}.tar.gz")
@@ -28,3 +28,4 @@ package() {
 }
 
 # vim:set ts=2 sw=2 et:
+provides=("libtins.so")
