@@ -15,7 +15,8 @@ sha256sums=('ff6be2b26694648891a9d5b3a35490924e3d2432082697753a3b521aa1481db8')
 
 build() {
     cd "${srcdir}"/"${_pkgname}-${pkgver}"/gui/
-    yarn --check-files
+    yarn cache clean
+    yarn install --check-files
     yarn build
     export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
     export CGO_CPPFLAGS="${CPPFLAGS}"
