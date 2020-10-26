@@ -10,13 +10,24 @@ url="https://github.com/v2rayA/v2rayA"
 license=('GPL3')
 depends=('glibc' 'v2ray')
 makedepends=('go>=2:1.12.3-1' 'nodejs>=14' 'yarn' 'python2')
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('ff6be2b26694648891a9d5b3a35490924e3d2432082697753a3b521aa1481db8')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
+        "v2raya.sysusers"
+        "v2raya.service"
+        "v2raya-1.1.1.patch")
+sha256sums=('ff6be2b26694648891a9d5b3a35490924e3d2432082697753a3b521aa1481db8'
+            '14bd6511a8b3dc85daf870e891a61993a5de3ec27e3b21a6fee9c36ee527de1e'
+            'ff6df3466d703660e53c9903cf29e52e8ed23d84457d0c576b2854f6f5e027b3'
+            '20f02ae3364381ae21d7a73a56ce57477974aad6263c4191f67a139660fa1495')
+
+prepare() {
+    cd "${srcdir}"/"${_pkgname}-${pkgver}"/
+    patch -p1 -i ../v2raya-1.1.1.patch
+}
 
 build() {
     cd "${srcdir}"/"${_pkgname}-${pkgver}"/gui/
     yarn cache clean
-    yarn install --check-files
+    yarn install
     yarn build
     export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
     export CGO_CPPFLAGS="${CPPFLAGS}"
@@ -32,7 +43,8 @@ package() {
     install -Dm 755 service/v2raya -t "${pkgdir}"/usr/bin/
     find web -type d -exec install -vd "${pkgdir}"/etc/v2raya/{} \;
     find web -type f -exec install -vm 644 {} "${pkgdir}"/etc/v2raya/{} \;
+    install -Dm 644 "${srcdir}"/v2raya.sysusers "${pkgdir}"/usr/lib/sysusers.d/v2raya.conf
+    install -Dm 644 "${srcdir}"/v2raya.service -t "${pkgdir}"/usr/lib/systemd/system/
     install -Dm 644 install/universal/v2raya.desktop -t "${pkgdir}"/usr/share/applications/
-    install -Dm 644 install/universal/v2raya.service -t "${pkgdir}"/usr/lib/systemd/system/
     install -Dm 644 gui/public/img/icons/android-chrome-512x512.png "${pkgdir}"/usr/share/icons/hicolor/512x512/apps/v2raya.png
 }
