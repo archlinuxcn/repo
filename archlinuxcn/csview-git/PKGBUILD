@@ -1,17 +1,17 @@
 # Maintainer: Wenxuan <wenxuangm@gmail.com>
+_pkgname=csview
 pkgname=csview-git
-_pkgname="csview"
 pkgver=0.3.6.48.gca098b0
-pkgrel=1
-pkgdesc="A high performance csv viewer with cjk/emoji support"
+pkgrel=2
+pkgdesc='A high performance csv viewer with cjk/emoji support'
 arch=(i686 x86_64)
-url="https://github.com/wfxr/csview"
-license=("MIT" "APACHE")
-depends=()
-makedepends=("rust" "cargo")
-conflicts=("csview" "csview-bin")
+url='https://github.com/wfxr/csview'
+license=('MIT' 'APACHE')
+makedepends=('git' 'rust' 'cargo')
+conflicts=("${_pkgname}" "${_pkgname}-bin")
+provides=("${_pkgname}")
 
-source=("${_pkgname}::git+https://github.com/wfxr/csview.git")
+source=("${_pkgname}::git+${url}")
 sha256sums=("SKIP")
 
 pkgver() {
