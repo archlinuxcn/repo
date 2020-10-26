@@ -5,7 +5,7 @@ from lilaclib import *
 def pre_build():
     aur_pre_build()
     add_depends(['libmbedcrypto.so'])
-    add_depends(['libdislocker.so'])
+    add_provides(['libdislocker.so'])
 
 def post_build():
     aur_post_build()
