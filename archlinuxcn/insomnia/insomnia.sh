@@ -1,2 +1,2 @@
 #!/bin/sh
-exec electron /usr/share/insomnia/app.asar \$@
+exec electron /usr/share/insomnia/app.asar "$@"
