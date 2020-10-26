@@ -7,6 +7,7 @@ pkgver=33688.c1f79e8366
 _gwtver=2.8.2
 _ginver=2.1.2
 _nodever=10.19.0
+_pandocver=2.11.0.4
 pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 arch=('i686' 'x86_64')
@@ -48,13 +49,12 @@ prepare() {
     cp -r "${srcdir}/gwt-${_gwtver}/"* lib/gwt/${_gwtver}
 
     cd "${srcdir}/${_gitname}/dependencies/common"
-    install -d pandoc
+    install -d pandoc/${_pandocver}
 
     ln -sfT /usr/share/myspell/dicts dictionaries
     ln -sfT /usr/share/mathjax2 mathjax-27
-    ln -sfT /usr/bin/pandoc pandoc/pandoc
-    ln -sfT /usr/bin/pandoc-citeproc pandoc/pandoc-citeproc
-
+    ln -sfT /usr/bin/pandoc pandoc/${_pandocver}/pandoc
+    ln -sfT /usr/bin/pandoc-citeproc pandoc/${_pandocver}/pandoc-citeproc
     # Nodejs
     install -d node/${_nodever}
     cp -r "${srcdir}/node-v${_nodever}-linux-x64/"* node/${_nodever}
