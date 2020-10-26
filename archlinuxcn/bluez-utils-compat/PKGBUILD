@@ -7,12 +7,12 @@
 pkgname='bluez-utils-compat'
 _pkgbase='bluez'
 pkgver=5.55
-pkgrel=2
+pkgrel=3
 url="http://www.bluez.org/"
 arch=('i686' 'x86_64' 'mips64el' 'armv6h' 'armv7h' 'arm' 'aarch64')
 license=('GPL2')
 pkgdesc="Development and debugging utilities for the bluetooth protocol stack. Includes deprecated tools."
-depends=('dbus' 'systemd' 'glib2')
+depends=("dbus" "glib2" "libdbus-1.so" "libglib-2.0.so" "libjson-c.so" "libreadline.so" "libudev.so" "systemd")
 makedepends=('dbus' 'libical' 'systemd' 'alsa-lib' 'json-c' 'ell')
 optdepends=('ell: for btpclient')
 conflicts=('bluez-hcidump' 'bluez-utils' 'bluez-hcitool')
