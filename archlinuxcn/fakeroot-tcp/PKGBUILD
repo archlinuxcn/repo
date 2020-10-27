@@ -16,15 +16,8 @@ depends=('glibc' 'filesystem' 'sed' 'util-linux' 'sh')
 makedepends=('po4a' 'automake')
 provides=("${_pkgname}=${pkgver}-${pkgrel}")
 conflicts=("${_pkgname}")
-source=(http://ftp.debian.org/debian/pool/main/f/$_pkgname/${_pkgname}_${pkgver}.orig.tar.gz
-        silence-dlerror.patch)
-md5sums=('964e5f438f1951e5a515dd54edd50fa6'
-         '5fba0b541b5af39d804265223fda525c')
-
-prepare() {
-  cd $_pkgname-$pkgver
-  patch -p1 -i "$srcdir"/silence-dlerror.patch
-}
+source=(http://ftp.debian.org/debian/pool/main/f/$_pkgname/${_pkgname}_${pkgver}.orig.tar.gz)
+md5sums=('964e5f438f1951e5a515dd54edd50fa6')
 
 build() {
   cd $_pkgname-$pkgver
