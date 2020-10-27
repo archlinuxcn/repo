@@ -1,0 +1,107 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=ITK
+pkgname=(itk-git python-itk-git)
+_pkgver=5.2
+pkgver=5.2.r52030.fa1082b929
+pkgrel=1
+pkgdesc="An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis"
+arch=('x86_64')
+url="https://www.itk.org/"
+license=('Apache')
+depends=(
+  castxml
+  double-conversion
+  eigen
+  expat
+  fftw
+  gdcm
+  hdf5
+  intel-mkl-static
+  libpng
+  libtiff
+  ocl-icd
+)
+makedepends=(
+  cmake
+  git
+  gtest
+  opencl-headers
+  subversion
+  swig
+)
+options=(!emptydirs)
+source=("${_pkgname}::git+https://github.com/InsightSoftwareConsortium/ITK.git")
+sha512sums=('SKIP')
+
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
+
+pkgver() {
+  cd "${srcdir}/${_pkgname}"
+  ver=$(printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)")
+  echo "${_pkgver}.${ver}"
+}
+
+build() {
+  cmake_opts=(
+    -S "${srcdir}/${_pkgname}"
+    -DBUILD_SHARED_LIBS=ON
+    -DBUILD_TESTING=OFF
+    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_C_COMPILER=gcc
+    -DCMAKE_CXX_COMPILER=g++
+    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_SKIP_INSTALL_RPATH=ON
+    -DITK_BUILD_DEFAULT_MODULES=ON
+    -DITK_USE_MKL=ON
+    -DITK_USE_SYSTEM_CASTXML=ON
+    -DITK_USE_SYSTEM_DOUBLECONVERSION=ON
+    -DITK_USE_SYSTEM_EIGEN=ON
+    -DITK_USE_SYSTEM_EXPAT=ON
+    -DITK_USE_SYSTEM_FFTW=ON
+    -DITK_USE_SYSTEM_GDCM=ON
+    -DITK_USE_SYSTEM_GOOGLETEST=ON
+    -DITK_USE_SYSTEM_HDF5=ON
+    -DITK_USE_SYSTEM_JPEG=ON
+    -DITK_USE_SYSTEM_PNG=ON
+    -DITK_USE_SYSTEM_SWIG=ON
+    -DITK_USE_SYSTEM_TIFF=ON
+    -DITK_USE_SYSTEM_ZLIB=ON
+    -DITK_WRAP_PYTHON=ON
+)
+
+  cmake -B "build" \
+    ${cmake_opts[@]} \
+    -DITK_USE_GPU=ON
+  make -C "${srcdir}/build"
+}
+
+package_itk-git() {
+  provides=(itk)
+  conflicts=(itk)
+
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}" install
+  rm -rf "${pkgdir}/usr/lib/python$(get_pyver)"
+}
+
+package_python-itk-git() {
+  pkgdesc+="${pkgdesc} (the python binding)"
+  depends+=(
+    python-numpy
+    python-xarray
+)
+  provides=(python-itk)
+  conflicts=(python-itk)
+
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}" install
+  # keep only python package
+  rm -rf "${pkgdir}/usr/bin" "${pkgdir}/usr/include" "${pkgdir}/usr/share" "${pkgdir}/usr/lib/cmake"
+  # remove /usr/lib but keep /usr/bin/python*
+  find "${pkgdir}/usr/lib" -maxdepth 1 -type f -exec rm -vf {} \;
+  find "${pkgdir}/usr/lib" -maxdepth 1 -type l -exec rm -vf {} \;
+}
+# vim:set ts=2 sw=2 et:
