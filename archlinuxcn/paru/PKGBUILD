@@ -1,6 +1,6 @@
 # Maintainer: Morgan <morganamilo@archlinux.org>
 pkgname=paru
-pkgver=0.99.5
+pkgver=0.99.6
 pkgrel=1
 pkgdesc='AUR helper based on yay'
 url='https://github.com/morganamilo/paru'
@@ -11,9 +11,9 @@ license=('GPL3')
 
 makedepends=('cargo')
 depends=('git' 'pacman')
-optdepends=('asp: downloading repo pkgbuilds')
+optdepends=('asp: downloading repo pkgbuilds' 'bat: colored pkgbuild printing')
 
-sha256sums=('271f102793fee0e574629539cf024cea4edb35d285ccab9c54a0ed70d17a97d9')
+sha256sums=('bd35863d6ced7d4b165fc67ca59a3d19e54c640e054e1fed533fcc3d37a622f8')
 
 build () {
   cd "$srcdir/$pkgname-$pkgver"
@@ -26,7 +26,7 @@ build () {
     _features+="backtrace,"
   fi
 
-  cargo build --features "${_features:-}" --release
+  cargo build --locked --features "${_features:-}" --release
 }
 
 package() {
