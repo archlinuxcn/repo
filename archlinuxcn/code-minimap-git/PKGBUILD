@@ -11,12 +11,12 @@ makedepends=("git" "rust" "cargo")
 conflicts=("${_pkgname}" "${_pkgname}-bin")
 provides=("${_pkgname}")
 
-source=("${_pkgname}::git+https://github.com/wfxr/${_pkgname}.git")
+source=("${_pkgname}::git+${url}")
 sha256sums=('SKIP')
 
 pkgver() {
     cd "${_pkgname}"
-    echo "$(grep '^version =' Cargo.toml|head -n1|cut -d\" -f2|cut -d\- -f1).$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+    echo "$(grep -oPm1 '(?<=^version = ")[^"]+' Cargo.toml).$(TZ=UTC git log -1 --pretty='%cd' --date=short-local | tr -d '-')"
 }
 
 build() {
