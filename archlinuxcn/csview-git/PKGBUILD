@@ -16,7 +16,7 @@ sha256sums=("SKIP")
 
 pkgver() {
     cd "${_pkgname}"
-    echo "$(grep -oPm1 '(?<=^version = ")[^"]+' Cargo.toml).$(TZ=UTC git log -1 --pretty='%cd' --date=short-local | tr -d '-')"
+    echo "$(grep -oPm1 '(?<=^version = ")[^"]+' Cargo.toml).$(TZ=UTC git log -1 --pretty='%cd' --date=short-local | tr -d '-')" | tr '-' '.'
 }
 
 build() {
