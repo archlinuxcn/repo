@@ -2,7 +2,7 @@
 # Generator  : CPANPLUS::Dist::Arch 1.32
 
 pkgname='perl-cpanel-json-xs'
-pkgver='4.24'
+pkgver='4.25'
 pkgrel='1'
 pkgdesc="cPanel fork of JSON::XS, fast and correct serializing"
 arch=('i686' 'x86_64')
@@ -12,8 +12,8 @@ depends=('perl>=0')
 makedepends=('libxcrypt')
 url='https://metacpan.org/release/Cpanel-JSON-XS'
 source=("https://cpan.metacpan.org/authors/id/R/RU/RURBAN/Cpanel-JSON-XS-${pkgver}.tar.gz")
-md5sums=('0fd56964b582e07b2bd47e64e01ff7f5')
-sha512sums=('311746bd6d686f758db4507c1219675b262205a8d798662b8f5521d3f9c7d76678580a30e26281b461647763d552cb76fdbbcf4aa1737dc7c7416364179741bb')
+md5sums=('4ac96ebc0b705f8b1cc5e5bf5bd3401a')
+sha512sums=('cf5b771cd6b5b080961efa3927bc5b785d16ec4a8a62951b26acfbcdbb88800a68fd3c45003ffa8fe391971c01f202047a35a84daa716859319cd6e2ea2fee2e')
 _distdir="Cpanel-JSON-XS-${pkgver}"
 
 build() {
