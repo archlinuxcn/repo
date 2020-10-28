@@ -3,8 +3,8 @@
 # Contributor: vscncls <lucaslou4@protonmail.com>
 
 pkgname=insomnia
-pkgver=2020.4.1
-pkgrel=2
+pkgver=2020.4.2
+pkgrel=1
 pkgdesc="Cross-platform HTTP and GraphQL Client"
 url="https://github.com/Kong/insomnia"
 arch=('any')
@@ -17,7 +17,7 @@ source=(
   "insomnia.sh"
   "node-any.patch"
 )
-b2sums=('9d6d8323307b28994500b0aa379ddec0243ed4ba6599690c42e90ff886946f1fbbc4364a543deaa69aa18d70b320ab9b6b4858f6d642cf17064b8d722b80c57e'
+b2sums=('2527045680d99d0321ce9a29f8d3e9302bd07c79d059d0a2e9c3f963d2adb45c9566668faca817a0f4913ee22728ebb8f553463ae6cdc731793520a3371d0953'
         'd2ceeb224fa3a35551b0929648d5e066da93a451a66b73373c13ed0dd89575a2482c2dc8e7499b214d0d62cca2532189dac9a681537751a5a86b592cae5686c7'
         '7ea4aff2779267bfc5f7be5533d70b07a3da1c8bfed424c9f6cc9806fe6567a4cd40144264a8827b016e51f31c6dbb395c90aac4d333f297070213c77a0b2c9c'
         'db40a0e7d85cb8378c1f973150249d67e5cfc5d018787b733f2516892144f3c536e1587cdba2eec5da800ee474d4bccf090379b371cb6c59a0a9829090012896')
