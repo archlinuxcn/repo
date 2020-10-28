@@ -1,0 +1,32 @@
+# Maintainer: Megumi_fox <megumifox@archlinuxcn.org>    
+# Contributor: Jose Riha <jose1711 gmail com>
+# Contributor: Christian Muehlhaeuser <muesli at gmail dot com>
+
+pkgname=tuhi-git
+pkgver=20200909
+pkgrel=1
+pkgdesc="DBus daemon to access Wacom SmartPad devices"
+arch=('any')
+depends=('python' 'python-svgwrite' 'python-xdg' 'python-cairo' 'python-gobject')
+makedepends=('git' 'python-setuptools' 'meson' 'ninja')
+url="https://github.com/tuhiproject/tuhi"
+license=('GPL2')
+source=(git+https://github.com/tuhiproject/tuhi)
+sha256sums=('SKIP')
+
+pkgver() {
+  cd ${pkgname%-git}
+  git log -1 --format="%cd" --date=short | sed "s|-||g"
+}
+
+build() {
+  cd ${pkgname%-git}
+  meson builddir --prefix=/usr
+  cd builddir
+  ninja
+}
+
+package() {
+  cd ${pkgname%-git}/builddir
+  DESTDIR="${pkgdir}" ninja install
+}
