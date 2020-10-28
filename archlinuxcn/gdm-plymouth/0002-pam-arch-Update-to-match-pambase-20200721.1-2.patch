@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: "Jan Alexander Steffens (heftig)" <heftig@archlinux.org>
-Date: Sun, 9 Aug 2020 00:34:37 +0000
+Date: Tue, 27 Oct 2020 18:59:14 +0000
 Subject: [PATCH] pam-arch: Update to match pambase 20200721.1-2
 
 https://bugs.archlinux.org/task/67485
@@ -97,7 +97,7 @@ index a4808617..cc660d9a 100644
 +session    include                     system-local-login
 +session    optional                    pam_gnome_keyring.so auto_start
 diff --git a/data/pam-arch/gdm-launch-environment.pam b/data/pam-arch/gdm-launch-environment.pam
-index d59c9cb9..2ff5ae56 100644
+index d59c9cb9..20d1810a 100644
 --- a/data/pam-arch/gdm-launch-environment.pam
 +++ b/data/pam-arch/gdm-launch-environment.pam
 @@ -1,13 +1,17 @@
@@ -108,12 +108,12 @@ index d59c9cb9..2ff5ae56 100644
  
 -account  required  pam_succeed_if.so audit quiet_success user = gdm
 -account  optional  pam_permit.so
-+auth       required                    pam_succeed_if.so    audit quiet_success user = gdm
++auth       required                    pam_succeed_if.so    audit quiet_success user in gdm:gnome-initial-setup
 +auth       optional                    pam_permit.so
 +auth       required                    pam_env.so
  
 -password required  pam_deny.so
-+account    required                    pam_succeed_if.so    audit quiet_success user = gdm
++account    required                    pam_succeed_if.so    audit quiet_success user in gdm:gnome-initial-setup
 +account    optional                    pam_permit.so
  
 -session  optional  pam_keyinit.so force revoke
@@ -124,7 +124,7 @@ index d59c9cb9..2ff5ae56 100644
 +
 +session    optional                    pam_loginuid.so
 +session    optional                    pam_keyinit.so       force revoke
-+session    required                    pam_succeed_if.so    audit quiet_success user = gdm
++session    required                    pam_succeed_if.so    audit quiet_success user in gdm:gnome-initial-setup
 +session    optional                    pam_permit.so
 +-session   optional                    pam_systemd.so
 +session    required                    pam_env.so           user_readenv=1
