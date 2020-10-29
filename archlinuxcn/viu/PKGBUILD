@@ -1,25 +1,31 @@
-# Maintainer: Wesley Moore <wes@wezm.net>
+# Maintainer: orhun <orhunparmaksiz@gmail.com>
+# Contributor: Wesley Moore <wes@wezm.net>
+# https://github.com/orhun/pkgbuilds
 
 pkgname=viu
 pkgver=1.2.1
-_pkgver=1.2.1
-pkgrel=1
-pkgdesc='A command-line application to view images from the terminal written in Rust'
+pkgrel=2
+pkgdesc="Simple terminal image viewer"
 arch=('x86_64')
-url='https://github.com/atanunq/viu'
+url="https://github.com/atanunq/viu"
 license=('MIT')
-depends=()
-conflicts=('viu-git')
 makedepends=('cargo')
-source=("$pkgver.tar.gz::$url/archive/v$_pkgver.tar.gz")
-sha256sums=('e4055c66b90173c51311a9c9868bba9e6cca80489c121b305905f930948b17a0')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+sha512sums=('22d8a4260552d49e8cf269a52262b40f02f4be84e799aab111cdac4ff57e2998ed6c61975ed7e90ecd25ad163aee4c3c9662720c119fb9134452396b76c21665')
 
 build() {
-  cd "$pkgname-$_pkgver"
-  cargo build --release --locked
+  cd "$pkgname-$pkgver"
+  cargo build --release --locked --all-features
+}
+
+check() {
+  cd "$pkgname-$pkgver"
+  cargo test --release --locked
 }
 
 package() {
-  install -Dm755 "$srcdir/$pkgname-$_pkgver/target/release/$pkgname" "$pkgdir/usr/bin/$pkgname"
-  install -Dm644 "$srcdir/$pkgname-$_pkgver/LICENSE-MIT" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  cd "$pkgname-$pkgver"
+  install -Dm 755 "target/release/$pkgname" -t "$pkgdir/usr/bin"
+  install -Dm 644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
+  install -Dm 644 LICENSE-MIT -t "$pkgdir/usr/share/licenses/$pkgname"
 }
