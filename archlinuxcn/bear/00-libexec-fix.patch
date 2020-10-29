@@ -1,0 +1,45 @@
+From 7d7bb418584fa487baeae3d8b1fffed5499ba4f2 Mon Sep 17 00:00:00 2001
+From: Laszlo Nagy <rizsotto@gmail.com>
+Date: Thu, 1 Oct 2020 18:26:16 +1000
+Subject: [PATCH] cmake: CMAKE_INSTALL_LIBEXECDIR forwarded to subproject
+
+---
+ CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 01cfa447..cf08d63f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -51,6 +51,7 @@ ExternalProject_Add(BearSource
+         CMAKE_CACHE_ARGS
+             -DCMAKE_PREFIX_PATH:PATH=${CMAKE_PREFIX_PATH}
+             -DCMAKE_INSTALL_PREFIX:PATH=${STAGED_INSTALL_PREFIX}
++	    -DCMAKE_INSTALL_LIBEXECDIR:PATH=${CMAKE_INSTALL_LIBEXECDIR}
+             -DROOT_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+             -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+             -DENABLE_UNIT_TESTS:BOOL=${ENABLE_UNIT_TESTS}
+From 4c42f83be702ca437588e89ea6fa172955a5ce22 Mon Sep 17 00:00:00 2001
+From: Laszlo Nagy <rizsotto@gmail.com>
+Date: Tue, 13 Oct 2020 22:08:21 +1100
+Subject: [PATCH] cmake: CMAKE_INSTALL_LIBEXECDIR defined if not specified when
+ forwarded to subproject (#301)
+
+---
+ CMakeLists.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7d9e13e4..7eecde0c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,6 +29,9 @@ include(ExternalProject)
+ set_property(DIRECTORY PROPERTY EP_BASE ${CMAKE_BINARY_DIR}/subprojects)
+ set(STAGED_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/stage)
+ set(DEPENDENCIES_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/subprojects/Install)
++if (NOT CMAKE_INSTALL_LIBEXECDIR)
++    include(GNUInstallDirs)
++endif ()
+ 
+ # Verify or install dependencies
+ add_subdirectory(third_party)
