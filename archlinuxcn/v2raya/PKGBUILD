@@ -11,16 +11,9 @@ license=('GPL3')
 depends=('glibc' 'v2ray')
 makedepends=('go>=2:1.12.3-1' 'nodejs>=14' 'yarn' 'python2')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
-        "v2raya.service"
-        "v2raya-1.1.1.patch")
+        "v2raya.service")
 sha256sums=('ff6be2b26694648891a9d5b3a35490924e3d2432082697753a3b521aa1481db8'
-            'cf44859216b66366e17ad8b1369252aba7ffc83dc42a1cfc2103b8faa7d0afec'
-            '20f02ae3364381ae21d7a73a56ce57477974aad6263c4191f67a139660fa1495')
-
-prepare() {
-    cd "${srcdir}"/"${_pkgname}-${pkgver}"/
-    patch -p1 -i ../v2raya-1.1.1.patch
-}
+            'cf44859216b66366e17ad8b1369252aba7ffc83dc42a1cfc2103b8faa7d0afec')
 
 build() {
     cd "${srcdir}"/"${_pkgname}-${pkgver}"/gui/
