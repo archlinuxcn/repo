@@ -31,7 +31,7 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=1.6.0.DEV.1381.g0097bddf900
+pkgver=1.6.0.DEV.1397.g8d55e04b698
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -59,7 +59,8 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.sh
         julia-precompile.hook
         julia-clear-precompile.hook
-        arch-source-translate.cpp)
+        arch-source-translate.cpp
+        sysp7z.diff)
 md5sums=('SKIP'
          '98b408bd7519637b7ee93b4e4f9d7f84'
          '28857429d085416d3758e70f769373b0'
@@ -73,7 +74,8 @@ md5sums=('SKIP'
          '6e7fcba300512df8ab8ab65d3e1eb847'
          'f1f6ffc7ddcbc7fa0000d6f5fdbbe925'
          'f9d0b11988630599dc860a5b33a7ba13'
-         '1bf92fe1bc71f4b052deaf7fc7505501')
+         '1bf92fe1bc71f4b052deaf7fc7505501'
+         '51de69d49b58470230d6931d322e3df8')
 
 pkgver() {
   cd julia
@@ -167,6 +169,11 @@ EOF
     echo "Clearing $f"
     echo > "$f"
   done
+  make "${julia_opts[@]}" julia-stdlib
+  (
+    cd usr/share/julia/stdlib/v*/Pkg
+    patch -Np0 < "$srcdir/sysp7z.diff"
+  )
 
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' */Makefile
 }
