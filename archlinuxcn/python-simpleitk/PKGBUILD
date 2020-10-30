@@ -15,6 +15,7 @@ makedepends=(
   git
   python-scikit-build
   python-setuptools
+  python-pip
 )
 source=("${pkgname}-${pkgver}::git+https://github.com/SimpleITK/SimpleITKPythonPackage.git"
   git+https://github.com/SimpleITK/SimpleITK.git#tag=v${pkgver})
@@ -32,12 +33,13 @@ build() {
   export CC=clang
   export CXX=clang++
   cd "${pkgname}-${pkgver}"
-  python setup.py build
+  python setup.py bdist_wheel
 }
 
 package() {
   cd "${pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  PIP_CONFIG_FILE=/dev/null pip install --isolated --root="${pkgdir}" --ignore-installed --no-deps dist/*.whl
+  python -O -m compileall "${pkgdir}"
 }
 # vim:set ts=2 sw=2 et:
 
