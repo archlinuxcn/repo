@@ -3,7 +3,7 @@
 
 _pkgname=fvcore
 pkgname=python-fvcore
-pkgver=0.1.2.post20201020
+pkgver=0.1.2.post20201030
 pkgrel=1
 pkgdesc="Collection of common code that's shared among different research projects in FAIR computer vision team."
 arch=('any')
@@ -12,7 +12,7 @@ license=('Apache')
 makedepends=(python-setuptools)
 depends=(python)
 source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha256sums=('c6958ae34629b527930e15072a0aa395e9615f017ff1910ee6d50e28a02c17b4')
+sha256sums=('2ce4fb57374a7effc80f78c24e871951c6180274bd3b0da3aed16d2e46c997d0')
 
 build() {
   cd "${_pkgname}-${pkgver}"
