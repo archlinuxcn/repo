@@ -1,0 +1,35 @@
+# Maintainer: Wenxuan <wenxuangm@gmail.com>
+_pkgname=rust-script
+pkgname=rust-script-git
+pkgver=0.7.0.20201029
+pkgrel=1
+pkgdesc='Run Rust files and expressions without any setup or compilation necessary'
+arch=(i686 x86_64)
+url='https://rust-script.org'
+license=('MIT' 'APACHE')
+makedepends=('git' 'rust>=1.47')
+conflicts=("${_pkgname}" "${_pkgname}-bin")
+provides=("${_pkgname}")
+
+source=("${_pkgname}::git+https://github.com/fornwall/rust-script")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "${_pkgname}"
+    echo "$(grep -oPm1 '(?<=^version = ")[^"]+' Cargo.toml).$(TZ=UTC git log -1 --pretty='%cd' --date=short-local | tr -d '-')" | tr '-' '.'
+}
+
+build() {
+    cd "${_pkgname}"
+    cargo build --release --locked
+}
+
+package() {
+    cd "$srcdir/${_pkgname}"
+    install -Dm755 "target/release/${_pkgname}" "$pkgdir/usr/bin/${_pkgname}"
+    install -Dm644 "README.md"                  "$pkgdir/usr/share/doc/${_pkgname}/README.md"
+    install -Dm644 "LICENSE-MIT"                "$pkgdir/usr/share/licenses/${_pkgname}/LICENSE-MIT"
+    install -Dm644 "LICENSE-APACHE"             "$pkgdir/usr/share/licenses/${_pkgname}/LICENSE-APACHE"
+}
+
+# vim:set noet sts=0 sw=4 ts=4 ft=PKGBUILD:
