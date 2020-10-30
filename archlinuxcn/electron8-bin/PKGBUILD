@@ -3,12 +3,12 @@
 _projectname='electron'
 _pkgname="${_projectname}8"
 pkgname="$_pkgname-bin"
-pkgver='8.5.2'
-pkgrel=2
+pkgver='8.5.3'
+pkgrel='1'
 epoch='1'
 pkgdesc='Build cross platform desktop apps with web technologies - version 8 - binary version'
 arch=('x86_64' 'i686' 'armv7h' 'aarch64')
-url="https://${_projectname}js.org/"
+url="https://${_projectname}js.org"
 license=('MIT')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
@@ -36,14 +36,14 @@ source_aarch64=(
 	"$pkgname-chromedriver-$epoch:$pkgver-$pkgrel-aarch64.zip::$_releaseurl/chromedriver-v$pkgver-linux-arm64.zip"
 	"$pkgname-$epoch:$pkgver-$pkgrel-aarch64.zip::$_releaseurl/$_projectname-v$pkgver-linux-arm64.zip"
 )
-sha256sums_x86_64=('d03d386a5104b801ab021238dac1a02ce146ee30ea6fbeb97e02f57dd78cb804'
-                   'c5b8c95b410436066b06165e9759b31336c907268339433db4f8610ccf644a51')
-sha256sums_i686=('b036fe260a9b8866c1e37e63cab079abe3f0c75f027b13eb6a66af38692e69d3'
-                 '0d108ac2420a437100f7a8d06aa019cd8138da4372fb94039b6d23c6253a6aea')
-sha256sums_armv7h=('cd147c541919318a3ca758f489a015d42eff8e72d83cfd8dfca83ae12f23d8b7'
-                   'f06ed475d1b206c3aa31e768add3517a64aabce5e2946e4d9707e615e6f398c0')
-sha256sums_aarch64=('ea8ed7524bd9ac98cb47ab63850ee5c18bbe10676553aac9c4aa59480d018a0a'
-                    'e9765584bbedad8a806f96ac1381c114a357fdbed8c67573decefde2d15d9cd7')
+sha256sums_x86_64=('cbf616e652ca43d435db97035f9caa97b27efe26ac9c4a6232b9f3a1b464d423'
+                   'e5884eff8d9627e3208aef8afab6d057013d1e40516411834e72e28673af94f8')
+sha256sums_i686=('1f2ff4a86f1016b6b9fefee0a31d8d5b5d49ab92609e9aa5306e869fe73e9513'
+                 '72bb6ef15cdfd0cd0732f81763ae68302af5bd9dbb2205e8e9d6a9a988a916af')
+sha256sums_armv7h=('5f88f4a4143300ce959e85302db4798dcad115eb7d924e124f32ec690dc8d302'
+                   '49acf1a1727022310dd350174e74b0246880d7ff7cd85acbe665fd7b584156f1')
+sha256sums_aarch64=('a326c514ed5a98f97c9d212041db81d114f356722ab51e4af4cc22c1e6724505'
+                    '86cc670f8e8aca193e0c1b8e52b68d6a32eb660eb1a5324f80bd6dda499d7c12')
 
 package() {
 	cd "$srcdir/"
