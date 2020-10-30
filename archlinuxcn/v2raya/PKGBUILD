@@ -2,8 +2,8 @@
 
 pkgname=v2raya
 _pkgname=v2rayA
-pkgver=1.1.1
-pkgrel=3
+pkgver=1.1.2
+pkgrel=1
 pkgdesc="A Linux web GUI client of Project V"
 arch=('x86_64')
 url="https://github.com/v2rayA/v2rayA"
@@ -12,7 +12,7 @@ depends=('glibc' 'v2ray')
 makedepends=('go>=2:1.12.3-1' 'nodejs>=14' 'yarn' 'python2')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "v2raya.service")
-sha256sums=('ff6be2b26694648891a9d5b3a35490924e3d2432082697753a3b521aa1481db8'
+sha256sums=('2d4d5832a5076fdc621456406acb6a08eb0fc99366ff0b4c357ba16645aa95df'
             'cf44859216b66366e17ad8b1369252aba7ffc83dc42a1cfc2103b8faa7d0afec')
 
 build() {
