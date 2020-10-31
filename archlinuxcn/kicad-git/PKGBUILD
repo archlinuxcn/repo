@@ -16,10 +16,8 @@ optdepends=('kicad-library: for footprints and symbols'
             'kicad-library-3d: for 3d models of components')
 conflicts=('kicad' 'kicad-bzr')
 provides=('kicad')
-source=("${pkgname}"'::git+https://gitlab.com/kicad/code/kicad.git'
-        "${_langpack}"'::git+https://gitlab.com/kicad/code/kicad-i18n.git')
-md5sums=('SKIP'
-         'SKIP')
+source=("${pkgname}"'::git+https://gitlab.com/kicad/code/kicad.git')
+md5sums=('SKIP')
 
 pkgver() {
   cd "${srcdir}/${pkgname}"
@@ -46,7 +44,7 @@ build() {
 
   make
 
-  cd "${srcdir}/${_langpack}"
+  cd "${srcdir}/${pkgname}/translation"
   mkdir -p build
   cd build
   cmake .. -DCMAKE_INSTALL_PREFIX=/usr
@@ -59,7 +57,7 @@ package() {
   cd build
   make DESTDIR="${pkgdir}" install
 
-  cd "${srcdir}/${_langpack}"
+  cd "${srcdir}/${pkgname}/translation"
   cd build
   make DESTDIR="${pkgdir}" install
 }
