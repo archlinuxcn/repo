@@ -1,23 +1,24 @@
-diff -aur conan-1.29.0-pristine/conans/requirements_server.txt conan-1.29.0-new/conans/requirements_server.txt
---- conan-1.29.0-pristine/conans/requirements_server.txt	2020-09-11 14:16:09.861691758 +0200
-+++ conan-1.29.0-new/conans/requirements_server.txt	2020-09-11 14:17:47.101970124 +0200
+diff -aur conan-1.31.0-pristine/conans/requirements_server.txt conan-1.31.0-new/conans/requirements_server.txt
+--- conan-1.31.0-pristine/conans/requirements_server.txt	2020-10-30 22:24:52.649999923 +0100
++++ conan-1.31.0-new/conans/requirements_server.txt	2020-10-30 22:27:37.786666585 +0100
 @@ -1,3 +1,3 @@
  # Server
 -bottle>=0.12.8, < 0.13
 +bottle>=0.12.8
  pluginbase>=0.5
-diff -aur conan-1.29.0-pristine/conans/requirements.txt conan-1.29.0-new/conans/requirements.txt
---- conan-1.29.0-pristine/conans/requirements.txt	2020-09-11 14:16:09.861691758 +0200
-+++ conan-1.29.0-new/conans/requirements.txt	2020-09-11 14:17:37.471942297 +0200
-@@ -1,19 +1,19 @@
+diff -aur conan-1.31.0-pristine/conans/requirements.txt conan-1.31.0-new/conans/requirements.txt
+--- conan-1.31.0-pristine/conans/requirements.txt	2020-10-30 22:24:52.649999923 +0100
++++ conan-1.31.0-new/conans/requirements.txt	2020-10-30 22:27:22.186666591 +0100
+@@ -1,20 +1,17 @@
 -PyJWT>=1.4.0, <2.0.0
 -requests>=2.8.1, <3.0.0
-+PyJWT>=1.4.0
-+requests>=2.8.1
- urllib3!=1.25.4,!=1.25.5
+-urllib3!=1.25.4,!=1.25.5
 -colorama>=0.3.3, <0.5.0
 -PyYAML>=3.11, <6.0
 -patch-ng>=1.17.4, <1.18
++PyJWT>=1.4.0
++requests>=2.8.1
++urllib3>=1.25.6
 +colorama>=0.3.3
 +PyYAML>=3.11
 +patch-ng>=1.17.4
@@ -29,8 +30,11 @@ diff -aur conan-1.29.0-pristine/conans/requirements.txt conan-1.29.0-new/conans/
 -pygments>=2.0, <3.0
 -deprecation>=2.0, <2.1
 -tqdm>=4.28.1, <5
--Jinja2>=2.3, <3
+-Jinja2>=2.9, <3
 -python-dateutil>=2.7.0, <3
+-idna==2.6 ; sys_platform == "darwin" # Solving conflict, somehow is installing 2.7 when requests require 2.6
+-cryptography>=1.3.4, <2.4.0 ; sys_platform == "darwin"
+-pyOpenSSL>=16.0.0, <19.0.0 ; sys_platform == "darwin"
 +six>=1.10.0
 +node-semver>=0.6.1
 +distro>=1.0.2
@@ -38,8 +42,6 @@ diff -aur conan-1.29.0-pristine/conans/requirements.txt conan-1.29.0-new/conans/
 +pygments>=2.0
 +deprecation>=2.0
 +tqdm>=4.28.1
-+Jinja2>=2.3
++Jinja2>=2.9
 +python-dateutil>=2.7.0
- idna==2.6 ; sys_platform == "darwin" # Solving conflict, somehow is installing 2.7 when requests require 2.6
- cryptography>=1.3.4, <2.4.0 ; sys_platform == "darwin"
- pyOpenSSL>=16.0.0, <19.0.0 ; sys_platform == "darwin"
+ 
