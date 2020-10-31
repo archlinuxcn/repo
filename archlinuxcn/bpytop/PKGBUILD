@@ -1,7 +1,7 @@
 # Contributor: derfenix <derfenix@gmail.com>
 
 pkgname=bpytop
-pkgver=1.0.47
+pkgver=1.0.48
 pkgrel=1
 pkgdesc="Resource monitor that shows usage and stats for processor, memory, disks, network and processes"
 arch=('any')
@@ -9,7 +9,7 @@ url="https://github.com/aristocratos/bpytop"
 license=('Apache')
 depends=('python3' 'python-psutil')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/aristocratos/$pkgname/archive/v$pkgver.tar.gz")
-sha256sums=('522890261adfc5fe3c6109d0c1f3f139a8456c94dbe0bde4ff9197aad27a9f45')
+sha256sums=('68f1e82080d7890bb8fe002549c75db6786b855cb4774b77810c9ea14efce3c2')
 
 
 package() {
