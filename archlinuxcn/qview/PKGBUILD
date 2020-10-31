@@ -1,6 +1,6 @@
 # Maintainer: jurplel <jeep70cp[at]gmail[dotcom]>
 pkgname=qview
-pkgver=3.0
+pkgver=4.0
 pkgrel=1
 pkgdesc="A Qt image viewer designed with minimalism and usability in mind."
 arch=('i686' 'x86_64')
@@ -10,7 +10,7 @@ groups=()
 depends=('qt5-base>=5.9' 'hicolor-icon-theme' 'desktop-file-utils')
 optdepends=('xdg-utils: Used to open containing folder of file' 'qt5-imageformats: Extra image format support' 'qt5-svg: SVG support')
 source=("https://github.com/jurplel/qView/releases/download/$pkgver/qView-$pkgver.tar.gz")
-sha256sums=('8461e4dfdd7bc977ae908275c0ac00bedc2e78497becfd28c17fa8ac898f6100')
+sha256sums=('ab9d2a6379eca0754e06d19666f4af53c7ade34a0272801d4313712ef6cfa18a')
 
 build() {
 	cd qView
