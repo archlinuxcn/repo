@@ -2,7 +2,7 @@
 # Contributor Pascal Grossé <pascal.grosse@gmail.com>
 
 pkgname=tome4
-pkgver='1.6.7'
+pkgver='1.7.0'
 pkgrel='1'
 pkgdesc="An open-source, single-player, role-playing roguelike game set in the world of Eyal."
 arch=('i686' 'x86_64')
@@ -16,8 +16,8 @@ source=("http://te4.org/dl/t-engine/t-engine4-src-${pkgver}.tar.bz2"
 	tome4
 	tome4.desktop)
 conflicts=('tome4-beta' 'tome4-git' 'tome4-nomusic')
-sha256sums=('c844900e82316a5f25afda8dcf207a10cc54007ea6e507f24f22c3a2eb860309'
-            '37f5be7020a06228b7d22f4c622ab5a8843b4dbea7493d7e3b324bd592cd818e'
+sha256sums=('5a0c747ad4baf838e80c2137d24c1976c1d0b414c22769da2cadd961811840bb'
+            '8e1821d1fe4bd2b48115179a83d71eaefa8b6bda70de77ca75d122d5d3053410'
             '3a1e4901337f91697bcfaf095f488c447c27ccc2484a543e31f024d5aefb61a0'
             '80e663d9eb2d41c6d9c0a6b4b5b52eb33b0872c3412a617530777fd137c0baa1')
 
@@ -26,6 +26,7 @@ sha256sums=('c844900e82316a5f25afda8dcf207a10cc54007ea6e507f24f22c3a2eb860309'
 ###############################################################################
 prepare() {
 	cd "$srcdir"/t-engine4-src-${pkgver}
+	cp premake4.lua premake5.lua
 	patch -p1 < "${srcdir}/aur-${pkgname}-${pkgver}-${pkgrel}.patch"
 }
 
@@ -34,7 +35,7 @@ prepare() {
 ###############################################################################
 build() {
 	cd t-engine4-src-${pkgver}
-	premake4 gmake
+	premake5 gmake
 	make config=debug
 }
 
