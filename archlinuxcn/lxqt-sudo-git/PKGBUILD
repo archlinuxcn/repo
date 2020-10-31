@@ -2,7 +2,7 @@
 
 _pkgname=lxqt-sudo
 pkgname=$_pkgname-git
-pkgver=0.15.0.10.g6aaafe9
+pkgver=0.15.0.13.g0294f3a
 pkgrel=1
 pkgdesc="Qt front-end for sudo. Part of but not restricted to LXQt."
 arch=("i686" "x86_64")
@@ -10,7 +10,7 @@ url="https://github.com/lxde/lxqt-sudo"
 license=("LGPL2.1")
 depends=("qt5-base" "sudo" "liblxqt-git")
 optdepends=("oxygen-icons: fallback icon theme on systems without LXQt")
-makedepends=('cmake' 'git' 'lxqt-build-tools-git' 'qt5-tools')
+makedepends=("cmake" "git" "lxqt-build-tools-git" "qt5-tools")
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 source=("git+https://github.com/lxde/$_pkgname.git")
