@@ -12,9 +12,7 @@ license=('GPL')
 depends=('gcc-libs')
 makedepends=('git')
 options=()
-# Temporary using a commit hash to fix Makefile bug
-source=("git+https://github.com/pchev/libpasastro.git#commit=e3c218d1502a18cae858c83a9a8812ab197fcb60")
-#source=("git+https://github.com/pchev/libpasastro.git#tag=$_pkgver")
+source=("git+https://github.com/pchev/libpasastro.git#tag=$_pkgver")
 sha256sums=('SKIP')
 
 build() {
