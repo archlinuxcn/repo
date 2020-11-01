@@ -4,12 +4,12 @@
 _gemname=crass
 pkgname=ruby-$_gemname
 pkgver=1.0.6
-pkgrel=1
+pkgrel=2
 pkgdesc='CSS parser based on the CSS Syntax Level 3 spec.'
 arch=(any)
 url='https://github.com/rgrove/crass/'
 license=(MIT)
-depends=('ruby' 'ruby-rdoc')
+depends=("ruby" "ruby-rdoc")
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
