@@ -3,7 +3,7 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.0.r514.86e6745f2
+pkgver=1.7.0.r515.5e6cb22ee
 pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
@@ -15,32 +15,47 @@ license=(
   LGPL3
 )
 depends=(
-  lib32-glew
-  lib32-libaio
-  lib32-libcanberra
-  lib32-libjpeg-turbo
-  lib32-libpcap
-  lib32-libpulse
-  lib32-libxml2
-  lib32-nvidia-cg-toolkit
-  lib32-ocl-icd
-  lib32-portaudio
-  lib32-sdl2
-  lib32-soundtouch
-  lib32-wxgtk3
+  gdk-pixbuf2
+  glibc
+  libaio
+  libasound.so
+  libfmt.so
+  libfreetype.so
+  libgdk-3.so
+  libgio-2.0.so
+  libgl
+  libGLEW.so
+  libglib-2.0.so
+  libgobject-2.0.so
+  libgtk-3.so
+  libpcap
+  libpng
+  libportaudio.so
+  libudev.so
+  libx11
+  libxcb
+  libxml2
+  sdl2
+  soundtouch
+  wxgtk3
+  wxgtk-common
+  xz
+  zlib
 )
 makedepends=(
   cmake
   git
   opencl-headers
   png++
+  ninja
 )
-provides=('pcsx2' 'pcsx2-git')
-conflicts=('pcsx2' 'pcsx2-git')
+provides=('pcsx2')
+conflicts=('pcsx2')
 replaces=('pcsx2-avx-git' 'pcsx2-avx2-git')
-source=('git+https://github.com/PCSX2/pcsx2.git' 'add-avx.patch')
+source=('git+https://github.com/PCSX2/pcsx2.git' 'add-avx.patch' 'pcsx2-system-fmt.patch')
 sha256sums=('SKIP'
-            'f9f8e3c9b7eb0a996e500c1a7939d4bdbfb966c1c1aec44f63da37ae3156fdf3')
+            'f9f8e3c9b7eb0a996e500c1a7939d4bdbfb966c1c1aec44f63da37ae3156fdf3'
+            'f710ea37a82f586a8bb509486a95cbbb83f49af0a5b35cc4a79815c0a43c24ce')
 
 pkgver() {
   cd pcsx2
@@ -52,36 +67,34 @@ prepare() {
   patch -p0 -i add-avx.patch
 
   cd pcsx2
-  git submodule update --init --recursive
+  patch -Np1 -i ../pcsx2-system-fmt.patch
+ # git submodule update --init --recursive
 }
 build() {
-  cmake -S pcsx2 -B build \
+    cmake -S pcsx2 -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_TOOLCHAIN_FILE=cmake/linux-compiler-i386-multilib.cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_LIBRARY_PATH=/usr/lib32 \
+    -DDOC_DIR=/usr/share/doc/pcsx2 \
     -DGAMEINDEX_DIR=/usr/share/pcsx2 \
-    -DPLUGIN_DIR=/usr/lib32/pcsx2 \
+    -DPLUGIN_DIR=/usr/lib/pcsx2 \
+    -DDISABLE_ADVANCE_SIMD=ON \
     -DDISABLE_BUILD_DATE=ON \
     -DDISABLE_PCSX2_WRAPPER=ON \
-    -DDISABLE_ADVANCE_SIMD=ON \
+    -DENABLE_TESTS=OFF \
     -DEXTRA_PLUGINS=ON \
-    -DEGL_API=OFF \
-    -DGLSL_API=ON \
     -DGTK3_API=ON \
-    -DOPENCL_API=ON \
     -DSDL2_API=ON \
     -DPACKAGE_MODE=ON \
     -DREBUILD_SHADER=ON \
     -DUSE_LTO=OFF \
     -DUSE_VTUNE=OFF \
     -DXDG_STD=ON \
-    -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config32 \
+    -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config-gtk3 \
     -Wno-dev
-  make -C build
+  ninja -C build
 }
 
 package() {
-  make DESTDIR="${pkgdir}" -C build install
+  DESTDIR="${pkgdir}" ninja -C build install
 }
 # vim: ts=2 sw=2 et:

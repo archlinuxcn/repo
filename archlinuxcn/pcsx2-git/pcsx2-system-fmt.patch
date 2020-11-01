@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1bc43a8e3..a8dd6e2ea 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -41,11 +41,6 @@ if(NOT NO_TRANSLATION)
+     endif()
+ endif()
+ 
+-# 3rdpary Libraries
+-if(EXISTS "${CMAKE_SOURCE_DIR}/3rdparty/fmt/fmt")
+-    add_subdirectory(3rdparty/fmt/fmt)
+-endif()
+-
+ # make common
+ if(common_libs)
+     add_subdirectory(common/src/Utilities)
+diff --git a/cmake/SearchForStuff.cmake b/cmake/SearchForStuff.cmake
+index 7a3871535..236682e6a 100644
+--- a/cmake/SearchForStuff.cmake
++++ b/cmake/SearchForStuff.cmake
+@@ -74,6 +74,11 @@ endif()
+ find_package(wxWidgets COMPONENTS base core adv)
+ find_package(ZLIB)
+ 
++find_package(fmt)
++if(NOT fmt_FOUND)
++    add_subdirectory(${CMAKE_SOURCE_DIR}/3rdparty/fmt/fmt)
++endif()
++
+ ## Use pcsx2 package to find module
+ include(FindLibc)
+ 
+
