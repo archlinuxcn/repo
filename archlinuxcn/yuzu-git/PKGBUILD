@@ -2,13 +2,13 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-git
-pkgver=r16207.2f6ba5448
-pkgrel=2
+pkgver=r16276.1089d7673
+pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (master GIT version)"
 arch=('i686' 'x86_64')
 url="https://github.com/yuzu-emu/yuzu"
 license=('GPL2')
-depends=('shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'mbedtls' 'openssl' 'zstd')
+depends=('shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'mbedtls' 'openssl' 'zstd')
 makedepends=('git' 'cmake' 'ninja' 'python2' 'conan' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'desktop-file-utils')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu' 'yuzu-cmd')
@@ -28,8 +28,8 @@ prepare() {
 	git submodule init
 	git submodule update --init --recursive
 
-  sed -i 's/Werror=reorder/Wno-reorder/g' src/CMakeLists.txt
-  sed -i 's/Werror=conversion/Wno-conversion/g' src/video_core/CMakeLists.txt
+#  sed -i 's/Werror=reorder/Wno-reorder/g' src/CMakeLists.txt
+#  sed -i 's/Werror=conversion/Wno-conversion/g' src/video_core/CMakeLists.txt
 }
 
 build() {
@@ -42,15 +42,15 @@ build() {
 	export TRAVIS_TAG=$(git describe --tags)
 	
 	# Hopefully temporary fix for a compilation error involving fmt
-	CXXFLAGS+=" -DFMT_USE_USER_DEFINED_LITERALS=0"
+#	CXXFLAGS+=" -DFMT_USE_USER_DEFINED_LITERALS=0"
 
 	# Flag to disable pre-compiled headers so boost can build properly
 	# CXXFLAGS+=" -DENABLE_PRECOMPILED_HEADERS=OFF"
 
 	# Flag to fix SDL exceptions occurring in some users' builds
-	CXXFLAGS+=" -I/usr/include/SDL2 -D_REENTRANT -pthread -lSDL2"
+#	CXXFLAGS+=" -I/usr/include/SDL2 -D_REENTRANT -pthread -lSDL2"
   
-  CXXFLAGS+=" -I/usr/include/libusb-1.0"
+#  CXXFLAGS+=" -I/usr/include/libusb-1.0"
 
 	mkdir -p build && cd build
 	cmake -GNinja .. \
