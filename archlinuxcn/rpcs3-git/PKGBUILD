@@ -4,7 +4,7 @@
 pkgname=rpcs3-git
 pkgver=0.0.12.11149.06ecc2ae6
 pkgrel=1
-pkgdesc='A Sony PlayStation 3 emulator (non-optimized)'
+pkgdesc='A Sony PlayStation 3 emulator (GIT Version)'
 arch=(x86_64)
 url=https://github.com/RPCS3/rpcs3
 license=(GPL2)
@@ -41,6 +41,7 @@ makedepends=(
 )
 provides=(rpcs3)
 conflicts=(rpcs3)
+replaces=(rpcs3-avx-git rpcs3-avx2-git)
 options=(!emptydirs)
 source=(
   git+https://github.com/RPCS3/rpcs3.git
