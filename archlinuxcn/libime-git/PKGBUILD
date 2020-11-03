@@ -3,7 +3,7 @@
 # Contributor: csslayer <wengxt AT gmail com>
 
 pkgname=libime-git
-pkgver=r218.22106dc
+pkgver=1.0.0.r0.g22106dc
 pkgrel=1
 pkgdesc="A library to support generic input method implementation"
 arch=('i686' 'x86_64')
@@ -18,7 +18,7 @@ sha512sums=('SKIP')
 
 pkgver() {
   cd libime
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {

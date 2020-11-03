@@ -5,7 +5,7 @@
 _pkgname=fcitx5-qt
 pkgbase=$_pkgname-git
 pkgname=(fcitx5-qt5-git fcitx5-qt4-git)
-pkgver=r200.97ea203
+pkgver=5.0.0.r0.g97ea203
 pkgrel=1
 pkgdesc="Fcitx Qt Library"
 arch=('x86_64')
@@ -18,7 +18,7 @@ sha512sums=('SKIP')
 
 pkgver() {
   cd $_pkgname
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build(){

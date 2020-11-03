@@ -3,8 +3,8 @@
 
 _pkgname=fcitx5-lua
 pkgname="$_pkgname-git"
-pkgver=r35.ff218dd
-pkgrel=2
+pkgver=5.0.0.r0.gff218dd
+pkgrel=1
 pkgdesc="Lua support for fcitx5, with an imeapi addon implementing googlepinyin api"
 arch=('i686' 'x86_64')
 url="https://github.com/fcitx/$_pkgname"
@@ -18,7 +18,7 @@ sha512sums=('SKIP')
 
 pkgver() {
   cd $_pkgname
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build(){
