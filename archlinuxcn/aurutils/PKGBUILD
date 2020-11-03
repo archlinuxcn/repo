@@ -1,6 +1,6 @@
 # Maintainer: Alad Wenter <https://github.com/AladW>
 pkgname=aurutils
-pkgver=3.0.0
+pkgver=3.0.3
 pkgrel=2
 pkgdesc='helper tools for the arch user repository'
 url='https://github.com/AladW/aurutils'
@@ -10,7 +10,7 @@ source=("$url/releases/download/$pkgver/$pkgname-$pkgver.tar.gz"
         "$url/releases/download/$pkgver/$pkgname-$pkgver.tar.gz.signify"
         'aurutils.pub')
 changelog=aurutils.changelog
-sha256sums=('b28da1527b2c6dddbe3aa00f79a0264b54fb671796f1fd9d03cb2f46e9cae8f9'
+sha256sums=('1025530a44d25caccb4e6a1fe0e44474dbdecfd74e7822da78aaa369cff9d06c'
             'SKIP'
             'f11d869b344b01acb229db00fcd40f72a6ee1d3b080b0bc2870001ed94f99dc9')
 depends=('git' 'jq' 'pacutils' 'curl')
@@ -26,11 +26,11 @@ prepare() {
 }
 
 build() {
-    cd aurutils
-    make DESTDIR="$pkgdir"
+    cd "$pkgname-$pkgver"
+    make
 }
 
 package() {
-    cd aurutils
+    cd "$pkgname-$pkgver"
     make DESTDIR="$pkgdir" install
 }
