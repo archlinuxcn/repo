@@ -1,22 +1,20 @@
-# Maintainer: Winston Astrachan <winston dot astrachan at gmail dot com>
-
 pkgname=1password
-pkgver=0.9.1
+pkgver=0.9.2_1
 pkgrel=1
-_appimagver=0.9.1
-_appimage="${pkgname}-${pkgver}-${pkgrel}.AppImage"
+_appimagver=${pkgver//_/-}
+_appimage="${pkgname}-${_appimagver}.AppImage"
 pkgdesc="The world's most-loved password manager - beta"
 arch=('x86_64')
 url='https://1password.com/'
 license=('unknown')
 depends=('fuse2' 'zlib' 'hicolor-icon-theme')
 options=(!strip)
-source=("${_appimage}::https://downloads.1password.com/linux/appimage/1password-${_appimagver}.AppImage"
-        "${_appimage}.sig::https://downloads.1password.com/linux/appimage/1password-${_appimagver}.AppImage.sig"
+source=("${_appimage}::https://downloads.1password.com/linux/appimage/${_appimage}"
+        "${_appimage}.sig::https://downloads.1password.com/linux/appimage/${_appimage}.sig"
 )
 noextract=("${_appimage}")
-sha256sums=('5fa36d372d55ed7ba81d68e329a42fb3889e2da009be37dc2cc60d4d383c1b12'
-            '78ec2888c539194946cad4b220d0761da5d0333dd540d7ef491c20aa3d2f10d3'
+sha256sums=('9902199d28312083df96ea63a74ec81c4b11162b9127b5ba39fffd56a1c3a8a6'
+            'ded7f6d0296233b0b3932952386f4a5083ffe3ae9390981f68e701b2d934c935'
 )
 validpgpkeys=('3FEF9748469ADBE15DA7CA80AC2D62742012EA22')
 
