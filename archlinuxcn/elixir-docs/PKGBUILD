@@ -1,7 +1,7 @@
 # Maintainer: BenYip <yebenmy@protonmail.com>
 
 pkgname=elixir-docs
-pkgver=1.11.1
+pkgver=1.11.2
 pkgrel=1
 pkgdesc="Documentation for elixir"
 makedepends=('unzip')
@@ -9,7 +9,7 @@ arch=('any')
 url='http://elixir-lang.org'
 license=('Apache')
 source=("$pkgname-$pkgver.zip::https://github.com/elixir-lang/elixir/releases/download/v${pkgver}/Docs.zip")
-md5sums=('959cd12d24e13d4aefc10d0da574b0bf')
+md5sums=('eb0ebfccc098bb96ef71b1187d723211')
 
 package() {
   mkdir -p "$pkgdir/usr/share"
