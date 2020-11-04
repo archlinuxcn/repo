@@ -11,6 +11,7 @@ license=('GPL3')
 depends=('ksysguard' 'libksysguard' 'qt5-quickcontrols' 'kirigami2')
 makedepends=('extra-cmake-modules' 'git' 'qt5-tools')
 provides=("${_pkgname,,}")
+conflicts=("${_pkgname,,}")
 source=("${_pkgname}::git+${url}.git")
 sha256sums=('SKIP')
 
