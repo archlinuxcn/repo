@@ -1,0 +1,46 @@
+maintainers:
+  - github: DDoSolitary
+build_prefix: multilib
+update_on:
+  - source: aur
+    aur: lib32-lv2
+  - source: archpkg
+    archpkg: lib32-fontconfig
+    provided: libfontconfig.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-freetype2
+    provided: libfreetype.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-glib2
+    provided: libgio-2.0.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-glib2
+    provided: libglib-2.0.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-glib2
+    provided: libgobject-2.0.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-harfbuzz
+    provided: libharfbuzz.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-pango
+    provided: libpango-1.0.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-pango
+    provided: libpangocairo-1.0.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-pango
+    provided: libpangoft2-1.0.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-libsndfile
+    provided: libsndfile.so
+    strip_release: true

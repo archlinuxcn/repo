@@ -1,0 +1,18 @@
+maintainers:
+  - github: DDoSolitary
+build_prefix: multilib
+update_on:
+  - source: aur
+    aur: lib32-libraqm
+  - source: archpkg
+    archpkg: lib32-freetype2
+    provided: libfreetype.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-fribidi
+    provided: libfribidi.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-harfbuzz
+    provided: libharfbuzz.so
+    strip_release: true

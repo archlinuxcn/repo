@@ -1,0 +1,18 @@
+maintainers:
+  - github: DDoSolitary
+build_prefix: multilib
+update_on:
+  - source: aur
+    aur: lib32-gssdp
+  - source: archpkg
+    archpkg: lib32-glib2
+    provided: libgio-2.0.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-glib2
+    provided: libglib-2.0.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-glib2
+    provided: libgobject-2.0.so
+    strip_release: true

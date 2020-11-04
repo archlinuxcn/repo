@@ -1,0 +1,44 @@
+#   Maintainer: GordonGR <ntheo1979@gmail.com>  
+#   Contributor: Thomas Baechler <thomas@archlinux.org>
+#   Contributor: Sarah Hay <sarahhay@mb.sympatico.ca>
+
+_pkgname=a52dec
+pkgname=lib32-a52dec
+pkgver=0.7.4
+pkgrel=9
+pkgdesc="A free library for decoding ATSC A/52 streams"
+url="http://liba52.sourceforge.net/"
+arch=('x86_64')
+license=('GPL2')
+depends=('lib32-glibc' $_pkgname)
+makedepends=('gcc-multilib')
+options=(!libtool)
+source=("http://liba52.sourceforge.net/files/${_pkgname}-${pkgver}.tar.gz"
+        'a52dec-0.7.4-build.patch'
+	'stderr.patch')
+md5sums=('caa9f5bc44232dc8aeea773fea56be80'
+         'fa16f224a7dceb7613824380abef0052'
+         '52f57e003259a24516eaab08b64ae703')
+
+prepare() {
+cd "${srcdir}/${_pkgname}-${pkgver}"
+patch -Np1 -i "${srcdir}/a52dec-0.7.4-build.patch"
+sed -i 's/AM_CONFIG_HEADER/AC_CONFIG_HEADERS/' configure.in
+mv configure.in configure.ac
+./bootstrap
+}
+
+build() {
+export CC="gcc -m32"
+export CXX="g++ -m32"
+
+cd ${_pkgname}-${pkgver}
+./configure --prefix=/usr --libdir=/usr/lib32 --enable-shared
+make
+}
+
+package() {
+cd ${_pkgname}-${pkgver}
+make DESTDIR="${pkgdir}" install
+rm -rf "${pkgdir}"/usr/{include,bin,share}
+}

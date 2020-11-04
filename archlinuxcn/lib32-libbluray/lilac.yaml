@@ -1,0 +1,14 @@
+maintainers:
+  - github: DDoSolitary
+build_prefix: multilib
+update_on:
+  - source: aur
+    aur: lib32-libbluray
+  - source: archpkg
+    archpkg: lib32-fontconfig
+    provided: libfontconfig.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-freetype2
+    provided: libfreetype.so
+    strip_release: true

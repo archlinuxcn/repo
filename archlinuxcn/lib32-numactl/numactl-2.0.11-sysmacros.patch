@@ -1,0 +1,11 @@
+diff -ru numactl-2.0.11/affinity.c new/affinity.c
+--- numactl-2.0.11/affinity.c	2015-12-10 22:24:17.000000000 +0100
++++ new/affinity.c	2018-09-03 17:21:41.833719945 +0200
+@@ -39,6 +39,7 @@
+ #include <dirent.h>
+ #include <linux/rtnetlink.h>
+ #include <linux/netlink.h>
++#include <sys/sysmacros.h>
+ #include <sys/types.h>
+ #include <ctype.h>
+ #include <assert.h>

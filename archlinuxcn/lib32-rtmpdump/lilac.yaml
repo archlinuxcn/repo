@@ -1,0 +1,14 @@
+maintainers:
+  - github: DDoSolitary
+build_prefix: multilib
+update_on:
+  - source: aur
+    aur: lib32-rtmpdump
+  - source: archpkg
+    archpkg: lib32-nettle
+    provided: libhogweed.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-nettle
+    provided: libnettle.so
+    strip_release: true

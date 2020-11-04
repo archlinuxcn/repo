@@ -1,0 +1,11 @@
+--- a/y4mdenoise/MotionSearcher.hh
++++ b/y4mdenoise/MotionSearcher.hh
+@@ -2196,7 +2196,7 @@
+ 	{
+ 		// This region is too small to be bothered with.
+ 		// Just get rid of it.
+-		DeleteRegion (a_pRegion);
++		this->DeleteRegion (a_pRegion);
+ 	}
+ 	else
+ 	{
