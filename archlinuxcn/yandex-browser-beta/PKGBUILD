@@ -4,8 +4,8 @@
 
 _pkgname=browser-beta
 pkgname=yandex-${_pkgname}
-pkgver=20.8.3.361_1
-_pkgver=20.8.3.361-1
+pkgver=20.9.3.189_1
+_pkgver=20.9.3.189-1
 pkgrel=2
 #epoch=1
 
@@ -27,7 +27,7 @@ optdepends=(
 )
 
 source=("${pkgname}-${pkgver}.deb::http://repo.yandex.ru/yandex-browser/deb/pool/main/y/yandex-browser-beta/yandex-browser-beta_${_pkgver}_amd64.deb")
-md5sums=("461b98fa3a2c6079e331b6464d008af9")
+md5sums=("8d06743c89c1f63f18ceeacedd74da84")
 
 prepare() {
     tar -xf data.tar.xz
