@@ -3,7 +3,7 @@
 # Contributor: Dave Reisner <d@falconindy.com>
 
 pkgname=libgit2-julia
-pkgver=1.0.1
+pkgver=1.1.0
 pkgrel=1
 epoch=1
 pkgdesc='A linkable library for Git'
@@ -17,7 +17,7 @@ license=('GPL2')
 source=("libgit2-$pkgver.tar.gz::https://github.com/libgit2/libgit2/archive/v${pkgver}.tar.gz"
         "libgit2-0.99.0-remove_http-parse_incompatible_tests.patch"
         libgit2-agent-nonfatal.patch)
-sha256sums=('1775427a6098f441ddbaa5bd4e9b8a043c7401e450ed761e69a415530fea81d2'
+sha256sums=('41a6d5d740fd608674c7db8685685f45535323e73e784062cf000a633d420d1e'
             '0a597176a551dfe8dda56a46362ff1ef614928206a162d78fdf2d3074c9273ca'
             'a60e169812b802e3fcb4ee7501786346eb87db9ffa3c8ae3311de47ce5a15f10')
 options=(!strip)
