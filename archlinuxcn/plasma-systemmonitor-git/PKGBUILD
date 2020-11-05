@@ -2,7 +2,7 @@
 
 _pkgname='plasma-systemmonitor'
 pkgname="${_pkgname,,}-git"
-pkgver=v5.20.0.r2.g0eaa8e1
+pkgver=v5.20.0.r3.g14dfb56
 pkgrel=1
 pkgdesc='New version of KSysGuard built on top of the new KStats daemon and using QML for its UI, git version'
 arch=('x86_64')
@@ -24,15 +24,12 @@ pkgver() {
 }
 
 build() {
-  cmake -B build -S "${_pkgname}" \
-    -DCMAKE_BUILD_TYPE='None' \
-    -DCMAKE_INSTALL_PREFIX='/usr' \
-    -Wno-dev
-  make -C build
+  cmake -B build -S "${_pkgname}"
+  cmake --build build
 }
 
 package() {
-  make DESTDIR="${pkgdir}" PREFIX="/usr" -C build install
+  DESTDIR="$pkgdir" cmake --install build
 }
 
 # vim: ts=2 sw=2 et:
