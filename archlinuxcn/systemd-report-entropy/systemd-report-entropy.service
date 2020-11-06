@@ -1,0 +1,12 @@
+[Unit]
+Description=Start to report entropy in journal
+DefaultDependencies=no
+Before=local-fs.target sysinit.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/systemd-report-entropy
+RemainAfterExit=yes
+
+[Install]
+WantedBy=basic.target
