@@ -5,7 +5,7 @@
 # https://github.com/alfredopalhares/arch-pkgbuilds
 
 pkgname=joplin
-pkgver=1.2.6
+pkgver=1.3.18
 pkgrel=1
 pkgdesc="A note taking and to-do application with synchronization capabilities"
 arch=('x86_64' 'i686')
@@ -20,7 +20,7 @@ source=("${pkgname}.desktop" "${pkgname}-desktop.sh" "${pkgname}.sh"
 sha256sums=('50c4d294eed7cc1319874831040a316127c3dbc03f8e74a293793a35773e0626'
             '41bfdc95a6ee285eb644d05eb3bded72a83950d4720c3c8058ddd3c605cd625d'
             '5245da6f5f647d49fbe044b747994c9f5a8e98b3c2cd02757dd189426a677276'
-            '3136f81198970a42b67ef0c172d6fdf8d8144dbae0285016ce8ff03d03c94b59')
+            '71f836bb1504b101cc85071e750d183edd4405ff163776a0aff74e6da0ba1906')
 
 build() {
   # Remove husky (git hooks) from dependencies
