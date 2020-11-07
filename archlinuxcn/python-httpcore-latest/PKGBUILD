@@ -1,6 +1,6 @@
 _name=httpcore
 pkgname=python-httpcore-latest
-pkgver=0.12.0
+pkgver=0.12.1
 pkgrel=1
 pkgdesc="A minimal low-level HTTP client."
 arch=(any)
@@ -10,18 +10,23 @@ depends=('python-h11' 'python-h2' 'python-sniffio')
 makedepends=('python-setuptools')
 conflicts=('python-httpcore')
 provides=('python-httpcore')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/httpcore-0.12.0.tar.gz")
-sha256sums=('2526a38f31ac5967d38b7f593b5d8c4bd3fa82c21400402f866ba3312946acbf')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/httpcore-0.12.1.tar.gz")
+sha256sums=('3c5fcd97c52c3f6a1e4d939d776458e6177b5c238b825ed51d72840e582573b5')
 
 build() {
-  cd "$srcdir/httpcore-0.12.0"
+  cd "$srcdir/httpcore-0.12.1"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/httpcore-0.12.0"
+  cd "$srcdir/httpcore-0.12.1"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
+  # make sure we don't install any world-writable or root-readable-only files
+  # we shouldn't need to fix ownership as we extract tarballs as a non-root user
+  # https://github.com/pypa/setuptools/issues/1328
+  # https://github.com/LonamiWebs/Telethon/issues/1605
+  chmod u=rwX,go=rX -R "$pkgdir"
   # make sure we don't install annoying files
   local _site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   rm -rf "$pkgdir/$_site_packages/tests/"
