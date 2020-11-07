@@ -29,7 +29,7 @@ makedepends=(
   python-setuptools
   python-pytorch-cuda
 )
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/facebookresearch/detectron2/archive/v0.2.1.tar.gz")
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/facebookresearch/detectron2/archive/v${pkgver}.tar.gz")
 sha256sums=('ee3e404f534c03883423846876522d6b1e3e64796abd12caf51e8f8648bd5a63')
 
 prepare() {
