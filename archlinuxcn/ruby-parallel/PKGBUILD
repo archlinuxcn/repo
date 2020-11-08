@@ -3,8 +3,8 @@
 
 _gemname=parallel
 pkgname=ruby-$_gemname
-pkgver=1.19.2
-pkgrel=2
+pkgver=1.20.0
+pkgrel=1
 pkgdesc="Run any kind of code in parallel processes"
 arch=(any)
 url="https://github.com/grosser/parallel"
@@ -14,7 +14,7 @@ makedepends=(rubygems ruby-rdoc)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha256sums=('54dc19bef898b700b6f51ac1a025b0d310708a5e1c1b127ec35ed4dafb11619d')
+sha256sums=('af85cd3bff706ac590ad4e9b7a847abdba2d1426d8eec26d4857e557631b91f1')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
