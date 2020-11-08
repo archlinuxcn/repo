@@ -3,8 +3,8 @@
 # Contributor: Rodrigo Gryzinski <rogryza@gmail.com>
 
 pkgname=ghcide
-pkgver=0.4.0
-pkgrel=2
+pkgver=0.5.0
+pkgrel=1
 pkgdesc="A library for building Haskell IDE tooling"
 arch=('x86_64')
 url="https://github.com/haskell/${pkgname}"
@@ -12,9 +12,9 @@ license=('Apache')
 makedepends=('stack')
 depends=('gmp' 'zlib')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('e4d5eb8c1216f62c1fe8ad2c2bccf5695fd8d37f7450a58d0dd60f229abf65d5')
+sha256sums=('7e12cd80bcd15bf08c55ac994aa8d1f6ba1ec8f9f20f1740d3717250eec98d5e')
 
-_ghc_versions=('8.4' '8.8' '8.10' '8.10.1')
+_ghc_versions=('8.8' '8.10' '8.10.1')
 
 prepare() {
   cd "${pkgname}-${pkgver}" 
