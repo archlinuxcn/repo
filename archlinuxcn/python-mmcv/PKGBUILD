@@ -2,8 +2,8 @@
 
 _pkgname=mmcv
 pkgname=(python-mmcv python-mmcv-full)
-pkgver=1.1.6
-pkgrel=3
+pkgver=1.2.0
+pkgrel=1
 pkgdesc='OpenMMLab Computer Vision Foundation'
 arch=('x86_64')
 url='https://github.com/open-mmlab/mmcv'
@@ -23,7 +23,7 @@ optdepends=(
   "opencv: optional image backend"
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmcv/archive/v${pkgver}.tar.gz")
-sha512sums=('3e8faebd68bd5f3b40f8495c41963db4ed0689e97a203737b3eff46dbd8f20932e38da2381302622baaa44cc7574920ffbfefc67083d59765a7e2661c86d3a78')
+sha512sums=('a064cc30157e720168c46aed307bb859f1af4d617dcd85da844ede3dcf7a744f94cd6b69bd162a6c87aa13cfe0e16182f613ece6671034450dde6fc515334e0f')
 
 build() {
   cp -a "${_pkgname}-${pkgver}" "${_pkgname}-full-${pkgver}"
