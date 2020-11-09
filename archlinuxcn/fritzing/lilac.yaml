@@ -11,3 +11,7 @@ post_build: aur_post_build
 update_on:
   - source: aur
     aur: fritzing
+  - source: archpkg
+    archpkg: libgit2
+    provided: libgit2.so
+    strip_release: true
