@@ -1,7 +1,7 @@
 # Maintainer: Alad Wenter <https://github.com/AladW>
 pkgname=aurutils
-pkgver=3.0.3
-pkgrel=2
+pkgver=3.1.2
+pkgrel=1
 pkgdesc='helper tools for the arch user repository'
 url='https://github.com/AladW/aurutils'
 arch=('any')
@@ -10,9 +10,9 @@ source=("$url/releases/download/$pkgver/$pkgname-$pkgver.tar.gz"
         "$url/releases/download/$pkgver/$pkgname-$pkgver.tar.gz.signify"
         'aurutils.pub')
 changelog=aurutils.changelog
-sha256sums=('1025530a44d25caccb4e6a1fe0e44474dbdecfd74e7822da78aaa369cff9d06c'
+sha256sums=('86a80ae8327aeeb4932c7709767b2be5fae19281a5bcc78b2b10197e97c32afb'
             'SKIP'
-            'f11d869b344b01acb229db00fcd40f72a6ee1d3b080b0bc2870001ed94f99dc9')
+            'a2c32b0dba4da40b83ff31cce48a00faed5ed2f663c060a865d31caeb1e4ed39')
 depends=('git' 'jq' 'pacutils' 'curl')
 makedepends=('signify')
 optdepends=('bash-completion: bash completion'

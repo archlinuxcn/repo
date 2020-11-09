@@ -9,6 +9,30 @@ https://bbs.archlinux.org/viewtopic.php?pid=1707649#p1707649
 for detailed instructions. For the 2.0.0 changelog, see:
 
 https://github.com/AladW/aurutils/releases/tag/2.0.0
+
+EOF
+    fi
+
+    if (( $(vercmp '3.0.0-1' "$2") == 1 )); then
+        cat >&2 <<-EOF
+As of 3.0.0, aurutils requires a separate pacman configuration for chroot
+builds.  The file path defaults to /usr/share/devtools/pacman/aur.conf.
+
+For this and other changes, see the aurutils 3.0 blog:
+
+https://pkgbuild.com/~alad/aurutils_3.html
+
+EOF
+    fi
+
+    if (( $(vercmp '3.1.0-1' "$2") == 1 )); then
+        cat >&2 <<-EOF
+As of 3.1.0, the default path of the pacman configuration for chroot builds
+moved from /usr/share/devtools/pacman-aur.conf to
+
+/etc/aurutils/pacman-<repository name>.conf
+
+More information about this file was added to the aur-build man page.
 EOF
     fi
 }
