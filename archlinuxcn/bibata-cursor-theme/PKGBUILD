@@ -3,7 +3,7 @@
 # Contributor: ful1e5 <kaizmandhu at gmail dot com>
 
 pkgname=bibata-cursor-theme
-pkgver=1.0.2
+pkgver=1.0.3
 pkgrel=1
 pkgdesc="Material Based Cursor Theme"
 arch=('any')
@@ -15,8 +15,8 @@ options=('!strip')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
         "$pkgname-bitmaps-$pkgver.zip::$url/releases/download/v$pkgver/bitmaps.zip")
 noextract=("$pkgname-bitmaps-$pkgver.zip")
-sha256sums=('f119f770a79eb53958c9176275a4d31e99c59bf3b2f750547a9e48631fbb2ad7'
-            '2e5a7967791f0c71c5aed2d911952ead6fbc1f3b755d39ade82d6f18ce4a1e21')
+sha256sums=('a503551819c15d129ab532e0bcfab0b65bfa878c5d4150957d9b2008711f9045'
+            '64b0e504cc2f850ae1f8969785ada0b925e43820d202587294ec29f98e0c877b')
 
 prepare() {
   cd Bibata_Cursor-$pkgver
