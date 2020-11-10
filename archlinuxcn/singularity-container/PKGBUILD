@@ -1,0 +1,42 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+# Contributor: Maciej Sieczka <msieczka at sieczka dot org>
+
+_pkgname=singularity
+pkgname=singularity-container
+pkgver=3.6.4
+pkgrel=1
+pkgdesc='Application containers for Linux'
+arch=('x86_64')
+url='https://www.sylabs.io/singularity/'
+license=('BSD')
+makedepends=(
+  dep
+  git
+  go
+)
+depends=(
+  cryptsetup
+  libseccomp
+  squashfs-tools
+)
+source=("${pkgname}::git+https://github.com/hpcng/singularity.git#tag=v${pkgver}")
+sha256sums=('SKIP')
+
+build() {
+  cd "${pkgname}"
+  ./mconfig \
+    --libexecdir=/usr/lib \
+    --localstatedir=/var \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    -V ${pkgver}
+  make -C builddir
+}
+
+package() {
+  make -C "${pkgname}/builddir" DESTDIR="${pkgdir}" install man
+  install -Dm644 "${srcdir}/${pkgname}/LICENSE.md" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+
+# vim:set ts=2 sw=2 et:
+
