@@ -1,0 +1,1621 @@
+Version 6.9
+02 November 2020
+    - fix python 3.9 issues #42 #44
+    - fix regex warning #45
+    - add usage of Python keyring package in addition to gnomekeyring (#43)
+
+Version 6.8
+07 October 2020
+    - fix #37: update copyright date and notices
+    - fix #39: Slow mail retrieval
+    - pull #40: fix UnboundLocalError when socket.error inside POP3_SSL_EXTENDED
+
+Version 6.7
+01 September 2020
+    - use $XDG_CONFIG_HOME if defined
+    - fix pip install (doc/man below site-packages)
+    - fix #34: quote only for select
+
+Version 6.6
+29 August 2020
+    - fix #34: quote mailbox if necessary
+    - fix #36: use setuptools, suggest pip to install and uninstall
+
+Version 6.5
+28 August 2020
+    - fix #23: port getmail-gmail-xoauth-tokens
+    - fix #24: TypeError: 'gaierror' object is not subscriptable
+    - documentation fixes
+
+Version 6.4
+24 August 2020
+    - fix #20: mboxrd can't concat str to bytes
+    - fix #21: version numbering from 6.0x to 6.x
+
+Version 6.03
+17 August 2020
+    - fix #14: IDLE not working
+    - documentation update
+
+Version 6.02
+12 August 2020
+    - try to do as little own decoding as possible
+    - issue #8
+
+Version 6.01
+    - fixes of reported issues on github up to #7
+
+Version 6.00
+02 May 2020
+    - Make code compatible to Python 3 (losing some backward compatibility)
+
+Version 5.14
+19 August 2019
+    -remove socket setblocking() calls which should be no longer needed,
+    and which may have caused hangups.  Thanks: Viacheslav Chimishuk.
+    -correct version number string in error message.  Thanks: Piet van
+    Oostrum.
+
+Version 5.13
+22 February 2019
+    -second attempt at fixing SNI change with Python < 2.7.  Thanks: "Cimbal".
+
+Version 5.12
+22 February 2019
+    -bugfix: the SNI change broke something else with Python 2.6 and earlier;
+    fixed.  Thanks: "Cimbal".
+
+Version 5.11
+13 February 2019
+    -bugfix: the SNI change did not work correctly with Python < 2.7.13;
+    should be fixed now.  Thanks: Scott Robbins.
+
+Version 5.10
+12 February 2019
+    -experimental: when SSL SNI support is present in the underlying Python
+    (and OpenSSL), send SNI by default in the SSL setup.  This should work
+    around Gmail's brokenness with TLSv.1.3 connections when SNI is not sent.
+
+Version 5.9
+    -documentation-only update; add note with workaround for Gmail SSL
+    connections with OpenSSL 1.1.1 and later.
+    -update copyright dates.
+
+Version 5.8
+9 November 2018
+    -fix problem handling IMAP errors introduced in 5.7.  Thanks:
+    Andreas Reuleaux.
+
+Version 5.7
+30 October 2018
+    -when users specify an SSL version that no longer exists in the Python
+    ssl module, do not result in an unhandled exception.  Thanks: "nandre".
+    -catch IMAP UNAVAILABLE temporary error during login.  Thanks:
+    Dario Corti.
+
+Version 5.6
+02 April 2018
+    -fix references to version 4 in README.  Thanks: Daniel Kahn Gillmor.
+    -add Gmail-specific XOAUTH2 login support for IMAP.  Thanks: Stefan Krah.
+
+Version 5.5
+18 December 2017
+    -feature request: added record_mailbox configuration parameter, to allow
+    turning off the header getmail adds with this information.
+    Thanks: Daniel Kahn Gillmor, Osamu Aoki,  Josh Triplett.
+
+Version 5.4
+6 October 2017
+    -bugfix: fix another error in logging an error condition.  Thanks: "ng0".
+
+Version 5.3
+5 October 2017
+    -bugfix: another case where an error condition resulted in getmail not
+    displaying the correct message.  Thanks: "ng0".
+
+Version 5.2
+4 October 2017
+    -bugfix: disconnection during IMAP IDLE could result in an error message
+    rather than silently exiting.  Thanks: David Gray.
+
+Version 5.1
+15 July 2017
+    -bugfix: if password_command parameter was used with a non-existent program,
+    getmail would error out during the handling of that condition and not report
+    the problem correctly.
+
+Version 5.0
+15 July 2017
+    -new release numbering scheme; previous version numbers were just getting
+    too high.
+    -catch and ignore/exit cleanly after reset connection in IMAP IDLE mode.
+    Thanks:  Stephan Schulz.
+    -allow specifying an expected SSL certificate hostname, for when the
+    server's certificate does not match the domain name used to connect to
+    it.  Thanks:  "Andre".
+    -fix error message not actually giving the header field name incorrectly
+    specified as containing the envelope recipient address.  Thanks:  Hardy
+    Braunsdorf.
+    -add new password_command configuration parameter for retrievers, allowing
+    getmail to retrieve the account password from any arbitrary external
+    command.  Suggestion:  "ng0".
+
+Version 4.54.0
+19 February 2017
+    -fix error running getmail_fetch introduced in 4.53.0.  Thanks: "fsckd"
+    of Arch Linux.
+
+Version 4.53.0
+15 January 2017
+    -fix plaintext version of docs not generated correctly.  Thanks: Elijah.
+    -fix `getmail --fingerprint` not logging server TLS fingerprint correctly
+    with SimplePOP3SSLRetriever.  Thanks: Gabriel Kihlman.
+
+Version 4.52.0
+22 October 2016
+    -add `ignore_header_shrinkage` parameter to Filter_external for users who
+    know it is normal for their particular filter to result in a smaller message
+    header than the source message, for example when the filter encapsulates
+    the original message in a simpler wrapper message.  Thanks: "RW",
+    Tristan Miller, Francesco Ariis.
+    -EXPERIMENTAL: when deleting a message from an IMAP mailbox, set the \Seen
+    flag in addition to the the \Deleted flag.  This apparently prevents
+    the ever-innovatively-broken MSExchange from sending a spurious incorrect
+    disposition-notification message to the sender of the message.  I do not
+    know if this will cause problems with other broken IMAP server
+    implementations; please send a report to the getmail-user's mailing list if
+    you see odd behaviour with this change.  Thanks: John Hein.
+    -enable socket timeouts for IMAP SSL classes by default.  They were disabled
+    in the code because they were incompatible with SSL in older versions of
+    Python.  If you see problems with Python 2.6 or 2.7 now, please let me know.
+
+Version 4.51.0
+11 September 2016
+    -fix exception when using MDA_External and an IMAP mailbox whose name
+    contains non-ASCII chars.  Thanks:  "drtmk".
+
+Version 4.50.0
+11 July 2016
+    -maybe fix handling of OSX keychain passwords containing double-quote chars.
+    Thanks: Teddy Wing, Patrick Asselman.
+    -fix getmail erroring out on IMAP folders containing i18n chars.
+    Thanks: Jan Stühler.
+
+    Version 4.49.0
+13 January 2016
+    -make IMAP class only issue EXPUNGE command on mailbox close if we have
+    actually deleted any messages from the open mailbox.  Makes use of read-only
+    IMAP folders possible.  Thanks: Zoltan Padrah.
+
+Version 4.48.0
+31 May 2015
+    -work around brain-damaged change in Python's poplib which causes
+   message retrieval errors if any line of a message has more than
+   2048 characters in it.
+    -restore link to moved Marc mailing list archive.  Thanks:
+    David J. Weller-Fahy.
+
+Version 4.47.0
+25 February 2015
+    -try to work around pathological breakage in one random POP server
+    implementation.  Thanks: Michael Thomas Kockmeyer.
+    -remove dead marc.theaimsgroup.com list archive from docs.  Thanks:
+    Miroslav Rovis.
+    -bugfix: if you combined IMAP IDLE mode with delete_after, getmail would,
+    after remaining connected to the server for the number of days configured,
+    begin deleting messages immediately after retrieval instead of after the
+    configured delay.  Now fixed.  Thanks: Johannes Weißl.
+
+Version 4.46.0
+6 April 2014
+    -fix --idle checking Python version incorrectly, resulting in incorrect
+    warning about running with Python < 2.5.  Thanks: "Voytek", Krzysztof
+    Warzecha.
+    -add missing support for SSL certificate checking in POP3 which broke
+    POP retrieval in v4.45.0.  Requires Python 2.6 or newer.  Thanks: "mancha".
+
+Version 4.45.0
+30 March 2014
+    -perform hostname-vs-certificate matching of SSL certificate if validating
+    the certifcate.  Thanks: "mancha".
+    -fix missing plaintext versions of documentation.
+
+Version 4.44.0
+22 March 2014
+    -add extended SSL options for IMAP retrievers, allowing certificate
+    verification and other features.  Thanks: Steven Murdoch.
+    -fix missing plaintext versions of documentation.  Thanks: Osamu Aoki.
+    -fix "Header instance has no attribute 'strip'" error which cropped up
+    in some configurations.  Thanks: Krzysztof Warzecha.
+
+Version 4.43.0
+25 August 2013
+    -add IMAP IDLE support.  Thanks: Jon Gjengset.
+
+Version 4.42.0
+3 August 2013
+    -fix problem with non-ascii characters in newly-added message header fields
+    with output from Filter_classifier.  Thanks: "Gour".
+
+Version 4.41.0
+26 May 2013
+    -messages retrieved with POP could have a blank trailing line removed when
+    delivered; fixed.  Thanks: Christoph Mitterer, Krzysztof Warzecha.
+    -fix an ImportError when IMAP retriever used with getmail under Python 2.4.
+
+Version 4.40.3
+10 May 2013
+    -increase system recursion limit when run with Python 2.3, to prevent
+    recursion errors in parsing some pathologically complex MIME emails.
+    Thanks: Kenneth Pronovici.
+
+Version 4.40.2
+8 May 2013
+    -fix a backwards incompatibility with Python 2.3 and 2.4 introduced in
+    getmail 4.38.0.  Thanks: Massimo Zambelli, Krzysztof Warzecha.
+
+Version 4.40.1
+22 April 2013
+    -again change protocol codes passed to OSX, as they're not only reserved
+    codes, but also case-sensitive.  Use the ones an OSX user reports work
+    properly.  Thanks: Tim Gray.
+
+Version 4.40.0
+21 April 2013
+    -convert SIGTERM to SIGINT so getmail can cleanup and exit normally if
+    killed with a default signal.  Thanks: Carl Lei.
+    -fix change which resulted in passing full protocol name to OSX keyring
+    program, which can't handle it (restricted to 4-character code).
+    Thanks: Tim Gray.
+
+Version 4.39.1
+10 March 2013
+    -fix a bug that could crop up when retrieving mail via IMAP from Gmail, and
+    the Gmail servers provided weird data in their header extensions.
+    Thanks: Krzysztof Warzecha.
+
+Version 4.39.0
+22 February 2013
+    -fix an oldmail filename issue that occurred with certain non-ASCII
+    characters in an IMAP mailbox name.  Thanks: Michael Kockmeyer.
+
+Version 4.38.0
+16 February 2013
+    -fix retrieving mail from an IMAP mailbox with non-ASCII characters in its
+    name causing difficult-to-understand unicode errors during delivery.
+    Thanks: "fsLeg", Krzysztof Warzecha.
+
+Version 4.37.0
+27 January 2013
+    -handle IMAP servers which include "/" in message IDs better, so those
+    messages aren't always thought to be new.  Thanks: Bradley Rintoul.
+    -record (IMAP) mailbox retrieved from in X-getmail-retrieved-from-mailbox:
+    header field, and make it available as %(mailbox) substitution in
+    MDA_external arguments.  Thanks: Les Barstow.
+    -add delete_bigger_than option to allow removal of large messages after
+    retrieval, even if not deleting messages otherwise.  Thanks: Jan Vereecke.
+
+Version 4.36.0
+15 December 2012
+    -add support for retrieving POP/IMAP passwords from, and storing them to,
+    the Gnome keyring.  Thanks: Krzysztof Warzecha, Scott Hepler.
+
+Version 4.35.0
+24 October 2012
+    -fix From_ quoting in mbox delivery; use of the Python stdlib function
+    meant getmail was incorrectly using mboxo-style quoting instead of
+    mboxrd quoting, probably since early in the v4 series.
+    Thanks: Christoph Mitterer.
+
+Version 4.34.0
+8 September 2012
+    -retrieve Gmail metadata (labels, thread ID, message ID) via IMAP extension
+    and record it in new message headers.  Thanks: Krzysztof Warzecha.
+
+Version 4.33.0
+7 August 2012
+    -allow normal exit on interrupt (ctrl-c) to allow the user to abort message
+    retrieval while still remembering already-retrieved messages as successfully
+    delivered.  You may get a weird error message after you abort, since the
+    server may be in the middle of delivering another message to getmail at the
+    time.  Thanks: Krzysztof Warzecha.
+
+Version 4.32.0
+6 July 2012
+    -prevent some nuisance stack traces if getmail cannot connect to the POP/
+    IMAP server correctly.  Thanks: Daniel Dumke.
+    -restore use_peek IMAP retriever parameter which accidentally got removed
+    in 4.30.  Thanks: Andreas Amann.
+
+Version 4.31.0
+5 July 2012
+    -improved backwards compatibility with pre-v.4.22.0 oldmail files, so IMAP
+    mail is not re-retrieved if you upgrade from a 4.22 or earlier to this one;
+    no user action necessary.  Thanks: Osamu Aoki, Tim van der Molen.
+
+Version 4.30.2
+27 June 2012
+    -fix a nuisance stack trace that would be dumped if a connection failed in
+    particular states.  Thanks: Gary Schmidt.
+
+Version 4.30.1
+21 June 2012
+    -silence a nuisance deprecation warning about the sets module when running
+    with Python >= 2.5 which was reintroduced in 4.29.0.  Thanks: Stephan
+    Schulz.
+
+Version 4.30.0
+21 June 2012
+    -fix breakage introduced in 4.29.0 where BrokenUIDLPOP3Retriever would fail
+    with a TypeError at logout time.  Thanks: Scott Robbins, Stephan Schulz.
+    -fix breakage introduced in 4.29.0 where deleted mail was not being expunged
+    from the last (or only) folder retrieved from in an IMAP session.  Thanks:
+    Paul Howarth.
+
+Version 4.29.0
+19 June 2012
+    -update old contact information for Free Software Foundation.  Thanks: Ricky
+    Zhou.
+    -fix incorrect character encoding in plaintext documentation.  Thanks: Ricky
+    Zhou.
+    -ensure getmail exits nonzero if a server refuses login due to a credential
+    problem.  Thanks: Stephan Schulz.
+
+Version 4.28.0
+26 May 2012
+    -ensure getmail exits nonzero if various error conditions (like POP/IMAP
+    authentication failure) occur.  Thanks: Ryan J., Stephan Schulz.
+    -python versions prior to 2.5.0 contain a bug when dealing with read-only
+    IMAP mailboxes.  Monkey-patch imaplib when running with Python<2.5.0.
+    Thanks: Les Barstow.
+    -do IMAP modified-utf7 conversion of mailbox names containing non-ASCII
+    characters.  Thanks: A. Lapraitis, Randall Mason.
+    -add special ALL value for retrieving mail from all selectable IMAP
+    mailboxes in the account.
+    -change IMAP retrieval strategy to retrieve all messages from a mailbox,
+    then move on to the next mailbox, etc.  Should result in increased speed,
+    but if you set `max_messages_per_session` too low, this could result in
+    later mailboxes not being retrieved from.
+
+Version 4.27.0
+20 May 2012
+    -make use of IMAP BODY.PEEK configurable; set the IMAP retriever parameter
+    `use_peek` to False to disable use of PEEK to get getmail's historical IMAP
+    behaviour.
+
+Version 4.26.0
+14 April 2012
+    -switch to using BODY.PEEK in IMAP retrieval; I no longer see problems with
+    this feature in my testing.  If users experience incompatibility with any
+    IMAP servers where 4.25.0 worked, please let me know.
+
+Version 4.25.0
+1 February 2012
+    -add support for storing POP/IMAP password in OSX keychain.  Thanks: Adam
+    Lazur.
+
+Version 4.24.0
+11 December 2011
+    -add an explicit expunge when closing an IMAP mailbox, for servers that
+    incorrectly do not do this when the mailbox is closed.  Thanks: Nicolas
+    Pomarède.
+    -fix incorrect section reference for `mailboxes` parameter in documentation.
+    Thanks: Ross Boylan.
+    -fix getmail_fetch broken in 4.21.0.  Thanks: Chris Donoghue.
+
+Version 4.23.0
+20 November 2011
+
+    -fix race if new message shows up in POP3 mailbox between running the UIDL
+    and LIST commands.  Thanks: Roland Koebler, Osamu Aoki.
+
+Version 4.22.2
+12 November 2011
+
+  -fix an error when logging a bad response to an IMAP SELECT command,
+  introduced in 4.21.0.  Thanks: "kureshii".
+
+Version 4.22.1
+30 September 2011
+
+  -fix BrokenUIDLPOP3Retriever breakage from 4.21.0.  Thanks: Scott Robbins,
+  "hgolden".
+
+Version 4.22.0
+25 September 2011
+
+  -when retriever supports multiple mail folders (IMAP), store oldmail data for
+  each folder separately, preventing problems in some cases when using multiple
+  rc files with the same account.  Thanks: Jesse Schobben.
+
+Version 4.21.0
+23 September 2011
+
+  -automatically open IMAP folders read-only if neither the delete nor
+  delete_after options are in use; necessary to access chatlogs via Gmail.
+  Thanks: Daniel M. Drucker.
+  -avoid sorting msgids on each retrieval, reducing overhead when dealing with
+  folders containing thousands of messages.  Thanks: Daniel Koukola.
+
+Version 4.20.4
+16 July 2011
+  -include more info from server response in error message when IMAP command
+  errors out.  Thanks: W. Martin Borgert, Osamu Aoki.
+  -switch to using Parser instead of HeaderParser to correct illegal formatting
+  bogosities in the body parts of incoming messages.  Thanks: Lauri Alanko.
+
+Version 4.20.3
+30 May 2011
+  -fix logging errors in error paths.  Thanks: Visa Putkinen.
+
+Version 4.20.2
+9 Apr 2011
+  -further changes to the Received: header construction to handle IPv6 better.
+  Thanks: Frédéric Perrin.
+
+Version 4.20.1
+7 Apr 2011
+  -ensure correct remote address and port is included in the Received: trace
+  headers generated by getmail.  Previously the first address found for the
+  server was used even if another address was actually used to connect to the
+  server.  Thanks: Frédéric Perrin.
+  -add workaround for Python issue http://bugs.python.org/issue1389051 which
+  affects Python < 2.5.3, causing message retrieval of large messages from IMAP4
+  SSL servers to consume pathologically large amounts of memory.
+  Thanks: Bill Janssen.
+
+Version 4.20.0
+29 June 2010
+  -fix crap code from bad svn merge that slipped into 4.18.0, triggering
+  exceptions in MDA_external configs.  Thanks: Paul Howarth.
+
+Version 4.19.0
+29 June 2010
+  -fix missing import introduced in 4.18.0.  Thanks: Paul Howarth.
+
+Version 4.18.0
+26 June 2010
+  -update broken link in FAQ.  Thanks: Stefan Kangas.
+  -strip a few extra problematic (on non-Unix systems) characters when
+  generating oldmail filenames; backslash was requested by Andy Ross.
+  If upgrading and your current oldmail file contains any of these
+  characters:
+      \ ; < > |
+  ... then rename it, replacing runs of one or more of those characters with
+  a single "-".
+  -improve clarity of message logged by getmail when an external program exits
+  0 but getmail considers it failed because it wrote to stderr.  Thanks:
+  Chris Dennis.
+
+Version 4.17.0
+30 April 2010
+  -change to how getmail counts messages in an IMAP mailbox; prevents problems
+  where getmail would only see the first 500 messages in a mailbox with some
+  IMAP servers that return oddball responses to SELECT.  Thanks: David Damerell.
+
+Version 4.16.0
+5 January 2010
+  -additional fix for IMAP server that offers a message it then fails to return,
+  to allow getmail to continue with the next message.  Thanks: Yaw Anokwa.
+
+Version 4.15.0
+2 December 2009
+  -default port for MultidropIMAPSSLRetriever was incorrect.  Thanks: David
+  Lehn.
+
+Version 4.14.0
+23 November 2009
+  -handle additional cases where IMAP (and for good measure, POP3) server is
+  broken and offers a message that it then fails to return.  Thanks: Eric
+  Waguespack.
+
+Version 4.13.0
+13 October 2009
+  -fix new log message not having trailing newline.Thanks: Morty Abzug.
+
+Version 4.12.0
+7 October 2009
+  -handle MSExchange failure to deliver message gracefully.  Thanks: Morty
+  Abzug.
+  -documentation updates regarding Python IMAP memory bug.  Thanks: "spig".
+  -fix bad tag in documentation.
+
+Version 4.11.0
+8 August 2009
+  -fix --dump not generating any output for rcfiles containing "verbose = 0"
+  option.  Thanks: Morty Abzug.
+  -fix copy-and-paste error in documentation of MultiSorter destination.
+  Thanks: Roland Hill.
+
+Version 4.10.0
+6 August 2009
+  -add "message_log_verbose" option, defaulting to false.  If true, the
+  message_log file (and syslog, if used) will contain a little more information
+  than the default of just messages retrieved.  Thanks: Matthias Andree,
+  Gregory Morozov.
+
+Version 4.9.2
+15 July 2009
+  -use tempfile module function instead of os.tmpfile() so getmail obeys TMPDIR
+  and similar environment variables.  Thanks: Stefan Bähring.
+  -fix encoding of CHANGELOG to utf-8.
+
+Version 4.9.1
+1 June 2009
+
+  -if oldmail file is corrupted on disk (by system crash, perhaps), handle it
+  gracefully.  Some lines may be lost (and messages therefore re-retrieved),
+  but operation will continue, with the corrupt lines logged.  Thanks:  Domen
+  Puncer.
+
+Version 4.9.0
+5 April 2009
+
+  -add Kerberos authentication support to IMAP retriever classes.  Thanks:
+  Guido Günther, Uli M.
+  -clarify documentation regarding MDA_external.  Thanks: AJ Weber.
+  -eliminate deprecation warning for sets module with Python 2.6 by using a
+  compatibility wrapper module.
+
+Version 4.8.4
+26 September 2008
+
+  -Add missing fsync() in updatefile close method to ensure data actually
+  hits disk before the rename takes place, to make writing of the oldmail
+  file more resilient to system crashes.  Thanks: Domen Puncer.
+
+Version 4.8.3
+11 August 2008
+
+  -Improve information sent to logfile about messages not retrieved.
+  Thanks: Scott.
+
+Version 4.8.2
+2 August 2008
+
+  -for IMAP retrievers, keep message state around for 30 days even if the
+  corresponding message isn't seen.  This allows users to have multiple rc
+  files with different IMAP folders to retrieve from without losing their
+  "seen" mail state for the folders they're not currently retrieving from.
+  You no longer need to work around this with different getmail state
+  directories.  Thanks: ?.
+
+Version 4.8.1
+26 March 2008
+
+  -fix use of Python 2.4 set builtin in 4.8.0 preventing getmail from running
+  on Python 2.3.x.  Thanks: Björn Stenberg.
+  -fix the RPM spec file not being included in the getmail distribution.
+
+Version 4.8.0
+19 February 2008
+  -better diagnostic when user invalidly supplies timeout configuration
+  parametmer for an IMAP-SSL retriever.  Thanks: Dennis S.
+  -code cleanups
+
+Version 4.7.8
+5 February 2008
+
+  -explicitly close current IMAP mailbox when selecting a new one, so all
+  servers expunge deleted mail.  Thanks: Josh Triplett.
+  -include experimental spec file for creating RPM with rpmbuild.  Thanks:
+  Dag Wieers, Rob Loos, Dries Verachtert.
+
+Version 4.7.7
+8 November 2007
+
+  -convert changelog to utf-8 encoding.
+  -update email addresses, etc.  Domain for mailing lists has changed to
+  lists.pyropus.ca.
+  -add FAQ about memory errors on OS X.  Thanks: Andres Gasson.
+  -drop log message level for stderr output of destination if ignore_stderr is
+  set, just like for filter.  Thanks: Jeremy Chadwick.
+
+Version 4.7.6
+8 August 2007
+
+  -fix exception when getmail is trying to report a POP3 server that
+  completely missed generating a UIDL token for a message.
+  Thanks: Hans Lammerts.
+
+Version 4.7.5
+6 June 2007
+
+  -make updatefile honour symlinks, so users can alias one server's oldmail
+  state file to another (for split-horizon DNS and other strange
+  configurations).  Thanks: Scott Hepler.
+
+Version 4.7.4
+24 April 2007
+
+  -explicitly watch for broken POP3 servers that return a blank UIDL value
+  (not permitted by the POP3 protocol) and print a fatal error message.
+  Thanks: Florian Hackenberger and Cameron Rangeley.
+
+Version 4.7.3
+18 March 2007
+
+  -fix wrong bytecount displayed in summary at end of run.  Thanks: Andreas
+  Jung.
+
+Version 4.7.2
+20 February 2007
+
+  -add ignore_stderr option to filters, copying same from MDA_external
+  destination.  Thanks: Vittorio Beggi.
+
+Version 4.7.1
+2 February 2007
+
+  -add max_bytes_per_session option.  Thanks: Robert Spencer.
+  -documentation additions.
+
+Version 4.7.0
+24 January 2007
+
+  -make Mboxrd lock type configurable (lockf or flock). Change default
+  to lockf.  Thanks: Norman Carver.
+
+Version 4.6.7
+3 January 2007
+
+  -better handling for some fatal violations of POP/IMAP protocols.
+  Thanks: Paul ?.
+  -formatting cleanups.
+
+Version 4.6.6
+12 December 2006
+
+  -add ignore_stderr option to MDA_external destination.  Thanks: Daniel
+  Burrows.
+  -documentation cleanups.
+
+Version 4.6.5
+20 October 2006
+
+  -disable debug logging message which would show up in messages if --trace was
+  used and the message was passed through an external filter.  Thanks:
+  Christian Bruemmer.
+  -add additional sanity checks to ensure a recent-enough Python is used;
+  trying to run getmail 4 with Python 2.2 would throw an exception.
+  Thanks: fakhri ?.
+
+Version 4.6.4
+28 September 2006
+
+  -add FAQ about BrokenUIDLPOP3 retrievers.
+  -add better diagnostics for missing/invalid/unwritable state/data
+  directory.  Thanks: Christian Authmann.
+
+Version 4.6.3
+22 June 2006
+
+  -fix regression: spurious errors thrown when required multidrop retriever
+  parameter "envelope_recipient" not present in getmailrc file.
+  Thanks: Elliot Schlegelmilch.
+  -fix regression: getmail_fetch no longer properly supported external MDAs
+  because of problems parsing the arguments to them.  Thanks: ?.
+  -change getmail's handling of regular expressions in the "locals" parameter
+  of MultiSorter destination to allow it to handle backslashes correctly.
+  Unfortunately this means complicating the configuration syntax slightly.
+  Thanks: Tim van der Molen.
+  -update filters to use new configuration code.  Remove obsolete code.
+
+Version 4.6.2
+8 June 2006
+
+  -fix regression introduced in 4.6.0 where atime on mbox files would get
+  updated (i.e. not set back), making it difficult for other programs to
+  tell if there was new mail or not without actually opening the mbox.
+  Thanks: Tim van der Molen.
+
+Version 4.6.1
+31 May 2006
+
+  -fix attribute deletion error with Filter_classifier when strip_delivered_to
+  is set.  Thanks: Darren Stevens.
+  -do not consider qmail-local writing to stderr a delivery error.
+  Thanks: Darren Stevens.
+
+Version 4.6.0
+5 April 2006
+
+  -clean up logger API.
+  -refactor configuration mechanism to use classes with embedded logic,
+  rather than simply dictionaries.
+
+Version 4.5.4
+14 February 2006
+
+  -added Maildir "filemode" parameter.  Thanks:  Martin Haag.
+
+Version 4.5.3
+8 February 2006
+
+  -keyfile and certfile parameters to SSL retrievers are now expanded for
+  leading "~/" and "~username/" as well as environment variables, just like
+  other path parameters.  Thanks:  Fredrik Steen.
+
+Version 4.5.2
+7 February 2006
+
+  -fix IMAP bug where no mail was retrieved introduced in 4.5.0.  Thanks:
+  Scott Robbins.
+
+Version 4.5.1
+3 February 2006
+
+  -fix accidental use of sorted() builtin only present in Python 2.4 and up.
+  Thanks:  Jürgen Nagel.
+
+Version 4.5.0
+1 February 2006
+
+  -add delete_dup_msgids option to non-multidrop POP3 retrievers.
+  Thanks: Matthias Andree.
+  -suppress stack trace in getmail_fetch error message when configuration error
+  detected.  Thanks: Dave Jarvis.
+  -documentation updates.
+  -build and development environment changes.  The plaintext versions of the
+  documentation are now generated with links instead of lynx.
+  -explicitly log the reason for not retrieving a message (seen or oversized).
+  Thanks: Payal Rathod.
+
+Version 4.4.4
+3 January 2006
+
+  -improve parsing of flags in IMAP responses.  Thanks: Gareth McCaughan.
+
+Version 4.4.3
+1 December 2005
+
+  -fix harmless copy and paste error in IMAPRetrieverBase class.  Thanks: Henry
+  Miller.
+
+Version 4.4.2
+13 November 2005
+
+  -fix logging import in corrupt messages with Python 2.3.  Thanks: Marco Ferra.
+
+Version 4.4.1
+10 November 2005
+
+  -work around bug in Python which meant POP3-over-SSL with Python >= 2.4
+  could "hang" (it's exactly the same bug that affected getmail's initial
+  IMAP-over-SSL code).
+
+Version 4.4.0
+9 November 2005
+
+  -add new POP3-over-SSL initialization class, which is automatically used
+  when Python 2.4 or newer is in use.  This reduces the overhead involved
+  in retrieving messages from a POP3SSL server (reduces systime about 35%,
+  user time about 50%, wall time 10-30%).  Thanks: Jan Vereecke.
+  -add getmail_fetch configuration-less commandline POP retriever, perfect
+  for scripting use.  Development of getmail_fetch was sponsored by
+  Texas Communications.
+  -future proofing: eliminate relative imports within getmailcore package.
+
+Version 4.3.14
+2 November 2005
+
+  -Fix copy and paste error that caused BrokenUIDLPOP3SSLRetriever to default
+  to port 110.  Thanks: Daniel Burrows via Fredrik Steen.
+
+Version 4.3.13
+15 October 2005
+
+  -add BrokenUIDLPOP3SSLRetriever as SSL version of BrokenUIDLPOP3Retriever,
+  based on an idea by a user of the Debian package.  Thanks: Daniel Burrows,
+  Fredrik Steen.
+
+Version 4.3.12
+13 October 2005
+
+  -remove deprecated "strict" argument from message/header parsing calls.
+  While it was possible to suppress the warning that resulted when using
+  Python 2.4,  it appears many getmail users couldn't bother to do that
+  and complained to me instead.
+
+Version 4.3.11
+16 June 2005
+
+  -getmail could previously record an envelope return path header of "<<>>".
+  Fixed.  Thanks: Fredrik Steen.
+
+Version 4.3.10
+19 May 2005
+
+  -bugfix for missing import.  Thanks: Matthias Andree.
+
+Version 4.3.9
+18 May 2005
+
+  -for multidrop retrievers, change the way the envelope recipient header
+  field is parsed, to prevent odd values from being interpreted as multiple
+  addresses when they look like an 822-style address group.  Thanks: "aal".
+  -try to avoid parsing message bodies, in case they're corrupt or invalid.
+  Thanks: Michael Gold.
+
+Version 4.3.8
+6 May 2005
+
+  -change (again) handling of deleted messages vs. connection that dies.
+  Inability to send QUIT to POP3 server should be less problematic now.
+  -improve housekeeping of old message state file.  Thanks: Thomas Schwinge.
+
+Version 4.3.7
+1 May 2005
+
+  -add error message for missing mboxrd file.  Thanks: Marco Ferra.
+  -change handling of connection that dies vs. deleted messages.
+  Thanks: Thomas Schwinge.
+
+Version 4.3.6
+8 April 2005
+
+  -broke BrokenUIDLPOP3Retriever when I added the forget_deleted parameter
+  to the retrievers base class; now fixed.  Thanks: Georg Neis.
+
+Version 4.3.5
+3 April 2005
+
+  -make getmail less conservative about remembering messages as already-seen
+  when unrelated errors occur after successfully delivering them.
+  Thanks: Thomas Schwinge.
+
+Version 4.3.4
+14 March 2005
+
+  -documentation changes; getmail v4 cannot run natively on Windows.  Use
+  Cygwin if you must run on a Windows platform; this works.
+  -remove some Windows-specific code.
+
+Version 4.3.3
+19 February 2005
+
+  -previously, for safety, getmail would re-retrieve messages after a session
+  that encountered errors.  However, getmail had enough information to safely
+  remember those messages that had been successfully delivered.  This behaviour
+  has been changed, to avoid delivering duplicate messages where it isn't
+  necessary.  Thanks: Thomas Schwinge.
+  -in output/log files, getmailrc files are now specified only by filename,
+  instead of by complete paths.  This will prevent some overly-long output
+  lines.
+  -add Windows versions of functions to lock/unlock files, so mbox delivery
+  can be used on Windows.  Thanks: Felix Schwarz.
+
+Version 4.3.2
+5 February 2005
+
+  -previously, if an SSL POP3 or IMAP server abruptly closed the connection
+  before getmail could finish logging in, getmail would exit instead of
+  proceeding to the next configured mail account.  Fixed.  Thanks: Matthias
+  Andree, Frank Benkstein, Thomas Schwinge.
+  -eliminate duplicate Return-Path: header fields.  Thanks: Angles Puglisi.
+
+Version 4.3.1
+18 January 2005
+
+  -some IMAP errors would cause getmail to raise an exception, instead of
+  gracefully proceeding with the next configured mail account.  Fixed.
+  Thanks: Matthias Andree.
+
+Version 4.3.0
+10 January 2005
+
+  -add BrokenUIDLPOP3Retriever class to support servers that do not implement
+  the UIDL command, or which fail to uniquely identify messages using it.
+
+Version 4.2.6
+2 January 2005
+
+  -add new error message and documentation for POP3 servers that cannot
+  uniquely identify messages in a mailbox.  Thanks: Thomas Schwinge.
+
+Version 4.2.5
+8 December 2004
+
+  -fix typo in getmailcore/exceptions.py that would raise a NameError
+  exception in certain rare cases.  Thanks: Gour ?.
+
+Version 4.2.4
+22 November 2004
+
+  -one type of filter error would cause getmail to skip to the next configured
+  mail account, rather than simply proceeding to the next message from the
+  same account.  Fixed.  Thanks: Adrien Beau.
+  -documentation updates.
+
+Version 4.2.3
+18 November 2004
+
+  -documentation updates.
+  -getmailrc examples file updated.  Thanks: Scott Robbins.
+  -clarify error message when user insecurely tries to deliver mail as GID 0.
+
+Version 4.2.2
+11 October 2004
+
+  -in child delivery processes, change real as well as effective uid/gid.
+  Thanks: David Watson.
+  -handle corrupted oldmail file better.  Thanks: Matthias Andree.
+
+Version 4.2.1
+8 October 2004
+
+  -set message attributes on corrupt container objects to prevent problems
+  with destinations that expect multidrop-retrieved messages.
+  Thanks: Harry Wearne.
+  -move tests for existence of file from mbox destination initialization
+  to delivery method, and change error from configuration to delivery error.
+  Thanks: David Watson.
+
+Version 4.2.0
+18 September 2004
+
+  -SECURITY: previous versions of getmail contain a security vulnerability.
+  A local attacker with a shell account could exploit a race condition (or a
+  similar symlink attack) to cause getmail to create or overwrite files in a
+  directory of the local user's choosing if the system administrator ran getmail
+  as root and delivered messages to a maildir or mbox file under the control of
+  the attacker, resulting in a local root exploit.  Fixed in versions 4.2.0
+  and 3.2.5.
+  This vulnerability is not exploitable if the administrator does not deliver
+  mail to the maildirs/mbox files of untrusted local users, or if getmail is
+  configured to use an external unprivileged MDA.  This vulnerability is
+  not remotely exploitable.
+  Thanks: David Watson.  My gratitude to David for his work on finding and
+  analyzing this problem.
+  -Now, on Unix-like systems when run as root, getmail forks a child
+  process and drops privileges before delivering to maildirs or mbox files.
+  getmail will absolutely refuse to deliver to such destinations as root;
+  the uid to switch to must be configured in the getmailrc file.
+  -revert behaviour regarding delivery to non-existent mbox files.  Versions
+  4.0.0 through 4.1.5 would create the mbox file if it did not exist; in
+  versions 4.2.0 and up, getmail reverts to the v.3 behaviour of refusing
+  to do so.
+
+Version 4.1.5
+13 September 2004
+
+  -getmail would not delete messages from the server if it was configured not
+  to retrieve them and the delete_after directive was not in use (i.e. user
+  normally left messages on server but occasionally wanted to force-delete
+  them).  Fixed.  Thanks:  Frankye Fattarelli.
+
+Version 4.1.4
+1 September 2004
+
+  -change failure of a message filter to produce at least as many mail headers
+  as it was provided from a non-fatal error to warning.  If your filter strips
+  headers, getmail will now warn you about it, but will not consider it an
+  error.
+  -documentation additions.
+
+Version 4.1.3
+31 August 2004
+
+  -enhance warning diagnostics about non-accessible or non-writable maildirs.
+  -change method of determining name of local host; only fall back to
+  getfqdn() if the result of gethostname() does not contain a dot.
+  -documentation enhancements.
+
+Version 4.1.2
+28 August 2004
+
+  -dumping config would raise an exception since 4.1.0; fixed.
+  Thanks: Ilya Krel.
+
+Version 4.1.1
+27 August 2004
+
+  -getmail raised an exception after processing all accounts, while printing
+  a summary, if verbose was set to 2.  Fixed.  Thanks:  Matthias Andree.
+
+Version 4.1.0
+24 August 2004
+
+  -biggest change is multiple verbosity levels.  To support this from rc file,
+  the verbose parameter had to change from a boolean to an integer.  Update
+  your getmail rc files:  for quiet, set verbose to 0.  For more output,
+  set it to 1 or 2.  2 includes info about messages not retrieved, etc.
+  -add rc filename to error messages
+  -change fix from 4.0.11 for email module raising exception during .flatten().
+  Thanks:  Jürgen Nagel.
+  -some types of SSL error could cause getmail to exit instead of
+  continuing to the next mail account; fixed.  Thanks:  Matthias Andree.
+
+Version 4.0.13
+19 August 2004
+
+  -unrecognized parameters could trigger a traceback instead of a warning.
+  Fixed.  Thanks: Frankye Fattarelli.
+
+Version 4.0.12
+19 August 2004
+
+  -forgot to add the new Message attribute (from 4.0.11) to its slots
+  declaration.  Fixed.
+
+Version 4.0.11
+18 August 2004
+
+  -change oldmail file writing to save a few bytes of disk space
+  -documentation additions.
+  -Python's standard library email.Message().flatten() could barf on certain
+  types of badly mis-formatted messages (instead of the during instantiation,
+  like the /other/ buggy cases).  Hope this is fixed in Python 2.4.  Developed
+  a work-around for getmail.  Thanks:  Jürgen Nagel.
+  -changes to "normal" output of getmail to make it slightly less verbose.
+
+Version 4.0.10
+12 August 2004
+
+  -cosmetic fix to output:  add whitespace after timestamp when not retrieving
+  message.  Thanks: Matthias Andree.
+  -include MANIFEST.in in source distribution, to assist users in building
+  "built distributions" from it.
+  -change a few output messages' level to make verbose mode slightly less
+  verbose, and add --debug switch to get "more verbose" behaviour.
+
+Version 4.0.9
+9 August 2004
+
+  -fix cosmetic error for IMAP mailboxes with 0 messages in them.
+  -change method of obtaining uidvalidity from IMAP server and remove wrapper.
+  -previously, connecting to an IMAP-SSL server could fail if a non-SSL
+  IMAP connection were attempted immediately before.  This was due to
+  the Python bug discussed here:
+  http://sourceforge.net/tracker/index.php?func=detail&aid=945642&group_id=5470&atid=305470
+  Implemented a workaround for getmail.  Thanks: Payal Rathod.
+
+Version 4.0.8
+6 August 2004
+
+  -add an extra error message if you ask getmail to deliver to a maildir,
+  but getmail can't check the contents of it due to permissions.
+  Thanks: Clemens Buschmann.
+  -fix breakage introduced in 4.0.7: getmail would forget a message was "seen"
+  after a cycle of not retrieving it.  Thanks: Payal Rathod.
+
+Version 4.0.7
+5 August 2004
+
+  -change failure of a message filter to produce at least as many mail headers
+  as it was provided from a fatal to a non-fatal error.  The message will
+  be skipped.  Thanks: Payal Rathod.
+  -a few non-conformant IMAP4 servers don't implement SEARCH, so getmail
+  couldn't get a list of UIDs.  Changed to use FETCH instead.
+  Thanks: Matthias Andree.
+  -prevent traceback if IMAP SSL connection closed during connect().
+  Thanks: Payal Rathod.
+  -add warning if unknown parameters are supplied to a retriever, filter,
+  or destination.
+  -write subclasses of Python imaplib classes to work around missing
+  UIDVALIDITY select() response.  Add it to the state getmail keeps.
+  Thanks:  Matthias Andree.
+  -move message state saving to later, so getmail doesn't falsely remember
+  having handled a message.  Thanks:  Matthias Andree.
+  -change location of documentation/man pages to
+  <prefix>/share/{doc/getmail,man}/ to be more comformant with the FHS.
+  -documentation updates
+
+
+Version 4.0.6
+4 August 2004
+
+  -if the connection failed in a certain way, getmail could forget which
+  messages it had already retrieved, and therefore retrieve them again when
+  the next successful connection occurred.  Fixed.  Thanks: Wim Uyttebroek.
+  -add win32 executable installer as third download option.
+
+Version 4.0.5
+3 August 2004
+
+  -add additional error handler for certain network errors with POP3-over-SSL
+  connections.  Thanks: Frank Benkstein.
+  -rename retriever class for Demon UK:  it should have been SDPS; my
+  transposition.  Thanks: Paul Howarth.
+
+Version 4.0.4
+2 August 2004
+
+  -corrupt-message handler introduced in 4.0.1 needed tweaking.
+  Thanks: Bernhard Riedel.
+
+Version 4.0.3
+2 August 2004
+
+  -some types of socket errors would raise an exception instead of letting
+  getmail gracefully continue; fixed.  Thanks: David.
+  -documentatation updates; fix two typos and add to the section on using
+  ClamAV with getmail.
+  -changes to my release process; the current version's URL will not change
+  when a new version is released.  See, I try to help others, even when they
+  don't do the same...
+
+Version 4.0.2
+30 July 2004
+
+  -trying to use MDA_qmaillocal destination with a non-multidrop retriever
+  would raise an exception instead of printing a configuration error message.
+  Fixed.  Thanks: Clemens Buschmann.
+
+Version 4.0.1
+26 July 2004
+
+  -documentation fixes.  Thanks: Roland Hill.
+  -add handler for badly-misformatted messages as a workaround for
+  Python 2.3.x, where the email module can raise exceptions while parsing
+  messages.  Thanks: Paul.
+
+Version 4.0.0
+23 July 2004
+
+  -exit beta; final release of version 4.0.0, with approximately four thousand
+  lines (~150 kbytes) of Python code and five thousand lines (~180 kbytes) of
+  documentation.
+
+Version 4.0.0b10
+21 July 2004
+
+  -documentation updates and cleanups
+  -add MultiGuesser destination; it's like MultiSorter, but guesses at the
+  message recipient based on addresses found in the message header, to be
+  used for mail sorting if you don't have a proper domain/multidrop mailbox.
+  -consolidate initialization code from retrievers to RetrieverSkeleton base
+  class.
+  -slight change to main script and retriever base classes to change the
+  way the retriever objects are destroyed and garbage-collected
+  -get rid of unneeded hostname variable in MultiDestinationBase
+  -add "Summary:" header line to main script output in verbose mode
+  -wrap code for 80 columns
+  -fix error message when a filter doesn't return a message properly.
+  Thanks: Shantanu Kulkarni.
+
+Version 4.0.0b9
+19 July 2004
+
+  -change syntax of MultiSorter's locals parameter.  The previous syntax was
+  fragile and was mostly a holdover from previous versions; it is now a tuple of
+  items, each of which is a 2-tuple of quoted strings.
+  -add Python version to --dump output.
+  -eliminate redundant _confstring() method in _retrieverbases.py.
+  -small documentation updates.
+
+Version 4.0.0b8
+18 July 2004
+
+  -documentation updates.
+  -include RPM build.  Rapidly approaching release state.
+
+Version 4.0.0b7
+17 July 2004
+
+  -changes to an "impossible" error handler in _child_handler(), just in case.
+  -move some code from destinations.MultiSorter() into new MultiDestinationBase
+  base class.
+  -fix MultiDestinationBase._get_destination()
+  -add MultiDestination class to deliver messages to multiple destinations
+  unconditionally.
+  -cosmetic fixes to output
+
+Version 4.0.0b6
+15 July 2004
+
+  -move common child-handling code out of filters and destinations into new
+  baseclasses.ForkingBase() class.
+  -add __all__ declarations to modules that were missing them, to help prevent
+  namespace clutter for others
+
+Version 4.0.0b5
+15 July 2004
+
+  -apply the child fix from b3 to Filter_classifier; I missed this in the
+  update.  Thanks: Dave Osbourn.
+  -cosmetic fix for output describing filters and destination objects.
+  Thanks: Dave Osbourn.
+  -catch configuration error of non-multidrop retriever with multidrop-only
+  destination.  This broke when I cleaned up the message attribute interface
+  in alpha 29.  Thanks: Dominik Kacprzak.
+
+Version 4.0.0b4
+14 July 2004
+
+  -remove unneeded code raising a ConfigurationError in Filter_TMDA
+  -clean up output for Maildir, Mboxrd destinations and getmail_maildir
+  script, messages dropped by filters, various other bits
+  -add --show-default-install-dirs to setup.py
+  -documentation updates, including more clarification and examples of
+  installation options
+  -tweak to getmail manpage.  Thanks: Frankye Fattarelli.
+
+Version 4.0.0b3
+13 July 2004
+
+  -different fix for the reaping child problem.  This one tested by Paul
+  and confirmed working on Mandrake 10's kernel.
+  -add Filter_TMDA filter class.
+  -changes to setup.py to account for --install-data specifying a non-default
+  path for the documentation and man pages
+
+Version 4.0.0b2
+13 July 2004
+
+  -documentation fixes regarding installation.  Thanks: Emily Jackson.
+  -do environment variable expansion in paths and arguments (before
+  substitutions like %(sender), etc) in addition to expanding leading
+  ~/ or ~user/ .  Thanks: Paul.
+  -try change to code which reaps child processes; the previous code failed
+  on a few Linux systems (perhaps the ones where the kernel changed
+  fork() behaviour to run the child first?)  Reported by Paul.
+
+Version 4.0.0b1
+10 July 2004
+
+  -first beta release
+  -add missing os import to getmail_maildir
+  -fix received_by in getmail_mbox and don't create Received: header
+  -a handful of trivial changes to make the code idiomatically consistent
+  -fix to oldmail file writing
+  -documentation updates
+
+Version 4.0.0a30
+8 July 2004
+
+  -documentation updates
+  -change header-adding code from filters to a method in Message class.  Thanks:
+  Frankye Fattarelli.
+  -make MultiSorter pass retriever info down to its sub-destinations.  This
+  fixes a problem reported by Frankye Fattarelli.
+
+Version 4.0.0a29
+8 July 2004
+
+  -flesh out the getmailrc-examples file (note that it's been renamed from
+  getmailrc-example)
+  -clean up message attributes.  Make Message() class.  Move flatten_msg()
+  out of utilities and make it into a Message method.  Remove header-length
+  checking when generating flattened representation of message.  Change
+  callers to use the new class.
+  -move SENDER check from deliver_maildir() to getmail_maildir where it
+  belongs.
+  -update the miscellaneous documentation files
+  -last alpha, I think
+
+Version 4.0.0a28
+7 July 2004
+
+  -documentation additions and changes.
+  -add manpages for getmail, getmail_maildir, getmail_box.  These go in
+  PREFIX/man/man1/.
+
+Version 4.0.0a27
+4 July 2004
+
+  -documentation fixes and additions.  Split documentation into
+  reasonably-sized files.  I need to add inter- and intra-document links
+  to most of the documentation yet.
+  -add auto-generated tables of contents to each doc file.
+  -start flushing out the website with copies of the docs, download directories,
+  etc.
+
+Version 4.0.0a26
+4 July 2004
+
+  -add explicit checks for multidrop classes to prevent users from incorrectly
+  specifying certain header fields as recording the envelope recipient address
+  -documentation fixes and additions
+
+Version 4.0.0a25
+2 July 2004
+
+  -add handler for KeyboardInterrupt.  Thanks: Thomas Schwinge.
+  -change setup script to not error if the specified directory prefix doesn't
+  exist.  Thanks: Thomas Schwinge.
+  -pass retriever protocol info to filters.  Thanks:  Frankye Fattarelli.
+  -first inclusion of "real" documentation.  See docs/documentation.html or its
+  plaintext counterpart docs/documentation.txt.
+
+Version 4.0.0a24
+1 July 2004
+
+  -setup script/distutils changes.  The setup.py script now looks for
+  --prefix or --home specifying an alternate installation directory, and
+  otherwise defaults to the hierarchy that Python was installed to.
+  /usr/share/doc/ or similar is no longer hardcoded anywhere.
+
+Version 4.0.0a23
+1 July 2004
+
+  -changes to MDA_qmaillocal:  add "group" parameter, and make "user"
+  parameter also have getmail change UID before invoking qmail-local.
+  -change two instances of socket.gethostname() to socket.getfqdn()
+  -change localparttranslate to localpart_translate
+  -add explicit checks for socket.ssl(), which is optional.  Raise
+  getmailConfigurationError if they're not present and the user tries
+  to use it.  Thanks: Thomas Schwinge.
+  -fix missing received_by in destinations.  Thanks: Frankye Fattarelli and
+  Andrew Raines.
+
+Version 4.0.0a22
+30 June 2004
+
+  -MultiSorter default destination can now be a named destination section as
+  well, so postmaster mail can go to an external MDA, etc.
+  -deliver_maildir writes out a new Return-Path: header field if SENDER
+  is set.
+  -include getmail_maildir and getmail_mbox delivery scripts for use as
+  MDAs with other programs.
+  -add starting/finishing log lines for each retriever
+  -change eval_bool to raise exception on unexpected values, rather than
+  using Python's native idea of what is boolean True and False
+  -ensure no message has partial final line regardless of delivery method.
+  Thanks: Thomas Schwinge.
+  -get rid of msg_lines(), mbox_timestamp() and their only callers.
+  -add the Delivered-To: and Received: header creation like getmail v.3 had,
+  and boolean options delivered_to and received to allow the user to disable
+  them.  This necessitates adding some data attributes to retriever classes
+  and additional code to destination classes and utilities.
+  Thanks: Thomas Schwinge.
+  -drop .py suffix on the name of the main getmail script
+  -declare the three scripts to be scripts instead of modules (for distutils)
+  -some fixups to the distutils setup script.  If files or directories
+  are still installed with "wrong" permissions (like 0600/0700 instead of
+  0644/0755), please let me know.
+  -a few miscellaneous fixups
+  -heading for beta, working on documentation ...
+
+Version 4.0.0a21
+27 June 2004
+
+  -leave Return-Path header field alone for program deliveries.  Thanks:
+  Andrew Raines.
+
+Version 4.0.0a20
+25 June 2004
+
+  -fix typo in Filter_classifier
+  -wrap additional exception check around executing subprocesses to ensure
+  nonzero exit on error
+  -finish MDA_qmaillocal address handling and add strip_delivered_to
+  parameter.  Document MDA_qmaillocal.
+  -change email module import in utilities.py.  Submit bug report to
+  Python bug tracker.  Thanks: Frankye Fattarelli.
+
+Version 4.0.0a19
+24 June 2004
+
+  -bring some docstrings, comments, and documentation up to date.
+  -add Filter_classifier filter module, to support adding information
+  to the message header from programs that don't provide the original message
+  back on stdout (like clamscan/clamdscan, apparently).  Thanks: Frankye
+  Fattarelli.
+  -missed seek(0) in msg_flatten().  Add missing imports.
+  Thanks: Andrew Raines.
+
+Version 4.0.0a18
+24 June 2004
+
+  -add msg_flatten(), msg_lines() and use them exclusively to prevent
+  .as_string() from changing header fields for spurious reasons.
+  Thanks: Andrew Raines.
+  -remove code doing From_-escaping in Mboxrd and let the email module do it.
+  -fix copy & paste errors in change_uidgid().  Thanks: Andrew Raines.
+  -catch timeouts
+
+Version 4.0.0a17
+23 June 2004
+
+  -add exitcodes_keep and exitcodes_drop parameters to Filter_external.
+  Thanks: Frankye Fattarelli.
+
+Version 4.0.0a16
+23 June 2004
+
+  -add user and group, and allow_root_commands parameters to MDA_external
+  destination and Filter_external filter classes.
+  -make import pwd fail gracefully for Windows, etc.
+  -add allow_root_commands parameter to MDA_external destination and
+  Filter_external filter classes to force overriding of running external
+  commands as root.
+  -pass reference to configparser to retriever, destination, and filters
+  -add MultiSorter destination of "[section]" which invokes another
+  destination from the same getmail rc file.  Use this to deliver to programs
+  by including an MDA_external destination in a section named [foo] in the
+  rc file, then specify that section name in the MultiSorter in the locals
+  part, i.e.
+    [destination]
+    type = MultiSorter
+    postmaster = /path/to/maildir/
+    locals = joe /path/to/maildir/
+      sam /path/to/mbox/
+      chris [myprogram]
+    [myprogram]
+    type = MDA_external
+    path = /usr/local/bin/mymda
+    arguments = ("--strip-attachments", "-f%(sender)", "--fast")
+  Don't try to cause a loop using this to point to itself.  You have been
+  warned.
+  -MultiSorter is now a little stricter about destination names.  A maildir
+  (after any tilde expansion, if applicable) must start with "." or "/" and
+  end with "/".  An mboxrd (after any tilde expansion, if applicable) must
+  start with "." or "/".  This means if you previous had something like:
+    locals = sam@example.net subdir/maildir/
+  You'll need to change it to:
+    locals = sam@example.net ./subdir/maildir/
+  Of course,
+    locals = sam@example.net ~sam/maildir/
+  is already okay if sam is a valid user and has a valid home directory.
+  -add message_log_syslog
+
+Version 4.0.0a15
+22 June 2004
+
+  -add summary "Retrieved X messages for ..." for each rc file at program
+  close.  Thanks: Frankye Fattarelli.
+  -add explicit delete of retriever after quit() to try to force writing
+  oldmail file immediately instead of at garbage collection.  Python makes
+  no guarantees about when garbage collection takes place, so this won't be
+  perfect.  Thanks: Julian Gomez.
+  -add message_log
+  -add traceback formatting on exception
+  -change --dump to include filters.  Change order of operations.
+
+Version 4.0.0a14
+22 June 2004
+
+  -fix IMAP-over-SSL.  socket.ssl objects are apparently incompatible with
+  socket timeouts, even in the IMAP_SSL class.
+  -ensure --trace debugging output doesn't output passwords.
+  Thanks: Julian Gomez.
+  -IMAP classes would stop indexing mailboxes when they hit an empty one.
+  Fixed.  Thanks: Julian Gomez.
+
+Version 4.0.0a13
+21 June 2004
+
+  -add missing default for max_messages_per_session.  Thanks:  Frankye
+  Fattarelli.
+
+Version 4.0.0a12
+21 June 2004
+
+  -slight change to quit() to ensure old connections are closed
+  and garbage-collected before trying to make new ones.  Thanks:  Frankye
+  Fattarelli.
+  -move default documentation directory to /usr/local/share/doc/ .
+  -filters.py now checks that the filtered message is at least basically
+  sane in that it has a header no shorter than the message it was supplied.
+  Let me know if this causes problems.
+  -add and document max_messages_per_session
+
+Version 4.0.0a11
+21 June 2004
+
+  -add MultidropIMAPRetriever and MultidropIMAPSSLRetriever
+  -add move_on_delete parameter to all IMAP retrievers.
+  -add and document delete_after and max_message_size options
+  -document read_all and delete options
+  -rename pop3ssl.py
+  -fix --quiet.  i.e., getmail should again operate truly silently if you
+  want it to.
+  -retrievers' quit() method wasn't getting called.  Fix.  Thanks: Frankye
+  Fattarelli.
+
+Version 4.0.0a10
+19 June 2004
+
+  -fix the retrieve-every-other-message bug when delete == True.
+  -move base classes out of retrievers.py into _retrieverbases.py
+  -fix exception when retrieving mail from an empty IMAP account
+
+Version 4.0.0a9
+19 June 2004
+
+  -accidentally edited initialize() in the wrong class; it broke POP3.
+  This update should fix it.
+
+Version 4.0.0a8
+18 June 2004
+
+  -fix 6 instances of getmailConfirurationError typo in retrievers.py
+  -finish basics of IMAP support -- i.e., it successfully retrieves mail.
+  delete might not work yet.  IMAP-over-SSL /might/, but the server I was
+  testing against wasn't working with SSL (no connection).
+  -handle email.Utils.getaddresses returning None.  Thanks:  Frankye Fattarelli.
+  -fix default port for MultidropPOP3SSLRetriever.
+
+Version 4.0.0a7
+17 June 2004
+
+  -debug and rewrite POP3-over-SSL functionality.  Involved writing around
+  some ugly limitations and kludges in Python's socket.ssl and poplib.POP3
+  code.  But POP3-over-SSL actually works now, and is fairly clean.
+  Let me know if it hangs; I might need to change the way blocking mode is
+  handled on the underlying socket.
+
+Version 4.0.0a6
+16 June 2004
+
+  -add pseudofile class to implement readline() and sslwrapper to implement
+  sendall() on ssl objects.
+  ssl objects in Python don't behave like a file, or like a socket; they're just
+  ... broken. It's a deficiency in the Python standard library.
+  This might make POP3-over-SSL work, or it might need more work yet.  I've
+  got it talking some SSL, but it hangs at the moment.  Might be blocking
+  in read().
+  -move Mboxrd file locking to _deliver_message().  Thanks:  Frankye Fattarelli.
+  -make --trace more useful and add extra debug info to main script.
+  -eliminate noise from defaults in non-[options] section processing
+  -found Python's ConfigParser .getboolean() method failed when the passed-in
+  default was a non-string.  Maybe I should have stayed with my own
+  replacement configuration parser, as it properly handled this case ...
+  submitted a patch to the Python bug tracker and added a workaround to
+  getmail for the moment.
+  -/really/ enable delete and read_all in [options] of rc file.
+
+Version 4.0.0a5
+16 June 2004
+
+  -document tuple syntax.  Thanks:  Frankye Fattarelli.
+  -fix "filters" name collision in script.  Thanks:  Frankye Fattarelli.
+
+Version 4.0.0a4
+15 June 2004
+
+  -fix default values in three classes' parameters which previously relied
+  on type conversion.  Thanks: Andrew Raines.
+  -fix default port for POP3-over-SSL and "username" parameter in documentation.
+  Thanks: Frankye Fattarelli.
+  -enable delete and read_all in [options] of rc file.  Change handling of
+  verbose.
+
+Version 4.0.0a3
+15 June 2004
+
+  -fix typo in processing filters.  Thanks: K. Shantanu.
+  -fix typo in processing non-default parameters.  Thanks: Andrew Raines.
+  -document SSL retrievers
+  -move retrievers.py configuration functionality into ConfigurableBase class
+  -convert filters.py to use ConfigurableBase
+  -convert destinations.py to use ConfigurableBase
+
+Version 4.0.0a2
+14 June 2004
+
+  -fix default/'default' in filters module.  Thanks: Andrew Raines.
+  -add the mix-in classes for SSL support with POP3 classes.  Meant small
+  rewrites to the POP3 classes, but the design should be even cleaner now.
+
+Version 4.0.0a1
+14 June 2004
+
+  -first alpha release of getmail version 4
+
+
+Changes since getmail version 3
+-------------------------------
+
+-complete rewrite
+-switch to Python version 2.3.3:
+  -increased code readability (augmented assignment, list comprehensions,
+    string methods, etc)
+  -eliminate external modules (ConfParser, timeoutsocket)
+  -use standard library modules which have come up to reasonable levels
+    of quality and functionality over old custom code (optparse,
+    ConfigParser)
+  -no longer require workarounds for older, broken standard library modules/
+    functions
+-modular, object-oriented framework for retrievers, destinations, filters
+  allows extensibility
+-make more platform-agnostic (transparently support system EOL convention,
+  etc)
+-support for multiple retriever/account types:
+  -POP (single-user, multidrop, SDPS)
+  -IMAPv4 (single-user, multidrop)
+-full native support for POP3-over-SSL and IMAP-over-SSL.
+-configuration (rc) file format changes:
+  -support multiple rc files per invocation
+  -one mail account per rc file
