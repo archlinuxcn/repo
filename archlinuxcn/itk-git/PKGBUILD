@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 _pkgname=ITK
-pkgname=(itk-git python-itk-git)
+pkgname=itk-git
 _pkgver=5.2
 pkgver=5.2.r52046.2b92d3973c
 pkgrel=1
@@ -30,13 +30,11 @@ makedepends=(
   subversion
   swig
 )
+provides=(itk)
+conflicts=(itk)
 options=(!emptydirs)
 source=("${_pkgname}::git+https://github.com/InsightSoftwareConsortium/ITK.git")
 sha512sums=('SKIP')
-
-get_pyver() {
-  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
-}
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
@@ -69,7 +67,6 @@ build() {
     -DITK_USE_SYSTEM_SWIG=ON
     -DITK_USE_SYSTEM_TIFF=ON
     -DITK_USE_SYSTEM_ZLIB=ON
-    -DITK_WRAP_PYTHON=ON
 )
 
   cmake -B "build" \
@@ -78,30 +75,8 @@ build() {
   make -C "${srcdir}/build"
 }
 
-package_itk-git() {
-  provides=(itk)
-  conflicts=(itk)
-
+package() {
   cd "${srcdir}/build"
   make DESTDIR="${pkgdir}" install
-  rm -rf "${pkgdir}/usr/lib/python$(get_pyver)"
-}
-
-package_python-itk-git() {
-  pkgdesc+="${pkgdesc} (the python binding)"
-  depends+=(
-    python-numpy
-    python-xarray
-)
-  provides=(python-itk)
-  conflicts=(python-itk)
-
-  cd "${srcdir}/build"
-  make DESTDIR="${pkgdir}" install
-  # keep only python package
-  rm -rf "${pkgdir}/usr/bin" "${pkgdir}/usr/include" "${pkgdir}/usr/share" "${pkgdir}/usr/lib/cmake"
-  # remove /usr/lib but keep /usr/bin/python*
-  find "${pkgdir}/usr/lib" -maxdepth 1 -type f -exec rm -vf {} \;
-  find "${pkgdir}/usr/lib" -maxdepth 1 -type l -exec rm -vf {} \;
 }
 # vim:set ts=2 sw=2 et:
