@@ -2,8 +2,8 @@
 
 _hkgname=cabal-fmt
 pkgname=cabal-fmt
-pkgver=0.1.5
-pkgrel=6
+pkgver=0.1.5.1
+pkgrel=1
 pkgdesc="Format .cabal files"
 url="https://github.com/phadej/cabal-fmt"
 license=("GPL3")
@@ -11,7 +11,7 @@ arch=('x86_64')
 depends=('ghc-libs' 'haskell-optparse-applicative')
 makedepends=('ghc' 'haskell-tasty' 'haskell-tasty-golden')
 source=("https://hackage.haskell.org/packages/archive/$_hkgname/$pkgver/$_hkgname-$pkgver.tar.gz")
-sha256sums=('4d21dfad4586ead9732b975d0e3155f873e166cb93ea7acfe99bc8d16e9456bb')
+sha256sums=('a7fc6f0ff8b36ddd329b01237c0e9a6eda835be9439e434470d69a4511611f7d')
 
 prepare() {
   cd $_hkgname-$pkgver
