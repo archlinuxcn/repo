@@ -2,7 +2,7 @@
 # Contributor: Andy Weidenbaum <archbaum@gmail.com>
 
 pkgname="lnav-git"
-pkgver=0.9.0.rc3.r27.g0e1eb41
+pkgver=0.9.0.v39.gcb7a890
 pkgrel=1
 pkgdesc="A featureful ncurses based log file viewer"
 arch=("i686" "x86_64")
@@ -18,7 +18,7 @@ md5sums=('SKIP')
 pkgver() {
     cd "$pkgname"
     # tag + number of commits since that + SHA-1 (first 7 characters) of the last commit
-    git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+    git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g;s/\.rc/rc/;s/\.r/.v/'
 }
 
 build() {
