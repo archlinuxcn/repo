@@ -43,7 +43,7 @@ pkgver() {
 	cd "YouCompleteMe" || exit
 	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
-pkgrel=2
+pkgrel=3
 pkgdesc="A code-completion engine for Vim"
 arch=('x86_64')
 url='https://ycm-core.github.io/YouCompleteMe/'
@@ -141,7 +141,7 @@ prepare() {
 		local jdtls_buildstamp=$(egrep '^JDTLS_BUILD_STAMP' "$srcdir/ycmd/build.py" | sed -e "s/.* = //g" -e "s/'//g")
 
 		if [[ "$jdtls_milestone" != "" ]] && [[ "$jdtls_buildstamp" != "" ]]; then
-			local jdtls_full_url="http://download.eclipse.org/jdtls/snapshots/${jdtls_package_name}-${jdtls_milestone}-${jdtls_buildstamp}.tar.gz"
+			local jdtls_full_url="https://download.eclipse.org/jdtls/snapshots/${jdtls_package_name}-${jdtls_milestone}-${jdtls_buildstamp}.tar.gz"
 			echo "JDTLS package version matched. Downloading... ${jdtls_full_url}"
 			curl -LO "${jdtls_full_url}"
 			tar xf ${jdtls_package_name}-${jdtls_milestone}-${jdtls_buildstamp}.tar.gz
