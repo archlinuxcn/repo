@@ -2,7 +2,7 @@
 pkgname=mmv-go
 _binname=mmv
 pkgver=0.1.2
-pkgrel=4
+pkgrel=5
 pkgdesc="Rename multiple files with editor"
 arch=(i686 x86_64)
 url='https://github.com/itchyny/mmv'
@@ -12,7 +12,7 @@ makedepends=('go' 'make')
 conflicts=('mmv' 'mmv-go-git' 'mmv-go-bin-git')
 provides=('mmv')
 
-source=("${url}/archive/v${pkgver}.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 sha256sums=('d9841ed28a720ceb07aa894cc3f69643bab02c558fc1c566ff42562875a9c84d')
 
 build() {
