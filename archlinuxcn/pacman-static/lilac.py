@@ -8,9 +8,10 @@ from lilaclib import *
 
 def pre_build():
   oldver, oldrel = get_pkgver_and_pkgrel()
+  aur_pre_build()
+  newver, newrel = get_pkgver_and_pkgrel()
   if oldver == newver:
     update_pkgrel(rel=int(oldrel + 1))
-  aur_pre_build()
 
 if __name__ == '__main__':
   single_main()
