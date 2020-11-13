@@ -1,0 +1,37 @@
+--- a/zshrc	2016-06-26 13:02:54.465316829 +0200
++++ b/zshrc	2016-06-26 13:01:21.811987209 +0200
+@@ -1,5 +1,5 @@
+ # Path to your oh-my-zsh installation.
+-export ZSH=$HOME/.oh-my-zsh
++ZSH=/usr/share/oh-my-zsh/
+ 
+ # Set name of the theme to load.
+ # Look in ~/.oh-my-zsh/themes/
+@@ -15,7 +15,7 @@
+ # HYPHEN_INSENSITIVE="true"
+ 
+ # Uncomment the following line to disable bi-weekly auto-update checks.
+-# DISABLE_AUTO_UPDATE="true"
++DISABLE_AUTO_UPDATE="true"
+ 
+ # Uncomment the following line to change how often to auto-update (in days).
+ # export UPDATE_ZSH_DAYS=13
+@@ -56,7 +56,6 @@
+ # export PATH="/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+ # export MANPATH="/usr/local/man:$MANPATH"
+ 
+-source $ZSH/oh-my-zsh.sh
+ 
+ # You may need to manually set your language environment
+ # export LANG=en_US.UTF-8
+@@ -82,3 +81,10 @@
+ # Example aliases
+ # alias zshconfig="mate ~/.zshrc"
+ # alias ohmyzsh="mate ~/.oh-my-zsh"
++
++ZSH_CACHE_DIR=$HOME/.cache/oh-my-zsh
++if [[ ! -d $ZSH_CACHE_DIR ]]; then
++  mkdir $ZSH_CACHE_DIR
++fi
++
++source $ZSH/oh-my-zsh.sh
