@@ -47,8 +47,11 @@ prepare() {
     elif line.startswith('validpgpkeys'):
       line = ''
       checks = checks + '7'
+    elif line.startswith('makedepends=('):
+      line = line.replace('=(', '=(\'git\' ')
+      checks = checks + '8'
     print(line)
-  if len(checks) != 8:
+  if len(checks) != 9:
     raise ValueError('PKGBUILD editing not completed. checks=' + checks)
 
 def post_build():
