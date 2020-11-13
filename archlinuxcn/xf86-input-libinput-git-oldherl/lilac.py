@@ -10,7 +10,7 @@ g = SimpleNamespace()
 
 def pre_build():
 
-  prepare = False
+  aur_pre_build(name='xf86-input-libinput-git', do_vcs_update=True)
   checks = ''
   for line in edit_file('PKGBUILD'):
     if line.startswith('pkgname='):
