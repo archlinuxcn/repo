@@ -39,6 +39,8 @@ def pre_build():
       line = '''
 prepare() {
   cd xf86-input-libinput
+  git config user.name "builduser"
+  git config user.email "builduser@example.com"
   git am ../0001-scroll-scale.patch
 }
 
