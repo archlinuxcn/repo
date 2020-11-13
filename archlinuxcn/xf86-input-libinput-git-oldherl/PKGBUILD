@@ -4,7 +4,7 @@
 
 pkgname=xf86-input-libinput-git-oldherl
 pkgver=0.30.0.6.r275.g8ebe495
-pkgrel=1
+pkgrel=1.1
 pkgdesc="Generic input driver for the X.Org server based on libinput. With patch for setting scroll scale."
 arch=('x86_64')
 license=('custom')
@@ -19,9 +19,7 @@ sha512sums=('SKIP' 'SKIP')
 
 prepare() {
   cd xf86-input-libinput
-  git config user.name "builduser"
-  git config user.email "builduser@example.com"
-  git am ../0001-scroll-scale.patch
+  git apply ../0001-scroll-scale.patch
 }
 
 pkgver() {
