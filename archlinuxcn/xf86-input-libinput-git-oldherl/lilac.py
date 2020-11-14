@@ -30,7 +30,7 @@ def pre_build():
       0001-scroll-scale.patch
       ''')
       checks = checks + '4'
-    elif line.startswith('sha256sums=('):
+    elif line.startswith('sha512sums=('):
       line = line.replace('=(', '''=(
 '934fd1e21ae8330bbaa1189c8b3858fc0e26724dea3d24dae62c5b569457e55f221db12ccc78b14a9c755bc69f59ab949bdce02ffb0f2329bef1a3d4c2c116a0'
       ''')
