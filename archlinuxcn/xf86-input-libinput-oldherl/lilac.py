@@ -27,7 +27,7 @@ def pre_build():
       checks = checks + '2'
     elif line.startswith('conflicts=('):
       line = line.replace('(', '(${_pkgname} ')
-      checks = checks + '2'
+      checks = checks + '7'
     elif line.startswith('groups=('):
       line = 'provides=("' + origname + '=$pkgver")'  # remove official groups
       checks = checks + '3'
@@ -49,7 +49,7 @@ prepare() {
 ''' + line
       checks = checks + '6'
     print(line)
-  if len(checks) != 7:
+  if len(checks) != 8:
     raise ValueError('PKGBUILD editing not completed. checks=' + checks)
 
 def post_build():
