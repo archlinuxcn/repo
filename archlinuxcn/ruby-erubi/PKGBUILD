@@ -3,8 +3,8 @@
 
 _gemname=erubi
 pkgname=ruby-$_gemname
-pkgver=1.9.0
-pkgrel=2
+pkgver=1.10.0
+pkgrel=1
 pkgdesc='Small ERB Implementation'
 arch=('any')
 url="https://github.com/jeremyevans/erubi"
@@ -14,7 +14,7 @@ makedepends=('ruby-rdoc')
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha1sums=('303b7682b7215f6973839dde4990bb7b9f7f21d7')
+sha1sums=('1267ccf1edf35c01cbeede7b8f67d8bc53e89786')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
