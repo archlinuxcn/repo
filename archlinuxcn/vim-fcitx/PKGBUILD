@@ -1,16 +1,19 @@
-# Maintainer: yesuu zhang <yesuu79@qq.com>
+# Maintainer: Shengyu Zhang <la@archlinuxcn.org>
+# Contributor: yesuu zhang <yesuu79@qq.com>
 
 pkgname=vim-fcitx
-pkgver=1.2.5
-pkgrel=1.1
+pkgver=1.2.6
+pkgrel=1
 pkgdesc="Keep and restore fcitx state for each buffer separately when leaving/re-entering insert mode. Like always typing English in normal mode, but Chinese in insert mode."
 arch=('any')
 url="https://vim.sourceforge.io/scripts/script.php?script_id=3764"
 license=('unknown')
 depends=('vim>=7.0')
-optdepends=('fcitx: input support')
-source=('fcitx.vim.tar.gz::https://vim.sourceforge.io/scripts/download_script.php?src_id=25227')
-sha256sums=('e33d8c0629b41713c3e489a3dfa97e5b7cf5fbbc7c5e18a07bf04d7c2946e58f')
+optdepends=('fcitx: input support'
+            'fcitx5: input support'
+        )
+source=('fcitx.vim.tar.gz::https://www.vim.org/scripts/download_script.php?src_id=26499')
+sha256sums=('959d1bd6c0411cf8d1b1eca37f6baafcfa33c5fd381a8dd97d31040c72b183c0')
 
 package() {
 	cd ${srcdir}
