@@ -1,4 +1,5 @@
 # Maintainer: Leonidas Spyropoulos <artafinde at gmail dot com>
+# Contributor: staletic
 # Contributor: James Brink <brink.james@gmail.com>
 # Contributor: Wilson E. Alvarez <wilson.e.alvarez1@gmail.com>
 # Contributor: p <parimal@beyond8labs.com>
@@ -38,7 +39,7 @@ _neovim="$NEOVIM_YOUCOMPLETEME"
 #                                    Default PKGBUILD Configuration                                       #
 #=========================================================================================================#
 pkgname=vim-youcompleteme-git
-pkgver=r2767.4e480a31
+pkgver=r2769.604a2a02
 pkgver() {
 	cd "YouCompleteMe" || exit
 	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
@@ -61,7 +62,7 @@ source=(
 	'git+https://github.com/davidhalter/parso.git'
 	'git+https://github.com/davidhalter/typeshed.git'
 	'git+https://github.com/kjd/idna.git'
-	'git+https://github.com/micbou/regex.git'
+	'git+https://bitbucket.org/mrabarnett/mrab-regex.git'
 	'git+https://github.com/Pylons/waitress.git'
 	'git+https://github.com/PythonCharmers/python-future.git'
 	'git+https://github.com/requests/requests.git'
@@ -158,7 +159,7 @@ prepare() {
 	gitprepare "YouCompleteMe" "third_party/" "${YouCompleteMe[@]}"
 	gitprepare "YouCompleteMe" "third_party/requests_deps/" "${YouCompleteMeRequestsDeps[@]}"
 
-	local ycmd=("bottle" "regex" "python-future" "waitress")
+	local ycmd=("bottle" "mrab-regex" "python-future" "waitress")
 
 	gitprepare "YouCompleteMe/third_party/ycmd" "third_party/" "${ycmd[@]}"
 
@@ -254,7 +255,7 @@ package() {
 
 	cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,ycm_core.so,CORE_VERSION} \
 		"$pkgdir/$vimfiles_dir/third_party/ycmd"
-	cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{bottle,clang,cregex,waitress} \
+	cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{bottle,clang,mrab-regex,waitress} \
 		"$pkgdir/$vimfiles_dir/third_party/ycmd/third_party"
 	cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/requests_deps/"{certifi,chardet,idna,requests,urllib3} \
 		"$pkgdir/$vimfiles_dir/third_party/ycmd/third_party/requests_deps"
