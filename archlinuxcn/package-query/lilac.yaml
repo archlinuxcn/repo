@@ -2,8 +2,11 @@
 
 maintainers:
   - github: felixonmars
+  - github: DDoSolitary
+
+pre_build: aur_pre_build
+post_build: aur_post_build
 
 update_on:
   - source: aur
     aur: package-query
-managed: false
