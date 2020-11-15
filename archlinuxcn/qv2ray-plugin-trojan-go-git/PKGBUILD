@@ -1,7 +1,7 @@
 # Maintainer: DuckSoft <realducksoft at gmail dot com>
 pkgname=qv2ray-plugin-trojan-go-git
 _pkgname=qv2ray-plugin-trojan-go
-pkgver=20200929.r27.f83b72d
+pkgver=20201115.r28.7a0c3c9
 pkgrel=1
 pkgdesc="Qv2ray Plugin: Trojan-Go (Stable Build)"
 arch=('x86_64')
