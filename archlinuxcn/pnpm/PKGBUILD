@@ -21,6 +21,6 @@ package() {
   # delete source map files to reduce size
   find "$pkgdir"/usr/lib -depth -name '*.map' -delete
 
-  install -Dm755 "$pkgdir/usr/share/licenses/$pkgname"
+  install -dm755 "$pkgdir/usr/share/licenses/$pkgname"
   ln -s "../../../lib/node_modules/$pkgname/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
