@@ -4,13 +4,13 @@
 _basename=libkate
 pkgname="lib32-$_basename"
 pkgver=0.4.1
-pkgrel=5
+pkgrel=6
 pkgdesc="A karaoke and text codec for embedding in ogg (32-bit)"
 url="https://wiki.xiph.org/OggKate"
 license=('BSD')
 arch=('x86_64')
 depends=('lib32-libogg' 'lib32-libpng' 'libkate')
-makedepends=('pkg-config' 'git')
+makedepends=("git" "pkg-config" "python2")
 source=("https://download.videolan.org/contrib/kate/$_basename-$pkgver.tar.gz"
         0001-Fix-automake-warnings.patch)
 sha512sums=('2635237753abc0f6c43fc07bd0ecc57c2f3c893efa6c62ad08de9191045612477302ed45acd61cdfea7447efd654ebbe0ed2d6a2cbf867eb834581d7ee43377b'
@@ -46,3 +46,4 @@ package() {
     mv lib lib32
     rm -r bin include lib32/lib share/{doc,man}
 }
+provides=("libkate.so" "liboggkate.so")
