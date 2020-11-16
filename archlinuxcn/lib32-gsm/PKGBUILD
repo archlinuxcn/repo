@@ -6,7 +6,7 @@
 pkgname=lib32-gsm
 _pkgbase=gsm
 pkgver=1.0.19
-pkgrel=1
+pkgrel=2
 pkgdesc="Shared libraries for GSM 06.10 lossy speech compression"
 arch=('x86_64')
 url="http://www.quut.com/gsm/"
@@ -51,3 +51,4 @@ package() {
   # clean directories provided by 64-bit package
   rm -Rf "${pkgdir}"/usr/{bin,include,lib,share}
 }
+provides=("libgsm.so")
