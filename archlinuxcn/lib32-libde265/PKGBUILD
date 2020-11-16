@@ -3,7 +3,7 @@
 _basename=libde265
 pkgname=lib32-libde265
 pkgver=1.0.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Open h.265 video codec implementation  (32-bit)"
 arch=(x86_64)
 url="https://github.com/strukturag/libde265"
@@ -39,3 +39,4 @@ package() {
 
     rm -r bin include
 }
+provides=("libde265.so")
