@@ -5,7 +5,7 @@
 _basename=neon
 pkgname=lib32-neon
 pkgver=0.31.2
-pkgrel=1
+pkgrel=2
 pkgdesc="HTTP and WebDAV client library with a C interface (32 bit)"
 arch=('x86_64')
 url="https://notroj.github.io/neon"
@@ -45,3 +45,4 @@ package() {
 
     rm -rf "${pkgdir}/usr"/{bin,include,share}
 }
+provides=("libneon.so")
