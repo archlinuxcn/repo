@@ -5,7 +5,7 @@
 pkgname=lib32-libreplaygain
 _pkgname=libreplaygain
 pkgver=475
-pkgrel=3
+pkgrel=4
 pkgdesc="A library to adjust audio gain (lib32)"
 arch=('x86_64')
 url="http://www.musepack.net/index.php?pg=src"
@@ -42,3 +42,4 @@ rm -rf {bin,include,share/imlib2}/
 mv lib/ lib32/
 
 }
+provides=("libreplaygain.so")
