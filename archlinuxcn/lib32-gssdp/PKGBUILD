@@ -3,12 +3,12 @@
 _basename=gssdp
 pkgname=lib32-gssdp
 pkgver=1.2.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A GObject-based API for handling resource discovery and announcement over SSDP (32-bit)"
 arch=(x86_64)
 url="http://gupnp.org/"
 license=(LGPL)
-depends=(lib32-libsoup gssdp)
+depends=("gssdp" "lib32-libsoup" "libgio-2.0.so" "libglib-2.0.so" "libgobject-2.0.so")
 makedepends=(git gobject-introspection lib32-gtk3 meson vala)
 _commit=a4eb74313a3df17c3ac5b99f3131522e6e8bccf4  # tags/gssdp-1.2.3^0
 source=("git+https://git.gnome.org/browse/gssdp#commit=$_commit")
@@ -44,3 +44,4 @@ package() {
 
     rm -rf "${pkgdir}/usr/include"
 }
+provides=("libgssdp-1.2.so")
