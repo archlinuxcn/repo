@@ -4,12 +4,12 @@
 
 pkgname=lib32-fltk
 pkgver=1.3.5
-pkgrel=1
+pkgrel=2
 pkgdesc="Graphical user interface toolkit for X (32-bit)"
 arch=('x86_64')
 url="https://www.fltk.org"
 license=('custom:LGPL')
-depends=("${pkgname#lib32-}" 'lib32-glu' 'lib32-libjpeg-turbo' 'lib32-libxcursor' 'lib32-libxinerama' 'lib32-libxft')
+depends=("${pkgname#lib32-}" "lib32-glu" "lib32-libjpeg-turbo" "lib32-libpng" "lib32-libxcursor" "lib32-libxft" "lib32-libxinerama" "libfontconfig.so")
 makedepends=('cmake' 'lib32-alsa-lib' 'libxft')
 options=('staticlibs')
 source=("${pkgname#lib32-}-${pkgver}.tar.gz::https://github.com/fltk/fltk/archive/release-${pkgver}.tar.gz"
@@ -48,3 +48,4 @@ package() {
   rm -rf "${pkgdir}/usr/"{bin,include,share}
   install -vDm 644 ../COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
+provides=("libfltk.so" "libfltk_forms.so" "libfltk_gl.so" "libfltk_images.so")
