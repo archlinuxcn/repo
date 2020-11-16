@@ -3,7 +3,7 @@
 pkgname=lib32-libbs2b
 _pkgname=libbs2b
 pkgver=3.1.0
-pkgrel=3
+pkgrel=4
 pkgdesc="Bauer stereophonic-to-binaural DSP effect library"
 arch=('i686' 'x86_64')
 url='http://bs2b.sourceforge.net'
@@ -26,3 +26,4 @@ package() {
   make DESTDIR="${pkgdir}" install
   rm -rf $pkgdir/usr/{include,bin}
 }
+provides=("libbs2b.so")
