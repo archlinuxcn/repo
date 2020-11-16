@@ -4,12 +4,12 @@
 _basename=lv2
 pkgname=lib32-${_basename}
 pkgver=1.18.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Successor to the LADSPA audio plug-in standard"
 url="http://lv2plug.in/"
 license=('LGPL' 'custom')
 arch=('x86_64')
-depends=('lv2')
+depends=("libfontconfig.so" "libfreetype.so" "libgio-2.0.so" "libglib-2.0.so" "libgobject-2.0.so" "libharfbuzz.so" "libpango-1.0.so" "libpangocairo-1.0.so" "libpangoft2-1.0.so" "libsndfile.so" "lv2")
 makedepends=('python' 'waf' 'lib32-libsndfile' 'lib32-gtk2')
 optdepends=('lib32-libsndfile: Example sampler'
             'lib32-gtk2: Example sampler'
