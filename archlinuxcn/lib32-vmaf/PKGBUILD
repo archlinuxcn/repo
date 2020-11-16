@@ -2,7 +2,7 @@
 
 _pkgbasename=vmaf
 pkgname=("lib32-$_pkgbasename" "lib32-lib$_pkgbasename")
-pkgver=1.5.2
+pkgver=1.5.3
 pkgrel=1
 pkgdesc='Perceptual video quality assessment algorithm based on multi-method fusion (32 bit)'
 arch=('x86_64')
@@ -16,9 +16,10 @@ makedepends=(
         'meson'
 #        'meson-cross-x86-linux-gnu>=1.0.4'
         'ninja'
+        'nasm'
     )
 source=("${_pkgbasename}-${pkgver}.tar.gz"::"https://github.com/Netflix/${_pkgbasename}/archive/v${pkgver}.tar.gz")
-sha256sums=('5f7785da0b0d66b2513ce11d3f81d0a9b3f79d49483c4652fde3a31c13f644da')
+sha256sums=('440652ae417d88be083ffd9fa5967662172601e31c458a9743f6008d7150c900')
 
 prepare() {
     mkdir -p "${_pkgbasename}-${pkgver}/libvmaf/build"
