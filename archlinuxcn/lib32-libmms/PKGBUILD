@@ -5,7 +5,7 @@
 _basename=libmms
 pkgname=lib32-libmms
 pkgver=0.6.4
-pkgrel=2
+pkgrel=3
 pkgdesc="MMS stream protocol library (32 bit)"
 arch=(x86_64)
 url="http://sourceforge.net/projects/libmms/"
@@ -37,3 +37,4 @@ package() {
 
     rm -rf "${pkgdir}/usr/include"
 }
+provides=("libmms.so")
