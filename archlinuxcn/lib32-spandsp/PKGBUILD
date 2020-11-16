@@ -6,7 +6,7 @@
 _basename=spandsp
 pkgname=lib32-spandsp
 pkgver=0.0.6
-pkgrel=4
+pkgrel=5
 pkgdesc="A DSP library for telephony (32 bit)"
 arch=(x86_64)
 license=(GPL)
@@ -39,3 +39,4 @@ package() {
     rm -rf "${pkgdir}/usr/include"
 }
 
+provides=("libspandsp.so")
