@@ -4,12 +4,12 @@
 _basename=wildmidi
 pkgname="lib32-$_basename"
 pkgver=0.4.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Open Source MIDI Synthesizer (32-bit)'
 arch=('x86_64')
 url="http://www.mindwerks.net/projects/wildmidi/"
 license=('LGPL3')
-depends=('lib32-alsa-lib' 'wildmidi')
+depends=("lib32-alsa-lib" "libasound.so" "wildmidi")
 makedepends=('cmake')
 source=(https://github.com/psi29a/wildmidi/archive/wildmidi-${pkgver}.tar.gz)
 sha256sums=('498e5a96455bb4b91b37188ad6dcb070824e92c44f5ed452b90adbaec8eef3c5')
@@ -42,3 +42,4 @@ package() {
     mv lib lib32
     rm -r share include
 }
+provides=("libWildMidi.so")
