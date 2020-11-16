@@ -5,7 +5,7 @@
 pkgname=lib32-libsidplay
 _pkgname=libsidplay
 pkgver=1.36.59
-pkgrel=6
+pkgrel=7
 pkgdesc="A library for playing SID music files, lib32."
 arch=('x86_64')
 url="http://critical.ch/distfiles/"
@@ -43,3 +43,4 @@ make DESTDIR=${pkgdir} install
 cd "$pkgdir/usr"
 rm -rf include/
 }
+provides=("libsidplay.so")
