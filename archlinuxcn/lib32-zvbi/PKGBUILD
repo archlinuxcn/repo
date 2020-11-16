@@ -4,7 +4,7 @@
 pkgname=lib32-zvbi
 _basename=zvbi
 pkgver=0.2.35
-pkgrel=3
+pkgrel=4
 pkgdesc="VBI capture and decoding library  (32-bit)"
 url="http://zapping.sourceforge.net/cgi-bin/view/ZVBI/WebHome"
 arch=('x86_64')
@@ -39,3 +39,4 @@ package() {
     rm -r "${pkgdir}/usr/include"
     rm -r "${pkgdir}/usr/share"
 }
+provides=("libzvbi-chains.so" "libzvbi.so")
