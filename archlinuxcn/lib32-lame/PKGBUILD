@@ -5,7 +5,7 @@
 _pkgbasename=lame
 pkgname=lib32-"$_pkgbasename"
 pkgver=3.100
-pkgrel=2
+pkgrel=3
 pkgdesc='A high quality MPEG Audio Layer III (MP3) encoder (32 bit)'
 arch=('x86_64')
 url='http://lame.sourceforge.net/'
@@ -38,3 +38,4 @@ package() {
     
     rm -r "$pkgdir"/usr/{bin,include,share}
 }
+provides=("libmp3lame.so")
