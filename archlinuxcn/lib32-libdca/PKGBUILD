@@ -5,7 +5,7 @@
 _basename=libdca
 pkgname=lib32-libdca
 pkgver=0.0.7
-pkgrel=1
+pkgrel=2
 pkgdesc="Free library for decoding DTS Coherent Acoustics streams (32 bit)"
 arch=(x86_64)
 license=(GPL)
@@ -45,3 +45,4 @@ package() {
     rm -rf "${pkgdir}/usr"/{bin,include,share}
     rm "${pkgdir}/usr/lib32/libdts.a"
 }
+provides=("libdca.so")
