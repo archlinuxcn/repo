@@ -5,12 +5,12 @@
 _pkgname=fftw
 pkgname=lib32-${_pkgname}
 pkgver=3.3.8
-pkgrel=1
+pkgrel=2
 pkgdesc="A library for computing the discrete Fourier transform (DFT) (32 bit)"
 arch=('x86_64')
 license=('GPL2')
 url="http://www.fftw.org/"
-depends=('lib32-glibc' "${_pkgname}")
+depends=("${_pkgname}" "lib32-gcc-libs" "lib32-glibc")
 makedepends=('gcc-fortran')
 options=('!libtool')
 source=("http://www.fftw.org/${_pkgname}-${pkgver}.tar.gz")
@@ -70,3 +70,4 @@ make DESTDIR="${pkgdir}" install
 
 rm -rf "${pkgdir}/usr"/{bin,include,share}
 }
+provides=("libfftw3.so" "libfftw3_omp.so" "libfftw3_threads.so" "libfftw3f.so" "libfftw3f_omp.so" "libfftw3f_threads.so" "libfftw3l.so" "libfftw3l_omp.so" "libfftw3l_threads.so")
