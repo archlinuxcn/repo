@@ -4,12 +4,12 @@
 _basename=numactl
 pkgname=lib32-numactl
 pkgver=2.0.11
-pkgrel=3
+pkgrel=4
 pkgdesc="Simple NUMA policy support 32-bit version. Libraries only"
 arch=('x86_64')
 url="http://oss.sgi.com/projects/libnuma/"
 license=('LGPL2.1' 'GPL2')
-depends=('perl' 'numactl')
+depends=("lib32-glibc" "numactl" "perl")
 source=('https://sources.archlinux.org/other/packages/numactl/numactl-2.0.11.tar.gz' 'numactl-2.0.11-sysmacros.patch')
 sha1sums=('0846670269824078a4eae8a977728175437b0da4' '5a9cff7cf1fe687e5be83de0a512325b923e3e21')
 
@@ -29,3 +29,4 @@ package() {
   rm -rf "$pkgdir/usr/share/" "$pkgdir/usr/bin/" "$pkgdir/usr/include/"
 }
  
+provides=("libnuma.so")
