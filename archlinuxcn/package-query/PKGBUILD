@@ -1,10 +1,10 @@
 # Contributor: tuxce <tuxce.net@gmail.com>
 # Contributor: Skunnyk <skunnyk@archlinux.fr>
 pkgname=package-query
-pkgver=1.10
+pkgver=1.11
 pkgrel=1
 pkgdesc="Query ALPM and AUR"
-arch=('i686' 'x86_64' 'mips64el' 'armv6h' 'armv7h' 'arm' 'aarch64')
+arch=('i686' 'x86_64' 'mips64el' 'armv6h' 'armv7h' 'arm' 'aarch64' 'pentium4')
 url="https://github.com/archlinuxfr/package-query/"
 license=('GPL')
 depends=('pacman>=5.2' 'yajl>=2.0')
@@ -23,4 +23,4 @@ package ()
 }
 
 # vim:set ts=2 sw=2 et:
-md5sums=('19b11ca4e5d05fa39775bd395602174e')
+md5sums=('650bfb4f98255c55ee469784e38bf633')
