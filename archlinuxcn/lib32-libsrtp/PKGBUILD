@@ -4,7 +4,7 @@
 _basename=libsrtp
 pkgname="lib32-$_basename"
 pkgver=2.3.0
-pkgrel=2
+pkgrel=1
 epoch=1
 pkgdesc="Library for SRTP (Secure Realtime Transport Protocol) (32-bit)"
 url="https://github.com/cisco/libsrtp"
@@ -67,3 +67,4 @@ package() {
 
     rm -r include
 }
+provides=("libsrtp2.so")
