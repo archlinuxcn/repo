@@ -3,7 +3,7 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.0.r545.12c21de66
+pkgver=1.7.0.r604.9d4337b7e
 pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
@@ -31,6 +31,7 @@ depends=(
   libpcap
   libpng
   libportaudio.so
+  libpulse.so
   libudev.so
   libx11
   libxcb
@@ -45,17 +46,14 @@ depends=(
 makedepends=(
   cmake
   git
-  opencl-headers
-  png++
   ninja
+  png++
 )
 provides=('pcsx2')
 conflicts=('pcsx2')
 replaces=('pcsx2-avx-git' 'pcsx2-avx2-git')
-source=('git+https://github.com/PCSX2/pcsx2.git' 'add-avx.patch' 'pcsx2-system-fmt.patch')
-sha256sums=('SKIP'
-            'f9f8e3c9b7eb0a996e500c1a7939d4bdbfb966c1c1aec44f63da37ae3156fdf3'
-            'f710ea37a82f586a8bb509486a95cbbb83f49af0a5b35cc4a79815c0a43c24ce')
+source=('git+https://github.com/PCSX2/pcsx2.git')
+sha256sums=('SKIP')
 
 pkgver() {
   cd pcsx2
@@ -63,13 +61,6 @@ pkgver() {
   git describe --tags | sed 's/^v//; s/-dev//; s/-/.r/; s/-g/./'
 }
 
-prepare() {
-  patch -p0 -i add-avx.patch
-
-  cd pcsx2
-  patch -Np1 -i ../pcsx2-system-fmt.patch
- # git submodule update --init --recursive
-}
 build() {
     cmake -S pcsx2 -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
