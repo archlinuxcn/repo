@@ -6,7 +6,7 @@
 _basename=libmpeg2
 pkgname=lib32-libmpeg2
 pkgver=0.5.1
-pkgrel=4
+pkgrel=5
 pkgdesc="Library for decoding MPEG-1 and MPEG-2 video streams (32 bit)"
 arch=(x86_64)
 url="http://libmpeg2.sourceforge.net/"
@@ -54,3 +54,4 @@ package() {
 
     rm -rf "${pkgdir}/usr"/{bin,include,share}
 }
+provides=("libmpeg2.so" "libmpeg2convert.so")
