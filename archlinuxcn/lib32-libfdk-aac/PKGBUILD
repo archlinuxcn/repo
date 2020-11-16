@@ -6,7 +6,7 @@
 
 pkgname=lib32-libfdk-aac
 pkgver=2.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Fraunhofer FDK AAC codec library (32-bit)'
 arch=(x86_64)
 url=https://sourceforge.net/projects/opencore-amr/
@@ -51,3 +51,4 @@ package () {
 
     rm -rf "${pkgdir}/usr/include"
 }
+provides=("libfdk-aac.so")
