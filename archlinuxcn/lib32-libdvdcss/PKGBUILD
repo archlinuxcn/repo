@@ -4,7 +4,7 @@
 _pkgname=libdvdcss
 pkgname=lib32-${_pkgname}
 pkgver=1.4.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Portable abstraction library for DVD decryption (32 bit)"
 url="http://www.videolan.org/developers/libdvdcss.html"
 arch=('x86_64')
@@ -30,3 +30,4 @@ cd "${_pkgname}-${pkgver}"
 make DESTDIR="${pkgdir}" install
 rm -rf "${pkgdir}/usr/include"
 }
+provides=("libdvdcss.so")
