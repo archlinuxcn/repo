@@ -6,7 +6,7 @@
 _basename=faad2
 pkgname=lib32-faad2
 pkgver=2.9.2
-pkgrel=1
+pkgrel=2
 pkgdesc="ISO AAC audio decoder (32 bit)"
 arch=('x86_64')
 url="https://github.com/knik0/faad2"
@@ -46,3 +46,4 @@ package() {
 
     rm -rf "${pkgdir}/usr"/{bin,include,share}
 }
+provides=("libfaad.so" "libfaad_drm.so")
