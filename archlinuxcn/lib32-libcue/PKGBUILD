@@ -5,7 +5,7 @@
 pkgname=lib32-libcue
 _pkgname=libcue
 pkgver=2.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Parses so-called cue sheets and handles the parsed data (lib32)'
 url='http://github.com/lipnitsk/libcue/'
 arch=('x86_64')
@@ -44,3 +44,4 @@ cd "${pkgdir}/usr/lib32/pkgconfig"
 sed -i 's|includedir=${prefix}/include|includedir=${prefix}/include/libcue/|' libcue.pc
 sed -i 's|libdir=${prefix}/lib|libdir=${prefix}/lib32|' libcue.pc
 }
+provides=("libcue.so")
