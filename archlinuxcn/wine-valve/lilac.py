@@ -1,7 +1,9 @@
 from lilaclib import *
 
 def pre_build():
-  update_pkgver_and_pkgrel(_G.newver.lstrip('wine-'))
+  newver = _G.newver.lstrip('proton-wine-')
+  newver = newver.replace("-",".")
+  update_pkgver_and_pkgrel(newver)
 
 def post_build():
   git_add_files('PKGBUILD')
