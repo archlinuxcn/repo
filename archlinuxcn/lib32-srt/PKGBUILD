@@ -3,7 +3,7 @@
 _basename=srt
 pkgname=lib32-srt
 pkgver=1.4.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Secure Reliable Transport library (32-bit)"
 url="https://www.srtalliance.org/"
 arch=(x86_64)
@@ -56,3 +56,4 @@ package() {
 
     rm -r bin include
 }
+provides=("libsrt.so")
