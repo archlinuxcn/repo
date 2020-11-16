@@ -5,13 +5,13 @@
 _pkgbasename=l-smash
 pkgname=lib32-l-smash
 pkgver=2.14.5
-pkgrel=1
+pkgrel=2
 pkgdesc='MP4 muxer and other tools'
 arch=('x86_64')
 url='https://github.com/l-smash/l-smash'
 license=('custom')
 depends=( 'lib32-glibc' 'l-smash')
-provides=('liblsmash.so')
+provides=("liblsmash.so")
 source=("l-smash-${pkgver}.tar.gz::https://github.com/l-smash/l-smash/archive/v${pkgver}.tar.gz")
 sha256sums=('e6f7c31de684f4b89ee27e5cd6262bf96f2a5b117ba938d2d606cf6220f05935')
 
