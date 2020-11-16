@@ -47,7 +47,7 @@ _1k_HZ_ticks=
 ### Do not edit below this line unless you know what you're doing
 
 pkgbase=linux-next-git
-pkgver=20201106.r0.gc34f157421f6
+pkgver=20201116.r0.g034307507118
 _srcname=linux-next
 pkgrel=1
 pkgdesc='Linux NEXT'
@@ -57,7 +57,7 @@ license=('GPL2')
 options=('!strip')
 makedepends=('kmod' 'bc' 'libelf' 'git' 'python-sphinx' 'python-sphinx_rtd_theme'
              'graphviz' 'imagemagick' 'pahole')
-_lucjanver=5.9-rc
+_lucjanver=5.9
 #_lucjanpath="https://raw.githubusercontent.com/sirlucjan/kernel-patches/master/${_lucjanver}"
 _lucjanpath="https://gitlab.com/sirlucjan/kernel-patches/raw/master/${_lucjanver}"
 
@@ -121,25 +121,16 @@ prepare() {
     ### Optionally set tickrate to 1000
 	if [ -n "$_1k_HZ_ticks" ]; then
 		echo "Setting tick rate to 1k..."
-		sed -i -e 's/^CONFIG_HZ_300=y/# CONFIG_HZ_300 is not set/' \
-                    -i -e 's/^# CONFIG_HZ_1000 is not set/CONFIG_HZ_1000=y/' \
-                    -i -e 's/^CONFIG_HZ=300/CONFIG_HZ=1000/' ./.config
+    scripts/config --disable CONFIG_HZ_300
+    scripts/config --enable CONFIG_HZ_1000
+    scripts/config --set-val CONFIG_HZ 1000
 	fi
 
     ### Optionally disable NUMA for 64-bit kernels only
         # (x86 kernels do not support NUMA)
         if [ -n "$_NUMAdisable" ]; then
             echo "Disabling NUMA from kernel config..."
-            sed -i -e 's/CONFIG_NUMA=y/# CONFIG_NUMA is not set/' \
-                -i -e '/CONFIG_AMD_NUMA=y/d' \
-                -i -e '/CONFIG_X86_64_ACPI_NUMA=y/d' \
-                -i -e '/CONFIG_NODES_SPAN_OTHER_NODES=y/d' \
-                -i -e '/# CONFIG_NUMA_EMU is not set/d' \
-                -i -e '/CONFIG_NODES_SHIFT=6/d' \
-                -i -e '/CONFIG_NEED_MULTIPLE_NODES=y/d' \
-                -i -e '/# CONFIG_MOVABLE_NODE is not set/d' \
-                -i -e '/CONFIG_USE_PERCPU_NUMA_NODE_ID=y/d' \
-                -i -e '/CONFIG_ACPI_NUMA=y/d' ./.config
+            scripts/config --disable CONFIG_NUMA
         fi
 
     ### Optionally load needed modules for the make localmodconfig
