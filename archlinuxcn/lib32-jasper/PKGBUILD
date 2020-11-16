@@ -5,7 +5,7 @@
 _pkgname=jasper
 pkgname=lib32-${_pkgname}
 pkgver=2.0.19
-pkgrel=1
+pkgrel=2
 pkgdesc="A software-based implementation of the codec specified in the emerging JPEG-2000 Part-1 standard (32-bit)"
 arch=('x86_64')
 url="http://www.ece.uvic.ca/~mdadams/jasper/"
@@ -75,3 +75,4 @@ package() {
   install -Dm 644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 
+provides=("libjasper.so")
