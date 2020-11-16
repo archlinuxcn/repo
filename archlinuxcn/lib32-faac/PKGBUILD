@@ -5,7 +5,7 @@
 _basename=faac
 pkgname=lib32-faac
 pkgver=1.30
-pkgrel=2
+pkgrel=3
 pkgdesc="Freeware Advanced Audio Coder"
 arch=(x86_64)
 url="https://www.audiocoding.com/"
@@ -47,3 +47,4 @@ package() {
     install -Dm644 "${srcdir}"/${_basename}-${pkgver}/COPYING \
      "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
 }
+provides=("libfaac.so")
