@@ -3,7 +3,7 @@
 
 pkgname=lib32-libexif
 pkgver=0.6.21
-pkgrel=4
+pkgrel=5
 pkgdesc="A library to parse an EXIF file and read the data from those tags (32-bit)"
 arch=('x86_64')
 license=('LGPL')
@@ -31,3 +31,4 @@ package() {
   make DESTDIR="${pkgdir}" install
   rm -rf "${pkgdir}/usr/"{include,share}
 }
+provides=("libexif.so")
