@@ -4,7 +4,7 @@
 _basename=sbc
 pkgname="lib32-$_basename"
 pkgver=1.4
-pkgrel=1
+pkgrel=2
 pkgdesc="Bluetooth Subband Codec (SBC) library (32-bit)"
 arch=('x86_64')
 url="http://www.bluez.org/"
@@ -39,3 +39,4 @@ package() {
 
     rm -r bin include
 }
+provides=("libsbc.so")
