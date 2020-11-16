@@ -3,7 +3,7 @@
 _pkgbase=libomxil-bellagio
 pkgname=lib32-$_pkgbase
 pkgver=0.9.3
-pkgrel=6
+pkgrel=7
 pkgdesc="An opensource implementation of the OpenMAX Integration Layer API"
 arch=('x86_64')
 url="http://omxil.sourceforge.net"
@@ -41,3 +41,4 @@ package() {
 
   rm -rf "$pkgdir"/usr/{bin,include,share}
 }
+provides=("libomxaudio_effects.so" "libomxclocksrc.so" "libomxdynamicloader.so" "libomxil-bellagio.so" "libomxvideosched.so")
