@@ -3,7 +3,7 @@
 _basename=aom
 pkgname=lib32-aom
 pkgver=2.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Alliance for Open Media video codec (32-bit)"
 url="https://aomedia.org/"
 arch=(x86_64)
@@ -44,3 +44,4 @@ package() {
 
     rm -r bin include
 }
+provides=("libaom.so")
