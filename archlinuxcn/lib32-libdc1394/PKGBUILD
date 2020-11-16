@@ -5,12 +5,12 @@
 _basename=libdc1394
 pkgname=lib32-${_basename}
 pkgver=2.2.6
-pkgrel=1
+pkgrel=2
 pkgdesc="High level programming interface to control IEEE 1394 based cameras (32 bit)"
 arch=(x86_64)
 license=('LGPL')
 url="http://sourceforge.net/projects/libdc1394/"
-depends=(lib32-libraw1394 lib32-libusb libdc1394)
+depends=("lib32-libraw1394" "lib32-libusb" "libdc1394" "libusb-1.0.so")
 options=('!emptydirs')
 source=("http://downloads.sourceforge.net/${_basename}/${_basename}-${pkgver}.tar.gz")
 sha256sums=('2b905fc9aa4eec6bdcf6a2ae5f5ba021232739f5be047dec8fe8dd6049c10fed')
@@ -37,3 +37,4 @@ package() {
 
     rm -rf "${pkgdir}/usr"/{bin,include,share}
 }
+provides=("libdc1394.so")
