@@ -7,7 +7,7 @@ _pkgbase=openjpeg2
 
 pkgname=${_setLibdir}-${_pkgbase}
 pkgver=2.3.1
-pkgrel=1
+pkgrel=2
 pkgdesc="An open source JPEG 2000 codec, version ${pkgver}"
 arch=('x86_64')
 license=('BSD')
@@ -44,3 +44,4 @@ package() {
   mkdir -p "${pkgdir}/${_setPrefix}"/share/licenses/${pkgname}
   ln -s ../openjpeg-2.3/LICENSE "${pkgdir}/${_setPrefix}"/share/licenses/${pkgname}/LICENSE
 }
+provides=("libopenjp2.so")
