@@ -3,7 +3,7 @@
 _basename=serd
 pkgname=lib32-serd
 pkgver=0.30.4
-pkgrel=1
+pkgrel=2
 pkgdesc="Lightweight C library for RDF syntax supporting reading/ writing Turtle and NTriples (32-bit)"
 arch=('x86_64')
 url="https://drobilla.net/software/serd/"
@@ -63,3 +63,4 @@ package() {
 
     rm -r bin include share/man
 }
+provides=("libserd-0.so")
