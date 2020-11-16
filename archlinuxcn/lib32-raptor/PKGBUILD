@@ -4,11 +4,11 @@
 
 pkgname=lib32-raptor
 pkgver=2.0.15
-pkgrel=8
+pkgrel=9
 pkgdesc="A C library that parses RDF/XML/N-Triples into RDF triples (32 bit)"
 arch=('x86_64')
 url="http://librdf.org/raptor"
-depends=('lib32-curl' 'lib32-icu' 'lib32-libxslt' 'raptor')
+depends=("lib32-curl" "lib32-icu" "lib32-libxslt" "libicudata.so" "libicui18n.so" "libicuuc.so" "raptor")
 makedepends=('gcc-multilib')
 license=('LGPL')
 source=("http://librdf.org/dist/source/raptor2-${pkgver}.tar.gz")
@@ -39,3 +39,4 @@ package() {
 
     rm -rf "${pkgdir}"/usr/{bin,include,share}
 }
+provides=("libraptor2.so")
