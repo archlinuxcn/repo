@@ -3,39 +3,39 @@
 _pkgname=horovod
 pkgname=python-horovod
 pkgver=0.20.3
-pkgrel=3
+pkgrel=4
 pkgdesc='Distributed training framework for TensorFlow, Keras, PyTorch, and Apache MXNet'
 arch=('x86_64')
 url='https://github.com/horovod/horovod'
 license=('Apache')
 depends=(
-  'cuda'
-  'cudnn'
-  'nccl'
-  'openmpi'
-  'python-cloudpickle'
-  'python-h5py'
-  'python-mock'
-  'python-mpi4py'
-  'python-psutil'
-  'python-pycparser'
-  'python-pyaml'
-  'python-scipy'
-  'python-six'
-  'python-tqdm'
+  cuda
+  cudnn
+  nccl
+  openmpi
+  python-cloudpickle
+  python-h5py
+  python-mock
+  python-mpi4py
+  python-psutil
+  python-pycparser
+  python-pyaml
+  python-scipy
+  python-six
+  python-tqdm
 )
 makedepends=(
-  'cmake'
-  'git'
-  'mxnet-cuda'
-  'python-pytorch-cuda'
-  'python-setuptools'
-  'python-tensorflow-cuda'
+  cmake
+  git
+  mxnet-cuda
+  python-pytorch-cuda
+  python-setuptools
+  python-tensorflow-cuda
 )
 optdepends=(
-  'mxnet-cuda'
-  'python-pytorch-cuda'
-  'python-tensorflow-cuda'
+  'mxnet-cuda: mxnet framework'
+  'python-pytorch-cuda: pytorch framework'
+  'python-tensorflow-cuda: tensorflow framework'
 )
 source=("${_pkgname}-${pkgver}::git+https://github.com/horovod/horovod.git#tag=v${pkgver}")
 sha512sums=('SKIP')
@@ -58,8 +58,10 @@ prepare() {
   export HOROVOD_WITH_MXNET=1
   export HOROVOD_WITH_PYTORCH=1
   export HOROVOD_WITH_TENSORFLOW=1
+  export HOROVOD_BUILD_CUDA_CC_LIST="52,53,60,61,62,70,72,75,80"
   export CC=/opt/cuda/bin/gcc
   export CXX=/opt/cuda/bin/g++
+  export MAKEFLAGS="-j1"
 }
 
 build() {
