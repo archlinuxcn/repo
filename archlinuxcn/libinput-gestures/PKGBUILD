@@ -1,18 +1,20 @@
 # Maintainer: mark.blakeney at bullet-systems dot net
 pkgname=libinput-gestures
-pkgver=2.52
+pkgver=2.54
 pkgrel=1
 pkgdesc="Actions gestures on your touchpad using libinput"
 url="https://github.com/bulletmark/$pkgname"
 license=("GPL3")
 arch=("any")
-depends=("python>=3.5" "libinput" "xdotool" "wmctrl" "hicolor-icon-theme")
+depends=("python>=3.5" "libinput" "hicolor-icon-theme")
+optdepends=("wmctrl: required for _internal command, as per default configuration"
+            "xdotool: simulates keyboard and mouse actions for Xorg or XWayland based apps")
 conflicts=("$pkgname-git")
 replaces=("$pkgname-git")
 backup=("etc/$pkgname.conf")
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
 install=install.sh
-md5sums=('97c9da66cd948464481c4424daaadeb0')
+md5sums=('187f0e6bb66b103cddc5805dc32ed0c0')
 
 package() {
   cd "$pkgname-$pkgver"
