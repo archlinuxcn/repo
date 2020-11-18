@@ -8,7 +8,7 @@
 # Contributor: ZiXiS
 
 pkgname=pcl
-pkgver=1.10.0
+pkgver=1.11.0
 pkgrel=1
 pkgdesc="A comprehensive open source library for n-D Point Clouds and 3D geometry processing"
 arch=('x86_64' 'i686')
@@ -20,7 +20,7 @@ makedepends=('cmake' 'gl2ps' 'python')
 optdepends=('cuda' 'openni2' 'python-sphinx')
 source=("pcl-${pkgver}.tar.gz"::"https://github.com/PointCloudLibrary/pcl/archive/pcl-${pkgver}.tar.gz")
 
-sha256sums=('dd24f93967ba9512a02d6fa15855084a45deb4cd6f3662f22afbbf0d65978d20' )
+sha256sums=('4255c3d3572e9774b5a1dccc235711b7a723197b79430ef539c2044e9ce65954' )
 
 build() {
  # Create build directory
@@ -30,10 +30,11 @@ build() {
   cmake ${srcdir}/pcl-pcl-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_surface_on_nurbs=ON \
     -DCUDA_HOST_COMPILER=/usr/bin/gcc
 
 #  cd "${srcdir}/pcl-pcl-${pkgver}/build"
-  make
+  make -j8
 }
 
 package() {
