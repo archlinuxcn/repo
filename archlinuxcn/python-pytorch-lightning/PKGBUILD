@@ -2,7 +2,7 @@
 
 pkgname=python-pytorch-lightning
 _pkgname=pytorch-lightning
-pkgver=1.0.6
+pkgver=1.0.7
 pkgrel=1
 pkgdesc="The lightweight PyTorch wrapper for high-performance AI research"
 arch=('any')
@@ -26,7 +26,7 @@ optdepends=(
 )
 makedepends=('python-setuptools')
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/PyTorchLightning/pytorch-lightning/archive/${pkgver}.tar.gz")
-sha512sums=('39180ae3d2ae6d632c55738d5dffd00a4120d531136ea392e311547df502f199ad67f7fb7fd6f9e34386dd034dccace46dfe3e6153fc011cb6660bfa9700ef11')
+sha512sums=('039abdf83069753fa67063a073573cea9b57ee6efa84c2c02987ef74b950ec95c8d149bfdf8cacf5020a00bd5629b800ec605075864554ef9e5d0f3b594917ae')
 
 build() {
   cd "${_pkgname}-${pkgver}"
