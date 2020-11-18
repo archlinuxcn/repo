@@ -9,7 +9,7 @@
 
 pkgname=brave-bin
 pkgver=1.16.76
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Web browser that blocks ads and trackers by default (binary release)."
 arch=("x86_64")
@@ -18,7 +18,8 @@ license=("MPL2" "BSD" "custom:chromium")
 depends=("gtk3" "nss" "alsa-lib" "libxss" "ttf-font")
 optdepends=("cups: Printer support"
             "pepper-flash: Adobe Flash support"
-            "libgnome-keyring: Enable GNOME keyring support")
+            "libgnome-keyring: Enable GNOME keyring support"
+            "libnotify: Native notification support")
 provides=("${pkgname%-bin}" "brave-browser")
 conflicts=("${pkgname%-bin}")
 source=("$pkgname-$pkgver.zip::https://github.com/brave/brave-browser/releases/download/v${pkgver}/brave-browser-${pkgver}-linux-amd64.zip"
