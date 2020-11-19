@@ -1,0 +1,32 @@
+# Maintainer: Lu Xu <oliver_lew@outlook.com>
+pkgname=transmission-web-control-git
+_pkgname=${pkgname%-git}
+pkgver=r505.ba0cc20
+pkgrel=1
+pkgdesc="A custom web UI for transmission"
+arch=('any')
+url="https://github.com/ronggang/transmission-web-control"
+license=('MIT')
+depends=('transmission-cli')
+makedepends=('git')
+install='transmission-web-control-git.install'
+source=("git+${url}.git" "${pkgname}.hook")
+md5sums=('SKIP' '075989cc27d75c3bb3c011d3f906916d')
+
+pkgver() {
+	cd "$srcdir/${_pkgname}"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+	cd "$srcdir/${_pkgname}"
+	# Avoid file conflict with transmission-cli
+	mv src/index.html src/index.new.html
+	# Copy the files
+	install -d "$pkgdir/usr/share/licenses/${pkgname}"
+	install -d "$pkgdir/usr/share/transmission/web/"
+	install -d "$pkgdir/usr/share/libalpm/hooks/"
+	cp LICENSE "$pkgdir/usr/share/licenses/${pkgname}"
+	cp -r src/* "$pkgdir/usr/share/transmission/web/"
+	install -Dm644 "$srcdir/${pkgname}.hook" "$pkgdir/usr/share/libalpm/hooks/"
+}
