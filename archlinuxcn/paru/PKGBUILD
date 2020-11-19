@@ -1,6 +1,6 @@
 # Maintainer: Morgan <morganamilo@archlinux.org>
 pkgname=paru
-pkgver=1.1.1
+pkgver=1.1.2
 pkgrel=1
 pkgdesc='AUR helper based on yay'
 url='https://github.com/morganamilo/paru'
@@ -11,7 +11,7 @@ license=('GPL3')
 makedepends=('cargo')
 depends=('git' 'pacman')
 optdepends=('asp: downloading repo pkgbuilds' 'bat: colored pkgbuild printing')
-sha256sums=('bc0cfc24f7d88230b7d0a43a6f644130c79306db2ca3cc8e38dfbb66246c25a2')
+sha256sums=('535e0f51d89eb5fe3e7beeb24b2e539fd0f571167c85e3129ce47178dd9ae253')
 
 build () {
   cd "$srcdir/$pkgname-$pkgver"
@@ -38,5 +38,5 @@ package() {
 
   install -Dm644 completions/bash "${pkgdir}/usr/share/bash-completion/completions/paru.bash"
   install -Dm644 completions/fish "${pkgdir}/usr/share/fish/completions/paru.fish"
-  install -Dm644 completions/zsh "${pkgdir}/usr/share/zsh/functions/Completion/Linux/_paru"
+  install -Dm644 completions/zsh "${pkgdir}/usr/share/zsh/site-functions/_paru"
 }
