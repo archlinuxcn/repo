@@ -3,8 +3,8 @@
 # Based on gtk4-git
 
 pkgname=gtk4
-pkgver=3.99.2
-pkgrel=1
+pkgver=3.99.4
+pkgrel=2
 pkgdesc="GObject-based multi-platform GUI toolkit"
 arch=('i686' 'x86_64')
 url="https://www.gtk.org/"
@@ -26,7 +26,6 @@ depends=('hicolor-icon-theme'
          'mesa'
          'pango'
          'wayland'
-         'wayland-protocols'
          'graphene'
          'json-glib'
          'colord'
@@ -36,10 +35,10 @@ depends=('hicolor-icon-theme'
          'gdk-pixbuf2'
          'gst-plugins-bad')
 makedepends=('gobject-introspection'
-             'gtk-doc'
              'meson'
              'ninja'
              'vulkan-headers'
+             'wayland-protocols'
              'pkgconfig'
              'git'
              'sassc')
@@ -51,7 +50,7 @@ source=("https://gitlab.gnome.org/GNOME/gtk/-/archive/${pkgver}/gtk-${pkgver}.ta
         'gtk4-update-icon-cache.hook'
         'gtk4-update-icon-cache.script'
         'settings.ini')
-sha512sums=('bbb711ae2de296954f92b9c87c2071dccd720c809ca445a1c4b51a543ae3e9bbf4198ba581a0b92d0283889e696111984027544e17e00e7c1137dec03b37e8de'
+sha512sums=('8fc9e00dd0f5dda2d03ae9023684eebe9cc827e4a742320c3bc6dd62b3e03892f1b29aafb8167402c238ed7b4776e5bea532d8243142ae8da986e9779d17a9c8'
             '5dcb698a15e7d5f4611c9357782d475052944cc71e73351238ffb5dfbe18d1bd1b62289da7f8066cde256c4339de5efa982088f47781876f5d8317f92b87f79f'
             '9d3bb80afb3a00dc50402d32476719daaeab017e1a066425bb602316b534d0a9899d48734a84f70af1066ed104df0491264383a34969dfad2ea9828fb41b9b6b'
             '805cf12606c738d0442d8af415223d3faada93c933b563b7c4c1d5e0c16d2d21435406add1fcc69300fb2fe534f2d0ddbf50b2c0463fc7462109d0f7802ccef1'
@@ -67,6 +66,7 @@ build() {
     --libdir=/usr/lib \
     -Dbroadway-backend=true \
     -Dvulkan=enabled \
+    -Dgtk_doc=false \
     _build .
 
   cd _build
@@ -93,4 +93,22 @@ package() {
   rm -f "$pkgdir/usr/share/glib-2.0/schemas/org.gtk.Settings.FileChooser.gschema.xml"
   rm -f "$pkgdir/usr/share/glib-2.0/schemas/org.gtk.Settings.EmojiChooser.gschema.xml"
   rm -f "$pkgdir/usr/share/glib-2.0/schemas/org.gtk.exampleapp.gschema.xml"
+
+  # Remove conflicts with gtk-doc
+  rm -f "$pkgdir/usr/bin/gtkdoc-check"
+  rm -f "$pkgdir/usr/bin/gtkdoc-depscan"
+  rm -f "$pkgdir/usr/bin/gtkdoc-fixxref"
+  rm -f "$pkgdir/usr/bin/gtkdoc-mkdb"
+  rm -f "$pkgdir/usr/bin/gtkdoc-mkhtml"
+  rm -f "$pkgdir/usr/bin/gtkdoc-mkhtml2"
+  rm -f "$pkgdir/usr/bin/gtkdoc-mkman"
+  rm -f "$pkgdir/usr/bin/gtkdoc-mkpdf"
+  rm -f "$pkgdir/usr/bin/gtkdoc-rebase"
+  rm -f "$pkgdir/usr/bin/gtkdoc-scan"
+  rm -f "$pkgdir/usr/bin/gtkdoc-scangobj"
+  rm -f "$pkgdir/usr/bin/gtkdocize"
+  rm -f "$pkgdir/usr/share/aclocal/gtk-doc.m4"
+  rm -rf "$pkgdir/usr/share/cmake/GtkDoc"
+  rm -rf "$pkgdir/usr/share/gtk-doc"
+  rm -f "$pkgdir/usr/share/pkgconfig/gtk-doc.pc"
 }
