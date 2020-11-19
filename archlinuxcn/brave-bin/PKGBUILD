@@ -9,7 +9,7 @@
 
 pkgname=brave-bin
 pkgver=1.16.76
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="Web browser that blocks ads and trackers by default (binary release)."
 arch=("x86_64")
@@ -35,7 +35,7 @@ noextract=("$pkgname-$pkgver.zip")
 
 prepare() {
   mkdir -p brave
-  cat $pkgname-$pkgver.zip | bsdtar -xf- -C brave
+  bsdtar -xf $pkgname-$pkgver.zip -C brave
   chmod +x brave/brave
 }
 
