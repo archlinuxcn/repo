@@ -1,9 +1,9 @@
-# Maintainer: Daniel Peukert <dan.peukert@gmail.com>
+# Maintainer: Daniel Peukert <daniel@peukert.cc>
 # Contributor: Tom Vincent <http://tlvince.com/contact/>
 _projectname='electron'
 _pkgname="${_projectname}8"
 pkgname="$_pkgname-bin"
-pkgver='8.5.3'
+pkgver='8.5.5'
 pkgrel='1'
 epoch='1'
 pkgdesc='Build cross platform desktop apps with web technologies - version 8 - binary version'
@@ -36,14 +36,14 @@ source_aarch64=(
 	"$pkgname-chromedriver-$epoch:$pkgver-$pkgrel-aarch64.zip::$_releaseurl/chromedriver-v$pkgver-linux-arm64.zip"
 	"$pkgname-$epoch:$pkgver-$pkgrel-aarch64.zip::$_releaseurl/$_projectname-v$pkgver-linux-arm64.zip"
 )
-sha256sums_x86_64=('cbf616e652ca43d435db97035f9caa97b27efe26ac9c4a6232b9f3a1b464d423'
-                   'e5884eff8d9627e3208aef8afab6d057013d1e40516411834e72e28673af94f8')
-sha256sums_i686=('1f2ff4a86f1016b6b9fefee0a31d8d5b5d49ab92609e9aa5306e869fe73e9513'
-                 '72bb6ef15cdfd0cd0732f81763ae68302af5bd9dbb2205e8e9d6a9a988a916af')
-sha256sums_armv7h=('5f88f4a4143300ce959e85302db4798dcad115eb7d924e124f32ec690dc8d302'
-                   '49acf1a1727022310dd350174e74b0246880d7ff7cd85acbe665fd7b584156f1')
-sha256sums_aarch64=('a326c514ed5a98f97c9d212041db81d114f356722ab51e4af4cc22c1e6724505'
-                    '86cc670f8e8aca193e0c1b8e52b68d6a32eb660eb1a5324f80bd6dda499d7c12')
+sha256sums_x86_64=('2f89a883aec161b750b87c2d347024561ef58876cc5558c69ae5ceec4b41c8d4'
+                   '8058442ab4a18d73ca644d4a6f001e374c3736bc7e37db0275c29011681f1f22')
+sha256sums_i686=('dccfba93338fd0304741c5ebaaf1003163b6c3469694b54044a3c0e313ae9297'
+                 'c8ee6c3d86576fe7546fb31b9318cb55a9cd23c220357a567d1cb4bf1b8d7f74')
+sha256sums_armv7h=('3fcebaedcc38b490796666ebbd630eb2d96990821e8205ac3e960b1fd44fb1c6'
+                   '0130d1fcd741552d2823bc8166eae9f8fc9f17cd7c0b2a7a5889d753006c0874')
+sha256sums_aarch64=('d948e47c898ba58ecee60fbc3d9ecadb280fda7680c47fa0aeaa508090f9f681'
+                    'ca16d8f82b3cb47716dc9db273681e9b7cd79df39894a923929c99dd713c45f5')
 
 package() {
 	cd "$srcdir/"
