@@ -1,0 +1,9 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = transmission-cli
+Target = transmission-web-control-git
+[Action]
+When = PostTransaction
+Exec = /bin/sh -c 'cd /usr/share/transmission/web; [ ! -h index.html ] && mv index.html index.original.html; ln -sf index.new.html index.html'

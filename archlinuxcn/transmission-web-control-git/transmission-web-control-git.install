@@ -1,0 +1,4 @@
+pre_remove() {
+    WEBDIR=/usr/share/transmission/web/
+    /usr/bin/mv -f $WEBDIR/index.original.html $WEBDIR/index.html
+}
