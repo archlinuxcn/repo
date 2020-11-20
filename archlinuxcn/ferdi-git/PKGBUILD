@@ -6,7 +6,7 @@
 # Contributor: Pieter Goetschalckx <3.14.e.ter <at> gmail <dot> com>
 _pkgname='ferdi'
 pkgname="$_pkgname-git"
-pkgver=20201018_194814
+pkgver=20201119_180101
 epoch=1
 pkgrel=1
 pkgdesc='A messaging browser that allows you to combine your favorite messaging services into one application - git version'
@@ -14,7 +14,7 @@ arch=('x86_64' 'i686' 'armv7h' 'aarch64')
 url="https://get$_pkgname.com"
 license=('Apache')
 depends=('electron9' 'libxkbfile')
-makedepends=('git' 'npm' 'python')
+makedepends=('git' 'npm' 'python2')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 source=(
