@@ -2,13 +2,16 @@
 
 maintainers:
   - github: ykelvis
+  - github: DDoSolitary
 
 build_prefix: extra-x86_64
-
-pre_build: vcs_update
-
-post_build: aur_post_build
 
 update_on:
   - source: aur
     aur: libpdfium-nojs
+  - source: cmd
+    cmd: |
+      bash -eo pipefail -c '
+        ver=$(curl -fsSL https://omahaproxy.appspot.com/linux?channel=stable | cut -d. -f3)
+        rev=$(curl -fsSL https://pdfium.googlesource.com/pdfium/+log/master..chromium/$ver?format=json | grep -c "\"commit\":")
+        echo $ver.r$rev'
