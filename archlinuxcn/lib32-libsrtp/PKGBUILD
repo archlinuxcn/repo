@@ -4,7 +4,7 @@
 _basename=libsrtp
 pkgname="lib32-$_basename"
 pkgver=2.3.0
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Library for SRTP (Secure Realtime Transport Protocol) (32-bit)"
 url="https://github.com/cisco/libsrtp"
@@ -18,7 +18,7 @@ _commit=d02d21111e379c297e93a9033d7b653135f732ee  # tags/v2.3.0
 source=("git+https://github.com/cisco/libsrtp#commit=$_commit")
 sha256sums=('SKIP')
 
-pkgver() {
+_pkgver() {
     cd $_basename
     git describe --tags | sed 's/^v//;s/-/+/g'
 }
