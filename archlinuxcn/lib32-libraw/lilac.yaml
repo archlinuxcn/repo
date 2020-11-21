@@ -1,0 +1,16 @@
+maintainers:
+  - github: DDoSolitary
+build_prefix: multilib
+repo_depends:
+  - lib32-jasper
+update_on:
+  - source: aur
+    aur: lib32-libraw
+  - source: alpm-lilac
+    alpm: lib32-jasper
+    provided: libjasper.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-libjpeg-turbo
+    provided: libjpeg.so
+    strip_release: true

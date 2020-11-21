@@ -1,0 +1,12 @@
+maintainers:
+  - github: DDoSolitary
+build_prefix: multilib
+repo_depends:
+  - lib32-fftw
+update_on:
+  - source: aur
+    aur: lib32-libofa
+  - source: alpm-lilac
+    alpm: lib32-fftw
+    provided: libfftw3.so
+    strip_release: true

@@ -1,0 +1,12 @@
+maintainers:
+  - github: DDoSolitary
+build_prefix: multilib
+repo_depends:
+  - lib32-numactl
+update_on:
+  - source: aur
+    aur: lib32-x265
+  - source: alpm-lilac
+    alpm: lib32-numactl
+    provided: libnuma.so
+    strip_release: true
