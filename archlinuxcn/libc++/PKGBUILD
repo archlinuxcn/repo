@@ -4,7 +4,7 @@
 
 pkgbase=libc++
 pkgname=(${pkgbase}{,abi,experimental})
-pkgver=10.0.1
+pkgver=11.0.0
 pkgrel=1
 url="https://libcxx.llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
@@ -15,11 +15,11 @@ source=("https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver/
         "https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver/libcxx-$pkgver.src.tar.xz"{,.sig}
         "https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver/libcxxabi-$pkgver.src.tar.xz"{,.sig})
 noextract=("${source[@]##*/}")
-sha512sums=('cf34d037c1684d09e7e38d5fc131714eac93c78353d6186b2f806a8fb22dcae0f4748ce22d6faf178c95cfcf20bdc3fa7c5238518a154b3112781f5ab70edaa4'
+sha512sums=('b3e92091ac48772edc0c30801218ce646ef374e1968baab91df9005f58e11c3ce149b2c4c655c7001f8554fd337caa02c08783bc736153bf58f35fe008e624a4'
             'SKIP'
-            'edc756751c8386f1868582d1974ef817ca5de34283474e0df3ce5df8ae213ca0601a5a1e089d09bdbfa8fca6c3f2fb2daa5cca8ca134f47dad738cc90f3c3f71'
+            'c4360c330c27caa940b6881775e37f4801152ef9f12fe5ba754aa5d38214e588e975d760a79866d1eb26f9fba9ce9082c4248f0ac2e7d635d976b9456cc1a4aa'
             'SKIP'
-            '1c58081e11746d5b63123dfb81b562eba925b31dc1a09413663c622a2cd56e8d17a2f184f6c3d78be292719fcc13f08aecaf9442f15b50682bd031416fe58a45'
+            'bfefe9784c9b466844d46e9882b93409b226277b3d98f05ff096a9b533fe1b112687122179e6e8678670f950968dbae7accf3f6ab0f0784cfb316ccab981dbcf'
             'SKIP')
 validpgpkeys=('474E22316ABF4785A88C6E8EA2C794A986419D8A') # Tom Stellard <tstellar@redhat.com> (.1 releases)
 validpgpkeys+=('B6C8F98282B944E3B0D5C2530FC3042E345AD05D') # Hans Wennborg <hans@chromium.org> (.0 releases)
@@ -60,7 +60,7 @@ package_libc++() {
   options=('staticlibs')
 
   cd build
-  DESTDIR="$pkgdir" ninja install-libcxx
+  DESTDIR="$pkgdir" ninja install-cxx
 
   # License.
   install -Dm0644 "$srcdir"/llvm/projects/libcxx/CREDITS.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/CREDITS
@@ -72,7 +72,7 @@ package_libc++abi() {
   options=('staticlibs')
   
   cd build
-  DESTDIR="$pkgdir" ninja install-libcxxabi
+  DESTDIR="$pkgdir" ninja install-cxxabi
   install -Dm0644 "$srcdir"/llvm/projects/libcxxabi/CREDITS.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/CREDITS
   install -Dm0644 "$srcdir"/llvm/projects/libcxxabi/LICENSE.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
