@@ -1,0 +1,42 @@
+# Maintainer: Timofey Titovets <nefelim4ag@gmail.com>
+
+pkgname=bees-git
+pkgver=v0.6.r88.g1b9b437
+pkgrel=1
+pkgdesc="Best-Effort Extent-Same, a btrfs deduplicator daemon"
+arch=('x86_64')
+url="https://github.com/Zygo/bees"
+license=('GPL3')
+depends=('btrfs-progs' 'markdown')
+makedepends=('git' 'make' 'gcc' 'markdown' 'btrfs-progs')
+source=("$pkgname"::'git://github.com/zygo/bees.git#branch=master')
+md5sums=('SKIP')
+
+pkgver() {
+	cd "$pkgname"
+	git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+	cd "$pkgname"
+	make
+	make scripts
+}
+
+package() {
+	cd "$pkgname"
+
+	make install DESTDIR="${pkgdir}"
+
+	mkdir -p "${pkgdir}/usr/bin/"
+
+	if [ -f "${pkgdir}/usr/sbin/beesd" ]; then
+		mv -v "${pkgdir}/usr/sbin/beesd" "${pkgdir}/usr/bin/beesd"
+	fi
+
+	if grep "$pkgname" "${pkgdir}/usr/bin/beesd"; then
+		exit 1
+	fi
+
+	find ${pkgdir} -empty -delete -print
+}
