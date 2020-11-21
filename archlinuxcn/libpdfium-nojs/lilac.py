@@ -9,7 +9,7 @@ def pre_build():
             print('_' + line)
         elif line.startswith('pkgver()'):
             print(line)
-            print('  _prepare 1>&2')
+            print('  _prepare >/dev/null 2>&1')
         else:
             print(line)
     vcs_update()
