@@ -1,8 +1,8 @@
 # Maintainer: Hao Long <imlonghao@archlinuxcn.org>
 
 pkgname=bottom
-pkgver=0.4.7
-pkgrel=2
+pkgver=0.5.0
+pkgrel=1
 pkgdesc="A cross-platform graphical process/system monitor with a customizable interface and a multitude of features"
 arch=("x86_64" "i686")
 url="https://github.com/ClementTsang/bottom"
@@ -10,7 +10,7 @@ license=("MIT")
 depends=("gcc-libs")
 makedepends=("cargo")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('6194357517080cd76b21850a6d4547eb9c95bd2019d41e2866c80d6858e7ec87')
+sha256sums=('1dd4ddadbfd36972065196f1ff700392f5a5abda02927975975ed3547b821b34')
 
 build() {
   cd ${pkgname}-${pkgver}
