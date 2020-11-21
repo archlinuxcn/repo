@@ -2,7 +2,7 @@
 
 _pkgname=addict
 pkgname=python-addict
-pkgver=2.3.0
+pkgver=2.4.0
 pkgrel=1
 pkgdesc="the Python Dict that's better than heroin"
 arch=('any')
@@ -12,7 +12,7 @@ checkdepends=(python-pytest)
 url='https://github.com/mewwts/addict'
 license=('MIT')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mewwts/addict/archive/v${pkgver}.tar.gz")
-sha512sums=('7c3a90f57c744d9b79e91023293c8b7d9edf7c31429f636118486d9279e2a09d4485ce7db3297ed26d26591d2423f46d0b7b717dffe4283f432506b10806af89')
+sha512sums=('aa8248b6ba695392d3d87761e2e72675221e22adb99d5d9afccc47ae6763dc840aac610c660201110817704917967f68dc1f65fbebdd52a3b619204d85056a15')
 
 build() {
   cd "${_pkgname}-${pkgver}"
