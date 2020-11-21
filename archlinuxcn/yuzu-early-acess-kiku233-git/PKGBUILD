@@ -1,0 +1,74 @@
+# Maintainer: Heavysink <winstonwu91 at gmail>
+
+_pkgname=yuzu
+pkgname=$_pkgname-early-access-kiku233-git
+pkgver=1138.r0.ga8f198c7e
+pkgrel=1
+pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access with Chinese translation)"
+arch=('i686' 'x86_64')
+url="https://github.com/yuzu-emu/yuzu-mainline"
+license=('GPL2')
+depends=('shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'mbedtls' 'openssl' 'zstd')
+makedepends=('git' 'cmake' 'ninja' 'python2' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'desktop-file-utils' 'conan')
+optdepends=('qt5-wayland: for Wayland support')
+provides=('yuzu' 'yuzu-early-access' 'yuzu-early-access-git')
+conflicts=('yuzu-canary-git' 'yuzu-master-git' 'yuzu-mainline-git' 'yuzu-git' 'yuzu-ea-bin')
+replaces=('yuzu-canary-git')
+source=("$_pkgname::git+https://github.com/kiku233/yuzu-early-access.git")
+md5sums=('SKIP')
+
+pkgver() {
+	cd "$srcdir/$_pkgname"
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/mainline-0-//g;s/-/./g'
+}
+
+prepare() {
+	cd "$srcdir/$_pkgname"
+
+	git submodule init
+	git submodule update --init --recursive
+
+  #sed -i 's/Werror=reorder/Wno-reorder/g' src/CMakeLists.txt
+  #sed -i 's/Werror=conversion/Wno-conversion/g' src/video_core/CMakeLists.txt
+}
+
+build() {
+	# Trick the compiler into thinking we're building from a continuous
+	# integration tool so the build number is correctly shown in the title
+	cd "$srcdir/$_pkgname"
+	export CI=true
+	export TRAVIS=true
+	export TRAVIS_REPO_SLUG=yuzu-emu/yuzu-mainline
+	export TRAVIS_TAG=$(git describe --tags)
+	
+	# Hopefully temporary fix for a compilation error involving fmt
+	#CXXFLAGS+=" -DFMT_USE_USER_DEFINED_LITERALS=0"
+
+	# Flag to disable pre-compiled headers so boost can build properly
+	# CXXFLAGS+=" -DENABLE_PRECOMPILED_HEADERS=OFF"
+
+	# Flag to fix SDL exceptions occurring in some users' builds
+	#CXXFLAGS+=" -I/usr/include/SDL2 -D_REENTRANT -pthread -lSDL2"
+
+  #CXXFLAGS+=" -I/usr/include/libusb-1.0"
+
+	mkdir -p build && cd build
+	cmake -GNinja .. \
+	  -DCMAKE_INSTALL_PREFIX=/usr \
+	  -DCMAKE_BUILD_TYPE=Release \
+	  -DYUZU_ENABLE_COMPATIBILITY_REPORTING=ON \
+    -DYUZU_USE_BUNDLED_UNICORN=ON \
+	  -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
+	  -DUSE_DISCORD_PRESENCE=ON
+ ninja
+}
+
+check() {
+	cd "$srcdir/$_pkgname/build"
+	ninja test
+}
+
+package() {
+	cd "$srcdir/$_pkgname/build"
+	DESTDIR="$pkgdir" ninja install
+}
