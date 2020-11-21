@@ -1,7 +1,7 @@
 # Maintainer: Felix Kauselmann <licorn@gmail.com>
 
 pkgname=libpdfium-nojs
-pkgver=4240.r2.9591642a08
+pkgver=4280.r1.0950ad89ea
 pkgrel=1
 pkgdesc="Open-source PDF rendering engine."
 arch=('x86_64')
@@ -22,6 +22,7 @@ md5sums=('SKIP'
          'feb270967925a0844b1b9a9e15288eb3')
 
 pkgver() {
+  _prepare >/dev/null 2>&1
 
   cd $srcdir/pdfium
 
@@ -32,7 +33,7 @@ pkgver() {
 
 }
 
-prepare() {
+_prepare() {
 
   cd "$srcdir/pdfium"
 
@@ -62,7 +63,10 @@ prepare() {
   curl https://chromium.googlesource.com/chromium/src/+/master/tools/generate_shim_headers/generate_shim_headers.py?format=TEXT \
     | base64 --decode > "$srcdir/pdfium/tools/generate_shim_headers/generate_shim_headers.py"
   echo "Done."
-
+  
+  # Create fake gclient_args.gni file to satisfy include list for build/config/compiler/compiler.gni
+  touch "$srcdir/build/config/gclient_args.gni"
+  
 } 
 
 build() {
@@ -87,6 +91,7 @@ build() {
       'pdf_is_standalone = true'
       'use_system_libopenjpeg2 = true'
       'is_component_build = true'
+      'use_gold = false' 
   )
   
   gn gen out/Release --script-executable=/usr/bin/python2 --args="${_flags[*]}"
