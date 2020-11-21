@@ -1,55 +1,44 @@
 # Maintainer: Ingo Bürk <admin at airblader dot de>
 
 pkgname=i3-gaps-next-git
-pkgver=4.18.3.r292.gcd86f6a0
-pkgrel=2
+pkgver=4.19.r6.g069edeb2
+pkgrel=1
 pkgdesc='A fork of i3wm tiling window manager (development branch) with more features, including gaps'
 arch=('i686' 'x86_64')
 url='https://github.com/Airblader/i3/tree/gaps-next'
 license=('BSD')
 provides=('i3-wm')
-conflicts=('i3-wm' 'i3bar' 'i3bar-git' 'i3-git' 'i3-gaps-git' 'i3-gaps')
+conflicts=('i3-wm' 'i3-git' 'i3-gaps')
 groups=('i3-vcs')
 depends=('xcb-util-keysyms' 'xcb-util-wm' 'libev' 'yajl'
          'startup-notification' 'pango' 'perl' 'xcb-util-cursor' 'xcb-util-xrm'
          'libxkbcommon-x11')
-makedepends=('git' 'asciidoc' 'docbook-xsl' 'xmlto' 'perl' 'pkgconfig' 'meson')
-optdepends=('rxvt-unicode: The terminal emulator used in the default config.'
-            'dmenu: As menu.'
-            'i3lock: For locking your screen.'
-            'i3status: To display system information with a bar.'
-            'perl-json-xs: For i3-save-tree'
-            'perl-anyevent-i3: For i3-save-tree')
-options=('docs' '!strip')
+makedepends=('git' 'bison' 'flex' 'asciidoc' 'xmlto' 'meson')
+optdepends=('i3lock: For locking your screen.'
+            'i3status: To display system information with a bar.')
+options=('docs')
 source=('git://github.com/Airblader/i3#branch=gaps-next')
 sha1sums=('SKIP')
 
-_gitname='i3'
-
 pkgver() {
-  cd "$srcdir/$_gitname"
+  cd "${srcdir}/i3"
   git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
-  cd "$_gitname"
-
-  rm -rf build
-  mkdir -p build && cd build
-
-
-  arch-meson ..
-  meson compile
+  cd "i3"
+  arch-meson \
+    -Ddocs=true \
+    -Dmans=true \
+  ../build
+  meson compile -C ../build
 }
 
 package() {
-  cd "$_gitname"
-  cd build/
+  cd "i3"
+  DESTDIR="$pkgdir" meson install -C ../build
 
-  DESTDIR="$pkgdir" meson install
-
-  install -Dm644 ../LICENSE \
-    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dt "${pkgdir}/usr/share/licenses/${pkgname}" -m644 LICENSE
 }
 
 # vim:set ts=2 sw=2 et:
