@@ -4,12 +4,12 @@
 _basename=libtiger
 pkgname=lib32-libtiger
 pkgver=0.3.4
-pkgrel=4
+pkgrel=5
 pkgdesc="A rendering library for Kate streams using Pango and Cairo (32-bit)"
 url="https://code.google.com/archive/p/libtiger/"
 license=('LGPL')
 arch=('x86_64')
-depends=('lib32-pango' 'lib32-libkate' 'libtiger')
+depends=("lib32-libkate" "lib32-pango" "libglib-2.0.so" "libgobject-2.0.so" "libharfbuzz.so" "libkate.so" "libpango-1.0.so" "libpangocairo-1.0.so" "libtiger")
 makedepends=('pkg-config')
 source=(https://download.videolan.org/contrib/tiger/$_basename-$pkgver.tar.gz)
 md5sums=('dc1dbeb658c95485ba10b9b2897b4ae2')
@@ -40,3 +40,4 @@ package() {
 
     rm -r include
 }
+provides=("libtiger.so")
