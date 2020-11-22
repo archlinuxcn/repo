@@ -3,12 +3,12 @@
 _basename=sord
 pkgname=lib32-sord
 pkgver=0.16.4
-pkgrel=2
+pkgrel=3
 pkgdesc="A lightweight C library for storing RDF data in memory (32-bit)"
 arch=('x86_64')
 url="https://drobilla.net/software/sord/"
 license=('custom:ISC')
-depends=('lib32-serd' 'sord')
+depends=("lib32-serd" "libserd-0.so" "sord")
 makedepends=('lib32-pcre' 'waf')
 source=("https://download.drobilla.net/$_basename-$pkgver.tar.bz2"{,.sig})
 sha512sums=('98bb102cff5ab38d999c2f966597508076ccce54583a739810b0c28b4f3d570b2ef414605fc08361ecb11ac3184d3176f2f50c7c59c06cc50c3d522e26ed5576'
@@ -66,3 +66,4 @@ package() {
 
     rm -r bin include share/man
 }
+provides=("libsord-0.so")
