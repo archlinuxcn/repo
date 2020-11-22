@@ -5,12 +5,12 @@
 _basename=libdvdnav
 pkgname=lib32-libdvdnav
 pkgver=6.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="The library for xine-dvdnav plugin (32 bit)"
 arch=(x86_64)
 license=(GPL)
 url="https://www.videolan.org/developers/libdvdnav.html"
-depends=(lib32-libdvdread libdvdnav)
+depends=("lib32-libdvdread" "libdvdnav" "libdvdread.so")
 source=("https://download.videolan.org/pub/videolan/libdvdnav/${pkgver}/libdvdnav-${pkgver}.tar.bz2"{,.asc})
 sha256sums=('f697b15ea9f75e9f36bdf6ec3726308169f154e2b1e99865d0bbe823720cee5b'
             'SKIP')
@@ -39,3 +39,4 @@ package() {
     rm -rf "${pkgdir}/usr"/{include,share}
 }
 
+provides=("libdvdnav.so")
