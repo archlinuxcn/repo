@@ -3,12 +3,12 @@
 _basename=gupnp
 pkgname=lib32-gupnp
 pkgver=1.2.4
-pkgrel=1
+pkgrel=2
 pkgdesc="An object-oriented UPNP framework (32-bit)"
 arch=(x86_64)
 url="https://wiki.gnome.org/Projects/GUPnP"
 license=(LGPL)
-depends=(lib32-gssdp gupnp)
+depends=("gupnp" "lib32-gssdp" "libgio-2.0.so" "libglib-2.0.so" "libgmodule-2.0.so" "libgobject-2.0.so" "libgssdp-1.2.so" "libuuid.so")
 makedepends=(git gobject-introspection meson vala)
 _commit=a066f3d70d7712976311c906afc3ca57be8a694d  # tags/gupnp-1.2.4^0
 source=("git+https://gitlab.gnome.org/GNOME/gupnp.git#commit=$_commit")
@@ -43,3 +43,4 @@ package() {
 
     rm -rf "${pkgdir}"/usr/{bin,include,share}
 }
+provides=("libgupnp-1.2.so")
