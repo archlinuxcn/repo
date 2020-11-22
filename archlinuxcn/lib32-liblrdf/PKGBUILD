@@ -5,11 +5,11 @@
 _pkgname=liblrdf
 pkgname=lib32-liblrdf
 pkgver=0.6.1
-pkgrel=3
+pkgrel=4
 pkgdesc="A library for the manipulation of RDF file in LADSPA plugins (32 bit)"
 arch=('x86_64')
 url="https://github.com/swh/LRDF"
-depends=('lib32-ladspa' 'lib32-raptor' 'liblrdf')
+depends=("lib32-ladspa" "lib32-raptor" "liblrdf" "libraptor2.so")
 makedepends=('gcc-multilib')
 license=('GPL2')
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/swh/LRDF/archive/v${pkgver}.tar.gz")
@@ -46,3 +46,4 @@ package() {
 
     rm -rf "${pkgdir}"/usr/{include,share}
 }
+provides=("liblrdf.so")
