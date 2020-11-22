@@ -1,0 +1,34 @@
+maintainers:
+  - github: DDoSolitary
+build_prefix: multilib
+repo_depends:
+  - lib32-aom
+  - lib32-libde265
+  - lib32-x265
+update_on:
+  - source: aur
+    aur: lib32-libheif
+  - alias: alpm-lilac
+    alpm: lib32-aom
+    provided: libaom.so
+    strip_release: true
+  - alias: alpm-lilac
+    alpm: lib32-libde265
+    provided: libde265.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-gdk-pixbuf2
+    provided: libgdk_pixbuf-2.0.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-glib2
+    provided: libglib-2.0.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-glib2
+    provided: libgobject-2.0.so
+    strip_release: true
+  - alias: alpm-lilac
+    alpm: lib32-x265
+    provided: libx265.so
+    strip_release: true
