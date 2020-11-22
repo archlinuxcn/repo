@@ -12,6 +12,10 @@ to_pattern = r'\1.\2'
 prefix = ''
 
 def custom_preproc(vers):
+  # Sometimes, vers contains a `-XXX` suffix
+  # that is not covered by `from_pattern`.
+  if "-" in vers:
+    vers = vers.replace('-', '.')
   if len(vers.split('.')) == 3:
     return vers + '.REL'
   else:
