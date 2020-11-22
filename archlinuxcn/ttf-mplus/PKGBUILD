@@ -1,7 +1,7 @@
 # Contributor: noonov <noonov@gmail.com>
 
 pkgname=ttf-mplus
-pkgver=TESTFLIGHT_063
+pkgver=TESTFLIGHT_063a
 _pkgver=${pkgver/_/-}
 pkgrel=1
 pkgdesc="M+ Japanese outline fonts"
@@ -11,7 +11,7 @@ license=('custom')
 depends=('fontconfig')
 _mirror="jaist"
 source=(http://${_mirror}.dl.osdn.jp/mplus-fonts/62344/mplus-${_pkgver}.tar.xz)
-sha256sums=('149a5c97c35624d79ffb3cbbdd56559319085229acaf72b49b56adc5ede0979c')
+sha256sums=('44eb973b4b6aff574de454db105ddc23e6749c2294734bd9cb1e0d734e4cdd79')
 
 package() {
   cd ${srcdir}/mplus-${_pkgver}
