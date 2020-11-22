@@ -1,7 +1,7 @@
 # Maintainer: Hao Long <imlonghao@archlinuxcn.org>
 
 pkgname=bottom
-pkgver=0.5.0
+pkgver=0.5.1
 pkgrel=1
 pkgdesc="A cross-platform graphical process/system monitor with a customizable interface and a multitude of features"
 arch=("x86_64" "i686")
@@ -10,7 +10,7 @@ license=("MIT")
 depends=("gcc-libs")
 makedepends=("cargo")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('1dd4ddadbfd36972065196f1ff700392f5a5abda02927975975ed3547b821b34')
+sha256sums=('8c2812696f32bef67f19eca43eef95a91a1718e5c7910f7c1280167a4146f390')
 
 build() {
   cd ${pkgname}-${pkgver}
