@@ -4,7 +4,7 @@
 _basename=openexr
 pkgname=lib32-openexr
 pkgver=2.5.3
-pkgrel=2
+pkgrel=3
 pkgdesc="An high dynamic-range image file format library (32-bit)"
 url="https://www.openexr.com/"
 arch=('x86_64')
@@ -38,4 +38,4 @@ package() {
 
     install -D -m644 "$srcdir"/$_basename-$pkgver/LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
-provides=("libHalf-2_5.so" "libHalf.so" "libIex-2_5.so" "libIex.so" "libIexMath-2_5.so" "libIexMath.so" "libIlmImf-2_5.so" "libIlmImf.so" "libIlmImfUtil-2_5.so" "libIlmImfUtil.so" "libIlmThread-2_5.so" "libIlmThread.so" "libImath-2_5.so" "libImath.so")
+provides=("libHalf-2_5.so" "libIex-2_5.so" "libIexMath-2_5.so" "libIlmImf-2_5.so" "libIlmImfUtil-2_5.so" "libIlmThread-2_5.so" "libImath-2_5.so")
