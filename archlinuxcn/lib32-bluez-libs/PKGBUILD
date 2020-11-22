@@ -7,7 +7,7 @@
 pkgbase=lib32-bluez-libs
 pkgname=("${pkgbase}" 'lib32-bluez-plugins')
 pkgver=5.55
-pkgrel=2
+pkgrel=3
 url="http://www.bluez.org/"
 arch=('x86_64')
 license=('LGPL2.1')
@@ -54,6 +54,7 @@ check() {
 }
 
 package_lib32-bluez-libs() {
+  provides=("libbluetooth.so")
   pkgdesc="Deprecated libraries for the bluetooth protocol stack (32-bit)"
   depends=('bluez-libs' 'lib32-glibc')
 
@@ -71,4 +72,3 @@ package_lib32-bluez-plugins() {
   make DESTDIR=${pkgdir} \
        install-pluginLTLIBRARIES
 }
-provides=("libbluetooth.so")
