@@ -4,12 +4,12 @@
 _basename=libwmf
 pkgname=lib32-libwmf
 pkgver=0.2.12
-pkgrel=3
+pkgrel=4
 pkgdesc="A library for reading vector images in Microsoft's native Windows Metafile Format (WMF) (32-bit)"
 arch=('x86_64')
 url="http://wvware.sourceforge.net/libwmf.html"
 license=('LGPL')
-depends=("lib32-expat" "lib32-freetype2" "lib32-gdk-pixbuf2" "libfreetype.so" "libglib-2.0.so" "libgobject-2.0.so" "libwmf")
+depends=("lib32-expat" "lib32-freetype2" "lib32-gdk-pixbuf2" "lib32-libx11" "libfreetype.so" "libglib-2.0.so" "libgobject-2.0.so" "libwmf")
 makedepends=('lib32-gtk2' 'lib32-libxt')
 options=('!docs' '!emptydirs')
 source=($_basename-$pkgver.tar.gz::https://github.com/caolanm/libwmf/archive/v$pkgver.tar.gz
@@ -55,4 +55,4 @@ package() {
     #Remove fonts, these are in gsfonts
     rm -rf "${pkgdir}/usr/share"
 }
-provides=("libwmf.so" "libwmflite.so")
+provides=("libwmf-${pkgver%.*}.so" "libwmflite-${pkgver%.*}.so")
