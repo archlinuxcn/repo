@@ -5,7 +5,7 @@
 _basename=libdvdread
 pkgname=lib32-libdvdread
 pkgver=6.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Provides a simple foundation for reading DVD video disks (32 bit)"
 arch=(x86_64)
 url="https://www.videolan.org/developers/libdvdnav.html"
@@ -50,3 +50,4 @@ package() {
 
     rm -rf "${pkgdir}/usr"/{include,share}
 }
+provides=("libdvdread.so")
