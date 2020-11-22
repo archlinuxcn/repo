@@ -1,19 +1,25 @@
 # Maintainer: nicman23
 _pkgbase=hid-nintendo
 pkgname=${_pkgbase}-dkms
-pkgver=3.0
+pkgver=3.0.r4.g86e5344
 pkgrel=1
 pkgdesc="hid-nintendo Driver (DKMS)"
 arch=('any')
 url="https://github.com/nicman23/dkms-hid-nintendo"
 license=('GPLv2')
 depends=('dkms' 'bc')
+makedepends=('git')
 provides=('hid-nintendo')
-source=("https://github.com/nicman23/dkms-hid-nintendo/archive/$pkgver.tar.gz"
+source=("git://github.com/nicman23/dkms-hid-nintendo.git"
         "dkms.conf")
-md5sums=('9c151796321e78cb6973dd4184c9ae04'
+md5sums=('SKIP'
          '7dee3612b857c0aeb9de37977ed64d36')
 
+pkgver () {
+  cd dkms-hid-nintendo
+
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
 package() {
   mkdir -p "${pkgdir}"/usr/src/${_pkgbase}-${pkgver}/
   chmod 755 "${pkgdir}"/usr/src/${_pkgbase}-${pkgver}/
