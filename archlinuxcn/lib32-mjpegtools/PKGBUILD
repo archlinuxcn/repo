@@ -5,7 +5,7 @@
 _basename=mjpegtools
 pkgname=lib32-${_basename}
 pkgver=2.1.0
-pkgrel=5
+pkgrel=6
 pkgdesc="Set of tools that can do recording of videos and playback, simple cut-and-paste editing and the MPEG compression of audio and video. 32bit libraries"
 arch=('x86_64')
 license=('GPL')
@@ -39,4 +39,4 @@ package() {
   rm ${pkgdir}/usr/include ${pkgdir}/usr/share ${pkgdir}/usr/bin -Rf
   }
  
-provides=("liblavfile.so" "liblavjpeg.so" "liblavplay.so" "libmjpegutils.so" "libmpeg2encpp.so" "libmplex2.so")
+provides=("liblavfile-${pkgver%.*}.so" "liblavjpeg-${pkgver%.*}.so" "liblavplay-${pkgver%.*}.so" "libmjpegutils-${pkgver%.*}.so" "libmpeg2encpp-${pkgver%.*}.so" "libmplex2-${pkgver%.*}.so")
