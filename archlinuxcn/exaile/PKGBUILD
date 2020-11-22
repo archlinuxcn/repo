@@ -7,9 +7,9 @@
 # Contributor: Joshua Stiefer <facedelajunk@gmail.com>
 
 pkgname=exaile
-_pkgver=4.1.0-alpha1
+_pkgver=4.1.0-beta1
 pkgver=${_pkgver//-/}
-pkgrel=2
+pkgrel=3
 pkgdesc="A full-featured Amarok-style media player for GTK+"
 arch=('any')
 url="https://www.exaile.org/"
@@ -29,6 +29,7 @@ checkdepends=('python-mox3' 'python-pytest')
 optdepends=('udisks2: device detection'
 	'cddb-py: CD info'
 	'python-zeroconf: DAAP plugins (daapserver and daapclient)'
+	'ipython: ipconsole plugin'
 	'python-pylast: Last.FM integration'
 	'python-lxml: lyrics from lyricsmania.com (lyricsmania)'
 	'python-beautifulsoup4: lyrics from lyrics.wikia.com (lyricwiki)'
@@ -41,7 +42,7 @@ optdepends=('udisks2: device detection'
 	'moodbar: moodbar plugin'
 	'gst-plugins-bad: BPM Counter plugin')
 source=("$pkgname-$_pkgver.tar.gz::https://github.com/exaile/exaile/archive/$_pkgver.tar.gz")
-sha512sums=('56e73f7cc4d250fbc30870170b50f65f0f99d27e97a8f28dd043af9eb93c919a8de3ed790cbd6c441133232afb3c405fa830cb62c8c33bb0a6e4d97b79d5b54d')
+sha512sums=('df3998e512a9cda4383bc7f47deaf67f12bbfb64561726e7682013193a6d71ae18a067ae1db1d6affab6eb3311b4d158d56897f92a5c639808539412113f7ef9')
 
 build() {
 	cd "$srcdir/$pkgname-$_pkgver"
