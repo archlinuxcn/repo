@@ -5,7 +5,7 @@
 _basename=libmpcdec
 pkgname=lib32-libmpcdec
 pkgver=0.1+r475
-pkgrel=3
+pkgrel=4
 epoch=1
 _rel=475
 pkgdesc="Musepack decoding library (32 bit)"
@@ -70,3 +70,4 @@ package() {
 
     install -Dm644 libmpcdec/COPYING "${pkgdir}/usr/share/licenses/lib32-libmpcdec/COPYING"
 }
+provides=("libmpcdec.so")
