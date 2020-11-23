@@ -1,0 +1,75 @@
+maintainers:
+  - github: DDoSolitary
+build_prefix: multilib
+repo_depends:
+  - lib32-jbigkit
+  - lib32-libheif
+  - lib32-liblqr
+  - lib32-libraqm
+  - lib32-libraw
+  - lib32-libwmf
+  - lib32-openexr
+  - lib32-openjpeg2
+update_on:
+  - source: aur
+    aur: lib32-imagemagick
+  - alias: alpm-lilac
+    alpm: lib32-openexr
+    provided: libIlmImf-2_5.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-fontconfig
+    provided: libfontconfig.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-freetype2
+    provided: libfreetype.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-glib2
+    provided: libglib-2.0.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-glib2
+    provided: libgobject-2.0.so
+    strip_release: true
+  - alias: alpm-lilac
+    alpm: lib32-libheif
+    provided: libheif.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-libjpeg-turbo
+    provided: libjpeg.so
+    strip_release: true
+  - alias: alpm-lilac
+    alpm: lib32-liblqr
+    provided: liblqr-1.so
+    strip_release: true
+  - alias: alpm-lilac
+    alpm: lib32-openjpeg2
+    provided: libopenjp2.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-pango
+    provided: libpango-1.0.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-pango
+    provided: libpangocairo-1.0.so
+    strip_release: true
+  - alias: alpm-lilac
+    alpm: lib32-libraqm
+    provided: libraqm.so
+    strip_release: true
+  - alias: alpm-lilac
+    alpm: lib32-libraw
+    provided: libraw_r.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-librsvg
+    provided: librsvg-2.so
+    strip_release: true
+  - alias: alpm-lilac
+    alpm: lib32-libwmf
+    provided: libwmflite-0.2.so
+    strip_release: true
