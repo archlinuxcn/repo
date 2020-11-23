@@ -3,7 +3,7 @@
 
 _gemname=parallel
 pkgname=ruby-$_gemname
-pkgver=1.20.0
+pkgver=1.20.1
 pkgrel=1
 pkgdesc="Run any kind of code in parallel processes"
 arch=(any)
@@ -14,7 +14,7 @@ makedepends=(rubygems ruby-rdoc)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha256sums=('af85cd3bff706ac590ad4e9b7a847abdba2d1426d8eec26d4857e557631b91f1')
+sha256sums=('ed4faec4498bf921e10ac8683ed5840d91e2f307c26f8e24f8d8ae58415ea500')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
