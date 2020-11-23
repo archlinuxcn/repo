@@ -5,12 +5,12 @@
 
 pkgname=xscreensaver-arch-logo
 pkgver=5.44
-pkgrel=3
+pkgrel=4
 pkgdesc='Screen saver and locker for the X Window System with Arch Linux branding'
 url='https://www.jwz.org/xscreensaver/'
 arch=('x86_64')
 license=('BSD')
-depends=('libglade' 'libxmu' 'glu' 'xorg-appres' 'perl-libwww')
+depends=('libglade' 'libxmu' 'glu' 'xorg-appres' 'perl-libwww' 'gdk-pixbuf-xlib')
 makedepends=('bc' 'intltool' 'libxpm')
 optdepends=('gdm: for login manager support')
 conflicts=('xscreensaver')
