@@ -1,0 +1,16 @@
+maintainers:
+  - github: DDoSolitary
+build_prefix: multilib
+repo_depends:
+  - lib32-imagemagick
+update_on:
+  - source: aur
+    aur: lib32-zbar
+  - source: archpkg
+    archpkg: lib32-dbus
+    provided: libdbus-1.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-libjpeg-turbo
+    provided: libjpeg.so
+    strip_release: true
