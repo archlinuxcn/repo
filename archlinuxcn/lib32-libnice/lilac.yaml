@@ -1,0 +1,24 @@
+maintainers:
+  - github: DDoSolitary
+build_prefix: multilib
+repo_depends:
+  - lib32-gupnp-igd
+update_on:
+  - source: aur
+    aur: lib32-libnice
+  - source: archpkg
+    archpkg: lib32-glib2
+    provided: libgio-2.0.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-glib2
+    provided: libglib-2.0.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-glib2
+    provided: libgobject-2.0.so
+    strip_release: true
+  - alias: alpm-lilac
+    alpm: lib32-gupnp-igd
+    provided: libgupnp-igd-1.0.so
+    strip_release: true
