@@ -4,6 +4,7 @@ build_prefix: multilib
 repo_depends:
   - lib32-aom
   - lib32-dav1d
+  - lib32-dav1d: lib32-libdav1d
   - lib32-gsm
   - lib32-lame
   - lib32-libass
@@ -13,6 +14,7 @@ repo_depends:
   - lib32-openjpeg2
   - lib32-srt
   - lib32-vmaf
+  - lib32-vmaf: lib32-libvmaf
   - lib32-x264
   - lib32-x265
   - lib32-xvidcore
