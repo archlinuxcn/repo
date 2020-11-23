@@ -2,8 +2,8 @@
 
 _basename=serd
 pkgname=lib32-serd
-pkgver=0.30.4
-pkgrel=2
+pkgver=0.30.6
+pkgrel=1
 pkgdesc="Lightweight C library for RDF syntax supporting reading/ writing Turtle and NTriples (32-bit)"
 arch=('x86_64')
 url="https://drobilla.net/software/serd/"
@@ -11,12 +11,15 @@ license=('custom:ISC')
 depends=('lib32-glibc' 'serd')
 makedepends=('waf')
 source=("https://download.drobilla.net/$_basename-$pkgver.tar.bz2"{,.sig})
-sha512sums=('4cc032f826d891213c6db787b10a41ffb8f4b2a3357ffa536e34013755dc34db7109d1b42f550a0d559d8651f56c3a5dfb3654c3e2047ee6e609ff9a5fe803d6'
+sha512sums=('db08d6c67d8627728679d0ed3770b8219a58f3eef82194ef8ba5682d3ff1f1033e2bbc8d6a1115a3fe0e32990f635c707a81ad8b4f457153fa78ff5991c9c30f'
             'SKIP')
+b2sums=('35a86847642ffe806797ae8dbcd292ce26f08135edfa3b1fd39652f8964c35d73dba8f8627f32dcff399e9cddc332e5484f14a80580a32d52d93977cd9b42912'
+        'SKIP')
 validpgpkeys=('907D226E7E13FA337F014A083672782A9BF368F3')
 
 prepare() {
     cd "${_basename}-${pkgver}"
+
     # remove call to local ldconfig
     sed -i "/ldconfig/d" wscript
     # let wscript(s) find the custom waf scripts
@@ -63,4 +66,4 @@ package() {
 
     rm -r bin include share/man
 }
-provides=("libserd-0.so")
+provides=("libserd-${pkgver%%.*}.so")
