@@ -5,16 +5,16 @@
 
 _basename=faad2
 pkgname=lib32-faad2
-pkgver=2.9.2
-pkgrel=2
+pkgver=2.10.0
+pkgrel=1
 pkgdesc="ISO AAC audio decoder (32 bit)"
 arch=('x86_64')
 url="https://github.com/knik0/faad2"
 license=('GPL2')
 depends=('lib32-glibc' 'faad2')
-options=('!makeflags')
 source=($_basename-$pkgver.tar.gz::https://github.com/knik0/faad2/archive/${pkgver//./_}.tar.gz)
-sha256sums=('9728b2b94f94ab49363cd229e7377fbe6ef3c311c5cd80da662d53ddb0ee091d')
+sha512sums=('92c8b5e79f85b7a7caac9e7954959c26d74ef148a658dcb37e2c1b303fc2fcc5a0d12f21e7bd476870498109bdd03916a56c13f578186a69d6eceb103222e771')
+b2sums=('73ecbcbb3fce93e8ceb88f6f7669bb681d2329935018cc2a23929cf6672959a0678b47c830cfdcf8e716709ce5252a02178737a7af09de373f7c8b54f38f3d9d')
 
 prepare() {
     mv -v "${_basename}-${pkgver//./_}" "${_basename}-${pkgver}"
