@@ -2,19 +2,18 @@
 
 _basename=srt
 pkgname=lib32-srt
-pkgver=1.4.1
-pkgrel=2
+pkgver=1.4.2
+pkgrel=1
 pkgdesc="Secure Reliable Transport library (32-bit)"
 url="https://www.srtalliance.org/"
 arch=(x86_64)
 license=(MPL2)
 depends=(lib32-gcc-libs lib32-openssl srt)
 makedepends=(git cmake ninja)
-_commit=9e52606fae3b32818b5b734d45d3358f4a95cf3f  # tags/v1.4.1
-source=("git+https://github.com/Haivision/srt#commit=$_commit"
-        no-rpath.diff)
-sha256sums=('SKIP'
-            'ce9a97d661d796da85a7e4faf9c70c27368d00eb505f85c03a31bba8f22e6847')
+_commit=50b7af06f3a0a456c172b4cb3aceafa8a5cc0036  # tags/v1.4.2
+source=("git+https://github.com/Haivision/srt#commit=$_commit")
+sha256sums=('SKIP')
+
 
 pkgver() {
     cd $_basename
@@ -22,23 +21,19 @@ pkgver() {
     git describe --tags | sed 's/^v//;s/-/+/g'
 }
 
-prepare() {
-    cd $_basename
-
-    patch -Np1 -i ../no-rpath.diff
-}
-
 build() {
     export CC='gcc -m32'
     export CXX='g++ -m32'
     export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
 
-    cmake -Hsrt -Bbuild -GNinja \
+    cmake -S srt -B build -G Ninja \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_BINDIR=bin \
         -DCMAKE_INSTALL_LIBDIR=lib32 \
         -DCMAKE_INSTALL_INCLUDEDIR=include \
-        -DENABLE_TESTING=True
+        -DCMAKE_BUILD_TYPE=None \
+        -DENABLE_STATIC=ON \
+        -DENABLE_TESTING=ON
 
     cmake --build build
 }
@@ -46,11 +41,12 @@ build() {
 check() {
     cd build
 
+    ./uriparser-test
     ./utility-test
 }
 
 package() {
-    DESTDIR="$pkgdir" cmake --build build --target install
+    DESTDIR="$pkgdir" cmake --install build
 
     cd "$pkgdir"/usr
 
