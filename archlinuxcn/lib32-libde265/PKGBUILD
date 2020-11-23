@@ -2,29 +2,28 @@
 
 _basename=libde265
 pkgname=lib32-libde265
-pkgver=1.0.3
-pkgrel=2
-pkgdesc="Open h.265 video codec implementation  (32-bit)"
+pkgver=1.0.8
+pkgrel=1
+pkgdesc="Open h.265 video codec implementation (32-bit)"
 arch=(x86_64)
 url="https://github.com/strukturag/libde265"
 license=(LGPL3)
 depends=(lib32-gcc-libs libde265)
 source=(https://github.com/strukturag/libde265/releases/download/v$pkgver/$_basename-$pkgver.tar.gz)
-sha256sums=('e4206185a7c67d3b797d6537df8dcaa6e5fd5a5f93bd14e65a755c33cd645f7a')
+sha256sums=('24c791dd334fa521762320ff54f0febfd3c09fc978880a8c5fbc40a88f21d905')
 
 build() {
     cd $_basename-$pkgver
 
     export CC='gcc -m32'
     export CXX='g++ -m32'
-    export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
+    export PKG_CONFIG='/usr/bin/i686-pc-linux-gnu-pkg-config'
 
     ./configure \
         --build=i686-pc-linux-gnu \
         --prefix=/usr \
         --libdir=/usr/lib32 \
         --enable-static=no \
-        --disable-dec265 \
         --disable-sherlock265
 
     make
