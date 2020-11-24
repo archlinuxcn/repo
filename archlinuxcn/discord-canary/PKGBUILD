@@ -1,12 +1,12 @@
 # Maintainer: Anna <morganamilo@gmail.com>
 # Maintainer: E5ten <e5ten.arch@gmail.com>
 # Maintainer: Parker Reed <parker.l.reed@gmail.com>
-# Maintainer: Stephanie Wilde-Hobbs <steph@rx14.co.uk>
+# Maintainer: Stephanie Wilde-Hobbs <git@stephanie.is>
 # Contributor: Cayde Dixon <me@cazzar.net>
 # Contributor: Anthony Anderson <aantony4122@gmail.com>
 
 pkgname=discord-canary
-pkgver=0.0.115
+pkgver=0.0.116
 pkgrel=1
 pkgdesc="All-in-one voice and text chat for gamers that's free and secure."
 arch=('x86_64')
@@ -22,18 +22,11 @@ optdepends=('libpulse: For pulseaudio support'
 source=("https://dl-canary.discordapp.net/apps/linux/${pkgver}/${pkgname}-${pkgver}.tar.gz"
         'LICENSE'
         "${pkgname}.sh")
-sha256sums=('9dcd8cc9ec40f2d3edfa8fda869ffefa72e2c0df4d43e5c99dc2c7b8e81d3171'
+sha256sums=('77d6c7ec36fba360c8e60da9a1d83aa466403ea7e1166af7aec985f45f416f92'
             '9be5f85421c9094c390c25bf1f45157c3c8dcf592feb8acb0810a61f11d80b90'
             '7119a3345162d39bf86813d19546b488a1bdba12d38c3d39749f86bd587f0a0c')
 
 package() {
-    # Patch
-    rm -rf "${srcdir}/unpack"
-    mkdir "${srcdir}/unpack"
-    asar extract "${srcdir}/DiscordCanary/resources/app.asar" "${srcdir}/unpack"
-    sed -i 's/emit..update-manually.*)/emit("update-not-available")/' "${srcdir}/unpack/app_bootstrap/hostUpdater.js"
-    asar pack "${srcdir}/unpack" "${srcdir}/DiscordCanary/resources/app.asar"
-
     # Install the main files.
     install -d "${pkgdir}/opt/${pkgname}"
     cp -a "${srcdir}/DiscordCanary/." "${pkgdir}/opt/${pkgname}"
