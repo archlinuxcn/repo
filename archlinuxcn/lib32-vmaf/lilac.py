@@ -11,7 +11,7 @@ def pre_build():
         elif line == '}':
             in_split = False
         if in_split and line.strip().startswith('provides='):
-            pos = line.find('(')
+            pos = line.find('(') + 1
             print(f'{line[:pos]}libvmaf.so {line[pos:]}')
         else:
             print(line)
