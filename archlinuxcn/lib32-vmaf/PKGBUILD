@@ -3,7 +3,7 @@
 _pkgbasename=vmaf
 pkgname=("lib32-$_pkgbasename" "lib32-lib$_pkgbasename")
 pkgver=1.5.3
-pkgrel=2
+pkgrel=3
 pkgdesc='Perceptual video quality assessment algorithm based on multi-method fusion (32 bit)'
 arch=('x86_64')
 url='https://github.com/Netflix/vmaf/'
@@ -50,7 +50,7 @@ package_lib32-libvmaf() {
       "$_pkgbasename"
       "lib32-gcc-libs"
     )
-    provides=("lib32-vmaf")
+    provides=(libvmaf.so "lib32-vmaf")
 
     cd ${_pkgbasename}-${pkgver}/libvmaf
 
