@@ -4,12 +4,11 @@
 
 pkgname=flashbench-git
 pkgver=r62.2e30b19
-pkgrel=1
+pkgrel=2
 pkgdesc="Tool for benchmarking and classifying flash memory drives"
 arch=(i686 x86_64)
 license=('GPL2')
 url="https://lwn.net/SubscriberLink/428584/354d16fe00c90072/"
-makedepends=('git')
 provides=('flashbench')
 conflicts=('flashbench')
 source=('git+https://git.linaro.org/people/arnd.bergmann/flashbench.git')
@@ -30,3 +29,4 @@ package() {
   mkdir -p "${pkgdir}/usr/bin"
   install -m755 flashbench erase "${pkgdir}/usr/bin/"
 }
+makedepends=("git")
