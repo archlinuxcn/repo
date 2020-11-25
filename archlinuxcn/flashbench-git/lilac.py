@@ -13,6 +13,7 @@ def pre_build():
             if line.startswith('replaces='):
                     continue
             print(line)
+    add_makedepends(['git'])
 
 
 #post_build = aur_post_build
