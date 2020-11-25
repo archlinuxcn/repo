@@ -7,13 +7,13 @@
 _pkgbasename=ffmpeg
 pkgname=("lib32-$_pkgbasename" "lib32-lib$_pkgbasename")
 pkgver=4.3.1
-pkgrel=4
+pkgrel=5
 epoch=2
 pkgdesc="Complete solution to record, convert and stream audio and video (32 bit)"
 arch=('x86_64')
 url="http://ffmpeg.org/"
 license=('GPL3')
-  depends=(
+  depends=("libaom.so" "libasound.so" "libass.so" "libbluray.so" "libdav1d.so" "libfontconfig.so" "libfreetype.so" "libfribidi.so" "libgsm.so" "libjack.so" "libmp3lame.so" "libopencore-amrnb.so" "libopencore-amrwb.so" "libopenjp2.so" "libsrt.so" "libvmaf.so" "libvorbis.so" "libvorbisenc.so" "libvpx.so" "libx264.so" "libx265.so" "libxvidcore.so"
       "$_pkgbasename"
       'lib32-alsa-lib'
       'lib32-aom'
@@ -188,7 +188,7 @@ package_lib32-libffmpeg() {
 
 package_lib32-ffmpeg() {
   pkgdesc="Complete solution to record, convert and stream audio and video (32 bit)"
-  depends=(
+  depends=("libaom.so" "libasound.so" "libass.so" "libbluray.so" "libdav1d.so" "libfontconfig.so" "libfreetype.so" "libfribidi.so" "libgsm.so" "libjack.so" "libmp3lame.so" "libopencore-amrnb.so" "libopencore-amrwb.so" "libopenjp2.so" "libsrt.so" "libvmaf.so" "libvorbis.so" "libvorbisenc.so" "libvpx.so" "libx264.so" "libx265.so" "libxvidcore.so"
       'lib32-libffmpeg' 
   )
 
