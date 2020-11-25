@@ -30,8 +30,6 @@ build() {
   sed -i 's|^.*\(#define VIMRC_FILE.*"\) .*$|\1|' \
     src/feature.h
 
-  git show 259e2ef34ea014067164f73665fe6444109ec328 | patch -p1
-
   local vim_options='--without-x --disable-canberra --disable-gui --disable-xsmp'
   local gvim_options='--enable-xsmp --enable-gui=gtk3'
 
