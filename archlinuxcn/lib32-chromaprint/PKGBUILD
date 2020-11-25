@@ -4,12 +4,12 @@
 _basename=chromaprint
 pkgname="lib32-$_basename"
 pkgver=1.5.0
-pkgrel=4
+pkgrel=5
 pkgdesc="Library for extracting fingerprints from any audio source (32-bit)"
 url="https://acoustid.org/chromaprint"
 arch=('x86_64')
 license=('LGPL2.1' 'MIT')
-depends=('lib32-ffmpeg' 'chromaprint')
+depends=("chromaprint" "lib32-ffmpeg" "libavcodec.so" "libavutil.so")
 makedepends=('cmake' 'gtest')
 # upstream signs with DSA key: https://github.com/acoustid/chromaprint/issues/81
 source=("${_basename}-${pkgver}.tar.gz::https://github.com/acoustid/${_basename}/archive/v${pkgver}.tar.gz"
@@ -63,3 +63,4 @@ package() {
     rm -r include
     mv lib lib32
 }
+provides=("libchromaprint.so")
