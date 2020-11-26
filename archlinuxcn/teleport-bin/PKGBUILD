@@ -3,7 +3,7 @@
 # Co-Maintainer: Ariel AxionL <arielaxionl@gmail.com | axionl@aosc.io>
 
 pkgname=teleport-bin
-pkgver=4.3.5
+pkgver=5.0.0
 pkgrel=1
 pkgdesc="Modern SSH server for teams managing distributed infrastructure"
 arch=('x86_64' 'armv7')
@@ -21,8 +21,8 @@ source_armv7=("teleport-bin-${pkgver}-${CARCH}.tar.gz::https://get.gravitational
 
 sha256sums=('78e272d3c6bb255fd254e38a3237b808f6e588bd4861f233eca010189e95a7e2'
             'cff4e3c69677210bdde9a781146df06fba3a62cef72ed6854cd1923a05444435')
-sha256sums_x86_64=('5f63f8866aa02b5d43d8059d0128b6211d1ef7c546564e76b2efbeca61d82876')
-sha256sums_armv7=('5f63f8866aa02b5d43d8059d0128b6211d1ef7c546564e76b2efbeca61d82876')
+sha256sums_x86_64=('9fe38a57fd8313c2ce500a9a71168b1d6620fc2fd4d7914a92051a1c27f50d8c')
+sha256sums_armv7=('9fe38a57fd8313c2ce500a9a71168b1d6620fc2fd4d7914a92051a1c27f50d8c')
 
 options=(!strip)
 
