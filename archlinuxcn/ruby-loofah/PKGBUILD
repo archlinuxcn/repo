@@ -2,17 +2,17 @@
 
 _gemname=loofah
 pkgname=ruby-$_gemname
-pkgver=2.7.0
+pkgver=2.8.0
 pkgrel=1
 pkgdesc='HTML sanitization for Rails applications'
 arch=(any)
 url='https://github.com/flavorjones/loofah'
 license=(MIT)
-depends=('ruby' 'ruby-crass' 'ruby-nokogiri')
+depends=("ruby" "ruby-crass" "ruby-nokogiri")
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha256sums=('f8b38df4dfa0dca45230c06ae55916c5e5940441237f7d31087cc1994d0f9faa')
+sha256sums=('f06b481765062d84a0e494794ef1c8849a8164c8f1ac8c11cc6e8e6972acb159')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
@@ -22,4 +22,4 @@ package() {
   install -D -m644 "$pkgdir/$_gemdir/gems/$_gemname-$pkgver/MIT-LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/MIT-LICENSE"
 }
 
-makedepends=('ruby-rdoc')
+makedepends=("ruby-rdoc")
