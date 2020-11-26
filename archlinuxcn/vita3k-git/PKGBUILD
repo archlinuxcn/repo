@@ -1,8 +1,9 @@
 # Maintainer: Severin Kaderli <severin@kaderli.dev>
 # Contributor: aimileus < $(echo YWltaWxpdXNAcHJvdG9ubWFpbC5jb20K | base64 -d)
 _pkgname=vita3k
+_discord_game_sdk_version=2.5.6
 pkgname="${_pkgname}-git"
-pkgver=r1756.ade269ac
+pkgver=r1776.146fd1c2
 pkgrel=1
 pkgdesc="Experimental PlayStation Vita emulator"
 arch=('x86_64')
@@ -11,7 +12,7 @@ license=('GPL2')
 makedepends=(
 	'boost'
 	'cmake'
-	'gcc8'
+	'unzip'
 	'git'
 	'python2'
 	'vulkan-headers'
@@ -26,10 +27,10 @@ provides=('vita3k')
 conflicts=('vita3k')
 source=(
 	"git+https://github.com/vita3k/vita3k.git"
+        "https://dl-game-sdk.discordapp.net/$_discord_game_sdk_version/discord_game_sdk.zip"
 )
-md5sums=(
-	'SKIP'
-)
+md5sums=('SKIP'
+         'f86f15957cc9fbf04e3db10462027d58')
 
 pkgver() {
 	cd "${_pkgname}"
@@ -39,13 +40,16 @@ pkgver() {
 prepare() {
 	cd "${_pkgname}"
 	git submodule update --recursive --init
+	mkdir -p build/external/discord_game_sdk
+	cd build/external
+	ln -sf "$srcdir"/discord_game_sdk.zip .
+	unzip -d discord_game_sdk discord_game_sdk.zip
+	mv discord_game_sdk/lib/x86_64/{,lib}discord_game_sdk.so
+	sed -i 's/stdint\.h/cstdint/' discord_game_sdk/cpp/ffi.h
 }
 
 build() {
 	cd "${_pkgname}"
-
-	export CC="/usr/bin/gcc-8"
-	export CXX="/usr/bin/g++-8"
 
 	mkdir -p build
 	cd build/
