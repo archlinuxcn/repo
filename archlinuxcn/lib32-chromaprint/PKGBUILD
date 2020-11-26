@@ -2,9 +2,9 @@
 # Contributor: orumin <dev@orum.in>
 
 _basename=chromaprint
-pkgname="lib32-$_basename"
+pkgname=lib32-chromaprint
 pkgver=1.5.0
-pkgrel=5
+pkgrel=6
 pkgdesc="Library for extracting fingerprints from any audio source (32-bit)"
 url="https://acoustid.org/chromaprint"
 arch=('x86_64')
@@ -23,18 +23,20 @@ prepare() {
     cd "${_basename}-${pkgver}"
 
     patch -Np1 -i ../fix_build_32bit.patch
+
     rm -v cmake/modules/FindGTest.cmake
 }
 
 build() {
     export CC='gcc -m32'
     export CXX='g++ -m32'
-    export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
+    export PKG_CONFIG='/usr/bin/i686-pc-linux-gnu-pkg-config'
 
     cd "${_basename}-${pkgver}"
 
     cmake -S . -B build \
         -DCMAKE_INSTALL_PREFIX=/usr \
+        -DLIB_SUFFIX=32 \
         -DCMAKE_BUILD_TYPE='None' \
         -DBUILD_TESTS=ON \
         -DGTEST_SOURCE_DIR=/usr/src/googletest/ \
@@ -58,9 +60,6 @@ package() {
 
     cd "$pkgdir"/usr
 
-    sed -e "s|/usr/lib|/usr/lib32|" -i lib/pkgconfig/libchromaprint.pc
-
     rm -r include
-    mv lib lib32
 }
 provides=("libchromaprint.so")
