@@ -1,0 +1,15 @@
+diff --git a/Makefile b/Makefile
+index 4d4fe198..dffeceb3 100644
+--- a/Makefile
++++ b/Makefile
+@@ -9,3 +9,9 @@ ntfs3-objs := bitfunc.o bitmap.o inode.o fsntfs.o frecord.o \
+ 	    index.o attrlist.o record.o attrib.o run.o xattr.o\
+ 	    upcase.o super.o file.o dir.o namei.o lznt.o\
+ 	    fslog.o
++
++all:
++	make -C /lib/modules/$(KVERSION)/build M=$(PWD) modules
++
++clean:
++	make -C /lib/modules/$(KVERSION)/build M=$(PWD) clean
+\ No newline at end of file
