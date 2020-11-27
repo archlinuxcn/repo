@@ -9,7 +9,7 @@
 pkgname=exaile
 _pkgver=4.1.0-beta1
 pkgver=${_pkgver//-/}
-pkgrel=4
+pkgrel=5
 pkgdesc="A full-featured Amarok-style media player for GTK+"
 arch=('any')
 url="https://www.exaile.org/"
@@ -27,7 +27,8 @@ depends=('python>=3.6'
 makedepends=('pygobject-devel>=3.22.0' 'help2man')
 checkdepends=('python-mox3' 'python-pytest')
 optdepends=('udisks2: device detection'
-	'cddb-py: CD info'
+	#'python-discid: CD info'
+	'spydaap: DAAP server'
 	'python-zeroconf: DAAP plugins (daapserver and daapclient)'
 	'ipython: ipconsole plugin'
 	'python-pylast: Last.FM integration'
