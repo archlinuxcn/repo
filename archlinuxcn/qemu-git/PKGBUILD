@@ -8,7 +8,7 @@ pkgbase=qemu-git
 _gitname=qemu
 pkgname=(qemu-git qemu-headless-git qemu-arch-extra-git qemu-headless-arch-extra-git qemu-block-{iscsi-git,rbd-git,gluster-git} qemu-guest-agent-git)
 pkgdesc="A generic and open source machine emulator and virtualizer. Git version."
-pkgver=5.1.0.r1429.g053a417781
+pkgver=5.2.0.rc3.r0.gdd3d2340c4
 pkgrel=1
 epoch=11
 arch=(i686 x86_64)
@@ -18,7 +18,7 @@ _headlessdeps=(seabios gnutls libpng libaio numactl libnfs
                lzo snappy curl vde2 libcap-ng spice libcacard usbredir libslirp
                libssh zstd liburing)
 depends=(virglrenderer sdl2 vte3 libpulse brltty "${_headlessdeps[@]}")
-makedepends=(git spice-protocol python ceph libiscsi glusterfs python-sphinx xfsprogs)
+makedepends=(git spice-protocol ninja python ceph libiscsi glusterfs python-sphinx xfsprogs)
 source=(git://git.qemu.org/qemu.git
         qemu-ga.service
         65-kvm.rules)
