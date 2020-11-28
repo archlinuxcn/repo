@@ -1,21 +1,21 @@
-From 9fe394feba1cf1496c534cef93bb126d000c148e Mon Sep 17 00:00:00 2001
+From f7b918781ff23a6bc2345b29ff01541e29ea0caf Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 29 Aug 2020 10:32:00 -0400
 Subject: [PATCH] Allow specifying AA info when constructing certain libcalls
 
 Maintain such info when simplifying libcalls.
 ---
- include/llvm/Transforms/Utils/BuildLibCalls.h | 110 ++++--
+ include/llvm/Transforms/Utils/BuildLibCalls.h | 105 ++++--
  .../llvm/Transforms/Utils/SimplifyLibCalls.h  |   2 +-
- lib/Transforms/Utils/BuildLibCalls.cpp        | 249 ++++++++++---
+ lib/Transforms/Utils/BuildLibCalls.cpp        | 243 ++++++++++---
  lib/Transforms/Utils/SimplifyLibCalls.cpp     | 336 ++++++++++++------
- 4 files changed, 528 insertions(+), 169 deletions(-)
+ 4 files changed, 518 insertions(+), 168 deletions(-)
 
 diff --git a/include/llvm/Transforms/Utils/BuildLibCalls.h b/include/llvm/Transforms/Utils/BuildLibCalls.h
-index 90517e806e0..66ae11e5d8a 100644
+index 90517e806e0..bc6e9925755 100644
 --- a/include/llvm/Transforms/Utils/BuildLibCalls.h
 +++ b/include/llvm/Transforms/Utils/BuildLibCalls.h
-@@ -47,102 +47,170 @@ namespace llvm {
+@@ -47,12 +47,14 @@ namespace llvm {
    /// pointer. Ptr is required to be some pointer type, and the return value has
    /// 'intptr_t' type.
    Value *emitStrLen(Value *Ptr, IRBuilderBase &B, const DataLayout &DL,
@@ -32,13 +32,7 @@ index 90517e806e0..66ae11e5d8a 100644
  
    /// Emit a call to the strnlen function to the builder, for the specified
    /// pointer. Ptr is required to be some pointer type, MaxLen must be of size_t
-   /// type, and the return value has 'intptr_t' type.
-   Value *emitStrNLen(Value *Ptr, Value *MaxLen, IRBuilderBase &B,
--                     const DataLayout &DL, const TargetLibraryInfo *TLI);
-+                     const DataLayout &DL, const TargetLibraryInfo *TLI,
-+                     const AAMDNodes &AAInfo);
- 
-   /// Emit a call to the strchr function to the builder, for the specified
+@@ -64,85 +66,148 @@ namespace llvm {
    /// pointer and character. Ptr is required to be some pointer type, and the
    /// return value has 'i8*' type.
    Value *emitStrChr(Value *Ptr, char C, IRBuilderBase &B,
@@ -164,8 +158,6 @@ index 90517e806e0..66ae11e5d8a 100644
 +  Value *emitStrLen(Value *Ptr, IRBuilderBase &B, const DataLayout &DL,
 +                    const TargetLibraryInfo *TLI);
 +  Value *emitStrDup(Value *Ptr, IRBuilderBase &B, const TargetLibraryInfo *TLI);
-+  Value *emitStrNLen(Value *Ptr, Value *MaxLen, IRBuilderBase &B,
-+                     const DataLayout &DL, const TargetLibraryInfo *TLI);
 +  Value *emitStrChr(Value *Ptr, char C, IRBuilderBase &B,
 +                    const TargetLibraryInfo *TLI);
 +  Value *emitStrNCmp(Value *Ptr1, Value *Ptr2, Value *Len, IRBuilderBase &B,
@@ -221,10 +213,10 @@ index d6ee19365c7..10f55730c57 100644
                        SmallVectorImpl<CallInst *> &SinCalls,
                        SmallVectorImpl<CallInst *> &CosCalls,
 diff --git a/lib/Transforms/Utils/BuildLibCalls.cpp b/lib/Transforms/Utils/BuildLibCalls.cpp
-index c64ad147fdf..efb47b799b5 100644
+index c64ad147fdf..0e4f0ee015e 100644
 --- a/lib/Transforms/Utils/BuildLibCalls.cpp
 +++ b/lib/Transforms/Utils/BuildLibCalls.cpp
-@@ -828,11 +828,143 @@ Value *llvm::castToCStr(Value *V, IRBuilderBase &B) {
+@@ -828,11 +828,137 @@ Value *llvm::castToCStr(Value *V, IRBuilderBase &B) {
    return B.CreateBitCast(V, B.getInt8PtrTy(AS), "cstr");
  }
  
@@ -237,12 +229,6 @@ index c64ad147fdf..efb47b799b5 100644
 +Value *llvm::emitStrDup(Value *Ptr, IRBuilderBase &B, const TargetLibraryInfo *TLI)
 +{
 +    return emitStrDup(Ptr, B, TLI, AAMDNodes());
-+}
-+
-+Value *llvm::emitStrNLen(Value *Ptr, Value *MaxLen, IRBuilderBase &B,
-+                         const DataLayout &DL, const TargetLibraryInfo *TLI)
-+{
-+    return emitStrNLen(Ptr, MaxLen, B, DL, TLI, AAMDNodes());
 +}
 +
 +Value *llvm::emitStrChr(Value *Ptr, char C, IRBuilderBase &B,
@@ -370,7 +356,7 @@ index c64ad147fdf..efb47b799b5 100644
    if (!TLI->has(TheLibFunc))
      return nullptr;
  
-@@ -845,70 +977,79 @@ static Value *emitLibCall(LibFunc TheLibFunc, Type *ReturnType,
+@@ -845,70 +971,79 @@ static Value *emitLibCall(LibFunc TheLibFunc, Type *ReturnType,
    if (const Function *F =
            dyn_cast<Function>(Callee.getCallee()->stripPointerCasts()))
      CI->setCallingConv(F->getCallingConv());
@@ -467,7 +453,7 @@ index c64ad147fdf..efb47b799b5 100644
    if (!TLI->has(LibFunc_memcpy_chk))
      return nullptr;
  
-@@ -927,105 +1068,123 @@ Value *llvm::emitMemCpyChk(Value *Dst, Value *Src, Value *Len, Value *ObjSize,
+@@ -927,105 +1062,123 @@ Value *llvm::emitMemCpyChk(Value *Dst, Value *Src, Value *Len, Value *ObjSize,
    if (const Function *F =
            dyn_cast<Function>(MemCpy.getCallee()->stripPointerCasts()))
      CI->setCallingConv(F->getCallingConv());
