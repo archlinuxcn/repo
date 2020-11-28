@@ -5,16 +5,16 @@ Subject: [PATCH] Allow specifying AA info when constructing certain libcalls
 
 Maintain such info when simplifying libcalls.
 ---
- .../llvm/Transforms/Utils/BuildLibCalls.h     | 110 ++++--
+ include/llvm/Transforms/Utils/BuildLibCalls.h | 110 ++++--
  .../llvm/Transforms/Utils/SimplifyLibCalls.h  |   2 +-
- llvm/lib/Transforms/Utils/BuildLibCalls.cpp   | 249 ++++++++++---
- .../lib/Transforms/Utils/SimplifyLibCalls.cpp | 336 ++++++++++++------
+ lib/Transforms/Utils/BuildLibCalls.cpp        | 249 ++++++++++---
+ lib/Transforms/Utils/SimplifyLibCalls.cpp     | 336 ++++++++++++------
  4 files changed, 528 insertions(+), 169 deletions(-)
 
-diff --git a/llvm/include/llvm/Transforms/Utils/BuildLibCalls.h b/llvm/include/llvm/Transforms/Utils/BuildLibCalls.h
+diff --git a/include/llvm/Transforms/Utils/BuildLibCalls.h b/include/llvm/Transforms/Utils/BuildLibCalls.h
 index 90517e806e0..66ae11e5d8a 100644
---- a/llvm/include/llvm/Transforms/Utils/BuildLibCalls.h
-+++ b/llvm/include/llvm/Transforms/Utils/BuildLibCalls.h
+--- a/include/llvm/Transforms/Utils/BuildLibCalls.h
++++ b/include/llvm/Transforms/Utils/BuildLibCalls.h
 @@ -47,102 +47,170 @@ namespace llvm {
    /// pointer. Ptr is required to be some pointer type, and the return value has
    /// 'intptr_t' type.
@@ -207,10 +207,10 @@ index 90517e806e0..66ae11e5d8a 100644
    Value *emitVSPrintf(Value *Dest, Value *Fmt, Value *VAList, IRBuilderBase &B,
                        const TargetLibraryInfo *TLI);
  
-diff --git a/llvm/include/llvm/Transforms/Utils/SimplifyLibCalls.h b/llvm/include/llvm/Transforms/Utils/SimplifyLibCalls.h
+diff --git a/include/llvm/Transforms/Utils/SimplifyLibCalls.h b/include/llvm/Transforms/Utils/SimplifyLibCalls.h
 index d6ee19365c7..10f55730c57 100644
---- a/llvm/include/llvm/Transforms/Utils/SimplifyLibCalls.h
-+++ b/llvm/include/llvm/Transforms/Utils/SimplifyLibCalls.h
+--- a/include/llvm/Transforms/Utils/SimplifyLibCalls.h
++++ b/include/llvm/Transforms/Utils/SimplifyLibCalls.h
 @@ -224,7 +224,7 @@ private:
  
    // Helper methods
@@ -220,10 +220,10 @@ index d6ee19365c7..10f55730c57 100644
    void classifyArgUse(Value *Val, Function *F, bool IsFloat,
                        SmallVectorImpl<CallInst *> &SinCalls,
                        SmallVectorImpl<CallInst *> &CosCalls,
-diff --git a/llvm/lib/Transforms/Utils/BuildLibCalls.cpp b/llvm/lib/Transforms/Utils/BuildLibCalls.cpp
+diff --git a/lib/Transforms/Utils/BuildLibCalls.cpp b/lib/Transforms/Utils/BuildLibCalls.cpp
 index c64ad147fdf..efb47b799b5 100644
---- a/llvm/lib/Transforms/Utils/BuildLibCalls.cpp
-+++ b/llvm/lib/Transforms/Utils/BuildLibCalls.cpp
+--- a/lib/Transforms/Utils/BuildLibCalls.cpp
++++ b/lib/Transforms/Utils/BuildLibCalls.cpp
 @@ -828,11 +828,143 @@ Value *llvm::castToCStr(Value *V, IRBuilderBase &B) {
    return B.CreateBitCast(V, B.getInt8PtrTy(AS), "cstr");
  }
@@ -617,10 +617,10 @@ index c64ad147fdf..efb47b799b5 100644
  }
  
  /// Append a suffix to the function name according to the type of 'Op'.
-diff --git a/llvm/lib/Transforms/Utils/SimplifyLibCalls.cpp b/llvm/lib/Transforms/Utils/SimplifyLibCalls.cpp
+diff --git a/lib/Transforms/Utils/SimplifyLibCalls.cpp b/lib/Transforms/Utils/SimplifyLibCalls.cpp
 index cfcc3454a21..988eff60ee7 100644
---- a/llvm/lib/Transforms/Utils/SimplifyLibCalls.cpp
-+++ b/llvm/lib/Transforms/Utils/SimplifyLibCalls.cpp
+--- a/lib/Transforms/Utils/SimplifyLibCalls.cpp
++++ b/lib/Transforms/Utils/SimplifyLibCalls.cpp
 @@ -247,14 +247,17 @@ Value *LibCallSimplifier::optimizeStrCat(CallInst *CI, IRBuilderBase &B) {
    if (Len == 0)
      return Dst;
