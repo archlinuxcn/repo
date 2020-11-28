@@ -1,4 +1,4 @@
-From 597f0ad9bcc60d631451b168d1654675b94b8f6f Mon Sep 17 00:00:00 2001
+From 91b910f8f854170fb1a06afcc230ea7ff8b74eaf Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 21 Aug 2020 13:15:02 -0400
 Subject: [PATCH 7/8] Optimize objectid in codegen
@@ -14,7 +14,7 @@ Subject: [PATCH 7/8] Optimize objectid in codegen
  7 files changed, 156 insertions(+), 17 deletions(-)
 
 diff --git a/src/builtins.c b/src/builtins.c
-index 6d5f3f2779..f38aeef648 100644
+index 8cbce6c5b6..20d5b7bbff 100644
 --- a/src/builtins.c
 +++ b/src/builtins.c
 @@ -290,7 +290,7 @@ static uintptr_t type_object_id_(jl_value_t *v, jl_varidx_t *env) JL_NOTSAFEPOIN
@@ -99,7 +99,7 @@ index 6d5f3f2779..f38aeef648 100644
  
  // eq hash table --------------------------------------------------------------
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index e2600385b1..0cb2c4e1a2 100644
+index 1f665e31f7..fdb997c0e5 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
 @@ -1882,7 +1882,39 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
@@ -161,10 +161,10 @@ index e2600385b1..0cb2c4e1a2 100644
  
      jl_cgval_t retval = sig.emit_a_ccall(
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index afa598421c..b7bef3f1e4 100644
+index 8d897cead7..3d2db3d903 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -376,12 +376,14 @@ static AttributeList get_attrs_zext(LLVMContext &C)
+@@ -384,12 +384,14 @@ static AttributeList get_attrs_zext(LLVMContext &C)
  
  // For libc functions that only read argument memory and not capturing them
  // e.g. memcmp, strlen, etc.
@@ -182,7 +182,7 @@ index afa598421c..b7bef3f1e4 100644
      for (auto arg: ptrargs)
          attrs = attrs.addParamAttribute(C, arg, Attribute::NoCapture);
      return attrs;
-@@ -739,7 +741,25 @@ static const auto jl_object_id__func = new JuliaFunction{
+@@ -747,7 +749,25 @@ static const auto jl_object_id__func = new JuliaFunction{
      "jl_object_id_",
      [](LLVMContext &C) { return FunctionType::get(T_size,
              {T_prjlvalue, PointerType::get(T_int8, AddressSpace::Derived)}, false); },
@@ -210,10 +210,10 @@ index afa598421c..b7bef3f1e4 100644
  static const auto setjmp_func = new JuliaFunction{
      jl_setjmp_name,
 diff --git a/src/julia_internal.h b/src/julia_internal.h
-index 85774c745e..2a674c67a6 100644
+index 19efe2ad23..6e93645730 100644
 --- a/src/julia_internal.h
 +++ b/src/julia_internal.h
-@@ -1103,8 +1103,9 @@ JL_DLLEXPORT int jl_stored_inline(jl_value_t *el_type);
+@@ -1117,8 +1117,9 @@ JL_DLLEXPORT int jl_stored_inline(jl_value_t *el_type);
  JL_DLLEXPORT jl_value_t *(jl_array_data_owner)(jl_array_t *a);
  JL_DLLEXPORT int jl_array_isassigned(jl_array_t *a, size_t i);
  
@@ -225,7 +225,7 @@ index 85774c745e..2a674c67a6 100644
  // -- synchronization utilities -- //
  
 diff --git a/src/llvm-alloc-opt.cpp b/src/llvm-alloc-opt.cpp
-index 76691a8802..5d3f3606a0 100644
+index f14ea15a5a..2f8c7499f9 100644
 --- a/src/llvm-alloc-opt.cpp
 +++ b/src/llvm-alloc-opt.cpp
 @@ -118,6 +118,8 @@ struct AllocOpt : public FunctionPass, public JuliaPassContext {
@@ -246,7 +246,7 @@ index 76691a8802..5d3f3606a0 100644
                  use_info.addrescaped = true;
                  return true;
              }
-@@ -1020,6 +1022,17 @@ void Optimizer::moveToStack(CallInst *orig_inst, size_t sz, bool has_ref)
+@@ -1010,6 +1012,17 @@ void Optimizer::moveToStack(CallInst *orig_inst, size_t sz, bool has_ref)
                  call->eraseFromParent();
                  return;
              }
@@ -264,7 +264,7 @@ index 76691a8802..5d3f3606a0 100644
              if (pass.typeof_func == callee) {
                  call->replaceAllUsesWith(tag);
                  call->eraseFromParent();
-@@ -1521,6 +1534,15 @@ bool AllocOpt::doInitialization(Module &M)
+@@ -1511,6 +1524,15 @@ bool AllocOpt::doInitialization(Module &M)
      if (!alloc_obj_func)
          return false;
  
@@ -330,5 +330,5 @@ index 71cab27e76..7fb8424611 100644
  
  #endif
 -- 
-2.28.0
+2.29.2
 

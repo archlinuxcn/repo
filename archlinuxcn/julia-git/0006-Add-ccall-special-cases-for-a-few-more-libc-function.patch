@@ -1,4 +1,4 @@
-From 7e598b155991f883b2fb7a7541e5501101d16607 Mon Sep 17 00:00:00 2001
+From 998b23b48f854c772f2d00b0ba63d221d546d2f8 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 21 Aug 2020 10:29:29 -0400
 Subject: [PATCH 6/8] Add ccall special cases for a few more libc functions
@@ -20,7 +20,7 @@ and add comment to emphasize the difference with the similar concept in other pa
  3 files changed, 166 insertions(+), 9 deletions(-)
 
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index a3509b7587..e2600385b1 100644
+index 776df643b2..1f665e31f7 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
 @@ -1272,6 +1272,13 @@ static Value *emit_new_array(jl_codectx_t &ctx, jl_cgval_t *argv)
@@ -176,7 +176,7 @@ index a3509b7587..e2600385b1 100644
      else if (is_libjulia_func(jl_object_id) && nccallargs == 1 &&
              rt == (jl_value_t*)jl_ulong_type) {
          jl_cgval_t val = argv[0];
-@@ -1943,11 +2073,10 @@ jl_cgval_t function_sig_t::emit_a_ccall(
+@@ -1938,11 +2068,10 @@ jl_cgval_t function_sig_t::emit_a_ccall(
          }
      }
  
@@ -190,10 +190,10 @@ index a3509b7587..e2600385b1 100644
  
      if (cc != CallingConv::C)
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index ffcbe5db05..afa598421c 100644
+index aced1c0e73..8d897cead7 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -374,6 +374,18 @@ static AttributeList get_attrs_zext(LLVMContext &C)
+@@ -382,6 +382,18 @@ static AttributeList get_attrs_zext(LLVMContext &C)
                  {Attributes(C, {Attribute::ZExt})});
  }
  
@@ -212,7 +212,7 @@ index ffcbe5db05..afa598421c 100644
  
  // global vars
  static const auto jlRTLD_DEFAULT_var = new JuliaVariable{
-@@ -746,10 +758,7 @@ static const auto memcmp_func = new JuliaFunction{
+@@ -754,10 +766,7 @@ static const auto memcmp_func = new JuliaFunction{
      "memcmp",
      [](LLVMContext &C) { return FunctionType::get(T_int32,
              {T_pint8, T_pint8, T_size}, false); },
@@ -225,7 +225,7 @@ index ffcbe5db05..afa598421c 100644
  };
  static const auto jldlsym_func = new JuliaFunction{
 diff --git a/src/llvm-alloc-opt.cpp b/src/llvm-alloc-opt.cpp
-index bd9f37aea8..76691a8802 100644
+index 4bf6038361..f14ea15a5a 100644
 --- a/src/llvm-alloc-opt.cpp
 +++ b/src/llvm-alloc-opt.cpp
 @@ -385,14 +385,33 @@ bool Optimizer::finalize()
@@ -265,5 +265,5 @@ index bd9f37aea8..76691a8802 100644
          }
      }
 -- 
-2.28.0
+2.29.2
 

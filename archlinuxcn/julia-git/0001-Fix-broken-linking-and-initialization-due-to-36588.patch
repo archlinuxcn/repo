@@ -1,4 +1,4 @@
-From 566879c25dae5a02a51e8d13e4e1ad95ac06b5c6 Mon Sep 17 00:00:00 2001
+From 3a2c1287cbb82bfed8a503d4e8890c9a5bd1b595 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Thu, 24 Sep 2020 22:10:32 -0400
 Subject: [PATCH 1/8] Fix broken linking and initialization due to #36588
@@ -95,5 +95,5 @@ index a8ab0b9837..7530693d74 100644
      int deps_len = strlen(dep_libs);
      char * curr_dep = &dep_libs[0];
 -- 
-2.28.0
+2.29.2
 

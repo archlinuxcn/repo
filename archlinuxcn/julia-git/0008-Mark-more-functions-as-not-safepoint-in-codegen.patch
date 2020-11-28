@@ -1,4 +1,4 @@
-From 850ffb8c253e620894695c390e28c24873568c73 Mon Sep 17 00:00:00 2001
+From ae3be6c0a3b4a9f712b2db93e52b3d25ff2bacc0 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Thu, 13 Aug 2020 02:24:27 -0400
 Subject: [PATCH 8/8] Mark more functions as not safepoint in codegen.
@@ -7,11 +7,11 @@ Subject: [PATCH 8/8] Mark more functions as not safepoint in codegen.
  src/ccall.cpp                 |  22 ++-
  src/codegen.cpp               |   8 +-
  src/codegen_shared.h          |   1 +
- src/llvm-late-gc-lowering.cpp | 272 +++++++++++++++++++++++++++++++++-
- 4 files changed, 293 insertions(+), 10 deletions(-)
+ src/llvm-late-gc-lowering.cpp | 271 +++++++++++++++++++++++++++++++++-
+ 4 files changed, 292 insertions(+), 10 deletions(-)
 
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index 0cb2c4e1a2..000bf9a8f8 100644
+index fdb997c0e5..f470be3e55 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
 @@ -126,6 +126,7 @@ static Value *runtime_sym_lookup(
@@ -50,7 +50,7 @@ index 0cb2c4e1a2..000bf9a8f8 100644
          JL_GC_POP();
          return ghostValue(jl_nothing_type);
  #endif
-@@ -2108,11 +2112,21 @@ jl_cgval_t function_sig_t::emit_a_ccall(
+@@ -2103,11 +2107,21 @@ jl_cgval_t function_sig_t::emit_a_ccall(
          }
      }
  
@@ -74,10 +74,10 @@ index 0cb2c4e1a2..000bf9a8f8 100644
      if (cc != CallingConv::C)
          ((CallInst*)ret)->setCallingConv(cc);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index b7bef3f1e4..a9045403e2 100644
+index 3d2db3d903..22c6941d23 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -639,7 +639,7 @@ static const auto jlenter_func = new JuliaFunction{
+@@ -647,7 +647,7 @@ static const auto jlenter_func = new JuliaFunction{
  static const auto jl_current_exception_func = new JuliaFunction{
      "jl_current_exception",
      [](LLVMContext &C) { return FunctionType::get(T_prjlvalue, false); },
@@ -86,7 +86,7 @@ index b7bef3f1e4..a9045403e2 100644
  };
  static const auto jlleave_func = new JuliaFunction{
      "jl_pop_handler",
-@@ -656,14 +656,14 @@ static const auto jl_restore_excstack_func = new JuliaFunction{
+@@ -664,14 +664,14 @@ static const auto jl_restore_excstack_func = new JuliaFunction{
  static const auto jl_excstack_state_func = new JuliaFunction{
      "jl_excstack_state",
      [](LLVMContext &C) { return FunctionType::get(T_size, false); },
@@ -103,7 +103,7 @@ index b7bef3f1e4..a9045403e2 100644
  };
  static const auto jl_alloc_obj_func = new JuliaFunction{
      "julia.gc_alloc_obj",
-@@ -841,7 +841,7 @@ static const auto jlarray_data_owner_func = new JuliaFunction{
+@@ -849,7 +849,7 @@ static const auto jlarray_data_owner_func = new JuliaFunction{
      [](LLVMContext &C) { return FunctionType::get(T_prjlvalue,
              {T_prjlvalue}, false); },
      [](LLVMContext &C) { return AttributeList::get(C,
@@ -125,19 +125,18 @@ index ee11870874..8fc9b94924 100644
  static inline void llvm_dump(llvm::Value *v)
  {
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index ecf93e50ee..d6d816bec4 100644
+index ecf93e50ee..96b175962e 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
-@@ -39,6 +39,8 @@
- #include "julia_assert.h"
- #include "llvm-pass-helpers.h"
- 
-+#include <set>
-+
- #define DEBUG_TYPE "late_lower_gcroot"
- 
- using namespace llvm;
-@@ -227,6 +229,271 @@ using namespace llvm;
+@@ -9,6 +9,7 @@
+ #include <llvm/ADT/PostOrderIterator.h>
+ #include <llvm/ADT/SetVector.h>
+ #include <llvm/ADT/SmallVector.h>
++#include <llvm/ADT/StringSet.h>
+ #include "llvm/Analysis/CFG.h"
+ #include <llvm/IR/Value.h>
+ #include <llvm/IR/Constants.h>
+@@ -227,6 +228,271 @@ using namespace llvm;
        simply sink the alloca into the GCFrame.
  */
  
@@ -145,7 +144,7 @@ index ecf93e50ee..d6d816bec4 100644
 +{
 +    // Some of these do have safepoint, but only in error path
 +    // and never needs the input argument to be rooted in those cases.
-+    static std::set<std::string> funcs = {
++    static StringSet funcs = {
 +        "bcmp",
 +        "ios_bufmode",
 +        "ios_close",
@@ -403,13 +402,13 @@ index ecf93e50ee..d6d816bec4 100644
 +        "wcslen",
 +        "_wrmdir",
 +    };
-+    return funcs.count(name) != 0;
++    return funcs.contains(name);
 +}
 +
  struct BBState {
      // Uses in this BB
      // These do not get updated after local analysis
-@@ -1527,7 +1794,7 @@ State LateLowerGCFrame::LocalScan(Function &F) {
+@@ -1527,7 +1793,7 @@ State LateLowerGCFrame::LocalScan(Function &F) {
                      if (callee == pointer_from_objref_func || callee == gc_preserve_begin_func ||
                          callee == gc_preserve_end_func || callee == typeof_func ||
                          callee == ptls_getter ||
@@ -418,7 +417,7 @@ index ecf93e50ee..d6d816bec4 100644
                          continue;
                      }
                      if (callee->hasFnAttribute(Attribute::ReadNone) ||
-@@ -1540,7 +1807,8 @@ State LateLowerGCFrame::LocalScan(Function &F) {
+@@ -1540,7 +1806,8 @@ State LateLowerGCFrame::LocalScan(Function &F) {
                      }
                  }
                  if (isa<IntrinsicInst>(CI) || CI->hasFnAttr(Attribute::ArgMemOnly) ||
@@ -429,5 +428,5 @@ index ecf93e50ee..d6d816bec4 100644
                      continue;
                  }
 -- 
-2.28.0
+2.29.2
 

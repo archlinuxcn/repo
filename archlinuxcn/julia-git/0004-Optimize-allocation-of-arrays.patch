@@ -1,4 +1,4 @@
-From 479a4b4de04ef8e8bca717f0adc1d8aa10d39652 Mon Sep 17 00:00:00 2001
+From be29dfaddf5a929c687869173415a96fd15915f1 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 22 Aug 2020 10:19:15 -0400
 Subject: [PATCH 4/8] Optimize allocation of arrays
@@ -11,7 +11,7 @@ Subject: [PATCH 4/8] Optimize allocation of arrays
  4 files changed, 115 insertions(+), 12 deletions(-)
 
 diff --git a/base/boot.jl b/base/boot.jl
-index 7c8d05cc13..c6db3a37e5 100644
+index 54d852ca96..9696d6dbc6 100644
 --- a/base/boot.jl
 +++ b/base/boot.jl
 @@ -445,19 +445,11 @@ const NTuple{N,T} = Tuple{Vararg{T,N}}
@@ -37,10 +37,10 @@ index 7c8d05cc13..c6db3a37e5 100644
  Array{T}(::UndefInitializer, m::Int) where {T} = Array{T,1}(undef, m)
  Array{T}(::UndefInitializer, m::Int, n::Int) where {T} = Array{T,2}(undef, m, n)
 diff --git a/src/array.c b/src/array.c
-index b38b38188b..d3d27a4bdd 100644
+index d311e5b152..4ef7208c4d 100644
 --- a/src/array.c
 +++ b/src/array.c
-@@ -451,8 +451,7 @@ JL_DLLEXPORT jl_array_t *jl_ptr_to_array(jl_value_t *atype, void *data,
+@@ -449,8 +449,7 @@ JL_DLLEXPORT jl_array_t *jl_ptr_to_array(jl_value_t *atype, void *data,
  
  JL_DLLEXPORT jl_array_t *jl_new_array(jl_value_t *atype, jl_value_t *_dims)
  {
@@ -50,7 +50,7 @@ index b38b38188b..d3d27a4bdd 100644
      return _new_array(atype, ndims, (size_t*)_dims);
  }
  
-@@ -475,6 +474,11 @@ JL_DLLEXPORT jl_array_t *jl_alloc_array_3d(jl_value_t *atype, size_t nr,
+@@ -473,6 +472,11 @@ JL_DLLEXPORT jl_array_t *jl_alloc_array_3d(jl_value_t *atype, size_t nr,
      return _new_array(atype, 3, &d[0]);
  }
  
@@ -63,7 +63,7 @@ index b38b38188b..d3d27a4bdd 100644
  {
      jl_array_t *a = jl_alloc_array_1d(jl_array_uint8_type, len);
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index 5763239248..a3509b7587 100644
+index 002ede019a..776df643b2 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
 @@ -1223,6 +1223,55 @@ static const std::string verify_ccall_sig(jl_value_t *&rt, jl_value_t *at,
@@ -137,10 +137,10 @@ index 5763239248..a3509b7587 100644
               argv[1].typ == (jl_value_t*)jl_ulong_type) {
          assert(!isVa && !llvmcall && nccallargs == 2);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index be9aaf0758..ffcbe5db05 100644
+index bdd159fbea..aced1c0e73 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -439,6 +439,57 @@ static const auto jlsplatnew_func = new JuliaFunction{
+@@ -447,6 +447,57 @@ static const auto jlsplatnew_func = new JuliaFunction{
              {T_prjlvalue, T_prjlvalue}, false); },
      get_func_attrs,
  };
@@ -199,5 +199,5 @@ index be9aaf0758..ffcbe5db05 100644
      "jl_throw",
      [](LLVMContext &C) { return FunctionType::get(T_void,
 -- 
-2.28.0
+2.29.2
 
