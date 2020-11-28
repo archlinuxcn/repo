@@ -11,3 +11,19 @@ Terminal=0
 Type=Application
 Categories=Network;InstantMessaging;
 Keywords=wx;wechat;weixin
+StartupWMClass=wechat
+Actions=Configure;Directory;
+
+[Desktop Action Configure]
+Exec=env WINEDEBUG=-all wechat --config
+Name=Configure Wine
+Name[zh_CN]=Wine 微信配置
+Comment=Run winecfg for Wine WeChat
+Comment[zh_CN]=为 Wine 微信运行 winecfg
+
+[Desktop Action Directory]
+Exec=env WINEDEBUG=-all wechat --dir
+Name=User Directory
+Name[zh_CN]=Wine 微信目录
+Comment=Open the directory for Wine WeChat
+Comment[zh_CN]=打开 Wine 微信使用的 Wine 环境目录 
