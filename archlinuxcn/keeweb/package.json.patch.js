@@ -23,6 +23,7 @@ const removePkg = [
 	/^sumchecker$/,
 	/^webpack-bundle-analyzer$/,
 	/^webpack-dev-server$/,
+	/keeweb-native-modules$/,
 ];
 
 Object.keys(data.dependencies).forEach(dep => {
