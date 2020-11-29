@@ -1,4 +1,4 @@
-From d5270e0c96df25b1263cba6e48454b1a5907b6c6 Mon Sep 17 00:00:00 2001
+From 4972aab9be2d46620b91a5e3814f353335d50221 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Thu, 13 Aug 2020 02:24:27 -0400
 Subject: [PATCH 8/8] Mark more functions as not safepoint in codegen.
@@ -125,7 +125,7 @@ index ee11870874..8fc9b94924 100644
  static inline void llvm_dump(llvm::Value *v)
  {
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index ecf93e50ee..6ae006f35e 100644
+index ecf93e50ee..4e49dd28dd 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
 @@ -9,6 +9,7 @@
@@ -402,7 +402,7 @@ index ecf93e50ee..6ae006f35e 100644
 +        "wcslen",
 +        "_wrmdir",
 +    };
-+    return funcs.contains(name);
++    return funcs.count(name) != 0;
 +}
 +
  struct BBState {
