@@ -1,4 +1,4 @@
-From ae3be6c0a3b4a9f712b2db93e52b3d25ff2bacc0 Mon Sep 17 00:00:00 2001
+From d5270e0c96df25b1263cba6e48454b1a5907b6c6 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Thu, 13 Aug 2020 02:24:27 -0400
 Subject: [PATCH 8/8] Mark more functions as not safepoint in codegen.
@@ -125,7 +125,7 @@ index ee11870874..8fc9b94924 100644
  static inline void llvm_dump(llvm::Value *v)
  {
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index ecf93e50ee..96b175962e 100644
+index ecf93e50ee..6ae006f35e 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
 @@ -9,6 +9,7 @@
@@ -144,7 +144,7 @@ index ecf93e50ee..96b175962e 100644
 +{
 +    // Some of these do have safepoint, but only in error path
 +    // and never needs the input argument to be rooted in those cases.
-+    static StringSet funcs = {
++    static StringSet<> funcs = {
 +        "bcmp",
 +        "ios_bufmode",
 +        "ios_close",
