@@ -1,8 +1,8 @@
 # Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
 pkgname=vimix-gtk-themes
-_pkgver=2020-02-24
+_pkgver=2020-11-28
 pkgver=${_pkgver//-/.}
-pkgrel=1
+pkgrel=2
 pkgdesc="A flat Material Design theme for GTK 3, GTK 2, GNOME Shell, etc."
 arch=('any')
 url="https://vinceliuice.github.io/theme-vimix.html"
@@ -15,10 +15,10 @@ optdepends=('kvantum-theme-vimix: Matching Kvantum theme'
 conflicts=('vimix-gtk-themes-git')
 options=('!strip')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/vinceliuice/$pkgname/archive/$_pkgver.tar.gz")
-sha256sums=('5630d7bfb09820978459b2ce2f7db6cacbb2a34a4c8f73ca3b706301310927bd')
+sha256sums=('c2fbe0d29cb32ab4b4cd4f419655212c684bb1cb9becd37eb6b7874f5555fc8d')
 
 package() {
 	cd "$pkgname-$_pkgver"
-	install -dm755 "$pkgdir/usr/share/themes"
+	install -d "$pkgdir/usr/share/themes"
 	./install.sh -d "$pkgdir/usr/share/themes"
 }
