@@ -1,14 +1,14 @@
 # Maintainer: DuckSoft <realducksoft at gmail dot com>
 
 pkgname=miller
-pkgver=5.9.1
+pkgver=5.10.0
 arch=('x86_64')
 pkgrel=1
 pkgdesc="Swiss Army Knife for CSV, TSV and tabular JSON format text files"
 url="https://github.com/johnkerl/miller"
 depends=(glibc)
 source=("$url/releases/download/v$pkgver/mlr-$pkgver.tar.gz")
-sha512sums=('ea16a917c500be442a8a4bff37c5de92a4924f9adc1c121bb28a5b4aba87f9429bf17127718639544a6e83f0e2519e9fe5860ed961c4f83486105970b2be39be')
+sha512sums=('933b83a1ad83f93c28c07e44a1d737491728b7f372f0b36c1ede1ccda1109e89f077319f57343747b7da9bcdb24365c659c57539f8dda1a51fa470a1605ece56')
 
 build() {
     cd "$srcdir/mlr-$pkgver"
