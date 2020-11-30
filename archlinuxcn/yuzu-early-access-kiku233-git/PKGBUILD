@@ -2,14 +2,14 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access-kiku233-git
-pkgver=1152.r0.g25902e711
+pkgver=1152.r1.g9a905b57d
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access with Chinese translation)"
 arch=('i686' 'x86_64')
 url="https://github.com/yuzu-emu/yuzu-mainline"
 license=('GPL2')
 depends=('shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'mbedtls' 'openssl' 'zstd')
-makedepends=('git' 'cmake' 'ninja' 'python2' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'desktop-file-utils' 'conan')
+makedepends=('git' 'cmake' 'glslang' 'ninja' 'python2' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'desktop-file-utils' 'conan')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu' 'yuzu-early-access' 'yuzu-early-access-git')
 conflicts=('yuzu-canary-git' 'yuzu-master-git' 'yuzu-mainline-git' 'yuzu-git' 'yuzu-ea-bin')
