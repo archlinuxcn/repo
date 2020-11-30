@@ -1,0 +1,35 @@
+# Maintainer: Dct Mei <dctxmei@gmail.com>
+# Contributor: Felix Yan <felixonmars@archlinux.org>
+
+pkgname=xray-domain-list-community
+pkgver=20201126091400
+pkgrel=1
+pkgdesc="A list of domains to be used as geosites for routing purpose in Project V"
+arch=('any')
+url="https://github.com/v2fly/domain-list-community"
+license=('MIT')
+makedepends=('git' 'go')
+source=("${url}/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('6a687d9128e80b3e336c435a8b8d6356c0a919abd86f55fbb058de4d3b5f7e28')
+
+prepare() {
+    mkdir .gopath
+    export GOPATH="${srcdir}"/.gopath
+
+    mkdir -p .gopath/src/github.com/v2fly
+    ln -s "${PWD}"/"domain-list-community-$pkgver" .gopath/src/github.com/v2fly/domain-list-community
+
+    go get github.com/golang/protobuf/proto
+    go get -insecure v2ray.com/core/app/router
+}
+
+build() {
+    cd .gopath
+    go run ./src/github.com/v2fly/domain-list-community/main.go
+}
+
+package() {
+    cd .gopath
+    install -Dm 644 dlc.dat "${pkgdir}"/usr/share/xray/geosite.dat
+    install -Dm 644 "${srcdir}"/"domain-list-community-${pkgver}"/LICENSE -t "${pkgdir}"/usr/share/licenses/"$pkgname"/
+}
