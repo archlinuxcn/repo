@@ -39,8 +39,8 @@ optdepends=('python-pyqt5: for imshow(x, fancy=True) and skivi'
             'python-imread: Optional I/O plugin providing most standard formats'
             'python-simpleitk: Optional I/O plugin providing a wide variety of formats. including specialized formats using in medical imaging')
 options=('!emptydirs')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha256sums=('bd954c0588f0f7e81d9763dc95e06950e68247d540476e06cb77bcbcd8c2d8b3')
+source=("${_name}-${pkgver}.tar.gz::https://github.com/scikit-image/scikit-image/archive/v${pkgver}.tar.gz")
+sha256sums=('54165f1c7365aacbd94df6c89ff72554260c3ea8fd8abdfb596d5d93b25d22ab')
 
 build() {
   cd "${srcdir}/${_name}-${pkgver}"
