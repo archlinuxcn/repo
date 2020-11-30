@@ -16,7 +16,7 @@ license=('GPL')
 depends=('cairo' 'enchant' 'iso-codes' 'libgl' 'libxkbcommon-x11' 'pango' 'systemd' 'wayland'
          'wayland-protocols' 'xcb-imdkit-git' 'xcb-util-wm' 'libxkbfile'
     	 'fmt' 'libxkbfile' 'gdk-pixbuf2' 'cldr-emoji-annotation')
-makedepends=('extra-cmake-modules' 'git')
+makedepends=('extra-cmake-modules' 'git' 'ninja')
 provides=($_pkgname)
 conflicts=($_pkgname)
 
@@ -37,11 +37,16 @@ prepare() {
 build(){
   cd fcitx5
 
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=/usr/lib .
-  make
+  cmake -Gninja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=/usr/lib -DCMAKE_INSTALL_SYSCONFDIR=/etc .
+  ninja
+}
+
+check(){
+  cd fcitx5
+  ninja test
 }
 
 package() {
   cd fcitx5
-  make DESTDIR="$pkgdir" install
+  DESTDIR="$pkgdir" ninja install
 }
