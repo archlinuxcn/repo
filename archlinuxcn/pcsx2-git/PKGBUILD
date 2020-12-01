@@ -3,7 +3,7 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.0.r636.3b073343c
+pkgver=1.7.0.r643.be85c568a
 pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
@@ -37,11 +37,13 @@ depends=(
   libxcb
   libxml2
   sdl2
+  libsamplerate
   soundtouch
   wxgtk3
   wxgtk-common
   xz
   zlib
+  yaml-cpp
 )
 makedepends=(
   cmake
@@ -73,7 +75,6 @@ build() {
     -DDISABLE_PCSX2_WRAPPER=ON \
     -DENABLE_TESTS=OFF \
     -DEXTRA_PLUGINS=ON \
-    -DGTK3_API=ON \
     -DSDL2_API=ON \
     -DPACKAGE_MODE=ON \
     -DREBUILD_SHADER=ON \
@@ -82,7 +83,8 @@ build() {
     -DXDG_STD=ON \
     -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config-gtk3 \
     -Wno-dev
-  ninja -C build
+
+    ninja -C build
 }
 
 package() {
