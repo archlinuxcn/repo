@@ -2,7 +2,7 @@
 pkgname=vimix-gtk-themes
 _pkgver=2020-11-28
 pkgver=${_pkgver//-/.}
-pkgrel=2
+pkgrel=3
 pkgdesc="A flat Material Design theme for GTK 3, GTK 2, GNOME Shell, etc."
 arch=('any')
 url="https://vinceliuice.github.io/theme-vimix.html"
@@ -20,5 +20,5 @@ sha256sums=('c2fbe0d29cb32ab4b4cd4f419655212c684bb1cb9becd37eb6b7874f5555fc8d')
 package() {
 	cd "$pkgname-$_pkgver"
 	install -d "$pkgdir/usr/share/themes"
-	./install.sh -d "$pkgdir/usr/share/themes"
+	./install.sh -a -d "$pkgdir/usr/share/themes"
 }
