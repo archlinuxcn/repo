@@ -3,7 +3,7 @@
 pkgname=python-isounidecode
 _name=${pkgname#python-}
 pkgver=0.3
-pkgrel=2
+pkgrel=3
 pkgdesc="Conversion and transliteration of unicode into ascii or iso-8859-1"
 arch=('any')
 url="https://github.com/redvasily/isounidecode"
