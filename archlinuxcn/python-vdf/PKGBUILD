@@ -3,9 +3,9 @@
 # Contributor: Ivan Semkin (ivan at semkin dot ru)
 
 _pkgname=vdf
-pkgname=(python-vdf)
+pkgname=python-vdf
 pkgver=3.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Library for working with Valve's VDF text format"
 arch=('any')
 url='https://github.com/ValvePython/vdf'
