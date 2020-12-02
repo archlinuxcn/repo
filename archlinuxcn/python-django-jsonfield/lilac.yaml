@@ -1,4 +1,13 @@
 maintainers:
   - github: yuyichao
 
-managed: false
+build_prefix: extra-x86_64
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: manual
+    manual: 2.1.1
+  - source: manual
+    manual: 2
+  - alias: python
