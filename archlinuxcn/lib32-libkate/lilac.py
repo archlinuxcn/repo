@@ -4,7 +4,6 @@ from lilaclib import *
 
 def pre_build():
     aur_pre_build()
-    add_makedepends(['python'])
     add_provides(['libkate.so', 'liboggkate.so'])
 
 def post_build():

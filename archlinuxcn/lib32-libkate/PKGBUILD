@@ -10,7 +10,7 @@ url="https://wiki.xiph.org/OggKate"
 license=('BSD')
 arch=('x86_64')
 depends=('lib32-libogg' 'lib32-libpng' 'libkate')
-makedepends=("git" "lib32-gcc-libs" "pkg-config" "python")
+makedepends=("git" "lib32-gcc-libs" "pkg-config")
 source=("https://download.videolan.org/contrib/kate/$_basename-$pkgver.tar.gz"
         0001-Fix-automake-warnings.patch)
 sha512sums=('2635237753abc0f6c43fc07bd0ecc57c2f3c893efa6c62ad08de9191045612477302ed45acd61cdfea7447efd654ebbe0ed2d6a2cbf867eb834581d7ee43377b'
