@@ -165,7 +165,7 @@ EOF
   for p in "${_patches[@]}"; do
     _apply_patch "$p"
   done
-  for f in stdlib/*/Artifacts.toml; do
+  for f in stdlib/*/*Artifacts.toml; do
     echo "Clearing $f"
     echo > "$f"
   done
