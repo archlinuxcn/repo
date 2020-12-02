@@ -1,25 +1,30 @@
 _name=jsmin
 pkgname=python-jsmin
 pkgver=2.2.2
-pkgrel=7
+pkgrel=8
 pkgdesc="JavaScript minifier."
 arch=(any)
 url="https://github.com/tikitu/jsmin/"
 license=('MIT License')
 depends=('python')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/jsmin-2.2.2.tar.gz")
 sha256sums=('b6df99b2cd1c75d9d342e4335b535789b8da9107ec748212706ef7bbe5c2553b')
 
 build() {
-  cd "$srcdir/$_name-$pkgver"
+  cd "$srcdir/jsmin-2.2.2"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/$_name-$pkgver"
+  cd "$srcdir/jsmin-2.2.2"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
+  # make sure we don't install any world-writable or root-readable-only files
+  # we shouldn't need to fix ownership as we extract tarballs as a non-root user
+  # https://github.com/pypa/setuptools/issues/1328
+  # https://github.com/LonamiWebs/Telethon/issues/1605
+  chmod u=rwX,go=rX -R "$pkgdir"
   # make sure we don't install annoying files
   local _site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   rm -rf "$pkgdir/$_site_packages/tests/"
