@@ -1,0 +1,41 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+# Contributor: Grey Christoforo <first name at last name dot net>
+
+_pkgname=plotly.py
+pkgname=python-plotly
+pkgver=4.13.0
+pkgrel=1
+pkgdesc='The interactive graphing library for Python (includes Plotly Express)'
+url='https://plotly.com/python'
+depends=(
+  python-matplotlib
+  python-numpy
+  python-pandas
+  python-retrying
+  python-six
+)
+optdepends=(
+  'ipython: ipython support'
+  'python-jupyter: jupyter support'
+  'python-ipykernel: jupyter support'
+  'python-pillow: image uri conversion'
+)
+makedepends=(
+  python-setuptools
+)
+license=('MIT')
+arch=('any')
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/plotly/plotly.py/archive/v${pkgver}.tar.gz")
+sha512sums=('f98660bd14617c49aa175dbd62dacc40e89ce37c96f41db97b84db3882f691cb2f9f91975ca5b6d61c2d7c77557ab46cbfa8f927ceff965e24b9ddd7b23502df')
+
+build() {
+  cd ${_pkgname}-${pkgver}/packages/python/plotly
+  python setup.py build
+}
+
+package() {
+  cd ${_pkgname}-${pkgver}/packages/python/plotly
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+# vim:set ts=2 sw=2 et:
