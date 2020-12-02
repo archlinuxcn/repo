@@ -1,0 +1,25 @@
+From cf113bac0d5305890be51d248125732ec265d358 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 2 Dec 2020 15:29:40 -0500
+Subject: [PATCH 2/2] Do not force fusion style
+
+---
+ mu4/appshell/appshell.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mu4/appshell/appshell.cpp b/mu4/appshell/appshell.cpp
+index 8aa0083cd..d85ba9a9c 100644
+--- a/mu4/appshell/appshell.cpp
++++ b/mu4/appshell/appshell.cpp
+@@ -37,7 +37,7 @@ AppShell::AppShell()
+ 
+ int AppShell::run(int argc, char** argv, std::function<void()> moduleSetup)
+ {
+-    qputenv("QT_STYLE_OVERRIDE", "Fusion");
++    // qputenv("QT_STYLE_OVERRIDE", "Fusion");
+     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+ 
+     const char* appName;
+-- 
+2.29.2
+
