@@ -1,7 +1,7 @@
 _name=libsass
 pkgname=python-libsass
 pkgver=0.20.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Sass for Python: A straightforward binding of libsass for Python."
 arch=('x86_64')
 url="https://sass.github.io/libsass-python/"
@@ -21,6 +21,11 @@ package() {
   cd "$srcdir/libsass-0.20.1"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
+  # make sure we don't install any world-writable or root-readable-only files
+  # we shouldn't need to fix ownership as we extract tarballs as a non-root user
+  # https://github.com/pypa/setuptools/issues/1328
+  # https://github.com/LonamiWebs/Telethon/issues/1605
+  chmod u=rwX,go=rX -R "$pkgdir"
   # make sure we don't install annoying files
   local _site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   rm -rf "$pkgdir/$_site_packages/tests/"
