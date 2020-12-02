@@ -3,7 +3,7 @@
 pkgname="python-imageio"
 _pkgname="imageio"
 pkgver=2.9.0
-pkgrel=1
+pkgrel=2
 pkgdesc="a Python library that provides an easy interface to read and write a wide range of image data"
 arch=('x86_64')
 _github="imageio/imageio"
