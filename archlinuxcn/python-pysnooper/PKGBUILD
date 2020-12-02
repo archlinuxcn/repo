@@ -1,0 +1,33 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+# Contributor: mark.blakeney at bullet-systems dot net
+
+_pkgname=PySnooper
+pkgname=python-pysnooper
+pkgver=0.4.1
+pkgrel=1
+pkgdesc='PySnooper - Never use print for debugging again'
+url='https://github.com/cool-RR/PySnooper'
+license=('MIT')
+arch=('any')
+depends=(python)
+makedepends=(python-setuptools)
+checkdepends=(python-pytest)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/cool-RR/PySnooper/archive/${pkgver}.tar.gz")
+sha512sums=('73a38820342f0b9380366821fb1ac40bd8cbf0b2baf45558d38d09bd58940201ff11dccd79a000b105f7fc997abd5b3454a311412ccce08883f23ecb2f01bf33')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+check() {
+  cd "${_pkgname}-${pkgver}"
+  pytest -v
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+# vim:set ts=2 sw=2 et:
