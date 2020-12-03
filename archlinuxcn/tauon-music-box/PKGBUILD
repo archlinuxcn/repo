@@ -2,8 +2,8 @@
 pkgname='tauon-music-box'
 _pkgname=tauonmb
 _gitname=TauonMusicBox
-pkgver=6.4.3
-pkgrel=2
+pkgver=6.4.4
+pkgrel=1
 pkgdesc='A streamlined music player that uses BASS'
 arch=('x86_64')
 url="https://github.com/Taiko2k/TauonMusicBox"
@@ -43,7 +43,7 @@ optdepends=('p7zip: 7z archive extraction support'
 
 source=("$pkgname-$pkgver.tar.gz::https://github.com/Taiko2k/TauonMusicBox/archive/v$pkgver.tar.gz")
 
-sha256sums=('4a941fa446b0c2152ec8e6df2f4bf2a3e254b4043317912a056d184f23b06ae1')
+sha256sums=('251109bbdea2974c89656ed076d8af84823880ba836c893f511273f370c34147')
 
 package() {
     cd "$_gitname-$pkgver"
