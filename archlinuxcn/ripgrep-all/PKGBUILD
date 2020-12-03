@@ -1,18 +1,25 @@
-# Maintainer: phiresky <phireskyde+aur@gmail.com>
-# Maintainer: Julien Nicoulaud <julien DOT nicoulaud AT gmail DOT com>
+# Maintainer: Chris Lane <aur at chrislane dot com>
+# Co-maintainer: phiresky <phireskyde+aur@gmail.com>
+# Contributor: Julien Nicoulaud <julien DOT nicoulaud AT gmail DOT com>
 
 pkgname=ripgrep-all
-pkgver=0.9.5
+pkgver=0.9.6
 pkgrel=1
 pkgdesc="rga: ripgrep, but also search in PDFs, E-Books, Office documents, zip, tar.gz, etc."
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
 url="https://github.com/phiresky/ripgrep-all"
 license=('AGPL3')
-depends=(ripgrep ffmpeg pandoc poppler tesseract imagemagick)
+depends=('ripgrep')
 makedepends=('rust' 'cargo')
-conflicts=("${pkgname}-git" "${pkgname}-bin" "rga" "rga-git" "rga-bin")
-source=("https://github.com/phiresky/ripgrep-all/archive/v${pkgver}.tar.gz")
-sha512sums=('b881503d412b882f03036e748e50fa80ce463cb2d0f670ee76a21853dc3ccf307d680ab0fb8d0a4302f3b6c40ca64d62b2f6fca84fb6323ee1af50d4f6eeae47')
+optdepends=(
+    'ffmpeg: for the ffmpeg adapter'
+    'graphicsmagick: for the pdfpages adapter'
+    'pandoc: for the pandoc adapter'
+    'poppler: for the poppler adapter'
+    'tesseract: for the tesseract adapter')
+conflicts=("${pkgname}-git" "${pkgname}-bin")
+source=("${pkgname}-${pkgver}"::"${url}/archive/v${pkgver}.tar.gz")
+sha512sums=('45fc258e8ef44ddd7ce6b4c7dc5c60a439c8e5aafd253ea41621afcc50aaecd300d8792c4cbdc9247a5656d9c3db0a33053de96ca41f0831421ea8ce382ca7de')
 
 build() {
   cd "${srcdir}/ripgrep-all-${pkgver}"
@@ -30,3 +37,4 @@ package() {
   install -Dm 755 "target/release/rga-preproc" "${pkgdir}/usr/bin/rga-preproc"
 }
 
+# vim:set ts=2 sw=2 et:
