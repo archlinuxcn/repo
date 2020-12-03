@@ -3,8 +3,8 @@
 # Contributor: Mika Fischer <mika.fischer@zoopnet.de>
 
 pkgname=soci
-pkgver=4.0.0
-pkgrel=3
+pkgver=4.0.1
+pkgrel=1
 pkgdesc="Database access library for C++"
 arch=('i686' 'x86_64')
 url="http://soci.sf.net"
@@ -19,7 +19,7 @@ optdepends=('instantclient-basic: support for oracle databases'
             'libmysqlclient'
             'boost-libs')
 source=("http://downloads.sourceforge.net/project/soci/soci/${pkgname}-${pkgver}/${pkgname}-${pkgver}.zip")
-sha1sums=('6be7cc81fd4bb181fc103ac61c0388ab4b2e09e7')
+sha1sums=('183ceafdc1ed064731d3ebe82770a338a204e736')
 
 build() {
     rm -rf "${srcdir}/${pkgname}-${pkgver}-build"
