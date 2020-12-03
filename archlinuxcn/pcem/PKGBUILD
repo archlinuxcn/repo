@@ -1,21 +1,15 @@
 # Maintainer: Aaron Paden <aaronbpaden@gmail.com>
 # Contributor: Natalia Portillo <claunia@clania.com>
 pkgname=pcem
-pkgver=16
-pkgrel=4
+pkgver=17
+pkgrel=1
 pkgdesc="Emulator for various IBM PC computers and clones."
 url="http://pcem-emulator.co.uk/"
 arch=('x86_64' 'i686')
 license=('GPL2')
 depends=('wxgtk2' 'openal' 'sdl2' 'alsa-lib')
-source=("http://pcem-emulator.co.uk/files/PCemV${pkgver}Linux.tar.gz"
-  use-fcommon.patch)
+source=("http://pcem-emulator.co.uk/files/PCemV${pkgver}Linux.tar.gz")
 
-prepare() {
-  cd "${srcdir}"
-  # fix build with gcc 10
-  patch -p0 <"${srcdir}/use-fcommon.patch"
-}
 build() {
   cd "${srcdir}"
   autoreconf
@@ -30,5 +24,4 @@ package() {
 }
 
 # vim:set ts=2 sw=2 et:
-sha256sums=('45ae9321ee25375f0e685a49d84e8a5acba8ed33ccf597299edcf287cb3c8499'
-            'a020184887520f58e74a8ebb990fb677af4d40dd87a5602f2336945824c7cea9')
+sha256sums=('5b24cb5ce886ed53232385f46594146ba3f7d7eecda90f82892b2dce1cb2f1a4')
