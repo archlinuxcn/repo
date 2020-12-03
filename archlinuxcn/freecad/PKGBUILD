@@ -29,8 +29,10 @@ source=("git+https://github.com/FreeCAD/FreeCAD.git#tag=$pkgver"
         "$pkgname-py39.patch::https://github.com/FreeCAD/FreeCAD/commit/ae641dc5278e.patch"
         "freecad.desktop" "freecad.xml")
 sha256sums=('SKIP'
-            '617968d7bbd1da71bdedaed1b66c5d6eaf24e0fb34678b93f5d925d370c66296'
-            '1d98fa4e62f352966eb357c93f54b1f0bf562931e8323bf70a83b5e221a5fb14')
+            '421a364ad214a25be578d81edc9960daab87d7b26f341022aa22dd15b9df621b'
+            'de1d61c18d329e0903d5c1bc27b9c4e28c4911380bdd4b6c49da5b63740862f1'
+            '7ef6f240a82a861cbeca128e453da1a0c37f548876894f409a780c55e9909add'
+            '4ee1daf47c8371a3e17173d85a0dd4a106dacd7899d783ccd97a6f3e0dd1a21f')
 
 prepare() {
   cd FreeCAD
