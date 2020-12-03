@@ -1,7 +1,7 @@
 #Maintainer: Xyne <ac xunilhcra enyx, backwards>
 pkgname=powerpill
 pkgver=2020
-pkgrel=1
+pkgrel=2
 pkgdesc='Pacman wrapper for faster downloads.'
 arch=(any)
 license=(GPL)
