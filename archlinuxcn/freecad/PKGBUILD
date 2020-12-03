@@ -8,100 +8,119 @@
 # Contributor: gborzi
 
 pkgname=freecad-oce
-_pkgver=0.18
-_count=16158
-_commit=783e1346c7a078f5265c3f0c6a927d09a8c1fe70
-pkgver=$_pkgver.$_count
+epoch=1
+pkgver=0.18.5
 pkgrel=1
-pkgdesc='A general purpose 3D CAD modeler'
-arch=('x86_64')
-url='https://www.freecadweb.org/'
-license=('LGPL')
-depends=('boost-libs' 'curl' 'oce' 'xerces-c' 'libspnav' 'glu' 'netcdf' 'openmpi'
-         'shared-mime-info' 'hicolor-icon-theme' 'jsoncpp' 'qt5-base' 'qt5-declarative' 'qt5-svg' 'qt5-tools'
-         'qt5-x11extras' 'qt5-webkit' 'med' 'python-pivy' 'python-pyside2' 'python-matplotlib' 'pyside2-tools')
-makedepends=('boost' 'eigen' 'gcc-fortran' 'swig' 'xerces-c' 'desktop-file-utils' 'git'
-             'cmake' 'coin>=4.0.0' 'python-shiboken2' 'pyside2' 'shiboken2' vtk glew)
-optdepends=('python-matplotlib' 'graphviz' 'openscad')
+pkgdesc='General purpose 3D CAD modeler'
+arch=(x86_64)
+url='https://freecadweb.org/'
+license=(LGPL)
+depends=(boost-libs glew jsoncpp libspnav med netcdf curl oce openmpi
+         pyside2-tools python-matplotlib python-pivy python-pyside2 qt5-svg
+         qt5-tools qt5-webkit qt5-x11extras shared-mime-info xerces-c hicolor-icon-theme)
+makedepends=(boost cmake coin eigen gcc-fortran git ninja pyside2 desktop-file-utils
+             python-shiboken2 shiboken2 swig)
+optdepends=(python-matplotlib graphviz openscad)
 options=(!libtool !staticlibs debug strip)
 provides=("freecad=$pkgver")
 conflicts=(freecad)
-source=("git+https://github.com/FreeCAD/FreeCAD.git#commit=$_commit"
+source=("git+https://github.com/FreeCAD/FreeCAD.git#tag=$pkgver"
+        'https://raw.githubusercontent.com/FreeCAD/FreeCAD/d06d5687c1498354483aff95093d7f798c2985f2/cMake/FindPySide2Tools.cmake'
+        "$pkgname-py39.patch::https://github.com/FreeCAD/FreeCAD/commit/ae641dc5278e.patch"
         "freecad.desktop" "freecad.xml")
 sha256sums=('SKIP'
             '617968d7bbd1da71bdedaed1b66c5d6eaf24e0fb34678b93f5d925d370c66296'
             '1d98fa4e62f352966eb357c93f54b1f0bf562931e8323bf70a83b5e221a5fb14')
 
-_backports=(
-  299368b1b278f94f579c110be179cf6023882ca5 # Workaround for messy SHIBOKEN_MICRO_VERSION definition.
-  17ed2b196a58afbbc3cc1bb99f6eb76060171ad2 # [Cmake] Update FindPySide2Tools for PySide2 5.14 - issue #4229
-  1666b28836baa79b26b707afb1e97c2a0855eb1f # Change IF(...LESS...) into IF(...VERSION_LESS...)
-  6eacb17b3e03d20039b85c9daebab9e44386d6bf # Update swigpyrun.in for Python 3.8
-)
-
 prepare() {
-  cd "${srcdir}/FreeCAD"
+  cd FreeCAD
 
-  if ((${#_backports[@]})); then
-    git cherry-pick --quit
-    git cherry-pick -n -x -Xours -Xignore-space-change "${_backports[@]}"
-  fi
+  patch -Np1 -i ../$pkgname-py39.patch
 
-  # Sigh… Why can't upstream backport properly?
-  sed -i '38a using namespace std\;\r' src/Mod/Raytracing/App/RayFeature.cpp # Fixup d13e777 by partial application of 5095703
+  # Use the fixed version of FindPySide2Tools.cmake
+  cp -f "$srcdir/FindPySide2Tools.cmake" cMake/FindPySide2Tools.cmake
+
+  # Fix Qt5 version detection
+  sed -i 's/Qt5Core_VERSION LESS/Qt5Core_VERSION VERSION_LESS/g' \
+      cMake/FindPySide2Tools.cmake
+
+  cd src
+
+  # Update swigpyrun.in for Python 3.8
+  sed -i 's/interp->modules/PyImport_GetModuleDict()/g' Base/swigpyrun.inl
 
   # Fix for Qt 5.15
-  sed -i 's/\(.*\)include <QPainter>$/&\n\1include <QPainterPath>/' src/Mod/Image/Gui/OpenGLImageBox.cpp
+  sed -i 's/\(.*\)include <QPainter>$/&\n\1include <QPainterPath>/' \
+      Mod/Image/Gui/OpenGLImageBox.cpp
+
+  # Compensate for the unusual Shiboken versioning scheme
+  sed -i 's/SHIBOKEN_MICRO_VERSION/0/g' Gui/WidgetFactory.cpp
+
+  # Fix missing "std::" qualifiers, sledge hammer style
+  find . \
+       ! -wholename "*/Mod/Sketcher/*" \
+       ! -wholename "*/Mod/PartDesign/*" \
+       -name "*.cpp" -type f \
+       -exec sed -i '1i using namespace std;' {} \;
+
+  # Add missing include
+  sed -i '1i \#include <Inventor\/SbByteBuffer.h>' \
+      Gui/Quarter/QuarterWidget.cpp
 }
 
 build() {
-  cd "${srcdir}/FreeCAD"
   mkdir -p build
   cd build
 
-  cmake .. -Wno-dev \
+  cmake ../FreeCAD \
+        -Wno-dev \
+        -DBUILD_QT5=ON \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_C_FLAGS="$CFLAGS -fPIC -w" \
+        -DCMAKE_CXX_FLAGS="$CXXFLAGS -fPIC -w" \
+        -DCMAKE_INSTALL_DATADIR="/usr/share/freecad" \
+        -DCMAKE_INSTALL_DOCDIR="/usr/share/freecad/doc" \
         -DCMAKE_INSTALL_PREFIX="/usr/lib/freecad" \
         -DCMAKE_INSTALL_LIBDIR="/usr/lib/freecad/lib" \
-        -DCMAKE_INSTALL_DOCDIR="/usr/share/freecad/doc" \
-        -DCMAKE_INSTALL_DATADIR="/usr/share/freecad" \
         -DCMAKE_INSTALL_INCLUDEDIR="/usr/include" \
+        -DFREECAD_USE_EXTERNAL_PIVY=ON \
         -DFREECAD_USE_OCC_VARIANT="Official Version" \
+        -DFREECAD_USE_QT_FILEDIALOG=ON \
+        -DPYTHON_EXECUTABLE=/usr/bin/python \
         -DOCC_INCLUDE_DIR=/usr/include/oce/ \
         -DOCE_DIR=/usr/lib/oce-0.18-dev/ \
-        -DFREECAD_USE_EXTERNAL_PIVY=ON \
-        -DFREECAD_USE_QT_FILEDIALOG=ON \
-        -DBUILD_QT5=ON \
-        -DPYTHON_EXECUTABLE=/usr/bin/python
-  make
+        -G Ninja
+  ninja
 }
 
 package() {
-  cd FreeCAD/build
+  DESTDIR="$pkgdir" ninja -C build install
 
-  # Install main program
-  make DESTDIR="${pkgdir}" install
-
-  # Symlink to /usr/bin
-  install -dm755 "${pkgdir}/usr/bin"
-  ln -srf "${pkgdir}/usr/lib/freecad/bin/FreeCAD" "${pkgdir}/usr/bin/freecad"
-  ln -srf "${pkgdir}/usr/lib/freecad/bin/FreeCAD" "${pkgdir}/usr/bin/FreeCAD"
-  ln -srf "${pkgdir}/usr/lib/freecad/bin/FreeCADCmd" "${pkgdir}/usr/bin/freecadcmd"
-  ln -srf "${pkgdir}/usr/lib/freecad/bin/FreeCADCmd" "${pkgdir}/usr/bin/FreeCADCmd"
-
-  # Install pixmaps and desktop shortcut
+  # Package desktop shortcut
   desktop-file-install \
     --dir="${pkgdir}/usr/share/applications" \
     "${srcdir}/freecad.desktop"
-  for i in 16 32 48 64; do
-    install -Dm644 "../src/Gui/Icons/freecad-icon-${i}.png" \
-            "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/freecad.png"
-  done
-  install -Dm644 "../src/Gui/Icons/freecad.svg" \
-          "${pkgdir}/usr/share/icons/hicolor/scalable/apps/freecad.svg"
 
-  # Mime info
-  install -D -m644 "${srcdir}/freecad.xml" "${pkgdir}/usr/share/mime/packages/freecad.xml"
+  # Package MIME info
+  install -Dm644 freecad.xml "$pkgdir/usr/share/mime/packages/freecad.xml"
+
+  cd FreeCAD/src/Gui/Icons
+
+  # Package icons
+  for i in 16 32 48 64; do
+    install -Dm644 "freecad-icon-$i.png" \
+            "$pkgdir/usr/share/icons/hicolor/${i}x$i/apps/freecad.png"
+  done
+  install -Dm644 freecad.svg \
+          "$pkgdir/usr/share/icons/hicolor/scalable/apps/freecad.svg"
+
+
+  # Package symlinks in /usr/bin
+  install -dm755 "${pkgdir}/usr/bin"
+  ln -sf /usr/lib/freecad/bin/FreeCAD "$pkgdir/usr/bin/freecad"
+  ln -sf /usr/lib/freecad/bin/FreeCAD "$pkgdir/usr/bin/FreeCAD"
+  ln -sf /usr/lib/freecad/bin/FreeCADCmd "$pkgdir/usr/bin/freecadcmd"
+  ln -sf /usr/lib/freecad/bin/FreeCADCmd "$pkgdir/usr/bin/FreeCADCmd"
 
   boostver=$(objdump -p /usr/lib/libboost_system.so | \
                grep SONAME | sed -e 's/.*boost_system\.so\.//')
