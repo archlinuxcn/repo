@@ -1,7 +1,7 @@
 # Maintainer: surefire@cryptomile.net
 
 pkgname=keeweb
-pkgver=1.16.0
+pkgver=1.16.1
 _electron=electron
 pkgrel=1
 pkgdesc="Desktop password manager compatible with KeePass databases"
@@ -16,7 +16,6 @@ makedepends=(
 	'asar'
 	'git'
 	'libsass>=3.5.5'
-	'nodejs>=8.15.0'
 	'npm'
 	'python2'
 )
@@ -24,7 +23,7 @@ optdepends=('xdotool: for auto-type')
 conflicts=('keeweb-desktop')
 source=(
 	"${pkgname}::git+https://github.com/keeweb/keeweb.git#tag=v${pkgver}"
-	"git+https://github.com/keeweb/keeweb-native-modules.git#tag=0.4.1"
+	"git+https://github.com/keeweb/keeweb-native-modules.git#tag=0.5.3"
 	'package.json.patch.js'
 )
 
