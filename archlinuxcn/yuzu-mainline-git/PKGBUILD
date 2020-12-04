@@ -2,14 +2,14 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-mainline-git
-pkgver=454.r0.gd93e024ad
+pkgver=456.r0.g8e70bf12f
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (mainline GIT version)"
 arch=('i686' 'x86_64')
 url="https://github.com/yuzu-emu/yuzu-mainline"
 license=('GPL2')
-depends=('shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'mbedtls' 'openssl' 'zstd')
-makedepends=('git' 'cmake' 'ninja' 'python2' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'desktop-file-utils' 'conan')
+depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'mbedtls' 'openssl' 'zstd')
+makedepends=('git' 'cmake' 'ninja' 'python2' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'desktop-file-utils')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu' 'yuzu-canary-git' 'yuzu-cmd' 'yuzu-mainline' 'yuzu-canary')
 conflicts=('yuzu-canary-git' 'yuzu-master-git')
@@ -25,9 +25,9 @@ pkgver() {
 prepare() {
 	cd "$srcdir/$_pkgname"
 
-	git submodule init
 	git submodule update --init --recursive
 
+  sed -i 's/1.73/1.72/g' CMakeLists.txt
   #sed -i 's/Werror=reorder/Wno-reorder/g' src/CMakeLists.txt
   #sed -i 's/Werror=conversion/Wno-conversion/g' src/video_core/CMakeLists.txt
 }

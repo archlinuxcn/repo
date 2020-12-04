@@ -25,9 +25,9 @@ pkgver() {
 prepare() {
 	cd "$srcdir/$_pkgname"
 
-	git submodule init
 	git submodule update --init --recursive
 
+  sed -i 's/1.73/1.72/g' CMakeLists.txt
 #  sed -i 's/Werror=reorder/Wno-reorder/g' src/CMakeLists.txt
 #  sed -i 's/Werror=conversion/Wno-conversion/g' src/video_core/CMakeLists.txt
 }
