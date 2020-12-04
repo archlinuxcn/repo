@@ -1,7 +1,7 @@
 # Maintainer: Morgan <morganamilo@archlinux.org>
 pkgname=paru
 pkgver=1.1.3
-pkgrel=1
+pkgrel=2
 pkgdesc='AUR helper based on yay'
 url='https://github.com/morganamilo/paru'
 source=("$pkgname-$pkgver.tar.gz::https://github.com/Morganamilo/paru/archive/v$pkgver.tar.gz")
@@ -16,7 +16,7 @@ sha256sums=('3a6e710be698e33ef8c12adcc26b2dc8d9f29625b6de2dcb298ec7d20c442cc0')
 build () {
   cd "$srcdir/$pkgname-$pkgver"
 
-  if pacman -T pacman-git > /dev/null; then
+  if pacman -T pacman-git > /dev/null || pacman -T 'pacman>6.0.0alpha' > /dev/null; then
     _features+="git,"
   fi
 
