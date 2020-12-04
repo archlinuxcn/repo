@@ -1,0 +1,27 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+pkgname=spectra
+pkgver=0.9.0
+pkgrel=1
+pkgdesc="A header-only C++ library for large scale eigenvalue problems"
+license=('MPL2')
+arch=('any')
+url='https://spectralib.org'
+depends=(
+  eigen
+)
+makedepends=(
+  cmake
+)
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/yixuan/spectra/archive/v${pkgver}.tar.gz")
+sha512sums=('4d2fdadd6b6211aac88118474d90a29f77d2e2ccf69dbe23b642566389a833dd91c4392d9108fa110dd3f01058c6f767436ffd59cf71ba2cc746772339fda710')
+
+package() {
+  cd "${pkgname}-${pkgver}"
+  cmake -DCMAKE_INSTALL_PREFIX=/usr .
+  make install DESTDIR="${pkgdir}"
+  mkdir -p "${pkgdir}/usr/lib"
+  mv -v "${pkgdir}/usr/cmake" "${pkgdir}/usr/lib/cmake"
+}
+# vim:set ts=2 sw=2 et:
+
