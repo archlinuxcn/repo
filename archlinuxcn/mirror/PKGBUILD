@@ -4,7 +4,7 @@
 pkgname=mirror
 pkgdesc="rsync scheduler for open source mirror site"
 pkgver=0.8.2
-pkgrel=1
+pkgrel=2
 arch=('any')
 license=('GPL')
 url="https://github.com/ideal/mirror"
