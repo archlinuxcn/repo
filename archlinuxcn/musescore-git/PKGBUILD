@@ -24,7 +24,7 @@ provides=("musescore=${_realver}" 'musescore-svn')
 replaces=('musescore-svn')
 source=('git://github.com/musescore/MuseScore.git'
   'mime.xml'
-  '0002-Do-not-force-fusion-style.patch')
+  '0001-Do-not-force-fusion-style.patch')
 md5sums=('SKIP'
          '969696178e56de36f9af37d7da61baaa'
          '032a042ec170c4f7b4fa1a08469793c0')
@@ -40,7 +40,7 @@ build() {
   cd MuseScore
 
   # Upstream add hard coded Fusion theme and they refuse to change it.
-  patch -Np1 < ../0002-Do-not-force-fusion-style.patch
+  patch -Np1 < ../0001-Do-not-force-fusion-style.patch
 
   # Fix Musescore + gcc's broken pch.
   # `-DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-fPIC"`:
@@ -77,3 +77,6 @@ package() {
   # mv share/manual/plugins/* \
   #   "$pkgdir/usr/share/mscore-2.0/manual/plugins"
 }
+md5sums=('SKIP'
+         '969696178e56de36f9af37d7da61baaa'
+         '21d61b9cc79fdeeaa345828b16190c18')
