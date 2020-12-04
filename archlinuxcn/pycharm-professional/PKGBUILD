@@ -2,7 +2,7 @@
 
 pkgname=pycharm-professional
 pkgver=2020.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Python IDE for Professional Developers. Professional Edition"
 arch=('x86_64')
 url='https://www.jetbrains.com/pycharm/'
@@ -49,7 +49,7 @@ build() {
   cd "pycharm-$pkgver"
 
   # compile PyDev debugger used by PyCharm to speedup debugging
-  python plugins/python/helpers/pydev/setup_cython.py build_ext --build-temp build --build-lib .
+  #python plugins/python/helpers/pydev/setup_cython.py build_ext --build-temp build --build-lib .
   
   rm -r bin/fsnotifier lib/pty4j-native/linux/{x86,ppc64le}
 }
