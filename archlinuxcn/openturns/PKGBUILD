@@ -8,50 +8,51 @@ license=('LGPL')
 arch=('x86_64')
 url='http://www.openturns.org'
 depends=(
-  'blas'
-  'eigen'
-  'intel-tbb'
-  'lapack'
-  'libxml2'
-  'muparser'
-  'nlopt'
-  'python'
+  bison
+  blas
+  boost
+  eigen
+  flex
+  hdf5
+  intel-tbb
+  lapack
+  libxml2
+  muparser
+  nlopt
+  python-matplotlib
+  python-pandas
+  python-psutil
+  python-scipy
 )
 makedepends=(
-  'bison'
-  'boost'
-  'cmake'
-  'flex'
-  'python-psutil'
-  'python-matplotlib'
-  'swig'
+  cmake
+  swig
 )
-optdepends=(
-  'bison'
-  'flex'
-  'python-psutil'
-  'python-matplotlib'
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/openturns/openturns/archive/v${pkgver}.tar.gz"
+  "0001-fix-build-with-cmake-3.19.1.patch::https://github.com/openturns/openturns/pull/1682.patch"
 )
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/openturns/openturns/archive/v${pkgver}.tar.gz")
-sha256sums=('9ab4c0d8f68d54a87df1cc19975f78cf0a16d6401afa83459eed9613695995dc')
+sha256sums=('9ab4c0d8f68d54a87df1cc19975f78cf0a16d6401afa83459eed9613695995dc'
+            '8c46f64d673d4b1bfa778cd2ea0fcb255322556dd0507cf3d02beb70bf8bba7d')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
 }
 
+prepare() {
+  cd "${pkgname}-${pkgver}"
+  patch -p1 -i "${srcdir}/0001-fix-build-with-cmake-3.19.1.patch"
+}
+
 build() {
-  mkdir build
-  cd build
-  cmake "${srcdir}/${pkgname}-${pkgver}" \
+  cmake -B 'build' -S "${srcdir}/${pkgname}-${pkgver}" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DOPENTURNS_SYSCONFIG_PATH=/etc \
     -DCMAKE_SKIP_INSTALL_RPATH=ON
-  make
+  make -C 'build'
 }
 
 package() {
-  cd build
-  make DESTDIR="${pkgdir}" install
+  make DESTDIR="${pkgdir}" -C 'build' install
   python -O -m compileall "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
 }
 # vim:set ts=2 sw=2 et:
