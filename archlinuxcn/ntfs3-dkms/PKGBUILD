@@ -1,32 +1,32 @@
 pkgname=ntfs3-dkms
-pkgver=13.0.0
+pkgver=14.0.0
 pkgrel=1
 pkgdesc="NTFS read-write driver GPL implementation by Paragon Software. Current version works with NTFS (including v3.1), normal/compressed/sparse files and supports journal replaying."
 arch=('any')
-url='https://www.paragon-software.com/'
+url='https://www.paragon-software.com/home/ntfs3-driver-faq/'
 license=('GPL2')
 depends=('dkms')
 options=('!strip')
 source=(Makefile.patch
         dkms.conf
-        "v$pkgver~1.patch::https://lore.kernel.org/patchwork/patch/1342503/raw"
-        "v$pkgver~2.patch::https://lore.kernel.org/patchwork/patch/1342506/raw"
-        "v$pkgver~3.patch::https://lore.kernel.org/patchwork/patch/1342501/raw"
-        "v$pkgver~4.patch::https://lore.kernel.org/patchwork/patch/1342504/raw"
-        "v$pkgver~5.patch::https://lore.kernel.org/patchwork/patch/1342502/raw"
-        "v$pkgver~6.patch::https://lore.kernel.org/patchwork/patch/1342498/raw"
-        "v$pkgver~7.patch::https://lore.kernel.org/patchwork/patch/1342505/raw"
-        "v$pkgver~8.patch::https://lore.kernel.org/patchwork/patch/1342499/raw")
-sha512sums=('ab49381b37714bc61b17c5a4d857aac776a674574e8dbd46738eab438eef984b7762430cac05860038d8a875d5538347a1e1176acfd2169d9b5a640a9ef04d7c'
-            'd4d2eb4f628642074b841ddab238a68f6cef0a0f8c039aae0a12e8d02f14b9fca891f1608f3b94fad4e2f9fbc0c729a23a51a4d28fc1fd8e4e312459bef06b7f'
-            '9db431b6d394fcb5c21dbfcd9f4fc09447b9d5f784032d6ff2fd727dbf17004879232af32c0a22c353fce90a248f8e1a1ea2cc46eaf8dbf28176f4fd63d49ebe'
-            '280b9421b9a6aaca1d24b1fe93bdc46f42990e8b2e837e648807e99e75be3c862a5412153e8fbb7618449253f944830388a41652e4b16d17878d8041be4ea8eb'
+        "v$pkgver~1.patch::https://lore.kernel.org/patchwork/patch/1349515/raw"
+        "v$pkgver~2.patch::https://lore.kernel.org/patchwork/patch/1349516/raw"
+        "v$pkgver~3.patch::https://lore.kernel.org/patchwork/patch/1349512/raw"
+        "v$pkgver~4.patch::https://lore.kernel.org/patchwork/patch/1349517/raw"
+        "v$pkgver~5.patch::https://lore.kernel.org/patchwork/patch/1349514/raw"
+        "v$pkgver~6.patch::https://lore.kernel.org/patchwork/patch/1349513/raw"
+        "v$pkgver~7.patch::https://lore.kernel.org/patchwork/patch/1349518/raw"
+        "v$pkgver~8.patch::https://lore.kernel.org/patchwork/patch/1349509/raw")
+sha512sums=('989009d7bc7dba6e4cc380bbd660e2c50b20cb312b678031da9fe4a330b92a4b8cd5bcaa8b6de3e4972dfdcb8db2e750c82628b3449350cb8c67f9f4df1cd977'
+            'af96b27a8033e066022facaaae0ebf2a058ce82c354b97fb66e3e54c50887ecaa27a3e29a2c104fdbc4b8c79e3ec039e743ba1ccee6bf4b8edbc491188851a2c'
+            '071b7c16394730ba46a0e6f1bcfea16a7c8e192485648c9e429c3924ee97d0271a67948f7f6c593f153a77800a071f3742c5ca29e3cf02bc3d7ebf52be6915ed'
+            '2bebb6565f596b38f5c84da70b8235cbf776c5c157aa9fa0cb13f838455f057bae65616552b55b2a53cd583f8821ebb7b66ad80cb948eb505fe464701c8ccbab'
             '17d1e267baca8ba75f5245726d1815e74a2ef8dfe18c6c08118a2f0f125c2ace98ac7ab70d017be51a0fc40236c59faac6813efc523270f52668a3978f1c343d'
-            '6507d2a3ee46194649f4b9c281366f4c921ecfed0c48df1659ce323c31e4d08eb0c03efcda57928dc2e64f959577d9a217e1ce394e56e3f32cae081ebbbb1d8b'
-            'ea4afcd3daf4e401bb3e05dcc0fae5560b2ab45f7d6d2f60dd6373095df5686d84b471f8bfad791ddb3869a5c480d98e9695cf80f0caad5a8aeeb390e4ef2cd1'
-            '67c5b0d58a9c9ae76bc00c05110a16354da9c63f68a22462e58aaa5c559d25f2da04aaa7f7506a4bdf243a058a381712b7f28752fe52a06ad321cb892a41485a'
+            '1acbb407b47ee200061d9b60b0aabc84795032f65b58777685db87a32a4bfc1f839b677af75f2d99fd03352f9ce68ee2596552502dfbaf1bd16e93d3dac7b602'
+            'dd895eb3775c45e36a824ff9bd8c9b6ddaa4fa1128d3ea539cd6b375d84044c22ced1958e0c7902125ccf66b8e82cca11d9d3c0ddd9458b44211237dda49e114'
+            'f689e0959cc37f8b97e2078e4d5c087d5774f17d04ab8a10cdec0939ecc2413b1a57b3c59ee697f5da6df2fabc5789dae2f1d0e20d7c34a1410be6c6b4c84036'
             'e8df577d6741624f246e9517d2be3eadb5f77ce8382e3d785a5294fd078139b25011ec1b8b8895d8d963085c626290ee8592d89713e167baf3bf6974c4707426'
-            '7e7b73cf9b920b58892343de442ed5c41e27d92e8b31cb47c95e0b4851312ef667535203103f0415522115f670a0c739125783743f86a9a24bd27ba6a4cbfd9a')
+            '9498e642e3bdcdccf9bb11a83333c7c11bb9a9252bc38058cf132a1d36b9e70411f725d18e376d22010e703450f8c32ead61344090dbeecfdf77c516dd7c851a')
 
 
 prepare() {
@@ -36,7 +36,7 @@ prepare() {
   do
     patch -p3 -N -i "$patch"
   done
-  patch -p1 -N -i "$srcdir/Makefile.patch"
+  patch -p0 -N -i "$srcdir/Makefile.patch"
 }
 
 package() {
