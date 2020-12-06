@@ -11,7 +11,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
 pkgver=86788
-pkgrel=2
+pkgrel=3
 _vboxsf_commit='5aba938bcabd978e4615186ad7d8617d633e6f30'
 arch=('x86_64')
 url='http://virtualbox.org'
@@ -79,7 +79,8 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         '013-Makefile.patch'
         '016-VBoxServiceAutoMount-Change-Linux-mount-code-to-use-.patch'
         '017-fix-narrowing-conversion.patch'
-        '018-xclient.patch')
+        '018-xclient.patch'
+        '019-python3.9.patch')
 
 pkgver() {
   cd "VirtualBox"
@@ -408,4 +409,6 @@ md5sums=('SKIP'
          '481d456c8c4e2e0833dceefaed62a305'
          '82db7666c0034c5388995bd062dc35e1'
          '7be927b4626f8b3df77d4d2e8c8c25a0'
-         '62a5ae2264adf5de908fcfcb906c2648')
+         '62a5ae2264adf5de908fcfcb906c2648'
+         '02d4e5993f3f9d2132014e6da88c9ac7')
+
