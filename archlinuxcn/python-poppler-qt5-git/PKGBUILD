@@ -2,8 +2,8 @@
 # Maintainer: Ben Yip <yebenmy@protonmail.com>
 
 pkgname=python-poppler-qt5-git
-pkgver=0.75.0.r0.gb97edce
-pkgrel=1
+pkgver=0.75.0.r4.gbae7194
+pkgrel=2
 pkgdesc='Python binding to libpoppler-qt5.'
 arch=('any')
 url='https://github.com/wbsoft/python-poppler-qt5'
@@ -22,5 +22,6 @@ pkgver() {
 
 package() {
     cd "${pkgname}"
-    python setup.py install --prefix=/usr --root="$pkgdir" --optimize 1
+    python setup.py build_ext --pyqt-sip-dir=/usr/lib/python3.9/site-packages/PyQt5/bindings/
+    python setup.py install  --prefix=/usr --root="$pkgdir" --optimize 1
 }
