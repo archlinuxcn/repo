@@ -5,7 +5,7 @@
 # Contributor: damir <damir@archlinux.org>
 
 pkgname=amarok
-pkgver=2.9.0.r482.c272ca62ca
+pkgver=2.9.0.r484.bd11ad36dc
 pkgrel=1
 pkgdesc="The powerful music player for KDE"
 arch=("x86_64")
@@ -17,9 +17,9 @@ optdepends=(
   "ifuse: support for Apple iPod Touch and iPhone"
   "loudmouth: backend needed by mp3tunes for syncing"
 )
-_commit="c272ca62cac01488c8e9e5730a815dbb01cd69ac"
+_commit="bd11ad36dc15533ba9fe7eb6150cdd08cc001d6f"
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/KDE/${pkgname}/archive/${_commit}.tar.gz")
-sha256sums=("feeaf11b5f5ea4ee11dcceb32214d6f574980c258d29ac875b6d4026b21690c5")
+sha256sums=("e5035c4e95b2005744cacfa452716f6ea4f1d2f6968f951491a83b33a1524e6c")
 
 #git describe --long --tags 2> /dev/null | sed "s/^[A-Za-z\.\-]*//;s/\([^-]*-\)g/r\1/;s/-/./g"
 #git rev-parse HEAD
