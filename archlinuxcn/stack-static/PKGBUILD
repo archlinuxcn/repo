@@ -3,12 +3,12 @@
 _arch=$(uname -m)
 pkgname=stack-static
 pkgver=2.5.1
-pkgrel=2
+pkgrel=3
 pkgdesc="The Haskell Tool Stack (linked statically)"
 arch=('x86_64')
 url="https://github.com/commercialhaskell/stack"
 license=('custom:BSD3')
-provides=( stack )
+provides=( stack=$pkgver )
 conflicts=( stack stack-bin haskell-stack )
 depends=( gmp gcc-libs zlib ) # needed for working ghc downloaded by stack
 optdepends=(
