@@ -31,7 +31,7 @@ build() {
 
 check() {
     cd "${srcdir}"/"Xray-core-${pkgver}"/
-    go test -p 1 -tags json -v -timeout 30m github.com/xtls/xray-core/v1/core/...
+    go test -p 1 -tags json -v -timeout 30m github.com/xtls/xray-core/core/...
 }
 
 package() {
