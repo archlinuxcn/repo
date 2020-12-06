@@ -17,7 +17,7 @@ install='haxm-git.install'
 
 pkgver() {
   cd "$srcdir/$pkgname"
-  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/loader\.v//g;s/^v//g'
+  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build() {
