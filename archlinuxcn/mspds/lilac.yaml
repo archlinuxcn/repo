@@ -4,11 +4,14 @@ maintainers:
 build_prefix: extra-x86_64
 
 pre_build_script: |
-    aur_pre_build(maintainers='yan12125')
+    update_pkgver_and_pkgrel(_G.newver)
 
-post_build: aur_post_build
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
 
 update_on:
-  - source: aur
-    aur: mspds
+  # TODO
+  - source: manual
+    manual: 1
   - alias: boost
