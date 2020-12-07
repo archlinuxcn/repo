@@ -3,7 +3,7 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.0.r658.a0ac42cf6
+pkgver=1.7.0.r670.5729230f5
 pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
@@ -43,7 +43,6 @@ depends=(
   wxgtk-common
   xz
   zlib
-  yaml-cpp
 )
 makedepends=(
   cmake
@@ -61,6 +60,12 @@ pkgver() {
   cd pcsx2
 
   git describe --tags | sed 's/^v//; s/-dev//; s/-/.r/; s/-g/./'
+}
+
+prepare() {
+  cd pcsx2
+
+  git submodule update --init --recursive
 }
 
 build() {
