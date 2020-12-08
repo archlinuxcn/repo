@@ -2,6 +2,9 @@ pre_build: aur_pre_build
 
 post_build: aur_post_build
 
+repo_depends:
+  - python-requests-futures
+
 update_on:
   - source: github
     github: Valloric/YouCompleteMe
