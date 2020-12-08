@@ -1,73 +1,62 @@
 # Maintainer: Jiachen YANG <farseerfc@gmail.com>
 _srcname=srcML
+_antlr_ver=2.7.7
 pkgname=srcml
-pkgver=0.9.5
+pkgver=1.0.0
 pkgrel=1
 pkgdesc="commandline and library for srcML, an XML representation for source code"
 arch=(x86_64)
 url="https://www.srcml.org/"
 license=('GPL')
-depends=(libxml2 libxslt libarchive boost-libs curl openssl antlr2 python2)
-makedepends=(cmake boost man2html docbook2x)
+depends=(libxml2 libxslt libarchive boost-libs curl openssl)
+makedepends=(cmake boost man2html docbook2x 'java-environment' 'sh' 'antlr2')
 optdepends=()
-source=("$pkgname-$pkgver.tar.gz::http://131.123.42.38/lmcrs/beta/srcML-src.tar.gz")
-md5sums=('e5c4223f7556b57984b20d70606f50ab')
+source=("$pkgname-$pkgver.tar.gz::http://131.123.42.38/lmcrs/v${pkgver}/${_srcname}-${pkgver}.tar.gz"
+        "arch-build.patch"
+        "https://www.antlr2.org/download/antlr-${_antlr_ver}.tar.gz"
+        "gcc4.4.patch")
+md5sums=('f910de40b1b7fa9a6928e7cd3d75cd2b'
+         '8aaad26040808d2a0ac0793999521e9e'
+         '01cc9a2a454dd33dcd8c856ec89af090'
+         '8574c93f40e6477e83c29f9b07de49da')
 
 prepare() {
-	cd "$_srcname-src"
-	# add runantlr2 command
-	sed -i "s|runantlr|runantlr runantlr2|" CMake/config.cmake
+        # copied from antlr2 package, rebuild with -fPIC
+        cd "${srcdir}/antlr-${_antlr_ver}"
+        patch -Np0 -i "${srcdir}"/gcc4.4.patch
 
-	# undefine TRUE and FALSE and NULLPTR
-	sed -i "22a #undef TRUE" src/parser/bitset_bucket_sorter.hpp
-	sed -i "22a #undef FALSE" src/parser/bitset_bucket_sorter.hpp
-	sed -i "22a #undef NULLPTR" src/parser/bitset_bucket_sorter.hpp
-	sed -i "23a #undef TRUE" src/libsrcml/srcml_types.hpp
-	sed -i "23a #undef FALSE" src/libsrcml/srcml_types.hpp
-	sed -i "23a #undef NULLPTR" src/libsrcml/srcml_types.hpp
-	sed -i "186a #undef TRUE" src/parser/srcMLParser.g
-	sed -i "186a #undef FALSE" src/parser/srcMLParser.g
-	sed -i "186a #undef NULLPTR" src/parser/srcMLParser.g
-	sed -i "130a #undef TRUE" src/parser/srcMLParser.g
-	sed -i "130a #undef FALSE" src/parser/srcMLParser.g
-	sed -i "130a #undef NULLPTR" src/parser/srcMLParser.g
-	sed -i "123a #undef TRUE" src/parser/srcMLParser.g
-	sed -i "123a #undef FALSE" src/parser/srcMLParser.g
-	sed -i "123a #undef NULLPTR" src/parser/srcMLParser.g
-	sed -i "29a #undef TRUE" src/parser/srcMLOutput.hpp
-	sed -i "29a #undef FALSE" src/parser/srcMLOutput.hpp
-	sed -i "29a #undef NULLPTR" src/parser/srcMLOutput.hpp
-	sed -i "29a #undef TRUE" src/libsrcml/srcml_translator.hpp
-	sed -i "29a #undef FALSE" src/libsrcml/srcml_translator.hpp
-	sed -i "29a #undef NULLPTR" src/libsrcml/srcml_translator.hpp
-	sed -i "54a #undef TRUE" src/libsrcml/srcml.h
-	sed -i "54a #undef FALSE" src/libsrcml/srcml.h
-	sed -i "54a #undef NULLPTR" src/libsrcml/srcml.h
-	
-	# fix syntax error of compare boost::option with int
-	sed -i "s|if(archive->language != 0) {|if(archive->language) {|" src/libsrcml/srcml_reader_handler.hpp
-
-	# adding link flags for "other" target
-	sed -i "46d" src/CMakeLists.txt
-	sed -i '46a set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "${CMAKE_LD_FLAGS}")' src/CMakeLists.txt
-	sed -i '46a set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS "${CMAKE_LD_FLAGS}")' src/CMakeLists.txt
-
-	# changing install prefix
-        sed -i 's|set(CMAKE_INSTALL_PREFIX "/usr/local")|set(CMAKE_INSTALL_PREFIX "/usr")|' CMake/install.cmake
+	cd "${srcdir}/${_srcname}-${pkgver}"
+        patch -Np1 -i ../arch-build.patch
 }
 
+
 build() {
-	cd "$_srcname-src"
+        # copied from antlr2 package, rebuild with -fPIC
+  	cd "${srcdir}/antlr-${_antlr_ver}"
+
+  	./configure --prefix=/usr \
+  	  --disable-examples \
+  	  --disable-csharp
+  	export LDFLAGS="$LDFLAGS -fPIC"
+  	export CFLAGS="$CFLAGS -fPIC"
+  	export CXXFLAGS="$CXXFLAGS -fPIC"
+        make
+
+	cd "${srcdir}/${_srcname}-${pkgver}"
 	mkdir build
 	cd build
-	export ANTLR_LIBRARY="/usr/lib/libantlr.a"
+        export _antlr_ver
+	export ANTLR_LIBRARY="${srcdir}/antlr-${_antlr_ver}/lib/cpp/src/libantlr.a"
 	cmake .. \
-		-DCMAKE_INSTALL_PREFIX="/usr" 
+		-DCMAKE_INSTALL_PREFIX="/usr" \
+                -DBUILD_LIBSRCML_STATIC=OFF \
+                -DLINK_LIBSRCML_STATIC=OFF \
+                -DANTLR_LIBRARY="${srcdir}/antlr-${_antlr_ver}/lib/cpp/src/libantlr.a" 
 	make
 }
 
 package() {
-	cd "$_srcname-src"
+	cd "$_srcname-${pkgver}"
 	cd build
 	make DESTDIR="$pkgdir/" install
 }

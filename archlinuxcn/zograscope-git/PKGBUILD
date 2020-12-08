@@ -1,20 +1,23 @@
 # Maintainer: Jiachen YANG <farseerfc@gmail.com>
 _pkgname=zograscope
-_commit=5a0a0754478e7ae5bd76509d082821202bb5ddf0
 pkgname=$_pkgname-git
-pkgver=r932.5a0a075
+pkgver=r1063.b5434cb
 pkgrel=1
 pkgdesc="syntax-aware diff that also provides a number of additional tools (zs-diff, zs-find, zs-gdiff, zs-hi, zs-stats)"
 arch=(x86_64)
 url="https://github.com/xaizek/zograscope"
 license=('AGPL')
-depends=('qt5-base' 'libgit2' 'boost-libs')
-makedepends=('git' 'boost' 'srcml')
+depends=('qt5-base' 'libgit2' 'boost-libs' 'ncurses')
+makedepends=('git' 'boost' 'srcml' 'bison')
 optdepends=('srcml: srcML related diff features')
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
-source=("zograscope::git+$url.git#commit=$_commit")
-md5sums=('SKIP')
+source=("zograscope::git+$url.git"
+"cursed::https://code.reversed.top/user/xaizek/libcursed"
+"vle::https://code.reversed.top/user/xaizek/libvle")
+md5sums=('SKIP'
+         '896020e55eddd4a60c6a2f049b69428d'
+         '76209f61ab1f0dbee12c68b238cf0d1d')
 
 # Please refer to the 'USING VCS SOURCES' section of the PKGBUILD man page for
 # a description of each element in the source array.
@@ -26,13 +29,17 @@ pkgver() {
 
 prepare() {
 	cd "$srcdir/${_pkgname}"
+        git submodule init
+        git config submodule.tools.tui.libs.vle "${srcdir}/vle"
+        git config submodule.tools.tui.libs.cursed "${srcdir}/cursed"
+        git submodule update
 	echo 'QT5_PROG := qmake-qt5' >> config.mk
 	echo 'HAVE_LIBGIT2 := yes'   >> config.mk
+        echo 'HAVE_CURSESW := yes'   >> config.mk
 }
 
 build() {
 	cd "$srcdir/${_pkgname}"
-	#make LDFLAGS="$LDFLAGS" release
 	make release
 }
 

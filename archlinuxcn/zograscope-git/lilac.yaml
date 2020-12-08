@@ -3,4 +3,11 @@
 maintainers:
   - github: farseerfc
 
-managed: false
+update_on:
+  - source: aur
+    aur: zograscope-git
+  - source: github
+    github: xaizek/zograscope
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
