@@ -1,23 +1,32 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+
 _name=aioxmpp
-pkgname=python-aioxmpp
-pkgver=0.11.0
+pkgname=python-aioxmpp-git
+pkgver=0.12.0a0.20201122
 pkgrel=1
 pkgdesc="Pure-python XMPP library for asyncio"
 arch=(any)
 url="https://github.com/horazont/aioxmpp"
 license=('LGPLv3+')
 depends=('python-aiosasl' 'python-aioopenssl' 'python-babel' 'python-dnspython' 'python-lxml' 'python-multidict' 'python-sortedcollections' 'python-pyopenssl' 'python-pyasn1' 'python-pyasn1-modules' 'python-tzlocal')
-makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/aioxmpp-0.11.0.tar.gz")
-sha256sums=('63e5e133925e8a8e67f4deb9c5b68123f867fdec2747b57e8e83d09a655063cc')
+makedepends=('python-setuptools' 'git')
+source=("git+https://github.com/horazont/aioxmpp.git")
+sha256sums=('SKIP')
+conflicts=('python-aioxmpp')
+provides=("python-aioxmpp=$pkgver")
+
+pkgver() {
+  cd "$srcdir/$_name"
+  echo $(PYTHONPATH=$PWD python3 -c 'from aioxmpp import __version__; print(__version__.replace("-", ""))').$(TZ=UTC git log -1 --pretty='%cd' --date=short-local | tr -d '-')
+}
 
 build() {
-  cd "$srcdir/aioxmpp-0.11.0"
+  cd "$srcdir/$_name"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/aioxmpp-0.11.0"
+  cd "$srcdir/$_name"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install any world-writable or root-readable-only files
