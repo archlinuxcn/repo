@@ -17,7 +17,11 @@ provides=("python-aioxmpp=$pkgver")
 
 pkgver() {
   cd "$srcdir/$_name"
-  echo $(PYTHONPATH=$PWD python3 -c 'from aioxmpp import __version__; print(__version__.replace("-", ""))').$(TZ=UTC git log -1 --pretty='%cd' --date=short-local | tr -d '-')
+  echo $(PYTHONPATH=$PWD python3 -c '
+import runpy
+version_mod = runpy.run_path("aioxmpp/_version.py")
+print(version_mod["__version__"].replace("-", ""))
+').$(TZ=UTC git log -1 --pretty='%cd' --date=short-local | tr -d '-')
 }
 
 build() {
