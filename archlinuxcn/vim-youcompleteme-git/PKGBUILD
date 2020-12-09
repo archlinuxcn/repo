@@ -36,7 +36,7 @@ _neovim="$NEOVIM_YOUCOMPLETEME"
 
 pkgname=vim-youcompleteme-git
 pkgver=r2774.4496153a
-pkgrel=2
+pkgrel=3
 pkgdesc='A code-completion engine for Vim'
 arch=('x86_64')
 url='https://ycm-core.github.io/YouCompleteMe/'
@@ -55,10 +55,8 @@ optdepends=(
   'omnisharp-roslyn: C# semantic completion'
   'java-environment>=11: Java semantic completion'
   'jdtls: Java semantic completion')
-source=(git+https://github.com/ycm-core/YouCompleteMe.git
-        git+https://github.com/ycm-core/ycmd.git)
-sha256sums=('SKIP'
-            'SKIP')
+source=(git+https://github.com/ycm-core/YouCompleteMe.git)
+sha256sums=('SKIP')
 
 pkgver() {
   cd "${srcdir}"/YouCompleteMe || exit
@@ -68,11 +66,9 @@ pkgver() {
 prepare() {
   cd "${srcdir}"/YouCompleteMe || exit
   git submodule init third_party/ycmd
-  git config submodule.third_party/ycmd.url "${srcdir}/ycmd"
-  git submodule update
+  git submodule update third_party/ycmd
 
-  # NOTE: Arch package for pybind11 2.6.0 doesn't ship headers
-  # Force system headers/libs
+  rm -rf "${srcdir}"/YouCompleteMe/third_party/ycmd/cpp/pybind11 || exit
   rm -rf "${srcdir}"/YouCompleteMe/third_party/ycmd/cpp/llvm || exit
 
   if [[ "$_gocode" == "y" ]]; then
@@ -100,6 +96,8 @@ prepare() {
       -e 's|\(roslyn_binary_path":\).*$|\1 "/opt/omnisharp-roslyn/OmniSharp.exe",|' \
       -e 's|\(mono_binary_path":\).*$|\1 "/usr/bin/mono",|' \
       -i "${srcdir}"/YouCompleteMe/third_party/ycmd/ycmd/default_settings.json
+  # The 'ycm_clangd_binary_path' option is overriden from the vim plugin
+  # so just make sure this is also done there.
   sed -e "s|\(ycm_clangd_binary_path',\).*\$|\1 '/usr/bin/clangd' )|" \
       -i "${srcdir}"/YouCompleteMe/plugin/youcompleteme.vim
 }
