@@ -1,77 +1,10 @@
-<!DOCTYPE html>
-<html lang='en'>
-<head>
-<title>openrgb.desktop - aur.git - AUR Package Repositories</title>
-<meta name='generator' content='cgit v1.2.3-2-g540e'/>
-<meta name='robots' content='index, nofollow'/>
-<link rel='stylesheet' type='text/css' href='/css/cgit.css'/>
-<link rel='shortcut icon' href='/images/favicon.ico'/>
-<link rel='alternate' title='Atom feed' href='https://aur.archlinux.org/cgit/aur.git/atom/openrgb.desktop?h=openrgb' type='application/atom+xml'/>
-<link rel='vcs-git' href='https://aur.archlinux.org/openrgb.git/' title='aur.git Git repository'/>
-</head>
-<body>
-		<div id="archnavbar" class="anb-aur">
-			<div id="archnavbarlogo"><h1><a href="/" title="Return to the main page">Arch Linux User Repository</a></h1></div>
-			<div id="archnavbarmenu">
-				<ul id="archnavbarlist">
-					<li id="anb-home"><a href="https://www.archlinux.org/" title="Arch news, packages, projects and more">Home</a></li>
-					<li id="anb-packages"><a href="https://www.archlinux.org/packages/" title="Arch Package Database">Packages</a></li>
-					<li id="anb-forums"><a href="https://bbs.archlinux.org/" title="Community forums">Forums</a></li>
-					<li id="anb-wiki"><a href="https://wiki.archlinux.org/" title="Community documentation">Wiki</a></li>
-					<li id="anb-bugs"><a href="https://bugs.archlinux.org/" title="Report and track bugs">Bugs</a></li>
-					<li id="anb-security"><a href="https://security.archlinux.org/" title="Arch Linux Security Tracker">Security</a></li>
-					<li id="anb-aur"><a href="/" title="Arch Linux User Repository">AUR</a></li>
-					<li id="anb-download"><a href="https://www.archlinux.org/download/" title="Get Arch Linux">Download</a></li>
-				</ul>
-			</div>
-		</div><!-- #archnavbar -->
-<div id='cgit'><table id='header'>
-<tr>
-<td class='main'>AUR : openrgb.git</td></tr>
-<tr><td class='sub'>AUR Package Repositories | click <a href='/pkgbase/openrgb/'>here</a> to return to the package base details page</td><td class='sub right'></td></tr></table>
-<table class='tabs'><tr><td>
-<a href='/cgit/aur.git/?h=openrgb'>summary</a><a href='/cgit/aur.git/log/openrgb.desktop?h=openrgb'>log</a><a class='active' href='/cgit/aur.git/tree/openrgb.desktop?h=openrgb'>tree</a><a href='/cgit/aur.git/commit/openrgb.desktop?h=openrgb'>commit</a><a href='/cgit/aur.git/diff/openrgb.desktop?h=openrgb'>diff</a><a href='/cgit/aur.git/stats/openrgb.desktop?h=openrgb'>stats</a></td><td class='form'><form class='right' method='get' action='/cgit/aur.git/log/openrgb.desktop'>
-<input type='hidden' name='h' value='openrgb'/><select name='qt'>
-<option value='grep'>log msg</option>
-<option value='author'>author</option>
-<option value='committer'>committer</option>
-<option value='range'>range</option>
-</select>
-<input class='txt' type='search' size='10' name='q' value=''/>
-<input type='submit' value='search'/>
-</form>
-</td></tr></table>
-<div class='path'>path: <a href='/cgit/aur.git/tree/?h=openrgb'>root</a>/<a href='/cgit/aur.git/tree/openrgb.desktop?h=openrgb'>openrgb.desktop</a></div><div class='content'>blob: be588616b11247d534998d5acbfab63db6ca4ddb (<a href='/cgit/aur.git/plain/openrgb.desktop?h=openrgb'>plain</a>)
-<table summary='blob content' class='blob'>
-<tr><td class='linenumbers'><pre><a id='n1' href='#n1'>1</a>
-<a id='n2' href='#n2'>2</a>
-<a id='n3' href='#n3'>3</a>
-<a id='n4' href='#n4'>4</a>
-<a id='n5' href='#n5'>5</a>
-<a id='n6' href='#n6'>6</a>
-<a id='n7' href='#n7'>7</a>
-<a id='n8' href='#n8'>8</a>
-<a id='n9' href='#n9'>9</a>
-<a id='n10' href='#n10'>10</a>
-</pre></td>
-<td class='lines'><pre><code><span class="hl kwa">[Desktop Entry]</span>
-<span class="hl kwb">Name</span><span class="hl opt">=</span>OpenRGB
-<span class="hl kwb">GenericName</span><span class="hl opt">=</span>RGB Settings
-<span class="hl kwb">Comment</span><span class="hl opt">=</span>Open source RGB lighting control that doesn&#39;t depend on manufacturer software.
-<span class="hl kwb">Exec</span><span class="hl opt">=</span>bash <span class="hl opt">-</span>c &#39;cd $HOME<span class="hl opt">/</span>.config<span class="hl opt">/</span>OpenRGB <span class="hl opt">&amp;&amp;</span> openrgb&#39;
-<span class="hl kwb">Icon</span><span class="hl opt">=</span>openrgb
-<span class="hl kwb">Terminal</span><span class="hl opt">=</span>false
-<span class="hl kwb">Type</span><span class="hl opt">=</span>Application
-<span class="hl kwb">Categories</span><span class="hl opt">=</span>Settings;System;
-<span class="hl kwb">StartupNotify</span><span class="hl opt">=</span>true
-</code></pre></td></tr></table>
-</div> <!-- class=content -->
-<div id="footer">
-	<p>
-		Copyright &copy; 2004-2020 aurweb Development Team &ndash;
-		<strong>AUR packages are user produced content. Any use of the provided files is at your own risk.</strong>
-	</p>
-</div>
-</div> <!-- id=cgit -->
-</body>
-</html>
+[Desktop Entry]
+Name=OpenRGB
+GenericName=RGB Settings
+Comment=Open source RGB lighting control that doesn't depend on manufacturer software.
+Exec=bash -c 'cd $HOME/.config/OpenRGB && openrgb'
+Icon=openrgb
+Terminal=false
+Type=Application
+Categories=Settings;System;
+StartupNotify=true
