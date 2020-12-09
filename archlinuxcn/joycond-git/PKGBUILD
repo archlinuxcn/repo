@@ -1,13 +1,14 @@
 # Maintainer: Parker Reed <parker.l.reed@gmail.com>
 
 pkgname=joycond-git
-pkgver=r31.a7dcddd
+pkgver=82.2990fe2
 pkgrel=1
 pkgdesc='Userspace daemon to combine joy-cons from the hid-joycon kernel driver'
-arch=('any')
+arch=('x86_64')
 url='https://github.com/DanielOgorchock/joycond'
 license=('GPL3')
-makedepends=('cmake' 'git')
+depends=('systemd-libs' 'libevdev')
+makedepends=('systemd' 'cmake' 'git')
 provides=("${pkgname%}")
 conflicts=("${pkgname%}")
 source=('git+https://github.com/DanielOgorchock/joycond.git')
