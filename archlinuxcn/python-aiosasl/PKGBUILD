@@ -1,0 +1,32 @@
+_name=aiosasl
+pkgname=python-aiosasl
+pkgver=0.4.1
+pkgrel=1
+pkgdesc="Pure-python, protocol agnostic SASL library for asyncio"
+arch=(any)
+url="https://github.com/horazont/aiosasl"
+license=('GPL')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/aiosasl-0.4.1.tar.gz")
+sha256sums=('ae137848638e1cad6831c0e57cfea8d2caa91f665a8ea8f4e3eaae8cbb27b397')
+
+build() {
+  cd "$srcdir/aiosasl-0.4.1"
+  python3 setup.py build
+}
+
+package() {
+  cd "$srcdir/aiosasl-0.4.1"
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+
+  # make sure we don't install any world-writable or root-readable-only files
+  # we shouldn't need to fix ownership as we extract tarballs as a non-root user
+  # https://github.com/pypa/setuptools/issues/1328
+  # https://github.com/LonamiWebs/Telethon/issues/1605
+  chmod u=rwX,go=rX -R "$pkgdir"
+  # make sure we don't install annoying files
+  local _site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rf "$pkgdir/$_site_packages/tests/"
+}
+
