@@ -26,12 +26,14 @@ options=(!libtool !staticlibs debug strip)
 provides=("freecad=$pkgver")
 conflicts=(freecad)
 source=("git+https://github.com/FreeCAD/FreeCAD.git#tag=$pkgver"
-        'https://raw.githubusercontent.com/FreeCAD/FreeCAD/d06d5687c1498354483aff95093d7f798c2985f2/cMake/FindPySide2Tools.cmake'
-        "$pkgname-py39.patch::https://github.com/FreeCAD/FreeCAD/commit/ae641dc5278e.patch"
+        'FindPySide2Tools.cmake'
+        "$pkgname-py39.patch"
+        "$pkgname-boost-1.73.patch"
         "freecad.desktop" "freecad.xml")
 sha256sums=('SKIP'
             '421a364ad214a25be578d81edc9960daab87d7b26f341022aa22dd15b9df621b'
             'de1d61c18d329e0903d5c1bc27b9c4e28c4911380bdd4b6c49da5b63740862f1'
+            '99a55f06e9d3be3385cb41d747b1a6c9515b010d867bdeeda000a45c0014a89e'
             '7ef6f240a82a861cbeca128e453da1a0c37f548876894f409a780c55e9909add'
             '4ee1daf47c8371a3e17173d85a0dd4a106dacd7899d783ccd97a6f3e0dd1a21f')
 
@@ -39,6 +41,7 @@ prepare() {
   cd FreeCAD
 
   patch -Np1 -i ../$pkgname-py39.patch
+  patch -Np1 -i ../$pkgname-boost-1.73.patch
 
   # Use the fixed version of FindPySide2Tools.cmake
   cp -f "$srcdir/FindPySide2Tools.cmake" cMake/FindPySide2Tools.cmake
