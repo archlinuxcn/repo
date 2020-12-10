@@ -1,9 +1,9 @@
 from lilaclib import *
 
 def pre_build():
-  newver = _G.newver.lstrip('proton-')
+  newver = _G.newver.removeprefix('proton-')
   for line in edit_file('PKGBUILD'):
-      if line.startwith('_pkgver'):
+      if line.startswith('_pkgver'):
           line = "_pkgver='" + newver + "'"
       print(line)
 

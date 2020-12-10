@@ -6,8 +6,8 @@
 # Conttributor: xiretza <xiretza+aur@gmail.com>
 # Contributor: heavysink <winstonwu91 at gmail>
 pkgname=wine-valve
-pkgver=5.12
-pkgrel=3
+pkgver=5.13
+pkgrel=1
 pkgdesc='A compatibility layer for running Windows programs (Valve version)'
 arch=('i686' 'x86_64')
 url='https://github.com/ValveSoftware/wine.git'
@@ -82,7 +82,7 @@ optdepends=(
 )
 options=('staticlibs')
 install="$pkgname.install"
-source=("https://github.com/ValveSoftware/wine/archive/wine-${pkgver}.tar.gz"
+source=("https://github.com/ValveSoftware/wine/archive/experimental-wine-${pkgver}-shmem-20201209.tar.gz"
         '30-win32-aliases.conf'
         'wine-binfmt.conf')
 
