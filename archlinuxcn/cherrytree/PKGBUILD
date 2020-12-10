@@ -1,7 +1,7 @@
 # Maintainer: Morgenstern <charles [at] charlesbwise [dot] com>
 
 pkgname=cherrytree
-pkgver=0.99.24
+pkgver=0.99.25
 pkgrel=1
 pkgdesc="Hierarchical note-taking application"
 arch=('x86_64')
@@ -14,7 +14,7 @@ depends=('gspell'
 makedepends=('cmake'
 	     'python-lxml')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/giuspen/cherrytree/archive/${pkgver}.tar.gz")
-sha256sums=('818403f82866fadd0716efc4c9eca9e75d86f38f74d6a4fcf7c00a0c3323ec99')
+sha256sums=('fc35b15655b25299576cfceb73bb69c8b1201ceb82fe6e75591e529506b5177d')
 
 build() {
   cmake \
