@@ -3,7 +3,7 @@
 _pkgname=yuzu
 _link="$(curl -s $(curl -s https://raw.githubusercontent.com/pineappleEA/pineappleEA.github.io/master/index.html | head -n -2 | grep -o 'https://.*.7z' | head -n 1) | grep -o 'https://cdn-.*.7z' | head -n 1)"
 pkgname=$_pkgname-early-access
-pkgver=1218
+pkgver=1222
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger"
 arch=('i686' 'x86_64')
