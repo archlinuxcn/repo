@@ -7,12 +7,10 @@ If you are interested to improve this patch, welcome to mail me.
 
 --- Ventoy2Disk.sh
 +++ Ventoy2Disk.sh
-@@ -18,46 +18,4 @@
+@@ -30,44 +18,4 @@
  echo '**********************************************'
  echo ''
  
--OLDDIR=$(pwd)
--PATH=./tool:$PATH
 -
 -if ! [ -f ./boot/boot.img ]; then
 -    if [ -d ./grub ]; then
@@ -23,30 +21,30 @@ If you are interested to improve this patch, welcome to mail me.
 -    exit 1
 -fi
 -
--echo "############# Ventoy2Disk $* ################" >> ./log.txt
+-echo "############# Ventoy2Disk $* [$TOOLDIR] ################" >> ./log.txt
 -date >> ./log.txt
 -
 -#decompress tool
--if [ -f ./tool/VentoyWorker.sh ]; then
+-if [ -f ./tool/$TOOLDIR/ash ]; then
 -    echo "no need to decompress tools" >> ./log.txt
 -else
--    cd tool
+-    cd ./tool/$TOOLDIR
 -    
--    if [ -f ./xzcat ]; then
--        chmod +x ./xzcat
--    fi
+-    [ -f ./xzcat ] && chmod +x ./xzcat
 -    
 -    for file in $(ls *.xz); do
 -        xzcat $file > ${file%.xz}
--        chmod +x ${file%.xz}
+-        [ -f ./$file ] && rm -f ./$file
 -    done
--    cd ../
+-    cd $OLDDIR
+-    
+-    chmod +x -R ./tool/$TOOLDIR
 -fi
 -
 -if [ -f /bin/bash ]; then
--    bash ./tool/VentoyWorker.sh $*
+-    /bin/bash ./tool/VentoyWorker.sh $*
 -else
--    ./tool/ash ./tool/VentoyWorker.sh $*
+-    ash ./tool/VentoyWorker.sh $*
 -fi
 -
 -if [ -n "$OLDDIR" ]; then 
@@ -57,18 +55,9 @@ If you are interested to improve this patch, welcome to mail me.
 +./tool/VentoyWorker.sh $*
 --- tool/ventoy_lib.sh
 +++ tool/ventoy_lib.sh
-@@ -37,7 +37,7 @@
- }
- 
- vtdebug() {
--    echo "$*" >> ./log.txt
-+    true
- }
+@@ -52,30 +52,6 @@
  
  check_tool_work_ok() {
-@@ -52,30 +52,6 @@
-         vtoyfat=vtoyfat_32
-     fi
      
 -    if echo 1 | hexdump > /dev/null; then
 -        vtdebug "hexdump test ok ..."
@@ -78,18 +67,18 @@ If you are interested to improve this patch, welcome to mail me.
 -        return
 -    fi
 -   
--    if ./tool/$mkexfatfs -V > /dev/null; then
--        vtdebug "$mkexfatfs test ok ..."
+-    if mkexfatfs -V > /dev/null; then
+-        vtdebug "mkexfatfs test ok ..."
 -    else
--        vtdebug "$mkexfatfs test fail ..."
+-        vtdebug "mkexfatfs test fail ..."
 -        ventoy_false
 -        return
 -    fi
 -    
--    if ./tool/$vtoyfat -T; then
--        vtdebug "$vtoyfat test ok ..."
+-    if vtoyfat -T; then
+-        vtdebug "vtoyfat test ok ..."
 -    else
--        vtdebug "$vtoyfat test fail ..."
+-        vtdebug "vtoyfat test fail ..."
 -        ventoy_false
 -        return
 -    fi
@@ -97,17 +86,3 @@ If you are interested to improve this patch, welcome to mail me.
      vtdebug "tool check success ..."
      ventoy_true
  }
-@@ -139,13 +115,6 @@
-         # fi
-     # fi
-     
--    # PART1_TYPE=$(dd if=$DISK bs=1 count=1 skip=450 status=none | hexdump -n1 -e  '1/1 "%02X"')
--    # if [ "$PART1_TYPE" != "07" ]; then
--        # vtdebug "part1 type is $PART2_TYPE not 07"
--        # ventoy_false
--        # return
--    # fi
--    
-     if [ -e /sys/class/block/${PART1#/dev/}/start ]; then
-         PART1_START=$(cat /sys/class/block/${PART1#/dev/}/start)
-     fi
