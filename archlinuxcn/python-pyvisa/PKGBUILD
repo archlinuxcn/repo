@@ -1,8 +1,8 @@
 # Maintainer: Greyson Christoforo <grey@christoforo.net>
 # Contributor: Alex Forencich <alex@alexforencich.com>
 pkgname=python-pyvisa 
-pkgver=1.11.1
-pkgrel=2
+pkgver=1.11.3
+pkgrel=1
 pkgdesc="A Python package with bindings to the 'Virtual Instrument Software Architecture' VISA library"
 arch=('any')
 url="https://github.com/pyvisa/pyvisa"
@@ -10,8 +10,8 @@ license=('MIT')
 depends=('python' 'python-distribute' 'python-docutils' 'python-setuptools-scm' 'python-typing_extensions')
 optdepends=('python-pyvisa-py: Pure Python backend')
 
-source=("https://github.com/pyvisa/pyvisa/archive/$pkgver.tar.gz")
-md5sums=('419fd12860e84ad068d43aa3dc18f165')
+source=("${pkgname}=${pkgver}.tar.gz::https://github.com/pyvisa/pyvisa/archive/$pkgver.tar.gz")
+sha256sums=('8f8a309050a784b518a04b1506a06d34c69c630ee553e8a88d9d89cea4fd318a')
 
 prepare() {
   cd "pyvisa-${pkgver}"
@@ -36,5 +36,6 @@ build() {
 package(){
   cd "pyvisa-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
