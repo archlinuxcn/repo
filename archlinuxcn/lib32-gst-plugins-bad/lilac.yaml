@@ -2,7 +2,6 @@ maintainers:
   - github: DDoSolitary
 build_prefix: multilib
 repo_depends:
-  - gstreamer1.16
   - lib32-aom
   - lib32-bluez-libs
   - lib32-chromaprint
@@ -25,7 +24,6 @@ repo_depends:
   - lib32-libnice
   - lib32-libofa
   - lib32-libsrtp
-  - lib32-libtiger
   - lib32-lilv
   - lib32-mjpegtools
   - lib32-neon
@@ -33,6 +31,7 @@ repo_depends:
   - lib32-openjpeg2
   - lib32-rtmpdump
   - lib32-sbc
+  - lib32-shaderc
   - lib32-spandsp
   - lib32-srt
   - lib32-webrtc-audio-processing
@@ -66,6 +65,10 @@ update_on:
   - alias: alpm-lilac
     alpm: lib32-libass
     provided: libass.so
+    strip_release: true
+  - source: archpkg
+    archpkg: lib32-libavtp
+    provided: libavtp.so
     strip_release: true
   - alias: alpm-lilac
     alpm: lib32-libbs2b
