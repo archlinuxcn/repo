@@ -1,5 +1,5 @@
 pkgname=ntfs3-dkms
-pkgver=14.0.0
+pkgver=15.0.0
 pkgrel=1
 pkgdesc="NTFS read-write driver GPL implementation by Paragon Software. Current version works with NTFS (including v3.1), normal/compressed/sparse files and supports journal replaying."
 arch=('any')
@@ -9,24 +9,24 @@ depends=('dkms')
 options=('!strip')
 source=(Makefile.patch
         dkms.conf
-        "v$pkgver~1.patch::https://lore.kernel.org/patchwork/patch/1349515/raw"
-        "v$pkgver~2.patch::https://lore.kernel.org/patchwork/patch/1349516/raw"
-        "v$pkgver~3.patch::https://lore.kernel.org/patchwork/patch/1349512/raw"
-        "v$pkgver~4.patch::https://lore.kernel.org/patchwork/patch/1349517/raw"
-        "v$pkgver~5.patch::https://lore.kernel.org/patchwork/patch/1349514/raw"
-        "v$pkgver~6.patch::https://lore.kernel.org/patchwork/patch/1349513/raw"
-        "v$pkgver~7.patch::https://lore.kernel.org/patchwork/patch/1349518/raw"
-        "v$pkgver~8.patch::https://lore.kernel.org/patchwork/patch/1349509/raw")
+        "v$pkgver~1.patch::https://lore.kernel.org/lkml/20201211161844.3590331-2-almaz.alexandrovich@paragon-software.com/raw"
+        "v$pkgver~2.patch::https://lore.kernel.org/lkml/20201211161844.3590331-3-almaz.alexandrovich@paragon-software.com/raw"
+        "v$pkgver~3.patch::https://lore.kernel.org/lkml/20201211161844.3590331-4-almaz.alexandrovich@paragon-software.com/raw"
+        "v$pkgver~4.patch::https://lore.kernel.org/lkml/20201211161844.3590331-5-almaz.alexandrovich@paragon-software.com/raw"
+        "v$pkgver~5.patch::https://lore.kernel.org/lkml/20201211161844.3590331-6-almaz.alexandrovich@paragon-software.com/raw"
+        "v$pkgver~6.patch::https://lore.kernel.org/lkml/20201211161844.3590331-7-almaz.alexandrovich@paragon-software.com/raw"
+        "v$pkgver~7.patch::https://lore.kernel.org/lkml/20201211161844.3590331-8-almaz.alexandrovich@paragon-software.com/raw"
+        "v$pkgver~8.patch::https://lore.kernel.org/lkml/20201211161844.3590331-9-almaz.alexandrovich@paragon-software.com/raw")
 sha512sums=('989009d7bc7dba6e4cc380bbd660e2c50b20cb312b678031da9fe4a330b92a4b8cd5bcaa8b6de3e4972dfdcb8db2e750c82628b3449350cb8c67f9f4df1cd977'
-            'af96b27a8033e066022facaaae0ebf2a058ce82c354b97fb66e3e54c50887ecaa27a3e29a2c104fdbc4b8c79e3ec039e743ba1ccee6bf4b8edbc491188851a2c'
-            '071b7c16394730ba46a0e6f1bcfea16a7c8e192485648c9e429c3924ee97d0271a67948f7f6c593f153a77800a071f3742c5ca29e3cf02bc3d7ebf52be6915ed'
-            '2bebb6565f596b38f5c84da70b8235cbf776c5c157aa9fa0cb13f838455f057bae65616552b55b2a53cd583f8821ebb7b66ad80cb948eb505fe464701c8ccbab'
-            '17d1e267baca8ba75f5245726d1815e74a2ef8dfe18c6c08118a2f0f125c2ace98ac7ab70d017be51a0fc40236c59faac6813efc523270f52668a3978f1c343d'
-            '1acbb407b47ee200061d9b60b0aabc84795032f65b58777685db87a32a4bfc1f839b677af75f2d99fd03352f9ce68ee2596552502dfbaf1bd16e93d3dac7b602'
-            'dd895eb3775c45e36a824ff9bd8c9b6ddaa4fa1128d3ea539cd6b375d84044c22ced1958e0c7902125ccf66b8e82cca11d9d3c0ddd9458b44211237dda49e114'
-            'f689e0959cc37f8b97e2078e4d5c087d5774f17d04ab8a10cdec0939ecc2413b1a57b3c59ee697f5da6df2fabc5789dae2f1d0e20d7c34a1410be6c6b4c84036'
-            'e8df577d6741624f246e9517d2be3eadb5f77ce8382e3d785a5294fd078139b25011ec1b8b8895d8d963085c626290ee8592d89713e167baf3bf6974c4707426'
-            '9498e642e3bdcdccf9bb11a83333c7c11bb9a9252bc38058cf132a1d36b9e70411f725d18e376d22010e703450f8c32ead61344090dbeecfdf77c516dd7c851a')
+            '3896726cdfaef8b5e86ea90336c2069c8b65808aa45e1c7588fca23e04340addcd0dea0cf8bce692e6ca0281dfe5664baab045b04677ca074a0c947e343591c5'
+            '42f0469e8a12afcb740cc56cbe556659f40eea1fcedb0d4edba0e274963040e417d9d30a6ce71e1193fbc91e6d22094c48f9cdeaa46f417ee80e2b89743342e4'
+            '50f94e40e5d5dc65a7703e81c5f23d02c51b455fc46a5ff090e7a4feb1002192e71c98a9054fad5a15e4d7d972a5aea6a78802e872fd0b17285c89f18ac07f33'
+            'a94ef5e81c5a17d8723ff76e777ee20a57575d2e8aa168c49724ab5ffafd9ded26c13cf16216ddb1c21ce8f6bc409a65c45deb2a25e2e210c4d3882a4fcee162'
+            'edc8ba83442a7fc27162d4fd838e682962711f13231d4060bf032d0bf36fb7839fa309a00d029705aab1deb426a39f224d3556434cecb0d3173c96460ffff245'
+            '6610211fc824cbd5d534ab5cd88f82667c2b0091465ab94c354c10b2e51f15a04cc0ca1e7deacb32675f20fcf6640b760e04ecb0142e1670c4639ac117d067ef'
+            'f2dc0e1d8cc7683ab13451b5f246838f93be103837b8f414f822ef2292097d03525e140720438705dfe971d33c485b967e70b022548934f7f2eea105752bbe88'
+            '9d60b7903db61a98f129a89bbf30b17a42824fdb55bd8a897cfeb9f24d09ce6e1ae019a62c1774876430104c7def983eb238b7d300d04d9e08abd0dc4b8297f1'
+            '70cf2822c31a5bbc44598877b22cc95203df46d7865063e5981d1316514a7e0a85de76be0954b3ac48c3de9dbd8a933b47411248d06bdabf3483d8d6b77bfd02')
 
 
 prepare() {
