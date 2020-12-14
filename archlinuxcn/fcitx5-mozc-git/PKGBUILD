@@ -5,7 +5,7 @@
 # Contributor: UTUMI Hirosi <utuhiro78 at yahoo dot co dot jp>
 
 ## Mozc compile option
-_bldtype=Debug
+_bldtype=Release
 
 _zipcode_rel=201810
 
@@ -13,7 +13,6 @@ _pkgbase=mozc
 pkgname=fcitx5-mozc-git
 pkgdesc="Fcitx5 Module of A Japanese Input Method for Chromium OS, Windows, Mac and Linux (the Open Source Edition of Google Japanese Input)"
 pkgver=2.25.4150.102.r1388.e7a97d0e
-_fcitx_patchver=2.25.4150.102
 pkgrel=1
 arch=('x86_64')
 url="https://github.com/google/mozc"
@@ -51,7 +50,9 @@ validpgpkeys=('2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9')  # Weng Xuetian
 
 pkgver() {
   cd mozc
-  printf "%s.r%s.%s" "${_fcitx_patchver}" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  # parse major.minor.buildid from version template, revision is fixed to 102 for Linux
+  _bzr_ver=$(sed 's/ //g;$ a echo $MAJOR.$MINOR.$BUILD.102' src/data/version/mozc_version_template.bzl | source /dev/stdin)
+  printf "%s.r%s.%s" "${_bzr_ver}" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
