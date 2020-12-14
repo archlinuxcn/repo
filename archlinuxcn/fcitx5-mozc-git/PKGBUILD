@@ -31,7 +31,6 @@ source=(git+https://github.com/fcitx/mozc.git#branch=fcitx
         git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git
         git+https://github.com/open-source-parsers/jsoncpp.git
         git+https://github.com/google/protobuf.git
-        git+https://github.com/taku910/zinnia.git
         git+https://github.com/abseil/abseil-cpp.git
 	)
 sha512sums=('SKIP'
@@ -64,7 +63,6 @@ prepare() {
   git config submodule.src/third_party/japanese_usage_dictionary.url "$srcdir/japanese-usage-dictionary"
   git config submodule.src/third_party/jsoncpp.url "$srcdir/jsoncpp"
   git config submodule.src/third_party/protobuf.url "$srcdir/protobuf"
-  git config submodule.src/third_party/zinnia.url "$srcdir/zinnia"
   git config submodule.src/third_party/abseil-cpp.url "$srcdir/abseil-cpp"
   git submodule update
 
@@ -77,9 +75,6 @@ prepare() {
   # disable fcitx4 target
   rm unix/fcitx/fcitx.gyp
   
-  # fix mozc icon for kimpanel
-  sed -i "s|PREFIX|/usr|" unix/fcitx5/mozc.conf
-
   ## use libstdc++ instead of libc++
   sed "/stdlib=libc++/d;/-lc++/d" -i gyp/common.gypi
 }
