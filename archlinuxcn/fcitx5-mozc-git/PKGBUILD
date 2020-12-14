@@ -7,12 +7,12 @@
 ## Mozc compile option
 _bldtype=Release
 
-_zipcode_rel=201810
+_zipcode_rel=202011
 
 _pkgbase=mozc
 pkgname=fcitx5-mozc-git
 pkgdesc="Fcitx5 Module of A Japanese Input Method for Chromium OS, Windows, Mac and Linux (the Open Source Edition of Google Japanese Input)"
-pkgver=2.25.4150.102.r1388.e7a97d0e
+pkgver=2.26.4206.102.r1388.e7a97d0e
 pkgrel=1
 arch=('x86_64')
 url="https://github.com/google/mozc"
@@ -22,8 +22,8 @@ makedepends=('pkg-config' 'python' 'curl' 'gtk2' 'mesa' 'subversion' 'ninja' 'gi
 replaces=('mozc-fcitx')
 conflicts=('mozc' 'mozc-server' 'mozc-utils-gui' 'mozc-fcitx' 'fcitx-mozc' 'fcitx5-mozc')
 source=(git+https://github.com/fcitx/mozc.git#branch=fcitx
-        https://downloads.sourceforge.net/pnsft-aur/x-ken-all-${_zipcode_rel}.zip
-        https://downloads.sourceforge.net/pnsft-aur/jigyosyo-${_zipcode_rel}.zip
+        https://osdn.net/projects/ponsfoot-aur/storage/mozc/jigyosyo-${_zipcode_rel}.zip
+        https://osdn.net/projects/ponsfoot-aur/storage/mozc/x-ken-all-${_zipcode_rel}.zip
         https://download.fcitx-im.org/fcitx-mozc/fcitx-mozc-icon.tar.gz
         git+https://chromium.googlesource.com/breakpad/breakpad
         git+https://github.com/google/googletest.git
@@ -35,8 +35,8 @@ source=(git+https://github.com/fcitx/mozc.git#branch=fcitx
         git+https://github.com/abseil/abseil-cpp.git
 	)
 sha512sums=('SKIP'
-            '59d0a5e62c698ebc64008f1fb2ed68ebbbd7798d9d95f2e4852261fb09d53e9f8c102f385ed8f2001e3da6c2a0a50d64f1f20e70671948b492f972c487655efe'
-            'daf41f63bd1afc0937beb12aa007ead8a239fabc3af2237e4adf75238b0e0e520f6051f5a98d413a541f901e17a1488eb3fad6d0bba1f1561987365236d64146'
+            '0ef2d0abd9744900f9a50f941cf1f9b47640f3643c14a1be1761bcf0bd1053cb93560203c25280f58fccbd8ec98b9ca2e21c5d5a59844bbbffc9c988dfcf7bed'
+            '8a35672b4a525d8e4f3303bd83c6bf6075cd4f10e703bf656a4c9328f18a8783c3049b749092e6e8be57eaddce4f889e9dacae9b3b72ba7bb9240a0f5a93fd34'
             '5507c637e5a65c44ccf6e32118b6d16647ece865171b9a77dd3c78e6790fbd97e6b219e68d2e27750e22074eb536bccf8d553c295d939066b72994b86b2f251a'
             'SKIP'
             'SKIP'
@@ -103,6 +103,7 @@ build() {
 package() {
   cd mozc/src
   export PREFIX="${pkgdir}/usr"
+  export _bldtype
   ../scripts/install_server
 
   install -d "${pkgdir}/usr/share/licenses/$pkgname/"
