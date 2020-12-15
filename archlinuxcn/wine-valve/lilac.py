@@ -2,7 +2,7 @@ from lilaclib import *
 
 def pre_build():
   newver = _G.newver.removeprefix('experimental-wine-')
-  newver = newver.removesuffix("-shmem-20201209")
+  newver = newver.removesuffix("-shmem-20201214")
   newver = newver.replace("-",".")
   update_pkgver_and_pkgrel(newver)
 
