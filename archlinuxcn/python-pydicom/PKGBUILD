@@ -11,27 +11,19 @@ license=(MIT)
 optdepends=(
     'python-numpy: for working with pixel data'
     'python-pillow: for working with compressed image data'
+    'python-pylibjpeg'
+    'python-pylibjpeg-openjpeg'
 )
 makedepends=(
-  'python-setuptools'
-  'git'
-)
-checkdepends=(
-  'python-pytest'
-  'python-pytest-cov'
+  git
+  python-setuptools
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/pydicom/pydicom/archive/v${pkgver}.tar.gz")
-md5sums=('398d943c9da2aec28857b60fe7e02123')
+sha512sums=('9f001132afdc0b5450f0da387fcbab4dd2569826e0d96b45790cc35d2e4616b4f11605329a3571a549495dfc5648cbc9842ee6f7a85f2e1e0d2172bbf5d3b01d')
 
 build() {
   cd "${_pkgname}-${pkgver}"
   python setup.py build
-}
-
-check() {
-  cd "${_pkgname}-${pkgver}"
-  make test-code
-  make test-coverage
 }
 
 package() {
