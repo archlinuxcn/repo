@@ -1,0 +1,46 @@
+From 67f0185ac119188c881a3041d810f2e5d84cd611 Mon Sep 17 00:00:00 2001
+From: DuckSoft <ducksoft@build.archlinuxcn.org>
+Date: Sun, 13 Dec 2020 20:11:14 +0800
+Subject: [PATCH] Revert "Compute text width taking into account the zoom
+ level"
+
+This reverts commit c7d4c37534fd4c7107497a3bb67e8ffe96ce775c.
+---
+ src/views/dolphinitemlistview.cpp | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
+
+diff --git a/src/views/dolphinitemlistview.cpp b/src/views/dolphinitemlistview.cpp
+index 9fa91a674..df28a0858 100644
+--- a/src/views/dolphinitemlistview.cpp
++++ b/src/views/dolphinitemlistview.cpp
+@@ -17,7 +17,6 @@
+ #include "zoomlevelinfo.h"
+ 
+ #include <KIO/PreviewJob>
+-#include <QtMath>
+ 
+ 
+ DolphinItemListView::DolphinItemListView(QGraphicsWidget* parent) :
+@@ -164,16 +163,11 @@ void DolphinItemListView::updateGridSize()
+ 
+     switch (itemLayout()) {
+     case KFileItemListView::IconsLayout: {
++        const int minItemWidth = 48;
++        itemWidth = minItemWidth + IconsModeSettings::textWidthIndex() * 64;
+ 
+-        // an exponential factor based on zoom, 0 -> 1, 4 -> 1.36 8 -> ~1.85, 16 -> 3.4
+-        auto zoomFactor = qExp(m_zoomLevel / 13.0);
+-        // 9 is the average char width for 10pt Noto Sans, making fontFactor =1
+-        // by each pixel the font gets larger the factor increases by 1/9
+-        auto fontFactor = option.fontMetrics.averageCharWidth() / 9.0;
+-        itemWidth = 48 + IconsModeSettings::textWidthIndex() * 64 * fontFactor * zoomFactor;
+-
+-        if (itemWidth < iconSize + padding * 2 * zoomFactor) {
+-            itemWidth = iconSize + padding * 2 * zoomFactor;
++        if (itemWidth < iconSize + padding * 2) {
++            itemWidth = iconSize + padding * 2;
+         }
+ 
+         itemHeight = padding * 3 + iconSize + option.fontMetrics.lineSpacing();
+-- 
+2.29.2 
