@@ -10,6 +10,10 @@ pre_build: aur_pre_build
 
 post_build: aur_post_build
 
+repo_depends:
+  - dtkcore-git
+  - deepin-desktop-base-git
+
 update_on:
   - source: github
     github: linuxdeepin/dtkwidget
