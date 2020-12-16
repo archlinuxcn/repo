@@ -5,14 +5,14 @@ Subject: [PATCH] Use remoting name for GDK application names
 
 ---
  toolkit/xre/nsAppRunner.cpp |  6 +-----
- widget/gtk/nsAppShell.cpp   | 11 ++++-------
- 2 files changed, 5 insertions(+), 12 deletions(-)
+ widget/gtk/nsAppShell.cpp   | 12 +++++-------
+ 2 files changed, 6 insertions(+), 12 deletions(-)
 
 diff --git a/toolkit/xre/nsAppRunner.cpp b/toolkit/xre/nsAppRunner.cpp
-index a16521852d05..d0be5a088d8c 100644
+index 40e4dae574dc5..cc22fc3f5edaf 100644
 --- a/toolkit/xre/nsAppRunner.cpp
 +++ b/toolkit/xre/nsAppRunner.cpp
-@@ -3832,11 +3832,7 @@ int XREMain::XRE_mainStartup(bool* aExitFlag) {
+@@ -4176,11 +4176,7 @@ int XREMain::XRE_mainStartup(bool* aExitFlag) {
    // consistently.
  
    // Set program name to the one defined in application.ini.
@@ -26,18 +26,19 @@ index a16521852d05..d0be5a088d8c 100644
    // Initialize GTK here for splash.
  
 diff --git a/widget/gtk/nsAppShell.cpp b/widget/gtk/nsAppShell.cpp
-index cfe022e65d82..06325264dbb1 100644
+index 24bdd5083375b..74dd54a5ae0e6 100644
 --- a/widget/gtk/nsAppShell.cpp
 +++ b/widget/gtk/nsAppShell.cpp
-@@ -24,6 +24,7 @@
+@@ -24,6 +24,8 @@
  #  include "WakeLockListener.h"
  #endif
  #include "gfxPlatform.h"
 +#include "nsAppRunner.h"
++#include "mozilla/XREAppData.h"
  #include "ScreenHelperGTK.h"
  #include "HeadlessScreenHelper.h"
  #include "mozilla/widget/ScreenManager.h"
-@@ -159,13 +160,9 @@ nsresult nsAppShell::Init() {
+@@ -153,13 +155,9 @@ nsresult nsAppShell::Init() {
        // See https://bugzilla.gnome.org/show_bug.cgi?id=747634
        //
        // Only bother doing this for the parent process, since it's the one
