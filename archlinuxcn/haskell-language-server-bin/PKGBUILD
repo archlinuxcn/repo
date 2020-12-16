@@ -1,7 +1,7 @@
 # Maintainer: berberman <hatsue@typed.icu>
 
 pkgname=haskell-language-server-bin
-pkgver=0.6.0
+pkgver=0.7.0
 pkgrel=1
 pkgdesc="Integration point for ghcide and haskell-ide-engine. One IDE to rule them all."
 arch=('x86_64')
@@ -11,14 +11,14 @@ depends=()
 provides=('haskell-language-server')
 conflicts=('haskell-language-server' 'haskell-language-server-git')
 source=()
-sha256sums=('e1023398039676a7cc1f59ae31b6d4d4744bd33c675f464d8c42b130319e4771'
-            '92ea990266a96311a4675b6411f98b05f42eb49a4330e9a38f2485b1635e7ce3'
-            '75781fe814f09fe1868ae670fff2f191ca8372f7b764237920cdefe22849568f'
-            '07952450de682b99839f15f75a592fd8d754ca15022e1a1206de51e3f859878e'
-            'b1302bb80ada393c107b2ae0f17ed396e4ecf6a251624245f17b1782bd22390b'
-            '336868cb66db0c1f1af10d835a190ff951c5838bd90969b8703c83a33b20233a'
-            '1aab106d6bb45d34d89a227911df8c95598ff214a9edda59155019fbb9672f01'
-            'fb847d221a85e2c69bbed78fb2ee190c066d6b8e42017f1a9235989521b78a18')
+sha256sums=('8d0b079a416450bad83e497536625aed32a60fd7edfe5e2104809403d6b40d48'
+            'd458558bcae7b9ffaae04a598c72f9ac1a50c9209cd3c4b3689bd89c9363f712'
+            '028e502bc1e18a7dd630b12afc01b9c32154938315516eb2d9430e186a3ffbd1'
+            '792151d9d1cecfc98774ed7c6cf9410cfbd7e6699e45e1f4c6f2f49db3f9775d'
+            '7659d3d26a8979cb3ae99c5e7651a8034884f3c266dc089df8cd026128a8fe3a'
+            '1b1a5c07da788f78df2a71186c4e082372e45c1653099c881406a2aa0bc87a18'
+            '9b391e3ba67627e63079707ec05264acdd95394661095b29e4b59c05e9acf1f3'
+            '4efe7b6c5505eb820052c7b0ddb5af7eadcad472c1ca84afcf04d6baff85dba6')
 _prefix="${pkgname%-bin}-Linux"
 _ghc_versions=('8.6.4' '8.6.5' '8.8.2' '8.8.3' '8.8.4' '8.10.1' '8.10.2')
 
