@@ -5,9 +5,9 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=78.5.0
-pkgrel=2
-_commit=bcfe407570cae32d00dd33a268de0e0593166f7b
+pkgver=78.6.0
+pkgrel=1
+_commit=a43514623e93d4f3fe6d61f5b2f82c5ef29bf518
 pkgdesc="GNU version of the Firefox browser."
 arch=(x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
@@ -29,7 +29,7 @@ source=(https://git.savannah.gnu.org/cgit/gnuzilla.git/snapshot/gnuzilla-${_comm
         "0001-Use-remoting-name-for-GDK-application-names.patch::https://raw.githubusercontent.com/archlinux/svntogit-packages/0adcedc05ce67d53268575f8801c8de872206901/firefox/trunk/0001-Use-remoting-name-for-GDK-application-names.patch"
         rust_1.48.patch.gz)
 
-sha256sums=('ca3859830a497d1e44bfa6d3f4fa974cc48cdfdcec806dca5a8873a89f0b34b1'
+sha256sums=('d8938711584023476abb88d93bd36a7141ecdf4ac890e71ebc0666caad93775e'
             'e00dbf01803cdd36fd9e1c0c018c19bb6f97e43016ea87062e6134bdc172bc7d'
             '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208'
             'e0eaec8ddd24bbebf4956563ebc6d7a56f8dada5835975ee4d320dd3d0c9c442'
