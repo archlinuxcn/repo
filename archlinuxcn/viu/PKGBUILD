@@ -4,7 +4,7 @@
 
 pkgname=viu
 pkgver=1.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Simple terminal image viewer"
 arch=('x86_64')
 url="https://github.com/atanunq/viu"
@@ -16,12 +16,12 @@ sha512sums=('cb22d2d629020cf2ca52fc9ac8fc0a053998bd08db7c4096ae497ba45ecdbf0103a
 
 build() {
   cd "$pkgname-$pkgver"
-  cargo build --release --locked
+  cargo build --release --locked --target-dir=target
 }
 
 check() {
   cd "$pkgname-$pkgver"
-  cargo test --release --locked
+  cargo test --release --locked --target-dir=target
 }
 
 package() {
