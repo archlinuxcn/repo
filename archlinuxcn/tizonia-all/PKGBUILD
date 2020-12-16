@@ -3,7 +3,7 @@
 _githubname=tizonia-openmax-il
 pkgname=tizonia-all
 pkgver=0.22.0
-pkgrel=5
+pkgrel=6
 pkgdesc="Command-line cloud music player for Linux with support for Spotify, Google Play Music, YouTube, SoundCloud, TuneIn, iHeartRadio, Plex servers and Chromecast devices."
 arch=('x86_64')
 url="https://tizonia.org"
@@ -50,8 +50,10 @@ depends=(
     'python-fuzzywuzzy'
     'python-spotipy'
 )
-source=("${_githubname}-${pkgver}.tar.gz"::"https://github.com/tizonia/${_githubname}/archive/v${pkgver}.tar.gz")
-md5sums=('236dd33a25700bf8d752af17b95bd50f')
+source=("${_githubname}-${pkgver}.tar.gz"::"https://github.com/tizonia/${_githubname}/archive/v${pkgver}.tar.gz"
+'99-tizgraphmgr-fix-placeholder.patch')
+md5sums=('236dd33a25700bf8d752af17b95bd50f'
+         'bf4dc8b4d23162f2da87c1467f8e4d0c')
 
 prepare() {
   command -v tizonia &> /dev/null \
@@ -60,10 +62,12 @@ prepare() {
       echo >&2 "See https://github.com/tizonia/tizonia-openmax-il/issues/485." ; \
       exit 1; }
   mkdir -p "$srcdir/path"
+  cd "${srcdir}/${_githubname}-${pkgver}"
+  patch -Np1 < ../99-tizgraphmgr-fix-placeholder.patch
 }
 
 build() {
-    cd "${_githubname}-${pkgver}"
+    cd "${srcdir}/${_githubname}-${pkgver}"
     pwd
     CFLAGS='-O2 -s -DNDEBUG' \
     CXXFLAGS='-O2 -s -DNDEBUG -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security' \
@@ -72,7 +76,7 @@ build() {
 }
 
 package() {
-    cd "${_githubname}-${pkgver}"
+    cd "${srcdir}/${_githubname}-${pkgver}"
     pwd
     DESTDIR=$pkgdir ninja -C build install
 }
