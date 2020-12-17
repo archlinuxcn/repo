@@ -3,7 +3,7 @@
 # Contributor: DuckSoft <realducksoft@gmail.com>
 pkgname=qv2ray-dev-git
 pkgver=2.7.0.6101.r2830.5205357c
-pkgrel=3
+pkgrel=4
 pkgdesc="Cross-platform V2Ray Client written in Qt (Development Release)"
 arch=('x86_64')
 url='https://github.com/Qv2ray/Qv2ray'
@@ -28,8 +28,7 @@ pkgver() {
 
 prepare() {
     cd "${srcdir}/Qv2ray"
-    git submodule init
-    git submodule update --recursive
+    git submodule update --init --recursive
 }
 
 build() {
