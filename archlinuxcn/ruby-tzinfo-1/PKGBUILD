@@ -2,7 +2,7 @@
 
 _gemname=tzinfo
 pkgname=ruby-$_gemname-1
-pkgver=1.2.8
+pkgver=1.2.9
 pkgrel=1
 pkgdesc='Daylight savings aware timezone library'
 arch=(any)
@@ -12,7 +12,7 @@ depends=(ruby ruby-thread_safe)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha256sums=('839c02a45feb42c0f11f4f030e118e33e1e1ddf9c01144d1e57764966034796a')
+sha256sums=('725b865cc72ac00ef21f1413fe55e01400dfb95f6e7317c45848a3110cc4987f')
 provides=('ruby-tzinfo')
 
 package() {
