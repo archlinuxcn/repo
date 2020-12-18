@@ -10,7 +10,7 @@
 pkgname=freecad-oce
 epoch=1
 pkgver=0.18.5
-pkgrel=3
+pkgrel=4
 pkgdesc='General purpose 3D CAD modeler'
 arch=(x86_64)
 url='https://freecadweb.org/'
@@ -26,12 +26,18 @@ options=(!libtool !staticlibs debug strip)
 provides=("freecad=$pkgver")
 conflicts=(freecad)
 source=("git+https://github.com/FreeCAD/FreeCAD.git#tag=$pkgver"
-        'FindPySide2Tools.cmake'
-        "$pkgname-py39.patch"
-        "$pkgname-boost-1.73.patch"
+        "freecad-qt-5.14.patch"
+        "freecad-qt-5.14-version.patch"
+        "freecad-qt-5.15.patch"
+        "freecad-py38.patch"
+        "freecad-py39.patch"
+        "freecad-boost-1.73.patch"
         "freecad.desktop" "freecad.xml")
 sha256sums=('SKIP'
-            '421a364ad214a25be578d81edc9960daab87d7b26f341022aa22dd15b9df621b'
+            '9af1f0b85a58acad3035fd5abfaf60f57f6a5424101cb328f16468a9e4aebfa5'
+            'a74b2f0a48056f73d4b5adaf37bb71750b140bb05a4e417b8c7ed35f294facde'
+            '820d863794a0dbf0ca1dbe5a419d1823202b2459fee1cc8751a61af67a735bb6'
+            '3d2570c143825acd01b8eeb645fc450566e9ac20d6333de9e17cbc10fb5a13e0'
             'de1d61c18d329e0903d5c1bc27b9c4e28c4911380bdd4b6c49da5b63740862f1'
             '99a55f06e9d3be3385cb41d747b1a6c9515b010d867bdeeda000a45c0014a89e'
             '7ef6f240a82a861cbeca128e453da1a0c37f548876894f409a780c55e9909add'
@@ -40,27 +46,14 @@ sha256sums=('SKIP'
 prepare() {
   cd FreeCAD
 
-  patch -Np1 -i ../$pkgname-py39.patch
-  patch -Np1 -i ../$pkgname-boost-1.73.patch
-
-  # Use the fixed version of FindPySide2Tools.cmake
-  cp -f "$srcdir/FindPySide2Tools.cmake" cMake/FindPySide2Tools.cmake
-
-  # Fix Qt5 version detection
-  sed -i 's/Qt5Core_VERSION LESS/Qt5Core_VERSION VERSION_LESS/g' \
-      cMake/FindPySide2Tools.cmake
+  patch -Np1 -i ../freecad-qt-5.14.patch
+  patch -Np1 -i ../freecad-qt-5.14-version.patch
+  patch -Np1 -i ../freecad-qt-5.15.patch
+  patch -Np1 -i ../freecad-py38.patch
+  patch -Np1 -i ../freecad-py39.patch
+  patch -Np1 -i ../freecad-boost-1.73.patch
 
   cd src
-
-  # Update swigpyrun.in for Python 3.8
-  sed -i 's/interp->modules/PyImport_GetModuleDict()/g' Base/swigpyrun.inl
-
-  # Fix for Qt 5.15
-  sed -i 's/\(.*\)include <QPainter>$/&\n\1include <QPainterPath>/' \
-      Mod/Image/Gui/OpenGLImageBox.cpp
-
-  # Compensate for the unusual Shiboken versioning scheme
-  sed -i 's/SHIBOKEN_MICRO_VERSION/0/g' Gui/WidgetFactory.cpp
 
   # Fix missing "std::" qualifiers, sledge hammer style
   find . \
@@ -80,21 +73,22 @@ build() {
 
   cmake ../FreeCAD \
         -Wno-dev \
-        -DBUILD_QT5=ON \
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        -DCMAKE_C_FLAGS="$CFLAGS -fPIC -w" \
-        -DCMAKE_CXX_FLAGS="$CXXFLAGS -fPIC -w" \
-        -DCMAKE_INSTALL_DATADIR="/usr/share/freecad" \
-        -DCMAKE_INSTALL_DOCDIR="/usr/share/freecad/doc" \
-        -DCMAKE_INSTALL_PREFIX="/usr/lib/freecad" \
-        -DCMAKE_INSTALL_LIBDIR="/usr/lib/freecad/lib" \
-        -DCMAKE_INSTALL_INCLUDEDIR="/usr/include" \
-        -DFREECAD_USE_EXTERNAL_PIVY=ON \
-        -DFREECAD_USE_OCC_VARIANT="Official Version" \
-        -DFREECAD_USE_QT_FILEDIALOG=ON \
-        -DPYTHON_EXECUTABLE=/usr/bin/python \
-        -DOCC_INCLUDE_DIR=/usr/include/oce/ \
-        -DOCE_DIR=/usr/lib/oce-0.18-dev/ \
+        -D BUILD_ENABLE_CXX_STD=C++14 \
+        -D BUILD_QT5=ON \
+        -D CMAKE_BUILD_TYPE=RelWithDebInfo \
+        -D CMAKE_C_FLAGS="$CFLAGS -fPIC -w" \
+        -D CMAKE_CXX_FLAGS="$CXXFLAGS -fPIC -w" \
+        -D CMAKE_INSTALL_DATADIR="/usr/share/freecad" \
+        -D CMAKE_INSTALL_DOCDIR="/usr/share/freecad/doc" \
+        -D CMAKE_INSTALL_PREFIX="/usr/lib/freecad" \
+        -D CMAKE_INSTALL_LIBDIR="/usr/lib/freecad/lib" \
+        -D CMAKE_INSTALL_INCLUDEDIR="/usr/include" \
+        -D FREECAD_USE_EXTERNAL_PIVY=ON \
+        -D FREECAD_USE_OCC_VARIANT="Official Version" \
+        -D FREECAD_USE_QT_FILEDIALOG=ON \
+        -D PYTHON_EXECUTABLE=/usr/bin/python \
+        -D OCC_INCLUDE_DIR=/usr/include/oce/ \
+        -D OCE_DIR=/usr/lib/oce-0.18-dev/ \
         -G Ninja
   ninja
 }

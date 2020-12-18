@@ -1,0 +1,36 @@
+From 1666b28836baa79b26b707afb1e97c2a0855eb1f Mon Sep 17 00:00:00 2001
+From: howetuft <howetuft@gmail.com>
+Date: Sun, 29 Dec 2019 08:17:33 +0100
+Subject: [PATCH] Change IF(...LESS...) into IF(...VERSION_LESS...)
+
+---
+ cMake/FindPySide2Tools.cmake | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/cMake/FindPySide2Tools.cmake b/cMake/FindPySide2Tools.cmake
+index 7ca9690dc11..cb740687b8c 100644
+--- a/cMake/FindPySide2Tools.cmake
++++ b/cMake/FindPySide2Tools.cmake
+@@ -25,19 +25,19 @@ endif(WIN32 OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+ 
+ FIND_PACKAGE(Qt5Core)
+ 
+-IF(Qt5Core_VERSION LESS 5.14)
++IF(Qt5Core_VERSION VERSION_LESS 5.14)
+   # Legacy (< 5.14)
+   FIND_PROGRAM(PYSIDE2UICBINARY NAMES python2-pyside2-uic pyside2-uic pyside2-uic-${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR} HINTS ${PYSIDE_BIN_DIR})
+   FIND_PROGRAM(PYSIDE2RCCBINARY NAMES pyside2-rcc pyside2-rcc-${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR} HINTS ${PYSIDE_BIN_DIR})
+   set(UICOPTIONS "")
+   set(RCCOPTIONS "")
+-ELSE(Qt5Core_VERSION LESS 5.14)
++ELSE(Qt5Core_VERSION VERSION_LESS 5.14)
+   # New (>= 5.14)
+   FIND_PROGRAM(PYSIDE2UICBINARY NAMES uic)
+   set(UICOPTIONS "--generator=python")
+   FIND_PROGRAM(PYSIDE2RCCBINARY NAMES rcc)
+   set(RCCOPTIONS "--generator=python" "--compress-algo=zlib" "--compress=1")
+-ENDIF(Qt5Core_VERSION LESS 5.14)
++ENDIF(Qt5Core_VERSION VERSION_LESS 5.14)
+ 
+ MACRO(PYSIDE_WRAP_UI outfiles)
+   FOREACH(it ${ARGN})
