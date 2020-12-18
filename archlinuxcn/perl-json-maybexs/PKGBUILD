@@ -3,7 +3,7 @@
 # Generator  : CPANPLUS::Dist::Arch 1.32
 
 pkgname='perl-json-maybexs'
-pkgver='1.004002'
+pkgver='1.004003'
 pkgrel='1'
 pkgdesc="Use Cpanel::JSON::XS with a fallback to JSON::XS and JSON::PP"
 arch=('any')
@@ -14,7 +14,7 @@ makedepends=('perl-test-needs')
 optdepends=('perl-cpanel-json-xs: Using Cpanel-JSON-XS')
 url='https://metacpan.org/release/JSON-MaybeXS'
 source=("https://cpan.metacpan.org/authors/id/E/ET/ETHER/JSON-MaybeXS-$pkgver.tar.gz")
-md5sums=('2c40209b38b7a569b3bfc4d88e47d98c')
+md5sums=('e46181e34588428d317932744597a7ab')
 _distdir="JSON-MaybeXS-$pkgver"
 
 build() {
