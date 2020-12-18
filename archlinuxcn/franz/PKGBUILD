@@ -3,9 +3,9 @@
 # Contributor: Pieter Goetschalckx <3.14.e.ter <at> gmail <dot> com>
 
 pkgname=franz
-_pkgver=5.6.0-beta.1
+_pkgver=5.6.1 # -beta.0
 pkgver=${_pkgver//-/} # Leaving it here for possible dev/beta package :)
-pkgrel=2
+pkgrel=1
 # Due to the previous "_beta" naming
 epoch=1
 pkgdesc='Free messaging app for services like WhatsApp, Slack, Messenger and many more.'
@@ -16,7 +16,7 @@ license=(Apache)
 # Expected one is 'electron'. May change soon.
 _electron='electron'
 depends=($_electron bash)
-makedepends=(expac git npm python $_electron)
+makedepends=(expac git npm python2 $_electron)
 source=("git+https://github.com/meetfranz/$pkgname#tag=v$_pkgver"
         'franz.desktop'
         'franz.sh.in'
