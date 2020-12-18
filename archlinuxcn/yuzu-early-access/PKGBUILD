@@ -3,8 +3,8 @@
 _pkgname=yuzu
 _link="$(curl -s $(curl -s https://raw.githubusercontent.com/pineappleEA/pineappleEA.github.io/master/index.html | head -n -2 | grep -o 'https://.*.7z' | head -n 1) | grep -o 'https://cdn-.*.7z' | head -n 1)"
 pkgname=$_pkgname-early-access
-pkgver=1233
-pkgrel=2
+pkgver=1238
+pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger"
 arch=('i686' 'x86_64')
 url="https://yuzu-emu.org"
@@ -15,7 +15,7 @@ optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu-canary-git' 'yuzu-master-git' 'yuzu-mainline-git' 'yuzu-git' 'yuzu-early-access-kiku233-git' 'yuzu-ea-bin')
 source=("$_pkgname.7z::$_link")
-md5sums=('1840fe92af1923e7a425d03cbf2fde8a')
+md5sums=('8eb1097e644f1c49896a55e708bd96a0')
 
 pkgver () {
   curl -s https://raw.githubusercontent.com/pineappleEA/pineappleEA.github.io/master/index.html | grep -Po 'Yuzu EA \d+' | sed 's/Yuzu EA //' | head -n 1
