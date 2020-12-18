@@ -11,6 +11,8 @@ depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
          'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5' 'qt5-wayland' 'gtk3')
 makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'microsoft-gsl' 'libtg_owt')
 optdepends=('ttf-opensans: default Open Sans font family')
+provides=("telegram-desktop")
+conflicts=("telegram-desktop")
 source=("tdesktop::git+https://github.com/telegramdesktop/tdesktop.git#tag=dev"
         "libtgvoip::git+https://github.com/telegramdesktop/libtgvoip"
         "GSL::git+https://github.com/Microsoft/GSL.git"
