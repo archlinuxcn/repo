@@ -4,12 +4,12 @@
 _basename=gst-plugins-bad
 pkgname=lib32-gst-plugins-bad
 pkgver=1.18.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Multimedia graph framework - bad plugins (32-bit)"
 url="https://gstreamer.freedesktop.org/"
 arch=(x86_64)
 license=(LGPL)
-depends=(lib32-aom lib32-bzip2 lib32-chromaprint lib32-curl lib32-faac lib32-faad2
+depends=("lib32-aom" "lib32-bzip2" "lib32-chromaprint" "lib32-curl" "lib32-faac" "lib32-faad2" "libHalf-2_5.so" "libIex-2_5.so" "libIlmImf-2_5.so" "libWildMidi.so" "libaom.so" "libass.so" "libavtp.so" "libbs2b.so" "libchromaprint.so" "libdc1394.so" "libdca.so" "libde265.so" "libdvdnav.so" "libdvdread.so" "libfaac.so" "libfaad.so" "libfdk-aac.so" "libgio-2.0.so" "libglib-2.0.so" "libgme.so" "libgmodule-2.0.so" "libgobject-2.0.so" "libgudev-1.0.so" "libkate.so" "liblilv-0.so" "liblrdf.so" "libmjpegutils-2.1.so" "libmms.so" "libmpcdec.so" "libmpeg2encpp-2.1.so" "libmplex2-2.1.so" "libneon.so" "libnettle.so" "libnice.so" "libofa.so" "libopenjp2.so" "libpango-1.0.so" "libpangocairo-1.0.so" "librsvg-2.so" "librtmp.so" "libsbc.so" "libsndfile.so" "libspandsp.so" "libsrt.so" "libsrtp2.so" "libusb-1.0.so" "libwebrtc_audio_processing.so" "libx265.so" "libzbar.so" "libzvbi.so"
         lib32-fluidsynth lib32-gst-plugins-base-libs lib32-gst-plugins-good
         lib32-lcms2 lib32-libass lib32-libavtp lib32-libbs2b lib32-libdc1394 lib32-libdrm
         lib32-libdca lib32-libde265 lib32-libdvdnav lib32-libdvdread lib32-libfdk-aac
@@ -88,3 +88,4 @@ package() {
 
     rm -rf "${pkgdir}"/usr/{bin,include,share}
 }
+provides=("libgstadaptivedemux-1.0.so" "libgstbadaudio-1.0.so" "libgstbasecamerabinsrc-1.0.so" "libgstcodecparsers-1.0.so" "libgstcodecs-1.0.so" "libgstinsertbin-1.0.so" "libgstisoff-1.0.so" "libgstmpegts-1.0.so" "libgstphotography-1.0.so" "libgstplayer-1.0.so" "libgstsctp-1.0.so" "libgsttranscoder-1.0.so" "libgsturidownloader-1.0.so" "libgstvulkan-1.0.so" "libgstwayland-1.0.so" "libgstwebrtc-1.0.so")
