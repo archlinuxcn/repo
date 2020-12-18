@@ -1,0 +1,146 @@
+# Maintainer: Sven-Hendrik Haase <svenstaro@gmail.com>
+# Contributor: hexchain <i@hexchain.org>
+pkgname=telegram-desktop-git
+pkgver=2.4.14.r25.ga0b079939
+pkgrel=1
+pkgdesc='Official Telegram Desktop client'
+arch=('x86_64')
+url="https://desktop.telegram.org/"
+license=('GPL3')
+depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
+         'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5' 'qt5-wayland' 'gtk3')
+makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'microsoft-gsl' 'libtg_owt')
+optdepends=('ttf-opensans: default Open Sans font family')
+source=("tdesktop::git+https://github.com/telegramdesktop/tdesktop.git#tag=dev"
+        "libtgvoip::git+https://github.com/telegramdesktop/libtgvoip"
+        "GSL::git+https://github.com/Microsoft/GSL.git"
+        "Catch::git+https://github.com/philsquared/Catch"
+        "xxHash::git+https://github.com/Cyan4973/xxHash.git"
+        "rlottie::git+https://github.com/desktop-app/rlottie.git"
+        "lz4::git+https://github.com/lz4/lz4.git"
+        "lib_crl::git+https://github.com/desktop-app/lib_crl.git"
+        "lib_rpl::git+https://github.com/desktop-app/lib_rpl.git"
+        "lib_base::git+https://github.com/desktop-app/lib_base.git"
+        "codegen::git+https://github.com/desktop-app/codegen.git"
+        "lib_ui::git+https://github.com/desktop-app/lib_ui.git"
+        "lib_rlottie::git+https://github.com/desktop-app/lib_rlottie.git"
+        "lib_lottie::git+https://github.com/desktop-app/lib_lottie.git"
+        "lib_tl::git+https://github.com/desktop-app/lib_tl.git"
+        "lib_spellcheck::git+https://github.com/desktop-app/lib_spellcheck"
+        "lib_storage::git+https://github.com/desktop-app/lib_storage.git"
+        "cmake_helpers::git+https://github.com/desktop-app/cmake_helpers.git"
+        "expected::git+https://github.com/TartanLlama/expected"
+        "QR-Code-generator::git+https://github.com/nayuki/QR-Code-generator"
+        "lib_qr::git+https://github.com/desktop-app/lib_qr.git"
+        "libdbusmenu-qt::git+https://github.com/desktop-app/libdbusmenu-qt.git"
+        "hunspell::git+https://github.com/hunspell/hunspell"
+        "materialdecoration::git+https://github.com/desktop-app/materialdecoration.git"
+        "range-v3::git+https://github.com/ericniebler/range-v3.git"
+        "fcitx-qt5::git+https://github.com/fcitx/fcitx-qt5.git"
+        "nimf::git+https://github.com/hamonikr/nimf.git"
+        "hime::git+https://github.com/hime-ime/hime.git"
+        "qt5ct::git+https://github.com/desktop-app/qt5ct.git"
+        "fcitx5-qt::git+https://github.com/fcitx/fcitx5-qt.git"
+        "lib_webrtc::git+https://github.com/desktop-app/lib_webrtc.git"
+        "tgcalls::git+https://github.com/TelegramMessenger/tgcalls.git"
+)
+sha512sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
+pkgver() {
+    cd "$srcdir/tdesktop"
+    git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+    cd "$srcdir/tdesktop"
+    git submodule init
+    git config submodule.Telegram/ThirdParty/libtgvoip.url "$srcdir/libtgvoip"
+    git config submodule.Telegram/ThirdParty/GSL.url "$srcdir/GSL"
+    git config submodule.Telegram/ThirdParty/Catch.url "$srcdir/Catch"
+    git config submodule.Telegram/ThirdParty/xxHash.url "$srcdir/xxHash"
+    git config submodule.Telegram/ThirdParty/rlottie.url "$srcdir/rlottie"
+    git config submodule.Telegram/ThirdParty/lz4.url "$srcdir/lz4"
+    git config submodule.Telegram/lib_crl.url "$srcdir/lib_crl"
+    git config submodule.Telegram/lib_rpl.url "$srcdir/lib_rpl"
+    git config submodule.Telegram/lib_base.url "$srcdir/lib_base"
+    git config submodule.Telegram/codegen.url "$srcdir/codegen"
+    git config submodule.Telegram/lib_ui.url "$srcdir/lib_ui"
+    git config submodule.Telegram/lib_rlottie.url "$srcdir/lib_rlottie"
+    git config submodule.Telegram/lib_lottie.url "$srcdir/lib_lottie"
+    git config submodule.Telegram/lib_tl.url "$srcdir/lib_tl"
+    git config submodule.Telegram/lib_spellcheck.url "$srcdir/lib_spellcheck"
+    git config submodule.Telegram/lib_storage.url "$srcdir/lib_storage"
+    git config submodule.cmake.url "$srcdir/cmake_helpers"
+    git config submodule.Telegram/ThirdParty/expected.url "$srcdir/expected"
+    git config submodule.Telegram/ThirdParty/QR.url "$srcdir/QR-Code-generator"
+    git config submodule.Telegram/lib_qr.url "$srcdir/lib_qr"
+    git config submodule.Telegram/ThirdParty/libdbusmenu-qt.url "$srcdir/libdbusmenu-qt"
+    git config sumbodule.Telegram/ThirdParty/hunspell.url "$srcdir/hunspell"
+    git config sumbodule.Telegram/ThirdParty/materialdecoration.url "$srcdir/materialdecoration"
+    git config sumbodule.Telegram/ThirdParty/range-v3.url "$srcdir/range-v3"
+    git config sumbodule.Telegram/ThirdParty/fcitx-qt5.url "$srcdir/fcitx-qt5"
+    git config sumbodule.Telegram/ThirdParty/nimf.url "$srcdir/nimf"
+    git config sumbodule.Telegram/ThirdParty/hime.url "$srcdir/hime"
+    git config sumbodule.Telegram/ThirdParty/qt5ct.url "$srcdir/qt5ct"
+    git config sumbodule.Telegram/ThirdParty/fcitx5-qt.url "$srcdir/fcitx5-qt"
+    git config sumbodule.Telegram/lib_webrtc.url "$srcdir/lib_webrtc"
+    git config sumbodule.Telegram/ThirdParty/tgcalls.url "$srcdir/tgcalls"
+    git submodule update
+
+    cd cmake
+    # force webrtc link to libjpeg
+    echo "target_link_libraries(external_webrtc INTERFACE jpeg)" | tee -a external/webrtc/CMakeLists.txt
+}
+
+build() {
+    cd "$srcdir/tdesktop"
+
+    # Turns out we're allowed to use the official API key that telegram uses for their snap builds:
+    # https://github.com/telegramdesktop/tdesktop/blob/8fab9167beb2407c1153930ed03a4badd0c2b59f/snap/snapcraft.yaml#L87-L88
+    # Thanks @primeos!
+    cmake . \
+        -B build \
+        -G Ninja \
+        -DCMAKE_INSTALL_PREFIX="/usr" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DTDESKTOP_API_ID=611335 \
+        -DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c \
+        -DTDESKTOP_LAUNCHER_BASENAME="telegramdesktop" \
+        -DDESKTOP_APP_SPECIAL_TARGET=""
+    ninja -C build
+}
+
+package() {
+    cd "$srcdir/tdesktop"
+    DESTDIR=$pkgdir ninja -C build install
+}
