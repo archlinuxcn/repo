@@ -10,14 +10,14 @@ license=('MIT')
 depends=('qt5-base' 'qt5-webengine')
 makedepends=('qt5-svg' 'git')
 
-source=("git://github.com/tamlok/vnote.git")
+source=("git://github.com/vnotex/vnote.git")
 sha256sums=(SKIP)
 
 gitname="vnote"
 
 pkgver() {
     cd "$srcdir/$gitname"
-    git describe --tags --long | sed 's/^v//;s|-[0-9]*-|.|;s|-|.|g;'
+    printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 package() {
