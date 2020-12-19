@@ -1,7 +1,7 @@
 # Maintainer: surefire@cryptomile.net
 
 pkgname=keeweb
-pkgver=1.16.4
+pkgver=1.16.5
 _electron=electron
 pkgrel=1
 pkgdesc="Desktop password manager compatible with KeePass databases"
@@ -17,7 +17,7 @@ makedepends=(
 	'git'
 	'libsass>=3.5.5'
 	'npm'
-	'python2'
+#	'python2'
 )
 optdepends=('xdotool: for auto-type')
 conflicts=('keeweb-desktop')
@@ -64,12 +64,10 @@ build() {
 
 	cd "${srcdir}/${pkgname}"
 
-	export SKIP_SASS_BINARY_DOWNLOAD_FOR_CI=1
-	export SASS_FORCE_BUILD=1
-	export LIBSASS_EXT=auto
-
+	SKIP_SASS_BINARY_DOWNLOAD_FOR_CI=1 \
+	SASS_FORCE_BUILD=1 \
+	LIBSASS_EXT=auto \
 	npm install --nodedir=/usr
-	npm install css-loader
 
 	npx grunt build-web-app build-desktop-app-content
 
@@ -92,7 +90,8 @@ build() {
 		use_system_libusb=true
 	)
 
-	HOME="${srcdir}/.electron-gyp" npm install "${electron_build_opts[@]/#/--}"
+	HOME="${srcdir}/.electron-gyp" \
+	npm install "${electron_build_opts[@]/#/--}"
 }
 
 package() {
