@@ -1,13 +1,13 @@
 maintainers:
   - github: yuyichao
 
-managed: false
+build_prefix: extra-x86_64
 
-# build_prefix: extra-x86_64
+post_build: git_pkgbuild_commit
 
-# pre_build: aur_pre_build
-
-# post_build: aur_post_build
-
-# update_on:
-#   - aur: libsearpc
+update_on:
+  - source: manual
+    manual: 3.2.0
+  - alias: python
+  - source: manual
+    manual: 6
