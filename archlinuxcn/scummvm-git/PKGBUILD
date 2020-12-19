@@ -11,7 +11,7 @@ url="http://www.scummvm.org"
 license=('GPL')
 depends=('libpng' 'libtheora' 'sdl2' 'sdl2_net' 'fluidsynth' 'flac' 'faad2' 'libvorbis' 'libmad' 'freetype2'
          'libgl' 'glu' 'libjpeg-turbo' 'libmpeg2' 'curl' 'a52dec')
-makedepends=('git')
+makedepends=('git' 'mesa')
 conflicts=('scummvm')
 provides=('scummvm')
 source=("$_pkgname"::'git+https://github.com/scummvm/scummvm.git')
