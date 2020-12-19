@@ -4,17 +4,17 @@
 # Contributor: Aaron Lindsay <aaron@aclindsay.com>
 
 pkgname=seafile-server
-pkgver=7.1.4
+pkgver=8.0.1
 pkgrel=1
 pkgdesc='Seafile server core'
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url='https://github.com/haiwen/seafile-server'
 license=('AGPL3')
 depends=(
-    "ccnet-server>=$pkgver"
-    'fuse2'
-    'libevhtp-seafile'
-    'libarchive'
+  "ccnet-server"
+  'fuse2'
+  'libevhtp-seafile'
+  'libarchive'
 )
 makedepends=('vala')
 conflicts=('seafile')
@@ -25,49 +25,49 @@ source=(
   0003-Fix-seafile-admin.patch
   'seafile-server@.service'
 )
-sha256sums=('cc5aaf76044f907758a75a43e321fef499482d7b57d9e61d0297a4bba66dcce4'
+sha256sums=('dc9088902abe9a1d374933f9263acced41625911c1960a232164d29e9a657a3d'
             '53eebc9233c1de818f7315b3d25ca9dfece85f0a5e719ed7003becbef6b01329'
             'b20993bbb57f13105d1b53c99a7ce48a17dc40b3433640af0825061f5fe60065'
             'abb1105d9850d6f1808a295f18b787a269a45c1e170c5dc1f8e9980abcd75fc4'
             'c5693c2522d0346469080e20d3ebaff724f63f360f8331d62ffd9be1369664c2')
 
 prepare() {
-    cd "$srcdir/$pkgname-$pkgver-server"
-    # Remove scripts for tests and others OS
-    rm -rf "./scripts/"{build,upgrade/win32,*.bat,*.md} "./integration-tests"
+  cd "$srcdir/$pkgname-$pkgver-server"
+  # Remove scripts for tests and others OS
+  rm -rf "./scripts/"{build,upgrade/win32,*.bat,*.md} "./integration-tests"
 
-    # Apply patchs
-    sed -i "s|(DESTDIR)@prefix@|@prefix@|" "./lib/libseafile.pc.in"
-    patch -Np1 --no-backup-if-mismatch < ../0001-Fix-controller-path-and-migrate-old-pids-directory.patch
-    patch -Np1 --no-backup-if-mismatch < ../0002-Fix-gunicorn-binary-path.patch
-    patch -Np1 --no-backup-if-mismatch < ../0003-Fix-seafile-admin.patch
-    2to3 -nw --no-diffs tools/seafile-admin
+  # Apply patchs
+  sed -i "s|(DESTDIR)@prefix@|@prefix@|" "./lib/libseafile.pc.in"
+  patch -Np1 --no-backup-if-mismatch < ../0001-Fix-controller-path-and-migrate-old-pids-directory.patch
+  patch -Np1 --no-backup-if-mismatch < ../0002-Fix-gunicorn-binary-path.patch
+  patch -Np1 --no-backup-if-mismatch < ../0003-Fix-seafile-admin.patch
+  2to3 -nw --no-diffs tools/seafile-admin
 }
 
 build() {
-    cd "$srcdir/$pkgname-$pkgver-server"
-    ./autogen.sh
-    ./configure \
-        --enable-fuse \
-        --enable-python \
-        --prefix=/usr \
-        PYTHON='/usr/bin/python'
-    make
+  cd "$srcdir/$pkgname-$pkgver-server"
+  ./autogen.sh
+  ./configure \
+    --enable-fuse \
+    --enable-python \
+    --prefix=/usr \
+    PYTHON='/usr/bin/python'
+  make
 }
 
 package() {
-    cd "$srcdir/$pkgname-$pkgver-server"
-    make DESTDIR="$pkgdir" install
+  cd "$srcdir/$pkgname-$pkgver-server"
+  make DESTDIR="$pkgdir" install
 
-    # Prepare directories layout for deploying
-    # These makes setup-seafile*.sh happy, whether we use them or not
-    mkdir -p "$pkgdir/usr/share/seafile-server/"{runtime,seafile/docs}
-    cp -p doc/*.doc "$pkgdir/usr/share/seafile-server/seafile/docs"
-    # The scripts needs this bin directory.
-    ln -s /usr/bin/ "$pkgdir/usr/share/seafile-server/seafile/bin"
-    cp -r -p "./scripts"/* "$pkgdir/usr/share/seafile-server/"
+  # Prepare directories layout for deploying
+  # These makes setup-seafile*.sh happy, whether we use them or not
+  mkdir -p "$pkgdir/usr/share/seafile-server/"{runtime,seafile/docs}
+  cp -p doc/*.doc "$pkgdir/usr/share/seafile-server/seafile/docs"
+  # The scripts needs this bin directory.
+  ln -s /usr/bin/ "$pkgdir/usr/share/seafile-server/seafile/bin"
+  cp -r -p "./scripts"/* "$pkgdir/usr/share/seafile-server/"
 
-    install -Dm644 \
-        "$srcdir/seafile-server@.service" \
-        "$pkgdir/usr/lib/systemd/system/seafile-server@.service"
+  install -Dm644 \
+          "$srcdir/seafile-server@.service" \
+          "$pkgdir/usr/lib/systemd/system/seafile-server@.service"
 }
