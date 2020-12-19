@@ -1,16 +1,16 @@
 maintainers:
   - github: yuyichao
 
-managed: false
+build_prefix: extra-x86_64
 
-# build_prefix: extra-x86_64
+post_build: git_pkgbuild_commit
 
-# pre_build: aur_pre_build
+update_on:
+  - source: manual
+    manual: 7.1.5
+  - alias: python
+  - source: manual
+    manual: 1
 
-# post_build: aur_post_build
-
-# update_on:
-#   - aur: ccnet-server
-
-# repo_depends:
-#   - libsearpc
+repo_depends:
+  - libsearpc
