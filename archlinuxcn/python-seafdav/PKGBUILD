@@ -1,13 +1,14 @@
 # Maintainer: Klemens Schölhorn <klemens@schoelhorn.eu>
 
 pkgname=python-seafdav
-pkgver=7.1.4
-pkgrel=2
+pkgver=8.0.1
+pkgrel=1
 pkgdesc="Seafile webdav server"
 arch=('any')
 url="https://github.com/haiwen/seafdav"
 license=('MIT')
 depends=(python
+         seafile-server
          python-seafobj
          python-defusedxml
          python-six
@@ -17,14 +18,14 @@ depends=(python
          python-sqlalchemy)
 makedepends=('python-setuptools')
 source=("https://github.com/haiwen/seafdav/archive/v${pkgver}-server.tar.gz"
-        0001-Log-gunicorn-output.-Increase-worker-count-and-timeo.patch)
-sha256sums=('43f5201658c862e9c32dc6617d5045fe47d099e637e4ac15d0725f7640f912fe'
-            '255e2daf094e1910520d2b564972c3903e740911a9fb27b4a5365473c699a5d9')
+        0001-Log-gunicorn-output.patch)
+sha256sums=('c6d750ea92f02ac0e2dca87cedfd5a0372c00357410579bd399fa45d434af910'
+            'e6fea78d591265fda8997d5c22a8c6b6341479fd254f9f6fac7b49abf7eea730')
 
 prepare() {
   cd seafdav-$pkgver-server
 
-  patch -Np1 < ../0001-Log-gunicorn-output.-Increase-worker-count-and-timeo.patch
+  patch -Np1 < ../0001-Log-gunicorn-output.patch
 }
 
 package() {

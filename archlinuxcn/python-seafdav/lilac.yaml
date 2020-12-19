@@ -1,8 +1,6 @@
 maintainers:
   - github: yuyichao
 
-managed: false
-
 build_prefix: extra-x86_64
 
 post_build: git_pkgbuild_commit
@@ -10,10 +8,11 @@ post_build: git_pkgbuild_commit
 repo_depends:
   - python-seafobj
   - python-jsmin
+  - seafile-server
 
 update_on:
   - source: manual
-    manual: 7.1.4
+    manual: 8.0.1
   - source: manual
-    manual: 2
+    manual: 1
   - alias: python
