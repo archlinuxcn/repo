@@ -1,0 +1,6 @@
+post_install() {
+  setcap cap_net_raw,cap_net_admin=eip /usr/bin/dosbox-x
+}
+post_upgrade() {
+  setcap cap_net_raw,cap_net_admin=eip /usr/bin/dosbox-x
+}

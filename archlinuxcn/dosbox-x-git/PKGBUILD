@@ -1,7 +1,7 @@
 # Mantainer: Franco Tortoriello
 
 pkgname=dosbox-x-git
-pkgver=13099.6f617f78d
+pkgver=13105.a05f01432
 pkgrel=1
 pkgdesc="x86 emulator with builtin DOS, with patches with more features"
 arch=(i686 x86_64)
@@ -10,6 +10,7 @@ license=(GPL)
 depends=(fluidsynth libxkbfile libpng libxrandr mesa ffmpeg)
 makedepends=(git glu)
 optdepends=()
+install='dosbox-x.install'
 source=(dosbox-x::git://github.com/joncampbell123/dosbox-x.git
 	dosbox-x.png
 	dosbox-x.desktop)
