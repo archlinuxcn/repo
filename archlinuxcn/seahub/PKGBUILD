@@ -4,18 +4,25 @@
 # Contributor: Aaron Lindsay <aaron@aclindsay.com>
 
 pkgname=seahub
-pkgver=7.1.4
-pkgrel=2
+pkgver=8.0.1
+pkgrel=1
 pkgdesc='The web frontend for seafile server'
 arch=('any')
 url='https://github.com/haiwen/seahub'
 license=('Apache')
+depends=('python-pytz')
 makedepends=('python-setuptools')
 source=("$pkgname-$pkgver-server.tar.gz::$url/archive/v$pkgver-server.tar.gz"
-        "https://www.djangoproject.com/m/releases/1.11/Django-1.11.25.tar.gz"
+        "https://files.pythonhosted.org/packages/78/46/a3af6eb3037044eaad9518082eff5ed473ad343dee165eb14b1f1a4a3d87/Django-2.2.14.tar.gz"
+        "https://files.pythonhosted.org/packages/e2/a5/ee2af425b62b1566e6628a9c172481dd197b13ad0fbf34cf869a308747c1/django-post_office-3.3.0.tar.gz"
+        "https://files.pythonhosted.org/packages/df/48/3c8a333b11312d73fb93dce589ae5a979e5334a5f5ee9918e580b88ddd96/django-picklefield-2.1.1.tar.gz"
+        "https://files.pythonhosted.org/packages/a7/9d/5eea11456889eaaf20b6cdb47fefe12915e99448559356fc42d7e02297a8/djangorestframework-3.11.1.tar.gz"
         0001-Add-support-for-more-audio-and-video-formats.patch)
-sha256sums=('4b4a53df13234582cb283695a8a15af7fb97bd6f46543a3715eb7e174a613c5b'
-            '5314e8586285d532b7aa5c6d763b0248d9a977a37efec86d30f0212b82e8ef66'
+sha256sums=('fabb71ca79090689b388c5e33edbd09dd3fac1cde3979ddb842d2e6fc3ab0c2a'
+            'edf0ecf6657713b0435b6757e6069466925cae70d634a3283c96b80c01e06191'
+            'b06514da601c22e955bd93a4ac6dd6b2218c571ca67c193e62bd1f22cec7536f'
+            '67a5e156343e3b032cac2f65565f0faa81635a99c7da74b0f07a0f5db467b646'
+            '6dd02d5a4bd2516fb93f80360673bf540c3b6641fec8766b1da2870a5aa00b32'
             'fd9f7c40fea3e60661861735f7741064ae8c35e838dbaa0c5ab251ee67e35534')
 options=('!strip')
 
@@ -39,6 +46,8 @@ prepare() {
   rm -rf \
      './'{CONTRIBUTORS,HACKING,Makefile} \
      './'{*test*,*dev*,*sh*,README*,pylintrc*,LICENSE*}
+
+  sed -i -E "/SEAFILE_VERSION/s/[0-9.]+/$pkgver/" ./seahub/settings.py
 }
 
 build() {
@@ -47,46 +56,65 @@ build() {
     msgfmt -vo "${locale%.po}.mo" "$locale"
   done
 
-  cd "$srcdir/Django-1.11.25"
-  python setup.py build
+  # cd "$srcdir/Django-2.2.14"
+  # python setup.py build
+  # cd "$srcdir/django-post_office-3.3.0"
+  # python setup.py build
+  # cd "$srcdir/django-picklefield-2.1.1"
+  # python setup.py build
+  # cd "$srcdir/djangorestframework-3.11.1"
+  # python setup.py build
 }
 
 package() {
-  depends=(
+  depends+=(
     "seafile-server>=$pkgver"
     # The following list is from seahub/requirements.txt
-    # python-django # 1.11.25
+    # python-django # 2.2.14
     'python-future'
     # 'python-captcha' # This one seems to conflict with django-simple-captcha
     'python-django-statici18n'
-    'python-django-post-office'
+    # 'python-django-post-office' # 3.3.0
     'python-django-webpack-loader'
     'gunicorn'
     'python-pymysql'
-    'python-django-picklefield'
+    # 'python-django-picklefield' # 2.1.1
     'python-openpyxl'
     'python-qrcode'
     'python-django-formtools'
     'python-django-simple-captcha'
-    'python-django-rest-framework'
+    # 'python-django-rest-framework' # 3.11.1
     'python-dateutil'
     'python-requests'
     'python-pillow'
     'python-pyjwt'
     'python-pycryptodome'
+    'python-requests-oauthlib'
+    'python-django-ranged-response'
   )
   optdepends=(
-    'ffmpeg: For video thumbnails'
     'python-seafdav: For WebDAV support'
+    'python-django-pylibmc: Memcached support'
+    'ffmpeg: For video thumbnails'
   )
   cd "$srcdir/seahub-$pkgver-server/"
   install -dm755 "$pkgdir/usr/share/seafile-server/seahub"
   cp -r -p "./"* "$pkgdir/usr/share/seafile-server/seahub/"
 
-  cd "$srcdir/Django-1.11.25"
+  export PYTHONPATH="$pkgdir/usr/share/seafile-server/seahub/thirdpart"
+  cd "$srcdir/Django-2.2.14"
   python setup.py install --root="$pkgdir" --optimize=1 \
          --install-lib "usr/share/seafile-server/seahub/thirdpart"
-  rm -rf "$pkgdir/usr/bin/"
+  cd "$srcdir/django-post_office-3.3.0"
+  python setup.py install --root="$pkgdir" --optimize=1 \
+         --install-lib "usr/share/seafile-server/seahub/thirdpart"
+  cd "$srcdir/django-picklefield-2.1.1"
+  python setup.py install --root="$pkgdir" --optimize=1 \
+         --install-lib "usr/share/seafile-server/seahub/thirdpart"
+  cd "$srcdir/djangorestframework-3.11.1"
+  python setup.py install --root="$pkgdir" --optimize=1 \
+         --install-lib "usr/share/seafile-server/seahub/thirdpart"
+  rm -rf "$pkgdir"/usr/{bin,share/seafile-server/seahub/thirdpart/*.egg-info}
 
   python -m compileall "$pkgdir/usr/share/seafile-server/seahub/"
 }
