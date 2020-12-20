@@ -28,7 +28,7 @@ def pre_build():
       line = 'pkgname=(qt5-base-24hms)'
       checks = checks + '1'
     elif line.startswith('pkgdesc='):
-      line = "pkgdesc='A cross-platform application and UI framework. This package uses 24-hour notation in all locales.'"
+      line = "pkgdesc='A cross-platform application and UI framework. This package uses 24-hour notation HH:mm:ss in all locales.'"
       checks = checks + 'b'
     elif line.startswith('makedepends=('):
       line = line.replace('(', "('python2' ")
