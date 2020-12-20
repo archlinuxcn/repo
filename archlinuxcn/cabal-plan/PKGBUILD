@@ -1,0 +1,38 @@
+_hkgname=cabal-plan
+pkgname=cabal-plan
+pkgver=0.7.2.0
+pkgrel=1
+pkgdesc="Library and utility for processing cabal's plan.json file"
+url="https://github.com/hvr/cabal-plan"
+license=("custom:GPL_2_0_or_later")
+arch=('x86_64')
+depends=('ghc-libs' 'haskell-aeson' 'haskell-ansi-terminal' 'haskell-async' 'haskell-base-compat' 'haskell-base16-bytestring' 'haskell-optics-core' 'haskell-optparse-applicative' 'haskell-semialign' 'haskell-singleton-bool' 'haskell-these' 'haskell-topograph' 'haskell-vector')
+makedepends=('ghc')
+source=("https://hackage.haskell.org/packages/archive/$_hkgname/$pkgver/$_hkgname-$pkgver.tar.gz")
+sha256sums=('233a3d1460732fe3486169023758e431d37c5c9156fb28d829decaf7b9170f85')
+
+build() {
+  cd $_hkgname-$pkgver
+
+  runhaskell Setup configure -O --enable-shared --enable-executable-dynamic --disable-library-vanilla \
+    --prefix=/usr --docdir=/usr/share/doc/$pkgname --enable-tests \
+    --dynlibdir=/usr/lib --libsubdir=\$compiler/site-local/\$pkgid \
+    --ghc-option=-optl-Wl\,-z\,relro\,-z\,now \
+    --ghc-option='-pie'
+
+  runhaskell Setup build
+  runhaskell Setup register --gen-script
+  runhaskell Setup unregister --gen-script
+  sed -i -r -e "s|ghc-pkg.*update[^ ]* |&'--force' |" register.sh
+  sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
+}
+
+package() {
+  cd $_hkgname-$pkgver
+
+  install -D -m744 register.sh "$pkgdir"/usr/share/haskell/register/$pkgname.sh
+  install -D -m744 unregister.sh "$pkgdir"/usr/share/haskell/unregister/$pkgname.sh
+  runhaskell Setup copy --destdir="$pkgdir"
+  install -D -m644 LICENSE.GPLv2 -t "$pkgdir"/usr/share/licenses/$pkgname/
+  rm -f "$pkgdir"/usr/share/doc/$pkgname/LICENSE.GPLv2
+}
