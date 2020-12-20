@@ -1,0 +1,21 @@
+diff --git a/policykitlistener.cpp b/policykitlistener.cpp
+index f3f58d4..0470047 100644
+--- a/policykitlistener.cpp
++++ b/policykitlistener.cpp
+@@ -323,14 +323,14 @@ void PolicyKitListener::fillResult()
+ {
+     if (!m_session.isNull()) {
+         if (m_wasCancelled) {
+-            m_session.data()->result()->setCancel("aciton cancel");
++//            m_session.data()->result()->setCancel("aciton cancel");
+         } else if (!m_gainedAuthorization) {
+             m_session.data()->result()->setError("password error");
+         }
+         m_session.data()->result()->setCompleted();
+     } else {
+         if (m_wasCancelled) {
+-            m_result->setCancel("action cancel");
++//            m_result->setCancel("action cancel");
+         } else if (!m_gainedAuthorization) {
+             m_result->setError("password error");
+         }
