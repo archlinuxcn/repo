@@ -1,0 +1,75 @@
+From 54aa63be9b74e8de72db9efbe6809ab1a97b29a7 Mon Sep 17 00:00:00 2001
+From: Takao Fujiwara <takao.fujiwara1@gmail.com>
+Date: Mon, 11 May 2020 21:14:01 +0900
+Subject: [PATCH] IBus: Use WAYLAND_DISPLAY on Wayland sessions to make up
+ socket names
+
+A recent change in IBus made it prefer the WAYLAND_DISPLAY envvar in
+order to compose its socket path for Wayland sessions. This is because
+DISPLAY is unreliable in those environment: It might not be there, there
+might be several displays pointing to the same Xwayland server (as it's
+the case in GNOME 3.36), or there might even be multiple Xwayland servers
+(eg. to enforce inter-app isolation with X11 apps).
+
+Fixes: QTBUG-82910
+Pick-To: 5.15
+Change-Id: I4883b5d06863ba284883dd95281bed2ce7203e29
+Reviewed-by: Lars Knoll <lars.knoll@qt.io>
+---
+ .../ibus/qibusplatforminputcontext.cpp             | 38 +++++++++++++++-------
+ 1 file changed, 27 insertions(+), 11 deletions(-)
+
+diff --git a/src/plugins/platforminputcontexts/ibus/qibusplatforminputcontext.cpp b/src/plugins/platforminputcontexts/ibus/qibusplatforminputcontext.cpp
+index 47ac54927bc..16c0ebfe213 100644
+--- a/src/plugins/platforminputcontexts/ibus/qibusplatforminputcontext.cpp
++++ b/src/plugins/platforminputcontexts/ibus/qibusplatforminputcontext.cpp
+@@ -712,19 +712,35 @@ void QIBusPlatformInputContextPrivate::createBusProxy()
+ 
+ QString QIBusPlatformInputContextPrivate::getSocketPath()
+ {
+-    QByteArray display(qgetenv("DISPLAY"));
+-    QByteArray host = "unix";
++    QByteArray display;
+     QByteArray displayNumber = "0";
++    bool isWayland = false;
++
++    if (qEnvironmentVariableIsSet("IBUS_ADDRESS_FILE")) {
++        QByteArray path = qgetenv("IBUS_ADDRESS_FILE");
++        return QString::fromLocal8Bit(path);
++    } else  if (qEnvironmentVariableIsSet("WAYLAND_DISPLAY")) {
++        display = qgetenv("WAYLAND_DISPLAY");
++        isWayland = true;
++    } else {
++        display = qgetenv("DISPLAY");
++    }
++    QByteArray host = "unix";
++
++    if (isWayland) {
++        displayNumber = display;
++    } else {
++        int pos = display.indexOf(':');
++        if (pos > 0)
++            host = display.left(pos);
++        ++pos;
++        int pos2 = display.indexOf('.', pos);
++        if (pos2 > 0)
++            displayNumber = display.mid(pos, pos2 - pos);
++         else
++            displayNumber = display.mid(pos);
++    }
+ 
+-    int pos = display.indexOf(':');
+-    if (pos > 0)
+-        host = display.left(pos);
+-    ++pos;
+-    int pos2 = display.indexOf('.', pos);
+-    if (pos2 > 0)
+-        displayNumber = display.mid(pos, pos2 - pos);
+-    else
+-        displayNumber = display.mid(pos);
+     if (debug)
+         qDebug() << "host=" << host << "displayNumber" << displayNumber;
+ 
+-- 
+2.16.3
+

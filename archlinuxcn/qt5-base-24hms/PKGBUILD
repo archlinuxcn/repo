@@ -1,0 +1,119 @@
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+
+pkgbase=qt5-base-24hms
+_origpkgname=qt5-base
+pkgname=(qt5-base-24hms)
+_qtver=5.15.2
+pkgver=${_qtver/-/}
+pkgrel=1.5
+arch=('x86_64')
+url='https://www.qt.io'
+license=('GPL3' 'LGPL3' 'FDL' 'custom')
+pkgdesc='A cross-platform application and UI framework. This package uses 24-hour notation in all locales.'
+depends=('libjpeg-turbo' 'xcb-util-keysyms' 'xcb-util-renderutil' 'libgl' 'fontconfig' 'xdg-utils'
+         'shared-mime-info' 'xcb-util-wm' 'libxrender' 'libxi' 'sqlite' 'xcb-util-image' 'mesa'
+         'tslib' 'libinput' 'libxkbcommon-x11' 'libproxy' 'libcups' 'double-conversion' 'md4c')
+makedepends=('python2' 'libfbclient' 'mariadb-libs' 'sqlite' 'unixodbc' 'postgresql-libs' 'alsa-lib' 'gst-plugins-base-libs'
+             'gtk3' 'libpulse' 'cups' 'freetds' 'vulkan-headers')
+optdepends=('qt5-svg: to use SVG icon themes'
+            'qt5-wayland: to run Qt applications in a Wayland session'
+            'qt5-translations: for some native UI translations'
+            'postgresql-libs: PostgreSQL driver'
+            'mariadb-libs: MariaDB driver'
+            'unixodbc: ODBC driver'
+            'libfbclient: Firebird/iBase driver'
+            'freetds: MS SQL driver'
+            'gtk3: GTK platform plugin'
+            'perl: for fixqt4headers and syncqt')
+conflicts=("qt5-base" "qt5-3d>$pkgver" "qt5-charts>$pkgver" "qt5-connectivity>$pkgver" "qt5-datavis3d>$pkgver" "qt5-declarative>$pkgver" "qt5-doc>$pkgver" "qt5-examples>$pkgver" "qt5-gamepad>$pkgver" "qt5-graphicaleffects>$pkgver" "qt5-imageformats>$pkgver" "qt5-location>$pkgver" "qt5-lottie>$pkgver" "qt5-multimedia>$pkgver" "qt5-networkauth>$pkgver" "qt5-purchasing>$pkgver" "qt5-quick3d>$pkgver" "qt5-quickcontrols>$pkgver" "qt5-quickcontrols2>$pkgver" "qt5-remoteobjects>$pkgver" "qt5-script>$pkgver" "qt5-scxml>$pkgver" "qt5-sensors>$pkgver" "qt5-serialbus>$pkgver" "qt5-serialport>$pkgver" "qt5-speech>$pkgver" "qt5-svg>$pkgver" "qt5-tools>$pkgver" "qt5-translations>$pkgver" "qt5-virtualkeyboard>$pkgver" "qt5-wayland>$pkgver" "qt5-webchannel>$pkgver" "qt5-webengine>$pkgver" "qt5-webglplugin>$pkgver" "qt5-websockets>$pkgver" "qt5-webview>$pkgver" "qt5-x11extras>$pkgver" "qt5-xmlpatterns>$pkgver" 'qtchooser')
+
+provides=("qt5-base=$pkgver")
+
+_pkgfqn="${_origpkgname/5-/}-everywhere-src-${_qtver}"
+source=(
+      oldherl-24hms.patch
+      'ftp://unicode.org/Public/cldr/36/core.zip'
+      "https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
+         qt5-base-cflags.patch)
+sha256sums=(
+'9c62800980e97b1614e4fc85ecad3b032606d0e620295e791fc3f34629bb0a44'
+      '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
+      '909fad2591ee367993a75d7e2ea50ad4db332f05e1c38dd7a5a274e156a4e0f8'
+            'cf707cd970650f8b60f8897692b36708ded9ba116723ec8fcd885576783fe85c')
+
+prepare() {
+  cd ${_pkgfqn}
+
+  patch -p1 -i ../qt5-base-cflags.patch # Use system CFLAGS
+
+  patch -p1 -i ../oldherl-24hms.patch
+  cd util/locale_database
+  echo "This is slow. It takes about 4 minutes on my desktop."
+  ./cldr2qlocalexml.py ../../../ > ./24h.xml
+  ./qlocalexml2cpp.py ./24h.xml ../..
+}
+
+build() {
+  cd ${_pkgfqn}
+
+  ./configure -confirm-license -opensource -v \
+    -prefix /usr \
+    -docdir /usr/share/doc/qt \
+    -headerdir /usr/include/qt \
+    -archdatadir /usr/lib/qt \
+    -datadir /usr/share/qt \
+    -sysconfdir /etc/xdg \
+    -examplesdir /usr/share/doc/qt/examples \
+    -plugin-sql-{psql,mysql,sqlite,odbc,ibase} \
+    -system-sqlite \
+    -openssl-linked \
+    -nomake examples \
+    -no-rpath \
+    -dbus-linked \
+    -system-harfbuzz \
+    -journald \
+    -no-mimetype-database \
+    -no-use-gold-linker \
+    -reduce-relocations \
+    -no-strip
+  make
+}
+
+package() {
+install -dm755 "$pkgdir"/usr/share/licenses/
+ln -s /usr/share/licenses/${pkgname} "$pkgdir"/usr/share/licenses/qt5-base
+
+  pkgdesc='A cross-platform application and UI framework'
+
+  cd ${_pkgfqn}
+  make INSTALL_ROOT="${pkgdir}" install
+
+  install -Dm644 LICENSE* -t "$pkgdir"/usr/share/licenses/$pkgbase
+
+  # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+  find "${pkgdir}/usr/lib" -type f -name '*.prl' \
+    -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+
+  # Fix wrong qmake path in pri file
+  sed -i "s|${srcdir}/${_pkgfqn}|/usr|" \
+    "${pkgdir}"/usr/lib/qt/mkspecs/modules/qt_lib_bootstrap_private.pri
+
+  # Symlinks for backwards compatibility
+  for b in "${pkgdir}"/usr/bin/*; do
+    ln -s $(basename $b) "${pkgdir}"/usr/bin/$(basename $b)-qt5
+  done
+}
+
+nopackage_qt5-xcb-private-headers() {
+  pkgdesc='Private headers for Qt5 Xcb'
+
+  depends=("qt5-base=$pkgver")
+  optdepends=()
+  groups=()
+  conflicts=()
+
+  cd ${_pkgfqn}
+  install -d -m755 "$pkgdir"/usr/include/qtxcb-private
+  cp -r src/plugins/platforms/xcb/*.h "$pkgdir"/usr/include/qtxcb-private/
+}
