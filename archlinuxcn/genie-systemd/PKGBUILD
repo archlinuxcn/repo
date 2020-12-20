@@ -1,0 +1,36 @@
+# Maintainer: DuckSoft <realducksoft@gmail.com>
+
+pkgname=genie-systemd
+_pkgname=genie
+pkgver=1.29
+pkgrel=1
+pkgdesc="A quick way into a systemd \"bottle\" for WSL"
+arch=('x86_64')
+url="https://github.com/arkane-systems/genie"
+depends=('daemonize' 'dotnet-runtime>=5.0' 'dotnet-host>=5.0' 'inetutils')
+makedepends=('dotnet-sdk>=5.0')
+conflicts=('genie-systemd')
+provides=('genie-systemd')
+source=("git+https://github.com/arkane-systems/genie.git#tag=$pkgver")
+sha256sums=('SKIP')
+
+prepare() {
+  	cd "${srcdir}/$_pkgname"
+}
+
+build() {
+  	export DOTNET_CLI_TELEMETRY_OPTOUT=1
+  	export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
+  	cd "$srcdir/$_pkgname/$_pkgname"
+  	export DESTDIR=$pkgdir
+  	ls -alh
+  	make build
+}
+
+package() {
+  	cd "$srcdir/$_pkgname/$_pkgname"
+  	make install
+	mkdir -p ${pkgdir}/usr/bin
+	chmod +x ${pkgdir}/usr/libexec/genie
+	ln -s /usr/libexec/genie/genie ${pkgdir}/usr/bin/genie
+}
