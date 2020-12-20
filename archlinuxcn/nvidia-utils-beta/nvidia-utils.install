@@ -1,0 +1,14 @@
+post_upgrade() {
+    if (("$(vercmp "$2" 430.14-2)" < 0 ))
+    then
+        printf '%s\n' '==> Package nvidia-egl-wayland-beta was dropped since version 430.14-2.'
+        printf '%s\n' '==> Replace it with egl-wayland from the official repositories with:'
+        printf '%s\n' '==> # pacman -Syu egl-wayland'
+    fi
+    
+    post_install
+}
+
+post_install() {
+    printf '%s\n' 'If you run into trouble with CUDA not being available, run nvidia-modprobe first.'
+}
