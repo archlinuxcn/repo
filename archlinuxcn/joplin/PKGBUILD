@@ -5,14 +5,13 @@
 # https://github.com/alfredopalhares/arch-pkgbuilds
 
 pkgbase="joplin"
-pkgname=('joplin' 'joplin-desktop-electron')
+pkgname=('joplin' 'joplin-cli' 'joplin-desktop' 'joplin-desktop-electron')
 pkgver=1.4.19
 groups=('joplin')
-pkgrel=9
+pkgrel=11
 install="joplin.install"
 pkgdesc="A note taking and to-do application with synchronization capabilities - Split Package"
 arch=('x86_64' 'i686')
-conflicts=('joplin-cli' 'joplin-desktop')
 makedepends=('git' 'npm' 'python' 'rsync' 'electron')
 url="https://joplinapp.org/"
 license=('MIT')
@@ -45,7 +44,7 @@ check() {
 }
 
 #TODO: A slimdown is needed
-package_joplin() {
+package_joplin-cli() {
   pkgdesc="A note taking and to-do application with synchronization capabilities - CLI App"
   depends=('nodejs' 'rsync')
 
@@ -92,7 +91,11 @@ package_joplin() {
   install -Dm755 joplin.sh "${pkgdir}/usr/bin/joplin-cli"
 }
 
-package_joplin-desktop-electron() {
+package_joplin() {
+  package_joplin-cli
+}
+
+package_joplin-desktop() {
   pkgdesc="A note taking and to-do application with synchronization capabilities - Desktop"
   depends=('electron' 'gtk3' 'libexif' 'libgsf' 'libjpeg-turbo' 'libwebp' 'libxss' 'nodejs'
          'nss' 'orc')
@@ -114,9 +117,13 @@ package_joplin-desktop-electron() {
   cd "${srcdir}/joplin-${pkgver}/"
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 
-  msg2 "Installing startup script and desktop file..." 
+  msg2 "Installing startup script and desktop file..."
   cd "${srcdir}"
   install -Dm755 ${srcdir}/joplin-desktop.sh "${pkgdir}/usr/bin/joplin-desktop"
   install -Dm644 ${srcdir}/joplin.desktop -t "${pkgdir}/usr/share/applications"
+}
+
+package_joplin-desktop-electron() {
+  package_joplin-desktop
 }
 
