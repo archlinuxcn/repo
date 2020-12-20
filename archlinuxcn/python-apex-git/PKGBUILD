@@ -1,7 +1,8 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
+_CUDA_ARCH_LIST="5.2;5.3;6.0;6.1;6.2;7.0;7.0+PTX;7.2;7.2+PTX;7.5;7.5+PTX;8.0;8.0+PTX;8.6;8.6+PTX"
 pkgname=python-apex-git
-pkgver=0.1.r826.8cf5ae6
+pkgver=0.1.r828.154c633
 _pkgver=0.1
 pkgrel=1
 pkgdesc="A PyTorch Extension for easy mixed precision and distributed training"
@@ -31,6 +32,7 @@ prepare() {
   # use gcc compatible with current cuda version
   export CC=/opt/cuda/bin/gcc
   export CXX=/opt/cuda/bin/g++
+  export TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST}
 }
 
 build() {
