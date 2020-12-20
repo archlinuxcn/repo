@@ -3,8 +3,8 @@
 
 _basename=gst-plugins-bad
 pkgname=lib32-gst-plugins-bad
-pkgver=1.18.1
-pkgrel=3
+pkgver=1.18.2
+pkgrel=1
 pkgdesc="Multimedia graph framework - bad plugins (32-bit)"
 url="https://gstreamer.freedesktop.org/"
 arch=(x86_64)
@@ -23,9 +23,10 @@ depends=("lib32-aom" "lib32-bzip2" "lib32-chromaprint" "lib32-curl" "lib32-faac"
         lib32-x265 lib32-zbar lib32-zvbi gst-plugins-bad)
 makedepends=(git lib32-bluez-libs lib32-glu lib32-gtk3 lib32-ladspa lib32-libexif lib32-lv2 lib32-vulkan-validation-layers
              meson python lib32-shaderc vulkan-headers wayland-protocols)
+optdepends=('lib32-nvidia-utils: nvcodec plugin')
 checkdepends=(xorg-server-xvfb)
 options=(!emptydirs)
-_commit=e5c3c106a2da607953fea36e3a253b382c939684  # tags/1.18.1^0
+_commit=b375ee4cdbcb98687c226d6564f8678a809cf02a  # tags/1.18.2^0
 source=("git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad.git#commit=$_commit")
 sha256sums=('SKIP')
 
@@ -51,8 +52,6 @@ build() {
         -D iqa=disabled \
         -D magicleap=disabled \
         -D msdk=disabled \
-        -D nvdec=disabled \
-        -D nvenc=disabled \
         -D opencv=disabled \
         -D openh264=disabled \
         -D openmpt=disabled \
