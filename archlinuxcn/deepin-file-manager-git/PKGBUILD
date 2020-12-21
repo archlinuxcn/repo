@@ -10,7 +10,7 @@ license=('GPL3')
 # startdde: for com.deepin.SessionManager
 depends=('deepin-anything-git' 'disomaster' 'file' 'gio-qt' 'libmediainfo' 'avfs' 'polkit-qt5' 'poppler'
          'ffmpegthumbnailer' 'startdde-git' 'taglib' 'jemalloc' 'htmlcxx' 'mimetic' 'lucene++')
-makedepends=('git' 'deepin-movie' 'lucene++' 'jemalloc' 'kcodecs' 'htmlcxx' 'libgsf' 'mimetic' 'boost' 'boost-libs' 'qt5-tools' 'deepin-dock-git' 'deepin-gettext-tools-git')
+makedepends=('git' 'deepin-movie' 'lucene++' 'jemalloc' 'kcodecs' 'htmlcxx' 'libgsf' 'mimetic' 'boost' 'boost-libs' 'qt5-tools' 'deepin-dock-git' 'deepin-gettext-tools-git' 'gtest')
 optdepends=('deepin-manual: for help menual'
             'deepin-shortcut-viewer: for shortcut display'
             'deepin-screensaver: for screensaver chooser'
