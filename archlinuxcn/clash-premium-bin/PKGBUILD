@@ -1,7 +1,7 @@
 # Maintainer: yangon99 <yangon99_all@outlook.com>
 
 pkgname=clash-premium-bin
-pkgver=2020.11.20
+pkgver=2020.12.21
 pkgrel=1
 pkgdesc="Close-sourced pre-built Clash binary with TUN support"
 provides=('clash')
@@ -22,13 +22,12 @@ source_armv6h=("${pkgname}-armv6h-${pkgver}.gz::https://github.com/Dreamacro/cla
 source_armv7h=("${pkgname}-armv7h-${pkgver}.gz::https://github.com/Dreamacro/clash/releases/download/premium/clash-linux-armv7-${pkgver}.gz")
 source_aarch64=("${pkgname}-aarch64-${pkgver}.gz::https://github.com/Dreamacro/clash/releases/download/premium/clash-linux-armv8-${pkgver}.gz")
 
-sha512sums_i686=('a49c30dcedc0bfbc41a9977fdd82574abf3750cce63feb2b14cc26e2718e075b8bd9c3bfd3bdc3707114ffdebec79cdf7ff515d49ac192fc95cb1b53b06f9e6d')
-sha512sums_x86_64=('d420f0e2320867e07f735b329eb01ffbe6fe5bc779a88f8d396b8a9d1e0fedf7b14d4d69f893ae9a281bd6c376d97f187dd9eea0413ab47b4e207a65d639956f')
-sha512sums_arm=('ff8ec4bd0fdfcb281fb4b4a3b6f3ddc95614b9e62eb29ebbfbcd5bec3ed92a519c208b9c074db8ff22a5f0855368a62ed241a75c571534e832212c2d2883f9e8')
-sha512sums_armv6h=('b02bd5728e431f8201f8cc43cba8eed7d600b252dc4575ecf68bb0d9327d9e7e8ed15071b4e24aa63ca50e6541967a6fc10c3f9d8c1eb6adec814fc135e2af5a')
-sha512sums_armv7h=('7bc55d1bb8b928ac08cf45345aaead523968e9a1f7e6fad6e0e78cb747170cd6075548a6423ee09eedbc8aacc7cfad97154344c0203154a2793aeafbf74c25d8')
-sha512sums_aarch64=('da622bebe9150cb63d3030fe6fbb16c5c6744d2e0ba213efad6c241d3563d59c113d26e88e223d185c243c48d462b65ea3481989057c847ab32300cc36ccdfc5')
-
+sha512sums_i686=('4075443913970c5115e43aa9f2e4d7c5d1e0eeff620fc8b450a731447a906ec7a53f1689c1e4da750f8ee460dd027a58a84aa7d18afd73afdc8b9ea975c3053e')
+sha512sums_x86_64=('6bbc085d2a5bfe51b8042f46fceef603bd2e8a6a8ac322767510918f7d2706ed36445eeda3641bcc93508e27bb7b352e7f031a0cda1e781238cc08b72b0c6d57')
+sha512sums_arm=('8151b993a39ddadc40402264c7591202e5ebe7f42fafcf9335fd37ff4c2b0f6af3e5644a0d0daca7aab07481d9b561870296d9b0ef8f8996e303f990d0f7ac2c')
+sha512sums_armv6h=('9f951ed0e5b3968f85c374f6374c0250ec4811ad1b8c99c51d602fcb6d3cb171c388e8eda8d3058f69ee05eb2e96e6e80bb9a0891ec766bdf56588b8b9d64aec')
+sha512sums_armv7h=('e6f03611fbc7fe6e18605b4640aade97de88e21e1b4550d354169f8c5beeeed08ab3af4f7f06ed4832d2ff292170d959ae83bfd6e3b619c00583deaf81e5a436')
+sha512sums_aarch64=('3b2a666af8aa55bb6f85b00610e7363feea8281a5f25591f770d847e6597ebb7f9fdd80712c377acdd906423f0cbff7932f2fe4f150441a4ef7135b1bafb69cf')
 
 package() {
     cd ${srcdir}
