@@ -3,8 +3,8 @@
 # Based on gtk4-git
 
 pkgname=gtk4
-pkgver=3.99.4
-pkgrel=2
+pkgver=4.0.0
+pkgrel=1
 pkgdesc="GObject-based multi-platform GUI toolkit"
 arch=('i686' 'x86_64')
 url="https://www.gtk.org/"
@@ -45,17 +45,24 @@ makedepends=('gobject-introspection'
 optdepends=('gnome-icon-theme: Default icon theme'
             'gnome-themes-standard: Default widget theme'
             'gdk-pixbuf2: An image loading library')
-source=("https://gitlab.gnome.org/GNOME/gtk/-/archive/${pkgver}/gtk-${pkgver}.tar.gz"
+source=("https://download.gnome.org/sources/gtk/${pkgver%.*}/gtk-${pkgver}.tar.xz"
         'gtk4.install'
         'gtk4-update-icon-cache.hook'
         'gtk4-update-icon-cache.script'
-        'settings.ini')
-sha512sums=('8fc9e00dd0f5dda2d03ae9023684eebe9cc827e4a742320c3bc6dd62b3e03892f1b29aafb8167402c238ed7b4776e5bea532d8243142ae8da986e9779d17a9c8'
+        'settings.ini'
+        'fix-incompatible-vulkan-error.patch')
+sha512sums=('5fe807bcdb59f0df2ad1cc5a28b654dbf90f5fa29bf9a4c69c9278543ab9a3e4f8b1712547fb2fd1f35711c438f78ee8a5cd1a509cf64f815274bb8c82023922'
             '5dcb698a15e7d5f4611c9357782d475052944cc71e73351238ffb5dfbe18d1bd1b62289da7f8066cde256c4339de5efa982088f47781876f5d8317f92b87f79f'
             '9d3bb80afb3a00dc50402d32476719daaeab017e1a066425bb602316b534d0a9899d48734a84f70af1066ed104df0491264383a34969dfad2ea9828fb41b9b6b'
             '805cf12606c738d0442d8af415223d3faada93c933b563b7c4c1d5e0c16d2d21435406add1fcc69300fb2fe534f2d0ddbf50b2c0463fc7462109d0f7802ccef1'
-            '1642d77622d61234e316e8fcbc803a6a5556c606e37e56aa5981ef2f2df85bfa959c31b5d1bff248b340760e1178281cb0d7abdf540c5f7d4b62cb383a67c685')
+            '1642d77622d61234e316e8fcbc803a6a5556c606e37e56aa5981ef2f2df85bfa959c31b5d1bff248b340760e1178281cb0d7abdf540c5f7d4b62cb383a67c685'
+            '2abb3e5c0743992bdffb5cdb2a9256577acba1e3da39971921e013d9d197dbbc5dd29555176f558a2176bd2a2853fd6370b8e7004257c4d001d3211694a9b9c3')
 install=gtk4.install
+
+prepare() {
+  cd gtk-${pkgver}
+  patch -p1 -i "$srcdir"/fix-incompatible-vulkan-error.patch
+}
 
 build() {
   cd gtk-${pkgver}

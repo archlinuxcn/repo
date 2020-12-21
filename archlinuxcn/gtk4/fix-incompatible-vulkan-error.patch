@@ -1,0 +1,29 @@
+From 3c2484142dabb1dc141a36e790e79ac6ace88436 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Timm=20B=C3=A4der?= <mail@baedert.org>
+Date: Tue, 15 Dec 2020 15:04:48 +0100
+Subject: [PATCH] vulkancontext: Remove usage of
+ VK_ERROR_INCOMPATIBLE_VERSION_KHR
+
+According to
+https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/html/chap46.html
+this has been removed. It also breaks the build on my system
+---
+ gdk/gdkvulkancontext.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/gdk/gdkvulkancontext.c b/gdk/gdkvulkancontext.c
+index 917b443f94..d0e47055c9 100644
+--- a/gdk/gdkvulkancontext.c
++++ b/gdk/gdkvulkancontext.c
+@@ -210,8 +210,6 @@ gdk_vulkan_strerror (VkResult result)
+       return "An unknown error has occurred; either the application has provided invalid input, or an implementation failure has occurred.";
+ #endif
+ #if VK_HEADER_VERSION >= 135
+-    case VK_ERROR_INCOMPATIBLE_VERSION_KHR:
+-      return "Acceleration structure serialized with version as the version information is not compatible with device.";
+     case VK_THREAD_IDLE_KHR:
+       return "A deferred operation is not complete but there is currently no work for this thread to do at the time of this call.";
+     case VK_THREAD_DONE_KHR:
+-- 
+GitLab
+
