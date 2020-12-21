@@ -8,7 +8,7 @@ _npmid="@$_npmscope/$_npmname"
 
 pkgname="${_npmscope}-${_npmname}"
 pkgver=4.5.9
-pkgrel=1
+pkgrel=2
 pkgdesc='Standard tooling for Vue.js development'
 arch=('any')
 url='https://cli.vuejs.org'
@@ -23,6 +23,8 @@ noextract=("${source[@]%%::*}")
 sha1sums=('d481d1ef1bb2b92d132958a8920c9db27c24998d')
 
 package() {
+  mkdir -p "${pkgdir}"/usr/lib
+  
   # Setting temporary cache
   npm install -g --user root --cache "$srcdir/npm-cache" --prefix "$pkgdir/usr" "${source[@]%%::*}"
 
