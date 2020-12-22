@@ -2,16 +2,16 @@
 
 pkgname=libva-vdpau-driver-vp9-git
 pkgver=r51.dabc009
-pkgrel=1
+pkgrel=2
 pkgdesc="VDPAU backend for VA API. (Version with VP9 codec support)"
 arch=('x86_64')
 url='https://github.com/xtknight/vdpau-va-driver-vp9'
 license=('GPL')
-depends=('libva'
-         'libvdpau>=1.3'
+depends=('libvdpau>=1.3'
          'libgl'
          )
 makedepends=("git"
+             'libva'
              'mesa'
              'xorgproto'
              )
