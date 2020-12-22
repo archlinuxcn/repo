@@ -6,7 +6,9 @@ post_build: git_pkgbuild_commit
 
 repo_depends:
   - daemonize
-  - dotnet-core-bin
+  - dotnet-core-bin: dotnet-runtime-bin
+  - dotnet-core-bin: dotnet-sdk-bin
+  - dotnet-core-bin: dotnet-host-bin
 
 update_on:
   - source: github
