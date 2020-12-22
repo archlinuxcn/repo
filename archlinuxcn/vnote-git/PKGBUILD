@@ -25,7 +25,7 @@ package() {
     git submodule update --init
     mkdir build
     cd build
-    qmake-qt5 ../VNote.pro
+    qmake-qt5 ../vnote.pro
     make
     make INSTALL_ROOT="$pkgdir" install
 }
