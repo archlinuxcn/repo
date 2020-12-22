@@ -1,15 +1,15 @@
 # Maintainer: OriginCode <self@origincode.me>
 
 pkgbase=linux-froidzen
-pkgver=5.9.13.zen1
-pkgrel=1
+pkgver=5.10.2.zen1
+pkgrel=2
 pkgdesc='Linux ZEN with Patches and Modifications'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/zen-kernel/zen-kernel/commits/$_srctag"
 arch=(x86_64)
 license=(GPL2)
 makedepends=(
-  bc kmod libelf pahole
+  bc kmod libelf pahole cpio perl tar xz
   xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick
   git
 )
@@ -18,8 +18,7 @@ _srcname=zen-kernel
 source=(
   "$_srcname::git+https://github.com/zen-kernel/zen-kernel?signed#tag=$_srctag"
   config         # the main kernel config file
-  sphinx-workaround.patch
-  "https://raw.githubusercontent.com/dolohow/uksm/master/v5.x/uksm-5.9.patch" # UKSM Patch
+  "https://raw.githubusercontent.com/dolohow/uksm/master/v5.x/uksm-5.10.patch" # UKSM Patch
 )
 validpgpkeys=(
   'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds
@@ -27,9 +26,8 @@ validpgpkeys=(
   'A2FF3A36AAA56654109064AB19802F8B0D70FC30'  # Jan Alexander Steffens (heftig)
 )
 sha256sums=('SKIP'
-            '23f9693a1b35e4d674eced335a2a2cd8a231a157f362000340ccfdb86b4a98e2'
-            '8cb21e0b3411327b627a9dd15b8eb773295a0d2782b1a41b2a8839d1b2f5778c'
-            '59d2b5e63c30332bd6e7030e4050ce9722f420b0e5b9bc383e7e93aca4268929')
+            'e5d2541532de126a4f243b4cc6f098403a425eb0d76ee59d3ffaf122ac4d8910'
+            '24729e63e08de13039ce7e6637146ec5a5747379ebbd92cdeef744edfad17183')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -42,9 +40,6 @@ prepare() {
   scripts/setlocalversion --save-scmversion
   echo "-$pkgrel" > localversion.10-pkgrel
   echo "${pkgbase#linux}" > localversion.20-pkgname
-
-  # Workaround for uksm-5.9 patch
-  sed -i "s/#include <linux\/vmalloc.h>/#include <linux\/vmalloc.h>\n #include <linux\/io_uring.h>/g" ${srcdir}/uksm-5.9.patch
 
   local src
   for src in "${source[@]}"; do
