@@ -10,6 +10,7 @@ url="https://github.com/arkane-systems/genie"
 depends=('daemonize' 'dotnet-runtime>=5.0' 'dotnet-host>=5.0' 'inetutils')
 makedepends=('git' 'dotnet-sdk>=5.0')
 conflicts=('genie-systemd')
+options=(!strip)
 provides=('genie-systemd')
 source=("git+https://github.com/arkane-systems/genie.git#tag=$pkgver")
 sha256sums=('SKIP')
