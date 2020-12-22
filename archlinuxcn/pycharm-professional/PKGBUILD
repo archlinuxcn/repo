@@ -1,8 +1,8 @@
 # Maintainer: XavierCLL <xavier.corredor.llano (a) gmail.com>
 
 pkgname=pycharm-professional
-pkgver=2020.3
-pkgrel=5
+pkgver=2020.3.1
+pkgrel=2
 pkgdesc="Python IDE for Professional Developers. Professional Edition"
 arch=('x86_64')
 url='https://www.jetbrains.com/pycharm/'
@@ -12,14 +12,14 @@ license=('custom')
 backup=("opt/$pkgname/bin/pycharm.vmoptions"
         "opt/$pkgname/bin/pycharm64.vmoptions"
         "opt/$pkgname/bin/idea.properties")
-depends=('giflib' 'glibc' 'sh' 'libxtst' 'libxslt' 'python' 'libdbusmenu-glib')
+depends=('giflib' 'glibc' 'sh' 'libxtst' 'libxslt' 'libxss' 'nss' 'python' 'libdbusmenu-glib')
 source=("https://download.jetbrains.com/python/$pkgname-$pkgver.tar.gz"
         "pycharm-professional.desktop"
         "charm.desktop"
         "charm")
-sha256sums=('a099d0aefa9e6a2e8507e0f89feb48f5839f529f21649393e22f52f641f2efcf'
-            '4547368ae3af428bb6c18edad0cb11e2578b28512b7bf1ab9513c154dd24a0a3'
-            'f8b5390d334de089ee6d1d87a0cfd8e502aa897f10361ba31a7ebc3f3cac3270'
+sha256sums=('65d0c32995bdce3b86643deedc0cde5ed69b128ee9a63594b555afa74d27ff1b'
+            'a75264959b06a45ea0801729bc1688bfbd52da3c5fbf3d5b1ad9267860439291'
+            'fdd92952973bf9c70dcb3a570b29fdc534ef87f524d06ca8f6c6422f3b954e14'
             'e3b2e7996a7571d659b9477f950ea935e8088c302f6d1e1f6cb5d803f1d10113')
 makedepends=('python-setuptools' 'cython')
 optdepends=('python2: Python 2 support'
@@ -63,9 +63,11 @@ package() {
     # base
     install -dm 755 "$pkgdir/opt/$pkgname"
     mv "pycharm-$pkgver/"* "$pkgdir/opt/$pkgname/"
-    install -dm 755 "$pkgdir/usr/share/"{applications,pixmaps}
+    install -dm 755 "$pkgdir/usr/share/applications"
     install -Dm 644 "$pkgname.desktop" "$pkgdir/usr/share/applications/"
-    ln -s "/opt/$pkgname/bin/pycharm.svg" "$pkgdir/usr/share/pixmaps/pycharm.svg"
+    install -dm 755 "$pkgdir/usr/share/icons/hicolor/"{128x128,scalable}"/apps/"
+    install -Dm 644 "$pkgdir/opt/$pkgname/bin/pycharm.png" "$pkgdir/usr/share/icons/hicolor/128x128/apps/pycharm.png"
+    install -Dm 644 "$pkgdir/opt/$pkgname/bin/pycharm.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/pycharm.svg"
 
     # exec
     install -dm 755 "$pkgdir/usr/bin/"
