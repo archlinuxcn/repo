@@ -10,14 +10,14 @@
 
 pkgname=nvidia-beta-dkms
 pkgver=460.27.04
-pkgrel=1
+pkgrel=2
 pkgdesc='NVIDIA driver sources for linux (beta version)'
 arch=('x86_64')
 url='https://www.nvidia.com/'
 license=('custom')
 provides=("nvidia=${pkgver}" "nvidia-dkms=${pkgver}" "nvidia-beta=${pkgver}"
           'NVIDIA-MODULE')
-conflicts=('nvidia')
+conflicts=(nvidia-dkms)
 _pkg="NVIDIA-Linux-${CARCH}-${pkgver}-no-compat32"
 source=("https://us.download.nvidia.com/XFree86/Linux-${CARCH}/${pkgver}/${_pkg}.run"
         '110-nvidia-change-dkms-conf.patch'
@@ -41,6 +41,6 @@ package() {
     
     mkdir -p "${pkgdir}/usr/src"
     cp -dr --no-preserve='ownership' "${_pkg}/kernel" "${pkgdir}/usr/src/nvidia-${pkgver}"
-    install -D -m644 <(printf '%s\n' 'blacklist nouveau') "${pkgdir}/usr/lib/modprobe.d/nvidia.conf"
+    install -D -m644 <(printf '%s\n' 'blacklist nouveau') "${pkgdir}/usr/lib/modprobe.d/nvidia-dkms.conf"
     install -D -m644 "${_pkg}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
