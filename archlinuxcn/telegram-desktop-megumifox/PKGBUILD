@@ -3,7 +3,7 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
-pkgver=2.4.7
+pkgver=2.5.1
 pkgrel=1
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
@@ -11,31 +11,23 @@ url="https://desktop.telegram.org/"
 license=('GPL3')
 depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
          'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5' 'qt5-wayland' 'libx11')
-makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'python2' 'microsoft-gsl' 'libwebrtc')
+makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'python2' 'microsoft-gsl' 'libtg_owt')
 optdepends=('ttf-opensans: default Open Sans font family')
 provides=('telegram-desktop')
 conflicts=('telegram-desktop')
 source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
 "0001-use-system-font-and-use-stylename.patch"
-"0002-fix-webrtc-integration-build-missing-libx11.patch"
-"0003-Use-tg_owt-webrtc-fork.patch"
-"0004-Update-webrtc-packaged-build-for-tg_owt.patch"
-"Add_external_jpeg.patch::https://github.com/desktop-app/cmake_helpers/commit/ed9fa2e798a1f175840479417d760c51181959b8.patch")
-sha512sums=('712ab6896f89f7df0c7ac297039ee3b3532c159e17f66e4539b701a35d04d4709b558755d592d3cd91df541a2d2ca9f0485cf073c32f0b69a18848ab2ccd1993'
+"0002-fix-webrtc-integration-build-missing-libx11.patch")
+sha512sums=('c906c76e44f5c6926bdc00143cbb1ac718633395a390c8a3e40fde9c4bfa42ba2e92cf0ac4c20434168d0548981f2fddefd019b942411ff4552a0f441336c0e1'
             '0a4206f3d16589ba476d85381bf7984a28b74e0623e02a82ce2d586eec337808f66261dd0f2116ee513403223ac7707734b3fa17d082b5ebf88481bc22636f6f'
-            'c8c55b2afee8c8dad33ec5daff5c1d8520f485e3a95061ab0442768976f62922387afe93c0dee4e7026e8cc74d12dd6a03314700a1cbacbcec6c6b28f288abb8'
-            '071591c6bb71435f8186dcaf570703718051f00366dbbe3f13c4df3706d3de1f168bff4bfa707ad1d6f09f5505c925f0b01d76fd65efe904f3ba7db693d63f43'
-            'eae8cf7480d9d48a1313301c8012dc351eb526bc61634b24ffdfddb03d5bdb7eedb33de0226133661a365d55bd047ad9dea0f38ebc7b584030a498115f9e9117'
-            '3891f191f720e77d463365d1415ff8c20866d0d898909dcbe757d334c582c38975d47c33e82ae54e3cfbce7f46c257e9f2eb76b673a76c37446ecf1e9a9c681b')
+            'c8c55b2afee8c8dad33ec5daff5c1d8520f485e3a95061ab0442768976f62922387afe93c0dee4e7026e8cc74d12dd6a03314700a1cbacbcec6c6b28f288abb8')
 
 prepare() {
     patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-use-system-font-and-use-stylename.patch
     patch -b -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0002-fix-webrtc-integration-build-missing-libx11.patch
-    patch -b -d tdesktop-$pkgver-full/cmake -R -Np1 -i ${srcdir}/Add_external_jpeg.patch
-    patch -b -d tdesktop-$pkgver-full/cmake -R -Np1 -i ${srcdir}/0004-Update-webrtc-packaged-build-for-tg_owt.patch
-    patch -b -d tdesktop-$pkgver-full/cmake -R -Np1 -i ${srcdir}/0003-Use-tg_owt-webrtc-fork.patch
+    # force webrtc link to libjpeg
     cd tdesktop-$pkgver-full/cmake
-    sed 's|set(webrtc_build_loc ${webrtc_loc}/out/$<CONFIG>/obj)|set(webrtc_build_loc /usr/lib)|' -i external/webrtc/CMakeLists.txt
+    echo "target_link_libraries(external_webrtc INTERFACE jpeg)" | tee -a external/webrtc/CMakeLists.txt
 }
 
 build() {
@@ -57,8 +49,7 @@ build() {
         -DDESKTOP_APP_SPECIAL_TARGET="" \
         -DDESKTOP_APP_USE_PACKAGED_LAZY=OFF \
         -DDESKTOP_APP_USE_PACKAGED_FONTS=OFF \
-	-DTDESKTOP_DISABLE_GTK_INTEGRATION=ON \
-        -DDESKTOP_APP_WEBRTC_LOCATION=/usr/include/libwebrtc
+    	-DTDESKTOP_DISABLE_GTK_INTEGRATION=ON
     ninja -C build
 }
 
