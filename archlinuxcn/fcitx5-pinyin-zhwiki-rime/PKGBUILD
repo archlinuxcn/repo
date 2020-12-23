@@ -3,7 +3,7 @@
 
 pkgname=fcitx5-pinyin-zhwiki-rime
 _reponame=fcitx5-pinyin-zhwiki
-pkgver=20201120
+pkgver=20201220
 _converterver=0.2.1
 pkgrel=1
 pkgdesc="Fcitx 5 Pinyin Dictionary from zh.wikipedia.org for rime"
@@ -14,7 +14,7 @@ makedepends=('libime' 'opencc' 'pypinyin')
 source=("https://github.com/felixonmars/${_reponame}/archive/$_converterver/$pkgname-$_converterver.tar.gz"
         "https://dumps.wikimedia.org/zhwiki/$pkgver/zhwiki-$pkgver-all-titles-in-ns0.gz")
 md5sums=('2d01f45a73b7c686fef5c44472a9572b'
-         'a0c7707cc4f8d0aeddf5250878f25cef')
+         '1780f415701a75b7391f3b7ac290c006')
 
 prepare() {
   cd ${_reponame}-$_converterver
