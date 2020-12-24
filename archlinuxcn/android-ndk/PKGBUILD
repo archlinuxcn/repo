@@ -5,7 +5,7 @@
 
 pkgname=android-ndk
 pkgver=r22
-pkgrel=1
+pkgrel=2
 pkgdesc='Android C/C++ developer kit'
 arch=('x86_64')
 url='https://developer.android.com/ndk/'
@@ -33,4 +33,8 @@ package() {
   mv "$pkgname-${pkgver/./}" "$pkgdir/opt/$pkgname"
 
   install -Dm644 $pkgname.sh -t "$pkgdir/etc/profile.d/"
+
+  # make sdkmanager and gradle recognize NDK
+  install -Ddm755 "$pkgdir"/opt/android-sdk
+  ln -s /opt/$pkgname "$pkgdir"/opt/android-sdk/ndk-bundle
 }
