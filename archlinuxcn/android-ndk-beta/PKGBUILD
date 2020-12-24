@@ -6,7 +6,7 @@
 pkgname=android-ndk-beta
 _pkgname=${pkgname/-beta*/}
 pkgver=r22_beta1
-pkgrel=2
+pkgrel=3
 pkgdesc='Android C/C++ developer kit (beta)'
 arch=('x86_64')
 url='https://developer.android.com/ndk/'
@@ -34,7 +34,5 @@ package() {
 
   install -Dm644 $pkgname.sh -t "$pkgdir/etc/profile.d/"
 
-  # make sdkmanager and gradle recognize NDK
-  install -Ddm755 "$pkgdir"/opt/android-sdk
-  ln -s /opt/$pkgname "$pkgdir"/opt/android-sdk/ndk-bundle
+  # XXX: not creating a symlink at /opt/android-sdk/ndk-bundle as the latter is already used by android-ndk
 }
