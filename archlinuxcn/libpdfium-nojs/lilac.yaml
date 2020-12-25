@@ -15,3 +15,4 @@ update_on:
         ver=$(curl -fsSL https://omahaproxy.appspot.com/linux?channel=stable | cut -d. -f3)
         rev=$(curl -fsSL https://pdfium.googlesource.com/pdfium/+log/master..chromium/$ver?format=json | grep -c "\"commit\":")
         echo $ver.r$rev'
+  - alias: icu
