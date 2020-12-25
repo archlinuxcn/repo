@@ -1,0 +1,55 @@
+_hkgname=json-autotype
+pkgname=haskell-json-autotype
+pkgver=3.1.2
+pkgrel=1
+pkgdesc="Automatic type declaration for JSON input data"
+url="https://github.com/mgajda/json-autotype.git#readme"
+license=("custom:BSD3")
+arch=('x86_64')
+depends=('ghc-libs' 'haskell-genericpretty' 'haskell-quickcheck' 'haskell-aeson' 'haskell-data-default' 'haskell-hashable' 'haskell-json-alt' 'haskell-lens' 'haskell-optparse-applicative' 'haskell-run-haskell-module' 'haskell-scientific' 'haskell-smallcheck' 'haskell-uniplate' 'haskell-unordered-containers' 'haskell-vector' 'haskell-yaml')
+makedepends=('ghc' 'uusi')
+source=("https://hackage.haskell.org/packages/archive/$_hkgname/$pkgver/$_hkgname-$pkgver.tar.gz" 'GenerateTestJSON.patch')
+sha256sums=('6f84504ae750f8d6a667633271bafc63cf99370b5f5790bb373e3e2e510ae1f1'
+            'e01ab0d1fec8bc65a053f1f5bfc252ae8520accbdf9e76ac74563ee86d05e8ef')
+
+prepare() {
+  cd $_hkgname-$pkgver
+  
+  uusi -uaeson -usmallcheck $_hkgname.cabal
+  
+  cd test/gen
+  
+  patch -u -i ../../../GenerateTestJSON.patch
+}
+
+build() {
+  cd $_hkgname-$pkgver
+
+  runhaskell Setup configure -O --enable-shared --enable-executable-dynamic --disable-library-vanilla \
+    --prefix=/usr --docdir=/usr/share/doc/$pkgname --enable-tests \
+    --dynlibdir=/usr/lib --libsubdir=\$compiler/site-local/\$pkgid \
+    --ghc-option=-optl-Wl\,-z\,relro\,-z\,now \
+    --ghc-option='-pie'
+
+  runhaskell Setup build
+  runhaskell Setup register --gen-script
+  runhaskell Setup unregister --gen-script
+  sed -i -r -e "s|ghc-pkg.*update[^ ]* |&'--force' |" register.sh
+  sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
+}
+
+check() {
+  cd $_hkgname-$pkgver
+  # tests would fail
+  # runhaskell Setup test
+}
+
+package() {
+  cd $_hkgname-$pkgver
+
+  install -D -m744 register.sh "$pkgdir"/usr/share/haskell/register/$pkgname.sh
+  install -D -m744 unregister.sh "$pkgdir"/usr/share/haskell/unregister/$pkgname.sh
+  runhaskell Setup copy --destdir="$pkgdir"
+  install -D -m644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname/
+  rm -f "$pkgdir"/usr/share/doc/$pkgname/LICENSE
+}
