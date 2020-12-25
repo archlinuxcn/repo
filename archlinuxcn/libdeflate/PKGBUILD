@@ -1,0 +1,26 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=libdeflate
+pkgver=1.7
+pkgrel=1
+pkgdesc='Heavily optimized library for DEFLATE/zlib/gzip compression and decompression'
+arch=('x86_64')
+url='https://github.com/ebiggers/libdeflate'
+license=('MIT')
+depends=('glibc')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ebiggers/libdeflate/archive/v${pkgver}.tar.gz")
+sha512sums=('82b297af2d3128a244e561893cce1d3664de410469ba6745c3f68fc3a1962c62467c427f3857bb679578e0f704cd0eba1a64b13c30505addd310ff9af1883068')
+
+build() {
+  make -C "${pkgname}-${pkgver}"
+}
+
+check() {
+  make -C "${pkgname}-${pkgver}" check
+}
+
+package() {
+  make -C "${pkgname}-${pkgver}" PREFIX="/usr" DESTDIR="${pkgdir}" install
+  install -Dm644 "${pkgname}-${pkgver}/COPYING" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
