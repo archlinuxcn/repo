@@ -1,7 +1,7 @@
 # Maintainer: Megumi_fox <i@megumifox.com>
 
 pkgname=qliveplayer
-pkgver=3.20.2
+pkgver=3.21.0
 pkgrel=1
 pkgdesc='Cute and useful Live Stream Player with danmaku support.'
 arch=('x86_64')
@@ -24,7 +24,7 @@ source=(
     "QLivePlayer-${pkgver}::https://github.com/IsoaSFlus/QLivePlayer/archive/${pkgver}.tar.gz"
 )
 
-sha256sums=('9859e3da8e4d194d153d2a3725f9f34fea527f67866867fb48299a43bf9c9e84')
+sha256sums=('435747c5ec9f07d271cba99ca02c3932fdef86bc516f7491dd001502bc2c97db')
 
 build() {
     cd $srcdir/QLivePlayer-${pkgver}
