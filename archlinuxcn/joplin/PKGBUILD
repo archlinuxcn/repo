@@ -5,15 +5,14 @@
 # https://github.com/alfredopalhares/arch-pkgbuilds
 
 pkgbase="joplin"
-pkgname=('joplin' 'joplin-cli' 'joplin-desktop' 'joplin-desktop-electron')
+pkgname=('joplin' 'joplin-desktop')
 pkgver=1.4.19
 groups=('joplin')
-pkgrel=14
+pkgrel=15
 install="joplin.install"
 depends=('electron' 'gtk3' 'libexif' 'libgsf' 'libjpeg-turbo' 'libwebp' 'libxss' 'nodejs'
          'nss' 'orc' 'rsync' )
 optdepends=('libappindicator-gtk3: for tray icon')
-pkgdesc="A note taking and to-do application with synchronization capabilities - CLI and Desktop Version"
 arch=('x86_64' 'i686')
 makedepends=('git' 'npm' 'python' 'rsync' 'electron')
 url="https://joplinapp.org/"
@@ -36,26 +35,20 @@ build() {
 
   msg2 "Installing dependencies..."
   npm install
+  msg2 "Running Lerna Bootstrap..."
   ./node_modules/.bin/lerna bootstrap
 }
 
 check() {
   cd "${srcdir}/joplin-${pkgver}"
-  msg2 "Running Lerna Test Suite"
-  npm run test || exit 0
-}
-
-package_joplin() {
-  conflicts=('joplin-cli' 'joplin-desktop' 'joplin-desktop-electron')
-  package_joplin-cli
-  package_joplin-desktop
+  msg2 "Not Running any tests for now"
+  #npm run test || exit 0
 }
 
 #TODO: A slimdown is needed
-package_joplin-cli() {
+package_joplin() {
   pkgdesc="A note taking and to-do application with synchronization capabilities - CLI App"
   depends=('nodejs' 'rsync')
-  conflicts=('joplin')
 
   msg2 "Building CLI..."
   mkdir -p "${pkgdir}/usr/share/joplin-cli/app-cli"
@@ -105,7 +98,7 @@ package_joplin-desktop() {
   depends=('electron' 'gtk3' 'libexif' 'libgsf' 'libjpeg-turbo' 'libwebp' 'libxss' 'nodejs'
          'nss' 'orc')
   optdepends=('libappindicator-gtk3: for tray icon')
-  conflicts=('joplin' 'joplin-desktop-electron')
+  conflicts=('joplin-desktop-electron')
 
   msg2 "Building Desktop with packaged Electron..."
   mkdir -p "${pkgdir}/usr/share/joplin-desktop"
@@ -127,14 +120,5 @@ package_joplin-desktop() {
   cd "${srcdir}"
   install -Dm755 ${srcdir}/joplin-desktop.sh "${pkgdir}/usr/bin/joplin-desktop"
   install -Dm644 ${srcdir}/joplin.desktop -t "${pkgdir}/usr/share/applications"
-}
-
-package_joplin-desktop-electron() {
-  pkgdesc="DEPRECATED: A note taking and to-do application with synchronization capabilities - Desktop"
-  depends=('electron' 'gtk3' 'libexif' 'libgsf' 'libjpeg-turbo' 'libwebp' 'libxss' 'nodejs'
-         'nss' 'orc')
-  optdepends=('libappindicator-gtk3: for tray icon')
-  conflicts=('joplin' 'joplin-desktop')
-  package_joplin-desktop
 }
 
