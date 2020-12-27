@@ -3,7 +3,7 @@
 # Contributor: Yegorius <yegorius@domic.us>
 
 pkgname=teamcity
-pkgver=2020.1.4
+pkgver=2020.2.1
 pkgrel=2
 pkgdesc='Continuous integration server from JetBrains'
 arch=('any')
@@ -11,13 +11,13 @@ url="http://www.jetbrains.com/teamcity/"
 license=('custom:JetBrains TeamCity')
 depends=('java-runtime-headless')
 install="$pkgname.install"
-source=('https://download.jetbrains.com/teamcity/TeamCity-2020.1.4.tar.gz'
+source=('https://download.jetbrains.com/teamcity/TeamCity-2020.2.1.tar.gz'
         'teamcity-agent.service'
         'teamcity-server.service'
         'teamcity-sysusers.conf'
         'teamcity-tmpfiles.conf'
         'teamcity.conf')
-sha256sums=('6b2ea04bc1106d9261befaf6dbb451ac9fa171960c6686efe6f27ad0fefb5b76'
+sha256sums=('3cb2e20ab6018382eb9ba42404f8c5993ca4048f0515e7e91bfaf265dd3e868a'
             'b66ca4d1963138be8f88c4bf7cf358b1bf096711a618f2f501ce9805fafdbb20'
             '59e68ab2524e66f7c074ac4215a0449ed9242160946ef3364d378e015525e749'
             'b74128251ac1943ff48956bb2849731423b712d078ec76f1a8959532f0161c91'
