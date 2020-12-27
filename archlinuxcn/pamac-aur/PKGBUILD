@@ -5,12 +5,12 @@ ENABLE_FLATPAK=0
 ENABLE_SNAPD=0
 
 pkgname=pamac-aur
-pkgver=10.0.2
+pkgver=10.0.3
 pkgrel=1
 _pkgfixver=$pkgver
 
-_commit='31b008b8b7d5978ce47a306aa2ca1d0fffd8d604'
-sha256sums=('c244c5147a0784a01d0be0e788980e3675e1c3dfed7d5b748c1a897d0d7ec92f'
+_commit='bfa54094c832b7e9a89d9f2cba03b9629c712490'
+sha256sums=('b535bd8502970a987a842448127b1136ccd712148d23cedec52fb3b2aff3272b'
             'e9fe7c14d15cbce1d337749cf317e4460bce485b102b5c228b7efa479998d4fa'
             'c2b943318a01ba1f3dabbf32e48e6a6f4b4b774e167ab86c6bfee31aa4a3424c')
 
