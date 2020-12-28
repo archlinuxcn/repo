@@ -1,0 +1,29 @@
+# Maintainer: Dct Mei <dctxmei@gmail.com>
+
+pkgname=i3lock-color
+pkgver=2.13.c.1
+pkgrel=1
+pkgdesc="A modern version of i3lock with color functionality and other features"
+arch=('x86_64')
+url="https://github.com/Raymo111/i3lock-color"
+license=('custom')
+depends=('cairo' 'libev' 'libjpeg-turbo' 'libxkbcommon-x11' 'pam' 'xcb-util-image' 'xcb-util-xrm')
+provides=('i3lock')
+conflicts=('i3lock' 'i3lock-color-git')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
+sha256sums=('691de5b10cb30bc3858390f5c8d22e5a0d1037b5d4b73948c8cf1955a71e5381')
+
+build() {
+    cd "${srcdir}"/"${pkgname}-${pkgver}"/
+    autoreconf -fiv
+    ./configure --prefix="${pkgdir}"/usr/ \
+        --sysconfdir="${pkgdir}"/etc/ \
+        --disable-sanitizers
+    make
+}
+
+package() {
+    cd "${srcdir}"/"${pkgname}-${pkgver}"/
+    make install
+    install -Dm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/"${pkgname}"/
+}
