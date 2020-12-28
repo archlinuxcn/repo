@@ -1,9 +1,10 @@
 # Maintainer: farawayer <farwayer@gmail.com>
+# Co-Maintainer: Bert Peters <bert@bertptrs.nl>
 
 _gemname=terminal-table
 pkgname=ruby-$_gemname
-pkgver=1.8.0
-pkgrel=4
+pkgver=2.0.0
+pkgrel=1
 pkgdesc='Simple, feature rich ascii table generation library'
 arch=(any)
 url='https://github.com/tj/terminal-table'
@@ -15,7 +16,7 @@ depends=(
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha1sums=('e5d8ae048471029bd8991152c7e8c20aafb8b935')
+sha1sums=('967467fe515e0221049431ef2929404bf9dc6be2')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
