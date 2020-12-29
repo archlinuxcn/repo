@@ -2,8 +2,8 @@
 
 pkgname=star
 _pkgname=STAR
-pkgver=2.7.6a
-pkgrel=2
+pkgver=2.7.7a
+pkgrel=1
 pkgdesc="Spliced Transcripts Alignment to a Reference"
 arch=('x86_64')
 url="https://github.com/alexdobin/STAR"
@@ -11,7 +11,7 @@ license=('MIT')
 depends=('gcc-libs' 'zlib')
 provides=('STAR')
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('9320797c604673debea0fe8f2e3762db364915cc59755de1a0d87c8018f97d51')
+sha256sums=('a4be87223816f2a34b98ae89470d89caff60ecc8e6d49b5ae6c917b3cadf31bb')
 
 build() {
     cd "${_pkgname}-${pkgver}"/
