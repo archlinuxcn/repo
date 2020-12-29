@@ -1,7 +1,7 @@
 # Maintainer: Arne Beer <privat@arne.beer>
 
 pkgname=pueue
-pkgver='0.10.0'
+pkgver='0.10.1'
 pkgrel=1
 arch=('any')
 pkgdesc='A command scheduler for shells'
@@ -11,7 +11,7 @@ url='https://github.com/nukesor/pueue'
 source=(
     "$pkgname-$pkgver.tar.gz::https://github.com/Nukesor/pueue/archive/v${pkgver}.tar.gz"
 )
-md5sums=('07ca78f39dd9dcc1805d522affed8e4d')
+md5sums=('94662d47361677c21294a0886ec123ba')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
