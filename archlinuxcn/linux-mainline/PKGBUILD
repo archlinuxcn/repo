@@ -8,15 +8,15 @@
 
 pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
-_tag=v5.10
-pkgver=5.10
+_tag=v5.11-rc1
+pkgver=5.11rc1
 pkgrel=1
 pkgdesc="Linux Mainline"
 arch=(x86_64)
 url="https://kernel.org/"
 license=(GPL2)
 makedepends=(
-  bc kmod libelf pahole
+  bc kmod libelf pahole cpio perl tar xz
   xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick
   git
 )
@@ -32,7 +32,7 @@ validpgpkeys=(
   'A2FF3A36AAA56654109064AB19802F8B0D70FC30'  # Jan Alexander Steffens (heftig)
 )
 sha256sums=('SKIP'
-            '36439a90c9d2f860298d90e141f3bf9d897dd8ece9e21cd46508f4ed7b2151bb')
+            'd8b28f67a0f0bc56e5de858141dee3607fbac48eac41b0e9f7f69685f7475b53')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
