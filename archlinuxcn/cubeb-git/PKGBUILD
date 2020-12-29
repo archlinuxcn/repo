@@ -1,0 +1,58 @@
+# Maintainer: Zion Nimchuk <zionnimchuk@gmail.com>
+_pkgbase='cubeb'
+pkgbase="$_pkgbase-git"
+pkgname="$_pkgbase-git"
+provides=('cubeb')
+conflicts=('cubeb')
+pkgver=r1437.860bf2b
+pkgrel=1
+pkgdesc="A cross platform audio library"
+arch=('i686' 'x86_64')
+url="https://github.com/kinetiknz/cubeb"
+license=('GPL2')
+depends=('sndio' 'alsa-lib')
+makedepends=('git' 'cmake' 'libpulse' 'alsa-lib' 'jack' 'sndio')
+optdepends=('libpulse: for PulseAudio support'
+			'jack: for JACK support')
+source=("$_pkgbase::git+https://github.com/mozilla/cubeb"
+		'git+https://github.com/arsenm/sanitizers-cmake')
+md5sums=('SKIP'
+	'SKIP')
+
+pkgver() {
+	cd "$srcdir/$_pkgbase"
+	echo "r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+	cd "$srcdir/$_pkgbase"
+	mkdir -p build
+	
+	git submodule init
+	git config submodule.cmake/sanitizers-cmake.url "$srcdir/sanitizers-cmake"
+	git submodule update
+}
+
+build() {
+	cd "$srcdir/$_pkgbase/build"
+	cmake .. \
+	  -DCMAKE_INSTALL_PREFIX=/usr \
+	  -DCMAKE_BUILD_TYPE=Release \
+	  -DBUILD_TESTS=False \
+	  -DBUILD_SHARED_LIBS=true \
+	  -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+	  -DUSE_PULSE=true \
+	  -DUSE_ALSA=true \
+	  -DUSE_JACK=true \
+	  -DUSE_SNDIO=true \
+	  -DUSE_OPENSL=false \
+	  -DUSE_KAI=false
+	# What even is kai?
+	  
+	make
+}
+
+package() {
+	cd "$srcdir/$_pkgbase/build"
+	make DESTDIR="$pkgdir/" install
+}
