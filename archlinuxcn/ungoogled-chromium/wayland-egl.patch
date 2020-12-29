@@ -1,0 +1,58 @@
+--- a/media/gpu/vaapi/vaapi_video_decode_accelerator.cc	2020-10-07 09:38:47.000000000 -0700
++++ b/media/gpu/vaapi/vaapi_video_decode_accelerator.cc	2020-10-08 14:09:34.550174093 -0700
+@@ -698,7 +698,6 @@
+   // The X11/ANGLE implementation can use |vaapi_wrapper_| to copy from an
+   // internal libva buffer into an X Pixmap without having to use a processing
+   // wrapper.
+-#if !defined(USE_X11)
+   // If we aren't in BufferAllocationMode::kNone, we have to allocate a
+   // |vpp_vaapi_wrapper_| for VaapiPicture to DownloadFromSurface() the VA's
+   // internal decoded frame.
+@@ -708,6 +707,7 @@
+           VaapiWrapper::kVideoProcess, VAProfileNone,
+           base::Bind(&ReportVaapiErrorToUMA,
+                      "Media.VaapiVideoDecodeAccelerator.Vpp.VAAPIError"));
++#if !defined(USE_X11)
+       RETURN_AND_NOTIFY_ON_FAILURE(vpp_vaapi_wrapper_,
+                                    "Failed to initialize VppVaapiWrapper",
+                                    PLATFORM_FAILURE, );
+@@ -715,11 +715,15 @@
+       RETURN_AND_NOTIFY_ON_FAILURE(
+           vpp_vaapi_wrapper_->CreateContext(gfx::Size()),
+           "Failed to create Context", PLATFORM_FAILURE, );
++#else
++      if (vpp_vaapi_wrapper_)
++          vpp_vaapi_wrapper_->CreateContext(gfx::Size());
++#endif  // !defined(USE_X11)
+     }
+-    vaapi_wrapper_for_picture = vpp_vaapi_wrapper_;
++    vaapi_wrapper_for_picture = (vpp_vaapi_wrapper_)?
++        vpp_vaapi_wrapper_:vaapi_wrapper_for_picture;
+   }
+ 
+-#endif  // !defined(USE_X11)
+ 
+   for (size_t i = 0; i < buffers.size(); ++i) {
+     // TODO(b/139460315): Create with buffers[i] once the AMD driver issue is
+--- a/ui/gl/gl_image_native_pixmap.cc	2020-05-18 11:40:06.000000000 -0700
++++ b/ui/gl/gl_image_native_pixmap.cc	2020-05-22 02:07:16.007770442 -0700
+@@ -288,6 +288,8 @@
+                                std::move(scoped_fd));
+   }
+ 
++  handle.planes[0].size = size_.GetArea();
++
+   return handle;
+ #endif  // !defined(OS_FUCHSIA)
+ }
+--- a/gpu/command_buffer/service/error_state.cc	2020-05-18 11:39:22.000000000 -0700
++++ b/gpu/command_buffer/service/error_state.cc	2020-05-22 13:43:09.181180388 -0700
+@@ -115,6 +115,8 @@
+     // buffer.
+     error = GL_NO_ERROR;
+   }
++  if (error == GL_INVALID_ENUM)
++    error = GL_NO_ERROR;
+   return error;
+ }
+ 
