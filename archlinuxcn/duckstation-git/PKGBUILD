@@ -1,15 +1,14 @@
 
 pkgname=duckstation-git
-pkgver=preview.r3254.1b992334
+pkgver=preview.r3258.c46495e6
 pkgdesc='A Sony PlayStation (PSX) emulator, focusing on playability, speed, and long-term maintainability'
 pkgrel=1
 arch=('x86_64' 'aarch64')
 url="https://github.com/stenzek/duckstation"
 license=('GPLv3')
-makedepends=('git' 'cmake' 'qt5-tools')
-depends=('gtk2' 'sdl2' 'qt5-base')
-optdepends=(
-)
+makedepends=('git' 'ninja' 'cmake' 'qt5-tools' 'libpulse')
+depends=('sdl2' 'gtk3' 'qt5-base')
+optdepends=()
 provides=('duckstation')
 conflicts=()
 
@@ -25,8 +24,8 @@ pkgver() {
 build() {
   cd "${srcdir}/duckstation"
 
-  cmake -DCMAKE_BUILD_TYPE=Release
-  make
+  cmake -GNinja -DCMAKE_BUILD_TYPE=Release
+  ninja
 }
 
 package() {
