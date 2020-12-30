@@ -2,7 +2,7 @@
 # Maintainer: Allen Zhong <zhongbenli@pingcap.com>
 pkgname=tidb
 pkgver=4.0.9
-pkgrel=1
+pkgrel=2
 pkgdesc='A distributed HTAP database compatible with the MySQL protocol'
 makedepends=('go' 'make')
 arch=('x86_64')
@@ -46,7 +46,7 @@ build() {
 
   cd $GOPATH/src/$_gopkgname
 
-  _LDFLAGS="-X github.com/pingcap/parser/mysql.TiDBReleaseVersion=$pkgver -X $_gopkgname/util/printer.TiDBGitHash=v$pkgver -X $_gopkgname/util/printer.TiDBGitBranch=release"
+  _LDFLAGS="-X github.com/pingcap/parser/mysql.TiDBReleaseVersion=$pkgver -X $_gopkgname/util/versioninfo.TiDBGitHash=v$pkgver -X $_gopkgname/util/versioninfo.TiDBGitBranch=release"
 
   BUILD_FLAG=$GOFLAGS LDFLAGS=$_LDFLAGS make server
 }
