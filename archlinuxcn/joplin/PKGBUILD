@@ -7,7 +7,7 @@
 
 pkgbase="joplin"
 pkgname=('joplin' 'joplin-desktop')
-pkgver=1.5.12
+pkgver=1.5.14
 groups=('joplin')
 pkgrel=1
 install="joplin.install"
@@ -23,7 +23,7 @@ source=("joplin.desktop" "joplin-desktop.sh" "joplin.sh"
 sha256sums=('c7c5d8b0ff9edb810ed901ea21352c9830bfa286f3c18b1292deca5b2f8febd2'
             'a450284fe66d89aa463d129ce8fff3a0a1a783a64209e4227ee47449d5737be8'
             'dc1236767ee055ea1d61f10e5266a23e70f3e611b405fe713ed24ca18ee9eeb5'
-            '5f50ce122986ce56bf5e7c020fe2ca6e1b9539af7fb57809e256260092042ab2')
+            'b4d7bbde4ad00447bfc34d586c68d1064f2a48f117c30a914d89a2814b549137')
 
 # local npm cache directory
 _npm_cache="npm-cache"
