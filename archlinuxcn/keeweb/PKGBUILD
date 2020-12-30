@@ -1,7 +1,7 @@
 # Maintainer: surefire@cryptomile.net
 
 pkgname=keeweb
-pkgver=1.16.5
+pkgver=1.16.6
 _electron=electron
 pkgrel=1
 pkgdesc="Desktop password manager compatible with KeePass databases"
@@ -17,7 +17,6 @@ makedepends=(
 	'git'
 	'libsass>=3.5.5'
 	'npm'
-#	'python2'
 )
 optdepends=('xdotool: for auto-type')
 conflicts=('keeweb-desktop')
