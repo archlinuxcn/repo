@@ -7,6 +7,7 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-  - source: cmd
-    cmd: curl -s https://raw.githubusercontent.com/pineappleEA/pineappleEA.github.io/master/index.html | grep -Po 'Yuzu EA \d+' | sed 's/Yuzu EA //' | head -n 1
+  - source: github
+    github:  pineappleEA/pineapple-src
+    use_latest_release: true
   - alias: boost
