@@ -2,17 +2,17 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-git
-pkgver=r16709.8d55c8c85
+pkgver=r16765.60121d8f2
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (master GIT version)"
 arch=('i686' 'x86_64')
 url="https://github.com/yuzu-emu/yuzu"
 license=('GPL2')
 depends=('shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'mbedtls' 'openssl' 'zstd')
-makedepends=('git' 'cmake' 'ninja' 'python2' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'desktop-file-utils')
+makedepends=('git' 'cmake' 'ninja' 'python2' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'desktop-file-utils' 'glslang')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu' 'yuzu-cmd')
-conflicts=('yuzu-canary-git' 'yuzu-mainline-git')
+conflicts=('yuzu')
 replaces=('yuzu-master-git')
 source=("$_pkgname::git+https://github.com/yuzu-emu/yuzu.git")
 md5sums=('SKIP')
@@ -27,7 +27,7 @@ prepare() {
 
 	git submodule update --init --recursive
 
-  sed -i 's/1.73/1.72/g' CMakeLists.txt
+#  sed -i 's/1.73/1.72/g' CMakeLists.txt
 #  sed -i 's/Werror=reorder/Wno-reorder/g' src/CMakeLists.txt
 #  sed -i 's/Werror=conversion/Wno-conversion/g' src/video_core/CMakeLists.txt
 }
