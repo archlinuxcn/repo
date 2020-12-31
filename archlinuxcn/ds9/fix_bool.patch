@@ -1,0 +1,87 @@
+Only in SAOImageDS9-8.2.new: SAOImageDS9-8.2
+diff --unified --recursive --text SAOImageDS9-8.2/tclxml/tclxml.c SAOImageDS9-8.2.new/tclxml/tclxml.c
+--- SAOImageDS9-8.2/tclxml/tclxml.c	2020-11-18 21:31:12.000000000 +0100
++++ SAOImageDS9-8.2.new/tclxml/tclxml.c	2020-12-30 23:31:04.193966521 +0100
+@@ -1580,7 +1580,7 @@
+      int objc;
+      Tcl_Obj *CONST objv[];
+ {
+-  int index, bool, doParse = 0, result;
++  int index, boolv, doParse = 0, result;
+   TclXML_ParserClassInfo *classinfo = (TclXML_ParserClassInfo *) xmlinfo->parserClass;
+ 
+   while (objc > 1) {
+@@ -1639,14 +1639,14 @@
+     switch ((enum instanceConfigureSwitches) index) {
+       case TCLXML_FINAL:            /* -final */
+ 
+-        if (Tcl_GetBooleanFromObj(interp, objv[1], &bool) != TCL_OK) {
++        if (Tcl_GetBooleanFromObj(interp, objv[1], &boolv) != TCL_OK) {
+           return TCL_ERROR;
+         }
+ 
+-        if (bool && !xmlinfo->final) {
++        if (boolv && !xmlinfo->final) {
+           doParse = 1;
+ 
+-        } else if (!bool && xmlinfo->final) {
++        } else if (!boolv && xmlinfo->final) {
+           /*
+            * Reset the parser for new input
+            */
+@@ -1654,7 +1654,7 @@
+           TclXMLResetParser(interp, xmlinfo);
+           doParse = 0;
+         }
+-        xmlinfo->final = bool;
++        xmlinfo->final = boolv;
+         break;
+ 
+ 	  case TCLXML_ENCODING: /* -encoding */
+@@ -1666,14 +1666,14 @@
+ 		break;
+ 
+       case TCLXML_VALIDATE:         /* -validate */
+-        if (Tcl_GetBooleanFromObj(interp, objv[1], &bool) != TCL_OK) {
++        if (Tcl_GetBooleanFromObj(interp, objv[1], &boolv) != TCL_OK) {
+           return TCL_ERROR;
+         }
+         /*
+          * If the parser is in the middle of parsing a document,
+          * this will be ignored.  Perhaps an error should be returned?
+          */
+-        xmlinfo->validate = bool;
++        xmlinfo->validate = boolv;
+         break;
+ 
+     case TCLXML_BASEURL:             /* -baseurl, -baseuri */
+@@ -1688,10 +1688,10 @@
+ 
+       case TCLXML_DEFAULTEXPANDINTERNALENTITIES:    /* -defaultexpandinternalentities */
+         /* ericm@scriptics */
+-        if (Tcl_GetBooleanFromObj(interp, objv[1], &bool) != TCL_OK) {
++        if (Tcl_GetBooleanFromObj(interp, objv[1], &boolv) != TCL_OK) {
+           return TCL_ERROR;
+         }
+-        xmlinfo->expandinternalentities = bool;
++        xmlinfo->expandinternalentities = boolv;
+         break;
+ 
+       case TCLXML_PARAMENTITYPARSING:
+diff --unified --recursive --text SAOImageDS9-8.2/tclxml/tclxslt-libxslt.c SAOImageDS9-8.2.new/tclxml/tclxslt-libxslt.c
+--- SAOImageDS9-8.2/tclxml/tclxslt-libxslt.c	2020-11-18 21:31:12.000000000 +0100
++++ SAOImageDS9-8.2.new/tclxml/tclxslt-libxslt.c	2020-12-30 23:31:04.197299853 +0100
+@@ -1565,10 +1565,10 @@
+       return NULL;
+     }
+   } else if (objPtr->typePtr == Tcl_GetObjType("boolean")) {
+-    int bool;
++    int boolv;
+ 
+-    if (Tcl_GetBooleanFromObj(interp, objPtr, &bool) == TCL_OK) {
+-      return xmlXPathNewBoolean(bool);
++    if (Tcl_GetBooleanFromObj(interp, objPtr, &boolv) == TCL_OK) {
++      return xmlXPathNewBoolean(boolv);
+     } else {
+       return NULL;
+     }
