@@ -1,6 +1,6 @@
 # Maintainer: erk <v at erk dot io>
 pkgname=vnote-git
-pkgver=2.10.gde75370
+pkgver=1490.bc11a8d0
 epoch=1
 pkgrel=1
 pkgdesc="A Vim-inspired note-taking application, especially for Markdown."
@@ -20,12 +20,18 @@ pkgver() {
     printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
-package() {
+prepare() {
     cd "$srcdir/$gitname"
     git submodule update --init
+}
+build () {
+    cd "$srcdir/$gitname"
     mkdir build
     cd build
     qmake-qt5 ../vnote.pro
     make
+}
+package() {
+    cd "$srcdir/$gitname"
     make INSTALL_ROOT="$pkgdir" install
 }

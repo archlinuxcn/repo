@@ -14,7 +14,7 @@ optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu' 'yuzu-canary-git' 'yuzu-cmd' 'yuzu-mainline' 'yuzu-canary')
 conflicts=('yuzu-canary-git' 'yuzu-master-git')
 replaces=('yuzu-canary-git')
-source=("$_pkgname::https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz")
+source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz")
 md5sums=('8e680d2efe6334603e07dd7546b90207')
 
 prepare() {
