@@ -1,8 +1,8 @@
 # Maintainer: XavierCLL <xavier.corredor.llano (a) gmail.com>
 
 pkgname=pycharm-professional
-pkgver=2020.3.1
-pkgrel=2
+pkgver=2020.3.2
+pkgrel=1
 pkgdesc="Python IDE for Professional Developers. Professional Edition"
 arch=('x86_64')
 url='https://www.jetbrains.com/pycharm/'
@@ -17,7 +17,7 @@ source=("https://download.jetbrains.com/python/$pkgname-$pkgver.tar.gz"
         "pycharm-professional.desktop"
         "charm.desktop"
         "charm")
-sha256sums=('65d0c32995bdce3b86643deedc0cde5ed69b128ee9a63594b555afa74d27ff1b'
+sha256sums=('dcfdcc04f366d23de04481bfa1bae51ae5a54210abfb5676b16f1f0cc8466bb9'
             'a75264959b06a45ea0801729bc1688bfbd52da3c5fbf3d5b1ad9267860439291'
             'fdd92952973bf9c70dcb3a570b29fdc534ef87f524d06ca8f6c6422f3b954e14'
             'e3b2e7996a7571d659b9477f950ea935e8088c302f6d1e1f6cb5d803f1d10113')
