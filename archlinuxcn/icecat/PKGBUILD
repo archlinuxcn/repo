@@ -6,7 +6,7 @@
 
 pkgname=icecat
 pkgver=78.6.0
-pkgrel=1
+pkgrel=2
 _commit=a43514623e93d4f3fe6d61f5b2f82c5ef29bf518
 pkgdesc="GNU version of the Firefox browser."
 arch=(x86_64)
@@ -27,13 +27,14 @@ options=(!emptydirs !makeflags !strip)
 source=(https://git.savannah.gnu.org/cgit/gnuzilla.git/snapshot/gnuzilla-${_commit}.tar.gz
         icecat.desktop icecat-safe.desktop
         "0001-Use-remoting-name-for-GDK-application-names.patch::https://raw.githubusercontent.com/archlinux/svntogit-packages/0adcedc05ce67d53268575f8801c8de872206901/firefox/trunk/0001-Use-remoting-name-for-GDK-application-names.patch"
-        rust_1.48.patch.gz)
+        rust_1.48.patch.gz cbindgen-0.16.patch)
 
 sha256sums=('d8938711584023476abb88d93bd36a7141ecdf4ac890e71ebc0666caad93775e'
             'e00dbf01803cdd36fd9e1c0c018c19bb6f97e43016ea87062e6134bdc172bc7d'
             '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208'
             'e0eaec8ddd24bbebf4956563ebc6d7a56f8dada5835975ee4d320dd3d0c9c442'
-            'd32c87c4526e897d64453914da43f99366d1d0b7d71e43b4027a6cb5aa274040')
+            'd32c87c4526e897d64453914da43f99366d1d0b7d71e43b4027a6cb5aa274040'
+            'ea348e96620d6ba10f3d41fbb18def98847b6172b0028aacc26f099f47727796')
 
 prepare() {
   cd gnuzilla-${_commit}
@@ -102,6 +103,9 @@ EOF
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1667736
   patch -Np1 -i ../../../rust_1.48.patch
+
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1684180
+  patch -Np1 -i ../../../cbindgen-0.16.patch
 
   # Patch to move files directly to /usr/lib/icecat. No more symlinks.
   sed -e 's;$(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME);g' -i config/baseconfig.mk
