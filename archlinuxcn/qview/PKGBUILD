@@ -1,7 +1,7 @@
 # Maintainer: jurplel <jeep70cp[at]gmail[dotcom]>
 pkgname=qview
 pkgver=4.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A Qt image viewer designed with minimalism and usability in mind."
 arch=('i686' 'x86_64')
 url="https://interversehq.com/qview/"
@@ -14,7 +14,7 @@ sha256sums=('ab9d2a6379eca0754e06d19666f4af53c7ade34a0272801d4313712ef6cfa18a')
 
 build() {
 	cd qView
-	qmake
+	qmake PREFIX=/usr
 	make
 }
 
