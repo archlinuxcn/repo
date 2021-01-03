@@ -5,7 +5,7 @@ pkgname=android-sdk-build-tools
 #_ver=$(cat "${srcdir}/$_android/source.properties" |grep ^Pkg.Revision=|sed 's/Pkg.Revision=\([0-9.]*\).*/\1/')
 _ver=30.0.3
 pkgver=r$_ver
-pkgrel=4
+pkgrel=5
 pkgdesc='Build-Tools for Google Android SDK (aapt, aidl, dexdump, dx, llvm-rs-cc)'
 arch=('i686' 'x86_64')
 url="https://developer.android.com/studio/releases/build-tools"
@@ -30,8 +30,11 @@ package() {
   cp -r "$srcdir/$_android/"* "$target"
   chmod +Xr -R "$target"
 
-  # Add binaries to PATH
-  mkdir -p etc/profile.d
-  echo "append_path '/$target'" > etc/profile.d/${pkgname}.sh
-  chmod 755 etc/profile.d/${pkgname}.sh
+  # Add symlinks to binaries to usr/bin/
+  mkdir -p usr/bin/
+  binaries=("aapt" "aapt2" "aidl" "apksigner" "bcc_compat" "d8" "dexdump" "dx" "lld" "llvm-rs-cc" "mainDexClasses" "split-select" "zipalign")
+  for f in "${binaries[@]}"
+  do
+    ln -s "/$target/$f" "usr/bin/$f"
+  done
 }
