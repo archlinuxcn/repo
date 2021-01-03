@@ -3,7 +3,7 @@
 pkgname=v2raya
 _pkgname=v2rayA
 pkgver=1.1.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A Linux web GUI client of Project V"
 arch=('x86_64')
 url="https://github.com/v2rayA/v2rayA"
@@ -32,6 +32,7 @@ build() {
 package() {
     cd "${srcdir}"/"${_pkgname}-${pkgver}"/
     install -Dm 755 service/v2raya -t "${pkgdir}"/usr/bin/
+    install -dm 750 "${pkgdir}"/etc/v2raya/
     find web -type d -exec install -vd "${pkgdir}"/etc/v2raya/{} \;
     find web -type f -exec install -vm 644 {} "${pkgdir}"/etc/v2raya/{} \;
     install -Dm 644 "${srcdir}"/v2raya.service -t "${pkgdir}"/usr/lib/systemd/system/
