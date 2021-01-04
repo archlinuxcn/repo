@@ -1,6 +1,6 @@
 # Maintainer: Alynx Zhou <alynx.zhou@gmail.com>
 pkgname=gnome-shell-extension-simple-net-speed
-pkgver=19
+pkgver=20
 pkgrel=1
 pkgdesc="GNOME Shell extension to show network speed."
 arch=('any')
@@ -19,3 +19,4 @@ package() {
     cp -a * "${pkgdir}/usr/share/gnome-shell/extensions/${_uuid}"
 }
 
+sha512sums=('b73cf257a19dcd9c839ea2a824c8236eee2ea20744190e3cc75938c17e3c081a0e2d1cfa9ee62636d01693d5bfd50d5d9ca8d792090e0166fdc30a2ce942717c')
