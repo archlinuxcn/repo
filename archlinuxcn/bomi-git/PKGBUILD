@@ -6,7 +6,7 @@
 _pkgbase=bomi
 
 pkgname=$_pkgbase-git
-pkgver=0.9.11.r60.gc9e545eb
+pkgver=0.9.11.r61.gff425381
 pkgrel=1
 pkgdesc="Powerful and easy-to-use GUI multimedia player based on mpv (git version)"
 arch=('i686' 'x86_64')
@@ -27,6 +27,7 @@ conflicts=('cmplayer' 'bomi')
 source=(git+https://github.com/demokritos/${_pkgbase}.git)
 md5sums=('SKIP')
 #options=(debug !strip)
+options=(!buildflags)
 
 pkgver() {
     cd "$srcdir/$_pkgbase"
