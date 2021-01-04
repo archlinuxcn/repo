@@ -4,35 +4,46 @@
 _pkgname=thundersvm
 pkgname=('thundersvm' 'thundersvm-cpu')
 pkgver=0.3.4
-pkgrel=6
+pkgrel=7
 pkgdesc='A Fast SVM Library on GPUs and CPUs'
 url='https://github.com/Xtra-Computing/thundersvm'
 license=('Apache')
 makedepends=(
-  'chrpath'
-  'cmake'
-  'cuda'
-  'git'
-  'python-setuptools'
-  'python-wheel'
+  chrpath
+  cmake
+  cuda
+  eigen
+  gtest
+  python-setuptools
+  python-wheel
 )
 depends=(
-  'python-numpy'
-  'python-scikit-learn'
-  'python-scipy'
+  python-numpy
+  python-scikit-learn
+  python-scipy
 )
 arch=('x86_64')
-source=("${_pkgname}::git+https://github.com/Xtra-Computing/thundersvm.git#tag=v${pkgver}")
-sha256sums=('SKIP')
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Xtra-Computing/thundersvm/archive/v${pkgver}.tar.gz"
+        "0001-fix-build-with-system-gtest.patch::https://github.com/Xtra-Computing/thundersvm/pull/194.patch"
+        "0002-fix-build-with-system-eigen.patch::https://github.com/Xtra-Computing/thundersvm/pull/196.patch"
+        "0003-fix-build-with-cuda11.patch::https://github.com/Xtra-Computing/thundersvm/pull/233.patch"
+)
+sha256sums=('c8b4f7ece312a51ab72ef72e550f7ca3973f5328bc128df64158fe6e3b3b8c0e'
+            'd8ca14fbfa14599aa503b98be6222165e90bd2549561f0dd6432844a55db02db'
+            'ecc951b00bac2082f0410a6289670c724e8e048ca2897ba9ecac4897dfd091e4'
+            '917f075816c192c48d813e4f59e2000fd698a5454aba7b2b9935e35c0e79135b')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
 }
 
 prepare() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  patch -p1 -i "${srcdir}/0001-fix-build-with-system-gtest.patch"
+  patch -p1 -i "${srcdir}/0002-fix-build-with-system-eigen.patch"
+  patch -p1 -i "${srcdir}/0003-fix-build-with-cuda11.patch"
+  cp -a "${srcdir}/${_pkgname}-${pkgver}" "${srcdir}/${_pkgname}"
   mkdir "${srcdir}/${_pkgname}/build"
-  cd "${srcdir}/${_pkgname}"
-  git submodule update --init --recursive
   cp -a "${srcdir}/${_pkgname}" "${srcdir}/${_pkgname}-cpu"
 
   export BUILD_TAG=""
@@ -46,10 +57,9 @@ build() {
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
     -DCMAKE_C_COMPILER=/opt/cuda/bin/gcc \
     -DCMAKE_CXX_COMPILER=/opt/cuda/bin/g++ \
-    -DCMAKE_CUDA_HOST_COMPILER=/opt/cuda/bin/g++ \
     -DUSE_CUDA:BOOL=ON \
     -DUSE_DOUBLE:BOOL=ON \
-    -DUSE_EIGEN:BOOL=ON
+    -DUSE_EIGEN:BOOL=OFF
   make
   cd ../python
   python setup.py build
