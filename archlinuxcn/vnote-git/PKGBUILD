@@ -1,6 +1,6 @@
 # Maintainer: erk <v at erk dot io>
 pkgname=vnote-git
-pkgver=1490.bc11a8d0
+pkgver=1498.db341b55
 epoch=1
 pkgrel=1
 pkgdesc="A Vim-inspired note-taking application, especially for Markdown."
@@ -32,6 +32,6 @@ build () {
     make
 }
 package() {
-    cd "$srcdir/$gitname"
+    cd "$srcdir/$gitname/build"
     make INSTALL_ROOT="$pkgdir" install
 }
