@@ -27,33 +27,30 @@ diff --git a/browser/installer/package-manifest.in b/browser/installer/package-m
 diff --git a/build/moz.configure/old.configure b/build/moz.configure/old.configure
 --- a/build/moz.configure/old.configure
 +++ b/build/moz.configure/old.configure
-@@ -228,7 +228,6 @@
-     '--enable-system-cairo',
-     '--enable-system-extension-dirs',
-     '--enable-system-pixman',
--    '--enable-system-sqlite',
-     '--enable-universalchardet',
-     '--enable-updater',
-     '--enable-xul',
-
+@@ -103,7 +103,6 @@
+     "--enable-system-cairo",
+     "--enable-system-extension-dirs",
+     "--enable-system-pixman",
+-    "--enable-system-sqlite",
+     "--enable-universalchardet",
+     "--enable-updater",
+     "--enable-xul",
 diff --git a/config/external/sqlite/moz.build b/config/external/sqlite/moz.build
 --- a/config/external/sqlite/moz.build
 +++ b/config/external/sqlite/moz.build
-@@ -1,22 +1,18 @@
- # -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
- # vim: set filetype=python:
- # This Source Code Form is subject to the terms of the Mozilla Public
+@@ -4,19 +4,15 @@
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
  
 -if CONFIG['MOZ_SYSTEM_SQLITE']:
-+DIRS += ['../../../third_party/sqlite3/src']
-+if CONFIG['MOZ_FOLD_LIBS']:
-     Library('sqlite')
--    OS_LIBS += CONFIG['SQLITE_LIBS']
+-     Library('sqlite')
+-     OS_LIBS += CONFIG['SQLITE_LIBS']
++DIRS += ["../../../third_party/sqlite3/src"]
++if CONFIG["MOZ_FOLD_LIBS"]:
++    Library("sqlite")
 +    # When folding libraries, sqlite is actually in the nss library.
 +    USE_LIBS += [
-+        'nss',
++        "nss",
 +    ]
  else:
 -    DIRS += ['../../../third_party/sqlite3/src']
@@ -66,11 +63,11 @@ diff --git a/config/external/sqlite/moz.build b/config/external/sqlite/moz.build
 -    else:
 -        SharedLibrary('sqlite')
 -        SHARED_LIBRARY_NAME = 'mozsqlite3'
-+    SharedLibrary('sqlite')
-+    SHARED_LIBRARY_NAME = 'mozsqlite3'
++    SharedLibrary("sqlite")
++    SHARED_LIBRARY_NAME = "mozsqlite3"
  
 -        SYMBOLS_FILE = '/third_party/sqlite3/src/sqlite.symbols'
-+    SYMBOLS_FILE = '/third_party/sqlite3/src/sqlite.symbols'
++    SYMBOLS_FILE = "/third_party/sqlite3/src/sqlite.symbols"
 diff --git a/old-configure.in b/old-configure.in
 --- a/old-configure.in
 +++ b/old-configure.in
@@ -168,14 +165,9 @@ diff --git a/storage/SQLiteMutex.h b/storage/SQLiteMutex.h
 diff --git a/storage/moz.build b/storage/moz.build
 --- a/storage/moz.build
 +++ b/storage/moz.build
-@@ -93,20 +93,14 @@ FINAL_LIBRARY = 'xul'
- # Thunderbird needs the 2-argument version of fts3_tokenizer()
- if CONFIG['MOZ_THUNDERBIRD'] or CONFIG['MOZ_SUITE']:
-     DEFINES['MOZ_SQLITE_FTS3_TOKENIZER'] = 1
- 
- # This is the default value.  If we ever change it when compiling sqlite, we
+@@ -98,12 +98,6 @@
  # will need to change it here as well.
- DEFINES['SQLITE_MAX_LIKE_PATTERN_LENGTH'] = 50000
+ DEFINES["SQLITE_MAX_LIKE_PATTERN_LENGTH"] = 50000
  
 -# See Sqlite moz.build for reasoning about TEMP_STORE.
 -# For system sqlite we cannot use the compile time option, so we use a pragma.
@@ -184,11 +176,8 @@ diff --git a/storage/moz.build b/storage/moz.build
 -    DEFINES['MOZ_MEMORY_TEMP_STORE_PRAGMA'] = True
 -
  LOCAL_INCLUDES += [
-     '/dom/base',
-     '/third_party/sqlite3/src',
- ]
- 
- CXXFLAGS += CONFIG['SQLITE_CFLAGS']
+     "/dom/base",
+     "/third_party/sqlite3/src",
 diff --git a/storage/mozStorageConnection.cpp b/storage/mozStorageConnection.cpp
 @@ -750,10 +749,6 @@ nsresult Connection::initializeInternal(
      return convertResultCode(srv);

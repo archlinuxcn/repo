@@ -14,10 +14,11 @@
              <menu id="file-menu" data-l10n-id="menu-file">
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -6316,11 +6316,17 @@ function onViewToolbarsPopupShowing(aEve
- 
+@@ -6427,11 +6427,18 @@ function onViewToolbarsPopupShowing(aEve
+   MozXULElement.insertFTLIfNeeded("browser/toolbarContextMenu.ftl");
+   let firstMenuItem = aInsertPoint || popup.firstElementChild;
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
- 
++
 +  let shellShowingMenubar = document.documentElement.getAttribute("shellshowingmenubar") == "true";
 +
    for (let toolbar of toolbarNodes) {
@@ -29,9 +30,9 @@
 +      continue;
 +    }
 +
-     let menuItem = document.createXULElement("menuitem");
-     let hidingAttribute =
-       toolbar.getAttribute("type") == "menubar" ? "autohide" : "collapsed";
+     if (toolbar.id == "PersonalToolbar" && gBookmarksToolbar2h2020) {
+       let menu = BookmarkingUI.buildBookmarksToolbarSubmenu(toolbar);
+       popup.insertBefore(menu, firstMenuItem);
 --- a/browser/components/places/content/places.xhtml
 +++ b/browser/components/places/content/places.xhtml
 @@ -169,7 +169,7 @@
@@ -72,32 +73,32 @@
 +++ b/dom/xul/moz.build
 @@ -83,6 +83,11 @@ LOCAL_INCLUDES += [
  
- include('/ipc/chromium/chromium-config.mozbuild')
+ include("/ipc/chromium/chromium-config.mozbuild")
  
-+if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk':
++if CONFIG["MOZ_WIDGET_TOOLKIT"] == "gtk":
 +    LOCAL_INCLUDES += [
-+        '/widget/gtk',
++        "/widget/gtk",
 +    ]
 +
- FINAL_LIBRARY = 'xul'
+ FINAL_LIBRARY = "xul"
  
- if CONFIG['CC_TYPE'] in ('clang', 'gcc'):
+ if CONFIG["CC_TYPE"] in ("clang", "gcc"):
 --- a/layout/build/moz.build
 +++ b/layout/build/moz.build
-@@ -67,6 +67,10 @@ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'an
-         '/dom/system',
-         '/dom/system/android',
+@@ -67,6 +67,10 @@ elif CONFIG["MOZ_WIDGET_TOOLKIT"] == "an
+         "/dom/system",
+         "/dom/system/android",
      ]
-+elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk':
++elif CONFIG["MOZ_WIDGET_TOOLKIT"] == "gtk":
 +    LOCAL_INCLUDES += [
-+        '/widget/gtk',
++        "/widget/gtk",
 +    ]
  
  XPCOM_MANIFESTS += [
-     'components.conf',
+     "components.conf",
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -312,6 +312,9 @@ pref("dom.mouseevent.click.hack.use_lega
+@@ -320,6 +320,9 @@ pref("dom.mouseevent.click.hack.use_lega
  // Fastback caching - if this pref is negative, then we calculate the number
  // of content viewers to cache based on the amount of available memory.
  pref("browser.sessionhistory.max_total_viewers", -1);
@@ -109,7 +110,7 @@
  
 --- a/toolkit/content/xul.css
 +++ b/toolkit/content/xul.css
-@@ -209,6 +209,13 @@ toolbar[type="menubar"] {
+@@ -216,6 +216,13 @@ toolbar[type="menubar"] {
  }
  %endif
  
@@ -125,30 +126,30 @@
  }
 --- a/widget/gtk/moz.build
 +++ b/widget/gtk/moz.build
-@@ -56,6 +56,15 @@ UNIFIED_SOURCES += [
+@@ -60,6 +60,15 @@ UNIFIED_SOURCES += [
  
  SOURCES += [
-     'MediaKeysEventSourceFactory.cpp',
-+    'nsDbusmenu.cpp',
-+    'nsMenu.cpp', # conflicts with X11 headers
-+    'nsMenuBar.cpp',
-+    'nsMenuContainer.cpp',
-+    'nsMenuItem.cpp',
-+    'nsMenuObject.cpp',
-+    'nsMenuSeparator.cpp',
-+    'nsNativeMenuDocListener.cpp',
-+    'nsNativeMenuService.cpp',
-     'nsWindow.cpp', # conflicts with X11 headers
-     'WaylandVsyncSource.cpp', # conflicts with X11 headers
+     "MediaKeysEventSourceFactory.cpp",
++    "nsDbusmenu.cpp",
++    "nsMenu.cpp", # conflicts with X11 headers
++    "nsMenuBar.cpp",
++    "nsMenuContainer.cpp",
++    "nsMenuItem.cpp",
++    "nsMenuObject.cpp",
++    "nsMenuSeparator.cpp",
++    "nsNativeMenuDocListener.cpp",
++    "nsNativeMenuService.cpp",
+     "nsWindow.cpp",  # conflicts with X11 headers
+     "WaylandVsyncSource.cpp",  # conflicts with X11 headers
  ]
-@@ -136,6 +145,7 @@ LOCAL_INCLUDES += [
-     '/layout/base',
-     '/layout/forms',
-     '/layout/generic',
-+    '/layout/style',
-     '/layout/xul',
-     '/other-licenses/atk-1.0',
-     '/third_party/cups/include',
+@@ -140,6 +149,7 @@ LOCAL_INCLUDES += [
+     "/layout/base",
+     "/layout/forms",
+     "/layout/generic",
++    "/layout/style",
+     "/layout/xul",
+     "/other-licenses/atk-1.0",
+     "/third_party/cups/include",
 --- /dev/null
 +++ b/widget/gtk/nsDbusmenu.cpp
 @@ -0,0 +1,61 @@
@@ -5068,7 +5069,7 @@
 +#endif /* __nsNativeMenuService_h__ */
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
-@@ -6039,6 +6039,10 @@ void nsWindow::HideWindowChrome(bool aSh
+@@ -6096,6 +6096,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5099,7 +5100,7 @@
    /**
     * GetLastUserInputTime returns a timestamp for the most recent user input
     * event.  This is intended for pointer grab requests (including drags).
-@@ -698,6 +702,8 @@ class nsWindow final : public nsBaseWidg
+@@ -701,6 +705,8 @@ class nsWindow final : public nsBaseWidg
    static CSDSupportLevel sCSDSupportLevel;
  
    static bool sTransparentMainWindow;
@@ -5110,19 +5111,19 @@
  #endif /* __nsWindow_h__ */
 --- a/widget/moz.build
 +++ b/widget/moz.build
-@@ -69,9 +69,9 @@ elif toolkit == 'cocoa':
-         'nsITouchBarInput.idl',
-         'nsITouchBarUpdater.idl',
+@@ -68,9 +68,9 @@ elif toolkit == "cocoa":
+         "nsITouchBarInput.idl",
+         "nsITouchBarUpdater.idl",
      ]
 -    EXPORTS += [
--        'nsINativeMenuService.h',
+-        "nsINativeMenuService.h",
 -    ]
 +
-+if toolkit in ('cocoa', 'gtk'):
-+    EXPORTS += ['nsINativeMenuService.h']
++if toolkit in ("cocoa", "gtk"):
++    EXPORTS += ["nsINativeMenuService.h"]
  
- TEST_DIRS += [
-     'tests',
+ TEST_DIRS += ["tests", "tests/gtest"]
+ 
 --- /dev/null
 +++ b/xpcom/ds/NativeMenuAtoms.py
 @@ -0,0 +1,9 @@
@@ -5145,7 +5146,7 @@
  import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
-@@ -2549,7 +2550,7 @@ STATIC_ATOMS = [
+@@ -2560,7 +2561,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
      # END ATOMS
@@ -5173,7 +5174,7 @@
  if defined('MOZ_X11'):
 --- a/xpfe/appshell/AppWindow.cpp
 +++ b/xpfe/appshell/AppWindow.cpp
-@@ -66,7 +66,7 @@
+@@ -71,7 +71,7 @@
  #  include "mozilla/XULStore.h"
  #endif
  

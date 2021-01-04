@@ -1,0 +1,34 @@
+From 5da063c9e3bedfbebbbd21c63749bfb49a546316 Mon Sep 17 00:00:00 2001
+From: Thomas Deutschmann <whissi@gentoo.org>
+Date: Sat, 29 Aug 2020 22:30:59 +0200
+Subject: [PATCH 28/35] LTO: Only enable LTO for Rust when complete build uses
+ LTO
+
+Signed-off-by: Thomas Deutschmann <whissi@gentoo.org>
+---
+ config/makefiles/rust.mk | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/config/makefiles/rust.mk b/config/makefiles/rust.mk
+index 8545c3de8b..fa73fbb037 100644
+--- a/config/makefiles/rust.mk
++++ b/config/makefiles/rust.mk
+@@ -61,6 +61,7 @@ endif
+ # These flags are passed via `cargo rustc` and only apply to the final rustc
+ # invocation (i.e., only the top-level crate, not its dependencies).
+ cargo_rustc_flags = $(CARGO_RUSTCFLAGS)
++ifdef MOZ_LTO
+ ifndef DEVELOPER_OPTIONS
+ ifndef MOZ_DEBUG_RUST
+ # Enable link-time optimization for release builds, but not when linking
+@@ -77,6 +78,7 @@ endif
+ endif
+ endif
+ endif
++endif
+ 
+ ifdef CARGO_INCREMENTAL
+ export CARGO_INCREMENTAL
+-- 
+2.29.2
+

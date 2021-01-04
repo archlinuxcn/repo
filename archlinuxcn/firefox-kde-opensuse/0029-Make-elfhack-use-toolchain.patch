@@ -1,0 +1,26 @@
+From 01459287a2dbb4d422526602a35d6d3965cffdc5 Mon Sep 17 00:00:00 2001
+From: Thomas Deutschmann <whissi@gentoo.org>
+Date: Mon, 28 Sep 2020 20:52:24 +0200
+Subject: [PATCH 29/35] Make elfhack use toolchain
+
+Signed-off-by: Thomas Deutschmann <whissi@gentoo.org>
+---
+ build/unix/elfhack/Makefile.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/unix/elfhack/Makefile.in b/build/unix/elfhack/Makefile.in
+index 08cc3d6852..c2b575d87a 100644
+--- a/build/unix/elfhack/Makefile.in
++++ b/build/unix/elfhack/Makefile.in
+@@ -20,7 +20,7 @@ test-array$(DLL_SUFFIX) test-ctors$(DLL_SUFFIX): %$(DLL_SUFFIX): %.$(OBJ_SUFFIX)
+ 	# Fail if the backup file doesn't exist
+ 	[ -f '$@.bak' ]
+ 	# Fail if the new library doesn't contain less relocations
+-	[ $$($(TOOLCHAIN_PREFIX)objdump -R $@.bak | wc -l) -gt $$(objdump -R $@ | wc -l) ]
++	[ $$($(TOOLCHAIN_PREFIX)objdump -R $@.bak | wc -l) -gt $$($(TOOLCHAIN_PREFIX)objdump -R $@ | wc -l) ]
+ 
+ test-array$(DLL_SUFFIX) test-ctors$(DLL_SUFFIX): DSO_SONAME=$@
+ test-array$(DLL_SUFFIX): DT_TYPE=INIT_ARRAY
+-- 
+2.29.2
+

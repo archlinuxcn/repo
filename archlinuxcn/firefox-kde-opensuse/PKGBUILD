@@ -18,12 +18,12 @@ _pgo=true
 # /view/head:/debian/patches/unity-menubar.patch
 
 # patches from gentoo:
-# https://dev.gentoo.org/~anarchy/mozilla/patchsets/firefox-71.0-patches-04.tar.xz
+# https://dev.gentoo.org/~whissi/mozilla/patchsets/firefox-84-patches-02.tar.xz
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=83.0
-pkgrel=2
+pkgver=84.0.1
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -47,7 +47,7 @@ depends=('mozilla-common' 'libxt' 'mime-types'
 makedepends=('unzip' 'zip' 'diffutils' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13'
              'cargo' 'mercurial' 'llvm' 'clang' 'rust' 'jack'
-             'gtk2' 'nodejs' 'cbindgen=0.15.0' 'nasm' 'xz'
+             'gtk2' 'nodejs' 'cbindgen' 'nasm' 'xz'
              'python' 'python-psutil' 'python-zstandard')
 
 
@@ -63,7 +63,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'pulseaudio: Audio support')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=859fecad6f780e5858788f165db72e04c17347ea
+_patchrev=c6bad4ac579cda0aa7d6ceedee15dcf3228b71ca
 options=('!emptydirs')
 _patchurl=https://raw.githubusercontent.com/openSUSE/firefox-maintenance/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -83,22 +83,24 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         pgo_fix_missing_kdejs.patch
         2000_system_harfbuzz_support.patch
         2001_system_graphite2_support.patch
-        pgo.patch
         # use sytem av1
         7002_system_av1_support.patch
         # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
         0001-Use-remoting-name-for-GDK-application-names.patch
         # reenable system sqlite
         5022efe33088.patch
-        # Fix MOZILLA#1516803
-        # https://bugzilla.mozilla.org/show_bug.cgi?id=1516803
-        mozilla-1516803.patch
         # Force disable elfhack to fix build errors
         build-disable-elfhack.patch
         # Revert patch from MOZILLA#1644409 to fix issue casused by this patch
-        mozilla-1644409.patch::https://hg.mozilla.org/mozilla-central/raw-rev/795c8762b16b
-        # MOZILLA#1667736
-        0002-Bug-1667736-Update-packed_simd-to-compile-on-Rust-1..patch
+        mozilla-1644409.patch
+        0020-Make-PGO-use-toolchain.patch
+        # Fix MOZILLA#1516803
+        # https://bugzilla.mozilla.org/show_bug.cgi?id=1516803
+        0022-bmo-1516803-force-one-LTO-partition-for-sandbox-when.patch
+        # PGO/LTO GCC patches
+        0025-Fix-building-with-PGO-when-using-GCC.patch
+        0028-LTO-Only-enable-LTO-for-Rust-when-complete-build-use.patch
+        0029-Make-elfhack-use-toolchain.patch
 )
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -150,28 +152,26 @@ prepare() {
   # reenable system sqlite
   patch -R -p1 -i "$srcdir"/5022efe33088.patch
 
-  # Fix MOZILLA#1516803
-  # sandbox needs to be built with --param lto-partitions=1 when
-  # GCC LTO is enabled
-  patch -Np1 -i "$srcdir"/mozilla-1516803.patch
-
   # Force disable elfhack to fix build errors
   patch -Np1 -i "$srcdir"/build-disable-elfhack.patch
 
-
-  # Revert patch from MOZILLA#1644409 to fix issue casused by this patch
-  patch -R -p1 -i "$srcdir"/mozilla-1644409.patch
-
-  # MOZILLLA#1667736
-  # Update packed_simd to compile on Rust 1.48
-  patch -Np1 -i "$srcdir"/0002-Bug-1667736-Update-packed_simd-to-compile-on-Rust-1..patch
-
-
   if [ $_pgo ] ; then
+    # Fix MOZILLA#1516803
+    # sandbox needs to be built with --param lto-partitions=1 when
+    # GCC LTO is enabled
+    patch -Np1 -i "$srcdir"/0022-bmo-1516803-force-one-LTO-partition-for-sandbox-when.patch
+
+    # Revert patch from MOZILLA#1644409 to fix issue casused by this patch
+    patch -R -p1 -i "$srcdir"/mozilla-1644409.patch
+
+    # PGO/LTO GCC patches
+    patch -Np1 -i "$srcdir"/0020-Make-PGO-use-toolchain.patch
+    patch -Np1 -i "$srcdir"/0025-Fix-building-with-PGO-when-using-GCC.patch
+    patch -Np1 -i "$srcdir"/0028-LTO-Only-enable-LTO-for-Rust-when-complete-build-use.patch
+    patch -Np1 -i "$srcdir"/0029-Make-elfhack-use-toolchain.patch
+
     # add missing rule for pgo builds
     patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
-
-    patch -Np1 -i "$srcdir"/pgo.patch
 
     # add missing file Makefile for pgo builds
     patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
@@ -267,24 +267,26 @@ END
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 md5sums=('SKIP'
-         'd7bf65ba1d9f606545dcf887d23bec9f'
+         '1fd86cc439737c90a5854aab7f85080f'
          'a26a061efb4def6572d5b319d657f1d6'
          '4c23d9c0a691d70919beb1dafbbecbd3'
          '05bb69d25fb3572c618e3adf1ee7b670'
          'c0f68250d27f208efcdee710207cd3e4'
-         '77c039d55aa155391db518afd638a0b9'
-         '93fc217bcdc9d936727a1c3446e72650'
+         '6976984e1cbf000a6883a18916afc45c'
+         'b9cd675e20aa979b0e96d1497820f999'
          '0a5733b7a457a2786c2dd27626a1bf88'
-         '2a23fc0920f7b2cb4f9a2a751fa060eb'
+         '9e795a0e8479b576d9294dd663297179'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3c383d371d7f6ede5983a40310518715'
-         'd24681f9a46ae23689b2867f4ab6eaae'
-         'dbb578ee6ef93f0d28584d38904fac70'
-         'f867ae41a722630cc5567e2dcc51676d'
-         '1e473ebbf9e5d648e498c58dd6c789e6'
-         '7b479b606ce2580f786a021cc0c3c5a1'
-         '129f1d0a83a9034e49c8ff62f5e0013d'
-         'efcddfb6595b356b3faaf6b93313659e'
-         'aa9261c4d407cf809bf8275e6f2e52c7'
-         '7c42a1e4928330d82409283e9af6422c'
-         'f0621d7f3d1a09d43dacf4da7871354c')
+         '6a1ed12b8dbac57722436a2987e3ea33'
+         '791db11feed7c4130b5af80b85ebcfbb'
+         'a6510ec00edc4fe9a049d182646a417f'
+         'e7994b3b78b780ebe610ba3d87247e40'
+         '00abc3976f028f8fe07111b9e687b574'
+         'c7b492df4fbf42ffe8aea4c0afb89921'
+         '9ad2e0f308cd64e3247d409c9a1b58d3'
+         'e7a7bf27b0807e3e74178fe08c822cd8'
+         'd9f35aad717d728a64b93981f806da1d'
+         '92ac8cc13336c9c383254fb5eb68d7d9'
+         '9d37406016c8ed060a3e5627063ecc11'
+         '636b22bae5cc68bbeb4c2153b66749b8')
