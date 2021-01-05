@@ -2,7 +2,7 @@
 
 pkgname=motrix-git
 _pkgname=motrix
-pkgver=1.5.15.r37.g79bf90b
+pkgver=1.5.15.r60.gc3400d9
 pkgrel=1
 pkgdesc='A full-featured download manager'
 arch=('any')
@@ -31,6 +31,7 @@ pkgver() {
 
 prepare() {
   sed -i 's/"postinstall"/"ignore"/' "${srcdir}/${_pkgname}/package.json"
+  sed -i 's/--colors/--color/g' "${srcdir}/${_pkgname}/package.json"
   rm -vf "${srcdir}/${_pkgname}/package-lock.json"
   echo "Creating desktop file..."
   gendesk -f -n --pkgname ${_pkgname} \
