@@ -2,8 +2,8 @@
 
 _pkgname=mmaction2
 pkgname=python-mmaction2
-pkgver=0.9.0
-pkgrel=2
+pkgver=0.10.0
+pkgrel=1
 pkgdesc="OpenMMLab's Next Generation Action Understanding Toolbox and Benchmark"
 arch=('any')
 url='https://github.com/open-mmlab/mmaction2'
@@ -26,7 +26,7 @@ optdepends=(
   python-onnxruntime
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmaction2/archive/v${pkgver}.tar.gz")
-sha512sums=('9aa92cc0c564475574d5188ec1649ab5db7d74784fdde11b080670ff859888d447940cc9770353d1ce3f2d12d1a30257d578d288800be8bd41f94eb57967e6d8')
+sha512sums=('420b8228d1c76c41f8c3bf5433a3148aade505259993b3b64f8961a206810b55501bcfe77ea3d82a35930f6f13928f8bfccc4ca123f12dbbb8165cdca33af99c')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
