@@ -8,7 +8,12 @@ build_prefix: extra-x86_64
 repo_depends:
   - lxqt-build-tools-git
 
-post_build: git_pkgbuild_commit
+pre_build_script: |
+    update_pkgrel()
+    vcs_update()
+
+post_build_script: |
+    git_pkgbuild_commit()
 
 update_on:
   - source: github
