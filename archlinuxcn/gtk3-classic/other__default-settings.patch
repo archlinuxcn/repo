@@ -1,0 +1,39 @@
+Index: b/gtk/gtkscrolledwindow.c
+===================================================================
+--- a/gtk/gtkscrolledwindow.c
++++ b/gtk/gtkscrolledwindow.c
+@@ -4490,7 +4490,7 @@ gtk_scrolled_window_update_use_indicator
+ 
+   use_indicators = overlay_scrolling && priv->overlay_scrolling;
+ 
+-  if (g_strcmp0 (g_getenv ("GTK_OVERLAY_SCROLLING"), "0") == 0)
++  if (g_strcmp0 (g_getenv ("GTK_OVERLAY_SCROLLING"), "1") != 0)
+     use_indicators = FALSE;
+ 
+   if (priv->use_indicators != use_indicators)
+Index: b/gtk/gtksettings.c
+===================================================================
+--- a/gtk/gtksettings.c
++++ b/gtk/gtksettings.c
+@@ -61,7 +61,7 @@
+ #ifdef GDK_WINDOWING_QUARTZ
+ #define PRINT_PREVIEW_COMMAND "open -b com.apple.Preview %f"
+ #else
+-#define PRINT_PREVIEW_COMMAND "evince --unlink-tempfile --preview --print-settings %s %f"
++#define PRINT_PREVIEW_COMMAND "atril --unlink-tempfile --preview --print-settings %s %f"
+ #endif
+ 
+ /**
+Index: b/gtk/org.gtk.Settings.FileChooser.gschema.xml
+===================================================================
+--- a/gtk/org.gtk.Settings.FileChooser.gschema.xml
++++ b/gtk/org.gtk.Settings.FileChooser.gschema.xml
+@@ -133,7 +133,7 @@
+       </description>
+     </key>
+     <key name='startup-mode' enum='org.gtk.Settings.FileChooser.StartupMode'>
+-      <default>'recent'</default>
++      <default>'cwd'</default>
+       <summary>Startup mode</summary>
+       <description>
+ 	Either "recent" or "cwd"; controls whether the file chooser

@@ -1,0 +1,51 @@
+Index: b/gtk/gtkprintunixdialog.c
+===================================================================
+--- a/gtk/gtkprintunixdialog.c
++++ b/gtk/gtkprintunixdialog.c
+@@ -750,6 +750,11 @@ gtk_print_unix_dialog_init (GtkPrintUnix
+   gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+   widget = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+   gtk_widget_set_sensitive (widget, FALSE);
++  GtkCssProvider *provider = gtk_css_provider_new ();
++  gtk_css_provider_load_from_data (provider, ".dialog-action-box { margin: 0; }", -1, NULL);
++  GtkStyleContext *context = gtk_widget_get_style_context (gtk_widget_get_parent (gtk_dialog_get_action_area (GTK_DIALOG (dialog))));
++  gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
++  gtk_style_context_save (context);
+ 
+   /* Treeview auxiliary functions need to be setup here */
+   gtk_tree_model_filter_set_visible_func (priv->printer_list_filter,
+Index: b/gtk/ui/gtkprintunixdialog.ui
+===================================================================
+--- a/gtk/ui/gtkprintunixdialog.ui
++++ b/gtk/ui/gtkprintunixdialog.ui
+@@ -48,6 +48,7 @@
+     <property name="step-increment">1</property>
+   </object>
+   <template class="GtkPrintUnixDialog" parent="GtkDialog">
++    <property name="border-width">5</property>
+     <property name="can-focus">False</property>
+     <property name="type-hint">dialog</property>
+     <signal name="notify::page-setup" handler="redraw_page_layout_preview" swapped="no"/>
+@@ -56,19 +57,19 @@
+       <object class="GtkBox" id="dialog-vbox1">
+         <property name="orientation">vertical</property>
+         <property name="spacing">2</property>
+-        <property name="border-width">0</property>
++        <property name="border-width">2</property>
+         <style>
+-          <class name="view"/>
+         </style>
+         <child>
+           <object class="GtkBox" id="box1">
++            <property name="border-width">5</property>
+             <property name="visible">1</property>
+             <property name="orientation">vertical</property>
+             <child>
+               <object class="GtkNotebook" id="notebook">
+                 <property name="visible">1</property>
+                 <property name="can-focus">1</property>
+-                <property name="show-border">0</property>
++                <property name="show-border">1</property>
+                 <child>
+                   <object class="GtkBox" id="general_main_box">
+                     <property name="visible">1</property>

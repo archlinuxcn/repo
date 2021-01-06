@@ -1,0 +1,15 @@
+Index: b/gtk/a11y/gtkaccessibility.c
+===================================================================
+--- a/gtk/a11y/gtkaccessibility.c
++++ b/gtk/a11y/gtkaccessibility.c
+@@ -989,7 +989,10 @@ _gtk_accessibility_init (void)
+   do_window_event_initialization ();
+ 
+ #ifdef GDK_WINDOWING_X11
++  GLogWriterOutput mushrooms_null_writer () { return G_LOG_WRITER_HANDLED; }
++  g_log_set_writer_func (mushrooms_null_writer, NULL, NULL);
+   atk_bridge_adaptor_init (NULL, NULL);
++  g_log_set_writer_func (g_log_writer_default, NULL, NULL);
+ #endif
+ 
+   atk_misc_instance = g_object_new (GTK_TYPE_MISC_IMPL, NULL);
