@@ -1,0 +1,36 @@
+# Maintainer: Ariel AxionL <i at axionl dot me>
+pkgname=gammaray
+pkgver=2.11.2
+pkgrel=1
+pkgdesc="A tool to poke around in a Qt-application and also to manipulate the application to some extent."
+arch=('x86_64')
+url="https://github.com/KDAB/GammaRay"
+license=('EULA' 'GPL2' 'GPL3' 'BSD3')
+depends=('qt5-base>=5.5' 'hicolor-icon-theme' 'desktop-file-utils' 'perl'
+    'syntax-highlighting' 'glslang' 'pkgconf' 'wayland' 'qt5-wayland' 'qt5-networkauth')
+makedepends=('cmake')
+optdepends=('lldb' 'qt5-3d' 'qt5-quick3d' 'qt5-connectivity' 'qt5-scxml' 'wayland'
+    'vtk: Needed for the object visualizer plugin (required Qt5). Just for toying around, highly experimental plugin.'
+    'doxygen: Needed to build the API documentation.')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/KDAB/GammaRay/releases/download/v${pkgver}/gammaray-${pkgver}.tar.gz")
+sha256sums=('bba4f21a2bc81ec8ab50dce5218c7a375b92d64253c690490a6fcb384c2ff9f3')
+
+build() {
+    cmake -B build -S "${srcdir}/${pkgname}-${pkgver}" \
+         -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr" \
+         -DCMAKE_BUILD_TYPE=Release \
+         -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=OFF \
+         -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+         -DCMAKE_INSTALL_LIBDIR=lib
+    make -C "build"
+}
+
+package() {
+    cd build
+    make install
+    
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    install -Dm644 LICENSE.BSD3.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.BSD3"
+    install -Dm644 LICENSE.GPL.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.GPL"
+}
