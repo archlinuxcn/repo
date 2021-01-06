@@ -5,56 +5,9 @@ Let me do some optimisations.
 
 If you are interested to improve this patch, welcome to mail me.
 
---- Ventoy2Disk.sh
-+++ Ventoy2Disk.sh
-@@ -30,44 +18,4 @@
- echo '**********************************************'
- echo ''
- 
--
--if ! [ -f ./boot/boot.img ]; then
--    if [ -d ./grub ]; then
--        echo "Don't run Ventoy2Disk.sh here, please download the released install package, and run the script in it."
--    else
--        echo "Please run under the correct directory!" 
--    fi
--    exit 1
--fi
--
--echo "############# Ventoy2Disk $* [$TOOLDIR] ################" >> ./log.txt
--date >> ./log.txt
--
--#decompress tool
--if [ -f ./tool/$TOOLDIR/ash ]; then
--    echo "no need to decompress tools" >> ./log.txt
--else
--    cd ./tool/$TOOLDIR
--    
--    [ -f ./xzcat ] && chmod +x ./xzcat
--    
--    for file in $(ls *.xz); do
--        xzcat $file > ${file%.xz}
--        [ -f ./$file ] && rm -f ./$file
--    done
--    cd $OLDDIR
--    
--    chmod +x -R ./tool/$TOOLDIR
--fi
--
--if [ -f /bin/bash ]; then
--    /bin/bash ./tool/VentoyWorker.sh $*
--else
--    ash ./tool/VentoyWorker.sh $*
--fi
--
--if [ -n "$OLDDIR" ]; then 
--    cd $OLDDIR
--fi
--
--
-+./tool/VentoyWorker.sh $*
---- tool/ventoy_lib.sh
-+++ tool/ventoy_lib.sh
+diff -ru --color old/tool/ventoy_lib.sh new/tool/ventoy_lib.sh
+--- tool/ventoy_lib.sh	2021-01-06 15:01:53.769565092 +0100
++++ tool/ventoy_lib.sh	2021-01-06 15:02:54.579355808 +0100
 @@ -52,30 +52,6 @@
  
  check_tool_work_ok() {
@@ -86,3 +39,54 @@ If you are interested to improve this patch, welcome to mail me.
      vtdebug "tool check success ..."
      ventoy_true
  }
+diff -ru --color old/Ventoy2Disk.sh new/Ventoy2Disk.sh
+--- Ventoy2Disk.sh	2021-01-06 15:02:09.699509722 +0100
++++ Ventoy2Disk.sh	2021-01-06 15:04:23.009060704 +0100
+@@ -30,46 +30,4 @@
+ echo '**********************************************'
+ echo ''
+ 
+-
+-if ! [ -f ./boot/boot.img ]; then
+-    if [ -d ./grub ]; then
+-        echo "Don't run Ventoy2Disk.sh here, please download the released install package, and run the script in it."
+-    else
+-        echo "Please run under the correct directory!" 
+-    fi
+-    exit 1
+-fi
+-
+-echo "############# Ventoy2Disk $* [$TOOLDIR] ################" >> ./log.txt
+-date >> ./log.txt
+-
+-#decompress tool
+-if [ -f ./tool/$TOOLDIR/ash ]; then
+-    echo "no need to decompress tools" >> ./log.txt
+-else
+-    cd ./tool/$TOOLDIR
+-    
+-    [ -f ./xzcat ] && chmod +x ./xzcat
+-    
+-    for file in $(ls *.xz); do
+-        xzcat $file > ${file%.xz}
+-        [ -f ./${file%.xz} ] && chmod +x ./${file%.xz}
+-        [ -f ./$file ] && rm -f ./$file
+-    done
+-    cd ../../
+-    
+-    chmod +x -R ./tool/$TOOLDIR
+-fi
+-
+-if [ -f /bin/bash ]; then
+-    /bin/bash ./tool/VentoyWorker.sh $*
+-else
+-    ash ./tool/VentoyWorker.sh $*
+-fi
+-
+-if [ -n "$OLDDIR" ]; then 
+-    CURDIR=$(pwd)
+-    if [ "$CURDIR" != "$OLDDIR" ]; then
+-        cd "$OLDDIR"
+-    fi
+-fi
++./tool/VentoyWorker.sh $*
