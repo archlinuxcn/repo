@@ -2,7 +2,7 @@
 
 pkgname=haskell-language-server-bin
 pkgver=0.8.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Integration point for ghcide and haskell-ide-engine. One IDE to rule them all."
 arch=('x86_64')
 url="https://github.com/haskell/${pkgname%-bin}"
@@ -18,9 +18,10 @@ sha256sums=('0c8a02598f596defd3abf963c1505a2af16d2363c46dd296fda6dd8682e94490'
             'b688eec0952a80fc71c3ecb9778ed376bc1a7e14f0909382996fe2dcd89c3187'
             '569ebebdc6cb4b30944b7f14fbcb198a3f3019b8a4267368fa441e133497e1b6'
             'ad4d0c3638be51174c399d263e5c9f7ce7c9a1747a5825568da646a99ebc631d'
+            '0d4bd6eae430d42788cba4ff4a41b2add9c23a2f942829fc22a9cf3dd7e64d36'
             'eeaa8cea780923da977ef00a08ae007a8fdb75c957b500209bc4d0fff10e72d4')
 _prefix="${pkgname%-bin}-Linux"
-_ghc_versions=('8.6.4' '8.6.5' '8.8.2' '8.8.3' '8.8.4' '8.10.1' '8.10.2')
+_ghc_versions=('8.6.4' '8.6.5' '8.8.2' '8.8.3' '8.8.4' '8.10.1' '8.10.2' '8.10.3')
 
 for ver in ${_ghc_versions[@]}; do
   source+=("${_prefix}-${ver}-${pkgver}.gz::${url}/releases/download/${pkgver}/${_prefix}-${ver}.gz")
