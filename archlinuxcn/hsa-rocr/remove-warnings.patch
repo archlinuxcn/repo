@@ -1,0 +1,12 @@
+*** ROCR-Runtime-rocm-3.3.0/src/core/util/lnx/os_linux.cpp.bak	2020-04-20 19:12:15.151530694 +0200
+--- ROCR-Runtime-rocm-3.3.0/src/core/util/lnx/os_linux.cpp	2020-04-20 19:12:59.714068646 +0200
+***************
+*** 162,168 ****
+  
+  LibHandle LoadLib(std::string filename) {
+    void* ret = dlopen(filename.c_str(), RTLD_LAZY);
+-   if (ret == nullptr) debug_print("LoadLib(%s) failed: %s\n", filename.c_str(), dlerror());
+    return *(LibHandle*)&ret;
+  }
+  
+--- 162,167 ----
