@@ -3,11 +3,11 @@
 
 pkgname=rstudio-desktop-git
 _gitname=rstudio
-pkgver=33921.3ce9c7e533
+pkgver=33979.458706c387
 _gwtver=2.8.2
 _ginver=2.1.2
 _nodever=10.19.0
-pkgrel=2
+pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 arch=('i686' 'x86_64')
 url="https://www.rstudio.com/products/rstudio/"
@@ -23,12 +23,15 @@ source=("git+https://github.com/rstudio/rstudio.git"
         "https://s3.amazonaws.com/rstudio-buildtools/gin-${_ginver}.zip"
         "https://s3.amazonaws.com/rstudio-buildtools/gwt-${_gwtver}.zip"
 	"https://nodejs.org/dist/v${_nodever}/node-v${_nodever}-linux-x64.tar.gz"
-	"qt.conf")
+	"qt.conf"
+  "boost_175.patch")
 sha256sums=('SKIP'
             'b98e704164f54be596779696a3fcd11be5785c9907a99ec535ff6e9525ad5f9a'
             '970701dacc55170088f5eb327137cb4a7581ebb4734188dfcc2fad9941745d1b'
             '36d90bc58f0418f31dceda5b18eb260019fcc91e59b0820ffa66700772a8804b'
-            '723626bfe05dafa545e135e8e61a482df111f488583fef155301acc5ecbbf921')
+            '723626bfe05dafa545e135e8e61a482df111f488583fef155301acc5ecbbf921'
+            '6a2f9257500435691fd7655688eba1e63f9059a091ccc7f6f05faa2f99c2ee78')
+
 noextract=("gin-${_ginver}.zip")
 
 pkgver() {
@@ -38,7 +41,8 @@ pkgver() {
 
 prepare() {
     cd ${srcdir}/${_gitname}
-
+    
+    git apply --whitespace=fix ../boost_175.patch
     msg "Extracting dependencies..."
     cd "${srcdir}/${_gitname}/src/gwt"
     install -d lib/gin/${_ginver} lib/gwt/${_gwtver}

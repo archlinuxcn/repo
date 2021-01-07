@@ -1,0 +1,2347 @@
+diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
+index 18a951fb83..fb16f75b32 100644
+--- a/src/cpp/CMakeLists.txt
++++ b/src/cpp/CMakeLists.txt
+@@ -35,7 +35,6 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/../../CMakeGlobals.txt")
+ 
+ # global directives
+ add_definitions(-DBOOST_ENABLE_ASSERT_HANDLER)
+-add_definitions(-DBOOST_BIND_GLOBAL_PLACEHOLDERS)
+ 
+ # explicitly do not use new c++ 11 features for websocketpp
+ # they currently do not work with our source
+diff --git a/src/cpp/core/ConfigUtils.cpp b/src/cpp/core/ConfigUtils.cpp
+index f35f3255cb..78d59ea341 100644
+--- a/src/cpp/core/ConfigUtils.cpp
++++ b/src/cpp/core/ConfigUtils.cpp
+@@ -18,14 +18,16 @@
+ #include <algorithm>
+ 
+ #include <boost/regex.hpp>
+-#include <boost/bind.hpp>
+ #include <boost/algorithm/string/trim.hpp>
+ #include <boost/algorithm/string/replace.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <shared_core/FilePath.hpp>
+ #include <core/FileSerializer.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace config_utils {
+diff --git a/src/cpp/core/FileLockTests.cpp b/src/cpp/core/FileLockTests.cpp
+index 8fb610494a..53eada310b 100644
+--- a/src/cpp/core/FileLockTests.cpp
++++ b/src/cpp/core/FileLockTests.cpp
+@@ -23,11 +23,13 @@
+ #include <shared_core/FilePath.hpp>
+ 
+ #include <boost/thread.hpp>
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #define RSTUDIO_NO_TESTTHAT_ALIASES
+ #include <tests/TestThat.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace tests {
+diff --git a/src/cpp/core/FileUtils.cpp b/src/cpp/core/FileUtils.cpp
+index 6a2dd9d2c4..578e5e78c5 100644
+--- a/src/cpp/core/FileUtils.cpp
++++ b/src/cpp/core/FileUtils.cpp
+@@ -16,7 +16,7 @@
+ #include <fstream>
+ #include <iostream>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/FileUtils.hpp>
+ #include <core/FileSerializer.hpp>
+@@ -29,6 +29,8 @@
+ #include <core/system/PosixUser.hpp>
+ #endif
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace file_utils {
+diff --git a/src/cpp/core/HtmlUtils.cpp b/src/cpp/core/HtmlUtils.cpp
+index c0ffb19f42..ddd28a008e 100644
+--- a/src/cpp/core/HtmlUtils.cpp
++++ b/src/cpp/core/HtmlUtils.cpp
+@@ -19,6 +19,7 @@
+ 
+ #include <boost/format.hpp>
+ #include <boost/algorithm/string/predicate.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Base64.hpp>
+ #include <core/FileSerializer.hpp>
+@@ -26,6 +27,8 @@
+ 
+ #include <core/http/Util.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace html_utils {
+diff --git a/src/cpp/core/file_lock/FileLock.cpp b/src/cpp/core/file_lock/FileLock.cpp
+index 4495ca02c8..11e444acbe 100644
+--- a/src/cpp/core/file_lock/FileLock.cpp
++++ b/src/cpp/core/file_lock/FileLock.cpp
+@@ -27,10 +27,13 @@
+ #include <core/system/Xdg.hpp>
+ 
+ #include <boost/algorithm/string.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ // borrowed from SessionConstants.hpp
+ #define kRStudioSessionRoute "RSTUDIO_SESSION_ROUTE"
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ 
+diff --git a/src/cpp/core/gwt/GwtSymbolMaps.cpp b/src/cpp/core/gwt/GwtSymbolMaps.cpp
+index 3d641d10d9..fc743c5256 100644
+--- a/src/cpp/core/gwt/GwtSymbolMaps.cpp
++++ b/src/cpp/core/gwt/GwtSymbolMaps.cpp
+@@ -20,16 +20,18 @@
+ #include <set>
+ #include <algorithm>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/regex.hpp>
+ #include <boost/algorithm/string/split.hpp>
+ #include <boost/algorithm/string/predicate.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Thread.hpp>
+ #include <core/RegexUtils.hpp>
+ #include <shared_core/SafeConvert.hpp>
+ #include <core/FileSerializer.hpp>
+ 
++using namespace boost::placeholders;
++
+ // NOTE: this is a port of the following GWT class:
+ // (our rev was 11565, we should track to future changes)
+ 
+diff --git a/src/cpp/core/http/SocketProxy.cpp b/src/cpp/core/http/SocketProxy.cpp
+index 4e80c6124e..6d814a0abf 100644
+--- a/src/cpp/core/http/SocketProxy.cpp
++++ b/src/cpp/core/http/SocketProxy.cpp
+@@ -27,9 +27,8 @@
+ 
+ #include <iostream>
+ 
+-#include <boost/bind.hpp>
+-
+ #include <boost/asio/placeholders.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <core/Log.hpp>
+@@ -37,6 +36,7 @@
+ #include <core/http/SocketUtils.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace core {
+diff --git a/src/cpp/core/http/UriHandler.cpp b/src/cpp/core/http/UriHandler.cpp
+index b350d19db8..d8e6bf6513 100644
+--- a/src/cpp/core/http/UriHandler.cpp
++++ b/src/cpp/core/http/UriHandler.cpp
+@@ -17,11 +17,13 @@
+ 
+ #include <algorithm>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/algorithm/string/predicate.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/http/Request.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace http {
+diff --git a/src/cpp/core/include/core/Predicate.hpp b/src/cpp/core/include/core/Predicate.hpp
+index 9af2c3e0ac..ee6423856e 100644
+--- a/src/cpp/core/include/core/Predicate.hpp
++++ b/src/cpp/core/include/core/Predicate.hpp
+@@ -16,8 +16,10 @@
+ #ifndef CORE_PREDICATE_HPP
+ #define CORE_PREDICATE_HPP
+ 
+-#include <boost/bind.hpp>
+ #include <boost/function.hpp>
++#include <boost/bind/bind.hpp>
++
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace core {
+diff --git a/src/cpp/core/include/core/http/AsyncUriHandler.hpp b/src/cpp/core/include/core/http/AsyncUriHandler.hpp
+index 6a6a99cc35..845f1d9866 100644
+--- a/src/cpp/core/include/core/http/AsyncUriHandler.hpp
++++ b/src/cpp/core/include/core/http/AsyncUriHandler.hpp
+@@ -20,15 +20,17 @@
+ #include <vector>
+ #include <algorithm>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/function.hpp>
+ #include <boost/shared_ptr.hpp>
+ #include <boost/variant.hpp>
+ #include <boost/algorithm/string/predicate.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/http/UriHandler.hpp>
+ #include <core/http/AsyncConnection.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace http {
+diff --git a/src/cpp/core/include/core/http/Message.hpp b/src/cpp/core/include/core/http/Message.hpp
+index b3736d6d18..8930391567 100644
+--- a/src/cpp/core/include/core/http/Message.hpp
++++ b/src/cpp/core/include/core/http/Message.hpp
+@@ -20,9 +20,11 @@
+ #include <vector>
+ #include <algorithm>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ #include <boost/utility.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace RSTUDIO_BOOST_NAMESPACE {
+ namespace asio {
+    class const_buffer;
+diff --git a/src/cpp/core/include/core/json/JsonRpc.hpp b/src/cpp/core/include/core/json/JsonRpc.hpp
+index a32606fbc1..839440fda5 100644
+--- a/src/cpp/core/include/core/json/JsonRpc.hpp
++++ b/src/cpp/core/include/core/json/JsonRpc.hpp
+@@ -91,14 +91,16 @@ struct is_error_code_enum<rstudio::core::json::errc::errc_t>
+ 
+ #include <string>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/function.hpp>
+ #include <boost/optional.hpp>
+ #include <boost/unordered_map.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <shared_core/json/Json.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace http {
+diff --git a/src/cpp/core/include/core/r_util/RSourceIndex.hpp b/src/cpp/core/include/core/r_util/RSourceIndex.hpp
+index 94fc0b573a..7919f2b522 100644
+--- a/src/cpp/core/include/core/r_util/RSourceIndex.hpp
++++ b/src/cpp/core/include/core/r_util/RSourceIndex.hpp
+@@ -19,12 +19,12 @@
+ #include <string>
+ #include <vector>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/function.hpp>
+ #include <boost/utility.hpp>
+ #include <boost/regex.hpp>
+ #include <boost/range/adaptors.hpp>
+ #include <boost/algorithm/string/predicate.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Algorithm.hpp>
+ #include <shared_core/SafeConvert.hpp>
+@@ -34,6 +34,8 @@
+ #include <core/r_util/RTokenizer.hpp>
+ #include <core/r_util/RFunctionInformation.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace r_util {
+diff --git a/src/cpp/core/include/core/text/TemplateFilter.hpp b/src/cpp/core/include/core/text/TemplateFilter.hpp
+index 13fc5a050f..a6da38b9d6 100644
+--- a/src/cpp/core/include/core/text/TemplateFilter.hpp
++++ b/src/cpp/core/include/core/text/TemplateFilter.hpp
+@@ -21,13 +21,15 @@
+ #include <string>
+ #include <map>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/function.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <boost/iostreams/filter/regex.hpp>
+ 
+ #include <core/StringUtils.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ 
+diff --git a/src/cpp/core/markdown/MathJax.cpp b/src/cpp/core/markdown/MathJax.cpp
+index 97420eb02d..e02bc035b8 100644
+--- a/src/cpp/core/markdown/MathJax.cpp
++++ b/src/cpp/core/markdown/MathJax.cpp
+@@ -17,13 +17,15 @@
+ 
+ #include <algorithm>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ #include <boost/function.hpp>
+ #include <boost/algorithm/string.hpp>
+ 
+ #include <core/RegexUtils.hpp>
+ #include <core/system/System.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ 
+diff --git a/src/cpp/core/r_util/RActiveSessions.cpp b/src/cpp/core/r_util/RActiveSessions.cpp
+index ce8a2df080..7fc1faa2d2 100644
+--- a/src/cpp/core/r_util/RActiveSessions.cpp
++++ b/src/cpp/core/r_util/RActiveSessions.cpp
+@@ -15,7 +15,7 @@
+ 
+ #include <core/r_util/RActiveSessions.hpp>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ #include <boost/algorithm/string/predicate.hpp>
+ 
+ #include <core/StringUtils.hpp>
+@@ -28,6 +28,8 @@
+ 
+ #define kSessionDirPrefix "session-"
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace r_util {
+diff --git a/src/cpp/core/r_util/RSourceIndex.cpp b/src/cpp/core/r_util/RSourceIndex.cpp
+index 71155c88ae..5008ded017 100644
+--- a/src/cpp/core/r_util/RSourceIndex.cpp
++++ b/src/cpp/core/r_util/RSourceIndex.cpp
+@@ -25,8 +25,10 @@
+ #include <core/r_util/RTokenizer.hpp>
+ #include <core/r_util/RTokenCursor.hpp>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/algorithm/string.hpp>
++#include <boost/bind/bind.hpp>
++
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace core {
+diff --git a/src/cpp/core/r_util/RVersionsPosix.cpp b/src/cpp/core/r_util/RVersionsPosix.cpp
+index 146918eaa0..159d29b58b 100644
+--- a/src/cpp/core/r_util/RVersionsPosix.cpp
++++ b/src/cpp/core/r_util/RVersionsPosix.cpp
+@@ -18,7 +18,7 @@
+ #include <iostream>
+ #include <algorithm>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Algorithm.hpp>
+ #include <core/FileSerializer.hpp>
+@@ -33,6 +33,8 @@
+ #define kRScriptPath "Resources/bin/R"
+ #endif
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace r_util {
+diff --git a/src/cpp/core/spelling/HunspellCustomDictionaries.cpp b/src/cpp/core/spelling/HunspellCustomDictionaries.cpp
+index 719c5e0052..416a491b22 100644
+--- a/src/cpp/core/spelling/HunspellCustomDictionaries.cpp
++++ b/src/cpp/core/spelling/HunspellCustomDictionaries.cpp
+@@ -15,11 +15,13 @@
+ 
+ #include <core/spelling/HunspellCustomDictionaries.hpp>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Algorithm.hpp>
+ #include <core/Log.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace spelling {
+diff --git a/src/cpp/core/spelling/HunspellDictionaryManager.cpp b/src/cpp/core/spelling/HunspellDictionaryManager.cpp
+index 4d53b96f5c..5a45200c46 100644
+--- a/src/cpp/core/spelling/HunspellDictionaryManager.cpp
++++ b/src/cpp/core/spelling/HunspellDictionaryManager.cpp
+@@ -16,11 +16,13 @@
+ #include <core/spelling/HunspellDictionaryManager.hpp>
+ #include <core/system/Xdg.hpp>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Algorithm.hpp>
+ #include <core/Log.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace spelling {
+diff --git a/src/cpp/core/system/ChildProcessSubprocPollTests.cpp b/src/cpp/core/system/ChildProcessSubprocPollTests.cpp
+index c7e297e8e5..50d17c9808 100644
+--- a/src/cpp/core/system/ChildProcessSubprocPollTests.cpp
++++ b/src/cpp/core/system/ChildProcessSubprocPollTests.cpp
+@@ -15,11 +15,13 @@
+ 
+ #include "ChildProcessSubprocPoll.hpp"
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ #include <boost/thread/thread.hpp>
+ 
+ #include <tests/TestThat.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace system {
+diff --git a/src/cpp/core/system/Environment.cpp b/src/cpp/core/system/Environment.cpp
+index cc676cbb85..b020e26705 100644
+--- a/src/cpp/core/system/Environment.cpp
++++ b/src/cpp/core/system/Environment.cpp
+@@ -20,7 +20,7 @@
+ 
+ #include <core/Algorithm.hpp>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #ifdef _WIN32
+ #define kPathSeparator ";"
+@@ -28,6 +28,8 @@
+ #define kPathSeparator ":"
+ #endif
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace system {
+diff --git a/src/cpp/core/system/PosixChildProcess.cpp b/src/cpp/core/system/PosixChildProcess.cpp
+index 3f57cd09fc..823aa265e8 100644
+--- a/src/cpp/core/system/PosixChildProcess.cpp
++++ b/src/cpp/core/system/PosixChildProcess.cpp
+@@ -33,7 +33,7 @@
+ #include <sys/types.h>
+ 
+ #include <boost/asio.hpp>
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <core/Log.hpp>
+@@ -46,6 +46,8 @@
+ 
+ #include <core/PerformanceTimer.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace system {
+diff --git a/src/cpp/core/system/PosixChildProcessTracker.cpp b/src/cpp/core/system/PosixChildProcessTracker.cpp
+index 985e70f43f..3af41ef12d 100644
+--- a/src/cpp/core/system/PosixChildProcessTracker.cpp
++++ b/src/cpp/core/system/PosixChildProcessTracker.cpp
+@@ -18,7 +18,9 @@
+ #include <sys/wait.h>
+ 
+ #include <boost/format.hpp>
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
++
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace core {
+diff --git a/src/cpp/core/system/PosixOutputCapture.cpp b/src/cpp/core/system/PosixOutputCapture.cpp
+index 8a83c57c7a..5e68f20bb1 100644
+--- a/src/cpp/core/system/PosixOutputCapture.cpp
++++ b/src/cpp/core/system/PosixOutputCapture.cpp
+@@ -29,7 +29,9 @@
+ 
+ #include <core/system/System.hpp>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
++
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace core {
+diff --git a/src/cpp/core/system/PosixProcess.cpp b/src/cpp/core/system/PosixProcess.cpp
+index 9229afc773..e94c89d3f9 100644
+--- a/src/cpp/core/system/PosixProcess.cpp
++++ b/src/cpp/core/system/PosixProcess.cpp
+@@ -16,13 +16,15 @@
+ #include <core/system/PosixProcess.hpp>
+ 
+ #include <boost/asio.hpp>
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/BoostThread.hpp>
+ #include <core/Thread.hpp>
+ 
+ #include <core/system/PosixSystem.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace system {
+diff --git a/src/cpp/core/system/PosixSystem.cpp b/src/cpp/core/system/PosixSystem.cpp
+index 3cad6a4cdb..7fb3093b62 100644
+--- a/src/cpp/core/system/PosixSystem.cpp
++++ b/src/cpp/core/system/PosixSystem.cpp
+@@ -23,7 +23,7 @@
+ 
+ #include <boost/algorithm/string.hpp>
+ #include <boost/range/as_array.hpp>
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <signal.h>
+ #include <fcntl.h>
+@@ -90,6 +90,8 @@
+ 
+ #include "config.h"
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace system {
+diff --git a/src/cpp/core/system/Process.cpp b/src/cpp/core/system/Process.cpp
+index bd280ce932..3df73ade20 100644
+--- a/src/cpp/core/system/Process.cpp
++++ b/src/cpp/core/system/Process.cpp
+@@ -18,7 +18,7 @@
+ #include <iostream>
+ 
+ #include <boost/algorithm/cxx11/any_of.hpp>
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Scope.hpp>
+ #include <shared_core/Error.hpp>
+@@ -28,6 +28,8 @@
+ #include <core/PerformanceTimer.hpp>
+ #include <core/system/ChildProcess.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace system {
+diff --git a/src/cpp/core/system/ProcessTests.cpp b/src/cpp/core/system/ProcessTests.cpp
+index 29971eb887..bd8057cdf9 100644
+--- a/src/cpp/core/system/ProcessTests.cpp
++++ b/src/cpp/core/system/ProcessTests.cpp
+@@ -17,7 +17,7 @@
+ 
+ #include <atomic>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ #include <boost/thread.hpp>
+ 
+ #include <shared_core/SafeConvert.hpp>
+@@ -28,6 +28,8 @@
+ 
+ #include <tests/TestThat.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace system {
+diff --git a/src/cpp/core/system/Win32System.cpp b/src/cpp/core/system/Win32System.cpp
+index 74ca314aa1..74a2263147 100644
+--- a/src/cpp/core/system/Win32System.cpp
++++ b/src/cpp/core/system/Win32System.cpp
+@@ -29,12 +29,12 @@
+ #include <tlhelp32.h>
+ #include <VersionHelpers.h>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/system/windows_error.hpp>
+ #include <boost/lexical_cast.hpp>
+ #include <boost/range.hpp>
+ #include <boost/algorithm/string/replace.hpp>
+ #include <boost/algorithm/string/split.hpp>
++#include <boost/bind/bind.hpp>
+ #include <boost/date_time/posix_time/posix_time.hpp>
+ 
+ #include <core/Log.hpp>
+@@ -55,6 +55,8 @@
+ #define JOB_OBJECT_LIMIT_BREAKAWAY_OK 0x00000800
+ #endif
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace system {
+diff --git a/src/cpp/core/system/file_monitor/FileMonitor.cpp b/src/cpp/core/system/file_monitor/FileMonitor.cpp
+index 39802e171f..6ac9b85a21 100644
+--- a/src/cpp/core/system/file_monitor/FileMonitor.cpp
++++ b/src/cpp/core/system/file_monitor/FileMonitor.cpp
+@@ -18,8 +18,8 @@
+ 
+ #include <list>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/algorithm/string.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Log.hpp>
+ #include <shared_core/Error.hpp>
+@@ -36,6 +36,8 @@
+ // practice we can't think of an easy way for the user to specify the
+ // non case-sensitive variant of a file
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace system {
+diff --git a/src/cpp/core/system/file_monitor/FileMonitorImpl.hpp b/src/cpp/core/system/file_monitor/FileMonitorImpl.hpp
+index 1500160557..35918b201d 100644
+--- a/src/cpp/core/system/file_monitor/FileMonitorImpl.hpp
++++ b/src/cpp/core/system/file_monitor/FileMonitorImpl.hpp
+@@ -20,7 +20,7 @@
+ #include <algorithm>
+ #include <list>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/FilePath.hpp>
+ #include <core/collection/Tree.hpp>
+@@ -29,6 +29,8 @@
+ 
+ #include <core/system/FileMonitor.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {   
+ namespace system {
+diff --git a/src/cpp/core/system/file_monitor/MacFileMonitor.cpp b/src/cpp/core/system/file_monitor/MacFileMonitor.cpp
+index 16739dd331..d7d1b6c3bc 100644
+--- a/src/cpp/core/system/file_monitor/MacFileMonitor.cpp
++++ b/src/cpp/core/system/file_monitor/MacFileMonitor.cpp
+@@ -19,7 +19,7 @@
+ 
+ #include <boost/algorithm/string/trim.hpp>
+ #include <boost/algorithm/string/classification.hpp>
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Log.hpp>
+ #include <shared_core/Error.hpp>
+@@ -31,6 +31,8 @@
+ 
+ #include "FileMonitorImpl.hpp"
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace system {
+diff --git a/src/cpp/core/text/DcfParser.cpp b/src/cpp/core/text/DcfParser.cpp
+index bac45625b7..f608042167 100644
+--- a/src/cpp/core/text/DcfParser.cpp
++++ b/src/cpp/core/text/DcfParser.cpp
+@@ -22,17 +22,18 @@
+ #include <map>
+ 
+ #include <boost/format.hpp>
+-#include <boost/bind.hpp>
+ #include <boost/function.hpp>
++#include <boost/regex.hpp>
+ #include <boost/algorithm/string/trim.hpp>
+ #include <boost/algorithm/string/split.hpp>
+-#include <boost/regex.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <shared_core/FilePath.hpp>
+ #include <core/FileSerializer.hpp>
+ #include <core/RegexUtils.hpp>
+ 
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace core {
+diff --git a/src/cpp/desktop/DesktopMain.cpp b/src/cpp/desktop/DesktopMain.cpp
+index 750bbd8573..ce6bf2914b 100644
+--- a/src/cpp/desktop/DesktopMain.cpp
++++ b/src/cpp/desktop/DesktopMain.cpp
+@@ -18,9 +18,9 @@
+ #include <QPushButton>
+ #include <QQuickWindow>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/function.hpp>
+ #include <boost/scoped_ptr.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/CrashHandler.hpp>
+ #include <core/FileSerializer.hpp>
+@@ -59,6 +59,8 @@
+ QProcess* pRSessionProcess;
+ QString sharedSecret;
+ 
++using namespace boost::placeholders;
++
+ using namespace rstudio;
+ using namespace rstudio::core;
+ using namespace rstudio::desktop;
+diff --git a/src/cpp/desktop/DesktopMainWindow.cpp b/src/cpp/desktop/DesktopMainWindow.cpp
+index 691167836c..803a9754f2 100644
+--- a/src/cpp/desktop/DesktopMainWindow.cpp
++++ b/src/cpp/desktop/DesktopMainWindow.cpp
+@@ -19,8 +19,8 @@
+ #include <QWebChannel>
+ #include <QWebEngineSettings>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/format.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/FileSerializer.hpp>
+ #include <core/Macros.hpp>
+@@ -37,6 +37,7 @@
+ #include "DesktopRCommandEvaluator.hpp"
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace desktop {
+diff --git a/src/cpp/desktop/DesktopSessionLauncher.cpp b/src/cpp/desktop/DesktopSessionLauncher.cpp
+index 05431c0c47..411547d87f 100644
+--- a/src/cpp/desktop/DesktopSessionLauncher.cpp
++++ b/src/cpp/desktop/DesktopSessionLauncher.cpp
+@@ -17,7 +17,7 @@
+ 
+ #include <iostream>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Macros.hpp>
+ #include <core/http/Request.hpp>
+@@ -42,6 +42,7 @@
+              std::cout << (message) << std::endl;
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace desktop {
+diff --git a/src/cpp/desktop/DesktopWin32DetectRHome.cpp b/src/cpp/desktop/DesktopWin32DetectRHome.cpp
+index a6711e6e60..87e1a37904 100644
+--- a/src/cpp/desktop/DesktopWin32DetectRHome.cpp
++++ b/src/cpp/desktop/DesktopWin32DetectRHome.cpp
+@@ -21,7 +21,7 @@
+ 
+ #include <windows.h>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/system/System.hpp>
+ #include <core/system/Environment.hpp>
+@@ -29,6 +29,7 @@
+ #include "DesktopRVersion.hpp"
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace desktop {
+diff --git a/src/cpp/ext/websocketpp/common/functional.hpp b/src/cpp/ext/websocketpp/common/functional.hpp
+index d332dd15ec..b0ebf1cca1 100644
+--- a/src/cpp/ext/websocketpp/common/functional.hpp
++++ b/src/cpp/ext/websocketpp/common/functional.hpp
+@@ -52,9 +52,11 @@
+ #ifdef _WEBSOCKETPP_CPP11_FUNCTIONAL_
+     #include <functional>
+ #else
+-    #include <boost/bind.hpp>
+     #include <boost/function.hpp>
+     #include <boost/ref.hpp>
++    #include <boost/bind/bind.hpp>
++
++    using namespace boost::placeholders;
+ #endif
+ 
+ 
+diff --git a/src/cpp/ext/websocketpp/transport/asio/endpoint.hpp b/src/cpp/ext/websocketpp/transport/asio/endpoint.hpp
+index b418060a85..935d62e7e7 100644
+--- a/src/cpp/ext/websocketpp/transport/asio/endpoint.hpp
++++ b/src/cpp/ext/websocketpp/transport/asio/endpoint.hpp
+@@ -38,12 +38,14 @@
+ #include <websocketpp/common/functional.hpp>
+ 
+ #include <boost/asio.hpp>
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ #include <boost/system/error_code.hpp>
+ 
+ #include <sstream>
+ #include <string>
+ 
++using namespace boost::placeholders;
++
+ namespace websocketpp {
+ namespace transport {
+ namespace asio {
+diff --git a/src/cpp/r/RJsonRpc.cpp b/src/cpp/r/RJsonRpc.cpp
+index 5e54597e99..1f02cdfdd3 100644
+--- a/src/cpp/r/RJsonRpc.cpp
++++ b/src/cpp/r/RJsonRpc.cpp
+@@ -47,7 +47,7 @@
+ #define R_INTERNAL_FUNCTIONS
+ #include <r/RJsonRpc.hpp>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <shared_core/FilePath.hpp>
+@@ -58,6 +58,7 @@
+ #include <r/RJson.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace r {
+diff --git a/src/cpp/r/RSexp.cpp b/src/cpp/r/RSexp.cpp
+index f6d236e08a..16d989fc11 100644
+--- a/src/cpp/r/RSexp.cpp
++++ b/src/cpp/r/RSexp.cpp
+@@ -25,10 +25,10 @@
+ 
+ #include <core/Algorithm.hpp>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/function.hpp>
+ #include <boost/numeric/conversion/cast.hpp>
+ #include <boost/optional.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Macros.hpp>
+ #include <core/Log.hpp>
+@@ -43,6 +43,7 @@
+ #undef FALSE
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace r {
+diff --git a/src/cpp/r/RSourceManager.cpp b/src/cpp/r/RSourceManager.cpp
+index cdad0b2611..5c6909f82e 100644
+--- a/src/cpp/r/RSourceManager.cpp
++++ b/src/cpp/r/RSourceManager.cpp
+@@ -17,8 +17,8 @@
+ 
+ #include <algorithm>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/algorithm/string/replace.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <shared_core/FilePath.hpp>
+@@ -27,6 +27,7 @@
+ #include <r/RExec.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace r {
+diff --git a/src/cpp/r/session/RClientState.cpp b/src/cpp/r/session/RClientState.cpp
+index 9fe6cbad7b..f5f9966391 100644
+--- a/src/cpp/r/session/RClientState.cpp
++++ b/src/cpp/r/session/RClientState.cpp
+@@ -17,8 +17,8 @@
+ 
+ #include <algorithm>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/function.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Log.hpp>
+ #include <shared_core/Error.hpp>
+@@ -26,6 +26,7 @@
+ #include <core/FileSerializer.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace r {
+diff --git a/src/cpp/r/session/RConsoleHistory.cpp b/src/cpp/r/session/RConsoleHistory.cpp
+index 140ff0593c..a347b4ebc8 100644
+--- a/src/cpp/r/session/RConsoleHistory.cpp
++++ b/src/cpp/r/session/RConsoleHistory.cpp
+@@ -15,9 +15,9 @@
+ 
+ #include <r/session/RConsoleHistory.hpp>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/function.hpp>
+ #include <boost/tokenizer.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <shared_core/FilePath.hpp>
+@@ -28,6 +28,7 @@
+ #include <gsl/gsl>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace r {
+diff --git a/src/cpp/r/session/REmbeddedWin32.cpp b/src/cpp/r/session/REmbeddedWin32.cpp
+index 7233248f2e..5174ab78f3 100644
+--- a/src/cpp/r/session/REmbeddedWin32.cpp
++++ b/src/cpp/r/session/REmbeddedWin32.cpp
+@@ -28,8 +28,8 @@
+ 
+ #include <stdio.h>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/format.hpp>
++#include <boost/bind/bind.hpp>
+ #include <boost/date_time/posix_time/posix_time_duration.hpp>
+ 
+ #include <shared_core/FilePath.hpp>
+@@ -54,6 +54,7 @@ extern "C" {
+ }
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace r {
+diff --git a/src/cpp/r/session/RInit.cpp b/src/cpp/r/session/RInit.cpp
+index 3564ca1aea..6b1d301ed2 100644
+--- a/src/cpp/r/session/RInit.cpp
++++ b/src/cpp/r/session/RInit.cpp
+@@ -13,7 +13,7 @@
+  *
+  */
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/system/Environment.hpp>
+ 
+@@ -37,6 +37,7 @@
+ #define kGraphicsPath "graphics"
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace r {
+diff --git a/src/cpp/r/session/RQuit.cpp b/src/cpp/r/session/RQuit.cpp
+index b04f85c61d..d0eef47986 100644
+--- a/src/cpp/r/session/RQuit.cpp
++++ b/src/cpp/r/session/RQuit.cpp
+@@ -15,7 +15,7 @@
+ 
+ #define R_INTERNAL_FUNCTIONS
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ #include <gsl/gsl>
+ 
+ #include <r/RErrorCategory.hpp>
+@@ -28,6 +28,7 @@
+ #include "RStdCallbacks.hpp"
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace r {
+diff --git a/src/cpp/r/session/RSearchPath.cpp b/src/cpp/r/session/RSearchPath.cpp
+index 61462cf0a4..a65fdf4963 100644
+--- a/src/cpp/r/session/RSearchPath.cpp
++++ b/src/cpp/r/session/RSearchPath.cpp
+@@ -26,11 +26,11 @@
+ #include <algorithm>
+ #include <gsl/gsl>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/function.hpp>
+ #include <boost/format.hpp>
+ #include <boost/lexical_cast.hpp>
+ #include <boost/algorithm/string/predicate.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Log.hpp>
+ #include <shared_core/Error.hpp>
+@@ -46,6 +46,7 @@
+ #include <r/session/RSessionUtils.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace r {
+diff --git a/src/cpp/r/session/RStdCallbacks.cpp b/src/cpp/r/session/RStdCallbacks.cpp
+index 71a4b52177..039c3a8a5c 100644
+--- a/src/cpp/r/session/RStdCallbacks.cpp
++++ b/src/cpp/r/session/RStdCallbacks.cpp
+@@ -21,6 +21,7 @@
+ 
+ #include <boost/function.hpp>
+ #include <boost/regex.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <r/RExec.hpp>
+ #include <r/ROptions.hpp>
+@@ -60,6 +61,7 @@ __declspec(dllimport) SA_TYPE SaveAction;
+ }
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace r {
+diff --git a/src/cpp/r/session/graphics/RGraphicsDevice.cpp b/src/cpp/r/session/graphics/RGraphicsDevice.cpp
+index e7c438939a..2444329958 100644
+--- a/src/cpp/r/session/graphics/RGraphicsDevice.cpp
++++ b/src/cpp/r/session/graphics/RGraphicsDevice.cpp
+@@ -17,8 +17,8 @@
+ 
+ #include <cstdlib>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/thread.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <shared_core/FilePath.hpp>
+@@ -53,6 +53,7 @@
+ 
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace r {
+diff --git a/src/cpp/r/session/graphics/RGraphicsPlotManager.cpp b/src/cpp/r/session/graphics/RGraphicsPlotManager.cpp
+index 6c7a0f179a..90b3588c7b 100644
+--- a/src/cpp/r/session/graphics/RGraphicsPlotManager.cpp
++++ b/src/cpp/r/session/graphics/RGraphicsPlotManager.cpp
+@@ -18,10 +18,10 @@
+ #include <algorithm>
+ #include <gsl/gsl>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/function.hpp>
+ #include <boost/format.hpp>
+ #include <boost/lexical_cast.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Log.hpp>
+ #include <shared_core/Error.hpp>
+@@ -39,6 +39,7 @@
+ #include "RGraphicsPlotManipulatorManager.hpp"
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace r {
+diff --git a/src/cpp/r/session/graphics/RGraphicsPlotManipulatorManager.cpp b/src/cpp/r/session/graphics/RGraphicsPlotManipulatorManager.cpp
+index 659d142859..fe70a19587 100644
+--- a/src/cpp/r/session/graphics/RGraphicsPlotManipulatorManager.cpp
++++ b/src/cpp/r/session/graphics/RGraphicsPlotManipulatorManager.cpp
+@@ -18,8 +18,8 @@
+ #include <string>
+ #include <algorithm>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/function.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Log.hpp>
+ #include <shared_core/Error.hpp>
+@@ -32,6 +32,7 @@
+ #include "RGraphicsPlotManager.hpp"
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace r {
+diff --git a/src/cpp/r/session/graphics/RShadowPngGraphicsHandler.cpp b/src/cpp/r/session/graphics/RShadowPngGraphicsHandler.cpp
+index 4bf247e2f0..097f44ba6e 100644
+--- a/src/cpp/r/session/graphics/RShadowPngGraphicsHandler.cpp
++++ b/src/cpp/r/session/graphics/RShadowPngGraphicsHandler.cpp
+@@ -18,8 +18,8 @@
+ #include <iostream>
+ #include <gsl/gsl>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/format.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/system/System.hpp>
+ #include <core/StringUtils.hpp>
+@@ -38,6 +38,7 @@
+ #include <Rembedded.h>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace r {
+diff --git a/src/cpp/session/SessionConsoleProcessSocketTests.cpp b/src/cpp/session/SessionConsoleProcessSocketTests.cpp
+index 46604012ab..916753c14a 100644
+--- a/src/cpp/session/SessionConsoleProcessSocketTests.cpp
++++ b/src/cpp/session/SessionConsoleProcessSocketTests.cpp
+@@ -16,11 +16,11 @@
+ #include <session/SessionConsoleProcessSocket.hpp>
+ #include <session/SessionConsoleProcessSocketPacket.hpp>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/shared_ptr.hpp>
+ #include <boost/make_shared.hpp>
+ #include <boost/enable_shared_from_this.hpp>
+ #include <boost/lexical_cast.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <websocketpp/config/asio_no_tls_client.hpp>
+ #include <websocketpp/client.hpp>
+@@ -32,6 +32,7 @@ namespace session {
+ namespace console_process {
+ 
+ using namespace console_process;
++using namespace boost::placeholders;
+ 
+ namespace {
+ 
+diff --git a/src/cpp/session/SessionSourceDatabase.cpp b/src/cpp/session/SessionSourceDatabase.cpp
+index 23e14b2bde..b7a8feedf0 100644
+--- a/src/cpp/session/SessionSourceDatabase.cpp
++++ b/src/cpp/session/SessionSourceDatabase.cpp
+@@ -19,8 +19,8 @@
+ #include <vector>
+ #include <algorithm>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/regex.hpp>
++#include <boost/bind/bind.hpp>
+ #include <boost/date_time/posix_time/posix_time.hpp>
+ 
+ #include <core/Log.hpp>
+@@ -63,6 +63,7 @@
+ // properties rather than a side-database
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/include/session/IncrementalFileChangeHandler.hpp b/src/cpp/session/include/session/IncrementalFileChangeHandler.hpp
+index 0d30e41cfd..7b95c58c5e 100644
+--- a/src/cpp/session/include/session/IncrementalFileChangeHandler.hpp
++++ b/src/cpp/session/include/session/IncrementalFileChangeHandler.hpp
+@@ -20,7 +20,7 @@
+ 
+ #include <boost/noncopyable.hpp>
+ #include <boost/function.hpp>
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <boost/date_time/posix_time/posix_time.hpp>
+ 
+@@ -32,6 +32,8 @@
+ 
+ #include <session/projects/SessionProjects.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace session {
+ 
+diff --git a/src/cpp/session/include/session/SessionScopes.hpp b/src/cpp/session/include/session/SessionScopes.hpp
+index e7de71914d..177ed7ee9f 100644
+--- a/src/cpp/session/include/session/SessionScopes.hpp
++++ b/src/cpp/session/include/session/SessionScopes.hpp
+@@ -19,8 +19,8 @@
+ #ifndef SESSION_SCOPES_HPP
+ #define SESSION_SCOPES_HPP
+ 
+-#include <boost/bind.hpp>
+ #include <boost/algorithm/string/predicate.hpp>
++#include <boost/bind/bind.hpp>
+ #include <boost/range/adaptor/map.hpp>
+ 
+ #include <shared_core/FilePath.hpp>
+@@ -39,6 +39,9 @@
+ #include <session/projects/ProjectsSettings.hpp>
+ #include <session/projects/SessionProjectSharing.hpp>
+ 
++
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace session {
+ 
+diff --git a/src/cpp/session/modules/SessionAskPass.cpp b/src/cpp/session/modules/SessionAskPass.cpp
+index 000197c47d..cf2e72e44b 100644
+--- a/src/cpp/session/modules/SessionAskPass.cpp
++++ b/src/cpp/session/modules/SessionAskPass.cpp
+@@ -15,7 +15,7 @@
+ 
+ #include "SessionAskPass.hpp"
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Exec.hpp>
+ #include <core/Log.hpp>
+@@ -35,6 +35,7 @@
+ 
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionAskSecret.cpp b/src/cpp/session/modules/SessionAskSecret.cpp
+index 57250f89df..ee8d119180 100644
+--- a/src/cpp/session/modules/SessionAskSecret.cpp
++++ b/src/cpp/session/modules/SessionAskSecret.cpp
+@@ -15,7 +15,7 @@
+ 
+ #include "SessionAskSecret.hpp"
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Exec.hpp>
+ #include <core/Log.hpp>
+@@ -36,6 +36,7 @@
+ 
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionBreakpoints.cpp b/src/cpp/session/modules/SessionBreakpoints.cpp
+index 8162957fe3..0ba0cc2663 100644
+--- a/src/cpp/session/modules/SessionBreakpoints.cpp
++++ b/src/cpp/session/modules/SessionBreakpoints.cpp
+@@ -17,9 +17,9 @@
+ 
+ #include <algorithm>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/format.hpp>
+ #include <boost/utility.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <core/Log.hpp>
+@@ -42,6 +42,7 @@
+ using namespace rstudio::core;
+ using namespace rstudio::r::sexp;
+ using namespace rstudio::r::exec;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionCRANMirrors.cpp b/src/cpp/session/modules/SessionCRANMirrors.cpp
+index 426d2af9e5..edd2011da2 100644
+--- a/src/cpp/session/modules/SessionCRANMirrors.cpp
++++ b/src/cpp/session/modules/SessionCRANMirrors.cpp
+@@ -15,7 +15,7 @@
+ 
+ #include "SessionCRANMirrors.hpp"
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/http/URL.hpp>
+ #include <core/http/TcpIpBlockingClient.hpp>
+@@ -29,6 +29,7 @@
+ #include <session/prefs/UserPrefs.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionCodeSearch.cpp b/src/cpp/session/modules/SessionCodeSearch.cpp
+index e75545fb3e..9f76e4007f 100644
+--- a/src/cpp/session/modules/SessionCodeSearch.cpp
++++ b/src/cpp/session/modules/SessionCodeSearch.cpp
+@@ -23,13 +23,13 @@
+ #include <set>
+ #include <gsl/gsl>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/shared_ptr.hpp>
+ #include <boost/foreach.hpp>
+ #include <boost/format.hpp>
+ #include <boost/regex.hpp>
+ #include <boost/algorithm/string/predicate.hpp>
+ #include <boost/algorithm/string/split.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <shared_core/FilePath.hpp>
+@@ -63,6 +63,7 @@
+ #include <core/Macros.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {  
+diff --git a/src/cpp/session/modules/SessionCrypto.cpp b/src/cpp/session/modules/SessionCrypto.cpp
+index 31280dd991..44207a57e1 100644
+--- a/src/cpp/session/modules/SessionCrypto.cpp
++++ b/src/cpp/session/modules/SessionCrypto.cpp
+@@ -17,7 +17,7 @@
+ 
+ #include <string>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Log.hpp>
+ #include <shared_core/Error.hpp>
+@@ -33,6 +33,7 @@
+ #include <session/SessionModuleContext.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionDependencies.cpp b/src/cpp/session/modules/SessionDependencies.cpp
+index 6d0ebdb433..734c7e6877 100644
+--- a/src/cpp/session/modules/SessionDependencies.cpp
++++ b/src/cpp/session/modules/SessionDependencies.cpp
+@@ -16,8 +16,8 @@
+ #include "SessionDependencies.hpp"
+ #include "SessionPackages.hpp"
+ 
+-#include <boost/bind.hpp>
+ #include <boost/algorithm/string/join.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <core/Exec.hpp>
+@@ -36,6 +36,7 @@
+ #include "jobs/ScriptJob.hpp"
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionDiagnostics.cpp b/src/cpp/session/modules/SessionDiagnostics.cpp
+index 1fafb44057..b0ce99e3fd 100644
+--- a/src/cpp/session/modules/SessionDiagnostics.cpp
++++ b/src/cpp/session/modules/SessionDiagnostics.cpp
+@@ -41,7 +41,7 @@
+ #include "shiny/SessionShiny.hpp"
+ 
+ #include <boost/shared_ptr.hpp>
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ #include <boost/range/adaptor/map.hpp>
+ 
+ #include <r/RSexp.hpp>
+@@ -55,6 +55,8 @@
+ #include <core/collection/Tree.hpp>
+ #include <core/collection/Stack.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace session {
+ namespace modules {
+diff --git a/src/cpp/session/modules/SessionDiagnosticsTests.cpp b/src/cpp/session/modules/SessionDiagnosticsTests.cpp
+index 347be98a89..4ff2a536fb 100644
+--- a/src/cpp/session/modules/SessionDiagnosticsTests.cpp
++++ b/src/cpp/session/modules/SessionDiagnosticsTests.cpp
+@@ -25,11 +25,13 @@
+ #include <core/FileUtils.hpp>
+ 
+ #include <boost/algorithm/string.hpp>
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <session/SessionOptions.hpp>
+ #include "SessionRParser.hpp"
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace session {
+ namespace modules {
+diff --git a/src/cpp/session/modules/SessionDirty.cpp b/src/cpp/session/modules/SessionDirty.cpp
+index 197c334b0e..30b034a897 100644
+--- a/src/cpp/session/modules/SessionDirty.cpp
++++ b/src/cpp/session/modules/SessionDirty.cpp
+@@ -17,9 +17,9 @@
+ 
+ #include <algorithm>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/format.hpp>
+ #include <boost/utility.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <core/Log.hpp>
+@@ -39,6 +39,7 @@
+ using namespace rstudio::core;
+ using namespace rstudio::r::sexp;
+ using namespace rstudio::r::exec;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionErrors.cpp b/src/cpp/session/modules/SessionErrors.cpp
+index aec300be4f..b40cf8a9cb 100644
+--- a/src/cpp/session/modules/SessionErrors.cpp
++++ b/src/cpp/session/modules/SessionErrors.cpp
+@@ -22,7 +22,7 @@
+ #include <r/RExec.hpp>
+ #include <r/ROptions.hpp>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ #include <session/SessionModuleContext.hpp>
+ #include <session/prefs/UserPrefs.hpp>
+ #include <session/prefs/UserState.hpp>
+@@ -30,6 +30,7 @@
+ #include "SessionBreakpoints.hpp"
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionFilesListingMonitor.cpp b/src/cpp/session/modules/SessionFilesListingMonitor.cpp
+index 2232103a6e..7b618af976 100644
+--- a/src/cpp/session/modules/SessionFilesListingMonitor.cpp
++++ b/src/cpp/session/modules/SessionFilesListingMonitor.cpp
+@@ -17,7 +17,7 @@
+ 
+ #include <algorithm>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <core/Log.hpp>
+@@ -36,6 +36,7 @@
+ #include "SessionVCS.hpp"
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionFind.cpp b/src/cpp/session/modules/SessionFind.cpp
+index 6fff11339e..41ccd79367 100644
+--- a/src/cpp/session/modules/SessionFind.cpp
++++ b/src/cpp/session/modules/SessionFind.cpp
+@@ -18,10 +18,10 @@
+ #include <algorithm>
+ #include <gsl/gsl>
+ 
+-#include <boost/algorithm/string.hpp>
+-#include <boost/bind.hpp>
+ #include <boost/enable_shared_from_this.hpp>
+ #include <boost/filesystem.hpp>
++#include <boost/algorithm/string.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Exec.hpp>
+ #include <core/StringUtils.hpp>
+@@ -37,6 +37,7 @@
+ #include <session/prefs/UserPrefs.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionGraphics.cpp b/src/cpp/session/modules/SessionGraphics.cpp
+index 5b5bbc579c..d2edd37297 100644
+--- a/src/cpp/session/modules/SessionGraphics.cpp
++++ b/src/cpp/session/modules/SessionGraphics.cpp
+@@ -15,7 +15,7 @@
+ 
+ #include "SessionGraphics.hpp"
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <r/RExec.hpp>
+ #include <r/RJson.hpp>
+@@ -29,6 +29,7 @@
+ #include <session/SessionModuleContext.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionHTMLPreview.cpp b/src/cpp/session/modules/SessionHTMLPreview.cpp
+index ccf0c4851b..30d408a0d9 100644
+--- a/src/cpp/session/modules/SessionHTMLPreview.cpp
++++ b/src/cpp/session/modules/SessionHTMLPreview.cpp
+@@ -16,17 +16,15 @@
+ 
+ #include "SessionHTMLPreview.hpp"
+ 
+-#include <boost/bind.hpp>
+ #include <boost/format.hpp>
+ #include <boost/enable_shared_from_this.hpp>
+-
++#include <boost/algorithm/string/join.hpp>
++#include <boost/algorithm/string/predicate.hpp>
+ #include <boost/iostreams/copy.hpp>
+ #include <boost/iostreams/concepts.hpp>
+ #include <boost/iostreams/filter/regex.hpp>
+ #include <boost/iostreams/filtering_stream.hpp>
+-
+-#include <boost/algorithm/string/join.hpp>
+-#include <boost/algorithm/string/predicate.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <core/Exec.hpp>
+@@ -57,6 +55,7 @@
+ #define kHTMLPreviewLocation "/" kHTMLPreview "/"
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionHistory.cpp b/src/cpp/session/modules/SessionHistory.cpp
+index f13d91e88b..331f35ebfa 100644
+--- a/src/cpp/session/modules/SessionHistory.cpp
++++ b/src/cpp/session/modules/SessionHistory.cpp
+@@ -22,12 +22,12 @@
+ #include <gsl/gsl>
+ 
+ #include <boost/utility.hpp>
+-#include <boost/bind.hpp>
+ #include <boost/function.hpp>
+ #include <boost/format.hpp>
+ #include <boost/tokenizer.hpp>
+ #include <boost/algorithm/string/trim.hpp>
+ #include <boost/algorithm/string/predicate.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <core/Exec.hpp>
+@@ -45,6 +45,7 @@
+ #include "SessionHistoryArchive.hpp"
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionLimits.cpp b/src/cpp/session/modules/SessionLimits.cpp
+index 13e8b1a9cb..c6cc97616f 100644
+--- a/src/cpp/session/modules/SessionLimits.cpp
++++ b/src/cpp/session/modules/SessionLimits.cpp
+@@ -17,8 +17,8 @@
+ #include "SessionLimits.hpp"
+ 
+ #include <boost/format.hpp>
+-#include <boost/bind.hpp>
+ #include <boost/function.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Log.hpp>
+ #include <shared_core/Error.hpp>
+@@ -29,6 +29,7 @@
+ #include <session/SessionModuleContext.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionLists.cpp b/src/cpp/session/modules/SessionLists.cpp
+index b4da316b15..5140778d80 100644
+--- a/src/cpp/session/modules/SessionLists.cpp
++++ b/src/cpp/session/modules/SessionLists.cpp
+@@ -18,9 +18,9 @@
+ 
+ #include <map>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/utility.hpp>
+ #include <boost/circular_buffer.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Exec.hpp>
+ #include <core/FileSerializer.hpp>
+@@ -29,6 +29,7 @@
+ #include <session/SessionModuleContext.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionObjectExplorer.cpp b/src/cpp/session/modules/SessionObjectExplorer.cpp
+index 5f65cb3482..bc83c450e9 100644
+--- a/src/cpp/session/modules/SessionObjectExplorer.cpp
++++ b/src/cpp/session/modules/SessionObjectExplorer.cpp
+@@ -17,7 +17,7 @@
+ 
+ #include "SessionObjectExplorer.hpp"
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Algorithm.hpp>
+ #include <shared_core/Error.hpp>
+@@ -30,6 +30,7 @@
+ #include <session/SessionModuleContext.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionPackages.cpp b/src/cpp/session/modules/SessionPackages.cpp
+index 3d55e4a95a..14339b6e00 100644
+--- a/src/cpp/session/modules/SessionPackages.cpp
++++ b/src/cpp/session/modules/SessionPackages.cpp
+@@ -20,9 +20,9 @@
+ 
+ #include "SessionPackages.hpp"
+ 
+-#include <boost/bind.hpp>
+ #include <boost/regex.hpp>
+ #include <boost/format.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <core/Exec.hpp>
+@@ -43,6 +43,7 @@
+ #include "session-config.h"
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionPath.cpp b/src/cpp/session/modules/SessionPath.cpp
+index c981fae66e..abee40d47c 100644
+--- a/src/cpp/session/modules/SessionPath.cpp
++++ b/src/cpp/session/modules/SessionPath.cpp
+@@ -18,7 +18,7 @@
+ #include <string>
+ #include <vector>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Algorithm.hpp>
+ #include <shared_core/Error.hpp>
+@@ -32,6 +32,7 @@
+ #include <session/SessionModuleContext.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionProjectTemplate.cpp b/src/cpp/session/modules/SessionProjectTemplate.cpp
+index fd1a9f403e..5533c258a6 100644
+--- a/src/cpp/session/modules/SessionProjectTemplate.cpp
++++ b/src/cpp/session/modules/SessionProjectTemplate.cpp
+@@ -14,8 +14,8 @@
+  */
+ #include <session/SessionProjectTemplate.hpp>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/function.hpp>
++#include <boost/bind/bind.hpp>
+ #include <boost/range/adaptors.hpp>
+ 
+ #include <core/Algorithm.hpp>
+@@ -37,6 +37,7 @@
+ #define kRStudioProjectTemplatesPath "rstudio/templates/project"
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionRAddins.cpp b/src/cpp/session/modules/SessionRAddins.cpp
+index d567f1b019..4d457d6251 100644
+--- a/src/cpp/session/modules/SessionRAddins.cpp
++++ b/src/cpp/session/modules/SessionRAddins.cpp
+@@ -27,7 +27,7 @@
+ #include <core/text/DcfParser.hpp>
+ 
+ #include <boost/regex.hpp>
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ #include <boost/range/adaptor/map.hpp>
+ #include <boost/system/error_code.hpp>
+ 
+@@ -40,6 +40,7 @@
+ #include <session/SessionPackageProvidedExtension.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionRHooks.cpp b/src/cpp/session/modules/SessionRHooks.cpp
+index 63b040a1ba..a8cd82c44f 100644
+--- a/src/cpp/session/modules/SessionRHooks.cpp
++++ b/src/cpp/session/modules/SessionRHooks.cpp
+@@ -20,7 +20,7 @@
+ 
+ #include <session/SessionModuleContext.hpp>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include "SessionRHooks.hpp"
+ 
+@@ -30,6 +30,7 @@ namespace modules {
+ namespace rhooks {
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ Error initialize()
+ {
+diff --git a/src/cpp/session/modules/SessionRParser.cpp b/src/cpp/session/modules/SessionRParser.cpp
+index f7c24ad425..82a2af68cd 100644
+--- a/src/cpp/session/modules/SessionRParser.cpp
++++ b/src/cpp/session/modules/SessionRParser.cpp
+@@ -42,8 +42,10 @@
+ 
+ #include <r/session/RSessionUtils.hpp>
+ 
++#include <boost/bind/bind.hpp>
+ #include <boost/container/flat_set.hpp>
+-#include <boost/bind.hpp>
++
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionRParser.hpp b/src/cpp/session/modules/SessionRParser.hpp
+index 1ef314a5e4..10b6f81964 100644
+--- a/src/cpp/session/modules/SessionRParser.hpp
++++ b/src/cpp/session/modules/SessionRParser.hpp
+@@ -40,13 +40,15 @@
+ #include <r/RSexp.hpp>
+ #include <r/RExec.hpp>
+ 
+-#include <boost/bind.hpp>
+-#include <boost/container/flat_set.hpp>
+ #include <boost/shared_ptr.hpp>
+ #include <boost/algorithm/string.hpp>
++#include <boost/bind/bind.hpp>
++#include <boost/container/flat_set.hpp>
+ 
+ #include <core/Macros.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace session {
+ namespace modules {
+diff --git a/src/cpp/session/modules/SessionRPubs.cpp b/src/cpp/session/modules/SessionRPubs.cpp
+index 4ed4e979bf..4a3fb945e0 100644
+--- a/src/cpp/session/modules/SessionRPubs.cpp
++++ b/src/cpp/session/modules/SessionRPubs.cpp
+@@ -15,11 +15,11 @@
+ 
+ #include "SessionRPubs.hpp"
+ 
+-#include <boost/bind.hpp>
+ #include <boost/utility.hpp>
+ #include <boost/format.hpp>
+ #include <boost/shared_ptr.hpp>
+ #include <boost/enable_shared_from_this.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <core/Exec.hpp>
+@@ -39,6 +39,7 @@
+ #include <session/projects/SessionProjects.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionReticulate.cpp b/src/cpp/session/modules/SessionReticulate.cpp
+index ff69c9e265..0d7c1d064d 100644
+--- a/src/cpp/session/modules/SessionReticulate.cpp
++++ b/src/cpp/session/modules/SessionReticulate.cpp
+@@ -17,7 +17,7 @@
+ 
+ #include "SessionThemes.hpp"
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <core/Exec.hpp>
+@@ -28,6 +28,7 @@
+ #include <session/SessionModuleContext.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionSVN.cpp b/src/cpp/session/modules/SessionSVN.cpp
+index 38d608719b..3c1a154497 100644
+--- a/src/cpp/session/modules/SessionSVN.cpp
++++ b/src/cpp/session/modules/SessionSVN.cpp
+@@ -22,10 +22,10 @@
+ #endif
+ 
+ #include <boost/algorithm/string.hpp>
+-#include <boost/bind.hpp>
+ #include <boost/date_time.hpp>
+ #include <boost/regex.hpp>
+ #include <core/BoostLamda.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/FileSerializer.hpp>
+ #include <core/rapidxml/rapidxml.hpp>
+@@ -55,6 +55,7 @@ using namespace rstudio::core;
+ using namespace rstudio::core::shell_utils;
+ using namespace rstudio::session::modules::vcs_utils;
+ using namespace rstudio::session::console_process;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionSnippets.cpp b/src/cpp/session/modules/SessionSnippets.cpp
+index af9bfb3847..a838375667 100644
+--- a/src/cpp/session/modules/SessionSnippets.cpp
++++ b/src/cpp/session/modules/SessionSnippets.cpp
+@@ -21,10 +21,12 @@
+ #include <shared_core/json/Json.hpp>
+ #include <core/system/Xdg.hpp>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <session/SessionModuleContext.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace session {
+ namespace modules {
+diff --git a/src/cpp/session/modules/SessionSource.cpp b/src/cpp/session/modules/SessionSource.cpp
+index 14f0be8f5e..af634688a3 100644
+--- a/src/cpp/session/modules/SessionSource.cpp
++++ b/src/cpp/session/modules/SessionSource.cpp
+@@ -22,8 +22,8 @@
+ 
+ #include <gsl/gsl>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/utility.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/r_util/RSourceIndex.hpp>
+ 
+@@ -61,6 +61,7 @@ extern "C" const char *locale2charset(const char *);
+ #include <session/prefs/Preferences.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionThemes.cpp b/src/cpp/session/modules/SessionThemes.cpp
+index 0196ff4b36..4f2438ff46 100644
+--- a/src/cpp/session/modules/SessionThemes.cpp
++++ b/src/cpp/session/modules/SessionThemes.cpp
+@@ -15,12 +15,12 @@
+ 
+ #include "SessionThemes.hpp"
+ 
++#include <boost/lexical_cast.hpp>
++#include <boost/regex.hpp>
+ #include <boost/algorithm/string.hpp>
+ #include <boost/algorithm/string/join.hpp>
+ #include <boost/algorithm/algorithm.hpp>
+-#include <boost/lexical_cast.hpp>
+-#include <boost/bind.hpp>
+-#include <boost/regex.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <core/Exec.hpp>
+@@ -45,6 +45,7 @@
+ #include <string>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionUpdates.cpp b/src/cpp/session/modules/SessionUpdates.cpp
+index f82118c8e9..b34b202d86 100644
+--- a/src/cpp/session/modules/SessionUpdates.cpp
++++ b/src/cpp/session/modules/SessionUpdates.cpp
+@@ -20,7 +20,7 @@
+ #include <core/system/Process.hpp>
+ #include <core/system/Environment.hpp>
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <session/SessionModuleContext.hpp>
+ 
+@@ -31,6 +31,7 @@
+ #include "session-config.h"
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/SessionUserCommands.cpp b/src/cpp/session/modules/SessionUserCommands.cpp
+index 031eba8574..d10bef6491 100644
+--- a/src/cpp/session/modules/SessionUserCommands.cpp
++++ b/src/cpp/session/modules/SessionUserCommands.cpp
+@@ -19,7 +19,7 @@
+ 
+ #include "SessionUserCommands.hpp"
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <core/Exec.hpp>
+@@ -38,6 +38,7 @@ namespace modules {
+ namespace user_commands {
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace {
+ 
+diff --git a/src/cpp/session/modules/build/SessionBuildErrors.cpp b/src/cpp/session/modules/build/SessionBuildErrors.cpp
+index 79de1ab4cf..93dcacec1b 100644
+--- a/src/cpp/session/modules/build/SessionBuildErrors.cpp
++++ b/src/cpp/session/modules/build/SessionBuildErrors.cpp
+@@ -17,10 +17,10 @@
+ 
+ #include <algorithm>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/regex.hpp>
+ #include <boost/format.hpp>
+ #include <boost/algorithm/string/predicate.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <shared_core/SafeConvert.hpp>
+@@ -32,6 +32,7 @@
+ #include <session/projects/SessionProjects.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {  
+diff --git a/src/cpp/session/modules/clang/RSourceIndex.cpp b/src/cpp/session/modules/clang/RSourceIndex.cpp
+index 5aebb51ec3..20c192bcff 100644
+--- a/src/cpp/session/modules/clang/RSourceIndex.cpp
++++ b/src/cpp/session/modules/clang/RSourceIndex.cpp
+@@ -15,8 +15,8 @@
+ 
+ #include "RSourceIndex.hpp"
+ 
+-#include <boost/bind.hpp>
+ #include <boost/algorithm/string/predicate.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/FileInfo.hpp>
+ #include <shared_core/FilePath.hpp>
+@@ -29,6 +29,7 @@
+ 
+ using namespace rstudio::core;
+ using namespace rstudio::core::libclang;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/connections/ConnectionsIndexer.cpp b/src/cpp/session/modules/connections/ConnectionsIndexer.cpp
+index 6afa4b06f0..f7c58dae36 100644
+--- a/src/cpp/session/modules/connections/ConnectionsIndexer.cpp
++++ b/src/cpp/session/modules/connections/ConnectionsIndexer.cpp
+@@ -23,7 +23,7 @@
+ #include <core/text/DcfParser.hpp>
+ 
+ #include <boost/regex.hpp>
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ #include <boost/range/adaptor/map.hpp>
+ #include <boost/system/error_code.hpp>
+ 
+@@ -38,6 +38,7 @@
+ #include <session/SessionPackageProvidedExtension.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/data/DataViewer.cpp b/src/cpp/session/modules/data/DataViewer.cpp
+index 4851d3bdc0..037f0ee653 100644
+--- a/src/cpp/session/modules/data/DataViewer.cpp
++++ b/src/cpp/session/modules/data/DataViewer.cpp
+@@ -20,9 +20,9 @@
+ #include <sstream>
+ #include <gsl/gsl>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/format.hpp>
+ #include <boost/algorithm/string/predicate.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Log.hpp>
+ #include <shared_core/Error.hpp>
+@@ -66,6 +66,7 @@
+ #define MAX_COLUMNS 50
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/panmirror/SessionPanmirrorBibliography.cpp b/src/cpp/session/modules/panmirror/SessionPanmirrorBibliography.cpp
+index 5daea99a5a..1591f3caff 100644
+--- a/src/cpp/session/modules/panmirror/SessionPanmirrorBibliography.cpp
++++ b/src/cpp/session/modules/panmirror/SessionPanmirrorBibliography.cpp
+@@ -15,7 +15,7 @@
+ 
+ #include "SessionPanmirrorBibliography.hpp"
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <core/Hash.hpp>
+@@ -30,6 +30,7 @@
+ #include <session/SessionModuleContext.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/presentation/PresentationLog.cpp b/src/cpp/session/modules/presentation/PresentationLog.cpp
+index 30646406bd..0c59a47520 100644
+--- a/src/cpp/session/modules/presentation/PresentationLog.cpp
++++ b/src/cpp/session/modules/presentation/PresentationLog.cpp
+@@ -16,9 +16,9 @@
+ 
+ #include "PresentationLog.hpp"
+ 
+-#include <boost/bind.hpp>
+ #include <boost/algorithm/string/join.hpp>
+ #include <boost/algorithm/string/trim.hpp>
++#include <boost/bind/bind.hpp>
+ #include <boost/date_time/posix_time/posix_time.hpp>
+ 
+ #include <shared_core/Error.hpp>
+@@ -34,6 +34,7 @@
+ #include "PresentationState.hpp"
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/presentation/SessionPresentation.cpp b/src/cpp/session/modules/presentation/SessionPresentation.cpp
+index 2f671b2d11..d0b67fe433 100644
+--- a/src/cpp/session/modules/presentation/SessionPresentation.cpp
++++ b/src/cpp/session/modules/presentation/SessionPresentation.cpp
+@@ -19,7 +19,7 @@
+ #include "SessionPresentation.hpp"
+ 
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/Exec.hpp>
+ #include <core/http/Util.hpp>
+@@ -40,6 +40,7 @@
+ 
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/presentation/SlideQuizRenderer.cpp b/src/cpp/session/modules/presentation/SlideQuizRenderer.cpp
+index 50a578523b..3141538584 100644
+--- a/src/cpp/session/modules/presentation/SlideQuizRenderer.cpp
++++ b/src/cpp/session/modules/presentation/SlideQuizRenderer.cpp
+@@ -17,15 +17,16 @@
+ 
+ #include <iostream>
+ 
+-#include <boost/bind.hpp>
+ #include <boost/format.hpp>
+ #include <boost/algorithm/string/replace.hpp>
+ #include <boost/algorithm/string/trim.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/SafeConvert.hpp>
+ #include <core/RegexUtils.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/rmarkdown/NotebookAlternateEngines.cpp b/src/cpp/session/modules/rmarkdown/NotebookAlternateEngines.cpp
+index c8177369f0..7886bce16e 100644
+--- a/src/cpp/session/modules/rmarkdown/NotebookAlternateEngines.cpp
++++ b/src/cpp/session/modules/rmarkdown/NotebookAlternateEngines.cpp
+@@ -21,8 +21,8 @@
+ #include "NotebookWorkingDir.hpp"
+ #include "NotebookHtmlWidgets.hpp"
+ 
+-#include <boost/bind.hpp>
+ #include <boost/algorithm/string.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/StringUtils.hpp>
+ #include <core/Algorithm.hpp>
+@@ -33,6 +33,7 @@
+ #include <r/RSexp.hpp>
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/rmarkdown/NotebookCache.cpp b/src/cpp/session/modules/rmarkdown/NotebookCache.cpp
+index ca58de5a21..f6f523938f 100644
+--- a/src/cpp/session/modules/rmarkdown/NotebookCache.cpp
++++ b/src/cpp/session/modules/rmarkdown/NotebookCache.cpp
+@@ -20,7 +20,7 @@
+ #include "NotebookOutput.hpp"
+ #include "NotebookHtmlWidgets.hpp"
+ 
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <session/SessionModuleContext.hpp>
+ #include <session/SessionSourceDatabase.hpp>
+@@ -41,6 +41,7 @@
+ #define kCacheAgeThresholdMs 1000 * 60 * 60 * 24 * 2
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/rmarkdown/NotebookPlotReplay.cpp b/src/cpp/session/modules/rmarkdown/NotebookPlotReplay.cpp
+index 3f300f916b..2ea8e3aa40 100644
+--- a/src/cpp/session/modules/rmarkdown/NotebookPlotReplay.cpp
++++ b/src/cpp/session/modules/rmarkdown/NotebookPlotReplay.cpp
+@@ -20,7 +20,7 @@
+ #include "NotebookOutput.hpp"
+ 
+ #include <boost/algorithm/string.hpp>
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/StringUtils.hpp>
+ #include <core/Exec.hpp>
+@@ -35,6 +35,7 @@
+ 
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/session/modules/rmarkdown/SessionExecuteChunkOperation.hpp b/src/cpp/session/modules/rmarkdown/SessionExecuteChunkOperation.hpp
+index 73d7cee0fb..73d3b1d8ec 100644
+--- a/src/cpp/session/modules/rmarkdown/SessionExecuteChunkOperation.hpp
++++ b/src/cpp/session/modules/rmarkdown/SessionExecuteChunkOperation.hpp
+@@ -15,10 +15,10 @@
+ #ifndef SESSION_MODULES_RMARKDOWN_SESSION_EXECUTE_CHUNK_OPERATIONR_HPP
+ #define SESSION_MODULES_RMARKDOWN_SESSION_EXECUTE_CHUNK_OPERATIONR_HPP
+ 
+-#include <boost/bind.hpp>
+ #include <boost/enable_shared_from_this.hpp>
+ #include <boost/noncopyable.hpp>
+ #include <boost/shared_ptr.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <core/FileSerializer.hpp>
+ #include <core/StringUtils.hpp>
+@@ -31,6 +31,8 @@
+ #include "NotebookExec.hpp"
+ #include "SessionRmdNotebook.hpp"
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace session {
+ namespace modules {
+diff --git a/src/cpp/session/modules/zotero/ZoteroCollectionsLocal.cpp b/src/cpp/session/modules/zotero/ZoteroCollectionsLocal.cpp
+index 3ea8e09367..cd884d48d4 100644
+--- a/src/cpp/session/modules/zotero/ZoteroCollectionsLocal.cpp
++++ b/src/cpp/session/modules/zotero/ZoteroCollectionsLocal.cpp
+@@ -15,8 +15,8 @@
+ 
+ #include "ZoteroCollectionsLocal.hpp"
+ 
+-#include <boost/bind.hpp>
+ #include <boost/algorithm/algorithm.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/Error.hpp>
+ #include <shared_core/json/Json.hpp>
+@@ -38,6 +38,7 @@
+ #include "session-config.h"
+ 
+ using namespace rstudio::core;
++using namespace boost::placeholders;
+ 
+ namespace rstudio {
+ namespace session {
+diff --git a/src/cpp/shared_core/FilePath.cpp b/src/cpp/shared_core/FilePath.cpp
+index da5dac94a7..7a405fbea9 100644
+--- a/src/cpp/shared_core/FilePath.cpp
++++ b/src/cpp/shared_core/FilePath.cpp
+@@ -45,10 +45,10 @@
+ #include <boost/filesystem.hpp>
+ #undef BOOST_NO_CXX11_SCOPED_ENUMS
+ 
++#include <boost/bind/bind.hpp>
++#include <boost/make_shared.hpp>
+ #include <boost/algorithm/string/case_conv.hpp>
+ #include <boost/algorithm/string/predicate.hpp>
+-#include <boost/bind.hpp>
+-#include <boost/make_shared.hpp>
+ 
+ #include <shared_core/Logger.hpp>
+ #include <shared_core/Error.hpp>
+@@ -57,6 +57,8 @@
+ 
+ typedef boost::filesystem::path path_t;
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ 
+diff --git a/src/cpp/shared_core/system/Win32User.cpp b/src/cpp/shared_core/system/Win32User.cpp
+index b023493556..7be5e1bcb0 100644
+--- a/src/cpp/shared_core/system/Win32User.cpp
++++ b/src/cpp/shared_core/system/Win32User.cpp
+@@ -18,13 +18,15 @@
+ #include <shlobj.h>
+ 
+ #include <boost/algorithm/string.hpp>
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ 
+ #include <shared_core/FilePath.hpp>
+ #include <shared_core/Logger.hpp>
+ #include <shared_core/SafeConvert.hpp>
+ #include <shared_core/system/Win32StringUtils.hpp>
+ 
++using namespace boost::placeholders;
++
+ namespace rstudio {
+ namespace core {
+ namespace system {
