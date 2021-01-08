@@ -7,9 +7,9 @@
 # Contributor: Joshua Stiefer <facedelajunk@gmail.com>
 
 pkgname=exaile
-_pkgver=4.1.0-beta1
+_pkgver=4.1.0-rc1
 pkgver=${_pkgver//-/}
-pkgrel=5
+pkgrel=6
 pkgdesc="A full-featured Amarok-style media player for GTK+"
 arch=('any')
 url="https://www.exaile.org/"
@@ -43,7 +43,7 @@ optdepends=('udisks2: device detection'
 	'moodbar: moodbar plugin'
 	'gst-plugins-bad: BPM Counter plugin')
 source=("$pkgname-$_pkgver.tar.gz::https://github.com/exaile/exaile/archive/$_pkgver.tar.gz")
-sha512sums=('df3998e512a9cda4383bc7f47deaf67f12bbfb64561726e7682013193a6d71ae18a067ae1db1d6affab6eb3311b4d158d56897f92a5c639808539412113f7ef9')
+sha512sums=('45c83cbfc38cdb9877d32d67781f30710b315e73af1f0d48532ef0d75d642ddfe8d26c96ceca8c78b51bb153719474e4c6f229556f4a589c5aeb088303e7de8e')
 
 build() {
 	cd "$srcdir/$pkgname-$_pkgver"
@@ -52,7 +52,7 @@ build() {
 
 check() {
 	cd "$srcdir/$pkgname-$_pkgver"
-	LC_ALL=C make PYTEST=py.test test
+	make PYTEST=py.test test
 }
 
 package() {
