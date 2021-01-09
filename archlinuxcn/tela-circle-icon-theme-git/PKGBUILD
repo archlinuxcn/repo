@@ -1,0 +1,28 @@
+# Maintainer: Ariel AxionL <i at axionl dot me>
+
+pkgname=tela-circle-icon-theme-git
+_gitname=Tela-circle-icon-theme
+pkgdesc="A flat colorful Design icon theme."
+pkgver=38.fd06dc5
+pkgrel=1
+arch=('any')
+url="https://github.com/vinceliuice/Tela-circle-icon-theme"
+license=('GPL3')
+makedepends=('git')
+options=('!strip')
+
+source=("git+https://github.com/vinceliuice/${_gitname}.git")
+
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${srcdir}/${_gitname}"
+	echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+	cd "${srcdir}/${_gitname}"
+	install -dm755 "${pkgdir}/"usr/share/icons
+	sed -i '/gtk-update-icon-cache/d' install.sh
+	./install.sh -a -d "${pkgdir}"/usr/share/icons
+}
