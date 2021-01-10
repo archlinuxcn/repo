@@ -2,8 +2,8 @@
 
 _pkgname=cyvlfeat
 pkgname=python-cyvlfeat
-pkgver=0.6.0
-pkgrel=6
+pkgver=0.7.0
+pkgrel=1
 pkgdesc='A thin Cython wrapper around select areas of vlfeat'
 arch=('x86_64')
 url='https://github.com/menpo/cyvlfeat/'
@@ -23,7 +23,7 @@ checkdepends=(
   python-scikit-image
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/menpo/cyvlfeat/archive/v${pkgver}.tar.gz")
-sha512sums=('f7c325fbe4ec52e79e01ee20ccbaa61d2009a8cbae8795a0de49da21ac42dd942a7a53d4bf7bdc49e8e3bf63d12ac4f3794792477632fad010e2357fe6e29ce5')
+sha512sums=('57a71c8f158a0aa3d29957fc8ddc90ebccce88a3855d2c7da86ef40d3c449f2a360615b1140d01fa72877c70ef6161313f9b3278e389c40a7e07b00daa507ec6')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
