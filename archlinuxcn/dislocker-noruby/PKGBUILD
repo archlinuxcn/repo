@@ -3,29 +3,25 @@
 
 _name=dislocker
 pkgname=${_name}-noruby
-pkgver=0.7.1
-pkgrel=5
-pkgdesc="Read BitLocker encrypted volumes under Linux (no ruby bindings/dependency)"
+pkgver=0.7.3
+pkgrel=1
+pkgdesc="Read/write BitLocker-encrypted volumes (no ruby bindings/dependency)"
 arch=('i686' 'x86_64')
 url="https://github.com/Aorimn/dislocker"
 license=('GPL2')
 depends=("fuse" "libmbedcrypto.so" "mbedtls")
-makedepends=('cmake')
+makedepends=('make' 'cmake')
 provides=("dislocker" "libdislocker.so")
 conflicts=('dislocker' 'dislocker-git')
 optdepends=('ntfs-3g: NTFS file system support')
-source=(https://github.com/Aorimn/dislocker/archive/v$pkgver.tar.gz
-        # Fix issues with Win10 1903 https://github.com/Aorimn/dislocker/pull/187
-        https://github.com/Aorimn/dislocker/commit/f778706e72d9f7bac84a5a4cd37f0b56cebdef49.patch
+source=($url/archive/v$pkgver.tar.gz
         no-ruby.patch)
-sha256sums=('742fb5c1b3ff540368ced54c29eae8b488ae5a5fcaca092947e17c2d358a6762'
-            'ad177e697e84f88ee91f7cb6a9ab3a47100665155107abc8c9e965529bc81cff'
-            '0b8d211cab004d17ec7a3841ca4597a909a5b61fe6197125d26a09f4ef669a85')
+sha256sums=('8d5275577c44f2bd87f6e05dd61971a71c0e56a9cbedf000bd38deadd8b6c1e6'
+            '2ec0b679a914544eda264fb9d2f2c1c618df411b16b9c1605d0ddb12623a340e')
 
 prepare() {
   cd "$srcdir/$_name-$pkgver"
 
-  patch -p1 -i "$srcdir/f778706e72d9f7bac84a5a4cd37f0b56cebdef49.patch"
   patch -p1 -i "$srcdir/no-ruby.patch"
 }
 
@@ -34,7 +30,6 @@ build() {
 
   cmake -DCMAKE_INSTALL_PREFIX=/usr \
         -Dlibdir=/usr/lib \
-        -D WARN_FLAGS:STRING="-Wall -Wextra" \
         -DWITH_RUBY=OFF \
         .
   make
