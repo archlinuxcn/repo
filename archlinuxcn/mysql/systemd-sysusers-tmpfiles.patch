@@ -8,3 +8,14 @@
 +d /run/mysqld 0755 mysql mysql  -
 +d /var/lib/mysql 0700 mysql mysql  -
 
+--- a/usr/lib/tmpfiles.d/mysqlrouter.conf  2020-12-25 21:41:47.218202248 +1100
++++ b/usr/lib/tmpfiles.d/mysqlrouter.conf  2020-12-25 21:42:07.126124043 +1100
+@@ -20,4 +20,6 @@
+ # along with this program; if not, write to the Free Software
+ # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+ 
+-d run 0755 mysqlrouter mysqlrouter  -
++d /run/mysqlrouter 0755 mysqlrouter mysqlrouter  -
++d /var/lib/mysqlrouter 0700 mysqlrouter mysqlrouter  -
++d /var/log/mysqlrouter 0750 mysqlrouter mysqlrouter  -
+
