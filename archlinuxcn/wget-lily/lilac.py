@@ -13,6 +13,7 @@ def pre_build():
   g.files = download_official_pkgbuild('wget')
 
   prepare = False
+  sumwhich = 0
   for line in edit_file('PKGBUILD'):
     if line.startswith('pkgname='):
       line = 'pkgname=wget-lily'
@@ -27,8 +28,15 @@ provides=("wget=$pkgver")'''
       prepare = False
     elif line.startswith('source=('):
       line = line.replace(')', ' wget.patch)')
+    elif line.startswith('sha256sums='):
+      sumwhich = 0
+    elif line.startswith('b2sums='):
+      sumwhich = 1
     elif "'SKIP')" in line:
-      line = line.replace(')', ' aa28cf8532f6b7cc1fe689eb253b0453102990eb725a6583704ca4f3e665c9b0)')
+      if sumwhich == 0:
+        line = line.replace(')', ' aa28cf8532f6b7cc1fe689eb253b0453102990eb725a6583704ca4f3e665c9b0)')
+      elif sumwhich == 1:
+        line = line.replace(')', ' c6a292c1be5606c007d1dcd25f02b3760ac98e86f2c1de30b50847b65c5ecfdb5cd89a482ab1e6a5b5978d38057c21d671b72ec45f10f6e59c5596519cecdf2e)')
     if '${pkgname}' in line:
       line = line.replace('${pkgname}', 'wget')
     print(line)
