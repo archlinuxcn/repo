@@ -5,8 +5,8 @@
 
 pkgname=perl-gnome2-wnck
 _cpname=Gnome2-Wnck
-pkgver=0.16
-pkgrel=17
+pkgver=0.18
+pkgrel=1
 pkgdesc="Perl interface to the Window Navigator Construction Kit"
 arch=('x86_64')
 license=("GPL" "PerlArtistic")
@@ -14,8 +14,8 @@ url="https://metacpan.org/pod/${_cpname//-/::}"
 depends=('perl' 'gtk2-perl' 'libwnck')
 makedepends=('perl-extutils-depends' 'perl-extutils-pkgconfig')
 options=('!emptydirs')
-source=("https://cpan.metacpan.org/authors/id/T/TS/TSCH/$_cpname-$pkgver.tar.gz")
-sha256sums=('604a8ece88ac29f132d59b0caac27657ec31371c1606a4698a2160e88ac586e5')
+source=("https://cpan.metacpan.org/authors/id/X/XA/XAOC/$_cpname-$pkgver.tar.gz")
+sha256sums=('44becec8b2d7f41f2780a73b092269fdb79cd49265bae0c8ff391037c4564a35')
 
 build() {
     cd "$_cpname-$pkgver"
