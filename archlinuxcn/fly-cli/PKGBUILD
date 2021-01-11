@@ -12,8 +12,8 @@ source=("https://github.com/concourse/concourse/archive/$pkgver.tar.gz")
 sha256sums=('c57852dc9cc56b0b671179ae89f3ffe20090b1b2c80b43179125e6e2bdf1302c')
 
 build() {
-  cd concourse-*/fly
-  go build -o ../../fly
+  cd concourse-${pkgver:1}/fly
+  go build -o ../../fly -ldflags="-X github.com/concourse/concourse.Version=${pkgver}"
 }
 
 package() {
