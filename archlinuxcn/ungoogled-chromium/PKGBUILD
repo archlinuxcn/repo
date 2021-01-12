@@ -9,8 +9,8 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=87.0.4280.88
-pkgrel=4
+pkgver=87.0.4280.141
+pkgrel=1
 _launcher_ver=6
 _gcc_patchset=9
 _pkgname=$(echo $pkgname | cut -d\- -f1-2)
@@ -18,8 +18,6 @@ _pkgver=$(echo $pkgver | cut -d\. -f1-4)
 # ungoogled chromium variables
 _uc_ver=$pkgver-1
 _uc_usr=Eloston
-_uc_sum='79fad3ac0f247732e4326992698e4cf2c643a53b7e101b3b62768c461195fba2'
-_uc_url="$_pkgname-$_uc_ver.tar.gz::https://github.com/$_uc_usr/ungoogled-chromium/archive/$_uc_ver.tar.gz"
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/Eloston/ungoogled-chromium"
@@ -39,7 +37,7 @@ optdepends=('pepper-flash: support for Flash content'
 provides=('chromium')
 conflicts=('chromium')
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$_pkgver.tar.xz
-        $_uc_url
+        $_pkgname-$_uc_ver.tar.gz::https://github.com/$_uc_usr/ungoogled-chromium/archive/$_uc_ver.tar.gz
         https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
         chromium-drirc-disable-10bpc-color-configs.conf
         https://github.com/stha09/chromium-patches/releases/download/chromium-${pkgver%%.*}-patchset-$_gcc_patchset/chromium-${pkgver%%.*}-patchset-$_gcc_patchset.tar.xz
@@ -47,8 +45,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         icu68.patch
         v8-icu68.patch
         subpixel-anti-aliasing-in-FreeType-2.8.1.patch)
-sha256sums=('3e4645328735ef60db78d1a313efb3770a3edeaede90d076414df52f567a09c0'
-            $_uc_sum
+sha256sums=('147591d7fc21e1a173701d28bbf35baddb91e64dd96ec16d8eee9a5113403375'
+            '3c2d6711d3f9490eb68c4e2cdd653163b163305d25890ccc32cd51e53164a4bb'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             'c99934bcd2f3ae8ea9620f5f59a94338b2cf739647f04c28c8a551d9083fa7e9'
