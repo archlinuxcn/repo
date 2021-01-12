@@ -4,16 +4,16 @@
 
 pkgname=libfprint-git
 pkgver=1.90.6.r14.g8254b9e
-pkgrel=1
+pkgrel=2
 pkgdesc="Library for fingerprint readers"
 arch=(x86_64)
 url="https://www.freedesktop.org/wiki/Software/fprint/libfprint"
 license=(LGPL)
-depends=(libgusb pixman nss systemd-libs)
-makedepends=(git meson gtk-doc gobject-introspection)
+depends=('libgusb' 'pixman' 'nss' 'systemd')
+makedepends=('git' 'meson' 'gtk-doc' 'gobject-introspection' 'cmake')
 checkdepends=(cairo)
 provides=('libfprint-2.so' 'libfprint')
-conflicts=(libfprint)
+conflicts=('libfprint')
 source=("libfprint-git::git+https://gitlab.freedesktop.org/libfprint/libfprint.git")
 sha256sums=('SKIP')
 
