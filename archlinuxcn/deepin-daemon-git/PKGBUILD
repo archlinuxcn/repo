@@ -1,8 +1,8 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=deepin-daemon-git
-pkgver=5.12.0.25.r55.gdc590957
-pkgrel=2
+pkgver=5.12.0.25.r78.g055f3904
+pkgrel=1
 pkgdesc='Daemon handling the DDE session settings'
 arch=('x86_64')
 url="https://github.com/linuxdeepin/dde-daemon"
@@ -51,6 +51,8 @@ prepare() {
   go get -v github.com/godbus/dbus
   go get -v github.com/godbus/dbus/introspect
   go get -v github.com/godbus/dbus/prop
+  go get -v github.com/Lofanmi/pinyin-golang/pinyin
+
   sed -i 's#/usr/share/backgrounds/default_background.jpg#/usr/share/backgrounds/deepin/desktop.jpg#' accounts/user.go
 }
 
