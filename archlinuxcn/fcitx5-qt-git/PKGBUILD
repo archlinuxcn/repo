@@ -6,13 +6,13 @@ _pkgname=fcitx5-qt
 pkgbase=$_pkgname-git
 pkgname=(fcitx5-qt5-git fcitx5-qt4-git fcitx5-qt6-git)
 pkgver=5.0.2.r1.g3857933
-pkgrel=1
+pkgrel=2
 pkgdesc="Fcitx Qt Library"
 arch=('x86_64')
 url="https://github.com/fcitx/fcitx5-qt"
 license=('GPL')
 depends=('fcitx5-git')
-makedepends=('extra-cmake-modules' 'git' 'qt4' 'qt5-base' 'qt6-base')
+makedepends=('extra-cmake-modules' 'git' 'qt4' 'qt5-base' 'qt6-base' 'ninja')
 source=("git+$url.git")
 sha512sums=('SKIP')
 
@@ -24,16 +24,16 @@ pkgver() {
 build(){
   cd $_pkgname
 
-  cmake \
+  cmake -GNinja . \
       -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_LIBDIR=/usr/lib \
-      -DENABLE_QT6=On \
-      .
-  make
+      -DCMAKE_INSTALL_LIBEXECDIR=/usr/lib \
+      -DENABLE_QT6=On
+  ninja
 
   # install into /tmp and split the package
-  make DESTDIR="/tmp/$_pkgname/" install
+  DESTDIR="/tmp/$_pkgname/" ninja install
 }
 
 _mv_pkg(){
@@ -51,7 +51,7 @@ package_fcitx5-qt5-git(){
   _mv_pkg usr/share
   _mv_pkg usr/lib/qt
   _mv_pkg usr/lib/libFcitx5Qt5*
-  _mv_pkg usr/lib/fcitx5
+  _mv_pkg usr/lib/fcitx5*
   _mv_pkg usr/lib/cmake/Fcitx5Qt5DBusAddons
   _mv_pkg usr/lib/cmake/Fcitx5Qt5WidgetsAddons
   _mv_pkg usr/include/Fcitx5Qt5

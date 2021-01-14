@@ -5,13 +5,13 @@
 _pkgname=fcitx5-configtool
 pkgname=$_pkgname-git
 pkgver=5.0.2.r1.g2a1bba4
-pkgrel=1
+pkgrel=2
 pkgdesc="Config tools for Fcitx5, nightly build from git"
 arch=('i686' 'x86_64')
 url="https://github.com/fcitx/fcitx5-configtool"
 license=('GPL')
-depends=('fcitx5-qt5-git' 'kconfigwidgets' 'kitemviews' 'qt5-x11extras')
-makedepends=('extra-cmake-modules' 'python' 'git' 'kcmutils' 'kirigami2' 'kdeclarative')
+depends=('fcitx5-qt5-git' 'kwidgetsaddons' 'kitemviews' 'qt5-x11extras')
+makedepends=('extra-cmake-modules' 'python' 'git' 'kirigami2' 'kdeclarative' 'ninja')
 conflicts=("$_pkgname" "fcitx5-config-qt" "kbd-layout-viewer5")
 provides=("$_pkgname" "fcitx5-config-qt" "kbd-layout-viewer5")
 optdepends=("kdeclarative: for KCM support"
@@ -29,16 +29,16 @@ build() {
   mkdir build
   cd build
 
-  cmake ../$_pkgname \
+  cmake -GNinja ../$_pkgname \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
     -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
-  make
+  ninja
 }
 
 package() {
   cd build
-  make DESTDIR="$pkgdir" install
+  DESTDIR="$pkgdir" ninja install
 }
 
