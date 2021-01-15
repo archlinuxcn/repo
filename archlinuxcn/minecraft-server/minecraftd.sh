@@ -383,7 +383,7 @@ backup_restore() {
 		fi
 	elif [[ $# -gt 1 ]]; then
 		>&2 echo -e "\e[39;1mToo many arguments.\e[0m Please pass only the filename for the world data as an argument."
-		>&2 echo "Or alternatively no arguments at all to chose from a list of available backups."
+		>&2 echo "Or alternatively, no arguments at all to choose from a list of available backups."
 		exit 7
 	fi
 
@@ -395,7 +395,7 @@ backup_restore() {
 	fi
 }
 
-# Run the given comman at the game server console
+# Run the given command at the game server console
 server_command() {
 	if [[ $# -lt 1 ]]; then
 		>&2 echo "No server command specified. Try 'help' for a list of commands."
@@ -423,17 +423,17 @@ server_console() {
 # Help function, no arguments required
 help() {
 	cat <<-EOF
-	This script was design to easily control any ${game} server. Quite every parameter for a given
-	${game} server derivative can be altered by editing the variables in the configuration file.
+	This script was designed to easily control any ${game} server. Almost any parameter for a given
+	${game} server derivative can be changed by editing the variables in the configuration file.
 
-	Usage: ${myname} {start|stop|status|backup|restore|command <command>|console}
+	Usage: ${myname} {start|stop|restart|status|backup|restore|command <command>|console}
 	    start                Start the ${game} server
 	    stop                 Stop the ${game} server
 	    restart              Restart the ${game} server
 	    status               Print some status information
 	    backup               Backup the world data
 	    restore [filename]   Restore the world data from a backup
-	    command <command>    Run the given comman at the ${game} server console
+	    command <command>    Run the given command at the ${game} server console
 	    console              Enter the server console through a screen session
 
 	Copyright (c) Gordian Edenhofer <gordian.edenhofer@gmail.com>
