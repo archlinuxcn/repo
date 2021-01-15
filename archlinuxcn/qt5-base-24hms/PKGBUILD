@@ -6,7 +6,7 @@ _origpkgname=qt5-base
 pkgname=(qt5-base-24hms)
 _qtver=5.15.2
 pkgver=${_qtver/-/}
-pkgrel=2.5
+pkgrel=3.5
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -35,17 +35,20 @@ source=(
       oldherl-24hms.patch
       'ftp://unicode.org/Public/cldr/36/core.zip'
       "https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
-         qt5-base-cflags.patch)
+         qt5-base-cflags.patch
+         kdebug-428095.patch::"https://code.qt.io/cgit/qt/qtbase.git/patch?id=c5336057")
 sha256sums=(
       '9c62800980e97b1614e4fc85ecad3b032606d0e620295e791fc3f34629bb0a44'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       '909fad2591ee367993a75d7e2ea50ad4db332f05e1c38dd7a5a274e156a4e0f8'
-            'cf707cd970650f8b60f8897692b36708ded9ba116723ec8fcd885576783fe85c')
+            'cf707cd970650f8b60f8897692b36708ded9ba116723ec8fcd885576783fe85c'
+            '25b1059e92ae135b1b5031c5b1dde32d03906f17c9245ac1c2f9e1248917e7b0')
 
 prepare() {
   cd ${_pkgfqn}
 
   patch -p1 -i ../qt5-base-cflags.patch # Use system CFLAGS
+  patch -p1 -i ../kdebug-428095.patch # Fix black border on some menus with Breeze
 
   patch -p1 -i ../oldherl-24hms.patch
   cd util/locale_database
