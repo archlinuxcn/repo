@@ -7,12 +7,12 @@
 # Contributor: Anatol Pomozov <anatol.pomozov@gmail.com>
 pkgname=amule-dlp-git
 pkgver=2.3.2.r10525.07932e9a3
-pkgrel=6
+pkgrel=7
 pkgdesc="An eMule-like client for ed2k p2p network with DLP patch"
 arch=('i686' 'x86_64')
 url="https://github.com/persmule/amule-dlp"
 license=('GPL')
-depends=('wxgtk' 'gd' 'geoip' 'libupnp' 'crypto++>=6.0.0' 'libsm' 'boost-libs')
+depends=('wxgtk2' 'gd' 'geoip' 'libupnp' 'crypto++>=6.0.0' 'libsm' 'boost-libs')
 conflicts=('amule' 'amule-dlp' 'amule-dlp-hg')
 makedepends=('git' 'boost')
 optdepends=('antileech')
