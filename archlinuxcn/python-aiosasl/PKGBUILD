@@ -1,23 +1,23 @@
 _name=aiosasl
 pkgname=python-aiosasl
-pkgver=0.4.1
-pkgrel=2
+pkgver=0.5.0
+pkgrel=1
 pkgdesc="Pure-python, protocol agnostic SASL library for asyncio"
 arch=(any)
 url="https://github.com/horazont/aiosasl"
-license=('GPL')
+license=('LGPLv3+')
 depends=('python')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/aiosasl-0.4.1.tar.gz")
-sha256sums=('ae137848638e1cad6831c0e57cfea8d2caa91f665a8ea8f4e3eaae8cbb27b397')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/aiosasl-0.5.0.tar.gz")
+sha256sums=('d927a8f9d855c4c00dea9d88fb86ea0d09dd4e7642b2109d2bd93be2f4c17b4e')
 
 build() {
-  cd "$srcdir/aiosasl-0.4.1"
+  cd "$srcdir/aiosasl-0.5.0"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/aiosasl-0.4.1"
+  cd "$srcdir/aiosasl-0.5.0"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install any world-writable or root-readable-only files
