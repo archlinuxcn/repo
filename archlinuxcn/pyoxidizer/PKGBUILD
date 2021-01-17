@@ -1,0 +1,29 @@
+# Maintainer: Metal A-wing <1 at 233 dot email>
+
+pkgname=pyoxidizer
+_name=PyOxidizer
+pkgver=0.7.0
+pkgrel=1
+pkgdesc="A modern Python application packaging and distribution tool"
+depends=('gcc-libs' 'openssl' 'zlib')
+arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
+url="https://github.com/indygreg/PyOxidizer"
+license=('MIT')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/indygreg/${_name}/archive/v${pkgver}.tar.gz")
+sha512sums=('9f889e82a6e2d120c3aabf9e2ca0bd56eebf1d887453623f215ad37f0dcf0f059dcf9e0fcd59df9dd11fb2668e1678bebc9ac6b745e0633a90eca0f1a7d0d341')
+makedepends=(cargo)
+
+build() {
+   cd "${_name}-${pkgver}"
+   cargo build --bin pyoxidizer --release --locked
+}
+
+check() {
+   cd "${_name}-${pkgver}"
+   cargo test --bin pyoxidizer --release --locked
+}
+
+package() {
+   cd "${_name}-${pkgver}"
+   install -Dm 755 target/release/${pkgname} -t "${pkgdir}/usr/bin"
+}
