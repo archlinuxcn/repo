@@ -2,10 +2,10 @@
 # Submitter: Schala Zeal <schalaalexiazeal@gmail.com>
 
 pkgname=spigot
-_pkgver=1.16.4
-_build=122
+_pkgver=1.16.5
+_build=124
 pkgver="${_pkgver}+b${_build}"
-pkgrel=3
+pkgrel=4
 pkgdesc="High performance Minecraft server implementation"
 arch=('any')
 url="https://www.spigotmc.org/"
@@ -26,14 +26,14 @@ source=("BuildTools-${_pkgver}+b${_build}.jar::https://hub.spigotmc.org/jenkins/
 	"${pkgname}.tmpfiles"
 	"${pkgname}.conf"
 	"${pkgname}.sh")
-sha512sums=('d0512817037fd5d29c564aacde6d7a5bd477641bbddbe4a90734c0501c0f55e88b46882e5a520cc52c18812c89775732788bb193995a8497c50063a81fa5b355'
+sha512sums=('f4898dff44e77495453aafd597c311989fbe812721e82ee52be2b6856b91f933f5b3ec75137b90923231dc2f9f68b84efca507fde4b9a22368f2ea9324323cb8'
             '03ba1032b687553831021cfb0bed489e6301d0446c3b4f56d989d203855952911f3b1caaa00596f4731060ddf6684f66c3d674f3c5546b600cbe6585fc8560fb'
             '76c77e47c442b477216e968db2213612579b24add54cf0e0512f808498673500b4d24e59bce70b1e7479d724a9a897ceb154e937b88a476beb11c8776258b36c'
             '5a32439ff4b8fa9db89e9242206cf99109e0b00f29f87711c25342dda522171d999f7e18fb2013437ddf62cfec05b6677601933233aaf42bcb5d67eb7a1469ee'
             'eac1deb53fa9d522af272fa2d9093b98e7d51aa4c0730471e5c575752733500b84a06bc19d1fe83b4c48e41b7f0e11efb23881bfadce4a40d2bfed7cbe5a5bf7'
             '69f6b4ec936653ab237e5cf6cbfdd1bc2c408426584f8746aafb3761b9782370c4d5ef4bf4efd23966fde5ac9ba2516acbcc62ea7af8647c79533234354aaca1'
             '33f456fd945bb2cfa6b390ce0ab02753cc6366e39abff80a4f2b7aa3aebe3cd31d148b785cbc2aa159dd8ad9fb03233a09f8693eb031b6b9db8dc03643d2397b'
-            '829f659f1c8bad080128718248ffc5ad662b4dd8fe328fdb3a9637e2daebb11404afeef0fd2ac9bdfc39b3ea747a099426aa8373cf2744b3c4031eaa375477e2')
+            '56cd4c1f190a5231891daa96d470b35fe51710732c78834da986920d79b77da7c583d559c93c13b22ba5906bf83543477f90f58f5e045136ba809b44062f345d')
 
 _game="spigot"
 _server_root="/srv/craftbukkit"
