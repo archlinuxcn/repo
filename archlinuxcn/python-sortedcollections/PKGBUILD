@@ -1,6 +1,6 @@
 _name=sortedcollections
 pkgname=python-sortedcollections
-pkgver=1.2.3
+pkgver=2.0.1
 pkgrel=1
 pkgdesc="Python Sorted Collections"
 arch=(any)
@@ -8,16 +8,16 @@ url="http://www.grantjenks.com/docs/sortedcollections/"
 license=('Apache 2.0')
 depends=('python-sortedcontainers')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/sortedcollections-1.2.3.tar.gz")
-sha256sums=('34934caf3142268cd6792bd5af9c269e5b1dfdd27f815965b973c6473edf2c45')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/sortedcollections-2.0.1.tar.gz")
+sha256sums=('75f3b022d641e484cefeefb8eef4340242158984c5c5310313567e3a661f5d49')
 
 build() {
-  cd "$srcdir/sortedcollections-1.2.3"
+  cd "$srcdir/sortedcollections-2.0.1"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/sortedcollections-1.2.3"
+  cd "$srcdir/sortedcollections-2.0.1"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install any world-writable or root-readable-only files
