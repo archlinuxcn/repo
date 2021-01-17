@@ -3,8 +3,8 @@
 
 _basename=lv2
 pkgname=lib32-${_basename}
-pkgver=1.18.0
-pkgrel=2
+pkgver=1.18.2
+pkgrel=1
 pkgdesc="Successor to the LADSPA audio plug-in standard"
 url="http://lv2plug.in/"
 license=('LGPL' 'custom')
@@ -19,7 +19,7 @@ conflicts=('lib32-lv2core')
 replaces=('lib32-lv2core')
 
 source=("http://lv2plug.in/spec/$_basename-$pkgver.tar.bz2")
-sha512sums=('9e8dd9c1f30371260d21efc105b1d4d4ad03d9e332d4d3877d873f20b9527bcd0e917ff23fc6e0a9cc4337bda85882c742f225f7cf4fbc8a8a0964565c91f9d9')
+sha512sums=('d5bdcf94d3cf9a569e29964002a038ae73cd6ae7f09f7d973f8fd74858c8cf9d01bbed85ae8bf0a00efcb2b3611357a64571222a89972091941449c36d76b0ef')
 
 build() {
   cd "$srcdir/$_basename-$pkgver"
@@ -30,6 +30,7 @@ build() {
   # let wscript(s) find the custom waf scripts
   mkdir -pv tools
   touch __init__.py
+  touch tools/__init__.py
   cp -v waflib/extras/{autowaf,lv2}.py tools/
   mkdir -pv plugins/tools/
   cp -v waflib/extras/{autowaf,lv2}.py plugins/tools/
