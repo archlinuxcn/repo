@@ -1,0 +1,56 @@
+# Maintainer: Metal A-wing <1 at 233 dot email>
+
+pkgname=iredis
+pkgver=1.9.1
+pkgrel=1
+pkgdesc='Interactive Redis: A Cli for Redis with AutoCompletion and Syntax Highlighting'
+arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
+url="https://github.com/laixintao/iredis"
+license=('custom')
+makedepends=('git' 'python-poetry' 'pyoxidizer')
+source=(
+	"${pkgname}::git+https://github.com/laixintao/iredis.git#tag=v${pkgver}"
+	"pyoxidizer.patch"
+	)
+sha512sums=(
+		'SKIP'
+		'9a7ad88f006abd69882af35dabba78c1126b1cf6c84c6cb51657c30c880fad2326512f3ca9484262bce946e0685f3232f1769d3900431939e565a0e1cc423390'
+		)
+
+build() {
+	cd ${pkgname}
+	python3 -m venv venv
+	. venv/bin/activate
+	pip install pip==18.1
+	pip install poetry
+	poetry install
+	poetry build
+	_gen_bin
+}
+
+check() {
+	cd ${pkgname}
+	python3 -m venv fresh_env
+  . fresh_env/bin/activate
+  pip install dist/*.whl
+  iredis -h
+  iredis help GET
+}
+
+_gen_bin() {
+	patch -Np1 < ../pyoxidizer.patch
+
+	export WHEEL_PATH=`ls ./dist/iredis*.whl`
+	envsubst '$WHEEL_PATH' < pyoxidizer.template.bzl > pyoxidizer.bzl
+  pyoxidizer build --release install
+}
+
+package() {
+	mkdir -p ${pkgdir}/usr/lib
+  cp -r ${srcdir}/${pkgname}/build/x86*/release/install ${pkgdir}/usr/lib/${pkgname}
+  install -Dm755 ${srcdir}/${pkgname}/build/x86*/release/install/${pkgname} -t ${pkgdir}/usr/lib/${pkgname}
+	mkdir -p ${pkgdir}/usr/bin
+	ln -s ../lib/iredis/iredis ${pkgdir}/usr/bin/${pkgname}
+
+	install -Dm644 ${srcdir}/${pkgname}/LICENSE -t ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}
