@@ -1,0 +1,32 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=python-cx-oracle
+_name=cx_Oracle
+pkgver=8.1.0
+pkgrel=1
+pkgdesc='Python interface to Oracle Database conforming to the Python DB API 2.0 specification'
+arch=('x86_64')
+url='https://oracle.github.io/python-cx_Oracle'
+license=('BSD')
+depends=(
+  python
+)
+makedepends=(
+  python-setuptools
+)
+source=(
+  "${_name}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz"
+)
+sha512sums=('21dbaec1facfa38c82cd8bba788953ada098bfcdfddd29c4c6278d3c757b5b64b547a2e8e39fc998eec826f8447f07d6d48649c8dc8edc7c7244e9113d4345cc')
+
+build() {
+  cd "${srcdir}/${_name}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${srcdir}/${_name}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 "LICENSE.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
