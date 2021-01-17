@@ -1,7 +1,7 @@
 # Maintainer: Sven-Hendrik Haase <svenstaro@gmail.com>
 
 pkgname=wasmer
-pkgver=1.0.0
+pkgver=1.0.1
 pkgrel=1
 pkgdesc="Universal Binaries Powered by WebAssembly"
 arch=('x86_64')
@@ -11,18 +11,18 @@ depends=('gcc-libs')
 makedepends=('rust' 'cmake' 'python' 'libxkbcommon')
 checkdepends=('llvm')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/wasmerio/wasmer/archive/${pkgver}.tar.gz")
-sha512sums=('5869f5b1a111389a8442abb9edd03d38417df46188e88b65b90ac7dc3752bbc4f2d7a6031402d68f80f96ed9ec630345769ec0849a445845e55c2381945b44e5')
+sha512sums=('5b96f84d6f1a00ef02bb1e2398706d1095276682d15d2c87a9a72571363c9ec3a1728beeb4d533adaa0ac9023cb54efc0fdd819982a4624c63b0e52010b8619e')
 
 build() {
   cd "$pkgname-$pkgver"
 
-  cargo build --all --release --locked
+  cargo build --all --release --locked --features "cranelift llvm singlepass"
 }
 
 check() {
   cd "$pkgname-$pkgver"
 
-  cargo test --release --locked
+  cargo test --release --locked --manifest-path lib/cli/Cargo.toml --features "cranelift llvm singlepass" --bin wasmer
 }
 
 package() {
