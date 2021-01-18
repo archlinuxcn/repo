@@ -1,43 +1,32 @@
-# Maintainer: Metal A-wing <1 at 233 dot email>
-
+_name=iredis
 pkgname=iredis
 pkgver=1.9.1
-pkgrel=4
-pkgdesc='Interactive Redis: A Cli for Redis with AutoCompletion and Syntax Highlighting'
-arch=('any')
+pkgrel=5
+pkgdesc="Terminal client for Redis with auto-completion and syntax highlighting."
+arch=(any)
 url="https://github.com/laixintao/iredis"
-license=('BSD')
-depends=(
-	'python'
-	'python-redis'
-	'python-prompt_toolkit'
-	'python-pygments'
-	'python-mistune'
-	'python-configobj'
-	'python-click'
-	'python-pendulum'
-	'python-importlib_resources'
-)
-
+license=('BSD-3-Clause')
+depends=('python')
 makedepends=('python-setuptools')
-#checkdepends=('python-pytest' 'python-pexpect' 'redis')
-source=('https://files.pythonhosted.org/packages/5c/94/7ab450e78a1c2947a65e4eca9ea3a1ac444f518be3b1633fe54a2a3aa2a5/iredis-1.9.1.tar.gz')
-sha512sums=('9bc605c9f3ad43a04622c70cf9829580eaa621c41a93eea8c045eea44c318dc42e00ad659dcec11d74e431d4b3d3c40e66a0731c2defeb84b1ff74cc5a97c8fa')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/iredis-1.9.1.tar.gz")
+sha256sums=('9f773711684f5a5bb19721b5ad2ec9987629975071b8ca968b05c9cc1d2af217')
 
 build() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-  python setup.py build
-}
-
-check() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-
-  # Let me think about it !
-  #pytest
+  cd "$srcdir/iredis-1.9.1"
+  python3 setup.py build
 }
 
 package() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-  python setup.py install --root=${pkgdir} --optimize=1
-  install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+  cd "$srcdir/iredis-1.9.1"
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+
+  # make sure we don't install any world-writable or root-readable-only files
+  # we shouldn't need to fix ownership as we extract tarballs as a non-root user
+  # https://github.com/pypa/setuptools/issues/1328
+  # https://github.com/LonamiWebs/Telethon/issues/1605
+  chmod u=rwX,go=rX -R "$pkgdir"
+  # make sure we don't install annoying files
+  local _site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rf "$pkgdir/$_site_packages/tests/"
 }
+
