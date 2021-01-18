@@ -51,6 +51,7 @@ prepare() {
   go get -v github.com/godbus/dbus
   go get -v github.com/godbus/dbus/introspect
   go get -v github.com/godbus/dbus/prop
+  go get -v github.com/Lofanmi/pinyin-golang/pinyin
   sed -i 's#/usr/share/backgrounds/default_background.jpg#/usr/share/backgrounds/deepin/desktop.jpg#' accounts/user.go
 }
 
@@ -62,7 +63,7 @@ build() {
   export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
 
   cd $pkgname
-  make -C network/nm_generator gen-nm-code
+#  make -C network/nm_generator gen-nm-code
   make
 }
 
