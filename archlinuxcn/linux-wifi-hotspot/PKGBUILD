@@ -1,8 +1,8 @@
 # Maintainer: Dimitris Kiziridis <ragouel at outlook dot com>
 # Co-Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
 pkgname=linux-wifi-hotspot
-pkgver=3.5.1
-pkgrel=2
+pkgver=3.6.0
+pkgrel=1
 pkgdesc="Create virtual wifi hotspot using same wifi card which is connected to an AP + many features (a GUI tool)"
 arch=('x86_64')
 url="https://github.com/lakinduakash/linux-wifi-hotspot"
@@ -16,14 +16,14 @@ depends=('hostapd'
 optdepends=('haveged: For random MAC generation'
             'wireless_tools: if iw cannot recognize your adapter'
             'bash-completion: for bash completions')
-provides=('wihotspot')
+provides=('wihotspot' 'create_ap')
 conflicts=('wihotspot' 'create_ap')
 backup=('etc/create_ap.conf')
 install="$pkgname.install"
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
         'makefile.patch')
-sha256sums=('9a895fba33adad657142d0114c46f45a294179c5a4bb2597c2bb21165ca1e7d0'
-            '63f9f3e73e42c4e3fcbdaf8aa71b00f2b016a3ed6ceab62809d89a83797813e9')
+sha256sums=('a3020ded511c57d24ad97a257878bf024bb6483860721d97bb8fb62c132d8de0'
+            '0b7a043231d07cc5e14efb3b3c2541caac037cece882b3ca9891b0fe169ff942')
 
 prepare() {
   cd "${pkgname}-${pkgver}"
@@ -39,9 +39,7 @@ package() {
   cd "${pkgname}-${pkgver}"
   make DESTDIR="${pkgdir}" install
 
-  install -Dm644 LICENSE -t \
-   "${pkgdir}/usr/share/licenses/${pkgname}"
-  install -Dm644 src/desktop/hotspot.png \
-    "${pkgdir}"/usr/share/pixmaps/wihotspot.png
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
+
 # vim:set ts=2 sw=2 et:

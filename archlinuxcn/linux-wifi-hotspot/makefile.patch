@@ -1,6 +1,48 @@
-diff --unified --recursive --text linux-wifi-hotspot-3.5.1.orig/src/scripts/Makefile linux-wifi-hotspot-3.5.1.new/src/scripts/Makefile
---- linux-wifi-hotspot-3.5.1.orig/src/scripts/Makefile	2020-11-13 17:02:11.000000000 -0700
-+++ linux-wifi-hotspot-3.5.1.new/src/scripts/Makefile	2021-01-17 09:44:36.708721295 -0700
+diff --unified --recursive --text linux-wifi-hotspot-3.6.0.orig/src/desktop/wifihotspot.desktop linux-wifi-hotspot-3.6.0.new/src/desktop/wifihotspot.desktop
+--- linux-wifi-hotspot-3.6.0.orig/src/desktop/wifihotspot.desktop	2021-01-17 14:06:48.000000000 -0700
++++ linux-wifi-hotspot-3.6.0.new/src/desktop/wifihotspot.desktop	2021-01-17 15:49:58.492871071 -0700
+@@ -2,7 +2,7 @@
+ Type=Application
+ Name=Wifi Hotspot
+ Comment=feature-rich wifi hotspot creator
+-Icon=/usr/share/wihotspot/hotspot.png
++Icon=wihotspot
+ Exec=sh -c 'env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY /usr/bin/wihotspot'
+ Terminal=false
+ Categories=System
+diff --unified --recursive --text linux-wifi-hotspot-3.6.0.orig/src/Makefile linux-wifi-hotspot-3.6.0.new/src/Makefile
+--- linux-wifi-hotspot-3.6.0.orig/src/Makefile	2021-01-17 14:06:48.000000000 -0700
++++ linux-wifi-hotspot-3.6.0.new/src/Makefile	2021-01-17 15:59:13.791901354 -0700
+@@ -31,7 +31,7 @@
+ resources.c: ui/glade/wifih.gresource.xml ui/glade/wifih.ui
+ 	$(GLIB_COMPILE_RESOURCES) ui/glade/wifih.gresource.xml --target=ui/$@ --sourcedir=ui/glade --generate-source
+ 	@$(MAKE) -f $(THIS_FILE) wihotspot-gui
+-	
++
+ $(ODIR)/%.o: ui/%.c
+ 	$(CC) -c -o $@ $< $(CFLAGS)
+ 
+@@ -42,9 +42,7 @@
+ 	$(CC) -o $(ODIR)/$@ $^ $(CFLAGS) $(LIBS)
+ 
+ install: $(ODIR)/wihotspot-gui
+-	mkdir -p $(DESTDIR)$(APP_DIR)
+-	install -Dm644 desktop/hotspot.png $(DESTDIR)$(APP_DIR)/hotspot.png
+-	install -Dm644 desktop/wifihotspot.desktop $(DESTDIR)$(APP_DIR)/$(APP_NAME).desktop
++	install -Dm644 desktop/hotspot.png $(DESTDIR)$(PREFIX)/share/pixmaps/wihotspot.png
+ 	install -Dm644 desktop/wifihotspot.desktop $(DESTDIR)$(PREFIX)/share/applications/$(APP_NAME).desktop
+ 	install -Dm755 $(ODIR)/wihotspot-gui $(DESTDIR)$(BINDIR)/$(APP_GUI_BINARY)
+ 	cd scripts && $(MAKE) install
+@@ -64,4 +62,4 @@
+ clean:
+ 	rm -f $(ODIR)/*.o
+ 	rm -f ui/$(BUILT_SRC)
+-	rm -f $(ODIR)/wihotspot-gui
+\ No newline at end of file
++	rm -f $(ODIR)/wihotspot-gui
+diff --unified --recursive --text linux-wifi-hotspot-3.6.0.orig/src/scripts/Makefile linux-wifi-hotspot-3.6.0.new/src/scripts/Makefile
+--- linux-wifi-hotspot-3.6.0.orig/src/scripts/Makefile	2021-01-17 14:06:48.000000000 -0700
++++ linux-wifi-hotspot-3.6.0.new/src/scripts/Makefile	2021-01-17 15:53:05.076540423 -0700
 @@ -9,7 +9,7 @@
  install:
  	install -CDm755 create_ap $(DESTDIR)$(BINDIR)/create_ap
@@ -10,3 +52,12 @@ diff --unified --recursive --text linux-wifi-hotspot-3.5.1.orig/src/scripts/Make
  	install -CDm644 bash_completion $(DESTDIR)$(PREFIX)/share/bash-completion/completions/create_ap
  	install -CDm644 README.md $(DESTDIR)$(PREFIX)/share/doc/create_ap/README.md
  	install -CDm755 wihotspot $(DESTDIR)$(BINDIR)/wihotspot
+@@ -17,7 +17,7 @@
+ install-cli-only:
+ 	install -CDm755 create_ap $(DESTDIR)$(BINDIR)/create_ap
+ 	install -CDm644 create_ap.conf $(DESTDIR)/etc/create_ap.conf
+-	[ ! -d $(DESTDIR)/lib/systemd/system ] || install -CDm644 create_ap.service $(DESTDIR)/lib/systemd/system/create_ap.service
++	install -CDm644 create_ap.service $(DESTDIR)$(PREFIX)/lib/systemd/system/create_ap.service
+ 	install -CDm644 bash_completion $(DESTDIR)$(PREFIX)/share/bash-completion/completions/create_ap
+ 	install -CDm644 README.md $(DESTDIR)$(PREFIX)/share/doc/create_ap/README.md
+ 
