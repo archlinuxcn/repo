@@ -4,7 +4,7 @@
 
 set -u
 pkgbase="linux-lts44"
-pkgver="4.4.249"
+pkgver="4.4.252"
 _srcname="linux-${pkgver%.*}"
 pkgrel='1'
 arch=('x86_64')
@@ -35,7 +35,7 @@ validpgpkeys=(
   '647F28654894E3BD457199BE38DBBDC86092693E' # Greg Kroah-Hartman (Linux kernel stable release signing key) <greg@kroah.com>
 )
 md5sums=('9a78fa2eb6c68ca5a40ed5af08142599'
-         '4cf68a44fbc52e987daa1492245a85a2'
+         '8497960b2ab982d88a90abfbfacc406a'
          '3bde314b2b0fffcc947ffec0d1832ca8'
          'ce6c81ad1ad1f8b333fd6077d47abdaf'
          'a85bfae59eb537b973c388ffadb281ff'
@@ -44,7 +44,7 @@ md5sums=('9a78fa2eb6c68ca5a40ed5af08142599'
          'e1093d9bc718f362344ab56b85d4fb76'
          '43d62abf4cd27fa1863759ac87b62ac5')
 sha256sums=('401d7c8fef594999a460d10c72c5a94e9c2e1022f16795ec51746b0d165418b2'
-            '28c12e09b5637200301e357aa80b654b60b30a5709a62e060c8fde42e7da531a'
+            '93ddcffd0142713ee6d63aec7bf5e1b9644b4f7fda07665e972ece4dc06d8a31'
             'c223bfec598ea11d2b151c1c179da28db13402b3b4575f845ddecba3482c1437'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
@@ -172,7 +172,7 @@ _package() {
   optdepends=('crda: to set the correct wireless channels of your country')
   backup=("etc/mkinitcpio.d/${pkgbase}.preset")
   install=linux-lts.install
-  provides=("linux=${pkgver}")
+  #provides=("linux=${pkgver}") # not permitted by order of Arch TU
 
   cd "${_srcname}"
 
@@ -235,7 +235,7 @@ _package() {
 _package-headers() {
   set -u
   pkgdesc="Header files and scripts for building modules for ${pkgbase/linux/Linux} kernel"
-  provides=("linux-headers=${pkgver}")
+  #provides=("linux-headers=${pkgver}") # not permitted by order of Arch TU
 
   cd ${_srcname}
   local _builddir="${pkgdir}/usr/lib/modules/${_kernver}/build"
