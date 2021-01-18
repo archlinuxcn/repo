@@ -44,6 +44,8 @@ prepare() {
   go get -v github.com/godbus/dbus/
   go get -v github.com/godbus/dbus/introspect
   go get -v github.com/godbus/dbus/prop
+  go get -v github.com/disintegration/imaging
+
 }
 
 build(){
