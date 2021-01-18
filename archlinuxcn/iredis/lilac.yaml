@@ -1,11 +1,10 @@
 maintainers:
   - github: a-wing
 
-repo_depends:
-  - pyoxidizer
+build_prefix: extra-x86_64
 
 update_on:
-  - source: github
-    github: laixintao/iredis
-    use_latest_release: true
+  - source: pypi
+    pypi: iredis
+  - alias: python
 

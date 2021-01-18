@@ -2,55 +2,43 @@
 
 pkgname=iredis
 pkgver=1.9.1
-pkgrel=1
+pkgrel=3
 pkgdesc='Interactive Redis: A Cli for Redis with AutoCompletion and Syntax Highlighting'
-arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
+arch=('any')
 url="https://github.com/laixintao/iredis"
-license=('custom')
-makedepends=('git' 'python-poetry' 'pyoxidizer')
-source=(
-	"${pkgname}::git+https://github.com/laixintao/iredis.git#tag=v${pkgver}"
-	"pyoxidizer.patch"
-	)
-sha512sums=(
-		'SKIP'
-		'9a7ad88f006abd69882af35dabba78c1126b1cf6c84c6cb51657c30c880fad2326512f3ca9484262bce946e0685f3232f1769d3900431939e565a0e1cc423390'
-		)
+license=('BSD')
+depends=(
+	'python'
+	'python-redis'
+	'python-prompt_toolkit'
+	'python-pygments'
+	'python-mistune'
+	'python-configobj'
+	'python-click'
+	'python-pendulum'
+	'python-importlib_resources'
+	'python-wcwidth'
+)
+
+makedepends=('python-setuptools')
+#checkdepends=('python-pytest' 'python-pexpect' 'redis')
+source=('https://files.pythonhosted.org/packages/5c/94/7ab450e78a1c2947a65e4eca9ea3a1ac444f518be3b1633fe54a2a3aa2a5/iredis-1.9.1.tar.gz')
+sha512sums=('9bc605c9f3ad43a04622c70cf9829580eaa621c41a93eea8c045eea44c318dc42e00ad659dcec11d74e431d4b3d3c40e66a0731c2defeb84b1ff74cc5a97c8fa')
 
 build() {
-	cd ${pkgname}
-	python3 -m venv venv
-	. venv/bin/activate
-	pip install pip==18.1
-	pip install poetry
-	poetry install
-	poetry build
-	_gen_bin
+  cd ${srcdir}/${pkgname}-${pkgver}
+  python setup.py build
 }
 
 check() {
-	cd ${pkgname}
-	python3 -m venv fresh_env
-  . fresh_env/bin/activate
-  pip install dist/*.whl
-  iredis -h
-  iredis help GET
-}
+  cd ${srcdir}/${pkgname}-${pkgver}
 
-_gen_bin() {
-	patch -Np1 < ../pyoxidizer.patch
-
-	export WHEEL_PATH=`ls ./dist/iredis*.whl`
-	envsubst '$WHEEL_PATH' < pyoxidizer.template.bzl > pyoxidizer.bzl
-  pyoxidizer build --release install
+  # Let me think about it !
+  #pytest
 }
 
 package() {
-	mkdir -p ${pkgdir}/usr/lib
-  cp -r ${srcdir}/${pkgname}/build/x86*/release/install ${pkgdir}/usr/lib/${pkgname}
-  install -Dm755 ${srcdir}/${pkgname}/build/x86*/release/install/${pkgname} -t ${pkgdir}/usr/lib/${pkgname}
-	mkdir -p ${pkgdir}/usr/bin
-	ln -s ../lib/iredis/iredis ${pkgdir}/usr/bin/${pkgname}
-
-	install -Dm644 ${srcdir}/${pkgname}/LICENSE -t ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+  cd ${srcdir}/${pkgname}-${pkgver}
+  python setup.py install --root=${pkgdir} --optimize=1
+  install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
 }
