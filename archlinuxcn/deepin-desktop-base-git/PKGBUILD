@@ -1,7 +1,7 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=deepin-desktop-base-git
-pkgver=2020.12.09.r4.gbd3dc1a
+pkgver=2020.05.27.r0.gf4f59a2
 pkgrel=1
 pkgdesc='Base component for Deepin'
 arch=('any')
