@@ -7,7 +7,7 @@
 # by setting SYNCTHING_TEST_TIMEOUT_FACTOR
 
 # set the web view provider: either webkit, webengine, auto or none
-_webview_provider=${SYNCTHING_TRAY_WEBVIEW_PROVIDER:-none}
+_webview_provider=none
 
 # set the JavaScript provider: either script, qml, auto or none
 _js_provider=${SYNCTHING_TRAY_JS_PROVIDER:-qml}
@@ -29,6 +29,8 @@ pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing'
 license=('GPL')
+provides=('syncthingtray')
+conflicts=('syncthingtray')
 depends=('qtutilities' 'qt5-svg' 'openssl' 'desktop-file-utils' 'xdg-utils')
 [[ $_webview_provider == none ]] && depends+=('qt5-base')
 [[ $_webview_provider == webkit ]] && depends+=('qt5-webkit')
