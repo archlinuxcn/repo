@@ -2,7 +2,8 @@
 
 pkgname=linuxqq
 pkgver=2.0.0_b2_1084
-pkgrel=2
+pkgrel=3
+epoch=1
 arch=('x86_64')
 pkgdesc="Tencent QQ for Linux"
 url="https://im.qq.com/linuxqq"
@@ -11,9 +12,11 @@ license=('custom')
 source=(
     "$pkgname-${pkgver}_orig_x86_64.pkg.tar.xz::https://down.qq.com/qqweb/LinuxQQ/linuxqq_2.0.0-b2-1084_x86_64.pkg.tar.xz"
     "qq.desktop"
+    "linuxqq.install"
 )
 sha512sums=('7bccbb2caf1f072ae7345d5b66c702e705439068bebfacf2093a135b2c93058e89b5c3bf8ef2e68bc179ea75805cd10f065729729db6d0acca7ee96b501ba027'
-            'a6118c6a2dc03d22b423d4bca393c6a2ef0c8494f6480db0ee1b29ca28485e3a5e648d9485595d2d4c921d1688f72c70a70949c241b2fdde6d43bd0053cdcaa2')
+            'a6118c6a2dc03d22b423d4bca393c6a2ef0c8494f6480db0ee1b29ca28485e3a5e648d9485595d2d4c921d1688f72c70a70949c241b2fdde6d43bd0053cdcaa2'
+            '11782ecda823feedc925e0ba87380dedb5ab19aeab7bd8e3be52f7e71737429ef1341a96554045b30ba91e9a7559c5a1c7cdf3bca1b75e2908a0ddad9a7b918b')
 replaces=('qq-linux')
 
 package() {
