@@ -7,7 +7,7 @@
 
 pkgbase="joplin"
 pkgname=('joplin' 'joplin-desktop')
-pkgver=1.5.14
+pkgver=1.6.7
 groups=('joplin')
 pkgrel=1
 install="joplin.install"
@@ -15,7 +15,7 @@ depends=('electron' 'gtk3' 'libexif' 'libgsf' 'libjpeg-turbo' 'libwebp' 'libxss'
          'nss' 'orc' 'rsync' )
 optdepends=('libappindicator-gtk3: for tray icon')
 arch=('x86_64' 'i686')
-makedepends=('git' 'npm' 'python' 'rsync' 'jq')
+makedepends=('git' 'npm' 'python' 'rsync' 'jq' 'electron')
 url="https://joplinapp.org/"
 license=('MIT')
 source=("joplin.desktop" "joplin-desktop.sh" "joplin.sh"
@@ -23,7 +23,7 @@ source=("joplin.desktop" "joplin-desktop.sh" "joplin.sh"
 sha256sums=('c7c5d8b0ff9edb810ed901ea21352c9830bfa286f3c18b1292deca5b2f8febd2'
             'a450284fe66d89aa463d129ce8fff3a0a1a783a64209e4227ee47449d5737be8'
             'dc1236767ee055ea1d61f10e5266a23e70f3e611b405fe713ed24ca18ee9eeb5'
-            'b4d7bbde4ad00447bfc34d586c68d1064f2a48f117c30a914d89a2814b549137')
+            'be8cb76bb2b2bdf0ad14078195bb61513a8ea30970d61860ea537db88395dadf')
 
 # local npm cache directory
 _npm_cache="npm-cache"
