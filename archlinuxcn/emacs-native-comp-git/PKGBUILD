@@ -66,14 +66,14 @@ MAGICK=           # ImageMagick 7 support. Deprecated (read the logs).
 		  #are doing.
                   # -->>If you just *believe* you need it, you don't.<<--
 NOGZ="YES"        # Don't compress .el files.
-FAST_BOOT=        # Only native-compile the bare minimum. Intended for use with
+FAST_BOOT="YES"   # Only native-compile the bare minimum. Intended for use with
                   # deferred compilation to native-compile on-demand at runtime.
 PROFILING=        # Enable gprof profiling support.
 ################################################################################
 
 ################################################################################
 pkgname="emacs-native-comp-git"
-pkgver=28.0.50.146120
+pkgver=28.0.50.146220
 pkgrel=1
 pkgdesc="GNU Emacs. Development native-comp branch."
 arch=('x86_64' )
