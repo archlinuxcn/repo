@@ -7,6 +7,7 @@
 
 pkgname=oracle-instantclient-basic
 pkgver=21.1.0.0.0
+_dirname=instantclient_21_1
 pkgrel=2
 pkgdesc="Light replacement for the Oracle client (files to run OCI, OCCI and JDBC-OCI programs)"
 arch=('x86_64')
@@ -17,21 +18,16 @@ depends=(
   java-runtime
   libaio
 )
-makedepends=(p7zip)
-
 source=(oracle.sh
         "${pkgname}-${pkgver}.zip::https://download.oracle.com/otn_software/linux/instantclient/211000/instantclient-basic-linux.x64-${pkgver}.zip")
-noextract=(${pkgname}-${pkgver}.zip)
 sha256sums=('36b5ab97950f1667403dd9b59c3cad25d8f9e457702feaece835d1bff7c971c9'
             '9b63e264c01ac54a0f0e61bd638576aed6f04a36b305bcd17847755e7b9855ce')
 
 package() {
-	install -d "${pkgdir}/usr/bin" "${pkgdir}/usr/lib"
-	7z e "${pkgname}-${pkgver}.zip" -o${pkgdir}/usr/lib
-	install -m 755 -t "${pkgdir}/usr/bin" ${pkgdir}/usr/lib/{adrci,genezi,uidrvci}
+	install -Dm755 ${_dirname}/{adrci,genezi,uidrvci} -t "${pkgdir}/usr/bin"
+	install -Dm755 ${_dirname}/*.jar -t "${pkgdir}/usr/lib"
+	mv -v ${_dirname}/lib* "${pkgdir}/usr/lib"
 	install -Dm755 "${srcdir}/oracle.sh" "$pkgdir/etc/profile.d/oracle.sh"
-	install -Dm644 "${pkgdir}/usr/lib/BASIC_LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-	
-	rm -rvf ${pkgdir}/usr/lib/{adrci,genezi,uidrvci,BASIC_README,BASIC_LICENSE,README} "${pkgdir}/usr/lib/network" "${pkgdir}/usr/lib/admin"
+	install -Dm644 "${_dirname}/BASIC_LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 # vim:set ts=2 sw=2 et:
