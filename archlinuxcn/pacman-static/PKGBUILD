@@ -6,17 +6,17 @@ pkgname=pacman-static
 pkgver=5.2.2
 _cares_ver=1.16.1
 _nghttp2_ver=1.41.0
-_curlver=7.71.1
-_sslver=1.1.1g
+_curlver=7.74.0
+_sslver=1.1.1i
 _zlibver=1.2.11
 _xzver=5.2.5
 _bzipver=1.0.8
 _zstdver=1.4.5
-_libarchive_ver=3.4.3
-_gpgerrorver=1.38
-_libassuanver=2.5.3
-_gpgmever=1.14.0
-pkgrel=17
+_libarchive_ver=3.5.1
+_gpgerrorver=1.41
+_libassuanver=2.5.4
+_gpgmever=1.15.1
+pkgrel=18
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
@@ -53,14 +53,14 @@ validpgpkeys+=('EC3CFE88F6CA0788774F5C1D1AA44BE649DE760A') # Mark Wielaard <mark
 source+=("zstd-${_zstdver}.tar.gz::https://github.com/facebook/zstd/archive/v${_zstdver}.tar.gz")
 # libgpg-error
 source+=("https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-${_gpgerrorver}.tar.bz2"{,.sig})
-validpgpkeys+=('D8692123C4065DEA5E0F3AB5249B39D24F25E3B6'  # Werner Koch
+validpgpkeys+=('6DAA6E64A76D2840571B4902528897B826403ADA'  # "Werner Koch (dist signing 2020)"
                '031EC2536E580D8EA286A9F22071B08A33BD3F06') # NIIBE Yutaka (GnuPG Release Key) <gniibe@fsij.org>
 # libassuan
 source+=("https://gnupg.org/ftp/gcrypt/libassuan/libassuan-${_libassuanver}.tar.bz2"{,.sig})
 # gpgme
 source+=("https://www.gnupg.org/ftp/gcrypt/gpgme/gpgme-${_gpgmever}.tar.bz2"{,.sig})
 # libarchive
-source+=("https://github.com/libarchive/libarchive/releases/download/v${_libarchive_ver}/libarchive-${_libarchive_ver}.tar.xz"{,.asc})
+source+=("https://github.com/libarchive/libarchive/releases/download/${_libarchive_ver}/libarchive-${_libarchive_ver}.tar.xz"{,.asc})
 validpgpkeys+=('A5A45B12AD92D964B89EEE2DEC560C81CEC2276E') # Martin Matuska <mm@FreeBSD.org>
 
 sha512sums=('1f9c569fb9cfe90afeeb7e3715bfa821ec4c57fdbbd7e09cd1e2519fad1a555b2f5378dedb2c2e551d2e92db92f1db9684969b472507f676c5bb932cdf436eda'
@@ -68,9 +68,9 @@ sha512sums=('1f9c569fb9cfe90afeeb7e3715bfa821ec4c57fdbbd7e09cd1e2519fad1a555b2f5
             'c92e8022ccc876fa311f21bc5bf5af75feff8232efb56a4b2ab198031e974d15b67c16c046188cc76552f75a1b2e7115925d6ce1e42d6f94ae482fe69727466d'
             '4ac2a5d5c6da74eb1d6155c4eadc7127ab1b53a8d13caec41bd6172db5417a79f3ab022e77ba37d8b13da6893d7ced5fd8baf5cc3950a4154b4de8743ad31471'
             'SKIP'
-            '614f8d67e6ee942cb5e57f2da1a3faaf84ebff549ffe383aaf3751a4de3c8874ff482076afa27a52e910a137dec9b0f6e98265dc7d4ad7c95845b63f39236fd4'
+            '4b61a23463315dce5529aa5f1dc7d21d7876347912c68855c9cfcb01e06492af1510975fafb213c67ac7b9764287767da69043a79376a4be366aa23ace09f163'
             'SKIP'
-            '01e3d0b1bceeed8fb066f542ef5480862001556e0f612e017442330bbd7e5faee228b2de3513d7fc347446b7f217e27de1003dc9d7214d5833b97593f3ec25ab'
+            'fe12e0ab9e1688f24dd862ac633d0ab703b499c0f34b53c3560aa0d3879d81d647aa0678ed517dda5efb2711f669fcb1a1e0e24f6eac2efc2cf4eae6b62014d8'
             'SKIP'
             '3857c298663728a465b5f95a3ef44547efbfb420d755e9dde7f20aa3905171b400e1c126d8db5c2b916c733bbd0724d8753cad16c9baf7b12dcd225a3ee04a97'
             '73fd3fff4adeccd4894084c15ddac89890cd10ef105dd5e1835e1e9bbb6a49ff229713bd197d203edfa17c2727700fce65a2a235f07568212d820dca88b528ae'
@@ -80,22 +80,22 @@ sha512sums=('1f9c569fb9cfe90afeeb7e3715bfa821ec4c57fdbbd7e09cd1e2519fad1a555b2f5
             '083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3'
             'SKIP'
             'b03c497c3e0590c3d384cb856e3024f144b2bfac0d805d80e68deafa612c68237f12a2d657416d476a28059e80936c79f099fc42331464b417593895ea214387'
-            'b936a4738c2cee111d855b1ba3ec433da8c77799a87d1f71275f974f871ebfa593c9db06ea53f0490b6cd6b94bef34f6052a587a4d13d839ec0128500c2dd9de'
+            '578d1d8090b9f6e6cbe59d9aeebec7df81aae492f75ec343f8df530950d30866fa0a7903ca050bf7bf721413f7b2708abe34f7467e2b208cc1447ffc9bd5b9a5'
             'SKIP'
-            'e7ccb651ea75b07b2e687d48d86d0ab83cba8e2af7f30da2aec794808e13e6ec93f21d607db50d3431f1c23cb3a07a2793b71170e69fa2f5a82cffb81961f617'
+            '764993d5311c24f0c0f970016e903e1a16783a2050c42072dbc1bc4f350f119e53b0be17ed6df25a0086bc9f8c25ee4f3134330577968480997263f95e05594f'
             'SKIP'
-            'b7ffa30a046c75215e1c73e2f34e5e65532e4dcf6bea55796adc6f82fd38dafe264bcd4332b2001155d6f9476d6fd82a77112dad31c1bb29db9ddefc532ae668'
+            '1d75a848cce6389f7cb8896b57a28dfe1dc5a447bfb4f128b0994a43e04134343400a3be063e971f03dfd595474cfd558519741d5d56afb3e84853ad4f2a45c2'
             'SKIP'
-            '9ad2b80de8edd94f9b2e590bfbcd07d36234382595784d918ed47fc532859cabd4bcf45cb3cf08ba7fc5202098191a42629c38f66a63a9efff194fac63a79c76'
+            '04ad3e98e840fee19eb4c2652f29eccef1cffc071fd5c6a6feb358fea6048699281c7baacbb9ca8f823b1bfaaef6d4c87d9cf6a8b0c28aab53b75b2d259b2045'
             'SKIP')
 b2sums=('14896b3911f851f66b93443fe29eca9ffe21a73698ce7844a7924450c0399ce71d038843d8a4acedb029d5444cd1b409776d482edff5e58928e248068acb68dd'
         'SKIP'
         '8dbd5f80bb9617d792e2eece09f6cae82907ad3a14a90084578b213191015c32ac38de87d9a39246651087b5d0e9c6c624ff806a0690973b5faa8624ee033d8f'
         '0d87538f5d6cac5b6b9c92d6ba5525af0e580e6506bee9270318f0951aaccdc7e135b446381e8150241d367789ccf2f73dbb333d45de4dbb5a87af05483063a8'
         'SKIP'
-        '0340639e86fe33b5c9f35058ffbaee1d9fe7f4fb3e555287188cd9eef74ee759d3bbc1ee0f618d3fd4ebb9e2606773a3a3b4479f37893ce5231bbc77e5cd7032'
+        '62125de15f32976560ce0fbf52d0dbadd38d198813130283ea50cd320292375895a4c909e803f7e0f5fe0fd14ceb01d2ac6554349ebc5b86cdd1100f9d4424d6'
         'SKIP'
-        '5e3dd4725ff89b959a5436d64b521317c6ffeb377418cc24c6d1927fab923423cb5f5fce2f9c2cdee597041c7be156d09668a5fd13dc6ff06d235a83db94cf19'
+        'ca98bab08e1874134da113dd0bda0583c133c7dce5b739f9601641ed2cf97894e5e13d901f0db9367aa5d7b78c552ac598aa0a3c2a3f0a438daae044e29f58d6'
         'SKIP'
         'e2ff99e8236487f43171c771d0ee89137b73f3d0b2756bcb0d6525c810ffa9f5a3763c3744327fb47cef21eabfc50fff96632f4bbe2cd244206a99daffa0c25a'
         '6bfc4bca5dcadba8a0d4121a2b3ed0bfe440c261003521862c8e6381f1a6f0a72d3fc037351d30afd7ef321e8e8d2ec817c046ac749f2ca0c97fbdc2f7e840b7'
@@ -105,13 +105,13 @@ b2sums=('14896b3911f851f66b93443fe29eca9ffe21a73698ce7844a7924450c0399ce71d03884
         '22ab3acd84f4db8c3d6f59340c252faedfd4447cea00dafbd652e65b6cf8a20adf6835c22e58563004cfafdb15348c924996230b4b23cae42da5e25eeac4bdad'
         'SKIP'
         '1497d4e87040e5c71466468ebf1a57f4073666f2b005229925bc1d95a4b4fcb2a51d88bb79be20f21860e5750da42f8aac21d2997421d07ba37bd6bb12a28b55'
-        '9532402466748503805366b94c82c9adfe5b448f885c26b33ebf7ba9957161ca046b4057f5ca862224accb9f2af731652a55d20e7a4ab69107190a58c8e11ad6'
+        '9dc95bc09f55915d904e0f956ecf9281615028b8b8d876dbc786b752068fefea56adfb5dd5db65bad656ab664d567e56541e44a584c7f8672c30537ed05c4db0'
         'SKIP'
-        'ae3a5a9a03e85d62cf87271cd4a0718a2b89a4f90ea814837913e4b2bb6e5af9746e766d99685cc0cc3a801efaee597e491a2bc03d42ac26059580ea4680fd7a'
+        '2eec42c47840741a4726fc35c3ed04300e5fbcd37f808b121534aeaa04d0d0f609a30ad48cfbe33a81ee4b2ebbb822b9a48a5c602268f1b802bf5d7d19d72e9c'
         'SKIP'
-        '75051166b1f3777d630236c5afbd1786df238272b7ccfd053c5a4b2a207ba146550f6be46c1211f3bacbe19fee2f67adbc5be558d69175c19230a1a02e32d9f2'
+        'd3a6ccaa35360ed3fc79364dfcc3f2fdcb70e5e41ac72ef011373a39d5def9be9ce1be45843ab65a87630d3fc570d29db5f40b9a273aa8e281464c9d1d3477de'
         'SKIP'
-        '45eaa44468b55d81626a8c315f80a7504c43c27dc5055b719952bb7deaa19e934b579e8f529e268bbd629223b9c0296a2925278950ab9e8a296fb6b919d6f56f'
+        '0be26a858bffc48bc3dea64e7ea16a703fd7dae1c37dd93e1acde291b6799e323461b3b0bb31c12f63e3429aa4be72d88636606d786978f8d56b94dd2dc144c7'
         'SKIP')
 
 export LDFLAGS="$LDFLAGS -static"
