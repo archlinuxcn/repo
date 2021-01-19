@@ -7,7 +7,7 @@
 
 pkgname=opera-developer
 pkgver=75.0.3939.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A fast and secure web browser and Internet suite - developer stream'
 arch=('x86_64')
 url='https://www.opera.com/computer'
@@ -16,7 +16,6 @@ provides=('opera')
 depends=('gtk3' 'alsa-lib' 'libnotify' 'curl' 'nss' 'libxss' 'ttf-font' 'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme')
 optdepends=(
     'opera-developer-ffmpeg-codecs: playback of proprietary video/audio'
-    'pepper-flash: flash support'
     'upower: opera battery save'
 )
 source=(
