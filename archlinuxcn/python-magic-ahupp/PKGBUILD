@@ -5,7 +5,7 @@ _pkgname='python-magic'
 pkgname=python-magic-ahupp
 pkgdesc='A python wrapper for libmagic'
 pkgver=0.4.20
-pkgrel=1
+pkgrel=2
 arch=('any')
 url="https://github.com/ahupp/python-magic"
 license=('MIT')
@@ -21,5 +21,5 @@ package() {
   python setup.py install --root="${pkgdir}" --optimize='1'
 
   install -D -m644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
-  install -D -m644 LICENSE "${pkgdir}/usr/share/license/${pkgname}/LICENSE"
+  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
