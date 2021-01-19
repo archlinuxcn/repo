@@ -3,12 +3,13 @@
 pkgname=python-cx-oracle
 _name=cx_Oracle
 pkgver=8.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Python interface to Oracle Database conforming to the Python DB API 2.0 specification'
 arch=('x86_64')
 url='https://oracle.github.io/python-cx_Oracle'
 license=('BSD')
 depends=(
+  oracle-instantclient-basic
   python
 )
 makedepends=(
@@ -28,5 +29,6 @@ package() {
   cd "${srcdir}/${_name}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
   install -Dm644 "LICENSE.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  rm -rfv "${pkgname}/usr/cx_Oracle-doc"
 }
 # vim:set ts=2 sw=2 et:
