@@ -1,0 +1,12 @@
+pre_build: aur_pre_build
+
+post_build: aur_post_build
+
+update_on:
+  - source: github
+    github: Dreamacro/clash-dashboard
+  - source: aur
+    aur: clash-dashboard-git
+
+maintainers:
+  - github: dctxmei
