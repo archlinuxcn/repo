@@ -1,10 +1,7 @@
-pre_build: aur_pre_build
-
-post_build: aur_post_build
-
 update_on:
-  - source: aur
-    aur: clash-geoip
+  - source: github
+    github: Dreamacro/maxmind-geoip
+    use_latest_release: true
 
 maintainers:
   - github: dctxmei
