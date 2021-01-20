@@ -1,7 +1,7 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=deepin-session-shell-git
-pkgver=5.3.0.39.r41.g987724f
+pkgver=5.3.0.39.r45.g3a315d2
 pkgrel=1
 pkgdesc='Deepin desktop-environment - session-shell module'
 arch=('x86_64')
