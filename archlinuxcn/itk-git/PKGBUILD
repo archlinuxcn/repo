@@ -3,7 +3,7 @@
 _pkgname=ITK
 pkgname=itk-git
 _pkgver=5.2
-pkgver=5.2.r52281.7f36e8e2ff
+pkgver=5.2.r52336.cd61f093d7
 pkgrel=1
 pkgdesc="An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis"
 arch=('x86_64')
@@ -11,7 +11,6 @@ url="https://www.itk.org/"
 license=('Apache')
 depends=(
   castxml
-  double-conversion
   eigen
   expat
   fftw
@@ -55,7 +54,7 @@ build() {
     -DITK_BUILD_DEFAULT_MODULES=ON
     -DITK_USE_MKL=ON
     -DITK_USE_SYSTEM_CASTXML=ON
-    -DITK_USE_SYSTEM_DOUBLECONVERSION=ON
+    -DITK_USE_SYSTEM_DOUBLECONVERSION=OFF
     -DITK_USE_SYSTEM_EIGEN=ON
     -DITK_USE_SYSTEM_EXPAT=ON
     -DITK_USE_SYSTEM_FFTW=ON
