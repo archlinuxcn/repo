@@ -3,7 +3,7 @@
 pkgname=motrix-git
 _pkgname=motrix
 pkgver=1.5.15.r63.gd020359
-pkgrel=1
+pkgrel=2
 pkgdesc='A full-featured download manager'
 arch=('any')
 url='https://motrix.app/'
@@ -32,6 +32,7 @@ pkgver() {
 prepare() {
   sed -i 's/"postinstall"/"ignore"/' "${srcdir}/${_pkgname}/package.json"
   sed -i 's/--colors/--color/g' "${srcdir}/${_pkgname}/package.json"
+  sed -i 's/ENGINE_MAX_CONNECTION_PER_SERVER = 64/ENGINE_MAX_CONNECTION_PER_SERVER = 16/' "${srcdir}/${_pkgname}/src/shared/constants.js"
   rm -vf "${srcdir}/${_pkgname}/package-lock.json"
   echo "Creating desktop file..."
   gendesk -f -n --pkgname ${_pkgname} \
