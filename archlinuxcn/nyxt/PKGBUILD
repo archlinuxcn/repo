@@ -1,0 +1,32 @@
+# Contributor: Cillian Berragan <cjberragan@gmail.com>
+# Contributor: Felix Golatofski <contact@xdfr.de>
+# Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
+
+pkgname=nyxt
+pkgver=2.pre.release.5
+pkgrel=2
+pkgdesc="Keyboard-oriented, Common Lisp extensible web-browser"
+arch=('i686' 'x86_64')
+url="https://nyxt.atlas.engineer"
+license=('custom:BSD')
+conflicts=('nyxt-browser')
+provides=('nyxt-browser' 'next-browser')
+source=(git+https://github.com/atlas-engineer/nyxt.git#commit=a065942ce03be5b85addf3fa0b9b5617f5ee1e08)
+sha256sums=('SKIP')
+# If someday Next works with other Lisps, replace 'sbcl' with 'common-lisp'.
+makedepends=('git' 'sbcl' 'cl-asdf')
+depends=('webkit2gtk' 'glib-networking' 'gsettings-desktop-schemas' 'libfixposix' 'enchant')
+optdepends=('gstreamer: for HTML5 audio/video'
+            'gst-plugins-base: for HTML5 audio/video'
+            'gst-plugins-good: for HTML5 audio/video'
+            'gst-plugins-bad: for HTML5 audio/video'
+            'gst-plugins-ugly: for HTML5 audio/video')
+# Binary will not run otherwise.
+options=('!strip' '!makeflags')
+
+package() {
+  cd $pkgname
+  make install PREFIX=/usr DESTDIR=${pkgdir}
+  install -Dm644 licenses/ASSET-LICENSE "$pkgdir"/usr/share/licenses/$pkgname/ASSET-LICENSE
+  install -Dm644 licenses/SOURCE-LICENSE "$pkgdir"/usr/share/licenses/$pkgname/SOURCE-LICENSE
+}
