@@ -3,7 +3,7 @@
 _arch=$(uname -m)
 pkgname=stack-static
 pkgver=2.5.1
-pkgrel=3
+pkgrel=4
 pkgdesc="The Haskell Tool Stack (linked statically)"
 arch=('x86_64')
 url="https://github.com/commercialhaskell/stack"
@@ -16,23 +16,26 @@ optdepends=(
   "ncurses5-compat-libs: using older ghc's linking against libtinfo.so.5"
 )
 source=(
-  "stack.bash"
   "https://github.com/commercialhaskell/stack/releases/download/v${pkgver}/stack-${pkgver}-linux-x86_64.tar.gz"
   "https://github.com/commercialhaskell/stack/releases/download/v${pkgver}/stack-${pkgver}-linux-x86_64.tar.gz.asc"
 )
-sha256sums=('df46833a748574d01f38d4120e5021ee6fac9b8a70995674ca0bd2cacbd3e3c2'
-            'c83b6c93d6541c0bce2175085a04062020f4160a86116e20f3b343b562f2d1e8'
+sha256sums=('c83b6c93d6541c0bce2175085a04062020f4160a86116e20f3b343b562f2d1e8'
             'SKIP')
 validpgpkeys=('C5705533DA4F78D8664B5DC0575159689BEFB442')
 
 package() {
   cd "${srcdir}"
   local d="stack-${pkgver}-linux-x86_64"
-  mkdir -p "${pkgdir}"/usr/{{bin,share/{doc,licenses}/"${pkgname}"},share/bash-completion/completions}
+  mkdir -p "${pkgdir}"/usr/{bin,share/{doc,licenses}/"${pkgname}"}
+  mkdir -p "${pkgdir}"/usr/share/{bash-completion/completions,fish/vendor_completions.d,zsh/site-functions}
   cp "${d}/stack" "${pkgdir}/usr/bin"
   cp -R "${d}/doc/." "${pkgdir}/usr/share/doc/${pkgname}/"
   cp "${d}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/"
-  cp "stack.bash" "${pkgdir}/usr/share/bash-completion/completions/stack"
+
+  local stack=${d}/stack
+  "$stack" --bash-completion-script stack >"$pkgdir"/usr/share/bash-completion/completions/stack
+  "$stack" --fish-completion-script stack > "$pkgdir"/usr/share/fish/vendor_completions.d/stack.fish
+  "$stack" --zsh-completion-script stack > "$pkgdir"/usr/share/zsh/site-functions/_stack
 }
 
 # vim:set ts=2 sw=2 et:
