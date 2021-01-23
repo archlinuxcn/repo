@@ -44,13 +44,6 @@ build() {
     -DKICAD_SCRIPTING_WXPYTHON_PHOENIX=ON
 
   make
-
-  cd "${srcdir}/${pkgname}/translation"
-  mkdir -p build
-  cd build
-  cmake .. -DCMAKE_INSTALL_PREFIX=/usr
-
-  make
 }
 
 package() {
