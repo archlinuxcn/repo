@@ -5,7 +5,7 @@ pkgname=kicad-git
 _langpack=kicad-i18n-git
 replaces=(${_langpack})
 pkgver=r20303.e10025db64
-pkgrel=1
+pkgrel=2
 pkgdesc="Electronic schematic and printed circuit board (PCB) design tools"
 arch=('i686' 'x86_64')
 url="http://kicad-pcb.org/"
@@ -33,6 +33,7 @@ build() {
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DKICAD_USE_OCE=OFF \
     -DKICAD_USE_OCC=ON \
+    -DKICAD_BUILD_I18N=ON \
     -DBUILD_GITHUB_PLUGIN=ON \
     -DKICAD_SCRIPTING=ON \
     -DKICAD_SCRIPTING_MODULES=ON \
@@ -54,10 +55,6 @@ build() {
 
 package() {
   cd "${srcdir}/${pkgname}"
-  cd build
-  make DESTDIR="${pkgdir}" install
-
-  cd "${srcdir}/${pkgname}/translation"
   cd build
   make DESTDIR="${pkgdir}" install
 }
