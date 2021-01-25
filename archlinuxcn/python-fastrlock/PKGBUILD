@@ -4,7 +4,7 @@
 pkgname=python-fastrlock
 _pkgname=fastrlock
 pkgver=0.5
-pkgrel=2
+pkgrel=3
 pkgdesc='A fast RLock implementation for CPython'
 url='https://github.com/scoder/fastrlock'
 arch=('x86_64')
@@ -28,6 +28,7 @@ get_pyver() {
 
 build() {
   cd "${_pkgname}-${pkgver}"
+  python setup.py build
   python setup.py build_ext --inplace
 }
 
