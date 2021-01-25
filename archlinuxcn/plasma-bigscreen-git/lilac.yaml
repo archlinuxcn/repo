@@ -5,6 +5,9 @@ build_prefix: extra-x86_64
 
 pre_build: vcs_update
 
+repo_depends:
+  - plasma-bigscreen-git
+
 update_on:
   - source: github
     github: KDE/plasma-bigscreen
