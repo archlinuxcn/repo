@@ -1,6 +1,6 @@
 pkgname='alacritty-ligatures-git'
 _pkgname="alacritty"
-pkgver=0.7.0.1745.gada2680
+pkgver=0.7.0.1753.g0f1372f
 pkgrel=1
 arch=('x86_64' 'i686')
 url="https://github.com/alacritty/alacritty"
