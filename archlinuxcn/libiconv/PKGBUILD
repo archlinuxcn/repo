@@ -4,30 +4,39 @@
 
 pkgname=libiconv
 pkgver=1.16
-pkgrel=1
-pkgdesc='Provides libiconv.so and libcharset.so'
+pkgrel=2
+pkgdesc='GNU charset conversion library'
 arch=('i686' 'x86_64')
 url='http://www.gnu.org/software/libiconv/'
 license=('LGPL')
+depends=(glibc)
+provides=(libcharset.so libiconv.so)
 source=("http://ftp.gnu.org/pub/gnu/${pkgname}/${pkgname}-${pkgver}.tar.gz"{,.sig})
 sha512sums=('365dac0b34b4255a0066e8033a8b3db4bdb94b9b57a9dca17ebf2d779139fe935caf51a465d17fd8ae229ec4b926f3f7025264f37243432075e5583925bb77b7'
             'SKIP')
 options=(!libtool)
 validpgpkeys=(
-  '68D94D8AAEEAD48AE7DC5B904F494A942E4616C2' # Bruno Haible
+  '68D94D8AAEEAD48AE7DC5B904F494A942E4616C2' # Bruno Haible <bruno@clisp.org>
 )
 
 build() {
   cd "${pkgname}-${pkgver}"
-  sed '/LD_RUN_PATH/d' -i Makefile.in
-  ./configure --prefix=/usr
-  cp -f /usr/include/stdio.h srclib/stdio.in.h
+  ./configure \
+    --prefix=/usr \
+    --docdir=/usr/share/doc/libiconv
+
+  # workaround for insecure rpath
+  sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+  sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+
   make
 }
 
 package() {
   cd "${pkgname}-${pkgver}"
-  make DESTDIR="${pkgdir}" LIBDIR="/usr/lib" install
+  make DESTDIR="${pkgdir}" install
+
+  # move references from iconv to libiconv
   mv "$pkgdir"/usr/include/{iconv.h,libiconv.h}
   mv "$pkgdir"/usr/bin/{iconv,libiconv}
   mv "$pkgdir"/usr/share/man/man1/{,lib}iconv.1
