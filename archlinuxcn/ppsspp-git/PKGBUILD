@@ -11,7 +11,7 @@ pkgname=(
   ppsspp-headless-git
   ppsspp-qt-git
 )
-pkgver=1.10.3.r1565.8fe9bedb7
+pkgver=1.10.3.r1643.1b843ef8c
 pkgrel=1
 pkgdesc='A PSP emulator written in C++'
 arch=(x86_64)
@@ -51,7 +51,6 @@ source=(
   ppsspp-qt.sh
   ppsspp.desktop
   ppsspp-qt.desktop
-  ppsspp-flags.patch
 )
 sha256sums=('SKIP'
             'SKIP'
@@ -67,8 +66,7 @@ sha256sums=('SKIP'
             '1236ce000bb670ee2c0e0645c3d55f4d8c8e74dbc35a1af0962a3bdd7608f1c5'
             '828b06aacc56672a4d953d77342717c5be414a68261025f74e466abd084b8e6b'
             '1c332702d0aeced07df7e12ba8530bc3f19a52bc76c355f6c84c141becfd46d8'
-            'b3b1fb9e0ecd3c4472b51f27d028a69514b1a3823c26e33da6ffaebfb1522b7f'
-            '6694643d96dae673f01555637139468eb277f3379afbcceccad3f7e0ae670278')
+            'b3b1fb9e0ecd3c4472b51f27d028a69514b1a3823c26e33da6ffaebfb1522b7f')
 
 pkgver() {
   cd ppsspp
@@ -78,8 +76,6 @@ pkgver() {
 
 prepare() {
   cd ppsspp
-
-  patch -Np1 -i ../ppsspp-flags.patch
 
   for submodule in assets/lang ext/glslang ffmpeg; do
     git submodule init ${submodule}
