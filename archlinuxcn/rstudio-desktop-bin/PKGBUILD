@@ -3,26 +3,24 @@
 # NOTE: If you are experiencing segmentation fault, delete the ".rstudio-desktop" folder from your home directory then restart the program should fix the issue.
 
 pkgname=rstudio-desktop-bin
-pkgver=1.3.1093
+pkgver=1.4.1103
 pkgrel=1
 pkgdesc="An integrated development environment (IDE) for R (binary from RStudio official repository)"
 arch=('x86_64')
 license=('GPL')
 url="http://www.rstudio.org/"
-#depends=('r' 'hicolor-icon-theme' 'shared-mime-info' 'orc' 'openssl-1.0')
-depends=('r' 'hicolor-icon-theme' 'shared-mime-info' 'openssl' 'libxkbcommon-x11' 'libedit')
+depends=('r' 'hicolor-icon-theme' 'shared-mime-info' 'openssl'
+  'libxkbcommon-x11' 'libedit' 'postgresql-libs' 'sqlite')
 makedepends=()
 optdepends=(
 'clang: C/C++ and Rcpp support'
-#'pandoc: markdown support'
-#'pandoc-citeproc: markdown support'
 )
 conflicts=('rstudio-desktop' 'rstudio-desktop-git' 'rstudio-desktop-preview-bin')
 provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
 sha256sums_x86_64=(
-ff222177fa968f8cf82016e2086bab10ca4bcbe02a4c16f0ecb650151748cf1c
+768643499ffeef393915998cb141f404db15f4a59f42293ed3f830f9171e323a
 #84e61f5eda991b978fa168d6762f7990
 #391ba54997d6faddbfe41a185a823ee4
 )
