@@ -1,15 +1,15 @@
 # Maintainer: Alynx Zhou <alynx.zhou@gmail.com>
 pkgname=flipclock
-pkgver=2.4.0
+pkgver=2.5.0
 pkgrel=1
 pkgdesc="A flip clock screensaver supported by SDL2."
 arch=('x86_64' 'i686' 'aarch64' 'armv7h' 'armv6h')
 url="https://github.com/AlynxZhou/flipclock"
 license=('Apache')
 depends=('sdl2' 'sdl2_ttf')
-makedepends=('cmake')
+makedepends=('meson')
 source=("https://github.com/AlynxZhou/${pkgname}/archive/v${pkgver}.tar.gz")
-sha512sums=('dfd0e18bcb34532a1db0f1b56eac6926a06c5d95b95b04501e7ae410742dd2177d9abc5dba3b0aa404475e373d511efe7acf6d8efd0ee49bc911d5e927e082ee')
+sha512sums=('559d4a7552d4f7cc960592d832347b6b4a6d243577198b5da11eab1fef0cb1276b342ba2ae4c1f4be1b35821fccbd526c0fd2469c068dd204438458a15b87677')
 
 prepare() {
   mkdir -p build
@@ -17,12 +17,11 @@ prepare() {
 
 build() {
   cd build
-  cmake -DCMAKE_INSTALL_PREFIX=/usr "../${pkgname}-${pkgver}"
-  make
+  arch-meson . "../${pkgname}-${pkgver}"
+  meson compile
 }
 
 package() {
   cd build
-  make DESTDIR="${pkgdir}/" install
+  DESTDIR="${pkgdir}/" meson install
 }
-
