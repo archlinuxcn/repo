@@ -2,10 +2,10 @@
 
 _pkgname='github-desktop'
 pkgname="${_pkgname}-bin"
-pkgver=2.6.1
-_pkgver="${pkgver}-linux2"
+pkgver=2.6.2
+_pkgver="${pkgver}-linux1"
 gitname="release-${_pkgver}"
-pkgrel=2
+pkgrel=1
 pkgdesc="GUI for managing Git and GitHub."
 arch=('x86_64')
 url="https://desktop.github.com"
@@ -19,7 +19,7 @@ source=(
     ${_pkgname}.desktop
 )
 sha256sums=(
-    a43c188f8fd326499b5c1d4099239f658ebac8e9a21001481407cccafcd5f208
+    c2f83dc5e078546886342fea041f5cce28f79ecb60745dab9b0256b3dc9960dc
     932e4c456e8c6db03d27172cf0daa37806bf025bb560d8b3d758c0997d1a618c
 )
 package() {
