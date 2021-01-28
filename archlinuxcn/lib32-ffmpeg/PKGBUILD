@@ -7,7 +7,7 @@
 _pkgbasename=ffmpeg
 pkgname=("lib32-$_pkgbasename" "lib32-lib$_pkgbasename")
 pkgver=4.3.1
-pkgrel=8
+pkgrel=9
 epoch=2
 pkgdesc="Complete solution to record, convert and stream audio and video (32 bit)"
 arch=('x86_64')
@@ -35,7 +35,6 @@ license=('GPL3')
       'lib32-libiec61883'
 #      'lib32-libmfx'
       'lib32-libmodplug'
-      'lib32-libomxil-bellagio'
       'lib32-libpulse'
 #      'lib32-rav1e'
       'lib32-libraw1394'
@@ -69,6 +68,8 @@ license=('GPL3')
   )
 makedepends=(
 #      'avisynthplus'
+      'amf-headers'
+      'clang'
       'ffnvcodec-headers'
       'git'
       'lib32-ladspa'
@@ -83,22 +84,19 @@ optdepends=(
 source=(
       "git+https://git.ffmpeg.org/ffmpeg.git#tag=n${pkgver}"
       "vmaf-model-path.patch"
-      "issue8760-fix-libsrt-1.4.1.patch"
 )
 validpgpkeys=('FCF986EA15E6E293A5644F10B4322F04D67658D8')
 sha256sums=(
       'SKIP'
       '8dff51f84a5f7460f8893f0514812f5d2bd668c3276ef7ab7713c99b71d7bd8d'
-      'd19626d3b803e2985b8114ab3f79c149420d5054491c282ca71f50f1934c579e'
 )
 
 prepare() {
   cd ${_pkgbasename}
 
   # Patching if needed
-
+  git cherry-pick -n 7c59e1b0f285cd7c7b35fcd71f49c5fd52cf9315 # fix build against libsrt 1.4.2
   patch -Np1 -i "${srcdir}"/vmaf-model-path.patch
-  patch -Np1 -i "${srcdir}"/issue8760-fix-libsrt-1.4.1.patch
 }
 
 build() {
@@ -114,6 +112,8 @@ build() {
     --disable-debug \
     --disable-static \
     --disable-stripping \
+    --enable-amf \
+    --enable-cuda-llvm \
     --enable-fontconfig \
     --enable-gmp \
     --enable-gnutls \
@@ -151,8 +151,9 @@ build() {
     --enable-libxvid \
     --enable-nvenc \
     --enable-nvdec \
-    --enable-omx \
     --enable-shared \
+    --enable-lto \
+    --disable-inline-asm \
     --enable-version3
 
 #    --enable-avisynth \ ## not available under 32 bit
