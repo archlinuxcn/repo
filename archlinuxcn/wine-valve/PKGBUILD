@@ -6,8 +6,9 @@
 # Conttributor: xiretza <xiretza+aur@gmail.com>
 # Contributor: heavysink <winstonwu91 at gmail>
 pkgname=wine-valve
-pkgver=5.13
-pkgrel=5
+pkgver=5.13.20210126
+_pkgver=5.13-20210126
+pkgrel=1
 pkgdesc='A compatibility layer for running Windows programs (Valve version)'
 arch=('i686' 'x86_64')
 url='https://github.com/ValveSoftware/wine.git'
@@ -82,7 +83,7 @@ optdepends=(
 )
 options=('staticlibs')
 install="$pkgname.install"
-source=("https://github.com/ValveSoftware/wine/archive/experimental-wine-${pkgver}-shmem-20201218c.tar.gz"
+source=("https://github.com/ValveSoftware/wine/archive/experimental-wine-${_pkgver}.tar.gz"
         '30-win32-aliases.conf'
         'wine-binfmt.conf')
 
@@ -103,7 +104,7 @@ fi
 
 
 prepare() {
-    cd "wine-experimental-wine-${pkgver}-shmem-20201218c/"
+    cd "wine-experimental-wine-${_pkgver}/"
     
     # fix path of opencl headers
     sed 's|OpenCL/opencl.h|CL/opencl.h|g' -i configure*
@@ -117,7 +118,7 @@ build() {
     # workaround for FS#55128
     # https://bugs.archlinux.org/task/55128
     # https://bugs.winehq.org/show_bug.cgi?id=43530
-    export CFLAGS="${CFLAGS/-fno-plt/}"
+    export CFLAGS="${CFLAGS/-fno-plt/} -fcommon"
     export LDFLAGS="${LDFLAGS/,-z,now/}"
     
     # build wine 64-bit
@@ -129,7 +130,7 @@ build() {
         mkdir "$pkgname"-64-build
         cd    "$pkgname"-64-build
         
-        ../"wine-experimental-wine-${pkgver}-shmem-20201218c"/configure \
+        CC="gcc -fPIC" CXX="g++ -fPIC" ../"wine-experimental-wine-${_pkgver}"/configure \
                           --prefix='/usr' \
                           --libdir='/usr/lib' \
                           --with-x \
@@ -151,7 +152,7 @@ build() {
     
     cd "${srcdir}/${pkgname}"-32-build
     
-    ../"wine-experimental-wine-${pkgver}-shmem-20201218c"/configure \
+    CC="gcc -fPIC" CXX="g++ -fPIC" ../"wine-experimental-wine-${_pkgver}"/configure \
                       --prefix='/usr' \
                       --with-x \
                       --with-gstreamer \
@@ -196,11 +197,11 @@ package() {
     install -D -m644 "${srcdir}/wine-binfmt.conf"   "${pkgdir}/usr/lib/binfmt.d/wine.conf"
 
     #wine list.h
-    for file in ${srcdir}/wine-experimental-wine-${pkgver}-shmem-20201218c/include/wine/*.h; do
+    for file in ${srcdir}/wine-experimental-wine-${_pkgver}/include/wine/*.h; do
         cp -n $file "${pkgdir}/usr/include/wine/"
     done
 }
 
-sha256sums=('42e060294458780ac84becbd9b6e85084afcee3abe22aa2296486ebc612be865'
+sha256sums=('40be833da8fa346d6b770a99eaaadafb43a9d832c5c216d3feebc6c1ffa74aa9'
             '9901a5ee619f24662b241672a7358364617227937d5f6d3126f70528ee5111e7'
             '6dfdefec305024ca11f35ad7536565f5551f09119dda2028f194aee8f77077a4')
