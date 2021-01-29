@@ -66,15 +66,13 @@ pkgname=('grub-theme-tela-color-1080p-git'
          'grub-theme-whitesur-whitesur-2k-git'
          'grub-theme-whitesur-whitesur-4k-git')
 pkgver=2021.01.26.r1.g86fc01c
-pkgrel=2
+pkgrel=3
 pkgdesc="Flat Design themes for Grub"
 arch=('any')
 url="https://github.com/vinceliuice/grub2-themes"
 license=('GPL3')
 depends=('grub')
 makedepends=('git')
-provides=("${pkgbase%-*}" "${_pkgbase}")
-conflicts=("${pkgbase%-*}" "${_pkgbase}")
 source=("git+${url}.git")
 sha256sums=('SKIP')
 
@@ -108,6 +106,8 @@ _package() {
 main() {
     for _pkgname in "${pkgname[@]}"; do
         eval "package_$_pkgname() {
+            provides=("${_pkgname%-*}")
+            conflicts=("${_pkgname%-*}")
             name="$(echo ${_pkgname%-*} | sed 's/grub-theme-//' | awk -F '-' '{print $1}')"
             icon="$(echo ${_pkgname%-*} | sed 's/grub-theme-//' | awk -F '-' '{print $2}')"
             resolution="$(echo ${_pkgname%-*} | sed 's/grub-theme-//' | awk -F '-' '{print $3}')"
