@@ -83,7 +83,7 @@ pkgver() {
 
 _package() {
     cd "${srcdir}"/"${_pkgbase}"/
-    install -Dm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/"${_pkgname}"/
+    install -Dm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/"${name}-${icon}-${resolution}-git"/
     install -Dm 644 common/* -t "${pkgdir}"/usr/share/grub/themes/"${name}-${icon}-${resolution}"/
     install -Dm 644 config/"theme-${resolution}.txt" "${pkgdir}"/usr/share/grub/themes/"${name}-${icon}-${resolution}"/theme.txt
     install -Dm 644 backgrounds/"${resolution}"/"background-${name}.jpg" "${pkgdir}"/usr/share/grub/themes/"${name}-${icon}-${resolution}"/background.jpg
