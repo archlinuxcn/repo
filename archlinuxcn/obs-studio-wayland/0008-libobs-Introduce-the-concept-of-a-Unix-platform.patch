@@ -1,0 +1,258 @@
+From 678cf335476375c701b6db87b3835f248f93d7dd Mon Sep 17 00:00:00 2001
+From: Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+Date: Fri, 6 Mar 2020 17:50:41 -0300
+Subject: [PATCH 08/25] libobs: Introduce the concept of a Unix platform
+
+This is a Unix-specific code. The only available platforms
+at this point are the X11/GLX and X11/EGL platforms.
+
+The concept of a platform display is also introduced. Again,
+the only display that is set right now is the X11 display.
+---
+ UI/obs-app.cpp            | 12 +++++++++
+ libobs/CMakeLists.txt     |  6 +++++
+ libobs/obs-nix-platform.c | 42 +++++++++++++++++++++++++++++++
+ libobs/obs-nix-platform.h | 52 +++++++++++++++++++++++++++++++++++++++
+ libobs/obs-nix-x11.c      |  5 ++--
+ libobs/obs-nix.c          | 15 +++++++++--
+ 6 files changed, 128 insertions(+), 4 deletions(-)
+ create mode 100644 libobs/obs-nix-platform.c
+ create mode 100644 libobs/obs-nix-platform.h
+
+diff --git a/UI/obs-app.cpp b/UI/obs-app.cpp
+index 408ba5e9..7afa2209 100644
+--- a/UI/obs-app.cpp
++++ b/UI/obs-app.cpp
+@@ -56,6 +56,11 @@
+ #include <pthread.h>
+ #endif
+ 
++#if !defined(_WIN32) && !defined(__APPLE__)
++#include <obs-nix-platform.h>
++#include <QX11Info>
++#endif
++
+ #include <iostream>
+ 
+ #include "ui-config.h"
+@@ -1369,6 +1374,13 @@ bool OBSApp::OBSInit()
+ 
+ 	qRegisterMetaType<VoidFunc>();
+ 
++#if !defined(_WIN32) && !defined(__APPLE__)
++	obs_set_nix_platform(OBS_NIX_PLATFORM_X11_GLX);
++	if (QApplication::platformName() == "xcb") {
++		obs_set_nix_platform_display(QX11Info::display());
++	}
++#endif
++
+ 	if (!StartupOBS(locale.c_str(), GetProfilerNameStore()))
+ 		return false;
+ 
+diff --git a/libobs/CMakeLists.txt b/libobs/CMakeLists.txt
+index e1765034..7a786350 100644
+--- a/libobs/CMakeLists.txt
++++ b/libobs/CMakeLists.txt
+@@ -181,13 +181,18 @@ elseif(APPLE)
+ elseif(UNIX)
+ 	set(libobs_PLATFORM_SOURCES
+ 		obs-nix.c
++		obs-nix-platform.c
+ 		obs-nix-x11.c
+ 		util/threading-posix.c
+ 		util/pipe-posix.c
+ 		util/platform-nix.c)
+ 
++	set(libobs_PLATFORM_HEADERS
++		obs-nix-platform.h)
++
+ 	if(NEEDS_SIMDE)
+ 		set(libobs_PLATFORM_HEADERS
++			${libobs_PLATFORM_HEADERS}
+ 			util/simde/check.h
+ 			util/simde/hedley.h
+ 			util/simde/mmx.h
+@@ -198,6 +203,7 @@ elseif(UNIX)
+ 			util/threading-posix.h)
+ 	else()
+ 		set(libobs_PLATFORM_HEADERS
++			${libobs_PLATFORM_HEADERS}
+ 			util/threading-posix.h)
+ 	endif()
+ 
+diff --git a/libobs/obs-nix-platform.c b/libobs/obs-nix-platform.c
+new file mode 100644
+index 00000000..e07a4d7b
+--- /dev/null
++++ b/libobs/obs-nix-platform.c
+@@ -0,0 +1,42 @@
++/******************************************************************************
++    Copyright (C) 2019 by Jason Francis <cycl0ps@tuta.io>
++
++    This program is free software: you can redistribute it and/or modify
++    it under the terms of the GNU General Public License as published by
++    the Free Software Foundation, either version 2 of the License, or
++    (at your option) any later version.
++
++    This program is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with this program.  If not, see <http://www.gnu.org/licenses/>.
++******************************************************************************/
++
++#include "obs-nix-platform.h"
++
++static enum obs_nix_platform_type obs_nix_platform = OBS_NIX_PLATFORM_X11_GLX;
++
++static void *obs_nix_platform_display = NULL;
++
++void obs_set_nix_platform(enum obs_nix_platform_type platform)
++{
++	obs_nix_platform = platform;
++}
++
++enum obs_nix_platform_type obs_get_nix_platform(void)
++{
++	return obs_nix_platform;
++}
++
++void obs_set_nix_platform_display(void *display)
++{
++	obs_nix_platform_display = display;
++}
++
++void *obs_get_nix_platform_display(void)
++{
++	return obs_nix_platform_display;
++}
+diff --git a/libobs/obs-nix-platform.h b/libobs/obs-nix-platform.h
+new file mode 100644
+index 00000000..4cf9d8cd
+--- /dev/null
++++ b/libobs/obs-nix-platform.h
+@@ -0,0 +1,52 @@
++/******************************************************************************
++    Copyright (C) 2019 by Jason Francis <cycl0ps@tuta.io>
++
++    This program is free software: you can redistribute it and/or modify
++    it under the terms of the GNU General Public License as published by
++    the Free Software Foundation, either version 2 of the License, or
++    (at your option) any later version.
++
++    This program is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with this program.  If not, see <http://www.gnu.org/licenses/>.
++******************************************************************************/
++
++#pragma once
++
++#include "util/c99defs.h"
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++enum obs_nix_platform_type {
++	OBS_NIX_PLATFORM_X11_GLX,
++	OBS_NIX_PLATFORM_X11_EGL,
++};
++
++/**
++ * Sets the Unix platform.
++ * @param platform The platform to select.
++ */
++EXPORT void obs_set_nix_platform(enum obs_nix_platform_type platform);
++/**
++ * Gets the host platform.
++ */
++EXPORT enum obs_nix_platform_type obs_get_nix_platform(void);
++/**
++ * Sets the host platform's display connection.
++ * @param display The host display connection.
++ */
++EXPORT void obs_set_nix_platform_display(void *display);
++/**
++ * Gets the host platform's display connection.
++ */
++EXPORT void *obs_get_nix_platform_display(void);
++
++#ifdef __cplusplus
++}
++#endif
+diff --git a/libobs/obs-nix-x11.c b/libobs/obs-nix-x11.c
+index 29aa3c7f..bb3bc0b7 100644
+--- a/libobs/obs-nix-x11.c
++++ b/libobs/obs-nix-x11.c
+@@ -18,6 +18,7 @@
+ ******************************************************************************/
+ 
+ #include "obs-internal.h"
++#include "obs-nix-platform.h"
+ #include "obs-nix-x11.h"
+ 
+ #include <xcb/xcb.h>
+@@ -32,7 +33,7 @@
+ 
+ void obs_nix_x11_log_info(void)
+ {
+-	Display *dpy = XOpenDisplay(NULL);
++	Display *dpy = obs_get_nix_platform_display();
+ 	if (!dpy) {
+ 		blog(LOG_INFO, "Unable to open X display");
+ 		return;
+@@ -827,7 +828,7 @@ static inline void registerMouseEvents(struct obs_core_hotkeys *hotkeys)
+ 
+ static bool obs_nix_x11_hotkeys_platform_init(struct obs_core_hotkeys *hotkeys)
+ {
+-	Display *display = XOpenDisplay(NULL);
++	Display *display = obs_get_nix_platform_display();
+ 	if (!display)
+ 		return false;
+ 
+diff --git a/libobs/obs-nix.c b/libobs/obs-nix.c
+index df1d99df..9c52279a 100644
+--- a/libobs/obs-nix.c
++++ b/libobs/obs-nix.c
+@@ -18,6 +18,7 @@
+ 
+ #include "obs-internal.h"
+ #include "obs-nix.h"
++#include "obs-nix-platform.h"
+ #include "obs-nix-x11.h"
+ #if defined(__FreeBSD__)
+ #define _GNU_SOURCE
+@@ -289,12 +290,22 @@ void log_system_info(void)
+ #if defined(__linux__)
+ 	log_distribution_info();
+ #endif
+-	obs_nix_x11_log_info();
++	switch (obs_get_nix_platform()) {
++	case OBS_NIX_PLATFORM_X11_GLX:
++	case OBS_NIX_PLATFORM_X11_EGL:
++		obs_nix_x11_log_info();
++		break;
++	}
+ }
+ 
+ bool obs_hotkeys_platform_init(struct obs_core_hotkeys *hotkeys)
+ {
+-	hotkeys_vtable = obs_nix_x11_get_hotkeys_vtable();
++	switch (obs_get_nix_platform()) {
++	case OBS_NIX_PLATFORM_X11_GLX:
++	case OBS_NIX_PLATFORM_X11_EGL:
++		hotkeys_vtable = obs_nix_x11_get_hotkeys_vtable();
++		break;
++	}
+ 
+ 	return hotkeys_vtable->init(hotkeys);
+ }
+-- 
+2.28.0
+

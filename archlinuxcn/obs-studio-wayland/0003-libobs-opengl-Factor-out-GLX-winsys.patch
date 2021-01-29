@@ -1,0 +1,403 @@
+From 6f1e483a579755577020c4b426faa865f40eab8f Mon Sep 17 00:00:00 2001
+From: Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+Date: Mon, 9 Mar 2020 16:46:37 -0300
+Subject: [PATCH 03/25] libobs-opengl: Factor out GLX winsys
+
+Move the GLX-related code to gl-x11-glx, and introduce gl-nix as
+a winsys-agnostic abstraction layer. gl-nix serves as the runtime
+selector of which winsys going to be used. Only the X11/GLX winsys
+is available now, but later commits will introduce the X11/EGL
+winsys as well.
+
+The gl-nix code was originally written by Jason Francis <cycl0ps@tuta.io>
+---
+ libobs-opengl/CMakeLists.txt |   1 +
+ libobs-opengl/gl-nix.c       | 107 +++++++++++++++++++++++++++++++++++
+ libobs-opengl/gl-nix.h       |  53 +++++++++++++++++
+ libobs-opengl/gl-x11-glx.c   |  59 +++++++++++++------
+ libobs-opengl/gl-x11-glx.h   |  22 +++++++
+ 5 files changed, 224 insertions(+), 18 deletions(-)
+ create mode 100644 libobs-opengl/gl-nix.c
+ create mode 100644 libobs-opengl/gl-nix.h
+ create mode 100644 libobs-opengl/gl-x11-glx.h
+
+diff --git a/libobs-opengl/CMakeLists.txt b/libobs-opengl/CMakeLists.txt
+index 35bb5c65..6a4bb97d 100644
+--- a/libobs-opengl/CMakeLists.txt
++++ b/libobs-opengl/CMakeLists.txt
+@@ -49,6 +49,7 @@ else() #This needs to change to be more specific to get ready for Wayland
+ 		${X11_XCB_LIBRARIES})
+ 
+ 	set(libobs-opengl_PLATFORM_SOURCES
++		gl-nix.c
+ 		gl-x11-glx.c)
+ endif()
+ 
+diff --git a/libobs-opengl/gl-nix.c b/libobs-opengl/gl-nix.c
+new file mode 100644
+index 00000000..574d4f77
+--- /dev/null
++++ b/libobs-opengl/gl-nix.c
+@@ -0,0 +1,107 @@
++/******************************************************************************
++    Copyright (C) 2019 by Jason Francis <cycl0ps@tuta.io>
++
++    This program is free software: you can redistribute it and/or modify
++    it under the terms of the GNU General Public License as published by
++    the Free Software Foundation, either version 2 of the License, or
++    (at your option) any later version.
++
++    This program is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with this program.  If not, see <http://www.gnu.org/licenses/>.
++******************************************************************************/
++
++#include "gl-nix.h"
++#include "gl-x11-glx.h"
++
++static const struct gl_winsys_vtable *gl_vtable = NULL;
++
++static void init_winsys(void)
++{
++	assert(gl_vtable == NULL);
++
++	gl_vtable = gl_x11_glx_get_winsys_vtable();
++
++	assert(gl_vtable != NULL);
++}
++
++extern struct gl_windowinfo *
++gl_windowinfo_create(const struct gs_init_data *info)
++{
++	return gl_vtable->windowinfo_create(info);
++}
++
++extern void gl_windowinfo_destroy(struct gl_windowinfo *info)
++{
++	gl_vtable->windowinfo_destroy(info);
++}
++
++extern struct gl_platform *gl_platform_create(gs_device_t *device,
++					      uint32_t adapter)
++{
++	init_winsys();
++
++	return gl_vtable->platform_create(device, adapter);
++}
++
++extern void gl_platform_destroy(struct gl_platform *plat)
++{
++	gl_vtable->platform_destroy(plat);
++
++	gl_vtable = NULL;
++}
++
++extern bool gl_platform_init_swapchain(struct gs_swap_chain *swap)
++{
++	return gl_vtable->platform_init_swapchain(swap);
++}
++
++extern void gl_platform_cleanup_swapchain(struct gs_swap_chain *swap)
++{
++	gl_vtable->platform_cleanup_swapchain(swap);
++}
++
++extern void device_enter_context(gs_device_t *device)
++{
++	gl_vtable->device_enter_context(device);
++}
++
++extern void device_leave_context(gs_device_t *device)
++{
++	gl_vtable->device_leave_context(device);
++}
++
++extern void *device_get_device_obj(gs_device_t *device)
++{
++	return gl_vtable->device_get_device_obj(device);
++}
++
++extern void gl_getclientsize(const struct gs_swap_chain *swap, uint32_t *width,
++			     uint32_t *height)
++{
++	gl_vtable->getclientsize(swap, width, height);
++}
++
++extern void gl_clear_context(gs_device_t *device)
++{
++	gl_vtable->clear_context(device);
++}
++
++extern void gl_update(gs_device_t *device)
++{
++	gl_vtable->update(device);
++}
++
++extern void device_load_swapchain(gs_device_t *device, gs_swapchain_t *swap)
++{
++	gl_vtable->device_load_swapchain(device, swap);
++}
++
++extern void device_present(gs_device_t *device)
++{
++	gl_vtable->device_present(device);
++}
+diff --git a/libobs-opengl/gl-nix.h b/libobs-opengl/gl-nix.h
+new file mode 100644
+index 00000000..209cc308
+--- /dev/null
++++ b/libobs-opengl/gl-nix.h
+@@ -0,0 +1,53 @@
++/******************************************************************************
++    Copyright (C) 2019 by Jason Francis <cycl0ps@tuta.io>
++
++    This program is free software: you can redistribute it and/or modify
++    it under the terms of the GNU General Public License as published by
++    the Free Software Foundation, either version 2 of the License, or
++    (at your option) any later version.
++
++    This program is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with this program.  If not, see <http://www.gnu.org/licenses/>.
++******************************************************************************/
++
++#pragma once
++
++#include "gl-subsystem.h"
++
++struct gl_winsys_vtable {
++	struct gl_windowinfo *(*windowinfo_create)(
++		const struct gs_init_data *info);
++	void (*windowinfo_destroy)(struct gl_windowinfo *info);
++
++	struct gl_platform *(*platform_create)(gs_device_t *device,
++					       uint32_t adapter);
++
++	void (*platform_destroy)(struct gl_platform *plat);
++
++	bool (*platform_init_swapchain)(struct gs_swap_chain *swap);
++
++	void (*platform_cleanup_swapchain)(struct gs_swap_chain *swap);
++
++	void (*device_enter_context)(gs_device_t *device);
++
++	void (*device_leave_context)(gs_device_t *device);
++
++	void *(*device_get_device_obj)(gs_device_t *device);
++
++	void (*getclientsize)(const struct gs_swap_chain *swap, uint32_t *width,
++			      uint32_t *height);
++
++	void (*clear_context)(gs_device_t *device);
++
++	void (*update)(gs_device_t *device);
++
++	void (*device_load_swapchain)(gs_device_t *device,
++				      gs_swapchain_t *swap);
++
++	void (*device_present)(gs_device_t *device);
++};
+diff --git a/libobs-opengl/gl-x11-glx.c b/libobs-opengl/gl-x11-glx.c
+index d04115b0..a562b564 100644
+--- a/libobs-opengl/gl-x11-glx.c
++++ b/libobs-opengl/gl-x11-glx.c
+@@ -36,7 +36,7 @@
+ 
+ #include <stdio.h>
+ 
+-#include "gl-subsystem.h"
++#include "gl-nix.h"
+ 
+ #include <glad/glad_glx.h>
+ 
+@@ -221,14 +221,14 @@ static void gl_context_destroy(struct gl_platform *plat)
+ 	bfree(plat);
+ }
+ 
+-extern struct gl_windowinfo *
+-gl_windowinfo_create(const struct gs_init_data *info)
++static struct gl_windowinfo *
++gl_x11_glx_windowinfo_create(const struct gs_init_data *info)
+ {
+ 	UNUSED_PARAMETER(info);
+ 	return bmalloc(sizeof(struct gl_windowinfo));
+ }
+ 
+-extern void gl_windowinfo_destroy(struct gl_windowinfo *info)
++static void gl_x11_glx_windowinfo_destroy(struct gl_windowinfo *info)
+ {
+ 	bfree(info);
+ }
+@@ -294,8 +294,8 @@ static int x_error_handler(Display *display, XErrorEvent *error)
+ 	return 0;
+ }
+ 
+-extern struct gl_platform *gl_platform_create(gs_device_t *device,
+-					      uint32_t adapter)
++static struct gl_platform *gl_x11_glx_platform_create(gs_device_t *device,
++						      uint32_t adapter)
+ {
+ 	/* There's some trickery here... we're mixing libX11, xcb, and GLX
+ 	   For an explanation see here: http://xcb.freedesktop.org/MixingCalls/
+@@ -346,7 +346,7 @@ success:
+ 	return plat;
+ }
+ 
+-extern void gl_platform_destroy(struct gl_platform *plat)
++static void gl_x11_glx_platform_destroy(struct gl_platform *plat)
+ {
+ 	if (!plat) /* In what case would platform be invalid here? */
+ 		return;
+@@ -354,7 +354,7 @@ extern void gl_platform_destroy(struct gl_platform *plat)
+ 	gl_context_destroy(plat);
+ }
+ 
+-extern bool gl_platform_init_swapchain(struct gs_swap_chain *swap)
++static bool gl_x11_glx_platform_init_swapchain(struct gs_swap_chain *swap)
+ {
+ 	Display *display = swap->device->plat->display;
+ 	xcb_connection_t *xcb_conn = XGetXCBConnection(display);
+@@ -429,13 +429,13 @@ success:
+ 	return status;
+ }
+ 
+-extern void gl_platform_cleanup_swapchain(struct gs_swap_chain *swap)
++static void gl_x11_glx_platform_cleanup_swapchain(struct gs_swap_chain *swap)
+ {
+ 	UNUSED_PARAMETER(swap);
+ 	/* Really nothing to clean up? */
+ }
+ 
+-extern void device_enter_context(gs_device_t *device)
++static void gl_x11_glx_device_enter_context(gs_device_t *device)
+ {
+ 	GLXContext context = device->plat->context;
+ 	Display *display = device->plat->display;
+@@ -453,7 +453,7 @@ extern void device_enter_context(gs_device_t *device)
+ 	}
+ }
+ 
+-extern void device_leave_context(gs_device_t *device)
++static void gl_x11_glx_device_leave_context(gs_device_t *device)
+ {
+ 	Display *display = device->plat->display;
+ 
+@@ -462,13 +462,13 @@ extern void device_leave_context(gs_device_t *device)
+ 	}
+ }
+ 
+-void *device_get_device_obj(gs_device_t *device)
++static void *gl_x11_glx_device_get_device_obj(gs_device_t *device)
+ {
+ 	return device->plat->context;
+ }
+ 
+-extern void gl_getclientsize(const struct gs_swap_chain *swap, uint32_t *width,
+-			     uint32_t *height)
++static void gl_x11_glx_getclientsize(const struct gs_swap_chain *swap,
++				     uint32_t *width, uint32_t *height)
+ {
+ 	xcb_connection_t *xcb_conn =
+ 		XGetXCBConnection(swap->device->plat->display);
+@@ -484,7 +484,7 @@ extern void gl_getclientsize(const struct gs_swap_chain *swap, uint32_t *width,
+ 	free(geometry);
+ }
+ 
+-extern void gl_clear_context(gs_device_t *device)
++static void gl_x11_glx_clear_context(gs_device_t *device)
+ {
+ 	Display *display = device->plat->display;
+ 
+@@ -493,7 +493,7 @@ extern void gl_clear_context(gs_device_t *device)
+ 	}
+ }
+ 
+-extern void gl_update(gs_device_t *device)
++static void gl_x11_glx_update(gs_device_t *device)
+ {
+ 	Display *display = device->plat->display;
+ 	xcb_window_t window = device->cur_swap->wi->window;
+@@ -506,7 +506,8 @@ extern void gl_update(gs_device_t *device)
+ 			     values);
+ }
+ 
+-extern void device_load_swapchain(gs_device_t *device, gs_swapchain_t *swap)
++static void gl_x11_glx_device_load_swapchain(gs_device_t *device,
++					     gs_swapchain_t *swap)
+ {
+ 	if (device->cur_swap == swap)
+ 		return;
+@@ -536,7 +537,7 @@ enum swap_type {
+ 	SWAP_TYPE_SGI,
+ };
+ 
+-extern void device_present(gs_device_t *device)
++static void gl_x11_glx_device_present(gs_device_t *device)
+ {
+ 	static bool initialized = false;
+ 	static enum swap_type swap_type = SWAP_TYPE_NORMAL;
+@@ -577,3 +578,25 @@ extern void device_present(gs_device_t *device)
+ 
+ 	glXSwapBuffers(display, window);
+ }
++
++static const struct gl_winsys_vtable glx_winsys_vtable = {
++	.windowinfo_create = gl_x11_glx_windowinfo_create,
++	.windowinfo_destroy = gl_x11_glx_windowinfo_destroy,
++	.platform_create = gl_x11_glx_platform_create,
++	.platform_destroy = gl_x11_glx_platform_destroy,
++	.platform_init_swapchain = gl_x11_glx_platform_init_swapchain,
++	.platform_cleanup_swapchain = gl_x11_glx_platform_cleanup_swapchain,
++	.device_enter_context = gl_x11_glx_device_enter_context,
++	.device_leave_context = gl_x11_glx_device_leave_context,
++	.device_get_device_obj = gl_x11_glx_device_get_device_obj,
++	.getclientsize = gl_x11_glx_getclientsize,
++	.clear_context = gl_x11_glx_clear_context,
++	.update = gl_x11_glx_update,
++	.device_load_swapchain = gl_x11_glx_device_load_swapchain,
++	.device_present = gl_x11_glx_device_present,
++};
++
++const struct gl_winsys_vtable *gl_x11_glx_get_winsys_vtable(void)
++{
++	return &glx_winsys_vtable;
++}
+diff --git a/libobs-opengl/gl-x11-glx.h b/libobs-opengl/gl-x11-glx.h
+new file mode 100644
+index 00000000..bdedf55c
+--- /dev/null
++++ b/libobs-opengl/gl-x11-glx.h
+@@ -0,0 +1,22 @@
++/******************************************************************************
++    Copyright (C) 2014 by Zachary Lund <admin@computerquip.com>
++
++    This program is free software: you can redistribute it and/or modify
++    it under the terms of the GNU General Public License as published by
++    the Free Software Foundation, either version 2 of the License, or
++    (at your option) any later version.
++
++    This program is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with this program.  If not, see <http://www.gnu.org/licenses/>.
++******************************************************************************/
++
++#pragma once
++
++#include "gl-nix.h"
++
++const struct gl_winsys_vtable *gl_x11_glx_get_winsys_vtable(void);
+-- 
+2.28.0
+

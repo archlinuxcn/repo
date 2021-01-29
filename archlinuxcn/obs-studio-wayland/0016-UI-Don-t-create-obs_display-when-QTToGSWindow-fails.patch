@@ -1,0 +1,76 @@
+From 1e1f2a08d604ef81bf73584e89544b6002a8923b Mon Sep 17 00:00:00 2001
+From: Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+Date: Wed, 19 Aug 2020 10:11:08 -0300
+Subject: [PATCH 16/25] UI: Don't create obs_display when QTToGSWindow fails
+
+Right after showing the OBSQTDisplay widget, it may happen that a
+wl_surface is not yet created and attached to the window. When this
+happens, creating the OBS display results in a crash.
+
+Make QTToGSWindow return a boolean, indicating success or failure, and
+don't create the OBS display on failure.
+---
+ UI/qt-display.cpp  | 3 ++-
+ UI/qt-wrappers.cpp | 6 +++++-
+ UI/qt-wrappers.hpp | 2 +-
+ 3 files changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/UI/qt-display.cpp b/UI/qt-display.cpp
+index fc83e0e0..c00719ce 100644
+--- a/UI/qt-display.cpp
++++ b/UI/qt-display.cpp
+@@ -100,7 +100,8 @@ void OBSQTDisplay::CreateDisplay()
+ 	info.format = GS_BGRA;
+ 	info.zsformat = GS_ZS_NONE;
+ 
+-	QTToGSWindow(windowHandle(), info.window);
++	if (!QTToGSWindow(windowHandle(), info.window))
++		return;
+ 
+ 	display = obs_display_create(&info, backgroundColor);
+ 
+diff --git a/UI/qt-wrappers.cpp b/UI/qt-wrappers.cpp
+index 040d1bb6..446576f3 100644
+--- a/UI/qt-wrappers.cpp
++++ b/UI/qt-wrappers.cpp
+@@ -111,8 +111,10 @@ void OBSMessageBox::critical(QWidget *parent, const QString &title,
+ 	mb.exec();
+ }
+ 
+-void QTToGSWindow(QWindow *window, gs_window &gswindow)
++bool QTToGSWindow(QWindow *window, gs_window &gswindow)
+ {
++	bool success = true;
++
+ #ifdef _WIN32
+ 	gswindow.hwnd = (HWND)window->winId();
+ #elif __APPLE__
+@@ -130,10 +132,12 @@ void QTToGSWindow(QWindow *window, gs_window &gswindow)
+ 			QGuiApplication::platformNativeInterface();
+ 		gswindow.display =
+ 			native->nativeResourceForWindow("surface", window);
++		success = gswindow.display != nullptr;
+ 		break;
+ #endif
+ 	}
+ #endif
++	return success;
+ }
+ 
+ uint32_t TranslateQtKeyboardEventModifiers(Qt::KeyboardModifiers mods)
+diff --git a/UI/qt-wrappers.hpp b/UI/qt-wrappers.hpp
+index 51c4f937..604e67e0 100644
+--- a/UI/qt-wrappers.hpp
++++ b/UI/qt-wrappers.hpp
+@@ -56,7 +56,7 @@ public:
+ 
+ void OBSErrorBox(QWidget *parent, const char *msg, ...);
+ 
+-void QTToGSWindow(QWindow *window, gs_window &gswindow);
++bool QTToGSWindow(QWindow *window, gs_window &gswindow);
+ 
+ uint32_t TranslateQtKeyboardEventModifiers(Qt::KeyboardModifiers mods);
+ 
+-- 
+2.28.0
+

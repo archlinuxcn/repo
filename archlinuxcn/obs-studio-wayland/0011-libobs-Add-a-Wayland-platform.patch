@@ -1,0 +1,422 @@
+From eb2b38d24454b1fdd21cb8184a224cb9fa0579d3 Mon Sep 17 00:00:00 2001
+From: Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+Date: Fri, 6 Mar 2020 18:53:42 -0300
+Subject: [PATCH 11/25] libobs: Add a Wayland platform
+
+Introduce the OBS_NIX_PLATFORM_WAYLAND enum value, and try to detect
+it when OBS Studio runs by looking into the platform name.
+---
+ CMakeLists.txt                  |  2 +
+ UI/CMakeLists.txt               |  5 ++
+ UI/obs-app.cpp                  | 17 +++++++
+ cmake/Modules/FindWayland.cmake | 78 +++++++++++++++++++++++++++++
+ libobs-opengl/CMakeLists.txt    |  2 +-
+ libobs-opengl/gl-nix.c          |  5 ++
+ libobs/CMakeLists.txt           | 15 ++++++
+ libobs/obs-nix-platform.h       |  4 ++
+ libobs/obs-nix-wayland.c        | 88 +++++++++++++++++++++++++++++++++
+ libobs/obs-nix-wayland.h        | 24 +++++++++
+ libobs/obs-nix.c                | 14 ++++++
+ libobs/obsconfig.h.in           |  2 +
+ 12 files changed, 255 insertions(+), 1 deletion(-)
+ create mode 100644 cmake/Modules/FindWayland.cmake
+ create mode 100644 libobs/obs-nix-wayland.c
+ create mode 100644 libobs/obs-nix-wayland.h
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5bdfe21f..7828c65a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -205,6 +205,8 @@ if(APPLE)
+ 	list(APPEND CMAKE_INSTALL_RPATH "@loader_path/" "@executable_path/")
+ elseif(UNIX)
+ 	option(USE_XDG "Utilize XDG Base Directory Specification" ON)
++	option(ENABLE_WAYLAND "Build support for Wayland" ON)
++
+ 	if(USE_XDG)
+ 		add_definitions(-DUSE_XDG)
+ 	endif()
+diff --git a/UI/CMakeLists.txt b/UI/CMakeLists.txt
+index df4d2645..ae689c95 100644
+--- a/UI/CMakeLists.txt
++++ b/UI/CMakeLists.txt
+@@ -408,6 +408,11 @@ if (APPLE)
+ endif()
+ set_target_properties(obs PROPERTIES FOLDER "frontend")
+ 
++if (ENABLE_WAYLAND)
++	find_package(Qt5Gui REQUIRED)
++	include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
++endif()
++
+ define_graphic_modules(obs)
+ 
+ install_obs_core(obs)
+diff --git a/UI/obs-app.cpp b/UI/obs-app.cpp
+index 2a8de8d9..ce350f06 100644
+--- a/UI/obs-app.cpp
++++ b/UI/obs-app.cpp
+@@ -59,6 +59,11 @@
+ #if !defined(_WIN32) && !defined(__APPLE__)
+ #include <obs-nix-platform.h>
+ #include <QX11Info>
++
++#ifdef ENABLE_WAYLAND
++#include <qpa/qplatformnativeinterface.h>
++#endif
++
+ #endif
+ 
+ #include <iostream>
+@@ -1383,6 +1388,18 @@ bool OBSApp::OBSInit()
+ 		}
+ 		obs_set_nix_platform_display(QX11Info::display());
+ 	}
++
++#ifdef ENABLE_WAYLAND
++	if (QApplication::platformName().contains("wayland")) {
++		obs_set_nix_platform(OBS_NIX_PLATFORM_WAYLAND);
++		QPlatformNativeInterface *native =
++			QGuiApplication::platformNativeInterface();
++		obs_set_nix_platform_display(
++			native->nativeResourceForIntegration("display"));
++
++		blog(LOG_INFO, "Platform: Wayland");
++	}
++#endif
+ #endif
+ 
+ 	if (!StartupOBS(locale.c_str(), GetProfilerNameStore()))
+diff --git a/cmake/Modules/FindWayland.cmake b/cmake/Modules/FindWayland.cmake
+new file mode 100644
+index 00000000..377f0545
+--- /dev/null
++++ b/cmake/Modules/FindWayland.cmake
+@@ -0,0 +1,78 @@
++# Try to find Wayland on a Unix system
++#
++# This will define:
++#
++#   WAYLAND_FOUND        - True if Wayland is found
++#   WAYLAND_LIBRARIES    - Link these to use Wayland
++#   WAYLAND_INCLUDE_DIRS - Include directory for Wayland
++#   WAYLAND_DEFINITIONS  - Compiler flags for using Wayland
++#
++# In addition the following more fine grained variables will be defined:
++#
++#   Wayland_Client_FOUND  WAYLAND_CLIENT_INCLUDE_DIRS  WAYLAND_CLIENT_LIBRARIES
++#   Wayland_Server_FOUND  WAYLAND_SERVER_INCLUDE_DIRS  WAYLAND_SERVER_LIBRARIES
++#   Wayland_EGL_FOUND     WAYLAND_EGL_INCLUDE_DIRS     WAYLAND_EGL_LIBRARIES
++#   Wayland_Cursor_FOUND  WAYLAND_CURSOR_INCLUDE_DIRS  WAYLAND_CURSOR_LIBRARIES
++#
++# Copyright (c) 2013 Martin Gräßlin <mgraesslin@kde.org>
++#               2020 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
++#
++# Redistribution and use is allowed according to the terms of the BSD license.
++# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
++
++IF (NOT WIN32)
++
++  # Use pkg-config to get the directories and then use these values
++  # in the find_path() and find_library() calls
++  find_package(PkgConfig)
++  PKG_CHECK_MODULES(PKG_WAYLAND QUIET wayland-client wayland-server wayland-egl wayland-cursor)
++
++  set(WAYLAND_DEFINITIONS ${PKG_WAYLAND_CFLAGS})
++
++  find_path(WAYLAND_CLIENT_INCLUDE_DIRS NAMES wayland-client.h HINTS ${PKG_WAYLAND_INCLUDE_DIRS})
++  find_library(WAYLAND_CLIENT_LIBRARIES NAMES wayland-client   HINTS ${PKG_WAYLAND_LIBRARY_DIRS})
++  if(WAYLAND_CLIENT_INCLUDE_DIRS AND WAYLAND_CLIENT_LIBRARIES)
++    set(Wayland_Client_FOUND TRUE)
++  else()
++    set(Wayland_Client_FOUND FALSE)
++  endif()
++  mark_as_advanced(WAYLAND_CLIENT_INCLUDE_DIRS WAYLAND_CLIENT_LIBRARIES)
++
++  find_path(WAYLAND_CURSOR_INCLUDE_DIRS NAMES wayland-cursor.h HINTS ${PKG_WAYLAND_INCLUDE_DIRS})
++  find_library(WAYLAND_CURSOR_LIBRARIES NAMES wayland-cursor   HINTS ${PKG_WAYLAND_LIBRARY_DIRS})
++  if(WAYLAND_CURSOR_INCLUDE_DIRS AND WAYLAND_CURSOR_LIBRARIES)
++    set(Wayland_Cursor_FOUND TRUE)
++  else()
++    set(Wayland_Cursor_FOUND FALSE)
++  endif()
++  mark_as_advanced(WAYLAND_CURSOR_INCLUDE_DIRS WAYLAND_CURSOR_LIBRARIES)
++
++  find_path(WAYLAND_EGL_INCLUDE_DIRS    NAMES wayland-egl.h    HINTS ${PKG_WAYLAND_INCLUDE_DIRS})
++  find_library(WAYLAND_EGL_LIBRARIES    NAMES wayland-egl      HINTS ${PKG_WAYLAND_LIBRARY_DIRS})
++  if(WAYLAND_EGL_INCLUDE_DIRS AND WAYLAND_EGL_LIBRARIES)
++    set(Wayland_EGL_FOUND TRUE)
++  else()
++    set(Wayland_EGL_FOUND FALSE)
++  endif()
++  mark_as_advanced(WAYLAND_EGL_INCLUDE_DIRS WAYLAND_EGL_LIBRARIES)
++
++  find_path(WAYLAND_SERVER_INCLUDE_DIRS NAMES wayland-server.h HINTS ${PKG_WAYLAND_INCLUDE_DIRS})
++  find_library(WAYLAND_SERVER_LIBRARIES NAMES wayland-server   HINTS ${PKG_WAYLAND_LIBRARY_DIRS})
++  if(WAYLAND_SERVER_INCLUDE_DIRS AND WAYLAND_SERVER_LIBRARIES)
++    set(Wayland_Server_FOUND TRUE)
++  else()
++    set(Wayland_Server_FOUND FALSE)
++  endif()
++  mark_as_advanced(WAYLAND_SERVER_INCLUDE_DIRS WAYLAND_SERVER_LIBRARIES)
++
++  set(WAYLAND_INCLUDE_DIRS ${WAYLAND_CLIENT_INCLUDE_DIRS} ${WAYLAND_SERVER_INCLUDE_DIRS} ${WAYLAND_EGL_INCLUDE_DIRS} ${WAYLAND_CURSOR_INCLUDE_DIRS})
++  set(WAYLAND_LIBRARIES ${WAYLAND_CLIENT_LIBRARIES} ${WAYLAND_SERVER_LIBRARIES} ${WAYLAND_EGL_LIBRARIES} ${WAYLAND_CURSOR_LIBRARIES})
++  mark_as_advanced(WAYLAND_INCLUDE_DIRS WAYLAND_LIBRARIES)
++
++  list(REMOVE_DUPLICATES WAYLAND_INCLUDE_DIRS)
++
++  include(FindPackageHandleStandardArgs)
++
++  find_package_handle_standard_args(Wayland REQUIRED_VARS WAYLAND_LIBRARIES WAYLAND_INCLUDE_DIRS HANDLE_COMPONENTS)
++
++ENDIF ()
+diff --git a/libobs-opengl/CMakeLists.txt b/libobs-opengl/CMakeLists.txt
+index 973c5da3..08e06f0d 100644
+--- a/libobs-opengl/CMakeLists.txt
++++ b/libobs-opengl/CMakeLists.txt
+@@ -32,7 +32,7 @@ elseif(APPLE)
+ 		${COCOA}
+ 		${IOSURF}
+ 		${OPENGL_gl_LIBRARY})
+-else() #This needs to change to be more specific to get ready for Wayland
++else()
+ 	find_package(XCB COMPONENTS XCB REQUIRED)
+ 	find_package(X11_XCB REQUIRED)
+ 
+diff --git a/libobs-opengl/gl-nix.c b/libobs-opengl/gl-nix.c
+index 9ed3d198..581e16a4 100644
+--- a/libobs-opengl/gl-nix.c
++++ b/libobs-opengl/gl-nix.c
+@@ -32,6 +32,11 @@ static void init_winsys(void)
+ 	case OBS_NIX_PLATFORM_X11_EGL:
+ 		gl_vtable = gl_x11_egl_get_winsys_vtable();
+ 		break;
++#ifdef ENABLE_WAYLAND
++	case OBS_NIX_PLATFORM_WAYLAND:
++		blog(LOG_ERROR, "EGL/Wayland not implemented yet");
++		break;
++#endif
+ 	}
+ 
+ 	assert(gl_vtable != NULL);
+diff --git a/libobs/CMakeLists.txt b/libobs/CMakeLists.txt
+index 7a786350..860ad1c8 100644
+--- a/libobs/CMakeLists.txt
++++ b/libobs/CMakeLists.txt
+@@ -190,6 +190,21 @@ elseif(UNIX)
+ 	set(libobs_PLATFORM_HEADERS
+ 		obs-nix-platform.h)
+ 
++	if(ENABLE_WAYLAND)
++		find_package(Wayland COMPONENTS Client REQUIRED)
++
++		set(libobs_PLATFORM_SOURCES ${libobs_PLATFORM_SOURCES}
++			obs-nix-wayland.c)
++
++		include_directories(
++			${WAYLAND_CLIENT_INCLUDE_DIR})
++		add_definitions(
++			${WAYLAND_DEFINITIONS})
++		set(libobs_PLATFORM_DEPS
++			${libobs_PLATFORM_DEPS}
++			${WAYLAND_CLIENT_LIBRARIES})
++	endif()
++
+ 	if(NEEDS_SIMDE)
+ 		set(libobs_PLATFORM_HEADERS
+ 			${libobs_PLATFORM_HEADERS}
+diff --git a/libobs/obs-nix-platform.h b/libobs/obs-nix-platform.h
+index 4cf9d8cd..cef700d7 100644
+--- a/libobs/obs-nix-platform.h
++++ b/libobs/obs-nix-platform.h
+@@ -26,6 +26,10 @@ extern "C" {
+ enum obs_nix_platform_type {
+ 	OBS_NIX_PLATFORM_X11_GLX,
+ 	OBS_NIX_PLATFORM_X11_EGL,
++#ifdef ENABLE_WAYLAND
++	OBS_NIX_PLATFORM_WAYLAND,
++#endif
++
+ };
+ 
+ /**
+diff --git a/libobs/obs-nix-wayland.c b/libobs/obs-nix-wayland.c
+new file mode 100644
+index 00000000..b242017f
+--- /dev/null
++++ b/libobs/obs-nix-wayland.c
+@@ -0,0 +1,88 @@
++/******************************************************************************
++    Copyright (C) 2019 by Jason Francis <cycl0ps@tuta.io>
++
++    This program is free software: you can redistribute it and/or modify
++    it under the terms of the GNU General Public License as published by
++    the Free Software Foundation, either version 2 of the License, or
++    (at your option) any later version.
++
++    This program is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with this program.  If not, see <http://www.gnu.org/licenses/>.
++******************************************************************************/
++
++#include "obs-internal.h"
++#include "obs-nix-platform.h"
++#include "obs-nix-wayland.h"
++
++#include <wayland-client.h>
++
++void obs_nix_wayland_log_info(void)
++{
++	struct wl_display *display = obs_get_nix_platform_display();
++	if (display == NULL) {
++		blog(LOG_INFO, "Unable to connect to Wayland server");
++		return;
++	}
++	//TODO: query some information about the wayland server if possible
++	blog(LOG_INFO, "Connected to Wayland server");
++}
++
++static bool
++obs_nix_wayland_hotkeys_platform_init(struct obs_core_hotkeys *hotkeys)
++{
++	UNUSED_PARAMETER(hotkeys);
++	return true;
++}
++
++static void
++obs_nix_wayland_hotkeys_platform_free(struct obs_core_hotkeys *hotkeys)
++{
++	UNUSED_PARAMETER(hotkeys);
++}
++
++static bool
++obs_nix_wayland_hotkeys_platform_is_pressed(obs_hotkeys_platform_t *context,
++					    obs_key_t key)
++{
++	UNUSED_PARAMETER(context);
++	UNUSED_PARAMETER(key);
++	return false;
++}
++
++static void obs_nix_wayland_key_to_str(obs_key_t key, struct dstr *dstr)
++{
++	UNUSED_PARAMETER(key);
++	UNUSED_PARAMETER(dstr);
++}
++
++static obs_key_t obs_nix_wayland_key_from_virtual_key(int sym)
++{
++	UNUSED_PARAMETER(sym);
++	return OBS_KEY_NONE;
++}
++
++static int obs_nix_wayland_key_to_virtual_key(obs_key_t key)
++{
++	UNUSED_PARAMETER(key);
++	return 0;
++}
++
++static const struct obs_nix_hotkeys_vtable wayland_hotkeys_vtable = {
++	.init = obs_nix_wayland_hotkeys_platform_init,
++	.free = obs_nix_wayland_hotkeys_platform_free,
++	.is_pressed = obs_nix_wayland_hotkeys_platform_is_pressed,
++	.key_to_str = obs_nix_wayland_key_to_str,
++	.key_from_virtual_key = obs_nix_wayland_key_from_virtual_key,
++	.key_to_virtual_key = obs_nix_wayland_key_to_virtual_key,
++
++};
++
++const struct obs_nix_hotkeys_vtable *obs_nix_wayland_get_hotkeys_vtable(void)
++{
++	return &wayland_hotkeys_vtable;
++}
+diff --git a/libobs/obs-nix-wayland.h b/libobs/obs-nix-wayland.h
+new file mode 100644
+index 00000000..d44720c5
+--- /dev/null
++++ b/libobs/obs-nix-wayland.h
+@@ -0,0 +1,24 @@
++/******************************************************************************
++    Copyright (C) 2019 by Jason Francis <cycl0ps@tuta.io>
++
++    This program is free software: you can redistribute it and/or modify
++    it under the terms of the GNU General Public License as published by
++    the Free Software Foundation, either version 2 of the License, or
++    (at your option) any later version.
++
++    This program is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with this program.  If not, see <http://www.gnu.org/licenses/>.
++******************************************************************************/
++
++#pragma once
++
++#include "obs-nix.h"
++
++void obs_nix_wayland_log_info(void);
++
++const struct obs_nix_hotkeys_vtable *obs_nix_wayland_get_hotkeys_vtable(void);
+diff --git a/libobs/obs-nix.c b/libobs/obs-nix.c
+index 9c52279a..ec7f8e25 100644
+--- a/libobs/obs-nix.c
++++ b/libobs/obs-nix.c
+@@ -20,6 +20,11 @@
+ #include "obs-nix.h"
+ #include "obs-nix-platform.h"
+ #include "obs-nix-x11.h"
++
++#ifdef ENABLE_WAYLAND
++#include "obs-nix-wayland.h"
++#endif
++
+ #if defined(__FreeBSD__)
+ #define _GNU_SOURCE
+ #endif
+@@ -295,6 +300,10 @@ void log_system_info(void)
+ 	case OBS_NIX_PLATFORM_X11_EGL:
+ 		obs_nix_x11_log_info();
+ 		break;
++#ifdef ENABLE_WAYLAND
++	case OBS_NIX_PLATFORM_WAYLAND:
++		break;
++#endif
+ 	}
+ }
+ 
+@@ -305,6 +314,11 @@ bool obs_hotkeys_platform_init(struct obs_core_hotkeys *hotkeys)
+ 	case OBS_NIX_PLATFORM_X11_EGL:
+ 		hotkeys_vtable = obs_nix_x11_get_hotkeys_vtable();
+ 		break;
++#ifdef ENABLE_WAYLAND
++	case OBS_NIX_PLATFORM_WAYLAND:
++		hotkeys_vtable = obs_nix_wayland_get_hotkeys_vtable();
++		break;
++#endif
+ 	}
+ 
+ 	return hotkeys_vtable->init(hotkeys);
+diff --git a/libobs/obsconfig.h.in b/libobs/obsconfig.h.in
+index 1a09ebea..82d2e3af 100644
+--- a/libobs/obsconfig.h.in
++++ b/libobs/obsconfig.h.in
+@@ -24,6 +24,8 @@
+ #define LIBOBS_IMAGEMAGICK_DIR_STYLE_7GE 7
+ #define LIBOBS_IMAGEMAGICK_DIR_STYLE @LIBOBS_IMAGEMAGICK_DIR_STYLE@
+ 
++#cmakedefine ENABLE_WAYLAND
++
+ /* NOTE: Release candidate version numbers internally are always the previous
+  * main release number!  For example, if the current public release is 21.0 and
+  * the build is 22.0 release candidate 1, internally the build number (defined
+-- 
+2.28.0
+

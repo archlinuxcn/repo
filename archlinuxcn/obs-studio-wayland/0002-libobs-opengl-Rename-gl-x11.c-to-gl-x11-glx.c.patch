@@ -1,0 +1,35 @@
+From 79bd851cc2f7abec7524a55d60c75709ba61f932 Mon Sep 17 00:00:00 2001
+From: Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+Date: Mon, 9 Mar 2020 13:19:31 -0300
+Subject: [PATCH 02/25] libobs-opengl: Rename gl-x11.c to gl-x11-glx.c
+
+This is in preparation for the future abstraction layer (gl-x11-*)
+and also to match the actual name of the windowing system. When
+running under X11, we can glue OpenGL through GLX or EGL, so the
+new file name matches that now.
+---
+ libobs-opengl/CMakeLists.txt             | 2 +-
+ libobs-opengl/{gl-x11.c => gl-x11-glx.c} | 0
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename libobs-opengl/{gl-x11.c => gl-x11-glx.c} (100%)
+
+diff --git a/libobs-opengl/CMakeLists.txt b/libobs-opengl/CMakeLists.txt
+index c2fa4fd6..35bb5c65 100644
+--- a/libobs-opengl/CMakeLists.txt
++++ b/libobs-opengl/CMakeLists.txt
+@@ -49,7 +49,7 @@ else() #This needs to change to be more specific to get ready for Wayland
+ 		${X11_XCB_LIBRARIES})
+ 
+ 	set(libobs-opengl_PLATFORM_SOURCES
+-		gl-x11.c)
++		gl-x11-glx.c)
+ endif()
+ 
+ set(libobs-opengl_SOURCES
+diff --git a/libobs-opengl/gl-x11.c b/libobs-opengl/gl-x11-glx.c
+similarity index 100%
+rename from libobs-opengl/gl-x11.c
+rename to libobs-opengl/gl-x11-glx.c
+-- 
+2.28.0
+
