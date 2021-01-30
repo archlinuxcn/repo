@@ -31,7 +31,7 @@ _depends=(
     'desktop-file-utils'
     'libgphoto2'
     'faudio'                'lib32-faudio'
-    'vkd3d'
+    'vkd3d'                 'lib32-vkd3d'
 )
 makedepends=('autoconf' 'ncurses' 'bison' 'perl' 'fontforge' 'flex'
     'gcc>=4.5.0-2'
@@ -118,7 +118,7 @@ build() {
     # workaround for FS#55128
     # https://bugs.archlinux.org/task/55128
     # https://bugs.winehq.org/show_bug.cgi?id=43530
-    export CFLAGS="${CFLAGS/-fno-plt/} -fcommon"
+    export CFLAGS="${CFLAGS/-fno-plt/}"
     export LDFLAGS="${LDFLAGS/,-z,now/}"
     
     # build wine 64-bit
@@ -130,14 +130,14 @@ build() {
         mkdir "$pkgname"-64-build
         cd    "$pkgname"-64-build
         
-        CC="gcc -fPIC" CXX="g++ -fPIC" ../"wine-experimental-wine-${_pkgver}"/configure \
+         ../"wine-experimental-wine-${_pkgver}"/configure \
                           --prefix='/usr' \
                           --libdir='/usr/lib' \
                           --with-x \
                           --with-gstreamer \
                           --enable-win64 \
 			  --disable-tests
-        make
+        make -j2
         
         local _wine32opts=(
                     '--libdir=/usr/lib32'
@@ -152,13 +152,13 @@ build() {
     
     cd "${srcdir}/${pkgname}"-32-build
     
-    CC="gcc -fPIC" CXX="g++ -fPIC" ../"wine-experimental-wine-${_pkgver}"/configure \
+     ../"wine-experimental-wine-${_pkgver}"/configure \
                       --prefix='/usr' \
                       --with-x \
                       --with-gstreamer \
 		      --disable-tests \
                       ${_wine32opts[@]}
-    make
+    make -j2
 }
 
 package() {
