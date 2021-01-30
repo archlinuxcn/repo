@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
-BRAVE_USE_FLASH_IF_AVAILABLE="${BRAVE_USE_FLASH_IF_AVAILABLE:-true}"
 
 # Allow users to override command-line options
 USER_FLAGS_FILE="$XDG_CONFIG_HOME/brave-flags.conf"
@@ -13,10 +12,4 @@ if [[ -f /proc/sys/kernel/unprivileged_userns_clone && $(< /proc/sys/kernel/unpr
     SANDBOX_FLAG="--no-sandbox"
 fi
 
-BRAVE_PEPPER_FLASH_SO=${BRAVE_PEPPER_FLASH_SO:-/usr/lib/PepperFlash/libpepflashplayer.so}
-if [[ -f $BRAVE_PEPPER_FLASH_SO && $BRAVE_USE_FLASH_IF_AVAILABLE == "true" ]]; then
-   BRAVE_PEPPER_FLASH_VERSION=${BRAVE_PEPPER_FLASH_VERSION:-$(LANG=C pacman -Qi pepper-flash | grep Version | sed 's/.*: //; s/\-[^-]*$//')}
-   PEPPER_FLASH_FLAG="--ppapi-flash-path=$BRAVE_PEPPER_FLASH_SO --ppapi-flash-version=$BRAVE_PEPPER_FLASH_VERSION"
-fi
-
-exec /usr/lib/brave-bin/brave "$@" $SANDBOX_FLAG $PEPPER_FLASH_FLAG $USER_FLAGS
+exec /usr/lib/brave-bin/brave "$@" $SANDBOX_FLAG $USER_FLAGS
