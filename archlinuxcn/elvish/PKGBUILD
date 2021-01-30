@@ -1,7 +1,7 @@
 # Maintainer: Haochen Tong <i at hexchain dot org>
 
 pkgname=elvish
-pkgver=0.14.1
+pkgver=0.15.0
 pkgrel=1
 pkgdesc="A friendly and expressive Unix shell."
 arch=('i686' 'x86_64')
@@ -17,7 +17,6 @@ install=elvish.install
 prepare() {
     mkdir -p "$srcdir/build"
     export GOPATH="$srcdir/build"
-    export CGO_LDFLAGS="$LDFLAGS"
     export GOFLAGS="-buildmode=pie -trimpath -mod=vendor -modcacherw"
     cd "$srcdir/elvish"
     go mod vendor
@@ -25,13 +24,13 @@ prepare() {
 
 build() {
     export GOPATH="$srcdir/build"
-    export CGO_LDFLAGS="$LDFLAGS"
     export GOFLAGS="-buildmode=pie -trimpath -mod=vendor -modcacherw"
+    export CGO_ENABLED=0
     cd "$srcdir/elvish"
     go build -v -ldflags="-X github.com/elves/elvish/pkg/buildinfo.Version=$pkgver" .
 
     cd website
-    mkdir "$srcdir/doc"
+    mkdir -p "$srcdir/doc"
     go build -v ./cmd/elvdoc/
     for file in builtin edit epm language math platform readline-binding re store str unix; do
         ./elvdoc -filter < "ref/$file.md" | pandoc \
@@ -45,8 +44,8 @@ build() {
 
 check() {
     export GOPATH="$srcdir/build"
-    export CGO_LDFLAGS="$LDFLAGS"
     export GOFLAGS="-trimpath -mod=vendor -modcacherw"
+    export CGO_ENABLED=1
     cd "$srcdir/elvish"
     make test
 }
