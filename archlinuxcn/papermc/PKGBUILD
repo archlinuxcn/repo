@@ -1,7 +1,7 @@
 # Maintainer: Gordian Edenhofer <gordian.edenhofer@gmail.com>
 
 pkgname=papermc
-pkgver=1.16.5+b449
+pkgver=1.16.5+b457
 pkgrel=1
 pkgdesc="Next generation of Minecraft server, compatible with Spigot plugins and offering uncompromising performance"
 arch=('any')
@@ -21,13 +21,13 @@ source=("papermc.${pkgver}.jar"::"https://papermc.io/api/v1/paper/${pkgver%%+*}/
 	"papermc.sh"
 	"papermc_${pkgver}_LICENSE.md"::"https://raw.githubusercontent.com/PaperMC/Paper/master/LICENSE.md")
 noextract=("papermc.${pkgver}.jar")
-sha512sums=('3f90b85ee40fdb6c9f71ee284fa1256d14e3b80a560af41524ab8b7d4b769c1f5a858ffea47cc4ab179c8a15162d26976348dc6678e1bab00ba0806a23598c55'
+sha512sums=('51100b98cb16c48689d2475386084574454c55f65fa192d2db102e415329e4f9fd7d5ebabfadd1623f9e252bb41006492a7af4be4dfe5f273de021657b6c657c'
             'a4fcc9f28436c0163e9414f2793fcbd4f6ea74772230cdff4a628246eae2a8008688b3dfb94d433f8f0887cd7eea3fe43ce25f9d5812d46e62179ff315b62895'
             '51c5345155e8640d4f1eaef0c8cfb890ae46063f2d4e7a0fe181ad4c8ff7b96fea88b0f9fc74031d589dfd61602f37b440f183ca1859835930fe69d37508cd42'
             'f29c4044d9e3cc5ab137c21f7e62399b36d7e1f777d5558a39f7b4a01de75bdf2de0b8678e424accc03934ca7db9ebb6a22c78c8c4497759287dd55e1c3eb456'
             'bec77bc748ee9b9efe4913608f7a6f9b1bd40ed8f018a431981451f8ad77accc4b3670096a8523ddd9f745aef5edb7294ef3b15f483cf9af32c69f9a40ef40a1'
             'c777e62beb213b5203883e13045953daa3d054c59da8ab535d416464366790edfe77fd9517f968d140dfb4c9009f7e8152f693312364ebbdc71cf2148d6a7df4'
-            'd4c645a58e1a17a0a1e42856a3cc43097711a05bf3d9f18c77c3bc9874417f223552859042ff00b7d3dda0003f49a9ee568540c2eb24e9f8fbb3c055f3b6e0a5')
+            'f3aa957a362a6482058984353ae745e47a5b79a4d9a2743189003cc145f1eaf3068bc941a2d1e7e8bd3591898398cd2996db7d871429ef968b6f1b0fcb7ca9f6')
 
 _game="papermc"
 _server_root="/srv/papermc"

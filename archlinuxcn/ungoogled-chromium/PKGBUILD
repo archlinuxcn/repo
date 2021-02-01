@@ -9,10 +9,10 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=87.0.4280.141
+pkgver=88.0.4324.104
 pkgrel=1
-_launcher_ver=6
-_gcc_patchset=9
+_launcher_ver=7
+_gcc_patchset=3
 _pkgname=$(echo $pkgname | cut -d\- -f1-2)
 _pkgver=$(echo $pkgver | cut -d\. -f1-4)
 # ungoogled chromium variables
@@ -23,13 +23,12 @@ arch=('x86_64')
 url="https://github.com/Eloston/ungoogled-chromium"
 license=('BSD')
 depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
-         'ttf-liberation' 'systemd' 'dbus' 'libpulse' 'pciutils' 'json-glib'
+         'ttf-liberation' 'systemd' 'dbus' 'libpulse' 'pciutils'
          'desktop-file-utils' 'hicolor-icon-theme')
 makedepends=('python' 'python2' 'gperf' 'mesa' 'ninja' 'nodejs' 'git' 'libva'
              'libpipewire02' 'clang' 'lld' 'gn' 'java-runtime-headless'
              'python2-setuptools')
-optdepends=('pepper-flash: support for Flash content'
-            'libpipewire02: WebRTC desktop sharing under Wayland'
+optdepends=('libpipewire02: WebRTC desktop sharing under Wayland'
             'libva: hardware-accelerated video decode [experimental]'
             'kdialog: needed for file dialogs in KDE'
             'org.freedesktop.secrets: password storage backend on GNOME / Xfce'
@@ -42,17 +41,13 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-drirc-disable-10bpc-color-configs.conf
         https://github.com/stha09/chromium-patches/releases/download/chromium-${pkgver%%.*}-patchset-$_gcc_patchset/chromium-${pkgver%%.*}-patchset-$_gcc_patchset.tar.xz
         wayland-egl.patch
-        icu68.patch
-        v8-icu68.patch
         subpixel-anti-aliasing-in-FreeType-2.8.1.patch)
-sha256sums=('147591d7fc21e1a173701d28bbf35baddb91e64dd96ec16d8eee9a5113403375'
-            '3c2d6711d3f9490eb68c4e2cdd653163b163305d25890ccc32cd51e53164a4bb'
-            '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
+sha256sums=('7dbdda0df8955811ada33a9505cad2f2e17f007827c435b591ba571c5dcd0147'
+            '14f195e24b85349c60f3dcf724e1433dbceb2739829f88a713178253644bfa44'
+            '86859c11cfc8ba106a3826479c0bc759324a62150b271dd35d1a0f96e890f52f'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
-            'c99934bcd2f3ae8ea9620f5f59a94338b2cf739647f04c28c8a551d9083fa7e9'
-            'bf86923eaee5529ab9fb6148bd6c33a73c8746ab1b4ade0cd3b761109bc55826'
-            '38fb5218331d6e03915490dab64f7b8bf26833a581d1aaa02090437c67e9439c'
-            '6e919c9712d8fe6c2918778df1f8c2ee0675a87a48be5d2aaa54e320703ced4b'
+            'e5a60a4c9d0544d3321cc241b4c7bd4adb0a885f090c6c6c21581eac8e3b4ba9'
+            '34d08ea93cb4762cb33c7cffe931358008af32265fc720f2762f0179c3973574'
             '1e2913e21c491d546e05f9b4edf5a6c7a22d89ed0b36ef692ca6272bcd5faec6')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
@@ -95,13 +90,13 @@ prepare() {
     third_party/libxml/chromium/*.cc
 
   # Upstream fixes
-  patch -Np1 -i ../icu68.patch
-  patch -Np1 -d v8 <../v8-icu68.patch
   patch -Np1 -d third_party/skia <../subpixel-anti-aliasing-in-FreeType-2.8.1.patch
 
   # Fixes for building with libstdc++ instead of libc++
-  patch -Np1 -i ../patches/chromium-87-ServiceWorkerContainerHost-crash.patch
   patch -Np1 -i ../patches/chromium-87-openscreen-include.patch
+  patch -Np1 -i ../patches/chromium-88-CompositorFrameReporter-dcheck.patch
+  patch -Np1 -i ../patches/chromium-88-ideographicSpaceCharacter.patch
+  patch -Np1 -i ../patches/chromium-88-AXTreeFormatter-include.patch
 
   # Wayland/EGL regression (crbug #1071528 #1071550)
   patch -Np1 -i ../wayland-egl.patch

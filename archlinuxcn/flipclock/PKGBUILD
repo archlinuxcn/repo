@@ -1,6 +1,6 @@
 # Maintainer: Alynx Zhou <alynx.zhou@gmail.com>
 pkgname=flipclock
-pkgver=2.7.0
+pkgver=2.7.4
 pkgrel=1
 pkgdesc="A flip clock screensaver supported by SDL2."
 arch=('x86_64' 'i686' 'aarch64' 'armv7h' 'armv6h')
@@ -25,3 +25,4 @@ package() {
   cd build
   DESTDIR="${pkgdir}" meson install
 }
+sha512sums=('567ad5e040d7886949f4ee44d9b4243f24902420dc73d865fc0aff4d9a183cb25c73ab58648c24ba9e7eed00e3740f2953a01fdc3b0e98022ee96baea1f8e8e6')
