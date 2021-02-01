@@ -1,7 +1,7 @@
 # Maintainer: Jiachen YANG <farseerfc@gmail.com>
 _pkgname=zograscope
 pkgname=$_pkgname-git
-pkgver=r1087.e93b27f
+pkgver=r1089.aae6264
 pkgrel=1
 pkgdesc="syntax-aware diff that also provides a number of additional tools (zs-diff, zs-find, zs-gdiff, zs-hi, zs-stats)"
 arch=(x86_64)
@@ -13,11 +13,11 @@ optdepends=('srcml: srcML related diff features')
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
 source=("zograscope::git+$url.git"
-"cursed::https://code.reversed.top/user/xaizek/libcursed"
-"vle::https://code.reversed.top/user/xaizek/libvle")
+"cursed::git+https://code.reversed.top/user/xaizek/libcursed"
+"vle::git+https://code.reversed.top/user/xaizek/libvle")
 md5sums=('SKIP'
-         '896020e55eddd4a60c6a2f049b69428d'
-         '76209f61ab1f0dbee12c68b238cf0d1d')
+         'SKIP'
+         'SKIP')
 
 # Please refer to the 'USING VCS SOURCES' section of the PKGBUILD man page for
 # a description of each element in the source array.
