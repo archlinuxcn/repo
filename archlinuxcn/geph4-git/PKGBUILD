@@ -1,7 +1,7 @@
 # Maintainer: alienzj <alienchuj@gmail.com>
 # Maintainer: Steven Tang <xosdy.t@gmail.com>
 # Maintainer: ohmyarch <ohmyarchlinux@protonmail.com>
-# Maintainer: Dct Mei <dctxmei@gmail.com>
+# Maintainer: Dct Mei <dctxmei@yandex.com>
 
 pkgbase=geph4-git
 _pkgbase=geph4
