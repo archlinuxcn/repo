@@ -14,7 +14,7 @@
              <menu id="file-menu" data-l10n-id="menu-file">
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -6427,11 +6427,18 @@ function onViewToolbarsPopupShowing(aEve
+@@ -6274,11 +6274,18 @@ function onViewToolbarsPopupShowing(aEve
    MozXULElement.insertFTLIfNeeded("browser/toolbarContextMenu.ftl");
    let firstMenuItem = aInsertPoint || popup.firstElementChild;
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
@@ -98,7 +98,7 @@
      "components.conf",
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -320,6 +320,9 @@ pref("dom.mouseevent.click.hack.use_lega
+@@ -312,6 +312,9 @@ pref("dom.mouseevent.click.hack.use_lega
  // Fastback caching - if this pref is negative, then we calculate the number
  // of content viewers to cache based on the amount of available memory.
  pref("browser.sessionhistory.max_total_viewers", -1);
@@ -126,7 +126,7 @@
  }
 --- a/widget/gtk/moz.build
 +++ b/widget/gtk/moz.build
-@@ -60,6 +60,15 @@ UNIFIED_SOURCES += [
+@@ -59,6 +59,15 @@ UNIFIED_SOURCES += [
  
  SOURCES += [
      "MediaKeysEventSourceFactory.cpp",
@@ -142,7 +142,7 @@
      "nsWindow.cpp",  # conflicts with X11 headers
      "WaylandVsyncSource.cpp",  # conflicts with X11 headers
  ]
-@@ -140,6 +149,7 @@ LOCAL_INCLUDES += [
+@@ -139,6 +148,7 @@ LOCAL_INCLUDES += [
      "/layout/base",
      "/layout/forms",
      "/layout/generic",
@@ -4476,7 +4476,7 @@
 +#endif /* __nsNativeMenuDocListener_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsNativeMenuService.cpp
-@@ -0,0 +1,503 @@
+@@ -0,0 +1,504 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -4484,6 +4484,7 @@
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
 + * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 +
++#include "mozilla/dom/Element.h"
 +#include "mozilla/Assertions.h"
 +#include "mozilla/Preferences.h"
 +#include "mozilla/UniquePtr.h"
@@ -5069,7 +5070,7 @@
 +#endif /* __nsNativeMenuService_h__ */
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
-@@ -6096,6 +6096,10 @@ void nsWindow::HideWindowChrome(bool aSh
+@@ -6148,6 +6148,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5100,7 +5101,7 @@
    /**
     * GetLastUserInputTime returns a timestamp for the most recent user input
     * event.  This is intended for pointer grab requests (including drags).
-@@ -701,6 +705,8 @@ class nsWindow final : public nsBaseWidg
+@@ -703,6 +707,8 @@ class nsWindow final : public nsBaseWidg
    static CSDSupportLevel sCSDSupportLevel;
  
    static bool sTransparentMainWindow;
@@ -5146,7 +5147,7 @@
  import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
-@@ -2560,7 +2561,7 @@ STATIC_ATOMS = [
+@@ -2562,7 +2563,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
      # END ATOMS
@@ -5174,7 +5175,7 @@
  if defined('MOZ_X11'):
 --- a/xpfe/appshell/AppWindow.cpp
 +++ b/xpfe/appshell/AppWindow.cpp
-@@ -71,7 +71,7 @@
+@@ -76,7 +76,7 @@
  #  include "mozilla/XULStore.h"
  #endif
  
