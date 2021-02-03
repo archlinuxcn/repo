@@ -106,11 +106,11 @@ add_systemd_drop_in() {
 build() {
     local rules unit
 
-    # from base
-    add_binary /bin/mount
     add_binary /usr/bin/kmod /usr/bin/modprobe
-    add_binary /usr/lib/systemd/systemd /init
+    add_binary /usr/bin/mount
     add_binary /usr/bin/sulogin
+    add_binary /usr/bin/umount
+    add_binary /usr/lib/systemd/systemd /init
 
     map add_binary \
         /usr/bin/journalctl \
