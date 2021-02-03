@@ -1,40 +1,49 @@
-# Maintainer: graysky <graysky AT archlinux DOT us>
+# Maintainer: Geballin <macniaque [at] free [dot] fr>
+# Maintainer: Morgenstern <charles [at] charlesbwise [dot] com>
+# Contributor: Thomas Mudrunka <harvie [at] email [dot] cz>
 # Contributor: Levente Polyak <anthraxx[at]archlinux[dot]org>
-# Contributor: Thomas Mudrunka <harvie@@email..cz>
-# Contributer: Eric Belanger <eric@archlinux.org>
+# Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=xscreensaver-arch-logo
 pkgver=5.45
-pkgrel=1
-pkgdesc='Screen saver and locker for the X Window System with Arch Linux branding'
-url='https://www.jwz.org/xscreensaver/'
+pkgrel=2
+pkgdesc="Screen saver and locker for the X Window System with Arch Linux branding"
+url="https://www.jwz.org/${pkgname%%-*}/"
 arch=('x86_64')
 license=('BSD')
-depends=('libglade' 'libxmu' 'glu' 'xorg-appres' 'perl-libwww' 'gdk-pixbuf-xlib')
-makedepends=('bc' 'intltool' 'libxpm')
+depends=('gdk-pixbuf-xlib'
+         'glu' 
+         'gtk2'
+         'libxmu'         
+         'perl-libwww' 
+         'xorg-appres') 
+makedepends=('bc' 
+             'intltool' 
+             'libxpm'
+             'systemd')
 optdepends=('gdm: for login manager support')
 conflicts=('xscreensaver')
 provides=('xscreensaver')
 backup=('etc/pam.d/xscreensaver')
 source=(https://www.jwz.org/xscreensaver/${pkgname%%-*}-${pkgver}.tar.gz
 LICENSE logo-50.xpm logo-180.xpm logo-50.png logo-180.png)
-sha1sums=('933cd5451bdfc4a2bf15bc49f629a8c8665cae62'
-          '3eedb8b91b13c29df9b1fe5cbb027e1470b802d2'
-          '5ff6dfd0a14ca484d4287647c3e00af8e417163c'
-          '63ed187b08864993684f826dc87b1c5f42ea5bf4'
-          '203ca4f21e0d42263fc0ebb796eaf968c457d93a'
-          '619cff60b77812545493dbedb0ba247a37f381e5')
+sha256sums=('7016df6736ba0126a68c1f35abcf411a695fe93bc01a18ebd9df46c9a9f4d50d'
+            'c0247a0328f07656f6b7a5854f57fe735579f161b6f40df967cf9a5eab772d63'
+            '82366926a2a81bd08459327936ba144e8b3ea5ee4a386c268bd898e1791ab1a0'
+            '253f0d5bbdd841f21a7bbdbb0fd7ded21f711751d5cb1b7914952bdd6541b36d'
+            '8027bdb2b4328d154a8e517bdb94f5ef4a9eb031e79a285dabedd62acfa77317'
+            '8357f9e631b80ae373cb0fc8e27fa96fd032c3d5e3869bd04dde843b79260b19')
 
 build() {
   cp logo-* "${srcdir}"/${pkgname%%-*}-${pkgver}/hacks/images/
+  install -Dm0644 "$srcdir"/logo-180.xpm -t "${srcdir}"/${pkgname%%-*}-${pkgver}/utils/images
   cd "${pkgname%%-*}-${pkgver}"
-  install -Dm644 "$srcdir"/logo-180.xpm  "${srcdir}"/${pkgname%%-*}-${pkgver}/utils/images/logo-180.xpm
-    ./configure \
+  ./configure \
     --prefix=/usr \
     --sysconfdir=/etc \
     --localstatedir=/var \
     --libexecdir=/usr/lib \
-    --with-x-app-defaults=/usr/share/X11/app-defaults \
+    --with-app-defaults=/usr/share/X11/app-defaults \
     --with-pam \
     --with-login-manager \
     --with-gtk \
@@ -49,7 +58,8 @@ package() {
   cd "${pkgname%%-*}-${pkgver}"
   install -d "${pkgdir}/etc/pam.d"
   make install_prefix="${pkgdir}" install
-  install -Dm 644 ../LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname%%-*}"
+  install -Dm0644 ../LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  # Remove sticky bit
   chmod 755 "${pkgdir}/usr/bin/xscreensaver"
   echo "NotShowIn=KDE;GNOME;" >> "${pkgdir}/usr/share/applications/xscreensaver-properties.desktop"
 }
