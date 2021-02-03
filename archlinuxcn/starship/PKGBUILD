@@ -2,7 +2,7 @@
 
 pkgname='starship'
 pkgdesc='The cross-shell prompt for astronauts'
-pkgver='0.48.0'
+pkgver='0.50.0'
 pkgrel=1
 arch=('x86_64')
 url='https://starship.rs/'
@@ -15,7 +15,7 @@ checkdepends=('rust' 'git' 'python')
 provides=(starship)
 #install="$pkgname.install"
 source=("$pkgname-$pkgver.tar.gz::https://github.com/starship/starship/archive/v${pkgver}.tar.gz")
-sha256sums=('23e729ace48ec0bf6d8eff5f99003351463841f3b28fe453faceb62e6f99bae6')
+sha256sums=('d8f4dc9bd266f2a5c34926d361c62fdddb61cd7da4acadba5f9c175eb07602e5')
 
 build() {
     cd "$pkgname-$pkgver"
@@ -29,6 +29,7 @@ check() {
 
 package() {
     cd "$pkgname-$pkgver"
-    install -Dm755 "target/release/starship" "$pkgdir/usr/bin/$pkgname"
+    targetdir=${CARGO_TARGET_DIR:-target}
+    install -Dm755 "$targetdir/release/starship" "$pkgdir/usr/bin/$pkgname"
     install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
