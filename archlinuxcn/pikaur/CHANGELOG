@@ -1753,3 +1753,15 @@ Mon Dec 7 06:04:01 2020 +0100
     Notable changes:
      2020-12-06 f0041a3 actionless fix(build: remove_build_deps): skip if pkg diff returned no installed pkgs (re: #528/konomikitten)
      2020-12-04 17feee7 actionless feat(packaging: bin: pikaur): handle the case when even fallback module load not helps
+
+
+Wed Feb 3 19:21:57 2021 +0100
+-------------------------------------------------
+1.6.16          Release 1.6.16
+    
+    Notable changes:
+     2021-01-26 5ea2502 Alberto Salvia Novella fix(pikspect): restore tcsetattr - solving stdin problem in bash when using output redirecction (fixes #547, #548) (#549)
+     2021-01-02 9f440a6 actionless fix(install cli: clone aur repos): [s]kip option in recovery prompt wasn't really working
+     2020-12-18 8c50de1 Dylan1496 chore(core: get_editor): add more fallback editors (#541)
+     2020-12-18 8770f03 actionless feat(urllib): handle more errors
+     2020-12-14 d4822be actionless feat(packaging: bin: pikaur): also handle pyalpm import failure
