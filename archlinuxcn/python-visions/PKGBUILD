@@ -2,7 +2,7 @@
 
 pkgname=python-visions
 _pkgname=visions
-pkgver=0.7.0
+pkgver=0.7.1
 pkgrel=1
 pkgdesc='Type System for Data Analysis in Python'
 arch=('any')
@@ -37,7 +37,7 @@ checkdepends=(
   twine
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/dylan-profiler/visions/archive/v${pkgver}.tar.gz")
-sha512sums=('a10a296f2757364b9d1c96043f695f9a1280b23284aee515aec2c66cd3472b491467f33160170b39344c2bf519fa3ede0cc060ade318dc01eb4f93e6219901a1')
+sha512sums=('788a31e5812fe2a729c1d2d1b3dc5b9816dad970b82084109ca2e1f0d7b0c5b77f29364358d608808a929840690a34f139ad9a0770a2be3e526048e3d3b6911d')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
