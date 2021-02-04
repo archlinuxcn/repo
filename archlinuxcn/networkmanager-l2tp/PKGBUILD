@@ -6,7 +6,7 @@
 pkgname=networkmanager-l2tp
 _pkgname=NetworkManager-l2tp
 pkgver=1.8.6
-pkgrel=2
+pkgrel=3
 pkgdesc='L2TP support for NetworkManager'
 arch=('i686' 'x86_64' 'aarch64')
 url="https://github.com/nm-l2tp/NetworkManager-l2tp"
@@ -31,7 +31,7 @@ build() {
 
   ./configure --prefix=/usr --sysconfdir=/etc \
     --localstatedir=/var --libexecdir=/usr/lib/NetworkManager \
-    --with-pppd-plugin-dir=/usr/lib/pppd/2.4.7
+    --with-pppd-plugin-dir=/usr/lib/pppd/2.4.8
   sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
   make
 }
