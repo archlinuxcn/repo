@@ -3,13 +3,13 @@
 _pkgname=telegram-tdlib
 pkgname=${_pkgname}
 pkgver=1.7.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Cross-platform library for building Telegram clients'
 arch=('i686' 'x86_64' 'armv7h')
 url='https://core.telegram.org/tdlib'
 license=('Boost')
 depends=('openssl' 'zlib')
-makedepends=('make' 'gcc' 'cmake' 'gperf')
+makedepends=('make' 'gcc' 'cmake' 'gperf' 'git')
 provides=('telegram-tdlib')
 conflicts=('telegram-tdlib')
 source=("https://github.com/tdlib/td/archive/v$pkgver.tar.gz")
