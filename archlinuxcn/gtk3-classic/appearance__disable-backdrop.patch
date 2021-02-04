@@ -1,0 +1,13 @@
+Index: b/gtk/gtkwindow.c
+===================================================================
+--- a/gtk/gtkwindow.c
++++ b/gtk/gtkwindow.c
+@@ -8017,7 +8017,7 @@ gtk_window_state_event (GtkWidget
+   GtkWindow *window = GTK_WINDOW (widget);
+   GtkWindowPrivate *priv = window->priv;
+ 
+-  if (event->changed_mask & GDK_WINDOW_STATE_FOCUSED)
++  if ((event->changed_mask & GDK_WINDOW_STATE_FOCUSED) && priv->client_decorated)
+     ensure_state_flag_backdrop (widget);
+ 
+   if (event->changed_mask & GDK_WINDOW_STATE_FULLSCREEN)

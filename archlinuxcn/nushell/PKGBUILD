@@ -3,23 +3,23 @@
 # Contributor: Bumsik Kim <k.bumsik@gmail.com>
 
 pkgname=nushell
-pkgver=0.23.0
-pkgrel=1
+pkgver=0.26.0
+pkgrel=2
 pkgdesc="A new type of shell."
 url="https://www.nushell.sh"
 license=('MIT')
 depends=('openssl' 'libxcb' 'libgit2' 'zlib' 'libx11')
 makedepends=('rust' 'python')
 arch=('x86_64' 'i686')
-source=("https://github.com/nushell/nushell/archive/${pkgver}.tar.gz")
 install=nushell.install
-sha256sums=('fbb490fa25cb4ca6ec46b33274ee8a222407a1786dd2204f05ceb573eb0246aa')
-b2sums=('358722a59630c9017d055379da4c2f72b3c0b23c3ea50804709a273f5acbacf817d83c9410c5c9a7111f185fcb7c14f6ef3cc703ebc8f0cae14f5fe49c4d7b4a')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/nushell/nushell/archive/${pkgver}.tar.gz")
+sha256sums=('66fbfe1297997a3f6b2181cd723816150ad2453527c7cab6c83a9c67b9af2478')
+b2sums=('d7b06a13f17a03203411df5045557c6cd4689edd69b18500cf29da0b1649423bdb80aebfa1cec3e4d9d2069b1d985da0c8641e27c13e02a9b3ec5c1c9755673b')
 
 build() {
   cd "${pkgname}-${pkgver}"
 
-  cargo build --release --locked --features extra
+  cargo build --release --locked --features extra --target-dir=target
 }
 
 package() {

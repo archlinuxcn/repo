@@ -1,6 +1,6 @@
 # Maintainer: Adrian Perez de Castro <aperez@igalia.com>
 pkgname=wayfire
-pkgver=0.6.0
+pkgver=0.7.0
 pkgrel=1
 pkgdesc="3D wayland compositor"
 arch=(x86_64)
@@ -9,12 +9,12 @@ license=(custom:MIT)
 depends=(cairo 'wf-config>=0.5' libjpeg libinput 'wlroots>=0.12' 'wlroots<0.13')
 makedepends=(meson ninja wayland-protocols glm)
 conflicts=("${pkgname}-git")
-source=("https://github.com/WayfireWM/${pkgname}/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.xz")
-sha256sums=(98a903eb3174834bb09d957987948a5fc8447661cf2dda48260db947f5d78571)
+source=("https://github.com/WayfireWM/${pkgname}/releases/download/v${pkgver}/${pkgname}-${pkgver}.tar.xz")
+sha256sums=(0d8ec311510bf10647d857c2db6e3dbbccfe3ac9064463661c8062c8cbb469a6)
 
 build() {
 	rm -rf build
-	arch-meson "${pkgname}-${pkgver}" build
+	arch-meson "${pkgname}-${pkgver}" build -Duse_system_wfconfig=enabled -Duse_system_wlroots=enabled
 	ninja -C build
 }
 

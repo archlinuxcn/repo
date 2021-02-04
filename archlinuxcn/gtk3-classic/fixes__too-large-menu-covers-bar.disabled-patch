@@ -1,0 +1,21 @@
+diff --color -U 5 -r -Z -B gtk/gtkmenu.c gtk/gtkmenu.c
+--- src/gtk/gtkmenu.c	2018-01-31 18:37:18.000000000 +0100
++++ src/gtk/gtkmenu.c	2018-07-16 23:43:51.061469725 +0200
+@@ -1393,10 +1393,17 @@
+                   const GdkRectangle *final_rect,
+                   gboolean            flipped_x,
+                   gboolean            flipped_y,
+                   GtkMenu            *menu)
+ {
++  if (GTK_IS_MENU_ITEM (menu->priv->widget) && GTK_IS_MENU_BAR (gtk_widget_get_parent (menu->priv->widget))
++      && flipped_rect != NULL && final_rect != NULL && !flipped_y && flipped_rect->y > final_rect->y)
++    {
++      gint new_height = final_rect->height - (flipped_rect->y - final_rect->y);
++      if (new_height > 200)
++        gdk_window_move_resize (window, final_rect->x, flipped_rect->y, final_rect->width, new_height);
++    }
+   g_signal_emit (menu,
+                  menu_signals[POPPED_UP],
+                  0,
+                  flipped_rect,
+                  final_rect,

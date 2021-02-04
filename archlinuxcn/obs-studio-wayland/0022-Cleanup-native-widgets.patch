@@ -1,0 +1,416 @@
+From 2544f356373bbcc58515be5ea012bcc6d22e7c03 Mon Sep 17 00:00:00 2001
+From: Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+Date: Sun, 20 Sep 2020 11:29:15 -0300
+Subject: [PATCH 22/25] Cleanup native widgets
+
+Some widgets are marked as native unnecessarily. Native widgets are
+a bit more involving than regular ones, so remove this flag.
+
+Original patch by David Edmundson <kde@davidedmundson.co.uk>
+---
+ UI/forms/AutoConfigStreamPage.ui              |  4 +--
+ UI/forms/OBSAbout.ui                          |  2 +-
+ UI/forms/OBSBasic.ui                          | 12 +++----
+ UI/forms/OBSBasicFilters.ui                   | 10 +++---
+ UI/forms/OBSBasicInteraction.ui               |  2 +-
+ UI/forms/OBSBasicSettings.ui                  | 36 +++++++++----------
+ UI/forms/OBSBasicTransform.ui                 |  6 ++--
+ .../source-toolbar/game-capture-toolbar.ui    |  2 +-
+ UI/forms/source-toolbar/media-controls.ui     |  2 +-
+ .../source-toolbar/text-source-toolbar.ui     |  2 +-
+ 10 files changed, 39 insertions(+), 39 deletions(-)
+
+diff --git a/UI/forms/AutoConfigStreamPage.ui b/UI/forms/AutoConfigStreamPage.ui
+index 7eec15fa..d7034d3f 100644
+--- a/UI/forms/AutoConfigStreamPage.ui
++++ b/UI/forms/AutoConfigStreamPage.ui
+@@ -30,7 +30,7 @@
+     <number>0</number>
+    </property>
+    <item>
+-    <widget class="QWidget" name="widget" native="true">
++    <widget class="QWidget" name="widget" >
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+@@ -261,7 +261,7 @@
+         </widget>
+        </item>
+        <item row="1" column="1">
+-        <widget class="QWidget" name="streamKeyWidget" native="true">
++        <widget class="QWidget" name="streamKeyWidget" >
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <property name="leftMargin">
+            <number>0</number>
+diff --git a/UI/forms/OBSAbout.ui b/UI/forms/OBSAbout.ui
+index 790a9656..28e3374b 100644
+--- a/UI/forms/OBSAbout.ui
++++ b/UI/forms/OBSAbout.ui
+@@ -149,7 +149,7 @@
+     </layout>
+    </item>
+    <item>
+-    <widget class="QWidget" name="widget" native="true">
++    <widget class="QWidget" name="widget" >
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+diff --git a/UI/forms/OBSBasic.ui b/UI/forms/OBSBasic.ui
+index 8cc20521..87f1f11b 100644
+--- a/UI/forms/OBSBasic.ui
++++ b/UI/forms/OBSBasic.ui
+@@ -61,7 +61,7 @@
+          <number>2</number>
+         </property>
+         <item>
+-         <widget class="QWidget" name="previewDisabledWidget" native="true">
++         <widget class="QWidget" name="previewDisabledWidget" >
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+@@ -167,7 +167,7 @@
+            </widget>
+           </item>
+           <item>
+-           <widget class="OBSBasicPreview" name="preview" native="true">
++           <widget class="OBSBasicPreview" name="preview" >
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+@@ -196,7 +196,7 @@
+      </layout>
+     </item>
+     <item>
+-     <widget class="QWidget" name="contextContainer" native="true">
++     <widget class="QWidget" name="contextContainer" >
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+@@ -235,7 +235,7 @@
+         <number>4</number>
+        </property>
+        <item>
+-        <widget class="QWidget" name="contextSubContainer" native="true">
++        <widget class="QWidget" name="contextSubContainer" >
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+@@ -377,7 +377,7 @@
+         </widget>
+        </item>
+        <item>
+-        <widget class="QWidget" name="emptySpace" native="true">
++        <widget class="QWidget" name="emptySpace" >
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+@@ -1083,7 +1083,7 @@
+       <number>4</number>
+      </property>
+      <item>
+-      <widget class="QWidget" name="transitionsContainer" native="true">
++      <widget class="QWidget" name="transitionsContainer" >
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>2</number>
+diff --git a/UI/forms/OBSBasicFilters.ui b/UI/forms/OBSBasicFilters.ui
+index 572a31f9..eaec7257 100644
+--- a/UI/forms/OBSBasicFilters.ui
++++ b/UI/forms/OBSBasicFilters.ui
+@@ -22,7 +22,7 @@
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+-        <widget class="QWidget" name="asyncWidget" native="true">
++        <widget class="QWidget" name="asyncWidget" >
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+@@ -63,7 +63,7 @@
+            </widget>
+           </item>
+           <item alignment="Qt::AlignLeft">
+-           <widget class="QWidget" name="widget" native="true">
++           <widget class="QWidget" name="widget" >
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <property name="spacing">
+               <number>4</number>
+@@ -198,7 +198,7 @@
+         </widget>
+        </item>
+        <item>
+-        <widget class="QWidget" name="effectWidget" native="true">
++        <widget class="QWidget" name="effectWidget" >
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+@@ -239,7 +239,7 @@
+            </widget>
+           </item>
+           <item alignment="Qt::AlignLeft">
+-           <widget class="QWidget" name="widget_2" native="true">
++           <widget class="QWidget" name="widget_2" >
+             <layout class="QHBoxLayout" name="horizontalLayout_6">
+              <property name="spacing">
+               <number>4</number>
+@@ -373,7 +373,7 @@
+        <item>
+         <layout class="QVBoxLayout" name="rightLayout">
+          <item>
+-          <widget class="OBSQTDisplay" name="preview" native="true">
++          <widget class="OBSQTDisplay" name="preview" >
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+diff --git a/UI/forms/OBSBasicInteraction.ui b/UI/forms/OBSBasicInteraction.ui
+index 65d313bc..419140cf 100644
+--- a/UI/forms/OBSBasicInteraction.ui
++++ b/UI/forms/OBSBasicInteraction.ui
+@@ -18,7 +18,7 @@
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+-    <widget class="OBSQTDisplay" name="preview" native="true">
++    <widget class="OBSQTDisplay" name="preview" >
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+diff --git a/UI/forms/OBSBasicSettings.ui b/UI/forms/OBSBasicSettings.ui
+index f4eaa36c..d813bc10 100644
+--- a/UI/forms/OBSBasicSettings.ui
++++ b/UI/forms/OBSBasicSettings.ui
+@@ -169,7 +169,7 @@
+               <number>9</number>
+              </property>
+              <item alignment="Qt::AlignTop">
+-              <widget class="QWidget" name="widget_2" native="true">
++              <widget class="QWidget" name="widget_2" >
+                <layout class="QVBoxLayout" name="verticalLayout_20">
+                 <item>
+                  <widget class="QGroupBox" name="groupBox_15">
+@@ -799,7 +799,7 @@
+           <number>0</number>
+          </property>
+          <item>
+-          <widget class="QWidget" name="widget_5" native="true">
++          <widget class="QWidget" name="widget_5" >
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+@@ -1021,7 +1021,7 @@
+               </widget>
+              </item>
+              <item row="1" column="1">
+-              <widget class="QWidget" name="streamKeyWidget" native="true">
++              <widget class="QWidget" name="streamKeyWidget" >
+                <layout class="QHBoxLayout" name="horizontalLayout_11">
+                 <property name="leftMargin">
+                  <number>0</number>
+@@ -1170,7 +1170,7 @@
+               </widget>
+              </item>
+              <item row="9" column="1">
+-              <widget class="QWidget" name="authPwWidget" native="true">
++              <widget class="QWidget" name="authPwWidget" >
+                <layout class="QHBoxLayout" name="horizontalLayout_25">
+                 <property name="leftMargin">
+                  <number>0</number>
+@@ -1268,7 +1268,7 @@
+               <number>9</number>
+              </property>
+              <item alignment="Qt::AlignTop">
+-              <widget class="QWidget" name="widget" native="true">
++              <widget class="QWidget" name="widget" >
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+@@ -1792,7 +1792,7 @@
+                   </spacer>
+                  </item>
+                  <item alignment="Qt::AlignTop">
+-                  <widget class="QWidget" name="simpleOutputContainer" native="true">
++                  <widget class="QWidget" name="simpleOutputContainer" >
+                    <layout class="QVBoxLayout" name="verticalLayout_4">
+                     <property name="leftMargin">
+                      <number>0</number>
+@@ -1851,7 +1851,7 @@
+                       <number>9</number>
+                      </property>
+                      <item alignment="Qt::AlignTop">
+-                      <widget class="QWidget" name="widget_4" native="true">
++                      <widget class="QWidget" name="widget_4" >
+                        <layout class="QVBoxLayout" name="verticalLayout_14">
+                         <property name="spacing">
+                          <number>0</number>
+@@ -1869,7 +1869,7 @@
+                          <number>0</number>
+                         </property>
+                         <item>
+-                         <widget class="QWidget" name="advOutTopContainer" native="true">
++                         <widget class="QWidget" name="advOutTopContainer" >
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                             <horstretch>0</horstretch>
+@@ -1949,7 +1949,7 @@
+                             </widget>
+                            </item>
+                            <item row="1" column="1">
+-                            <widget class="QWidget" name="widget_8" native="true">
++                            <widget class="QWidget" name="widget_8" >
+                              <property name="sizePolicy">
+                               <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                                <horstretch>0</horstretch>
+@@ -2043,7 +2043,7 @@
+                       <number>9</number>
+                      </property>
+                      <item>
+-                      <widget class="QWidget" name="advOutRecTypeContainer" native="true">
++                      <widget class="QWidget" name="advOutRecTypeContainer" >
+                        <layout class="QFormLayout" name="formLayout_9">
+                         <property name="fieldGrowthPolicy">
+                          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+@@ -2113,7 +2113,7 @@
+                           <number>0</number>
+                          </property>
+                          <item>
+-                          <widget class="QWidget" name="advOutRecTopContainer" native="true">
++                          <widget class="QWidget" name="advOutRecTopContainer" >
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                              <horstretch>0</horstretch>
+@@ -2267,7 +2267,7 @@
+                              </widget>
+                             </item>
+                             <item row="5" column="1">
+-                             <widget class="QWidget" name="advOutRecRescaleContainer" native="true">
++                             <widget class="QWidget" name="advOutRecRescaleContainer" >
+                               <layout class="QHBoxLayout" name="horizontalLayout_4">
+                                <property name="leftMargin">
+                                 <number>0</number>
+@@ -2438,7 +2438,7 @@
+                           </widget>
+                          </item>
+                          <item alignment="Qt::AlignTop">
+-                          <widget class="QWidget" name="widget_7" native="true">
++                          <widget class="QWidget" name="widget_7" >
+                            <layout class="QVBoxLayout" name="verticalLayout_15">
+                             <property name="leftMargin">
+                              <number>0</number>
+@@ -2719,7 +2719,7 @@
+                           </widget>
+                          </item>
+                          <item row="15" column="1">
+-                          <widget class="QWidget" name="widget_10" native="true">
++                          <widget class="QWidget" name="widget_10" >
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                              <horstretch>0</horstretch>
+@@ -2899,7 +2899,7 @@
+                       <number>0</number>
+                      </property>
+                      <item alignment="Qt::AlignTop">
+-                      <widget class="QWidget" name="widget_3" native="true">
++                      <widget class="QWidget" name="widget_3" >
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                          <horstretch>0</horstretch>
+@@ -3763,7 +3763,7 @@
+               <number>9</number>
+              </property>
+              <item alignment="Qt::AlignTop">
+-              <widget class="QWidget" name="widget_50" native="true">
++              <widget class="QWidget" name="widget_50" >
+                <layout class="QVBoxLayout" name="verticalLayout_51">
+                 <item>
+                  <widget class="QGroupBox" name="audioGeneralGroupBox">
+@@ -4619,7 +4619,7 @@
+               <number>9</number>
+              </property>
+              <item>
+-              <widget class="QWidget" name="widget_11" native="true">
++              <widget class="QWidget" name="widget_11" >
+                <layout class="QVBoxLayout" name="verticalLayout_24">
+                 <item>
+                  <widget class="QGroupBox" name="advancedGeneralGroupBox">
+@@ -5012,7 +5012,7 @@
+                     </widget>
+                    </item>
+                    <item row="1" column="1">
+-                    <widget class="QWidget" name="widget_12" native="true">
++                    <widget class="QWidget" name="widget_12" >
+                      <property name="enabled">
+                       <bool>true</bool>
+                      </property>
+diff --git a/UI/forms/OBSBasicTransform.ui b/UI/forms/OBSBasicTransform.ui
+index 971cd023..a12e4e73 100644
+--- a/UI/forms/OBSBasicTransform.ui
++++ b/UI/forms/OBSBasicTransform.ui
+@@ -48,7 +48,7 @@
+       </widget>
+      </item>
+      <item row="0" column="1">
+-      <widget class="QWidget" name="widget" native="true">
++      <widget class="QWidget" name="widget" >
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+@@ -149,7 +149,7 @@
+       </widget>
+      </item>
+      <item row="2" column="1">
+-      <widget class="QWidget" name="widget_2" native="true">
++      <widget class="QWidget" name="widget_2" >
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+@@ -404,7 +404,7 @@
+       </widget>
+      </item>
+      <item row="7" column="1">
+-      <widget class="QWidget" name="widget_3" native="true">
++      <widget class="QWidget" name="widget_3" >
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+diff --git a/UI/forms/source-toolbar/game-capture-toolbar.ui b/UI/forms/source-toolbar/game-capture-toolbar.ui
+index b2206428..cf3d9500 100644
+--- a/UI/forms/source-toolbar/game-capture-toolbar.ui
++++ b/UI/forms/source-toolbar/game-capture-toolbar.ui
+@@ -148,7 +148,7 @@
+     </widget>
+    </item>
+    <item>
+-    <widget class="QWidget" name="empty" native="true">
++    <widget class="QWidget" name="empty" >
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+diff --git a/UI/forms/source-toolbar/media-controls.ui b/UI/forms/source-toolbar/media-controls.ui
+index 1133476a..f40f542b 100644
+--- a/UI/forms/source-toolbar/media-controls.ui
++++ b/UI/forms/source-toolbar/media-controls.ui
+@@ -391,7 +391,7 @@
+     </widget>
+    </item>
+    <item>
+-    <widget class="QWidget" name="emptySpaceAgain" native="true">
++    <widget class="QWidget" name="emptySpaceAgain" >
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+diff --git a/UI/forms/source-toolbar/text-source-toolbar.ui b/UI/forms/source-toolbar/text-source-toolbar.ui
+index 1b2ada18..46b23c61 100644
+--- a/UI/forms/source-toolbar/text-source-toolbar.ui
++++ b/UI/forms/source-toolbar/text-source-toolbar.ui
+@@ -83,7 +83,7 @@
+     </widget>
+    </item>
+    <item>
+-    <widget class="QWidget" name="emptySpace" native="true">
++    <widget class="QWidget" name="emptySpace" >
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+-- 
+2.28.0
+

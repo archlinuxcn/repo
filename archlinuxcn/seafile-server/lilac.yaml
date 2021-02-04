@@ -3,18 +3,18 @@
 maintainers:
   - github: yuyichao
 
-managed: false
+build_prefix: extra-x86_64
 
-# build_prefix: archlinuxcn-x86_64
+post_build: git_pkgbuild_commit
 
-# pre_build: aur_pre_build
+update_on:
+  - source: manual
+    manual: 8.0.1
+  - alias: python
+  - source: manual
+    manual: 1
 
-# post_build: aur_post_build
-
-# update_on:
-#   - aur: seafile-server
-
-# repo_depends:
-#   - ccnet-server
-#   - libevhtp-seafile
-#   - libsearpc
+repo_depends:
+  - ccnet-server
+  - libevhtp-seafile
+  - libsearpc

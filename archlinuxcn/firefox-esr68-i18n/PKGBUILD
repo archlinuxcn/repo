@@ -1,4 +1,4 @@
-# Maintainer: Dct Mei <dctxmei@gmail.com>
+# Maintainer: Dct Mei <dctxmei@yandex.com>
 # Contributor: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Thomas Baechler <thomas@archlinux.org>
 # Contributor: Jaroslaw Swierczynski <swiergot@juvepoland.com>

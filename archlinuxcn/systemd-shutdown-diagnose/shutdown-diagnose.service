@@ -1,0 +1,11 @@
+[Unit]
+Description= A service to execute start diagnose-shutdown at begining of shutdown
+
+[Service]
+Type=idle
+RemainAfterExit=yes
+ExecStart=/usr/bin/true
+ExecStop=/usr/bin/start-diagnose-shutdown
+
+[Install]
+WantedBy=default.target

@@ -1,9 +1,9 @@
-# Maintainer: Dct Mei <dctxmei@gmail.com>
+# Maintainer: Dct Mei <dctxmei@yandex.com>
 
 pkgname=v2raya
 _pkgname=v2rayA
-pkgver=1.1.2
-pkgrel=1
+pkgver=1.2.1
+pkgrel=3
 pkgdesc="A Linux web GUI client of Project V"
 arch=('x86_64')
 url="https://github.com/v2rayA/v2rayA"
@@ -12,8 +12,8 @@ depends=('glibc' 'v2ray')
 makedepends=('go>=2:1.12.3-1' 'nodejs>=14' 'yarn' 'python2')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "v2raya.service")
-sha256sums=('2d4d5832a5076fdc621456406acb6a08eb0fc99366ff0b4c357ba16645aa95df'
-            'cf44859216b66366e17ad8b1369252aba7ffc83dc42a1cfc2103b8faa7d0afec')
+sha256sums=('128af1fb196726a50be08b743085a6a9729746314aea8bde9c10f6b9948616a0'
+            '85002076c39c7de79433321e65ca0c093ace1e837d488bfe4df7fda0567266d7')
 
 build() {
     cd "${srcdir}"/"${_pkgname}-${pkgver}"/gui/
@@ -32,6 +32,7 @@ build() {
 package() {
     cd "${srcdir}"/"${_pkgname}-${pkgver}"/
     install -Dm 755 service/v2raya -t "${pkgdir}"/usr/bin/
+    install -dm 750 "${pkgdir}"/etc/v2raya/
     find web -type d -exec install -vd "${pkgdir}"/etc/v2raya/{} \;
     find web -type f -exec install -vm 644 {} "${pkgdir}"/etc/v2raya/{} \;
     install -Dm 644 "${srcdir}"/v2raya.service -t "${pkgdir}"/usr/lib/systemd/system/

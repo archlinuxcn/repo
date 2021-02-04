@@ -1,0 +1,11 @@
+pkgname=lib32-ffmpeg-jack2
+pkgver=1
+pkgrel=1
+pkgdesc="Force lib32-ffmpeg to use lib32-jack2 (for packaging only)"
+arch=(any)
+license=(GPL3)
+install=$pkgname.install
+
+package() {
+	depends=(lib32-ffmpeg lib32-jack2)
+}

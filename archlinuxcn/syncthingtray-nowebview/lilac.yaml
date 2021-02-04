@@ -6,7 +6,16 @@ build_prefix: extra-x86_64
 repo_depends:
   - qtutilities
 
-post_build: aur_post_build
+pre_build_script: |
+    aur_pre_build('syncthingtray')
+
+    run_cmd(['sed', '-e', 's/pkgname=syncthingtray/pkgname=syncthingtray-nowebview/',
+                    '-e', 's/^_webview_provider.*/_webview_provider=none/',
+                    '-e', "/license=/a provides=('syncthingtray')\\nconflicts=('syncthingtray')",
+                    '-i', 'PKGBUILD'])
+
+post_build_script: |
+    aur_post_build()
 
 update_on:
   - source: aur

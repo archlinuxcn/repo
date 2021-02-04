@@ -1,3 +1,21 @@
+Version 6.13
+07 December 2021
+    - fix #59: Traceback while trying to reap child process
+    - fix #60: Need to refresh the OAuth access token when reconnecting (IMAP IDLE)
+
+Version 6.12
+31 December 2020
+    - fix #53: unclosed file warnings
+    - fix #52: getmail seems to lose its child process and hangs forever (pull #54)
+    - documentation improvements (#55, #56)
+
+Version 6.11
+09 December 2020
+    - comply more closely with the XDG basedir specification: allow an
+      unset XDG_CONFIG_HOME environment variable.
+    - Simplify the documentation around the location of the configuration directory.
+    - fix #49: "'utf-8' codec can't decode" for mbox
+
 Version 6.10
 28 November 2020
     - fix #48: handle Header in address_no_brackets using Header.__str__

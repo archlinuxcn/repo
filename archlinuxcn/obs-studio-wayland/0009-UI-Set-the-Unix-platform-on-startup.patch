@@ -1,0 +1,67 @@
+From c5734b839a8e50e561d6ad42b3924e65800bdacf Mon Sep 17 00:00:00 2001
+From: Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+Date: Tue, 7 Apr 2020 23:17:02 -0300
+Subject: [PATCH 09/25] UI: Set the Unix platform on startup
+
+Move the OBS_USE_EGL environment variable check to obs-app.cpp,
+and set the OBS platform to be either OBS_NIX_PLATFORM_X11_GLX
+or OBS_NIX_PLATFORM_X11_EGL.
+---
+ UI/obs-app.cpp         |  4 ++++
+ libobs-opengl/gl-nix.c | 10 ++++++----
+ libobs-opengl/gl-nix.h |  2 ++
+ 3 files changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/UI/obs-app.cpp b/UI/obs-app.cpp
+index 7afa2209..2a8de8d9 100644
+--- a/UI/obs-app.cpp
++++ b/UI/obs-app.cpp
+@@ -1377,6 +1377,10 @@ bool OBSApp::OBSInit()
+ #if !defined(_WIN32) && !defined(__APPLE__)
+ 	obs_set_nix_platform(OBS_NIX_PLATFORM_X11_GLX);
+ 	if (QApplication::platformName() == "xcb") {
++		if (getenv("OBS_USE_EGL")) {
++			blog(LOG_INFO, "Using EGL/X11");
++			obs_set_nix_platform(OBS_NIX_PLATFORM_X11_EGL);
++		}
+ 		obs_set_nix_platform_display(QX11Info::display());
+ 	}
+ #endif
+diff --git a/libobs-opengl/gl-nix.c b/libobs-opengl/gl-nix.c
+index 4b616ef1..9ed3d198 100644
+--- a/libobs-opengl/gl-nix.c
++++ b/libobs-opengl/gl-nix.c
+@@ -25,11 +25,13 @@ static void init_winsys(void)
+ {
+ 	assert(gl_vtable == NULL);
+ 
+-	if (getenv("OBS_USE_EGL")) {
+-		gl_vtable = gl_x11_egl_get_winsys_vtable();
+-		blog(LOG_INFO, "Using EGL/X11");
+-	} else {
++	switch (obs_get_nix_platform()) {
++	case OBS_NIX_PLATFORM_X11_GLX:
+ 		gl_vtable = gl_x11_glx_get_winsys_vtable();
++		break;
++	case OBS_NIX_PLATFORM_X11_EGL:
++		gl_vtable = gl_x11_egl_get_winsys_vtable();
++		break;
+ 	}
+ 
+ 	assert(gl_vtable != NULL);
+diff --git a/libobs-opengl/gl-nix.h b/libobs-opengl/gl-nix.h
+index 209cc308..f5532719 100644
+--- a/libobs-opengl/gl-nix.h
++++ b/libobs-opengl/gl-nix.h
+@@ -17,6 +17,8 @@
+ 
+ #pragma once
+ 
++#include <obs-nix-platform.h>
++
+ #include "gl-subsystem.h"
+ 
+ struct gl_winsys_vtable {
+-- 
+2.28.0
+

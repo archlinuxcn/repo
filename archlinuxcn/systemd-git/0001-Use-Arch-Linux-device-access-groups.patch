@@ -1,17 +1,12 @@
-From 34e4b4953cb99642e9144d97823edf32b06ffe93 Mon Sep 17 00:00:00 2001
-Message-Id: <34e4b4953cb99642e9144d97823edf32b06ffe93.1520376078.git.jan.steffens@gmail.com>
 From: "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
 Date: Tue, 6 Mar 2018 23:39:47 +0100
 Subject: [PATCH] Use Arch Linux' device access groups
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
   cdrom   → optical
   dialout → uucp
   tape    → storage
 ---
- rules/50-udev-default.rules.in | 14 +++++++-------
+ rules.d/50-udev-default.rules.in | 14 +++++++-------
  sysusers.d/basic.conf.in       |  6 +++---
  2 files changed, 10 insertions(+), 10 deletions(-)
 
@@ -70,6 +65,3 @@ index 8e358c02d..33e513a36 100644
  g video   -     -            -
  
  # Default group for normal users
--- 
-2.16.2
-

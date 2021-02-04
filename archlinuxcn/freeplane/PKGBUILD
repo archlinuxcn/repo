@@ -2,7 +2,7 @@
 # Contributor: scrawler@gmail.com
 
 pkgname=freeplane
-pkgver=1.8.10
+pkgver=1.8.11
 pkgrel=1
 pkgdesc="A Java mindmapping tool"
 arch=('any')
@@ -12,9 +12,9 @@ makedepends=('unzip')
 depends=('java-runtime>7' 'desktop-file-utils')
 source=("https://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}_bin-${pkgver}.zip"
         "freeplane.desktop" "freeplane.run")
-sha256sums=('c356d69e08afbb81e17537f386000372159bf5e42207262fd79cb8696ec4f388'
-            '25f6f65bb726f1051035c62c08fd9df7c989091d5c6aef0d94624e6d2ef4ab05'
-            'f8b95860fb87893b020eb2e1780a34ff4d9653ba553637a6471f6cb8bbdd4133')
+b2sums=('9aa4faeeced23714cb0368e12ed7006a7d199494f9e9555666966dede64478814be608ef90ccc5ee398debb8d153166e33de2dd3bfd8d8408f5a83dc1e385b92'
+        'f73371afd6fad2e105ecb7b3f802561b45ddb2e5401d82987876ee55bb9c15ed9995bfd013229de1cf731ec692bf52088a9a745c9e035d414e46c1868bdb2719'
+        '24ca56b7c7894b9bb38600b4d37973769243e1bdb221f33125b60bf4f878a3b630775710fab9dee97fa45a69319455037e294860ba7fbd608529982c6b0b1538')
 package() {
   # Create required directories
   mkdir -p "${pkgdir}/usr/share/freeplane/core/org.freeplane.core/META-INF"

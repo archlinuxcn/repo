@@ -1,26 +1,24 @@
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 656b4e6..b5caa0c 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -121,12 +121,15 @@ else()
+--- dislocker-0.7.3/src/CMakeLists.txt.orig
++++ dislocker-0.7.3/src/CMakeLists.txt
+@@ -129,12 +129,15 @@
  	return ()
  endif()
  
 -find_package (Ruby)
--if(RUBY_FOUND  AND  RUBY_INCLUDE_DIRS  AND  RUBY_LIBRARIES)
+-if(RUBY_FOUND  AND  RUBY_INCLUDE_DIRS  AND  RUBY_LIBRARY)
 -	include_directories (${RUBY_INCLUDE_DIRS})
--	set (LIB "${LIB} ${RUBY_LIBRARIES}")
+-	set (LIB ${LIB} ${RUBY_LIBRARY})
 -	add_definitions (-D_HAVE_RUBY=${RUBY_VERSION_STRING})
 -	set (SOURCES ${SOURCES} ruby.c)
-+option(WITH_RUBY "Enable ruby bindings" ON)
++option (WITH_RUBY "Enable Ruby bindings" ON)
 +if (WITH_RUBY)
-+    find_package (Ruby)
-+    if(RUBY_FOUND  AND  RUBY_INCLUDE_DIRS  AND  RUBY_LIBRARIES)
-+        include_directories (${RUBY_INCLUDE_DIRS})
-+        set (LIB "${LIB} ${RUBY_LIBRARIES}")
-+        add_definitions (-D_HAVE_RUBY=${RUBY_VERSION_STRING})
-+        set (SOURCES ${SOURCES} ruby.c)
-+    endif()
++	find_package (Ruby)
++	if(RUBY_FOUND  AND  RUBY_INCLUDE_DIRS  AND  RUBY_LIBRARY)
++		include_directories (${RUBY_INCLUDE_DIRS})
++		set (LIB ${LIB} ${RUBY_LIBRARY})
++		add_definitions (-D_HAVE_RUBY=${RUBY_VERSION_STRING})
++		set (SOURCES ${SOURCES} ruby.c)
++	endif()
  endif()
  
  find_package (FUSE)

@@ -15,3 +15,7 @@ repo_depends:
 update_on:
   - source: aur
     aur: megasync
+  - source: archpkg
+    archpkg: crypto++
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1

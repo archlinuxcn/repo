@@ -1,0 +1,116 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a9a0f0cbe..27d95f7bf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -92,9 +92,13 @@ if(EXISTS /etc/os-release)
+     file(STRINGS /etc/os-release DISTRO REGEX "^NAME=")
+ endif()
+ 
++if(EXISTS /usr/lib/os-release)
++    file(STRINGS /usr/lib/os-release DISTRO REGEX "^NAME=")
++endif()
++
+ # Fedora and CentOS do not put /usr/local/{bin,lib64} on the default search paths
+ # So change installation to /usr
+-if(DISTRO AND DISTRO MATCHES "CentOS|Fedora")
++if(DISTRO AND DISTRO MATCHES "CentOS|Fedora|Arch Linux")
+     set(CMAKE_INSTALL_PREFIX /usr)
+ endif()
+ 
+diff --git a/package/CMakeLists.txt b/package/CMakeLists.txt
+index 796c91324..9e07392c9 100644
+--- a/package/CMakeLists.txt
++++ b/package/CMakeLists.txt
+@@ -76,6 +76,8 @@ else()
+         set(CPACK_GENERATOR "TGZ;TBZ2")
+     elseif(DISTRO MATCHES "Ubuntu")
+         set(CPACK_GENERATOR "DEB;TGZ;TBZ2")
++    elseif(DISTRO MATCHES "Arch Linux")
++        set(CPACK_GENERATOR "TGZ;TBZ2")
+     else()
+         set(CPACK_GENERATOR "RPM;TGZ;TBZ2")
+     endif()
+diff --git a/src/libsrcml/CMakeLists.txt b/src/libsrcml/CMakeLists.txt
+index 9ef32d202..1abef69cd 100644
+--- a/src/libsrcml/CMakeLists.txt
++++ b/src/libsrcml/CMakeLists.txt
+@@ -40,6 +40,7 @@ endif()
+ 
+ include_directories(BEFORE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_INSTALL_INCLUDEDIR})
+ 
++if(BUILD_LIBSRCML_STATIC)
+ # Building static and dynamic libraries for srcML.
+ add_library(libsrcml_static STATIC $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml>)
+ set_target_properties(libsrcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+@@ -48,6 +49,7 @@ target_link_libraries(libsrcml_static PRIVATE ${LIBSRCML_LIBRARIES})
+ if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
+     target_link_libraries(libsrcml_static PRIVATE gcov)
+ endif()
++endif()
+ 
+ add_library(libsrcml_shared SHARED $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml>)
+ set_target_properties(libsrcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+@@ -59,12 +61,22 @@ endif()
+ 
+ set_target_properties(libsrcml_shared PROPERTIES VERSION "${PROJECT_VERSION}" SOVERSION "${PROJECT_VERSION_MAJOR}")
+ 
++if(BUILD_LIBRSRCML_STATIC)
++if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
++    set_target_properties(libsrcml_static PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS_DEBUG "/SAFESEH:NO")
++elseif(APPLE)
++    set_target_properties(libsrcml_static PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-Wl,-exported_symbols_list ${CMAKE_SOURCE_DIR}/src/libsrcml/export_list" MACOSX_RPATH OFF)
++else()
++    set_target_properties(libsrcml_static PROPERTIES OUTPUT_NAME srcml)
++endif()
++endif()
++
+ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+-    set_target_properties(libsrcml_shared libsrcml_static PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS_DEBUG "/SAFESEH:NO")
++    set_target_properties(libsrcml_shared PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS_DEBUG "/SAFESEH:NO")
+ elseif(APPLE)
+-    set_target_properties(libsrcml_shared libsrcml_static PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-Wl,-exported_symbols_list ${CMAKE_SOURCE_DIR}/src/libsrcml/export_list" MACOSX_RPATH OFF)
++    set_target_properties(libsrcml_shared PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-Wl,-exported_symbols_list ${CMAKE_SOURCE_DIR}/src/libsrcml/export_list" MACOSX_RPATH OFF)
+ else()
+-    set_target_properties(libsrcml_shared libsrcml_static PROPERTIES OUTPUT_NAME srcml)
++    set_target_properties(libsrcml_shared PROPERTIES OUTPUT_NAME srcml)
+ endif()
+ 
+ # which types of libraries
+@@ -101,6 +113,7 @@ if(NOT APPLE)
+     set_target_properties(libsrcml_shared PROPERTIES LINK_FLAGS_RELEASE -s)
+ endif()
+ 
++if(BUILD_LIBSRCML_STATIC)
+ if(APPLE)
+     add_custom_command(TARGET libsrcml_static POST_BUILD
+         COMMAND /usr/bin/strip -ur ${CMAKE_BINARY_DIR}/bin/libsrcml.a
+@@ -110,3 +123,4 @@ elseif(NOT WIN32)
+         COMMAND /usr/bin/strip ${CMAKE_BINARY_DIR}/bin/libsrcml.a
+         COMMAND ${CMAKE_COMMAND} -E echo "-- Stripping bin/libsrcml.a")
+ endif()
++endif()
+diff --git a/src/parser/CMakeLists.txt b/src/parser/CMakeLists.txt
+index 049927cad..d39e56e57 100644
+--- a/src/parser/CMakeLists.txt
++++ b/src/parser/CMakeLists.txt
+@@ -20,7 +20,7 @@
+ # CMake files for building the parser
+ 
+ # Find antlr binary
+-find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin ${WINDOWS_DEP_PATH}/tools/antlr/277/bin)
++find_program(ANTLR_EXE NAMES antlr runantlr runantlr2 cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin ${WINDOWS_DEP_PATH}/tools/antlr/277/bin)
+ 
+ # Assume all C++ source files are parser
+ file(GLOB PARSER_SOURCE *.hpp *.cpp)
+diff --git a/src/parser/UTF8CharBuffer.cpp b/src/parser/UTF8CharBuffer.cpp
+index c45cf682f..b728d46ea 100644
+--- a/src/parser/UTF8CharBuffer.cpp
++++ b/src/parser/UTF8CharBuffer.cpp
+@@ -29,6 +29,7 @@
+ #include <map>
+ #include <string>
+ #include <cstring>
++#include <algorithm>
+ 
+ #ifndef _MSC_BUILD
+ #include <unistd.h>

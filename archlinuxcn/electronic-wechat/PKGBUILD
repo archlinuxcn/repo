@@ -4,12 +4,12 @@
 
 pkgname=electronic-wechat
 pkgver=2.3.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A better WeChat client"
 arch=('x86_64')
 url='https://github.com/kooritea/electronic-wechat'
 license=('custom')
-depends=('electron' 'python' 'nodejs' 'hicolor-icon-theme')
+depends=('electron9' 'python' 'nodejs' 'hicolor-icon-theme')
 optdepends=('libappindicator-gtk3: fix broken tray icon in KDE')
 makedepends=('git' 'npm' 'python2' 'imagemagick')
 source=(
@@ -19,7 +19,7 @@ source=(
 )
 sha256sums=('9282d07bf65e0e5c5c5fda44d2b05ff9003abedf727ae7bec90aa79f3afa6ce1'
             '56c0db46c3b9fc31ac16265d0346ef47a6422392607bcce954e0f550894475be'
-            '10696031537d5d749b1d8914829057d73aaccb788263b4df8bc5ff7ed7939bff')
+            '45f520cd528c711bd0d84e77f25f973c9a2ba3753fb15f7b465eca7349e7e999')
 
 prepare() {
     cd "$pkgname-$pkgver"

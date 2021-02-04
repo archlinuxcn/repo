@@ -3,4 +3,15 @@
 maintainers:
   - github: farseerfc
 
-managed: false
+repo_depends:
+  - srcml
+
+update_on:
+  - source: aur
+    aur: zograscope-git
+  - source: github
+    github: xaizek/zograscope
+  - alias: boost
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit

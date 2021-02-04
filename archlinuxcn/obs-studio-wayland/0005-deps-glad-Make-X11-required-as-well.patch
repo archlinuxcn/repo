@@ -1,0 +1,26 @@
+From 99ccd3f717f0f2325a3f4f607f387b4da6236880 Mon Sep 17 00:00:00 2001
+From: Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+Date: Sat, 11 Apr 2020 23:49:05 -0300
+Subject: [PATCH 05/25] deps/glad: Make X11 required as well
+
+To keep consistency with the EGL line
+---
+ deps/glad/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/deps/glad/CMakeLists.txt b/deps/glad/CMakeLists.txt
+index 60b3ad41..83f4efac 100644
+--- a/deps/glad/CMakeLists.txt
++++ b/deps/glad/CMakeLists.txt
+@@ -3,7 +3,7 @@ project(glad)
+ find_package(OpenGL)
+ 
+ if(NOT WIN32 AND NOT APPLE)
+-	find_package(X11)
++	find_package(X11 REQUIRED)
+ 	find_package(EGL REQUIRED)
+ endif()
+ 
+-- 
+2.28.0
+

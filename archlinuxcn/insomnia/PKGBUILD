@@ -3,54 +3,52 @@
 # Contributor: vscncls <lucaslou4@protonmail.com>
 
 pkgname=insomnia
-pkgver=2020.4.2
+pkgver=2020.5.2
 pkgrel=1
+_nodeversion=12.18.3
 pkgdesc="Cross-platform HTTP and GraphQL Client"
 url="https://github.com/Kong/insomnia"
 arch=('any')
 license=('MIT')
-depends=('electron')
-makedepends=('npm')
+depends=()
+makedepends=('npm' 'nvm' 'fontconfig')
 source=(
   "https://github.com/Kong/insomnia/archive/core@${pkgver}/${pkgname}-${pkgver}.tar.gz"
   "insomnia.desktop"
-  "insomnia.sh"
-  "node-any.patch"
 )
-b2sums=('2527045680d99d0321ce9a29f8d3e9302bd07c79d059d0a2e9c3f963d2adb45c9566668faca817a0f4913ee22728ebb8f553463ae6cdc731793520a3371d0953'
-        'd2ceeb224fa3a35551b0929648d5e066da93a451a66b73373c13ed0dd89575a2482c2dc8e7499b214d0d62cca2532189dac9a681537751a5a86b592cae5686c7'
-        '7ea4aff2779267bfc5f7be5533d70b07a3da1c8bfed424c9f6cc9806fe6567a4cd40144264a8827b016e51f31c6dbb395c90aac4d333f297070213c77a0b2c9c'
-        'db40a0e7d85cb8378c1f973150249d67e5cfc5d018787b733f2516892144f3c536e1587cdba2eec5da800ee474d4bccf090379b371cb6c59a0a9829090012896')
+b2sums=('5cd5f55b437926e85307e69a9c96349d1ea2516e34bea29bfa53c74d1bd5573d1a4bbbf4dcc181a51430d66bdb308f0eb982201b9d54fb63d3eb194ed701dffe'
+        '38c2edd681b012931e25498a4a65007cc2a2152c9bbc5505dbb7cf03e1143a7365c41e9ad7eb2318c8ea894dccad0e0b6601cf76f680ea4085d12b5059e61a6e')
+
+_ensure_local_nvm() {
+  # lets be sure we are starting clean
+  which nvm >/dev/null 2>&1 && nvm deactivate && nvm unload
+
+  export NVM_DIR="${srcdir}/${pkgname}-core-${pkgver}/.nvm"
+  # The init script returns 3 if version
+  #   specified in ./.nvrc is not (yet) installed in $NVM_DIR
+  #   but nvm itself still gets loaded ok
+  source /usr/share/nvm/init-nvm.sh || [[ $? != 1 ]]
+}
 
 prepare() {
-  # Use local node and electron version
-  # See https://wiki.archlinux.org/index.php/Electron_package_guidelines
-
+  _ensure_local_nvm
   cd ${pkgname}-core-${pkgver}
-  node --version | sed s/v// > .nvmrc
-  patch --forward --strip=1 --input="${srcdir}/node-any.patch"
-  electron_version=$(electron --version | sed s/v//)
-  sed -i 's/"electron": ".\+"/"electron": "'"$electron_version"'"/g' packages/insomnia-app/package.json
+  nvm install 
 }
 
 build() {
+  _ensure_local_nvm
   cd ${pkgname}-core-${pkgver}
-  npm run bootstrap
+  npm run bootstrap  
   GIT_TAG="core@${pkgver}" npm run app-package
 }
 
 package() {
-  # Install start script
-  install -Dm755 ${pkgname}.sh "${pkgdir}/usr/bin/insomnia"
   install -Dm644 ${pkgname}.desktop -t "${pkgdir}/usr/share/applications"
-
   cd ${pkgname}-core-${pkgver}
-  install -Dm644 packages/insomnia-app/dist/com.insomnia.app/linux-unpacked/resources/app.asar -t "${pkgdir}/usr/share/insomnia"
-
-  for size in 16 32 48 128 256 512; do
-    install -Dm644 packages/insomnia-app/build/com.insomnia.app/static/icon.png "${pkgdir}/usr/share/icons/hicolor/${size}x${size}/apps/insomnia.png"
-  done
-
+  install -d "${pkgdir}/opt/insomnia"
+  cp -r "packages/insomnia-app/dist/com.insomnia.app/linux-unpacked/." "$pkgdir/opt/insomnia"
+  install -Dm644 packages/insomnia-app/app/ui/images/insomnia-core-logo.png "${pkgdir}/usr/share/pixmaps/insomnia.png"
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 

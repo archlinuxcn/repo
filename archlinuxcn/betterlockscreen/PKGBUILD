@@ -1,4 +1,4 @@
-# Maintainer: Dct Mei <dctxmei@gmail.com>
+# Maintainer: Dct Mei <dctxmei@yandex.com>
 # Contributor: AUTplayed <fips.hem@gmail.com>
 # Contributor: pavanjadhaw <pavanjadhaw96@gmail.com>
 

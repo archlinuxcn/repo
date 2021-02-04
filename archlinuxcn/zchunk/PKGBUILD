@@ -1,6 +1,6 @@
 # Maintainer: Nikita Puzyryov <PuzyryovN@gmail.com>
 pkgname=zchunk
-pkgver=1.1.7
+pkgver=1.1.9
 pkgrel=1
 pkgdesc="A file format that allows easy deltas while maintaining good compression"
 arch=(x86 x86_64)
@@ -10,7 +10,7 @@ depends=('libcurl.so' 'zstd')
 provides=('libzck.so')
 makedepends=('meson' 'ninja')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
-sha256sums=('eb3d531916d6fea399520a2a4663099ddbf2278088599fa09980631067dc9d7b')
+sha256sums=('9e9bac8bb92e86eba50dc7fcf1f79e7835534c3aa15274355ffd84a8bcc03f91')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"

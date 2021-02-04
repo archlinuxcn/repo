@@ -5,41 +5,36 @@
 # Contributor: UTUMI Hirosi <utuhiro78 at yahoo dot co dot jp>
 
 ## Mozc compile option
-_bldtype=Debug
+_bldtype=Release
 
-_zipcode_rel=201810
+_zipcode_rel=202011
 
 _pkgbase=mozc
 pkgname=fcitx5-mozc-git
 pkgdesc="Fcitx5 Module of A Japanese Input Method for Chromium OS, Windows, Mac and Linux (the Open Source Edition of Google Japanese Input)"
-pkgver=2.25.4150.102.r1388.e7a97d0e
-_fcitx_patchver=2.25.4150.102
+pkgver=2.26.4269.102.r1417.aa254a31
 pkgrel=1
 arch=('x86_64')
 url="https://github.com/google/mozc"
 license=('custom')
-depends=('qt5-base' 'fcitx5-git' 'zinnia')
+depends=('qt5-base' 'fcitx5-git')
 makedepends=('pkg-config' 'python' 'curl' 'gtk2' 'mesa' 'subversion' 'ninja' 'git' 'clang' 'python-six')
 replaces=('mozc-fcitx')
 conflicts=('mozc' 'mozc-server' 'mozc-utils-gui' 'mozc-fcitx' 'fcitx-mozc' 'fcitx5-mozc')
 source=(git+https://github.com/fcitx/mozc.git#branch=fcitx
-        https://downloads.sourceforge.net/pnsft-aur/x-ken-all-${_zipcode_rel}.zip
-        https://downloads.sourceforge.net/pnsft-aur/jigyosyo-${_zipcode_rel}.zip
-        https://download.fcitx-im.org/fcitx-mozc/fcitx-mozc-icon.tar.gz
+        https://osdn.net/projects/ponsfoot-aur/storage/mozc/jigyosyo-${_zipcode_rel}.zip
+        https://osdn.net/projects/ponsfoot-aur/storage/mozc/x-ken-all-${_zipcode_rel}.zip
         git+https://chromium.googlesource.com/breakpad/breakpad
         git+https://github.com/google/googletest.git
         git+https://chromium.googlesource.com/external/gyp
         git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git
         git+https://github.com/open-source-parsers/jsoncpp.git
         git+https://github.com/google/protobuf.git
-        git+https://github.com/taku910/zinnia.git
         git+https://github.com/abseil/abseil-cpp.git
 	)
 sha512sums=('SKIP'
-            '59d0a5e62c698ebc64008f1fb2ed68ebbbd7798d9d95f2e4852261fb09d53e9f8c102f385ed8f2001e3da6c2a0a50d64f1f20e70671948b492f972c487655efe'
-            'daf41f63bd1afc0937beb12aa007ead8a239fabc3af2237e4adf75238b0e0e520f6051f5a98d413a541f901e17a1488eb3fad6d0bba1f1561987365236d64146'
-            '5507c637e5a65c44ccf6e32118b6d16647ece865171b9a77dd3c78e6790fbd97e6b219e68d2e27750e22074eb536bccf8d553c295d939066b72994b86b2f251a'
-            'SKIP'
+            '0ef2d0abd9744900f9a50f941cf1f9b47640f3643c14a1be1761bcf0bd1053cb93560203c25280f58fccbd8ec98b9ca2e21c5d5a59844bbbffc9c988dfcf7bed'
+            '8a35672b4a525d8e4f3303bd83c6bf6075cd4f10e703bf656a4c9328f18a8783c3049b749092e6e8be57eaddce4f889e9dacae9b3b72ba7bb9240a0f5a93fd34'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -51,7 +46,9 @@ validpgpkeys=('2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9')  # Weng Xuetian
 
 pkgver() {
   cd mozc
-  printf "%s.r%s.%s" "${_fcitx_patchver}" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  # parse major.minor.buildid from version template, revision is fixed to 102 for Linux
+  _bzr_ver=$(sed 's/ //g;$ a echo $MAJOR.$MINOR.$BUILD.102' src/data/version/mozc_version_template.bzl | source /dev/stdin)
+  printf "%s.r%s.%s" "${_bzr_ver}" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
@@ -63,7 +60,6 @@ prepare() {
   git config submodule.src/third_party/japanese_usage_dictionary.url "$srcdir/japanese-usage-dictionary"
   git config submodule.src/third_party/jsoncpp.url "$srcdir/jsoncpp"
   git config submodule.src/third_party/protobuf.url "$srcdir/protobuf"
-  git config submodule.src/third_party/zinnia.url "$srcdir/zinnia"
   git config submodule.src/third_party/abseil-cpp.url "$srcdir/abseil-cpp"
   git submodule update
 
@@ -76,9 +72,6 @@ prepare() {
   # disable fcitx4 target
   rm unix/fcitx/fcitx.gyp
   
-  # fix mozc icon for kimpanel
-  sed -i "s|PREFIX|/usr|" unix/fcitx5/mozc.conf
-
   ## use libstdc++ instead of libc++
   sed "/stdlib=libc++/d;/-lc++/d" -i gyp/common.gypi
 }
@@ -102,6 +95,7 @@ build() {
 package() {
   cd mozc/src
   export PREFIX="${pkgdir}/usr"
+  export _bldtype
   ../scripts/install_server
 
   install -d "${pkgdir}/usr/share/licenses/$pkgname/"
@@ -111,17 +105,4 @@ package() {
   install -d "${PREFIX}/share/fcitx5/inputmethod"
   install -d "${PREFIX}/lib/fcitx5"
   ../scripts/install_fcitx5
-
-  install -d "${pkgdir}/usr/share/fcitx5/mozc/icon"
-  install -m 644 "$srcdir/fcitx-mozc-icons/mozc.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc.png"
-  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-alpha_full.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-alpha_full.png"
-  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-alpha_half.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-alpha_half.png"
-  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-direct.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-direct.png"
-  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-hiragana.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-hiragana.png"
-  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-katakana_full.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-katakana_full.png"
-  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-katakana_half.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-katakana_half.png"
-  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-dictionary.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-dictionary.png"
-  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-properties.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-properties.png"
-  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-tool.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-tool.png"
-
 }

@@ -1,0 +1,62 @@
+Index: b/gtk/gtkplacessidebar.c
+===================================================================
+--- a/gtk/gtkplacessidebar.c
++++ b/gtk/gtkplacessidebar.c
+@@ -633,6 +633,7 @@ open_home (GtkPlacesSidebar *sidebar)
+ static void
+ add_special_dirs (GtkPlacesSidebar *sidebar)
+ {
++  return;
+   GList *dirs;
+   gint index;
+ 
+@@ -1427,8 +1428,6 @@ update_places (GtkPlacesSidebar *sidebar
+       root = sl->data;
+       is_native = g_file_is_native (root);
+ 
+-      if (_gtk_bookmarks_manager_get_is_builtin (sidebar->bookmarks_manager, root))
+-        continue;
+ 
+       if (sidebar->local_only && !is_native)
+         continue;
+@@ -1536,6 +1535,17 @@ update_places (GtkPlacesSidebar *sidebar
+ 
+       g_object_unref (start_icon);
+     }
++  else if (!sidebar->local_only)
++    {
++      start_icon = g_themed_icon_new_with_default_fallbacks (ICON_NAME_NETWORK);
++
++      add_place (sidebar, PLACES_BUILT_IN,
++                 SECTION_OTHER_LOCATIONS,
++                 _("Networks"), start_icon, NULL, "network:///",
++                 NULL, NULL, NULL, NULL, 0, _("Show other locations"));
++
++      g_object_unref (start_icon);
++    }
+ 
+   gtk_widget_show_all (GTK_WIDGET (sidebar));
+   /* We want this hidden by default, but need to do it after the show_all call */
+@@ -4155,7 +4165,7 @@ gtk_places_sidebar_init (GtkPlacesSideba
+ 
+   gtk_container_add (GTK_CONTAINER (sidebar), sidebar->list_box);
+ 
+-  sidebar->hostname = g_strdup (_("Computer"));
++  sidebar->hostname = g_strdup (_("File System"));
+   sidebar->hostnamed_cancellable = g_cancellable_new ();
+   g_dbus_proxy_new_for_bus (G_BUS_TYPE_SYSTEM,
+                             G_DBUS_PROXY_FLAGS_GET_INVALIDATED_PROPERTIES,
+Index: b/gtk/ui/gtkfilechooserwidget.ui
+===================================================================
+--- a/gtk/ui/gtkfilechooserwidget.ui
++++ b/gtk/ui/gtkfilechooserwidget.ui
+@@ -16,7 +16,8 @@
+                 <property name="visible">1</property>
+                 <property name="hscrollbar-policy">never</property>
+                 <property name="local-only">1</property>
+-                <property name="show-other-locations">1</property>
++                <property name="show-other-locations">0</property>
++                <property name="show-trash">0</property>
+                 <style>
+                   <class name="sidebar"/>
+                 </style>

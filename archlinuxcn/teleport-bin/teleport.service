@@ -5,9 +5,12 @@ After=network.target
 [Service]
 Type=simple
 Restart=on-failure
-ExecStart=/usr/bin/teleport start --config=/etc/teleport.yaml --pid-file=/var/run/teleport.pid
+WorkingDirectory=/etc/teleport
+EnvironmentFile=-/etc/teleport/teleport-env.conf
+ExecStart=/usr/bin/teleport start --pid-file=/run/teleport.pid --config teleport.yaml
 ExecReload=/bin/kill -HUP $MAINPID
-PIDFile=/var/run/teleport.pid
+PIDFile=/run/teleport.pid
+LimitNOFILE=8192
 
 [Install]
 WantedBy=multi-user.target

@@ -1,0 +1,49 @@
+diff --git a/system/gesture/core.c b/system/gesture/core.c
+index 85902af6..e1f0df64 100644
+--- a/system/gesture/core.c
++++ b/system/gesture/core.c
+@@ -355,12 +355,12 @@ handle_gesture_events(struct libinput_event *ev, int type)
+         return ;
+     }
+     struct libinput_event_gesture *gesture = libinput_event_get_gesture_event(ev);
+-    if (raw->dblclick
++    if (raw->dblclick /*
+     && type != LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN
+     && type != LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE
+     && type != LIBINPUT_EVENT_GESTURE_SWIPE_END
+     && type != LIBINPUT_EVENT_GESTURE_TAP_UPDATE
+-    && type != LIBINPUT_EVENT_GESTURE_TAP_END) {
++    && type != LIBINPUT_EVENT_GESTURE_TAP_END*/) {
+         raw->fingers = libinput_event_gesture_get_finger_count(gesture);
+         handleSwipeStop(raw->fingers);
+         raw->dblclick = false;
+@@ -438,7 +438,7 @@ handle_gesture_events(struct libinput_event *ev, int type)
+ 
+         raw_event_reset(raw, true);
+         break;
+-    case LIBINPUT_EVENT_GESTURE_TAP_BEGIN:
++    /*case LIBINPUT_EVENT_GESTURE_TAP_BEGIN:
+         g_debug("[Tap begin] time: %u duration: %d fingers: %d \n", raw->t_start_tap, (libinput_event_gesture_get_time_usec(gesture) - raw->t_start_tap) / 1000, raw->fingers);
+         if (raw->t_start_tap > 0
+         &&  (libinput_event_gesture_get_time_usec(gesture) - raw->t_start_tap) / 1000 <= dblclick_duration
+@@ -462,7 +462,7 @@ handle_gesture_events(struct libinput_event *ev, int type)
+         } else {
+             raw_event_reset(raw, true);
+         }
+-        break;
++        break;*/
+     }
+ }
+ 
+@@ -592,9 +592,9 @@ handle_events(struct libinput *li, struct movement *m)
+         case LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN:
+         case LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE:
+         case LIBINPUT_EVENT_GESTURE_SWIPE_END:
+-        case LIBINPUT_EVENT_GESTURE_TAP_BEGIN:
++        /*case LIBINPUT_EVENT_GESTURE_TAP_BEGIN:
+         case LIBINPUT_EVENT_GESTURE_TAP_UPDATE:
+-        case LIBINPUT_EVENT_GESTURE_TAP_END:{
++        case LIBINPUT_EVENT_GESTURE_TAP_END:*/{
+             handle_gesture_events(ev, type);
+             break;
+         }

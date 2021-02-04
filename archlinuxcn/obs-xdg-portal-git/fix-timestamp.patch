@@ -1,0 +1,36 @@
+From 8189f99cfbd2dfebee94f37a2e95b9deb320fc9f Mon Sep 17 00:00:00 2001
+From: Zakk <zakk@rsdio.com>
+Date: Sun, 5 Jul 2020 01:04:59 -0400
+Subject: [PATCH] Set the OBS frame timestamp to a frame counter. The GST macro
+ returns an invalid timestamp. This causes display framerate issue in OBS.
+
+---
+ obs-xdg-portal.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/obs-xdg-portal.c b/obs-xdg-portal.c
+index 83cdccc..d595365 100644
+--- a/obs-xdg-portal.c
++++ b/obs-xdg-portal.c
+@@ -48,6 +48,7 @@ typedef struct
+ 
+         obs_source_t *source;
+         obs_data_t *settings;
++	int64_t frame_count;
+ } obs_xdg_data;
+ 
+ /* auxiliary methods */
+@@ -187,9 +188,9 @@ new_appsink_sample_cb (GstAppSink *appsink,
+     .data[0] = info.data + video_info.offset[0],
+     .data[1] = info.data + video_info.offset[1],
+     .data[2] = info.data + video_info.offset[2],
+-    .timestamp = GST_BUFFER_DTS_OR_PTS (buffer),
+   };
+ 
++  frame.timestamp = xdg->frame_count++;
+   switch (video_info.colorimetry.range)
+     {
+     case GST_VIDEO_COLOR_RANGE_0_255:
+-- 
+GitLab
+

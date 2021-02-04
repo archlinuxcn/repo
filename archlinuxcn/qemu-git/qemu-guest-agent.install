@@ -1,0 +1,6 @@
+post_upgrade() {
+    echo "qemu-ga.service was renamed to qemu-guest-agent.service"
+    echo "You might want to switch to the new service name:"
+    echo "# systemctl disable qemu-ga.service"
+    echo "# systemctl enable qemu-guest-agent.service"
+}

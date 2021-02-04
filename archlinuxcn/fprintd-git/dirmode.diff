@@ -1,0 +1,15 @@
+ data/fprintd.service.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git c/data/fprintd.service.in i/data/fprintd.service.in
+index 9ea7a2a..02bd13e 100644
+--- c/data/fprintd.service.in
++++ i/data/fprintd.service.in
+@@ -13,6 +13,7 @@ ProtectKernelTunables=true
+ ProtectControlGroups=true
+ # This always corresponds to /var/lib/fprint
+ StateDirectory=fprint
++StateDirectoryMode=0700
+ ProtectHome=true
+ PrivateTmp=true
+ 

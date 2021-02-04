@@ -1,0 +1,33 @@
+diff --git a/OpenRGB.pro b/OpenRGB.pro
+index 0e77d373e0d094fb714c1e58162aa67f5037da00..10d209ce25ff9e4a3351b5598e209e2326d81331 100644
+--- a/OpenRGB.pro
++++ b/OpenRGB.pro
+@@ -673,6 +673,15 @@ unix:!macx {
+     #-------------------------------------------------------------------------------------------#
+     packagesExist(hidapi-hidraw) {
+         LIBS += -lhidapi-hidraw
++
++        #---------------------------------------------------------------------------------------#
++        # hidapi-hidraw >= 0.10.1 supports USAGE/USAGE_PAGE                                     #
++        # Define USE_HID_USAGE if hidapi-hidraw supports it                                     #
++        #---------------------------------------------------------------------------------------#
++        HIDAPI_HIDRAW_VERSION = $$system(pkgconf --modversion hidapi-hidraw)
++        if(versionAtLeast(HIDAPI_HIDRAW_VERSION, "0.10.1")) {
++            DEFINES += USE_HID_USAGE
++        }
+     } else {
+         packagesExist(hidapi-libusb) {
+             LIBS += -lhidapi-libusb
+diff --git a/README.md b/README.md
+index 348f7140a9350b792af844064e15e32cb19cb982..e88acff8e83ad3e0d60cf3981a5dcaafa89c4b3d 100644
+--- a/README.md
++++ b/README.md
+@@ -54,7 +54,7 @@ There have been two instances of hardware damage in OpenRGB's development and we
+   *  Pre-built binaries in AppImage format are available under the Releases section on GitLab.
+   *  You can build the project using Qt Creator or on the command line.
+       1.  Install build dependencies
+-          - Debian: sudo apt install build-essential qtcreator qt5-default libusb-1.0-0-dev libhidapi-dev pkgconf
++          - Debian: sudo apt install build-essential qtcreator qt5-default libusb-1.0-0-dev libhidapi-dev pkgconf pkg-config
+           - Fedora: sudo dnf install git make automake gcc gcc-c++ qt-creator qt5-devel hidapi-devel libusb-devel
+       2.  git clone https://gitlab.com/CalcProgrammer1/OpenRGB
+       3.  cd OpenRGB

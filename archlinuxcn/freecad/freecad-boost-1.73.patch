@@ -1,0 +1,34 @@
+From 200c7c7e00d569ed9f00e06c9d9751a27fa67c2d Mon Sep 17 00:00:00 2001
+From: wmayer <wmayer@users.sourceforge.net>
+Date: Sun, 7 Jun 2020 17:21:37 +0200
+Subject: [PATCH] [skip ci] include missing boost header
+
+---
+ src/Gui/DAGView/DAGView.cpp                  | 1 +
+ src/Mod/Sketcher/Gui/TaskSketcherGeneral.cpp | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/src/Gui/DAGView/DAGView.cpp b/src/Gui/DAGView/DAGView.cpp
+index c4820b35606..e0f11e0bfde 100644
+--- a/src/Gui/DAGView/DAGView.cpp
++++ b/src/Gui/DAGView/DAGView.cpp
+@@ -22,6 +22,7 @@
+ 
+ #include "PreCompiled.h"
+ #ifndef _PreComp_
++#include <boost/bind.hpp>
+ #include <QAbstractEventDispatcher>
+ #include <QVBoxLayout>
+ #endif
+diff --git a/src/Mod/Sketcher/Gui/TaskSketcherGeneral.cpp b/src/Mod/Sketcher/Gui/TaskSketcherGeneral.cpp
+index dd8161a90f1..e8bf2a629d3 100644
+--- a/src/Mod/Sketcher/Gui/TaskSketcherGeneral.cpp
++++ b/src/Mod/Sketcher/Gui/TaskSketcherGeneral.cpp
+@@ -24,6 +24,7 @@
+ #include "PreCompiled.h"
+ 
+ #ifndef _PreComp_
++#include <boost/bind.hpp>
+ #endif
+ 
+ #include "ui_TaskSketcherGeneral.h"

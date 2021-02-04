@@ -2,7 +2,7 @@
 
 pkgname=webcamoid
 pkgver=8.7.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Webcamoid is a full featured webcam capture application."
 url='https://webcamoid.github.io/'
 license=('GPL')
@@ -39,7 +39,7 @@ makedepends=('v4l-utils'
 provides=('webcamoid')
 conflicts=('webcamoid-git')
 install="${pkgname}.install"
-source=("https://github.com/${pkgname}/${pkgname}/archive/${pkgver}.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/${pkgname}/${pkgname}/archive/${pkgver}.tar.gz")
 sha256sums=('e0c033b0421e3ee626456fcc6e7c39d322be646a96a53352f74c3b5dc5fd5435')
 
 build() {

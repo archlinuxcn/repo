@@ -1,0 +1,54 @@
+From fd3cd8b1134bc069943e1a2012f138437d210046 Mon Sep 17 00:00:00 2001
+From: Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+Date: Thu, 20 Aug 2020 11:57:19 -0300
+Subject: [PATCH 19/25] UI: Make OBSQTDisplay::CreateDisplay() public and allow
+ forcing creation
+
+This will be used by a new event filter, added only when running as a Wayland
+client, to force creating the obs_display instance even when not exposed.
+---
+ UI/qt-display.cpp | 7 +++++--
+ UI/qt-display.hpp | 3 +--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/UI/qt-display.cpp b/UI/qt-display.cpp
+index feed5b6c..b230ab4e 100644
+--- a/UI/qt-display.cpp
++++ b/UI/qt-display.cpp
+@@ -87,9 +87,12 @@ void OBSQTDisplay::UpdateDisplayBackgroundColor()
+ 	obs_display_set_background_color(display, backgroundColor);
+ }
+ 
+-void OBSQTDisplay::CreateDisplay()
++void OBSQTDisplay::CreateDisplay(bool force)
+ {
+-	if (display || !windowHandle()->isExposed())
++	if (display)
++		return;
++
++	if (!windowHandle()->isExposed() && !force)
+ 		return;
+ 
+ 	QSize size = GetPixelSize(this);
+diff --git a/UI/qt-display.hpp b/UI/qt-display.hpp
+index 21308e70..c48c1267 100644
+--- a/UI/qt-display.hpp
++++ b/UI/qt-display.hpp
+@@ -13,8 +13,6 @@ class OBSQTDisplay : public QWidget {
+ 
+ 	OBSDisplay display;
+ 
+-	void CreateDisplay();
+-
+ 	void resizeEvent(QResizeEvent *event) override;
+ 	void paintEvent(QPaintEvent *event) override;
+ 
+@@ -36,4 +34,5 @@ public:
+ 	QColor GetDisplayBackgroundColor() const;
+ 	void SetDisplayBackgroundColor(const QColor &color);
+ 	void UpdateDisplayBackgroundColor();
++	void CreateDisplay(bool force = false);
+ };
+-- 
+2.28.0
+

@@ -1,0 +1,43 @@
+# Maintainer: Morten Linderud <foxboron@archlinux.org>
+# Contributor: Giovanni Scafora <giovanni@archlinux.org>
+# Contributor: dorphell <dorphell@archlinux.org>
+# Contributor: Tom Newsom <Jeepster@gmx.co.uk>
+# Contributor: Denis Tikhomirov <dvtikhomirov@gmail.com>
+
+pkgname=minicom-line_timestamp
+_pkgname=minicom
+pkgver=2.8
+pkgrel=4
+pkgdesc='A serial communication program (with line_timestamp patch)'
+arch=('x86_64')
+url='https://salsa.debian.org/minicom-team/minicom'
+license=('GPL')
+depends=('bash')
+optdepends=('lrzsz: for xmodem, ymodem and zmodem file transfer protocols')
+provides=("minicom=$pkgver")
+conflicts=('minicom')
+backup=('etc/minirc.dfl')
+source=("https://salsa.debian.org/minicom-team/minicom/-/archive/$pkgver/minicom-$pkgver.tar.bz2"
+        "minicom-line_timestamp-v3.patch::https://salsa.debian.org/yan12125-guest/minicom/-/commit/4ee3e984cb21923bbf801750f39f9d07e8e3b9f8.patch")
+sha256sums=('38cea30913a20349326ff3f1763ee1512b7b41601c24f065f365e18e9db0beba'
+            'd9c164b0535c4315ccda49ab0caea1c4b236f8d479731d388c5f8cfef0260233')
+
+prepare(){
+  cd "${_pkgname}-${pkgver}"
+  patch -Np1 < "$srcdir/minicom-line_timestamp-v3.patch"
+}
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+
+  ./configure --prefix=/usr \
+              --sysconfdir=/etc
+  make
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+
+  make DESTDIR="${pkgdir}/" install
+  install -Dm644 doc/minirc.dfl ${pkgdir}/etc/minirc.dfl
+}

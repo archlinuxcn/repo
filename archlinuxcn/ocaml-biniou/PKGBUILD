@@ -4,7 +4,7 @@
 _pkgname=biniou
 pkgname=ocaml-${_pkgname}
 pkgver=1.2.1
-pkgrel=4
+pkgrel=5
 pkgdesc="An optimized parsing and printing library for JSON"
 arch=('x86_64')
 url="https://github.com/ocaml-community/${_pkgname}"

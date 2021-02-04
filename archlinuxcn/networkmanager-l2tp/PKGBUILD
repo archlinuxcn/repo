@@ -5,7 +5,7 @@
 
 pkgname=networkmanager-l2tp
 _pkgname=NetworkManager-l2tp
-pkgver=1.8.2
+pkgver=1.8.6
 pkgrel=1
 pkgdesc='L2TP support for NetworkManager'
 arch=('i686' 'x86_64' 'aarch64')
@@ -18,7 +18,7 @@ optdepends=(
   'strongswan: IPSec support'
 )
 source=("${_pkgname}-${pkgver}.tar.gz"::"https://github.com/nm-l2tp/${_pkgname}/archive/${pkgver}.tar.gz")
-md5sums=('ed2cbbb99cab8af10f9dce025c26c9f8')
+md5sums=('beebcc2e2ad0ff5e5b37dc517666612c')
 
 prepare() {
   cd $_pkgname-$pkgver

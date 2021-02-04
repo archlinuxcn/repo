@@ -2,8 +2,8 @@
 # Contributor: wenLiangcan <boxeed at gmail dot com>
 
 pkgname=websocketd
-pkgver=0.3.0
-pkgrel=10
+pkgver=0.4.1
+pkgrel=1
 pkgdesc="Like inetd, but for WebSockets. Turn any application that uses STDIO/STDOUT into a WebSocket server."
 arch=('x86_64' 'i686' 'arm64' 'arm')
 url="https://github.com/joewalnes/websocketd"
@@ -17,10 +17,10 @@ source_arm64=("https://github.com/joewalnes/websocketd/releases/download/v${pkgv
 source_arm=("https://github.com/joewalnes/websocketd/releases/download/v${pkgver}/websocketd-${pkgver}-linux_arm.zip")
 
 
-md5sums_x86_64=('398eaaa82858a802c863aba3a177fdbc')
-md5sums_i686=('2f3cb03240474b1ba3e2073e4a6fa225')
-md5sums_arm64=('968c1ce4ed4fe5f86817f2533f5d3004')
-md5sums_arm=('eb1350748075034b7699925cf3ca2d7d')
+md5sums_x86_64=('9e85a8fdf7dc9f55225e57e2923fcd91')
+md5sums_i686=('b9d9d66dccebac9451c6d0c0c5afc5c4')
+md5sums_arm64=('fa8db9628ccd6550dac02f66b0762e35')
+md5sums_arm=('611cd8522c68f2e599eceff8250c52ea')
 
 
 package() {

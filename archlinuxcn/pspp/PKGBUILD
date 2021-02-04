@@ -2,7 +2,7 @@
 # Contributor: joyfulgirl <joyfulgirl (at) archlinux.us>
 pkgname=pspp
 pkgver=1.4.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Statistical analysis program. Free replacement for SPSS."
 arch=('i686' 'x86_64')
 url="http://www.gnu.org/software/pspp/"

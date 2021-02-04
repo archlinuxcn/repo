@@ -1,6 +1,6 @@
 # Maintainer: Adrian Perez de Castro <aperez@igalia.com>
 pkgname=wf-config
-pkgver=0.6.0
+pkgver=0.7.0
 pkgrel=1
 pkgdesc="A library for managing configuration files, written for wayfire"
 arch=(x86_64)
@@ -9,8 +9,8 @@ license=(custom:MIT)
 depends=(libevdev libxml2)
 makedepends=(meson ninja pkg-config wayland-protocols glm)
 conflicts=("${pkgname}-git")
-source=("https://github.com/WayfireWM/${pkgname}/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.xz")
-sha256sums=(c0b2c9f41992859a4976301a2f4a5bb85cd5e67aa3e6e725b92ddd0597c7aaa8)
+source=("https://github.com/WayfireWM/${pkgname}/releases/download/v${pkgver}/${pkgname}-${pkgver}.tar.xz")
+sha256sums=(c7fb0b388afdd46add4b209ff7262bd3a30f9948a9a4d6e7ec1239bbf42b5aad)
 
 build() {
 	rm -rf build

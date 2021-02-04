@@ -1,8 +1,8 @@
 # Maintainer: Chih-Hsuan Yen <yan12125@archlinux.org>
 
 pkgname=python-tf2onnx
-pkgver=1.7.2
-pkgrel=2
+pkgver=1.8.1
+pkgrel=1
 pkgdesc='Convert TensorFlow models to ONNX'
 arch=(any)
 url='https://github.com/onnx/tensorflow-onnx'
@@ -11,7 +11,7 @@ depends=(python python-tensorflow python-numpy python-onnx python-requests pytho
 makedepends=(python-setuptools)
 checkdepends=(python-pytest python-graphviz python-parameterized python-yaml python-onnxruntime)
 source=("https://github.com/onnx/tensorflow-onnx/archive/v$pkgver/tf2onnx-v$pkgver.tar.gz")
-sha256sums=('133c3c28a761bc3b2307081920268f4c246d89cce35f50ba8018e105995f8d28')
+sha256sums=('fc612a2fca6426c29aeb536e1aa514941a7a4fa8a32b49cab0601e9be0090f7c')
 
 build() {
   cd tensorflow-onnx-$pkgver

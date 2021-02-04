@@ -1,35 +1,36 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=python-onnx
-pkgver=1.8.0
+pkgver=1.8.1
 pkgrel=2
 pkgdesc='Open Neural Network Exchange'
 arch=('x86_64')
 url='https://onnx.ai'
 license=('MIT')
 depends=(
-  'protobuf'
-  'python-protobuf'
-  'python-numpy'
-  'python-six'
-  'python-typing_extensions'
+  protobuf
+  python-protobuf
+  python-numpy
+  python-six
+  python-typing_extensions
 )
 makedepends=(
-  'cmake'
-  'git'
-  'python-setuptools'
+  cmake
+  git
+  python-setuptools
+  python-pip
 )
 checkdepends=(
-  'python-nbval' 
-  'python-nose' 
-  'python-pytest' 
-  'python-scipy'
+  python-nbval
+  python-nose
+  python-pytest
+  python-scipy
   ${optdepends[@]}
 )
 optdepends=(
-  'mxnet'
-  'python-pytorch'
-  'python-tensorflow'
+  mxnet
+  python-pytorch
+  python-tensorflow
 )
 source=("${pkgname}::git+https://github.com/onnx/onnx.git#tag=v${pkgver}")
 sha512sums=('SKIP')
@@ -41,8 +42,6 @@ get_pyver() {
 prepare() {
   cd "${srcdir}/${pkgname}"
   git submodule update --init --recursive
-  # fix build with protobuf 3.11, see https://github.com/onnx/onnx/pull/2482/files
-  sed -i 's/${ONNX_DLLEXPORT_STR}${CMAKE_CURRENT_BINARY_DIR})/${CMAKE_CURRENT_BINARY_DIR})/' "${srcdir}/${pkgname}/CMakeLists.txt"
 }
 
 build() {
