@@ -6,7 +6,7 @@
 pkgname=networkmanager-l2tp
 _pkgname=NetworkManager-l2tp
 pkgver=1.8.6
-pkgrel=1
+pkgrel=2
 pkgdesc='L2TP support for NetworkManager'
 arch=('i686' 'x86_64' 'aarch64')
 url="https://github.com/nm-l2tp/NetworkManager-l2tp"
