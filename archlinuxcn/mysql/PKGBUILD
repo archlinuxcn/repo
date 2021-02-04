@@ -6,8 +6,8 @@
 
 pkgname=('mysql' 'libmysqlclient' 'mysql-clients')
 pkgbase=mysql
-pkgver=8.0.21
-pkgrel=1
+pkgver=8.0.22
+pkgrel=2
 pkgdesc="Fast SQL database server, community edition"
 arch=('x86_64')
 makedepends=('openssl' 'zlib' 'cmake' 'systemd-tools' 'libaio' 'jemalloc'
@@ -21,12 +21,12 @@ source=("https://cdn.mysql.com/Downloads/MySQL-8.0/${pkgbase}-boost-${pkgver}.ta
         "mysql.sysconfig"
         "mysqld_service.patch"
         "systemd-sysusers-tmpfiles.patch")
-sha256sums=('37231a123372a95f409857364dc1deb196b6f2c0b1fe60cc8382c7686b487f11'
+sha256sums=('ba765f74367c638d7cd1c546c05c14382fd997669bcd9680278e907f8d7eb484'
             '6bc24ae510f6b6bbad6b3edda2d0028b29292937b482274a4c2fae335f4de328'
             'e1c23fa0971a13d998f2790379b68c475438d05b6d6f2691b99051dbf497567f'
             '203dcd22fea668477ac7123dbd9909fae72d3d07f8855417a669a9c94db072ae'
             '8fbedfc2c5fe271ed13217feeceeac00202d2cb135e4283eeee2f9a13d6251af'
-            '7dfc863de8ba62b31e412bdb82a2617c90b9e588db34028ab694813547dab167')
+            'e2abfc23fcc417e201a893cc7c8bdf847a275a35783d4d135d3b3a2ecf108d77')
 
 build() {
   rm -rf build
@@ -53,6 +53,10 @@ build() {
     -DINSTALL_MYSQLSHAREDIR=share/mysql \
     -DINSTALL_DOCDIR=share/mysql/docs \
     -DINSTALL_SHAREDIR=share/mysql \
+    -DROUTER_INSTALL_CONFIGDIR=etc/mysqlrouter \
+    -DROUTER_INSTALL_DATADIR=var/lib/mysqlrouter \
+    -DROUTER_INSTALL_RUNTIMEDIR=run \
+    -DROUTER_INSTALL_LOGDIR=var/log/mysqlrouter \
     -DWITH_SYSTEM_LIBS=ON \
     -DWITH_SSL=system \
     -DWITH_LIBWRAP=OFF \
@@ -69,7 +73,7 @@ build() {
     -DPLUGIN_FEEDBACK=NO \
     -DCMAKE_C_FLAGS="${CFLAGS}" \
     -DCMAKE_C_LINK_FLAGS="${LDFLAGS}" \
-    -DCMAKE_CXX_FLAGS="${CXXFLAGS}" \
+    -DCMAKE_CXX_FLAGS="${CXXFLAGS} -DU_DEFINE_FALSE_AND_TRUE=1" \
     -DCMAKE_CXX_LINK_FLAGS="${LDFLAGS}" \
     -DDEFAULT_CHARSET=utf8mb4 \
     -DDEFAULT_COLLATION=utf8mb4_unicode_ci \
@@ -136,6 +140,7 @@ package_mysql-clients(){
 package_mysql(){
   pkgdesc="Fast SQL database server, community edition"
   backup=("etc/mysql/my.cnf"
+          "etc/mysqlrouter/mysqlrouter.conf"
           "etc/conf.d/${pkgname}.conf")
   install="${pkgbase}.install"
   depends=('mysql-clients' 'libsasl' 'zlib' 'jemalloc' 'libaio' 'libtirpc' 'icu'
@@ -151,13 +156,14 @@ package_mysql(){
   install -m 644 -D "${srcdir}/my-default.cnf" "${pkgdir}/etc/mysql/my.cnf"
   install -m 755 -d "${pkgdir}/etc/ld.so.conf.d"
   install -m 644 -D "${srcdir}/mysql-ld.so.conf" "${pkgdir}/etc/ld.so.conf.d/${pkgname}.conf"
+  install -m 644 -D "${srcdir}/build/packaging/rpm-common/mysqlrouter.conf" "${pkgdir}/etc/mysqlrouter/mysqlrouter.conf"
 
   # provided by libmysqlclient
   rm "${pkgdir}/usr/bin/mysql_config"
   rm "${pkgdir}/usr/lib/libmysqlclient.a"
   rm "${pkgdir}/usr/lib/libmysqlclient.so"
   rm "${pkgdir}/usr/lib/libmysqlclient.so.21"
-  rm "${pkgdir}/usr/lib/libmysqlclient.so.21.1.21"
+  rm "${pkgdir}/usr/lib/libmysqlclient.so.21.1.22"
   rm "${pkgdir}/usr/lib/libmysqlservices.a"
   rm "${pkgdir}/usr/lib/pkgconfig/mysqlclient.pc"
   rmdir "${pkgdir}/usr/lib/pkgconfig"
@@ -188,7 +194,6 @@ package_mysql(){
 
   # not needed
   rm -r "${pkgdir}/usr/mysql-test"
-  rmdir "${pkgdir}/usr/run"
 
   # Move somewhere else
   mv "${pkgdir}/usr/LICENSE.router" "${pkgdir}/usr/share/mysql/docs"
@@ -204,11 +209,24 @@ package_mysql(){
   mv "${pkgdir}/usr/usr/lib/systemd" "${pkgdir}/usr/lib"
   mv "${pkgdir}/usr/usr/lib/tmpfiles.d" "${pkgdir}/usr/lib"
 
+  # Move logrotate files
+  install -d -m 755 "${pkgdir}/etc/logrotate.d/"
+  mv "${pkgdir}/usr/mysqlrouter-log-rotate" "${pkgdir}/etc/logrotate.d/mysqlrouter"
+
+  # Move docs files
+  mv "${pkgdir}/usr/docs/sample_mysqlrouter.conf" "${pkgdir}/usr/share/mysql/docs"
+  rmdir "${pkgdir}/usr/docs"
+
   # Cleanup
+  rmdir "${pkgdir}/usr/etc/mysqlrouter"
+  rmdir "${pkgdir}/usr/etc"
+  rmdir "${pkgdir}/usr/run"
   rmdir "${pkgdir}/usr/usr/lib"
   rmdir "${pkgdir}/usr/usr"
   rmdir "${pkgdir}/usr/var/lib/mysqlrouter"
   rmdir "${pkgdir}/usr/var/lib"
+  rmdir "${pkgdir}/usr/var/log/mysqlrouter"
+  rmdir "${pkgdir}/usr/var/log"
   rmdir "${pkgdir}/usr/var"
 
   # Arch Linux specific patches:

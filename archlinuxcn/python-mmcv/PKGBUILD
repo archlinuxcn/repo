@@ -3,8 +3,8 @@
 _CUDA_ARCH_LIST="5.2;5.3;6.0;6.1;6.2;7.0;7.0+PTX;7.2;7.2+PTX;7.5;7.5+PTX;8.0;8.0+PTX;8.6;8.6+PTX"
 _pkgname=mmcv
 pkgname=(python-mmcv python-mmcv-full)
-pkgver=1.2.2
-pkgrel=1
+pkgver=1.2.6
+pkgrel=3
 pkgdesc='OpenMMLab Computer Vision Foundation'
 arch=('x86_64')
 url='https://github.com/open-mmlab/mmcv'
@@ -17,6 +17,7 @@ depends=(
 makedepends=(
   cuda
   cython
+  python-pip
   python-pytorch-cuda
   python-setuptools
 )
@@ -24,24 +25,34 @@ optdepends=(
   "opencv: optional image backend"
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmcv/archive/v${pkgver}.tar.gz")
-sha512sums=('cd4114bb13680b1d0adea3250036a3ce77a7d76a45621438ac9ef52ffd75f775bea68ca9f736ecbe48d29e56d1043b0cc4fd3e6c7163b2087f35bb4df2704d08')
+sha512sums=('c6dc513c0d61b19ad43e6b4a89c01e8c710b60229ab92f061dfa5664f76b3d94c390c33806e6472acd88f69f09506b3353e6f51d81566046a04a3da9ebff2eb9')
+
+prepare() {
+  cp -a "${_pkgname}-${pkgver}" "${_pkgname}-full-${pkgver}"
+}
 
 build() {
-  cp -a "${_pkgname}-${pkgver}" "${_pkgname}-full-${pkgver}"
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  python setup.py build
-
+  MMCV_WITH_OPS=1 python setup.py build_py
+  MMCV_WITH_OPS=1 python setup.py build_ext
+  
   cd "${srcdir}/${_pkgname}-full-${pkgver}"
+  FORCE_CUDA=1 \
+  MMCV_WITH_OPS=1 \
   TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
-  MMCV_WITH_OPS=1 FORCE_CUDA=1 python setup.py build
+  python setup.py build_py
+  FORCE_CUDA=1 \
+  MMCV_WITH_OPS=1 \
+  TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
+  python setup.py build_ext
 }
 
 package_python-mmcv() {
-  pkgdesc+="(lite version, without cuda ops)"
+  pkgdesc+="(cpu version, without cuda ops)"
   depends+=(python-pytorch)
 
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  MMCV_WITH_OPS=1 python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
 }
 
 package_python-mmcv-full() {
@@ -51,6 +62,9 @@ package_python-mmcv-full() {
   conflicts=(python-mmcv)
 
   cd "${_pkgname}-full-${pkgver}"
+  FORCE_CUDA=1 \
+  MMCV_WITH_OPS=1 \
+  TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
 }
 # vim:set ts=2 sw=2 et:

@@ -1,0 +1,58 @@
+From dbe3c133a386f7c4aae505d298d6d90d6f1407bf Mon Sep 17 00:00:00 2001
+From: Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+Date: Wed, 19 Aug 2020 15:09:26 -0300
+Subject: [PATCH 18/25] UI: Disable and ignore Always On Top on Wayland
+ platforms
+
+This is a dangerous operation on Wayland, and is crashing not only
+OBS Studio but also the whole compositor. Let's disable it for now
+when running as a native Wayland client.
+
+Some compositors (GNOME Shell, Plasma) still allow setting this
+option on the window menu.
+---
+ UI/window-basic-main.cpp | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/UI/window-basic-main.cpp b/UI/window-basic-main.cpp
+index a93b2136..de3d8856 100644
+--- a/UI/window-basic-main.cpp
++++ b/UI/window-basic-main.cpp
+@@ -78,6 +78,10 @@
+ 
+ #include <json11.hpp>
+ 
++#ifdef ENABLE_WAYLAND
++#include <obs-nix-platform.h>
++#endif
++
+ using namespace json11;
+ using namespace std;
+ 
+@@ -1799,9 +1803,22 @@ void OBSBasic::OBSInit()
+ 
+ 	bool alwaysOnTop = config_get_bool(App()->GlobalConfig(), "BasicWindow",
+ 					   "AlwaysOnTop");
+-	if (alwaysOnTop || opt_always_on_top) {
++
++#ifdef ENABLE_WAYLAND
++	bool isWayland = obs_get_nix_platform() == OBS_NIX_PLATFORM_WAYLAND;
++#else
++	bool isWayland = false;
++#endif
++
++	if (!isWayland && (alwaysOnTop || opt_always_on_top)) {
+ 		SetAlwaysOnTop(this, true);
+ 		ui->actionAlwaysOnTop->setChecked(true);
++	} else if (isWayland) {
++		if (opt_always_on_top)
++			blog(LOG_INFO,
++			     "Always On Top not available on Wayland, ignoring…");
++		ui->actionAlwaysOnTop->setEnabled(false);
++		ui->actionAlwaysOnTop->setVisible(false);
+ 	}
+ 
+ #ifndef _WIN32
+-- 
+2.28.0
+

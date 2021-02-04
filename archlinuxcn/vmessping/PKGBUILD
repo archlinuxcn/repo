@@ -1,4 +1,4 @@
-# Maintainer: Dct Mei <dctxmei@gmail.com>
+# Maintainer: Dct Mei <dctxmei@yandex.com>
 
 pkgbase=vmessping
 pkgname=('vmessconv' 'vmessping' 'vmessspeed')

@@ -3,11 +3,10 @@
 
 pkgbase=jdk
 pkgname=('jre' 'jdk')
-pkgver=15
-_build=36
-_hash=779bf45e88a44cbd9ea6621d33e33db1
+pkgver=15.0.2
+_build=7
+_hash=0d1cfde4252546c6931946de8db48ee2
 _majver="${pkgver%%.*}"
-_next="$((_majver + 1))"
 pkgrel=1
 pkgdesc='Oracle Java'
 arch=('x86_64')
@@ -19,7 +18,7 @@ source=("https://download.oracle.com/otn-pub/java/jdk/${pkgver}+${_build}/${_has
         'jshell.desktop'
         'java_16.png'
         'java_48.png')
-sha256sums=('300538e0c227c268f14957294d5c44abb5e7e476debc9d07e8d892c417ac8f0d'
+sha256sums=('54b29a3756671fcb4b6116931e03e86645632ec39361bc16ad1aaa67332c7c61'
             '15a35fe1ef4c672ca56489d0a1aaa23f260dfc58dfad3b64f73accdf5dd3a174'
             '8dde78d1da7d22daebb7067ff29d3ad92c267b2b2b0369ee28e418816adcca8b'
             '419d7b48f3267ce6a8dd969f6ae45411be42f3e123bc344b26e29201319df632'
@@ -92,7 +91,7 @@ package_jre() {
 
 package_jdk() {
     pkgdesc='Oracle Java Development Kit'
-    depends=('java-environment-common' "jre>=${_majver}" "jre<${_next}" 'zlib' 'hicolor-icon-theme')
+    depends=('java-environment-common' "jre>=${_majver}" "jre<$((_majver + 1))" 'zlib' 'hicolor-icon-theme')
     provides=("java-environment=${_majver}" "java-environment-jdk=${_majver}")
     install=jdk.install
     

@@ -1,0 +1,26 @@
+
+# HG changeset patch
+# User Mike Hommey <mh+mozilla@glandium.org>
+# Date 1595595951 0
+# Node ID 795c8762b16bf8367fd1776e5b69f4d175715106
+# Parent  3077c06189677d30a3e4e066dea97f2e083c6501
+Bug 1644409 - Make --enable-lto=thin work with GCC. r=froydnj
+
+Differential Revision: https://phabricator.services.mozilla.com/D84773
+
+diff --git a/build/moz.configure/lto-pgo.configure b/build/moz.configure/lto-pgo.configure
+--- a/build/moz.configure/lto-pgo.configure
++++ b/build/moz.configure/lto-pgo.configure
+@@ -265,7 +265,10 @@
+             # instruction sets.
+         else:
+             num_cores = multiprocessing.cpu_count()
+-            cflags.append("-flto")
++            if len(value) and value[0].lower() == "full":
++                cflags.append("-flto")
++            else:
++                cflags.append("-flto=thin")
+             cflags.append("-flifetime-dse=1")
+ 
+             ldflags.append("-flto=%s" % num_cores)
+             

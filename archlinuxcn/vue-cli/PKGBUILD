@@ -7,8 +7,8 @@ _npmname=cli
 _npmid="@$_npmscope/$_npmname"
 
 pkgname="${_npmscope}-${_npmname}"
-pkgver=4.5.9
-pkgrel=2
+pkgver=4.5.11
+pkgrel=1
 pkgdesc='Standard tooling for Vue.js development'
 arch=('any')
 url='https://cli.vuejs.org'
@@ -20,7 +20,7 @@ conflicts=('nodejs-vue-cli' 'vue')
 source=("$pkgname-$pkgver.tar.gz::https://registry.npmjs.org/$_npmid/-/$_npmname-$pkgver.tgz")
 noextract=("${source[@]%%::*}")
 # Get SHASUM:  curl -s "https://registry.npmjs.org/@vue/cli" | jq '.versions."4.5.8".dist.shasum'
-sha1sums=('d481d1ef1bb2b92d132958a8920c9db27c24998d')
+sha1sums=('ab46e00559d4b8cae6a7b74f4140f250225893e8')
 
 package() {
   mkdir -p "${pkgdir}"/usr/lib

@@ -1,47 +1,52 @@
 # Maintainer: Alexandre Demers <alexandre.f.demers@gmail.com>
 
-_setPrefix="/usr"
-_setLibdir="lib32"
-_setFullLibdir="${_setPrefix}/${_setLibdir}"
-_pkgbase=openjpeg2
-
-pkgname=${_setLibdir}-${_pkgbase}
-pkgver=2.3.1
-pkgrel=2
+_pkgbasename=openjpeg2
+pkgname="lib32-${_pkgbasename}"
+pkgver=2.4.0
+pkgrel=1
 pkgdesc="An open source JPEG 2000 codec, version ${pkgver}"
 arch=('x86_64')
 license=('BSD')
 url="http://www.openjpeg.org"
-makedepends=('cmake' 'lib32-gcc-libs' 'lib32-libpng'  'lib32-libtiff' 'lib32-lcms2')
-depends=("${_pkgbase}" 'lib32-zlib')
+makedepends=('cmake'
+    'lib32-gcc-libs'
+    'lib32-libpng' 
+    'lib32-libtiff'
+    'lib32-lcms2')
+depends=("${_pkgbasename}=${pkgver}"
+    'lib32-zlib')
 source=("https://github.com/uclouvain/openjpeg/archive/v${pkgver}.tar.gz")
-md5sums=("3b9941dc7a52f0376694adb15a72903f")
+sha256sums=('8702ba68b442657f11aaeb2b338443ca8d5fb95b0d845757968a7be31ef7f16d')
 
+prepare() {
+  mkdir -p build
+
+  # Patching if needed
+}
 build() {
   export CFLAGS="-m32"
   export CXXFLAGS="-m32"
-  export PKG_CONFIG_PATH="${_setFullLibdir}/pkgconfig"
+  export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 
-  cd "${srcdir}"
-  mkdir -p build
   cd build
-  cmake "../openjpeg-$pkgver" -DCMAKE_INSTALL_PREFIX=${_setPrefix} -DOPENJPEG_INSTALL_LIB_DIR=${_setLibdir} -DBUILD_DOC=off
+  cmake "../openjpeg-$pkgver" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DOPENJPEG_INSTALL_LIB_DIR=lib32 \
+    -DBUILD_SHARED_LIBS=ON \
+    -DBUILD_STATIC_LIBS=OFF \
+    -DBUILD_DOC=off
   make
 }
 
 package() {
-  cd "${srcdir}/build"
-  make DESTDIR="${pkgdir}" install
+  make -C build DESTDIR="${pkgdir}" install
 
   # removing unneeded files and folders
-  rm -rf "${pkgdir}/${_setPrefix}"/{bin,include}
-  rm -fr "${pkgdir}/${_setFullLibdir}"/openjpeg-2.3
+  rm -rf "${pkgdir}/usr/"{bin,include}
 
   # installing license
-  mkdir -p "${pkgdir}/${_setPrefix}"/share/licenses/openjpeg-2.3
-  cp LICENSE.txt "${pkgdir}/${_setPrefix}"/share/licenses/openjpeg-2.3/LICENSE
-
-  mkdir -p "${pkgdir}/${_setPrefix}"/share/licenses/${pkgname}
-  ln -s ../openjpeg-2.3/LICENSE "${pkgdir}/${_setPrefix}"/share/licenses/${pkgname}/LICENSE
+  mkdir -p "${pkgdir}/usr/share/licenses/${pkgname}/"
+  ln -s "/usr/share/licenses/${_pkgbasename}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
 provides=("libopenjp2.so")

@@ -1,18 +1,19 @@
 # Maintainer: Artem Klevtsov <a.a.klevtso@gmail.com>
+# Maintainer: Stephen Martin <hwkiller@gmail.com>
 # Contributor: Conor Anderson <conor@conr.ca>
 
 pkgname=rstudio-desktop-git
 _gitname=rstudio
-pkgver=33921.3ce9c7e533
+pkgver=34362.e742ee103b
 _gwtver=2.8.2
 _ginver=2.1.2
 _nodever=10.19.0
-pkgrel=2
+pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 arch=('i686' 'x86_64')
 url="https://www.rstudio.com/products/rstudio/"
 license=('AGPL3')
-depends=('r>=3.0.1' boost-libs qt5-sensors qt5-svg qt5-webengine qt5-xmlpatterns postgresql-libs sqlite3 soci clang hunspell-en_US mathjax2 pandoc)
+depends=('r>=3.0.1' boost-libs qt5-sensors qt5-svg qt5-webengine qt5-xmlpatterns postgresql-libs sqlite3 soci clang hunspell-en_US mathjax2 pandoc yaml-cpp)
 makedepends=(git 'cmake>=3.1.0' boost desktop-file-utils jdk8-openjdk apache-ant unzip openssl libcups pam patchelf wget yarn)
 optdepends=('git: for git support'
             'subversion: for subversion support'
@@ -23,12 +24,14 @@ source=("git+https://github.com/rstudio/rstudio.git"
         "https://s3.amazonaws.com/rstudio-buildtools/gin-${_ginver}.zip"
         "https://s3.amazonaws.com/rstudio-buildtools/gwt-${_gwtver}.zip"
 	"https://nodejs.org/dist/v${_nodever}/node-v${_nodever}-linux-x64.tar.gz"
-	"qt.conf")
+	"qt.conf"
+	"cran_multithread.patch")
 sha256sums=('SKIP'
             'b98e704164f54be596779696a3fcd11be5785c9907a99ec535ff6e9525ad5f9a'
             '970701dacc55170088f5eb327137cb4a7581ebb4734188dfcc2fad9941745d1b'
             '36d90bc58f0418f31dceda5b18eb260019fcc91e59b0820ffa66700772a8804b'
-            '723626bfe05dafa545e135e8e61a482df111f488583fef155301acc5ecbbf921')
+            '723626bfe05dafa545e135e8e61a482df111f488583fef155301acc5ecbbf921'
+            'c907e6eec5ef324ad498b44fb9926bb5baafc4e0778ca01f6ba9b49dd3a2a980')
 noextract=("gin-${_ginver}.zip")
 
 pkgver() {
@@ -38,6 +41,9 @@ pkgver() {
 
 prepare() {
     cd ${srcdir}/${_gitname}
+    local JOBS; JOBS="$(grep -oP -- "-j\s*\K[0-9]+" <<< "${MAKEFLAGS}")" || JOBS="1"
+    sed "s/@@proc_num@@/${JOBS}/" -i ${srcdir}/cran_multithread.patch
+    git apply -v ${srcdir}/cran_multithread.patch
 
     msg "Extracting dependencies..."
     cd "${srcdir}/${_gitname}/src/gwt"
@@ -48,7 +54,7 @@ prepare() {
     cd "${srcdir}/${_gitname}/dependencies/common"
     _pandocver=$(grep -oP "(?<=PANDOC_VERSION=\").*(?=\"$)" install-pandoc)
     install -d pandoc/${_pandocver}
-
+ 
     ln -sfT /usr/share/myspell/dicts dictionaries
     ln -sfT /usr/share/mathjax2 mathjax-27
     ln -sfT /usr/bin/pandoc pandoc/${_pandocver}/pandoc
@@ -60,13 +66,12 @@ prepare() {
     cd "${srcdir}/${_gitname}/src/gwt/panmirror/src/editor"
     yarn config set ignore-engines true
     yarn install
-
-    cd "${srcdir}/${_gitname}/dependencies/common"
-    msg "Downloading and installing R packages..."
-    bash install-packages
 }
 
 build() {
+    msg "Downloading and installing R packages..."
+    bash "${srcdir}/${_gitname}"/dependencies/common/install-packages
+
     export PATH=/usr/lib/jvm/java-8-openjdk/jre/bin/:${PATH}
 
     cmake -S "${srcdir}/${_gitname}" -B build \
@@ -74,10 +79,12 @@ build() {
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_INSTALL_PREFIX=/usr/lib/rstudio \
           -DRSTUDIO_USE_SYSTEM_BOOST=yes \
+          -DRSTUDIO_USE_SYSTEM_YAML_CPP=yes \
           -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake \
           -DBoost_NO_BOOST_CMAKE=ON \
           -DRSTUDIO_USE_SYSTEM_SOCI=yes \
-          -DRSTUDIO_BUNDLE_QT=FALSE ..
+          -DRSTUDIO_BUNDLE_QT=FALSE
+    make -C build
 }
 
 package() {

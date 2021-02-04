@@ -4,7 +4,8 @@ from lilaclib import *
 #build_prefix = 'extra-x86_64'
 
 def pre_build():
-  update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+  update_pkgver_and_pkgrel(_G.newver.lstrip('EA-'))
+  run_cmd(['updpkgsums'])
 
 def post_build():
   git_add_files('PKGBUILD')

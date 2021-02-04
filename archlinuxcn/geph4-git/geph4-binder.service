@@ -1,0 +1,15 @@
+[Unit]
+Description=Geph4 binder Service
+After=network.target nss-lookup.target
+
+[Service]
+DynamicUser=true
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+EnvironmentFile=/etc/default/geph4-binder
+ExecStart=/usr/bin/geph4-binder $OPTIONS --database $DATABASE --database-ca-cert $DATABASE_CA_CERT
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,50 @@
+# Maintainer: Morten Linderud <foxboron@archlinux.org>
+# Contributor: Giovanni Scafora <giovanni@archlinux.org>
+# Contributor: dorphell <dorphell@archlinux.org>
+# Contributor: Tom Newsom <Jeepster@gmx.co.uk>
+# Contributor: Denis Tikhomirov <dvtikhomirov@gmail.com>
+
+pkgname=minicom-git
+_pkgname=minicom
+pkgver=2.8.r6.g4efbb0a
+pkgrel=2
+pkgdesc='A serial communication program'
+arch=('x86_64')
+url='https://salsa.debian.org/minicom-team/minicom'
+license=('GPL')
+depends=('bash')
+makedepends=('git')
+optdepends=('lrzsz: for xmodem, ymodem and zmodem file transfer protocols')
+provides=("minicom=$pkgver")
+conflicts=('minicom')
+backup=('etc/minirc.dfl')
+source=("git+https://salsa.debian.org/minicom-team/minicom.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${_pkgname}"
+  ( set -o pipefail
+    git describe --long --tag 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//'
+  )
+}
+
+prepare() {
+  cd "${_pkgname}"
+
+  ./autogen.sh
+}
+
+build() {
+  cd "${_pkgname}"
+
+  ./configure --prefix=/usr \
+              --sysconfdir=/etc
+  make
+}
+
+package() {
+  cd "${_pkgname}"
+
+  make DESTDIR="${pkgdir}/" install
+  install -Dm644 doc/minirc.dfl ${pkgdir}/etc/minirc.dfl
+}

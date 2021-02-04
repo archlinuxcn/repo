@@ -4,6 +4,8 @@ Documentation=https://github.com/v2rayA/v2rayA/wiki
 After=network.target nss-lookup.target
 
 [Service]
+LimitNOFILE=1048576
+LimitNPROC=512
 ExecStart=/usr/bin/v2raya
 Restart=on-abort
 

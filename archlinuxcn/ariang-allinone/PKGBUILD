@@ -1,4 +1,4 @@
-# Maintainer: Dct Mei <dctxmei@gmail.com>
+# Maintainer: Dct Mei <dctxmei@yandex.com>
 
 pkgname=ariang-allinone
 pkgver=1.1.7

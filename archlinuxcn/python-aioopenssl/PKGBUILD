@@ -1,23 +1,23 @@
 _name=aioopenssl
 pkgname=python-aioopenssl
-pkgver=0.5.1
-pkgrel=2
+pkgver=0.6.0
+pkgrel=1
 pkgdesc="TLS-capable transport using OpenSSL for asyncio"
 arch=(any)
 url="https://github.com/horazont/aioopenssl"
 license=('Apache 2.0')
 depends=('python-pyopenssl')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/aioopenssl-0.5.1.tar.gz")
-sha256sums=('68ff306ad6436c6ece06b6b399d107ae1f506b14253a9b7a02ae3859e3b4716b')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/aioopenssl-0.6.0.tar.gz")
+sha256sums=('eae2fb193ec0d2a3f752f72d8f672191cc836b1039de5e334cc9cb835b800831')
 
 build() {
-  cd "$srcdir/aioopenssl-0.5.1"
+  cd "$srcdir/aioopenssl-0.6.0"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/aioopenssl-0.5.1"
+  cd "$srcdir/aioopenssl-0.6.0"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install any world-writable or root-readable-only files

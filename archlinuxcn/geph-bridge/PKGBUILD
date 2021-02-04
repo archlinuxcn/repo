@@ -1,4 +1,4 @@
-# Maintainer: Dct Mei <dctxmei@gmail.com>
+# Maintainer: Dct Mei <dctxmei@yandex.com>
 # Co-Maintainer: xosdy <xosdy.t@gmail.com>
 # Co-Maintainer: ohmyarch <ohmyarchlinux@protonmail.com>
 

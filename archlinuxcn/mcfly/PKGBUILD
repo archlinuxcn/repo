@@ -1,7 +1,7 @@
 # Maintainer: BennyYip <yebenmy@protonmail.com>
 pkgname=mcfly
 _pkgname=mcfly
-pkgver=0.5.1
+pkgver=0.5.3
 pkgrel=1
 pkgdesc="McFly replaces your default ctrl-r Bash history search with an intelligent search engine that takes into account your working directory and the context of recently executed commands. McFly's suggestions are prioritized in real time with a small neural network."
 arch=('x86_64')
@@ -11,7 +11,7 @@ makedepends=('rust' 'cargo')
 depends=()
 provides=("$_pkgname")
 source=($_pkgname.tar.gz::"https://crates.io/api/v1/crates/$_pkgname/$pkgver/download")
-sha256sums=('61209291b50236ba4364c24ee8df7e3e4400810f912b24e44852c6f4714d193e')
+sha256sums=('aa642ecc5680fecce0dc96f6a92f5b55f896b973304b0f9ffd8a6bf4e7e138d1')
 
 install=${pkgname}.install
 

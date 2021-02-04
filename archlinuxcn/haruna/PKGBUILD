@@ -1,0 +1,30 @@
+# Maintainer: prg <prg _at_ xannode _dot_ com>
+# Contributor: Caltlgin Stsodaat <contact@fossdaily.xyz>
+pkgname='haruna'
+pkgver=0.5.0
+pkgrel=2
+pkgdesc='Video player built with Qt/QML on top of libmpv.'
+arch=('x86_64')
+url='https://github.com/g-fb/haruna'
+license=('GPL3')
+depends=('kfilemetadata' 'kio' 'mpv' 'kirigami2')
+makedepends=('extra-cmake-modules')
+optdepends=('nvidia-utils: hardware accelerate support'
+            'breeze: recommend theme')
+provides=('haruna')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
+sha256sums=('ebc6144a18f3a7ec7460cdefb77b1b170a049f7987f833e745ca12fd741f5078')
+
+build() {
+  cmake -B 'build' -S "${pkgname}-${pkgver}" \
+    -DCMAKE_BUILD_TYPE='Release' \
+    -DCMAKE_INSTALL_PREFIX='/usr'
+  make -C 'build'
+}
+
+package() {
+  make DESTDIR="${pkgdir}" PREFIX='/usr' -C 'build' install
+  install -Dvm644 "${pkgname}-${pkgver}/README.md" -t "${pkgdir}/usr/share/doc/${pkgname}"
+}
+
+# vim: ts=2 sw=2 et:

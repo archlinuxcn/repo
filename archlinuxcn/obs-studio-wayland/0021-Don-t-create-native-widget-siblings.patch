@@ -1,0 +1,36 @@
+From 6e20eb830789cdf33c24e13a36f4d860b777d7b3 Mon Sep 17 00:00:00 2001
+From: David Edmundson <kde@davidedmundson.co.uk>
+Date: Wed, 16 Sep 2020 15:24:22 +0100
+Subject: [PATCH 21/25] Don't create native widget siblings
+
+Native windows really only make sense for previews. They can be a new
+xcb_window or a wayland subsurface.
+
+For historical reasons setting a widget to native will also affect
+ancestors. Qt will still draw them as part of the parent as they are
+never mapped, but a window is nonetheless created.
+
+This is especially problematic on wayland as then the subsurface is
+parented to an unmapped window.
+
+This default behaviour can be turned off. Now only the native widgets
+(the video previews) are actually native.
+---
+ UI/obs-app.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/UI/obs-app.cpp b/UI/obs-app.cpp
+index ce350f06..09f1ae60 100644
+--- a/UI/obs-app.cpp
++++ b/UI/obs-app.cpp
+@@ -1376,6 +1376,7 @@ bool OBSApp::OBSInit()
+ 	ProfileScope("OBSApp::OBSInit");
+ 
+ 	setAttribute(Qt::AA_UseHighDpiPixmaps);
++	setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
+ 
+ 	qRegisterMetaType<VoidFunc>();
+ 
+-- 
+2.28.0
+

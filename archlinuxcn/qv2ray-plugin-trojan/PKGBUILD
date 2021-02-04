@@ -1,4 +1,4 @@
-# Maintainer: Dct Mei <dctxmei@gmail.com>
+# Maintainer: Dct Mei <dctxmei@yandex.com>
 
 pkgname=qv2ray-plugin-trojan
 pkgver=2.0.0

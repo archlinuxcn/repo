@@ -2,7 +2,8 @@ maintainers:
   - github: oldherl
 
 update_on:
-  - source: aur
-    aur: libasi
-pre_build: aur_pre_build
-post_build: aur_post_build
+  - source: archpkg
+    archpkg: libindi
+    strip_release: true
+  - source: manual
+    manual: 1

@@ -1,0 +1,38 @@
+From 2b169c0667bb779880557d361754220098081a39 Mon Sep 17 00:00:00 2001
+From: Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+Date: Wed, 8 Apr 2020 23:58:43 -0300
+Subject: [PATCH 10/25] linux-capture: Fail to load when running on EGL
+
+Right now, linux-capture hard-depends on GLX. Disable it when
+running under EGL.
+---
+ plugins/linux-capture/linux-capture.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/plugins/linux-capture/linux-capture.c b/plugins/linux-capture/linux-capture.c
+index ce49ee72..56ff485c 100644
+--- a/plugins/linux-capture/linux-capture.c
++++ b/plugins/linux-capture/linux-capture.c
+@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ #include <obs-module.h>
++#include <obs-nix-platform.h>
+ 
+ OBS_DECLARE_MODULE()
+ OBS_MODULE_USE_DEFAULT_LOCALE("linux-xshm", "en-US")
+@@ -30,6 +31,11 @@ extern void xcomposite_unload(void);
+ 
+ bool obs_module_load(void)
+ {
++	if (obs_get_nix_platform() != OBS_NIX_PLATFORM_X11_GLX) {
++		blog(LOG_ERROR, "linux-capture cannot run on EGL platforms");
++		return false;
++	}
++
+ 	obs_register_source(&xshm_input);
+ 	xcomposite_load();
+ 	return true;
+-- 
+2.28.0
+

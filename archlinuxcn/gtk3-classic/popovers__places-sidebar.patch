@@ -1,0 +1,146 @@
+Index: b/gtk/gtkplacessidebar.c
+===================================================================
+--- a/gtk/gtkplacessidebar.c
++++ b/gtk/gtkplacessidebar.c
+@@ -64,6 +64,7 @@
+ #include "gtkgesturelongpress.h"
+ #include "gtkbox.h"
+ #include "gtkmodelbutton.h"
++#include "deprecated/gtkimagemenuitem.h"
+ 
+ /**
+  * SECTION:gtkplacessidebar
+@@ -2341,32 +2342,32 @@ check_popover_sensitivity (GtkSidebarRow
+   gtk_widget_set_visible (data->stop_item, show_stop);
+ 
+   /* Adjust start/stop items to reflect the type of the drive */
+-  g_object_set (data->start_item, "text", _("_Start"), NULL);
+-  g_object_set (data->stop_item, "text", _("_Stop"), NULL);
++  g_object_set (data->start_item, "label", _("_Start"), "use_underline", TRUE, NULL);
++  g_object_set (data->stop_item, "label", _("_Stop"), "use_underline", TRUE, NULL);
+   if ((show_start || show_stop) && drive != NULL)
+     {
+       switch (g_drive_get_start_stop_type (drive))
+         {
+         case G_DRIVE_START_STOP_TYPE_SHUTDOWN:
+           /* start() for type G_DRIVE_START_STOP_TYPE_SHUTDOWN is normally not used */
+-          g_object_set (data->start_item, "text", _("_Power On"), NULL);
+-          g_object_set (data->stop_item, "text", _("_Safely Remove Drive"), NULL);
++          g_object_set (data->start_item, "label", _("_Power On"), "use_underline", TRUE, NULL);
++          g_object_set (data->stop_item, "label", _("_Safely Remove Drive"), "use_underline", TRUE, NULL);
+           break;
+ 
+         case G_DRIVE_START_STOP_TYPE_NETWORK:
+-          g_object_set (data->start_item, "text", _("_Connect Drive"), NULL);
+-          g_object_set (data->stop_item, "text", _("_Disconnect Drive"), NULL);
++          g_object_set (data->start_item, "label", _("_Connect Drive"), "use_underline", TRUE, NULL);
++          g_object_set (data->stop_item, "label", _("_Disconnect Drive"), "use_underline", TRUE, NULL);
+           break;
+ 
+         case G_DRIVE_START_STOP_TYPE_MULTIDISK:
+-          g_object_set (data->start_item, "text", _("_Start Multi-disk Device"), NULL);
+-          g_object_set (data->stop_item, "text", _("_Stop Multi-disk Device"), NULL);
++          g_object_set (data->start_item, "label", _("_Start Multi-disk Device"), "use_underline", TRUE, NULL);
++          g_object_set (data->stop_item, "label", _("_Stop Multi-disk Device"), "use_underline", TRUE, NULL);
+           break;
+ 
+         case G_DRIVE_START_STOP_TYPE_PASSWORD:
+           /* stop() for type G_DRIVE_START_STOP_TYPE_PASSWORD is normally not used */
+-          g_object_set (data->start_item, "text", _("_Unlock Device"), NULL);
+-          g_object_set (data->stop_item, "text", _("_Lock Device"), NULL);
++          g_object_set (data->start_item, "label", _("_Unlock Device"), "use_underline", TRUE, NULL);
++          g_object_set (data->stop_item, "label", _("_Lock Device"), "use_underline", TRUE, NULL);
+           break;
+ 
+         default:
+@@ -3559,6 +3560,13 @@ append_separator (GtkWidget *box)
+ {
+   GtkWidget *separator;
+ 
++  if (GTK_IS_MENU (box))
++    {
++      separator = gtk_separator_menu_item_new();
++      gtk_widget_set_visible(GTK_WIDGET(separator), TRUE);
++      gtk_menu_shell_append(GTK_MENU_SHELL(box), separator);
++      return separator;
++    }
+   separator = g_object_new (GTK_TYPE_SEPARATOR,
+                             "orientation", GTK_ORIENTATION_HORIZONTAL,
+                             "visible", TRUE,
+@@ -3577,6 +3585,14 @@ add_button (GtkWidget   *box,
+ {
+   GtkWidget *item;
+ 
++  if (GTK_IS_MENU (box))
++    {
++      item = gtk_image_menu_item_new_with_mnemonic(label);
++      g_object_set(G_OBJECT(item), "action-name", action, NULL);
++      gtk_widget_set_visible(GTK_WIDGET(item), TRUE);
++      gtk_menu_shell_append(GTK_MENU_SHELL(box), item);
++      return item;
++    }
+   item = g_object_new (GTK_TYPE_MODEL_BUTTON,
+                        "visible", TRUE,
+                        "action-name", action,
+@@ -3594,6 +3610,17 @@ add_open_button (GtkWidget          *box
+ {
+   GtkWidget *item;
+ 
++  if (GTK_IS_MENU (box))
++    {
++      item = gtk_image_menu_item_new_with_mnemonic (label);
++      g_object_set(G_OBJECT (item),
++        "action-name", flags == GTK_PLACES_OPEN_NORMAL ? "row.open" : "row.open-other",
++        "action-target", g_variant_new_int32 (flags),
++      NULL);
++      gtk_widget_set_visible (GTK_WIDGET (item), TRUE);
++      gtk_menu_shell_append (GTK_MENU_SHELL (box), item);
++      return item;
++    }
+   item = g_object_new (GTK_TYPE_MODEL_BUTTON,
+                        "visible", TRUE,
+                        "action-name", flags == GTK_PLACES_OPEN_NORMAL ? "row.open" : "row.open-other",
+@@ -3699,6 +3726,13 @@ create_row_popover (GtkPlacesSidebar *si
+   g_object_set (box, "margin", 10, NULL);
+   gtk_widget_show (box);
+   gtk_container_add (GTK_CONTAINER (sidebar->popover), box);
++  if (!sidebar->populate_all)
++    {
++      sidebar->popover = gtk_menu_new ();
++      g_signal_connect (sidebar->popover, "destroy", G_CALLBACK (on_row_popover_destroy), sidebar);
++      gtk_menu_attach_to_widget (GTK_MENU (sidebar->popover), GTK_WIDGET (sidebar), NULL);
++      box = sidebar->popover;
++    }
+ 
+   add_open_button (box, _("_Open"), GTK_PLACES_OPEN_NORMAL);
+ 
+@@ -3722,6 +3756,15 @@ create_row_popover (GtkPlacesSidebar *si
+   data.rescan_item = add_button (box, _("_Detect Media"), "row.rescan");
+   data.start_item = add_button (box, _("_Start"), "row.start");
+   data.stop_item = add_button (box, _("_Stop"), "row.stop");
++  if (!sidebar->populate_all)
++    {
++      g_object_set (
++        g_list_first (gtk_container_get_children (GTK_CONTAINER (box)))->data,
++        "image", gtk_image_new_from_icon_name ("gtk-open", GTK_ICON_SIZE_MENU), NULL
++      );
++      g_object_set (data.remove_item,       "image", gtk_image_new_from_icon_name("gtk-remove",GTK_ICON_SIZE_MENU), NULL);
++      g_object_set (data.add_shortcut_item, "image", gtk_image_new_from_icon_name("gtk-add",   GTK_ICON_SIZE_MENU), NULL);
++    }
+ 
+   /* Update everything! */
+   check_popover_sensitivity (row, &data);
+@@ -3765,6 +3808,13 @@ show_row_popover (GtkSidebarRow *row)
+     gtk_widget_destroy (sidebar->popover);
+ 
+   create_row_popover (sidebar, row);
++  if (GTK_IS_MENU (sidebar->popover))
++    {
++      sidebar->context_row = row;
++      gtk_menu_popup_at_pointer (GTK_MENU (sidebar->popover), NULL);
++      g_object_unref (sidebar);
++      return;
++    }
+ 
+   gtk_popover_set_relative_to (GTK_POPOVER (sidebar->popover), GTK_WIDGET (row));
+ 

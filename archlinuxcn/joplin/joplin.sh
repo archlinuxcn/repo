@@ -1,9 +1,9 @@
 #!/bin/bash
 
-readonly joplin_dir="/usr/share/joplin-cli/app-cli"
+readonly joplin_dir="/usr/share/joplin/"
 
 if [[ ! -d $joplin_dir ]]; then
-  echo "Cannot find /usr/share/joplin-cli/app-cli"
+  echo "Cannot find ${joplin_dir}"
   exit 1
 fi
 

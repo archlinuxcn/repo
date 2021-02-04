@@ -7,6 +7,14 @@ post_install(){
     chown -R mysql:mysql "/var/lib/mysql" &>/dev/null
   fi
 
+  groupadd -g 88 mysqlrouter &>/dev/null
+  useradd -u 88 -g mysqlrouter -d "/var/lib/mysqlrouter" -s /bin/false mysqlrouter &>/dev/null
+
+  if [[ ! -e "/var/lib/mysqlrouter" ]]; then
+    install -dm700 "/var/lib/mysqlrouter"
+    chown -R mysqlrouter:mysqlrouter "/var/lib/mysqlrouter" &>/dev/null
+  fi
+
   echo ":: You need to initialize the MySQL data directory prior to starting"
   echo "   the service. This can be done with mysqld --initialize command, e.g.:"
   echo "   mysqld --initialize --user=mysql --basedir=/usr --datadir=/var/lib/mysql"
@@ -20,5 +28,12 @@ post_remove(){
   fi
   if getent group mysql >/dev/null 2>&1; then
     groupdel mysql
+  fi
+
+  if getent passwd mysqlrouter >/dev/null 2>&1; then
+    userdel mysqlrouter
+  fi
+  if getent group mysqlrouter >/dev/null 2>&1; then
+    groupdel mysqlrouter
   fi
 }
