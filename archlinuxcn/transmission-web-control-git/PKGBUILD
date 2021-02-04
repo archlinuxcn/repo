@@ -1,0 +1,35 @@
+# Maintainer: Lu Xu <oliver_lew@outlook.com>
+# Maintainer: Dct Mei <dctxmei@yandex.com>
+
+pkgname=transmission-web-control-git
+_pkgname="${pkgname%-*}"
+pkgver=1.6.1.update1.r23.g4e0c781
+pkgrel=1
+pkgdesc="A custom web UI for Transmission"
+arch=('any')
+url="https://github.com/ronggang/transmission-web-control"
+license=('MIT')
+depends=('transmission-cli')
+makedepends=('git')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+install='transmission-web-control-git.install'
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "${srcdir}"/"${_pkgname}"/
+    git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+package() {
+    cd "${srcdir}"/"${_pkgname}"/
+    install -Dm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/"${pkgname}"/
+    cd src/
+    find . -type d -exec install -vd "${pkgdir}"/usr/share/transmission/web-control/{} \;
+    find . -type f -exec install -vm 644 {} "${pkgdir}"/usr/share/transmission/web-control/{} \;
+    ln -s /usr/share/transmission/web/index.html "${pkgdir}"/usr/share/transmission/web-control/index.original.html
+    for web_original in 'images' 'javascript' 'style'; do
+        ln -s /usr/share/transmission/web/"${web_original}" "${pkgdir}"/usr/share/transmission/web-control/"${web_original}"
+    done
+}
