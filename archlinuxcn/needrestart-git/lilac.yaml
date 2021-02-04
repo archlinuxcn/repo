@@ -1,0 +1,16 @@
+maintainers:
+  - github: isjerryxiao
+    email: archcn@mail.jerryxiao.cc
+  - github: dctxmei
+
+build_prefix: extra-x86_64
+
+pre_build: aur_pre_build
+
+post_build: aur_post_build
+
+update_on:
+  - source: github
+    github: liske/needrestart
+  - source: aur
+    aur: needrestart-git
