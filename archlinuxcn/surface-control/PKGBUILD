@@ -1,7 +1,7 @@
 # Maintainer: Maximilian Luz <luzmaximilian@gmail.com>
 
 pkgname="surface-control"
-pkgver=0.3.0
+pkgver=0.3.1
 pkgrel=1
 _pkgrel=1
 pkgdesc='Control various aspects of Microsoft Surface devices from the Command-Line'
@@ -26,6 +26,10 @@ build(){
 
 package() {
     install -D -m755 "${srcdir}/${pkgname}/target/release/surface" "$pkgdir/usr/bin/surface"
+
+    # copy system files
+    install -D -m644 "${srcdir}/${pkgname}/etc/sysusers/surface-control.conf" "${pkgdir}/usr/lib/sysusers.d/surface-control.conf"
+    install -D -m644 "${srcdir}/${pkgname}/etc/udev/40-surface-control.rules" "${pkgdir}/usr/lib/udev/rules.d/40-surface-control.rules"
 
     # completion files
     install -D -m644 "${srcdir}/${pkgname}/target/surface.bash" "$pkgdir/usr/share/bash-completion/completions/surface"
