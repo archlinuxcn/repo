@@ -1,15 +1,15 @@
 # Maintainer: Christian Muehlhaeuser <muesli at gmail dot com>
 
 pkgname=duf
-pkgver=0.5.0
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="Disk Usage/Free Utility"
 arch=('x86_64' 'i686' 'armv6h' 'armv7h' 'aarch64')
-url="https://github.com/muesli/duf"
+url="https://github.com/muesli/${pkgname}"
 license=('MIT')
 makedepends=('go')
 source=("${url}/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('d8879fbf091cd6f6a3b95102fdeb7d21b7fc8200df1a9864b89d8e87057fc9c6')
+sha256sums=('238ace11966ab3b1f99e5488a9f161ebc97aba7600a8f09884110d0572309491')
 
 prepare() {
     export GOPATH="$srcdir/gopath"
