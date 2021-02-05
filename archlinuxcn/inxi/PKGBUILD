@@ -3,15 +3,16 @@
 # Contributor: Florian Pritz <f-p@gmx.at>
 
 pkgname=inxi
-_pkgver=3.2.02-2
+_pkgver=3.3.00-1
 pkgver=${_pkgver//-/.}
-pkgrel=3
+pkgrel=4
 pkgdesc="Full featured CLI system information tool"
 arch=(any)
 url="https://github.com/smxi/inxi"
 license=(GPL3)
 depends=(coreutils pciutils perl procps-ng)
 optdepends=(
+            "bluez-utils-compat: hciconfig: -E bluetooth HCI data"
             "bind-tools: -i wlan IP"
             "dmidecode: inxi -M if no sys machine data"
             "file: inxi -o unmounted file system"
@@ -35,7 +36,7 @@ optdepends=(
             "xorg-xrandr: inxi -G single screen resolution"
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/smxi/inxi/archive/${_pkgver}.tar.gz")
-sha256sums=('9de1dc8be6579c5883d40def6f37230384525d7a8f969cf280ddde1c1dfec62e')
+sha256sums=('1180dd8dc71690322ec28f0ee7d9e013adea67bc94298742cfc5a2b4eefff6b9')
 
 package() {
   cd "${pkgname}-${_pkgver}"
