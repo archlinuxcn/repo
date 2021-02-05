@@ -1,0 +1,6 @@
+post_remove() {
+cat << EOF
+  You might want to remove the containers that were created by x11docker:
+  docker rm \$(docker container ls -aq --filter name=x11docker_X)
+EOF
+}
