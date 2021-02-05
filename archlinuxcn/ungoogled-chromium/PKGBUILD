@@ -9,7 +9,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=88.0.4324.104
+pkgver=88.0.4324.146
 pkgrel=1
 _launcher_ver=7
 _gcc_patchset=3
@@ -42,8 +42,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://github.com/stha09/chromium-patches/releases/download/chromium-${pkgver%%.*}-patchset-$_gcc_patchset/chromium-${pkgver%%.*}-patchset-$_gcc_patchset.tar.xz
         wayland-egl.patch
         subpixel-anti-aliasing-in-FreeType-2.8.1.patch)
-sha256sums=('7dbdda0df8955811ada33a9505cad2f2e17f007827c435b591ba571c5dcd0147'
-            '14f195e24b85349c60f3dcf724e1433dbceb2739829f88a713178253644bfa44'
+sha256sums=('38b118fbe8bbdf89e4f170ced090088f5eb2bb68f2295abbb0006cc94b7f827d'
+            'cbbc917097ca089a2bcd2b85f9d7f160e52323a9d900d2fc1da5a84567f7b357'
             '86859c11cfc8ba106a3826479c0bc759324a62150b271dd35d1a0f96e890f52f'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             'e5a60a4c9d0544d3321cc241b4c7bd4adb0a885f090c6c6c21581eac8e3b4ba9'
