@@ -7,9 +7,6 @@ if [[ -f $USER_FLAGS_FILE ]]; then
    USER_FLAGS="$(cat $USER_FLAGS_FILE | sed 's/#.*//')"
 fi
 
-if [[ -f /proc/sys/kernel/unprivileged_userns_clone && $(< /proc/sys/kernel/unprivileged_userns_clone) == 0 ]]; then
-    >&2 echo "User namespaces are detected as disabled on your system, Brave will run with the sandbox disabled"
-    SANDBOX_FLAG="--no-sandbox"
-fi
+export CHROME_VERSION_EXTRA="stable"
 
-exec /usr/lib/brave-bin/brave "$@" $SANDBOX_FLAG $USER_FLAGS
+exec /usr/lib/brave-bin/brave "$@" $USER_FLAGS
