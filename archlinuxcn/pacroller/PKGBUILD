@@ -2,13 +2,14 @@
 _srcname=pacroller
 pkgname=pacroller
 pkgver=0.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Unattended upgrade for archlinux"
 arch=('any')
 url="https://github.com/isjerryxiao/pacroller"
 license=('GPL3')
 depends=('python' 'pyalpm')
 makedepends=('python-setuptools' 'git')
+optdepends=('needrestart')
 backup=('etc/pacroller/config.json')
 source=("$_srcname::git+https://github.com/isjerryxiao/pacroller#tag=${pkgver}")
 md5sums=('SKIP')
