@@ -105,7 +105,7 @@ _package() {
 
 main() {
     for _pkgname in "${pkgname[@]}"; do
-        eval "package_$_pkgname() {
+        eval "package_${_pkgname}() {
             provides=("${_pkgname%-*}")
             conflicts=("${_pkgname%-*}")
             name="$(echo ${_pkgname%-*} | sed 's/grub-theme-//' | awk -F '-' '{print $1}')"
