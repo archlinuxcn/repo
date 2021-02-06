@@ -1,5 +1,5 @@
 pkgname=ntfs3-dkms
-pkgver=19.0.0
+pkgver=20.0.0
 pkgrel=1
 pkgdesc="NTFS read-write driver GPL implementation by Paragon Software. Current version works with NTFS (including v3.1), normal/compressed/sparse files and supports journal replaying."
 arch=('any')
@@ -9,24 +9,26 @@ depends=('dkms')
 options=('!strip')
 source=(Makefile.patch
         dkms.conf
-        "v$pkgver~1.patch::https://lore.kernel.org/lkml/20210128090455.3576502-2-almaz.alexandrovich@paragon-software.com/raw"
-        "v$pkgver~2.patch::https://lore.kernel.org/lkml/20210128090455.3576502-3-almaz.alexandrovich@paragon-software.com/raw"
-        "v$pkgver~3.patch::https://lore.kernel.org/lkml/20210128090455.3576502-4-almaz.alexandrovich@paragon-software.com/raw"
-        "v$pkgver~4.patch::https://lore.kernel.org/lkml/20210128090455.3576502-5-almaz.alexandrovich@paragon-software.com/raw"
-        "v$pkgver~5.patch::https://lore.kernel.org/lkml/20210128090455.3576502-6-almaz.alexandrovich@paragon-software.com/raw"
-        "v$pkgver~6.patch::https://lore.kernel.org/lkml/20210128090455.3576502-7-almaz.alexandrovich@paragon-software.com/raw"
-        "v$pkgver~7.patch::https://lore.kernel.org/lkml/20210128090455.3576502-8-almaz.alexandrovich@paragon-software.com/raw"
-        "v$pkgver~8.patch::https://lore.kernel.org/lkml/20210128090455.3576502-9-almaz.alexandrovich@paragon-software.com/raw")
-sha512sums=('3d47cccc7914b42dbcc670bcb9144f948a42d0ba57843140373afec0483570597b4b4ad61753742b282626f50aec25cabbeb88aadc94d2cb67ec1c612b6ed41d'
-            'f98f7ebeba0e3aa0555801b05d7d8e54139ae4b9c4443c67475c17fd1cde91126f1a275ab5ad7ea48a8161fb3a210986237da1fa1c9dfd315cf108ebdc645633'
-            '5d084ca098eb0753ec325a04b02f0c92a6c8e25c2e590539868e56dae1185327aa232300e3ad382ea5a5a9a6a044b827762891d394745774e553e82cf0ef8099'
-            '9949726ea2e0ec98ccfae30aeb99f801245d0912269498a9c4ebc1fa8cf0ed205d7518cb5626aead41c64578131559cf6c7195cca104184dc1c658fae3be0180'
-            '2268105de76feebb684e42d5a1885ca53cbd308d8ddc5d749126339218fb39f7867a36624af240e2c7ec6d3fda049c5e947815ae262f2c083c1ae6c6beb9bbe1'
-            'fddbda4c4a3d858f6740673c69613eacc4fca51ad564770588a363f2f09f2225a000f1507fca9f5dda723f4250438e9c3b6373fb2e98c0cf0ba197e9b4ef2c99'
-            'c77ba7eb033286963569ab32a457ff613b6244eafb08c4ab9c5a8945ff058caccd5af65885c34a7caa82b09821edc9b6ed562c7def19f1bce2f5369fa5b6d2ff'
-            'a78ef11cef86d563148669bab42b2bf8ac756c9de0a796dacc36810fc8f19484f74ae8c91ec063188b219d7201bee8bd98258f3b1341f93210a361d06212c149'
-            'fcf2d17aeb22c00b3886150f970e2adf61a4cc00efe6185ac935164a32ad69c95a0be6d03152b3f3de58e3a701d8c25c7c3d340fc56c19d1995eb5df1041a8a3'
-            'b894ee23f7722e2515048dadbd07605a6cf93fbe9194891b0038374c4bce9e00b811249f8c945c83bf5c84eaea57f1c78aa87834d5dde412e67f669ce67f32fd')
+        "v$pkgver~1.patch::https://lore.kernel.org/lkml/20210205150244.542628-2-almaz.alexandrovich@paragon-software.com/raw"
+        "v$pkgver~2.patch::https://lore.kernel.org/lkml/20210205150244.542628-3-almaz.alexandrovich@paragon-software.com/raw"
+        "v$pkgver~3.patch::https://lore.kernel.org/lkml/20210205150244.542628-4-almaz.alexandrovich@paragon-software.com/raw"
+        "v$pkgver~4.patch::https://lore.kernel.org/lkml/20210205150244.542628-5-almaz.alexandrovich@paragon-software.com/raw"
+        "v$pkgver~5.patch::https://lore.kernel.org/lkml/20210205150244.542628-6-almaz.alexandrovich@paragon-software.com/raw"
+        "v$pkgver~6.patch::https://lore.kernel.org/lkml/20210205150244.542628-7-almaz.alexandrovich@paragon-software.com/raw"
+        "v$pkgver~7.patch::https://lore.kernel.org/lkml/20210205150244.542628-8-almaz.alexandrovich@paragon-software.com/raw"
+        "v$pkgver~8.patch::https://lore.kernel.org/lkml/20210205150244.542628-9-almaz.alexandrovich@paragon-software.com/raw"
+        v20_fix.patch)
+sha512sums=('55523ce0d3c3790c33fbe73bd396e5e5f1d015608303e497202a232f51af9bb172003cc836880a7fa85163947609281754606067e5e0df79e9630cd6d1821b96'
+            '88e9cf87ab809df7753012b0e285beaa902930a02c4140573967289ea34ae5603159a116cafd5a6bda2e29987d146ed32dc19d831ba44b1db8ca23fc2f3d8f12'
+            '3abe2a46b4099e50664914a1f743594c1e591a903ed21bd988e615de0a458d53abfb4d4f49064b7838f75f3e335594f5771f79779a0e656855463eb8d434845b'
+            '96a05006a7bded3e1ba122c8a4916eb0326d83d6820642f433676fc08063340d9799d69b71a20717bb5032750b909c7e2ad9468a09b85aea8774f3f493a1fdc5'
+            '862a8ed7e7c68027eff42d40b4698a3f984e5f5d90a70623b2e83488dc37bb90c38babfe108a73d46baea2b0a7cc63a643d60f48d1b48afa17aaaaa9ddef5a75'
+            '725bb2673d1a61463aff61cc1d8fcaac3888b3177e7af75bed464974da0cfa07383628ce863bb214e9c48969f0d978cbbd845dcfbc971ef850f08af3eb3eb740'
+            'd2366ffa6108c78a4579a8dbc55cea27006fcdb0a8c60638b7e0d4b78067f4b1450c69030dfdf6daf077b3e827bf052f0fc63aa02a963cd1e6b9914972abe143'
+            'eb420dc335e8b522bfcf037c4eb608da254e570d4d41ea6b688eed6b7ff4e4df560d573d31c51b587139dd82f0b9bce538a964ee6e3431aea78e2b5beb9d03fc'
+            '0b4d47b79c6884f657b974700e4709f9527bfdd60b931e10b3402fcea514107a82fcfe81c1a0dcb7e64247b3661ecaa1868e4c1fe1c7f0f0564d591d612085f4'
+            'fae49f1a1ae6bcdb56337f43b78467c282a4a7405be75821b8ac41740595cf4b1af091cae59ba26aa6118448d6710494aca7d13a31260316042e49c693e687c3'
+            'a799437ebe798fa88d667ddb086f4c752a41cac7aa5e70bd5f1d718c923272eaff7b59deaeac6794f801dc99bcb4f1c6bacbc8e59539c1e7e8180acf4f0a43dd')
 
 
 prepare() {
@@ -36,6 +38,7 @@ prepare() {
   do
     patch -p3 -N -i "$patch"
   done
+  patch -p3 -N -i "$srcdir/v20_fix.patch"
   patch -p0 -N -i "$srcdir/Makefile.patch"
 }
 
