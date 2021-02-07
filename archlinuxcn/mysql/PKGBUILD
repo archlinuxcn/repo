@@ -6,8 +6,8 @@
 
 pkgname=('mysql' 'libmysqlclient' 'mysql-clients')
 pkgbase=mysql
-pkgver=8.0.22
-pkgrel=2
+pkgver=8.0.23
+pkgrel=1
 pkgdesc="Fast SQL database server, community edition"
 arch=('x86_64')
 makedepends=('openssl' 'zlib' 'cmake' 'systemd-tools' 'libaio' 'jemalloc'
@@ -21,7 +21,7 @@ source=("https://cdn.mysql.com/Downloads/MySQL-8.0/${pkgbase}-boost-${pkgver}.ta
         "mysql.sysconfig"
         "mysqld_service.patch"
         "systemd-sysusers-tmpfiles.patch")
-sha256sums=('ba765f74367c638d7cd1c546c05c14382fd997669bcd9680278e907f8d7eb484'
+sha256sums=('1c7a424303c134758e59607a0b3172e43a21a27ff08e8c88c2439ffd4fc724a5'
             '6bc24ae510f6b6bbad6b3edda2d0028b29292937b482274a4c2fae335f4de328'
             'e1c23fa0971a13d998f2790379b68c475438d05b6d6f2691b99051dbf497567f'
             '203dcd22fea668477ac7123dbd9909fae72d3d07f8855417a669a9c94db072ae'
@@ -163,7 +163,7 @@ package_mysql(){
   rm "${pkgdir}/usr/lib/libmysqlclient.a"
   rm "${pkgdir}/usr/lib/libmysqlclient.so"
   rm "${pkgdir}/usr/lib/libmysqlclient.so.21"
-  rm "${pkgdir}/usr/lib/libmysqlclient.so.21.1.22"
+  rm "${pkgdir}/usr/lib/libmysqlclient.so.21.1.23"
   rm "${pkgdir}/usr/lib/libmysqlservices.a"
   rm "${pkgdir}/usr/lib/pkgconfig/mysqlclient.pc"
   rmdir "${pkgdir}/usr/lib/pkgconfig"
