@@ -1,6 +1,6 @@
 # Maintainer: Adrian Perez de Castro <aperez@igalia.com>
 pkgname=libdispatch
-pkgver=5.3.2
+pkgver=5.3.3
 pkgrel=1
 pkgdesc='Comprehensive support for concurrent code execution on multicore hardware'
 arch=(i686 x86_64 arm armv6h armv7h aarch64)
