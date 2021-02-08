@@ -2,7 +2,7 @@
 # Maintainer: Médéric Boquien <mboquien@free.fr>
 pkgname=python-pyerfa
 pkgver=1.7.1.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Python wrapper for the ERFA library "
 arch=('i686' 'x86_64')
 url="https://github.com/liberfa/pyerfa"
@@ -15,7 +15,7 @@ sha512sums=('59c2dceed6ef5b1ece618742dd0084b729cce8eb52f903dff2aad009fa0f495defb
 build() {
   cd "${srcdir}/pyerfa-${pkgver}"
 
-  CONFIG_FILE=/dev/null pip wheel --no-cache-dir --no-deps --wheel-dir="${srcdir}/pyerfa-${pkgver}" .
+  PYERFA_USE_SYSTEM_LIBERFA=1 CONFIG_FILE=/dev/null pip wheel --no-cache-dir --no-deps --wheel-dir="${srcdir}/pyerfa-${pkgver}" .
 }
 
 package() {
@@ -23,6 +23,6 @@ package() {
 
   install -d -m755 "${pkgdir}/usr/share/licenses/${pkgname}/"
   install -m644 -t "${pkgdir}/usr/share/licenses/${pkgname}/" licenses/*
-  PIP_CONFIG_FILE=/dev/null pip install --isolated --ignore-installed --no-deps --no-warn-script-location --root="${pkgdir}" "$(ls ./*.whl 2> /dev/null)"
+  PYERFA_USE_SYSTEM_LIBERFA=1 PIP_CONFIG_FILE=/dev/null pip install --isolated --ignore-installed --no-deps --no-warn-script-location --root="${pkgdir}" "$(ls ./*.whl 2> /dev/null)"
   rm "${pkgdir}"/usr/lib/python*/site-packages/pyerfa-"${pkgver}".dist-info/direct_url.json
 }
