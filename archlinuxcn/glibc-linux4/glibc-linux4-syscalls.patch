@@ -1,0 +1,358 @@
+diff --git a/sysdeps/nptl/futex-internal.c b/sysdeps/nptl/futex-internal.c
+index 89b4ba76e9..5033193472 100644
+--- a/sysdeps/nptl/futex-internal.c
++++ b/sysdeps/nptl/futex-internal.c
+@@ -71,13 +71,9 @@ __futex_abstimed_wait_common64 (unsigned int* futex_word,
+   int op = __lll_private_flag (FUTEX_WAIT_BITSET | clockbit, private);
+ 
+   if (cancel)
+-    err = INTERNAL_SYSCALL_CANCEL (futex_time64, futex_word, op, expected,
+-                                   abstime, NULL /* Unused.  */,
+-                                   FUTEX_BITSET_MATCH_ANY);
++    err = -ENOSYS; //INTERNAL_SYSCALL_CANCEL (futex_time64, futex_word, op, expected, abstime, NULL /* Unused.  */, FUTEX_BITSET_MATCH_ANY);
+   else
+-    err = INTERNAL_SYSCALL_CALL (futex_time64, futex_word, op, expected,
+-                                 abstime, NULL /* Ununsed.  */,
+-                                 FUTEX_BITSET_MATCH_ANY);
++    err = -ENOSYS; //INTERNAL_SYSCALL_CALL (futex_time64, futex_word, op, expected, abstime, NULL /* Ununsed.  */, FUTEX_BITSET_MATCH_ANY);
+ #ifndef __ASSUME_TIME64_SYSCALLS
+   if (err == -ENOSYS)
+     err = __futex_abstimed_wait_common32 (futex_word, expected, op, abstime,
+diff --git a/sysdeps/nptl/futex-internal.h b/sysdeps/nptl/futex-internal.h
+index 4c192c99e3..4e977b4598 100644
+--- a/sysdeps/nptl/futex-internal.h
++++ b/sysdeps/nptl/futex-internal.h
+@@ -254,9 +254,7 @@ static __always_inline int
+ futex_lock_pi64 (int *futex_word, const struct __timespec64 *abstime,
+                  int private)
+ {
+-  int err = INTERNAL_SYSCALL_CALL (futex_time64, futex_word,
+-                                   __lll_private_flag
+-                                   (FUTEX_LOCK_PI, private), 0, abstime);
++  int err = -ENOSYS; //INTERNAL_SYSCALL_CALL (futex_time64, futex_word, __lll_private_flag (FUTEX_LOCK_PI, private), 0, abstime);
+ #ifndef __ASSUME_TIME64_SYSCALLS
+   if (err == -ENOSYS)
+     {
+diff --git a/sysdeps/unix/sysv/linux/clock_adjtime.c b/sysdeps/unix/sysv/linux/clock_adjtime.c
+index 7850eb2ec4..606cb46f1b 100644
+--- a/sysdeps/unix/sysv/linux/clock_adjtime.c
++++ b/sysdeps/unix/sysv/linux/clock_adjtime.c
+@@ -29,7 +29,8 @@ __clock_adjtime64 (const clockid_t clock_id, struct __timex64 *tx64)
+ #ifndef __NR_clock_adjtime64
+ # define __NR_clock_adjtime64 __NR_clock_adjtime
+ #endif
+-  int r = INLINE_SYSCALL_CALL (clock_adjtime64, clock_id, tx64);
++  int r = -1; // INLINE_SYSCALL_CALL (clock_adjtime64, clock_id, tx64);
++  errno = ENOSYS;
+ #ifndef __ASSUME_TIME64_SYSCALLS
+   if (r >= 0 || errno != ENOSYS)
+     return r;
+diff --git a/sysdeps/unix/sysv/linux/clock_getcpuclockid.c b/sysdeps/unix/sysv/linux/clock_getcpuclockid.c
+index 15215d6855..ba1de750df 100644
+--- a/sysdeps/unix/sysv/linux/clock_getcpuclockid.c
++++ b/sysdeps/unix/sysv/linux/clock_getcpuclockid.c
+@@ -34,7 +34,7 @@ __clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
+ #ifndef __NR_clock_getres_time64
+ # define __NR_clock_getres_time64 __NR_clock_getres
+ #endif
+-  int r = INTERNAL_SYSCALL_CALL (clock_getres_time64, pidclock, NULL);
++  int r = -ENOSYS; //INTERNAL_SYSCALL_CALL (clock_getres_time64, pidclock, NULL);
+ 
+ #ifndef __ASSUME_TIME64_SYSCALLS
+   if (r != 0 && r == -ENOSYS)
+diff --git a/sysdeps/unix/sysv/linux/clock_getres.c b/sysdeps/unix/sysv/linux/clock_getres.c
+index 14e50fbdf2..f2d21bcf52 100644
+--- a/sysdeps/unix/sysv/linux/clock_getres.c
++++ b/sysdeps/unix/sysv/linux/clock_getres.c
+@@ -37,9 +37,9 @@ __clock_getres64 (clockid_t clock_id, struct __timespec64 *res)
+   if (supports_time64 ())
+     {
+ #ifdef HAVE_CLOCK_GETRES64_VSYSCALL
+-      r = INLINE_VSYSCALL (clock_getres_time64, 2, clock_id, res);
++      r = ENOSYS; //INLINE_VSYSCALL (clock_getres_time64, 2, clock_id, res);
+ #else
+-      r = INLINE_SYSCALL_CALL (clock_getres_time64, clock_id, res);
++      r = ENOSYS; //INLINE_SYSCALL_CALL (clock_getres_time64, clock_id, res);
+ #endif
+ 
+       if (r == 0 || errno != ENOSYS)
+diff --git a/sysdeps/unix/sysv/linux/clock_gettime.c b/sysdeps/unix/sysv/linux/clock_gettime.c
+index 781d05c2fd..f4d8d07e0e 100644
+--- a/sysdeps/unix/sysv/linux/clock_gettime.c
++++ b/sysdeps/unix/sysv/linux/clock_gettime.c
+@@ -38,9 +38,9 @@ __clock_gettime64 (clockid_t clock_id, struct __timespec64 *tp)
+   if (supports_time64 ())
+     {
+ #ifdef HAVE_CLOCK_GETTIME64_VSYSCALL
+-      r = INLINE_VSYSCALL (clock_gettime64, 2, clock_id, tp);
++      r = ENOSYS; //INLINE_VSYSCALL (clock_gettime64, 2, clock_id, tp);
+ #else
+-      r = INLINE_SYSCALL_CALL (clock_gettime64, clock_id, tp);
++      r = ENOSYS; //INLINE_SYSCALL_CALL (clock_gettime64, clock_id, tp);
+ #endif
+ 
+       if (r == 0 || errno != ENOSYS)
+diff --git a/sysdeps/unix/sysv/linux/clock_nanosleep.c b/sysdeps/unix/sysv/linux/clock_nanosleep.c
+index 007f1736cb..a8e7bf94c8 100644
+--- a/sysdeps/unix/sysv/linux/clock_nanosleep.c
++++ b/sysdeps/unix/sysv/linux/clock_nanosleep.c
+@@ -40,8 +40,7 @@ __clock_nanosleep_time64 (clockid_t clock_id, int flags, const struct __timespec
+ #ifndef __NR_clock_nanosleep_time64
+ # define __NR_clock_nanosleep_time64 __NR_clock_nanosleep
+ #endif
+-  int r = INTERNAL_SYSCALL_CANCEL (clock_nanosleep_time64, clock_id,
+-				   flags, req, rem);
++  int r = -ENOSYS; //INTERNAL_SYSCALL_CANCEL (clock_nanosleep_time64, clock_id, flags, req, rem);
+ 
+ #ifndef __ASSUME_TIME64_SYSCALLS
+   if (r == 0 || r != -ENOSYS)
+diff --git a/sysdeps/unix/sysv/linux/clock_settime.c b/sysdeps/unix/sysv/linux/clock_settime.c
+index 598d72b8b1..54a1d3c208 100644
+--- a/sysdeps/unix/sysv/linux/clock_settime.c
++++ b/sysdeps/unix/sysv/linux/clock_settime.c
+@@ -35,7 +35,8 @@ __clock_settime64 (clockid_t clock_id, const struct __timespec64 *tp)
+ #ifndef __NR_clock_settime64
+ # define __NR_clock_settime64 __NR_clock_settime
+ #endif
+-  int ret = INLINE_SYSCALL_CALL (clock_settime64, clock_id, tp);
++  int ret = -1; //INLINE_SYSCALL_CALL (clock_settime64, clock_id, tp);
++  errno = ENOSYS;
+ 
+ #ifndef __ASSUME_TIME64_SYSCALLS
+   if (ret == 0 || errno != ENOSYS)
+diff --git a/sysdeps/unix/sysv/linux/faccessat.c b/sysdeps/unix/sysv/linux/faccessat.c
+index 13160d3249..9f35998f9e 100644
+--- a/sysdeps/unix/sysv/linux/faccessat.c
++++ b/sysdeps/unix/sysv/linux/faccessat.c
+@@ -26,7 +26,8 @@
+ int
+ __faccessat (int fd, const char *file, int mode, int flag)
+ {
+-  int ret = INLINE_SYSCALL_CALL (faccessat2, fd, file, mode, flag);
++  int ret = -1; //INLINE_SYSCALL_CALL (faccessat2, fd, file, mode, flag);
++  errno = ENOSYS;
+ #if __ASSUME_FACCESSAT2
+   return ret;
+ #else
+diff --git a/sysdeps/unix/sysv/linux/kernel-features.h b/sysdeps/unix/sysv/linux/kernel-features.h
+index 1680b10ca1..bb903c44cc 100644
+--- a/sysdeps/unix/sysv/linux/kernel-features.h
++++ b/sysdeps/unix/sysv/linux/kernel-features.h
+@@ -201,7 +201,7 @@
+ #if __LINUX_KERNEL_VERSION >= 0x050100                          \
+   || __WORDSIZE == 64                                           \
+   || (defined __SYSCALL_WORDSIZE && __SYSCALL_WORDSIZE == 64)
+-# define __ASSUME_TIME64_SYSCALLS 1
++# define NO_ASSUME_TIME64_SYSCALLS 1
+ #endif
+ 
+ /* Linux waitid prior kernel 5.4 does not support waiting for the current
+@@ -213,7 +213,7 @@
+ /* The faccessat2 system call was introduced across all architectures
+    in Linux 5.8.  */
+ #if __LINUX_KERNEL_VERSION >= 0x050800
+-# define __ASSUME_FACCESSAT2 1
++# define __ASSUME_FACCESSAT2 0
+ #else
+ # define __ASSUME_FACCESSAT2 0
+ #endif
+diff --git a/sysdeps/unix/sysv/linux/mq_timedreceive.c b/sysdeps/unix/sysv/linux/mq_timedreceive.c
+index eb948ccc18..d63d314592 100644
+--- a/sysdeps/unix/sysv/linux/mq_timedreceive.c
++++ b/sysdeps/unix/sysv/linux/mq_timedreceive.c
+@@ -29,8 +29,8 @@ __mq_timedreceive_time64 (mqd_t mqdes, char *__restrict msg_ptr, size_t msg_len,
+ #ifndef __NR_mq_timedreceive_time64
+ # define __NR_mq_timedreceive_time64 __NR_mq_timedreceive
+ #endif
+-  int ret = SYSCALL_CANCEL (mq_timedreceive_time64, mqdes, msg_ptr, msg_len,
+-                            msg_prio, abs_timeout);
++  int ret = -1; //SYSCALL_CANCEL (mq_timedreceive_time64, mqdes, msg_ptr, msg_len, msg_prio, abs_timeout);
++  errno = ENOSYS;
+ 
+ #ifndef __ASSUME_TIME64_SYSCALLS
+   if (ret == 0 || errno != ENOSYS)
+diff --git a/sysdeps/unix/sysv/linux/mq_timedsend.c b/sysdeps/unix/sysv/linux/mq_timedsend.c
+index 5f14ecb0bf..e77979d248 100644
+--- a/sysdeps/unix/sysv/linux/mq_timedsend.c
++++ b/sysdeps/unix/sysv/linux/mq_timedsend.c
+@@ -29,8 +29,8 @@ __mq_timedsend_time64 (mqd_t mqdes, const char *msg_ptr, size_t msg_len,
+ # ifndef __NR_mq_timedsend_time64
+ #  define __NR_mq_timedsend_time64 __NR_mq_timedsend
+ # endif
+-  int ret = SYSCALL_CANCEL (mq_timedsend_time64, mqdes, msg_ptr, msg_len,
+-			    msg_prio, abs_timeout);
++  int ret = -1; //SYSCALL_CANCEL (mq_timedsend_time64, mqdes, msg_ptr, msg_len, msg_prio, abs_timeout);
++  errno = ENOSYS;
+ 
+ #ifndef __ASSUME_TIME64_SYSCALLS
+   if (ret == 0 || errno != ENOSYS)
+diff --git a/sysdeps/unix/sysv/linux/ppoll.c b/sysdeps/unix/sysv/linux/ppoll.c
+index 624f14f517..1c042f8238 100644
+--- a/sysdeps/unix/sysv/linux/ppoll.c
++++ b/sysdeps/unix/sysv/linux/ppoll.c
+@@ -45,8 +45,8 @@ __ppoll64 (struct pollfd *fds, nfds_t nfds, const struct __timespec64 *timeout,
+ #ifndef __NR_ppoll_time64
+ # define __NR_ppoll_time64 __NR_ppoll
+ #endif
+-      ret = SYSCALL_CANCEL (ppoll_time64, fds, nfds, timeout, sigmask,
+-			    __NSIG_BYTES);
++      ret = -1; //SYSCALL_CANCEL (ppoll_time64, fds, nfds, timeout, sigmask, __NSIG_BYTES);
++      errno = ENOSYS;
+ 
+       if (ret == 0 || errno != ENOSYS)
+ 	return ret;
+diff --git a/sysdeps/unix/sysv/linux/pselect.c b/sysdeps/unix/sysv/linux/pselect.c
+index 5e8a0cc2dc..053785a5ad 100644
+--- a/sysdeps/unix/sysv/linux/pselect.c
++++ b/sysdeps/unix/sysv/linux/pselect.c
+@@ -49,8 +49,8 @@ __pselect64 (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+ 	{
+ 	  (uintptr_t) sigmask, __NSIG_BYTES
+ 	};
+-      r = SYSCALL_CANCEL (pselect6_time64, nfds, readfds, writefds, exceptfds,
+-			  timeout, data);
++      r = -1; //SYSCALL_CANCEL (pselect6_time64, nfds, readfds, writefds, exceptfds, timeout, data);
++      errno = ENOSYS;
+       if (r == 0 || errno != ENOSYS)
+ 	return r;
+ 
+diff --git a/sysdeps/unix/sysv/linux/recvmmsg.c b/sysdeps/unix/sysv/linux/recvmmsg.c
+index 672ba20332..d99dafcfc5 100644
+--- a/sysdeps/unix/sysv/linux/recvmmsg.c
++++ b/sysdeps/unix/sysv/linux/recvmmsg.c
+@@ -27,8 +27,8 @@ __recvmmsg64 (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
+ #ifndef __NR_recvmmsg_time64
+ # define __NR_recvmmsg_time64 __NR_recvmmsg
+ #endif
+-  int r = SYSCALL_CANCEL (recvmmsg_time64, fd, vmessages, vlen, flags,
+-			  timeout);
++  int r = -1; //SYSCALL_CANCEL (recvmmsg_time64, fd, vmessages, vlen, flags, timeout);
++  errno = ENOSYS;
+ #ifndef __ASSUME_TIME64_SYSCALLS
+   if (r >= 0 || errno != ENOSYS)
+     return r;
+diff --git a/sysdeps/unix/sysv/linux/sched_rr_gi.c b/sysdeps/unix/sysv/linux/sched_rr_gi.c
+index 5e55cf4977..fa172ee8bc 100644
+--- a/sysdeps/unix/sysv/linux/sched_rr_gi.c
++++ b/sysdeps/unix/sysv/linux/sched_rr_gi.c
+@@ -28,7 +28,8 @@ __sched_rr_get_interval64 (pid_t pid, struct __timespec64 *tp)
+ #ifndef __NR_sched_rr_get_interval_time64
+ # define __NR_sched_rr_get_interval_time64 __NR_sched_rr_get_interval
+ #endif
+-  int ret = INLINE_SYSCALL_CALL (sched_rr_get_interval_time64, pid, tp);
++  int ret = -1; //INLINE_SYSCALL_CALL (sched_rr_get_interval_time64, pid, tp);
++  errno = ENOSYS;
+ #ifndef __ASSUME_TIME64_SYSCALLS
+   if (ret == 0 || errno != ENOSYS)
+     return ret;
+diff --git a/sysdeps/unix/sysv/linux/select.c b/sysdeps/unix/sysv/linux/select.c
+index 415aa87d3c..ecbe0456ac 100644
+--- a/sysdeps/unix/sysv/linux/select.c
++++ b/sysdeps/unix/sysv/linux/select.c
+@@ -46,8 +46,8 @@ __select64 (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+   int r;
+   if (supports_time64 ())
+     {
+-      r = SYSCALL_CANCEL (pselect6_time64, nfds, readfds, writefds, exceptfds,
+-			  pts64, NULL);
++      r = -1; //SYSCALL_CANCEL (pselect6_time64, nfds, readfds, writefds, exceptfds, pts64, NULL);
++      errno = ENOSYS;
+       /* Linux by default will update the timeout after a pselect6 syscall
+          (though the pselect() glibc call suppresses this behavior).
+          Since select() on Linux has the same behavior as the pselect6
+diff --git a/sysdeps/unix/sysv/linux/semtimedop.c b/sysdeps/unix/sysv/linux/semtimedop.c
+index b732b6db48..a7050420ab 100644
+--- a/sysdeps/unix/sysv/linux/semtimedop.c
++++ b/sysdeps/unix/sysv/linux/semtimedop.c
+@@ -28,7 +28,8 @@ __semtimedop64 (int semid, struct sembuf *sops, size_t nsops,
+ {
+   int r;
+ #if defined __NR_semtimedop_time64
+-  r = INLINE_SYSCALL_CALL (semtimedop_time64, semid, sops, nsops, timeout);
++  r = -1; //INLINE_SYSCALL_CALL (semtimedop_time64, semid, sops, nsops, timeout);
++  errno = ENOSYS;
+ #elif defined __ASSUME_DIRECT_SYSVIPC_SYSCALLS && defined __NR_semtimedop
+   r = INLINE_SYSCALL_CALL (semtimedop, semid, sops, nsops, timeout);
+ #else
+diff --git a/sysdeps/unix/sysv/linux/time64-support.h b/sysdeps/unix/sysv/linux/time64-support.h
+index 8466d37f8f..35bf73f5ee 100644
+--- a/sysdeps/unix/sysv/linux/time64-support.h
++++ b/sysdeps/unix/sysv/linux/time64-support.h
+@@ -54,6 +54,7 @@ extern int __time64_support attribute_hidden;
+ static inline bool
+ supports_time64 (void)
+ {
++  return false;
+ #ifdef __ASSUME_TIME64_SYSCALLS
+   return true;
+ #else
+diff --git a/sysdeps/unix/sysv/linux/timer_gettime.c b/sysdeps/unix/sysv/linux/timer_gettime.c
+index 193fe3b140..782387bba9 100644
+--- a/sysdeps/unix/sysv/linux/timer_gettime.c
++++ b/sysdeps/unix/sysv/linux/timer_gettime.c
+@@ -31,7 +31,8 @@ __timer_gettime64 (timer_t timerid, struct __itimerspec64 *value)
+ #ifndef __NR_timer_gettime64
+ # define __NR_timer_gettime64 __NR_timer_gettime
+ #endif
+-  int ret = INLINE_SYSCALL_CALL (timer_gettime64, ktimerid, value);
++  int ret = -1; //INLINE_SYSCALL_CALL (timer_gettime64, ktimerid, value);
++  errno = ENOSYS;
+ #ifndef __ASSUME_TIME64_SYSCALLS
+   if (ret == 0 || errno != ENOSYS)
+     return ret;
+diff --git a/sysdeps/unix/sysv/linux/timer_settime.c b/sysdeps/unix/sysv/linux/timer_settime.c
+index f8bb16a4c2..24aa17f1bf 100644
+--- a/sysdeps/unix/sysv/linux/timer_settime.c
++++ b/sysdeps/unix/sysv/linux/timer_settime.c
+@@ -38,8 +38,7 @@ __timer_settime64 (timer_t timerid, int flags,
+                               ovalue);
+ #else
+ # ifdef __NR_timer_settime64
+-  int ret = INLINE_SYSCALL_CALL (timer_settime64, ktimerid, flags, value,
+-                                 ovalue);
++  int ret = ENOSYS; //INLINE_SYSCALL_CALL (timer_settime64, ktimerid, flags, value, ovalue);
+   if (ret == 0 || errno != ENOSYS)
+     return ret;
+ # endif
+diff --git a/sysdeps/unix/sysv/linux/timerfd_gettime.c b/sysdeps/unix/sysv/linux/timerfd_gettime.c
+index 89f8066b91..e11cf663ba 100644
+--- a/sysdeps/unix/sysv/linux/timerfd_gettime.c
++++ b/sysdeps/unix/sysv/linux/timerfd_gettime.c
+@@ -32,7 +32,8 @@ __timerfd_gettime64 (int fd, struct __itimerspec64 *value)
+   return INLINE_SYSCALL_CALL (timerfd_gettime64, fd, value);
+ #else
+ # ifdef __NR_timerfd_gettime64
+-  int ret = INLINE_SYSCALL_CALL (timerfd_gettime64, fd, value);
++  int ret = -1; //INLINE_SYSCALL_CALL (timerfd_gettime64, fd, value);
++  errno = ENOSYS;
+   if (ret == 0 || errno != ENOSYS)
+     return ret;
+ # endif
+diff --git a/sysdeps/unix/sysv/linux/timerfd_settime.c b/sysdeps/unix/sysv/linux/timerfd_settime.c
+index 0dd6fa026e..3f57b84cb4 100644
+--- a/sysdeps/unix/sysv/linux/timerfd_settime.c
++++ b/sysdeps/unix/sysv/linux/timerfd_settime.c
+@@ -29,7 +29,8 @@ __timerfd_settime64 (int fd, int flags, const struct __itimerspec64 *value,
+ #ifndef __NR_timerfd_settime64
+ # define __NR_timerfd_settime64 __NR_timerfd_settime
+ #endif
+-  int ret = INLINE_SYSCALL_CALL (timerfd_settime64, fd, flags, value, ovalue);
++  int ret = -1; //INLINE_SYSCALL_CALL (timerfd_settime64, fd, flags, value, ovalue);
++  errno = ENOSYS;
+ #ifndef __ASSUME_TIME64_SYSCALLS
+   if (ret == 0 || errno != ENOSYS)
+     return ret;
+diff --git a/sysdeps/unix/sysv/linux/utimensat.c b/sysdeps/unix/sysv/linux/utimensat.c
+index 909a29762b..8115e62868 100644
+--- a/sysdeps/unix/sysv/linux/utimensat.c
++++ b/sysdeps/unix/sysv/linux/utimensat.c
+@@ -31,7 +31,8 @@ __utimensat64_helper (int fd, const char *file,
+ #ifndef __NR_utimensat_time64
+ # define __NR_utimensat_time64 __NR_utimensat
+ #endif
+-  int ret = INLINE_SYSCALL_CALL (utimensat_time64, fd, file, &tsp64[0], flags);
++  int ret = -1; //INLINE_SYSCALL_CALL (utimensat_time64, fd, file, &tsp64[0], flags);
++  errno = ENOSYS;
+ #ifndef __ASSUME_TIME64_SYSCALLS
+   if (ret == 0 || errno != ENOSYS)
+     return ret;

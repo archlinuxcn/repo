@@ -1,0 +1,48 @@
+From c3479fb7939898ec22c655c383454d6e8b982a67 Mon Sep 17 00:00:00 2001
+From: Sergei Trofimovich <slyfox@gentoo.org>
+Date: Fri, 5 Feb 2021 07:32:18 +0000
+Subject: [PATCH] nsswitch: return result when nss database is locked [BZ
+ #27343]
+
+Before the change nss_database_check_reload_and_get() did not populate
+the '*result' value when it returned success in a case of chroot
+detection. This caused initgroups() to use garage pointer in the
+following test (extracted from unbound):
+
+```
+
+int main() {
+    // load some NSS modules
+    struct passwd * pw = getpwnam("root");
+
+    chdir("/tmp");
+    chroot("/tmp");
+    chdir("/");
+    // access nsswitch.conf in a chroot
+    initgroups("root", 0);
+}
+```
+
+Reviewed-by: DJ Delorie <dj@redhat.com>
+---
+ nss/nss_database.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/nss/nss_database.c b/nss/nss_database.c
+index cf0306adc4..e1bef6bd75 100644
+--- a/nss/nss_database.c
++++ b/nss/nss_database.c
+@@ -398,8 +398,9 @@ nss_database_check_reload_and_get (struct nss_database_state *local,
+ 	  && (str.st_ino != local->root_ino
+ 	      ||  str.st_dev != local->root_dev)))
+     {
+-      /* Change detected; disable reloading.  */
++      /* Change detected; disable reloading and return current state.  */
+       atomic_store_release (&local->data.reload_disabled, 1);
++      *result = local->data.services[database_index];
+       __libc_lock_unlock (local->lock);
+       __nss_module_disable_loading ();
+       return true;
+-- 
+2.27.0
+
