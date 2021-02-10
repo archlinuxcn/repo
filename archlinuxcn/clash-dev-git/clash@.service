@@ -1,0 +1,12 @@
+[Unit]
+Description=Clash Service
+After=network.target nss-lookup.target
+
+[Service]
+User=clash
+ExecStart=/usr/bin/clash -d /etc/clash/ -f /etc/clash/%i.yaml
+Restart=on-abort
+StandardOutput=file:/var/log/clash/%i.log
+
+[Install]
+WantedBy=multi-user.target
