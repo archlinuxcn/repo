@@ -2,7 +2,7 @@
 
 pkgname=gnome-shell-extension-gsconnect
 pkgver=44
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE Connect implementation with GNOME Shell integration"
 arch=('any')
 url="https://github.com/andyholmes/gnome-shell-extension-gsconnect"
@@ -20,6 +20,6 @@ sha256sums=('ff0fc637df5352f74097caa2a1ba9d97ccb49a4834c49b3070a57fb6913a5f0d')
 
 package() {
   cd "$pkgname-$pkgver"
-  meson build --prefix /usr --libdir lib/
+  arch-meson build
   DESTDIR="${pkgdir}" ninja -C build install
 }
