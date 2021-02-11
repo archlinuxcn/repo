@@ -1,32 +1,28 @@
-# Maintainer: Sibren Vasse <arch@sibrenvasse.nl>
-
-_name=casttube
-pkgname="python-$_name"
+# Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
+# Contributor: Sibren Vasse <arch@sibrenvasse.nl>
+pkgname=python-casttube
+_name=${pkgname#python-}
 pkgver=0.2.1
-pkgrel=3
-pkgdesc='YouTube chromecast api'
-url='http://github.com/ur1katz/casttube'
-depends=('python' 'python-requests')
-makedepends=('python-setuptools')
-license=('MIT')
+pkgrel=4
+pkgdesc="YouTube Chromecast API"
 arch=('any')
-source=("https://github.com/ur1katz/casttube/archive/${pkgver}.tar.gz"
-license.patch)
-sha256sums=('351819818a10a107641675cab71c4154afb490762410b3138c18ef410cbf5c33'
-            'cfd4952db463d970ae6d1121f23f11ccb56322fdc413effbb55a45e8b05c9556')
-
-prepare() {
-    cd "${srcdir}/${_name}-${pkgver}"
-    patch --forward --strip=1 --input="${srcdir}/license.patch"
-}
+url="http://github.com/ur1katz/casttube"
+license=('MIT')
+depends=('python-requests')
+makedepends=('python-setuptools')
+source=("https://pypi.org/packages/source/${_name:0:1}/$_name/$_name-$pkgver.tar.gz")
+sha256sums=('54d2af8c7949aa9c5db87fb11ef0a478a5d3e7ac6d2d2ac8dd1711e3a516fc82')
 
 build() {
-    cd "${srcdir}/${_name}-${pkgver}"
-    python setup.py build
+	cd "$_name-$pkgver"
+	python setup.py build
 }
 
 package() {
-    cd "${srcdir}/${_name}-${pkgver}"
-    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-    python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+	cd "$_name-$pkgver"
+	export PYTHONHASHSEED=0
+	python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+
+	install -d "$pkgdir/usr/share/licenses/$pkgname"
+	mv "$pkgdir/usr/LICENSE" "$pkgdir/usr/share/licenses/$pkgname"
 }
