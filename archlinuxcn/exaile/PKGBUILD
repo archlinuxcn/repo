@@ -7,9 +7,8 @@
 # Contributor: Joshua Stiefer <facedelajunk@gmail.com>
 
 pkgname=exaile
-_pkgver=4.1.0-rc1
-pkgver=${_pkgver//-/}
-pkgrel=6
+pkgver=4.1.0
+pkgrel=1
 pkgdesc="A full-featured Amarok-style media player for GTK+"
 arch=('any')
 url="https://www.exaile.org/"
@@ -42,20 +41,20 @@ optdepends=('udisks2: device detection'
 	'libnotify: recording streams'
 	'moodbar: moodbar plugin'
 	'gst-plugins-bad: BPM Counter plugin')
-source=("$pkgname-$_pkgver.tar.gz::https://github.com/exaile/exaile/archive/$_pkgver.tar.gz")
-sha512sums=('45c83cbfc38cdb9877d32d67781f30710b315e73af1f0d48532ef0d75d642ddfe8d26c96ceca8c78b51bb153719474e4c6f229556f4a589c5aeb088303e7de8e')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/exaile/exaile/archive/$pkgver.tar.gz")
+sha512sums=('4b0742f04075cea20883fb68bb35fa3583d101b4dac0a5fef7db6cfdab756a8081228acceb0e4e8f27915afc23827d2ce9285868a2d6cf5085971caf461bdd65')
 
 build() {
-	cd "$srcdir/$pkgname-$_pkgver"
+	cd "$srcdir/$pkgname-$pkgver"
 	make PREFIX="/usr"
 }
 
 check() {
-	cd "$srcdir/$pkgname-$_pkgver"
+	cd "$srcdir/$pkgname-$pkgver"
 	make PYTEST=py.test test
 }
 
 package() {
-	cd "$srcdir/$pkgname-$_pkgver"
+	cd "$srcdir/$pkgname-$pkgver"
 	make PREFIX="/usr" DESTDIR="$pkgdir" install
 }
