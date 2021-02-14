@@ -2,28 +2,29 @@
 # Contributor: hdhoang <arch@hdhoang.space>
 
 pkgname=nginx-mod-fancyindex
-pkgver=0.5.0
-pkgrel=2
+pkgver=0.5.1
+pkgrel=1
 
 _modname="${pkgname#nginx-mod-}"
-_nginxver=1.18.0
 
 pkgdesc='Fancy indexes module for the Nginx web server'
 arch=('i686' 'x86_64')
 depends=('nginx')
+makedepends=('nginx-src')
 url="https://github.com/aperezdc/ngx-fancyindex"
 license=('BSD')
 
-source=(https://nginx.org/download/nginx-$_nginxver.tar.gz{,.asc}
-        https://github.com/aperezdc/ngx-$_modname/archive/v$pkgver.tar.gz
+source=(https://github.com/aperezdc/ngx-$_modname/archive/v$pkgver.tar.gz
 )
 validpgpkeys=(B0F4253373F8F6F510D42178520A9993A1C052F8) # Maxim Dounin <mdounin@mdounin.ru>
-md5sums=('b2d33d24d89b8b1f87ff5d251aa27eb8'
-         'SKIP'
-         '2895e2028ac1329f69bf5c9e31674d2d')
+md5sums=('231fa02b10fa8c7c94b49e94649e5ad0')
+
+prepare() {
+  cp -r /usr/src/nginx .
+}
 
 build() {
-  cd "$srcdir"/nginx-$_nginxver
+  cd "$srcdir"/nginx
   ./configure --with-compat --add-dynamic-module=../ngx-$_modname-$pkgver
   make modules
 }
@@ -32,7 +33,7 @@ package() {
   install -Dm644 "$srcdir/"ngx-$_modname-$pkgver/LICENSE \
                  "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 
-  cd "$srcdir"/nginx-$_nginxver/objs
+  cd "$srcdir"/nginx/objs
   for mod in *.so; do
     install -Dm755 $mod "$pkgdir"/usr/lib/nginx/modules/$mod
   done
