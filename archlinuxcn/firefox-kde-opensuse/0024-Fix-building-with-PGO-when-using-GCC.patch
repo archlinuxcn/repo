@@ -1,14 +1,33 @@
-From fb0662b450db6b5cf8fdce36de0d261307b7fff7 Mon Sep 17 00:00:00 2001
+From 56bbe41b90385dbe33555a43ab85b4acc01d8a91 Mon Sep 17 00:00:00 2001
 From: Thomas Deutschmann <whissi@gentoo.org>
 Date: Thu, 2 Jul 2020 18:05:03 +0200
-Subject: [PATCH 25/35] Fix building with PGO when using GCC
+Subject: [PATCH 24/39] Fix building with PGO when using GCC
 
 Signed-off-by: Thomas Deutschmann <whissi@gentoo.org>
 ---
- build/pgo/profileserver.py                 | 26 ++++++++++++++++++----
- python/mozbuild/mozbuild/build_commands.py |  5 ++---
- 3 files changed, 27 insertions(+), 9 deletions(-)
+ build/moz.configure/lto-pgo.configure |  5 +++--
+ build/pgo/profileserver.py            | 26 ++++++++++++++++++++++----
+ 2 files changed, 25 insertions(+), 6 deletions(-)
 
+diff --git a/build/moz.configure/lto-pgo.configure b/build/moz.configure/lto-pgo.configure
+index e28bd14956..9cb78fc522 100644
+--- a/build/moz.configure/lto-pgo.configure
++++ b/build/moz.configure/lto-pgo.configure
+@@ -84,11 +84,12 @@
+ @imports(_from="__builtin__", _import="min")
+ def pgo_flags(compiler, profdata, target_is_windows):
+     if compiler.type == "gcc":
++        profile_use = "-fprofile-use"
+         return namespace(
+             gen_cflags=["-fprofile-generate"],
+             gen_ldflags=["-fprofile-generate"],
+-            use_cflags=["-fprofile-use", "-fprofile-correction", "-Wcoverage-mismatch"],
+-            use_ldflags=["-fprofile-use"],
++            use_cflags=[profile_use, "-fprofile-correction", "-Wcoverage-mismatch"],
++            use_ldflags=[profile_use],
+         )
+ 
+     if compiler.type in ("clang-cl", "clang"):
 diff --git a/build/pgo/profileserver.py b/build/pgo/profileserver.py
 index 7f3de106ab..89289a7756 100755
 --- a/build/pgo/profileserver.py
@@ -60,22 +79,6 @@ index 7f3de106ab..89289a7756 100755
          llvm_profdata = env.get("LLVM_PROFDATA")
          if llvm_profdata:
              profraw_files = glob.glob("*.profraw")
-diff --git a/python/mozbuild/mozbuild/build_commands.py b/python/mozbuild/mozbuild/build_commands.py
-index 688c6f4779..c937e51521 100644
---- a/python/mozbuild/mozbuild/build_commands.py
-+++ b/python/mozbuild/mozbuild/build_commands.py
-@@ -126,9 +126,8 @@ class Build(MachCommandBase):
-                 return status
- 
-             pgo_env = os.environ.copy()
--            pgo_env["LLVM_PROFDATA"] = instr.config_environment.substs.get(
--                "LLVM_PROFDATA"
--            )
-+            if instr.config_environment.substs.get("CC_TYPE") != "gcc":
-+                pgo_env["LLVM_PROFDATA"] = instr.config_environment.substs.get("LLVM_PROFDATA")
-             pgo_env["JARLOG_FILE"] = mozpath.join(orig_topobjdir, "jarlog/en-US.log")
-             pgo_cmd = [
-                 instr.virtualenv_manager.python_path,
 -- 
-2.29.2
+2.30.1
 

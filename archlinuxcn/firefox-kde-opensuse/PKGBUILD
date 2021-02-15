@@ -10,19 +10,10 @@
 
 # build with PGO
 
-# globalmenu
-# to support globalmenu a patch from ubuntu is applied
-# source:
-# http://bazaar.launchpad.net/~mozillateam/firefox/firefox-trunk.head
-# /view/head:/debian/patches/unity-menubar.patch
-
-# patches from gentoo:
-# https://dev.gentoo.org/~whissi/mozilla/patchsets/firefox-84-patches-02.tar.xz
-
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=84.0.1
-pkgrel=5
+pkgver=85.0.2
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -62,7 +53,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'pulseaudio: Audio support')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=c6bad4ac579cda0aa7d6ceedee15dcf3228b71ca
+_patchrev=e7e06c9fc570554462a44e58620eb567477bfa89
 options=('!emptydirs')
 _patchurl=https://raw.githubusercontent.com/openSUSE/firefox-maintenance/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -77,7 +68,13 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
 	# Gecko/toolkit patchset
 	mozilla-kde-$_patchrev.patch::$_patchurl/mozilla-kde.patch
 	mozilla-nongnome-proxies-$_patchrev.patch::$_patchurl/mozilla-nongnome-proxies.patch
+        # globalmenu patch:
+        # to support globalmenu a patch from ubuntu is applied
+        # source:
+        # http://bazaar.launchpad.net/~mozillateam/firefox/firefox-trunk.head
+        # /view/head:/debian/patches/unity-menubar.patch
 	unity-menubar.patch
+        # end
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
         2000_system_harfbuzz_support.patch
@@ -90,16 +87,21 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         5022efe33088.patch
         # Force disable elfhack to fix build errors
         build-disable-elfhack.patch
-        # Revert patch from MOZILLA#1644409 to fix issue casused by this patch
-        mozilla-1644409.patch
+        # patches from gentoo:
+        # https://dev.gentoo.org/~whissi/mozilla/patchsets/firefox-85-patches-04.tar.xz
         0020-Make-PGO-use-toolchain.patch
         # Fix MOZILLA#1516803
         # https://bugzilla.mozilla.org/show_bug.cgi?id=1516803
         0022-bmo-1516803-force-one-LTO-partition-for-sandbox-when.patch
         # PGO/LTO GCC patches
-        0025-Fix-building-with-PGO-when-using-GCC.patch
-        0028-LTO-Only-enable-LTO-for-Rust-when-complete-build-use.patch
-        0029-Make-elfhack-use-toolchain.patch
+        0024-Fix-building-with-PGO-when-using-GCC.patch
+        0027-LTO-Only-enable-LTO-for-Rust-when-complete-build-use.patch
+        0028-Make-elfhack-use-toolchain.patch
+        # Fix MOZILLA#1684261
+        # "Fix build with Rust nightly"
+        # https://bugzilla.mozilla.org/show_bug.cgi?id=1684261
+        0039-bmo-1684261-Fix-build-with-rust-1.50.0.patch
+        # end
 )
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -154,20 +156,20 @@ prepare() {
   # Force disable elfhack to fix build errors
   patch -Np1 -i "$srcdir"/build-disable-elfhack.patch
 
+  # Fix MOZILLA#1684261
+  patch -Np1 -i "$srcdir"/0039-bmo-1684261-Fix-build-with-rust-1.50.0.patch
+
   if [ $_pgo ] ; then
     # Fix MOZILLA#1516803
     # sandbox needs to be built with --param lto-partitions=1 when
     # GCC LTO is enabled
     patch -Np1 -i "$srcdir"/0022-bmo-1516803-force-one-LTO-partition-for-sandbox-when.patch
 
-    # Revert patch from MOZILLA#1644409 to fix issue casused by this patch
-    patch -R -p1 -i "$srcdir"/mozilla-1644409.patch
-
     # PGO/LTO GCC patches
     patch -Np1 -i "$srcdir"/0020-Make-PGO-use-toolchain.patch
-    patch -Np1 -i "$srcdir"/0025-Fix-building-with-PGO-when-using-GCC.patch
-    patch -Np1 -i "$srcdir"/0028-LTO-Only-enable-LTO-for-Rust-when-complete-build-use.patch
-    patch -Np1 -i "$srcdir"/0029-Make-elfhack-use-toolchain.patch
+    patch -Np1 -i "$srcdir"/0024-Fix-building-with-PGO-when-using-GCC.patch
+    patch -Np1 -i "$srcdir"/0027-LTO-Only-enable-LTO-for-Rust-when-complete-build-use.patch
+    patch -Np1 -i "$srcdir"/0028-Make-elfhack-use-toolchain.patch
 
     # add missing rule for pgo builds
     patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
@@ -274,7 +276,7 @@ md5sums=('SKIP'
          '6976984e1cbf000a6883a18916afc45c'
          'b9cd675e20aa979b0e96d1497820f999'
          '0a5733b7a457a2786c2dd27626a1bf88'
-         '9e795a0e8479b576d9294dd663297179'
+         '672a1c8e723126926046d02ae573a6dc'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3c383d371d7f6ede5983a40310518715'
          '6a1ed12b8dbac57722436a2987e3ea33'
@@ -283,9 +285,9 @@ md5sums=('SKIP'
          'e7994b3b78b780ebe610ba3d87247e40'
          '00abc3976f028f8fe07111b9e687b574'
          'c7b492df4fbf42ffe8aea4c0afb89921'
-         '9ad2e0f308cd64e3247d409c9a1b58d3'
-         'e7a7bf27b0807e3e74178fe08c822cd8'
-         'd9f35aad717d728a64b93981f806da1d'
-         '92ac8cc13336c9c383254fb5eb68d7d9'
-         '9d37406016c8ed060a3e5627063ecc11'
-         '636b22bae5cc68bbeb4c2153b66749b8')
+         'd6dd4e8e23b2e6e37ea6ea4a981d4316'
+         '67c0bca3e38404d53e6057e744c7ecee'
+         'c8e251f1fc9050cd12173b540baa96f8'
+         '72176c9ee7b2ac4f1bb07ff5ee5fe10b'
+         '07770d558b8999b5793794e1551a1309'
+         '2537c791cbec5055feecc154ffae2c0e')
