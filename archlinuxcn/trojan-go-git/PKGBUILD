@@ -40,8 +40,8 @@ build() {
         -ldflags="-s -w $GO_VARS -extldflags=-Wl,-z,now,-z,relro" \
         -o trojan-go .
     
-    cd "$srcdir"/$_pkgname/docs/
-    make hugo-build
+    #cd "$srcdir"/$_pkgname/docs/
+    #make hugo-build
 }
 
 package() {
@@ -53,13 +53,13 @@ package() {
     
     mkdir -p "$pkgdir"/usr/bin
     ln -sf /usr/lib/trojan-go/trojan-go "$pkgdir"/usr/bin/trojan-go
-    ln -sf /usr/lib/v2ray/geosite.dat   "$pkgdir"/usr/lib/trojan-go/geosite.dat
-    ln -sf /usr/lib/v2ray/geoip.dat     "$pkgdir"/usr/lib/trojan-go/geoip.dat
+    ln -sf /usr/share/v2ray/geosite.dat   "$pkgdir"/usr/lib/trojan-go/geosite.dat
+    ln -sf /usr/share/v2ray/geoip.dat     "$pkgdir"/usr/lib/trojan-go/geoip.dat
     
     mkdir -p "$pkgdir"/usr/share/trojan-go
-    ln -sf /usr/lib/v2ray/geosite.dat   "$pkgdir"/usr/share/trojan-go/geosite.dat
-    ln -sf /usr/lib/v2ray/geoip.dat     "$pkgdir"/usr/share/trojan-go/geoip.dat
+    ln -sf /usr/share/v2ray/geosite.dat   "$pkgdir"/usr/share/trojan-go/geosite.dat
+    ln -sf /usr/share/v2ray/geoip.dat     "$pkgdir"/usr/share/trojan-go/geoip.dat
     
-    mkdir -p "$pkgdir"/usr/share/doc/trojan-go
-    cp -r "$srcdir"/$_pkgname/docs/public/* "$pkgdir"/usr/share/doc/trojan-go/
+    #mkdir -p "$pkgdir"/usr/share/doc/trojan-go
+    #cp -r "$srcdir"/$_pkgname/docs/public/* "$pkgdir"/usr/share/doc/trojan-go/
 }
