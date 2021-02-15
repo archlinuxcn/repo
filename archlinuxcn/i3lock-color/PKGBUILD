@@ -1,8 +1,8 @@
 # Maintainer: Dct Mei <dctxmei@yandex.com>
 
 pkgname=i3lock-color
-pkgver=2.13.c.1
-pkgrel=2
+pkgver=2.13.c.2
+pkgrel=1
 pkgdesc="A modern version of i3lock with color functionality and other features"
 arch=('x86_64')
 url="https://github.com/Raymo111/i3lock-color"
@@ -11,7 +11,7 @@ depends=('cairo' 'libev' 'libjpeg-turbo' 'libxkbcommon-x11' 'pam' 'xcb-util-imag
 provides=('i3lock')
 conflicts=('i3lock' 'i3lock-color-git')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('691de5b10cb30bc3858390f5c8d22e5a0d1037b5d4b73948c8cf1955a71e5381')
+sha256sums=('e6d362bfe04ba6ae2d7640c3c480862fa1183629fcb400088fb510aa6e94c400')
 
 build() {
     cd "${srcdir}"/"${pkgname}-${pkgver}"/
