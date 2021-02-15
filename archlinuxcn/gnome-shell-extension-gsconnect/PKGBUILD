@@ -2,7 +2,7 @@
 
 pkgname=gnome-shell-extension-gsconnect
 pkgver=44
-pkgrel=4
+pkgrel=5
 pkgdesc="KDE Connect implementation with GNOME Shell integration"
 arch=('any')
 url="https://github.com/andyholmes/gnome-shell-extension-gsconnect"
@@ -20,7 +20,7 @@ sha256sums=('ff0fc637df5352f74097caa2a1ba9d97ccb49a4834c49b3070a57fb6913a5f0d')
 _uuid='gsconnect@andyholmes.github.io'
 
 build() {
-  arch-meson -Dinstalled_tests=false -Dfirewalld=true -Dpost_install=false -Dgsettings_schemadir="/usr/share/gnome-shell/extensions/$_uuid/schemas" $pkgname-$pkgver build
+  arch-meson -Dinstalled_tests=false -Dfirewalld=true -Dpost_install=true -Dgsettings_schemadir="/usr/share/gnome-shell/extensions/$_uuid/schemas" $pkgname-$pkgver build
   meson compile -C build
 }
 
