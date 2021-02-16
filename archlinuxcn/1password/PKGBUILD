@@ -1,8 +1,8 @@
 pkgname=1password
-_appimagver=0.9.12-3
+_appimagver=0.9.13
 _appimage="${pkgname}-${_appimagver}.AppImage"
 pkgver=${_appimagver//-/_}
-pkgrel=8
+pkgrel=9
 pkgdesc="Password manager and secure wallet"
 arch=('x86_64')
 url='https://1password.com'
@@ -11,8 +11,8 @@ depends=('fuse2' 'zlib' 'hicolor-icon-theme')
 options=(!strip)
 source=(https://downloads.1password.com/linux/appimage/${_appimage}{,.sig})
 noextract=("${_appimage}")
-sha256sums=('20ae01b9928cd94f2fcfb9bcc1a261a21ded439dfdc062dc203362606528bb6e'
-            '10e12e78a963186dc27cf44a6527b9973b61fc31da0818b900f479cd25feb024'
+sha256sums=('55d6dd9a92e24065451f7aba6da136caeb8acf5d539f480ca6418323d288dc74'
+            '44b03fd5a55c7b8721c45f09b32f16011e23791ada669ce1e49ea518aa1d2f52'
 )
 validpgpkeys=('3FEF9748469ADBE15DA7CA80AC2D62742012EA22')
 
