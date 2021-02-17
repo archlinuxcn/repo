@@ -1,0 +1,27 @@
+# Maintainer: oldherl <oldherl@gmail.com>
+
+pkgname=ttf-lxgw-wenkai
+pkgver=0.202
+pkgrel=1
+pkgdesc="霞鹜文楷 An open-source Chinese font derived from Fontworks' Klee One."
+url="https://github.com/lxgw/LxgwWenKai"
+license=("custom:OFL")
+arch=(any)
+source=(
+"https://github.com/lxgw/LxgwWenKai/releases/download/v$pkgver/LXGWWenKai-Medium.ttf"
+"https://github.com/lxgw/LxgwWenKai/releases/download/v$pkgver/LXGWWenKai-Regular.ttf"
+"LICENSE::https://raw.githubusercontent.com/lxgw/LxgwWenKai/main/SIL_Open_Font_License_1.1.txt"
+)
+sha256sums=(
+"SKIP"
+"SKIP"
+"SKIP"
+)
+
+package(){
+  install -d "$pkgdir/usr/share/fonts/TTF"
+  install -d "$pkgdir/usr/share/licenses/${pkgname}"
+  install -m644 LXGWWenKai-Medium.ttf "$pkgdir/usr/share/fonts/TTF/"
+  install -m644 LXGWWenKai-Regular.ttf "$pkgdir/usr/share/fonts/TTF/"
+  install -m644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/"
+}
