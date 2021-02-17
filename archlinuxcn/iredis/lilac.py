@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    pypi_pre_build(depends = [], depends_setuptools = False)
+    pypi_pre_build(depends_setuptools = False)
 
 def post_build():
     git_add_files('PKGBUILD')
