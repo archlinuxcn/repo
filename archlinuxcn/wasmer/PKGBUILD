@@ -3,7 +3,7 @@
 
 pkgname=wasmer
 pkgver=1.0.2
-pkgrel=2
+pkgrel=3
 pkgdesc="Universal Binaries Powered by WebAssembly"
 arch=('x86_64')
 url="https://github.com/wasmerio/wasmer"
@@ -46,7 +46,7 @@ package() {
 
   install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 
-  WASMER_DIR="$pkgdir"/usr/bin/wasmer config --pkg-config | install -Dm644 /dev/stdin "$pkgdir"/usr/lib/pkgconfig/wasmer.pc
+  env WASMER_DIR=/usr "$pkgdir"/usr/bin/wasmer config --pkg-config | install -Dm644 /dev/stdin "$pkgdir"/usr/lib/pkgconfig/wasmer.pc
 }
 
 # vim:set ts=2 sw=2 et:
