@@ -3,13 +3,14 @@
 pkgname=python-visions
 _pkgname=visions
 pkgver=0.7.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Type System for Data Analysis in Python'
 arch=('any')
 url='https://github.com/dylan-profiler/visions'
 license=('BSD')
 depends=(
   python-attrs
+  python-multimethod
   python-networkx
   python-numpy
   python-pandas
@@ -27,7 +28,6 @@ makedepends=(
 checkdepends=(
   python-imagehash
   python-matplotlib
-  python-multimethod
   python-pillow
   python-pydot
   python-pytest
