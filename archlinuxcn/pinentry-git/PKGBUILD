@@ -1,14 +1,14 @@
 # Maintainer: Chocobo1 <chocobo1 AT archlinux DOT net>
 
 pkgname=pinentry-git
-pkgver=1.1.1.r4.gd6a3a04
+pkgver=1.1.1.r5.g19a18ba
 pkgrel=1
 pkgdesc="A small collection of dialog programs that allow GnuPG to read passphrases and PIN numbers in a secure manner"
 arch=('i686' 'x86_64')
 url="https://gnupg.org/software/pinentry/index.html"
 license=('GPL2')
-depends=('glibc' 'libassuan' 'libsecret' 'libcap' 'ncurses')
-makedepends=('git' 'gcr' 'gtk2' 'qt5-base')
+depends=('glibc' 'libassuan' 'libcap' 'libsecret' 'ncurses')
+makedepends=('git' 'efl' 'gcr' 'gtk2' 'qt5-base')
 provides=('pinentry')
 conflicts=('pinentry')
 source=("git+https://dev.gnupg.org/source/pinentry.git"
@@ -27,12 +27,16 @@ build() {
   cd "pinentry"
 
   ./autogen.sh --force
-  ./configure --prefix="/usr" \
+  ./configure \
+    --prefix="/usr" \
     --enable-maintainer-mode \
     --enable-pinentry-tty \
-    --enable-pinentry-curses --enable-fallback-curses \
+    --enable-pinentry-curses \
+    --enable-fallback-curses \
+    --enable-pinentry-efl \
     --enable-pinentry-emacs \
-    --enable-pinentry-gtk2 --enable-pinentry-gnome3 \
+    --enable-pinentry-gnome3 \
+    --enable-pinentry-gtk2 \
     --enable-pinentry-qt \
     --enable-libsecret
   make
