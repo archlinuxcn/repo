@@ -4,7 +4,7 @@
 
 pkgname=firefox-esr
 pkgver=78.7.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Standalone web browser from mozilla.org, Extended Support Release"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -31,7 +31,7 @@ sha256sums=('5042783e2cf94d21dd990d2083800f05bc32f8ba65532a715c7be3cb7716b837'
             '3bb7463471fb43b2163a705a79a13a3003d70fff4bbe44f467807ca056de9a75'
             'eb9b9c058d1505e5b82526a8cad63f98e04fc17c4715f6b4cfc778e10fcfaf27'
             'd32c87c4526e897d64453914da43f99366d1d0b7d71e43b4027a6cb5aa274040'
-            'ed71ddae4ae4115e5d78ef2d6291bfe20f02198273746081d8c89f24919a1ba7')
+            '12b677de5181466634aff6e68b9a189b21a1b3a7ea1dbf666462602320442c02')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
