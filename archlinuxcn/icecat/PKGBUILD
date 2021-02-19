@@ -5,15 +5,14 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=78.7.0
-pkgrel=3
-_commit=01b67d368563ac3d74d1a61692d15fc3d49e77cf
+pkgver=78.7.1
+pkgrel=1
+_commit=bb1c105f4416c2973f394680c2d579918a1da77a
 pkgdesc="GNU version of the Firefox browser."
 arch=(x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
 license=('GPL' 'MPL' 'LGPL')
-depends=(gtk3 mozilla-common libxt startup-notification mime-types dbus-glib
-         ffmpeg nss ttf-font libpulse)
+depends=(gtk3 mozilla-common libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse)
 makedepends=(m4 unzip zip diffutils python2-setuptools yasm mesa imake inetutils
              xorg-server-xvfb autoconf2.13 rust clang llvm jack gtk2
              python nodejs python2-psutil cbindgen nasm wget mercurial git lld perl-file-rename)
@@ -29,18 +28,18 @@ source=(https://git.savannah.gnu.org/cgit/gnuzilla.git/snapshot/gnuzilla-${_comm
         "0001-Use-remoting-name-for-GDK-application-names.patch::https://raw.githubusercontent.com/archlinux/svntogit-packages/0adcedc05ce67d53268575f8801c8de872206901/firefox/trunk/0001-Use-remoting-name-for-GDK-application-names.patch"
         rust_1.48.patch.gz rust_1.50.patch)
 
-sha256sums=('6527f34da5f5e4fda93383baf5f40dd72055710769994c510a47faf0f367eabb'
+sha256sums=('f8fc6889a0d6c7ebec076d90f7fe4804abb6efb03fc086e5d526b325cb1c5c37'
             'e00dbf01803cdd36fd9e1c0c018c19bb6f97e43016ea87062e6134bdc172bc7d'
             '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208'
             'e0eaec8ddd24bbebf4956563ebc6d7a56f8dada5835975ee4d320dd3d0c9c442'
             'd32c87c4526e897d64453914da43f99366d1d0b7d71e43b4027a6cb5aa274040'
-            'ed71ddae4ae4115e5d78ef2d6291bfe20f02198273746081d8c89f24919a1ba7')
+            '12b677de5181466634aff6e68b9a189b21a1b3a7ea1dbf666462602320442c02')
 
 prepare() {
   cd gnuzilla-${_commit}
 
   # Uncomment if you have issues with gpg download... WITH PROXY gpg doesn't work!!!!!!
-  #sed -e 's/^gpg2 --keyserver.*//g' -i makeicecat
+  #sed -e 's/^verify_sources$//g' -i makeicecat
 
   mkdir output || rm -rf output/*  # Clean output just in case is already an old build there
   if [ -f "${startdir}/firefox-${pkgver}esr.source.tar.xz" ] && [ -f "${startdir}/firefox-${pkgver}esr.source.tar.xz.asc" ]; then cp -f "${startdir}"/firefox-${pkgver}esr.source.tar.xz{,.asc} output/ ; fi
