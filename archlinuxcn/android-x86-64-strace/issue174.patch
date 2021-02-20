@@ -1,0 +1,81 @@
+From cdfc8ebaeff56a0083042afab374fa1b45ba61db Mon Sep 17 00:00:00 2001
+From: "Dmitry V. Levin" <ldv@strace.io>
+Date: Fri, 19 Feb 2021 08:00:00 +0000
+Subject: [PATCH] build: fix build using bionic libc
+
+Apparently, bionic libc uses unconventional approach of patching Linux
+uapi header files to provide and use struct sockaddr_storage instead of
+struct __kernel_sockaddr_storage.
+
+* src/linux/generic/socket.h.in: New file.
+* src/Makefile.am (EXTRA_DIST): Add linux/generic/socket.h.in.
+(DISTCLEANFILES): Add linux/generic/linux/socket.h.
+* configure.ac (AC_CHECK_TYPES): Check for struct sockaddr_storage in
+<sys/socket.h>; if not found, install a proxy <linux/socket.h> file.
+* NEWS: Mention this.
+
+Resolves: https://github.com/strace/strace/issues/174
+---
+ NEWS                          | 1 +
+ configure.ac                  | 7 +++++++
+ src/Makefile.am               | 7 ++++++-
+ src/linux/generic/socket.h.in | 7 +++++++
+ 4 files changed, 21 insertions(+), 1 deletion(-)
+ create mode 100644 src/linux/generic/socket.h.in
+
+diff --git a/configure.ac b/configure.ac
+index e1e5f0ba3..590a591b7 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -329,6 +329,13 @@ AC_CHECK_FUNCS(m4_normalize([
+ 
+ AC_CHECK_TYPES([sig_atomic_t, struct sigcontext],,, [#include <signal.h>])
+ 
++AC_CHECK_TYPES([struct sockaddr_storage],
++	       [],
++	       [mkdir -p src/linux/generic/linux
++		cp $srcdir/src/linux/generic/socket.h.in src/linux/generic/linux/socket.h
++		CPPFLAGS="-Isrc/linux/generic $CPPFLAGS"],
++	       [#include <sys/socket.h>])
++
+ AC_CHECK_TYPES([struct mmsghdr],,, [#include <sys/socket.h>])
+ 
+ AC_CHECK_TYPES([__kernel_long_t, __kernel_ulong_t],,,
+diff --git a/src/Makefile.am b/src/Makefile.am
+index eec669778..efe6881c0 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -545,6 +545,7 @@ EXTRA_DIST =				\
+ 	linux/generic/shuffle_scno.c		\
+ 	linux/generic/signal.h.in		\
+ 	linux/generic/signalent.h		\
++	linux/generic/socket.h.in		\
+ 	linux/generic/subcallent.h		\
+ 	linux/generic/syscallent-common.h	\
+ 	linux/generic/syscallent_base_nr.h	\
+@@ -1018,7 +1019,11 @@ CLEANFILES    = $(ioctl_redefs_h) $(ioctlent_h) $(mpers_preproc_files) \
+ 		ioctl_iocdef.h ioctl_iocdef.i \
+ 		bpf_attr_check.c native_printer_decls.h native_printer_defs.h \
+ 		printers.h sen.h sys_func.h
+-DISTCLEANFILES = gnu/stubs-32.h gnu/stubs-x32.h linux/generic/linux/signal.h
++DISTCLEANFILES = gnu/stubs-32.h \
++		 gnu/stubs-x32.h \
++		 linux/generic/linux/signal.h \
++		 linux/generic/linux/socket.h \
++		 #
+ 
+ include scno.am
+ 
+diff --git a/src/linux/generic/socket.h.in b/src/linux/generic/socket.h.in
+new file mode 100644
+index 000000000..585771ee9
+--- /dev/null
++++ b/src/linux/generic/socket.h.in
+@@ -0,0 +1,7 @@
++#include_next <linux/socket.h>
++/*
++ * <sys/socket.h> expects <linux/socket.h> to define struct sockaddr_storage.
++ */
++#ifndef sockaddr_storage
++# define sockaddr_storage __kernel_sockaddr_storage
++#endif
