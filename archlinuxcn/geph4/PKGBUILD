@@ -6,7 +6,7 @@ pkgname=('geph4-binder'
          'geph4-client'
          'geph4-exit'
          'geph4-vpn-helper')
-pkgver=4.1.6
+pkgver=4.1.7
 pkgrel=1
 pkgdesc="A command-line Geph4 toolset"
 arch=('x86_64')
@@ -25,7 +25,7 @@ source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "geph4-client.service"
         "geph4-exit.service"
         "geph4-vpn-helper.service")
-sha256sums=('098c0c4f304183676b306e89eb9d9596391a83b0e5a58e0d988a2bd6df6d9bcf'
+sha256sums=('b0f58e1de7a620033098846b7b9a10371160b0d12faabb15b1b08d015391d268'
             '96e495d1f5d6cb61c7953c70035125febf0063fa0e8d0bb47bc314d326c93b55'
             '3def2cd4cce25ad38cadc3b20913d3c45df16b89d0903b7cd88da77d57f86938'
             '01b1ec9c4a5fe499d015cc5da62b46245f6bb9acc30afa5ec1f982650e331223'
