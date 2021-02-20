@@ -7,7 +7,7 @@
 # Contributor: Auguste Pop < auguste [at] gmail [dot] com >
 
 pkgname=stockfish
-pkgver=12
+pkgver=13
 pkgrel=1
 epoch=1
 pkgdesc="A strong chess engine written by Tord Romstad, Marco Costalba, Joona Kiiski"
@@ -16,7 +16,7 @@ url="https://stockfishchess.org/"
 license=('GPL3')
 depends=('glibc')
 source=("$pkgname-$pkgver.zip::https://github.com/official-stockfish/Stockfish/archive/sf_$pkgver.zip")
-sha512sums=('7746b43d979ff935d5e2def24e25af19ed67d1caeadfc684f91aac3cde5f81964dc4b4afeccf7bd8ea1c5fd973b7902b3b2f98d644a3c9e1ab8d5aa7b3051efb')
+sha512sums=('9940b6513db5c59ea69aade090f02e6ddd267d7b2a23aba304611f3ed1a33735038ec58a1479141c42b2749b193d96f3ca93590f26baaf335400e83e7e039993')
 
 build() {
   cd "Stockfish-sf_${pkgver}/src"
