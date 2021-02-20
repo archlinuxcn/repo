@@ -2,8 +2,8 @@
 
 pkgname=protondb-tags
 _pkgname=ProtonDB-Tags
-pkgver=1.1.0
-pkgrel=2
+pkgver=1.1.1
+pkgrel=1
 pkgdesc="Pull ratings from ProtonDB and import them into your Steam library as tags."
 arch=('any')
 url="https://github.com/CorruptComputer/$_pkgname"
@@ -17,7 +17,7 @@ optdepends=(
 )
 provides=('protondb-tags')
 source=(https://github.com/CorruptComputer/$_pkgname/archive/$pkgver.zip)
-md5sums=('64472d2a0795255100fe4e9164f31e12')
+md5sums=('fe9551e815326406227d21e9ae6b33b4')
 
 package() {
   cd "$srcdir/$_pkgname-$pkgver"
