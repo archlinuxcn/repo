@@ -3,7 +3,7 @@
 
 _gemname=terminal-table
 pkgname=ruby-$_gemname
-pkgver=2.0.0
+pkgver=3.0.0
 pkgrel=1
 pkgdesc='Simple, feature rich ascii table generation library'
 arch=(any)
@@ -16,7 +16,7 @@ depends=(
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha1sums=('967467fe515e0221049431ef2929404bf9dc6be2')
+sha1sums=('5976e086dbd68096f94512efbf5323e18d9d9d2f')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
