@@ -1,0 +1,11 @@
+maintainers:
+    - github: solaraquarion
+build_prefix: multilib
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: cmd # Update every other day
+    cmd: python -c "import time; print(int(time.time()) // (2 * 24 * 60 * 60))"
+  # - source: vcs # this will make update unnecessarily frequent
