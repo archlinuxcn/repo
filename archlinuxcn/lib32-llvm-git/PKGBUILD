@@ -1,0 +1,150 @@
+#!/usr/bin/bash
+
+# Based on LordHeavy's LLVM
+pkgbase=lib32-llvm-git
+pkgname=('lib32-llvm-libs-git' 'lib32-clang-git' 'lib32-llvm-git')
+pkgdesc='Low Level Virtual Machine (git version)'
+pkgver=13.0.0_r380643.b02bc0224a9f
+pkgrel=1
+groups=('chaotic-mesa-git')
+arch=('x86_64')
+url="https://llvm.org/"
+license=('custom:Apache 2.0 with LLVM Exception')
+makedepends=('git' 'cmake' 'ninja' 'python' 'python2'
+             'lib32-gcc-libs' 'lib32-libffi' 'lib32-libunwind'
+             'lib32-libxml2' 'lib32-zlib')
+
+source=("llvm-project::git+https://github.com/llvm/llvm-project.git")
+
+md5sums=('SKIP')
+sha512sums=('SKIP')
+options=('staticlibs') # 'debug' takes way too long to scan for the source files...
+
+pkgver() {
+    cd llvm-project/llvm
+
+    # This will almost match the output of `llvm-config --version` when the
+    # LLVM_APPEND_VC_REV cmake flag is turned on. The only difference is
+    # dash being replaced with underscore because of Pacman requirements.
+    local _pkgver=$(awk -F 'MAJOR |MINOR |PATCH |)' \
+                        'BEGIN { ORS="." ; i=0 } \
+             /set\(LLVM_VERSION_/ { print $2 ; i++ ; if (i==2) ORS="" } \
+             END { print "\n" }' \
+                        CMakeLists.txt)_r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+    echo "$_pkgver"
+}
+
+prepare() {
+    cd llvm-project
+    # llvm-project contains a lot of stuff, remove parts that aren't used by this package
+    rm -rf debuginfo-tests libclc libcxx libcxxabi llgo openmp parallel-libs pstl libc
+
+    rm -rf "$srcdir"/fakeinstall
+}
+
+build() {
+    CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+    CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+    CFLAGS+=' -fasynchronous-unwind-tables'
+    CXXFLAGS+=' -fasynchronous-unwind-tables'
+    LDFLAGS+=' -fasynchronous-unwind-tables'
+
+    export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+
+    LIB32_CFLAGS="$CFLAGS -m32"
+    LIB32_CXXFLAGS="$CXXFLAGS -m32"
+
+    cmake \
+        -B _build \
+        -S llvm-project/llvm \
+        -G Ninja \
+        -D LLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt" \
+        -D CMAKE_BUILD_TYPE=Release \
+        -D CMAKE_INSTALL_PREFIX=/usr \
+        -D LLVM_LIBDIR_SUFFIX=32 \
+        -D CMAKE_C_FLAGS="$LIB32_CFLAGS" \
+        -D CMAKE_CXX_FLAGS="$LIB32_CXXFLAGS" \
+        -D LLVM_TARGET_ARCH:STRING=i686 \
+        -D LLVM_HOST_TRIPLE="$CHOST" \
+        -D LLVM_DEFAULT_TARGET_TRIPLE="i686-pc-linux-gnu" \
+        -D LLVM_BINUTILS_INCDIR=/usr/include \
+        -D LLVM_BUILD_LLVM_DYLIB=ON \
+        -D LLVM_LINK_LLVM_DYLIB=ON \
+        -D LLVM_ENABLE_RTTI=ON \
+        -D LLVM_ENABLE_FFI=ON \
+        -D LLVM_BUILD_TESTS=OFF \
+        -D LLVM_BUILD_DOCS=OFF \
+        -D LLVM_ENABLE_SPHINX=OFF \
+        -D LLVM_ENABLE_DOXYGEN=OFF \
+        -D FFI_INCLUDE_DIR="$(pkg-config --variable=includedir libffi)" \
+        -D LLVM_BINUTILS_INCDIR=/usr/include \
+        -D LLVM_APPEND_VC_REV=ON
+
+    ninja -C _build all LLVMgold
+    DESTDIR="$srcdir/fakeinstall" ninja -C _build install
+}
+
+_fakeinstall () {
+    local src f dir
+    for src; do
+        f="${src#fakeinstall/}"
+        dir="$pkgdir/${f%/*}"
+        install -m755 -d "$dir"
+        mv -v "$src" "$dir/"
+    done
+}
+
+package_lib32-llvm-libs-git() {
+    pkgdesc='Low Level Virtual Machine library (runtime library)(32-bit)(git version)'
+    depends=('lib32-libffi' 'lib32-zlib' 'lib32-libxml2' 'lib32-gcc-libs')
+    provides=("lib32-llvm-libs=$pkgver")
+    replaces=('lib32-llvm-libs-svn')
+    conflicts=('lib32-llvm-libs-svn' 'lib32-llvm-libs')
+
+    _fakeinstall fakeinstall/usr/lib32/libLLVM-*.so
+    _fakeinstall fakeinstall/usr/lib32/libRemarks.so.*
+    _fakeinstall fakeinstall/usr/lib32/LLVMgold.so
+    install -d "$pkgdir/usr/lib32/bfd-plugins"
+    ln -s ../LLVMgold.so "$pkgdir/usr/lib32/bfd-plugins/LLVMgold.so"
+    install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_lib32-clang-git() {
+    pkgdesc="C language family frontend for LLVM (32-bit)"
+    depends=("lib32-llvm-libs-git=$pkgver-$pkgrel" "gcc-multilib")
+    provides=("lib32-clang=$pkgver")
+    replaces=('lib32-clang-svn')
+    conflicts=('lib32-clang' 'lib32-clang-svn')
+
+    _fakeinstall fakeinstall/usr/lib32/clang
+    _fakeinstall fakeinstall/usr/lib32/cmake/clang/
+    _fakeinstall fakeinstall/usr/lib32/libclang*
+    install -Dm644 "$srcdir"/llvm-project/clang/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_lib32-llvm-git() {
+    pkgdesc='Low Level Virtual Machine (32-bit)(git version)'
+    depends=("lib32-llvm-libs-git=$pkgver-$pkgrel" 'llvm-git')
+    provides=("lib32-llvm=$pkgver")
+    replaces=('lib32-llvm-svn')
+    conflicts=('lib32-llvm' 'lib32-llvm-svn')
+
+    _fakeinstall fakeinstall/usr/lib32
+    # Remove libs which conflict with lib32-llvm-libs
+    rm -f "$pkgdir"/usr/lib32/{libLLVM,libLTO,LLVMgold,libRemarks}.so
+
+    _fakeinstall fakeinstall/usr/bin/llvm-config
+    mv -v "$pkgdir"/usr/bin/llvm-config "$pkgdir"/usr/lib32/llvm-config
+
+    _fakeinstall fakeinstall/usr/include/llvm/Config/llvm-config.h
+    mv "$pkgdir"/usr/include/llvm/Config/llvm-config.h "$pkgdir"/usr/lib32/llvm-config-32.h
+
+    rm -rf "$pkgdir"/usr/{bin/*,include,share/{doc,man,llvm,opt-viewer}}
+
+    install -d "$pkgdir/usr/include/llvm/Config"
+    mv "$pkgdir/usr/lib32/llvm-config-32.h" "$pkgdir/usr/include/llvm/Config/"
+
+    mv -v "$pkgdir"/usr/lib32/llvm-config "$pkgdir"/usr/bin/llvm-config32
+
+    install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
