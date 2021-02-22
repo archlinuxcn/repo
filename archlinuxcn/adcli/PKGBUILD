@@ -1,6 +1,6 @@
 # Maintainer: Mantas Mikulėnas <grawity@gmail.com>
 pkgname=adcli
-pkgver=0.9.0.r14.gfa5c5fb
+pkgver=0.9.1
 pkgrel=1
 pkgdesc="Active Directory account management tool"
 arch=(i686 x86_64)
@@ -8,7 +8,7 @@ url="https://gitlab.freedesktop.org/realmd/adcli"
 license=(GPL3)
 depends=(cyrus-sasl-gssapi krb5 openldap)
 makedepends=(docbook-xml docbook-xsl git xmlto)
-_commit=fa5c5fb4f8e7bcadf3e5a3798bd060720fd35eaa
+_commit=9027d9d1aea9db61e37e14c5f9078e89fa39ef5e
 source=("git+https://gitlab.freedesktop.org/realmd/adcli.git#commit=$_commit")
 sha256sums=('SKIP')
 #source=("https://www.freedesktop.org/software/realmd/releases/$pkgname-$pkgver.tar.gz"
