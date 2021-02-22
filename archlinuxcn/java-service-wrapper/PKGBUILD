@@ -2,30 +2,27 @@
 # Contributor: Artyom Olshevskiy <siasia@siasia>
 
 pkgname=java-service-wrapper
-pkgver=3.5.43
-pkgrel=2
+pkgver=3.5.45
+pkgrel=1
 pkgdesc="Enables a Java Application to be run as a Windows Service or Unix Daemon"
 url="https://wrapper.tanukisoftware.com/doc/english/introduction.html"
 arch=('i686' 'x86_64' 'aarch64' 'armv6h' 'armv7h')
 license=('GPL2' 'custom:tanuki-community')
 makedepends=('ant' 'jdk8-openjdk')
-source=("https://wrapper.tanukisoftware.com/download/${pkgver}/wrapper_${pkgver}_src.tar.gz"
-        'java10.patch')
-sha256sums=('4b802ee036541eed97f0fab3a36579ba464d9cedfba26f0a10ebcc4c0a1a9da5'
-            '75ad8377c824d3fcd03b919c5744706b74fec5a35c32fe7d1f76f4cc8c1f9b98')
+source=("https://wrapper.tanukisoftware.com/download/${pkgver}/wrapper_${pkgver}_src.tar.gz")
+sha256sums=('ae7965a1ad0389c593d5194fdaccc3bc120dbd3e7f459d7b18e6ab533bd7d402')
 
 prepare() {
     cd "wrapper_${pkgver}_src"
 
-    _ver=$(javac -version 2>&1 |awk '{print $2}')
-    msg "Detected Java $_ver"
-    [[ "$_ver" =~ ^1[0-6] ]] &&
-        patch -Np0 -i "$srcdir/java10.patch"
-
-    # Prevent building the testsuite on the x64, this requires the cunit pkg
-    # from the AUR, its a pain and useless to keep it a build-dep
+    # Prevent building the testsuite on x64, this requires the cunit pkg
+    # from the AUR, its a pain to require just for building
     sed -i "src/c/Makefile-linux-x86"*.make \
-        -e "s|all: .*|all: init wrapper libwrapper.so|"
+        -e '/all:/s/ testsuite//'
+
+    # Hide deprecation warning
+    sed -i "build.xml" \
+        -e '/deprecation=/s/"on"/"off"/'
 }
 
 build() {
