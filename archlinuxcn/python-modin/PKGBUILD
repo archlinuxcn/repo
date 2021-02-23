@@ -9,10 +9,13 @@ arch=('any')
 url='https://github.com/modin-project/modin'
 license=(Apache)
 depends=(
+  python-boto3
+  python-cloudpickle
   python-dask
   python-distributed
   python-numpy
   python-pandas
+  python-rpyc
 )
 makedepends=(
   python-setuptools
