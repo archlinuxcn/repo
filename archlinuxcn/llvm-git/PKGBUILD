@@ -174,7 +174,7 @@ package_compiler-rt-git() {
     depends=("llvm-git=$pkgver-$pkgrel" 'gcc-libs')
     provides=("compiler-rt=$pkgver")
     replaces=('compiler-rt-svn')
-    conflicts=('compiler-rt' 'compiler-rt-svn' 'clang')
+    conflicts=('compiler-rt' 'compiler-rt-svn')
 
     local _llvmver=$(echo "$pkgver" | grep -Po "(^[\.\d]+)")
 
