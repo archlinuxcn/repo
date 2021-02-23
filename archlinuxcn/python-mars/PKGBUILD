@@ -7,7 +7,7 @@ pkgrel=1
 pkgdesc='A tensor-based unified framework for large-scale data computation which scales Numpy, pandas, Scikit-learn and Python functions'
 arch=('x86_64')
 url='https://github.com/mars-project/mars'
-license=(BSD)
+license=(Apache)
 depends=(
   python-arrow
   python-cloudpickle
@@ -39,6 +39,5 @@ build() {
 package() {
   cd "${_pkgname}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
-  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
