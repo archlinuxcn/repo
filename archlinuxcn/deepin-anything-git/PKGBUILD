@@ -2,7 +2,7 @@
 
 pkgbase=deepin-anything-git
 pkgname=(deepin-anything-git deepin-anything-dkms-git)
-pkgver=0.1.0.r4.g1340200
+pkgver=0.1.0.r5.ga3cf6db
 _extramodules=extramodules-ARCH
 pkgrel=1
 pkgdesc="Deepin Anything file search tool"
