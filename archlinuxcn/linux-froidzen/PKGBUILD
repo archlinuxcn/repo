@@ -1,7 +1,7 @@
 # Maintainer: OriginCode <self@origincode.me>
 
 pkgbase=linux-froidzen
-pkgver=5.10.13.zen1
+pkgver=5.11.zen2
 pkgrel=1
 pkgdesc='Linux ZEN with Patches and Modifications'
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -18,8 +18,7 @@ _srcname=zen-kernel
 source=(
   "$_srcname::git+https://github.com/zen-kernel/zen-kernel?signed#tag=$_srctag"
   config         # the main kernel config file
-  'https://raw.githubusercontent.com/dolohow/uksm/master/v5.x/uksm-5.10.patch' # UKSM Patch
-  'https://raw.githubusercontent.com/AOSC-Dev/aosc-os-abbs/linux-5.10.x/extra-kernel/linux-kernel/autobuild/patches/0003-bugfix-ovl-use-a-dedicated-semaphore-for-dir-upperfile-c.patch' # Fix CIEL! hang
+  'https://raw.githubusercontent.com/dolohow/uksm/master/v5.x/uksm-5.11.patch' # UKSM Patch
 )
 validpgpkeys=(
   'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds
@@ -27,9 +26,8 @@ validpgpkeys=(
   'A2FF3A36AAA56654109064AB19802F8B0D70FC30'  # Jan Alexander Steffens (heftig)
 )
 sha256sums=('SKIP'
-            '21cd6eccba768496a368cf678b342db79d4f595e0c470b33de26dfbdd95b583a'
-            '24729e63e08de13039ce7e6637146ec5a5747379ebbd92cdeef744edfad17183'
-            '67bedaedd5bbd841a5c5a2c3c7236bdf1b4fb9abd5bf45ba8581244592b03ee4')
+            'ee3627d42ebdcb8208ef906319adaab8f86eb59fc16641026d9bcc8753b2ab8f'
+            '34f4ae617a2407fed2ba347b663d31f39c1ec9b390e1ea5ea636c91a4cc6f875')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -111,6 +109,7 @@ _package() {
 
 _package-headers() {
   pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
+  depends=(pahole)
 
   cd $_srcname
   local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
