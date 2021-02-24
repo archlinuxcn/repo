@@ -13,6 +13,7 @@ depends=(
   bzip2
   curl
   dcmtk
+  libarchive
   libxt
   openssl
   qt5-base
@@ -25,6 +26,7 @@ depends=(
   qt5-xmlpatterns
   rapidjson
   sqlite
+  teem
 )
 makedepends=(
   clang
@@ -50,6 +52,8 @@ pkgver() {
 prepare() {
   # find sqlite with cmake's FindSQLite3
   sed -i 's/find_package(${proj} REQUIRED)/find_package(SQLite3 REQUIRED)/' "${srcdir}/${_pkgname}/SuperBuild/External_sqlite.cmake"
+  # fix building with system teem
+  sed -i '/ExternalProject_Add_Empty/d' "${srcdir}/${_pkgname}/SuperBuild/External_teem.cmake"
 
   echo "Creating desktop file"
   gendesk -f -n --pkgname ${_pkgname} \
@@ -72,12 +76,13 @@ build() {
     -DSlicer_USE_SYSTEM_bzip2=ON \
     -DSlicer_USE_SYSTEM_curl=ON \
     -DSlicer_USE_SYSTEM_DCMTK=ON \
+    -DSlicer_USE_SYSTEM_LibArchive=ON \
     -DSlicer_USE_SYSTEM_LZMA=ON \
     -DSlicer_USE_SYSTEM_OpenSSL=ON \
     -DSlicer_USE_SYSTEM_QT=ON \
     -DSlicer_USE_SYSTEM_RapidJSON=ON \
     -DSlicer_USE_SYSTEM_sqlite=ON \
-    -DSlicer_USE_SYSTEM_teem=OFF \
+    -DSlicer_USE_SYSTEM_teem=ON \
     -DSlicer_USE_SYSTEM_VTK=OFF \
     -DSlicer_USE_SYSTEM_zlib=ON
   make -C "build"
