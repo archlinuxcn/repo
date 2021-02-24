@@ -8,12 +8,17 @@ repo_depends:
   - libqtxdg-git
   - libfm-qt-git
 
+pre_build_script: |
+    update_pkgrel()
+    aur_pre_build()
+
 post_build: aur_post_build
 
 update_on:
-  - source: vcs
+  - source: github
+    github: lxqt/lxqt-qtplugin
   - source: aur
-    aur:
+    aur: lxqt-qtplugin-git
   - source: archpkg
     archpkg: qt5-base
     strip_release: true
