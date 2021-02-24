@@ -6,8 +6,8 @@
 
 pkgname='bluez-utils-compat'
 _pkgbase='bluez'
-pkgver=5.55
-pkgrel=3
+pkgver=5.56
+pkgrel=1
 url="http://www.bluez.org/"
 arch=('i686' 'x86_64' 'mips64el' 'armv6h' 'armv7h' 'arm' 'aarch64')
 license=('GPL2')
@@ -19,7 +19,7 @@ conflicts=('bluez-hcidump' 'bluez-utils' 'bluez-hcitool')
 provides=('bluez-hcidump' "bluez-utils=${pkgver}" 'bluez-hcitool')
 source=(https://www.kernel.org/pub/linux/bluetooth/"${_pkgbase}-${pkgver}".tar.xz) #{xz,sign}
 # see https://www.kernel.org/pub/linux/bluetooth/sha256sums.asc
-sha256sums=('8863717113c4897e2ad3271fc808ea245319e6fd95eed2e934fae8e0894e9b88')
+sha256sums=('59c4dba9fc8aae2a6a5f8f12f19bc1b0c2dc27355c7ca3123eed3fe6bd7d0b9d')
 #validpgpkeys=('E932D120BC2AEC444E558F0106CA9F5D1DCF2659') # Marcel Holtmann <marcel@holtmann.org>
 
 build() {
@@ -52,6 +52,7 @@ package() {
   cd "${_pkgbase}-${pkgver}"
   make DESTDIR="${pkgdir}" \
        install-binPROGRAMS \
+       install-dist_zshcompletionDATA \
        install-man1
 
   # add missing tools FS#41132, FS#41687, FS#42716
@@ -62,9 +63,6 @@ package() {
     done
   done
 
-  # libbluetooth.so* are part of libLTLIBRARIES and binPROGRAMS targets
-  #make DESTDIR=${pkgdir} uninstall-libLTLIBRARIES
-  #rmdir ${pkgdir}/usr/lib
   rm -rf "${pkgdir}"/usr/lib
   
   # move the hid2hci man page out
