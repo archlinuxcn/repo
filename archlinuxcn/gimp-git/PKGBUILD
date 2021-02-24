@@ -7,8 +7,8 @@
 
 pkgname=gimp-git
 _pkgname=${pkgname%-git}
-epoch=1
-pkgver=46709.6959426603
+epoch=2
+pkgver=2.99.5.r194.6959426603
 pkgrel=1
 pkgdesc="GNU Image Manipulation Program (non-conflicting git version)"
 arch=('i686' 'x86_64')
@@ -63,8 +63,10 @@ sha512sums=('SKIP'
             '6f33d57f242fa8ce04b65e06a712bd54677306a45b22cb853fbe348089cd4673bd4ed91073074fe067166fe8951c370f8bbbc386783e3ed5170d52e9062666fe')
 
 pkgver() {
-  cd ${srcdir}/${_pkgname}
-  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  printf "%s.%s.%s.r%s.%s" \
+    $(grep -oP 'gimp_(major|minor|micro)_version\], \[\K[0-9]{1,2}' ${_pkgname}/configure.ac) \
+   "$(git -C $_pkgname rev-list "$(git -C $_pkgname describe --abbrev=0)"..HEAD --count)" \
+   "$(git -C $_pkgname log --pretty=format:'%h' -n 1)"
 }
 
 prepare() {
@@ -83,7 +85,7 @@ build() {
 package() {
   DESTDIR="${pkgdir}" ninja -C "${srcdir}/build" install
   install -Dm 644 "${srcdir}/linux.gpl" "${pkgdir}/usr/share/gimp/2.99/palettes/Linux.gpl"
-  
+
   #fix gimp.desktop
   mv ${pkgdir}/usr/share/applications/gimp.desktop ${pkgdir}/usr/share/applications/gimp-2.99.desktop
   sed -i 's/Icon=gimp/&-2.99/' ${pkgdir}/usr/share/applications/gimp-2.99.desktop
