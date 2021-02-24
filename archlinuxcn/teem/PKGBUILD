@@ -40,5 +40,7 @@ package() {
   cd "build"
   make DESTDIR="${pkgdir}" install
   install -Dm644 "${srcdir}/${pkgname}-${pkgver}/${pkgname}/trunk/LICENSE.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  # fix cmake path
+  sed -i "s,lib/TeemUse.cmake,lib/cmake/teem/TeemUse.cmake," "${pkgdir}/usr/lib/cmake/teem/TeemConfig.cmake"
 }
 # vim:set ts=2 sw=2 et:
