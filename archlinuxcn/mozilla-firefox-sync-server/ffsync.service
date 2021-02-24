@@ -1,0 +1,29 @@
+[Unit]
+Description=Gunicorn server running Mozilla's Firefox Sync Server - Version 1.5
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/mozilla-firefox-sync-server/local/bin/gunicorn --paste /opt/mozilla-firefox-sync-server/syncserver.ini
+Restart=on-abort
+
+User=ffsync
+Group=http
+UMask=007
+
+NoNewPrivileges=yes
+
+PrivateTmp=yes
+PrivateDevices=yes
+
+ProtectSystem=full
+ProtectHome=yes
+
+SystemCallArchitectures=native
+SystemCallFilter=~@clock @cpu-emulation @debug @keyring @module @mount @obsolete @raw-io
+
+CapabilityBoundingSet=
+AmbientCapabilities=
+
+[Install]
+WantedBy=multi-user.target
