@@ -1,9 +1,10 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 # Contributor: Martino Pilia <martino.pilia@gmail.com>
 
+_revision=6479
 pkgname=teem
 pkgver=1.11.0
-pkgrel=6
+pkgrel=7
 pkgdesc='A coordinated group of libraries for representing, processing, and visualizing scientific raster data'
 arch=('x86_64')
 url='http://teem.sourceforge.net/index.html'
@@ -17,7 +18,7 @@ makedepends=(
   cmake
   subversion
 )
-source=("${pkgname}-${pkgver}::svn+https://svn.code.sf.net/p/teem/code#revision=6355")
+source=("${pkgname}-${pkgver}::svn+https://svn.code.sf.net/p/teem/code#revision=${_revision}")
 sha512sums=('SKIP')
 
 build() {
