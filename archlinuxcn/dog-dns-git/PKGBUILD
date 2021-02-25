@@ -3,8 +3,8 @@
 
 pkgname=dog-dns-git
 _pkgname=dog
-pkgver=0.1.0.r24.ga002db8
-pkgrel=2
+pkgver=0.1.0.r33.gd2d22fd
+pkgrel=1
 pkgdesc="Command-line DNS client like dig (git)"
 arch=('x86_64')
 url="https://github.com/ogham/dog"
