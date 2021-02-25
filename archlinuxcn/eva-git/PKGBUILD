@@ -2,7 +2,7 @@
 # https://github.com/orhun/pkgbuilds
 
 pkgname=eva-git
-pkgver=0.2.7.r17.g060819a
+pkgver=0.2.7.r18.g3f52f6f
 pkgrel=1
 pkgdesc="a calculator REPL, similar to bc(1)"
 arch=('x86_64')
@@ -21,12 +21,12 @@ pkgver() {
 
 build() {
   cd "${pkgname%-git}"
-  cargo build --release --locked --all-features
+  cargo build --release --locked
 }
 
 check() {
   cd "${pkgname%-git}"
-  cargo test --release --locked --all-features
+  cargo test --release --locked
 }
 
 package() {
