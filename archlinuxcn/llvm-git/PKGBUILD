@@ -121,7 +121,7 @@ package_lldb-git() {
 
     pkgdesc="Next generation, high-performance debugger (git version)"
     url="https://lldb.llvm.org/"
-    depends=("clang-git=$pkgver-$pkgrel" "llvm-libs-git=$pkgver-$pkgrel" "python" "libedit" "libxml2")
+    depends=("clang-git=$pkgver-$pkgrel" "llvm-libs-git=$pkgver-$pkgrel")
     optdepends=('llvm-git: for the man files')
     provides=("lldb=$pkgver")
     replaces=('lldb-svn')
