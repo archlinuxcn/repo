@@ -2,7 +2,7 @@
 
 pkgname=python-nvidia-dali
 _pkgname=dali
-pkgver=0.30.0
+pkgver=0.31.0
 pkgrel=1
 pkgdesc='A library containing both highly optimized building blocks and an execution engine for data pre-processing in deep learning applications'
 arch=('x86_64')
