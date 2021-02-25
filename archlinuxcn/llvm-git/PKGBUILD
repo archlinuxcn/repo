@@ -61,8 +61,8 @@ prepare() {
 }
 
 build() {
-    CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
-    CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+    CFLAGS+=" -ffile-prefix-map=$srcdir=${DBGSRCDIR:-/usr/src/debug}"
+    CXXFLAGS+=" -ffile-prefix-map=$srcdir=${DBGSRCDIR:-/usr/src/debug}"
     CFLAGS+=' -I/usr/include/tensorflow'
     CXXFLAGS+=' -I/usr/include/tensorflow'
     CFLAGS+=' -fasynchronous-unwind-tables'
@@ -122,7 +122,7 @@ package_lldb-git() {
     pkgdesc="Next generation, high-performance debugger (git version)"
     url="https://lldb.llvm.org/"
     depends=("clang-git=$pkgver-$pkgrel" "llvm-libs-git=$pkgver-$pkgrel")
-    optdepends=('llvm-git: for the man file')
+    optdepends=('llvm-git: for the man files')
     provides=("lldb=$pkgver")
     replaces=('lldb-svn')
     conflicts=('lldb' 'lldb-svn')
@@ -137,7 +137,7 @@ package_lldb-git() {
 package_lld-git(){
     pkgdesc="Linker from the LLVM project"
     url="https://lld.llvm.org"
-    depends=("gcc-libs" "llvm-libs-git=$pkgver-$pkgrel")
+    depends=("llvm-libs-git=$pkgver-$pkgrel")
     provides=("lld=$pkgver")
     replaces=('lld-svn')
     conflicts=('lld' 'lld-svn')
@@ -155,7 +155,7 @@ package_lld-git(){
 package_polly-git() {
     pkgdesc="Polly is a high-level loop and data-locality optimizer and optimization infrastructure for LLVM"
     url="https://polly.llvm.org/"
-    depends=("llvm-git=$pkgver-$pkgrel")
+    depends=("llvm-libs-git=$pkgver-$pkgrel")
     provides=("polly=$pkgver")
     replaces=('polly-svn')
     conflicts=('polly' 'polly-svn')
@@ -171,7 +171,7 @@ package_polly-git() {
 package_compiler-rt-git() {
     pkgdesc="Compiler runtime libraries for clang (git version)"
     url="https://compiler-rt.llvm.org/"
-    depends=("llvm-git=$pkgver-$pkgrel" 'gcc-libs')
+    depends=('gcc-libs')
     provides=("compiler-rt=$pkgver")
     replaces=('compiler-rt-svn')
     conflicts=('compiler-rt' 'compiler-rt-svn')
@@ -190,8 +190,10 @@ package_clang-git() {
 
     pkgdesc="C language family frontend for LLVM (git version)"
     url="http://clang.llvm.org/"
-    depends=("llvm-git=$pkgver-$pkgrel" 'gcc' "python" 'python2')
-    optdepends=('llvm-libs: for compiling with -flto')
+    depends=("llvm-libs-git=$pkgver-$pkgrel" 'gcc' "compiler-rt-git=$pkgver-$pkgrel")
+    optdepends=('llvm-git: refered by some clang-headers'
+                'python: for scan-view and git-clang-format'
+                'perl: for scanbuild, c++-analyzer, and ccc-analyzer')
     provides=("clang=$pkgver" "clang-analyzer=$pkgver" "clang-tools-extra=$pkgver")
     conflicts=('clang' 'clang-svn' 'clang-analyzer' 'clang-analyzer-svn' 'clang-tools-extra' 'clang-tools-extra-svn')
     replaces=('clang-svn' 'clang-analyzer-svn' 'clang-tools-extra-svn')
@@ -278,7 +280,7 @@ package_llvm-ocaml-git() {
 
 package_llvm-git() {
     pkgdesc="Collection of modular and reusable compiler and toolchain technologies (git version)"
-    depends=("llvm-libs-git=$pkgver" 'perl')
+    depends=("llvm-libs-git=$pkgver-$pkgrel" 'perl')
     optdepends=('python-setuptools: for using lit (LLVM Integrated Tester)')
     provides=("llvm=$pkgver")
     replaces=('llvm-svn')

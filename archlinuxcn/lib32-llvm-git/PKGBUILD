@@ -111,10 +111,11 @@ package_lib32-llvm-libs-git() {
 
 package_lib32-clang-git() {
     pkgdesc="C language family frontend for LLVM (32-bit)"
-    depends=("lib32-llvm-libs-git=$pkgver-$pkgrel" "gcc-multilib")
+    depends=("lib32-llvm-libs-git=$pkgver-$pkgrel" "lib32-gcc-libs" "gcc-multilib")
     provides=("lib32-clang=$pkgver")
     replaces=('lib32-clang-svn')
     conflicts=('lib32-clang' 'lib32-clang-svn')
+    optdepends=('python: needed for hwsan_symbolize')
 
     _fakeinstall fakeinstall/usr/lib32/clang
     _fakeinstall fakeinstall/usr/lib32/cmake/clang/
@@ -124,7 +125,7 @@ package_lib32-clang-git() {
 
 package_lib32-llvm-git() {
     pkgdesc='Low Level Virtual Machine (32-bit)(git version)'
-    depends=("lib32-llvm-libs-git=$pkgver-$pkgrel" 'llvm-git')
+    depends=("lib32-llvm-libs-git=$pkgver-$pkgrel" 'llvm-git' 'lib32-gcc-libs')
     provides=("lib32-llvm=$pkgver")
     replaces=('lib32-llvm-svn')
     conflicts=('lib32-llvm' 'lib32-llvm-svn')
