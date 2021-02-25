@@ -1,9 +1,10 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 # Contributor: Martino Pilia <martino.pilia@gmail.com>
 
+_revision=6479
 pkgname=teem
 pkgver=1.11.0
-pkgrel=4
+pkgrel=8
 pkgdesc='A coordinated group of libraries for representing, processing, and visualizing scientific raster data'
 arch=('x86_64')
 url='http://teem.sourceforge.net/index.html'
@@ -13,34 +14,33 @@ depends=(
   fftw
   libpng
 )
-makedepends=(cmake)
-source=("${pkgname}-${pkgver}.tar.gz::https://sourceforge.net/projects/teem/files/teem/${pkgver}/teem-${pkgver}-src.tar.gz"
-local:///0001-fix-cmake-path.patch)
-sha512sums=('48b171a12db0f02dcfdaa87aa84464c651d661fa66201dc966b3cd5a8134c5bad1dad8987ffcc5d7c21c5d14c2eb617d48200410a1bda19008ef743c093ed575'
-            'f62fd55bed52bbb1bd66ec787c6c3d888b3d3c4bae5038adece392f314ae66ad76e610cf8726272dc11baef85ef58bc029fab5211ff03a409c9483025afb7a75')
-
-prepare() {
-  cd "${pkgname}-${pkgver}-src"
-  patch -p1 -i "${srcdir}/0001-fix-cmake-path.patch"
-}
+makedepends=(
+  cmake
+  subversion
+)
+source=("${pkgname}-${pkgver}::svn+https://svn.code.sf.net/p/teem/code#revision=${_revision}")
+sha512sums=('SKIP')
 
 build() {
-  cmake -S "${srcdir}/${pkgname}-${pkgver}-src" -B "build" \
+  cmake -S "${srcdir}/${pkgname}-${pkgver}/${pkgname}/trunk" -B "build" \
     -DBUILD_EXPERIMENTAL_APPS=ON \
     -DBUILD_EXPERIMENTAL_LIBS=ON \
     -DBUILD_SHARED_LIBS:BOOL=ON \
     -DCMAKE_BUILD_TYPE:STRING=Release \
     -DCMAKE_INSTALL_PREFIX:PATH="/usr" \
     -DCMAKE_SKIP_INSTALL_RPATH=ON \
-    -DTeem_USE_LIB_INSTALL_SUBDIR=OFF \
-    -DTeem_FFTW3=ON
+    -DTeem_BZIP2=ON \
+    -DTeem_FFTW3=ON \
+    -DTeem_PNG=ON \
+    -DTeem_USE_LIB_INSTALL_SUBDIR=OFF
   make -C "build"
 }
 
 package() {
   cd "build"
   make DESTDIR="${pkgdir}" install
-  install -Dm644 "${srcdir}/${pkgname}-${pkgver}-src/LICENSE.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}/${pkgname}/trunk/LICENSE.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  # fix cmake path
+  sed -i "s,lib/TeemUse.cmake,lib/cmake/teem/TeemUse.cmake," "${pkgdir}/usr/lib/cmake/teem/TeemConfig.cmake"
 }
-
 # vim:set ts=2 sw=2 et:

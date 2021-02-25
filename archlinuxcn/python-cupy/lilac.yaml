@@ -1,12 +1,11 @@
 maintainers:
-  - github: wfxr
-
+  - github: hubutui
 build_prefix: extra-x86_64
-
 pre_build: aur_pre_build
-
 post_build: aur_post_build
-
+repo_depends:
+  - python-fastrlock
 update_on:
   - source: aur
-    aur: pueue
+    aur: python-cupy
+# vim:set ts=2 sw=2 et:

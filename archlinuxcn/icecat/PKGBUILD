@@ -5,9 +5,9 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=78.7.1
+pkgver=78.8.0
 pkgrel=1
-_commit=bb1c105f4416c2973f394680c2d579918a1da77a
+_commit=d5df5618fbf6f6ea0c49b6bfdcb098846d2cd777
 pkgdesc="GNU version of the Firefox browser."
 arch=(x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
@@ -26,14 +26,13 @@ options=(!emptydirs !makeflags !strip)
 source=(https://git.savannah.gnu.org/cgit/gnuzilla.git/snapshot/gnuzilla-${_commit}.tar.gz
         icecat.desktop icecat-safe.desktop
         "0001-Use-remoting-name-for-GDK-application-names.patch::https://raw.githubusercontent.com/archlinux/svntogit-packages/0adcedc05ce67d53268575f8801c8de872206901/firefox/trunk/0001-Use-remoting-name-for-GDK-application-names.patch"
-        rust_1.48.patch.gz rust_1.50.patch)
+        rust_1.48.patch.gz)
 
-sha256sums=('f8fc6889a0d6c7ebec076d90f7fe4804abb6efb03fc086e5d526b325cb1c5c37'
+sha256sums=('c1d4249f52805740ddf3a1724da946fa4c412316868f76cb614a1db774f0d8e4'
             'e00dbf01803cdd36fd9e1c0c018c19bb6f97e43016ea87062e6134bdc172bc7d'
             '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208'
             'e0eaec8ddd24bbebf4956563ebc6d7a56f8dada5835975ee4d320dd3d0c9c442'
-            'd32c87c4526e897d64453914da43f99366d1d0b7d71e43b4027a6cb5aa274040'
-            '12b677de5181466634aff6e68b9a189b21a1b3a7ea1dbf666462602320442c02')
+            'c7f867ccee684939c9f0a9c30ea69127077bbe43af545a03f09dfbbdc02545a9')
 
 prepare() {
   cd gnuzilla-${_commit}
@@ -69,9 +68,6 @@ prepare() {
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1667736
   patch -Np1 -i ../../../rust_1.48.patch
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1684261
-  patch -Np1 -i ../../../rust_1.50.patch
 
   # Patch to move files directly to /usr/lib/icecat. No more symlinks.
   sed -e 's;$(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME);g' -i config/baseconfig.mk
@@ -120,16 +116,20 @@ END
 build() {
   cd gnuzilla-${_commit}/output/icecat-${pkgver}
 
+  export MOZ_NOSPAM=1
+  export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
+  export MACH_USE_SYSTEM_PYTHON=1
+
   # LTO needs more open files
   ulimit -n 4096
 
   # -fno-plt with cross-LTO causes obscure LLVM errors
   # LLVM ERROR: Function Import: link error
-  #CFLAGS="${CFLAGS/-fno-plt/}"
-  #CXXFLAGS="${CXXFLAGS/-fno-plt/}"
+  CFLAGS="${CFLAGS/-fno-plt/}"
+  CXXFLAGS="${CXXFLAGS/-fno-plt/}"
 
-  xvfb-run -a -n 97 -s "-screen 0 1600x1200x24" ./mach build
-  ./mach buildsymbols
+  ./mach build
+  #./mach buildsymbols
 
 }
 

@@ -3,7 +3,7 @@
 _pkgname=3dslicer
 pkgname=3dslicer-git
 _pkgver=4.13
-pkgver=4.13.r26640.7f7fa81b4
+pkgver=4.13.r26693.d7d727de1
 pkgrel=1
 pkgdesc="A multi-platform, free and open source software package for visualization and medical image computing"
 arch=('x86_64')
@@ -13,6 +13,7 @@ depends=(
   bzip2
   curl
   dcmtk
+  libarchive
   libxt
   openssl
   qt5-base
@@ -51,6 +52,8 @@ pkgver() {
 prepare() {
   # find sqlite with cmake's FindSQLite3
   sed -i 's/find_package(${proj} REQUIRED)/find_package(SQLite3 REQUIRED)/' "${srcdir}/${_pkgname}/SuperBuild/External_sqlite.cmake"
+  # fix building with system teem
+  sed -i '/ExternalProject_Add_Empty/d' "${srcdir}/${_pkgname}/SuperBuild/External_teem.cmake"
 
   echo "Creating desktop file"
   gendesk -f -n --pkgname ${_pkgname} \
@@ -73,6 +76,7 @@ build() {
     -DSlicer_USE_SYSTEM_bzip2=ON \
     -DSlicer_USE_SYSTEM_curl=ON \
     -DSlicer_USE_SYSTEM_DCMTK=ON \
+    -DSlicer_USE_SYSTEM_LibArchive=ON \
     -DSlicer_USE_SYSTEM_LZMA=ON \
     -DSlicer_USE_SYSTEM_OpenSSL=ON \
     -DSlicer_USE_SYSTEM_QT=ON \
@@ -87,7 +91,6 @@ build() {
 package() {
   cd "${srcdir}/build/Slicer-build"
   make package
-  ls -lh "${srcdir}/build/Slicer-build/"
   install -d "${pkgdir}/opt/${_pkgname}" "${pkgdir}/usr/bin"
   tar xvf "${srcdir}/build/Slicer-build/"*.tar.gz -C "${pkgdir}/opt/${_pkgname}" --strip-components 1
   ln -s /opt/${_pkgname}/Slicer "${pkgdir}/usr/bin"

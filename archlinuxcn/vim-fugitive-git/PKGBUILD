@@ -1,0 +1,37 @@
+# Maintainer: Yiyao Yu <yuydevel at protonmail dot com>
+# Contributor: Sam Stuewe <halosghost at archlinux dot info>
+# Contributor: M Rawash <mrawash@gmail.com>
+# Contributor: János Illés <ijanos@gmail.com>
+
+_pkgname=vim-fugitive
+pkgname="${_pkgname}-git"
+pkgver=3.2.130.g6c4c7c9
+pkgrel=2
+pkgdesc='Git wrapper so awesome, it should be illegal.'
+url='https://github.com/tpope/vim-fugitive'
+arch=('any')
+license=('custom:vim')
+depends=('vim' 'git')
+provides=('vim-fugitive')
+conflicts=('vim-fugitive')
+source=("${_pkgname}::git+${url}.git"
+        license.txt)
+sha256sums=('SKIP'
+            '446c67d93c43addf076fe103a71844c2d875d478f82186436567dd221f2652f3')
+
+pkgver() {
+  cd "${srcdir}/${_pkgname}"
+  echo "$(git describe --always|cut -d 'v' -f2|sed -e 's|-|.|g' )"
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}"
+
+  find autoload doc ftdetect plugin syntax -type f -exec \
+    install -Dm 644 '{}' "${pkgdir}/usr/share/vim/vimfiles/{}" \;
+
+  install -Dm 644 "${srcdir}/license.txt" \
+    "${pkgdir}/usr/share/licenses/${_pkgname}/license.txt"
+}
+
+# vim:set et ts=2 sw=2 tw=79:
