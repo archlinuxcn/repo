@@ -1,7 +1,7 @@
 # Maintainer: berberman <hatsue@typed.icu>
 
 pkgname=haskell-language-server-bin
-pkgver=0.9.0
+pkgver=1.0.0
 pkgrel=1
 pkgdesc="Integration point for ghcide and haskell-ide-engine. One IDE to rule them all."
 arch=('x86_64')
@@ -11,17 +11,17 @@ depends=()
 provides=('haskell-language-server')
 conflicts=('haskell-language-server' 'haskell-language-server-git')
 source=()
-sha256sums=('7e38c60a975f7970bd825f7320d780eeb068ade0c9426380c6e6ddcde999b287'
-            'e0bf91f2b1c55dedcb76648eede05556097204dbc17e72b7756c098409dfb222'
-            '905a1edb2345465c12878527f9f35ffd0d8cff1265eb3c914969015d6fdb8b8c'
-            'd622d8ce07406254ca470733cc9a270acb2c965362b8eb33152aa4b9adff4330'
-            '7d2dd3ab23cd2c293354fa4fb921019c3998f64a69972d577562668488007fd7'
-            '892f596510aa38de44140f123f4cd85e0a3680ba5b49d807a7967692e06a5810'
-            'ad2c21f19b0a32f882e8446d53186d7357794ca1a71708b63a3a50ad219f703b'
-            'e9db4226fdd8b2963e55bd0965666d3272b10bbc73ce4f54a4d571abdfb73791'
-            'a87e588bc9b1dbc039e38c00b9b9f23ecad6f0e99ae30a01642e2125de371fb4')
+sha256sums=('95c0233437a185258e7c04750535dd6c3ffba04c7bce20805d03b3e7907b4aa8'
+            'd034115897475ab090a9093e887c0ed826804bfefd34b1289598637b9ab411f2'
+            'd2c0e2435f9c07b5eac9c88a683ba489fa57d0b60d85b9c0681d2cb0d9df7b44'
+            'a652eb1a197ad22a9543e40498f74727d2148c81404e18fc01dd17ed06ebeca8'
+            '11f6aa40ba10192ee5fc0c1387804fe62b220e501ca7bb979a146b6ad7ff5d07'
+            '1a55e43c49a158bd8d6ac440009fc28d9e37f492ab21cbcb63b29f3027b999a3'
+            '20324e484c253922e7bd910aee6351b86fb11e8b4d7813f65c086413d05f1605'
+            '0f0bd997dda3e6b13d1ff0a44da4d966cf3f3a9ce794576665a5d28facbfa244'
+            '454a15e3b3c26f7dc51f2e8b7f8977947b1e42aafe0d657909c618dceebda2f3')
 _prefix="${pkgname%-bin}-Linux"
-_ghc_versions=('8.6.4' '8.6.5' '8.8.2' '8.8.3' '8.8.4' '8.10.1' '8.10.2' '8.10.3')
+_ghc_versions=('8.6.4' '8.6.5' '8.8.2' '8.8.3' '8.8.4' '8.10.2' '8.10.3' '8.10.4')
 
 for ver in ${_ghc_versions[@]}; do
   source+=("${_prefix}-${ver}-${pkgver}.gz::${url}/releases/download/${pkgver}/${_prefix}-${ver}.gz")
