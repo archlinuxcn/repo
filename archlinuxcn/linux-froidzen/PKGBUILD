@@ -1,7 +1,7 @@
 # Maintainer: OriginCode <self@origincode.me>
 
 pkgbase=linux-froidzen
-pkgver=5.11.zen2
+pkgver=5.11.1.zen1
 pkgrel=1
 pkgdesc='Linux ZEN with Patches and Modifications'
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -18,6 +18,7 @@ _srcname=zen-kernel
 source=(
   "$_srcname::git+https://github.com/zen-kernel/zen-kernel?signed#tag=$_srctag"
   config         # the main kernel config file
+  sphinx-workaround.patch  # Sphinx 3.5 broke the build again
   'https://raw.githubusercontent.com/dolohow/uksm/master/v5.x/uksm-5.11.patch' # UKSM Patch
 )
 validpgpkeys=(
@@ -27,6 +28,7 @@ validpgpkeys=(
 )
 sha256sums=('SKIP'
             'ee3627d42ebdcb8208ef906319adaab8f86eb59fc16641026d9bcc8753b2ab8f'
+            '52fc0fcd806f34e774e36570b2a739dbdf337f7ff679b1c1139bee54d03301eb'
             '34f4ae617a2407fed2ba347b663d31f39c1ec9b390e1ea5ea636c91a4cc6f875')
 
 export KBUILD_BUILD_HOST=archlinux

@@ -1,0 +1,19 @@
+diff --git i/Documentation/conf.py w/Documentation/conf.py
+index 6a767294887e..d1d145759fed 100644
+--- i/Documentation/conf.py
++++ w/Documentation/conf.py
+@@ -267,11 +267,9 @@ except ImportError:
+ 
+ html_static_path = ['sphinx-static']
+ 
+-html_context = {
+-    'css_files': [
+-        '_static/theme_overrides.css',
+-    ],
+-}
++html_css_files = [
++    '_static/theme_overrides.css',
++]
+ 
+ # Add any extra paths that contain custom files (such as robots.txt or
+ # .htaccess) here, relative to this directory. These files are copied
