@@ -1,0 +1,9 @@
+post_upgrade() {
+    [ $(vercmp $2 1.0.36) -eq -1 ] && post_install
+}
+
+post_install() {
+    echo -e "\e[1;32m==>\e[0;1m  ventoy-bin"
+    echo -e "\e[1;34m  ->\e[0;1m Please note that usage of the newly added web UI is not yet recommended."
+    echo -e "\e[1;34m  ->\e[0;1m It needs to be adapted to the Arch Linux file system hierarchy first."
+}
