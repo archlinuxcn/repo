@@ -4,7 +4,7 @@
 
 pkgname=bibata-cursor-theme
 pkgver=1.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Material Based Cursor Theme"
 arch=('any')
 url="https://github.com/ful1e5/Bibata_Cursor"
@@ -28,7 +28,12 @@ prepare() {
 
 build() {
   cd Bibata_Cursor-$pkgver/builder
-  make build_unix
+  _themes='Amber Classic Ice'
+
+  for t in $_themes; do
+    python build.py unix -p "../bitmaps/Bibata-Modern-$t"
+    python build.py unix -p "../bitmaps/Bibata-Original-$t"
+  done
 }
 
 package() {
