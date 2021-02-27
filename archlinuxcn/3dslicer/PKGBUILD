@@ -1,8 +1,8 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=3dslicer
-pkgver=4.11.20200930
-pkgrel=9
+pkgver=4.11.20210226
+pkgrel=1
 pkgdesc="A multi-platform, free and open source software package for visualization and medical image computing"
 arch=('x86_64')
 url="https://www.slicer.org/"
