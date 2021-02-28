@@ -1,0 +1,16 @@
+diff --git a/webpack.prod.js b/webpack.prod.js
+index d4c5bbbb..947fd7ab 100644
+--- a/webpack.prod.js
++++ b/webpack.prod.js
+@@ -1,7 +1,10 @@
+ const { merge } = require('webpack-merge');
+ const common = require('./webpack.common.js');
+ 
+-module.exports = common().map((config) =>
++module.exports = common({
++  onlyTranspileTypescript: true,
++  experimentalFeatures: false,
++}).map((config) =>
+   merge(config, {
+     mode: 'production',
+     devtool: 'source-map',
