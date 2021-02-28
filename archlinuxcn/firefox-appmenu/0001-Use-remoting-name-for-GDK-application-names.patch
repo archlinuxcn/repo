@@ -9,10 +9,10 @@ Subject: [PATCH] Use remoting name for GDK application names
  2 files changed, 6 insertions(+), 12 deletions(-)
 
 diff --git a/toolkit/xre/nsAppRunner.cpp b/toolkit/xre/nsAppRunner.cpp
-index 40e4dae574dc5..cc22fc3f5edaf 100644
+index df53d2f8358ba..684105058af38 100644
 --- a/toolkit/xre/nsAppRunner.cpp
 +++ b/toolkit/xre/nsAppRunner.cpp
-@@ -4176,11 +4176,7 @@ int XREMain::XRE_mainStartup(bool* aExitFlag) {
+@@ -4184,11 +4184,7 @@ int XREMain::XRE_mainStartup(bool* aExitFlag) {
    // consistently.
  
    // Set program name to the one defined in application.ini.
