@@ -8,10 +8,10 @@ pkgbase=systemd-git
 _pkgbase=systemd
 pkgname=('systemd-git' 'systemd-libs-git' 'systemd-resolvconf-git' 'systemd-sysvcompat-git')
 pkgdesc="systemd (git version)"
-pkgver=248rc2.72
+pkgver=248.rc2.r72.ge2a19fce0d
 pkgrel=1
 arch=('x86_64')
-url='https://www.github.com/systemd/systemd'
+url="https://www.github.com/systemd/systemd"
 makedepends=('acl' 'cryptsetup' 'docbook-xsl' 'gperf' 'lz4' 'xz' 'pam' 'libelf'
              'intltool' 'iptables' 'kmod' 'libcap' 'libidn2' 'libgcrypt'
              'libmicrohttpd' 'libxcrypt' 'libxslt' 'util-linux' 'linux-api-headers'
@@ -26,7 +26,7 @@ source=('git+https://github.com/systemd/systemd.git'
         'initcpio-install-udev'
         'arch.conf'
         'loader.conf'
-        'splash-arch.bmp'::'https://git.archlinux.org/svntogit/packages.git/plain/trunk/splash-arch.bmp?h=packages/systemd'
+        'splash-arch.bmp::https://git.archlinux.org/svntogit/packages.git/plain/trunk/splash-arch.bmp?h=packages/systemd'
         'systemd-user.pam'
         'systemd-hook'
         '20-systemd-sysusers.hook'
@@ -72,13 +72,8 @@ prepare() {
 }
 
 pkgver() {
-  local version count
-
   cd "$_pkgbase"
-
-  version="$(git describe --abbrev=0 --tags)"
-  count="$(git rev-list --count ${version}..)"
-  printf '%s.%s' "${version#v}" "${count}" | sed "s/-//g"
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
@@ -99,6 +94,7 @@ build() {
 
   local _meson_options=(
     -Dversion-tag="${pkgver}-${pkgrel}-arch"
+    -Dmode=release
 
     -Dgnu-efi=true
     -Dima=false
@@ -224,7 +220,7 @@ package_systemd-git() {
 }
 
 package_systemd-libs-git() {
-  pkgdesc='systemd client libraries (git version)'
+  pkgdesc="systemd client libraries (git version)"
   depends=('glibc' 'libcap' 'libgcrypt' 'lz4' 'xz' 'zstd')
   license=('LGPL2.1')
   provides=("systemd-libs=$pkgver" 'libsystemd' 'libsystemd.so' 'libudev.so')
@@ -236,7 +232,7 @@ package_systemd-libs-git() {
 }
 
 package_systemd-resolvconf-git() {
-  pkgdesc='systemd resolvconf replacement (for use with systemd-resolved, git version)'
+  pkgdesc="systemd resolvconf replacement (for use with systemd-resolved, git version)"
   license=('LGPL2.1')
   depends=('systemd-git')
   provides=("systemd-resolvconf=$pkgver" 'openresolv' 'resolvconf')
@@ -251,7 +247,7 @@ package_systemd-resolvconf-git() {
 
 
 package_systemd-sysvcompat-git() {
-  pkgdesc='sysvinit compat for systemd (git version)'
+  pkgdesc="sysvinit compat for systemd (git version)"
   license=('GPL2')
   depends=('systemd-git')
   provides=("systemd-sysvcompat=$pkgver")
