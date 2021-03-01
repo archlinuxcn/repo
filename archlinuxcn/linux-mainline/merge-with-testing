@@ -14,7 +14,7 @@ fi
 
 git fetch arch
 git checkout -b merge --no-track arch/packages/linux
-git filter-branch -f --subdirectory-filter trunk/
+FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --subdirectory-filter trunk/
 grep ^pkgver PKGBUILD
 grep ^pkgrel PKGBUILD
 git checkout master
