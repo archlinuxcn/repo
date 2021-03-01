@@ -1,11 +1,15 @@
 # Maintainer: Dct Mei <dctxmei@yandex.com>
-# Maintainer: Andreas Radke <andyrtr@archlinux.org>
+# Maintainer: Levente Polyak <anthraxx[at]archlinux[dot]org>
+# Contributor: Daniel Micay <danielmicay@gmail.com>
+# Contributor: Tobias Powalowski <tpowa@archlinux.org>
+# Contributor: Thomas Baechler <thomas@archlinux.org>
+# Contributor: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=linux-dctxmei
 pkgver=5.10.18
-pkgrel=1
-pkgdesc='LTS Linux - Dct Mei'
-url="https://www.kernel.org/"
+pkgrel=2
+pkgdesc='Security-Hardened Linux - Dct Mei'
+url="https://github.com/anthraxx/linux-hardened"
 arch=(x86_64)
 license=(GPL2)
 makedepends=(
@@ -14,22 +18,22 @@ makedepends=(
 )
 options=('!strip')
 _srcname=linux-$pkgver
+_srctag=$pkgver-hardened1
 source=(
-  https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
+  https://www.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
+  https://github.com/anthraxx/${pkgbase%-*}-hardened/releases/download/${_srctag}/${pkgbase%-*}-hardened-${_srctag}.patch{,.sig}
   config         # the main kernel config file
-  0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
-#  0002-virt-vbox-Add-support-for-the-new-VBG_IOCTL_ACQUIRE_.patch
-#  sphinx-workaround.patch
 )
 validpgpkeys=(
   'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds
   '647F28654894E3BD457199BE38DBBDC86092693E'  # Greg Kroah-Hartman
+  'E240B57E2C4630BA768E2F26FC1B547C8D8172C8'  # Levente Polyak
 )
-# https://www.kernel.org/pub/linux/kernel/v5.x/sha256sums.asc
 sha256sums=('3bc1ee2b1bf73b5ba936721953f3f9599fd165cef906cd5163c68d23cb9bb611'
             'SKIP'
-            '14d52a4f598bdbf752546c4bab4dd096173db1f958df7dde97d17bb347b7073f'
-            '757e6de2a76284cd86f443d8a9830e775291ba01d9d339cff9b9b3e4b205b7b3')
+            '63dc8d2c77aa7cdf4bfad8c4a1fed861668c7f4bd09becc5895d7187396de1a7'
+            'SKIP'
+            'fc26dfd5634bde6d90383b3a65d008fb1295d07c817aea4fb79542469eca1da1')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -70,7 +74,8 @@ _package() {
   pkgdesc="The $pkgdesc kernel and modules (disable nouveau, disable uvcvideo, default apparmor, default bbr)"
   depends=(coreutils kmod initramfs)
   optdepends=('crda: to set the correct wireless channels of your country'
-              'linux-firmware: firmware images needed for some devices')
+              'linux-firmware: firmware images needed for some devices'
+              'usbctl: deny_new_usb control')
   provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
 
   cd $_srcname
