@@ -1,15 +1,15 @@
-# Maintainer: João Figueiredo <jf dot mundox at gmail dot com>
+# Maintainer: João Figueiredo <jf.mundox@gmail.com>
 # Contributor: Jan de Groot <jan@archlinux.org>
 
 pkgname=gconf
 pkgver=3.2.6+11+g07808097
-pkgrel=9
+pkgrel=10
 pkgdesc="An obsolete configuration database system"
 url="https://projects-old.gnome.org/gconf/"
-arch=(x86_64)
+arch=($CARCH)
 license=(LGPL)
 depends=(libxml2 polkit libldap dbus-glib python)
-makedepends=(intltool gtk-doc gobject-introspection git gnome-common)
+makedepends=(git intltool gtk-doc gobject-introspection gnome-common)
 install=gconf.install
 _commit=0780809731c8ab1c364202b1900d3df106b28626 # The latest and last commit, dug out from deep within the waves of time...
 source=("git+https://gitlab.gnome.org/Archive/gconf.git#commit=$_commit"
@@ -65,11 +65,10 @@ package() {
   DESTDIR="$pkgdir" make -C $pkgname install
 
   install -d "$pkgdir/etc/gconf/gconf.xml.system"
-  install -Dt "$pkgdir/usr/bin" gconf-merge-schema gconfpkg
-  install -Dt "$pkgdir/usr/share/libalpm/hooks" -m644 ./*.hook
+  install -D gconf-merge-schema gconfpkg -t "$pkgdir/usr/bin"
+  install -Dm644 ./*.hook -t "$pkgdir/usr/share/libalpm/hooks"
 
-  # fix dbus policy location - --with-dbusdir doens't work
-  install -dm755 "$pkgdir/usr/share/dbus-1/system.d"
-  mv "$pkgdir"/etc/dbus-1/system.d/* "$pkgdir/usr/share/dbus-1/system.d"
-  rm -rf "$pkgdir/etc/dbus-1"
+  # fix dbus policy location - --with-dbusdir doesn't work
+  install -Dm644 "$pkgdir/etc/dbus-1/system.d/org.gnome.GConf.Defaults.conf" -t "$pkgdir/usr/share/dbus-1/system.d"
+  rm -rf "$pkgdir/etc/dbus-1/"
 }
