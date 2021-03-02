@@ -3,14 +3,14 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
-pkgver=2.5.1
+pkgver=2.6.1
 pkgrel=2
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL3')
 depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
-         'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5' 'qt5-wayland' 'libx11')
+         'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5' 'kwayland' 'libx11')
 makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'python2' 'microsoft-gsl' 'libtg_owt')
 optdepends=('ttf-opensans: default Open Sans font family')
 provides=('telegram-desktop')
@@ -18,7 +18,7 @@ conflicts=('telegram-desktop')
 source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
 "0001-use-system-font-and-use-stylename.patch"
 "0002-fix-webrtc-integration-build-missing-libx11.patch")
-sha512sums=('c906c76e44f5c6926bdc00143cbb1ac718633395a390c8a3e40fde9c4bfa42ba2e92cf0ac4c20434168d0548981f2fddefd019b942411ff4552a0f441336c0e1'
+sha512sums=('92506477ee1778f7528d8b914406cbf04abf1941d4f1a5d61b75dbf393df2184da1f4f83bbc343e221a539c7a01d3e3b3fe5286453d2bf1863b75ea922b70d5a'
             '0a4206f3d16589ba476d85381bf7984a28b74e0623e02a82ce2d586eec337808f66261dd0f2116ee513403223ac7707734b3fa17d082b5ebf88481bc22636f6f'
             'c8c55b2afee8c8dad33ec5daff5c1d8520f485e3a95061ab0442768976f62922387afe93c0dee4e7026e8cc74d12dd6a03314700a1cbacbcec6c6b28f288abb8')
 
@@ -49,7 +49,7 @@ build() {
         -DDESKTOP_APP_SPECIAL_TARGET="" \
         -DDESKTOP_APP_USE_PACKAGED_LAZY=OFF \
         -DDESKTOP_APP_USE_PACKAGED_FONTS=OFF \
-    	-DTDESKTOP_DISABLE_GTK_INTEGRATION=ON
+    	-DDESKTOP_APP_DISABLE_GTK_INTEGRATION=ON
     ninja -C build
 }
 

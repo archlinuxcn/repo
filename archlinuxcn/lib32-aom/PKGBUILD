@@ -2,7 +2,7 @@
 
 _basename=aom
 pkgname=lib32-aom
-pkgver=2.0.1
+pkgver=2.0.2
 pkgrel=1
 pkgdesc="Alliance for Open Media video codec (32-bit)"
 url="https://aomedia.org/"
@@ -10,7 +10,7 @@ arch=(x86_64)
 license=(BSD custom:PATENTS)
 depends=(lib32-glibc aom)
 makedepends=(cmake git ninja yasm)
-_commit=b52ee6d44adaef8a08f6984390de050d64df9faa  # tags/v2.0.1^0
+_commit=cb1d48da8da2061e72018761788a18b8fa8013bb  # tags/v2.0.2^0
 source=("git+https://aomedia.googlesource.com/aom#commit=$_commit")
 sha256sums=('SKIP')
 

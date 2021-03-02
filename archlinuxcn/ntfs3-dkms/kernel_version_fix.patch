@@ -1,34 +1,15 @@
-From e487427ef07c735fdc711a56d1ceac6629c34dcf Mon Sep 17 00:00:00 2001
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-Date: Fri, 12 Feb 2021 20:11:54 +0100
-Subject: [PATCH] ntfs3-5.11: throw away userns changes from linux-next
-
-Signed-off-by: Oleksandr Natalenko <oleksandr@natalenko.name>
----
- fs/ntfs3/file.c    | 15 ++++++------
- fs/ntfs3/inode.c   | 10 ++++----
- fs/ntfs3/namei.c   | 34 ++++++++++++--------------
- fs/ntfs3/ntfs_fs.h | 26 +++++++++-----------
- fs/ntfs3/super.c   |  5 ++--
- fs/ntfs3/xattr.c   | 61 ++++++++++++++++++----------------------------
- 6 files changed, 65 insertions(+), 86 deletions(-)
-
-diff --git a/fs/ntfs3/file.c b/fs/ntfs3/file.c
-index d5bbe06ddb0d..3886a4a27fa5 100644
 --- a/fs/ntfs3/file.c
 +++ b/fs/ntfs3/file.c
-@@ -76,8 +76,8 @@ static long ntfs_compat_ioctl(struct file *filp, u32 cmd, unsigned long arg)
+@@ -76,7 +76,7 @@
  /*
   * inode_operations::getattr
   */
 -int ntfs_getattr(struct user_namespace *mnt_userns, const struct path *path,
--		 struct kstat *stat, u32 request_mask, u32 flags)
-+int ntfs_getattr(const struct path *path, struct kstat *stat, u32 request_mask,
-+		 u32 flags)
++int ntfs_getattr(const struct path *path,
+ 		 struct kstat *stat, u32 request_mask, u32 flags)
  {
  	struct inode *inode = d_inode(path->dentry);
- 	struct ntfs_inode *ni = ntfs_i(inode);
-@@ -90,7 +90,7 @@ int ntfs_getattr(struct user_namespace *mnt_userns, const struct path *path,
+@@ -90,7 +90,7 @@
  
  	stat->attributes_mask |= STATX_ATTR_COMPRESSED | STATX_ATTR_ENCRYPTED;
  
@@ -37,17 +18,16 @@ index d5bbe06ddb0d..3886a4a27fa5 100644
  
  	stat->result_mask |= STATX_BTIME;
  	stat->btime = ni->i_crtime;
-@@ -614,8 +614,7 @@ static long ntfs_fallocate(struct file *file, int mode, loff_t vbo, loff_t len)
+@@ -614,7 +614,7 @@
  /*
   * inode_operations::setattr
   */
 -int ntfs3_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
--		  struct iattr *attr)
-+int ntfs3_setattr(struct dentry *dentry, struct iattr *attr)
++int ntfs3_setattr(struct dentry *dentry,
+ 		  struct iattr *attr)
  {
  	struct super_block *sb = dentry->d_sb;
- 	struct ntfs_sb_info *sbi = sb->s_fs_info;
-@@ -633,7 +632,7 @@ int ntfs3_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+@@ -633,7 +633,7 @@
  		ia_valid = attr->ia_valid;
  	}
  
@@ -56,7 +36,7 @@ index d5bbe06ddb0d..3886a4a27fa5 100644
  	if (err)
  		goto out;
  
-@@ -658,10 +657,10 @@ int ntfs3_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+@@ -658,10 +658,10 @@
  		ni->ni_flags |= NI_FLAG_UPDATE_PARENT;
  	}
  
@@ -69,26 +49,19 @@ index d5bbe06ddb0d..3886a4a27fa5 100644
  		if (err)
  			goto out;
  
-diff --git a/fs/ntfs3/inode.c b/fs/ntfs3/inode.c
-index 1ab2e500b8b0..504d783f6ff9 100644
+
 --- a/fs/ntfs3/inode.c
 +++ b/fs/ntfs3/inode.c
-@@ -1176,10 +1176,10 @@ ntfs_create_reparse_buffer(struct ntfs_sb_info *sbi, const char *symname,
+@@ -1176,7 +1176,7 @@
  	return ERR_PTR(err);
  }
  
 -int ntfs_create_inode(struct user_namespace *mnt_userns, struct inode *dir,
--		      struct dentry *dentry, const struct cpu_str *uni,
--		      umode_t mode, dev_t dev, const char *symname, u32 size,
--		      int excl, struct ntfs_fnd *fnd, struct inode **new_inode)
-+int ntfs_create_inode(struct inode *dir, struct dentry *dentry,
-+		      const struct cpu_str *uni, umode_t mode, dev_t dev,
-+		      const char *symname, u32 size, int excl,
-+		      struct ntfs_fnd *fnd, struct inode **new_inode)
- {
- 	int err;
- 	struct super_block *sb = dir->i_sb;
-@@ -1585,7 +1585,7 @@ int ntfs_create_inode(struct user_namespace *mnt_userns, struct inode *dir,
++int ntfs_create_inode(struct inode *dir,
+ 		      struct dentry *dentry, const struct cpu_str *uni,
+ 		      umode_t mode, dev_t dev, const char *symname, u32 size,
+ 		      int excl, struct ntfs_fnd *fnd, struct inode **new_inode)
+@@ -1584,7 +1584,7 @@
  
  #ifdef CONFIG_NTFS3_FS_POSIX_ACL
  	if (!is_link && (sb->s_flags & SB_POSIXACL)) {
@@ -97,145 +70,117 @@ index 1ab2e500b8b0..504d783f6ff9 100644
  		if (err)
  			goto out6;
  	} else
-diff --git a/fs/ntfs3/namei.c b/fs/ntfs3/namei.c
-index 5e3b928984fe..34d89ec2a303 100644
+
 --- a/fs/ntfs3/namei.c
 +++ b/fs/ntfs3/namei.c
-@@ -102,8 +102,8 @@ static struct dentry *ntfs_lookup(struct inode *dir, struct dentry *dentry,
+@@ -102,7 +102,7 @@
   *
   * inode_operations::create
   */
 -static int ntfs_create(struct user_namespace *mnt_userns, struct inode *dir,
--		       struct dentry *dentry, umode_t mode, bool excl)
-+static int ntfs_create(struct inode *dir, struct dentry *dentry, umode_t mode,
-+		       bool excl)
++static int ntfs_create(struct inode *dir,
+ 		       struct dentry *dentry, umode_t mode, bool excl)
  {
  	int err;
- 	struct ntfs_inode *ni = ntfs_i(dir);
-@@ -111,8 +111,8 @@ static int ntfs_create(struct user_namespace *mnt_userns, struct inode *dir,
+@@ -111,7 +111,7 @@
  
  	ni_lock_dir(ni);
  
 -	err = ntfs_create_inode(mnt_userns, dir, dentry, NULL, S_IFREG | mode,
--				0, NULL, 0, excl, NULL, &inode);
-+	err = ntfs_create_inode(dir, dentry, NULL, S_IFREG | mode, 0, NULL, 0,
-+				excl, NULL, &inode);
++	err = ntfs_create_inode(dir, dentry, NULL, S_IFREG | mode,
+ 				0, NULL, 0, excl, NULL, &inode);
  
  	ni_unlock(ni);
- 
-@@ -185,8 +185,8 @@ static int ntfs_unlink(struct inode *dir, struct dentry *dentry)
+@@ -185,7 +185,7 @@
   *
   * inode_operations::symlink
   */
 -static int ntfs_symlink(struct user_namespace *mnt_userns, struct inode *dir,
--			struct dentry *dentry, const char *symname)
-+static int ntfs_symlink(struct inode *dir, struct dentry *dentry,
-+			const char *symname)
++static int ntfs_symlink(struct inode *dir,
+ 			struct dentry *dentry, const char *symname)
  {
  	int err;
- 	u32 size = strlen(symname);
-@@ -195,8 +195,8 @@ static int ntfs_symlink(struct user_namespace *mnt_userns, struct inode *dir,
+@@ -195,7 +195,7 @@
  
  	ni_lock_dir(ni);
  
 -	err = ntfs_create_inode(mnt_userns, dir, dentry, NULL, S_IFLNK | 0777,
--				0, symname, size, 0, NULL, &inode);
-+	err = ntfs_create_inode(dir, dentry, NULL, S_IFLNK | 0777, 0, symname,
-+				size, 0, NULL, &inode);
++	err = ntfs_create_inode(dir, dentry, NULL, S_IFLNK | 0777,
+ 				0, symname, size, 0, NULL, &inode);
  
  	ni_unlock(ni);
- 
-@@ -208,8 +208,7 @@ static int ntfs_symlink(struct user_namespace *mnt_userns, struct inode *dir,
+@@ -208,7 +208,7 @@
   *
   * inode_operations::mkdir
   */
 -static int ntfs_mkdir(struct user_namespace *mnt_userns, struct inode *dir,
--		      struct dentry *dentry, umode_t mode)
-+static int ntfs_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
++static int ntfs_mkdir(struct inode *dir,
+ 		      struct dentry *dentry, umode_t mode)
  {
  	int err;
- 	struct inode *inode;
-@@ -217,8 +216,8 @@ static int ntfs_mkdir(struct user_namespace *mnt_userns, struct inode *dir,
+@@ -217,7 +217,7 @@
  
  	ni_lock_dir(ni);
  
 -	err = ntfs_create_inode(mnt_userns, dir, dentry, NULL, S_IFDIR | mode,
--				0, NULL, -1, 0, NULL, &inode);
-+	err = ntfs_create_inode(dir, dentry, NULL, S_IFDIR | mode, 0, NULL, -1,
-+				0, NULL, &inode);
++	err = ntfs_create_inode(dir, dentry, NULL, S_IFDIR | mode,
+ 				0, NULL, -1, 0, NULL, &inode);
  
  	ni_unlock(ni);
- 
-@@ -249,9 +248,9 @@ static int ntfs_rmdir(struct inode *dir, struct dentry *dentry)
+@@ -249,7 +249,7 @@
   *
   * inode_operations::rename
   */
 -static int ntfs_rename(struct user_namespace *mnt_userns, struct inode *old_dir,
--		       struct dentry *old_dentry, struct inode *new_dir,
--		       struct dentry *new_dentry, u32 flags)
-+static int ntfs_rename(struct inode *old_dir, struct dentry *old_dentry,
-+		       struct inode *new_dir, struct dentry *new_dentry,
-+		       u32 flags)
++static int ntfs_rename(struct inode *old_dir,
+ 		       struct dentry *old_dentry, struct inode *new_dir,
+ 		       struct dentry *new_dentry, u32 flags)
  {
- 	int err;
- 	struct super_block *sb = old_dir->i_sb;
-@@ -533,9 +532,8 @@ static int ntfs_atomic_open(struct inode *dir, struct dentry *dentry,
- 	file->f_mode |= FMODE_CREATED;
+@@ -534,7 +534,7 @@
  
  	/*fnd contains tree's path to insert to*/
--	/* TODO: init_user_ns? */
+ 	/* TODO: init_user_ns? */
 -	err = ntfs_create_inode(&init_user_ns, dir, dentry, uni, mode, 0, NULL,
--				0, excl, fnd, &inode);
-+	err = ntfs_create_inode(dir, dentry, uni, mode, 0, NULL, 0, excl, fnd,
-+				&inode);
++	err = ntfs_create_inode(dir, dentry, uni, mode, 0, NULL,
+ 				0, excl, fnd, &inode);
  	if (!err)
  		err = finish_open(file, dentry, ntfs_file_open);
- 	dput(d);
-diff --git a/fs/ntfs3/ntfs_fs.h b/fs/ntfs3/ntfs_fs.h
-index 25069b8c46e5..6e5afe3dc943 100644
+
 --- a/fs/ntfs3/ntfs_fs.h
 +++ b/fs/ntfs3/ntfs_fs.h
-@@ -454,12 +454,11 @@ bool dir_is_empty(struct inode *dir);
+@@ -454,11 +454,11 @@
  extern const struct file_operations ntfs_dir_operations;
  
  /* globals from file.c*/
 -int ntfs_getattr(struct user_namespace *mnt_userns, const struct path *path,
--		 struct kstat *stat, u32 request_mask, u32 flags);
-+int ntfs_getattr(const struct path *path, struct kstat *stat, u32 request_mask,
-+		 u32 flags);
++int ntfs_getattr(const struct path *path,
+ 		 struct kstat *stat, u32 request_mask, u32 flags);
  void ntfs_sparse_cluster(struct inode *inode, struct page *page0, CLST vcn,
  			 CLST len);
 -int ntfs3_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
--		  struct iattr *attr);
-+int ntfs3_setattr(struct dentry *dentry, struct iattr *attr);
++int ntfs3_setattr(struct dentry *dentry,
+ 		  struct iattr *attr);
  int ntfs_file_open(struct inode *inode, struct file *file);
  int ntfs_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
- 		__u64 start, __u64 len);
-@@ -645,10 +644,10 @@ int ntfs_sync_inode(struct inode *inode);
+@@ -645,7 +645,7 @@
  int ntfs_flush_inodes(struct super_block *sb, struct inode *i1,
  		      struct inode *i2);
  int inode_write_data(struct inode *inode, const void *data, size_t bytes);
 -int ntfs_create_inode(struct user_namespace *mnt_userns, struct inode *dir,
--		      struct dentry *dentry, const struct cpu_str *uni,
--		      umode_t mode, dev_t dev, const char *symname, u32 size,
--		      int excl, struct ntfs_fnd *fnd, struct inode **new_inode);
-+int ntfs_create_inode(struct inode *dir, struct dentry *dentry,
-+		      const struct cpu_str *uni, umode_t mode, dev_t dev,
-+		      const char *symname, u32 size, int excl,
-+		      struct ntfs_fnd *fnd, struct inode **new_inode);
- int ntfs_link_inode(struct inode *inode, struct dentry *dentry);
- int ntfs_unlink_inode(struct inode *dir, const struct dentry *dentry);
- void ntfs_evict_inode(struct inode *inode);
-@@ -771,18 +770,15 @@ int ntfs_cmp_names_cpu(const struct cpu_str *uni1, const struct le_str *uni2,
++int ntfs_create_inode(struct inode *dir,
+ 		      struct dentry *dentry, const struct cpu_str *uni,
+ 		      umode_t mode, dev_t dev, const char *symname, u32 size,
+ 		      int excl, struct ntfs_fnd *fnd, struct inode **new_inode);
+@@ -771,17 +771,17 @@
  /* globals from xattr.c */
  #ifdef CONFIG_NTFS3_FS_POSIX_ACL
  struct posix_acl *ntfs_get_acl(struct inode *inode, int type);
 -int ntfs_set_acl(struct user_namespace *mnt_userns, struct inode *inode,
--		 struct posix_acl *acl, int type);
++int ntfs_set_acl(struct inode *inode,
+ 		 struct posix_acl *acl, int type);
 -int ntfs_init_acl(struct user_namespace *mnt_userns, struct inode *inode,
--		  struct inode *dir);
-+int ntfs_set_acl(struct inode *inode, struct posix_acl *acl, int type);
-+int ntfs_init_acl(struct inode *inode, struct inode *dir);
++int ntfs_init_acl(struct inode *inode,
+ 		  struct inode *dir);
  #else
  #define ntfs_get_acl NULL
  #define ntfs_set_acl NULL
@@ -243,21 +188,15 @@ index 25069b8c46e5..6e5afe3dc943 100644
  
 -int ntfs_acl_chmod(struct user_namespace *mnt_userns, struct inode *inode);
 -int ntfs_permission(struct user_namespace *mnt_userns, struct inode *inode,
--		    int mask);
 +int ntfs_acl_chmod(struct inode *inode);
-+int ntfs_permission(struct inode *inode, int mask);
++int ntfs_permission(struct inode *inode,
+ 		    int mask);
  ssize_t ntfs_listxattr(struct dentry *dentry, char *buffer, size_t size);
  extern const struct xattr_handler *ntfs_xattr_handlers[];
- 
-diff --git a/fs/ntfs3/super.c b/fs/ntfs3/super.c
-index 7d09d3eaaf2a..69c8a7d33f9d 100644
+
 --- a/fs/ntfs3/super.c
 +++ b/fs/ntfs3/super.c
-@@ -544,14 +544,13 @@ static int ntfs_show_options(struct seq_file *m, struct dentry *root)
- 	struct super_block *sb = root->d_sb;
- 	struct ntfs_sb_info *sbi = sb->s_fs_info;
- 	struct ntfs_mount_options *opts = &sbi->options;
--	struct user_namespace *user_ns = seq_user_ns(m);
+@@ -548,10 +548,10 @@
  
  	if (opts->uid)
  		seq_printf(m, ",uid=%u",
@@ -270,21 +209,19 @@ index 7d09d3eaaf2a..69c8a7d33f9d 100644
  	if (opts->fmask)
  		seq_printf(m, ",fmask=%04o", ~opts->fs_fmask_inv);
  	if (opts->dmask)
-diff --git a/fs/ntfs3/xattr.c b/fs/ntfs3/xattr.c
-index ffe329315b12..f94f215c1078 100644
+
 --- a/fs/ntfs3/xattr.c
 +++ b/fs/ntfs3/xattr.c
-@@ -473,8 +473,7 @@ static inline void ntfs_posix_acl_release(struct posix_acl *acl)
+@@ -473,7 +473,7 @@
  		kfree(acl);
  }
  
 -static struct posix_acl *ntfs_get_acl_ex(struct user_namespace *mnt_userns,
--					 struct inode *inode, int type,
-+static struct posix_acl *ntfs_get_acl_ex(struct inode *inode, int type,
++static struct posix_acl *ntfs_get_acl_ex(
+ 					 struct inode *inode, int type,
  					 int locked)
  {
- 	struct ntfs_inode *ni = ntfs_i(inode);
-@@ -509,7 +508,7 @@ static struct posix_acl *ntfs_get_acl_ex(struct user_namespace *mnt_userns,
+@@ -509,7 +509,7 @@
  
  	/* Translate extended attribute to acl */
  	if (err > 0) {
@@ -293,22 +230,20 @@ index ffe329315b12..f94f215c1078 100644
  		if (!IS_ERR(acl))
  			set_cached_acl(inode, type, acl);
  	} else {
-@@ -528,12 +527,10 @@ static struct posix_acl *ntfs_get_acl_ex(struct user_namespace *mnt_userns,
-  */
+@@ -529,10 +529,10 @@
  struct posix_acl *ntfs_get_acl(struct inode *inode, int type)
  {
--	/* TODO: init_user_ns? */
+ 	/* TODO: init_user_ns? */
 -	return ntfs_get_acl_ex(&init_user_ns, inode, type, 0);
 +	return ntfs_get_acl_ex(inode, type, 0);
  }
  
 -static noinline int ntfs_set_acl_ex(struct user_namespace *mnt_userns,
--				    struct inode *inode, struct posix_acl *acl,
-+static noinline int ntfs_set_acl_ex(struct inode *inode, struct posix_acl *acl,
++static noinline int ntfs_set_acl_ex(
+ 				    struct inode *inode, struct posix_acl *acl,
  				    int type, int locked)
  {
- 	const char *name;
-@@ -590,7 +587,7 @@ static noinline int ntfs_set_acl_ex(struct user_namespace *mnt_userns,
+@@ -590,7 +590,7 @@
  	if (!value)
  		return -ENOMEM;
  
@@ -317,25 +252,24 @@ index ffe329315b12..f94f215c1078 100644
  	if (err)
  		goto out;
  
-@@ -614,14 +611,12 @@ static noinline int ntfs_set_acl_ex(struct user_namespace *mnt_userns,
+@@ -614,13 +614,13 @@
   *
   * inode_operations::set_acl
   */
 -int ntfs_set_acl(struct user_namespace *mnt_userns, struct inode *inode,
--		 struct posix_acl *acl, int type)
-+int ntfs_set_acl(struct inode *inode, struct posix_acl *acl, int type)
++int ntfs_set_acl(struct inode *inode,
+ 		 struct posix_acl *acl, int type)
  {
 -	return ntfs_set_acl_ex(mnt_userns, inode, acl, type, 0);
 +	return ntfs_set_acl_ex(inode, acl, type, 0);
  }
  
 -static int ntfs_xattr_get_acl(struct user_namespace *mnt_userns,
--			      struct inode *inode, int type, void *buffer,
-+static int ntfs_xattr_get_acl(struct inode *inode, int type, void *buffer,
++static int ntfs_xattr_get_acl(
+ 			      struct inode *inode, int type, void *buffer,
  			      size_t size)
  {
- 	struct posix_acl *acl;
-@@ -637,14 +632,13 @@ static int ntfs_xattr_get_acl(struct user_namespace *mnt_userns,
+@@ -637,13 +637,13 @@
  	if (!acl)
  		return -ENODATA;
  
@@ -347,12 +281,11 @@ index ffe329315b12..f94f215c1078 100644
  }
  
 -static int ntfs_xattr_set_acl(struct user_namespace *mnt_userns,
--			      struct inode *inode, int type, const void *value,
-+static int ntfs_xattr_set_acl(struct inode *inode, int type, const void *value,
++static int ntfs_xattr_set_acl(
+ 			      struct inode *inode, int type, const void *value,
  			      size_t size)
  {
- 	struct posix_acl *acl;
-@@ -653,23 +647,23 @@ static int ntfs_xattr_set_acl(struct user_namespace *mnt_userns,
+@@ -653,23 +653,23 @@
  	if (!(inode->i_sb->s_flags & SB_POSIXACL))
  		return -EOPNOTSUPP;
  
@@ -380,17 +313,16 @@ index ffe329315b12..f94f215c1078 100644
  
  release_and_out:
  	ntfs_posix_acl_release(acl);
-@@ -679,8 +673,7 @@ static int ntfs_xattr_set_acl(struct user_namespace *mnt_userns,
+@@ -679,7 +679,7 @@
  /*
   * Initialize the ACLs of a new inode. Called from ntfs_create_inode.
   */
 -int ntfs_init_acl(struct user_namespace *mnt_userns, struct inode *inode,
--		  struct inode *dir)
-+int ntfs_init_acl(struct inode *inode, struct inode *dir)
++int ntfs_init_acl(struct inode *inode,
+ 		  struct inode *dir)
  {
  	struct posix_acl *default_acl, *acl;
- 	int err;
-@@ -691,7 +684,7 @@ int ntfs_init_acl(struct user_namespace *mnt_userns, struct inode *inode,
+@@ -691,7 +691,7 @@
  	 */
  	inode->i_default_acl = NULL;
  
@@ -399,24 +331,23 @@ index ffe329315b12..f94f215c1078 100644
  
  	if (!default_acl || default_acl == ERR_PTR(-EOPNOTSUPP)) {
  		inode->i_mode &= ~current_umask();
-@@ -719,14 +712,12 @@ int ntfs_init_acl(struct user_namespace *mnt_userns, struct inode *inode,
+@@ -719,13 +719,13 @@
  	}
  
  	if (default_acl)
 -		err = ntfs_set_acl_ex(mnt_userns, inode, default_acl,
--				      ACL_TYPE_DEFAULT, 1);
-+		err = ntfs_set_acl_ex(inode, default_acl, ACL_TYPE_DEFAULT, 1);
++		err = ntfs_set_acl_ex(inode, default_acl,
+ 				      ACL_TYPE_DEFAULT, 1);
  
  	if (!acl)
  		inode->i_acl = NULL;
  	else if (!err)
 -		err = ntfs_set_acl_ex(mnt_userns, inode, acl, ACL_TYPE_ACCESS,
--				      1);
-+		err = ntfs_set_acl_ex(inode, acl, ACL_TYPE_ACCESS, 1);
++		err = ntfs_set_acl_ex(inode, acl, ACL_TYPE_ACCESS,
+ 				      1);
  
  	posix_acl_release(acl);
- out1:
-@@ -742,7 +733,7 @@ int ntfs_init_acl(struct user_namespace *mnt_userns, struct inode *inode,
+@@ -742,7 +742,7 @@
   *
   * helper for 'ntfs3_setattr'
   */
@@ -425,7 +356,7 @@ index ffe329315b12..f94f215c1078 100644
  {
  	struct super_block *sb = inode->i_sb;
  
-@@ -752,7 +743,7 @@ int ntfs_acl_chmod(struct user_namespace *mnt_userns, struct inode *inode)
+@@ -752,7 +752,7 @@
  	if (S_ISLNK(inode->i_mode))
  		return -EOPNOTSUPP;
  
@@ -434,16 +365,16 @@ index ffe329315b12..f94f215c1078 100644
  }
  
  /*
-@@ -760,15 +751,14 @@ int ntfs_acl_chmod(struct user_namespace *mnt_userns, struct inode *inode)
+@@ -760,7 +760,7 @@
   *
   * inode_operations::permission
   */
 -int ntfs_permission(struct user_namespace *mnt_userns, struct inode *inode,
--		    int mask)
-+int ntfs_permission(struct inode *inode, int mask)
++int ntfs_permission(struct inode *inode,
+ 		    int mask)
  {
  	if (ntfs_sb(inode->i_sb)->options.no_acs_rules) {
- 		/* "no access rules" mode - allow all changes */
+@@ -768,7 +768,7 @@
  		return 0;
  	}
  
@@ -452,36 +383,30 @@ index ffe329315b12..f94f215c1078 100644
  }
  
  /*
-@@ -884,9 +874,8 @@ static int ntfs_getxattr(const struct xattr_handler *handler, struct dentry *de,
- 	    (name_len == sizeof(XATTR_NAME_POSIX_ACL_DEFAULT) - 1 &&
- 	     !memcmp(name, XATTR_NAME_POSIX_ACL_DEFAULT,
+@@ -886,7 +886,7 @@
  		     sizeof(XATTR_NAME_POSIX_ACL_DEFAULT)))) {
--		/* TODO: init_user_ns? */
+ 		/* TODO: init_user_ns? */
  		err = ntfs_xattr_get_acl(
 -			&init_user_ns, inode,
 +			inode,
- 			name_len == sizeof(XATTR_NAME_POSIX_ACL_ACCESS) - 1 ?
- 				ACL_TYPE_ACCESS :
- 				ACL_TYPE_DEFAULT,
-@@ -907,7 +896,6 @@ static int ntfs_getxattr(const struct xattr_handler *handler, struct dentry *de,
+ 			name_len == sizeof(XATTR_NAME_POSIX_ACL_ACCESS) - 1
+ 				? ACL_TYPE_ACCESS
+ 				: ACL_TYPE_DEFAULT,
+@@ -907,7 +907,7 @@
   * inode_operations::setxattr
   */
  static noinline int ntfs_setxattr(const struct xattr_handler *handler,
 -				  struct user_namespace *mnt_userns,
++				  
  				  struct dentry *de, struct inode *inode,
  				  const char *name, const void *value,
  				  size_t size, int flags)
-@@ -1015,9 +1003,8 @@ static noinline int ntfs_setxattr(const struct xattr_handler *handler,
- 	    (name_len == sizeof(XATTR_NAME_POSIX_ACL_DEFAULT) - 1 &&
- 	     !memcmp(name, XATTR_NAME_POSIX_ACL_DEFAULT,
+@@ -1017,7 +1017,7 @@
  		     sizeof(XATTR_NAME_POSIX_ACL_DEFAULT)))) {
--		/* TODO: init_user_ns? */
+ 		/* TODO: init_user_ns? */
  		err = ntfs_xattr_set_acl(
 -			&init_user_ns, inode,
 +			inode,
- 			name_len == sizeof(XATTR_NAME_POSIX_ACL_ACCESS) - 1 ?
- 				ACL_TYPE_ACCESS :
- 				ACL_TYPE_DEFAULT,
--- 
-GitLab
-
+ 			name_len == sizeof(XATTR_NAME_POSIX_ACL_ACCESS) - 1
+ 				? ACL_TYPE_ACCESS
+ 				: ACL_TYPE_DEFAULT,

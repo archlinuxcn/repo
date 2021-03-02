@@ -3,8 +3,8 @@
 # Contributor: Jakub Schmidtke <sjakub@gmail.com>
 
 pkgname=firefox-esr
-pkgver=78.7.1
-pkgrel=3
+pkgver=78.8.0
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, Extended Support Release"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -23,15 +23,13 @@ conflicts=(firefox)
 options=(!emptydirs !makeflags !strip)
 source=(https://archive.mozilla.org/pub/firefox/releases/${pkgver}esr/source/firefox-${pkgver}esr.source.tar.xz{,.asc}
         ${pkgname}.desktop 0001-Use-remoting-name-for-GDK-application-names.patch upload-symbol-archive
-        rust_1.48.patch.gz
-        rust_1.50.patch)
-sha256sums=('5042783e2cf94d21dd990d2083800f05bc32f8ba65532a715c7be3cb7716b837'
+        rust_1.48.patch.gz)
+sha256sums=('1cf2dfdee2e31fd0a5ecced6275a33fa11bee1d2a7c65e23350b26992584a110'
             'SKIP'
             'd86fe1636346ff003744b65e73cd3a7182618faedf3ee57023bb942e325cc726'
             '3bb7463471fb43b2163a705a79a13a3003d70fff4bbe44f467807ca056de9a75'
             'eb9b9c058d1505e5b82526a8cad63f98e04fc17c4715f6b4cfc778e10fcfaf27'
-            'd32c87c4526e897d64453914da43f99366d1d0b7d71e43b4027a6cb5aa274040'
-            '12b677de5181466634aff6e68b9a189b21a1b3a7ea1dbf666462602320442c02')
+            'c7f867ccee684939c9f0a9c30ea69127077bbe43af545a03f09dfbbdc02545a9')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -55,9 +53,6 @@ prepare() {
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1667736
   patch -Np1 -i ../rust_1.48.patch
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1684261
-  patch -Np1 -i ../rust_1.50.patch
 
   echo -n "$_google_api_key" >google-api-key
   echo -n "$_mozilla_api_key" >mozilla-api-key

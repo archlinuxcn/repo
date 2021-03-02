@@ -1,7 +1,8 @@
 # Maintainer: Gordian Edenhofer <gordian.edenhofer@gmail.com>
 
 pkgname=papermc
-pkgver=1.16.5+b498
+pkgver=1.16.5+b507
+_license_commit=4a7962c
 pkgrel=1
 pkgdesc="Next generation of Minecraft server, compatible with Spigot plugins and offering uncompromising performance"
 arch=('any')
@@ -19,15 +20,19 @@ source=("papermc.${pkgver}.jar"::"https://papermc.io/api/v1/paper/${pkgver%%+*}/
 	"papermc.service"
 	"papermc.conf"
 	"papermc.sh"
-	"papermc_${pkgver}_LICENSE.md"::"https://raw.githubusercontent.com/PaperMC/Paper/master/LICENSE.md")
+	"papermc.tmpfiles"
+	"papermc.sysusers"
+	"LICENSE_${pkgver}.md"::"https://raw.githubusercontent.com/PaperMC/Paper/${_license_commit}/LICENSE.md")
 noextract=("papermc.${pkgver}.jar")
-sha512sums=('f282c6cb05d2f130d9e8feb4a07cfc38342d45397273d18a20f76967a2927247c0e99fc29eea68ca83bbda559ba22f64f41b0df18486a0413c50775e6bfb1048'
+sha512sums=('cbe42c397d2195b071babc63544d523960f753236fbd09146eb901587d1b6790a2c87890df499b5063e7b6b763ab18b6b1ee06a5fa3343bf745094aec4e4fc50'
             'a4fcc9f28436c0163e9414f2793fcbd4f6ea74772230cdff4a628246eae2a8008688b3dfb94d433f8f0887cd7eea3fe43ce25f9d5812d46e62179ff315b62895'
             '51c5345155e8640d4f1eaef0c8cfb890ae46063f2d4e7a0fe181ad4c8ff7b96fea88b0f9fc74031d589dfd61602f37b440f183ca1859835930fe69d37508cd42'
             'f29c4044d9e3cc5ab137c21f7e62399b36d7e1f777d5558a39f7b4a01de75bdf2de0b8678e424accc03934ca7db9ebb6a22c78c8c4497759287dd55e1c3eb456'
             'bec77bc748ee9b9efe4913608f7a6f9b1bd40ed8f018a431981451f8ad77accc4b3670096a8523ddd9f745aef5edb7294ef3b15f483cf9af32c69f9a40ef40a1'
-            'c777e62beb213b5203883e13045953daa3d054c59da8ab535d416464366790edfe77fd9517f968d140dfb4c9009f7e8152f693312364ebbdc71cf2148d6a7df4'
-            'f3aa957a362a6482058984353ae745e47a5b79a4d9a2743189003cc145f1eaf3068bc941a2d1e7e8bd3591898398cd2996db7d871429ef968b6f1b0fcb7ca9f6')
+            '6462249c6bb29ee0e7278f5c9e5d4e46b9e214f7ebbbcd202717ff639a1bdb455391145bd1cc716e66523bda48cefeb72908a1944c3dec2151186136689cadae'
+            'f67da32f350cddb34d2fd1fcb6d6004db13453a3c4cb43d381d6c72c894fc96fca0a970fe3addb9978d73b196dd0b2e18a73637003581446e013bcbb2c716211'
+            '115fe7213d7edd0e3159607a31b28edb6e6b3bd1d454d516973e38c8cf0b803275c2c4e59b29e2260561270d931c71bad134046535e5add309e0a8d055cde0ff'
+            'd4c645a58e1a17a0a1e42856a3cc43097711a05bf3d9f18c77c3bc9874417f223552859042ff00b7d3dda0003f49a9ee568540c2eb24e9f8fbb3c055f3b6e0a5')
 
 _game="papermc"
 _server_root="/srv/papermc"
@@ -38,6 +43,8 @@ package() {
 	install -Dm644 ${_game}.service           "${pkgdir}/usr/lib/systemd/system/${_game}.service"
 	install -Dm644 ${_game}-backup.service    "${pkgdir}/usr/lib/systemd/system/${_game}-backup.service"
 	install -Dm644 ${_game}-backup.timer      "${pkgdir}/usr/lib/systemd/system/${_game}-backup.timer"
+	install -Dm644 ${_game}.sysusers          "${pkgdir}/usr/lib/sysusers.d/${_game}.conf"
+	install -Dm644 ${_game}.tmpfiles          "${pkgdir}/usr/lib/tmpfiles.d/${_game}.conf"
 	install -Dm644 ${_game}.${pkgver}.jar     "${pkgdir}/${_server_root}/${_game}.${pkgver}.jar"
 	ln -s "${_game}.${pkgver}.jar" "${pkgdir}${_server_root}/${_game}_server.jar"
 
@@ -49,5 +56,5 @@ package() {
 	# Give the group write permissions and set user or group ID on execution
 	chmod g+ws "${pkgdir}${_server_root}"
 
-	install -D ./papermc_${pkgver}_LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+	install -D ./LICENSE_${pkgver}.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

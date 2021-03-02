@@ -9,14 +9,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=88.0.4324.150
+pkgver=88.0.4324.182
 pkgrel=1
 _launcher_ver=7
 _gcc_patchset=3
 _pkgname=$(echo $pkgname | cut -d\- -f1-2)
 _pkgver=$(echo $pkgver | cut -d\. -f1-4)
 # ungoogled chromium variables
-_uc_ver=88.0.4324.146-1
+_uc_ver=$pkgver-1
 _uc_usr=Eloston
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
@@ -43,8 +43,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-glibc-2.33.patch
         wayland-egl.patch
         subpixel-anti-aliasing-in-FreeType-2.8.1.patch)
-sha256sums=('ae12e94392986c6b8ea4413356a49bae0a19356ffe2ea95495303cf2decb38c3'
-            'cbbc917097ca089a2bcd2b85f9d7f160e52323a9d900d2fc1da5a84567f7b357'
+sha256sums=('30411fc3ec2d33df4c5cad41f21affa3823c80f7dbd394f6d68f9a1e81015b81'
+            '4b0e06af18f084c11b3fea6a084d27e13952e8192f39c066563dfa8890d6e6d8'
             '86859c11cfc8ba106a3826479c0bc759324a62150b271dd35d1a0f96e890f52f'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             'e5a60a4c9d0544d3321cc241b4c7bd4adb0a885f090c6c6c21581eac8e3b4ba9'

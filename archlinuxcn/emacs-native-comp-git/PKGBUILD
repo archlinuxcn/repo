@@ -73,7 +73,7 @@ PROFILING=        # Enable gprof profiling support.
 
 ################################################################################
 pkgname="emacs-native-comp-git"
-pkgver=28.0.50.146975
+pkgver=28.0.50.147071
 pkgrel=1
 pkgdesc="GNU Emacs. Development native-comp branch."
 arch=('x86_64' )
@@ -209,7 +209,7 @@ build() {
 # Good luck!
    --without-gconf
    --without-gsettings
-   --with-nativecomp
+   --with-native-compilation
   )
 
 ################################################################################

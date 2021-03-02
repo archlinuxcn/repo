@@ -3,8 +3,8 @@
 # Contributor: KokaKiwi <kokakiwi+aur@kokakiwi.net>
 
 pkgname=ventoy-bin
-pkgver=1.0.35
-pkgrel=1
+pkgver=1.0.36
+pkgrel=6
 pkgdesc='A new multiboot USB solution (Binary)'
 url='http://www.ventoy.net/'
 arch=('i686' 'x86_64')
@@ -13,10 +13,11 @@ depends=('bash' 'util-linux' 'xz' 'exfat-utils' 'dosfstools' 'lib32-glibc')
 provides=("${pkgname%-bin}")
 conflicts=("${pkgname%-bin}")
 source=("https://github.com/ventoy/Ventoy/releases/download/v${pkgver}/${pkgname%-bin}-${pkgver}-linux.tar.gz"
-        "${pkgname%-bin}" 'sanitize.patch')
-sha256sums=('62d611de2addc9e86ec9bc8129352505cf5174e1de4b39da2019ab9898d21009'
+        "${pkgname%-bin}" "${pkgname%-bin}web" 'sanitize.patch')
+sha256sums=('4d3da8b7e1464e11e7325c5693fe92d6d086007f794c5de8c101e2661d494c58'
             '1ad5d314e02b84127a5a59f3871eb1d28617218cad07cde3eeddcac391473000'
-            '27d6865faadd1d12958f864a2fcd17f9e73f50dbfd0d85cedf4c48585752a62d')
+            'c3d4463a878a89d96e5f0bc4e1a43e48f27af5965bd4c977567695d7cf91fe5f'
+            '8c90f9625fdad2d792dc43fae4b601f239d2b5ee187d91d7d59d4f06ea6a427e')
 
 prepare() {
   msg2 "Decompress tools..."
@@ -32,9 +33,12 @@ prepare() {
   msg2 "Applying sanitize patch..."
   cd ../..
   patch --verbose -p0 < "$srcdir/sanitize.patch"
+  sed -i 's|log\.txt|/var/log/ventoy.log|g' WebUI/static/js/languages.js
 
   msg2 "Cleaning up unused binaries..."
-  rm -fv tool/$CARCH/{mkextfatfs_{32,64},mount.exfat-fuse_{32,64},ash,hexdump,xzcat}
+  for binary in xzcat hexdump mkexfatfs mount.exfat-fuse; do
+    rm -fv tool/$CARCH/$binary
+  done
 }
 
 package() {
@@ -46,16 +50,13 @@ package() {
   install -Dm755 -vt      "$pkgdir/opt/${pkgname%-bin}/tool/"            tool/*.{cer,sh}
   install -Dm755 -vt      "$pkgdir/opt/${pkgname%-bin}/tool/$CARCH/"     tool/$CARCH/*
   install -Dm755 -vt      "$pkgdir/opt/${pkgname%-bin}/"                 *.sh
-  cp --no-preserve=o -avt "$pkgdir/opt/${pkgname%-bin}/"                 plugin
+  cp --no-preserve=o -avt "$pkgdir/opt/${pkgname%-bin}/"                 plugin WebUI
 
   msg2 "Linking system binaries..."
-  ln -svf /usr/bin/xzcat            "$pkgdir/opt/${pkgname%-bin}/tool/"
-  ln -svf /usr/bin/hexdump          "$pkgdir/opt/${pkgname%-bin}/tool/"
-  ln -svf /usr/bin/mkfs.exfat       "$pkgdir/opt/${pkgname%-bin}/tool/mkextfatfs_32"
-  ln -svf /usr/bin/mkfs.exfat       "$pkgdir/opt/${pkgname%-bin}/tool/mkextfatfs_64"
-  ln -svf /usr/bin/mount.exfat-fuse "$pkgdir/opt/${pkgname%-bin}/tool/mount.exfat-fuse_32"
-  ln -svf /usr/bin/mount.exfat-fuse "$pkgdir/opt/${pkgname%-bin}/tool/mount.exfat-fuse_64"
+  for binary in xzcat hexdump mkexfatfs mount.exfat-fuse; do
+    ln -svf /usr/bin/$binary "$pkgdir/opt/${pkgname%-bin}/tool/$CARCH/"
+  done
 
   msg2 "Creating /usr/bin entries..."
-  install -Dm755 "$srcdir/${pkgname%-bin}" -t "$pkgdir"/usr/bin/
+  install -Dm755 "$srcdir/${pkgname%-bin}"{,web} -vt "$pkgdir"/usr/bin/
 }

@@ -15,16 +15,24 @@ vimdiff PKGBUILD ../linux/PKGBUILD
 cd ../linux/src/archlinux-linux
 git clean -xdf
 git fetch --all
-git co -b lily-5.4 v5.4.27
-git merge --no-edit cjktty/5.3-utf8
-patch -p1 < ~/uksm-5.4.patch
+git co -b lily-5.10 v5.10.19
+
+patch -p1 < ~/uksm-5.10.patch
 git add .
 git commit -m 'apply uksm patch'
+
+patch -p1 < ~/cjktty-5.10.patch
+git add .
+git commit -m 'apply cjktty patch'
+patch -p1 < ~/cjktty-add-uni32x32-font-data.patch
+git add .
+git commit -m 'apply cjktty 32x32 font data'
+
 cp ../../config .config
-patch .config ~/archgitrepo/archlinuxcn/linux-lily/config.diff.4.19.84
+patch .config ~/archgitrepo/archlinuxcn/linux-lily/config.diff.5.4.27
 make clean oldconfig
-diff -Naur ../../config .config > ~/archgitrepo/archlinuxcn/linux-lily/config.diff.5.4.27
-vim ~/archgitrepo/archlinuxcn/linux-lily/config.diff.5.4.27
+diff -Naur ../../config .config > ~/archgitrepo/archlinuxcn/linux-lily/config.diff.5.10.19
+vim ~/archgitrepo/archlinuxcn/linux-lily/config.diff.5.10.19
 
 cd ../..
 # 升级 gcc

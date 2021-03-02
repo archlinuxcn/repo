@@ -5153,9 +5153,9 @@
      # END ATOMS
 -] + HTML_PARSER_ATOMS
 +] + HTML_PARSER_ATOMS + NATIVE_MENU_ATOMS
+ # fmt: on
  
  
- def verify():
 --- a/widget/gtk/components.conf
 +++ b/widget/gtk/components.conf
 @@ -82,6 +82,14 @@ Classes = [
@@ -5176,8 +5176,8 @@
 --- a/xpfe/appshell/AppWindow.cpp
 +++ b/xpfe/appshell/AppWindow.cpp
 @@ -76,7 +76,7 @@
- #  include "mozilla/XULStore.h"
- #endif
+ 
+ #include "mozilla/dom/DocumentL10n.h"
  
 -#ifdef XP_MACOSX
 +#if defined(XP_MACOSX) || defined(MOZ_WIDGET_GTK)

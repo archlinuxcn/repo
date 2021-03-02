@@ -2,34 +2,23 @@
 # Contributor: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=xray-domain-list-community
-pkgver=20210218112005
-pkgrel=1
+pkgver=20210226210728
+pkgrel=2
 pkgdesc="A list of domains to be used as geosites for routing purpose in Project V"
 arch=('any')
 url="https://github.com/v2fly/domain-list-community"
 license=('MIT')
-makedepends=('git' 'go')
-source=("${url}/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('641701dfb0fee6123593fc449f9b62c7c216eebcfefa9657e4788fb740218b31')
-
-prepare() {
-    mkdir .gopath
-    export GOPATH="${srcdir}"/.gopath
-
-    mkdir -p .gopath/src/github.com/v2fly
-    ln -s "${PWD}"/"domain-list-community-$pkgver" .gopath/src/github.com/v2fly/domain-list-community
-
-    go get github.com/golang/protobuf/proto
-    go get -insecure v2ray.com/core/app/router
-}
+makedepends=('go')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
+sha256sums=('1c1275ec82027855aafea51aaa430614d87047d120d2ff24d5aa6fafbce1a472')
 
 build() {
-    cd .gopath
-    go run ./src/github.com/v2fly/domain-list-community/main.go
+    cd "${srcdir}"/"domain-list-community-${pkgver}"/
+    go run main.go
 }
 
 package() {
-    cd .gopath
+    cd "${srcdir}"/"domain-list-community-${pkgver}"/
     install -Dm 644 dlc.dat "${pkgdir}"/usr/share/xray/geosite.dat
     install -Dm 644 "${srcdir}"/"domain-list-community-${pkgver}"/LICENSE -t "${pkgdir}"/usr/share/licenses/"$pkgname"/
 }

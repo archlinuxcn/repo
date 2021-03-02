@@ -1,34 +1,33 @@
 # Maintainer: Shengyu Zhang <la@archlinuxcn.org>
 
 pkgname=srain
-pkgver=1.1.3
-pkgrel=1
+pkgver=1.2.0
+pkgrel=3
 pkgdesc="Modern IRC client written in GTK."
 arch=('i686' 'x86_64')
 license=('GPL')
 url="https://srain.im"
-makedepends=('python-sphinx')
+makedepends=('python-sphinx' 'meson')
 depends=('gtk3' 'libconfig' 'libsoup' 'libsecret')
 source=("https://github.com/SrainApp/${pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('08f32c762eaf5e50a3a8b5374c49dc42df31f6730ad373495cc951701d0e319b')
+sha256sums=('96891684cbf3c29a15c8d44df86e8fcb7a028f7e02d5e93f9a272ef3431c73b1')
 
 _prefix='/usr'
 
 build() {
     cd ${pkgname}-${pkgver}
 
-    ./configure                         \
+    meson setup                         \
         --prefix="${_prefix}"           \
         --datadir="${_prefix}/share"    \
         --sysconfdir="/etc"             \
-        --disable-debug
-    make
-    make doc
+        --buildtype=release             \
+        builddir
+    ninja -C builddir
 }
 
 package() {
     cd ${pkgname}-${pkgver}
 
-    make DESTDIR="${pkgdir}" install
-    make DESTDIR="${pkgdir}" install-doc
+    DESTDIR="${pkgdir}" ninja -C builddir install
 }
