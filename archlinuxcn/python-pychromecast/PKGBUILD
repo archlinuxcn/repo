@@ -6,7 +6,7 @@
 
 pkgname=python-pychromecast
 _name=${pkgname#python-}
-pkgver=9.0.0
+pkgver=9.1.1
 pkgrel=1
 pkgdesc='Library for Python 3 to communicate with the Google Chromecast'
 arch=('any')
@@ -15,7 +15,7 @@ license=('MIT')
 depends=('python' 'python-protobuf' 'python-requests' 'python-zeroconf' 'python-six' 'python-setuptools' 'python-casttube')
 makedepends=('python-setuptools')
 source=("${pkgname}"-"${pkgver}".tar.gz::${url}/archive/$pkgver.tar.gz)
-sha512sums=('e95c4e408871b17a239563b56f8132a230f5233db677e97fbf0fffa0b835aac1f453460ec526015dc3b5ca8a1a042029938e786f4e0554b2995d2c7bec7e1442')
+sha512sums=('7a4ceec47f8d8b183626329b5669b9366a8784e6e8867e21fa680ef87be8a6895345c4c76d3e8f90db2285e51d22465585caa8fd41ccb1109be248b72b9e1e2f')
 conflicts=('python-pychromecast6')
 
 build() {
