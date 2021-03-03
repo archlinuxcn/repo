@@ -2,8 +2,8 @@
 
 pkgname=3dslicer-bin
 _pkgname=3dslicer
-pkgver=4.11.20200930
-pkgrel=6
+pkgver=4.11.20210226
+pkgrel=1
 pkgdesc="A multi-platform, free open source software package for visualization and medical image computing"
 arch=('x86_64')
 url="https://www.slicer.org"
@@ -17,7 +17,7 @@ source=(
     "${_pkgname}-${pkgver}.tar.gz::http://download.slicer.org/download?os=linux&stability=release"
     "${_pkgname}.svg::https://github.com/Slicer/Slicer/raw/v4.11/Resources/3DSlicerLogo-app-icon.svg"
 )
-sha512sums=('0928f138c6c6b002a959c70eccad61c321ffc77289bf7813c20e265bea337119e55550cc1af6afd564877766e2e7b4d8332e673d894a251fef6144a2f27387a4'
+sha512sums=('882c61da94f378326697ba777cc321d463e768cf00f5e3c85913027a909884a26589abf057a0020a6e02982eb15a1b8065a8e19ff1bba7b0fed89287698a3aa6'
             'c23104efcbec3d49b5c26ad5514ed74316423db4aa9e6c7894f02f7ddbe509b577de358dfdd2f7c492963f312b7c146f03d5e41a89ab1298811894dc18746225')
 
 prepare() {
