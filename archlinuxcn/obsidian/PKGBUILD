@@ -3,7 +3,7 @@
 pkgname=obsidian
 pkgver=0.11.3
 _appimage="${pkgname}-${pkgver}.AppImage"
-pkgrel=1
+pkgrel=2
 pkgdesc="Obsidian is a powerful knowledge base that works on top of a local folder of plain text Markdown files"
 provides=("obsidian")
 conflicts=("obsidian-appimage")
@@ -14,7 +14,7 @@ depends=('zlib' 'hicolor-icon-theme' 'fuse')
 options=(!strip)
 source=("${_appimage}::https://github.com/obsidianmd/obsidian-releases/releases/download/v${pkgver}/Obsidian-${pkgver}.AppImage")
 noextract=("${_appimage}")
-sha256sums=('d337a8bbdd1ea47b823570dfb20085d8b73d5391343e59aba6146bdc4ae3b22b')
+sha256sums=('97e733d01ecce9c4182432a4f8761e4c4063c16f2856dbb9c41e20c362778fba')
 
 prepare() {
     # Enable execution of AppImage
