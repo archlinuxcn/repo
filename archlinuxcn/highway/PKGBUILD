@@ -1,7 +1,7 @@
 # Maintainer: Daniel Bermond <dbermond@archlinux.org>
 
 pkgname=highway
-pkgver=0.11.0
+pkgver=0.11.1
 pkgrel=1
 pkgdesc='A C++ library for SIMD (Single Instruction, Multiple Data)'
 arch=('x86_64')
@@ -9,7 +9,7 @@ url='https://github.com/google/highway/'
 license=('Apache')
 makedepends=('cmake' 'gtest')
 source=("https://github.com/google/highway/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('30c85bee1ba600c480ff0edafb5a803cad23311ac9b7754918edc22cbd23dd88')
+sha256sums=('4c4bb9501c02b27a0944afde8923aaab554384690d37e5b2a7f97553426ea641')
 
 build() {
     export CXXFLAGS+=' -DHWY_COMPILE_ALL_ATTAINABLE'
