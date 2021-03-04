@@ -1,9 +1,9 @@
 # Maintainer: Chih-Hsuan Yen <yan12125@gmail.com>
 
 pkgname=python-onnxruntime
-pkgver=1.7.0
+pkgver=1.7.1
 pkgdesc='Cross-platform, high performance scoring engine for ML models'
-pkgrel=2
+pkgrel=1
 arch=(x86_64)
 url='https://github.com/microsoft/onnxruntime'
 license=(MIT)
