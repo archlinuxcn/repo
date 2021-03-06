@@ -2,7 +2,7 @@
 
 pkgbase=libjpeg-xl
 pkgname=('libjpeg-xl' 'libjpeg-xl-doc')
-pkgver=0.3.2
+pkgver=0.3.3
 pkgrel=1
 pkgdesc='JPEG XL image format reference implementation'
 arch=('x86_64')
@@ -74,12 +74,13 @@ check() {
 
 package_libjpeg-xl() {
     depends=('brotli')
-    optdepends=('gdk-pixbuf2: for gdk-pixbuf plugin'
+    optdepends=('gdk-pixbuf2: for gdk-pixbuf loader'
                 'giflib: for CLI tools'
                 'gimp: for gimp plugin'
                 'libjpeg-turbo: for CLI tools'
                 'libpng: for CLI tools'
                 'openexr: for CLI tools')
+    provides=('libjxl' 'libjxl.so')
     
     make -C build DESTDIR="$pkgdir" install
     install -D -m644 jpeg-xl/plugins/mime/image-jxl.xml -t "${pkgdir}/usr/share/mime/packages"
@@ -88,6 +89,7 @@ package_libjpeg-xl() {
 package_libjpeg-xl-doc() {
     pkgdesc+=' (documentation)'
     arch=('any')
+    provides=('libjxl-doc')
     
     mkdir -p "${pkgdir}/usr/share/doc"
     cp -dr --no-preserve='ownership' build/html "${pkgdir}/usr/share/doc/libjpeg-xl"
