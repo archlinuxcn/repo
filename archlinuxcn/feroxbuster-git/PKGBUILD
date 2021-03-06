@@ -2,7 +2,7 @@
 pkgname=feroxbuster-git
 _pkgname=${pkgname%-git}
 pkgver=2.2.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A fast, simple, recursive content discovery tool written in Rust. "
 arch=('any')
 url="https://github.com/epi052/feroxbuster"
@@ -14,22 +14,18 @@ source=("${_pkgname}::git+${url}")
 sha256sums=("SKIP")
 
 pkgver() {
-    cd "${_pkgname}"
-    ( set -o pipefail
-        printf "$(git describe --tags | awk -F- '{print $1}' | cut -c2-)"
-    )
+	cd "${_pkgname}"
+	( set -o pipefail
+		printf "$(git describe --tags | awk -F- '{print $1}' | cut -c2-)"
+	)
 }
 
 build() {
-    cd "${_pkgname}"
-    cargo build --release
+	cd "${_pkgname}"
+	cargo build --release
 }
 
 package() {
-    install -Dm755 "${_pkgname}/target/release/${_pkgname}"         "$pkgdir/usr/bin/${_pkgname}"
-    install -Dm644 "${_pkgname}/LICENSE"                            "$pkgdir/usr/share/licenses/${_pkgname}/LICENSE"
-    install -Dm644 "${_pkgname}/shell_completions/${_pkgname}.fish" "$pkgdir/usr/share/fish/vendor_completions.d/${_pkgname}.fish"
-    install -Dm644 "${_pkgname}/shell_completions/_${_pkgname}"     "$pkgdir/usr/share/zsh/site-functions/_${_pkgname}"
+	install -Dm644 "${_pkgname}/LICENSE" "$pkgdir/usr/share/licenses/${_pkgname}/LICENSE"
+	install -Dm755 "${_pkgname}/target/release/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
 }
-
-# vim:set noet sts=0 sw=4 ts=4 ft=PKGBUILD:
