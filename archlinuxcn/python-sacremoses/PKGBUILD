@@ -18,6 +18,9 @@ depends=(
 makedepends=(
   python-setuptools
 )
+checkdepends=(
+  python-pytest
+)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/alvations/sacremoses/archive/${pkgver}.tar.gz"
         "LICENSE::https://raw.githubusercontent.com/alvations/sacremoses/master/LICENSE")
 sha512sums=('403331bb455aefc5adcebacf8030442ee75422ea5f6f0bd7b583b0ee3c45c948d0488e7779a08542b4a48c256494d1ca4dc8442e23f1d69440a3d4d471b819a8'
