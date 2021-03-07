@@ -12,6 +12,9 @@ def pre_build():
   g.files = download_official_pkgbuild('qt5-base')
 
   conflict_string=""
+  # As of 2021 March, qt5.15 is commercial-only LTS branch, but qt5-webengine is an exception.
+  # Thus it is the only component that is going beyond 5.15.2
+  # Removed qt5-webengine from the qt5-pkgs conflict list.
   for line in open('qt5-pkgs').readlines():
     p = line.strip()
     conflict_string = conflict_string + '"' + p + '>$pkgver" '
@@ -23,7 +26,7 @@ def pre_build():
       line = 'pkgbase=qt5-base-24h' + '\n' + '_origpkgname=qt5-base'
       checks = checks + '0'
     elif line.startswith('pkgrel='):
-      line = line + '.5'
+      line = line + '.6'
     elif line.startswith('pkgname='):
       line = 'pkgname=(qt5-base-24h)'
       checks = checks + '1'
