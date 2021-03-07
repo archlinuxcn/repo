@@ -12,8 +12,8 @@
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=85.0.2
-pkgrel=4
+pkgver=86.0
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -38,7 +38,7 @@ makedepends=('unzip' 'zip' 'diffutils' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13'
              'cargo' 'mercurial' 'llvm' 'clang' 'rust' 'jack'
              'gtk2' 'nodejs' 'cbindgen' 'nasm' 'xz'
-             'python' 'python-psutil' 'python-zstandard')
+             'python' 'python-psutil' 'python-zstandard' 'dump_syms')
 
 
 if [ $_pgo ] ; then
@@ -53,7 +53,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'pulseaudio: Audio support')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=e7e06c9fc570554462a44e58620eb567477bfa89
+_patchrev=9879274865591215e2c87180f1fbaa36d73e88bd
 options=('!emptydirs')
 _patchurl=https://raw.githubusercontent.com/openSUSE/firefox-maintenance/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -97,11 +97,12 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         0024-Fix-building-with-PGO-when-using-GCC.patch
         0027-LTO-Only-enable-LTO-for-Rust-when-complete-build-use.patch
         0028-Make-elfhack-use-toolchain.patch
-        # Fix MOZILLA#1684261
-        # "Fix build with Rust nightly"
-        # https://bugzilla.mozilla.org/show_bug.cgi?id=1684261
-        0039-bmo-1684261-Fix-build-with-rust-1.50.0.patch
         # end
+        # Fix MOZILLA#1694670
+        # "Linux startup crash in [@ qcms_data_create_rgb_with_gamma]"
+        # https://bugzilla.mozilla.org/show_bug.cgi?id=1694670
+        # https://bugs.archlinux.org/task/69821
+        0002-Bug-1694670.-Fix-the-OOB-check-in-write_u32-u16.-r-a.patch
 )
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -156,8 +157,9 @@ prepare() {
   # Force disable elfhack to fix build errors
   patch -Np1 -i "$srcdir"/build-disable-elfhack.patch
 
-  # Fix MOZILLA#1684261
-  patch -Np1 -i "$srcdir"/0039-bmo-1684261-Fix-build-with-rust-1.50.0.patch
+  # Fix MOZILLA#1694670
+  patch -Np1 -i \
+  "$srcdir"/0002-Bug-1694670.-Fix-the-OOB-check-in-write_u32-u16.-r-a.patch
 
   if [ $_pgo ] ; then
     # Fix MOZILLA#1516803
@@ -276,7 +278,7 @@ md5sums=('SKIP'
          '6976984e1cbf000a6883a18916afc45c'
          'b9cd675e20aa979b0e96d1497820f999'
          '0a5733b7a457a2786c2dd27626a1bf88'
-         '672a1c8e723126926046d02ae573a6dc'
+         '02f72a7f3b628013e93b87d4cd093801'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3c383d371d7f6ede5983a40310518715'
          '6a1ed12b8dbac57722436a2987e3ea33'
@@ -290,4 +292,4 @@ md5sums=('SKIP'
          'c8e251f1fc9050cd12173b540baa96f8'
          '72176c9ee7b2ac4f1bb07ff5ee5fe10b'
          '07770d558b8999b5793794e1551a1309'
-         '2537c791cbec5055feecc154ffae2c0e')
+         '4fa2b662e08d8270e0968366c6d690e1')
