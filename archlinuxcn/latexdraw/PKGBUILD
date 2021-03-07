@@ -36,6 +36,9 @@ build() {
 
 package() {
   dpkg -x "${pkgname}-${pkgver}/target/${pkgname}_${pkgver}-1_amd64.deb" "${pkgdir}"
+  install -d ${pkgdir}/usr/bin
+  ln -sf "/opt/latexdraw/bin/LaTeXDraw" "${pkgdir}/usr/bin/LaTeXDraw"
+  install -Dm644 "${pkgdir}/opt/latexdraw/lib/latexdraw-LaTeXDraw.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
 }
 # vim:set ts=2 sw=2 et:
 
