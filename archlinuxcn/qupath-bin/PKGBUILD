@@ -3,22 +3,11 @@
 pkgname=qupath-bin
 _pkgname=QuPath
 pkgver=0.2.3
-pkgrel=1
+pkgrel=2
 pkgdesc="An open, powerful, flexible, extensible software platform for whole slide image analysis."
 arch=('x86_64')
 url="https://qupath.github.io"
-license=('GPL')
-depends=(
-  'freetype2'
-  'java-runtime'  
-  'libjpeg-turbo'
-  'libnet'
-  'libtiff'
-  'libxml2'
-  'libxrender'
-  'libxtst'
-  'sqlite'
-)
+license=('GPL3')
 makedepends=('gendesk')
 provides=(qupath=${pkgver})
 conflicts=('qupath')

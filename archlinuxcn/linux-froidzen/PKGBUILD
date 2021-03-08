@@ -1,7 +1,7 @@
 # Maintainer: OriginCode <self@origincode.me>
 
 pkgbase=linux-froidzen
-pkgver=5.11.2.zen1
+pkgver=5.11.3.zen1
 pkgrel=1
 pkgdesc='Linux ZEN with Patches and Modifications'
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -27,7 +27,7 @@ validpgpkeys=(
   'A2FF3A36AAA56654109064AB19802F8B0D70FC30'  # Jan Alexander Steffens (heftig)
 )
 sha256sums=('SKIP'
-            'ee3627d42ebdcb8208ef906319adaab8f86eb59fc16641026d9bcc8753b2ab8f'
+            '6c446a2ee6bc666884530aef7f8be82ea70440cb2576c57cc933bd90a48a1db3'
             '52fc0fcd806f34e774e36570b2a739dbdf337f7ff679b1c1139bee54d03301eb'
             '34f4ae617a2407fed2ba347b663d31f39c1ec9b390e1ea5ea636c91a4cc6f875')
 

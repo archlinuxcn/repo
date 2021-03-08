@@ -1,9 +1,9 @@
 # Maintainer: surefire@cryptomile.net
 
 pkgname=keeweb
-pkgver=1.16.7
+pkgver=1.17.0
 _electron=electron
-pkgrel=5
+pkgrel=1
 pkgdesc="Desktop password manager compatible with KeePass databases"
 arch=('any')
 url="https://keeweb.info"
@@ -11,6 +11,7 @@ license=('MIT')
 depends=(
 	"$_electron"
 	'org.freedesktop.secrets'
+	'libusb'
 )
 makedepends=(
 	'asar'
@@ -22,7 +23,7 @@ optdepends=('xdotool: for auto-type')
 conflicts=('keeweb-desktop')
 source=(
 	"${pkgname}::git+https://github.com/keeweb/keeweb.git#tag=v${pkgver}"
-	"git+https://github.com/keeweb/keeweb-native-modules.git#tag=0.8.2"
+	"git+https://github.com/keeweb/keeweb-native-modules.git#tag=0.9.2"
 	'package.json.patch.js'
 )
 
@@ -79,18 +80,11 @@ build() {
 
 	cd "${srcdir}/keeweb-native-modules"
 
-	local electron_build_opts=(
-		production
-		arch=$_arch
-		runtime=electron
-		disturl=https://electronjs.org/headers
-		target=$(</usr/lib/${_electron}/version)
-		target_arch=$_arch
-		use_system_libusb=true
-	)
+	npm install --ignore-scripts
 
 	HOME="${srcdir}/.electron-gyp" \
-	npm install "${electron_build_opts[@]/#/--}"
+	npm_config_use_system_libusb=true \
+	npx electron-rebuild --arch="${_arch}" --version="$(</usr/lib/${_electron}/version)" --only=argon2,keytar,usb,yubikey-chalresp,keyboard-auto-type
 }
 
 package() {
@@ -107,12 +101,11 @@ package() {
 	local _src_mdir="${srcdir}/keeweb-native-modules/node_modules"
 	local _pkg_mdir="${pkgdir}/usr/lib/keeweb/node_modules/@keeweb/keeweb-native-modules"
 
-	install -Dm0644 "${_src_mdir}/argon2/build-tmp-napi-v3/Release/argon2.node" \
-		"${_pkg_mdir}/argon2-linux-${_arch}.node"
-	install -Dm0644 "${_src_mdir}/keytar/build/Release/keytar.node" \
-		"${_pkg_mdir}/keytar-linux-${_arch}.node"
 	install -Dm0644 "${_src_mdir}/usb/build/Release/usb_bindings.node" \
 		"${_pkg_mdir}/usb-linux-${_arch}.node"
-	install -Dm0644 "${_src_mdir}/yubikey-chalresp/build/Release/yubikey-chalresp.node" \
-		"${_pkg_mdir}/yubikey-chalresp-linux-${_arch}.node"
+
+	for _mod in argon2 keyboard-auto-type keytar yubikey-chalresp; do
+		install -Dm0644 "${_src_mdir}/${_mod}/build/Release/${_mod}.node" \
+			"${_pkg_mdir}/${_mod}-linux-${_arch}.node"
+	done
 }
