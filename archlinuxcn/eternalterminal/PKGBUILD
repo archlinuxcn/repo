@@ -6,25 +6,29 @@ _tarname='et'
 pkgbase='eternalterminal'
 pkgname=('eternalterminal-client' 'eternalterminal-server'
          'eternalterminal-htm' 'eternalterminal')
-pkgver=6.1.0
+pkgver=6.1.2
 pkgrel=1
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 depends=(
-  'libsodium' 'libutempter'
+  'libsodium' 'libutempter' 'libunwind'
 )
 makedepends=(
-  'ninja' 'protobuf' 'cmake' 'unzip' 'wget' 'zip'
+  'patch' 'protobuf' 'cmake' 'unzip' 'wget'
 )
 url='https://mistertea.github.io/EternalTerminal/'
 license=('Apache')
 
 source=(
   "https://github.com/MisterTea/EternalTerminal/archive/et-v${pkgver}.tar.gz"
+  0001-fix.patch
 )
-sha256sums=('30c693a4d146da5dee4132a120c27e33a2af26d5735813866152efee7df3c35f')
+sha256sums=('26aa317a437bcbf77f15eed8133f09baddecac9a9a7b8f78f7cb027c27529340'
+            '53b32b470383a9b024e933cd5c2ab85701a7cba2a13d8b08036d6c63adba5991')
 
 prepare() {
   cd EternalTerminal-et-v${pkgver}
+
+  patch -Np1 < ../0001-fix.patch
 
   echo '=> Preparing directories'
   mkdir -p build
@@ -39,7 +43,8 @@ build() {
   export CXXFLAGS
 
   echo '=> Running cmake'
-  cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+  cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr \
+        -DDISABLE_VCPKG=On
 
   echo '=> Building EternalTerminal'
   make
