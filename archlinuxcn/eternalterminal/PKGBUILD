@@ -6,7 +6,7 @@ _tarname='et'
 pkgbase='eternalterminal'
 pkgname=('eternalterminal-client' 'eternalterminal-server'
          'eternalterminal-htm' 'eternalterminal')
-pkgver=6.1.2
+pkgver=6.1.3
 pkgrel=1
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 depends=(
@@ -22,7 +22,7 @@ source=(
   "https://github.com/MisterTea/EternalTerminal/archive/et-v${pkgver}.tar.gz"
   0001-fix.patch
 )
-sha256sums=('26aa317a437bcbf77f15eed8133f09baddecac9a9a7b8f78f7cb027c27529340'
+sha256sums=('5eb76a6667b7c8ba13b5cb089221e5fe237e5dde164956af8720ed11a9a38dcd'
             '53b32b470383a9b024e933cd5c2ab85701a7cba2a13d8b08036d6c63adba5991')
 
 prepare() {
