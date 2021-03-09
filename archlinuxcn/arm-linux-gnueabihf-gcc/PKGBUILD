@@ -7,28 +7,29 @@
 _target="arm-linux-gnueabihf"
 pkgbase="${_target}-gcc"
 _pkgname=(gcc gcc-libs gcc-fortran gcc-objc)
-pkgver=9.1.0
-_majorver=${pkgver:0:1}
+pkgver=10.2.0
+_majorver=${pkgver%%.*}
 _islver=0.21
-pkgrel=2
+pkgrel=1
 pkgdesc="The GNU Compiler Collection (${_target})"
 arch=(i686 x86_64)
 license=(GPL LGPL FDL custom)
 url='https://gcc.gnu.org'
-depends=("${_target}-binutils>=2.32" "${_target}-glibc>=2.29" libmpc elfutils zlib)
+depends=("${_target}-binutils>=2.35.1-1" "${_target}-glibc>=2.32-1" libmpc elfutils zlib)
 checkdepends=(dejagnu inetutils)
 options=(!emptydirs !distcc !strip)
-source=(https://ftp.gnu.org/gnu/gcc/gcc-$pkgver/gcc-$pkgver.tar.xz
-        http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2
-        bz90397.patch
-        bz90949.patch)
-sha256sums=('79a66834e96a6050d8fe78db2c3b32fb285b230b855d0a66288235bc04b327a0'
-            'd18ca11f8ad1a39ab6d03d3dcb3365ab416720fcb65b42d69f34f51bf0a0e859'
-            'cc20d05bcc6cb35bf0944b391f0b0380af375f2a8a03ce1cd67835884bc41fac'
-            'c860819e730faf1621e1286ebe3a0179df6e25182b81a9ca0a3db02633982a14')
+# source=(https://sources.archlinux.org/other/gcc/gcc-${pkgver/+/-}.tar.xz)
+source=(https://sourceware.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.xz
+        http://isl.gforge.inria.fr/isl-${_islver}.tar.xz
+        fs64270.patch
+        ipa-fix-bit-CPP-when-combined-with-IPA-bit-CP.patch
+        ipa-fix-ICE-in-get_default_value.patch)
+sha256sums=('b8dd4368bb9c7f0b98188317ee0254dd8cc99d1e3a18d0ff146c855fe16c1d8c'
+            '777058852a3db9500954361e294881214f6ecd4b594c00da5eee974cd6a54960'
+            '1ef190ed4562c4db8c1196952616cd201cfdd788b65f302ac2cc4dabb4d72cee'
+            'fcb11c9bcea320afd202b031b48f8750aeaedaa4b0c5dddcd2c0a16381e927e4'
+            '42865f2af3f48140580c4ae70b6ea03b5bdca0f29654773ef0d42ce00d60ea16')
 
-_svnrev=264010
-_svnurl=svn://gcc.gnu.org/svn/gcc/branches/gcc-${_majorver}-branch
 _libdir="usr/lib/gcc/${_target}/${pkgver%%+*}"
 
 prepare() {
@@ -44,35 +45,45 @@ prepare() {
   # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
 
+  # Turn off SSP for nostdlib|nodefaultlibs|ffreestanding
+  # https://bugs.archlinux.org/task/64270
+  patch -p1 -i "$srcdir/fs64270.patch"
+
+  # Fix a crash in mpv when mesa 20.2 is compiled with LTO
+  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/3239
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96482
+  patch -Np1 -i ../ipa-fix-bit-CPP-when-combined-with-IPA-bit-CP.patch
+  patch -Np1 -i ../ipa-fix-ICE-in-get_default_value.patch
+
   mkdir -p "$srcdir/gcc-build"
 
-  rm -rf "${srcdir}/bin"
-  mkdir -p "${srcdir}/bin"
-  for c in cc c++ gcc g++; do
-    cat > "${srcdir}/bin/arm-linux-gnueabihf-${c}" <<EOF
-#!/bin/bash
-exec /usr/bin/arm-linux-gnueabihf-${c} -Wl,-rpath-link,/usr/arm-linux-gnueabihf/lib "\$@"
-EOF
-    chmod +x "${srcdir}/bin/arm-linux-gnueabihf-${c}"
-  done
-  # Try to make gccgo compilation happy
-  cat > "${srcdir}/bin/arm-linux-gnueabihf-ld" <<EOF
-#!/bin/bash
-exec /usr/bin/arm-linux-gnueabihf-ld -rpath-link /usr/arm-linux-gnueabihf/lib "\$@"
-EOF
-  chmod +x "${srcdir}/bin/arm-linux-gnueabihf-ld"
+  #   rm -rf "${srcdir}/bin"
+  #   mkdir -p "${srcdir}/bin"
+  #   for c in cc c++ gcc g++; do
+  #     cat > "${srcdir}/bin/arm-linux-gnueabihf-${c}" <<EOF
+  # #!/bin/bash
+  # exec /usr/bin/arm-linux-gnueabihf-${c} -Wl,-rpath-link,/usr/arm-linux-gnueabihf/lib "\$@"
+  # EOF
+  #     chmod +x "${srcdir}/bin/arm-linux-gnueabihf-${c}"
+  #   done
+  #   # Try to make gccgo compilation happy
+  #   cat > "${srcdir}/bin/arm-linux-gnueabihf-ld" <<EOF
+  # #!/bin/bash
+  # exec /usr/bin/arm-linux-gnueabihf-ld -rpath-link /usr/arm-linux-gnueabihf/lib "\$@"
+  # EOF
+  #   chmod +x "${srcdir}/bin/arm-linux-gnueabihf-ld"
 }
 
-setup_env() {
-  export PATH="${srcdir}/bin:${PATH}"
-  export CFLAGS="-O2"
-  export CXXFLAGS="-O2"
-  export CPP=/usr/bin/cpp
-  export CXXCPP=/usr/bin/cpp
-}
+# setup_env() {
+#   export PATH="${srcdir}/bin:${PATH}"
+#   export CFLAGS="-O2"
+#   export CXXFLAGS="-O2"
+#   export CPP=/usr/bin/cpp
+#   export CXXCPP=/usr/bin/cpp
+# }
 
 build() {
-  setup_env
+  # setup_env
 
   cd gcc-build
 
@@ -81,7 +92,7 @@ build() {
   CFLAGS=${CFLAGS/-pipe/}
   CXXFLAGS=${CXXFLAGS/-pipe/}
 
-  ../gcc/configure \
+  "$srcdir/gcc/configure" \
     --prefix=/usr \
     --program-prefix=${_target}- \
     --with-local-prefix=/usr/${_target} \
@@ -89,30 +100,31 @@ build() {
     --with-build-sysroot=/usr/${_target} \
     --with-as=/usr/bin/${_target}-as \
     --with-ld=/usr/bin/${_target}-ld \
-    --libdir=/usr/lib --libexecdir=/usr/lib \
+    --libdir=/usr/lib \
+    --libexecdir=/usr/lib \
     --disable-nls \
     --enable-languages=c,c++,fortran,lto,objc,obj-c++ \
-    --enable-shared \
-    --enable-threads=posix \
-    --with-system-zlib \
     --with-isl \
+    --with-linker-hash-style=gnu \
+    --with-system-zlib \
     --enable-__cxa_atexit \
-    --disable-libunwind-exceptions \
+    --enable-checking=release \
     --enable-clocale=gnu \
-    --disable-libstdcxx-pch \
-    --disable-libssp \
+    --enable-default-pie \
+    --enable-default-ssp \
+    --enable-gnu-indirect-function \
     --enable-gnu-unique-object \
+    --enable-install-libiberty \
     --enable-linker-build-id \
     --enable-lto \
     --enable-plugin \
-    --enable-install-libiberty \
-    --with-linker-hash-style=gnu \
-    --enable-gnu-indirect-function \
+    --enable-shared \
+    --enable-threads=posix \
+    --disable-libssp \
+    --disable-libstdcxx-pch \
+    --disable-libunwind-exceptions \
     --disable-multilib \
     --disable-werror \
-    --enable-checking=release \
-    --enable-default-pie \
-    --enable-default-ssp \
     --target=${_target} \
     --host=${CHOST} \
     --build=${CHOST} \
@@ -126,7 +138,7 @@ build() {
 }
 
 package_gcc-libs() {
-  setup_env
+  # setup_env
   pkgdesc="Runtime libraries shipped by GCC (${_target})"
   depends=("${_target}-glibc")
 
@@ -149,7 +161,7 @@ package_gcc-libs() {
 }
 
 package_gcc() {
-  setup_env
+  # setup_env
   pkgdesc="The GNU Compiler Collection - C and C++ frontends (${_target})"
   depends=("${_target}-gcc-libs=$pkgver-$pkgrel"
            "${_target}-binutils>=2.25" 'libmpc')
@@ -204,7 +216,7 @@ package_gcc() {
 }
 
 package_gcc-fortran() {
-  setup_env
+  # setup_env
   pkgdesc="Fortran front-end for GCC (${_target})"
   depends=("${_target}-gcc=$pkgver-$pkgrel")
 
@@ -219,7 +231,7 @@ package_gcc-fortran() {
 }
 
 package_gcc-objc() {
-  setup_env
+  # setup_env
   pkgdesc="Objective-C front-end for GCC (${_target})"
   depends=("${_target}-gcc=$pkgver-$pkgrel")
 
@@ -230,7 +242,7 @@ package_gcc-objc() {
 }
 
 package_gcc-go() {
-  setup_env
+  # setup_env
   pkgdesc="Go front-end for GCC (${_target})"
   depends=("${_target}-gcc=$pkgver-$pkgrel")
 

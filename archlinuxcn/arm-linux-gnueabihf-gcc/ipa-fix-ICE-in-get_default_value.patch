@@ -1,0 +1,80 @@
+From f91770216eade83f068528c1e4f00e2ac3b23044 Mon Sep 17 00:00:00 2001
+From: Martin Liska <mliska@suse.cz>
+Date: Thu, 13 Aug 2020 09:38:41 +0200
+Subject: [PATCH] ipa: fix ICE in get_default_value
+
+The patch aligns code with ipcp_bits_lattice::set_to_constant
+where we properly mask m_value with m_mask. The same should
+be done here.
+
+gcc/ChangeLog:
+
+	PR ipa/96482
+	* ipa-cp.c (ipcp_bits_lattice::meet_with_1): Mask m_value
+	with m_mask.
+
+gcc/testsuite/ChangeLog:
+
+	PR ipa/96482
+	* gcc.dg/ipa/pr96482-2.c: New test.
+---
+ gcc/ipa-cp.c                         |  2 +-
+ gcc/testsuite/gcc.dg/ipa/pr96482-2.c | 33 ++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+), 1 deletion(-)
+ create mode 100644 gcc/testsuite/gcc.dg/ipa/pr96482-2.c
+
+diff --git a/gcc/ipa-cp.c b/gcc/ipa-cp.c
+index 2b21280d919..e4910a04ffa 100644
+--- a/gcc/ipa-cp.c
++++ b/gcc/ipa-cp.c
+@@ -1048,7 +1048,7 @@ ipcp_bits_lattice::meet_with_1 (widest_int value, widest_int mask,
+ 
+   widest_int old_mask = m_mask;
+   m_mask = (m_mask | mask) | (m_value ^ value);
+-  m_value &= value;
++  m_value &= ~m_mask;
+ 
+   if (wi::sext (m_mask, precision) == -1)
+     return set_to_bottom ();
+diff --git a/gcc/testsuite/gcc.dg/ipa/pr96482-2.c b/gcc/testsuite/gcc.dg/ipa/pr96482-2.c
+new file mode 100644
+index 00000000000..54b71ac4fc0
+--- /dev/null
++++ b/gcc/testsuite/gcc.dg/ipa/pr96482-2.c
+@@ -0,0 +1,33 @@
++/* PR ipa/96482 */
++/* { dg-do compile } */
++/* { dg-options "-O2"  } */
++
++int i2c_transfer();
++void _dev_err();
++
++struct i2c_msg {
++  char bufaddr;
++  int adapterdev;
++} wdt87xx_i2c_xfer_client;
++
++int wdt87xx_i2c_xfer_client_0, wdt87xx_i2c_xfer_rxdata, wdt87xx_get_string_str_idx;
++
++void
++static wdt87xx_i2c_xfer(void *txdata, unsigned rxlen) {
++  struct i2c_msg msgs[] = {wdt87xx_i2c_xfer_client_0, rxlen,
++                           wdt87xx_i2c_xfer_rxdata};
++  int error = i2c_transfer(wdt87xx_i2c_xfer_client, msgs);
++  _dev_err("", __func__, error);
++}
++static void wdt87xx_get_string(unsigned len) {
++  char tx_buf[] = {wdt87xx_get_string_str_idx, 3};
++  int rx_len = len + 2;
++  wdt87xx_i2c_xfer(tx_buf, rx_len);
++}
++
++void
++wdt87xx_ts_probe_tx_buf() {
++  wdt87xx_get_string(34);
++  wdt87xx_get_string(8);
++  wdt87xx_i2c_xfer(wdt87xx_ts_probe_tx_buf, 2);
++}
+-- 
+2.28.0
+
