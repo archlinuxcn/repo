@@ -7,5 +7,6 @@ Target = plex-media-server-plexpass
 Target = plex-media-server
 
 [Action]
+Description = Restarting Plex Media Server...
 When = PostTransaction
 Exec = /usr/bin/systemctl try-restart plexmediaserver.service
