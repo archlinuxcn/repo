@@ -3,7 +3,7 @@
 # Contributor: Brice Waegeneire <brice dot wge at gmail dot com>
 # Contributor: Reventlov <contact+aur@volcanis.me>
 pkgname=isso
-pkgver=0.12.4
+pkgver=0.12.5
 pkgrel=1
 pkgdesc="A commenting python server similar to Disqus"
 arch=('any')
@@ -16,7 +16,7 @@ source=("isso-${pkgver}-pypi.tar.gz::https://files.pythonhosted.org/packages/sou
   "https://raw.githubusercontent.com/posativ/isso/master/LICENSE"
   "isso.service")
 install=$pkgname.install
-sha256sums=('9c3fd3396bb009cd135a4ac8e12d0d2dc4a92a9466d5666a5a414b05568f7e56'
+sha256sums=('fda66558bcb9bbda99c90738a57f2a7721297192f18f46fa6a46dcb203471691'
             'd909d060d71c4d9ce92102fa68aa53c963db9b4b6ca315fa0817eafb07651fe2'
             '5e625e14f757101dcfa9cdacb18c191d5f6f0324a2c68dc8847cb77e343b7eef')
 validpgpkeys=("7757B21C0C6E5AE4BC6F6462FD1BA15E0E87FE5C")
