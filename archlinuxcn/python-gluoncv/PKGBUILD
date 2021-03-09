@@ -2,7 +2,7 @@
 
 _pkgname=gluon-cv
 pkgname=python-gluoncv
-pkgver=0.9.0
+pkgver=0.10.0
 pkgrel=1
 pkgdesc='A Deep Learning Toolkit for Computer Vision'
 arch=('any')
@@ -19,7 +19,7 @@ depends=(
 )
 makedepends=(python-setuptools)
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/dmlc/gluon-cv/archive/v${pkgver}.tar.gz")
-sha512sums=('5e43c91b9e21a511de844fa96877087e01bbce9f90c29c2ffe11d90249f64ff474297baee507703b64c97ad81f2c803692fae9c8b1cf490d552a6f0317b0926c')
+sha512sums=('68128d501e591d6e35c3468cb6e900f8447fb5e16752fe0a33a94fceb40bc301d9d0d57495efdd5b31151103568b5fa79cb27df5af43ada5cfe321b27a9ceef4')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
