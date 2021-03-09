@@ -3,12 +3,13 @@
 pkgname=visual-studio-code-bin
 _pkgname=visual-studio-code
 pkgver=1.54.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Visual Studio Code (vscode): Editor for building and debugging modern web and cloud applications (official binary version)"
 arch=('x86_64' 'i686' 'aarch64' 'armv7h')
 url="https://code.visualstudio.com/"
 license=('custom: commercial')
 provides=('code')
+conflicts=('code')
 # lsof: need for terminal splitting, see https://github.com/Microsoft/vscode/issues/62991
 depends=(libxkbfile gnupg gtk3 libsecret nss gcc-libs libnotify libxss glibc lsof)
 optdepends=('glib2: Needed for move to trash functionality'
