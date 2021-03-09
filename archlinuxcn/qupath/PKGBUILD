@@ -20,7 +20,7 @@ prepare() {
   gendesk -f -n --pkgname ${pkgname} \
     --pkgdesc "${pkgdesc}" \
     --categories "Graphics;MedicalSoftware;Science;" \
-    --icon "/opt/${pkgname}/lib/${_pkgname}-${pkgver}.png"
+    --icon "/opt/${pkgname}/lib/${_pkgname}-${pkgver}.png" \
     --exec "${pkgname}"
 }
 
