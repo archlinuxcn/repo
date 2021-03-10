@@ -1,0 +1,9 @@
+[Unit]
+Description=Nextcloud; run cron.php
+
+[Service]
+User=nextcloud
+ExecStart=/usr/bin/php -f /usr/share/webapps/nextcloud/cron.php
+
+[Install]
+WantedBy=basic.target
