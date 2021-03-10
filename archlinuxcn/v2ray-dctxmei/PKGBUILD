@@ -35,7 +35,7 @@ build() {
 
 check() {
     cd "${srcdir}"/"v2ray-core-${pkgver}"/
-    go test -p 1 -tags json -v -timeout 30m v2ray.com/core/...
+    go test -p 1 -tags json -v -timeout 30m ./...
 }
 
 package() {
