@@ -3,7 +3,7 @@
 
 pkgname=ats2-postiats
 _pkgname=ATS2-Postiats-gmp
-pkgver=0.4.0
+pkgver=0.4.2
 pkgrel=1
 pkgdesc="Statically typed programming language"
 arch=('i686' 'x86_64')
@@ -14,10 +14,11 @@ options=('staticlibs' '!emptydirs' '!makeflags')
 install="${pkgname}.install"
 source=("https://downloads.sourceforge.net/project/ats2-lang/ats2-lang/ats2-postiats-${pkgver}/${_pkgname}-${pkgver}.tgz")
 
-sha256sums=('1cdf6dca3d1a481d1ae7c0400c7da9f040d7542cc210b2de51a4d3fd61c091c1')
+md5sums=(e2f0f6c38868bb6b85f77fd1d9222b23)
+sha1sums=(a869ba92d673082cd30fc6c2368d3948eef772fa)
 
 build() {
-	cd "${srcdir}/${_pkgname}-${pkgver}"
+	cd "${_pkgname}-${pkgver}"
 	# NOTE: Before update a version check if has been correctly packaged
 	# sed -i "s/0.2.11/${pkgver}/g" VERSION
 	# sed -i "49s/0.3.9/${pkgver}/g" configure.ac
@@ -27,7 +28,7 @@ build() {
 }
 
 package() {
-	cd "${srcdir}/${_pkgname}-${pkgver}"
+	cd "${_pkgname}-${pkgver}"
 	make DESTDIR="${pkgdir}" install
 
 	local profiled="${pkgdir}/etc/profile.d"
