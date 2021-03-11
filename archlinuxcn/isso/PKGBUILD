@@ -4,12 +4,12 @@
 # Contributor: Reventlov <contact+aur@volcanis.me>
 pkgname=isso
 pkgver=0.12.5
-pkgrel=1
+pkgrel=2
 pkgdesc="A commenting python server similar to Disqus"
 arch=('any')
 url="http://posativ.org/isso/"
 license=('MIT')
-depends=('python-bleach' 'python-jinja' 'python-werkzeug' 'python-html5lib' 'python-misaka' 'python-itsdangerous' 'python-six' 'python-cffi' 'sqlite' 'python-setuptools')
+depends=('python-bleach' 'python-jinja' 'python-werkzeug' 'python-html5lib' 'python-misaka' 'python-itsdangerous' 'python-six' 'python-flask-caching' 'python-cffi' 'sqlite' 'python-setuptools')
 makedepends=('git' 'python')
 backup=('etc/isso.conf')
 source=("isso-${pkgver}-pypi.tar.gz::https://files.pythonhosted.org/packages/source/i/isso/isso-${pkgver}.tar.gz"
