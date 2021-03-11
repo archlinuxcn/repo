@@ -1,0 +1,40 @@
+# Maintainer: Wenxuan <wenxuangm@gmail.com>
+_pkgname="clitrans"
+pkgname="${_pkgname}-git"
+pkgver=0.3.1.49.g3e6f0e1
+pkgrel=1
+pkgdesc="Yet another command-line translator (Chinese <=> English)"
+arch=(i686 x86_64)
+url="https://github.com/wfxr/${_pkgname}"
+license=("MIT" "APACHE")
+makedepends=("git" "rust" "cargo" "alsa-lib" "curl")
+depends=("alsa-lib" "curl")
+conflicts=("${_pkgname}" "${_pkgname}-bin")
+
+source=("${_pkgname}::git+https://github.com/wfxr/${_pkgname}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "${_pkgname}"
+    echo "$(grep '^version =' Cargo.toml|head -n1|cut -d\" -f2|cut -d\- -f1).$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd "${_pkgname}"
+    # resolver requires nightly version cargo for now (2021-03-11)
+    sed -i /^resolver/d Cargo.toml
+    cargo build --release --locked --features audio
+    git checkout Cargo.toml
+}
+
+package() {
+    cd "$srcdir/${_pkgname}"
+    install -Dm755 "target/release/${_pkgname}"        "$pkgdir/usr/bin/${_pkgname}"
+    install -Dm644 "completions/fish/${_pkgname}.fish" "$pkgdir/usr/share/fish/vendor_completions.d/${_pkgname}.fish"
+    install -Dm644 "completions/zsh/_${_pkgname}"      "$pkgdir/usr/share/zsh/site-functions/_${_pkgname}"
+    install -Dm644 "README.md"                         "$pkgdir/usr/share/doc/${_pkgname}/README.md"
+    install -Dm644 "LICENSE-MIT"                       "$pkgdir/usr/share/licenses/${_pkgname}/LICENSE-MIT"
+    install -Dm644 "LICENSE-APACHE"                    "$pkgdir/usr/share/licenses/${_pkgname}/LICENSE-APACHE"
+}
+
+# vim:set noet sts=0 sw=4 ts=4 ft=PKGBUILD:
