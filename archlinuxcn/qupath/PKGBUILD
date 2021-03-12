@@ -3,7 +3,7 @@
 _pkgname=QuPath
 pkgname=qupath
 pkgver=0.2.3
-pkgrel=2
+pkgrel=3
 pkgdesc='Bioimage analysis & digital pathology'
 arch=('x86_64')
 url="https://qupath.github.io"
@@ -11,6 +11,9 @@ license=('GPL')
 makedepends=(
   'gendesk'
   'java-environment'
+)
+optdepends=(
+  'ttf-droid: font for CJK characters'
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/qupath/qupath/archive/v${pkgver}.tar.gz")
 sha512sums=('176a21fca1ae62d632fa15b75f980bdd2c2375f9e0870760a1304638134649615e44438bc62ac462494782dfa5e27ada945bc6b8eabc0c0c87df79b2ea147bb7')
