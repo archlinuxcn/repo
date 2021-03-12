@@ -1,7 +1,7 @@
 # Maintainer: phiresky <phireskyde+git@gmail.com> 
 pkgname=svp
 pkgver=4.5.205
-pkgrel=1
+pkgrel=2
 epoch=
 pkgdesc="SmoothVideo Project 4 (SVP4)"
 arch=('x86_64')
@@ -23,7 +23,7 @@ options=(!strip)
 install=${pkgname}.install
 changelog=
 #source=("https://gist.githubusercontent.com/phiresky/1e2cbd30bed4e5978771af232d11afd1/raw/svp4-linux.$pkgver.tar.bz2")
-source=("https://www.svp-team.com/files/svp4-linux.$pkgver.tar.bz2")
+source=("https://www.svp-team.com/files/svp4-linux.$pkgver-1.tar.bz2")
 # I am rehosting the binaries
 # taken from
 # http://www.svp-team.com/files/svp4-linux-64.tbz2
@@ -31,7 +31,7 @@ source=("https://www.svp-team.com/files/svp4-linux.$pkgver.tar.bz2")
 # so they are correctly versioned and old versions still exist
 # update 2019-10-06: svp-team.com now uses versioned file names. i'll keep rehosting them for now since i don't trust them to actually keep old versions.
 noextract=()
-sha256sums=('9e0542ce835fb87675adf0244a4b0fc6a0f17a59802d8afb089a7d53427a4382')
+sha256sums=('a3c326b73be00a1c736c663cbd6975e49715b95e68bf8998b7a89c22df1c392c')
 validpgpkeys=()
 
 prepare() {
@@ -58,7 +58,7 @@ package() {
 		mv "$srcdir/extracted/licenses" "$pkgdir/usr/share/licenses/$pkgname"
 	fi
 	mv "$srcdir/extracted/"* "$pkgdir/opt/$pkgname"
-	rm "$pkgdir/opt/$pkgname/extensions/libsvpcode.so"
+	# rm "$pkgdir/opt/$pkgname/extensions/libsvpcode.so" # previously this extension caused the whole thing to segfault. lmk if that's still the case
 	ln -s "/opt/$pkgname/SVPManager" "$pkgdir/usr/bin/SVPManager"
 	chmod -R +rX "$pkgdir/opt/svp" "$pkgdir/usr/share"
 }
