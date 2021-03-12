@@ -3,17 +3,17 @@
 pkgname=qupath-bin
 _pkgname=QuPath
 pkgver=0.2.3
-pkgrel=3
+pkgrel=4
 pkgdesc='Bioimage analysis & digital pathology'
 arch=('x86_64')
-url="https://qupath.github.io"
+url='https://qupath.github.io'
 license=('GPL3')
 makedepends=('gendesk')
 optdepends=(
   'ttf-droid: font for CJK characters'
 )
 provides=(qupath=${pkgver})
-conflicts=('qupath')
+conflicts=(qupath)
 source=(
     "${pkgname}-${pkgver}.tar.xz::https://github.com/qupath/qupath/releases/download/v${pkgver//_/-}/${_pkgname}-${pkgver//_/-}-Linux.tar.xz"
 )
