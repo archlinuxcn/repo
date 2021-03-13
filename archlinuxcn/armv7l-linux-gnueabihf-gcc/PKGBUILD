@@ -1,0 +1,236 @@
+# Contributor: Alexander 'hatred' Drozdov <adrozdoff@gmail.com>
+# Contributor: toha257 <toha257@gmail.com>
+# Contributor: Allan McRae <allan@archlinux.org>
+# Contributor: Kevin Mihelich <kevin@archlinuxarm.org>
+# Maintainer: Tavian Barnes <tavianator@tavianator.com>
+
+_target="armv7l-linux-gnueabihf"
+pkgbase="${_target}-gcc"
+_pkgname=(gcc gcc-libs gcc-fortran gcc-objc)
+pkgver=10.2.0
+_majorver=${pkgver%%.*}
+_islver=0.21
+pkgrel=1
+pkgdesc="The GNU Compiler Collection (${_target})"
+arch=(i686 x86_64)
+license=(GPL LGPL FDL custom)
+url='https://gcc.gnu.org'
+depends=("${_target}-binutils>=2.35.1-1" "${_target}-glibc>=2.32-1" libmpc elfutils zlib)
+checkdepends=(dejagnu inetutils)
+options=(!emptydirs !distcc !strip)
+# source=(https://sources.archlinux.org/other/gcc/gcc-${pkgver/+/-}.tar.xz)
+source=(https://sourceware.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.xz
+        http://isl.gforge.inria.fr/isl-${_islver}.tar.xz
+        fs64270.patch
+        ipa-fix-bit-CPP-when-combined-with-IPA-bit-CP.patch
+        ipa-fix-ICE-in-get_default_value.patch)
+sha256sums=('b8dd4368bb9c7f0b98188317ee0254dd8cc99d1e3a18d0ff146c855fe16c1d8c'
+            '777058852a3db9500954361e294881214f6ecd4b594c00da5eee974cd6a54960'
+            '1ef190ed4562c4db8c1196952616cd201cfdd788b65f302ac2cc4dabb4d72cee'
+            'fcb11c9bcea320afd202b031b48f8750aeaedaa4b0c5dddcd2c0a16381e927e4'
+            '42865f2af3f48140580c4ae70b6ea03b5bdca0f29654773ef0d42ce00d60ea16')
+
+_libdir="usr/lib/gcc/${_target}/${pkgver%%+*}"
+
+prepare() {
+  [[ ! -d gcc ]] && ln -s gcc-${pkgver/+/-} gcc
+  cd gcc
+
+  # link isl for in-tree build
+  ln -sf ../isl-${_islver} isl
+
+  # Do not run fixincludes
+  sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
+
+  # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
+
+  # Turn off SSP for nostdlib|nodefaultlibs|ffreestanding
+  # https://bugs.archlinux.org/task/64270
+  patch -p1 -i "$srcdir/fs64270.patch"
+
+  # Fix a crash in mpv when mesa 20.2 is compiled with LTO
+  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/3239
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96482
+  patch -Np1 -i ../ipa-fix-bit-CPP-when-combined-with-IPA-bit-CP.patch
+  patch -Np1 -i ../ipa-fix-ICE-in-get_default_value.patch
+
+  mkdir -p "$srcdir/gcc-build"
+}
+
+build() {
+  cd gcc-build
+
+  # using -pipe causes spurious test-suite failures
+  # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=48565
+  CFLAGS=${CFLAGS/-pipe/}
+  CXXFLAGS=${CXXFLAGS/-pipe/}
+
+  "$srcdir/gcc/configure" \
+    --prefix=/usr \
+    --program-prefix=${_target}- \
+    --with-local-prefix=/usr/${_target} \
+    --with-sysroot=/usr/${_target} \
+    --with-build-sysroot=/usr/${_target} \
+    --with-as=/usr/bin/${_target}-as \
+    --with-ld=/usr/bin/${_target}-ld \
+    --libdir=/usr/lib \
+    --libexecdir=/usr/lib \
+    --disable-nls \
+    --enable-languages=c,c++,fortran,lto,objc,obj-c++ \
+    --with-isl \
+    --with-linker-hash-style=gnu \
+    --with-system-zlib \
+    --enable-__cxa_atexit \
+    --enable-checking=release \
+    --enable-clocale=gnu \
+    --enable-default-pie \
+    --enable-default-ssp \
+    --enable-gnu-indirect-function \
+    --enable-gnu-unique-object \
+    --enable-install-libiberty \
+    --enable-linker-build-id \
+    --enable-lto \
+    --enable-plugin \
+    --enable-shared \
+    --enable-threads=posix \
+    --disable-libssp \
+    --disable-libstdcxx-pch \
+    --disable-libunwind-exceptions \
+    --disable-multilib \
+    --disable-werror \
+    --target=${_target} \
+    --host=${CHOST} \
+    --build=${CHOST} \
+    --enable-interwork \
+    --enable-addons \
+    --with-arch=armv7-a \
+    --with-float=hard \
+    --with-fpu=vfpv3-d16
+  make
+}
+
+package_gcc-libs() {
+  # setup_env
+  pkgdesc="Runtime libraries shipped by GCC (${_target})"
+  depends=("${_target}-glibc")
+
+  cd gcc-build
+
+  make -C ${_target}/libgcc DESTDIR="${pkgdir}" install-shared
+  rm "${pkgdir}/${_libdir}/libgcc_eh.a"
+
+  for lib in libatomic \
+               libgfortran \
+               libgomp \
+               libitm \
+               libquadmath \
+               libsanitizer/{a,l,ub}san \
+               libstdc++-v3/src; do
+    make -C $_target/$lib DESTDIR="${pkgdir}" install-toolexeclibLTLIBRARIES
+  done
+
+  make -C $_target/libobjc DESTDIR="${pkgdir}" install-libs
+}
+
+package_gcc() {
+  # setup_env
+  pkgdesc="The GNU Compiler Collection - C and C++ frontends (${_target})"
+  depends=("${_target}-gcc-libs=$pkgver-$pkgrel"
+           "${_target}-binutils>=2.25" 'libmpc')
+  conflicts=("${_target}-gcc-stage1" "${_target}-gcc-stage2")
+  replaces=("${_target}-gcc-stage1" "${_target}-gcc-stage2")
+  provides=("${_target}-gcc-stage1=${pkgver}" "${_target}-gcc-stage2=${pkgver}")
+
+  cd gcc-build
+
+  make -C gcc DESTDIR="${pkgdir}" install-driver install-cpp install-gcc-ar \
+       c++.install-common install-headers install-plugin install-lto-wrapper
+
+  # install -m755 -t "$pkgdir/usr/bin/" gcc/gcov{,-tool}
+  install -m755 -t "$pkgdir/${_libdir}/" gcc/{cc1,cc1plus,collect2,lto1}
+
+  make -C $_target/libgcc DESTDIR="${pkgdir}" install
+  rm "${pkgdir}"/usr/${_target}/lib/libgcc_s.so*
+
+  make -C $_target/libstdc++-v3/src DESTDIR="${pkgdir}" install
+  make -C $_target/libstdc++-v3/include DESTDIR="${pkgdir}" install
+  make -C $_target/libstdc++-v3/libsupc++ DESTDIR="${pkgdir}" install
+
+  rm "${pkgdir}"/usr/${_target}/lib/libstdc++.*
+
+  make DESTDIR="${pkgdir}" install-fixincludes
+  make -C gcc DESTDIR="${pkgdir}" install-mkheaders
+
+  make -C lto-plugin DESTDIR="${pkgdir}" install
+  # install -dm755 "${pkgdir}"/usr/lib/bfd-plugins/
+  # ln -s /usr/lib/gcc/$_target/${pkgver}/liblto_plugin.so \
+    #    "${pkgdir}"/usr/lib/bfd-plugins/
+
+  make -C $_target/libgomp DESTDIR="${pkgdir}" \
+       install-nodist_toolexeclibHEADERS install-nodist_libsubincludeHEADERS
+  make -C $_target/libitm DESTDIR="${pkgdir}" install-nodist_toolexeclibHEADERS
+  make -C $_target/libquadmath DESTDIR="${pkgdir}" \
+       install-nodist_libsubincludeHEADERS
+  make -C $_target/libsanitizer DESTDIR="${pkgdir}" \
+       install-nodist_toolexeclibHEADERS
+  make -C $_target/libsanitizer/asan DESTDIR="${pkgdir}" \
+       install-nodist_toolexeclibHEADERS
+
+  make -C libiberty DESTDIR="${pkgdir}" install
+  mkdir -p "${pkgdir}"/usr/${_target}/include
+  mv "${pkgdir}"/usr/include/libiberty "${pkgdir}"/usr/${_target}/include
+  # install PIC version of libiberty
+  install -m644 "${srcdir}"/gcc-build/libiberty/pic/libiberty.a \
+          "${pkgdir}"/usr/${_target}/lib
+
+  make -C libcpp DESTDIR="${pkgdir}" install
+  rm "$pkgdir"/usr/lib/libiberty.a
+}
+
+package_gcc-fortran() {
+  # setup_env
+  pkgdesc="Fortran front-end for GCC (${_target})"
+  depends=("${_target}-gcc=$pkgver-$pkgrel")
+
+  cd gcc-build
+  make -C $_target/libgfortran DESTDIR="$pkgdir" \
+       install-cafexeclibLTLIBRARIES \
+       install-{toolexeclibDATA,nodist_fincludeHEADERS}
+  make -C $_target/libgomp DESTDIR="$pkgdir" install-nodist_fincludeHEADERS
+  make -C gcc DESTDIR="$pkgdir" fortran.install-common
+
+  install -Dm755 gcc/f951 $pkgdir/${_libdir}/f951
+}
+
+package_gcc-objc() {
+  # setup_env
+  pkgdesc="Objective-C front-end for GCC (${_target})"
+  depends=("${_target}-gcc=$pkgver-$pkgrel")
+
+  cd gcc-build
+  make DESTDIR="$pkgdir" -C $_target/libobjc install-headers
+  install -dm755 "$pkgdir"/${_libdir}
+  install -m755 gcc/cc1obj{,plus} "$pkgdir"/${_libdir}/
+}
+
+package_gcc-go() {
+  # setup_env
+  pkgdesc="Go front-end for GCC (${_target})"
+  depends=("${_target}-gcc=$pkgver-$pkgrel")
+
+  cd gcc-build
+  make -C $_target/libgo DESTDIR="$pkgdir" install-exec-am
+  make -C gcc DESTDIR=$pkgdir go.install-common
+  install -Dm755 gcc/go1 $pkgdir/${_libdir}/go1
+
+  make DESTDIR=${pkgdir} install-gotools
+}
+
+pkgname=()
+for pkg in "${_pkgname[@]}"; do
+  pkgname=("${pkgname[@]}" "${_target}-${pkg}")
+  eval "package_${_target}-${pkg}() {
+    package_${pkg}
+}"
+done

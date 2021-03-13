@@ -1,0 +1,11 @@
+--- a/sysdeps/x86_64/fpu/multiarch/ifunc-fma4.h 2020-08-25 15:08:15.049364392 +0200
++++ b/sysdeps/x86_64/fpu/multiarch/ifunc-fma4.h 2020-08-25 15:08:20.012697875 +0200
+@@ -32,7 +32,7 @@
+       && CPU_FEATURE_USABLE_P (cpu_features, AVX2))
+     return OPTIMIZE (fma);
+
+-  if (CPU_FEATURE_USABLE_P (cpu_features, FMA))
++  if (CPU_FEATURE_USABLE_P (cpu_features, FMA4))
+     return OPTIMIZE (fma4);
+
+   return OPTIMIZE (sse2);

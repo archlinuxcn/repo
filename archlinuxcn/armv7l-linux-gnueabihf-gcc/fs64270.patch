@@ -1,0 +1,26 @@
+Disable ssp on -nostdlib, -nodefaultlibs and -ffreestanding 
+
+--- a/gcc/gcc.c	2017-07-04 09:15:57.740793000 +0200
++++ b/gcc/gcc.c	2018-03-02 13:58:44.387741114 +0100
+@@ -857,6 +857,12 @@ proper position among the other output f
+ #define LINK_GCC_C_SEQUENCE_SPEC "%G %L %G"
+ #endif
+ 
++#ifdef ENABLE_DEFAULT_SSP
++#define NO_SSP_SPEC "%{nostdlib|nodefaultlibs|ffreestanding:-fno-stack-protector} "
++#else
++#define NO_SSP_SPEC ""
++#endif
++
+ #ifndef LINK_SSP_SPEC
+ #ifdef TARGET_LIBC_PROVIDES_SSP
+ #define LINK_SSP_SPEC "%{fstack-protector|fstack-protector-all" \
+@@ -1131,7 +1148,7 @@ static const char *cc1_options =
+  %{-version:--version}\
+  %{-help=*:--help=%*}\
+  %{!fsyntax-only:%{S:%W{o*}%{!o*:-o %b.s}}}\
+- %{fsyntax-only:-o %j} %{-param*}\
++ %{fsyntax-only:-o %j} %{-param*} " NO_SSP_SPEC "\
+  %{coverage:-fprofile-arcs -ftest-coverage}\
+  %{fprofile-arcs|fprofile-generate*|coverage:\
+    %{!fprofile-update=singel:\

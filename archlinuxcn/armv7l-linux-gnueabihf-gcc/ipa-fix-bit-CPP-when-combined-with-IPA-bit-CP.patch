@@ -1,0 +1,147 @@
+From d58f078ce2d53e5dab6b3d0d5f960504268e1894 Mon Sep 17 00:00:00 2001
+From: Martin Liska <mliska@suse.cz>
+Date: Wed, 12 Aug 2020 09:21:51 +0200
+Subject: [PATCH] ipa: fix bit CPP when combined with IPA bit CP
+
+As mentioned in the PR, let's consider the following example:
+
+int
+__attribute__((noinline))
+foo(int arg)
+{
+  if (arg == 3)
+    return 1;
+  if (arg == 4)
+    return 123;
+
+  __builtin_unreachable ();
+}
+
+during WPA we find all calls of the function
+(yes the call with value 5 is UBSAN):
+
+  Node: foo/0:
+    param [0]: 5 [loc_time: 4, loc_size: 2, prop_time: 0, prop_size: 0]
+               3 [loc_time: 3, loc_size: 3, prop_time: 0, prop_size: 0]
+         ctxs: VARIABLE
+         Bits: value = 0x5, mask = 0x6
+
+in LTRANS we have the following VRP info:
+
+  # RANGE [3, 3] NONZERO 3
+
+when we AND masks in get_default_value we end up with 6 & 3 = 2 (0x010).
+That means the only second (least significant bit) is unknown and
+value (5 = 0x101) & ~mask gives us either 7 (0x111) or 5 (0x101).
+
+That's why if (arg_2(D) == 3) gets optimized to false.
+
+gcc/ChangeLog:
+
+	PR ipa/96482
+	* ipa-cp.c (ipcp_bits_lattice::meet_with_1): Drop value bits
+	for bits that are unknown.
+	(ipcp_bits_lattice::set_to_constant): Likewise.
+	* tree-ssa-ccp.c (get_default_value): Add sanity check that
+	IPA CP bit info has all bits set to zero in bits that
+	are unknown.
+
+gcc/testsuite/ChangeLog:
+
+	PR ipa/96482
+	* gcc.dg/ipa/pr96482.c: New test.
+---
+ gcc/ipa-cp.c                       |  3 +-
+ gcc/testsuite/gcc.dg/ipa/pr96482.c | 44 ++++++++++++++++++++++++++++++
+ gcc/tree-ssa-ccp.c                 |  3 ++
+ 3 files changed, 49 insertions(+), 1 deletion(-)
+ create mode 100644 gcc/testsuite/gcc.dg/ipa/pr96482.c
+
+diff --git a/gcc/ipa-cp.c b/gcc/ipa-cp.c
+index 945a69977f3..2b21280d919 100644
+--- a/gcc/ipa-cp.c
++++ b/gcc/ipa-cp.c
+@@ -1011,7 +1011,7 @@ ipcp_bits_lattice::set_to_constant (widest_int value, widest_int mask)
+ {
+   gcc_assert (top_p ());
+   m_lattice_val = IPA_BITS_CONSTANT;
+-  m_value = value;
++  m_value = wi::bit_and (wi::bit_not (mask), value);
+   m_mask = mask;
+   return true;
+ }
+@@ -1048,6 +1048,7 @@ ipcp_bits_lattice::meet_with_1 (widest_int value, widest_int mask,
+ 
+   widest_int old_mask = m_mask;
+   m_mask = (m_mask | mask) | (m_value ^ value);
++  m_value &= value;
+ 
+   if (wi::sext (m_mask, precision) == -1)
+     return set_to_bottom ();
+diff --git a/gcc/testsuite/gcc.dg/ipa/pr96482.c b/gcc/testsuite/gcc.dg/ipa/pr96482.c
+new file mode 100644
+index 00000000000..68ead798d28
+--- /dev/null
++++ b/gcc/testsuite/gcc.dg/ipa/pr96482.c
+@@ -0,0 +1,44 @@
++/* PR ipa/96482 */
++/* { dg-do run } */
++/* { dg-options "-O2 -flto"  } */
++/* { dg-require-effective-target lto } */
++
++int
++__attribute__((noinline))
++foo(int arg)
++{
++  if (arg == 3)
++    return 1;
++  if (arg == 4)
++    return 123;
++
++  __builtin_unreachable ();
++}
++
++int
++__attribute__((noinline))
++baz(int x)
++{
++  if (x != 0)
++    return foo(3); /* called */
++
++  return 1;
++}
++
++int
++__attribute__((noinline))
++bar(int x)
++{
++  if (x == 0)
++    return foo(5); /* not executed */
++
++  return 1;
++}
++
++int main(int argc, char **argv)
++{
++  if (bar(argc) != baz(argc))
++    __builtin_abort ();
++
++  return 0;
++}
+diff --git a/gcc/tree-ssa-ccp.c b/gcc/tree-ssa-ccp.c
+index 7e3921869b8..65dffe06530 100644
+--- a/gcc/tree-ssa-ccp.c
++++ b/gcc/tree-ssa-ccp.c
+@@ -306,6 +306,9 @@ get_default_value (tree var)
+ 		{
+ 		  val.lattice_val = CONSTANT;
+ 		  val.value = value;
++		  widest_int ipa_value = wi::to_widest (value);
++		  /* Unknown bits from IPA CP must be equal to zero.  */
++		  gcc_assert (wi::bit_and (ipa_value, mask) == 0);
+ 		  val.mask = mask;
+ 		  if (nonzero_bits != -1)
+ 		    val.mask &= extend_mask (nonzero_bits,
+-- 
+2.28.0
+

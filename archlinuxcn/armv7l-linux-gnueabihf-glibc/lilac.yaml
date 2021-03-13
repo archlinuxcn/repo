@@ -1,0 +1,16 @@
+maintainers:
+  - github: yuyichao
+
+# This package actually has a makedepends on itself
+# so we kinda have to grab some dependencies from the repo
+build_prefix: archlinuxcn-x86_64
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - armv7l-linux-gnueabihf-linux-api-headers
+  - armv7l-linux-gnueabihf-binutils
+  # - armv7l-linux-gnueabihf-gcc-stage2 # use arm-linux-gnueabihf-gcc from repo
+
+update_on:
+  - source: manual
+    manual: 2.32
