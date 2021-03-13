@@ -1,7 +1,7 @@
 # Maintainer: surefire@cryptomile.net
 
 pkgname=keeweb
-pkgver=1.17.0
+pkgver=1.17.2
 _electron=electron
 pkgrel=1
 pkgdesc="Desktop password manager compatible with KeePass databases"
@@ -11,7 +11,6 @@ license=('MIT')
 depends=(
 	"$_electron"
 	'org.freedesktop.secrets'
-	'libusb'
 )
 makedepends=(
 	'asar'
@@ -19,11 +18,10 @@ makedepends=(
 	'libsass'
 	'npm'
 )
-optdepends=('xdotool: for auto-type')
 conflicts=('keeweb-desktop')
 source=(
 	"${pkgname}::git+https://github.com/keeweb/keeweb.git#tag=v${pkgver}"
-	"git+https://github.com/keeweb/keeweb-native-modules.git#tag=0.9.2"
+	"git+https://github.com/keeweb/keeweb-native-modules.git#tag=0.10.3"
 	'package.json.patch.js'
 )
 
@@ -83,8 +81,7 @@ build() {
 	npm install --ignore-scripts
 
 	HOME="${srcdir}/.electron-gyp" \
-	npm_config_use_system_libusb=true \
-	npx electron-rebuild --arch="${_arch}" --version="$(</usr/lib/${_electron}/version)" --only=argon2,keytar,usb,yubikey-chalresp,keyboard-auto-type
+	npx electron-rebuild --arch="${_arch}" --version="$(</usr/lib/${_electron}/version)" --only=argon2,keytar,usb-detection,yubikey-chalresp,keyboard-auto-type
 }
 
 package() {
@@ -101,8 +98,8 @@ package() {
 	local _src_mdir="${srcdir}/keeweb-native-modules/node_modules"
 	local _pkg_mdir="${pkgdir}/usr/lib/keeweb/node_modules/@keeweb/keeweb-native-modules"
 
-	install -Dm0644 "${_src_mdir}/usb/build/Release/usb_bindings.node" \
-		"${_pkg_mdir}/usb-linux-${_arch}.node"
+	install -Dm0644 "${_src_mdir}/usb-detection/build/Release/detection.node" \
+		"${_pkg_mdir}/usb-detection-linux-${_arch}.node"
 
 	for _mod in argon2 keyboard-auto-type keytar yubikey-chalresp; do
 		install -Dm0644 "${_src_mdir}/${_mod}/build/Release/${_mod}.node" \
