@@ -9,10 +9,10 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=88.0.4324.182
-pkgrel=1
+pkgver=89.0.4389.82
+pkgrel=2
 _launcher_ver=7
-_gcc_patchset=3
+_gcc_patchset=7
 _pkgname=$(echo $pkgname | cut -d\- -f1-2)
 _pkgver=$(echo $pkgver | cut -d\. -f1-4)
 # ungoogled chromium variables
@@ -23,13 +23,11 @@ arch=('x86_64')
 url="https://github.com/Eloston/ungoogled-chromium"
 license=('BSD')
 depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
-         'ttf-liberation' 'systemd' 'dbus' 'libpulse' 'pciutils'
+         'ttf-liberation' 'systemd' 'dbus' 'libpulse' 'pciutils' 'libva'
          'desktop-file-utils' 'hicolor-icon-theme')
-makedepends=('python' 'python2' 'gperf' 'mesa' 'ninja' 'nodejs' 'git' 'libva'
-             'libpipewire02' 'clang' 'lld' 'gn' 'java-runtime-headless'
-             'python2-setuptools')
-optdepends=('libpipewire02: WebRTC desktop sharing under Wayland'
-            'libva: hardware-accelerated video decode [experimental]'
+makedepends=('python' 'gn' 'ninja' 'clang' 'lld' 'gperf' 'nodejs' 'pipewire'
+             'java-runtime-headless' 'python2' 'python2-setuptools')
+optdepends=('pipewire: WebRTC desktop sharing under Wayland'
             'kdialog: needed for file dialogs in KDE'
             'org.freedesktop.secrets: password storage backend on GNOME / Xfce'
             'kwallet: for storing passwords in KWallet on KDE desktops')
@@ -38,19 +36,23 @@ conflicts=('chromium')
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$_pkgver.tar.xz
         $_pkgname-$_uc_ver.tar.gz::https://github.com/$_uc_usr/ungoogled-chromium/archive/$_uc_ver.tar.gz
         https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
-        chromium-drirc-disable-10bpc-color-configs.conf
         https://github.com/stha09/chromium-patches/releases/download/chromium-${pkgver%%.*}-patchset-$_gcc_patchset/chromium-${pkgver%%.*}-patchset-$_gcc_patchset.tar.xz
+        add-dependency-on-opus-in-webcodecs.patch
+        x11-ozone-fix-two-edge-cases.patch
+        chromium-drirc-disable-10bpc-color-configs.conf
         chromium-glibc-2.33.patch
         wayland-egl.patch
-        subpixel-anti-aliasing-in-FreeType-2.8.1.patch)
-sha256sums=('30411fc3ec2d33df4c5cad41f21affa3823c80f7dbd394f6d68f9a1e81015b81'
-            '4b0e06af18f084c11b3fea6a084d27e13952e8192f39c066563dfa8890d6e6d8'
+        use-oauth2-client-switches-as-default.patch)
+sha256sums=('df4914407b68afdc6449cb8e3f1b08d110eb8689ac41f86490e337fa4d1be379'
+            '2bc8d0089c1a687b146a7921fcc5946c5f5f7c1745a1fe1ea6f0e275d4338631'
             '86859c11cfc8ba106a3826479c0bc759324a62150b271dd35d1a0f96e890f52f'
+            'f8b1558f6c87b33423da854d42f0f69d47885a96d6bf6ce7f26373e93d47442f'
+            'b86b11de8db438c47f0a84c7956740f648d21035f4ee46bfbd50c3348d369121'
+            '9e4743bdeaf5b668659ad53400e3977006916aac3a7ba045bbc750b7b4cbf274'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
-            'e5a60a4c9d0544d3321cc241b4c7bd4adb0a885f090c6c6c21581eac8e3b4ba9'
             '2fccecdcd4509d4c36af873988ca9dbcba7fdb95122894a9fdf502c33a1d7a4b'
             '34d08ea93cb4762cb33c7cffe931358008af32265fc720f2762f0179c3973574'
-            '1e2913e21c491d546e05f9b4edf5a6c7a22d89ed0b36ef692ca6272bcd5faec6')
+            'e393174d7695d0bafed69e868c5fbfecf07aa6969f3b64596d0bae8b067e1711')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -91,17 +93,21 @@ prepare() {
     third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
     third_party/libxml/chromium/*.cc
 
+  # Use the --oauth2-client-id= and --oauth2-client-secret= switches for
+  # setting GOOGLE_DEFAULT_CLIENT_ID and GOOGLE_DEFAULT_CLIENT_SECRET at
+  # runtime -- this allows signing into Chromium without baked-in values
+  patch -Np1 -i ../use-oauth2-client-switches-as-default.patch
+
   # https://crbug.com/1164975
   patch -Np1 -i ../chromium-glibc-2.33.patch
 
   # Upstream fixes
-  patch -Np1 -d third_party/skia <../subpixel-anti-aliasing-in-FreeType-2.8.1.patch
+  patch -Np1 -i ../add-dependency-on-opus-in-webcodecs.patch
+  patch -Np1 -i ../x11-ozone-fix-two-edge-cases.patch
 
   # Fixes for building with libstdc++ instead of libc++
-  patch -Np1 -i ../patches/chromium-87-openscreen-include.patch
-  patch -Np1 -i ../patches/chromium-88-CompositorFrameReporter-dcheck.patch
-  patch -Np1 -i ../patches/chromium-88-ideographicSpaceCharacter.patch
-  patch -Np1 -i ../patches/chromium-88-AXTreeFormatter-include.patch
+  patch -Np1 -i ../patches/chromium-89-quiche-dcheck.patch
+  patch -Np1 -i ../patches/chromium-89-AXTreeSerializer-include.patch
 
   # Wayland/EGL regression (crbug #1071528 #1071550)
   patch -Np1 -i ../wayland-egl.patch
@@ -136,7 +142,7 @@ prepare() {
       -delete
   done
 
-  python2 build/linux/unbundle/replace_gn_files.py \
+  ./build/linux/unbundle/replace_gn_files.py \
     --system-libraries "${!_system_libs[@]}"
 }
 
@@ -159,15 +165,16 @@ build() {
     'custom_toolchain="//build/toolchain/linux/unbundle:default"'
     'host_toolchain="//build/toolchain/linux/unbundle:default"'
     'is_official_build=true' # implies is_cfi=true on x86_64
+    'chrome_pgo_phase=0' # unsupported instrumentation profile format version
     'ffmpeg_branding="Chrome"'
     'proprietary_codecs=true'
     'rtc_use_pipewire=true'
+    'rtc_pipewire_version="0.3"' # will be the default in Chromium 90
     'link_pulseaudio=true'
     'use_gnome_keyring=false'
     'use_sysroot=false'
     'use_custom_libcxx=false'
     'enable_widevine=true'
-    'use_vaapi=true'
   )
 
   if [[ -n ${_system_libs[icu]+set} ]]; then
@@ -192,7 +199,7 @@ build() {
   CXXFLAGS+=' -Wno-unknown-warning-option'
 
   msg2 'Configuring Chromium'
-  gn gen out/Release --args="${_flags[*]}" --script-executable=python2
+  gn gen out/Release --args="${_flags[*]}"
   msg2 'Building Chromium'
   ninja -C out/Release chrome chrome_sandbox chromedriver
 }
