@@ -80,7 +80,8 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         '016-VBoxServiceAutoMount-Change-Linux-mount-code-to-use-.patch'
         '017-fix-narrowing-conversion.patch'
         '018-xclient.patch'
-        '019-python3.9.patch')
+        '019-python3.9.patch'
+        '020-linux-5-11.patch')
 
 pkgver() {
   cd "VirtualBox"
@@ -100,7 +101,6 @@ prepare() {
         fi
     done
     
-    sed -i '#include<QPainter>/a #include<QPainterPath>' src/VBox/Frontends/VirtualBox/src/monitor/UIMonitorCommon.cpp
     echo 'Applying local config'
     cp "$srcdir/LocalConfig.kmk" .
     
@@ -410,4 +410,5 @@ sha256sums=('SKIP'
             '100c9e14e9cfb12ae65364e830153d2481cf272ceeb39d11c6b203bc6e35bf0c'
             '5aac692909a0a0ec56b08bdece9e42cf7463abdca9da2f990d441ff463be6a99'
             'cac5a573e9ed5aafb2f469c2e6fffb8cd4f389bbadba5a968c9f65be7a72fee3'
-            '26d4154480f61300d10b010078f4c33243722f1c89f1db768041119ec7e266a2')
+            '039c7b520ae589bc52dc6c0e658f7ec28ca8defb12ccbc32ad9834361d23162c'
+            'a8fb9e4d0bb662a60953c17df79f60f225aaebf192bbd2319aa2b5d7a8a28bbc')

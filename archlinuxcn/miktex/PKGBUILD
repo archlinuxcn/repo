@@ -3,7 +3,7 @@
 
 pkgname=miktex
 pkgver=21.2
-pkgrel=1
+pkgrel=2
 pkgdesc="a distribution of the TeX/LaTeX typesetting system"
 arch=('x86_64')
 url="https://miktex.org"
@@ -20,7 +20,7 @@ build() {
     cd "$srcdir/$pkgname-$pkgver"	
     [ -d build ] || mkdir build
     cd build
-    cmake -DCMAKE_INSTALL_PREFIX=/opt/miktex -DWITH_UI_QT=ON ..
+    cmake -DCMAKE_INSTALL_PREFIX=/opt/miktex -DWITH_UI_QT=ON -DUSE_SYSTEM_POPPLER=TRUE -DUSE_SYSTEM_POPPLER_QT5=TRUE ..
     make
 }
 
