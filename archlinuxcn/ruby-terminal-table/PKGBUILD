@@ -4,21 +4,32 @@
 _gemname=terminal-table
 pkgname=ruby-$_gemname
 pkgver=3.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Simple, feature rich ascii table generation library'
 arch=(any)
 url='https://github.com/tj/terminal-table'
 license=(MIT)
 depends=(
   ruby
-  'ruby-unicode-display_width<2' 'ruby-unicode-display_width>=1.1.1'
+  'ruby-unicode-display_width>=1.1.1'
 )
 options=(!emptydirs)
-source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
-noextract=($_gemname-$pkgver.gem)
-sha1sums=('5976e086dbd68096f94512efbf5323e18d9d9d2f')
+source=($pkgname-$pkgver.tar.gz::https://github.com/tj/terminal-table/archive/v${pkgver}.tar.gz)
+sha1sums=('71d5cb3645266244fe4a1daf0f0427d06907d8b7')
+
+prepare() {
+  cd ${_gemname}-${pkgver}
+  sed -r 's|~>|>=|g' -i ${_gemname}.gemspec # don't give a fuck about rubys bla bla
+  sed 's|git ls-files -z|find -type f -print0 \|sed "s,\\\\./,,g"|' -i ${_gemname}.gemspec
+}
+
+build() {
+  cd ${_gemname}-${pkgver}
+  gem build ${_gemname}.gemspec
+}
 
 package() {
+  cd ${_gemname}-${pkgver}
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
   gem install --ignore-dependencies --no-user-install -i "$pkgdir/$_gemdir" -n "$pkgdir/usr/bin" $_gemname-$pkgver.gem
   rm "$pkgdir/$_gemdir/cache/$_gemname-$pkgver.gem"
