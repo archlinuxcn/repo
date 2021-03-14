@@ -1,7 +1,7 @@
 # Contributor: chrisl echo archlinux@c2h0r1i2s4t5o6p7h8e9r-l3u4n1a.com|sed 's/[0-9]//g'
 
 pkgname=cemu
-pkgver=1.22.7
+pkgver=1.22.8
 pkgrel=1
 pkgdesc="Wii U emulator (via wine). Includes the Cemuhook plugin"
 arch=(x86_64)
@@ -26,8 +26,8 @@ install=${pkgname}.install
 
 md5sums=('cb1dbf192ad3237a087260aa16758e95'
          '54d70005a8975812ab54fcfef53f7bde'
-         '29045327f5d688142c812c8fb08375c0'
-         'd4a1cc78b8e09c76700ac1b8dca37b0d'
+         'f2e5afb7a5e249c0085bd1929f9c2de7'
+         '0377aaeb924d3a46de32d2629b90e5c1'
          'f5f0de02b9df62d5b6018c7a82e6d43b'
          '336a0bc0e44eede4ddf613a0eebf3bb9')
 
