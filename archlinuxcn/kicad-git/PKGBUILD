@@ -38,7 +38,6 @@ build() {
     -DKICAD_SCRIPTING_PYTHON3=ON \
     -DKICAD_SCRIPTING_WXPYTHON=ON \
     -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config-gtk3 \
-    -DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=gold \
     -DKICAD_SCRIPTING_WXPYTHON_PHOENIX=ON
 
   make
