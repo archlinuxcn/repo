@@ -1,0 +1,36 @@
+# Maintainer: DuckSoft <realducksoft at gmail dot com>
+pkgname=leaf
+pkgver=0.2.13
+pkgrel=1
+pkgdesc="A lightweight and fast proxy utility tries to include any useful features."
+arch=('x86_64' 'aarch64')
+url="https://github.com/eycorsican/leaf"
+license=('custom:Apache-2.0')
+depends=('gcc-libs')
+makedepends=('git' 'cargo')
+provides=('leaf')
+_lwip_commit="35708e6ec9964a54cefeb5fa96725a3ea535c289"
+source=("${pkgname}-${pkgver}::git+${url}.git#tag=v${pkgver}"
+    "lwip-leaf::git+https://github.com/eycorsican/lwip-leaf.git#commit=${_lwip_commit}")
+
+b2sums=('SKIP'
+        'SKIP')
+
+prepare() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    git submodule init
+    git config submodule.lwip.url "${srcdir}/lwip-leaf"
+    git submodule update
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	cargo build --release -p leaf-bin --target-dir=target
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+	install -Dm644 README{,.zh}.md -t "${pkgdir}/usr/share/doc/${pkgname}/"
+	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+}
