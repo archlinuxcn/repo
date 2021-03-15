@@ -12,9 +12,9 @@ verlt() {
 
 
 wget -O teamcity.json "https://data.services.jetbrains.com/products/releases?code=TC&latest=true&type=release&downloads=linux"
-downloadLink=`JSON.sh -b < teamcity.json | grep '\["TC",0,"downloads","linux","link"\]' | sed -r 's/.*(https.*)"/\1/'`
-checksumLink=`JSON.sh -b < teamcity.json | grep '\["TC",0,"downloads","linux","checksumLink"\]' | sed -r 's/.*(https.*)"/\1/'`
-pkgver=`JSON.sh -b < teamcity.json | grep '\["TC",0,"version"\]' | cut -f2 | cut -d "\"" -f2`
+downloadLink=`jq -r '.TC[0].downloads.linux.link' < teamcity.json`
+checksumLink=`jq -r '.TC[0].downloads.linux.checksumLink' < teamcity.json`
+pkgver=`jq -r '.TC[0].version' < teamcity.json`
 oldpkgver=`grep -oP '(?<=pkgver = ).*' .SRCINFO`
 
 verlt $oldpkgver $pkgver
