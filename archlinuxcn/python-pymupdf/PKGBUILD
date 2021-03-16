@@ -2,34 +2,40 @@
 
 _pkgname=PyMuPDF
 pkgname=python-pymupdf
-pkgver=1.14.10
-pkgrel=4
-pkgdesc="Python bindings for the PDF rendering library MuPDF"
-arch=('any')
-url="https://github.com/rk700/PyMuPDF"
-license=('GPLv3+')
-makedepends=('python-setuptools')
-depends=('python' 'libmupdf' 'jbig2dec'  'openjpeg2'  'libjpeg' 'openssl' 'freetype2')
-_name=${pkgname#python-}
-source=(
-"https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"
+pkgver=1.18.9
+pkgrel=1
+pkgdesc="Python bindings for MuPDF's rendering library"
+arch=('x86_64')
+url='https://github.com/pymupdf/PyMuPDF'
+license=('AGPL3')
+makedepends=(
+  python-setuptools
+  swig
 )
-md5sums=('540bc8cbbe91ca6df3eb2d3078b9a16f')
+depends=(
+  freetype2
+  gumbo-parser
+  jbig2dec
+  libjpeg
+  libmupdf
+  openjpeg2
+)
 
+source=(
+  "${_pkgname}-${pkgver}.tar.gz::https://github.com/pymupdf/PyMuPDF/archive/${pkgver}.tar.gz"
+)
+sha512sums=('beafc196dc81c26ff732db9f9acddfa9cc9c3cfedc20b582e56c36d7c1efe2a4f5d5aba6dbf2f3ca97da8274d44b06704c34d3632a5e41b9f03187c0d940a906')
 
-prepare() {
-  cd "$srcdir/$_pkgname-$pkgver"
-  sed -i "s/# 'jbig2dec'/'jbig2dec'/" setup.py
-}
 
 build() {
-  cd "$srcdir/$_pkgname-$pkgver"
-  LANG=en_US.UTF-8 python3 setup.py build
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
 }
 
 package() {
-  cd "$srcdir/$_pkgname-$pkgver"
-  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root=${pkgdir} --optimize=1 --skip-build
+  rm -vf "${pkgdir}/usr/README.md"
 }
 
-# vim:set sw=2 et:
+# vim:set ts=2 sw=2 et:
