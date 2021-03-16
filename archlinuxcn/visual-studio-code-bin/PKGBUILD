@@ -3,7 +3,7 @@
 pkgname=visual-studio-code-bin
 _pkgname=visual-studio-code
 pkgver=1.54.3
-pkgrel=2
+pkgrel=3
 pkgdesc="Visual Studio Code (vscode): Editor for building and debugging modern web and cloud applications (official binary version)"
 arch=('x86_64' 'i686' 'aarch64' 'armv7h')
 url="https://code.visualstudio.com/"
@@ -11,7 +11,7 @@ license=('custom: commercial')
 provides=('code')
 conflicts=('code')
 # lsof: need for terminal splitting, see https://github.com/Microsoft/vscode/issues/62991
-depends=(libxkbfile gnupg gtk3 libsecret nss gcc-libs libnotify libxss glibc lsof)
+depends=(libxkbfile gnupg gtk3 libsecret nss gcc-libs libnotify libxss glibc lsof shared-mime-info)
 optdepends=('glib2: Needed for move to trash functionality'
             'libdbusmenu-glib: Needed for KDE global menu')
 source=(${_pkgname}.desktop ${_pkgname}-url-handler.desktop ${_pkgname}-workspace.xml)
@@ -60,8 +60,3 @@ package() {
   ln -s /opt/${_pkgname}/bin/code "${pkgdir}"/usr/bin/code
 }
 
-post_install() {
-  if hash update-mime-database 2>/dev/null; then
-    update-mime-database /usr/share/mime
-  fi
-}
