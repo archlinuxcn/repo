@@ -1,26 +1,43 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index 3cee60f3..3328fc06 100644
+index a07893771c..253843fa5b 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -327,7 +327,7 @@ if(Protobuf_FOUND OR Protobuf_FOUND)
+@@ -596,7 +596,7 @@ if(Protobuf_FOUND OR Protobuf_FOUND)
      if(NOT Protobuf_USE_STATIC_LIBS)
-       #Indeed here should be a warning, not a fatal error. ONNX Runtime itself can work in such a 
+       #Indeed here should be a warning, not a fatal error. ONNX Runtime itself can work in such a
        #setting but it may cause compatibility issue when ONNX Runtime is integrated with the other ONNX ecosystem softwares.
 -      message(FATAL_ERROR "Please enable Protobuf_USE_STATIC_LIBS")
 +      message(WARNING "Please enable Protobuf_USE_STATIC_LIBS")
      endif()
    else()
      set(PROTOBUF_LIB protobuf::libprotobuf-lite)
-@@ -395,7 +395,7 @@ get_filename_component(REPO_ROOT "${REPO_ROOT}" ABSOLUTE)
+@@ -657,7 +657,8 @@ get_filename_component(ORTTRAINING_ROOT "${ORTTRAINING_ROOT}" ABSOLUTE)
+ get_filename_component(REPO_ROOT "${REPO_ROOT}" ABSOLUTE)
  set(ONNXRUNTIME_INCLUDE_DIR ${REPO_ROOT}/include/onnxruntime)
- 
  
 -add_subdirectory(external/date EXCLUDE_FROM_ALL)
 +find_package(date REQUIRED)
++add_library(date_interface ALIAS date::date)
+ 
+ set(SAFEINT_INCLUDE_DIR ${REPO_ROOT}/cmake/external/SafeInt)
+ add_library(safeint_interface INTERFACE)
+@@ -668,10 +669,13 @@ if(onnxruntime_DISABLE_EXCEPTIONS)
+   add_compile_definitions(optional_CONFIG_NO_EXCEPTIONS=1)
+ endif()
+ 
+-add_subdirectory(external/mp11 EXCLUDE_FROM_ALL)
++add_library(boost_mp11 INTERFACE)
++add_library(Boost::mp11 ALIAS boost_mp11)
  
  if(onnxruntime_PREFER_SYSTEM_LIB)
-   find_package(re2)  
-@@ -802,7 +802,8 @@
+-  find_package(re2)
++  find_package(PkgConfig)
++  pkg_check_modules(RE2 IMPORTED_TARGET re2)
++  add_library(re2::re2 ALIAS PkgConfig::RE2)
+ endif()
+ if(NOT TARGET re2::re2)
+   add_subdirectory(external/re2 EXCLUDE_FROM_ALL)
+@@ -947,7 +951,8 @@ set(FLATBUFFERS_BUILD_TESTS OFF CACHE BOOL "FLATBUFFERS_BUILD_TESTS" FORCE)
  set(FLATBUFFERS_INSTALL OFF CACHE BOOL "FLATBUFFERS_INSTALL" FORCE)
  set(FLATBUFFERS_BUILD_FLATHASH OFF CACHE BOOL "FLATBUFFERS_BUILD_FLATHASH" FORCE)
  set(FLATBUFFERS_BUILD_FLATLIB ON CACHE BOOL "FLATBUFFERS_BUILD_FLATLIB" FORCE)
@@ -30,46 +47,11 @@ index 3cee60f3..3328fc06 100644
  list(APPEND onnxruntime_EXTERNAL_DEPENDENCIES flatbuffers)
  list(APPEND onnxruntime_EXTERNAL_LIBRARIES flatbuffers)
  
-diff --git a/cmake/external/Findre2.cmake b/cmake/external/Findre2.cmake
-new file mode 100644
-index 00000000..4c91696c
---- /dev/null
-+++ b/cmake/external/Findre2.cmake
-@@ -0,0 +1,3 @@
-+find_package(PkgConfig)
-+pkg_check_modules(re2 REQUIRED IMPORTED_TARGET GLOBAL re2)
-+add_library(re2::re2 ALIAS PkgConfig::re2)
-diff --git a/cmake/onnxruntime_common.cmake b/cmake/onnxruntime_common.cmake
-index d33e9e14..5770e818 100644
---- a/cmake/onnxruntime_common.cmake
-+++ b/cmake/onnxruntime_common.cmake
-@@ -86,7 +86,7 @@ if (onnxruntime_USE_MIMALLOC_STL_ALLOCATOR OR onnxruntime_USE_MIMALLOC_ARENA_ALL
-     endif()
- endif()
- 
--onnxruntime_add_include_to_target(onnxruntime_common date_interface wil)
-+onnxruntime_add_include_to_target(onnxruntime_common date::date wil)
- target_include_directories(onnxruntime_common
-     PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${ONNXRUNTIME_ROOT} ${eigen_INCLUDE_DIRS}
-     # safeint is part of onnxruntime_common public interface, so we want to propagate its includes
-diff --git a/cmake/onnxruntime_unittests.cmake b/cmake/onnxruntime_unittests.cmake
-index d1bd347c..0c4b81e4 100644
---- a/cmake/onnxruntime_unittests.cmake
-+++ b/cmake/onnxruntime_unittests.cmake
-@@ -40,7 +40,7 @@ function(AddTest)
-   else()
-     target_link_libraries(${_UT_TARGET} PRIVATE ${_UT_LIBS} GTest::gtest GTest::gmock ${onnxruntime_EXTERNAL_LIBRARIES})
-   endif()
--  onnxruntime_add_include_to_target(${_UT_TARGET} date_interface flatbuffers)
-+  onnxruntime_add_include_to_target(${_UT_TARGET} date::date flatbuffers)
-   target_include_directories(${_UT_TARGET} PRIVATE ${TEST_INC_DIR})
-   if (onnxruntime_USE_CUDA)
-     target_include_directories(${_UT_TARGET} PRIVATE ${CUDA_INCLUDE_DIRS} ${onnxruntime_CUDNN_HOME}/include)
 diff --git a/onnxruntime/core/session/inference_session_utils.h b/onnxruntime/core/session/inference_session_utils.h
-index 57159083..9fa7dce0 100644
+index 5899afac8d..2672be649d 100644
 --- a/onnxruntime/core/session/inference_session_utils.h
 +++ b/onnxruntime/core/session/inference_session_utils.h
-@@ -6,7 +6,7 @@
+@@ -18,7 +18,7 @@
  #pragma warning(push)
  #pragma warning(disable : 28020)
  #endif

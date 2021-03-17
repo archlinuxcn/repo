@@ -2,30 +2,25 @@
 # Maintainer: heavysink <winstonwu91 at gmail>
 
 pkgname=miktex
-pkgver=20.12
-pkgrel=1
+pkgver=21.2
+pkgrel=2
 pkgdesc="a distribution of the TeX/LaTeX typesetting system"
 arch=('x86_64')
 url="https://miktex.org"
 license=('custom')
-depends=('apr' 'apr-util' 'bzip2' 'cairo' 'expat' 'fontconfig' 'freetype2'
+depends=('apr' 'boost-libs' 'apr-util' 'bzip2' 'cairo' 'expat' 'fontconfig' 'freetype2'
          'fribidi' 'gd' 'gmp' 'graphite' 'harfbuzz-icu' 'hunspell' 'icu'
          'libjpeg' 'log4cxx' 'xz' 'mpfr' 'libmspack' 'openssl' 'pixman' 'libpng'
          'poppler' 'popt' 'potrace' 'uriparser' 'zziplib' 'poppler-qt5' 'qt5-script')
-makedepends=('cmake' 'coreutils' 'fop' 'sed' 'libxslt' 'qt5-tools')
+makedepends=('cmake' 'coreutils' 'fop' 'sed' 'libxslt' 'qt5-tools' 'boost')
 source=("https://github.com/MiKTeX/miktex/archive/${pkgver}.tar.gz")
-md5sums=('7ecd805e8afa8cd93cbc8254533da34d')
-
-prepare() {
-    cd "$srcdir/$pkgname-$pkgver"
-    sed -i '/#include <QPainter>/a #include <QPainterPath>' Programs/Editors/TeXworks/source/modules/QtPDF/src/PDFBackend.cpp
-}
+md5sums=('acf0a438b53d81455a90369b33d0a19d')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"	
     [ -d build ] || mkdir build
     cd build
-    cmake -DCMAKE_INSTALL_PREFIX=/opt/miktex -DWITH_UI_QT=ON ..
+    cmake -DCMAKE_INSTALL_PREFIX=/opt/miktex -DWITH_UI_QT=ON -DUSE_SYSTEM_POPPLER=TRUE -DUSE_SYSTEM_POPPLER_QT5=TRUE ..
     make
 }
 

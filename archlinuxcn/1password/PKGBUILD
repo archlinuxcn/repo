@@ -1,18 +1,19 @@
 pkgname=1password
-_appimagver=0.9.26
+_appimagver=8.0.28
 _appimage="${pkgname}-${_appimagver}.AppImage"
 pkgver=${_appimagver//-/_}
-pkgrel=11
+pkgrel=13
 pkgdesc="Password manager and secure wallet"
 arch=('x86_64')
 url='https://1password.com'
 license=('LicenseRef-1Password-Proprietary')
 depends=('fuse2' 'zlib' 'hicolor-icon-theme')
 options=(!strip)
+install="${pkgname}.install"
 source=(https://downloads.1password.com/linux/appimage/${_appimage}{,.sig})
 noextract=("${_appimage}")
-sha256sums=('2ef1ef5944b68849bd9bebfe924ef07fe3fdc5990ecaea0b938c4ce3e3f6bc5f'
-            '7ddaa03634d5f93b0087171c6c3a7b4b5f3090f1e488a6c314f1973bd342f1b1'
+sha256sums=('a242deca893fe6b8a1197690694474e9d1a4a6eaaa5b4daa27aaba5552ed66c1'
+            '3eb0a7d0fab097d21ed81d80285370231e20019df36be5454014dd378cf56c42'
 )
 validpgpkeys=('3FEF9748469ADBE15DA7CA80AC2D62742012EA22')
 
@@ -41,6 +42,8 @@ package() {
     install -Dm644 squashfs-root/${pkgname}.desktop -t "${pkgdir}"/usr/share/applications/
     # Move package contents to opt
     mv squashfs-root "${pkgdir}"/opt/${pkgname}
+    # Install system unlock PolKit policy file
+    install -Dm0644 "${pkgdir}"/opt/${pkgname}/com.1password.1Password.policy -t "${pkgdir}"/usr/share/polkit-1/actions/
     # Symlink /usr/bin executable to opt
     ln -s /opt/${pkgname}/${pkgname} "${pkgdir}"/usr/bin/${pkgname}
 }

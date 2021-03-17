@@ -1,7 +1,7 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=startdde-git
-pkgver=5.6.0.35.r24.gbe1db94
+pkgver=5.8.4.r3.g23b0a86
 pkgrel=1
 pkgdesc="starter of deepin desktop environment"
 arch=('x86_64')
@@ -27,6 +27,7 @@ pkgver() {
 
 prepare() {
   export GOPATH="$srcdir/build:/usr/share/gocode"
+  export GO111MODULE=off
   go get -v github.com/cryptix/wav
   go get -v golang.org/x/xerrors
   go get -v github.com/fsnotify/fsnotify

@@ -4,7 +4,7 @@
 
 pkgname=rstudio-desktop-git
 _gitname=rstudio
-pkgver=34529.d572b81809
+pkgver=34595.1bb39da12b
 _gwtver=2.8.2
 _ginver=2.1.2
 _nodever=10.19.0
@@ -59,13 +59,19 @@ prepare() {
     ln -sfT /usr/share/mathjax2 mathjax-27
     ln -sfT /usr/bin/pandoc pandoc/${_pandocver}/pandoc
     ln -sfT /usr/bin/pandoc-citeproc pandoc/${_pandocver}/pandoc-citeproc
-
+    
     # Nodejs
     install -d node/${_nodever}
     cp -r "${srcdir}/node-v${_nodever}-linux-x64/"* node/${_nodever}
     cd "${srcdir}/${_gitname}/src/gwt/panmirror/src/editor"
     yarn config set ignore-engines true
     yarn install
+
+    cd "${srcdir}/${_gitname}/dependencies"
+    ln -s common/dictionaries .
+    ln -s common/mathjax-27 .
+    ln -s common/pandoc .
+    ln -s common/node .
 }
 
 build() {
@@ -84,7 +90,7 @@ build() {
           -DBoost_NO_BOOST_CMAKE=ON \
           -DRSTUDIO_USE_SYSTEM_SOCI=yes \
           -DRSTUDIO_BUNDLE_QT=FALSE
-    make -C build
+#    make -C build
 }
 
 package() {

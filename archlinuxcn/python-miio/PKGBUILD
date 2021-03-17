@@ -1,24 +1,31 @@
-# Maintainer: Patrick Lühne <patrick-arch@luehne.de>
+# Maintainer: Kasei Wang <kasei@kasei.im>
 
 pkgname=python-miio
-pkgver=0.5.0.1
+pkgver=0.5.5
 pkgrel=1
 pkgdesc="Python library & console tool for controlling Xiaomi smart appliances"
 url="https://github.com/rytilahti/python-miio"
 arch=('any')
 license=('GPL3')
 depends=('python>=3.6' 'python-appdirs' 'python-attrs' 'python-click>=7' 'python-construct' 'python-cryptography' 'python-netifaces' 'python-pytz' 'python-tqdm' 'python-zeroconf')
+makedepends=('git' 'python-setuptools' 'python-poetry')
 optdepends=('python-android-backup-tools: Android backup extraction support')
-source=("https://github.com/rytilahti/${pkgname}/archive/${pkgver}.tar.gz")
-sha512sums=('d82c4d52c7590892f7322d2d1a428a8dcb4843085a42374458bdfeeeacfc73a0f159d1a3bcc0612a5740d61dca472bbb022f912d20cf07ba2e1f9df6fdc52b20')
+source=("${pkgname}::git+https://github.com/rytilahti/${pkgname}.git#tag=${pkgver}")
+sha512sums=('SKIP')
+
+prepare() {
+  cd "${pkgname}"
+  git submodule update --init --recursive
+}
 
 build() {
-	cd ${pkgname}-${pkgver}
-	python setup.py build
+	cd ${pkgname}
+	poetry build
+	tar -xvf "./dist/${pkgname}-${pkgver}.tar.gz"
 }
 
 package() {
-	cd ${pkgname}-${pkgver}
-	python setup.py install --prefix=/usr --root="${pkgdir}"
+	cd ${pkgname}/${pkgname}-${pkgver}
+	python setup.py install --prefix=/usr --root="${pkgdir}" --optimize=1
 	install -D -m644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }

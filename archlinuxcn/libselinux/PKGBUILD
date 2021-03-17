@@ -8,22 +8,22 @@
 # If you want to help keep it up to date, please open a Pull Request there.
 
 pkgname=libselinux
-pkgver=3.1
-pkgrel=3
+pkgver=3.2
+pkgrel=1
 pkgdesc="SELinux library and simple utilities"
 arch=('i686' 'x86_64' 'armv6h')
 url='https://github.com/SELinuxProject/selinux'
 license=('custom')
 groups=('selinux')
 makedepends=('pkgconf' 'python' 'ruby' 'xz' 'swig')
-depends=('libsepol>=3.1' 'pcre')
+depends=('libsepol>=3.2' 'pcre')
 optdepends=('python: python bindings'
             'ruby: ruby bindings')
 conflicts=("selinux-usr-${pkgname}")
 provides=("selinux-usr-${pkgname}=${pkgver}-${pkgrel}")
-source=("https://github.com/SELinuxProject/selinux/releases/download/20200710/${pkgname}-${pkgver}.tar.gz"
+source=("https://github.com/SELinuxProject/selinux/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.gz"
         "libselinux.tmpfiles.d")
-sha256sums=('ea5dcbb4d859e3f999c26a13c630da2f16dff9462e3cc8cb7b458ac157d112e7'
+sha256sums=('df758ef1d9d4811051dd901ea6b029ae334ffd7c671c128beb16bce1e25ac161'
             'afe23890fb2e12e6756e5d81bad3c3da33f38a95d072731c0422fbeb0b1fa1fc')
 
 build() {

@@ -3,15 +3,13 @@
 
 _pkgname=singularity
 pkgname=singularity-container
-pkgver=3.7.1
-pkgrel=1
+pkgver=3.7.2
+pkgrel=2
 pkgdesc='Application containers for Linux'
 arch=('x86_64')
 url='https://www.sylabs.io/singularity/'
 license=('BSD')
 makedepends=(
-  dep
-  git
   go
 )
 depends=(
@@ -19,23 +17,28 @@ depends=(
   libseccomp
   squashfs-tools
 )
-source=("${pkgname}::git+https://github.com/hpcng/singularity.git#tag=v${pkgver}")
-sha256sums=('SKIP')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/hpcng/singularity/releases/download/v${pkgver}/${_pkgname}-${pkgver}.tar.gz")
+sha256sums=('36916222e26fb934404f0766e0ff368edac36d7fc31ca571f5f609466609066b')
 
 build() {
-  cd "${pkgname}"
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+  cd "${_pkgname}"
   ./mconfig \
     --libexecdir=/usr/lib \
     --localstatedir=/var \
     --prefix=/usr \
     --sysconfdir=/etc \
-    -V ${pkgver}
+    -P release-stripped \
+    -V ${pkgver} \
+    -v
   make -C builddir
 }
 
 package() {
-  make -C "${pkgname}/builddir" DESTDIR="${pkgdir}" install man
-  install -Dm644 "${srcdir}/${pkgname}/LICENSE.md" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  make -C "${_pkgname}/builddir" DESTDIR="${pkgdir}" install man
+  install -Dm644 "${srcdir}/${_pkgname}/LICENSE.md" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 
 # vim:set ts=2 sw=2 et:

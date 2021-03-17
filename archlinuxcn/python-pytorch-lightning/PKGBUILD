@@ -2,31 +2,31 @@
 
 pkgname=python-pytorch-lightning
 _pkgname=pytorch-lightning
-pkgver=1.2.1
-pkgrel=1
+pkgver=1.2.3
+pkgrel=3
 pkgdesc="The lightweight PyTorch wrapper for high-performance AI research"
 arch=('any')
 url='https://github.com/PyTorchLightning/pytorch-lightning'
 license=('Apache')
 depends=(
-  'python-fsspec'
-  'python-pandas'
-  'python-pyaml'
-  'python-numpy'
-  'python-scikit-learn'
-  'python-pytorch'
-  'python-torchvision'
-  'python-twine'
-  'python-tqdm'
+  python-fsspec
+  python-pandas
+  python-pyaml
+  python-numpy
+  python-scikit-learn
+  python-pytorch
+  python-torchvision
+  python-twine
+  python-tqdm
+  tensorboard
 )
 optdepends=(
   'python-apex: mixed precision support'    
-  'tensorboard: tensorboard support'
   'python-horovod: for distributed training'
 )
 makedepends=('python-setuptools')
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/PyTorchLightning/pytorch-lightning/archive/${pkgver}.tar.gz")
-sha512sums=('9a3166f833b5ce1af19ea25b4343b1a5b294110e62c2bb2c6def71dc053b89211993acf485ffb2520c79fc281cc64b04805d2637f7cc0f11eb40ae7855d9b1bb')
+sha512sums=('f52a1c2eba3d7eb2b5d0be9acd1e15ff0d8f9a610830ab927241f030a8ca86f7ddc4b97bb25f834a3cc4faff6b91ffb94d12eeda80478cd5c7f6eed9fd5cc03c')
 
 build() {
   cd "${_pkgname}-${pkgver}"

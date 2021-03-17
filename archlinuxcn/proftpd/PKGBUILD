@@ -3,7 +3,7 @@
 
 pkgname=proftpd
 pkgver=1.3.7a
-pkgrel=2
+pkgrel=3
 epoch=2
 pkgdesc='High-performance, scalable FTP server'
 arch=('x86_64' 'i686')
@@ -39,7 +39,7 @@ build() {
     --enable-facl \
     --with-systemd
 
-  make CFLAGS="$CFLAGS -fcommon"
+  make
 }
 
 package() {

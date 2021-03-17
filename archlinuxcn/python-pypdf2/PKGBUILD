@@ -1,0 +1,30 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=PyPDF2
+pkgname=python-pypdf2
+pkgver=1.26.0
+pkgrel=2
+pkgdesc='A utility to read and write PDFs with Python'
+arch=('any')
+url='https://mstamy2.github.io/PyPDF2'
+license=('BSD')
+depends=(
+  python
+)
+makedepends=(
+  python-setuptools
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/mstamy2/PyPDF2/archive/${pkgver}.tar.gz")
+sha512sums=('fe29c1e24be765c43fed47185dc69cfe959d36c693f6ac9fed9a33c48035c651eed8f2f6eb674697f923b769fcfdd275624b128ab99992477bfc0e854b90fa5c')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

@@ -1,4 +1,14 @@
 maintainers:
   - github: yuyichao
 
-managed: false
+build_prefix: extra-x86_64
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - arm-linux-gnueabihf-linux-api-headers
+  - arm-linux-gnueabihf-binutils
+  - arm-linux-gnueabihf-glibc
+
+update_on:
+  - source: manual
+    manual: 10.2.0

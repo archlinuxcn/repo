@@ -1,20 +1,16 @@
 # Maintainer: Static_Rocket
 
 pkgname=asus-nb-ctrl-git
-pkgver=2.2.1.r11.g580ed72
+pkgver=3.1.6.r0.g8a63dce
 pkgrel=1
 pkgdesc="Asus laptop control utilities"
 arch=('x86_64')
 url="https://gitlab.com/asus-linux/asus-nb-ctrl"
 license=('Mozilla Public License Version 2.0')
 depends=('libusb' 'udev' 'systemd')
-optdepends=('hid-asus-rog-dkms-git: fn+key combination support'
-	'asus-rog-nb-wmi-dkms-git: G14/G15 support'
-	'linux-g14: same functions as dkms modules'
-	'acpi_call: fan control')
+optdepends=('acpi_call: fan control')
 makedepends=('git' 'rust')
 provides=('asus-nb-ctrl')
-conflicts=('asus-nb-ctrl')
 source=('git+https://gitlab.com/asus-linux/asus-nb-ctrl.git')
 md5sums=('SKIP')
 _gitdir=${pkgname%"-git"}

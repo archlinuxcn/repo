@@ -5,9 +5,9 @@ Let me do some optimisations.
 
 If you are interested to improve this patch, welcome to mail me.
 
-diff -ru --color old/tool/ventoy_lib.sh new/tool/ventoy_lib.sh
---- tool/ventoy_lib.sh	2021-02-28 17:38:10.896891394 +0100
-+++ tool/ventoy_lib.sh	2021-02-28 17:40:59.206686303 +0100
+diff -ru old/tool/ventoy_lib.sh new/tool/ventoy_lib.sh
+--- tool/ventoy_lib.sh	2021-03-06 14:54:04.163817366 +0100
++++ tool/ventoy_lib.sh	2021-03-06 14:56:07.053667242 +0100
 @@ -29,7 +29,7 @@
  }
  
@@ -57,9 +57,9 @@ diff -ru --color old/tool/ventoy_lib.sh new/tool/ventoy_lib.sh
  o
  n
  p
-diff -ru --color old/tool/VentoyWorker.sh new/tool/VentoyWorker.sh
---- tool/VentoyWorker.sh	2021-02-28 17:38:24.396873895 +0100
-+++ tool/VentoyWorker.sh	2021-02-28 17:41:08.906675262 +0100
+diff -ru old/tool/VentoyWorker.sh new/tool/VentoyWorker.sh
+--- tool/VentoyWorker.sh	2021-03-06 14:53:26.603866863 +0100
++++ tool/VentoyWorker.sh	2021-03-06 14:55:52.493675465 +0100
 @@ -96,7 +96,7 @@
  if check_tool_work_ok; then
      vtdebug "check tool work ok"
@@ -69,10 +69,10 @@ diff -ru --color old/tool/VentoyWorker.sh new/tool/VentoyWorker.sh
      exit 1
  fi
  
-diff -ru --color old/Ventoy2Disk.sh new/Ventoy2Disk.sh
---- Ventoy2Disk.sh	2021-02-28 17:38:39.106855053 +0100
-+++ Ventoy2Disk.sh	2021-02-28 17:41:14.176669295 +0100
-@@ -30,46 +30,4 @@
+diff -ru old/Ventoy2Disk.sh new/Ventoy2Disk.sh
+--- Ventoy2Disk.sh	2021-03-06 14:52:52.703911700 +0100
++++ Ventoy2Disk.sh	2021-03-06 14:55:45.943684011 +0100
+@@ -32,46 +32,4 @@
  echo '**********************************************'
  echo ''
  
@@ -120,9 +120,9 @@ diff -ru --color old/Ventoy2Disk.sh new/Ventoy2Disk.sh
 -    fi
 -fi
 +./tool/VentoyWorker.sh $*
-diff -ru --color old/VentoyWeb.sh new/VentoyWeb.sh
---- VentoyWeb.sh	2021-02-28 17:38:47.476844437 +0100
-+++ VentoyWeb.sh	2021-02-28 17:41:18.036664939 +0100
+diff -ru old/VentoyWeb.sh new/VentoyWeb.sh
+--- VentoyWeb.sh	2021-03-06 14:54:25.383789486 +0100
++++ VentoyWeb.sh	2021-03-06 14:56:01.253668661 +0100
 @@ -15,12 +15,6 @@
      echo ""
  }
@@ -135,20 +135,8 @@ diff -ru --color old/VentoyWeb.sh new/VentoyWeb.sh
 -
  OLDDIR=$(pwd)
  
- if uname -a | egrep -q 'aarch64|arm64'; then
-@@ -17,9 +17,9 @@
- 
- OLDDIR=$(pwd)
- 
--if uname -a | egrep -q 'aarch64|arm64'; then
-+if uname -m | egrep -q 'aarch64|arm64'; then
-     TOOLDIR=aarch64
--elif uname -a | egrep -q 'x86_64|amd64'; then
-+elif uname -m | egrep -q 'x86_64|amd64'; then
-     TOOLDIR=x86_64
- else
-     TOOLDIR=i386
-@@ -82,8 +76,8 @@
+ if uname -m | egrep -q 'aarch64|arm64'; then
+@@ -84,8 +78,8 @@
      exit 1
  fi
  

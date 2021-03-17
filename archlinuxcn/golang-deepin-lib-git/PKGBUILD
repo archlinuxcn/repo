@@ -1,8 +1,8 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=golang-deepin-lib-git
-pkgver=5.6.0.9.r9.g6ecbbc8
-pkgrel=5
+pkgver=5.7.0.r5.gcc0de92
+pkgrel=1
 pkgdesc='A library containing many useful go routines for things such as glib, gettext, archive, graphic,etc.'
 arch=('any')
 url="https://github.com/linuxdeepin/go-lib"
@@ -24,6 +24,7 @@ pkgver() {
 }
 
 prepare() {
+  export GO111MODULE=off
   cd $pkgname
   sed -i 's/int connect_timeout;/extern int connect_timeout;/' pulse/dde-pulse.h
   go get -v github.com/fsnotify/fsnotify
@@ -34,6 +35,7 @@ prepare() {
 
 check() {
   export GOPATH="$srcdir/build:/usr/share/gocode"
+  export GO111MODULE=off
   mkdir -p "$srcdir"/build/src/pkg.deepin.io
   cp -a "$srcdir/$pkgname" "$srcdir"/build/src/pkg.deepin.io/lib
   cd "$srcdir"/build/src/pkg.deepin.io/lib

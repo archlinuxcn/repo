@@ -1,14 +1,14 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=deepin-qt5integration-git
-pkgver=5.1.5.r12.g3ce68d5
+pkgver=5.1.5.r20.gc8049be
 pkgrel=1
 pkgdesc='Qt platform theme integration plugins for DDE'
 arch=('x86_64')
 url="https://github.com/linuxdeepin/qt5integration"
 license=('GPL3')
 depends=('dtkwidget-git' 'libqtxdg' 'deepin-qt5platform-plugins-git')
-makedepends=('git' 'qt5-tools' 'xcb-util-renderutil')
+makedepends=('git' 'qt5-tools' 'xcb-util-renderutil' 'gtest')
 conflicts=('deepin-qt5integration')
 provides=('deepin-qt5integration')
 groups=('deepin-git')

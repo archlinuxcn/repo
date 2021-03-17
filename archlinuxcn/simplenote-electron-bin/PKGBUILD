@@ -2,7 +2,7 @@
 # Maintainer: Samuel Walladge <samuel at swalladge dot id dot au>
 
 pkgname=simplenote-electron-bin
-pkgver=2.7.0
+pkgver=2.7.1
 pkgrel=1
 pkgdesc="The simplest way to keep notes"
 arch=('x86_64' 'armv7h')
@@ -12,8 +12,8 @@ depends=('nss' 'gtk3' 'libxss')
 provides=('simplenote')
 source_x86_64=("${url}/releases/download/v${pkgver}/Simplenote-linux-${pkgver}-amd64.deb")
 source_armv7h=("${url}/releases/download/v${pkgver}/Simplenote-linux-${pkgver}-armv7l.deb")
-sha256sums_x86_64=('d2b53ea3e4ff92c3f81f354c3183a4e66def7947f2a58e3874ab1a413c5a38e7')
-sha256sums_armv7h=('7d07b45f358bea4814de51cc7fdfdf73708a3dee9f933cda5f3670c9404f1875')
+sha256sums_x86_64=('a7efadbb8c01a2d875aefbde8f9401233bdc22a70846df70e3f19a1cb2ba2f93')
+sha256sums_armv7h=('3659901cf532fba92fed2b5cb9dd69a9df2965962a5a291d35e103e648b8fe7b')
 
 # Warning: the release deb file has been known to be silently modified, resulting in a different checksum. 
 # If the checksum fails to validate, this is most likely the cause. If you are concerned about the
