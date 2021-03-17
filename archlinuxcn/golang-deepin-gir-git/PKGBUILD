@@ -2,7 +2,7 @@
 
 pkgname=golang-deepin-gir-git
 pkgver=2.0.2.r1.gd9225a1
-pkgrel=7
+pkgrel=9
 pkgdesc='Generate static golang bindings for GObject'
 arch=('any')
 url="https://github.com/linuxdeepin/go-gir-generator"
@@ -44,7 +44,7 @@ prepare() {
 build() {
   export GOPATH="$srcdir/build:/usr/share/gocode"
   export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
-
+  export GO111MODULE=off
   cd $pkgname
   rm -r gogtk-demo
   make
