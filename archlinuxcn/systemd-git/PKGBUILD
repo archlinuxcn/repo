@@ -8,7 +8,7 @@ pkgbase=systemd-git
 _pkgbase=systemd
 pkgname=('systemd-git' 'systemd-libs-git' 'systemd-resolvconf-git' 'systemd-sysvcompat-git')
 pkgdesc="systemd (git version)"
-pkgver=248.rc2.r301.ga174da59c2
+pkgver=248.rc3.r39.gfa92d38428
 pkgrel=1
 arch=('x86_64')
 url="https://www.github.com/systemd/systemd"
@@ -20,7 +20,7 @@ makedepends=('acl' 'cryptsetup' 'docbook-xsl' 'gperf' 'lz4' 'xz' 'pam' 'libelf'
              'bash-completion' 'p11-kit' 'systemd')
 options=('strip')
 source=('git+https://github.com/systemd/systemd.git'
-        '0001-Use-Arch-Linux-device-access-groups.patch'
+        '0001-Use-Arch-Linux-device-access-groups.patch::https://raw.githubusercontent.com/yurikoles-aur/systemd-git/master/0001-Use-Arch-Linux-device-access-groups.patch'
         'initcpio-hook-udev'
         'initcpio-install-systemd'
         'initcpio-install-udev'
@@ -39,7 +39,7 @@ source=('git+https://github.com/systemd/systemd.git'
         '30-systemd-udev-reload.hook'
         '30-systemd-update.hook')
 sha512sums=('SKIP'
-            'e38c7c422c82953f9c2476a5ab8009d614cbec839e4088bff5db7698ddc84e3d8ed64f32ed323f57b1913c5c9703546f794996cb415ed7cdda930b627962a3c4'
+            '73ec374130597eb9cfa9defa62574a6815428cf86a51ff9c7ce76a20d8d762c5258c066b15f0327a7bfcbb9c49fa7da6bae58be6ae838c64d28ca24edadeff65'
             'f0d933e8c6064ed830dec54049b0a01e27be87203208f6ae982f10fb4eddc7258cb2919d594cbfb9a33e74c3510cfd682f3416ba8e804387ab87d1a217eb4b73'
             '8e76f8334b95ce7fee9190f4a1016b16109f3a75b68635fc227b2b4791cf8179ef09b532b66b4ed885ddf98ed76befed3106f3c3088f1819ed8cdf4c13e0805a'
             'a25b28af2e8c516c3a2eec4e64b8c7f70c21f974af4a955a4a9d45fd3e3ff0d2a98b4419fe425d47152d5acae77d64e69d8d014a7209524b75a81b0edb10bf3a'
