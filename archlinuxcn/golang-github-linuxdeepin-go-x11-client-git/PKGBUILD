@@ -1,8 +1,8 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=golang-github-linuxdeepin-go-x11-client-git
-pkgver=0.6.2.r1.g6d7b662
-pkgrel=3
+pkgver=0.6.4.r0.g6d7b662
+pkgrel=1
 pkgdesc='X11 protocol go language binding'
 arch=('any')
 url="https://github.com/linuxdeepin/go-x11-client"
@@ -28,6 +28,7 @@ prepare() {
 
 check() {
   export GOPATH="$srcdir/build:/usr/share/gocode"
+  export GO111MODULE=off
   mkdir -p "$srcdir"/build/src/github.com/linuxdeepin
   cp -a "$srcdir/$pkgname" "$srcdir"/build/src/github.com/linuxdeepin/go-x11-client
   cd "$srcdir"/build/src/github.com/linuxdeepin/go-x11-client
