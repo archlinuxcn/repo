@@ -1,7 +1,7 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=deepin-desktop-schemas-git
-pkgver=5.9.5.r4.ge9cca7b
+pkgver=5.9.5.r5.g284c9cc
 pkgrel=1
 pkgdesc='GSettings deepin desktop-wide schemas'
 arch=('any')
