@@ -1,0 +1,43 @@
+# Maintainer: Wenxuan <wenxuangm@gmail.com>
+# Contributor: Sven-Hendrik Haase <svenstaro@gmail.com>
+# Contributor: Adam Fontenot <adam.m.fontenot@gmail.com>
+# Contributor: Daniel M. Capella <polyzen@archlinux.org>
+
+_pkgname=broot
+pkgname="${_pkgname}-git"
+pkgver=1.2.9.995.g914e6d9
+pkgrel=1
+pkgdesc='Fuzzy Search + tree + cd'
+arch=('x86_64')
+url=https://github.com/Canop/broot
+license=('MIT')
+depends=('gcc-libs' 'zlib')
+makedepends=('rust')
+source=("${_pkgname}::git+https://github.com/Canop/${_pkgname}.git")
+conflicts=("${_pkgname}" "${_pkgname}-bin")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "${_pkgname}"
+    echo "$(grep '^version =' Cargo.toml|head -n1|cut -d\" -f2|cut -d\- -f1).$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "$_pkgname"
+  cargo build --release --locked
+}
+
+package() {
+  cd "$_pkgname"
+  install -Dt "$pkgdir"/usr/bin target/release/$_pkgname
+  sed -i "s/#version/$pkgver/" man/page
+  # Theoretically we could get the date from the CHANGELOG.md but it seems that the
+  # CHANGELOG.md entry for the current version isn't actually in the current release.
+  # changelog_date=$(sed -n "s/.*v$pkgver - \(.*\)$/\1/p" CHANGELOG.md)
+  sed -i "s/#date//" man/page
+  gzip --best man/page
+  install -Dm644 man/page.gz "$pkgdir/usr/share/man/man1/$_pkgname.1.gz"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:
