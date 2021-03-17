@@ -1,8 +1,8 @@
 # Maintainer: DingYuan <justforlxz@gmail.com>
 
 pkgname=golang-github-linuxdeepin-go-dbus-factory-git
-pkgver=1.8.2.r4.gb1e7e69
-pkgrel=2
+pkgver=1.8.6.r0.gb1e7e69
+pkgrel=1
 pkgdesc='GO DBus factory for DDE'
 arch=('any')
 url="https://github.com/linuxdeepin/go-dbus-factory"
@@ -22,6 +22,7 @@ pkgver() {
 
 prepare() {
   export GOPATH="$srcdir/build:/usr/share/gocode"
+  export GO111MODULE=off
   mkdir -p "$srcdir"/build/src/github.com/linuxdeepin
   cp -a "$srcdir/$pkgname" "$srcdir"/build/src/github.com/linuxdeepin/go-dbus-factory
   go get -v github.com/fsnotify/fsnotify
