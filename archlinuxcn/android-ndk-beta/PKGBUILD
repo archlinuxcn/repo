@@ -5,7 +5,7 @@
 
 pkgname=android-ndk-beta
 _pkgname=${pkgname/-beta*/}
-pkgver=r23_beta1
+pkgver=r23_beta2
 pkgrel=1
 pkgdesc='Android C/C++ developer kit (beta)'
 arch=('x86_64')
@@ -24,9 +24,9 @@ source=("$pkgname.sh")
 source_x86_64=("$pkgname-$pkgver.zip"::"https://dl.google.com/android/repository/${_pkgname}-${pkgver/_/-}-linux-x86_64.zip")
 # SHA1 sums is kept to follow upstream releases https://github.com/android-ndk/ndk/issues/673
 sha1sums=('b0a3c3d4e148c1049f9c8b12f2632840630ea4db')
-sha1sums_x86_64=('1340ed20f27fcb184ea814ae63e0f3cd75890342')
+sha1sums_x86_64=('290e8c39bb9732ac8784855e1f22342eb488228e')
 sha256sums=('a39422d48174302e1ee27f07031f20adc78224d12c17a5451129a88b47c901c1')
-sha256sums_x86_64=('dbd3358bd8594ea3656bf93e420fdd22f2a4b7ad7024ede0042a47e96366454b')
+sha256sums_x86_64=('32dd15685786e9106a8c133dce92c0f1694b04a5a723f8ad64999f5aaa8cc6e1')
 
 package() {
   install -Ddm755 "$pkgdir/opt"
