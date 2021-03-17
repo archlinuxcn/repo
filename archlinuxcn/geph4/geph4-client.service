@@ -9,7 +9,7 @@ CapabilityBoundingSet=CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_BIND_SERVICE
 NoNewPrivileges=true
 EnvironmentFile=/etc/default/geph4-client
-ExecStart=/usr/bin/geph4-client $SUBCOMMAND $FLAGS $OPTIONS --credential-cache /var/cache/geph4-client/geph4-credentials.db --password $PASSWORD --username $USERNAME
+ExecStart=/usr/bin/geph4-client $SUBCOMMAND $FLAGS $OPTIONS --credential-cache /var/cache/geph4-client/ --password $PASSWORD --username $USERNAME
 Restart=on-abort
 
 [Install]
