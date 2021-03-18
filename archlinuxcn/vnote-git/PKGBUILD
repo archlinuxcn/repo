@@ -1,6 +1,6 @@
 # Maintainer: erk <v at erk dot io>
 pkgname=vnote-git
-pkgver=1498.db341b55
+pkgver=1530.a2d180ea
 epoch=1
 pkgrel=1
 pkgdesc="A Vim-inspired note-taking application, especially for Markdown."
@@ -22,7 +22,7 @@ pkgver() {
 
 prepare() {
     cd "$srcdir/$gitname"
-    git submodule update --init
+    git submodule update --init --recursive
 }
 build () {
     cd "$srcdir/$gitname"
