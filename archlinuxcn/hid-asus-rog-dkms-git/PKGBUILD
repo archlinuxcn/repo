@@ -2,7 +2,7 @@
 
 pkgname=hid-asus-rog-dkms-git
 _pkgname=hid-asus-rog
-pkgver=1.0.0.r0.gbededfa
+pkgver=1.0.2.r1.ga525700
 pkgrel=1
 pkgdesc="Kernel module to patch hid-asus to support more ROG laptops"
 arch=('x86_64')
@@ -15,7 +15,7 @@ makedepends=('git' 'linux' 'linux-headers')
 source=("git+https://gitlab.com/asus-linux/hid-asus-rog.git"
 	"dkms.conf")
 sha256sums=("SKIP"
-	    "a9d78677756306c7687bef847f81425b5d04a53bb16cee8c586a6fce1e93777d")
+            '80c3128869b16cc10fa1233821fe7cc967e1a611cf2056279785c28dcf28d58c')
 
 pkgver() {
     cd "$srcdir/${_pkgname}"
@@ -31,7 +31,7 @@ prepare() {
 package() {
   cd "${srcdir}/${_pkgname}"
   install -d -m 755 ${pkgdir}/usr/src/${_pkgname}-${pkgver}/src
-  install -m 644 Makefile ${pkgdir}/usr/src/${_pkgname}-${pkgver}/Makefile
+  install -m 644 Kbuild ${pkgdir}/usr/src/${_pkgname}-${pkgver}/Kbuild
   install -m 644 src/hid-asus-rog.c ${pkgdir}/usr/src/${_pkgname}-${pkgver}/src/hid-asus-rog.c
   install -m 644 src/hid-ids.h ${pkgdir}/usr/src/${_pkgname}-${pkgver}/src/hid-ids.h
 
