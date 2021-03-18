@@ -1,7 +1,7 @@
 # Maintainer: Simon Wilper <sxw@chronowerks.de>
 # Contributor: Ariel AxionL <i@axionl.me>
 pkgname=xtensor
-pkgver=0.23.1
+pkgver=0.23.2
 pkgrel=1
 pkgdesc="C++ tensors with broadcasting and lazy computing"
 arch=('any')
@@ -13,7 +13,7 @@ makedepends=('gcc' 'cmake')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz"
         "LICENSE::https://raw.githubusercontent.com/xtensor-stack/xtl/master/LICENSE")
 
-sha512sums=('6b9aaa0afc8e602e389d33dae1a2204b5beca499f6499adde9418b7d8bf6c62631142b7c774e12203e20769949e004abd4080f84131dd95d5bcef734b33ef15b'
+sha512sums=('d9aa867734eef4092b251f4c837dd8fc13735aba7bd18aaa11075833ca36173db495caf468ce3d4ff16b8edc425c773441117b04563d05dac962c87087c2cfb5'
             '5699df3613806f6148e7a37f4b01c3452e86759ba74971be571c9cb95070f80171412f2525c32099221f1c3f03b3cbf02fe0248d4023cd8692ab5c3a4a1eb49c')
 
 build() {
