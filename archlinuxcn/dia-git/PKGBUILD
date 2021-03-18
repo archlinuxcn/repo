@@ -5,7 +5,7 @@
 
 pkgname=dia-git
 _pkgname=dia
-pkgver=6614.383a1faf
+pkgver=6619.49674406
 pkgrel=1
 pkgdesc="A GTK+ based diagram creation program (GIT VERSION)"
 arch=('x86_64')
@@ -35,6 +35,7 @@ prepare() {
   sed -i 's/python23/python3/g' build-aux/*.py
   sed -i 's|#include "tool-icons.h"||g' objects/standard/outline.c
   sed -i 's/22.0.0/99.0.0/g' meson.build
+  sed -i 's/PDFDoc *doc/std::unique_ptr<PDFDoc> doc/g' plug-ins/pdf/pdf-import.cpp
 }
 
 build() {
