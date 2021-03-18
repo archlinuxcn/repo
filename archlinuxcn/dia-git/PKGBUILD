@@ -5,13 +5,13 @@
 
 pkgname=dia-git
 _pkgname=dia
-pkgver=6614.383a1faf
-pkgrel=1
+pkgver=6621.bda0a93c
+pkgrel=2
 pkgdesc="A GTK+ based diagram creation program (GIT VERSION)"
 arch=('x86_64')
 license=('GPL')
 url="http://live.gnome.org/Dia"
-depends=('poppler' 'libxslt' 'gtk2' 'freetype2' 'python2' 'graphene')
+depends=('poppler' 'python' 'libxslt' 'gtk2' 'freetype2' 'python2' 'graphene')
 makedepends=('git' 'cmake' 'meson' 'intltool' 'dblatex' 'python' 'docbook-xsl')
 optdepends=('python2')
 provides=('dia')
@@ -35,6 +35,8 @@ prepare() {
   sed -i 's/python23/python3/g' build-aux/*.py
   sed -i 's|#include "tool-icons.h"||g' objects/standard/outline.c
   sed -i 's/22.0.0/99.0.0/g' meson.build
+  sed -i 's/PDFDoc \*doc/std::unique_ptr<PDFDoc> doc/g' plug-ins/pdf/pdf-import.cpp
+  sed -i 's/delete doc/doc.reset()/g' plug-ins/pdf/pdf-import.cpp
 }
 
 build() {

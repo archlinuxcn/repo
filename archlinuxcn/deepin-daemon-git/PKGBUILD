@@ -1,7 +1,7 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=deepin-daemon-git
-pkgver=5.12.0.25.r82.ga30d37ac
+pkgver=5.13.6.r8.ge9090d58
 pkgrel=1
 pkgdesc='Daemon handling the DDE session settings'
 arch=('x86_64')
@@ -41,7 +41,7 @@ prepare() {
   patch -p1 -i ../dde-daemon.patch
 
   export GOPATH="$srcdir/build:/usr/share/gocode"
-
+  export GO111MODULE=off
   # golang-deepin-lib's dependency, remove when go packaging resumes
   go get -v github.com/cryptix/wav
 

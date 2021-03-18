@@ -1,14 +1,14 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=deepin-polkit-agent-ext-gnomekeyring-git
-pkgver=5.0.4.r0.gc437a27
+pkgver=5.0.4.r1.g157fc21
 pkgrel=1
 pkgdesc="GNOME keyring extension for dde-polkit-agent"
 arch=('x86_64')
 url="https://github.com/linuxdeepin/dpa-ext-gnomekeyring"
 license=('GPL3')
 depends=('deepin-polkit-agent-git' 'libgnome-keyring')
-makedepends=('git' 'qt5-tools' 'libgnome-keyring' 'deepin-polkit-agent-git')
+makedepends=('git' 'cmake' 'ninja' 'qt5-tools' 'libgnome-keyring' 'deepin-polkit-agent-git')
 conflicts=('deepin-polkit-agent-ext-gnomekeyring')
 provides=('deepin-polkit-agent-ext-gnomekeyring')
 groups=('deepin-git')
@@ -23,11 +23,11 @@ pkgver() {
 build() {
   cd $pkgname
 
-  qmake-qt5
-  make
+  cmake . -G Ninja -DCMAKE_INSTALL_PREFIX=/usr
+  ninja
 }
 
 package() {
   cd $pkgname
-  make INSTALL_ROOT="$pkgdir" install
+  DESTDIR="$pkgdir" ninja install
 }

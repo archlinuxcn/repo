@@ -7,7 +7,7 @@ pkgname=('geph4-binder'
          'geph4-exit'
          'geph4-vpn-helper')
 pkgver=4.2.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A command-line Geph4 toolset"
 arch=('x86_64')
 url="https://github.com/geph-official/geph4"
@@ -28,13 +28,13 @@ source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
 sha256sums=('7cbe6bf44bc6a41f7dd0ad6f4dffc6cfef7f8a1c1af9f27edd624b035579a7cc'
             '96e495d1f5d6cb61c7953c70035125febf0063fa0e8d0bb47bc314d326c93b55'
             '3def2cd4cce25ad38cadc3b20913d3c45df16b89d0903b7cd88da77d57f86938'
-            '01b1ec9c4a5fe499d015cc5da62b46245f6bb9acc30afa5ec1f982650e331223'
+            'fe10aa9e8ecc58e3b01487cb60c6fe970dd80343d1b715744e734077b1e14f66'
             '2daf5117a98d4529225712cb9f4828f4f5269a591565745497df0eb10068ba2a'
             '7c8c2b2e2f24a45a2d216af90d1b370a25d1f4fe3501f341bf18b7b68a7fa93a'
             '08bcd5c7d8a44f7ee05315ce745658a59bf48f0c5475b231c75120858ddf39ef'
-            '3599ecabf51e9405eb3afdc0c653060e8da9d6cbe83a4f4ce14c46017f520022'
+            '2aef927e466ce22796bbaec6d618f6178d0251e6d0ba1df3c526d3374dd903da'
             '04b096c9e99f655c7f7e9e13082be2a487e255c2366471ad9c9e3216be389774'
-            '806ed9538c92e659e2c0f70f8f5620f37e2f7df15b39a9bdea301b65c5cbcf5f')
+            'ae990333a1eebd5d5bb57ebd4a930db84d08a2c7db541d349de119280473e043')
 
 build() {
     cd "${srcdir}"/"${pkgbase}-${pkgver}"/
