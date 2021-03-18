@@ -164,7 +164,7 @@ package_polly-git() {
     _fakeinstall fakeinstall/usr/lib/cmake/polly/
     _fakeinstall fakeinstall/usr/lib/*Polly*
     _fakeinstall fakeinstall/usr/lib/libGPU*
-    install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     # _fakeinstall fakeinstall/usr/share/man/man1/polly*
 }
 
