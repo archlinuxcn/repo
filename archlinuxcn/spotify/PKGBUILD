@@ -4,12 +4,10 @@
 # Contributor: Eothred <yngve.levinsen@gmail.com>
 
 pkgname=spotify
-pkgver=1.1.42.622
+pkgver=1.1.55.494
 epoch=1
-_commit=gbd112320
-_ver_x86_64=37
-#_ver_i686=10
-pkgrel=2
+_commit=gca75f788
+pkgrel=1
 pkgdesc='A proprietary music streaming service'
 arch=('x86_64')
 license=('custom')
@@ -22,24 +20,24 @@ optdepends=('ffmpeg-compat-57: Adds support for playback of local files'
             'libnotify: Desktop notifications')
 options=('!strip')
 
-# http://repository.spotify.com/dists/stable/Release
-# http://repository.spotify.com/dists/stable/non-free/binary-amd64/Packages
-# http://repository.spotify.com/dists/stable/non-free/binary-i386/Packages
-# http://repository.spotify.com/dists/stable/Release.gpg
+# NOTE: We switched from stable to testing on 18th march, as the spotify
+# stable repository is always outdated. Testing seems to be in sync with snap:
+# https://snapcraft.io/spotify
+# http://repository.spotify.com/dists/testing/Release
+# http://repository.spotify.com/dists/testing/non-free/binary-amd64/Packages
+# http://repository.spotify.com/dists/testing/Release.gpg
 source=('spotify.protocol'
         'LICENSE'
-        "${pkgname}-${pkgver}-Release::http://repository.spotify.com/dists/stable/Release"
-        "${pkgname}-${pkgver}-Release.sig::http://repository.spotify.com/dists/stable/Release.gpg")
-source_x86_64=("${pkgname}-${pkgver}-x86_64.deb::http://repository.spotify.com/pool/non-free/s/spotify-client/spotify-client_${pkgver}.${_commit}-${_ver_x86_64}_amd64.deb"
-               "${pkgname}-${pkgver}-x86_64-Packages::http://repository.spotify.com/dists/stable/non-free/binary-amd64/Packages")
-# source_i686=("${pkgname}-${pkgver}-i686.deb::http://repository.spotify.com/pool/non-free/s/spotify-client/spotify-client_${pkgver}.${_commit}-${_ver_i686}_i386.deb"
-#              "${pkgname}-${pkgver}-i686-Packages::http://repository.spotify.com/dists/stable/non-free/binary-i386/Packages")
+        "${pkgname}-${pkgver}-Release::http://repository.spotify.com/dists/testing/Release"
+        "${pkgname}-${pkgver}-Release.sig::http://repository.spotify.com/dists/testing/Release.gpg")
+source_x86_64=("${pkgname}-${pkgver}-x86_64.deb::http://repository.spotify.com/pool/non-free/s/spotify-client/spotify-client_${pkgver}.${_commit}_amd64.deb"
+               "${pkgname}-${pkgver}-x86_64-Packages::http://repository.spotify.com/dists/testing/non-free/binary-amd64/Packages")
 sha512sums=('999abe46766a4101e27477f5c9f69394a4bb5c097e2e048ec2c6cb93dfa1743eb436bde3768af6ba1b90eaac78ea8589d82e621f9cbe7d9ab3f41acee6e8ca20'
             '2e16f7c7b09e9ecefaa11ab38eb7a792c62ae6f33d95ab1ff46d68995316324d8c5287b0d9ce142d1cf15158e61f594e930260abb8155467af8bc25779960615'
             'SKIP'
             'SKIP')
-sha512sums_x86_64=('a3fe98d69460ffd641df3219c2a3d164a33e2b52c86a56276e473dd5c3a43d6304df3b77fefcf0ca6c09cb6e2c8dacab65573cf7543725b6c8d402832149e122'
-                   'af7eb8c50e003638cab04ef1cad36f43379e678a1071c65844a6ff8963434b427044b76159e51c1383698c309c814261ed85aab02ffb86ac73ee86181aada5e9')
+sha512sums_x86_64=('95938ac1170c8cccb9fde836659e84b82391513bbd55d228d496bb3562b0e5ea567b4956aeacf379e76e4569e4b6d5060a5f21db0ce76c0a6908b2f4323d7fd6'
+                   'e202d266a57dc4ad5300aaa1336e920bb1cd56c1814542aaf2ff113265fb0bd565ad686502bed2b9a23a9229511055b9967f426c93da788e1a6c65ef89a98bb5')
 validpgpkeys=('8FD3D9A8D3800305A9FFF259D1742AD60D811D58') # Spotify <tux@spotify.com>
 # Old Keys:
 # 931FF8E79F0876134EDDBDCCA87FF9DF48BF1C90
