@@ -144,8 +144,6 @@ _package() {
   ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/mxnet/libmxnet.so"
   ln -s "/usr/include" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/mxnet/include"
 
-  mv "${pkgdir}/mkldnn" "${pkgdir}/usr/include"
-
   # remove unwantted files
   rm -rfv "${pkgdir}/usr/mxnet"
   rm -rfv "${pkgdir}/usr/lib/cmake/dnnl"
