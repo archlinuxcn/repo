@@ -2,7 +2,7 @@
 
 pkgname=motrix-git
 _pkgname=motrix
-pkgver=1.5.15.r68.g0cd1ed1
+pkgver=1.5.15.r77.g57a5c0c
 pkgrel=1
 pkgdesc='A full-featured download manager'
 arch=('any')
@@ -66,5 +66,7 @@ EOF
   chmod +x "${pkgdir}/usr/bin/${_pkgname}"
   install -Dm644 "${srcdir}/${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
   install -Dm644 "${srcdir}/${_pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  # delete .DS_Store, fuck those developers
+  find "${pkgdir}" -type f -name .DS_Store -delete
 }
 # vim:set ts=2 sw=2 et:
