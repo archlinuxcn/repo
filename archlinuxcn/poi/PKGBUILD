@@ -3,7 +3,7 @@
 pkgname=poi
 _pkgname=poi
 pkgver=10.6.0.0.g1f164297
-pkgrel=1
+pkgrel=2
 pkgdesc="Scalable KanColle browser and tool"
 arch=('any')
 url="https://github.com/poooi/poi/"
@@ -61,4 +61,6 @@ package() {
     mkdir -p "${pkgdir}/usr/bin"
     cp "${_pkgname}.sh" "${pkgdir}/usr/bin/${_pkgname}"
     chmod 0755 "${pkgdir}/usr/bin/${_pkgname}"
+
+    find "${pkgdir}" -type f -name .DS_Store -delete
 }
