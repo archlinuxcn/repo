@@ -50,6 +50,18 @@
  			goto out;
  
 
+--- a/fs/ntfs3/fsntfs.c
++++ b/fs/ntfs3/fsntfs.c
+@@ -1620,7 +1620,7 @@
+ 		lbo = (u64)lcn << cluster_bits;
+ 		len = (u64)clen << cluster_bits;
+ new_bio:
+-		new = ntfs_alloc_bio(BIO_MAX_VECS);
++		new = ntfs_alloc_bio(BIO_MAX_PAGES);
+ 		if (!new) {
+ 			err = -ENOMEM;
+ 			break;
+
 --- a/fs/ntfs3/inode.c
 +++ b/fs/ntfs3/inode.c
 @@ -1176,7 +1176,7 @@
@@ -196,7 +208,7 @@
 
 --- a/fs/ntfs3/super.c
 +++ b/fs/ntfs3/super.c
-@@ -548,10 +548,10 @@
+@@ -544,10 +544,10 @@
  
  	if (opts->uid)
  		seq_printf(m, ",uid=%u",
