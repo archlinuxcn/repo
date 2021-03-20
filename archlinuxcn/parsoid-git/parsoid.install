@@ -16,6 +16,10 @@ _update() {
     if  getent passwd parsoid &>/dev/null; then
         userdel -rf parsoid &>/dev/null
     fi
+    note ">> For MediaWiki 1.35 and newer users:"
+    note ">> You should switch to bundled PHP version of Parsoid."
+    note ">> Check https://www.mediawiki.org/wiki/Parsoid for details."
+    note ">> JS version of Parsoid will end-of-life in June 2021 after MediaWiki 1.31 LTS EOLs."
 }
 
 post_install() {
