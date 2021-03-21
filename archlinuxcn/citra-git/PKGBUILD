@@ -5,18 +5,16 @@
 _pkgbase='citra'
 pkgname="$_pkgbase-git"
 pkgver=r8969.8e3c7674d
-pkgrel=1
+pkgrel=2
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger (Master branch)"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra/"
 license=('GPL2')
-depends=('shared-mime-info' 'desktop-file-utils' 'sdl2' 'qt5-base' 'qt5-multimedia' 'libxkbcommon-x11')
-makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt5-tools' 'libfdk-aac' 'ffmpeg')
-optdepends=("ffmpeg: needed for HLE AAC Decoding on Linux"
-    "libfdk-aac: needed for HLE AAC Decoding on Linux")
-replaces=('citra-qt-git')
-provides=('citra' 'citra-qt' 'citra-qt-git')
-conflicts=('citra' 'citra-qt' 'citra-qt-git' 'citra-canary-git' 'citra-nightly-git')
+depends=('boost-libs' 'shared-mime-info' 'desktop-file-utils' 'ffmpeg' 'libfdk-aac' 'libusb' 'sdl2' 'qt5-base' 'qt5-multimedia' 'libxkbcommon-x11')
+makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt5-tools')
+optdepends=('qt5-wayland: for Wayland support')
+provides=('citra')
+conflicts=('citra')
 source=("$_pkgbase::git+https://github.com/citra-emu/citra")
 md5sums=('SKIP')
 
@@ -34,17 +32,23 @@ prepare() {
 }
 
 build() {
-	cd "$srcdir/$_pkgbase/build"
-	CXXFLAGS+=" -DFMT_USE_USER_DEFINED_LITERALS=0" cmake .. \
+	# Trick the compiler into thinking we're building from a continuous
+	# integration tool so the build number is correctly shown in the title
+	cd "$srcdir/$_pkgbase"
+	CXXFLAGS+=" -DFMT_USE_USER_DEFINED_LITERALS=0"
+	
+	mkdir -p build && cd build
+	cmake .. \
 	  -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=lib \
+	  -DCMAKE_BUILD_TYPE=Release \
 	  -DENABLE_QT_TRANSLATION=ON \
 	  -DCITRA_ENABLE_COMPATIBILITY_REPORTING=ON \
 	  -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
 	  -DUSE_DISCORD_PRESENCE=ON \
-	  -DENABLE_FFMPEG=ON \
-    -DENABLE_FFMPEG_AUDIO_DECODER=ON \
-	  -DCMAKE_BUILD_TYPE=Release
+    -DUSE_SYSTEM_BOOST=ON \
+	  -DENABLE_FFMPEG_VIDEO_DUMPER=ON \
+    -DENABLE_MF=OFF \
+    -DENABLE_FDK=ON
 	make
 }
 
