@@ -1,0 +1,54 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+_pkgname=mark-mind
+_oldpkgname=mind
+pkgname=mark-mind-git
+pkgver=1.1.9.0.8.g7ee8071
+pkgrel=1
+pkgdesc="Mark Mind — Next generation mind map editor"
+arch=('any')
+url="https://github.com/MarkMindLtd/Mark-Mind"
+license=('MIT')
+provides=(${pkgname})
+conflicts=("mark-mind")
+#replaces=(${pkgname})
+depends=('npm')
+makedepends=('coreutils' 'npm' 'git')
+backup=()
+options=('!strip')
+source=("${pkgname}"'::git+https://github.com/MarkMindLtd/Mark-Mind.git'
+    "${_pkgname}.desktop")
+sha256sums=(
+      'SKIP'  
+    'e726247f694723f9c8cec971efa8eabe321b4341df06c0de6157581ecb285764'
+)
+
+pkgver() {
+  cd "${srcdir}/${pkgname}"
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+    cd "${srcdir}/${pkgname}"
+    npm install
+    npm run dev
+    npm run build
+}
+
+check() {
+    cd "${srcdir}/${pkgname}"
+    npm test
+}
+
+package() {
+    install -d "${pkgdir}/opt/${pkgname}"
+    cp -r "${srcdir}/${pkgname}/build/linux-unpacked" "${pkgdir}/opt/${pkgname}"
+
+    install -d "${pkgdir}/usr/share/icons"
+    cp -r "${srcdir}/${pkgname}/build/icons/icon.png" "${pkgdir}/usr/share/pixmaps/${_oldpkgname}"
+
+    install -d "${pkgdir}/usr/bin"
+    ln -sf "${pkgdir}/opt/${pkgname}/${_oldpkgname}" "${pkgdir}/usr/bin/${pkgname}"
+
+    install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+}
