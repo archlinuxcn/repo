@@ -4,7 +4,7 @@
 
 pkgname=bibata-cursor-theme
 pkgver=1.1.0
-pkgrel=3
+pkgrel=4
 pkgdesc="Material Based Cursor Theme"
 arch=('any')
 url="https://github.com/ful1e5/Bibata_Cursor"
