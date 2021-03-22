@@ -1,6 +1,6 @@
 # Maintainer: Peter Lamby <peterlamby@web.de>
 pkgname=deadbeef-mpris2-plugin
-pkgver=1.13
+pkgver=1.14
 pkgrel=1
 pkgdesc="MPRISv2 plugin for the DeaDBeeF music player"
 arch=('i686' 'x86_64')
@@ -10,7 +10,7 @@ depends=('glib2' 'deadbeef' )
 conflicts=('deadbeef-mpris-plugin')
 options=('!libtool')
 source=(https://github.com/Serranya/$pkgname/releases/download/v$pkgver/$pkgname-$pkgver.tar.xz)
-md5sums=('848323d88f9b781d6c6e6dbf9a4e04c8')
+md5sums=('c7e6b795bb5092e1aa5af7e2d1640d70')
 
 build() {
   cd "${srcdir}/deadbeef-${pkgver}"
