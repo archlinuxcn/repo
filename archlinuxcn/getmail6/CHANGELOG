@@ -1,5 +1,19 @@
+Version 6.15
+21 March 2021
+    - #67 Implement a destination that delivers to a local LMTP server
+    - #71 allow "=" in ssl_ciphers to allow "ssl_ciphers = DEFAULT@SECLEVEL=1"
+    - #72 non-compliant e-mail header (in multidrop configuration) causes getmail to stop working
+    - Added test folder: run tests with `make test`. Tests and fixes.
+
+Version 6.14
+14 January 2021
+    - #64 getmail6: sometimes dies on running external filter program in version 6.13
+    - #65 Wait much longer, and raise an exception when timeout (pull from ykasap/fix-timeout to solve #64)
+    - #63 Trap exceptions caused by xoauth2 token expiration
+    - #61 Refresh the OAuth access token when reconnecting (IMAP IDLE)
+
 Version 6.13
-07 December 2021
+07 January 2021
     - fix #59: Traceback while trying to reap child process
     - fix #60: Need to refresh the OAuth access token when reconnecting (IMAP IDLE)
 

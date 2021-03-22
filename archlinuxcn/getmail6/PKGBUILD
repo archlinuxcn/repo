@@ -3,7 +3,7 @@
 
 pkgname=getmail6
 
-pkgver=6.14
+pkgver=6.15
 pkgrel=1
 
 pkgdesc='POP3 mail retriever with reliable Maildir and command delivery; Python 3 port'
@@ -21,7 +21,7 @@ optdepends=('python-keyring: secure password store'
 
 changelog=CHANGELOG
 source=("$pkgname-$pkgver.tgz::https://github.com/$pkgname/$pkgname/archive/v$pkgver.tar.gz")
-b2sums=('c74fce627e6a23e0b209dddca690301f80626d9c4489d8cd2391884908e6f1c017602ed23ca4d343e2dd400b911d3f808235231217afd38f96017d8f0d20b3a2')
+b2sums=('fd1f6ad33f6a518f6ae09470f484dc3493060c596902307afa77376b495b19a8e8a5d500cbd7ffb2e0903a007a4e7f80464c801585dea0e767b3d71c1e2582a0')
 
 
 build() {
