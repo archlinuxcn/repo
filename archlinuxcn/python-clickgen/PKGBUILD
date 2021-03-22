@@ -1,7 +1,7 @@
 # Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
 pkgname=python-clickgen
 _name=${pkgname#python-}
-pkgver=1.1.8
+pkgver=1.1.9
 pkgrel=1
 pkgdesc="X11 & Windows cursor building API"
 arch=('any')
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('python-pillow' 'libx11' 'libxcursor' 'libpng')
 makedepends=('python-setuptools')
 source=("https://pypi.org/packages/source/${_name:0:1}/$_name/$_name-$pkgver.tar.gz")
-sha256sums=('ec853050a433dac806cbf7b428427a9ae6fd2536012bc3e5e8e194789396f9b2')
+sha256sums=('2567bae2c08a45e4381954eb5bb76252519ed208ebe6f3d43cca83c11a854b9d')
 
 build() {
 	cd "$_name-$pkgver"
