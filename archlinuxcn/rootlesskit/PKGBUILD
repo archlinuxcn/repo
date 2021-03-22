@@ -1,0 +1,34 @@
+# Maintainer: Songmin Li <lisongmin@protonmail.com>
+pkgname=rootlesskit
+pkgver=0.14.0
+pkgrel=1
+pkgdesc='RootlessKit is a Linux-native implementation of "fake root" using user_namespaces.'
+makedepends=('go')
+arch=('i686' 'x86_64' 'aarch64')
+url='https://github.com/rootless-containers/rootlesskit'
+license=('Apache')
+provides=('rootlesskit')
+source=(${pkgname}-${pkgver}.tar.gz::https://github.com/rootless-containers/${pkgname}/archive/v${pkgver}.tar.gz)
+sha256sums=('63c43f205e38f9f6e19c535323abef6f4e01293e4d2241991c3b8a78d1f50bef')
+
+build() {
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+  export GO111MODULE=on
+
+  cd $pkgname-${pkgver}
+
+  make all
+}
+
+package() {
+  # Install binary
+  export DESTDIR=$pkgdir
+  export BINDIR=/usr/bin
+
+  cd $srcdir/${pkgname}-${pkgver}
+  make install
+}
