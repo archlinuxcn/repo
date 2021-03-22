@@ -4,7 +4,7 @@
 
 _basename=gst-plugins-ugly
 pkgname=lib32-gst-plugins-ugly
-pkgver=1.18.3
+pkgver=1.18.4
 pkgrel=1
 pkgdesc="Multimedia graph framework - ugly plugins (32-bit)"
 url="https://gstreamer.freedesktop.org/"
@@ -13,7 +13,7 @@ license=(LGPL)
 depends=("lib32-a52dec" "lib32-gst-plugins-base-libs" "lib32-libdvdread" "lib32-libmpeg2" "lib32-libsidplay" "liba52.so" "libcdio.so" "libdvdread.so" "libglib-2.0.so" "libgmodule-2.0.so" "libgobject-2.0.so" "libmpeg2.so" "libopencore-amrnb.so" "libopencore-amrwb.so" "libsidplay.so" "libx264.so"
          lib32-libcdio lib32-x264 lib32-opencore-amr gst-plugins-ugly)
 makedepends=(git meson python)
-_commit=ad60e5463f591caa1c8470f180fd0ef8fce4a802  # tags/1.18.3^0
+_commit=bb3f9de20025820fb1c913f96e31cf0a27528bcc # tags/1.18.4^0
 source=("git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-ugly.git#commit=$_commit")
 sha256sums=('SKIP')
 
