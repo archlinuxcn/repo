@@ -1,0 +1,39 @@
+# Maintainer: Songmin Li <lisongmin@protonmail.com>
+pkgname=buildkit
+pkgver=0.8.2
+pkgrel=1
+pkgdesc='BuildKit is a toolkit for converting source code to build artifacts in an efficient, expressive and repeatable manner.'
+makedepends=('go')
+arch=('i686' 'x86_64' 'aarch64')
+url='https://github.com/moby/buildkit'
+license=('Apache')
+provides=('buildkit')
+source=(${pkgname}-${pkgver}.tar.gz::https://github.com/moby/${pkgname}/archive/v${pkgver}.tar.gz)
+sha256sums=('bfe402c521a461903088dfccb5b75fcc6811f7c416e041c3c60af7a2400866bc')
+
+build() {
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+  export GO111MODULE=on
+
+  cd $pkgname-${pkgver}
+
+  sed -i 's/^\(.*Version =\) ".*"$/\1 "'${pkgver}'"/g' version/version.go
+  sed -i 's/^\(.*Revision =\) ".*"$/\1 "'${pkgrel}'"/g' version/version.go
+
+  go build -v github.com/moby/buildkit/cmd/buildctl
+  go build -v github.com/moby/buildkit/cmd/buildkitd
+}
+
+package() {
+  # Install binary
+  export DESTDIR=$pkgdir
+  export BINDIR=/usr/bin
+
+  cd $srcdir/${pkgname}-${pkgver}
+  install -Dm755 buildctl ${pkgdir}/usr/bin/buildctl
+  install -Dm755 buildkitd ${pkgdir}/usr/bin/buildkitd
+}
