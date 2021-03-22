@@ -1,7 +1,7 @@
 # Maintainer: dracorp aka Piotr Rogoza <piotr.r.public at gmail.com>
 
 pkgname=ksnip
-pkgver=1.8.1
+pkgver=1.8.2
 pkgrel=1
 pkgdesc='Screenshot tool inspired by Windows Snipping Tool and made with Qt for Linux'
 arch=('i686' 'x86_64')
@@ -19,7 +19,7 @@ makedepends=(
 )
 conflicts=(ksnip-git)
 source=($pkgname-$pkgver.tar.gz::https://github.com/ksnip/ksnip/archive/v${pkgver}.tar.gz)
-sha256sums=('1842628cc444d83bc16170285e313b740219aa2d4a0ad3b630a91a6cea39de59')
+sha256sums=('78af7f3fb4b5d900e717a4becb0413d3626d02a331b862d9c1cfdd8302328656')
 
 prepare(){
   cd "$srcdir/$pkgname-$pkgver"
