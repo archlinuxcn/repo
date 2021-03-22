@@ -3,7 +3,7 @@
 
 _basename=gst-plugins-bad
 pkgname=lib32-gst-plugins-bad
-pkgver=1.18.3
+pkgver=1.18.4
 pkgrel=1
 pkgdesc="Multimedia graph framework - bad plugins (32-bit)"
 url="https://gstreamer.freedesktop.org/"
@@ -26,7 +26,7 @@ makedepends=(git lib32-bluez-libs lib32-glu lib32-gtk3 lib32-ladspa lib32-libexi
 optdepends=('lib32-nvidia-utils: nvcodec plugin')
 checkdepends=(xorg-server-xvfb)
 options=(!emptydirs)
-_commit=382e373d9be363f1e21b12990a4d12f1ecb6df41  # tags/1.18.3^0
+_commit=8cb03bdf01ca6ad8c87f951bcd7962c3ca9f6860 # tags/1.18.4^0
 source=("git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad.git#commit=$_commit")
 sha256sums=('SKIP')
 
