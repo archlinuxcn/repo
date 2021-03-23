@@ -11,12 +11,13 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 repo_depends:
-  - deepin-qt5platform-plugins-git
-  - dtkwidget-git
-  - dtkcore-git
   - deepin-desktop-base-git
-  - dtkgui-git
   - deepin-qt-dbus-factory-git
+  - deepin-qt5platform-plugins-git
+  - dtkcommon-git
+  - dtkcore-git
+  - dtkwidget-git
+  - dtkgui-git
 
 update_on:
   - source: github
