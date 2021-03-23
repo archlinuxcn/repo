@@ -2,7 +2,7 @@
 
 pkgbase=libjpeg-xl
 pkgname=('libjpeg-xl' 'libjpeg-xl-doc')
-pkgver=0.3.3
+pkgver=0.3.4
 pkgrel=1
 pkgdesc='JPEG XL image format reference implementation'
 arch=('x86_64')
