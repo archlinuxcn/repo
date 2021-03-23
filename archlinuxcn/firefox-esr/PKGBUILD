@@ -1,18 +1,19 @@
 # Maintainer : Figue <ffigue@gmail.com>
+# Contributor : Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 # Contributor : Ionut Biru <ibiru@archlinux.org>
-# Contributor: Jakub Schmidtke <sjakub@gmail.com>
+# Contributor : Jakub Schmidtke <sjakub@gmail.com>
 
 pkgname=firefox-esr
-pkgver=78.8.0
+pkgver=78.9.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, Extended Support Release"
 arch=(x86_64)
 license=(MPL GPL LGPL)
 url="https://www.mozilla.org/en-US/firefox/organizations/"
-depends=(gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse)
+depends=(gtk2 gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse libevent libxt)
 makedepends=(unzip zip diffutils yasm mesa imake inetutils xorg-server-xvfb
              autoconf2.13 rust clang llvm jack gtk2 nodejs cbindgen nasm
-             python-setuptools python-psutil lld)
+             python-setuptools python-psutil python-zstandard lld dump_syms)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
@@ -22,13 +23,12 @@ provides=(firefox=${pkgver})
 conflicts=(firefox)
 options=(!emptydirs !makeflags !strip)
 source=(https://archive.mozilla.org/pub/firefox/releases/${pkgver}esr/source/firefox-${pkgver}esr.source.tar.xz{,.asc}
-        ${pkgname}.desktop 0001-Use-remoting-name-for-GDK-application-names.patch upload-symbol-archive
+        ${pkgname}.desktop 0001-Use-remoting-name-for-GDK-application-names.patch
         rust_1.48.patch.gz)
-sha256sums=('1cf2dfdee2e31fd0a5ecced6275a33fa11bee1d2a7c65e23350b26992584a110'
+sha256sums=('8e03ac1dfc5ac804c8b13a529414a9387e0425e545bb2f4462d74c3175e64864'
             'SKIP'
             'd86fe1636346ff003744b65e73cd3a7182618faedf3ee57023bb942e325cc726'
             '3bb7463471fb43b2163a705a79a13a3003d70fff4bbe44f467807ca056de9a75'
-            'eb9b9c058d1505e5b82526a8cad63f98e04fc17c4715f6b4cfc778e10fcfaf27'
             'c7f867ccee684939c9f0a9c30ea69127077bbe43af545a03f09dfbbdc02545a9')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
@@ -59,6 +59,7 @@ prepare() {
 
   cat >../mozconfig <<END
 ac_add_options --enable-application=browser
+mk_add_options MOZ_OBJDIR=${PWD@Q}/obj
 
 ac_add_options --prefix=/usr
 ac_add_options --enable-release
@@ -96,7 +97,7 @@ ac_add_options --with-system-nss
 # Features
 ac_add_options --enable-alsa
 ac_add_options --enable-jack
-ac_add_options --disable-crashreporter
+ac_add_options --enable-crashreporter
 ac_add_options --disable-updater
 ac_add_options --disable-tests
 END
@@ -107,14 +108,11 @@ build() {
 
   export MOZ_NOSPAM=1
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
+  export MOZ_ENABLE_FULL_SYMBOLS=1
+  export MACH_USE_SYSTEM_PYTHON=1
 
   # LTO needs more open files
   ulimit -n 4096
-
-  # -fno-plt with cross-LTO causes obscure LLVM errors
-  # LLVM ERROR: Function Import: link error
-  CFLAGS="${CFLAGS/-fno-plt/}"
-  CXXFLAGS="${CXXFLAGS/-fno-plt/}"
 
   # Do 3-tier PGO
   echo "Building instrumented browser..."
@@ -148,8 +146,8 @@ ac_add_options --with-pgo-jarlog=${PWD@Q}/jarlog
 END
   ./mach build
 
-#  echo "Building symbol archive..."
-#  ./mach buildsymbols
+  echo "Building symbol archive..."
+  ./mach buildsymbols
 }
 
 package() {
@@ -215,13 +213,12 @@ END
     ln -srfv "$pkgdir/usr/lib/libnssckbi.so" "$nssckbi"
   fi
 
-#  if [[ -f "$startdir/.crash-stats-api.token" ]]; then
-#    find . -name '*crashreporter-symbols-full.zip' -exec \
-#      "$startdir/upload-symbol-archive" "$startdir/.crash-stats-api.token" {} +
-#  else
-#    find . -name '*crashreporter-symbols-full.zip' -exec \
-#      cp -fvt "$startdir" {} +
-#  fi
+  export SOCORRO_SYMBOL_UPLOAD_TOKEN_FILE="$startdir/.crash-stats-api.token"
+  if [[ -f $SOCORRO_SYMBOL_UPLOAD_TOKEN_FILE ]]; then
+    make -C obj uploadsymbols
+  else
+    cp -fvt "$startdir" obj/dist/*crashreporter-symbols-full.zip
+  fi
 }
 
 # vim:set sw=2 et:
