@@ -3,13 +3,14 @@
 _pkgname=PyMuPDF
 pkgname=python-pymupdf
 pkgver=1.18.9
-pkgrel=1
+pkgrel=2
 pkgdesc="Python bindings for MuPDF's rendering library"
 arch=('x86_64')
 url='https://github.com/pymupdf/PyMuPDF'
 license=('AGPL3')
 makedepends=(
   python-setuptools
+  systemd
   swig
 )
 depends=(
