@@ -2,7 +2,8 @@
 pkgname=rootlesskit
 pkgver=0.14.0
 pkgrel=1
-pkgdesc='RootlessKit is a Linux-native implementation of "fake root" using user_namespaces.'
+pkgdesc='A Linux-native implementation of "fake root" using user_namespaces.'
+depends=('glibc')
 makedepends=('go')
 arch=('i686' 'x86_64' 'aarch64')
 url='https://github.com/rootless-containers/rootlesskit'
