@@ -3,7 +3,7 @@
 
 _gemname=mimemagic
 pkgname=ruby-$_gemname
-pkgver=0.3.5
+pkgver=0.4.0
 pkgrel=1
 pkgdesc='Fast mime detection by extension or content'
 arch=(any)
@@ -14,7 +14,7 @@ makedepends=(ruby-rdoc)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha1sums=('5bf614a328f8a9cce9079a9761f5eb8ef5c8402d')
+sha1sums=('c2972466cbd57f67ce62bdbbd2c6e613a6cc8e13')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
