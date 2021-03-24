@@ -11,10 +11,10 @@
 +#endif
                                    this.setAttribute('openedwithkey',
                                                      event.target.parentNode.openedWithKey);">
-             <menu id="file-menu" label="&fileMenu.label;"
+             <menu id="file-menu" data-l10n-id="menu-file">
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -7008,11 +7008,17 @@ function onViewToolbarsPopupShowing(aEve
+@@ -6301,11 +6301,17 @@ function onViewToolbarsPopupShowing(aEve
  
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
  
@@ -32,10 +32,10 @@
      let menuItem = document.createXULElement("menuitem");
      let hidingAttribute =
        toolbar.getAttribute("type") == "menubar" ? "autohide" : "collapsed";
---- a/browser/components/places/content/places.xul
-+++ b/browser/components/places/content/places.xul
-@@ -166,7 +166,7 @@
-         <toolbarbutton type="menu" class="tabbable"
+--- a/browser/components/places/content/places.xhtml
++++ b/browser/components/places/content/places.xhtml
+@@ -169,7 +169,7 @@
+         <toolbarbutton type="menu" class="tabbable" wantdropmarker="true"
                onpopupshowing="document.getElementById('placeContent').focus()"
  #else
 -      <menubar id="placesMenu">
@@ -45,7 +45,7 @@
                id="organizeButton" label="&organize.label;"
 --- a/dom/xul/XULPopupElement.cpp
 +++ b/dom/xul/XULPopupElement.cpp
-@@ -156,6 +156,10 @@ void XULPopupElement::GetState(nsString&
+@@ -158,6 +158,10 @@ void XULPopupElement::GetState(nsString&
    // set this here in case there's no frame for the popup
    aState.AssignLiteral("closed");
  
@@ -56,7 +56,7 @@
    nsMenuPopupFrame* menuPopupFrame = do_QueryFrame(GetPrimaryFrame());
    if (menuPopupFrame) {
      switch (menuPopupFrame->PopupState()) {
-@@ -179,6 +183,11 @@ void XULPopupElement::GetState(nsString&
+@@ -181,6 +185,11 @@ void XULPopupElement::GetState(nsString&
          break;
      }
    }
@@ -70,11 +70,11 @@
  nsINode* XULPopupElement::GetTriggerNode() const {
 --- a/dom/xul/moz.build
 +++ b/dom/xul/moz.build
-@@ -78,6 +78,11 @@ LOCAL_INCLUDES += [
+@@ -83,6 +83,11 @@ LOCAL_INCLUDES += [
  
  include('/ipc/chromium/chromium-config.mozbuild')
  
-+if 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
++if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk':
 +    LOCAL_INCLUDES += [
 +        '/widget/gtk',
 +    ]
@@ -84,11 +84,11 @@
  if CONFIG['CC_TYPE'] in ('clang', 'gcc'):
 --- a/layout/build/moz.build
 +++ b/layout/build/moz.build
-@@ -70,6 +70,10 @@ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'an
+@@ -68,6 +68,10 @@ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'an
          '/dom/system',
          '/dom/system/android',
      ]
-+elif 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
++elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk':
 +    LOCAL_INCLUDES += [
 +        '/widget/gtk',
 +    ]
@@ -97,10 +97,10 @@
      'components.conf',
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -246,6 +246,9 @@ pref("dom.window.event.enabled", true);
+@@ -313,6 +313,9 @@ pref("dom.mouseevent.click.hack.use_lega
+ // of content viewers to cache based on the amount of available memory.
  pref("browser.sessionhistory.max_total_viewers", -1);
  
- pref("ui.use_native_colors", true);
 +#ifdef MOZ_WIDGET_GTK
 +pref("ui.use_unity_menubar", true);
 +#endif
@@ -109,19 +109,14 @@
  pref("ui.android.mouse_as_touch", 1);
 --- a/toolkit/content/xul.css
 +++ b/toolkit/content/xul.css
-@@ -215,6 +215,18 @@ toolbar[type="menubar"] {
+@@ -200,6 +200,13 @@ toolbar[type="menubar"] {
  }
  %endif
  
 +%ifdef MOZ_WIDGET_GTK
-+window[shellshowingmenubar="true"] menubar {
-+  display: none !important;
-+}
-+
-+window[shellshowingmenubar="true"]
++*|*:root[shellshowingmenubar="true"]
 +toolbar[type="menubar"]:not([customizing="true"]) {
-+  min-height: 0 !important;
-+  border: 0 !important;
++  display: none !important;
 +}
 +%endif
 +
@@ -130,10 +125,10 @@
  }
 --- a/widget/gtk/moz.build
 +++ b/widget/gtk/moz.build
-@@ -53,6 +53,15 @@ UNIFIED_SOURCES += [
- ]
+@@ -55,6 +55,15 @@ UNIFIED_SOURCES += [
  
  SOURCES += [
+     'MediaKeysEventSourceFactory.cpp',
 +    'nsDbusmenu.cpp',
 +    'nsMenu.cpp', # conflicts with X11 headers
 +    'nsMenuBar.cpp',
@@ -144,9 +139,9 @@
 +    'nsNativeMenuDocListener.cpp',
 +    'nsNativeMenuService.cpp',
      'nsWindow.cpp', # conflicts with X11 headers
+     'WaylandVsyncSource.cpp', # conflicts with X11 headers
  ]
- 
-@@ -127,6 +136,7 @@ FINAL_LIBRARY = 'xul'
+@@ -134,6 +143,7 @@ FINAL_LIBRARY = 'xul'
  LOCAL_INCLUDES += [
      '/layout/base',
      '/layout/generic',
@@ -324,7 +319,7 @@
 +#endif /* __nsDbusmenu_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenu.cpp
-@@ -0,0 +1,843 @@
+@@ -0,0 +1,796 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -341,11 +336,8 @@
 +#include "mozilla/EventDispatcher.h"
 +#include "mozilla/GuardObjects.h"
 +#include "mozilla/MouseEvents.h"
-+#include "mozilla/Move.h"
 +#include "mozilla/PresShell.h"
 +#include "mozilla/PresShellInlines.h"
-+#include "nsAutoPtr.h"
-+#include "nsBindingManager.h"
 +#include "nsComponentManagerUtils.h"
 +#include "nsContentUtils.h"
 +#include "nsCSSValue.h"
@@ -358,8 +350,6 @@
 +#include "nsString.h"
 +#include "nsStyleStruct.h"
 +#include "nsThreadUtils.h"
-+#include "nsXBLBinding.h"
-+#include "nsXBLService.h"
 +
 +#include "nsNativeMenuDocListener.h"
 +
@@ -440,44 +430,6 @@
 +
 +    WidgetMouseEvent event(true, aMsg, nullptr, WidgetMouseEvent::eReal);
 +    EventDispatcher::Dispatch(aTarget, nullptr, &event);
-+}
-+
-+static void
-+AttachXBLBindings(nsIContent *aContent)
-+{
-+    dom::Document *doc = aContent->OwnerDoc();
-+    PresShell *shell = doc->GetPresShell();
-+    if (!shell) {
-+        return;
-+    }
-+
-+    RefPtr<ComputedStyle> style =
-+        shell->StyleSet()->ResolveStyleLazily(*aContent->AsElement());
-+
-+    if (!style) {
-+        return;
-+    }
-+
-+    const nsStyleDisplay* display = style->StyleDisplay();
-+    if (!display->mBinding) {
-+        return;
-+    }
-+
-+    nsXBLService* xbl = nsXBLService::GetInstance();
-+    if (!xbl) {
-+        return;
-+    }
-+
-+    RefPtr<nsXBLBinding> binding;
-+    nsresult rv = xbl->LoadBindings(aContent->AsElement(),
-+                                    display->mBinding->GetURI(),
-+                                    display->mBinding->ExtraData()->Principal(),
-+                                    getter_AddRefs(binding));
-+    if ((NS_FAILED(rv) && rv != NS_ERROR_XBL_BLOCKED) || !binding) {
-+        return;
-+    }
-+
-+    doc->BindingManager()->AddToAttachedQueue(binding);
 +}
 +
 +void
@@ -689,8 +641,6 @@
 +        return;
 +    }
 +
-+    AttachXBLBindings(mPopupContent);
-+
 +    DocListener()->RegisterForContentChanges(mPopupContent, this);
 +}
 +
@@ -815,8 +765,6 @@
 +    mNeedsUpdate = true;
 +
 +    MaybeAddPlaceholderItem();
-+
-+    AttachXBLBindings(ContentNode());
 +}
 +
 +void
@@ -1296,7 +1244,7 @@
 +#endif /* __nsMenu_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenuBar.cpp
-@@ -0,0 +1,550 @@
+@@ -0,0 +1,548 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -1311,9 +1259,7 @@
 +#include "mozilla/dom/Event.h"
 +#include "mozilla/dom/KeyboardEvent.h"
 +#include "mozilla/dom/KeyboardEventBinding.h"
-+#include "mozilla/Move.h"
 +#include "mozilla/Preferences.h"
-+#include "nsAutoPtr.h"
 +#include "nsContentUtils.h"
 +#include "nsIDOMEventListener.h"
 +#include "nsIRunnable.h"
@@ -1963,7 +1909,7 @@
 +#endif /* __nsMenuBar_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenuContainer.cpp
-@@ -0,0 +1,171 @@
+@@ -0,0 +1,170 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -1972,7 +1918,6 @@
 + * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 +
 +#include "mozilla/DebugOnly.h"
-+#include "mozilla/Move.h"
 +#include "nsGkAtoms.h"
 +#include "nsIContent.h"
 +
@@ -2103,7 +2048,7 @@
 +                                                 index));
 +    }
 +
-+    MOZ_ALWAYS_TRUE(mChildren.InsertElementAt(index, std::move(aChild)));
++    mChildren.InsertElementAt(index, std::move(aChild));
 +}
 +
 +void
@@ -2117,7 +2062,7 @@
 +                                           aChild->GetNativeData()));
 +    }
 +
-+    MOZ_ALWAYS_TRUE(mChildren.AppendElement(std::move(aChild)));
++    mChildren.AppendElement(std::move(aChild));
 +}
 +
 +bool
@@ -2210,7 +2155,7 @@
 +#endif /* __nsMenuContainer_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenuItem.cpp
-@@ -0,0 +1,764 @@
+@@ -0,0 +1,766 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -2224,10 +2169,8 @@
 +#include "mozilla/dom/Element.h"
 +#include "mozilla/dom/KeyboardEventBinding.h"
 +#include "mozilla/dom/XULCommandEvent.h"
-+#include "mozilla/Move.h"
 +#include "mozilla/Preferences.h"
 +#include "mozilla/TextEvents.h"
-+#include "nsAutoPtr.h"
 +#include "nsContentUtils.h"
 +#include "nsCRT.h"
 +#include "nsGkAtoms.h"
@@ -2794,6 +2737,10 @@
 +    for (uint32_t i = 0; i < count; ++i) {
 +        nsIContent *sibling = parent->GetChildAt_Deprecated(i);
 +
++        if (sibling->IsComment()) {
++            continue;
++        }
++
 +        nsAutoString otherName;
 +        sibling->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::name,
 +                                      otherName);
@@ -3060,7 +3007,7 @@
 +#endif /* __nsMenuItem_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenuObject.cpp
-@@ -0,0 +1,663 @@
+@@ -0,0 +1,664 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -3149,16 +3096,16 @@
 +
 +NS_IMPL_ISUPPORTS(nsMenuObjectIconLoader, imgINotificationObserver)
 +
-+NS_IMETHODIMP
++void
 +nsMenuObjectIconLoader::Notify(imgIRequest *aProxy,
 +                               int32_t aType, const nsIntRect *aRect)
 +{
 +    if (!mOwner) {
-+        return NS_OK;
++        return;
 +    }
 +
 +    if (aProxy != mImageRequest) {
-+        return NS_ERROR_FAILURE;
++        return;
 +    }
 +
 +    if (aType == imgINotificationObserver::LOAD_COMPLETE) {
@@ -3167,7 +3114,7 @@
 +            (status & imgIRequest::STATUS_ERROR)) {
 +            mImageRequest->Cancel(NS_BINDING_ABORTED);
 +            mImageRequest = nullptr;
-+            return NS_ERROR_FAILURE;
++            return;
 +        }
 +
 +        nsCOMPtr<imgIContainer> image;
@@ -3179,23 +3126,23 @@
 +        image->GetWidth(&width);
 +        image->GetHeight(&height);
 +        image->RequestDecodeForSize(nsIntSize(width, height), imgIContainer::FLAG_NONE);
-+        return NS_OK;
++        return;
 +    }
 +
 +    if (aType == imgINotificationObserver::DECODE_COMPLETE) {
 +        mImageRequest->Cancel(NS_BINDING_ABORTED);
 +        mImageRequest = nullptr;
-+        return NS_OK;
++        return;
 +    }
 +
 +    if (aType != imgINotificationObserver::FRAME_COMPLETE) {
-+        return NS_OK;
++        return;
 +    }
 +
 +    nsCOMPtr<imgIContainer> img;
 +    mImageRequest->GetImage(getter_AddRefs(img));
 +    if (!img) {
-+        return NS_ERROR_FAILURE;
++        return;
 +    }
 +
 +    if (!mImageRect.IsEmpty()) {
@@ -3208,7 +3155,7 @@
 +
 +    if (width <= 0 || height <= 0) {
 +        mOwner->ClearIcon();
-+        return NS_OK;
++        return;
 +    }
 +
 +    if (width > 100 || height > 100) {
@@ -3217,7 +3164,7 @@
 +        // GDbus helpfully aborts the application. Thank you :)
 +        NS_WARNING("Icon data too large");
 +        mOwner->ClearIcon();
-+        return NS_OK;
++        return;
 +    }
 +
 +    GdkPixbuf *pixbuf = nsImageToPixbuf::ImageToPixbuf(img);
@@ -3228,7 +3175,7 @@
 +        g_object_unref(pixbuf);
 +    }
 +
-+    return NS_OK;
++    return;
 +}
 +
 +void
@@ -3260,7 +3207,8 @@
 +        imageRequest = list->GetListStyleImage();
 +        if (imageRequest) {
 +            imageRequest->GetURI(getter_AddRefs(uri));
-+            imageRect = list->mImageRegion.ToNearestPixels(
++            auto& rect = list->mImageRegion.AsRect();
++            imageRect = rect.ToLayoutRect().ToNearestPixels(
 +                            pc->AppUnitsPerDevPixel());
 +        }
 +    }
@@ -3303,11 +3251,11 @@
 +            return;
 +        }
 +
-+        loader->LoadImage(uri, nullptr, nullptr, mozilla::net::RP_Unset,
++        loader->LoadImage(uri, nullptr, nullptr,
 +                          nullptr, 0, loadGroup, this, nullptr, nullptr,
 +                          nsIRequest::LOAD_NORMAL, nullptr,
 +                          nsIContentPolicy::TYPE_IMAGE, EmptyString(),
-+                          false, getter_AddRefs(mImageRequest));
++                          false, false, getter_AddRefs(mImageRequest));
 +    }
 +}
 +
@@ -3504,7 +3452,7 @@
 +    if (aComputedStyle &&
 +        (aComputedStyle->StyleDisplay()->mDisplay == StyleDisplay::None ||
 +         aComputedStyle->StyleVisibility()->mVisible ==
-+            NS_STYLE_VISIBILITY_COLLAPSE)) {
++            StyleVisibility::Collapse)) {
 +        vis = false;
 +    }
 +
@@ -3898,7 +3846,7 @@
 +#endif /* __nsMenuObject_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenuSeparator.cpp
-@@ -0,0 +1,84 @@
+@@ -0,0 +1,82 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -3907,8 +3855,6 @@
 + * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 +
 +#include "mozilla/Assertions.h"
-+#include "mozilla/Move.h"
-+#include "nsAutoPtr.h"
 +#include "nsCRT.h"
 +#include "nsGkAtoms.h"
 +
@@ -4107,7 +4053,7 @@
 +        return;
 +    }
 +
-+    MutationRecord *m = *mPendingMutations.AppendElement(new MutationRecord);
++    MutationRecord *m = mPendingMutations.AppendElement(MakeUnique<MutationRecord>())->get();
 +    m->mType = MutationRecord::eAttributeChanged;
 +    m->mTarget = aElement;
 +    m->mAttribute = aAttribute;
@@ -4138,7 +4084,7 @@
 +        return;
 +    }
 +
-+    MutationRecord *m = *mPendingMutations.AppendElement(new MutationRecord);
++    MutationRecord *m = mPendingMutations.AppendElement(MakeUnique<MutationRecord>())->get();
 +    m->mType = MutationRecord::eContentInserted;
 +    m->mTarget = container;
 +    m->mChild = aChild;
@@ -4161,7 +4107,7 @@
 +        return;
 +    }
 +
-+    MutationRecord *m = *mPendingMutations.AppendElement(new MutationRecord);
++    MutationRecord *m = mPendingMutations.AppendElement(MakeUnique<MutationRecord>())->get();
 +    m->mType = MutationRecord::eContentRemoved;
 +    m->mTarget = container;
 +    m->mChild = aChild;
@@ -4231,7 +4177,7 @@
 +    bool inUpdateSequence = false;
 +
 +    while (mPendingMutations.Length() > 0) {
-+        MutationRecord *m = mPendingMutations[0];
++        MutationRecord *m = mPendingMutations[0].get();
 +
 +        if (m->mTarget != currentTarget) {
 +            if (inUpdateSequence) {
@@ -4392,7 +4338,7 @@
 +#include "mozilla/Attributes.h"
 +#include "mozilla/GuardObjects.h"
 +#include "mozilla/RefPtr.h"
-+#include "nsAutoPtr.h"
++#include "mozilla/UniquePtr.h"
 +#include "nsDataHashtable.h"
 +#include "nsStubMutationObserver.h"
 +#include "nsTArray.h"
@@ -4503,7 +4449,7 @@
 +    mozilla::dom::Document *mDocument;
 +    nsIContent *mLastSource;
 +    nsNativeMenuChangeObserver *mLastTarget;
-+    nsTArray<nsAutoPtr<MutationRecord> > mPendingMutations;
++    nsTArray<mozilla::UniquePtr<MutationRecord> > mPendingMutations;
 +    nsDataHashtable<nsPtrHashKey<nsIContent>, nsNativeMenuChangeObserver *> mContentToObserverTable;
 +
 +    static uint32_t sUpdateBlockersCount;
@@ -4538,7 +4484,7 @@
 +#endif /* __nsNativeMenuDocListener_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsNativeMenuService.cpp
-@@ -0,0 +1,505 @@
+@@ -0,0 +1,503 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -4547,10 +4493,8 @@
 + * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 +
 +#include "mozilla/Assertions.h"
-+#include "mozilla/Move.h"
 +#include "mozilla/Preferences.h"
 +#include "mozilla/UniquePtr.h"
-+#include "nsAutoPtr.h"
 +#include "nsCOMPtr.h"
 +#include "nsCRT.h"
 +#include "nsGtkUtils.h"
@@ -5133,15 +5077,7 @@
 +#endif /* __nsNativeMenuService_h__ */
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
-@@ -71,6 +71,7 @@
- 
- #include "mozilla/Assertions.h"
- #include "mozilla/Likely.h"
-+#include "mozilla/Move.h"
- #include "mozilla/Preferences.h"
- #include "nsIPrefService.h"
- #include "nsIServiceManager.h"
-@@ -5067,6 +5068,10 @@ void nsWindow::HideWindowChrome(bool aSh
+@@ -6069,6 +6069,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5154,7 +5090,7 @@
    nsIRollupListener* rollupListener = GetActiveRollupListener();
 --- a/widget/gtk/nsWindow.h
 +++ b/widget/gtk/nsWindow.h
-@@ -38,6 +38,8 @@
+@@ -39,6 +39,8 @@
  
  #include "IMContextWrapper.h"
  
@@ -5163,7 +5099,7 @@
  #undef LOG
  #ifdef MOZ_LOGGING
  
-@@ -171,6 +173,8 @@ class nsWindow final : public nsBaseWidg
+@@ -186,6 +188,8 @@ class nsWindow final : public nsBaseWidg
                                    nsIScreen* aTargetScreen = nullptr) override;
    virtual void HideWindowChrome(bool aShouldHide) override;
  
@@ -5172,7 +5108,7 @@
    /**
     * GetLastUserInputTime returns a timestamp for the most recent user input
     * event.  This is intended for pointer grab requests (including drags).
-@@ -633,6 +637,8 @@ class nsWindow final : public nsBaseWidg
+@@ -721,6 +725,8 @@ class nsWindow final : public nsBaseWidg
  
    mozilla::UniquePtr<mozilla::CurrentX11TimeGetter> mCurrentTimeGetter;
    static CSDSupportLevel sCSDSupportLevel;
@@ -5183,7 +5119,7 @@
  #endif /* __nsWindow_h__ */
 --- a/widget/moz.build
 +++ b/widget/moz.build
-@@ -68,9 +68,9 @@ elif toolkit == 'cocoa':
+@@ -69,9 +69,9 @@ elif toolkit == 'cocoa':
          'nsITouchBarInput.idl',
          'nsITouchBarUpdater.idl',
      ]
@@ -5191,22 +5127,11 @@
 -        'nsINativeMenuService.h',
 -    ]
 +
-+if toolkit in ('cocoa', 'gtk3'):
++if toolkit in ('cocoa', 'gtk'):
 +    EXPORTS += ['nsINativeMenuService.h']
  
- TEST_DIRS += ['tests']
- 
---- a/xpfe/appshell/nsWebShellWindow.cpp
-+++ b/xpfe/appshell/nsWebShellWindow.cpp
-@@ -70,7 +70,7 @@
- 
- #include "gfxPlatform.h"
- 
--#ifdef XP_MACOSX
-+#if defined(XP_MACOSX) || defined(MOZ_WIDGET_GTK)
- #  include "nsINativeMenuService.h"
- #  define USE_NATIVE_MENUS
- #endif
+ TEST_DIRS += [
+     'tests',
 --- /dev/null
 +++ b/xpcom/ds/NativeMenuAtoms.py
 @@ -0,0 +1,9 @@
@@ -5229,7 +5154,7 @@
  import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
-@@ -2477,7 +2478,7 @@ STATIC_ATOMS = [
+@@ -2553,7 +2554,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
      # END ATOMS
@@ -5255,3 +5180,14 @@
  ]
  
  if defined('MOZ_X11'):
+--- a/xpfe/appshell/AppWindow.cpp
++++ b/xpfe/appshell/AppWindow.cpp
+@@ -67,7 +67,7 @@
+ #  include "mozilla/XULStore.h"
+ #endif
+ 
+-#ifdef XP_MACOSX
++#if defined(XP_MACOSX) || defined(MOZ_WIDGET_GTK)
+ #  include "nsINativeMenuService.h"
+ #  define USE_NATIVE_MENUS
+ #endif

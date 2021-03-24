@@ -1,0 +1,25 @@
+From 9855927c896eaeecb21c1541942ee6d557144183 Mon Sep 17 00:00:00 2001
+From: anthraxx <levente@leventepolyak.net>
+Date: Sun, 8 Nov 2020 13:26:47 +0100
+Subject: [PATCH] configure: fix passing system bzip2 ldflags
+
+---
+ comm/third_party/openpgp.configure | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/comm/third_party/openpgp.configure b/comm/third_party/openpgp.configure
+index 2f9c796..2cbc907 100644
+--- a/comm/third_party/openpgp.configure
++++ b/comm/third_party/openpgp.configure
+@@ -80,7 +80,7 @@ with only_when('--enable-compile-environment'):
+         if bzip2_pkg:
+             cflags = list(bzip2_pkg.cflags)
+             libs = bzip2_pkg.libs
+-            return namespace(cflags=cflags, libs=libs, path=(value[0]), )
++            return namespace(cflags=cflags, ldflags=libs, )
+         # Fallback
+         return namespace(
+             ldflags=['-lbz2'],
+-- 
+2.28.0
+
