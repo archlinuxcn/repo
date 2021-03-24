@@ -6,7 +6,7 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome-dev
-pkgver=91.0.4449.6
+pkgver=91.0.4455.2
 pkgrel=1
 pkgdesc="The popular and trusted web browser by Google (Dev Channel)"
 arch=('x86_64')
@@ -18,7 +18,6 @@ optdepends=(
 	'kdialog: for file dialogs in KDE'
 	'gnome-keyring: for storing passwords in GNOME keyring'
 	'kwallet: for storing passwords in KWallet'
-	'gtk3-print-backends: for printing'
 	'libunity: for download progress on KDE'
 	'ttf-liberation: fix fonts for some PDFs - CRBug #369991'
 	'xdg-utils'
@@ -30,7 +29,7 @@ _channel=unstable
 source=("https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-${_channel}/google-chrome-${_channel}_${pkgver}-1_amd64.deb"
 	'eula_text.html'
 	"google-chrome-$_channel.sh")
-sha512sums=('c5c6ad70d099a582f9709d14e5985b5459b1e024c040dcf5e8d01e1ce9f9516252f813b64069c2f857f22885f7924999a7e7514959d3e804f9e99632c210d342'
+sha512sums=('1a68587e6c34cc30e688b92af5cae49b7b52662fd97041b74cfa32d91d66ae3f2447dd6824e39822f8111ad11fd2d71cb6cf1f1d95ae6a67e822ab209f9a65c8'
             'a225555c06b7c32f9f2657004558e3f996c981481dbb0d3cd79b1d59fa3f05d591af88399422d3ab29d9446c103e98d567aeafe061d9550817ab6e7eb0498396'
             '349fc419796bdea83ebcda2c33b262984ce4d37f2a0a13ef7e1c87a9f619fd05eb8ff1d41687f51b907b43b9a2c3b4a33b9b7c3a3b28c12cf9527ffdbd1ddf2e')
 
