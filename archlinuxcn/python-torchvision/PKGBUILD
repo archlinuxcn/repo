@@ -7,7 +7,7 @@
 _CUDA_ARCH_LIST="5.2;5.3;6.0;6.1;6.2;7.0;7.0+PTX;7.2;7.2+PTX;7.5;7.5+PTX;8.0;8.0+PTX;8.6;8.6+PTX"
 pkgname=('python-torchvision' 'python-torchvision-cuda')
 _pkgname=vision
-pkgver=0.9.0
+pkgver=0.9.1
 pkgrel=1
 pkgdesc='Datasets, transforms, and models specific to computer vision'
 arch=('x86_64')
@@ -39,7 +39,7 @@ checkdepends=(
   'python-scipy'
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/pytorch/vision/archive/v${pkgver}.tar.gz")
-sha512sums=('13e3a1cbe477db1e461a1bf820b9ababa22061ff825eeb12df4b606cf68414a653b3493eecc42504a63ac7eb9d2f6806ce7d545eae01dd73f0cd3c31fd9d8fe2')
+sha512sums=('e20c84cbbd3cc6bf3cfcb33fdf858a11515d4872926d8f1c7a529b83bd677d9f68093fb60d9b7918346007b91b05ade841e6ab171215bc356622f575bfba7954')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
