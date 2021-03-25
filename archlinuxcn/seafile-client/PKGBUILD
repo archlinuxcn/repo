@@ -4,8 +4,8 @@
 # Contributor: Edvinas Valatka <edacval@gmail.com>
 
 pkgname=seafile-client
-pkgver=7.0.10
-pkgrel=2
+pkgver=8.0.1
+pkgrel=1
 pkgdesc='GUI client for synchronizing your local files with seafile server'
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/haiwen/$pkgname"
@@ -22,15 +22,16 @@ conflicts=('seafile-client-qt5')
 provides=('seafile-client-qt5')
 source=(
     "$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
-    'fix_QT5_v5.15_QPainterPath.diff'
+    'fix_build_with_glib2.diff'
 )
 sha256sums=(
-    '3b373e13fd56fd1cb768db598302f19669919194a3d2a54b0eb929ff04310333'
-    '300d77db22b8f0845faa4442afc557d46c21b758b7b3be75381e5a2dd58fef07'
+    '49bd391549b54f1cf043026862e765c8c27e84be07835c8ffc21d81570968367'
+    '203a941b8c2b683b6cff15767117956ff34a393301ecc66e7860f8eba9701370'
 )
+
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"
-    patch -p1 -i "$srcdir/fix_QT5_v5.15_QPainterPath.diff"
+    patch -p1 -i "$srcdir/fix_build_with_glib2.diff"
 
     cd "$srcdir"
     rm -rf build
