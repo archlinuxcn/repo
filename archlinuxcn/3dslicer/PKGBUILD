@@ -3,9 +3,9 @@
 pkgname=3dslicer
 pkgver=4.11.20210226
 pkgrel=1
-pkgdesc="A multi-platform, free and open source software package for visualization and medical image computing"
+pkgdesc='Multi-platform, free open source software for visualization and image computing'
 arch=('x86_64')
-url="https://www.slicer.org/"
+url='https://www.slicer.org'
 license=('BSD')
 depends=(
   bzip2
@@ -47,40 +47,40 @@ prepare() {
 
   echo "Creating desktop file"
   gendesk -f -n --pkgname ${pkgname} \
-    --pkgdesc "${pkgdesc}" \
     --categories "Graphics;MedicalSoftware;Science;" \
+    --exec "Slicer" \
     --icon "${pkgname}" \
-    --exec "Slicer"
+    --pkgdesc "${pkgdesc}"
 }
 
 build() {
   cmake -B build -S "${srcdir}/${pkgname}-${pkgver}" \
     -DBUILD_TESTING=OFF \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_C_COMPILER=clang \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DSlicer_BUILD_DOCUMENTATION=OFF \
     -DSlicer_BUILD_I18N_SUPPORT=ON \
-    -DSlicer_USE_SimpleITK_SHARED=ON \
-    -DSlicer_USE_SYSTEM_bzip2=ON \
-    -DSlicer_USE_SYSTEM_curl=ON \
+    -DSlicer_STORE_SETTINGS_IN_APPLICATION_HOME_DIR=OFF \
     -DSlicer_USE_SYSTEM_DCMTK=ON \
-    -DSlicer_USE_SYSTEM_LibArchive=ON \
     -DSlicer_USE_SYSTEM_LZMA=ON \
+    -DSlicer_USE_SYSTEM_LibArchive=ON \
     -DSlicer_USE_SYSTEM_OpenSSL=ON \
     -DSlicer_USE_SYSTEM_QT=ON \
     -DSlicer_USE_SYSTEM_RapidJSON=ON \
+    -DSlicer_USE_SYSTEM_VTK=OFF \
+    -DSlicer_USE_SYSTEM_bzip2=ON \
+    -DSlicer_USE_SYSTEM_curl=ON \
     -DSlicer_USE_SYSTEM_sqlite=ON \
     -DSlicer_USE_SYSTEM_teem=ON \
-    -DSlicer_USE_SYSTEM_VTK=OFF \
-    -DSlicer_USE_SYSTEM_zlib=ON
+    -DSlicer_USE_SYSTEM_zlib=ON \
+    -DSlicer_USE_SimpleITK_SHARED=ON
   make -C "build"
 }
 
 package() {
-  cd "${srcdir}/build/Slicer-build"
-  make package
+  make -C "${srcdir}/build/Slicer-build" package
   install -d "${pkgdir}/opt/${pkgname}" "${pkgdir}/usr/bin"
   tar xvf "${srcdir}/build/Slicer-build/"*.tar.gz -C "${pkgdir}/opt/${pkgname}" --strip-components 1
   ln -s /opt/${pkgname}/Slicer "${pkgdir}/usr/bin"
