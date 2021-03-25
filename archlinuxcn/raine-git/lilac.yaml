@@ -6,10 +6,6 @@ maintainers:
 
 build_prefix: multilib
 
-repo_depends:
-  - lib32-sdl_sound
-  - lib32-muparser
-
 pre_build: vcs_update
 
 post_build: git_pkgbuild_commit
