@@ -7,7 +7,7 @@
 
 pkgname=hsa-rocr
 pkgver=4.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc='ROCm Platform Runtime: ROCr a HPC market enhanced HSA based runtime'
 arch=('x86_64')
 url='https://rocmdocs.amd.com/en/latest/Installation_Guide/ROCR-Runtime.html'
@@ -31,6 +31,7 @@ prepare() {
 
 build() {
   cmake -DCMAKE_INSTALL_PREFIX=/opt/rocm \
+        -DCMAKE_CXX_FLAGS='-DNDEBUG' \
         "$_dirname/src"
   make
 }
