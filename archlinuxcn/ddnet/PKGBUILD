@@ -3,7 +3,7 @@
 
 pkgname=ddnet
 pkgver=15.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A Teeworlds modification with a unique cooperative gameplay."
 arch=('x86_64')
 url="https://ddnet.tw"
@@ -13,6 +13,7 @@ makedepends=('cmake' 'ninja' 'python')
 checkdepends=('gmock')
 optdepends=('ddnet-skins: A collection with more than 500 custom tee skins.'
             'ddnet-maps-git: All the maps used on the official DDNet Servers.')
+backup=('usr/share/ddnet/data/autoexec_server.cfg')
 source=("https://ddnet.tw/downloads/DDNet-$pkgver.tar.xz"
         "ddnet-server.service" "ddnet-sysusers.conf" "ddnet-tmpfiles.conf")
 sha256sums=('2b8a43e4b75a0fcd43ad8e469349e66c294bb7182d2ec6fe96a4e76c1630e87c'
@@ -54,4 +55,7 @@ package() {
     install -vDm644 ddnet-server.service          "$pkgdir/usr/lib/systemd/system/ddnet-server.service"
     install -vDm644 "$srcdir/ddnet-sysusers.conf" "$pkgdir/usr/lib/sysusers.d/ddnet.conf"
     install -vDm644 "$srcdir/ddnet-tmpfiles.conf" "$pkgdir/usr/lib/tmpfiles.d/ddnet.conf"
+    sed -i "$pkgdir/usr/share/ddnet/data/autoexec_server.cfg" \
+        -e '/sv_test_cmds/s/1/0/' \
+        -e 's/myServerconfig.cfg/autoexec_server_maps.cfg/'
 }
