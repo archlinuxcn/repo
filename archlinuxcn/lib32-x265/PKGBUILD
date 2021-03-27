@@ -6,20 +6,20 @@
 
 _basename=x265
 pkgname=lib32-x265
-pkgver=3.4
-pkgrel=3
+pkgver=3.5
+pkgrel=1
 pkgdesc='Open Source H265/HEVC video encoder. 32bit libraries.'
 arch=('x86_64')
-url='https://bitbucket.org/multicoreware/x265'
+url='https://bitbucket.org/multicoreware/x265_git'
 license=('GPL')
 depends=("lib32-gcc-libs" "lib32-numactl" "libnuma.so" "x265")
 makedepends=('cmake' 'nasm')
-provides=("libx265.so")
-source=("https://github.com/videolan/x265/archive/${pkgver}.tar.gz")
-sha256sums=('544d147bf146f8994a7bf8521ed878c93067ea1c7c6e93ab602389be3117eaaf')
+provides=('libx265.so')
+source=("https://bitbucket.org/multicoreware/x265_git/downloads/x265_${pkgver}.tar.gz")
+sha256sums=('e70a3335cacacbba0b3a20ec6fecd6783932288ebc8163ad74bcc9606477cae8')
 
 prepare() {
-  cd x265-${pkgver}
+  cd x265_${pkgver}
 
   for d in 8 10 12; do
     if [[ -d build-$d ]]; then
@@ -30,7 +30,7 @@ prepare() {
 }
 
 build() {
-  cd x265-${pkgver}/build-12
+  cd x265_${pkgver}/build-12
   export CC="gcc -m32"
   export CXX="g++ -m32"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
@@ -72,7 +72,7 @@ build() {
 }
 
 package() {
-  cd x265-${pkgver}/build-8
+  cd x265_${pkgver}/build-8
 
   make DESTDIR="${pkgdir}" install
  # sed 's/"libdir=${exec_prefix}/lib"/"libdir=${exec_prefix}/lib32"' ${pkgdir}/usr/lib32/pkgconfig/x265.pc
