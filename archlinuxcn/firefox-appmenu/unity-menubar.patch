@@ -14,7 +14,7 @@
              <menu id="file-menu" data-l10n-id="menu-file">
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -6274,11 +6274,18 @@ function onViewToolbarsPopupShowing(aEve
+@@ -6231,11 +6231,18 @@ function onViewToolbarsPopupShowing(aEve
    MozXULElement.insertFTLIfNeeded("browser/toolbarContextMenu.ftl");
    let firstMenuItem = aInsertPoint || popup.firstElementChild;
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
@@ -98,7 +98,7 @@
      "components.conf",
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -312,6 +312,9 @@ pref("dom.mouseevent.click.hack.use_lega
+@@ -305,6 +305,9 @@ pref("dom.mouseevent.click.hack.use_lega
  // Fastback caching - if this pref is negative, then we calculate the number
  // of content viewers to cache based on the amount of available memory.
  pref("browser.sessionhistory.max_total_viewers", -1);
@@ -110,7 +110,7 @@
  
 --- a/toolkit/content/xul.css
 +++ b/toolkit/content/xul.css
-@@ -216,6 +216,13 @@ toolbar[type="menubar"] {
+@@ -221,6 +221,13 @@ toolbar[type="menubar"] {
  }
  %endif
  
@@ -126,7 +126,24 @@
  }
 --- a/widget/gtk/moz.build
 +++ b/widget/gtk/moz.build
-@@ -59,6 +59,15 @@ UNIFIED_SOURCES += [
+@@ -33,11 +33,16 @@ EXPORTS += [
+ 
+ EXPORTS.mozilla += ["WidgetUtilsGtk.h"]
+ 
++EXPORTS.mozilla.widget += [
++    "NativeMenuSupport.h",
++]
++
+ UNIFIED_SOURCES += [
+     "IMContextWrapper.cpp",
+     "MozContainer.cpp",
+     "MPRISServiceHandler.cpp",
+     "NativeKeyBindings.cpp",
++    "NativeMenuSupport.cpp",
+     "nsAppShell.cpp",
+     "nsBidiKeyboard.cpp",
+     "nsColorPicker.cpp",
+@@ -59,6 +64,15 @@ UNIFIED_SOURCES += [
  
  SOURCES += [
      "MediaKeysEventSourceFactory.cpp",
@@ -142,7 +159,7 @@
      "nsWindow.cpp",  # conflicts with X11 headers
      "WaylandVsyncSource.cpp",  # conflicts with X11 headers
  ]
-@@ -139,6 +148,7 @@ LOCAL_INCLUDES += [
+@@ -139,6 +153,7 @@ LOCAL_INCLUDES += [
      "/layout/base",
      "/layout/forms",
      "/layout/generic",
@@ -3204,7 +3221,7 @@
 +        }
 +
 +        const nsStyleList *list = aComputedStyle->StyleList();
-+        imageRequest = list->GetListStyleImage();
++        imageRequest = list->mListStyleImage.GetImageRequest();
 +        if (imageRequest) {
 +            imageRequest->GetURI(getter_AddRefs(uri));
 +            auto& rect = list->mImageRegion.AsRect();
@@ -4476,7 +4493,7 @@
 +#endif /* __nsNativeMenuDocListener_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsNativeMenuService.cpp
-@@ -0,0 +1,504 @@
+@@ -0,0 +1,478 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -4513,32 +4530,6 @@
 +
 +extern PangoLayout* gPangoLayout;
 +extern nsNativeMenuDocListenerTArray* gPendingListeners;
-+
-+#if not GLIB_CHECK_VERSION(2,26,0)
-+enum GBusType {
-+    G_BUS_TYPE_STARTER = -1,
-+    G_BUS_TYPE_NONE = 0,
-+    G_BUS_TYPE_SYSTEM = 1,
-+    G_BUS_TYPE_SESSION = 2
-+};
-+
-+enum GDBusProxyFlags {
-+    G_DBUS_PROXY_FLAGS_NONE = 0,
-+    G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES = 1 << 0,
-+    G_DBUS_PROXY_FLAGS_DO_NOT_CONNECT_SIGNALS = 1 << 1,
-+    G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START = 1 << 2,
-+    G_DBUS_PROXY_FLAGS_GET_INVALIDATED_PROPERTIES = 1 << 3
-+};
-+
-+enum GDBusCallFlags {
-+    G_DBUS_CALL_FLAGS_NONE = 0,
-+    G_DBUS_CALL_FLAGS_NO_AUTO_START = 1 << 0
-+};
-+
-+typedef _GDBusInterfaceInfo GDBusInterfaceInfo;
-+typedef _GDBusProxy GDBusProxy;
-+typedef _GVariant GVariant;
-+#endif
 +
 +#undef g_dbus_proxy_new_for_bus
 +#undef g_dbus_proxy_new_for_bus_finish
@@ -4983,7 +4974,7 @@
 +}
 --- /dev/null
 +++ b/widget/gtk/nsNativeMenuService.h
-@@ -0,0 +1,84 @@
+@@ -0,0 +1,85 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -5007,8 +4998,9 @@
 +class nsMenuBar;
 +
 +/*
-+ * The main native menu service singleton. nsWebShellWindow calls in to this when
-+ * a new top level window is created.
++ * The main native menu service singleton.
++ * NativeMenuSupport::CreateNativeMenuBar calls in to this when a new top level
++ * window is created.
 + *
 + * Menubars are owned by their nsWindow. This service holds a weak reference to
 + * each menubar for the purpose of re-registering them with the shell if it
@@ -5070,7 +5062,7 @@
 +#endif /* __nsNativeMenuService_h__ */
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
-@@ -6148,6 +6148,10 @@ void nsWindow::HideWindowChrome(bool aSh
+@@ -6386,6 +6386,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5092,7 +5084,7 @@
  #undef LOG
  #ifdef MOZ_LOGGING
  
-@@ -177,6 +179,8 @@ class nsWindow final : public nsBaseWidg
+@@ -182,6 +184,8 @@ class nsWindow final : public nsBaseWidg
                                    nsIScreen* aTargetScreen = nullptr) override;
    virtual void HideWindowChrome(bool aShouldHide) override;
  
@@ -5101,8 +5093,8 @@
    /**
     * GetLastUserInputTime returns a timestamp for the most recent user input
     * event.  This is intended for pointer grab requests (including drags).
-@@ -703,6 +707,8 @@ class nsWindow final : public nsBaseWidg
-   static CSDSupportLevel sCSDSupportLevel;
+@@ -719,6 +723,8 @@ class nsWindow final : public nsBaseWidg
+   static GtkWindowDecoration sGtkWindowDecoration;
  
    static bool sTransparentMainWindow;
 +
@@ -5110,21 +5102,6 @@
  };
  
  #endif /* __nsWindow_h__ */
---- a/widget/moz.build
-+++ b/widget/moz.build
-@@ -68,9 +68,9 @@ elif toolkit == "cocoa":
-         "nsITouchBarInput.idl",
-         "nsITouchBarUpdater.idl",
-     ]
--    EXPORTS += [
--        "nsINativeMenuService.h",
--    ]
-+
-+if toolkit in ("cocoa", "gtk"):
-+    EXPORTS += ["nsINativeMenuService.h"]
- 
- TEST_DIRS += ["tests", "tests/gtest"]
- 
 --- /dev/null
 +++ b/xpcom/ds/NativeMenuAtoms.py
 @@ -0,0 +1,9 @@
@@ -5147,7 +5124,7 @@
  import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
-@@ -2562,7 +2563,7 @@ STATIC_ATOMS = [
+@@ -2508,7 +2509,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
      # END ATOMS
@@ -5163,7 +5140,7 @@
          'processes': ProcessSelector.MAIN_PROCESS_ONLY,
      },
 +    {
-+        'cid': '{0B3FE5AA-BC72-4303-85AE-76365DF1251D}',
++        'cid': '{0b3fe5aa-bc72-4303-85ae-76365df1251d}',
 +        'contract_ids': ['@mozilla.org/widget/nativemenuservice;1'],
 +        'singleton': True,
 +        'type': 'nsNativeMenuService',
@@ -5175,12 +5152,130 @@
  if defined('MOZ_X11'):
 --- a/xpfe/appshell/AppWindow.cpp
 +++ b/xpfe/appshell/AppWindow.cpp
-@@ -76,7 +76,7 @@
+@@ -79,7 +79,7 @@
  
  #include "mozilla/dom/DocumentL10n.h"
  
 -#ifdef XP_MACOSX
 +#if defined(XP_MACOSX) || defined(MOZ_WIDGET_GTK)
- #  include "nsINativeMenuService.h"
+ #  include "mozilla/widget/NativeMenuSupport.h"
  #  define USE_NATIVE_MENUS
  #endif
+--- /dev/null
++++ b/widget/gtk/NativeMenuSupport.cpp
+@@ -0,0 +1,25 @@
++/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++#include "mozilla/widget/NativeMenuSupport.h"
++
++#include "MainThreadUtils.h"
++#include "nsINativeMenuService.h"
++
++namespace mozilla::widget {
++
++void NativeMenuSupport::CreateNativeMenuBar(nsIWidget* aParent, dom::Element* aMenuBarElement) {
++    MOZ_RELEASE_ASSERT(NS_IsMainThread(), "Attempting to create native menu bar on wrong thread!");
++
++    nsCOMPtr<nsINativeMenuService> nms =
++        do_GetService("@mozilla.org/widget/nativemenuservice;1");
++    if (!nms) {
++        return;
++    }
++
++    nms->CreateNativeMenuBar(aParent, aMenuBarElement);
++}
++
++}  // namespace mozilla::widget
+--- /dev/null
++++ b/widget/gtk/NativeMenuSupport.h
+@@ -0,0 +1,31 @@
++/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++#ifndef mozilla_widget_NativeMenuSupport_h
++#define mozilla_widget_NativeMenuSupport_h
++
++class nsIWidget;
++
++namespace mozilla {
++
++namespace dom {
++class Element;
++}
++
++namespace widget {
++
++class NativeMenuSupport final {
++public:
++    // Given a top-level window widget and a menu bar DOM node, sets up native
++    // menus. Once created, native menus are controlled via the DOM, including
++    // destruction.
++    static void CreateNativeMenuBar(nsIWidget* aParent,
++                                    dom::Element* aMenuBarElement);
++};
++
++}  // namespace widget
++}  // namespace mozilla
++
++#endif  // mozilla_widget_NativeMenuSupport_h
+--- a/widget/moz.build
++++ b/widget/moz.build
+@@ -145,6 +145,11 @@ EXPORTS += [
+     "PuppetWidget.h",
+ ]
+ 
++if toolkit == "gtk":
++    EXPORTS += [
++        "nsINativeMenuService.h",
++    ]
++
+ EXPORTS.mozilla += [
+     "BasicEvents.h",
+     "CommandList.h",
+--- /dev/null
++++ b/widget/nsINativeMenuService.h
+@@ -0,0 +1,39 @@
++/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++#ifndef nsINativeMenuService_h_
++#define nsINativeMenuService_h_
++
++#include "nsISupports.h"
++
++class nsIWidget;
++class nsIContent;
++namespace mozilla {
++namespace dom {
++class Element;
++}
++}  // namespace mozilla
++
++// {90DF88F9-F084-4EF3-829A-49496E636DED}
++#define NS_INATIVEMENUSERVICE_IID                    \
++  {                                                  \
++    0x90DF88F9, 0xF084, 0x4EF3, {                    \
++      0x82, 0x9A, 0x49, 0x49, 0x6E, 0x63, 0x6D, 0xED \
++    }                                                \
++  }
++
++class nsINativeMenuService : public nsISupports {
++ public:
++  NS_DECLARE_STATIC_IID_ACCESSOR(NS_INATIVEMENUSERVICE_IID)
++  // Given a top-level window widget and a menu bar DOM node, sets up native
++  // menus. Once created, native menus are controlled via the DOM, including
++  // destruction.
++  NS_IMETHOD CreateNativeMenuBar(nsIWidget* aParent,
++                                 mozilla::dom::Element* aMenuBarNode) = 0;
++};
++
++NS_DEFINE_STATIC_IID_ACCESSOR(nsINativeMenuService, NS_INATIVEMENUSERVICE_IID)
++
++#endif  // nsINativeMenuService_h_
