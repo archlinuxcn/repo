@@ -2,8 +2,8 @@
 # Maintainer: Jguer <joaogg3@gmail.com>
 pkgname="yay-git"
 _pkgname="yay"
-pkgver=10.1.2.r15.g05c2fa6
-pkgrel=2
+pkgver=10.2.0.r8.g2da1e15
+pkgrel=1
 pkgdesc="Yet another yogurt. Pacman wrapper and AUR helper written in go. (development version, build for pacman-git)"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="https://github.com/Jguer/yay"
@@ -22,10 +22,15 @@ pkgver() {
 }
 
 build() {
+  export GOPATH="$srcdir"/gopath
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export CGO_ENABLED=1
+
   cd "$srcdir/$_pkgname"
-  EXTRA_GOFLAGS="-gcflags all=-trimpath=${PWD} -asmflags all=-trimpath=${PWD}" \
-  LDFLAGS="-linkmode external -extldflags \"${LDFLAGS}\""
-  make VERSION=$pkgver DESTDIR="$pkgdir" build
+  make VERSION=$pkgver DESTDIR="$pkgdir" PREFIX="/usr" build
 }
 
 package() {
