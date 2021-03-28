@@ -1,0 +1,12 @@
+post_install() {
+  printf "$(tput setaf 4)  ->$(tput sgr0; tput bold) %s$(tput sgr0)\n" \
+    'NOTE: You can create persistence images for ventoy with the "ventoy-persistent" command,'
+  printf "$(tput setaf 4)  ->$(tput sgr0; tput bold) %s$(tput sgr0)\n" \
+    'which is a shortcut to "/opt/ventoy/CreatePersistentImg.sh"'
+  printf "$(tput setaf 4)  ->$(tput sgr0; tput bold) %s$(tput sgr0)\n" \
+    '(See https://www.ventoy.net/en/plugin_persistence.html for documentation.)'
+}
+
+post_upgrade() {
+  [ $(vercmp $2 1.0.39) -le 0 ] && post_install
+}
