@@ -14,8 +14,10 @@ optdepends=('kicad-library: for footprints')
 conflicts=('kicad' 'kicad-bzr')
 provides=('kicad')
 install=kicad.install
-source=("${pkgname}"'::git+https://gitlab.com/kicad/code/kicad.git')
-md5sums=('SKIP')
+source=("${pkgname}"'::git+https://gitlab.com/kicad/code/kicad.git'
+        "kicad-git.env")
+md5sums=('SKIP'
+         'SKIP')
 
 pkgver() {
   cd "${srcdir}/${pkgname}"
@@ -26,10 +28,14 @@ build() {
   cd "${srcdir}/${pkgname}"
   mkdir -p build
   cd build
-  cmake .. -G Ninja\
+  cmake .. -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCMAKE_INSTALL_PREFIX=/usr/lib/kicad-git \
+    -DCMAKE_INSTALL_DATADIR=/usr/share/kicad-git \
+    -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/kicad-git \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib/kicad-git/lib \
+    -DCMAKE_EXECUTABLE_SUFFIX=-git \
+    -DKICAD_DATA=/usr/share/kicad-git \
     -DKICAD_USE_OCE=OFF \
     -DKICAD_USE_OCC=ON \
     -DBUILD_GITHUB_PLUGIN=ON \
@@ -49,4 +55,28 @@ package() {
   cd "${srcdir}/${pkgname}"
   cd build
   DESTDIR="$pkgdir" ninja install
+  mkdir -p "$pkgdir/usr/share/applications"
+  for prog in bitmap2component eeschema gerbview kicad pcbcalculator pcbnew; do
+    sed -i \
+        -e 's/^Exec=\([^ ]*\)\(.*\)$/Exec=\1-git\2/g' \
+        -e 's/^Icon=\(.*\)$/Icon=\1-git/g' \
+        -e 's/^Name=\(.*\)$/Name=\1 git/g' \
+        "$pkgdir/usr/share/kicad-git/applications/$prog.desktop"
+    ln -sv "../kicad-git/applications/$prog.desktop" \
+        "$pkgdir/usr/share/applications/${prog}-git.desktop"
+  done
+
+  cd "$srcdir"
+  mkdir -p "$pkgdir/usr/share/kicad-git"
+  cp kicad-git.env "$pkgdir/usr/share/kicad-git/kicad-git.env"
+
+  mkdir -p "$pkgdir/usr/bin"
+  (cd "$pkgdir/usr/lib/kicad-git/bin" && ls | grep -v '\.kiface') | while read prog; do
+  cat > "$pkgdir/usr/bin/$prog-git" <<EOF
+#!/bin/sh
+. /usr/share/kicad-git/kicad-git.env
+exec /usr/lib/kicad-git/bin/$prog
+EOF
+  chmod +x "$pkgdir/usr/bin/$prog-git"
+  done
 }
