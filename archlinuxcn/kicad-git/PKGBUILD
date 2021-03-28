@@ -2,14 +2,14 @@
 
 pkgname=kicad-git
 pkgver=5.99.0.r10019.g42c6af4bd8
-pkgrel=1
+pkgrel=1.1
 pkgdesc="Electronic schematic and printed circuit board (PCB) design tools"
 arch=('i686' 'x86_64')
 url="http://kicad-pcb.org/"
 license=('GPL')
 depends=('glew' 'wxgtk3' 'desktop-file-utils' 'boost-libs' 'python'
          'glm' 'curl' 'swig' 'python-wxpython' 'opencascade' 'ngspice>=27')
-makedepends=('cmake' 'git' 'zlib' 'mesa' 'boost')
+makedepends=('cmake' 'git' 'zlib' 'mesa' 'boost' 'ninja')
 optdepends=('kicad-library: for footprints')
 conflicts=('kicad' 'kicad-bzr')
 provides=('kicad')
@@ -26,7 +26,8 @@ build() {
   cd "${srcdir}/${pkgname}"
   mkdir -p build
   cd build
-  cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+  cmake .. -G Ninja\
+    -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DKICAD_USE_OCE=OFF \
@@ -41,11 +42,11 @@ build() {
     -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config-gtk3 \
     -DKICAD_SCRIPTING_WXPYTHON_PHOENIX=ON
 
-  make
+ninja
 }
 
 package() {
   cd "${srcdir}/${pkgname}"
   cd build
-  make DESTDIR="${pkgdir}" install
+  DESTDIR="$pkgdir" ninja install
 }
