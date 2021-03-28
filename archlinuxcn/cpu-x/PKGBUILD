@@ -2,16 +2,16 @@
 
 _realname=CPU-X
 pkgname=cpu-x
-pkgver=4.1.0
+pkgver=4.2.0
 pkgrel=1
 pkgdesc="A Free software that gathers information on CPU, motherboard and more"
 arch=('i686' 'x86_64')
 url="http://X0rg.github.io/CPU-X/"
 license=('GPL3')
-depends=('gtk3' 'ncurses' 'libcpuid' 'pciutils' 'procps-ng')
+depends=('gtk3' 'ncurses' 'libcpuid' 'pciutils' 'glfw' 'procps-ng')
 makedepends=('cmake' 'ninja' 'nasm')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/X0rg/CPU-X/archive/v$pkgver.tar.gz")
-sha512sums=('4a271b5d62c4c1e1ada5829537517a516d71b43a2202502097e16ca3d1acfaa3f482c71ff4955f429ec75bf88cdb5e1db966c1bbcdcbc7fe925fc23792a76a4b')
+sha512sums=('28d51ecd1086624310825d83820051e2d97f2cb10b8b4af3aa69c372854331fdd29100fb932972a4a787187f42894ae93ad830c29aaa5a75b2dc72d765ee4b10')
 
 build() {
 	cmake -S "$_realname-$pkgver" -B build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
