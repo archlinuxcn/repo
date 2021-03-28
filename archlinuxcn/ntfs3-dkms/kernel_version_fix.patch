@@ -68,12 +68,12 @@
  	return ERR_PTR(err);
  }
  
--int ntfs_create_inode(struct user_namespace *mnt_userns, struct inode *dir,
-+int ntfs_create_inode(struct inode *dir,
- 		      struct dentry *dentry, const struct cpu_str *uni,
- 		      umode_t mode, dev_t dev, const char *symname, u32 size,
- 		      int excl, struct ntfs_fnd *fnd, struct inode **new_inode)
-@@ -1584,7 +1584,7 @@
+-struct inode *ntfs_create_inode(struct user_namespace *mnt_userns,
++struct inode *ntfs_create_inode(
+ 				struct inode *dir, struct dentry *dentry,
+ 				const struct cpu_str *uni, umode_t mode,
+ 				dev_t dev, const char *symname, u32 size,
+@@ -1577,7 +1577,7 @@
  
  #ifdef CONFIG_NTFS3_FS_POSIX_ACL
  	if (!is_link && (sb->s_flags & SB_POSIXACL)) {
@@ -93,17 +93,17 @@
 +static int ntfs_create(struct inode *dir,
  		       struct dentry *dentry, umode_t mode, bool excl)
  {
- 	int err;
-@@ -111,7 +111,7 @@
+ 	struct ntfs_inode *ni = ntfs_i(dir);
+@@ -110,7 +110,7 @@
  
  	ni_lock_dir(ni);
  
--	err = ntfs_create_inode(mnt_userns, dir, dentry, NULL, S_IFREG | mode,
-+	err = ntfs_create_inode(dir, dentry, NULL, S_IFREG | mode,
- 				0, NULL, 0, excl, NULL, &inode);
+-	inode = ntfs_create_inode(mnt_userns, dir, dentry, NULL, S_IFREG | mode,
++	inode = ntfs_create_inode(dir, dentry, NULL, S_IFREG | mode,
+ 				  0, NULL, 0, excl, NULL);
  
  	ni_unlock(ni);
-@@ -185,7 +185,7 @@
+@@ -184,7 +184,7 @@
   *
   * inode_operations::symlink
   */
@@ -111,17 +111,17 @@
 +static int ntfs_symlink(struct inode *dir,
  			struct dentry *dentry, const char *symname)
  {
- 	int err;
-@@ -195,7 +195,7 @@
+ 	u32 size = strlen(symname);
+@@ -193,7 +193,7 @@
  
  	ni_lock_dir(ni);
  
--	err = ntfs_create_inode(mnt_userns, dir, dentry, NULL, S_IFLNK | 0777,
-+	err = ntfs_create_inode(dir, dentry, NULL, S_IFLNK | 0777,
- 				0, symname, size, 0, NULL, &inode);
+-	inode = ntfs_create_inode(mnt_userns, dir, dentry, NULL, S_IFLNK | 0777,
++	inode = ntfs_create_inode(dir, dentry, NULL, S_IFLNK | 0777,
+ 				  0, symname, size, 0, NULL);
  
  	ni_unlock(ni);
-@@ -208,7 +208,7 @@
+@@ -206,7 +206,7 @@
   *
   * inode_operations::mkdir
   */
@@ -129,17 +129,17 @@
 +static int ntfs_mkdir(struct inode *dir,
  		      struct dentry *dentry, umode_t mode)
  {
- 	int err;
-@@ -217,7 +217,7 @@
+ 	struct inode *inode;
+@@ -214,7 +214,7 @@
  
  	ni_lock_dir(ni);
  
--	err = ntfs_create_inode(mnt_userns, dir, dentry, NULL, S_IFDIR | mode,
-+	err = ntfs_create_inode(dir, dentry, NULL, S_IFDIR | mode,
- 				0, NULL, -1, 0, NULL, &inode);
+-	inode = ntfs_create_inode(mnt_userns, dir, dentry, NULL, S_IFDIR | mode,
++	inode = ntfs_create_inode(dir, dentry, NULL, S_IFDIR | mode,
+ 				  0, NULL, -1, 0, NULL);
  
  	ni_unlock(ni);
-@@ -249,7 +249,7 @@
+@@ -246,7 +246,7 @@
   *
   * inode_operations::rename
   */
@@ -148,15 +148,15 @@
  		       struct dentry *old_dentry, struct inode *new_dir,
  		       struct dentry *new_dentry, u32 flags)
  {
-@@ -534,7 +534,7 @@
+@@ -520,7 +520,7 @@
  
  	/*fnd contains tree's path to insert to*/
  	/* TODO: init_user_ns? */
--	err = ntfs_create_inode(&init_user_ns, dir, dentry, uni, mode, 0, NULL,
-+	err = ntfs_create_inode(dir, dentry, uni, mode, 0, NULL,
- 				0, excl, fnd, &inode);
- 	if (!err)
- 		err = finish_open(file, dentry, ntfs_file_open);
+-	inode = ntfs_create_inode(&init_user_ns, dir, dentry, uni, mode, 0,
++	inode = ntfs_create_inode(dir, dentry, uni, mode, 0,
+ 				  NULL, 0, excl, fnd);
+ 	err = IS_ERR(inode) ? PTR_ERR(inode)
+ 			    : finish_open(file, dentry, ntfs_file_open);
 
 --- a/fs/ntfs3/ntfs_fs.h
 +++ b/fs/ntfs3/ntfs_fs.h
@@ -178,12 +178,12 @@
  int ntfs_flush_inodes(struct super_block *sb, struct inode *i1,
  		      struct inode *i2);
  int inode_write_data(struct inode *inode, const void *data, size_t bytes);
--int ntfs_create_inode(struct user_namespace *mnt_userns, struct inode *dir,
-+int ntfs_create_inode(struct inode *dir,
- 		      struct dentry *dentry, const struct cpu_str *uni,
- 		      umode_t mode, dev_t dev, const char *symname, u32 size,
- 		      int excl, struct ntfs_fnd *fnd, struct inode **new_inode);
-@@ -773,17 +773,17 @@
+-struct inode *ntfs_create_inode(struct user_namespace *mnt_userns,
++struct inode *ntfs_create_inode(
+ 				struct inode *dir, struct dentry *dentry,
+ 				const struct cpu_str *uni, umode_t mode,
+ 				dev_t dev, const char *symname, u32 size,
+@@ -785,17 +785,17 @@
  /* globals from xattr.c */
  #ifdef CONFIG_NTFS3_FS_POSIX_ACL
  struct posix_acl *ntfs_get_acl(struct inode *inode, int type);
