@@ -64,6 +64,13 @@ def prepare():
   except KeyError:
     return 'no clippy available?'
 
+  rls_version = toml['pkg']['rls-preview']['version'].split('-', 1)[0]
+  try:
+    rls_url = toml['pkg']['rls-preview']['target'] \
+        ['x86_64-unknown-linux-gnu']['xz_url']
+  except KeyError:
+    return 'no rls available?'
+
   stds = [Std(target, toml['pkg']['rust-std']['target'][target])
           for target in STDS]
 
@@ -78,6 +85,8 @@ def prepare():
     rustfmt_version = rustfmt_version,
     clippy_version = clippy_version,
     clippy_url = clippy_url,
+    rls_version = rls_version,
+    rls_url = rls_url,
   )
 
 def pre_build():
