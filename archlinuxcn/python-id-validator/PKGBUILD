@@ -2,7 +2,7 @@
 
 _pkgname=id-validator.py
 pkgname=python-id-validator
-pkgver=1.0.16
+pkgver=1.0.17
 pkgrel=1
 pkgdesc='中华人民共和国居民身份证、中华人民共和国港澳居民居住证以及中华人民共和国台湾居民居住证号码验证工具'
 arch=('any')
@@ -15,7 +15,7 @@ checkdepends=(
   python-pytest
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/jxlwqq/id-validator.py/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('50748783cb7c5165911a461841f8a6142ab417d930e61fa48ecbe8d8a578a47e5b86919f607c9615c5fff6bf43d39c8ccb1fbb988cbea9e0784e12ec86dd4b0b')
+sha512sums=('629ed682a3fa77752f33b5df1a4f407500fa9eadc5c3bcf6251472994db784a80a8d8b61da6ef698d3d75d08a380ad85e118890879b4c74dc41e1aaf5f7ace71')
 
 build() {
   cd "${_pkgname}-${pkgver}"
