@@ -1,0 +1,42 @@
+# Maintainer: Songmin Li <lisongmin@protonmail.com>
+pkgname=nerdctl
+pkgver=0.7.2
+pkgrel=1
+pkgdesc='Docker-compatible CLI for containerd.'
+makedepends=('go')
+arch=('i686' 'x86_64' 'aarch64')
+url='https://github.com/containerd/nerdctl'
+license=('Apache')
+provides=('nerdctl')
+source=(${pkgname}-${pkgver}.tar.gz::https://github.com/containerd/${pkgname}/archive/v${pkgver}.tar.gz)
+sha256sums=('0bf1badd8daf4d86063504539cf645017195cb053c40f61c1cc2f2b2875a65f8')
+
+build() {
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+  export GO111MODULE=on
+
+  cd $pkgname-${pkgver}
+
+  sed -i 's/^\(.*Version =\) ".*"$/\1 "'${pkgver}'"/g' pkg/version/version.go
+  sed -i 's/^\(.*Revision =\) ".*"$/\1 "'${pkgrel}'"/g' pkg/version/version.go
+
+  go build -o nerdctl
+
+  ./nerdctl completion bash > nerdctl.bash
+}
+
+package() {
+  depends=('containerd' 'cni-plugins' 'buildkit' 'rootlesskit' 'slirp4netns')
+
+  # Install binary
+  install -Dm755 "$srcdir/${pkgname}-${pkgver}/nerdctl" "$pkgdir/usr/bin/nerdctl"
+  install -Dm755 "$srcdir/${pkgname}-${pkgver}/extras/rootless/containerd-rootless-setuptool.sh" "$pkgdir/usr/bin/containerd-rootless-setuptool.sh"
+  install -Dm755 "$srcdir/${pkgname}-${pkgver}/extras/rootless/containerd-rootless.sh" "$pkgdir/usr/bin/containerd-rootless.sh"
+
+  # completion for bash
+  install -Dm644 "$srcdir/${pkgname}-${pkgver}/nerdctl.bash" "$pkgdir/usr/share/bash-completion/completions/nerdctl"
+}
