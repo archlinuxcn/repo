@@ -6,7 +6,7 @@
 _pkgname=wine
 pkgname=wine-for-wechat
 pkgver=6.5
-pkgrel=1
+pkgrel=2
 
 _pkgbasever=${pkgver/rc/-rc}
 
@@ -171,9 +171,9 @@ package() {
     dlldir="$pkgdir/usr/lib/wine" install
 
   # Font aliasing settings for Win32 applications
-  install -d "$pkgdir"/etc/fonts/conf.{avail,d}
-  install -m644 "$srcdir/30-win32-aliases.conf" "$pkgdir/etc/fonts/conf.avail"
-  ln -s ../conf.avail/30-win32-aliases.conf "$pkgdir/etc/fonts/conf.d/30-win32-aliases.conf"
+  install -d "$pkgdir"/usr/share/fontconfig/conf.{avail,default}
+  install -m644 "$srcdir/30-win32-aliases.conf" "$pkgdir/usr/share/fontconfig/conf.avail"
+  ln -s ../conf.avail/30-win32-aliases.conf "$pkgdir/usr/share/fontconfig/conf.default/30-win32-aliases.conf"
   install -Dm 644 "$srcdir/wine-binfmt.conf" "$pkgdir/usr/lib/binfmt.d/wine.conf"
 
   i686-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib32/wine/*.dll
