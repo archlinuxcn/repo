@@ -6,14 +6,15 @@
 # Contributor: Robert Orzanna <orschiro at gmail dot com>
 pkgname=timeshift
 pkgver=20.11.1+3+g08d0e59
-pkgrel=3
+pkgrel=4
 pkgdesc="A system restore utility for Linux"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/teejee2008/timeshift"
 license=('GPL')
-depends=('gtk3' 'libsoup' 'desktop-file-utils' 'cronie' 'rsync' 'libgee' 'vte3'
-         'xapp' 'xorg-xhost' 'btrfs-progs')
-makedepends=('git' 'vala' 'diffutils' 'coreutils')
+depends=('gtk3' 'libsoup' 'cronie' 'rsync' 'libgee' 'vte3' 'xapp' 'xorg-xhost')
+makedepends=('git' 'vala')
+checkdepends=('appstream-glib' 'desktop-file-utils')
+optdepends=('btrfs-progs: BTRFS support')
 install="$pkgname.install"
 _commit=08d0e5912b617009f2f0fdb61fb4173cb3576ed4
 source=("git+https://github.com/teejee2008/timeshift.git#commit=$_commit")
@@ -24,12 +25,22 @@ pkgver() {
 	git describe --tags | sed 's/^v//;s/-/+/g'
 }
 
+prepare() {
+	cd "$srcdir/$pkgname"
+	sed -i -e 's/--Xcc="-O3" //g' src/makefile
+}
+
 build() {
 	cd "$srcdir/$pkgname/src"
-	export CFLAGS="${CFLAGS} --std=c99"
 	make app-gtk
 	make app-console
 	make pot
+}
+
+check() {
+	cd "$srcdir/$pkgname"
+	appstream-util validate-relax --nonet debian/*.appdata.xml
+	desktop-file-validate "src/$pkgname-gtk.desktop"
 }
 
 package() {
