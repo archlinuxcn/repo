@@ -1,9 +1,10 @@
-# Maintainer:  Dimitris Kiziridis <ragouel at outlook dot com>
+# Maintainer:  Moses Narrow <moe-narrow@use.startmail.com>
+# Contributor:  Dimitris Kiziridis <ragouel at outlook dot com>
 # Contributor: Konrad Tegtmeier <konrad.tegtmeier+aur@gmail.com>
 # Contributor: Marcel O'Neil <marcel@marceloneil.com>
 
 pkgname=cockroachdb-bin
-pkgver=20.2.0
+pkgver=20.2.7
 pkgrel=1
 pkgdesc='An open source, survivable, strongly consistent, scale-out SQL database'
 arch=('x86_64')
@@ -18,12 +19,12 @@ source=("${pkgname}-${pkgver}.tgz::https://binaries.cockroachdb.com/cockroach-v$
         'cockroach.default'
         'cockroach.sysusers'
         'cockroach.tmpfiles')
-sha256sums=('5fe1da315bf6cf433e4c12cd4f77bd75bec576dfe947ae5c06ea3b6bab2993ec'
+sha256sums=('498f99c751daaa2665dffbe98265605ab257bdb80581256b9a517ecc4c5f7c82'
             '8a2fba9d26592ff3538f44c96d1b894ef44649058b4d04f3fda49518a9c4ae11'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP')
+            '6c336d30983d6295995823a134e3cc85a06ef9418339b53cf6f375df816bea51'
+            '55f380f5cb201c6afeafbf1a6fb5a6400dbffa0edc134d30960d1d04e3d19ef2'
+            '8be2f52529135d8d173bba130e000a187bbadc869ac2c603a4714af435840821'
+            'c74cf876197312b91970bdd7832081750d2ab4d47e553bb46f38d57cba52641e')
 
 package() {
   # generate shell completion
