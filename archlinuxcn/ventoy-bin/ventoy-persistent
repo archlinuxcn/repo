@@ -1,4 +1,3 @@
 #!/bin/sh
 
-cd /opt/ventoy || exit 1
-exec ./CreatePersistentImg.sh "$@"
+exec /opt/ventoy/CreatePersistentImg.sh "$@"
