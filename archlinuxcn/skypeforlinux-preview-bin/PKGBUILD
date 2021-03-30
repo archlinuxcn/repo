@@ -3,7 +3,7 @@
 
 _pkgname=skypeforlinux
 pkgname=$_pkgname-preview-bin
-pkgver=8.69.76.76
+pkgver=8.70.76.76
 pkgrel=1
 pkgdesc="Skype for Linux - Preview/Insider Version"
 arch=("x86_64")
@@ -11,6 +11,7 @@ url="http://www.skype.com"
 license=("custom")
 depends=("gtk3" "libxss" "alsa-lib" "libxtst" "libsecret" "nss"
          "glibc>=2.28-4")
+makedepends=("rpmextract")
 optdepends=("org.freedesktop.secrets: keyring/password support"
             "libappindicator-gtk3: systray icon support")
 conflicts=("$_pkgname" "$_pkgname-bin" "$_pkgname-stable-bin"
@@ -19,16 +20,17 @@ provides=("$_pkgname" "skype")
 replaces=("$_pkgname-bin")
 install=install.sh
 source=(
-"https://repo.skype.com/deb/pool/main/s/$_pkgname/${_pkgname}_${pkgver}_amd64.deb"
+https://repo.skype.com/rpm/unstable/${_pkgname}_${pkgver}-1.x86_64.rpm
 )
-sha256sums=('30182e5d940993061956a7fd188ca56fbf3bc0852f7c6e8e6a46d44460db63c4')
+sha256sums=('ebca4b6dfc398a962c06ec3c0ea1d8f28d1ac4d07786d4c46313d060fb777e70')
 
 package() {
-  tar --no-same-owner -xJC "$pkgdir" -f data.tar.xz
+  cd $pkgdir
+  rpmextract.sh $srcdir/${_pkgname}_${pkgver}-1.x86_64.rpm
+  rm -rf "$pkgdir/usr/lib/.build-id"
   install -d "$pkgdir/usr/share/licenses/$pkgname"
   mv "$pkgdir/usr/share/$_pkgname/LICENSES.chromium.html" \
-    "$pkgdir/usr/share/licenses/$pkgname/"
-  rm -rf "$pkgdir/opt"
+     "$pkgdir/usr/share/licenses/$pkgname/"
 }
 
 # vim:set ts=2 sw=2 et:
