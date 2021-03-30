@@ -5,7 +5,7 @@
 
 pkgbase=nvidia-utils-beta
 pkgname=('nvidia-utils-beta' 'opencl-nvidia-beta' 'nvidia-settings-beta')
-pkgver=460.67
+pkgver=465.19.01
 pkgrel=1
 pkgdesc='NVIDIA drivers utilities (beta version)'
 arch=('x86_64')
@@ -17,10 +17,10 @@ source=("https://us.download.nvidia.com/XFree86/Linux-${CARCH}/${pkgver}/${_pkg}
         'nvidia-drm-outputclass.conf'
         'nvidia-utils.sysusers'
         '120-nvidia-settings-change-desktop-paths.patch')
-sha256sums=('a19253cf805f913a3b53098587d557fb21c9b57b1568cb630e128ebb3276c10e'
+sha256sums=('1bfc0e95d5f14bcb62bc56c074524e2adfe968860f481c38f95a0587774940c2'
             'be99ff3def641bb900c2486cce96530394c5dc60548fc4642f19d3a4c784134d'
             'd8d1caa5d72c71c6430c2a0d9ce1a674787e9272ccce28b9d5898ca24e60a167'
-            '6bbc832f4f91a7c9ec4778eac5fffd633f5f547bc2d8bb89afe4f442ad3c8dda')
+            'd6f80e0166a7db0a618e659ee66d24b24682b40a93cd4b2ad8ab3f26485d02b9')
 
 # create soname links
 _create_links() {
@@ -194,15 +194,13 @@ package_nvidia-utils-beta() {
     install -D -m644 README.txt "${pkgdir}/usr/share/doc/${pkgname}/README"
     install -D -m644 NVIDIA_Changelog -t "${pkgdir}/usr/share/doc/${pkgname}"
     install -D -m644 supported-gpus/supported-gpus.json -t "${pkgdir}/usr/share/doc/${pkgname}"
-    cp -a html "${pkgdir}/usr/share/doc/${pkgname}/"
+    cp -dr --no-preserve='ownership' html "${pkgdir}/usr/share/doc/${pkgname}/"
     #ln -s nvidia "${pkgdir}/usr/share/doc/nvidia-utils"
     
     # new power management support
-    install -D -m644 nvidia-suspend.service   -t "${pkgdir}/usr/lib/systemd/system"
-    install -D -m644 nvidia-hibernate.service -t "${pkgdir}/usr/lib/systemd/system"
-    install -D -m644 nvidia-resume.service    -t "${pkgdir}/usr/lib/systemd/system"
-    install -D -m755 nvidia                   -t "${pkgdir}/usr/lib/systemd/system-sleep"
-    install -D -m755 nvidia-sleep.sh          -t "${pkgdir}/usr/bin"
+    install -D -m644 systemd/system/*.service -t "${pkgdir}/usr/lib/systemd/system"
+    install -D -m755 systemd/system-sleep/nvidia -t "${pkgdir}/usr/lib/systemd/system-sleep"
+    install -D -m755 systemd/nvidia-sleep.sh -t "${pkgdir}/usr/bin"
     
     # distro specific files must be installed in /usr/share/X11/xorg.conf.d
     install -D -m644 "${srcdir}/nvidia-drm-outputclass.conf" "${pkgdir}/usr/share/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf"
