@@ -1,8 +1,8 @@
 # Maintainer: prg <prg _at_ xannode _dot_ com>
 # Contributor: Caltlgin Stsodaat <contact@fossdaily.xyz>
 pkgname='haruna'
-pkgver=0.5.0
-pkgrel=2
+pkgver=0.6.0
+pkgrel=1
 pkgdesc='Video player built with Qt/QML on top of libmpv.'
 arch=('x86_64')
 url='https://github.com/g-fb/haruna'
@@ -13,7 +13,7 @@ optdepends=('nvidia-utils: hardware accelerate support'
             'breeze: recommend theme')
 provides=('haruna')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('ebc6144a18f3a7ec7460cdefb77b1b170a049f7987f833e745ca12fd741f5078')
+sha256sums=('07e762612902c943f0e2508d3e1f5b65aad07a8f50ca70e5dc5191550aab95b9')
 
 build() {
   cmake -B 'build' -S "${pkgname}-${pkgver}" \
