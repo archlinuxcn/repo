@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import re
 from lilaclib import *
 
 def pre_build():
