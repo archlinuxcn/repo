@@ -2,7 +2,7 @@
 
 pkgbase=libjpeg-xl
 pkgname=('libjpeg-xl' 'libjpeg-xl-doc')
-pkgver=0.3.6
+pkgver=0.3.7
 pkgrel=1
 pkgdesc='JPEG XL image format reference implementation'
 arch=('x86_64')
@@ -10,7 +10,8 @@ url='https://jpeg.org/jpegxl/'
 license=('Apache')
 makedepends=('git' 'cmake' 'clang' 'brotli' 'gdk-pixbuf2' 'giflib' 'gimp'
              'libjpeg-turbo' 'libpng' 'openexr' 'zlib' 'libgl' 'freeglut'
-             'gtest' 'gmock' 'python' 'doxygen' 'graphviz' 'highway')
+             'gtest' 'gmock' 'python' 'asciidoc' 'doxygen' 'graphviz'
+             'highway')
 source=("git+https://gitlab.com/wg1/jpeg-xl.git#tag=v${pkgver}"
         'git+https://github.com/google/brotli.git'
         'git+https://github.com/lvandeve/lodepng.git'
