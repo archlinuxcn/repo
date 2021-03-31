@@ -4,7 +4,7 @@ pkgname=python-pyreadr
 _pkgname=pyreadr
 pkgver=0.4.0
 pkgrel=1
-pkgdesc='Python package to read and write R RData and Rds files into/from pandas dataframes. No R or other external dependencies required.'
+pkgdesc='Read and write R RData and Rds files into/from pandas dataframes'
 arch=('x86_64')
 url='https://github.com/ofajardo/pyreadr'
 license=('AGPL3')
@@ -17,7 +17,6 @@ makedepends=(
   python-setuptools
 )
 checkdepends=(
-  python-pytest
   python-sphinx_rtd_theme
   python-xarray
 )
@@ -39,9 +38,7 @@ build() {
 
 check() {
   cd "${_pkgname}-${pkgver}"
-  # dirty hack to pass the tests
-  sed -i "1iimport pyreadr" tests/test_basic.py
-  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-$(get_pyver)" pytest -v
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-$(get_pyver)" python tests/test_basic.py
 }
 
 package() {
