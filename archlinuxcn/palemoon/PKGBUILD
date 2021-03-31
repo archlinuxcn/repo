@@ -4,9 +4,9 @@
 # Contributor: American_Jesus
 pkgname=palemoon
 _repo=Pale-Moon
-pkgver=29.1.0
+pkgver=29.1.1
 # Commit can be found at https://repo.palemoon.org/MoonchildProductions/Pale-Moon/releases
-_commit=6758ce9877
+_commit=0487fd6d5c
 pkgrel=1
 pkgdesc="Open source web browser based on Firefox focusing on efficiency."
 arch=('i686' 'x86_64')
