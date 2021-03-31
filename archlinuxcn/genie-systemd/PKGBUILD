@@ -1,37 +1,54 @@
-# Maintainer: DuckSoft <realducksoft@gmail.com>
-
 pkgname=genie-systemd
 _pkgname=genie
-pkgver=1.29
-pkgrel=11
+pkgver=1.36
+pkgrel=1
 pkgdesc="A quick way into a systemd \"bottle\" for WSL"
 arch=('x86_64')
 url="https://github.com/arkane-systems/genie"
-depends=('daemonize' 'dotnet-runtime>=5.0' 'dotnet-host>=5.0' 'inetutils')
-makedepends=('git' 'dotnet-sdk>=5.0')
+depends=('daemonize' 'dotnet-runtime' 'dotnet-host')
+makedepends=('git' 'dotnet-sdk')
 conflicts=('genie-systemd')
 options=(!strip)
 provides=('genie-systemd')
-source=("git+https://github.com/arkane-systems/genie.git#tag=$pkgver")
+source=("git+https://github.com/arkane-systems/genie.git#tag=v$pkgver")
 sha256sums=('SKIP')
 
-prepare() {
-  	cd "${srcdir}/$_pkgname"
+
+pkgver() {
+  cd "$srcdir"/"$_pkgname"/package
+  grep VersionPrefix ../binsrc/genie/genie.csproj | sed 's/.*<VersionPrefix>\(.*\)<\/VersionPrefix>/\1/' | tr -d '\r\n'
 }
 
 build() {
-  	export DOTNET_CLI_TELEMETRY_OPTOUT=1
-  	export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
-  	cd "$srcdir/$_pkgname/$_pkgname"
-  	export DESTDIR=$pkgdir
-  	ls -alh
-  	make build
+  cd "$srcdir"/"$_pkgname"/package
+  make -C ../binsrc
 }
 
 package() {
-  	cd "$srcdir/$_pkgname/$_pkgname"
-  	make install
-	mkdir -p ${pkgdir}/usr/bin
-	chmod +x ${pkgdir}/usr/libexec/genie
-	ln -s /usr/libexec/genie/genie ${pkgdir}/usr/bin/genie
+  cd "$srcdir"/"$_pkgname"/package
+  # Binaries
+  install -Dm 4755 -o root "../binsrc/genie/bin/Release/net5.0/linux-x64/publish/genie" -t "${pkgdir}/usr/libexec/genie"
+  install -Dm 0755 -o root "../binsrc/runinwsl/bin/Release/net5.0/linux-x64/publish/runinwsl" -t "${pkgdir}/usr/libexec/genie"
+
+  # Environment generator.
+  install -Dm 0755 -o root "../othersrc/scripts/10-genie-envar.sh" -t "${pkgdir}/usr/libexec/genie"
+
+  # Configuration file.
+  install -Dm 0644 -o root "../othersrc/etc/genie.ini" -t "${pkgdir}/etc"
+
+  # genie symlink
+  mkdir -p ${pkgdir}/usr/bin
+  ln -s /usr/libexec/genie/genie ${pkgdir}/usr/bin/genie
+
+  # 10-genie-envar.sh symlinks
+  mkdir -p ${pkgdir}/usr/lib/systemd/user-environment-generators
+  mkdir -p ${pkgdir}/usr/lib/systemd/system-environment-generators
+  ln -s /usr/libexec/genie/10-genie-envar.sh ${pkgdir}/usr/lib/systemd/user-environment-generators/10-genie-envar.sh
+  ln -s /usr/libexec/genie/10-genie-envar.sh ${pkgdir}/usr/lib/systemd/system-environment-generators/10-genie-envar.sh
+
+  # man page
+  cp ../othersrc/docs/genie.8 /tmp/genie.8
+  gzip -9 /tmp/genie.8
+  install -Dm 0644 -o root /tmp/genie.8.gz -t "${pkgdir}/usr/share/man/man8"
+  rm /tmp/genie.8.gz
 }
