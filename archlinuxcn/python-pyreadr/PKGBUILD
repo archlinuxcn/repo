@@ -1,0 +1,51 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=python-pyreadr
+_pkgname=pyreadr
+pkgver=0.4.0
+pkgrel=1
+pkgdesc='Python package to read and write R RData and Rds files into/from pandas dataframes. No R or other external dependencies required.'
+arch=('x86_64')
+url='https://github.com/ofajardo/pyreadr'
+license=('AGPL3')
+depends=(
+  python-pandas
+  xz
+)
+makedepends=(
+  cython  
+  python-setuptools
+)
+checkdepends=(
+  python-pytest
+  python-sphinx_rtd_theme
+  python-xarray
+)
+optdepends=(
+  "python-xarray: for reading 3D arrays"
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ofajardo/pyreadr/archive/refs/tags/v${pkgver}.tar.gz"
+)
+sha512sums=('2ea5669211ec63653358477afd0368f44ea37498caef6058c46e37cadda21264fe9bb258f7f3c403a36baef0b33eaa476ba62341be8a9effe87347837513cae7')
+
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+check() {
+  cd "${_pkgname}-${pkgver}"
+  # dirty hack to pass the tests
+  sed -i "1iimport pyreadr" tests/test_basic.py
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-$(get_pyver)" pytest -v
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+}
+# vim:set ts=2 sw=2 et:
