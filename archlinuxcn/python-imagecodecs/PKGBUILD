@@ -2,7 +2,7 @@
 
 _name=imagecodecs
 pkgname=python-imagecodecs
-pkgver=2021.2.26
+pkgver=2021.3.31
 pkgrel=1
 pkgdesc='Image transformation, compression, and decompression codecs'
 arch=('x86_64')
@@ -32,7 +32,7 @@ depends=(
 )
 makedepends=(python-setuptools cython)
 source=("${_name}-${pkgver}.tar.gz::https://github.com/cgohlke/imagecodecs/archive/v${pkgver}.tar.gz")
-sha256sums=('9b9e18b7683a96d9dcf732787c4ca0c948c0059ec7fb61d409a0e5aa792f21fa')
+sha256sums=('9bd5cb7e6490d96eddd2d8c225a1b160384ec2b583e713437be9e30174ffa170')
 
 prepare() {
   sed -i "s/del EXTENSIONS\['zopfli'\]/pass/" ${srcdir}/${_name}-${pkgver}/setup.py
