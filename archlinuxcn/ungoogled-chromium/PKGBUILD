@@ -9,8 +9,8 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=89.0.4389.90
-pkgrel=3
+pkgver=89.0.4389.114
+pkgrel=1
 _launcher_ver=7
 _gcc_patchset=7
 _pkgname=$(echo $pkgname | cut -d\- -f1-2)
@@ -38,19 +38,19 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
         https://github.com/stha09/chromium-patches/releases/download/chromium-${pkgver%%.*}-patchset-$_gcc_patchset/chromium-${pkgver%%.*}-patchset-$_gcc_patchset.tar.xz
         add-dependency-on-opus-in-webcodecs.patch
-        x11-ozone-fix-two-edge-cases.patch
         chromium-drirc-disable-10bpc-color-configs.conf
         chromium-glibc-2.33.patch
+        chromium-fix-libva-redef.patch
         wayland-egl.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('11c6089c5fdd921216aa4eb34b52818a9b091cad655a24aed0982d29e65b279a'
-            'f18996580d89d48e9f140c072343df7259b3b5193eafc4b82877c7e8efb769da'
+sha256sums=('f2f0abe9697a220a8545df74d832c6c8d85a4fb11845e7e398752d746e72ed00'
+            '38bc4f73356caaa23d7f6b9d2961f9241f8e0fb212f3ab11bf88dca1db5ca3ee'
             '86859c11cfc8ba106a3826479c0bc759324a62150b271dd35d1a0f96e890f52f'
             'f8b1558f6c87b33423da854d42f0f69d47885a96d6bf6ce7f26373e93d47442f'
             'b86b11de8db438c47f0a84c7956740f648d21035f4ee46bfbd50c3348d369121'
-            '9e4743bdeaf5b668659ad53400e3977006916aac3a7ba045bbc750b7b4cbf274'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '2fccecdcd4509d4c36af873988ca9dbcba7fdb95122894a9fdf502c33a1d7a4b'
+            'de9eb3612d44616a500c2eccdffac814eb90ad9a868cc1030d17fc6783d544e2'
             '34d08ea93cb4762cb33c7cffe931358008af32265fc720f2762f0179c3973574'
             'e393174d7695d0bafed69e868c5fbfecf07aa6969f3b64596d0bae8b067e1711')
 
@@ -101,9 +101,11 @@ prepare() {
   # https://crbug.com/1164975
   patch -Np1 -i ../chromium-glibc-2.33.patch
 
+  # https://github.com/kiss-community/repo-community/issues/246
+  patch -Np1 -i ../chromium-fix-libva-redef.patch
+
   # Upstream fixes
   patch -Np1 -i ../add-dependency-on-opus-in-webcodecs.patch
-  patch -Np1 -i ../x11-ozone-fix-two-edge-cases.patch
 
   # Fixes for building with libstdc++ instead of libc++
   patch -Np1 -i ../patches/chromium-89-quiche-dcheck.patch
