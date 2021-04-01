@@ -7,3 +7,4 @@ def pre_build():
 
 def post_build():
     git_pkgbuild_commit()
+    update_aur_repo()
