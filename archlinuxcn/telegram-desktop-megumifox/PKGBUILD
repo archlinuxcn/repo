@@ -4,14 +4,14 @@
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
 pkgver=2.7.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL3')
 depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
-         'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5' 'kwayland' 'libx11')
-makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'python2' 'microsoft-gsl' 'libtg_owt' 'glibmm')
+         'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5' 'kwayland' 'libx11' 'glibmm')
+makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'python2' 'microsoft-gsl' 'libtg_owt')
 optdepends=('ttf-opensans: default Open Sans font family')
 provides=('telegram-desktop')
 conflicts=('telegram-desktop')
