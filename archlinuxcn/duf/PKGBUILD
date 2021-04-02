@@ -1,40 +1,35 @@
 # Maintainer: Christian Muehlhaeuser <muesli at gmail dot com>
 
 pkgname=duf
-pkgver=0.6.0
+pkgver=0.6.1
 pkgrel=1
 pkgdesc="Disk Usage/Free Utility"
 arch=('x86_64' 'i686' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/muesli/${pkgname}"
 license=('MIT')
-makedepends=('go')
+makedepends=('git' 'go' 'gzip' 'tar')
 source=("${url}/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('238ace11966ab3b1f99e5488a9f161ebc97aba7600a8f09884110d0572309491')
-
-prepare() {
-    export GOPATH="$srcdir/gopath"
-    export GO111MODULE=on
-
-    go clean -modcache
-}
+sha256sums=('a80ca8ba79b7f7b9a8433652e595220039627de575fe920e78d2aeab40b6cc9c')
 
 build() {
-    cd "$pkgname-$pkgver"
+    local commit
+    local extraflags
+    commit=$(zcat ${pkgname}-${pkgver}.tar.gz | git get-tar-commit-id)
+    extraflags="-X main.Version=${pkgver} -X main.CommitSHA=${commit}"
 
     export CGO_CPPFLAGS="${CPPFLAGS}"
     export CGO_CFLAGS="${CFLAGS}"
     export CGO_CXXFLAGS="${CXXFLAGS}"
     export CGO_LDFLAGS="${LDFLAGS}"
 
+    cd "$pkgname-$pkgver"
     go build \
         -trimpath \
         -buildmode=pie \
         -mod=readonly \
         -modcacherw \
-        -ldflags "-X main.Version=$pkgver -linkmode external -extldflags \"${LDFLAGS}\"" \
+        -ldflags "${extraflags} -extldflags \"${LDFLAGS}\"" \
         -o "$pkgname" .
-
-    go clean -modcache
 }
 
 package() {
