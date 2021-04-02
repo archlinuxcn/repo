@@ -3,12 +3,12 @@
 pkgname=rocketchat-desktop
 pkgver=3.1.1
 _pkgname="Rocket.Chat.Electron-${pkgver}"
-pkgrel=1
+pkgrel=2
 pkgdesc='Rocket.Chat Native Cross-Platform Desktop Application via Electron.'
 arch=('i686' 'x86_64')
 url='https://github.com/RocketChat/Rocket.Chat.Electron'
 license=('MIT')
-depends=('electron')
+depends=('electron11')
 makedepends=('nodejs' 'node-gyp' 'python' 'yarn')
 conflicts=('rocketchat-client-bin')
 install=rocketchat-desktop.install
@@ -16,12 +16,12 @@ source=("${url}/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz"
         rocketchat-desktop
         rocketchat-desktop.desktop)
 sha256sums=('ba0f4ebee4119987ab45a304b9ee3bfc8ce14159dd9cd3dca095020e1eae8a3e'
-            '18fab390ffce4f89a17d5d71a7e78fea9afa9f9d2bcdafecb4f310d4f804996f'
+            '57f2d0a2295ce4ed62a0461338d225f6c13e286ecb1ca418d722f8d4bdece6c4'
             '31fae4f98a61a774f84030fd43d2ef92c7633740dc5aa55967a21d0e29ea621a')
 
 prepare() {
   cd "$_pkgname"
-  yarn upgrade electron@"$(</usr/lib/electron/version)"
+  yarn upgrade electron@"$(</usr/lib/electron11/version)"
 }
 
 build() {
@@ -30,8 +30,8 @@ build() {
   export NODE_ENV=production
   yarn build
   yarn run electron-builder --linux --"${!CARCH}" --dir \
-    -c.electronDist=/usr/lib/electron \
-    -c.electronVersion="$(</usr/lib/electron/version)"
+    -c.electronDist=/usr/lib/electron11 \
+    -c.electronVersion="$(</usr/lib/electron11/version)"
 }
 
 package() {
