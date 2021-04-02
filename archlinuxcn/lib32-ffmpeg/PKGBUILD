@@ -7,7 +7,7 @@
 _pkgbasename=ffmpeg
 pkgname=("lib32-$_pkgbasename" "lib32-lib$_pkgbasename")
 pkgver=4.3.2
-pkgrel=2
+pkgrel=3
 epoch=2
 pkgdesc="Complete solution to record, convert and stream audio and video (32 bit)"
 arch=('x86_64')
@@ -48,7 +48,7 @@ license=('GPL3')
       'lib32-libvpx'
       'lib32-libwebp'
       'lib32-libx11'
-      'lib32-x264>=0.161'
+      'lib32-x264>=3:0.161'
       'lib32-x265>=3.5'
       'lib32-libxcb'
       'lib32-libxext'
@@ -97,7 +97,6 @@ prepare() {
   cd ${_pkgbasename}
 
   # Patching if needed
-  git cherry-pick -n 7c59e1b0f285cd7c7b35fcd71f49c5fd52cf9315 # fix build against libsrt 1.4.2
   patch -Np1 -i "${srcdir}"/vmaf-model-path.patch
 }
 
