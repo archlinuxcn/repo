@@ -1,15 +1,15 @@
 # Maintainer: Christian Muehlhaeuser <muesli at gmail dot com>
 
 pkgname=duf
-pkgver=0.6.1
+pkgver=0.6.2
 pkgrel=1
 pkgdesc="Disk Usage/Free Utility"
 arch=('x86_64' 'i686' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/muesli/${pkgname}"
 license=('MIT')
-makedepends=('git' 'go' 'gzip' 'tar')
+makedepends=('git' 'go')
 source=("${url}/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('a80ca8ba79b7f7b9a8433652e595220039627de575fe920e78d2aeab40b6cc9c')
+sha256sums=('f2314d8e5e133a6ce93968b3450c1710a3e432cb4a5dfc528aa0317d968a8988')
 
 build() {
     local commit
