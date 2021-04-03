@@ -1,15 +1,15 @@
-# Maintainer: Joonas Henriksson <joonas.henriksson at gmail com>
+# Maintainer: Shengyu Zhang <la@archlinuxcn.org>
+# Contributor: Joonas Henriksson <joonas.henriksson at gmail com>
 
-pkgbase=arc-gtk-theme-jnsh-git
+pkgname=arc-gtk-theme-jnsh-git
 _pkgname=arc-theme
-pkgname=('arc-gtk-theme-jnsh-git' 'arc-solid-gtk-theme-jnsh-git')
-pkgver=r1218.0c23e12
+pkgver=r1265.677e82a7
 pkgrel=1
 pkgdesc="A flat theme suite with transparent elements. Fork maintained by jnsh."
 arch=('any')
 url="https://github.com/jnsh/arc-theme"
 license=('GPL3')
-makedepends=('sassc' 'inkscape' 'optipng' 'git')
+makedepends=('sassc' 'inkscape' 'optipng' 'git' 'meson')
 optdepends=('gtk-engine-murrine: GTK2 support'
             'gnome-themes-extra: GTK2 support')
 source=("${_pkgname}::git+https://github.com/jnsh/${_pkgname}.git")
@@ -20,37 +20,17 @@ pkgver() {
   printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
+_prefix='/usr'
+
 build() {
   cd "${_pkgname}"
-  ./autogen.sh --prefix=/usr \
-    --with-cinnamon=4.4 \
-    --with-gnome-shell=3.36 \
-    --with-gtk3=3.24
-  make
-
-  cd "${srcdir}"
-  cp -a "${_pkgname}"{,-solid}
-
-  cd "${_pkgname}-solid"
-  ./autogen.sh --prefix=/usr \
-    --with-cinnamon=4.4 \
-    --with-gnome-shell=3.36 \
-    --with-gtk3=3.24 \
-    --disable-transparency
-  make
+  meson setup --prefix="${_prefix}" -Dthemes=gnome-shell,gtk2,gtk3,metacity,plank,unity,xfwm builddir
+  ninja -C builddir
 }
 
-package_arc-gtk-theme-jnsh-git() {
+package() {
   conflicts=('arc-gtk-theme' 'arc-gtk-theme-git')
 
   cd "${_pkgname}"
-  make DESTDIR="$pkgdir/" install
-}
-
-package_arc-solid-gtk-theme-jnsh-git() {
-  pkgdesc="A flat theme suite without transparent elements. Fork maintained by jnsh."
-  conflicts=('arc-solid-gtk-theme' 'arc-solid-gtk-theme-git')
-
-  cd "${_pkgname}-solid"
-  make DESTDIR="$pkgdir/" install
+  DESTDIR="${pkgdir}" ninja -C builddir install
 }
