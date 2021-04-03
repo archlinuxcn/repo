@@ -2,12 +2,17 @@
 
 pkgname=nutstore
 pkgver=5.0.4
-pkgrel=1
+pkgrel=2
 pkgdesc='a cloud service that lets you sync and share files anywhere.'
 arch=(x86_64)
 url='https://www.jianguoyun.com/'
 license=(custom)
-depends=(libappindicator-gtk3 libnotify python-gobject)
+depends=(
+    libappindicator-gtk3
+    libnotify
+    python-gobject
+    webkit2gtk
+)
 optdepends=('nautilus-nutstore: Nautilus plugin')
 source=(nutstore license)
 source_x86_64=("https://www.jianguoyun.com/static/exe/st/$pkgver/nutstore_client-$pkgver-linux-x64-public.tar.gz")
