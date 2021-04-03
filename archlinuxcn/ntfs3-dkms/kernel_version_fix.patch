@@ -160,7 +160,7 @@
 
 --- a/fs/ntfs3/ntfs_fs.h
 +++ b/fs/ntfs3/ntfs_fs.h
-@@ -454,11 +454,11 @@
+@@ -453,11 +453,11 @@
  extern const struct file_operations ntfs_dir_operations;
  
  /* globals from file.c*/
@@ -174,7 +174,7 @@
  		  struct iattr *attr);
  int ntfs_file_open(struct inode *inode, struct file *file);
  int ntfs_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
-@@ -645,7 +645,7 @@
+@@ -644,7 +644,7 @@
  int ntfs_flush_inodes(struct super_block *sb, struct inode *i1,
  		      struct inode *i2);
  int inode_write_data(struct inode *inode, const void *data, size_t bytes);
@@ -183,7 +183,7 @@
  				struct inode *dir, struct dentry *dentry,
  				const struct cpu_str *uni, umode_t mode,
  				dev_t dev, const char *symname, u32 size,
-@@ -785,17 +785,17 @@
+@@ -784,17 +784,17 @@
  /* globals from xattr.c */
  #ifdef CONFIG_NTFS3_FS_POSIX_ACL
  struct posix_acl *ntfs_get_acl(struct inode *inode, int type);
@@ -208,7 +208,7 @@
 
 --- a/fs/ntfs3/super.c
 +++ b/fs/ntfs3/super.c
-@@ -544,10 +544,10 @@
+@@ -542,10 +542,10 @@
  
  	if (opts->uid)
  		seq_printf(m, ",uid=%u",
@@ -395,7 +395,7 @@
  }
  
  /*
-@@ -886,7 +886,7 @@
+@@ -882,7 +882,7 @@
  		     sizeof(XATTR_NAME_POSIX_ACL_DEFAULT)))) {
  		/* TODO: init_user_ns? */
  		err = ntfs_xattr_get_acl(
@@ -404,7 +404,7 @@
  			name_len == sizeof(XATTR_NAME_POSIX_ACL_ACCESS) - 1
  				? ACL_TYPE_ACCESS
  				: ACL_TYPE_DEFAULT,
-@@ -907,7 +907,7 @@
+@@ -903,7 +903,7 @@
   * inode_operations::setxattr
   */
  static noinline int ntfs_setxattr(const struct xattr_handler *handler,
@@ -413,7 +413,7 @@
  				  struct dentry *de, struct inode *inode,
  				  const char *name, const void *value,
  				  size_t size, int flags)
-@@ -1017,7 +1017,7 @@
+@@ -1013,7 +1013,7 @@
  		     sizeof(XATTR_NAME_POSIX_ACL_DEFAULT)))) {
  		/* TODO: init_user_ns? */
  		err = ntfs_xattr_set_acl(
