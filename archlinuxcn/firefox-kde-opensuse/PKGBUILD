@@ -12,7 +12,7 @@
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=86.0.1
+pkgver=87.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -53,7 +53,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'pulseaudio: Audio support')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=9879274865591215e2c87180f1fbaa36d73e88bd
+_patchrev=3fdf082cf93d94e4289e552cbd9988601044576a
 options=('!emptydirs')
 _patchurl=https://raw.githubusercontent.com/openSUSE/firefox-maintenance/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -98,6 +98,8 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         0027-LTO-Only-enable-LTO-for-Rust-when-complete-build-use.patch
         0028-Make-elfhack-use-toolchain.patch
         # end
+        # Fix CSD when globalmenu is active #8
+        fix_csd_window_buttons.patch
 )
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -151,6 +153,9 @@ prepare() {
 
   # Force disable elfhack to fix build errors
   patch -Np1 -i "$srcdir"/build-disable-elfhack.patch
+
+  # Fix CSD when globalmenu is active #8
+  patch -Np1 -i "$srcdir"/fix_csd_window_buttons.patch
 
   if [ $_pgo ] ; then
     # Fix MOZILLA#1516803
@@ -266,10 +271,10 @@ md5sums=('SKIP'
          '4c23d9c0a691d70919beb1dafbbecbd3'
          '05bb69d25fb3572c618e3adf1ee7b670'
          'c0f68250d27f208efcdee710207cd3e4'
-         '6976984e1cbf000a6883a18916afc45c'
-         'b9cd675e20aa979b0e96d1497820f999'
+         '43c65f6513fbc28aaa8238ad3bdb4e26'
+         'e9ef021913dfc283621ee883a89650f5'
          '0a5733b7a457a2786c2dd27626a1bf88'
-         '02f72a7f3b628013e93b87d4cd093801'
+         '3296eaae541e4ea340df8d02450a5b81'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3c383d371d7f6ede5983a40310518715'
          '6a1ed12b8dbac57722436a2987e3ea33'
@@ -282,4 +287,5 @@ md5sums=('SKIP'
          '67c0bca3e38404d53e6057e744c7ecee'
          'c8e251f1fc9050cd12173b540baa96f8'
          '72176c9ee7b2ac4f1bb07ff5ee5fe10b'
-         '07770d558b8999b5793794e1551a1309')
+         '07770d558b8999b5793794e1551a1309'
+         'f49ac3b9f5146e33ce587e6b23eb1a86')
