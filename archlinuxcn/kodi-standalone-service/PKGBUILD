@@ -1,7 +1,7 @@
 # Maintainer: graysky <graysky AT archlinux DOT us>
 
 pkgname=kodi-standalone-service
-pkgver=1.125
+pkgver=1.128
 pkgrel=1
 pkgdesc="Systemd services to run kodi in stand-alone mode without a DE"
 # Do NOT attempt to use this package on Arch ARM! This is only for x86_64.
@@ -18,7 +18,7 @@ optdepends=(
  'xorg-xinit: for kodi-x11.service'
 ) 
 source=("$pkgname-v$pkgver.tar.gz::https://github.com/graysky2/$pkgname/archive/v$pkgver.tar.gz")
-b2sums=('93a2c044895395698aca9e1fa9b491eb3a478c0d83f0f49a2a06e8baa7de33fb7e3f0d552938aa9f24ab57ec0d8ed1b2bc9e9a21b30f275aa76196cecc920327')
+b2sums=('b0bfbf218f3feb6d3f7ecc159ac47adbeb6ac131395e882023756ded8265b62107fd046206b667587b56036863796870cd49dc3b2fc4422d9ecfb13dd9d4414e')
 
 package() {
   cd "$pkgname-$pkgver"
