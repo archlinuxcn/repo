@@ -1,8 +1,8 @@
 # Maintainer: fzerorubigd <fzero@rubi.gd>
 _pkgmain=pgspecial
 pkgname=python-$_pkgmain
-pkgver=1.11.10
-pkgrel=4
+pkgver=1.12.1
+pkgrel=1
 pkgdesc="Meta-commands handler for Postgres Database."
 arch=('any')
 url="https://github.com/dbcli/pgspecial"
@@ -18,4 +18,4 @@ package() {
   cd "$srcdir/$_pkgmain-$pkgver"
   python setup.py install --root="$pkgdir/" --optimize=1
 }
-md5sums=('9799703d862b4db87acfd1ed8f94784c')
+md5sums=('c02781439773600f590ccb62c1194940')
