@@ -3,20 +3,20 @@
 # Contributer: Peter Sutton (foxxy) <foxxy@foxdogstudios.com>
 
 pkgname=ngrok
-pkgver=2.3.35
+pkgver=2.3.38
 pkgrel=1
 pkgdesc='A tunneling, reverse proxy for developing and understanding networked, HTTP services'
 url='https://ngrok.com'
 license=('custom')
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
-source_i686=("https://bin.equinox.io/a/bjFaKy3TSAg/ngrok-${pkgver}-linux-386")
-sha256sums_i686=('1fdd1c057c3c31044400ef6ade20ad3f10bce415ad33ccfb4bc2fd83bb36f62f')
-source_x86_64=("https://bin.equinox.io/a/52fZaxjGg9n/ngrok-${pkgver}-linux-amd64")
-sha256sums_x86_64=('b456608239cdf4b5119916c62a87640667d1cb1900c53faed89e3dacc1fe4679')
-source_armv7h=("https://bin.equinox.io/a/2cUd5mRRjoF/ngrok-${pkgver}-linux-arm")
-sha256sums_armv7h=('94d88311e9b2baea615d9fe7c6921ac0167040ec66aa0d0cbb856c027d617f1f')
-source_aarch64=("https://bin.equinox.io/a/k2qx6ipHqpb/ngrok-${pkgver}-linux-arm64")
-sha256sums_aarch64=('fd07f5c449f1c1444606bbc9d06fa6b649325ddf0b3e6dac6f32d785a886f170')
+source_i686=("https://bin.equinox.io/a/dSNu6tQY6s7/ngrok-2.3.38-linux-386")
+sha256sums_i686=('dd63ec2752303aa5f87718187d66391bdb686e6af60ad9bfc7e1154f92c0c899')
+source_x86_64=("https://bin.equinox.io/a/2bHnBNUx6zB/ngrok-2.3.38-linux-amd64")
+sha256sums_x86_64=('18e8c1da8d64658b0c7177517576bedd21d1d6dd9916216b8a1b5fd317b499ec')
+source_armv7h=("https://bin.equinox.io/a/h37qTyEB1m/ngrok-2.3.38-linux-arm")
+sha256sums_armv7h=('8c852eac84a198f2c953b23d918157010c8af65dcf098b14ee5ac9cf1d0814fa')
+source_aarch64=("https://bin.equinox.io/a/8FNih6eeFm5/ngrok-2.3.38-linux-arm64")
+sha256sums_aarch64=('b203ccb08439c90e0b23ab08dd7790aa9bb283a18e1ece7a741b5904c7265b3a')
 
 package() {
   cd "${srcdir}"
