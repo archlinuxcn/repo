@@ -1,8 +1,8 @@
 # Maintainer: Joey Dumont <joey.dumont@gmail.com>
 # Contributor: Lucas Hermann Negri <lucashnegri at gmail dot com>
 pkgname=armadillo
-pkgver=10.3.0
-_pkgver=${pkgver/_/-}                     # For use with RC releases, to replace the _ with -
+pkgver=10.4.0
+_pkgver=${pkgver/_/-} # For use with RC releases, to replace the _ with -
 
 pkgrel=1
 pkgdesc="C++ linear algebra library"
@@ -15,7 +15,7 @@ optdepends=('hdf5: HDF5 output'
 makedepends=('cmake')
 source=("http://downloads.sourceforge.net/sourceforge/arma/$pkgname-$_pkgver.tar.xz")
 install=armadillo.install
-sha512sums=('99877ff6581d3effea282d1c4e258883618f4107d84cfe85ed877afc62ba445793e760693c0c6c2113a1822881160cb10adb90087e97b4e31d3a1e64344a6353')
+sha512sums=('72cf8a493e86c51c4c875076d0a9dd7c21fbfbd639064fa7a96daf4a5df02b36c93440bbae471f30d368547c6856c91fef97ce8ed2ec0526b0060588b71cd28a')
 
 build() {
   if [ "$CARCH" == "x86_64" ]; then
@@ -23,7 +23,7 @@ build() {
   fi
 
   cd "${srcdir}/$pkgname-$_pkgver"
-  cmake  $ARMA64LIBDIR -DCMAKE_INSTALL_PREFIX:PATH=/usr .
+  cmake $ARMA64LIBDIR -DCMAKE_INSTALL_PREFIX:PATH=/usr .
   make
 }
 
@@ -32,4 +32,3 @@ package() {
   make DESTDIR="${pkgdir}" install
   install -D -m644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
-      
