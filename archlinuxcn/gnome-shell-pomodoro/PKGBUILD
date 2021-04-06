@@ -6,8 +6,8 @@
 # Contributor: maus25 <mirko378@gmail.com>
 
 pkgname=gnome-shell-pomodoro
-pkgver=0.18.0
-pkgrel=3
+pkgver=0.19.0
+pkgrel=1
 pkgdesc='A time management utility for GNOME based on the pomodoro technique'
 arch=('i686' 'x86_64')
 url='https://github.com/gnome-pomodoro/gnome-pomodoro'
@@ -16,7 +16,7 @@ depends=('gnome-desktop' 'gstreamer' 'gobject-introspection' 'libpeas' 'appstrea
 makedepends=('intltool' 'vala' 'gnome-common' 'docbook2x' 'perl-xml-sax-expat' 'xorgproto')
 changelog='NEWS'
 source=("$pkgname-$pkgver.tar.gz::https://github.com/gnome-pomodoro/gnome-pomodoro/archive/$pkgver.tar.gz")
-sha256sums=('16cb0a772a5e0adad1519dbc63f98a6959887b4e65f8db512a9b7a4d24fcc52d')
+sha256sums=('f86094aa6aae89813ddf8472cb5fa035a115e69c6c35449fb9d286e16cf21ffa')
 
 prepare() {
   cd "$srcdir/gnome-pomodoro-$pkgver"
