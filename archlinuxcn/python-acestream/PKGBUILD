@@ -2,7 +2,7 @@
 # Contributor: Jonian Guveli <https://github.com/jonian/>
 
 pkgname=python-acestream
-pkgver=0.1.8
+pkgver=0.1.9
 pkgrel=1
 pkgdesc="Python interface to interact with the AceStream Engine and the HTTP API"
 arch=("any")
@@ -12,7 +12,7 @@ depends=("python")
 makedepends=("python-setuptools")
 conflicts=("${pkgname}-git")
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-md5sums=('ec6dd1a50ebbbd8e084d84a69dddfffa')
+md5sums=('671b4a95c7b96f2ac50c44a43b0de1dd')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
