@@ -1,7 +1,7 @@
 # Maintainer: Leo Mao <leomaoyw at gmail dot com>
 pkgname=python-cupy
 _pkgname=cupy
-pkgver=8.4.0
+pkgver=8.6.0
 _cubver=1.8.0
 pkgrel=1
 pkgdesc="NumPy-like API accelerated with CUDA"
@@ -14,12 +14,13 @@ makedepends=('python' 'python-setuptools' 'cython')
 optdepends=('libcutensor')
 source=("https://github.com/cupy/cupy/archive/v$pkgver.tar.gz"
         "https://github.com/NVlabs/cub/archive/$_cubver.tar.gz")
-md5sums=('00eb9edbfb59bb287d68e283657e93ad'
+md5sums=('401b583c272bc98ffcb04f19aa88fe9b'
          '9203ea2499b56782601fddf8a12e9b08')
 
 prepare() {
   cd "$srcdir/$_pkgname-$pkgver"
   ln -srf "$srcdir/cub-$_cubver" cupy/core/include/cupy/cub
+  #ln -srf "$srcdir/cub-$_cubver" cupy/_core/include/cupy/cub
   export CC=/opt/cuda/bin/gcc
   export CXX=/opt/cuda/bin/g++
   # We can use c++14 if the cuda version is greater than 11.
