@@ -2,7 +2,7 @@
 # Contributor: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=xray-domain-list-community
-pkgver=20210406072932
+pkgver=20210407065022
 pkgrel=1
 pkgdesc="A list of domains to be used as geosites for routing purpose in Project V"
 arch=('any')
@@ -10,7 +10,7 @@ url="https://github.com/v2fly/domain-list-community"
 license=('MIT')
 makedepends=('go')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('3f5ea585ad2de8ca99e30935f41753b6e6fd289c104597615ea3a6f94158f25b')
+sha256sums=('373a0394ff9c857c3eb191b4123f646779ffabf45dd8a04ad674960ef7fc2673')
 
 build() {
     cd "${srcdir}"/"domain-list-community-${pkgver}"/
