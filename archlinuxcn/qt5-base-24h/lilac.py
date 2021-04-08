@@ -15,9 +15,11 @@ def pre_build():
   # As of 2021 March, qt5.15 is commercial-only LTS branch, but qt5-webengine is an exception.
   # Thus it is the only component that is going beyond 5.15.2
   # Removed qt5-webengine from the qt5-pkgs conflict list.
+  # As of 2021 April, qt5-base in Arch is using kde fork, so the version number for various
+  # qt5-* packages would differ.
   for line in open('qt5-pkgs').readlines():
     p = line.strip()
-    conflict_string = conflict_string + '"' + p + '>$pkgver" '
+    conflict_string = conflict_string + '"' + p + '>=5.16" '
 
   prepare = False
   checks = ''
