@@ -1,7 +1,7 @@
 # Maintainer: Hao Long <imlonghao@archlinuxcn.org>
 
 pkgname=zoxide
-pkgver=0.5.0
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="A fast cd command that learns your habits"
 arch=("x86_64" "i686")
@@ -10,7 +10,7 @@ license=("MIT")
 depends=("gcc-libs")
 makedepends=("cargo")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('62b7a2ced73d5ac0a183b3855d54d6619166b4d8d8c74299bb610265ccc4b193')
+sha256sums=('fe93aa4d1fe8d4f94b302335f30bc543c7a1664df2a3fde73e6253c74f576c35')
 
 build() {
   cd ${pkgname}-${pkgver}
