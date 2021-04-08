@@ -4,7 +4,7 @@
 _basename=libsrtp
 pkgname="lib32-$_basename"
 pkgver=2.3.0
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="Library for SRTP (Secure Realtime Transport Protocol) (32-bit)"
 url="https://github.com/cisco/libsrtp"
@@ -32,7 +32,8 @@ prepare() {
     # Fix building with GCC 10
     git cherry-pick -n 716a73862b387a2107f37398c0fb7d9a754c0ccd
 
-    autoreconf -fvi
+    autoreconf -fvi || true
+    sed -i -e 's|install-sh ar-lib|install-sh|' configure
 }
 
 build() {
