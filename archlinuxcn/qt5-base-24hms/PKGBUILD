@@ -5,7 +5,7 @@ pkgbase=qt5-base-24hms
 _origpkgname=qt5-base
 pkgname=(qt5-base-24hms)
 pkgver=5.15.2+kde+r171
-pkgrel=1.6
+pkgrel=2.6
 _commit=cb2da673f53815a5cfe15f50df49b98032429f9e
 arch=('x86_64')
 url='https://www.qt.io'
@@ -26,7 +26,7 @@ optdepends=('qt5-svg: to use SVG icon themes'
             'freetds: MS SQL driver'
             'gtk3: GTK platform plugin'
             'perl: for fixqt4headers and syncqt')
-conflicts=("qt5-base" "qt5-3d>$pkgver" "qt5-charts>$pkgver" "qt5-connectivity>$pkgver" "qt5-datavis3d>$pkgver" "qt5-declarative>$pkgver" "qt5-doc>$pkgver" "qt5-examples>$pkgver" "qt5-gamepad>$pkgver" "qt5-graphicaleffects>$pkgver" "qt5-imageformats>$pkgver" "qt5-location>$pkgver" "qt5-lottie>$pkgver" "qt5-multimedia>$pkgver" "qt5-networkauth>$pkgver" "qt5-purchasing>$pkgver" "qt5-quick3d>$pkgver" "qt5-quickcontrols>$pkgver" "qt5-quickcontrols2>$pkgver" "qt5-remoteobjects>$pkgver" "qt5-script>$pkgver" "qt5-scxml>$pkgver" "qt5-sensors>$pkgver" "qt5-serialbus>$pkgver" "qt5-serialport>$pkgver" "qt5-speech>$pkgver" "qt5-svg>$pkgver" "qt5-tools>$pkgver" "qt5-translations>$pkgver" "qt5-virtualkeyboard>$pkgver" "qt5-wayland>$pkgver" "qt5-webchannel>$pkgver" "qt5-webglplugin>$pkgver" "qt5-websockets>$pkgver" "qt5-webview>$pkgver" "qt5-x11extras>$pkgver" "qt5-xmlpatterns>$pkgver" 'qtchooser')
+conflicts=("qt5-base" "qt5-3d>=5.16" "qt5-charts>=5.16" "qt5-connectivity>=5.16" "qt5-datavis3d>=5.16" "qt5-declarative>=5.16" "qt5-doc>=5.16" "qt5-examples>=5.16" "qt5-gamepad>=5.16" "qt5-graphicaleffects>=5.16" "qt5-imageformats>=5.16" "qt5-location>=5.16" "qt5-lottie>=5.16" "qt5-multimedia>=5.16" "qt5-networkauth>=5.16" "qt5-purchasing>=5.16" "qt5-quick3d>=5.16" "qt5-quickcontrols>=5.16" "qt5-quickcontrols2>=5.16" "qt5-remoteobjects>=5.16" "qt5-script>=5.16" "qt5-scxml>=5.16" "qt5-sensors>=5.16" "qt5-serialbus>=5.16" "qt5-serialport>=5.16" "qt5-speech>=5.16" "qt5-svg>=5.16" "qt5-tools>=5.16" "qt5-translations>=5.16" "qt5-virtualkeyboard>=5.16" "qt5-wayland>=5.16" "qt5-webchannel>=5.16" "qt5-webglplugin>=5.16" "qt5-websockets>=5.16" "qt5-webview>=5.16" "qt5-x11extras>=5.16" "qt5-xmlpatterns>=5.16" 'qtchooser')
 
 provides=("qt5-base=$pkgver")
 
@@ -35,14 +35,16 @@ source=(
       oldherl-24hms.patch
       'ftp://unicode.org/Public/cldr/36/core.zip'
       git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit
-         qt5-base-cflags.patch
-         qt5-base-nostrip.patch)
+        qt5-base-cflags.patch
+        qt5-base-nostrip.patch
+        qsortfilterproxymodel-crash.patch::https://code.qt.io/cgit/qt/qtbase.git/patch/src/corelib/itemmodels?id=8455bfee)
 sha256sums=(
       '9c62800980e97b1614e4fc85ecad3b032606d0e620295e791fc3f34629bb0a44'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       'SKIP'
             'cf707cd970650f8b60f8897692b36708ded9ba116723ec8fcd885576783fe85c'
-            '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
+            '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094'
+            '829f8464fcd34b2c6f45636c12de35e5e440714e5ec0a235380f2bd0143455dc')
 
 pkgver() {
   cd $_pkgfqn
@@ -53,8 +55,9 @@ prepare() {
   cd ${_pkgfqn}
 
   git revert -n 6344955d17e17e2398720fe60c34cfc2a4a95208 # Revert version bump
-  patch -p1 -i ../qt5-base-cflags.patch # Use system CFLAGS in qmake
-  patch -p1 -i ../qt5-base-nostrip.patch # Don't strip binaries with qmake
+  patch -Rp1 < ../qsortfilterproxymodel-crash.patch # FS#70366 FS#70367
+  patch -p1 < ../qt5-base-cflags.patch # Use system CFLAGS in qmake
+  patch -p1 < ../qt5-base-nostrip.patch # Don't strip binaries with qmake
 
   patch -p1 -i ../oldherl-24hms.patch
   cd util/locale_database
