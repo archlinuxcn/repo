@@ -7,7 +7,7 @@
 _pkgbase=gdm
 pkgbase=gdm-plymouth
 pkgname=(gdm-plymouth libgdm-plymouth)
-pkgver=3.38.2.1
+pkgver=40.0
 pkgrel=1
 pkgdesc="Display manager and login screen with plymouth support"
 url="https://wiki.gnome.org/Projects/GDM"
@@ -16,27 +16,31 @@ license=(GPL)
 depends=(plymouth gnome-shell gnome-session upower systemd xorg-xrdb xorg-server xorg-xhost libxdmcp)
 makedepends=(yelp-tools gobject-introspection git docbook-xsl meson)
 checkdepends=(check)
-_commit=a97225675079fc349dadee65d843191fd4c05197  # tags/3.38.2.1^0
+_commit=3246bf1af8589899621649df523e6840e4858cda  # tags/40.0^0
 source=("git+https://gitlab.gnome.org/GNOME/gdm.git#commit=$_commit"
-        0001-Xsession-Don-t-start-ssh-agent-by-default.patch
-        0002-pam-arch-Update-to-match-pambase-20200721.1-2.patch
+        0001-pam-arch-Update-to-match-pambase-20200721.1-2.patch
+        0002-Xsession-Don-t-start-ssh-agent-by-default.patch
         default.pa)
 sha256sums=('SKIP'
-            'b9ead66d2b6207335f0bd982a835647536998e7c7c6b5248838e5d53132ca21a'
-            'd5cd6a401db2aa19374d477817420a39759044393bd420414fdc41881fd93597'
+            'f32555703d4f3b6babbe49ddd2c82295238623050b63826c95a959d5caec37f8'
+            'aa751223e8664f65fe2cae032dc93bb94338a41cfca4c6b66a0fca0c788c4313'
             'e88410bcec9e2c7a22a319be0b771d1f8d536863a7fc618b6352a09d61327dcb')
 
 pkgver() {
   cd $_pkgbase
-  git describe --tags | sed 's/-/+/g'
+  git describe --tags | sed 's/\.rc/rc/;s/-/+/g'
 }
 
 prepare() {
   cd $_pkgbase
-  git apply -3 ../0001-Xsession-Don-t-start-ssh-agent-by-default.patch
+  
 
   # https://bugs.archlinux.org/task/67485
-  git apply -3 ../0002-pam-arch-Update-to-match-pambase-20200721.1-2.patch
+  git apply -3 ../0001-pam-arch-Update-to-match-pambase-20200721.1-2.patch
+  
+  
+  # Don't start ssh-agent by default
+  git apply -3 ../0002-Xsession-Don-t-start-ssh-agent-by-default.patch
 }
 
 build() {
