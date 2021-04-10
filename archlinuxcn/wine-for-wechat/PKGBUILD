@@ -5,15 +5,15 @@
 
 _pkgname=wine
 pkgname=wine-for-wechat
-pkgver=6.5
-pkgrel=2
+pkgver=6.6
+pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 
 source=(https://dl.winehq.org/wine/source/6.x/$_pkgname-$_pkgbasever.tar.xz{,.sign}
         30-win32-aliases.conf
         wine-binfmt.conf wine-wechat.patch)
-sha512sums=('11f9d2bb515c63429d397b97ecc1f13d0dbb717780d674229b851b819d707e0fd6fbf8bbae9a41dbf7b2ceb3729c4f5643d1ec5e414d6694d192072081f96fe4'
+sha512sums=('a5caabc5ff91a830fbdcd25a85ee32b6df98315325a929a3124521cd10cc873e5a585359b03eb0293bb2474e39a179cbe179c0611acda6a228861e06068c091e'
             'SKIP'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
