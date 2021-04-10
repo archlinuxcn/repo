@@ -8,5 +8,5 @@ post_install() {
 }
 
 post_upgrade() {
-  [ $(vercmp $2 1.0.39) -le 0 ] && post_install
+  if [ $(vercmp $2 1.0.39) -le 0 ]; then post_install; fi
 }
