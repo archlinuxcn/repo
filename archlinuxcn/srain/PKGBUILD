@@ -1,8 +1,8 @@
 # Maintainer: Shengyu Zhang <la@archlinuxcn.org>
 
 pkgname=srain
-pkgver=1.2.0
-pkgrel=3
+pkgver=1.2.1
+pkgrel=1
 pkgdesc="Modern IRC client written in GTK."
 arch=('i686' 'x86_64')
 license=('GPL')
@@ -10,7 +10,7 @@ url="https://srain.im"
 makedepends=('python-sphinx' 'meson')
 depends=('gtk3' 'libconfig' 'libsoup' 'libsecret')
 source=("https://github.com/SrainApp/${pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('96891684cbf3c29a15c8d44df86e8fcb7a028f7e02d5e93f9a272ef3431c73b1')
+sha256sums=('a81a3177e09bf1d9ff1302fc95c79dba2514f50409dc52a29451801e57467655')
 
 _prefix='/usr'
 
