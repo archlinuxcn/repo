@@ -6,7 +6,7 @@
 
 pkgname='bluez-utils-compat'
 _pkgbase='bluez'
-pkgver=5.56
+pkgver=5.58
 pkgrel=1
 url="http://www.bluez.org/"
 arch=('i686' 'x86_64' 'mips64el' 'armv6h' 'armv7h' 'arm' 'aarch64')
@@ -19,7 +19,7 @@ conflicts=('bluez-hcidump' 'bluez-utils' 'bluez-hcitool')
 provides=('bluez-hcidump' "bluez-utils=${pkgver}" 'bluez-hcitool')
 source=(https://www.kernel.org/pub/linux/bluetooth/"${_pkgbase}-${pkgver}".tar.xz) #{xz,sign}
 # see https://www.kernel.org/pub/linux/bluetooth/sha256sums.asc
-sha256sums=('59c4dba9fc8aae2a6a5f8f12f19bc1b0c2dc27355c7ca3123eed3fe6bd7d0b9d')
+sha256sums=('c8065e75a5eb67236849ef68a354b1700540305a8c88ef0a0fd6288f19daf1f1')
 #validpgpkeys=('E932D120BC2AEC444E558F0106CA9F5D1DCF2659') # Marcel Holtmann <marcel@holtmann.org>
 
 build() {
