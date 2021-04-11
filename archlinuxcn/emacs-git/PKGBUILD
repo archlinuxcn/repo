@@ -25,7 +25,7 @@ CLANG=            # Use clang.
 GOLD=             # Use the gold linker.
 LTO="YES"         # Enable link-time optimization. Read emacs's INSTALL before
                   # attempting to use it with clang.
-JIT=              # Enable native just-in-time compilation
+JIT=              # Enable native just-in-time compilation. libgccjit is in AUR.
 CLI=              # CLI only binary.
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
 LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
@@ -53,7 +53,7 @@ if [[ $CLI == "YES" ]] ; then
 else
 pkgname="emacs-git"
 fi
-pkgver=28.0.50.146284
+pkgver=28.0.50.146290
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
@@ -210,6 +210,7 @@ fi
 
 if [[ $JIT == "YES" ]]; then
   _conf+=( '--with-native-compilation' );
+  depends+=( 'libgccjit' ); 
 fi
 
 if [[ $CLI == "YES" ]]; then
