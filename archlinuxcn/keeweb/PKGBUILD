@@ -1,7 +1,7 @@
 # Maintainer: surefire@cryptomile.net
 
 pkgname=keeweb
-pkgver=1.17.5
+pkgver=1.17.6
 _electron=electron
 pkgrel=1
 pkgdesc="Desktop password manager compatible with KeePass databases"
