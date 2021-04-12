@@ -2,19 +2,19 @@
 # Generator  : CPANPLUS::Dist::Arch 1.32
 
 pkgname='perl-cpanel-json-xs'
-pkgver='4.25'
+pkgver='4.26'
 pkgrel='1'
 pkgdesc="cPanel fork of JSON::XS, fast and correct serializing"
 arch=('i686' 'x86_64')
 license=('PerlArtistic' 'GPL')
 options=('!emptydirs')
 depends=('perl>=0')
-makedepends=('libxcrypt')
+makedepends=()
 url='https://metacpan.org/release/Cpanel-JSON-XS'
-source=("https://cpan.metacpan.org/authors/id/R/RU/RURBAN/Cpanel-JSON-XS-${pkgver}.tar.gz")
-md5sums=('4ac96ebc0b705f8b1cc5e5bf5bd3401a')
-sha512sums=('cf5b771cd6b5b080961efa3927bc5b785d16ec4a8a62951b26acfbcdbb88800a68fd3c45003ffa8fe391971c01f202047a35a84daa716859319cd6e2ea2fee2e')
-_distdir="Cpanel-JSON-XS-${pkgver}"
+source=("https://cpan.metacpan.org/authors/id/R/RU/RURBAN/Cpanel-JSON-XS-$pkgver.tar.gz")
+md5sums=('c7c3f0a0d5126623a6c566e516276429')
+sha512sums=('3193988a09670a5de6b6292e9f35e8c374518120648a206b769802fb4a66e6487a4ba05b3e89e214b9e3f5985452be74c17aa67e4bf96e88097812be75b2ed9e')
+_distdir="Cpanel-JSON-XS-$pkgver"
 
 build() {
   export PERL_MM_USE_DEFAULT=1 PERL5LIB=""                      \
