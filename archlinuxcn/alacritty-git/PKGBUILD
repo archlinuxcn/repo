@@ -25,11 +25,6 @@ build(){
   env CARGO_INCREMENTAL=0 cargo build --release --locked
 }
 
-check(){
-  cd "$_pkgname"
-  env CARGO_INCREMENTAL=0 cargo test --release
-}
-
 package_alacritty-git() {
 
 	cd $_pkgname
