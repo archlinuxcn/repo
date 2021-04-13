@@ -1,8 +1,9 @@
 pkgname=1password
-_tarver=8.0.32
+
+_tarver=8.0.33-26.BETA
 _tar="${pkgname}-${_tarver}.tar.gz"
 pkgver=${_tarver//-/_}
-pkgrel=1
+pkgrel=26
 pkgdesc="Password manager and secure wallet"
 arch=('x86_64')
 url='https://1password.com'
@@ -11,8 +12,8 @@ depends=('hicolor-icon-theme')
 options=(!strip)
 install="${pkgname}.install"
 source=(https://downloads.1password.com/linux/tar/${_tar}{,.sig})
-sha256sums=('78e207b4e70d4fff86e71eb3300c543427fc993263611bad20bd5e74a481cbe9'
-            '78760f2c792c6a46af8139ac75ff3f2a9ab96c6f1dac6967c7ce9be61dd287d8'
+sha256sums=('2cbcdd3ab34aeea04fbdfcb286c3b425c7cd35d4726abd21ac1e1ca5ee142b6c'
+            'f2d40812bb474adc915490e8232e61a321609188e26a918b0a49aed6f8f7ffb8'
 )
 validpgpkeys=('3FEF9748469ADBE15DA7CA80AC2D62742012EA22')
 
@@ -21,15 +22,19 @@ package() {
     cd "${pkgname}-${_tarver}"
 
     # Install icons
-    icons=(usr/share/icons/hicolor/*/${pkgname}.png)
-    for icon in "${icons[@]}"
+    resolutions=(32x32 64x64 256x256 512x512)
+    for resolution in "${resolutions[@]}"
     do
-        install -Dm0644 "${icon}" "${pkgdir}/${icon}"
+        install -Dm0644 "resources/icons/hicolor/${resolution}/apps/${pkgname}.png" \
+            "${pkgdir}/usr/share/icons/hicolor/${resolution}/apps/${pkgname}.png"
     done
     # Install desktop file
-    install -Dm0644 usr/share/applications/${pkgname}.desktop -t "${pkgdir}"/usr/share/applications/
+    install -Dm0644 resources/${pkgname}.desktop -t "${pkgdir}"/usr/share/applications/
     # Install system unlock PolKit policy file
     install -Dm0644 com.1password.1Password.policy -t "${pkgdir}"/usr/share/polkit-1/actions/
+
+    # Install examples
+    install -Dm0644 resources/custom_allowed_browsers -t "${pkgdir}"/usr/share/doc/${pkgname}/examples/
 
     # Move package contents to /opt/1Password
     cd "${srcdir}"
