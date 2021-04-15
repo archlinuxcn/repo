@@ -23,5 +23,5 @@ pkgver() {
 package() {
 	cd $_pkgname
 	install -Dm644 doc/surround.txt "$pkgdir"/usr/share/vim/vimfiles/doc/surround.txt
-	install -Dm644 plugin/surround.vim "$pkgdir"/usr/share/vim/vimfiles/autoload/surround.vim
+	install -Dm644 plugin/surround.vim "$pkgdir"/usr/share/vim/vimfiles/plugin/surround.vim
 }

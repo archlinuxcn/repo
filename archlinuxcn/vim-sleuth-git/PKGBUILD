@@ -23,5 +23,5 @@ pkgver() {
 package() {
 	cd $_pkgname
 	install -Dm644 doc/sleuth.txt "$pkgdir"/usr/share/vim/vimfiles/doc/sleuth.txt
-	install -Dm644 plugin/sleuth.vim "$pkgdir"/usr/share/vim/vimfiles/autoload/sleuth.vim
+	install -Dm644 plugin/sleuth.vim "$pkgdir"/usr/share/vim/vimfiles/plugin/sleuth.vim
 }

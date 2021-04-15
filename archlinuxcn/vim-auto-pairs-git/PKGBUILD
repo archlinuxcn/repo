@@ -22,6 +22,6 @@ pkgver() {
 
 package() {
 	cd $_pkgname
-	install -Dm644 doc/AutoPairs.txt "$pkgdir"/usr/share/vim/vimfiles/doc/AutoPairs.txt
-	install -Dm644 plugin/auto-pairs.vim "$pkgdir"/usr/share/vim/vimfiles/autoload/auto-pairs.vim
+	install -Dm644 doc/AutoPairs.txt "$pkgdir"/usr/share/vim/vimfiles/doc/auto-pairs.txt
+	install -Dm644 plugin/auto-pairs.vim "$pkgdir"/usr/share/vim/vimfiles/plugin/auto-pairs.vim
 }
