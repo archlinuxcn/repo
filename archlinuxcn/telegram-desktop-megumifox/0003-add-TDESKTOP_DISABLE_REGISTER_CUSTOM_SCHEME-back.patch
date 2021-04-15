@@ -1,0 +1,75 @@
+From c5a05b95c18ec425102260291aaae8c767a92151 Mon Sep 17 00:00:00 2001
+From: Megumi_fox <i@megumifox.com>
+Date: Wed, 14 Apr 2021 22:56:55 +0800
+Subject: [PATCH] add TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME back
+
+---
+ Telegram/SourceFiles/platform/linux/specific_linux.cpp | 2 ++
+ Telegram/SourceFiles/settings/settings_codes.cpp       | 3 +++
+ Telegram/cmake/telegram_options.cmake                  | 5 +++++
+ 3 files changed, 10 insertions(+)
+
+diff --git a/Telegram/SourceFiles/platform/linux/specific_linux.cpp b/Telegram/SourceFiles/platform/linux/specific_linux.cpp
+index 7ea7d2a1a..d97f588b2 100644
+--- a/Telegram/SourceFiles/platform/linux/specific_linux.cpp
++++ b/Telegram/SourceFiles/platform/linux/specific_linux.cpp
+@@ -827,6 +827,7 @@ void InstallLauncher(bool force) {
+ }
+ 
+ void RegisterCustomScheme(bool force) {
++#ifndef TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME
+ 	try {
+ #ifndef DESKTOP_APP_DISABLE_DBUS_INTEGRATION
+ 		if (InSnap()) {
+@@ -894,6 +895,7 @@ void RegisterCustomScheme(bool force) {
+ 	} catch (const Glib::Error &e) {
+ 		LOG(("App Error: %1").arg(QString::fromStdString(e.what())));
+ 	}
++#endif // !TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME
+ }
+ 
+ PermissionStatus GetPermissionStatus(PermissionType type) {
+diff --git a/Telegram/SourceFiles/settings/settings_codes.cpp b/Telegram/SourceFiles/settings/settings_codes.cpp
+index ef99f5c1f..918f1e9f4 100644
+--- a/Telegram/SourceFiles/settings/settings_codes.cpp
++++ b/Telegram/SourceFiles/settings/settings_codes.cpp
+@@ -136,10 +136,13 @@ auto GenerateCodes() {
+ 			window->showSettings(Settings::Type::Folders);
+ 		}
+ 	});
++
++#ifndef TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME
+ 	codes.emplace(qsl("registertg"), [](SessionController *window) {
+ 		Platform::RegisterCustomScheme(true);
+ 		Ui::Toast::Show("Forced custom scheme register.");
+ 	});
++#endif // !TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME
+ 
+ #if defined Q_OS_WIN || defined Q_OS_MAC
+ 	codes.emplace(qsl("freetype"), [](SessionController *window) {
+diff --git a/Telegram/cmake/telegram_options.cmake b/Telegram/cmake/telegram_options.cmake
+index 5fe70fb2a..49d72aadf 100644
+--- a/Telegram/cmake/telegram_options.cmake
++++ b/Telegram/cmake/telegram_options.cmake
+@@ -5,6 +5,7 @@
+ # https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ 
+ option(TDESKTOP_API_TEST "Use test API credentials." OFF)
++option(TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME "Disable automatic 'tg://' URL scheme handler registration." OFF) 
+ set(TDESKTOP_API_ID "0" CACHE STRING "Provide 'api_id' for the Telegram API access.")
+ set(TDESKTOP_API_HASH "" CACHE STRING "Provide 'api_hash' for the Telegram API access.")
+ set(TDESKTOP_LAUNCHER_BASENAME "" CACHE STRING "Desktop file base name (Linux only).")
+@@ -47,6 +48,10 @@ if (DESKTOP_APP_DISABLE_AUTOUPDATE)
+     target_compile_definitions(Telegram PRIVATE TDESKTOP_DISABLE_AUTOUPDATE)
+ endif()
+ 
++if (TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME)
++    target_compile_definitions(Telegram PRIVATE TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME)
++endif()
++
+ if (DESKTOP_APP_SPECIAL_TARGET)
+     target_compile_definitions(Telegram PRIVATE TDESKTOP_ALLOW_CLOSED_ALPHA)
+ endif()
+-- 
+2.31.1
+

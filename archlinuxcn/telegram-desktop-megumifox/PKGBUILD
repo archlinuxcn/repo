@@ -4,7 +4,7 @@
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
 pkgver=2.7.1
-pkgrel=3
+pkgrel=3.1
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
@@ -18,15 +18,18 @@ conflicts=('telegram-desktop')
 source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
 "0001-use-system-font-and-use-stylename.patch"
 "0002-fix-webrtc-integration-build-missing-libx11.patch"
+"0003-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch"
 "fix-tgcalls-gcc10.patch")
 sha512sums=('dffd184c4369c5c5947b1ca085add533e54313ce39aebcdca4f0958431a305aa5e95c2f2b48592f6992e666b2d33eeba5697f9e09f6048a53b807f2950fbd17b'
             '0a4206f3d16589ba476d85381bf7984a28b74e0623e02a82ce2d586eec337808f66261dd0f2116ee513403223ac7707734b3fa17d082b5ebf88481bc22636f6f'
             'c8c55b2afee8c8dad33ec5daff5c1d8520f485e3a95061ab0442768976f62922387afe93c0dee4e7026e8cc74d12dd6a03314700a1cbacbcec6c6b28f288abb8'
+            '448058e5dd303c000502880c572e80576e2bbf95e9f278c4d5d3fecb86ee7cb4ad121538171aec6a62a0845724f5ac82cd368e03ff3e2b2b3a0bdd18b0deeab7'
             'dbc61a8520f3698fdeec6c9849cfd8241b8b778589f89277f82d6c748d8ed7a81db90daa0a69dedc3ab2b81bba848ee68e1df79a9cb3fb055f99bd7d19f46e5d')
 
 prepare() {
     patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-use-system-font-and-use-stylename.patch
     patch -b -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0002-fix-webrtc-integration-build-missing-libx11.patch
+    patch -b -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0003-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch
     # force webrtc link to libjpeg
     cd tdesktop-$pkgver-full/cmake
     echo "target_link_libraries(external_webrtc INTERFACE jpeg)" | tee -a external/webrtc/CMakeLists.txt
@@ -37,7 +40,6 @@ prepare() {
 
 build() {
     cd tdesktop-$pkgver-full
-
 
     # Turns out we're allowed to use the official API key that telegram uses for their snap builds:
     # https://github.com/telegramdesktop/tdesktop/blob/8fab9167beb2407c1153930ed03a4badd0c2b59f/snap/snapcraft.yaml#L87-L88
