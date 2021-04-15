@@ -3,13 +3,12 @@
 pkgname=python-pandas-profiling
 _pkgname=pandas-profiling
 pkgver=2.11.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Create HTML profiling reports from pandas DataFrame objects'
 arch=('any')
 url='https://github.com/pandas-profiling/pandas-profiling'
 license=('MIT')
 depends=(
-#  python-astropy
   python-attrs
   python-confuse
   python-htmlmin
@@ -20,6 +19,7 @@ depends=(
   python-missingno
   python-numpy
   python-pandas
+  python-phik
   python-requests
   python-seaborn
   python-scipy
