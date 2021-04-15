@@ -7,14 +7,14 @@
 
 pkgname=google-chrome
 pkgver=90.0.4430.72
-pkgrel=1
+pkgrel=2
 pkgdesc="The popular and trusted web browser by Google (Stable Channel)"
 arch=('x86_64')
 url="https://www.google.com/chrome"
 license=('custom:chrome')
 depends=('alsa-lib' 'gtk3' 'libcups' 'libxss' 'libxtst' 'nss')
 optdepends=(
-	'libpipewire02: WebRTC desktop sharing under Wayland'
+	'pipewire: WebRTC desktop sharing under Wayland'
 	'kdialog: for file dialogs in KDE'
 	'gnome-keyring: for storing passwords in GNOME keyring'
 	'kwallet: for storing passwords in KWallet'
