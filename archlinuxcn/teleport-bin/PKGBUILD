@@ -3,7 +3,7 @@
 # Co-Maintainer: Ariel AxionL <arielaxionl@gmail.com | axionl@aosc.io>
 
 pkgname=teleport-bin
-pkgver=6.0.2
+pkgver=6.1.1
 pkgrel=1
 pkgdesc="Modern SSH server for teams managing distributed infrastructure"
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -24,9 +24,9 @@ source_aarch64=("teleport-bin-${pkgver}-aarch64.tar.gz::https://get.gravitationa
 sha256sums=('22fd1ee136e9422458740811c9946de447105f26e87dbbc8daa35d17bd1f3894'
             '21ca4e56c9c5e1ce11570894e85ded853e26e91cc2e16ed9114b3d6a2c5c22ef'
             'cff4e3c69677210bdde9a781146df06fba3a62cef72ed6854cd1923a05444435')
-sha256sums_x86_64=('a306df00c716dff9bb9535e1670b05246fdb86acb587dfffa7bb01d8c9f914e1')
-sha256sums_armv7h=('c1ad9040421ddd682d6610690988ce0bb832881de5048160376a78a3a2775a5f')
-sha256sums_aarch64=('1b422158a7a2e60b9b70711669a190d75d9e76438891ab7f83213bba9f5482c6')
+sha256sums_x86_64=('52a5a9b91e5f42ed7b2ef66ca84e74fb9f9fef47fe5bc0076ae872bfb7ec5181')
+sha256sums_armv7h=('8208a153c163067e052581b8cfcb390e66f015188bc77b94d7fb241603119360')
+sha256sums_aarch64=('8a819adf735a9250fe806247bc8de387e546fd6e707fe5c4f70ea5d45785e631')
 
 options=(!strip)
 
