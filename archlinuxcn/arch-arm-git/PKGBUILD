@@ -2,8 +2,8 @@
 #Contributor: Yichao Yu <yyc1992@gmail.com>
 
 pkgname=arch-arm-git
-pkgver=64.c51d90f
-pkgrel=1
+pkgver=66.5859302
+pkgrel=2
 pkgdesc="Archlinux ARM cross compiling tools"
 arch=('i686' 'x86_64')
 provides=('arch-arm')
@@ -40,8 +40,8 @@ package() {
 
   # These symlinks are within the global sysroot which helps the cross compiler to
   # find the right path in the sysroot.
-  install -dm755 "${pkgdir}/usr/lib/arch-arm-cross/pkg_root/armv7/usr/arm-linux-gnueabihf/"
-  ln -sf ../../lib "${pkgdir}/usr/lib/arch-arm-cross/pkg_root/armv7/usr/arm-linux-gnueabihf/lib"
+  install -dm755 "${pkgdir}/usr/lib/arch-arm-cross/pkg_root/armv7/usr/armv7l-linux-gnueabihf/"
+  ln -sf ../../lib "${pkgdir}/usr/lib/arch-arm-cross/pkg_root/armv7/usr/armv7l-linux-gnueabihf/lib"
   install -dm755 "${pkgdir}/usr/lib/arch-arm-cross/pkg_root/armv8/usr/aarch64-linux-gnu/"
   ln -sf ../../lib "${pkgdir}/usr/lib/arch-arm-cross/pkg_root/armv8/usr/aarch64-linux-gnu/lib"
 }
