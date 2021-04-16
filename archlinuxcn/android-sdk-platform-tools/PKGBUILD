@@ -4,7 +4,7 @@
 # Contributor: Christoph Bayer <chrbayer@criby.de>
 
 pkgname=android-sdk-platform-tools
-pkgver=31.0.1
+pkgver=31.0.2
 pkgrel=1
 pkgdesc='Platform-Tools for Google Android SDK (adb and fastboot)'
 arch=('x86_64')
@@ -17,7 +17,7 @@ install="${pkgname}.install"
 source=("https://dl.google.com/android/repository/platform-tools_r${pkgver}-linux.zip"
         "adb.service"
         "license.html")
-sha1sums=('35ed511710c1cb613947d429da028e80bcb10dcf'
+sha1sums=('ff02a9d8c6fa9687e1207fc0c4b84033925d452d'
           '49a40c129199844603afe71fce69c0908e062393'
           'bfb91be7e0b602d765b7a1fcaf0ce1b7e1a93faa')
 
