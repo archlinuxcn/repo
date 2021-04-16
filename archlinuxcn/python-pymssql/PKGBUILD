@@ -2,8 +2,8 @@
 
 _pkgname=pymssql
 pkgname=python-pymssql
-pkgver=2.2.0
-pkgrel=2
+pkgver=2.2.1
+pkgrel=1
 pkgdesc='A simple database interface for Python that builds on top of FreeTDS to provide a Python DB-API (PEP-249) interface to Microsoft SQL Server'
 arch=('x86_64')
 url='https://github.com/pymssql/pymssql'
@@ -24,7 +24,7 @@ checkdepends=(
   python-sqlalchemy
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha512sums=('bb1cbe84d4556629e7f693f6f24fc9a851c813392193b22982ba47e97c3a62508faa0757761ddf512fbbfb3f741a8df2e1e166acafb4d37307c9df06c5fbda6c')
+sha512sums=('d44fbe506d7daf3b5fc1dfa20b99814aa3ed025cf8e4e14097f53014bc21918e0969e15149fa93c39367a06567502be08bb673e30ebdf87d6fc2c30b01216b7c')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
