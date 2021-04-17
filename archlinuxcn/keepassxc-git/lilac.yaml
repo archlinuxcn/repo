@@ -14,3 +14,7 @@ post_build_script: |
 update_on:
   - source: github
     github: keepassxreboot/keepassxc
+  - source: archpkg
+    archpkg: botan
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
