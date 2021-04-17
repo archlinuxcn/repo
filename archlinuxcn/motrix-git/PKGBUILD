@@ -19,6 +19,7 @@ makedepends=(
   'npm'
   'python2'
 )
+install=$pkgname.install
 provides=(motrix=${pkgver})
 conflicts=(motrix)
 source=("${_pkgname}::git+https://github.com/agalwood/Motrix.git")
