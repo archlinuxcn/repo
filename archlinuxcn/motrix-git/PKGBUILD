@@ -2,15 +2,15 @@
 
 pkgname=motrix-git
 _pkgname=motrix
-pkgver=1.5.15.r77.g57a5c0c
-pkgrel=1
+pkgver=1.5.15.r82.g7206f2f
+pkgrel=2
 pkgdesc='A full-featured download manager'
 arch=('any')
 url='https://motrix.app/'
 license=('MIT')
 depends=(
   'aria2'
-  'electron'
+  'electron11'
   'nodejs'
 )
 makedepends=(
@@ -61,7 +61,7 @@ package() {
   cat << EOF > "${pkgdir}/usr/bin/${_pkgname}"
 #!/bin/bash
 export ELECTRON_IS_DEV=0
-exec /usr/bin/electron /usr/lib/${_pkgname}/app
+exec /usr/bin/electron11 /usr/lib/${_pkgname}/app
 EOF
   chmod +x "${pkgdir}/usr/bin/${_pkgname}"
   install -Dm644 "${srcdir}/${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
