@@ -1,0 +1,20 @@
+<services>
+  <service name="tar_scm">
+    <param name="scm">git</param>
+    <param name="url">https://aur.archlinux.org/thunderbird-appmenu.git</param>
+  </service>
+  <service name="extract_file">
+    <param name="archive">*.tar</param>
+    <param name="files">*/*</param>
+  </service>
+<service name="download_url">
+  <param name="host">ftp.mozilla.org</param>
+  <param name="protocol">https</param>
+  <param name="path">/pub/mozilla.org/thunderbird/releases/PKGVER/source/thunderbird-PKGVER.source.tar.xz</param>
+  </service>
+  <service name="download_url">
+    <param name="host">ftp.mozilla.org</param>
+    <param name="protocol">https</param>
+    <param name="path">/pub/mozilla.org/thunderbird/releases/PKGVER/source/thunderbird-PKGVER.source.tar.xz.asc</param>
+  </service>
+</services>
