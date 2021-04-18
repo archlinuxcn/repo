@@ -11,7 +11,7 @@ depends=('libpulse' 'gtksourceview2' 'libxv' 'libao' 'openal' 'sdl2')
 conflicts=('bsnes-classic' 'bsnes-plus')
 source=("https://github.com/bsnes-emu/bsnes/archive/v${pkgver}.tar.gz" 'package.patch')
 sha256sums=('e51d25f95b8fbcb91470b3dc8844d87206b74f3a164e41e6db271601e0cff93c'
-            'f391b8ce83ed1dfe93d83484464613de1fa1c454d69b02c5234efc9ef69fd3bb')
+            '98ea96ec8c771aa4814ded68319aa9082433707d3b46628f7f209eb2914afcba')
 
 prepare() {
   cd "bsnes-${pkgver}"

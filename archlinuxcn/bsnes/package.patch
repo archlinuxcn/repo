@@ -1,7 +1,7 @@
 diff --unified --recursive bsnes_v108-source.orig/bsnes/GNUmakefile bsnes_v108-source.new/bsnes/GNUmakefile
---- bsnes_v108-source.orig/bsnes/GNUmakefile	2019-03-10 01:42:30.163599022 -0700
-+++ bsnes_v108-source.new/bsnes/GNUmakefile	2019-03-10 01:45:20.179375447 -0700
-@@ -1,6 +1,9 @@
+--- bsnes_v108-source.orig/bsnes/GNUmakefile.orig	2020-03-03 18:56:48.000000000 +0800
++++ bsnes_v108-source.new/bsnes/GNUmakefile	2021-04-18 17:45:28.350429325 +0800
+@@ -1,8 +1,11 @@
 +flags = $(CFLAGS)
 +options = $(LDFLAGS)
 +
@@ -10,8 +10,11 @@ diff --unified --recursive bsnes_v108-source.orig/bsnes/GNUmakefile bsnes_v108-s
 -build := performance
 +build := release
  openmp := true
+-local := true
++local := false
  flags += -I. -I..
  
+ # in order for this to work, obj/lzma.o must be omitted or bsnes will hang on startup.
 
 diff --unified --recursive bsnes_v113-source.orig/bsnes/target-bsnes/GNUmakefile bsnes_v113-source.new/bsnes/target-bsnes/GNUmakefile
 --- bsnes_v113-source.orig/bsnes/target-bsnes/GNUmakefile       2019-12-11 12:19:18.782618740 -0700
