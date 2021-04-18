@@ -4,13 +4,13 @@
 
 _pkgname='decaf-emu'
 pkgname="${_pkgname}-git"
-pkgver=5083.ef720a09
+pkgver=5096.0cd56a2f
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Wii U emulator"
 arch=('x86_64')
 url="https://github.com/decaf-emu/decaf-emu"
 license=('GPL')
-depends=('c-ares' 'libuv' 'curl' 'ffmpeg' 'openssl' 'qt5-base' 'qt5-svg' 'sdl2' 'vulkan-icd-loader' 'zlib')
+depends=('c-ares' 'libuv' 'curl' 'ffmpeg' 'openssl' 'qt5-base' 'qt5-svg' 'sdl2' 'vulkan-icd-loader' 'zlib' 'qt5-x11extras')
 makedepends=('cmake' 'glslang' 'git' 'python' 'vulkan-validation-layers')
 optdepends=('qt5-wayland: for Wayland support')
 source=("git+https://github.com/decaf-emu/decaf-emu")
