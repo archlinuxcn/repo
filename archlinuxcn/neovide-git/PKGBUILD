@@ -1,0 +1,44 @@
+# Maintainer: Wenxuan <wenxuangm@gmail.com>
+# Maintainer: j4qfrost <j4qfrost at gmail dot com>
+# Maintainer: ptolemy753 <dsconce at protonmail dot com>
+# Maintainer: peeweep <peeweep at 0x0 dot ee>
+
+pkgname=neovide-git
+pkgver=0.7.0.r3.ge1d8d40
+pkgrel=1
+pkgdesc='No Nonsense Neovim Client in Rust'
+arch=('x86_64')
+url='https://github.com/Kethku/neovide'
+license=('MIT')
+depends=('neovim' 'fontconfig' 'freetype2' 'libglvnd' 'sndio')
+makedepends=('git' 'rust' 'gtk3' 'cmake' 'sdl2' 'make')
+provides=("neovide")
+conflicts=("neovide")
+source=("${pkgname}::git+${url}")
+sha1sums=('SKIP')
+
+pkgver() {
+  cd "${srcdir}/${pkgname}"
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd "${srcdir}/${pkgname}"
+  sed -i 's/debug = true/opt-level = 3\ndebug = false/' Cargo.toml
+  sed -i 's/Icon=neovide/Icon=nvim/' assets/neovide.desktop
+}
+
+build() {
+  cd "${srcdir}/${pkgname}"
+  export CARGO_HOME="${srcdir}/${pkgname}/CARGO"
+  export CFLAGS="-fcommon -fPIE"
+  cargo build --release
+}
+
+package() {
+  install -Dm644 ${srcdir}/${pkgname}/LICENSE ${pkgdir}/usr/share/licenses/neovide/LICENSE
+  install -Dm755 ${srcdir}/${pkgname}/target/release/neovide ${pkgdir}/usr/bin/neovide
+  install -Dm644 ${srcdir}/${pkgname}/assets/neovide.desktop ${pkgdir}/usr/share/applications/neovide.desktop
+}
+
+# vim: ts=2 sw=2 et:
