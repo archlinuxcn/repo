@@ -1,39 +1,57 @@
-# Maintainer: Evan Teitelman <teitelmanevan at gmail dot com>
+# Maintainer: Levente Polyak <anthraxx[at]archlinux[dot]org>
+# Contributor: Evan Teitelman <teitelmanevan at gmail dot com>
 # Contributor: fxbru <frxbru[at]gmail>
 
 pkgname=sqlmap-git
-pkgver=1.2.12.1349.g9a6acd205
+pkgver=1.5.4.r7.g9a6acd205
 pkgrel=1
 pkgdesc='Automatic SQL injection and database takeover tool'
-arch=('any')
 url='http://sqlmap.org'
-license=('GPLv2')
-depends=('python2')
-provides=('sqlmap')
-conflicts=('sqlmap' 'sqlmap-svn')
+arch=('any')
+license=('GPL2')
+depends=('python' 'sh')
 makedepends=('git')
-options=('!strip')
-source=('git://github.com/sqlmapproject/sqlmap.git')
-md5sums=('SKIP')
+provides=('sqlmap')
+conflicts=('sqlmap')
+backup=('etc/sqlmap.conf')
+source=(${pkgname}::git+https://github.com/sqlmapproject/sqlmap.git)
+sha512sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/sqlmap"
-  git describe --always | sed 's|-|.|g;s|0\.9|1.0dev|'
+  cd ${pkgname}
+  git describe --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd ${pkgname}
+  python -m compileall .
+  python -O -m compileall .
 }
 
 package() {
-  cd "$srcdir/sqlmap"
+  cd ${pkgname}
 
-  # Base directories.
-  install -dm755 "$pkgdir/usr/bin"
-  install -dm755 "$pkgdir/opt/sqlmap"
+  install -d "${pkgdir}/etc"
+  install -d "${pkgdir}/usr/bin"
+  install -d "${pkgdir}/opt/${pkgname}"
+  install -d "${pkgdir}/usr/share/doc"
 
-  cp -R --no-preserve=ownership * "$pkgdir/opt/sqlmap"
+  mv doc "${pkgdir}/usr/share/doc/${pkgname}"
+  mv sqlmap.conf "${pkgdir}/etc/sqlmap.conf"
+  ln -sf /etc/sqlmap.conf "${pkgdir}/opt/${pkgname}/sqlmap.conf"
+  cp -a --no-preserve=ownership * "${pkgdir}/opt/${pkgname}"
 
-  cat > "$pkgdir/usr/bin/sqlmap" << EOF
-#!/bin/bash
-cd /opt/sqlmap
-python2 sqlmap.py "\$@"
+  cat > "${pkgdir}/usr/bin/sqlmap" << EOF
+#!/bin/sh
+cd /opt/${pkgname}
+python sqlmap.py "\$@"
 EOF
-  chmod 755 "$pkgdir/usr/bin/sqlmap"
+  cat > "${pkgdir}/usr/bin/sqlmapapi" << EOF
+#!/bin/sh
+cd /opt/${pkgname}
+python sqlmapapi.py "\$@"
+EOF
+
+  chmod 755 "${pkgdir}/usr/bin/sqlmap"
+  chmod 755 "${pkgdir}/usr/bin/sqlmapapi"
 }
