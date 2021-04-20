@@ -13,7 +13,7 @@ pkgname=(
 pkgver=5.0.5.sdk202
 _runtimever=5.0.5
 _sdkver=5.0.202
-pkgrel=1
+pkgrel=2
 arch=('x86_64' 'armv7h' 'aarch64')
 url='https://www.microsoft.com/net/core'
 license=('MIT')
@@ -49,8 +49,8 @@ package_dotnet-runtime-bin() {
            'zlib'
   )
   optdepends=('lttng-ust: CoreCLR tracing')
-  provides=("dotnet-runtime-bin" "dotnet-runtime=${_runtimever}" "dotnet-runtime-5.0")
-  conflicts=("dotnet-runtime-bin" "dotnet-runtime=${_runtimever}" "dotnet-runtime-5.0")
+  provides=("dotnet-runtime=${_runtimever}" "dotnet-runtime-5.0")
+  conflicts=("dotnet-runtime=${_runtimever}" "dotnet-runtime-5.0")
 
   install -dm 755 "${pkgdir}"/usr/share/{dotnet/shared,licenses}
   cp -dr --no-preserve='ownership' shared/Microsoft.NETCore.App "${pkgdir}"/usr/share/dotnet/shared/
@@ -60,8 +60,8 @@ package_dotnet-runtime-bin() {
 package_aspnet-runtime-bin() {
   pkgdesc='The ASP.NET Core runtime (binary)'
   depends=('dotnet-runtime-bin')
-  provides=("aspnet-runtime-bin" "aspnet-runtime=${_runtimever}" "aspnet-runtime-5.0")
-  conflicts=("aspnet-runtime-bin" "aspnet-runtime=${_runtimever}" "aspnet-runtime-5.0")
+  provides=("aspnet-runtime=${_runtimever}" "aspnet-runtime-5.0")
+  conflicts=("aspnet-runtime=${_runtimever}" "aspnet-runtime-5.0")
 
   install -dm 755 "${pkgdir}"/usr/share/{dotnet/shared,licenses}
   cp -dr --no-preserve='ownership' shared/Microsoft.AspNetCore.App "${pkgdir}"/usr/share/dotnet/shared/
@@ -74,7 +74,7 @@ package_dotnet-sdk-bin() {
     'dotnet-runtime-bin'
     'glibc'
     'dotnet-targeting-pack-bin'
-    'netstandard-targeting-pack-2.1')
+    'netstandard-targeting-pack-bin')
   optdepends=('aspnet-targeting-pack-bin: Build ASP.NET Core applications')
   provides=("dotnet-sdk-bin" "dotnet-sdk=${pkgver}" "dotnet-sdk-5.0")
   conflicts=("dotnet-sdk-bin" "dotnet-sdk=${pkgver}" "dotnet-sdk-5.0")
@@ -86,8 +86,8 @@ package_dotnet-sdk-bin() {
 
 package_netstandard-targeting-pack-bin() {
   pkgdesc='The .NET Standard targeting pack (binary)'
-  provides=('netstandard-targeting-pack-2.1' 'netstandard-targeting-pack-bin')
-  conflicts=('netstandard-targeting-pack-2.1' 'netstandard-targeting-pack-bin')
+  provides=('netstandard-targeting-pack-2.1' 'netstandard-targeting-pack')
+  conflicts=('netstandard-targeting-pack-2.1' 'netstandard-targeting-pack')
 
   install -dm 755 "${pkgdir}"/usr/share/{dotnet,dotnet/packs,licenses}
   cp -dr --no-preserve='ownership' packs/NETStandard.Library.Ref "${pkgdir}"/usr/share/dotnet/packs/
@@ -96,7 +96,7 @@ package_netstandard-targeting-pack-bin() {
 
 package_dotnet-targeting-pack-bin() {
   pkgdesc='The .NET Core targeting pack (binary)'
-  depends=(netstandard-targeting-pack-2.1)
+  depends=(netstandard-targeting-pack-bin)
   provides=(dotnet-targeting-pack=${_runtimever} dotnet-targeting-pack-5.0)
   conflicts=(dotnet-targeting-pack=${_runtimever} dotnet-targeting-pack-5.0)
 
