@@ -3,35 +3,35 @@
 
 _pyname=requests-cache
 pkgname=python-requests-cache
-pkgver=0.5.2
-pkgrel=4
+pkgver=0.6.2
+pkgrel=1
 pkgdesc="Persistent cache for requests library"
 arch=('any')
 url="https://github.com/reclosedev/requests-cache"
 license=('BSD')
 depends=('python')
 makedepends=('python-setuptools')
-checkdepends=('python-mock' 'python-requests')
+# checkdepends=('python-pytest' 'python-requests-mock' 'python-requests' 'python-pytest-httpbin')
 
 source=("${_pyname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/r/${_pyname}/${_pyname}-${pkgver}.tar.gz")
 
-sha512sums=('355cc571a46b768615606a907a69ed065b3c4b5e74bb6c311abc7a28d9406f32fdea1db0dfd2b1c32dcdc82ed817ef7e0b30086c069de57307254617604c5177')
+sha512sums=('45d11756f70bd3156f8986b61097b1ee522e742856782301e7362fed09f166769ccd8373415c59ca0cd75e78a929cd3bd19e77a88781626dd249d16811ba8876')
 
 build() {
     cd ${_pyname}-${pkgver}
     python setup.py build
 }
 
-# Comment out the unit test temporarily, the upstream response url('http://httpbin.org') has been changed.
-#check() {
+# Comment out the unit test temporarily, missing check dependences.
+# check() {
 #    cd ${_pyname}-${pkgver}/tests
-#    python test_cache.py
-#}
+#    USE_PYTEST_HTTPBIN=true pytest ./integration/test_cache.py
+# }
 
 package() {
     cd "${srcdir}/${_pyname}-${pkgver}"
     python setup.py install -O1 --root="${pkgdir}" --skip-build
     install -Dm 644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-    install -Dm 644 README.rst "${pkgdir}/usr/share/doc/${pkgname}/README"
+    install -Dm 644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README"
 }
 # vim:set et sw=2 ts=2 tw=79:
