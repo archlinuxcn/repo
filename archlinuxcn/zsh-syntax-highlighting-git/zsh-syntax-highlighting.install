@@ -1,4 +1,8 @@
 post_install() {
-    echo "==> To use syntax highlighting, include the following line in your .zshrc:
-    source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  cat << EOF
+To activate zsh-syntax-highlighting, add the following line at the end of ~/.zshrc:
+    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+EOF
 }
+
+# vim:set ts=2 sw=2 et:
