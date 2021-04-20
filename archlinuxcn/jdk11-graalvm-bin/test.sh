@@ -49,6 +49,15 @@ if [[ $helloWorld != 'Hello, world!' ]]; then
     exit 1
 fi
 
+printf '%s\n' 'Testing Espresso...'
+
+# reusing the same Test.java / Test.class
+helloWorld=$(java -truffle Test) || exit
+if [[ $helloWorld != 'Hello, world!' ]]; then
+    printf 'expected "Hello, world!", got %q\n' "$helloWorld"
+    exit 1
+fi
+
 printf '%s\n' 'Testing GraalWASM...'
 
 PATH=$PATH:/usr/lib/emscripten
