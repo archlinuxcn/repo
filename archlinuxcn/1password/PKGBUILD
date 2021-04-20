@@ -1,9 +1,9 @@
 pkgname=1password
 
-_tarver=8.0.33-26.BETA
-_tar="${pkgname}-${_tarver}.tar.gz"
+_tarver=8.0.33-40.BETA
+_tar="${pkgname}-${_tarver}.x64.tar.gz"
 pkgver=${_tarver//-/_}
-pkgrel=26
+pkgrel=40
 pkgdesc="Password manager and secure wallet"
 arch=('x86_64')
 url='https://1password.com'
@@ -11,15 +11,15 @@ license=('LicenseRef-1Password-Proprietary')
 depends=('hicolor-icon-theme')
 options=(!strip)
 install="${pkgname}.install"
-source=(https://downloads.1password.com/linux/tar/${_tar}{,.sig})
-sha256sums=('2cbcdd3ab34aeea04fbdfcb286c3b425c7cd35d4726abd21ac1e1ca5ee142b6c'
-            'f2d40812bb474adc915490e8232e61a321609188e26a918b0a49aed6f8f7ffb8'
+source=(https://downloads.1password.com/linux/tar/beta/x86_64/${_tar}{,.sig})
+sha256sums=('9ab066860e68a531a999ddbc6099e189fbb468861368dcbefd41de0ee2d4f6dc'
+            'd6875672207de00ba0206f7bd1d2bfe7bfa5f512b85f8779c0c19488aede85e0'
 )
 validpgpkeys=('3FEF9748469ADBE15DA7CA80AC2D62742012EA22')
 
 package() {
     # Go to source directory
-    cd "${pkgname}-${_tarver}"
+    cd "${pkgname}-${_tarver}.x64"
 
     # Install icons
     resolutions=(32x32 64x64 256x256 512x512)
@@ -39,7 +39,7 @@ package() {
     # Move package contents to /opt/1Password
     cd "${srcdir}"
     install -dm0755 "${pkgdir}"/opt
-    mv "${pkgname}-${_tarver}" "${pkgdir}/opt/1Password"
+    mv "${pkgname}-${_tarver}.x64" "${pkgdir}/opt/1Password"
 
     # Symlink /usr/bin executable to opt
     install -dm0755 "${pkgdir}"/usr/bin
