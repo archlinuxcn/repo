@@ -2,7 +2,7 @@
 
 pkgname=nali-cli
 pkgver=2.1.4
-pkgrel=1
+pkgrel=2
 pkgdesc="Parse geoinfo of IP Address without leaving your terminal"
 arch=('any')
 url="https://nali.skk.moe/"
@@ -19,15 +19,15 @@ sha256sums=('a648a11b4fdce9ae7005079088517ac59f68f6a1cf7f85a2182b1443e8cbed7d'
             '3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986')
 
 package() {
-  npm install -g --user root --prefix "$pkgdir"/usr "$srcdir"/$pkgname-$pkgver.tgz
+  npm install -g --prefix "${pkgdir}/usr" "${srcdir}/${pkgname}-${pkgver}.tgz"
 
   # Non-deterministic race in npm gives 777 permissions to random directories.
-  # See https://github.com/npm/npm/issues/9359 for details.
-  find "${pkgdir}"/usr -type d -exec chmod 755 {} +
+  # See https://github.com/npm/cli/issues/1103 for details.
+  find "${pkgdir}/usr" -type d -exec chmod 755 {} +
 
-  # npm installs package.json owned by build user
+  # npm gives ownership of ALL FILES to build user
   # https://bugs.archlinux.org/task/63396
-  chown -R root:root "$pkgdir"
+  chown -R root:root "${pkgdir}"
 
   install -Dm644 "$srcdir"/LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 }
