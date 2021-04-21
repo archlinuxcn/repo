@@ -4,7 +4,7 @@
 # Contributor : Jakub Schmidtke <sjakub@gmail.com>
 
 pkgname=firefox-esr
-pkgver=78.9.0
+pkgver=78.10.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, Extended Support Release"
 arch=(x86_64)
@@ -25,7 +25,7 @@ options=(!emptydirs !makeflags !strip)
 source=(https://archive.mozilla.org/pub/firefox/releases/${pkgver}esr/source/firefox-${pkgver}esr.source.tar.xz{,.asc}
         ${pkgname}.desktop 0001-Use-remoting-name-for-GDK-application-names.patch
         rust_1.48.patch.gz)
-sha256sums=('8e03ac1dfc5ac804c8b13a529414a9387e0425e545bb2f4462d74c3175e64864'
+sha256sums=('979141a6d94bbe303815e9cd1ab1d23b5ce2f9c77d9d5486871eaecf0ea2df40'
             'SKIP'
             'd86fe1636346ff003744b65e73cd3a7182618faedf3ee57023bb942e325cc726'
             '3bb7463471fb43b2163a705a79a13a3003d70fff4bbe44f467807ca056de9a75'
@@ -68,11 +68,11 @@ ac_add_options --enable-optimize
 ac_add_options --enable-rust-simd
 ac_add_options --enable-linker=lld
 ac_add_options --disable-elf-hack
-export CC='clang --target=x86_64-unknown-linux-gnu'
-export CXX='clang++ --target=x86_64-unknown-linux-gnu'
-export AR=llvm-ar
-export NM=llvm-nm
-export RANLIB=llvm-ranlib
+#export CC='clang --target=x86_64-unknown-linux-gnu'
+#export CXX='clang++ --target=x86_64-unknown-linux-gnu'
+#export AR=llvm-ar
+#export NM=llvm-nm
+#export RANLIB=llvm-ranlib
 
 # Branding
 ac_add_options --enable-official-branding
