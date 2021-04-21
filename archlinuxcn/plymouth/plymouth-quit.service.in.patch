@@ -8,7 +8,6 @@ diff -aur plymouth.src/systemd-units/plymouth-quit.service.in plymouth.patch/sys
 +Before=getty@tty1.service
  
  [Service]
--ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth quit
-+ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth quit --retain-splash
+ ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth quit
  Type=oneshot
  TimeoutSec=20
