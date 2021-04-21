@@ -13,12 +13,12 @@
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
 pkgver=87.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
 url="https://build.opensuse.org/package/show/mozilla:Factory/MozillaFirefox"
-depends=('mozilla-common' 'libxt' 'mime-types'
+depends=('libxt' 'mime-types'
          'dbus-glib' 'hicolor-icon-theme'
 	 'libvpx' 'icu'  'libevent' 'nss>=3.28.3' 'nspr>=4.10.6' 'hunspell'
 	 'sqlite' 'libnotify' 'kmozillahelper' 'ffmpeg' 'gtk3'
@@ -100,6 +100,9 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         # end
         # Fix CSD when globalmenu is active #8
         fix_csd_window_buttons.patch
+        # Fix MOZILLA#1701089
+        # vp09 codec string fails when parsing Widevine manifest
+        mozilla-1701089.patch
 )
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -156,6 +159,9 @@ prepare() {
 
   # Fix CSD when globalmenu is active #8
   patch -Np1 -i "$srcdir"/fix_csd_window_buttons.patch
+
+  # Fix MOZILLA#1701089
+  patch -Np1 -i "$srcdir"/mozilla-1701089.patch
 
   if [ $_pgo ] ; then
     # Fix MOZILLA#1516803
@@ -288,4 +294,5 @@ md5sums=('SKIP'
          'c8e251f1fc9050cd12173b540baa96f8'
          '72176c9ee7b2ac4f1bb07ff5ee5fe10b'
          '07770d558b8999b5793794e1551a1309'
-         'f49ac3b9f5146e33ce587e6b23eb1a86')
+         'f49ac3b9f5146e33ce587e6b23eb1a86'
+         '1140834b3911a1f2f862b9587941a6d2')

@@ -1,0 +1,41 @@
+#+TITLE: Readme
+
+* Sources or marking the package of date
+
+  This package has several patches that need to be updated for every
+  major release.
+
+  If any of those is not update don't report the package out of date.
+  This also means that if the listed source does not contain the patches
+  the package is not out of date.
+
+  + Firefox KDE patches from openSUSE [fn:kde_patches]
+  + Ubuntu Globalmenu patch
+
+
+  For more information on the patches applied to the package look
+  at the source section of the [[./PKGBUILD::source=][PKGBUILD]].
+
+
+* Reporting issues
+
+If you have issues with package please note the following
+items down when creating an issue:
+
++ Describe what..
+  + Happens
+  + What should happen (if applicable)
++ Version of the package
++ Desktop Environment
++ GPU-Driver used
++ Attach these files
+  + Text from about:support
+    + Click /Copy text to clipboard/
+    + Save into text file
+  + Comandline output when the issue happens
++ Build log or source of the package
+
+  
+* Footnotes
+
+[fn:kde_patches] https://github.com/openSUSE/firefox-maintenance
