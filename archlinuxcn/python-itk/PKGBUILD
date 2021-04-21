@@ -2,8 +2,8 @@
 
 _pkgname=ITKPythonPackage
 pkgname=python-itk
-pkgver=5.1.2
-pkgrel=2
+pkgver=5.2.0
+pkgrel=1
 pkgdesc='An open-source toolkit for multidimensional image analysis. This package provides only the python binding'
 arch=('x86_64')
 url='https://itk.org/'
@@ -20,24 +20,37 @@ makedepends=(
   python-scikit-build
 )
 
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/InsightSoftwareConsortium/ITKPythonPackage/archive/v${pkgver}.tar.gz")
-sha512sums=('3b6eac42190358115aa32a2e5fdeceef771a1b6a327118092d8a08fb061cdc63b538f3aaca5a6623ffa3a3394449bac1b658507be0b929c147ba210b6d613c00')
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/InsightSoftwareConsortium/ITKPythonPackage/archive/v${pkgver}.tar.gz"
+"0001-fix-build-with-cmake-3.20.patch::https://github.com/InsightSoftwareConsortium/ITKPythonPackage/pull/156.patch"
+"ITK-${pkgver}.tar.gz::https://github.com/InsightSoftwareConsortium/ITK/archive/refs/tags/v${pkgver}.tar.gz"
+"0002-fix-ipo.patch::https://github.com/InsightSoftwareConsortium/ITK/pull/2498.patch"
+)
+sha512sums=('d6ef9597c52b349d9134752cd0236e9d53bdafd4e85edc65ea09be982b58b0f4ac56e7e9b49c790505a17f32148e53122a118a497fdb3f3190afb2ded03efa59'
+            '8901af2ccc5283c8499c56fd12059d08ff3865d689861d4055cd2493bb89e1ced2439a045e69157dc59db7f48d65f858158fe695bf4df514e4eba0984edd26ab'
+            'a055280f37ce187d29bc5ed4c6732094d4285b583ec7874a193bea90da2a455c9cb514e313fe20c65b5f65821eae6040a86815d07450e82498509bc1e4cd8d3b'
+            '460b8431ed4f47d0c3afa83fa195a8520c049c9e9e038d7d1cfd3935d2eff1373b07e4a5ba9796a917788cd2dff78f8c6ddd53b0ee7643355241e8b85266e027')
 
-get_pyver() {
-  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+prepare() {
+  cd "${_pkgname}-${pkgver}"
+  patch -p1 -i "${srcdir}/0001-fix-build-with-cmake-3.20.patch"
+  cd "${srcdir}/ITK-${pkgver}"
+  patch -p1 -i "${srcdir}/0002-fix-ipo.patch"
+  export CC=clang
+  export CXX=clang++
 }
 
 build() {
-  export CC=clang
-  export CXX=clang++
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python setup.py build -- \
+    -DITK_WRAP_unsigned_short:BOOL=ON \
+    -DITK_WRAP_double:BOOL=ON \
+    -DITK_WRAP_IMAGE_DIMS:STRING="2;3;4" \
+    -DITK_SOURCE_DIR="${srcdir}/ITK-${pkgver}"
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
-  mv "${pkgdir}/usr/itkHelpers.py" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/itkHelpers.py"
 }
 # vim:set ts=2 sw=2 et:
 
