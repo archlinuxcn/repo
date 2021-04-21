@@ -5,17 +5,17 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=78.9.0
-pkgrel=1
-_commit=8b54aee6bd0c39f043bbba7a654870e032a910bc
+pkgver=78.10.0
+pkgrel=2
+_commit=b72c22186cf381d7b1f93be550c9da30865d03b4
 pkgdesc="GNU version of the Firefox browser."
 arch=(x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
 license=('GPL' 'MPL' 'LGPL')
-depends=(gtk3 mozilla-common libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse)
+depends=(gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse)
 makedepends=(m4 unzip zip diffutils python2-setuptools yasm mesa imake inetutils
              xorg-server-xvfb autoconf2.13 rust clang llvm jack gtk2
-             python nodejs python2-psutil cbindgen nasm wget mercurial git lld perl-file-rename)
+             python nodejs python2-psutil cbindgen nasm wget mercurial git lld perl-rename)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
@@ -28,7 +28,7 @@ source=(https://git.savannah.gnu.org/cgit/gnuzilla.git/snapshot/gnuzilla-${_comm
         "0001-Use-remoting-name-for-GDK-application-names.patch::https://raw.githubusercontent.com/archlinux/svntogit-packages/0adcedc05ce67d53268575f8801c8de872206901/firefox/trunk/0001-Use-remoting-name-for-GDK-application-names.patch"
         rust_1.48.patch.gz)
 
-sha256sums=('5b248baaa61ece3f5b8077751638a42445c196df4e7d09e6d9b28e127b482e86'
+sha256sums=('a92affc4da1831db842f4090590e26c4b211975d79894578c6da10430b64c9ce'
             'e00dbf01803cdd36fd9e1c0c018c19bb6f97e43016ea87062e6134bdc172bc7d'
             '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208'
             'e0eaec8ddd24bbebf4956563ebc6d7a56f8dada5835975ee4d320dd3d0c9c442'
@@ -41,7 +41,7 @@ prepare() {
   #sed -e 's/^verify_sources$//g' -i makeicecat
 
   mkdir output || rm -rf output/*  # Clean output just in case is already an old build there
-  if [ -f "${startdir}/firefox-${pkgver}esr.source.tar.xz" ] && [ -f "${startdir}/firefox-${pkgver}esr.source.tar.xz.asc" ]; then cp -f "${startdir}"/firefox-${pkgver}esr.source.tar.xz{,.asc} output/ ; fi
+  if [ -f "${SRCDEST}/firefox-${pkgver}esr.source.tar.xz" ] && [ -f "${SRCDEST}/firefox-${pkgver}esr.source.tar.xz.asc" ]; then cp -f "${SRCDEST}"/firefox-${pkgver}esr.source.tar.xz{,.asc} output/ ; fi
 
   # Patches to avoid download sources if you have in your $startdir
   sed -e '/rm -rf output/d' -i makeicecat
@@ -58,6 +58,71 @@ prepare() {
     [ -z "$_LOCALE" ] || sed -e "s/es-ES/$_LOCALE/g" -i makeicecat && echo "$_LOCALE" > custom-shipped-locales
     rm -rf data/files-to-append/l10n/*
   fi
+
+  patch -p1 << 'EOF'
+--- a/makeicecat	2021-04-21 12:56:35.319095244 +0200
++++ b/makeicecat	2021-04-21 13:10:03.249639226 +0200
+@@ -143,16 +143,23 @@
+     do which ${rename_cmd} &> /dev/null && RENAME_CMD=${rename_cmd}
+     done
+     readonly RENAME_CMD
+-    if ! ( [[ "$( ${RENAME_CMD} --version )" =~ 'File::Rename version '([0-9]+)\.([0-9]+) ]] &&
++    if ! ( [[ "$( ${RENAME_CMD} --version )" =~ ([0-9]+)\.([0-9]+) ]] &&
+                (( ${BASH_REMATCH[1]} >= MIN_RENAME_VER_MAJ )) &&
+                (( ${BASH_REMATCH[2]} >= MIN_RENAME_VER_MIN )) )
+     then
+         required_ver=${MIN_RENAME_VER_MAJ}.${MIN_RENAME_VER_MIN}
+         echo -e "\nERROR: This script requires the Perl rename program (version >= ${required_ver})
+  e.g.: 'rename' from the Guix 'rename' package
+-       'perl-rename' from the Parabola 'perl-file-rename' package
++       'perl-rename' from the Archlinux package or 'perl-file-rename' in the Parabola project
+        'prename' from the Trisquel 'rename' package"
+         return 1
++    else
++        if [[ "$( ${RENAME_CMD} --version )" =~ 'File::Rename' ]]
++        then
++            RENAME_FLAVOUR=RMBARKER
++        else
++            RENAME_FLAVOUR=PEDERST
++        fi
+     fi
+ 
+     # verify that Wget is available
+@@ -428,9 +433,16 @@
+ 
+ apply_batch_branding()
+ {
+-    find . | tac | grep -i fennec  | ${RENAME_CMD} --nofullpath -E 's/fennec/icecatmobile/;' -E 's/Fennec/IceCatMobile/;'
+-    find . | tac | grep -i firefox | ${RENAME_CMD} --nofullpath -E 's/firefox/icecat/;' -E 's/Firefox/IceCat/;'
+-    find services/fxaccounts/rust-bridge | tac | ${RENAME_CMD} --nofullpath -E 's/icecat-accounts/firefox-accounts/;' -E 's/IceCatAccounts/FirefoxAccounts/;'
++    if [ "${RENAME_FLAVOUR}" = "PEDERST" ]
++    then
++        find . | tac | grep -i firefox | ${RENAME_CMD} 's/firefox/icecat/ if -f;'
++        find . | tac | grep -i firefox | ${RENAME_CMD} 's/Firefox/IceCat/ if -f;'
++        find services/fxaccounts/rust-bridge | tac | ${RENAME_CMD} 's/icecat-accounts/firefox-accounts/ if -f;'
++        find services/fxaccounts/rust-bridge | tac | ${RENAME_CMD} 's/IceCatAccounts/FirefoxAccounts/ if -f;'
++    else
++        find . | tac | grep -i firefox | ${RENAME_CMD} --nofullpath -E 's/firefox/icecat/;' -E 's/Firefox/IceCat/;'
++        find services/fxaccounts/rust-bridge | tac | ${RENAME_CMD} --nofullpath -E 's/icecat-accounts/firefox-accounts/;' -E 's/IceCatAccounts/FirefoxAccounts/;'
++    fi
+ 
+     echo "Running batch rebranding"
+     local sed_script="
+@@ -492,7 +507,12 @@
+ 
+     sed 's/mozilla-bin/icecat-bin/' -i build/unix/run-mozilla.sh
+ 
+-    find . | tac | grep run-mozilla | ${RENAME_CMD} --nofullpath -E 's/mozilla/icecat/;'
++    if [ "${RENAME_FLAVOUR}" = "PEDERST" ]
++    then 
++        find . | tac | grep run-mozilla | ${RENAME_CMD} 's/mozilla/icecat/ if -f;'
++    else
++        find . | tac | grep run-mozilla | ${RENAME_CMD} --nofullpath -E 's/mozilla/icecat/;'
++    fi
+ 
+     # do not alter useragent/platform/oscpu/etc with fingerprinting countermeasure, it makes things worse
+     sed '/ShouldResistFingerprinting/,/}/s/^/\/\//' -i ./netwerk/protocol/http/nsHttpHandler.cpp
+EOF
 
   # Produce IceCat sources
   bash makeicecat
