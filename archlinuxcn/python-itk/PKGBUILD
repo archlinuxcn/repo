@@ -3,7 +3,7 @@
 _pkgname=ITKPythonPackage
 pkgname=python-itk
 pkgver=5.2.0
-pkgrel=1
+pkgrel=2
 pkgdesc='An open-source toolkit for multidimensional image analysis. This package provides only the python binding'
 arch=('x86_64')
 url='https://itk.org/'
@@ -28,7 +28,7 @@ source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/InsightSoftwareConsort
 sha512sums=('d6ef9597c52b349d9134752cd0236e9d53bdafd4e85edc65ea09be982b58b0f4ac56e7e9b49c790505a17f32148e53122a118a497fdb3f3190afb2ded03efa59'
             '8901af2ccc5283c8499c56fd12059d08ff3865d689861d4055cd2493bb89e1ced2439a045e69157dc59db7f48d65f858158fe695bf4df514e4eba0984edd26ab'
             'a055280f37ce187d29bc5ed4c6732094d4285b583ec7874a193bea90da2a455c9cb514e313fe20c65b5f65821eae6040a86815d07450e82498509bc1e4cd8d3b'
-            '460b8431ed4f47d0c3afa83fa195a8520c049c9e9e038d7d1cfd3935d2eff1373b07e4a5ba9796a917788cd2dff78f8c6ddd53b0ee7643355241e8b85266e027')
+            '91f2ce0d22953cdc8acd881763e86e50f5a4749509d50d8ae421a8193ef17cb4ac281b8ee997523acd7f4eedb7fb5f57aa8c9fb45dc9eae768d40fce96d0d65e')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
