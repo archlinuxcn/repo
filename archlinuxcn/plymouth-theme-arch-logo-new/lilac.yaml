@@ -6,5 +6,6 @@ post_build: aur_post_build
 repo_depends:
   - plymouth
 update_on:
-  - source: aur
-    aur: plymouth-theme-arch-logo-new
+  - source: gitlab
+    gitlab: menelkir/plymouth-arch-logo-new
+    use_max_tag: true
