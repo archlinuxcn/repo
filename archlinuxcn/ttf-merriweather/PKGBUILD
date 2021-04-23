@@ -1,9 +1,9 @@
 # Maintainer: Tyler Swagar <buttpickle69@shaw.ca>
 
 pkgname=ttf-merriweather
-_commit='ae0bf55e53517ac98cc74c375a383ad4c36f937a'
-pkgver=2.005
-pkgrel=3
+_commit='06e56b5a24d80a4a1ac94a71a0a05a98b5d02ef5'
+pkgver=2.100
+pkgrel=1
 epoch=1
 pkgdesc='A typeface that is pleasant to read on screens by Sorkin Type Co'
 arch=('any')
@@ -19,14 +19,14 @@ source=("Merriweather-Black-${pkgver}.ttf::https://github.com/SorkinType/Merriwe
         "Merriweather-LightItalic-${pkgver}.ttf::https://github.com/SorkinType/Merriweather/raw/${_commit}/fonts/ttfs/Merriweather-LightItalic.ttf"
         "Merriweather-Regular-${pkgver}.ttf::https://github.com/SorkinType/Merriweather/raw/${_commit}/fonts/ttfs/Merriweather-Regular.ttf"
         "${pkgname}-${pkgver}-OFL.txt::https://github.com/SorkinType/Merriweather/raw/${_commit}/OFL.txt")
-sha256sums=('73e4deb0e7c241a7e98ddcb9216c322be2a7f50df9b542f4aa3233154c12a852'
-            '1f83c77a970d9832143f481b32ea705f97f238a0e7bb2c6ecd30a1de1b902f54'
-            'a03a68750a3ef5c50833ba8313e7ee4a1907c811da1a6e96a2f64718850706f4'
-            '96c3e940049b0f7fb500620998d5aa0ad0a901c6a67c359859dd90b88d20e373'
-            'e9e7c00e9606290a2fc4e478f76256fe5e7b39f4e5c79bb3264595ffb18402bc'
-            '5acd66e1d1841fc30649e195480a9552fa7e55d62c73b8b4795513761f911fb6'
-            'ba900a4ad03e5ee0fe0d91c083a0711bb1f434074950535a24583ad9e0bbf83d'
-            '22ce375fea4f4c394dafb0637b7c18fc1783c64524da6806159c771efbe9a47a'
+sha256sums=('e4b178ebd76474428e59020635fafa11076f6a3b5e14cf41fac408bba75e75ae'
+            'e302d95920cb4a161d4c81db6a24249fdc9ff30235b840780c4db49522149ad7'
+            '8d2dcbd3041b5eab1739cb00cb58fadfea5c2c2977f410148d8432c471022879'
+            '1d9bb02a953dc478f05bcc1ad8776809a8e7ce43f34ed53fb8224000a5163b08'
+            '8969d6b6123e0b3b9e150c4411ac697ab941be075df38680229e2bd685b5691b'
+            '32221799ab71877aeef75fa1615364408088e4d2fbd29e65caa97bfd92ff9594'
+            '4780495ff32c2b547677e1e5946bdc62d44554137197af9fc196aa42584566cd'
+            'a74a8658a74b5da43ddf32e211f4ad96bc0efc7d5cb921f78d3376aa2b8be5fe'
             'a7ba785ad99b6eae0444ab89910e512d4af9865937fddbcb5c72c4f59f55d6ad')
 
 package() {
