@@ -8,6 +8,7 @@ repo_depends:
 
 pre_build_script: |
     aur_pre_build(maintainers='aperez')
+    add_makedepends(['cmake'])  # https://aur.archlinux.org/packages/wf-config/#comment-803553
 
 post_build_script: |
     aur_post_build()
