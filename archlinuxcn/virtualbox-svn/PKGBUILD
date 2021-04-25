@@ -10,8 +10,8 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=87670
-pkgrel=2
+pkgver=88654
+pkgrel=1
 _vboxsf_commit='5aba938bcabd978e4615186ad7d8617d633e6f30'
 arch=('x86_64')
 url='http://virtualbox.org'
@@ -79,8 +79,7 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         '012-vbglR3GuestCtrlDetectPeekGetCancelSupport.patch'
         '013-Makefile.patch'
         '017-fix-narrowing-conversion.patch'
-        '018-xclient.patch'
-        '020-linux-5-11.patch')
+        '018-xclient.patch')
 
 pkgver() {
   cd "VirtualBox"
@@ -409,7 +408,6 @@ sha256sums=('SKIP'
             '13c6ca9be0f91582445fd2a14a8c58a0625a15d9cb98cb6e8c2736d77ea976ab'
             '053bfeee8863f3ffdf2f0e3f9f0d77dc61dd32764700a97a7635fd8611e20491'
             '81900e13d36630488accd8c0bfd2ceb69563fb2c4f0f171caba1cca59d438024'
-            'da7e58ed37dc23c6202aab3017864579a99e78417f3421ddcc98a198198fe2c9'
+            'baafc9aa33b7022f7e7f6af16f75621dc311abbea538bf953c227e040006fb3f'
             '5aac692909a0a0ec56b08bdece9e42cf7463abdca9da2f990d441ff463be6a99'
-            'cac5a573e9ed5aafb2f469c2e6fffb8cd4f389bbadba5a968c9f65be7a72fee3'
-            'a8fb9e4d0bb662a60953c17df79f60f225aaebf192bbd2319aa2b5d7a8a28bbc')
+            'cac5a573e9ed5aafb2f469c2e6fffb8cd4f389bbadba5a968c9f65be7a72fee3')
