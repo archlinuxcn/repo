@@ -26,6 +26,12 @@ GOLD=             # Use the gold linker.
 LTO="YES"         # Enable link-time optimization. Read emacs's INSTALL before
                   # attempting to use it with clang.
 JIT=              # Enable native just-in-time compilation. libgccjit is in AUR.
+                  # This compiles only performance critical elisp files.
+                  # To compile all elisp on demand, set
+                  # comp-deferred-compilation non-nil
+AOT=              # Precompile all included elisp. It takes a long time.
+                  # You still need to enable on-demand compilation
+                  # for your own packages.
 CLI=              # CLI only binary.
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
 LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
@@ -53,7 +59,7 @@ if [[ $CLI == "YES" ]] ; then
 else
 pkgname="emacs-git"
 fi
-pkgver=28.0.50.146471
+pkgver=28.0.50.148045
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
@@ -65,7 +71,7 @@ makedepends=('git')
 provides=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq' 'emacs-nox')
 conflicts=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq' 'emacs-nox')
 source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
-# I've given up on Savannah for the time being. A shame...
+# If Savannah fails for reasons, use Github's mirror
 #source=("emacs-git::git://github.com/emacs-mirror/emacs.git")
 options=(!strip)
 b2sums=('SKIP')
@@ -267,7 +273,11 @@ _conf+=('--program-transform-name=s/\([ec]tags\)/\1.emacs/')
   # Please note that incremental compilation implies that you
   # are reusing your src directory!
   #
-  make
+  if [[ $JIT == "YES" ]] && [[ $AOT == "YES" ]]; then
+    make NATIVE_FULL_AOT=1
+  else
+    make
+  fi
 
   # You may need to run this if 'loaddefs.el' files become corrupt.
   #cd "$srcdir/emacs-git/lisp"
