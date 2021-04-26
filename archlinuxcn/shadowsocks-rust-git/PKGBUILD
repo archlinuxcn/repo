@@ -10,7 +10,7 @@ arch=('x86_64')
 url='https://github.com/shadowsocks/shadowsocks-rust'
 license=('MIT')
 depends=('openssl')
-makedepends=('cargo' 'libsodium')
+makedepends=('cargo' 'libsodium' 'git')
 source=("git+$url.git" shadowsocks-rust{,-server}@.service)
 
 pkgver() {
@@ -19,19 +19,19 @@ pkgver() {
 }
 
 build() {
- 	cd "${pkgname%-git}"
+    cd "${pkgname%-git}"
     cargo build --release
 }
 
 package() {
-	install -Dm644 shadowsocks-rust{,-server}@.service -vt "$pkgdir"/usr/lib/systemd/system/
+    install -Dm644 shadowsocks-rust{,-server}@.service -vt "$pkgdir"/usr/lib/systemd/system/
 
- 	cd "${pkgname%-git}"
- 	install -Dm644 LICENSE                             -vt "$pkgdir"/usr/share/licenses/shadowsocks-rust/
-	install -Dm644 examples/config{,_ext}.json         -vt "$pkgdir"/etc/shadowsocks-rust/
-	
- 	cd target/release
- 	for name in sslocal ssserver ssurl ssmanager; do
+    cd "${pkgname%-git}"
+    install -Dm644 LICENSE                     -vt "$pkgdir"/usr/share/licenses/shadowsocks-rust/
+    install -Dm644 examples/config{,_ext}.json -vt "$pkgdir"/etc/shadowsocks-rust/
+    
+    cd target/release
+    for name in sslocal ssserver ssurl ssmanager; do
         install -Dm755 -v $name "$pkgdir"/usr/bin/${name}-rust
     done
 }
