@@ -1,0 +1,41 @@
+# Maintainer: DuckSoft <realducksoft at gmail dot com>
+# Contributor: rustemb <rustemb at systemli dot org>
+pkgname=shadowsocks-rust-opt-git
+pkgver=1.10.9.r5.g89b329c
+pkgrel=1
+provides=(shadowsocks-rust)
+conflicts=(shadowsocks-rust)
+pkgdesc='Rust port of Shadowsocks (with optimizations for x86-64-v3)'
+arch=('x86_64')
+url='https://github.com/shadowsocks/shadowsocks-rust'
+license=('MIT')
+depends=('openssl')
+makedepends=('cargo' 'libsodium' 'git')
+source=("git+$url.git" shadowsocks-rust{,-server}@.service)
+
+pkgver() {
+    cd "${pkgname%-opt-git}"
+    git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+    cd "${pkgname%-opt-git}"
+    RUSTFLAGS="-C opt-level=2 -C target-cpu=x86-64-v3" cargo build --release
+}
+
+package() {
+    install -Dm644 shadowsocks-rust{,-server}@.service -vt "$pkgdir"/usr/lib/systemd/system/
+
+    cd "${pkgname%-opt-git}"
+    install -Dm644 LICENSE                      -vt "$pkgdir"/usr/share/licenses/shadowsocks-rust/
+    install -Dm644 examples/config{,_ext}.json  -vt "$pkgdir"/etc/shadowsocks-rust/
+
+    cd target/release
+    for name in sslocal ssserver ssurl ssmanager; do
+        install -Dm755 -v $name "$pkgdir"/usr/bin/${name}-rust
+    done
+}
+
+b2sums=('SKIP'
+        '7dc6edb5263e84c7e161d81cb2838197052b4eeb4df31ffbad1085b714d5ecce26f4f311287557bcf9fb92cf869d962f311ff2e5fa962db1de92dedbe82a0bd1'
+        '7f9f0a7a9679aae5933c22faf3b26981ecf892ae6e469869ef90adcd2c6155b13ca23ef9de7f062efe9bc2be949e7083a284037a9a41505ab52847326d9a2a6c')
