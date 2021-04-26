@@ -1,9 +1,9 @@
 # Maintainer: berberman <hatsue@typed.icu>
 
 pkgname=haskell-language-server-bin
-pkgver=1.0.0
+pkgver=1.1.0
 pkgrel=1
-pkgdesc="Integration point for ghcide and haskell-ide-engine. One IDE to rule them all."
+pkgdesc="Successor of ghcide & haskell-ide-engine. One IDE to rule them all."
 arch=('x86_64')
 url="https://github.com/haskell/${pkgname%-bin}"
 license=('Apache')
@@ -11,15 +11,15 @@ depends=()
 provides=('haskell-language-server')
 conflicts=('haskell-language-server' 'haskell-language-server-git')
 source=()
-sha256sums=('95c0233437a185258e7c04750535dd6c3ffba04c7bce20805d03b3e7907b4aa8'
-            'd034115897475ab090a9093e887c0ed826804bfefd34b1289598637b9ab411f2'
-            'd2c0e2435f9c07b5eac9c88a683ba489fa57d0b60d85b9c0681d2cb0d9df7b44'
-            'a652eb1a197ad22a9543e40498f74727d2148c81404e18fc01dd17ed06ebeca8'
-            '11f6aa40ba10192ee5fc0c1387804fe62b220e501ca7bb979a146b6ad7ff5d07'
-            '1a55e43c49a158bd8d6ac440009fc28d9e37f492ab21cbcb63b29f3027b999a3'
-            '20324e484c253922e7bd910aee6351b86fb11e8b4d7813f65c086413d05f1605'
-            '0f0bd997dda3e6b13d1ff0a44da4d966cf3f3a9ce794576665a5d28facbfa244'
-            '454a15e3b3c26f7dc51f2e8b7f8977947b1e42aafe0d657909c618dceebda2f3')
+sha256sums=('93976e622ec27f96c1ee56293f7fba3e1dc86af4dd762c5c54582bc5b5bb72b6'
+            'ef39563144ced4ba26a53d02ac1ba9d4f26ff932c1305c5b75cec1aec419f5be'
+            '0dea95c02cff74b827bb5d126553b3d22a7ad066c17870771bfc3dc7df02baef'
+            '23d1a9e28280b5153e92cb1f6cc0f0be7b83ca94c7a8815bb4d28aae81d86536'
+            '6f6736efee87f1bb28a3d87433a44e2076c183c8efac67b674e6dcf18226a445'
+            '84db2ec0827b0bb528c967f5c5715d43aeeba2704e42170169e2959578ce515c'
+            'c7b4d0fcec3ee6f697a578b791e6c6caf5e6b816dd310e65ee9d8acbb46af9a9'
+            'c47ddfd35ef8becebe7f5c0f2c04fa597c76753999c26d91dad8918f342d16c8'
+            'bb01c0e9d0a10e007c05ed7f621ee0d1f30cab9a9b8b72fd9a2e3d63b2162995')
 _prefix="${pkgname%-bin}-Linux"
 _ghc_versions=('8.6.4' '8.6.5' '8.8.2' '8.8.3' '8.8.4' '8.10.2' '8.10.3' '8.10.4')
 
