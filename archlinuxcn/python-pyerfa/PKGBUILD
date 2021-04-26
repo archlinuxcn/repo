@@ -1,16 +1,17 @@
 # Contributor: Médéric Boquien <mboquien@free.fr>
 # Maintainer: Médéric Boquien <mboquien@free.fr>
 pkgname=python-pyerfa
-pkgver=1.7.1.1
-pkgrel=3
+_name=${pkgname#python-}
+pkgver=1.7.3
+pkgrel=1
 pkgdesc="Python wrapper for the ERFA library "
 arch=('i686' 'x86_64')
 url="https://github.com/liberfa/pyerfa"
 license=('BSD')
-depends=('python>=3.6' 'python-numpy>=1.16.0' 'erfa>=0.17')
+depends=('python>=3.6' 'python-numpy>=1.16.0' 'erfa>=1.7.3')
 makedepends=('cython' 'python-jinja' 'python-pip')
-source=("https://files.pythonhosted.org/packages/3b/37/0ff81021f6405e4f6f627bb4aed32d22569fe016376dccee14e5eca947d1/pyerfa-${pkgver}.tar.gz")
-sha512sums=('59c2dceed6ef5b1ece618742dd0084b729cce8eb52f903dff2aad009fa0f495defb4511688da0a5203ed5900d041a552fbe50668ddac0c3a6bb3fd6d34d089bb')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz")
+sha512sums=('fe20665cfed8b921c8887e37259efe8eadd7ae34fbec4cac62a622c55afb98145deb548435c9bdbf6506c74261087234dd54188f8f02ceb446bfe9ccf4cac1f7')
 
 build() {
   cd "${srcdir}/pyerfa-${pkgver}"
