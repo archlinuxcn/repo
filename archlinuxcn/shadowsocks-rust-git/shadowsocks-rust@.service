@@ -1,0 +1,11 @@
+[Unit]
+Description=Shadowsocks-Rust Client Service
+After=network.target
+
+[Service]
+Type=simple
+User=nobody
+ExecStart=/usr/bin/sslocal-rust -c /etc/shadowsocks/%i.json --log-without-time
+
+[Install]
+WantedBy=multi-user.target
