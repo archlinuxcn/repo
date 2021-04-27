@@ -1,7 +1,7 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=dtkwidget-git
-pkgver=5.4.1.r33.g22055f0e
+pkgver=5.4.1.r41.g8a7765e5
 pkgrel=1
 pkgdesc='Deepin graphical user interface library'
 arch=('x86_64')
@@ -23,7 +23,10 @@ pkgver() {
 
 prepare() {
   cd $pkgname
-  sed -i '/#include <QPainter>/a #include <QPainterPath>' src/util/dwidgetutil.cpp
+  sed -i 's/5\.5//g' examples/dwidget-examples/collections/collections.pro
+  sed -i 's/5\.5//g' tests/tests.pro
+  sed -i 's/5\.5//g' tools/svgc/svgc.pro
+  sed -i 's/5\.5//g' src/src.pro
 }
 
 build() {
