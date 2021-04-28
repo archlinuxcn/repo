@@ -1,6 +1,6 @@
 pkgname=ntfs3-dkms
 pkgver=26.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="NTFS read-write driver GPL implementation by Paragon Software. Current version works with NTFS (including v3.1), normal/compressed/sparse files and supports journal replaying."
 arch=('any')
 url='https://www.paragon-software.com/home/ntfs3-driver-faq/'
@@ -17,7 +17,7 @@ source=(Makefile.patch
         "v$pkgver~6.patch::https://lore.kernel.org/lkml/20210402155347.64594-7-almaz.alexandrovich@paragon-software.com/raw"
         "v$pkgver~7.patch::https://lore.kernel.org/lkml/20210402155347.64594-8-almaz.alexandrovich@paragon-software.com/raw"
         "v$pkgver~8.patch::https://lore.kernel.org/lkml/20210402155347.64594-9-almaz.alexandrovich@paragon-software.com/raw"
-        kernel_version_fix.patch)
+        legacy_kernel.patch)
 sha512sums=('5b5b487eb66d2f74699cbd10c0c669c0dbbd87c0c8ed1d96685aa5f3eb992fdfe859f0eb7aa3a31ade9e267cf6a9a9df228a760f305ff4a2874f01cd7844bf98'
             '46020b5f6ec435168d1998ae8dd2f771c1992a0a312efbabbc0afc93769c636b688030bc5cc8052eb17e5a9f36fc4a7f9eb99ddb43905c36517183d21f713f32'
             'b5492e4398c0155bb8f9c23a70435983579d142b8e4e8f90c6b03a67ccefd20c56a26e9cb62f74b1a8c172be300b81582e01a788b2c730f49d39cad70641d0a8'
@@ -34,12 +34,25 @@ sha512sums=('5b5b487eb66d2f74699cbd10c0c669c0dbbd87c0c8ed1d96685aa5f3eb992fdfe85
 prepare() {
   mkdir -p ${pkgname}-${pkgver}
   cd ${pkgname}-${pkgver}
+
+  echo "Applying NTFS3 patches..."
   for patch in "$srcdir/v$pkgver~"*
   do
     patch -p3 -N -i "$patch"
   done
-  patch -p3 -N -i "$srcdir/kernel_version_fix.patch"
+
+  echo "Applying makefile patch..."
   patch -p0 -N -i "$srcdir/Makefile.patch"
+
+  # Detect <5.12 kernel version
+  local kstr=`uname -r | grep -Po '^\d+\.\d+'`
+  local kmaj=`echo $kstr | cut -d'.' -f1`
+  local kmin=`echo $kstr | cut -d'.' -f2`
+
+  if [ $kmaj -lt 5 ] || [ $kmin -lt 12 ]; then
+    echo "Legacy kernel (<5.12) detected! Applying compatibility patch..."
+    patch -p3 -N -i "$srcdir/legacy_kernel.patch"
+  fi
 }
 
 package() {
