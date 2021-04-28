@@ -1,7 +1,7 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=golang-deepin-lib-git
-pkgver=5.7.0.r6.g832a67d
+pkgver=5.7.5.r1.g832a67d
 pkgrel=1
 pkgdesc='A library containing many useful go routines for things such as glib, gettext, archive, graphic,etc.'
 arch=('any')
