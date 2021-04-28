@@ -1,9 +1,11 @@
 post_remove() {
-  echo "==> Optionally delete the adguardhome user and its home directory"
-  echo "==>   if you are certain no processes are running under it."
-  echo "==>   userdel adguardhome"
-  echo "==>   groupdel adguardhome"
-  echo "==>   rm -rf /var/lib/adguardhome"
+  cat <<END
+
+>>> Optionally delete the adguardhome user and its home directory if you are
+    certain no processes are running under it:
+    userdel adguardhome && groupdel adguardhome && rm -rf /var/lib/adguardhome
+
+END
 }
 
 # vim:set ts=2 sw=2 et:
