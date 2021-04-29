@@ -1,20 +1,22 @@
 --- a/browser/base/content/browser-menubar.inc
 +++ b/browser/base/content/browser-menubar.inc
-@@ -5,7 +5,11 @@
- 
-        <menubar id="main-menubar"
-                 onpopupshowing="if (event.target.parentNode.parentNode == this &amp;&amp;
+@@ -7,7 +7,12 @@
+ # On macOS, we don't track whether activation of the native menubar happened
+ # with the keyboard.
+ #ifndef XP_MACOSX
+-                onpopupshowing="if (event.target.parentNode.parentNode == this)
++                onpopupshowing="if (event.target.parentNode.parentNode == this &amp;&amp;
 +#ifdef MOZ_WIDGET_GTK
 +                                    document.documentElement.getAttribute('shellshowingmenubar') != 'true')
 +#else
-                                     !('@mozilla.org/widget/nativemenuservice;1' in Cc))
++                                    true)
 +#endif
                                    this.setAttribute('openedwithkey',
-                                                     event.target.parentNode.openedWithKey);">
-             <menu id="file-menu" data-l10n-id="menu-file">
+                                                     event.target.parentNode.openedWithKey);"
+ #endif
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -6231,11 +6231,18 @@ function onViewToolbarsPopupShowing(aEve
+@@ -6291,11 +6291,18 @@ function onViewToolbarsPopupShowing(aEve
    MozXULElement.insertFTLIfNeeded("browser/toolbarContextMenu.ftl");
    let firstMenuItem = aInsertPoint || popup.firstElementChild;
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
@@ -98,7 +100,7 @@
      "components.conf",
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -305,6 +305,9 @@ pref("dom.mouseevent.click.hack.use_lega
+@@ -301,6 +301,9 @@ pref("dom.mouseevent.click.hack.use_lega
  // Fastback caching - if this pref is negative, then we calculate the number
  // of content viewers to cache based on the amount of available memory.
  pref("browser.sessionhistory.max_total_viewers", -1);
@@ -110,7 +112,7 @@
  
 --- a/toolkit/content/xul.css
 +++ b/toolkit/content/xul.css
-@@ -221,6 +221,13 @@ toolbar[type="menubar"] {
+@@ -230,6 +230,13 @@ toolbar[type="menubar"] {
  }
  %endif
  
@@ -4292,7 +4294,7 @@
 +    MOZ_ASSERT(!mContentToObserverTable.Get(aContent, &old) || old == aObserver,
 +               "Multiple observers for the same content node are not supported");
 +
-+    mContentToObserverTable.Put(aContent, aObserver);
++    mContentToObserverTable.InsertOrUpdate(aContent, aObserver);
 +}
 +
 +void
@@ -4352,7 +4354,7 @@
 +#include "mozilla/Attributes.h"
 +#include "mozilla/RefPtr.h"
 +#include "mozilla/UniquePtr.h"
-+#include "nsDataHashtable.h"
++#include "nsTHashMap.h"
 +#include "nsStubMutationObserver.h"
 +#include "nsTArray.h"
 +
@@ -4459,7 +4461,7 @@
 +    nsIContent *mLastSource;
 +    nsNativeMenuChangeObserver *mLastTarget;
 +    nsTArray<mozilla::UniquePtr<MutationRecord> > mPendingMutations;
-+    nsDataHashtable<nsPtrHashKey<nsIContent>, nsNativeMenuChangeObserver *> mContentToObserverTable;
++    nsTHashMap<nsPtrHashKey<nsIContent>, nsNativeMenuChangeObserver *> mContentToObserverTable;
 +
 +    static uint32_t sUpdateBlockersCount;
 +};
@@ -4737,7 +4739,7 @@
 +    }
 +
 +    GCancellable *cancellable = g_cancellable_new();
-+    mMenuBarRegistrationCancellables.Put(aMenuBar, cancellable);
++    mMenuBarRegistrationCancellables.InsertOrUpdate(aMenuBar, cancellable);
 +
 +    // We keep a weak ref because we can't assume that GDBus cancellation
 +    // is reliable (see https://launchpad.net/bugs/953562)
@@ -4987,7 +4989,7 @@
 +
 +#include "mozilla/Attributes.h"
 +#include "nsCOMPtr.h"
-+#include "nsDataHashtable.h"
++#include "nsTHashMap.h"
 +#include "nsINativeMenuService.h"
 +#include "nsTArray.h"
 +
@@ -5053,7 +5055,7 @@
 +    GDBusProxy *mDbusProxy;
 +    bool mOnline;
 +    nsTArray<nsMenuBar *> mMenuBars;
-+    nsDataHashtable<nsPtrHashKey<nsMenuBar>, GCancellable*> mMenuBarRegistrationCancellables;
++    nsTHashMap<nsPtrHashKey<nsMenuBar>, GCancellable*> mMenuBarRegistrationCancellables;
 +
 +    static bool sShutdown;
 +    static nsNativeMenuService *sService;
@@ -5062,7 +5064,7 @@
 +#endif /* __nsNativeMenuService_h__ */
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
-@@ -6386,6 +6386,10 @@ void nsWindow::HideWindowChrome(bool aSh
+@@ -6409,6 +6409,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5093,7 +5095,7 @@
    /**
     * GetLastUserInputTime returns a timestamp for the most recent user input
     * event.  This is intended for pointer grab requests (including drags).
-@@ -719,6 +723,8 @@ class nsWindow final : public nsBaseWidg
+@@ -722,6 +726,8 @@ class nsWindow final : public nsBaseWidg
    static GtkWindowDecoration sGtkWindowDecoration;
  
    static bool sTransparentMainWindow;
@@ -5124,7 +5126,7 @@
  import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
-@@ -2508,7 +2509,7 @@ STATIC_ATOMS = [
+@@ -2507,7 +2508,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
      # END ATOMS
@@ -5279,3 +5281,20 @@
 +NS_DEFINE_STATIC_IID_ACCESSOR(nsINativeMenuService, NS_INATIVEMENUSERVICE_IID)
 +
 +#endif  // nsINativeMenuService_h_
+--- a/widget/nsWidgetsCID.h
++++ b/widget/nsWidgetsCID.h
+@@ -66,6 +66,14 @@
+ // Menus
+ //-----------------------------------------------------------
+ 
++// {0B3FE5AA-BC72-4303-85AE-76365DF1251D}
++#define NS_NATIVEMENUSERVICE_CID                     \
++  {                                                  \
++    0x0B3FE5AA, 0xBC72, 0x4303, {                    \
++      0x85, 0xAE, 0x76, 0x36, 0x5D, 0xF1, 0x25, 0x1D \
++    }                                                \
++  }
++
+ // {F6CD4F21-53AF-11d2-8DC4-00609703C14E}
+ #define NS_POPUPMENU_CID                           \
+   {                                                \
