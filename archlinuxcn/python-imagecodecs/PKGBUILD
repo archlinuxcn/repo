@@ -3,7 +3,7 @@
 _name=imagecodecs
 pkgname=python-imagecodecs
 pkgver=2021.3.31
-pkgrel=1
+pkgrel=2
 pkgdesc='Image transformation, compression, and decompression codecs'
 arch=('x86_64')
 url='https://github.com/cgohlke/imagecodecs'
@@ -19,6 +19,7 @@ depends=(
   libdeflate
   libavif
   libjpeg
+  libjpeg-xl
   libmng
   libpng
   libtiff
@@ -30,7 +31,10 @@ depends=(
   zfp
   zopfli
 )
-makedepends=(python-setuptools cython)
+makedepends=(
+  cython
+  python-setuptools
+)
 source=("${_name}-${pkgver}.tar.gz::https://github.com/cgohlke/imagecodecs/archive/v${pkgver}.tar.gz")
 sha256sums=('9bd5cb7e6490d96eddd2d8c225a1b160384ec2b583e713437be9e30174ffa170')
 
