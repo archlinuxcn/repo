@@ -3,8 +3,6 @@ maintainers:
 build_prefix: extra-x86_64
 pre_build: aur_pre_build
 post_build: aur_post_build
-repo_depends:
-  - libnvidia-container: libnvidia-container-tools
 update_on:
   - source: aur
-    aur: nvidia-container-toolkit
+    aur: libnvidia-container

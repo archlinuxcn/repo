@@ -1,0 +1,13 @@
+diff --git a/mk/elftoolchain.mk b/mk/elftoolchain.mk
+index 7484fde..10d3e14 100644
+--- a/mk/elftoolchain.mk
++++ b/mk/elftoolchain.mk
+@@ -41,6 +41,8 @@ $(SRCS_DIR)/.download_stamp:
+ $(SRCS_DIR)/.build_stamp: $(SRCS_DIR)/.download_stamp
+ 	$(BMAKE) -j $(shell nproc) -C $(COMMON)
+ 	$(BMAKE) -j $(shell nproc) -C $(LIBELF)
++	# somehow the elf is being named wrong? who knows at this point :(
++	test -f $(LIBELF)/'name libelf.so.1' && mv $(LIBELF)/'name libelf.so.1' $(LIBELF)/'libelf.so.1' || true
+ 	@touch $@
+ 
+ ##### Public rules #####

@@ -1,0 +1,26 @@
+diff --git a/deps/src/elftoolchain-0.7.1/mk/elftoolchain.lib.mk b/deps/src/elftoolchain-0.7.1/mk/elftoolchain.lib.mk
+index f62dfc0..5de7ea7 100644
+--- a/deps/src/elftoolchain-0.7.1/mk/elftoolchain.lib.mk
++++ b/deps/src/elftoolchain-0.7.1/mk/elftoolchain.lib.mk
+@@ -8,8 +8,21 @@
+ 
+ .include "${TOP}/mk/elftoolchain.os.mk"
+ 
++#### OVERWRITE shared lib target because /usr/share/mk/bsd.lib.mk has a broken flag to ld
++
+ .include <bsd.lib.mk>
+ 
++# make -soname use an equals instead of a space
++LD_shared=-shared -Wl,"-soname=lib${LIB}.so.${SHLIB_MAJOR}"
++
++# bound to be non-portable...
++lib${LIB}.so: ${SOLIB} ${DPADD}
++	@${META_NOECHO} building shared ${LIB} library \(version ${SHLIB_FULLVERSION}\)
++	@rm -f ${.TARGET}
++	${SHLIB_LD} -o ${.TARGET} ${LD_shared} ${LD_solib} ${DLLIB} ${SHLIB_LDADD}
++
++#### END HACK
++
+ # Support a 'clobber' target.
+ clobber:	clean os-specific-clobber .PHONY
+ 
