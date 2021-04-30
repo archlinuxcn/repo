@@ -2,20 +2,20 @@
 
 _basename=serd
 pkgname=lib32-serd
-pkgver=0.30.6
+pkgver=0.30.10
 pkgrel=1
 pkgdesc="Lightweight C library for RDF syntax supporting reading/ writing Turtle and NTriples (32-bit)"
 arch=('x86_64')
 url="https://drobilla.net/software/serd/"
 license=('custom:ISC')
 depends=('lib32-glibc' 'serd')
-makedepends=('waf')
+makedepends=('lib32-gcc-libs' 'waf')
 source=("https://download.drobilla.net/$_basename-$pkgver.tar.bz2"{,.sig})
-sha512sums=('db08d6c67d8627728679d0ed3770b8219a58f3eef82194ef8ba5682d3ff1f1033e2bbc8d6a1115a3fe0e32990f635c707a81ad8b4f457153fa78ff5991c9c30f'
+sha512sums=('ed7b49abfd3dc3a724b047f5f0cd07b811596330c96d91c0ce90540440f03260e05daee76c3ccccc3d4ca39afbbd4f3d07decbb601730e90c133a09c640c0006'
             'SKIP')
-b2sums=('35a86847642ffe806797ae8dbcd292ce26f08135edfa3b1fd39652f8964c35d73dba8f8627f32dcff399e9cddc332e5484f14a80580a32d52d93977cd9b42912'
+b2sums=('7f84b425a9eed36c5b59b22b8fd2cb9139a3de2bd1a47f92fd9888c433d931dcf83f13c2460d821c04f4244a79aa4330ba973017508ecb5f4564e78ae45b9b9a'
         'SKIP')
-validpgpkeys=('907D226E7E13FA337F014A083672782A9BF368F3')
+validpgpkeys=('907D226E7E13FA337F014A083672782A9BF368F3') # David Robillard <d@drobilla.net>
 
 prepare() {
     cd "${_basename}-${pkgver}"
