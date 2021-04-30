@@ -2,20 +2,20 @@
 
 _basename=sord
 pkgname=lib32-sord
-pkgver=0.16.6
+pkgver=0.16.8
 pkgrel=1
 pkgdesc="A lightweight C library for storing RDF data in memory (32-bit)"
 arch=('x86_64')
 url="https://drobilla.net/software/sord/"
 license=('custom:ISC')
 depends=("lib32-serd" "libserd-0.so" "sord")
-makedepends=('lib32-pcre' 'waf')
+makedepends=('lib32-gcc-libs' 'lib32-pcre' 'waf')
 source=("https://download.drobilla.net/$_basename-$pkgver.tar.bz2"{,.sig})
-sha512sums=('1d3c2bf47ff7e4b533e4e737e2ece8e29bace78bb00c41a252ad5c583abdcba3baa05b189cb8651c212861a2eea3c690354c99d684fd0f343b40e74c94572f98'
+sha512sums=('24ed50de8e5bb321e557bac6d3e441b2ed49adabf828bf0e1b33a080c89306dde80443dc8b563098fcc184c4d6e53b7e716b523ddccdf56d08301d1b0120f2b2'
             'SKIP')
-b2sums=('7ec248a78e0d9e525d640363414ddd32acc3e32817e2ab86e791fd9232a46658538c9a4db936a5daa7eeb5ef9f7bf13e1aa1429ab6d9fc769e1391a014da919f'
+b2sums=('3ba43b2edb69efec64ac68f139a18f23dc1b92290b054f420c400d2907af74fa550b042596374136c53b7cf0db1b775cfc7edd24c771bbf26d25928845787c7b'
         'SKIP')
-validpgpkeys=('907D226E7E13FA337F014A083672782A9BF368F3') # David Robillard
+validpgpkeys=('907D226E7E13FA337F014A083672782A9BF368F3') # David Robillard <d@drobilla.net>
 
 prepare() {
     cd "$_basename-$pkgver"
@@ -45,8 +45,8 @@ build() {
     export CFLAGS="$(echo "$CFLAGS" | sed 's/ -fno-plt//')"
 
     waf configure --prefix=/usr \
-                          --libdir=/usr/lib32 \
-                          --test
+                  --libdir=/usr/lib32 \
+                  --test
 
     waf build
 }
