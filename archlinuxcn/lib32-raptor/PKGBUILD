@@ -6,12 +6,12 @@ _name=raptor2
 _basename=raptor
 pkgname=lib32-raptor
 pkgver=2.0.15
-pkgrel=12
+pkgrel=13
 pkgdesc="A C library that parses RDF/XML/N-Triples into RDF triples (32 bit)"
 arch=('x86_64')
 url="http://librdf.org/raptor"
 license=('Apache' 'GPL2' 'LGPL2.1')
-depends=("lib32-curl" "lib32-glibc" "lib32-icu" "lib32-libxml2" "lib32-libxslt" "lib32-xz" "lib32-zlib" "libicudata.so" "libicui18n.so" "libicuuc.so")
+depends=("lib32-curl" "lib32-glibc" "lib32-icu" "lib32-libxml2" "lib32-libxslt" "lib32-xz" "lib32-zlib" "libicudata.so" "libicui18n.so" "libicuuc.so" "raptor")
 makedepends=('gcc-multilib')
 source=("http://librdf.org/dist/source/${_name}-$pkgver.tar.gz"{,.asc}
         "${_basename}-2.0.15-CVE-2017-18926.patch::https://github.com/dajobe/raptor/commit/590681e546cd9aa18d57dc2ea1858cb734a3863f.patch"
