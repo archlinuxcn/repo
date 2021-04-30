@@ -2,9 +2,9 @@
 # Contributor: orumin <dev@orum.in>
 
 _basename=wildmidi
-pkgname="lib32-$_basename"
-pkgver=0.4.3
-pkgrel=6
+pkgname=lib32-wildmidi
+pkgver=0.4.4
+pkgrel=1
 pkgdesc='Open Source MIDI Synthesizer (32-bit)'
 arch=('x86_64')
 url="http://www.mindwerks.net/projects/wildmidi/"
@@ -12,7 +12,7 @@ license=('LGPL3')
 depends=("lib32-alsa-lib" "libasound.so" "wildmidi")
 makedepends=('cmake')
 source=(https://github.com/psi29a/wildmidi/archive/wildmidi-${pkgver}.tar.gz)
-sha256sums=('498e5a96455bb4b91b37188ad6dcb070824e92c44f5ed452b90adbaec8eef3c5')
+sha256sums=('6f267c8d331e9859906837e2c197093fddec31829d2ebf7b958cf6b7ae935430')
 
 prepare() {
     cd "$_basename-$_basename-$pkgver/src"
@@ -26,8 +26,9 @@ build() {
     export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
     cmake -S "$_basename-$_basename-$pkgver" -B build \
+        -DCMAKE_BUILD_TYPE=None \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        -DLIB_SUFFIX=32
+        -DCMAKE_INSTALL_LIBDIR=lib32
 
     cmake --build build
 }
