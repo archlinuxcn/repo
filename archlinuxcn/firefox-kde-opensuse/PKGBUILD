@@ -12,8 +12,8 @@
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=87.0
-pkgrel=3
+pkgver=88.0
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -53,7 +53,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'pulseaudio: Audio support')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=3fdf082cf93d94e4289e552cbd9988601044576a
+_patchrev=aedbca44a8a2958947bed31f28e3083ac0496f4a
 options=('!emptydirs')
 _patchurl=https://raw.githubusercontent.com/openSUSE/firefox-maintenance/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -100,9 +100,6 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         # end
         # Fix CSD when globalmenu is active #8
         fix_csd_window_buttons.patch
-        # Fix MOZILLA#1701089
-        # vp09 codec string fails when parsing Widevine manifest
-        mozilla-1701089.patch
 )
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -160,8 +157,6 @@ prepare() {
   # Fix CSD when globalmenu is active #8
   patch -Np1 -i "$srcdir"/fix_csd_window_buttons.patch
 
-  # Fix MOZILLA#1701089
-  patch -Np1 -i "$srcdir"/mozilla-1701089.patch
 
   if [ $_pgo ] ; then
     # Fix MOZILLA#1516803
@@ -278,14 +273,14 @@ md5sums=('SKIP'
          '05bb69d25fb3572c618e3adf1ee7b670'
          'c0f68250d27f208efcdee710207cd3e4'
          '43c65f6513fbc28aaa8238ad3bdb4e26'
-         'e9ef021913dfc283621ee883a89650f5'
+         '7a97237384119556880ab5393c9091a3'
          '0a5733b7a457a2786c2dd27626a1bf88'
-         '3296eaae541e4ea340df8d02450a5b81'
+         'f7dd45358cf99a22b551ffd4514cee74'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3c383d371d7f6ede5983a40310518715'
          '6a1ed12b8dbac57722436a2987e3ea33'
          '791db11feed7c4130b5af80b85ebcfbb'
-         'a6510ec00edc4fe9a049d182646a417f'
+         '967b311e1a5c988a257b51d97633fba4'
          'e7994b3b78b780ebe610ba3d87247e40'
          '00abc3976f028f8fe07111b9e687b574'
          'c7b492df4fbf42ffe8aea4c0afb89921'
@@ -294,5 +289,4 @@ md5sums=('SKIP'
          'c8e251f1fc9050cd12173b540baa96f8'
          '72176c9ee7b2ac4f1bb07ff5ee5fe10b'
          '07770d558b8999b5793794e1551a1309'
-         'f49ac3b9f5146e33ce587e6b23eb1a86'
-         '1140834b3911a1f2f862b9587941a6d2')
+         'f49ac3b9f5146e33ce587e6b23eb1a86')
