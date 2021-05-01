@@ -9,7 +9,7 @@
 
 pkgname=brave-bin
 pkgver=1.23.75
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Web browser that blocks ads and trackers by default (binary release)."
 arch=("x86_64")
@@ -42,7 +42,7 @@ _bsdtardir="brave"
 
 package() {
     install -d -m0755 "$pkgdir/usr/lib"
-    cp -a --reflink=auto $_bsdtardir "$pkgdir/usr/lib/$pkgname"
+    cp -a $_bsdtardir "$pkgdir/usr/lib/$pkgname"
 
     # allow firejail users to get the suid sandbox working
     chmod 4755 $pkgdir/usr/lib/brave-bin/chrome-sandbox
