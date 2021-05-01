@@ -3,7 +3,7 @@
 _basename=imath
 pkgname=lib32-imath
 pkgver=3.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A C++ and python library of 2D and 3D vector, matrix, and math operations for computer graphics (32-bit)"
 url="https://www.openexr.com/"
 arch=(x86_64)
@@ -34,3 +34,4 @@ package() {
 
     install -Dm644 Imath-$pkgver/LICENSE.md -t "$pkgdir"/usr/share/licenses/$pkgname
 }
+provides=("libImath-3_0.so")
