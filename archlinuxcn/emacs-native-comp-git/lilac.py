@@ -12,9 +12,13 @@ from lilaclib import *
 def pre_build():
     aur_pre_build()
     for line in edit_file('PKGBUILD'):
-            if line.startswith('replaces='):
-                    continue
-            print(line)
+        if line.startswith('replaces='):
+            continue
+        if line.startswith('JIT='):
+            line = 'JIT="YES"'
+        if line.startswith('AOT='):
+            line = 'AOT="YES"'
+        print(line)
 
 
 #post_build = aur_post_build
