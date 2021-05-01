@@ -6,15 +6,15 @@
 
 _pkgbasename=ffmpeg
 pkgname=("lib32-$_pkgbasename" "lib32-lib$_pkgbasename")
-pkgver=4.3.2
-pkgrel=4
+pkgver=4.4
+pkgrel=1
 epoch=2
 pkgdesc="Complete solution to record, convert and stream audio and video (32 bit)"
 arch=('x86_64')
 url="http://ffmpeg.org/"
 license=('GPL3')
   depends=(libaom.so libasound.so libass.so libbluray.so libdav1d.so libfontconfig.so libfreetype.so libfribidi.so libgsm.so libjack.so libmp3lame.so libopencore-amrnb.so libopencore-amrwb.so libopenjp2.so libsrt.so libvmaf.so libvorbis.so libvorbisenc.so libvpx.so libx264.so libx265.so libxvidcore.so 
-      "$_pkgbasename"
+      "$_pkgbasename>=$pkgver"
       'lib32-alsa-lib'
       'lib32-aom'
       'lib32-bzip2'
@@ -38,6 +38,7 @@ license=('GPL3')
       'lib32-libpulse'
 #      'lib32-rav1e'
       'lib32-libraw1394'
+      'lib32-librsvg'
 #      'lib32-libsoxr'
 #      'lib32-libssh'
       'lib32-libtheora'
@@ -82,7 +83,7 @@ optdepends=(
       'lib32-ladspa: LADSPA filters'
       'lib32-nvidia-utils: Nvidia NVDEC/NVENC support'
 )
-_tag=f719f869907764e6412a6af6e178c46e5f915d25
+_tag=09c358362008e2d04cec8239526c6827543da4cf
 source=(
       "git+https://git.ffmpeg.org/ffmpeg.git#tag=${_tag}"
       "vmaf-model-path.patch"
@@ -134,11 +135,12 @@ build() {
     --enable-libjack \
     --enable-libmodplug \
     --enable-libmp3lame \
-    --enable-libopencore_amrnb \
-    --enable-libopencore_amrwb \
+    --enable-libopencore-amrnb \
+    --enable-libopencore-amrwb \
     --enable-libopenjpeg \
     --enable-libopus \
     --enable-libpulse \
+    --enable-librsvg \
     --enable-libspeex \
     --enable-libsrt \
     --enable-libtheora \
@@ -150,17 +152,20 @@ build() {
     --enable-libx264 \
     --enable-libx265 \
     --enable-libxcb \
-    --enable-libxml2 \
     --enable-libxvid \
+    --enable-libxml2 \
     --enable-nvenc \
     --enable-nvdec \
     --enable-shared \
     --enable-version3
 
 #    --enable-avisynth \ ## not available under 32 bit
+#    --enable-libopenh264
 #    --enable-librav1e \ ## not available under 32 bit
 #    --enable-libsoxr \ ## not available under 32 bit
 #    --enable-libssh \ ## not available under 32 bit
+#    --enable-libsvtav1 
+#    --enable-libuavs3d
 #    --enable-libvidstab \ ## not available under 32 bit
 #    --enable-libmfx \ ## not available under 32 bit
 #    --enable-libzimg \ ## not available under 32 bit
