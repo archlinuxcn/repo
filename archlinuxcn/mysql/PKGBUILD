@@ -6,13 +6,13 @@
 
 pkgname=('mysql' 'libmysqlclient' 'mysql-clients')
 pkgbase=mysql
-pkgver=8.0.23
-pkgrel=2
+pkgver=8.0.24
+pkgrel=1
 pkgdesc="Fast SQL database server, community edition"
 arch=('x86_64')
-makedepends=('openssl' 'zlib' 'cmake' 'systemd-tools' 'libaio' 'jemalloc'
-             'rpcsvc-proto' 'libtirpc' 'icu' 'libedit' 'libevent' 're2'
-             'rapidjson')
+makedepends=('openssl' 'zlib' 'cmake' 'systemd-tools' 'systemd-libs' 'libaio'
+             'jemalloc' 'rpcsvc-proto' 'libtirpc' 'icu' 'libedit' 'libevent'
+             're2' 'rapidjson')
 license=('GPL')
 url="https://www.mysql.com/products/community/"
 source=("https://cdn.mysql.com/Downloads/MySQL-8.0/${pkgbase}-boost-${pkgver}.tar.gz"
@@ -20,13 +20,15 @@ source=("https://cdn.mysql.com/Downloads/MySQL-8.0/${pkgbase}-boost-${pkgver}.ta
         "mysql-ld.so.conf"
         "mysql.sysconfig"
         "mysqld_service.patch"
-        "systemd-sysusers-tmpfiles.patch")
-sha256sums=('1c7a424303c134758e59607a0b3172e43a21a27ff08e8c88c2439ffd4fc724a5'
+        "systemd-tmpfiles.patch"
+        "systemd-sysusers.conf")
+sha256sums=('4bc9c54b38e9e2a3f5cc77f21791dc52372f15c5473f7d427793f6ec44bf5900'
             '6bc24ae510f6b6bbad6b3edda2d0028b29292937b482274a4c2fae335f4de328'
             'e1c23fa0971a13d998f2790379b68c475438d05b6d6f2691b99051dbf497567f'
             '203dcd22fea668477ac7123dbd9909fae72d3d07f8855417a669a9c94db072ae'
             '8fbedfc2c5fe271ed13217feeceeac00202d2cb135e4283eeee2f9a13d6251af'
-            'e2abfc23fcc417e201a893cc7c8bdf847a275a35783d4d135d3b3a2ecf108d77')
+            'e2abfc23fcc417e201a893cc7c8bdf847a275a35783d4d135d3b3a2ecf108d77'
+            '200a992eb41c95efa99845d017439ddd4018a3e51f57ffca8cb802b0d25123f1')
 
 build() {
   rm -rf build
@@ -107,7 +109,7 @@ package_libmysqlclient(){
 
 package_mysql-clients(){
   pkgdesc="MySQL client tools"
-  depends=('libmysqlclient' 'zlib' 'openssl' 'jemalloc' 'libedit' 'lz4')
+  depends=('libmysqlclient' 'zlib' 'openssl' 'jemalloc' 'libedit' 'lz4' 'zstd' 'bash')
   conflicts=('mariadb-clients')
   provides=("mariadb-clients=${pkgver}" "mysql-clients=${pkgver}")
 
@@ -131,6 +133,7 @@ package_mysql-clients(){
   # provided by mysql
   rm "${pkgdir}/usr/bin/mysql_upgrade"
   rm "${pkgdir}/usr/bin/mysqlbinlog"
+  rm "${pkgdir}/usr/bin/mysql_migrate_keyring"
   rm "${pkgdir}/usr/bin/mysqlpump"
   rm "${pkgdir}/usr/bin/mysql_secure_installation"
   rm "${pkgdir}/usr/bin/mysql_ssl_rsa_setup"
@@ -144,10 +147,10 @@ package_mysql(){
           "etc/conf.d/${pkgname}.conf")
   install="${pkgbase}.install"
   depends=('mysql-clients' 'libsasl' 'zlib' 'jemalloc' 'libaio' 'libtirpc' 'icu'
-           'lz4' 'libevent' 'systemd-libs')
+           'lz4' 'libevent' 'systemd-libs' 'zstd' 'bash')
   conflicts=('mariadb')
   provides=("mariadb=${pkgver}" "mysql=${pkgver}")
-  optdepends=('perl-dbd-mysql: for mysqlhotcopy, mysql_convert_table_format and mysql_setpermission')
+  optdepends=('perl-dbd-mysql: for mysqlhotcopy, mysql_convert_table_format, mysql_setpermission, mysqldumpslow')
   options=('emptydirs')
 
   cd build
@@ -163,7 +166,7 @@ package_mysql(){
   rm "${pkgdir}/usr/lib/libmysqlclient.a"
   rm "${pkgdir}/usr/lib/libmysqlclient.so"
   rm "${pkgdir}/usr/lib/libmysqlclient.so.21"
-  rm "${pkgdir}/usr/lib/libmysqlclient.so.21.1.23"
+  rm "${pkgdir}/usr/lib/libmysqlclient.so.21.1.24"
   rm "${pkgdir}/usr/lib/libmysqlservices.a"
   rm "${pkgdir}/usr/lib/pkgconfig/mysqlclient.pc"
   rmdir "${pkgdir}/usr/lib/pkgconfig"
@@ -208,6 +211,8 @@ package_mysql(){
   # Move systemd files
   mv "${pkgdir}/usr/usr/lib/systemd" "${pkgdir}/usr/lib"
   mv "${pkgdir}/usr/usr/lib/tmpfiles.d" "${pkgdir}/usr/lib"
+  install -m 755 -d "${pkgdir}/usr/lib/sysusers.d"
+  install -m 644 "${srcdir}/systemd-sysusers.conf" "${pkgdir}/usr/lib/sysusers.d/${pkgname}.conf"
 
   # Move logrotate files
   install -d -m 755 "${pkgdir}/etc/logrotate.d/"
@@ -235,6 +240,6 @@ package_mysql(){
   #  * fix path to our config
   cd "${pkgdir}"
   patch -Np1 -i "${srcdir}/mysqld_service.patch"
-  patch -Np1 -i "${srcdir}/systemd-sysusers-tmpfiles.patch"
+  patch -Np1 -i "${srcdir}/systemd-tmpfiles.patch"
 }
 
