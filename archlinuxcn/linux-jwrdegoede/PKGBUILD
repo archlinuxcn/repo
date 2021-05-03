@@ -5,12 +5,12 @@
 
 pkgbase=linux-jwrdegoede
 _srcname=linux-sunxi
-pkgver=5.11.0.202101311246.ac7f7257486d
+pkgver=5.12.0.202105031815.ab58e6c686b7
 pkgrel=1
 arch=('x86_64')
 url='https://www.kernel.org/'
 license=('GPL2')
-makedepends=('git' 'xmlto' 'kmod' 'inetutils' 'bc' 'libelf' 'cpio' 'sed')
+makedepends=('git' 'xmlto' 'kmod' 'inetutils' 'bc' 'libelf' 'cpio' 'sed' 'python') 
 options=('!strip')
 source=(
   'git+https://github.com/jwrdegoede/linux-sunxi.git'
