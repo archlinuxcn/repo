@@ -12,6 +12,8 @@ from lilaclib import *
 def pre_build():
     aur_pre_build()
     for line in edit_file('PKGBUILD'):
+        if line.startswith('pkgname='):
+            line = 'pkgname="emacs-native-comp-git"'
         if line.startswith('replaces='):
             continue
         if line.startswith('JIT='):
