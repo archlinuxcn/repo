@@ -4,12 +4,12 @@
 _basename=gst-plugins-bad
 pkgname=lib32-gst-plugins-bad
 pkgver=1.18.4
-pkgrel=3
+pkgrel=4
 pkgdesc="Multimedia graph framework - bad plugins (32-bit)"
 url="https://gstreamer.freedesktop.org/"
 arch=(x86_64)
 license=(LGPL)
-depends=("lib32-aom" "lib32-bzip2" "lib32-chromaprint" "lib32-curl" "lib32-faac" "lib32-faad2" "libHalf-2_5.so" "libIex-2_5.so" "libIlmImf-2_5.so" "libWildMidi.so" "libaom.so" "libass.so" "libavtp.so" "libbs2b.so" "libchromaprint.so" "libdc1394.so" "libdca.so" "libde265.so" "libdvdnav.so" "libdvdread.so" "libfaac.so" "libfaad.so" "libfdk-aac.so" "libgio-2.0.so" "libglib-2.0.so" "libgme.so" "libgmodule-2.0.so" "libgobject-2.0.so" "libgudev-1.0.so" "libkate.so" "liblilv-0.so" "liblrdf.so" "libmjpegutils-2.1.so" "libmms.so" "libmpcdec.so" "libmpeg2encpp-2.1.so" "libmplex2-2.1.so" "libneon.so" "libnettle.so" "libnice.so" "libofa.so" "libopenjp2.so" "libpango-1.0.so" "libpangocairo-1.0.so" "librsvg-2.so" "librtmp.so" "libsbc.so" "libsndfile.so" "libspandsp.so" "libsrt.so" "libsrtp2.so" "libusb-1.0.so" "libwebrtc_audio_processing.so" "libx265.so" "libzbar.so" "libzvbi.so"
+depends=("lib32-aom" "lib32-bzip2" "lib32-chromaprint" "lib32-curl" "lib32-faac" "lib32-faad2" "libHalf-3_0.so" "libIex-3_0.so" "libIlmImf-3_0.so" "libWildMidi.so" "libaom.so" "libass.so" "libavtp.so" "libbs2b.so" "libchromaprint.so" "libdc1394.so" "libdca.so" "libde265.so" "libdvdnav.so" "libdvdread.so" "libfaac.so" "libfaad.so" "libfdk-aac.so" "libgio-2.0.so" "libglib-2.0.so" "libgme.so" "libgmodule-2.0.so" "libgobject-2.0.so" "libgudev-1.0.so" "libkate.so" "liblilv-0.so" "liblrdf.so" "libmjpegutils-2.1.so" "libmms.so" "libmpcdec.so" "libmpeg2encpp-2.1.so" "libmplex2-2.1.so" "libneon.so" "libnettle.so" "libnice.so" "libofa.so" "libopenjp2.so" "libpango-1.0.so" "libpangocairo-1.0.so" "librsvg-2.so" "librtmp.so" "libsbc.so" "libsndfile.so" "libspandsp.so" "libsrt.so" "libsrtp2.so" "libusb-1.0.so" "libwebrtc_audio_processing.so" "libx265.so" "libzbar.so" "libzvbi.so"
         lib32-fluidsynth lib32-gst-plugins-base-libs lib32-gst-plugins-good
         lib32-lcms2 lib32-libass lib32-libavtp lib32-libbs2b lib32-libdc1394 lib32-libdrm
         lib32-libdca lib32-libde265 lib32-libdvdnav lib32-libdvdread lib32-libfdk-aac
@@ -27,13 +27,21 @@ optdepends=('lib32-nvidia-utils: nvcodec plugin')
 checkdepends=(xorg-server-xvfb)
 options=(!emptydirs)
 _commit=8cb03bdf01ca6ad8c87f951bcd7962c3ca9f6860 # tags/1.18.4^0
-source=("git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad.git#commit=$_commit")
-sha256sums=('SKIP')
+source=("git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad.git#commit=$_commit"
+        gst-plugins-bad-openexr3.patch)
+sha256sums=('SKIP'
+            '6bf2b72021586efa41b35507beedb939e952cfd612ce50f5f9e704cf1bd1d876')
 
 pkgver() {
     cd $_basename
 
     git describe --tags | sed 's/-/+/g'
+}
+
+prepare() {
+    cd $_basename
+
+    patch -p1 < ../gst-plugins-bad-openexr3.patch # Fix build with OpenEXR 3
 }
 
 build() {
