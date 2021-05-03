@@ -4,7 +4,7 @@
 
 pkgname=ventoy-bin
 pkgver=1.0.42
-pkgrel=1
+pkgrel=2
 pkgdesc='A new multiboot USB solution (Binary)'
 url='http://www.ventoy.net/'
 arch=('i686' 'x86_64')
@@ -55,9 +55,11 @@ package() {
   cp --no-preserve=o -avt "$pkgdir/opt/${pkgname%-bin}/"                 plugin WebUI
 
   msg2 "Linking system binaries..."
-  for binary in xzcat hexdump mkexfatfs mount.exfat-fuse; do
+  for binary in xzcat hexdump mount.exfat-fuse; do
     ln -svf /usr/bin/$binary "$pkgdir/opt/${pkgname%-bin}/tool/$CARCH/"
   done
+  # working around exfatprogs provides exfat-utils but is missing mkexfatfs
+  ln -svf /usr/bin/mkfs.exfat "$pkgdir/opt/${pkgname%-bin}/tool/$CARCH/mkexfatfs"
 
   msg2 "Creating /usr/bin entries..."
   install -Dm755 "$srcdir/${pkgname%-bin}"{,web,-persistent} -vt "$pkgdir"/usr/bin/
