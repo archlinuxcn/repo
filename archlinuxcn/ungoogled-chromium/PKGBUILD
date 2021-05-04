@@ -9,14 +9,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=89.0.4389.128
+pkgver=90.0.4430.93
 pkgrel=1
 _launcher_ver=7
-_gcc_patchset=7
+_gcc_patchset=6
 _pkgname=$(echo $pkgname | cut -d\- -f1-2)
 _pkgver=$(echo $pkgver | cut -d\. -f1-4)
 # ungoogled chromium variables
-_uc_ver=89.0.4389.114-1
+_uc_ver=$pkgver-1
 _uc_usr=Eloston
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
@@ -37,20 +37,18 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         $_pkgname-$_uc_ver.tar.gz::https://github.com/$_uc_usr/ungoogled-chromium/archive/$_uc_ver.tar.gz
         https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
         https://github.com/stha09/chromium-patches/releases/download/chromium-${pkgver%%.*}-patchset-$_gcc_patchset/chromium-${pkgver%%.*}-patchset-$_gcc_patchset.tar.xz
-        add-dependency-on-opus-in-webcodecs.patch
+        add-clang-nomerge-attribute-to-CheckError.patch
         chromium-drirc-disable-10bpc-color-configs.conf
         chromium-glibc-2.33.patch
-        chromium-fix-libva-redef.patch
         wayland-egl.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('1a75ea6aeb98f2d3b6feae1fbf5692679e93d5b7631bc7c762dd873499deda5b'
-            '38bc4f73356caaa23d7f6b9d2961f9241f8e0fb212f3ab11bf88dca1db5ca3ee'
+sha256sums=('532ec75f4e08384fe2fb17b69af9210103379ee212dbf0bf081bdc5d4eca357e'
+            '3e4059169aa2910df36e17fcd39990df88b6f5ae12c66e2754b528e859436f8b'
             '86859c11cfc8ba106a3826479c0bc759324a62150b271dd35d1a0f96e890f52f'
-            'f8b1558f6c87b33423da854d42f0f69d47885a96d6bf6ce7f26373e93d47442f'
-            'b86b11de8db438c47f0a84c7956740f648d21035f4ee46bfbd50c3348d369121'
+            '3eb9580ea35a96789e02815270498226fa33726f4210a5ee36f3868af2ffae1f'
+            '5e22afcb91b5402bc09e80630c5323d61013c3fccb0bbd9b23d1e79a400b00d0'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '2fccecdcd4509d4c36af873988ca9dbcba7fdb95122894a9fdf502c33a1d7a4b'
-            'de9eb3612d44616a500c2eccdffac814eb90ad9a868cc1030d17fc6783d544e2'
             '34d08ea93cb4762cb33c7cffe931358008af32265fc720f2762f0179c3973574'
             'e393174d7695d0bafed69e868c5fbfecf07aa6969f3b64596d0bae8b067e1711')
 
@@ -101,15 +99,12 @@ prepare() {
   # https://crbug.com/1164975
   patch -Np1 -i ../chromium-glibc-2.33.patch
 
-  # https://github.com/kiss-community/repo-community/issues/246
-  patch -Np1 -i ../chromium-fix-libva-redef.patch
-
-  # Upstream fixes
-  patch -Np1 -i ../add-dependency-on-opus-in-webcodecs.patch
+  # Revert addition of [[clang::nomerge]] attribute; not supported by clang 11
+  patch -Rp1 -d base <../add-clang-nomerge-attribute-to-CheckError.patch
 
   # Fixes for building with libstdc++ instead of libc++
-  patch -Np1 -i ../patches/chromium-89-quiche-dcheck.patch
-  patch -Np1 -i ../patches/chromium-89-AXTreeSerializer-include.patch
+  patch -Np1 -i ../patches/chromium-90-quantization_utils-include.patch
+  patch -Np1 -i ../patches/chromium-90-TokenizedOutput-include.patch
 
   # Wayland/EGL regression (crbug #1071528 #1071550)
   patch -Np1 -i ../wayland-egl.patch
@@ -191,6 +186,10 @@ build() {
   _ungoogled_repo="$srcdir/$_pkgname-$_uc_ver"
   readarray -t -O ${#_flags[@]} _flags < "${_ungoogled_repo}/flags.gn"
 
+  # use fixed flags as system flags break build
+  CFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fno-plt"
+  CXXFLAGS="$CFLAGS"
+
   # Facilitate deterministic builds (taken from build/config/compiler/BUILD.gn)
   CFLAGS+='   -Wno-builtin-macro-redefined'
   CXXFLAGS+=' -Wno-builtin-macro-redefined'
@@ -199,7 +198,7 @@ build() {
   # Do not warn about unknown warning options
   CFLAGS+='   -Wno-unknown-warning-option'
   CXXFLAGS+=' -Wno-unknown-warning-option'
-
+  
   msg2 'Configuring Chromium'
   gn gen out/Release --args="${_flags[*]}"
   msg2 'Building Chromium'

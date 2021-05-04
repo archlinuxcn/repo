@@ -1,0 +1,62 @@
+From 209bf5cdfc095516ba9e391dd52ce16a74114ae6 Mon Sep 17 00:00:00 2001
+From: Zequan Wu <zequanwu@google.com>
+Date: Wed, 10 Feb 2021 03:26:00 +0000
+Subject: [PATCH] Reland "Add [[clang::nomerge]] attribute to ~CheckError()."
+
+This is a reland of 8860253376c38c090d585bda4b20b801e3aa3ce3
+
+Original change's description:
+> Add [[clang::nomerge]] attribute to ~CheckError().
+>
+> To disable merging multiple ~CheckError() destructor for accurate crash logs.
+>
+> Bug: 1153188
+> Change-Id: If6d153661667a63f13b645f6d284eb3d5ea3a300
+> Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/2611331
+> Commit-Queue: Nico Weber <thakis@chromium.org>
+> Auto-Submit: Zequan Wu <zequanwu@google.com>
+> Reviewed-by: Nico Weber <thakis@chromium.org>
+> Cr-Commit-Position: refs/heads/master@{#844989}
+
+Bug: 1153188
+Change-Id: I303c5ff9fb88f7a30663400622b327a910d0b108
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/2686331
+Reviewed-by: Nico Weber <thakis@chromium.org>
+Commit-Queue: Nico Weber <thakis@chromium.org>
+Commit-Queue: Zequan Wu <zequanwu@google.com>
+Cr-Commit-Position: refs/heads/master@{#852453}
+GitOrigin-RevId: 9909f146b28d56c9c0411329a056ed959b33f76a
+---
+ check.h             | 2 +-
+ compiler_specific.h | 7 +++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/check.h b/check.h
+index c94ab68db..17048e455 100644
+--- a/check.h
++++ b/check.h
+@@ -85,7 +85,7 @@ class BASE_EXPORT CheckError {
+   // Stream for adding optional details to the error message.
+   std::ostream& stream();
+ 
+-  ~CheckError();
++  NOMERGE ~CheckError();
+ 
+   CheckError(const CheckError& other) = delete;
+   CheckError& operator=(const CheckError& other) = delete;
+diff --git a/compiler_specific.h b/compiler_specific.h
+index fa961b0ce..14a5d6870 100644
+--- a/compiler_specific.h
++++ b/compiler_specific.h
+@@ -332,4 +332,11 @@ inline constexpr bool AnalyzerAssumeTrue(bool arg) {
+ 
+ #endif  // defined(__clang_analyzer__)
+ 
++// Use nomerge attribute to disable optimization of merging multiple same calls.
++#if defined(__clang__) && __has_attribute(nomerge) && !defined(OS_CHROMEOS)
++#define NOMERGE [[clang::nomerge]]
++#else
++#define NOMERGE
++#endif
++
+ #endif  // BASE_COMPILER_SPECIFIC_H_
