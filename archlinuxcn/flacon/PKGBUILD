@@ -4,8 +4,8 @@
 # Contributor: Artem Sereda <overmind88 at gmail dot com>
 #
 pkgname="flacon"
-pkgver="6.1.0"
-pkgrel="2"
+pkgver="7.0.1"
+pkgrel="1"
 pkgdesc="An Audio File Encoder. Extracts audio tracks from an audio CD image to separate tracks."
 arch=('i686' 'x86_64' 'aarch64')
 url="https://flacon.github.io/"
@@ -27,11 +27,11 @@ optdepends=('flac: For FLAC support'
 conflicts=('flacon-git')
 
 source=("${pkgname}-${pkgver}.tar.gz::${_url}/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('b6af83ed30697ed82369d3eefaf8fcceabea69fc86a1d6d1a5594cc5768bad7b')
+sha256sums=('f63b959099e7b97b02a7f9ccf2c922a99de6c0d1ec83e74c436fd10e41630b6e')
 
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
-    mkdir build
+    mkdir -p build
 
     cd build
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr
