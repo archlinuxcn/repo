@@ -1,7 +1,7 @@
 # Maintainer: Maximilian Luz <luzmaximilian@gmail.com>
 
 pkgname="surface-control"
-pkgver=0.4.0
+pkgver=0.4.1
 pkgrel=1
 _pkgrel=1
 pkgdesc='Control various aspects of Microsoft Surface devices from the Command-Line'
