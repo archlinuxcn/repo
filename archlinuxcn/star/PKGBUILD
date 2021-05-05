@@ -2,7 +2,7 @@
 
 pkgname=star
 _pkgname=STAR
-pkgver=2.7.8a
+pkgver=2.7.9a
 pkgrel=1
 pkgdesc="Spliced Transcripts Alignment to a Reference"
 arch=('x86_64')
@@ -11,7 +11,7 @@ license=('MIT')
 depends=('gcc-libs' 'zlib')
 provides=('STAR')
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('e6bf898291a1a350b36d8c031d3f65fc66869e6775a053af57c9cfe275f77305')
+sha256sums=('ff52c9d6daaa9fb7261efa3aa49ef6ce5262aa089b0762a3cbc751e81321050e')
 
 build() {
     cd "${_pkgname}-${pkgver}"/
