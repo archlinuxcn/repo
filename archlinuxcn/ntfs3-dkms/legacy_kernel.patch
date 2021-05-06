@@ -1,5 +1,5 @@
---- a/fs/ntfs3/file.c
-+++ b/fs/ntfs3/file.c
+--- a/file.c
++++ b/file.c
 @@ -76,7 +76,7 @@
  /*
   * inode_operations::getattr
@@ -50,8 +50,8 @@
  			goto out;
  
 
---- a/fs/ntfs3/fsntfs.c
-+++ b/fs/ntfs3/fsntfs.c
+--- a/fsntfs.c
++++ b/fsntfs.c
 @@ -1620,7 +1620,7 @@
  		lbo = (u64)lcn << cluster_bits;
  		len = (u64)clen << cluster_bits;
@@ -62,8 +62,8 @@
  			err = -ENOMEM;
  			break;
 
---- a/fs/ntfs3/inode.c
-+++ b/fs/ntfs3/inode.c
+--- a/inode.c
++++ b/inode.c
 @@ -1176,7 +1176,7 @@
  	return ERR_PTR(err);
  }
@@ -83,8 +83,8 @@
  			goto out6;
  	} else
 
---- a/fs/ntfs3/namei.c
-+++ b/fs/ntfs3/namei.c
+--- a/namei.c
++++ b/namei.c
 @@ -102,7 +102,7 @@
   *
   * inode_operations::create
@@ -158,8 +158,8 @@
  	err = IS_ERR(inode) ? PTR_ERR(inode)
  			    : finish_open(file, dentry, ntfs_file_open);
 
---- a/fs/ntfs3/ntfs_fs.h
-+++ b/fs/ntfs3/ntfs_fs.h
+--- a/ntfs_fs.h
++++ b/ntfs_fs.h
 @@ -453,11 +453,11 @@
  extern const struct file_operations ntfs_dir_operations;
  
@@ -206,8 +206,8 @@
  ssize_t ntfs_listxattr(struct dentry *dentry, char *buffer, size_t size);
  extern const struct xattr_handler *ntfs_xattr_handlers[];
 
---- a/fs/ntfs3/super.c
-+++ b/fs/ntfs3/super.c
+--- a/super.c
++++ b/super.c
 @@ -542,10 +542,10 @@
  
  	if (opts->uid)
@@ -222,8 +222,8 @@
  		seq_printf(m, ",fmask=%04o", ~opts->fs_fmask_inv);
  	if (opts->dmask)
 
---- a/fs/ntfs3/xattr.c
-+++ b/fs/ntfs3/xattr.c
+--- a/xattr.c
++++ b/xattr.c
 @@ -473,7 +473,7 @@
  		kfree(acl);
  }
