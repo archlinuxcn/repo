@@ -1,7 +1,7 @@
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
 # Maintainer: Allen Zhong <zhongbenli@pingcap.com>
 pkgname=tidb
-pkgver=4.0.11
+pkgver=5.0.1
 pkgrel=1
 pkgdesc='A distributed HTAP database compatible with the MySQL protocol'
 makedepends=('go' 'make')
@@ -17,11 +17,11 @@ source=(tidb-${pkgver}.tar.gz::https://github.com/pingcap/tidb/archive/v${pkgver
         tidb-sysusers.conf
         tidb-tmpfiles.conf
         tidb.toml)
-sha256sums=('467b4cb5b5adacf389b5f6e25a785f8e51b15269e5a3e290c3224b2a995b2490'
+sha256sums=('067a86471e6f38036dfe6f202189c3951e5daf6b449e742629743e47dd45956e'
             '22318c19bb89ff5a0852df5186cc1496214cd49f2264192413a326d1e8c93dc9'
             '2b147d80985e714d5f861baf76591104c07058b9b6fa573bf0676d675cf8fc20'
             '30ce83fbec8f102c30e438282bb5b18c026d08480f2386d68f1116c12481bf66'
-            '906c6b0cb66e627b51ee938f266d8126f6857360e56d070ca254005b6752c64d')
+            'f32709894c0d2c105a4398dcaf027f1cbdee359a2a6747f43cac819e9df25517')
 
 _gopkgname='github.com/pingcap/tidb'
 
@@ -32,7 +32,7 @@ prepare() {
   mv -Tv "$srcdir/tidb-${pkgver}" "$GOPATH/src/$_gopkgname"
 
   # patch Makefile
-  sed -i '/shell git /d' "$GOPATH/src/$_gopkgname/Makefile"
+  sed -i '/shell git /d' "$GOPATH/src/$_gopkgname/Makefile.common"
 }
 
 build() {
