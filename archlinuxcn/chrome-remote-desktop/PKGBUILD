@@ -5,7 +5,7 @@
 # Contributor: Mateus Rodrigues Costa <charles [dot] costar [at] gmail [dot] com>
 
 pkgname=chrome-remote-desktop
-pkgver=89.0.4389.45
+pkgver=89.0.4389.85
 pkgrel=1
 pkgdesc="Access other computers or allow another user to access your computer securely over the Internet"
 arch=("x86_64")
@@ -19,7 +19,7 @@ source=(
   "pamrule"
   "crd"
 )
-sha256sums=('b31f2eae45115ef42df9fc3e95e55cdf316f8dbeb72c7c0a9f761899ec34bdef'
+sha256sums=('ce2d1f7e7dd2f22f685c05ffaa30086143b31117625f261104f12cdeb7e9bcfa'
             'e5da5ae89b5bc599f72f415d1523341b25357931b0de46159fce50ab83615a4b'
             'fcc38269eb1cc902abff9688eda9377a22367e39b9f111f87c0dd8e77adb82e2'
             '27dee2d383e6bd993fe0557d5c222fa80ab6d16d43775dedff6218713c7a1c06')
@@ -46,6 +46,7 @@ package() {
   cp -r "${srcdir}/opt/"* "${pkgdir}/opt"
   install -Dm644 "${srcdir}/usr/share/doc/${pkgname}/copyright" "${pkgdir}/usr/share/licenses/${pkgname}/copyright"
   install -Dm644 "${srcdir}/${pkgname}.service" "${pkgdir}/usr/lib/systemd/user/${pkgname}.service"
+  install -Dm644 "${srcdir}/lib/systemd/system/${pkgname}@.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}@.service"
   install -Dm644 "${srcdir}/pamrule" "${pkgdir}/etc/pam.d/${pkgname}"
   install -Dm755 "${srcdir}/crd" "${pkgdir}/usr/bin/crd"
   install -dm755 "${pkgdir}/etc/chromium/native-messaging-hosts"
