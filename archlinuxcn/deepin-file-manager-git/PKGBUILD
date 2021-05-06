@@ -1,7 +1,7 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=deepin-file-manager-git
-pkgver=5.2.0.76.r109.gb978dbde0
+pkgver=5.2.18.r6.g6b40ecd30
 pkgrel=1
 pkgdesc='Deepin File Manager'
 arch=('x86_64')
@@ -29,10 +29,10 @@ pkgver() {
 
 prepare() {
     cd ${pkgname}
-    sed -i '/#include <QException>/a #include <QPainterPath>' dialogs/dfmtaskwidget.cpp
-    sed -i '/#include <QTimer>/a #include <QPainterPath>' dde-file-manager-lib/interfaces/dfmglobal.cpp
-    sed -i '/#include <QPainter>/a #include <QPainterPath>' dde-file-manager-lib/interfaces/{dlistitemdelegate,dfmstyleditemdelegate,diconitemdelegate}.cpp dde-file-manager-lib/dialogs/openwithdialog.cpp
-    sed -i 's|systembusconf.path = /etc/dbus-1/system.d|systembusconf.path = /usr/share/dbus-1/system.d|' dde-file-manager-daemon/dde-file-manager-daemon.pro
+    sed -i '/#include <QException>/a #include <QPainterPath>' src/dialogs/dfmtaskwidget.cpp
+    sed -i '/#include <QTimer>/a #include <QPainterPath>' src/dde-file-manager-lib/interfaces/dfmglobal.cpp
+    sed -i '/#include <QPainter>/a #include <QPainterPath>' src/dde-file-manager-lib/interfaces/{dlistitemdelegate,dfmstyleditemdelegate,diconitemdelegate}.cpp src/dde-file-manager-lib/dialogs/openwithdialog.cpp
+    sed -i 's|systembusconf.path = /etc/dbus-1/system.d|systembusconf.path = /usr/share/dbus-1/system.d|' src/dde-file-manager-daemon/dde-file-manager-daemon.pro
 }
 
 build() {
