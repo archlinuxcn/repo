@@ -1,9 +1,9 @@
 pkgname=1password
 
-_tarver=8.0.33-69.BETA
+_tarver=8.0.33-79.BETA
 _tar="${pkgname}-${_tarver}.x64.tar.gz"
 pkgver=${_tarver//-/_}
-pkgrel=69
+pkgrel=79
 pkgdesc="Password manager and secure wallet"
 arch=('x86_64')
 url='https://1password.com'
@@ -12,8 +12,8 @@ depends=('hicolor-icon-theme')
 options=(!strip)
 install="${pkgname}.install"
 source=(https://downloads.1password.com/linux/tar/beta/x86_64/${_tar}{,.sig})
-sha256sums=('6570dc6e65a3555055d24cd6060a927fe80530310fe9422c1efbb0601635f39e'
-            'ee873f2f15eae4a8778099b7e073d0c8ee15bfa77fcfa13d8244b12e5b8b7edb'
+sha256sums=('a72f88727d7aab0d40b46328672ea58b72617d6a7ff55d729a88429cd3c2f2eb'
+            '54f6b9afa7befba4dfc70c1ff12ef80d97c96d96ebf643957627c8fb67ec844f'
 )
 validpgpkeys=('3FEF9748469ADBE15DA7CA80AC2D62742012EA22')
 
