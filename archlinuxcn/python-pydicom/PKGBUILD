@@ -3,16 +3,17 @@
 pkgname=python-pydicom
 _pkgname=pydicom
 pkgver=2.1.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Read, modify and write DICOM files with python code'
 arch=(any)
 url='https://github.com/pydicom/pydicom'
 license=(MIT)
 optdepends=(
-    'python-numpy: for working with pixel data'
-    'python-pillow: for working with compressed image data'
-    'python-pylibjpeg'
-    'python-pylibjpeg-openjpeg'
+  'python-numpy: for working with pixel data'
+  'python-pillow: for working with compressed image data'
+  'python-pylibjpeg'
+  'python-pylibjpeg-openjpeg'
+  'python-pylibjpeg-rle'
 )
 makedepends=(
   git
