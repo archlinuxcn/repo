@@ -4,12 +4,12 @@
 
 pkgname=ventoy-bin
 pkgver=1.0.42
-pkgrel=2
+pkgrel=3
 pkgdesc='A new multiboot USB solution (Binary)'
 url='http://www.ventoy.net/'
 arch=('i686' 'x86_64')
 license=('GPL3')
-depends=('bash' 'util-linux' 'xz' 'exfat-utils' 'dosfstools' 'lib32-glibc')
+depends=('bash' 'util-linux' 'xz' 'dosfstools' 'lib32-glibc')
 provides=("${pkgname%-bin}")
 conflicts=("${pkgname%-bin}")
 install="${pkgname%-bin}.install"
@@ -38,7 +38,8 @@ prepare() {
   sed -i 's|log\.txt|/var/log/ventoy.log|g' WebUI/static/js/languages.js
 
   msg2 "Cleaning up unused binaries..."
-  for binary in xzcat hexdump mkexfatfs mount.exfat-fuse; do
+  # Preserving mkexfatfs and mount.exfat-fuse because exfatprogs is incompatible
+  for binary in xzcat hexdump; do
     rm -fv tool/$CARCH/$binary
   done
 }
@@ -55,11 +56,9 @@ package() {
   cp --no-preserve=o -avt "$pkgdir/opt/${pkgname%-bin}/"                 plugin WebUI
 
   msg2 "Linking system binaries..."
-  for binary in xzcat hexdump mount.exfat-fuse; do
+  for binary in xzcat hexdump; do
     ln -svf /usr/bin/$binary "$pkgdir/opt/${pkgname%-bin}/tool/$CARCH/"
   done
-  # working around exfatprogs provides exfat-utils but is missing mkexfatfs
-  ln -svf /usr/bin/mkfs.exfat "$pkgdir/opt/${pkgname%-bin}/tool/$CARCH/mkexfatfs"
 
   msg2 "Creating /usr/bin entries..."
   install -Dm755 "$srcdir/${pkgname%-bin}"{,web,-persistent} -vt "$pkgdir"/usr/bin/
