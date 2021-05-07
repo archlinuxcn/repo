@@ -10,7 +10,7 @@ from lilaclib import *
 #build_prefix = 'archlinuxcn-x86_64'
 
 def pre_build():
-    run_cmd(["rm", "-rf", "emacs-git"])
+    # run_cmd(["rm", "-rf", "emacs-git"])
     aur_pre_build()
     for line in edit_file('PKGBUILD'):
             if line.startswith('replaces='):
