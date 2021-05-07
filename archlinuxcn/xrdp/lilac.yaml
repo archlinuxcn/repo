@@ -1,4 +1,8 @@
 maintainers:
   - github: colinkeenan
-
-managed: false
+build_prefix: extra-x86_64
+update_on:
+  - source: github
+    github: neutrinolabs/xrdp
+    use_max_tag: true
+# vim:set ts=2 sw=2 et:
