@@ -1,0 +1,87 @@
+# Maintainer: edward-p <edward At edward-p Dot xyz>
+
+pkgname=proxmark3-iceman
+pkgver=4.9237
+pkgrel=1
+pkgdesc='RRG / Iceman repo - Proxmark3 RDV4.0 and other Proxmark3 platforms.'
+arch=('x86_64')
+url='https://github.com/RfidResearchGroup/proxmark3'
+license=('GPL2')
+depends=('perl' 'python' 'libsndfile')
+makedepends=('git' 'arm-none-eabi-gcc' 'arm-none-eabi-newlib')
+options=(!buildflags)
+provides=('proxmark3' 'proxmark3-iceman')
+conflicts=('proxmark3' 'proxmark3-iceman-git')
+replaces=($pkgname'-generic' $pkgname'-rdv4')
+source=("$pkgname::git+https://github.com/RfidResearchGroup/proxmark3.git#tag=v${pkgver}")
+sha512sums=('SKIP')
+install=proxmark3-iceman.install
+
+build() {
+  export DESTDIR="build"
+  export PREFIX="/usr"
+  export UDEV_PREFIX="/usr/lib/udev/rules.d"
+  
+  cd "${srcdir}/${pkgname}"
+
+  mkdir "$DESTDIR"
+  
+  STANDALONE_MODES=(
+          #'LF_SKELETON'
+          'LF_EM4100EMUL'
+          'LF_EM4100RSWB'
+          'LF_EM4100RWC'
+          'LF_HIDBRUTE'
+          'LF_PROXBRUTE'
+          'LF_SAMYRUN'
+          'HF_LEGIC'
+          'HF_MATTYRUN'
+          'HF_MSDSAL'
+          'HF_YOUNG')
+  RDV4_STANDALONE_MODES=(
+          'LF_ICEHID'
+          'HF_14ASNIFF'
+          'HF_BOG'
+          'HF_COLIN'
+          # 'HF_ICECLASS' currently not available in stable version
+          )
+ 
+  # Build recovery (without PLATFORM_EXTRAS and STANDALONE)
+  make \
+    PLATFORM="PM3RDV4" STANDALONE= FWTAG="rdv4-nostandalone" recovery/install
+  make \
+    PLATFORM="PM3OTHER" STANDALONE= FWTAG="other-nostandalone" recovery/install
+
+  # These firmware is not needed.
+  # rm build/usr/share/proxmark3/firmware/{fullimage-rdv4-nostandalone.elf,fullimage-other-nostandalone.elf}
+
+  # Build various firmwares
+  for standalone in ${STANDALONE_MODES[@]}; do
+
+      make \
+        PLATFORM="PM3RDV4" PLATFORM_EXTRAS="BTADDON" STANDALONE="${standalone}" \
+        FWTAG="rdv4-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') armsrc/install
+
+      make \
+        PLATFORM="PM3OTHER" STANDALONE="${standalone}" \
+        FWTAG="other-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') armsrc/install
+
+  done
+
+  for standalone in ${RDV4_STANDALONE_MODES[@]}; do
+
+      make \
+        PLATFORM="PM3RDV4" PLATFORM_EXTRAS="BTADDON" STANDALONE="${standalone}" \
+        FWTAG="rdv4-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') armsrc/install
+
+  done
+
+  # Build & install other targets
+  make {bootrom,client,mfkey,nonce2key,common}/install
+}
+
+package() {
+  export DESTDIR="build"
+  cd "${srcdir}/${pkgname}"
+  mv "$DESTDIR"/* "${pkgdir}/"
+}

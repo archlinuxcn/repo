@@ -1,0 +1,5 @@
+post_install() {
+    echo ":: Add yourself to the uucp group to access the serial ports:"
+    echo "   sudo usermod -a -G uucp <user>"
+    echo ":: Firmwares are installed at /usr/share/proxmark3/firmware"
+}
