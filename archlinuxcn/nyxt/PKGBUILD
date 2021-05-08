@@ -5,19 +5,21 @@
 # Contributor: Felix Golatofski <contact@xdfr.de>
 
 pkgname=nyxt
-pkgver=2.pre.release.6
-pkgrel=2
+pkgver=2.pre.release.7
+pkgrel=1
 pkgdesc="A keyboard-oriented, infinitely extensible web browser designed for power users"
 arch=('x86_64')
 url="https://github.com/atlas-engineer/nyxt"
 license=('custom:BSD')
 conflicts=('nyxt-browser')
 provides=('nyxt-browser' 'next-browser')
-source=("git+https://github.com/atlas-engineer/nyxt.git#tag=${pkgver//./-}")
-sha256sums=('SKIP')
+source=("git+https://github.com/atlas-engineer/nyxt.git#tag=${pkgver//./-}"
+        "Makefile.2.pre.release.7.patch")
+sha256sums=('SKIP'
+            'a6c833611d87c08e4c45299f5dda860b41cb3fea79fdde4bfb063cfeee5273e7')
 # If someday Next works with other Lisps, replace 'sbcl' with 'common-lisp'.
-makedepends=('git' 'sbcl' 'cl-asdf')
-depends=('webkit2gtk' 'glib-networking' 'gsettings-desktop-schemas' 'libfixposix' 'enchant')
+makedepends=('cl-asdf' 'git' 'gobject-introspection-runtime' 'sbcl')
+depends=('enchant' 'glib-networking' 'gsettings-desktop-schemas' 'libfixposix' 'webkit2gtk')
 optdepends=('gstreamer: for HTML5 audio/video'
             'gst-plugins-base: for HTML5 audio/video'
             'gst-plugins-good: for HTML5 audio/video'
@@ -25,6 +27,16 @@ optdepends=('gstreamer: for HTML5 audio/video'
             'gst-plugins-ugly: for HTML5 audio/video')
 # Binary will not run otherwise.
 options=('!strip' '!makeflags')
+
+prepare() {
+    cd "${srcdir}"/"${pkgname}"/
+    patch -p1 -i ../Makefile.2.pre.release.7.patch
+}
+
+build() {
+    cd "${srcdir}"/"${pkgname}"/
+    make all
+}
 
 package() {
     cd "${srcdir}"/"${pkgname}"/
