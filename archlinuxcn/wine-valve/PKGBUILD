@@ -6,8 +6,8 @@
 # Conttributor: xiretza <xiretza+aur@gmail.com>
 # Contributor: heavysink <winstonwu91 at gmail>
 pkgname=wine-valve
-pkgver=6.3.20210503
-_pkgver='6.3-20210503'
+pkgver=6.3.20210507
+_pkgver='6.3-20210507'
 pkgrel=1
 pkgdesc='A compatibility layer for running Windows programs (Valve version)'
 arch=('i686' 'x86_64')
@@ -202,6 +202,6 @@ package() {
     done
 }
 
-sha256sums=('d7ea20fe0084e5a63fcd991059219810d7b4f378afabc7755cd85a219ea927a7'
+sha256sums=('e490e61d6f31132154a0d9579fc9c94b6620e97c01a8d173dc6b07b365fcf787'
             '9901a5ee619f24662b241672a7358364617227937d5f6d3126f70528ee5111e7'
             '6dfdefec305024ca11f35ad7536565f5551f09119dda2028f194aee8f77077a4')
