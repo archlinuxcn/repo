@@ -4,8 +4,8 @@
 _pkgname='python-magic'
 pkgname=python-magic-ahupp
 pkgdesc='A python wrapper for libmagic'
-pkgver=0.4.20
-pkgrel=2
+pkgver=0.4.22
+pkgrel=1
 arch=('any')
 url="https://github.com/ahupp/python-magic"
 license=('MIT')
@@ -14,7 +14,7 @@ makedepends=('python-setuptools')
 conflicts=('python-magic')
 provides=('python-magic')
 source=("https://github.com/ahupp/${_pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('9822826e6629305da894278c595d561bff3f6b87bd7542e4d3d081159406b229')
+sha256sums=('cd4be7884304720a59e72a32e578c0fe676e4cdd2664778ba105469b4c201189')
 
 package() {
   cd "${_pkgname}-${pkgver}"
