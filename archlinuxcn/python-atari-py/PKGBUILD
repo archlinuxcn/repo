@@ -1,26 +1,41 @@
-# Maintainer: Leo Mao <leomaoyw at gmail dot com>
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+# Contributor: Leo Mao <leomaoyw at gmail dot com>
+
 pkgname=python-atari-py
 _pkgname=atari-py
 pkgver=0.2.6
 pkgrel=2
-pkgdesc="A python interface for the Arcade Learning Environment (Modified by OpenAI)"
+pkgdesc='A python interface for the Arcade Learning Environment (Modified by OpenAI)'
 arch=('any')
-_github='openai/atari-py'
-#_pypiname='atari-py'
-url="https://github.com/openai/atari-py"
+url='https://github.com/openai/atari-py'
 license=('GPL')
-depends=('python' 'python-numpy' 'python-six' 'zlib')
-makedepends=('python-setuptools' 'cmake' 'gcc')
+depends=(
+  python-numpy
+  python-six
+)
+makedepends=(
+  cmake
+  python-setuptools
+)
+checkdepends=(
+  python-nose
+)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/openai/atari-py/archive/${pkgver}.tar.gz")
-md5sums=('34c28ceac0813e74f5146c8e8333bf54')
+sha256sums=('ba8377b2ddf2d8cebab89ab370e6439363647c99ac75d4fbdc55d9da2cb9e914')
 
 build() {
-  msg "Building Python 3"
-  cd "${srcdir}/${_pkgname}-${pkgver}"
+  cd "${_pkgname}-${pkgver}"
   python setup.py build
+  python setup.py build_ext --inplace
+}
+
+check() {
+  cd "${_pkgname}-${pkgver}"
+  nosetests -v
 }
 
 package() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}"/ --optimize=1 --skip-build
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
 }
+# vim:set ts=2 sw=2 et:
