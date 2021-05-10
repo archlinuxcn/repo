@@ -2,7 +2,7 @@
 
 pkgname=python-torchio
 _pkgname=torchio
-pkgver=0.18.33
+pkgver=0.18.37
 pkgrel=1
 pkgdesc='Tools for medical image processing in deep learning and PyTorch'
 arch=(any)
@@ -28,7 +28,7 @@ checkdepends=(
 )
 
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/fepegar/torchio/archive/v${pkgver}.tar.gz")
-sha512sums=('3e1480d57f2a4580ac88ef12945ecdadfc0d0e42659d8a73095052187d1a160a533b48fd3c88000f4966c8ec4c8efaa1dadec55b624ca6056a4b68829cbcab42')
+sha512sums=('abd584052f6810285473873576abd5a9a282411606a0c85baa4ad1352fa0f413cc11373d7e358912d8c03b1afef35a5cf25770d248687144ff31aab0b752e37d')
 
 build() {
   cd "${_pkgname}-${pkgver}"
