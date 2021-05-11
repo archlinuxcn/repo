@@ -4,7 +4,7 @@
 
 pkgname=rocm-opencl-runtime
 pkgver=4.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Radeon Open Compute - OpenCL runtime'
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/ROCm-OpenCL-Runtime'
@@ -18,11 +18,9 @@ sha256sums=('0729e6c2adf1e3cf649dc6e679f9cb936f4f423f4954ad9852857c0a53ef799c')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
 build() {
-    CFLAGS="$CFLAGS -isystem /opt/rocm/rocclr/include/include -isystem /opt/rocm/rocclr/include/compiler/lib -isystem /opt/rocm/rocclr/include/compiler/lib/include -isystem /opt/rocm/rocclr/include/elf" \
-    CXXFLAGS="$CXXFLAGS -isystem /opt/rocm/rocclr/include/include -isystem /opt/rocm/rocclr/include/compiler/lib -isystem /opt/rocm/rocclr/include/compiler/lib/include -isystem /opt/rocm/rocclr/include/elf" \
+    CFLAGS="$CFLAGS -isystem /opt/rocm/include/compiler/lib -isystem /opt/rocm/include/compiler/lib/include -isystem /opt/rocm/include/elf" \
+    CXXFLAGS="$CXXFLAGS -isystem /opt/rocm/include/compiler/lib -isystem /opt/rocm/include/compiler/lib/include -isystem /opt/rocm/include/elf" \
     cmake -DCMAKE_INSTALL_PREFIX=/opt/rocm \
-          -DROCclr_DIR=/opt/rocm/rocclr \
-          -DLIBROCclr_STATIC_DIR=/opt/rocm/rocclr/lib \
           -DUSE_COMGR_LIBRARY=yes \
           -DBUILD_TESTING=OFF \
           "$_dirname"
