@@ -4,7 +4,7 @@ maintainers:
   - github: ykelvis
   - github: yan12125
 
-pre_build: aur_pre_build
+pre_build_script: aur_pre_build(maintainers=['jleclanche'])
 post_build: aur_post_build
 
 repo_depends:
