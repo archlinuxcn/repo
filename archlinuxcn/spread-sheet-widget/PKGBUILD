@@ -1,33 +1,34 @@
-# Maintainer: Miguel Revilla <yo at miguelrevilla dot com>
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+# Contributor: Miguel Revilla <yo at miguelrevilla dot com>
 
 pkgname=spread-sheet-widget
-pkgver=0.7
+pkgver=0.8
 pkgrel=1
-pkgdesc="Library for Gtk+ which provides a widget for viewing and manipulating 2 dimensional tabular data"
-arch=('i686' 'x86_64')
-url="https://www.gnu.org/software/ssw/"
-license=("GPL3")
-depends=(gtk3)
-makedepends=(python)
-source=("https://alpha.gnu.org/gnu/ssw/${pkgname}-${pkgver}.tar.gz")
-md5sums=('2d26336029fc6656dabcc4fb97454fec')
+pkgdesc='Library for Gtk+ which provides a widget for viewing and manipulating 2 dimensional tabular data'
+arch=('x86_64')
+url='https://www.gnu.org/software/ssw'
+license=('GPL3')
+depends=(
+  gtk3
+)
+makedepends=(
+  python
+)
+source=("${pkgname}-${pkgver}.tar.gz::https://alpha.gnu.org/gnu/ssw/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('8589d8298fcf3b5850d0968b04801a4f40faf0555544f6cc9d954b0162e9954b')
 
 prepare() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
-
-	./configure --prefix=/usr
+  cd "${pkgname}-${pkgver}"
+  ./configure --prefix=/usr
 }
 
 build() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
-
-	make
+  cd "${pkgname}-${pkgver}"
+  make
 }
 
 package() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
-
-	make DESTDIR="${pkgdir}" install
+  cd "${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
 }
-
-# End of file
+# vim:set ts=2 sw=2 et:

@@ -1,8 +1,11 @@
 maintainers:
   - github: hubutui
 build_prefix: extra-x86_64
-pre_build: aur_pre_build
-post_build: aur_post_build
 update_on:
-  - source: aur
-    aur: spread-sheet-widget
+  - source: regex
+    url: "https://alpha.gnu.org/gnu/ssw"
+    regex: 'spread-sheet-widget-(\d+.\d+)'
+repo_depends:
+  - spread-sheet-widget
+# vim:set ts=2 sw=2 et:
+
