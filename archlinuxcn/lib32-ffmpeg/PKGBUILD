@@ -7,7 +7,7 @@
 _pkgbasename=ffmpeg
 pkgname=("lib32-$_pkgbasename" "lib32-lib$_pkgbasename")
 pkgver=4.4
-pkgrel=1
+pkgrel=2
 epoch=2
 pkgdesc="Complete solution to record, convert and stream audio and video (32 bit)"
 arch=('x86_64')
@@ -63,6 +63,7 @@ license=('GPL3')
       'lib32-sdl2'
       'lib32-speex'
       'lib32-srt'
+#      'lib32-svt-av1'
       'lib32-v4l-utils'
       'lib32-vmaf'
       'lib32-xz'
@@ -98,6 +99,7 @@ prepare() {
   cd ${_pkgbasename}
 
   # Patching if needed
+  git cherry-pick -n 988f2e9eb063db7c1a678729f58aab6eba59a55b # fix nvenc on older gpus
   patch -Np1 -i "${srcdir}"/vmaf-model-path.patch
 }
 
