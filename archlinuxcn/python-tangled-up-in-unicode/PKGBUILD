@@ -2,7 +2,7 @@
 
 pkgname=python-tangled-up-in-unicode
 _pkgname=tangled-up-in-unicode
-pkgver=0.0.7
+pkgver=0.1.0
 pkgrel=1
 pkgdesc='Access to the Unicode Character Database (UCD)'
 arch=('any')
@@ -13,7 +13,7 @@ depends=(
 )
 makedepends=(python-setuptools)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/dylan-profiler/tangled-up-in-unicode/archive/v${pkgver}.tar.gz")
-sha512sums=('9183d043428f30f5cd077bddae07507403c526073b72793986d4354a815b42de7cf4b3fb031e9ae142f6fd43b7ec3105372da40f875d5c9007f6f8ce06f6e80e')
+sha512sums=('7be5fcce87f59e89854ccef263f2d535c9d8eeb468bfcf404ef6ead2e14ca6986d4cb90656cba5313cbefde2d67a0dfca656d0b186b372d1b657577952d86e98')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
