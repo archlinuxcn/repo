@@ -1,39 +1,41 @@
-# Maintainer: Miguel Revilla <yo@miguelrevilla.com>
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+# Contributor: Miguel Revilla <yo@miguelrevilla.com>
 # Contributor: joyfulgirl <joyfulgirl (at) archlinux.us>
+
 pkgname=pspp
 pkgver=1.4.1
-pkgrel=2
-pkgdesc="Statistical analysis program. Free replacement for SPSS."
-arch=('i686' 'x86_64')
-url="http://www.gnu.org/software/pspp/"
+pkgrel=3
+pkgdesc='Statistical analysis program. Free replacement for SPSS'
+arch=('x86_64')
+url='http://www.gnu.org/software/pspp'
 license=('GPL3')
-depends=('gsl' 'gtksourceview3' 'postgresql-libs' 'desktop-file-utils' 'spread-sheet-widget')
-makedepends=('python')
-optdepends=('zlib: GNUmeric support'
-            'libxml2: GNUMERIC support')
+depends=(
+  gsl
+  gtksourceview3
+  postgresql-libs
+  spread-sheet-widget
+)
+makedepends=(
+  python
+)
+optdepends=(
+  'zlib: GNUmeric support'
+  'libxml2: GNUMERIC support'
+)
 options=('!libtool' '!emptydirs')
-source=("https://ftp.gnu.org/gnu/pspp/pspp-${pkgver}.tar.gz")
-md5sums=('7852af2e4f5ac1b57bd2c1636dca7b40')
-
-prepare() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
-
-	./configure --prefix=/usr \
-				--sysconfdir=/etc \
-				--without-libreadline-prefix
-}
+source=("${pkgname}-${pkgver}.tar.gz::https://ftp.gnu.org/gnu/pspp/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('56b551184f86f2664a1ae8e1558788c40b30cd4fe876dafa4f609d63a0561953')
 
 build() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
-
-    make CFLAGS="$CFLAGS -fcommon"
+  cd "${pkgname}-${pkgver}"
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc
+  make
 }
 
 package() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
-    make DESTDIR="${pkgdir}" install
-    rm -f "${pkgdir}/usr/share/info/dir"
+  cd "${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
 }
-
-
-# End of file
+# vim:set ts=2 sw=2 et:
