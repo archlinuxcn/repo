@@ -3,8 +3,8 @@
 
 _gemname=terminal-table
 pkgname=ruby-$_gemname
-pkgver=3.0.0
-pkgrel=5
+pkgver=3.0.1
+pkgrel=1
 pkgdesc='Simple, feature rich ascii table generation library'
 arch=(any)
 url='https://github.com/tj/terminal-table'
@@ -15,7 +15,7 @@ depends=(
 )
 options=(!emptydirs)
 source=($pkgname-$pkgver.tar.gz::https://github.com/tj/terminal-table/archive/v${pkgver}.tar.gz)
-sha1sums=('71d5cb3645266244fe4a1daf0f0427d06907d8b7')
+sha1sums=('774d905f3e5a8bef9507bb3a47214f9a58f426e6')
 
 prepare() {
   cd ${_gemname}-${pkgver}
