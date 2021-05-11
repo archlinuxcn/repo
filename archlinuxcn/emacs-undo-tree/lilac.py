@@ -7,7 +7,7 @@ from lilaclib import *
 #post_build = aur_post_build
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers='eyl')
     for line in edit_file('PKGBUILD'):
         if line.strip().startswith("depends"):
             line += "\nmakedepends=('git')"
