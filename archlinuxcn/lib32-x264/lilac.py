@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers='oxalin')
     add_depends(['liblsmash.so'])
 
 def post_build():

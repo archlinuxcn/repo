@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers='quartic')
     add_depends(['libgif.so', 'libjpeg.so'])
     add_provides(['libjbig2enc.so'])
 

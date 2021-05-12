@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers='rodrigo21')
     for line in edit_file('PKGBUILD'):
         if line.startswith('pkgver()'):
             print('_' + line)

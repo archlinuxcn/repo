@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers='oxalin')
     in_split = False
     for line in edit_file('PKGBUILD'):
         if line.startswith('package_lib32-libvmaf()'):

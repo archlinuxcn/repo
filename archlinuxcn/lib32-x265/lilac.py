@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers='llde')
     add_depends(['libnuma.so'])
     add_makedepends(['git'])
 
