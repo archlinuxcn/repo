@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers='Rhinoceros')
     run_cmd(['sed', '-i', '/vim-plugins/d', 'PKGBUILD'])
 
 def post_build():

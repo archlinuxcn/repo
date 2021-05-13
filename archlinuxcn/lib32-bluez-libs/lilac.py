@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers='WoefulDerelict')
     for line in edit_file('PKGBUILD'):
         print(line)
         if line.startswith('package_lib32-bluez-libs()'):

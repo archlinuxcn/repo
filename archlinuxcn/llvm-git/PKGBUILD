@@ -4,7 +4,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=13.0.0_r387835.4b8962940322
+pkgver=13.0.0_r387989.33399405f442
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -12,7 +12,7 @@ url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
              'python-sphinx' 'ocaml' 'ocaml-ctypes' 'ocaml-findlib'
-             'python-recommonmark' 'cuda' 'ocl-icd' 'opencl-headers'
+             'python-recommonmark' 'python-sphinx-automodapi' 'cuda' 'ocl-icd' 'opencl-headers'
              'swig' 'python' 'libunwind' 'python2' 'tensorflow')
 
 source=("llvm-project::git+https://github.com/llvm/llvm-project.git"
@@ -55,8 +55,6 @@ pkgver() {
 prepare() {
     cd llvm-project
     # llvm-project contains a lot of stuff, remove parts that aren't used by this package
-    rm -rf debuginfo-tests libclc libcxx libcxxabi llgo openmp parallel-libs pstl libc
-
     rm -rf "$srcdir"/fakeinstall
 }
 
@@ -75,6 +73,7 @@ build() {
     cmake \
         -B _build \
         -S llvm-project/llvm  -G Ninja \
+        -Wno-dev \
         -D CMAKE_C_FLAGS="$CFLAGS" \
         -D CMAKE_CXX_FLAGS="$CXXFLAGS" \
         -D CMAKE_BUILD_TYPE=Release \
@@ -88,12 +87,9 @@ build() {
         -D LLVM_BUILD_LLVM_DYLIB=ON \
         -D LLVM_LINK_LLVM_DYLIB=ON \
         -D LLVM_INSTALL_UTILS=ON \
-        -D LLVM_BUILD_DOCS=OFF \
-        -D LLVM_INCLUDE_DOCS=OFF \
-        -D LLVM_ENABLE_DOXYGEN=OFF \
-        -D CLANG_INCLUDE_DOCS=OFF \
+        -D LLVM_BUILD_DOCS=ON \
         -D LLVM_EXPERIMENTAL_TARGETS_TO_BUILD=AVR \
-        -D LLVM_ENABLE_SPHINX=OFF \
+        -D LLVM_ENABLE_SPHINX=ON \
         -D SPHINX_OUTPUT_HTML=OFF \
         -D SPHINX_WARNINGS_AS_ERRORS=OFF \
         -D POLLY_ENABLE_GPGPU_CODEGEN=ON \
@@ -102,7 +98,7 @@ build() {
         -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang" \
         -D TENSORFLOW_C_LIB_PATH="/usr/" # Force on
 
-    ninja -C _build LLVMgold all # ocaml_doc
+    ninja -C _build LLVMgold all ocaml_doc
     DESTDIR="$srcdir/fakeinstall" ninja -C _build install
 }
 
@@ -122,7 +118,6 @@ package_lldb-git() {
     pkgdesc="Next generation, high-performance debugger (git version)"
     url="https://lldb.llvm.org/"
     depends=("clang-git=$pkgver-$pkgrel" "llvm-libs-git=$pkgver-$pkgrel")
-    optdepends=('llvm-git: for the man files')
     provides=("lldb=$pkgver")
     replaces=('lldb-svn')
     conflicts=('lldb' 'lldb-svn')
@@ -130,7 +125,7 @@ package_lldb-git() {
     _fakeinstall fakeinstall/usr/include/lldb
     _fakeinstall fakeinstall/usr/lib/liblldb*
     _fakeinstall fakeinstall/usr/lib/python"$_pythonver"/site-packages/lldb
-    # _fakeinstall fakeinstall/usr/share/man/man1/lldb*
+    _fakeinstall fakeinstall/usr/share/man/man1/lldb*
     install -Dm644 "$srcdir"/llvm-project/lldb/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
@@ -145,9 +140,7 @@ package_lld-git(){
     _fakeinstall fakeinstall/usr/include/lld
     _fakeinstall fakeinstall/usr/lib/liblld*
     _fakeinstall fakeinstall/usr/lib/cmake/lld/
-    _fakeinstall fakeinstall/usr/bin/lld*
-    _fakeinstall fakeinstall/usr/bin/*lld
-    _fakeinstall fakeinstall/usr/bin/wasm-ld
+    _fakeinstall fakeinstall/usr/bin/{lld*,*.lld,wasm-ld}
     install -Dm644 "$srcdir"/llvm-project/lld/docs/ld.lld.1 "$pkgdir/usr/share/man/man1"
     install -Dm644 "$srcdir"/llvm-project/lld/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
@@ -165,13 +158,14 @@ package_polly-git() {
     _fakeinstall fakeinstall/usr/lib/*Polly*
     _fakeinstall fakeinstall/usr/lib/libGPU*
     install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-    # _fakeinstall fakeinstall/usr/share/man/man1/polly*
+     _fakeinstall fakeinstall/usr/share/doc/polly
+     _fakeinstall fakeinstall/usr/share/man/man1/polly.1
 }
 
 package_compiler-rt-git() {
     pkgdesc="Compiler runtime libraries for clang (git version)"
     url="https://compiler-rt.llvm.org/"
-    depends=('gcc-libs')
+    depends=('gcc-libs' "llvm-git=$pkgver-$pkgrel")
     provides=("compiler-rt=$pkgver")
     replaces=('compiler-rt-svn')
     conflicts=('compiler-rt' 'compiler-rt-svn')
@@ -211,10 +205,10 @@ package_clang-git() {
     _fakeinstall fakeinstall/usr/lib/cmake/clang
 
     _fakeinstall fakeinstall/usr/libexec
-
+    _fakeinstall fakeinstall/usr/share/doc/clang*
     _fakeinstall fakeinstall/usr/share/clang
     _fakeinstall fakeinstall/usr/share/scan{-build,-view}
-    # _fakeinstall fakeinstall/usr/share/man/man1/{clang,diagtool,extraclangtools,scan-build}*
+    _fakeinstall fakeinstall/usr/share/man/man1/{clang,diagtool,extraclangtools,scan-build}*
 
     # Remove documentation sources
     rm -rf "$pkgdir"/usr/share/doc/clang{,-tools}/html/{_sources,.buildinfo}
@@ -273,7 +267,7 @@ package_llvm-ocaml-git() {
     conflicts=('llvm-ocaml' 'llvm-ocaml-svn')
 
     _fakeinstall fakeinstall/usr/lib/ocaml
-    # _fakeinstall fakeinstall/usr/share/doc/llvm/ocaml-html
+    _fakeinstall fakeinstall/usr/share/doc/llvm/ocaml-html
 
     install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

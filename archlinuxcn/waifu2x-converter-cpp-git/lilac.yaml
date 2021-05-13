@@ -1,7 +1,8 @@
 maintainers:
   - github: DDoSolitary
 build_prefix: extra-x86_64
-pre_build: aur_pre_build
+pre_build_script: |
+  aur_pre_build(maintainers='nfnty')
 post_build: aur_post_build
 update_on:
   - source: aur
@@ -12,3 +13,4 @@ update_on:
     archpkg: opencv
     from_pattern: ^(\d+\.\d+)\..*
     to_pattern: \1
+staging: true

@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers='rodrigo21')
     add_depends(['libicudata.so', 'libicui18n.so', 'libicuuc.so'])
     add_provides(['libraptor2.so'])
 

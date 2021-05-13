@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers='morguldir')
     add_depends(['lib32-glibc'])
     add_provides(['libopencore-amrnb.so', 'libopencore-amrwb.so'])
 

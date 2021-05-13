@@ -3,8 +3,8 @@
 
 from lilaclib import *
 
-def pre_build():
-    aur_pre_build()
+# def pre_build():
+    # aur_pre_build()
     # for line in edit_file('PKGBUILD'):
     #     if line.startswith('_giturl='):
     #         print('_giturl="git+https://github.com/micheleg/dash-to-dock/#branch=gnome-3-36"')

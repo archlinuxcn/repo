@@ -4,7 +4,7 @@ import re
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers='dbermond')
     for line in edit_file('PKGBUILD'):
         if line.startswith('conflicts='):
             line = 'conflicts=(nvidia-dkms)'

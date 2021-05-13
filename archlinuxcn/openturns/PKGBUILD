@@ -2,7 +2,7 @@
 
 pkgname=openturns
 pkgver=1.16
-pkgrel=2
+pkgrel=3
 pkgdesc='Uncertainty treatment library'
 license=('LGPL')
 arch=('x86_64')
@@ -29,19 +29,11 @@ makedepends=(
   cmake
   swig
 )
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/openturns/openturns/archive/v${pkgver}.tar.gz"
-  "0001-fix-build-with-cmake-3.19.1.patch::https://github.com/openturns/openturns/pull/1682.patch"
-)
-sha256sums=('9ab4c0d8f68d54a87df1cc19975f78cf0a16d6401afa83459eed9613695995dc'
-            '8c46f64d673d4b1bfa778cd2ea0fcb255322556dd0507cf3d02beb70bf8bba7d')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/openturns/openturns/archive/v${pkgver}.tar.gz")
+sha256sums=('9ab4c0d8f68d54a87df1cc19975f78cf0a16d6401afa83459eed9613695995dc')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
-}
-
-prepare() {
-  cd "${pkgname}-${pkgver}"
-  patch -p1 -i "${srcdir}/0001-fix-build-with-cmake-3.19.1.patch"
 }
 
 build() {

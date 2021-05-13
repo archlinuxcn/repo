@@ -1,11 +1,11 @@
 maintainers:
   - github: hubutui
 build_prefix: extra-x86_64
-pre_build: aur_pre_build
-post_build: aur_post_build
 repo_depends:
   - python-fastrlock
 update_on:
-  - source: aur
-    aur: python-cupy
+  - source: github
+    github: cupy/cupy
+    use_latest_release: true
+  - alias: python
 # vim:set ts=2 sw=2 et:

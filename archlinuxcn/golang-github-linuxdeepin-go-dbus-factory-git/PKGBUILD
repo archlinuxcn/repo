@@ -1,7 +1,7 @@
 # Maintainer: DingYuan <justforlxz@gmail.com>
 
 pkgname=golang-github-linuxdeepin-go-dbus-factory-git
-pkgver=1.9.3.r13.gb4a21c8
+pkgver=1.9.3.r19.gfa11210
 pkgrel=1
 pkgdesc='GO DBus factory for DDE'
 arch=('any')
@@ -29,6 +29,7 @@ prepare() {
   go get -v github.com/godbus/dbus
   go get -v github.com/godbus/dbus/introspect
   go get -v github.com/godbus/dbus/prop
+  go get -v gopkg.in/yaml.v3
 }
 
 build() {

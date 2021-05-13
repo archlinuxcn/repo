@@ -1,4 +1,4 @@
-pre_build: aur_pre_build
+pre_build_script: aur_pre_build(maintainers=['yochananmarqos'])
 
 post_build: aur_post_build
 
@@ -7,8 +7,6 @@ update_on:
     aur: elementary-planner
   - source: archpkg
     archpkg: granite
-  - source: manual
-    manual: 1
 
 maintainers:
   - github: dctxmei

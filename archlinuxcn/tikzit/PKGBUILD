@@ -1,4 +1,5 @@
-# Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+# Contributor: Stefan Husmann <stefan-husmann@t-online.de>
 # Contributor: Hans-Nikolai Viessmann <hans AT viess.mn>
 # Contributor: max_meyer
 # Contributor: popsch
@@ -6,18 +7,22 @@
 
 pkgname=tikzit
 pkgver=2.1.6
-pkgrel=1
-pkgdesc="Allows the creation and modification of TeX diagrams written using the pgf/TikZ macro library"
-arch=('i686' 'x86_64')
-url="https://tikzit.github.io/"
+pkgrel=2
+pkgdesc='Allows the creation and modification of TeX diagrams written using the pgf/TikZ macro library'
+arch=('x86_64')
+url='https://tikzit.github.io'
 license=('GPL2')
-depends=('qt5-base' 'poppler-qt5' 'hicolor-icon-theme')
+depends=(
+  qt5-base
+  poppler-qt5
+  hicolor-icon-theme
+)
 optdepends=('texlive-core: previews')
-source=("$pkgname-$pkgver.tar.gz::https://github.com/tikzit/tikzit/archive/v$pkgver.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/tikzit/tikzit/archive/v${pkgver}.tar.gz")
 sha256sums=('40e160f654a25a3a36d6a5361eef71a51f9d3b5eec3b42dd9246ec26402149d1')
 
 build() {
-  cd $pkgname-$pkgver
+  cd "${pkgname}-${pkgver}"
   qmake PREFIX=/usr \
         QMAKE_CFLAGS="${CFLAGS}" \
         QMAKE_CXXFLAGS="${CXXFLAGS}" -r
@@ -25,6 +30,7 @@ build() {
 }
 
 package() {
-  cd $pkgname-$pkgver
-  make INSTALL_ROOT="$pkgdir" install
+  cd "${pkgname}-${pkgver}"
+  make INSTALL_ROOT="${pkgdir}" install
 }
+# vim:set ts=2 sw=2 et:

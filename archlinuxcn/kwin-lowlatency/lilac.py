@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers="tildearrow")
 
     for line in edit_file('PKGBUILD'):
         if line.strip().startswith('groups='):

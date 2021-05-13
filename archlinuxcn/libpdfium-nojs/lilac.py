@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers=['selmf'])
     for line in edit_file('PKGBUILD'):
         if line.startswith('prepare()'):
             print('_' + line)

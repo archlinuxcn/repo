@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers='rodrigo21')
     add_provides(['libfdk-aac.so'])
 
 def post_build():

@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers='GordonGR')
     add_provides(['libdvdcss.so'])
 
 def post_build():

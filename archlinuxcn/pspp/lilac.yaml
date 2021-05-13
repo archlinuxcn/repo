@@ -1,11 +1,10 @@
 maintainers:
   - github: hubutui
 build_prefix: extra-x86_64
-pre_build: aur_pre_build
-post_build: aur_post_build
 update_on:
-  - source: aur
-    aur: pspp
+  - source: regex
+    url: "https://ftp.gnu.org/gnu/pspp"
+    regex: 'pspp-(\d+.\d+.\d+)'
 repo_depends:
   - spread-sheet-widget
 # vim:set ts=2 sw=2 et:

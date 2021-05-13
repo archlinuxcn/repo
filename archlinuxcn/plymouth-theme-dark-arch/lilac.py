@@ -5,11 +5,11 @@ from lilaclib import *
 def pre_build():
     old_pkgver, old_pkgrel = get_pkgver_and_pkgrel()
     update_pkgrel(0)
-    aur_pre_build()
+    aur_pre_build(maintainers='jsayol')
     aur_pkgver, aur_pkgrel = get_pkgver_and_pkgrel()
     update_pkgver_and_pkgrel(old_pkgver, updpkgsums=False)
     update_pkgrel(old_pkgrel)
-    aur_pre_build()
+    aur_pre_build(maintainers='jsayol')
     for line in edit_file('PKGBUILD'):
         if line.startswith('pkgrel='):
             print(f'real_pkgrel={aur_pkgrel}')
