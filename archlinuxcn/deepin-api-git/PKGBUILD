@@ -1,7 +1,7 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=deepin-api-git
-pkgver=5.4.5.r4.gc5b715b
+pkgver=5.4.5.r5.g5240c11
 pkgrel=1
 pkgdesc='Golang bindings for dde-daemon'
 arch=('x86_64')
@@ -50,7 +50,7 @@ prepare() {
   go get -v github.com/godbus/dbus/introspect
   go get -v github.com/godbus/dbus/prop
   go get -v github.com/disintegration/imaging
-
+  go get -v gopkg.in/yaml.v3
 }
 
 build(){
