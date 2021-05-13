@@ -1,245 +1,130 @@
-commit fc1417f1ee8d411a768486c301eaea2a69fae6b5 (HEAD -> master)
+commit f25f0b75bbeb485961dc139aed6b5b474552d043 (HEAD -> main)
 Author: Taiki Sugawara <buzz.taiki@gmail.com>
-Date:   Wed Mar 22 03:05:51 2017 +0900
+Date:   Wed May 12 18:26:11 2021 +0900
 
-    natspec patch
+    natspec patch for p7zip 17.x
 
-diff --git a/CPP/7zip/Archive/Zip/ZipIn.cpp b/CPP/7zip/Archive/Zip/ZipIn.cpp
-index c71c40f..3aaf4e8 100644
---- a/CPP/7zip/Archive/Zip/ZipIn.cpp
-+++ b/CPP/7zip/Archive/Zip/ZipIn.cpp
-@@ -2,6 +2,9 @@
- 
- #include "StdAfx.h"
- 
-+#include <iconv.h>
-+#include <natspec.h>
-+
- // #include <stdio.h>
- 
- #include "../../../Common/DynamicBuffer.h"
-@@ -16,6 +19,8 @@
- 
- #include "ZipIn.h"
- 
-+#include "myPrivate.h" // global_use_utf16_conversion
-+
- #define Get16(p) GetUi16(p)
- #define Get32(p) GetUi32(p)
- #define Get64(p) GetUi64(p)
-@@ -604,6 +609,19 @@ void CInArchive::ReadFileName(unsigned size, AString &s)
- }
- 
- 
-+void CInArchive::RecodeFileName(CItem &item) {
-+  if (item.IsUtf8()) return;
-+
-+  /* Convert filename from archive charset to current locale's charset */
-+  char *p = natspec_convert(item.Name.Ptr(), NULL, archive_oem_charset, 0);
-+  if (p) {
-+    item.Name = p;
-+    item.SetUtf8(true);
-+    USING_UTF8 = true;
-+    free(p);
-+  }
-+}
-+
- bool CInArchive::ReadExtra(unsigned extraSize, CExtraBlock &extraBlock,
-     UInt64 &unpackSize, UInt64 &packSize, UInt64 &localHeaderOffset, UInt32 &diskStartNumber)
- {
-@@ -745,6 +763,7 @@ bool CInArchive::ReadLocalItem(CItemEx &item)
-     HeadersWarning = true;
-   }
-   
-+  RecodeFileName(item);
-   return item.LocalFullHeaderSize <= ((UInt32)1 << 16);
- }
- 
-@@ -1017,6 +1036,7 @@ HRESULT CInArchive::ReadCdItem(CItemEx &item)
-   G32(34, item.ExternalAttrib);
-   G32(38, item.LocalHeaderPos);
-   ReadFileName(nameSize, item.Name);
-+  RecodeFileName(item);
-   
-   if (extraSize > 0)
-     ReadExtra(extraSize, item.CentralExtra, item.Size, item.PackSize, item.LocalHeaderPos, item.Disk);
-@@ -2112,7 +2132,10 @@ HRESULT CInArchive::ReadHeaders2(CObjectVector<CItemEx> &items)
- HRESULT CInArchive::Open(IInStream *stream, const UInt64 *searchLimit,
-     IArchiveOpenCallback *callback, CObjectVector<CItemEx> &items)
- {
--  _inBufMode = false;
-+  /* Guess archive filename charset */
-+  archive_oem_charset = natspec_get_charset_by_locale(NATSPEC_DOSCS, "");
-+
-+ _inBufMode = false;
-   items.Clear();
-   
-   Close();
-diff --git a/CPP/7zip/Archive/Zip/ZipIn.h b/CPP/7zip/Archive/Zip/ZipIn.h
-index 9b10905..8265c58 100644
---- a/CPP/7zip/Archive/Zip/ZipIn.h
-+++ b/CPP/7zip/Archive/Zip/ZipIn.h
-@@ -349,6 +349,9 @@ public:
- 
-     return true;
-   }
-+
-+  const char *archive_oem_charset;
-+  void RecodeFileName(CItem &item);
- };
-   
- }}
 diff --git a/CPP/7zip/Archive/Zip/ZipItem.cpp b/CPP/7zip/Archive/Zip/ZipItem.cpp
-index 12bc8ad..cf72102 100644
+index 353e895..44071f3 100644
 --- a/CPP/7zip/Archive/Zip/ZipItem.cpp
 +++ b/CPP/7zip/Archive/Zip/ZipItem.cpp
-@@ -15,6 +15,8 @@
- namespace NArchive {
- namespace NZip {
+@@ -1,9 +1,7 @@
+ // Archive/ZipItem.cpp
  
-+bool USING_UTF8 = true;
-+
- using namespace NFileHeader;
- 
- bool CExtraSubBlock::ExtractNtfsTime(unsigned index, FILETIME &ft) const
-diff --git a/CPP/7zip/Archive/Zip/ZipItem.h b/CPP/7zip/Archive/Zip/ZipItem.h
-index c134ec7..14d4dbe 100644
---- a/CPP/7zip/Archive/Zip/ZipItem.h
-+++ b/CPP/7zip/Archive/Zip/ZipItem.h
-@@ -14,6 +14,8 @@
- namespace NArchive {
- namespace NZip {
- 
-+extern bool USING_UTF8;
-+
- struct CVersion
- {
-   Byte Version;
-diff --git a/CPP/7zip/Archive/Zip/ZipOut.cpp b/CPP/7zip/Archive/Zip/ZipOut.cpp
-index 2a1ba2c..c720bd3 100644
---- a/CPP/7zip/Archive/Zip/ZipOut.cpp
-+++ b/CPP/7zip/Archive/Zip/ZipOut.cpp
-@@ -2,10 +2,15 @@
+-#if (!defined _WIN32) && (!defined __CYGWIN__) && (!defined __APPLE__)
+ #include <iconv.h>
+-#include <locale.h>
+-#endif
++#include <natspec.h>
  
  #include "StdAfx.h"
  
-+#include <iconv.h>
-+#include <natspec.h>
-+
- #include "../../Common/OffsetStream.h"
- 
- #include "ZipOut.h"
- 
-+#include "myPrivate.h" // global_use_utf16_conversion
-+
- namespace NArchive {
- namespace NZip {
- 
-@@ -18,9 +23,24 @@ HRESULT COutArchive::Create(IOutStream *outStream)
-   m_OutBuffer.SetStream(outStream);
-   m_OutBuffer.Init();
- 
-+  /* Guess archive filename charset */
-+  archive_oem_charset = natspec_get_charset_by_locale(NATSPEC_DOSCS, "");
-+
-   return m_Stream->Seek(0, STREAM_SEEK_CUR, &m_Base);
- }
- 
-+void COutArchive::RecodeFileName(CItem &item) {
-+  if (USING_UTF8) return;
-+
-+  /* Convert filename from current locale charset to archive charset. */
-+  char *p = natspec_convert(item.Name.Ptr(), archive_oem_charset, NULL, 0);
-+  if (p) {
-+    item.Name = p;
-+    item.SetUtf8(false);
+@@ -355,87 +353,15 @@ void CItem::GetUnicodeString(UString &res, const AString &s, bool isComment, boo
+     #endif
+   }
+   
+-  #if (!defined _WIN32) && (!defined __CYGWIN__) && (!defined __APPLE__)
+-  // Convert OEM char set to UTF-8 if needed
+-  // Use system locale to select code page
+-
+-  Byte hostOS = GetHostOS();
+-  if (!isUtf8 && ((hostOS == NFileHeader::NHostOS::kFAT) || (hostOS == NFileHeader::NHostOS::kNTFS))) {
+-
+-    const char *oemcp;
+-    oemcp = getenv("OEMCP");
+-    if (!oemcp) {
+-      oemcp = "CP437\0"; // CP name is 6 chars max
+-
+-      const char *lc_to_cp_table[] = {
+-      "af_ZA", "CP850", "ar_SA", "CP720", "ar_LB", "CP720", "ar_EG", "CP720",
+-      "ar_DZ", "CP720", "ar_BH", "CP720", "ar_IQ", "CP720", "ar_JO", "CP720",
+-      "ar_KW", "CP720", "ar_LY", "CP720", "ar_MA", "CP720", "ar_OM", "CP720",
+-      "ar_QA", "CP720", "ar_SY", "CP720", "ar_TN", "CP720", "ar_AE", "CP720",
+-      "ar_YE", "CP720","ast_ES", "CP850", "az_AZ", "CP866", "az_AZ", "CP857",
+-      "be_BY", "CP866", "bg_BG", "CP866", "br_FR", "CP850", "ca_ES", "CP850",
+-      "zh_CN", "CP936", "zh_TW", "CP950", "kw_GB", "CP850", "cs_CZ", "CP852",
+-      "cy_GB", "CP850", "da_DK", "CP850", "de_AT", "CP850", "de_LI", "CP850",
+-      "de_LU", "CP850", "de_CH", "CP850", "de_DE", "CP850", "el_GR", "CP737",
+-      "en_AU", "CP850", "en_CA", "CP850", "en_GB", "CP850", "en_IE", "CP850",
+-      "en_JM", "CP850", "en_BZ", "CP850", "en_PH", "CP437", "en_ZA", "CP437",
+-      "en_TT", "CP850", "en_US", "CP437", "en_ZW", "CP437", "en_NZ", "CP850",
+-      "es_PA", "CP850", "es_BO", "CP850", "es_CR", "CP850", "es_DO", "CP850",
+-      "es_SV", "CP850", "es_EC", "CP850", "es_GT", "CP850", "es_HN", "CP850",
+-      "es_NI", "CP850", "es_CL", "CP850", "es_MX", "CP850", "es_ES", "CP850",
+-      "es_CO", "CP850", "es_ES", "CP850", "es_PE", "CP850", "es_AR", "CP850",
+-      "es_PR", "CP850", "es_VE", "CP850", "es_UY", "CP850", "es_PY", "CP850",
+-      "et_EE", "CP775", "eu_ES", "CP850", "fa_IR", "CP720", "fi_FI", "CP850",
+-      "fo_FO", "CP850", "fr_FR", "CP850", "fr_BE", "CP850", "fr_CA", "CP850",
+-      "fr_LU", "CP850", "fr_MC", "CP850", "fr_CH", "CP850", "ga_IE", "CP437",
+-      "gd_GB", "CP850", "gv_IM", "CP850", "gl_ES", "CP850", "he_IL", "CP862",
+-      "hr_HR", "CP852", "hu_HU", "CP852", "id_ID", "CP850", "is_IS", "CP850",
+-      "it_IT", "CP850", "it_CH", "CP850", "iv_IV", "CP437", "ja_JP", "CP932",
+-      "kk_KZ", "CP866", "ko_KR", "CP949", "ky_KG", "CP866", "lt_LT", "CP775",
+-      "lv_LV", "CP775", "mk_MK", "CP866", "mn_MN", "CP866", "ms_BN", "CP850",
+-      "ms_MY", "CP850", "nl_BE", "CP850", "nl_NL", "CP850", "nl_SR", "CP850",
+-      "nn_NO", "CP850", "nb_NO", "CP850", "pl_PL", "CP852", "pt_BR", "CP850",
+-      "pt_PT", "CP850", "rm_CH", "CP850", "ro_RO", "CP852", "ru_RU", "CP866",
+-      "sk_SK", "CP852", "sl_SI", "CP852", "sq_AL", "CP852", "sr_RS", "CP855",
+-      "sr_RS", "CP852", "sv_SE", "CP850", "sv_FI", "CP850", "sw_KE", "CP437",
+-      "th_TH", "CP874", "tr_TR", "CP857", "tt_RU", "CP866", "uk_UA", "CP866",
+-      "ur_PK", "CP720", "uz_UZ", "CP866", "uz_UZ", "CP857", "vi_VN", "CP1258",
+-      "wa_BE", "CP850", "zh_HK", "CP950", "zh_SG", "CP936"};
+-      int table_len = sizeof(lc_to_cp_table) / sizeof(char *);
+-      int lc_len, i;
+-
+-      char *lc = setlocale(LC_CTYPE, "");
+-
+-      if (lc && lc[0]) {
+-          // Compare up to the dot, if it exists, e.g. en_US.UTF-8
+-          for (lc_len = 0; lc[lc_len] != '.' && lc[lc_len] != '\0'; ++lc_len)
+-              ;
+-          for (i = 0; i < table_len; i += 2)
+-              if (strncmp(lc, lc_to_cp_table[i], lc_len) == 0)
+-                  oemcp = lc_to_cp_table[i + 1];
+-      }
+-    }
+-
+-    iconv_t cd;
+-    if ((cd = iconv_open("UTF-8", oemcp)) != (iconv_t)-1) {
+-
+-      AString s_utf8;
+-      const char* src = s.Ptr();
+-      size_t slen = s.Len();
+-      size_t dlen = slen * 4;
+-      const char* dest = s_utf8.GetBuf_SetEnd(dlen + 1); // (source length * 4) + null termination
+-
+-      size_t done = iconv(cd, (char**)&src, &slen, (char**)&dest, &dlen);
+-      bzero((size_t*)dest + done, 1);
+-
+-      iconv_close(cd);
+-
+-      if (ConvertUTF8ToUnicode(s_utf8, res) || ignore_Utf8_Errors)
+-        return;
+-    }    
++  if (!isUtf8) {
++    const char *oem_charset = natspec_get_charset_by_locale(NATSPEC_DOSCS, "");
++    char *p = natspec_convert(s.Ptr(), NULL, oem_charset, 0);
++    AString utf = p;
 +    free(p);
-+  }
-+}
++    if (ConvertUTF8ToUnicode(utf, res))
++      return;
+   }
+-  #endif
+-  
 +
- void COutArchive::MoveCurPos(UInt64 distanceToMove)
- {
-   m_CurPos += distanceToMove; // test overflow
-diff --git a/CPP/7zip/Archive/Zip/ZipOut.h b/CPP/7zip/Archive/Zip/ZipOut.h
-index 056d0d0..a2bb3af 100644
---- a/CPP/7zip/Archive/Zip/ZipOut.h
-+++ b/CPP/7zip/Archive/Zip/ZipOut.h
-@@ -81,6 +81,9 @@ public:
- 
-   void CreateStreamForCompressing(IOutStream **outStream);
-   void CreateStreamForCopying(ISequentialOutStream **outStream);
-+
-+  const char *archive_oem_charset;
-+  void RecodeFileName(CItem &item);
- };
- 
- }}
-diff --git a/CPP/7zip/Archive/Zip/ZipUpdate.cpp b/CPP/7zip/Archive/Zip/ZipUpdate.cpp
-index 77df016..f86d235 100644
---- a/CPP/7zip/Archive/Zip/ZipUpdate.cpp
-+++ b/CPP/7zip/Archive/Zip/ZipUpdate.cpp
-@@ -79,6 +79,8 @@ static void SetFileHeader(
-   else
-     isDir = item.IsDir();
- 
-+  archive.RecodeFileName(item);
-+
-   item.LocalHeaderPos = archive.GetCurPos();
-   item.MadeByVersion.HostOS = kMadeByHostOS;
-   item.MadeByVersion.Version = NFileHeader::NCompressionMethod::kMadeByProgramVersion;
-@@ -364,6 +366,7 @@ static HRESULT UpdateItemOldData(
-     item.Ntfs_ATime = ui.Ntfs_ATime;
-     item.Ntfs_CTime = ui.Ntfs_CTime;
-     item.NtfsTimeIsDefined = ui.NtfsTimeIsDefined;
-+    archive.RecodeFileName(item);
- 
-     item.CentralExtra.RemoveUnknownSubBlocks();
-     item.LocalExtra.RemoveUnknownSubBlocks();
-@@ -383,6 +386,8 @@ static HRESULT UpdateItemOldData(
-     if (!packStream)
-       return E_NOTIMPL;
-     
-+    archive.RecodeFileName(item);
-+
-     // set new header position
-     item.LocalHeaderPos = archive.GetCurPos();
-     
-diff --git a/makefile.linux_amd64_asm b/makefile.linux_amd64_asm
-index 075c6a8..3de8ccf 100644
---- a/makefile.linux_amd64_asm
-+++ b/makefile.linux_amd64_asm
-@@ -19,7 +19,7 @@ ASM=yasm -f elf -m amd64 -Dx64
- 
- PRE_COMPILED_HEADER=StdAfx.h.gch
- 
--LOCAL_LIBS=-lpthread
-+LOCAL_LIBS=-lpthread -lnatspec
- LOCAL_LIBS_DLL=$(LOCAL_LIBS) -ldl
- 
- CPU=x64
-diff --git a/makefile.linux_any_cpu_gcc_4.X b/makefile.linux_any_cpu_gcc_4.X
-index be093b5..e384b74 100644
---- a/makefile.linux_any_cpu_gcc_4.X
-+++ b/makefile.linux_any_cpu_gcc_4.X
-@@ -19,7 +19,7 @@ LINK_SHARED=-fPIC -shared
- 
- PRE_COMPILED_HEADER=StdAfx.h.gch
+   if (isUtf8)
+     if (ConvertUTF8ToUnicode(s, res) || ignore_Utf8_Errors)
+       return;
+diff --git a/makefile.machine b/makefile.machine
+index a89b568..3e12592 100644
+--- a/makefile.machine
++++ b/makefile.machine
+@@ -16,7 +16,7 @@ CC=gcc
+ CC_SHARED=-fPIC
+ LINK_SHARED=-fPIC -shared
  
 -LOCAL_LIBS=-lpthread
 +LOCAL_LIBS=-lpthread -lnatspec
  LOCAL_LIBS_DLL=$(LOCAL_LIBS) -ldl
  
  OBJ_CRC32=$(OBJ_CRC32_C)
-diff --git a/makefile.linux_x86_asm_gcc_4.X b/makefile.linux_x86_asm_gcc_4.X
-index 1ac339b..4b37a3f 100644
---- a/makefile.linux_x86_asm_gcc_4.X
-+++ b/makefile.linux_x86_asm_gcc_4.X
-@@ -22,7 +22,7 @@ ASM=nasm -f elf
- 
- PRE_COMPILED_HEADER=StdAfx.h.gch
- 
--LOCAL_LIBS=-lpthread
-+LOCAL_LIBS=-lpthread -lnatspec
- LOCAL_LIBS_DLL=$(LOCAL_LIBS) -ldl
- 
- CPU=x86

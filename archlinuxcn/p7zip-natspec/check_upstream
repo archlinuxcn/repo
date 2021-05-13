@@ -4,9 +4,9 @@
 
 set -e
 
-fname=$_pkgname-$pkgver-$_upstream_pkgrel-${arch[0]}.pkg.tar.xz
+fname=$_pkgname-1:$pkgver-$_upstream_pkgrel-${arch[0]}.pkg.tar.zst
 url=https://www.archlinux.org/packages/extra/${arch[0]}/$_pkgname/download/
-remote_fname=$(curl -s -I "$url" | tr -d '\r' | awk -F/ 'tolower($0) ~ /^location:/ {print $NF}')
+remote_fname=$(curl -s -LI "$url" | tr -d '\r' | awk -F/ 'tolower($0) ~ /^location:/ {print $NF}' | tail -n1)
 
 if [ "$fname" != "$remote_fname" ]; then
   echo upstream is not "$fname" but "$remote_fname" 1>&2
