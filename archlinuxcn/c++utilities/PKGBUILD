@@ -5,7 +5,7 @@
 
 _reponame=cpp-utilities
 pkgname=c++utilities
-pkgver=5.10.2
+pkgver=5.10.3
 pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Common C++ classes and routines such as argument parser, IO and conversion utilities'
@@ -16,7 +16,7 @@ makedepends=('cmake' 'ninja')
 checkdepends=('cppunit')
 url="https://github.com/Martchus/${_reponame}"
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('65c34689a2d88dc0f7bb70e5bd5a0128ee6e97746504d10239d9e6820a835d54')
+sha256sums=('7a9f063227383f9882c9936af7d9d95054dc4a33bdd01344b962ee4b6dd98f6d')
 
 prepare() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
