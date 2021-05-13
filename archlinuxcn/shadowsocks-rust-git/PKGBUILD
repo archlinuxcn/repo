@@ -20,7 +20,7 @@ pkgver() {
 
 build() {
     cd "${pkgname%-git}"
-    cargo build --release
+    cargo build --release --features "local-http-rustls local-redir local-dns dns-over-tls dns-over-https"
 }
 
 package() {

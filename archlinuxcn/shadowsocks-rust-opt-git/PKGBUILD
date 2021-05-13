@@ -20,7 +20,7 @@ pkgver() {
 
 build() {
     cd "${pkgname%-opt-git}"
-    RUSTFLAGS="-C opt-level=2 -C target-cpu=x86-64-v3" cargo build --release
+    RUSTFLAGS="-C opt-level=2 -C target-cpu=x86-64-v3" cargo build --release --features "local-http-rustls local-redir local-dns dns-over-tls dns-over-https"
 }
 
 package() {
