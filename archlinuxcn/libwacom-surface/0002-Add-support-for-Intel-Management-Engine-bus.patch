@@ -1,0 +1,100 @@
+From 02df4e0f272dff001ee280ab93e8e1c4600375ff Mon Sep 17 00:00:00 2001
+From: Maximilian Luz <luzmaximilian@gmail.com>
+Date: Sat, 1 Jun 2019 21:17:15 +0200
+Subject: [PATCH 02/11] Add support for Intel Management Engine bus
+
+Add support for devices connected via the Intel Management Engine (MEI).
+This is required to support IPTS based devices, such as (among others)
+the Microsoft Surface Books, Surface Pro 5 and 6, and Surface Laptops.
+---
+ data/test_data_files.py      | 2 +-
+ libwacom/libwacom-database.c | 4 ++++
+ libwacom/libwacom.c          | 5 +++++
+ libwacom/libwacom.h          | 1 +
+ test/test-tablet-validity.c  | 1 +
+ 5 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/data/test_data_files.py b/data/test_data_files.py
+index cb5ca6d..466b18a 100755
+--- a/data/test_data_files.py
++++ b/data/test_data_files.py
+@@ -29,6 +29,6 @@ def test_device_match(tabletfile):
+             continue
+ 
+         bus, vid, pid = match.split(':')[:3]  # skip the name part of the match
+-        assert bus in ['usb', 'bluetooth', 'i2c', 'serial', 'virt'], f'{tabletfile}: unknown bus type'
++        assert bus in ['usb', 'bluetooth', 'i2c', 'serial', 'virt', 'mei'], f'{tabletfile}: unknown bus type'
+         assert re.match('[0-9a-f]{4}', vid), f'{tabletfile}: {vid} must be lowercase hex'
+         assert re.match('[0-9a-f]{4}', pid), f'{tabletfile}: {pid} must be lowercase hex'
+diff --git a/libwacom/libwacom-database.c b/libwacom/libwacom-database.c
+index 17571b6..4c6df4e 100644
+--- a/libwacom/libwacom-database.c
++++ b/libwacom/libwacom-database.c
+@@ -132,6 +132,8 @@ bus_from_str (const char *str)
+ 		return WBUSTYPE_I2C;
+ 	if (streq(str, "virt"))
+ 		return WBUSTYPE_VIRTUAL;
++	if (strcmp (str, "mei") == 0)
++		return WBUSTYPE_MEI;
+ 	return WBUSTYPE_UNKNOWN;
+ }
+ 
+@@ -152,6 +154,8 @@ bus_to_str (WacomBusType bus)
+ 		return "i2c";
+ 	case WBUSTYPE_VIRTUAL:
+ 		return "virt";
++	case WBUSTYPE_MEI:
++		return "mei";
+ 	}
+ 	g_assert_not_reached ();
+ }
+diff --git a/libwacom/libwacom.c b/libwacom/libwacom.c
+index 7b97bb1..d84e8fa 100644
+--- a/libwacom/libwacom.c
++++ b/libwacom/libwacom.c
+@@ -151,6 +151,10 @@ get_bus_vid_pid (GUdevDevice  *device,
+ 		*bus = WBUSTYPE_VIRTUAL;
+ 		retval = TRUE;
+ 		break;
++	case 68:
++		*bus = WBUSTYPE_MEI;
++		retval = TRUE;
++		break;
+ 	}
+ 
+ out:
+@@ -770,6 +774,7 @@ static void print_match(int fd, const WacomMatch *match)
+ 		case WBUSTYPE_SERIAL:		bus_name = "serial";	break;
+ 		case WBUSTYPE_I2C:		bus_name = "i2c";	break;
+ 		case WBUSTYPE_VIRTUAL:		bus_name = "virt";	break;
++		case WBUSTYPE_MEI:		bus_name = "mei";	break;
+ 		case WBUSTYPE_UNKNOWN:		bus_name = "unknown";	break;
+ 		default:			g_assert_not_reached(); break;
+ 	}
+diff --git a/libwacom/libwacom.h b/libwacom/libwacom.h
+index 24e99cd..0eee2fd 100644
+--- a/libwacom/libwacom.h
++++ b/libwacom/libwacom.h
+@@ -118,6 +118,7 @@ typedef enum {
+ 	WBUSTYPE_BLUETOOTH,	/**< Bluetooth tablet */
+ 	WBUSTYPE_I2C,		/**< I2C tablet */
+ 	WBUSTYPE_VIRTUAL,	/**< Virtual (uinput) tablet */
++	WBUSTYPE_MEI,		/**< MEI */
+ } WacomBusType;
+ 
+ /**
+diff --git a/test/test-tablet-validity.c b/test/test-tablet-validity.c
+index 3883341..352bc43 100644
+--- a/test/test-tablet-validity.c
++++ b/test/test-tablet-validity.c
+@@ -180,6 +180,7 @@ assert_vidpid(WacomBusType bus, int vid, int pid)
+ 		case WBUSTYPE_BLUETOOTH:
+ 		case WBUSTYPE_I2C:
+ 		case WBUSTYPE_VIRTUAL:
++		case WBUSTYPE_MEI:
+ 			g_assert_cmpint(vid, >, 0);
+ 			g_assert_cmpint(pid, >, 0);
+ 			break;
+-- 
+2.30.1
+

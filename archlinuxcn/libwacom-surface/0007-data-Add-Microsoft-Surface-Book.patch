@@ -1,0 +1,33 @@
+From da5c0255ab397bc5537861f9b48d3036f2fc8e98 Mon Sep 17 00:00:00 2001
+From: Maximilian Luz <luzmaximilian@gmail.com>
+Date: Tue, 18 Aug 2020 20:19:38 +0200
+Subject: [PATCH 07/11] data: Add Microsoft Surface Book
+
+---
+ data/surface-book.tablet | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 data/surface-book.tablet
+
+diff --git a/data/surface-book.tablet b/data/surface-book.tablet
+new file mode 100644
+index 0000000..e2a5401
+--- /dev/null
++++ b/data/surface-book.tablet
+@@ -0,0 +1,14 @@
++# This is for the Microsoft Surface Book (1)
++
++[Device]
++Name=Microsoft Surface Book
++Class=PenDisplay
++DeviceMatch=virt:1b96:005e;mei:1b96:005e
++Width=11
++Height=7
++IntegratedIn=Display;System;
++
++[Features]
++Stylus=true
++Touch=true
++Buttons=0
+-- 
+2.30.1
+

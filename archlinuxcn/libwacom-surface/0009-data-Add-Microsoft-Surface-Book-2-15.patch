@@ -1,0 +1,33 @@
+From 13e81b74340251dba524b6f414e3452e93458929 Mon Sep 17 00:00:00 2001
+From: Maximilian Luz <luzmaximilian@gmail.com>
+Date: Tue, 18 Aug 2020 20:20:13 +0200
+Subject: [PATCH 09/11] data: Add Microsoft Surface Book 2 (15")
+
+---
+ data/surface-book2-15.tablet | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 data/surface-book2-15.tablet
+
+diff --git a/data/surface-book2-15.tablet b/data/surface-book2-15.tablet
+new file mode 100644
+index 0000000..ad98cc7
+--- /dev/null
++++ b/data/surface-book2-15.tablet
+@@ -0,0 +1,14 @@
++# This is for the Microsoft Surface Book 2 15-inch model
++
++[Device]
++Name=Microsoft Surface Book 2 (15")
++Class=PenDisplay
++DeviceMatch=virt:045e:0020;mei:045e:0020
++Width=12
++Height=8
++IntegratedIn=Display;System;
++
++[Features]
++Stylus=true
++Touch=true
++Buttons=0
+-- 
+2.30.1
+

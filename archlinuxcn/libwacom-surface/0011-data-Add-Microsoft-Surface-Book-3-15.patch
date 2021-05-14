@@ -1,0 +1,33 @@
+From d105e4c6fd7512eefa4c703224a24cea19e0f457 Mon Sep 17 00:00:00 2001
+From: Maximilian Luz <luzmaximilian@gmail.com>
+Date: Tue, 18 Aug 2020 20:20:42 +0200
+Subject: [PATCH 11/11] data: Add Microsoft Surface Book 3 (15")
+
+---
+ data/surface-book3-15.tablet | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 data/surface-book3-15.tablet
+
+diff --git a/data/surface-book3-15.tablet b/data/surface-book3-15.tablet
+new file mode 100644
+index 0000000..291321f
+--- /dev/null
++++ b/data/surface-book3-15.tablet
+@@ -0,0 +1,14 @@
++# This is for the Microsoft Surface Book 3 15-inch model
++
++[Device]
++Name=Microsoft Surface Book 3 (15")
++Class=PenDisplay
++DeviceMatch=virt:045e:09b1;mei:045e:09b1
++Width=12
++Height=8
++IntegratedIn=Display;System;
++
++[Features]
++Stylus=false
++Touch=true
++Buttons=0
+-- 
+2.30.1
+

@@ -1,0 +1,33 @@
+From 0b12a623e70d877fa6bf1df615d06229f7b2eb83 Mon Sep 17 00:00:00 2001
+From: Maximilian Luz <luzmaximilian@gmail.com>
+Date: Tue, 18 Aug 2020 20:19:13 +0200
+Subject: [PATCH 06/11] data: Add Microsoft Surface pro 7
+
+---
+ data/surface-pro7.tablet | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 data/surface-pro7.tablet
+
+diff --git a/data/surface-pro7.tablet b/data/surface-pro7.tablet
+new file mode 100644
+index 0000000..7961379
+--- /dev/null
++++ b/data/surface-pro7.tablet
+@@ -0,0 +1,14 @@
++# This is for the Microsoft Surface Pro 7
++
++[Device]
++Name=Microsoft Surface Pro 7
++Class=PenDisplay
++DeviceMatch=virt:045e:099f;mei:045e:099f
++Width=10
++Height=6
++IntegratedIn=Display;System;
++
++[Features]
++Stylus=false
++Touch=true
++Buttons=0
+-- 
+2.30.1
+
