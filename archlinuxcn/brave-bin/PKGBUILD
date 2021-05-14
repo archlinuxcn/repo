@@ -9,7 +9,7 @@
 
 pkgname=brave-bin
 pkgver=1.24.85
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Web browser that blocks ads and trackers by default (binary release)."
 arch=("x86_64")
@@ -28,7 +28,7 @@ source=("$pkgname-$pkgver.zip::https://github.com/brave/brave-browser/releases/d
 options=(!strip)
 sha512sums=("efb94318bcedac6c2c467e7c7addafb465ff777ff17a13a3d771ae43f11cac403de1c17a540d0c8f4a8a400b551d973a9e8c66a7c2c0be3d3cf6c7fef4be372f"
             "6912f1e0b20f16078e15ce75eca61b29fd5c415c63df9bd69a547d402bf00599fdcbe1c0898b8d2dc865dc1b604f81e2ec21525ecc61a0fcafba0d9f87434540"
-            "137e14b6ff8faf19fcbfc2adcde73a3fb8f6529e9662c8eed04fc4a891073775c20b79c7149fb617465f53b980a8e46114c1c8eb704be7755da8d22a974761dd"
+            "847b3f5f7c58b36d45579d75bd0086e21bf6aef3948d24a1e8f091bc9d53dfc1e430a0a6cc43dc02ae9d9041aabdf924ff47704993d747e28329fe3c1d70e23e"
             "d7bef52e336bd908d24bf3a084a1fc480831d27a3c80af4c31872465b6a0ce39bdf298e620ae9865526c974465807559cc75610b835e60b4358f65a8a8ff159e")
 noextract=("$pkgname-$pkgver.zip")
 
@@ -49,7 +49,7 @@ package() {
 
     install -Dm0755 "$pkgname.sh" "$pkgdir/usr/bin/brave"
     install -Dm0644 -t "$pkgdir/usr/share/applications" "brave-browser.desktop"
-    install -Dm0644 "logo.png" "$pkgdir/usr/share/pixmaps/brave.png"
+    install -Dm0644 "logo.png" "$pkgdir/usr/share/pixmaps/brave-desktop.png"
     LICENSES_DIR="$pkgdir/usr/share/licenses/$pkgname"
     mkdir -p "$LICENSES_DIR"
     if [ -f "$pkgdir/usr/lib/$pkgname/LICENSE" ] && [ -f "$pkgdir/usr/lib/$pkgname/LICENSES.chromium.html" ]; then
