@@ -9,7 +9,7 @@ from lilaclib import *
 
 #build_prefix = 'extra-x86_64'
 def pre_build():
-  aur_pre_build()
+  aur_pre_build(maintainers=['imlonghao'])
   add_makedepends(["imagemagick"])
 
 #post_build = aur_post_build
