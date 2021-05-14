@@ -4,7 +4,7 @@
 _pkgname=drawio-desktop
 pkgname=drawio-desktop-bin
 pkgver=14.5.1
-pkgrel=2
+pkgrel=3
 pkgdesc='Diagram drawing application built on web technology'
 arch=('x86_64')
 url='https://github.com/jgraph/drawio'
@@ -30,6 +30,5 @@ prepare() {
 package() {
   cp -rp "${srcdir}/opt" "${pkgdir}"
   cp -rp "${srcdir}/usr" "${pkgdir}"
-  install -Dm644 "${srcdir}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
