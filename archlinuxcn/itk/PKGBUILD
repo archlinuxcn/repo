@@ -1,0 +1,87 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=ITK
+pkgname=(itk python-itk)
+pkgver=5.2.0
+pkgrel=2
+pkgdesc="An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis"
+arch=('x86_64')
+url='https://www.itk.org'
+license=('Apache')
+depends=(
+  castxml
+  eigen
+  expat
+  fftw
+  gdcm
+  hdf5
+  intel-mkl-static
+  libpng
+  libtiff
+  ocl-icd
+)
+makedepends=(
+  cmake
+  git
+  gtest
+  opencl-headers
+  subversion
+  swig
+)
+#options=(!emptydirs)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/InsightSoftwareConsortium/ITK/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('a055280f37ce187d29bc5ed4c6732094d4285b583ec7874a193bea90da2a455c9cb514e313fe20c65b5f65821eae6040a86815d07450e82498509bc1e4cd8d3b')
+
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
+
+build() {
+  cmake_opts=(
+    -DBUILD_SHARED_LIBS=ON
+    -DBUILD_TESTING=OFF
+    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_C_COMPILER=gcc
+    -DCMAKE_CXX_COMPILER=g++
+    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_SKIP_INSTALL_RPATH=ON
+    -DITK_BUILD_DEFAULT_MODULES=ON
+    -DITK_USE_MKL=ON
+    -DITK_USE_SYSTEM_CASTXML=ON
+    -DITK_USE_SYSTEM_DOUBLECONVERSION=OFF
+    -DITK_USE_SYSTEM_EIGEN=ON
+    -DITK_USE_SYSTEM_EXPAT=ON
+    -DITK_USE_SYSTEM_FFTW=ON
+    -DITK_USE_SYSTEM_GDCM=ON
+    -DITK_USE_SYSTEM_GOOGLETEST=ON
+    -DITK_USE_SYSTEM_HDF5=ON
+    -DITK_USE_SYSTEM_JPEG=ON
+    -DITK_USE_SYSTEM_PNG=ON
+    -DITK_USE_SYSTEM_SWIG=ON
+    -DITK_USE_SYSTEM_TIFF=ON
+    -DITK_USE_SYSTEM_ZLIB=ON
+    -DITK_WRAP_unsigned_short=ON
+    -DITK_WRAP_double=ON
+    -DITK_WRAP_IMAGE_DIMS="2;3;4"
+    -DITK_WRAP_PYTHON=ON
+)
+
+  cmake -B "build" -S ${srcdir}/${_pkgname}-${pkgver} \
+    ${cmake_opts[@]} \
+    -DITK_USE_GPU=ON
+  make -C "${srcdir}/build"
+}
+
+package_itk() {
+  make -C "${srcdir}/build" DESTDIR="${pkgdir}" install
+  rm -rf "${pkgdir}/usr/lib/python$(get_pyver)"
+}
+
+package_python-itk() {
+  depends+=(itk=${pkgver})
+
+  make -C "${srcdir}/build" DESTDIR="${srcdir}/dist" install
+  install -dm755 "${pkgdir}/usr/lib"
+  cp -a "${srcdir}/dist/usr/lib/python$(get_pyver)" "${pkgdir}/usr/lib/python$(get_pyver)"
+}
+# vim:set ts=2 sw=2 et:
