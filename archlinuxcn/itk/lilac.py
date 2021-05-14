@@ -2,11 +2,12 @@
 
 from lilaclib import *
 
+
 def pre_build():
-  update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+    update_pkgrel()
+
 
 def post_build():
-  git_add_files('PKGBUILD')
-  git_commit()
+    git_pkgbuild_commit()
 # vim:set ts=2 sw=2 et:
 
