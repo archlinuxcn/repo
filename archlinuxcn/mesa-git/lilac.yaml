@@ -12,6 +12,7 @@ repo_depends:
   - libclc-git
   - llvm-git: clang-git
   - llvm-git: llvm-libs-git
+  - llvm-git
 update_on:
   - source: cmd # Update every other day
     cmd: python -c "import time; print(int(time.time()) // (2 * 24 * 60 * 60))"
