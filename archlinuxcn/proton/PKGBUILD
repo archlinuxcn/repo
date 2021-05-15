@@ -4,9 +4,9 @@
 
 pkgname=proton
 # Upstream version
-_pkgver='6.3-3'
+_pkgver='6.3-4'
 # Arch - no hyphens
-pkgver=6.3.3
+pkgver=6.3.4
 pkgrel=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 arch=('x86_64')
@@ -22,7 +22,7 @@ makedepends=(
 source=(
 	"https://github.com/ValveSoftware/Proton/archive/$pkgname-$_pkgver.tar.gz"
 )
-sha512sums=('ef62405c8ea79bb8f9511b13412534b657e13bf1b011d635ca87c528dae106641ea05e16ba3204ac09a7bbac51c561b26048e5e07d7fa66959d413c38ed196ab')
+sha512sums=('b11c0e499bb0816b6fc10e1281773f86fd6f9062c210337ab338192475f4888ae80df93b4ef37ecf7d61e24b540f6ec69cf447cad8a3b5b1bbe5a3674347327c')
 
 prepare() {
 	cd "Proton-$pkgname-$_pkgver"
