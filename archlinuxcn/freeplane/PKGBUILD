@@ -3,7 +3,7 @@
 
 pkgname=freeplane
 pkgver=1.9.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A Java mindmapping tool"
 arch=('any')
 url="http://freeplane.sourceforge.net"
@@ -28,7 +28,7 @@ package() {
   mkdir -p "${pkgdir}/usr/share/freeplane/doc/Images/mouse"
   mkdir -p "${pkgdir}/usr/share/freeplane/doc/Images/other/workspace/output"
 
-  cd ${srcdir}/${pkgname}-${pkgver}
+  cd ""${srcdir}/${pkgname}-${pkgver}""
   # Copy plugins
   find plugins -type f | while read file ; do
     install -Dm644 "${file}" "${pkgdir}/usr/share/freeplane/${file}"
@@ -38,33 +38,34 @@ package() {
     install -Dm644 "${file}" "${pkgdir}/usr/share/freeplane/${file}"
   done
   # Copy various
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/framework.jar ${pkgdir}/usr/share/freeplane/framework.jar
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/freeplane.l4j.ini ${pkgdir}/usr/share/freeplane/freeplane.l4j.ini
-  install -Dm755 ${srcdir}/${pkgname}-${pkgver}/freeplane.policy ${pkgdir}/usr/share/freeplane/freeplane.policy
-  install -Dm755 ${srcdir}/${pkgname}-${pkgver}/freeplane.sh ${pkgdir}/usr/share/freeplane/freeplane.sh
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/freeplaneConsole.l4j.ini ${pkgdir}/usr/share/freeplane/freeplaneConsole.l4j.ini
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/freeplaneIcons.dll ${pkgdir}/usr/share/freeplane/freeplaneIcons.dll
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/freeplanelauncher.jar ${pkgdir}/usr/share/freeplane/freeplanelauncher.jar
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/gitinfo.txt ${pkgdir}/usr/share/freeplane/gitinfo.txt
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/init.xargs ${pkgdir}/usr/share/freeplane/init.xargs
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/license.txt ${pkgdir}/usr/share/freeplane/licence.txt
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/props.xargs ${pkgdir}/usr/share/freeplane/props.xargs
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/framework.jar "${pkgdir}"/usr/share/freeplane/framework.jar
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/freeplane.l4j.ini "${pkgdir}"/usr/share/freeplane/freeplane.l4j.ini
+  install -Dm755 "${srcdir}/${pkgname}-${pkgver}"/freeplane.policy "${pkgdir}"/usr/share/freeplane/freeplane.policy
+  install -Dm755 "${srcdir}/${pkgname}-${pkgver}"/freeplane.sh "${pkgdir}"/usr/share/freeplane/freeplane.sh
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/freeplaneConsole.l4j.ini "${pkgdir}"/usr/share/freeplane/freeplaneConsole.l4j.ini
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/freeplaneIcons.dll "${pkgdir}"/usr/share/freeplane/freeplaneIcons.dll
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/freeplanelauncher.jar "${pkgdir}"/usr/share/freeplane/freeplanelauncher.jar
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/gitinfo.txt "${pkgdir}"/usr/share/freeplane/gitinfo.txt
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/init.xargs "${pkgdir}"/usr/share/freeplane/init.xargs
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/license.txt "${pkgdir}"/usr/share/freeplane/licence.txt
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/props.xargs "${pkgdir}"/usr/share/freeplane/props.xargs
   # Copy core
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/core/org.freeplane.core/META-INF/* ${pkgdir}/usr/share/freeplane/core/org.freeplane.core/META-INF/
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/core/org.freeplane.core/lib/* ${pkgdir}/usr/share/freeplane/core/org.freeplane.core/lib
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/core/org.freeplane.core/META-INF/* "${pkgdir}"/usr/share/freeplane/core/org.freeplane.core/META-INF/
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/core/org.freeplane.core/lib/* "${pkgdir}"/usr/share/freeplane/core/org.freeplane.core/lib
   # Copy resources
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/resources/ortho/* ${pkgdir}/usr/share/freeplane/resources/ortho/
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/resources/templates/* ${pkgdir}/usr/share/freeplane/resources/templates/
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/resources/xslt/* ${pkgdir}/usr/share/freeplane/resources/xslt/
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/resources/xml/* ${pkgdir}/usr/share/freeplane/resources/xml/
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/resources/gitinfo.properties ${pkgdir}/usr/share/freeplane/resources/gitinfo.properties
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/resources/ortho/* "${pkgdir}"/usr/share/freeplane/resources/ortho/
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/resources/templates/* "${pkgdir}"/usr/share/freeplane/resources/templates/
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/resources/xslt/* "${pkgdir}"/usr/share/freeplane/resources/xslt/
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/resources/xml/* "${pkgdir}"/usr/share/freeplane/resources/xml/
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/resources/gitinfo.properties "${pkgdir}"/usr/share/freeplane/resources/gitinfo.properties
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/resources/linkDecoration.ini "${pkgdir}"/usr/share/freeplane/resources/linkDecoration.ini
   # Copy scripts
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/scripts/* ${pkgdir}/usr/share/freeplane/scripts/
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/scripts/* "${pkgdir}"/usr/share/freeplane/scripts/
   
   # Install the desktop entry
-  install -Dm644 ${srcdir}/freeplane.desktop ${pkgdir}/usr/share/applications/freeplane.desktop
+  install -Dm644 ${srcdir}/freeplane.desktop "${pkgdir}"/usr/share/applications/freeplane.desktop
   # Install icons
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/freeplane.svg ${pkgdir}/usr/share/pixmaps/freeplane.svg
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/freeplane.svg "${pkgdir}"/usr/share/pixmaps/freeplane.svg
   # Install the executable script
-  install -Dm755 ${srcdir}/freeplane.run ${pkgdir}/usr/bin/freeplane
+  install -Dm755 "${srcdir}"/freeplane.run "${pkgdir}"/usr/bin/freeplane
 }
