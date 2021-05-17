@@ -1,0 +1,12 @@
+--- a/scripts/init.js	2021-02-13 18:13:49.659921427 +0100
++++ b/scripts/init.js	2021-02-14 00:04:32.098634830 +0100
+@@ -17,8 +17,7 @@
+ if (!fs.existsSync(path.join(braveCoreDir, '.git'))) {
+   Log.status(`Cloning brave-core [${braveCoreRef}] into ${braveCoreDir}...`)
+   fs.mkdirSync(braveCoreDir)
+-  util.runGit(braveCoreDir, ['clone', util.getNPMConfig(['projects', 'brave-core', 'repository', 'url']), '.'])
+-  util.runGit(braveCoreDir, ['checkout', braveCoreRef])
++  util.runGit(braveCoreDir, ['clone', '--depth=1', util.getNPMConfig(['projects', 'brave-core', 'repository', 'url']), '-b', braveCoreRef, '.'])
+ }
+ 
+ let npmCommand = 'npm'
