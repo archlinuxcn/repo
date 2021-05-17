@@ -2,17 +2,17 @@
 # Maintainer: Swift Geek
 pkgname=bluez-git
 _pkgname=bluez
-pkgver=5.58.r21.gd9fdbedf0
-pkgrel=2
+pkgver=5.58.r52.gc3159848b
+pkgrel=1
 epoch=1
 pkgdesc="Libraries and tools for the Bluetooth protocol stack"
 
 url="http://www.bluez.org/"
 arch=('i686' 'x86_64')
 license=('GPL2')
-depends=('libical' 'libdbus' 'glib2' 'alsa-lib' 'ell' 'json-c')
+depends=('libical' 'libdbus' 'alsa-lib' 'ell' 'json-c')
 optdepends=('cups: CUPS backend')
-makedepends=('git')
+makedepends=('git' 'python-docutils' 'systemd')
 conflicts=($_pkgname
 	   $_pkgname-utils
 	   $_pkgname-libs
@@ -57,7 +57,7 @@ build() {
     --enable-btpclient \
     --enable-midi \
     --enable-sixaxis \
-    --disable-mesh \
+    --enable-mesh \
     --enable-hid2hci \
     --enable-experimental \
     --enable-manpages \
