@@ -1,7 +1,7 @@
 # Maintainer: Nico <d3sox at protonmail dot com>
 pkgname=fluent-reader
-pkgver=1.0.0
-pkgrel=5
+pkgver=1.0.1
+pkgrel=1
 _pkgname="${pkgname}-${pkgver}"
 pkgdesc='Modern desktop RSS reader built with Electron, React, and Fluent UI'
 arch=('any')
@@ -11,7 +11,7 @@ depends=('hicolor-icon-theme')
 makedepends=('nodejs' 'node-gyp' 'npm')
 source=("https://github.com/yang991178/fluent-reader/archive/v${pkgver}.tar.gz"
         'fluent-reader.desktop')
-sha256sums=('40e43fbc983e1cfd1ea32c852918ebce88d243f7ed943031696bdc7e01e55784'
+sha256sums=('2edb465cd21155b3370895ecbd64b437e25268186f625c037116ab1f5e579e62'
             '8094dd526fcb3bd67913a20224fa8c167068d58b8e0ba51b74e8b74c23f73026')
 
 build() {
