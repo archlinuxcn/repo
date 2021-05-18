@@ -6,11 +6,10 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build: aur_pre_build
-
-post_build: aur_post_build
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: aur
-    aur: python-node-semver
+  - source: github
+    github: podhmo/python-semver
+    use_max_tag: true
   - alias: python
