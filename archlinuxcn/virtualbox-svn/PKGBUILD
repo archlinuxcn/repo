@@ -99,9 +99,9 @@ prepare() {
     echo 'Use our CFLAGS'
     echo "VBOX_GCC_OPT=$CXXFLAGS" >> LocalConfig.kmk
 
-    #sed -i '/#include "PyXPCOM_std.h"/a PyAPI_FUNC(void) _Py_NewReference(PyObject *op);' src/libs/xpcom18a4/python/src/PyIID.cpp
-    #sed -i '/#include "PyXPCOM_std.h"/a PyAPI_FUNC(void) _Py_NewReference(PyObject *op);' src/libs/xpcom18a4/python/src/PyISupports.cpp
-    #sed -i '/#include "PyXPCOM_std.h"/a PyAPI_FUNC(void) _Py_NewReference(PyObject *op);' src/libs/xpcom18a4/python/src/TypeObject.cpp
+    sed -i '/#include "PyXPCOM_std.h"/a PyAPI_FUNC(void) _Py_NewReference(PyObject *op);' src/libs/xpcom18a4/python/src/PyIID.cpp
+    sed -i '/#include "PyXPCOM_std.h"/a PyAPI_FUNC(void) _Py_NewReference(PyObject *op);' src/libs/xpcom18a4/python/src/PyISupports.cpp
+    sed -i '/#include "PyXPCOM_std.h"/a PyAPI_FUNC(void) _Py_NewReference(PyObject *op);' src/libs/xpcom18a4/python/src/TypeObject.cpp
 }
 
 build() {
