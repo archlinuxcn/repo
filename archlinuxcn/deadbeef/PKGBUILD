@@ -2,16 +2,16 @@
 # Contributor: Alexey Yakovenko <waker@users.sourceforge.net>
 
 pkgname=deadbeef
-pkgver=1.8.4
+pkgver=1.8.7
 pkgrel=1
 pkgdesc='A GTK+ audio player for GNU/Linux.'
 arch=('x86_64')
 url='http://deadbeef.sourceforge.net'
 license=('GPL2')
-depends=('alsa-lib' 'hicolor-icon-theme' 'desktop-file-utils' 'jansson')
+depends=('alsa-lib' 'hicolor-icon-theme' 'desktop-file-utils' 'jansson' 'libblocksruntime' 'libdispatch')
 makedepends=('libvorbis' 'libmad' 'flac' 'curl' 'imlib2' 'wavpack' 'libsndfile' 'libcdio' 'libcddb'
              'libx11' 'faad2' 'zlib' 'intltool' 'pkgconfig' 'libpulse' 'libzip' 'libsamplerate'
-             'yasm' 'ffmpeg' 'gtk2' 'gtk3')
+             'yasm' 'ffmpeg' 'gtk2' 'gtk3' 'clang')
 optdepends=('gtk2: for the GTK2 interface'
             'gtk3: for the GTK3 interface'
             'libsamplerate: for Resampler plugin'
@@ -32,14 +32,19 @@ optdepends=('gtk2: for the GTK2 interface'
             'zlib: for Audio Overload plugin'
             'libzip: for vfs_zip plugin'
             'ffmpeg: for ffmpeg plugin')
-source=("https://github.com/DeaDBeeF-Player/${pkgname}/archive/${pkgver}.tar.gz")
-sha512sums=('18c54ae2c7931419ea06f3eb581cc8e704fa6eb87d330fc09f7295f4a8ef6e88b6f8c314223c34c321cd2a54f14cb6911add41602250c39c1b1c1edbf64d63b7')
-
+source=("https://github.com/DeaDBeeF-Player/${pkgname}/archive/${pkgver}.tar.gz"
+        apbuild.zip::"https://github.com/DeaDBeeF-Player/apbuild/archive/refs/heads/master.zip"
+        mp4p.zip::"https://github.com/DeaDBeeF-Player/mp4p/archive/refs/heads/master.zip")
+sha512sums=('b8026b934a211ed24cdbc7e738fbfaa95d20706c0fcaef65530d7354e19d71c1e05af59305354478b4c4f1dbe4f7dbf436af7093d25727a2508b24c692a09258'
+            'SKIP'
+            'SKIP')
 prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	
+	cp -R ${srcdir}/mp4p-master/* external/mp4p/
+	cp -R ${srcdir}/apbuild-master/* external/apbuild/
+
 	./autogen.sh 
-	./configure --prefix=/usr
+	CC=clang CXX=clang++ ./configure --prefix=/usr
 }
 
 build () {
@@ -50,4 +55,5 @@ build () {
 package() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	make DESTDIR="$pkgdir" install
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
 }
