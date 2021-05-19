@@ -1,0 +1,32 @@
+post_install() {
+cat <<"EOF"
+Warning about nvidia containers!
+
+Systemd v247.2-2 introduced a unified cgroup change which has somewhat
+broken nvidia-container's access to the handles in
+/sys/fs/cgroup/devices.
+
+If you are using Docker you will then need to explicitly allow access
+to the nvidia devices like:
+
+docker run ... --gpus all --device /dev/nvidia0 --device \
+    /dev/nvidia-uvm --device /dev/nvidia-uvm-tools --device \
+    /dev/nvidiactl ...
+
+or by using a docker-compose which esposes the devices with:
+
+devices:
+  - /dev/nvidia0:/dev/nvidia0
+  - /dev/nvidiactl:/dev/nvidiactl
+  - /dev/nvidia-modeset:/dev/nvidia-modeset
+  - /dev/nvidia-uvm:/dev/nvidia-uvm
+  - /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
+
+See the link for more details:
+https://github.com/NVIDIA/nvidia-docker/issues/1447#issuecomment-757034464
+EOF
+}
+
+post_upgrade() {
+    post_install
+}
