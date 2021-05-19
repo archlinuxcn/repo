@@ -1,0 +1,13 @@
+diff --git a/plugins/load-dcraw/Makefile.am b/plugins/load-dcraw/Makefile.am
+index 165da256..e39fd84a 100644
+--- a/plugins/load-dcraw/Makefile.am
++++ b/plugins/load-dcraw/Makefile.am
+@@ -39,7 +39,7 @@ AM_CFLAGS =\
+ 	-DDCRAW_NOLCMS\
+ 	-DWITH_MMAP_HACK\
+ 	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
+-	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
++	-DPACKAGE_LOCALE_DIR=\""@localedir@"\" \
+ 	@PACKAGE_CFLAGS@ @LCMS_CFLAGS@\
+ 	-I$(top_srcdir)/librawstudio/ \
+ 	-I$(top_srcdir)/
