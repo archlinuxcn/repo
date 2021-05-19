@@ -4,12 +4,12 @@
 
 pkgname='virtualbox-host-modules-lily'
 pkgver=6.1.22
-pkgrel=1
+pkgrel=2
 pkgdesc='Virtualbox host kernel modules for linux-lily Kernel'
 arch=('x86_64')
 url='https://virtualbox.org/'
 license=('GPL')
-depends=("linux-lily=5.10.29-1")
+depends=("linux-lily=5.10.38-1")
 makedepends=('linux-lily-headers'
              "virtualbox-host-dkms>=$pkgver")
 conflicts=('virtualbox-host-dkms')
@@ -34,6 +34,7 @@ package(){
   printf '%s\n' vboxdrv vboxnetadp vboxnetflt |
     install -D -m0644 /dev/stdin "$pkgdir/usr/lib/modules-load.d/$pkgname.conf"
 }
+
 
 
 
