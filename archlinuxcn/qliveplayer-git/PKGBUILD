@@ -38,11 +38,11 @@ build() {
     cd $srcdir/QLivePlayer
     mkdir -p build
     cd build
-    cmake -DCMAKE_INSTALL_PREFIX="$pkgdir/usr" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib ..
-    make
+    cmake -GNinja -DCMAKE_INSTALL_PREFIX="$pkgdir/usr" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib ..
+    ninja
 }
 
 package() {
     cd $srcdir/QLivePlayer/build
-    make install
+    DESTDIR="$pkgdir" ninja install
 }
