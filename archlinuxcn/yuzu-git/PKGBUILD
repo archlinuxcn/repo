@@ -9,7 +9,7 @@ arch=('i686' 'x86_64')
 url="https://github.com/yuzu-emu/yuzu"
 license=('GPL2')
 depends=('shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'mbedtls' 'openssl' 'zstd')
-makedepends=('gcc10' 'git' 'cmake' 'ninja' 'python2' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'desktop-file-utils' 'glslang')
+makedepends=('git' 'cmake' 'ninja' 'python2' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'desktop-file-utils' 'glslang')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
@@ -53,8 +53,6 @@ build() {
 #  CXXFLAGS+=" -I/usr/include/libusb-1.0"
 
 	mkdir -p build && cd build
-  export CC=gcc-10
-  export CXX=g++-10
 
 	cmake -GNinja .. \
 	  -DCMAKE_INSTALL_PREFIX=/usr \
