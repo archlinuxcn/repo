@@ -38,7 +38,6 @@ makedepends=(
   libglvnd
   python
   vulkan-validation-layers
-  gcc10
 )
 provides=(rpcs3)
 conflicts=(rpcs3)
@@ -79,8 +78,6 @@ prepare() {
 }
 
 build() {
-  export CC=gcc-10
-  export CXX=g++-10
   cmake -S rpcs3 -B build \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
