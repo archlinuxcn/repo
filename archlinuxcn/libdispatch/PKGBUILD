@@ -1,12 +1,12 @@
 # Maintainer: Adrian Perez de Castro <aperez@igalia.com>
 pkgname=libdispatch
 pkgver=5.4.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Comprehensive support for concurrent code execution on multicore hardware'
 arch=(i686 x86_64 arm armv6h armv7h aarch64)
 url=https://apple.github.io/swift-corelibs-libdispatch
 license=(Apache)
-depends=(libblocksruntime)
+depends=(glibc)
 makedepends=(git clang cmake)
 conflicts=(libdispatch-git swift swift-development libblocksruntime)
 provides=(libblocksruntime)
