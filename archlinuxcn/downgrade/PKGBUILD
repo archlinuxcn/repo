@@ -2,12 +2,13 @@
 # shellcheck disable=SC2154
 # Author: Patrick Brisbin <pbrisbin@gmail.com>
 pkgname=downgrade
-pkgver=9.0.0
+pkgver=10.0.0
 pkgrel=1
 pkgdesc="Bash script for downgrading one or more packages to a version in your cache or the A.L.A."
 arch=('any')
 url="https://github.com/pbrisbin/$pkgname"
 license=('GPL')
+backup=(etc/xdg/downgrade/downgrade.conf)
 source=("downgrade-v$pkgver.tar.gz::https://github.com/pbrisbin/$pkgname/archive/v$pkgver.tar.gz")
 depends=('pacman-contrib') # pacsort
 optdepends=('sudo: for installation via sudo')
@@ -17,4 +18,4 @@ package() {
 
   make DESTDIR="$pkgdir" PREFIX=/usr install
 }
-md5sums=('f37e1c3c70d6b1292c7ea3499eebab87')
+md5sums=('f0c1575a89ee1dd0dc27345ed30d08e5')
