@@ -1,10 +1,10 @@
 # Maintainer: Kien Dang <mail at kien dot ai>
-# Maintainer: Joel Shapiro <jshapiro at nvidia dot com>
+# Maintainer: Julie Shapiro <jshapiro at nvidia dot com>
 
 pkgname=nvidia-container-toolkit
 
 pkgver=1.5.0
-pkgrel=1
+pkgrel=2
 
 pkgdesc='NVIDIA container runtime toolkit'
 arch=('x86_64')
@@ -12,7 +12,7 @@ url='https://github.com/NVIDIA/nvidia-container-toolkit'
 license=('Apache')
 
 makedepends=('go')
-depends=('libnvidia-container-tools>=1.3.3')
+depends=('libnvidia-container-tools>=1.4.0')
 conflicts=('nvidia-container-runtime-hook' 'nvidia-container-runtime<2.0.0')
 replaces=('nvidia-container-runtime-hook')
 
