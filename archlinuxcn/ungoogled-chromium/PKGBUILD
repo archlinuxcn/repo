@@ -10,7 +10,7 @@
 
 pkgname=ungoogled-chromium
 pkgver=90.0.4430.212
-pkgrel=1
+pkgrel=2
 _launcher_ver=7
 _gcc_patchset=6
 _pkgname=$(echo $pkgname | cut -d\- -f1-2)
@@ -41,7 +41,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-drirc-disable-10bpc-color-configs.conf
         chromium-glibc-2.33.patch
         wayland-egl.patch
-        use-oauth2-client-switches-as-default.patch)
+        use-oauth2-client-switches-as-default.patch
+        sql-make-virtualcursor-standard-layout-type.patch)
 sha256sums=('abe11d0cb1ff21278aad2eec1a1e279d59176b15331804d7df1807446786d59e'
             'b49f989e756bdaa66785905a59779005e9f168c39a235f605bd45df301c44788'
             '86859c11cfc8ba106a3826479c0bc759324a62150b271dd35d1a0f96e890f52f'
@@ -50,7 +51,8 @@ sha256sums=('abe11d0cb1ff21278aad2eec1a1e279d59176b15331804d7df1807446786d59e'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '2fccecdcd4509d4c36af873988ca9dbcba7fdb95122894a9fdf502c33a1d7a4b'
             '34d08ea93cb4762cb33c7cffe931358008af32265fc720f2762f0179c3973574'
-            'e393174d7695d0bafed69e868c5fbfecf07aa6969f3b64596d0bae8b067e1711')
+            'e393174d7695d0bafed69e868c5fbfecf07aa6969f3b64596d0bae8b067e1711'
+            '23d6b14530acb66762c5d8b895c100203a824549e0d9aa815958dfd2513e6a7a')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -102,9 +104,13 @@ prepare() {
   # Revert addition of [[clang::nomerge]] attribute; not supported by clang 11
   patch -Rp1 -d base <../add-clang-nomerge-attribute-to-CheckError.patch
 
+  # gcc1 patch
+  patch -Np1 -i ../sql-make-virtualcursor-standard-layout-type.patch
+
   # Fixes for building with libstdc++ instead of libc++
   patch -Np1 -i ../patches/chromium-90-quantization_utils-include.patch
   patch -Np1 -i ../patches/chromium-90-TokenizedOutput-include.patch
+  patch -Np1 -i ../patches/chromium-90-ruy-include.patch
 
   # Wayland/EGL regression (crbug #1071528 #1071550)
   patch -Np1 -i ../wayland-egl.patch
