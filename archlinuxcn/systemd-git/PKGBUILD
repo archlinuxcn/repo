@@ -10,6 +10,7 @@ pkgname=('systemd-git' 'systemd-libs-git' 'systemd-resolvconf-git' 'systemd-sysv
 pkgdesc="systemd (git version)"
 pkgver=248.rc4.r102.g414f59dad7
 pkgrel=1
+epoch=1 # official repo use systemd-stable as upstream and missing the subversion tags
 arch=('x86_64')
 url="https://www.github.com/systemd/systemd"
 makedepends=('acl' 'cryptsetup' 'docbook-xsl' 'gperf' 'lz4' 'xz' 'pam' 'libelf'
