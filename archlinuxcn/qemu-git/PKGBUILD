@@ -8,15 +8,15 @@ pkgbase=qemu-git
 _gitname=qemu
 pkgname=(qemu-git qemu-headless-git qemu-arch-extra-git qemu-headless-arch-extra-git qemu-block-{iscsi-git,rbd-git,gluster-git} qemu-guest-agent-git)
 pkgdesc="A generic and open source machine emulator and virtualizer. Git version."
-pkgver=6.0.0.r352.gf9a576a818
-pkgrel=2
+pkgver=6.0.0.r913.g6c769690ac
+pkgrel=1
 epoch=13
 arch=(i686 x86_64)
 license=(GPL2 LGPL2.1)
 url="http://wiki.qemu.org/"
-_headlessdeps=(seabios gnutls libpng libaio numactl libnfs
-               lzo snappy curl vde2 libcap-ng spice libcacard usbredir libslirp
-               libssh zstd liburing ndctl dtc fuse3)
+_headlessdeps=(seabios libaio numactl libnfs
+               snappy curl vde2 spice libcacard usbredir libslirp
+               libssh liburing ndctl dtc fuse3)
 depends=(dtc virglrenderer sdl2 vte3 libpulse brltty "${_headlessdeps[@]}")
 makedepends=(spice-protocol python ceph libiscsi glusterfs python-sphinx xfsprogs git ninja)
 source=(git://git.qemu.org/qemu.git
@@ -191,7 +191,7 @@ package_qemu-arch-extra-git() {
 
 package_qemu-headless-arch-extra-git() {
   pkgdesc="QEMU without GUI, for foreign architectures. Git version."
-  depends=(qemu-headless)
+  depends=(qemu-headless-git)
   options=(!strip)
   conflicts=(qemu-headless-arch-extra)
   provides=(qemu-headless-arch-extra)
@@ -228,7 +228,7 @@ package_qemu-block-gluster-git() {
 
 package_qemu-guest-agent-git() {
   pkgdesc="QEMU Guest Agent. Git version."
-  depends=(gcc-libs glib2 libudev.so)
+  depends=(gcc-libs glib2 libudev.so liburing)
   conflicts=(qemu-guest-agent)
   provides=(qemu-guest-agent)
   install=qemu-guest-agent.install
