@@ -8,11 +8,14 @@ repo_depends:
   - libqtxdg-git
   - liblxqt-git
 
-pre_build: aur_pre_build
+pre_build_script: |
+    aur_pre_build(maintainers=['pmattern'])
 
-post_build: aur_post_build
+post_build_script: |
+    aur_post_build()
 
 update_on:
-  - source: vcs
+  - source: github
+    github: lxqt/lxqt-admin
   - source: aur
     aur: lxqt-admin-git

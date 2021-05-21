@@ -9,16 +9,15 @@ repo_depends:
   - libfm-qt-git
 
 pre_build_script: |
-    update_pkgrel()
-    aur_pre_build()
+    vcs_update()
 
-post_build: aur_post_build
+post_build_script: |
+    git_pkgbuild_commit()
+    update_aur_repo()
 
 update_on:
   - source: github
     github: lxqt/lxqt-qtplugin
-  - source: aur
-    aur: lxqt-qtplugin-git
   - source: archpkg
     archpkg: qt5-base
     strip_release: true

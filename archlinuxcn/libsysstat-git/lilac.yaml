@@ -6,12 +6,14 @@ build_prefix: extra-x86_64
 repo_depends:
   - lxqt-build-tools-git
 
+pre_build_script: |
+    aur_pre_build(maintainers=['pmattern'])
+
+post_build_script: |
+    aur_post_build()
+
 update_on:
   - source: github
     github: lxqt/libsysstat
-  -
-
-    source: aur
-    aur:
-pre_build: aur_pre_build
-post_build: aur_post_build
+  - source: aur
+    aur: libsysstat-git
