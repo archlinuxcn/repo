@@ -3,15 +3,19 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-post_build: aur_post_build
-
 repo_depends:
   - lxqt-build-tools-git
 
+pre_build_script: |
+    vcs_update()
+
+post_build_script: |
+    git_pkgbuild_commit()
+    update_aur_repo()
+
 update_on:
-  - source: vcs
-  - source: aur
-    aur:
+  - source: github
+    github: lxqt/libqtxdg
   - source: archpkg
     archpkg: qt5-base
     strip_release: true
