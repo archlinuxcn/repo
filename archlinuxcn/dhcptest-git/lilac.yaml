@@ -1,10 +1,10 @@
 maintainers:
-  - github: YuutaW
-    email: trumeetc@gmail.com
+  - github: Trumeet
+    email: yuuta@yuuta.moe
 
 build_prefix: extra-x86_64
 
-pre_build: aur_pre_build
+pre_build_script: aur_pre_build(maintainers=['YuutaW', 'yan12125'])
 
 post_build: aur_post_build
 
