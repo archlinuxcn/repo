@@ -1,0 +1,10 @@
+pre_build_script: aur_pre_build(maintainers=['ejona86'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: mcrcon
+
+maintainers:
+  - github: dctxmei
