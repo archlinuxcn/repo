@@ -3,7 +3,7 @@
 
 _pkgname=skypeforlinux
 pkgname=$_pkgname-preview-bin
-pkgver=8.73.76.16
+pkgver=8.73.76.33
 pkgrel=1
 pkgdesc="Skype for Linux - Preview/Insider Version"
 arch=("x86_64")
@@ -21,7 +21,7 @@ install=install.sh
 source=(
 https://repo.skype.com/rpm/unstable/${_pkgname}_${pkgver}-1.x86_64.rpm
 )
-sha256sums=('54f1fd8002be911d1ad71a2ccce7fbbb29173d9f2dbfa0d8b5ea1a7d353d23fb')
+sha256sums=('61b623692f1cbef780eb46f857688ac2db12463b7f3765303e29d5ce43f65a13')
 
 package() {
   cd $pkgdir
