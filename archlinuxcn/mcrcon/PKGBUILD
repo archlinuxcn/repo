@@ -1,0 +1,25 @@
+# Contributor: kreed <kreed@kreed.org>
+# Contributor: rayman2200
+# Maintainer: Eric Anderson <ejona86@gmail.com>
+
+pkgname=mcrcon
+pkgver=0.7.1
+pkgrel=1
+pkgdesc="Console based remote console (rcon) client for Minecraft servers"
+arch=('i686' 'x86_64')
+url="https://github.com/Tiiffi/mcrcon"
+license=('ZLIB')
+depends=('glibc')
+source=("https://github.com/Tiiffi/${pkgname}/archive/v${pkgver}.tar.gz")
+sha256sums=('69597079fa35bb246087671a77c825e015d51d16f7b8d0064915b84d78dd3c8f')
+
+build() {
+	cd "$pkgname-$pkgver"
+	make LINKER="$LDFLAGS"
+}
+
+package() {
+	cd "$pkgname-$pkgver"
+	make PREFIX="$pkgdir/usr/" install
+	install -m 644 -D LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
