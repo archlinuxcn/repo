@@ -6,7 +6,7 @@
 
 pkgname=nyxt
 pkgver=2.pre.release.7
-pkgrel=4
+pkgrel=5
 pkgdesc="A keyboard-oriented, infinitely extensible web browser designed for power users"
 arch=('x86_64')
 url="https://github.com/atlas-engineer/nyxt"
@@ -29,11 +29,11 @@ optdepends=('gstreamer: for HTML5 audio/video'
 # Binary will not run otherwise.
 options=('!strip' '!makeflags')
 
-prepare() {
-    cd "${srcdir}"/"${pkgname}"/
+#prepare() {
+#    cd "${srcdir}"/"${pkgname}"/
 #    patch -p1 -i ../Makefile.2.pre.release.7.patch
 #    patch -p1 -i ../renderer-gi-gtk.lisp.issue.1374.patch
-}
+#}
 
 build() {
     cd "${srcdir}"/"${pkgname}"/
