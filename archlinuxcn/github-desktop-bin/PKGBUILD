@@ -2,10 +2,10 @@
 
 _pkgname='github-desktop'
 pkgname="${_pkgname}-bin"
-_pkgver='2.8.1-linux2'
-pkgver=2.8.1.linux2
+_pkgver='2.8.1-linux3'
+pkgver=2.8.1.linux3
 gitname="release-${_pkgver}"
-pkgrel=2
+pkgrel=1
 pkgdesc="GUI for managing Git and GitHub."
 arch=('x86_64')
 url="https://desktop.github.com"
@@ -18,7 +18,7 @@ source=(
     https://github.com/shiftkey/desktop/releases/download/${gitname}/GitHubDesktop-linux-${_pkgver}.deb
     ${_pkgname}.desktop
 )
-sha256sums=('892f59f961c9eb241dd7856052e719b052bac29856b30486a9800c44f8a1178f'
+sha256sums=('a504ac98e6b3478a2da8d3257229f1885c1a4defee9ac22f145af02914b31c59'
             '932e4c456e8c6db03d27172cf0daa37806bf025bb560d8b3d758c0997d1a618c')
 
 package() {
