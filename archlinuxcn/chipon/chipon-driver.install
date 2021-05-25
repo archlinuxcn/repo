@@ -1,0 +1,29 @@
+# chipon-driver.install
+
+chipon_driver () {
+    echo "If rules fail to reload automatically, you can refresh udev rules with the command \`sudo udevadm control --reload\`"
+    echo "如果规则无法自动重新加载，您可以使用以下命令刷新 udev 规则 \`sudo udevadm control --reload\`"
+    echo "Arch automatic configuration"
+    echo "Arch 自动配置中"
+    udevadm control --reload
+}
+
+post_install() {
+    chipon_driver
+}
+
+#pre_upgrade() {
+#
+#}
+
+post_upgrade() {
+    chipon_driver
+}
+
+#pre_remove() {
+#
+#}
+
+post_remove() {
+    chipon_driver
+}
