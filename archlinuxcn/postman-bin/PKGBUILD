@@ -2,8 +2,10 @@
 # Contributor: Claudio d'Angelis <claudiodangelis at gmail dot com>
 pkgname=postman-bin
 pkgver=8.5.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Build, test, and document your APIs faster"
+provides=('postman')
+conflicts=('postman')
 arch=('x86_64')
 url="https://www.getpostman.com"
 options=(!strip)
