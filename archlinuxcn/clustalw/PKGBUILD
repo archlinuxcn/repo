@@ -1,0 +1,30 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+pkgname=clustalw
+pkgver=2.1
+pkgrel=1
+pkgdesc='Multiple alignment of nucleic acid and protein sequences (command line tool)'
+arch=('x86_64')
+url='http://www.clustal.org/clustal2'
+license=('LGPL3')
+depends=(
+  gcc-libs
+)
+makedepends=(
+)
+options=(!emptydirs)
+source=("${pkgname}-${pkgver}.tar.gz::http://www.clustal.org/download/current/clustalw-${pkgver}.tar.gz")
+sha256sums=('e052059b87abfd8c9e695c280bfba86a65899138c82abccd5b00478a80f49486')
+
+build() {
+  cd "${pkgname}-${pkgver}"
+  ./configure \
+    --prefix=/usr
+  make
+}
+
+package() {
+  cd "${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+}
+# vim:set ts=2 sw=2 et:
