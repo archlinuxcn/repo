@@ -1,0 +1,72 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Gaetan Bisson <bisson@archlinux.org>
+# Contributor: Gerhard Brauer <gerhard.brauer@web.de>
+
+pkgname=collectd
+pkgver=5.12.0
+pkgrel=3
+pkgdesc='Daemon which collects system performance statistics periodically'
+url='https://collectd.org/'
+arch=('x86_64')
+license=('GPL')
+
+optdepends=('curl: apache, ascent, curl, nginx, and write_http plugins'
+            'libdbi: dbi plugin'
+            'libesmtp: notify_email plugin'
+            'libgcrypt: encryption and authentication for network plugin'
+            'libmemcached: memcachec plugin'
+            'mariadb-libs: mysql plugin'
+            'systemd-libs: UdevNameAttr option'
+            'iproute2: netlink plugin'
+            'net-snmp: snmp plugin'
+            'libnotify: notify_desktop plugin'
+            'openipmi: ipmi plugin'
+            'liboping: ping plugin'
+            'libpcap: dns plugin'
+            'perl: perl plugin'
+            'postgresql-libs: postgresql plugin'
+            'python: python plugin'
+            'rrdtool: rrdtool and rrdcached plugins'
+            'lm_sensors: lm_sensors and sensors plugins'
+            'libvirt: libvirt plugin'
+            'libxml2: ascent and libvirt plugins'
+            'yajl: curl_json plugin'
+            'libatasmart: smart plugin'
+            'lvm2: lvm plugin'
+            'protobuf-c: write_riemann plugin'
+            'mosquitto: MQTT plugin'
+            'libmicrohttpd: prometheus plugin'
+            'librabbitmq-c: amqp plugin'
+            'nut: nut plugin')
+
+makedepends=(${optdepends[@]%:*})
+depends=('libltdl' 'iptables' 'libnsl')
+
+source=("https://storage.googleapis.com/collectd-tarballs/${pkgname}-${pkgver}.tar.bz2"
+        'service')
+sha256sums=('5bae043042c19c31f77eb8464e56a01a5454e0b39fa07cf7ad0f1bfc9c3a09d6'
+            'e45e261146563b0bf6967c669dff7ac2400f066f0eb4c022ac3fdb0ccadca2f9')
+
+backup=('etc/collectd.conf')
+
+build() {
+	cd ${pkgname}-${pkgver}
+	./configure \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--sbindir=/usr/bin \
+		--disable-werror \
+		--with-python=/usr/bin/python \
+		--with-perl-bindings='INSTALLDIRS=vendor' \
+
+	make all
+}
+
+package() {
+	cd ${pkgname}-${pkgver}
+	make DESTDIR="${pkgdir}" install
+	rmdir "${pkgdir}/var/run" # FS#30201
+	install -Dm644 ../service "${pkgdir}"/usr/lib/systemd/system/collectd.service
+	install -Dm644 contrib/collectd2html.pl "${pkgdir}"/usr/share/collectd/collectd2html.pl
+}
