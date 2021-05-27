@@ -13,6 +13,7 @@ def pre_build():
   for line in edit_file('PKGBUILD'):
     if line.startswith('sha256sums='):
       line = f"sha256sums=('{sha256sum}'"
+    print(line)
 
 def post_build():
   git_add_files("PKGBUILD")
