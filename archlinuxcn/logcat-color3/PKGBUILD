@@ -2,17 +2,17 @@
 # Contributor: Thomas Weißschuh <thomas t-8ch de>
 
 pkgname=logcat-color3
-pkgver=0.9.0
-pkgrel=4
+pkgver=0.9.1
+pkgrel=1
 pkgdesc='A colorful and highly configurable alternative to the standard "adb logcat" command from the Android SDK'
 arch=(any)
 url='https://github.com/yan12125/logcat-color3'
 license=(Apache)
 depends=(python-colorama)
-makedepends=(python-setuptools-scm)
+makedepends=(python-setuptools-scm python-wheel)
 conflicts=(logcat-color)
 source=("https://files.pythonhosted.org/packages/source/l/logcat-color3/logcat-color3-$pkgver.tar.gz"{,.asc})
-sha256sums=('57471841b59d0a456f6d3a971bb3701ca2fc9a8319735e9515c9de3cd2062c92'
+sha256sums=('800e852869e5c00c07b14cdbae77b8c76091727faeb76c0c03fd0b639e37a497'
             'SKIP')
 validpgpkeys=(
   '481C4474AF1572165AE4C6AF3FDDD575826C5C30'  # Chih-Hsuan Yen <yan12125@gmail.com>
@@ -25,7 +25,7 @@ build() {
 
 check() {
   cd logcat-color3-$pkgver
-  python test/test.py
+  python -m unittest discover ./test
 }
 
 package() {
