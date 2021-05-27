@@ -1,0 +1,75 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+# Contributor: Nathaniel Stickney <nstickney@gmail.com>
+# Contributor: Christian Krause ("wookietreiber") <kizkizzbangbang@googlemail.com>
+
+pkgname=blast+
+pkgver=2.11.0
+pkgrel=1
+pkgdesc='BLAST tool suite from NCBI (blastn, blastp, blastx, psiblast, etc)'
+arch=('x86_64')
+url='http://blast.ncbi.nlm.nih.gov'
+license=('custom')
+depends=(
+  grpc
+  lmdb
+  lzo
+  perl
+  python
+  sqlite
+)
+makedepends=(
+  arrow
+  boost
+  cpio
+  fcgi
+  freeglut
+  freetype2
+  giflib
+  gl2ps
+  glew
+  gnutls
+  gtest
+  hdf5
+  hiredis
+  lapacke
+  leveldb
+  libjpeg
+  libpng
+  librdkafka
+  libtiff
+  libuv
+  libx11
+  libxext
+  libxmu
+  libxpm
+  libxslt
+  libxt
+  mariadb
+  mesa
+  microsoft-gsl
+  mimetic
+  muparser
+  pcre
+  procps-ng
+  protobuf
+  wxgtk2
+)
+source=("${pkgname}-${pkgver}.tar.gz::https://ftp.ncbi.nlm.nih.gov/blast/executables/LATEST/ncbi-blast-${pkgver}+-src.tar.gz")
+sha256sums=('d88e1858ae7ce553545a795a2120e657a799a6d334f2a07ef0330cc3e74e1954')
+
+build() {
+  cd "${srcdir}/ncbi-blast-${pkgver}+-src/c++"
+  ./configure \
+    --prefix=/usr \
+    --with-dll
+  make
+}
+
+package() {
+  cd "${srcdir}/ncbi-blast-${pkgver}+-src/c++"
+  make prefix="${pkgdir}/usr" install
+  install -Dm644 "scripts/projects/blast/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  # delete conflict files
+  rm -vf "${pkgdir}/usr/lib/libproj.so"
+}
+# vim:set ts=2 sw=2 et:
