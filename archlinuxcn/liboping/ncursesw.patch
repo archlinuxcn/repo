@@ -1,0 +1,21 @@
+diff -Naur old/src/oping.c new/src/oping.c
+--- old/src/oping.c	2017-05-10 21:32:27.000000000 -1000
++++ new/src/oping.c	2018-06-13 08:29:44.887061003 -1000
+@@ -903,7 +903,6 @@
+ #if USE_NCURSES
+ static _Bool has_utf8() /* {{{ */
+ {
+-# if HAVE_NCURSESW_NCURSES_H
+ 	if (!opt_utf8)
+ 	{
+ 		/* Automatically determine */
+@@ -913,9 +912,6 @@
+ 			opt_utf8 = 1;
+ 	}
+ 	return ((_Bool) (opt_utf8 - 1));
+-# else
+-	return (0);
+-# endif
+ } /* }}} _Bool has_utf8 */
+ 
+ static int update_graph_boxplot (ping_context_t *ctx) /* {{{ */

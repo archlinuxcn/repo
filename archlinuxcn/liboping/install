@@ -1,0 +1,8 @@
+post_upgrade() {
+	setcap cap_net_raw=ep usr/bin/oping
+	setcap cap_net_raw=ep usr/bin/noping
+}
+
+post_install() {
+	post_upgrade
+}

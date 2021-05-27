@@ -1,0 +1,44 @@
+# Maintainer: Gaetan Bisson <bisson@archlinux.org>
+
+pkgname=liboping
+pkgver=1.10.0
+pkgrel=9
+pkgdesc='C library to generate ICMP echo requests, better known as "ping packets"'
+url='https://noping.cc/'
+arch=('x86_64')
+license=('GPL')
+depends=('libcap')
+makedepends=('ncurses')
+optdepends=('perl: perl bindings'
+            'ncurses: noping CLI tool')
+source=("${url}files/${pkgname}-${pkgver}.tar.bz2"
+        'ncursesw.patch')
+sha256sums=('eb38aa93f93e8ab282d97e2582fbaea88b3f889a08cbc9dbf20059c3779d5cd8'
+            '64db954250e7cd4f77ed28d0d4f3deb1525ebe4145c6b20caafc2459c8b1c780')
+
+install=install
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+
+	# Setting capabilities/setuid is futile in fakeroot.
+	# (We do that in the install script.)
+	sed -i 's/ install-exec-hook//g' src/Makefile.in
+
+	# Our ncurses has full UTF8 support although not called ncursesw.
+	patch -p1 -i ../ncursesw.patch
+
+	# Be serious.
+	sed '/-Wall -Werror/d' -i src/Makefile.*
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr --with-perl-bindings='INSTALLDIRS=vendor'
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}
