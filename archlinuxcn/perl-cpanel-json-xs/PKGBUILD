@@ -3,7 +3,7 @@
 
 pkgname='perl-cpanel-json-xs'
 pkgver='4.26'
-pkgrel='1'
+pkgrel='2'
 pkgdesc="cPanel fork of JSON::XS, fast and correct serializing"
 arch=('i686' 'x86_64')
 license=('PerlArtistic' 'GPL')
