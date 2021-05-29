@@ -1,0 +1,78 @@
+nftables-geoip-db
+=================
+
+nftables-geoip-db makes use of @@@DBSOURCE@@@ GeoIP data.
+
+It creates country specific database files which can be used by nft command via an include statement.
+
+Note: In the following text, CC represents 2 letter ISO code of a country, which you should replace as per your choice of the country.
+
+Country specific files are stored in /usr/share/nft_geoip directory and are named as:
+
+For IPv4: CC.ipv4
+For IPv6: CC.ipv6
+
+Each country specific file defines a variable which holds IP addresses specific to that country as per @@@DBSOURCE@@@ GeoIP data.
+
+Variable names are of the following form.
+
+For IPv4: geoip4_iso_country_CC
+For IPv6: geoip6_iso_country_CC
+
+This variable can be used in nft statements (rules, sets etc.) to act based on country.
+
+
+Example:
+--------
+#!/usr/bin/nft -f
+
+# Purpose: allow SSH connections only from India (IN)
+
+# create some basic rules
+flush ruleset
+add chain ip filter INPUT { type filter hook input priority 0; policy drop; }
+add rule ip filter INPUT iif lo accept
+add rule ip filter INPUT ct state established,related accept
+
+# include the country specific file
+include "/usr/share/nft_geoip/IN.ipv4"
+
+# create a set containing IP addresses of India
+add set ip filter geo_IN { type ipv4_addr; flags interval; elements = $geoip4_iso_country_IN }
+
+# create rule to accept connection from IP address in the set
+add rule ip filter INPUT ct state new tcp dport ssh ip saddr @geo_IN accept
+
+# alternate form without creating a set (anonymous set)
+# add rule ip filter INPUT ct state new tcp dport ssh ip saddr $geoip4_iso_country_IN accept
+
+
+Auto-update GeoIP SETs
+----------------------
+
+When nftables-geoip-db is updated, IP address ranges of a country may have changed.
+
+So you need to update your active nftables sets with up-to-date IP addresses.
+
+You can place file with extension .update.nft in /etc/nftables.d/geoip directory.
+
+This file should contain nft rules which change the contents of a set with new IP address ranges.
+
+When nftables-geoip-db package is updated, it will automatically run these rules.
+
+Example:
+--------
+$ cat /etc/nftables.d/geoip/IN.update.nft
+#!/usr/bin/nft -f
+
+# include the country specific file
+include "/usr/share/nft_geoip/IN.ipv4"
+
+# flush and update the set containing IP addresses of India
+flush set ip filter geo_IN
+add element ip filter geo_IN $geoip4_iso_country_IN
+
+
+Legal Attribution:
+------------------
+This product includes @@@DBSOURCE@@@ database, available from @@@DBLINK@@@

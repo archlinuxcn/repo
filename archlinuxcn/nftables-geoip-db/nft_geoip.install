@@ -1,0 +1,10 @@
+sd_booted() {
+    [[ -d run/systemd/system && ! -L run/systemd/system ]]
+}
+
+post_upgrade() {
+    if sd_booted && systemctl -q is-active nftables.service; then
+        echo Running GeoIP nft update rules
+        echo 'include "/etc/nftables.d/geoip/*.update.nft"' | nft -f -
+    fi
+}
