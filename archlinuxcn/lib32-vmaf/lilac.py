@@ -17,4 +17,5 @@ def pre_build():
             print(line)
 
 def post_build():
+    check_library_provides()
     aur_post_build()

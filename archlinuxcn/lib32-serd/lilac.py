@@ -7,4 +7,5 @@ def pre_build():
     add_provides(['libserd-${pkgver%%.*}.so'])
 
 def post_build():
+    check_library_provides()
     aur_post_build()

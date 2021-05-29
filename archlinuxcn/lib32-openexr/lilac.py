@@ -10,4 +10,5 @@ def pre_build():
     add_depends([f'libImath-{so_ver}.so', 'libz.so'])
 
 def post_build():
+    check_library_provides()
     aur_post_build()

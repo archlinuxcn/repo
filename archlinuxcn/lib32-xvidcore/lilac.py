@@ -3,8 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build(maintainers='rodrigo21')
-    add_provides(['libsrt.so'])
+    aur_pre_build(maintainers='tjackson')
 
 def post_build():
     check_library_provides()

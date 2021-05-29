@@ -8,4 +8,5 @@ def pre_build():
     add_makedepends(['git'])
 
 def post_build():
+    check_library_provides()
     aur_post_build()
