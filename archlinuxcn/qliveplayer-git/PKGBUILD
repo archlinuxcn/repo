@@ -39,7 +39,7 @@ build() {
     cd $srcdir/QLivePlayer
     mkdir -p build
     cd build
-    cmake -GNinja -DCMAKE_INSTALL_PREFIX="$pkgdir/usr" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib ..
+    cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib ..
     ninja
 }
 
