@@ -1,3 +1,3 @@
 #!/bin/sh
 
-exec electron '/usr/lib/ferdi/app.asar' "$@"
+NODE_ENV=production exec electron '/usr/lib/ferdi/app.asar' "$@"
