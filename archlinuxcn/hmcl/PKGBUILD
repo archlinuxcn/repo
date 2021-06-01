@@ -4,8 +4,8 @@
 
 pkgname=hmcl
 _pkgname=HMCL
-pkgver=3.3.172
-_commit=bd18355a1a02a8f6a927edd7dadadbf18857e6e9
+pkgver=3.3.188
+_commit=447afaa76f111936a10f54c884bab5129c50f409
 pkgrel=1
 pkgdesc="A Minecraft Launcher which is multi-functional, cross-platform and popular"
 arch=('any')
@@ -18,15 +18,9 @@ depends=('java8-openjfx'
 source=("hmcl-launch-script"
         "${pkgname}.desktop"
         "${pkgname}-${pkgver}.tgz::${url}/archive/${_commit}.tar.gz")
-sha256sums=('5565dafda05a2f15e6d6c58aedc3a4c9191fa2f165796c9d9fc32fdf5efa1ab2'
+sha256sums=('b9e66ecda49285fb076f2c383420854b639c56e4bb240e86dbf666f5929dc1a5'
             '5780cf70f1afec0eb3cd8fc43297d361903c7204e274a28c5edf9b8ac3eea83e'
-            'e8e092205541e142b3d31975afc89330fb27b1d367f90d5a66758b1b08816290')
-
-prepare() {
-  cd "${_pkgname}-${_commit}"
-  # Fix license check
-  sed "s/\${year}/2020/" license-header.txt -i
-}
+            'ac4d57b9c662e1672240ca9b362b64670098a25569f6e6722634424d7fb2f5fc')
 
 build() {
   cd "${_pkgname}-${_commit}"

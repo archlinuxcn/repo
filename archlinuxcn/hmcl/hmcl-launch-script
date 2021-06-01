@@ -4,6 +4,7 @@ if [[ "$1" != "-p" ]]; then
     WORKDIR=${XDG_CONFIG_HOME:-$HOME/.config}/hmcl
     mkdir -p $WORKDIR
     cd $WORKDIR
+    ls hmcl.json > /dev/null 2>&1 || touch hmcl.json
 fi
 
 exec /usr/lib/jvm/java-8-openjdk/jre/bin/java -jar "/usr/share/java/hmcl/hmcl.jar" "$@"
