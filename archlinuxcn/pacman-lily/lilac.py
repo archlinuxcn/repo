@@ -33,8 +33,8 @@ def pre_build():
       line = '  install -m755 "$srcdir/pacsync" "$pkgdir/usr/bin"\n' + line
       package = False
 
-    if '${pkgname}' in line:
-      line = line.replace('${pkgname}', 'pacman-lily')
+    if '$pkgname' in line:
+      line = line.replace('$pkgname', 'pacman')
     print(line)
 
 def post_build():
