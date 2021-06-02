@@ -1,0 +1,61 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=ggplot2
+_pkgver=3.3.3
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Create Elegant Data Visualisations Using the Grammar of Graphics'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-digest
+  r-glue
+  r-gtable
+  r-isoband
+  r-rlang
+  r-scales
+  r-tibble
+  r-withr
+)
+optdepends=(
+  r-covr
+  r-dplyr
+  r-ggplot2movies
+  r-hexbin
+  r-hmisc
+  r-knitr
+  r-lattice
+  r-mapproj
+  r-maps
+  r-maptools
+  r-multcomp
+  r-munsell
+  r-nlme
+  r-profvis
+  r-quantreg
+  r-rcolorbrewer
+  r-rgeos
+  r-rmarkdown
+  r-rpart
+  r-sf
+  r-sp
+  r-svglite
+  r-testthat
+  r-vdiffr
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('45c29e2348dbd195bbde1197a52db7764113e57f463fd3770fb899acc33423cc')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,52 @@
+# Maintainer: hubutui <hot123tea123@gmail.com>
+
+_pkgname=colorspace
+_pkgver=2.0-1
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='A Toolbox for Manipulating and Assessing Colors and Palettes'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('BSD')
+depends=(
+  r
+)
+optdepends=(
+  r-datasets
+  r-dplyr
+  r-ggplot2
+  r-grid
+  r-jpeg
+  r-kernlab
+  r-kernsmooth
+  r-knitr
+  r-mass
+  r-mvtnorm
+  r-png
+  r-rcartocolor
+  r-rcolorbrewer
+  r-rmarkdown
+  r-scales
+  r-scico
+  r-shiny
+  r-shinyjs
+  r-tcltk
+  r-utils
+  r-vcd
+  r-viridis
+  r-wesanderson
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('f82fdde36058678d1bd0f410eb45a5874aa28d74e2de30399f28b070a284425e')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
