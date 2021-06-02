@@ -1,0 +1,47 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=Biostrings
+_pkgver=2.60.0
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Efficient manipulation of biological strings'
+arch=('x86_64')
+url="https://bioconductor.org/packages/${_pkgname}"
+license=('Artistic2.0')
+depends=(
+  r
+  r-biocgenerics
+  r-crayon
+  r-genomeinfodb
+  r-iranges
+  r-s4vectors
+  r-xvector
+)
+optdepends=(
+  r-affy
+  r-affydata
+  r-bsgenome
+  r-bsgenome.celegans.ucsc.ce2
+  r-bsgenome.dmelanogaster.ucsc.dm3
+  r-bsgenome.hsapiens.ucsc.hg18
+  r-drosophila2probe
+  r-genomicfeatures
+  r-hgu133aprobe
+  r-hgu95av2cdf
+  r-hgu95av2probe
+  r-rmpi
+  r-runit
+)
+source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('fe0b28157ea2e11700f2b920f76d89d7f8199276a4a19e6478875070b9812d76')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

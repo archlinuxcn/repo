@@ -1,0 +1,39 @@
+# Maintainer: hubutui <hot123tea123@gmail.com>
+
+_pkgname=IRanges
+_pkgver=2.26.0
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Foundation of integer range manipulation in Bioconductor'
+arch=('x86_64')
+url="https://bioconductor.org/packages/${_pkgname}"
+license=('Artistic2.0')
+depends=(
+  r
+  r-biocgenerics
+  r-s4vectors
+)
+optdepends=(
+  r-biocstyle
+  r-bsgenome.celegans.ucsc.ce2
+  r-genomicalignments
+  r-genomicfeatures
+  r-genomicranges
+  r-pasillabamsubset
+  r-rsamtools
+  r-runit
+  r-xvector
+)
+source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('7d1e8fcbd1f9fc9005765e216418d819775452a77e48a59b80347eb93047f237')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

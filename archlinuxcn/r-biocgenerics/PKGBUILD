@@ -1,0 +1,43 @@
+# Maintainer: hubutui <hot123tea123@gmail.com>
+
+_pkgname=BiocGenerics
+_pkgver=0.38.0
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='S4 generic functions used in Bioconductor'
+arch=('any')
+url="https://bioconductor.org/packages/${_pkgname}"
+license=('Artistic2.0')
+depends=(
+  r
+)
+optdepends=(
+  r-affy
+  r-affyplm
+  r-annotate
+  r-annotationdbi
+  r-biobase
+  r-biostrings
+  r-delayedarray
+  r-deseq2
+  r-flowclust
+  r-genomicranges
+  r-iranges
+  r-msnbase
+  r-rsamtools
+  r-runit
+  r-s4vectors
+)
+source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('a692fe68256578fc1beb60630cfd45ffc3b003ad36801dce8970c4e9eba767cf')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:
