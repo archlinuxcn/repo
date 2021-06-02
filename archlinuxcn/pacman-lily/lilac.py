@@ -8,6 +8,7 @@ def pre_build():
   g.files = download_official_pkgbuild('pacman')
 
   build = False
+  package = False
   for line in edit_file('PKGBUILD'):
     if line.startswith('pkgname='):
       line = 'pkgname=pacman-lily'
@@ -23,9 +24,15 @@ def pre_build():
       line += '\n  patch -p1 -i "${srcdir}/pacman.patch"'
       build = False
     elif line.startswith('source=('):
-      line = line.replace('(', '(pacman.patch\n        ')
+      line = line.replace('(', '(pacman.patch\n        pacsync\n        ')
     elif line.startswith('sha256sums=('):
-      line = line.replace('(', '(b8fa45a99dfb5b902aae6376043f6f90806bb8e6e32e969b5160fc7d452dd898\n            ')
+      line = line.replace('(', '(b8fa45a99dfb5b902aae6376043f6f90806bb8e6e32e969b5160fc7d452dd898\n            207d5cee261bba18e650bbd2c249ffd8fe9c1dbd7de6b241d8bf011848faa70b\n            ')
+    elif line.startswith('package() '):
+      package = True
+    elif package and line.startswith('}'):
+      line = '  install -m755 "$srcdir/pacsync" "$pkgdir/usr/bin"\n' + line
+      package = False
+
     if '${pkgname}' in line:
       line = line.replace('${pkgname}', 'pacman-lily')
     print(line)

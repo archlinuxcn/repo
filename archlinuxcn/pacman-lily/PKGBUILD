@@ -21,10 +21,12 @@ options=('strip' 'debug')
 validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@archlinux.org>
               'B8151B117037781095514CA7BBDFFC92306B1121') # Andrew Gregory (pacman) <andrew@archlinux.org>
 source=(pacman.patch
+        pacsync
         https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.xz{,.sig}
         pacman.conf
         makepkg.conf)
 sha256sums=(b8fa45a99dfb5b902aae6376043f6f90806bb8e6e32e969b5160fc7d452dd898
+            207d5cee261bba18e650bbd2c249ffd8fe9c1dbd7de6b241d8bf011848faa70b
             '004448085a7747bdc7a0a4dd5d1fb7556c6b890111a06e029ab088f9905d4808'
             'SKIP'
             '606e55f06c297d2b508bc4438890b229a1abaa68b0374a2d7f94c8e7be6792d7'
@@ -60,4 +62,5 @@ package() {
   install -dm755 "$pkgdir/etc"
   install -m644 "$srcdir/pacman.conf" "$pkgdir/etc"
   install -m644 "$srcdir/makepkg.conf" "$pkgdir/etc"
+  install -m755 "$srcdir/pacsync" "$pkgdir/usr/bin"
 }
