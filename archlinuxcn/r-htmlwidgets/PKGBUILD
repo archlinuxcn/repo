@@ -1,0 +1,36 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=htmlwidgets
+_pkgver=1.5.3
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='HTML Widgets for R'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-htmltools
+  r-jsonlite
+  r-yaml
+)
+optdepends=(
+  r-knitr
+  r-rmarkdown
+  r-shiny
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('01a5833182cc224bd100be2815e57e67b524de9f2bb1542787b6e3d1303f0f29')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

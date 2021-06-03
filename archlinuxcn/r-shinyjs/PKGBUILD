@@ -1,0 +1,39 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=shinyjs
+_pkgver=2.0.0
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Easily Improve the User Experience of Your Shiny Apps in Seconds'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  pandoc
+  r
+  r-digest
+  r-htmltools
+  r-jsonlite
+  r-shiny
+)
+optdepends=(
+  r-knitr
+  r-rmarkdown
+  r-shinyace
+  r-shinydisconnect
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('c2cdd9fab41f6b46bb41b288cd9b3fb3a7fe9627b664e3a58a0cb5dd4c19f8ff')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

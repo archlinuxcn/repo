@@ -1,0 +1,60 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=rgl
+_pkgver=0.106.8
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='3D Visualization Using OpenGL'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  glu
+  freetype2
+  mesa
+  pandoc
+  r
+  r-crosstalk
+  r-htmltools
+  r-htmlwidgets
+  r-jsonlite
+  r-knitr
+  r-magrittr
+  r-manipulatewidget
+  r-shiny
+)
+optdepends=(
+  r-akima
+  r-alphashape3d
+  r-deldir
+  r-downlit
+  r-extrafont
+  r-interp
+  r-js
+  r-lattice
+  r-magick
+  r-mass
+  r-misc3d
+  r-orientlib
+  r-pkgdown
+  r-plotrix
+  r-rmarkdown
+  r-rstudioapi
+  r-tcltk
+  r-tripack
+  r-waldo
+  r-webshot2
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('fc2ac2293cecd5bf0bc922a00f0b3cf12294fb53041efc0132ea07c4ebda3f54')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

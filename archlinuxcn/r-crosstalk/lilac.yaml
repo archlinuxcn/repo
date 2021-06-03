@@ -1,0 +1,12 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-htmltools
+  - r-jsonlite
+  - r-lazyeval
+  - r-r6
+update_on:
+  - regex: crosstalk_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=crosstalk
