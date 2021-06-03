@@ -16,7 +16,7 @@
  #endif
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -6291,11 +6291,18 @@ function onViewToolbarsPopupShowing(aEve
+@@ -6251,11 +6251,18 @@ function onViewToolbarsPopupShowing(aEve
    MozXULElement.insertFTLIfNeeded("browser/toolbarContextMenu.ftl");
    let firstMenuItem = aInsertPoint || popup.firstElementChild;
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
@@ -48,7 +48,7 @@
                id="organizeButton" label="&organize.label;"
 --- a/dom/xul/XULPopupElement.cpp
 +++ b/dom/xul/XULPopupElement.cpp
-@@ -158,6 +158,10 @@ void XULPopupElement::GetState(nsString&
+@@ -211,6 +211,10 @@ void XULPopupElement::GetState(nsString&
    // set this here in case there's no frame for the popup
    aState.AssignLiteral("closed");
  
@@ -56,10 +56,10 @@
 +  nsAutoString nativeState;
 +#endif
 +
-   nsMenuPopupFrame* menuPopupFrame = do_QueryFrame(GetPrimaryFrame());
-   if (menuPopupFrame) {
-     switch (menuPopupFrame->PopupState()) {
-@@ -181,6 +185,11 @@ void XULPopupElement::GetState(nsString&
+   if (nsXULPopupManager* pm = nsXULPopupManager::GetInstance()) {
+     switch (pm->GetPopupState(this)) {
+       case ePopupShown:
+@@ -233,6 +237,11 @@ void XULPopupElement::GetState(nsString&
          break;
      }
    }
@@ -87,7 +87,7 @@
  if CONFIG["CC_TYPE"] in ("clang", "gcc"):
 --- a/layout/build/moz.build
 +++ b/layout/build/moz.build
-@@ -67,6 +67,10 @@ elif CONFIG["MOZ_WIDGET_TOOLKIT"] == "an
+@@ -68,6 +68,10 @@ elif CONFIG["MOZ_WIDGET_TOOLKIT"] == "an
          "/dom/system",
          "/dom/system/android",
      ]
@@ -2536,7 +2536,7 @@
 +        if (command) {
 +            command->InitCommandEvent(u"command"_ns, true, true,
 +                                      nsGlobalWindowInner::Cast(doc->GetInnerWindow()),
-+                                      0, false, false, false, false, nullptr, 0, rv);
++                                      0, false, false, false, false, 0, nullptr, 0, rv);
 +            if (!rv.Failed()) {
 +                event->SetTrusted(true);
 +                ContentNode()->DispatchEvent(*event, rv);
@@ -5064,7 +5064,7 @@
 +#endif /* __nsNativeMenuService_h__ */
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
-@@ -6409,6 +6409,10 @@ void nsWindow::HideWindowChrome(bool aSh
+@@ -6436,6 +6436,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5086,7 +5086,7 @@
  #undef LOG
  #ifdef MOZ_LOGGING
  
-@@ -182,6 +184,8 @@ class nsWindow final : public nsBaseWidg
+@@ -168,6 +170,8 @@ class nsWindow final : public nsBaseWidg
                                    nsIScreen* aTargetScreen = nullptr) override;
    virtual void HideWindowChrome(bool aShouldHide) override;
  
@@ -5095,7 +5095,7 @@
    /**
     * GetLastUserInputTime returns a timestamp for the most recent user input
     * event.  This is intended for pointer grab requests (including drags).
-@@ -722,6 +726,8 @@ class nsWindow final : public nsBaseWidg
+@@ -708,6 +712,8 @@ class nsWindow final : public nsBaseWidg
    static GtkWindowDecoration sGtkWindowDecoration;
  
    static bool sTransparentMainWindow;
@@ -5126,7 +5126,7 @@
  import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
-@@ -2507,7 +2508,7 @@ STATIC_ATOMS = [
+@@ -2506,7 +2507,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
      # END ATOMS
@@ -5154,7 +5154,7 @@
  if defined('MOZ_X11'):
 --- a/xpfe/appshell/AppWindow.cpp
 +++ b/xpfe/appshell/AppWindow.cpp
-@@ -79,7 +79,7 @@
+@@ -80,7 +80,7 @@
  
  #include "mozilla/dom/DocumentL10n.h"
  
@@ -5227,7 +5227,7 @@
 +#endif  // mozilla_widget_NativeMenuSupport_h
 --- a/widget/moz.build
 +++ b/widget/moz.build
-@@ -145,6 +145,11 @@ EXPORTS += [
+@@ -144,6 +144,11 @@ EXPORTS += [
      "PuppetWidget.h",
  ]
  
