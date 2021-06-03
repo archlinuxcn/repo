@@ -2,7 +2,7 @@
 # Contributor: Paul Davis <paul@dangersalad.com>
 pkgname=openrgb
 pkgver=0.6
-pkgrel=1
+pkgrel=2
 pkgdesc="Open source RGB lighting control that doesn't depend on manufacturer software."
 arch=("x86_64")
 url="https://gitlab.com/CalcProgrammer1/OpenRGB"
@@ -15,12 +15,16 @@ source=(
    openrgb.conf
    openrgb.service
    openrgb.desktop
+   09e5243-g502detectionfix.patch
+   ae88771-g502pidfix.patch
 )
 sha256sums=(
    'cfcec232550d0c4d00e87b91ba501ca248a07e3b50a07c50d0c0af37dc03dffa'
    'b5a53d747422f8b594e3e9615e238457d696732efce94050cdd72182a8645ef2'
-   '97445ee2e0824441dbebab14a10c2ea6983e14ab8f7177b977ee6b8bdc3398f9'
+   'd5e61b52d8f753a0500ed2cb951362fee637611a9cae8d59f06f1bf72bc9999f'
    '2f96f6bcb381490dae7132b9533045dd46db8a0fc9f9ab5d00d952545800c6fc'
+   '7dc3f07409ff52efdf836d277be9d8bd68093980f0f6f14bed6f1718c31224cf'
+   '80baad74c9f5f6109ec6e1179737e85ef93395b8647e2e7efeb29671c26e2701'
 )
 
 prepare() {
