@@ -1,0 +1,28 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-bslib
+  - r-cachem
+  - r-commonmark
+  - r-crayon
+  - r-digest
+  - r-ellipsis
+  - r-fastmap
+  - r-glue
+  - r-htmltools
+  - r-httpuv
+  - r-jsonlite
+  - r-later
+  - r-lifecycle
+  - r-mime
+  - r-promises
+  - r-r6
+  - r-rlang
+  - r-sourcetools
+  - r-withr
+  - r-xtable
+update_on:
+  - regex: shiny_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=shiny

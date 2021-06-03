@@ -1,0 +1,32 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=commonmark
+_pkgver=1.7
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='High Performance CommonMark and Github Markdown Rendering in R'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('BSD')
+depends=(
+  r
+)
+optdepends=(
+  r-curl
+  r-testthat
+  r-xml2
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('d14a767a3ea9778d6165f44f980dd257423ca6043926e3cd8f664f7171f89108')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

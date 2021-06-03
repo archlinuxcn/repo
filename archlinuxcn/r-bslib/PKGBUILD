@@ -1,0 +1,43 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=bslib
+_pkgver=0.2.5.1
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc="Custom 'Bootstrap' 'Sass' Themes for 'shiny' and 'rmarkdown'"
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-htmltools
+  r-jquerylib
+  r-jsonlite
+  r-magrittr
+  r-rlang
+  r-sass
+)
+optdepends=(
+  r-curl
+  r-knitr
+  r-rappdirs
+  r-rmarkdown
+  r-shiny
+  r-testthat
+  r-thematic
+  r-withr
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('7e42faf071dc1a03336c22885e2102b8bd155f3914987ce30eb82d71e969c899')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
