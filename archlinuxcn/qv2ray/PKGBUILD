@@ -3,7 +3,7 @@
 # Contributor: Leroy.H.Y <me at lhy0403 dot top>
 pkgname=qv2ray
 pkgver=2.6.3
-pkgrel=25
+pkgrel=26
 pkgdesc="Cross-platform V2ray Client written in Qt (Stable Release)"
 arch=('x86_64')
 url='https://github.com/Qv2ray/Qv2ray'
@@ -15,9 +15,11 @@ makedepends=('git' 'make' 'qt5-tools' 'which' 'gcc' 'qt5-declarative'
 provides=('qv2ray')
 conflicts=('qv2ray')
 
-source=('Qv2ray::git+https://github.com/Qv2ray/Qv2ray')
+source=('Qv2ray::git+https://github.com/Qv2ray/Qv2ray'
+        'missing-header-zxing-cpp.patch')
 
-sha512sums=('SKIP')
+sha512sums=('SKIP'
+            'a6e512433eedd90484868c79acc235811cc33769121f2882f58898408f253376613f3000568ea1c363eafe3b815ed2ecf94a4f445081c13e228e84008384ec78')
 
 pkgver() {
     printf "%s" $(cat ${srcdir}/Qv2ray/makespec/VERSION)
@@ -28,6 +30,9 @@ prepare() {
     git submodule init
     git config submodule."3rdparty/zxing-cpp".active true 
     git submodule update
+
+    # Temporarily fix https://github.com/Qv2ray/Qv2ray/issues/1494
+    patch -Np1 -i ../missing-header-zxing-cpp.patch
 }
 
 build() {
