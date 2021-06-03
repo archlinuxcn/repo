@@ -1,0 +1,52 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=rio
+_pkgver=0.5.26
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='A Swiss-Army Knife for Data I/O'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-curl
+  r-data.table
+  r-haven
+  r-openxlsx
+  r-readxl
+  r-tibble
+)
+optdepends=(
+  r-arrow
+  r-bit64
+  r-clipr
+  r-datasets
+  r-feather
+  r-fst
+  r-hexview
+  r-jsonlite
+  r-knitr
+  r-magrittr
+  r-pzfx
+  r-readods
+  r-readr
+  r-rmarkdown
+  r-rmatio
+  r-testthat
+  r-xml2
+  r-yaml
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('4df0762782540133f99c5100232b417a2f56d0576bd67f76361fac2596ecdfcc')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

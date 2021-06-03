@@ -1,0 +1,26 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=abind
+_pkgver=1.4-5
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Combine Multidimensional Arrays'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('LGPL')
+depends=(
+  r
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('3a3ace5afbcb86e56889efcebf3bf5c3bb042a282ba7cc4412d450bb246a3f2c')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

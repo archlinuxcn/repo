@@ -1,0 +1,34 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=sp
+_pkgver=1.4-5
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Classes and Methods for Spatial Data'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+)
+optdepends=(
+  r-deldir
+  r-gstat
+  r-maptools
+  r-rcolorbrewer
+  r-rgdal
+  r-rgeos
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('6beeb216d540475cdead5f2c72d6c7ee400fe2423c1882d72cf57f6df58f09da')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

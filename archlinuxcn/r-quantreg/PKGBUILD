@@ -1,0 +1,41 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=quantreg
+_pkgver=5.85
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Quantile Regression'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-conquer
+  r-matrixmodels
+  r-sparsem
+)
+optdepends=(
+  r-akima
+  r-formula
+  r-logspline
+  r-mass
+  r-nor1mix
+  r-r.rsp
+  r-rgl
+  r-survival
+  r-tripack
+  r-zoo
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('049f45176ab2541e4dbad88d19e390dd724a9d6dcbf821de99c12f6f027d1af9')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

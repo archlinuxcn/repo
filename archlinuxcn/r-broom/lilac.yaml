@@ -1,0 +1,18 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-backports
+  - r-dplyr
+  - r-ellipsis
+  - r-generics
+  - r-glue
+  - r-purrr
+  - r-rlang
+  - r-stringr
+  - r-tibble
+  - r-tidyr
+update_on:
+  - regex: broom_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=broom

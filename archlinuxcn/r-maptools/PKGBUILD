@@ -1,0 +1,41 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=maptools
+_pkgver=1.1-1
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Tools for Handling Spatial Objects'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-sp
+)
+optdepends=(
+  r-gpclib
+  r-maps
+  r-pbsmapping
+  r-plotrix
+  r-polyclip
+  r-raster
+  r-rcolorbrewer
+  r-rgeos
+  r-spatstat
+  r-spatstat.geom
+  r-spatstat.linnet
+  r-spatstat.utils
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('14a95dc56f51de7f64495f80761d13e2d13f0db2f4b0b50574d7d02c207fc45e')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

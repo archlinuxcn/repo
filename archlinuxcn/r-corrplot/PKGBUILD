@@ -1,0 +1,34 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=corrplot
+_pkgver=0.88
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Visualization of a Correlation Matrix'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+)
+optdepends=(
+  r-knitr
+  r-prettydoc
+  r-rcolorbrewer
+  r-rmarkdown
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('bfd14d28ea0009843bb27ec4d65d2b0deb75c66414146fa5b9248a7e9b8e09e8')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

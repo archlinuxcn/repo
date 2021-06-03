@@ -1,0 +1,124 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=broom
+_pkgver=0.7.6
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Convert Statistical Objects into Tidy Tibbles'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-backports
+  r-dplyr
+  r-ellipsis
+  r-generics
+  r-glue
+  r-purrr
+  r-rlang
+  r-stringr
+  r-tibble
+  r-tidyr
+)
+optdepends=(
+  r-aer
+  r-akima
+  r-auc
+  r-bbmle
+  r-betareg
+  r-biglm
+  r-bingroup
+  r-boot
+  r-btergm
+  r-car
+  r-caret
+  r-cluster
+  r-cmprsk
+  r-coda
+  r-covr
+  r-drc
+  r-e1071
+  r-emmeans
+  r-epir
+  r-ergm
+  r-fixest
+  r-gam
+  r-gee
+  r-geepack
+  r-ggplot2
+  r-glmnet
+  r-glmnetutils
+  r-gmm
+  r-hmisc
+  r-irlba
+  r-joinerml
+  r-kendall
+  r-knitr
+  r-ks
+  r-lahman
+  r-lavaan
+  r-leaps
+  r-lfe
+  r-lm.beta
+  r-lme4
+  r-lmodel2
+  r-lmtest
+  r-lsmeans
+  r-maps
+  r-maptools
+  r-margins
+  r-mass
+  r-matrix
+  r-mclust
+  r-mediation
+  r-metafor
+  r-mfx
+  r-mgcv
+  r-mlogit
+  r-modeldata
+  r-modeltests
+  r-muhaz
+  r-multcomp
+  r-network
+  r-nnet
+  r-orcutt
+  r-ordinal
+  r-plm
+  r-polca
+  r-psych
+  r-quantreg
+  r-rchoice
+  r-rgeos
+  r-rmarkdown
+  r-robust
+  r-robustbase
+  r-rsample
+  r-sandwich
+  r-sp
+  r-spatialreg
+  r-spdep
+  r-speedglm
+  r-spelling
+  r-survey
+  r-survival
+  r-systemfit
+  r-testthat
+  r-tseries
+  r-vars
+  r-zoo
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('1649c09bbb22682e50e5c19b1e6a546cf5c5b14024abdff1e01d7b002ba24cd2')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

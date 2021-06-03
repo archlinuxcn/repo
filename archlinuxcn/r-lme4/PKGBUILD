@@ -1,0 +1,50 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=lme4
+_pkgver=1.1-27
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc="Linear Mixed-Effects Models using 'Eigen' and S4"
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-minqa
+  r-nloptr
+  r-rcpp
+  r-rcppeigen
+)
+optdepends=(
+  r-car
+  r-dfoptim
+  r-gamm4
+  r-ggplot2
+  r-hsaur3
+  r-knitr
+  r-memss
+  r-mgcv
+  r-mlmrev
+  r-numderiv
+  r-optimx
+  r-pbkrtest
+  r-pkpdmodels
+  r-rmarkdown
+  r-rr2
+  r-semeff
+  r-statmod
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('fe0391c76c78188ac1eefb18014d0607212c909b55474d985a919b55efe5a15f')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:
