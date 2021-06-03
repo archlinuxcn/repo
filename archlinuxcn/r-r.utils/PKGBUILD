@@ -1,0 +1,31 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=R.utils
+_pkgver=2.10.1
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Various Programming Utilities'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('LGPL')
+depends=(
+  r
+  r-r.methodss3
+  r-r.oo
+)
+optdepends=(
+  r-digest
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('957a4f51998c79403a50f6a46266e6553bbf08757b26bf80603a423bceb45abf')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

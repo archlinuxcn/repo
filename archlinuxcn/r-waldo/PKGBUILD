@@ -1,0 +1,39 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=waldo
+_pkgver=0.2.5
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Find Differences Between R Objects'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-cli
+  r-diffobj
+  r-fansi
+  r-glue
+  r-rematch2
+  r-rlang
+  r-tibble
+)
+optdepends=(
+  r-covr
+  r-r6
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('7961ab8528b7461c33b3a55ded5d1a214bf0e5fdfc6472a3c7e441d3dee55026')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

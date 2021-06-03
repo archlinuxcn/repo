@@ -1,0 +1,27 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-brio
+  - r-callr
+  - r-cli
+  - r-crayon
+  - r-desc
+  - r-digest
+  - r-ellipsis
+  - r-evaluate
+  - r-jsonlite
+  - r-lifecycle
+  - r-magrittr
+  - r-pkgload
+  - r-praise
+  - r-processx
+  - r-ps
+  - r-r6
+  - r-rlang
+  - r-waldo
+  - r-withr
+update_on:
+  - regex: testthat_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=testthat

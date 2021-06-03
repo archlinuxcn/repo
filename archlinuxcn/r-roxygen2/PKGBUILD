@@ -1,0 +1,47 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=roxygen2
+_pkgver=7.1.1
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='In-Line Documentation for R'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-brew
+  r-commonmark
+  r-desc
+  r-digest
+  r-knitr
+  r-pkgload
+  r-purrr
+  r-r6
+  r-rcpp
+  r-rlang
+  r-stringi
+  r-stringr
+  r-xml2
+)
+optdepends=(
+  r-covr
+  r-devtools
+  r-r.methodss3
+  r-r.oo
+  r-rmarkdown
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('bdc55ded037d4366f4d25a0d69e880dacc0fa22bee20f595d45855eef8548861')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:
