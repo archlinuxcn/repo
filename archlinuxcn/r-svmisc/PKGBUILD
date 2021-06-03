@@ -1,0 +1,35 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=svMisc
+_pkgver=1.1.4
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc="'SciViews' - Miscellaneous Functions"
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+)
+optdepends=(
+  r-covr
+  r-knitr
+  r-markdown
+  r-rjava
+  r-spelling
+  r-tcltk
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('6aa00bc86c6ba543c50872413534ae8d1b7662af9013f7886e8a7f4f57841579')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:
