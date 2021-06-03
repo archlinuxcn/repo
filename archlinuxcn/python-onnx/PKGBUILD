@@ -25,12 +25,6 @@ checkdepends=(
   python-nose
   python-pytest
   python-scipy
-  ${optdepends[@]}
-)
-optdepends=(
-  mxnet
-  python-pytorch
-  python-tensorflow
 )
 source=("${pkgname}::git+https://github.com/onnx/onnx.git#tag=v${pkgver}")
 sha512sums=('SKIP')
