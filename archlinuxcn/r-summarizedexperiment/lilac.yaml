@@ -1,0 +1,16 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-biobase
+  - r-biocgenerics
+  - r-delayedarray
+  - r-genomeinfodb
+  - r-genomicranges
+  - r-iranges
+  - r-matrixgenerics
+  - r-s4vectors
+update_on:
+  - regex: SummarizedExperiment_([\d._-]+).tar.gz
+    source: regex
+    url: https://bioconductor.org/packages/SummarizedExperiment

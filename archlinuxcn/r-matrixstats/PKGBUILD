@@ -1,0 +1,34 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=matrixStats
+_pkgver=0.59.0
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Functions that Apply to Rows and Columns of Matrices (and to Vectors)'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('Artistic2.0')
+depends=(
+  r
+)
+optdepends=(
+  r-base64enc
+  r-ggplot2
+  r-knitr
+  r-microbenchmark
+  r-r.devices
+  r-r.rsp
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('07428726ad29d9b144c88946dc6ac240355df49dd97f10e8b071e5d332560b9d')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

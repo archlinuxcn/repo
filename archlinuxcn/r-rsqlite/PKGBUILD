@@ -1,0 +1,44 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=RSQLite
+_pkgver=2.2.7
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc="'SQLite' Interface for R"
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('LGPL')
+depends=(
+  r
+  r-bit64
+  r-blob
+  r-dbi
+  r-memoise
+  r-pkgconfig
+  r-plogr
+  r-rcpp
+)
+optdepends=(
+  r-dbitest
+  r-gert
+  r-gh
+  r-hms
+  r-knitr
+  r-rmarkdown
+  r-rvest
+  r-testthat
+  r-xml2
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('3126a38f51610a90f411e54d7280e6ccf2a2b438dfa28d312c5e90dd3cb109c9')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

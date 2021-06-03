@@ -1,0 +1,16 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-annotationdbi
+  - r-biocfilecache
+  - r-digest
+  - r-httr
+  - r-progress
+  - r-rappdirs
+  - r-stringr
+  - r-xml
+update_on:
+  - regex: biomaRt_([\d._-]+).tar.gz
+    source: regex
+    url: https://bioconductor.org/packages/biomaRt

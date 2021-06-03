@@ -1,0 +1,17 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-biocgenerics
+  - r-biocparallel
+  - r-biostrings
+  - r-genomeinfodb
+  - r-genomicranges
+  - r-iranges
+  - r-rsamtools
+  - r-s4vectors
+  - r-summarizedexperiment
+update_on:
+  - regex: GenomicAlignments_([\d._-]+).tar.gz
+    source: regex
+    url: https://bioconductor.org/packages/GenomicAlignments

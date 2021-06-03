@@ -1,0 +1,32 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=XML
+_pkgver=3.99-0.6
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Tools for Parsing and Generating XML Within R and S-Plus'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('BSD')
+depends=(
+  libxml2
+  r
+)
+optdepends=(
+  r-bitops
+  r-rcurl
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('a8b895116960c432c7cb88b41084ba0b87e8db1e5e71ea03a1ef54b798da2b62')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

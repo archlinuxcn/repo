@@ -1,0 +1,28 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=stringi
+_pkgver=1.6.2
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Character String Processing Facilities'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('custom')
+depends=(
+  icu
+  r
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('3a151dd9b982696370ac8df3920afe462f8abbd4e41b479ff8b66cfd7b602dae')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

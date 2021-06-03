@@ -1,0 +1,51 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=SummarizedExperiment
+_pkgver=1.22.0
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='SummarizedExperiment container'
+arch=('any')
+url="https://bioconductor.org/packages/${_pkgname}"
+license=('Artistic2.0')
+depends=(
+  r
+  r-biobase
+  r-biocgenerics
+  r-delayedarray
+  r-genomeinfodb
+  r-genomicranges
+  r-iranges
+  r-matrixgenerics
+  r-s4vectors
+)
+optdepends=(
+  r-airway
+  r-annotate
+  r-annotationdbi
+  r-biocstyle
+  r-digest
+  r-genomicfeatures
+  r-hdf5array
+  r-hgu95av2.db
+  r-jsonlite
+  r-knitr
+  r-rhdf5
+  r-rmarkdown
+  r-runit
+  r-testthat
+  r-txdb.hsapiens.ucsc.hg19.knowngene
+)
+source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('2f58077942686218a01ef5645a41516a71eea7f666450a2b32713d69662cd79a')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

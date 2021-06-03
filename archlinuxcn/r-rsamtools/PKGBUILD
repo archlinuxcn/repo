@@ -1,0 +1,48 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=Rsamtools
+_pkgver=2.8.0
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Binary alignment (BAM), FASTA, variant call (BCF), and tabix file import'
+arch=('x86_64')
+url="https://bioconductor.org/packages/${_pkgname}"
+license=('Artistic2.0')
+depends=(
+  r
+  r-biocgenerics
+  r-biocparallel
+  r-biostrings
+  r-bitops
+  r-genomeinfodb
+  r-genomicranges
+  r-iranges
+  r-rhtslib
+  r-s4vectors
+  r-xvector
+  r-zlibbioc
+)
+optdepends=(
+  r-biocstyle
+  r-bsgenome.hsapiens.ucsc.hg19
+  r-genomicalignments
+  r-genomicfeatures
+  r-rnaseqdata.hnrnpc.bam.chr14
+  r-runit
+  r-shortread
+  r-txdb.dmelanogaster.ucsc.dm3.ensgene
+  r-txdb.hsapiens.ucsc.hg18.knowngene
+)
+source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('05ab1ef36e9f5d3b4583929d5c461bc863aed9674fea0267edf58ebe5681302b')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

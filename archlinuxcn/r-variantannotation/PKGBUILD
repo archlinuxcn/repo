@@ -1,0 +1,57 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=VariantAnnotation
+_pkgver=1.38.0
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Annotation of Genetic Variants'
+arch=('x86_64')
+url="https://bioconductor.org/packages/${_pkgname}"
+license=('Artistic2.0')
+depends=(
+  r
+  r-annotationdbi
+  r-biobase
+  r-biocgenerics
+  r-biostrings
+  r-bsgenome
+  r-dbi
+  r-genomeinfodb
+  r-genomicfeatures
+  r-genomicranges
+  r-iranges
+  r-matrixgenerics
+  r-rhtslib
+  r-rsamtools
+  r-rtracklayer
+  r-s4vectors
+  r-summarizedexperiment
+  r-xvector
+  r-zlibbioc
+)
+optdepends=(
+  r-annotationhub
+  r-biocstyle
+  r-bsgenome.hsapiens.ucsc.hg19
+  r-ggplot2
+  r-polyphen.hsapiens.dbsnp131
+  r-runit
+  r-sift.hsapiens.dbsnp132
+  r-sift.hsapiens.dbsnp137
+  r-snplocs.hsapiens.dbsnp.20101109
+  r-snpstats
+  r-txdb.hsapiens.ucsc.hg19.knowngene
+)
+source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('301b906e144e33d85582242e9147de5fd2c0e4099193dd80357a0d8524003931')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:
