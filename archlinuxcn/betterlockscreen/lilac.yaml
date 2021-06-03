@@ -1,10 +1,9 @@
-pre_build_script: aur_pre_build(maintainers=['dctxmei'])
-
-post_build: aur_post_build
-
 update_on:
-  - source: aur
-    aur: betterlockscreen
+  - source: github
+    github: pavanjadhaw/betterlockscreen
+    use_latest_release: true
+  - source: manual
+    manual: 1.0
 
 maintainers:
   - github: dctxmei
