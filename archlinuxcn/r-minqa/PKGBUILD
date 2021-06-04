@@ -13,6 +13,9 @@ depends=(
   r
   r-rcpp
 )
+makedepends=(
+  gcc-fortran
+)
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
 sha256sums=('cfa193a4a9c55cb08f3faf4ab09c11b70412523767f19894e4eafc6e94cccd0c')
 
