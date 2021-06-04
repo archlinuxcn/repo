@@ -17,7 +17,7 @@ sha256sums=('9b80af4b93e0b35bc916a584522ecf9eb39414c8010a2e4f2bb6941fdc5faf28')
 package() {
     cd "${pkgname}-${pkgver}"/
     install -Dm 755 "${pkgname}" -t "${pkgdir}"/usr/bin/
-    install -Dm 644 "${pkgname}@.service" -t "${pkgdir}"/usr/lib/systemd/system/
+    install -Dm 644 "system/${pkgname}@.service" -t "${pkgdir}"/usr/lib/systemd/system/
     install -Dm 644 examples/"${pkgname}rc" -t "${pkgdir}"/usr/share/doc/betterlockscreen/examples/
     install -Dm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/"${pkgname}"/
 }
