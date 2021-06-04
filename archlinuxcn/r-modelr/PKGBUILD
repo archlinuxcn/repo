@@ -1,0 +1,40 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=modelr
+_pkgver=0.1.8
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Modelling Functions that Work with the Pipe'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-broom
+  r-magrittr
+  r-purrr
+  r-rlang
+  r-tibble
+  r-tidyr
+  r-tidyselect
+  r-vctrs
+)
+optdepends=(
+  r-compiler
+  r-covr
+  r-ggplot2
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('825ba77d95d60cfb94920bec910872ca2ffe7790a44148b2992be2759cb361c4')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,45 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=dtplyr
+_pkgver=1.1.0
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc="Data Table Back-End for 'dplyr'"
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-crayon
+  r-data.table
+  r-dplyr
+  r-ellipsis
+  r-glue
+  r-lifecycle
+  r-rlang
+  r-tibble
+  r-tidyselect
+  r-vctrs
+)
+optdepends=(
+  r-bench
+  r-covr
+  r-knitr
+  r-rmarkdown
+  r-testthat
+  r-tidyr
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('99681b7285d7d5086e5595ca6bbeebf7f4e2ee358a32b694cd9d35916cdfc732')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

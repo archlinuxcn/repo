@@ -1,0 +1,50 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=googlesheets4
+_pkgver=0.3.0
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Access Google Sheets using the Sheets API V4'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-cellranger
+  r-curl
+  r-gargle
+  r-glue
+  r-googledrive
+  r-httr
+  r-ids
+  r-lifecycle
+  r-magrittr
+  r-purrr
+  r-rematch2
+  r-rlang
+  r-tibble
+  r-vctrs
+)
+optdepends=(
+  r-covr
+  r-readr
+  r-rmarkdown
+  r-sodium
+  r-spelling
+  r-testthat
+  r-withr
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('621137d078d89a91f59e61a2be83f3bcfbef2e6db9c623b1485940f51b3b6111')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

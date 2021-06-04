@@ -1,0 +1,46 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=gargle
+_pkgver=1.1.0
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Utilities for Working with Google APIs'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-cli
+  r-fs
+  r-glue
+  r-httr
+  r-jsonlite
+  r-rappdirs
+  r-rlang
+  r-rstudioapi
+  r-withr
+)
+optdepends=(
+  r-covr
+  r-httpuv
+  r-knitr
+  r-mockr
+  r-rmarkdown
+  r-sodium
+  r-spelling
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('7ce429638a3e3286e78f801636b3671400c0ea1647a159fa4d7c91f27f4bc20f')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
