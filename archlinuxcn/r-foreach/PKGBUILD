@@ -1,0 +1,35 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=foreach
+_pkgver=1.5.1
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Provides Foreach Looping Construct'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('Apache')
+depends=(
+  r
+  r-iterators
+)
+optdepends=(
+  r-domc
+  r-doparallel
+  r-knitr
+  r-randomforest
+  r-rmarkdown
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('fb5ad69e295618c52b2ac7dff84a0771462870a97345374d43b3de2dc31a68e1')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:
