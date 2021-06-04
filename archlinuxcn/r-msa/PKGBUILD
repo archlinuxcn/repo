@@ -1,0 +1,50 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=msa
+_pkgver=1.24.0
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Multiple Sequence Alignment'
+arch=('x86_64')
+url="https://bioconductor.org/packages/${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-biocgenerics
+  r-biostrings
+  r-iranges
+  r-rcpp
+  r-s4vectors
+)
+optdepends=(
+  r-ape
+  r-biobase
+  r-knitr
+  r-phangorn
+  r-seqinr
+)
+source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz"
+  "0001.fix-building-with-gcc.patch"
+)
+sha256sums=('72003c10a43eb15895c7038479283c94ee1928b1a49a3d7478336cb2019ecd3e'
+            'bfbc216605985ddf0b029ec76a9719e6314c7f0071916afcb9200613491766bf')
+
+prepare() {
+  cd ${_pkgname}
+  # see also https://support.bioconductor.org/p/9135773/#9136764
+  patch -p1 -i "${srcdir}/0001.fix-building-with-gcc.patch"
+  cd "${srcdir}"
+  tar cvfz ${_pkgname}_${_pkgver}.tar.gz ${_pkgname}
+}
+
+build() {
+#  export CFLAGS="${CFLAGS} -fcommon"
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:
