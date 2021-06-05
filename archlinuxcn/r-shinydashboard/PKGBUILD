@@ -1,0 +1,29 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=shinydashboard
+_pkgver=0.7.1
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc="Create Dashboards with 'Shiny'"
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-htmltools
+  r-promises
+  r-shiny
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('51a49945c6b8a684111a2ba4b2a5964e3a50610286ce0378e37ae02316620a4e')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:
