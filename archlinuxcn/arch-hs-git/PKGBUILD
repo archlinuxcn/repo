@@ -1,16 +1,16 @@
 # Maintainer: berberman <hatsue@typed.icu>
 
 pkgname=arch-hs-git
-pkgver=r280.4171f0b
-pkgrel=5
+pkgver=0.9.0.r0.g3b41785
+pkgrel=9
 pkgdesc="Distribute hackage packages to archlinux"
 arch=('x86_64')
 url="https://github.com/berberman/arch-hs"
 license=('MIT')
-depends=('ghc-libs' 'haskell-aeson' 'haskell-req' 'haskell-hackage-db' 'haskell-megaparsec' 
+depends=('ghc-libs' 'haskell-aeson' 'haskell-hackage-db' 'haskell-megaparsec' 
   'haskell-algebraic-graphs' 'haskell-conduit' 'haskell-tar-conduit' 'haskell-conduit-extra' 
   'haskell-split' 'haskell-neat-interpolation' 'haskell-microlens' 'haskell-microlens-th' 
-  'haskell-polysemy' 'haskell-optparse-applicative' 'libalpm.so' 'haskell-diff' 
+  'haskell-polysemy' 'haskell-optparse-simple' 'libalpm.so' 'haskell-diff' 
   'haskell-prettyprinter' 'haskell-prettyprinter-ansi-terminal' 'haskell-arch-web'
 )
 makedepends=('ghc' 'git')
@@ -22,7 +22,7 @@ md5sums=('SKIP')
 
 pkgver() {
   cd "$srcdir/${pkgname%-git}"        
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 _gen_comp(){
@@ -54,7 +54,7 @@ build() {
   
   _gen_comp
   _gen_comp "-diff"
-  _gen_comp "-submit"
+  _gen_comp "-sync"
 }
 
 package() {
@@ -67,5 +67,5 @@ package() {
   
   _install_comp
   _install_comp "-diff"
-  _install_comp "-submit"
+  _install_comp "-sync"
 } 

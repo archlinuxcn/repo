@@ -1,0 +1,49 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=cpp11
+_pkgver=0.2.7
+pkgname=r-${_pkgname,,}
+pkgver=0.2.7
+pkgrel=1
+pkgdesc="A C++11 Interface for R's C Interface"
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+)
+optdepends=(
+  r-bench
+  r-brio
+  r-callr
+  r-cli
+  r-covr
+  r-decor
+  r-desc
+  r-ggplot2
+  r-glue
+  r-knitr
+  r-lobstr
+  r-mockery
+  r-progress
+  r-rmarkdown
+  r-scales
+  r-testthat
+  r-tibble
+  r-utils
+  r-vctrs
+  r-withr
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+md5sums=('5debd10f7fd1eff6acdce39b03caf358')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

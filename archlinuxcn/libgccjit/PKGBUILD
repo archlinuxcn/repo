@@ -1,87 +1,87 @@
+# Maintainer: Andrew Whatson <https://aur.archlinux.org/account/flatwhatson>
 # Maintainer: ZenTauro <zentauro at riseup dot net>
-# Maintainer: Ruben De Smet <ruben dot de dot smet at glycos dot org>
+# Contributor: Ruben De Smet <ruben dot de dot smet at glycos dot org>
 # Contributor: Jashandeep Sohi <jashandeep.s.sohi@gmail.com>
 
-_gccmajor="10.2.0"
-_gccver="10.2.0"
-_gccsrc="gcc-${_gccver}"
-
-pkgname='libgccjit'
-pkgver="${_gccver}"
-pkgrel=3
+pkgname=libgccjit
+pkgver=11.1.0
+pkgrel=1
 pkgdesc='Just-In-Time Compilation using GCC.'
+arch=(x86_64)
+license=(GPL3)
 url='https://gcc.gnu.org/wiki/JIT'
-license=(
- 'GPL3'
-)
-source=(
-   "ftp://gcc.gnu.org/pub/gcc/releases/gcc-$_gccmajor/$_gccsrc.tar.xz"
-)
-sha512sums=('42ae38928bd2e8183af445da34220964eb690b675b1892bbeb7cd5bb62be499011ec9a93397dba5e2fb681afadfc6f2767d03b9035b44ba9be807187ae6dc65e')
-#  "https://sources.archlinux.org/other/gcc/gcc-8.2.1-20180831.tar.xz"
-arch=(
- 'i686'
- 'x86_64'
-)
-depends=(
- 'glibc'
-# 'isl>=0.14'
- 'libmpc'
- 'zlib'
- "gcc-libs=$pkgver"
-)
-makedepends=(
- 'binutils'
- 'gcc-ada'
- 'libmpc>=0.8.1'
- 'gmp>=4.3.2'
- 'mpfr>=2.4.2'
-# 'isl>=0.14'
-)
-checkdepends=(
- 'dejagnu'
-)
-options=(
- '!emptydirs'
-)
+makedepends=(binutils libmpc)
+checkdepends=(dejagnu)
+depends=(glibc libmpc "gcc-libs=$pkgver")
+options=(!emptydirs)
+source=(https://sourceware.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.xz{,.sig})
+validpgpkeys=(F3691687D867B81B51CE07D9BBE43771487328A9  # bpiotrowski@archlinux.org
+              86CFFCA918CF3AF47147588051E8B148A9999C34  # evangelos@foutrelis.com
+              13975A70E63C361C73AE69EF6EEB81F8981C74C7  # richard.guenther@gmail.com
+              D3A93CAD751C2AF4F8C7AD516C35B99309B5FA62) # Jakub Jelinek <jakub@redhat.com>
+sha256sums=('4c4a6fb8a8396059241c2e674b85b351c26a5d678274007f076957afa1cc9ddf'
+            'SKIP')
 
 prepare() {
- cd "$srcdir/$_gccsrc"
+ cd "$srcdir/gcc-$pkgver"
 
  # Do not run fixincludes
  sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
+
+ # Arch Linux installs x86_64 libraries /lib
+ sed -i '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
+
+ # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
+ sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
 }
 
 build() {
- install -d "$srcdir/$pkgname-build"
+ mkdir -p "$srcdir/$pkgname-build"
  cd "$srcdir/$pkgname-build"
 
- CPPFLAGS="$CPPFLAGS -O2"
+ CFLAGS=${CFLAGS/-Werror=format-security/}
+ CXXFLAGS=${CXXFLAGS/-Werror=format-security/}
 
- ../$_gccsrc/configure \
-  --prefix="/usr" \
-  --libexecdir="/usr/lib" \
-  --with-system-zlib \
-  --with-bugurl='https://github.com/jashandeep-sohi/libgccjit-pkg/issues' \
-  --with-linker-hash-style=gnu \
-  --enable-host-shared \
-  --enable-shared \
-  --enable-checking=release \
-  --enable-languages=jit \
-  --enable-linker-build-id \
-  --enable-checking=release \
-  --disable-multilib \
-  --disable-bootstrap \
-  --disable-libssp \
-  --disable-lto \
-  --disable-libquadmath \
-  --disable-liboffloadmic \
-  --disable-libada \
-  --disable-libsanitizer \
-  --disable-libquadmath-support \
-  --disable-libgomp \
-  --disable-libvtv \
-  --disable-libsanitizer
+ "$srcdir/gcc-$pkgver/configure" --prefix=/usr \
+     --libdir=/usr/lib \
+     --libexecdir=/usr/lib \
+     --mandir=/usr/share/man \
+     --infodir=/usr/share/info \
+     --with-bugurl=https://aur.archlinux.org/packages/libgccjit/ \
+     --enable-languages=jit \
+     --with-linker-hash-style=gnu \
+     --with-system-zlib \
+     --enable-__cxa_atexit \
+     --enable-cet=auto \
+     --enable-checking=release \
+     --enable-clocale=gnu \
+     --enable-default-pie \
+     --enable-default-ssp \
+     --enable-gnu-indirect-function \
+     --enable-gnu-unique-object \
+     --enable-install-libiberty \
+     --enable-linker-build-id \
+     --enable-lto \
+     --enable-multilib \
+     --enable-plugin \
+     --enable-shared \
+     --enable-host-shared \
+     --enable-threads=posix \
+     --disable-bootstrap \
+     --disable-multilib \
+     --disable-libssp \
+     --disable-lto \
+     --disable-libquadmath \
+     --disable-liboffloadmic \
+     --disable-libada \
+     --disable-libsanitizer \
+     --disable-libquadmath-support \
+     --disable-libgomp \
+     --disable-libvtv \
+     --disable-libsanitizer \
+     --disable-libstdcxx-pch \
+     --disable-libunwind-exceptions \
+     --disable-werror
 
  make
 }

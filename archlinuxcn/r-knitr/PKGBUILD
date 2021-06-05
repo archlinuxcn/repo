@@ -1,0 +1,60 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=knitr
+_pkgver=1.33
+pkgname=r-${_pkgname,,}
+pkgver=1.33
+pkgrel=1
+pkgdesc='A General-Purpose Package for Dynamic Report Generation in R'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  pandoc
+  r
+  r-evaluate
+  r-highr
+  r-markdown
+  r-stringr
+  r-xfun
+  r-yaml
+)
+optdepends=(
+  r-bslib
+  r-codetools
+  r-dbi
+  r-digest
+  r-formatr
+  r-gifski
+  r-htmlwidgets
+  r-httr
+  r-jpeg
+  r-juliacall
+  r-magick
+  r-png
+  r-ragg
+  r-reticulate
+  r-rgl
+  r-rmarkdown
+  r-sass
+  r-showtext
+  r-styler
+  r-testit
+  r-tibble
+  r-tikzdevice
+  r-tinytex
+  r-webshot
+  r-xml2
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('2f83332b0a880de6eae522271bda7f862c97693fba45c23ab1f772028f6c0909')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

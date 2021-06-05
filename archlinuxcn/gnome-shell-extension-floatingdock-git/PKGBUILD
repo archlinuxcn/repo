@@ -1,0 +1,32 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+# Contributor: Thanos Apostolou <thanosapostolou@outlook.com>
+
+pkgname=gnome-shell-extension-floatingdock-git
+pkgver=r98.869c6cc
+pkgrel=4
+pkgdesc='Move dock anywhere on the desktop'
+arch=('any')
+url='https://github.com/sunwxg/gnome-shell-extension-floatingDock'
+license=('MIT')
+depends=(
+  gnome-shell
+)
+makedepends=(git)
+source=(
+  "${pkgname}::git+https://github.com/sunwxg/gnome-shell-extension-floatingDock.git"
+)
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${pkgname}"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+	cd "${pkgname}"
+  install -dm755 "${pkgdir}/usr/share/gnome-shell/extensions"
+  cp -r floatingDock@sun.wxg@gmail.com "${pkgdir}/usr/share/gnome-shell/extensions"
+  install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+# vim:set ts=2 sw=2 et:
+

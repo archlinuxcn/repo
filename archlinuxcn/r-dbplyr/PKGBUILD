@@ -1,0 +1,57 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=dbplyr
+_pkgver=2.1.1
+pkgname=r-${_pkgname,,}
+pkgver=2.1.1
+pkgrel=1
+pkgdesc="A 'dplyr' Back End for Databases"
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-assertthat
+  r-blob
+  r-dbi
+  r-dplyr
+  r-ellipsis
+  r-glue
+  r-lifecycle
+  r-magrittr
+  r-purrr
+  r-r6
+  r-rlang
+  r-tibble
+  r-tidyselect
+  r-vctrs
+  r-withr
+)
+optdepends=(
+  r-bit64
+  r-covr
+  r-knitr
+  r-lahman
+  r-nycflights13
+  r-odbc
+  r-rmariadb
+  r-rmarkdown
+  r-rpostgres
+  r-rpostgresql
+  r-rsqlite
+  r-testthat
+  r-tidyr
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('aba4cf47b85ab240fd3ec4cd8d512f6e1958201e151577c1a2ebc3d6ebc5bc08')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

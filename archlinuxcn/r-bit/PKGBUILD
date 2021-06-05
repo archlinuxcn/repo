@@ -1,0 +1,35 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=bit
+_pkgver=4.0.4
+pkgname=r-${_pkgname,,}
+pkgver=4.0.4
+pkgrel=1
+pkgdesc='Classes and Methods for Fast Memory-Efficient Boolean Selections'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+)
+optdepends=(
+  r-bit64
+  r-ff
+  r-knitr
+  r-microbenchmark
+  r-rmarkdown
+  r-roxygen2
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('e404841fbe4ebefe4ecd4392effe673a8c9fa05f97952c4ce6e2f6159bd2f168')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

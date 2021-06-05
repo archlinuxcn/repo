@@ -3,10 +3,12 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build: aur_pre_build
+pre_build_script: |
+    aur_pre_build(maintainers="Martchus")
 
-post_build: aur_post_build
+post_build_script: |
+    aur_post_build()
 
 update_on:
   - source: aur
-    aur:
+    aur: c++utilities

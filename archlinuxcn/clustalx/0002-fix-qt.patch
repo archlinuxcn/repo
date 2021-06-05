@@ -1,0 +1,200 @@
+diff -urN clustalx-2.1/AlignOutputFileNames.cpp clustalx-2.1-bak/AlignOutputFileNames.cpp
+--- clustalx-2.1/AlignOutputFileNames.cpp	2010-11-17 11:12:30.000000000 +0100
++++ clustalx-2.1-bak/AlignOutputFileNames.cpp	2015-09-18 18:59:38.582405761 +0200
+@@ -13,6 +13,7 @@
+  * 18-06-07,Nigel Brown(EMBL): Made the 'ok' button in each dialogue be the
+  * default instead of a Browse button.
+  */
++#include <QtGui>
+ #include <QPushButton>
+ #include <QGroupBox>
+ #include <QCheckBox>
+@@ -20,8 +21,8 @@
+ #include <QGridLayout>
+ #include <QSizePolicy>
+ #include <QComboBox>
+-#include <QtGui>
+ #include <QLabel>
++#include <QLineEdit>
+ #include <iostream>
+ #include "AlignOutputFileNames.h"
+ #include "clustalW/general/userparams.h"
+diff -urN clustalx-2.1/AlignmentViewerWidget.cpp clustalx-2.1-bak/AlignmentViewerWidget.cpp
+--- clustalx-2.1/AlignmentViewerWidget.cpp	2010-11-17 11:12:30.000000000 +0100
++++ clustalx-2.1-bak/AlignmentViewerWidget.cpp	2015-09-18 18:50:09.762563103 +0200
+@@ -69,6 +69,11 @@
+ #include "PSPrinter.h"
+ #include "FileDialog.h"
+ #include <QFontMetrics>
++#include <QVBoxLayout>
++#include <QScrollBar>
++#include <QScrollArea>
++#include <QMessageBox>
++#include <QGroupBox>
+ 
+ AlignmentViewerWidget::AlignmentViewerWidget(QWidget *parent)
+  : QWidget(parent),
+diff -urN clustalx-2.1/AlignmentWidget.cpp clustalx-2.1-bak/AlignmentWidget.cpp
+--- clustalx-2.1/AlignmentWidget.cpp	2010-11-17 11:12:30.000000000 +0100
++++ clustalx-2.1-bak/AlignmentWidget.cpp	2015-09-18 18:58:36.656119118 +0200
+@@ -46,6 +46,7 @@
+  ****************************************************************************/
+ 
+ #include <QtGui>
++#include <QScrollArea>
+ #include "AlignmentWidget.h"
+ #include "clustalW/general/userparams.h"
+ #include "ClustalQtParams.h"
+diff -urN clustalx-2.1/BootstrapTreeDialog.cpp clustalx-2.1-bak/BootstrapTreeDialog.cpp
+--- clustalx-2.1/BootstrapTreeDialog.cpp	2010-11-17 11:12:30.000000000 +0100
++++ clustalx-2.1-bak/BootstrapTreeDialog.cpp	2015-09-18 19:00:09.782214298 +0200
+@@ -5,6 +5,7 @@
+  * 12-4-07, Mark Larkin, Removed destructor. No need to delete QObjects. Also removed
+  * setAllPtrsToNull function. 
+  */
++#include <QtGui>
+ #include <QPushButton>
+ #include <QGroupBox>
+ #include <QCheckBox>
+@@ -12,8 +13,8 @@
+ #include <QGridLayout>
+ #include <QSizePolicy>
+ #include <QComboBox>
+-#include <QtGui>
+ #include <QLabel>
++#include <QLineEdit>
+ #include <iostream>
+ #include "BootstrapTreeDialog.h"
+ #include "clustalW/general/userparams.h"
+diff -urN clustalx-2.1/ColorFileXmlParser.cpp clustalx-2.1-bak/ColorFileXmlParser.cpp
+--- clustalx-2.1/ColorFileXmlParser.cpp	2010-11-17 11:12:30.000000000 +0100
++++ clustalx-2.1-bak/ColorFileXmlParser.cpp	2015-09-18 19:00:42.695345653 +0200
+@@ -1,4 +1,5 @@
+ #include <QtGui>
++#include <QMessageBox>
+ 
+ #include "ColorFileXmlParser.h"
+ #include "ClustalQtParams.h"
+@@ -202,4 +203,4 @@
+         rule = rule.nextSiblingElement("resrule");
+     }  
+     return numOfRules;  
+-}
+\ No newline at end of file
++}
+diff -urN clustalx-2.1/HelpDisplayWidget.cpp clustalx-2.1-bak/HelpDisplayWidget.cpp
+--- clustalx-2.1/HelpDisplayWidget.cpp	2010-11-17 11:12:30.000000000 +0100
++++ clustalx-2.1-bak/HelpDisplayWidget.cpp	2015-09-18 19:34:51.692771579 +0200
+@@ -16,6 +16,8 @@
+ #include <QTextEdit>
+ #include <iostream>
+ #include <fstream>
++#include <QPushButton>
++#include <QVBoxLayout>
+ #include <QtGui>
+ #include "Resources.h"
+ 
+diff -urN clustalx-2.1/PSPrinter.cpp clustalx-2.1-bak/PSPrinter.cpp
+--- clustalx-2.1/PSPrinter.cpp	2010-11-17 11:12:30.000000000 +0100
++++ clustalx-2.1-bak/PSPrinter.cpp	2015-09-18 19:20:36.528019466 +0200
+@@ -17,6 +17,7 @@
+ #include <iomanip>
+ #include <sstream>
+ #include <QtGui>
++#include <QMessageBox>
+ #include "PSPrinter.h"
+ #include "ColorFileXmlParser.h"
+ #include "clustalW/general/userparams.h"
+diff -urN clustalx-2.1/ProteinGapParameters.cpp clustalx-2.1-bak/ProteinGapParameters.cpp
+--- clustalx-2.1/ProteinGapParameters.cpp	2010-11-17 11:12:30.000000000 +0100
++++ clustalx-2.1-bak/ProteinGapParameters.cpp	2015-09-18 19:20:07.311532091 +0200
+@@ -9,6 +9,7 @@
+ #include <QLabel>
+ #include <QString>
+ #include <QMessageBox>
++#include <QLineEdit>
+ #include "ProteinGapParameters.h"
+ #include "clustalW/general/userparams.h"
+ 
+diff -urN clustalx-2.1/SaveSeqFile.cpp clustalx-2.1-bak/SaveSeqFile.cpp
+--- clustalx-2.1/SaveSeqFile.cpp	2010-11-17 11:12:30.000000000 +0100
++++ clustalx-2.1-bak/SaveSeqFile.cpp	2015-09-18 19:21:28.231035513 +0200
+@@ -20,6 +20,8 @@
+ #include <QComboBox>
+ #include <QtGui>
+ #include <QLabel>
++#include <QMessageBox>
++#include <QLineEdit>
+ #include "SaveSeqFile.h"
+ #include "clustalW/general/userparams.h"
+ #include "clustalW/general/utils.h"
+diff -urN clustalx-2.1/SeqNameWidget.cpp clustalx-2.1-bak/SeqNameWidget.cpp
+--- clustalx-2.1/SeqNameWidget.cpp	2010-11-17 11:12:30.000000000 +0100
++++ clustalx-2.1-bak/SeqNameWidget.cpp	2015-09-18 19:22:48.903873782 +0200
+@@ -56,6 +56,7 @@
+  ****************************************************************************/
+ 
+ #include <QtGui>
++#include <QScrollArea>
+ #include "SeqNameWidget.h"
+ #include "KeyController.h" //- nige
+ #include "clustalW/alignment/Alignment.h"
+diff -urN clustalx-2.1/TreeOutputFileNames.cpp clustalx-2.1-bak/TreeOutputFileNames.cpp
+--- clustalx-2.1/TreeOutputFileNames.cpp	2010-11-17 11:12:30.000000000 +0100
++++ clustalx-2.1-bak/TreeOutputFileNames.cpp	2015-09-18 19:23:37.006911921 +0200
+@@ -13,6 +13,7 @@
+ #include <QComboBox>
+ #include <QtGui>
+ #include <QLabel>
++#include <QLineEdit>
+ #include <iostream>
+ #include "TreeOutputFileNames.h"
+ #include "clustalW/general/userparams.h"
+diff -urN clustalx-2.1/WritePostscriptFile.cpp clustalx-2.1-bak/WritePostscriptFile.cpp
+--- clustalx-2.1/WritePostscriptFile.cpp	2010-11-17 11:12:30.000000000 +0100
++++ clustalx-2.1-bak/WritePostscriptFile.cpp	2015-09-18 19:24:30.429917414 +0200
+@@ -20,6 +20,8 @@
+ #include <QComboBox>
+ #include <QtGui>
+ #include <QLabel>
++#include <QLineEdit>
++#include <QMessageBox>
+ #include <iostream>
+ #include "WritePostscriptFile.h"
+ #include "clustalW/general/userparams.h"
+Binary files clustalx-2.1/clustalx and clustalx-2.1-bak/clustalx differ
+diff -urN clustalx-2.1/clustalx.pro clustalx-2.1-bak/clustalx.pro
+--- clustalx-2.1/clustalx.pro	2010-11-17 11:12:30.000000000 +0100
++++ clustalx-2.1-bak/clustalx.pro	2015-09-18 19:14:42.666857671 +0200
+@@ -4,8 +4,11 @@
+ 
+ TEMPLATE = app
+ TARGET = clustalx
+-CONFIG += release static
++CONFIG += release 
+ QT += xml
++QT += widgets
++DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x000000
++
+ VERSION = 2.1
+ win32 {
+    DEFINES += OS_WINDOWS
+diff -urN clustalx-2.1/mainwindow.cpp clustalx-2.1-bak/mainwindow.cpp
+--- clustalx-2.1/mainwindow.cpp	2010-11-17 11:12:30.000000000 +0100
++++ clustalx-2.1-bak/mainwindow.cpp	2015-09-18 19:19:03.545256739 +0200
+@@ -94,6 +94,15 @@
+ #include <cstdlib>
+ #include <QCheckBox>
+ #include <QStringList>
++#include <QMenu>
++#include <QMenuBar>
++#include <QAction>
++#include <QMessageBox>
++#include <QApplication>
++#include <QScrollBar>
++#include <QHBoxLayout>
++#include <QGroupBox>
++#include <QVBoxLayout>
+ #include "SecStructOptions.h"
+ #include "mainwindow.h"
+ #include "WritePostscriptFile.h"

@@ -1,0 +1,18 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-callr
+  - r-cli
+  - r-clipr
+  - r-fs
+  - r-glue
+  - r-knitr
+  - r-rlang
+  - r-rmarkdown
+  - r-rstudioapi
+  - r-withr
+update_on:
+  - regex: reprex_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=reprex

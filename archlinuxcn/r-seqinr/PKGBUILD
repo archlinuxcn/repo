@@ -1,0 +1,28 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=seqinr
+_pkgver=4.2-5
+pkgname=r-${_pkgname,,}
+pkgver=4.2.5
+pkgrel=1
+pkgdesc='Biological Sequences Retrieval and Analysis'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-ade4
+  r-segmented
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('de9860759c23af2ec2f2ef03b5dd1cea72c804438eadd369b7d9269bdf8d32fc')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

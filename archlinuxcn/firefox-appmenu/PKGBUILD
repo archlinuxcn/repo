@@ -7,13 +7,13 @@
 
 pkgname=firefox-appmenu
 _pkgname=firefox
-pkgver=88.0.1
+pkgver=89.0
 pkgrel=1
 pkgdesc="Firefox from extra with appmenu patch"
 arch=(x86_64)
 license=(MPL GPL LGPL)
 url="https://www.mozilla.org/firefox/"
-depends=(gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse)
+depends=(gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse libdbusmenu-gtk3)
 makedepends=(unzip zip diffutils yasm mesa imake inetutils xorg-server-xvfb
              autoconf2.13 rust clang llvm jack gtk2 nodejs cbindgen nasm
              python-setuptools python-psutil python-zstandard lld dump_syms)
@@ -21,19 +21,22 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
             'speech-dispatcher: Text-to-Speech'
-            'hunspell-en_US: Spell checking, American English')
+            'hunspell-en_US: Spell checking, American English'
+            'xdg-desktop-portal: Screensharing with Wayland')
 provides=("firefox=$pkgver")
 conflicts=("firefox")            
 options=(!emptydirs !makeflags !strip)
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         0001-Use-remoting-name-for-GDK-application-names.patch
         $_pkgname.desktop
-        unity-menubar.patch)
-sha256sums=('83df1eae0e28fe99661fd5d39d705cdab2e108b4a24ce12c2db6183c632804cc'
+        unity-menubar.patch
+        fix_csd_window_buttons.patch)
+sha256sums=('db43d7d5796455051a5b847f6daa3423393803c9288c8b6d7f1186f5e2e0a90a'
             'SKIP'
-            '1b6814e85f13dcf069482ad1acfc1a099661922c85e3344aa4ee059288506ccc'
+            '98b6b30973bb1e12e17e8a78baf7d1db0d5085f35252f4611870bb23e8faeff1'
             '34514a657d6907a159594c51e674eeb81297c431ec26a736417c2fdb995c2c0c'
-            '860e49ab14ce2c9416a479d313a2da799e023db58e93b81ca4cb869c5afb39a7')
+            '2337ac2af70d547b577420211c1f13de75f679fca8cdc51bfb3fff5300621091'
+            'e08d0bc5b7e562f5de6998060e993eddada96d93105384960207f7bdf2e1ed6e')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -58,6 +61,9 @@ prepare() {
   # actual appmenu patch from ubuntu repos
   # http://archive.ubuntu.com/ubuntu/pool/main/f/firefox/firefox_80.0+build2-0ubuntu0.16.04.1.debian.tar.xz
   patch -Np1 -i ../unity-menubar.patch
+
+  #fix csd window buttons patch
+  patch -Np1 -i ../fix_csd_window_buttons.patch
 
   echo -n "$_google_api_key" >google-api-key
   echo -n "$_mozilla_api_key" >mozilla-api-key
@@ -87,7 +93,6 @@ ac_add_options --with-unsigned-addon-scopes=app,system
 ac_add_options --allow-addon-sideload
 export MOZILLA_OFFICIAL=1
 export MOZ_APP_REMOTINGNAME=${_pkgname//-/}
-export MOZ_TELEMETRY_REPORTING=1
 export MOZ_REQUIRE_SIGNING=1
 
 # Keys

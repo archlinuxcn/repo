@@ -4,7 +4,7 @@
 # All my PKGBUILDs are managed at https://github.com/eli-schwartz/pkgbuilds
 
 pkgname=git-extras
-pkgver=6.1.0
+pkgver=6.2.0
 pkgrel=1
 pkgdesc="GIT utilities -- repo summary, commit counting, repl, changelog population and more"
 arch=('any')
@@ -12,8 +12,8 @@ url="https://github.com/tj/${pkgname}"
 license=('MIT')
 depends=('git')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('7be0b15ee803d76d2c2e8036f5d9db6677f2232bb8d2c4976691ff7ae026a22f')
-b2sums=('3450edecb3116e19ffcf918b118aee04f025c06d812e29e8701f35a3c466b13d2578d41c8e1ee93327743d0019bf98bb3f397189e19435f89e3a259ff1b82747')
+sha256sums=('151bc129f717179c1f7b6c83faf1d4829eeddef8b7c501dac05dc38c28270c3e')
+b2sums=('71e3be3f56ca049d2060c79b8dd52aacf613d9157fc5d6fa76c827b59e9355f16903cce94e09dcf73e0c7c4f81b422a37234dbc8f9eb146ca9925da8778ea2dc')
 
 package() {
     cd "${srcdir}/${pkgname}-${pkgver}"
@@ -22,4 +22,8 @@ package() {
     export GIT_CONFIG=/dev/null
     make DESTDIR="${pkgdir}" PREFIX=/usr SYSCONFDIR=/etc install
     install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+    # add documentation for completions, which do not work when autoloaded
+    mkdir -p "${pkgdir}"/usr/share/doc/git-extras/
+    cp etc/*.zsh etc/*.fish "${pkgdir}"/usr/share/doc/git-extras/
 }

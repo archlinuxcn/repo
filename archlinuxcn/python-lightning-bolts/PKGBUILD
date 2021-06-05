@@ -1,0 +1,36 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=python-lightning-bolts
+_pkgname=lightning-bolts
+pkgver=0.3.3
+pkgrel=2
+pkgdesc='Toolbox of models, callbacks, and datasets for AI/ML researchers'
+arch=('any')
+url='https://github.com/PyTorchLightning/lightning-bolts'
+license=('Apache')
+depends=(
+  python-pytorch
+  python-pytorch-lightning
+  python-torchmetrics
+)
+makedepends=(
+  python-setuptools
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/PyTorchLightning/lightning-bolts/archive/refs/tags/${pkgver}.tar.gz")
+sha512sums=('695fc889eb9b7ee45a27944cfccf9fb8cdc2b8986dbaaf2ef77baef302668cb6b74e0e94db9571f68fcfac185480720eb313188521d40b679cdd9c580c92c597')
+
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  rm -rf "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/tests"
+}
+# vim:set ts=2 sw=2 et:

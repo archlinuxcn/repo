@@ -8,8 +8,9 @@ pkgbase=systemd-git
 _pkgbase=systemd
 pkgname=('systemd-git' 'systemd-libs-git' 'systemd-resolvconf-git' 'systemd-sysvcompat-git')
 pkgdesc="systemd (git version)"
-pkgver=248.rc4.r102.g414f59dad7
-pkgrel=1
+pkgver=248.r1416.g33f2de7b64
+pkgrel=2
+epoch=1 # official repo use systemd-stable as upstream and missing the subversion tags
 arch=('x86_64')
 url="https://www.github.com/systemd/systemd"
 makedepends=('acl' 'cryptsetup' 'docbook-xsl' 'gperf' 'lz4' 'xz' 'pam' 'libelf'
@@ -17,7 +18,7 @@ makedepends=('acl' 'cryptsetup' 'docbook-xsl' 'gperf' 'lz4' 'xz' 'pam' 'libelf'
              'libmicrohttpd' 'libxcrypt' 'libxslt' 'util-linux' 'linux-api-headers'
              'python-lxml' 'quota-tools' 'shadow' 'gnu-efi-libs' 'git'
              'meson' 'libseccomp' 'pcre2' 'audit' 'kexec-tools' 'libxkbcommon'
-             'bash-completion' 'p11-kit' 'systemd')
+             'bash-completion' 'p11-kit' 'systemd' 'python-jinja')
 options=('strip')
 source=('git+https://github.com/systemd/systemd.git'
         '0001-Use-Arch-Linux-device-access-groups.patch::https://raw.githubusercontent.com/yurikoles-aur/systemd-git/master/0001-Use-Arch-Linux-device-access-groups.patch'

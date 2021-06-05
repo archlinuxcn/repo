@@ -1,0 +1,32 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=tinytex
+_pkgver=0.32
+pkgname=r-${_pkgname,,}
+pkgver=0.32
+pkgrel=1
+pkgdesc='Helper Functions to Install and Maintain TeX Live, and Compile LaTeX Documents'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-xfun
+)
+optdepends=(
+  r-rstudioapi
+  r-testit
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('70fa28195ae6c8b8d43790205b49745c5a062aab78e64cec39bfbe5ed604c29f')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

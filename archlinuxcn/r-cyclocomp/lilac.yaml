@@ -1,0 +1,13 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-callr
+  - r-crayon
+  - r-desc
+  - r-remotes
+  - r-withr
+update_on:
+  - regex: cyclocomp_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=cyclocomp

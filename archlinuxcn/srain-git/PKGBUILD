@@ -1,7 +1,7 @@
 # Maintainer: Shengyu Zhang <la@archlinuxcn.org>
 
 pkgname=srain-git
-pkgver=1.2.0.1.geec8764
+pkgver=1.2.2
 pkgrel=1
 pkgdesc="Modern IRC client written in GTK, git version"
 arch=('i686' 'x86_64')
@@ -14,7 +14,7 @@ optdepends=(
     )
 conflicts=('srain')
 provides=('srain')
-source=("git+https://github.com/SrainApp/srain.git#branch=master")
+source=("git+https://github.com/SrainApp/srain.git#branch=stable/1.2")
 sha256sums=('SKIP')
 
 _prefix='/usr'

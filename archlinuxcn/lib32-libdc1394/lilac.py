@@ -8,4 +8,5 @@ def pre_build():
     add_provides(['libdc1394.so'])
 
 def post_build():
+    check_library_provides()
     aur_post_build()

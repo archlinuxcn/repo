@@ -1,0 +1,11 @@
+maintainers:
+- github: lilydjwg
+
+update_on:
+- source: aur
+- alias: perl
+
+pre_build_script: |
+  aur_pre_build(maintainers=["vesath"])
+
+post_build: aur_post_build

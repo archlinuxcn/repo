@@ -1,0 +1,44 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=xfun
+_pkgver=0.23
+pkgname=r-${_pkgname,,}
+pkgver=0.23
+pkgrel=1
+pkgdesc="Supporting Functions for Packages Maintained by 'Yihui Xie'"
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+)
+optdepends=(
+  r-codetools
+  r-curl
+  r-htmltools
+  r-jsonlite
+  r-knitr
+  r-markdown
+  r-mime
+  r-pak
+  r-parallel
+  r-remotes
+  r-renv
+  r-rmarkdown
+  r-rstudioapi
+  r-testit
+  r-tinytex
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('ec8528e85ea7e7f3dad0148359cdb0b10c8dc586bb99d4ab20b3fb24ed850e37')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

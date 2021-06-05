@@ -290,6 +290,19 @@ def iter_packages(all_pkgs: bool = False) -> Generator[str, None, None]:
         yield package
 
 
+class DuplicateKeyError(Exception):
+    pass
+
+class UniqueKeyLoader(yaml.SafeLoader):
+    def construct_mapping(self, node, deep=False):
+        mapping = []
+        for key_node, value_node in node.value:
+            key = self.construct_object(key_node, deep=deep)
+            if key in mapping:
+                raise DuplicateKeyError(key)
+            mapping.append(key)
+        return super().construct_mapping(node, deep)
+
 class RepoTreeTest(TestCase):
 
     @skip("PKGBUILDs may be added later by lilac")
@@ -322,7 +335,11 @@ class RepoTreeTest(TestCase):
             with self.subTest(package=package):
                 lilac_yaml_path = os.path.join(pkgpath(package), 'lilac.yaml')
                 with git_open(lilac_yaml_path) as lilac_yaml_file:
-                    lilac_yaml = yaml.load(lilac_yaml_file.read(), Loader=yaml.SafeLoader)
+                    try:
+                        lilac_yaml = yaml.load(lilac_yaml_file.read(), Loader=UniqueKeyLoader)
+                    except Exception:
+                        self.fail(msg='package "\033[1;31m{0}\033[m"\'s lilac.yaml'
+                                  'contains invalid YAML'.format(package))
                     try:
                         jsonschema.validate(lilac_yaml, YAML_SCHEMA)
                     except jsonschema.exceptions.ValidationError:

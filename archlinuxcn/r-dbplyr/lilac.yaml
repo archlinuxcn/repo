@@ -1,0 +1,23 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-assertthat
+  - r-blob
+  - r-dbi
+  - r-dplyr
+  - r-ellipsis
+  - r-glue
+  - r-lifecycle
+  - r-magrittr
+  - r-purrr
+  - r-r6
+  - r-rlang
+  - r-tibble
+  - r-tidyselect
+  - r-vctrs
+  - r-withr
+update_on:
+  - regex: dbplyr_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=dbplyr

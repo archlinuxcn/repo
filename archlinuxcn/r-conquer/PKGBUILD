@@ -1,0 +1,29 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=conquer
+_pkgver=1.0.2
+pkgname=r-${_pkgname,,}
+pkgver=1.0.2
+pkgrel=1
+pkgdesc='Convolution-Type Smoothed Quantile Regression'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-matrixstats
+  r-rcpp
+  r-rcpparmadillo
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('542f6154ce1ffec0c1b4dd4e1f5b86545015f4b378c4c66a0840c65c57d674ff')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

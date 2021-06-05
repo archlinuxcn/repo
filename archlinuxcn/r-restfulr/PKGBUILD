@@ -1,0 +1,36 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=restfulr
+_pkgver=0.0.13
+pkgname=r-${_pkgname,,}
+pkgver=0.0.13
+pkgrel=1
+pkgdesc='R Interface to RESTful Web Services'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('Artistic2.0')
+depends=(
+  r
+  r-rcurl
+  r-rjson
+  r-s4vectors
+  r-xml
+  r-yaml
+)
+optdepends=(
+  r-getpass
+  r-rsolr
+  r-runit
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('7b59f5887aaf02f46a80617f4d1e0ffd4e11e4840e9e2fbd486a9a9c7f2d64b6')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

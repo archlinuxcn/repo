@@ -1,0 +1,175 @@
+diff --git a/plugins/load-dcraw/dcraw.cc b/plugins/load-dcraw/dcraw.cc
+index dd7f6c4d..db994f18 100644
+--- a/plugins/load-dcraw/dcraw.cc
++++ b/plugins/load-dcraw/dcraw.cc
+@@ -831,7 +831,7 @@ int CLASS canon_has_lowbits()
+ 
+   fseek (ifp, 0, SEEK_SET);
+   fread (test, 1, sizeof test, ifp);
+-  for (i=540; i < sizeof test - 1; i++)
++  for (i=540; i < int(sizeof test - 1); i++)
+     if (test[i] == 0xff) {
+       if (test[i+1]) return 1;
+       ret=0;
+@@ -952,7 +952,7 @@ int CLASS ljpeg_start (struct jhead *jh, int info_only)
+     FORC(4)        jh->huff[2+c] = jh->huff[1];
+     FORC(jh->sraw) jh->huff[1+c] = jh->huff[0];
+   }
+-  jh->row = (ushort *) calloc (jh->wide*jh->clrs, 4);
++  jh->row = (ushort *) calloc (jh->wide*jh->clrs, 16);
+   merror (jh->row, "ljpeg_start()");
+   return zero_after_ff = 1;
+ }
+@@ -1317,7 +1317,7 @@ void CLASS nikon_load_raw()
+     split = get2();
+   } else if (ver0 != 0x46 && csize <= 0x4001)
+     read_shorts (curve, max=csize);
+-  while (curve[max-2] == curve[max-1]) max--;
++  while (max > 2 && (curve[max-2] == curve[max-1])) max--;
+   huff = make_decoder (nikon_tree[tree]);
+   fseek (ifp, data_offset, SEEK_SET);
+   getbits(-1);
+@@ -9327,9 +9327,9 @@ void CLASS identify()
+   if (!strncasecmp(model,"PENTAX",6))
+     strcpy (make, "Pentax");
+   cp = make + strlen(make);		/* Remove trailing spaces */
+-  while (*--cp == ' ') *cp = 0;
++  while (cp > make && *--cp == ' ') *cp = 0;
+   cp = model + strlen(model);
+-  while (*--cp == ' ') *cp = 0;
++  while (cp > model && *--cp == ' ') *cp = 0;
+   i = strlen(make);			/* Remove make from model */
+   if (!strncasecmp (model, make, i) && model[i++] == ' ')
+     memmove (model, model+i, 64-i);
+@@ -10446,7 +10446,7 @@ void CLASS tiff_head (struct tiff_hdr *th, int full)
+   strncpy (th->desc, desc, 512);
+   strncpy (th->make, make, 64);
+   strncpy (th->model, model, 64);
+-  strcpy (th->soft, "dcraw v"DCRAW_VERSION);
++  strcpy (th->soft, "dcraw v" DCRAW_VERSION);
+   t = localtime (&timestamp);
+   sprintf (th->date, "%04d:%02d:%02d %02d:%02d:%02d",
+       t->tm_year+1900,t->tm_mon+1,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec);
+@@ -10978,7 +10978,7 @@ int CLASS main (int argc, const char **argv)
+       strcpy (ofname,_("standard output"));
+     else {
+       strcpy (ofname, ifname);
+-      if ((cp = strrchr (ofname, '.'))) *cp = 0;
++      if ((cp = (char*)strrchr (ofname, '.'))) *cp = 0;
+       if (multi_out)
+ 	sprintf (ofname+strlen(ofname), "_%0*d",
+ 		snprintf(0,0,"%d",is_raw-1), shot_select);
+diff --git a/plugins/load-dcraw/uf_glib.h b/plugins/load-dcraw/uf_glib.h
+index 21c10b19..56cd6971 100644
+--- a/plugins/load-dcraw/uf_glib.h
++++ b/plugins/load-dcraw/uf_glib.h
+@@ -13,13 +13,13 @@
+ #ifndef _UF_GLIB_H
+ #define _UF_GLIB_H
+ 
++#include <glib.h>
++#include <glib/gstdio.h>
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+ 
+-#include <glib.h>
+-#include <glib/gstdio.h>
+-
+ // g_win32_locale_filename_from_utf8 is needed only on win32
+ #ifdef _WIN32
+ #define uf_win32_locale_filename_from_utf8(__some_string__) \
+diff --git a/plugins/load-dcraw/ufraw_conf.c b/plugins/load-dcraw/ufraw_conf.c
+index 2b17e2c1..e66d2226 100644
+--- a/plugins/load-dcraw/ufraw_conf.c
++++ b/plugins/load-dcraw/ufraw_conf.c
+@@ -1941,11 +1941,13 @@ int ufraw_process_args(int *argc, char ***argv, conf_data *cmd, conf_data *rc)
+                     cmd->autoExposure = apply_state;
+                     break;
+                 }
++                // fall through
+             case 'k':
+                 if (!strcmp(optarg, "auto")) {
+                     cmd->autoBlack = apply_state;
+                     break;
+                 }
++                // fall through
+             case 'G':
+             case 'L':
+             case 's':
+diff --git a/plugins/load-dcraw/ufraw_developer.c b/plugins/load-dcraw/ufraw_developer.c
+index 73067d38..ff9be030 100644
+--- a/plugins/load-dcraw/ufraw_developer.c
++++ b/plugins/load-dcraw/ufraw_developer.c
+@@ -387,7 +387,7 @@ static double findExpCoeff(double b)
+     else a = b;
+     bg = a / (1 - exp(-a));
+     /* The limit on try is just to be sure there is no infinite loop. */
+-    for (try = 0; abs(bg - b) > 0.001 || try < 100; try++) {
++    for (try = 0; fabs(bg - b) > 0.001 || try < 100; try++) {
+                     a = a + (b - bg);
+                     bg = a / (1 - exp(-a));
+                 }
+diff --git a/plugins/load-dcraw/ufraw_message.c b/plugins/load-dcraw/ufraw_message.c
+index a7186571..f5039663 100644
+--- a/plugins/load-dcraw/ufraw_message.c
++++ b/plugins/load-dcraw/ufraw_message.c
+@@ -152,8 +152,10 @@ char *ufraw_message(int code, const char *format, ...)
+     switch (code) {
+         case UFRAW_SET_ERROR:
+             errorFlag = TRUE;
++            // fall through
+         case UFRAW_SET_WARNING:
+             errorBuffer = ufraw_message_buffer(errorBuffer, message);
++            // fall through
+         case UFRAW_SET_LOG:
+         case UFRAW_DCRAW_SET_LOG:
+             logBuffer = ufraw_message_buffer(logBuffer, message);
+@@ -161,6 +163,7 @@ char *ufraw_message(int code, const char *format, ...)
+             return NULL;
+         case UFRAW_GET_ERROR:
+             if (!errorFlag) return NULL;
++            // fall through
+         case UFRAW_GET_WARNING:
+             return errorBuffer;
+         case UFRAW_GET_LOG:
+@@ -168,6 +171,7 @@ char *ufraw_message(int code, const char *format, ...)
+         case UFRAW_CLEAN:
+             g_free(logBuffer);
+             logBuffer = NULL;
++            // fall through
+         case UFRAW_RESET:
+             g_free(errorBuffer);
+             errorBuffer = NULL;
+diff --git a/plugins/load-dcraw/ufraw_ufraw.c b/plugins/load-dcraw/ufraw_ufraw.c
+index 516b4c70..197d5198 100644
+--- a/plugins/load-dcraw/ufraw_ufraw.c
++++ b/plugins/load-dcraw/ufraw_ufraw.c
+@@ -1915,20 +1915,26 @@ void ufraw_unnormalize_rotation(ufraw_data *uf)
+     switch (uf->conf->orientation) {
+         case 5: /* Rotate 270 */
+             uf->conf->rotationAngle += 90;
++            // fall through
+         case 3: /* Rotate 180 */
+             uf->conf->rotationAngle += 90;
++            // fall through
+         case 6: /* Rotate 90 */
+             uf->conf->rotationAngle += 90;
+             uf->conf->orientation = 0;
++            // fall through
+         case 0: /* No flip */
+             break;
+         case 4: /* Flip over diagonal "\" */
+             uf->conf->rotationAngle += 90;
++            // fall through
+         case 2: /* Flip vertical */
+             uf->conf->rotationAngle += 90;
++            // fall through
+         case 7: /* Flip over diagonal "/" */
+             uf->conf->rotationAngle += 90;
+             uf->conf->orientation = 1;
++            // fall through
+         case 1: /* Flip horizontal */
+             break;
+         default:

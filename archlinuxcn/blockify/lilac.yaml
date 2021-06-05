@@ -9,11 +9,10 @@ build_prefix: extra-x86_64
 repo_depends:
   - spotify
 
-pre_build: aur_pre_build
-
-post_build: aur_post_build
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: aur
-    aur: blockify
+  - source: github
+    github: serialoverflow/blockify
+    use_max_tag: true
   - alias: python

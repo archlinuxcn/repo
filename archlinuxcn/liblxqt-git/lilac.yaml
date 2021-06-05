@@ -7,9 +7,13 @@ repo_depends:
   - lxqt-build-tools-git
   - libqtxdg-git
 
-post_build: aur_post_build
+pre_build_script: |
+    vcs_update()
+
+post_build_script: |
+    git_pkgbuild_commit()
+    update_aur_repo()
 
 update_on:
-  - source: vcs
-  - source: aur
-    aur:
+  - source: github
+    github: lxqt/liblxqt

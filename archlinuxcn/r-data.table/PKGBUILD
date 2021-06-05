@@ -1,0 +1,38 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=data.table
+_pkgver=1.14.0
+pkgname=r-${_pkgname,,}
+pkgver=1.14.0
+pkgrel=1
+pkgdesc='Extension of `data.frame`'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MPL2')
+depends=(
+  r
+)
+optdepends=(
+  r-bit
+  r-bit64
+  r-curl
+  r-knitr
+  r-nanotime
+  r-r.utils
+  r-rmarkdown
+  r-xts
+  r-yaml
+  r-zoo
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('13f1de244e7fa90fadfb0be964db5ffb324ca024d5f136feb4578b5daedaeb4d')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

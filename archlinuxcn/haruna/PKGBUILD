@@ -2,15 +2,19 @@
 # Contributor: Caltlgin Stsodaat <contact@fossdaily.xyz>
 pkgname='haruna'
 pkgver=0.6.3
-pkgrel=1
-pkgdesc='Video player built with Qt/QML on top of libmpv.'
+pkgrel=3
+pkgdesc='Open source video player built with Qt/QML and libmpv'
 arch=('x86_64')
-url='https://github.com/g-fb/haruna'
+url='https://invent.kde.org/multimedia/haruna'
 license=('GPL3')
 depends=('kfilemetadata' 'kio' 'mpv' 'kirigami2')
 makedepends=('extra-cmake-modules')
 optdepends=('nvidia-utils: hardware accelerate support'
-            'breeze: recommend theme')
+            'breeze: recommend theme'
+            'breeze-icons: recommend icons'
+            'kio-extras: additional components to increase the functionality of KIO'
+            'youtube-dl: play videos from Youtube.com'
+            'nvidia-utils: libcuda support')
 provides=('haruna')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
 sha256sums=('c79ec1e351f47faf9a58a6ba7ec3cc05cfdc5423fde0584f2d4081f5058363e3')

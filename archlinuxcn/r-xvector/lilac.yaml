@@ -1,0 +1,12 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-biocgenerics
+  - r-iranges
+  - r-s4vectors
+  - r-zlibbioc
+update_on:
+  - regex: XVector_([\d._-]+).tar.gz
+    source: regex
+    url: https://bioconductor.org/packages/XVector

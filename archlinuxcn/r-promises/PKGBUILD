@@ -1,0 +1,42 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=promises
+_pkgver=1.2.0.1
+pkgname=r-${_pkgname,,}
+pkgver=1.2.0.1
+pkgrel=1
+pkgdesc='Abstractions for Promise-Based Asynchronous Programming'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-later
+  r-magrittr
+  r-r6
+  r-rcpp
+  r-rlang
+)
+optdepends=(
+  r-fastmap
+  r-future
+  r-knitr
+  r-purrr
+  r-rmarkdown
+  r-spelling
+  r-testthat
+  r-vembedr
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('8d3a8217909e91f4c2a2eebba5ac8fc902a9ac1a9e9d8a30815c9dc0f162c4b7')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

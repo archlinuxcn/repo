@@ -1,0 +1,46 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=rvest
+_pkgver=1.0.0
+pkgname=r-${_pkgname,,}
+pkgver=1.0.0
+pkgrel=1
+pkgdesc='Easily Harvest (Scrape) Web Pages'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-httr
+  r-lifecycle
+  r-magrittr
+  r-rlang
+  r-selectr
+  r-tibble
+  r-xml2
+)
+optdepends=(
+  r-covr
+  r-glue
+  r-knitr
+  r-readr
+  r-repurrrsive
+  r-rmarkdown
+  r-spelling
+  r-stringi
+  r-testthat
+  r-webfakes
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('a358bf258a91b3362b3736fb5f957c12e98cddf21b6066fb2abdd26ecd665713')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

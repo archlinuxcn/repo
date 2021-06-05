@@ -2,17 +2,50 @@
 # Contributor: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=rawstudio-git
-pkgver=2.0.605.g8c732f11
-pkgrel=1
+pkgver=2.0.614.g846f8fc6
+pkgrel=3
 pkgdesc="An open-source program to read and manipulate RAW images from digital cameras."
 arch=('i686' 'x86_64')
 url="https://rawstudio.org/"
-license=('GPL-2')
-depends=('osm-gps-map' 'desktop-file-utils' 'libgphoto2' 'fftw' 'gconf' 'lcms2' 'exiv2' 'lensfun' 'git')
+license=('GPL2')
+depends=('osm-gps-map' 'desktop-file-utils' 'libgphoto2' 'fftw' 'gconf' 'lcms2' 'exiv2' 'lensfun')
+makedepends=('git')
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
-source=("git://github.com/rawstudio/rawstudio.git")
-md5sums=('SKIP')
+source=("git://github.com/rawstudio/rawstudio.git"
+    0001-readd-dcraw.patch
+    0002-fix-c11.patch
+    0003-add-check-ufraw.patch
+    0004-wrong-find-green.patch
+    0005-fix-rhbz.patch
+    0006-update-dcraw.patch
+    0007-update-ufraw.patch
+    0008-fix-locale-dir.patch
+    0009-remove-extern-C.patch
+)
+
+md5sums=('SKIP'
+         'c3064925c9b7094f68dc9a6b81347a01'
+         '2658fdc1879b33efcdbb3a25db41cafc'
+         '94f9e822b35e7b40b8a5b1f3c1a4f3b4'
+         'c648b5a6251d1085c438216a3d117da7'
+         '29a99b24265827497f62749fbb85d3bc'
+         '709289105be9e8985a52cbbe6710605a'
+         'afc6e8cb870d9eea15a7210ccd214927'
+         '11ed64969bbfcb79346c2feaf5f3cf6c'
+         '088bbc87b0d92b2930f450bb544947c2')
+
+prepare() {
+  cd "${pkgname%-git}"
+
+  local filename
+  for filename in "${source[@]}"; do
+      if [[ "$filename" =~ \.patch$ ]]; then
+          echo "Applying patch ${filename##*/}"
+          patch -p1 -N -i "$srcdir/${filename##*/}"
+      fi
+  done
+}
 
 pkgver() {
   cd "${pkgname%-git}"

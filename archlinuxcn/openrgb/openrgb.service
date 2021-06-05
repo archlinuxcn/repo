@@ -3,10 +3,9 @@ Description=Run openrgb server
 After=network.target lm_sensors.service
 
 [Service]
-Type=simple
+Type=forking
 RemainAfterExit=yes
 ExecStart=/usr/bin/openrgb --server --startminimized
-ExecStop=/usr/bin/killall openrgb
 Restart=always
 
 [Install]

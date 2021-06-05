@@ -1,0 +1,32 @@
+--- PKGBUILD	2021-05-31 11:52:38.124496766 +0800
++++ PKGBUILD	2021-05-27 10:27:26.099954762 +0800
+@@ -103,7 +103,16 @@
+ 
+ prepare() {
+   # Allow ccache to work
+-  mv $pkgname-$_pkgbasever $pkgname
++  mv wine-$_pkgbasever $pkgname
++
++  scard4wine_dir=scard4wine-yan12125/src
++  cp -v $scard4wine_dir/winscard.c $pkgname/dlls/winscard/winscard.c
++  cp -v $scard4wine_dir/winscard.spec $pkgname/dlls/winscard/winscard.spec
++  cp -v $scard4wine_dir/winscard.h $pkgname/include/winscard.h
++  cp -v $scard4wine_dir/winsmcrd.h $pkgname/include/winsmcrd.h
++  cp -v $scard4wine_dir/wine-compat56.h $pkgname/include/wine-compat.h
++
++  sed -i '/-mno-cygwin/d' $pkgname/dlls/winscard/Makefile.in
+ 
+   # Doesn't compile without remove these flags as of 4.10
+   export CFLAGS="${CFLAGS/-fno-plt/}"
+@@ -176,3 +185,11 @@
+ }
+ 
+ # vim:set ts=8 sts=2 sw=2 et:
++
++source+=("scard4wine-yan12125::git+https://git.code.sf.net/u/yan12125/scard4wine.git#commit=480dbba00d6dd555d9a36a83d024031ae8c198cc")
++sha512sums+=('SKIP')
++makedepends+=(git)
++provides=("$pkgname=$pkgver")
++conflicts=("$pkgname")
++pkgname+='-winscard'
++pkgdesc+=" (with IDRASSI's winscard patch)"

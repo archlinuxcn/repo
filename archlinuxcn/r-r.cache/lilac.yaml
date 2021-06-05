@@ -1,0 +1,12 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-digest
+  - r-r.methodss3
+  - r-r.oo
+  - r-r.utils
+update_on:
+  - regex: R.cache_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=R.cache

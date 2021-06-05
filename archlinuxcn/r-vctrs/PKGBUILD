@@ -1,0 +1,47 @@
+# Maintainer: hubutui <hot123tea123@gmail.com>
+
+_pkgname=vctrs
+_pkgver=0.3.8
+pkgname=r-${_pkgname,,}
+pkgver=0.3.8
+pkgrel=1
+pkgdesc='Vector Helpers'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-ellipsis
+  r-glue
+  r-rlang
+)
+optdepends=(
+  r-bit64
+  r-covr
+  r-crayon
+  r-dplyr
+  r-generics
+  r-knitr
+  r-pillar
+  r-pkgdown
+  r-rmarkdown
+  r-testthat
+  r-tibble
+  r-waldo
+  r-withr
+  r-xml2
+  r-zeallot
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('7f4e8b75eda115e69dddf714f0643eb889ad61017cdc13af24389aab2a2d1bb1')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

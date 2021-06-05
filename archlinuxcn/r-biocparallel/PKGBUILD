@@ -1,0 +1,51 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=BiocParallel
+_pkgver=1.26.0
+pkgname=r-${_pkgname,,}
+pkgver=1.26.0
+pkgrel=1
+pkgdesc='Bioconductor facilities for parallel evaluation'
+arch=('x86_64')
+url="https://bioconductor.org/packages/${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-bh
+  r-futile.logger
+  r-snow
+)
+optdepends=(
+  r-batchjobs
+  r-batchtools
+  r-bbmisc
+  r-biocgenerics
+  r-biocstyle
+  r-codetools
+  r-data.table
+  r-doparallel
+  r-foreach
+  r-genomicalignments
+  r-genomicranges
+  r-knitr
+  r-rmpi
+  r-rnaseqdata.hnrnpc.bam.chr14
+  r-rsamtools
+  r-runit
+  r-shortread
+  r-tools
+  r-txdb.hsapiens.ucsc.hg19.knowngene
+  r-variantannotation
+)
+source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('401297f6ea653be0272a8b3d6b656110b7bef269e132cfe373baf62e557b849f')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

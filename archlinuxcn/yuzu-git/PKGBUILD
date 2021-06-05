@@ -2,7 +2,7 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-git
-pkgver=r17880.904584e4b
+pkgver=r18071.fefc76e5d
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (master GIT version)"
 arch=('i686' 'x86_64')
@@ -11,7 +11,7 @@ license=('GPL2')
 depends=('shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'mbedtls' 'openssl' 'zstd')
 makedepends=('git' 'cmake' 'ninja' 'python2' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'desktop-file-utils' 'glslang')
 optdepends=('qt5-wayland: for Wayland support')
-provides=('yuzu' 'yuzu-cmd')
+provides=('yuzu')
 conflicts=('yuzu')
 replaces=('yuzu-master-git')
 source=("$_pkgname::git+https://github.com/yuzu-emu/yuzu.git")
@@ -53,6 +53,7 @@ build() {
 #  CXXFLAGS+=" -I/usr/include/libusb-1.0"
 
 	mkdir -p build && cd build
+
 	cmake -GNinja .. \
 	  -DCMAKE_INSTALL_PREFIX=/usr \
 	  -DCMAKE_BUILD_TYPE=Release \

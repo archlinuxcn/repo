@@ -1,0 +1,14 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-broom
+  - r-dplyr
+  - r-knitr
+  - r-lme4
+  - r-magrittr
+  - r-numderiv
+update_on:
+  - regex: pbkrtest_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=pbkrtest

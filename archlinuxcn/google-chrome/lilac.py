@@ -30,7 +30,7 @@ post_upgrade() {
 '''
 
 def pre_build():
-  aur_pre_build()
+  aur_pre_build(maintainers=['luzifer'])
   install_file = '%s.install' % _pkg_name
   try:
     os.unlink(install_file)

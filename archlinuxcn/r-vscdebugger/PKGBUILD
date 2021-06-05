@@ -1,0 +1,33 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=vscDebugger
+pkgname=r-${_pkgname,,}
+pkgver=0.4.6
+pkgrel=3
+pkgdesc='Support for Visual Studio Code Debugger'
+arch=('x86_64')
+url="https://github.com/ManuelHentschel/vscDebugger"
+license=('MIT')
+depends=(
+  r
+  r-jsonlite
+  r-r6
+  r-svsocket
+)
+optdepends=(
+  r-knitr
+  r-pkgload
+  r-rmarkdown
+)
+source=("https://github.com/ManuelHentschel/vscDebugger/releases/download/v${pkgver}/${_pkgname}_${pkgver}.tar.gz")
+sha256sums=('9b08b88556921fc792651c5b18f293a15c6a992388cb1d3653d06dded2816de6')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

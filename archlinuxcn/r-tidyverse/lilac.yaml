@@ -1,0 +1,37 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-broom
+  - r-cli
+  - r-crayon
+  - r-dbplyr
+  - r-dplyr
+  - r-dtplyr
+  - r-forcats
+  - r-ggplot2
+  - r-googledrive
+  - r-googlesheets4
+  - r-haven
+  - r-hms
+  - r-httr
+  - r-jsonlite
+  - r-lubridate
+  - r-magrittr
+  - r-modelr
+  - r-pillar
+  - r-purrr
+  - r-readr
+  - r-readxl
+  - r-reprex
+  - r-rlang
+  - r-rstudioapi
+  - r-rvest
+  - r-stringr
+  - r-tibble
+  - r-tidyr
+  - r-xml2
+update_on:
+  - regex: tidyverse_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=tidyverse

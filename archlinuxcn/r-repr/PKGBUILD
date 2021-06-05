@@ -1,0 +1,44 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=repr
+_pkgver=1.1.3
+pkgname=r-${_pkgname,,}
+pkgver=1.1.3
+pkgrel=1
+pkgdesc='Serializable Representations'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-base64enc
+  r-htmltools
+  r-jsonlite
+  r-pillar
+)
+optdepends=(
+  r-cairo
+  r-data.table
+  r-geojsonio
+  r-highr
+  r-htmlwidgets
+  r-leaflet
+  r-methods
+  r-plotly
+  r-stringr
+  r-testthat
+  r-tibble
+  r-vegalite
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('531b43d413b51cbc96e3b9162493c975d9395bb9532e500ad51cd99b36a53562')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

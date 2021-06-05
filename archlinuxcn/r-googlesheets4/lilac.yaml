@@ -1,0 +1,22 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-cellranger
+  - r-curl
+  - r-gargle
+  - r-glue
+  - r-googledrive
+  - r-httr
+  - r-ids
+  - r-lifecycle
+  - r-magrittr
+  - r-purrr
+  - r-rematch2
+  - r-rlang
+  - r-tibble
+  - r-vctrs
+update_on:
+  - regex: googlesheets4_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=googlesheets4

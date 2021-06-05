@@ -1,7 +1,7 @@
 # Maintainer: demian <mikar ατ gmx δοτ de>
 pkgname=blockify
 pkgver=3.6.3
-pkgrel=6
+pkgrel=7
 pkgdesc="Mutes Spotify advertisements."
 arch=("any")
 url="https://github.com/mikar/${pkgname}"
@@ -9,7 +9,7 @@ license=("MIT")
 conflicts=("blockify-git")
 depends=("spotify"
          "alsa-utils"
-         "pygtk"
+         "python-gobject"
          "gst-python"
          "python-dbus"
          "python-docopt"

@@ -6,6 +6,7 @@ build_prefix: extra-x86_64
 repo_depends:
   - nsync
   - python-onnx
+  - python-torchvision
 
 pre_build_script: |
     update_pkgver_and_pkgrel(_G.newver)

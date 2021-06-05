@@ -1,0 +1,13 @@
+diff --git a/lib/libalpm/dload.c b/lib/libalpm/dload.c
+index 2d8b4d6d..963cbf73 100644
+--- a/lib/libalpm/dload.c
++++ b/lib/libalpm/dload.c
+@@ -60,7 +60,7 @@ static int curl_gethost(const char *url, char *buffer, size_t buf_len);
+ 
+ /* number of "soft" errors required to blacklist a server, set to 0 to disable
+  * server blacklisting */
+-const unsigned int server_error_limit = 3;
++const unsigned int server_error_limit = 0;
+ 
+ struct server_error_count {
+ 	char server[HOSTNAME_SIZE];
