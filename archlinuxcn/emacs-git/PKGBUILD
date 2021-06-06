@@ -59,7 +59,7 @@ if [[ $CLI == "YES" ]] ; then
 else
 pkgname="emacs-git"
 fi
-pkgver=28.0.50.148587
+pkgver=28.0.50.148617
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
@@ -67,13 +67,14 @@ url="http://www.gnu.org/software/emacs/"
 license=('GPL3')
 depends_nox=('alsa-lib' 'gnutls' 'libxml2' 'jansson' 'gpm')
 depends=("${depends_nox[@]}" 'm17n-lib' 'libotf' 'harfbuzz')
-makedepends=('git')
+makedepends=("git" "systemd")
 provides=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq' 'emacs-nox')
 conflicts=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq' 'emacs-nox')
-source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
+#source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
 # If Savannah fails for reasons, use Github's mirror
-#source=("emacs-git::git://github.com/emacs-mirror/emacs.git")
+source=("emacs-git::git://github.com/emacs-mirror/emacs.git")
 options=(!strip)
+install="$pkgname".install
 b2sums=('SKIP')
 ################################################################################
 
@@ -304,13 +305,15 @@ package() {
   if [[ $DOCS_PDF == "YES" ]]; then make DESTDIR="$pkgdir/" install-pdf; fi
 
   # fix user/root permissions on usr/share files
-  find "$pkgdir"/usr/share/emacs/ | xargs chown root:root
+  # MOVED to install script
+  # find "$pkgdir"/usr/share/emacs/ | xargs chown root:root
 
   # fix permssions on /var/games
   mkdir -p "$pkgdir"/var/games/emacs
   chmod 775 "$pkgdir"/var/games
   chmod 775 "$pkgdir"/var/games/emacs
-  chown -R root:games "$pkgdir"/var/games
+  # MOVED to install script
+  # chown -R root:games "$pkgdir"/var/games
 
 }
 
