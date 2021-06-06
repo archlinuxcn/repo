@@ -15,8 +15,6 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if line.startswith('replaces='):
             continue
-        if line.startswith('makedepends='):
-            line = 'makedepends=("git" "systemd")'
         if line.startswith('source='):
             line = 'source=("emacs-git::git://github.com/emacs-mirror/emacs.git")'
         print(line)
