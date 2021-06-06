@@ -22,7 +22,7 @@ def pre_build():
         if line.startswith('AOT='):
             line = 'AOT="YES"'
         if line.startswith('install='):
-            line = 'emacs-git.install'
+            line = 'install=emacs-git.install'
         if line.startswith('source='):
             line = 'source=("emacs-git::git://github.com/emacs-mirror/emacs.git")'
         print(line)
