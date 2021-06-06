@@ -11,7 +11,7 @@ from lilaclib import *
 
 def pre_build():
     # run_cmd(["rm", "-rf", "emacs-git"])
-    aur_pre_build()
+    aur_pre_build('emacs-git', maintainers=['vorbote'])
     for line in edit_file('PKGBUILD'):
         if line.startswith('replaces='):
             continue
