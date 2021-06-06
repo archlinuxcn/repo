@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=quantreg
-_pkgver=5.85
+_pkgver=5.86
 pkgname=r-${_pkgname,,}
-pkgver=5.85
+pkgver=5.86
 pkgrel=1
 pkgdesc='Quantile Regression'
 arch=('x86_64')
@@ -31,7 +31,7 @@ makedepends=(
   gcc-fortran
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('049f45176ab2541e4dbad88d19e390dd724a9d6dcbf821de99c12f6f027d1af9')
+sha256sums=('71d1c829af7574ca00575cc0375376ac3ecd54b3d6d36e8eecd71ed8acb9d605')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
