@@ -21,6 +21,8 @@ def pre_build():
             line = 'JIT="YES"'
         if line.startswith('AOT='):
             line = 'AOT="YES"'
+        if line.startswith('makedepends='):
+            line = 'makedepends=("git" "systemd")'
         # if line.startswith('source='):
             # line = 'source=("emacs-git::git://github.com/emacs-mirror/emacs.git")'
         print(line)
