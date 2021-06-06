@@ -59,7 +59,7 @@ if [[ $CLI == "YES" ]] ; then
 else
 pkgname="emacs-git"
 fi
-pkgver=28.0.50.148617
+pkgver=28.0.50.148618
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
@@ -67,7 +67,7 @@ url="http://www.gnu.org/software/emacs/"
 license=('GPL3')
 depends_nox=('alsa-lib' 'gnutls' 'libxml2' 'jansson' 'gpm')
 depends=("${depends_nox[@]}" 'm17n-lib' 'libotf' 'harfbuzz')
-makedepends=("git" "systemd")
+makedepends=('git')
 provides=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq' 'emacs-nox')
 conflicts=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq' 'emacs-nox')
 #source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
