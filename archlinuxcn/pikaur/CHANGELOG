@@ -1791,3 +1791,18 @@ Thu Apr 29 01:44:26 2021 +0200
      2021-04-28 8e0421d Gustavo Costa Add pt_BR translation (#561)
      2021-03-24 13d3e8c actionless fix(pikspect, main: handle_sig_int): don't handle SIG_INT while running pacman, (fixes #551)
      2021-03-23 92e1a38 Justin Li fix(makefile): avoid make bug with directories in $PATH (#553)
+
+
+Mon Jun 7 18:33:31 2021 +0200
+-------------------------------------------------
+1.7             Release 1.7
+    
+    New features:
+     2021-06-05 a279cbb actionless feat(install cli, build): add `git stash` option to git-pull-recovery prompt
+     2021-05-26 66d87de actionless fix(main: print_upgradeable; install_info_fetcher: pkg_is_ignored): allow glob patterns in --ignore and IgnorePkg (fixes #564)
+     2021-05-13 67a5014 Chris Braun feat(config, build): add IgnoreArch config option to [build] (#566)
+     2021-05-10 2f1b598 actionless feat(main: cli_getpkgbuild): do `asp update` if dir already exists
+    
+    Notable fixes:
+     2021-05-31 f70e6f6 actionless fix(install_info_fetcher: get_info_from_pkgbuild): support manually package selection/--ignore (fixes #555)
+     2021-04-29 544b07c actionless feat(prompt: retry_interactive_command): dont use pikspect with --noconfirm as it not interactive anyway (fixes #556)
