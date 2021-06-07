@@ -26,7 +26,7 @@ def pre_build():
     elif line.startswith('source=('):
       line = line.replace('(', '(pacman.patch\n        pacsync\n        ')
     elif line.startswith('sha256sums=('):
-      line = line.replace('(', '(b8fa45a99dfb5b902aae6376043f6f90806bb8e6e32e969b5160fc7d452dd898\n            207d5cee261bba18e650bbd2c249ffd8fe9c1dbd7de6b241d8bf011848faa70b\n            ')
+      line = line.replace('(', '(129986c0189552b3592003a0e07670b2473c000d9b9250f2374363145088bfbb\n            207d5cee261bba18e650bbd2c249ffd8fe9c1dbd7de6b241d8bf011848faa70b\n            ')
     elif line.startswith('package() '):
       package = True
     elif package and line.startswith('}'):
