@@ -10,21 +10,21 @@ index 2d8b4d6d..963cbf73 100644
 +const unsigned int server_error_limit = 0;
  
  struct server_error_count {
- 	char server[HOSTNAME_SIZE];
+	char server[HOSTNAME_SIZE];
 @@ -510,6 +510,16 @@ static int curl_check_finished_download(CURLM *curlm, CURLMsg *msg,
-                                                        payload->remote_name, hostname, payload->error_buffer);
-                                        server_soft_error(handle, payload->fileurl);
-                                }
+							payload->remote_name, hostname, payload->error_buffer);
+					server_soft_error(handle, payload->fileurl);
+				}
 +
-+                         fflush(payload->localf);
-+                         if(fstat(fileno(payload->localf), &st) == 0 && st.st_size != payload->initial_size) {
-+                                 /* an html error page was written to the file, reset it */
-+                                 if(ftruncate(fileno(payload->localf), payload->initial_size)) {
-+                                         RET_ERR(handle, ALPM_ERR_SYSTEM, -1);
-+                                 }
-+                                 fseek(payload->localf, payload->initial_size, SEEK_SET);
-+                         }
++			fflush(payload->localf);
++			if(fstat(fileno(payload->localf), &st) == 0 && st.st_size != payload->initial_size) {
++				/* an html error page was written to the file, reset it */
++				if(ftruncate(fileno(payload->localf), payload->initial_size)) {
++					RET_ERR(handle, ALPM_ERR_SYSTEM, -1);
++				}
++				fseek(payload->localf, payload->initial_size, SEEK_SET);
++			}
 +
-                                if(curl_retry_next_server(curlm, curl, payload) == 0) {
-                                        (*active_downloads_num)++;
-                                        return 2;
+				if(curl_retry_next_server(curlm, curl, payload) == 0) {
+					(*active_downloads_num)++;
+					return 2;
