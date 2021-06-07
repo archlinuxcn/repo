@@ -1,8 +1,8 @@
 # Maintainer: Patrizio Bekerle <patrizio at bekerle dot com>
 
 pkgname=qownnotes
-pkgver=21.6.0
-tag="1d90bc9f1d1a5c3b1baa831b64ae3ae090fc4e09"
+pkgver=21.6.1
+tag="1c848876fc89a81ca81a2893ddd114ff243386c7"
 pkgrel=1
 pkgdesc="Plain-text file markdown note taking with Nextcloud/ownCloud integration"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -12,7 +12,7 @@ groups=('qownnotes')
 depends=('qt5-base' 'qt5-svg' 'qt5-declarative' 'openssl' 'qt5-xmlpatterns' 'qt5-websockets' 'qt5-x11extras' 'aspell')
 makedepends=('qt5-tools')
 source=("https://download.tuxfamily.org/${pkgname}/src/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('03387c4e113809f713e1debc2d968572826bf940fe5d3703b6bd4476e4b67a59')
+sha256sums=('64abe919d81384ba01648ad159bdc96d49416da326a61919d28dc30ae1821a97')
 
 prepare() {
     cd "${pkgname}-${pkgver}"
