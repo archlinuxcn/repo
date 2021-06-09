@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=seqinr
-_pkgver=4.2-5
+_pkgver=4.2-8
 pkgname=r-${_pkgname,,}
-pkgver=4.2.5
+pkgver=4.2.8
 pkgrel=1
 pkgdesc='Biological Sequences Retrieval and Analysis'
 arch=('x86_64')
@@ -15,7 +15,7 @@ depends=(
   r-segmented
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('de9860759c23af2ec2f2ef03b5dd1cea72c804438eadd369b7d9269bdf8d32fc')
+sha256sums=('584b34e9dec0320cef02096eb356a0f6115bbd24356cf62e67356963e9d5e9f7')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
