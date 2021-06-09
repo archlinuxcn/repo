@@ -24,13 +24,13 @@ def pre_build():
       line += '\n  patch -p1 -i "${srcdir}/pacman.patch"'
       build = False
     elif line.startswith('source=('):
-      line = line.replace('(', '(pacman.patch\n        pacsync\n        ')
+      line = line.replace('(', '(pacman.patch\n        pacman-syncdb\n        ')
     elif line.startswith('sha256sums=('):
       line = line.replace('(', '(a4ebcc619f88b1b3067d9ac8c1e6dab8963d50980c15e0b366ae221be94be26a\n            207d5cee261bba18e650bbd2c249ffd8fe9c1dbd7de6b241d8bf011848faa70b\n            ')
     elif line.startswith('package() '):
       package = True
     elif package and line.startswith('}'):
-      line = '  install -m755 "$srcdir/pacsync" "$pkgdir/usr/bin"\n' + line
+      line = '  install -m755 "$srcdir/pacman-syncdb" "$pkgdir/usr/bin"\n' + line
       package = False
 
     if '$pkgname' in line:
