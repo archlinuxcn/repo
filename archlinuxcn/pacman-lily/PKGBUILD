@@ -3,7 +3,7 @@
 
 pkgname=pacman-lily
 pkgver=6.0.0
-pkgrel=4
+pkgrel=5
 pkgdesc="A library-based package manager with dependency support (no disabling-server-on-error)"
 arch=('x86_64')
 url="https://www.archlinux.org/pacman/"
@@ -21,7 +21,7 @@ options=('strip' 'debug')
 validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@archlinux.org>
               'B8151B117037781095514CA7BBDFFC92306B1121') # Andrew Gregory (pacman) <andrew@archlinux.org>
 source=(pacman.patch
-        pacsync
+        pacman-syncdb
         https://sources.archlinux.org/other/pacman/pacman-$pkgver.tar.xz{,.sig}
         pacman.conf
         makepkg.conf)
@@ -62,5 +62,5 @@ package() {
   install -dm755 "$pkgdir/etc"
   install -m644 "$srcdir/pacman.conf" "$pkgdir/etc"
   install -m644 "$srcdir/makepkg.conf" "$pkgdir/etc"
-  install -m755 "$srcdir/pacsync" "$pkgdir/usr/bin"
+  install -m755 "$srcdir/pacman-syncdb" "$pkgdir/usr/bin"
 }
