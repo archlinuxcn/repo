@@ -18,7 +18,7 @@
 
 pkgname='tor-browser'
 pkgver='10.0.17'
-pkgrel='1'
+pkgrel='2'
 pkgdesc='Tor Browser Bundle: anonymous browsing using Firefox and Tor (international PKGBUILD)'
 url='https://www.torproject.org/projects/torbrowser.html'
 arch=('i686' 'x86_64')
@@ -148,8 +148,8 @@ package() {
 		"${pkgdir}/usr/share/icons/hicolor/scalable/apps" \
 		"${pkgdir}/usr/share/icons/hicolor/128x128/apps"
 
-	install -Dm 644 "${pkgname}.png" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.png"
-	install -Dm 644 "${pkgname}.svg" "${pkgdir}/usr/share/icons/hicolor/128x128/apps/${pkgname}.svg"
+	install -Dm 644 "${pkgname}.png" "${pkgdir}/usr/share/icons/hicolor/128x128/apps/${pkgname}.png"
+	install -Dm 644 "${pkgname}.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
 
 	install -dm755 "${pkgdir}/usr/share/applications"
 	sed "${_sed_subst}" "${pkgname}.desktop.in" > \
