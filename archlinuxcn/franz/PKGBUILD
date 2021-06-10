@@ -16,7 +16,7 @@ license=(Apache)
 # Expected one is 'electron'. May change soon.
 _electron='electron'
 depends=($_electron bash)
-makedepends=(expac git npm python2 $_electron)
+makedepends=(expac git nvm python2 $_electron)
 source=("git+https://github.com/meetfranz/$pkgname#tag=v$_pkgver"
         franz.desktop
         franz.sh.in
