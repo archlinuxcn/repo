@@ -7,6 +7,9 @@ build_prefix: extra-x86_64
 
 post_build: git_pkgbuild_commit
 
+repo_depends:
+  - nvm
+
 update_on:
   - source: manual
     manual: 5.6.1
