@@ -2,7 +2,7 @@
 # Contributor: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=xray-geoip
-pkgver=202106030115
+pkgver=202106100026
 pkgrel=1
 pkgdesc="GeoIP List for Xray"
 arch=('any')
@@ -10,7 +10,7 @@ url="https://github.com/v2fly/geoip"
 license=('CCPL:by-sa')
 source=("geoip-${pkgver}.dat::${url}/releases/download/${pkgver}/geoip.dat"
         "${url}/raw/master/LICENSE")
-sha256sums=('acf231d7c6461d088ae479fe0c1cb143b5ee3cf7048a897c5a9b7807ab7005df'
+sha256sums=('927b941f4189b08e936ad755d53659e7df065233f34e1bd5c4ddeac99179b067'
             '5e436ff8ffbb77d8607220e9bce20c8915d860010feeb6c1ebef5a85688e9b39')
 
 package() {
