@@ -13,17 +13,19 @@ arch=(x86_64 i686 armv7h aarch64)
 url='https://meetfranz.com'
 license=(Apache)
 # Allow to easily switch between Electron versions.
-# Expected one is 'electron'. May change soon.
-_electron='electron'
+# Expected one is 'electron10' (Electron 10). May change soon.
+# This is automatically replaced in `franz.sh` with the package name, as
+# the executable matches the package name (as of 2020-11-15).
+_electron='electron10'
 depends=($_electron bash)
-makedepends=(expac git nvm python2 $_electron)
+makedepends=(expac git nvm python python2)
 source=("git+https://github.com/meetfranz/$pkgname#tag=v$_pkgver"
         franz.desktop
         franz.sh.in
         0001-Add-cmdline-option-to-open-with-window-closed.patch)
 sha512sums=('SKIP'
             '049c4bf2e0f362f892e8eef28dd18a6c321251c686a9c9e49e4abfb778057de2fc68b95b4ff7bb8030a828a48b58554a56b810aba078c220cb01d5837083992e'
-            '0e2a871139453b505d7fc0d652911225c0e721fe32b98dceba86ec4b5969f28405bf88ed3769d09b66ad6eab8e188fd6a840c346477391ef4b1eddd1def7783a'
+            '44486b524353eb06fd6b4e65ed586b10a765c9da7b5da9ccd98146cc7dc91fe0a8fdbfe8c792061b047d35f43338536acc7bd8ebadcee6793f194dad75ae50cd'
             '8f59b911eccd4f8c965f60ae4ba111195f48a76326e1c63391b1ab61b74d74dcb021fdb835da07037b28823cac1c3fd3b01f5ace501b6b6b7fe6db5e2aef8068')
 
 # Helper function for setting up nvm nicely.
