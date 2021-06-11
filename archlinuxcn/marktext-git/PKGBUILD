@@ -7,24 +7,27 @@
 
 pkgname=marktext-git
 _pkgname=${pkgname%-git}
-pkgver=0.16.2.r38.gf725239
+pkgver=0.16.3.r2.gf501ef4
 pkgrel=1
 pkgdesc='A simple and elegant open-source markdown editor that focused on speed and usability'
-arch=('x86_64')
+arch=(x86_64)
 url='https://marktext.app'
-license=('MIT')
-depends=('electron'
-         'libxkbfile'
-         'libsecret'
-         'ripgrep')
-makedepends=('jq'
-             'nodejs'
-             'node-gyp'
-             'moreutils'
-             'yarn'
-             'yq')
-conflicts=("$_pkgname")
+license=(MIT)
+_electron=electron11
+depends=("$_electron"
+         libxkbfile
+         libsecret
+         ripgrep)
+makedepends=("git"
+             jq
+             nodejs
+             npm
+             node-gyp
+             moreutils
+             yarn
+             yq)
 provides=("$_pkgname-$pkgver")
+conflicts=("$_pkgname")
 source=("$pkgname::git+https://github.com/$_pkgname/${pkgname/-/.}"
         "$_pkgname.sh"
         "$_pkgname-arg-handling.patch")
@@ -39,8 +42,8 @@ pkgver() {
 }
 
 prepare() {
-    local _electronDist=$(dirname $(realpath $(which electron)))
-    local _electronVersion=$(electron --version | sed -e 's/^v//')
+    local _electronDist=$(dirname $(realpath $(which $_electron)))
+    local _electronVersion=$($_electron --version | sed -e 's/^v//')
     cd "$pkgname"
     jq 'del(.devDependencies["electron"], .scripts["preinstall", "postinstall"])' \
         package.json | sponge package.json
@@ -50,6 +53,7 @@ prepare() {
     yarn --cache-folder "$srcdir/node_modules" install --frozen-lockfile
     yarn --cache-folder "$srcdir/node_modules" add -D -E --no-lockfile --ignore-scripts electron@$_electronVersion
     patch -p1 < "$srcdir/$_pkgname-arg-handling.patch"
+    sed -e "s/\belectron\b/$_electron/" "../$_pkgname.sh" > "$_pkgname.sh"
 }
 
 build() {
@@ -63,7 +67,7 @@ build() {
 
 package() {
     cd "$pkgname"
-    install -Dm755 "../$_pkgname.sh" "$pkgdir/usr/bin/$_pkgname"
+    install -Dm755 "$_pkgname.sh" "$pkgdir/usr/bin/$_pkgname"
     local _dist=build/linux-unpacked/resources
     install -Dm644 -t "$pkgdir/usr/lib/$_pkgname/" "$_dist/app.asar"
     cp -a "$_dist"/{app.asar.unpacked,hunspell_dictionaries} "$pkgdir/usr/lib/$_pkgname/"
