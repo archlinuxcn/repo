@@ -1,0 +1,16 @@
+maintainers:
+  - github: yan12125
+
+build_prefix: extra-x86_64
+
+pre_build_script: |
+    aur_pre_build(maintainers='amoka')
+
+post_build_script: |
+    aur_post_build()
+
+update_on:
+  - source: github
+    github: firewalld/firewalld
+  - source: aur
+    aur: firewalld-git

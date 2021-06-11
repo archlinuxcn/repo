@@ -1,0 +1,78 @@
+# Maintainer: Amanoel Dawod <amoka at amanoel dot com>
+# Contributor: Elliott Saille <me+aur@esaille.me>
+# Contributor: Maxime Gauduin <alucryd@archlinux.org>
+# Contributor: unikum <unikum.pm@gmail.com>
+# Contributor: speed145a <jonathan@tagchapter.com>
+
+pkgname=firewalld-git
+pkgver=r3337.012a87a3
+pkgrel=1
+epoch=1
+pkgdesc="Firewall daemon with D-Bus interface (from git)"
+arch=(any)
+url="https://firewalld.org/"
+license=(GPL2)
+depends=(
+  dbus-python
+  dconf
+  glib2
+  hicolor-icon-theme
+  nftables
+  python-gobject
+)
+makedepends=(
+  docbook-xsl
+  git
+  intltool
+  ipset
+)
+optdepends=(
+  'bash-completion: bash completion'
+  'gtk3: firewall-config'
+  'ipset: ipset support'
+  'libnotify: firewall-applet'
+  'nm-connection-editor: firewalld-applet'
+  'python-pyqt5: firewall-applet'
+)
+provides=('firewalld')
+conflicts=('firewalld')
+backup=(
+  etc/conf.d/firewalld
+  etc/firewalld/firewalld.conf
+)
+source=(
+  git+https://github.com/firewalld/firewalld.git
+  firewalld-sysconfigdir.patch
+)
+sha256sums=('SKIP'
+            'cf7d655230c43acf10a0f97dffdbcba136729967c8b9a25a930871d54a589834')
+
+pkgver() {
+  cd firewalld
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd firewalld
+  patch -Np1 -i ../firewalld-sysconfigdir.patch
+  NOCONFIGURE=true ./autogen.sh
+}
+
+build() {
+  cd firewalld
+  ./configure \
+    --prefix=/usr \
+    --localstatedir=/var \
+    --sbindir=/usr/bin \
+    --sysconfdir=/etc \
+    --disable-schemas-compile \
+    --disable-sysconfig
+  make
+}
+
+package() {
+  make DESTDIR="${pkgdir}" -C firewalld install
+  export PYTHONHASHSEED=0
+  python -m compileall -d /usr/lib "$pkgdir/usr/lib"
+  python -O -m compileall -d /usr/lib "$pkgdir/usr/lib"
+}
