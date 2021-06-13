@@ -2,14 +2,15 @@
 # Co-Maintainer: Emanuele 'Lele aka eldios' Calo' <xeldiosx@gmail.com>
 # Co-Maintainer: Ariel AxionL <arielaxionl@gmail.com | axionl@aosc.io>
 
+_pkgname=teleport
 pkgname=teleport-bin
-pkgver=6.2.0
+pkgver=6.2.3
 pkgrel=1
 pkgdesc="Modern SSH server for teams managing distributed infrastructure"
 arch=('x86_64' 'armv7h' 'aarch64')
 url="https://github.com/gravitational/teleport"
 license=('Apache')
-depends=('bash' 'python')
+depends=()
 provides=('teleport' 'tctl' 'tsh')
 install=teleport.install
 
@@ -23,22 +24,26 @@ source_aarch64=("teleport-bin-${pkgver}-aarch64.tar.gz::https://get.gravitationa
 
 sha256sums=('22fd1ee136e9422458740811c9946de447105f26e87dbbc8daa35d17bd1f3894'
             '21ca4e56c9c5e1ce11570894e85ded853e26e91cc2e16ed9114b3d6a2c5c22ef'
-            'cff4e3c69677210bdde9a781146df06fba3a62cef72ed6854cd1923a05444435')
-sha256sums_x86_64=('90e9fd3e39d84b966b601f3979ed288ff82708784f1cf8c44246e0d1db20b70f')
-sha256sums_armv7h=('2da2fd03b2719af8a0be87a16d9aa0c4873e31cc495abfd39e883283d35b8e67')
-sha256sums_aarch64=('178d794b75c34ee9b372abe65f09bec1198b627c5d468ac3bc6df0a7ac889464')
+            'ce2dd61cae3c0c3684e7e629f98b77551e66ddedca2194250a34f0efbc674f3a')
+sha256sums_x86_64=('ccdda458dd4c417f6df7285059895933874a78a5bc1ebe518f69dd3d6811c9fe')
+sha256sums_armv7h=('8640dfc9746790984bb3c4ffdc0852f299396d48d7e894fa874ad805c912fc45')
+sha256sums_aarch64=('2240c902591547cd774f652166b74bf560fc9610555e77e461067196ecb5a6f4')
 
 options=(!strip)
 
 package() {
-    install -Dm644 ${srcdir}/teleport.service "${pkgdir}/usr/lib/systemd/system/teleport.service"
-    install -Dm644 ${srcdir}/teleport.service "${pkgdir}/usr/lib/systemd/system/teleport@.service"
-    install -dm755 "${pkgdir}/etc/teleport"
+    cd "${srcdir}/${_pkgname}"
 
-    cd "${srcdir}/teleport"
+    # Install binaries
     install -Dm755 teleport "${pkgdir}/usr/bin/teleport"
     install -Dm755 tctl "${pkgdir}/usr/bin/tctl"
     install -Dm755 tsh "${pkgdir}/usr/bin/tsh"
 
-    cp -r examples "${pkgdir}/etc/teleport/"
+    # Install services
+    install -Dm644 ${srcdir}/teleport.service "${pkgdir}/usr/lib/systemd/system/teleport.service"
+    install -Dm644 ${srcdir}/teleport@.service "${pkgdir}/usr/lib/systemd/system/teleport@.service"
+
+    # Copy example files
+    install -dm755 "${pkgdir}/usr/share/teleport"
+    cp -r examples "${pkgdir}/usr/share/teleport/"
 }
