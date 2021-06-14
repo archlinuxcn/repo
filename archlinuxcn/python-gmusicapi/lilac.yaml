@@ -4,14 +4,13 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers='robertfoster')
+pre_build: pypi_pre_build
 
-post_build: aur_post_build
+post_build: pypi_post_build
 
 update_on:
-  #  - source: aur
-  #  aur: python-gmusicapi
-  - source: manual
+  - source: pypi
+    pypi: gmusicapi
   - alias: python
 
 repo_depends:
