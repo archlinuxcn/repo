@@ -6,10 +6,7 @@ maintainers:
 
 build_prefix: multilib
 
-pre_build: aur_pre_build
-
-post_build: aur_post_build
-
 update_on:
-  - source: aur
-    aur: lib32-muparser
+- source: archpkg
+  archpkg: muparser
+  strip_release: true

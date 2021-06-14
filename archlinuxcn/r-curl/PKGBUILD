@@ -1,0 +1,37 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=curl
+_pkgver=4.3.1
+pkgname=r-${_pkgname,,}
+pkgver=4.3.1
+pkgrel=1
+pkgdesc='A Modern and Flexible Web Client for R'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+)
+optdepends=(
+  r-httpuv
+  r-jsonlite
+  r-knitr
+  r-magrittr
+  r-rmarkdown
+  r-spelling
+  r-testthat
+  r-webutils
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('2266cb041addf121195108975ae1ad34c433046a7b4e95eec630ee5eda5fff62')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

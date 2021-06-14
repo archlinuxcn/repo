@@ -6,11 +6,14 @@ build_prefix: extra-x86_64
 repo_depends:
   - lxqt-build-tools-git
 
-pre_build: aur_pre_build
+pre_build_script: |
+    aur_pre_build(maintainers=['pmattern'])
 
-post_build: aur_post_build
+post_build_script: |
+    aur_post_build()
 
 update_on:
-  - source: vcs
+  - source: github
+    github: lxqt/pavucontrol-qt
   - source: aur
     aur: pavucontrol-qt-git

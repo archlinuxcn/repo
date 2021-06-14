@@ -4,17 +4,17 @@
 # Contributor: American_Jesus
 pkgname=palemoon
 _repo=Pale-Moon
-pkgver=29.2.0
+pkgver=29.2.1
 # Commit can be found at https://repo.palemoon.org/MoonchildProductions/Pale-Moon/releases
-_commit=e7ccadb26f
-pkgrel=2
+_commit=b5aa3cb745
+pkgrel=1
 pkgdesc="Open source web browser based on Firefox focusing on efficiency."
 arch=('i686' 'x86_64')
 url="https://www.palemoon.org/"
 license=('MPL' 'GPL' 'LGPL')
 depends=('gtk2' 'dbus-glib' 'desktop-file-utils' 'libxt' 'mime-types' 'alsa-lib'
          'startup-notification')
-makedepends=('git' 'python2' 'autoconf2.13' 'unzip' 'zip' 'yasm'
+makedepends=('git' 'python2' 'autoconf2.13' 'unzip' 'zip' 'yasm' 'gcc10'
              'libpulse')
 optdepends=('libpulse: PulseAudio audio driver'
             'ffmpeg: various video and audio support')
@@ -23,7 +23,7 @@ source=(git+"https://repo.palemoon.org/MoonchildProductions/${_repo}?signed#comm
         mozconfig.in)
 sha1sums=('SKIP'
           'SKIP'
-          '8db1453bbcca0a81ae12b8e0af1e19429c51e136')
+          '5fc8e164a8c1731ad2cce6270c9b0e9a5145194c')
 validpgpkeys=('3059E09144F56804F0FBF4E126B40624BDBFD9F3'
               '3DAD8CD107197488D2A2A0BD40481E7B8FCF9CEC')
 

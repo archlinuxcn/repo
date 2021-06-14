@@ -8,4 +8,5 @@ def pre_build():
     add_provides(['libgstadaptivedemux-1.0.so', 'libgstbadaudio-1.0.so', 'libgstbasecamerabinsrc-1.0.so', 'libgstcodecparsers-1.0.so', 'libgstcodecs-1.0.so', 'libgstinsertbin-1.0.so', 'libgstisoff-1.0.so', 'libgstmpegts-1.0.so', 'libgstphotography-1.0.so', 'libgstplayer-1.0.so', 'libgstsctp-1.0.so', 'libgsttranscoder-1.0.so', 'libgsturidownloader-1.0.so', 'libgstvulkan-1.0.so', 'libgstwayland-1.0.so', 'libgstwebrtc-1.0.so'])
 
 def post_build():
+    check_library_provides()
     aur_post_build()

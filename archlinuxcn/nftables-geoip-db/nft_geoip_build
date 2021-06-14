@@ -1,0 +1,128 @@
+#!/usr/bin/perl
+#	Source: https://inai.de/files/xtables-addons/xtables-addons-3.15.tar.xz
+#
+#	Converter for DBIP (Country Lite) CSV database to binary, for xt_geoip
+#	Copyright Jan Engelhardt, 2008-2011
+#	Copyright Philip Prindeville, 2018
+#	Copyright Arjen de Korte, 2020
+#
+use Getopt::Long;
+use Net::CIDR::Lite;
+use Socket qw(AF_INET AF_INET6 inet_pton);
+use warnings;
+use Text::CSV_XS; # or trade for Text::CSV
+use strict;
+
+my $csv = Text::CSV_XS->new({
+	allow_whitespace => 1,
+	binary => 1,
+	eol => $/,
+}); # or Text::CSV
+my $quiet = 0;
+my $input_file = "dbip-country-lite.csv";
+my $target_dir = ".";
+
+&Getopt::Long::Configure(qw(bundling));
+&GetOptions(
+	"D=s" => \$target_dir,
+	"i=s" => \$input_file,
+	"q" => \$quiet,
+	"s" => sub { $target_dir = "/usr/share/xt_geoip"; },
+);
+
+if (!-d $target_dir) {
+	print STDERR "Target directory \"$target_dir\" does not exist.\n";
+	exit 1;
+}
+
+&dump(&collect());
+
+sub collect
+{
+	my ($file, $fh, $row);
+	my (%country);
+	if ($input_file eq "-") {
+		open($fh, "<&STDIN");
+	} else {
+		open($fh, "<", $input_file) || die "Cannot open $input_file: $!\n";
+	}
+
+	while ($row = $csv->getline($fh)) {
+		my ($cc, $range);
+
+		$cc = $row->[2];
+		$range = $row->[0] . "-" . $row->[1];
+
+		if (!exists($country{$cc})) {
+			$country{$cc} = { pool_v4 => Net::CIDR::Lite->new(), pool_v6 => Net::CIDR::Lite->new() };
+		}
+
+		if (index($range, '.') > 0) {
+			$country{$cc}->{pool_v4}->add_range($range);
+		}
+
+		if (index($range, ':') > 0) {
+			$country{$cc}->{pool_v6}->add_range($range);
+		}
+
+		if (!$quiet && $. % 4096 == 0) {
+			print STDERR "\r\e[2K$. entries";
+		}
+	}
+
+	print STDERR "\r\e[2K$. entries total\n" unless ($quiet);
+
+	close($fh);
+
+	return \%country;
+}
+
+sub dump
+{
+	my $country = shift @_;
+
+	foreach my $iso_code (sort keys %{$country}) {
+		&dump_one($iso_code, $country->{$iso_code});
+	}
+}
+
+sub dump_one
+{
+	my($iso_code, $country) = @_;
+	my @ranges;
+
+	@ranges = $country->{pool_v4}->list_range();
+
+	writeCountry($iso_code, AF_INET, @ranges);
+
+	@ranges = $country->{pool_v6}->list_range();
+
+	writeCountry($iso_code, AF_INET6, @ranges);
+}
+
+sub writeCountry
+{
+	my ($iso_code, $family, @ranges) = @_;
+	my $fh;
+
+	printf "%5u IPv%s ranges for %s\n",
+		scalar(@ranges),
+		($family == AF_INET ? '4' : '6'),
+		$iso_code unless ($quiet);
+
+	my $file = "$target_dir/".uc($iso_code).".ipv".($family == AF_INET ? '4' : '6');
+	if (!open($fh, '>', $file)) {
+		print STDERR "Error opening $file: $!\n";
+		exit 1;
+	}
+
+	print $fh "define geoip".($family == AF_INET ? '4' : '6')."_iso_country_".uc($iso_code)." = {\n";
+	foreach my $range (@ranges) {
+		my ($start, $end) = split('-', $range);
+		print $fh "    $start";
+		print $fh "-$end" if ($start ne $end);
+		print $fh ",\n";
+	}
+	print $fh "}\n";
+	close $fh;
+}

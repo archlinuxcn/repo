@@ -1,9 +1,6 @@
 maintainers:
   - github: DDoSolitary
 build_prefix: multilib
-pre_build_script: |
-  aur_pre_build(maintainers='tjackson')
-post_build: aur_post_build
 update_on:
   - source: aur
     aur: lib32-xvidcore

@@ -1,0 +1,59 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=dplyr
+_pkgver=1.0.6
+pkgname=r-${_pkgname,,}
+pkgver=1.0.6
+pkgrel=1
+pkgdesc='A Grammar of Data Manipulation'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-ellipsis
+  r-generics
+  r-glue
+  r-lifecycle
+  r-magrittr
+  r-pillar
+  r-r6
+  r-rlang
+  r-tibble
+  r-tidyselect
+  r-vctrs
+)
+optdepends=(
+  r-bench
+  r-broom
+  r-callr
+  r-covr
+  r-dbi
+  r-dbplyr
+  r-knitr
+  r-lahman
+  r-lobstr
+  r-microbenchmark
+  r-nycflights13
+  r-purrr
+  r-rmarkdown
+  r-rmysql
+  r-rpostgresql
+  r-rsqlite
+  r-testthat
+  r-tidyr
+  r-withr
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('088c381a19595b202d5508003168c302fb6d893c9e7164e17ddb71616162fa07')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

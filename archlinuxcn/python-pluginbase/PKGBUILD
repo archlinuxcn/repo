@@ -5,16 +5,16 @@ _name="pluginbase"
 _module="$_name"
 
 pkgname=("python-$_module")
-pkgver=1.0.0
-pkgrel=7
+pkgver=1.0.1
+pkgrel=1
 pkgdesc="A support library for building plugins systems in Python."
 arch=("any")
 url="http://pluginbase.pocoo.org/"
 license=("BSD")
 makedepends=("python-setuptools")
 depends=("python")
-source=("https://github.com/mitsuhiko/pluginbase/archive/$pkgver.tar.gz")
-sha256sums=('ab0e5fc405f1d28abe99724943ad54b5e7fb1c2f6b1519f0942e2074e6c8c22a')
+source=($_name-$pkgver.tar.gz::"https://github.com/mitsuhiko/pluginbase/archive/v$pkgver.tar.gz")
+sha256sums=('bb95fe6a84ec6583e1be399ef6705011262757c69fb99fa24317fcc6e8998ffc')
 
 build() {
     cd "$_name-$pkgver"

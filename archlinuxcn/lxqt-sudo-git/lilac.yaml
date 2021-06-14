@@ -7,9 +7,15 @@ repo_depends:
   - lxqt-build-tools-git
   - liblxqt-git
 
-post_build: aur_post_build
+pre_build_script: |
+    aur_pre_build(maintainers=['pmattern'])
+    add_makedepends(['lxqt-build-tools-git'])
+
+post_build_script: |
+    aur_post_build()
 
 update_on:
-  - source: vcs
+  - source: github
+    github: lxqt/lxqt-sudo
   - source: aur
-    aur:
+    aur: lxqt-sudo-git

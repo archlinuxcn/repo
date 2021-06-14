@@ -1,27 +1,29 @@
 # Maintainer: nl6720 <nl6720@archlinux.org>
 
 pkgname='shim-signed'
-pkgver='15.f8'
-pkgrel=3
-pkgdesc='Initial UEFI bootloader that handles chaining to a trusted full bootloader under secure boot environments (prebuilt X64 EFI binaries from Fedora)'
-url='https://koji.fedoraproject.org/koji/packageinfo?packageID=14502'
+pkgver='15.r2.debian+15+1533136590.3beb971+7+deb10u1'
+pkgrel='1'
+pkgdesc='Initial UEFI bootloader that handles chaining to a trusted full bootloader under secure boot environments (prebuilt X64 EFI binaries from Debian)'
+url='https://packages.debian.org/buster/shim-signed'
 arch=('any')
 license=('BSD')
 options=('!strip')
-noextract=('shim-x64-13-4.x86_64.rpm')
-source=("https://kojipkgs.fedoraproject.org/packages/shim/${pkgver//.f/\/}/x86_64/shim-x64-${pkgver//.f/-}.x86_64.rpm"
-        'https://kojipkgs.fedoraproject.org/packages/shim-signed/13/4/x86_64/shim-x64-13-4.x86_64.rpm')
-sha512sums=('bea58059801c9af1f9beab675cf7b6bb7262278b1fe874cb56c3dec051a71236a352d3444f82ee0204518fdf1e18cbde4ce2d240dc1223dda2409ea23c3daa48'
-            'b6091fd4154b7cd4353e9bea2bcd0b796864c3c268a5a9ebce90e738afc7ab30924099b2127eec108d62da96983147c4d40292ed391ed1b2cfe5257b8d6fd474')
-
+noextract=('shim-helpers-amd64-signed_1+15+1533136590.3beb971+7+deb10u1_amd64.deb')
+source=('https://deb.debian.org/debian/pool/main/s/shim-signed/shim-signed_1.33+15+1533136590.3beb971-7_amd64.deb'
+        'https://deb.debian.org/debian/pool/main/s/shim-helpers-amd64-signed/shim-helpers-amd64-signed_1+15+1533136590.3beb971+7+deb10u1_amd64.deb')
+sha256sums=('da466858eee1786433646dfcc9918395d2da06a7fb1815a3f66de749f5d8e506'
+            '5d9198a417a4e0692e68d04594df1717ea10e9f80eb8292f19d30c56ab34a100')
 prepare() {
-	cd "${srcdir}"
-	# Use old MokManager from Fedora's shim-signed 13-4, https://github.com/rhboot/shim/issues/143 
-	bsdtar -f shim-x64-13-4.x86_64.rpm -x boot/efi/EFI/fedora/mmx64.efi
+	cd "$srcdir"
+	# Exctract shimx64.efi
+	bsdtar -xf 'data.tar.xz' 'usr/lib/shim/'
+	# Extract mmx64.efi and fbx64.efi
+	bsdtar -xf 'shim-helpers-amd64-signed_1+15+1533136590.3beb971+7+deb10u1_amd64.deb' 'data.tar.xz'
+	bsdtar -xf 'data.tar.xz' 'usr/lib/shim/'
 }
 
 package() {
-	install -D -m0644 -t "${pkgdir}/usr/share/${pkgname}/" "${srcdir}/boot/efi/EFI/fedora/shimx64.efi"
-	install -D -m0644 -t "${pkgdir}/usr/share/${pkgname}/" "${srcdir}/boot/efi/EFI/fedora/mmx64.efi"
-	install -D -m0644 -t "${pkgdir}/usr/share/${pkgname}/" "${srcdir}/boot/efi/EFI/BOOT/fbx64.efi"
+	install -Dm0644 "${srcdir}/usr/lib/shim/shimx64.efi.signed" "${pkgdir}/usr/share/${pkgname}/shimx64.efi"
+	install -Dm0644 "${srcdir}/usr/lib/shim/mmx64.efi.signed" "${pkgdir}/usr/share/${pkgname}/mmx64.efi"
+	install -Dm0644 "${srcdir}/usr/lib/shim/fbx64.efi.signed" "${pkgdir}/usr/share/${pkgname}/fbx64.efi"
 }

@@ -1,0 +1,10 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-glue
+  - r-shiny
+update_on:
+  - regex: shinycustomloader_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=shinycustomloader

@@ -8,6 +8,8 @@ build_prefix: extra-x86_64
 
 pre_build: vcs_update
 
+post_build: git_pkgbuild_commit
+
 update_on:
   - source: vcs
     vcs: git://git.kernel.org/pub/scm/bluetooth/bluez.git

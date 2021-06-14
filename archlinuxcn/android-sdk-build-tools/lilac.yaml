@@ -3,10 +3,12 @@ maintainers:
 
 build_prefix: multilib
 
-pre_build: aur_pre_build
+pre_build_script: |
+    aur_pre_build(maintainers="mynacol")
 
-post_build: aur_post_build
+post_build_script: |
+    aur_post_build()
 
 update_on:
   - source: aur
-    aur:
+    aur: android-sdk-build-tools

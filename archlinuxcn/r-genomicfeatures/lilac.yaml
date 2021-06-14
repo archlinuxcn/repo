@@ -1,0 +1,23 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-annotationdbi
+  - r-biobase
+  - r-biocgenerics
+  - r-biocio
+  - r-biomart
+  - r-biostrings
+  - r-dbi
+  - r-genomeinfodb
+  - r-genomicranges
+  - r-iranges
+  - r-rcurl
+  - r-rsqlite
+  - r-rtracklayer
+  - r-s4vectors
+  - r-xvector
+update_on:
+  - regex: GenomicFeatures_([\d._-]+).tar.gz
+    source: regex
+    url: https://bioconductor.org/packages/GenomicFeatures

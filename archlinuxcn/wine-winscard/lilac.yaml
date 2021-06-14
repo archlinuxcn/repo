@@ -1,0 +1,17 @@
+maintainers:
+  - github: yan12125
+
+build_prefix: multilib
+
+pre_build_script: |
+    _G.files = download_official_pkgbuild('wine')
+    run_cmd(['patch', '-Np0', '-i', 'PKGBUILD.diff'])
+
+post_build_script: |
+    git_add_files(_G.files)
+    git_commit()
+    update_aur_repo()
+
+update_on:
+  - source: archpkg
+    archpkg: wine

@@ -1,0 +1,46 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=remotes
+_pkgver=2.4.0
+pkgname=r-${_pkgname,,}
+pkgver=2.4.0
+pkgrel=1
+pkgdesc="R Package Installation from Remote Repositories, Including 'GitHub'"
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+)
+optdepends=(
+  'git: for install_git'
+  r-brew
+  r-callr
+  r-codetools
+  r-covr
+  r-curl
+  r-git2r
+  r-knitr
+  r-mockery
+  r-pingr
+  r-pkgbuild
+  r-rmarkdown
+  r-rprojroot
+  r-testthat
+  r-webfakes
+  r-withr
+  'subversion: for install_svn'
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('cde5c3e44f67eba5f9bb8ea72e04ed372649178cb036479e1387eac92b8c1411')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

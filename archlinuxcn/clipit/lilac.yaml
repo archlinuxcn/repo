@@ -6,8 +6,9 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-post_build: aur_post_build
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: aur
-    aur: clipit
+  - source: github
+    github: CristianHenzel/ClipIt
+    use_max_tag: true

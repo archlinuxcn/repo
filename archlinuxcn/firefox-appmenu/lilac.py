@@ -7,7 +7,7 @@ time_limit_hours = 4
 
 def pre_build():
   oldver, oldrel = get_pkgver_and_pkgrel()
-  aur_pre_build()
+  aur_pre_build(maintainers=['nikatar'])
   newver, newrel = get_pkgver_and_pkgrel()
   if oldver == newver:
     update_pkgrel(rel=int(oldrel + 1))

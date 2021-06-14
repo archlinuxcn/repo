@@ -2,8 +2,8 @@
 
 pkgname=python-pydeprecate
 _pkgname=pyDeprecate
-pkgver=0.3.0
-pkgrel=2
+pkgver=0.3.2
+pkgrel=1
 pkgdesc="Simple tooling for marking deprecated functions or classes and re-routing to the new successors' instance."
 arch=('any')
 url='https://github.com/Borda/pyDeprecate'
@@ -20,7 +20,7 @@ checkdepends=(
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Borda/pyDeprecate/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha512sums=('724b9809b235a4b2d143171f029fc524466745989d65c62f3a51699727f62c62717d756cd04a8d4675d90478b1a46b06f7543a5178c47bbbc51e3de38a01c908')
+sha512sums=('fdb99b5531b48a950fd75dbeb1e8f33041dedfa418c743698a3fb09d812c4573e91b7fd893c2287ba9f32a3e5028fbb304f211232121d3f79a128875c90a8b8f')
 
 build() {
   cd "${_pkgname}-${pkgver}"

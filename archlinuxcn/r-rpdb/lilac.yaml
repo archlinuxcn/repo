@@ -1,0 +1,9 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-rgl
+update_on:
+  - regex: Rpdb_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=Rpdb

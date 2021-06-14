@@ -8,12 +8,14 @@ repo_depends:
   - libsysstat-git
   - lxqt-globalkeys-git
 
-pre_build: aur_pre_build
+pre_build_script: |
+    aur_pre_build(maintainers=['pmattern'])
 
-post_build: aur_post_build
+post_build_script: |
+    aur_post_build()
 
 update_on:
   - source: github
     github: lxqt/lxqt-panel
   - source: aur
-    aur:
+    aur: lxqt-panel-git

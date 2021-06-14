@@ -7,12 +7,10 @@ pkgbase=mesa-git
 pkgname=('vulkan-mesa-layers-git' 'opencl-mesa-git' 'vulkan-intel-git' 'vulkan-radeon-git' 'vulkan-swrast-git' 'mesa-git')
 pkgdesc="mesa trunk (git version)"
 epoch=1
-pkgver=21.1.0_devel.137762.b4a66b29cd6
+pkgver=21.2.0_devel.141004.42b351370da
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
-
-LLVM_VERSION=$(pacman -Si llvm-libs-git | grep -Po '^Version +: ([^-]+)' | awk '{print $3}')
 
 makedepends=('python-mako' 'libxml2' 'libx11' 'libdrm' 'xorgproto' 'libxrandr' 'valgrind'
 	     'libxshmfence' 'libxxf86vm' 'libxdamage' 'libvdpau' 'libva' 'libxv' 'polly-git' 'wayland' 'wayland-protocols' 'elfutils' 'llvm-git' 'systemd' 'libxvmc'
@@ -109,7 +107,7 @@ package_opencl-mesa-git() {
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('opencl-mesa' 'opencl-driver')
   conflicts=('opencl-mesa')
-  
+
   _install fakeinstall/etc/OpenCL
   _install fakeinstall/usr/lib/lib*OpenCL*
   _install fakeinstall/usr/lib/gallium-pipe

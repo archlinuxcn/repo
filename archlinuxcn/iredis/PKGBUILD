@@ -1,23 +1,23 @@
 _name=iredis
 pkgname=iredis
-pkgver=1.9.1
-pkgrel=9
+pkgver=1.9.2
+pkgrel=1
 pkgdesc="Terminal client for Redis with auto-completion and syntax highlighting."
 arch=(any)
 url="https://github.com/laixintao/iredis"
 license=('BSD-3-Clause')
 depends=('python' 'python-redis' 'python-prompt_toolkit' 'python-pygments' 'python-mistune' 'python-configobj' 'python-click' 'python-pendulum' 'python-importlib_resources' 'python-wcwidth')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/iredis-1.9.1.tar.gz")
-sha256sums=('9f773711684f5a5bb19721b5ad2ec9987629975071b8ca968b05c9cc1d2af217')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/iredis-1.9.2.tar.gz")
+sha256sums=('b50bb0f36bff1173c6967fa40b1ce76a3c57f6e5c21b69981f3c8980317c0edf')
 
 build() {
-  cd "$srcdir/iredis-1.9.1"
+  cd "$srcdir/iredis-1.9.2"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/iredis-1.9.1"
+  cd "$srcdir/iredis-1.9.2"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install any world-writable or root-readable-only files

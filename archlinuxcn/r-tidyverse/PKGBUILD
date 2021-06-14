@@ -1,0 +1,64 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=tidyverse
+_pkgver=1.3.1
+pkgname=r-${_pkgname,,}
+pkgver=1.3.1
+pkgrel=1
+pkgdesc="Easily Install and Load the 'Tidyverse'"
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-broom
+  r-cli
+  r-crayon
+  r-dbplyr
+  r-dplyr
+  r-dtplyr
+  r-forcats
+  r-ggplot2
+  r-googledrive
+  r-googlesheets4
+  r-haven
+  r-hms
+  r-httr
+  r-jsonlite
+  r-lubridate
+  r-magrittr
+  r-modelr
+  r-pillar
+  r-purrr
+  r-readr
+  r-readxl
+  r-reprex
+  r-rlang
+  r-rstudioapi
+  r-rvest
+  r-stringr
+  r-tibble
+  r-tidyr
+  r-xml2
+)
+optdepends=(
+  r-covr
+  r-feather
+  r-glue
+  r-knitr
+  r-rmarkdown
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('83cf95109d4606236274f5a8ec2693855bf75d3a1b3bc1ab4426dcc275ed6632')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

@@ -4,12 +4,13 @@
 
 
 pkgname=telegraf
-pkgver=1.18.2
-pkgrel=2
+pkgver=1.18.3
+pkgrel=1
 pkgdesc='Plugin-driven server agent for reporting metrics into InfluxDB'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url='http://influxdb.org/'
 license=('MIT')
+depends=('glibc')
 makedepends=('go' 'git')
 backup=('etc/telegraf/telegraf.conf')
 install="${pkgname}.install"
@@ -18,7 +19,7 @@ source=("https://github.com/influxdata/${pkgname}/archive/v${pkgver}/${pkgname}-
         "${pkgname}.service"
         "${pkgname}.sysusers"
         "${pkgname}.tmpfiles")
-sha256sums=('19856eef5762c0740f3531d5c4d55e25d8a9de34278ee6e1dcef49dfd48942e1'
+sha256sums=('877496fb440d9d18713cafc01df8e24c0b1cfd5945f5a5c6cf5fb0df62b0f2c3'
             'b8494d35b868a256eace5f7baa7caa9d8561ee506aded3c47bd6b2ee031b0745'
             'ef54a27c036f11c44f32a42c81787dd0253f84e77170c2e8f9e268aca8773c33'
             'acf95397a51077b7684e8e4f4db7266c42cf82f24bc969ef2bc112a0f914f4cd'

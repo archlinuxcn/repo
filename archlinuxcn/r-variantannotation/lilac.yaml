@@ -1,0 +1,26 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-annotationdbi
+  - r-biobase
+  - r-biocgenerics
+  - r-biostrings
+  - r-bsgenome
+  - r-dbi
+  - r-genomeinfodb
+  - r-genomicfeatures
+  - r-genomicranges
+  - r-iranges
+  - r-matrixgenerics
+  - r-rhtslib
+  - r-rsamtools
+  - r-rtracklayer
+  - r-s4vectors
+  - r-summarizedexperiment
+  - r-xvector
+  - r-zlibbioc
+update_on:
+  - regex: VariantAnnotation_([\d._-]+).tar.gz
+    source: regex
+    url: https://bioconductor.org/packages/VariantAnnotation

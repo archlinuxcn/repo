@@ -1,0 +1,42 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=DBI
+_pkgver=1.1.1
+pkgname=r-${_pkgname,,}
+pkgver=1.1.1
+pkgrel=1
+pkgdesc='R Database Interface'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('LGPL')
+depends=(
+  r
+)
+optdepends=(
+  r-blob
+  r-covr
+  r-dbplyr
+  r-dplyr
+  r-glue
+  r-hms
+  r-knitr
+  r-magrittr
+  r-rmariadb
+  r-rmarkdown
+  r-rprojroot
+  r-rsqlite
+  r-testthat
+  r-xml2
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('572ab3b8a6421d0ac3e7665c4c842826f1723af98fca25d4f43edb419e771344')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

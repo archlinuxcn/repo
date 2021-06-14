@@ -8,7 +8,7 @@ repo_depends:
   - nvm
   - electron4-bin
 
-pre_build: aur_pre_build
+pre_build_script: aur_pre_build(maintainers=['bruceutut', 'whiredplanck'])
 post_build: aur_post_build
 
 update_on:

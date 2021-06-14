@@ -1,12 +1,11 @@
-# Contributor: Juanma Hernandez <juanmah@gmail.com>
 # Maintainer: Juanma Hernandez <juanmah@gmail.com>
 
 pkgname=zotero
 pkgver=5.0.96.2
-pkgrel=2
+pkgrel=3
 pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64')
-url="http://www.zotero.org/download"
+url="https://www.zotero.org/download"
 license=('AGPL3')
 depends=('dbus-glib' 'gtk3' 'nss' 'libxt')
 

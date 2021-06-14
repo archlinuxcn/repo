@@ -1,7 +1,7 @@
 # Maintainer: Alejandro Valdes <alejandrovaldes@live.com>
 
 pkgname=plasma5-applets-window-title
-pkgver=0.6.0
+pkgver=0.7.0
 pkgrel=1
 pkgdesc="Plasma 5 applet that shows the application title and icon for active window"
 arch=(x86_64)
@@ -9,7 +9,7 @@ url="https://github.com/psifidotos/applet-window-title"
 license=(GPL)
 depends=(plasma-workspace)
 source=("https://github.com/psifidotos/applet-window-title/archive/$pkgver.tar.gz")
-sha512sums=('13ca0e92de0cf8fdd2f481d2580e540217efde30dad7cdc3d2c37364cb73bd488e41c15e839fdd5d16ea066b46d887dc29e7d40e7ec6271ca4e213e75b9c1448')
+sha512sums=('c08ac528ae9aae1d5745aa9aa13e1907b626c3290fa338961e89c3ee1ac94ad11303710561c50b39c77a40e2e76fb3269f43bdd814e367e085752ebf52e850b2')
 
 package() {
   _pkgdir="$pkgdir/usr/share/plasma/plasmoids/org.kde.windowtitle"

@@ -1,7 +1,7 @@
 # Maintainer: Nick Østergaard <oe.nick at gmail dot com>
 
 pkgname=kicad-git
-pkgver=5.99.0.r10561.gccaf9e11df
+pkgver=5.99.0.r11013.g74cefecaac
 pkgrel=1
 pkgdesc="Electronic schematic and printed circuit board (PCB) design tools"
 arch=('i686' 'x86_64')
@@ -13,7 +13,6 @@ makedepends=('cmake' 'git' 'zlib' 'mesa' 'boost' 'ninja')
 optdepends=('kicad-library: for footprints')
 conflicts=('kicad' 'kicad-bzr')
 provides=('kicad')
-install=kicad.install
 source=("${pkgname}"'::git+https://gitlab.com/kicad/code/kicad.git')
 md5sums=('SKIP')
 

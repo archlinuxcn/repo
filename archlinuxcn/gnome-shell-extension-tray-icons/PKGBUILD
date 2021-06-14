@@ -2,9 +2,9 @@
 # Contributor: Thanos Apostolou <thanosapostolou@outlook.com>
 
 pkgname=gnome-shell-extension-tray-icons
-pkgver=5
-pkgrel=4
-pkgdesc="Simple version of TopIcons Plus"
+pkgver=6
+pkgrel=1
+pkgdesc='Simple version of TopIcons Plus'
 arch=('any')
 url='https://github.com/zhangkaizhao/gnome-shell-extension-tray-icons'
 license=('GPL3')
@@ -13,14 +13,11 @@ depends=(
 )
 source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/zhangkaizhao/gnome-shell-extension-tray-icons/archive/v${pkgver}.tar.gz"
-  "0001-fix-gnome40-support.patch::https://github.com/zhangkaizhao/gnome-shell-extension-tray-icons/pull/21.patch"
 )
-sha256sums=('ba14df2a7123ddac3548766e3034d7427d6b3a8c2e108bccffc205ad8f55a9af'
-            'f5c279defc3a8d7f56ef0b487fca338930ed312636837b7a7b0461f347741397')
+sha256sums=('39062a45acc15a13bebde3bed48a99d6ead34140826c3a07eaea64a3398159c1')
 
 package() {
 	cd "${pkgname}-${pkgver}"
-  patch -p1 -i "${srcdir}/0001-fix-gnome40-support.patch"
 	install -d "${pkgdir}/usr/share/gnome-shell/extensions/tray-icons@zhangkaizhao.com"
 	install -Dm644 extension.js "${pkgdir}/usr/share/gnome-shell/extensions/tray-icons@zhangkaizhao.com/extension.js"
 	install -Dm644 metadata.json "${pkgdir}/usr/share/gnome-shell/extensions/tray-icons@zhangkaizhao.com/metadata.json"

@@ -1,8 +1,8 @@
 # Maintainer: Patrizio Bekerle <patrizio at bekerle dot com>
 
 pkgname=qownnotes
-pkgver=21.5.3
-tag="9fff5b9e0c68c0c79e66ebed9f61be10984ec6a4"
+pkgver=21.6.2
+tag="1ff358ccf676758f8b7355b9061915392015898f"
 pkgrel=1
 pkgdesc="Plain-text file markdown note taking with Nextcloud/ownCloud integration"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -12,7 +12,7 @@ groups=('qownnotes')
 depends=('qt5-base' 'qt5-svg' 'qt5-declarative' 'openssl' 'qt5-xmlpatterns' 'qt5-websockets' 'qt5-x11extras' 'aspell')
 makedepends=('qt5-tools')
 source=("https://download.tuxfamily.org/${pkgname}/src/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('994a73e0860f955350fe542a2bf209088820139deb272f96d6644d0e059da719')
+sha256sums=('0bc0491a39ea8654aa17c2aeeb905cd0376e6e1c41b5310ca03cd86845821ef2')
 
 prepare() {
     cd "${pkgname}-${pkgver}"
@@ -33,7 +33,6 @@ package() {
 
     # install visuals
     install -D -m644 PBE.QOwnNotes.desktop "${pkgdir}/usr/share/applications/PBE.QOwnNotes.desktop"
-    install -D -m644 "images/icons/128x128/apps/QOwnNotes.png" "${pkgdir}/usr/share/pixmaps/QOwnNotes.png"
     for format in {16x16,24x24,32x32,48x48,64x64,96x96,128x128,256x256,512x512}; do
         install -D -m644 "images/icons/${format}/apps/QOwnNotes.png" "${pkgdir}/usr/share/icons/hicolor/$format/apps/QOwnNotes.png"
     done

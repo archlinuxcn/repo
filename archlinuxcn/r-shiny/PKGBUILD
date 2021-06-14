@@ -1,0 +1,64 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=shiny
+_pkgver=1.6.0
+pkgname=r-${_pkgname,,}
+pkgver=1.6.0
+pkgrel=1
+pkgdesc='Web Application Framework for R'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-bslib
+  r-cachem
+  r-commonmark
+  r-crayon
+  r-digest
+  r-ellipsis
+  r-fastmap
+  r-glue
+  r-htmltools
+  r-httpuv
+  r-jsonlite
+  r-later
+  r-lifecycle
+  r-mime
+  r-promises
+  r-r6
+  r-rlang
+  r-sourcetools
+  r-withr
+  r-xtable
+)
+optdepends=(
+  r-cairo
+  r-datasets
+  r-dygraphs
+  r-future
+  r-ggplot2
+  r-knitr
+  r-magrittr
+  r-markdown
+  r-ragg
+  r-reactlog
+  r-rmarkdown
+  r-sass
+  r-shinytest
+  r-showtext
+  r-testthat
+  r-yaml
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('8bd7d76d67d610aabdcc1df7c8f6d0f18dd695ace16af29b60982541d784bb99')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

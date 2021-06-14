@@ -1,0 +1,12 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-ggplot2
+  - r-rcpp
+  - r-rlang
+  - r-scales
+update_on:
+  - regex: ggrepel_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=ggrepel

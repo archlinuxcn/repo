@@ -1,0 +1,41 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=ade4
+_pkgver=1.7-16
+pkgname=r-${_pkgname,,}
+pkgver=1.7.16
+pkgrel=1
+pkgdesc='Analysis of Ecological Data: Exploratory and Euclidean Methods in Environmental Sciences'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-pixmap
+  r-progress
+  r-sp
+)
+optdepends=(
+  r-ade4tkgui
+  r-adegraphics
+  r-adephylo
+  r-ape
+  r-circstats
+  r-deldir
+  r-lattice
+  r-spdep
+  r-splancs
+  r-waveslim
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('9bd7a25ff4fe30a32fd8f6b71909f4c638a0e2f002fc8303c0a4795423385590')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

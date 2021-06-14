@@ -6,5 +6,6 @@ update_on:
     aur: python-astropy-helpers
   - alias: python
 
-pre_build: aur_pre_build
+pre_build_script: aur_pre_build(maintainers='gypaetus')
+
 post_build: aur_post_build

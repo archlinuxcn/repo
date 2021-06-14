@@ -4,11 +4,11 @@
 
 pkgname=rstudio-desktop-git
 _gitname=rstudio
-pkgver=34714.02cac2f85a
+pkgver=34715.0420c874af
 _gwtver=2.8.2
 _ginver=2.1.2
 _nodever=10.19.0
-pkgrel=1
+pkgrel=32
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 arch=('i686' 'x86_64')
 url="https://www.rstudio.com/products/rstudio/"
@@ -22,7 +22,7 @@ provides=('rstudio-desktop')
 conflicts=('rstudio-desktop' 'rstudio-desktop-bin' 'rstudio-desktop-preview')
 source=("git+https://github.com/rstudio/rstudio.git"
         "https://s3.amazonaws.com/rstudio-buildtools/gin-${_ginver}.zip"
-        "https://s3.amazonaws.com/rstudio-buildtools/gwt-${_gwtver}.zip"
+        "https://storage.googleapis.com/gwt-releases/gwt-${_gwtver}.zip"
 	"https://nodejs.org/dist/v${_nodever}/node-v${_nodever}-linux-x64.tar.gz"
 	"qt.conf"
 	"cran_multithread.patch")

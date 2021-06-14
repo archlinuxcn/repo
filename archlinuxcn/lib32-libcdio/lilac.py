@@ -7,4 +7,5 @@ def pre_build():
     add_provides(['libcdio++.so', 'libcdio.so', 'libiso9660++.so', 'libiso9660.so', 'libudf.so'])
 
 def post_build():
+    check_library_provides()
     aur_post_build()

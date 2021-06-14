@@ -1,7 +1,7 @@
 # Maintainer: Megumi_fox <i@megumifox.com>
 
 pkgname=qliveplayer-git
-pkgver=3.22.0.r1.gca7eb3f
+pkgver=3.22.1.r0.ge0d6117
 pkgrel=1
 pkgdesc='Cute and useful Live Stream Player with danmaku support.'
 arch=('x86_64')
@@ -19,6 +19,7 @@ depends=('mpv'
          'python')
 makedepends=('cmake'
              'git'
+             'ninja'
              'extra-cmake-modules' )
 optdepends=('python-protobuf: for YouTube LiveChat support'
             'streamlink: for foreign streaming service support')
@@ -38,11 +39,11 @@ build() {
     cd $srcdir/QLivePlayer
     mkdir -p build
     cd build
-    cmake -DCMAKE_INSTALL_PREFIX="$pkgdir/usr" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib ..
-    make
+    cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib ..
+    ninja
 }
 
 package() {
     cd $srcdir/QLivePlayer/build
-    make install
+    DESTDIR="$pkgdir" ninja install
 }

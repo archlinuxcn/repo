@@ -10,3 +10,7 @@ post_build: git_pkgbuild_commit
 update_on:
   - source: github
     github: medusalix/xow
+  - source: archpkg
+    archpkg: libusb
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1

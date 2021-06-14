@@ -1,0 +1,52 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=logger
+_pkgver=0.2.0
+pkgname=r-${_pkgname,,}
+pkgver=0.2.0
+pkgrel=1
+pkgdesc='A Lightweight, Modern and Flexible Logging Utility'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('AGPL')
+depends=(
+  r
+)
+optdepends=(
+  r-botor
+  r-callr
+  r-covr
+  r-crayon
+  r-devtools
+  r-futile.logger
+  r-glue
+  r-jsonlite
+  r-knitr
+  r-log4r
+  r-logging
+  r-pander
+  r-parallel
+  r-r.utils
+  r-rmarkdown
+  r-roxygen2
+  r-rpushbullet
+  r-rsyslog
+  r-shiny
+  r-slackr
+  r-syslognet
+  r-telegram
+  r-testthat
+  r-txtq
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('79650eadafaf910e4effe28914a46783aa0a97fce64fe7d1c2065c565957ef05')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,11 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-htmltools
+  - r-jsonlite
+  - r-yaml
+update_on:
+  - regex: htmlwidgets_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=htmlwidgets

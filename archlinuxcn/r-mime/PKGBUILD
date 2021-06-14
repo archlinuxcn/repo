@@ -1,0 +1,26 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=mime
+_pkgver=0.10
+pkgname=r-${_pkgname,,}
+pkgver=0.10
+pkgrel=1
+pkgdesc='Map Filenames to MIME Types'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('783233a15a817a7530d140e9825565a661aa4bdea7c635d11b9c74faa33be3f7')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

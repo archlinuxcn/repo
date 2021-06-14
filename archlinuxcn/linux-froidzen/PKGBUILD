@@ -1,7 +1,7 @@
 # Maintainer: OriginCode <self@origincode.me>
 
 pkgbase=linux-froidzen
-pkgver=5.11.14.zen1
+pkgver=5.12.9.zen1
 pkgrel=1
 pkgdesc='Linux ZEN with Patches and Modifications'
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -18,7 +18,7 @@ _srcname=zen-kernel
 source=(
   "$_srcname::git+https://github.com/zen-kernel/zen-kernel?signed#tag=$_srctag"
   config         # the main kernel config file
-  'https://raw.githubusercontent.com/dolohow/uksm/master/v5.x/uksm-5.11.patch' # UKSM Patch
+  'https://raw.githubusercontent.com/dolohow/uksm/master/v5.x/uksm-5.12.patch' # UKSM Patch
 )
 validpgpkeys=(
   'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds
@@ -26,8 +26,8 @@ validpgpkeys=(
   'A2FF3A36AAA56654109064AB19802F8B0D70FC30'  # Jan Alexander Steffens (heftig)
 )
 sha256sums=('SKIP'
-            '5622e03f673b1398594b7c763abcd25638576a5641e303232c743355dc6a8f1e'
-            '34f4ae617a2407fed2ba347b663d31f39c1ec9b390e1ea5ea636c91a4cc6f875')
+            '296a656e8a2b577252c5f9d72c7ec13e36963d82f9a17e413152924bfea0dfef'
+            '8b2e476ae108255ae5dc6da43cda57620021a8e68da0e3c568eb44afd3d3254a')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase

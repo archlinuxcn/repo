@@ -1,0 +1,43 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=tidyselect
+_pkgver=1.1.1
+pkgname=r-${_pkgname,,}
+pkgver=1.1.1
+pkgrel=1
+pkgdesc='Select from a Set of Strings'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-ellipsis
+  r-glue
+  r-purrr
+  r-rlang
+  r-vctrs
+)
+optdepends=(
+  r-covr
+  r-crayon
+  r-dplyr
+  r-knitr
+  r-magrittr
+  r-rmarkdown
+  r-testthat
+  r-tibble
+  r-withr
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('18eb6a6746196a81ce19ee6cbf1db0c33f494177b97e2419312ef25a00ae486b')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

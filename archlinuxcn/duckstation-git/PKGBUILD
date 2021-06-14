@@ -1,16 +1,17 @@
 
 pkgname=duckstation-git
-pkgver=preview.r4423.6f5c00bc
+epoch=1
+pkgver=4733.fe7a195e
 pkgdesc='A Sony PlayStation (PSX) emulator, focusing on playability, speed, and long-term maintainability'
 pkgrel=1
 arch=('x86_64' 'aarch64')
 url="https://github.com/stenzek/duckstation"
 license=('GPLv3')
-makedepends=('git' 'ninja' 'cmake' 'qt5-tools' 'libpulse')
-depends=('sdl2' 'gtk3' 'qt5-base')
+makedepends=(git cmake extra-cmake-modules qt5-tools libdrm gtk3 ninja)
+depends=(sdl2 qt5-base)
 optdepends=()
 provides=('duckstation')
-conflicts=()
+conflicts=('duckstation')
 
 _branch=master
 source=("git+https://github.com/stenzek/duckstation.git#branch=${_branch}")
@@ -18,26 +19,29 @@ sha256sums=('SKIP')
 
 pkgver() {
   cd "${srcdir}/duckstation"
-  printf "%s.r%s.%s" "$(git describe --abbrev=0 --tags)" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build() {
-  cd "${srcdir}/duckstation"
-
-  cmake -GNinja -DCMAKE_BUILD_TYPE=Release
-  ninja
+    cmake -B build -S duckstation \
+        -DUSE_DRMKMS=ON \
+        -DUSE_WAYLAND=ON \
+        -G Ninja
+    ninja -C build
 }
 
 package() {
-  cd "${srcdir}/duckstation"
+    # Main files
+    install -m755 -d "${pkgdir}/opt"
+    cp -rv build/bin "${pkgdir}/opt/${pkgname%-git}"
 
-  install -m 755 -d "${pkgdir}/usr/bin/"
-  install -m 755 -t "${pkgdir}/usr/bin/" bin/duckstation-nogui bin/duckstation-qt
+    # Symlink to /usr/bin
+    install -m755 -d "${pkgdir}/usr/bin"
+    ln -svt "${pkgdir}/usr/bin" /opt/"${pkgname%-git}"/"${pkgname%-git}"-{qt,nogui}
 
-  install -m 755 -d "${pkgdir}/usr/share/applications/"
-  install -m 644 appimage/duckstation-qt.desktop "${pkgdir}/usr/share/applications/duckstation.desktop"
-  sed -e 's/Terminal=true/Terminal=false/' -e 's/Name=DuckStation Qt/Name=DuckStation/' -e 's/Icon=duckstation-qt/Icon=duckstation/' -i "${pkgdir}/usr/share/applications/duckstation.desktop"
-
-  install -m 755 -d "${pkgdir}/usr/share/pixmaps/"
-  install -m 644 appimage/icon-64px.png "${pkgdir}/usr/share/pixmaps/duckstation.png"
+    # Desktop file
+    install -Dm644 -t "${pkgdir}/usr/share/applications/" "${pkgname%-git}"/dist/duckstation-{qt,nogui}.desktop
+    sed -e 's/Icon=duckstation-qt/Icon=duckstation/' -i "${pkgdir}/usr/share/applications/duckstation-qt.desktop"
+    sed -e 's/Icon=duckstation-qt/Icon=duckstation/' -i "${pkgdir}/usr/share/applications/duckstation-nogui.desktop"
+    install -Dm644 "${pkgname%-git}"/dist/icon-64px.png "${pkgdir}/usr/share/pixmaps/duckstation.png"
 }

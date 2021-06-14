@@ -1,0 +1,44 @@
+diff -rupN firewalld.orig/config/firewalld.service.in firewalld/config/firewalld.service.in
+--- firewalld.orig/config/firewalld.service.in	2018-07-31 22:22:40.786777349 +0200
++++ firewalld/config/firewalld.service.in	2018-07-31 22:26:40.550121870 +0200
+@@ -8,7 +8,7 @@ Conflicts=iptables.service ip6tables.ser
+ Documentation=man:firewalld(1)
+ 
+ [Service]
+-EnvironmentFile=-/etc/sysconfig/firewalld
++EnvironmentFile=-/etc/conf.d/firewalld
+ ExecStart=@sbindir@/firewalld --nofork --nopid $FIREWALLD_ARGS
+ ExecReload=/bin/kill -HUP $MAINPID
+ # supress to log debug and error output also to /var/log/messages
+diff -rupN firewalld.orig/config/Makefile.am firewalld/config/Makefile.am
+--- firewalld.orig/config/Makefile.am	2018-07-31 22:22:40.786777349 +0200
++++ firewalld/config/Makefile.am	2018-07-31 22:26:21.666787661 +0200
+@@ -329,12 +329,12 @@ firewalld-sysctls.conf: firewalld-sysctl
+ 	$(edit) $< >$@
+ 
+ install-sysconfig:
+-	$(MKDIR_P) $(DESTDIR)$(sysconfdir)/sysconfig
+-	$(INSTALL_DATA) $(srcdir)/firewalld.sysconfig $(DESTDIR)$(sysconfdir)/sysconfig/firewalld
++	$(MKDIR_P) $(DESTDIR)$(sysconfdir)/conf.d
++	$(INSTALL_DATA) $(srcdir)/firewalld.sysconfig $(DESTDIR)$(sysconfdir)/conf.d/firewalld
+ 
+ uninstall-sysconfig:
+-	rm -f $(DESTDIR)$(sysconfdir)/sysconfig/firewalld
+-	rmdir $(DESTDIR)$(sysconfdir)/sysconfig || :
++	rm -f $(DESTDIR)$(sysconfdir)/conf.d/firewalld
++	rmdir $(DESTDIR)$(sysconfdir)/conf.d || :
+ 
+ install-rpmmacros:
+ 	$(MKDIR_P) $(DESTDIR)$(prefix)/lib/rpm/macros.d
+diff -rupN firewalld.orig/src/firewall/config/__init__.py.in firewalld/src/firewall/config/__init__.py.in
+--- firewalld.orig/src/firewall/config/__init__.py.in	2018-07-31 22:22:40.800110683 +0200
++++ firewalld/src/firewall/config/__init__.py.in	2018-07-31 22:24:54.403450272 +0200
+@@ -96,7 +96,7 @@ FIREWALLD_PIDFILE = "/var/run/firewalld.
+ 
+ FIREWALLD_TEMPDIR = '/run/firewalld'
+ 
+-SYSCONFIGDIR = '/etc/sysconfig'
++SYSCONFIGDIR = '/etc/conf.d'
+ IFCFGDIR = "@IFCFGDIR@"
+ 
+ SYSCTL_CONFIG = '/etc/sysctl.conf'

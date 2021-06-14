@@ -1,0 +1,114 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=parameters
+_pkgver=0.14.0
+pkgname=r-${_pkgname,,}
+pkgver=0.14.0
+pkgrel=1
+pkgdesc='Processing of Model Parameters'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-bayestestr
+  r-insight
+)
+optdepends=(
+  r-aer
+  r-afex
+  r-aod
+  r-bayesfactor
+  r-bayesfm
+  r-bbmle
+  r-betareg
+  r-blme
+  r-boot
+  r-brglm2
+  r-brms
+  r-broom
+  r-caic4
+  r-car
+  r-cgam
+  r-clubsandwich
+  r-cluster
+  r-cplm
+  r-dplyr
+  r-drr
+  r-effectsize
+  r-eganet
+  r-emmeans
+  r-factominer
+  r-fastica
+  r-gam
+  r-gamlss
+  r-gee
+  r-geepack
+  r-ggplot2
+  r-glmmadaptive
+  r-glmmtmb
+  r-gparotation
+  r-gt
+  r-knitr
+  r-lavaan
+  r-lavasearch2
+  r-lm.beta
+  r-lme4
+  r-lmertest
+  r-logspline
+  r-lqmm
+  r-m3c
+  r-magrittr
+  r-mass
+  r-matrix
+  r-mclust
+  r-mcmcglmm
+  r-mediation
+  r-metabma
+  r-metafor
+  r-mfx
+  r-mgcv
+  r-mice
+  r-multcomp
+  r-multimode
+  r-mumin
+  r-nbclust
+  r-nfactors
+  r-nlme
+  r-panelr
+  r-pbkrtest
+  r-performance
+  r-plm
+  r-pmcmrplus
+  r-projpred
+  r-pscl
+  r-psych
+  r-quantreg
+  r-randomforest
+  r-rmarkdown
+  r-rstanarm
+  r-sandwich
+  r-see
+  r-sjstats
+  r-spelling
+  r-survey
+  r-survival
+  r-testthat
+  r-tmb
+  r-tripack
+  r-truncreg
+  r-vgam
+  r-wrs2
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('c7349620fdf8a43e9dee93ecfb744cca889a126c4681580466e9dff52382a20f')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

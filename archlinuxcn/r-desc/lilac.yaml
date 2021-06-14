@@ -1,0 +1,11 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-crayon
+  - r-r6
+  - r-rprojroot
+update_on:
+  - regex: desc_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=desc

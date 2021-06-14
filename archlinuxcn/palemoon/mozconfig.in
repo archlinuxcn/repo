@@ -3,6 +3,8 @@ mk_add_options MOZ_OBJDIR=%SRCDIR%/pmbuild
 ac_add_options --enable-official-branding
 export MOZILLA_OFFICIAL=1
 export MOZ_PKG_SPECIAL=gtk2
+export CC=/usr/bin/gcc-10
+export CXX=/usr/bin/g++-10
 
 ac_add_options --enable-application=palemoon
 ac_add_options --enable-optimize="-O2 -w"

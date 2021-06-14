@@ -3,14 +3,15 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build: aur_pre_build
+pre_build_script: |
+    aur_pre_build(maintainers="Muflone")
 
-post_build: aur_post_build
+post_build_script: |
+    aur_post_build()
 
 update_on:
-  -
+  - source: aur
+    aur: android-x86-64-system-image
 
-    source: aur
-    aur:
 repo_depends:
   - android-platform

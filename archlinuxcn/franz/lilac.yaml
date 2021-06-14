@@ -5,9 +5,10 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-# pre_build: aur_pre_build
-# post_build: aur_post_build
 post_build: git_pkgbuild_commit
+
+repo_depends:
+  - nvm
 
 update_on:
   - source: manual
@@ -17,4 +18,4 @@ update_on:
     from_pattern: ^(\d+\.\d+.\d+).*
     to_pattern: \1
   - source: manual
-    manual: 1
+    manual: 3

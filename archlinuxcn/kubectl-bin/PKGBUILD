@@ -4,7 +4,7 @@
 
 pkgname=kubectl-bin
 pkgdesc="Kubernetes.io client binary"
-pkgver=1.21.0
+pkgver=1.21.1
 pkgrel=1
 arch=('i686' 'x86_64' 'aarch64' 'armv7h' 'armv7l')
 url="https://kubernetes.io"
@@ -17,11 +17,11 @@ source_x86_64=($_kubectl_file::https://storage.googleapis.com/kubernetes-release
 source_aarch64=($_kubectl_file::https://storage.googleapis.com/kubernetes-release/release/v$pkgver/bin/linux/arm64/kubectl)
 source_armv7h=($_kubectl_file::https://storage.googleapis.com/kubernetes-release/release/v$pkgver/bin/linux/arm/kubectl)
 source_armv7l=($_kubectl_file::https://storage.googleapis.com/kubernetes-release/release/v$pkgver/bin/linux/arm/kubectl)
-sha256sums_i686=('c59de6a0b497a94cda841957f56efabbae7bccc2093ffb073bb65cf8f759b796')
-sha256sums_x86_64=('9f74f2fa7ee32ad07e17211725992248470310ca1988214518806b39b1dad9f0')
-sha256sums_aarch64=('a4dd7100f547a40d3e2f83850d0bab75c6ea5eb553f0a80adcf73155bef1fd0d')
-sha256sums_armv7h=('6d79f6ebec2eda45b0808a895fa5d06bd8611c02d34b584eaa94857f365b25aa')
-sha256sums_armv7l=('6d79f6ebec2eda45b0808a895fa5d06bd8611c02d34b584eaa94857f365b25aa')
+sha256sums_i686=('97d1c2e54baa4a68ca68f4634df1aeb4d2de88cebef243b8bc10814b09f4a693')
+sha256sums_x86_64=('58785190e2b4fc6891e01108e41f9ba5db26e04cebb7c1ac639919a931ce9233')
+sha256sums_aarch64=('d7e1163f4127efd841e5f5db6eacced11c2a3b20384457341b19ca295d0c535f')
+sha256sums_armv7h=('d963971fd796b04ccaa389cf59900834e01c151a52c531585ac68aae779c0d91')
+sha256sums_armv7l=('d963971fd796b04ccaa389cf59900834e01c151a52c531585ac68aae779c0d91')
 
 package() {
   install -Dm 755 "$srcdir/$_kubectl_file" "$pkgdir/usr/bin/kubectl"

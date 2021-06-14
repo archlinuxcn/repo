@@ -1,0 +1,32 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=highr
+_pkgver=0.9
+pkgname=r-${_pkgname,,}
+pkgver=0.9
+pkgrel=1
+pkgdesc='Syntax Highlighting for R Source Code'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-xfun
+)
+optdepends=(
+  r-knitr
+  r-markdown
+  r-testit
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('beff11390d936c90fdcc00e7ed0eb72220f3de403a51b56659e3d3e0b6d8ed4d')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

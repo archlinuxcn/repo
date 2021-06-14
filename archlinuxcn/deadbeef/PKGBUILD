@@ -1,0 +1,59 @@
+# Maintainer: Lukas Fleischer <lfleischer@archlinux.org>
+# Contributor: Alexey Yakovenko <waker@users.sourceforge.net>
+
+pkgname=deadbeef
+pkgver=1.8.7
+pkgrel=2
+pkgdesc='A GTK+ audio player for GNU/Linux.'
+arch=('x86_64')
+url='http://deadbeef.sourceforge.net'
+license=('GPL2')
+depends=('alsa-lib' 'hicolor-icon-theme' 'desktop-file-utils' 'jansson' 'libblocksruntime' 'libdispatch')
+makedepends=('libvorbis' 'libmad' 'flac' 'curl' 'imlib2' 'wavpack' 'libsndfile' 'libcdio' 'libcddb'
+             'libx11' 'faad2' 'zlib' 'intltool' 'pkgconfig' 'libpulse' 'libzip' 'libsamplerate'
+             'yasm' 'ffmpeg' 'gtk2' 'gtk3' 'clang')
+optdepends=('gtk2: for the GTK2 interface'
+            'gtk3: for the GTK3 interface'
+            'libsamplerate: for Resampler plugin'
+            'libvorbis: for Ogg Vorbis playback'
+            'libmad: for MP1/MP2/MP3 playback'
+            'mpg123: for MP1/MP2/MP3 playback'
+            'flac: for FLAC playback'
+            'curl: for Last.fm scrobbler, SHOUTcast, Icecast, Podcast support'
+            'imlib2: for artwork plugin'
+            'wavpack: for WavPack playback'
+            'libsndfile: for Wave playback'
+            'libcdio: audio cd plugin'
+            'libcddb: audio cd plugin'
+            'faad2: for AAC/MP4 support'
+            'dbus: for OSD notifications support'
+            'pulseaudio: for PulseAudio output plugin'
+            'libx11: for global hotkeys plugin'
+            'zlib: for Audio Overload plugin'
+            'libzip: for vfs_zip plugin'
+            'ffmpeg: for ffmpeg plugin')
+source=("https://github.com/DeaDBeeF-Player/${pkgname}/archive/${pkgver}.tar.gz"
+        apbuild.zip::"https://github.com/DeaDBeeF-Player/apbuild/archive/refs/heads/master.zip"
+        mp4p.zip::"https://github.com/DeaDBeeF-Player/mp4p/archive/refs/heads/master.zip")
+sha512sums=('b8026b934a211ed24cdbc7e738fbfaa95d20706c0fcaef65530d7354e19d71c1e05af59305354478b4c4f1dbe4f7dbf436af7093d25727a2508b24c692a09258'
+            'b49e5354677afe702b98afdfb969e30c478c756992b95a68aea62b6c5824a5872ce1840a476be5a97e1b7e7e22f71b697b243a4e727e4187861a252c6a135922'
+            'b946ca6616c1a9260bd7918fbc8f7af589fc74209541733eb1f33d8ba3def27bae31e604f5567770890bb8535e9b01d950af4107271e5b3d20cff5da0dcf95ef')
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	cp -R ${srcdir}/mp4p-master/* external/mp4p/
+	cp -R ${srcdir}/apbuild-master/* external/apbuild/
+
+	./autogen.sh 
+	CC=clang CXX=clang++ ./configure --prefix=/usr
+}
+
+build () {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="$pkgdir" install
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}

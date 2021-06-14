@@ -1,0 +1,59 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=testthat
+_pkgver=3.0.2
+pkgname=r-${_pkgname,,}
+pkgver=3.0.2
+pkgrel=1
+pkgdesc='Unit Testing for R'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-brio
+  r-callr
+  r-cli
+  r-crayon
+  r-desc
+  r-digest
+  r-ellipsis
+  r-evaluate
+  r-jsonlite
+  r-lifecycle
+  r-magrittr
+  r-pkgload
+  r-praise
+  r-processx
+  r-ps
+  r-r6
+  r-rlang
+  r-waldo
+  r-withr
+)
+optdepends=(
+  r-covr
+  r-curl
+  r-diffviewer
+  r-knitr
+  r-mockery
+  r-rmarkdown
+  r-rstudioapi
+  r-shiny
+  r-usethis
+  r-vctrs
+  r-xml2
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('1803d0aec8056698978d01ac3a6036009e3c12ef9f2565ae721fcabccd984b0f')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
