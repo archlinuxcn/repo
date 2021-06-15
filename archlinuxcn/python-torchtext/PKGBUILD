@@ -2,8 +2,8 @@
 
 pkgname=python-torchtext
 _pkgname=text
-pkgver=0.8.1
-pkgrel=2
+pkgver=0.10.0
+pkgrel=1
 pkgdesc='Data loaders and abstractions for text and NLP'
 arch=('x86_64')
 url='https://github.com/pytorch/text'
