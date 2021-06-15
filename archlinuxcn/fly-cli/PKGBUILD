@@ -1,6 +1,6 @@
 # Maintainer: Sasasu <su@sasasu.me>
 pkgname=fly-cli
-pkgver=v7.3.1
+pkgver=v7.3.2
 pkgrel=5
 pkgdesc="A command line interface for Concourse CI"
 arch=("x86_64")
@@ -9,7 +9,7 @@ license=('Apache-2.0')
 makedepends=("go")
 conflicts=("concourse-fly" "concourse-fly-bin" "concourse-fly-git")
 source=("https://github.com/concourse/concourse/archive/$pkgver.tar.gz")
-sha256sums=('dc0e4a198c9525685f9b7afdbbafee26afdde1320be0415b20b99900c46bd6b0')
+sha256sums=('c89eaa89acab439f5e338bba8db5967a22c26b72fb1108322035c789725d149c')
 
 build() {
   cd concourse-${pkgver:1}/fly
