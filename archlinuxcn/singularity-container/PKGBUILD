@@ -3,7 +3,7 @@
 
 _pkgname=singularity
 pkgname=singularity-container
-pkgver=3.7.3
+pkgver=3.8.0
 pkgrel=1
 pkgdesc='Application containers for Linux'
 arch=('x86_64')
@@ -18,13 +18,13 @@ depends=(
   squashfs-tools
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/hpcng/singularity/releases/download/v${pkgver}/${_pkgname}-${pkgver}.tar.gz")
-sha256sums=('6667eb8875d2b66d73504f40c956b42b1351744f488d164204376215d885da5c')
+sha256sums=('e9608b0e0a8c805218bbe795e9176484837b2f7fcb95e5469b853b3809a2412e')
 
 build() {
   export CGO_CPPFLAGS="${CPPFLAGS}"
   export CGO_CXXFLAGS="${CXXFLAGS}"
   export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
-  cd "${_pkgname}"
+  cd "${_pkgname}-${pkgver}"
   ./mconfig \
     --libexecdir=/usr/lib \
     --localstatedir=/var \
@@ -37,8 +37,8 @@ build() {
 }
 
 package() {
-  make -C "${_pkgname}/builddir" DESTDIR="${pkgdir}" install man
-  install -Dm644 "${srcdir}/${_pkgname}/LICENSE.md" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  make -C "${_pkgname}-${pkgver}/builddir" DESTDIR="${pkgdir}" install man
+  install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/LICENSE.md" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 
 # vim:set ts=2 sw=2 et:
