@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=biomaRt
-_pkgver=2.48.0
+_pkgver=2.48.1
 pkgname=r-${_pkgname,,}
-pkgver=2.48.0
+pkgver=2.48.1
 pkgrel=1
 pkgdesc='Interface to BioMart databases (i.e. Ensembl)'
 arch=('any')
@@ -29,7 +29,7 @@ optdepends=(
   r-testthat
 )
 source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('a5383f391a7bf5fb8078582d803e0ccf50e8e7fd0a5a6acbf1c16f3c4cfb14c1')
+sha256sums=('aae3a938b3fb8334f8e2764da9c1013bd6e4c03ef11644231f38cc1d3e8034a8')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
