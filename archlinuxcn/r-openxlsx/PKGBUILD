@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=openxlsx
-_pkgver=4.2.3
+_pkgver=4.2.4
 pkgname=r-${_pkgname,,}
-pkgver=4.2.3
+pkgver=4.2.4
 pkgrel=1
 pkgdesc='Read, Write and Edit xlsx Files'
 arch=('x86_64')
@@ -22,7 +22,7 @@ optdepends=(
   r-testthat
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('cdef89d826e50bef772af3e5eae935ca0316626a6e22f55f7631eac733b5e46f')
+sha256sums=('af571b3c60cea2a5975f6a394469f1c50266d4a5c5c91896b991b1b3ba8bc86e')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
