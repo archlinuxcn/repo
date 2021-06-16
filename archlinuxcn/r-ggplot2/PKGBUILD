@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=ggplot2
-_pkgver=3.3.3
+_pkgver=3.3.4
 pkgname=r-${_pkgname,,}
-pkgver=3.3.3
+pkgver=3.3.4
 pkgrel=1
 pkgdesc='Create Elegant Data Visualisations Using the Grammar of Graphics'
 arch=('any')
@@ -47,7 +47,7 @@ optdepends=(
   r-vdiffr
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('45c29e2348dbd195bbde1197a52db7764113e57f463fd3770fb899acc33423cc')
+sha256sums=('b77083663077ab57dede2832d69eed476a5e301c568158f90a5b1fb846740692')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
