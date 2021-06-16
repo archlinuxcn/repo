@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=rmarkdown
-_pkgver=2.8
+_pkgver=2.9
 pkgname=r-${_pkgname,,}
-pkgver=2.8
+pkgver=2.9
 pkgrel=1
 pkgdesc='Dynamic Documents for R'
 arch=('any')
@@ -36,7 +36,7 @@ optdepends=(
   r-withr
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('3fdf67ca065992527fbf7c37c664f558a61be75e95a0510c017477972c2a6562')
+sha256sums=('6ce5af8b9a7c282619f74d3999d27ec4de12d3f93cde8fd12cc4c19f02ea8668')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
