@@ -140,7 +140,8 @@ idle_server_daemon() {
 					no_player=$(( IDLE_IF_TIME - 300 ))
 					# Game server is down, listen on port ${GAME_PORT} for incoming connections
 					echo -n "Netcat: "
-					${NETCAT_CMD} -v -l -p ${GAME_PORT} && echo "Netcat caught an connection. The server is coming up again..."
+					${NETCAT_CMD} -v -l -p ${GAME_PORT} 2>&1 | (grep -m1 -i "connect" && pkill -P $$ ${NETCAT_CMD}) || true
+					echo "Netcat caught a connection. The server is coming up again..."
 					IDLE_SERVER="false" ${myname} start
 				fi
 			else
@@ -152,7 +153,8 @@ idle_server_daemon() {
 			no_player=$(( IDLE_IF_TIME - 300 ))
 			# Game server is down, listen on port ${GAME_PORT} for incoming connections
 			echo -n "Netcat: "
-			${NETCAT_CMD} -v -l -p ${GAME_PORT} && echo "Netcat caught an connection. The server is coming up again..."
+			${NETCAT_CMD} -v -l -p ${GAME_PORT} 2>&1 | (grep -m1 -i "connect" && pkill -P $$ ${NETCAT_CMD}) || true
+			echo "Netcat caught a connection. The server is coming up again..."
 			IDLE_SERVER="false" ${myname} start
 		fi
 	done
