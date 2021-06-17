@@ -1,0 +1,12 @@
+maintainers:
+  - github: DDoSolitary
+build_prefix: extra-x86_64
+pre_build_script: |
+  aur_pre_build(maintainers='adsun')
+post_build: aur_post_build
+repo_depends:
+  - cross-mips-elf-binutils
+update_on:
+  - source: aur
+    aur: cross-mips-elf-gcc
+staging: true
