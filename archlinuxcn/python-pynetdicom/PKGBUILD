@@ -1,0 +1,30 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=python-pynetdicom
+_pkgname=pynetdicom
+pkgver=1.5.7
+pkgrel=1
+pkgdesc='A Python implementation of the DICOM networking protocol'
+arch=(any)
+url='https://github.com/pydicom/pynetdicom'
+license=(MIT)
+depends=(
+  python-pydicom
+)
+makedepends=(
+  python-setuptools
+)
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/pydicom/pynetdicom/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('84f88b3c5dcdb780489e13585fc42293db2372470953cc4bc3586c3661a01eb3a778aac0241c17c21cd1293fb888a5e3bd45b38344258ba4ecbfb2d69168834d')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENCE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
