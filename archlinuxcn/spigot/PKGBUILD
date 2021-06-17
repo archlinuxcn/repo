@@ -2,18 +2,18 @@
 # Submitter: Schala Zeal <schalaalexiazeal@gmail.com>
 
 pkgname=spigot
-_pkgver=1.16.5
-_build=126
+_pkgver=1.17
+_build=128
 pkgver="${_pkgver}+b${_build}"
-pkgrel=5
+pkgrel=6
 pkgdesc="High performance Minecraft server implementation"
 arch=('any')
 url="https://www.spigotmc.org/"
 license=("LGPL")
-depends=("java-runtime-headless>=8" 'screen' 'sudo' 'fontconfig' 'bash' 'awk' 'sed')
+depends=("java-runtime-headless>=16" 'screen' 'sudo' 'fontconfig' 'bash' 'awk' 'sed')
 optdepends=("tar: needed in order to create world backups"
 	"netcat: required in order to suspend an idle server")
-makedepends=("java-environment>=8" 'git')
+makedepends=("java-environment>=16" 'git')
 provides=("minecraft-server=${_pkgver%_*}" "bukkit=${_pkgver%_*}" "craftbukkit=${_pkgver%_*}")
 conflicts=("bukkit" "craftbukkit" "spigot-patcher")
 backup=("etc/conf.d/${pkgname}")
@@ -26,14 +26,14 @@ source=("BuildTools-${_pkgver}+b${_build}.jar::https://hub.spigotmc.org/jenkins/
 	"${pkgname}.tmpfiles"
 	"${pkgname}.conf"
 	"${pkgname}.sh")
-sha512sums=('92fe99a967d3899cd7415c867128d755ab23dfd2cbb945806db52013c21105e694ec30ddd9e1599bd7b47101ceb2b5a73f8034f4ce09e1d9b97d29af9183e82a'
+sha512sums=('1a68933b4430ca0e4c45f57e3ff6af13fb867b7df776626e038c8cb9a3ffb894b381ba5ed0bd5e35034fb9f2c1a1f65a215733b90f317ebaf87939ba1ee2f30e'
             '03ba1032b687553831021cfb0bed489e6301d0446c3b4f56d989d203855952911f3b1caaa00596f4731060ddf6684f66c3d674f3c5546b600cbe6585fc8560fb'
             '76c77e47c442b477216e968db2213612579b24add54cf0e0512f808498673500b4d24e59bce70b1e7479d724a9a897ceb154e937b88a476beb11c8776258b36c'
             '5a32439ff4b8fa9db89e9242206cf99109e0b00f29f87711c25342dda522171d999f7e18fb2013437ddf62cfec05b6677601933233aaf42bcb5d67eb7a1469ee'
             'eac1deb53fa9d522af272fa2d9093b98e7d51aa4c0730471e5c575752733500b84a06bc19d1fe83b4c48e41b7f0e11efb23881bfadce4a40d2bfed7cbe5a5bf7'
             'f3b3005a8ee643cb7d8fa24a3d1141604157efd2147d07aa7f839b070370cbed66ccf3c34317181e9601f2aadb5224002617226c99e36b677c0fc3de0b42d0d8'
             '2f5d71911c9ee7e7763d3300f335245a531a9e00d23e4d007ce76f4175dd7ecd9d8f0425af86a885797764690db64bfa558b49719f3d9d85a46df89443bcdf7b'
-            '884bde3d6d6cb994850687c5cb806e022bb05740959911912ac9bb8a3cf5d6fda15d5f1139c041b9c8d36d9fae94c97eb01edfb1cb79d568759dc01fcd8dc80b')
+            '109e3ce4c78af5bb1ce80dc3259ff239fbf2db5c2415b1002e9b2c29353062f6ed9ecd31956d5f77251e2b5bb537e9bd0b1e7706e4cf3308d49f3eb36046be92')
 
 _game="spigot"
 _server_root="/srv/craftbukkit"
