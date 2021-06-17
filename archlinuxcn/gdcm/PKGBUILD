@@ -5,7 +5,7 @@
 pkgname=gdcm
 _pkgname=GDCM
 pkgver=3.0.9
-pkgrel=1
+pkgrel=2
 pkgdesc='A C++ library for DICOM medical files'
 arch=('x86_64')
 url='http://gdcm.sourceforge.net'
@@ -37,11 +37,18 @@ makedepends=(
 )
 source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/malaterre/GDCM/archive/v${pkgver}.tar.gz"
+  "0001-fix-building-with-gcc11.patch::https://github.com/malaterre/GDCM/commit/4404b770be337bd0d5d3c2289abfd34426433db2.patch"
 )
-sha512sums=('5220ea12ac94d83ee7046a3a070cec7ef83752d2f3d838e7db8d0379b5606d19a94d5bfdc04e8ec4c72e0c3b4397751f54fad49a04a283ee9b760b59183e8f7a')
+sha512sums=('5220ea12ac94d83ee7046a3a070cec7ef83752d2f3d838e7db8d0379b5606d19a94d5bfdc04e8ec4c72e0c3b4397751f54fad49a04a283ee9b760b59183e8f7a'
+            '67ddd28837253bae450b587d36e8f3c08cfa2779593718430e8bda3fb53f336a6e131c96be2808202b84957b445f7cd5998c2cda73a112d86e7c29900acef220')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
+
+prepare() {
+  cd "${_pkgname}-${pkgver}"
+  patch -p1 -i "${srcdir}/0001-fix-building-with-gcc11.patch"
 }
 
 build() {
@@ -52,6 +59,7 @@ build() {
     -DCHARLS_LIBRARY=/usr/lib/libcharls.so \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
+    -DGDCMV2_0_COMPATIBILITY:BOOL=OFF \
     -DGDCM_BUILD_APPLICATIONS:BOOL=ON \
     -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=ON \
     -DGDCM_BUILD_EXAMPLES:BOOL=OFF \
@@ -68,7 +76,6 @@ build() {
     -DGDCM_USE_SYSTEM_UUID:BOOL=ON \
     -DGDCM_USE_SYSTEM_ZLIB:BOOL=ON \
     -DGDCM_USE_VTK:BOOL=ON \
-    -DGDCMV2_0_COMPATIBILITY:BOOL=OFF \
     -DGDCM_WRAP_PYTHON:BOOL=ON
   make -C "build"
 }
