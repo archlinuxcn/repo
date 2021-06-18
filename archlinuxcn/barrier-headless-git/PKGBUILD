@@ -1,0 +1,104 @@
+# Maintainer: Pellegrino Prevete <pellegrinoprevete@gmail.com>
+
+_pkgname=barrier-headless
+pkgname=$_pkgname-git
+pkgver=v2.3.3+157+g649fdfe0
+pkgrel=1
+pkgdesc="Open-source KVM software based on Synergy"
+url="https://github.com/debauchee/barrier"
+license=("custom:GPL2WithOpenSSLException")
+source=(
+    "${pkgname}::git+${url}.git"
+)
+provides=(barrier-headless)
+sha256sums=('SKIP')
+arch=(x86_64)
+depends=(
+    # Barrier core dependencies:
+    curl
+    avahi
+    libx11
+    libxrandr
+    libxext
+    libxinerama
+    xorgproto
+    libxtst
+    libxi
+    libsm
+    libice
+    openssl
+)
+makedepends=("git"
+    cmake
+
+    # Barrier GUI dependencies:
+    qt5-base
+    hicolor-icon-theme
+)
+
+pkgver() {
+  cd $pkgname
+  git describe --tags | sed 's/-/+/g'
+}
+
+prepare() {
+    cd $pkgname
+  
+    git submodule update --init --recursive
+
+    for patch in "${srcdir?}"/*.patch; do
+        if [ -f "${patch?}" ]; then
+            patch -Np1 -i "${patch?}"
+        fi
+    done
+}
+
+build() {
+    cd $pkgname
+
+    mkdir -p build
+    cd build
+
+    cmake -G "Unix Makefiles" \
+        -D CMAKE_BUILD_TYPE:STRING=Release \
+        -D CMAKE_INSTALL_PREFIX:STRING=/usr \
+        -D BARRIER_REVISION:STRING=00000000 \
+        -D BARRIER_VERSION_STAGE:STRING=RELEASE \
+        ..
+    make
+}
+
+_package_common() {
+    # Install binaries:
+    cd "${pkgname}/build"
+    DESTDIR="${pkgdir?}" make install
+
+    # Install the license:
+    cd ..
+    install -m 644 -D LICENSE "${pkgdir?}/usr/share/licenses/${pkgname?}/LICENSE"
+
+    # Install the manpages:
+    mkdir -p "${pkgdir?}/usr/share/man/man1"
+    install -m 644 doc/*.1 "${pkgdir?}/usr/share/man/man1"
+
+    # Install the examples:
+    mkdir -p "${pkgdir?}/usr/share/doc/${pkgname?}"
+    install -m 644 doc/barrier.conf* "${pkgdir?}/usr/share/doc/${pkgname?}"
+}
+
+package_barrier-headless-git() {
+    pkgdesc="Open-source KVM software based on Synergy (client and server CLI binaries)"
+
+    # Install all the files:
+    _package_common
+
+    # Now go and delete the GUI-related files:
+    for file in \
+        /usr/bin/barrier \
+        /usr/share/applications \
+        /usr/share/icons \
+    ;do
+        rm -rf "${pkgdir:?}/${file:?}"
+    done
+}
+
