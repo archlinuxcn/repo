@@ -2,7 +2,7 @@
 # Contributor: Caltlgin Stsodaat <contact@fossdaily.xyz>
 pkgname='haruna'
 pkgver=0.6.3.1
-pkgrel=1
+pkgrel=3
 pkgdesc='Open source video player built with Qt/QML and libmpv'
 arch=('x86_64')
 url='https://invent.kde.org/multimedia/haruna'
@@ -20,6 +20,7 @@ source=("${pkgname}-${pkgver}.tar.gz::https://invent.kde.org/multimedia/haruna/-
 sha256sums=('0dbf156c4deb8a0db08bad182cf5f2bef964e9574933ca19c3f39a07963b6519')
 
 build() {
+  mkdir -p build
   cmake -B 'build' -S "${pkgname}-${pkgver}" \
     -DCMAKE_BUILD_TYPE='Release' \
     -DCMAKE_INSTALL_PREFIX='/usr'
