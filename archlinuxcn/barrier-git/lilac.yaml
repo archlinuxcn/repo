@@ -1,0 +1,20 @@
+maintainers:
+  - github: yan12125
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - barrier-headless-git
+
+pre_build_script: |
+    aur_pre_build(maintainers=['tallero'])
+    add_makedepends(['git'])
+
+post_build_script: |
+    aur_post_build()
+
+update_on:
+  - source: github
+    github: debauchee/barrier
+  - source: aur
+    aur: barrier-headless-git
