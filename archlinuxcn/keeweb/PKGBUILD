@@ -1,8 +1,8 @@
 # Maintainer: surefire@cryptomile.net
 
 pkgname=keeweb
-pkgver=1.18.5
-_electron=electron
+pkgver=1.18.6
+_electron=electron12
 pkgrel=1
 pkgdesc="Desktop password manager compatible with KeePass databases"
 arch=('any')
@@ -24,11 +24,13 @@ source=(
 	"${pkgname}::git+https://github.com/keeweb/keeweb.git#tag=v${pkgver}"
 	"git+https://github.com/keeweb/keeweb-native-modules.git#tag=0.11.7"
 	'package.json.patch.js'
+	'67e917af3dcd9d78273774e7061f74d893b5523b.patch'
 )
 
 sha1sums=('SKIP'
           'SKIP'
-          '5e2a12694cf56ec9ed558554819dba0187e7fbdc')
+          '5e2a12694cf56ec9ed558554819dba0187e7fbdc'
+          '3b6341f657421899d4e4078b799bece7d93587e5')
 
 case "$CARCH" in
 	i686)    _arch=ia32;;
@@ -80,6 +82,9 @@ build() {
 	cd "${srcdir}/keeweb-native-modules"
 
 	npm install --ignore-scripts
+
+	# https://github.com/antelle/keyboard-auto-type/commit/67e917af3dcd9d78273774e7061f74d893b5523b
+	patch -Np1 <"${srcdir}/67e917af3dcd9d78273774e7061f74d893b5523b.patch"
 
 	HOME="${srcdir}/.electron-gyp" \
 	npx electron-rebuild --arch="${_arch}" --version="$(</usr/lib/${_electron}/version)" --only=argon2,keytar,usb-detection,yubikey-chalresp,keyboard-auto-type
