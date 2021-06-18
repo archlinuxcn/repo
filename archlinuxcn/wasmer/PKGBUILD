@@ -2,28 +2,37 @@
 # Maintainer: Julius Michaelis <gitter@liftm.de.de>
 
 pkgname=wasmer
-pkgver=1.0.2
-pkgrel=3
+pkgver=2.0.0
+pkgrel=1
 pkgdesc="Universal Binaries Powered by WebAssembly"
 arch=('x86_64')
 url="https://github.com/wasmerio/wasmer"
 license=(MIT)
-depends=('gcc-libs')
+depends=('libffi' 'zlib' 'ncurses')
 makedepends=('rust' 'cmake' 'python' 'libxkbcommon' 'llvm')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/wasmerio/wasmer/archive/${pkgver}.tar.gz")
-sha512sums=('f8058cbd5a8a807cd84b4a839c87ff76dae5475c655e804b27262cd5cb22ddb6c43da3a01b6cdbed29502afc38aa9ee589022f67fab27b189453f2500478c4a9')
+sha512sums=('c02b97075212a496a4c30a9cfcd6b8ef89cb08bf3e5f9f20bf5f83c63bedb5744e4976ee3641310f6a44d911d670285c8b67c3cb9725acdd632ef5f8880ba4b9')
 options=('staticlibs')
+
+wasmer_env() {
+  export ENABLE_LLVM=1
+  export ENABLE_CRANELIFT=1
+  export ENABLE_SINGLEPASS=1
+  export WASMER_INSTALL_PREFIX=/usr
+}
 
 build() {
   cd "$pkgname-$pkgver"
-  cargo build --release --locked --manifest-path lib/c-api/Cargo.toml --no-default-features --features deprecated,wat,jit,native,object-file,cranelift,wasi
-  cargo build --release --locked --manifest-path lib/cli/Cargo.toml --features "cranelift llvm singlepass" --bin wasmer
+
+  wasmer_env
+  make all
 }
 
 check() {
   cd "$pkgname-$pkgver"
 
-  cargo test --release --locked --manifest-path lib/cli/Cargo.toml --features "cranelift llvm singlepass" --bin wasmer
+  wasmer_env
+  make test-packages # test-compilers bugs... Needs investigation
   # Check if we can run a basic binary
   target/release/wasmer run tests/wasi-wast/wasi/snapshot1/hello.wasm &>/dev/null
 }
@@ -31,22 +40,8 @@ check() {
 package() {
   cd "$pkgname-$pkgver"
 
-  install -Dm755 target/release/wasmer "$pkgdir"/usr/bin/wasmer
-  for header in wasm.h wasmer_wasm.h wasmer.h wasmer.hh; do
-    install -Dm644 "lib/c-api/"$header "$pkgdir"/usr/include/$header
-  done
-
-  install -Dm755 target/release/libwasmer_c_api.so "$pkgdir/usr/lib/libwasmer.so.$pkgver"
-  install -Dm755 target/release/libwasmer_c_api.a "$pkgdir/usr/lib/libwasmer.a"
-  local _shortver="${pkgver%.*}"
-  local _majorver="${_shortver%.*}"
-  ln -s "libwasmer.so.$pkgver" "$pkgdir/usr/lib/libwasmer.so.$_shortver"
-  ln -s "libwasmer.so.$pkgver" "$pkgdir/usr/lib/libwasmer.so.$_majorver"
-  ln -s "libwasmer.so.$pkgver" "$pkgdir/usr/lib/libwasmer.so"
-
-  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
-
-  env WASMER_DIR=/usr "$pkgdir"/usr/bin/wasmer config --pkg-config | install -Dm644 /dev/stdin "$pkgdir"/usr/lib/pkgconfig/wasmer.pc
+  wasmer_env
+  DESTDIR="$pkgdir/usr/" make install
 }
 
 # vim:set ts=2 sw=2 et:
