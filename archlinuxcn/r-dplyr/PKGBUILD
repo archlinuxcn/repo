@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=dplyr
-_pkgver=1.0.6
+_pkgver=1.0.7
 pkgname=r-${_pkgname,,}
-pkgver=1.0.6
+pkgver=1.0.7
 pkgrel=1
 pkgdesc='A Grammar of Data Manipulation'
 arch=('x86_64')
@@ -45,7 +45,7 @@ optdepends=(
   r-withr
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('088c381a19595b202d5508003168c302fb6d893c9e7164e17ddb71616162fa07')
+sha256sums=('d2fe3aedbce02fdddce09a8a80f85f5918a9d1f15f792ad4a98f254959d7123d')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
