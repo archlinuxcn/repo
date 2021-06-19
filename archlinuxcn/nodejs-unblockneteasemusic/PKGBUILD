@@ -1,7 +1,7 @@
 # Maintainer: DDoSolitary <DDoSolitary@gmail.com>
 pkgname=nodejs-unblockneteasemusic
 pkgver=0.25.3
-pkgrel=4
+pkgrel=5
 pkgdesc="Revive unavailable songs for Netease Cloud Music"
 arch=(any)
 url=https://github.com/nondanee/UnblockNeteaseMusic
@@ -19,7 +19,7 @@ sha512sums=('63425da7a0a7419dcd9e12f620601eebdedeb40016af876b44779f78f8a0c586fa9
             '20b8c61fcc55a7d2b4b4b8e231f2888a8232b9edcd7811cf845976ca944c31d982cffdce3ad574abb87d3cf12d5ba442ce3baae4a18a7763fb9769e16f99207b'
             'bbf170413150b9eab5fe996f213ca2e454f7acac7ce64c39a70e8ae4a2e2fb5a467b5a253898e0f488a272dfde2060310d7ebff958390dd918510bda764a65be')
 package() {
-	npm install -g --user root --prefix "$pkgdir/usr" -cache  "$srcdir/npm-cache" "$srcdir/$pkgname-$pkgver.tar.gz"
+	npm install -g --prefix "$pkgdir/usr" -cache  "$srcdir/npm-cache" "$srcdir/$pkgname-$pkgver.tar.gz"
 	find "$pkgdir/usr" -type d -exec chmod 755 {} \;
 	chown -R root:root "$pkgdir"
 	find "$pkgdir" -name package.json -print0 | xargs -r -0 sed -i "/_where/d"
