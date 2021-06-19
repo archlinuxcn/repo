@@ -3,7 +3,7 @@
 pkgname=keeweb
 pkgver=1.18.6
 _electron=electron12
-pkgrel=1
+pkgrel=2
 pkgdesc="Desktop password manager compatible with KeePass databases"
 arch=('any')
 url="https://keeweb.info"
@@ -18,18 +18,21 @@ makedepends=(
 	'libsass'
 	'npm'
 	'nodejs'
+	'cmake'
 )
 conflicts=('keeweb-desktop')
 source=(
 	"${pkgname}::git+https://github.com/keeweb/keeweb.git#tag=v${pkgver}"
 	"git+https://github.com/keeweb/keeweb-native-modules.git#tag=0.11.7"
+	"git+https://github.com/keeweb/keeweb-connect.git#tag=0.3.6"
 	'package.json.patch.js'
 	'67e917af3dcd9d78273774e7061f74d893b5523b.patch'
 )
 
 sha1sums=('SKIP'
           'SKIP'
-          '5e2a12694cf56ec9ed558554819dba0187e7fbdc'
+          'SKIP'
+          '679f19fcdff4a8df49bb0bd8ee09eab1784cf264'
           '3b6341f657421899d4e4078b799bece7d93587e5')
 
 case "$CARCH" in
@@ -88,12 +91,16 @@ build() {
 
 	HOME="${srcdir}/.electron-gyp" \
 	npx electron-rebuild --arch="${_arch}" --version="$(</usr/lib/${_electron}/version)" --only=argon2,keytar,usb-detection,yubikey-chalresp,keyboard-auto-type
+
+	cd "${srcdir}/keeweb-connect/native-messaging-host"
+	make
 }
 
 package() {
 	cd "${srcdir}/${pkgname}"
 
 	install -Dm0755 -t "${pkgdir}/usr/bin" tmp/desktop/keeweb
+	install -Dm0755 -t "${pkgdir}/usr/lib/keeweb" ../keeweb-connect/native-messaging-host/build/keeweb-native-messaging-host
 	install -Dm0644 -t "${pkgdir}/usr/lib/keeweb" tmp/desktop/app.asar
 	install -Dm0644 -t "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE DEPS-LICENSE
 	install -Dm0644 -t "${pkgdir}/usr/share/mime/packages" package/deb/usr/share/mime/packages/keeweb.xml
