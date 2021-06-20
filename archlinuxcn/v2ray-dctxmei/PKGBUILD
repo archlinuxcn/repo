@@ -3,7 +3,7 @@
 pkgname=v2ray-dctxmei
 _pkgname=v2ray
 pkgver=4.39.2
-pkgrel=1
+pkgrel=2
 pkgdesc="A platform for building proxies to bypass network restrictions"
 arch=('x86_64')
 url="https://github.com/v2fly/v2ray-core"
@@ -13,15 +13,11 @@ makedepends=('git' 'go')
 provides=("v2ray=${pkgver}")
 conflicts=('v2ray')
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/v2fly/v2ray-core/archive/v${pkgver}.tar.gz"
-        "v2ray.sysusers"
-        "v2ray.tmpfiles"
         "v2ray.service"
         "v2ray@.service")
 sha256sums=('bcb35c0fd3fed604762b4c2a0950718b0118d7f4cb0ca9987d716a6a6e471b2b'
-            'caca9d88eff50ce7cd695b6fcab4d253344e92c966780f7de6d5c531d48ed80e'
-            'ae55077bcf7140a7460f192adb03009b4573ec4420af84f4cbe9828cf8ca8e06'
-            'ffe8c832fac5772fd700e39460e41cf59bac544c7a16e0b9a7fcee53d4e4bb9d'
-            '7d8cd2309f3cb54d888128e9e8150432756b60cf7e759da46ad8e848c0b0a386')
+            '7b11f58df7068639354a840d88e1220f33046aa1402f81da5f434097b03be874'
+            'd1e2a2cd16ceaf78d65130e2a5d3d49d3ef4ee8647e102d6a30494fb139efba9')
 
 build() {
     cd "${srcdir}"/"v2ray-core-${pkgver}"/
@@ -44,8 +40,6 @@ package() {
     install -Dm 755 v2ray -t "${pkgdir}"/usr/bin/
     install -Dm 755 v2ctl -t "${pkgdir}"/usr/bin/
     install -Dm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/v2ray/
-    install -Dm 644 "${srcdir}"/v2ray.sysusers "${pkgdir}"/usr/lib/sysusers.d/v2ray.conf
-    install -Dm 644 "${srcdir}"/v2ray.tmpfiles "${pkgdir}"/usr/lib/tmpfiles.d/v2ray.conf
     install -Dm 644 "${srcdir}"/v2ray.service -t "${pkgdir}"/usr/lib/systemd/system/
     install -Dm 644 "${srcdir}"/v2ray@.service -t "${pkgdir}"/usr/lib/systemd/system/
 }
