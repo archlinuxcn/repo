@@ -1,0 +1,52 @@
+# Maintainer: Konstantinos Sideris <siderisk at auth dot gr>
+# Maintainer: Joseph Donofry <joe at joedonofry dot com>
+
+pkgname=nheko-git
+pkgver=0.8.2.r133.g57a9a1d0
+pkgrel=1
+pkgdesc="Desktop client for the Matrix protocol"
+arch=("i686" "x86_64")
+
+url="https://github.com/Nheko-Reborn/nheko"
+license=("GPL3")
+
+depends=(
+  lmdb qt5-base qt5-svg qt5-multimedia qt5-declarative qt5-quickcontrols2 qtkeychain-qt5
+  boost-libs openssl mtxclient libolm spdlog cmark
+  gst-plugins-base-libs gst-plugins-bad-libs libxcb xcb-util-wm hicolor-icon-theme
+)
+
+makedepends=(git cmake qt5-tools boost nlohmann-json fontconfig lmdbxx pkg-config)
+
+provides=("nheko")
+conflicts=("nheko")
+
+source=($pkgname::git+https://github.com/Nheko-Reborn/nheko.git#branch=master)
+md5sums=("SKIP")
+
+pkgver() {
+  cd $pkgname
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  mkdir -p $pkgname/build
+}
+
+build() {
+  cd $pkgname/build
+
+  # build with more cores than the default
+  cmake .. -DHUNTER_ENABLED=OFF \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCOMPILE_QML=On
+  make
+}
+
+package() {
+  cd $pkgname/build
+
+  make DESTDIR="$pkgdir" install
+}
