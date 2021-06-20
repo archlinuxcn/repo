@@ -16,5 +16,9 @@ update_on:
     archpkg: qt5-declariative
     from_pattern: ^(.*)
     to_pattern: \1
+  - source: archpkg
+    archpkg: cmark
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
   - source: manual
     manual: 1

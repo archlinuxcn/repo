@@ -49,4 +49,23 @@ package() {
   cd $pkgname/build
 
   make DESTDIR="$pkgdir" install
+
+  boostver=$(objdump -p /usr/lib/libboost_system.so | \
+               grep SONAME | sed -e 's/.*boost_system\.so\.//')
+  [[ $boostver =~ ^([0-9]*)\.([0-9]*)\.([0-9]*) ]]
+  maj_ver=${BASH_REMATCH[1]}
+  min_ver=${BASH_REMATCH[2]}
+  patch_ver=${BASH_REMATCH[3]}
+  ((next_min=min_ver + 1))
+  depends+=("boost-libs>=${maj_ver}.${min_ver}.${patch_ver}"
+            "boost-libs<${maj_ver}.${next_min}.0")
+
+  cmarkver=$(objdump -p /usr/lib/libcmark.so | \
+               grep SONAME | sed -e 's/.*cmark\.so\.//')
+  [[ $cmarkver =~ ^([0-9]*)\.([0-9]*)\.([0-9]*) ]]
+  maj_ver=${BASH_REMATCH[1]}
+  min_ver=${BASH_REMATCH[2]}
+  ((next_min=min_ver + 1))
+  depends+=("cmark>=${maj_ver}.${min_ver}"
+            "cmark<${maj_ver}.${next_min}")
 }
