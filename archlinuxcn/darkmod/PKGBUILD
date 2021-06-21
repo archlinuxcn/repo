@@ -12,7 +12,7 @@ license=('CCPL')
 makedepends=('unzip' 'xorg-server-xvfb' 'xterm')
 [ "$CARCH" == i686   ] && depends=('glew' 'libpng' 'libjpeg-turbo' 'libpng12' 'curl' 'libxxf86vm' 'libpulse')
 
-[ "$CARCH" == x86_64 ] && depends=('lib32-glew' 'lib32-libpng' 'lib32-libjpeg-turbo' 'lib32-libpng12' 'lib32-curl' 'lib32-libxxf86vm' 'lib32-libpulse' 'lib32-alsa-plugins')
+[ "$CARCH" == x86_64 ] && depends=('lib32-glew' 'lib32-libpng' 'lib32-libjpeg-turbo' 'lib32-libpng12' 'lib32-curl' 'lib32-libxxf86vm' 'lib32-libpulse' 'lib32-alsa-plugins' 'lib32-openal')
 
 source=(http://www.fidcal.com/darkuser/tdm_update_linux.zip
         "$pkgname".desktop
