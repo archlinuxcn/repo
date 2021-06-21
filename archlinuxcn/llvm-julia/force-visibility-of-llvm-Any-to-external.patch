@@ -1,0 +1,42 @@
+From 3d3abc22b3ef189813a3b9061c2a90ba86a32f44 Mon Sep 17 00:00:00 2001
+From: serge-sans-paille <sguelton@redhat.com>
+Date: Tue, 11 May 2021 20:46:58 +0200
+Subject: [PATCH] Force visibility of llvm::Any to external
+
+llvm::Any::TypeId::Id relies on the uniqueness of the address of a static
+variable defined in a template function. hidden visibility implies vague linkage
+for that variable, which does not guarantee the uniqueness of the address across
+a binary and a shared library. This totally breaks the implementation of
+llvm::Any.
+
+Ideally, setting visibility to llvm::Any::TypeId::Id should be enough,
+unfortunately this doesn't work as expected and we lack time (before 12.0.1
+release) to understand why setting the visibility to llvm::Any does work.
+
+See https://gcc.gnu.org/wiki/Visibility and
+https://gcc.gnu.org/onlinedocs/gcc/Vague-Linkage.html
+for more information on that topic.
+
+Differential Revision: https://reviews.llvm.org/D101972
+---
+ llvm/include/llvm/ADT/Any.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/llvm/include/llvm/ADT/Any.h b/llvm/include/llvm/ADT/Any.h
+index 15b114f7932d..e513586845a1 100644
+--- a/llvm/include/llvm/ADT/Any.h
++++ b/llvm/include/llvm/ADT/Any.h
+@@ -23,7 +23,12 @@
+ 
+ namespace llvm {
+ 
+-class Any {
++class LLVM_EXTERNAL_VISIBILITY Any {
++
++  // The `Typeid<T>::Id` static data member below is a globally unique
++  // identifier for the type `T`. It is explicitly marked with default
++  // visibility so that when `-fvisibility=hidden` is used, the loader still
++  // merges duplicate definitions across DSO boundaries.
+   template <typename T> struct TypeId { static const char Id; };
+ 
+   struct StorageBase {
