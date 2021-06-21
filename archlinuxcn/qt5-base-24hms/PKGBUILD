@@ -4,9 +4,9 @@
 pkgbase=qt5-base-24hms
 _origpkgname=qt5-base
 pkgname=(qt5-base-24hms)
-pkgver=5.15.2+kde+r198
-pkgrel=1.6
-_commit=ad0eb20e5bf229a6e759d7e3d9af0d9f2f0af94f
+pkgver=5.15.2+kde+r199
+pkgrel=1.7
+_commit=9dac9e3bb01a025a358cf9a78f13d043da225d09
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -33,7 +33,7 @@ provides=("qt5-base=$pkgver")
 _pkgfqn=qtbase
 source=(
       oldherl-24hms.patch
-      'ftp://unicode.org/Public/cldr/36/core.zip'
+      'https://build.archlinuxcn.org/~oldherl/files/cldr/36/core.zip'
       git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit
         qt5-base-cflags.patch
         qt5-base-nostrip.patch)
