@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=rio
-_pkgver=0.5.26
+_pkgver=0.5.27
 pkgname=r-${_pkgname,,}
-pkgver=0.5.26
+pkgver=0.5.27
 pkgrel=1
 pkgdesc='A Swiss-Army Knife for Data I/O'
 arch=('any')
@@ -39,7 +39,7 @@ optdepends=(
   r-yaml
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('4df0762782540133f99c5100232b417a2f56d0576bd67f76361fac2596ecdfcc')
+sha256sums=('e0eb616cdbba9f2d5c4489ae05336201d717ce65b0ea6854023054d1c2e3dd0a')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
