@@ -201,8 +201,9 @@ build() {
 }
 
 _source_files() {
-  LANG=C readelf "$1" --debug-dump | \
-    awk '/DW_AT_name +:/{name=$8}/DW_AT_comp_dir +:/{{if (name == "<artificial>") next}{if (name !~ /^[<\/]/) {printf "%s/", $8}}{print name}}'
+  # Copied from /usr/share/makepkg/tidy/strip.sh
+  LANG=C readelf "$1" --debug-dump 2>/dev/null | \
+    awk '/DW_AT_name +:/{name=$NF}/DW_AT_comp_dir +:/{{if (name == "<artificial>") next}{if (name !~ /^[<\/]/) {printf "%s/", $NF}}{print name}}'
 }
 
 package-julia-in() {
@@ -262,7 +263,8 @@ package-julia-in() {
   # Without stripping, makepkg doesn't copy the source for us...
   dbgsrcdir="${DBGSRCDIR:-/usr/src/debug}"
   for binary in usr/bin/julia usr/bin/julia-debug \
-                              usr/lib/libjulia.so usr/lib/libjulia-debug.so; do
+                              usr/lib/libjulia.so usr/lib/libjulia-debug.so \
+                              usr/lib/libjulia-internal.so usr/lib/libjulia-internal-debug.so; do
     binary="${pkgdir}/${binary}"
     # copy source files to debug directory
     local f t
@@ -287,7 +289,7 @@ package-julia-in() {
 }
 
 package_julia-git() {
-  export LD_PRELOAD="${srcdir}/libarch-source-translate.so:$LD_PRELOAD"
+  # export LD_PRELOAD="${srcdir}/libarch-source-translate.so:$LD_PRELOAD"
   package-julia-in julia "${julia_opts[@]}"
   if [[ "$CARCH" = x86_64 ]]; then
     replaces=(julia-git-avx2)
