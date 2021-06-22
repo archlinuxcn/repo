@@ -1,0 +1,53 @@
+pkgname=julia-git-ijulia-git
+pkgver=1.23.2.0.2.g6f92c42
+pkgrel=1
+pkgdesc="IJulia.jl"
+url="https://github.com/JuliaLang/IJulia.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts julia-git-conda)
+depends=(julia-git jupyter)
+provides=(julia-git-ijulia)
+source=(git://github.com/JuliaLang/IJulia.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd IJulia.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+prepare() {
+  cd IJulia.jl
+
+  sed -i -e 's/copy_config(joinpath(ijulia_dir/copy_config(joinpath(dirname(@__DIR__)/' deps/kspec.jl
+}
+
+build() {
+  cd IJulia.jl
+
+  rm -rf "${srcdir}/"{jupyter,.julia}
+  mkdir -p "${srcdir}/"{jupyter,.julia}
+
+  stdlib_dir=$(julia --startup-file=no -e "print(Sys.STDLIB)")
+
+  cd deps/
+
+  HOME="${srcdir}/jupyter" \
+      JULIA_DEPOT_PATH="${srcdir}/.julia" \
+      JUPYTER=/usr/bin/jupyter \
+      IJULIA_DIR="${stdlib_dir}/IJulia" \
+      julia --startup-file=no build.jl
+}
+
+package() {
+  cd IJulia.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh IJulia "${pkgdir}" "${pkgname}" julia-git
+
+  # Install Jupyter kernel
+
+  kernels_dir="${pkgdir}/usr/share/jupyter"
+  install -dm755 "$kernels_dir"
+  cp -a "$srcdir/jupyter/.local/share/jupyter/kernels" "$kernels_dir"
+}
