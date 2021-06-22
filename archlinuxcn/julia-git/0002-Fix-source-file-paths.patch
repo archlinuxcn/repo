@@ -1,7 +1,7 @@
-From e425f3dffaadf64e22a56e32474db29640761f8d Mon Sep 17 00:00:00 2001
+From cb4fb671b5869938534c60d4e0440c01f285ea44 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 19 Jul 2020 09:40:32 -0400
-Subject: [PATCH 3/8] Fix source file paths
+Subject: [PATCH 2/3] Fix source file paths
 
 ---
  base/sysimg.jl          |  7 +++++++
@@ -11,10 +11,10 @@ Subject: [PATCH 3/8] Fix source file paths
  4 files changed, 26 insertions(+), 2 deletions(-)
 
 diff --git a/base/sysimg.jl b/base/sysimg.jl
-index 4de093d640..bdfa56f0a0 100644
+index 36c40e4ae7..2b22c9329b 100644
 --- a/base/sysimg.jl
 +++ b/base/sysimg.jl
-@@ -96,6 +96,13 @@ let
+@@ -99,6 +99,13 @@ let
  
          print_time("Stdlibs total", tot_time_stdlib)
      end
@@ -29,7 +29,7 @@ index 4de093d640..bdfa56f0a0 100644
      # Clear global state
      empty!(Core.ARGS)
 diff --git a/base/sysinfo.jl b/base/sysinfo.jl
-index 4c11397126..21300de7b5 100644
+index cdcb304271..30eedeed46 100644
 --- a/base/sysinfo.jl
 +++ b/base/sysinfo.jl
 @@ -51,7 +51,7 @@ A string containing the full path to the directory containing the `stdlib` packa
@@ -59,11 +59,11 @@ index a81908b96a..4c463db143 100644
          write(io, filename)
          write(io, UInt64(sizeof(src)))
 diff --git a/src/ast.c b/src/ast.c
-index 944e6602cd..20a677c2a2 100644
+index 2a0661e629..cd440ac9d9 100644
 --- a/src/ast.c
 +++ b/src/ast.c
-@@ -801,6 +801,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v)
-     return julia_to_scm_noalloc2(fl_ctx, v);
+@@ -827,6 +827,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v, int check_vali
+     return julia_to_scm_noalloc2(fl_ctx, v, check_valid);
  }
  
 +JL_DLLEXPORT __attribute__((weak)) const char *jl_archlinux_translate_filename(const char *filename);
@@ -81,7 +81,7 @@ index 944e6602cd..20a677c2a2 100644
  // Parse `text` starting at 0-based `offset` and attributing the content to
  // `filename`. Return an svec of (parsed_expr, final_offset)
  JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
-@@ -825,6 +837,7 @@ JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
+@@ -851,6 +863,7 @@ JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
      fl_context_t *fl_ctx = &ctx->fl;
      value_t fl_text = cvalue_static_cstrn(fl_ctx, text, text_len);
      fl_gc_handle(fl_ctx, &fl_text);
@@ -90,5 +90,5 @@ index 944e6602cd..20a677c2a2 100644
                                                jl_string_len(filename));
      fl_gc_handle(fl_ctx, &fl_filename);
 -- 
-2.29.2
+2.32.0
 

@@ -16,22 +16,12 @@ if ((BUILD_DOC)); then
   pkgname+=('julia-git-docs')
 fi
 
-case $CARCH in
-  x86_64|i686|aarch64|armv7h)
-    makedepends_llvm=("llvm-julia>=11.0" "llvm-julia<12.0")
-    depends_llvm=("llvm-libs-julia>=11.0" "llvm-libs-julia<12.0")
-    ;;
-  # armv7h)
-  #   makedepends_llvm=("llvm-svn")
-  #   depends_llvm=("llvm-libs-svn")
-  #   ;;
-  *)
-    echo "Unsupported Arch \"$CARCH\"" >&2
-    ;;
-esac
+makedepends_llvm=("llvm-julia")
+# TODO: automatically detect llvm-libs version
+depends_llvm=("llvm-libs-julia>=12.0" "llvm-libs-julia<13.0")
 
 epoch=1
-pkgver=1.6.0.DEV.1624.gf89a83aca27
+pkgver=1.8.0.DEV.62.ga4dd5e5338e
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -44,14 +34,9 @@ makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
              gcc-fortran git patchelf python)
 options=('debug' '!strip' '!buildflags')
 _patches=(
-  0001-Fix-broken-linking-and-initialization-due-to-36588.patch
-  0002-Force-enable-GDB-debug-info-registration.patch
-  0003-Fix-source-file-paths.patch
-  0004-Optimize-allocation-of-arrays.patch
-  0005-Enable-basic-AA-in-O2.patch
-  0006-Add-ccall-special-cases-for-a-few-more-libc-function.patch
-  0007-Optimize-objectid-in-codegen.patch
-  0008-Mark-more-functions-as-not-safepoint-in-codegen.patch
+  0001-Force-enable-GDB-debug-info-registration.patch
+  0002-Fix-source-file-paths.patch
+  0003-Enable-basic-AA-in-O2.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -62,20 +47,15 @@ source=('git://github.com/JuliaLang/julia'
         arch-source-translate.cpp
         sysp7z.diff)
 md5sums=('SKIP'
-         'a9f52d686f21638632f2cb2ce66fd9fa'
-         '599ac353e7bd7799dcf0021d40797475'
-         '23f00dee833ebcf383e03698e95d0c1a'
-         'acb03bc19825c209cf054de9101eef93'
-         'bd78ec957753815be34d1ba6d184286f'
-         '2fe88ea465f81d2cd2303e66309aa44b'
-         '4983cb80498581823a9c5245dbe33201'
-         'da445a0489060b1b202534d7fe195dfe'
+         '23195fdef07fc58e2841136c087affb4'
+         '85395afc88875c46f2774313322d835e'
+         'd400ad6c3044f99325e39ba829f75433'
          'a430db0964744bbf6b1a49e76a3bf1e4'
          '6e7fcba300512df8ab8ab65d3e1eb847'
          'f1f6ffc7ddcbc7fa0000d6f5fdbbe925'
          'f9d0b11988630599dc860a5b33a7ba13'
          '1bf92fe1bc71f4b052deaf7fc7505501'
-         '51de69d49b58470230d6931d322e3df8')
+         '0956f3e10d19d1cabcd80414f5eb24bb')
 
 pkgver() {
   cd julia
@@ -92,27 +72,25 @@ pkgver() {
 }
 
 julia_opts=(prefix=/usr sysconfdir=/etc
+            USE_SYSTEM_CSL=1
             USE_SYSTEM_LLVM=1
-            USE_SYSTEM_OPENLIBM=1
             USE_SYSTEM_LIBUNWIND=1
             USE_SYSTEM_PCRE=1
-            USE_SYSTEM_OPENSPECFUN=1
+            USE_SYSTEM_OPENLIBM=1
             USE_SYSTEM_BLAS=1
             USE_SYSTEM_LAPACK=1
-            USE_SYSTEM_FFTW=1
             USE_SYSTEM_GMP=1
             USE_SYSTEM_MPFR=1
-            USE_SYSTEM_ARPACK=1
-            USE_SYSTEM_SUITESPARSE=1
+            USE_SYSTEM_LIBSUITESPARSE=1
             USE_SYSTEM_UTF8PROC=1
-            USE_SYSTEM_LIBGIT2=1
-            USE_SYSTEM_LIBSSH2=1
             USE_SYSTEM_MBEDTLS=1
+            USE_SYSTEM_LIBSSH2=1
+            USE_SYSTEM_NGHTTP2=1
             USE_SYSTEM_CURL=1
+            USE_SYSTEM_LIBGIT2=1
             USE_SYSTEM_PATCHELF=1
             USE_SYSTEM_ZLIB=1
             USE_SYSTEM_P7ZIP=1
-            USE_SYSTEM_NGHTTP2=1
             USE_LLVM_SHLIB=1
             USE_BINARYBUILDER=0
             LLVM_USE_CMAKE=0 # Workaround LLVM linking with system LLVM
@@ -165,15 +143,15 @@ EOF
   for p in "${_patches[@]}"; do
     _apply_patch "$p"
   done
-  for f in stdlib/*/*Artifacts.toml; do
-    echo "Clearing $f"
-    echo > "$f"
-  done
   make "${julia_opts[@]}" julia-stdlib
   (
     cd usr/share/julia/stdlib/v*/Pkg
     patch -Np0 < "$srcdir/sysp7z.diff"
   )
+  for f in usr/share/julia/stdlib/v*/*/*Artifacts.toml; do
+    echo "Clearing $f"
+    echo > "$f"
+  done
 
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' */Makefile
 }
