@@ -1,0 +1,24 @@
+pkgname=julia-git-chainrulescore-git
+pkgver=0.10.8.0.4.g66bd0a1
+pkgrel=1
+pkgdesc="ChainRulesCore.jl"
+url="https://github.com/JuliaDiff/ChainRulesCore.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-chainrulescore)
+source=(git://github.com/JuliaDiff/ChainRulesCore.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd ChainRulesCore.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd ChainRulesCore.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh ChainRulesCore "${pkgdir}" "${pkgname}" julia-git
+}

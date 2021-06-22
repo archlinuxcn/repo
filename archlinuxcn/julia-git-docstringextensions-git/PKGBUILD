@@ -1,0 +1,24 @@
+pkgname=julia-git-docstringextensions-git
+pkgver=0.8.5
+pkgrel=1
+pkgdesc="DocStringExtensions.jl"
+url="https://github.com/JuliaMath/DocStringExtensions.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-docstringextensions)
+source=(git://github.com/JuliaDocs/DocStringExtensions.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd DocStringExtensions.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd DocStringExtensions.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh DocStringExtensions "${pkgdir}" "${pkgname}" julia-git
+}
