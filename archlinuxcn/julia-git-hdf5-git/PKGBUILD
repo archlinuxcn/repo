@@ -1,0 +1,30 @@
+pkgname=julia-git-hdf5-git
+pkgver=0.15.5.0.9.geddbceb
+pkgrel=1
+pkgdesc="HDF5.jl"
+url="https://github.com/JuliaIO/HDF5.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-hdf5)
+source=(git://github.com/JuliaIO/HDF5.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd HDF5.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd HDF5.jl
+
+  julia --startup-file=no deps/build.jl
+}
+
+package() {
+  cd HDF5.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh HDF5 "${pkgdir}" "${pkgname}" julia-git
+}

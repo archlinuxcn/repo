@@ -1,0 +1,33 @@
+pkgname=julia-git-lz4_jll-git
+pkgver=4.0.v1.9.3+0.1.g15ffd09
+pkgrel=1
+pkgdesc="Lz4_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Lz4_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git lz4)
+provides=(julia-git-lz4_jll)
+source=(git://github.com/JuliaBinaryWrappers/Lz4_jll.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Lz4_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd Lz4_jll.jl
+
+  sed -i -e '/^JLLWrapper/d' Project.toml
+
+  /usr/lib/julia/julia-gen-jll.sh \
+    Lz4_jll liblz4 -b lz4cat -b unlz4 -b lz4 -b lz4c
+}
+
+package() {
+  cd Lz4_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Lz4_jll "${pkgdir}" "${pkgname}" julia-git
+}

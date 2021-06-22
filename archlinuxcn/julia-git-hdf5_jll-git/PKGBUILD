@@ -1,0 +1,32 @@
+pkgname=julia-git-hdf5_jll-git
+pkgver=5.0.v1.12.0+1
+pkgrel=1
+pkgdesc="HDF5_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/HDF5_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git hdf5)
+provides=(julia-git-hdf5_jll)
+source=(git://github.com/JuliaBinaryWrappers/HDF5_jll.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd HDF5_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd HDF5_jll.jl
+
+  sed -i -e '/^JLLWrapper/d' Project.toml
+
+  /usr/lib/julia/julia-gen-jll.sh HDF5_jll libhdf5 libhdf5_hl
+}
+
+package() {
+  cd HDF5_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh HDF5_jll "${pkgdir}" "${pkgname}" julia-git
+}

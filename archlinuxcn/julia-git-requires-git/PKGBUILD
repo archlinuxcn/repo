@@ -1,0 +1,24 @@
+pkgname=julia-git-requires-git
+pkgver=1.1.3
+pkgrel=1
+pkgdesc="Requires.jl"
+url="https://github.com/JuliaPackaging/Requires.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-requires)
+source=(git://github.com/JuliaPackaging/Requires.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Requires.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Requires.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Requires "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,32 @@
+pkgname=julia-git-zstd_jll-git
+pkgver=1.5.0+0
+pkgrel=1
+pkgdesc="Zstd_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Zstd_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git zstd)
+provides=(julia-git-zstd_jll)
+source=(git://github.com/JuliaBinaryWrappers/Zstd_jll.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Zstd_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd Zstd_jll.jl
+
+  sed -i -e '/^JLLWrapper/d' Project.toml
+
+  /usr/lib/julia/julia-gen-jll.sh Zstd_jll libzstd -b zstd
+}
+
+package() {
+  cd Zstd_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Zstd_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,32 @@
+pkgname=julia-git-openssl_jll-git
+pkgver=1.1.10+0
+pkgrel=1
+pkgdesc="OpenSSL_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/OpenSSL_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git openssl)
+provides=(julia-git-openssl_jll)
+source=(git://github.com/JuliaBinaryWrappers/OpenSSL_jll.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd OpenSSL_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd OpenSSL_jll.jl
+
+  sed -i -e '/^JLLWrapper/d' Project.toml
+
+  /usr/lib/julia/julia-gen-jll.sh OpenSSL_jll libcrypto libssl -b openssl
+}
+
+package() {
+  cd OpenSSL_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh OpenSSL_jll "${pkgdir}" "${pkgname}" julia-git
+}

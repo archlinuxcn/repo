@@ -1,0 +1,24 @@
+pkgname=julia-git-blosc-git
+pkgver=0.7.0.0.1.gd3c78f9
+pkgrel=1
+pkgdesc="Blosc.jl"
+url="https://github.com/stevengj/Blosc.jl"
+arch=('i686' 'x86_64')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-blosc)
+source=(git://github.com/stevengj/Blosc.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Blosc.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Blosc.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Blosc "${pkgdir}" "${pkgname}" julia-git
+}

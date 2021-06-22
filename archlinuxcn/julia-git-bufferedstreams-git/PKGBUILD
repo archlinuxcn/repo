@@ -1,0 +1,27 @@
+pkgname=julia-git-bufferedstreams-git
+pkgver=1.0.0.0.2.gb85ff82
+pkgrel=1
+pkgdesc="BufferedStreams.jl"
+url="https://github.com/BioJulia/BufferedStreams.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-bufferedstreams)
+source=(git://github.com/BioJulia/BufferedStreams.jl
+        Project.toml)
+md5sums=('SKIP'
+         'f29a2199058830a59ba31c2e484b489d')
+
+pkgver() {
+  cd BufferedStreams.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd BufferedStreams.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh BufferedStreams "${pkgdir}" "${pkgname}" julia-git
+  cp -n ../Project.toml "${dest_dir}"
+}
