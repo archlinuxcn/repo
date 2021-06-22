@@ -1,0 +1,32 @@
+pkgname=julia-git-libsodium_jll-git
+pkgver=1.0.20+0
+pkgrel=1
+pkgdesc="libsodium_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/libsodium_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libsodium)
+provides=(julia-git-libsodium_jll)
+source=(git://github.com/JuliaBinaryWrappers/libsodium_jll.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd libsodium_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd libsodium_jll.jl
+
+  sed -i -e '/^JLLWrapper/d' Project.toml
+
+  /usr/lib/julia/julia-gen-jll.sh libsodium_jll libsodium
+}
+
+package() {
+  cd libsodium_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh libsodium_jll "${pkgdir}" "${pkgname}" julia-git
+}
