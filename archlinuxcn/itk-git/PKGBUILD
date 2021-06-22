@@ -5,21 +5,24 @@ pkgname=(itk-git python-itk-git)
 _pkgver=5.3
 pkgver=5.3.r52712.f98f6a8920
 pkgrel=1
-pkgdesc="An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis"
+pkgdesc='An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis'
 arch=('x86_64')
 url="https://www.itk.org/"
 license=('Apache')
 depends=(
   castxml
+  dcmtk
   eigen
   expat
   fftw
   gdcm
   hdf5
   intel-mkl-static
+  kwiml-git
   libpng
   libtiff
   ocl-icd
+  vxl
 )
 makedepends=(
   cmake
@@ -48,13 +51,12 @@ build() {
     -DBUILD_SHARED_LIBS=ON
     -DBUILD_TESTING=OFF
     -DCMAKE_BUILD_TYPE=Release
-    -DCMAKE_C_COMPILER=gcc
-    -DCMAKE_CXX_COMPILER=g++
     -DCMAKE_INSTALL_PREFIX=/usr
     -DCMAKE_SKIP_INSTALL_RPATH=ON
     -DITK_BUILD_DEFAULT_MODULES=ON
     -DITK_USE_MKL=ON
     -DITK_USE_SYSTEM_CASTXML=ON
+    -DITK_USE_SYSTEM_DCMTK=ON
     -DITK_USE_SYSTEM_DOUBLECONVERSION=OFF
     -DITK_USE_SYSTEM_EIGEN=ON
     -DITK_USE_SYSTEM_EXPAT=ON
@@ -63,14 +65,16 @@ build() {
     -DITK_USE_SYSTEM_GOOGLETEST=ON
     -DITK_USE_SYSTEM_HDF5=ON
     -DITK_USE_SYSTEM_JPEG=ON
+    -DITK_USE_SYSTEM_KWIML=ON
+    -DITK_USE_SYSTEM_MINC=OFF
     -DITK_USE_SYSTEM_PNG=ON
     -DITK_USE_SYSTEM_SWIG=ON
     -DITK_USE_SYSTEM_TIFF=ON
     -DITK_USE_SYSTEM_ZLIB=ON
-    -DITK_WRAP_unsigned_short=ON
-    -DITK_WRAP_double=ON
     -DITK_WRAP_IMAGE_DIMS="2;3;4"
     -DITK_WRAP_PYTHON=ON
+    -DITK_WRAP_double=ON
+    -DITK_WRAP_unsigned_short=ON
 )
 
   cmake -B "build" -S "${srcdir}/${_pkgname}" \
