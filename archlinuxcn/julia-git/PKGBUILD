@@ -152,7 +152,6 @@ EOF
     echo "Clearing $f"
     echo > "$f"
   done
-
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' */Makefile
 }
 
@@ -194,10 +193,10 @@ build() {
   fi
   g++ -fPIC -Wall -Wextra -shared -o libarch-source-translate.so -O2 \
       -std=$g20 arch-source-translate.cpp
-  _ld_preload="${srcdir}/libarch-source-translate.so"
-  if [[ -n $LD_PRELOAD ]]; then
-    _ld_preload="${_ld_preload}:$LD_PRELOAD"
-  fi
+  # _ld_preload="${srcdir}/libarch-source-translate.so"
+  # if [[ -n $LD_PRELOAD ]]; then
+  #   _ld_preload="${_ld_preload}:$LD_PRELOAD"
+  # fi
   (LD_PRELOAD="${_ld_preload}" build_in julia $BUILD_DOC "${julia_opts[@]}")
 }
 
