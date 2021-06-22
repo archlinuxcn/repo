@@ -1,0 +1,12 @@
+diff --git a/SuperBuild/External_ITK.cmake b/SuperBuild/External_ITK.cmake
+index 222d3a1b0..708748bee 100644
+--- a/SuperBuild/External_ITK.cmake
++++ b/SuperBuild/External_ITK.cmake
+@@ -168,6 +168,7 @@ if(NOT DEFINED ITK_DIR AND NOT Slicer_USE_SYSTEM_${proj})
+     INSTALL_COMMAND ""
+     DEPENDS
+       ${${proj}_DEPENDENCIES}
++    PATCH_COMMAND bash -c "grep -lR 'std::numeric_limits'|xargs sed -i '1 i\#include <limits>'"
+     )
+ 
+   ExternalProject_GenerateProjectDescription_Step(${proj})
