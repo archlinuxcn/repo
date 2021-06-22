@@ -1,0 +1,34 @@
+pkgname=julia-git-fftw_jll-git
+pkgver=3.3.9+7
+pkgrel=1
+pkgdesc="FFTW_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/FFTW_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git fftw)
+provides=(julia-git-fftw_jll)
+source=(git://github.com/JuliaBinaryWrappers/FFTW_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         '15bf7b54e08f974949a438f2023461fd')
+
+pkgver() {
+  cd FFTW_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd FFTW_jll.jl
+
+  sed -i -e '/^JLLWrapper/d' Project.toml
+
+  julia /usr/lib/julia/julia-gen-jll.jl FFTW_jll ../jll.toml
+}
+
+package() {
+  cd FFTW_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh FFTW_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,41 @@
+pkgname=julia-git-intelopenmp_jll-git
+pkgver=2018.0.3+2
+pkgrel=1
+pkgdesc="IntelOpenMP_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/IntelOpenMP_jll.jl"
+arch=(aarch64 armv7h x86_64)
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+if [[ $CARCH = x86_64 ]]; then
+  depends+=(intel-mkl)
+fi
+provides=(julia-git-intelopenmp_jll)
+source=(git://github.com/JuliaBinaryWrappers/IntelOpenMP_jll.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd IntelOpenMP_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd IntelOpenMP_jll.jl
+
+  sed -i -e '/^JLLWrapper/d' Project.toml
+
+  if [[ $CARCH = x86_64 ]]; then
+    /usr/lib/julia/julia-gen-jll.sh \
+      IntelOpenMP_jll \
+      libiomp=/opt/intel/mkl/lib/intel64/libiomp5.so
+  else
+    /usr/lib/julia/julia-gen-jll.sh IntelOpenMP_jll
+  fi
+}
+
+package() {
+  cd IntelOpenMP_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh IntelOpenMP_jll "${pkgdir}" "${pkgname}" julia-git
+}

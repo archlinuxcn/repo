@@ -1,0 +1,42 @@
+pkgname=julia-git-mkl_jll-git
+pkgver=2021.1.1+1
+pkgrel=1
+pkgdesc="MKL_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/MKL_jll.jl"
+arch=(aarch64 armv7h x86_64)
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+if [[ $CARCH = x86_64 ]]; then
+  depends+=(intel-mkl)
+fi
+provides=(julia-git-mkl_jll)
+source=(git://github.com/JuliaBinaryWrappers/MKL_jll.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd MKL_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd MKL_jll.jl
+
+  sed -i -e '/^JLLWrapper/d' Project.toml
+
+  if [[ $CARCH = x86_64 ]]; then
+    /usr/lib/julia/julia-gen-jll.sh \
+      MKL_jll \
+      libmkl_core=/opt/intel/mkl/lib/intel64/libmkl_core.so \
+      libmkl_rt=/opt/intel/mkl/lib/intel64/libmkl_rt.so
+  else
+    /usr/lib/julia/julia-gen-jll.sh MKL_jll
+  fi
+}
+
+package() {
+  cd MKL_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh MKL_jll "${pkgdir}" "${pkgname}" julia-git
+}

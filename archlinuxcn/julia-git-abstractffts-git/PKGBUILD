@@ -1,0 +1,24 @@
+pkgname=julia-git-abstractffts-git
+pkgver=1.0.1
+pkgrel=1
+pkgdesc="AbstractFFTs.jl"
+url="https://github.com/JuliaMath/AbstractFFTs.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-abstractffts)
+source=(git://github.com/JuliaMath/AbstractFFTs.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd AbstractFFTs.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd AbstractFFTs.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh AbstractFFTs "${pkgdir}" "${pkgname}" julia-git
+}
