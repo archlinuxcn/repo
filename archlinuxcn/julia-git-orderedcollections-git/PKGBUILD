@@ -1,0 +1,24 @@
+pkgname=julia-git-orderedcollections-git
+pkgver=1.4.1
+pkgrel=1
+pkgdesc="OrderedCollections.jl"
+url="https://github.com/JuliaCollections/OrderedCollections.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-orderedcollections)
+source=(git://github.com/JuliaCollections/OrderedCollections.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd OrderedCollections.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd OrderedCollections.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh OrderedCollections "${pkgdir}" "${pkgname}" julia-git
+}
