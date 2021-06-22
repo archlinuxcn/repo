@@ -130,7 +130,7 @@ prepare() {
 
   for p in cc c++ gcc g++; do
     cat > bin/$p <<EOF
-exec /usr/bin/$p "\${@/#-O0/-Og}" -fasynchronous-unwind-tables -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}
+exec /usr/bin/$p "\${@/#-O0/-Og}" -fasynchronous-unwind-tables -ffile-prefix-map="${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
 EOF
     chmod +x bin/$p
   done
@@ -273,9 +273,15 @@ package-julia-in() {
     while IFS= read -r t; do
       f=${t/${dbgsrcdir}/"$srcdir"}
       if ! [[ -f "$f" ]]; then
-        echo "Cannot find source file: $f"
+        echo "Cannot find source file: '$f'"
         continue
       fi
+      case "${t%/*}" in
+        "${srcdir}"*)
+          echo "Source file path not mapped: '${t%/*}'."
+          continue
+          ;;
+      esac
       mkdir -p "${pkgdir}/${t%/*}"
       cp -- "$f" "${pkgdir}/${t%/*}"
     done < <(_source_files "$binary")
