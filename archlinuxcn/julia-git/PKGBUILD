@@ -37,6 +37,7 @@ _patches=(
   0001-Force-enable-GDB-debug-info-registration.patch
   0002-Fix-source-file-paths.patch
   0003-Enable-basic-AA-in-O2.patch
+  0004-Fix-mbedtls-version.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -47,9 +48,10 @@ source=('git://github.com/JuliaLang/julia'
         arch-source-translate.cpp
         sysp7z.diff)
 md5sums=('SKIP'
-         '23195fdef07fc58e2841136c087affb4'
-         '85395afc88875c46f2774313322d835e'
-         'd400ad6c3044f99325e39ba829f75433'
+         'b1dae0301eec8918bfb7997ca11226f3'
+         '13183540d49242c6cf80cda1865442e0'
+         'd9aa735c3c4571813aedae995a47c061'
+         'ea205b68437e2056272ac622f95f4d3e'
          'a430db0964744bbf6b1a49e76a3bf1e4'
          '6e7fcba300512df8ab8ab65d3e1eb847'
          'f1f6ffc7ddcbc7fa0000d6f5fdbbe925'

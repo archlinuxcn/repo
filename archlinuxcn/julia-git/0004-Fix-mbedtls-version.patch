@@ -1,0 +1,25 @@
+From 77d5e447c7bcdc3e76b91987635cf1e77d26a891 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 22 Jun 2021 10:35:16 -0400
+Subject: [PATCH 4/4] Fix mbedtls version
+
+---
+ stdlib/MbedTLS_jll/src/MbedTLS_jll.jl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl b/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl
+index 1006e9fc2f..7877140142 100644
+--- a/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl
++++ b/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl
+@@ -31,7 +31,7 @@ elseif Sys.isapple()
+     const libmbedtls = "@rpath/libmbedtls.13.dylib"
+     const libmbedx509 = "@rpath/libmbedx509.1.dylib"
+ else
+-    const libmbedcrypto = "libmbedcrypto.so.5"
++    const libmbedcrypto = "libmbedcrypto.so.6"
+     const libmbedtls = "libmbedtls.so.13"
+     const libmbedx509 = "libmbedx509.so.1"
+ end
+-- 
+2.32.0
+
