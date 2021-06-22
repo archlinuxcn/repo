@@ -1,0 +1,24 @@
+pkgname=julia-git-pyplot-git
+pkgver=2.9.0.0.4.g52a83c8
+pkgrel=1
+pkgdesc="PyPlot.jl"
+url="https://github.com/stevengj/PyPlot.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git python-matplotlib)
+provides=(julia-git-pyplot)
+source=(git://github.com/stevengj/PyPlot.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd PyPlot.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd PyPlot.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh PyPlot "${pkgdir}" "${pkgname}" julia-git
+}

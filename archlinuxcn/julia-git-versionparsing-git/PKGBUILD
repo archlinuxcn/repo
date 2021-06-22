@@ -1,0 +1,24 @@
+pkgname=julia-git-versionparsing-git
+pkgver=1.2.0.0.3.gefa8240
+pkgrel=1
+pkgdesc="VersionParsing.jl"
+url="https://github.com/stevengj/VersionParsing.jl"
+arch=('any')
+license=('MIT')
+makedepends=('git' 'julia-pkg-scripts')
+depends=('julia-git')
+provides=('julia-git-versionparsing')
+source=(git://github.com/stevengj/VersionParsing.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd VersionParsing.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd VersionParsing.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh VersionParsing "${pkgdir}" "${pkgname}" julia-git
+}

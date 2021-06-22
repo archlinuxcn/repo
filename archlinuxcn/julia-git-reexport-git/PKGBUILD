@@ -1,0 +1,24 @@
+pkgname=julia-git-reexport-git
+pkgver=1.1.0
+pkgrel=1
+pkgdesc="Reexport.jl"
+url="https://github.com/simonster/Reexport.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-reexport)
+source=(git://github.com/simonster/Reexport.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Reexport.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Reexport.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Reexport "${pkgdir}" "${pkgname}" julia-git
+}

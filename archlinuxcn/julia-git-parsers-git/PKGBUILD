@@ -1,0 +1,24 @@
+pkgname=julia-git-parsers-git
+pkgver=1.1.0
+pkgrel=1
+pkgdesc="Parsers.jl"
+url="https://github.com/JuliaData/Parsers.jl"
+arch=('any')
+license=('MIT')
+makedepends=('git' 'julia-pkg-scripts')
+depends=('julia-git')
+provides=('julia-git-parsers')
+source=(git://github.com/JuliaData/Parsers.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Parsers.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Parsers.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Parsers "${pkgdir}" "${pkgname}" julia-git
+}
