@@ -2,8 +2,8 @@
 
 pkgname=3dslicer
 pkgver=4.11.20210226
-pkgrel=1
-pkgdesc='Multi-platform, free open source software for visualization and image computing'
+pkgrel=2
+pkgdesc='A multi-platform, free and open source software package for visualization and medical image computing'
 arch=('x86_64')
 url='https://www.slicer.org'
 license=('BSD')
@@ -34,53 +34,57 @@ makedepends=(
   subversion
 )
 options=(!emptydirs !strip)
-source=("${pkgname}-${pkgver}::git+https://github.com/Slicer/Slicer.git#tag=v${pkgver}"
-        "${pkgname}.svg::https://github.com/Slicer/Slicer/raw/v4.11/Resources/3DSlicerLogo-app-icon.svg")
+source=("${pkgname}::git+https://github.com/Slicer/Slicer.git#tag=v${pkgver}"
+        "${pkgname}.svg::https://github.com/Slicer/Slicer/raw/v4.11/Resources/3DSlicerLogo-app-icon.svg"
+        "itk_limits.patch"
+)
 sha512sums=('SKIP'
-            'c23104efcbec3d49b5c26ad5514ed74316423db4aa9e6c7894f02f7ddbe509b577de358dfdd2f7c492963f312b7c146f03d5e41a89ab1298811894dc18746225')
+            'c23104efcbec3d49b5c26ad5514ed74316423db4aa9e6c7894f02f7ddbe509b577de358dfdd2f7c492963f312b7c146f03d5e41a89ab1298811894dc18746225'
+            'e0c19c5fc2580366b91b16f20e6b8914dbb003a5ce2741fd5b2d2f5520724266c037b1edac33dc00a344a96c627743c5670f861065e28d81a4b207ab8082cc2e')
 
 prepare() {
   # find sqlite with cmake's FindSQLite3
-  sed -i 's/find_package(${proj} REQUIRED)/find_package(SQLite3 REQUIRED)/' "${srcdir}/${pkgname}-${pkgver}/SuperBuild/External_sqlite.cmake"
+  sed -i 's/find_package(${proj} REQUIRED)/find_package(SQLite3 REQUIRED)/' "${srcdir}/${pkgname}/SuperBuild/External_sqlite.cmake"
   # fix building with system teem
-  sed -i '/ExternalProject_Add_Empty/d' "${srcdir}/${pkgname}-${pkgver}/SuperBuild/External_teem.cmake"
-
+  sed -i '/ExternalProject_Add_Empty/d' "${srcdir}/${pkgname}/SuperBuild/External_teem.cmake"
+  # quick fix clang:12/gcc:11 <limits> header regression
+  git -C "${srcdir}/${pkgname}" apply -v "${srcdir}/itk_limits.patch"
   echo "Creating desktop file"
   gendesk -f -n --pkgname ${pkgname} \
+    --pkgdesc "${pkgdesc}" \
     --categories "Graphics;MedicalSoftware;Science;" \
-    --exec "Slicer" \
     --icon "${pkgname}" \
-    --pkgdesc "${pkgdesc}"
+    --exec "Slicer"
 }
 
 build() {
-  cmake -B build -S "${srcdir}/${pkgname}-${pkgver}" \
+  cmake -B build -S "${srcdir}/${pkgname}" \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
     -DBUILD_TESTING=OFF \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_CXX_COMPILER=clang++ \
-    -DCMAKE_C_COMPILER=clang \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DSlicer_BUILD_DOCUMENTATION=OFF \
     -DSlicer_BUILD_I18N_SUPPORT=ON \
-    -DSlicer_STORE_SETTINGS_IN_APPLICATION_HOME_DIR=OFF \
+    -DSlicer_USE_SimpleITK_SHARED=ON \
+    -DSlicer_USE_SYSTEM_bzip2=ON \
+    -DSlicer_USE_SYSTEM_curl=ON \
     -DSlicer_USE_SYSTEM_DCMTK=ON \
-    -DSlicer_USE_SYSTEM_LZMA=ON \
     -DSlicer_USE_SYSTEM_LibArchive=ON \
+    -DSlicer_USE_SYSTEM_LZMA=ON \
     -DSlicer_USE_SYSTEM_OpenSSL=ON \
     -DSlicer_USE_SYSTEM_QT=ON \
     -DSlicer_USE_SYSTEM_RapidJSON=ON \
-    -DSlicer_USE_SYSTEM_VTK=OFF \
-    -DSlicer_USE_SYSTEM_bzip2=ON \
-    -DSlicer_USE_SYSTEM_curl=ON \
     -DSlicer_USE_SYSTEM_sqlite=ON \
     -DSlicer_USE_SYSTEM_teem=ON \
-    -DSlicer_USE_SYSTEM_zlib=ON \
-    -DSlicer_USE_SimpleITK_SHARED=ON
+    -DSlicer_USE_SYSTEM_VTK=OFF \
+    -DSlicer_USE_SYSTEM_zlib=ON
   make -C "build"
 }
 
 package() {
-  make -C "${srcdir}/build/Slicer-build" package
+  cd "${srcdir}/build/Slicer-build"
+  make package
   install -d "${pkgdir}/opt/${pkgname}" "${pkgdir}/usr/bin"
   tar xvf "${srcdir}/build/Slicer-build/"*.tar.gz -C "${pkgdir}/opt/${pkgname}" --strip-components 1
   ln -s /opt/${pkgname}/Slicer "${pkgdir}/usr/bin"
