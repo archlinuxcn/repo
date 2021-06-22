@@ -1,0 +1,24 @@
+pkgname=julia-git-stringencodings-git
+pkgver=0.3.5
+pkgrel=1
+pkgdesc="StringEncodings.jl"
+url="https://github.com/JuliaStrings/StringEncodings.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-stringencodings)
+source=(git://github.com/JuliaStrings/StringEncodings.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd StringEncodings.jl
+
+  git describe --tag | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd StringEncodings.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh StringEncodings "${pkgdir}" "${pkgname}" julia-git
+}
