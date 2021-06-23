@@ -1,0 +1,34 @@
+pkgname=julia-git-arpack_jll-git
+pkgver=3.8.0+0.0.1.gf887229
+pkgrel=1
+pkgdesc="Arpack_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Arpack_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git arpack)
+provides=(julia-git-arpack_jll)
+source=(git://github.com/JuliaBinaryWrappers/Arpack_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         'f2288ef331d01b764430caed4e723b61')
+
+pkgver() {
+  cd Arpack_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd Arpack_jll.jl
+
+  sed -i -e '/^JLLWrapper/d' Project.toml
+
+  julia /usr/lib/julia/julia-gen-jll.jl Arpack_jll ../jll.toml
+}
+
+package() {
+  cd Arpack_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Arpack_jll "${pkgdir}" "${pkgname}" julia-git
+}
