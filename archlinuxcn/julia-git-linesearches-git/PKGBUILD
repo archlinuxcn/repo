@@ -1,0 +1,25 @@
+pkgname=julia-git-linesearches-git
+pkgver=7.1.1
+pkgrel=1
+pkgdesc="LineSearches.jl"
+url="https://github.com/JuliaNLSolvers/LineSearches.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-linesearches)
+source=(git://github.com/JuliaNLSolvers/LineSearches.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd LineSearches.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd LineSearches.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh LineSearches "${pkgdir}" "${pkgname}" julia-git
+  rm "${dest_dir}"/REQUIRE
+}

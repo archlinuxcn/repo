@@ -1,0 +1,24 @@
+pkgname=julia-git-positivefactorizations-git
+pkgver=0.2.4.0.3.g2f6470c
+pkgrel=1
+pkgdesc="PositiveFactorizations.jl"
+url="https://github.com/timholy/PositiveFactorizations.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-positivefactorizations)
+source=(git://github.com/timholy/PositiveFactorizations.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd PositiveFactorizations.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd PositiveFactorizations.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh PositiveFactorizations "${pkgdir}" "${pkgname}" julia-git
+}
