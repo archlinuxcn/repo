@@ -1,0 +1,24 @@
+pkgname=julia-git-fileio-git
+pkgver=1.10.1
+pkgrel=1
+pkgdesc="FileIO.jl"
+url="https://github.com/JuliaIO/FileIO.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-fileio)
+source=(git://github.com/JuliaIO/FileIO.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd FileIO.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd FileIO.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh FileIO "${pkgdir}" "${pkgname}" julia-git
+}
