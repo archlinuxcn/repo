@@ -1,0 +1,25 @@
+From da2bb54a2a7d92efff1d8328a36a06bd42caf710 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 22 Jun 2021 22:42:50 -0400
+Subject: [PATCH] Disable MKL check
+
+---
+ src/numpy.jl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/numpy.jl b/src/numpy.jl
+index f3d523a..bd3f3fd 100644
+--- a/src/numpy.jl
++++ b/src/numpy.jl
+@@ -64,7 +64,7 @@ function npyinitialize()
+     numpy = pyimport("numpy")
+ 
+     # emit a warning if both Julia and NumPy are linked with MKL (#433)
+-    if LinearAlgebra.BLAS.vendor() === :mkl &&
++    if false && LinearAlgebra.BLAS.vendor() === :mkl &&
+        LinearAlgebra.BLAS.BlasInt === Int64 && hasproperty(numpy, "__config__")
+         config = numpy."__config__"
+         if hasproperty(config, "blas_opt_info")
+-- 
+2.32.0
+
