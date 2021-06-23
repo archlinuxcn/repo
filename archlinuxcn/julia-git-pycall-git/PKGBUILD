@@ -5,9 +5,9 @@ pkgdesc="PyCall.jl"
 url="https://github.com/stevengj/PyCall.jl"
 arch=('any')
 license=('MIT')
-makedepends=(git julia-pkg-scripts julia-git-conda julia-git-json
+makedepends=(git python julia-pkg-scripts julia-git-conda julia-git-json
              julia-git-parsers julia-git-versionparsing)
-depends=(julia-git python)
+depends=(julia-git)
 provides=('julia-git-pycall')
 source=(git://github.com/stevengj/PyCall.jl
         0001-Disable-MKL-check.patch)
@@ -36,4 +36,8 @@ package() {
   cd PyCall.jl
 
   . /usr/lib/julia/julia-install-pkg.sh PyCall "${pkgdir}" "${pkgname}" julia-git
+
+  pymin_ver=$(python -c 'import sys; print(sys.version_info.minor)')
+  ((pynext_min=pymin_ver + 1))
+  depends+=("python>=3.${pymin_ver}.0" "python<3.${pynext_min}.0")
 }
