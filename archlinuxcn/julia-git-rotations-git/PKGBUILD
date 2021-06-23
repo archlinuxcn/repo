@@ -1,0 +1,24 @@
+pkgname=julia-git-rotations-git
+pkgver=1.0.2.0.12.g38b208b
+pkgrel=1
+pkgdesc="Rotations.jl"
+url="https://github.com/JuliaGeometry/Rotations.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-rotations)
+source=(git://github.com/JuliaGeometry/Rotations.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Rotations.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Rotations.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Rotations "${pkgdir}" "${pkgname}" julia-git
+}

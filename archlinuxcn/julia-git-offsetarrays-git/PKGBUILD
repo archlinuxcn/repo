@@ -1,0 +1,24 @@
+pkgname=julia-git-offsetarrays-git
+pkgver=1.10.0
+pkgrel=1
+pkgdesc="OffsetArrays.jl"
+url="https://github.com/JuliaArrays/OffsetArrays.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-offsetarrays)
+source=(git://github.com/JuliaArrays/OffsetArrays.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd OffsetArrays.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd OffsetArrays.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh OffsetArrays "${pkgdir}" "${pkgname}" julia-git
+}

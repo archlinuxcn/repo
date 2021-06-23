@@ -1,0 +1,24 @@
+pkgname=julia-git-imagecore-git
+pkgver=0.9.0
+pkgrel=1
+pkgdesc="ImageCore.jl"
+url="https://github.com/JuliaImages/ImageCore.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-imagecore)
+source=(git://github.com/JuliaImages/ImageCore.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd ImageCore.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd ImageCore.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh ImageCore "${pkgdir}" "${pkgname}" julia-git
+}

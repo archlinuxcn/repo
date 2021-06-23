@@ -1,0 +1,24 @@
+pkgname=julia-git-adapt-git
+pkgver=3.3.1
+pkgrel=1
+pkgdesc="Adapt.jl"
+url="https://github.com/JuliaGPU/Adapt.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-adapt)
+source=(git://github.com/JuliaGPU/Adapt.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Adapt.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Adapt.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Adapt "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,24 @@
+pkgname=julia-git-computationalresources-git
+pkgver=0.3.2.0.2.g5950dbb
+pkgrel=1
+pkgdesc="ComputationalResources.jl"
+url="https://github.com/timholy/ComputationalResources.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-computationalresources)
+source=(git://github.com/timholy/ComputationalResources.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd ComputationalResources.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd ComputationalResources.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh ComputationalResources "${pkgdir}" "${pkgname}" julia-git
+}

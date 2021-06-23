@@ -1,0 +1,24 @@
+pkgname=julia-git-imagecontrastadjustment-git
+pkgver=0.3.8
+pkgrel=1
+pkgdesc="ImageContrastAdjustment.jl"
+url="https://github.com/JuliaImages/ImageContrastAdjustment.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-imagecontrastadjustment)
+source=(git://github.com/JuliaImages/ImageContrastAdjustment.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd ImageContrastAdjustment.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd ImageContrastAdjustment.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh ImageContrastAdjustment "${pkgdir}" "${pkgname}" julia-git
+}

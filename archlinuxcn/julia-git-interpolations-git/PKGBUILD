@@ -1,0 +1,24 @@
+pkgname=julia-git-interpolations-git
+pkgver=0.13.2.0.44.g894cce3
+pkgrel=1
+pkgdesc="Interpolations.jl"
+url="https://github.com/JuliaMath/Interpolations.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-interpolations)
+source=(git://github.com/JuliaMath/Interpolations.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Interpolations.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Interpolations.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Interpolations "${pkgdir}" "${pkgname}" julia-git
+}

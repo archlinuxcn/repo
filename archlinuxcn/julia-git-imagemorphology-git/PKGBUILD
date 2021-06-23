@@ -1,0 +1,24 @@
+pkgname=julia-git-imagemorphology-git
+pkgver=0.2.12
+pkgrel=1
+pkgdesc="ImageMorphology.jl"
+url="https://github.com/JuliaImages/ImageMorphology.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-imagemorphology)
+source=(git://github.com/JuliaImages/ImageMorphology.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd ImageMorphology.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd ImageMorphology.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh ImageMorphology "${pkgdir}" "${pkgname}" julia-git
+}

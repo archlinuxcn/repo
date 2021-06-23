@@ -1,0 +1,24 @@
+pkgname=julia-git-axisarrays-git
+pkgver=0.4.3.0.1.g9b91d54
+pkgrel=1
+pkgdesc="AxisArrays.jl"
+url="https://github.com/JuliaArrays/AxisArrays.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-axisarrays)
+source=(git://github.com/JuliaArrays/AxisArrays.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd AxisArrays.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd AxisArrays.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh AxisArrays "${pkgdir}" "${pkgname}" julia-git
+}

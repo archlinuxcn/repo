@@ -1,0 +1,24 @@
+pkgname=julia-git-simpletraits-git
+pkgver=0.9.3.0.2.g300480d
+pkgrel=1
+pkgdesc="SimpleTraits.jl"
+url="https://github.com/mauro3/SimpleTraits.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-simpletraits)
+source=(git://github.com/mauro3/SimpleTraits.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd SimpleTraits.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd SimpleTraits.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh SimpleTraits "${pkgdir}" "${pkgname}" julia-git
+}

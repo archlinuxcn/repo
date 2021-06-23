@@ -1,0 +1,24 @@
+pkgname=julia-git-tiffimages-git
+pkgver=0.3.2.0.7.g46e5908
+pkgrel=1
+pkgdesc="TiffImages.jl"
+url="https://github.com/tlnagy/TiffImages.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-tiffimages)
+source=(git://github.com/tlnagy/TiffImages.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd TiffImages.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd TiffImages.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh TiffImages "${pkgdir}" "${pkgname}" julia-git
+}

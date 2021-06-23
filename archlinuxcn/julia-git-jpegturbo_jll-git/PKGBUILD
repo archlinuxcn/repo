@@ -1,0 +1,32 @@
+pkgname=julia-git-jpegturbo_jll-git
+pkgver=2.1.0+0
+pkgrel=1
+pkgdesc="JpegTurbo_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/JpegTurbo_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libjpeg-turbo)
+provides=(julia-git-jpegturbo_jll)
+source=(git://github.com/JuliaBinaryWrappers/JpegTurbo_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         '9a99f10a5bcd55c6b9aab31e151c0df8')
+
+pkgver() {
+  cd JpegTurbo_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd JpegTurbo_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl JpegTurbo_jll ../jll.toml
+}
+
+package() {
+  cd JpegTurbo_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh JpegTurbo_jll "${pkgdir}" "${pkgname}" julia-git
+}

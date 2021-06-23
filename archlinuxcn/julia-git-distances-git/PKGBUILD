@@ -1,0 +1,24 @@
+pkgname=julia-git-distances-git
+pkgver=0.10.3.0.2.g988c92b
+pkgrel=1
+pkgdesc="Distances.jl"
+url="https://github.com/JuliaStats/Distances.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-distances)
+source=(git://github.com/JuliaStats/Distances.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Distances.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Distances.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Distances "${pkgdir}" "${pkgname}" julia-git
+}

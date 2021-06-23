@@ -1,0 +1,24 @@
+pkgname=julia-git-tensorcore-git
+pkgver=0.1.1.0.3.g7e9ad32
+pkgrel=1
+pkgdesc="TensorCore.jl"
+url="https://github.com/JuliaMath/TensorCore.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-tensorcore)
+source=(git://github.com/JuliaMath/TensorCore.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd TensorCore.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd TensorCore.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh TensorCore "${pkgdir}" "${pkgname}" julia-git
+}

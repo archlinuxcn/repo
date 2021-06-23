@@ -1,0 +1,32 @@
+pkgname=julia-git-libtiff_jll-git
+pkgver=4.3.0+0
+pkgrel=1
+pkgdesc="Libtiff_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Libtiff_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libtiff)
+provides=(julia-git-libtiff_jll)
+source=(git://github.com/JuliaBinaryWrappers/Libtiff_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         '3254f65fbb7234046bb3ba684fab7b80')
+
+pkgver() {
+  cd Libtiff_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd Libtiff_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Libtiff_jll ../jll.toml
+}
+
+package() {
+  cd Libtiff_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Libtiff_jll "${pkgdir}" "${pkgname}" julia-git
+}

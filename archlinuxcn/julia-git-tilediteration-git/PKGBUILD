@@ -1,0 +1,24 @@
+pkgname=julia-git-tilediteration-git
+pkgver=0.3.0.0.2.g23740d3
+pkgrel=1
+pkgdesc="TiledIteration.jl"
+url="https://github.com/JuliaArrays/TiledIteration.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-tilediteration)
+source=(git://github.com/JuliaArrays/TiledIteration.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd TiledIteration.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd TiledIteration.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh TiledIteration "${pkgdir}" "${pkgname}" julia-git
+}

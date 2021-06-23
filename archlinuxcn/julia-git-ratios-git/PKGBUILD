@@ -1,0 +1,24 @@
+pkgname=julia-git-ratios-git
+pkgver=0.4.0.0.3.g3476a71
+pkgrel=1
+pkgdesc="Ratios.jl"
+url="https://github.com/timholy/Ratios.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-ratios)
+source=(git://github.com/timholy/Ratios.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Ratios.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Ratios.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Ratios "${pkgdir}" "${pkgname}" julia-git
+}

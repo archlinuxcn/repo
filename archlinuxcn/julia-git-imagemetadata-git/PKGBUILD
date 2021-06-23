@@ -1,0 +1,24 @@
+pkgname=julia-git-imagemetadata-git
+pkgver=0.9.6.0.1.g4910098
+pkgrel=1
+pkgdesc="ImageMetadata.jl"
+url="https://github.com/JuliaImages/ImageMetadata.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-imagemetadata)
+source=(git://github.com/JuliaImages/ImageMetadata.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd ImageMetadata.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd ImageMetadata.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh ImageMetadata "${pkgdir}" "${pkgname}" julia-git
+}

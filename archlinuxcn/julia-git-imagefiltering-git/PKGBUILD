@@ -1,0 +1,24 @@
+pkgname=julia-git-imagefiltering-git
+pkgver=0.6.22
+pkgrel=1
+pkgdesc="ImageFiltering.jl"
+url="https://github.com/JuliaImages/ImageFiltering.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-imagefiltering)
+source=(git://github.com/JuliaImages/ImageFiltering.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd ImageFiltering.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd ImageFiltering.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh ImageFiltering "${pkgdir}" "${pkgname}" julia-git
+}

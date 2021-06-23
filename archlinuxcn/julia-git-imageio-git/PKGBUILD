@@ -1,0 +1,24 @@
+pkgname=julia-git-imageio-git
+pkgver=0.5.5.0.1.g239380b
+pkgrel=1
+pkgdesc="ImageIO.jl"
+url="https://github.com/JuliaIO/ImageIO.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-imageio)
+source=(git://github.com/JuliaIO/ImageIO.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd ImageIO.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd ImageIO.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh ImageIO "${pkgdir}" "${pkgname}" julia-git
+}

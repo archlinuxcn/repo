@@ -1,0 +1,32 @@
+pkgname=julia-git-libpng_jll-git
+pkgver=1.6.38+0.0.1.g7610368
+pkgrel=1
+pkgdesc="libpng_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/libpng_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libpng)
+provides=(julia-git-libpng_jll)
+source=(git://github.com/JuliaBinaryWrappers/libpng_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         'dfdcd0744277df02cd73c861d27b3fbc')
+
+pkgver() {
+  cd libpng_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd libpng_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl libpng_jll ../jll.toml
+}
+
+package() {
+  cd libpng_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh libpng_jll "${pkgdir}" "${pkgname}" julia-git
+}

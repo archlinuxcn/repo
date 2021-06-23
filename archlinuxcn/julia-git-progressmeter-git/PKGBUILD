@@ -1,0 +1,24 @@
+pkgname=julia-git-progressmeter-git
+pkgver=1.7.1.0.1.ge1c7c71
+pkgrel=1
+pkgdesc="ProgressMeter.jl"
+url="https://github.com/timholy/ProgressMeter.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-progressmeter)
+source=(git://github.com/timholy/ProgressMeter.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd ProgressMeter.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd ProgressMeter.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh ProgressMeter "${pkgdir}" "${pkgname}" julia-git
+}

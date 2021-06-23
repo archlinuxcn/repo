@@ -1,0 +1,24 @@
+pkgname=julia-git-inflate-git
+pkgver=0.1.2
+pkgrel=1
+pkgdesc="Inflate.jl"
+url="https://github.com/GunnarFarneback/Inflate.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-inflate)
+source=(git://github.com/GunnarFarneback/Inflate.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Inflate.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Inflate.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Inflate "${pkgdir}" "${pkgname}" julia-git
+}
