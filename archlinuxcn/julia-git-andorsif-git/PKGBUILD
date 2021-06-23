@@ -1,0 +1,24 @@
+pkgname=julia-git-andorsif-git
+pkgver=0.1.1.0.3.g9dfa513
+pkgrel=1
+pkgdesc="AndorSIF.jl"
+url="https://github.com/JuliaIO/AndorSIF.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-andorsif)
+source=(git://github.com/JuliaIO/AndorSIF.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd AndorSIF.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd AndorSIF.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh AndorSIF "${pkgdir}" "${pkgname}" julia-git
+}
