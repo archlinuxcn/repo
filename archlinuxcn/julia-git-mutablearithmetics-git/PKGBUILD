@@ -1,0 +1,24 @@
+pkgname=julia-git-mutablearithmetics-git
+pkgver=0.2.20
+pkgrel=1
+pkgdesc="MutableArithmetics.jl"
+url="https://github.com/jump-dev/MutableArithmetics.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-mutablearithmetics)
+source=(git://github.com/jump-dev/MutableArithmetics.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd MutableArithmetics.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd MutableArithmetics.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh MutableArithmetics "${pkgdir}" "${pkgname}" julia-git
+}

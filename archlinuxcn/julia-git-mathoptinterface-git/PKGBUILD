@@ -1,0 +1,24 @@
+pkgname=julia-git-mathoptinterface-git
+pkgver=0.9.21.0.72.g9fb8da1c
+pkgrel=1
+pkgdesc="MathOptInterface.jl"
+url="https://github.com/jump-dev/MathOptInterface.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-mathoptinterface)
+source=(git://github.com/jump-dev/MathOptInterface.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd MathOptInterface.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd MathOptInterface.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh MathOptInterface "${pkgdir}" "${pkgname}" julia-git
+}
