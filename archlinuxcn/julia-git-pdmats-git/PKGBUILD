@@ -1,0 +1,24 @@
+pkgname=julia-git-pdmats-git
+pkgver=0.11.1
+pkgrel=1
+pkgdesc="PDMats.jl"
+url="https://github.com/JuliaStats/PDMats.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-pdmats)
+source=(git://github.com/JuliaStats/PDMats.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd PDMats.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd PDMats.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh PDMats "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,24 @@
+pkgname=julia-git-nanmath-git
+pkgver=0.3.5.0.3.g0fc4df8
+pkgrel=1
+pkgdesc="NaNMath.jl"
+url="https://github.com/mlubin/NaNMath.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-nanmath)
+source=(git://github.com/mlubin/NaNMath.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd NaNMath.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd NaNMath.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh NaNMath "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,24 @@
+pkgname=julia-git-rmath-git
+pkgver=0.7.0
+pkgrel=1
+pkgdesc="Rmath.jl"
+url="https://github.com/JuliaStats/Rmath.jl"
+arch=(any)
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-rmath)
+source=(git://github.com/JuliaStats/Rmath.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Rmath.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Rmath.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Rmath "${pkgdir}" "${pkgname}" julia-git
+}

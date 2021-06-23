@@ -1,0 +1,24 @@
+pkgname=julia-git-diffresults-git
+pkgver=1.0.3+docs.0.1.g89f5a06
+pkgrel=1
+pkgdesc="DiffResults.jl"
+url="https://github.com/JuliaDiff/DiffResults.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-diffresults)
+source=(git://github.com/JuliaDiff/DiffResults.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd DiffResults.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd DiffResults.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh DiffResults "${pkgdir}" "${pkgname}" julia-git
+}

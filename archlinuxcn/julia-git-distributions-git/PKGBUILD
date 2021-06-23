@@ -1,0 +1,24 @@
+pkgname=julia-git-distributions-git
+pkgver=0.25.5
+pkgrel=1
+pkgdesc="Distributions.jl"
+url="https://github.com/JuliaStats/Distributions.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-distributions)
+source=(git://github.com/JuliaStats/Distributions.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Distributions.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Distributions.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Distributions "${pkgdir}" "${pkgname}" julia-git
+}

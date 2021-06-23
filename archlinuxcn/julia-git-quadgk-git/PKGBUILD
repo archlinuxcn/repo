@@ -1,0 +1,24 @@
+pkgname=julia-git-quadgk-git
+pkgver=2.4.1.0.2.gecde924
+pkgrel=1
+pkgdesc="QuadGK.jl"
+url="https://github.com/JuliaMath/QuadGK.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-quadgk)
+source=(git://github.com/JuliaMath/QuadGK.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd QuadGK.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd QuadGK.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh QuadGK "${pkgdir}" "${pkgname}" julia-git
+}

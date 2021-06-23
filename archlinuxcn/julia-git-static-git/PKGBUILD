@@ -1,0 +1,24 @@
+pkgname=julia-git-static-git
+pkgver=0.2.5
+pkgrel=1
+pkgdesc="Static.jl"
+url="https://github.com/SciML/Static.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-static)
+source=(git://github.com/SciML/Static.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Static.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Static.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Static "${pkgdir}" "${pkgname}" julia-git
+}

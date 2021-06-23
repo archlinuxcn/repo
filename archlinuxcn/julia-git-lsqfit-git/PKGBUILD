@@ -1,0 +1,24 @@
+pkgname=julia-git-lsqfit-git
+pkgver=0.12.1.0.1.g91b358f
+pkgrel=1
+pkgdesc="LsqFit.jl"
+url="https://github.com/JuliaOpt/LsqFit.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-lsqfit)
+source=(git://github.com/JuliaOpt/LsqFit.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd LsqFit.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd LsqFit.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh LsqFit "${pkgdir}" "${pkgname}" julia-git
+}

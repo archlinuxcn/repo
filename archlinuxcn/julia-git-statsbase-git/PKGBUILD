@@ -1,0 +1,24 @@
+pkgname=julia-git-statsbase-git
+pkgver=0.33.8.0.3.g2faa6e8
+pkgrel=1
+pkgdesc="StatsBase.jl"
+url="https://github.com/JuliaStats/StatsBase.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-statsbase)
+source=(git://github.com/JuliaStats/StatsBase.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd StatsBase.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd StatsBase.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh StatsBase "${pkgdir}" "${pkgname}" julia-git
+}

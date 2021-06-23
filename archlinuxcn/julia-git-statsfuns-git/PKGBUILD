@@ -1,0 +1,24 @@
+pkgname=julia-git-statsfuns-git
+pkgver=0.9.8
+pkgrel=1
+pkgdesc="StatsFuns.jl"
+url="https://github.com/JuliaStats/StatsFuns.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-statsfuns)
+source=(git://github.com/JuliaStats/StatsFuns.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd StatsFuns.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd StatsFuns.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh StatsFuns "${pkgdir}" "${pkgname}" julia-git
+}

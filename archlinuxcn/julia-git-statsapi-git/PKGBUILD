@@ -1,0 +1,24 @@
+pkgname=julia-git-statsapi-git
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="StatsAPI.jl"
+url="https://github.com/JuliaStats/StatsAPI.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-statsapi)
+source=(git://github.com/JuliaStats/StatsAPI.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd StatsAPI.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd StatsAPI.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh StatsAPI "${pkgdir}" "${pkgname}" julia-git
+}
