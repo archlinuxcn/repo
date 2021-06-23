@@ -1,0 +1,24 @@
+pkgname=julia-git-dierckx-git
+pkgver=0.5.1
+pkgrel=1
+pkgdesc="Dierckx.jl"
+url="https://github.com/kbarbary/Dierckx.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libddierckx)
+provides=(julia-git-dierckx)
+source=(git://github.com/kbarbary/Dierckx.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Dierckx.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Dierckx.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Dierckx "${pkgdir}" "${pkgname}" julia-git
+}
