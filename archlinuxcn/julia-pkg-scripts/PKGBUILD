@@ -1,13 +1,13 @@
 # Maintainer:  <yuyichao@yyc2.yyc-arch.org>
 pkgname=julia-pkg-scripts
-pkgver=0.1.0.23.g775453f
+pkgver=0.1.0.27.g95bd789
 pkgrel=1
 pkgdesc="Packaging script for julia"
 arch=('any')
 license=('custom:MIT')
 source=(git://github.com/yuyichao/julia-pkg-scripts)
 md5sums=('SKIP')
-makedepends=(git)
+makedepends=(git cmake)
 
 pkgver() {
   cd julia-pkg-scripts
@@ -15,14 +15,18 @@ pkgver() {
   git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
 }
 
-package() {
-  depends=('julia')
+build() {
   cd julia-pkg-scripts
 
-  mkdir -p "${pkgdir}/usr/lib/julia/"
-  install -Dm644 julia-install-pkg.sh "${pkgdir}/usr/lib/julia/"
-  install -Dm644 julia-list-deps.jl "${pkgdir}/usr/lib/julia/"
-  install -Dm755 julia-read-soname.sh "${pkgdir}/usr/lib/julia/"
-  install -Dm755 julia-gen-jll.sh "${pkgdir}/usr/lib/julia/"
-  install -Dm644 julia-gen-jll.jl "${pkgdir}/usr/lib/julia/"
+  mkdir -p build
+  cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib
+  make
+}
+
+package() {
+  depends=('julia')
+  cd julia-pkg-scripts/build
+
+  make install DESTDIR="${pkgdir}"
 }
