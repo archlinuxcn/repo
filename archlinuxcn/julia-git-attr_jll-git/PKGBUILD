@@ -1,0 +1,34 @@
+pkgname=julia-git-attr_jll-git
+pkgver=2.4.48+0
+pkgrel=1
+pkgdesc="Attr_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Attr_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git attr)
+provides=(julia-git-attr_jll)
+source=(git://github.com/JuliaBinaryWrappers/Attr_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         '6cb28570377907533a2be7ce53a76cbb')
+
+pkgver() {
+  cd Attr_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd Attr_jll.jl
+
+  sed -i -e '/^JLLWrapper/d' Project.toml
+
+  julia /usr/lib/julia/julia-gen-jll.jl Attr_jll ../jll.toml
+}
+
+package() {
+  cd Attr_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Attr_jll "${pkgdir}" "${pkgname}" julia-git
+}

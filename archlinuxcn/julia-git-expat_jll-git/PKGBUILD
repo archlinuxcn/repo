@@ -1,0 +1,34 @@
+pkgname=julia-git-expat_jll-git
+pkgver=2.2.10+0
+pkgrel=1
+pkgdesc="Expat_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Expat_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git expat)
+provides=(julia-git-expat_jll)
+source=(git://github.com/JuliaBinaryWrappers/Expat_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         'a5308c604c250d0ec646c0c8e1dada92')
+
+pkgver() {
+  cd Expat_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd Expat_jll.jl
+
+  sed -i -e '/^JLLWrapper/d' Project.toml
+
+  julia /usr/lib/julia/julia-gen-jll.jl Expat_jll ../jll.toml
+}
+
+package() {
+  cd Expat_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Expat_jll "${pkgdir}" "${pkgname}" julia-git
+}
