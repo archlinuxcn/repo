@@ -8,8 +8,10 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git lz4)
 provides=(julia-git-lz4_jll)
-source=(git://github.com/JuliaBinaryWrappers/Lz4_jll.jl)
-md5sums=('SKIP')
+source=(git://github.com/JuliaBinaryWrappers/Lz4_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         '00fdbf46d614ff33d7f4faa5a93a17a9')
 
 pkgver() {
   cd Lz4_jll.jl
@@ -20,10 +22,7 @@ pkgver() {
 build() {
   cd Lz4_jll.jl
 
-  sed -i -e '/^JLLWrapper/d' Project.toml
-
-  /usr/lib/julia/julia-gen-jll.sh \
-    Lz4_jll liblz4 -b lz4cat -b unlz4 -b lz4 -b lz4c
+  julia /usr/lib/julia/julia-gen-jll.jl Lz4_jll ../jll.toml
 }
 
 package() {

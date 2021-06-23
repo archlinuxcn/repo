@@ -8,8 +8,10 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git libiconv)
 provides=(julia-git-libiconv_jll)
-source=(git://github.com/JuliaBinaryWrappers/Libiconv_jll.jl)
-md5sums=('SKIP')
+source=(git://github.com/JuliaBinaryWrappers/Libiconv_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         '03b127e2367538672b87f53178db7f7b')
 
 pkgver() {
   cd Libiconv_jll.jl
@@ -20,9 +22,7 @@ pkgver() {
 build() {
   cd Libiconv_jll.jl
 
-  sed -i -e '/^JLLWrapper/d' Project.toml
-
-  /usr/lib/julia/julia-gen-jll.sh Libiconv_jll libcharset libiconv
+  julia /usr/lib/julia/julia-gen-jll.jl Libiconv_jll ../jll.toml
 }
 
 package() {

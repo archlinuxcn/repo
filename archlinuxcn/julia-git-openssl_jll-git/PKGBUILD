@@ -8,8 +8,10 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git openssl)
 provides=(julia-git-openssl_jll)
-source=(git://github.com/JuliaBinaryWrappers/OpenSSL_jll.jl)
-md5sums=('SKIP')
+source=(git://github.com/JuliaBinaryWrappers/OpenSSL_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         'a91e1e86ded5c21ea4cf8179c931b71e')
 
 pkgver() {
   cd OpenSSL_jll.jl
@@ -20,9 +22,7 @@ pkgver() {
 build() {
   cd OpenSSL_jll.jl
 
-  sed -i -e '/^JLLWrapper/d' Project.toml
-
-  /usr/lib/julia/julia-gen-jll.sh OpenSSL_jll libcrypto libssl -b openssl
+  julia /usr/lib/julia/julia-gen-jll.jl OpenSSL_jll ../jll.toml
 }
 
 package() {

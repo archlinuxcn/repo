@@ -8,8 +8,10 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git zeromq)
 provides=(julia-git-zeromq_jll)
-source=(git://github.com/JuliaBinaryWrappers/ZeroMQ_jll.jl)
-md5sums=('SKIP')
+source=(git://github.com/JuliaBinaryWrappers/ZeroMQ_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         '1a7fe494805ca0208f8f7263c5d6ebe6')
 
 pkgver() {
   cd ZeroMQ_jll.jl
@@ -20,9 +22,7 @@ pkgver() {
 build() {
   cd ZeroMQ_jll.jl
 
-  sed -i -e '/^JLLWrapper/d' Project.toml
-
-  /usr/lib/julia/julia-gen-jll.sh ZeroMQ_jll libzmq
+  julia /usr/lib/julia/julia-gen-jll.jl ZeroMQ_jll ../jll.toml
 }
 
 package() {

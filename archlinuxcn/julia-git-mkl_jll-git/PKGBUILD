@@ -11,8 +11,12 @@ if [[ $CARCH = x86_64 ]]; then
   depends+=(intel-mkl)
 fi
 provides=(julia-git-mkl_jll)
-source=(git://github.com/JuliaBinaryWrappers/MKL_jll.jl)
-md5sums=('SKIP')
+source=(git://github.com/JuliaBinaryWrappers/MKL_jll.jl
+        jll.toml
+        jll_x86_64.toml)
+md5sums=('SKIP'
+         'd41d8cd98f00b204e9800998ecf8427e'
+         '754e20d9cdc6ccb948a31b0d9bd4cdc0')
 
 pkgver() {
   cd MKL_jll.jl
@@ -23,15 +27,10 @@ pkgver() {
 build() {
   cd MKL_jll.jl
 
-  sed -i -e '/^JLLWrapper/d' Project.toml
-
   if [[ $CARCH = x86_64 ]]; then
-    /usr/lib/julia/julia-gen-jll.sh \
-      MKL_jll \
-      libmkl_core=/opt/intel/mkl/lib/intel64/libmkl_core.so \
-      libmkl_rt=/opt/intel/mkl/lib/intel64/libmkl_rt.so
+    julia /usr/lib/julia/julia-gen-jll.jl MKL_jll ../jll_x86_64.toml
   else
-    /usr/lib/julia/julia-gen-jll.sh MKL_jll
+    julia /usr/lib/julia/julia-gen-jll.jl MKL_jll ../jll.toml
   fi
 }
 

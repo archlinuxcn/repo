@@ -8,8 +8,10 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git libsodium)
 provides=(julia-git-libsodium_jll)
-source=(git://github.com/JuliaBinaryWrappers/libsodium_jll.jl)
-md5sums=('SKIP')
+source=(git://github.com/JuliaBinaryWrappers/libsodium_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         '3aa01457cc36cb17f32a5ffaaf29eb0b')
 
 pkgver() {
   cd libsodium_jll.jl
@@ -20,9 +22,7 @@ pkgver() {
 build() {
   cd libsodium_jll.jl
 
-  sed -i -e '/^JLLWrapper/d' Project.toml
-
-  /usr/lib/julia/julia-gen-jll.sh libsodium_jll libsodium
+  julia /usr/lib/julia/julia-gen-jll.jl libsodium_jll ../jll.toml
 }
 
 package() {

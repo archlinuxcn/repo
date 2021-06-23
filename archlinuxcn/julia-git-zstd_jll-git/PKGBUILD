@@ -8,8 +8,10 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git zstd)
 provides=(julia-git-zstd_jll)
-source=(git://github.com/JuliaBinaryWrappers/Zstd_jll.jl)
-md5sums=('SKIP')
+source=(git://github.com/JuliaBinaryWrappers/Zstd_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         '3dc743f4d293e54931197f2f2969a839')
 
 pkgver() {
   cd Zstd_jll.jl
@@ -20,9 +22,7 @@ pkgver() {
 build() {
   cd Zstd_jll.jl
 
-  sed -i -e '/^JLLWrapper/d' Project.toml
-
-  /usr/lib/julia/julia-gen-jll.sh Zstd_jll libzstd -b zstd
+  julia /usr/lib/julia/julia-gen-jll.jl Zstd_jll ../jll.toml
 }
 
 package() {

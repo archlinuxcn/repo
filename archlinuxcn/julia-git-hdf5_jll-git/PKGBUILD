@@ -8,8 +8,10 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git hdf5)
 provides=(julia-git-hdf5_jll)
-source=(git://github.com/JuliaBinaryWrappers/HDF5_jll.jl)
-md5sums=('SKIP')
+source=(git://github.com/JuliaBinaryWrappers/HDF5_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         '0fb3bb9974b7354b2f48672c979adeaa')
 
 pkgver() {
   cd HDF5_jll.jl
@@ -20,9 +22,7 @@ pkgver() {
 build() {
   cd HDF5_jll.jl
 
-  sed -i -e '/^JLLWrapper/d' Project.toml
-
-  /usr/lib/julia/julia-gen-jll.sh HDF5_jll libhdf5 libhdf5_hl
+  julia /usr/lib/julia/julia-gen-jll.jl HDF5_jll ../jll.toml
 }
 
 package() {
