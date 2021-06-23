@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=mime
-_pkgver=0.10
+_pkgver=0.11
 pkgname=r-${_pkgname,,}
-pkgver=0.10
+pkgver=0.11
 pkgrel=1
 pkgdesc='Map Filenames to MIME Types'
 arch=('x86_64')
@@ -13,7 +13,7 @@ depends=(
   r
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('783233a15a817a7530d140e9825565a661aa4bdea7c635d11b9c74faa33be3f7')
+sha256sums=('215427a49f0d0b0e3ab38d419c515a35d57e3bc32535805306275d8b33f8eec0')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
