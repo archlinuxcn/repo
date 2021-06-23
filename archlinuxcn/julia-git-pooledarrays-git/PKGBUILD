@@ -1,0 +1,24 @@
+pkgname=julia-git-pooledarrays-git
+pkgver=1.2.1.0.1.g35ecfd1
+pkgrel=1
+pkgdesc="PooledArrays.jl"
+url="https://github.com/JuliaData/PooledArrays.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-pooledarrays)
+source=(git://github.com/JuliaData/PooledArrays.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd PooledArrays.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd PooledArrays.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh PooledArrays "${pkgdir}" "${pkgname}" julia-git
+}

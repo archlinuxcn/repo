@@ -1,0 +1,24 @@
+pkgname=julia-git-tables-git
+pkgver=1.4.4
+pkgrel=1
+pkgdesc="Tables.jl"
+url="https://github.com/JuliaData/Tables.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-tables)
+source=(git://github.com/JuliaData/Tables.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Tables.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Tables.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Tables "${pkgdir}" "${pkgname}" julia-git
+}
