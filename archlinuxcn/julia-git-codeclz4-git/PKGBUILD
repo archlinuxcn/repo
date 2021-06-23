@@ -1,0 +1,24 @@
+pkgname=julia-git-codeclz4-git
+pkgver=0.4.0.0.1.g0921918
+pkgrel=1
+pkgdesc="CodecLz4.jl"
+url="https://github.com/JuliaIO/CodecLz4.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-codeclz4)
+source=(git://github.com/JuliaIO/CodecLz4.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd CodecLz4.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd CodecLz4.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh CodecLz4 "${pkgdir}" "${pkgname}" julia-git
+}
