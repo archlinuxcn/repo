@@ -216,7 +216,7 @@ package_clang-git() {
     rm -rf "$pkgdir"/usr/share/doc/clang{,-tools}/html/{_sources,.buildinfo}
 
     # Move analyzer scripts out of /usr/libexec
-    mv "$pkgdir"/usr/libexec/{ccc,c++}-analyzer "$pkgdir/usr/lib/clang/"
+    mv "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/clang/"
     rmdir "$pkgdir/usr/libexec"
     sed -i 's|libexec|lib/clang|' "$pkgdir/usr/bin/scan-build"
     # Install Python bindings
