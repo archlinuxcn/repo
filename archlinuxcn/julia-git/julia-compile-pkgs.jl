@@ -74,6 +74,15 @@ function check_src(name)
     return path
 end
 
+function check_already_compiled(binpath, name)
+    # This assume the precompiled file to exist as long as the directory exists
+    # and also assumes there isn't any name conflicts between packages.
+    # Ideally we would also check the time stamp and the `.archpkg` file.
+    # Should be good enough for now
+    path = joinpath(binpath, "compiled", "v$(VERSION.major).$(VERSION.minor)")
+    return isdir(path)
+end
+
 function add_precompile_deps(compiled, pkg)
     caches = Base.find_all_in_cache_path(pkg)
     if isempty(caches)
@@ -90,13 +99,17 @@ function add_precompile_deps(compiled, pkg)
     end
 end
 
-function precompile(path)
+function precompile(binpath)
     compiled = Set{String}()
-    insert!(Base.DEPOT_PATH, 1, path)
+    insert!(Base.DEPOT_PATH, 1, binpath)
     resize!(Base.DEPOT_PATH, 1)
     Core.eval(Base, :(is_interactive = true))
     for pkg in get_compile_list()
         pkg in compiled && continue
+        if check_already_compiled(binpath, pkg)
+            push!(compiled, pkg)
+            continue
+        end
         path = check_src(pkg)
         path === nothing && continue
         id = project_deps_get(pkg)
