@@ -4,6 +4,13 @@ Operation = Upgrade
 Operation = Remove
 Target = julia-git
 
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = usr/share/julia/{stdlib,compiled}/v@VER@/*
+
 [Action]
 Description = Removing julia precompile cache...
 When = PreTransaction
