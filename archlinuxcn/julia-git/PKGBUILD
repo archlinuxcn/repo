@@ -242,8 +242,12 @@ package-julia-in() {
   for pkg in $(ls -1 "$stdlib_dir"); do
     if [[ -f "$stdlib_dir/$pkg/Project.toml" ]]; then
       builtin_pkgs=("${builtin_pkgs[@]}" "julia-git-${pkg,,}")
+      echo "$pkg"
     fi
-  done
+    # Keep a list of the builtin stdlibs so that we can compile these as a whole
+    # in a single package. Note that even though these are builtin,
+    # not all of them are in the system image.
+  done > "$pkgdir/usr/share/julia/builtin_stdlib.v$ver_short"
   provides=("julia=2:$ver" "${builtin_pkgs[@]}")
   conflicts=('julia' "${builtin_pkgs[@]}")
   replaces=("${builtin_pkgs[@]}")
