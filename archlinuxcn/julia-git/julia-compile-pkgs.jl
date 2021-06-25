@@ -79,7 +79,7 @@ function check_already_compiled(binpath, name)
     # and also assumes there isn't any name conflicts between packages.
     # Ideally we would also check the time stamp and the `.archpkg` file.
     # Should be good enough for now
-    path = joinpath(binpath, "compiled", "v$(VERSION.major).$(VERSION.minor)")
+    path = joinpath(binpath, "compiled", "v$(VERSION.major).$(VERSION.minor)", name)
     return isdir(path)
 end
 
