@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build(maintainers='SolarAquarion')
+    aur_pre_build(maintainers='somebody')
     add_provides(['libbs2b.so'])
 
 def post_build():
