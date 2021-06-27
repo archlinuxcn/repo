@@ -1,0 +1,12 @@
+diff --unified --recursive --text libbs2b-3.1.0/src/bs2bconvert.c libbs2b-3.1.0.new/src/bs2bconvert.c
+--- src/libbs2b-3.1.0/src/bs2bconvert.c	2009-06-05 04:01:15.000000000 +1000
++++ src/libbs2b-3.1.0.new/src/bs2bconvert.c 2021-06-10 15:11:29.809380636 +1000
+@@ -153,7 +153,7 @@
+ 	if( ( infile = sf_open( infilename, SFM_READ, &sfinfo ) ) == NULL )
+ 	{
+ 		printf( "Not able to open input file %s.\n", infilename );
+-		printf( sf_strerror( NULL ) );
++		printf( "%s\n", sf_strerror( NULL ) );
+ 		return 1;
+ 	}
+
