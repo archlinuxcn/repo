@@ -30,7 +30,7 @@ build() {
   cd "${srcdir}/${pkgname}"
 
   mkdir "$DESTDIR"
-  
+ 
   STANDALONE_MODES=(
           #'LF_SKELETON'
           'LF_EM4100EMUL'
@@ -39,16 +39,22 @@ build() {
           'LF_HIDBRUTE'
           'LF_PROXBRUTE'
           'LF_SAMYRUN'
+          'HF_AVEFUL'
+          'HF_CRAFTBYTE'
           'HF_LEGIC'
           'HF_MATTYRUN'
           'HF_MSDSAL'
+          'HF_TCPRST'
+          'HF_TMUDFORD'
           'HF_YOUNG')
   RDV4_STANDALONE_MODES=(
           'LF_ICEHID'
+          'LF_NEXID'
           'HF_14ASNIFF'
           'HF_BOG'
           'HF_COLIN'
-          'HF_ICECLASS')
+          'HF_ICECLASS'
+          )
  
   # Build recovery (without PLATFORM_EXTRAS and STANDALONE)
   make \
