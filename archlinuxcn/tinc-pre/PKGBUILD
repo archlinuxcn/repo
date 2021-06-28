@@ -1,8 +1,8 @@
 # Maintainer: hexchain <i at hexchain dot org>
 
 pkgname=tinc-pre
-pkgver=1.1pre17
-pkgrel=2
+pkgver=1.1pre18
+pkgrel=1
 pkgdesc="VPN (Virtual Private Network) daemon (Pre-release)"
 arch=(i686 x86_64 armv7h armv6h)
 url="http://www.tinc-vpn.org/"
@@ -12,17 +12,11 @@ makedepends=('git' 'autoconf')
 optdepends=('python2' 'wxpython: gui support')
 provides=('tinc-pre' 'tinc-pre-systemd')
 conflicts=('tinc' 'tinc-pre-systemd')
-source=("git+https://github.com/gsliepen/tinc.git#tag=release-$pkgver")
-sha256sums=('SKIP')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/gsliepen/tinc/archive/refs/tags/release-$pkgver.tar.gz")
+sha256sums=('bd2d010a1bdeb1dd767f6fbc769fce2a2169119fb3d177df928c27d1f20b5775')
 
 build() {
-    cd "$srcdir/tinc"
-
-    export GIT_COMMITTER_NAME="Builder" GIT_COMMITTER_EMAIL="builder@builder.local"
-    git cherry-pick 2b0aeec02d64bb4724da9ff1dbc19b7d35d7c904
-    git cherry-pick f8190b7233871b5b47c3fc8846731d1bbdef78a5
-    git cherry-pick f3ba50ed3d14749b7c1ef100d2a49ac30d3b3853
-    unset GIT_COMMITTER_EMAIL GIT_COMMITTER_NAME
+    cd "$srcdir/tinc-release-$pkgver"
 
     autoreconf -fsi
     ./configure \
@@ -36,7 +30,7 @@ build() {
 }
 
 package() {
-    cd "$srcdir/tinc"
+    cd "$srcdir/tinc-release-$pkgver"
     make DESTDIR="$pkgdir" install
 
     mkdir -p "$pkgdir/etc/tinc/"
