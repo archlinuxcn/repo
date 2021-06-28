@@ -3,7 +3,7 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
-pkgver=2.8.1
+pkgver=2.8.2
 pkgrel=1
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
@@ -20,10 +20,11 @@ source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver
         "0002-fix-webrtc-integration-build-missing-libx11.patch"
         "0003-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch"
         "0001-Fix-building-with-GCC-11.patch")
-sha512sums=('0a796d7a8c5e5982bc60f19c41da53996a609bf794fad224e7beea5fc3816b5cf35f16b0ec2cc7279085c69996063a44085f48e1596dfe746d260a2e8f1b2d14'
+sha512sums=('7e77fe7ddbaf5590e5e9846e76d987e35fadb4ed7a90ae4c4b3c54ddb331d71be0b046b28217287cb19636514197fc4a3632b09433ab5922f5b22bdfd6e22f75'
             '0a4206f3d16589ba476d85381bf7984a28b74e0623e02a82ce2d586eec337808f66261dd0f2116ee513403223ac7707734b3fa17d082b5ebf88481bc22636f6f'
-            'c8c55b2afee8c8dad33ec5daff5c1d8520f485e3a95061ab0442768976f62922387afe93c0dee4e7026e8cc74d12dd6a03314700a1cbacbcec6c6b28f288abb8'
-            '448058e5dd303c000502880c572e80576e2bbf95e9f278c4d5d3fecb86ee7cb4ad121538171aec6a62a0845724f5ac82cd368e03ff3e2b2b3a0bdd18b0deeab7')
+            '3ff546af7f5ed2aafeaffd136b0c694ddf6d1bbbe1e539e2a3740829d6bb95855d75cf6b409c40fea3236329e5cb3c085b783fa030e6411bc62f7952ade02684'
+            '448058e5dd303c000502880c572e80576e2bbf95e9f278c4d5d3fecb86ee7cb4ad121538171aec6a62a0845724f5ac82cd368e03ff3e2b2b3a0bdd18b0deeab7'
+            '703a462c45af6b9ed9017d52a3fc47bf193d1b916a0461cd881fc6299f2ef95051ef9874991b81da3a5f28edb1abf288c8b246e2c0b7be52bf1a9508ef177e1f')
 
 prepare() {
     patch -b -d tdesktop-$pkgver-full/Telegram/lib_webview/ -Np1 -i ${srcdir}/0001-Fix-building-with-GCC-11.patch
