@@ -1,0 +1,36 @@
+From 0765131f7eadb41cfe62ee5ac283f7ae7ba52ee1 Mon Sep 17 00:00:00 2001
+From: mid-kid <esteve.varela@gmail.com>
+Date: Sat, 8 May 2021 16:12:47 +0200
+Subject: [PATCH] Fix building with GCC 11
+
+---
+ webview/webview_embed.cpp | 2 +-
+ webview/webview_embed.h   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/webview/webview_embed.cpp b/webview/webview_embed.cpp
+index 7d4050a..bc55f7e 100644
+--- a/webview/webview_embed.cpp
++++ b/webview/webview_embed.cpp
+@@ -125,7 +125,7 @@ void Window::setMessageHandler(Fn<void(std::string)> handler) {
+ 	_messageHandler = std::move(handler);
+ }
+ 
+-void Window::setMessageHandler(Fn<void(QJsonDocument)> handler) {
++void Window::setMessageHandler(Fn<void(const QJsonDocument&)> handler) {
+ 	if (!handler) {
+ 		setMessageHandler(Fn<void(std::string)>());
+ 		return;
+diff --git a/webview/webview_embed.h b/webview/webview_embed.h
+index 930cb8e..1281a71 100644
+--- a/webview/webview_embed.h
++++ b/webview/webview_embed.h
+@@ -36,7 +36,7 @@ class Window final {
+ 
+ 	void navigate(const QString &url);
+ 	void setMessageHandler(Fn<void(std::string)> handler);
+-	void setMessageHandler(Fn<void(QJsonDocument)> handler);
++	void setMessageHandler(Fn<void(const QJsonDocument&)> handler);
+ 	void setNavigationStartHandler(Fn<bool(QString)> handler);
+ 	void setNavigationDoneHandler(Fn<void(bool)> handler);
+ 	void init(const QByteArray &js);
