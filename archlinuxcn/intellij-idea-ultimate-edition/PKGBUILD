@@ -2,8 +2,8 @@
 
 pkgbase=intellij-idea-ultimate-edition
 pkgname=(intellij-idea-ultimate-edition intellij-idea-ultimate-edition-jre)
-pkgver=2021.1.2
-_buildver=211.7442.40
+pkgver=2021.1.3
+_buildver=211.7628.21
 pkgrel=1
 arch=('any')
 pkgdesc="An intelligent IDE for Java, Groovy and other programming languages with advanced refactoring features intensely focused on developer productivity."
@@ -12,7 +12,7 @@ license=('Commercial')
 options=(!strip)
 source=("https://download.jetbrains.com/idea/ideaIU-$pkgver.tar.gz"
         "jetbrains-idea.desktop")
-sha256sums=('e90e814c9ef629c35bd6aa95b63c5fc48d8eaba78b41deed2557902f7021871f'
+sha256sums=('47ec0973666bc7179d814be1c6ce1a5ac354860fbf92afa644da919b5d814d67'
             '83af2ba8f9f14275a6684e79d6d4bd9b48cd852c047dacfc81324588fa2ff92b')
 
 prepare() {
