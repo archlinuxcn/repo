@@ -2,7 +2,7 @@
 # Contributor: scrawler@gmail.com
 
 pkgname=freeplane
-pkgver=1.9.4
+pkgver=1.9.5
 pkgrel=1
 pkgdesc="A Java mindmapping tool"
 arch=('any')
@@ -12,8 +12,8 @@ makedepends=('unzip')
 depends=('java-runtime>7' 'desktop-file-utils')
 source=("https://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}_bin-${pkgver}.zip"
         "freeplane.desktop" "freeplane.run")
-b2sums=('d80a4c703cb1e56d1bc3f424c0f49b6f4ca4ce0ca56e4a4dfc77bde6e7ef661f418672f2c3b5f373426444018031792bf40f1c01e9fa11bcfa360cab4ca15f0a'
-        'f73371afd6fad2e105ecb7b3f802561b45ddb2e5401d82987876ee55bb9c15ed9995bfd013229de1cf731ec692bf52088a9a745c9e035d414e46c1868bdb2719'
+b2sums=('523be33f38b30144466f2831db341d0e380bcb51852ce69e48c0215f98fbc9a566e7821255c17cb3b61c9ca29be80f974e3df0b7d40b06102c65389689488c9a'
+        '87c25331e01823e38668e4b394a51a279c05b24b088f4ffc1482d3783e24018da8f9e51b3ad1a62c5a863f85a6ccb30bbe8999cb861dc1b93d5483019644cfa5'
         '24ca56b7c7894b9bb38600b4d37973769243e1bdb221f33125b60bf4f878a3b630775710fab9dee97fa45a69319455037e294860ba7fbd608529982c6b0b1538')
 package() {
   # Create required directories
