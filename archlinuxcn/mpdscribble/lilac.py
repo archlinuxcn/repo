@@ -12,7 +12,7 @@ from lilaclib import *
 #post_build = aur_post_build
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers=['jasonwryan'])
     for line in edit_file('PKGBUILD'):
         if line.startswith('makedepends'):
             line = "makedepends=('boost' 'systemd' 'meson' 'ninja')"
