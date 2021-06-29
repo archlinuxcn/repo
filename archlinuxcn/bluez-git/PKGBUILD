@@ -3,16 +3,16 @@
 pkgname=bluez-git
 _pkgname=bluez
 pkgver=5.59.r21.g10d1acb1f
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Libraries and tools for the Bluetooth protocol stack"
 
 url="http://www.bluez.org/"
 arch=('i686' 'x86_64')
 license=('GPL2')
-depends=('libical' 'libdbus' 'alsa-lib' 'ell' 'json-c')
+depends=('libical' 'libdbus' 'glib2' 'alsa-lib' 'ell' 'json-c')
 optdepends=('cups: CUPS backend')
-makedepends=('git' 'python-docutils' 'systemd')
+makedepends=('git' 'python-docutils')
 conflicts=($_pkgname
 	   $_pkgname-utils
 	   $_pkgname-libs
@@ -22,7 +22,8 @@ conflicts=($_pkgname
 	   $_pkgname-hcidump
            'obexd-client'
 	   'obexd-server')
-provides=($_pkgname=${pkgver%%.r*}-${pkgrel}
+provides=(libbluetooth.so
+	  $_pkgname=${pkgver%%.r*}-${pkgrel}
           $_pkgname-utils=${pkgver%%.r*}-${pkgrel}
 	  $_pkgname-libs=${pkgver%%.r*}-${pkgrel}
 	  $_pkgname-cups=${pkgver%%.r*}-${pkgrel}
@@ -57,7 +58,7 @@ build() {
     --enable-btpclient \
     --enable-midi \
     --enable-sixaxis \
-    --enable-mesh \
+    --disable-mesh \
     --enable-hid2hci \
     --enable-experimental \
     --enable-manpages \
