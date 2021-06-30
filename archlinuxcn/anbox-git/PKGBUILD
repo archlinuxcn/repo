@@ -42,6 +42,8 @@ prepare() {
   truncate -s 0 cmake/FindGMock.cmake
   truncate -s 0 tests/CMakeLists.txt
   
+  sed -i  "1i\#include<cstdint>"  ./src/anbox/input/manager.h
+  
   git submodule update --init --remote
   cd src/anbox/graphics/
 
