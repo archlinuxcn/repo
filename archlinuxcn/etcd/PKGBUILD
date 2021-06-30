@@ -5,35 +5,36 @@
 # Contributor: codekoala <codekoala at gmail dot com>
 
 pkgname=etcd
-pkgver=3.4.16
+pkgver=3.5.0
 pkgrel=1
 pkgdesc='A highly-available key value store for shared configuration and service discovery.'
 arch=('x86_64' 'armv6h' 'armv7h')
 url='https://github.com/etcd-io/etcd'
 license=('Apache')
-makedepends=('go')
+makedepends=('go' 'git')
 backup=('etc/conf.d/etcd')
 install="${pkgname}".install
 source=("${pkgname}"-"${pkgver}".tar.gz::https://github.com/etcd-io/"${pkgname}"/archive/v"${pkgver}".tar.gz
          10-EnvironmentFile.conf
          etcd.env)
-sha512sums=('3f413debe8bd723a00a3e39db05f6dbf414b7dc02f40f07d3037445c63b31c7bd8adaf77152ae01aa6aae3966f65393c5c8e352bbc2b86d01e5e2dd979c1c2e1'
+sha512sums=('ea332fe99c9bce842dc9919b7cf676db2024adf83c23c37dcd8db48bc2a2d3f98879893701644a2317dea69dc15f747f42f5473f14f4343fe7aee9a6b4ebceca'
             'fa85d772929ea7e0a18bddd4b9c41d043a7f75e560eacfab67b979985e510dea694c332b5130570e47101c1ec5c25925872c6a581568390e7b141d9c6c26aae2'
-            '040cee3c04dd5bb253415169d1f6f50bbccac10b687706c1b168184985c0c6c6cc67858f0c71d2ebb475891e54b370fa39b20ead5155658d01fac31d7d388324')
+            'a4843be558e401fa6c612c88059fbe83025eb86077bec70331bc43b7dd48cc09fd186f0ea9d4b45c802a617d5f771752bb2ed8113ce02a6b6eaaabd926e227e9')
 
 build() {
   export CGO_CPPFLAGS="${CPPFLAGS}"
   export CGO_CFLAGS="${CFLAGS}"
   export CGO_CXXFLAGS="${CXXFLAGS}"
   export CGO_LDFLAGS="${LDFLAGS}"
-  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+  export GO_BUILD_FLAGS="-trimpath -buildmode=pie -mod=readonly -modcacherw"
+  export GO_LDFLAGS="-linkmode=external -extldflags=${LDFLAGS}"
 
   cd "${srcdir}"/"${pkgname}"-"${pkgver}"
 
   # https://github.com/etcd-io/etcd/issues/12109
   go mod tidy
 
-  ./build
+  ./build.sh
 }
 
 package() {
