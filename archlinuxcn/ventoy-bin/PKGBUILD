@@ -4,7 +4,7 @@
 
 pkgname=ventoy-bin
 pkgver=1.0.46
-pkgrel=1
+pkgrel=2
 pkgdesc='A new multiboot USB solution (Binary)'
 url='http://www.ventoy.net/'
 arch=('i686' 'x86_64')
@@ -23,23 +23,25 @@ sha256sums=('171432e990418ef99c7bb6c20cb2a93ace194eadfb6cedd4d08bbb536451c4be'
             '00dec31721a052d5e6c928e3b38b870959bdb42188f34717898d99c0cef950df'
             'd250816de0903a5fc5364ee25914a06b1b1595bcfc72dac84ad016e1d30727c4')
 
+_msg2() { printf "\e[1;34m  ->\e[0;1m %s\e[0m\n" "$1"; }
+
 prepare() {
-  msg2 "Decompress tools..."
+  _msg2 "Decompress tools..."
   cd "$srcdir/${pkgname%-bin}-${pkgver}/tool/$CARCH"
   for file in *.xz; do
     xzcat $file > ${file%.xz}
     chmod +x ${file%.xz}
   done
 
-  msg2 "Cleaning up .xz crap..."
+  _msg2 "Cleaning up .xz crap..."
   rm -fv ./*.xz
 
-  msg2 "Applying sanitize patch..."
+  _msg2 "Applying sanitize patch..."
   cd ../..
   patch --verbose -p0 < "$srcdir/sanitize.patch"
   sed -i 's|log\.txt|/var/log/ventoy.log|g' WebUI/static/js/languages.js
 
-  msg2 "Cleaning up unused binaries..."
+  _msg2 "Cleaning up unused binaries..."
   # Preserving mkexfatfs and mount.exfat-fuse because exfatprogs is incompatible
   for binary in xzcat hexdump; do
     rm -fv tool/$CARCH/$binary
@@ -49,7 +51,7 @@ prepare() {
 package() {
   cd "$srcdir/${pkgname%-bin}-${pkgver}"
 
-  msg2 "Copying package files..."
+  _msg2 "Copying package files..."
   install -Dm644 -vt      "$pkgdir/opt/${pkgname%-bin}/boot/"            boot/*
   install -Dm644 -vt      "$pkgdir/opt/${pkgname%-bin}/${pkgname%-bin}/" "${pkgname%-bin}"/*
   install -Dm755 -vt      "$pkgdir/opt/${pkgname%-bin}/tool/"            tool/*.{cer,sh}
@@ -57,11 +59,11 @@ package() {
   install -Dm755 -vt      "$pkgdir/opt/${pkgname%-bin}/"                 *.sh
   cp --no-preserve=o -avt "$pkgdir/opt/${pkgname%-bin}/"                 plugin WebUI
 
-  msg2 "Linking system binaries..."
+  _msg2 "Linking system binaries..."
   for binary in xzcat hexdump; do
     ln -svf /usr/bin/$binary "$pkgdir/opt/${pkgname%-bin}/tool/$CARCH/"
   done
 
-  msg2 "Creating /usr/bin entries..."
+  _msg2 "Creating /usr/bin entries..."
   install -Dm755 "$srcdir/${pkgname%-bin}"{,web,-{,extend-}persistent} -vt "$pkgdir"/usr/bin/
 }
