@@ -6,7 +6,7 @@
 # Contributor: Pieter Goetschalckx <3.14.e.ter <at> gmail <dot> com>
 _pkgname='ferdi'
 pkgname="$_pkgname-git"
-pkgver=20210617_145431
+pkgver=20210701_065454
 epoch=1
 pkgrel=1
 pkgdesc='A messaging browser that allows you to combine your favorite messaging services into one application - git version'
@@ -98,7 +98,9 @@ build() {
 	export npm_config_cache="$srcdir/$pkgname-npm-cache"
 
 	npx gulp build
-        npx electron-rebuild -v "$(cat '/usr/lib/electron/version')"
+	# TODO: remove force-abi once node-abi includes latest electron
+	# TODO: bump force-abi once system electron upgrades to a higher ABI level
+        npx electron-rebuild --force-abi=89 -v "$(cat '/usr/lib/electron/version')"
 	npx electron-builder --linux dir "--$_electronbuilderarch" -c.electronDist='/usr/lib/electron' -c.electronVersion="$(cat '/usr/lib/electron/version')"
 }
 
