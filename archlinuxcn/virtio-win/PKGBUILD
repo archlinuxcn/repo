@@ -1,13 +1,13 @@
 # Maintainer: Javier Tiá <javier dot tia at gmail dot com>
 
 pkgname=virtio-win
-_ver=0.1.190
+_ver=0.1.196
 # upstream version
 _pkgver=${_ver}-1
 # package version
 pkgver=${_ver}.1
-pkgrel=2
-pkgdesc='virtio drivers for Windows (2000, XP, Vista, 7, 8, 10) guests and floppy images for Windows XP'
+pkgrel=3
+pkgdesc='virtio drivers for Windows (2000, XP, Vista, 7, 8, 10) guests'
 arch=('any')
 url='https://docs.fedoraproject.org/en-US/quick-docs/creating-windows-virtual-machines-using-virtio-drivers/index.html'
 license=('BSD-3-Clause')
@@ -16,25 +16,20 @@ optdepends=('qemu')
 changelog="${pkgname}.changelog"
 # install="${pkgname}.install"
 _url=https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio
-source=("${pkgname}-${_pkgver}.iso::${_url}/${pkgname}-${_pkgver}/${pkgname}.iso"
-        "${pkgname}-${_pkgver}_amd64.vfd::${_url}/${pkgname}-${_pkgver}/${pkgname}_amd64.vfd"
-        "${pkgname}-${_pkgver}_x86.vfd::${_url}/${pkgname}-${_pkgver}/${pkgname}_x86.vfd")
-noextract=("${pkgname}-${_pkgver}.iso"
-           "${pkgname}-${_pkgver}_amd64.vfd"
-           "${pkgname}-${_pkgver}_x86.vfd")
-sha256sums=('dc6044e02fa6739881246843287481919ebcd4484f4bf23247741100489e9930'
-            '947e01fc437351384a263bfccbcc4835e72d2273ed8ba76b2fd830575b565164'
-            '99e6b03afa88287f77d607a9c7e0cdd8c950d73e4dabe0a2a0353b1f213d34da')
+source=("${pkgname}-${_pkgver}.iso::${_url}/${pkgname}-${_pkgver}/${pkgname}.iso")
+noextract=("${pkgname}-${_pkgver}.iso")
+sha256sums=('7d978331324ade642306f3b965ee3f2879bc83897f963daa31fa3ebf7c1f45fe')
+
+note() {
+	printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
+}
 
 package() {
-  install -Dm 644 ${pkgname}-${_pkgver}.iso \
-    "${pkgdir}/usr/share/virtio/${pkgname}.iso"
+	IMG_PATH=/var/lib/libvirt/images
+	install -Dm 644 ${pkgname}-${_pkgver}.iso \
+		"${pkgdir}${IMG_PATH}/${pkgname}.iso"
 
-  install -Dm 644 ${pkgname}-${_pkgver}_amd64.vfd \
-    "${pkgdir}/usr/share/virtio/${pkgname}_x86_64.vfd"
-
-  install -Dm 644 ${pkgname}-${_pkgver}_x86.vfd \
-    "${pkgdir}/usr/share/virtio/${pkgname}_x86_32.vfd"
+	note "The images can be found in ${IMG_PATH}"
 }
 
 # vim:set ts=2 sw=2 et:
