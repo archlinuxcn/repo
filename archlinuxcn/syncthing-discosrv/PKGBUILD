@@ -8,7 +8,7 @@ _pkgname=syncthing
 pkgname=$_pkgname-discosrv
 epoch=1
 pkgver=1.17.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Discover server for the syncthing P2P synchronization utility'
 url='http://syncthing.net'
 license=('MIT')
@@ -40,7 +40,14 @@ prepare() {
 build() {
   export GOPATH="$srcdir"
   cd src/github.com/$_pkgname/$_pkgname/cmd/stdiscosrv
-  go build -modcacherw -x -i -v -ldflags -w
+
+  go build \
+    -trimpath \
+    -buildmode=pie \
+    -mod=readonly \
+    -modcacherw \
+    -ldflags "-linkmode external -extldflags \"${LDFLAGS}\"" \
+    .
 }
 
 package() {
