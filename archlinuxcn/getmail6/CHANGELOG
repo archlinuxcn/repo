@@ -1,3 +1,11 @@
+Version 6.18
+06 July 2021
+    - #89: fetchmail feature: skip fetching read mail.
+      New `imap_search` and `imap_on_delete` to fetch only `Unseen` messages and set them to `\Seen`.
+    - add `-s/--searchset` to override imap search and setting of flags for all rcfile's in the command
+    - if no `--rcfile` and no default `getmailrc`, then use all files from the `--getmaildir` folder
+    - fix "SyntaxError: Non-ASCII in file, but no encoding declared" (only Python 2.7)
+
 Version 6.17
 15 June 2021
     - #79: UnicodeEncodeError: 'ascii' codec can't encode character in position
