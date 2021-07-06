@@ -2,7 +2,7 @@
 
 pkgname=liboping
 pkgver=1.10.0
-pkgrel=12
+pkgrel=13
 pkgdesc='C library to generate ICMP echo requests, better known as "ping packets"'
 url='https://noping.cc/'
 arch=('x86_64')
@@ -38,5 +38,5 @@ build() {
 
 package() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	make DESTDIR="${pkgdir}"
+	make DESTDIR="${pkgdir}" install
 }
