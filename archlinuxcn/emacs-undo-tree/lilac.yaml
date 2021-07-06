@@ -7,6 +7,9 @@ build_prefix: extra-x86_64
 
 post_build: aur_post_build
 
+repo_depends:
+  - emacs-queue
+
 update_on:
   - source: aur
     aur: emacs-undo-tree

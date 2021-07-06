@@ -4,7 +4,7 @@
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
 pkgver=2.8.4
-pkgrel=1
+pkgrel=4
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
@@ -19,14 +19,20 @@ source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver
         "0001-use-system-font-and-use-stylename.patch"
         "0002-fix-webrtc-integration-build-missing-libx11.patch"
         "0003-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch"
-        "0001-Fix-building-with-GCC-11.patch")
+        "0001-Fix-building-with-GCC-11.patch"
+	"Fix-freeze-after-creating-file-dialog.patch::https://github.com/telegramdesktop/tdesktop/commit/1261c775d4ca6fb78277ec213794da7c15e304e2.patch"
+    "revert-qmenubar-fix-global-menu.patch::https://github.com/telegramdesktop/tdesktop/commit/6f031a715e5f9db1f75ec230cf06538d77d5b4ec.patch")
 sha512sums=('b0e78aa9bffa1707425f058737b0d0a0db26e8fba14e1413e465eefcbbc95dc0eaee642d1ebc4a82c8239188a3eed677c5c3eb748203348a14ba2ace61afd779'
             '0a4206f3d16589ba476d85381bf7984a28b74e0623e02a82ce2d586eec337808f66261dd0f2116ee513403223ac7707734b3fa17d082b5ebf88481bc22636f6f'
             '3ff546af7f5ed2aafeaffd136b0c694ddf6d1bbbe1e539e2a3740829d6bb95855d75cf6b409c40fea3236329e5cb3c085b783fa030e6411bc62f7952ade02684'
             '448058e5dd303c000502880c572e80576e2bbf95e9f278c4d5d3fecb86ee7cb4ad121538171aec6a62a0845724f5ac82cd368e03ff3e2b2b3a0bdd18b0deeab7'
-            '703a462c45af6b9ed9017d52a3fc47bf193d1b916a0461cd881fc6299f2ef95051ef9874991b81da3a5f28edb1abf288c8b246e2c0b7be52bf1a9508ef177e1f')
+            '703a462c45af6b9ed9017d52a3fc47bf193d1b916a0461cd881fc6299f2ef95051ef9874991b81da3a5f28edb1abf288c8b246e2c0b7be52bf1a9508ef177e1f'
+            '2a5c8f5ca5a3a34872567ac98032717c40689baab2926d9fa8960404c6630925732f028dc7fdcf28bef11dd247a78779c3f5ca631f8b75abf23e23dab8d0f24c'
+            '9a49f7e074f8e5c2ecad0092146af2647f7afd5e7b7904d3634013fcba7fb81eaff7ccca35c955ee55010431172b2c1bcdbe7f01d3d5a391d950b278b491fb54')
 
 prepare() {
+    patch -b -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/Fix-freeze-after-creating-file-dialog.patch
+    patch -b -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/revert-qmenubar-fix-global-menu.patch
     patch -b -d tdesktop-$pkgver-full/Telegram/lib_webview/ -Np1 -i ${srcdir}/0001-Fix-building-with-GCC-11.patch
     patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-use-system-font-and-use-stylename.patch
     patch -b -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0002-fix-webrtc-integration-build-missing-libx11.patch

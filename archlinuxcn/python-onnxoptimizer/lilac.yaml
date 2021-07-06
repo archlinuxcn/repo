@@ -21,5 +21,7 @@ update_on:
     github: onnx/optimizer
     use_max_tag: true
     prefix: v
+    # Upstream pushes all tags, including v1.x tags inherited from onnx...
+    include_regex: 'v0.*'
   - alias: python
   - alias: protobuf

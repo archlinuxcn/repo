@@ -4,15 +4,15 @@
 _basename=sbc
 pkgname=lib32-sbc
 pkgver=1.5
-pkgrel=1
+pkgrel=2
 pkgdesc="Bluetooth Subband Codec (SBC) library (32-bit)"
-url="http://www.bluez.org/"
+url="https://git.kernel.org/pub/scm/bluetooth/sbc.git"
 arch=(x86_64)
 license=(GPL LGPL)
 depends=(lib32-glibc sbc)
 makedepends=(git lib32-gcc-libs)
 _commit=b2c20a3ecf5ed00f63c94077a9762b505935ede9  # tags/1.5^0
-source=("git+https://git.kernel.org/pub/scm/bluetooth/sbc.git#commit=$_commit")
+source=("git+$url#commit=$_commit")
 sha512sums=('SKIP')
 
 pkgver() {

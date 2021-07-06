@@ -3,7 +3,7 @@
 
 pkgbase=bcc-git
 pkgname=('bcc-git' 'bcc-tools-git' 'python-bcc-git')
-pkgver=0.11.0.r617.ac431bd3
+pkgver=0.11.0.r621.4e8e8c65
 pkgrel=1
 pkgdesc="BPF Compiler Collection - latest git code"
 arch=('x86_64')
@@ -13,9 +13,10 @@ conflicts=('bcc')
 makedepends=('cmake' 'clang>=3.7.0' 'llvm>=3.7.0' 'flex' 'bison' 'python'
              'git' 'libelf' 'zlib' 'ncurses' 'gcc-libs')
 source=('bcc-git::git+https://github.com/iovisor/bcc'
+        'libbpf::git+https://github.com/libbpf/libbpf'
         'bcc'
         '_bcc')
-sha256sums=('SKIP'
+sha256sums=('SKIP' 'SKIP'
             '77a711328281759b9da81a326a16b220132544dd4a83fa9c59781f37c390cf5d'
             '37222cff28f342e89ca9e6ba6eabfffbc079f8c6a3eeab9aebab058a9fc738fa')
 
@@ -24,11 +25,16 @@ pkgver() {
   printf "%s" "$(git describe --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g;s/^v//')"
 }
 
+prepare() {
+  cd "$srcdir/bcc-git"
+  git submodule init
+  git config submodule.src/cc/libbpf.url "$srcdir/libbpf"
+  git submodule update
+}
+
 build() {
-  # make sure repetitive builds are clean
-  [[ -d "${srcdir}/${pkgbase}/build" ]] && \
-    rm -rf "${srcdir}/${pkgbase}/build"
-  mkdir "${srcdir}/${pkgbase}/build"
+  rm -rf "${srcdir}/${pkgbase}/build"
+  mkdir -p "${srcdir}/${pkgbase}/build"
   cd "${srcdir}/${pkgbase}/build"
 
   export LDFLAGS=-ltinfo
@@ -36,7 +42,10 @@ build() {
   cmake .. \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=/usr/lib
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+    -DENABLE_EXAMPLES=off \
+    -DENABLE_TESTS=off \
+    -DENABLE_LLVM_SHARED=on
   make
 }
 
