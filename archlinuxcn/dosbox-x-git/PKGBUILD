@@ -7,13 +7,14 @@ pkgdesc="x86 emulator with builtin DOS, with patches with more features"
 arch=(i686 x86_64)
 url="http://dosbox.sourceforge.net"
 license=(GPL)
-depends=(fluidsynth libxkbfile libpng libxrandr mesa ffmpeg)
-makedepends=(git glu)
+depends=(fluidsynth libxkbfile libpng libxrandr mesa ffmpeg physfs)
+makedepends=(git glu libpcap libslirp)
+optdepends=('openglide-git: Third-party 3dfx Glide API support'
+ 'libpcap: Allows DosBox-X to connect to a network and to the internet'
+ 'libslirp: Allows DosBox-X to connect to the internet rootless solution')
 optdepends=()
 install='dosbox-x.install'
-source=(dosbox-x::git://github.com/joncampbell123/dosbox-x.git
-	dosbox-x.png
-	dosbox-x.desktop)
+source=(dosbox-x::git://github.com/joncampbell123/dosbox-x.git)
 
 pkgver() {
   cd "$SRCDEST/dosbox-x"
@@ -22,7 +23,6 @@ pkgver() {
 
 build() {
   cd "$srcdir/dosbox-x"
-  export LDFLAGS="${LDFLAGS//,--as-needed}"
   sed -i -e 's/-j3/-j$(nproc)/g' build
   ./build
 }
@@ -30,13 +30,7 @@ build() {
 package() {
   cd "$srcdir/dosbox-x"
   make DESTDIR="$pkgdir" install
-  install -Dm644 "$srcdir/dosbox-x.png" \
-	"$pkgdir/usr/share/pixmaps/dosbox-x.png"
-  install -Dm644 "$srcdir/dosbox-x.desktop" \
-	"$pkgdir/usr/share/applications/dosbox-x.desktop"
 }
 
-md5sums=('SKIP'
-         '3dcfe45c5ed0433316eaea51e3620b36'
-	 '615228a51b52d4788c73940602f1dc97')
+md5sums=('SKIP')
 
