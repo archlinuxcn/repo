@@ -2,7 +2,7 @@ maintainers:
   - github: zsrkmyn
     email: Stephen Zhang <zsrkmyn@archlinuxcn.org>
 
-pre_build: aur_pre_build
+pre_build_script: aur_pre_build(maintainers=['lilydjwg', 'farseerfc', 'felixonmars'])
 
 post_build: aur_post_build
 
