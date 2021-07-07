@@ -1,4 +1,5 @@
-# Maintainer: Jonathan Shreckengost <jonathanshrek@gmail.com>
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Gaetan Bisson <bisson@archlinux.org>
 
 pkgname=liboping
 pkgver=1.10.0
@@ -15,6 +16,8 @@ source=("${url}files/${pkgname}-${pkgver}.tar.bz2"
         'ncursesw.patch')
 sha256sums=('eb38aa93f93e8ab282d97e2582fbaea88b3f889a08cbc9dbf20059c3779d5cd8'
             '64db954250e7cd4f77ed28d0d4f3deb1525ebe4145c6b20caafc2459c8b1c780')
+
+install=install
 
 prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

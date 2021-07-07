@@ -2,10 +2,7 @@ maintainers:
 - github: lilydjwg
 
 update_on:
-- source: aur
+- source: github
+  github: octo/liboping
+  use_latest_release: true
 - alias: perl
-
-pre_build_script: |
-  aur_pre_build(maintainers=["triz3n"])
-
-post_build: aur_post_build
