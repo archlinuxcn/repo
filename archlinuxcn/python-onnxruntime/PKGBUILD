@@ -2,9 +2,9 @@
 
 pkgbase=python-onnxruntime
 pkgname=(python-onnxruntime python-onnxruntime-cuda)
-pkgver=1.8.0
+pkgver=1.8.1
 pkgdesc='Cross-platform, high performance scoring engine for ML models'
-pkgrel=5
+pkgrel=1
 arch=(x86_64)
 url='https://github.com/microsoft/onnxruntime'
 license=(MIT)
