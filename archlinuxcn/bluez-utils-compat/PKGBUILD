@@ -6,7 +6,7 @@
 
 pkgname='bluez-utils-compat'
 _pkgbase='bluez'
-pkgver=5.59
+pkgver=5.60
 pkgrel=1
 url="http://www.bluez.org/"
 arch=('i686' 'x86_64' 'mips64el' 'armv6h' 'armv7h' 'arm' 'aarch64')
@@ -17,18 +17,10 @@ makedepends=('dbus' 'libical' 'systemd' 'alsa-lib' 'json-c' 'ell' 'python-docuti
 optdepends=('ell: for btpclient')
 conflicts=('bluez-hcidump' 'bluez-utils' 'bluez-hcitool')
 provides=('bluez-hcidump' "bluez-utils=${pkgver}" 'bluez-hcitool')
-source=(https://www.kernel.org/pub/linux/bluetooth/"${_pkgbase}-${pkgver}".tar.xz #{xz,sign}
-        0001-rfkill-Fix-reading-from-rfkill-socket.patch)
+source=(https://www.kernel.org/pub/linux/bluetooth/"${_pkgbase}-${pkgver}".tar.xz) #{xz,sign}
 # see https://www.kernel.org/pub/linux/bluetooth/sha256sums.asc
-sha256sums=('046b95b386d0bfb2a16311fe799d517ee7735045512d89902c4ed701db477316'
-            'befc9c56fa15fe276916d299e70901d09aedc25d5a29ee444e78fa76f297e72f')
+sha256sums=('710999580d01ee59ec585e5e7c07fd94eddedc001aa26fe7464c546f9d945304')
 #validpgpkeys=('E932D120BC2AEC444E558F0106CA9F5D1DCF2659') # Marcel Holtmann <marcel@holtmann.org>
-
-prepare() {
-  cd "${_pkgbase}"-${pkgver}
-  # https://bugs.archlinux.org/task/71243
-  patch -Np1 -i ../0001-rfkill-Fix-reading-from-rfkill-socket.patch
-}
 
 build() {
   cd "${_pkgbase}-${pkgver}"
