@@ -1,25 +1,24 @@
-Only in conan-1.32.0-new/conans: arch-reqs.patch
-diff -aur conan-1.32.0-pristine/conans/requirements_server.txt conan-1.32.0-new/conans/requirements_server.txt
---- conan-1.32.0-pristine/conans/requirements_server.txt	2020-12-04 10:57:21.846666599 +0100
-+++ conan-1.32.0-new/conans/requirements_server.txt	2020-12-04 10:58:30.229999941 +0100
+diff -aur conan-1.37.0-pristine/conans/requirements_server.txt conan-1.37.0-new/conans/requirements_server.txt
+--- conan-1.37.0-pristine/conans/requirements_server.txt	2021-06-01 12:52:46.649999943 +0200
++++ conan-1.37.0-new/conans/requirements_server.txt	2021-06-01 12:55:08.966666608 +0200
 @@ -1,3 +1,3 @@
  # Server
 -bottle>=0.12.8, < 0.13
 +bottle>=0.12.8
  pluginbase>=0.5
-diff -aur conan-1.32.0-pristine/conans/requirements.txt conan-1.32.0-new/conans/requirements.txt
---- conan-1.32.0-pristine/conans/requirements.txt	2020-12-04 10:57:21.846666599 +0100
-+++ conan-1.32.0-new/conans/requirements.txt	2020-12-04 10:58:23.346666609 +0100
+diff -aur conan-1.37.0-pristine/conans/requirements.txt conan-1.37.0-new/conans/requirements.txt
+--- conan-1.37.0-pristine/conans/requirements.txt	2021-06-01 12:52:46.649999943 +0200
++++ conan-1.37.0-new/conans/requirements.txt	2021-06-01 12:54:44.546666610 +0200
 @@ -1,17 +1,17 @@
 -PyJWT>=1.4.0, <2.0.0
 -requests>=2.8.1, <3.0.0
--urllib3<1.26, !=1.25.4, !=1.25.5
+-urllib3>=1.25.8, <1.26
 -colorama>=0.3.3, <0.5.0
 -PyYAML>=3.11, <6.0
 -patch-ng>=1.17.4, <1.18
 +PyJWT>=1.4.0
 +requests>=2.8.1
-+urllib3>=1.25.6
++urllib3>=1.25.8
 +colorama>=0.3.3
 +PyYAML>=3.11
 +patch-ng>=1.17.4
