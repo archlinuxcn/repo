@@ -4,7 +4,7 @@
 
 _gemname=parser
 pkgname=ruby-${_gemname}
-pkgver=3.0.1.1
+pkgver=3.0.2.0
 pkgrel=1
 pkgdesc="A Ruby parser written in pure Ruby."
 arch=('any')
@@ -15,7 +15,7 @@ license=('MIT')
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 options=(!emptydirs)
 noextract=($_gemname-$pkgver.gem)
-sha256sums=('d2ded2eab569bb7bee861790a54a81e71ce4b4a25bf908bfeb06945f6288badf')
+sha256sums=('05766daec0e44fe986067d948e2ed8d23656ad072442f213b314c17b1037aa1a')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
