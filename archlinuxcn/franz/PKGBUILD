@@ -61,11 +61,9 @@ prepare() {
   echo "--> Electron package version: $electron_version"
   sed -i -E "s|(\s+\"electron\":).*,|\1 \"$electron_version\",|" package.json
 
-  # Prevent franz from being launched in dev mode
-  sed "s|export const isDevMode = .*|export const isDevMode = false;|g" \
-      -i src/environment.js
-  sed "s|import isDevMode from 'electron-is-dev'|export const isDevMode = false|g" \
-      -i src/index.js
+  # Prevent Franz from being launched in development mode
+  # This changes all the occurences where 'isDevMode' is set to a value.
+  grep -lr 'isDevMode =' src | xargs sed -E 's|^(.*isDevMode =) .*$|\1 false|' -i
 
   # Setup nvm
   _ensure_nvm_setup
