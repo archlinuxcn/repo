@@ -2,7 +2,7 @@
 
 _pkgname=camelot
 pkgname=python-camelot
-pkgver=0.9.0
+pkgver=0.10.1
 pkgrel=1
 pkgdesc='A Python library to extract tabular data from PDFs'
 arch=('any')
@@ -25,7 +25,7 @@ makedepends=(
   python-setuptools
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/camelot-dev/camelot/archive/v${pkgver}.tar.gz")
-sha512sums=('3bbf2c70d542a4e5bd2aeb0e360dd84462b793ea723c3f6d1ca9fde12fdcbf305385c8d4bda5786c2f44776204714bf9ea98a15a7d540d211f28d04121ccb8a8')
+sha512sums=('aeb1446021caccb0aa302d68d8ec17e0598debc29f0521d910c9a14c140a526d14ad8c749bac4fec4e366d8aeced2e9bc36aae1694f172ecbfeca351d97e848d')
 
 build() {
   cd "${_pkgname}-${pkgver}"
