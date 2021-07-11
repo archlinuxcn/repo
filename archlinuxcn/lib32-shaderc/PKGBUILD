@@ -6,13 +6,13 @@ _setFullLibdir="${_setPrefix}/${_setLibdir}"
 _pkgbasename=shaderc
 
 pkgname=lib32-$_pkgbasename
-pkgver=2020.5
+pkgver=2021.1
 pkgrel=1
 pkgdesc='Collection of tools, libraries and tests for shader compilation (32bit)'
 url='https://github.com/google/shaderc'
 arch=('x86_64')
 license=('Apache')
-depends=("$_pkgbasename"
+depends=("$_pkgbasename>=$pkgver"
         'lib32-glibc'
         'lib32-gcc-libs'
         'lib32-glslang>=8.13.3559'
@@ -30,7 +30,7 @@ source=(
         "${_pkgbasename}-${pkgver}.tar.gz::https://github.com/google/shaderc/archive/v${pkgver}.tar.gz"
         )
 sha512sums=(
-        '705493f024345603d1803b1bc87c605055efc0359745a0f04e3eb4a4fc073e87dc408404e8d2a9e920d42252fc20745d6cd58525c9de25f2e0428711b24cc287'
+        'b6668bc2dd54cc745184c6a0b9a8f7ba6579fd6b67691a57179d03300f3054776e70b54b82e54b16e04aa14f3b5b28385079d2533657191a69e5698af3cde444'
         )
 
 prepare() {
