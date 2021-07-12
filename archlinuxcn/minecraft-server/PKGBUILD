@@ -3,8 +3,8 @@
 # Contributer: sowieso <sowieso@dukun.de>
 
 pkgname=minecraft-server
-pkgver=1.17
-_nonce=0a269b5f2c5b93b1712d0f5dc43b6182b9ab254e
+pkgver=1.17.1
+_nonce=a16d67e5807f57fc4e550299cf20226194497dc2
 pkgrel=1
 pkgdesc="Minecraft server unit files, script, and jar"
 arch=('any')
@@ -25,7 +25,7 @@ source=("minecraft_server.${pkgver}.jar"::"https://launcher.mojang.com/v1/object
 	"minecraftd.conf"
 	"minecraftd.sh")
 noextract=("minecraft_server.${pkgver}.jar")
-sha512sums=('d8c7658f2fedeb0ce60be24935e5543135200feae53bcaec510fcb86b93a18ac3464527a4d657c886f5ecaca89f1a7701cb03d6656efcb5c19e2156e59feef5a'
+sha512sums=('fe6e48e2cee38224d2c88f04c19afca9c21fddbe6077b5538e0a0581c2f6c4478ec99bc369bec5131d709b89273dbd769659f149163f0c284b518a38e58a5bcc'
             'a10e38c0e9a09c25e23e46147a8b8ce4d88a62ee780c1c0b525b9e41a563c4a4ed8e94d851abc3936bc31f3faa916ef005543129a039f66878b8f2c34853b91d'
             '19ee3646bfbace353b65c0373594edb654de11c9671f29cebad3b31109f29f94ade1d529d9f409b0989c376bef9b451585b22a1e0ac4295fcc92d9565f808418'
             '5203f6331f740ecfcea2a2cc653603ae97419baa89e08512f9d8feb63e4a52978442a69b313eccd9037b676a62ab528e2b533c0fb95a9c7177318279fe0cde79'
