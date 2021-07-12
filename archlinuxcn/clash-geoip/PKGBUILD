@@ -2,7 +2,7 @@
 
 pkgname=clash-geoip
 _pkgname=maxmind-geoip
-pkgver=20210612
+pkgver=20210712
 pkgrel=1
 pkgdesc="A GeoLite2 data created by MaxMind"
 arch=('any')
