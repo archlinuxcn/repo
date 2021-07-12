@@ -1,7 +1,7 @@
 # Maintainer: Hao Long <imlonghao@archlinuxcn.org>
 
 pkgname=trivy
-pkgver=0.18.3
+pkgver=0.19.0
 pkgrel=1
 pkgdesc="A Simple and Comprehensive Vulnerability Scanner for Containers, Suitable for CI"
 arch=("x86_64" "i686")
@@ -13,7 +13,7 @@ makedepends=("go" "btrfs-progs")
 provides=('trivy')
 conflicts=('trivy')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('9f4aea01f19e7703fc2261feff32b2c037bfb4eaad43804b860676b5acf75c03')
+sha256sums=('d8325e6fff97361d61939c0e3e6135f95e79416fd28afae73a5c9c47e2df6cb0')
 
 build() {
   cd ${pkgname}-${pkgver}/cmd/trivy
