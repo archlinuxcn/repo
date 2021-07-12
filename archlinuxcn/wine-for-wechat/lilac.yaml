@@ -1,10 +1,9 @@
 maintainers:
 - github: lilydjwg
-
 build_prefix: multilib
-
 update_on:
-- source: archpkg
-  archpkg: wine
+- source: alpm
+  alpm: wine
+  repo: multilib
 - source: manual
   manual: 1

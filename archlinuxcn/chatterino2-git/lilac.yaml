@@ -1,16 +1,13 @@
 maintainers:
   - github: ykelvis
-
 build_prefix: extra-x86_64
-
 pre_build_script: aur_pre_build(maintainers=['chatterino2-ci', 'Ckat'])
-
 post_build: aur_post_build
-
 update_on:
   - source: github
     github: Chatterino/chatterino2
   - source: aur
     aur: chatterino2-git
-  - source: archpkg
-    archpkg: boost-libs
+  - source: alpm
+    alpm: boost-libs
+    repo: extra

@@ -1,34 +1,43 @@
 maintainers:
     - github: farseerfc
-
 build_prefix: extra-x86_64
-
 post_build: aur_post_build
-
 update_on:
     - source: aur
       aur: pacman-static
-    - source: archpkg
-      archpkg: c-ares
-    - source: archpkg
-      archpkg: libnghttp2
-    - source: archpkg
-      archpkg: curl
-    - source: archpkg
-      archpkg: openssl
-    - source: archpkg
-      archpkg: xz
-    - source: archpkg
-      archpkg: bzip2
-    - source: archpkg
-      archpkg: zstd
-    - source: archpkg
-      archpkg: libarchive
-    - source: archpkg
-      archpkg: libgpg-error
-    - source: archpkg
-      archpkg: libassuan
-    - source: archpkg
-      archpkg: gpgme
-    - source: archpkg
-      archpkg: gnupg
+    - source: alpm
+      alpm: c-ares
+      repo: extra
+    - source: alpm
+      alpm: libnghttp2
+      repo: core
+    - source: alpm
+      alpm: curl
+      repo: core
+    - source: alpm
+      alpm: openssl
+      repo: core
+    - source: alpm
+      alpm: xz
+      repo: core
+    - source: alpm
+      alpm: bzip2
+      repo: core
+    - source: alpm
+      alpm: zstd
+      repo: core
+    - source: alpm
+      alpm: libarchive
+      repo: core
+    - source: alpm
+      alpm: libgpg-error
+      repo: core
+    - source: alpm
+      alpm: libassuan
+      repo: core
+    - source: alpm
+      alpm: gpgme
+      repo: core
+    - source: alpm
+      alpm: gnupg
+      repo: core

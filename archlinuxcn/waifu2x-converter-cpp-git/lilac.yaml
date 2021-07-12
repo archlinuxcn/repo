@@ -2,15 +2,16 @@ maintainers:
   - github: DDoSolitary
 build_prefix: extra-x86_64
 pre_build_script: |
-  aur_pre_build(maintainers='nfnty')
+    aur_pre_build(maintainers='nfnty')
 post_build: aur_post_build
 update_on:
   - source: aur
     aur: waifu2x-converter-cpp-git
   - source: github
     github: DeadSix27/waifu2x-converter-cpp
-  - source: archpkg
-    archpkg: opencv
+  - source: alpm
     from_pattern: ^(\d+\.\d+)\..*
     to_pattern: \1
+    alpm: opencv
+    repo: extra
 staging: true

@@ -1,18 +1,14 @@
 maintainers:
   - github: yan12125
-
 build_prefix: extra-x86_64
-
 pre_build_script: |
     aur_pre_build(maintainers='larchunix')
-
 post_build: aur_post_build
-
 update_on:
-  -
   # lua does not provide sodepends yet
-    source: aur
+  - source: aur
     aur:
-  - source: archpkg
-    archpkg: lua
+  - source: alpm
     strip_release: true
+    alpm: lua
+    repo: extra

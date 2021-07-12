@@ -6,18 +6,21 @@ repo_depends:
 update_on:
   - source: aur
     aur: lib32-libnice
-  - source: archpkg
-    archpkg: lib32-glib2
+  - source: alpm
     provided: libgio-2.0.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-glib2
+    alpm: lib32-glib2
+    repo: multilib
+  - source: alpm
     provided: libglib-2.0.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-glib2
+    alpm: lib32-glib2
+    repo: multilib
+  - source: alpm
     provided: libgobject-2.0.so
     strip_release: true
+    alpm: lib32-glib2
+    repo: multilib
   - alias: alpm-lilac
     alpm: lib32-gupnp-igd
     provided: libgupnp-igd-1.0.so

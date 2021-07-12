@@ -2,19 +2,17 @@
 
 maintainers:
   - github: ykelvis
-
 build_prefix: extra-x86_64
-
 pre_build_script: aur_pre_build(maintainers=['TJM'])
-
 post_build: aur_post_build
-
 update_on:
   - source: aur
     aur: amule-dlp-git
-  - source: archpkg
-    archpkg: crypto++
-  - source: archpkg
-    archpkg: boost-libs
+  - source: alpm
+    alpm: crypto++
+    repo: community
+  - source: alpm
     from_pattern: ^(\d+\.\d+)\..*
     to_pattern: \1
+    alpm: boost-libs
+    repo: extra

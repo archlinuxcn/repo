@@ -1,23 +1,22 @@
 maintainers:
   - github: yuyichao
-
 build_prefix: extra-x86_64
-
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
-
 repo_depends:
   - qt4
 
 update_on:
   - source: vcs
-  - source: archpkg
-    archpkg: qt5-base
+  - source: alpm
     from_pattern: ^(\d+\.\d+)\..*
     to_pattern: \1
-  - source: archpkg
-    archpkg: kconfig
+    alpm: qt5-base
+    repo: extra
+  - source: alpm
     from_pattern: ^(\d+\.\d+\.\d+).*
     to_pattern: \1
+    alpm: kconfig
+    repo: extra
   - source: manual
     manual: 1

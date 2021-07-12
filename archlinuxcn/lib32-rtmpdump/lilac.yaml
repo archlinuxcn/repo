@@ -4,14 +4,16 @@ build_prefix: multilib
 update_on:
   - source: aur
     aur: lib32-rtmpdump
-  - source: archpkg
-    archpkg: lib32-nettle
+  - source: alpm
     provided: libhogweed.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-nettle
+    alpm: lib32-nettle
+    repo: multilib
+  - source: alpm
     provided: libnettle.so
     strip_release: true
+    alpm: lib32-nettle
+    repo: multilib
   - source: manual
     manual: 1
 staging: true

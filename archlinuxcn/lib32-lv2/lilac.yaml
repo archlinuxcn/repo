@@ -4,44 +4,54 @@ build_prefix: multilib
 update_on:
   - source: aur
     aur: lib32-lv2
-  - source: archpkg
-    archpkg: lib32-fontconfig
+  - source: alpm
     provided: libfontconfig.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-freetype2
+    alpm: lib32-fontconfig
+    repo: multilib
+  - source: alpm
     provided: libfreetype.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-glib2
+    alpm: lib32-freetype2
+    repo: multilib
+  - source: alpm
     provided: libgio-2.0.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-glib2
+    alpm: lib32-glib2
+    repo: multilib
+  - source: alpm
     provided: libglib-2.0.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-glib2
+    alpm: lib32-glib2
+    repo: multilib
+  - source: alpm
     provided: libgobject-2.0.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-harfbuzz
+    alpm: lib32-glib2
+    repo: multilib
+  - source: alpm
     provided: libharfbuzz.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-pango
+    alpm: lib32-harfbuzz
+    repo: multilib
+  - source: alpm
     provided: libpango-1.0.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-pango
+    alpm: lib32-pango
+    repo: multilib
+  - source: alpm
     provided: libpangocairo-1.0.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-pango
+    alpm: lib32-pango
+    repo: multilib
+  - source: alpm
     provided: libpangoft2-1.0.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-libsndfile
+    alpm: lib32-pango
+    repo: multilib
+  - source: alpm
     provided: libsndfile.so
     strip_release: true
+    alpm: lib32-libsndfile
+    repo: multilib
 staging: true

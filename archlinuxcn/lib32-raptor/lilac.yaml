@@ -4,16 +4,19 @@ build_prefix: multilib
 update_on:
   - source: aur
     aur: lib32-raptor
-  - source: archpkg
-    archpkg: lib32-icu
+  - source: alpm
     provided: libicudata.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-icu
+    alpm: lib32-icu
+    repo: multilib
+  - source: alpm
     provided: libicui18n.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-icu
+    alpm: lib32-icu
+    repo: multilib
+  - source: alpm
     provided: libicuuc.so
     strip_release: true
+    alpm: lib32-icu
+    repo: multilib
 staging: true

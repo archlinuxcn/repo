@@ -1,10 +1,7 @@
 maintainers:
   - github: farseerfc
-
 build_prefix: extra-x86_64
-
 pre_build: vcs_update
-
 repo_depends:
   - libtg_owt-git
 
@@ -12,5 +9,6 @@ update_on:
   - source: github
     github: telegramdesktop/tdesktop
     branch: dev
-  - source: archpkg
-    archpkg: telegram-desktop
+  - source: alpm
+    alpm: telegram-desktop
+    repo: community

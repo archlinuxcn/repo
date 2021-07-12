@@ -1,12 +1,14 @@
 maintainers:
   - github: berberman
-
 update_on:
   - source: hackage
     hackage: cabal-fmt
-  - source: archpkg
-    archpkg: haskell-optparse-applicative
-  - source: archpkg
-    archpkg: haskell-tasty
-  - source: archpkg
-    archpkg: haskell-tasty-golden
+  - source: alpm
+    alpm: haskell-optparse-applicative
+    repo: community
+  - source: alpm
+    alpm: haskell-tasty
+    repo: community
+  - source: alpm
+    alpm: haskell-tasty-golden
+    repo: community

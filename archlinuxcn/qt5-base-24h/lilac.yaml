@@ -1,10 +1,9 @@
 maintainers:
   - github: oldherl
-
 build_prefix: extra-x86_64
-
 update_on:
-  - source: archpkg
-    archpkg: qt5-base
+  - source: alpm
+    alpm: qt5-base
+    repo: extra
   - source: manual
     manual: 3

@@ -24,10 +24,11 @@ update_on:
     alpm: lib32-aom
     provided: libaom.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-alsa-lib
+  - source: alpm
     provided: libasound.so
     strip_release: true
+    alpm: lib32-alsa-lib
+    repo: multilib
   - alias: alpm-lilac
     alpm: lib32-libass
     provided: libass.so
@@ -40,26 +41,30 @@ update_on:
     alpm: lib32-libdav1d
     provided: libdav1d.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-fontconfig
+  - source: alpm
     provided: libfontconfig.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-freetype2
+    alpm: lib32-fontconfig
+    repo: multilib
+  - source: alpm
     provided: libfreetype.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-fribidi
+    alpm: lib32-freetype2
+    repo: multilib
+  - source: alpm
     provided: libfribidi.so
     strip_release: true
+    alpm: lib32-fribidi
+    repo: multilib
   - alias: alpm-lilac
     alpm: lib32-gsm
     provided: libgsm.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-jack
+  - source: alpm
     provided: libjack.so
     strip_release: true
+    alpm: lib32-jack
+    repo: multilib
   - alias: alpm-lilac
     alpm: lib32-lame
     provided: libmp3lame.so
@@ -84,18 +89,21 @@ update_on:
     alpm: lib32-libvmaf
     provided: libvmaf.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-libvorbis
+  - source: alpm
     provided: libvorbis.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-libvorbis
+    alpm: lib32-libvorbis
+    repo: multilib
+  - source: alpm
     provided: libvorbisenc.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-libvpx
+    alpm: lib32-libvorbis
+    repo: multilib
+  - source: alpm
     provided: libvpx.so
     strip_release: true
+    alpm: lib32-libvpx
+    repo: multilib
   - alias: alpm-lilac
     alpm: lib32-x264
     provided: libx264.so

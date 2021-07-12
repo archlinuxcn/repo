@@ -1,17 +1,15 @@
 maintainers:
   - github: heavysink
     email: winstonwu91@gmail.com
-
 build_prefix: extra-x86_64
-
 pre_build_script: aur_pre_build(maintainer=['Muflone'])
-
 post_build: aur_post_build
-
 update_on:
   - source: aur
     aur: mysql
-  - source: archpkg
-    archpkg: libevent
-  - source: archpkg
-    archpkg: icu
+  - source: alpm
+    alpm: libevent
+    repo: core
+  - source: alpm
+    alpm: icu
+    repo: core

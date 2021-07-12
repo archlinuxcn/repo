@@ -67,10 +67,11 @@ update_on:
     alpm: lib32-libass
     provided: libass.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-libavtp
+  - source: alpm
     provided: libavtp.so
     strip_release: true
+    alpm: lib32-libavtp
+    repo: multilib
   - alias: alpm-lilac
     alpm: lib32-libbs2b
     provided: libbs2b.so
@@ -111,30 +112,35 @@ update_on:
     alpm: lib32-libfdk-aac
     provided: libfdk-aac.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-glib2
+  - source: alpm
     provided: libgio-2.0.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-glib2
+    alpm: lib32-glib2
+    repo: multilib
+  - source: alpm
     provided: libglib-2.0.so
     strip_release: true
+    alpm: lib32-glib2
+    repo: multilib
   - alias: alpm-lilac
     alpm: lib32-libgme
     provided: libgme.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-glib2
+  - source: alpm
     provided: libgmodule-2.0.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-glib2
+    alpm: lib32-glib2
+    repo: multilib
+  - source: alpm
     provided: libgobject-2.0.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-libgudev
+    alpm: lib32-glib2
+    repo: multilib
+  - source: alpm
     provided: libgudev-1.0.so
     strip_release: true
+    alpm: lib32-libgudev
+    repo: multilib
   - alias: alpm-lilac
     alpm: lib32-libkate
     provided: libkate.so
@@ -171,10 +177,11 @@ update_on:
     alpm: lib32-neon
     provided: libneon.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-nettle
+  - source: alpm
     provided: libnettle.so
     strip_release: true
+    alpm: lib32-nettle
+    repo: multilib
   - alias: alpm-lilac
     alpm: lib32-libnice
     provided: libnice.so
@@ -187,18 +194,21 @@ update_on:
     alpm: lib32-openjpeg2
     provided: libopenjp2.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-pango
+  - source: alpm
     provided: libpango-1.0.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-pango
+    alpm: lib32-pango
+    repo: multilib
+  - source: alpm
     provided: libpangocairo-1.0.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-librsvg
+    alpm: lib32-pango
+    repo: multilib
+  - source: alpm
     provided: librsvg-2.so
     strip_release: true
+    alpm: lib32-librsvg
+    repo: multilib
   - alias: alpm-lilac
     alpm: lib32-rtmpdump
     provided: librtmp.so
@@ -207,10 +217,11 @@ update_on:
     alpm: lib32-sbc
     provided: libsbc.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-libsndfile
+  - source: alpm
     provided: libsndfile.so
     strip_release: true
+    alpm: lib32-libsndfile
+    repo: multilib
   - alias: alpm-lilac
     alpm: lib32-spandsp
     provided: libspandsp.so
@@ -223,10 +234,11 @@ update_on:
     alpm: lib32-libsrtp
     provided: libsrtp2.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-libusb
+  - source: alpm
     provided: libusb-1.0.so
     strip_release: true
+    alpm: lib32-libusb
+    repo: multilib
   - alias: alpm-lilac
     alpm: lib32-webrtc-audio-processing
     provided: libwebrtc_audio_processing.so

@@ -6,12 +6,14 @@ update_on:
     aur: jbig2enc-git
   - source: github
     github: agl/jbig2enc
-  - source: archpkg
-    archpkg: giflib
+  - source: alpm
     provided: libgif.so
     strip_release: true
-  - source: archpkg
-    archpkg: libjpeg-turbo
+    alpm: giflib
+    repo: extra
+  - source: alpm
     provided: libjpeg.so
     strip_release: true
+    alpm: libjpeg-turbo
+    repo: extra
 staging: true

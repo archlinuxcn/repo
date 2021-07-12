@@ -4,20 +4,24 @@ build_prefix: multilib
 update_on:
   - source: aur
     aur: lib32-libass
-  - source: archpkg
-    archpkg: lib32-fontconfig
+  - source: alpm
     provided: libfontconfig.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-freetype2
+    alpm: lib32-fontconfig
+    repo: multilib
+  - source: alpm
     provided: libfreetype.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-fribidi
+    alpm: lib32-freetype2
+    repo: multilib
+  - source: alpm
     provided: libfribidi.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-harfbuzz
+    alpm: lib32-fribidi
+    repo: multilib
+  - source: alpm
     provided: libharfbuzz.so
     strip_release: true
+    alpm: lib32-harfbuzz
+    repo: multilib
 staging: true

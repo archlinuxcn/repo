@@ -1,14 +1,13 @@
 maintainers:
   - github: BruceZhang1993
     email: zttt183525594@gmail.com
-
 build_prefix: extra-x86_64
-
 update_on:
   - source: github
     github: swoole/swoole-src
     use_max_tag: true
-  - source: archpkg
-    archpkg: php
+  - source: alpm
     from_pattern: ^(\d+\.\d+)\..*
     to_pattern: \1
+    alpm: php
+    repo: extra
