@@ -3,11 +3,9 @@ Description=System statistics collection daemon
 After=local-fs.target network.target
 
 [Service]
-Type=forking
-PIDFile=/run/collectdmon.pid
-ExecStart=/usr/bin/collectdmon
-ExecReload=/bin/kill -HUP $MAINPID
-Restart=always
+Type=notify
+ExecStart=/usr/bin/collectd
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
