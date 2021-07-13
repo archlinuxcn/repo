@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=styler
-_pkgver=1.4.1
+_pkgver=1.5.1
 pkgname=r-${_pkgname,,}
-pkgver=1.4.1
+pkgver=1.5.1
 pkgrel=1
 pkgdesc='Non-Invasive Pretty Printing of R Code'
 arch=('any')
@@ -36,7 +36,7 @@ optdepends=(
   r-testthat
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('bdf0b5d62eac5dec9c9e5baea7fee2c7e5cabebe652fd9d2178bc5af2c23d281')
+sha256sums=('8c3243bf1bb9b07ca25287bc0309f6374b91bfb7e2fcb6c8c171f68aca9f7a87')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
