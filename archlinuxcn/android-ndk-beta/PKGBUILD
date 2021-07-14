@@ -5,8 +5,8 @@
 
 pkgname=android-ndk-beta
 _pkgname=${pkgname/-beta*/}
-pkgver=r23_beta5
-pkgrel=2
+pkgver=r23_beta6
+pkgrel=1
 pkgdesc='Android C/C++ developer kit (beta)'
 arch=('x86_64')
 url='https://developer.android.com/ndk/'
@@ -23,9 +23,9 @@ optdepends=(
 source=("$pkgname-$pkgver.zip"::"https://dl.google.com/android/repository/${_pkgname}-${pkgver/_/-}-linux.zip"
         "$pkgname.sh")
 # SHA1 sums is kept to follow upstream releases https://github.com/android-ndk/ndk/issues/673
-sha1sums=('453ba0ca124e43337318f8a40d26cab114e7092c'
+sha1sums=('b3118a9daeff8ad1801c4dbaeda1e5e5fb33b8a5'
           'b0a3c3d4e148c1049f9c8b12f2632840630ea4db')
-sha256sums=('93858626ac0ec0bdbd2e4723056cece0237ab2b358d83e2ae1f42c5bcfc72889'
+sha256sums=('4fb871ea7c8fdedecef6432fa1924ce896f510be5c699bdbc120284cf8bf7617'
             'a39422d48174302e1ee27f07031f20adc78224d12c17a5451129a88b47c901c1')
 
 package() {
