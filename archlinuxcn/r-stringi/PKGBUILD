@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=stringi
-_pkgver=1.6.2
+_pkgver=1.7.2
 pkgname=r-${_pkgname,,}
-pkgver=1.6.2
+pkgver=1.7.2
 pkgrel=1
 pkgdesc='Character String Processing Facilities'
 arch=('x86_64')
@@ -14,7 +14,7 @@ depends=(
   r
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('3a151dd9b982696370ac8df3920afe462f8abbd4e41b479ff8b66cfd7b602dae')
+sha256sums=('cecb5ef093586585ac3b4f0aebf9c1fc2358b1458c03bba5b5256d92bced954d')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
