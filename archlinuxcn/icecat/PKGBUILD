@@ -5,9 +5,9 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=78.11.0
+pkgver=78.12.0
 pkgrel=1
-_commit=27c91a14d6c389ebbbaeed6191207bfbf8f97c75
+_commit=b1cddc13149014362a984902cc0cbe4fba28cf05
 pkgdesc="GNU version of the Firefox browser."
 arch=(x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
@@ -25,14 +25,12 @@ options=(!emptydirs !makeflags !strip)
 
 source=(https://git.savannah.gnu.org/cgit/gnuzilla.git/snapshot/gnuzilla-${_commit}.tar.gz
         icecat.desktop icecat-safe.desktop
-        "0001-Use-remoting-name-for-GDK-application-names.patch::https://raw.githubusercontent.com/archlinux/svntogit-packages/0adcedc05ce67d53268575f8801c8de872206901/firefox/trunk/0001-Use-remoting-name-for-GDK-application-names.patch"
-        rust_1.48.patch.gz)
+        "0001-Use-remoting-name-for-GDK-application-names.patch::https://raw.githubusercontent.com/archlinux/svntogit-packages/0adcedc05ce67d53268575f8801c8de872206901/firefox/trunk/0001-Use-remoting-name-for-GDK-application-names.patch")
 
-sha256sums=('895bcb88879ec756f12ef85618adad1c417a727839b1fbee4982ee0ad7fadb58'
+sha256sums=('762215d0d2898becbabf6d5e63e9fd0bdef56caa9df17a48724f0181d173a1d2'
             'e00dbf01803cdd36fd9e1c0c018c19bb6f97e43016ea87062e6134bdc172bc7d'
             '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208'
-            'e0eaec8ddd24bbebf4956563ebc6d7a56f8dada5835975ee4d320dd3d0c9c442'
-            'c7f867ccee684939c9f0a9c30ea69127077bbe43af545a03f09dfbbdc02545a9')
+            'e0eaec8ddd24bbebf4956563ebc6d7a56f8dada5835975ee4d320dd3d0c9c442')
 
 prepare() {
   cd gnuzilla-${_commit}
@@ -130,9 +128,6 @@ EOF
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
   patch -Np1 -i ../../../0001-Use-remoting-name-for-GDK-application-names.patch
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1667736
-  patch -Np1 -i ../../../rust_1.48.patch
 
   # Patch to move files directly to /usr/lib/icecat. No more symlinks.
   sed -e 's;$(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME);g' -i config/baseconfig.mk
