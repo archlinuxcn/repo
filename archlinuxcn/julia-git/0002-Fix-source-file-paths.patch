@@ -1,4 +1,4 @@
-From cb4fb671b5869938534c60d4e0440c01f285ea44 Mon Sep 17 00:00:00 2001
+From bedaac875311e96301a7d8bb94b5b8312208d492 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 19 Jul 2020 09:40:32 -0400
 Subject: [PATCH 2/4] Fix source file paths
@@ -59,10 +59,10 @@ index a81908b96a..4c463db143 100644
          write(io, filename)
          write(io, UInt64(sizeof(src)))
 diff --git a/src/ast.c b/src/ast.c
-index 2a0661e629..cd440ac9d9 100644
+index 94bbf48dde..3ebf60a488 100644
 --- a/src/ast.c
 +++ b/src/ast.c
-@@ -827,6 +827,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v, int check_vali
+@@ -828,6 +828,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v, int check_vali
      return julia_to_scm_noalloc2(fl_ctx, v, check_valid);
  }
  
@@ -81,7 +81,7 @@ index 2a0661e629..cd440ac9d9 100644
  // Parse `text` starting at 0-based `offset` and attributing the content to
  // `filename`. Return an svec of (parsed_expr, final_offset)
  JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
-@@ -851,6 +863,7 @@ JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
+@@ -852,6 +864,7 @@ JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
      fl_context_t *fl_ctx = &ctx->fl;
      value_t fl_text = cvalue_static_cstrn(fl_ctx, text, text_len);
      fl_gc_handle(fl_ctx, &fl_text);

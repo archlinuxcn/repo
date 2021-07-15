@@ -29,7 +29,8 @@ url="http://julialang.org"
 license=('GPL')
 depends_libs=(arpack fftw gmp libgit2-julia libunwind-git mpfr pcre2 suitesparse
               openspecfun openblas-lapack libutf8proc-git
-              openlibm mbedtls libssh2 zlib p7zip curl libnghttp2 ca-certificates-utils)
+              openlibm mbedtls libssh2 zlib p7zip curl libnghttp2 ca-certificates-utils
+              'libmbedcrypto.so=7-64' 'libmbedtls.so=13-64' 'libmbedx509.so=1-64')
 makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
              gcc-fortran git patchelf python)
 options=('debug' '!strip' '!buildflags')
@@ -48,10 +49,10 @@ source=('git://github.com/JuliaLang/julia'
         arch-source-translate.cpp
         sysp7z.diff)
 sha512sums=('SKIP'
-            'da2ba676c31c3af06b5e25143cf2651a25bd2bc89f1f97192819142573a225e6c2b534d36302e71f09e06ce44ec7f60b95e839ecfe55ee9820d510eedc20d5e9'
-            '1f0a0da5fd355840a18768ad39d9d272118d797c2d361fb40fe387d92411300176552b9c5b4650bbe971043151e67efab5d2cd085101c5b4ae8d302bc4b7bcb8'
-            '3ac5062fcc14e805a0d6c2b31e12c3c731c4be15c7b178bbc948c2aa9253dd5b52e713c8820e3cf976a607566772571276ff8124eef3cac4f67bebed9bf8a1b0'
-            'e3243613ef7e7b504765300b987ad35a88839592eccc6f98c1d45386f360bd95dc5c7ce7e0015fd559f3a97f695665bbf19d43b6d7c8df63f799588f1ca446e0'
+            'e09b91f9d721a4ff8438892c5adaf0ed20bd713c08b49a4c6b805f9ee5d5416c228cd7ecb414e2da4fb427773c744415476da63e1b4560974673e7745259a081'
+            '5e69bdaae3e0edef72cb31cd1b4a29ff45bafa9ffe685d78072daad855d6613dc663da11bc4f0034412d49dc25700e18200d1fbb27a250d0fa8bec64000bde27'
+            '4c3869734fb6a32fb5dbc3b82c2b640c54495c8834e7197267cd26c5de7b05e533c80dc5ffc766c2d17f0494b5a06617682690786c15a8adfc91dbf9fe0beb15'
+            'f7f0a431ea977a59ffed77dc6deb5120ef8d8981f8e2ba38fcc4a58bc567acf377ce43ad16ec41a427994e498cf3f0cc7c6de0c08b1d197dcb05e3d3f9fc56f5'
             'eba2a2d6d4e44e39a98b7038aba22c7a534071ae95c680d1547c6021cd6d0bacaae7ab0ec150ce4103568a28d2a69e9803e07ab6a11bc1125f060f4a1f386a47'
             'ce03e2995a45d942f480d25d1ce7cddacb98f2e11eeed19b5564e36d817987f548c313b0d6b139402ba8c203c8ba9a059e1732695517d7b78b7fa88f08429295'
             '36df234b634926bc88084e683ee9f495ef0ce4c26d6d6b9f55294098bdcb86f5eaaf6c671afe1a5c4371c428bd7bf3dd617ec1f15a7ff35376d67df22140454c'
