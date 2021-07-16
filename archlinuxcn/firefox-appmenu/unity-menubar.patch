@@ -107,9 +107,9 @@
 +#ifdef MOZ_WIDGET_GTK
 +pref("ui.use_unity_menubar", true);
 +#endif
- // 0 = false, 1 = true, 2 = autodetect.
- pref("ui.android.mouse_as_touch", 1);
  
+ pref("browser.display.force_inline_alttext", false); // true = force ALT text for missing images to be layed out inline
+ // 0 = no external leading,
 --- a/toolkit/content/xul.css
 +++ b/toolkit/content/xul.css
 @@ -230,6 +230,13 @@ toolbar[type="menubar"] {
@@ -128,24 +128,23 @@
  }
 --- a/widget/gtk/moz.build
 +++ b/widget/gtk/moz.build
-@@ -33,11 +33,16 @@ EXPORTS += [
- 
+@@ -33,6 +33,7 @@
  EXPORTS.mozilla += ["WidgetUtilsGtk.h"]
  
-+EXPORTS.mozilla.widget += [
+ EXPORTS.mozilla.widget += [
 +    "NativeMenuSupport.h",
-+]
-+
- UNIFIED_SOURCES += [
-     "IMContextWrapper.cpp",
+     "WindowSurface.h",
+     "WindowSurfaceProvider.h",
+ ]
+@@ -45,6 +46,7 @@
      "MozContainer.cpp",
      "MPRISServiceHandler.cpp",
      "NativeKeyBindings.cpp",
 +    "NativeMenuSupport.cpp",
+     "nsApplicationChooser.cpp",
      "nsAppShell.cpp",
      "nsBidiKeyboard.cpp",
-     "nsColorPicker.cpp",
-@@ -59,6 +64,15 @@ UNIFIED_SOURCES += [
+@@ -70,6 +72,15 @@
  
  SOURCES += [
      "MediaKeysEventSourceFactory.cpp",
@@ -158,10 +157,10 @@
 +    "nsMenuSeparator.cpp",
 +    "nsNativeMenuDocListener.cpp",
 +    "nsNativeMenuService.cpp",
+     "nsNativeThemeGTK.cpp",  # conflicts with X11 headers
      "nsWindow.cpp",  # conflicts with X11 headers
      "WaylandVsyncSource.cpp",  # conflicts with X11 headers
- ]
-@@ -139,6 +153,7 @@ LOCAL_INCLUDES += [
+@@ -138,6 +149,7 @@
      "/layout/base",
      "/layout/forms",
      "/layout/generic",
@@ -5078,14 +5077,14 @@
 --- a/widget/gtk/nsWindow.h
 +++ b/widget/gtk/nsWindow.h
 @@ -39,6 +39,8 @@
- 
+ #include "nsRefPtrHashtable.h"
  #include "IMContextWrapper.h"
  
 +#include "nsMenuBar.h"
 +
- #undef LOG
- #ifdef MOZ_LOGGING
- 
+ #ifdef ACCESSIBILITY
+ #  include "mozilla/a11y/LocalAccessible.h"
+ #endif
 @@ -168,6 +170,8 @@ class nsWindow final : public nsBaseWidg
                                    nsIScreen* aTargetScreen = nullptr) override;
    virtual void HideWindowChrome(bool aShouldHide) override;
@@ -5101,9 +5100,9 @@
    static bool sTransparentMainWindow;
 +
 +  mozilla::UniquePtr<nsMenuBar> mMenuBar;
- };
  
- #endif /* __nsWindow_h__ */
+ #ifdef ACCESSIBILITY
+   RefPtr<mozilla::a11y::LocalAccessible> mRootAccessible;
 --- /dev/null
 +++ b/xpcom/ds/NativeMenuAtoms.py
 @@ -0,0 +1,9 @@

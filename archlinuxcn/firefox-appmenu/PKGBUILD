@@ -7,7 +7,7 @@
 
 pkgname=firefox-appmenu
 _pkgname=firefox
-pkgver=89.0.2
+pkgver=90.0
 pkgrel=1
 pkgdesc="Firefox from extra with appmenu patch"
 arch=(x86_64)
@@ -15,7 +15,7 @@ license=(MPL GPL LGPL)
 url="https://www.mozilla.org/firefox/"
 depends=(gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse libdbusmenu-gtk3)
 makedepends=(unzip zip diffutils yasm mesa imake inetutils xorg-server-xvfb
-             autoconf2.13 rust clang llvm jack gtk2 nodejs cbindgen nasm
+             autoconf2.13 rust clang llvm jack nodejs cbindgen nasm
              python-setuptools python-psutil python-zstandard lld dump_syms)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
@@ -31,11 +31,11 @@ source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-
         $_pkgname.desktop
         unity-menubar.patch
         fix_csd_window_buttons.patch)
-sha256sums=('3225f583c5e36bdf52ad16f71a2c359deb0c765c38205acdeb6b7b6520ac5494'
+sha256sums=('43a943e7d7660c6d7f5b41c95b344b7fd6a4a88ad0bb45dbd844b372ea60d58b'
             'SKIP'
-            '98b6b30973bb1e12e17e8a78baf7d1db0d5085f35252f4611870bb23e8faeff1'
+            '7e7435e8171426e87a84cecf9eb017cb969c9c85d973feb78c1e05771972b6e9'
             '34514a657d6907a159594c51e674eeb81297c431ec26a736417c2fdb995c2c0c'
-            '2337ac2af70d547b577420211c1f13de75f679fca8cdc51bfb3fff5300621091'
+            'f5e5af8cfb8db2e0ed2e3cb8ae844ece713923ca103deb63c689c2011eb57cb7'
             'e08d0bc5b7e562f5de6998060e993eddada96d93105384960207f7bdf2e1ed6e')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
@@ -79,6 +79,7 @@ ac_add_options --enable-optimize
 ac_add_options --enable-rust-simd
 ac_add_options --enable-linker=lld
 ac_add_options --disable-elf-hack
+ac_add_options --disable-bootstrap
 export CC='clang --target=x86_64-unknown-linux-gnu'
 export CXX='clang++ --target=x86_64-unknown-linux-gnu'
 export AR=llvm-ar
@@ -93,7 +94,6 @@ ac_add_options --with-unsigned-addon-scopes=app,system
 ac_add_options --allow-addon-sideload
 export MOZILLA_OFFICIAL=1
 export MOZ_APP_REMOTINGNAME=${_pkgname//-/}
-export MOZ_REQUIRE_SIGNING=1
 
 # Keys
 ac_add_options --with-google-location-service-api-keyfile=${PWD@Q}/google-api-key
