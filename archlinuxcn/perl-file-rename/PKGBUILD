@@ -2,8 +2,8 @@
 # Grabbed from Parabola by figue <https://aur.archlinux.org/account/figue> :: https://www.parabola.nu/packages/pcr/x86_64/perl-file-rename/
 
 pkgname=perl-file-rename
-pkgver=1.13
-pkgrel=3
+pkgver=1.20
+pkgrel=1
 pkgdesc="Renames multiple files using Perl regular expressions."
 arch=(any)
 url="https://metacpan.org/release/File-Rename"
@@ -13,7 +13,7 @@ provides=('perl-rename')
 conflicts=('perl-rename')
 options=(!emptydirs)
 source=(https://cpan.metacpan.org/authors/id/R/RM/RMBARKER/File-Rename-$pkgver.tar.gz)
-sha256sums=('0b308d6ac5b8ae0dad6135c7b68620582221b2b3144a5b390ddd2ea64312e64d')
+sha256sums=('518fa23f2b00b009f9a6e30db72a3b344f29dae6eaf3edbb5302bf128a9ea8b0')
 
 build() {
     cd "$srcdir/File-Rename-$pkgver"
