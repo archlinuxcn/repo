@@ -1,9 +1,9 @@
 # Maintainer: hubutui <hot123tea123@gmail.com>
 
 _pkgname=cli
-_pkgver=3.0.0
+_pkgver=3.0.1
 pkgname=r-${_pkgname,,}
-pkgver=3.0.0
+pkgver=3.0.1
 pkgrel=1
 pkgdesc='Helpers for Developing Command Line Interfaces'
 arch=('any')
@@ -31,7 +31,7 @@ optdepends=(
 )
 options=(!emptydirs)
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('a4f173dd98769b1e6ca3e7c14deb81a06eb5262b2c1f8dfd19290e00c0754d39')
+sha256sums=('d89a25b6cd760e157605676e104ce65473a7d8d64c289efdd9640e949968b4fd')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
