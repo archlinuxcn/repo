@@ -1,0 +1,45 @@
+# Maintainer: Christian Hesse <mail@eworm.de>
+# Maintainer: Dave Reisner <dreisner@archlinux.org> ([core] package)
+# Maintainer: Thomas Bächler <thomas@archlinux.org> ([core] package)
+
+pkgname=mkinitcpio-git
+pkgver=30.r18.gf40bb42
+pkgrel=1
+pkgdesc='Modular initramfs image creation utility - git checkout'
+arch=('any')
+url='https://github.com/archlinux/mkinitcpio'
+license=('GPL')
+depends=('awk' 'mkinitcpio-busybox' 'kmod' 'util-linux' 'libarchive' 'coreutils'
+         'bash' 'findutils' 'grep' 'filesystem' 'gzip' 'systemd-tools')
+optdepends=('xz: Use lzma or xz compression for the initramfs image'
+            'bzip2: Use bzip2 compression for the initramfs image'
+            'lzop: Use lzo compression for the initramfs image'
+            'mkinitcpio-nfs-utils: Support for root filesystem on NFS')
+makedepends=('git' 'asciidoc')
+provides=('initramfs' "mkinitcpio=${pkgver}")
+conflicts=('mkinitcpio')
+backup=('etc/mkinitcpio.conf')
+source=('git+https://github.com/archlinux/mkinitcpio.git')
+sha256sums=('SKIP')
+
+pkgver() {
+	cd mkinitcpio/
+
+	if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
+		printf '%s.r%s.g%s' \
+			"$(sed -e "s/^${pkgname%%-git}//" -e 's/^[-_/a-zA-Z]\+//' -e 's/[-_+]/./g' <<< ${GITTAG})" \
+			"$(git rev-list --count ${GITTAG}..)" \
+			"$(git rev-parse --short HEAD)"
+	else
+		printf '0.r%s.g%s' \
+			"$(git rev-list --count master)" \
+			"$(git rev-parse --short HEAD)"
+	fi
+}
+
+package() {
+	cd mkinitcpio/
+
+	make DESTDIR="${pkgdir}" install
+}
+
