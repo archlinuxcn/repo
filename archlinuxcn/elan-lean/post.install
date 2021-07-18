@@ -1,0 +1,8 @@
+post_install() {
+	echo "You may need to run elan update stable"
+	echo "and possibly also elan self upgrade-data"
+}
+
+post_upgrade() {
+	echo "You may need to run elan self upgrade-data"
+}
