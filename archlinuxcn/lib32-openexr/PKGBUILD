@@ -4,12 +4,12 @@
 _basename=openexr
 pkgname=lib32-openexr
 pkgver=3.0.5
-pkgrel=2
+pkgrel=3
 pkgdesc="An high dynamic-range image file format library (32-bit)"
 url="https://www.openexr.com/"
 arch=('x86_64')
 license=('BSD')
-depends=("lib32-gcc-libs" "lib32-imath" "lib32-zlib" "libImath-3_0.so" "libz.so" "openexr")
+depends=("lib32-gcc-libs" "lib32-imath" "lib32-zlib" "libImath-3_1.so" "libz.so" "openexr")
 makedepends=('cmake')
 conflicts=('lib32-ilmbase')
 replaces=('lib32-ilmbase')
