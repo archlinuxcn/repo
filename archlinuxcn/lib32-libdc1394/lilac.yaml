@@ -4,8 +4,9 @@ build_prefix: multilib
 update_on:
   - source: aur
     aur: lib32-libdc1394
-  - source: archpkg
-    archpkg: lib32-libusb
+  - source: alpm
     provided: libusb-1.0.so
     strip_release: true
+    alpm: lib32-libusb
+    repo: multilib
 staging: true

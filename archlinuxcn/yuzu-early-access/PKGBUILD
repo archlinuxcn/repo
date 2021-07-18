@@ -2,30 +2,38 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=1666
+pkgver=1884
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (mainline GIT version)"
 arch=('i686' 'x86_64')
 url="https://yuzu-emu.org/"
 license=('GPL2')
 depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'mbedtls' 'openssl' 'zstd')
-makedepends=('git' 'glslang' 'cmake' 'ninja' 'python2' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils')
+makedepends=('git' 'glslang' 'cmake' 'ninja' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils')
 optdepends=('qt5-wayland: for Wayland support')
-provides=('yuzu' 'yuzu-canary-git' 'yuzu-cmd' 'yuzu-mainline' 'yuzu-canary')
-conflicts=('yuzu-canary-git' 'yuzu-master-git')
-replaces=('yuzu-canary-git')
-source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz")
-md5sums=('cfe8708ca58e805aab98e1f54516d85b')
+provides=('yuzu')
+conflicts=('yuzu')
+source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz"
+    "inject-git-info.patch")
+md5sums=('e7a68aab4d8c47c0925285fdc39dc819'
+         'd45a4d68786e3c115142a55760398070')
 
 prepare() {
   cd "$srcdir/pineapple-src-EA-${pkgver}"
+  cp $srcdir/inject-git-info.patch patches/
+
   for i in patches/*.patch; do
-    patch -p1 < $i
+    patch -p1 --verbose --ignore-whitespace < $i
   done
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror$/-W/g' {} +
-  find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*)$/ )/g' {} +
+  #find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*)$/ )/g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/-Werror/-W/g' {} +
+  sed -i -e 's/--quiet //g' src/video_core/host_shaders/CMakeLists.txt
+  sed -i -e 's#${SPIRV_HEADER_FILE} ${SOURCE_FILE}#${SPIRV_HEADER_FILE} ${SOURCE_FILE} 2>/dev/null#g' src/video_core/host_shaders/CMakeLists.txt
+  sed -i -e '/Name=yuzu/ s/$/ Early Access/' dist/yuzu.desktop
+  sed -i -e '/yuzu %f/a StartupWMClass=yuzu' dist/yuzu.desktop
+  sed -i -e 's_^MimeType=.*_&application/x-nx-nsp;application/x-nx-xci;_' dist/yuzu.desktop
 }
 build() {
   cd "$srcdir/pineapple-src-EA-${pkgver}"
@@ -33,15 +41,14 @@ build() {
   cmake .. -GNinja \
     -DTITLE_BAR_FORMAT_IDLE="yuzu Early Access $pkgver" \
     -DTITLE_BAR_FORMAT_RUNNING="yuzu Early Access $pkgver | {3}" \
-    -DGIT_BRANCH="HEAD" \
-    -DGIT_DESC="$msvc" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DYUZU_ENABLE_COMPATIBILITY_REPORTING=ON \
     -DYUZU_USE_BUNDLED_UNICORN=ON \
     -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
     -DYUZU_USE_QT_WEB_ENGINE=ON \
-    -DUSE_DISCORD_PRESENCE=ON
+    -DUSE_DISCORD_PRESENCE=ON \
+    -DENABLE_QT_TRANSLATION=ON
 
   ninja
 }

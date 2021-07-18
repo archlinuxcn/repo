@@ -3,11 +3,12 @@ Description=V2Ray Service
 After=network.target nss-lookup.target
 
 [Service]
-User=v2ray
+DynamicUser=true
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 NoNewPrivileges=true
 ExecStart=/usr/bin/v2ray -config /etc/v2ray/%i.json
+LogsDirectory=v2ray
 Restart=on-abort
 
 [Install]

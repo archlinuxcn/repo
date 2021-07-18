@@ -1,0 +1,42 @@
+# Maintainer: hubutui <hot123tea123@gmail.com>
+
+_pkgname=scales
+_pkgver=1.1.1
+pkgname=r-${_pkgname,,}
+pkgver=1.1.1
+pkgrel=1
+pkgdesc='Scale Functions for Visualization'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-farver
+  r-labeling
+  r-lifecycle
+  r-munsell
+  r-r6
+  r-rcolorbrewer
+  r-viridislite
+)
+optdepends=(
+  r-bit64
+  r-covr
+  r-dichromat
+  r-ggplot2
+  r-hms
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('40b2b66522f1f314a20fd09426011b0cdc9d16b23ee2e765fe1930292dd03705')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

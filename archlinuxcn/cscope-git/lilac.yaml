@@ -2,17 +2,15 @@
 
 maintainers:
   - github: yuyichao
-
 build_prefix: extra-x86_64
-
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
-
 update_on:
   - source: vcs
   - source: manual
     manual: 2
-  - source: archpkg
-    archpkg: emacs
+  - source: alpm
     from_pattern: ^(\d+\.\d+).*
     to_pattern: \1
+    alpm: emacs
+    repo: extra

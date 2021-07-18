@@ -4,12 +4,14 @@ build_prefix: extra-x86_64
 update_on:
   - source: aur
     aur: libtins
-  - source: archpkg
-    archpkg: libpcap
+  - source: alpm
     provided: libpcap.so
     strip_release: true
-  - source: archpkg
-    archpkg: openssl
+    alpm: libpcap
+    repo: core
+  - source: alpm
     from_pattern: ^(\d\.\d)\..*
     to_pattern: \1
+    alpm: openssl
+    repo: core
 staging: true

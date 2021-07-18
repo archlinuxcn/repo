@@ -1,0 +1,34 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=blob
+_pkgver=1.2.1
+pkgname=r-${_pkgname,,}
+pkgver=1.2.1
+pkgrel=1
+pkgdesc="A Simple S3 Class for Representing Vectors of Binary Data ('BLOBS')"
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-rlang
+  r-vctrs
+)
+optdepends=(
+  r-covr
+  r-crayon
+  r-pillar
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('ef54bc7a9646c1b73f4d2f60c869b4f1940bc3505874175114297ad7772d8bea')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

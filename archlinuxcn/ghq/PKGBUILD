@@ -2,7 +2,7 @@
 # Contributor: Kohei Suzuki <eagletmt@gmail.com>
 
 pkgname=ghq
-pkgver=1.1.7
+pkgver=1.2.1
 pkgrel=1
 pkgdesc="Remote repository management made easy"
 arch=('i686' 'x86_64')
@@ -13,7 +13,7 @@ makedepends=('go' 'git')
 optdepends=('zsh: ghq function for zsh')
 source=("ghq-${pkgver}.tar.gz::https://github.com/motemen/ghq/archive/v${pkgver}.tar.gz")
 
-sha512sums=('c523b26c10ac3fb1559d7392b96b1688efe6ebf6b5f46aafe598fdc0e7216411e2dc2df1dcf943f3d672c2f529200019f6e0b2f5d11f65215352bd2c94da34da')
+sha512sums=('7df1cb669058ddeae088ba7a68a98b8bdcd892d67e4335e90c5fe67027894e74d7f14aea26d44d8ccedb11d3a9b5dc836fb36d0079046ca7d6bbb25c169b70f1')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"

@@ -1,8 +1,10 @@
-# Maintainer: spikecodes <19519553+spikecodes@users.noreply.github.com>
+# Maintainer: theguy147 <yakamoz147 (at) protonmail (dot) com>
+# Contributor: spikecodes <19519553+spikecodes@users.noreply.github.com>
+
 pkgname=feroxbuster-git
 _pkgname=${pkgname%-git}
-pkgver=2.2.3
-pkgrel=10
+pkgver=2.3.1.r1.gabef7a2
+pkgrel=1
 pkgdesc="A fast, simple, recursive content discovery tool written in Rust. "
 arch=('any')
 url="https://github.com/epi052/feroxbuster"
@@ -10,14 +12,12 @@ license=("MIT")
 makedepends=("git" "cargo")
 provides=(${_pkgname})
 conflicts=(${_pkgname})
-source=("${_pkgname}::git+${url}")
+source=("${_pkgname}::git+${url}.git")
 sha256sums=("SKIP")
 
 pkgver() {
 	cd "${_pkgname}"
-	( set -o pipefail
-		printf "$(git describe --tags | awk -F- '{print $1}' | cut -c2-)"
-	)
+        git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
@@ -28,4 +28,8 @@ build() {
 package() {
 	install -Dm644 "${_pkgname}/LICENSE" "$pkgdir/usr/share/licenses/${_pkgname}/LICENSE"
 	install -Dm755 "${_pkgname}/target/release/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
+
+        # shell completions
+        install -Dm644 "${_pkgname}/shell_completions/${_pkgname}.fish" "$pkgdir/usr/share/fish/vendor_completions.d/${_pkgname}.fish"
+        install -Dm644 "${_pkgname}/shell_completions/_${_pkgname}"     "$pkgdir/usr/share/zsh/site-functions/_${_pkgname}"
 }

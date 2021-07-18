@@ -2,7 +2,7 @@
 
 pkgname=python-onnx
 pkgver=1.9.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Open Neural Network Exchange'
 arch=('x86_64')
 url='https://onnx.ai'
@@ -25,12 +25,6 @@ checkdepends=(
   python-nose
   python-pytest
   python-scipy
-  ${optdepends[@]}
-)
-optdepends=(
-  mxnet
-  python-pytorch
-  python-tensorflow
 )
 source=("${pkgname}::git+https://github.com/onnx/onnx.git#tag=v${pkgver}")
 sha512sums=('SKIP')

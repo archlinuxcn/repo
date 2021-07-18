@@ -1,0 +1,43 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=manipulateWidget
+_pkgver=0.11.0
+pkgname=r-${_pkgname,,}
+pkgver=0.11.0
+pkgrel=1
+pkgdesc='Add Even More Interactivity to Interactive Charts'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-base64enc
+  r-htmltools
+  r-htmlwidgets
+  r-knitr
+  r-miniui
+  r-shiny
+  r-shinyjs
+  r-webshot
+)
+optdepends=(
+  r-covr
+  r-dygraphs
+  r-leaflet
+  r-plotly
+  r-rmarkdown
+  r-testthat
+  r-xts
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('f2953494a08babba972e9dcc293f767371ccf5c8d0f4d67b78dba1a50c7dda47')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

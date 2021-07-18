@@ -1,0 +1,9 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-biocgenerics
+update_on:
+  - regex: Biobase_([\d._-]+).tar.gz
+    source: regex
+    url: https://bioconductor.org/packages/Biobase

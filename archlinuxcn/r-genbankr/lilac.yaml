@@ -1,0 +1,18 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-biobase
+  - r-biocgenerics
+  - r-biostrings
+  - r-genomeinfodb
+  - r-genomicfeatures
+  - r-genomicranges
+  - r-iranges
+  - r-rtracklayer
+  - r-s4vectors
+  - r-variantannotation
+update_on:
+  - regex: genbankr_([\d._-]+).tar.gz
+    source: regex
+    url: https://bioconductor.org/packages/genbankr

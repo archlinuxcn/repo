@@ -6,10 +6,12 @@ build_prefix: extra-x86_64
 repo_depends:
   - wf-config
 
-pre_build: aur_pre_build
+pre_build_script: |
+    aur_pre_build(maintainers="aperez")
 
-post_build: aur_post_build
+post_build_script: |
+    aur_post_build()
 
 update_on:
   - source: aur
-    aur:
+    aur: wayfire

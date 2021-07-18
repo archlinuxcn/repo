@@ -6,7 +6,8 @@ update_on:
     aur: bomi-git
   - source: github
     github: demokritos/bomi
-  - source: archpkg
-    archpkg: libdvdread
+  - source: alpm
+    alpm: libdvdread
+    repo: extra
 pre_build: aur_pre_build
 post_build: aur_post_build

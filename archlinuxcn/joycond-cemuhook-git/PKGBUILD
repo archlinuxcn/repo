@@ -26,7 +26,7 @@ pkgver() {
 }
 
 package() {
-    install -Dm755 "${srcdir}/run.sh" "${pkgdir}/usr/bin/${pkgname}"
+    install -Dm755 "${srcdir}/run.sh" "${pkgdir}/usr/bin/${_pkgname}"
 
     install -Dm644 "${srcdir}/${_pkgname}/joycond-cemuhook.py" "${pkgdir}/usr/lib/${pkgname}/${pkgname}.py"
 

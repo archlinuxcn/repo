@@ -1,0 +1,22 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-biocgenerics
+  - r-biocio
+  - r-biostrings
+  - r-genomeinfodb
+  - r-genomicalignments
+  - r-genomicranges
+  - r-iranges
+  - r-rcurl
+  - r-restfulr
+  - r-rsamtools
+  - r-s4vectors
+  - r-xml
+  - r-xvector
+  - r-zlibbioc
+update_on:
+  - regex: rtracklayer_([\d._-]+).tar.gz
+    source: regex
+    url: https://bioconductor.org/packages/rtracklayer

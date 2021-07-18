@@ -1,7 +1,7 @@
 # Maintainer: Torsten Keßler <t dot kessler at posteo dot de>
 pkgname=rocclr
-pkgver=4.1.0
-pkgrel=2
+pkgver=4.2.0
+pkgrel=1
 pkgdesc='Radeon Open Compute Common Language Runtime'
 arch=('x86_64')
 url='https://github.com/ROCm-Developer-Tools/ROCclr'
@@ -11,8 +11,8 @@ makedepends=('cmake')
 _opencl='https://github.com/RadeonOpenCompute/ROCm-OpenCL-Runtime'
 source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz"
         "$pkgname-opencl-$pkgver.tar.gz::$_opencl/archive/rocm-$pkgver.tar.gz")
-sha256sums=('9eb1d88cfc9474979aaf29b99bcf9d3769a0f7f1f8f10660941aabf83d9eeb0c'
-            '0729e6c2adf1e3cf649dc6e679f9cb936f4f423f4954ad9852857c0a53ef799c')
+sha256sums=('c57525af32c59becf56fd83cdd61f5320a95024d9baa7fb729a01e7a9fcdfd78'
+            '18133451948a83055ca5ebfb5ba1bd536ed0bcb611df98829f1251a98a38f730')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
 build() {

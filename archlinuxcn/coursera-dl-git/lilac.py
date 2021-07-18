@@ -5,7 +5,7 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 
 def pre_build():
-  aur_pre_build()
+  aur_pre_build(maintainers=['hexchain'])
   for l in edit_file('PKGBUILD'):
     if l.startswith('pkgrel'):
       l += '\nepoch=1'

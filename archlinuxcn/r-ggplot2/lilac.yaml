@@ -1,0 +1,16 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-digest
+  - r-glue
+  - r-gtable
+  - r-isoband
+  - r-rlang
+  - r-scales
+  - r-tibble
+  - r-withr
+update_on:
+  - regex: ggplot2_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=ggplot2

@@ -11,11 +11,13 @@ from lilaclib import *
 
 def pre_build():
     # run_cmd(["rm", "-rf", "emacs-git"])
-    aur_pre_build()
+    aur_pre_build('emacs-git', maintainers=['vorbote'])
     for line in edit_file('PKGBUILD'):
-            if line.startswith('replaces='):
-                    continue
-            print(line)
+        if line.startswith('replaces='):
+            continue
+        if line.startswith('source='):
+            line = 'source=("emacs-git::git://github.com/emacs-mirror/emacs.git")'
+        print(line)
 
 
 #post_build = aur_post_build

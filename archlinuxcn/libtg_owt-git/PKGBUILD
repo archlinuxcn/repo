@@ -2,19 +2,21 @@
 
 _pkgname=libtg_owt
 pkgname=${_pkgname}-git
-pkgver=0.git.r97.d1de6cb
+pkgver=0.git.r166.91d836d
 pkgrel=1
 pkgdesc='WebRTC library - static linked, git version'
 arch=('x86_64')
 url='https://github.com/desktop-app/tg_owt'
 license=('custom:BSD')
 depends=('protobuf')
-makedepends=('git' 'ninja' 'unzip' 'cmake' 'libxrandr' 'libxcomposite' 'openssl' 'glibc' 'ffmpeg' 'libva' 'opus' 'yasm' 'libjpeg-turbo' 'python' 'pipewire')
+makedepends=('git' 'ninja' 'unzip' 'cmake' 'libxrandr' 'libxcomposite' 'openssl' 'glibc' 'ffmpeg' 'libva' 'opus' 'yasm' 'libjpeg-turbo' 'python' 'pipewire' 'libxtst')
 options=('staticlibs')
 source=("tg_owt::git+${url}.git"
         "libvpx::git+https://chromium.googlesource.com/webm/libvpx.git"
-        "libyuv::git+https://chromium.googlesource.com/libyuv/libyuv.git")
+        "libyuv::git+https://chromium.googlesource.com/libyuv/libyuv.git"
+	"pipewire::git+https://github.com/PipeWire/pipewire.git")
 b2sums=('SKIP'
+        'SKIP'
         'SKIP'
         'SKIP')
 provides=('libtg_owt')
@@ -30,6 +32,7 @@ prepare() {
   git submodule init
   git config submodule.src/third_party/libvpx/source/libvpx.url "$srcdir"/libvpx
   git config submodule.src/third_party/libyuv.url "$srcdir"/libyuv
+  git config submodule.src/third_party/pipewire.url "$srcdir"/pipewire
   git submodule update
 }
 
@@ -46,6 +49,7 @@ build() {
     -DTG_OWT_OPENSSL_INCLUDE_PATH=/usr/include \
     -DTG_OWT_OPUS_INCLUDE_PATH=/usr/include/opus \
     -DTG_OWT_FFMPEG_INCLUDE_PATH=/usr/include \
+    -DTG_OWT_DLOPEN_PIPEWIRE=OFF \
     ..
   ninja
 }

@@ -1,0 +1,30 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=iterators
+_pkgver=1.0.13
+pkgname=r-${_pkgname,,}
+pkgver=1.0.13
+pkgrel=1
+pkgdesc='Provides Iterator Construct'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('Apache')
+depends=(
+  r
+)
+optdepends=(
+  r-foreach
+  r-runit
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('778e30e4c292da9f94d62acc637cf55273dae258199d847e62658f44840f11a4')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

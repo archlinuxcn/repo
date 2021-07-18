@@ -1,0 +1,18 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-biocgenerics
+  - r-biostrings
+  - r-genomeinfodb
+  - r-genomicranges
+  - r-iranges
+  - r-matrixstats
+  - r-rsamtools
+  - r-rtracklayer
+  - r-s4vectors
+  - r-xvector
+update_on:
+  - regex: BSgenome_([\d._-]+).tar.gz
+    source: regex
+    url: https://bioconductor.org/packages/BSgenome

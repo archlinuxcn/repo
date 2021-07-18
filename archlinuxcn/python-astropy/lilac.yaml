@@ -10,5 +10,6 @@ update_on:
     aur: python-astropy
   - alias: python
 
-pre_build: aur_pre_build
+pre_build_script: aur_pre_build(maintainers='mboquien')
+
 post_build: aur_post_build

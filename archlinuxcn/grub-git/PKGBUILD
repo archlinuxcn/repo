@@ -28,9 +28,8 @@ backup=('etc/default/grub'
         'etc/grub.d/40_custom')
 options=('!makeflags')
 
-conflicts=('grub-common' 'grub-bios' 'grub-emu' "grub-efi-${_EFI_ARCH}" 'grub-legacy')
-replaces=('grub-common' 'grub-bios' 'grub-emu' "grub-efi-${_EFI_ARCH}")
-provides=('grub-common' 'grub-bios' 'grub-emu' "grub-efi-${_EFI_ARCH}")
+conflicts=('grub')
+provides=('grub')
 
 makedepends=('git' 'rsync' 'xz' 'freetype2' 'ttf-dejavu' 'python' 'autogen'
              'texinfo' 'help2man' 'gettext' 'device-mapper' 'fuse2')
@@ -60,7 +59,7 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'b7668a5d498972dc4981250c49f83601babce797be19b4fdd0f2f1c6cfbd0fc5'
-            '580a81b00088773d554832b0d74c85bf16fec37728802973c45993bcb97cd7d5'
+            '8488aec30a93e8fe66c23ef8c23aefda39c38389530e9e73ba3fbcc8315d244d'
             '5dee6628c48eef79812bb9e86ee772068d85e7fcebbd2b2b8d1e19d24eda9dab'
             '791fadf182edf8d5bee4b45c008b08adce9689a9624971136527891a8f67d206')
 

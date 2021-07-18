@@ -1,0 +1,9 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-insight
+update_on:
+  - regex: bayestestR_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=bayestestR

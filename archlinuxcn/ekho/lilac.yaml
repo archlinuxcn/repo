@@ -1,12 +1,10 @@
 maintainers:
   - github: farseerfc
-
 build_prefix: extra-x86_64
-
 post_build: git_pkgbuild_commit
-
 update_on:
   - source: aur
     aur: ekho
-  - source: archpkg
-    archpkg: festival
+  - source: alpm
+    alpm: festival
+    repo: extra

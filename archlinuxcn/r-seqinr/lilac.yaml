@@ -1,0 +1,10 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-ade4
+  - r-segmented
+update_on:
+  - regex: seqinr_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=seqinr

@@ -1,0 +1,19 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-backports
+  - r-cli
+  - r-magrittr
+  - r-purrr
+  - r-r.cache
+  - r-rematch2
+  - r-rlang
+  - r-rprojroot
+  - r-tibble
+  - r-withr
+  - r-xfun
+update_on:
+  - regex: styler_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=styler

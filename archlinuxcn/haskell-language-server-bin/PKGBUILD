@@ -1,7 +1,7 @@
 # Maintainer: berberman <hatsue@typed.icu>
 
 pkgname=haskell-language-server-bin
-pkgver=1.1.0
+pkgver=1.2.0
 pkgrel=1
 pkgdesc="Successor of ghcide & haskell-ide-engine. One IDE to rule them all."
 arch=('x86_64')
@@ -11,17 +11,18 @@ depends=()
 provides=('haskell-language-server')
 conflicts=('haskell-language-server' 'haskell-language-server-git')
 source=()
-sha256sums=('93976e622ec27f96c1ee56293f7fba3e1dc86af4dd762c5c54582bc5b5bb72b6'
-            'ef39563144ced4ba26a53d02ac1ba9d4f26ff932c1305c5b75cec1aec419f5be'
-            '0dea95c02cff74b827bb5d126553b3d22a7ad066c17870771bfc3dc7df02baef'
-            '23d1a9e28280b5153e92cb1f6cc0f0be7b83ca94c7a8815bb4d28aae81d86536'
-            '6f6736efee87f1bb28a3d87433a44e2076c183c8efac67b674e6dcf18226a445'
-            '84db2ec0827b0bb528c967f5c5715d43aeeba2704e42170169e2959578ce515c'
-            'c7b4d0fcec3ee6f697a578b791e6c6caf5e6b816dd310e65ee9d8acbb46af9a9'
-            'c47ddfd35ef8becebe7f5c0f2c04fa597c76753999c26d91dad8918f342d16c8'
-            'bb01c0e9d0a10e007c05ed7f621ee0d1f30cab9a9b8b72fd9a2e3d63b2162995')
+sha256sums=('a9d7ebf8c175353931f8fde79f1298f9012341814231059a8b0fee4a68084c5a'
+            '7e2d52983d6e2f365ba4706fec16689f58d86802afb580c0a0d124faea156fe3'
+            'c67fa2e8f40d47d071e6eafc30f6b616052eb65617f477b0d2938162b984e71a'
+            '1c2ac87ad1ecda53561ae07548897bb217cbd16bf06e2247a5b344edefdaa043'
+            'a2917fd83cb78f516d6077331b2e2738ce8b764757f853fcc37da217db8296ce'
+            'c9146e5abfc7a8a1aba05feae2b4ef15432ef0b085ae82b2186d0b2ce2b1f8b9'
+            'd48c64314ee7168e60ad326db12e1050fb975f2d1f7177cba862d25919b9a3dc'
+            '1ef7cba3d5f02765329bfa14df50b41085946c4c61dbb1d1f350c899f5bd7073'
+            'd5875ee656c272fa4d0d80da9a8d3c9ca36b4d1816892d075f091ce477ae1b0d'
+            'e19a3830268a7b34617bc9b935ebf8e2f50fb6628ee0f8317b83bafdb37b29ec')
 _prefix="${pkgname%-bin}-Linux"
-_ghc_versions=('8.6.4' '8.6.5' '8.8.2' '8.8.3' '8.8.4' '8.10.2' '8.10.3' '8.10.4')
+_ghc_versions=('8.6.4' '8.6.5' '8.8.2' '8.8.3' '8.8.4' '8.10.2' '8.10.3' '8.10.4' '8.10.5')
 
 for ver in ${_ghc_versions[@]}; do
   source+=("${_prefix}-${ver}-${pkgver}.gz::${url}/releases/download/${pkgver}/${_prefix}-${ver}.gz")

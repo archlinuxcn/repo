@@ -1,0 +1,16 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-broom
+  - r-magrittr
+  - r-purrr
+  - r-rlang
+  - r-tibble
+  - r-tidyr
+  - r-tidyselect
+  - r-vctrs
+update_on:
+  - regex: modelr_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=modelr

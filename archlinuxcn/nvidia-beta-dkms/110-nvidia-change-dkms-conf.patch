@@ -1,9 +1,9 @@
 --- a/kernel/dkms.conf
 +++ b/kernel/dkms.conf
-@@ -1,12 +1,20 @@
+@@ -1,12 +1,22 @@
  PACKAGE_NAME="nvidia"
 -PACKAGE_VERSION="__VERSION_STRING"
-+PACKAGE_VERSION="465.27"
++PACKAGE_VERSION="470.42.01"
  AUTOINSTALL="yes"
  
  # By default, DKMS will add KERNELRELEASE to the make command line; however,
@@ -23,4 +23,6 @@
 +DEST_MODULE_LOCATION[2]="/kernel/drivers/video"
 +BUILT_MODULE_NAME[3]="nvidia-drm"
 +DEST_MODULE_LOCATION[3]="/kernel/drivers/video"
++BUILT_MODULE_NAME[4]="nvidia-peermem"
++DEST_MODULE_LOCATION[4]="/kernel/drivers/video"
 +

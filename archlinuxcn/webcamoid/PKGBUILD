@@ -2,7 +2,7 @@
 
 pkgname=webcamoid
 pkgver=8.8.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Webcamoid is a full featured webcam capture application."
 url='https://webcamoid.github.io/'
 license=('GPL')
@@ -39,8 +39,13 @@ makedepends=('v4l-utils'
 provides=('webcamoid')
 conflicts=('webcamoid-git')
 install="${pkgname}.install"
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/${pkgname}/${pkgname}/archive/${pkgver}.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/${pkgname}/${pkgname}/archive/${pkgver}.tar.gz")
 sha256sums=('77ed77cbaf57180247485646b81af30edcc89ee545bc241c23d8bd648464bf15')
+
+prepare() { 
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  sed -i '1i #include <limits>' libAvKys/Plugins/VirtualCamera/src/VCamUtils/src/image/videoformat.h
+}
 
 build() {
     cd "$srcdir/${pkgname}-${pkgver}"

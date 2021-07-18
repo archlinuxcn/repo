@@ -2,9 +2,13 @@ post_install() {
   printf "$(tput setaf 4)  ->$(tput sgr0; tput bold) %s$(tput sgr0)\n" \
     'NOTE: You can create persistence images for ventoy with the "ventoy-persistent" command,'
   printf "$(tput setaf 4)  ->$(tput sgr0; tput bold) %s$(tput sgr0)\n" \
-    'which is a shortcut to "/opt/ventoy/CreatePersistentImg.sh"'
+    '      and losslessly expand persistence ".dat" files using "ventoy-extend-persistent",'
   printf "$(tput setaf 4)  ->$(tput sgr0; tput bold) %s$(tput sgr0)\n" \
-    '(See https://www.ventoy.net/en/plugin_persistence.html for documentation.)'
+    '      which are shortcuts to "/opt/ventoy/CreatePersistentImg.sh" and'
+  printf "$(tput setaf 4)  ->$(tput sgr0; tput bold) %s$(tput sgr0)\n" \
+    '      "/opt/ventoy/ExtendPersistentImg.sh", respectively.'
+  printf "$(tput setaf 4)  ->$(tput sgr0; tput bold) %s$(tput sgr0)\n" \
+    '      (See https://www.ventoy.net/en/plugin_persistence.html for documentation.)'
 }
 
 post_upgrade() {

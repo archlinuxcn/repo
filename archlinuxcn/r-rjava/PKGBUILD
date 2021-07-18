@@ -1,0 +1,27 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=rJava
+_pkgver=1.0-4
+pkgname=r-${_pkgname,,}
+pkgver=1.0.4
+pkgrel=1
+pkgdesc='Low-Level R to Java Interface'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('LGPL')
+depends=(
+  java-environment
+  r
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('1d4682796f3d3ae3593af22408d27c85a72549d2b156213c8bc410723983a9e5')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

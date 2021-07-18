@@ -1,21 +1,21 @@
-# Maintainer: Daniel Peukert <dan.peukert@gmail.com>
+# Maintainer: Daniel Peukert <daniel@peukert.cc>
 # Contributor: Jakob Gahde <j5lx@fmail.co.uk> (ocaml-migrate-parsetree PKGBUILD)
 _projectname='ocaml-migrate-parsetree'
 pkgname="${_projectname}2"
-pkgver='2.1.0'
+pkgver='2.2.0'
 pkgrel='1'
 pkgdesc='Convert OCaml parsetrees between different major versions - 2.x.x version'
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/ocaml-ppx/$_projectname"
 license=('custom:LGPL2.1 with linking exception')
 depends=('ocaml>=4.02.3')
-makedepends=('dune>=1.11.0')
+makedepends=('dune>=2.3.0')
 options=('!strip')
 source=(
 	"$pkgname-$pkgver-$pkgrel.tar.gz::$url/archive/v$pkgver.tar.gz"
 	"$pkgname.diff"
 )
-sha256sums=('526e72f4bcbbe4dfb9d775338784b255a8200ae5244529329112028c6f981776'
+sha256sums=('718dcfa6d28d8a623f11da9798371f75c58fb0ab20fc968a037d3b96b36f8bf6'
             '3831b60723b68f5d70bfb5a12402491b0518e1642a2e2d9ec529c4c0b021e6e0')
 
 _sourcedirectory="$_projectname-$pkgver"

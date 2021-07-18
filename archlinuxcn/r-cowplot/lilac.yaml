@@ -1,0 +1,12 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-ggplot2
+  - r-gtable
+  - r-rlang
+  - r-scales
+update_on:
+  - regex: cowplot_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=cowplot

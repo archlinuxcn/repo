@@ -1,0 +1,49 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=rmarkdown
+_pkgver=2.9
+pkgname=r-${_pkgname,,}
+pkgver=2.9
+pkgrel=1
+pkgdesc='Dynamic Documents for R'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  pandoc
+  r
+  r-evaluate
+  r-htmltools
+  r-jsonlite
+  r-knitr
+  r-stringr
+  r-tinytex
+  r-xfun
+  r-yaml
+)
+optdepends=(
+  r-bslib
+  r-digest
+  r-dygraphs
+  r-fs
+  r-rsconnect
+  r-sass
+  r-shiny
+  r-testthat
+  r-tibble
+  r-tufte
+  r-vctrs
+  r-withr
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('6ce5af8b9a7c282619f74d3999d27ec4de12d3f93cde8fd12cc4c19f02ea8668')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

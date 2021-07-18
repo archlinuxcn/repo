@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build(maintainers='kescherAUR')
+    aur_pre_build(maintainers='Alberto_OS')
     pattern = re.compile("^ *['\"]?(?:vulkan-tools)['\"]?$")
     for line in edit_file('PKGBUILD'):
         if not pattern.match(line) and not line.startswith('groups='):

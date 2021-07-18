@@ -1,0 +1,14 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-curl
+  - r-data.table
+  - r-haven
+  - r-openxlsx
+  - r-readxl
+  - r-tibble
+update_on:
+  - regex: rio_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=rio

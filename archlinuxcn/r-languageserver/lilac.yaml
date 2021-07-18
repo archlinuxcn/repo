@@ -1,0 +1,21 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-callr
+  - r-collections
+  - r-desc
+  - r-fs
+  - r-jsonlite
+  - r-lintr
+  - r-r6
+  - r-repr
+  - r-roxygen2
+  - r-stringi
+  - r-styler
+  - r-xml2
+  - r-xmlparsedata
+update_on:
+  - regex: languageserver_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=languageserver

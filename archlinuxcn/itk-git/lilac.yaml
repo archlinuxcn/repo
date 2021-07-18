@@ -4,7 +4,10 @@ build_prefix: extra-x86_64
 time_limit_hours: 4
 repo_depends:
   - castxml
+  - dcmtk
   - gdcm
+  - kwiml-git
+  - vxl
 update_on:
   - source: cmd
     cmd: python -c "import time; print(int(time.time()) // (17 * 24 * 60 * 60))"

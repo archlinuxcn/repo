@@ -1,0 +1,28 @@
+diff -urN clustalx-2.1/ClustalQtParams.h clustalx-2.1a/ClustalQtParams.h
+--- clustalx-2.1/ClustalQtParams.h	2010-11-17 05:12:30.000000000 -0500
++++ clustalx-2.1a/ClustalQtParams.h	2010-11-18 12:19:42.450866697 -0500
+@@ -13,9 +13,9 @@
+ #include "clustalW/alignment/Alignment.h"
+ #include <vector>
+ 
+-static QString psColorFile = "colprot.xml";
+-static QString psDNAFile = "coldna.xml";
+-static QString psPrintFile = "colprint.xml";
++static QString psColorFile = "/usr/share/clustalx/colprot.xml";
++static QString psDNAFile = "/usr/share/clustalx/coldna.xml";
++static QString psPrintFile = "/usr/share/clustalx/colprint.xml";
+ 
+ static const int BlackAndWhite = 1;
+ static const int ColorsBackGround = 2;
+diff -urN clustalx-2.1/HelpDisplayWidget.cpp clustalx-2.1a/HelpDisplayWidget.cpp
+--- clustalx-2.1/HelpDisplayWidget.cpp	2010-11-17 05:12:30.000000000 -0500
++++ clustalx-2.1a/HelpDisplayWidget.cpp	2010-11-18 12:20:34.727866697 -0500
+@@ -19,7 +19,7 @@
+ #include <QtGui>
+ #include "Resources.h"
+ 
+-const string HelpDisplayWidget::helpFileName = "clustalx.hlp";
++const string HelpDisplayWidget::helpFileName = "/usr/share/clustalx/clustalx.hlp";
+ 
+ HelpDisplayWidget::HelpDisplayWidget(char helpPointer)
+ {

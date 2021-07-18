@@ -1,0 +1,13 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-later
+  - r-magrittr
+  - r-r6
+  - r-rcpp
+  - r-rlang
+update_on:
+  - regex: promises_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=promises

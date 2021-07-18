@@ -1,12 +1,10 @@
 pre_build: aur_pre_build
-
 post_build: aur_post_build
-
 update_on:
   - source: aur
     aur: r8125
-  - source: archpkg
-    archpkg: linux
-
+  - source: alpm
+    alpm: linux
+    repo: core
 maintainers:
   - github: dctxmei

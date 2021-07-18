@@ -1,0 +1,45 @@
+# Maintainer: hubutui <hot123tea123@gmail.com>
+
+_pkgname=cli
+_pkgver=3.0.1
+pkgname=r-${_pkgname,,}
+pkgver=3.0.1
+pkgrel=1
+pkgdesc='Helpers for Developing Command Line Interfaces'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-glue
+)
+optdepends=(
+  r-callr
+  r-covr
+  r-grdevices
+  r-htmlwidgets
+  r-knitr
+  r-methods
+  r-mockery
+  r-prettycode
+  r-ps
+  r-rmarkdown
+  r-rstudioapi
+  r-testthat
+  r-tibble
+  r-withr
+)
+options=(!emptydirs)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('d89a25b6cd760e157605676e104ce65473a7d8d64c289efdd9640e949968b4fd')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

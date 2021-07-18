@@ -1,17 +1,8 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index a07893771c..253843fa5b 100644
+index a027c69e0..eb7608518 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -596,7 +596,7 @@ if(Protobuf_FOUND OR Protobuf_FOUND)
-     if(NOT Protobuf_USE_STATIC_LIBS)
-       #Indeed here should be a warning, not a fatal error. ONNX Runtime itself can work in such a
-       #setting but it may cause compatibility issue when ONNX Runtime is integrated with the other ONNX ecosystem softwares.
--      message(FATAL_ERROR "Please enable Protobuf_USE_STATIC_LIBS")
-+      message(WARNING "Please enable Protobuf_USE_STATIC_LIBS")
-     endif()
-   else()
-     set(PROTOBUF_LIB protobuf::libprotobuf-lite)
-@@ -657,7 +657,8 @@ get_filename_component(ORTTRAINING_ROOT "${ORTTRAINING_ROOT}" ABSOLUTE)
+@@ -753,7 +753,8 @@ get_filename_component(ORTTRAINING_ROOT "${ORTTRAINING_ROOT}" ABSOLUTE)
  get_filename_component(REPO_ROOT "${REPO_ROOT}" ABSOLUTE)
  set(ONNXRUNTIME_INCLUDE_DIR ${REPO_ROOT}/include/onnxruntime)
  
@@ -21,13 +12,18 @@ index a07893771c..253843fa5b 100644
  
  set(SAFEINT_INCLUDE_DIR ${REPO_ROOT}/cmake/external/SafeInt)
  add_library(safeint_interface INTERFACE)
-@@ -668,10 +669,13 @@ if(onnxruntime_DISABLE_EXCEPTIONS)
+@@ -764,14 +765,17 @@ if(onnxruntime_DISABLE_EXCEPTIONS)
    add_compile_definitions(optional_CONFIG_NO_EXCEPTIONS=1)
  endif()
  
 -add_subdirectory(external/mp11 EXCLUDE_FROM_ALL)
 +add_library(boost_mp11 INTERFACE)
 +add_library(Boost::mp11 ALIAS boost_mp11)
+ 
+ set(JSON_BuildTests OFF CACHE INTERNAL "")
+ set(JSON_Install OFF CACHE INTERNAL "")
+-add_subdirectory(external/json EXCLUDE_FROM_ALL)
++find_package(nlohmann_json REQUIRED)
  
  if(onnxruntime_PREFER_SYSTEM_LIB)
 -  find_package(re2)
@@ -37,26 +33,13 @@ index a07893771c..253843fa5b 100644
  endif()
  if(NOT TARGET re2::re2)
    add_subdirectory(external/re2 EXCLUDE_FROM_ALL)
-@@ -947,7 +951,8 @@ set(FLATBUFFERS_BUILD_TESTS OFF CACHE BOOL "FLATBUFFERS_BUILD_TESTS" FORCE)
- set(FLATBUFFERS_INSTALL OFF CACHE BOOL "FLATBUFFERS_INSTALL" FORCE)
+@@ -1261,7 +1265,8 @@ set(FLATBUFFERS_INSTALL OFF CACHE BOOL "FLATBUFFERS_INSTALL" FORCE)
  set(FLATBUFFERS_BUILD_FLATHASH OFF CACHE BOOL "FLATBUFFERS_BUILD_FLATHASH" FORCE)
  set(FLATBUFFERS_BUILD_FLATLIB ON CACHE BOOL "FLATBUFFERS_BUILD_FLATLIB" FORCE)
+ set_msvc_c_cpp_compiler_warning_level(4)
 -add_subdirectory(external/flatbuffers EXCLUDE_FROM_ALL)
 +find_package(Flatbuffers REQUIRED)
 +add_library(flatbuffers ALIAS flatbuffers::flatbuffers_shared)
+ set_msvc_c_cpp_compiler_warning_level(3)
  list(APPEND onnxruntime_EXTERNAL_DEPENDENCIES flatbuffers)
  list(APPEND onnxruntime_EXTERNAL_LIBRARIES flatbuffers)
- 
-diff --git a/onnxruntime/core/session/inference_session_utils.h b/onnxruntime/core/session/inference_session_utils.h
-index 5899afac8d..2672be649d 100644
---- a/onnxruntime/core/session/inference_session_utils.h
-+++ b/onnxruntime/core/session/inference_session_utils.h
-@@ -18,7 +18,7 @@
- #pragma warning(push)
- #pragma warning(disable : 28020)
- #endif
--#include "single_include/nlohmann/json.hpp"
-+#include <nlohmann/json.hpp>
- #ifdef _WIN32
- #pragma warning(pop)
- #endif

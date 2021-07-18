@@ -1,0 +1,59 @@
+# Maintainer: hubutui <hot123tea123@gmail.com>
+
+_pkgname=tibble
+_pkgver=3.1.2
+pkgname=r-${_pkgname,,}
+pkgver=3.1.2
+pkgrel=1
+pkgdesc='Simple Data Frames'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-ellipsis
+  r-fansi
+  r-lifecycle
+  r-magrittr
+  r-pillar
+  r-pkgconfig
+  r-rlang
+  r-vctrs
+)
+optdepends=(
+  r-bench
+  r-bit64
+  r-blob
+  r-cli
+  r-covr
+  r-crayon
+  r-diagrammer
+  r-dplyr
+  r-evaluate
+  r-formattable
+  r-ggplot2
+  r-hms
+  r-htmltools
+  r-knitr
+  r-lubridate
+  r-mockr
+  r-nycflights13
+  r-purrr
+  r-rmarkdown
+  r-testthat
+  r-tidyr
+  r-withr
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('b67ebde1520346ee62be0043ee612d93d7242b6ca6bfa825c88a9a7254f8bcee')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

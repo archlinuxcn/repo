@@ -28,7 +28,7 @@ def pre_build():
       line = 'pkgbase=qt5-base-24h' + '\n' + '_origpkgname=qt5-base'
       checks = checks + '0'
     elif line.startswith('pkgrel='):
-      line = line + '.6'
+      line = line + '.7'
     elif line.startswith('pkgname='):
       line = 'pkgname=(qt5-base-24h)'
       checks = checks + '1'
@@ -52,7 +52,7 @@ provides=("qt5-base=$pkgver")
     elif line.startswith('source=('):
       line = line.replace('=(', '''=(
       oldherl-24h.patch
-      'ftp://unicode.org/Public/cldr/36/core.zip'
+      'https://build.archlinuxcn.org/~oldherl/files/cldr/36/core.zip'
       ''')
       checks = checks + '6'
     elif line.startswith('sha256sums=('):

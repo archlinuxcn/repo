@@ -1,7 +1,7 @@
 _name=libsass
 pkgname=python-libsass
-pkgver=0.20.1
-pkgrel=2
+pkgver=0.21.0
+pkgrel=1
 pkgdesc="Sass for Python: A straightforward binding of libsass for Python."
 arch=('x86_64')
 url="https://sass.github.io/libsass-python/"
@@ -9,16 +9,16 @@ license=('MIT License')
 depends=('python-six' 'libsass' 'python-setuptools')
 makedepends=('gcc')
 provides=('sassc')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/libsass-0.20.1.tar.gz")
-sha256sums=('e0e60836eccbf2d9e24ec978a805cd6642fa92515fbd95e3493fee276af76f8a')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/libsass-0.21.0.tar.gz")
+sha256sums=('d5ba529d9ce668be9380563279f3ffe988f27bc5b299c5a28453df2e0b0fbaf2')
 
 build() {
-  cd "$srcdir/libsass-0.20.1"
+  cd "$srcdir/libsass-0.21.0"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/libsass-0.20.1"
+  cd "$srcdir/libsass-0.21.0"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install any world-writable or root-readable-only files

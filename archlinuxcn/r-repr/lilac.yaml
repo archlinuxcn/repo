@@ -1,0 +1,12 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-base64enc
+  - r-htmltools
+  - r-jsonlite
+  - r-pillar
+update_on:
+  - regex: repr_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=repr

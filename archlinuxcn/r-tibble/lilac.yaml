@@ -1,0 +1,16 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-ellipsis
+  - r-fansi
+  - r-lifecycle
+  - r-magrittr
+  - r-pillar
+  - r-pkgconfig
+  - r-rlang
+  - r-vctrs
+update_on:
+  - regex: tibble_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=tibble

@@ -1,0 +1,16 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-curl
+  - r-dbi
+  - r-dbplyr
+  - r-dplyr
+  - r-filelock
+  - r-httr
+  - r-rappdirs
+  - r-rsqlite
+update_on:
+  - regex: BiocFileCache_([\d._-]+).tar.gz
+    source: regex
+    url: https://bioconductor.org/packages/BiocFileCache

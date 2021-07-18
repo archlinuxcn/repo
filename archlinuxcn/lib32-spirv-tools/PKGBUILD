@@ -2,7 +2,7 @@
 # Previous Maintainer: Kenneth Endfinger <kaendfinger@gmail.com>
 
 pkgname=lib32-spirv-tools
-pkgver=2020.5
+pkgver=2021.1
 pkgrel=1
 pkgdesc="API and commands for processing SPIR-V modules"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
@@ -16,8 +16,7 @@ makedepends=('cmake'
              'git'
 )
 source=("git+https://github.com/KhronosGroup/SPIRV-Tools.git#tag=v${pkgver}"
-        # Temporary fixed tags for the header files.
-        'git+https://github.com/KhronosGroup/SPIRV-Headers.git#tag=1.5.3.reservations1'
+        'git+https://github.com/KhronosGroup/SPIRV-Headers.git'
 )
 sha256sums=('SKIP'
             'SKIP'
@@ -25,7 +24,7 @@ sha256sums=('SKIP'
 
 prepare() {
   mkdir -p build
-  
+
   alias widl=
 }
 

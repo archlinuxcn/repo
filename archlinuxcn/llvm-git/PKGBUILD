@@ -4,14 +4,14 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=13.0.0_r387989.33399405f442
+pkgver=13.0.0_r393780.b5a84e214d49
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
 url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
-             'python-sphinx' 'ocaml' 'ocaml-ctypes' 'ocaml-findlib'
+             'python-sphinx' 'ocaml' 'ocaml-ctypes' 'ocaml-findlib' 'lua53'
              'python-recommonmark' 'python-sphinx-automodapi' 'cuda' 'ocl-icd' 'opencl-headers'
              'swig' 'python' 'libunwind' 'python2' 'tensorflow')
 
@@ -94,6 +94,7 @@ build() {
         -D SPHINX_WARNINGS_AS_ERRORS=OFF \
         -D POLLY_ENABLE_GPGPU_CODEGEN=ON \
         -D LLVM_VERSION_SUFFIX="" \
+        -D LLDB_ENABLE_PYTHON=ON \
         -D LLDB_USE_SYSTEM_SIX=1 \
         -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang" \
         -D TENSORFLOW_C_LIB_PATH="/usr/" # Force on
@@ -120,6 +121,7 @@ package_lldb-git() {
     depends=("clang-git=$pkgver-$pkgrel" "llvm-libs-git=$pkgver-$pkgrel")
     provides=("lldb=$pkgver")
     replaces=('lldb-svn')
+    optdepends=('lua53: scripting support')
     conflicts=('lldb' 'lldb-svn')
     _fakeinstall fakeinstall/usr/bin/lldb*
     _fakeinstall fakeinstall/usr/include/lldb
@@ -158,8 +160,8 @@ package_polly-git() {
     _fakeinstall fakeinstall/usr/lib/*Polly*
     _fakeinstall fakeinstall/usr/lib/libGPU*
     install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-     _fakeinstall fakeinstall/usr/share/doc/polly
-     _fakeinstall fakeinstall/usr/share/man/man1/polly.1
+ #    _fakeinstall fakeinstall/usr/share/doc/polly
+     _fakeinstall fakeinstall/usr/share/man/man1/polly*
 }
 
 package_compiler-rt-git() {
@@ -205,7 +207,7 @@ package_clang-git() {
     _fakeinstall fakeinstall/usr/lib/cmake/clang
 
     _fakeinstall fakeinstall/usr/libexec
-    _fakeinstall fakeinstall/usr/share/doc/clang*
+ #   _fakeinstall fakeinstall/usr/share/doc/clang*
     _fakeinstall fakeinstall/usr/share/clang
     _fakeinstall fakeinstall/usr/share/scan{-build,-view}
     _fakeinstall fakeinstall/usr/share/man/man1/{clang,diagtool,extraclangtools,scan-build}*
@@ -214,7 +216,7 @@ package_clang-git() {
     rm -rf "$pkgdir"/usr/share/doc/clang{,-tools}/html/{_sources,.buildinfo}
 
     # Move analyzer scripts out of /usr/libexec
-    mv "$pkgdir"/usr/libexec/{ccc,c++}-analyzer "$pkgdir/usr/lib/clang/"
+    mv "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/clang/"
     rmdir "$pkgdir/usr/libexec"
     sed -i 's|libexec|lib/clang|' "$pkgdir/usr/bin/scan-build"
     # Install Python bindings

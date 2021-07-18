@@ -1,0 +1,16 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-crosstalk
+  - r-htmltools
+  - r-htmlwidgets
+  - r-jsonlite
+  - r-knitr
+  - r-magrittr
+  - r-manipulatewidget
+  - r-shiny
+update_on:
+  - regex: rgl_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=rgl

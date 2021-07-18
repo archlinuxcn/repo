@@ -1,0 +1,38 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=reticulate
+_pkgver=1.20
+pkgname=r-${_pkgname,,}
+pkgver=1.20
+pkgrel=1
+pkgdesc="Interface to 'Python'"
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('Apache')
+depends=(
+  python
+  r
+  r-jsonlite
+  r-png
+  r-rappdirs
+  r-rcpp
+  r-withr
+)
+optdepends=(
+  r-callr
+  r-knitr
+  r-rmarkdown
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('7019404c8097821f38577c44f9630132c9ae0f9b148dc1950047d2d1c062c82b')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

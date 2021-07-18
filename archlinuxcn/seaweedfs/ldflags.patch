@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index 59a3c46..1d285ed 100644
+--- a/Makefile
++++ b/Makefile
+@@ -34,7 +34,7 @@ deps:
+ 	rm -rf /home/travis/gopath/src/go.etcd.io/etcd/vendor/golang.org/x/net/trace
+ 
+ build: deps
+-	go build $(GO_FLAGS) -ldflags "$(LDFLAGS)" -o $(BINARY) $(SOURCE_DIR)
++	go build $(GO_FLAGS) -ldflags "-X github.com/chrislusf/seaweedfs/weed/util.COMMIT=${COMMIT} -extldflags $(LDFLAGS)" -o $(BINARY) $(SOURCE_DIR)
+ 
+ linux: deps
+ 	mkdir -p linux

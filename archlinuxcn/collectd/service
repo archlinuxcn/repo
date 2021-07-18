@@ -1,0 +1,11 @@
+[Unit]
+Description=System statistics collection daemon
+After=local-fs.target network.target
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/collectd
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

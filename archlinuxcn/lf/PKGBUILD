@@ -4,7 +4,7 @@
 # Contributor: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=lf
-pkgver=22
+pkgver=24
 pkgrel=1
 license=('MIT')
 pkgdesc="A terminal file manager inspred by ranger written in Go"
@@ -13,7 +13,7 @@ makedepends=('go')
 arch=('aarch64' 'armv7h' 'i686' 'x86_64')
 url="https://github.com/gokcehan/lf"
 source=("$pkgname-r$pkgver.tar.gz::https://github.com/gokcehan/$pkgname/archive/r$pkgver.tar.gz")
-sha256sums=('2da82d8c6108b14ce866f49a308d2c7afc0d79bc4254a395e5b4cf07f3fe2c97')
+sha256sums=('252e7fda36b874260e78285ddad1e4d8001cc1a40fcc27812ef155bbb10d9855')
 
 prepare() {
   # prevent creation of a `go` directory in one's home.

@@ -1,0 +1,13 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-biocgenerics
+  - r-biostrings
+  - r-iranges
+  - r-rcpp
+  - r-s4vectors
+update_on:
+  - regex: msa_([\d._-]+).tar.gz
+    source: regex
+    url: https://bioconductor.org/packages/msa

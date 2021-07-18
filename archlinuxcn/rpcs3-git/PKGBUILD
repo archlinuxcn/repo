@@ -2,9 +2,9 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.16.12242.fe17c8302
-pkgrel=2
-pkgdesc='A Sony PlayStation 3 emulator (GIT Version)'
+pkgver=0.0.17.12497.6f6503ee3
+pkgrel=1
+pkgdesc='A Sony PlayStation 3 emulator'
 arch=(x86_64)
 url=https://github.com/RPCS3/rpcs3
 license=(GPL2)
@@ -31,6 +31,9 @@ depends=(
   vulkan-icd-loader
   zlib
   curl
+  wolfssl
+  flatbuffers
+  pugixml
 )
 makedepends=(
   cmake
@@ -41,7 +44,6 @@ makedepends=(
 )
 provides=(rpcs3)
 conflicts=(rpcs3)
-replaces=(rpcs3-avx-git rpcs3-avx2-git)
 options=(!emptydirs)
 source=(
   git+https://github.com/RPCS3/rpcs3.git
@@ -66,15 +68,30 @@ pkgver() {
 prepare() {
   cd rpcs3
   
-  git submodule init Vulkan/glslang llvm
-  git config submodule.glslang.url ../glslang
+  git submodule init 3rdparty/glslang/glslang llvm
+  git config submodule.3rdparty/glslang.url ../glslang
   git config submodule.llvm.url ../rpcs3-llvm
   
-  SUBMODULES=$(git config --file .gitmodules --get-regexp path | awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/llvm/ && !/glslang/ { print $2 }')
+  SUBMODULES=($(git config --file .gitmodules --get-regexp path | \
+    awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/llvm/ && !/glslang/ && !/wolfssl/ && !/pugixml/ && !/flatbuffers/'))
 
-  git submodule update --init --depth=1 $SUBMODULES
+  # We need to convert from a relative folder path to a https://github.com path
+  for ((i=0;i<${#SUBMODULES[@]};i+=2))
+  do
+    pathid=${SUBMODULES[$i]}
+    path=${SUBMODULES[$i+1]}
+
+    git submodule init $path
+    urlid=${pathid/%.path/.url}
+
+    # This gets the last two paths in the url, ie RPCS3/rpcs3.git
+    url=$(git config $urlid | awk -F/ '{print $(NF-1)"/"$(NF-0)}')
+
+    git config $urlid https://github.com/$url
+    git submodule update --init --depth=1 $path
+  done
   
-  git submodule update Vulkan/glslang llvm
+  git submodule update 3rdparty/glslang/glslang llvm
 }
 
 build() {
@@ -86,7 +103,11 @@ build() {
     -DUSE_SYSTEM_FFMPEG=ON \
     -DUSE_SYSTEM_LIBPNG=ON \
     -DUSE_SYSTEM_ZLIB=ON \
-    -DUSE_SYSTEM_CURL=ON
+    -DUSE_SYSTEM_CURL=ON \
+    -DUSE_SYSTEM_WOLFSSL=ON \
+    -DUSE_SYSTEM_FLATBUFFERS=ON \
+    -DUSE_SYSTEM_PUGIXML=ON
+  
   make -C build
 }
 

@@ -1,15 +1,15 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=libdeflate
-pkgver=1.7
-pkgrel=2
+pkgver=1.8
+pkgrel=1
 pkgdesc='Heavily optimized library for DEFLATE/zlib/gzip compression and decompression'
 arch=('x86_64')
 url='https://github.com/ebiggers/libdeflate'
 license=('MIT')
 depends=('glibc')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ebiggers/libdeflate/archive/v${pkgver}.tar.gz")
-sha512sums=('82b297af2d3128a244e561893cce1d3664de410469ba6745c3f68fc3a1962c62467c427f3857bb679578e0f704cd0eba1a64b13c30505addd310ff9af1883068')
+sha512sums=('b40caecdf783487488a5bd8213304175348b9db9bc1efdf6d5222fb912f61698b5e196522195a3640d7ff61ba953a93c0c8f75e07f548ac8b9d9c5dd5a787544')
 
 build() {
   make -C "${pkgname}-${pkgver}"

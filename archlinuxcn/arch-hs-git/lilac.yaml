@@ -1,43 +1,55 @@
 maintainers:
   - github: felixonmars
   - github: berberman
-
 build_prefix: extra-x86_64
-
-pre_build: aur_pre_build
+pre_build_script: aur_pre_build(maintainers='berberman')
 post_build: aur_post_build
-
 update_on:
   - source: vcs
   - source: aur
     aur: arch-hs-git
-  - source: archpkg
-    archpkg: haskell-aeson
-  - source: archpkg
-    archpkg: haskell-req
-  - source: archpkg
-    archpkg: haskell-hackage-db
-  - source: archpkg
-    archpkg: haskell-megaparsec
-  - source: archpkg
-    archpkg: haskell-algebraic-graphs
-  - source: archpkg
-    archpkg: haskell-conduit
-  - source: archpkg
-    archpkg: haskell-tar-conduit
-  - source: archpkg
-    archpkg: haskell-conduit-extra
-  - source: archpkg
-    archpkg: haskell-split
-  - source: archpkg
-    archpkg: haskell-neat-interpolation
-  - source: archpkg
-    archpkg: haskell-microlens
-  - source: archpkg
-    archpkg: haskell-microlens-th
-  - source: archpkg
-    archpkg: haskell-polysemy
-  - source: archpkg
-    archpkg: haskell-colourista
-  - source: archpkg
-    archpkg: haskell-optparse-applicative
+  - source: alpm
+    alpm: haskell-aeson
+    repo: community
+  - source: alpm
+    alpm: haskell-hackage-db
+    repo: community
+  - source: alpm
+    alpm: haskell-megaparsec
+    repo: community
+  - source: alpm
+    alpm: haskell-algebraic-graphs
+    repo: community
+  - source: alpm
+    alpm: haskell-conduit
+    repo: community
+  - source: alpm
+    alpm: haskell-tar-conduit
+    repo: community
+  - source: alpm
+    alpm: haskell-conduit-extra
+    repo: community
+  - source: alpm
+    alpm: haskell-split
+    repo: community
+  - source: alpm
+    alpm: haskell-neat-interpolation
+    repo: community
+  - source: alpm
+    alpm: haskell-microlens
+    repo: community
+  - source: alpm
+    alpm: haskell-microlens-th
+    repo: community
+  - source: alpm
+    alpm: haskell-polysemy
+    repo: community
+  - source: alpm
+    alpm: haskell-optparse-applicative
+    repo: community
+  - source: alpm
+    alpm: haskell-arch-web
+    repo: community
+  - source: alpm
+    alpm: haskell-prettyprinter-ansi-terminal
+    repo: community

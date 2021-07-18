@@ -39,7 +39,6 @@ build() {
   cmake \
     -DBUILD_LMDB:BOOL=ON \
     -DCMAKE_BUILD_TYPE:String=Release \
-    -DCMAKE_CUDA_HOST_COMPILER=/opt/cuda/bin/g++ \
     -DCMAKE_INSTALL_PREFIX:PATH=/usr \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DProtobuf_USE_STATIC_LIBS:BOOL=OFF \

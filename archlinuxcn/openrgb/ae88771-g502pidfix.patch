@@ -1,0 +1,13 @@
+diff --git a/Controllers/LogitechController/LogitechControllerDetect.cpp b/Controllers/LogitechController/LogitechControllerDetect.cpp
+index 270841db18c70fd3d7757f9435cd562e438e1cf2..a254d8d843a1913e93b6d72d850c95120e95d6fb 100644
+--- a/Controllers/LogitechController/LogitechControllerDetect.cpp
++++ b/Controllers/LogitechController/LogitechControllerDetect.cpp
+@@ -662,7 +662,7 @@ REGISTER_HID_DETECTOR_IPU("Logitech G Pro Wireless Gaming Mouse",
+ | Lightspeed Wireless Devices (Linux Wired)                                                                                                          |
+ \*-------------------------------------------------------------------------------------------------------------------------------------------------*/
+ REGISTER_HID_DETECTOR_IPU("Logitech G403 Wireless Gaming Mouse (wired)",        DetectLogitechWired,        LOGITECH_VID, LOGITECH_G403_LIGHTSPEED_PID,         1, 0xFF00, 2);
+-REGISTER_HID_DETECTOR_IPU("Logitech G502 Wireless Gaming Mouse (wired)",        DetectLogitechWired,        LOGITECH_VID, LOGITECH_G502_HERO_PID,               1, 0xFF00, 2);
++REGISTER_HID_DETECTOR_IPU("Logitech G502 Wireless Gaming Mouse (wired)",        DetectLogitechWired,        LOGITECH_VID, LOGITECH_G502_LIGHTSPEED_PID,         1, 0xFF00, 2);
+ REGISTER_HID_DETECTOR_IPU("Logitech G703 Wireless Gaming Mouse (wired)",        DetectLogitechWired,        LOGITECH_VID, LOGITECH_G703_LIGHTSPEED_PID,         1, 0xFF00, 2);
+ REGISTER_HID_DETECTOR_IPU("Logitech G900 Wireless Gaming Mouse (wired)",        DetectLogitechWired,        LOGITECH_VID, LOGITECH_G900_LIGHTSPEED_PID,         1, 0xFF00, 2);
+ REGISTER_HID_DETECTOR_IPU("Logitech G903 Wireless Gaming Mouse (wired)",        DetectLogitechWired,        LOGITECH_VID, LOGITECH_G903_LIGHTSPEED_PID,         1, 0xFF00, 2);

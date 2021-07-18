@@ -1,5 +1,3 @@
-# XXX: The format for `maintainers` is subjected to changes.
-# See https://github.com/archlinuxcn/lilac/pull/68
 
 maintainers:
   - github: farseerfc
@@ -9,4 +7,7 @@ build_prefix: extra-x86_64
 update_on:
   - source: aur
     aur: timeshift
-pre_build: aur_pre_build
+
+pre_build_script: aur_pre_build(maintainers=['yochananmarqos','librewish'])
+
+post_build: aur_post_build

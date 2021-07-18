@@ -1,0 +1,39 @@
+# Maintainer: hubutui <hot123tea123@gmail.com>
+
+_pkgname=S4Vectors
+_pkgver=0.30.0
+pkgname=r-${_pkgname,,}
+pkgver=0.30.0
+pkgrel=1
+pkgdesc='Foundation of vector-like and list-like containers in Bioconductor'
+arch=('x86_64')
+url="https://bioconductor.org/packages/${_pkgname}"
+license=('Artistic2.0')
+depends=(
+  r
+  r-biocgenerics
+)
+optdepends=(
+  r-biocstyle
+  r-data.table
+  r-delayedarray
+  r-genomicranges
+  r-graph
+  r-iranges
+  r-matrix
+  r-runit
+  r-shortread
+  r-summarizedexperiment
+)
+source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('98dce0f9a5f92419e6fa5ce4237e1b352c964b2ad4fd5afddbf108055eedbb6c')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

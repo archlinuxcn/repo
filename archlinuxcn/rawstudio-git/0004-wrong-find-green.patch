@@ -1,0 +1,23 @@
+diff --git a/plugins/load-dcraw/dcraw.cc b/plugins/load-dcraw/dcraw.cc
+index 07293f85..9ab3bcd7 100644
+--- a/plugins/load-dcraw/dcraw.cc
++++ b/plugins/load-dcraw/dcraw.cc
+@@ -9240,13 +9240,13 @@ void CLASS identify()
+       filters = 0x16161616;
+     }
+     if (make[0] == 'O') {
+-      i = find_green (12, 32, 1188864, 3576832);
+-      c = find_green (12, 32, 2383920, 2387016);
+-      if (abs(i) < abs(c)) {
+-	SWAP(i,c);
++      float g1 = find_green (12, 32, 1188864, 3576832);
++      float g2 = find_green (12, 32, 2383920, 2387016);
++      if (fabsf(g1) < fabsf(g2)) {
++	SWAP(g1,g2);
+ 	load_flags = 24;
+       }
+-      if ((int) i < 0) filters = 0x61616161;
++      if (g1 < 0) filters = 0x61616161;
+     }
+   } else if (fsize == 5869568) {
+     if (!timestamp && minolta_z2()) {

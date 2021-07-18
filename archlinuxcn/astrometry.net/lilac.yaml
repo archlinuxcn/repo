@@ -1,6 +1,5 @@
 maintainers:
   - github: oldherl
-
 repo_depends:
   - python-astropy
 
@@ -9,14 +8,17 @@ update_on:
     github: dstndstn/astrometry.net
     use_latest_release: true
   - alias: python
-  - source: archpkg
-    archpkg: wcslib
+  - source: alpm
     strip_release: true
-  - source: archpkg
-    archpkg: gsl
+    alpm: wcslib
+    repo: community
+  - source: alpm
     strip_release: true
-  - source: archpkg
-    archpkg: cfitsio
+    alpm: gsl
+    repo: extra
+  - source: alpm
     strip_release: true
+    alpm: cfitsio
+    repo: extra
   - source: manual
     manual: 2

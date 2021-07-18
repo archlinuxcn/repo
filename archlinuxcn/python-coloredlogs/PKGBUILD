@@ -1,21 +1,34 @@
 # Maintainer: Maikel Wever <maikelwever@gmail.com>
+# Maintainer: Matthew Gamble <git@matthewgamble.net>
+
 pkgname=python-coloredlogs
-pkgver=15.0
-pkgrel=1
+pkgver=15.0.1
+pkgrel=2
 pkgdesc="Colored terminal output for Python's logging module"
+arch=('any')
 url="https://github.com/xolox/python-coloredlogs"
 license=('MIT')
 depends=('python' 'python-humanfriendly')
-makedepends=('python-setuptools')
+makedepends=('python-setuptools' 'python-sphinx')
 source=("https://github.com/xolox/${pkgname}/archive/${pkgver}.tar.gz")
-md5sums=('1999ab887e0bf410921c85ade47c1317')
-arch=('any')
+sha256sums=('e8161222671bb129f7936cd220c275a3cbc0a6c22313bd4483114b9526e5695f')
+
+build() {
+  cd "${pkgname}-${pkgver}"
+
+  python setup.py build
+
+  cd docs
+  sphinx-build -nb html -d build/doctrees . build/html
+}
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
-  python setup.py install --root="$pkgdir/" --optimize=1
-  mkdir -p ${pkgdir}/usr/share/licenses/${pkgname}
-  cp LICENSE.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.txt
+  cd "${pkgname}-${pkgver}"
+
+  PYTHONHASHSEED=0 python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/python-coloredlogs/LICENSE.txt"
+  install -Dm644 CHANGELOG.rst "${pkgdir}/usr/share/doc/python-coloredlogs/CHANGELOG.rst"
+  cp -r docs/build/html "${pkgdir}/usr/share/doc/python-coloredlogs/html"
 }
 
 # vim:set ts=2 sw=2 et:

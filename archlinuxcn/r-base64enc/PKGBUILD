@@ -1,0 +1,29 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=base64enc
+_pkgver=0.1-3
+pkgname=r-${_pkgname,,}
+pkgver=0.1.3
+pkgrel=1
+pkgdesc='Tools for base64 encoding'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+)
+optdepends=(
+  r-png
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('6d856d8a364bcdc499a0bf38bfd283b7c743d08f0b288174fba7dbf0a04b688d')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

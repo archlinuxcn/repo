@@ -3,7 +3,7 @@
 # Contributor: ful1e5 <kaizmandhu at gmail dot com>
 
 pkgname=bibata-cursor-theme
-pkgver=1.1.1
+pkgver=1.1.2
 pkgrel=1
 pkgdesc="Material Based Cursor Theme"
 arch=('any')
@@ -15,8 +15,8 @@ options=('!strip')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
         "$pkgname-bitmaps-$pkgver.zip::$url/releases/download/v$pkgver/bitmaps.zip")
 noextract=("$pkgname-bitmaps-$pkgver.zip")
-sha256sums=('fb195e48cd9669ee915c038e5138acf39a5e2175696b95e94b3095d9c7847204'
-            '9ec5b60c8de324f6ac732f17eb7c32ac4e5901df433703d746b9c13b45bb0479')
+sha256sums=('c0a9b8b09835de7dfc8270de9e4754bc1b96890d4d91b2350fd7ca026f577a62'
+            '31ecd4c40d40abf639b3a2b5992f2531a765d8c8b8fefba1f71a3890d53596dd')
 
 prepare() {
   cd Bibata_Cursor-$pkgver
@@ -28,14 +28,7 @@ prepare() {
 
 build() {
   cd Bibata_Cursor-$pkgver/builder
-  _themes='Amber Classic Ice'
-  _sizes='22 24 28 32 40 48 56 64 72 80 88 96'
-
-  set -- ${_sizes}
-  for t in ${_themes}; do
-    python build.py unix -p "../bitmaps/Bibata-Modern-$t" --xsizes ${_sizes[@]}
-    python build.py unix -p "../bitmaps/Bibata-Original-$t" --xsizes ${_sizes[@]}
-  done
+  make build_unix
 }
 
 package() {

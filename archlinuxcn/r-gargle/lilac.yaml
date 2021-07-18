@@ -1,0 +1,17 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-cli
+  - r-fs
+  - r-glue
+  - r-httr
+  - r-jsonlite
+  - r-rappdirs
+  - r-rlang
+  - r-rstudioapi
+  - r-withr
+update_on:
+  - regex: gargle_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=gargle

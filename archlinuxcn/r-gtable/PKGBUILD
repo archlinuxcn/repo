@@ -1,0 +1,34 @@
+# Maintainer: hubutui <hot123tea123@gmail.com>
+
+_pkgname=gtable
+_pkgver=0.3.0
+pkgname=r-${_pkgname,,}
+pkgver=0.3.0
+pkgrel=1
+pkgdesc="Arrange 'Grobs' in Tables"
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+)
+optdepends=(
+  r-covr
+  r-ggplot2
+  r-knitr
+  r-profvis
+  r-rmarkdown
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('fd386cc4610b1cc7627dac34dba8367f7efe114b968503027fb2e1265c67d6d3')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

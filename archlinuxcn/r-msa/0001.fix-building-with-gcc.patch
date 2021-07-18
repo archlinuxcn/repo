@@ -1,0 +1,12 @@
+diff --color -uprN msa/src/gc-7.2/msaMakefile msa-new/src/gc-7.2/msaMakefile
+--- msa/src/gc-7.2/msaMakefile	2021-05-20 03:06:32.000000000 +0800
++++ msa-new/src/gc-7.2/msaMakefile	2021-06-04 14:54:13.138381043 +0800
+@@ -1,7 +1,7 @@
+ all: build_gc
+ 
+ build_gc:
+-	./configure --enable-cplusplus --enable-threads=pthreads --enable-shared --with-pic
++	CFLAGS="${CFLAGS} -fcommon" ./configure --enable-cplusplus --enable-threads=pthreads --enable-shared --with-pic
+ 	make
+ 	cp .libs/libgc.a ../
+ 	cp .libs/libgccpp.a ../ 

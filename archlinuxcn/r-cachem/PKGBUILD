@@ -1,0 +1,32 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=cachem
+_pkgver=1.0.5
+pkgname=r-${_pkgname,,}
+pkgver=1.0.5
+pkgrel=1
+pkgdesc='Cache R Objects with Automatic Pruning'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-fastmap
+  r-rlang
+)
+optdepends=(
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('82cf4af8363740cdefde655322570c109c99d6c64bd8271732c7123aa1c32ff6')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

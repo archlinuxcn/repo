@@ -1,0 +1,15 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-biobase
+  - r-biocgenerics
+  - r-dbi
+  - r-iranges
+  - r-keggrest
+  - r-rsqlite
+  - r-s4vectors
+update_on:
+  - regex: AnnotationDbi_([\d._-]+).tar.gz
+    source: regex
+    url: https://bioconductor.org/packages/AnnotationDbi

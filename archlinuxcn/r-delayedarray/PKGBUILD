@@ -1,0 +1,43 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=DelayedArray
+_pkgver=0.18.0
+pkgname=r-${_pkgname,,}
+pkgver=0.18.0
+pkgrel=1
+pkgdesc='A unified framework for working transparently with on-disk and in-memory array-like datasets'
+arch=('x86_64')
+url="https://bioconductor.org/packages/${_pkgname}"
+license=('Artistic2.0')
+depends=(
+  r
+  r-biocgenerics
+  r-iranges
+  r-matrixgenerics
+  r-s4vectors
+)
+optdepends=(
+  r-airway
+  r-biocparallel
+  r-biocstyle
+  r-delayedmatrixstats
+  r-genefilter
+  r-hdf5array
+  r-knitr
+  r-lobstr
+  r-rmarkdown
+  r-runit
+  r-summarizedexperiment
+)
+source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('59e2f53c97ccac0f74015bbb50ba576da4afec615b1a9df0b6ece3268c10c370')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

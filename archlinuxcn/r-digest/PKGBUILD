@@ -1,0 +1,32 @@
+# Maintainer: hubutui <hot123tea123@gmail.com>
+
+_pkgname=digest
+_pkgver=0.6.27
+pkgname=r-${_pkgname,,}
+pkgver=0.6.27
+pkgrel=1
+pkgdesc='Create Compact Hash Digests of R Objects'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+)
+optdepends=(
+  r-knitr
+  r-minidown
+  r-rmarkdown
+  r-tinytest
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('f485f75122907da24c41d4a62c91a232f0c371befd2f77e973342a1bef00253f')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

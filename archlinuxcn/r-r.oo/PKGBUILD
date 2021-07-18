@@ -1,0 +1,30 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=R.oo
+_pkgver=1.24.0
+pkgname=r-${_pkgname,,}
+pkgver=1.24.0
+pkgrel=1
+pkgdesc='R Object-Oriented Programming with or without References'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('LGPL')
+depends=(
+  r
+  r-r.methodss3
+)
+optdepends=(
+  r-tools
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('37a1dab8dd668ceba69a1ba36c0c60e9809e29b74bd56d1e8ed519e19c8e3bb6')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

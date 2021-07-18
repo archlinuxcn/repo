@@ -1,15 +1,18 @@
 # Maintainer: Sven-Hendrik Haase <svenstaro@gmail.com>
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-git
-pkgver=2.7.5.r1.g95b443539
+pkgver=2.8.4.r28.g1261c775d
 pkgrel=1
 pkgdesc='Official Telegram Desktop client'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL3')
-depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal' 'webkit2gtk'
-         'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5' 'kwayland' 'gtk3' 'glibmm')
-makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'microsoft-gsl' 'libtg_owt-git')
+depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal' 'ttf-opensans'
+         'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5' 'kwayland' 'gtk3' 'glibmm'
+         'webkit2gtk' 'rnnoise' 'pipewire' 'libxtst' 'libxrandr' )
+makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'microsoft-gsl'
+             'extra-cmake-modules' 'jemalloc'
+             'libtg_owt-git')
 optdepends=('ttf-opensans: default Open Sans font family')
 provides=("telegram-desktop")
 conflicts=("telegram-desktop")
@@ -120,8 +123,14 @@ prepare() {
     git submodule update
 
     cd cmake
-    # force webrtc link to libjpeg
+    # force webrtc link to libjpeg and X11 libs
     echo "target_link_libraries(external_webrtc INTERFACE jpeg)" | tee -a external/webrtc/CMakeLists.txt
+    echo "find_package(X11 REQUIRED COMPONENTS Xcomposite Xdamage Xext Xfixes Xrender Xrandr Xtst)" | tee -a external/webrtc/CMakeLists.txt
+    echo "target_link_libraries(external_webrtc INTERFACE Xcomposite Xdamage Xext Xfixes Xrandr Xrender Xtst)" | tee -a external/webrtc/CMakeLists.txt
+
+    # cp libjemalloc from jemalloc package
+    mkdir -p external/jemalloc/jemalloc-prefix/src/jemalloc/lib/
+    cp /usr/lib/libjemalloc_pic.a external/jemalloc/jemalloc-prefix/src/jemalloc/lib/libjemalloc.a
 }
 
 build() {

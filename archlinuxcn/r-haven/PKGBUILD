@@ -1,0 +1,45 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=haven
+_pkgver=2.4.1
+pkgname=r-${_pkgname,,}
+pkgver=2.4.1
+pkgrel=1
+pkgdesc="Import and Export 'SPSS', 'Stata' and 'SAS' Files"
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-cpp11
+  r-forcats
+  r-hms
+  r-readr
+  r-rlang
+  r-tibble
+  r-tidyselect
+  r-vctrs
+)
+optdepends=(
+  r-cli
+  r-covr
+  r-crayon
+  r-fs
+  r-knitr
+  r-pillar
+  r-rmarkdown
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('408c710e2ca4dbdecd3def718e9a55b97d24f20ab764199cf15cbc79583356e9')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

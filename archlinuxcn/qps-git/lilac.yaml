@@ -3,13 +3,15 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build: aur_pre_build
-
-post_build: aur_post_build
-
 repo_depends:
   - lxqt-build-tools-git
   - liblxqt-git
+
+pre_build_script: |
+    aur_pre_build(maintainers=['pmattern'])
+
+post_build_script: |
+    aur_post_build()
 
 update_on:
   - source: github

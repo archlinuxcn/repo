@@ -1,0 +1,11 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-biostrings
+  - r-httr
+  - r-png
+update_on:
+  - regex: KEGGREST_([\d._-]+).tar.gz
+    source: regex
+    url: https://bioconductor.org/packages/KEGGREST

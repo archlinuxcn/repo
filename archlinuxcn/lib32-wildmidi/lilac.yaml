@@ -4,8 +4,9 @@ build_prefix: multilib
 update_on:
   - source: aur
     aur: lib32-wildmidi
-  - source: archpkg
-    archpkg: lib32-alsa-lib
+  - source: alpm
     provided: libasound.so
     strip_release: true
+    alpm: lib32-alsa-lib
+    repo: multilib
 staging: true

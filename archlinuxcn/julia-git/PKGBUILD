@@ -16,22 +16,12 @@ if ((BUILD_DOC)); then
   pkgname+=('julia-git-docs')
 fi
 
-case $CARCH in
-  x86_64|i686|aarch64|armv7h)
-    makedepends_llvm=("llvm-julia>=11.0" "llvm-julia<12.0")
-    depends_llvm=("llvm-libs-julia>=11.0" "llvm-libs-julia<12.0")
-    ;;
-  # armv7h)
-  #   makedepends_llvm=("llvm-svn")
-  #   depends_llvm=("llvm-libs-svn")
-  #   ;;
-  *)
-    echo "Unsupported Arch \"$CARCH\"" >&2
-    ;;
-esac
+makedepends_llvm=("llvm-julia")
+# TODO: automatically detect llvm-libs version
+depends_llvm=("llvm-libs-julia>=12.0" "llvm-libs-julia<13.0")
 
 epoch=1
-pkgver=1.6.0.DEV.1624.gf89a83aca27
+pkgver=1.8.0.DEV.197.g361b3a48e2c
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -39,19 +29,16 @@ url="http://julialang.org"
 license=('GPL')
 depends_libs=(arpack fftw gmp libgit2-julia libunwind-git mpfr pcre2 suitesparse
               openspecfun openblas-lapack libutf8proc-git
-              openlibm mbedtls libssh2 zlib p7zip curl libnghttp2 ca-certificates-utils)
+              openlibm mbedtls libssh2 zlib p7zip curl libnghttp2 ca-certificates-utils
+              'libmbedcrypto.so=7-64' 'libmbedtls.so=13-64' 'libmbedx509.so=1-64')
 makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
              gcc-fortran git patchelf python)
 options=('debug' '!strip' '!buildflags')
 _patches=(
-  0001-Fix-broken-linking-and-initialization-due-to-36588.patch
-  0002-Force-enable-GDB-debug-info-registration.patch
-  0003-Fix-source-file-paths.patch
-  0004-Optimize-allocation-of-arrays.patch
-  0005-Enable-basic-AA-in-O2.patch
-  0006-Add-ccall-special-cases-for-a-few-more-libc-function.patch
-  0007-Optimize-objectid-in-codegen.patch
-  0008-Mark-more-functions-as-not-safepoint-in-codegen.patch
+  0001-Force-enable-GDB-debug-info-registration.patch
+  0002-Fix-source-file-paths.patch
+  0003-Enable-basic-AA-in-O2.patch
+  0004-Fix-mbedtls-version.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -61,21 +48,17 @@ source=('git://github.com/JuliaLang/julia'
         julia-clear-precompile.hook
         arch-source-translate.cpp
         sysp7z.diff)
-md5sums=('SKIP'
-         'a9f52d686f21638632f2cb2ce66fd9fa'
-         '599ac353e7bd7799dcf0021d40797475'
-         '23f00dee833ebcf383e03698e95d0c1a'
-         'acb03bc19825c209cf054de9101eef93'
-         'bd78ec957753815be34d1ba6d184286f'
-         '2fe88ea465f81d2cd2303e66309aa44b'
-         '4983cb80498581823a9c5245dbe33201'
-         'da445a0489060b1b202534d7fe195dfe'
-         'a430db0964744bbf6b1a49e76a3bf1e4'
-         '6e7fcba300512df8ab8ab65d3e1eb847'
-         'f1f6ffc7ddcbc7fa0000d6f5fdbbe925'
-         'f9d0b11988630599dc860a5b33a7ba13'
-         '1bf92fe1bc71f4b052deaf7fc7505501'
-         '51de69d49b58470230d6931d322e3df8')
+sha512sums=('SKIP'
+            'e09b91f9d721a4ff8438892c5adaf0ed20bd713c08b49a4c6b805f9ee5d5416c228cd7ecb414e2da4fb427773c744415476da63e1b4560974673e7745259a081'
+            '5e69bdaae3e0edef72cb31cd1b4a29ff45bafa9ffe685d78072daad855d6613dc663da11bc4f0034412d49dc25700e18200d1fbb27a250d0fa8bec64000bde27'
+            '4c3869734fb6a32fb5dbc3b82c2b640c54495c8834e7197267cd26c5de7b05e533c80dc5ffc766c2d17f0494b5a06617682690786c15a8adfc91dbf9fe0beb15'
+            'f7f0a431ea977a59ffed77dc6deb5120ef8d8981f8e2ba38fcc4a58bc567acf377ce43ad16ec41a427994e498cf3f0cc7c6de0c08b1d197dcb05e3d3f9fc56f5'
+            'eba2a2d6d4e44e39a98b7038aba22c7a534071ae95c680d1547c6021cd6d0bacaae7ab0ec150ce4103568a28d2a69e9803e07ab6a11bc1125f060f4a1f386a47'
+            'ce03e2995a45d942f480d25d1ce7cddacb98f2e11eeed19b5564e36d817987f548c313b0d6b139402ba8c203c8ba9a059e1732695517d7b78b7fa88f08429295'
+            '36df234b634926bc88084e683ee9f495ef0ce4c26d6d6b9f55294098bdcb86f5eaaf6c671afe1a5c4371c428bd7bf3dd617ec1f15a7ff35376d67df22140454c'
+            'adf0fef964e8bdee9926f1127177bc0ddea0d2dbb1090ab94555c3599b87cf03b489dfe92fda3453bf68385f4b69556f396b1ecfb8a9525c23a3ed808e2eb370'
+            'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
+            '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849')
 
 pkgver() {
   cd julia
@@ -92,27 +75,25 @@ pkgver() {
 }
 
 julia_opts=(prefix=/usr sysconfdir=/etc
+            USE_SYSTEM_CSL=1
             USE_SYSTEM_LLVM=1
-            USE_SYSTEM_OPENLIBM=1
             USE_SYSTEM_LIBUNWIND=1
             USE_SYSTEM_PCRE=1
-            USE_SYSTEM_OPENSPECFUN=1
+            USE_SYSTEM_OPENLIBM=1
             USE_SYSTEM_BLAS=1
             USE_SYSTEM_LAPACK=1
-            USE_SYSTEM_FFTW=1
             USE_SYSTEM_GMP=1
             USE_SYSTEM_MPFR=1
-            USE_SYSTEM_ARPACK=1
-            USE_SYSTEM_SUITESPARSE=1
+            USE_SYSTEM_LIBSUITESPARSE=1
             USE_SYSTEM_UTF8PROC=1
-            USE_SYSTEM_LIBGIT2=1
-            USE_SYSTEM_LIBSSH2=1
             USE_SYSTEM_MBEDTLS=1
+            USE_SYSTEM_LIBSSH2=1
+            USE_SYSTEM_NGHTTP2=1
             USE_SYSTEM_CURL=1
+            USE_SYSTEM_LIBGIT2=1
             USE_SYSTEM_PATCHELF=1
             USE_SYSTEM_ZLIB=1
             USE_SYSTEM_P7ZIP=1
-            USE_SYSTEM_NGHTTP2=1
             USE_LLVM_SHLIB=1
             USE_BINARYBUILDER=0
             LLVM_USE_CMAKE=0 # Workaround LLVM linking with system LLVM
@@ -152,7 +133,7 @@ prepare() {
 
   for p in cc c++ gcc g++; do
     cat > bin/$p <<EOF
-exec /usr/bin/$p "\${@/#-O0/-Og}" -fasynchronous-unwind-tables
+exec /usr/bin/$p "\${@/#-O0/-Og}" -fasynchronous-unwind-tables -ffile-prefix-map="${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
 EOF
     chmod +x bin/$p
   done
@@ -165,16 +146,15 @@ EOF
   for p in "${_patches[@]}"; do
     _apply_patch "$p"
   done
-  for f in stdlib/*/*Artifacts.toml; do
-    echo "Clearing $f"
-    echo > "$f"
-  done
   make "${julia_opts[@]}" julia-stdlib
   (
     cd usr/share/julia/stdlib/v*/Pkg
     patch -Np0 < "$srcdir/sysp7z.diff"
   )
-
+  for f in usr/share/julia/stdlib/v*/*/*Artifacts.toml; do
+    echo "Clearing $f"
+    echo > "$f"
+  done
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' */Makefile
 }
 
@@ -216,16 +196,17 @@ build() {
   fi
   g++ -fPIC -Wall -Wextra -shared -o libarch-source-translate.so -O2 \
       -std=$g20 arch-source-translate.cpp
-  _ld_preload="${srcdir}/libarch-source-translate.so"
-  if [[ -n $LD_PRELOAD ]]; then
-    _ld_preload="${_ld_preload}:$LD_PRELOAD"
-  fi
+  # _ld_preload="${srcdir}/libarch-source-translate.so"
+  # if [[ -n $LD_PRELOAD ]]; then
+  #   _ld_preload="${_ld_preload}:$LD_PRELOAD"
+  # fi
   (LD_PRELOAD="${_ld_preload}" build_in julia $BUILD_DOC "${julia_opts[@]}")
 }
 
 _source_files() {
-  LANG=C readelf "$1" --debug-dump | \
-    awk '/DW_AT_name +:/{name=$8}/DW_AT_comp_dir +:/{{if (name == "<artificial>") next}{if (name !~ /^[<\/]/) {printf "%s/", $8}}{print name}}'
+  # Copied from /usr/share/makepkg/tidy/strip.sh
+  LANG=C readelf "$1" --debug-dump 2>/dev/null | \
+    awk '/DW_AT_name +:/{name=$NF}/DW_AT_comp_dir +:/{{if (name == "<artificial>") next}{if (name !~ /^[<\/]/) {printf "%s/", $NF}}{print name}}'
 }
 
 package-julia-in() {
@@ -261,9 +242,13 @@ package-julia-in() {
   builtin_pkgs=()
   for pkg in $(ls -1 "$stdlib_dir"); do
     if [[ -f "$stdlib_dir/$pkg/Project.toml" ]]; then
-      builtin_pkgs=("${builtin_pkgs[@]}" "julia-${pkg,,}")
+      builtin_pkgs=("${builtin_pkgs[@]}" "julia-git-${pkg,,}")
+      echo "$pkg"
     fi
-  done
+    # Keep a list of the builtin stdlibs so that we can compile these as a whole
+    # in a single package. Note that even though these are builtin,
+    # not all of them are in the system image.
+  done > "$pkgdir/usr/share/julia/builtin_stdlib.v$ver_short"
   provides=("julia=2:$ver" "${builtin_pkgs[@]}")
   conflicts=('julia' "${builtin_pkgs[@]}")
   replaces=("${builtin_pkgs[@]}")
@@ -285,18 +270,31 @@ package-julia-in() {
   # Without stripping, makepkg doesn't copy the source for us...
   dbgsrcdir="${DBGSRCDIR:-/usr/src/debug}"
   for binary in usr/bin/julia usr/bin/julia-debug \
-                              usr/lib/libjulia.so usr/lib/libjulia-debug.so; do
+                              usr/lib/libjulia.so usr/lib/libjulia-debug.so \
+                              usr/lib/julia/libjulia-internal.so \
+                              usr/lib/julia/libjulia-internal-debug.so; do
     binary="${pkgdir}/${binary}"
+    ls "$binary"
     # copy source files to debug directory
     local f t
     while IFS= read -r t; do
       f=${t/${dbgsrcdir}/"$srcdir"}
-      mkdir -p  "${pkgdir}/${t%/*}"
+      if ! [[ -f "$f" ]]; then
+        echo "Cannot find source file: '$f'"
+        continue
+      fi
+      case "${t%/*}" in
+        "${srcdir}"*)
+          echo "Source file path not mapped: '${t%/*}'."
+          continue
+          ;;
+      esac
+      mkdir -p "${pkgdir}/${t%/*}"
       cp -- "$f" "${pkgdir}/${t%/*}"
     done < <(_source_files "$binary")
   done
   # Files that are not compiled directly aren't being copied by the code above.
-  # This include all headers as well as come cpp files
+  # This include all headers as well as some cpp files
   #   (e.g. `cgutils.cpp`, `processor_*.cpp` etc)
   # that are included from other files. Copy these directly for now.
   cp src/*.{c,cpp} "${pkgdir}/${dbgsrcdir}/julia/src/"
@@ -310,7 +308,7 @@ package-julia-in() {
 }
 
 package_julia-git() {
-  export LD_PRELOAD="${srcdir}/libarch-source-translate.so:$LD_PRELOAD"
+  # export LD_PRELOAD="${srcdir}/libarch-source-translate.so:$LD_PRELOAD"
   package-julia-in julia "${julia_opts[@]}"
   if [[ "$CARCH" = x86_64 ]]; then
     replaces=(julia-git-avx2)

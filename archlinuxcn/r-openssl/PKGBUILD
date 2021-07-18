@@ -1,0 +1,38 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=openssl
+_pkgver=1.4.4
+pkgname=r-${_pkgname,,}
+pkgver=1.4.4
+pkgrel=1
+pkgdesc='Toolkit for Encryption, Signatures and Certificates Based on OpenSSL'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-askpass
+  openssl
+)
+optdepends=(
+  r-digest
+  r-jose
+  r-jsonlite
+  r-knitr
+  r-rmarkdown
+  r-sodium
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('920fb4494da6cf78b55937a9f645d11dae4d7982afa640f28c1be74d486cc874')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

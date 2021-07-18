@@ -1,0 +1,32 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=Rcpp
+_pkgver=1.0.7
+pkgname=r-${_pkgname,,}
+pkgver=1.0.7
+pkgrel=1
+pkgdesc='Seamless R and C++ Integration'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+)
+optdepends=(
+  r-inline
+  r-pkgkitten
+  r-rbenchmark
+  r-tinytest
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('15e5a4732216daed16263c79fb37017c2ada84a2d4e785e3b76445d0eba3dc1d')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

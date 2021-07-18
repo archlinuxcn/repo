@@ -6,28 +6,33 @@ repo_depends:
 update_on:
   - source: aur
     aur: lib32-libtiger
-  - source: archpkg
-    archpkg: lib32-glib2
+  - source: alpm
     provided: libglib-2.0.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-glib2
+    alpm: lib32-glib2
+    repo: multilib
+  - source: alpm
     provided: libgobject-2.0.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-harfbuzz
+    alpm: lib32-glib2
+    repo: multilib
+  - source: alpm
     provided: libharfbuzz.so
     strip_release: true
+    alpm: lib32-harfbuzz
+    repo: multilib
   - alias: alpm-lilac
     alpm: lib32-libkate
     provided: libkate.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-pango
+  - source: alpm
     provided: libpango-1.0.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-pango
+    alpm: lib32-pango
+    repo: multilib
+  - source: alpm
     provided: libpangocairo-1.0.so
     strip_release: true
+    alpm: lib32-pango
+    repo: multilib
 staging: true

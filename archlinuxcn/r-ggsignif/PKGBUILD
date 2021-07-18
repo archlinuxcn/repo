@@ -1,0 +1,34 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=ggsignif
+_pkgver=0.6.2
+pkgname=r-${_pkgname,,}
+pkgver=0.6.2
+pkgrel=1
+pkgdesc="Significance Brackets for 'ggplot2'"
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-ggplot2
+)
+optdepends=(
+  r-knitr
+  r-rmarkdown
+  r-spelling
+  r-testthat
+  r-vdiffr
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('41ab291127e48fe3bee6301edd893b1ebaa064005971d4ecbfa3a1687e1b3fa3')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

@@ -11,10 +11,11 @@ arch=("x86_64")
 url="http://dicom.offis.de/dcmtk"
 license=("custom")
 depends=(
+  charls
   libsndfile
   libtiff
-  libxml2
   libwrap
+  libxml2
   openjpeg2
 )
 makedepends=(cmake)
@@ -24,7 +25,6 @@ sha512sums=('7eaf5c9f1e327c6842de70e1ca8a09271c69ea4f91629aaa490025d65cae27a7774
 build() {
   cmake \
     -B "build" \
-    -S "${_pkgname}-${pkgver}" \
     -DBUILD_SHARED_LIBS:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
@@ -39,7 +39,9 @@ build() {
     -DDCMTK_WITH_SNDFILE:BOOL=ON \
     -DDCMTK_WITH_TIFF:BOOL=ON \
     -DDCMTK_WITH_XML:BOOL=ON \
-    -DDCMTK_WITH_ZLIB:BOOL=ON
+    -DDCMTK_WITH_ZLIB:BOOL=ON \
+    -S "${_pkgname}-${pkgver}" \
+    -Wno-dev
   make -C "build"
 }
 
@@ -57,7 +59,8 @@ package() {
 
   # delete conflict file with charls
   # TODO: use system's charls
-  rm -vf "${pkgdir}/usr/lib/libcharls.so"
+  # rm -vf "${pkgdir}/usr/lib/libcharls.so"
+  rm -vf "${pkgdir}/usr/bin/"*_tests
 }
 # vim:set ts=2 sw=2 et:
 

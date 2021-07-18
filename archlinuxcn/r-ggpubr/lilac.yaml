@@ -1,0 +1,24 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-cowplot
+  - r-dplyr
+  - r-ggplot2
+  - r-ggrepel
+  - r-ggsci
+  - r-ggsignif
+  - r-glue
+  - r-gridextra
+  - r-magrittr
+  - r-polynom
+  - r-purrr
+  - r-rlang
+  - r-rstatix
+  - r-scales
+  - r-tibble
+  - r-tidyr
+update_on:
+  - regex: ggpubr_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=ggpubr

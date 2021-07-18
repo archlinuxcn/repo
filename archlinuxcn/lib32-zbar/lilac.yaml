@@ -4,14 +4,16 @@ build_prefix: multilib
 update_on:
   - source: aur
     aur: lib32-zbar
-  - source: archpkg
-    archpkg: lib32-dbus
+  - source: alpm
     provided: libdbus-1.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-libjpeg-turbo
+    alpm: lib32-dbus
+    repo: multilib
+  - source: alpm
     provided: libjpeg.so
     strip_release: true
+    alpm: lib32-libjpeg-turbo
+    repo: multilib
   - source: manual
     manual: 2
 staging: true

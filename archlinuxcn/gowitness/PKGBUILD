@@ -1,7 +1,7 @@
 # Maintainer: Hao Long <aur@esd.cc>
 
 pkgname=gowitness
-pkgver=2.3.4
+pkgver=2.3.6
 pkgrel=1
 pkgdesc="a golang, web screenshot utility using Chrome Headless"
 arch=("x86_64" "i686")
@@ -10,7 +10,7 @@ license=("GPL3")
 depends=("chromium")
 makedepends=("go")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('c05b0ecff01b14cf40f32641a60fb2997da14ea87cc67044d07d9248499fa9a4')
+sha256sums=('8610136b48a16524a5fb70705c65a788fb63c78fd46ee4c7c120851558991514')
 
 build() {
   cd ${pkgname}-${pkgver}

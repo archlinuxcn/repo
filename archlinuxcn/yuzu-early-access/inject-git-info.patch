@@ -1,0 +1,40 @@
+diff --git a/CMakeModules/GenerateSCMRev.cmake b/CMakeModules/GenerateSCMRev.cmake
+--- a/CMakeModules/GenerateSCMRev.cmake
++++ b/CMakeModules/GenerateSCMRev.cmake
+@@ -11,10 +11,10 @@
+ 
+ # generate git/build information
+ include(GetGitRevisionDescription)
+-get_git_head_revision(GIT_REF_SPEC GIT_REV)
+-git_describe(GIT_DESC --always --long --dirty)
+-git_branch_name(GIT_BRANCH)
+-get_timestamp(BUILD_DATE)
++#get_git_head_revision(GIT_REF_SPEC GIT_REV)
++#git_describe(GIT_DESC --always --long --dirty)
++#git_branch_name(GIT_BRANCH)
++#get_timestamp(BUILD_DATE)
+ 
+ # Generate cpp with Git revision from template
+ # Also if this is a CI build, add the build name (ie: Nightly, Canary) to the scm_rev file as well
+@@ -113,4 +113,5 @@
+     set(COMBINED "${COMBINED}${TMP}")
+ endforeach()
+ string(MD5 SHADER_CACHE_VERSION "${COMBINED}")
++set(BUILD_FULLNAME ${BUILD_FULLNAME})
+ configure_file("${SRC_DIR}/src/common/scm_rev.cpp.in" "scm_rev.cpp" @ONLY)
+diff --git a/src/common/CMakeLists.txt b/src/common/CMakeLists.txt
+--- a/src/common/CMakeLists.txt
++++ b/src/common/CMakeLists.txt
+@@ -28,6 +28,12 @@
+       -DBUILD_TAG=${BUILD_TAG}
+       -DBUILD_ID=${DISPLAY_VERSION}
+       -DGIT_EXECUTABLE=${GIT_EXECUTABLE}
++      -DGIT_REF_SPEC=${GIT_REF_SPEC}
++      -DGIT_REV=${GIT_REV}
++      -DGIT_DESC=${GIT_DESC}
++      -DGIT_BRANCH=${GIT_BRANCH}
++      -DBUILD_FULLNAME=${BUILD_FULLNAME}
++      -DBUILD_DATE=${BUILD_DATE}
+       -P ${CMAKE_SOURCE_DIR}/CMakeModules/GenerateSCMRev.cmake
+     DEPENDS
+       # WARNING! It was too much work to try and make a common location for this list,

@@ -1,0 +1,78 @@
+From 9021729667e019defea0d4c1bdf563d629d7d837 Mon Sep 17 00:00:00 2001
+From: Ernesto Castellotti <mail@ernestocastellotti.it>
+Date: Sat, 10 Apr 2021 18:59:14 +0200
+Subject: [PATCH] PARTIAL REVERT commit tree-wide: replace strverscmp() and
+ str_verscmp() with strverscmp_improved
+
+This is a workaround for the issue https://github.com/systemd/systemd/issues/19191
+---
+ src/boot/efi/boot.c | 49 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 48 insertions(+), 1 deletion(-)
+
+diff --git a/src/boot/efi/boot.c b/src/boot/efi/boot.c
+index 35248db009bf..75c7e2c61d19 100644
+--- a/src/boot/efi/boot.c
++++ b/src/boot/efi/boot.c
+@@ -914,6 +914,53 @@ static VOID config_entry_free(ConfigEntry *entry) {
+         FreePool(entry);
+ }
+ 
++static BOOLEAN is_digit(CHAR16 c) {
++        return (c >= '0') && (c <= '9');
++}
++static UINTN c_order(CHAR16 c) {
++        if (c == '\0')
++                return 0;
++        if (is_digit(c))
++                return 0;
++        else if ((c >= 'a') && (c <= 'z'))
++                return c;
++        else
++                return c + 0x10000;
++}
++static INTN str_verscmp(CHAR16 *s1, CHAR16 *s2) {
++        CHAR16 *os1 = s1;
++        CHAR16 *os2 = s2;
++        while (*s1 || *s2) {
++                INTN first;
++                while ((*s1 && !is_digit(*s1)) || (*s2 && !is_digit(*s2))) {
++                        INTN order;
++                        order = c_order(*s1) - c_order(*s2);
++                        if (order != 0)
++                                return order;
++                        s1++;
++                        s2++;
++                }
++                while (*s1 == '0')
++                        s1++;
++                while (*s2 == '0')
++                        s2++;
++                first = 0;
++                while (is_digit(*s1) && is_digit(*s2)) {
++                        if (first == 0)
++                                first = *s1 - *s2;
++                        s1++;
++                        s2++;
++                }
++                if (is_digit(*s1))
++                        return 1;
++                if (is_digit(*s2))
++                        return -1;
++                if (first != 0)
++                        return first;
++        }
++        return StrCmp(os1, os2);
++}
++
+ static CHAR8 *line_get_key_value(
+                 CHAR8 *content,
+                 CHAR8 *sep,
+@@ -1478,7 +1525,7 @@ static INTN config_entry_compare(ConfigEntry *a, ConfigEntry *b) {
+         if (a->tries_left == 0 && b->tries_left != 0)
+                 return -1;
+ 
+-        r = strverscmp_improved(a->id, b->id);
++        r = str_verscmp(a->id, b->id);
+         if (r != 0)
+                 return r;
+ 

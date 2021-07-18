@@ -1,0 +1,29 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-base64enc
+  - r-crosstalk
+  - r-data.table
+  - r-digest
+  - r-dplyr
+  - r-ggplot2
+  - r-htmltools
+  - r-htmlwidgets
+  - r-httr
+  - r-jsonlite
+  - r-lazyeval
+  - r-magrittr
+  - r-promises
+  - r-purrr
+  - r-rcolorbrewer
+  - r-rlang
+  - r-scales
+  - r-tibble
+  - r-tidyr
+  - r-vctrs
+  - r-viridislite
+update_on:
+  - regex: plotly_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=plotly

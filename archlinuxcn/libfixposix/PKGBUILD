@@ -2,29 +2,30 @@
 # Contributor: June Tate-Gans <june@theonelab.com>
 
 pkgname=libfixposix
-pkgver=0.4.3
-pkgrel=2
+pkgver=0.5
+pkgrel=1
 pkgdesc='Thin wrapper over POSIX syscalls'
 arch=('i686' 'x86_64')
 url="https://github.com/sionescu/libfixposix"
 license=('Boost')
 depends=('glibc')
-source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/sionescu/libfixposix/archive/v${pkgver}.tar.gz")
-sha256sums=('78fe8bcebf496520ac29b5b65049f5ec1977c6bd956640bdc6d1da6ea04d8504')
+depends+=('git')
+source=("libfixposix::git+https://github.com/sionescu/libfixposix#commit=b6bfd4a3ba9a9d2761cbf78d3a04a2d71482284e")
+sha256sums=("SKIP")
 
 prepare() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${pkgname}"
   autoreconf -fiv
 }
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${pkgname}"
   ./configure --prefix=/usr
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${pkgname}"
   make DESTDIR="${pkgdir}" install
   install -Dm644 LICENCE "${pkgdir}/usr/share/licenses/${pkgname}/LICENCE"
 }

@@ -1,0 +1,68 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=GenomicRanges
+_pkgver=1.44.0
+pkgname=r-${_pkgname,,}
+pkgver=1.44.0
+pkgrel=1
+pkgdesc='Representation and manipulation of genomic intervals'
+arch=('x86_64')
+url="https://bioconductor.org/packages/${_pkgname}"
+license=('Artistic2.0')
+depends=(
+  r
+  r-biocgenerics
+  r-genomeinfodb
+  r-iranges
+  r-s4vectors
+  r-xvector
+)
+optdepends=(
+  r-annotate
+  r-annotationdbi
+  r-annotationhub
+  r-biobase
+  r-biocstyle
+  r-biostrings
+  r-bsgenome
+  r-bsgenome.hsapiens.ucsc.hg19
+  r-bsgenome.mmusculus.ucsc.mm10
+  r-bsgenome.scerevisiae.ucsc.saccer2
+  r-deseq2
+  r-dexseq
+  r-digest
+  r-edger
+  r-genomicalignments
+  r-genomicfeatures
+  r-gviz
+  r-hgu95av2.db
+  r-hgu95av2probe
+  r-kegggraph
+  r-keggrest
+  r-knitr
+  r-matrix
+  r-pasillabamsubset
+  r-rmarkdown
+  r-rnaseqdata.hnrnpc.bam.chr14
+  r-rsamtools
+  r-rtracklayer
+  r-runit
+  r-summarizedexperiment
+  r-txdb.athaliana.biomart.plantsmart22
+  r-txdb.dmelanogaster.ucsc.dm3.ensgene
+  r-txdb.hsapiens.ucsc.hg19.knowngene
+  r-txdb.mmusculus.ucsc.mm10.knowngene
+  r-variantannotation
+)
+source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('1da88df1a1bf9aa97ffc46fa70ccc329fa773e743e49f0e0b06ad2c65933ace3')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

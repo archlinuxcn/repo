@@ -5,12 +5,15 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build: aur_pre_build
+repo_depends:
+  - ncurses5-compat-libs
 
-post_build: aur_post_build
+pre_build_script: |
+    aur_pre_build(maintainers="dreamingincode")
+
+post_build_script: |
+    aur_post_build()
 
 update_on:
   - source: aur
     aur: android-emulator
-repo_depends:
-  - ncurses5-compat-libs

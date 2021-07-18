@@ -1,0 +1,47 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=googledrive
+_pkgver=2.0.0
+pkgname=r-${_pkgname,,}
+pkgver=2.0.0
+pkgrel=1
+pkgdesc='An Interface to Google Drive'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-curl
+  r-gargle
+  r-glue
+  r-httr
+  r-jsonlite
+  r-magrittr
+  r-purrr
+  r-rlang
+  r-tibble
+  r-uuid
+)
+optdepends=(
+  r-covr
+  r-dplyr
+  r-knitr
+  r-rmarkdown
+  r-roxygen2
+  r-sodium
+  r-spelling
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('605c469a6a086ef4b049909c2e20a35411c165ce7ce4f62d68fd39ffed8c5a26')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,31 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=diffobj
+_pkgver=0.3.4
+pkgname=r-${_pkgname,,}
+pkgver=0.3.4
+pkgrel=1
+pkgdesc='Diffs for R Objects'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-crayon
+)
+optdepends=(
+  r-knitr
+  r-rmarkdown
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('38cd8ac8698af3c0be42e630088d3a24e9ed8fb72b411a68cf295ea995839efc')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

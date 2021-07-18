@@ -1,0 +1,19 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-biocgenerics
+  - r-biocparallel
+  - r-biostrings
+  - r-bitops
+  - r-genomeinfodb
+  - r-genomicranges
+  - r-iranges
+  - r-rhtslib
+  - r-s4vectors
+  - r-xvector
+  - r-zlibbioc
+update_on:
+  - regex: Rsamtools_([\d._-]+).tar.gz
+    source: regex
+    url: https://bioconductor.org/packages/Rsamtools

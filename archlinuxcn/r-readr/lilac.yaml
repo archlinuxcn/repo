@@ -1,0 +1,18 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-bh
+  - r-cli
+  - r-clipr
+  - r-cpp11
+  - r-crayon
+  - r-hms
+  - r-lifecycle
+  - r-r6
+  - r-rlang
+  - r-tibble
+update_on:
+  - regex: readr_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=readr

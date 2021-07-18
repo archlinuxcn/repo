@@ -1,0 +1,55 @@
+# Maintainer: hubutui <hot123tea123@gmail.com>
+
+_pkgname=pillar
+_pkgver=1.6.1
+pkgname=r-${_pkgname,,}
+pkgver=1.6.1
+pkgrel=1
+pkgdesc='Coloured Formatting for Columns'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-cli
+  r-crayon
+  r-ellipsis
+  r-fansi
+  r-lifecycle
+  r-rlang
+  r-utf8
+  r-vctrs
+)
+optdepends=(
+  r-bit64
+  r-debugme
+  r-diagrammer
+  r-dplyr
+  r-formattable
+  r-ggplot2
+  r-knitr
+  r-lubridate
+  r-nycflights13
+  r-palmerpenguins
+  r-rmarkdown
+  r-scales
+  r-stringi
+  r-survival
+  r-testthat
+  r-tibble
+  r-units
+  r-withr
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('08b7b96188c301dbbc14047cd4d41ea47f9e33c521cac2b7a7c47f94a698722a')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

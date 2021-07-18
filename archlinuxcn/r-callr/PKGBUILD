@@ -1,0 +1,38 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=callr
+_pkgver=3.7.0
+pkgname=r-${_pkgname,,}
+pkgver=3.7.0
+pkgrel=1
+pkgdesc='Call R from R'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-processx
+  r-r6
+)
+optdepends=(
+  r-cli
+  r-covr
+  r-ps
+  r-rprojroot
+  r-spelling
+  r-testthat
+  r-withr
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('d67255148595c6d0ba4c4d241bc9f6b5e00cafe25fdc13e38c10acc38653360a')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

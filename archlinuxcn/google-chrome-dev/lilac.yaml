@@ -6,10 +6,8 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build: aur_pre_build
-
-post_build: aur_post_build
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: aur
-    aur: google-chrome-dev
+  - source: cmd
+    cmd: curl -sSf https://dl.google.com/linux/chrome/deb/dists/stable/main/binary-amd64/Packages | grep -A1 'google-chrome-unstable' | awk '/Version/{print $2}' | cut -d '-' -f1 

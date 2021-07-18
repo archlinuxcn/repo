@@ -8,12 +8,13 @@ update_on:
     aur: lib32-openexr
   - alias: alpm-lilac
     alpm: lib32-imath
-    provided: libImath-3_0.so
+    provided: libImath-3_1.so
     strip_release: true
-  - source: archpkg
-    archpkg: lib32-zlib
+  - source: alpm
     provided: libz.so
     strip_release: true
+    alpm: lib32-zlib
+    repo: multilib
   - source: manual
     manual: 2
 staging: true

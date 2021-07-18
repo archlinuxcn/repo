@@ -1,0 +1,13 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-biocgenerics
+  - r-genomeinfodb
+  - r-iranges
+  - r-s4vectors
+  - r-xvector
+update_on:
+  - regex: GenomicRanges_([\d._-]+).tar.gz
+    source: regex
+    url: https://bioconductor.org/packages/GenomicRanges
