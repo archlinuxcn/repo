@@ -6,7 +6,7 @@
 
 pkgname=xscreensaver-arch-logo
 pkgver=6.00
-pkgrel=1
+pkgrel=2
 pkgdesc="Screen saver and locker for the X Window System with Arch Linux branding"
 url="https://www.jwz.org/${pkgname%%-*}/"
 arch=('x86_64')
@@ -25,7 +25,7 @@ optdepends=('gdm: for login manager support')
 conflicts=('xscreensaver')
 provides=('xscreensaver')
 backup=('etc/pam.d/xscreensaver')
-source=("${pkgname}-${pkgver}.tar.gz::https://www.jwz.org/xscreensaver/${pkgname%%-*}-${pkgver}.tar.gz"
+source=("${pkgname}-${pkgver}.tar.gz::https://www.jwz.org/${pkgname%%-*}/${pkgname%%-*}-${pkgver}.tar.gz"
         LICENSE 
         logo-50.xpm 
         logo-180.xpm 
@@ -43,7 +43,7 @@ prepare() {
   for _file in logo-*; do
 	install "${_file}" -Dm0644 "${srcdir}/${pkgname%%-*}-${pkgver}/hacks/images/${_file}"
   done
-  install -Dm0644 "$srcdir"/logo-180.xpm "${srcdir}/${pkgname%%-*}-${pkgver}/utils/images/logo-180.xpm"
+  install -Dm0644 "${srcdir}/logo-180.xpm" "${srcdir}/${pkgname%%-*}-${pkgver}/utils/images/logo-180.xpm"
 }
 
 build() {
@@ -54,6 +54,8 @@ build() {
 	--localstatedir=/var \
 	--libexecdir=/usr/lib \
 	--with-app-defaults=/usr/share/X11/app-defaults \
+	--without-setuid-hacks \
+	--without-setcap-hacks \
 	--with-pam \
 	--with-login-manager \
 	--with-gtk \
@@ -69,8 +71,5 @@ package() {
   install -d "${pkgdir}/etc/pam.d"
   make install_prefix="${pkgdir}" install
   install -Dm0644 ../LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-  
-  # Remove sticky bit
-  chmod 0755 "${pkgdir}/usr/bin/xscreensaver" "${pkgdir}/usr/lib/xscreensaver/sonar"
-  echo "NotShowIn=KDE;GNOME;" >> "${pkgdir}/usr/share/applications/xscreensaver-properties.desktop"
+  echo "NotShowIn=KDE;GNOME;" >> "${pkgdir}/usr/share/applications/${pkgname%%-*}-properties.desktop"
 }
