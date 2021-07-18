@@ -1,7 +1,7 @@
 # Maintainer: Sven-Hendrik Haase <svenstaro@gmail.com>
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-git
-pkgver=2.8.4.r28.g1261c775d
+pkgver=2.8.11.r0.g77d8c7ce0
 pkgrel=1
 pkgdesc='Official Telegram Desktop client'
 arch=('x86_64')
@@ -48,6 +48,7 @@ source=("tdesktop::git+https://github.com/telegramdesktop/tdesktop.git#tag=dev"
         "telegram-desktop-fcitx5-qt::git+https://github.com/fcitx/fcitx5-qt.git"
         "telegram-desktop-lib_webrtc::git+https://github.com/desktop-app/lib_webrtc.git"
         "telegram-desktop-tgcalls::git+https://github.com/TelegramMessenger/tgcalls.git"
+	"fix-webview-extern-C-linkage.patch::https://patch-diff.githubusercontent.com/raw/desktop-app/lib_webview/pull/9.patch"
 )
 sha512sums=('SKIP'
             'SKIP'
@@ -80,7 +81,8 @@ sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'SKIP')
+            'SKIP'
+            '6f405d48457f8839c9759ec1024db20251f0d42a3ec0026d1334d56511877f830213ac4b3c2396319dc8811e330324a4d62a0973221e280063aa69c18fd09a0e')
 pkgver() {
     cd "$srcdir/tdesktop"
     git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
@@ -128,6 +130,10 @@ prepare() {
     echo "find_package(X11 REQUIRED COMPONENTS Xcomposite Xdamage Xext Xfixes Xrender Xrandr Xtst)" | tee -a external/webrtc/CMakeLists.txt
     echo "target_link_libraries(external_webrtc INTERFACE Xcomposite Xdamage Xext Xfixes Xrandr Xrender Xtst)" | tee -a external/webrtc/CMakeLists.txt
 
+    cd ..
+    # fix extern "C" linkage with lib_webview
+    patch -b -d Telegram/lib_webview/ -Np1 -i ${srcdir}/fix-webview-extern-C-linkage.patch
+ 
     # cp libjemalloc from jemalloc package
     mkdir -p external/jemalloc/jemalloc-prefix/src/jemalloc/lib/
     cp /usr/lib/libjemalloc_pic.a external/jemalloc/jemalloc-prefix/src/jemalloc/lib/libjemalloc.a
