@@ -1,29 +1,19 @@
 # Maintainer: nl6720 <nl6720@archlinux.org>
 
 pkgname='shim-signed'
-pkgver='15.r2.debian+15+1533136590.3beb971+7+deb10u1'
+pkgver='15.4+fedora+5'
 pkgrel='1'
-pkgdesc='Initial UEFI bootloader that handles chaining to a trusted full bootloader under secure boot environments (prebuilt X64 EFI binaries from Debian)'
-url='https://packages.debian.org/buster/shim-signed'
+pkgdesc='Initial UEFI bootloader that handles chaining to a trusted full bootloader under secure boot environments (prebuilt X64 EFI binaries from Fedora)'
+url='https://koji.fedoraproject.org/koji/packageinfo?packageID=14502'
 arch=('any')
 license=('BSD')
 options=('!strip')
-noextract=('shim-helpers-amd64-signed_1+15+1533136590.3beb971+7+deb10u1_amd64.deb')
-source=('https://deb.debian.org/debian/pool/main/s/shim-signed/shim-signed_1.33+15+1533136590.3beb971-7_amd64.deb'
-        'https://deb.debian.org/debian/pool/main/s/shim-helpers-amd64-signed/shim-helpers-amd64-signed_1+15+1533136590.3beb971+7+deb10u1_amd64.deb')
-sha256sums=('da466858eee1786433646dfcc9918395d2da06a7fb1815a3f66de749f5d8e506'
-            '5d9198a417a4e0692e68d04594df1717ea10e9f80eb8292f19d30c56ab34a100')
-prepare() {
-	cd "$srcdir"
-	# Exctract shimx64.efi
-	bsdtar -xf 'data.tar.xz' 'usr/lib/shim/'
-	# Extract mmx64.efi and fbx64.efi
-	bsdtar -xf 'shim-helpers-amd64-signed_1+15+1533136590.3beb971+7+deb10u1_amd64.deb' 'data.tar.xz'
-	bsdtar -xf 'data.tar.xz' 'usr/lib/shim/'
-}
+install="${pkgname}.install"
+source=("https://kojipkgs.fedoraproject.org/packages/shim/${pkgver//+fedora+/\/}/x86_64/shim-x64-${pkgver//+fedora+/-}.x86_64.rpm")
+sha512sums=('966836d71ad4b6cca44e650893aeb09e69d1ca9d192d61a8b9efef8d7389b2a6e0ff0f488c3c00dd895427ac2ae1a4778e62d39340d7bd0ff9e809a45cebd014')
 
 package() {
-	install -Dm0644 "${srcdir}/usr/lib/shim/shimx64.efi.signed" "${pkgdir}/usr/share/${pkgname}/shimx64.efi"
-	install -Dm0644 "${srcdir}/usr/lib/shim/mmx64.efi.signed" "${pkgdir}/usr/share/${pkgname}/mmx64.efi"
-	install -Dm0644 "${srcdir}/usr/lib/shim/fbx64.efi.signed" "${pkgdir}/usr/share/${pkgname}/fbx64.efi"
+	install -D -m0644 -t "${pkgdir}/usr/share/${pkgname}/" "${srcdir}/boot/efi/EFI/fedora/shimx64.efi"
+	install -D -m0644 -t "${pkgdir}/usr/share/${pkgname}/" "${srcdir}/boot/efi/EFI/fedora/mmx64.efi"
+	install -D -m0644 -t "${pkgdir}/usr/share/${pkgname}/" "${srcdir}/boot/efi/EFI/BOOT/fbx64.efi"
 }

@@ -1,0 +1,13 @@
+post_install() {
+	cat <<EOF
+  WARNING: Since version 15.3, shim requires SBAT.
+  It WILL NOT launch EFI binaries without a .sbat section.
+  See the upstream documentation: https://github.com/rhboot/shim/blob/main/SBAT.md
+EOF
+}
+
+post_upgrade() {
+	if (( $(vercmp $1 15.4+fedora+5) <= 0)); then
+		post_install
+	fi
+}
