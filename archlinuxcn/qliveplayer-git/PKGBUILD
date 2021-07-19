@@ -1,7 +1,7 @@
 # Maintainer: Megumi_fox <i@megumifox.com>
 
 pkgname=qliveplayer-git
-pkgver=3.22.4.r0.gb9e1137
+pkgver=4.0.1.r0.gcd30fe8
 pkgrel=1
 pkgdesc='Cute and useful Live Stream Player with danmaku support.'
 arch=('x86_64')
@@ -15,31 +15,36 @@ depends=('mpv'
          'qt5-base'
          'qt5-quickcontrols2'
          'qt5-graphicaleffects'
-         'qt5-quickcontrols'
-         'python')
+         'qt5-quickcontrols')
 makedepends=('cmake'
              'git'
+             'rust'
              'ninja'
              'extra-cmake-modules' )
-optdepends=('python-protobuf: for YouTube LiveChat support'
-            'streamlink: for foreign streaming service support')
 
 source=(
     "QLivePlayer::git+https://github.com/IsoaSFlus/QLivePlayer.git"
+    "QLivePlayer-Lib::git+https://github.com/IsoaSFlus/QLivePlayer-Lib.git#branch=dev"
 )
 
-pkgver() {
+pkgver(){
     cd QLivePlayer
     git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
+prepare() {
+    cd QLivePlayer
+    git submodule init
+    git config submodule.src/QLivePlayer-Lib.url "$srcdir/QLivePlayer-Lib"
+    git submodule update
+}
 
-sha256sums=('SKIP')
+sha256sums=('SKIP' 'SKIP')
 
 build() {
     cd $srcdir/QLivePlayer
     mkdir -p build
     cd build
-    cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib ..
+    cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release  ..
     ninja
 }
 
