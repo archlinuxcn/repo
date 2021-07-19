@@ -7,9 +7,9 @@ def pre_build():
     aur_pre_build()
     pkgver = ""
     for line in edit_file('PKGBUILD'):
-        if line.strip().startwith('_pkgver='):
+        if line.strip().startswith('_pkgver='):
             pkgver = line[len('_pkgver='):].strip().replace('-', '.')
-        elif line.strip().startwith('pkgver='):
+        elif line.strip().startswith('pkgver='):
             print(f'pkgver={pkgver}')
         else:
             print(line)
