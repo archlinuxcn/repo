@@ -1,5 +1,7 @@
+#!/usr/bin/env python3
+
 from lilaclib import *
 
-# Oh my lovely lilac, can you pls help me update my AUR repo? OAO
 def post_build():
+    git_pkgbuild_commit()
     update_aur_repo()
