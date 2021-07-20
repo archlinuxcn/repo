@@ -9,6 +9,7 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if line.strip().startswith('_pkgver='):
             pkgver = line[len('_pkgver='):].strip().replace('-', '.')
+            print(line)
         elif line.strip().startswith('pkgver='):
             print(f'pkgver={pkgver}')
         else:
