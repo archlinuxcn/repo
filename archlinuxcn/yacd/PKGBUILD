@@ -1,7 +1,7 @@
 # Maintainer: Dct Mei <dctxmei@yandex.com>
 
 pkgname=yacd
-pkgver=0.3.2
+pkgver=0.3.3
 pkgrel=1
 pkgdesc="Yet Another Clash Dashboard"
 arch=('any')
@@ -11,7 +11,7 @@ depends=('clash')
 makedepends=('yarn')
 conflicts=('yacd-git')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('0949e0bd1e421617f0c3e3ab31450898a4feef2392fc589e44d19ee24cc0eec1')
+sha256sums=('c83bf53ca38a8ea941a634e1a1c65001b42a2e5d45b92bc6c76c717f4b394e13')
 
 build() {
     cd "${srcdir}"/"${pkgname}-${pkgver}"/
