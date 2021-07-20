@@ -19,10 +19,10 @@ _unused_components=(
   'vmware-horizon-scannerclient'
   'vmware-horizon-serialportclient'
   'vmware-horizon-url-redirection')
-pkgver=2103
-_build1=8.2.0
-_build2=17742757
-_cart='CART22FQ1'
+pkgver=2106
+_build1=8.3.0
+_build2=18251983
+_cart='CART22FQ2'
 pkgrel=1
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
@@ -34,7 +34,7 @@ source=("${pkgbase}-${pkgver}-${_build1}-${_build2}-x86_64.bundle::https://downl
         'vmware-horizon-usb'
         'vmware-horizon-usb.service'
         'vmware-horizon.svg')
-sha256sums=('6432308d7b7bd73d16bd51838e2f41998af9dd9b23970a75f61ea9741ec1ca8f'
+sha256sums=('3ea34d1f1251140fca59c258526cf3e17bf1627b2c8c4f61efafa895c5b0c469'
             'd6863e92b891fc506fc8e81714a47ca3f9f74b7fe68bdf48be058d5e0d433033'
             '008b60ebf45f7d1e033c8ad8ce1688d5e1c59fc0668493067fb89b563b1dc00f'
             'a897c1b9e8928fc222880ebbfc7bb6aff940bff4acf4e4e0cd4002fff81c7226'
@@ -126,7 +126,6 @@ package_vmware-horizon-client() {
 	cd "${srcdir}/extract/vmware-horizon-hosted-apps/"
 
 	mkdir -p "${pkgdir}/usr/"
-	install -D -m0755 vmware-view "${pkgdir}/usr/lib/vmware/view/bin/vmware-view"
 	cp -a lib/ "${pkgdir}/usr/"
 
 	install -D -m0644 "${srcdir}/vmware-horizon.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/vmware-horizon.svg"
