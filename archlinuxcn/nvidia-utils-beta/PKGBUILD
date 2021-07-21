@@ -6,7 +6,7 @@
 pkgbase=nvidia-utils-beta
 pkgname=('nvidia-utils-beta' 'opencl-nvidia-beta' 'nvidia-settings-beta')
 pkgver=470.57.02
-pkgrel=1
+pkgrel=2
 pkgdesc='NVIDIA drivers utilities (beta version)'
 arch=('x86_64')
 url='https://www.nvidia.com/'
@@ -148,6 +148,9 @@ package_nvidia-utils-beta() {
     # PTX JIT Compiler (Parallel Thread Execution (PTX) is a pseudo-assembly language for CUDA)
     install -D -m755 "libnvidia-ptxjitcompiler.so.${pkgver}" -t "${pkgdir}/usr/lib"
     
+    # NVVM Compiler (JIT link-time-optimization for CUDA)
+    install -D -m755 libnvidia-nvvm.so.*.*.* -t "${pkgdir}/usr/lib"
+    
     # raytracing
     install -D -m755 "libnvoptix.so.${pkgver}"       -t "${pkgdir}/usr/lib"
     install -D -m755 "libnvidia-rtcore.so.${pkgver}" -t "${pkgdir}/usr/lib"
@@ -160,6 +163,7 @@ package_nvidia-utils-beta() {
     install -D -m755 "libnvidia-ngx.so.${pkgver}" -t "${pkgdir}/usr/lib"
     
     # DLSS
+    install -D -m755 nvidia-ngx-updater -t "${pkgdir}/usr/bin"
     install -D -m644 {,_}nvngx.dll -t "${pkgdir}/usr/lib/nvidia/wine"
     
     # DEBUG
