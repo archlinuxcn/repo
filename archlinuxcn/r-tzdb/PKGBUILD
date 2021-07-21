@@ -1,42 +1,24 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
-_pkgname=readr
-_pkgver=1.4.0
+_pkgname=tzdb
+_pkgver=0.1.2
 pkgname=r-${_pkgname,,}
-pkgver=1.4.0
+pkgver=${_pkgver//[:-]/.}
 pkgrel=1
-pkgdesc='Read Rectangular Text Data'
+pkgdesc='Time Zone Database Information'
 arch=('x86_64')
 url="https://cran.r-project.org/package=${_pkgname}"
-license=('GPL')
+license=('MIT')
 depends=(
   r
-  r-bh
-  r-cli
-  r-clipr
   r-cpp11
-  r-crayon
-  r-hms
-  r-lifecycle
-  r-r6
-  r-rlang
-  r-tibble
-  r-tzdb
-  r-vroom
 )
 optdepends=(
   r-covr
-  r-curl
-  r-dplyr
-  r-knitr
-  r-rmarkdown
-  r-spelling
-  r-stringi
   r-testthat
-  r-xml2
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('02b1188aab8b2bc3f3d2bba5b946bd299610e87f3f7660c88b60b444093c46b9')
+sha256sums=('4c7875e713262f7140527d6cbdddce6ff32f1aff3ebeb7d94e3044d199b288ea')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
@@ -45,5 +27,6 @@ build() {
 package() {
   install -dm0755 "${pkgdir}/usr/lib/R/library"
   cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:

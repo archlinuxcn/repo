@@ -2,19 +2,21 @@ build_prefix: extra-x86_64
 maintainers:
   - github: hubutui
 repo_depends:
-  - r-bh
+  - r-bit64
   - r-cli
-  - r-clipr
   - r-cpp11
   - r-crayon
+  - r-glue
   - r-hms
   - r-lifecycle
-  - r-r6
+  - r-progress
   - r-rlang
   - r-tibble
+  - r-tidyselect
   - r-tzdb
-  - r-vroom
+  - r-vctrs
+  - r-withr
 update_on:
-  - regex: readr_([\d._-]+).tar.gz
+  - regex: vroom_([\d._-]+).tar.gz
     source: regex
-    url: https://cran.r-project.org/package=readr
+    url: https://cran.r-project.org/package=vroom
