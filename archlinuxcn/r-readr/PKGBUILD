@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=readr
-_pkgver=1.4.0
+_pkgver=2.0.0
 pkgname=r-${_pkgname,,}
-pkgver=1.4.0
+pkgver=2.0.0
 pkgrel=1
 pkgdesc='Read Rectangular Text Data'
 arch=('x86_64')
@@ -36,7 +36,7 @@ optdepends=(
   r-xml2
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('02b1188aab8b2bc3f3d2bba5b946bd299610e87f3f7660c88b60b444093c46b9')
+sha256sums=('19d11618aee0fa1883b3e3ad856da823e2db404ce16aa57f855957f018b3689c')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
