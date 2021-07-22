@@ -6,13 +6,13 @@
 
 pkgname=netatalk
 pkgver=3.1.12
-pkgrel=6
+pkgrel=7
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url='https://netatalk.sourceforge.net'
 license=('GPL')
 depends=('avahi>=0.6' 'cracklib' 'dbus-glib' 'dbus-python'
-  'libevent' 'libgcrypt>=1.2.3' 'libldap' 'pam' 'tdb')
+  'libevent' 'libgcrypt>=1.2.3' 'libldap' 'pam')
 replaces=('netatalk-git' 'netatalk2')
 backup=('etc/afp.conf'
 	'etc/extmap.conf')
@@ -38,7 +38,7 @@ build() {
     --prefix=/usr --localstatedir=/var/state --sbindir=/usr/bin --sysconfdir=/etc \
     --enable-silent-rules --enable-pgp-uam \
     --with-init-style=systemd --with-cracklib --with-cnid-cdb-backend \
-    --without-libevent --without-tdb
+    --without-libevent
   make
 }
 
