@@ -1,0 +1,45 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=datawizard
+_pkgver=0.1.0
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Easy Data Wrangling'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-insight
+)
+optdepends=(
+  r-bayestestr
+  r-boot
+  r-dplyr
+  r-gamm4
+  r-ggplot2
+  r-lme4
+  r-mass
+  r-mclust
+  r-multimode
+  r-psych
+  r-purrr
+  r-rstanarm
+  r-see
+  r-sjstats
+  r-spelling
+  r-testthat
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('8300b5c61d795bdb9fd6ca8b0c1a92e7df7ced1634db4467317a9abab33a82b9')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:
