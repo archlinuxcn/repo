@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=languageserver
-_pkgver=0.3.10
+_pkgver=0.3.11
 pkgname=r-${_pkgname,,}
-pkgver=0.3.10
+pkgver=0.3.11
 pkgrel=1
 pkgdesc='Language Server Protocol'
 arch=('x86_64')
@@ -36,7 +36,7 @@ optdepends=(
   r-withr
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('92a300234e52f1af3022ff6f3037f8342ed26ce0d9127a6790d277fb19e610d5')
+sha256sums=('87eece0d3f69bfcadaacc396a112c014c4a2dc6cdc7f927e46032cbc3e51c1fb')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
