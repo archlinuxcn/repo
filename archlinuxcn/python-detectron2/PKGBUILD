@@ -3,7 +3,7 @@
 _CUDA_ARCH_LIST="5.2;5.3;6.0;6.1;6.2;7.0;7.0+PTX;7.2;7.2+PTX;7.5;7.5+PTX;8.0;8.0+PTX;8.6;8.6+PTX"
 pkgname=(python-detectron2 python-detectron2-cuda)
 _pkgname=detectron2
-pkgver=0.4
+pkgver=0.5
 pkgrel=1
 pkgdesc="FAIR's next-generation platform for object detection and segmentation"
 arch=('x86_64')
@@ -31,7 +31,7 @@ makedepends=(
   python-pytorch-cuda
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/facebookresearch/detectron2/archive/v${pkgver}.tar.gz")
-sha256sums=('1294603f48ccb1d31b6c540233c724e392257643f378755fc688de0b57e823b3')
+sha256sums=('eb5a63dc89face5f0ba8b9cd66283817f79afa0445937614af8225712274787f')
 
 prepare() {
   cp -a "${_pkgname}-${pkgver}" "python-${_pkgname}-${pkgver}" 
