@@ -35,6 +35,8 @@ sha512sums=('SKIP'
             'SKIP'
             '685f0235abed6e1277dd0eb9bda56c464d1987fe7fc90a3550e17ec70cc49fd15f34996a0e159f9622c4ca3e6bf29917fe51b7849342531fa2a6808d782f1e06'
             '55ba879c015df11582ff4afaa9ccca19c0e3d3a8be503629718402dbdc826e36bc3ec3ce4dd589705371d7fcf250ba2a9b30c5a3dd0cfccb8e008346f1bd6252')
+# CUDA seems not working with LTO
+options+=('!lto')
 
 # Check PKGBUILDs of python-pytorch and tensorflow for CUDA architectures built by official packages
 _CUDA_ARCHITECTURES="52-real;53-real;60-real;61-real;62-real;70-real;72-real;75-real;80-real;86-real;86-virtual"
