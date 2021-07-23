@@ -3,9 +3,9 @@
 
 pkgbase=jdk
 pkgname=('jre' 'jdk')
-pkgver=16.0.1
-_build=9
-_hash=7147401fd7354114ac51ef3e1328291f
+pkgver=16.0.2
+_build=7
+_hash=d4a915d82b4c4fbb9bde534da945d746
 _majver="${pkgver%%.*}"
 pkgrel=1
 pkgdesc='Oracle Java'
@@ -18,7 +18,7 @@ source=("https://download.oracle.com/otn-pub/java/jdk/${pkgver}+${_build}/${_has
         'jshell.desktop'
         'java_16.png'
         'java_48.png')
-sha256sums=('caa0bfc0e9ee52f45c8f8ca803a23f132ef551297c6b9331b091110c5740a9bf'
+sha256sums=('630e3e56c58f45db3788343ce842756d5a5a401a63884242cc6a141071285a62'
             '9fc4cd168fd3e0d654093c1b2dd070f627ffae9b7f5c2c0741bac0b5c1ed0635'
             '12b6e632e38e2c2ef54d6b03976290ca649380a89f78b5dae8827423eae52a1b'
             'b2fd5a8f273a103569bf03af6f4ff4d3a5448472abc79b8649cecd0ee9313fc7'
