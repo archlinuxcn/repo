@@ -2,8 +2,8 @@
 
 _pkgname=vscDebugger
 pkgname=r-${_pkgname,,}
-pkgver=0.4.6
-pkgrel=3
+pkgver=0.4.7
+pkgrel=1
 pkgdesc='Support for Visual Studio Code Debugger'
 arch=('x86_64')
 url="https://github.com/ManuelHentschel/vscDebugger"
@@ -20,7 +20,7 @@ optdepends=(
   r-rmarkdown
 )
 source=("https://github.com/ManuelHentschel/vscDebugger/releases/download/v${pkgver}/${_pkgname}_${pkgver}.tar.gz")
-sha256sums=('9b08b88556921fc792651c5b18f293a15c6a992388cb1d3653d06dded2816de6')
+sha256sums=('a0b863f1c9a06eb5454cbd90e07946c8032cf6e466ad6da37b3ef99547723575')
 
 build() {
   R CMD INSTALL ${_pkgname}_${pkgver}.tar.gz -l "${srcdir}"
