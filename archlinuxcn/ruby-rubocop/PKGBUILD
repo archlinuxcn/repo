@@ -3,7 +3,7 @@
 
 _gemname=rubocop
 pkgname=ruby-${_gemname}
-pkgver=1.18.3
+pkgver=1.18.4
 pkgrel=1
 pkgdesc="Automatic Ruby code style checking tool."
 arch=('any')
@@ -24,7 +24,7 @@ noextract=($_gemname-$pkgver.gem)
 license=('MIT')
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
-sha256sums=('3d68b45c160faab94cc544f94d31c0625305ee5faf49415c49edfaa9a9cab110')
+sha256sums=('12c63a283dc90816072392118f7dbfc358febc0648655abd23690905ecbd68d2')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
