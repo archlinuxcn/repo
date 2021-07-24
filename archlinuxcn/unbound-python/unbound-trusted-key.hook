@@ -1,0 +1,10 @@
+[Trigger]
+Type = Path
+Target = etc/trusted-key.key
+Operation = Install
+Operation = Upgrade
+
+[Action]
+Description = Updating trusted-key.key for unbound...
+When = PostTransaction
+Exec = /bin/cp -f /etc/trusted-key.key /etc/unbound/
