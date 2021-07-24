@@ -1,0 +1,25 @@
+From db686257c41dfd0d7252271c5fe909352c994523 Mon Sep 17 00:00:00 2001
+From: Lucas Hazel <lucas@hazel.id.au>
+Date: Fri, 7 May 2021 15:29:12 +1000
+Subject: [PATCH] add missing parameter to gs_texture_create_from_dmabuf
+ function call
+
+---
+ pipewire.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/pipewire.c b/pipewire.c
+index 1898b1b..b592bb3 100644
+--- a/pipewire.c
++++ b/pipewire.c
+@@ -349,6 +349,7 @@ on_process_cb (void *user_data)
+       xdg->texture =
+         gs_texture_create_from_dmabuf (xdg->format.info.raw.size.width,
+                                        xdg->format.info.raw.size.height,
++                                       xdg->format.info.raw.format,
+                                        obs_format,
+                                        1,
+                                        fds,
+-- 
+GitLab
+
