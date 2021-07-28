@@ -2,7 +2,7 @@
 pkgname=ciel
 _pkgname=${pkgname}-rs
 _pkgver=3.0.0
-pkgver=3.0.9
+pkgver=3.0.10
 pkgrel=1
 pkgdesc="A tool for controlling multi-layer file systems and containers."
 arch=('i686' 'x86_64')
