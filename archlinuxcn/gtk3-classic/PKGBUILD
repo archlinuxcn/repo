@@ -5,13 +5,15 @@
 # This file is based on original PKGBUILD of GTK3 package.
 # https://git.archlinux.org/svntogit/packages.git/plain/trunk/PKGBUILD?h=packages/gtk3
 
-__arch_pkg_commit="408873e9af613dc26f6d434fe489735fb8c5de75"
-_gtkver=3.24.29
+__arch_pkg_commit="2e881c9916dd4babb5f9922fb07dce2345b3cb4b"
+_gtkver=3.24.30
+
+_gtk3_classic_commit="12f90e216bd894b27cfedc5b1eb918fd7cae4811"
 
 pkgbase=gtk3-classic
 pkgname=($pkgbase lib32-$pkgbase)
 pkgver=${_gtkver}
-pkgrel=7
+pkgrel=8
 pkgdesc="GTK3 patched to provide a more classic experience"
 url="https://github.com/lah7/gtk3-classic"
 conflicts=(gtk3 gtk3-typeahead gtk3-print-backends)
@@ -34,16 +36,16 @@ makedepends=(
 )
 install=gtk3.install
 source=(
-	git+$url.git#commit=fdbaeb4e4936e90f8b92abf23c2cb7dd46fbd03b
+	git+$url.git#commit=$_gtk3_classic_commit
 	"https://download.gnome.org/sources/gtk+/${pkgver%.*}/gtk+-$_gtkver.tar.xz"
-	"settings.ini::https://git.archlinux.org/svntogit/packages.git/plain/trunk/settings.ini?h=packages/gtk3&id=$__arch_pkg_commit"
-	"gtk-query-immodules-3.0.hook::https://git.archlinux.org/svntogit/packages.git/plain/trunk/gtk-query-immodules-3.0.hook?h=packages/gtk3&id=$__arch_pkg_commit"
+	"gtk-query-immodules-3.0.hook::https://raw.githubusercontent.com/archlinux/svntogit-packages/$__arch_pkg_commit/trunk/gtk-query-immodules-3.0.hook"
+	settings.ini
 	README.md
 )
 sha256sums=('SKIP'
-            'f57ec4ade8f15cab0c23a80dcaee85b876e70a8823d9105f067ce335a8268caa'
-            '01fc1d81dc82c4a052ac6e25bf9a04e7647267cc3017bc91f9ce3e63e5eb9202'
+            'ba75bfff320ad1f4cfbee92ba813ec336322cc3c660d406aad014b07087a3ba9'
             'a0319b6795410f06d38de1e8695a9bf9636ff2169f40701671580e60a108e229'
+            '01fc1d81dc82c4a052ac6e25bf9a04e7647267cc3017bc91f9ce3e63e5eb9202'
             '1d2e3c41c7de03a31d717b09e053c88cbaca2ae74eefd982549c49de81c21ada')
 
 prepare()
