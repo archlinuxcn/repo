@@ -3,8 +3,8 @@
 # Maintainer: luosoy <249799588@qq.com>
 
 pkgname=deepin-wine-helper
-_pkgver=5.1.13-1
-pkgver=5.1.13
+_pkgver=5.1.27-1
+pkgver=5.1.27
 pkgrel=1
 epoch=
 pkgdesc="Deepin Wine Helper"
@@ -23,9 +23,9 @@ backup=()
 options=()
 install=
 changelog=
-source=("https://cdn-package-store6.deepin.com/appstore/pool/appstore/d/${pkgname}/${pkgname}_${_pkgver}_i386.deb")
+source=("https://home-store-packages.uniontech.com/appstore/pool/appstore/d/${pkgname}/${pkgname}_${_pkgver}_i386.deb")
 noextract=("${pkgname}_${_pkgver}_i386.deb")
-md5sums=('9f31d8d9b4a978ce6b935b6d1b7ae8a1')
+md5sums=('16ec217c86277ff35afafca31b660512')
 validpgpkeys=()
 
 prepare() {
