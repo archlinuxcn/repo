@@ -1,13 +1,13 @@
 # Contributor: Médéric Boquien <mboquien@free.fr>
 # Maintainer: Médéric Boquien <mboquien@free.fr>
 pkgname=python-astropy
-pkgver=4.2.1
+pkgver=4.3
 pkgrel=1
 pkgdesc="A community python library for astronomy"
 arch=('i686' 'x86_64')
 url="http://www.astropy.org/"
 license=('BSD')
-depends=('python>=3.7' 'python-numpy>=1.17.0' 'cfitsio>=3.49' 'python-pyerfa>=1.7' 'expat>=2.2.9' 'wcslib>=7.3')
+depends=('python>=3.7' 'python-numpy>=1.17.0' 'cfitsio>=3.49' 'python-pyerfa>=1.7.3' 'expat>=2.2.9' 'wcslib>=7.3')
 optdepends=('python-scipy: powers a variety of features in several modules'
             'python-h5py: reads/writes Table objects from/to HDF5 files'
             'python-beautifulsoup4: reads Table objects from HTML files'
@@ -28,12 +28,13 @@ optdepends=('python-scipy: powers a variety of features in several modules'
 conflicts=('python-pyfits' 'python-vo')
 makedepends=('cython' 'python-jinja' 'python-pip')
 source=("https://files.pythonhosted.org/packages/source/a/astropy/astropy-${pkgver}.tar.gz")
-sha512sums=('0566af1e06b0fb96c592f90534ffd3e8d23ad29222b9b6ee4a6067dfd61403f818c7156a9bfb94d4a20e39bbf421b02a2895ce5f735780ca86dc1ef82594ef09')
+sha512sums=('865b6a920ad1daff64823ec36d9f70c0de38dd897b4133001466d6d5274adcc74e006220c1e45af8fd57e7de987ecb336a1ee1b685a3e56c8a5a614125e175dc')
 
 build() {
   cd "${srcdir}/astropy-${pkgver}"
-
-  ASTROPY_USE_SYSTEM_ALL=1 PIP_CONFIG_FILE=/dev/null pip wheel --no-cache-dir --no-deps --wheel-dir="${srcdir}/astropy-${pkgver}" .
+  # Temporarily disable the use of the system cfitsio, as astropy is broken as it only tracks an old bundled version with a slightly different API
+  #ASTROPY_USE_SYSTEM_ALL=1 PIP_CONFIG_FILE=/dev/null pip wheel --no-cache-dir --no-deps --wheel-dir="${srcdir}/astropy-${pkgver}" .
+  ASTROPY_USE_SYSTEM_WCSLIB=1 ASTROPY_USE_SYSTEM_EXPAT=1 ASTROPY_USE_SYSTEM_ERFA=1 PIP_CONFIG_FILE=/dev/null pip wheel --no-cache-dir --no-deps --wheel-dir="${srcdir}/astropy-${pkgver}" .
 }
 
 package() {
