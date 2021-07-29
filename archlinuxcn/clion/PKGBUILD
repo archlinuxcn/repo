@@ -10,7 +10,7 @@ pkgname=(clion clion-jre clion-cmake clion-gdb clion-lldb)
 _pkgname=clion
 _dlname=CLion
 pkgver=2021.2
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="C/C++ IDE. Free 30-day trial."
 arch=('x86_64' 'aarch64')
@@ -29,9 +29,6 @@ build() {
     mkdir -p "${srcdir}/opt/${pkgbase}"
     bsdtar --strip-components 1 -xf "${_dlname}-${pkgver}.tar.gz" \
            -C "${srcdir}/opt/${pkgbase}"
-
-    rm -f "${srcdir}/opt/${pkgbase}/bin/libyjpagent-linux.so"
-    rm -f "${srcdir}/opt/${pkgbase}/bin/fsnotifier"
 }
 
 package_clion() {
@@ -54,8 +51,7 @@ package_clion() {
         'python2: Python 2 programming language support'
         'doxygen: Code documentation generation'
     )
-    backup=("opt/${pkgbase}/bin/clion.vmoptions"
-            "opt/${pkgbase}/bin/clion64.vmoptions"
+    backup=("opt/${pkgbase}/bin/clion64.vmoptions"
             "opt/${pkgbase}/bin/idea.properties")
 
     rsync -rtl "${srcdir}/opt" "${pkgdir}" \
