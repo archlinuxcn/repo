@@ -6,15 +6,14 @@
 # $ curl -sL https://dl.google.com/linux/earth/deb/dists/stable/main/binary-amd64/Packages | grep -Pom1 'Version: \K[^-]*'
 
 pkgname=google-earth-pro
-pkgver=7.3.3.7786
-pkgrel=4
+pkgver=7.3.4.8248
+pkgrel=1
 pkgdesc='3D interface to explore the globe, terrain, streets, buildings and other planets (Pro version)'
 arch=('x86_64')
 url='https://www.google.com/earth/'
 license=('custom')
 depends=(
     'curl'
-    'openssl-1.0'
     'glu'
     'hicolor-icon-theme'
     'libsm'
@@ -26,9 +25,6 @@ depends=(
     'alsa-lib'
     'libcups'
     'desktop-file-utils')
-optdepends=(
-    'catalyst-utils: For AMD Catalyst'
-    'nvidia-utils: For the NVIDIA driver')
 replaces=("google-earth")
 provides=('google-earth')
 options=('!strip' '!emptydirs')
@@ -39,7 +35,7 @@ source=("https://dl.google.com/linux/earth/deb/pool/main/g/google-earth-pro-stab
         'Legal-Notices-for-Google-Earth-and-Google-Earth-APIs.html'::'https://www.google.com/help/legalnotices_maps.html'
         'Google-Privacy-Policy.html'::'https://www.google.com/intl/ALL/policies/privacy/index.html')
 noextract=("google-earth-pro-stable_${pkgver}-r0_amd64.deb")
-sha256sums=('63ad2fdae55cefa7674e68a2f7383274a1768ad118c13cc613e0b897f9546ce8'
+sha256sums=('cdf406c0574564b2b1c2bdcfd731c45ae6358d1f69969895ccd4ea6344bc6add'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -69,9 +65,6 @@ package() {
     # remove the debian-intended cron job and duplicated images
     rm -r "${pkgdir}/etc/cron.daily" "${pkgdir}/${_installdir}"/product_logo_*.png
     
-    # fix search
-    sed -i '/googleearth-bin/s/^/LC_NUMERIC=en_US.UTF-8 /' "${pkgdir}/${_installdir}/googleearth"
-
     # licenses
     local _file
     for _file in 'Google-Terms-of-Service.html' \
@@ -81,7 +74,4 @@ package() {
     do
         install -D -m644 "$_file" "${pkgdir}/usr/share/licenses/${pkgname}/${_file}"
     done
-
-    # fix Segmentation fault with curl 7.74
-    rm "${pkgdir}/opt/google/earth/pro/libcrypto.so.1.0.0"
 }
