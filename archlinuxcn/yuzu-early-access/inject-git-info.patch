@@ -16,11 +16,11 @@ diff --git a/CMakeModules/GenerateSCMRev.cmake b/CMakeModules/GenerateSCMRev.cma
  
  # Generate cpp with Git revision from template
  # Also if this is a CI build, add the build name (ie: Nightly, Canary) to the scm_rev file as well
-@@ -113,4 +113,5 @@
-     set(COMBINED "${COMBINED}${TMP}")
- endforeach()
- string(MD5 SHADER_CACHE_VERSION "${COMBINED}")
-+set(BUILD_FULLNAME ${BUILD_FULLNAME})
+@@ -50,4 +50,5 @@ endif()
+ 
+ # The variable SRC_DIR must be passed into the script
+ # (since it uses the current build directory for all values of CMAKE_*_DIR)
++set(BUILD_FULLNAME "${BUILD_FULLNAME} ")
  configure_file("${SRC_DIR}/src/common/scm_rev.cpp.in" "scm_rev.cpp" @ONLY)
 diff --git a/src/common/CMakeLists.txt b/src/common/CMakeLists.txt
 --- a/src/common/CMakeLists.txt
