@@ -1,7 +1,7 @@
 # Maintainer: Alex Taber <aft dot pokemon at gmail dot com>
 
 pkgname=teamviewer
-pkgver=15.19.3
+pkgver=15.20.3
 pkgrel=1
 pkgdesc='All-In-One Software for Remote Support and Online Meetings'
 arch=('i686' 'x86_64' 'armv7h')
@@ -33,9 +33,9 @@ source_x86_64=("https://dl.teamviewer.com/download/linux/version_${pkgver%%.*}x/
 source_i686=("https://dl.teamviewer.com/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver}_i386.deb")
 source_armv7h=("https://dl.teamviewer.com/download/linux/version_${pkgver%%.*}x/teamviewer-host_${pkgver}_armhf.deb")
 #source_armv7h=("https://dl.teamviewer.com/download/linux/version_${pkgver%%.*}x/teamviewer-host_13.2.13582_armhf.deb")
-sha256sums_i686=('2ae56df61f61fa27fa5cf39383cd9549e24ee996e354c9b56e016844d7b32563')
-sha256sums_x86_64=('99dd3e71cdf6c7dcbd136442383fcaac753214fec71ea63f411eff95a1ddd9ad')
-sha256sums_armv7h=('962c9eb81c05bbd9ce49ebcf4e43626ba89f5b9ed92ab36e97a18dfb837b7fc4')
+sha256sums_i686=('5caf67cb0e515974bd69d4fcfb971b6d9cc3b4245a6d89299c029b7ec0e95501')
+sha256sums_x86_64=('910b9d45e02b4e6cd0ba490fc7d86ddd08b1f5a3da387e5782dc6b3d9a9ac74d')
+sha256sums_armv7h=('0970fe04a909f7309be46c32f93a1b06c3648529756f3c1cf53f8907a82e54d4')
 
 prepare() {
 	warning "If the install fails, you need to uninstall previous major version of Teamviewer"
