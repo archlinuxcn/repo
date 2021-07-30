@@ -1,6 +1,6 @@
 # Maintainer: Jguer <joaogg3@gmail.com>
 pkgname=yay
-pkgver=10.3.0
+pkgver=10.3.1
 pkgrel=1
 pkgdesc="Yet another yogurt. Pacman wrapper and AUR helper written in go."
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
@@ -17,7 +17,7 @@ makedepends=(
   'go'
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Jguer/yay/archive/v${pkgver}.tar.gz")
-sha256sums=('17fb138f57678b49c3a58abb075620393a62d6c29a0c5ac2ee2d1b48c25473ce')
+sha256sums=('d8870f172b64b23f1433085cb7babd68330f77cf973eeb05cd99e04e202d3c47')
 
 # With pacman 6 arriving a rebuild of yay will be necessary, if you upgrade pacman without upgrading yay at the same time, yay will not run after.
 # I'm bumping the pkgrel so it shows up on the upgrade list (and will do so when pacman transitions from staging->core)
