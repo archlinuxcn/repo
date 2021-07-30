@@ -3,7 +3,7 @@
 
 pkgbase=dolphin-emu-git
 pkgname=('dolphin-emu-git' 'dolphin-emu-nogui-git')
-pkgver=5.0.r14671.b515786c8d
+pkgver=5.0.r14762.c86c02e46b
 pkgrel=1
 pkgdesc='A GameCube / Wii / Triforce emulator'
 arch=('x86_64')
@@ -29,6 +29,10 @@ pkgver() {
 }
 
 prepare() {
+  cd dolphin-emu
+  git submodule update --init --recursive
+  
+  cd ${srcdir}
   if [[ -d build ]]; then
     rm -rf build
   fi
