@@ -4,49 +4,48 @@ Date: Wed, 14 Apr 2021 22:56:55 +0800
 Subject: [PATCH] add TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME back
 
 ---
- Telegram/SourceFiles/platform/linux/specific_linux.cpp | 2 ++
- Telegram/SourceFiles/settings/settings_codes.cpp       | 3 +++
+ Telegram/SourceFiles/core/application.cpp              | 2 ++
+ Telegram/SourceFiles/settings/settings_codes.cpp       | 2 ++
  Telegram/cmake/telegram_options.cmake                  | 5 +++++
  3 files changed, 10 insertions(+)
 
-diff --git a/Telegram/SourceFiles/platform/linux/specific_linux.cpp b/Telegram/SourceFiles/platform/linux/specific_linux.cpp
-index 7ea7d2a1a..d97f588b2 100644
---- a/Telegram/SourceFiles/platform/linux/specific_linux.cpp
-+++ b/Telegram/SourceFiles/platform/linux/specific_linux.cpp
-@@ -827,6 +827,7 @@ void InstallLauncher(bool force) {
+diff --git a/Telegram/SourceFiles/core/application.cpp b/Telegram/SourceFiles/core/application.cpp
+index 005b9260f..a6bf60cb8 100644
+--- a/Telegram/SourceFiles/core/application.cpp
++++ b/Telegram/SourceFiles/core/application.cpp
+@@ -1124,6 +1124,7 @@ void Application::startShortcuts() {
  }
- 
- void RegisterCustomScheme(bool force) {
+
+ void Application::RegisterUrlScheme() {
 +#ifndef TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME
- 	try {
- #ifndef DESKTOP_APP_DISABLE_DBUS_INTEGRATION
- 		if (InSnap()) {
-@@ -894,6 +895,7 @@ void RegisterCustomScheme(bool force) {
- 	} catch (const Glib::Error &e) {
- 		LOG(("App Error: %1").arg(QString::fromStdString(e.what())));
- 	}
+        base::Platform::RegisterUrlScheme(base::Platform::UrlSchemeDescriptor{
+                .executable = cExeDir() + cExeName(),
+                .arguments = qsl("-workdir \"%1\"").arg(cWorkingDir()),
+@@ -1134,6 +1135,7 @@ void Application::RegisterUrlScheme() {
+                .displayAppName = AppName.utf16(),
+                .displayAppDescription = AppName.utf16(),
+        });
 +#endif // !TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME
  }
- 
- PermissionStatus GetPermissionStatus(PermissionType type) {
+
+ bool IsAppLaunched() {
 diff --git a/Telegram/SourceFiles/settings/settings_codes.cpp b/Telegram/SourceFiles/settings/settings_codes.cpp
-index ef99f5c1f..918f1e9f4 100644
+index cb8ed8ac0..49b6ed574 100644
 --- a/Telegram/SourceFiles/settings/settings_codes.cpp
 +++ b/Telegram/SourceFiles/settings/settings_codes.cpp
-@@ -136,10 +136,13 @@ auto GenerateCodes() {
- 			window->showSettings(Settings::Type::Folders);
- 		}
- 	});
-+
+@@ -136,10 +136,12 @@ auto GenerateCodes() {
+                        window->showSettings(Settings::Type::Folders);
+                }
+        });
 +#ifndef TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME
- 	codes.emplace(qsl("registertg"), [](SessionController *window) {
- 		Platform::RegisterCustomScheme(true);
- 		Ui::Toast::Show("Forced custom scheme register.");
- 	});
+        codes.emplace(qsl("registertg"), [](SessionController *window) {
+                Core::Application::RegisterUrlScheme();
+                Ui::Toast::Show("Forced custom scheme register.");
+        });
 +#endif // !TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME
- 
+
  #if defined Q_OS_WIN || defined Q_OS_MAC
- 	codes.emplace(qsl("freetype"), [](SessionController *window) {
+        codes.emplace(qsl("freetype"), [](SessionController *window) {
 diff --git a/Telegram/cmake/telegram_options.cmake b/Telegram/cmake/telegram_options.cmake
 index 5fe70fb2a..49d72aadf 100644
 --- a/Telegram/cmake/telegram_options.cmake

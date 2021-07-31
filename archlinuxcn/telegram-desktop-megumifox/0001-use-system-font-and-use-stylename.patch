@@ -19,7 +19,7 @@ index 570d169..6b7be9f 100644
 +    RegularFont.family = QFontDatabase::systemFont(type).family();
 +    RegularFont.style = "Regular";
 +    BoldFont.family = QFontDatabase::systemFont(type).family();
-+    BoldFont.style = "DemiBold";
++    BoldFont.style = "";
 +
  	const auto bold = ((flags & FontBold) || (flags & FontSemibold));
  	const auto italic = (flags & FontItalic);

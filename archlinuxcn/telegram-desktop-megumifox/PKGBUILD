@@ -19,15 +19,15 @@ source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver
         "0001-use-system-font-and-use-stylename.patch"
         "0002-fix-webrtc-integration-build-missing-libx11.patch"
         "0003-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch")
-sha512sums=('a553313b04fbb562745be2381a84117657172952e46e280980a73c9fcfe2a7cf29c0e012e4b1259816d1e6652418e7a1ddfc4e394544fcc3aeb33704cbe80860'
-            '0a4206f3d16589ba476d85381bf7984a28b74e0623e02a82ce2d586eec337808f66261dd0f2116ee513403223ac7707734b3fa17d082b5ebf88481bc22636f6f'
+sha512sums=('e9be60cdaeffa4efa95ea1e5d8fe50308bff5612b546fa92c02f824f479b42e098fb8fbe713e652578ee2308e3faadaf82e4c101dee0e58b6f3c70d8dcb0bd8e'
+            '62c41188d1faf4200167b9086552db092dadcba6000bb3c51d7c79ba22cc453c980f6e50013c76e766c9dd8585e84327d00d289512fc1f7e7222f223a23a14a7'
             '3ff546af7f5ed2aafeaffd136b0c694ddf6d1bbbe1e539e2a3740829d6bb95855d75cf6b409c40fea3236329e5cb3c085b783fa030e6411bc62f7952ade02684'
-            '448058e5dd303c000502880c572e80576e2bbf95e9f278c4d5d3fecb86ee7cb4ad121538171aec6a62a0845724f5ac82cd368e03ff3e2b2b3a0bdd18b0deeab7')
+            '7a1dcfc563b764d1e68acb566df52890ad527ba2c442ac78825239bce64da3d77ca5f7cf965c67dafc5290e3549fa52780fc49b2d991cd798d05735a6143f46b')
 
 prepare() {
     patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-use-system-font-and-use-stylename.patch
     patch -b -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0002-fix-webrtc-integration-build-missing-libx11.patch
-    patch -b -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0003-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch
+    patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0003-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch
     # force webrtc link to libjpeg and X11 libs
     cd tdesktop-$pkgver-full/cmake
     echo "target_link_libraries(external_webrtc INTERFACE jpeg)" | tee -a external/webrtc/CMakeLists.txt
@@ -54,7 +54,8 @@ build() {
         -DDESKTOP_APP_SPECIAL_TARGET="" \
         -DDESKTOP_APP_USE_PACKAGED_LAZY=OFF \
         -DDESKTOP_APP_USE_PACKAGED_FONTS=OFF \
-    	-DDESKTOP_APP_DISABLE_GTK_INTEGRATION=ON
+    	-DDESKTOP_APP_DISABLE_GTK_INTEGRATION=ON \
+	-DDESKTOP_APP_DISABLE_WEBKITGTK=ON
     ninja -C build
 }
 
