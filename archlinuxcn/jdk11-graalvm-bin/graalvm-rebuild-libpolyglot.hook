@@ -1,0 +1,11 @@
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = usr/lib/jvm/java-JAVA-graalvm/*
+
+[Action]
+Description = Suggest rebuilding GraalVM libpolyglot component
+When = PostTransaction
+Exec = /usr/bin/printf '%s\n' 'Changes to GraalVM detected.' 'You may need to rebuild libpolyglot (and possibly other components) with the following command:' '  /usr/lib/jvm/java-JAVA-graalvm/bin/gu rebuild libpolyglot' "Note that this will take a while (which is why it's not done automatically):" 'the package maintainer has experienced CPU times upwards of _four hours_.' '(However, it parallelizes fairly well, so wall-clock time will depend on your CPU.)' "If you don't rebuild libpolyglot, then --polyglot without --jvm probably won't work right."

@@ -13,20 +13,19 @@ function cleanup {
 trap cleanup EXIT
 PATH=/usr/lib/jvm/java-${java_}-graalvm/bin/:$(systemd-path search-binaries-default)
 
-printf '%s\n' 'Testing polyglot R, JavaScript, Python, Ruby, and Java...'
+printf '%s\n' 'Testing Node with polyglot R, Python, Ruby, JavaScript, and Java...'
 
-cat > test.R << 'EOF'
-jsPlus = eval.polyglot('js', '(function(s1, s2) { return s1 + s2; })')
-pythonPlus = eval.polyglot('python', 'lambda s1, s2: s1 + s2')
-rubyOne = eval.polyglot('ruby', '1')
-pythonOne = eval.polyglot('python', '1')
-rOne = 1
-jvmPrint = java.type("java.lang.System")$out$println
-jvmPrint(pythonPlus(jsPlus(rubyOne, pythonOne), rOne))
+jsThree=$(node --polyglot --jvm << 'EOF'
+rPlus = Polyglot.eval('R', '(function(s1, s2) s1 + s2)');
+pythonPlus = Polyglot.eval('python', 'lambda s1, s2: s1 + s2');
+rubyOne = Polyglot.eval('ruby', '1')
+pythonOne = Polyglot.eval('python', '1')
+jsOne = 1
+jvmPrint = Java.type('java.lang.System').out.println
+jvmPrint(pythonPlus(rPlus(rubyOne, pythonOne), jsOne))
 EOF
-
-rThree=$(Rscript --polyglot --jvm test.R) || exit
-if [[ $rThree != 3 ]]; then
+) || exit
+if [[ $jsThree != 3 ]]; then
     printf 'expected 3, got %q\n' "$rThree"
     exit 1
 fi
