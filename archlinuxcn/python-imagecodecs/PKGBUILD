@@ -2,7 +2,7 @@
 
 _name=imagecodecs
 pkgname=python-imagecodecs
-pkgver=2021.6.8
+pkgver=2021.7.30
 pkgrel=1
 pkgdesc='Image transformation, compression, and decompression codecs'
 arch=('x86_64')
@@ -37,7 +37,7 @@ makedepends=(
   python-setuptools
 )
 source=("${_name}-${pkgver}.tar.gz::https://github.com/cgohlke/imagecodecs/archive/v${pkgver}.tar.gz")
-sha256sums=('f9da8c53f8b7400a46298093ec71a44758e860fe9dcba9f48434ebbacfdb7817')
+sha256sums=('c3f10514ab14ba81f906d3e4f4b04f75208c7b48eb810d939a47fcc0581f027b')
 
 build() {
   cd "${srcdir}/${_name}-${pkgver}"
