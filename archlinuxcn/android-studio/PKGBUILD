@@ -8,9 +8,8 @@
 # Maintainer: Kordian Bruck <k@bruck.me>
 
 pkgname=android-studio
-pkgver=4.2.2.0
+pkgver=2020.3.1.22
 pkgrel=1
-_build=202.7486908
 pkgdesc="The official Android IDE (Stable branch)"
 arch=('i686' 'x86_64')
 url="https://developer.android.com/"
@@ -18,12 +17,13 @@ license=('APACHE')
 makedepends=()
 depends=('alsa-lib' 'freetype2' 'libxrender' 'libxtst' 'which')
 optdepends=('gtk2: GTK+ look and feel'
-            'libgl: emulator support')
+            'libgl: emulator support'
+            'ncurses5-compat-libs: native debugger support')
 options=('!strip')
-source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.tar.gz"
+source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-$pkgver-linux.tar.gz"
         "$pkgname.desktop"
         "license.html")
-sha256sums=('733b04cb66e3ff7f03766aa0222ebd1fef7a63e6340665aa91f0d62e724feca3'
+sha256sums=('4adb7b9876ed7a59ae12de5cbfe7a402e1c07be915a4a516a32fef1d30b47276'
             '73cd2dde1d0f99aaba5baad1e2b91c834edd5db3c817f6fb78868d102360d3c4'
             '9a7563f7fb88c9a83df6cee9731660dc73a039ab594747e9e774916275b2e23e')
 
