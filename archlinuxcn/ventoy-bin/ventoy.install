@@ -10,7 +10,3 @@ post_install() {
   printf "$(tput setaf 4)  ->$(tput sgr0; tput bold) %s$(tput sgr0)\n" \
     '      (See https://www.ventoy.net/en/plugin_persistence.html for documentation.)'
 }
-
-post_upgrade() {
-  if [ $(vercmp $2 1.0.39) -le 0 ]; then post_install; fi
-}
