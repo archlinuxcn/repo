@@ -6,7 +6,12 @@ build_prefix: extra-x86_64
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
 update_on:
-  - source: vcs
+  - source: git
+    git: git+https://code.orgmode.org/bzg/org-mode.git
+    use_commit: true
+  - source: git
+    git: git+https://git.sr.ht/~bzg/org-contrib
+    use_commit: true
   - source: alpm
     from_pattern: ^(\d+\.\d+).*
     to_pattern: \1
