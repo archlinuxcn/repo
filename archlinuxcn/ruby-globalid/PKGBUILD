@@ -3,7 +3,7 @@
 
 _gemname=globalid
 pkgname=ruby-$_gemname
-pkgver=0.5.1
+pkgver=0.5.2
 pkgrel=1
 pkgdesc='Refer to any model with a URI: gid://app/class/id'
 arch=(any)
@@ -13,7 +13,7 @@ depends=(ruby ruby-activesupport)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha1sums=('a7e1613839e7fcf70b35b906dd35a56dfe916e95')
+sha1sums=('6091a20c6a87a78e9b6e729da51a418388a11022')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
