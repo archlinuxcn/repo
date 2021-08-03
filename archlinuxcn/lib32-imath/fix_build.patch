@@ -1,0 +1,19 @@
+diff '--color=auto' --unified --recursive --text Imath-3.1.2.orig/src/Imath/half.h Imath-3.1.2.new/src/Imath/half.h
+--- Imath-3.1.2.orig/src/Imath/half.h	2021-07-30 17:25:31.000000000 -0300
++++ Imath-3.1.2.new/src/Imath/half.h	2021-08-02 18:51:06.702804940 -0300
+@@ -177,10 +177,12 @@
+ /// floats in question.
+ ///
+
+-#ifdef _WIN32
+-#        include <intrin.h>
+-#elif defined(__x86_64__)
++#if defined(__has_include)
++#    if __has_include(<x86intrin.h>)
+ #        include <x86intrin.h>
++#    elif __has_include(<intrin.h>)
++#        include <intrin.h>
++#    endif
+ #endif
+
+ #include <stdint.h>
