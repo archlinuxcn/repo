@@ -2,9 +2,9 @@
 
 pkgname=plasma5-applets-window-appmenu
 pkgver=0.7.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Plasma 5 applet in order to show the window appmenu"
-arch=(x86_64)
+arch=(x86_64 aarch64)
 url="https://github.com/psifidotos/applet-window-appmenu"
 license=(GPL)
 depends=(qt5-base qt5-declarative plasma-workspace libxcb)
