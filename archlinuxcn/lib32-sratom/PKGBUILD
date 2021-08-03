@@ -3,7 +3,7 @@
 _basename=sratom
 pkgname=lib32-sratom
 pkgver=0.6.8
-pkgrel=1
+pkgrel=2
 pkgdesc="An LV2 Atom RDF serialisation library (32-bit)"
 arch=('x86_64')
 url="https://drobilla.net/software/sratom/"
@@ -26,6 +26,7 @@ prepare() {
     # let wscript(s) find the custom waf scripts
     mkdir -pv tools
     touch __init__.py
+    touch tools/__init__.py
     cp -v waflib/extras/{autoship,autowaf,lv2}.py tools/
     mkdir -pv plugins/tools/
     cp -v waflib/extras/{autoship,autowaf,lv2}.py plugins/tools/
