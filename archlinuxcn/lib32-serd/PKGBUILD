@@ -3,7 +3,7 @@
 _basename=serd
 pkgname=lib32-serd
 pkgver=0.30.10
-pkgrel=1
+pkgrel=2
 pkgdesc="Lightweight C library for RDF syntax supporting reading/ writing Turtle and NTriples (32-bit)"
 arch=('x86_64')
 url="https://drobilla.net/software/serd/"
@@ -25,6 +25,7 @@ prepare() {
     # let wscript(s) find the custom waf scripts
     mkdir -pv tools
     touch __init__.py
+    touch tools/__init__.py
     cp -v waflib/extras/{autoship,autowaf,lv2}.py tools/
     mkdir -pv plugins/tools/
     cp -v waflib/extras/{autoship,autowaf,lv2}.py plugins/tools/
