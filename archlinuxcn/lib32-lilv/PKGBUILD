@@ -3,7 +3,7 @@
 _basename=lilv
 pkgname=lib32-lilv
 pkgver=0.24.12
-pkgrel=1
+pkgrel=2
 pkgdesc="A C library interface to the LV2 plug-in standard (32-bit)"
 arch=('x86_64')
 url="https://drobilla.net/software/lilv/"
@@ -23,6 +23,7 @@ prepare() {
     # let wscript(s) find the custom waf scripts
     mkdir -pv tools
     touch __init__.py
+    touch tools/__init__.py
     cp -v waflib/extras/{autoship,autowaf,lv2}.py tools/
     mkdir -pv plugins/tools/
     cp -v waflib/extras/{autoship,autowaf,lv2}.py plugins/tools/
