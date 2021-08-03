@@ -3,7 +3,7 @@
 _basename=sord
 pkgname=lib32-sord
 pkgver=0.16.8
-pkgrel=1
+pkgrel=2
 pkgdesc="A lightweight C library for storing RDF data in memory (32-bit)"
 arch=('x86_64')
 url="https://drobilla.net/software/sord/"
@@ -26,6 +26,7 @@ prepare() {
     # let wscript(s) find the custom waf scripts
     mkdir -pv tools
     touch __init__.py
+    touch tools/__init__.py
     cp -v waflib/extras/{autoship,autowaf,lv2}.py tools/
     mkdir -pv plugins/tools/
     cp -v waflib/extras/{autoship,autowaf,lv2}.py plugins/tools/
