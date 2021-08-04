@@ -3,8 +3,8 @@
 # Contributor: Bumsik Kim <k.bumsik@gmail.com>
 
 pkgname=nushell
-pkgver=0.34.0
-pkgrel=2
+pkgver=0.35.0
+pkgrel=1
 pkgdesc="A new type of shell."
 url="https://www.nushell.sh"
 license=('MIT')
@@ -13,14 +13,14 @@ makedepends=('rust' 'python')
 arch=('x86_64' 'i686' 'aarch64')
 install=nushell.install
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/nushell/nushell/archive/${pkgver}.tar.gz")
-cksums=('1554336555')
-sha256sums=('9571c7fbf0f0fdabb055727b63b6a5c3561f04357336289106591fc6afcff7a3')
-b2sums=('a83ca65512c90641714c969e17e6b1c3b79e1f52a26d2fd3c960a10e9b947185f0679f6ff03512e5c94268f8d5df475fe8b0598b3f20fc96eadfdcfc1fe5e4ca')
+cksums=('1290491688')
+sha256sums=('2e93366a2f089bdbe0ae52eafcda5390119642c66e541b26e8eeb1ab4bc13823')
+b2sums=('1a179cfa8e4a6bb5f7543e7a22ef2de596b5f03cb0c401e1751d525cbf7e3466704495b815a84e609cc67d99fe18f9be2b840dd5b380afd2c05667418ca9431b')
 
 build() {
   cd "${pkgname}-${pkgver}"
 
-  cargo build --release --locked --features extra --target-dir=target
+  RUSTUP_TOOLCHAIN=stable cargo build --release --locked --all-features --target-dir=target
 }
 
 package() {
