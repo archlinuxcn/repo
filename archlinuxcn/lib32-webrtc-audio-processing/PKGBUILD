@@ -4,7 +4,7 @@
 _basename=webrtc-audio-processing
 pkgname=lib32-webrtc-audio-processing
 pkgver=0.3.1
-pkgrel=3
+pkgrel=4
 pkgdesc="AudioProcessing library based on Google's implementation of WebRTC"
 url="https://freedesktop.org/software/pulseaudio/webrtc-audio-processing/"
 arch=(x86_64)
@@ -12,7 +12,7 @@ license=(custom)
 depends=(lib32-gcc-libs webrtc-audio-processing)
 makedepends=(git)
 _commit=e882a5442ac22c93648e12837248d651d18b9247  # tags/v0.3.1^0
-source=("git+https://anongit.freedesktop.org/git/pulseaudio/webrtc-audio-processing#commit=$_commit")
+source=("git+https://gitlab.freedesktop.org/pulseaudio/webrtc-audio-processing.git#commit=$_commit")
 sha256sums=('SKIP')
 
 pkgver() {
@@ -40,6 +40,8 @@ build() {
         --libdir=/usr/lib32 \
         --disable-static
 
+    sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+
     make
 }
 
@@ -50,6 +52,6 @@ package() {
 
     rm -r "$pkgdir/usr/include"
 
-    install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+    install -Dt "$pkgdir/usr/share/licenses/$pkgname" -m644 COPYING
 }
 provides=("libwebrtc_audio_processing.so")
