@@ -5,8 +5,8 @@
 # Contributor: Daniel Reuter <daniel.robin.reuter@googlemail.com>
 
 pkgname=ocrmypdf
-pkgver=12.3.0
-pkgrel=3
+pkgver=12.3.1
+pkgrel=1
 pkgdesc="A tool to add an OCR text layer to scanned PDF files, allowing them to be searched"
 url="https://github.com/jbarlow83/OCRmyPDF"
 arch=('any')
@@ -17,7 +17,7 @@ depends=('python' 'python-cffi' 'img2pdf' 'python-pillow>=7.0.0' 'tesseract' 'gh
 makedepends=('python-setuptools' 'python-setuptools-scm-git-archive' 'python-pip')
 optdepends=('jbig2enc: Better compression algorithm; results in smaller PDF files')
 source=("https://files.pythonhosted.org/packages/source/${pkgname::1}/$pkgname/$pkgname-$pkgver.tar.gz")
-sha256sums=('bc0e583ba6097217623581922775ed5295a61ea650c097218e4f3dcecac494c0')
+sha256sums=('68a882ebb50b55fd164ba0e80918ab97961cfce4613e6426dc76951687f2e08f')
 
 package () {
   cd "${srcdir}/${pkgname}-${pkgver}"
