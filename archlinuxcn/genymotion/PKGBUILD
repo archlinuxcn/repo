@@ -6,14 +6,16 @@
 
 pkgname=genymotion
 pkgver=3.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Complete set of tools that provides a virtual environment for Android."
 arch=('x86_64')
 url="http://www.genymotion.com/"
 depends=('libpng' 'net-tools' 'protobuf' 'qca-qt5' 'qt5-script' 'qt5-webkit' 'virtualbox')
+makedepends=('wget')
 install=$pkgname.install
 license=('custom')
 _ARCH="x64"
+DLAGENTS=("https::/usr/bin/wget -U "Mozilla" %u")
 source=("genymotion.desktop"
         "genymotion-player.desktop"
         "https://dl.genymotion.com/releases/genymotion-$pkgver/$pkgname-${pkgver}-linux_$_ARCH.bin")
