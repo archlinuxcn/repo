@@ -1,27 +1,21 @@
 #!/bin/bash
 
-strip_quotes() {
-  local len=${#1} quotes=$'[\'"]' str=${!1}
-
-  if [[ ${str:0:1} = ${str: -1} && ${str:0:1} = $quotes ]]; then
-    printf -v "$1" %s "${str:1:-1}"
-  fi
-}
-
 add_udev_rule() {
     # Add an udev rules file to the initcpio image. Dependencies on binaries
     # will be discovered and added.
     #   $1: path to rules file (or name of rules file)
 
-    local rules= rule= key= value= binary=
+    local rules="$1" rule= key= value= binary=
 
-    rules=$(PATH=/usr/lib/udev/rules.d:/lib/udev/rules.d type -P "$1")
+    if [[ ${rules:0:1} != '/' ]]; then
+        rules=$(PATH=/usr/lib/udev/rules.d:/lib/udev/rules.d type -P "$1")
+    fi
     if [[ -z $rules ]]; then
         # complain about not found rules
         return 1
     fi
 
-    add_file "$rules"
+    add_file "$rules" /usr/lib/udev/rules.d/"${rules##*/}"
 
     while IFS=, read -ra rule; do
         # skip empty lines, comments
@@ -31,9 +25,10 @@ add_udev_rule() {
             IFS=' =' read -r key value <<< "$pair"
             case $key in
                 RUN@({program}|+)|IMPORT{program}|ENV{REMOVE_CMD})
-                    strip_quotes 'value'
+                    # strip quotes
+                    binary=${value//[\"\']/}
                     # just take the first word as the binary name
-                    binary=${value%% *}
+                    binary=${binary%% *}
                     [[ ${binary:0:1} == '$' ]] && continue
                     if [[ ${binary:0:1} != '/' ]]; then
                         binary=$(PATH=/usr/lib/udev:/lib/udev type -P "$binary")
@@ -174,7 +169,7 @@ build() {
 
     echo "root:x:0:0:root:/root:/bin/sh" >"$BUILDROOT/etc/passwd"
     echo 'root:*:::::::' >"$BUILDROOT/etc/shadow"
-    getent group root audio disk input kmem kvm lp optical render storage tty uucp video | awk -F: ' { print $1 ":x:" $3 ":" }' >"$BUILDROOT/etc/group"
+    getent group root audio disk input kmem kvm lp optical render sgx storage tty uucp video | awk -F: ' { print $1 ":x:" $3 ":" }' >"$BUILDROOT/etc/group"
 
     add_dir "/etc/modules-load.d"
     (

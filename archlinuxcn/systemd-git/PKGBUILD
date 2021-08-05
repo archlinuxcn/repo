@@ -126,6 +126,13 @@ build() {
     -Drpmmacrosdir=no
     -Dsysvinit-path=
     -Dsysvrcnd-path=
+
+
+    -Dsbat-distro='arch'
+    -Dsbat-distro-summary='Arch Linux'
+    -Dsbat-distro-pkgname="${pkgname}"
+    -Dsbat-distro-version="${pkgver}"
+    -Dsbat-distro-url="https://github.com/archlinuxcn/repo/tree/master/archlinuxcn/${_pkgbase}"
   )
 
   arch-meson "$_pkgbase" build "${_meson_options[@]}"
@@ -198,7 +205,7 @@ package_systemd-git() {
     -e '/^C \/etc\/issue/d' "$pkgdir"/usr/lib/tmpfiles.d/etc.conf
 
   # add back tmpfiles.d/legacy.conf, normally omitted without sysv-compat
-  install -m0644 "$_pkgbase"/tmpfiles.d/legacy.conf "$pkgdir"/usr/lib/tmpfiles.d
+  install -m0644 "$_pkgbase"/tmpfiles.d/legacy.conf.in "$pkgdir"/usr/lib/tmpfiles.d
 
   # ship default policy to leave services disabled
   echo 'disable *' >"$pkgdir"/usr/lib/systemd/system-preset/99-default.preset

@@ -1,6 +1,14 @@
 #!/bin/sh -e
 
+is_chrooted() {
+  if systemd-detect-virt --chroot; then
+    echo >&2 "  Skipped: Running in chroot."
+    exit 0
+  fi
+}
+
 systemd_live() {
+  is_chrooted
   if [ ! -d /run/systemd/system ]; then
     echo >&2 "  Skipped: Current root is not booted."
     exit 0
@@ -8,6 +16,7 @@ systemd_live() {
 }
 
 udevd_live() {
+  is_chrooted
   if [ ! -d /run/udev ]; then
     echo >&2 "  Skipped: Device manager is not running."
     exit 0
