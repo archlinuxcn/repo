@@ -1,14 +1,14 @@
 # Contributor: chrisl echo archlinux@c2h0r1i2s4t5o6p7h8e9r-l3u4n1a.com|sed 's/[0-9]//g'
 
 pkgname=cemu
-pkgver=1.25.0
-pkgrel=1
+pkgver=1.25.1
+pkgrel=2
 pkgdesc="Wii U emulator (via wine). Includes the Cemuhook plugin"
 arch=(x86_64)
 url="https://cemu.info/"
 license=('custom')
 depends=('wine' 'winetricks')
-_cemuhookver=1159_0573
+_cemuhookver=1251_0574
 source=(
   cemu.sh
   cemu.xpm
@@ -24,11 +24,11 @@ install=${pkgname}.install
 # Sometimes, they update the zip file without changing its name, which causes the md5sum to fail.
 # If you notice this, please mark this package as out-of-date in the aur website and I'll fix it.
 
-md5sums=('cb1dbf192ad3237a087260aa16758e95'
+md5sums=('4a5add39abfee819f76e4eceef4971b7'
          '54d70005a8975812ab54fcfef53f7bde'
-         'f419f0ebf4e14b7689eea9011555b838'
-         'c05ae9b867453cfcc24137c71a48b7ce'
-         'f5f0de02b9df62d5b6018c7a82e6d43b'
+         'b2fc346c4ae4e25856c9457e8d8c1eac'
+         '5f52dfd7fb0623b3b39c787a89305188'
+         '14ce1f8e2491609f81dd0e15d76310bb'
          '336a0bc0e44eede4ddf613a0eebf3bb9')
 
 options=(!strip)
@@ -51,7 +51,7 @@ package() {
   cp -R sharedFonts $pkgdir/usr/share/$pkgname
   cd cemu_$pkgver
   install -m644 Cemu.exe $pkgdir/usr/share/$pkgname
-  install -m644 dbghelp.dll $pkgdir/usr/share/$pkgname
+  install -m644 cemuhook.dll $pkgdir/usr/share/$pkgname
   install -m644 keystone.dll $pkgdir/usr/share/$pkgname
   cp -R gameProfiles $pkgdir/usr/share/$pkgname
   mkdir $pkgdir/usr/share/$pkgname/mlc01
