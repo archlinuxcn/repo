@@ -1,7 +1,7 @@
 # Maintainer:  edward-p <edward AT edward-p DOT xyz>
 
 pkgname=lunarvim-git
-pkgver=0.5.1.r105.g1484e056
+pkgver=0.5.1.r106.g3da49e4b
 pkgrel=1
 pkgdesc="An IDE layer for Neovim with sane defaults. Completely free and community driven."
 arch=('any')
@@ -39,14 +39,12 @@ build(){
   cd "${srcdir}/nvim-treesitter"
   runtime="${srcdir}/nvim-treesitter"
   count_maintained=$(nvim --cmd "set runtimepath+=${runtime}" --headless \
-    +"lua print(#require('nvim-treesitter.parsers').maintained_parsers())" +qall)
-  
-  nvim --cmd "set runtimepath+=${runtime}" --headless \
-      +'TSUpdateSync maintained' +qall
+    +"lua print(#require('nvim-treesitter.parsers').maintained_parsers())" +qall 2>&1)
 
-  if [ "$(ls ${runtime}/parser/ | wc -l)" -lt "${count_maintained}" ]; then
-    exit 1
-  fi
+  while [ "$(ls ${runtime}/parser/ | wc -l)" -lt "${count_maintained}" ]; do
+    nvim --cmd "set runtimepath+=${runtime}" --headless \
+      +'TSUpdateSync maintained' +qall
+  done
 }
 
 package() {
