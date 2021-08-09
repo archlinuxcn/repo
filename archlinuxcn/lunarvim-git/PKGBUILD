@@ -11,7 +11,6 @@ depends=(
   'neovim'
   'lua'
   'git'
-  'ripgrep'
   'fzf'
   'neovim-remote'
   'tree-sitter'
@@ -19,6 +18,9 @@ depends=(
   'nodejs'
   'yarn')
 makedepends=('git')
+optdepends=(
+  'ripgrep: optional dependencies for telescope.nvim'
+)
 install=${pkgname}.install
 source=("${pkgname}::git+https://github.com/LunarVim/LunarVim.git#branch=rolling"
 	"git+https://github.com/nvim-treesitter/nvim-treesitter.git#branch=0.5-compat"
