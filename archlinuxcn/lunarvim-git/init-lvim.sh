@@ -1,6 +1,8 @@
 #!/bin/bash
 mkdir -p ~/.config/lvim
 ln -s /usr/share/doc/lunarvim/config.example-no-ts.lua ~/.config/lvim/config.lua
+mkdir -p ~/.local/share/lunarvim
+ln -s /usr/share/lunarvim ~/.local/share/lunarvim/lvim
 echo "Installing Packer..."
 git clone https://github.com/wbthomason/packer.nvim ~/.local/share/lunarvim/site/pack/packer/start/packer.nvim
 echo "PackerInstall..."
