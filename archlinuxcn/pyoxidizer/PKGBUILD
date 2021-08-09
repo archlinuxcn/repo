@@ -3,15 +3,15 @@
 
 pkgname=pyoxidizer
 _name=PyOxidizer
-pkgver=0.16.0
-pkgrel=8
+pkgver=0.17
+pkgrel=1
 pkgdesc="A modern Python application packaging and distribution tool"
 depends=('gcc-libs' 'openssl' 'zlib')
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/indygreg/PyOxidizer"
 license=('MIT')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/indygreg/${_name}/archive/pyoxidizer/${pkgver}.tar.gz")
-sha512sums=('eb4bd6680170bb3d8b5e9cf5402da93b252b422b0caadb337f8ebb3de1e86680adf45711ddde83bb86fe9fd51c16f62fbfd950b1b97569eed0ae6cba99892593')
+sha512sums=('d68ddbfc8ae3cb1da23a922a4621e7877e0b1af711413efc21e2a2fd8d7f76bf5b7b1cf92be5a2db4e8e8be850eda59b584d24705d8c99d5425a60bba0ec893a')
 makedepends=(cargo)
 
 build() {
