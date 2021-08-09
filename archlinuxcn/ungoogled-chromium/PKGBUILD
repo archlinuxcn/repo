@@ -9,15 +9,10 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=91.0.4472.164
+pkgver=92.0.4515.131
 pkgrel=1
-_launcher_ver=7
-_gcc_patchset=5
-_pkgname=$(echo $pkgname | cut -d\- -f1-2)
-_pkgver=$(echo $pkgver | cut -d\. -f1-4)
-# ungoogled chromium variables
-_uc_ver=$pkgver-1
-_uc_usr=Eloston
+_launcher_ver=8
+_gcc_patchset=7
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/Eloston/ungoogled-chromium"
@@ -31,37 +26,35 @@ optdepends=('pipewire: WebRTC desktop sharing under Wayland'
             'kdialog: support for native dialogs in Plasma'
             'org.freedesktop.secrets: password storage backend on GNOME / Xfce'
             'kwallet: support for storing passwords in KWallet on Plasma')
-provides=('chromium')
-conflicts=('chromium')
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
         https://github.com/stha09/chromium-patches/releases/download/chromium-${pkgver%%.*}-patchset-$_gcc_patchset/chromium-${pkgver%%.*}-patchset-$_gcc_patchset.tar.xz
-        fix-crash-in-ThemeService.patch
-        unbundle-use-char16_t-as-UCHAR_TYPE.patch
-        make-dom-distiller-protoc-plugin-call-py2.7.patch
         extend-enable-accelerated-video-decode-flag.patch
+        linux-sandbox-syscall-broker-use-struct-kernel_stat.patch
+        linux-sandbox-fix-fstatat-crash.patch
         sql-make-VirtualCursor-standard-layout-type.patch
-        chromium-glibc-2.33.patch
+        chromium-freetype-2.11.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('84e56fa2ad96d910cab429c513eeaca7bfa94096fef057bd024be826ce8426bd'
-            '86859c11cfc8ba106a3826479c0bc759324a62150b271dd35d1a0f96e890f52f'
-            '171525009003a9ed1182cfcb6f407d7169d9a731a474304e263029376719f55a'
-            '3cfe46e181cb9d337c454b5b5adbf5297052f29cd617cdee4380eeb1943825d8'
-            '59a59a60a08b335fe8647fdf0f9d2288d236ebf2cc9626396d0c4d032fd2b25d'
-            '76ceebd14c9a6f1ea6a05b1613e64d1e2aca595e0f0b3e9497e3eeee33ed756c'
+sha256sums=('b6ac840ed5390de69f962e922649bf1df895ff0f5db8e5f656b5191e0cf4ce3a'
+            '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
+            '53a2cbb1b58d652d5424ff9040b6a51b9dc6348ce3edc68344cd0d25f1f4beb2'
             '66db9132d6f5e06aa26e5de0924f814224a76a9bdf4b61afce161fb1d7643b22'
+            '268e18ad56e5970157b51ec9fc8eb58ba93e313ea1e49c842a1ed0820d9c1fa3'
+            '253348550d54b8ae317fd250f772f506d2bae49fb5dc75fe15d872ea3d0e04a5'
             'dd317f85e5abfdcfc89c6f23f4c8edbcdebdd5e083dcec770e5da49ee647d150'
-            '2fccecdcd4509d4c36af873988ca9dbcba7fdb95122894a9fdf502c33a1d7a4b'
+            '7ef689cd6b2f85f2b76b2a10ecede003cfa0c2da15acc998ecbc445f2c95ced6'
             'e393174d7695d0bafed69e868c5fbfecf07aa6969f3b64596d0bae8b067e1711')
+provides=('chromium')
+conflicts=('chromium')
 source=(${source[@]}
-        $_pkgname-$_uc_ver.tar.gz::https://github.com/$_uc_usr/ungoogled-chromium/archive/$_uc_ver.tar.gz
+        $pkgname-$pkgver-1.tar.gz::https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-1.tar.gz
         chromium-drirc-disable-10bpc-color-configs.conf
         wayland-egl.patch)
 sha256sums=(${sha256sums[@]}
-            'aebc3eaa0b4c96a2e6453cb8a9f123ac253254775b8928e2317777caa3867205'
+            '417ed82d81895d3cd2773e9a44406dc676810e1faf09947be3084c53afcdaee4'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '34d08ea93cb4762cb33c7cffe931358008af32265fc720f2762f0179c3973574')
-
+ 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
 declare -gA _system_libs=(
@@ -89,7 +82,7 @@ _unwanted_bundled_libs=(
 depends+=(${_system_libs[@]})
 
 prepare() {
-  cd "$srcdir/chromium-$_pkgver"
+  cd "$srcdir/chromium-$pkgver"
 
   # Allow building against system libraries in official builds
   sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' \
@@ -106,14 +99,13 @@ prepare() {
   # runtime -- this allows signing into Chromium without baked-in values
   patch -Np1 -i ../use-oauth2-client-switches-as-default.patch
 
-  # https://crbug.com/1164975
-  patch -Np1 -i ../chromium-glibc-2.33.patch
+  # Fix build with FreeType 2.11 (patch from Gentoo)
+  patch -Np1 -i ../chromium-freetype-2.11.patch
 
   # Upstream fixes
-  #patch -Np1 -i ../fix-crash-in-ThemeService.patch
-  patch -Np1 -i ../unbundle-use-char16_t-as-UCHAR_TYPE.patch
-  patch -Np1 -i ../make-dom-distiller-protoc-plugin-call-py2.7.patch
   patch -Np1 -i ../extend-enable-accelerated-video-decode-flag.patch
+  patch -Np1 -i ../linux-sandbox-syscall-broker-use-struct-kernel_stat.patch
+  patch -Np1 -i ../linux-sandbox-fix-fstatat-crash.patch
 
   # https://chromium-review.googlesource.com/c/chromium/src/+/2862724
   patch -Np1 -i ../sql-make-VirtualCursor-standard-layout-type.patch
@@ -125,13 +117,10 @@ prepare() {
   patch -Np1 -i ../wayland-egl.patch
 
   # Ungoogled Chromium changes
-  _ungoogled_repo="$srcdir/$_pkgname-$_uc_ver"
+  _ungoogled_repo="$srcdir/$pkgname-$pkgver-1"
   _utils="${_ungoogled_repo}/utils"
-  msg2 'Pruning binaries'
   python "$_utils/prune_binaries.py" ./ "$_ungoogled_repo/pruning.list"
-  msg2 'Applying patches'
   python "$_utils/patches.py" apply ./ "$_ungoogled_repo/patches"
-  msg2 'Applying domain substitution'
   python "$_utils/domain_substitution.py" apply -r "$_ungoogled_repo/domain_regex.list" \
     -f "$_ungoogled_repo/domain_substitution.list" -c domainsubcache.tar.gz ./
 
@@ -160,7 +149,7 @@ prepare() {
 build() {
   make -C chromium-launcher-$_launcher_ver
 
-  cd "$srcdir/chromium-$_pkgver"
+  cd "$srcdir/chromium-$pkgver"
 
   export CC=clang
   export CXX=clang++
@@ -190,7 +179,7 @@ build() {
   fi
 
   # Append ungoogled chromium flags to _flags array
-  _ungoogled_repo="$srcdir/$_pkgname-$_uc_ver"
+  _ungoogled_repo="$srcdir/$pkgname-$pkgver-1"
   readarray -t -O ${#_flags[@]} _flags < "${_ungoogled_repo}/flags.gn"
 
   # use fixed flags as system flags break build
@@ -205,10 +194,8 @@ build() {
   # Do not warn about unknown warning options
   CFLAGS+='   -Wno-unknown-warning-option'
   CXXFLAGS+=' -Wno-unknown-warning-option'
-  
-  msg2 'Configuring Chromium'
+
   gn gen out/Release --args="${_flags[*]}"
-  msg2 'Building Chromium'
   ninja -C out/Release chrome chrome_sandbox chromedriver
 }
 
@@ -218,7 +205,7 @@ package() {
   install -Dm644 LICENSE \
     "$pkgdir/usr/share/licenses/chromium/LICENSE.launcher"
 
-  cd "$srcdir/chromium-$_pkgver"
+  cd "$srcdir/chromium-$pkgver"
 
   install -D out/Release/chrome "$pkgdir/usr/lib/chromium/chromium"
   install -Dm4755 out/Release/chrome_sandbox "$pkgdir/usr/lib/chromium/chrome-sandbox"
@@ -258,6 +245,7 @@ package() {
     libGLESv2.so
 
     chromedriver
+    crashpad_handler
   )
 
   if [[ -z ${_system_libs[icu]+set} ]]; then
@@ -281,4 +269,4 @@ package() {
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/chromium/LICENSE"
 }
 
-# vim:set ts=2 sw=2 et ft=sh:
+# vim:set ts=2 sw=2 et:
