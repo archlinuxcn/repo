@@ -1,7 +1,7 @@
 # Maintainer:  edward-p <edward AT edward-p DOT xyz>
 
 pkgname=lunarvim-git
-pkgver=0.5.1.r106.g3da49e4b
+pkgver=0.5.1.r111.g0e09963a
 pkgrel=1
 pkgdesc="An IDE layer for Neovim with sane defaults. Completely free and community driven."
 arch=('any')
@@ -29,7 +29,7 @@ source=("${pkgname}::git+https://github.com/LunarVim/LunarVim.git#branch=rolling
 sha256sums=('SKIP'
             'SKIP'
             '0bb4e331e3e47dab1610b04b1a2bcdf96a56f8880ef5cbf00ee0f3b1bd8c4873'
-            '9a28e9aa6555fb34432b00db18e0d89cfa34370201168377e20f09c0da64dc08')
+            'c02c3d30bcac0406a3e960082dc60b4234ae7c391615506c60e66b7c80ba63f1')
 
 pkgver() {
   cd "${pkgname}"
