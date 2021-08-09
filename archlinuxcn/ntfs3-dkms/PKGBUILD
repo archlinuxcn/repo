@@ -1,11 +1,13 @@
 pkgname=ntfs3-dkms
 pkgver=27.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="NTFS read-write driver GPL implementation by Paragon Software. Current version works with NTFS (including v3.1), normal/compressed/sparse files and supports journal replaying."
 arch=('any')
 url='https://www.paragon-software.com/home/ntfs3-driver-faq/'
 license=('GPL2')
 depends=('dkms')
+provides=('NTFS3-MODULE' "ntfs3=${pkgver}" "ntfs3-dkms=${pkgver}")
+conflicts=('ntfs3' 'ntfs3-dkms')
 options=('!strip')
 
 source=(
