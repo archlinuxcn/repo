@@ -1,8 +1,8 @@
 # Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
 pkgname=vimix-gtk-themes
-_pkgver=2021-07-12
+_pkgver=2021-08-09
 pkgver=${_pkgver//-/.}
-pkgrel=5
+pkgrel=6
 pkgdesc="A flat Material Design theme for GTK 3, GTK 2, GNOME Shell, etc."
 arch=('any')
 url="https://vinceliuice.github.io/theme-vimix.html"
@@ -13,14 +13,16 @@ optdepends=('gtk-engine-murrine: GTK2 theme support'
             'kvantum-theme-vimix: Matching Kvantum theme'
             'vimix-icon-theme: Matching icon theme'
             'vimix-cursors: Matching cursor theme'
-            'tela-icon-theme: Recommended icon theme')
-conflicts=('vimix-gtk-themes-git')
+            'plank: for Plank theme')
 options=('!strip')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/vinceliuice/$pkgname/archive/$_pkgver.tar.gz")
-sha256sums=('e7a58c69203576a0ac261c52bb36b388cdac195000bc23d253e32b6cf2a1497b')
+sha256sums=('ace094d182bb2db68543b1b2eb66d7bb041796c129852b02a261c3c98b85d489')
 
 package() {
-	cd "$pkgname-$_pkgver"
-	install -d "$pkgdir/usr/share/themes"
-	./install.sh -a -d "$pkgdir/usr/share/themes"
+  cd "$pkgname-$_pkgver"
+  install -d "$pkgdir/usr/share/themes"
+  ./install.sh -a -d "$pkgdir/usr/share/themes"
+
+  # Plank theme
+  install -Dm644 src/plank/dock.theme -t "$pkgdir/usr/share/plank/themes/vimix"
 }
