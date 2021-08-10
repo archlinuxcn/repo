@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build(maintainers='tjackson')
+    aur_pre_build(maintainers='Nocifer')
 
 def post_build():
     check_library_provides()
