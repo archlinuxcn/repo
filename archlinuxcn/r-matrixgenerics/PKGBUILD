@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=MatrixGenerics
-_pkgver=1.4.1
+_pkgver=1.4.2
 pkgname=r-${_pkgname,,}
-pkgver=1.4.1
+pkgver=1.4.2
 pkgrel=1
 pkgdesc='S4 Generic Summary Statistic Functions that Operate on Matrix-Like Objects'
 arch=('any')
@@ -20,7 +20,7 @@ optdepends=(
   r-testthat
 )
 source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('3702d66093fbc4daf97c56155214024bab9b1d97863aff7d73df8a3d5404a2af')
+sha256sums=('a2fdc955e60d3247f72b46149a4d0fe5ae399ce6d7397214f18a5e065f615a4e')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
