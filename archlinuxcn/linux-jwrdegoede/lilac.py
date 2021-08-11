@@ -10,8 +10,6 @@ from lilaclib import *
 #build_prefix = 'extra-x86_64'
 
 def pre_build():
-    run_cmd('makepkg -od'.split(' ')) # to run prepare() to download linux-sunxi for real
-    run_cmd('rm -rf master.zip'.split(' '))
     vcs_update()
 
 def post_build():
