@@ -2,7 +2,7 @@
 # Contributor: YuutaW <i@yuuta.moe>
 
 pkgname=rsshub-git
-pkgver=r6297.406c71b66
+pkgver=r6349.9968dbfc9
 pkgrel=1
 pkgdesc="Everything is RSSible"
 # The built package bundles native Node.js extensions like OpenCC
@@ -10,8 +10,7 @@ arch=('x86_64')
 url="https://rsshub.app/"
 license=('MIT')
 depends=('nodejs')
-# rsshub uses yarn and a dependency re2 uses npm
-makedepends=('npm' 'yarn' 'node-gyp' 'git')
+makedepends=('npm' 'node-gyp' 'git')
 optdepends=(
   'chromium: for routes using a headless browser'
 )
@@ -27,7 +26,7 @@ sha512sums=('SKIP'
             '892a82aa32c0f486009eb2b620b8fd5b8674de6a36ab16d42545e64fbdb7184b7d1f2ca63d6841ec420f639bc714df88dd32c17803772aa489a4c5f12f7ec96f'
             'ae2fd7a452716fccd0f421176aba9b9971edf9a9a3f241bd023044f9bce140dfcad0777eff9d47a891264d0ea49ce9f9f7671043b44fd2bcf7c9f484c08b8449')
 # clean-nm.sh leaves many empty directories
-options=('!emptydirs')
+options=('!emptydirs' '!strip')
 
 pkgver() {
     cd $pkgname
@@ -44,12 +43,14 @@ prepare() {
 
 build() {
     cd $pkgname
-    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true yarn install --verbose --pure-lockfile --production --cache-folder "${srcdir}/yarn-cache"
+    # Not using --production here as minify-docker.js needs devDependencies.
+    # Unused dependencies will be cleaned up, anyway.
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install --cache "${srcdir}/npm-cache"
 
     # Cleanup node modules, as Dockerfile does.
-    chmod +x ./tools/clean-nm.sh
-    ./tools/clean-nm.sh
-    find -name '*.o' -delete
+    node ./scripts/docker/minify-docker.js
+    rm -rf node_modules
+    mv app-minimal/node_modules .
 }
 
 package() {
