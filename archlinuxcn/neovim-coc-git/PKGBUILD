@@ -1,7 +1,8 @@
 # Maintainer: Sainnhe Park <sainnhe@gmail.com>
 pkgname=neovim-coc-git
-pkgver=0.0.80.r90.gbdd11f8b
-pkgrel=5
+epoch=1
+pkgver=r4051.e7f4fd4d
+pkgrel=1
 pkgdesc='Intellisense engine for Vim8 & Neovim, full language server protocol support as VSCode'
 arch=('any')
 url='https://github.com/neoclide/coc.nvim'
@@ -18,7 +19,7 @@ sha256sums=('SKIP')
 
 pkgver() {
     cd "${srcdir}/coc.nvim"
-    git describe release --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build() {
