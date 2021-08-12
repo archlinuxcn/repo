@@ -2,33 +2,47 @@
 # Contributor: Det <nimetonmaili g-mail>
 
 pkgbase=jdk
-pkgname=('jre' 'jdk')
+pkgname=('jre' 'jdk' 'jdk-doc')
 pkgver=16.0.2
 _build=7
 _hash=d4a915d82b4c4fbb9bde534da945d746
 _majver="${pkgver%%.*}"
-pkgrel=1
+pkgrel=2
 pkgdesc='Oracle Java'
 arch=('x86_64')
 url='https://www.oracle.com/java/'
 license=('custom')
+makedepends=('python-html2text')
 source=("https://download.oracle.com/otn-pub/java/jdk/${pkgver}+${_build}/${_hash}/jdk-${pkgver}_linux-x64_bin.tar.gz"
+        "https://download.oracle.com/otn-pub/java/jdk/${pkgver}+${_build}/${_hash}/jdk-${pkgver}_doc-all.zip"
+        "java-${_majver}-jdk-license.html"::"https://download.oracle.com/otndocs/jcp/java_se-${_majver}-final-spec/license.html"
         'java.desktop'
         'jconsole.desktop'
         'jshell.desktop'
         'java_16.png'
-        'java_48.png')
+        'java_48.png'
+        'LICENSE')
+noextract=("jdk-${pkgver}_doc-all.zip")
 sha256sums=('630e3e56c58f45db3788343ce842756d5a5a401a63884242cc6a141071285a62'
+            '7cd96f9aa11d9e1a1adbee3e941a78e899bc9079370e4c12c106761d3df80f82'
+            '2f14da815e019b3f5558e5176c969227a2530bac1cfdfd42dbd6ccc2ee618346'
             '9fc4cd168fd3e0d654093c1b2dd070f627ffae9b7f5c2c0741bac0b5c1ed0635'
             '12b6e632e38e2c2ef54d6b03976290ca649380a89f78b5dae8827423eae52a1b'
             'b2fd5a8f273a103569bf03af6f4ff4d3a5448472abc79b8649cecd0ee9313fc7'
             'd27fec1d74f7a3081c3d175ed184d15383666dc7f02cc0f7126f11549879c6ed'
-            '7cf8ca096e6d6e425b3434446b0835537d0fc7fe64b3ccba7a55f7bd86c7e176')
+            '7cf8ca096e6d6e425b3434446b0835537d0fc7fe64b3ccba7a55f7bd86c7e176'
+            'ef331c118f613261f06771161e9aebf8d26ab6cc131edd51358b01cc20fc759d')
 
 DLAGENTS=('https::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -b oraclelicense=a -o %o %u')
 
+prepare() {
+    mkdir -p "jdk-doc-${pkgver}"
+    bsdtar -x -f "jdk-${pkgver}_doc-all.zip" -C "jdk-doc-${pkgver}" --strip-components='1'
+    html2text "java-${_majver}-jdk-license.html" > LICENSE-doc
+}
+
 package_jre() {
-    pkgdesc='Oracle Java Runtime Environment'
+    pkgdesc+=' Runtime Environment'
     depends=('java-runtime-common' 'ca-certificates-utils' 'freetype2' 'libxtst'
              'libxrender' 'libnet')
     optdepends=('alsa-lib: for basic sound support')
@@ -87,10 +101,11 @@ package_jre() {
     cp -a legal/* "${pkgdir}/usr/share/licenses/${pkgname}"
     ln -s "$pkgname" "${pkgdir}/usr/share/licenses/java-${pkgname}"
     ln -s "../../../share/licenses/${pkgname}" "${pkgdir}/${_jvmdir}/legal"
+    install -D -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 
 package_jdk() {
-    pkgdesc='Oracle Java Development Kit'
+    pkgdesc+=' Development Kit'
     depends=('java-environment-common' "jre>=${_majver}" "jre<$((_majver + 1))" 'zlib' 'hicolor-icon-theme')
     provides=("java-environment=${_majver}" "java-environment-jdk=${_majver}")
     install=jdk.install
@@ -134,4 +149,16 @@ package_jdk() {
     # legal/licenses
     cp -a legal/* "${pkgdir}/usr/share/licenses/${pkgname}"
     ln -s "$pkgname" "${pkgdir}/usr/share/licenses/java-${pkgname}"
+    install -D -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+
+package_jdk-doc() {
+    pkgdesc+=' documentation'
+    arch=('any')
+    
+    install -d -m755 "${pkgdir}/usr/share"/{doc,licenses}
+    cp -dr --no-preserve='ownership' "jdk-doc-${pkgver}" "${pkgdir}/usr/share/doc/java-jdk"
+    mv "${pkgdir}/usr/share/doc/java-jdk/legal" "${pkgdir}/usr/share/licenses/${pkgname}"
+    install -D -m644 LICENSE-doc "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    ln -s "../../licenses/${pkgname}" "${pkgdir}/usr/share/doc/java-jdk/legal"
 }
