@@ -1,0 +1,13 @@
+maintainers:
+- github: axionl
+
+build_prefix: extra-x86_64
+
+repo_depends:
+- python-url-normalize
+
+update_on:
+- source: github
+  github: niksite/url-normalize
+  use_latest_release: true
+- alias: python
