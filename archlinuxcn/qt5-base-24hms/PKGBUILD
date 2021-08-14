@@ -5,7 +5,7 @@ pkgbase=qt5-base-24hms
 _origpkgname=qt5-base
 pkgname=(qt5-base-24hms)
 pkgver=5.15.2+kde+r215
-pkgrel=1.7
+pkgrel=2.7
 _commit=2583b4f9397d60c4dd8403ca18c9df5bdf1c5583
 arch=('x86_64')
 url='https://www.qt.io'
@@ -36,13 +36,15 @@ source=(
       'https://build.archlinuxcn.org/~oldherl/files/cldr/36/core.zip'
       git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit
         qt5-base-cflags.patch
-        qt5-base-nostrip.patch)
+        qt5-base-nostrip.patch
+        qtbug-95639.patch)
 sha256sums=(
       '9c62800980e97b1614e4fc85ecad3b032606d0e620295e791fc3f34629bb0a44'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       'SKIP'
             'cf707cd970650f8b60f8897692b36708ded9ba116723ec8fcd885576783fe85c'
-            '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
+            '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094'
+            '562e4ff501d52326658af751a596b948113271774cfa6692f1db0c7cf6609fa4')
 
 pkgver() {
   cd $_pkgfqn
@@ -56,6 +58,7 @@ prepare() {
 
   patch -p1 < ../qt5-base-cflags.patch # Use system CFLAGS in qmake
   patch -p1 < ../qt5-base-nostrip.patch # Don't strip binaries with qmake
+  patch -p1 < ../qtbug-95639.patch # Fix issues with MariaDB 10.6
 
   patch -p1 -i ../oldherl-24hms.patch
   cd util/locale_database
