@@ -4,13 +4,13 @@
 
 _pkgname=teleport
 pkgname=teleport-bin
-pkgver=6.2.3
+pkgver=6.2.8
 pkgrel=1
 pkgdesc="Modern SSH server for teams managing distributed infrastructure"
 arch=('x86_64' 'armv7h' 'aarch64')
 url="https://github.com/gravitational/teleport"
 license=('Apache')
-depends=()
+depends=('python' 'bash')
 provides=('teleport' 'tctl' 'tsh')
 install=teleport.install
 
@@ -25,9 +25,9 @@ source_aarch64=("teleport-bin-${pkgver}-aarch64.tar.gz::https://get.gravitationa
 sha256sums=('22fd1ee136e9422458740811c9946de447105f26e87dbbc8daa35d17bd1f3894'
             '21ca4e56c9c5e1ce11570894e85ded853e26e91cc2e16ed9114b3d6a2c5c22ef'
             'ce2dd61cae3c0c3684e7e629f98b77551e66ddedca2194250a34f0efbc674f3a')
-sha256sums_x86_64=('ccdda458dd4c417f6df7285059895933874a78a5bc1ebe518f69dd3d6811c9fe')
-sha256sums_armv7h=('8640dfc9746790984bb3c4ffdc0852f299396d48d7e894fa874ad805c912fc45')
-sha256sums_aarch64=('2240c902591547cd774f652166b74bf560fc9610555e77e461067196ecb5a6f4')
+sha256sums_x86_64=('6ecbda4bde9844cdbd77773874d6151ac76d4b5c00d41e7dc8d77ade9a298d5d')
+sha256sums_armv7h=('a310be1093d9190597a46f17db919b52559af3a391ee4f958d7c73889369e06f')
+sha256sums_aarch64=('cbe79fa29a64008f08232b2c8c6a04fdad690afab22466b6ca309a4992a4f5f5')
 
 options=(!strip)
 
