@@ -3,14 +3,13 @@
 
 pkgname=scummvm-git
 _pkgname=scummvm
-pkgver=r122591.7642ecf0a9a
+pkgver=r122612.714c10f38b3
 pkgrel=1
 pkgdesc="A 'virtual machine' for several classic graphical point-and-click adventure games."
 arch=('i686' 'x86_64')
 url="http://www.scummvm.org"
 license=('GPL')
-depends=('libpng' 'libtheora' 'sdl2' 'sdl2_net' 'fluidsynth' 'flac' 'faad2' 'libvorbis' 'libmad' 'freetype2'
-         'libgl' 'glu' 'libjpeg-turbo' 'libmpeg2' 'curl' 'a52dec')
+depends=('libtheora' 'sdl2_net' 'fluidsynth' 'flac' 'faad2' 'libmad' 'libjpeg-turbo' 'libmpeg2' 'curl' 'a52dec' 'gtk3' 'glew' 'libspeechd' 'giflib')
 makedepends=('git' 'mesa')
 conflicts=('scummvm')
 provides=('scummvm')
