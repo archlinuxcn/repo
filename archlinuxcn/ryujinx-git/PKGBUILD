@@ -43,6 +43,7 @@ Name=Ryujinx
 Comment=Experimental Nintendo Switch Emulator written in C# - master branch
 Exec=Ryujinx
 Icon=/opt/ryujinx/Ryujinx.ico
+Categories=Game;Emulator;
 Terminal=false" >> $pkgdir/usr/share/applications/ryujinx.desktop
 	cd $pkgdir/opt/ryujinx/ && curl -O https://raw.githubusercontent.com/Ryujinx/Ryujinx/master/Ryujinx/Ryujinx.ico
 }
