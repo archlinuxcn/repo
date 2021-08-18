@@ -1,8 +1,7 @@
 # Maintainer: Jack Wu <origincode@aosc.io>
 pkgname=ciel
 _pkgname=${pkgname}-rs
-_pkgver=3.0.0
-pkgver=3.0.10
+pkgver=3.0.11
 pkgrel=1
 pkgdesc="A tool for controlling multi-layer file systems and containers."
 arch=('i686' 'x86_64')
@@ -12,8 +11,8 @@ depends=('systemd' 'dbus' 'openssl')
 makedepends=('rust' 'make' 'gcc')
 optdepends=('libgit2: git vcs support'
             'xz: xzip archive support')
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AOSC-Dev/${_pkgname}/archive/v${_pkgver}.tar.gz")
-sha256sums=('4e8236a200e4acd9f3be76e02206a685a1f6ad00f4f632cabd358832e0514108')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AOSC-Dev/${_pkgname}/archive/v${pkgver}.tar.gz")
+sha256sums=('3b60131ad14ecf8dcdfc50dc8c812f2ec158416ad004b2a3d74835a94131f1c7')
 conflicts=('ciel-git')
 
 build() {
@@ -32,5 +31,5 @@ package() {
     PREFIX="${pkgdir}/usr/" ./install-assets.sh
 
     # Install the license
-    install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/$pkgname/LICENSE
+    install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
 }
