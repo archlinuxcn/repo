@@ -16,12 +16,12 @@ sha256sums=('3b60131ad14ecf8dcdfc50dc8c812f2ec158416ad004b2a3d74835a94131f1c7')
 conflicts=('ciel-git')
 
 build() {
-    cd ${_pkgname}-${_pkgver}
+    cd ${_pkgname}-${pkgver}
     cargo build --release --locked --all-features --target-dir=target
 }
 
 package() {
-    cd ${_pkgname}-${_pkgver}
+    cd ${_pkgname}-${pkgver}
     install -Dm755 target/release/${_pkgname} -t "${pkgdir}/usr/bin"
 
     # Rename the binary
