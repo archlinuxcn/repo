@@ -3,8 +3,8 @@
 
 _pyname=requests-cache
 pkgname=python-requests-cache
-pkgver=0.7.3
-pkgrel=4
+pkgver=0.7.4
+pkgrel=1
 pkgdesc="Persistent cache for requests library"
 arch=('any')
 url="https://github.com/reclosedev/requests-cache"
@@ -15,7 +15,7 @@ makedepends=('python-setuptools')
 
 source=("${_pyname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/r/${_pyname}/${_pyname}-${pkgver}.tar.gz")
 
-sha512sums=('27c7ae9f3f004a08efc56b7f010a0b1a89ab3885eb81901a7f5bc2963ca417b2294c4a2aac3cc0d974c20a5953ce1e455cd5284f4fd9822d48d28a8e57f6996c')
+sha512sums=('36f2c46caa93095d4eb48e8d2a12b6d45ea62677e8e93c7fe64a14e1eb5337d817ba774b15330dc56a7e565727db570f03425b3660fa90c5acd7ea995cd62123')
 
 build() {
     cd ${_pyname}-${pkgver}

@@ -1,9 +1,11 @@
-# Maintainer: surefire@cryptomile.net
+# vim: noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
+# Maintainer: Peter Cai <peter@typeblog.net>
+# Contributor: <surefire@cryptomile.net>
 
 pkgname=keeweb
-pkgver=1.18.6
+pkgver=1.18.7
 _electron=electron12
-pkgrel=2
+pkgrel=1
 pkgdesc="Desktop password manager compatible with KeePass databases"
 arch=('any')
 url="https://keeweb.info"
@@ -24,7 +26,7 @@ conflicts=('keeweb-desktop')
 source=(
 	"${pkgname}::git+https://github.com/keeweb/keeweb.git#tag=v${pkgver}"
 	"git+https://github.com/keeweb/keeweb-native-modules.git#tag=0.11.7"
-	"git+https://github.com/keeweb/keeweb-connect.git#tag=0.3.6"
+	"git+https://github.com/keeweb/keeweb-connect.git#tag=0.3.7"
 	'package.json.patch.js'
 	'67e917af3dcd9d78273774e7061f74d893b5523b.patch'
 )
@@ -60,6 +62,12 @@ prepare() {
 		-e "/const BundleAnalyzerPlugin/              d" \
 		-e "/new BundleAnalyzerPlugin({$/, /^\s*})$/  d" \
 	build/webpack.config.js
+
+	# Patch `getNativeMessagingHostPath` to not rely on the executable path
+	# (in our case, the executable path is the system electron binary)
+	sed -i \
+		-e 's@function getNativeMessagingHostPath() {@function getNativeMessagingHostPath() {\nreturn "/usr/lib/keeweb/keeweb-native-messaging-host";@' \
+	desktop/scripts/util/browser-extension-installer.js
 }
 
 build() {

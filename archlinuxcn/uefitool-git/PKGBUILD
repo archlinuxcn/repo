@@ -1,16 +1,16 @@
-# Maintainer: xsmile <sascha_r at gmx dot de>
+# Maintainer: xsmile <>
 
 pkgname=uefitool-git
 _pkgname=uefitool
-_tools=('UEFIPatch' 'UEFIReplace')
+_tools=(UEFIPatch UEFIReplace)
 pkgver=r228.44cafeb
-pkgrel=1
+pkgrel=2
 pkgdesc='UEFI firmware image viewer and editor and utilities'
 arch=("x86_64")
-url='https://github.com/LongSoft/UEFITool'
-license=('BSD')
-depends=('qt5-base')
-makedepends=('git' 'qt5-base')
+url=https://github.com/LongSoft/UEFITool
+license=(BSD)
+depends=(qt5-base)
+makedepends=(git)
 provides=($_pkgname)
 conflicts=($_pkgname)
 source=("${_pkgname}::git+${url}.git")
@@ -22,7 +22,10 @@ pkgver() {
 }
 
 _build() {
-  qmake QMAKE_CFLAGS_RELEASE="$CFLAGS" QMAKE_CXXFLAGS_RELEASE="$CXXFLAGS"
+  qmake \
+    QMAKE_CFLAGS_RELEASE="$CFLAGS" \
+    QMAKE_CXXFLAGS_RELEASE="$CXXFLAGS" \
+    QMAKE_LFLAGS_RELEASE="$LDFLAGS"
   make
 }
 
@@ -40,13 +43,13 @@ build() {
 package() {
   # UEFITool
   cd "$srcdir/$_pkgname"
-  install -D -m755 UEFITool "$pkgdir/usr/bin/$_pkgname"
+  install -Dm755 UEFITool "$pkgdir/usr/bin/$_pkgname"
   # Other tools
   for tool in "${_tools[@]}"; do
-    install -D -m755 "$tool/$tool" "$pkgdir/usr/bin/${tool,,}"
+    install -Dm755 "$tool/$tool" "$pkgdir/usr/bin/${tool,,}"
   done
-  # Install patches.txt
-  install -D -m644 UEFIPatch/patches.txt "$pkgdir/usr/share/$_pkgname/patches.txt"
+  # Patch files
+  install -Dm644 UEFIPatch/patches{,-misc}.txt -t "$pkgdir/usr/share/$_pkgname/"
   # License
-  install -Dm644 LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 LICENSE.md -t "$pkgdir/usr/share/licenses/$_pkgname/"
 }

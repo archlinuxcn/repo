@@ -1,7 +1,7 @@
 # Maintainer: Hexchain Tong <i at hexchain dot org>
 pkgname=neovim-remote
 pkgver=2.4.0
-pkgrel=4
+pkgrel=5
 pkgdesc="Support --remote and friends for Neovim"
 arch=(any)
 url="https://github.com/mhinz/neovim-remote"
@@ -20,6 +20,8 @@ package() {
   cd "$srcdir/$pkgname-$pkgver"
   python setup.py install --optimize=1 --root="$pkgdir/" --prefix=/usr --skip-build
   install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 contrib/completion.bash "$pkgdir/usr/share/bash-completion/completions/neovim-remote"
+  install -Dm644 README.md -t "$pkgdir/usr/share/doc/$pkgname/"
 }
 
 # vim:set ts=2 sw=2 et:
