@@ -1,9 +1,9 @@
 # Maintainer: hubutui <hot123tea123@gmail.com>
 
 _pkgname=R6
-_pkgver=2.5.0
+_pkgver=2.5.1
 pkgname=r-${_pkgname,,}
-pkgver=2.5.0
+pkgver=2.5.1
 pkgrel=1
 pkgdesc='Encapsulated Classes with Reference Semantics'
 arch=('any')
@@ -21,7 +21,7 @@ optdepends=(
   r-testthat
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('aec1af9626ec532cb883b544bf9eff4cb2d89c343c7ce0fa31761ec5a7882e02')
+sha256sums=('8d92bd29c2ed7bf15f2778618ffe4a95556193d21d8431a7f75e7e5fc102bf48')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
