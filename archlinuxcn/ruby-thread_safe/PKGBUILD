@@ -6,11 +6,11 @@
 _gemname=thread_safe
 pkgname=ruby-$_gemname
 pkgver=0.3.6
-pkgrel=4
+pkgrel=5
 pkgdesc='Thread-safe collections and utilities for Ruby'
 arch=(any)
 url='https://github.com/ruby-concurrency/thread_safe'
-license=(Apache-2.0)
+license=(APACHE)
 depends=(ruby)
 makedepends=(ruby-rdoc)
 options=(!emptydirs)
@@ -22,5 +22,4 @@ package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
   gem install --ignore-dependencies --no-user-install -i "$pkgdir/$_gemdir" -n "$pkgdir/usr/bin" $_gemname-$pkgver.gem
   rm "$pkgdir/$_gemdir/cache/$_gemname-$pkgver.gem"
-  install -D -m644 "$pkgdir/$_gemdir/gems/$_gemname-$pkgver/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
