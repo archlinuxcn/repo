@@ -2,7 +2,7 @@ from lilaclib import *
 
 def pre_build():
   deps = [
-    'h11', 'h2', 'sniffio',
+    'h11', 'sniffio', 'anyio',
   ]
   pypi_pre_build(
     pypi_name = 'httpcore',
@@ -10,6 +10,9 @@ def pre_build():
     conflicts = ['python-httpcore'],
     depends = [f'python-{x}' for x in deps],
     depends_setuptools = False,
+    optdepends = [
+      'python-h2: HTTP/2 support',
+    ],
   )
 
 def post_build():

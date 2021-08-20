@@ -2,13 +2,11 @@ from lilaclib import *
 
 def pre_build():
   deps = [
-    'hstspreload',
+    'charset-normalizer',
     'sniffio',
-    'chardet',
-    'idna',
     'rfc3986',
     'httpcore-latest',
-    'charset-normalizer',
+    'idna',
   ]
   pypi_pre_build(
     pypi_name = 'httpx',
@@ -17,8 +15,9 @@ def pre_build():
     depends = [f'python-{x}' for x in deps],
     depends_setuptools = False,
     optdepends = [
-      'python-brotlipy: decoding for "brotli" compressed responses',
-      'python-urllib3: support for the httpx.URLLib3Transport class',
+      'python-h2: HTTP/2 support',
+      'python-brotli: decoding for "brotli" compressed responses',
+      'python-brotlicffi: decoding for "brotli" compressed responses',
     ],
     prepare = '''\
   sed -i '/certifi/d' setup.py
