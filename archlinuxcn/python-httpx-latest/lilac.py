@@ -8,6 +8,7 @@ def pre_build():
     'idna',
     'rfc3986',
     'httpcore-latest',
+    'charset-normalizer',
   ]
   pypi_pre_build(
     pypi_name = 'httpx',
