@@ -4,7 +4,7 @@
 pkgname=netease-cloud-music
 pkgver=1.2.1
 _pkgdate=20190428
-pkgrel=5
+pkgrel=6
 pkgdesc="Netease Cloud Music, converted from .deb package"
 arch=("x86_64")
 url="https://music.163.com/"
@@ -19,7 +19,7 @@ source=(
 )
 sha256sums=('1ee9f02842e6c2c8c79c48b2e932074f9c213a8eb4238e5e63f20438562fecbb'
             'cf307fee4be224223ed8cf5af5e8708960683564cd05c53108fa3c382c029a0e'
-            '56ca2bef65508632b2cff48289a34082c6a780743f34eebfb9746f5480ee2015'
+            'a92650cfd889b1d5c3192adc0785627721f1c60dbfe08a35f124f6f5cc9613dc'
             '0c470e76741c549e5530b2e57d57281eaf198fd56ca3590f664154365b744cf9'
             'b11bd6ab4abcc375850668f54a4912948875ad9f9b93cfc24f89de16ec1e8ea7')
 
