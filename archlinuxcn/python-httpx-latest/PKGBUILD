@@ -1,14 +1,14 @@
 _name=httpx
 pkgname=python-httpx-latest
 pkgver=0.19.0
-pkgrel=3
+pkgrel=4
 pkgdesc="The next generation HTTP client."
 arch=(any)
 url="https://github.com/encode/httpx"
 license=('BSD')
-depends=('python-hstspreload' 'python-sniffio' 'python-chardet' 'python-idna' 'python-rfc3986' 'python-httpcore-latest' 'python-charset-normalizer')
+depends=('python-charset-normalizer' 'python-sniffio' 'python-rfc3986' 'python-httpcore-latest' 'python-idna')
 makedepends=('python-setuptools')
-optdepends=('python-brotlipy: decoding for "brotli" compressed responses' 'python-urllib3: support for the httpx.URLLib3Transport class')
+optdepends=('python-h2: HTTP/2 support' 'python-brotli: decoding for "brotli" compressed responses' 'python-brotlicffi: decoding for "brotli" compressed responses')
 conflicts=('python-httpx')
 provides=('python-httpx')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/httpx-0.19.0.tar.gz")
