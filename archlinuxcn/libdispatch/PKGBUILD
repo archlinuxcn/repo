@@ -1,7 +1,7 @@
 # Maintainer: Adrian Perez de Castro <aperez@igalia.com>
 pkgname=libdispatch
-pkgver=5.4.0
-pkgrel=3
+pkgver=5.4.2
+pkgrel=2
 pkgdesc='Comprehensive support for concurrent code execution on multicore hardware'
 arch=(i686 x86_64 arm armv6h armv7h aarch64)
 url=https://apple.github.io/swift-corelibs-libdispatch
@@ -29,11 +29,11 @@ build () {
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DBlocksRuntime_INCLUDE_DIR=/usr/include \
 		-DBlocksRuntime_LIBRARIES=/usr/lib/libBlocksRuntime.so
-	cmake --build build -j $(nproc)
+	cmake --build build
 }
 
 check () {
-	cmake --build build --target test
+	cmake --build build -j 1 --target test
 }
 
 package () {
