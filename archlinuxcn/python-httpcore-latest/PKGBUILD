@@ -1,13 +1,14 @@
 _name=httpcore
 pkgname=python-httpcore-latest
 pkgver=0.13.6
-pkgrel=1
+pkgrel=2
 pkgdesc="A minimal low-level HTTP client."
 arch=(any)
 url="https://github.com/encode/httpcore"
 license=('BSD')
-depends=('python-h11' 'python-h2' 'python-sniffio')
+depends=('python-h11' 'python-sniffio' 'python-anyio')
 makedepends=('python-setuptools')
+optdepends=('python-h2: HTTP/2 support')
 conflicts=('python-httpcore')
 provides=('python-httpcore')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/httpcore-0.13.6.tar.gz")
