@@ -7,7 +7,7 @@ pkgver=1.0.0.REL
 _pkgver=${pkgver%.*}${pkgver##*.}
 _pkgver=${_pkgver/REL/}
 _srcdir=$_pkgname-$_pkgver
-pkgrel=1
+pkgrel=2
 pkgdesc='Shattered fork of the popular rogue-like game'
 url='https://shatteredpixel.com/'
 license=('GPL3')
@@ -21,14 +21,14 @@ source=(
   "$pkgname.desktop"
 )
 sha512sums=('7eea0278ce0cd4a9c66568ebb537a5bd65f30be6407510443659e8298ba00654089bae697e9eec038d5ce7ec82ca9babd2a933f5ba08f1851b29de1bc1da4b70'
-            '586ac3e1357495434e318dbda539792565a423ca59768b4e1aee8c81764ad6daea75365b4714fdac76a098b0ffc42da91cf5f2a5ab83fa0dc1beb7abf99f2607'
+            'b0218d4189cee0d4bb4109fa671a0a535715a58e91dd6dc0c364a57db948c818b3ad5e29bbbbf14c245bcf83fecb7588b80f250235b87e87051b380bc7cef34c'
             '204a7bcedbbc14bdad6586e4b759b326191a7fd2c344dadc7032495d4caa5fe32edac4118d7294229a6fe24f6684416fff37e260bbc9dde9e50846a03ba77db8')
 
 build() {
   cd $_srcdir
   unset _JAVA_OPTIONS
   # Force the system to build the package using JDK8
-  export PATH=/usr/lib/jvm/java-8-openjdk/jre/bin/:$PATH
+  export PATH=/usr/lib/jvm/java-11-openjdk/jre/bin/:$PATH
   GRADLE_USER_HOME="$srcdir" gradle desktop:release
 }
 
