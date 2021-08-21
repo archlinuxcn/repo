@@ -1,8 +1,8 @@
 # Maintainer: prg <prg _at_ xannode _dot_ com>
 # Contributor: Caltlgin Stsodaat <contact@fossdaily.xyz>
 pkgname='haruna'
-pkgver=0.6.3.1
-pkgrel=4
+pkgver=0.7.0
+pkgrel=1
 pkgdesc='Open source video player built with Qt/QML and libmpv'
 arch=('x86_64')
 url='https://invent.kde.org/multimedia/haruna'
@@ -16,8 +16,8 @@ optdepends=('nvidia-utils: hardware accelerate support'
             'youtube-dl: play videos from Youtube.com'
             'nvidia-utils: libcuda support')
 provides=('haruna')
-source=("${pkgname}-${pkgver}.tar.gz::https://invent.kde.org/multimedia/haruna/-/archive/${pkgver}/haruna-${pkgver}.tar.gz")
-sha256sums=('0dbf156c4deb8a0db08bad182cf5f2bef964e9574933ca19c3f39a07963b6519')
+source=("${pkgname}-${pkgver}.tar.gz::https://invent.kde.org/multimedia/haruna/-/archive/v${pkgver}/haruna-v${pkgver}.tar.gz")
+sha256sums=('aa9b9ca6aae1de66d5afd3a092d89565d6c856483aca92695d03d9e0b7d16491')
 
 build() {
   mkdir -p build
