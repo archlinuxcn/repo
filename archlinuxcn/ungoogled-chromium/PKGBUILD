@@ -1,6 +1,6 @@
 # Maintainer: Seppia <seppia@seppio.fish>
 # Maintainer: JustKidding <jk@vin.ovh>
-
+ 
 # Based on aur/chromium-vaapi, with ungoogled-chromium patches
 
 # Maintainer: Evangelos Foutras <evangelos@foutrelis.com>
@@ -9,7 +9,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=92.0.4515.131
+pkgver=92.0.4515.159
 pkgrel=1
 _launcher_ver=8
 _gcc_patchset=7
@@ -35,7 +35,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         sql-make-VirtualCursor-standard-layout-type.patch
         chromium-freetype-2.11.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('b6ac840ed5390de69f962e922649bf1df895ff0f5db8e5f656b5191e0cf4ce3a'
+sha256sums=('d97d337d0d70e959a75f1f510f5d78d2b57b5bf24573b7ade9fff9f26a7cfd11'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '53a2cbb1b58d652d5424ff9040b6a51b9dc6348ce3edc68344cd0d25f1f4beb2'
             '66db9132d6f5e06aa26e5de0924f814224a76a9bdf4b61afce161fb1d7643b22'
@@ -51,10 +51,10 @@ source=(${source[@]}
         chromium-drirc-disable-10bpc-color-configs.conf
         wayland-egl.patch)
 sha256sums=(${sha256sums[@]}
-            '417ed82d81895d3cd2773e9a44406dc676810e1faf09947be3084c53afcdaee4'
+            '452d52be91d6183ea2f1728b83f5973fc480591b9a3625742c108cfbf6357588'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '34d08ea93cb4762cb33c7cffe931358008af32265fc720f2762f0179c3973574')
- 
+
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
 declare -gA _system_libs=(
