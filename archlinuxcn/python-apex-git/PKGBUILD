@@ -23,26 +23,20 @@ source=("${pkgname}::git+https://github.com/NVIDIA/apex.git")
 sha512sums=('SKIP')
 
 pkgver() {
-	cd "${srcdir}/${pkgname}"
-	ver=$(printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)")
+  cd "${srcdir}/${pkgname}"
+  ver=$(printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)")
   echo ${_pkgver}.${ver}
 }
 
-prepare() { 
-  # use gcc compatible with current cuda version
-  export CC=/opt/cuda/bin/gcc
-  export CXX=/opt/cuda/bin/g++
-  export TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST}
-}
-
 build() {
-	cd "${srcdir}/${pkgname}"
-	python setup.py --cuda_ext --cpp_ext build
+  export TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST}
+  cd "${srcdir}/${pkgname}"
+  python setup.py --cuda_ext --cpp_ext build
 }
 
 package() {
-	cd "${srcdir}/${pkgname}"
-	python setup.py --cuda_ext --cpp_ext install --root="${pkgdir}" --optimize=1 --skip-build
- 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  cd "${srcdir}/${pkgname}"
+  python setup.py --cuda_ext --cpp_ext install --root="${pkgdir}" --optimize=1 --skip-build
+   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
