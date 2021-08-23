@@ -9,17 +9,18 @@ arch=('x86_64')
 url='https://github.com/NVIDIA/DALI'
 license=('Apache')
 depends=(
-  'cuda'
-  'lmdb'
-  'opencv'
-  'protobuf'
-  'python'
+  cuda
+  libtar
+  lmdb
+  opencv
+  protobuf
+  python
 )
 makedepends=(
-  'clang'
-  'cmake'
-  'git'
-  'python-setuptools'
+  clang
+  cmake
+  git
+  python-setuptools
 )
 source=("${pkgname}::git+https://github.com/NVIDIA/DALI.git#tag=v${pkgver}")
 sha512sums=('SKIP')
