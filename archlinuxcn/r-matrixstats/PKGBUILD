@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=matrixStats
-_pkgver=0.60.0
+_pkgver=0.60.1
 pkgname=r-${_pkgname,,}
-pkgver=0.60.0
+pkgver=0.60.1
 pkgrel=1
 pkgdesc='Functions that Apply to Rows and Columns of Matrices (and to Vectors)'
 arch=('x86_64')
@@ -21,7 +21,7 @@ optdepends=(
   r-r.rsp
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('0ee09303cfcc7e5577c56a19cc5aa35183165fb923bfdb06321af35b56945f21')
+sha256sums=('2f77f1dc3d157e85d91f468e4ec4c569537b17a156e016ed723bdc4dcf128f7f')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
