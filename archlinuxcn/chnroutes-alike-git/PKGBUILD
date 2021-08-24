@@ -2,7 +2,7 @@
 
 _pkgname=chnroutes-alike
 pkgname=$_pkgname-git
-pkgver=0.99.09e5162
+pkgver=0.101.9253c48
 pkgrel=1
 pkgdesc="Collection of IP ranges not in China but works good enough"
 arch=('any')
@@ -19,7 +19,7 @@ pkgver() {
 
 package() {
   cd $_pkgname
-  install -Dm644 chnroutes-alike.txt -t "$pkgdir"/usr/share/chnroutes-alike/
+  install -Dm644 *.txt -t "$pkgdir"/usr/share/chnroutes-alike/
 }
 
 # vim:set ts=2 sw=2 et:
