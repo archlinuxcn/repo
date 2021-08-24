@@ -4,7 +4,7 @@
 
 pkgname=betterlockscreen
 pkgver=4.0.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A simple, minimal lockscreen"
 arch=('any')
 url="https://github.com/pavanjadhaw/${pkgname}"
@@ -14,7 +14,7 @@ conflicts=('betterlockscreen-git')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "betterlockscreen@.service")
 sha256sums=('d96fd64f1c94c91fec5d26b9665ba68f7f130c8a8612978ad9edbfa859710671'
-            '3db1f3775abd6c5333631e3f729625285da0b33ab807ad6888db3923f37ab885')
+            '342c92fcbc685349d843811ea336983307205f680f43362bef7dc3cfaed31d4d')
 
 package() {
     cd "${pkgname}-${pkgver}"/
