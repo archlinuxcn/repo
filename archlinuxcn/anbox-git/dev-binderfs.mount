@@ -1,0 +1,13 @@
+[Unit]
+Description=Android Binder File System
+ConditionPathExists=!/dev/binder
+Before=anbox-container-manager.service
+
+[Mount]
+Where=/dev/binderfs
+What=binder
+Type=binder
+Options=nofail
+
+[Install]
+WantedBy=anbox-container-manager.service
