@@ -1,7 +1,7 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=htmltools
-_pkgver=0.5.1.1
+_pkgver=0.5.2
 pkgname=r-${_pkgname,,}
 pkgver=0.5.1.1
 pkgrel=1
@@ -13,6 +13,7 @@ depends=(
   r
   r-base64enc
   r-digest
+  r-fastmap
   r-rlang
 )
 optdepends=(
@@ -25,7 +26,7 @@ optdepends=(
   r-withr
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('f0bfe72ffe330f3d6c9ead5857f3a4aef80e002e32558074a3e643f2ab67a4ba')
+sha256sums=('7dc7d50436e5a82a5801f85bcd2f572a06a98b4027d71aa17b4854ec9b2767fb')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
