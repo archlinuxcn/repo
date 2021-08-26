@@ -1,0 +1,12 @@
+pre_build_script: aur_pre_build(maintainers=['mzz2017'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: github
+    github: v2rayA/v2rayA
+  - source: aur
+    aur: v2raya-git
+
+maintainers:
+  - github: dctxmei
