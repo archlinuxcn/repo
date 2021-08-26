@@ -19,7 +19,7 @@ sha256sums=('b663f1ab9ec3c26299d000ffd45c91f8749fae73004329066c3f0398b57435b2'
             '91f034ae9fbccf5e3155f5a6d6b6dc17147c987dc1f5deb11a0e64a624260571')
 
 build() {
-    export OUTPUT_DIR="${srcdir}/v2rayA-${pkgver}/service/server/router/web/"
+    export OUTPUT_DIR="${srcdir}/${_pkgname}-${pkgver}/service/server/router/web/"
     cd "${srcdir}"/"${_pkgname}-${pkgver}"/gui/
     yarn cache clean
     yarn install
