@@ -16,12 +16,12 @@ Server = https://repo.archlinuxcn.org/$arch
 ```
 to your /etc/pacman.conf .
 
-For mirrors (mainly in China), see https://github.com/archlinuxcn/mirrorlist-repo.
+For mirrors (strongly recommended for users in China), see https://github.com/archlinuxcn/mirrorlist-repo.
 
 Import PGP Keys:
 
 ```bash
-sudo pacman -Syy && sudo pacman -S archlinuxcn-keyring
+sudo pacman -Sy && sudo pacman -S archlinuxcn-keyring
 ```
 
 ### Issues
