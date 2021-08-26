@@ -1,4 +1,9 @@
+make nconfig:
+     disable nouveau: DRM_NOUVEAU [=n],
+     disable uvcvideo: USB_VIDEO_CLASS [=n],
+     default apparmor: LSM [=landlock,lockdown,yama,apparmor,bpf],
+     default bbr: DEFAULT_BBR [=y]
+
 Steps to apply the patch:
-1. patch -p3 -i config.5.10.18.patch
-2. patch -Rp3 -i config.diff
-3. updpkgsums
+1. patch -p3 -i config.5.10.45.patch
+2. updpkgsums
