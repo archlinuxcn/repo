@@ -1,0 +1,39 @@
+From c261dc8bb451340ea44e726f339713e55afc23ec Mon Sep 17 00:00:00 2001
+From: Laszlo Nagy <rizsotto@gmail.com>
+Date: Fri, 20 Aug 2021 16:12:54 +1000
+Subject: [PATCH] citnames: fix #396 (new release of json library)
+
+---
+ source/citnames/source/Output.cc         | 2 +-
+ third_party/nlohmann_json/CMakeLists.txt | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/source/citnames/source/Output.cc b/source/citnames/source/Output.cc
+index 8df1a981..2d004ff6 100644
+--- a/source/citnames/source/Output.cc
++++ b/source/citnames/source/Output.cc
+@@ -184,7 +184,7 @@ namespace cs {
+                         throw error;
+                     });
+         } else {
+-            throw nlohmann::json::out_of_range::create(403, "key 'command' or 'arguments' not found");
++            throw std::runtime_error("Field 'command' or 'arguments' not found");
+         }
+ 
+         validate(entry);
+diff --git a/third_party/nlohmann_json/CMakeLists.txt b/third_party/nlohmann_json/CMakeLists.txt
+index bcd8a052..4621c571 100644
+--- a/third_party/nlohmann_json/CMakeLists.txt
++++ b/third_party/nlohmann_json/CMakeLists.txt
+@@ -9,9 +9,9 @@ else ()
+     include(ExternalProject)
+     ExternalProject_Add(nlohmann_json_dependency
+             URL
+-                https://github.com/nlohmann/json/archive/v3.9.1.tar.gz
++                https://github.com/nlohmann/json/archive/v3.10.0.tar.gz
+             URL_HASH
+-                MD5=e386222fb57dd2fcb8a7879fc016d037
++                MD5=78d0f567b2940341704c1d838a11fad2
+             DOWNLOAD_NO_PROGRESS
+                 1
+             UPDATE_COMMAND
