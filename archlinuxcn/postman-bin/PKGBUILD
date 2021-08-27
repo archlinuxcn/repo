@@ -1,7 +1,7 @@
 # Maintainer: Jay Ta'ala <jay@jaytaala.com>
 # Contributor: Claudio d'Angelis <claudiodangelis at gmail dot com>
 pkgname=postman-bin
-pkgver=8.10.0
+pkgver=8.11.1
 pkgrel=1
 pkgdesc="Build, test, and document your APIs faster"
 provides=('postman')
@@ -15,7 +15,7 @@ source=(
 	"postman.desktop"
 )
 depends=(libxss nss gtk3)
-sha256sums=('05f3eaa229483a7e1f698e6e2ea2031d37687de540d4fad05ce677ac216db24d'
+sha256sums=('4b23aea34d7730a270cb19a12c696d402675888ef1be4837045235d31162a45b'
             '74b2d8570658e207e31f729e7f4768952252383aee7c695218d077bd0ef13245')
 package() {
 	install -dm755 "${pkgdir}/opt/"
@@ -24,12 +24,6 @@ package() {
 	chmod -R 755 "${pkgdir}/opt/postman"
   	install -dm755 "${pkgdir}/usr/bin"
     ln -s "/opt/postman/Postman" "${pkgdir}/usr/bin/postman"
-    # License
-    install -D -m644 "Postman/app/LICENSE" \
-        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-    # Chromium License
-    install -D -m644 "Postman/app/LICENSES.chromium.html" \
-        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSES.chromium.html"
     # Desktop file
     install -D -m644 "postman.desktop" \
         "${pkgdir}/usr/share/applications/postman.desktop"
