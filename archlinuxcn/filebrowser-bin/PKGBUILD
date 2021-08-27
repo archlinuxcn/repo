@@ -1,7 +1,7 @@
 # Maintainer: axionl <axionl@aosc.io>
 # Contributor: Sherlock Holo <sherlockya(at)gmail.com>
 pkgname=filebrowser-bin
-pkgver=2.17.1
+pkgver=2.17.2
 pkgrel=1
 pkgdesc="Web File Manager which can be used as a middleware or standalone app."
 arch=('x86_64' 'aarch64')
@@ -20,8 +20,8 @@ source_aarch64=("linux-aarch64-filebrowser-${pkgver}.tar.gz::https://github.com/
 sha256sums=('79a1fdb1f0b26f211242f1fdb6f3478a56890a721fe324ea7ade2e8f9a351b38'
             '8a423af0707ac37b15ca425ec097b3d98aecd08238f7599ae9dfcce31c8cbb32'
             '1fc20cab3a7d67d7997126a98dd151a362dc4600201ca37fd608b959d25985db')
-sha256sums_x86_64=('9b29ea490d2167aa62034392cfaed2cd712285ac2ddd9205b086271478cf29ea')
-sha256sums_aarch64=('0495070f852bc2309d783045025ad2bbe89e7e8eb4edcb33fdc4fb6b8318fa8c')
+sha256sums_x86_64=('0bc43fc6d429ab0ed76b267aa4771faaf15e1588abf946991c703aa795c7c6cd')
+sha256sums_aarch64=('cb678b90dff0dcdd350c0c5997ea5a9d98d1fd2fbad09830f4f45837ffe62833')
 
 
 
