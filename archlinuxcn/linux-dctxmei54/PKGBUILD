@@ -1,14 +1,14 @@
 # Maintainer: Dct Mei <dctxmei@yandex.com>
-# Maintainer: Levente Polyak <anthraxx[at]archlinux[dot]org>
 # Maintainer: Jonathon Fernyhough <jonathon+m2x+dev>
+# Maintainer: Levente Polyak <anthraxx[at]archlinux[dot]org>
 # Contributor: Daniel Micay <danielmicay@gmail.com>
 # Contributor: Tobias Powalowski <tpowa@archlinux.org>
 # Contributor: Thomas Baechler <thomas@archlinux.org>
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=linux-dctxmei54
-pkgver=5.4.112
-pkgrel=2
+pkgver=5.4.143
+pkgrel=1
 pkgdesc='Security-Hardened 5.4 Linux - Dct Mei'
 url="https://github.com/anthraxx/linux-hardened"
 arch=(x86_64)
@@ -18,8 +18,8 @@ makedepends=(
   xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick
 )
 options=('!strip')
-_srcname=linux-$pkgver
-_srctag=$pkgver-hardened1
+_srcname=linux-${pkgver}
+_srctag=${pkgver}-hardened1
 source=(
   https://www.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
   https://github.com/anthraxx/${pkgbase%-*}-hardened/releases/download/${_srctag}/${pkgbase%-*}-hardened-${_srctag}.patch{,.sig}
@@ -35,9 +35,9 @@ validpgpkeys=(
   'E240B57E2C4630BA768E2F26FC1B547C8D8172C8'  # Levente Polyak
 )
 # https://www.kernel.org/pub/linux/kernel/v5.x/sha256sums.asc
-sha256sums=('b8361d461a4254c86d4c68aa4ceab1debaa3b2ccc6785542d026837a4fc20ca4'
+sha256sums=('0953650b05a5f806d76c5691583e94e141f4f691bc0ba75a60b643740f021d24'
             'SKIP'
-            '52840ac61062ae2d492e791f8f9b5950c0f0dd1f9d684a2db542e0860c7b31d1'
+            '7fa0a7b10a1e1815193d1cb263566394f62c6fbff7239044c1dc5f4f194b6277'
             'SKIP'
             '81c7cfdd5bf655f749538fb874dea76aa98c00fa4b67f72936ca22959aa034e9'
             '4fd74bb2a7101d700fba91806141339d8c9e46a14f8fc1fe276cfb68f1eec0f5'
@@ -83,9 +83,8 @@ _package() {
   pkgdesc="The $pkgdesc kernel and modules (disable nouveau, disable uvcvideo, default apparmor, default bbr)"
   depends=(coreutils kmod initramfs)
   optdepends=('crda: to set the correct wireless channels of your country'
-              'linux-firmware: firmware images needed for some devices'
-              'usbctl: deny_new_usb control')
-  provides=(linux-hardened)
+              'linux-firmware: firmware images needed for some devices')
+  provides=(VIRTUALBOX-GUEST-MODULES)
 
   cd $_srcname
   local kernver="$(<version)"
