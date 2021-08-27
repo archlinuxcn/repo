@@ -8,7 +8,7 @@ pkgdesc="Next generation of Minecraft server, compatible with Spigot plugins and
 arch=('any')
 url="https://papermc.io/"
 license=('custom')
-depends=('java-runtime-headless>=8' 'screen' 'sudo' 'bash' 'awk' 'sed')
+depends=('java-runtime-headless>=8' 'tmux' 'sudo' 'bash' 'awk' 'sed')
 optdepends=("tar: needed in order to create world backups"
 	"netcat: required in order to suspend an idle server")
 conflicts=('papermc-git')
@@ -29,7 +29,7 @@ sha512sums=('c76ef2570c727246bdbafdb9b19e036636e4204e027e1b12e1fd89ee939ef65dd69
             '51c5345155e8640d4f1eaef0c8cfb890ae46063f2d4e7a0fe181ad4c8ff7b96fea88b0f9fc74031d589dfd61602f37b440f183ca1859835930fe69d37508cd42'
             'f29c4044d9e3cc5ab137c21f7e62399b36d7e1f777d5558a39f7b4a01de75bdf2de0b8678e424accc03934ca7db9ebb6a22c78c8c4497759287dd55e1c3eb456'
             'bec77bc748ee9b9efe4913608f7a6f9b1bd40ed8f018a431981451f8ad77accc4b3670096a8523ddd9f745aef5edb7294ef3b15f483cf9af32c69f9a40ef40a1'
-            '6462249c6bb29ee0e7278f5c9e5d4e46b9e214f7ebbbcd202717ff639a1bdb455391145bd1cc716e66523bda48cefeb72908a1944c3dec2151186136689cadae'
+            'bb0633de2da12b0f9e8c9ba29ef61c91785e9e6fb65f7712d60cf99d2045a38321073b78d7a7e1b34078e5627acbe42e8f3ad7164bbf6eef27dbbb3c5d41d748'
             '961626b9d4f6efdaeafa123471e4ac3d6a4be06a546e4a3c1ada75a3e2694c5e29634bd419bdec71b1c7ea7cb95fbbec4180cb17ee6fd32a9549a4d90c672c0a'
             '115fe7213d7edd0e3159607a31b28edb6e6b3bd1d454d516973e38c8cf0b803275c2c4e59b29e2260561270d931c71bad134046535e5add309e0a8d055cde0ff'
             'd4c645a58e1a17a0a1e42856a3cc43097711a05bf3d9f18c77c3bc9874417f223552859042ff00b7d3dda0003f49a9ee568540c2eb24e9f8fbb3c055f3b6e0a5')
