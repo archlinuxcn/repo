@@ -28,12 +28,11 @@ sha256sums=('SKIP')
 prepare() {
   cd "${_pkgname}-${pkgver}"
   git submodule update --init --recursive
-  export CC=/opt/cuda/bin/gcc
-  export CXX=/opt/cuda/bin/g++
 }
 
 build() {
   cd "${_pkgname}-${pkgver}"
+  CUDA_PATH=/opt/cuda \
   python setup.py build
 }
 
