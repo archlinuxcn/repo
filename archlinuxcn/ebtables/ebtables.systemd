@@ -1,0 +1,21 @@
+#!/bin/bash
+
+CONFIG_FILE='/etc/ebtables.conf'
+
+case $1 in
+  start)
+    ebtables-restore < "$CONFIG_FILE"
+  ;;
+  stop)
+    ebtables -F
+  ;;
+  save)
+    ebtables-save > "$CONFIG_FILE"
+  ;;
+  *)
+    echo "usage: ${0##*/} {start|stop|save}" >&2
+    exit 1
+  ;;
+esac
+
+# vim:set ts=2 sw=2 ft=sh et:
