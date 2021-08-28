@@ -1,7 +1,7 @@
 # Maintainer: George Rawlinson <george@rawlinson.net.nz>
 
 pkgname=cloudflared
-pkgver=2021.8.6
+pkgver=2021.8.7
 pkgrel=1
 pkgdesc="Argo Tunnel client"
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -17,7 +17,7 @@ source=(
   'sysusers.conf'
   'tmpfiles.conf'
 )
-b2sums=('132cfdd79bbc500f92a41db794fc0d485f57139c6a144c877569ab90c41159fd85102f76aad2647227fa52574c00652ce57e7c6e85f859dd4a691642702e6f06'
+b2sums=('ecc79abbb81cc763aacdc470b3232ee92a547071a2e3f725a1292aae45985cdc395d4af995b2960019d7cb91d9853f7480ee76867b958b5d56ef3bdf42ac3ea9'
         '887218db3b5e7cdbb90c86b60aac1597d70b59fccece18c8c5e6e2357d04aa219b2438436f23f913a0c8dc6eb425ef3e22901e28fd30e5130d17e414e67ec4af'
         '0fa4ac918b4c72e2b1a1bd36e025fdb6078364363cba167e6d91e7815c8bd6f5c4b412f0651d1a75991ef7e069da6e81917f22bd40ef87fd1ccd41171e64e0b2'
         '7a15fc73f02cc74e2cea55ba51632724bae16f140e07904a88daa3179ed320e9e6efa9a1901d8249fd1618a2a91f93384a93bfaba6eba6990457b7c2d2155f58'
