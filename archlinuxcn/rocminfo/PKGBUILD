@@ -5,7 +5,7 @@
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 
 pkgname=rocminfo
-pkgver=4.3.0
+pkgver=4.3.1
 pkgrel=1
 pkgdesc='ROCm info tools - rocm_agent_enumerator'
 arch=('x86_64')
@@ -14,7 +14,7 @@ license=('custom:NCSAOSL')
 depends=('pciutils' 'python' 'hsa-rocr')
 makedepends=('cmake' 'rocm-cmake')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('2cc1f251c0ed9c3ea413cc15cb5ce11559e4497540eebbf5e8dcfd52b03e53d1')
+sha256sums=('d042947d3f29e943a2e3294a2a2d759ca436cebe31151ce048e49bc4f02d6993')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
 build() {
