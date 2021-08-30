@@ -10,7 +10,7 @@ license=("MIT")
 depends=("bzip2" "cairo" "fontconfig" "freetype2" "ghostscript" "glfw-x11"
          "libjpeg-turbo" "libpng" "libtiff" "libx11" "libxft" "libxt" "pixman"
          "qhull" "qt5-base" "zlib")
-makedepends=("git" "cmake")
+makedepends=("git" "cmake" "patchelf")
 optdepends=("ffmpeg: video support")
 provides=("${pkgname%-*}=${pkgver}")
 conflicts=("${pkgname%-*}")
