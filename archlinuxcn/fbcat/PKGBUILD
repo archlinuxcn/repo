@@ -1,7 +1,7 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 pkgname=fbcat
-pkgver=0.5.1
-pkgrel=3
+pkgver=0.5.2
+pkgrel=1
 pkgdesc="A framebuffer screenshot grabber"
 arch=(i686 x86_64)
 url="https://github.com/jwilk/fbcat"
@@ -10,7 +10,7 @@ optdepends=('imagemagick: for fbgrab' 'netpbm: for fbgrab' 'graphicsmagick: for 
 makedepends=('docbook-xsl')
 source=(https://github.com/jwilk/${pkgname}/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.gz)
 conflicts=('fbgrab')
-md5sums=('944fd3854bfe00971bfcd830f6c94497')
+md5sums=('b54912af77a865f550cab9f54f840f54')
 
 build() {
   cd $srcdir/${pkgname}-${pkgver}
