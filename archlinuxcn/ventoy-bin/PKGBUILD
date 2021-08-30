@@ -4,7 +4,7 @@
 
 pkgname=ventoy-bin
 pkgver=1.0.51
-pkgrel=1
+pkgrel=2
 pkgdesc='A new multiboot USB solution (Binary)'
 url='http://www.ventoy.net/'
 arch=('i686' 'x86_64')
@@ -23,7 +23,10 @@ sha256sums=('81ae02a06b132b5965dd09c9b64e000a6dafa1d57e03d8564feefda14ef1ee02'
             '00dec31721a052d5e6c928e3b38b870959bdb42188f34717898d99c0cef950df'
             '1555f65997e6d92ca29a774b45052e97a3358430fa5869f521a4fe7818427a1f')
 
-_msg2() { printf "\e[1;34m  ->\e[0;1m %s\e[0m\n" "$1"; }
+_msg2() {
+  if [ "$USE_COLOR" = n ]; then printf "  -> %s\n" "$1"
+  else printf "\e[1;34m  ->\e[0;1m %s\e[0m\n" "$1"; fi
+}
 
 prepare() {
   _msg2 "Decompress tools..."
