@@ -1,15 +1,11 @@
 # Maintainer: Dct Mei <dctxmei@yandex.com>
-# Maintainer: Levente Polyak <anthraxx[at]archlinux[dot]org>
-# Contributor: Daniel Micay <danielmicay@gmail.com>
-# Contributor: Tobias Powalowski <tpowa@archlinux.org>
-# Contributor: Thomas Baechler <thomas@archlinux.org>
-# Contributor: Andreas Radke <andyrtr@archlinux.org>
+# Maintainer: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=linux-dctxmei510
-pkgver=5.10.60
+pkgver=5.10.61
 pkgrel=1
-pkgdesc='Security-Hardened 5.10 Linux - Dct Mei'
-url="https://github.com/anthraxx/linux-hardened"
+pkgdesc='LTS 5.10 Linux - Dct Mei'
+url="https://www.kernel.org/"
 arch=(x86_64)
 license=(GPL2)
 makedepends=(
@@ -18,22 +14,19 @@ makedepends=(
 )
 options=('!strip')
 _srcname=linux-${pkgver}
-_srctag=${pkgver}-hardened1
 source=(
-  https://www.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
-  https://github.com/anthraxx/${pkgbase%-*}-hardened/releases/download/${_srctag}/${pkgbase%-*}-hardened-${_srctag}.patch{,.sig}
+  https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
   config         # the main kernel config file
+  0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
 )
 validpgpkeys=(
   'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds
   '647F28654894E3BD457199BE38DBBDC86092693E'  # Greg Kroah-Hartman
-  'E240B57E2C4630BA768E2F26FC1B547C8D8172C8'  # Levente Polyak
 )
-sha256sums=('696ff7753f6c7c5123dbcb0a22d693cb358c760c61a76649531b6a207155f78d'
+sha256sums=('82eae38cc5cd11dd6aaac91c02ff0d006c7bafd6d4cf5c6a791930820a3a91d1'
             'SKIP'
-            '083a7e07b89fb7212eee92c84e849f6c36586b6af8875816b194bf77bd08cc42'
-            'SKIP'
-            'f4c02a78ed4e2150349be53c35b7b6c3cede7a99fbb976d23e801a94ee8abe0e')
+            'f4c02a78ed4e2150349be53c35b7b6c3cede7a99fbb976d23e801a94ee8abe0e'
+            '96a72e1652314215da7140956c3abcf495cafd00811eda3cf4ce03ec5f791f1e')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -74,8 +67,7 @@ _package() {
   pkgdesc="The $pkgdesc kernel and modules (disable nouveau, disable uvcvideo, default apparmor, default bbr)"
   depends=(coreutils kmod initramfs)
   optdepends=('crda: to set the correct wireless channels of your country'
-              'linux-firmware: firmware images needed for some devices'
-              'usbctl: deny_new_usb control')
+              'linux-firmware: firmware images needed for some devices')
   provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
 
   cd $_srcname
