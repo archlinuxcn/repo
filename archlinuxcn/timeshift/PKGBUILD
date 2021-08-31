@@ -6,12 +6,13 @@
 # Contributor: Robert Orzanna <orschiro at gmail dot com>
 pkgname=timeshift
 pkgver=20.11.1+4+gd437358
-pkgrel=3
+pkgrel=4
 pkgdesc="A system restore utility for Linux"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/teejee2008/timeshift"
 license=('GPL3')
-depends=('gtk3' 'libsoup' 'cronie' 'rsync' 'libgee' 'vte3' 'xapp' 'xorg-xhost')
+depends=('cronie' 'gtk3' 'libgee' 'libnotify' 'libsoup' 'rsync' 'vte3' 'xapp'
+         'xorg-xhost')
 makedepends=('git' 'vala')
 checkdepends=('appstream-glib' 'desktop-file-utils')
 optdepends=('btrfs-progs: BTRFS support'
@@ -31,37 +32,37 @@ sha256sums=('SKIP'
             'f3c71c6cb42b968c33a24361ff3be1e4cf59000605e74af8e061f0c5679fe315')
 
 pkgver() {
-	cd "$srcdir/$pkgname"
-	git describe --tags | sed 's/^v//;s/-/+/g'
+  cd "$srcdir/$pkgname"
+  git describe --tags | sed 's/^v//;s/-/+/g'
 }
 
 prepare() {
-	cd "$srcdir/$pkgname"
-	sed -i -e 's/--Xcc="-O3" //g' src/makefile
+  cd "$srcdir/$pkgname"
+  sed -i -e 's/--Xcc="-O3" //g' src/makefile
 
-	# https://github.com/teejee2008/timeshift/pull/685
-	patch -Np1 -i "$srcdir"/read-only-btrfs-snapshot.patch
+  # https://github.com/teejee2008/timeshift/pull/685
+  patch -Np1 -i "$srcdir"/read-only-btrfs-snapshot.patch
 }
 
 build() {
-	export CFLAGS="${CFLAGS} --std=c99"
+  export CFLAGS="${CFLAGS} --std=c99"
 
-	cd "$srcdir/$pkgname/src"
-	make app-gtk
-	make app-console
-	make pot
+  cd "$srcdir/$pkgname/src"
+  make app-gtk
+  make app-console
+  make pot
 }
 
 check() {
-	cd "$srcdir/$pkgname"
-	appstream-util validate-relax --nonet debian/*.appdata.xml
-	desktop-file-validate "src/$pkgname-gtk.desktop"
+  cd "$srcdir/$pkgname"
+  appstream-util validate-relax --nonet debian/*.appdata.xml
+  desktop-file-validate "src/$pkgname-gtk.desktop"
 }
 
 package() {
-	cd "$srcdir/$pkgname/src"
-	make DESTDIR="$pkgdir" install
-	install -Dm644 $srcdir/grub-btrfs.path $pkgdir/etc/systemd/system/grub-btrfs.path
-	install -Dm644 $srcdir/snapshot-detect.desktop $pkgdir/etc/xdg/autostart/snapshot-detect.desktop
-	install -Dm755 $srcdir/snapshot-detect $pkgdir/usr/bin/snapshot-detect
+  cd "$srcdir/$pkgname/src"
+  make DESTDIR="$pkgdir" install
+  install -Dm644 $srcdir/grub-btrfs.path "$pkgdir/etc/systemd/system/grub-btrfs.path"
+  install -Dm644 $srcdir/snapshot-detect.desktop -t "$pkgdir/etc/xdg/autostart/"
+  install -Dm755 $srcdir/snapshot-detect -t "$pkgdir/usr/bin/"
 }
