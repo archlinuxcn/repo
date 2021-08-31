@@ -20,5 +20,7 @@ pkgver() {
 package() {
   cd GR.jl
 
+  echo "import GR_jll" > deps/deps.jl
+
   . /usr/lib/julia/julia-install-pkg.sh GR "${pkgdir}" "${pkgname}" julia-git
 }
