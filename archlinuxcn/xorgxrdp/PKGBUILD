@@ -2,8 +2,8 @@
 # Contributor: Chocobo1 <chocobo1 AT archlinux DOT net>
 
 pkgname=xorgxrdp
-pkgver=0.2.16
-pkgrel=2
+pkgver=0.2.17
+pkgrel=1
 pkgdesc='Xorg drivers for xrdp'
 arch=('x86_64')
 url='https://github.com/neutrinolabs/xorgxrdp'
@@ -17,7 +17,7 @@ makedepends=(
   xorg-server-devel
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/neutrinolabs/xorgxrdp/releases/download/v$pkgver/xorgxrdp-$pkgver.tar.gz")
-sha256sums=('e6b5f3df44cbf147dcbbc326cdd08c95fe28dba80c2a216e046fe42d962f9215')
+sha256sums=('de6fb593edfbaead1d47c663fc9c04bdad7e98293c0dca2bdc10727c54b24ced')
 
 build() {
   cd "${pkgname}-${pkgver}"
