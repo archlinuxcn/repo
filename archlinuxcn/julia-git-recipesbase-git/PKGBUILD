@@ -1,0 +1,24 @@
+pkgname=julia-git-recipesbase-git
+pkgver=1.1.2
+pkgrel=1
+pkgdesc="RecipesBase.jl"
+url="https://github.com/JuliaPlots/RecipesBase.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-recipesbase)
+source=(git://github.com/JuliaPlots/RecipesBase.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd RecipesBase.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd RecipesBase.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh RecipesBase "${pkgdir}" "${pkgname}" julia-git
+}

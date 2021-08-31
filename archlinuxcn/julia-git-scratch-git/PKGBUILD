@@ -1,0 +1,24 @@
+pkgname=julia-git-scratch-git
+pkgver=1.1.0.0.2.gdf4d656
+pkgrel=1
+pkgdesc="Scratch.jl"
+url="https://github.com/JuliaPackaging/Scratch.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-scratch)
+source=(git://github.com/JuliaPackaging/Scratch.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Scratch.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Scratch.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Scratch "${pkgdir}" "${pkgname}" julia-git
+}
