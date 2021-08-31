@@ -1,0 +1,24 @@
+pkgname=julia-git-timezones-git
+pkgver=1.5.7
+pkgrel=1
+pkgdesc="TimeZones.jl"
+url="https://github.com/JuliaTime/TimeZones.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-timezones)
+source=(git://github.com/JuliaTime/TimeZones.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd TimeZones.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd TimeZones.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh TimeZones "${pkgdir}" "${pkgname}" julia-git
+}

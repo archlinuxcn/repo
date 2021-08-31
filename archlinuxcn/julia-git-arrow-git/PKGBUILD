@@ -1,0 +1,33 @@
+pkgname=julia-git-arrow-git
+pkgver=1.6.2.0.1.g551b3c2
+pkgrel=1
+pkgdesc="Arrow.jl"
+url="https://github.com/JuliaData/Arrow.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-arrow "julia-git-arrowtypes-git=${pkgver}-${pkgrel}" julia-git-arrowtypes)
+source=(git://github.com/JuliaData/Arrow.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Arrow.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Arrow.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Arrow "${pkgdir}" "${pkgname}" julia-git
+  ln -s Arrow/src/ArrowTypes "${pkgdir}/${site_dir}/ArrowTypes"
+  old_depends=("${depends[@]}")
+  _depends=() # use a different name to fool makepkg's stupic static check
+  for dep in "${old_depends[@]}"; do
+    if [[ "$dep" != julia-git-arrowtypes ]]; then
+      _depends+=("${dep}")
+    fi
+  done
+  depends=("${_depends[@]}")
+}
