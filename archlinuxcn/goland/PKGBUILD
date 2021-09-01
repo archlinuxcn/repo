@@ -2,7 +2,7 @@
 
 pkgbase=goland
 pkgname=(goland goland-jre)
-pkgver=2021.2.1
+pkgver=2021.2.2
 pkgrel=1
 arch=('x86_64' 'i686')
 url='https://www.jetbrains.com/go/'
@@ -12,7 +12,7 @@ options=('!strip')
 source=("https://download.jetbrains.com/go/${pkgbase}-${pkgver}.tar.gz"
         jetbrains-goland.desktop
         LICENSE)
-b2sums=('b9315ba0c23c47dfa120e102b52b198c18450cf00cd9e6cd54dadebf35f53831b6884465eca66eab284c70e49498694634305fbd99736fe423e5a9a278b06570'
+b2sums=('9b4970f5e80ee665ae09a4229699fcef6c462b38d5cfaba0624a74f4cbf1aaf5c6afa20d8537e128eba5800858295715b314698a55c1c729a84bd32fa4f18676'
         '69a09c3ff4182cd5ae43c967b4a58ce3bdf428f0fb87f91f835ffcde5c10019cf4a789cfdb8966ad98c95dda47517a6c49e9c4bf6c217f0cb1b553100730a6a6'
         'dadaf0e67b598aa7a7a4bf8644943a7ee8ebf4412abb17cd307f5989e36caf9d0db529a0e717a9df5d9537b10c4b13e814b955ada6f0d445913c812b63804e77')
 
