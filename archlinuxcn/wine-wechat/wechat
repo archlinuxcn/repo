@@ -47,9 +47,7 @@ if __name__ == '__main__':
                       help='arguments for WeChat.exe')
   args = parser.parse_args()
 
-  root = os.environ.get('XDG_DATA_DIR', os.environ['HOME'] + '/.local')
-  root = pathlib.Path(root)
-  prefix = root / 'lib/wine-wechat' / (args.profile or 'default')
+  prefix = pathlib.Path.home() / '.local' / 'lib/wine-wechat' / (args.profile or 'default')
   tarball = pathlib.Path('/opt/wine-wechat/wine-wechat.tar.zst')
 
   env = os.environ.copy()
