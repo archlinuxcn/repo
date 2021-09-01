@@ -1,0 +1,41 @@
+From 1cd404cf4770ed124bff1538a6f3740c3e9f69f9 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 1 Sep 2021 07:59:02 -0400
+Subject: [PATCH] Remove restrict signatures that are moved to ImageAxes
+
+---
+ src/algorithms.jl | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/src/algorithms.jl b/src/algorithms.jl
+index d6eebd8..a695dde 100644
+--- a/src/algorithms.jl
++++ b/src/algorithms.jl
+@@ -434,23 +434,14 @@ findlocalminima(img::AbstractArray, region=coords_spatial(img), edges=true) =
+         findlocalextrema(img, region, edges, Base.Order.Reverse)
+ 
+ # restrict for AxisArray and ImageMeta
+-restrict(img::AxisArray, ::Tuple{}) = img
+ restrict(img::ImageMeta, ::Tuple{}) = img
+ 
+ function restrict(img::ImageMeta, region::Dims)
+     shareproperties(img, restrict(arraydata(img), region))
+ end
+ 
+-function restrict(img::AxisArray{T,N}, region::Dims) where {T,N}
+-    inregion = falses(ndims(img))
+-    inregion[[region...]] .= true
+-    inregiont = (inregion...,)::NTuple{N,Bool}
+-    rdata = restrict(img.data, region)
+-    AxisArray(rdata, map(modax, AxisArrays.axes(img), axes(rdata), inregiont))
+-end
+-
+ # FIXME: this doesn't get inferred, but it should be (see issue #628)
+-function restrict(img::Union{AxisArray,ImageMetaAxis}, ::Type{Ax}) where Ax
++function restrict(img::ImageMetaAxis, ::Type{Ax}) where Ax
+     dim = axisdim(img, Ax)
+     A = restrict(img.data, dim)
+     AxisArray(A, replace_axis(modax(img[Ax], axes(A)[dim]), AxisArrays.axes(img)))
+-- 
+2.33.0
+
