@@ -17,6 +17,12 @@ pkgver() {
   git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
 }
 
+prepare() {
+  cd JuMP.jl
+
+  find -iname '*.jl' -exec sed -i 's/IndicatorSet/Indicator/g' {} \;
+}
+
 package() {
   cd JuMP.jl
 
