@@ -1,0 +1,73 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <heftig@archlinux.org>
+Date: Tue, 31 Aug 2021 21:51:46 +0000
+Subject: [PATCH] pam-arch: Drop pam_faillock counting from fingerprint and
+ smartcard
+
+As mentioned in an [fprintd issue comment][1], we need to make sure that
+the stack's error status is taken from the main auth module, i.e.
+pam_fprintd, otherwise GDM will not behave correctly.
+
+Still use pam_faillock preauth so that we test whether the account is
+locked, but don't use authfail/authsucc to log a failure/success so this
+stack doesn't participate in triggering the lock.
+
+Ideally we would check which return values we actually want to treat as
+a reason to lock the account (e.g. fingerprint mismatch) and which are
+neutral (e.g. no fingerprints enrolled), but that's much more effort.
+
+Should fix [FS#71750][2].
+
+[1]: https://gitlab.freedesktop.org/libfprint/fprintd/-/issues/112#note_1016191
+[2]: https://bugs.archlinux.org/task/71750
+---
+ data/pam-arch/gdm-fingerprint.pam | 10 ++--------
+ data/pam-arch/gdm-smartcard.pam   | 10 ++--------
+ 2 files changed, 4 insertions(+), 16 deletions(-)
+
+diff --git a/data/pam-arch/gdm-fingerprint.pam b/data/pam-arch/gdm-fingerprint.pam
+index cc660d9a..2aaf9f6c 100644
+--- a/data/pam-arch/gdm-fingerprint.pam
++++ b/data/pam-arch/gdm-fingerprint.pam
+@@ -2,16 +2,10 @@
+ 
+ auth       required                    pam_shells.so
+ auth       requisite                   pam_nologin.so
+-auth       required                    pam_faillock.so      preauth
+-# Optionally use requisite above if you do not want to prompt for the fingerprint
+-# on locked accounts.
+-auth       [success=1 default=ignore]  pam_fprintd.so
+-auth       [default=die]               pam_faillock.so      authfail
++auth       requisite                   pam_faillock.so      preauth
++auth       required                    pam_fprintd.so
+ auth       optional                    pam_permit.so
+ auth       required                    pam_env.so
+-auth       required                    pam_faillock.so      authsucc
+-# If you drop the above call to pam_faillock.so the lock will be done also
+-# on non-consecutive authentication failures.
+ auth       [success=ok default=1]      pam_gdm.so
+ auth       optional                    pam_gnome_keyring.so
+ 
+diff --git a/data/pam-arch/gdm-smartcard.pam b/data/pam-arch/gdm-smartcard.pam
+index e6ec1299..6d7333bf 100644
+--- a/data/pam-arch/gdm-smartcard.pam
++++ b/data/pam-arch/gdm-smartcard.pam
+@@ -2,16 +2,10 @@
+ 
+ auth       required                    pam_shells.so
+ auth       requisite                   pam_nologin.so
+-auth       required                    pam_faillock.so      preauth
+-# Optionally use requisite above if you do not want to prompt for the smartcard
+-# on locked accounts.
+-auth       [success=1 default=ignore]  pam_pkcs11.so        wait_for_card card_only
+-auth       [default=die]               pam_faillock.so      authfail
++auth       requisite                   pam_faillock.so      preauth
++auth       required                    pam_pkcs11.so        wait_for_card card_only
+ auth       optional                    pam_permit.so
+ auth       required                    pam_env.so
+-auth       required                    pam_faillock.so      authsucc
+-# If you drop the above call to pam_faillock.so the lock will be done also
+-# on non-consecutive authentication failures.
+ auth       [success=ok default=1]      pam_gdm.so
+ auth       optional                    pam_gnome_keyring.so
+ 
