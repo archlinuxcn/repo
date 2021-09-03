@@ -116,6 +116,7 @@ int execve(const char *path, char *const argv[], char *const envp[])
         STRING_WITH_LEN_INIT("LD_PRELOAD="),
         STRING_WITH_LEN_INIT("QT_PLUGIN_PATH="),
         STRING_WITH_LEN_INIT("QT_QPA_PLATFORM_PLUGIN_PATH="),
+        STRING_WITH_LEN_INIT("QT_QPA_PLATFORM="),
     };
 
     size_t nenv;
