@@ -2,8 +2,8 @@
 
 _pkgname=QuPath
 pkgname=qupath
-pkgver=0.2.3
-pkgrel=4
+pkgver=0.3.0
+pkgrel=1
 pkgdesc='Bioimage analysis & digital pathology'
 arch=('x86_64')
 url="https://qupath.github.io"
@@ -16,28 +16,27 @@ optdepends=(
   'ttf-droid: font for CJK characters'
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/qupath/qupath/archive/v${pkgver}.tar.gz")
-sha512sums=('176a21fca1ae62d632fa15b75f980bdd2c2375f9e0870760a1304638134649615e44438bc62ac462494782dfa5e27ada945bc6b8eabc0c0c87df79b2ea147bb7')
+sha512sums=('5d6ce93a5e267f6b3b837cc7fdea30f26a964f3a9f66407f68bca759ff31d3619fc47f7770ccc23c3491bfb7df329f8e4a6bff450446c753f6a18edce1cb2b41')
 
 prepare() {
   echo "Creating desktop file"
   gendesk -f -n --pkgname ${pkgname} \
     --pkgdesc "${pkgdesc}" \
     --categories "Graphics;MedicalSoftware;Science;" \
-    --icon "/opt/${pkgname}/lib/${_pkgname}-${pkgver}.png" \
+    --icon "/opt/${pkgname}/lib/${_pkgname}.png" \
     --exec "${pkgname}"
 }
 
 build() {
   cd "${pkgname}-${pkgver}"
-  ./gradlew clean assemble createPackage
+  ./gradlew clean jpackage
 }
 
 package() {
   install -d ${pkgdir}/opt
-  cp -a ${srcdir}/${pkgname}-${pkgver}/build/dist/${_pkgname}-${pkgver} ${pkgdir}/opt/${pkgname}
+  cp -a ${srcdir}/${pkgname}-${pkgver}/build/dist/${_pkgname} ${pkgdir}/opt/${pkgname}
   install -d "${pkgdir}/usr/bin"
-  ln -sf "/opt/${pkgname}/bin/${_pkgname}-${pkgver}" "${pkgdir}/usr/bin/${pkgname}" 
-  find "${pkgdir}/opt/${pkgname}/lib/app" -type f -name "*.cfg" -exec mv -v {} "${pkgdir}/opt/${pkgname}/lib/app/${_pkgname}-${pkgver}.cfg" \;
+  ln -sf "/opt/${pkgname}/bin/${_pkgname}" "${pkgdir}/usr/bin/${pkgname}" 
   install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
 }
 # vim:set ts=2 sw=2 et:
