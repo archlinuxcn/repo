@@ -1,26 +1,26 @@
+#
+
 maintainers:
   - github: yuyichao
+
 build_prefix: extra-x86_64
+
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
+
 repo_depends:
-  - lmdbxx
-  - mtxclient-git
+  - coeurl-git
 
 update_on:
   - source: vcs
-  - source: alpm
-    from_pattern: ^(.*)
-    to_pattern: \1
-    alpm: qt5-declarative
-    repo: extra
+  - alias: boost
   - source: alpm
     from_pattern: ^(\d+\.\d+)\..*
     to_pattern: \1
-    alpm: cmark
-    repo: extra
+    alpm: libevent
+    repo: core
   - alias: alpm-lilac
-    alpm: mtxclient-git
-    provided: libmatrix_client.so
+    alpm: coeurl-git
+    provided: libcoeurl.so
   - source: manual
-    manual: 2
+    manual: 1
