@@ -1,6 +1,9 @@
 update_on:
-  - source: cmd
-    cmd: curl -sS https://api.github.com/repos/geph-official/geph4/tags | grep name | grep geph4-client | awk -F '"' '{print $4}' | sort -n -t '.' -k 1,1 -k 2,2 -k 3,3 | tail -n 1 | sed 's/geph4-client-v//'
+  - source: github
+    github: geph-official/geph4
+    use_latest_tag: true
+  - source: manual
+    manual: 1.0
 
 maintainers:
   - github: dctxmei
