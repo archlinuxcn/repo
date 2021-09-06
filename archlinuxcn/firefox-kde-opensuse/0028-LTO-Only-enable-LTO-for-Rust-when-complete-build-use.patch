@@ -1,7 +1,7 @@
-From c34b95e7a79cefedcce90739e506f4f500bc2e2b Mon Sep 17 00:00:00 2001
+From 0ad7c12c402a0b3b999fea3e8db3d991b4aa522c Mon Sep 17 00:00:00 2001
 From: Thomas Deutschmann <whissi@gentoo.org>
 Date: Sat, 29 Aug 2020 22:30:59 +0200
-Subject: [PATCH 27/39] LTO: Only enable LTO for Rust when complete build uses
+Subject: [PATCH 28/35] LTO: Only enable LTO for Rust when complete build uses
  LTO
 
 Signed-off-by: Thomas Deutschmann <whissi@gentoo.org>
@@ -10,7 +10,7 @@ Signed-off-by: Thomas Deutschmann <whissi@gentoo.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/config/makefiles/rust.mk b/config/makefiles/rust.mk
-index 615d54076b..36a2e0896e 100644
+index 49d25655b1..b3ac4763c7 100644
 --- a/config/makefiles/rust.mk
 +++ b/config/makefiles/rust.mk
 @@ -64,6 +64,7 @@ endif
@@ -30,5 +30,5 @@ index 615d54076b..36a2e0896e 100644
  ifdef CARGO_INCREMENTAL
  export CARGO_INCREMENTAL
 -- 
-2.30.1
+2.32.0
 

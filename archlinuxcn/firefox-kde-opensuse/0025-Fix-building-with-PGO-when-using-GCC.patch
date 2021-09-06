@@ -1,7 +1,7 @@
-From 56bbe41b90385dbe33555a43ab85b4acc01d8a91 Mon Sep 17 00:00:00 2001
+From 9b403dc8840d1f16ace76a9410fe003434a96e1b Mon Sep 17 00:00:00 2001
 From: Thomas Deutschmann <whissi@gentoo.org>
 Date: Thu, 2 Jul 2020 18:05:03 +0200
-Subject: [PATCH 24/39] Fix building with PGO when using GCC
+Subject: [PATCH 25/37] Fix building with PGO when using GCC
 
 Signed-off-by: Thomas Deutschmann <whissi@gentoo.org>
 ---
@@ -10,10 +10,10 @@ Signed-off-by: Thomas Deutschmann <whissi@gentoo.org>
  2 files changed, 25 insertions(+), 6 deletions(-)
 
 diff --git a/build/moz.configure/lto-pgo.configure b/build/moz.configure/lto-pgo.configure
-index e28bd14956..9cb78fc522 100644
+index 30b8b27fc4..95852d7c21 100644
 --- a/build/moz.configure/lto-pgo.configure
 +++ b/build/moz.configure/lto-pgo.configure
-@@ -84,11 +84,12 @@
+@@ -84,12 +84,13 @@
  @imports(_from="__builtin__", _import="min")
  def pgo_flags(compiler, profdata, target_is_windows):
      if compiler.type == "gcc":
@@ -28,6 +28,7 @@ index e28bd14956..9cb78fc522 100644
          )
  
      if compiler.type in ("clang-cl", "clang"):
+     
 diff --git a/build/pgo/profileserver.py b/build/pgo/profileserver.py
 index 7f3de106ab..89289a7756 100755
 --- a/build/pgo/profileserver.py
@@ -80,5 +81,5 @@ index 7f3de106ab..89289a7756 100755
          if llvm_profdata:
              profraw_files = glob.glob("*.profraw")
 -- 
-2.30.1
+2.31.1
 
