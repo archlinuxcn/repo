@@ -1,34 +1,33 @@
-diff -aur conan-1.37.0-pristine/conans/requirements_server.txt conan-1.37.0-new/conans/requirements_server.txt
---- conan-1.37.0-pristine/conans/requirements_server.txt	2021-06-01 12:52:46.649999943 +0200
-+++ conan-1.37.0-new/conans/requirements_server.txt	2021-06-01 12:55:08.966666608 +0200
+diff -aur conan-1.40.0-pristine/conans/requirements_server.txt conan-1.40.0-new/conans/requirements_server.txt
+--- conan-1.40.0-pristine/conans/requirements_server.txt	2021-09-06 14:27:07.709999994 +0200
++++ conan-1.40.0-new/conans/requirements_server.txt	2021-09-06 14:28:14.029999990 +0200
 @@ -1,3 +1,3 @@
  # Server
 -bottle>=0.12.8, < 0.13
 +bottle>=0.12.8
  pluginbase>=0.5
-diff -aur conan-1.37.0-pristine/conans/requirements.txt conan-1.37.0-new/conans/requirements.txt
---- conan-1.37.0-pristine/conans/requirements.txt	2021-06-01 12:52:46.649999943 +0200
-+++ conan-1.37.0-new/conans/requirements.txt	2021-06-01 12:54:44.546666610 +0200
-@@ -1,17 +1,17 @@
+diff -aur conan-1.40.0-pristine/conans/requirements.txt conan-1.40.0-new/conans/requirements.txt
+--- conan-1.40.0-pristine/conans/requirements.txt	2021-09-06 14:27:07.709999994 +0200
++++ conan-1.40.0-new/conans/requirements.txt	2021-09-06 14:28:06.893333328 +0200
+@@ -1,15 +1,15 @@
 -PyJWT>=1.4.0, <2.0.0
 -requests>=2.8.1, <3.0.0
--urllib3>=1.25.8, <1.26
+-urllib3>=1.26.6, <1.27
 -colorama>=0.3.3, <0.5.0
 -PyYAML>=3.11, <6.0
 -patch-ng>=1.17.4, <1.18
 +PyJWT>=1.4.0
 +requests>=2.8.1
-+urllib3>=1.25.8
++urllib3>=1.26.6
 +colorama>=0.3.3
 +PyYAML>=3.11
 +patch-ng>=1.17.4
  fasteners>=0.14.1
--six>=1.10.0,<=1.15.0
+-six>=1.10.0,<=1.16.0
 -node-semver==0.6.1
--distro>=1.0.2, <=1.5.0
+-distro>=1.0.2, <=1.6.0
 -future>=0.16.0, <0.19.0
 -pygments>=2.0, <3.0
--deprecation>=2.0, <2.1
 -tqdm>=4.28.1, <5
 -Jinja2>=2.9, <3
 -python-dateutil>=2.7.0, <3
@@ -37,8 +36,6 @@ diff -aur conan-1.37.0-pristine/conans/requirements.txt conan-1.37.0-new/conans/
 +distro>=1.0.2
 +future>=0.16.0
 +pygments>=2.0
-+deprecation>=2.0
 +tqdm>=4.28.1
 +Jinja2>=2.9
 +python-dateutil>=2.7.0
- 
