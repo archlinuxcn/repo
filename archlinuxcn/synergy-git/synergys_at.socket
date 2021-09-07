@@ -1,0 +1,9 @@
+[Unit]
+Conflicts=synergys@.service
+
+[Socket]
+ListenStream=24800
+Accept=false
+
+[Install]
+WantedBy=sockets.target
