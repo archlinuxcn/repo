@@ -2,7 +2,7 @@
 
 _pkgbasename=dav1d
 pkgname=("lib32-$_pkgbasename" "lib32-lib$_pkgbasename")
-pkgver=0.9.1
+pkgver=0.9.2
 pkgrel=1
 pkgdesc='AV1 cross-platform decoder focused on speed and correctness (32 bit)'
 url='https://code.videolan.org/videolan/dav1d/'
@@ -21,11 +21,11 @@ source=(
       https://downloads.videolan.org/pub/videolan/${_pkgbasename}/${pkgver}/${_pkgbasename}-${pkgver}.tar.xz{,.asc}
       )
 sha512sums=(
-      '672708b07c389f21968b3d91be4547483f8c0d3b5d41e916503798896ab88212bafa3ca8c229624cbbbe5fdcfcb4f26f19ed8ce9ce1c9f8a217174fe397b6a35'
+      '87026f8b14e408ff50fc8f137ec2ede4b14c5f69687e615d2359d0f718ae5cb5176522490786d9ae1f7838182f82615c2674f7c2961b6dcec83f1ee587c3af7c'
       'SKIP'
       )
 b2sums=(
-      '41a8c4bf1b21432bd01b9ef2ea102e24c4c0a7cdf2070a665567ae861acfabb5242028ef758ea4bb420b6b0f9b3c9fd5bd056c766910864a6e24184747c2e27b'
+      '7baa28821b06b05b95d3ea80b22dffe59d0793c9b4be4231ba0be99b548e1f5517a956dc865c2be1702576d078c2218e7e80342a26ab4003b4f06bcb0cdbb769'
       'SKIP'
       )
 validpgpkeys=('65F7C6B4206BD057A7EB73787180713BE58D1ADC') # VideoLAN Release Signing Key
