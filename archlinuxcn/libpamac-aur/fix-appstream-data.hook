@@ -1,0 +1,14 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Path
+Target = usr/share/app-info/xmls/*.xml.gz
+
+# attention: hook name before: update-appstream-cache.hook
+
+[Action]
+Description = fix appstream datas for pamac
+When = PostTransaction
+Depends = gzip
+Exec = /etc/pacman.d/hooks.bin/fix-appstream-data.sh
+NeedsTargets
