@@ -1,0 +1,24 @@
+pkgname=julia-git-shiftedarrays-git
+pkgver=1.0.0.0.8.gd4475d0
+pkgrel=2
+pkgdesc="ShiftedArrays.jl"
+url="https://github.com/JuliaArrays/ShiftedArrays.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-shiftedarrays)
+source=(git://github.com/JuliaArrays/ShiftedArrays.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd ShiftedArrays.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd ShiftedArrays.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh ShiftedArrays "${pkgdir}" "${pkgname}" julia-git
+}

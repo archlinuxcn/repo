@@ -1,13 +1,13 @@
 pkgname=ntfs3-dkms
 pkgver=27.0.0
-pkgrel=2
+pkgrel=5
 pkgdesc="NTFS read-write driver GPL implementation by Paragon Software. Current version works with NTFS (including v3.1), normal/compressed/sparse files and supports journal replaying."
 arch=('any')
 url='https://www.paragon-software.com/home/ntfs3-driver-faq/'
 license=('GPL2')
 depends=('dkms')
 provides=('NTFS3-MODULE' "ntfs3=${pkgver}" "ntfs3-dkms=${pkgver}")
-conflicts=('ntfs3' 'ntfs3-dkms')
+conflicts=('ntfs3')
 options=('!strip')
 
 source=(
@@ -15,44 +15,31 @@ source=(
     dkms.conf
     kernel-5.12-backport.patch
     kernel-5.14-backport.patch
-    "ntfs3-v${pkgver}~1.patch::https://lore.kernel.org/lkml/20210729134943.778917-2-almaz.alexandrovich@paragon-software.com/raw"
-    "ntfs3-v${pkgver}~2.patch::https://lore.kernel.org/lkml/20210729134943.778917-3-almaz.alexandrovich@paragon-software.com/raw"
-    "ntfs3-v${pkgver}~3.patch::https://lore.kernel.org/lkml/20210729134943.778917-4-almaz.alexandrovich@paragon-software.com/raw"
-    "ntfs3-v${pkgver}~4.patch::https://lore.kernel.org/lkml/20210729134943.778917-5-almaz.alexandrovich@paragon-software.com/raw"
-    "ntfs3-v${pkgver}~5.patch::https://lore.kernel.org/lkml/20210729134943.778917-6-almaz.alexandrovich@paragon-software.com/raw"
-    "ntfs3-v${pkgver}~6.patch::https://lore.kernel.org/lkml/20210729134943.778917-7-almaz.alexandrovich@paragon-software.com/raw"
-    "ntfs3-v${pkgver}~7.patch::https://lore.kernel.org/lkml/20210729134943.778917-8-almaz.alexandrovich@paragon-software.com/raw"
-    "ntfs3-v${pkgver}~8.patch::https://lore.kernel.org/lkml/20210729134943.778917-9-almaz.alexandrovich@paragon-software.com/raw"
+    kernel-5.15-backport.patch
+    "ntfs3-v${pkgver}.patch::https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/rawdiff/?id=f7464060f7ab9a2424428008f0ee9f1e267e410f&id2=6abaa83c7352b31450d7e8c173f674324c16b02b"
 )
 
 sha512sums=(
     '533c249f0f6bd4833faf02d0d92ca1b5802a49afc5feb2e46a7d37275cfca7896db76cd83593f4f313977d278a9a7e92eda550667be2b93910c49cfb68ead4fb'
-    'ac00adb4a6d7fc685c39af054474631c930455e9ad0838338e6b3622b72451e81397506866b83a4a51dd0e34ed7752963c0fed9e8b017da5122e0dca3d345fb6'
-    '374c6fa524defb5dcac093493bc7526e43ca9fe07602357fb51df4a26b02280ba4f2d764d3ba2ba2b32d5318ef466f3e0b6cbfdad1cdac0b04c31e8543114e33'
-    '081b19b271ed89c47a9306874827a0c15feba6dda6d7c8a085f634a72a6691a78fdeccf47488ed141b979f7bfbf3df2d117301f09ba2da8416449460d4711d34'
-    '5a018d5f5255a907dc40eeb8819163addd0a84e588c9ff81ca0abd5b5d01f8921966ef530ed71b3504e43a23ee0250a6eebb673c19b0350e125d4261cef147c1'
-    '6485a1b72e40b44a65462762f0b803f021c08960ea7f5efa2b5ba4f6b60f887689ebf7ef8840f9fda1706aa413a76edf78319b31a99623daa1ea5b067859b8d2'
-    'bac7d87d506fde67d637044d15841a8f8c7a90e361efefaa99c0375851f1192210e5e0122466fc44c421426d82445eaa35338386754d67ea9ba0ef6363f9f708'
-    'd06114a86eca34252d5aafb667a3938418594ce096a8930d477849d36f590613bd658bc6bed70a2dac4f8b2a3b619762d1a07d6c516c7871f11d6499b8d5c409'
-    '27b0cb8de12524b5f6c4725e02631474785dd72608ac9070f1f5d4521cfac4517281b9e7615e88ace923e55fcca90462797d2f0ee5da08317c43aae00cd54beb'
-    '5791f97578c47f5332076bd9d6d4388df1a4392ac110a4649965806502db20a0184f9b1f1826ad2b129d99f2f46f15ee69312509393cda401774825b0285d5bd'
-    'e35dfc2144e5449fb7ca76555eb0067595589bd0fe0a30a9a1dd8642be66912bf3a7545b9f6bf4b5a9397b894a1b63535372b5ec268179dd35b5890c8bb744be'
-    '16605ef35c3534e61e8d06655e9c7237ee04e163e972f2c8b77ba9adfe775813a1788a5333bcd9cc41b6cd8e051f71c89f33f620047e302b24464c5d0ab1edf1'
+    'f61ad1d95b577c1fa183fc0ad4c8c0d1d269db7603892ae6b121ee1b0ab34063692bb39136ecef4ed548b4648b8519101ca44ea268d60241f1ea047718aa12f9'
+    '6f6190825febee219e10be6583718afc9360b3b4c69e06f8d59715da8f73a855d4f652b1ef77064ca100fd15678e13a0ef10bb7837f10c0784530eff1694340d'
+    '0392b665aced96aa92cd6e0f72c2276c0233e661c7cc3b6fe8e074c2be654f2c8836b1d0468a8a665f43fac08704896d0ef0dcbb8826b4deef88a3a894bdf050'
+    'c68307e0dd9fbf17b36599bb850d9aa7b6fee5c38a9c2da975643a311ac8d09ecabd145ba09d8a5062630cac3a853bb035b641ff6fe75672940ccc3b7b164aa8'
+    'd19089027897871b6ae339b206f74aed12a0c9e7235a104eb995ca1b7ddf49cb531631b360e4c678f37ccdd7bac629959040e810be18d247259334ef35f32af6'
 )
 
 prepare() {
     mkdir -p "${pkgver}"
     cd "${pkgver}"
 
-    for patch in "${srcdir}/ntfs3-v${pkgver}"*.patch; do
-        patch -p3 -N -i "${patch}"
-    done
+    patch -p3 -t -N -i "${srcdir}/ntfs3-v${pkgver}.patch" || true
 
     patch -p0 -N -i "${srcdir}/Makefile.patch"
 
     # For testing
-    # patch -p1 -N -i "${srcdir}/kernel-5.12-backport.patch"
+    # patch -p1 -N -i "${srcdir}/kernel-5.15-backport.patch"
     # patch -p1 -N -i "${srcdir}/kernel-5.14-backport.patch"
+    # patch -p1 -N -i "${srcdir}/kernel-5.12-backport.patch"
 }
 
 package() {

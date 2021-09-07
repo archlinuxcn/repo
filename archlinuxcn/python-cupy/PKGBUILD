@@ -3,7 +3,7 @@
 
 _pkgname=cupy
 pkgname=python-cupy
-pkgver=9.3.0
+pkgver=9.4.0
 pkgrel=1
 pkgdesc='A NumPy-compatible array library accelerated by CUDA'
 url='https://cupy.dev'
@@ -28,12 +28,11 @@ sha256sums=('SKIP')
 prepare() {
   cd "${_pkgname}-${pkgver}"
   git submodule update --init --recursive
-  export CC=/opt/cuda/bin/gcc
-  export CXX=/opt/cuda/bin/g++
 }
 
 build() {
   cd "${_pkgname}-${pkgver}"
+  CUDA_PATH=/opt/cuda \
   python setup.py build
 }
 

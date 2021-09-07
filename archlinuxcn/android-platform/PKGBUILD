@@ -7,10 +7,10 @@
 # Contributor: Jakub Schmidtke
 
 pkgname=android-platform
-_apilevel=30
-_rev=r03
+_apilevel=31
+_rev=r01
 pkgver=${_apilevel}_${_rev}
-pkgrel=3
+pkgrel=4
 pkgdesc="Android SDK Platform, latest API"
 arch=('any')
 url="http://developer.android.com/sdk/index.html"
@@ -20,10 +20,10 @@ conflicts=("${pkgname}-${_apilevel}")
 options=('!strip')
 source=("https://dl.google.com/android/repository/platform-${_apilevel}_${_rev}.zip"
          "package.xml")
-sha1sums=('e7c6280901dcfa511af098d67dd88c4dfcbc6ea2'
-          '146112fc3e86f7af1001d5bafb4e398a8a2ac142')
-sha384sums=('2ff53b95a4584f86ab06c5daaf8aabe6e8bb28eaa3cd2e4e06b9762959d84a0a331721eb3c6e39f49dd0691a961fa46c'
-            'de3cb56bdd0e78c94a05a209765378cb60e162dc98d828b5526958ffa97b933aa738d1475224c7005af77c311b72f39f')
+sha1sums=('ca5bcaa565cb37e9d287051d6dd0e49a5426ec29'
+          '282839150fb5472b8784c23943dde146ac5bb116')
+sha384sums=('0a7b03eb59df99d0be5acc9c3c43c1d575afeb069bca8c6aee117820fca68d1b89da133fd6fc64d74542045efb48a501'
+            'e84e72953a3a6b082563b7218b43c88915e8d0c8b55a645829ab59e95521798a57d50889348c18a837050c60862023c7')
 
 package() {
   depends=('android-sdk' 'android-sdk-platform-tools')

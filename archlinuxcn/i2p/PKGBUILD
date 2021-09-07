@@ -5,7 +5,7 @@
 #export LG2=en
 
 pkgname=i2p
-pkgver=0.9.50
+pkgver=1.5.0
 pkgrel=1
 pkgdesc="A distributed anonymous network"
 url="https://geti2p.net"
@@ -23,8 +23,8 @@ options=(!strip)
 # https://geti2p.net/_static/zzz.key.asc
 validpgpkeys=('2D3D2D03910C6504C1210C65EE60C0C8EE7256A8')
 
-#_url="https://download.i2p2.de/releases/${pkgver}"
-_url="https://launchpad.net/i2p/trunk/${pkgver}/+download"
+_url="https://files.i2p-projekt.de/${pkgver}"
+#_url="https://launchpad.net/i2p/trunk/${pkgver}/+download"
 
 source=("${_url}/i2psource_${pkgver}.tar.bz2"{,.sig}
         #"https://download.db-ip.com/free/dbip-country-lite-$(date +%Y-%m).mmdb.gz"
@@ -33,7 +33,7 @@ source=("${_url}/i2psource_${pkgver}.tar.bz2"{,.sig}
         #upstream.patch::'https://github.com/i2p/i2p.i2p/commit/6c0e18d3.patch'
 )
 
-sha256sums=('66d32b3fd29fb5d68c1cbfdcf2ee74a671ebb359cdc697260291f12e441d94ff'
+sha256sums=('26e5f4d95b1a0766870f97b30e57c9a8e98690279c3bf09198e30effabecc450'
             'SKIP'
             '644b771ec7f5db3efab3206bf1f896566cdb00d410a54608fda85bdb4c2ad876'
             'fc30dd32f48fe1c93bf36c8297ca48203a1479e4e221ebe62c57cf3c3c0347d3'
@@ -41,7 +41,8 @@ sha256sums=('66d32b3fd29fb5d68c1cbfdcf2ee74a671ebb359cdc697260291f12e441d94ff'
             '90f202e5b66d5a5b425522b409e71fb892d34c534e32ce2d6fe5284015cacf94'
             '7a19b9f90c8792460fd58e8b8aa435a065e34d29a942479850472510e9d3078a'
             '8d39f080c7a2e49226db3a785f3e18583159ef2f95e1ab467fd9984c4e38c9f5'
-            'a7076156703e2b949331e450455813432caeb4e5712f1c7b668974eb06a69fb9')
+            'a7076156703e2b949331e450455813432caeb4e5712f1c7b668974eb06a69fb9'
+)
 
 prepare() {
     cd "$pkgname-$pkgver"

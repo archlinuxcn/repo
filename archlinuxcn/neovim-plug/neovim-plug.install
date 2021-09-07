@@ -1,0 +1,17 @@
+post_install() {
+  echo "
+    >>> To use vim-plug, please check the file /usr/share/doc/neovim-plug/init.vim.sample
+    >>> and update your init.vim file, accordingly
+  "
+}
+post_upgrade() {
+  post_install $1
+}
+
+post_remove() {
+  echo "
+    >>> Please remember to remove plugins from your init.vim file
+    >>> and from your plugin directory!
+  "
+}
+

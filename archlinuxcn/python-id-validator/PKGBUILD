@@ -2,9 +2,9 @@
 
 _pkgname=id-validator.py
 pkgname=python-id-validator
-pkgver=1.0.18
+pkgver=1.0.20
 pkgrel=1
-pkgdesc='中华人民共和国居民身份证、中华人民共和国港澳居民居住证以及中华人民共和国台湾居民居住证号码验证工具'
+pkgdesc='Validator tool for ID number in China (including mainland, Hongkong, Macao, and Taiwan)'
 arch=('any')
 url='https://github.com/jxlwqq/id-validator.py'
 license=('MIT')
@@ -15,7 +15,7 @@ checkdepends=(
   python-pytest
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/jxlwqq/id-validator.py/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('a8d0d3b98162f5dcb2542d08b731a9500f915e9866495e06a57fad12a16b8befa57cdb02834ed92a5b48a3e50667a00316e115447d5581551f86b4f9e2d83fa0')
+sha512sums=('c4cf8f0e1ad0658bafa9f01a9e48be4139c03bc30724d20e4fd596c7065a503753fcde373973c213461c5d5f11648ba6544f69257af39bcde1ec4418202c0010')
 
 build() {
   cd "${_pkgname}-${pkgver}"

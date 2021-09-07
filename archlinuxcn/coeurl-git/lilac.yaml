@@ -1,0 +1,27 @@
+#
+
+maintainers:
+  - github: yuyichao
+
+build_prefix: extra-x86_64
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: vcs
+  - source: alpm
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+    alpm: libevent
+    repo: core
+  - source: alpm
+    alpm: spdlog
+    repo: commuity
+    provided: libspdlog.so
+  - source: alpm
+    alpm: fmt
+    repo: extra
+    provided: libfmt.so
+  - source: manual
+    manual: 1

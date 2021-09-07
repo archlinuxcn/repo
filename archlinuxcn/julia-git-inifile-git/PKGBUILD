@@ -1,0 +1,27 @@
+pkgname=julia-git-inifile-git
+pkgver=0.5.0
+pkgrel=2
+pkgdesc="IniFile.jl"
+url="https://github.com/JuliaIO/IniFile.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-inifile)
+source=(git://github.com/JuliaIO/IniFile.jl
+        Project.toml)
+md5sums=('SKIP'
+         '2bf4c7b2e048ae24c8e72663ad510083')
+
+pkgver() {
+  cd IniFile.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd IniFile.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh IniFile "${pkgdir}" "${pkgname}" julia-git
+  cp -n ../Project.toml "${dest_dir}"
+}

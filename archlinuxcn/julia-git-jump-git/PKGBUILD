@@ -1,5 +1,5 @@
 pkgname=julia-git-jump-git
-pkgver=0.21.9.0.13.g66295bb31
+pkgver=0.21.10
 pkgrel=1
 pkgdesc="JuMP.jl"
 url="https://github.com/jump-dev/JuMP.jl"
@@ -15,6 +15,12 @@ pkgver() {
   cd JuMP.jl
 
   git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+prepare() {
+  cd JuMP.jl
+
+  find -iname '*.jl' -exec sed -i 's/IndicatorSet/Indicator/g' {} \;
 }
 
 package() {

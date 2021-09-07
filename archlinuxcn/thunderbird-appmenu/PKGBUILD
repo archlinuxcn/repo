@@ -12,8 +12,8 @@
 
 _pkgname=thunderbird
 pkgname=thunderbird-appmenu
-pkgver=91.0
-pkgrel=1
+pkgver=91.0.3
+pkgrel=3
 pkgdesc="Thunderbird from extra with appmenu patch"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -89,6 +89,7 @@ prepare() {
 }
 
 build() {
+export MOZ_REQUIRE_SIGNING= # https://bugzilla.mozilla.org/show_bug.cgi?id=1727113
   cd $_pkgname-$pkgver
   if [[ -n "${SOURCE_DATE_EPOCH}" ]]; then
     export MOZ_BUILD_DATE=$(date --date "@${SOURCE_DATE_EPOCH}" "+%Y%m%d%H%M%S")

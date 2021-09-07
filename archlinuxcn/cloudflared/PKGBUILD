@@ -1,22 +1,23 @@
 # Maintainer: George Rawlinson <george@rawlinson.net.nz>
 
 pkgname=cloudflared
-pkgver=2021.8.2
+pkgver=2021.8.7
 pkgrel=1
 pkgdesc="Argo Tunnel client"
 arch=('x86_64' 'armv7h' 'aarch64')
 url="https://github.com/cloudflare/cloudflared"
 license=('custom:cloudflared')
-depends=('glibc')
 makedepends=('go')
 conflicts=('cloudflared-bin')
 backup=("etc/$pkgname/config.yml")
-source=("$pkgname-$pkgver.tar.gz::https://github.com/cloudflare/cloudflared/archive/$pkgver.tar.gz"
-        "config.yml"
-        "$pkgname.service"
-        "sysusers.d.conf"
-        "tmpfiles.d.conf")
-b2sums=('7afe80c240fc12f081d35bcedd7360f3fc33d44113126cb03181eb54dfd9de1af9fc099c6947d8bf90576682e2a627c8b7e33e51b2a2c578e2a212e50bd86ae6'
+source=(
+  "$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz"
+  'config.yml'
+  'systemd.service'
+  'sysusers.conf'
+  'tmpfiles.conf'
+)
+b2sums=('ecc79abbb81cc763aacdc470b3232ee92a547071a2e3f725a1292aae45985cdc395d4af995b2960019d7cb91d9853f7480ee76867b958b5d56ef3bdf42ac3ea9'
         '887218db3b5e7cdbb90c86b60aac1597d70b59fccece18c8c5e6e2357d04aa219b2438436f23f913a0c8dc6eb425ef3e22901e28fd30e5130d17e414e67ec4af'
         '0fa4ac918b4c72e2b1a1bd36e025fdb6078364363cba167e6d91e7815c8bd6f5c4b412f0651d1a75991ef7e069da6e81917f22bd40ef87fd1ccd41171e64e0b2'
         '7a15fc73f02cc74e2cea55ba51632724bae16f140e07904a88daa3179ed320e9e6efa9a1901d8249fd1618a2a91f93384a93bfaba6eba6990457b7c2d2155f58'
@@ -24,6 +25,8 @@ b2sums=('7afe80c240fc12f081d35bcedd7360f3fc33d44113126cb03181eb54dfd9de1af9fc099
 
 prepare() {
   cd "$pkgname-$pkgver"
+
+  # create directory for build output
   mkdir build
 }
 
@@ -31,10 +34,11 @@ build() {
   cd "$pkgname-$pkgver"
 
   # define buildtime for use in man page & binary
-  local build_time="$(date --iso-8601=seconds --utc)"
+  local build_time="$(date -d@"$SOURCE_DATE_EPOCH" +%Y%m%d-%H:%M:%S)"
 
   # generate man page
-  sed -e "s/\${VERSION}/${pkgver}/; s/\${DATE}/${build_time}/" \
+  sed -e "s/\${VERSION}/${pkgver}/" \
+      -e "s/\${DATE}/${build_time}/" \
     cloudflared_man_template > "build/$pkgname.1"
 
   go build -v \
@@ -42,8 +46,11 @@ build() {
     -trimpath \
     -mod=vendor \
     -modcacherw \
-    -ldflags "-extldflags $LDFLAGS -X "main.Version=${pkgver}" -X "main.BuildTime=${build_time}"" \
-    -o build ./cmd/...
+    -ldflags "-extldflags ${LDFLAGS} \
+      -X main.Version=${pkgver} \
+      -X main.BuildTime=${build_time}" \
+    -o build \
+    ./cmd/...
 }
 
 check() {
@@ -52,10 +59,10 @@ check() {
 }
 
 package() {
-  # systemd files
-  install -vDm644 -t "$pkgdir/usr/lib/systemd/system" "$pkgname.service"
-  install -vDm644 sysusers.d.conf "$pkgdir/usr/lib/sysusers.d/$pkgname.conf"
-  install -vDm644 tmpfiles.d.conf "$pkgdir/usr/lib/tmpfiles.d/$pkgname.conf"
+  # systemd integration
+  install -vDm644 systemd.service "$pkgdir/usr/lib/systemd/system/$pkgname.service"
+  install -vDm644 sysusers.conf "$pkgdir/usr/lib/sysusers.d/$pkgname.conf"
+  install -vDm644 tmpfiles.conf "$pkgdir/usr/lib/tmpfiles.d/$pkgname.conf"
 
   # config
   install -vDm644 -t "$pkgdir/etc/$pkgname" config.yml

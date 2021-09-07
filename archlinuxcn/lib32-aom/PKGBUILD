@@ -2,7 +2,7 @@
 
 _basename=aom
 pkgname=lib32-aom
-pkgver=3.1.1
+pkgver=3.1.2
 pkgrel=1
 pkgdesc="Alliance for Open Media video codec (32-bit)"
 url="https://aomedia.org/"
@@ -10,7 +10,7 @@ arch=(x86_64)
 license=(BSD custom:PATENTS)
 depends=(lib32-glibc aom)
 makedepends=(cmake git ninja yasm)
-_commit=7fadc0e77130efb05f52979b0deaba9b6a1bba6d  # tags/v3.1.1^0
+_commit=ae2be8030200925895fa6e98bd274ffdb595cbf6 # tags/v3.1.2^0
 source=("git+https://aomedia.googlesource.com/aom#commit=$_commit")
 b2sums=('SKIP')
 
@@ -22,6 +22,9 @@ pkgver() {
 
 prepare() {
     cd $_basename
+
+    # https://bugs.archlinux.org/task/71800
+    git cherry-pick -n 31257f59a1df72cbbd1399efb780d13a0e433b16
 }
 
 build() {

@@ -1,0 +1,26 @@
+pkgname=julia-git-gr-git
+pkgver=0.59.0.0.1.g143a9c1
+pkgrel=1
+pkgdesc="GR.jl"
+url="https://github.com/jheinen/GR.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-gr)
+source=(git://github.com/jheinen/GR.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd GR.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd GR.jl
+
+  echo "import GR_jll" > deps/deps.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh GR "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,108 @@
+#!/usr/bin/python3
+
+import subprocess
+import os
+import pathlib
+import argparse
+import sys
+
+REG_FILE = r'''REGEDIT4
+
+[HKEY_CURRENT_USER\Control Panel\Desktop]
+"FontSmoothing"="2"
+"FontSmoothingOrientation"=dword:00000001
+"FontSmoothingType"=dword:00000001
+
+[HKEY_CURRENT_USER\Software\Wine\DllOverrides]
+"*riched20"="native,builtin"
+
+[HKEY_CURRENT_USER\Software\Wine\Fonts\Replacements]
+"微软雅黑"="文泉驿正黑"
+'''
+
+if os.isatty(1):
+  def error(msg):
+    print(msg, file=sys.stderr)
+
+  def need_install(env, prefix):
+    print('请下载微信安装程序并将文件路径使用 -i 参数传递给本脚本来安装。', file=sys.stderr)
+    sys.exit(1)
+
+else:
+  def error(msg):
+    subprocess.run(['zenity', '--error', f'--text={msg}'])
+
+  def need_install(env, prefix):
+    subprocess.run([
+      'zenity', '--info', '--title=需要先安装微信',
+      '--text=在下一步，请选择微信安装程序',
+    ])
+    file_chooser = subprocess.run([
+      'zenity', '--title=选择微信安装程序', '--file-selection', '--file-filter=*.exe',
+    ], capture_output = True, text = True,
+    )
+    if file_chooser.returncode == 0:
+      install(env, prefix, file_chooser.stdout.rstrip('\n'))
+
+def install(env, prefix, file):
+  if not os.path.exists(file):
+    error(f'文件 "{file}" 不存在')
+    sys.exit(1)
+
+  prefix.mkdir(parents=True, exist_ok=True)
+  subprocess.check_call([
+    'winetricks', 'sandbox', 'riched20',
+  ], env=env)
+
+  regfile = prefix / 'drive_c' / 'wechat.reg'
+  with regfile.open('w') as f:
+    f.write(REG_FILE)
+  subprocess.check_call([
+    'wine', 'regedit', r'C:\wechat.reg',
+  ], env=env)
+  regfile.unlink()
+
+  wechat_exe = prefix / 'drive_c' / 'WeChatSetup.exe'
+  if not wechat_exe.is_file():
+    wechat_exe.symlink_to(os.path.abspath(file))
+  subprocess.run(['wine', 'WeChatSetup.exe'], env=env, cwd=prefix / 'drive_c')
+  wechat_exe.unlink()
+
+if __name__ == '__main__':
+  parser = argparse.ArgumentParser(description='Wine WeChat')
+  parser.add_argument('-c', '--config', action='store_true',
+                      help='run winecfg')
+  parser.add_argument('-d', '--dir', action='store_true',
+                      help='open Wine prefix directory')
+  parser.add_argument('-i', '--install', type=str,
+                      help='install or update the WeChat program')
+  parser.add_argument('-p', '--profile', type=str,
+                      help='use alternative profile')
+  parser.add_argument('args', nargs='*',
+                      help='arguments for WeChat.exe')
+  args = parser.parse_args()
+
+  prefix = pathlib.Path.home() / '.local' / 'lib/wine-wechat' / (args.profile or 'default')
+  env = os.environ.copy()
+  env['WINEDLLOVERRIDES'] = 'winemenubuilder.exe=d'
+  env['WINEARCH'] = 'win32'
+  env['WINEPREFIX'] = str(prefix)
+  env['LANG'] = 'zh_CN.UTF-8'
+  exe_dir = prefix / 'drive_c/Program Files/Tencent/WeChat'
+
+  if args.install:
+    install(env, prefix, args.install)
+    sys.exit()
+
+  if args.config:
+    os.execvpe('winecfg', ['winecfg'], env)
+
+  if args.dir:
+    os.execvp('xdg-open', ['xdg-open', prefix])
+
+  if not (exe_dir / 'WeChat.exe').is_file():
+    need_install(env, prefix)
+    sys.exit(2)
+
+  os.chdir(exe_dir)
+  os.execvpe('wine', ['wine', 'WeChat.exe'] + args.args, env)

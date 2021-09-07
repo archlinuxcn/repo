@@ -5,7 +5,7 @@ pre_build: vcs_update
 post_build: git_pkgbuild_commit
 repo_depends:
   - lmdbxx
-  - mtxclient
+  - mtxclient-git
 
 update_on:
   - source: vcs
@@ -19,5 +19,8 @@ update_on:
     to_pattern: \1
     alpm: cmark
     repo: extra
+  - alias: alpm-lilac
+    alpm: mtxclient-git
+    provided: libmatrix_client.so
   - source: manual
     manual: 2

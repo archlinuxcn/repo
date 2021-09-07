@@ -1,6 +1,6 @@
 pkgname=julia-git-images-git
-pkgver=0.24.1.0.8.ge14a49f
-pkgrel=1
+pkgver=0.24.1.0.9.gf50f59b
+pkgrel=2
 pkgdesc="Images.jl"
 url="https://github.com/JuliaImages/Images.jl"
 arch=('any')
@@ -8,13 +8,21 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-images)
-source=(git://github.com/JuliaImages/Images.jl)
-md5sums=('SKIP')
+source=(git://github.com/JuliaImages/Images.jl
+        0001-Remove-restrict-signatures-that-are-moved-to-ImageAx.patch)
+md5sums=('SKIP'
+         '1d4ff8d18d374ef796dd126dd410d70a')
 
 pkgver() {
   cd Images.jl
 
   git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+prepare() {
+  cd Images.jl
+
+  patch -Np1 < ../0001-Remove-restrict-signatures-that-are-moved-to-ImageAx.patch
 }
 
 package() {

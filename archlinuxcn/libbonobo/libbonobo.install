@@ -1,7 +1,0 @@
-post_upgrade() {
-  ldconfig -r .
-  PID=`pidof bonobo-activation-server`
-  if [ ! -z "${PID}" ]; then
-    killall -HUP bonobo-activation-server 2>&1
-  fi
-}

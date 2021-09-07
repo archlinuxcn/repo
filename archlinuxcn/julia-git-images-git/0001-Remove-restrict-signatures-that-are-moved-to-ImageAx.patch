@@ -1,0 +1,47 @@
+From d55e5f5b467b25fd768c3ab91b801f2fb05bacde Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 1 Sep 2021 07:59:02 -0400
+Subject: [PATCH] Remove restrict signatures that are moved to ImageAxes and
+ ImageMetadata
+
+---
+ src/algorithms.jl | 23 -----------------------
+ 1 file changed, 23 deletions(-)
+
+diff --git a/src/algorithms.jl b/src/algorithms.jl
+index d6eebd8..661737c 100644
+--- a/src/algorithms.jl
++++ b/src/algorithms.jl
+@@ -433,29 +433,6 @@ Like `findlocalmaxima`, but returns the coordinates of the smallest elements.
+ findlocalminima(img::AbstractArray, region=coords_spatial(img), edges=true) =
+         findlocalextrema(img, region, edges, Base.Order.Reverse)
+ 
+-# restrict for AxisArray and ImageMeta
+-restrict(img::AxisArray, ::Tuple{}) = img
+-restrict(img::ImageMeta, ::Tuple{}) = img
+-
+-function restrict(img::ImageMeta, region::Dims)
+-    shareproperties(img, restrict(arraydata(img), region))
+-end
+-
+-function restrict(img::AxisArray{T,N}, region::Dims) where {T,N}
+-    inregion = falses(ndims(img))
+-    inregion[[region...]] .= true
+-    inregiont = (inregion...,)::NTuple{N,Bool}
+-    rdata = restrict(img.data, region)
+-    AxisArray(rdata, map(modax, AxisArrays.axes(img), axes(rdata), inregiont))
+-end
+-
+-# FIXME: this doesn't get inferred, but it should be (see issue #628)
+-function restrict(img::Union{AxisArray,ImageMetaAxis}, ::Type{Ax}) where Ax
+-    dim = axisdim(img, Ax)
+-    A = restrict(img.data, dim)
+-    AxisArray(A, replace_axis(modax(img[Ax], axes(A)[dim]), AxisArrays.axes(img)))
+-end
+-
+ replace_axis(newax, axs) = _replace_axis(newax, axnametype(newax), axs...)
+ @inline _replace_axis(newax, ::Type{Ax}, ax::Ax, axs...) where {Ax} = (newax, _replace_axis(newax, Ax, axs...)...)
+ @inline _replace_axis(newax, ::Type{Ax}, ax, axs...) where {Ax} = (ax, _replace_axis(newax, Ax, axs...)...)
+-- 
+2.33.0
+

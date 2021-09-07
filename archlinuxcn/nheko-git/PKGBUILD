@@ -2,8 +2,8 @@
 # Maintainer: Joseph Donofry <joe at joedonofry dot com>
 
 pkgname=nheko-git
-pkgver=0.8.2.r133.g57a9a1d0
-pkgrel=4
+pkgver=0.8.2.r534.g54723b06
+pkgrel=1
 pkgdesc="Desktop client for the Matrix protocol"
 arch=("i686" "x86_64")
 
@@ -12,7 +12,7 @@ license=("GPL3")
 
 depends=(
   lmdb qt5-base qt5-svg qt5-multimedia qt5-declarative qt5-quickcontrols2 qtkeychain-qt5
-  boost-libs openssl mtxclient libolm spdlog cmark
+  boost-libs openssl mtxclient-git libmatrix_client.so libolm spdlog cmark
   gst-plugins-base-libs gst-plugins-bad-libs libxcb xcb-util-wm hicolor-icon-theme
 )
 

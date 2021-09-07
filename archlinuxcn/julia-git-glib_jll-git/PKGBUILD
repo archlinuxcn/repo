@@ -1,0 +1,32 @@
+pkgname=julia-git-glib_jll-git
+pkgver=2.68.3+0
+pkgrel=3
+pkgdesc="Glib_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Glib_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git glib2)
+provides=(julia-git-glib_jll)
+source=(git://github.com/JuliaBinaryWrappers/Glib_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         'f009a8da7c4c77486daf2b6be7c8df99')
+
+pkgver() {
+  cd Glib_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd Glib_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Glib_jll ../jll.toml
+}
+
+package() {
+  cd Glib_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Glib_jll "${pkgdir}" "${pkgname}" julia-git
+}

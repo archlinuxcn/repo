@@ -3,7 +3,7 @@
 pkgbase=libjxl
 pkgname=('libjxl' 'libjxl-doc')
 pkgver=0.5
-pkgrel=4
+pkgrel=5
 pkgdesc='JPEG XL image format reference implementation'
 arch=('x86_64')
 url='https://jpeg.org/jpegxl/'
@@ -23,7 +23,7 @@ source=("git+https://github.com/libjxl/libjxl.git#tag=v${pkgver}"
         'git+https://github.com/Netflix/vmaf.git'
         'git+https://github.com/thorfdbg/difftest_ng.git'
         'git+https://github.com/google/highway.git'
-        '010-libjxl-jdk7-fix.patch'::'https://github.com/libjxl/libjxl/commit/76df97ea2d7e91ceecc778d7c098dc376209ee73.patch')
+        '010-libjxl-jdk7-fix.patch')
 sha256sums=('SKIP'
             'SKIP'
             'SKIP'
@@ -35,7 +35,7 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            '40e22d47f073b8ccc9382451449360e01afed96ce5d80c89ff82ae8babb96303')
+            '6f912699dc070d5d2353fdc7772222929f5f8c500094b414081a186302db2a28')
 
 prepare() {
     git -C libjxl submodule init

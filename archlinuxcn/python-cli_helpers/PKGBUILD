@@ -1,23 +1,23 @@
 _name=cli_helpers
 pkgname=python-cli_helpers
-pkgver=2.1.0
-pkgrel=2
+pkgver=2.2.0
+pkgrel=1
 pkgdesc="Helpers for building command-line apps"
 arch=(any)
 url="https://github.com/dbcli/cli_helpers"
 license=(BSD)
 depends=('python' 'python-terminaltables' 'python-tabulate' 'python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/cli_helpers-2.1.0.tar.gz")
-sha256sums=('dd6f164310f7d86fa3da1f82043a9c784e44a02ad49be932a80624261e56979b')
+makedepends=('python-pip')
+source=("https://files.pythonhosted.org/packages/py3/${_name::1}/$_name/cli_helpers-2.2.0-py3-none-any.whl")
+sha256sums=('3ed557793aa4ef5529c792e6a9c55f84ae798997d4a5107352219221023b4a81')
 
 build() {
-  cd "$srcdir/cli_helpers-2.1.0"
-  python3 setup.py build
+  true
 }
 
 package() {
-  cd "$srcdir/cli_helpers-2.1.0"
-  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  cd "$srcdir"
+  pip install 'cli_helpers-2.2.0-py3-none-any.whl' --root="$pkgdir" --no-deps --install-option="--optimize=1"
 
   # make sure we don't install any world-writable or root-readable-only files
   # we shouldn't need to fix ownership as we extract tarballs as a non-root user

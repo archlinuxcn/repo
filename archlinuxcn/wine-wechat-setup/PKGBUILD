@@ -1,0 +1,37 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+
+pkgname=wine-wechat-setup
+pkgver=1.1
+pkgrel=1
+pkgdesc='Setup and run WeChat Windows version with Wine (Chinese version)'
+url='https://weixin.qq.com/'
+arch=('any')
+license=('GPL3')
+replaces=(wine-wechat)
+conflicts=(wine-wechat)
+provides=(wine-wechat)
+depends=('libarchive' 'zstd' 'python' 'winetricks' 'zenity'
+        'wine' 'lib32-libldap' 'wine_gecko' 'lib32-libpulse')
+optdepends=('wine-for-wechat: get rid of those border shades'
+            'lib32-v4l-utils: for video chat')
+source=("wine-wechat.desktop"
+        "wine-wechat-cfg.desktop"
+        "wine-wechat-dir.desktop"
+        "wechat.png"
+        "wechat")
+install=wechat.install
+
+package() {
+  for name in "" "-cfg" "-dir"; do
+    install -Dm 644 "wine-wechat${name}.desktop" "${pkgdir}/usr/share/applications/wine-wechat${name}.desktop"
+  done
+  install -Dm 644 "wechat.png" "${pkgdir}/usr/share/pixmaps/wechat.png"
+  install -Dm 755 "wechat" "${pkgdir}/usr/bin/wechat"
+
+}
+
+sha1sums=('fd20b287ada368afb0ec620635999fbb206814da'
+          'c791d6514125400c424b610188c4d105832eda80'
+          '48a3fcc818d0db6c4a4f2a200d62300e9648bd80'
+          'a6a9c232ab8f1188b7b583a9b81e98371af95ae9'
+          '7b54894c5ce580bbc1a858a6e3240a111f09f30e')
