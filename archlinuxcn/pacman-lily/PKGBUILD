@@ -2,8 +2,8 @@
 # Maintainer: 
 
 pkgname=pacman-lily
-pkgver=6.0.0
-pkgrel=7
+pkgver=6.0.1
+pkgrel=1
 pkgdesc="A library-based package manager with dependency support (no disabling-server-on-error)"
 arch=('x86_64')
 url="https://www.archlinux.org/pacman/"
@@ -23,24 +23,18 @@ validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@a
 source=(pacman.patch
         pacman-syncdb
         https://sources.archlinux.org/other/pacman/pacman-$pkgver.tar.xz{,.sig}
-        pacman-6.0.0-fix-404-download.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/3401f9e142ac4c701cd98c52618cb13164f2146b.patch
-        pacman-6.0.0-fix-key-import-double-free.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/542910d684191eb7f25ddc5d3d8fe3060028a267.patch
         pacman.conf
         makepkg.conf)
 sha256sums=(61e0b85dadb341ea14e5aa28b0b1edf98871bc3dffd1083fb5775fc28a65e113
             207d5cee261bba18e650bbd2c249ffd8fe9c1dbd7de6b241d8bf011848faa70b
-            '004448085a7747bdc7a0a4dd5d1fb7556c6b890111a06e029ab088f9905d4808'
+            '0db61456e56aa49e260e891c0b025be210319e62b15521f29d3e93b00d3bf731'
             'SKIP'
-            'f4c1c39b43b52ba19b656b32913688b81085c73685afe32d2018dbb695d5a1e6'
-            'defdf1686d65fc896c19f41d1bc166912fccf9134b72e50da3b24538366cecdf'
             '606e55f06c297d2b508bc4438890b229a1abaa68b0374a2d7f94c8e7be6792d7'
             '89d1dd7e7064243754efc1993a8843a400afd5d7c15070787985376ec346d6d9')
 
 
 prepare() {
   cd "pacman-$pkgver"
-  patch -p1 -i "$srcdir"/pacman-6.0.0-fix-404-download.patch
-  patch -p1 -i "$srcdir"/pacman-6.0.0-fix-key-import-double-free.patch
 }
 
 build() {
