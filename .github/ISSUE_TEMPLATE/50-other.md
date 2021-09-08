@@ -1,5 +1,5 @@
 ---
-name: 其它
+name: 其它问题
 about: other
 
 ---
