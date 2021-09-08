@@ -64,7 +64,7 @@ def install(env, prefix, file):
 
   wechat_exe = prefix / 'drive_c' / 'WeChatSetup.exe'
   if not wechat_exe.is_file():
-    wechat_exe.symlink_to(file)
+    wechat_exe.symlink_to(os.path.abspath(file))
   subprocess.run(['wine', 'WeChatSetup.exe'], env=env, cwd=prefix / 'drive_c')
   wechat_exe.unlink()
 

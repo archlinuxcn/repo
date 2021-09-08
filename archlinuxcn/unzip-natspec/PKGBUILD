@@ -5,15 +5,15 @@
 
 pkgname=unzip-natspec
 pkgver=6.0
-pkgrel=6.1
+pkgrel=7
 pkgdesc="Unpacks .zip archives with non-latin filenames, using libnatspec patch from AltLinux."
 arch=('i686' 'x86_64' 'armv7h' 'armv6h')
-url="http://www.info-zip.org/"
+url="https://www.info-zip.org/"
 license=('custom')
 depends=('bzip2' 'bash' 'libnatspec')
 conflicts=('unzip')
 provides=('unzip')
-source=('http://downloads.sourceforge.net/infozip/unzip60.tar.gz' 
+source=('https://downloads.sourceforge.net/infozip/unzip60.tar.gz' 
  'unzip-6.0-alt-natspec.patch'
  'overflow-fsize.patch'
  'cve20149636.patch'
@@ -37,7 +37,7 @@ build() {
   patch -p1 -i ${srcdir}/empty-input.patch || return 1 # FS#46955
   patch -p1 -i ${srcdir}/csiz-underflow.patch || return 1 # FS#46955
   patch -p1 -i ${srcdir}/nextbyte-overflow.patch || return 1 # FS#46955
-  export CFLAGS="$CFLAGS -D_FILE_OFFSET_BITS=64 -DACORN_FTYPE_NFS \
+  export CFLAGS="${CFLAGS//-Werror=format-security/} -D_FILE_OFFSET_BITS=64 -DACORN_FTYPE_NFS \
   -DWILD_STOP_AT_DIR -DLARGE_FILE_SUPPORT -DUNICODE_SUPPORT \
   -DUNICODE_WCHAR -DUTF8_MAYBE_NATIVE -DNO_LCHMOD -DDATE_FORMAT=DF_YMD \
   -DUSE_BZIP2 -DNATIVE -DNOMEMCPY -DNO_SETLOCALE"

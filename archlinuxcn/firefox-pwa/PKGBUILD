@@ -2,10 +2,15 @@
 # Maintainer: Peter Cai <peter at typeblog dot net>
 # Contributor: TheFool <rn6l05d28@relay.firefox.com>
 
+# This file is automatically updated/generated on every package release
+# Any changes made directly to the AUR repository will be overwritten
+# Please contribute changes to the main GitHub repository instead
+# See: https://github.com/filips123/FirefoxPWA/blob/main/native/packages/aur/firefox-pwa/PKGBUILD
+
 _pkgname="FirefoxPWA"
 pkgname="firefox-pwa"
 pkgdesc="A tool to install, manage and use Progressive Web Apps (PWAs) in Mozilla Firefox (native component)"
-pkgver=1.0.0
+pkgver="1.1.0"
 pkgrel=1
 url="https://github.com/filips123/FirefoxPWA"
 arch=("x86_64" "i686")
@@ -16,8 +21,8 @@ optdepends=("firefox: Support for browser extension")
 install=package.install
 
 source=("$pkgname-$pkgver.tar.gz::https://github.com/filips123/FirefoxPWA/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('47cb03a8f5773da235e360655a4ef93203d7d3ed760ebf6013692ec20239c2c1')
-b2sums=('9da9e7dc6508a27671f446ec1ba2c570d64e27151c0aeafb1094ab1b234a5aade8fc98073d639e9e3fd18babb23d7c1f833c426733e31e9ee3d1992076b0208e')
+sha256sums=('e3a18c742cc44d0ffde698753182733da75bfe9a2e331efddeb133c479108328')
+b2sums=('379263387c9ebefe44173d3159ebc1ec31c5363437e51d0001aee8ad7f97745a3ed901f825829ce1e6ed2f143ef4ae352e88e04b038c9eb84fe0693e6af8f31c')
 
 prepare() {
     cd $srcdir/$_pkgname-$pkgver/native/

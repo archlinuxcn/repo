@@ -1,48 +1,31 @@
 # Contributor: Zeph <zeph33@gmail.com>
 # Maintainer: Zeph <zeph33@gmail.com>
 # https://gitlab.manjaro.org/packages/extra/pamac
-ENABLE_FLATPAK=0
-ENABLE_SNAPD=0
 
 pkgname=pamac-aur
-pkgver=10.1.2
-pkgrel=1
+pkgver=10.1.3
+pkgrel=2
 _pkgfixver=$pkgver
 
-_commit='bd6b8e8cf727cf94a1c9f4467a9157d94cad781f'
-sha256sums=('9f172520c904ed79dd831f84b96dbe28a96d132391889fbf8207c98589221921'
-            'e9fe7c14d15cbce1d337749cf317e4460bce485b102b5c228b7efa479998d4fa'
-            'c2b943318a01ba1f3dabbf32e48e6a6f4b4b774e167ab86c6bfee31aa4a3424c')
+_commit='b7837bb4fd517e0288e744af0ef773b325128196'
+sha256sums=('cf5304bdab2d9f2682a21ee918b44de4b148eb107c440cd382855c0d6954113e')
 
 pkgdesc="A Gtk3 frontend, Package Manager based on libalpm with AUR and Appstream support"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
-url="https://gitlab.manjaro.org/applications/pamac"
+url="https://gitlab.manjaro.org/applications"
 license=('GPL3')
 depends=('glib2>=2.42' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3>=0.38' 'gtk3>=3.22'
-         'libnotify' 'desktop-file-utils' 'pacman>=5.2' 'gnutls>=3.4' 'git'
+         'libnotify' 'desktop-file-utils' 'libpamac-aur' 'gnutls>=3.4' 'git'
          'appstream-glib>=0.7.18-1' 'archlinux-appstream-data' 'libhandy' 'git')
 
 optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
             'lxsession: needed for authentification in Xfce, LXDE etc.')
 makedepends=('gettext' 'itstool' 'vala>=0.46' 'gtk3>=3.22' 'asciidoc' 'meson' 'ninja' 'gobject-introspection' 'libappindicator-gtk3' 'xorgproto')
-backup=('etc/pamac.conf')
 conflicts=('pamac' 'pamac-tray-appindicator')
 provides=("pamac=$pkgver-$pkgrel")
 options=(!emptydirs !strip)
-
 install=pamac.install
-source=("pamac-$pkgver-$pkgrel.tar.gz::$url/-/archive/$_commit/pamac-$_commit.tar.gz"
-        fix-appstream-data.sh fix-appstream-data.hook)
-define_meson=''
-if [ "${ENABLE_FLATPAK}" = 1 ]; then
-  depends+=('flatpak')
-  define_meson+=' -Denable-flatpak=true'
-fi
-
-if [ "${ENABLE_SNAPD}" = 1 ]; then
-  depends+=('snapd' 'snapd-glib')
-  define_meson+=' -Denable-snap=true'
-fi
+source=("pamac-$pkgver-$pkgrel.tar.gz::$url/pamac/-/archive/$_commit/pamac-$_commit.tar.gz")
 
 prepare() {
   cd "$srcdir/pamac-$_commit"
@@ -57,18 +40,13 @@ build() {
   meson --buildtype=release \
         --prefix=/usr \
         -Denable-appindicator=true \
-        --sysconfdir=/etc $define_meson
-  # build
+        --sysconfdir=/etc
   ninja
 }
 
 package() {
   cd "$srcdir/pamac-$_commit/builddir"
-
   DESTDIR="$pkgdir" ninja install
-  # cp -r "$srcdir/pamac-$_commit/data/gnome-shell/pamac-updates@manjaro.org" "$pkgdir/usr/share/gnome-shell/extensions"
-  # fix appstream issue
-  install -Dm644 "$srcdir/fix-appstream-data.hook" "$pkgdir/etc/pacman.d/hooks/fix-appstream-data.hook"
-  install -Dm755 "$srcdir/fix-appstream-data.sh" "$pkgdir/etc/pacman.d/hooks.bin/fix-appstream-data.sh"  
+  cp -r "$srcdir/pamac-$_commit/data/gnome-shell/pamac-updates@manjaro.org" "$pkgdir/usr/share/gnome-shell/extensions"
 }
 # vim:set ts=2 sw=2 et:
