@@ -2,7 +2,7 @@
 # Maintainer: Eric Bélanger <eric@archlinux.org>
 
 pkgname=wget-lily
-pkgver=1.21.1
+pkgver=1.21.2
 pkgrel=1
 pkgdesc='Network utility to retrieve files from the Web'
 url='https://www.gnu.org/software/wget/wget.html'
@@ -16,9 +16,9 @@ conflicts=('wget')
 provides=("wget=$pkgver")
 backup=('etc/wgetrc')
 source=(https://ftp.gnu.org/gnu/wget/wget-${pkgver}.tar.lz{,.sig} wget.patch)
-sha256sums=('db9bbe5347e6faa06fc78805eeb808b268979455ead9003a608569c9d4fc90ad'
+sha256sums=('1727a330a86acacb3e57615ce268f5f29978bf7adec4abe6a30d370207bc91b3'
             'SKIP' aa28cf8532f6b7cc1fe689eb253b0453102990eb725a6583704ca4f3e665c9b0)
-b2sums=('d3b7bb3a566ebefc6a7df3cfd7e78b5996aa7b52fba219666cbbe8acf82d41985f19a32c204d11efc9a0a86f91c039955a2a3d7693ccd315cccb36e85bd3119e'
+b2sums=('9141b27f2db587bbd34cb97ecf4a6179e564817067b45c8168390cf1548c1a18f71723247d82b11f2edf3981a9b9f0d2097afe5d56397e033b0a86adae9482b1'
         'SKIP' c6a292c1be5606c007d1dcd25f02b3760ac98e86f2c1de30b50847b65c5ecfdb5cd89a482ab1e6a5b5978d38057c21d671b72ec45f10f6e59c5596519cecdf2e)
 validpgpkeys=(
   'AC404C1C0BF735C63FF4D562263D6DF2E163E1EA' # Giuseppe Scrivano <gscrivano@gnu.org>
