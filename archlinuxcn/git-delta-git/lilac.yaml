@@ -3,12 +3,9 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['PrimaMateria'])
-
-post_build: aur_post_build
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: aur
-    aur: git-delta-git
   - source: github
     github: dandavison/delta

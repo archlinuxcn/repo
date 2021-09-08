@@ -1,37 +1,37 @@
-# Maintainer: Matus Benko <matus.benko@gmail.com>
+# Maintainer: zjuyk <ownbyzjuyk@gmail.com>
 
 pkgname=git-delta-git
-_pkgname=delta
-pkgver=r.1520.fb0d809
+pkgver=0.8.4.20210902
 pkgrel=1
 pkgdesc="A syntax-highlighting pager for git"
 arch=('any')
 url="https://github.com/dandavison/delta"
-license=('custom')
-depends=()
-makedepends=('git' 'rust')
-provides=('delta')
-source=(git+https://github.com/dandavison/$_pkgname.git)
+license=('MIT')
+makedepends=('git' 'rust' 'cargo')
+provides=(git-delta=$pkgver)
+source=(git+$url)
 md5sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/$_pkgname"
-  printf "r.%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  cd delta
+  echo $(grep -oPm1 '(?<=^version = ")[^"]+' Cargo.toml).$(TZ=UTC git log -1 --pretty='%cd' --date=short-local | tr -d '-')
 }
 
 build() {
-  cd "$srcdir/$_pkgname"
-  cargo build --release --locked
+  cd delta
+  sed -i '/profile.release/alto = true' Cargo.toml
+  cargo build --release
+  git checkout Cargo.toml
 }
 
 check() {
-  cd "$srcdir/$_pkgname"
+  cd delta
   cargo test --release --locked
 }
 
 package() {
-  cd "$srcdir/$_pkgname"
+  cd delta
 
-  install -Dm755 "target/release/$_pkgname" -t "$pkgdir/usr/bin"
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm755 "target/release/delta" "$pkgdir/usr/bin/delta"
+  install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
