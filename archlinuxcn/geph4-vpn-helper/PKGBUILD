@@ -1,7 +1,7 @@
 # Maintainer: Dct Mei <dctxmei@yandex.com>
 
 pkgname=geph4-vpn-helper
-pkgver=0.1.4
+pkgver=0.1.5
 pkgrel=1
 pkgdesc="A command-line Geph4 toolset"
 arch=('x86_64')
@@ -13,7 +13,7 @@ makedepends=('rust')
 conflicts=('geph4-vpn-helper-git')
 source=("${pkgname}-${pkgver}.tar.gz::https://static.crates.io/crates/${pkgname}/${pkgname}-${pkgver}.crate"
         "geph4-vpn-helper.service")
-sha256sums=('8e1571f1e54925f8e89ad14fdbda824f34d253b7e43eb5a83644aa6f5198613e'
+sha256sums=('e3a0383ea3deffe524b8b1204dde0fb48fc9e9c02f2760e9a7e51ac0b3cd413e'
             'ae990333a1eebd5d5bb57ebd4a930db84d08a2c7db541d349de119280473e043')
 
 build() {
