@@ -15,6 +15,7 @@ git push
   osc commit -m "$ver_msg"
 )
 
+sleep 30m
 [ -e thunderbird-appmenu-bin ] || git clone ssh://aur@aur.archlinux.org/thunderbird-appmenu-bin.git
 cd thunderbird-appmenu-bin
 sed "s/^pkgver=.*/pkgver=${ver}/g" -i PKGBUILD
