@@ -1,37 +1,33 @@
 # Maintainer: zjuyk <ownbyzjuyk@gmail.com>
 
 pkgname=git-delta-git
+_pkgname=delta
 pkgver=0.8.4.20210902
-pkgrel=1
+pkgrel=2
 pkgdesc="A syntax-highlighting pager for git"
 arch=('any')
 url="https://github.com/dandavison/delta"
 license=('MIT')
-makedepends=('git' 'rust' 'cargo')
-provides=(git-delta=$pkgver)
+makedepends=('git' 'rust')
+provides=(git-delta)
 source=(git+$url)
 md5sums=('SKIP')
 
 pkgver() {
-  cd delta
+  cd "$srcdir/$_pkgname"
   echo $(grep -oPm1 '(?<=^version = ")[^"]+' Cargo.toml).$(TZ=UTC git log -1 --pretty='%cd' --date=short-local | tr -d '-')
 }
 
 build() {
-  cd delta
+  cd "$srcdir/$_pkgname"
   sed -i '/profile.release/alto = true' Cargo.toml
   cargo build --release
   git checkout Cargo.toml
 }
 
-check() {
-  cd delta
-  cargo test --release --locked
-}
-
 package() {
-  cd delta
+  cd "$srcdir/$_pkgname"
 
-  install -Dm755 "target/release/delta" "$pkgdir/usr/bin/delta"
+  install -Dm755 "target/release/$_pkgname" -t "$pkgdir/usr/bin"
   install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
