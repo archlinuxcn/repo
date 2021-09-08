@@ -32,7 +32,7 @@ _TB_LANGUAGE_="@PACKAGE_LANGUAGE@"
 _TB_ARCH_='@PACKAGE_ARCH@'
 
 # other constants and variables
-_TB_HOME_DIR_=~/".${_TB_PKGNAME_}"
+_TB_HOME_DIR_=~/".local/opt/${_TB_PKGNAME_}"
 _TB_REFRESH_=0
 
 
@@ -64,12 +64,13 @@ _compare_ver_() {
 
 _refresh_local_() {
 
+	local CACHE_DIR=~/".cache"
 	local KEEP_DIR="${_TB_APP_DIR_}/Browser/TorBrowser/Data/Browser"
-	local KEPT_DIR=~/".${_TB_PKGNAME_}-tmpdata"
+	local KEPT_DIR="${CACHE_DIR}/tor-browser-tmpdata"
 	local DIR_IS_KEPT=0
 
 	if [[ -d "${KEEP_DIR}" ]]; then
-		[[ -d "${KEPT_DIR}" ]] && rm -rf "${KEPT_DIR}"
+		[[ -d "${KEPT_DIR}" ]] && rm -rf "${KEPT_DIR}" || mkdir -p "${CACHE_DIR}"
 		mv "${KEEP_DIR}" "${KEPT_DIR}"
 		echo "${0}: Preserving files in ${KEPT_DIR}/." >> "${_TB_LOG_FILE_}"
 		DIR_IS_KEPT=1

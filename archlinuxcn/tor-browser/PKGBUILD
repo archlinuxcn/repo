@@ -17,7 +17,7 @@
 
 
 pkgname='tor-browser'
-pkgver='10.5.5'
+pkgver='10.5.6'
 pkgrel='1'
 pkgdesc='Tor Browser Bundle: anonymous browsing using Firefox and Tor (international PKGBUILD)'
 url='https://www.torproject.org/projects/torbrowser.html'
@@ -73,7 +73,9 @@ validpgpkeys=('EF6E286DDA85EA2A4BA7DE684E2C6E8793298290')
 # Syntax: _dist_checksum 'linux32'/'linux64'
 _dist_checksum() {
 
-	curl --silent --fail "${_urlbase}/sha256sums-signed-build.txt" | grep "${1}-${pkgver}_${_language}.tar.xz\$" | cut -d ' ' -f1
+	(curl --silent --fail "${_urlbase}/sha256sums-signed-build.txt" || \
+		curl --silent --fail "${_urlbase}/sha256sums-unsigned-build.txt") | \
+		grep "${1}-${pkgver}_${_language}.tar.xz\$" | cut -d ' ' -f1
 
 }
 
@@ -94,7 +96,7 @@ source=("${pkgname}.desktop.in"
 # with each release, everything is done automatically! Leave them like this!  #
 ###############################################################################
 sha256sums=('0b0614d04d55ac3748775fd34cb6c1f244fd05b5a16cc1e3ae70d887f7eedbc6'
-            '8a6e0945571c332c1fc8b1cef11d15f699a752da2bb403bd0b65ee44821cc643'
+            'c7286fb34405fd58b5f3174c6c0b8d59190769a2a466d280c32af18075b30115'
             'f25ccf68b47f5eb14c6fec0664c74f30ea9c6c58d42fc6abac3b64670aaa3152'
             '7b28b5dbe8ad573bb46e61b4d542b33e01ca240825ca640b4893fee6203b021f')
 sha256sums_i686=("$(_dist_checksum "${_tag_i686}")"
