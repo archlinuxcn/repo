@@ -1,0 +1,14 @@
+diff -upr p7zip-17.04.orig/install.sh p7zip-17.04/install.sh
+--- p7zip-17.04.orig/install.sh	2021-04-04 06:11:06.000000000 +0300
++++ p7zip-17.04/install.sh	2021-09-08 06:08:22.977304060 +0300
+@@ -159,10 +159,6 @@ else
+    chmod 644 "${DEST_DIR}${DEST_MAN}/man1/7zr.1"
+ fi
+ 
+-gzip "${DEST_DIR}${DEST_MAN}/man1/7z.1"
+-gzip "${DEST_DIR}${DEST_MAN}/man1/7za.1"
+-gzip "${DEST_DIR}${DEST_MAN}/man1/7zr.1"
+-
+ if [ -f README ]
+ then
+   echo "- installing ${DEST_DIR}${DEST_SHARE_DOC}/README"

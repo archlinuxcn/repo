@@ -9,8 +9,8 @@
 pkgname=p7zip-natspec
 _pkgname=p7zip
 pkgver=17.04
-pkgrel=1
-_upstream_pkgrel=1
+pkgrel=2
+_upstream_pkgrel=3
 pkgdesc="Command-line file archiver with high compression ratio, based on libnatspec patch from ubuntu zip-i18n PPA (https://launchpad.net/~frol/+archive/zip-i18n)."
 arch=('x86_64')
 url="https://github.com/jinfeihan57/p7zip"
@@ -19,12 +19,17 @@ depends=('gcc-libs' 'sh' 'libnatspec')
 conflicts=('p7zip')
 provides=('p7zip')
 source=(https://github.com/jinfeihan57/p7zip/archive/v$pkgver/$_pkgname-v$pkgver.tar.gz
-        natspec.patch)
+        natspec.patch
+        do-not-gzip-man-pages.patch)
 sha256sums=('ea029a2e21d2d6ad0a156f6679bd66836204aa78148a4c5e498fe682e77127ef'
-            '8412de795faf1abafc5303458699f1621e4900ef854b733c7c409385d78e11ee')
+            '8412de795faf1abafc5303458699f1621e4900ef854b733c7c409385d78e11ee'
+            '2179e67764eb46cb414ce9b5c978a532a6499617a6a685deb323b6da122aba00')
 
 prepare() {
   cd $_pkgname-$pkgver
+
+  # Leave man page compression to makepkg to maintain reproducibility
+  patch -Np1 -i ../do-not-gzip-man-pages.patch
 
   patch -p1 < ../natspec.patch
 }
