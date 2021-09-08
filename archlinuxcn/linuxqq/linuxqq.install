@@ -1,6 +1,0 @@
-post_install() {
-    echo "!!! ============================ WARNING ============================ !!!"
-    echo "According to https://aur.archlinux.org/packages/linuxqq#comment-786745"
-    echo "NOTE: It was found that linuxqq called open(2) on dotfiles in \$HOME with"
-    echo "O_NOATIME. it is unknown if read(2) was also called. BE CAREFUL!"
-}
