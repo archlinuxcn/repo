@@ -14,14 +14,11 @@ update_on:
     from_pattern: ^(\d+\.\d+)\..*
     to_pattern: \1
     alpm: libevent
-    repo: core
   - source: alpm
     alpm: spdlog
-    repo: commuity
     provided: libspdlog.so
   - source: alpm
     alpm: fmt
-    repo: extra
     provided: libfmt.so
   - source: manual
     manual: 1
