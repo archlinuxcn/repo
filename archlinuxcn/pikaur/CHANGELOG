@@ -1806,3 +1806,25 @@ Mon Jun 7 18:33:31 2021 +0200
     Notable fixes:
      2021-05-31 f70e6f6 actionless fix(install_info_fetcher: get_info_from_pkgbuild): support manually package selection/--ignore (fixes #555)
      2021-04-29 544b07c actionless feat(prompt: retry_interactive_command): dont use pikspect with --noconfirm as it not interactive anyway (fixes #556)
+
+
+Thu Sep 9 00:12:59 2021 +0200
+-------------------------------------------------
+1.8             Release 1.8
+    
+    Notable changes:
+     2021-09-04 849bc4f actionless fix(pikspect: nested_terminal): check stdin stream is tty before doing anything with it
+     2021-09-04 8adcec4 actionless fix(pikspect): init tty_opened property
+     2021-08-26 f7f49ff actionless chore(pikspect: questions: proceed): add 'Proceed with installation?'
+     2021-08-26 839a756 actionless fix(pikspect): apply the same tty wrapper as for prompt (for handling tty inside pipe)
+     2021-08-25 18b21dc actionless fix(prompt: get_input): open /dev/tty manually when under pipe (fixes #587)
+     2021-07-28 48ba71d actionless fix(args): -i/--info is countable arg
+     2021-07-15 73dc63c Bundy01 chore(locale): update ES,FR translations (#580)
+     2021-07-13 3d45bd2 Drommer chore(locale): update ru.po (#579)
+     2021-06-30 7700162 actionless fix(version: get_common_version): for devel updates hardcode diff weight (for sorting) to always be the same
+     2021-06-24 773554a actionless feat(aur_deps: find_dep_graph): also check provided pkg names
+     2021-06-23 161924d actionless feat(install_cli: aur_pkg_not_found_prompt): make it more clear about which pkg prompt is asking about
+     2021-06-23 9bcb02d actionless feat(aur_deps: handle_not_found_aur_pkgs): print full dependency 'graph' instead of only directly dependant package (re: #576)
+     2021-06-12 0ec97d0 actionless fix(info_cli): columns alignment in more languages
+     2021-06-12 772885f actionless fix(info_cli): correctly highlight 'None' in any language supported by pacman
+     2021-06-12 397cd36 actionless feat(args, info_cli, main): support -Sy and -Si together; imprve handling of unsupported pacman commands when using pikaur-specific args (fixes #574)
