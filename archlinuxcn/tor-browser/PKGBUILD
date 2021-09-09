@@ -18,12 +18,12 @@
 
 pkgname='tor-browser'
 pkgver='10.5.6'
-pkgrel='1'
+pkgrel=2
 pkgdesc='Tor Browser Bundle: anonymous browsing using Firefox and Tor (international PKGBUILD)'
 url='https://www.torproject.org/projects/torbrowser.html'
 arch=('i686' 'x86_64')
 license=('GPL')
-depends=('libxt' 'startup-notification' 'mime-types' 'dbus-glib' 
+depends=('libxt' 'startup-notification' 'mime-types' 'dbus-glib' 'bash'
 	'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
 	'libvpx' 'icu' 'libevent' 'nss' 'hunspell' 'sqlite')
 optdepends=('zenity: simple dialog boxes'
@@ -96,7 +96,7 @@ source=("${pkgname}.desktop.in"
 # with each release, everything is done automatically! Leave them like this!  #
 ###############################################################################
 sha256sums=('0b0614d04d55ac3748775fd34cb6c1f244fd05b5a16cc1e3ae70d887f7eedbc6'
-            'c7286fb34405fd58b5f3174c6c0b8d59190769a2a466d280c32af18075b30115'
+            '8e171f7ef77058648a88d6b2683db458b217e47597a7ec9232a9505766916cca'
             'f25ccf68b47f5eb14c6fec0664c74f30ea9c6c58d42fc6abac3b64670aaa3152'
             '7b28b5dbe8ad573bb46e61b4d542b33e01ca240825ca640b4893fee6203b021f')
 sha256sums_i686=("$(_dist_checksum "${_tag_i686}")"
@@ -157,7 +157,7 @@ package() {
 	sed "${_sed_subst}" "${pkgname}.desktop.in" > \
 		"${pkgdir}/usr/share/applications/${pkgname}.desktop"
 
-	install -Dm 644 "${pkgname}-${_archstr}-${pkgver}_${_language}.tar.xz" \
+	install -Dm 444 "${pkgname}-${_archstr}-${pkgver}_${_language}.tar.xz" \
 		"${pkgdir}/opt/${pkgname}/${pkgname}-${_archstr}-${pkgver}_${_language}.tar.xz"
 
 }
