@@ -2,7 +2,7 @@
 
 pkgname=ariang-allinone
 pkgver=1.2.2
-pkgrel=1
+pkgrel=2
 pkgdesc="A modern web frontend making aria2 easier to use (all-in-one version)"
 arch=('any')
 url="https://github.com/mayswind/AriaNg"
@@ -13,7 +13,7 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz"
         "${pkgname}.desktop"
         "${pkgname}.sh")
 sha256sums=('c4a6eaa009bd7dc746deacd1b74171c2fb02c6315664205abe8e5631cde5b913'
-            '37ddfc79173070226c053a6e4efcae5113162e152a3d472ceb2408b886311a5a'
+            'f39fe16d7a1c94179917158716acf54d5d62e77be6827ccfc0daa4e45d6f8d48'
             'c6c617a9bc32885b8f89c8b7120b67f98f6df52e141db6cfd24ffcd89435ec6a')
 
 build() {
