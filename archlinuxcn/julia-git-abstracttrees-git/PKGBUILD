@@ -1,0 +1,24 @@
+pkgname=julia-git-abstracttrees-git
+pkgver=0.3.4.0.34.g087ce85
+pkgrel=1
+pkgdesc="AbstractTrees.jl"
+url="https://github.com/JuliaCollections/AbstractTrees.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-abstracttrees)
+source=(git://github.com/JuliaCollections/AbstractTrees.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd AbstractTrees.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd AbstractTrees.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh AbstractTrees "${pkgdir}" "${pkgname}" julia-git
+}
