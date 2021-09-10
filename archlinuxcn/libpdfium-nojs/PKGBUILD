@@ -1,7 +1,7 @@
 # Maintainer: Felix Kauselmann <licorn@gmail.com>
 
 pkgname=libpdfium-nojs
-pkgver=4515.r0.dab1161c86
+pkgver=4577.r0.60a7195a9b
 pkgrel=1
 pkgdesc="Open-source PDF rendering engine."
 arch=('x86_64')
@@ -49,6 +49,12 @@ _prepare() {
 
   # git checkout "chromium/$(curl https://omahaproxy.appspot.com/linux?channel=beta | cut -d'.' -f 3)"
   # git checkout "chromium/$(curl https://omahaproxy.appspot.com/linux?channel=dev | cut -d'.' -f 3)"
+
+  # Fix missing string headers for GCC + libstdcc compilation, but only for affected version
+  if [ `git rev-parse --abbrev-ref HEAD` == 'chromium/4577' ]
+  then
+      git cherry-pick -n 7a6289c
+  fi
 
   # Extract build repo revision needed from DEPS file and do a checkout
   cd "$srcdir/pdfium/build"
