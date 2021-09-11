@@ -12,3 +12,99 @@
  
  # Header directory for the running kernel
  ifdef LINUXINCLUDE
+From 9fda02bce13527ce94a95df1a98fb6188dea22b8 Mon Sep 17 00:00:00 2001
+From: Michal Kubecek <mkubecek@suse.cz>
+Date: Wed, 30 Jun 2021 11:05:16 +0200
+Subject: [PATCH] vmmon: fix task_struct::state access patterns
+
+Mainline commit 2f064a59a11f ("sched: Change task_struct::state") in
+5.14-rc1 finishes a series fixing racy access patterns to task state and
+renames task_struct::state to __state so that code old code acessing it
+directly fails to build.
+
+Two of these in HostIF_SemaphoreWait() can be rewritten into calls to
+set_current_state() unconditionally (second one may do with
+__set_current_state() but I don't feel confident enough about that).
+There are also two places where vmmon code reads task_struct::state;
+provide a compat accessor using READ_ONCE() and use it instead of
+a direct read. To avoid kernel version check, check presence of
+get_current_state() macro introduced in the same commit as state member
+rename.
+---
+ vmmon-only/include/compat_sched.h | 15 +++++++++++++++
+ vmmon-only/linux/hostif.c         | 10 ++++++----
+ 2 files changed, 21 insertions(+), 4 deletions(-)
+
+diff --git a/vmmon-only/include/compat_sched.h b/vmmon-only/include/compat_sched.h
+index 3f3304b..72078e0 100644
+--- a/vmmon-only/include/compat_sched.h
++++ b/vmmon-only/include/compat_sched.h
+@@ -289,5 +289,20 @@ typedef struct pid * compat_pid;
+ #define compat_kill_pid(pid, sig, flag) kill_pid(pid, sig, flag)
+ #endif
+ 
++/*
++ * Since v5.14-rc1, task_struct::state hase been renamed to __state and is
++ * is longer supposed to be accessed without READ_ONCE/WRITE_ONCE.
++ */
++#ifdef get_current_state
++static inline int compat_get_task_state(const struct task_struct *t)
++{
++	return READ_ONCE(t->__state);
++}
++#else
++static inline int compat_get_task_state(const struct task_struct *t)
++{
++	return READ_ONCE(t->state);
++}
++#endif
+ 
+ #endif /* __COMPAT_SCHED_H__ */
+diff --git a/vmmon-only/linux/hostif.c b/vmmon-only/linux/hostif.c
+index 137062c..6910f69 100644
+--- a/vmmon-only/linux/hostif.c
++++ b/vmmon-only/linux/hostif.c
+@@ -77,6 +77,8 @@
+ #include "pgtbl.h"
+ #include "versioned_atomic.h"
+ 
++#include "compat_sched.h"
++
+ #if !defined(CONFIG_HIGH_RES_TIMERS)
+ #error CONFIG_HIGH_RES_TIMERS required for acceptable performance
+ #endif
+@@ -474,7 +476,7 @@ HostIF_WakeUpYielders(VMDriver *vm,     // IN:
+       ASSERT(vcpuid < vm->numVCPUs);
+       t = vm->vmhost->vcpuSemaTask[vcpuid];
+       VCPUSet_Remove(&req, vcpuid);
+-      if (t && (t->state & TASK_INTERRUPTIBLE)) {
++      if (t && (compat_get_task_state(t) & TASK_INTERRUPTIBLE)) {
+          wake_up_process(t);
+       }
+    }
+@@ -2566,14 +2568,14 @@ HostIF_SemaphoreWait(VMDriver *vm,   // IN:
+    }
+ 
+    poll_initwait(&table);
+-   current->state = TASK_INTERRUPTIBLE;
++   set_current_state(TASK_INTERRUPTIBLE);
+    mask = file->f_op->poll(file, &table.pt);
+    if (!(mask & (POLLIN | POLLERR | POLLHUP))) {
+       vm->vmhost->vcpuSemaTask[vcpuid] = current;
+       schedule_timeout(timeoutms * HZ / 1000);  // convert to Hz
+       vm->vmhost->vcpuSemaTask[vcpuid] = NULL;
+    }
+-   current->state = TASK_RUNNING;
++   set_current_state(TASK_RUNNING);
+    poll_freewait(&table);
+ 
+    /*
+@@ -2655,7 +2657,7 @@ HostIF_SemaphoreForceWakeup(VMDriver *vm,       // IN:
+        */
+       struct task_struct *t =
+          (struct task_struct *)xchg(&vm->vmhost->vcpuSemaTask[vcpuid], NULL);
+-      if (t && (t->state & TASK_INTERRUPTIBLE)) {
++      if (t && (compat_get_task_state(t) & TASK_INTERRUPTIBLE)) {
+          wake_up_process(t);
+       }
+    } ROF_EACH_VCPU_IN_SET_WITH_MAX();
