@@ -1,7 +1,7 @@
 # Maintainer: Ckat <ckat@teknik.io>
 pkgname=chatterino2-git
 _pkgname=chatterino2
-pkgver=r3314.4bfa56c1
+pkgver=r3316.c0f4a410
 pkgrel=1
 pkgdesc='Second installment of the Twitch chat client series "Chatterino", dev/git version'
 arch=('any')
@@ -16,7 +16,7 @@ provides=('chatterino')
 conflicts=('chatterino')
 install=$pkgname.install
 source=("git://github.com/Chatterino/chatterino2"
-        "git://github.com/communi/libcommuni"
+        "git://github.com/Chatterino/libcommuni#branch=chatterino-cmake"
         "git://github.com/jiakuan/qBreakpad"
         "git://github.com/mohabouje/WinToast"
         "git://github.com/pajlada/settings"
@@ -24,8 +24,10 @@ source=("git://github.com/Chatterino/chatterino2"
         "git://github.com/pajlada/serialize"
         "git://github.com/Tencent/rapidjson"
         "git://github.com/Chatterino/qtkeychain"
+        "git://github.com/arsenm/sanitizers-cmake"
         "git://github.com/zaphoyd/websocketpp")
 md5sums=('SKIP'
+         'SKIP'
          'SKIP'
          'SKIP'
          'SKIP'
@@ -52,6 +54,7 @@ prepare () {
     git config submodule.serialize $srcdir/$_pkgname/lib/serialize
     git config submodule.rapidjson $srcdir/$_pkgname/lib/rapidjson
     git config submodule.qtkeychain $srcdir/$_pkgname/lib/qtkeychain
+    git config submodule.sanitizers-cmake $srcdir/$_pkgname/lib/sanitizers-cmake
     git config submodule.websocketpp $srcdir/$_pkgname/lib/websocketpp
     git submodule update
 }
