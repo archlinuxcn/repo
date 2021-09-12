@@ -2,27 +2,25 @@
 
 pkgbase=python-onnxruntime
 pkgname=(python-onnxruntime python-onnxruntime-cuda)
-pkgver=1.8.2
+pkgver=1.9.0
 pkgdesc='Cross-platform, high performance scoring engine for ML models'
-pkgrel=4
+pkgrel=1
 arch=(x86_64)
 url='https://github.com/microsoft/onnxruntime'
 license=(MIT)
 depends=(nsync re2 python-flatbuffers python-numpy python-onnx python-protobuf openmpi)
-makedepends=(git cmake gtest gmock pybind11 python-setuptools nlohmann-json chrono-date boost flatbuffers cuda cudnn nccl clang)
+makedepends=(git cmake gtest gmock pybind11 python-setuptools nlohmann-json chrono-date boost eigen flatbuffers cuda cudnn nccl clang)
 checkdepends=(python-pytest python-pytorch python-h5py python-pandas python-psutil python-tqdm python-sympy python-torchvision tensorboard python-cerberus)
 # not de-vendored libraries
-# eigen: API changes a lot since extra/eigen 3.3.7 to the commit onnxruntime uses
 # onnx: needs shared libonnx (https://github.com/onnx/onnx/issues/3030)
-# https://github.com/microsoft/onnxruntime/blob/v1.1.2/onnxruntime/core/protobuf/onnx-ml.proto#L250-L251
 source=("git+https://github.com/microsoft/onnxruntime#tag=v$pkgver"
-        "git+https://gitlab.com/libeigen/eigen.git"
         "git+https://github.com/onnx/onnx.git"
         "git+https://github.com/dcleblanc/SafeInt.git"
         "git+https://github.com/martinmoene/optional-lite.git"
         "git+https://github.com/tensorflow/tensorboard.git"
         "git+https://github.com/dmlc/dlpack.git"
         "git+https://github.com/jarro2783/cxxopts.git"
+        "pytorch_cpuinfo::git+https://github.com/pytorch/cpuinfo.git"
         build-fixes.patch
         clang.patch)
 sha512sums=('SKIP'
@@ -34,7 +32,7 @@ sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             '685f0235abed6e1277dd0eb9bda56c464d1987fe7fc90a3550e17ec70cc49fd15f34996a0e159f9622c4ca3e6bf29917fe51b7849342531fa2a6808d782f1e06'
-            '55ba879c015df11582ff4afaa9ccca19c0e3d3a8be503629718402dbdc826e36bc3ec3ce4dd589705371d7fcf250ba2a9b30c5a3dd0cfccb8e008346f1bd6252')
+            'ad94af8bb25744b244c4f82e9a06189741f82b295a88523ca0e8005568fac710c2299d783989457e9cf96ef8da0593fb4f70c8792d416f44ab29d6493e204f13')
 # CUDA seems not working with LTO
 options+=('!lto')
 
@@ -47,8 +45,12 @@ prepare() {
   patch -Np1 -i ../build-fixes.patch
   patch -Np1 -i ../clang.patch
 
+  # 1.9.0 is marked as 1.10.0 https://github.com/microsoft/onnxruntime/blob/v1.9.0/VERSION_NUMBER
+  # Official wheels are not affected, though
+  echo $pkgver > VERSION_NUMBER
+
   git submodule init
-  for mod in eigen onnx SafeInt optional-lite tensorboard dlpack cxxopts; do
+  for mod in onnx SafeInt optional-lite tensorboard dlpack cxxopts pytorch_cpuinfo; do
     git config submodule.cmake/external/$mod.url "$srcdir"/$mod
     git submodule update cmake/external/$mod
   done
@@ -71,6 +73,8 @@ _build() {
     -Donnxruntime_BUILD_SHARED_LIB=ON \
     -Donnxruntime_ENABLE_TRAINING=ON \
     -Donnxruntime_USE_MPI=ON \
+    -Donnxruntime_USE_PREINSTALLED_EIGEN=ON \
+    -Deigen_SOURCE_PATH=/usr/include/eigen3 \
     "$@"
 
   cd $build_dir
@@ -115,7 +119,8 @@ _check() {
   LD_LIBRARY_PATH="$PWD" pytest \
     --ignore launch_test.py \
     --ignore orttraining_run_bert_pretrain.py \
-    --ignore orttraining_run_frontend_batch_size_test.py || echo Test failed!!
+    --ignore orttraining_run_frontend_batch_size_test.py \
+    --ignore transformers
 }
 
 check() {
