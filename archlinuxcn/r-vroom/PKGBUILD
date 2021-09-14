@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=vroom
-_pkgver=1.5.4
+_pkgver=1.5.5
 pkgname=r-${_pkgname,,}
-pkgver=1.5.4
+pkgver=1.5.5
 pkgrel=1
 pkgdesc='Read and Write Rectangular Text Data Quickly'
 arch=('x86_64')
@@ -49,7 +49,7 @@ optdepends=(
   r-xml2
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('f6bcdde91c969785ec3329cd335f329818b70103020a458197ddae7acbc8eb95')
+sha256sums=('1d45688c08f162a3300eda532d9e87d144f4bc686769a521bf9a12e3d3b465fe')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
