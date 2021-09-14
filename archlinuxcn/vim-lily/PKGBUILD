@@ -40,7 +40,7 @@ build() {
     git archive all | tar x -C ../$pkgbase
 
     pushd $_dir
-    CFLAGS='-g -O2' STRIP=true ./configure \
+    STRIP=true ./configure \
       --prefix=/usr \
       --localstatedir=/var/lib/vim \
       --mandir=/usr/share/man \
