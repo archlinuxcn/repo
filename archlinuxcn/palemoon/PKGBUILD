@@ -3,10 +3,7 @@
 # Contributor: ilikenwf
 # Contributor: American_Jesus
 pkgname=palemoon
-_repo=Pale-Moon
-pkgver=29.4.0.2
-# Commit can be found at https://repo.palemoon.org/MoonchildProductions/Pale-Moon/releases
-_commit=951553c0a4
+pkgver=29.4.1
 pkgrel=1
 pkgdesc="Open source web browser based on Firefox focusing on efficiency."
 arch=('i686' 'x86_64')
@@ -18,26 +15,19 @@ makedepends=('git' 'python2' 'autoconf2.13' 'unzip' 'zip' 'yasm' 'gcc10'
              'libpulse')
 optdepends=('libpulse: PulseAudio audio driver'
             'ffmpeg: various video and audio support')
-source=(git+"https://repo.palemoon.org/MoonchildProductions/${_repo}?signed#commit=${_commit}"
-        git+"https://repo.palemoon.org/MoonchildProductions/UXP"
+# as of 29.4.1, upstream have switched to unsigned source archives instead of git
+source=("http://archive.palemoon.org/source/palemoon-${pkgver}-source.tar.xz"
         mozconfig.in)
-sha1sums=('SKIP'
-          'SKIP'
+sha1sums=('a63f2f79774be283de4f9e6042a3c315ff690b3b'
           '5fc8e164a8c1731ad2cce6270c9b0e9a5145194c')
-validpgpkeys=('3059E09144F56804F0FBF4E126B40624BDBFD9F3'
-              '3DAD8CD107197488D2A2A0BD40481E7B8FCF9CEC')
+sha256sums=('4a307d4f7641ea5641f3c7bcd5305dcd1983e89522579b784b6bf60ae18e00ba'
+            'a8ded94beaef0dfa4a5d6b109c1a669967cb7d38d4fe70b3a4d7725ef4b47394')
 
 prepare() {
   sed 's#%SRCDIR%#'"${srcdir}"'#g' mozconfig.in > mozconfig
-  cd ${_repo}
-  git submodule init
-  git config submodule.platform.url "${srcdir}/UXP"
-  git submodule update
 }
 
 build() {
-  cd ${_repo}
-
   export MOZBUILD_STATE_PATH="${srcdir}/mozbuild"
   export MOZCONFIG="${srcdir}/mozconfig"
   export CPPFLAGS="${CPPFLAGS} -O2 -Wno-format-overflow"
