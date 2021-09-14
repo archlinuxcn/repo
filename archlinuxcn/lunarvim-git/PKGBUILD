@@ -29,7 +29,7 @@ source=("${pkgname}::git+https://github.com/LunarVim/LunarVim.git#branch=rolling
 sha256sums=('SKIP'
             'SKIP'
             '0bb4e331e3e47dab1610b04b1a2bcdf96a56f8880ef5cbf00ee0f3b1bd8c4873'
-            'c02c3d30bcac0406a3e960082dc60b4234ae7c391615506c60e66b7c80ba63f1')
+            'bf8a977a1ceff5240e5709de79f0eb2543816f2d627d6a750e766a78bc28d503')
 
 pkgver() {
   cd "${pkgname}"
