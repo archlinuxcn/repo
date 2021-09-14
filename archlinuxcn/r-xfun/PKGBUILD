@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=xfun
-_pkgver=0.25
+_pkgver=0.26
 pkgname=r-${_pkgname,,}
-pkgver=0.25
+pkgver=0.26
 pkgrel=1
 pkgdesc="Supporting Functions for Packages Maintained by 'Yihui Xie'"
 arch=('x86_64')
@@ -30,7 +30,7 @@ optdepends=(
   r-tinytex
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('e63d7c86c8935189f5579dda4ca841adc03c4d2d92d2fd88ad4396f12f34be97')
+sha256sums=('9e2680489b7c86794bdb1ec2fdf1bb5927120d1439f0347b09d2cfdf00d027a5')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
