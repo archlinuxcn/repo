@@ -5,8 +5,8 @@
 # Contributor: Drew DeVault
 
 pkgname=nginx-mainline-boringssl
-pkgver=1.21.0
-pkgrel=2
+pkgver=1.21.3
+pkgrel=1
 pkgdesc='Lightweight HTTP server and IMAP/POP3 proxy server, mainline release'
 arch=('i686' 'x86_64')
 url='https://nginx.org'
@@ -31,7 +31,7 @@ source=($url/download/nginx-$pkgver.tar.gz{,.asc}
         "service"
         "logrotate")
 validpgpkeys=('B0F4253373F8F6F510D42178520A9993A1C052F8') # Maxim Dounin <mdounin@mdounin.ru>
-sha256sums=('fe192a4bac2bd3a769e8695cb9fe14a00e57eaceb919095347a83b5b2afc0771'
+sha256sums=('14774aae0d151da350417efc4afda5cce5035056e71894836797e1f6e2d1175a'
             'SKIP'
             'SKIP'
             '05fdc0c0483410944b988d7f4beabb00bec4a44a41bd13ebc9b78585da7d3f9b'
@@ -70,8 +70,8 @@ _mainline_flags=(
 )
 
 build() {
-  export CXXFLAGS="$CXXFLAGS -Wno-array-bounds -Wno-stringop-overflow -Wno-array-parameter"
-  export CFLAGS="$CFLAGS -Wno-array-bounds -Wno-stringop-overflow -Wno-array-parameter"
+  export CXXFLAGS="$CXXFLAGS -Wno-array-bounds -Wno-stringop-overflow -Wno-array-parameter -Wno-unused-result"
+  export CFLAGS="$CFLAGS -Wno-array-bounds -Wno-stringop-overflow -Wno-array-parameter -Wno-unused-result"
 
   cd ${srcdir}/boringssl
   mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release ../ && make && cd ${srcdir}/boringssl
