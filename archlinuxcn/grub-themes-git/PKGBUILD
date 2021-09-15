@@ -92,12 +92,15 @@ _package() {
             if [[ "${resolution}" == 'ultrawide' ]]; then
                 install -Dm 644 assets/assets-select/select-1080p/* -t "${pkgdir}"/usr/share/grub/themes/"${name}-${icon}-${resolution}"/
                 install -Dm 644 assets/"assets-${icon}"/icons-1080p/* -t "${pkgdir}"/usr/share/grub/themes/"${name}-${icon}-${resolution}"/icons/
+                install -Dm 644 assets/info-1080p.png -t "${pkgdir}"/usr/share/grub/themes/"${name}-${icon}-${resolution}"/info.png
             elif [[ "${resolution}" == 'ultrawide2k' ]]; then
                 install -Dm 644 assets/assets-select/select-2k/* -t "${pkgdir}"/usr/share/grub/themes/"${name}-${icon}-${resolution}"/
                 install -Dm 644 assets/"assets-${icon}"/icons-2k/* -t "${pkgdir}"/usr/share/grub/themes/"${name}-${icon}-${resolution}"/icons/
+                install -Dm 644 assets/info-2k.png -t "${pkgdir}"/usr/share/grub/themes/"${name}-${icon}-${resolution}"/info.png
             else
                 install -Dm 644 assets/assets-select/"select-${resolution}"/* -t "${pkgdir}"/usr/share/grub/themes/"${name}-${icon}-${resolution}"/
                 install -Dm 644 assets/"assets-${icon}"/"icons-${resolution}"/* -t "${pkgdir}"/usr/share/grub/themes/"${name}-${icon}-${resolution}"/icons/
+                install -Dm 644 assets/"info-${screen}.png" -t "${pkgdir}"/usr/share/grub/themes/"${name}-${icon}-${resolution}"/info.png
             fi
         fi
     done
