@@ -10,3 +10,8 @@ post_install() {
   printf "$(tput setaf 4)  ->$(tput sgr0; tput bold) %s$(tput sgr0)\n" \
     '      (See https://www.ventoy.net/en/plugin_persistence.html for documentation.)'
 }
+
+post_remove() {
+  # Remove log file
+  rm -rf /opt/ventoy/
+}

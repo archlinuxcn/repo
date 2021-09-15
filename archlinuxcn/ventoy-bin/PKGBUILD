@@ -4,7 +4,7 @@
 
 pkgname=ventoy-bin
 pkgver=1.0.52
-pkgrel=4
+pkgrel=6
 pkgdesc="A new multiboot USB solution"
 arch=('i686' 'x86_64')
 url="http://www.ventoy.net"
@@ -12,7 +12,8 @@ license=('GPL3')
 depends=('bash' 'util-linux' 'xz' 'dosfstools' 'lib32-glibc')
 optdepends=('gtk2: GTK2 GUI'
             'gtk3: GTK3 GUI'
-            'qt5-base: Qt5 GUI')
+            'qt5-base: Qt5 GUI'
+            'polkit: run GUI from application menu')
 provides=("${pkgname%-bin}")
 conflicts=("${pkgname%-bin}")
 install="${pkgname%-bin}.install"
