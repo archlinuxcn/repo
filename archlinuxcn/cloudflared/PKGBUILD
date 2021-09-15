@@ -1,7 +1,7 @@
 # Maintainer: George Rawlinson <george@rawlinson.net.nz>
 
 pkgname=cloudflared
-pkgver=2021.8.7
+pkgver=2021.9.0
 pkgrel=1
 pkgdesc="Argo Tunnel client"
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -17,7 +17,7 @@ source=(
   'sysusers.conf'
   'tmpfiles.conf'
 )
-b2sums=('ecc79abbb81cc763aacdc470b3232ee92a547071a2e3f725a1292aae45985cdc395d4af995b2960019d7cb91d9853f7480ee76867b958b5d56ef3bdf42ac3ea9'
+b2sums=('b844d506890f3d1f54eafc486e93e270e0e9b5adf9bf6517586510f8e0a986c2271095427a56e3584fd9bc978d710b93325902b5df8ba1cc2d6a2aa1b8ccff65'
         '887218db3b5e7cdbb90c86b60aac1597d70b59fccece18c8c5e6e2357d04aa219b2438436f23f913a0c8dc6eb425ef3e22901e28fd30e5130d17e414e67ec4af'
         '0fa4ac918b4c72e2b1a1bd36e025fdb6078364363cba167e6d91e7815c8bd6f5c4b412f0651d1a75991ef7e069da6e81917f22bd40ef87fd1ccd41171e64e0b2'
         '7a15fc73f02cc74e2cea55ba51632724bae16f140e07904a88daa3179ed320e9e6efa9a1901d8249fd1618a2a91f93384a93bfaba6eba6990457b7c2d2155f58'
@@ -28,6 +28,9 @@ prepare() {
 
   # create directory for build output
   mkdir build
+
+  # verify go modules
+  go mod verify
 }
 
 build() {
