@@ -1,7 +1,7 @@
 # Maintainer: Dct Mei <dctxmei@yandex.com>
 
 pkgname=geph4-client
-pkgver=4.4.16
+pkgver=4.4.17
 pkgrel=1
 pkgdesc="A command-line Geph4 toolset"
 arch=('x86_64')
@@ -15,7 +15,7 @@ backup=('etc/default/geph4-client')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "geph4-client.default"
         "geph4-client.service")
-sha256sums=('e16a98ed8332ea8edbad7eba7b12b663907cba0b10f525ebf6541212067ee097'
+sha256sums=('8f25c89ff96c7bacd93261f1f880f641a041af8c583edbec9d56f2cc5990b22f'
             'fe10aa9e8ecc58e3b01487cb60c6fe970dd80343d1b715744e734077b1e14f66'
             '2aef927e466ce22796bbaec6d618f6178d0251e6d0ba1df3c526d3374dd903da')
 
