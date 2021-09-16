@@ -1,6 +1,6 @@
 # Maintainer: Songmin Li <lisongmin@protonmail.com>
 pkgname=nerdctl
-pkgver=0.11.1
+pkgver=0.11.2
 pkgrel=1
 pkgdesc='Docker-compatible CLI for containerd.'
 makedepends=('go')
@@ -9,7 +9,7 @@ url='https://github.com/containerd/nerdctl'
 license=('Apache')
 provides=('nerdctl')
 source=(${pkgname}-${pkgver}.tar.gz::https://github.com/containerd/${pkgname}/archive/v${pkgver}.tar.gz)
-sha256sums=('258d5be91cb59dcaecc1a5bdea2b847c6e895718f0cb94992ec126da9bd92716')
+sha256sums=('6fb0eba2e67e0f135be3976e4127ae2568c8e63e2bc1bc20d02f5f28e3e1c0a5')
 
 build() {
   export CGO_CPPFLAGS="${CPPFLAGS}"
