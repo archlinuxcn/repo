@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=ade4
-_pkgver=1.7-17
+_pkgver=1.7-18
 pkgname=r-${_pkgname,,}
-pkgver=1.7.17
+pkgver=1.7.18
 pkgrel=1
 pkgdesc='Analysis of Ecological Data: Exploratory and Euclidean Methods in Environmental Sciences'
 arch=('x86_64')
@@ -28,7 +28,7 @@ optdepends=(
   r-waveslim
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('eed9df80b312d620faa27cbfe256dc49be9c67b50a86d95898cd3da67b123d69')
+sha256sums=('ecb6f4c42c60f39702aa96f454bb536a333049c9608ee2b6bdf8795e059cc525')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
