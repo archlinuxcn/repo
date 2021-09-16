@@ -1,23 +1,23 @@
 _name=jsmin
 pkgname=python-jsmin
-pkgver=2.2.2
-pkgrel=8
+pkgver=3.0.0
+pkgrel=1
 pkgdesc="JavaScript minifier."
 arch=(any)
 url="https://github.com/tikitu/jsmin/"
 license=('MIT License')
 depends=('python')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/jsmin-2.2.2.tar.gz")
-sha256sums=('b6df99b2cd1c75d9d342e4335b535789b8da9107ec748212706ef7bbe5c2553b')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/jsmin-3.0.0.tar.gz")
+sha256sums=('88fc1bd6033a47c5911dbcada7d279c7a8b7ad0841909590f6a742c20c4d2e08')
 
 build() {
-  cd "$srcdir/jsmin-2.2.2"
+  cd "$srcdir/jsmin-3.0.0"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/jsmin-2.2.2"
+  cd "$srcdir/jsmin-3.0.0"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install any world-writable or root-readable-only files
