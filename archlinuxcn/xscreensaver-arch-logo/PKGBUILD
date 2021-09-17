@@ -5,8 +5,8 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=xscreensaver-arch-logo
-pkgver=6.00
-pkgrel=2
+pkgver=6.01
+pkgrel=1
 pkgdesc="Screen saver and locker for the X Window System with Arch Linux branding"
 url="https://www.jwz.org/${pkgname%%-*}/"
 arch=('x86_64')
@@ -31,14 +31,19 @@ source=("${pkgname}-${pkgver}.tar.gz::https://www.jwz.org/${pkgname%%-*}/${pkgna
         logo-180.xpm 
         logo-50.png 
         logo-180.png)
-sha256sums=('585088974721b828ebd71fd3ebb019d1bf312133c956eac9672d61f6b49d7706'
-            '54ed1dbf2570317651113d8bbd399e60d177aee1a13aa0fdcb3632fe8c53c0d3'
-            '82366926a2a81bd08459327936ba144e8b3ea5ee4a386c268bd898e1791ab1a0'
-            '253f0d5bbdd841f21a7bbdbb0fd7ded21f711751d5cb1b7914952bdd6541b36d'
-            '8027bdb2b4328d154a8e517bdb94f5ef4a9eb031e79a285dabedd62acfa77317'
-            '8357f9e631b80ae373cb0fc8e27fa96fd032c3d5e3869bd04dde843b79260b19')
+sha512sums=('3a6e875196e1340909b2a379c25e758fef490d3d10154aef3096ec1be50fabe0d852de806d45a067eefd061381c8541acd7902d28be3bac15b76bd9d4bf0c02a'
+            '529ed9b7904631989803a4e1f306a0f3e496e50a123ebbd6ff77058e52aeb1b2328148d8224e54b547faff14e9d591146b9849c5fb9d1063e6db41f295f3074e'
+            'dcaa60ffc8e871ce6b4199ff5cdb6ac4d391ff8c1f548f9d6a098e33ba45532dc6e4854e0ae20fbaf0f18ffc5acb2d318e558a0c94254a298ce1ec92ee1b8ec3'
+            '2f9bbbd6a7fba30ed3935e4e8106642b393984ccfb6fd2e202be22021651810f8f29f21b523607268b79c7bd3f3de9fea6731a8002d027d1b1568bb6f25c9c2c'
+            'a8319072feac775309a7aa0f821483240dd8eab10056c2fbaf0c1b93bcc93dc1c6ee2a8c1a7393d5fa92b7dbce6bf38d78ee1a84d8be7745de635843b1db71d8'
+            '86c5e84374068827ba939121e0d269633b392e89cb206ea39479ee640c2f01dbe35b9ca4012d32c299a5c7c46f448bd51226533cb419c5c975810e826d21d5c9')
+# Workaround for broken xscreensaver-6.01 tarball
+noextract=($pkgname-$pkgver.tar.gz)
 
 prepare() {
+  # Workaround for broken xscreensaver-6.01 tarball
+  bsdtar xf ${pkgname}-${pkgver}.tar.gz || true
+
   cd "${srcdir}"
   for _file in logo-*; do
 	install "${_file}" -Dm0644 "${srcdir}/${pkgname%%-*}-${pkgver}/hacks/images/${_file}"
