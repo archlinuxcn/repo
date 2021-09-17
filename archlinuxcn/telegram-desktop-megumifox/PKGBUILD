@@ -4,7 +4,7 @@
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
 pkgver=3.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
@@ -18,16 +18,19 @@ conflicts=('telegram-desktop')
 source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
         "0001-use-system-font-and-use-stylename.patch"
         "0002-fix-webrtc-integration-build-missing-libx11.patch"
-        "0003-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch")
+        "0003-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch"
+        "no-digraphs.patch")
 sha512sums=('6bff6be5f2c0c7a17df61dccc5a3216dcbb95a1c6d3176442c530e2c1b525e6d15079b230d40751f20684da2a1067d4518a9a1ab90d49d1a7338d3e05239d447'
             '62c41188d1faf4200167b9086552db092dadcba6000bb3c51d7c79ba22cc453c980f6e50013c76e766c9dd8585e84327d00d289512fc1f7e7222f223a23a14a7'
             '3ff546af7f5ed2aafeaffd136b0c694ddf6d1bbbe1e539e2a3740829d6bb95855d75cf6b409c40fea3236329e5cb3c085b783fa030e6411bc62f7952ade02684'
-            '7a1dcfc563b764d1e68acb566df52890ad527ba2c442ac78825239bce64da3d77ca5f7cf965c67dafc5290e3549fa52780fc49b2d991cd798d05735a6143f46b')
+            '7a1dcfc563b764d1e68acb566df52890ad527ba2c442ac78825239bce64da3d77ca5f7cf965c67dafc5290e3549fa52780fc49b2d991cd798d05735a6143f46b'
+            '81c86779008c02eb315ef06e51ba41be34badf4865c7d7621a4f57c3553ff53c52d40532c415f43ffd257e9794c541c1ad00207d239aa2240cce1b773ace5f93')
 
 prepare() {
     patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-use-system-font-and-use-stylename.patch
     patch -b -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0002-fix-webrtc-integration-build-missing-libx11.patch
     patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0003-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch
+    patch -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/no-digraphs.patch
  }
 
 build() {
