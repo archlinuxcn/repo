@@ -7,8 +7,8 @@
 
 pkgname=firefox-appmenu
 _pkgname=firefox
-pkgver=91.0.2
-pkgrel=3
+pkgver=92.0
+pkgrel=1
 pkgdesc="Firefox from extra with appmenu patch"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -33,13 +33,13 @@ source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-
         fix-wayland-build.patch
         unity-menubar.patch
         fix_csd_window_buttons.patch)
-sha256sums=('23523af27631e24dd7dbab8429bcd0d828133e9d32b7ab343495c6e15912f6b5'
+sha256sums=('299a472373021cc9194449c9f4bb962d5f74ef05e8af0448c589761ea34fbc84'
             'SKIP'
-            '138b972a40a74104791783167770c4a01e62cce00bb9cc75119e152f9ea9f14d'
+            'd7c7a65c4b7ec9ea40df129724ffb369d3f775b0514e3c267c52eec6d284b5e6'
             '34514a657d6907a159594c51e674eeb81297c431ec26a736417c2fdb995c2c0c'
             'a9b8b4a0a1f4a7b4af77d5fc70c2686d624038909263c795ecc81e0aec7711e9'
-            '85c7287cd38d218305bf80dfb462db98ba27d55b13ba30275194e28b8fa03f48'
-            'f5e5af8cfb8db2e0ed2e3cb8ae844ece713923ca103deb63c689c2011eb57cb7'
+            '46724a625f51c358abaee488a7ce75673078e96ba009459339120b8dd11dec25'
+            '8bbcaa48023c9eefb7f3ddfcfa4e4c6db6236664540bee7644ae9ecf790e8823'
             'e08d0bc5b7e562f5de6998060e993eddada96d93105384960207f7bdf2e1ed6e')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 

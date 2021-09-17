@@ -3517,7 +3517,7 @@
 +{
 +    RefPtr<ComputedStyle> style =
 +        nsComputedDOMStyle::GetComputedStyleNoFlush(
-+            mContent->AsElement(), nullptr);
++            mContent->AsElement());
 +
 +    return style.forget();
 +}
