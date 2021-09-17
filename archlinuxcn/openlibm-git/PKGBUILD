@@ -7,7 +7,7 @@ pkgdesc="standalone implementation of C mathematical functions"
 arch=(i686 x86_64 armv7h aarch64)
 url="https://github.com/JuliaLang/openlibm"
 license=('BSD')
-provides=('openlibm=0.7.0')
+provides=('openlibm=0.7.0' 'libopenlibm.so')
 if [[ $CARCH = x86_64 ]]; then
   provides+=(openlibm-git-avx2 openlibm-avx2)
   replaces+=(openlibm-git-avx2)

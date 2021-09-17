@@ -27,9 +27,9 @@ pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
-depends_libs=(arpack fftw gmp libgit2-julia libunwind-git mpfr pcre2 suitesparse
-              openspecfun openblas-lapack libutf8proc-git
-              openlibm mbedtls libssh2 zlib p7zip curl libnghttp2 ca-certificates-utils
+depends_libs=(arpack fftw gmp libgit2-julia libgit2.so libunwind-git mpfr pcre2 suitesparse
+              openspecfun openblas-lapack libutf8proc-git libopenlibm.so
+              mbedtls libssh2.so zlib p7zip libcurl.so libnghttp2 ca-certificates-utils
               'libmbedcrypto.so=7-64' 'libmbedtls.so=13-64' 'libmbedx509.so=1-64')
 makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
              gcc-fortran git patchelf python)

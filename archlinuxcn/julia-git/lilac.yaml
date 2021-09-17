@@ -19,5 +19,17 @@ repo_depends:
 
 update_on:
   - source: vcs
+  - source: alpm
+    alpm: curl
+    provided: libcurl.so
+  - source: alpm-lilac
+    alpm: libgit2-julia
+    provided: libgit2.so
+  - source: alpm-lilac
+    alpm: libopenlibm
+    provided: libopenlibm.so
+  - source: alpm
+    alpm: libssh2
+    provided: libssh2.so
   - source: manual
     manual: 4
