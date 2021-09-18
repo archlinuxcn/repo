@@ -3,17 +3,17 @@
 
 pkgbase=jdk
 pkgname=('jre' 'jdk' 'jdk-doc')
-pkgver=16.0.2
-_build=7
-_hash=d4a915d82b4c4fbb9bde534da945d746
+pkgver=17
+_build=35
+_hash=0d483333a00540d886896bac774ff48b
 _majver="${pkgver%%.*}"
-pkgrel=2
+pkgrel=1
 pkgdesc='Oracle Java'
 arch=('x86_64')
 url='https://www.oracle.com/java/'
 license=('custom')
 makedepends=('python-html2text')
-source=("https://download.oracle.com/otn-pub/java/jdk/${pkgver}+${_build}/${_hash}/jdk-${pkgver}_linux-x64_bin.tar.gz"
+source=("https://download.oracle.com/java/${_majver}/archive/jdk-${pkgver}_linux-x64_bin.tar.gz"
         "https://download.oracle.com/otn-pub/java/jdk/${pkgver}+${_build}/${_hash}/jdk-${pkgver}_doc-all.zip"
         "java-${_majver}-jdk-license.html"::"https://download.oracle.com/otndocs/jcp/java_se-${_majver}-final-spec/license.html"
         'java.desktop'
@@ -23,15 +23,15 @@ source=("https://download.oracle.com/otn-pub/java/jdk/${pkgver}+${_build}/${_has
         'java_48.png'
         'LICENSE')
 noextract=("jdk-${pkgver}_doc-all.zip")
-sha256sums=('630e3e56c58f45db3788343ce842756d5a5a401a63884242cc6a141071285a62'
-            '7cd96f9aa11d9e1a1adbee3e941a78e899bc9079370e4c12c106761d3df80f82'
-            '2f14da815e019b3f5558e5176c969227a2530bac1cfdfd42dbd6ccc2ee618346'
-            '9fc4cd168fd3e0d654093c1b2dd070f627ffae9b7f5c2c0741bac0b5c1ed0635'
-            '12b6e632e38e2c2ef54d6b03976290ca649380a89f78b5dae8827423eae52a1b'
-            'b2fd5a8f273a103569bf03af6f4ff4d3a5448472abc79b8649cecd0ee9313fc7'
+sha256sums=('106e3fc31b9fe4d0fd76c6c92b1931bdd1b0ac4d788747951de0f92cc73b1ffe'
+            '0b6870176449abdedae5c4a98ad69684f68831d02900b9b6ccea54213ff2cca7'
+            'ab50940bda40a9e8935d1a8f002debda0fdd0b3e2bcc0319827ec19acd8b34f3'
+            'f17fe6e3d1b7ffbe854364e127509144057878a344d74673393782b90b6f054a'
+            '321dc88a1a0289c1f0a3113e75bd2f488829a0b82c11ac047272e464fb3f3ab3'
+            'e7638e42cbe38f32cb7a1ec800c27408e8559f576d8dd7698fdd5856c4c9b842'
             'd27fec1d74f7a3081c3d175ed184d15383666dc7f02cc0f7126f11549879c6ed'
             '7cf8ca096e6d6e425b3434446b0835537d0fc7fe64b3ccba7a55f7bd86c7e176'
-            'ef331c118f613261f06771161e9aebf8d26ab6cc131edd51358b01cc20fc759d')
+            '20becfcac0bdeaa29a76e6966d727f8cc79381354cbd5d530cdec823954df19f')
 
 DLAGENTS=('https::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -b oraclelicense=a -o %o %u')
 
@@ -43,11 +43,15 @@ prepare() {
 
 package_jre() {
     pkgdesc+=' Runtime Environment'
-    depends=('java-runtime-common' 'ca-certificates-utils' 'freetype2' 'libxtst'
-             'libxrender' 'libnet')
-    optdepends=('alsa-lib: for basic sound support')
-    provides=("java-runtime=${_majver}" "java-runtime-headless=${_majver}"
-              "java-runtime-jre=${_majver}" "java-runtime-headless-jre=${_majver}")
+    depends=('java-runtime-common' 'ca-certificates-utils' 'freetype2' 'libx11' 'libxext'
+             'libxi' 'libxtst' 'libxrender')
+    optdepends=('alsa-lib: for basic sound support'
+                'gtk2: for the Gtk+ 2 look and feel - desktop usage'
+                'gtk3: for the Gtk+ 3 look and feel - desktop usage')
+    provides=("java-runtime=${_majver}" "java-runtime-jdk${_majver}"
+              "jre${_majver}-jdk=${pkgver}-${pkgrel}"
+              "java-runtime-headless=${_majver}" "java-runtime-headless-jdk=${_majver}"
+              "jre${_majver}-jdk-headless="${pkgver}-${pkgrel})
     backup=("etc/java-${pkgbase}/management/jmxremote.access"
             "etc/java-${pkgbase}/management/jmxremote.password.template"
             "etc/java-${pkgbase}/management/management.properties"
@@ -76,24 +80,23 @@ package_jre() {
     ln -s "../../../../etc/java-${pkgbase}" "${pkgdir}/${_jvmdir}/conf"
     
     # bin
-    install -D -m755 bin/{java,jpackage,jrunscript} -t "${pkgdir}/${_jvmdir}/bin"
-    install -D -m755 bin/{keytool,rmid,rmiregistry}     -t "${pkgdir}/${_jvmdir}/bin"
+    install -D -m755 bin/{java,jfr,jrunscript} -t "${pkgdir}/${_jvmdir}/bin"
+    install -D -m755 bin/{keytool,rmiregistry} -t "${pkgdir}/${_jvmdir}/bin"
     
     # libs
     cp -a lib "${pkgdir}/${_jvmdir}"
-    rm -r "${pkgdir}/${_jvmdir}/lib/jfr"
     rm "${pkgdir}/${_jvmdir}/lib/"{ct.sym,libattach.so,libsaproc.so,src.zip}
     
     # man pages
     local _file
-    for _file in man/man1/{java,jpackage,jrunscript,keytool,rmid,rmiregistry}.1
+    for _file in man/man1/{java,jfr,jrunscript,keytool,rmiregistry}.1
     do
         install -D -m644 "$_file" "${pkgdir}/usr/share/${_file%.1}-jdk${_majver}.1"
     done
     
     install -D -m644 release -t "${pkgdir}/${_jvmdir}"
     
-    # replace JKS keystore with ca-certificates-utils
+    # link JKS keystore from ca-certificates-utils
     rm "${pkgdir}${_jvmdir}/lib/security/cacerts"
     ln -s /etc/ssl/certs/java/cacerts "${pkgdir}${_jvmdir}/lib/security/cacerts"
     
@@ -106,8 +109,10 @@ package_jre() {
 
 package_jdk() {
     pkgdesc+=' Development Kit'
-    depends=('java-environment-common' "jre>=${_majver}" "jre<$((_majver + 1))" 'zlib' 'hicolor-icon-theme')
-    provides=("java-environment=${_majver}" "java-environment-jdk=${_majver}")
+    depends=('java-environment-common' "jre=${pkgver}-${pkgrel}" 'zlib'
+             'hicolor-icon-theme')
+    provides=("java-environment=${_majver}" "java-environment-jdk=${_majver}"
+              "jdk${_majver}-jdk=${pkgver}-${pkgrel}")
     install=jdk.install
     
     cd "jdk-${pkgver}"
@@ -118,13 +123,12 @@ package_jdk() {
     
     # bin
     cp -a bin "${pkgdir}/${_jvmdir}"
-    rm "${pkgdir}/${_jvmdir}/bin/"{java,jpackage,jrunscript,keytool,rmid,rmiregistry}
+    rm "${pkgdir}/${_jvmdir}/bin/"{java,jfr,jrunscript,keytool,rmiregistry}
     
     # libs
     install -D -m644 lib/ct.sym       -t "${pkgdir}/${_jvmdir}/lib"
     install -D -m644 lib/libattach.so -t "${pkgdir}/${_jvmdir}/lib"
     install -D -m644 lib/libsaproc.so -t "${pkgdir}/${_jvmdir}/lib"
-    cp -a lib/jfr "${pkgdir}/${_jvmdir}/lib"
     
     cp -a include "${pkgdir}/${_jvmdir}"
     cp -a jmods   "${pkgdir}/${_jvmdir}"
@@ -144,7 +148,7 @@ package_jdk() {
     do
         install -D -m644 "$_file" "${pkgdir}/usr/share/${_file%.1}-jdk${_majver}.1"
     done < <(find man/man1 -type f -print0)
-    rm "${pkgdir}/usr/share/man/man1/"{java,jpackage,jrunscript,keytool,rmid,rmiregistry}-jdk"${_majver}".1
+    rm "${pkgdir}/usr/share/man/man1/"{java,jfr,jrunscript,keytool,rmiregistry}-jdk"${_majver}".1
     
     # legal/licenses
     cp -a legal/* "${pkgdir}/usr/share/licenses/${pkgname}"
