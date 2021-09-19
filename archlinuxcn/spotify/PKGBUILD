@@ -4,9 +4,9 @@
 # Contributor: Eothred <yngve.levinsen@gmail.com>
 
 pkgname=spotify
-pkgver=1.1.67.586
+pkgver=1.1.68.628
 epoch=1
-_commit=gbb5ef64e
+_commit=geb44bd66
 pkgrel=1
 pkgdesc='A proprietary music streaming service'
 arch=('x86_64')
@@ -33,7 +33,7 @@ source=('spotify.protocol'
         "${pkgname}-${pkgver}-x86_64-Packages::http://repository.spotify.com/dists/testing/non-free/binary-amd64/Packages")
 sha512sums=('999abe46766a4101e27477f5c9f69394a4bb5c097e2e048ec2c6cb93dfa1743eb436bde3768af6ba1b90eaac78ea8589d82e621f9cbe7d9ab3f41acee6e8ca20'
             '2e16f7c7b09e9ecefaa11ab38eb7a792c62ae6f33d95ab1ff46d68995316324d8c5287b0d9ce142d1cf15158e61f594e930260abb8155467af8bc25779960615'
-            'd105eed1f013be2704ad7f0aaeb80ab2f8f19a0cfe69782f32fc95241d2900560996ec17101222365e1ad3b02ff9fa866da3f0709277a5bb40d032f5a58f7062'
+            'aa21e1becf03fb1d2e13d5f706f6e6cba877ea8d93540fef94ebeac1186e5a029cbd2fffcae65d801863dc3523de3ff0b32b1fb6aa40bfe59ac076cbb1cd0dc7'
             'SKIP'
             'SKIP'
             'SKIP')
