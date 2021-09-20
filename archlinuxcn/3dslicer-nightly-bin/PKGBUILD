@@ -17,11 +17,11 @@ provides=(3dslicer=${pkgver})
 conflicts=('3dslicer')
 source=(
     "${_pkgname}-${pkgver}.tar.gz::http://download.slicer.org/download?os=linux&stability=nightly"
-    "${_pkgname}.svg::https://github.com/Slicer/Slicer/raw/v4.11/Resources/3DSlicerLogo-app-icon.svg"
+    "${_pkgname}.svg::https://www.slicer.org/assets/img/3D-Slicer-Mark.svg"
 )
 noextract=("${_pkgname}.tar.gz")
 sha512sums=('0976c73cb9c2ae2cffccac3019b67425eca8f3127de389bfd99778a8f02de20c720423b7c201394ae9237dcbce415599d8d156a61ee18b0bc2ab6352bc678bd8'
-            'c23104efcbec3d49b5c26ad5514ed74316423db4aa9e6c7894f02f7ddbe509b577de358dfdd2f7c492963f312b7c146f03d5e41a89ab1298811894dc18746225')
+            'e0c19c5fc2580366b91b16f20e6b8914dbb003a5ce2741fd5b2d2f5520724266c037b1edac33dc00a344a96c627743c5670f861065e28d81a4b207ab8082cc2e')
 options=('!strip' '!emptydirs')
 
 prepare() {
