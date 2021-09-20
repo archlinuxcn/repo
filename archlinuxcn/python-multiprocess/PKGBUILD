@@ -1,23 +1,28 @@
-pkgname=python-multiprocess
-pkgver=0.70.9
-pkgrel=3
+# Maintainer: Carlos Aznarán <caznaranl@uni.pe>
+# Contributor: Michel Zou <xantares09@hotmail.com>
+_base=multiprocess
+pkgname=python-${_base}
 pkgdesc="better multiprocessing and multithreading in python"
-url="http://trac.mystic.cacr.caltech.edu/project/pathos/wiki.html"
-arch=('i686' 'x86_64')
-license=('BSD')
-makedepends=('python-setuptools')
-depends=('python-dill')
-source=("https://github.com/uqfoundation/multiprocess/archive/multiprocess-${pkgver}.tar.gz")
-sha256sums=('7cff4ea58e01e813c31756247c11616edb605fb4cb7a6bf5c2704a95277b9bf6')
+pkgver=0.70.12.2
+pkgrel=1
+url="https://github.com/uqfoundation/${_base}"
+arch=('any')
+license=(BSD)
+depends=(python-dill)
+makedepends=(python-setuptools)
+source=(${url}/archive/${_base}-${pkgver}.tar.gz)
+sha512sums=('16b8dc6b34d4f48db2cce697c31f591815f34bc71560225d8461b15cb63bff7b35011d3075505f7c26053eba7b281fc57a3237260a20e2984e548e80400c3cdc')
+
+export PYTHONPYCACHEPREFIX="${BUILDDIR}/${pkgname}/.cache/cpython/"
 
 build() {
-  cd "${srcdir}"/multiprocess-multiprocess-$pkgver
+  cd "${_base}-${_base}-${pkgver}"
   python setup.py build
 }
 
 package() {
-  cd "${srcdir}/multiprocess-multiprocess-$pkgver"
-  python setup.py install --root=${pkgdir} --optimize=1
+  cd "${_base}-${_base}-${pkgver}"
+  export PYTHONHASHSEED=0
+  python setup.py install --prefix=/usr --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm 644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
-
-
