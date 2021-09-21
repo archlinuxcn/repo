@@ -1,35 +1,31 @@
 # Maintainer: Vasia Novikov <n1dr+cmarchlinux@yaaandex.com> (replace "aaa" with "a")
 pkgname=rua
-pkgver=0.18.1
+pkgver=0.18.2
 pkgrel=1
 pkgdesc='AUR helper in Rust providing control, review, patch application and safe build options'
 url='https://github.com/vn971/rua'
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/vn971/rua/archive/v${pkgver}.tar.gz")
-arch=('x86_64' 'i686')
+arch=('any')
 license=('GPL3')
 
-makedepends=('cargo')
+makedepends=('cargo' 'libseccomp')
 depends=('bubblewrap' 'git' 'pacman' 'xz')
 optdepends=(
   'bubblewrap-suid: version of bubblewrap that works on linux-hardened kernel'
-  'shellcheck: check PKGBUILD scripts, taking care of special variables'
-  'sudo: package installation can be done via sudo, if convenient'
+  'shellcheck: allows checking PKGBUILD scripts, taking care of special variables'
+  'sudo: allows package installation via sudo, if desired'
 )
 
 #options+=(!strip)  # uncomment if you want readable stack traces
 
-sha256sums=(ac1ff3c4fa237ebc1defc82a471918e4e9bfba718f85a910be43c015812b8545)
+sha256sums=(e5e7e27bc2c6359fde000baefa4051176f29f456c6163bea60a46e0096397c76)
 
 build () {
   cd "$srcdir/$pkgname-$pkgver"
   mkdir -p target/completions
 
-  if pacman -T pacman-git > /dev/null; then
-    _features="git"
-  fi
-
   COMPLETIONS_DIR=target/completions \
-    cargo build --features "${_features:-}" --release
+    cargo build --release
 }
 
 package() {
@@ -40,4 +36,3 @@ package() {
   install -Dm644 target/completions/rua.fish "${pkgdir}/usr/share/fish/completions/rua.fish"
   install -Dm644 target/completions/_rua "${pkgdir}/usr/share/zsh/functions/Completion/Linux/_rua"
 }
-
