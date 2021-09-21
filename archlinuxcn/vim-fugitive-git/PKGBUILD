@@ -5,7 +5,7 @@
 
 _pkgname=vim-fugitive
 pkgname="${_pkgname}-git"
-pkgver=3.4.15.g630ecc8
+pkgver=3.4.29.ge1d382b
 pkgrel=1
 pkgdesc='Git wrapper so awesome, it should be illegal.'
 url='https://github.com/tpope/vim-fugitive'
@@ -21,7 +21,7 @@ sha256sums=('SKIP'
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
-  echo "$(git describe --always|cut -d 'v' -f2|sed -e 's|-|.|g' )"
+  echo "$(git describe --match 'v[0-9]*' --always|cut -d 'v' -f2|sed -e 's/-/./g'|sed -e 's/trashtest\./3.4.1/g')"
 }
 
 package() {
