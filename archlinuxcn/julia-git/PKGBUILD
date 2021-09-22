@@ -20,6 +20,21 @@ makedepends_llvm=("llvm-julia")
 # TODO: automatically detect llvm-libs version
 depends_llvm=("llvm-libs-julia>=12.0" "llvm-libs-julia<13.0")
 
+case "$CARCH" in
+  x86_64)
+    _soarch=64
+    ;;
+  i686)
+    _soarch=32
+    ;;
+  aarch64)
+    _soarch=64
+    ;;
+  armv7h)
+    _soarch=32
+    ;;
+esac
+
 epoch=1
 pkgver=1.8.0.DEV.571.g5bf1ca5c724
 pkgrel=1
@@ -27,10 +42,16 @@ pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
-depends_libs=(arpack fftw gmp libgit2-julia libgit2.so libunwind-git mpfr pcre2 suitesparse
-              openspecfun openblas-lapack libutf8proc-git 'libopenlibm.so=4-64'
-              mbedtls libssh2.so zlib p7zip libcurl.so libnghttp2 ca-certificates-utils
-              'libmbedcrypto.so=7-64' 'libmbedtls.so=13-64' 'libmbedx509.so=1-64')
+# The JLL packages hardcodes the sonames so we can't use autodetection for those.
+# Also, the makepkg autodetection of the soname looks at the linkage info from the ELF files
+# and it doesn't work here since these are either symlinks or hardcoded names in text files.
+depends_libs=(arpack fftw gmp libgit2-julia "libgit2.so=1.1-$_soarch"
+              libunwind-git mpfr pcre2 suitesparse
+              openspecfun openblas-lapack libutf8proc-git "libopenlibm.so=4-$_soarch"
+              mbedtls "libssh2.so=1-$_soarch" zlib p7zip "libcurl.so=4-$_soarch"
+              libnghttp2 ca-certificates-utils
+              "libmbedcrypto.so=7-$_soarch" "libmbedtls.so=13-$_soarch"
+              "libmbedx509.so=1-$_soarch")
 makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
              gcc-fortran git patchelf python)
 options=('debug' '!strip' '!buildflags')
