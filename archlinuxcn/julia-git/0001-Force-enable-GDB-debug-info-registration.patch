@@ -1,14 +1,14 @@
-From 7c106069a150d885bfed45d53826266371ab0cf5 Mon Sep 17 00:00:00 2001
+From dc0da6e168b78981b3145ac21d158208ca5a30cf Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 3 Oct 2020 08:45:51 -0400
-Subject: [PATCH 1/4] Force enable GDB debug info registration
+Subject: [PATCH 1/5] Force enable GDB debug info registration
 
 ---
  src/init.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/init.c b/src/init.c
-index 602583a922..927e0ab0bd 100644
+index 1c58753506..cb74bbe153 100644
 --- a/src/init.c
 +++ b/src/init.c
 @@ -703,7 +703,7 @@ JL_DLLEXPORT void julia_init(JL_IMAGE_SEARCH rel)
@@ -21,5 +21,5 @@ index 602583a922..927e0ab0bd 100644
  # else
      const char *jit_gdb = getenv("ENABLE_GDBLISTENER");
 -- 
-2.32.0
+2.33.0
 

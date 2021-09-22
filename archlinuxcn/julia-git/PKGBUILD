@@ -28,7 +28,7 @@ arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
 depends_libs=(arpack fftw gmp libgit2-julia libgit2.so libunwind-git mpfr pcre2 suitesparse
-              openspecfun openblas-lapack libutf8proc-git libopenlibm.so
+              openspecfun openblas-lapack libutf8proc-git 'libopenlibm.so=4-64'
               mbedtls libssh2.so zlib p7zip libcurl.so libnghttp2 ca-certificates-utils
               'libmbedcrypto.so=7-64' 'libmbedtls.so=13-64' 'libmbedx509.so=1-64')
 makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
@@ -39,6 +39,7 @@ _patches=(
   0002-Fix-source-file-paths.patch
   0003-Enable-basic-AA-in-O2.patch
   0004-Fix-mbedtls-version.patch
+  0005-Update-openlibm-soname.patch
 )
 source=('git://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -49,10 +50,11 @@ source=('git://github.com/JuliaLang/julia'
         arch-source-translate.cpp
         sysp7z.diff)
 sha512sums=('SKIP'
-            'e09b91f9d721a4ff8438892c5adaf0ed20bd713c08b49a4c6b805f9ee5d5416c228cd7ecb414e2da4fb427773c744415476da63e1b4560974673e7745259a081'
-            '5e69bdaae3e0edef72cb31cd1b4a29ff45bafa9ffe685d78072daad855d6613dc663da11bc4f0034412d49dc25700e18200d1fbb27a250d0fa8bec64000bde27'
-            '4c3869734fb6a32fb5dbc3b82c2b640c54495c8834e7197267cd26c5de7b05e533c80dc5ffc766c2d17f0494b5a06617682690786c15a8adfc91dbf9fe0beb15'
-            'f7f0a431ea977a59ffed77dc6deb5120ef8d8981f8e2ba38fcc4a58bc567acf377ce43ad16ec41a427994e498cf3f0cc7c6de0c08b1d197dcb05e3d3f9fc56f5'
+            'ed92cd835e9afbc682584af6721842a21867499f458b31115cae34cec626a0399cb1b413025f60a9cb8b9629603bc2bfca7c97b9da0d981c9677c3b0ca424f9a'
+            '7b936c32e04b5efadc6e1a02f94748e60ce6cb48e8ed32804af44abac02ebff2b0e568f79999a8c0eb6ad73dded8ce34b85455dd7996545f189820adef173694'
+            'd2babe516b6ada125b43b38313ed0c396effadb0bdfe4dbf2d6aaa28e4bc47383289a8114ef276b767d79019e9c4df367b6db8808892ee41f96f344f71562ea7'
+            'f41977acbf674232e1ee2217677921975c58f53ac4f8ccaeab69008a47fc63738242db8145817d459f5a1108edc06ebedf6d5915658a65a012684ccafefa25aa'
+            'd3649307e11f5cffb0ac729783d37fe51dc8f08ebe2007f6e4f4685624f1e9f8ae3a2879cd457833a4c17a0c5f71e4bfbac7abc6f4c1d1bbf7f79ebcadce48de'
             'eba2a2d6d4e44e39a98b7038aba22c7a534071ae95c680d1547c6021cd6d0bacaae7ab0ec150ce4103568a28d2a69e9803e07ab6a11bc1125f060f4a1f386a47'
             'ce03e2995a45d942f480d25d1ce7cddacb98f2e11eeed19b5564e36d817987f548c313b0d6b139402ba8c203c8ba9a059e1732695517d7b78b7fa88f08429295'
             '36df234b634926bc88084e683ee9f495ef0ce4c26d6d6b9f55294098bdcb86f5eaaf6c671afe1a5c4371c428bd7bf3dd617ec1f15a7ff35376d67df22140454c'
