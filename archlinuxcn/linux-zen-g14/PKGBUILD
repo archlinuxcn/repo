@@ -3,7 +3,7 @@
 
 pkgbase=linux-zen-g14
 _pkgbase=linux-zen
-pkgver=5.14.6.zen1
+pkgver=5.14.7.zen1
 pkgrel=1
 pkgdesc='Linux ZEN'
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -49,7 +49,7 @@ prepare() {
   rm ../0001-asus-wmi-Add-panel-overdrive-functionality.patch
   patch -Np1 <../0001-asus-wmi-Add-support-for-platform_profile.patch
   rm ../0001-asus-wmi-Add-support-for-platform_profile.patch
-
+  rm ../0001-add-amd-debug-cmdline.patch
   cd $srcdir
 
   for src in $(ls -1 *.patch); do
