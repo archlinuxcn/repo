@@ -1,0 +1,40 @@
+# Maintainer: Yuri Pieters <magejohnyjtp@gmail.com>
+
+_pkgname=supergfxctl
+pkgname="$_pkgname-git"
+pkgver=2.0.1.r6.2c22e67
+pkgrel=1
+pkgdesc="A utility for Linux graphics switching on Intel/AMD iGPU + nVidia dGPU laptops"
+arch=('x86_64')
+url="https://gitlab.com/asus-linux/$_pkgname"
+license=('MPL2')
+depends=('dbus' 'systemd')
+optdepends=()
+makedepends=('git' 'cargo')
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+source=("git+$url.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${_pkgname}" || exit
+  printf "%s" "$(git describe --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+prepare() {
+  cd "${_pkgname}" || exit
+  cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+  cd "${_pkgname}" || exit
+  export RUSTUP_TOOLCHAIN=stable
+  export CARGO_TARGET_DIR=target
+  cargo build --frozen --release --features cli,daemon
+}
+
+package() {
+  cd "${_pkgname}" || exit
+  make DESTDIR="${pkgdir}" install
+}
+
