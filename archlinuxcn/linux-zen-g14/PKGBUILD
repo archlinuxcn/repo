@@ -49,7 +49,6 @@ prepare() {
   rm ../0001-asus-wmi-Add-panel-overdrive-functionality.patch
   patch -Np1 <../0001-asus-wmi-Add-support-for-platform_profile.patch
   rm ../0001-asus-wmi-Add-support-for-platform_profile.patch
-  rm ../0001-add-amd-debug-cmdline.patch
   cd $srcdir
 
   for src in $(ls -1 *.patch); do
