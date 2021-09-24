@@ -1,0 +1,37 @@
+3.4
+  * Allow to disable image support
+
+3.2
+  * Add option to not trim space from selection
+
+3.1
+	* Chmod to 600 the cache history file
+	* Do not rely on atom given by thirdapp to avoid buggy app (thermite)
+
+3.0
+  * Support for blacklisting applications
+	* Support for keeping images in history
+	* Fix exception with clear commands
+
+2.1
+  * Support ~ expansion in config file
+
+2.0
+  * X Primary selection can be used as Input
+
+1.3
+  * Fix config file parsing
+	* Add version in the help message
+
+1.2
+  * Avoid that the program hang sometime due to the fact that XnextEvent is uninterruptible
+
+1.1
+  * Better Unicode support
+  * Add timeout on how long we can wait for selection
+  * Correctly abort the program when no XDisplay is available
+  * Avoid re-opening a connection to the X server each time (dirty-fix)
+  * Avoid hanging issue
+
+1.0
+  * Working version
