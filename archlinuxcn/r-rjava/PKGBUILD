@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=rJava
-_pkgver=1.0-4
+_pkgver=1.0-5
 pkgname=r-${_pkgname,,}
-pkgver=1.0.4
+pkgver=1.0.5
 pkgrel=1
 pkgdesc='Low-Level R to Java Interface'
 arch=('x86_64')
@@ -14,7 +14,7 @@ depends=(
   r
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('1d4682796f3d3ae3593af22408d27c85a72549d2b156213c8bc410723983a9e5')
+sha256sums=('2fdba5774f6333440e0ef6d96567b37f9f382820242a4d885f2891796fb36fde')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
