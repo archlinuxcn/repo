@@ -1,0 +1,28 @@
+From 7a23987acb698c2934958cb42a5e7b1cd73fe142 Mon Sep 17 00:00:00 2001
+From: Nico Weber <thakis@chromium.org>
+Date: Tue, 20 Jul 2021 21:54:09 +0000
+Subject: [PATCH] build: Add a TODO about a missing pnacl flag
+
+Change-Id: I1700d185a23afe4120e14c755782450b1bf89289
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/3041785
+Commit-Queue: Nico Weber <thakis@chromium.org>
+Commit-Queue: Hans Wennborg <hans@chromium.org>
+Auto-Submit: Nico Weber <thakis@chromium.org>
+Reviewed-by: Hans Wennborg <hans@chromium.org>
+Cr-Commit-Position: refs/heads/master@{#903659}
+---
+ build/config/compiler/BUILD.gn | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/build/config/compiler/BUILD.gn b/build/config/compiler/BUILD.gn
+index b6e095b705..ef6d1dfc12 100644
+--- a/build/config/compiler/BUILD.gn
++++ b/build/config/compiler/BUILD.gn
+@@ -1217,6 +1217,7 @@ config("compiler_deterministic") {
+     # we build same files with same compile flag.
+     # Other paths are already given in relative, no need to normalize them.
+     if (is_nacl) {
++      # TODO(https://crbug.com/1231236): Use -ffile-compilation-dir= here.
+       cflags += [
+         "-Xclang",
+         "-fdebug-compilation-dir",
