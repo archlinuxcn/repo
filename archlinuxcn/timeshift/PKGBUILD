@@ -5,8 +5,8 @@
 # Contributor: Doug Newgard <scimmia22 at outlook dot com>
 # Contributor: Robert Orzanna <orschiro at gmail dot com>
 pkgname=timeshift
-pkgver=20.11.1+4+gd437358
-pkgrel=6
+pkgver=21.09.1
+pkgrel=1
 pkgdesc="A system restore utility for Linux"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/teejee2008/timeshift"
@@ -19,7 +19,7 @@ optdepends=('btrfs-progs: BTRFS support'
             'grub-btrfs: BtrfS snapshots in grub')
 options=('!emptydirs')
 install="$pkgname.install"
-_commit=d437358ac3debf7625aefda4d0bd387a91b69df5
+_commit=ade651c0c8199a6f99344ecf6fc5061b741494eb
 source=("git+https://github.com/teejee2008/timeshift.git#commit=$_commit"
         "read-only-btrfs-snapshot.patch"
         "grub-btrfs.path"
