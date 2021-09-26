@@ -2,7 +2,7 @@
 # Contributor: navigaid <navigaid@gmail.com>
 
 pkgname=android-apktool
-pkgver=2.5.0
+pkgver=2.6.0
 pkgrel=1
 pkgdesc="a tool for reengineering Android apk files"
 arch=('any')
@@ -11,7 +11,7 @@ license=('Apache')
 depends=('java-runtime')
 source=("https://github.com/iBotPeaches/Apktool/releases/download/v${pkgver}/apktool_${pkgver}.jar"
         "http://connortumbleson.com/apktool/googlecode/apktool-install-linux-r04-brut1.tar.bz2")
-sha256sums=('b392d7cb99b592e9c5acc3c06f1b0f180edde96c66b86b3d6932b7c0c4079fe4'
+sha256sums=('f750a3cd2c1f942f27f5f7fd5d17eada3bdaff0a6643f49db847e842579fdda5'
             'cffa5c0a46bab9c66da02cc5db651c3a8321bee98580815e44c802d62a696dfa')
 
 prepare() {
