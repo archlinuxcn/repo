@@ -15,8 +15,6 @@ def pre_build():
       line = 'pkgname=(gtk3-no-tracker)'
     elif line.endswith(' tracker3'):
       line = line.removesuffix(' tracker3')
-    elif 'broadway_backend=true' in line:
-      line = line.replace('=true', '=false')
     elif 'tracker3=true' in line:
       line = line.replace('=true', '=false')
     elif 'gtk_doc=true' in line:
