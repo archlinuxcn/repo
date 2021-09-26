@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=R.utils
-_pkgver=2.10.1
+_pkgver=2.11.0
 pkgname=r-${_pkgname,,}
-pkgver=2.10.1
+pkgver=2.11.0
 pkgrel=1
 pkgdesc='Various Programming Utilities'
 arch=('any')
@@ -18,7 +18,7 @@ optdepends=(
   r-digest
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('957a4f51998c79403a50f6a46266e6553bbf08757b26bf80603a423bceb45abf')
+sha256sums=('622860f995f78be3a6e439f29d945874c5cb0866f6a73a9b43ac1d4d7f23fed8')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
