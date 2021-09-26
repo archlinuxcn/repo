@@ -4,7 +4,7 @@
 pkgbase=gtk3-no-tracker
 pkgname=(gtk3-no-tracker)
 pkgver=3.24.30+62+g8d04980f38
-pkgrel=3
+pkgrel=4
 epoch=1
 pkgdesc="GObject-based multi-platform GUI toolkit"
 arch=(x86_64)
@@ -36,7 +36,7 @@ prepare() {
 build() {
   CFLAGS+=" -DG_DISABLE_CAST_CHECKS"
   local meson_options=(
-    -D broadway_backend=false
+    -D broadway_backend=true
     -D cloudproviders=true
     -D tracker3=false
     -D colord=yes
