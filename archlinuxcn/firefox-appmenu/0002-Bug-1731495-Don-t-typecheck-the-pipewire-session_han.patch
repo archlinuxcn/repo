@@ -1,0 +1,40 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
+Date: Sun, 19 Sep 2021 17:26:30 +0200
+Subject: [PATCH] Bug 1731495 - Don't typecheck the pipewire session_handle.
+ r?rmader
+
+Since xdg-desktop-portal 1.10.0, the type is "o" (an object path string)
+instead of "s" (a normal string). g_variant_lookup fails if the type
+doesn't match exactly, even though both are strings.
+
+Use g_variant_lookup_value to get the field value, telling it not to
+typecheck. Use g_variant_dup_string to extract the string, which doesn't
+care about the exact type, so this code should work with all versions of
+xdg-desktop-portal.
+
+Following a similar fix to OBS, see
+https://github.com/obsproject/obs-studio/commit/ef0540c0d7df.
+---
+ .../desktop_capture/linux/base_capturer_pipewire.cc       | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/third_party/libwebrtc/webrtc/modules/desktop_capture/linux/base_capturer_pipewire.cc b/third_party/libwebrtc/webrtc/modules/desktop_capture/linux/base_capturer_pipewire.cc
+index 236fc09c8a96b..2c4489fb62c6c 100644
+--- a/third_party/libwebrtc/webrtc/modules/desktop_capture/linux/base_capturer_pipewire.cc
++++ b/third_party/libwebrtc/webrtc/modules/desktop_capture/linux/base_capturer_pipewire.cc
+@@ -589,8 +589,12 @@ void BaseCapturerPipeWire::OnSessionRequestResponseSignal(
+   guint32 portal_response;
+   GVariant* response_data;
+   g_variant_get(parameters, "(u@a{sv})", &portal_response, &response_data);
+-  g_variant_lookup(response_data, "session_handle", "s",
+-                   &that->session_handle_);
++
++  GVariant* session_handle =
++      g_variant_lookup_value(response_data, "session_handle", NULL);
++  that->session_handle_ = g_variant_dup_string(session_handle, NULL);
++
++  g_variant_unref(session_handle);
+   g_variant_unref(response_data);
+ 
+   if (!that->session_handle_ || portal_response) {
