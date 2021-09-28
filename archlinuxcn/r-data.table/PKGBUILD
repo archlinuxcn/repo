@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=data.table
-_pkgver=1.14.0
+_pkgver=1.14.2
 pkgname=r-${_pkgname,,}
-pkgver=1.14.0
+pkgver=1.14.2
 pkgrel=1
 pkgdesc='Extension of `data.frame`'
 arch=('x86_64')
@@ -25,7 +25,7 @@ optdepends=(
   r-zoo
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('13f1de244e7fa90fadfb0be964db5ffb324ca024d5f136feb4578b5daedaeb4d')
+sha256sums=('f741b951e5937440139514aedbae78dbd6862d825066848bdb006aa02c2f3d2b')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

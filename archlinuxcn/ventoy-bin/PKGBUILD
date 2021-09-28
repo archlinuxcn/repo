@@ -3,15 +3,17 @@
 # Contributor: KokaKiwi <kokakiwi+aur@kokakiwi.net>
 
 pkgname=ventoy-bin
-pkgver=1.0.52
-pkgrel=6
+pkgver=1.0.53
+pkgrel=1
 pkgdesc="A new multiboot USB solution"
 arch=('i686' 'x86_64')
 url="http://www.ventoy.net"
 license=('GPL3')
-depends=('bash' 'util-linux' 'xz' 'dosfstools' 'lib32-glibc')
+depends=('bash' 'util-linux' 'xz' 'dosfstools')
 optdepends=('gtk2: GTK2 GUI'
+            'libxml2: GTK2 GUI'
             'gtk3: GTK3 GUI'
+            'glib2: GTK3 GUI'
             'qt5-base: Qt5 GUI'
             'polkit: run GUI from application menu')
 provides=("${pkgname%-bin}")
@@ -25,7 +27,7 @@ source=("https://github.com/ventoy/Ventoy/releases/download/v${pkgver}/${pkgname
         "${pkgname%-bin}-extend-persistent"
         "${pkgname%-bin}.desktop"
         'sanitize.patch')
-sha256sums=('ed1120bcaa63ee810fb8bd712964c73057f70c7648be3125f45e639599a631c2'
+sha256sums=('910b7432b4222a6d92ca796571ad61bac500282f39a13fc8688d428abac52868'
             '1ad5d314e02b84127a5a59f3871eb1d28617218cad07cde3eeddcac391473000'
             'cbe6f47007981ada5e27a092fac7620a926301a704b59186295552d9f64cb0e7'
             'c3d4463a878a89d96e5f0bc4e1a43e48f27af5965bd4c977567695d7cf91fe5f'
