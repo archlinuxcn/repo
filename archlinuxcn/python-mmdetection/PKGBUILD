@@ -2,7 +2,7 @@
 
 _pkgname=mmdetection
 pkgname=python-mmdetection
-pkgver=2.16.0
+pkgver=2.17.0
 pkgrel=1
 pkgdesc='OpenMMLab Detection Toolbox and Benchmark'
 arch=('any')
@@ -27,7 +27,7 @@ optdepends=(
   python-mmlvis
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmdetection/archive/v${pkgver}.tar.gz")
-sha512sums=('4acc5c72ca230e65edd5abbe4155ab5dfae562b364bdf81c8996f6abd726f051ef36aa9f44108dc9ff76d33b3c371dadc0216eae6baecd90c9c1690ed021ec55')
+sha512sums=('c4ac7bd3adb8f829fe0db501a1d3a941e9bb817a306c455d9657eb34ff1a852def54b7b45c350475d8f90b6c2802584ea59945cc0800b435d554b13e846730d7')
 
 
 prepare() {
