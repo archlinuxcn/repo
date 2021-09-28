@@ -3,8 +3,8 @@
 
 pkgbase=linux-zen-g14
 _pkgbase=linux-zen
-pkgver=5.14.7.zen1
-pkgrel=2
+pkgver=5.14.8.zen1
+pkgrel=1
 pkgdesc='Linux ZEN'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/zen-kernel/zen-kernel/commits/$_srctag"
@@ -23,7 +23,7 @@ source=(
   "git+https://gitlab.com/asus-linux/fedora-kernel.git#branch=rog-5.14"
 )
 sha256sums=('SKIP'
-            'e4dafc832ab5c7401d06a4758048e40e9a3ba7db6e764061708c9bf063e05bff'
+            'SKIP'
             'SKIP')
 
 export KBUILD_BUILD_HOST=archlinux
@@ -31,9 +31,11 @@ export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
 
 prepare() {
+  sed -i 's/CONFIG_AMD_PMC=m/CONFIG_AMD_PMC=y/g' $srcdir/config
   cd $_srcname
 
   cp ../fedora-kernel/0*.patch $srcdir
+  cp ../fedora-kernel/kernel.spec $srcdir
 
   echo "Setting version..."
   scripts/setlocalversion --save-scmversion
@@ -41,17 +43,19 @@ prepare() {
   echo "${pkgbase#linux}" > localversion.20-pkgname
   
   
-  patch -Np1 < ../0002-asus-wmi-Add-dgpu-disable-method.patch
-  rm ../0002-asus-wmi-Add-dgpu-disable-method.patch
-  patch -Np1 <../0003-asus-wmi-Add-egpu-enable-method.patch
-  rm ../0003-asus-wmi-Add-egpu-enable-method.patch
-  patch -Np1 <../0001-asus-wmi-Add-panel-overdrive-functionality.patch
-  rm ../0001-asus-wmi-Add-panel-overdrive-functionality.patch
-  patch -Np1 <../0001-asus-wmi-Add-support-for-platform_profile.patch
-  rm ../0001-asus-wmi-Add-support-for-platform_profile.patch
+  #patch -Np1 < ../0002-asus-wmi-Add-dgpu-disable-method.patch
+  #rm ../0002-asus-wmi-Add-dgpu-disable-method.patch
+  #patch -Np1 <../0003-asus-wmi-Add-egpu-enable-method.patch
+  #rm ../0003-asus-wmi-Add-egpu-enable-method.patch
+  #patch -Np1 <../0001-asus-wmi-Add-panel-overdrive-functionality.patch
+  #rm ../0001-asus-wmi-Add-panel-overdrive-functionality.patch
+  #patch -Np1 <../0001-asus-wmi-Add-support-for-platform_profile.patch
+  #rm ../0001-asus-wmi-Add-support-for-platform_profile.patch
+  #patch -Np1 <../0999-v2-platform-x86-amd-pmc-Export-Idlemask-values-based-on-the-APU.patch
+  #rm ../0999-v2-platform-x86-amd-pmc-Export-Idlemask-values-based-on-the-APU.patch
   cd $srcdir
 
-  for src in $(ls -1 *.patch); do
+  for src in $(cat kernel.spec | grep "ApplyOptionalPatch 0" | sed -e 's/ApplyOptionalPatch //g'); do
     cd $_srcname
     echo "Applying patch $src..."
     patch -Np1 < "../$src"
