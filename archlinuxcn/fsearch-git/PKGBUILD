@@ -1,14 +1,14 @@
 # Maintainer: Christian Boxdörfer <christian.boxdoerfer@posteo.de>
 pkgname=fsearch-git
 _gitname=fsearch
-pkgver=0.1.r11.gc1e3272
+pkgver=0.1.r13.g26e1b4e
 pkgrel=1
-pkgdesc="A fast file search utility. Git Version."
+pkgdesc="A fast graphical file search utility. Development version."
 arch=('i686' 'x86_64')
 url="https://cboxdoerfer.github.io/fsearch"
 license=('GPL2')
-depends=('gtk3' 'pcre')
-makedepends=('git' 'autoconf-archive')
+depends=('gtk3' 'icu' 'pcre')
+makedepends=('git' 'meson')
 conflicts=('fsearch')
 source=('git://github.com/cboxdoerfer/fsearch.git')
 md5sums=('SKIP')
@@ -19,15 +19,14 @@ pkgver() {
 }
 
 build() {
-    cd $_gitname/
+    arch-meson $_gitname build
+    meson compile -C build
+}
 
-    ./autogen.sh
-    ./configure --prefix=/usr
-    make
+check() {
+    meson test -C build
 }
 
 package() {
-    cd $_gitname/
-
-    make DESTDIR="$pkgdir/" install
+    DESTDIR="$pkgdir" meson install -C build
 }
