@@ -11,14 +11,21 @@ provides=('proot')
 conflicts=('proot' 'proot-bin')
 depends=('talloc')
 makedepends=('git' 'python-docutils' 'libxslt')
-source=("git://github.com/proot-me/PRoot")
-sha1sums=('SKIP')
+source=("git://github.com/proot-me/PRoot"
+        0001-Add-support-for-statx-syscall.patch)
+sha1sums=('SKIP'
+          'f6e3358ffcce82b8d04c8804755296db8778bb31')
 
 pkgver() {
   cd PRoot
   printf "'r%s.%s'" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
+prepare() {
+  cd PRoot
+
+  patch -Np1 < ../0001-Add-support-for-statx-syscall.patch
+}
 
 build() {
   make -C PRoot/src -f GNUmakefile
