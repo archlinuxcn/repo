@@ -2,7 +2,7 @@
 
 pkgname=libindi-asi
 pkgver=1.9.2
-pkgrel=1
+pkgrel=2
 pkgdesc="3rd party drivers for INDI, support for ZWO devices: ASI cameras, EFW filter wheel, ASI ST4 port and ASI focuser"
 url="http://www.indilib.org/index.php?title=Main_Page"
 license=(LGPL2.1)
@@ -16,8 +16,11 @@ prepare() {
   mkdir -p build
   cd  indi-3rdparty-${pkgver}
 
-  #set all to off by default
-  sed -i -e '/option(WITH_.*On/s/ On/ Off/' CMakeLists.txt
+  # set all to off by default
+  sed -i -e '/option(WITH_.*On)$/s/ On)$/ Off)/' CMakeLists.txt
+
+  # prevent files being put in /lib
+  find ./ -name CMakeLists.txt -exec sed -i -e 's|"\/lib|"${CMAKE_INSTALL_PREFIX}/lib|g' {} \;
 }
 
 build() {
