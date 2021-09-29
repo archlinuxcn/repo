@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=knitr
-_pkgver=1.35
+_pkgver=1.36
 pkgname=r-${_pkgname,,}
-pkgver=1.35
+pkgver=1.36
 pkgrel=1
 pkgdesc='A General-Purpose Package for Dynamic Report Generation in R'
 arch=('any')
@@ -47,7 +47,7 @@ optdepends=(
   r-xml2
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('24aca2168da0a0d977507e3005976a0ad010294abebc12fdde64e096c8e6d6e5')
+sha256sums=('6ecef5b428d135e95a05f24f9f194d0d828b1180c61be44ad89b6210e32b8e41')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
