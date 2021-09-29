@@ -1,3 +1,4 @@
+cd "$(dirname "$0")"
 ver="$(curl https://releases.mozilla.org/pub/thunderbird/releases/ | sed -rn 's/([^0-9]*)([0-9]*\.[0-9]*?(\.[0-9]*)).*/\2/p' | sort -V | tail -n1)"
 #ver=91.0
 sed -r "s/(pkgver=)(.*)/\1$ver/" -i PKGBUILD
