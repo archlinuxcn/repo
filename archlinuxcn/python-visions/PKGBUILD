@@ -2,8 +2,8 @@
 
 pkgname=python-visions
 _pkgname=visions
-pkgver=0.7.1
-pkgrel=4
+pkgver=0.7.4
+pkgrel=1
 pkgdesc='Type System for Data Analysis in Python'
 arch=('any')
 url='https://github.com/dylan-profiler/visions'
@@ -26,7 +26,7 @@ makedepends=(
   python-sphinx_rtd_theme
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/dylan-profiler/visions/archive/v${pkgver}.tar.gz")
-sha512sums=('788a31e5812fe2a729c1d2d1b3dc5b9816dad970b82084109ca2e1f0d7b0c5b77f29364358d608808a929840690a34f139ad9a0770a2be3e526048e3d3b6911d')
+sha512sums=('0ff3233fd59e1099c138f98fd46d94eb042f1d28c436db41fed5c12dad0a5d6f175db3122fafdbc7d76e0d487a152f530aca4d6aaef165c884f3e2b9d6ed1134')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
