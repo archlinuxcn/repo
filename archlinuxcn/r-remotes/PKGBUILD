@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=remotes
-_pkgver=2.4.0
+_pkgver=2.4.1
 pkgname=r-${_pkgname,,}
-pkgver=2.4.0
+pkgver=2.4.1
 pkgrel=1
 pkgdesc="R Package Installation from Remote Repositories, Including 'GitHub'"
 arch=('any')
@@ -32,7 +32,7 @@ optdepends=(
   'subversion: for install_svn'
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('cde5c3e44f67eba5f9bb8ea72e04ed372649178cb036479e1387eac92b8c1411')
+sha256sums=('d5d777b2e10d70fd0670166d539eab88ec4f7fe030f54ec5cd2703f548473276')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
