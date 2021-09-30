@@ -1,0 +1,10 @@
+pre_build_script: aur_pre_build(maintainers=['w0rty'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: wgcf
+
+maintainers:
+  - github: dctxmei
