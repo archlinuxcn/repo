@@ -1,9 +1,9 @@
 # Maintainer: hubutui <hot123tea123@gmail.com>
 
 _pkgname=tibble
-_pkgver=3.1.4
+_pkgver=3.1.5
 pkgname=r-${_pkgname,,}
-pkgver=3.1.4
+pkgver=3.1.5
 pkgrel=1
 pkgdesc='Simple Data Frames'
 arch=('x86_64')
@@ -45,7 +45,7 @@ optdepends=(
   r-withr
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('73870e0771ada3ccae4e79c920f84b4b4dd60702999b5c7a8818c0aba078177f')
+sha256sums=('da6387ba683a67cd7fc2a111f6b62468e480a8078bc1867d433a40c5460edbe7')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
