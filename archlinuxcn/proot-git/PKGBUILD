@@ -12,9 +12,27 @@ conflicts=('proot' 'proot-bin')
 depends=('talloc')
 makedepends=('git' 'python-docutils' 'libxslt')
 source=("git://github.com/proot-me/PRoot"
-        0001-Add-support-for-statx-syscall.patch)
+        0001-Fix-handling-of-fstatat-on-new-kernels.patch
+        0002-Add-support-for-statx-syscall.patch
+        0003-Make-sure-bin-is-in-PATH-during-test.patch
+        0004-Fix-test-failure-due-to-increased-shebang-limit.patch
+        0005-Fix-test-caused-by-shell-optimization.patch
+        0006-Fix-regression-in-socket-name-shortening.patch
+        0007-Make-sure-not-to-fake-too-old-an-kernel-release.patch
+        0008-Python-3-support-in-test.patch
+        0009-Allow-a-higher-initial-heap-size-in-test.patch
+        0010-Make-sure-the-stack-is-aligned.patch)
 sha1sums=('SKIP'
-          'f6e3358ffcce82b8d04c8804755296db8778bb31')
+          'bf61a2f455bdb17facfeb9570064384b3a53b92d'
+          '4deacef92738fca5c47e89c42fb87cfd43171e95'
+          'abb6070153265590d3f715d9f3126406c4aceb6e'
+          '20621e3da62308979f23384e91f7d0a79e60a344'
+          '7d643dfdc3276f93e76ebd148f8489d79941f8be'
+          'a17288087db0de9ea4f9c36307e48bcca243263d'
+          '4cda80a45d95c3601b57070171998d36c8bfc480'
+          '0535273000f64ca1c1a09a77033a8391955b6fb1'
+          '90c2841780e2cf1331be2534d7989860b5524082'
+          'a8b8aa9a7dc79fa384757b0543cb0cc8840067f9')
 
 pkgver() {
   cd PRoot
@@ -24,7 +42,16 @@ pkgver() {
 prepare() {
   cd PRoot
 
-  patch -Np1 < ../0001-Add-support-for-statx-syscall.patch
+  patch -Np1 < ../0001-Fix-handling-of-fstatat-on-new-kernels.patch
+  patch -Np1 < ../0002-Add-support-for-statx-syscall.patch
+  patch -Np1 < ../0003-Make-sure-bin-is-in-PATH-during-test.patch
+  patch -Np1 < ../0004-Fix-test-failure-due-to-increased-shebang-limit.patch
+  patch -Np1 < ../0005-Fix-test-caused-by-shell-optimization.patch
+  patch -Np1 < ../0006-Fix-regression-in-socket-name-shortening.patch
+  patch -Np1 < ../0007-Make-sure-not-to-fake-too-old-an-kernel-release.patch
+  patch -Np1 < ../0008-Python-3-support-in-test.patch
+  patch -Np1 < ../0009-Allow-a-higher-initial-heap-size-in-test.patch
+  patch -Np1 < ../0010-Make-sure-the-stack-is-aligned.patch
 }
 
 build() {

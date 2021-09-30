@@ -1,0 +1,147 @@
+From 6bb2e39cf44095f6a43afa6c556eb86125370d29 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 29 Sep 2021 23:45:30 -0400
+Subject: [PATCH 08/10] Python 3 support in test
+
+---
+ test/sockets/tcpsockets.py     | 20 +++++++++++---------
+ test/sockets/tcpsocketsipv6.py | 20 +++++++++++---------
+ 2 files changed, 22 insertions(+), 18 deletions(-)
+
+diff --git a/test/sockets/tcpsockets.py b/test/sockets/tcpsockets.py
+index 2daffaf..d92fdcf 100644
+--- a/test/sockets/tcpsockets.py
++++ b/test/sockets/tcpsockets.py
+@@ -1,3 +1,5 @@
++from __future__ import print_function
++
+ import socket
+ import sys
+ import os
+@@ -18,16 +20,16 @@ if pid:
+         time.sleep(int(sys.argv[1]))
+ 
+     # Bind syscall
+-    print "Server bind"
++    print("Server bind")
+     sock.bind((HOST, PORT))
+ 
+     # Listen syscall
+-    print "Server listen"
++    print("Server listen")
+     sock.listen(1)
+ 
+     try:
+         # Accept syscall
+-        print "Server accept"
++        print("Server accept")
+         conn, addr = sock.accept()
+ 
+         while True:
+@@ -39,7 +41,7 @@ if pid:
+                 #    with open("fakeoutput" + sys.argv[4] + ".txt", "a") as testfile:
+                 #        testfile.write(data)
+                 #    os.remove("fakeoutput" + sys.argv[4] + ".txt")
+-                print "Server data received : " + data
++                print("Server data received : " + data.decode())
+                 break
+     finally:
+         # Close syscall
+@@ -56,10 +58,10 @@ else:
+ 
+     try:
+         # Connect syscall
+-        print "Client connect"
++        print("Client connect")
+         sock.connect((HOST, PORT))
+-    except socket.error, msg:
+-        print >>sys.stderr, msg
++    except socket.error as msg:
++        print(msg, file=sys.stderr)
+         sys.exit(1)
+ 
+     if len(sys.argv) > 3:
+@@ -68,8 +70,8 @@ else:
+     try:
+         # send Syscall
+         if len(sys.argv) > 4:
+-            sock.send("test " + sys.argv[4])
++            sock.send(("test " + sys.argv[4]).encode())
+         else:
+-            sock.send("test")
++            sock.send(b"test")
+     finally:
+         sock.close()
+diff --git a/test/sockets/tcpsocketsipv6.py b/test/sockets/tcpsocketsipv6.py
+index c3da21c..714210f 100644
+--- a/test/sockets/tcpsocketsipv6.py
++++ b/test/sockets/tcpsocketsipv6.py
+@@ -1,3 +1,5 @@
++from __future__ import print_function
++
+ import socket
+ import sys
+ import os
+@@ -9,7 +11,7 @@ PORT = 6432
+ pid = os.fork()
+ addrs = socket.getaddrinfo(HOST, PORT, socket.AF_INET6, 0, socket.SOL_TCP)[0][-1]
+ #addrs = (HOST, PORT)
+-print addrs
++print(addrs)
+ 
+ # Server
+ if pid:
+@@ -21,16 +23,16 @@ if pid:
+         time.sleep(int(sys.argv[1]))
+ 
+     # Bind syscall
+-    print "Server bind"
++    print("Server bind")
+     sock.bind(addrs)
+ 
+     # Listen syscall
+-    print "Server listen"
++    print("Server listen")
+     sock.listen(1)
+ 
+     try:
+         # Accept syscall
+-        print "Server accept"
++        print("Server accept")
+         conn, addr = sock.accept()
+ 
+         while True:
+@@ -42,7 +44,7 @@ if pid:
+                 #    with open("fakeoutput" + sys.argv[4] + ".txt", "a") as testfile:
+                 #        testfile.write(data)
+                 #    os.remove("fakeoutput" + sys.argv[4] + ".txt")
+-                print "Server data received : " + data
++                print("Server data received : " + data.decode())
+                 break
+     finally:
+         # Close syscall
+@@ -58,10 +60,10 @@ else:
+ 
+     try:
+         # Connect syscall
+-        print "Client connect"
++        print("Client connect")
+         sock.connect(addrs)
+-    except socket.error, msg:
+-        print >>sys.stderr, msg
++    except socket.error as msg:
++        print(msg, file=sys.stderr)
+         sys.exit(1)
+ 
+     if len(sys.argv) > 3:
+@@ -69,6 +71,6 @@ else:
+ 
+     try:
+         # send Syscall
+-        sock.send("test " + sys.argv[4])
++        sock.send(("test " + sys.argv[4]).encode())
+     finally:
+         sock.close()
+-- 
+2.33.0
+

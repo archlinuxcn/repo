@@ -1,0 +1,28 @@
+From 952ae979ac37a7fceda9064346ec7a9ebab6b683 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 29 Sep 2021 23:38:03 -0400
+Subject: [PATCH 07/10] Make sure not to fake too old an kernel release
+
+Or glibc will complain about kernel too old...
+---
+ test/test-e99993c8.sh | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/test/test-e99993c8.sh b/test/test-e99993c8.sh
+index 91cd8b9..9ca9aaa 100644
+--- a/test/test-e99993c8.sh
++++ b/test/test-e99993c8.sh
+@@ -2,7 +2,9 @@ if [ -z `which uname` ] || [ -z `which grep` ]; then
+     exit 125;
+ fi
+ 
++kver=$(uname -r)
++
+ LONG_RELEASE=0123456789012345678901234567890123456789012345678901234567890123456789
+ 
+-${PROOT} -k 3.33.333 uname -r | grep ^3.33.333$
++${PROOT} -k $kver-3.33.333 uname -r | grep ^.*-3.33.333$
+ ${PROOT} -k ${LONG_RELEASE} uname -r | grep ^0123456789012345678901234567890123456789012345678901234567890123$
+-- 
+2.33.0
+

@@ -1,0 +1,27 @@
+From d42f0066006de81a7860c85620964710b47c1395 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 29 Sep 2021 18:51:36 -0400
+Subject: [PATCH 03/10] Make sure `/bin` is in PATH during test
+
+On ArchLinux, where `/bin` is no longer in `PATH` by default
+this fixes about 10 test failures.
+---
+ test/GNUmakefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/GNUmakefile b/test/GNUmakefile
+index de9c4d5..845f3a9 100644
+--- a/test/GNUmakefile
++++ b/test/GNUmakefile
+@@ -23,7 +23,7 @@ check_failure: $(CHECK_TESTS)
+ 	@bash -c '! test -e failure'
+ 
+ check-%.sh: %.sh setup
+-	$(Q)env CARE="$(CARE)" PROOT_RAW="$(PROOT_RAW)" PROOT="$(PROOT)" ROOTFS=$(ROOTFS) sh -ex $< $(silently); $(call check,$*)
++	$(Q)env CARE="$(CARE)" PROOT_RAW="$(PROOT_RAW)" PROOT="$(PROOT)" ROOTFS=$(ROOTFS) PATH="$${PATH}:/bin" sh -ex $< $(silently); $(call check,$*)
+ 
+ check-%.c: $(ROOTFS)/bin/% setup
+ 	$(call check_c,$*,$(PROOT) -b /proc -r $(ROOTFS) /bin/$*)
+-- 
+2.33.0
+
