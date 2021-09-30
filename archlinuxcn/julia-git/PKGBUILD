@@ -36,8 +36,8 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.8.0.DEV.620.gc8b59049919
-pkgrel=2
+pkgver=1.8.0.DEV.622.gdc627e7bec0
+pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -53,7 +53,7 @@ depends_libs=(arpack fftw gmp libgit2-julia "libgit2.so=1.1-$_soarch"
               "libmbedcrypto.so=7-$_soarch" "libmbedtls.so=13-$_soarch"
               "libmbedx509.so=1-$_soarch")
 makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
-             gcc-fortran git patchelf python)
+             gcc-fortran git patchelf python proot)
 options=('debug' '!strip' '!buildflags')
 _patches=(
   0001-Force-enable-GDB-debug-info-registration.patch
@@ -76,7 +76,7 @@ sha512sums=('SKIP'
             'd2babe516b6ada125b43b38313ed0c396effadb0bdfe4dbf2d6aaa28e4bc47383289a8114ef276b767d79019e9c4df367b6db8808892ee41f96f344f71562ea7'
             'f41977acbf674232e1ee2217677921975c58f53ac4f8ccaeab69008a47fc63738242db8145817d459f5a1108edc06ebedf6d5915658a65a012684ccafefa25aa'
             'd3649307e11f5cffb0ac729783d37fe51dc8f08ebe2007f6e4f4685624f1e9f8ae3a2879cd457833a4c17a0c5f71e4bfbac7abc6f4c1d1bbf7f79ebcadce48de'
-            'eba2a2d6d4e44e39a98b7038aba22c7a534071ae95c680d1547c6021cd6d0bacaae7ab0ec150ce4103568a28d2a69e9803e07ab6a11bc1125f060f4a1f386a47'
+            '2bf050afb5afcd21b23667beb6129e73dc2fb8143366921c8859d7011ed06187db9f4aedae99c0fe31e0bcb7b0896180b006ee542d4b4d592369e9f4f1bd77ec'
             'ce03e2995a45d942f480d25d1ce7cddacb98f2e11eeed19b5564e36d817987f548c313b0d6b139402ba8c203c8ba9a059e1732695517d7b78b7fa88f08429295'
             '36df234b634926bc88084e683ee9f495ef0ce4c26d6d6b9f55294098bdcb86f5eaaf6c671afe1a5c4371c428bd7bf3dd617ec1f15a7ff35376d67df22140454c'
             'adf0fef964e8bdee9926f1127177bc0ddea0d2dbb1090ab94555c3599b87cf03b489dfe92fda3453bf68385f4b69556f396b1ecfb8a9525c23a3ed808e2eb370'
@@ -328,6 +328,32 @@ package-julia-in() {
       ln -sf "/usr/include/julia/$f" "${pkgdir}/${dbgsrcdir}/julia/src/$f"
     done
   )
+
+  env JULIA_PRECOMPILE_STDLIB_DIR="/usr/share/julia/stdlib/v$ver_short" \
+      proot -b "${pkgdir}/usr/share/julia/:/usr/share/julia/" \
+      "${pkgdir}/usr/bin/julia" --startup-file=no "${srcdir}/julia-compile-pkgs.jl" \
+      /usr/share/julia
+  for f in "${pkgdir}/usr/share/julia/compiled/v$ver_short/"*; do
+    touch "$f/.archpkg"
+  done
+
+  # The ji file records the exact time stamps so we need to fix those in post_install
+  (
+    echo "_fix_timestamps() {"
+    cd "${pkgdir}"
+    find usr/share/julia/stdlib -type f -exec \
+         sh -c 'echo "  touch -c -d \"$(stat -c %y "{}")\" \"{}\""' \;
+    echo "}"
+
+    echo "post_install() {"
+    echo "  _fix_timestamps"
+    echo "}"
+
+    echo "post_upgrade() {"
+    echo "  _fix_timestamps"
+    echo "}"
+  ) > "${startdir}/install.pkg"
+  true && install=install.pkg
 }
 
 package_julia-git() {

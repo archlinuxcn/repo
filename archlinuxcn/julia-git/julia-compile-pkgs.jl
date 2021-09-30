@@ -2,15 +2,17 @@
 
 using Pkg
 
+const stdlib_dir = get(ENV, "JULIA_PRECOMPILE_STDLIB_DIR", Sys.STDLIB)
+
 function get_deps(pkg)
     try
-        projfile = joinpath(Sys.STDLIB, pkg, "Project.toml")
+        projfile = joinpath(stdlib_dir, pkg, "Project.toml")
         isfile(projfile) &&
             return String[dep for (dep, id) in Pkg.Types.read_project(projfile).deps]
     catch
     end
     try
-        reqfile = joinpath(Sys.STDLIB, pkg, "REQUIRE")
+        reqfile = joinpath(stdlib_dir, pkg, "REQUIRE")
         if isfile(reqfile)
             res = String[]
             for line in readlines(reqfile)
@@ -39,15 +41,15 @@ function add_compile_pkg(pkgs, pkg)
 end
 
 if isdefined(Base, :TOMLCache) && !isdefined(Base, :CachedTOMLDict)
-    project_deps_get(pkg) = Base.project_deps_get(Sys.STDLIB, pkg, Base.TOMLCache())
+    project_deps_get(pkg) = Base.project_deps_get(stdlib_dir, pkg, Base.TOMLCache())
 else
-    project_deps_get(pkg) = Base.project_deps_get(Sys.STDLIB, pkg)
+    project_deps_get(pkg) = Base.project_deps_get(stdlib_dir, pkg)
 end
 
 function get_compile_list()
     # Get a topologically sorted list of packages to compile
     pkgs = String[]
-    for pkg in readdir(Sys.STDLIB)
+    for pkg in readdir(stdlib_dir)
         id = project_deps_get(pkg)
         id === nothing && continue
         Base.root_module_exists(id) && continue # Already loaded, this is a stdlib library.
@@ -57,9 +59,9 @@ function get_compile_list()
 end
 
 function find_src(name)
-    path = joinpath(Sys.STDLIB, "$name.jl")
+    path = joinpath(stdlib_dir, "$name.jl")
     isfile(path) && return path
-    path = joinpath(Sys.STDLIB, name, "src", "$name.jl")
+    path = joinpath(stdlib_dir, name, "src", "$name.jl")
     isfile(path) && return path
     return nothing
 end
