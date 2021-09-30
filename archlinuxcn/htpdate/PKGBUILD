@@ -1,35 +1,31 @@
-# Maintainer: Dominik Schrempf <dominik.schrempf at gmail dot com>
+# Maintainer: Yigit Sever <yigit at yigitsever dot com>
+# Contributor: Dominik Schrempf <dominik.schrempf at gmail dot com>
 # Contributor: Jonathan Ryan <jryan at curious-computing dot com>
 # Contributor: Hussam Al-Tayeb <hussam at visp dot net dot lb>
 pkgname=htpdate
-pkgver=1.2.2
-pkgrel=4
+pkgver=1.2.6
+pkgrel=1
 pkgdesc="HTTP based time synchronization tool"
-arch=(i686 x86_64)
-url="http://www.vervest.org/htp/"
+arch=('i686' 'x86_64')
+url="https://github.com/angeloc/htpdate"
 license=(GPL2)
 depends=('glibc')
-# TODO: In the process of adding two patches from OpenWRT, but they are rejected.
-# See https://aur.archlinux.org/packages/htpdate/.
-source=("http://www.vervest.org/htp/archive/c/${pkgname}-${pkgver}.tar.xz"
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "htpdate.default"
-        "htpdate.service"
-        "100-pidfile.patch")
-sha256sums=('5f1f959877852abb3153fa407e8532161a7abe916aa635796ef93f8e4119f955'
+    "htpdate.service")
+sha256sums=('d2cff522b8f53b00769dcca77d8025b19238ed35d702a4739dc05e387f718909'
             'b27efa8fe12de2a2bbacead8e5f926ec26d3010c2a68985f351515939e861864'
-            '0c0df47f66e6840b8b5ac70660ec433fa86a24aa396cfaaccba65ed6db8c0237'
-            'b564e561a24c03d23d1641c499b9cf952514ef8f6e6b0bd42d472eba01f513a6')
+            '0c0df47f66e6840b8b5ac70660ec433fa86a24aa396cfaaccba65ed6db8c0237')
 
 build() {
   cd ${pkgname}-${pkgver}
-  patch htpdate.c ../100-pidfile.patch
   make
 }
 
 package() {
   install -D -m 644 htpdate.default ${pkgdir}/etc/default/htpdate
-  install -D -m 644 htpdate.service ${pkgdir}/usr/lib/systemd/system/htpdate.service
+  install -D -m644 htpdate.service ${pkgdir}/usr/lib/systemd/system/htpdate.service
   cd ${pkgname}-${pkgver}
-  install -D -m 755 htpdate ${pkgdir}/usr/bin/htpdate
-  install -D -m 644 htpdate.8 ${pkgdir}/usr/share/man/man8/htpdate.8
+  install -D -m755 htpdate ${pkgdir}/usr/bin/htpdate
+  install -D -m644 htpdate.8 ${pkgdir}/usr/share/man/man8/htpdate.8
 }
