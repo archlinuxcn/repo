@@ -1,0 +1,13 @@
+maintainers:
+  - github: hubutui
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - rootlesskit
+
+update_on:
+  - source: github
+    github: moby/moby
+    use_latest_release: true
+# vim:set ts=2 sw=2 et:

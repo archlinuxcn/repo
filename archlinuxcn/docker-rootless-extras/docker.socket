@@ -1,0 +1,9 @@
+[Unit]
+Description=Docker Socket for the API
+
+[Socket]
+ListenStream=%t/docker.sock
+SocketMode=0660
+
+[Install]
+WantedBy=sockets.target
