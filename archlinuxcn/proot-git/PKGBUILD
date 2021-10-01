@@ -42,7 +42,6 @@ package() {
   install -m644 'doc/proot/changelog.rst' "${pkgdir}/usr/share/doc/proot"
   install -m644 'doc/proot/index.html' "${pkgdir}/usr/share/doc/proot"
   install -m644 'doc/proot/manual.rst' "${pkgdir}/usr/share/doc/proot"
-  install -m644 'doc/proot/roadmap.rst' "${pkgdir}/usr/share/doc/proot"
 
   install -m755 -d "${pkgdir}/usr/share/doc/proot/stylesheets"
   install -m644 'doc/proot/stylesheets/'* "${pkgdir}/usr/share/doc/proot/stylesheets"
