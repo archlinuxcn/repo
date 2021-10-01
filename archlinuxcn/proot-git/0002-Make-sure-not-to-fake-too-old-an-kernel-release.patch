@@ -1,0 +1,67 @@
+From e151a6c4b2cc9c6479a0e3c153f676a3a1c9b713 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 29 Sep 2021 23:38:03 -0400
+Subject: [PATCH 2/6] Make sure not to fake too old an kernel release
+
+Or glibc will complain about kernel too old...
+---
+ test/test-230f47ch.sh | 26 ++++++++++++++------------
+ test/test-e99993c8.sh |  4 +++-
+ 2 files changed, 17 insertions(+), 13 deletions(-)
+
+diff --git a/test/test-230f47ch.sh b/test/test-230f47ch.sh
+index fed0ac3..6abf254 100644
+--- a/test/test-230f47ch.sh
++++ b/test/test-230f47ch.sh
+@@ -7,19 +7,21 @@ if [ $? -eq 0 ]; then
+     exit 125;
+ fi
+ 
+-${PROOT} ${PROOT_RAW} -0 id -u                 | grep ^0$
+-${PROOT} ${PROOT_RAW} -i 123:456 id -u         | grep ^123$
+-${PROOT} ${PROOT_RAW} -k 3.33.333 uname -r     | grep ^3\.33\.333$
++kver=$(uname -r)
+ 
+-${PROOT} -0       ${PROOT_RAW} id -u           | grep ^0$
+-${PROOT} -i 123:456 ${PROOT_RAW} id -u         | grep ^123$
+-${PROOT} -k 3.33.333 ${PROOT_RAW} uname -r     | grep ^3\.33\.333$
++${PROOT} ${PROOT_RAW} -0 id -u                    | grep ^0$
++${PROOT} ${PROOT_RAW} -i 123:456 id -u            | grep ^123$
++${PROOT} ${PROOT_RAW} -k $kver-3.33.333 uname -r  | grep ^.*-3\.33\.333$
+ 
+-${PROOT} -0 ${PROOT_RAW} -k 3.33.333 id -u     | grep ^0$
+-${PROOT} -0 ${PROOT_RAW} -k 3.33.333 uname -r  | grep ^3\.33\.333$
++${PROOT} -0       ${PROOT_RAW} id -u              | grep ^0$
++${PROOT} -i 123:456 ${PROOT_RAW} id -u            | grep ^123$
++${PROOT} -k $kver-3.33.333 ${PROOT_RAW} uname -r  | grep ^.*-3\.33\.333$
+ 
+-${PROOT} -k 3.33.333 ${PROOT_RAW} -0 id -u     | grep ^0$
+-${PROOT} -k 3.33.333 ${PROOT_RAW} -0 uname -r  | grep ^3\.33\.333$
++${PROOT} -0 ${PROOT_RAW} -k $kver-3.33.333 id -u     | grep ^0$
++${PROOT} -0 ${PROOT_RAW} -k $kver-3.33.333 uname -r  | grep ^.*-3\.33\.333$
+ 
+-${PROOT} -i 123:456 ${PROOT_RAW} -k 3.33.333 id -u | grep ^123$
+-${PROOT} -k 3.33.333 ${PROOT_RAW} -i 123:456 id -u | grep ^123$
++${PROOT} -k $kver-3.33.333 ${PROOT_RAW} -0 id -u     | grep ^0$
++${PROOT} -k $kver-3.33.333 ${PROOT_RAW} -0 uname -r  | grep ^.*-3\.33\.333$
++
++${PROOT} -i 123:456 ${PROOT_RAW} -k $kver-3.33.333 id -u | grep ^123$
++${PROOT} -k $kver-3.33.333 ${PROOT_RAW} -i 123:456 id -u | grep ^123$
+diff --git a/test/test-e99993c8.sh b/test/test-e99993c8.sh
+index 91cd8b9..1ae8640 100644
+--- a/test/test-e99993c8.sh
++++ b/test/test-e99993c8.sh
+@@ -2,7 +2,9 @@ if [ -z `which uname` ] || [ -z `which grep` ]; then
+     exit 125;
+ fi
+ 
++kver=$(uname -r)
++
+ LONG_RELEASE=0123456789012345678901234567890123456789012345678901234567890123456789
+ 
+-${PROOT} -k 3.33.333 uname -r | grep ^3.33.333$
++${PROOT} -k $kver-3.33.333 uname -r | grep ^.*-3\.33\.333$
+ ${PROOT} -k ${LONG_RELEASE} uname -r | grep ^0123456789012345678901234567890123456789012345678901234567890123$
+-- 
+2.33.0
+

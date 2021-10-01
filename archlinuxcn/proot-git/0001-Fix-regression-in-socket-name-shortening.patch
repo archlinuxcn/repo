@@ -1,7 +1,7 @@
-From e92d8b2560b96b92a328b373474e1c825a5c6978 Mon Sep 17 00:00:00 2001
+From e730c6e889a23d32d79f4f3919f952e0fe216649 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 29 Sep 2021 23:26:14 -0400
-Subject: [PATCH 06/10] Fix regression in socket name shortening
+Subject: [PATCH 1/6] Fix regression in socket name shortening
 
 Instead of creating a temporary socket directly,
 create a temporary directory and have the socket be created in there.

@@ -1,7 +1,7 @@
-From 507d3070a2cb3b6a2ef2f54d9f9a39c1162b9a06 Mon Sep 17 00:00:00 2001
+From aab1bbcad53105ad91eb95c2f9f93b79ca187ced Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Thu, 30 Sep 2021 00:01:11 -0400
-Subject: [PATCH 09/10] Allow a higher initial heap size in test
+Subject: [PATCH 4/6] Allow a higher initial heap size in test
 
 A `/bin/sleep` has an initial heap size fo 33 pages on my local setup.
 -1 pages is way too small to fail.
