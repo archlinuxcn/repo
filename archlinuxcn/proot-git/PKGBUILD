@@ -11,20 +11,8 @@ provides=('proot')
 conflicts=('proot' 'proot-bin')
 depends=('talloc')
 makedepends=('git' 'python-docutils' 'libxslt')
-source=("git://github.com/proot-me/PRoot"
-        0001-Fix-regression-in-socket-name-shortening.patch
-        0002-Make-sure-not-to-fake-too-old-an-kernel-release.patch
-        0003-Python-3-support-in-test.patch
-        0004-Allow-a-higher-initial-heap-size-in-test.patch
-        0005-Make-sure-the-stack-is-aligned.patch
-        0006-Access-sockfd-in-the-chained-getsocketname-via-the-o.patch)
-sha1sums=('SKIP'
-          '10df01ccb8aadfc0d4814d0f3fd487cfd9b17eb2'
-          '86afae92e333466df866eb40ded7936d829fc3e0'
-          '3a05a00a82e9ee97b54a5e626a8f886f8c2d5255'
-          '742d934557e40090a89680ed661a7de09a574c68'
-          'dd15b3d426ec2cd8c8cfbccc91bb3034422e6782'
-          'd842877abb98fc2a9bf57a35777433c3c7441e01')
+source=("git://github.com/proot-me/PRoot")
+sha1sums=('SKIP')
 
 pkgver() {
   cd PRoot
@@ -33,14 +21,6 @@ pkgver() {
 
 prepare() {
   cd PRoot
-
-
-  patch -Np1 < ../0001-Fix-regression-in-socket-name-shortening.patch
-  patch -Np1 < ../0002-Make-sure-not-to-fake-too-old-an-kernel-release.patch
-  patch -Np1 < ../0003-Python-3-support-in-test.patch
-  patch -Np1 < ../0004-Allow-a-higher-initial-heap-size-in-test.patch
-  patch -Np1 < ../0005-Make-sure-the-stack-is-aligned.patch
-  patch -Np1 < ../0006-Access-sockfd-in-the-chained-getsocketname-via-the-o.patch
 }
 
 build() {
