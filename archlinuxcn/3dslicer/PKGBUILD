@@ -2,7 +2,7 @@
 
 pkgname=3dslicer
 pkgver=4.11.20210226
-pkgrel=5
+pkgrel=6
 pkgdesc='A free, open source and multi-platform software package widely used for medical, biomedical, and related imaging research'
 arch=('x86_64')
 url='https://www.slicer.org'
@@ -35,11 +35,11 @@ makedepends=(
 )
 options=(!emptydirs !strip)
 source=("${pkgname}::git+https://github.com/Slicer/Slicer.git#tag=v${pkgver}"
-        "${pkgname}.svg::https://github.com/Slicer/Slicer/raw/v4.11/Resources/3DSlicerLogo-app-icon.svg"
+        "${pkgname}.svg::https://www.slicer.org/assets/img/3D-Slicer-Mark.svg"
         "itk_limits.patch"
 )
 sha512sums=('SKIP'
-            'c23104efcbec3d49b5c26ad5514ed74316423db4aa9e6c7894f02f7ddbe509b577de358dfdd2f7c492963f312b7c146f03d5e41a89ab1298811894dc18746225'
+            '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014'
             'e0c19c5fc2580366b91b16f20e6b8914dbb003a5ce2741fd5b2d2f5520724266c037b1edac33dc00a344a96c627743c5670f861065e28d81a4b207ab8082cc2e')
 
 prepare() {
