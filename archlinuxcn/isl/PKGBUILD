@@ -5,15 +5,15 @@
 
 pkgname=isl
 pkgver=0.24
-pkgrel=1
+pkgrel=2
 pkgdesc="Library for manipulating sets and relations of integer points bounded by linear constraints"
 arch=('i686' 'x86_64')
 url="http://isl.gforge.inria.fr/"
 depends=('gmp')
 license=('MIT')
 conflicts=('isl-git' 'isl14' 'isl15' 'isl16' 'isl17')
-source=("http://isl.gforge.inria.fr/isl-${pkgver}.tar.gz")
-sha256sums=('26e6e4d60ad59b3fff9948eb36743f0c874e124e410ef5bab930d0f546bc580d')
+source=("https://mirror.sobukus.de/files/src/isl/isl-${pkgver}.tar.xz")
+sha256sums=('043105cc544f416b48736fff8caf077fb0663a717d06b1113f16e391ac99ebad')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
