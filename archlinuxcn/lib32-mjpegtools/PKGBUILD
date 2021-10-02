@@ -4,16 +4,16 @@
 # Mantainer: Lorenzo Ferrillo <lorenzofer at live dot com>
 _basename=mjpegtools
 pkgname=lib32-${_basename}
-pkgver=2.2.0
-pkgrel=2
+pkgver=2.2.1
+pkgrel=1
 pkgdesc="Set of tools that can do recording of videos and playback, simple cut-and-paste editing and the MPEG compression of audio and video. 32bit libraries"
 arch=('x86_64')
 license=('GPL')
 url="http://mjpeg.sourceforge.net/"
 depends=("gcc-libs-multilib" "lib32-libdv" "lib32-libjpeg" "lib32-libpng" "lib32-sdl" "libjpeg.so" "mjpegtools")
 makedepends=('lib32-gtk2' 'lib32-v4l-utils')
-source=(http://downloads.sourceforge.net/sourceforge/mjpeg/${_basename}-${pkgver}.tar.bz2)
-sha256sums=('a84349839471052db1ef691134aacf905b314dfce8762d47e10edcc9ab5f97d8' )
+source=(http://downloads.sourceforge.net/sourceforge/mjpeg/mjpegtools/${pkgver}/${_basename}-${pkgver}.tar.gz)
+sha256sums=('b180536d7d9960b05e0023a197b00dcb100929a49aab71d19d55f4a1b210f49a')
 prepare() {
   cd ${_basename}-${pkgver}
   sed -i -e '/ARCHFLAGS=/s:=.*:=:' configure
