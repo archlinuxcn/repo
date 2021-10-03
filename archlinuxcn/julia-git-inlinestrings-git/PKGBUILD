@@ -1,0 +1,25 @@
+pkgname=julia-git-inlinestrings-git
+pkgver=0.0.0.7.c733724
+pkgrel=1
+pkgdesc="InlineStrings.jl"
+url="https://github.com/JuliaData/InlineStrings.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-inlinestrings)
+source=(git://github.com/JuliaData/InlineStrings.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd InlineStrings.jl
+
+  echo "0.0.0.$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+  # git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd InlineStrings.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh InlineStrings "${pkgdir}" "${pkgname}" julia-git
+}
