@@ -3,7 +3,8 @@
 # NOTE: If you are experiencing segmentation fault, delete the ".rstudio-desktop" folder from your home directory then restart the program should fix the issue.
 
 pkgname=rstudio-desktop-bin
-pkgver=1.4.1717
+pkgver=2021.09.0.351
+_pkgver=2021.09.0-351
 pkgrel=1
 pkgdesc="An integrated development environment (IDE) for R (binary from RStudio official repository)"
 arch=('x86_64')
@@ -20,12 +21,12 @@ provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
 sha256sums_x86_64=(
-e27b2645f800c8760fb67d69e89b3a371c4e9e4d517fa81d650f44f3975a1745
+0d7ef2629dce118a577c1e1da2e14a2886c593a0aeef98ceb193641188ad66c7
 #84e61f5eda991b978fa168d6762f7990
 #391ba54997d6faddbfe41a185a823ee4
 )
 
-source_x86_64=("https://download1.rstudio.org/desktop/bionic/amd64/rstudio-${pkgver}-amd64.deb"
+source_x86_64=("https://download1.rstudio.org/desktop/bionic/amd64/rstudio-${_pkgver}-amd64.deb"
 #"http://archive.ubuntu.com/ubuntu/pool/main/g/gstreamer0.10/libgstreamer0.10-0_0.10.36-1.2ubuntu3_amd64.deb"
 #"http://security.ubuntu.com/ubuntu/pool/main/g/gst-plugins-base0.10/libgstreamer-plugins-base0.10-0_0.10.36-1.1ubuntu2.1_amd64.deb"
 )
