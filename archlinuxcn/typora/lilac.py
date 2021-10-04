@@ -13,7 +13,7 @@ from lilaclib import *
 
 def pre_build():
     run_cmd(["updpkgsums"])
-    aur_pre_build(maintainers=['duckbrain'])
+    aur_pre_build(maintainers=['irgendwr'])
 
 #post_build = aur_post_build
 
