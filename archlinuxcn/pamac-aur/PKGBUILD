@@ -4,15 +4,15 @@
 
 pkgname=pamac-aur
 pkgver=10.2.0
-pkgrel=1
+pkgrel=2
 _pkgfixver=$pkgver
 
-_commit='f9bdf612ead79cf8e7ba7a2bf58d4e062351143f'
-sha256sums=('b1e4cccd98750c2f8302d20e32806b258dd38e3ba11c73a06e3f690485bf441c')
+_commit='2f673c78cda2dd863d25a6beadb8290207462538'
+sha256sums=('d7a6fd0e30345cc040c35858b83c4678d5907381ec617faddfb53bddf3b7051d')
 
 pkgdesc="A Gtk3 frontend, Package Manager based on libalpm with AUR and Appstream support"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
-url="https://gitlab.manjaro.org/applications"
+url="https://gitlab.manjaro.org/applications/pamac"
 license=('GPL3')
 depends=('glib2>=2.42' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3>=0.38' 'gtk3>=3.22'
          'libnotify' 'desktop-file-utils' 'libpamac-aur>=11.1' 'gnutls>=3.4' 'git'
@@ -25,7 +25,7 @@ conflicts=('pamac' 'pamac-tray-appindicator')
 provides=("pamac=$pkgver-$pkgrel")
 options=(!emptydirs !strip)
 install=pamac.install
-source=("pamac-$pkgver-$pkgrel.tar.gz::$url/pamac/-/archive/$_commit/pamac-$_commit.tar.gz")
+source=("pamac-$pkgver-$pkgrel.tar.gz::$url/-/archive/$_commit/pamac-$_commit.tar.gz")
 
 prepare() {
   cd "$srcdir/pamac-$_commit"
