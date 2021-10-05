@@ -1,0 +1,59 @@
+# Maintainer: Julien Nicoulaud <julien dot nicoulaud at gmail dot com>
+
+_pkgname=ncspot
+pkgname="${_pkgname}-git"
+pkgver=0.5.0
+pkgrel=1
+pkgdesc="Cross-platform ncurses Spotify client written in Rust, inspired by ncmpc and the likes."
+arch=('x86_64')
+url="https://github.com/hrkfdn/ncspot"
+license=('BSD')
+depends=(
+   'ncurses'
+   'openssl'
+   'libpulse'
+)
+optdepends=(
+   'portaudio: PortAudio backend'
+   'ueberzug: cover drawing in terminal'
+)
+makedepends=(
+   'rust'
+   'cargo'
+   'git'
+   'alsa-lib'
+   'python'
+)
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("git+https://github.com/hrkfdn/ncspot.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd "${srcdir}/${_pkgname}"
+  echo "$(git describe --tags | sed 's/^v//; s/-/.r/; s/-g/./')"
+}
+
+prepare() {
+  cd "${srcdir}/${_pkgname}"
+  cargo fetch --locked
+}
+
+build() {
+  cd "${srcdir}/${_pkgname}"
+  cargo build --release --locked
+#  cargo build --release --features "cover" --locked
+}
+
+check() {
+  cd "${srcdir}/${_pkgname}"
+  cargo test --release --locked
+#  cargo test --release --features "cover" --locked
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}"
+  install -Dm 755 "target/release/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
+  install -Dm 755 LICENSE "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE"
+}
+
