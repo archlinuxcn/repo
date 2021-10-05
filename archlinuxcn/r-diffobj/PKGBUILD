@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=diffobj
-_pkgver=0.3.4
+_pkgver=0.3.5
 pkgname=r-${_pkgname,,}
-pkgver=0.3.4
+pkgver=0.3.5
 pkgrel=1
 pkgdesc='Diffs for R Objects'
 arch=('x86_64')
@@ -18,7 +18,7 @@ optdepends=(
   r-rmarkdown
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('38cd8ac8698af3c0be42e630088d3a24e9ed8fb72b411a68cf295ea995839efc')
+sha256sums=('d860a79b1d4c9e369282d7391b539fe89228954854a65ba47181407c53e3cf60')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
