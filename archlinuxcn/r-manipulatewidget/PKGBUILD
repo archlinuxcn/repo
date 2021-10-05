@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=manipulateWidget
-_pkgver=0.11.0
+_pkgver=0.11.1
 pkgname=r-${_pkgname,,}
-pkgver=0.11.0
+pkgver=0.11.1
 pkgrel=1
 pkgdesc='Add Even More Interactivity to Interactive Charts'
 arch=('any')
@@ -30,7 +30,7 @@ optdepends=(
   r-xts
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('f2953494a08babba972e9dcc293f767371ccf5c8d0f4d67b78dba1a50c7dda47')
+sha256sums=('5b73728d7d6dcc32f32d861375074cd65112c03a01e4ee4fa94e21b063fdefb6')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
