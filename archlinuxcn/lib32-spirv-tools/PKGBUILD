@@ -4,7 +4,7 @@
 # Contributor: Alexandre Demers <alexandre.f.demers@gmail.com>
 
 pkgname=lib32-spirv-tools
-pkgver=2021.2
+pkgver=2021.3
 pkgrel=1
 pkgdesc="API and commands for processing SPIR-V modules"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
@@ -30,7 +30,7 @@ prepare() {
   alias widl=
 
   cd "${srcdir}/SPIRV-Headers"
-  git reset --hard cf00fad5b4374c1ee10b46659d2766797769a658
+  git reset --hard ae217c17809fadb232ec94b29304b4afcd417bb4
 }
 
 build() {
