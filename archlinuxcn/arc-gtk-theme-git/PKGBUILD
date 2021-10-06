@@ -7,7 +7,7 @@
 pkgbase=arc-gtk-theme-git
 _pkgname=arc-theme
 pkgname=('arc-gtk-theme-git' 'arc-solid-gtk-theme-git')
-pkgver=20210412.r14.g23bf79a5
+pkgver=20210412.r15.g533c12a3
 pkgrel=1
 pkgdesc="A flat theme suite with transparent elements."
 arch=('any')
@@ -21,8 +21,9 @@ md5sums=('SKIP')
 
 # Latest stable Arch package versions
 _cinnamonver=4.8
-_gnomeshellver=3.38
+_gnomeshellver=40
 _gtk3ver=3.24
+_gtk4ver=4.4
 
 pkgver() {
   cd "${_pkgname}"
@@ -33,22 +34,25 @@ build() {
   cd "${_pkgname}"
 
   meson --prefix=/usr build \
+    -Dgnome_shell_gresource=true \
     -Dcinnamon_version="${_cinnamonver}" \
     -Dgnome_shell_version="${_gnomeshellver}" \
-    -Dgtk3_version="${_gtk3ver}"
+    -Dgtk3_version="${_gtk3ver}" \
+    -Dgtk4_version="${_gtk4ver}"
   meson compile -C build
 
   meson --prefix=/usr build-solid \
     -Dtransparency=false \
+    -Dgnome_shell_gresource=true \
     -Dcinnamon_version="${_cinnamonver}" \
     -Dgnome_shell_version="${_gnomeshellver}" \
-    -Dgtk3_version="${_gtk3ver}"
+    -Dgtk3_version="${_gtk3ver}" \
+    -Dgtk4_version="${_gtk4ver}"
   meson compile -C build-solid
 }
 
 package_arc-gtk-theme-git() {
   conflicts=('arc-gtk-theme')
-  replaces=('arc-gtk-theme-jnsh-git')
 
   cd "${_pkgname}"
   DESTDIR="$pkgdir" meson install -C build
@@ -57,7 +61,6 @@ package_arc-gtk-theme-git() {
 package_arc-solid-gtk-theme-git() {
   pkgdesc="A flat theme suite without transparent elements."
   conflicts=('arc-solid-gtk-theme')
-  replaces=('arc-solid-gtk-theme-jnsh-git')
 
   cd "${_pkgname}"
   DESTDIR="$pkgdir" meson install -C build-solid
