@@ -1,20 +1,20 @@
-From dc0da6e168b78981b3145ac21d158208ca5a30cf Mon Sep 17 00:00:00 2001
+From 73d886272321b62ff75d0a8ab4c50209d60bc8f8 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 3 Oct 2020 08:45:51 -0400
 Subject: [PATCH 1/5] Force enable GDB debug info registration
 
 ---
- src/init.c | 2 +-
+ src/codegen.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/src/init.c b/src/init.c
-index 1c58753506..cb74bbe153 100644
---- a/src/init.c
-+++ b/src/init.c
-@@ -703,7 +703,7 @@ JL_DLLEXPORT void julia_init(JL_IMAGE_SEARCH rel)
-     }
- #endif
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index 754499d502..593560a6ab 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -8318,7 +8318,7 @@ extern "C" void jl_init_llvm(void)
+     jl_data_layout.reset(DL);
  
+     // Register GDB event listener
 -#if defined(JL_DEBUG_BUILD)
 +#if defined(JL_DEBUG_BUILD) || 1
      jl_using_gdb_jitevents = 1;
