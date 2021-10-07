@@ -4,8 +4,8 @@
 
 pkgname=gdcm
 _pkgname=GDCM
-pkgver=3.0.9
-pkgrel=4
+pkgver=3.0.10
+pkgrel=1
 pkgdesc='A C++ library for DICOM medical files'
 arch=('x86_64')
 url='http://gdcm.sourceforge.net'
@@ -38,7 +38,7 @@ makedepends=(
 source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/malaterre/GDCM/archive/v${pkgver}.tar.gz"
 )
-sha512sums=('5220ea12ac94d83ee7046a3a070cec7ef83752d2f3d838e7db8d0379b5606d19a94d5bfdc04e8ec4c72e0c3b4397751f54fad49a04a283ee9b760b59183e8f7a')
+sha512sums=('1141389d9720b593a578b31069f93a3abe0abf559ac999c366cae28f1fd804e967c51548d4417e12d61dcc5d59d68b1c015857e31455b5a30e2063d3ee4102e9')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
