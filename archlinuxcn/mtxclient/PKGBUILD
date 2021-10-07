@@ -2,18 +2,23 @@
 
 pkgname=mtxclient
 pkgver=0.5.1
-pkgrel=2
-pkgdesc="Client API library for Matrix, built on top of Boost.Asio<Paste>"
-arch=('x86_64' 'i686')
+pkgrel=3
+pkgdesc="Client API library for Matrix, built on top of Boost.Asio"
+arch=('x86_64')
 url="https://github.com/Nheko-Reborn/mtxclient"
 license=('MIT')
 depends=('libolm' 'libsodium' 'openssl' 'boost-libs')
 makedepends=('cmake' 'nlohmann-json' 'boost')
-source=("$pkgname-$pkgver.tar.gz::https://github.com/Nheko-Reborn/mtxclient/archive/v$pkgver.tar.gz")
-sha256sums=('9478d870296ebe7679c90f563cb798eb3cdd3f9c4578ceea5af75b66f456baaa')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/Nheko-Reborn/mtxclient/archive/v$pkgver.tar.gz"
+        "0001-Fix-compilaton-with-Olm-3.2.5.patch")
+sha256sums=('9478d870296ebe7679c90f563cb798eb3cdd3f9c4578ceea5af75b66f456baaa'
+            '96d213f254dcc08126865e834679e9d72bdfde867510bcc0b7a44e8351f6c32d')
 
 prepare() {
   mkdir -p build
+
+  cd $pkgname-$pkgver
+  patch -Np1 < ../0001-Fix-compilaton-with-Olm-3.2.5.patch
 }
 
 build() {
