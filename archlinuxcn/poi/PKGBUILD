@@ -2,7 +2,7 @@
 
 pkgname=poi
 _pkgname=poi
-pkgver=10.7.0.beta.2.0.gd76fafa8
+pkgver=10.6.0.0.g1f164297
 pkgrel=1
 pkgdesc="Scalable KanColle browser and tool"
 arch=('any')
@@ -23,7 +23,7 @@ options=('!strip') # nothing to strip
 
 prepare() {
     cd ${srcdir}/${pkgname}
-    git checkout -f $(git describe --tags $(git rev-list --tags --max-count=1))
+    git checkout -f $(git tag --sort=-taggerdate | egrep -v '.*(alpha|beta).*' | head -n 1)
 }
 
 pkgver() {
