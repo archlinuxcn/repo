@@ -3,7 +3,7 @@
 _pkgname=horovod
 pkgname=python-horovod
 pkgver=0.21.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Distributed training framework for TensorFlow, Keras, PyTorch, and Apache MXNet'
 arch=('x86_64')
 url='https://github.com/horovod/horovod'
@@ -27,14 +27,12 @@ depends=(
 makedepends=(
   cmake
   git
-  mxnet-cuda
   python-pip
   python-pytorch-cuda
   python-setuptools
   python-tensorflow-cuda
 )
 optdepends=(
-  'mxnet-cuda: mxnet framework'
   'python-pytorch-cuda: pytorch framework'
   'python-tensorflow-cuda: tensorflow framework'
 )
@@ -56,10 +54,10 @@ prepare() {
   export HOROVOD_GPU_BROADCAST=NCCL
   export HOROVOD_WITH_GLOO=1
   export HOROVOD_WITH_MPI=1
-  export HOROVOD_WITH_MXNET=1
+  export HOROVOD_WITH_MXNET=0
   export HOROVOD_WITH_PYTORCH=1
   export HOROVOD_WITH_TENSORFLOW=1
-  export HOROVOD_BUILD_CUDA_CC_LIST="52,53,60,61,62,70,72,75,80"
+  export HOROVOD_BUILD_CUDA_CC_LIST="52,53,60,61,62,70,72,75,80,86"
   export CC=/opt/cuda/bin/gcc
   export CXX=/opt/cuda/bin/g++
   export MAKEFLAGS="-j1"
