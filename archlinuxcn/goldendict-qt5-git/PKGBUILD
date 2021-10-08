@@ -5,12 +5,12 @@
 
 pkgname=goldendict-qt5-git
 pkgver=1.5.0.RC2.490.gbaff02a1
-pkgrel=1
+pkgrel=2
 pkgdesc="Feature-rich dictionary lookup program."
 arch=('i686' 'x86_64')
 url="http://goldendict.org/"
 license=('GPL3')
-depends=('ffmpeg' 'hunspell' 'libao' 'libeb' 'qt5-multimedia' 'qt5-svg' 'qt5-tools' 'qt5-webkit' 'qt5-x11extras' 'libxtst')
+depends=('ffmpeg' 'hunspell' 'libao' 'libeb' 'qt5-multimedia' 'qt5-svg' 'qt5-tools' 'qt5-webkit' 'qt5-x11extras' 'libxtst' 'opencc')
 makedepends=('git')
 conflicts=('goldendict' 'goldendict-svn' 'goldendict-git-opt')
 provides=('goldendict')
@@ -31,7 +31,7 @@ prepare() {
 
 build(){
   cd ${_gitname}
-  PREFIX="/usr" qmake-qt5 "CONFIG+=zim_support"
+  PREFIX="/usr" qmake-qt5 "CONFIG+=zim_support" "CONFIG+=chinese_conversion_support"
   make
 }
 
