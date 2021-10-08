@@ -6,7 +6,7 @@
 # Contributor: Robert Orzanna <orschiro at gmail dot com>
 pkgname=timeshift
 pkgver=21.09.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A system restore utility for Linux"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/teejee2008/timeshift"
@@ -41,7 +41,7 @@ prepare() {
   sed -i -e 's/--Xcc="-O3" //g' src/makefile
 
   # https://github.com/teejee2008/timeshift/pull/685
-  patch -Np1 -i "$srcdir"/read-only-btrfs-snapshot.patch
+  #patch -Np1 -i "$srcdir"/read-only-btrfs-snapshot.patch
 }
 
 build() {
