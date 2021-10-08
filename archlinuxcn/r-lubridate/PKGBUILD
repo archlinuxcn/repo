@@ -1,10 +1,10 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=lubridate
-_pkgver=1.7.10
+_pkgver=1.8.0
 pkgname=r-${_pkgname,,}
-pkgver=1.7.10
-pkgrel=2
+pkgver=1.8.0
+pkgrel=1
 pkgdesc='Make Dealing with Dates a Little Easier'
 arch=('x86_64')
 url="https://cran.r-project.org/package=${_pkgname}"
@@ -27,7 +27,7 @@ optdepends=(
   r-zoo
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('15121d213893255f1c8257a5a06acae7b3269b2378d56efd5cc95d9b4d1bc5e8')
+sha256sums=('87d66efdb1f3d680db381d7e40a202d35645865a0542e2f270ef008a19002ba5')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
