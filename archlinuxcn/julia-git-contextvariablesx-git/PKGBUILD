@@ -1,0 +1,24 @@
+pkgname=julia-git-contextvariablesx-git
+pkgver=0.1.2.0.1.g26eb394
+pkgrel=1
+pkgdesc="ContextVariablesX.jl"
+url="https://github.com/tkf/ContextVariablesX.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-contextvariablesx)
+source=(git://github.com/tkf/ContextVariablesX.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd ContextVariablesX.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd ContextVariablesX.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh ContextVariablesX "${pkgdir}" "${pkgname}" julia-git
+}
