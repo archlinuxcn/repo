@@ -4,14 +4,15 @@ _pkgbase=iptables
 pkgbase=iptables-fullconenat
 pkgname=(iptables-fullconenat iptables-fullconenat-nft)
 pkgver=1.8.7
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc='Linux kernel packet control tool with FULLCONENAT support.'
 arch=(x86_64)
 license=(GPL2)
 url='https://www.netfilter.org/projects/iptables/index.html'
-depends=(libnftnl libpcap libnfnetlink libnetfilter_conntrack bash netfilter-fullconenat)
+depends=(libnftnl libpcap libnfnetlink libnetfilter_conntrack bash)
 makedepends=(linux-api-headers)
+optdepends=("netfilter-fullconenat: kernel module for fullconenat")
 provides=('iptables')
 conflicts=(iptables)
 install=${pkgbase}.install
@@ -19,7 +20,8 @@ backup=(etc/ethertypes etc/iptables/{ip,ip6}tables.rules)
 source=(https://www.netfilter.org/projects/iptables/files/$_pkgbase-$pkgver.tar.bz2{,.sig}
         empty.rules simple_firewall.rules empty-{filter,mangle,nat,raw,security}.rules
         {arp,eb,ip,ip6}tables.service iptables-{legacy,nft}-flush
-        "libipt_FULLCONENAT.c::https://raw.githubusercontent.com/Chion82/netfilter-full-cone-nat/master/libipt_FULLCONENAT.c")
+        "libipt_FULLCONENAT.c::https://raw.githubusercontent.com/llccd/netfilter-full-cone-nat/dev/libipt_FULLCONENAT.c"
+        "libip6t_FULLCONENAT.c::https://raw.githubusercontent.com/llccd/netfilter-full-cone-nat/dev/libip6t_FULLCONENAT.c")
 sha1sums=('05ef75415cb7cb7641f51d51e74f3ea29cc31ab1'
           'SKIP'
           '83b3363878e3660ce23b2ad325b53cbd6c796ecf'
@@ -35,14 +37,15 @@ sha1sums=('05ef75415cb7cb7641f51d51e74f3ea29cc31ab1'
           '9cec592787e32451f58fa608ea057870e07aa704'
           'd10af7780d1634778d898c709e2d950aa1561856'
           '15c1684f3e671f4d0ede639a7c9c08e1a841511c'
-          '6defc372f039b484948c9bb6d88737967818b2dd')
+          '4a4f5ebc8e30c573f9c3220b8135e3101f8da18c'
+          '878a1e0a306f274b285a26d3d4a3f2072caa31e3')
 validpgpkeys=('37D964ACC04981C75500FB9BD55D978A8A1420E4') # Netfilter Core Team
 
 prepare() {
   mkdir build
   cd $_pkgbase-$pkgver
 
-  cp ../libipt_FULLCONENAT.c extensions/
+  cp ../libip{,6}t_FULLCONENAT.c extensions/
   # use system one
   rm include/linux/types.h
 }
