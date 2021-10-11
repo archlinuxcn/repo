@@ -1,12 +1,12 @@
 #Maintainer : Sasasu <lizhaolong0123@gmail.com>
 pkgbase=uget-integrator-browsers
-pkgname=(uget-integrator-chrome uget-integrator-chromium uget-integrator-opera uget-integrator-firefox)
+pkgname=(uget-integrator-chrome uget-integrator-chromium uget-integrator-opera uget-integrator-firefox uget-integrator-libreworlf)
 arch=('any')
 url="https://github.com/ugetdm/uget-integrator"
 license=('GPL3')
 depends=('uget-integrator')
 pkgver=1.0.0
-pkgrel=2
+pkgrel=3
 makedepends=()
 source=("ugetdm-chrome-$pkgver::https://raw.githubusercontent.com/ugetdm/uget-integrator/v$pkgver/conf/com.ugetdm.chrome.json"
         "ugetdm-firefox-$pkgver::https://raw.githubusercontent.com/ugetdm/uget-integrator/v$pkgver/conf/com.ugetdm.firefox.json")
@@ -55,4 +55,14 @@ package_uget-integrator-firefox(){
     cd "$srcdir"
     mkdir -p "$pkgdir/usr/lib/mozilla/native-messaging-hosts"
     install -m644 "ugetdm-firefox-$pkgver" "$pkgdir"/usr/lib/mozilla/native-messaging-hosts/com.ugetdm.firefox.json
+}
+
+#for LibreWolf, thanks quentin
+package_uget-integrator-libreworlf(){
+    optdepends=('librewolf: the browser')
+    pkgdesc="Configuration to connect LibreWolf with uget-integrator"
+    install="firefox.install"
+    cd "$srcdir"
+    mkdir -p "$pkgdir/usr/lib/librewolf/native-messaging-hosts"
+    install -m644 "ugetdm-firefox-$pkgver" "$pkgdir"/usr/lib/librewolf/native-messaging-hosts/com.ugetdm.firefox.json
 }
