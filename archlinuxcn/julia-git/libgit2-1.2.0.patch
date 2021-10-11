@@ -1,0 +1,24 @@
+From ad714d34e0902f48032b8a2bec3c837663805f18 Mon Sep 17 00:00:00 2001
+From: Antonio Rojas <arojas@archlinux.org>
+Date: Fri, 10 Sep 2021 19:55:59 +0200
+Subject: [PATCH] Support libgit2 1.2
+
+libgit2 1.2 added a new remote_ready member to git_remote_callbacks, update RemoteCallbacks accordingly
+---
+ stdlib/LibGit2/src/types.jl | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/stdlib/LibGit2/src/types.jl b/stdlib/LibGit2/src/types.jl
+index 9ffcaa364612..5f571e7b2646 100644
+--- a/stdlib/LibGit2/src/types.jl
++++ b/stdlib/LibGit2/src/types.jl
+@@ -230,6 +230,9 @@ Matches the [`git_remote_callbacks`](https://libgit2.org/libgit2/#HEAD/type/git_
+     push_update_reference::Ptr{Cvoid}  = C_NULL
+     push_negotiation::Ptr{Cvoid}       = C_NULL
+     transport::Ptr{Cvoid}              = C_NULL
++    @static if LibGit2.VERSION >= v"1.2.0"
++        remote_ready::Ptr{Cvoid}       = C_NULL
++    end
+     payload::Any                       = nothing
+     @static if LibGit2.VERSION >= v"0.99.0"
+         resolve_url::Ptr{Cvoid}        = C_NULL

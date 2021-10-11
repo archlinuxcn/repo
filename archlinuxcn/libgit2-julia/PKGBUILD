@@ -3,8 +3,8 @@
 # Contributor: Dave Reisner <d@falconindy.com>
 
 pkgname=libgit2-julia
-pkgver=1.1.0
-pkgrel=2
+pkgver=1.2.0
+pkgrel=1
 epoch=1
 pkgdesc='A linkable library for Git'
 arch=(i686 x86_64 armv7h aarch64)
@@ -15,7 +15,7 @@ provides=('libgit2.so' "libgit2=$epoch:$pkgver")
 conflicts=(libgit2)
 license=('GPL2')
 source=("libgit2-$pkgver.tar.gz::https://github.com/libgit2/libgit2/archive/v${pkgver}.tar.gz"
-        "libgit2-0.99.0-remove_http-parse_incompatible_tests.patch"
+        "libgit2-1.2.0-remove_http-parse_incompatible_tests.patch"
         libgit2-agent-nonfatal.patch)
 sha256sums=('41a6d5d740fd608674c7db8685685f45535323e73e784062cf000a633d420d1e'
             '0a597176a551dfe8dda56a46362ff1ef614928206a162d78fdf2d3074c9273ca'
@@ -25,9 +25,9 @@ options=(!strip)
 prepare() {
   cd "libgit2-$pkgver"
   mkdir -p build
-  # removing tests that are only compatible with the (modified) vendored
-  # version of http-parser, but not with upstream http-parser
-  patch -Np1 -i "../libgit2-0.99.0-remove_http-parse_incompatible_tests.patch"
+  # remove tests that are only compatible with the (modified) vendored version
+  # of http-parser, but not with upstream http-parser
+  patch -Np1 -i "../libgit2-1.2.0-remove_http-parse_incompatible_tests.patch"
   patch -p1 < ../libgit2-agent-nonfatal.patch
 }
 
