@@ -1,7 +1,8 @@
-# Maintainer: phiresky <phireskyde+git@gmail.com> 
+# Maintainer: phiresky <phireskyde+git@gmail.com>
 pkgname=svp
 pkgver=4.5.210
-pkgrel=1
+_pkgver=${pkgver}-1
+pkgrel=2
 epoch=
 pkgdesc="SmoothVideo Project 4 (SVP4)"
 arch=('x86_64')
@@ -23,15 +24,15 @@ options=(!strip)
 install=${pkgname}.install
 changelog=
 #source=("https://gist.githubusercontent.com/phiresky/1e2cbd30bed4e5978771af232d11afd1/raw/svp4-linux.$pkgver.tar.bz2")
-source=("https://www.svp-team.com/files/svp4-linux.$pkgver.tar.bz2")
-# I am rehosting the binaries
-# taken from
+source=("https://www.svp-team.com/files/svp4-linux.${_pkgver}.tar.bz2")
+# I am rehosting the binaries taken from
 # http://www.svp-team.com/files/svp4-linux-64.tbz2
 # at https://gist.github.com/phiresky/1e2cbd30bed4e5978771af232d11afd1
 # so they are correctly versioned and old versions still exist
-# update 2019-10-06: svp-team.com now uses versioned file names. i'll keep rehosting them for now since i don't trust them to actually keep old versions.
+# update 2019-10-06: svp-team.com now uses versioned file names.
+# I'll keep rehosting them for now since i don't trust them to actually keep old versions.
 noextract=()
-sha256sums=('ed4c5ce7dd03ce0dcda48bba17ad1da9532fbfdcc864bf360aee9f295ee65d88')
+sha256sums=('940d539ba50e4455fdaebbec07db03870f98f101fbb4ceadda013d1e00c90883')
 validpgpkeys=()
 
 prepare() {
