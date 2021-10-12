@@ -45,7 +45,7 @@ license=('GPL')
 # The JLL packages hardcodes the sonames so we can't use autodetection for those.
 # Also, the makepkg autodetection of the soname looks at the linkage info from the ELF files
 # and it doesn't work here since these are either symlinks or hardcoded names in text files.
-depends_libs=(arpack fftw gmp libgit2-julia "libgit2.so=1.1-$_soarch"
+depends_libs=(arpack fftw gmp libgit2-julia "libgit2.so=1.2-$_soarch"
               libunwind-git mpfr pcre2 suitesparse
               openspecfun openblas-lapack libutf8proc-git "libopenlibm.so=4-$_soarch"
               mbedtls "libssh2.so=1-$_soarch" zlib p7zip "libcurl.so=4-$_soarch"
