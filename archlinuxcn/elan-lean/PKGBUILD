@@ -1,4 +1,5 @@
-# Maintainer: Xuanrui QI <me@xuanruiqi.com>
+# Maintainer: Ray Xu <i@xugr.me>
+# Contributor: Xuanrui QI <me@xuanruiqi.com>
 
 # This PKGBUILD is forked off the PKGBUILD for rustup, which is 
 # the work of:
@@ -7,20 +8,20 @@
 # Contributor: Jon Gjengset <jon@tsp.io>
 _pkgname=elan
 pkgname=${_pkgname}-lean
-pkgver=1.0.6
-pkgrel=2
+pkgver=1.0.7
+pkgrel=1
 pkgdesc="A Lean version manager"
 arch=('x86_64')
-url="https://github.com/Kha/elan"
+url="https://github.com/leanprover/elan"
 license=('MIT' 'Apache')
 depends=('curl' 'xz')
 makedepends=('cargo')
 provides=('lean-community')
 conflicts=('lean-bin' 'lean-git' 'lean4' 'lean-community' )
 install='post.install'
-source=("elan-${pkgver}.tar.gz::https://github.com/Kha/elan/archive/v${pkgver}.tar.gz")
-sha512sums=('6e45e0b0837a5bc452a5c499f91688e5481a0e0859cc6e3bbbada6f11ebc9f277021d7094e5ca26cd4295d4cc6562a5674bbd64ac203e7703c0b400333d30137')
-_binlinks=('lean' 'leanchecker' 'leanpkg')
+source=("elan-${pkgver}.tar.gz::https://github.com/leanprover/elan/archive/v${pkgver}.tar.gz")
+sha256sums=('2f77c1dfcfb3afbd00fc7743a511db54ec84ef28241e15e44b17a78dbaf2a9cf')
+_binlinks=('lean' 'leanpkg' 'leanchecker' 'leanc' 'leanmake' 'lake')
 
 build() {
     cd "$srcdir/$_pkgname-${pkgver}"
