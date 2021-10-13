@@ -3,12 +3,12 @@
 # https://gitlab.manjaro.org/packages/extra/pamac
 
 pkgname=pamac-aur
-pkgver=10.2.0
+pkgver=10.2.1
 pkgrel=2
 _pkgfixver=$pkgver
 
-_commit='2f673c78cda2dd863d25a6beadb8290207462538'
-sha256sums=('d7a6fd0e30345cc040c35858b83c4678d5907381ec617faddfb53bddf3b7051d')
+_commit='c84f52c0c17a94e3fd20eccc9e2870f0210e851a'
+sha256sums=('fcd6c91da9e2f94c983f0dc23392c11751c4e94435aa9b5aa048338129bd4915')
 
 pkgdesc="A Gtk3 frontend, Package Manager based on libalpm with AUR and Appstream support"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
