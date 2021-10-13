@@ -1,7 +1,7 @@
 # Maintainer: George Rawlinson <george@rawlinson.net.nz>
 
 pkgname=cloudflared
-pkgver=2021.9.2
+pkgver=2021.10.0
 pkgrel=1
 pkgdesc="Argo Tunnel client"
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -17,7 +17,12 @@ source=(
   'sysusers.conf'
   'tmpfiles.conf'
 )
-b2sums=('ef7fb1a0c294b7d33f426e43ae2ae92130a6fabd384a6cba956bf6d1192250b01e2396bce2daafa7755e8566fd4af28679ed4efe71ad628f05b40e82601cdba9'
+sha512sums=('74fd500da07eb5c064cd312049f32426e776f5c1ace346dcf644b9407cf3de57bf390d0b7bc0c9feb8fdd05416201a63c727cb248477f8eef349919c9eb898ff'
+            '52a8e1a71b7195047ea490ade1caae8f82c7c332d9473611853b6cc21c31eb4403a94b66e9efc800faa4a1d3c0d8b5ad01d60896728161eeb4bf2a69ac58b95a'
+            'bd8be485adec1a84fdc2395aed75be8cca47e94f968b801699cb379008b63be56e3c4609470d7b1bb0ed25be071779b4f5f19df2bcfb4b659bfdd15ac16ce96f'
+            '019e8bf95390d8f4815cf6118d419dba677967a22d9e68c245c71b32b198f188756e213ccada3f00b44a11b1486ef08780702ea0226086fc7e79e6c4466a26ae'
+            'db826ea2bb031a1c9c0ff8f81f54894ab116d506700da8e49c207d6a252366f4ce02cf63386a333071a85fe699287a8c8bfc2e49c946845abd4592f5764a433b')
+b2sums=('e4b77a4595569f0d3088883564f270c1521a0a9e0867101790c8339f7d309748330e6c22858553d544227826feb321e731c4470ddc8fb3732b48b551852c0c84'
         '887218db3b5e7cdbb90c86b60aac1597d70b59fccece18c8c5e6e2357d04aa219b2438436f23f913a0c8dc6eb425ef3e22901e28fd30e5130d17e414e67ec4af'
         '0fa4ac918b4c72e2b1a1bd36e025fdb6078364363cba167e6d91e7815c8bd6f5c4b412f0651d1a75991ef7e069da6e81917f22bd40ef87fd1ccd41171e64e0b2'
         '7a15fc73f02cc74e2cea55ba51632724bae16f140e07904a88daa3179ed320e9e6efa9a1901d8249fd1618a2a91f93384a93bfaba6eba6990457b7c2d2155f58'
@@ -28,9 +33,6 @@ prepare() {
 
   # create directory for build output
   mkdir build
-
-  # verify go modules
-  go mod verify
 }
 
 build() {
@@ -44,6 +46,10 @@ build() {
       -e "s/\${DATE}/${build_time}/" \
     cloudflared_man_template > "build/$pkgname.1"
 
+  # verify go modules
+  go mod verify
+
+  # build cloudflared
   go build -v \
     -buildmode=pie \
     -trimpath \
