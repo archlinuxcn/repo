@@ -6,11 +6,11 @@ ENABLE_SNAPD=0
 
 pkgname=libpamac-aur
 pkgver=11.1.0
-pkgrel=1
+pkgrel=2
 _pkgfixver=$pkgver
 
-_commit='1bb83038d44a90e004b56749be8310ff8802ba7c'
-sha256sums=('0268e119aeab1c62a429ffbca347b90f44e3ec2c9949d1925479a8ba048bbe2b'
+_commit='c3a5f80255c28079700f860180daf9f46b3e2a47'
+sha256sums=('2f0fb143764ee3133e8f0b74b82749307d931ec501398a8b64fd99e07f11469d'
             'e9fe7c14d15cbce1d337749cf317e4460bce485b102b5c228b7efa479998d4fa'
             'c2b943318a01ba1f3dabbf32e48e6a6f4b4b774e167ab86c6bfee31aa4a3424c')
 
