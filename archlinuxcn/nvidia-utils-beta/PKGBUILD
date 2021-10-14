@@ -5,7 +5,7 @@
 
 pkgbase=nvidia-utils-beta
 pkgname=('nvidia-utils-beta' 'opencl-nvidia-beta' 'nvidia-settings-beta')
-pkgver=470.74
+pkgver=495.29.05
 pkgrel=1
 pkgdesc='NVIDIA drivers utilities (beta version)'
 arch=('x86_64')
@@ -17,7 +17,7 @@ source=("https://us.download.nvidia.com/XFree86/Linux-${CARCH}/${pkgver}/${_pkg}
         'nvidia-drm-outputclass.conf'
         'nvidia-utils.sysusers'
         '120-nvidia-settings-change-desktop-paths.patch')
-sha256sums=('33e513dee329f2a9b106882979f1747eccb64eb698952c12cd030987cecadf6a'
+sha256sums=('f7254b97d400c692504796496f4e7d8f64e93b1e31c427860a4f219a186f125e'
             'be99ff3def641bb900c2486cce96530394c5dc60548fc4642f19d3a4c784134d'
             'd8d1caa5d72c71c6430c2a0d9ce1a674787e9272ccce28b9d5898ca24e60a167'
             'd6f80e0166a7db0a618e659ee66d24b24682b40a93cd4b2ad8ab3f26485d02b9')
@@ -124,7 +124,6 @@ package_nvidia-utils-beta() {
     install -D -m755 "libnvidia-glsi.so.${pkgver}"    -t "${pkgdir}/usr/lib"
     
     # misc
-    install -D -m755 "libnvidia-ifr.so.${pkgver}"       -t "${pkgdir}/usr/lib"
     install -D -m755 "libnvidia-fbc.so.${pkgver}"       -t "${pkgdir}/usr/lib"
     install -D -m755 "libnvidia-encode.so.${pkgver}"    -t "${pkgdir}/usr/lib"
     install -D -m755 "libnvidia-cfg.so.${pkgver}"       -t "${pkgdir}/usr/lib"
@@ -154,7 +153,6 @@ package_nvidia-utils-beta() {
     # raytracing
     install -D -m755 "libnvoptix.so.${pkgver}"       -t "${pkgdir}/usr/lib"
     install -D -m755 "libnvidia-rtcore.so.${pkgver}" -t "${pkgdir}/usr/lib"
-    install -D -m755 "libnvidia-cbl.so.${pkgver}"    -t "${pkgdir}/usr/lib"
     
     # Optical flow
     install -D -m755 "libnvidia-opticalflow.so.${pkgver}" -t "${pkgdir}/usr/lib"
@@ -165,6 +163,12 @@ package_nvidia-utils-beta() {
     # DLSS
     install -D -m755 nvidia-ngx-updater -t "${pkgdir}/usr/bin"
     install -D -m644 {,_}nvngx.dll -t "${pkgdir}/usr/lib/nvidia/wine"
+    
+    # GBM
+    install -D -m755 "libnvidia-allocator.so.${pkgver}" -t "${pkgdir}/usr/lib"
+    install -D -m755 libnvidia-egl-gbm.so.1.1.0         -t "${pkgdir}/usr/lib"
+    install -d -m755 "${pkgdir}/usr/lib/gbm"
+    ln -s "../libnvidia-allocator.so.${pkgver}" "${pkgdir}/usr/lib/gbm/nvidia-drm_gbm.so"
     
     # DEBUG
     install -D -m755 nvidia-debugdump -t "${pkgdir}/usr/bin"
