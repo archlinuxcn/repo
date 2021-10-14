@@ -2,16 +2,16 @@
 
 pkgname=clash-geoip
 _pkgname=maxmind-geoip
-pkgver=20210912
+pkgver=20211012
 pkgrel=1
 pkgdesc="A GeoLite2 data created by MaxMind"
 arch=('any')
 url="https://github.com/Dreamacro/maxmind-geoip"
 license=('custom')
 source=("${url}/releases/download/${pkgver}/Country.mmdb")
-md5sums=('f901873268f3f71b8f588406f731cf02')
-sha1sums=('8ab25a880f913a51b603bccb21190ccf27ae953e')
-sha256sums=('6e2265425c3b77d196b4aca6dcd5c22e4ce071bae785f876856a609aec8f73f1')
+md5sums=('5efbd72017a294186e9fed4551cf464c')
+sha1sums=('baf1f180f9892697b7d3d1b2f2ca1a961912a77c')
+sha256sums=('1aa79e4d93b2312bdd6a9251580e48e16d756c6cd159e7275a23f615d46e98ac')
 
 package() {
     install -Dm 644 Country.mmdb -t "${pkgdir}"/etc/clash/

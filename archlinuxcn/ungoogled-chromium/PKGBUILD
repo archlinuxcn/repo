@@ -9,7 +9,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=94.0.4606.71
+pkgver=94.0.4606.81
 pkgrel=1
 _launcher_ver=8
 _gcc_patchset=3
@@ -32,17 +32,19 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         replace-blacklist-with-ignorelist.patch
         add-a-TODO-about-a-missing-pnacl-flag.patch
         use-ffile-compilation-dir.patch
+        pipewire-do-not-typecheck-the-portal-session_handle.patch
         sql-make-VirtualCursor-standard-layout-type.patch
         chromium-93-ffmpeg-4.4.patch
         chromium-94-ffmpeg-roll.patch
         unexpire-accelerated-video-decode-flag.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('cabbba2e608c5ec110850b14ee5fead2608c44447a52edb80e2ba8261be3dc5b'
+sha256sums=('7071aa2b2caf48094c2ae816395948b4daec940606f4982ad5bbf68e5d2de598'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '22692bddaf2761c6ddf9ff0bc4722972bca4d4c5b2fd3e5dbdac7eb60d914320'
             'd3344ba39b8c6ed202334ba7f441c70d81ddf8cdb15af1aa8c16e9a3a75fbb35'
             'd53da216538f2e741a6e048ed103964a91a98e9a3c10c27fdfa34d4692fdc455'
             '921010cd8fab5f30be76c68b68c9b39fac9e21f4c4133bb709879592bbdf606e'
+            '1889d890ff512a8b82a0f88972e78c78131177d8034750ff53577dfad99b3e3e'
             'dd317f85e5abfdcfc89c6f23f4c8edbcdebdd5e083dcec770e5da49ee647d150'
             '1a9e074f417f8ffd78bcd6874d8e2e74a239905bf662f76a7755fa40dc476b57'
             '56acb6e743d2ab1ed9f3eb01700ade02521769978d03ac43226dec94659b3ace'
@@ -55,7 +57,7 @@ source=(${source[@]}
         chromium-drirc-disable-10bpc-color-configs.conf
         wayland-egl.patch)
 sha256sums=(${sha256sums[@]}
-            '04a73a707205ab6461213fbfd25ecade807e6b609b14aa632a1ec777e3903b4b'
+            'dfb162c8824f98095bc5fa8928d44bcb5fb66a19873a5976b8059abe20cad6fe'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '34d08ea93cb4762cb33c7cffe931358008af32265fc720f2762f0179c3973574')
 
@@ -122,6 +124,9 @@ prepare() {
   # Revert addition of -ffile-compilation-dir= (needs newer clang)
   patch -Rp1 -i ../add-a-TODO-about-a-missing-pnacl-flag.patch
   patch -Rp1 -i ../use-ffile-compilation-dir.patch
+
+  # Fix desktop sharing via Pipewire with xdg-desktop-portal 1.10
+  patch -Np1 -d third_party/webrtc <../pipewire-do-not-typecheck-the-portal-session_handle.patch
 
   # https://chromium-review.googlesource.com/c/chromium/src/+/2862724
   patch -Np1 -i ../sql-make-VirtualCursor-standard-layout-type.patch

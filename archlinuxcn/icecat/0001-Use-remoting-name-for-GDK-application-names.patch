@@ -1,0 +1,57 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
+Date: Mon, 25 Mar 2019 20:30:11 +0100
+Subject: [PATCH] Use remoting name for GDK application names
+
+---
+ toolkit/xre/nsAppRunner.cpp |  6 +-----
+ widget/gtk/nsAppShell.cpp   | 12 +++++-------
+ 2 files changed, 6 insertions(+), 12 deletions(-)
+
+diff --git a/toolkit/xre/nsAppRunner.cpp b/toolkit/xre/nsAppRunner.cpp
+index bb14d84338334..f5c0222987fb0 100644
+--- a/toolkit/xre/nsAppRunner.cpp
++++ b/toolkit/xre/nsAppRunner.cpp
+@@ -4299,11 +4299,7 @@ int XREMain::XRE_mainStartup(bool* aExitFlag) {
+   // consistently.
+ 
+   // Set program name to the one defined in application.ini.
+-  {
+-    nsAutoCString program(gAppData->name);
+-    ToLowerCase(program);
+-    g_set_prgname(program.get());
+-  }
++  g_set_prgname(gAppData->remotingName);
+ 
+   // Initialize GTK here for splash.
+ 
+diff --git a/widget/gtk/nsAppShell.cpp b/widget/gtk/nsAppShell.cpp
+index 60de473de07ab..004c066575c17 100644
+--- a/widget/gtk/nsAppShell.cpp
++++ b/widget/gtk/nsAppShell.cpp
+@@ -24,6 +24,8 @@
+ #  include "WakeLockListener.h"
+ #endif
+ #include "gfxPlatform.h"
++#include "nsAppRunner.h"
++#include "mozilla/XREAppData.h"
+ #include "ScreenHelperGTK.h"
+ #include "HeadlessScreenHelper.h"
+ #include "mozilla/widget/ScreenManager.h"
+@@ -152,13 +154,9 @@ nsresult nsAppShell::Init() {
+       // See https://bugzilla.gnome.org/show_bug.cgi?id=747634
+       //
+       // Only bother doing this for the parent process, since it's the one
+-      // creating top-level windows. (At this point, a child process hasn't
+-      // received the list of registered chrome packages, so the
+-      // GetBrandShortName call would fail anyway.)
+-      nsAutoString brandName;
+-      mozilla::widget::WidgetUtils::GetBrandShortName(brandName);
+-      if (!brandName.IsEmpty()) {
+-        gdk_set_program_class(NS_ConvertUTF16toUTF8(brandName).get());
++      // creating top-level windows.
++      if (gAppData) {
++        gdk_set_program_class(gAppData->remotingName);
+       }
+     }
+   }
