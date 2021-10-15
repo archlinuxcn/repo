@@ -1,0 +1,37 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+# Contributor: hawkeye116477 <hawkeye116477 at gmail dot com>
+
+_pkgname=PySimpleGUI
+pkgname=('python-pysimplegui')
+_module='PySimpleGUI'
+pkgver=4.49.0
+pkgrel=1
+pkgdesc='Python GUIs for Humans'
+arch=('any')
+license=('LGPL3')
+url='https://github.com/MikeTheWatchGuy/PySimpleGUI'
+depends=(
+  python
+)
+makedepends=(
+  python-setuptools
+)
+optdepends=(
+  pyside2
+  python-remi
+  python-wxpython
+  tk
+)
+source=(${pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz)
+sha256sums=('28b5bcd02b8338f12d6439d69270abdfb806d431aeeaf30a39aebba7a428c3e4')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+}
+# vim:set ts=2 sw=2 et:
