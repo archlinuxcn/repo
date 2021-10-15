@@ -1,0 +1,38 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+# Contributor: Marius Lindvall <(firstname) {cat} varden {dog} info>
+
+_pkgname=pywebview
+pkgname=python-pywebview
+pkgver=3.5
+pkgrel=1
+pkgdesc='Build GUI for your Python program with JavaScript, HTML, and CSS'
+arch=('any')
+url='https://pywebview.flowrl.com/'
+license=('BSD')
+depends=(
+  python-proxy_tools
+)
+makedepends=(
+  python-setuptools
+)
+optdepends=(
+  'python-gobject: use with GTK'
+  'python-cairo: use with GTK'
+  'webkit2gtk>=2.22: use with GTK'
+  'python-pyqtwebengine: use with Qt'
+  'qt5-webkit: use with Qt')
+install="${pkgname}.install"
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/r0x0r/pywebview/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('d97d5de3217939fcdebe8adaca7cdf4bbd76b9086ebeffdf57e5bfd4549b6de1')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}/" --optimize=1 --skip-build
+  install -Dm 644 "LICENSE.md" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+# vim:set ts=2 sw=2 et:

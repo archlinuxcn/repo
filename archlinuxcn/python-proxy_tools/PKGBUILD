@@ -1,0 +1,33 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+# Contributor: Marius Lindvall <(firstname) {cat} varden {dog} info>
+
+_pkgname=proxy_tools
+pkgname=python-proxy_tools
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Simple proxy implementation for Python'
+arch=('any')
+url='https://github.com/jtushman/proxy_tools'
+license=('BSD')
+depends=(
+  python
+)
+makedepends=(
+  python-setuptools
+)
+source=("${pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"
+        "LICENSE::https://raw.githubusercontent.com/jtushman/proxy_tools/master/LICENSE.txt")
+sha256sums=('ccb3751f529c047e2d8a58440d86b205303cf0fe8146f784d1cbcd94f0a28010'
+            'a428fb8a2e762af3eb0a6edbbb88e9b42ccfee80fd9b423958bcacf9b9abbfe4')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm 644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+# vim:set ts=2 sw=2 et:
