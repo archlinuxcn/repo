@@ -1,11 +1,11 @@
 # Maintainer: Megumi_fox <i@megumifox.com>
 
 pkgname=qliveplayer-git
-pkgver=4.0.1.r0.gcd30fe8
-pkgrel=3
+pkgver=4.1.0.r0.gfd6b39a
+pkgrel=1
 pkgdesc='Cute and useful Live Stream Player with danmaku support.'
 arch=('x86_64')
-url="https://github.com/IsoaSFlus/QLivePlayer"
+url="https://github.com/THMonster/QLivePlayer"
 license=('GPL2')
 provides=('qliveplayer')
 conflicts=('qliveplayer')
@@ -22,8 +22,8 @@ makedepends=('cmake'
              'extra-cmake-modules' )
 
 source=(
-    "QLivePlayer::git+https://github.com/IsoaSFlus/QLivePlayer.git"
-    "QLivePlayer-Lib::git+https://github.com/IsoaSFlus/QLivePlayer-Lib.git#branch=dev"
+    "QLivePlayer::git+https://github.com/THMonster/QLivePlayer.git"
+    "QLivePlayer-Lib::git+https://github.com/THMonster/QLivePlayer-Lib.git#branch=dev"
 )
 
 pkgver(){
