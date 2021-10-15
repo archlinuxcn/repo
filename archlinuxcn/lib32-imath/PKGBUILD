@@ -2,7 +2,7 @@
 
 _basename=imath
 pkgname=lib32-imath
-pkgver=3.1.2
+pkgver=3.1.3
 pkgrel=1
 pkgdesc='A C++ and python library of 2D and 3D vector, matrix, and math operations for computer graphics (32-bit)'
 url='https://www.openexr.com/'
@@ -12,7 +12,7 @@ depends=(lib32-gcc-libs imath)
 makedepends=(cmake)
 source=(https://github.com/AcademySoftwareFoundation/Imath/archive/v$pkgver/$_basename-$pkgver.tar.gz
         fix_build.patch)
-sha256sums=('f21350efdcc763e23bffd4ded9bbf822e630c15ece6b0697e2fcb42737c08c2d'
+sha256sums=('0bf7ec51162c4d17a4c5b850fb3f6f7a195cff9fa71f4da7735f74d7b5124320'
             '8894825cb9bd4a3b70b1ff46fd30b435c42fba8b9438833bd50cf50f4a7da971')
 
 prepare() {
