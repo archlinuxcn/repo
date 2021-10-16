@@ -7,7 +7,7 @@ _channel=nightly
 pkgbase=firefox-nightly
 pkgname=()
 _version=95.0a1
-pkgver=95.0a1.20211015.11
+pkgver=95.0a1.20211015.23
 pkgrel=1
 arch=('x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -22,16 +22,16 @@ optdepends=('pulseaudio: audio support'
             'speech-dispatcher: text-to-speech'
             'startup-notification: support for FreeDesktop Startup Notification')
 _url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central-l10n"
-_filename_prefix="20211015.11-"
+_filename_prefix="20211015.23-"
 source=("${pkgbase}.desktop")
 sha512sums=('b58c1b3b09772d0866d511e83e3c7f54db0fe71d2978d2a06bd19b25c020f16e201aab825f0b3d5e9f0c1a3e9db028018e5e38f7ee4868e321938f11cb5ac817'
-            '51ef504af20545f389a3c2243a1af56c8e3c927744c977592d30edc3e9679ee0b152bbc7e513c79cadc84bbf8304e357920c50538c3ba640bba2a4a0b308b756'
+            'aa426202d26cfb2c50a030811c2b81ef9276818cc6b2d10aa33922edc22828067642b1a4e86c0b753aebc6915717d7f98f0407384f8d4f57eab6f66ff3bb10d5'
             'SKIP'
-            'd15f83bf1d96cf0ce8eb91733141e27f87398da4051d8e59a777ea5ca973ce7bc55272172669595c1c6cfb2be195e0fe47de3be347b7ee643336c29ec1bb2ed4'
+            '361f11cc7e875a2b111b8856a9d6e9293522c926a87074a392be981e1a7a9d3eae9c8d0b3ff9b166133ccff57cd1ad1eb9d07361179ba84c8aad2996c100afd8'
             'SKIP'
-            'cdd09b5801395d61b3f8d837c690d3a40d0349e53240b1bbe5daabf962d0b7b02de2388b5db33032e59bdd50f38544057825a10c2b423f7f1a7a9b3326a05938'
+            '4326532049aeef635083881894de646ce78f44c58577955bb62bdaa544d054351264213095beedae20f6124cb543c0f78453d1df85937256cee9c9a24bf3981a'
             'SKIP'
-            '1986ff705f010a9b1f82d22ad94205ea2b5e224773a3f4f70ae856f5ff7c87b830cfbe019714e4a4bf316c1fc6e2af265e1513bb42c4a0c09e8fedea9d538297'
+            'd5a4eb5f614e9fa83293f3b85b905bc75e2db836104fe7b182f38d610f8b1ae16f99fc1813e9fe0f36e847d6d4588bb89583e01ef3d6833029a2e213c0978001'
             'SKIP')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353'
               '097B313077AE62A02F84DA4DF1A6668FBB7D572E') # Mozilla’s GnuPG release key
