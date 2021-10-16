@@ -5,10 +5,11 @@
 # Contributor: Lubomir 'Kuci' Kucera <kuci24-at-gmail-dot-com>
 # Contributor: Tad Fisher <tadfisher at gmail dot com>
 # Contributor: Philippe Hürlimann <p@hurlimann.org>
+# Contributor: Julian Raufelder <aur@raufelder.com>
 # Maintainer: Kordian Bruck <k@bruck.me>
 
 pkgname=android-studio
-pkgver=2020.3.1.24
+pkgver=2020.3.1.25
 pkgrel=1
 pkgdesc="The official Android IDE (Stable branch)"
 arch=('i686' 'x86_64')
@@ -23,7 +24,7 @@ options=('!strip')
 source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-$pkgver-linux.tar.gz"
         "$pkgname.desktop"
         "license.html")
-sha256sums=('f498ac0446b1fe32d9d5dda2b508049eb6732d9499619e2adf5ec9bb1166124d'
+sha256sums=('cfc96e4981ad17e27ba91681fada06553fb118960c95f49232f72f30c2e2f781'
             '73cd2dde1d0f99aaba5baad1e2b91c834edd5db3c817f6fb78868d102360d3c4'
             '9a7563f7fb88c9a83df6cee9731660dc73a039ab594747e9e774916275b2e23e')
 
