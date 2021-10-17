@@ -1,13 +1,13 @@
 diff --git a/mk/common.mk b/mk/common.mk
-index bded646..572adfc 100644
+index d43306d..d7df94b 100644
 --- a/mk/common.mk
 +++ b/mk/common.mk
-@@ -21,7 +21,7 @@ DOCKER   ?= docker
- UID      := $(shell id -u)
- GID      := $(shell id -g)
- DATE     := $(shell date -u --iso-8601=minutes)
--REVISION := $(shell git rev-parse HEAD)
-+REVISION := 0000000000000000000000000000000000000000
+@@ -26,7 +26,7 @@ ifdef SOURCE_DATE_EPOCH
+ else
+     DATE := $(shell date -u --iso-8601=minutes)
+ endif
+-REVISION ?= $(shell git rev-parse HEAD)
++REVISION ?= 0000000000000000000000000000000000000000
  COMPILER := $(realpath $(shell which $(CC)))
  PLATFORM ?= $(shell uname -m)
  
