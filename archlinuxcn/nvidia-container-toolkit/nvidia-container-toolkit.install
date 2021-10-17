@@ -22,6 +22,18 @@ devices:
   - /dev/nvidia-uvm:/dev/nvidia-uvm
   - /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
 
+
+Alternatively, if you are not currently reliant on the new cgroup v2
+interface you can disable it entirely and go back to the old v1 interface
+by using the following on the kernel command line:
+
+systemd.unified_cgroup_hierarchy=false
+
+And by telling the program to use c-groups again by modifying
+/etc/nvidia-container-runtime/config.toml to set:
+
+no-cgroups = false
+
 See the link for more details:
 https://github.com/NVIDIA/nvidia-docker/issues/1447#issuecomment-757034464
 EOF
