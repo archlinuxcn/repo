@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=logger
-_pkgver=0.2.1
+_pkgver=0.2.2
 pkgname=r-${_pkgname,,}
-pkgver=0.2.1
+pkgver=0.2.2
 pkgrel=1
 pkgdesc='A Lightweight, Modern and Flexible Logging Utility'
 arch=('any')
@@ -39,7 +39,7 @@ optdepends=(
   r-txtq
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('e86bb0a1c353f7350203a98456e390de1a71f18509e7bc74922eb72c543bc05c')
+sha256sums=('4f1be7d4381f2fc591f19fdbfb8f3cccbf26c9fdbae104612f6e6d5762a97e22')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
