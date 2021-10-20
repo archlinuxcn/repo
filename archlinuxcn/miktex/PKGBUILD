@@ -2,7 +2,7 @@
 # Maintainer: heavysink <winstonwu91 at gmail>
 
 pkgname=miktex
-pkgver=21.8
+pkgver=21.10
 pkgrel=1
 pkgdesc="a distribution of the TeX/LaTeX typesetting system"
 arch=('x86_64')
@@ -14,7 +14,7 @@ depends=('apr' 'boost-libs' 'apr-util' 'bzip2' 'cairo' 'expat' 'fontconfig' 'fre
          'poppler' 'popt' 'potrace' 'uriparser' 'hicolor-icon-theme' 'zziplib' 'poppler-qt5' 'qt5-script' 'qt5-declarative')
 makedepends=('cmake' 'coreutils' 'fop' 'sed' 'libxslt' 'qt5-tools' 'boost')
 source=("https://github.com/MiKTeX/miktex/archive/${pkgver}.tar.gz")
-md5sums=('af129781f65e67db987c77ec28dc7237')
+md5sums=('27e027eb34fa497fea23871c94b94d6e')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"	
