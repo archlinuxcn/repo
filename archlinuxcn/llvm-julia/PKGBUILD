@@ -172,7 +172,7 @@ package_llvm-julia() {
 
 package_llvm-libs-julia() {
   pkgdesc="LLVM runtime libraries (with patch for julia)"
-  depends=(gcc-libs zlib libffi libedit ncurses libxml2)
+  depends=(gcc-libs zlib libffi.so libedit ncurses libxml2)
   conflicts=("llvm-libs")
   provides=("llvm-libs=$pkgver-$pkgrel")
 
