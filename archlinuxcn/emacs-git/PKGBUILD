@@ -21,19 +21,29 @@
 #
 ################################################################################
 CHECK=            # Run tests. May fail, this is developement after all.
+
 CLANG=            # Use clang.
+
 GOLD=             # Use the gold linker.
+
 LTO="YES"         # Enable link-time optimization. Read emacs's INSTALL before
                   # attempting to use it with clang.
+
 JIT=              # Enable native just-in-time compilation. libgccjit is in AUR.
                   # This compiles only performance critical elisp files.
-                  # To compile all elisp on demand, set
-                  # comp-deferred-compilation non-nil
+                  #
+                  # To compile all elisp on demand, add
+                  #    (setq comp-deferred-compilation t)
+                  # to your .emacs file.
+
 AOT=              # Precompile all included elisp. It takes a long time.
                   # You still need to enable on-demand compilation
                   # for your own packages.
+
 CLI=              # CLI only binary.
+
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
+               
 LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   #
                   # Read https://wiki.archlinux.org/index.php/X_resources
@@ -42,14 +52,21 @@ LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   # for some tips on using outline fonts with
                   # Xft, if you choose no toolkit or Lucid.
                   #
+               
 GTK2=             # GTK2 support. Why would you?
+               
 NOCAIRO=          # Disable here. 
+               
 XWIDGETS=         # Use GTK+ widgets pulled from webkit2gtk. Usable.
+               
 DOCS_HTML=        # Generate and install html documentation.
+               
 DOCS_PDF=         # Generate and install pdf documentation.
+               
 MAGICK=           # ImageMagick 7 support. Deprecated (read the logs).
                   # ImageMagick, like flash, won't die... 
                   # -->>If you just *believe* you need ImageMagick, you don't.<<--
+               
 NOGZ="YES"        # Don't compress .el files.
 ################################################################################
 
@@ -59,7 +76,7 @@ if [[ $CLI == "YES" ]] ; then
 else
 pkgname="emacs-git"
 fi
-pkgver=29.0.50.151032
+pkgver=29.0.50.151058
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
