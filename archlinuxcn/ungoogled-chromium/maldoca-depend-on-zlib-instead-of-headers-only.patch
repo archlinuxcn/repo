@@ -1,0 +1,31 @@
+From 0aa878b7839141077071db97ba1cd30edf486827 Mon Sep 17 00:00:00 2001
+From: Stephan Hartmann <stha09@googlemail.com>
+Date: Wed, 15 Sep 2021 17:14:14 +0000
+Subject: [PATCH] maldoca: depend on zlib instead of headers only
+
+There is no zlib_common_headers target for unbundled zlib
+and in the end code links against zlib static library anyways.
+
+Bug: None
+Change-Id: I50b8bb5b480770b637904de00aecc3a629f09471
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/3162976
+Reviewed-by: Daniel Rubery <drubery@chromium.org>
+Commit-Queue: Stephan Hartmann <stha09@googlemail.com>
+Cr-Commit-Position: refs/heads/main@{#921717}
+---
+ third_party/maldoca/BUILD.gn | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/third_party/maldoca/BUILD.gn b/third_party/maldoca/BUILD.gn
+index eeab2056b5..29a0a2ca49 100644
+--- a/third_party/maldoca/BUILD.gn
++++ b/third_party/maldoca/BUILD.gn
+@@ -224,7 +224,7 @@ source_set("maldoca-ole") {
+     "//third_party/libxml",
+     "//third_party/protobuf:protobuf_lite",
+     "//third_party/re2",
+-    "//third_party/zlib:zlib_common_headers",
++    "//third_party/zlib:zlib",
+     "//third_party/zlib/google:zip",
+   ]
+ 
