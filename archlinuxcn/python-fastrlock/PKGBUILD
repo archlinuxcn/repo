@@ -4,7 +4,7 @@
 pkgname=python-fastrlock
 _pkgname=fastrlock
 pkgver=0.6
-pkgrel=1
+pkgrel=2
 pkgdesc='A fast RLock implementation for CPython'
 url='https://github.com/scoder/fastrlock'
 arch=('x86_64')
@@ -19,7 +19,7 @@ makedepends=(
 checkdepends=(
   'python-pytest'
 )
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/scoder/${_pkgname}/archive/${pkgver}.tar.gz")
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/scoder/fastrlock/archive/refs/tags/v${pkgver}.tar.gz")
 sha512sums=('91d22d72ab5a8d5dec6a6a5da91d5b5e4d9c32b14e8c0c57c948ad4a5c6eb6a883ce02d7b500bddc763262b9df1617f95a40d9312cbb0a17b0c5d1fdfe0b009d')
 
 get_pyver() {
