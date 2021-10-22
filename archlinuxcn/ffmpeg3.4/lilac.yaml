@@ -12,5 +12,12 @@ post_build: aur_post_build
 update_on:
   - source: aur
     aur: ffmpeg3.4
-  - alias: x264
-  - alias: x265
+  - source: alpm
+    alpm: x264
+    repo: extra
+  - source: alpm
+    alpm: x265
+    repo: extra
+  - source: alpm
+    alpm: libvpx
+    repo: extra
