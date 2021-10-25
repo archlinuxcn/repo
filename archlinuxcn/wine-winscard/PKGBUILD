@@ -111,7 +111,7 @@ prepare() {
   cp -v $scard4wine_dir/winsmcrd.h $pkgname/include/winsmcrd.h
   cp -v $scard4wine_dir/wine-compat56.h $pkgname/include/wine-compat.h
 
-  sed -i '/-mno-cygwin/d' $pkgname/dlls/winscard/Makefile.in
+  echo EXTRADLLFLAGS = -mcygwin >> $pkgname/dlls/winscard/Makefile.in
 
   # Doesn't compile without remove these flags as of 4.10
   export CFLAGS="${CFLAGS/-fno-plt/}"
