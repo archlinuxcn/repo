@@ -2,7 +2,7 @@
 
 pkgname=wgcf
 pkgver=2.2.9
-pkgrel=1
+pkgrel=2
 pkgdesc='Generate WireGuard profile from Cloudflare Warp account'
 arch=('x86_64')
 url="https://github.com/ViRb3/wgcf"
@@ -25,7 +25,7 @@ build() {
   export CGO_CFLAGS="${CFLAGS}"
   export CGO_CXXFLAGS="${CXXFLAGS}"
   export CGO_LDFLAGS="${LDFLAGS}"
-  go build -o build -trimpath -buildmode=pie -ldflags "-extldflags \"${LDFLAGS}\" -s -w" -modcacherw
+  go build -o build -trimpath -buildmode=pie -ldflags "-linkmode=external -extldflags \"${LDFLAGS}\" -s -w" -modcacherw
 }
 
 package() {
