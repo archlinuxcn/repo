@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=Biobase
-_pkgver=2.52.0
+_pkgver=2.54.0
 pkgname=r-${_pkgname,,}
-pkgver=2.52.0
+pkgver=2.54.0
 pkgrel=1
 pkgdesc='Biobase: Base functions for Bioconductor'
 arch=('x86_64')
@@ -21,7 +21,7 @@ optdepends=(
   r-tools
 )
 source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('79abe91af6c5c133582fd08d2035f65034ad90eae5b81b74fa147e6010e2e8e9')
+sha256sums=('9c3fa69a195ff3001c3614df6b3995a8064083919dfdb4fba1e57aa5de14594d')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
