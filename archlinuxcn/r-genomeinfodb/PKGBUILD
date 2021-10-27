@@ -1,9 +1,9 @@
 # Maintainer: hubutui <hot123tea123@gmail.com>
 
 _pkgname=GenomeInfoDb
-_pkgver=1.28.4
+_pkgver=1.30.0
 pkgname=r-${_pkgname,,}
-pkgver=1.28.4
+pkgver=1.30.0
 pkgrel=1
 pkgdesc='Utilities for manipulating chromosome names, including modifying them to follow a particular naming style'
 arch=('any')
@@ -32,7 +32,7 @@ optdepends=(
   r-txdb.dmelanogaster.ucsc.dm3.ensgene
 )
 source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('8093dab602adccf20b7452858fd588b43000cd8ad62a011f66886ebfef7e573a')
+sha256sums=('da1a0d06fc4a0d6e549c74d9351eecf0f46d23f85a375e42ed18129e3e5d1ce4')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
