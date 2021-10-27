@@ -4,7 +4,7 @@
 
 pkgname=pamac-aur
 pkgver=10.2.2
-pkgrel=1
+pkgrel=2
 _pkgfixver=$pkgver
 
 _commit='125033f1da74b617c9ef3b74c8b26d4156ed7daa'
@@ -39,7 +39,6 @@ build() {
   cd builddir
   meson --buildtype=release \
         --prefix=/usr \
-        -Denable-appindicator=true \
         --sysconfdir=/etc
   ninja
 }
