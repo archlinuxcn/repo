@@ -1,0 +1,35 @@
+From a6e7045bf38be98fceb1b16e7f1af8d84bf3e5ed Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 27 Oct 2021 09:16:04 -0400
+Subject: [PATCH 12/14] Do not request hard floating point from compiler
+
+---
+ Makefile | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index a5fc133..c648d07 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1213,7 +1213,6 @@ EXTRA_CFLAGS += -DDM_ODM_SUPPORT_TYPE=0x04
+ ifeq ($(CONFIG_PLATFORM_I386_PC), y)
+ EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+ EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
+-EXTRA_CFLAGS += -mhard-float
+ SUBARCH := $(shell uname -m | sed -e s/i.86/i386/)
+ ARCH ?= $(SUBARCH)
+ CROSS_COMPILE ?=
+@@ -2100,10 +2099,6 @@ endif
+ 
+ endif
+ 
+-ifeq ($(ARCH), arm)
+-EXTRA_CFLAGS += -mfloat-abi=hard
+-endif
+-
+ ifeq ($(CONFIG_MULTIDRV), y)
+ 
+ ifeq ($(CONFIG_SDIO_HCI), y)
+-- 
+2.33.1
+

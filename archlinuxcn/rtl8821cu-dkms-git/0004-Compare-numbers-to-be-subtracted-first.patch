@@ -1,0 +1,28 @@
+From 24276282e1dca10a5552a3582e5dc18c47d37525 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 27 Oct 2021 08:47:55 -0400
+Subject: [PATCH 04/14] Compare numbers to be subtracted first
+
+---
+ core/rtw_mp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/core/rtw_mp.c b/core/rtw_mp.c
+index f35d7b9..90effa7 100644
+--- a/core/rtw_mp.c
++++ b/core/rtw_mp.c
+@@ -3330,9 +3330,9 @@ UINT LDPC_parameter_generator(
+ 	/*	Number of information bits per CW*/
+ 	K_LDPC = L_LDPC_12 * CR12;
+ 	/*	Number of shortening bits					max(0, (N_CW * L_LDPC_12 * 12 * R) - N_pld)*/
+-	N_shrt = (N_CW * K_LDPC - N_pld) > 0. ? (N_CW * K_LDPC - N_pld) : 0.;
++	N_shrt = (N_CW * K_LDPC > N_pld) ? (N_CW * K_LDPC - N_pld) : 0.;
+ 	/*	Number of puncturing bits*/
+-	N_punc = (N_CW * L_LDPC_12 * 12 - N_TCB - N_shrt) > 0. ? (N_CW * L_LDPC_12 * 12 - N_TCB - N_shrt) : 0.;
++	N_punc = (N_CW * L_LDPC_12 * 12 > N_TCB + N_shrt) ? (N_CW * L_LDPC_12 * 12 - N_TCB - N_shrt) : 0.;
+ 	if (((N_punc > .1 * N_CW * L_LDPC_12 * (12 - CR12)) && (N_shrt < 1.2 * N_punc * CR12 / (12 - CR12))) ||
+ 	    (N_punc > 0.3 * N_CW * L_LDPC_12 * (12 - CR12))) {
+ 		VHTSIGA2B3 = 1;
+-- 
+2.33.1
+
