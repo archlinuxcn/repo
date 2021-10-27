@@ -13,8 +13,12 @@ depends=('dkms' 'bc') # bc dependency needed for GCC 4.9 detection in makefile
 makedepends=('git')
 conflicts=("${_pkgbase}")
 source=("git+https://github.com/brektrou/rtl8821CU"
+        0001-Make-flags.patch
+        0002-Get-rid-of-hardware-float.patch
         'dkms.conf')
 sha256sums=('SKIP'
+            '7f0704ae047350bb2a4a13a190666061bba598bdfd8c00602d4cf854670392fc'
+            '6ad8c5e562adfb75c43e9932bf4d1bbf6ed1497f2b1d44a7ba7f779d22f26718'
             'dc259d528f88d10b0026f7ee5815669d9f700485418278292f521e98afa54ba1')
 pkgver() {
   cd rtl8821CU
@@ -24,10 +28,8 @@ pkgver() {
 prepare() {
   cd rtl8821CU
 
-  sed -i \
-      -e 's/shell \+uname \+-m/& | sed -e "s:armv.*:arm:" /' \
-      -e 's/-mhard-float//' \
-      -e 's/-mfloat-abi=hard//' Makefile
+  patch -Np1 < ../0001-Make-flags.patch
+  patch -Np1 < ../0002-Get-rid-of-hardware-float.patch
 }
 
 package() {
