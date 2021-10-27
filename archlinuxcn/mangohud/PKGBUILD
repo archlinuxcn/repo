@@ -8,26 +8,27 @@ _spdlog_wrap_ver=1
 
 pkgbase=mangohud
 pkgname=('mangohud' 'lib32-mangohud' 'mangohud-common')
-pkgver=0.6.6
-pkgrel=2
+pkgver=0.6.6.1
+_pkgver=0.6.6-1
+pkgrel=1
 url='https://github.com/flightlessmango/MangoHud'
 license=('MIT')
 arch=('x86_64')
 makedepends=('meson' 'python-mako' 'glslang' 'libglvnd' 'lib32-libglvnd'
              'vulkan-headers' 'vulkan-icd-loader' 'lib32-vulkan-icd-loader'
              'libxnvctrl' 'dbus')
-source=("$pkgbase-$pkgver.tar.gz::https://github.com/flightlessmango/MangoHud/archive/v$pkgver.tar.gz"
+source=("$pkgbase-$_pkgver.tar.gz::https://github.com/flightlessmango/MangoHud/archive/v$_pkgver.tar.gz"
         "imgui-$_imgui_ver.tar.gz::https://github.com/ocornut/imgui/archive/refs/tags/v$_imgui_ver.tar.gz"
         "imgui-$_imgui_ver-$_imgui_wrap_ver-wrap.zip::https://wrapdb.mesonbuild.com/v1/projects/imgui/$_imgui_ver/$_imgui_wrap_ver/get_zip"
         "spdlog-$_spdlog_ver.tar.gz::https://github.com/gabime/spdlog/archive/refs/tags/v$_spdlog_ver.tar.gz"
         "spdlog-$_spdlog_ver-$_spdlog_wrap_ver-wrap.zip::https://wrapdb.mesonbuild.com/v1/projects/spdlog/$_spdlog_ver/$_spdlog_wrap_ver/get_zip")
-sha256sums=('8221aa46c6a86e9b249f26b9ce9dd6208e95cb0f7ab42ab219dfba3c6bcbe3b5'
+sha256sums=('ac64c586004cccd6124b393744d4b8257291f90193646ff24171cf2b86bd3b27'
             'f7c619e03a06c0f25e8f47262dbc32d61fd033d2c91796812bf0f8c94fca78fb'
             '6d00b442690b6a5c5d8f898311daafbce16d370cf64f53294c3b8c5c661e435f'
             '944d0bd7c763ac721398dca2bb0f3b5ed16f67cef36810ede5061f35a543b4b8'
             '3c38f275d5792b1286391102594329e98b17737924b344f98312ab09929b74be')
 
-_srcdir="MangoHud-$pkgver"
+_srcdir="MangoHud-$_pkgver"
 
 build() {
     ln -s "$srcdir/imgui-$_imgui_ver" "$_srcdir/subprojects/imgui"
