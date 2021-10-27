@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=backports
-_pkgver=1.2.1
+_pkgver=1.3.0
 pkgname=r-${_pkgname,,}
-pkgver=1.2.1
+pkgver=1.3.0
 pkgrel=1
 pkgdesc='Reimplementations of Functions Introduced Since R-3.0.0'
 arch=('x86_64')
@@ -13,7 +13,7 @@ depends=(
   r
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('a2834bbd57e305e5d8010322f1906ea1789b3b5ba5eca77c5ff4248aceb7c2d5')
+sha256sums=('4f231e91ca8298fb1a27810ef5dd4c84e05c2b2b6f6748eab68f70ff4827812d')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
