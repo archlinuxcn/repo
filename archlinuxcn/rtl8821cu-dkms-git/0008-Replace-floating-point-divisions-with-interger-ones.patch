@@ -1,0 +1,92 @@
+From 2f637770040ab1f03ece8c16f4844b619c97b25b Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 27 Oct 2021 09:04:05 -0400
+Subject: [PATCH 08/14] Replace floating point divisions with interger ones
+
+---
+ core/rtw_mp.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/core/rtw_mp.c b/core/rtw_mp.c
+index 2217132..351f4fd 100644
+--- a/core/rtw_mp.c
++++ b/core/rtw_mp.c
+@@ -3407,20 +3407,20 @@ void PMAC_Nsym_generator(
+ 		N_DBPS = (UINT)((double)N_CBPS * CR);
+ 
+ 		if (pPMacTxInfo->bLDPC == FALSE) {
+-			N_ES = (UINT)ceil((double)(N_DBPS * pPMacPktInfo->Nss) / 4. / 300.);
++			N_ES = ceil_divide(N_DBPS * pPMacPktInfo->Nss, 1200);
+ 			RTW_INFO("N_ES = %d\n", N_ES);
+ 
+ 			/*	N_SYM = m_STBC* (8*length+16+6*N_ES) / (m_STBC*N_DBPS)*/
+-			N_SYM = pPMacTxInfo->m_STBC * (UINT)ceil((double)(pPMacTxInfo->PacketLength * 8 + 16 + N_ES * 6) /
+-					(double)(N_DBPS * pPMacTxInfo->m_STBC));
++			N_SYM = pPMacTxInfo->m_STBC * ceil_divide(pPMacTxInfo->PacketLength * 8 + 16 + N_ES * 6,
++					N_DBPS * pPMacTxInfo->m_STBC);
+ 
+ 		} else {
+ 			N_ES = 1;
+ 			/*	N_pld = length * 8 + 16*/
+ 			N_pld = pPMacTxInfo->PacketLength * 8 + 16;
+ 			RTW_INFO("N_pld = %d\n", N_pld);
+-			N_SYM = pPMacTxInfo->m_STBC * (UINT)ceil((double)(N_pld) /
+-					(double)(N_DBPS * pPMacTxInfo->m_STBC));
++			N_SYM = pPMacTxInfo->m_STBC * ceil_divide(N_pld,
++					N_DBPS * pPMacTxInfo->m_STBC);
+ 			RTW_INFO("N_SYM = %d\n", N_SYM);
+ 			/*	N_avbits = N_CBPS *m_STBC *(N_pld/N_CBPS*R*m_STBC)*/
+ 			N_TCB = N_CBPS * N_SYM;
+@@ -3452,16 +3452,16 @@ void PMAC_Nsym_generator(
+ 		N_DBPS = (UINT)((double)N_CBPS * CR);
+ 		if (pPMacTxInfo->bLDPC == FALSE) {
+ 			if (pPMacTxInfo->bSGI)
+-				N_ES = (UINT)ceil((double)(N_DBPS) / 3.6 / 600.);
++				N_ES = ceil_divide(N_DBPS, 2160);
+ 			else
+-				N_ES = (UINT)ceil((double)(N_DBPS) / 4. / 600.);
++				N_ES = ceil_divide(N_DBPS, 2400);
+ 			/*	N_SYM = m_STBC* (8*length+16+6*N_ES) / (m_STBC*N_DBPS)*/
+-			N_SYM = pPMacTxInfo->m_STBC * (UINT)ceil((double)(pPMacTxInfo->PacketLength * 8 + 16 + N_ES * 6) / (double)(N_DBPS * pPMacTxInfo->m_STBC));
++			N_SYM = pPMacTxInfo->m_STBC * ceil_divide(pPMacTxInfo->PacketLength * 8 + 16 + N_ES * 6, N_DBPS * pPMacTxInfo->m_STBC);
+ 			SIGA2B3 = 0;
+ 		} else {
+ 			N_ES = 1;
+ 			/*	N_SYM = m_STBC* (8*length+N_service) / (m_STBC*N_DBPS)*/
+-			N_SYM = pPMacTxInfo->m_STBC * (UINT)ceil((double)(pPMacTxInfo->PacketLength * 8 + 16) / (double)(N_DBPS * pPMacTxInfo->m_STBC));
++			N_SYM = pPMacTxInfo->m_STBC * ceil_divide(pPMacTxInfo->PacketLength * 8 + 16, N_DBPS * pPMacTxInfo->m_STBC);
+ 			/*	N_avbits = N_sys_init * N_CBPS*/
+ 			N_TCB = N_CBPS * N_SYM;
+ 			/*	N_pld = N_sys_init * N_DBPS*/
+@@ -3516,7 +3516,7 @@ void L_SIG_generator(
+ 		LENGTH = pPMacTxInfo->PacketLength;
+ 	} else {
+ 		UCHAR	N_LTF;
+-		double	T_data;
++		UINT	T_data5;
+ 		UINT	OFDM_symbol;
+ 
+ 		mode = 0;
+@@ -3528,15 +3528,15 @@ void L_SIG_generator(
+ 			N_LTF = 4;
+ 
+ 		if (pPMacTxInfo->bSGI)
+-			T_data = 3.6;
++			T_data5 = 18;
+ 		else
+-			T_data = 4.0;
++			T_data5 = 20;
+ 
+ 		/*(L-SIG, HT-SIG, HT-STF, HT-LTF....HT-LTF, Data)*/
+ 		if (MPT_IS_VHT_RATE(pPMacTxInfo->TX_RATE))
+-			OFDM_symbol = (UINT)ceil((double)(8 + 4 + N_LTF * 4 + N_SYM * T_data + 4) / 4.);
++			OFDM_symbol = 2 + 1 + N_LTF + ceil_divide(N_SYM * T_data5, 20) + 1;
+ 		else
+-			OFDM_symbol = (UINT)ceil((double)(8 + 4 + N_LTF * 4 + N_SYM * T_data) / 4.);
++			OFDM_symbol = 2 + 1 + N_LTF + ceil_divide(N_SYM * T_data5, 20);
+ 
+ 		RTW_INFO("%s , OFDM_symbol =%d\n", __func__, OFDM_symbol);
+ 		LENGTH = OFDM_symbol * 3 - 3;
+-- 
+2.33.1
+

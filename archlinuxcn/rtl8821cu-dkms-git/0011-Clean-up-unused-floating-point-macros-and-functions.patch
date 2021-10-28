@@ -1,0 +1,38 @@
+From 0290929963482619cbae1c52db16e8655aa9c362 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 27 Oct 2021 09:13:40 -0400
+Subject: [PATCH 11/14] Clean up unused floating point macros and functions
+
+---
+ core/rtw_mp.c | 15 ---------------
+ 1 file changed, 15 deletions(-)
+
+diff --git a/core/rtw_mp.c b/core/rtw_mp.c
+index dc3cf26..63fb39e 100644
+--- a/core/rtw_mp.c
++++ b/core/rtw_mp.c
+@@ -28,21 +28,6 @@ static inline UINT ceil_divide(UINT a, UINT b)
+     return (a + b - 1) / b;
+ }
+ 
+-#ifdef CONFIG_MP_VHT_HW_TX_MODE
+-#define CEILING_POS(X) ((X - (int)(X)) > 0 ? (int)(X + 1) : (int)(X))
+-#define CEILING_NEG(X) ((X - (int)(X)) < 0 ? (int)(X - 1) : (int)(X))
+-#define ceil(X) (((X) > 0) ? CEILING_POS(X) : CEILING_NEG(X))
+-
+-int rtfloor(float x)
+-{
+-	int i = x - 2;
+-	while
+-	(++i <= x - 1)
+-		;
+-	return i;
+-}
+-#endif
+-
+ #ifdef CONFIG_MP_INCLUDED
+ u32 read_macreg(_adapter *padapter, u32 addr, u32 sz)
+ {
+-- 
+2.33.1
+

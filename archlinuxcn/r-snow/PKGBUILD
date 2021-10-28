@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=snow
-_pkgver=0.4-3
+_pkgver=0.4-4
 pkgname=r-${_pkgname,,}
-pkgver=0.4.3
+pkgver=0.4.4
 pkgrel=1
 pkgdesc='Simple Network of Workstations'
 arch=('any')
@@ -18,7 +18,7 @@ optdepends=(
   r-rmpi
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('8512537daf334ea2b8074dbb80cf5e959a403a78d68bc1e97664e8a4f64576d8')
+sha256sums=('84587f46f222a96f3e2fde10ad6ec6ddbd878f4e917cd926d632f61a87db13c9')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

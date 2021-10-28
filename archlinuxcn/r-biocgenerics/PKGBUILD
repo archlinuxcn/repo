@@ -1,9 +1,9 @@
 # Maintainer: hubutui <hot123tea123@gmail.com>
 
 _pkgname=BiocGenerics
-_pkgver=0.38.0
+_pkgver=0.40.0
 pkgname=r-${_pkgname,,}
-pkgver=0.38.0
+pkgver=0.40.0
 pkgrel=1
 pkgdesc='S4 generic functions used in Bioconductor'
 arch=('any')
@@ -30,7 +30,7 @@ optdepends=(
   r-s4vectors
 )
 source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('a692fe68256578fc1beb60630cfd45ffc3b003ad36801dce8970c4e9eba767cf')
+sha256sums=('d045577f491676583a5faca014af9774d993fffb999fdab3b3790a8732e9255b')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

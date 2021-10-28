@@ -4,7 +4,7 @@ pkgname=rtl8821cu-dkms-git
 _pkgbase=rtl8821cu
 epoch=1
 pkgver=5.4.1.122.9828dcb
-pkgrel=2
+pkgrel=3
 pkgdesc="rtl8821cu chipset driver"
 arch=('any')
 url="https://github.com/brektrou/rtl8821CU"
@@ -12,13 +12,38 @@ license=('GPL2')
 depends=('dkms' 'bc') # bc dependency needed for GCC 4.9 detection in makefile
 makedepends=('git')
 conflicts=("${_pkgbase}")
+_patches=(0001-Remove-unused-floating-point-variables.patch
+          0002-Remove-unnecessary-floating-point-conversion.patch
+          0003-Scale-LDPC-and-CR-to-make-them-both-integer.patch
+          0004-Compare-numbers-to-be-subtracted-first.patch
+          0005-Add-ceiling-division-helper-function.patch
+          0006-Get-rid-of-the-remaining-floating-point-values-from-.patch
+          0007-Scale-comparisons-to-use-integer-arithmetics.patch
+          0008-Replace-floating-point-divisions-with-interger-ones.patch
+          0009-Remove-use-of-floating-point-math-in-PMAC_Nsym_gener.patch
+          0010-Scale-ratio-by-11-to-get-rid-of-floating-point-math-.patch
+          0011-Clean-up-unused-floating-point-macros-and-functions.patch
+          0012-Do-not-request-hard-floating-point-from-compiler.patch
+          0013-Fix-SUBARCH-autodetection-on-arm-and-aarch64.patch
+          0014-Remove-wrong-notes-about-building-on-ARM.patch)
 source=("git+https://github.com/brektrou/rtl8821CU"
-        0001-Make-flags.patch
-        0002-Get-rid-of-hardware-float.patch
+        "${_patches[@]}"
         'dkms.conf')
 sha256sums=('SKIP'
-            '7f0704ae047350bb2a4a13a190666061bba598bdfd8c00602d4cf854670392fc'
-            '6ad8c5e562adfb75c43e9932bf4d1bbf6ed1497f2b1d44a7ba7f779d22f26718'
+            'c65b886487ae0dcc2237ff3c75e59f8775183dda430913a66ca053d2834a7f19'
+            '3664e9e9b6619c0d2d4a8d82a69d31fe8bbab458b0f6c61dc08a2e45bedb65b6'
+            'd84eeb908f26c07c1f57805c4b16f974ef93b4f3206cee2f284a5ea2e95de588'
+            'd3e7aac44db289b267ba333ebfcf7dd27d695d648523ed0dce236536baa6a0b9'
+            'fdb75604bb61955b8bac2fc51f04f0236bc063d8281a3ceaf1accf2bbe85abfc'
+            'c86c9445adc87444bd75983e2ec3273e12bf19ce942ac18b93f360f2c6a7d026'
+            '89dd378c37c130bf75f39c8a780ca0147f7d8fc6dce8d033e20e299afc4bc009'
+            'a596820ef9a185f376fde219300589e2eb425180fe6d9e88729fe388d12dc0b8'
+            '03eb27c78f6a3053d382a72ce5f2a7836eec86e8e444bcc8ef6a84f71cb2d06e'
+            '9fa8bd143a5ae9a318aba3def3e358b2eb4393ef192b20c78ef4b8d904098191'
+            'd3b581beabd7d3ed8b6eaea92f34f3790a460a7283738cf0770fdb800edba25a'
+            'd17ac5a3f4f50ceae950bff4c668f8c5e5770bb525278ca2b0a2a08e0c0d420d'
+            '17ea8185e42727157f42191ef2750a8a3e4eb0321d60dda468d232817d21c896'
+            '80be8c4f56bda32bb8df625d2a9d813100b8a7b3906e4b09aa30355c95b14151'
             'dc259d528f88d10b0026f7ee5815669d9f700485418278292f521e98afa54ba1')
 pkgver() {
   cd rtl8821CU
@@ -28,8 +53,9 @@ pkgver() {
 prepare() {
   cd rtl8821CU
 
-  patch -Np1 < ../0001-Make-flags.patch
-  patch -Np1 < ../0002-Get-rid-of-hardware-float.patch
+  for p in "${_patches[@]}"; do
+    patch -Np1 < "../$p"
+  done
 }
 
 package() {

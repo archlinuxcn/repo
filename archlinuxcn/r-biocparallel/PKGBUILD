@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=BiocParallel
-_pkgver=1.26.2
+_pkgver=1.28.0
 pkgname=r-${_pkgname,,}
-pkgver=1.26.2
+pkgver=1.28.0
 pkgrel=1
 pkgdesc='Bioconductor facilities for parallel evaluation'
 arch=('x86_64')
@@ -38,7 +38,7 @@ optdepends=(
   r-variantannotation
 )
 source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('1111b7a7a76bdbdb4413b0648a055d1835e5e90fbfd3a65f1c2e08fc3c4b85f8')
+sha256sums=('46e5bbdef307b354515c4650abbac1f697c4a6200c620002ff36f27be55d0f4b')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

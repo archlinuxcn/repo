@@ -1,0 +1,28 @@
+From f9117491b7b2df046a1b1be04f6cfcdc04c09fe0 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 27 Oct 2021 08:48:52 -0400
+Subject: [PATCH 05/14] Add ceiling division helper function
+
+---
+ core/rtw_mp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/core/rtw_mp.c b/core/rtw_mp.c
+index 90effa7..f4763f7 100644
+--- a/core/rtw_mp.c
++++ b/core/rtw_mp.c
+@@ -23,6 +23,11 @@
+ 	#include <rtw_bt_mp.h>
+ #endif
+ 
++static inline UINT ceil_divide(UINT a, UINT b)
++{
++    return (a + b - 1) / b;
++}
++
+ #ifdef CONFIG_MP_VHT_HW_TX_MODE
+ #define CEILING_POS(X) ((X - (int)(X)) > 0 ? (int)(X + 1) : (int)(X))
+ #define CEILING_NEG(X) ((X - (int)(X)) < 0 ? (int)(X - 1) : (int)(X))
+-- 
+2.33.1
+
