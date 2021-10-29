@@ -1,0 +1,48 @@
+[Unit]
+Description=NaiveProxy Server Service
+After=network-online.target
+
+[Service]
+Type=simple
+User=naiveproxy
+Restart=on-failure
+RestartSec=5s
+ExecStart=/usr/bin/naiveproxy /etc/naiveproxy/config.json
+# Proc filesystem
+ProcSubset=pid
+ProtectProc=invisible
+# Capabilities
+CapabilityBoundingSet=
+# Security
+NoNewPrivileges=true
+# Sandboxing
+ProtectSystem=strict
+PrivateTmp=true
+PrivateDevices=true
+PrivateUsers=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+ProtectHome=true
+RestrictAddressFamilies=AF_INET
+RestrictAddressFamilies=AF_INET6
+RestrictAddressFamilies=AF_NETLINK
+RestrictAddressFamilies=AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateMounts=true
+ProtectClock=true
+# System Call Filtering
+SystemCallArchitectures=native
+SystemCallFilter=~@cpu-emulation @debug @keyring @ipc @mount @obsolete @privileged @setuid
+SystemCallFilter=pipe
+SystemCallFilter=pipe2
+
+[Install]
+WantedBy=default.target
+
