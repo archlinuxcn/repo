@@ -6,7 +6,7 @@
 pkgbase=nvidia-utils-beta
 pkgname=('nvidia-utils-beta' 'opencl-nvidia-beta' 'nvidia-settings-beta')
 pkgver=495.44
-pkgrel=1
+pkgrel=2
 pkgdesc='NVIDIA drivers utilities (beta version)'
 arch=('x86_64')
 url='https://www.nvidia.com/'
@@ -129,6 +129,9 @@ package_nvidia-utils-beta() {
     install -D -m755 "libnvidia-cfg.so.${pkgver}"       -t "${pkgdir}/usr/lib"
     install -D -m755 "libnvidia-ml.so.${pkgver}"        -t "${pkgdir}/usr/lib"
     install -D -m755 "libnvidia-glvkspirv.so.${pkgver}" -t "${pkgdir}/usr/lib"
+    install -D -m755 "libnvidia-vulkan-producer.so.${pkgver}" -t "${pkgdir}/usr/lib"
+    ln -s "libnvidia-vulkan-producer.so.${pkgver}" "${pkgdir}/usr/lib/libnvidia-vulkan-producer.so.1"
+    ln -s libnvidia-vulkan-producer.so.1 "${pkgdir}/usr/lib/libnvidia-vulkan-producer.so"
     
     # Vulkan ICD
     install -D -m644 nvidia_icd.json    -t "${pkgdir}/usr/share/vulkan/icd.d"
@@ -167,6 +170,7 @@ package_nvidia-utils-beta() {
     # GBM
     install -D -m755 "libnvidia-allocator.so.${pkgver}" -t "${pkgdir}/usr/lib"
     install -D -m755 libnvidia-egl-gbm.so.1.1.0         -t "${pkgdir}/usr/lib"
+    install -D -m644 15_nvidia_gbm.json -t "${pkgdir}/usr/share/egl/egl_external_platform.d"
     install -d -m755 "${pkgdir}/usr/lib/gbm"
     ln -s "../libnvidia-allocator.so.${pkgver}" "${pkgdir}/usr/lib/gbm/nvidia-drm_gbm.so"
     
