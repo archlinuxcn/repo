@@ -5,7 +5,7 @@
 pkgname=gdcm
 _pkgname=GDCM
 pkgver=3.0.10
-pkgrel=1
+pkgrel=2
 pkgdesc='A C++ library for DICOM medical files'
 arch=('x86_64')
 url='http://gdcm.sourceforge.net'
@@ -15,7 +15,7 @@ depends=(
   'libxml2'
   'poppler'
   'python'
-  'vtk'
+# 'vtk'
 )
 makedepends=(
   'cmake'
@@ -44,6 +44,7 @@ get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
 }
 
+# disable vtk, see also https://sourceforge.net/p/gdcm/bugs/509/
 build() {
   export CXXFLAGS+=" ${CPPFLAGS} -fpermissive"
   cmake \
@@ -68,7 +69,7 @@ build() {
     -DGDCM_USE_SYSTEM_POPPLER:BOOL=ON \
     -DGDCM_USE_SYSTEM_UUID:BOOL=ON \
     -DGDCM_USE_SYSTEM_ZLIB:BOOL=ON \
-    -DGDCM_USE_VTK:BOOL=ON \
+    -DGDCM_USE_VTK:BOOL=OFF \
     -DGDCM_WRAP_PYTHON:BOOL=ON
   make -C "build"
 }
@@ -82,10 +83,8 @@ package() {
   # fix python binding installation
   install -d "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
   ln -s "/usr/lib/_gdcmswig.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/_gdcmswig.so"
-  ln -s "/usr/lib/vtkgdcmPython.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/vtkgdcmPython.so"
-  mv -v "${pkgdir}/usr/lib/gdcm.py" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
-  mv -v "${pkgdir}/usr/lib/vtkgdcm.py" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
-  mv -v "${pkgdir}/usr/lib/gdcmswig.py" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
+  #ln -s "/usr/lib/vtkgdcmPython.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/vtkgdcmPython.so"
+  find "${pkgdir}/usr/lib" -type f -name "*.py" -exec mv -vf {} "${pkgdir}/usr/lib/python$(get_pyver)/site-packages" \;
 }
 # vim:set ts=2 sw=2 et:
 
