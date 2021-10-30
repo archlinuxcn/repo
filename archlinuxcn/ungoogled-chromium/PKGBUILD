@@ -9,7 +9,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=95.0.4638.54
+pkgver=95.0.4638.69
 pkgrel=1
 _launcher_ver=8
 _gcc_patchset=4
@@ -41,7 +41,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-94-ffmpeg-roll.patch
         unexpire-accelerated-video-decode-flag.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('3eef88d745e6ddaeaf507358f1510482d6f399cf335061bb1226a5f7120061fd'
+sha256sums=('38a37d737c6c9a7198402ca614746b2dbb7abbb793bb2cb02dc796b62a22efe7'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'bc6373f2470a9e6d947a4deaee0612f730112f69552b933c54bb6e60b82dd6f1'
             '074b32078b9e53fd9b33709ce5785c120eb0346b015a93921897caed4f95f7b6'
@@ -63,7 +63,7 @@ source=(${source[@]}
         chromium-drirc-disable-10bpc-color-configs.conf
         wayland-egl.patch)
 sha256sums=(${sha256sums[@]}
-            'fe3a77372668b5f7de71705b768b78a2bb10f74e35bd85a0af9b982a39ff32d3'
+            '35debe7f407a4749d4454fc78f52c18955f1d8400750fdc20b179f528106c658'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '34d08ea93cb4762cb33c7cffe931358008af32265fc720f2762f0179c3973574')
 
