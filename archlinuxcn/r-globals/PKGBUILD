@@ -1,23 +1,19 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
-_pkgname=conquer
-_pkgver=1.0.2
+_pkgname=globals
+_pkgver=0.14.0
 pkgname=r-${_pkgname,,}
-pkgver=1.0.2
-pkgrel=2
-pkgdesc='Convolution-Type Smoothed Quantile Regression'
-arch=('x86_64')
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Identify Global Objects in R Expressions'
+arch=('any')
 url="https://cran.r-project.org/package=${_pkgname}"
-license=('GPL')
+license=('LGPL')
 depends=(
   r
-  r-caret
-  r-matrixstats
-  r-rcpp
-  r-rcpparmadillo
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('542f6154ce1ffec0c1b4dd4e1f5b86545015f4b378c4c66a0840c65c57d674ff')
+sha256sums=('203dbccb829ca9cc6aedb6f5e79cb126ea31f8dd379dff9111ec66e3628c32f3')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

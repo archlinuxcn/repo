@@ -1,23 +1,22 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
-_pkgname=conquer
-_pkgver=1.0.2
+_pkgname=proxy
+_pkgver=0.4-26
 pkgname=r-${_pkgname,,}
-pkgver=1.0.2
-pkgrel=2
-pkgdesc='Convolution-Type Smoothed Quantile Regression'
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Distance and Similarity Measures'
 arch=('x86_64')
 url="https://cran.r-project.org/package=${_pkgname}"
 license=('GPL')
 depends=(
   r
-  r-caret
-  r-matrixstats
-  r-rcpp
-  r-rcpparmadillo
+)
+optdepends=(
+  r-cba
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('542f6154ce1ffec0c1b4dd4e1f5b86545015f4b378c4c66a0840c65c57d674ff')
+sha256sums=('676bad821343974e0297a0566c4bf0cf0ea890104906a745b87d3b5989c81a4d')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

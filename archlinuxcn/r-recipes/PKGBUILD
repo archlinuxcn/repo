@@ -1,0 +1,65 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=recipes
+_pkgver=0.1.17
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Preprocessing and Feature Engineering Steps for Modeling'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-dplyr
+  r-ellipsis
+  r-generics
+  r-glue
+  r-gower
+  r-ipred
+  r-lifecycle
+  r-lubridate
+  r-magrittr
+  r-purrr
+  r-rlang
+  r-tibble
+  r-tidyr
+  r-tidyselect
+  r-timedate
+  r-vctrs
+  r-withr
+)
+optdepends=(
+  r-covr
+  r-ddalpha
+  r-dimred
+  r-fastica
+  r-ggplot2
+  r-igraph
+  r-kernlab
+  r-knitr
+  r-modeldata
+  r-parsnip
+  r-rann
+  r-rcpproll
+  r-rmarkdown
+  r-rpart
+  r-rsample
+  r-rspectra
+  r-testthat
+  r-workflows
+  r-xml2
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('ed20ba0ea0165310e31864ed7d2e005a2a37b76c7913977fd124d8b567616d3d')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

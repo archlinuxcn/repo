@@ -1,23 +1,29 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
-_pkgname=conquer
-_pkgver=1.0.2
+_pkgname=future.apply
+_pkgver=1.8.1
 pkgname=r-${_pkgname,,}
-pkgver=1.0.2
-pkgrel=2
-pkgdesc='Convolution-Type Smoothed Quantile Regression'
-arch=('x86_64')
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Apply Function to Elements in Parallel using Futures'
+arch=('any')
 url="https://cran.r-project.org/package=${_pkgname}"
 license=('GPL')
 depends=(
   r
-  r-caret
-  r-matrixstats
-  r-rcpp
-  r-rcpparmadillo
+  r-future
+  r-globals
+)
+optdepends=(
+  r-datasets
+  r-listenv
+  r-markdown
+  r-r.rsp
+  r-stats
+  r-tools
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('542f6154ce1ffec0c1b4dd4e1f5b86545015f4b378c4c66a0840c65c57d674ff')
+sha256sums=('0d5bc3cb0289665bb27ae4ccad51fcc5ebf6dca46872b0a4e57790b9dc0aa6c7')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

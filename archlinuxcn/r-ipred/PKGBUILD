@@ -1,23 +1,27 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
-_pkgname=conquer
-_pkgver=1.0.2
+_pkgname=ipred
+_pkgver=0.9-12
 pkgname=r-${_pkgname,,}
-pkgver=1.0.2
-pkgrel=2
-pkgdesc='Convolution-Type Smoothed Quantile Regression'
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Improved Predictors'
 arch=('x86_64')
 url="https://cran.r-project.org/package=${_pkgname}"
 license=('GPL')
 depends=(
   r
-  r-caret
-  r-matrixstats
-  r-rcpp
-  r-rcpparmadillo
+  r-prodlim
+)
+optdepends=(
+  r-mlbench
+  r-mvtnorm
+  r-party
+  r-randomforest
+  r-th.data
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('542f6154ce1ffec0c1b4dd4e1f5b86545015f4b378c4c66a0840c65c57d674ff')
+sha256sums=('d6e1535704d39415a799d7643141ffa4f6f55597f03e763f4ccd5d8106005843')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

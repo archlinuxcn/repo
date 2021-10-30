@@ -1,0 +1,69 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=caret
+_pkgver=6.0-90
+pkgname=r-${_pkgname,,}
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Classification and Regression Training'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-e1071
+  r-foreach
+  r-ggplot2
+  r-modelmetrics
+  r-plyr
+  r-proc
+  r-recipes
+  r-reshape2
+  r-withr
+)
+optdepends=(
+  r-bradleyterry2
+  r-covr
+  r-cubist
+  r-dplyr
+  r-earth
+  r-ellipse
+  r-fastica
+  r-gam
+  r-ipred
+  r-kernlab
+  r-klar
+  r-knitr
+  r-mass
+  r-matrix
+  r-mda
+  r-mgcv
+  r-mlbench
+  r-mlmetrics
+  r-nnet
+  r-pamr
+  r-party
+  r-pls
+  r-proxy
+  r-randomforest
+  r-rann
+  r-rmarkdown
+  r-rpart
+  r-spls
+  r-subselect
+  r-superpc
+  r-testthat
+  r-themis
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('e851a4ed7d939c665e57e3551a5464b09fe4285e7c951236efdd890b0da866bc')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

@@ -1,23 +1,23 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
-_pkgname=conquer
-_pkgver=1.0.2
+_pkgname=timeDate
+_pkgver=3043.102
 pkgname=r-${_pkgname,,}
-pkgver=1.0.2
-pkgrel=2
-pkgdesc='Convolution-Type Smoothed Quantile Regression'
-arch=('x86_64')
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Rmetrics - Chronological and Calendar Objects'
+arch=('any')
 url="https://cran.r-project.org/package=${_pkgname}"
 license=('GPL')
 depends=(
   r
-  r-caret
-  r-matrixstats
-  r-rcpp
-  r-rcpparmadillo
+)
+optdepends=(
+  r-date
+  r-runit
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('542f6154ce1ffec0c1b4dd4e1f5b86545015f4b378c4c66a0840c65c57d674ff')
+sha256sums=('377cba03cddab8c6992e31d0683c1db3a73afa9834eee3e95b3b0723f02d7473')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

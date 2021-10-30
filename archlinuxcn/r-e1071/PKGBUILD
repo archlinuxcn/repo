@@ -1,23 +1,32 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
-_pkgname=conquer
-_pkgver=1.0.2
+_pkgname=e1071
+_pkgver=1.7-9
 pkgname=r-${_pkgname,,}
-pkgver=1.0.2
-pkgrel=2
-pkgdesc='Convolution-Type Smoothed Quantile Regression'
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Misc Functions of the Department of Statistics, Probability Theory Group (Formerly: E1071), TU Wien'
 arch=('x86_64')
 url="https://cran.r-project.org/package=${_pkgname}"
 license=('GPL')
 depends=(
   r
-  r-caret
-  r-matrixstats
-  r-rcpp
-  r-rcpparmadillo
+  r-proxy
+)
+optdepends=(
+  r-cluster
+  r-mass
+  r-matrix
+  r-mlbench
+  r-nnet
+  r-randomforest
+  r-rpart
+  r-slam
+  r-sparsem
+  r-xtable
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('542f6154ce1ffec0c1b4dd4e1f5b86545015f4b378c4c66a0840c65c57d674ff')
+sha256sums=('9bf9a15e7ce0b9b1a57ce3048d29cbea7f2a5bb2e91271b1b6aaafe07c852226')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

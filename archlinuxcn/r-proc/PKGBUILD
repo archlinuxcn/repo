@@ -1,23 +1,31 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
-_pkgname=conquer
-_pkgver=1.0.2
+_pkgname=pROC
+_pkgver=1.18.0
 pkgname=r-${_pkgname,,}
-pkgver=1.0.2
-pkgrel=2
-pkgdesc='Convolution-Type Smoothed Quantile Regression'
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Display and Analyze ROC Curves'
 arch=('x86_64')
 url="https://cran.r-project.org/package=${_pkgname}"
 license=('GPL')
 depends=(
   r
-  r-caret
-  r-matrixstats
+  r-plyr
   r-rcpp
-  r-rcpparmadillo
+)
+optdepends=(
+  r-doparallel
+  r-ggplot2
+  r-logcondens
+  r-mass
+  r-microbenchmark
+  r-tcltk
+  r-testthat
+  r-vdiffr
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('542f6154ce1ffec0c1b4dd4e1f5b86545015f4b378c4c66a0840c65c57d674ff')
+sha256sums=('d5ef54b384176ece6d6448014ba40570a98181b58fee742f315604addb5f7ba9')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

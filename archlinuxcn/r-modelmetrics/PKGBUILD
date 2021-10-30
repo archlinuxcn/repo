@@ -1,23 +1,24 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
-_pkgname=conquer
-_pkgver=1.0.2
+_pkgname=ModelMetrics
+_pkgver=1.2.2.2
 pkgname=r-${_pkgname,,}
-pkgver=1.0.2
-pkgrel=2
-pkgdesc='Convolution-Type Smoothed Quantile Regression'
+pkgver=${_pkgver//[:-]/.}
+pkgrel=1
+pkgdesc='Rapid Calculation of Model Metrics'
 arch=('x86_64')
 url="https://cran.r-project.org/package=${_pkgname}"
 license=('GPL')
 depends=(
   r
-  r-caret
-  r-matrixstats
+  r-data.table
   r-rcpp
-  r-rcpparmadillo
+)
+optdepends=(
+  r-testthat
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('542f6154ce1ffec0c1b4dd4e1f5b86545015f4b378c4c66a0840c65c57d674ff')
+sha256sums=('5e06f1926aebca5654e1329c66ef19b04058376b2277ebb16e3bf8c208d73457')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
