@@ -3,7 +3,7 @@
 # Contributor: Mick Elliot <micke at sfu dot ca>
 
 pkgname=mafft
-pkgver=7.487
+pkgver=7.489
 pkgrel=1
 pkgdesc='Multiple alignment program for amino acid or nucleotide sequences'
 arch=('x86_64')
@@ -13,7 +13,7 @@ depends=(
   perl
 )
 source=("${pkgname}-${pkgver}.tgz::https://mafft.cbrc.jp/alignment/software/${pkgname}-${pkgver}-with-extensions-src.tgz")
-sha1sums=('d94137e79ea14c2d235c3f10a6d0537e86768a2e')
+sha1sums=('2a581469bb9e9bd3e68dfa009394542b938a0b87')
 
 build() {
   make -C "${pkgname}-${pkgver}-with-extensions/core" PREFIX=/usr LIBDIR=/usr/lib/mafft
