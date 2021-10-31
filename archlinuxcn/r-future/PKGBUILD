@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=future
-_pkgver=1.22.1
+_pkgver=1.23.0
 pkgname=r-${_pkgname,,}
-pkgver=1.22.1
+pkgver=1.23.0
 pkgrel=1
 pkgdesc='Unified Parallel and Distributed Processing in R for Everyone'
 arch=('any')
@@ -22,7 +22,7 @@ optdepends=(
   r-rhpcblasctl
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('87b24a85caf08e1d809eab28f9258444105cd7788eee2e3e2f21727ba3bbedcd')
+sha256sums=('d869c80e837c0937a414b8050deff081aefeac586b796f3d634d64f0f4fdb8f8')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
