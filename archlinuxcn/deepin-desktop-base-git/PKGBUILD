@@ -2,7 +2,7 @@
 
 pkgname=deepin-desktop-base-git
 pkgver=2021.1.25.r0.g2388ac2
-pkgrel=14
+pkgrel=16
 pkgdesc='Base component for Deepin'
 arch=('any')
 url="https://github.com/linuxdeepin/deepin-desktop-base"
