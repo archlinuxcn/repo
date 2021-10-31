@@ -2,67 +2,57 @@
 # Contributor: orumin <dev@orum.in>
 
 _basename=libsrtp
-pkgname="lib32-$_basename"
-pkgver=2.3.0
-pkgrel=3
+pkgname=lib32-libsrtp
+pkgver=2.4.2
+pkgrel=1
 epoch=1
 pkgdesc="Library for SRTP (Secure Realtime Transport Protocol) (32-bit)"
 url="https://github.com/cisco/libsrtp"
 arch=('x86_64')
 license=(BSD)
-depends=('lib32-glibc' 'libsrtp')
-makedepends=('git')
+depends=('lib32-glibc' 'lib32-nss' 'libsrtp')
+makedepends=('git' 'lib32-libpcap' 'meson')
 checkdepends=('procps-ng')
-options=('staticlibs')
-_commit=d02d21111e379c297e93a9033d7b653135f732ee  # tags/v2.3.0
+_commit=90d05bf8980d16e4ac3f16c19b77e296c4bc207b # tags/v2.4.2
 source=("git+https://github.com/cisco/libsrtp#commit=$_commit")
 sha256sums=('SKIP')
 
 _pkgver() {
     cd $_basename
+
     git describe --tags | sed 's/^v//;s/-/+/g'
 }
 
 prepare() {
     cd $_basename
 
-    # Fixup pkgver: There are tags like v1.5.4 but also "moving" tags like v1 and v1.5
-    git tag | grep -Pv '^v\d+.\d+.\d+$' | xargs git tag -d
-
-    # Fix building with GCC 10
-    git cherry-pick -n 716a73862b387a2107f37398c0fb7d9a754c0ccd
-
-    autoreconf -fvi || true
-    sed -i -e 's|install-sh ar-lib|install-sh|' configure
+    # Fixup pkgver: There are proper tags like v2.4.4
+    # but also "moving tags" like v2 and v2.4 that aren't stable
+    git tag | grep -Pv '^v\d+\.\d+\.\d+$' | xargs git tag -d
 }
 
 build() {
-    cd $_basename
-
     export CC='gcc -m32'
     export CXX='g++ -m32'
-    export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
+    export PKG_CONFIG='/usr/bin/i686-pc-linux-gnu-pkg-config'
 
-    ./configure --prefix=/usr \
-        --build=i686-pc-linux-gnu \
-        --libdir=/usr/lib32
-
-    make all
-    make shared_library
+    arch-meson $_basename build \
+        --libdir=lib32 \
+        --buildtype release \
+        -D crypto-library=nss \
+        -D crypto-library-kdf=disabled \
+        -D doc=disabled
+    meson compile -C build
 }
 
 check() {
-    cd $_basename
-
-    make runtest
+    meson test -C build --print-errorlogs
 }
 
 package() {
-    cd $_basename
+    meson install -C build --destdir "$pkgdir"
 
-    make DESTDIR="$pkgdir" install
-
-    install -Dt "$pkgdir/usr/share/licenses/$pkgname" -m644 LICENSE
+    install -Dt "$pkgdir/usr/share/licenses/$pkgname" -m644 $_basename/LICENSE
 
     cd "$pkgdir"/usr
 

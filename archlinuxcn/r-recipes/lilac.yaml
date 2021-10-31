@@ -1,0 +1,25 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-dplyr
+  - r-ellipsis
+  - r-generics
+  - r-glue
+  - r-gower
+  - r-ipred
+  - r-lifecycle
+  - r-lubridate
+  - r-magrittr
+  - r-purrr
+  - r-rlang
+  - r-tibble
+  - r-tidyr
+  - r-tidyselect
+  - r-timedate
+  - r-vctrs
+  - r-withr
+update_on:
+  - regex: recipes_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=recipes

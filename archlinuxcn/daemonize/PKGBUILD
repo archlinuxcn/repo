@@ -1,17 +1,17 @@
 # Maintainer: Erik Westrup <erik.westrup@gmail.com>
 pkgname=daemonize
-pkgver=1.7.7
+pkgver=1.7.8
 pkgrel=1
 pkgdesc="Run a program as a Unix daemon"
 arch=(i686 x86_64 armv7h)
-url="http://bmc.github.com/daemonize/"
+url="https://github.com/bmc/daemonize"
 license=('BSD')
 depends=(glibc)
 provides=(daemonize)
 conflicts=(daemonize-git)
 makedepends=(python-markdown)
 source=("$pkgname-$pkgver.tar.gz::https://github.com/bmc/$pkgname/tarball/release-$pkgver")
-md5sums=('84877ef65f01ccf8cd5da1bf4045883e')
+md5sums=('5030b6914aab6721b04b35fa8bb4b222')
 
 build() {
   local _dirname=$(tar tf "$srcdir/$pkgname-$pkgver.tar.gz" | sed 1q);

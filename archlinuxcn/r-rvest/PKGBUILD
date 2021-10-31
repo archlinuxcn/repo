@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=rvest
-_pkgver=1.0.1
+_pkgver=1.0.2
 pkgname=r-${_pkgname,,}
-pkgver=1.0.1
+pkgver=1.0.2
 pkgrel=1
 pkgdesc='Easily Harvest (Scrape) Web Pages'
 arch=('any')
@@ -32,7 +32,7 @@ optdepends=(
   r-webfakes
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('0886245347b04ac3af1d2c5417bb4a9aa1ece5bb7f6e788b27fa1c20ee5d29ed')
+sha256sums=('89bb477e0944c80298a52ccf650db8f6377fd7ed3c1bc7034d000f695fdf05a4')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

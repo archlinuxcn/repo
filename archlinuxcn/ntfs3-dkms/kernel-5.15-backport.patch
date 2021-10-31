@@ -1,6 +1,6 @@
 --- a/ntfs_fs.h
 +++ b/ntfs_fs.h
-@@ -809,7 +809,7 @@
+@@ -836,7 +836,7 @@
  
  /* globals from xattr.c */
  #ifdef CONFIG_NTFS3_FS_POSIX_ACL
@@ -12,7 +12,7 @@
 
 --- a/xattr.c
 +++ b/xattr.c
-@@ -535,11 +535,8 @@
+@@ -530,11 +530,8 @@
  /*
   * ntfs_get_acl - inode_operations::get_acl
   */
@@ -25,12 +25,3 @@
  	/* TODO: init_user_ns? */
  	return ntfs_get_acl_ex(&init_user_ns, inode, type, 0);
  }
-@@ -638,7 +635,7 @@
- 		return -EOPNOTSUPP;
- 	}
- 
--	acl = ntfs_get_acl(inode, type, false);
-+	acl = ntfs_get_acl(inode, type);
- 	if (IS_ERR(acl))
- 		return PTR_ERR(acl);
- 

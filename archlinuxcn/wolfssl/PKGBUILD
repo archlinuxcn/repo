@@ -5,7 +5,7 @@
 
 pkgname=wolfssl
 pkgver=4.8.1
-pkgrel=1
+pkgrel=2
 pkgdesc='small, fast, portable implementation of TLS/SSL for embedded devices to the cloud (formerly CyaSSL)'
 arch=(i686 x86_64)
 license=(GPL)
@@ -56,7 +56,8 @@ build() {
               --enable-curve25519 \
               --enable-ed25519 \
               --enable-curve448 \
-              --enable-ed448
+              --enable-ed448 \
+              --enable-writedup
   make
 }
 

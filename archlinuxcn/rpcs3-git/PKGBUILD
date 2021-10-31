@@ -2,8 +2,8 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.18.12878.479150b214
-pkgrel=2
+pkgver=0.0.18.12966.f258ae795c
+pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator'
 arch=(x86_64)
 url=https://github.com/RPCS3/rpcs3
@@ -27,6 +27,8 @@ depends=(
   openal
   qt5-base
   qt5-declarative
+  qt5-multimedia
+  qt5-svg
   sdl2
   vulkan-icd-loader
   zlib
@@ -34,6 +36,7 @@ depends=(
   wolfssl
   flatbuffers
   pugixml
+  ffmpeg
 )
 makedepends=(
   cmake

@@ -1,14 +1,11 @@
-post_upgrade() {
-  set -u
+post_install() {
   if ! systemctl -q is-enabled 'cronie.service'; then
-    echo 'TimeShift automatic backups require the cronie.service to be running.'
+    echo 'TimeShift scheduled backups require the cronie.service to be running.'
     echo 'Try:'
     echo '  systemctl enable --now cronie.service'
   fi
-  set +u
 }
 
-post_install() {
-    systemctl enable --now cronie.service
-  post_upgrade
+post_upgrade() {
+  post_install
 }

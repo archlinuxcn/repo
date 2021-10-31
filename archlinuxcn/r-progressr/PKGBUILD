@@ -1,0 +1,47 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=progressr
+_pkgver=0.9.0
+pkgname=r-${_pkgname,,}
+pkgver=0.9.0
+pkgrel=1
+pkgdesc='An Inclusive, Unifying API for Progress Updates'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-digest
+)
+optdepends=(
+  r-base64enc
+  r-beepr
+  r-commonmark
+  r-crayon
+  r-dofuture
+  r-foreach
+  r-furrr
+  r-future
+  r-future.apply
+  r-graphics
+  r-pbmcapply
+  r-plyr
+  r-progress
+  r-purrr
+  r-rstudioapi
+  r-shiny
+  r-tcltk
+  r-tools
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('cfe70f8423041ea5b5a2a39122c166462e58b1bba84df935858a7b86362b530f')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,38 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=pROC
+_pkgver=1.18.0
+pkgname=r-${_pkgname,,}
+pkgver=1.18.0
+pkgrel=1
+pkgdesc='Display and Analyze ROC Curves'
+arch=('x86_64')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('GPL')
+depends=(
+  r
+  r-plyr
+  r-rcpp
+)
+optdepends=(
+  r-doparallel
+  r-ggplot2
+  r-logcondens
+  r-mass
+  r-microbenchmark
+  r-tcltk
+  r-testthat
+  r-vdiffr
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('d5ef54b384176ece6d6448014ba40570a98181b58fee742f315604addb5f7ba9')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:

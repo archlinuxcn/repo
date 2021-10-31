@@ -1,0 +1,43 @@
+From c4e78f8dd1e4b06adf8429c67f26857b7ab2b507 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 27 Oct 2021 09:17:42 -0400
+Subject: [PATCH 13/14] Fix SUBARCH autodetection on arm and aarch64
+
+---
+ Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index c648d07..a60c71e 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1213,7 +1213,7 @@ EXTRA_CFLAGS += -DDM_ODM_SUPPORT_TYPE=0x04
+ ifeq ($(CONFIG_PLATFORM_I386_PC), y)
+ EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+ EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
+-SUBARCH := $(shell uname -m | sed -e s/i.86/i386/)
++SUBARCH := $(shell uname -m | sed -e "s/armv.*/arm/" | sed -e "s/aarch64/arm64/" | sed -e s/i.86/i386/)
+ ARCH ?= $(SUBARCH)
+ CROSS_COMPILE ?=
+ KVER  := $(shell uname -r)
+@@ -1350,7 +1350,7 @@ endif
+ 
+ ifeq ($(CONFIG_PLATFORM_ANDROID_X86), y)
+ EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+-SUBARCH := $(shell uname -m | sed -e s/i.86/i386/)
++SUBARCH := $(shell uname -m | sed -e "s/armv.*/arm/" | sed -e "s/aarch64/arm64/" | sed -e s/i.86/i386/)
+ ARCH := $(SUBARCH)
+ CROSS_COMPILE := /media/DATA-2/android-x86/ics-x86_20120130/prebuilt/linux-x86/toolchain/i686-unknown-linux-gnu-4.2.1/bin/i686-unknown-linux-gnu-
+ KSRC := /media/DATA-2/android-x86/ics-x86_20120130/out/target/product/generic_x86/obj/kernel
+@@ -1373,7 +1373,7 @@ ifeq ($(CONFIG_PLATFORM_JB_X86), y)
+ EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+ EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
+ EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
+-SUBARCH := $(shell uname -m | sed -e s/i.86/i386/)
++SUBARCH := $(shell uname -m | sed -e "s/armv.*/arm/" | sed -e "s/aarch64/arm64/" | sed -e s/i.86/i386/)
+ ARCH := $(SUBARCH)
+ CROSS_COMPILE := /home/android_sdk/android-x86_JB/prebuilts/gcc/linux-x86/x86/i686-linux-android-4.7/bin/i686-linux-android-
+ KSRC := /home/android_sdk/android-x86_JB/out/target/product/x86/obj/kernel/
+-- 
+2.33.1
+

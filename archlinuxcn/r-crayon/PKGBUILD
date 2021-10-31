@@ -1,9 +1,9 @@
 # Maintainer: hubutui <hot123tea123@gmail.com>
 
 _pkgname=crayon
-_pkgver=1.4.1
+_pkgver=1.4.2
 pkgname=r-${_pkgname,,}
-pkgver=1.4.1
+pkgver=1.4.2
 pkgrel=1
 pkgdesc='Colored Terminal Output'
 arch=('any')
@@ -19,7 +19,7 @@ optdepends=(
   r-withr
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('08b6e42e748d096960b2f32b7ffe690c25742e29fe14c19d1834cd6ff43029c7')
+sha256sums=('ee34397f643e76e30588068d4c93bd3c9afd2193deacccacb3bffcadf141b857')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

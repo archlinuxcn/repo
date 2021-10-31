@@ -1,0 +1,35 @@
+From e41d4afc3762fb6994aaffdac8455bd29decdf78 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 27 Oct 2021 09:19:10 -0400
+Subject: [PATCH 14/14] Remove wrong notes about building on ARM
+
+---
+ README.md | 11 -----------
+ 1 file changed, 11 deletions(-)
+
+diff --git a/README.md b/README.md
+index 6264588..bb3d579 100644
+--- a/README.md
++++ b/README.md
+@@ -110,18 +110,7 @@ Make sure `8821cu.ko` file present on that directory
+ ``
+ sudo dkms status
+ ``
+-### ARM architecture tweak for this driver (this solves compilation problem of this driver):
+-```
+-# For AArch32
+-sudo cp /lib/modules/$(uname -r)/build/arch/arm/Makefile /lib/modules/$(uname -r)/build/arch/arm/Makefile.$(date +%Y%m%d%H%M)
+-sudo sed -i 's/-msoft-float//' /lib/modules/$(uname -r)/build/arch/arm/Makefile
+-sudo ln -s /lib/modules/$(uname -r)/build/arch/arm /lib/modules/$(uname -r)/build/arch/armv7l
+-
+-# For AArch64
+-sudo cp /lib/modules/$(uname -r)/build/arch/arm64/Makefile /lib/modules/$(uname -r)/build/arch/arm64/Makefile.$(date +%Y%m%d%H%M)
+-sudo sed -i 's/-mgeneral-regs-only//' /lib/modules/$(uname -r)/build/arch/arm64/Makefile
+ 
+-```
+ ### Monitor mode
+ Use the tool 'iw', please don't use other tools like 'airmon-ng'
+ ```
+-- 
+2.33.1
+

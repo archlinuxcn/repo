@@ -1,0 +1,54 @@
+# Maintainer: Vlad Frolov <frolvlad@gmail.com>
+
+pkgname=owlink-git
+pkgver=0.0.0.r42.fb09463
+pkgrel=2
+pkgdesc='An open Apple Wireless Direct Link (AWDL) implementation written in C'
+arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
+url=https://owlink.org/
+license=('GPL3')
+depends=('libpcap' 'libev' 'libnl')
+makedepends=('cmake' 'git')
+provides=('owlink' 'owl-git')
+conflicts=('owlink' 'owl' 'owl-git')
+source=(
+  "$pkgname::git+https://github.com/seemoo-lab/owl.git#branch=master"
+  "git+https://github.com/google/googletest.git"
+  "git+https://github.com/radiotap/radiotap-library.git"
+)
+sha512sums=(
+  'SKIP'
+  'SKIP'
+  'SKIP'
+)
+
+pkgver() {
+  cd "$pkgname"
+  ( set -o pipefail
+    git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "0.0.0.r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  )
+}
+
+prepare() {
+  cd "$pkgname"
+  git config submodule.googletest.url $srcdir/googletest
+  git config submodule.radiotap.url $srcdir/radiotap-library
+  git submodule update --init
+}
+
+build() {
+  cd "$pkgname"
+  mkdir build -p && cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+  make DESTDIR="$pkgdir" install
+
+  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" ../COPYING
+}
+
+# vim:set ts=2 sw=2 et:

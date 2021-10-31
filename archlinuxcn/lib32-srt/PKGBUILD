@@ -2,7 +2,7 @@
 
 _basename=srt
 pkgname=lib32-srt
-pkgver=1.4.3
+pkgver=1.4.4
 pkgrel=1
 pkgdesc="Secure Reliable Transport library (32-bit)"
 url="https://www.srtalliance.org/"
@@ -10,7 +10,7 @@ arch=(x86_64)
 license=(MPL2)
 depends=(lib32-gcc-libs lib32-openssl srt)
 makedepends=(cmake git ninja)
-_commit=291e010fbf91b13b92e1cde5dcb824a9d7f4e353  # tags/v1.4.3
+_commit=8b32f3734ff6af7cc7b0fef272591cb80a2d1aae # tags/v1.4.4
 source=("git+https://github.com/Haivision/srt#commit=$_commit")
 b2sums=('SKIP')
 

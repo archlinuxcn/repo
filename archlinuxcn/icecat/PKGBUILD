@@ -5,32 +5,33 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=78.14.0
+pkgver=91.2.0
 pkgrel=1
-_commit=799c5ee63c4d65add90ff55f4948562e31a7be1a
+_commit=1537880dac3087d3779543303f0df83432831166
 pkgdesc="GNU version of the Firefox browser."
 arch=(x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
 license=('GPL' 'MPL' 'LGPL')
 depends=(gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse)
-makedepends=(m4 unzip zip diffutils python2-setuptools yasm mesa imake inetutils
+makedepends=(m4 unzip zip diffutils python2-setuptools python-jsonschema yasm mesa imake inetutils
              xorg-server-xvfb autoconf2.13 rust clang llvm jack gtk2
              python nodejs python2-psutil cbindgen nasm wget mercurial git lld perl-rename)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
             'speech-dispatcher: Text-to-Speech'
-            'hunspell-en_US: Spell checking, American English')
+            'hunspell-en_US: Spell checking, American English'
+            'xdg-desktop-portal: Screensharing with Wayland')
 options=(!emptydirs !makeflags !strip)
 
 source=(https://git.savannah.gnu.org/cgit/gnuzilla.git/snapshot/gnuzilla-${_commit}.tar.gz
         icecat.desktop icecat-safe.desktop
         "0001-Use-remoting-name-for-GDK-application-names.patch::https://raw.githubusercontent.com/archlinux/svntogit-packages/0adcedc05ce67d53268575f8801c8de872206901/firefox/trunk/0001-Use-remoting-name-for-GDK-application-names.patch")
 
-sha256sums=('40071a8ccc629b10fada7de7532eaf386282239f3977d2ddc6b06c6b1cda2cbc'
+sha256sums=('ed26ad9ef3b49e4cc86cb13015eb8ee32a9413aa89743b3f1cda2e61b7452116'
             'e00dbf01803cdd36fd9e1c0c018c19bb6f97e43016ea87062e6134bdc172bc7d'
             '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208'
-            'e0eaec8ddd24bbebf4956563ebc6d7a56f8dada5835975ee4d320dd3d0c9c442')
+            'bb9769a8fe720abea2bba5b895c70c4fba0d44bb553399d83350268edf85cdeb')
 
 prepare() {
   cd gnuzilla-${_commit}
@@ -58,8 +59,8 @@ prepare() {
   fi
 
   patch -p1 << 'EOF'
---- a/makeicecat	2021-04-21 12:56:35.319095244 +0200
-+++ b/makeicecat	2021-04-21 13:10:03.249639226 +0200
+--- a/makeicecat	2021-10-12 17:14:08.000000000 +0200
++++ b/makeicecat	2021-10-12 17:16:43.831787739 +0200
 @@ -143,16 +143,23 @@
      do which ${rename_cmd} &> /dev/null && RENAME_CMD=${rename_cmd}
      done
@@ -86,33 +87,30 @@ prepare() {
      fi
  
      # verify that Wget is available
-@@ -428,9 +433,16 @@
+@@ -562,9 +569,13 @@
  
  apply_batch_branding()
  {
 -    find . | tac | grep -i fennec  | ${RENAME_CMD} --nofullpath -E 's/fennec/icecatmobile/;' -E 's/Fennec/IceCatMobile/;'
 -    find . | tac | grep -i firefox | ${RENAME_CMD} --nofullpath -E 's/firefox/icecat/;' -E 's/Firefox/IceCat/;'
--    find services/fxaccounts/rust-bridge | tac | ${RENAME_CMD} --nofullpath -E 's/icecat-accounts/firefox-accounts/;' -E 's/IceCatAccounts/FirefoxAccounts/;'
+-
 +    if [ "${RENAME_FLAVOUR}" = "PEDERST" ]
 +    then
 +        find . | tac | grep -i firefox | ${RENAME_CMD} 's/firefox/icecat/ if -f;'
 +        find . | tac | grep -i firefox | ${RENAME_CMD} 's/Firefox/IceCat/ if -f;'
-+        find services/fxaccounts/rust-bridge | tac | ${RENAME_CMD} 's/icecat-accounts/firefox-accounts/ if -f;'
-+        find services/fxaccounts/rust-bridge | tac | ${RENAME_CMD} 's/IceCatAccounts/FirefoxAccounts/ if -f;'
 +    else
 +        find . | tac | grep -i firefox | ${RENAME_CMD} --nofullpath -E 's/firefox/icecat/;' -E 's/Firefox/IceCat/;'
-+        find services/fxaccounts/rust-bridge | tac | ${RENAME_CMD} --nofullpath -E 's/icecat-accounts/firefox-accounts/;' -E 's/IceCatAccounts/FirefoxAccounts/;'
 +    fi
- 
-     echo "Running batch rebranding"
+     echo "Running batch rebranding (this will take a while)"
      local sed_script="
-@@ -492,7 +507,12 @@
+ s|marketplace\\.firefox\\.com|f-droid.org/repository/browse|g;
+@@ -625,7 +636,12 @@
  
      sed 's/mozilla-bin/icecat-bin/' -i build/unix/run-mozilla.sh
  
 -    find . | tac | grep run-mozilla | ${RENAME_CMD} --nofullpath -E 's/mozilla/icecat/;'
 +    if [ "${RENAME_FLAVOUR}" = "PEDERST" ]
-+    then 
++    then
 +        find . | tac | grep run-mozilla | ${RENAME_CMD} 's/mozilla/icecat/ if -f;'
 +    else
 +        find . | tac | grep run-mozilla | ${RENAME_CMD} --nofullpath -E 's/mozilla/icecat/;'
@@ -145,16 +143,13 @@ ac_add_options --enable-optimize
 ac_add_options --enable-rust-simd
 ac_add_options --enable-linker=lld
 ac_add_options --disable-elf-hack
-export CC='clang --target=x86_64-unknown-linux-gnu'
-export CXX='clang++ --target=x86_64-unknown-linux-gnu'
-export AR=llvm-ar
-export NM=llvm-nm
-export RANLIB=llvm-ranlib
+ac_add_options --disable-bootstrap
 
 # Branding
 ac_add_options --enable-official-branding
 ac_add_options --with-distribution-id=org.gnu
 ac_add_options --with-unsigned-addon-scopes=app,system
+ac_add_options --allow-addon-sideload
 
 # System libraries
 ac_add_options --with-system-nspr
@@ -183,13 +178,7 @@ build() {
   # LTO needs more open files
   ulimit -n 4096
 
-  # -fno-plt with cross-LTO causes obscure LLVM errors
-  # LLVM ERROR: Function Import: link error
-  CFLAGS="${CFLAGS/-fno-plt/}"
-  CXXFLAGS="${CXXFLAGS/-fno-plt/}"
-
   ./mach build
-  #./mach buildsymbols
 
 }
 
@@ -207,11 +196,14 @@ package () {
 // Use LANG environment variable to choose locale
 pref("intl.locale.requested", "");
 
+// Use system-provided dictionaries
+pref("spellchecker.dictionary_path", "/usr/share/hunspell");
+
 // Disable default browser checking.
 pref("browser.shell.checkDefaultBrowser", false);
 
-// Opt all of us into e10s, instead of just 50%
-pref("browser.tabs.remote.autostart", true);
+// Don't disable extensions in the application directory
+pref("extensions.autoDisableScopes", 11);
 END
 
   local distini="$pkgdir/usr/lib/$pkgname/distribution/distribution.ini"
@@ -239,3 +231,5 @@ END
   install -Dm644 ${srcdir}/icecat.desktop ${pkgdir}/usr/share/applications/
   install -Dm644 ${srcdir}/icecat-safe.desktop ${pkgdir}/usr/share/applications/
 }
+
+# vim:set sw=2 et:

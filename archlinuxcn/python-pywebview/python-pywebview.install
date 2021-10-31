@@ -1,0 +1,9 @@
+post_install() {
+    cat << EOF
+
+NOTE: To use pywebview, make sure optional dependencies for this package
+are installed for either GTK or Qt.
+
+EOF
+    /bin/true
+}

@@ -29,4 +29,4 @@ clean:
 publish:
 	git add .
 	git commit -m "Update to version $(shell $(MAKE) versions | tail -n 1)"
-	git push
+#	git push

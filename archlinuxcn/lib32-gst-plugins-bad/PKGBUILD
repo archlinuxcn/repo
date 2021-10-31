@@ -4,7 +4,7 @@
 _basename=gst-plugins-bad
 pkgname=lib32-gst-plugins-bad
 pkgver=1.18.4
-pkgrel=10
+pkgrel=11
 pkgdesc="Multimedia graph framework - bad plugins (32-bit)"
 url="https://gstreamer.freedesktop.org/"
 arch=(x86_64)
@@ -27,8 +27,10 @@ optdepends=('lib32-nvidia-utils: nvcodec plugin')
 checkdepends=(xorg-server-xvfb)
 options=(!emptydirs)
 _commit=8cb03bdf01ca6ad8c87f951bcd7962c3ca9f6860 # tags/1.18.4^0
-source=("git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad.git#commit=$_commit")
-sha256sums=('SKIP')
+source=("git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad.git#commit=$_commit"
+        gst-plugins-bad-neon-0.32.patch::https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/-/merge_requests/2547.patch)
+sha256sums=('SKIP'
+            'bbd9b8bcc12ad86ddb58bb93df18777675f3a390e80bf60177fefbf034faa22c')
 
 pkgver() {
     cd $_basename
@@ -41,6 +43,8 @@ prepare() {
 
     git cherry-pick -n 68858358544dd3b7e20663f731db22fd74a78a45 # fix build with GCC 11
     git cherry-pick -n a9fafd98b74fd184b178604095d35ac6105119b8 # fix build with OpenEXR 3
+
+    patch -p1 -i ../gst-plugins-bad-neon-0.32.patch # Accept neon 0.32
 }
 
 build() {

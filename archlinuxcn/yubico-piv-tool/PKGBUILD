@@ -1,8 +1,8 @@
 # Maintainer: travisghansen <travisghansen@yahoo.com>
 
 pkgname=yubico-piv-tool
-pkgver=2.2.0
-pkgrel=2
+pkgver=2.2.1
+pkgrel=1
 pkgdesc="Tool to interact with the PIV applet on a YubiKey NEO"
 arch=('aarch64' 'armv7h' 'i686' 'x86_64')
 license=('GPL3')
@@ -13,7 +13,7 @@ source=(
  "https://developers.yubico.com/yubico-piv-tool/Releases/${pkgname}-${pkgver}.tar.gz"
  "https://developers.yubico.com/yubico-piv-tool/Releases/${pkgname}-${pkgver}.tar.gz.sig"
 )
-md5sums=('aa71993a96f483cfbec3f9ba717d9fc6'
+md5sums=('fdd64e16da13c464cfb0c7999b407cec'
          'SKIP')
 validpgpkeys=('0A3B0262BCA1705307D5FF06BCA00FD4B2168C0A'
               '20EE325B86A81BCBD3E56798F04367096FBA95E8'
@@ -27,8 +27,6 @@ validpgpkeys=('0A3B0262BCA1705307D5FF06BCA00FD4B2168C0A'
               '355C8C0186CC96CBA49F9CD8DAA17C2953914D9D'
               '9E885C0302F9BB9167529C2D5CBA11E6ADC7BCD1'
               '7FBB6186957496D58C751AC20E777DD85755AA4A'
-              'EE90AE0D19774C8386628FAAB428949EF7914718'
-              '9AA9BDB11BB1B99A21285A330664A76954265E8C'
               'DCB904FAB343CFA719076EF79EA90242958E0658')
 options=(!libtool)
 

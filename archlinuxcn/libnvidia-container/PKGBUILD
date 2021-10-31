@@ -1,10 +1,10 @@
-# Maintainer: Joel Shapiro <jshapiro at nvidia dot com>
+# Maintainer: Julie Shapiro <jshapiro at nvidia dot com>
 # Maintainer: Kien Dang <mail at kien dot ai>
 
 pkgbase=libnvidia-container
 pkgname=(libnvidia-container libnvidia-container-tools)
 
-pkgver=1.4.0
+pkgver=1.5.1
 pkgrel=1
 _elfver=0.7.1
 _nvmpver=450.57
@@ -32,11 +32,11 @@ source=("https://github.com/NVIDIA/${pkgbase}/archive/v${pkgver}.tar.gz"
         fix_git_rev_unavail.patch
         fix_libelf_so_name.patch
         fix_elftoolchain.patch)
-sha256sums=('5cf5a9054aeae53f48556c31856f9aabc51b35749f7d815356974c051911bdb7'
+sha256sums=('b12e1190df03875547628a776f97efe478fac77aa31a0fadfbea10df3bc2dc8d'
             '44f14591fcf21294387215dd7562f3fb4bec2f42f476cf32420a6bbabb2bd2b5'
             '396b4102d3075a2dee3024652fae206a1b38ace54b8efb1e2c20757a11ec19f1'
             'c8c600d753d1f98464667d56e011b868eed3c8364280ed33c0435974f800d3bb'
-            '48edab623a44e42d3310c87bf38df56878e68146ae4ac446c28d460fa0a4385b'
+            '12986dd405971dd2af9cd8ab0c75db37e09c8ec0657f1b148d59822831b8e40e'
             '42412db6bbcf0c2f76c426b6f51cf12eda6a78b5c9c64d29e9a80739790ea6b9'
             '1af7dcdc7f13cac3ddf1f4b4c7b225d8cd7f8407915b63aacea736a2a751db46')
 

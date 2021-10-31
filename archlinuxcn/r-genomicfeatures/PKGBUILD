@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=GenomicFeatures
-_pkgver=1.44.2
+_pkgver=1.46.1
 pkgname=r-${_pkgname,,}
-pkgver=1.44.2
+pkgver=1.46.1
 pkgrel=1
 pkgdesc='Conveniently import and query gene models'
 arch=('any')
@@ -53,7 +53,7 @@ optdepends=(
   r-txdb.mmusculus.ucsc.mm10.knowngene
 )
 source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('5589ddde26e25a4cb8ce8b5185c712df095f73d87e07d46c847876e16c473724')
+sha256sums=('dbcb1b07228f42de590c62b1fbfebf724035b81363ac72ff473590797222a0b6')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

@@ -5,7 +5,7 @@
 pkgname=franz
 _pkgver=5.7.0 # -beta.0
 pkgver=${_pkgver//-/} # Leaving it here for possible dev/beta package :)
-pkgrel=16
+pkgrel=17
 # Due to the previous "_beta" naming
 epoch=1
 pkgdesc='Free messaging app for services like WhatsApp, Slack, Messenger and many more.'
@@ -49,6 +49,18 @@ _ensure_nvm_setup() {
   export npm_config_cache="$srcdir/npm_cache"
 }
 
+_run_unsafe() {
+  # Run command with the error options disabled for shell functions that aren't written
+  # to run with these options set...
+  local restoreshopt=$(shopt -p)
+  shopt -o -u errexit errtrace
+  "$@"
+  local ret=$?
+  eval "$restoreshopt"
+  # Forward the return value for the whole command
+  return $?
+}
+
 prepare() {
   # Small patching
   cd $pkgname
@@ -69,7 +81,11 @@ prepare() {
   _ensure_nvm_setup
 
   echo "--> Install toolchain with nvm"
-  nvm install
+
+  # nvm is a shell function and as of version 0.39.0 it is not compatible with
+  # the shell options set by makepkg.
+  # (check for /sbin/init in nvm_get_arch fails)
+  _run_unsafe nvm install
 
   echo "--> Install modules dependencies with lerna"
   npx --package="lerna@^3.8.0" lerna bootstrap

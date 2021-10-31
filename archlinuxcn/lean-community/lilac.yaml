@@ -1,7 +1,10 @@
-pre_build_script: aur_pre_build(maintainers=['ouuan'])
+pre_build_script: aur_pre_build(maintainers=['fanninpm'])
+
 post_build: aur_post_build
+
 update_on:
   - source: aur
     aur: lean-community
+
 maintainers:
   - github: dctxmei

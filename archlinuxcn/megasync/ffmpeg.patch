@@ -1,0 +1,12 @@
+diff --git a/src/gfx/qt.cpp b/src/gfx/qt.cpp
+index ceb33ce9f..2e6f0abe8 100644
+--- a/src/gfx/qt.cpp
++++ b/src/gfx/qt.cpp
+@@ -1209,7 +1209,6 @@ QImageReader *GfxProcQT::readbitmapFfmpeg(int &w, int &h, int &orientation, QStr
+ 
+     // Force seeking to key frames
+     formatContext->seek2any = false;
+-    videoStream->skip_to_keyframe = true;
+     if (decoder->capabilities & CAP_TRUNCATED)
+     {
+         codecContext.flags |= CAP_TRUNCATED;

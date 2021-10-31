@@ -3,9 +3,9 @@
 
 pkgbase=jdk
 pkgname=('jre' 'jdk' 'jdk-doc')
-pkgver=17
-_build=35
-_hash=0d483333a00540d886896bac774ff48b
+pkgver=17.0.1
+_build=12
+_hash=2a2082e5a09d4267845be086888add4f
 _majver="${pkgver%%.*}"
 pkgrel=1
 pkgdesc='Oracle Java'
@@ -14,7 +14,7 @@ url='https://www.oracle.com/java/'
 license=('custom')
 makedepends=('python-html2text')
 source=("https://download.oracle.com/java/${_majver}/archive/jdk-${pkgver}_linux-x64_bin.tar.gz"
-        "https://download.oracle.com/otn-pub/java/jdk/${pkgver}+${_build}/${_hash}/jdk-${pkgver}_doc-all.zip"
+        "https://download.oracle.com/otn_software/java/jdk/${pkgver}+${_build}/${_hash}/jdk-${pkgver}_doc-all.zip"
         "java-${_majver}-jdk-license.html"::"https://download.oracle.com/otndocs/jcp/java_se-${_majver}-final-spec/license.html"
         'java.desktop'
         'jconsole.desktop'
@@ -23,8 +23,8 @@ source=("https://download.oracle.com/java/${_majver}/archive/jdk-${pkgver}_linux
         'java_48.png'
         'LICENSE')
 noextract=("jdk-${pkgver}_doc-all.zip")
-sha256sums=('106e3fc31b9fe4d0fd76c6c92b1931bdd1b0ac4d788747951de0f92cc73b1ffe'
-            '0b6870176449abdedae5c4a98ad69684f68831d02900b9b6ccea54213ff2cca7'
+sha256sums=('6f25bcb94d3e22fb52a4632c74e03b403834e81b68701ab7ecd900fb9cd89f43'
+            '126a130be9a45d3f079d462c0b2ece8bcef7d422d252d06d1c8ca37c835e7cf8'
             'ab50940bda40a9e8935d1a8f002debda0fdd0b3e2bcc0319827ec19acd8b34f3'
             'f17fe6e3d1b7ffbe854364e127509144057878a344d74673393782b90b6f054a'
             '321dc88a1a0289c1f0a3113e75bd2f488829a0b82c11ac047272e464fb3f3ab3'

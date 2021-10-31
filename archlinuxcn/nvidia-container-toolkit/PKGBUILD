@@ -3,8 +3,8 @@
 
 pkgname=nvidia-container-toolkit
 
-pkgver=1.5.0
-pkgrel=2
+pkgver=1.5.1
+pkgrel=1
 
 pkgdesc='NVIDIA container runtime toolkit'
 arch=('x86_64')
@@ -16,10 +16,12 @@ depends=('libnvidia-container-tools>=1.4.0')
 conflicts=('nvidia-container-runtime-hook' 'nvidia-container-runtime<2.0.0')
 replaces=('nvidia-container-runtime-hook')
 
+backup=('etc/nvidia-container-runtime/config.toml')
+
 source=(fix_cgroup.patch
         "v${pkgver}-${pkgrel}.tar.gz"::"${url}/archive/v${pkgver}.tar.gz")
 sha256sums=('48a36a4b01ab64739d55c4a696bbe72f2b90a9e5abc0b9d1c4090a3016d9a1fb'
-            'a233de640a69fa3ff1c0e5b929b6c37922b040471a02eb98b6cf209a0dcac107')
+            '51d6f2fa0e740d7581f6c632875bb87bafc2351ba32830df11bb7cb19d87b763')
 
 install=$pkgname.install
 
@@ -38,7 +40,7 @@ build() {
     -asmflags "all=-trimpath=${PWD}" \
     -ldflags "-s -w -extldflags ${LDFLAGS}" \
     -o "${pkgname}" \
-    "${_golang_pkg_path}"
+    "./..."
     # -trimpath \  # only go > 1.13
     #-ldflags " -s -w -extldflags=-Wl,-z,now,-z,relro" \
 

@@ -2,29 +2,21 @@
 
 _basename=aom
 pkgname=lib32-aom
-pkgver=3.1.2
+pkgver=3.2.0
 pkgrel=1
 pkgdesc="Alliance for Open Media video codec (32-bit)"
 url="https://aomedia.org/"
 arch=(x86_64)
 license=(BSD custom:PATENTS)
 depends=(lib32-glibc aom)
-makedepends=(cmake git ninja yasm)
-_commit=ae2be8030200925895fa6e98bd274ffdb595cbf6 # tags/v3.1.2^0
-source=("git+https://aomedia.googlesource.com/aom#commit=$_commit")
-b2sums=('SKIP')
-
-pkgver() {
-    cd $_basename
-
-    git describe --tags | sed 's/^v//;s/-errata/.errata/;s/-/+/g'
-}
+makedepends=(cmake ninja yasm)
+source=(https://storage.googleapis.com/aom-releases/libaom-$pkgver.tar.gz{,.asc})
+b2sums=('b247c9092bf3b8080b33671f182b10eea060a2eafd94eeb1b92177d2c7b5c32de2342f9cf1c7e500b28fdac2b00ea8d43b1e56c9d1c8c0efe1bbc4e40285a52a'
+        'SKIP')
+validpgpkeys=(B002F08B74A148DAA01F7123A48E86DB0B830498) # AOMedia release signing key <av1-discuss@aomedia.org>
 
 prepare() {
     cd $_basename
-
-    # https://bugs.archlinux.org/task/71800
-    git cherry-pick -n 31257f59a1df72cbbd1399efb780d13a0e433b16
 }
 
 build() {
@@ -32,7 +24,7 @@ build() {
     export CXX='g++ -m32'
     export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
 
-    cmake -S $_basename -B build -G Ninja \
+    cmake -S . -B build -G Ninja \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=lib32 \
         -DBUILD_SHARED_LIBS=1 \
@@ -45,7 +37,7 @@ build() {
 package() {
     DESTDIR="${pkgdir}" cmake --install build
 
-    install -Dt "$pkgdir/usr/share/licenses/$pkgname" -m644 $_basename/{LICENSE,PATENTS}
+    install -Dt "$pkgdir/usr/share/licenses/$pkgname" -m644 LICENSE PATENTS
 
     cd "$pkgdir/usr"
 

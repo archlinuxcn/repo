@@ -2,7 +2,7 @@
 
 _pkgname=ASAP
 pkgname=asap
-pkgver=1.9
+pkgver=2.0
 pkgrel=3
 pkgdesc='Program for the analysis and visualization of whole-slide images in digital pathology'
 arch=('x86_64')
@@ -26,10 +26,12 @@ makedepends=(
   gendesk
   git
 )
-source=("${pkgname}::git+https://github.com/computationalpathologygroup/ASAP.git"
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/computationalpathologygroup/ASAP/archive/refs/tags/ASAP-${pkgver}-(Nightly).tar.gz"
   "pugixml::git+https://github.com/zeux/pugixml.git"
 )
-sha256sums=('SKIP'
+noextract=(${pkgname}-${pkgver}.tar.gz)
+sha256sums=('830a9874b143c5bf738eabf594fc91465df9cb5482391caf51cc4a2b945352cc'
             'SKIP')
 
 get_pyver() {
@@ -37,9 +39,11 @@ get_pyver() {
 }
 
 prepare() {
-  # fix building with Qt 5.15
-  # TODO: correct me if https://github.com/computationalpathologygroup/ASAP/issues/176 is fixed
-  sed -i "1 i #include <QPainterPath>" "${srcdir}/asap/ASAP/MiniMap.cpp"
+  mkdir "${srcdir}/${pkgname}-${pkgver}"
+  tar xvf "${srcdir}/${pkgname}-${pkgver}.tar.gz" -C "${srcdir}/${pkgname}-${pkgver}" --strip-components 1
+  # fix for CMAKE_DL_LIBS
+  sed -i 's/target_link_libraries(multiresolutionimageinterface PUBLIC core PRIVATE jpeg2kcodec libtiff Boost::disable_autolinking Boost::thread)/target_link_libraries(multiresolutionimageinterface PUBLIC core PRIVATE jpeg2kcodec libtiff Boost::disable_autolinking Boost::thread ${CMAKE_DL_LIBS})/' \
+    "${srcdir}/${pkgname}-${pkgver}/multiresolutionimageinterface/CMakeLists.txt"
   echo "Creating desktop file"
   gendesk -f -n --pkgname ${pkgname} \
     --pkgdesc "${pkgdesc}" \
@@ -49,7 +53,7 @@ prepare() {
 }
 
 build() {
-  cmake -B build -S "${srcdir}/${pkgname}" \
+  cmake -B build -S "${srcdir}/${pkgname}-${pkgver}" \
     -DBUILD_ASAP=ON \
     -DBUILD_EXECUTABLES=ON \
     -DBUILD_IMAGEPROCESSING=ON \
@@ -63,12 +67,14 @@ build() {
 
 package() {
   make -C build DESTDIR="${pkgdir}" install
-  install -Dm644 "${pkgname}/Copyright.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}"
-  install -Dm755 "${pkgdir}/usr/bin/_wholeslidefilters.so" -t "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
-  rm -vf "${pkgdir}/usr/bin/_wholeslidefilters.so"
-  install -d "${pkgdir}/usr/lib/cmake" "${pkgdir}/usr/share/pixmaps"
-  mv "${pkgdir}/usr/cmake" "${pkgdir}/usr/lib/cmake/${pkgname}"
+  install -Dm644 "${pkgname}-${pkgver}/Copyright.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -d \
+    "${pkgdir}/usr/cmake" \
+    "${pkgdir}/usr/lib/cmake/${pkgname}" \
+    "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
+  mv -vf "${pkgdir}/usr/bin/_wholeslidefilters.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
+  mv -vf "${pkgdir}/usr/cmake" "${pkgdir}/usr/lib/cmake/${pkgname}"
   install -Dm644 "${srcdir}/${pkgname}.desktop" -t "${pkgdir}/usr/share/applications"
-  install -Dm644 "${srcdir}/${pkgname}/ASAP/resources/application.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}/ASAP/resources/application.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
 }
 # vim:set ts=2 sw=2 et:

@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=tzdb
-_pkgver=0.1.2
+_pkgver=0.2.0
 pkgname=r-${_pkgname,,}
-pkgver=0.1.2
+pkgver=0.2.0
 pkgrel=1
 pkgdesc='Time Zone Database Information'
 arch=('x86_64')
@@ -18,7 +18,7 @@ optdepends=(
   r-testthat
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('4c7875e713262f7140527d6cbdddce6ff32f1aff3ebeb7d94e3044d199b288ea')
+sha256sums=('c335905d452b400af7ed54b916b5246cb3f47ede0602911a2bcb25a1cf56d5a9')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

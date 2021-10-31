@@ -1,7 +1,7 @@
 # Maintainer: Nick Østergaard <oe.nick at gmail dot com>
 
 pkgname=kicad-git
-pkgver=5.99.0.r12774.g1cfff1f624
+pkgver=5.99.0.r13015.ge6c3027531
 pkgrel=1
 pkgdesc="Electronic schematic and printed circuit board (PCB) design tools"
 arch=('i686' 'x86_64')
@@ -29,7 +29,6 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=lib \
-    -DKICAD_USE_OCE=OFF \
     -DKICAD_USE_OCC=ON \
     -DBUILD_GITHUB_PLUGIN=ON \
     -DKICAD_SCRIPTING=ON \

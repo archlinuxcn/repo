@@ -1,9 +1,9 @@
 # Maintainer: hubutui <hot123tea123@gmail.com>
 
 _pkgname=rlang
-_pkgver=0.4.11
+_pkgver=0.4.12
 pkgname=r-${_pkgname,,}
-pkgver=0.4.11
+pkgver=0.4.12
 pkgrel=1
 pkgdesc="Functions for Base Types and Core R and 'Tidyverse' Features"
 arch=('x86_64')
@@ -28,7 +28,7 @@ optdepends=(
   r-withr
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('740e926b20b00788a7ea64cb92ddfdc94cdf256b05b0c57059edf7292511d5dd')
+sha256sums=('2a26915738be120a56ec93e781bcb50ffa1031e11904544198b4a15c35029915')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

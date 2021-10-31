@@ -1,0 +1,44 @@
+From 408e4da26f1b782005ab10307c83892055d7ef45 Mon Sep 17 00:00:00 2001
+From: Robert Mader <robert.mader@posteo.de>
+Date: Mon, 20 Sep 2021 15:15:31 +0200
+Subject: [PATCH] Pipewire: Do not typecheck the portal session_handle
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Desktop sharing via Pipewire will break for clients updating to
+xdg-desktop-portal 1.10 due to a bug fix in the API implementation[1].
+
+This ports over a fix from OBS Studio[2] that also is used in the
+downstream Firefox WebRTC copy[3].
+
+1: https://github.com/flatpak/xdg-desktop-portal/pull/609
+2: https://github.com/obsproject/obs-studio/pull/5294
+3: https://phabricator.services.mozilla.com/D126053
+Bug: webrtc:13192
+Change-Id: I497dd1bb53cc39dee3732c2e0014e2e36a7afb6c
+Reviewed-on: https://webrtc-review.googlesource.com/c/src/+/232329
+Reviewed-by: Erik Språng <sprang@webrtc.org>
+Reviewed-by: Tommi <tommi@webrtc.org>
+Commit-Queue: Tommi <tommi@webrtc.org>
+Cr-Commit-Position: refs/heads/main@{#35153}
+---
+ modules/desktop_capture/linux/base_capturer_pipewire.cc | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/modules/desktop_capture/linux/base_capturer_pipewire.cc b/modules/desktop_capture/linux/base_capturer_pipewire.cc
+index 2d5e973..45229b2 100644
+--- a/modules/desktop_capture/linux/base_capturer_pipewire.cc
++++ b/modules/desktop_capture/linux/base_capturer_pipewire.cc
+@@ -801,8 +801,9 @@ void BaseCapturerPipeWire::OnSessionRequestResponseSignal(
+   Scoped<GVariant> response_data;
+   g_variant_get(parameters, "(u@a{sv})", &portal_response,
+                 response_data.receive());
+-  g_variant_lookup(response_data.get(), "session_handle", "s",
+-                   &that->session_handle_);
++  Scoped<GVariant> session_handle(
++      g_variant_lookup_value(response_data.get(), "session_handle", nullptr));
++  that->session_handle_ = g_variant_dup_string(session_handle.get(), nullptr);
+ 
+   if (!that->session_handle_ || portal_response) {
+     RTC_LOG(LS_ERROR)

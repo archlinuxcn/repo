@@ -4,16 +4,16 @@
 
 pkgname=rstudio-desktop-git
 _gitname=rstudio
-pkgver=34715.0420c874af
+pkgver=36522.de18667e3e
 _gwtver=2.8.2
 _ginver=2.1.2
-_nodever=10.19.0
-pkgrel=207
+_nodever=14.17.5
+pkgrel=2
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 arch=('i686' 'x86_64')
 url="https://www.rstudio.com/products/rstudio/"
 license=('AGPL3')
-depends=('r>=3.0.1' boost-libs qt5-sensors qt5-svg qt5-webengine qt5-xmlpatterns postgresql-libs sqlite3 soci clang hunspell-en_US mathjax2 pandoc yaml-cpp)
+depends=('r>=3.0.1' quarto-cli-bin boost-libs qt5-sensors qt5-svg qt5-webengine qt5-xmlpatterns postgresql-libs sqlite3 soci clang hunspell-en_US mathjax2 pandoc yaml-cpp)
 makedepends=(git 'cmake>=3.1.0' boost desktop-file-utils jdk8-openjdk apache-ant unzip openssl libcups pam patchelf wget yarn)
 optdepends=('git: for git support'
             'subversion: for subversion support'
@@ -29,7 +29,7 @@ source=("git+https://github.com/rstudio/rstudio.git"
 sha256sums=('SKIP'
             'b98e704164f54be596779696a3fcd11be5785c9907a99ec535ff6e9525ad5f9a'
             '970701dacc55170088f5eb327137cb4a7581ebb4734188dfcc2fad9941745d1b'
-            '36d90bc58f0418f31dceda5b18eb260019fcc91e59b0820ffa66700772a8804b'
+            'dc04c7e60235ff73536ba0d9e50638090f60cacabfd83184082dce3b330afc6e'
             '723626bfe05dafa545e135e8e61a482df111f488583fef155301acc5ecbbf921'
             'c907e6eec5ef324ad498b44fb9926bb5baafc4e0778ca01f6ba9b49dd3a2a980')
 noextract=("gin-${_ginver}.zip")
@@ -57,6 +57,7 @@ prepare() {
  
     ln -sfT /usr/share/myspell/dicts dictionaries
     ln -sfT /usr/share/mathjax2 mathjax-27
+    ln -sfT /opt/quarto quarto
     ln -sfT /usr/bin/pandoc pandoc/${_pandocver}/pandoc
     ln -sfT /usr/bin/pandoc-citeproc pandoc/${_pandocver}/pandoc-citeproc
     
@@ -68,10 +69,10 @@ prepare() {
     yarn install
 
     cd "${srcdir}/${_gitname}/dependencies"
-    ln -s common/dictionaries .
-    ln -s common/mathjax-27 .
-    ln -s common/pandoc .
-    ln -s common/node .
+    ln -sfT common/dictionaries dictionaries
+    ln -sfT common/mathjax-27 mathjax-27
+    ln -sfT common/pandoc pandoc
+    ln -sfT common/quarto quarto
 }
 
 build() {
@@ -79,6 +80,9 @@ build() {
     bash "${srcdir}/${_gitname}"/dependencies/common/install-packages
 
     export PATH=/usr/lib/jvm/java-8-openjdk/jre/bin/:${PATH}
+    export JAVA_TOOL_OPTIONS="-Djava.util.prefs.userRoot=${srcdir}"
+    export BUILD_ID="local"
+    export PACKAGE_OS="Arch Linux"
 
     cmake -S "${srcdir}/${_gitname}" -B build \
           -DRSTUDIO_TARGET=Desktop \

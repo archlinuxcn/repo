@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=rtracklayer
-_pkgver=1.52.1
+_pkgver=1.54.0
 pkgname=r-${_pkgname,,}
-pkgver=1.52.1
+pkgver=1.54.0
 pkgrel=1
 pkgdesc='R interface to genome annotation files and the UCSC genome browser'
 arch=('x86_64')
@@ -40,7 +40,7 @@ optdepends=(
   r-txdb.hsapiens.ucsc.hg19.knowngene
 )
 source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('a95310b8051532d98ef8a99a5f9a4cb0c7633b4238e5176ca489ac9b406f8687')
+sha256sums=('0c5e46ca04c2956c0d9d5ba4a946f8c121370751dec47b59ac0d0b95e14c7085')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

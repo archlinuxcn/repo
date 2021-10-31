@@ -1,0 +1,35 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=future
+_pkgver=1.22.1
+pkgname=r-${_pkgname,,}
+pkgver=1.22.1
+pkgrel=1
+pkgdesc='Unified Parallel and Distributed Processing in R for Everyone'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('LGPL')
+depends=(
+  r
+  r-digest
+  r-globals
+  r-listenv
+  r-parallelly
+)
+optdepends=(
+  r-markdown
+  r-r.rsp
+  r-rhpcblasctl
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('87b24a85caf08e1d809eab28f9258444105cd7788eee2e3e2f21727ba3bbedcd')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+}
+# vim:set ts=2 sw=2 et:
