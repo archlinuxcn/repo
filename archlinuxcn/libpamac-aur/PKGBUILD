@@ -6,11 +6,11 @@ ENABLE_SNAPD=0
 
 pkgname=libpamac-aur
 pkgver=11.1.3
-pkgrel=1
+pkgrel=2
 _pkgfixver=$pkgver
 
-_commit='da8af3e20df847f64437d1e4e279796a27a735f1'
-sha256sums=('ec0ec7a076e1c789258ce0dd71f5cf76cf608c395563138f5c1f2eb3e490a4a9'
+_commit='08bff33f1570c50ccebf05435eb54920b3c234de'
+sha256sums=('039276f09d0c1b02bc4e8ae750ea664629a0412f71927af04a3796ed69b4c021'
             'e9fe7c14d15cbce1d337749cf317e4460bce485b102b5c228b7efa479998d4fa'
             'c2b943318a01ba1f3dabbf32e48e6a6f4b4b774e167ab86c6bfee31aa4a3424c')
 
@@ -54,7 +54,6 @@ build() {
   cd builddir
   meson setup --buildtype=release \
         --prefix=/usr \
-        -Denable-appindicator=true \
         --sysconfdir=/etc $define_meson
   # build
   ninja
