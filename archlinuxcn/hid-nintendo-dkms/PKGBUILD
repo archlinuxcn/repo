@@ -2,7 +2,7 @@
 _pkgbase=hid-nintendo
 pkgname=${_pkgbase}-dkms
 pkgver=3.2.r0.g6f78c51
-pkgrel=3
+pkgrel=4
 pkgdesc="hid-nintendo Driver (DKMS)"
 arch=('any')
 url="https://github.com/nicman23/dkms-hid-nintendo"
@@ -11,19 +11,9 @@ depends=('dkms' 'bc')
 makedepends=('git')
 provides=('hid-nintendo')
 source=("git://github.com/nicman23/dkms-hid-nintendo.git"
-"https://raw.githubusercontent.com/DanielOgorchock/linux/ogorchock/drivers/hid/hidraw.c"
-"https://raw.githubusercontent.com/DanielOgorchock/linux/ogorchock/drivers/hid/uhid.c"
-"https://raw.githubusercontent.com/DanielOgorchock/linux/ogorchock/drivers/hid/hid-ids.h"
-"https://raw.githubusercontent.com/DanielOgorchock/linux/ogorchock/drivers/hid/hid-nintendo.c"
-"dkms.conf"
-"defs.patch")
+"dkms.conf")
 md5sums=('SKIP'
-         'SKIP'
-         'SKIP'
-         'SKIP'
-         'SKIP'
-         '7dee3612b857c0aeb9de37977ed64d36'
-         'SKIP')
+         '7dee3612b857c0aeb9de37977ed64d36')
 
 pkgver () {
   cd dkms-hid-nintendo
@@ -31,18 +21,11 @@ pkgver () {
   git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
-prepare() {
-    cd $srcdir
-    patch --follow-symlinks -p0 -i defs.patch
-}
-
 package() {
   mkdir -p "${pkgdir}"/usr/src/${_pkgbase}-${pkgver}/
   chmod 755 "${pkgdir}"/usr/src/${_pkgbase}-${pkgver}/
 
   cp -r dkms-hid-nintendo*/* "${pkgdir}"/usr/src/${_pkgbase}-${pkgver}/
-  cp ${srcdir}/*.c "${pkgdir}"/usr/src/${_pkgbase}-${pkgver}/src/
-  cp ${srcdir}/*.h "${pkgdir}"/usr/src/${_pkgbase}-${pkgver}/src/
   install -Dm644 dkms.conf "${pkgdir}"/usr/src/${_pkgbase}-${pkgver}/dkms.conf
   sed -e "s/@_PKGBASE@/${_pkgbase}/" \
       -e "s/@PKGVER@/${pkgver}/" \
