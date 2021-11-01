@@ -1,14 +1,15 @@
 # Contributor: Zeph <zeph33@gmail.com>
 # Maintainer: Zeph <zeph33@gmail.com>
 # https://gitlab.manjaro.org/packages/extra/pamac
+ENABLE_FAKE_GNOME_SOFTWARE=0
 
 pkgname=pamac-aur
 pkgver=10.2.2
-pkgrel=2
+pkgrel=3
 _pkgfixver=$pkgver
 
-_commit='125033f1da74b617c9ef3b74c8b26d4156ed7daa'
-sha256sums=('ee8a7ef693cce365127bd19adce75b389ed92fbc7da91a0f6c7f0df384e3cff3')
+_commit='dd9d59e0fd4985c21f1bf521bd54feecc939bab0'
+sha256sums=('c205d3f5d242d2597bd4f83166b7e348247f44c4aebc27a5aae8ea05ac8f68b8')
 
 pkgdesc="A Gtk3 frontend, Package Manager based on libalpm with AUR and Appstream support"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -27,6 +28,13 @@ options=(!emptydirs !strip)
 install=pamac.install
 source=("pamac-$pkgver-$pkgrel.tar.gz::$url/-/archive/$_commit/pamac-$_commit.tar.gz")
 
+define_meson=''
+if [ "${ENABLE_FAKE_GNOME_SOFTWARE}" = 1 ]; then
+  conflicts+=('pamac-gnome-integration' 'pamac-gnome-integration-dev' 'gnome-software')
+  define_meson+=' -Denable-fake-gnome-software=true'
+fi
+
+
 prepare() {
   cd "$srcdir/pamac-$_commit"
   # adjust version string
@@ -39,7 +47,7 @@ build() {
   cd builddir
   meson --buildtype=release \
         --prefix=/usr \
-        --sysconfdir=/etc
+        --sysconfdir=/etc $define_meson
   ninja
 }
 
