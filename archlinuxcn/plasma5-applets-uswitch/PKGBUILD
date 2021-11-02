@@ -1,0 +1,27 @@
+_pkgname=uswitch
+pkgname=plasma5-applets-uswitch
+pkgver=1.3.0
+pkgrel=1
+pkgdesc='Modified version of User Switch plasmoid'
+url="https://gitlab.com/divinae/uswitch"
+license=('GPL3')
+arch=('any')
+depends=('plasma-workspace')
+makedepends=('cmake' 'extra-cmake-modules')
+source=("$_pkgname-$pkgver.tar.gz::https://gitlab.com/divinae/uswitch/-/archive/$pkgver/uswitch-$pkgver.tar.gz")
+sha256sums=('e861467b1161b2080d05bd4af764c0d4d956c7501c148c4a1f9a7a05e14d18f9')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  mv "./package/CMakeLists.txt" .
+  mv "./package" "./plasmoid"
+  cmake -B build \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    .
+  cmake --build build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  cmake --install build --prefix "$pkgdir/usr"
+}
