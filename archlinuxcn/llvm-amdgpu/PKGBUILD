@@ -3,7 +3,7 @@
 
 pkgname=llvm-amdgpu
 pkgdesc='Radeon Open Compute - LLVM toolchain (llvm, clang, lld)'
-pkgver=4.3.1
+pkgver=4.5.0
 pkgrel=1
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/llvm-project'
@@ -11,7 +11,7 @@ license=('custom:Apache 2.0 with LLVM Exception')
 depends=(z3)
 makedepends=(cmake python ninja)
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('b53c6b13be7d77dc93a7c62e4adbb414701e4e601e1af2d1e98da4ee07c9837f')
+sha256sums=('e33d08c8ae42a3ba394dceb8938263cd14ba45e9603b18f3502c3344814ca296')
 options=(staticlibs)
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
