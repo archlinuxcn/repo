@@ -1,0 +1,31 @@
+# Maintainer: William Gathoye <william + aur at gathoye dot be>
+
+pkgname=plasma5-applets-netspeed
+pkgver=1.9
+pkgrel=1
+pkgdesc='Plasma 5 widget that displays the currently used network bandwidth'
+arch=('i686' 'x86_64')
+
+url='https://github.com/dfaust/plasma-applet-netspeed-widget'
+license=('GPL2')
+
+depends=('kdeplasma-addons')
+makedepends=('git' 'cmake' 'extra-cmake-modules' 'plasma-framework')
+
+source=(
+    "https://github.com/dfaust/plasma-applet-netspeed-widget/archive/v${pkgver}.tar.gz"
+)
+sha512sums=(
+    '1685439832e2839ed31b012c9c0e232f43bb26927a5aabe1877002645a6761e61b7a960a52e6ed4c4c9789343a803e03b7a58601619daf63348ef6c42fdcc042'
+)
+
+build() {
+    cd "plasma-applet-netspeed-widget-${pkgver}"
+    cmake -DCMAKE_INSTALL_PREFIX=/usr 
+    make
+}
+
+package() {
+    cd "plasma-applet-netspeed-widget-${pkgver}"
+    make DESTDIR="$pkgdir/" install
+}

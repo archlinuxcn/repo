@@ -1,0 +1,10 @@
+pre_build_script: aur_pre_build(maintainers='wget')
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: plasma5-applets-netspeed
+
+maintainers:
+  - github: rocka
