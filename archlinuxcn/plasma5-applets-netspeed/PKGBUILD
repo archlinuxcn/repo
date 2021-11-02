@@ -2,7 +2,7 @@
 
 pkgname=plasma5-applets-netspeed
 pkgver=1.9
-pkgrel=1
+pkgrel=2
 pkgdesc='Plasma 5 widget that displays the currently used network bandwidth'
 arch=('i686' 'x86_64')
 
@@ -29,3 +29,4 @@ package() {
     cd "plasma-applet-netspeed-widget-${pkgver}"
     make DESTDIR="$pkgdir/" install
 }
+
