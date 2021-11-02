@@ -7,7 +7,7 @@
 # Contributor: Auguste Pop < auguste [at] gmail [dot] com >
 
 pkgname=stockfish
-pkgver=14
+pkgver=14.1
 pkgrel=1
 epoch=1
 pkgdesc="A strong chess engine written by Tord Romstad, Marco Costalba, Joona Kiiski"
@@ -16,18 +16,20 @@ url="https://stockfishchess.org/"
 license=('GPL3')
 depends=('glibc')
 source=("$pkgname-$pkgver.zip::https://github.com/official-stockfish/Stockfish/archive/sf_$pkgver.zip")
-sha512sums=('a6eb4ba763d91694dde6e60b22796d322f3bcf702981fba23c17e2620ee99bada6eb6ce868a6d07e916cad8191dc991c5ac133582e2a16fff3cd08ab1e8ed44a')
+sha512sums=('531a54a7a792a722438aacfdf61d064b107365672852599c1b027bd2c0c3f903e6600c8eedc95c60c734d169562f9977cb7f5dc3ede18d8fc20627c7c23cafba')
 
 build() {
   cd "Stockfish-sf_${pkgver}/src"
 
   if [[ "$CARCH" == "armv7h" ]]; then
     _arch=armv7
+  elif [[ "$CARCH" == "aarch64" ]]; then
+    _arch=armv8
   elif [[ "$CARCH" == "i686" ]]; then
     _arch=x86-32
-  elif grep -q bmi2 /proc/cpuinfo; then
+  elif grep -wq bmi2 /proc/cpuinfo; then
     _arch=x86-64-bmi2
-  elif grep -q popcnt /proc/cpuinfo; then
+  elif grep -w popcnt /proc/cpuinfo | grep -wqv cr8_legacy; then
     _arch=x86-64-modern
   else
     _arch=x86-64
