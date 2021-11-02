@@ -3,7 +3,7 @@
 
 pkgname=freeplane
 pkgver=1.9.10
-pkgrel=1
+pkgrel=3
 pkgdesc="A Java mindmapping tool"
 arch=('any')
 url="http://freeplane.sourceforge.net"
@@ -16,18 +16,6 @@ b2sums=('260e8caaf8510d6e1c400e53c5940d1784d7ae8835984d38d682a181a43cd197c7956a0
         '87c25331e01823e38668e4b394a51a279c05b24b088f4ffc1482d3783e24018da8f9e51b3ad1a62c5a863f85a6ccb30bbe8999cb861dc1b93d5483019644cfa5'
         '24ca56b7c7894b9bb38600b4d37973769243e1bdb221f33125b60bf4f878a3b630775710fab9dee97fa45a69319455037e294860ba7fbd608529982c6b0b1538')
 package() {
-  # Create required directories
-  mkdir -p "${pkgdir}/usr/share/freeplane/core/org.freeplane.core/META-INF"
-  mkdir -p "${pkgdir}/usr/share/freeplane/core/org.freeplane.core/lib"
-  mkdir -p "${pkgdir}/usr/share/freeplane/resources/ortho"
-  mkdir -p "${pkgdir}/usr/share/freeplane/resources/templates"
-  mkdir -p "${pkgdir}/usr/share/freeplane/resources/xslt"
-  mkdir -p "${pkgdir}/usr/share/freeplane/resources/xml"
-  mkdir -p "${pkgdir}/usr/share/freeplane/scripts"
-  mkdir -p "${pkgdir}/usr/share/freeplane/doc/Images/doc"
-  mkdir -p "${pkgdir}/usr/share/freeplane/doc/Images/mouse"
-  mkdir -p "${pkgdir}/usr/share/freeplane/doc/Images/other/workspace/output"
-
   cd "${srcdir}/${pkgname}-${pkgver}"
   # Copy plugins
   find plugins -type f | while read file ; do
@@ -50,16 +38,24 @@ package() {
   install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/license.txt "${pkgdir}"/usr/share/freeplane/licence.txt
   install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/props.xargs "${pkgdir}"/usr/share/freeplane/props.xargs
   # Copy core
+  install -dm755 "${pkgdir}"/usr/share/freeplane/core/org.freeplane.core/META-INF/
   install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/core/org.freeplane.core/META-INF/* "${pkgdir}"/usr/share/freeplane/core/org.freeplane.core/META-INF/
+  install -dm755 "${pkgdir}"/usr/share/freeplane/core/org.freeplane.core/lib
   install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/core/org.freeplane.core/lib/* "${pkgdir}"/usr/share/freeplane/core/org.freeplane.core/lib
   # Copy resources
+  install -dm755 "${pkgdir}"/usr/share/freeplane/resources/ortho/
   install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/resources/ortho/* "${pkgdir}"/usr/share/freeplane/resources/ortho/
+  install -dm755 "${pkgdir}"/usr/share/freeplane/resources/templates/
+  install -dm755 "${pkgdir}"/usr/share/freeplane/resources/templates/
   install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/resources/templates/* "${pkgdir}"/usr/share/freeplane/resources/templates/
+  install -dm755 "${pkgdir}"/usr/share/freeplane/resources/xslt/
   install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/resources/xslt/* "${pkgdir}"/usr/share/freeplane/resources/xslt/
+  install -dm755 "${pkgdir}"/usr/share/freeplane/resources/xml/
   install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/resources/xml/* "${pkgdir}"/usr/share/freeplane/resources/xml/
   install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/resources/gitinfo.properties "${pkgdir}"/usr/share/freeplane/resources/gitinfo.properties
   install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/resources/linkDecoration.ini "${pkgdir}"/usr/share/freeplane/resources/linkDecoration.ini
   # Copy scripts
+  install -dm755 "${pkgdir}"/usr/share/freeplane/scripts/
   install -Dm644 "${srcdir}/${pkgname}-${pkgver}"/scripts/* "${pkgdir}"/usr/share/freeplane/scripts/
   
   # Install the desktop entry
