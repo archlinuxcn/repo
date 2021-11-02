@@ -6,8 +6,8 @@ _name=firefox
 _channel=nightly
 pkgbase=firefox-nightly
 pkgname=()
-_version=95.0a1
-pkgver=95.0a1.20211101.10
+_version=96.0a1
+pkgver=96.0a1.20211101.23
 pkgrel=1
 arch=('x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -22,16 +22,16 @@ optdepends=('pulseaudio: audio support'
             'speech-dispatcher: text-to-speech'
             'startup-notification: support for FreeDesktop Startup Notification')
 _url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central-l10n"
-_filename_prefix="20211101.10-"
+_filename_prefix="20211101.23-"
 source=("${pkgbase}.desktop")
 sha512sums=('b58c1b3b09772d0866d511e83e3c7f54db0fe71d2978d2a06bd19b25c020f16e201aab825f0b3d5e9f0c1a3e9db028018e5e38f7ee4868e321938f11cb5ac817'
-            'c005dbae33791dbb9201d9306233ac71bdd8a3d29da2cdb34f197dc06f729d03f9d2d45fb72e9e28448919903cfafb21ed7cc5c906a5a4c29396f7a7af8e8d69'
+            'f02bfb849663f3c1ea21d0d35c46a7f44e1cddf4dfc0ff07ad2e599d3d0c5b93704291481d2c6c2e6f64229b707013e9919e59166b583c984fd126d6327f960f'
             'SKIP'
-            '7acb880842b226831e115376c802e1502ab63c6cd7f2be4e986d38582050be6f4f07157bf1c405a69b2f3bf64ce44f5a9475888ded11aab9e130aa5ec5919c7c'
+            'bc142354b041bc66fb8204187994b1e0cb1fd38de0af01b5bf247566fb375b369e56d205d3af0735cdd5d54d9974c119379cf73e9e95a3a6e044c84afadf3dc2'
             'SKIP'
-            '246baadb9a402169a49dbbc7b7d34b4612c8f0e0f3da23791dec074886ecfc3a3a32343e497d26d22301f186ed659c097563341294b5e5241aabe993a3059909'
+            '00f9bf7622f595530928f8bffd58a512709da719ca6382027d80bbd1db3e9c7ab30c8597c0ace644ddb413b16583a2af1d564519a420c97bc75a1dbba3ee5f75'
             'SKIP'
-            '6c24953f3305868cd50a2361a8ed7ddbf32826b698e2eaaa2b17ea7c9a674f4832d7ed22e42361283602a300017ecd29659e241db2b4361b4b5b1cd98f6d613a'
+            '4912ad6a445e9b4a082b26060ed0f5c5a74def931aabde389afe6f47203521526f7e2b93187bc3cfc80170c9eaafe471f96c2a8069002cba469444070e4fa3e6'
             'SKIP')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353'
               '097B313077AE62A02F84DA4DF1A6668FBB7D572E') # Mozilla’s GnuPG release key
