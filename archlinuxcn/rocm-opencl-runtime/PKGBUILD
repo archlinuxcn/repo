@@ -3,32 +3,43 @@
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 
 pkgname=rocm-opencl-runtime
-pkgver=4.3.1
+pkgver=4.5.0
 pkgrel=1
 pkgdesc='Radeon Open Compute - OpenCL runtime'
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/ROCm-OpenCL-Runtime'
 license=('MIT')
-depends=('hsakmt-roct' 'hsa-rocr' 'rocclr' 'opencl-icd-loader')
+depends=('hsakmt-roct' 'hsa-rocr' 'comgr' 'mesa' 'opencl-icd-loader')
 makedepends=('cmake' 'rocm-cmake')
 provides=('opencl-driver')
 conflicts=('opencl-amdgpu-pro-pal')
-source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('7f98f7d4707b4392f8aa7017aaca9e27cb20263428a1a81fb7ec7c552e60c4ca')
+_rocclr='https://github.com/ROCm-Developer-Tools/ROCclr'
+source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz"
+        "$pkgname-rocclr-$pkgver.tar.gz::$_rocclr/archive/rocm-$pkgver.tar.gz")
+sha256sums=('3a163aed24619b3faf5e8ba17325bdcedd1667a904ea20914ac6bdd33fcdbca8'
+            'ca8d6305ff0e620d9cb69ff7ac3898917db9e9b6996a7320244b48ab6511dd8e')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
+_rocclr_dir="$(basename "$_rocclr")-$(basename "${source[1]}" .tar.gz)"
 
 build() {
-    CFLAGS="$CFLAGS -isystem /opt/rocm/include/compiler/lib -isystem /opt/rocm/include/compiler/lib/include -isystem /opt/rocm/include/elf" \
-    CXXFLAGS="$CXXFLAGS -isystem /opt/rocm/include/compiler/lib -isystem /opt/rocm/include/compiler/lib/include -isystem /opt/rocm/include/elf" \
-    cmake -DCMAKE_INSTALL_PREFIX=/opt/rocm \
-          -DUSE_COMGR_LIBRARY=yes \
-          -DBUILD_TESTING=OFF \
-          "$_dirname"
-    make
+    cmake -Wno-dev -B build-rocclr \
+	-S "$_rocclr_dir" \
+    -DAMD_OPENCL_PATH="$srcdir/$_dirname"
+
+    make -C build-rocclr
+
+    cmake -Wno-dev -B build \
+    -S "$_dirname" \
+    -DCMAKE_INSTALL_PREFIX=/opt/rocm \
+    -DUSE_COMGR_LIBRARY=yes \
+    -DROCCLR_PATH="$srcdir/$_rocclr_dir" \
+    -DAMD_OPENCL_PATH="$srcdir/$_dirname"
+
+    make -C build
 }
 
 package() {
-    DESTDIR="$pkgdir" make install
+    DESTDIR="$pkgdir" make -C build install
     install -Dm644 "$_dirname/LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     install -Dm644 /dev/stdin "$pkgdir/etc/ld.so.conf.d/$pkgname.conf" <<-EOF
       /opt/rocm/lib
