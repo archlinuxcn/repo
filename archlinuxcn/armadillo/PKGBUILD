@@ -1,7 +1,7 @@
 # Maintainer: Joey Dumont <joey.dumont@gmail.com>
 # Contributor: Lucas Hermann Negri <lucashnegri at gmail dot com>
 pkgname=armadillo
-pkgver=10.7.1
+pkgver=10.7.2
 _pkgver=${pkgver/_/-} # For use with RC releases, to replace the _ with -
 
 pkgrel=1
@@ -15,7 +15,7 @@ optdepends=('hdf5: HDF5 output'
 makedepends=('cmake')
 source=("http://downloads.sourceforge.net/sourceforge/arma/$pkgname-$_pkgver.tar.xz")
 install=armadillo.install
-sha512sums=('b9be6a38165a4d23a61715a3c3f970dcb9b813bebd51b7372a4e8349ab2c351cd5c74f662d860911b30b2b816f2eb1255768fab1497ec087a63a07f56f74327f')
+sha512sums=('3018a54d9fc1ebc9afe0991bf6eb75fcffff70de39f61dca79feb59b9d9cbd3c1513d08a2dfca6843202ca185b096d1dfe9724b8e4518b283903e5e777485567')
 
 build() {
   if [ "$CARCH" == "x86_64" ]; then
