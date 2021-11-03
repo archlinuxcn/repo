@@ -3,6 +3,7 @@ ver="$(curl https://releases.mozilla.org/pub/thunderbird/releases/ | sed -rn 's/
 #ver=91.0
 sed -r "s/(pkgver=)(.*)/\1$ver/" -i PKGBUILD
 makepkg --printsrcinfo > .SRCINFO
+eval $(cat PKGBUILD| grep pkgrel=)
 
 ver_msg="autohook $ver"
 git commit -am "$ver_msg"
@@ -14,12 +15,15 @@ git push
    > home:nicman23/thunderbird-appmenu-bin/_service
   cd home:nicman23/thunderbird-appmenu-bin/
   osc commit -m "$ver_msg"
+  osc results -w
 )
 
 sleep 30m
 [ -e thunderbird-appmenu-bin ] || git clone ssh://aur@aur.archlinux.org/thunderbird-appmenu-bin.git
 cd thunderbird-appmenu-bin
 sed "s/^pkgver=.*/pkgver=${ver}/g" -i PKGBUILD
+sed "s/^pkgrel=.*/pkgrel=${pkgrel}/g" -i PKGBUILD
+
 makepkg --printsrcinfo > .SRCINFO
 git commit -am "$ver_msg"
 git push
