@@ -1,0 +1,12 @@
+pre_build_script: aur_pre_build(maintainers='yochananmarqos')
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: touche
+  - source: github
+    github: JoseExposito/touche
+
+maintainers:
+  - github: rocka

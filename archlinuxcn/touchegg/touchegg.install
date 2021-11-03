@@ -1,0 +1,13 @@
+post_install() {
+	echo ""
+	echo "Enable & start the daemon:"
+	echo "systemctl enable --now touchegg"
+	echo ""
+}
+
+post_upgrade() {
+	echo ""
+	echo "Restart daemon:"
+	echo "systemctl daemon-reload && systemctl restart touchegg"
+	echo ""
+}
