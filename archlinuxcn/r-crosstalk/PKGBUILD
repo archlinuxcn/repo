@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=crosstalk
-_pkgver=1.1.1
+_pkgver=1.2.0
 pkgname=r-${_pkgname,,}
-pkgver=1.1.1
+pkgver=1.2.0
 pkgrel=1
 pkgdesc='Inter-Widget Interactivity for HTML Widgets'
 arch=('any')
@@ -22,7 +22,7 @@ optdepends=(
   r-testthat
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('ed3234f7f000fb607cc42e005d68be1dd598d95fa687a3f6e6b17ba38e36ccd8')
+sha256sums=('4237baab35cd246a8a98fb9cf4ce53b6ddbc31d00742ded4edea0479613d1ea0')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
