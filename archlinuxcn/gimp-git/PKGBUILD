@@ -8,7 +8,7 @@
 pkgname=gimp-git
 _pkgname=${pkgname%-git}
 epoch=1
-pkgver=47480.422d5fec8f
+pkgver=47512.03217722c5
 pkgrel=1
 pkgdesc="GNU Image Manipulation Program (non-conflicting git version)"
 arch=('i686' 'x86_64')
@@ -58,8 +58,10 @@ optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cu
             'luajit: LUA scripting support'
             )
 source=('git+https://gitlab.gnome.org/GNOME/gimp.git'
+        'https://gitlab.gnome.org/GNOME/gimp/-/merge_requests/506.patch'
         'linux.gpl')
 sha512sums=('SKIP'
+            'SKIP'
             '6f33d57f242fa8ce04b65e06a712bd54677306a45b22cb853fbe348089cd4673bd4ed91073074fe067166fe8951c370f8bbbc386783e3ed5170d52e9062666fe')
 
 pkgver() {
@@ -69,6 +71,10 @@ pkgver() {
 
 prepare() {
   export CFLAGS CXXFLAGS LDFLAGS
+  sed -i 's/evn/env/' ${srcdir}/506.patch
+  cd ${srcdir}/${_pkgname}
+  patch -Np1 < ../506.patch
+  cd ${srcdir}
   mkdir "${srcdir}/build" -p
   meson "${srcdir}/${_pkgname}"\
         "${srcdir}/build"\
