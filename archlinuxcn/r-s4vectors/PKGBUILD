@@ -1,9 +1,9 @@
 # Maintainer: hubutui <hot123tea123@gmail.com>
 
 _pkgname=S4Vectors
-_pkgver=0.32.0
+_pkgver=0.32.1
 pkgname=r-${_pkgname,,}
-pkgver=0.32.0
+pkgver=0.32.1
 pkgrel=1
 pkgdesc='Foundation of vector-like and list-like containers in Bioconductor'
 arch=('x86_64')
@@ -26,7 +26,7 @@ optdepends=(
   r-summarizedexperiment
 )
 source=("https://bioconductor.org/packages/release/bioc/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('09b00dd57bd291f4018163ea1f0fe65e8d87ce15320e1990eac9059c31eda1fe')
+sha256sums=('8dd9733efd794ce58c957603a532070ae6539b4776e20ba748d0550e5eadc445')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
