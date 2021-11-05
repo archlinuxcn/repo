@@ -2,7 +2,7 @@
 
 pkgname=python-cx-oracle
 _name=cx_Oracle
-pkgver=8.2.1
+pkgver=8.3.0
 pkgrel=1
 pkgdesc='Python interface to Oracle Database conforming to the Python DB API 2.0 specification'
 arch=('x86_64')
@@ -18,7 +18,7 @@ makedepends=(
 source=(
   "${_name}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz"
 )
-sha512sums=('879f25323ea037499c773be860d7c9a4f9bc675f7107a79a1ac027db45f6a4d71b47579b656fba267b85dacb76316f012de238ffda66ea33395ce5989b982116')
+sha512sums=('9a2f50b929802311271e5270f118c96968886c6fd3c8677d2e08949d61e9d4d26846bc9e44c674e0bd12a7f8b57bcced9b979f3622a37656e0969ad8ea4e7f70')
 
 build() {
   cd "${srcdir}/${_name}-${pkgver}"
