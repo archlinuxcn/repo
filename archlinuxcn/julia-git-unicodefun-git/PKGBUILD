@@ -1,0 +1,24 @@
+pkgname=julia-git-unicodefun-git
+pkgver=0.4.1
+pkgrel=1
+pkgdesc="UnicodeFun.jl"
+url="https://github.com/SimonDanisch/UnicodeFun.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-unicodefun)
+source=(git://github.com/SimonDanisch/UnicodeFun.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd UnicodeFun.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd UnicodeFun.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh UnicodeFun "${pkgdir}" "${pkgname}" julia-git
+}
