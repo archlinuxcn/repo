@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=car
-_pkgver=3.0-11
+_pkgver=3.0-12
 pkgname=r-${_pkgname,,}
-pkgver=3.0.11
+pkgver=3.0.12
 pkgrel=1
 pkgdesc='Companion to Applied Regression'
 arch=('any')
@@ -35,7 +35,7 @@ optdepends=(
   r-survival
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('b32c927206f515631ff276dbb337b0f22e9b2d851f4abb1d2c272e534c19542c')
+sha256sums=('b899a6efae3842a90a2349d381dbcf4b4ed36bd03108ebe7380e81120e457302')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
