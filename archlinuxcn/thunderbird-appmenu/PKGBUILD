@@ -12,20 +12,23 @@
 
 _pkgname=thunderbird
 pkgname=thunderbird-appmenu
-pkgver=91.2.1
-pkgrel=4
+pkgver=91.3.0
+pkgrel=3
 pkgdesc="Thunderbird from extra with appmenu patch"
 arch=(x86_64)
 license=(MPL GPL LGPL)
 url="https://www.mozilla.org/thunderbird/"
+
 depends=(
-  glibc gtk3 libgdk-3.so mime-types dbus libdbus-1.so dbus-glib alsa-lib nss
-  hunspell sqlite ttf-font libvpx libvpx.so zlib bzip2 botan libwebp libevent
-  libjpeg-turbo libffi nspr gcc-libs libx11 libxrender libxfixes libxext
-  libxcomposite libxdamage pango libpango-1.0.so cairo gdk-pixbuf2 icu
-  libicui18n.so libicuuc.so freetype2 libfreetype.so fontconfig
-  libfontconfig.so glib2 libglib-2.0.so pixman libpixman-1.so gnupg libnotify
+  glibc gtk3 libgdk-3.so libgtk-3.so mime-types dbus libdbus-1.so dbus-glib
+  alsa-lib nss hunspell sqlite ttf-font libvpx libvpx.so zlib bzip2 libbz2.so
+  botan libwebp libwebp.so libwebpdemux.so libevent libjpeg-turbo libffi
+  libffi.so nspr gcc-libs libx11 libxrender libxfixes libxext libxcomposite
+  libxdamage pango libpango-1.0.so cairo gdk-pixbuf2 icu libicui18n.so
+  libicuuc.so freetype2 libfreetype.so fontconfig libfontconfig.so glib2
+  libglib-2.0.so pixman libpixman-1.so gnupg
 )
+
 optdepends=(
   'libotr: OTR support for active one-to-one chats'
 )
