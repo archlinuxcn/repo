@@ -4,7 +4,7 @@
 
 _hkgname=ShellCheck
 pkgname=shellcheck-static
-pkgver=0.7.2
+pkgver=0.8.0
 pkgrel=1
 pkgdesc="Shell script analysis tool (static version not depending on GHC libraries)"
 url="https://www.shellcheck.net"
@@ -15,7 +15,7 @@ makedepends=('stack' 'pandoc')
 provides=("shellcheck=$pkgver")
 conflicts=(shellcheck)
 source=("$_hkgname-$pkgver.tar.gz::https://github.com/koalaman/shellcheck/archive/v$pkgver.tar.gz")
-sha512sums=('87b7377add4ce37766f9fd812cd9bf03097c9ba452b646e7ae1dc65946a7210c9d24d8c83b4be4146a0f100aff5bc9a3a562b3990c74f1c29ee191e249f97714')
+sha512sums=('71f4c6745c6094ab1832a0f19f3e65621af93dd57c2cd780b8702886481e5568d708a9d1884e82525b92b6d109bf94d843dd10ac991ead27ca6cd4c6c553e92d')
 
 build() {
     cd shellcheck-$pkgver
