@@ -1,9 +1,9 @@
 # Maintainer: hubutui <hot123tea123@gmail.com>
 
 _pkgname=glue
-_pkgver=1.4.2
+_pkgver=1.5.0
 pkgname=r-${_pkgname,,}
-pkgver=1.4.2
+pkgver=1.5.0
 pkgrel=1
 pkgdesc='Interpreted String Literals'
 arch=('x86_64')
@@ -32,7 +32,7 @@ optdepends=(
   r-withr
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('9f7354132a26e9a876428fa87629b9aaddcd558f9932328e6ac065b95b8ef7ad')
+sha256sums=('5b1ef20d8fe15b13aa2cdfb70f8d5c38306d4e3a900cc8ac0cd2909a4ec94af2')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
