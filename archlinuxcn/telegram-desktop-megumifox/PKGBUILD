@@ -3,7 +3,7 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
-pkgver=3.1.11
+pkgver=3.2.2
 pkgrel=1
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
@@ -11,23 +11,20 @@ url="https://desktop.telegram.org/"
 license=('GPL3')
 depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
          'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5' 'kwayland' 'libx11' 'glibmm' 'rnnoise' 'pipewire' 'libxtst' 'libxrandr' 'jemalloc' 'libtg_owt' 'qt5-svg')
-makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'python2' 'microsoft-gsl' 'libtg_owt' 'extra-cmake-modules')
+makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'python2' 'microsoft-gsl' 'extra-cmake-modules' 'gtk3' 'webkit2gtk')
 optdepends=('ttf-opensans: default Open Sans font family')
 provides=('telegram-desktop')
 conflicts=('telegram-desktop')
 source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
         "0001-use-system-font-and-use-stylename.patch"
-        "0002-fix-webrtc-integration-build-missing-libx11.patch"
-        "0003-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch")
-sha512sums=('7d67f2895797d4f7f1edd5e5e7e8509044fad5d5cfe6bbdb5613689da9519dab2fde707a452aad6788193addf84f2ebcc69342955607e0be8507397c22557709'
+        "0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch")
+sha512sums=('300ffb75994df28041990dae662e8031da972d0ced8aa9770c026fba61edbb87f2a2176e173febbdd2b859876e0d64b490b45c93408e7f41113d13abab1f2de6'
             '62c41188d1faf4200167b9086552db092dadcba6000bb3c51d7c79ba22cc453c980f6e50013c76e766c9dd8585e84327d00d289512fc1f7e7222f223a23a14a7'
-            '3ff546af7f5ed2aafeaffd136b0c694ddf6d1bbbe1e539e2a3740829d6bb95855d75cf6b409c40fea3236329e5cb3c085b783fa030e6411bc62f7952ade02684'
             '7a1dcfc563b764d1e68acb566df52890ad527ba2c442ac78825239bce64da3d77ca5f7cf965c67dafc5290e3549fa52780fc49b2d991cd798d05735a6143f46b')
 
 prepare() {
     patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-use-system-font-and-use-stylename.patch
-    patch -b -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0002-fix-webrtc-integration-build-missing-libx11.patch
-    patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0003-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch
+    patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch
  }
 
 build() {
@@ -41,13 +38,12 @@ build() {
         -G Ninja \
         -DCMAKE_INSTALL_PREFIX="/usr" \
         -DCMAKE_BUILD_TYPE=Release \
+        -DDESKTOP_APP_QT6=off \
         -DTDESKTOP_API_ID=611335 \
         -DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c \
         -DTDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME=ON \
-        -DDESKTOP_APP_USE_PACKAGED_LAZY=OFF \
-        -DDESKTOP_APP_USE_PACKAGED_FONTS=OFF \
     	-DDESKTOP_APP_DISABLE_GTK_INTEGRATION=ON \
-	-DDESKTOP_APP_DISABLE_WEBKITGTK=ON
+	    -DDESKTOP_APP_DISABLE_WEBKITGTK=ON
     ninja -C build
 }
 
