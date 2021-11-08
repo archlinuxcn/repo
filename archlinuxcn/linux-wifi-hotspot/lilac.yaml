@@ -1,4 +1,10 @@
+pre_build_script: aur_pre_build(maintainers=['yochananmarqos'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: linux-wifi-hotspot
+
 maintainers:
   - github: dctxmei
-
-managed: false
