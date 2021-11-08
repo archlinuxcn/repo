@@ -3,8 +3,8 @@
 # Contributor: Dylon Edwards <deltaecho at archlinux dot us>
 
 pkgname='python-tensorly'
-pkgver=0.6.0
-pkgrel=2
+pkgver=0.7.0
+pkgrel=1
 pkgdesc="Simple and Fast Tensor Learning in Python"
 arch=('any')
 url="https://tensorly.org/stable/home.html"
@@ -35,7 +35,7 @@ optdepends+=(
 )
 changelog="${pkgname}.changelog"
 source=("tensorly-${pkgver}.tar.gz::https://github.com/tensorly/tensorly/archive/${pkgver}.tar.gz")
-sha256sums=('e36a9124efd34f76fc727b0c45e92655a256231b56897591ee0d451ada279262')
+sha256sums=('af6d61d58829d7e3267db59d0a8bf88a58ccf22e7acc9fbe1520dc20fde5cdc9')
 
 build() {
     cd "tensorly-${pkgver}"
