@@ -2,7 +2,7 @@
 
 pkgname=clash-user
 _pkgname=clash
-pkgver=1.7.1
+pkgver=1.8.0
 pkgrel=1
 pkgdesc="A rule-based tunnel in Go"
 arch=('x86_64')
@@ -20,7 +20,7 @@ source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "clash.tmpfiles"
         "clash.service"
         "clash@.service")
-sha256sums=('18c2ef10df608392435a1277d3f2e256c65bec3662bf0a6c325f02be6deb4fce'
+sha256sums=('e1bae0ba88a0e2ba36702f95fe95fdc8fee58db4751b5b108ea600563c36a972'
             '511abd285aedc6dda651b1bf3d7fd84f51060fa313a12beb3ce68d916c2fc173'
             '62ed4460cd2ed4b400193ad04b0cccb76d7558f87c377a0033041841a73f7945'
             '149c6448a5630af1065ea230707331ac12663128568d6cf0e9d5480e94d1d104'
