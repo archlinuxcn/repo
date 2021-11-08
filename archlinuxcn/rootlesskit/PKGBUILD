@@ -1,6 +1,6 @@
 # Maintainer: Songmin Li <lisongmin@protonmail.com>
 pkgname=rootlesskit
-pkgver=0.14.5
+pkgver=0.14.6
 pkgrel=1
 pkgdesc='A Linux-native implementation of "fake root" using user_namespaces.'
 depends=('glibc')
@@ -10,7 +10,7 @@ url='https://github.com/rootless-containers/rootlesskit'
 license=('Apache')
 provides=('rootlesskit')
 source=(${pkgname}-${pkgver}.tar.gz::https://github.com/rootless-containers/${pkgname}/archive/v${pkgver}.tar.gz)
-sha256sums=('9f36a4e871eb4ca3e521139f02bf8ef9d3249c9c6688558ada07ccc74a477d32')
+sha256sums=('e27e4249f12cca44fc6e15a27f214f30fcb5f15646c813a90b6788bd9f0cfd4b')
 
 build() {
   export CGO_CPPFLAGS="${CPPFLAGS}"
