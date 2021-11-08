@@ -1,25 +1,24 @@
-# Maintainer: asm0dey <pavel.finkelshtein+AUR@gmail.com>
+# Maintainer: a821
+# Contributor: asm0dey <pavel.finkelshtein+AUR@gmail.com>
 # Contributor: Sven-Hendrik Haase <sh@lutzhaase.com>
 
 pkgname=pgcli
-pkgver=3.1.0
+pkgver=3.2.0
 pkgrel=1
 pkgdesc="a command line interface for Postgres with auto-completion and syntax highlighting"
 url="http://pgcli.com/"
 arch=(any)
 license=('BSD')
-depends=('python' 'python-sqlparse>=0.3.0' 'python-psycopg2' 'python-click>=4.1' 'python-prompt_toolkit' 'python-humanize>=0.5.1' 'python-configobj>=5.0.6' 'python-pgspecial>=1.11.8' 'python-setproctitle>=1.1.9' 'python-cli_helpers>=1.2.0' 'python-keyring' 'python-dbus' 'python-pygments' 'python-pendulum')
-makedepends=('python-distribute')
-source=($pkgname-$pkgver.zip::https://github.com/dbcli/pgcli/archive/v$pkgver.zip)
+depends=('python-sqlparse' 'python-psycopg2' 'python-click' 'python-prompt_toolkit'
+         'python-configobj' 'python-pgspecial' 'python-setproctitle' 'python-cli_helpers'
+         'python-keyring' 'python-pygments' 'python-pendulum')
+makedepends=('python-setuptools')
+source=($pkgname-$pkgver.tar.gz::https://github.com/dbcli/pgcli/archive/v$pkgver.tar.gz)
 provides=('pgcli')
-conflicts=('pgcli-git')
-md5sums=('2ce0bab01467c213555756c932b904a5')
+sha256sums=('9ae5278853865bcec9ec7589773936c516512ae446514746658121a69915cbcf')
 
 package() {
-    cd "$srcdir/pgcli-${pkgver}"
-#    sed -i -e "s/prompt_toolkit>=2.0.6,<3.0.0/prompt_toolkit>=2.0.6/g" setup.py
-#    sed -i -e "s/sqlparse >=0.3.0,<0.4/sqlparse >= 0.3.0,<0.5/g" setup.py
+    cd "pgcli-${pkgver}"
     python setup.py install --root="$pkgdir/" --optimize=1
-    mkdir -p "$pkgdir/usr/share/licenses/$pkgname"
-    cp LICENSE.txt "$_/LICENSE"
+    install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
