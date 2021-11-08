@@ -1,13 +1,7 @@
 pre_build_script: aur_pre_build(maintainers=['Xorg'])
-
 post_build: aur_post_build
-
-repo_depends:
-  - libcpuid
-
 update_on:
   - source: aur
     aur: cpu-x
-
 maintainers:
   - github: dctxmei
