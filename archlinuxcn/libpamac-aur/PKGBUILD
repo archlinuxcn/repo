@@ -1,16 +1,16 @@
 # Contributor: Zeph <zeph33@gmail.com>
 # Maintainer: Zeph <zeph33@gmail.com>
-# https://gitlab.manjaro.org/packages/extra/pamac
+# https://gitlab.manjaro.org/packages/extra/libpamac
 ENABLE_FLATPAK=0
 ENABLE_SNAPD=0
 
 pkgname=libpamac-aur
-pkgver=11.1.3
-pkgrel=2
+pkgver=11.2.0
+pkgrel=0
 _pkgfixver=$pkgver
 
-_commit='08bff33f1570c50ccebf05435eb54920b3c234de'
-sha256sums=('039276f09d0c1b02bc4e8ae750ea664629a0412f71927af04a3796ed69b4c021'
+_commit='1c3941ec6cfd6e3ad904e24b9364ce03bcf4b4d2'
+sha256sums=('623224f2c6e1058cd95c1536b2fd9b0b97f817595faf814f080b3d60f4b89cb1'
             'e9fe7c14d15cbce1d337749cf317e4460bce485b102b5c228b7efa479998d4fa'
             'c2b943318a01ba1f3dabbf32e48e6a6f4b4b774e167ab86c6bfee31aa4a3424c')
 
@@ -56,7 +56,7 @@ build() {
         --prefix=/usr \
         --sysconfdir=/etc $define_meson
   # build
-  ninja
+  meson compile
 }
 
 package() {
