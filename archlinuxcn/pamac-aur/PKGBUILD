@@ -4,24 +4,24 @@
 ENABLE_FAKE_GNOME_SOFTWARE=0
 
 pkgname=pamac-aur
-pkgver=10.2.2
-pkgrel=3
+pkgver=10.3.0
+pkgrel=1
 _pkgfixver=$pkgver
 
-_commit='dd9d59e0fd4985c21f1bf521bd54feecc939bab0'
-sha256sums=('c205d3f5d242d2597bd4f83166b7e348247f44c4aebc27a5aae8ea05ac8f68b8')
+_commit='c2c19b7c1fde12ded5a80babc39f3b99efd2be43'
+sha256sums=('e1bcbe75002adae4c022d9afc69a7d82a23a7f26c746f5e5cd7fac934c784005')
 
 pkgdesc="A Gtk3 frontend, Package Manager based on libalpm with AUR and Appstream support"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://gitlab.manjaro.org/applications/pamac"
 license=('GPL3')
-depends=('glib2>=2.42' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3>=0.38' 'gtk3>=3.22'
-         'libnotify' 'desktop-file-utils' 'libpamac-aur>=11.1' 'gnutls>=3.4' 'git'
+depends=('glib2>=2.42' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3>=0.38' 'gtk3>=3.24'
+         'libnotify' 'desktop-file-utils' 'libpamac-aur>=11.2' 'gnutls>=3.4' 'git'
          'appstream-glib>=0.7.18-1' 'archlinux-appstream-data' 'libhandy' 'git')
 
 optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
             'lxsession: needed for authentification in Xfce, LXDE etc.')
-makedepends=('gettext' 'itstool' 'vala>=0.46' 'gtk3>=3.22' 'asciidoc' 'meson' 'ninja' 'gobject-introspection' 'libappindicator-gtk3' 'xorgproto')
+makedepends=('gettext' 'itstool' 'vala>=0.46' 'gtk3>=3.24' 'asciidoc' 'meson' 'ninja' 'gobject-introspection' 'libappindicator-gtk3' 'xorgproto')
 conflicts=('pamac' 'pamac-tray-appindicator')
 provides=("pamac=$pkgver-$pkgrel")
 options=(!emptydirs !strip)
