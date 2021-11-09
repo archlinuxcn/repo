@@ -3,7 +3,7 @@
 # Contributor: ilikenwf
 # Contributor: American_Jesus
 pkgname=palemoon
-pkgver=29.4.1
+pkgver=29.4.2
 pkgrel=1
 pkgdesc="Open source web browser based on Firefox focusing on efficiency."
 arch=('i686' 'x86_64')
@@ -18,9 +18,9 @@ optdepends=('libpulse: PulseAudio audio driver'
 # as of 29.4.1, upstream have switched to unsigned source archives instead of git
 source=("http://archive.palemoon.org/source/palemoon-${pkgver}-source.tar.xz"
         mozconfig.in)
-sha1sums=('a63f2f79774be283de4f9e6042a3c315ff690b3b'
+sha1sums=('a8bccc80fea1381b3135c21c85c57a3b0dbcf696'
           '5fc8e164a8c1731ad2cce6270c9b0e9a5145194c')
-sha256sums=('4a307d4f7641ea5641f3c7bcd5305dcd1983e89522579b784b6bf60ae18e00ba'
+sha256sums=('293aad9fc29b8123b8ecff70d75070615382f3acbb0cb5c879ccd1ceba2e43c0'
             'a8ded94beaef0dfa4a5d6b109c1a669967cb7d38d4fe70b3a4d7725ef4b47394')
 
 prepare() {
@@ -53,5 +53,5 @@ package() {
     "${pkgdir}/usr/share/icons/hicolor/128x128/apps/${pkgname}.png"
 
   # install desktop file
-  install -Dm644 "${srcdir}/${_repo}/palemoon/branding/official/palemoon.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  install -Dm644 "${srcdir}/palemoon/branding/official/palemoon.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
 }
