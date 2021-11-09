@@ -3,16 +3,16 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
-pkgver=3.2.2
-pkgrel=2
+pkgver=3.2.3
+pkgrel=1.1
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL3')
 depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
-         'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5' 'kwayland' 'libx11' 'glibmm' 'rnnoise' 'pipewire' 'libxtst' 'libxrandr' 'jemalloc' 'libtg_owt' 'qt5-svg')
-makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'python2' 'microsoft-gsl' 'extra-cmake-modules' 'gtk3' 'webkit2gtk')
-optdepends=('ttf-opensans: default Open Sans font family')
+         'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5' 'kwayland' 'gtk3' 'glibmm' 'rnnoise' 'pipewire' 'libxtst' 'libxrandr' 'jemalloc' 'libtg_owt' 'qt5-svg' 'webkit2gtk')
+makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'python2' 'microsoft-gsl' 'extra-cmake-modules')
+optdepends=('xdg-desktop-portal: desktop integration')
 provides=('telegram-desktop')
 conflicts=('telegram-desktop')
 source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
@@ -38,12 +38,11 @@ build() {
         -G Ninja \
         -DCMAKE_INSTALL_PREFIX="/usr" \
         -DCMAKE_BUILD_TYPE=Release \
+         # Use Qt5 for the time being until kwayland has an easier way to work with Qt6.
         -DDESKTOP_APP_QT6=off \
         -DTDESKTOP_API_ID=611335 \
         -DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c \
         -DTDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME=ON \
-    	-DDESKTOP_APP_DISABLE_GTK_INTEGRATION=ON \
-	    -DDESKTOP_APP_DISABLE_WEBKITGTK=ON
     ninja -C build
 }
 
