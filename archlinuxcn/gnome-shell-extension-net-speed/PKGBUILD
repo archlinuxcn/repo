@@ -1,6 +1,6 @@
 # Maintainer: Alynx Zhou <alynx.zhou@gmail.com>
 pkgname=gnome-shell-extension-net-speed
-pkgver=2
+pkgver=3
 pkgrel=1
 pkgdesc="Show current net speed on panel."
 arch=('any')
@@ -8,7 +8,7 @@ url="https://github.com/AlynxZhou/gnome-shell-extension-net-speed"
 license=('GPL')
 depends=('gnome-shell')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha512sums=('05c664c564dca5e285a9b15b117c353769ac9f21e24c829dc80d758b52ed7f921c15caef1f84551b007305519f8835ac4fcdc88b206ce4a4a9f5890a57d44323')
+sha512sums=('f946e484645fc66d682e3f90d3b258f55529c20f9478b6f7050271111cb50eda2d878adf9ee45e35d449830dccae661c88181ada7344f7616c01738444b95df4')
 
 package() {
     _uuid="netspeed@alynx.one"
