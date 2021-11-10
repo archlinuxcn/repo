@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=corrplot
-_pkgver=0.90
+_pkgver=0.91
 pkgname=r-${_pkgname,,}
-pkgver=0.90
+pkgver=0.91
 pkgrel=1
 pkgdesc='Visualization of a Correlation Matrix'
 arch=('any')
@@ -20,7 +20,7 @@ optdepends=(
   r-testthat
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('d9871f219351f443f879ae93c45e3a364eb32cc6f41491a801e7b8a91e96d5dd')
+sha256sums=('e01f61f02e36c5201c71c52d665226ddd74a43416c2d93bc813ee8318c7e2848')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
