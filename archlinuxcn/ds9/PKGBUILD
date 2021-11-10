@@ -1,7 +1,7 @@
 # Maintainer:  Yigit Dallilar <yigit.dallilar at gmail dot com>
 
 pkgname=ds9
-pkgver=8.2.1
+pkgver=8.3
 pkgrel=1
 pkgdesc="SAOImage DS9: Astronomical Data Visualization Application"
 url="http://hea-www.harvard.edu/RD/ds9/"
@@ -11,17 +11,24 @@ provides=(ds9)
 conflicts=(ds9-bin)
 depends=("desktop-file-utils" "libx11" "libxml2")
 options=(!strip)
-makedepends=(libx11 libxml2 libxslt libpng tcl zip)
+makedepends=(libx11 libxslt libxml2 libxft tcl zip)
 conflicts=()
 replaces=()
 backup=()
 source=("https://github.com/SAOImageDS9/SAOImageDS9/archive/v${pkgver}.tar.gz"
         "ds9.desktop"
-        "ds9.png")
-md5sums=('fdac9f96738a83f823a61e3ec887676f'
+        "ds9.png"
+        "format-security.patch")
+md5sums=('1c3784c93d63ee1c194b0480f17d3f93'
          'f1738e4ec665ae9afd1b65b86e6a07f1'
-         '9297d5738f5f462831075c483dc785d5')
+         '9297d5738f5f462831075c483dc785d5'
+         '64ebd4c1e03b45fc682b692046028f1d')
 
+
+prepare() {
+    cd ${srcdir}/SAOImageDS9-${pkgver}
+    patch --strip=1 < ../format-security.patch
+}
 
 build() {
     cd ${srcdir}/SAOImageDS9-${pkgver}
