@@ -3,15 +3,15 @@
 # Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=xrestop
-pkgver=0.4
-pkgrel=7
+pkgver=0.5
+pkgrel=1
 pkgdesc="Uses the X-Resource extension to provide 'top' like statistics"
 arch=('x86_64')
 url="http://freedesktop.org/wiki/Software/xrestop"
 license=('GPL')
 depends=('libxres' 'ncurses')
-source=(http://downloads.yoctoproject.org/releases/$pkgname/$pkgname-$pkgver.tar.gz)
-md5sums=('d8a54596cbaf037e62b80c4585a3ca9b')
+source=(https://xorg.freedesktop.org/archive/individual/app/$pkgname-$pkgver.tar.bz2)
+md5sums=('5fb15fce4b643046df43e8179054773c')
 
 build() {
   cd $pkgname-$pkgver
