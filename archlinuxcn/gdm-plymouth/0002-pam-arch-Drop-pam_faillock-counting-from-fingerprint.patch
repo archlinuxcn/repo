@@ -26,7 +26,7 @@ Should fix [FS#71750][2].
  2 files changed, 4 insertions(+), 16 deletions(-)
 
 diff --git a/data/pam-arch/gdm-fingerprint.pam b/data/pam-arch/gdm-fingerprint.pam
-index cc660d9a..2aaf9f6c 100644
+index cc660d9a90ba..2aaf9f6c88a0 100644
 --- a/data/pam-arch/gdm-fingerprint.pam
 +++ b/data/pam-arch/gdm-fingerprint.pam
 @@ -2,16 +2,10 @@
@@ -49,7 +49,7 @@ index cc660d9a..2aaf9f6c 100644
  auth       optional                    pam_gnome_keyring.so
  
 diff --git a/data/pam-arch/gdm-smartcard.pam b/data/pam-arch/gdm-smartcard.pam
-index e6ec1299..6d7333bf 100644
+index e6ec129948a7..6d7333bf4204 100644
 --- a/data/pam-arch/gdm-smartcard.pam
 +++ b/data/pam-arch/gdm-smartcard.pam
 @@ -2,16 +2,10 @@

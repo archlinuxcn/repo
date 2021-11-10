@@ -8,7 +8,7 @@ Subject: [PATCH] Xsession: Don't start ssh-agent by default
  1 file changed, 8 deletions(-)
 
 diff --git a/data/Xsession.in b/data/Xsession.in
-index 2e4de4fe..29ebc30e 100755
+index 2e4de4fe384f..29ebc30ea0c5 100755
 --- a/data/Xsession.in
 +++ b/data/Xsession.in
 @@ -207,14 +207,6 @@ if [ "x$command" = "xdefault" ] ; then

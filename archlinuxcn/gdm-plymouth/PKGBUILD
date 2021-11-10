@@ -7,8 +7,8 @@
 _pkgbase=gdm
 pkgbase=gdm-plymouth
 pkgname=(gdm-plymouth libgdm-plymouth)
-pkgver=40.1
-pkgrel=2
+pkgver=41.0
+pkgrel=1
 pkgdesc="Display manager and login screen with plymouth support"
 url="https://wiki.gnome.org/Projects/GDM"
 arch=(x86_64)
@@ -16,14 +16,14 @@ license=(GPL)
 depends=(plymouth gnome-shell gnome-session upower systemd xorg-xrdb xorg-server xorg-xhost libxdmcp)
 makedepends=(yelp-tools gobject-introspection git docbook-xsl meson)
 checkdepends=(check)
-_commit=7fafdbcac9b970492e9ea23df42111d90986f3f3  # tags/40.1^0
+_commit=536491641156ba88beab2c881278b09e52df6813  # tags/41.0^0
 source=("git+https://gitlab.gnome.org/GNOME/gdm.git#commit=$_commit"
         0001-Xsession-Don-t-start-ssh-agent-by-default.patch
         0002-pam-arch-Drop-pam_faillock-counting-from-fingerprint.patch
         default.pa)
 sha256sums=('SKIP'
-            'aa751223e8664f65fe2cae032dc93bb94338a41cfca4c6b66a0fca0c788c4313'
-            'a5dc583f37311164526569e54fe2d2c06fa27de9995848d7f374b4a554c4c8c0'
+            '39a7e1189d423dd428ace9baac77ba0442c6706a861d3c3db9eb3a6643e223f8'
+            'e3dcaaa5ffa2dd4d3338c8b5827965ea2ca1efd9a95d7272a107e6121cb7898f'
             'e88410bcec9e2c7a22a319be0b771d1f8d536863a7fc618b6352a09d61327dcb')
 
 pkgver() {
