@@ -1,0 +1,30 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+# Contributor: hawkeye116477 <hawkeye116477 at gmail dot com>
+
+_pkgname=PySimpleGUIQt
+pkgname=python-pysimpleguiqt
+pkgver=0.35.0
+pkgrel=1
+pkgdesc='Python GUIs for Humans (Qt port)'
+arch=('any')
+license=('LGPL3')
+url='https://github.com/PySimpleGUI/PySimpleGUI'
+depends=(
+  pyside2
+)
+makedepends=(
+  python-setuptools
+)
+source=(${pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz)
+sha256sums=('2c18ea261554235a2cdaee76e616d0adc148501e89bf4112a798f2a69bf3c8b5')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+}
+# vim:set ts=2 sw=2 et:
