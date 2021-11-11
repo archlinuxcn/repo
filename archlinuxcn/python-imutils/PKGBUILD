@@ -1,0 +1,35 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=imutils
+pkgname=python-imutils
+pkgver=0.5.4
+pkgrel=1
+pkgdesc='A series of convenience functions to make basic image processing more easier with OpenCV'
+arch=('any')
+license=('MIT')
+url='https://github.com/PyImageSearch/imutils'
+depends=(
+  python-matplotlib
+  python-numpy
+  python-opencv
+  python-scipy
+)
+makedepends=(
+  python-setuptools
+)
+source=(${pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz
+        'LICENSE::https://github.com/PyImageSearch/imutils/raw/master/LICENSE.txt')
+sha256sums=('03827a9fca8b5c540305c0844a62591cf35a0caec199cb0f2f0a4a0fb15d8f24'
+            '2c8a99780369034a6bd93e28206d817769ccb38be870fb815e6ded11d6096b31')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 "${srcdir}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
