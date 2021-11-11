@@ -1,8 +1,8 @@
 # Maintainer: Sebastian Baberowski <sebastian@baberowski.com>
 
 pkgname=libindi-asi
-pkgver=1.9.2
-pkgrel=3
+pkgver=1.9.3
+pkgrel=1
 pkgdesc="3rd party drivers for INDI, support for ZWO devices: ASI cameras, EFW filter wheel, ASI ST4 port and ASI focuser"
 url="http://www.indilib.org/index.php?title=Main_Page"
 license=(LGPL2.1)
@@ -10,7 +10,7 @@ arch=(x86_64)
 depends=(libindi=${pkgver} libasi=${pkgver})
 makedepends=(cmake)
 source=("https://github.com/indilib/indi-3rdparty/archive/v${pkgver}.tar.gz")
-sha256sums=('d582fa25a3b2b53f2a91be7881689951a616cbe8c87c71a392f714a0870cc473')
+sha256sums=('4e71a8106fcdf6248486b18f04f4013332b0722b4942b90fbf01770d8037d3dc')
 
 prepare() {
   mkdir -p build
