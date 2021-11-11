@@ -1,0 +1,32 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=qudida
+pkgname=python-qudida
+pkgver=0.0.4
+pkgrel=1
+pkgdesc='QUick and DIrty Domain Adaptation'
+arch=('any')
+license=('MIT')
+url='https://github.com/arsenyinfo/qudida'
+depends=(
+  python-opencv
+  python-scikit-learn
+  python-typing_extensions
+)
+makedepends=(
+  python-setuptools
+)
+source=(${pkgname}-${pkgver}.tar.gz::https://github.com/arsenyinfo/qudida/archive/refs/tags/${pkgver}.tar.gz)
+sha256sums=('3f6a7838c3578deec662e63a8cae4ef8d836f6b0d970714be347f868cdcbf232')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
