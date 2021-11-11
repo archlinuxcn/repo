@@ -3,24 +3,18 @@
 
 _pkgname=PySimpleGUI
 pkgname=('python-pysimplegui')
-_module='PySimpleGUI'
 pkgver=4.55.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Python GUIs for Humans'
 arch=('any')
 license=('LGPL3')
-url='https://github.com/MikeTheWatchGuy/PySimpleGUI'
+url='https://github.com/PySimpleGUI/PySimpleGUI'
 depends=(
   python
+  tk
 )
 makedepends=(
   python-setuptools
-)
-optdepends=(
-  pyside2
-  python-remi
-  python-wxpython
-  tk
 )
 source=(${pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz)
 sha256sums=('9d40c0a0c2b4c3d2ee935854e48d724f508ae68123f4bac8072612dd9e707dec')
