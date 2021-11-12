@@ -37,10 +37,10 @@ diff -ru old/tool/ventoy_lib.sh new/tool/ventoy_lib.sh
 -        return
 -    fi
 -    
--    if vtoyfat -T; then
--        vtdebug "vtoyfat test ok ..."
+-    if vtoycli fat -T; then
+-        vtdebug "vtoycli fat test ok ..."
 -    else
--        vtdebug "vtoyfat test fail ..."
+-        vtdebug "vtoycli fat test fail ..."
 -        ventoy_false
 -        return
 -    fi
@@ -60,7 +60,7 @@ diff -ru old/tool/ventoy_lib.sh new/tool/ventoy_lib.sh
 diff -ru old/tool/VentoyWorker.sh new/tool/VentoyWorker.sh
 --- tool/VentoyWorker.sh	2021-03-06 14:53:26.603866863 +0100
 +++ tool/VentoyWorker.sh	2021-03-06 14:55:52.493675465 +0100
-@@ -96,7 +96,7 @@
+@@ -99,7 +99,7 @@
  if check_tool_work_ok; then
      vtdebug "check tool work ok"
  else
@@ -72,7 +72,7 @@ diff -ru old/tool/VentoyWorker.sh new/tool/VentoyWorker.sh
 diff -ru old/Ventoy2Disk.sh new/Ventoy2Disk.sh
 --- Ventoy2Disk.sh	2021-03-06 14:52:52.703911700 +0100
 +++ Ventoy2Disk.sh	2021-03-06 14:55:45.943684011 +0100
-@@ -32,46 +32,4 @@
+@@ -34,46 +34,4 @@
  echo '**********************************************'
  echo ''
  
