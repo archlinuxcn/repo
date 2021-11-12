@@ -1,0 +1,33 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=omegaconf
+pkgname=python-omegaconf
+pkgver=2.1.1
+pkgrel=1
+pkgdesc='Flexible Python configuration system'
+arch=('any')
+license=('BSD')
+url='https://github.com/omry/omegaconf'
+depends=(
+  python-antlr4
+  python-yaml
+)
+makedepends=(
+  java-environment
+  python-pip
+  python-setuptools
+)
+source=(${pkgname}-${pkgver}.tar.gz::https://github.com/omry/omegaconf/archive/refs/tags/v${pkgver}.tar.gz)
+sha256sums=('1c090255e303cd72af546fd6a433722edcd5ff30edf915405e6f56d28fb02b36')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

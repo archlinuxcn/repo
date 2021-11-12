@@ -1,0 +1,31 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=iopath
+pkgname=python-iopath
+pkgver=0.1.9
+pkgrel=1
+pkgdesc='A python library that provides common I/O interface across different storage backends'
+arch=('any')
+license=('MIT')
+url='https://github.com/facebookresearch/iopath'
+depends=(
+  python-portalocker
+  python-tqdm
+)
+makedepends=(
+  python-setuptools
+)
+source=(${pkgname}-${pkgver}.tar.gz::https://github.com/facebookresearch/iopath/archive/refs/tags/v${pkgver}.tar.gz)
+sha256sums=('3f17a6558fa62fdc2ab1ecdf7c106576167fb8bb19f1612289fd88467535ad7a')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
