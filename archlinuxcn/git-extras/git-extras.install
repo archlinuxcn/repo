@@ -1,0 +1,18 @@
+# arg 1:  the new package version
+post_install() {
+cat << EOF
+If you are a zsh user, you may want to 'source /usr/share/doc/git-extras/git-extras-completion.zsh' and put this line into ~/.zshrc to enable zsh completion
+If you are a fish user, you may want to copy or link '/usr/share/doc/git-extras/git-extras.fish' to '~/.config/fish/completions/'
+EOF
+}
+
+# arg 1:  the new package version
+# arg 2:  the old package version
+post_upgrade() {
+	post_install
+}
+
+# arg 1:  the old package version
+# post_remove() {
+# }
+
