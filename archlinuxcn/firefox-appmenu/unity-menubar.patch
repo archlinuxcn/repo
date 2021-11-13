@@ -37,15 +37,14 @@
        popup.insertBefore(menu, firstMenuItem);
 --- a/browser/components/places/content/places.xhtml
 +++ b/browser/components/places/content/places.xhtml
-@@ -169,7 +169,7 @@
-         <toolbarbutton type="menu" class="tabbable" wantdropmarker="true"
-               onpopupshowing="document.getElementById('placeContent').focus()"
+@@ -165,6 +165,7 @@
  #else
--      <menubar id="placesMenu">
-+      <menubar id="placesMenu" _moz-menubarkeeplocal="true">
-         <menu accesskey="&organize.accesskey;" class="menu-iconic"
+       <menubar id="placesMenu">
+         <menu class="menu-iconic" data-l10n-id="places-organize-button"
++              _moz-menubarkeeplocal="true"
  #endif
-               id="organizeButton" label="&organize.label;"
+               id="organizeButton">
+           <menupopup id="organizeButtonPopup">
 --- a/dom/xul/XULPopupElement.cpp
 +++ b/dom/xul/XULPopupElement.cpp
 @@ -211,6 +211,10 @@ void XULPopupElement::GetState(nsString&
