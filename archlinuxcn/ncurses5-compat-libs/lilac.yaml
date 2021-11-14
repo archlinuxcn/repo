@@ -10,5 +10,6 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 update_on:
-  - source: aur
-    aur: ncurses5-compat-libs
+  - regex: ncurses-(\d+.\d+).tar.gz
+    source: regex
+    url: https://ftp.gnu.org/pub/gnu/ncurses/
