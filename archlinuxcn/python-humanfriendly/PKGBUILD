@@ -1,8 +1,8 @@
-# Maintainer: Maikel Wever <maikelwever@gmail.com>
-# Maintainer: Matthew Gamble <git@matthewgamble.net>
+# Contributor: Maikel Wever <maikelwever@gmail.com>
+# Contributor: Matthew Gamble <git@matthewgamble.net>
 
 pkgname=python-humanfriendly
-pkgver=9.2
+pkgver=10.0
 pkgrel=1
 pkgdesc="Human friendly input/output in Python"
 arch=('any')
@@ -11,7 +11,7 @@ license=('MIT')
 depends=('python')
 makedepends=('python-setuptools' 'python-sphinx')
 source=("https://github.com/xolox/python-humanfriendly/archive/${pkgver}.tar.gz")
-sha256sums=('63b6ae2ca33e7e8f5c3ae80b2a86d4bdf4d80e113afe02f4f1bd38031144f649')
+sha256sums=('a7f6ee6aa93933ffdf716a44163a8b1d17e8c95b3badb25efa37d562b2b93393')
 
 build() {
   cd "python-humanfriendly-${pkgver}"
