@@ -25,7 +25,7 @@ makedepends=('subversion'
              'glu'
              'gsoap'
              'iasl'
-             'jdk7-openjdk'
+             'jdk8-openjdk'
              'libidl2'
              'libpulse'
              'libstdc++5'
@@ -70,6 +70,7 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         '005-gsoap-build.patch'
         '006-rdesktop-vrdp-keymap-path.patch'
         '008-no-vboxvideo.patch'
+        '009-i3wm.patch'
         '012-vbglR3GuestCtrlDetectPeekGetCancelSupport.patch'
         '013-Makefile.patch'
         '017-fix-narrowing-conversion.patch'
@@ -98,10 +99,6 @@ prepare() {
     
     echo 'Use our CFLAGS'
     echo "VBOX_GCC_OPT=$CXXFLAGS" >> LocalConfig.kmk
-
-    sed -i '/#include "PyXPCOM_std.h"/a PyAPI_FUNC(void) _Py_NewReference(PyObject *op);' src/libs/xpcom18a4/python/src/PyIID.cpp
-    sed -i '/#include "PyXPCOM_std.h"/a PyAPI_FUNC(void) _Py_NewReference(PyObject *op);' src/libs/xpcom18a4/python/src/PyISupports.cpp
-    sed -i '/#include "PyXPCOM_std.h"/a PyAPI_FUNC(void) _Py_NewReference(PyObject *op);' src/libs/xpcom18a4/python/src/TypeObject.cpp
 }
 
 build() {
@@ -171,7 +168,6 @@ package_virtualbox-svn() {
 
     # components
     install -dm0755 "$pkgdir/usr/lib/virtualbox/components"
-    #rm components/VBoxREM.so # TODO: remove when dead link is fixed
     install -m0755 components/* -t "$pkgdir/usr/lib/virtualbox/components"
 
     # extensions packs
@@ -351,7 +347,7 @@ sha256sums=('SKIP'
             'da4c49f6ca94e047e196cdbcba2c321199f4760056ea66e0fbc659353e128c9e'
             '9c5238183019f9ebc7d92a8582cad232f471eab9d3278786225abc1a1c7bf66e'
             '033c597e0f5285d2ddb0490868e5b6f945f45c7b1b1152a02a9e6fea438b2c95'
-            '240ddf9c532b34380dd9bdd56c6302f323ded9ca95ccf5c50b6e44a5cb533cc9'
+            '3cf42bc6e9e55fd2cb6be7b89c5b98d0f6a2eff6125a9ee7efafaabc35f1de22'
             'c41a801fe344a4471a7b61a4764d1d857c403e4fb96e2ba6bc89c77a35f2be7a'
             '01dbb921bd57a852919cc78be5b73580a564f28ebab2fe8d6c9b8301265cbfce'
             '83d8f24bff25bb925083cf39b3195236c6136105e62417712cc3f25b92e14b47'
@@ -362,7 +358,8 @@ sha256sums=('SKIP'
             '7d2da8fe10a90f76bbfc80ad1f55df4414f118cd10e10abfb76070326abebd46'
             '13c6ca9be0f91582445fd2a14a8c58a0625a15d9cb98cb6e8c2736d77ea976ab'
             '053bfeee8863f3ffdf2f0e3f9f0d77dc61dd32764700a97a7635fd8611e20491'
+            'cd83f4c9f3befb344c7e143aec65550444647890b676d6ea8502d67c7c1b3d93'
             '81900e13d36630488accd8c0bfd2ceb69563fb2c4f0f171caba1cca59d438024'
-            'baafc9aa33b7022f7e7f6af16f75621dc311abbea538bf953c227e040006fb3f'
+            'fb21aafdc0bc14312b9618ebd7550cb7ecf2228486a121c75a0d94bf90ba54fb'
             '5aac692909a0a0ec56b08bdece9e42cf7463abdca9da2f990d441ff463be6a99'
             'cac5a573e9ed5aafb2f469c2e6fffb8cd4f389bbadba5a968c9f65be7a72fee3')
