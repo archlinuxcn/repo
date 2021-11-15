@@ -3,7 +3,7 @@
 
 pkgname=python-torchaudio
 _pkgname=audio
-pkgver=0.9.0
+pkgver=0.10.0
 pkgrel=1
 pkgdesc="Data manipulation and transformation for audio signal processing, powered by PyTorch"
 arch=('any')
@@ -22,7 +22,7 @@ build() {
   cd "$srcdir/${_pkgname}"
   git config submodule.kaldi.url "$srcdir/kaldi"
   git submodule update third_party/kaldi/submodule
-  BUILD_SOX=1 python setup.py build
+  CUDA_HOME=/opt/cuda/ BUILD_SOX=1 python setup.py build
 }
 
 package() {
