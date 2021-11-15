@@ -2,6 +2,7 @@ from lilaclib import *
 
 def pre_build():
   newver = _G.newver.removeprefix('experimental-wine-')
+  newver = newver.removeprefix('proton-wine-')
   for line in edit_file('PKGBUILD'):
       if line.startswith('_pkgver'):
           line = "_pkgver='" + newver + "'"
