@@ -1,0 +1,18 @@
+post_install() {
+  cat << EOF
+
+===> virtualbox-guest-iso post install message:
+===>
+===> Redistribution of VBoxGuestAdditions.iso from the binary packages
+===> on www.virtualbox.org with Arch Linux has been granted by
+===> InnoTek Systemberatung GmbH.
+===>
+===> By using this package you accept
+===> the VirtualBox Personal Use and Evaluation License (PUEL)
+===> which can be found here: http://virtualbox.org/wiki/VirtualBox_PUEL
+===>
+===> If you do not accept this license, you must remove the package immediately.
+===>
+
+EOF
+}
