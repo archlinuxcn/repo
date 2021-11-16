@@ -10,6 +10,7 @@ url="https://github.com/lilydjwg/fcitx5-paste-primary"
 license=('GPL')
 depends=('fcitx5')
 makedepends=('cmake' 'git' 'extra-cmake-modules')
+optdepends=('wl-clipboard: for Wayland support')
 source=('git+https://github.com/lilydjwg/fcitx5-paste-primary.git')
 md5sums=('SKIP')
 
