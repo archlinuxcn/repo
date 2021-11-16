@@ -9,7 +9,7 @@ pkgname=('qgnomeplatform' 'qgnomeplatform-qt6')
 pkgbase=qgnomeplatform
 _pkgname=QGnomePlatform
 pkgver=0.8.2
-pkgrel=1
+pkgrel=2
 pkgdesc="QPlatformTheme for a better Qt application inclusion in GNOME"
 arch=('x86_64')
 url="https://github.com/FedoraQt/QGnomePlatform"
@@ -60,6 +60,6 @@ package_qgnomeplatform-qt6() {
     qt6-wayland
 )
 
-  make -C build-qt5 DESTDIR="${pkgdir}" install
+  make -C build-qt6 DESTDIR="${pkgdir}" install
 }
 # vim:set ts=2 sw=2 et:
