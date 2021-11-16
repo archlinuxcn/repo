@@ -1,10 +1,13 @@
 from lilaclib import *
 
 def pre_build():
+  newver = _G.newver.removeprefix('v')
   for line in edit_file('PKGBUILD'):
       if line.startswith('_pkgver'):
-          line = f'_pkgver={_G.newver}'
+          line = '_pkgver=' + newver
       print(line)
+  newver = newver.replace("-",".")
+  update_pkgver_and_pkgrel(newver)
 
 #if __name__ == '__main__':
 #  single_main()
