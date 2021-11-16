@@ -1,7 +1,7 @@
 # Maintainer: heavysink <winstonwu91 at gmail>
 
 pkgname=quarto-cli-bin
-pkgver=0.2.281
+pkgver=0.2.284
 pkgrel=1
 pkgdesc="An open-source scientific and technical publishing system built on Pandoc  (binary from official repo)"
 arch=('x86_64')
@@ -20,4 +20,4 @@ package() {
     ln -s /opt/quarto/bin/quarto "${pkgdir}/usr/bin"
 }
 
-sha256sums=('900cbcd3005c841033b410c63ce1b2a14afd47d8d0f29310dab9643cb0c5d24f')
+sha256sums=('e363d3035c8e3f1303ab0080f39afac14ca6b8a964bf82378677b37aa583ce05')
