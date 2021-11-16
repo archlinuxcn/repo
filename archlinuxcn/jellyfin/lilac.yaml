@@ -5,6 +5,11 @@ post_build: aur_post_build
 update_on:
   - source: aur
     aur: jellyfin
+  - source: archpkg
+    archpkg: dotnet-sdk
+    strip_release: true
+  - source: manual
+    manual: 1.0
 
 maintainers:
   - github: dctxmei
