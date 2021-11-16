@@ -5,7 +5,7 @@
 
 pkgname=wine
 pkgver=6.21
-pkgrel=1
+pkgrel=2
 
 _pkgbasever=${pkgver/rc/-rc}
 
@@ -104,7 +104,7 @@ prepare() {
   # Allow ccache to work
   mv wine-$_pkgbasever $pkgname
 
-  scard4wine_dir=scard4wine-yan12125/src
+  scard4wine_dir=scard4wine/src
   cp -v $scard4wine_dir/winscard.c $pkgname/dlls/winscard/winscard.c
   cp -v $scard4wine_dir/winscard.spec $pkgname/dlls/winscard/winscard.spec
   cp -v $scard4wine_dir/winscard.h $pkgname/include/winscard.h
@@ -185,7 +185,7 @@ package() {
 
 # vim:set ts=8 sts=2 sw=2 et:
 
-source+=("scard4wine-yan12125::git+https://git.code.sf.net/u/yan12125/scard4wine.git#commit=480dbba00d6dd555d9a36a83d024031ae8c198cc")
+source+=("scard4wine::git+https://git.code.sf.net/p/scard4wine/code.git#commit=484230432f6f29538916872dac495d8a8de45382")
 sha512sums+=('SKIP')
 makedepends+=(git)
 provides=("$pkgname=$pkgver")
