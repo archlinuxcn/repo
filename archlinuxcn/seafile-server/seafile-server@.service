@@ -5,10 +5,13 @@ After=syslog.target network.target
 [Service]
 Type=forking
 WorkingDirectory=/srv/seafile/%i
-ExecStart=/usr/bin/seafile-admin start
-ExecStop=/usr/bin/seafile-admin stop
+ExecStartPre=seafile-server/seafile.sh start
+ExecStart=seafile-server/seahub.sh start
+ExecStop=seafile-server/seahub.sh stop
+ExecStopPost=seafile-server/seafile.sh stop
 PIDFile=/srv/seafile/%i/pids/seaf-server.pid
 User=seafile
+Group=seafile
 
 [Install]
 WantedBy=multi-user.target
