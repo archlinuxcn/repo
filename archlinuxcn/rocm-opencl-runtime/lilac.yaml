@@ -12,9 +12,11 @@ post_build: aur_post_build
 update_on:
   - source: aur
     aur: rocm-opencl-runtime
+  - source: manual
+    manual: 1
 
 repo_depends:
-  - hsa-rocr
   - hsakmt-roct
-  - rocclr
+  - hsa-rocr
+  - comgr
   - rocm-cmake
