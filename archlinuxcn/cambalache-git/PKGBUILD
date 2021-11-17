@@ -13,13 +13,8 @@ makedepends+=(git 'meson>=0.50.0')
 conflicts=($_pkgname)
 provides=($_pkgname=$pkgver)
 source=('git+https://gitlab.gnome.org/jpu/cambalache.git' 'fix-build.patch')
-sha512sums=('SKIP'
-            '6d3030bc1726692dc5d65727b694e0a916b6eeca6702dc1cc33cda429b1b0a37d47c4794bc4cf5f92bfd73970efacc4d27b18825304b06e1d60da8c89e2c3e0d')
+sha512sums=('SKIP')
 
-prepare() {
-    cd "$_pkgname"
-    patch --forward --strip=1 --input="${srcdir}/fix-build.patch"
-}
 
 pkgver() {
     cd "$_pkgname"
