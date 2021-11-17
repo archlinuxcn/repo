@@ -1,16 +1,16 @@
 #Maintainer: Xyne <ac xunilhcra enyx, backwards>
 pkgname=python3-xcpf
 pkgver=2021
-pkgrel=1
+pkgrel=2
 pkgdesc='Xyne'"'"'s common Pacman functions, for internal use.'
 arch=(any)
 license=(GPL)
-url="https://xyne.archlinux.ca/projects/python3-xcpf"
-depends=(pyalpm python-xdg python3 python3-memoizedb python3-xcgf)
+url="https://xyne.mirrorrepo.com/projects/python3-xcpf"
+depends=(pyalpm python-pyxdg python3 python3-memoizedb python3-xcgf)
 optdepends=('rsync: Retrieve ABS files via rsync.')
 source=(
-  https://xyne.archlinux.ca/projects/python3-xcpf/src/python3-xcpf-2021.tar.xz
-  https://xyne.archlinux.ca/projects/python3-xcpf/src/python3-xcpf-2021.tar.xz.sig
+  https://xyne.mirrorrepo.com/projects/python3-xcpf/src/python3-xcpf-2021.tar.xz
+  https://xyne.mirrorrepo.com/projects/python3-xcpf/src/python3-xcpf-2021.tar.xz.sig
 )
 sha512sums=(
   7ab6f6cc646546e9bc46d7062c76dc4da140e8baa2a623322208cf2c8342b66017abead8cc9f5a72378c9b40aaac8239413113cce41038582b05fd47e4b63ea6
