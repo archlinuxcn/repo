@@ -5,10 +5,8 @@ After=syslog.target network.target
 [Service]
 Type=forking
 WorkingDirectory=/srv/seafile/%i
-ExecStartPre=seafile-server/seafile.sh start
-ExecStart=seafile-server/seahub.sh start
-ExecStop=seafile-server/seahub.sh stop
-ExecStopPost=seafile-server/seafile.sh stop
+ExecStart=sh -c 'seafile-server/seafile.sh start; seafile-server/seahub.sh start'
+ExecStop=sh -c 'seafile-server/seafile.sh stop; seafile-server/seahub.sh stop'
 PIDFile=/srv/seafile/%i/pids/seaf-server.pid
 User=seafile
 Group=seafile
