@@ -1,19 +1,19 @@
 #Maintainer: Xyne <ac xunilhcra enyx, backwards>
 pkgname=python3-aur
 pkgver=2020.12.15
-pkgrel=3
+pkgrel=4
 pkgdesc='AUR-related modules and helper utilities (aurploader, aurquery, aurtomatic).'
 arch=(any)
 license=(GPL)
-url="https://xyne.archlinux.ca/projects/python3-aur"
-depends=(pyalpm python-xdg python3 python3-xcgf python3-xcpf)
+url="https://xyne.mirrorrepo.com/projects/python3-aur"
+depends=(pyalpm python-pyxdg python3 python3-xcgf python3-xcpf)
 optdepends=('curl: Aurploader support' 'git: Clone AUR Git repositories.')
 replaces=(aurploader)
 conflicts=(aurploader)
 provides=(aurploader)
 source=(
-  https://xyne.archlinux.ca/projects/python3-aur/src/python3-aur-2020.12.15.tar.xz
-  https://xyne.archlinux.ca/projects/python3-aur/src/python3-aur-2020.12.15.tar.xz.sig
+  https://xyne.mirrorrepo.com/projects/python3-aur/src/python3-aur-2020.12.15.tar.xz
+  https://xyne.mirrorrepo.com/projects/python3-aur/src/python3-aur-2020.12.15.tar.xz.sig
 )
 sha512sums=(
   05cba4c05937b8722b061fb24a32548c6f04fa04966449fd238eb991bea2ed30905ae60567802922810ebba87febfeb0d5c4b34a27e63e33dbda764bbafa17aa
