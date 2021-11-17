@@ -1,0 +1,7 @@
+## arg 1:  the new package version
+## arg 2:  the old package version
+
+post_install() {
+  echo "--> Users of bash need to add the following to ~/.bashrc"
+  echo "--> [[ -s /etc/profile.d/autojump.sh ]] && source /etc/profile.d/autojump.sh"
+}
