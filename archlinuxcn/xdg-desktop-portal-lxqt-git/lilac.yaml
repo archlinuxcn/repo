@@ -3,6 +3,10 @@ maintainers:
 
 build_prefix: extra-x86_64
 
+repo_depends:
+  - lxqt-qtplugin-git
+  - libfm-qt-git
+
 pre_build_script: |
     vcs_update()
 
