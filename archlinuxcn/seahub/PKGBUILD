@@ -17,12 +17,14 @@ source=("$pkgname-$pkgver-server.tar.gz::$url/archive/v$pkgver-server.tar.gz"
         "https://files.pythonhosted.org/packages/e2/a5/ee2af425b62b1566e6628a9c172481dd197b13ad0fbf34cf869a308747c1/django-post_office-3.3.0.tar.gz"
         "https://files.pythonhosted.org/packages/df/48/3c8a333b11312d73fb93dce589ae5a979e5334a5f5ee9918e580b88ddd96/django-picklefield-2.1.1.tar.gz"
         "https://files.pythonhosted.org/packages/a7/9d/5eea11456889eaaf20b6cdb47fefe12915e99448559356fc42d7e02297a8/djangorestframework-3.11.1.tar.gz"
+        "https://files.pythonhosted.org/packages/9a/86/6e5296375cbe76f741d3dc1bc996c19eadf7ade54dd2e90432cdf2ad4da5/django-webpack-loader-0.7.0.tar.gz"
         0001-Add-support-for-more-audio-and-video-formats.patch)
 sha256sums=('fabb71ca79090689b388c5e33edbd09dd3fac1cde3979ddb842d2e6fc3ab0c2a'
             'edf0ecf6657713b0435b6757e6069466925cae70d634a3283c96b80c01e06191'
             'b06514da601c22e955bd93a4ac6dd6b2218c571ca67c193e62bd1f22cec7536f'
             '67a5e156343e3b032cac2f65565f0faa81635a99c7da74b0f07a0f5db467b646'
             '6dd02d5a4bd2516fb93f80360673bf540c3b6641fec8766b1da2870a5aa00b32'
+            '7a3c88201aa54481f9399465615cbe7b9aece8081496a6d0287b7cb8e232f447'
             'fd9f7c40fea3e60661861735f7741064ae8c35e838dbaa0c5ab251ee67e35534')
 options=('!strip')
 
@@ -64,6 +66,8 @@ build() {
   # python setup.py build
   # cd "$srcdir/djangorestframework-3.11.1"
   # python setup.py build
+  # cd "$srcdir/django-webpack-loader-0.7.0"
+  # python setup.py build
 }
 
 package() {
@@ -75,7 +79,7 @@ package() {
     # 'python-captcha' # This one seems to conflict with django-simple-captcha
     'python-django-statici18n'
     # 'python-django-post-office' # 3.3.0
-    'python-django-webpack-loader'
+    # 'python-django-webpack-loader' # 0.7.0
     'gunicorn'
     'python-pymysql'
     # 'python-django-picklefield' # 2.1.1
@@ -112,6 +116,9 @@ package() {
   python setup.py install --root="$pkgdir" --optimize=1 \
          --install-lib "usr/share/seafile-server/seahub/thirdpart"
   cd "$srcdir/djangorestframework-3.11.1"
+  python setup.py install --root="$pkgdir" --optimize=1 \
+         --install-lib "usr/share/seafile-server/seahub/thirdpart"
+  cd "$srcdir/django-webpack-loader-0.7.0"
   python setup.py install --root="$pkgdir" --optimize=1 \
          --install-lib "usr/share/seafile-server/seahub/thirdpart"
   rm -rf "$pkgdir"/usr/{bin,share/seafile-server/seahub/thirdpart/*.egg-info}
