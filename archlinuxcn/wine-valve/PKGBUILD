@@ -7,8 +7,8 @@
 # Contributor: heavysink <winstonwu91 at gmail>
 pkgname=wine-valve
 epoch=1
-pkgver=6.3.8.rc4
-_pkgver='6.3-8-rc4'
+pkgver=6.3.8.rc5
+_pkgver='6.3-8-rc5'
 pkgrel=1
 pkgdesc='A compatibility layer for running Windows programs (Valve version)'
 arch=('i686' 'x86_64')
@@ -208,6 +208,6 @@ package() {
     done
 }
 
-sha256sums=('396d1052ec9cd089d7dd18a6f938aa2d1eabac4df9ef4176becc8fdb3ae14b98'
+sha256sums=('7c480a300fe0f772fc2500cfc5bd6878426b36b22200c927a857fb1ad76b1e3f'
             '9901a5ee619f24662b241672a7358364617227937d5f6d3126f70528ee5111e7'
             '6dfdefec305024ca11f35ad7536565f5551f09119dda2028f194aee8f77077a4')
