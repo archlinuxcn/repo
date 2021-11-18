@@ -1,0 +1,164 @@
+From c84ece04da099f7d6bae6d3341918f4f80bf9e29 Mon Sep 17 00:00:00 2001
+From: Dario Nieuwenhuis <dirbaio@dirbaio.net>
+Date: Fri, 31 Jan 2020 22:57:48 +0100
+Subject: [PATCH 1/2] xwayland: add support for global scale factor
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This does the necessary changes to support HiDPI in xwayland
+applications, with the following xwayland patch:
+https://gitlab.freedesktop.org/xorg/xserver/merge_requests/111
+
+[Antonin Décimo: rebase after 27609ba]
+[Antonin Décimo: rebase after 99f3c64]
+[Antonin Décimo: rebase after 79be26f]
+Co-authored-by: Antonin Décimo <antonin.decimo@gmail.com>
+---
+ include/wlr/xwayland.h |  4 ++++
+ xwayland/server.c      |  2 ++
+ xwayland/xwayland.c    |  4 ++++
+ xwayland/xwm.c         | 47 ++++++++++++++++++++++++++++++------------
+ 4 files changed, 44 insertions(+), 13 deletions(-)
+
+diff --git a/include/wlr/xwayland.h b/include/wlr/xwayland.h
+index 3689b8b3..00cee542 100644
+--- a/include/wlr/xwayland.h
++++ b/include/wlr/xwayland.h
+@@ -32,6 +32,8 @@ struct wlr_xwayland_server {
+ 
+ 	time_t server_start;
+ 
++	int32_t scale;
++
+ 	/* Anything above display is reset on Xwayland restart, rest is conserved */
+ 
+ 	int display;
+@@ -262,6 +264,8 @@ struct wlr_xwayland *wlr_xwayland_create(struct wl_display *wl_display,
+ 
+ void wlr_xwayland_destroy(struct wlr_xwayland *wlr_xwayland);
+ 
++void wlr_xwayland_set_scale(struct wlr_xwayland *wlr_xwayland, int32_t scale);
++
+ void wlr_xwayland_set_cursor(struct wlr_xwayland *wlr_xwayland,
+ 	uint8_t *pixels, uint32_t stride, uint32_t width, uint32_t height,
+ 	int32_t hotspot_x, int32_t hotspot_y);
+diff --git a/xwayland/server.c b/xwayland/server.c
+index 7af01b6f..fa4dfb34 100644
+--- a/xwayland/server.c
++++ b/xwayland/server.c
+@@ -449,6 +449,8 @@ struct wlr_xwayland_server *wlr_xwayland_server_create(
+ 	server->wl_fd[0] = server->wl_fd[1] = -1;
+ 	server->wm_fd[0] = server->wm_fd[1] = -1;
+ 
++	server->scale = 1;
++
+ 	wl_signal_init(&server->events.ready);
+ 	wl_signal_init(&server->events.destroy);
+ 
+diff --git a/xwayland/xwayland.c b/xwayland/xwayland.c
+index 86e8c6eb..a6397a1a 100644
+--- a/xwayland/xwayland.c
++++ b/xwayland/xwayland.c
+@@ -104,6 +104,10 @@ struct wlr_xwayland *wlr_xwayland_create(struct wl_display *wl_display,
+ 	return xwayland;
+ }
+ 
++void wlr_xwayland_set_scale(struct wlr_xwayland *xwayland, int32_t scale) {
++	xwayland->server->scale = scale;
++}
++
+ void wlr_xwayland_set_cursor(struct wlr_xwayland *xwayland,
+ 		uint8_t *pixels, uint32_t stride, uint32_t width, uint32_t height,
+ 		int32_t hotspot_x, int32_t hotspot_y) {
+diff --git a/xwayland/xwm.c b/xwayland/xwm.c
+index 313bfc0a..d0423126 100644
+--- a/xwayland/xwm.c
++++ b/xwayland/xwm.c
+@@ -20,6 +20,14 @@
+ #include "util/signal.h"
+ #include "xwayland/xwm.h"
+ 
++static int32_t scale(struct wlr_xwm *xwm, int32_t val) {
++	return val * xwm->xwayland->server->scale;
++}
++
++static int32_t unscale(struct wlr_xwm *xwm, int32_t val) {
++	return (val + xwm->xwayland->server->scale/2) / xwm->xwayland->server->scale;
++}
++
+ const char *const atom_map[ATOM_LAST] = {
+ 	[WL_SURFACE_ID] = "WL_SURFACE_ID",
+ 	[WM_DELETE_WINDOW] = "WM_DELETE_WINDOW",
+@@ -948,8 +956,13 @@ static void xwm_handle_create_notify(struct wlr_xwm *xwm,
+ 		return;
+ 	}
+ 
+-	xwayland_surface_create(xwm, ev->window, ev->x, ev->y,
+-		ev->width, ev->height, ev->override_redirect);
++	xwayland_surface_create(xwm, ev->window,
++		unscale(xwm, ev->x),
++		unscale(xwm, ev->y),
++		unscale(xwm, ev->width),
++		unscale(xwm, ev->height),
++		ev->override_redirect
++	);
+ }
+ 
+ static void xwm_handle_destroy_notify(struct wlr_xwm *xwm,
+@@ -980,10 +993,10 @@ static void xwm_handle_configure_request(struct wlr_xwm *xwm,
+ 
+ 	struct wlr_xwayland_surface_configure_event wlr_event = {
+ 		.surface = surface,
+-		.x = mask & XCB_CONFIG_WINDOW_X ? ev->x : surface->x,
+-		.y = mask & XCB_CONFIG_WINDOW_Y ? ev->y : surface->y,
+-		.width = mask & XCB_CONFIG_WINDOW_WIDTH ? ev->width : surface->width,
+-		.height = mask & XCB_CONFIG_WINDOW_HEIGHT ? ev->height : surface->height,
++		.x = unscale(xwm, mask & XCB_CONFIG_WINDOW_X ? ev->x : surface->x),
++		.y = unscale(xwm, mask & XCB_CONFIG_WINDOW_Y ? ev->y : surface->y),
++		.width = unscale(xwm, mask & XCB_CONFIG_WINDOW_WIDTH ? ev->width : surface->width),
++		.height = unscale(xwm, mask & XCB_CONFIG_WINDOW_HEIGHT ? ev->height : surface->height),
+ 		.mask = mask,
+ 	};
+ 
+@@ -998,14 +1011,16 @@ static void xwm_handle_configure_notify(struct wlr_xwm *xwm,
+ 	}
+ 
+ 	bool geometry_changed =
+-		(xsurface->x != ev->x || xsurface->y != ev->y ||
+-		 xsurface->width != ev->width || xsurface->height != ev->height);
++		(xsurface->x != unscale(xwm, ev->x) ||
++		 xsurface->y != unscale(xwm, ev->y) ||
++		 xsurface->width != unscale(xwm, ev->width) ||
++		 xsurface->height != unscale(xwm, ev->height));
+ 
+ 	if (geometry_changed) {
+-		xsurface->x = ev->x;
+-		xsurface->y = ev->y;
+-		xsurface->width = ev->width;
+-		xsurface->height = ev->height;
++		xsurface->x = unscale(xwm, ev->x);
++		xsurface->y = unscale(xwm, ev->y);
++		xsurface->width = unscale(xwm, ev->width);
++		xsurface->height = unscale(xwm, ev->height);
+ 	}
+ 
+ 	if (xsurface->override_redirect != ev->override_redirect) {
+@@ -1717,7 +1732,13 @@ void wlr_xwayland_surface_configure(struct wlr_xwayland_surface *xsurface,
+ 	uint32_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y |
+ 		XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT |
+ 		XCB_CONFIG_WINDOW_BORDER_WIDTH;
+-	uint32_t values[] = {x, y, width, height, 0};
++	uint32_t values[] = {
++		scale(xsurface->xwm, x),
++		scale(xsurface->xwm, y),
++		scale(xsurface->xwm, width),
++		scale(xsurface->xwm, height),
++		0,
++	};
+ 	xcb_configure_window(xwm->xcb_conn, xsurface->window_id, mask, values);
+ 	xcb_flush(xwm->xcb_conn);
+ }
+-- 
+2.33.1
+

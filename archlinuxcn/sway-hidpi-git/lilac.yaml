@@ -1,0 +1,20 @@
+maintainers:
+  - github: PeterCxy
+
+build_prefix: extra-x86_64
+
+pre_build: vcs_update
+
+repo_depends:
+  - swaybg-git
+  - wlroots-hidpi-git
+  - xorg-xwayland-hidpi-git
+
+update_on:
+  - source: gitlab
+    gitlab: swaywm/sway
+    host: github.com
+  - alias: alpm-lilac
+    alpm: wlroots-hidpi-git
+  - alias: alpm-lilac
+    alpm: xorg-xwayland-hidpi-git
