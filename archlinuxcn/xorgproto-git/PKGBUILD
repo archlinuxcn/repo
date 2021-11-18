@@ -1,0 +1,59 @@
+# Maintainer: Yurii Kolesnykov
+# Based on [extra]'s xorgproto by AndyRTR <andyrtr@archlinux.org>
+
+_pkgname=xorgproto
+pkgname=$_pkgname-git
+pkgver=2021.5.1.r2711.g914d8f5
+pkgrel=1
+pkgdesc='combined X.Org X11 Protocol headers (git version)'
+arch=('any')
+url="https://xorg.freedesktop.org/"
+license=('custom')
+makedepends=(
+	'git'
+	'meson'
+	'xorg-util-macros'
+)
+checkdepends=('python-libevdev')
+provides=('xorgproto')
+conflicts=('xorgproto')
+source=("$pkgname::git+https://gitlab.freedesktop.org/xorg/proto/xorgproto.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd "$pkgname"
+  echo $(git describe --long | cut -d "-" -f2-3 | tr - .).r$(git rev-list HEAD --count).$(git describe --long | cut -d "-" -f4)
+}
+
+prepare() {
+  rm -rf build
+  mkdir build
+}
+
+build() {
+  arch-meson "$pkgname" build
+  ninja -C build
+}
+
+check() {
+  meson test -C build
+}
+
+package() {
+  DESTDIR="$pkgdir" ninja -C build install
+
+  # missing docs
+  install -m755 -d "${pkgdir}/usr/share/doc/${_pkgname}"
+  install -m644 "$pkgname"/PM_spec "${pkgdir}/usr/share/doc/${_pkgname}/"
+
+  # licenses
+  install -m755 -d "${pkgdir}/usr/share/licenses/${_pkgname}"
+  install -m644 "$pkgname"/COPYING* "${pkgdir}/usr/share/licenses/${_pkgname}/"
+  # remove licences of legacy stuff we don't ship anymore
+  rm -f "${pkgdir}"/usr/share/licenses/${_pkgname}/COPYING-{evieproto,fontcacheproto,lg3dproto,printproto,xcalibrateproto,xf86rushproto}
+
+  # cleanup
+  rm -f "${pkgdir}"/usr/include/X11/extensions/apple*
+  rm -f "${pkgdir}"/usr/share/licenses/${_pkgname}/COPYING-{apple,windows}wmproto
+  rm -f "${pkgdir}"/usr/share/pkgconfig/applewmproto.pc
+}
