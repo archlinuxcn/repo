@@ -19,7 +19,7 @@ source=("$pkgname-$pkgver-server.tar.gz::$url/archive/v$pkgver-server.tar.gz"
         "https://files.pythonhosted.org/packages/a7/9d/5eea11456889eaaf20b6cdb47fefe12915e99448559356fc42d7e02297a8/djangorestframework-3.11.1.tar.gz"
         "https://files.pythonhosted.org/packages/9a/86/6e5296375cbe76f741d3dc1bc996c19eadf7ade54dd2e90432cdf2ad4da5/django-webpack-loader-0.7.0.tar.gz"
         0001-Add-support-for-more-audio-and-video-formats.patch)
-sha256sums=('fabb71ca79090689b388c5e33edbd09dd3fac1cde3979ddb842d2e6fc3ab0c2a'
+sha256sums=('9d6127403537c254a623441e755e0d5c3bc76a5f12c3d219154e8e38664a6f83'
             'edf0ecf6657713b0435b6757e6069466925cae70d634a3283c96b80c01e06191'
             'b06514da601c22e955bd93a4ac6dd6b2218c571ca67c193e62bd1f22cec7536f'
             '67a5e156343e3b032cac2f65565f0faa81635a99c7da74b0f07a0f5db467b646'
@@ -40,8 +40,8 @@ _patch_js() {
 
 prepare() {
   cd "$srcdir/$pkgname-$pkgver-server"
-  _patch_js 'mp4:"video.png",ogv:"video.png",webm:"video.png",mov:"video.png",flv:"video.png",wmv:"video.png",rmvb:"video.png",mp3:"music.png",oga:"music.png",ogg:"music.png",flac:"music.png",aac:"music.png",ac3:"music.png",wma:"music.png",jpg:"pic.png",jpeg:"pic.png",png:"pic.png",svg:"pic.png",gif:"pic.png",bmp:"pic.png",ico:"pic.png"' 'mp4:"video.png",m4v:"video.png",mkv:"video.png",opus:"video.png",ogv:"video.png",webm:"video.png",mov:"video.png",flv:"video.png",wmv:"video.png",rmvb:"video.png",rm:"video.png",m4a:"music.png",mp3:"music.png",oga:"music.png",ogg:"music.png",flac:"music.png",aac:"music.png",ac3:"music.png",caf:"music.png",wav:"music.png",wma:"music.png",jpg:"pic.png",jpeg:"pic.png",png:"pic.png",svg:"pic.png",gif:"pic.png",bmp:"pic.png",ico:"pic.png"' media/assets/frontend/js/
-  _patch_js 'opus:"video/ogg",ogv:"video/ogg",mp4:"video/mp4",mov:"video/mp4",m4v:"video/mp4",mkv:"video/x-matroska",mp3:"audio/mpeg",aac:"audio/aac",oga:"audio/ogg",m3u8:"application/x-mpegURL"' 'opus:"video/ogg",ogv:"video/ogg",mp4:"video/mp4",mov:"video/mp4",m4v:"video/mp4",mkv:"video/x-matroska",m4a:"audio/mp4",mp3:"audio/mpeg",caf:"audio/x-caf",aac:"audio/aac",oga:"audio/ogg",m3u8:"application/x-mpegURL",flac:"audio/flac",jpg:"image/jpeg",jpeg:"image/jpeg",gif:"image/gif",png:"image/png",svg:"image/svg+xml",wav:"audio/wav",webp:"image/webp"' media/assets/frontend/js/
+  _patch_js 'mp4:"video.png",ogv:"video.png",webm:"video.png",mov:"video.png",flv:"video.png",wmv:"video.png",rmvb:"video.png",mp3:"music.png",oga:"music.png",ogg:"music.png",flac:"music.png",aac:"music.png",ac3:"music.png",wma:"music.png",jpg:"pic.png",jpeg:"pic.png",png:"pic.png",svg:"pic.png",gif:"pic.png",bmp:"pic.png",ico:"pic.png"' 'mp4:"video.png",m4v:"video.png",mkv:"video.png",opus:"video.png",ogv:"video.png",webm:"video.png",mov:"video.png",flv:"video.png",wmv:"video.png",rmvb:"video.png",rm:"video.png",m4a:"music.png",mp3:"music.png",oga:"music.png",ogg:"music.png",flac:"music.png",aac:"music.png",ac3:"music.png",caf:"music.png",wav:"music.png",wma:"music.png",jpg:"pic.png",jpeg:"pic.png",png:"pic.png",svg:"pic.png",gif:"pic.png",bmp:"pic.png",ico:"pic.png"' media/assets/frontend/static/js/
+  _patch_js 'opus:"video/ogg",ogv:"video/ogg",mp4:"video/mp4",mov:"video/mp4",m4v:"video/mp4",mkv:"video/x-matroska",mp3:"audio/mpeg",aac:"audio/aac",oga:"audio/ogg",m3u8:"application/x-mpegURL"' 'opus:"video/ogg",ogv:"video/ogg",mp4:"video/mp4",mov:"video/mp4",m4v:"video/mp4",mkv:"video/x-matroska",m4a:"audio/mp4",mp3:"audio/mpeg",caf:"audio/x-caf",aac:"audio/aac",oga:"audio/ogg",m3u8:"application/x-mpegURL",flac:"audio/flac",jpg:"image/jpeg",jpeg:"image/jpeg",gif:"image/gif",png:"image/png",svg:"image/svg+xml",wav:"audio/wav",webp:"image/webp"' media/assets/frontend/static/js/
 
   patch -Np1 --no-backup-if-mismatch < ../0001-Add-support-for-more-audio-and-video-formats.patch
   # Remove useless files and directories
