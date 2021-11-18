@@ -2,7 +2,7 @@
 # Contributor: krevedko <helllamer-gmail.com>
 
 pkgname=seaweedfs
-pkgver=2.76
+pkgver=2.78
 pkgrel=1
 pkgdesc="SeaweedFS is a simple and highly scalable distributed file system"
 arch=('i686' 'x86_64' 'aarch64' 'armv7h' 'armv6h' 'arm')
@@ -10,7 +10,7 @@ url="https://github.com/chrislusf/seaweedfs"
 license=('APACHE')
 makedepends=('git' 'go')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
-sha256sums=('ca73c4eac55463db95dfbcecb32ab89e93eb1402ac5cf66f1e1c31a0cf9d70b6')
+sha256sums=('3babe46101b9b465b2885efdda079beb788d8534b7adb0cef26c2e8970552110')
 _shortcommit=84d2e1b
 
 prepare() {
@@ -29,7 +29,7 @@ build() {
   export GOPATH="${SRCDEST:-$srcdir}"
 
   cd $pkgname-$pkgver/weed
-  go build -v $GO_FLAGS -ldflags "-X github.com/chrislusf/seaweedfs/weed/util.COMMIT=$_shortcommit -extldflags $LDFLAGS"
+  go build -v $GO_FLAGS -tags 5BytesOffset -ldflags "-X github.com/chrislusf/seaweedfs/weed/util.COMMIT=$_shortcommit -extldflags $LDFLAGS"
 }
 
 #check() {
