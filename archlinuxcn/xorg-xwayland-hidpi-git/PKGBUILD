@@ -19,7 +19,7 @@ makedepends=('meson' 'git'
              'systemd'
              'egl-wayland'
 )
-source=("xserver::git+https://gitlab.freedesktop.org/xorg/xserver.git"
+source=("xserver-hidpi::git+https://gitlab.freedesktop.org/xorg/xserver.git"
        'xwlScaling.diff')
 sha256sums=('SKIP'
             '66135299c9d13e46444f8f32281cdc3f616c3a77f69bf13d798077e643992d2a')
@@ -28,7 +28,7 @@ conflicts=('xorg-xwayland' 'xorg-server-xwayland' 'xorg-server-xwayland-git' 'xo
 replaces=('xorg-server-xwayland-hidpi-git')
 
 pkgver() {
-  cd xserver
+  cd xserver-hidpi
 
   local branch=origin/xwayland-21.1
   local head=$(git rev-parse --short HEAD)
@@ -38,7 +38,7 @@ pkgver() {
 }
 
 prepare() {
-  cd xserver
+  cd xserver-hidpi
   patch --forward --strip=1 --input="${srcdir}/xwlScaling.diff"
 }
 
@@ -50,7 +50,7 @@ build() {
 #  export CXXFLAGS=${CXXFLAGS/-fno-plt}
 #  export LDFLAGS=${LDFLAGS/,-z,now}
 
-  arch-meson xserver build \
+  arch-meson xserver-hidpi build \
     -D ipv6=true \
     -D xvfb=false \
     -D xnest=false \
@@ -81,5 +81,5 @@ package() {
   install -m644 -Dt "${pkgdir}"/usr/lib/pkgconfig build/hw/xwayland/xwayland.pc
 
   # license
-  install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" xserver/COPYING
+  install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" xserver-hidpi/COPYING
 }
