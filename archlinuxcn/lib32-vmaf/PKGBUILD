@@ -3,13 +3,13 @@
 _pkgbasename=vmaf
 pkgname=("lib32-$_pkgbasename" "lib32-lib$_pkgbasename")
 pkgver=1.5.3
-pkgrel=3
+pkgrel=4
 pkgdesc='Perceptual video quality assessment algorithm based on multi-method fusion (32 bit)'
 arch=('x86_64')
 url='https://github.com/Netflix/vmaf/'
 license=('BSD')
 depends=(
-        "$_pkgbasename"
+        "$_pkgbasename>=${pkgver}"
         'lib32-gcc-libs'
     )
 makedepends=(
@@ -56,7 +56,7 @@ package_lib32-libvmaf() {
 
     DESTDIR="$pkgdir" ninja -v -C "build" install
     
-    rm -r "$pkgdir"/usr/{include,share,bin}
+    rm -r "$pkgdir"/usr/{include,bin,share}
 
 #    install -D -m644 "${_pkgbasename}-${pkgver}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
@@ -79,7 +79,7 @@ package_lib32-vmaf() {
         mv "$i" "$i"-32
     done
 
-    rm -r "$pkgdir"/usr/{include,share,lib32}
+    rm -r "$pkgdir"/usr/{include,lib32,share}
 
 #    install -D -m644 "${_pkgbasename}-${pkgver}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
