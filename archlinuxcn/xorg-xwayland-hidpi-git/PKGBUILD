@@ -29,15 +29,12 @@ replaces=('xorg-server-xwayland-hidpi-git')
 
 pkgver() {
   cd xserver
-  git stash > /dev/null
 
   local branch=origin/xwayland-21.1
   local head=$(git rev-parse --short HEAD)
   local tag=$(git describe --abbrev=0 "$branch")
   local revisions=$(git rev-list "${tag}..HEAD" --count)
   printf "%s.r%d.g%s" "$(echo "$tag" | sed 's/^xwayland.//')" "$revisions" "$head"
-
-  git stash apply > /dev/null
 }
 
 prepare() {
