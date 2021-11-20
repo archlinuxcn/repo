@@ -1,0 +1,643 @@
+diff --git a/hw/xwayland/meson.build b/hw/xwayland/meson.build
+index 1dea64bff..7b3d3a4f7 100644
+--- a/hw/xwayland/meson.build
++++ b/hw/xwayland/meson.build
+@@ -4,6 +4,8 @@ srcs = [
+     'xwayland-input.h',
+     'xwayland-cursor.c',
+     'xwayland-cursor.h',
++    'xwayland-ext.c',
++    'xwayland-ext.h',
+     'xwayland-glamor.h',
+     'xwayland-glx.h',
+     'xwayland-pixmap.c',
+diff --git a/hw/xwayland/xwayland-cursor.c b/hw/xwayland/xwayland-cursor.c
+index 16c13fb64..a88a3d311 100644
+--- a/hw/xwayland/xwayland-cursor.c
++++ b/hw/xwayland/xwayland-cursor.c
+@@ -162,6 +162,8 @@ xwl_cursor_attach_pixmap(struct xwl_seat *xwl_seat,
+     }
+ 
+     wl_surface_attach(xwl_cursor->surface, buffer, 0, 0);
++    wl_surface_set_buffer_scale(xwl_cursor->surface,
++                                xwl_seat->xwl_screen->global_output_scale);
+     xwl_surface_damage(xwl_seat->xwl_screen, xwl_cursor->surface, 0, 0,
+                        xwl_seat->x_cursor->bits->width,
+                        xwl_seat->x_cursor->bits->height);
+@@ -193,6 +195,7 @@ xwl_cursor_clear_frame_cb(struct xwl_cursor *xwl_cursor)
+ void
+ xwl_seat_set_cursor(struct xwl_seat *xwl_seat)
+ {
++    struct xwl_screen *xwl_screen = xwl_seat->xwl_screen;
+     struct xwl_cursor *xwl_cursor = &xwl_seat->cursor;
+     PixmapPtr pixmap;
+     CursorPtr cursor;
+@@ -223,8 +226,8 @@ xwl_seat_set_cursor(struct xwl_seat *xwl_seat)
+     wl_pointer_set_cursor(xwl_seat->wl_pointer,
+                           xwl_seat->pointer_enter_serial,
+                           xwl_cursor->surface,
+-                          xwl_seat->x_cursor->bits->xhot,
+-                          xwl_seat->x_cursor->bits->yhot);
++                          xwl_scale_to(xwl_screen, xwl_seat->x_cursor->bits->xhot),
++                          xwl_scale_to(xwl_screen, xwl_seat->x_cursor->bits->yhot));
+ 
+     xwl_cursor_attach_pixmap(xwl_seat, xwl_cursor, pixmap);
+ }
+@@ -233,6 +236,7 @@ void
+ xwl_tablet_tool_set_cursor(struct xwl_tablet_tool *xwl_tablet_tool)
+ {
+     struct xwl_seat *xwl_seat = xwl_tablet_tool->seat;
++    struct xwl_screen *xwl_screen = xwl_seat->xwl_screen;
+     struct xwl_cursor *xwl_cursor = &xwl_tablet_tool->cursor;
+     PixmapPtr pixmap;
+     CursorPtr cursor;
+@@ -261,8 +265,8 @@ xwl_tablet_tool_set_cursor(struct xwl_tablet_tool *xwl_tablet_tool)
+     zwp_tablet_tool_v2_set_cursor(xwl_tablet_tool->tool,
+                                   xwl_tablet_tool->proximity_in_serial,
+                                   xwl_cursor->surface,
+-                                  xwl_seat->x_cursor->bits->xhot,
+-                                  xwl_seat->x_cursor->bits->yhot);
++                                  xwl_scale_to(xwl_screen, xwl_seat->x_cursor->bits->xhot),
++                                  xwl_scale_to(xwl_screen, xwl_seat->x_cursor->bits->yhot));
+ 
+     xwl_cursor_attach_pixmap(xwl_seat, xwl_cursor, pixmap);
+ }
+diff --git a/hw/xwayland/xwayland-ext.c b/hw/xwayland/xwayland-ext.c
+new file mode 100644
+index 000000000..1668dda57
+--- /dev/null
++++ b/hw/xwayland/xwayland-ext.c
+@@ -0,0 +1,134 @@
++/*
++ * Copyright © 2020 Dario Nieuwenhuis
++ *
++ * Permission to use, copy, modify, distribute, and sell this software
++ * and its documentation for any purpose is hereby granted without
++ * fee, provided that the above copyright notice appear in all copies
++ * and that both that copyright notice and this permission notice
++ * appear in supporting documentation, and that the name of the
++ * copyright holders not be used in advertising or publicity
++ * pertaining to distribution of the software without specific,
++ * written prior permission.  The copyright holders make no
++ * representations about the suitability of this software for any
++ * purpose.  It is provided "as is" without express or implied
++ * warranty.
++ *
++ * THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
++ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
++ * FITNESS, IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
++ * SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
++ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
++ * AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
++ * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
++ * SOFTWARE.
++ */
++
++#ifdef HAVE_DIX_CONFIG_H
++#include <dix-config.h>
++#endif
++
++#include "dixstruct.h"
++
++#include <X11/X.h>
++#include "misc.h"
++#include "os.h"
++#include "extinit.h"
++
++#include "xwayland-ext.h"
++#include "xwayland-screen.h"
++
++#ifdef DEBUG
++#define DEBUG_P(x) DebugF(x"\n")
++#else
++#define DEBUG_P(x) /**/
++#endif
++
++static int XwaylandErrorBase;
++
++static int
++ProcXwaylandQueryVersion(ClientPtr client)
++{
++    xXwaylandQueryVersionReply rep = {
++        .type = X_Reply,
++        .sequenceNumber = client->sequence,
++        .length = 0,
++        .majorVersion = XWAYLAND_MAJOR_VERSION,
++        .minorVersion = XWAYLAND_MINOR_VERSION
++    };
++
++    DEBUG_P("XwaylandQueryVersion");
++
++    REQUEST_SIZE_MATCH(xXwaylandQueryVersionReq);
++
++    if (client->swapped) {
++        swaps(&rep.sequenceNumber);
++        swapl(&rep.length);
++        swaps(&rep.majorVersion);
++        swaps(&rep.minorVersion);
++    }
++    WriteToClient(client, sizeof(xXwaylandQueryVersionReply), &rep);
++    return Success;
++}
++
++static int
++ProcXwaylandSetScale(ClientPtr client)
++{
++    DEBUG_P("XwaylandSetScale");
++
++    REQUEST(xXwaylandSetScaleReq);
++    REQUEST_SIZE_MATCH(xXwaylandSetScaleReq);
++
++    if (stuff->screen >= screenInfo.numScreens)
++        return BadValue;
++    ScreenPtr pScreen = screenInfo.screens[stuff->screen];
++
++    struct xwl_screen* xwl_screen = xwl_screen_get(pScreen);
++    if (xwl_screen == NULL)
++        return BadImplementation;
++
++    if(stuff->scale < 1)
++        return BadValue;
++
++    xwl_screen_set_global_scale(xwl_screen, stuff->scale);
++
++    return Success;
++}
++
++static int
++ProcXwaylandDispatch(ClientPtr client)
++{
++    REQUEST(xReq);
++    switch (stuff->data) {
++        case X_XwaylandQueryVersion:
++            return ProcXwaylandQueryVersion(client);
++        case X_XwaylandSetScale:
++            return ProcXwaylandSetScale(client);
++        default:
++            return BadRequest;
++    }
++}
++
++static int _X_COLD
++SProcXwaylandDispatch(ClientPtr client)
++{
++    REQUEST(xReq);
++    switch (stuff->data) {
++        default:
++            return BadRequest;
++    }
++}
++
++void
++xwlExtensionInit(void)
++{
++    ExtensionEntry* extEntry;
++    if ((extEntry = AddExtension(XWAYLANDNAME,
++                                 XwaylandNumberEvents,
++                                 XwaylandNumberErrors,
++                                 ProcXwaylandDispatch,
++                                 SProcXwaylandDispatch,
++                                 NULL, StandardMinorOpcode))) {
++        XwaylandErrorBase = extEntry->errorBase;
++    }
++}
++
+diff --git a/hw/xwayland/xwayland-ext.h b/hw/xwayland/xwayland-ext.h
+new file mode 100644
+index 000000000..be8fb39d9
+--- /dev/null
++++ b/hw/xwayland/xwayland-ext.h
+@@ -0,0 +1,76 @@
++/*
++ * Copyright © 2020 Dario Nieuwenhuis
++ *
++ * Permission to use, copy, modify, distribute, and sell this software
++ * and its documentation for any purpose is hereby granted without
++ * fee, provided that the above copyright notice appear in all copies
++ * and that both that copyright notice and this permission notice
++ * appear in supporting documentation, and that the name of the
++ * copyright holders not be used in advertising or publicity
++ * pertaining to distribution of the software without specific,
++ * written prior permission.  The copyright holders make no
++ * representations about the suitability of this software for any
++ * purpose.  It is provided "as is" without express or implied
++ * warranty.
++ *
++ * THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
++ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
++ * FITNESS, IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
++ * SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
++ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
++ * AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
++ * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
++ * SOFTWARE.
++ */
++
++#ifndef XWAYLAND_EXT_H
++#define XWAYLAND_EXT_H
++
++#include <xwayland-config.h>
++
++#define XWAYLANDNAME "XWAYLAND"
++#define XwaylandNumberEvents 0
++#define XwaylandNumberErrors 0
++
++#define XWAYLAND_MAJOR_VERSION	1	/* current version numbers */
++#define XWAYLAND_MINOR_VERSION	0
++
++#define X_XwaylandQueryVersion	0
++#define X_XwaylandSetScale  	1
++
++
++typedef struct _XwaylandQueryVersion {
++    CARD8	reqType;		    /* always XwaylandReqCode */
++    CARD8	xwaylandReqType;	/* always X_XwaylandQueryVersion */
++    CARD16	length;
++} xXwaylandQueryVersionReq;
++#define sz_xXwaylandQueryVersionReq	4
++
++typedef struct {
++    BYTE	type;			    /* X_Reply */
++    BOOL	pad1;
++    CARD16	sequenceNumber;
++    CARD32	length;
++    CARD16	majorVersion;		/* major version of Xwayland */
++    CARD16	minorVersion;		/* minor version of Xwayland */
++    CARD32	pad2;
++    CARD32	pad3;
++    CARD32	pad4;
++    CARD32	pad5;
++    CARD32	pad6;
++} xXwaylandQueryVersionReply;
++#define sz_xXwaylandQueryVersionReply	32
++
++
++typedef struct {
++    CARD8	reqType;		    /* always XwaylandReqCode */
++    CARD8	xwaylandReqType;	/* always X_XwaylandSetScale */
++    CARD16	length;
++    CARD16	screen;
++    CARD16	scale;
++} xXwaylandSetScaleReq;
++#define sz_xXwaylandSetScaleReq	8
++
++void xwlExtensionInit(void);
++
++#endif /* XWAYLAND_EXT_H */
+diff --git a/hw/xwayland/xwayland-input.c b/hw/xwayland/xwayland-input.c
+index f5c24048f..946272fd3 100644
+--- a/hw/xwayland/xwayland-input.c
++++ b/hw/xwayland/xwayland-input.c
+@@ -412,8 +412,8 @@ pointer_handle_enter(void *data, struct wl_pointer *pointer,
+     DeviceIntPtr dev = get_pointer_device(xwl_seat);
+     DeviceIntPtr master;
+     int i;
+-    int sx = wl_fixed_to_int(sx_w);
+-    int sy = wl_fixed_to_int(sy_w);
++    int sx = wl_fixed_to_int(sx_w) * xwl_seat->xwl_screen->global_output_scale;
++    int sy = wl_fixed_to_int(sy_w) * xwl_seat->xwl_screen->global_output_scale;
+     int dx, dy;
+     ScreenPtr pScreen = xwl_seat->xwl_screen->screen;
+     ValuatorMask mask;
+@@ -589,13 +589,14 @@ pointer_handle_motion(void *data, struct wl_pointer *pointer,
+                       uint32_t time, wl_fixed_t sx_w, wl_fixed_t sy_w)
+ {
+     struct xwl_seat *xwl_seat = data;
++    int32_t scale = xwl_seat->xwl_screen->global_output_scale;
+ 
+     if (!xwl_seat->focus_window)
+         return;
+ 
+     xwl_seat->pending_pointer_event.has_absolute = TRUE;
+-    xwl_seat->pending_pointer_event.x = sx_w;
+-    xwl_seat->pending_pointer_event.y = sy_w;
++    xwl_seat->pending_pointer_event.x = sx_w * scale;
++    xwl_seat->pending_pointer_event.y = sy_w * scale;
+ 
+     if (wl_proxy_get_version((struct wl_proxy *) xwl_seat->wl_pointer) < 5)
+         dispatch_pointer_motion_event(xwl_seat);
+@@ -669,7 +670,8 @@ pointer_handle_axis(void *data, struct wl_pointer *pointer,
+         xorg_list_del(&pending->l);
+         free(pending);
+     } else {
+-        valuator_mask_set_double(&mask, index, wl_fixed_to_double(value) / divisor);
++        double scaled_value = wl_fixed_to_double(value);
++        valuator_mask_set_double(&mask, index, scaled_value / divisor);
+     }
+ 
+     QueuePointerEvents(get_pointer_device(xwl_seat),
+@@ -737,12 +739,13 @@ relative_pointer_handle_relative_motion(void *data,
+                                         wl_fixed_t dy_unaccelf)
+ {
+     struct xwl_seat *xwl_seat = data;
++    int32_t scale = xwl_seat->xwl_screen->global_output_scale;
+ 
+     xwl_seat->pending_pointer_event.has_relative = TRUE;
+-    xwl_seat->pending_pointer_event.dx = wl_fixed_to_double(dxf);
+-    xwl_seat->pending_pointer_event.dy = wl_fixed_to_double(dyf);
+-    xwl_seat->pending_pointer_event.dx_unaccel = wl_fixed_to_double(dx_unaccelf);
+-    xwl_seat->pending_pointer_event.dy_unaccel = wl_fixed_to_double(dy_unaccelf);
++    xwl_seat->pending_pointer_event.dx = wl_fixed_to_double(dxf) * scale;
++    xwl_seat->pending_pointer_event.dy = wl_fixed_to_double(dyf) * scale;
++    xwl_seat->pending_pointer_event.dx_unaccel = wl_fixed_to_double(dx_unaccelf) * scale;
++    xwl_seat->pending_pointer_event.dy_unaccel = wl_fixed_to_double(dy_unaccelf) * scale;
+ 
+     if (!xwl_seat->focus_window)
+         return;
+@@ -1054,8 +1057,8 @@ touch_handle_down(void *data, struct wl_touch *wl_touch,
+ 
+     xwl_touch->window = wl_surface_get_user_data(surface);
+     xwl_touch->id = id;
+-    xwl_touch->x = wl_fixed_to_int(sx_w);
+-    xwl_touch->y = wl_fixed_to_int(sy_w);
++    xwl_touch->x = wl_fixed_to_int(sx_w) * xwl_seat->xwl_screen->global_output_scale;;
++    xwl_touch->y = wl_fixed_to_int(sy_w) * xwl_seat->xwl_screen->global_output_scale;;
+     xorg_list_add(&xwl_touch->link_touch, &xwl_seat->touches);
+ 
+     xwl_touch_send_event(xwl_touch, xwl_seat, XI_TouchBegin);
+@@ -1091,8 +1094,8 @@ touch_handle_motion(void *data, struct wl_touch *wl_touch,
+     if (!xwl_touch)
+         return;
+ 
+-    xwl_touch->x = wl_fixed_to_int(sx_w);
+-    xwl_touch->y = wl_fixed_to_int(sy_w);
++    xwl_touch->x = wl_fixed_to_int(sx_w) * xwl_seat->xwl_screen->global_output_scale;;
++    xwl_touch->y = wl_fixed_to_int(sy_w) * xwl_seat->xwl_screen->global_output_scale;;
+     xwl_touch_send_event(xwl_touch, xwl_seat, XI_TouchUpdate);
+ }
+ 
+@@ -1719,8 +1722,8 @@ tablet_tool_motion(void *data, struct zwp_tablet_tool_v2 *tool,
+     struct xwl_tablet_tool *xwl_tablet_tool = data;
+     struct xwl_seat *xwl_seat = xwl_tablet_tool->seat;
+     int32_t dx, dy;
+-    double sx = wl_fixed_to_double(x);
+-    double sy = wl_fixed_to_double(y);
++    double sx = wl_fixed_to_double(x) * xwl_seat->xwl_screen->global_output_scale;
++    double sy = wl_fixed_to_double(y) * xwl_seat->xwl_screen->global_output_scale;
+ 
+     if (!xwl_seat->tablet_focus_window)
+         return;
+@@ -2707,6 +2710,7 @@ xwl_pointer_warp_emulator_set_fake_pos(struct xwl_pointer_warp_emulator *warp_em
+                                        int x,
+                                        int y)
+ {
++    struct xwl_screen *xwl_screen;
+     struct zwp_locked_pointer_v1 *locked_pointer =
+         warp_emulator->locked_pointer;
+     WindowPtr window;
+@@ -2718,6 +2722,7 @@ xwl_pointer_warp_emulator_set_fake_pos(struct xwl_pointer_warp_emulator *warp_em
+     if (!warp_emulator->xwl_seat->focus_window)
+         return;
+ 
++    xwl_screen = warp_emulator->xwl_seat->xwl_screen;
+     window = warp_emulator->xwl_seat->focus_window->window;
+     if (x >= window->drawable.x ||
+         y >= window->drawable.y ||
+@@ -2726,8 +2731,8 @@ xwl_pointer_warp_emulator_set_fake_pos(struct xwl_pointer_warp_emulator *warp_em
+         sx = x - window->drawable.x;
+         sy = y - window->drawable.y;
+         zwp_locked_pointer_v1_set_cursor_position_hint(locked_pointer,
+-                                                       wl_fixed_from_int(sx),
+-                                                       wl_fixed_from_int(sy));
++                                                       wl_fixed_from_int(xwl_scale_to(xwl_screen, sx)),
++                                                       wl_fixed_from_int(xwl_scale_to(xwl_screen, sy)));
+         wl_surface_commit(warp_emulator->xwl_seat->focus_window->surface);
+     }
+ }
+diff --git a/hw/xwayland/xwayland-output.c b/hw/xwayland/xwayland-output.c
+index 1f22c4cf6..a5a502aa0 100644
+--- a/hw/xwayland/xwayland-output.c
++++ b/hw/xwayland/xwayland-output.c
+@@ -191,6 +191,9 @@ update_screen_size(struct xwl_output *xwl_output, int width, int height)
+ {
+     struct xwl_screen *xwl_screen = xwl_output->xwl_screen;
+ 
++    width = width * xwl_screen->global_output_scale;
++    height = height * xwl_screen->global_output_scale;
++
+     if (xwl_screen->root_clip_mode == ROOT_CLIP_FULL)
+         SetRootClip(xwl_screen->screen, ROOT_CLIP_NONE);
+ 
+@@ -591,14 +594,15 @@ xwl_output_set_emulated_mode(struct xwl_output *xwl_output, ClientPtr client,
+                                              new_emulated_height);
+ }
+ 
+-static void
+-apply_output_change(struct xwl_output *xwl_output)
++void
++xwl_output_apply_changes(struct xwl_output *xwl_output)
+ {
+     struct xwl_screen *xwl_screen = xwl_output->xwl_screen;
+     struct xwl_output *it;
+     int mode_width, mode_height, count;
+     int width = 0, height = 0, has_this_output = 0;
+     RRModePtr *randr_modes;
++    int32_t scale = xwl_screen->global_output_scale;
+ 
+     /* Clear out the "done" received flags */
+     xwl_output->wl_output_done = FALSE;
+@@ -617,10 +621,10 @@ apply_output_change(struct xwl_output *xwl_output)
+     }
+ 
+     /* Build a fresh modes array using the current refresh rate */
+-    randr_modes = output_get_rr_modes(xwl_output, mode_width, mode_height, &count);
++    randr_modes = output_get_rr_modes(xwl_output, mode_width * scale, mode_height * scale, &count);
+     RROutputSetModes(xwl_output->randr_output, randr_modes, count, 1);
+     RRCrtcNotify(xwl_output->randr_crtc, randr_modes[0],
+-                 xwl_output->x, xwl_output->y,
++                 xwl_output->x * scale, xwl_output->y * scale,
+                  xwl_output->rotation, NULL, 1, &xwl_output->randr_output);
+     /* RROutputSetModes takes ownership of the passed in modes, so we only
+      * have to free the pointer array.
+@@ -661,7 +665,7 @@ output_handle_done(void *data, struct wl_output *wl_output)
+      */
+     if (xwl_output->xdg_output_done || !xwl_output->xdg_output ||
+         zxdg_output_v1_get_version(xwl_output->xdg_output) >= 3)
+-        apply_output_change(xwl_output);
++        xwl_output_apply_changes(xwl_output);
+ }
+ 
+ static void
+@@ -704,7 +708,7 @@ xdg_output_handle_done(void *data, struct zxdg_output_v1 *xdg_output)
+     xwl_output->xdg_output_done = TRUE;
+     if (xwl_output->wl_output_done &&
+         zxdg_output_v1_get_version(xdg_output) < 3)
+-        apply_output_change(xwl_output);
++        xwl_output_apply_changes(xwl_output);
+ }
+ 
+ static void
+@@ -772,6 +776,8 @@ xwl_output_create(struct xwl_screen *xwl_screen, uint32_t id)
+     RROutputSetConnection(xwl_output->randr_output, RR_Connected);
+     RRTellChanged(xwl_screen->screen);
+ 
++    xwl_output->scale = 1;
++
+     /* We want the output to be in the list as soon as created so we can
+      * use it when binding to the xdg-output protocol...
+      */
+diff --git a/hw/xwayland/xwayland-output.h b/hw/xwayland/xwayland-output.h
+index 02b983108..ec089757f 100644
+--- a/hw/xwayland/xwayland-output.h
++++ b/hw/xwayland/xwayland-output.h
+@@ -43,7 +43,7 @@ struct xwl_output {
+     struct xwl_screen *xwl_screen;
+     RROutputPtr randr_output;
+     RRCrtcPtr randr_crtc;
+-    int32_t x, y, width, height, refresh;
++    int32_t x, y, width, height, scale, refresh;
+     Rotation rotation;
+     Bool wl_output_done;
+     Bool xdg_output_done;
+@@ -77,6 +77,8 @@ void xwl_output_set_emulated_mode(struct xwl_output *xwl_output,
+ void xwl_output_set_window_randr_emu_props(struct xwl_screen *xwl_screen,
+                                            WindowPtr window);
+ 
++void xwl_output_apply_changes(struct xwl_output *xwl_output);
++
+ void xwl_screen_init_xdg_output(struct xwl_screen *xwl_screen);
+ 
+ #endif /* XWAYLAND_OUTPUT_H */
+diff --git a/hw/xwayland/xwayland-present.c b/hw/xwayland/xwayland-present.c
+index 69c02dce4..6a0670892 100644
+--- a/hw/xwayland/xwayland-present.c
++++ b/hw/xwayland/xwayland-present.c
+@@ -680,6 +680,7 @@ xwl_present_flip(WindowPtr present_window,
+ 
+     /* We can flip directly to the main surface (full screen window without clips) */
+     wl_surface_attach(xwl_window->surface, buffer, 0, 0);
++    wl_surface_set_buffer_scale(xwl_window->surface, xwl_window->xwl_screen->global_output_scale);
+ 
+     if (!xwl_window->frame_callback)
+         xwl_window_create_frame_callback(xwl_window);
+diff --git a/hw/xwayland/xwayland-screen.c b/hw/xwayland/xwayland-screen.c
+index b39a3d2fd..78b5bef59 100644
+--- a/hw/xwayland/xwayland-screen.c
++++ b/hw/xwayland/xwayland-screen.c
+@@ -110,6 +110,12 @@ xwl_screen_has_resolution_change_emulation(struct xwl_screen *xwl_screen)
+     return xwl_screen->rootless && xwl_screen_has_viewport_support(xwl_screen);
+ }
+ 
++int
++xwl_scale_to(struct xwl_screen *xwl_screen, int value)
++{
++    return value / (double)xwl_screen->global_output_scale + 0.5;
++}
++
+ /* Return the output @ 0x0, falling back to the first output in the list */
+ struct xwl_output *
+ xwl_screen_get_first_output(struct xwl_screen *xwl_screen)
+@@ -521,8 +527,14 @@ void xwl_surface_damage(struct xwl_screen *xwl_screen,
+ {
+     if (wl_surface_get_version(surface) >= WL_SURFACE_DAMAGE_BUFFER_SINCE_VERSION)
+         wl_surface_damage_buffer(surface, x, y, width, height);
+-    else
++    else {
++        x = xwl_scale_to(xwl_screen, x);
++        y = xwl_scale_to(xwl_screen, y);
++        width = xwl_scale_to(xwl_screen, width);
++        height = xwl_scale_to(xwl_screen, height);
++
+         wl_surface_damage(surface, x, y, width, height);
++    }
+ }
+ 
+ void
+@@ -538,6 +550,18 @@ xwl_screen_roundtrip(struct xwl_screen *xwl_screen)
+         xwl_give_up("could not connect to wayland server\n");
+ }
+ 
++void
++xwl_screen_set_global_scale( struct xwl_screen *xwl_screen, int32_t scale)
++{
++    struct xwl_output *it;
++    xwl_screen->global_output_scale = scale;
++
++    /* change randr resolutions and positions */
++    xorg_list_for_each_entry(it, &xwl_screen->output_list, link) {
++        xwl_output_apply_changes(it);
++    }
++}
++
+ Bool
+ xwl_screen_init(ScreenPtr pScreen, int argc, char **argv)
+ {
+@@ -573,6 +597,7 @@ xwl_screen_init(ScreenPtr pScreen, int argc, char **argv)
+ #ifdef XWL_HAS_GLAMOR
+     xwl_screen->glamor = 1;
+ #endif
++    xwl_screen->global_output_scale = 1;
+ 
+     for (i = 1; i < argc; i++) {
+         if (strcmp(argv[i], "-rootless") == 0) {
+diff --git a/hw/xwayland/xwayland-screen.h b/hw/xwayland/xwayland-screen.h
+index b965dddd7..6cfc441e3 100644
+--- a/hw/xwayland/xwayland-screen.h
++++ b/hw/xwayland/xwayland-screen.h
+@@ -72,6 +72,8 @@ struct xwl_screen {
+     struct xorg_list damage_window_list;
+     struct xorg_list window_list;
+ 
++    int32_t global_output_scale;
++
+     int wayland_fd;
+     struct wl_display *display;
+     struct wl_registry *registry;
+@@ -134,5 +136,7 @@ void xwl_screen_roundtrip (struct xwl_screen *xwl_screen);
+ void xwl_surface_damage(struct xwl_screen *xwl_screen,
+                         struct wl_surface *surface,
+                         int32_t x, int32_t y, int32_t width, int32_t height);
++int xwl_scale_to(struct xwl_screen *xwl_screen, int value);
++void xwl_screen_set_global_scale( struct xwl_screen *xwl_screen, int32_t scale);
+ 
+ #endif /* XWAYLAND_SCREEN_H */
+diff --git a/hw/xwayland/xwayland-window.c b/hw/xwayland/xwayland-window.c
+index 00f161eda..ed3903853 100644
+--- a/hw/xwayland/xwayland-window.c
++++ b/hw/xwayland/xwayland-window.c
+@@ -470,7 +470,8 @@ ensure_surface_for_window(WindowPtr window)
+         }
+ 
+         wl_region_add(region, 0, 0,
+-                      window->drawable.width, window->drawable.height);
++                      xwl_scale_to(xwl_screen, window->drawable.width),
++                      xwl_scale_to(xwl_screen, window->drawable.height));
+         wl_surface_set_opaque_region(xwl_window->surface, region);
+         wl_region_destroy(region);
+     }
+@@ -820,6 +821,7 @@ xwl_window_post_damage(struct xwl_window *xwl_window)
+ #endif
+ 
+     wl_surface_attach(xwl_window->surface, buffer, 0, 0);
++    wl_surface_set_buffer_scale(xwl_window->surface, xwl_screen->global_output_scale);
+ 
+     /* Arbitrary limit to try to avoid flooding the Wayland
+      * connection. If we flood it too much anyway, this could
+diff --git a/hw/xwayland/xwayland.c b/hw/xwayland/xwayland.c
+index 21587dbb6..7a0251504 100644
+--- a/hw/xwayland/xwayland.c
++++ b/hw/xwayland/xwayland.c
+@@ -41,12 +41,15 @@
+ 
+ #include "xwayland-screen.h"
+ #include "xwayland-vidmode.h"
++#include "xwayland-ext.h"
+ 
+ #ifdef XF86VIDMODE
+ #include <X11/extensions/xf86vmproto.h>
+ extern _X_EXPORT Bool noXFree86VidModeExtension;
+ #endif
+ 
++_X_EXPORT Bool noXwaylandExtension;
++
+ void
+ ddxGiveUp(enum ExitCode error)
+ {
+@@ -246,6 +249,7 @@ xwl_log_handler(const char *format, va_list args)
+ static const ExtensionModule xwayland_extensions[] = {
+ #ifdef XF86VIDMODE
+     { xwlVidModeExtensionInit, XF86VIDMODENAME, &noXFree86VidModeExtension },
++    { xwlExtensionInit, XWAYLANDNAME, &noXwaylandExtension },
+ #endif
+ };
+ 

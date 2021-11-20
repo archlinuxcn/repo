@@ -1,19 +1,16 @@
+build_prefix: extra-x86_64
+
 maintainers:
   - github: PeterCxy
 
-build_prefix: extra-x86_64
-
 pre_build: vcs_update
 
-repo_depeneds:
+repo_depends:
   - xorgproto-git
-  - xorg-xwayland-hidpi-git
 
 update_on:
   - source: gitlab
-    gitlab: wlroots/wlroots
+    gitlab: xorg/xserver
     host: gitlab.freedesktop.org
 #  - alias: alpm-lilac
 #    alpm: xorgproto-git
-#  - alias: alpm-lilac
-#    alpm: xorg-xwayland-hidpi-git

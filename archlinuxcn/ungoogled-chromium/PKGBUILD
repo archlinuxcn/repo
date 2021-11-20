@@ -9,7 +9,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=95.0.4638.69
+pkgver=96.0.4664.45
 pkgrel=1
 _launcher_ver=8
 _gcc_patchset=4
@@ -29,28 +29,16 @@ optdepends=('pipewire: WebRTC desktop sharing under Wayland'
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
         https://github.com/stha09/chromium-patches/releases/download/chromium-${pkgver%%.*}-patchset-$_gcc_patchset/chromium-${pkgver%%.*}-patchset-$_gcc_patchset.tar.xz
-        maldoca-depend-on-zlib-instead-of-headers-only.patch
-        ozone-x11-fix-VA-API.patch
-        chromium-95-harfbuzz-3.patch
-        replace-blacklist-with-ignorelist.patch
-        add-a-TODO-about-a-missing-pnacl-flag.patch
-        use-ffile-compilation-dir.patch
-        pipewire-do-not-typecheck-the-portal-session_handle.patch
+        unbundle-fix-visibility-of-build-config-freetype.patch
         sql-make-VirtualCursor-standard-layout-type.patch
         chromium-93-ffmpeg-4.4.patch
         chromium-94-ffmpeg-roll.patch
         unexpire-accelerated-video-decode-flag.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('38a37d737c6c9a7198402ca614746b2dbb7abbb793bb2cb02dc796b62a22efe7'
+sha256sums=('488c6ad983ebf7781cb4d704f70496e8aa2165611b46656d7aa62f269c760407'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
-            'bc6373f2470a9e6d947a4deaee0612f730112f69552b933c54bb6e60b82dd6f1'
-            '074b32078b9e53fd9b33709ce5785c120eb0346b015a93921897caed4f95f7b6'
-            '3af6dfe5c4e6ed1be52a292c30bc0c447cc8498bb108f7973adb438239961474'
-            'd9002f1e33390c3e770637773c81be6731584b18f68f086e955bcc3f66f4510d'
-            'd3344ba39b8c6ed202334ba7f441c70d81ddf8cdb15af1aa8c16e9a3a75fbb35'
-            'd53da216538f2e741a6e048ed103964a91a98e9a3c10c27fdfa34d4692fdc455'
-            '921010cd8fab5f30be76c68b68c9b39fac9e21f4c4133bb709879592bbdf606e'
-            '1889d890ff512a8b82a0f88972e78c78131177d8034750ff53577dfad99b3e3e'
+            '090af7eab39aade15a1786273f2497d6b4abfaef24279fbf97ce0dd1c38c69aa'
+            'd0b17162211dd49e3a58c16d1697e7d8c322dcfd3b7890f0c2f920b711f52293'
             'dd317f85e5abfdcfc89c6f23f4c8edbcdebdd5e083dcec770e5da49ee647d150'
             '1a9e074f417f8ffd78bcd6874d8e2e74a239905bf662f76a7755fa40dc476b57'
             '56acb6e743d2ab1ed9f3eb01700ade02521769978d03ac43226dec94659b3ace'
@@ -63,7 +51,7 @@ source=(${source[@]}
         chromium-drirc-disable-10bpc-color-configs.conf
         wayland-egl.patch)
 sha256sums=(${sha256sums[@]}
-            '35debe7f407a4749d4454fc78f52c18955f1d8400750fdc20b179f528106c658'
+            '8f74125ac735b727c557b2473f650cf540810dbe19944331fefc8020d98ad5dd'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '34d08ea93cb4762cb33c7cffe931358008af32265fc720f2762f0179c3973574')
 
@@ -125,25 +113,16 @@ prepare() {
   patch -Np0 -i ../unexpire-accelerated-video-decode-flag.patch
 
   # Upstream fixes
-  patch -Np1 -i ../maldoca-depend-on-zlib-instead-of-headers-only.patch
-  patch -Np1 -i ../ozone-x11-fix-VA-API.patch
-  patch -Np1 -i ../chromium-95-harfbuzz-3.patch
-
-  # Revert transition to -fsanitize-ignorelist (needs newer clang)
-  patch -Rp1 -i ../replace-blacklist-with-ignorelist.patch
-
-  # Revert addition of -ffile-compilation-dir= (needs newer clang)
-  patch -Rp1 -i ../add-a-TODO-about-a-missing-pnacl-flag.patch
-  patch -Rp1 -i ../use-ffile-compilation-dir.patch
-
-  # Fix desktop sharing via Pipewire with xdg-desktop-portal 1.10
-  patch -Np1 -d third_party/webrtc <../pipewire-do-not-typecheck-the-portal-session_handle.patch
+  patch -Np1 -i ../unbundle-fix-visibility-of-build-config-freetype.patch
 
   # https://chromium-review.googlesource.com/c/chromium/src/+/2862724
   patch -Np1 -i ../sql-make-VirtualCursor-standard-layout-type.patch
 
   # Fixes for building with libstdc++ instead of libc++
-  patch -Np1 -i ../patches/chromium-95-quiche-include.patch
+  patch -Np1 -i ../patches/chromium-96-CommandLine-include.patch
+  patch -Np1 -i ../patches/chromium-96-RestrictedCookieManager-tuple.patch
+  patch -Np1 -i ../patches/chromium-96-DrmRenderNodePathFinder-include.patch
+  patch -Np1 -i ../patches/chromium-96-CouponDB-include.patch
 
   # Wayland/EGL regression (crbug #1071528 #1071550)
   patch -Np1 -i ../wayland-egl.patch
@@ -271,6 +250,8 @@ package() {
   local toplevel_files=(
     chrome_100_percent.pak
     chrome_200_percent.pak
+    chrome_crashpad_handler
+    chromedriver
     resources.pak
     v8_context_snapshot.bin
 
@@ -278,8 +259,9 @@ package() {
     libEGL.so
     libGLESv2.so
 
-    chromedriver
-    chrome_crashpad_handler
+    # SwiftShader ICD
+    libvk_swiftshader.so
+    vk_swiftshader_icd.json
   )
 
   if [[ -z ${_system_libs[icu]+set} ]]; then

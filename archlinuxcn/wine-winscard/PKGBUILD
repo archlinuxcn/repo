@@ -5,7 +5,7 @@
 
 pkgname=wine
 pkgver=6.21
-pkgrel=2
+pkgrel=3
 
 _pkgbasever=${pkgver/rc/-rc}
 
@@ -118,6 +118,9 @@ prepare() {
   export LDFLAGS="${LDFLAGS/,-z,now/}"
 
   sed 's|OpenCL/opencl.h|CL/opencl.h|g' -i $pkgname/configure*
+
+  # Fix openldap 2.5+ detection
+  sed 's/-lldap_r/-lldap/' -i $pkgname/configure
 
   # Get rid of old build dirs
   rm -rf $pkgname-{32,64}-build
