@@ -9,7 +9,12 @@ pre_build_script: aur_pre_build(maintainers=['z3ntu'])
 
 post_build: aur_post_build
 
+repo_depends:
+  - coeurl-git
+
 update_on:
   - source: aur
     aur: mtxclient
   - alias: boost
+  - source: manual
+    manual: 1
