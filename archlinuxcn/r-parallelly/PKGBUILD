@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=parallelly
-_pkgver=1.28.1
+_pkgver=1.29.0
 pkgname=r-${_pkgname,,}
-pkgver=1.28.1
+pkgver=1.29.0
 pkgrel=1
 pkgdesc="Enhancing the 'parallel' Package"
 arch=('any')
@@ -13,7 +13,7 @@ depends=(
   r
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('f4ae883b18409adb83c561ed69427e740e1b50bf85ef57f48c3f2edf837cc663')
+sha256sums=('87f9eb3b1b549b94a9623c68a28bb9ce6554cf9e69a7e555abdb622c45a60429')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
