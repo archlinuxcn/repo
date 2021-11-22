@@ -4,15 +4,15 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine
-pkgver=6.21
-pkgrel=3
+pkgver=6.22
+pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 
 source=(https://dl.winehq.org/wine/source/6.x/$pkgname-$_pkgbasever.tar.xz{,.sign}
         30-win32-aliases.conf
         wine-binfmt.conf)
-sha512sums=('2c6d58c8c5c37497b2b3935f71afd636c274d1d4ad3f9ca2fd9982a9ed5910888cc20841bd9175446aab2fef7813d7700458edbaad6028ad34e7444a887a9220'
+sha512sums=('5326d500a2c5884e3ff004557a0360f8ff5c29ae42fdc256a13012ab746371dd403c87715efa00e43bf181fbc6d0647372e3e40944e5673b069f6e4f4cc700b5'
             'SKIP'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
