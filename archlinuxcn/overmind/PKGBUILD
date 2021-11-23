@@ -1,7 +1,9 @@
-# Maintainer: Adrien Smith <adrien at bouldersmiths dot com>
+#!/hint/bash -e
+# Maintainer: Adrien Smith <adrien@panissupraomnia.dev>
+
 pkgname=overmind
 pkgver=2.2.2
-pkgrel=2
+pkgrel=3
 pkgdesc="Process manager for Procfile-based applications and tmux"
 arch=("x86_64")
 url="https://github.com/DarthSim/$pkgname"
@@ -15,17 +17,18 @@ b2sums=('0caafb16472bb0c3ea369347156cda929bb8e16ba19b758c61ed0c87ad946b93528f506
 
 build() {
   cd "$pkgname-$pkgver"
-  go build \
-    -trimpath \
-    -buildmode=pie \
-    -mod=readonly \
-    -modcacherw \
-    -ldflags "-linkmode external -extldflags \"${LDFLAGS}\"" \
-    -o $pkgname .
+
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+  go build -o $pkgname .
 }
 
 package() {
   cd "$pkgname-$pkgver"
+
   install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
