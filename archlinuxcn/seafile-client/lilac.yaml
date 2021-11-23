@@ -9,7 +9,12 @@ pre_build: aur_pre_build
 
 post_build: aur_post_build
 
+repo_depends:
+  - seafile
+
 update_on:
   - source: aur
     aur: seafile-client
   - alias: python
+  - source: manual
+    manual: 1
