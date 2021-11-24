@@ -1,7 +1,7 @@
 # Maintainer: w0rty <mawo97 at gmail.com>
 
 pkgname=wgcf
-pkgver=2.2.9
+pkgver=2.2.10
 pkgrel=2
 pkgdesc='Generate WireGuard profile from Cloudflare Warp account'
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('MIT')
 makedepends=('go')
 depends=('glibc')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('2620d865913bfe272f97ecf0bdee9e84c72223b284ebba9a88f3ef0c4ce0f0e3')
+sha256sums=('2b7d2b2aedc7084e2d7d4efa104e6e0eb2ab3eb991f693ec9f38cdfb9c95e641')
 
 prepare(){
   cd "$pkgname-$pkgver"
