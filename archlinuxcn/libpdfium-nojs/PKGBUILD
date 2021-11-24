@@ -1,8 +1,8 @@
 # Maintainer: Felix Kauselmann <licorn@gmail.com>
 
 pkgname=libpdfium-nojs
-pkgver=4638.r2.839d18189f
-pkgrel=2
+pkgver=4664.r1.4888f07873
+pkgrel=1
 pkgdesc="Open-source PDF rendering engine."
 arch=('x86_64')
 url="https://pdfium.googlesource.com/pdfium/"
@@ -14,10 +14,12 @@ makedepends=('git' 'python2' 'gn' 'ninja')
 
 source=("git+https://pdfium.googlesource.com/pdfium"
     "git+https://chromium.googlesource.com/chromium/src/build.git"
+    "git+https://chromium.googlesource.com/chromium/src/third_party/abseil-cpp"
     "libpdfium.pc"
     )
 
 md5sums=('SKIP'
+    'SKIP'
     'SKIP'
     'feb270967925a0844b1b9a9e15288eb3'
     )
@@ -42,6 +44,7 @@ _prepare() {
   cd "$srcdir/pdfium"
 
   ln -sf $srcdir/build build
+  ln -sf $srcdir/abseil-cpp third_party/abseil-cpp
 
   # Pdfium is developed alongside Chromium and does not provide releases
   # Upstream recommends using Chromium's dev channels instead
@@ -53,16 +56,21 @@ _prepare() {
   # git checkout "chromium/$(curl https://omahaproxy.appspot.com/linux?channel=beta | cut -d'.' -f 3)"
   # git checkout "chromium/$(curl https://omahaproxy.appspot.com/linux?channel=dev | cut -d'.' -f 3)"
 
-  # Fix missing string headers for GCC + libstdcc compilation, but only for affected version
-  if [ `git rev-parse --abbrev-ref HEAD` == 'chromium/4577' ]
-  then
-      git cherry-pick -n 7a6289c
-  fi
-
   # Extract build repo revision needed from DEPS file and do a checkout
   cd "$srcdir/pdfium/build"
   git checkout $(awk '/build_revision/ {print substr($2,2,40)}' $srcdir/pdfium/DEPS) -q
   
+  # Fix visibilty for system Freetype
+  git cherry-pick -n bfd6ff0
+  
+  # Extract abseil-cpp repo revision needed from DEPS file and do a checkout
+  cd "$srcdir/pdfium/third_party/abseil-cpp"
+  git checkout $(awk '/abseil_revision/ {print substr($2,2,40)}' $srcdir/pdfium/DEPS) -q
+
+  # Patch abseil build to be static
+  sed -i 's/component(/static_library(/' BUILD.gn
+  sed -i 's/is_component_build(/false/' BUILD.gn
+
   # Use system provided icu library (unbundling)
   mkdir -p "$srcdir/pdfium/third_party/icu"
   ln -sf "$srcdir/build/linux/unbundle/icu.gn" "$srcdir/pdfium/third_party/icu/BUILD.gn"
@@ -76,6 +84,10 @@ _prepare() {
   
   # Create fake gclient_args.gni file to satisfy include list for build/config/compiler/compiler.gni
   touch "$srcdir/build/config/gclient_args.gni"
+  
+  # Fix visibilty for gmock
+  cd "$srcdir/pdfium/third_party/googletest"
+  sed -i 's/\":\*\"/&, "\/\/testing\/gmock\:gmock", /' BUILD.gn
   
 } 
 
@@ -98,7 +110,7 @@ build() {
       'use_system_lcms2=true'
       'use_system_libpng=true'
       'use_custom_libcxx=false'
-      'pdf_is_standalone = true'
+      'pdf_is_standalone = false'
       'use_system_libopenjpeg2 = true'
       'is_component_build = true'
       'use_gold = false' 
