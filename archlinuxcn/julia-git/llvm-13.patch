@@ -1,0 +1,1435 @@
+diff --git a/Makefile b/Makefile
+index 3452310148..a6a1587bcd 100644
+--- a/Makefile
++++ b/Makefile
+@@ -189,7 +189,7 @@ else
+ JL_PRIVATE_LIBS-$(USE_SYSTEM_ZLIB) += libz
+ endif
+ ifeq ($(USE_LLVM_SHLIB),1)
+-JL_PRIVATE_LIBS-$(USE_SYSTEM_LLVM) += libLLVM libLLVM-12jl
++JL_PRIVATE_LIBS-$(USE_SYSTEM_LLVM) += libLLVM libLLVM-13jl
+ endif
+ JL_PRIVATE_LIBS-$(USE_SYSTEM_LIBUNWIND) += libunwind
+ 
+diff --git a/deps/Versions.make b/deps/Versions.make
+index 3fb5f2f9a2..a704f7a00c 100644
+--- a/deps/Versions.make
++++ b/deps/Versions.make
+@@ -15,8 +15,7 @@ CSL_JLL_NAME := CompilerSupportLibraries
+ 
+ # Clang (paired with LLVM, only here as a JLL download)
+ CLANG_JLL_NAME := Clang
+-# equivalent to libLLVM 12.0.1+4
+-CLANG_JLL_VER  := 12.0.1+3
++CLANG_JLL_VER  := 13.0.0+0
+ 
+ # DSFMT
+ DSFMT_VER := 2.2.4
+@@ -45,15 +44,14 @@ LIBUV_VER := 2
+ LIBUV_JLL_NAME := LibUV
+ 
+ # LLVM
+-LLVM_VER := 12.0.1
+-LLVM_ASSERT_JLL_VER := 12.0.1+4
++LLVM_VER := 13.0.0
++LLVM_ASSERT_JLL_VER := 13.0.0+0
+ LLVM_JLL_NAME := libLLVM
+ 
+ # LLVM_tools (downloads LLVM_jll to get things like `lit` and `opt`)
+ LLVM_TOOLS_JLL_NAME := LLVM
+-# equivalent to libLLVM 12.0.1+4
+-LLVM_TOOLS_JLL_VER := 12.0.1+3
+-LLVM_TOOLS_ASSERT_JLL_VER := 12.0.1+3
++LLVM_TOOLS_JLL_VER := 13.0.0+0
++LLVM_TOOLS_ASSERT_JLL_VER := 13.0.0+0
+ 
+ # LLVM libunwind
+ LLVMUNWIND_VER := 12.0.1
+diff --git a/deps/checksums/clang b/deps/checksums/clang
+index b5343f4965..7586aa20a6 100644
+--- a/deps/checksums/clang
++++ b/deps/checksums/clang
+@@ -1,58 +1,58 @@
+-Clang.v12.0.1+3.aarch64-apple-darwin.tar.gz/md5/e48f17625df207526c56dc0010ae0daa
+-Clang.v12.0.1+3.aarch64-apple-darwin.tar.gz/sha512/e7b9844e84327e8624bb689302f103ad1e621e0e31f2824af54182c597873c38f5e7028ec055aba84645e0c6890c4d39ab2bc9a1acdaa6eaf0b3d648b3e4cdfc
+-Clang.v12.0.1+3.aarch64-linux-gnu-cxx03.tar.gz/md5/5da291e45739f3cf99c055364bd8c2fd
+-Clang.v12.0.1+3.aarch64-linux-gnu-cxx03.tar.gz/sha512/6a06c06c6b03d4dbb5fc61d922ce5ff4f394fca2b39025b7e8ee0f50d2373917ad46d8c688f0a6e073a4ad3b14c981a8353d554356d634846be940d659b1da53
+-Clang.v12.0.1+3.aarch64-linux-gnu-cxx11.tar.gz/md5/e732781718ddbd28567247c5d1ed0d1c
+-Clang.v12.0.1+3.aarch64-linux-gnu-cxx11.tar.gz/sha512/5b8ee21c0661bd3221252964a1ef0b5be55e227a9d167453be5659bf21d006fcc921b275b35f9ee9c6535fae4e03ee9df585233af61b96d04acf3742997a20b5
+-Clang.v12.0.1+3.aarch64-linux-musl-cxx03.tar.gz/md5/6d93f705e632a2eef897e56510091bc6
+-Clang.v12.0.1+3.aarch64-linux-musl-cxx03.tar.gz/sha512/75fa08aeb2c4aafa73e39109391f22c0469df2ef6a5973d7a0f72d9ba9f6602259732ec1d87ec48e019f7c1c7cb168747e1215e7a95b9faf7d12ef4928c2a087
+-Clang.v12.0.1+3.aarch64-linux-musl-cxx11.tar.gz/md5/92f83227bf548f2237ee367893ea5779
+-Clang.v12.0.1+3.aarch64-linux-musl-cxx11.tar.gz/sha512/7215208979ca7b6cab569b1d23da554b62d0f09f5ce80b9240a0bdbc55307f2b2cf7dd53523800a620a635d0dc9a5355d0b62b9e943e5e054d527f12e1488283
+-Clang.v12.0.1+3.armv6l-linux-gnueabihf-cxx03.tar.gz/md5/cb434a7f448a848941150b676a000993
+-Clang.v12.0.1+3.armv6l-linux-gnueabihf-cxx03.tar.gz/sha512/3c7075e543ca17d7c41d99fb123351fb5afe4b292afe45b2d5283d43b59fe07fe822721455b62dd35ce8eb72c061066eefbb9c72218a0b7cad92fbf0a7f78696
+-Clang.v12.0.1+3.armv6l-linux-gnueabihf-cxx11.tar.gz/md5/6867cd783ae6e8161f356c2de58b2b9e
+-Clang.v12.0.1+3.armv6l-linux-gnueabihf-cxx11.tar.gz/sha512/8a976ff74c14b475e4e06ec95b7d24d3e6fc1f8938569c38953314e3ff1be32f03b1aa7f681fcf852cdc4041c2eacbf8ef6110615267dd74c83cbd0e308b0975
+-Clang.v12.0.1+3.armv6l-linux-musleabihf-cxx03.tar.gz/md5/03d7b293eec65433a10b72fce8822c45
+-Clang.v12.0.1+3.armv6l-linux-musleabihf-cxx03.tar.gz/sha512/9a2b00fe099c6481122252f2079692335bdc450b67ac094272725bf992d9376a55102db8221ad56e1575c75af09fbc5919f06faea63130785973afdadd7d5920
+-Clang.v12.0.1+3.armv6l-linux-musleabihf-cxx11.tar.gz/md5/a7c9d6bfc7d6f203b50f9b4dcecd6965
+-Clang.v12.0.1+3.armv6l-linux-musleabihf-cxx11.tar.gz/sha512/0532eeb0c391927c897d7c050913d5b41d0869bb26da2e56d782e60b228fef859bc1928e563f4ee349d4bad450588e7706a144398ca47a849ca2c36b7721fa8d
+-Clang.v12.0.1+3.armv7l-linux-gnueabihf-cxx03.tar.gz/md5/5cda8cbfc60a39c7e4426c0f12545337
+-Clang.v12.0.1+3.armv7l-linux-gnueabihf-cxx03.tar.gz/sha512/ea35242499d3e658c72407e3caa42a642051d6a0245aa72605288b9c5f90335d3caf2c2f2c31768e1667fccaf3e6f3e6d003b98504aec4304f562ee6854cf434
+-Clang.v12.0.1+3.armv7l-linux-gnueabihf-cxx11.tar.gz/md5/460de1a7571da00e77ab43488cc5c81a
+-Clang.v12.0.1+3.armv7l-linux-gnueabihf-cxx11.tar.gz/sha512/e275ef8b01b142e8187dfc5420342fc6d889ce97458d4178f85b7951a37e37896d3d30793856475030d635d6df7fc20a380524ef24560d4d3a1681564135517e
+-Clang.v12.0.1+3.armv7l-linux-musleabihf-cxx03.tar.gz/md5/42b35ff028d6c4964083ac6218d783e6
+-Clang.v12.0.1+3.armv7l-linux-musleabihf-cxx03.tar.gz/sha512/d941f82bff7917d8c8b9b260a8896d1af8d61c56dcc574e7a96a3971da8622f2d5822e340f8d5cf340adcc36760a757efa68c7e6a4686ecdec49207b68761ea0
+-Clang.v12.0.1+3.armv7l-linux-musleabihf-cxx11.tar.gz/md5/2fffd7d0d994b8185b6b93e43ba0d187
+-Clang.v12.0.1+3.armv7l-linux-musleabihf-cxx11.tar.gz/sha512/d538b96f66e9d4935391abd51ed069a323c7dde561ab5daafbc31360c422a25fffcf924a676d50642275c3047cc2c733b89a9c130f78fa9862a63146d981ae0f
+-Clang.v12.0.1+3.i686-linux-gnu-cxx03.tar.gz/md5/cd41e8189cb89991cf25b2d29418b127
+-Clang.v12.0.1+3.i686-linux-gnu-cxx03.tar.gz/sha512/8c42ce277a94492e76c7719cc7aa9388fc167caa05bec7faec901dfaae953857c97a82c24edfa47d42e23bda3ccb13e6ef33b89d5e663177429b95304d74f6ba
+-Clang.v12.0.1+3.i686-linux-gnu-cxx11.tar.gz/md5/39e81ef66d081d99e63c3df56392f518
+-Clang.v12.0.1+3.i686-linux-gnu-cxx11.tar.gz/sha512/fe630a179fe59fa899bab114890b3e3f8d704b08eca933289f26ac888fff2dce295328b75c77c0a837890d0ef15a07e92df30a60c71e3db5be99b4dbc8e3bbe1
+-Clang.v12.0.1+3.i686-linux-musl-cxx03.tar.gz/md5/db4f1a883aff089f3e939ea73019ce92
+-Clang.v12.0.1+3.i686-linux-musl-cxx03.tar.gz/sha512/4dafc8b917a4fbfa07477d6fd95b08c14ad3a5101017e539ca6b09c572a671117f30336f705a1a494ea123b5afdfd84ae3e4d3e18d7179225fd20873e758be27
+-Clang.v12.0.1+3.i686-linux-musl-cxx11.tar.gz/md5/f06fdcc12560bfa49659fd074d7c3e85
+-Clang.v12.0.1+3.i686-linux-musl-cxx11.tar.gz/sha512/5f5b70b2f52752a255ada165408adab30f5c3549a9a0c07ab02efa86af437610eb948309cf7c62282edbf0f19b6c72ef011c276405b9c80207775211a15409b9
+-Clang.v12.0.1+3.i686-w64-mingw32-cxx03.tar.gz/md5/a45b6e1a73bfe6c89e42e02fb0a7c8d5
+-Clang.v12.0.1+3.i686-w64-mingw32-cxx03.tar.gz/sha512/d0a8a539e2ae9ae0c652e80c2a321b2ea5e1e0d2b7d50850ef9fb2013b5b1ee8dda86e159b17aba9e5c4fa35d777dd6cf99e10bd54fbd51d9a2e235486e70956
+-Clang.v12.0.1+3.i686-w64-mingw32-cxx11.tar.gz/md5/0cf24f2a471eaa7979f8b08dbc6384df
+-Clang.v12.0.1+3.i686-w64-mingw32-cxx11.tar.gz/sha512/3cb5d20140c3e10a079e603377e5963844a85c6c50f3df7ec7981a16c0c2b7810cbab3460be9b96412ee9cfc6664d6d2dfefc554101a2b8934b4fc8551a90ece
+-Clang.v12.0.1+3.powerpc64le-linux-gnu-cxx03.tar.gz/md5/01c8ca0f75ca27893933b0f56dc2e4f7
+-Clang.v12.0.1+3.powerpc64le-linux-gnu-cxx03.tar.gz/sha512/c00bd0c1ec5a602c2343865ba3267904b24daa92bcd384240d7f09190dfaaa9ec7d1927c60245345a9b207224ac15834332406f67a0ba152239c4064f38800de
+-Clang.v12.0.1+3.powerpc64le-linux-gnu-cxx11.tar.gz/md5/901196acf617f5e7113197b9f555e357
+-Clang.v12.0.1+3.powerpc64le-linux-gnu-cxx11.tar.gz/sha512/efab074365fa8597fe3c383d69cad981edebe9919128c9de01801cfc2e77e83c070fad61cc606670045af696b00f724f1b4fd9166d54090984a587b4c3c193db
+-Clang.v12.0.1+3.x86_64-apple-darwin.tar.gz/md5/ce31160483e0a9872391988530012ee9
+-Clang.v12.0.1+3.x86_64-apple-darwin.tar.gz/sha512/a091f580ed8ffec36aecb5b7b929b0c4753ecce2f0a4421fe99a8b98d1e615bb975ffe1a82acc3921eac8a2e92055012c8222c7b8a52214acc87e2d8b0b16fb4
+-Clang.v12.0.1+3.x86_64-linux-gnu-cxx03.tar.gz/md5/ad4f1b6309c845816fe20b974e02acf1
+-Clang.v12.0.1+3.x86_64-linux-gnu-cxx03.tar.gz/sha512/9a6b18091bdf586c554fd9c4c0a97da2324e69443ebc732d4863028f099ea0523c1ac476726b6310ef95f438673d317170cba38e571a5de16805b43d9b6fa64c
+-Clang.v12.0.1+3.x86_64-linux-gnu-cxx11.tar.gz/md5/3cf260c1df00939fdaf322320b19264b
+-Clang.v12.0.1+3.x86_64-linux-gnu-cxx11.tar.gz/sha512/15951398a9d2c176caee370e004234e7db7eda5d590b74183ee5696678b4bb8ecad6047cdd4cb7c62f25847035b0e52d4c8ee8cb25d08e0edf00a68dbee12e98
+-Clang.v12.0.1+3.x86_64-linux-musl-cxx03.tar.gz/md5/ce07838922efed663d6aea0ee0b0995e
+-Clang.v12.0.1+3.x86_64-linux-musl-cxx03.tar.gz/sha512/e05a903feda1868d17b311816943f00745ce79fc859ed92782b8606c11015f13884380ddc5fa6e1fad2174b2f5f32ec3208eb76e000ffc9825ff532926ff8859
+-Clang.v12.0.1+3.x86_64-linux-musl-cxx11.tar.gz/md5/a59f567abcc0adbed004ba0d0e590407
+-Clang.v12.0.1+3.x86_64-linux-musl-cxx11.tar.gz/sha512/45e6f46f028beb879f9fec18137593882a7d81fc0825b623d9884f9b8fa400ca847e0c975ad2a7f1fce6ab7bee6d2f7d3cd3c6ad4ee49cbf879584ea7b3e2e58
+-Clang.v12.0.1+3.x86_64-unknown-freebsd.tar.gz/md5/5caa4b65706d5bcce71e72ac8dae39bc
+-Clang.v12.0.1+3.x86_64-unknown-freebsd.tar.gz/sha512/d49041ff192b1af43778afed30d0ab8f8e6a6b0cf1a8b0382712dd54e0362de2a58a9ea69ef51a1924f34480a79bb6a498904fb7eecb76e6cb40bffc98427093
+-Clang.v12.0.1+3.x86_64-w64-mingw32-cxx03.tar.gz/md5/88e8ce154a83ac41fa8bdee270453f54
+-Clang.v12.0.1+3.x86_64-w64-mingw32-cxx03.tar.gz/sha512/d9087edb3ee10bb91783340f27717a690a7e659aeb7bbff138f1a9ce1db2763c9f3cabd8cb0a1d1c79e2587a993ca609d815166db009b214689c7d4f1c55f05c
+-Clang.v12.0.1+3.x86_64-w64-mingw32-cxx11.tar.gz/md5/1394c306638fe127292414f6144e6d90
+-Clang.v12.0.1+3.x86_64-w64-mingw32-cxx11.tar.gz/sha512/88f6aa01c851cb26f8999d4a1996527351237fd3331048b4255de303c3cd8e8e90ba217bbf709bc1277e9eab46258b831d0bdaccdcc58dbf086b8be0a1ae49d0
++Clang.v13.0.0+0.aarch64-apple-darwin.tar.gz/md5/1b9f079f0ea34a2f5cd98528ec3abd21
++Clang.v13.0.0+0.aarch64-apple-darwin.tar.gz/sha512/ceb988b4c718c9b3145f747db528197fc6c5d2cc8d73fb1c4b54aed059266988a7f0da76e1bffea34c7b97f1c770b20adb62e8257022acb2d9dee2a399a3d1d4
++Clang.v13.0.0+0.aarch64-linux-gnu-cxx03.tar.gz/md5/0f763f0d450f66fe14538b5223054e1e
++Clang.v13.0.0+0.aarch64-linux-gnu-cxx03.tar.gz/sha512/84396ff5b6100a739fe219bf603727fbd240b685ca1710cb400b21a9d5a5d7891fedaabf9a6b54d59c8a6d17286ae9dad4fff2716a78aeb80540860195346f79
++Clang.v13.0.0+0.aarch64-linux-gnu-cxx11.tar.gz/md5/71d1183f97a1554f7ae8e78fd1cbc665
++Clang.v13.0.0+0.aarch64-linux-gnu-cxx11.tar.gz/sha512/e01fd96d96b99d3c326cb76ceb50efe82c0175a83a1d1d251432e39c81bc1fa6e9c88e6cc1e38dd7b6d56e45dd70e534a67ac0a11a311b1ce4ba4703f752c26d
++Clang.v13.0.0+0.aarch64-linux-musl-cxx03.tar.gz/md5/5f6f6a61aca8a8cf7ccfa3271bbcbe00
++Clang.v13.0.0+0.aarch64-linux-musl-cxx03.tar.gz/sha512/b0f9ba30e5c2856c06dedacd9d607610dc0b5ac2ac56460ac2098041352a0985138eb5ab4441b22d003827e975e4238287f26502a21fe62e2e30a3364dacf59b
++Clang.v13.0.0+0.aarch64-linux-musl-cxx11.tar.gz/md5/694697829c29d3eb9450b204c12b5c31
++Clang.v13.0.0+0.aarch64-linux-musl-cxx11.tar.gz/sha512/b2be81a5168dd423bb6246c4a416d1e4c4ffc5e0e7f5ffe674d7e904ebbe64297d51e786db9e7a76eaba05f008f9fb73e93cf5aee4719bbcc2089fbd6a152024
++Clang.v13.0.0+0.armv6l-linux-gnueabihf-cxx03.tar.gz/md5/15a9daa3b0e6e0cd55016847363f67a6
++Clang.v13.0.0+0.armv6l-linux-gnueabihf-cxx03.tar.gz/sha512/1963edaeae056530b574d4d44a8d44f0ce3e2730f1aee34fa261ab174dfade392243af914cc684004593efaecb1c8c69f3c127fcdfd3eefdf5aba36d8879069c
++Clang.v13.0.0+0.armv6l-linux-gnueabihf-cxx11.tar.gz/md5/03a4fc8ec34f6a441615df2720d5809d
++Clang.v13.0.0+0.armv6l-linux-gnueabihf-cxx11.tar.gz/sha512/c4c5f6e19e4b74f7fb4509b0f20ca78165181d3a59952d849e2aac0714d449d51f0f06133639e471dad3c7242594b830c26d7aec3bdf507702b46cf1bbbfe684
++Clang.v13.0.0+0.armv6l-linux-musleabihf-cxx03.tar.gz/md5/840f4188fe3dfc69b016fd0810d38f6b
++Clang.v13.0.0+0.armv6l-linux-musleabihf-cxx03.tar.gz/sha512/514a8e4f39e2e0670e86679cd5ddd9c44ae75a2bacc6fdd89195cb23b861144b27edbf8b973e91befca5cf4e3e1e73e02ab190bf9d22675faaa2a088d6b79361
++Clang.v13.0.0+0.armv6l-linux-musleabihf-cxx11.tar.gz/md5/d0371079ab710d834760e5b9c48e63b6
++Clang.v13.0.0+0.armv6l-linux-musleabihf-cxx11.tar.gz/sha512/d9fbd022f302b2f5fad8910eee8958203c4d90a10097bd956162ccb6c00681bf2392570eade45c3a767660178d3c769e901fc3e3838bba27e7400f24404b40ee
++Clang.v13.0.0+0.armv7l-linux-gnueabihf-cxx03.tar.gz/md5/40eb5b89821dbf7fe9aa354bd33b199d
++Clang.v13.0.0+0.armv7l-linux-gnueabihf-cxx03.tar.gz/sha512/beaf6dfc098f56e0acc63786df0562f771602477da63fd22a5ace4544f839d601e294f2097f433fdf94cc3222c21fcc9087a49f463c3b24ad3b8466c4ddc1a5b
++Clang.v13.0.0+0.armv7l-linux-gnueabihf-cxx11.tar.gz/md5/0215486c8dc9f2505139b2360ab8ec37
++Clang.v13.0.0+0.armv7l-linux-gnueabihf-cxx11.tar.gz/sha512/a239671333c7ba0792e66311214a4413154b9c445be1372350ff26238052ef5c5e3c61b361cc82ee6e9dd0b940b390b00958c0361f7f5099c8e6851bf976fa8e
++Clang.v13.0.0+0.armv7l-linux-musleabihf-cxx03.tar.gz/md5/7ba37c245667367f6e8fa733576286fa
++Clang.v13.0.0+0.armv7l-linux-musleabihf-cxx03.tar.gz/sha512/a905bd5fc671c4012a8eb3e313715ee66d93d81df79296ac0820b74065dac04aac7db8427a821386fa0a20d6cbb2e9ba0a7234bb241168ebba3b0515618619ec
++Clang.v13.0.0+0.armv7l-linux-musleabihf-cxx11.tar.gz/md5/733209f5ec6c5a7f8eab8621801b52c7
++Clang.v13.0.0+0.armv7l-linux-musleabihf-cxx11.tar.gz/sha512/abdf894a4064e5c7ffb9c1b7db2f6888fb9f154b96ba0af5c28f5868581aaa3c928763a68d3d7c86a77451c4f004021fd4efee6cbada03bbcc6b50edc2bf7807
++Clang.v13.0.0+0.i686-linux-gnu-cxx03.tar.gz/md5/55aaf6fd6ed906bc07fccab1bf13c5df
++Clang.v13.0.0+0.i686-linux-gnu-cxx03.tar.gz/sha512/447c9e41eb1d2e2ed471cdfb22f07c93b1c5822b7570f605213fb1382778529ad778e910741baaa67ad74bd4173968428f118ef96eb0fb7d6b4c4ec70836b67e
++Clang.v13.0.0+0.i686-linux-gnu-cxx11.tar.gz/md5/63aa6b1f9195029e49f611cc8b16a075
++Clang.v13.0.0+0.i686-linux-gnu-cxx11.tar.gz/sha512/c2448558a9576387a4e952287874ffa6322eb66d68255eb427410991e7712d29a773fdbe1497599963e078356d3764a88dd1e0fa69a9f44baf2c9270a9a6de2d
++Clang.v13.0.0+0.i686-linux-musl-cxx03.tar.gz/md5/bbb4e48d9ff81632266b742261767756
++Clang.v13.0.0+0.i686-linux-musl-cxx03.tar.gz/sha512/1670ff060b08d798a95eccec11fb4a47b24cc7fd407e2f289f0a80761596c2b48022f7a1626e81a48e3ca9afa251d32a57237f27c573d6cff1f331de2f2a17b3
++Clang.v13.0.0+0.i686-linux-musl-cxx11.tar.gz/md5/e82e2baed858808b74350e89f7c61bda
++Clang.v13.0.0+0.i686-linux-musl-cxx11.tar.gz/sha512/5508a48d5221ec42201315cc90b29aa6f1b2bb3fbc3a6a482124dcbcb835d10569f8f2ef96d16f98e9002b37d9905eef24cd9d63bfaa351153291c36f929a50b
++Clang.v13.0.0+0.i686-w64-mingw32-cxx03.tar.gz/md5/265da5572027e80d50245861eca2e497
++Clang.v13.0.0+0.i686-w64-mingw32-cxx03.tar.gz/sha512/e8f2ae2bea1fc8f4fb5ab30c08b419ac6ca4f8639100238a70ff27c7fddd38c811c816b78d0540f4d444503b745521b05199c26f7e3bb009e8aff6734cac7802
++Clang.v13.0.0+0.i686-w64-mingw32-cxx11.tar.gz/md5/2970cc4653e13e85a9467794661f98ed
++Clang.v13.0.0+0.i686-w64-mingw32-cxx11.tar.gz/sha512/46fb885f07f1df3700ba46a3bafeee823182a48508bc4e7aed60dcdf140baa4a5297b6a50991154beda64fc6e0c85080025d57fb491d09e1512460b0c63e0d34
++Clang.v13.0.0+0.powerpc64le-linux-gnu-cxx03.tar.gz/md5/2a4fd440766003478c41914aad5a17c8
++Clang.v13.0.0+0.powerpc64le-linux-gnu-cxx03.tar.gz/sha512/dcfd7132a17714c682316e3a441116bcae33b83421906f749d0ea6bc82d58dd4384129652dcf9adb934c9fe88b30b618e5fc7a6b20b1944d24e8e2b044b3def5
++Clang.v13.0.0+0.powerpc64le-linux-gnu-cxx11.tar.gz/md5/64457f1b8c5c13e2ffc1bffa9000b398
++Clang.v13.0.0+0.powerpc64le-linux-gnu-cxx11.tar.gz/sha512/c212a13429aa3d5503675af35c4c48d04f9aeda65862839944e91f67d2916a01f29bd479cc754b649ab72e26bda6ad4f340342261bdd65b21229f745f6345303
++Clang.v13.0.0+0.x86_64-apple-darwin.tar.gz/md5/6ea7c05c7020de66073808513251a548
++Clang.v13.0.0+0.x86_64-apple-darwin.tar.gz/sha512/17a64a87a823af335dc3742ab2563a3e2c9bdd034ed0ce6ed00b3a88542c82129c12c6ff15ee5075b252e7c7a52c8bd7dd934568d0da5f396009f0cfd059ca75
++Clang.v13.0.0+0.x86_64-linux-gnu-cxx03.tar.gz/md5/da2d284a2b72ef896f83ba1db47ab14c
++Clang.v13.0.0+0.x86_64-linux-gnu-cxx03.tar.gz/sha512/a652e20466e4cd6cae10fc298bc2a0d5c3985e026d053bd9814e65805ed1e461e7ac646a0abf2bb0d4e81ec0b15efc7788e35546b0cfbdfa7672971d6f1c65d6
++Clang.v13.0.0+0.x86_64-linux-gnu-cxx11.tar.gz/md5/4a6f1ee81b3822b4b59d3c617e430cf2
++Clang.v13.0.0+0.x86_64-linux-gnu-cxx11.tar.gz/sha512/775b2e517394eec66f4c6499f2ec00a9f9dad8f088ff69c0f1a8cc22ed2256477a8bac62a8b357a523c16533746f7f64e271eb8f3e8b88b000fdae95f3c864a3
++Clang.v13.0.0+0.x86_64-linux-musl-cxx03.tar.gz/md5/498ba114b4056a9a5ffcc63f7216ad55
++Clang.v13.0.0+0.x86_64-linux-musl-cxx03.tar.gz/sha512/10ca0f9b67468a952795a87bf7b527c35eaaff689732b1036d48aafc18a8f1fbe4e968cf4bd8a162d49fac410881c4870ce4340033ea26029e4bbc5fe64b4d39
++Clang.v13.0.0+0.x86_64-linux-musl-cxx11.tar.gz/md5/5482d6fe05066d34b4d5179256552dd5
++Clang.v13.0.0+0.x86_64-linux-musl-cxx11.tar.gz/sha512/614192fb4efe7ef8f9e86a58911b4f7926b7709fdc4637fc67aa8cb09b5413a1ebbc1676dcea7b546a85305a568cc6a2d814d009137261903373253c6f23995c
++Clang.v13.0.0+0.x86_64-unknown-freebsd.tar.gz/md5/9114480f5618fcc4f8831774ceb8d5bb
++Clang.v13.0.0+0.x86_64-unknown-freebsd.tar.gz/sha512/ed7c9df5330b3d0a15741609b51d8ae4330e3e51ccec1291576002808e48807fac0aec67ef992c00c57f15e41398cbb94ca59c311234de0330f4d256658c9e02
++Clang.v13.0.0+0.x86_64-w64-mingw32-cxx03.tar.gz/md5/8095c8bd45ee121a3d8419e64c87b1fa
++Clang.v13.0.0+0.x86_64-w64-mingw32-cxx03.tar.gz/sha512/640b27f12a05080d1ebecca345ef3e265ba732626721ea7ad14ba55e1f75c0a360e5b1ab1812c9469e1d12e152e3ebb776c83f0ac0de57205a19c35159f7dfa7
++Clang.v13.0.0+0.x86_64-w64-mingw32-cxx11.tar.gz/md5/8a0c335d2676e5aac7eb02636e06dde5
++Clang.v13.0.0+0.x86_64-w64-mingw32-cxx11.tar.gz/sha512/327fd51589ceee45925d15ecaace4ba8bec425801cf64bc2dae469c29759d339bdb32faac65101587bc0ea9b1430e68a092492bd8cd9f8265a0a649cf0e0cbab
+diff --git a/deps/checksums/llvm b/deps/checksums/llvm
+index 4278c6e75c..d5961e3e5f 100644
+--- a/deps/checksums/llvm
++++ b/deps/checksums/llvm
+@@ -1,234 +1,234 @@
+-LLVM.v12.0.1+3.aarch64-apple-darwin.tar.gz/md5/030bb63a3b713d16f0ac3435c0a43e09
+-LLVM.v12.0.1+3.aarch64-apple-darwin.tar.gz/sha512/db1bbf60acef681a8305fc0e4112d6833dc1ea700a1620e0bcd8d03df558dd4acf0581c6a7f11bafa09dcc96c49c8acc0b3d5d958a232ac389890fd9ad618b7c
+-LLVM.v12.0.1+3.aarch64-linux-gnu-cxx03.tar.gz/md5/fe34d2e02cee760c62f1f41fe47ae253
+-LLVM.v12.0.1+3.aarch64-linux-gnu-cxx03.tar.gz/sha512/66e825ff27e9dbbfa751c96484ff62335b5630e71278e4b10bb965ce4b5e73766a0ac5f50c2a5ed4383550220f45c5fc408a944f1948e0a7a2b4447893cc1d8d
+-LLVM.v12.0.1+3.aarch64-linux-gnu-cxx11.tar.gz/md5/85a6bbde762fafa2a1807852f56248d4
+-LLVM.v12.0.1+3.aarch64-linux-gnu-cxx11.tar.gz/sha512/0c6d130888eaff79b7d754a169330f7e8faa11d783953bc53822a29c312f60402bf151286f6f621ab08e6d25119f54becfceef6714e3a5aa388dcb0d2254332a
+-LLVM.v12.0.1+3.aarch64-linux-musl-cxx03.tar.gz/md5/3d1eb8fd9704fefac898226b3d4ab97d
+-LLVM.v12.0.1+3.aarch64-linux-musl-cxx03.tar.gz/sha512/d0f1f76d408102dc2cbeb4ea14718e00b829c8a7f5d5673dca285025d123d2fc8d523729ff637339f32067347bc1e7a235fe209b9d7a997c642499094a2cbc86
+-LLVM.v12.0.1+3.aarch64-linux-musl-cxx11.tar.gz/md5/6369070026fc863a83ec0ffca0ee86f4
+-LLVM.v12.0.1+3.aarch64-linux-musl-cxx11.tar.gz/sha512/7895fddea3a29073cf317699b44b84cdea93c30897da2b6adde23831d44414ef21f09a33107084eefb596bac114a40b13d6387820fe0a2b380ec657eebeea2e8
+-LLVM.v12.0.1+3.armv6l-linux-gnueabihf-cxx03.tar.gz/md5/56508e7869dfd808945120b5a821d076
+-LLVM.v12.0.1+3.armv6l-linux-gnueabihf-cxx03.tar.gz/sha512/f55cfa6cb399bcba239e7669e0223ede9908204d3f7af880cf83f7e75eac3f33e0555d38c72a7dab8e5a0b69b9c829ebe045a9a5823561f2f8ecc34406d43d56
+-LLVM.v12.0.1+3.armv6l-linux-gnueabihf-cxx11.tar.gz/md5/254db0016b8f28e79637bc6fcb802b3e
+-LLVM.v12.0.1+3.armv6l-linux-gnueabihf-cxx11.tar.gz/sha512/c84b5ca1c0db254c567613748034a4be7682d96462abbb842bf64924b35f48a999a43feeacb3f4e2603eb343fc4dac3cc3fd6f30520c915236637bca8e8bd040
+-LLVM.v12.0.1+3.armv6l-linux-musleabihf-cxx03.tar.gz/md5/6e0c7c26a2e4b3a740d13c2fa8a8ffb3
+-LLVM.v12.0.1+3.armv6l-linux-musleabihf-cxx03.tar.gz/sha512/78c214b5e8330663de05f376107778457a94df300660142ac5598b41aad52b7cf39de47b9fc7a589c90425e6adba41e1e816dbe41705897f2eafa060faae60cc
+-LLVM.v12.0.1+3.armv6l-linux-musleabihf-cxx11.tar.gz/md5/47349be8a91bcb4e9c02c6b3d1a48834
+-LLVM.v12.0.1+3.armv6l-linux-musleabihf-cxx11.tar.gz/sha512/9c6c0820c60de53512e8b0f35f6fca87d9bc96f37fcfae616fd49dc37f6f0ba46a5d9cf8fe61d2a6b3248c1add386cd850e0faf6049dbe4b399fe43f3e9ddd6a
+-LLVM.v12.0.1+3.armv7l-linux-gnueabihf-cxx03.tar.gz/md5/0f192ef028db44efcdba51d82f263449
+-LLVM.v12.0.1+3.armv7l-linux-gnueabihf-cxx03.tar.gz/sha512/65eed323640babaf50adb8274e1b69dc71132991d2e67523f52550267a4021dad159bbaf66ce94b7bc05b5b449440aa043025533d57d7c6e94d2d1c7b9b15450
+-LLVM.v12.0.1+3.armv7l-linux-gnueabihf-cxx11.tar.gz/md5/90bfc9c6cf1699b912dac03305c515f4
+-LLVM.v12.0.1+3.armv7l-linux-gnueabihf-cxx11.tar.gz/sha512/ad3a2e3e6d6f699145e4752786ba807715c33312d86ac0f14b17d31ac252d0a99ace0238ae7cd5ca439c5a48ad9451fa8eab9efd0a954e6df96ed99612234812
+-LLVM.v12.0.1+3.armv7l-linux-musleabihf-cxx03.tar.gz/md5/42a829237e9b00b53ecb4ab0c34ef1eb
+-LLVM.v12.0.1+3.armv7l-linux-musleabihf-cxx03.tar.gz/sha512/8b7aa5e5da8bad8760ad43d647c7b2c0ff26282d79310c78661be43817bef03adfa5b0084f441571e74eb4733cb5fa088952563faabdd473e2f997aa06035913
+-LLVM.v12.0.1+3.armv7l-linux-musleabihf-cxx11.tar.gz/md5/b60ffd48c020b1ac576d27cce13e03e3
+-LLVM.v12.0.1+3.armv7l-linux-musleabihf-cxx11.tar.gz/sha512/de804988c639dfab72a6850e7513340f0bd927f0e5ab0dc059f58967f7d296f71d84771533fbc5869a540c6d25b668f3f239f6ccbb7f6ccbce02bc978f457f73
+-LLVM.v12.0.1+3.i686-linux-gnu-cxx03.tar.gz/md5/70922a7a3c7e140d603c419b89ff309e
+-LLVM.v12.0.1+3.i686-linux-gnu-cxx03.tar.gz/sha512/340f438b091f88f637d86dae2494fcc2bbd874a61dec3b52a2a336328da650a787f310c5b53e52a6c0afd0b2821b44784451e3ecd6419a81f1159f345b4a31ac
+-LLVM.v12.0.1+3.i686-linux-gnu-cxx11.tar.gz/md5/0d3f5843efc9ff41ec26b0d2fe06d1d0
+-LLVM.v12.0.1+3.i686-linux-gnu-cxx11.tar.gz/sha512/6c7afe936a6fea6c546b86365649c5e3eaeabb676155b1de6a51040d3851bdf6a3cd9ac4b18ad4293e809cde6452adf6ce82dbe34e87dcb063dbf8e20e6e1848
+-LLVM.v12.0.1+3.i686-linux-musl-cxx03.tar.gz/md5/af24092be60361066596900ca710068c
+-LLVM.v12.0.1+3.i686-linux-musl-cxx03.tar.gz/sha512/73733c177e32cd04227b480974e9fb46f4c3aad294a024be971a2ca6b902c711449bc610947a4dfeff596f45f3b384d03b77478a9c552328be11282e6d58fd4a
+-LLVM.v12.0.1+3.i686-linux-musl-cxx11.tar.gz/md5/423b80b7428ef930a9f1491544ab265c
+-LLVM.v12.0.1+3.i686-linux-musl-cxx11.tar.gz/sha512/050f92f6700289aea6cfcef16cf3dd74d6aa67fcb1dfab3d3c763d8079e3981277e1466910b5d292cd3be8abcafa683c4b6666bf8eeaf0ec239b970a2aea46d0
+-LLVM.v12.0.1+3.i686-w64-mingw32-cxx03.tar.gz/md5/f29d5c7daa02e68011359b4e833ee93f
+-LLVM.v12.0.1+3.i686-w64-mingw32-cxx03.tar.gz/sha512/647a861b043411ff0ee543d2e348a8a67d4287708444df16b61a184d42a03749ce31f3a1c3ba0854c30c1b94998e263f992a69b0989ce2bd83227aeb779bcb35
+-LLVM.v12.0.1+3.i686-w64-mingw32-cxx11.tar.gz/md5/3cea1896bf46e17788a7bf3cfcda1572
+-LLVM.v12.0.1+3.i686-w64-mingw32-cxx11.tar.gz/sha512/d077a8cf530391fbaf7f7ff9866fc006ffe875c63a2b2757e5585cd96fcf50a71aa67bcde7f3d122286c978b91f69949542add4f94d18b36c18fd88dd9d14640
+-LLVM.v12.0.1+3.powerpc64le-linux-gnu-cxx03.tar.gz/md5/52a64aae6d3502b6b6da316826a6f781
+-LLVM.v12.0.1+3.powerpc64le-linux-gnu-cxx03.tar.gz/sha512/ec631dc651f97d7c5406439f2c43c1975cb15903593c808749b419904ee19505e404cf6a2c2030928972bbdf3c135443978e6710b628549a52f18be4860447db
+-LLVM.v12.0.1+3.powerpc64le-linux-gnu-cxx11.tar.gz/md5/fd65e34e2fdbe1db1936bca6a60dceb9
+-LLVM.v12.0.1+3.powerpc64le-linux-gnu-cxx11.tar.gz/sha512/788efc06e2c48d409e3bfa3be1cbc52884c41884af409d90fb666ed2f8c0ddae2ff0e440a189d64db98919d8630dc6aecf033cef73cb363a2882dcd005e9fa58
+-LLVM.v12.0.1+3.x86_64-apple-darwin.tar.gz/md5/114ce26c4df444bab96f990241ce9bed
+-LLVM.v12.0.1+3.x86_64-apple-darwin.tar.gz/sha512/fd3d929389c56574fb21ec1c0f587801f312da6938a09c6ca521a378c6e0b268157f4b712b335652033fabcea1baae376d26d52f54022c615fb0d23edc805d47
+-LLVM.v12.0.1+3.x86_64-linux-gnu-cxx03.tar.gz/md5/ab03079efbe7d09f21b338810ce3eeae
+-LLVM.v12.0.1+3.x86_64-linux-gnu-cxx03.tar.gz/sha512/804fb8b233f2b07f2485be6f9335b3a55e2c9905147f628f949dd12295c2f2fd8fd50b6a4a2332660430bf967402d9ad9adb8eab1990d548a6e5c6bab7afbf45
+-LLVM.v12.0.1+3.x86_64-linux-gnu-cxx11.tar.gz/md5/d0990981455842c45be8d65d8d546ba1
+-LLVM.v12.0.1+3.x86_64-linux-gnu-cxx11.tar.gz/sha512/95394cc64bf53487c855179a8e415cfd6cf31165d8ddb42c00121212b37c1e2024c6183e3a52f6e251ffd153437b115a5601780530d8c97bd428b961d7b43196
+-LLVM.v12.0.1+3.x86_64-linux-musl-cxx03.tar.gz/md5/d5386c4593c7ab43b19d2a9606bf5832
+-LLVM.v12.0.1+3.x86_64-linux-musl-cxx03.tar.gz/sha512/4413d5bddaa3b9e90c2e6913ce62046c2b6325f602c8e8922ef32c8f801ba258d1e4cc15e7865b5ca43ffaa9202e84d7f595959863dca8ab4a34bff4f4e228f8
+-LLVM.v12.0.1+3.x86_64-linux-musl-cxx11.tar.gz/md5/8ea5455eade726090f609be3150dfa60
+-LLVM.v12.0.1+3.x86_64-linux-musl-cxx11.tar.gz/sha512/06499fbe80700ca5b9c935a24c5e12ed68a17aa8fc57b7b51cf6b35e9ad4866ed4c7cae60a9cf68c89bc662a7854e61e6d8e4580bc1e5f05f53e6943ad2c2dd0
+-LLVM.v12.0.1+3.x86_64-unknown-freebsd.tar.gz/md5/79e28ee303ac6b62a2573defe7465e50
+-LLVM.v12.0.1+3.x86_64-unknown-freebsd.tar.gz/sha512/1b563fa34102d4354ef5703875bc4d3814dedce22891e1ec70f418af523a2dc759f10d1c063b571fc098660a0269cc92e72b6239d30098ff6bb0f190e3c3037e
+-LLVM.v12.0.1+3.x86_64-w64-mingw32-cxx03.tar.gz/md5/5907621595ffb08e6e4b32662f864d04
+-LLVM.v12.0.1+3.x86_64-w64-mingw32-cxx03.tar.gz/sha512/c28d2d41e97609f43b820f0702ab73d099a84e33e0dcc73f60e7d9d780ac14cbb041f508cf7948af7647086495e6704b49671ee32454309c57cca7275d3da3f2
+-LLVM.v12.0.1+3.x86_64-w64-mingw32-cxx11.tar.gz/md5/d1947f14710a789be153ac7dbaf07fd6
+-LLVM.v12.0.1+3.x86_64-w64-mingw32-cxx11.tar.gz/sha512/a1872be87a399b2488fc71106c6deeaf76508efbf3a8149dabcd9bf704fdf365071b2c159f46834401c17c2a677dc3e94b877f759ba421a5f8fa44a9f6f41c01
+-LLVM_assert.v12.0.1+3.aarch64-apple-darwin.tar.gz/md5/4552a6310882e53f4811c8c489cc606c
+-LLVM_assert.v12.0.1+3.aarch64-apple-darwin.tar.gz/sha512/ca06e15aa74aff65ddd860f4cc0277996f34411f88a83e8719233b9b4aaa23a2c8a1299215e44a55fa9810b9f762be896a41ac643791ac06fdd0fcafc98e7ee2
+-LLVM_assert.v12.0.1+3.aarch64-linux-gnu-cxx03.tar.gz/md5/b748609f646cb3764890a8dfb7e1bd8e
+-LLVM_assert.v12.0.1+3.aarch64-linux-gnu-cxx03.tar.gz/sha512/9ef7ee15bcc062f329951e90c743b3abd8ea522f7a1464a9e250483a6f087f3e74a70f7b0344fa882b2cd3e00af2b0f436789111885248b0ef0ce846123c84eb
+-LLVM_assert.v12.0.1+3.aarch64-linux-gnu-cxx11.tar.gz/md5/63e23a25c16b1eee756cb5030a37a13f
+-LLVM_assert.v12.0.1+3.aarch64-linux-gnu-cxx11.tar.gz/sha512/08493eb6d8b3599f216417590775394cef147ddc4b4582c4176a39890084432c05bd1806256953310a0a18e6d3d76e498f75bbb8994af0b4e13b7e4144f60499
+-LLVM_assert.v12.0.1+3.aarch64-linux-musl-cxx03.tar.gz/md5/46a0faaee1285bab78d8c3eae37172c6
+-LLVM_assert.v12.0.1+3.aarch64-linux-musl-cxx03.tar.gz/sha512/110370eec758240e347d3ed749ed4ec2734f30887cf1ba433f88eb9ce86d5392fb566e41b8834a1dd802aad9c06ae2997050c4e67ac3d9d8bd02a5607cd155a7
+-LLVM_assert.v12.0.1+3.aarch64-linux-musl-cxx11.tar.gz/md5/3118c11faac4a3a6ae28816620e1e5cf
+-LLVM_assert.v12.0.1+3.aarch64-linux-musl-cxx11.tar.gz/sha512/8659202d60c105e15f761417e5e234a9a28e3d430f76919a3a97b3468f82a83773fa82b71b388f9db427f64b37cb32850631e69541dad9e4bf3879aa9b259ae5
+-LLVM_assert.v12.0.1+3.armv6l-linux-gnueabihf-cxx03.tar.gz/md5/c85321f3bf4921332771f52f91bc1242
+-LLVM_assert.v12.0.1+3.armv6l-linux-gnueabihf-cxx03.tar.gz/sha512/a364948840635cebd140d3392e1f13ce91e91ba3621b542ff8944fbf467aaeeebe3a2de29faf0a5a0704244f7befc2bacd27637aac8fa82027cddb158a279f22
+-LLVM_assert.v12.0.1+3.armv6l-linux-gnueabihf-cxx11.tar.gz/md5/8cf84c038afa0f88c433ef80de7fcf78
+-LLVM_assert.v12.0.1+3.armv6l-linux-gnueabihf-cxx11.tar.gz/sha512/a212d9468bb65aa940bc80cd4e3bd325359997231a1d1b736cf3374c8eaabd1e542483a915b9b31dded4fc954e8969dad89a8d80af66e20030b3ec68ee910e44
+-LLVM_assert.v12.0.1+3.armv6l-linux-musleabihf-cxx03.tar.gz/md5/be16a49eae21f6cc64ebb702942fe056
+-LLVM_assert.v12.0.1+3.armv6l-linux-musleabihf-cxx03.tar.gz/sha512/4b3a8a5ffdb699267a8664e774dad3a3fc57459d2d5e91e58382ce0cb62bad43e6e6fd40bca70c0e09131a7a6c11106e14099efcbdb80100391a50db13d74a39
+-LLVM_assert.v12.0.1+3.armv6l-linux-musleabihf-cxx11.tar.gz/md5/24bc7545947c7849e4a682681963792e
+-LLVM_assert.v12.0.1+3.armv6l-linux-musleabihf-cxx11.tar.gz/sha512/be3a91ea0c48dcca90d537db774fd02c1a7eed1e260c3b5e15d9cf1659dc7abae74375e85203dac9ffd218c69700b3ce2f411d01fb8c31380f0c662dad3ce8b2
+-LLVM_assert.v12.0.1+3.armv7l-linux-gnueabihf-cxx03.tar.gz/md5/b426daf1d4f60f22f4640a0a8cbe2c1b
+-LLVM_assert.v12.0.1+3.armv7l-linux-gnueabihf-cxx03.tar.gz/sha512/b7f1cb3611fe0b0e66904654e7afb7e1f122a25b17505eaf9000b3832924b8801166ffda3e9195ac30cf0dd97c74847418f25701169e561807bd638acb9f16f8
+-LLVM_assert.v12.0.1+3.armv7l-linux-gnueabihf-cxx11.tar.gz/md5/1027a5d4137f2454cc431b42a9a5669e
+-LLVM_assert.v12.0.1+3.armv7l-linux-gnueabihf-cxx11.tar.gz/sha512/96d3df07e31cb91dee4f179bf82e38c6c81de711a05aae69342d04f615e1f87cd3e51b977cd66603577a79b59485dc6253aebe55b75cac0016227d2b86c5a348
+-LLVM_assert.v12.0.1+3.armv7l-linux-musleabihf-cxx03.tar.gz/md5/63c82c7c3d0a641433c724409fb98a8a
+-LLVM_assert.v12.0.1+3.armv7l-linux-musleabihf-cxx03.tar.gz/sha512/905404dcde1b59b6a43ec5bae571bb1c50d8571e5add5fe97d72dcfed48d825419bad03a5d54bf9c86387d97b1e01411ab6bc62be736aa944ca559317c7a036b
+-LLVM_assert.v12.0.1+3.armv7l-linux-musleabihf-cxx11.tar.gz/md5/2135e5b0431edb042700f39ed23d277d
+-LLVM_assert.v12.0.1+3.armv7l-linux-musleabihf-cxx11.tar.gz/sha512/415d81437863cb9b86d68e31c676c30e011af59c2399446d96b99adc9e928a5af346ecd26119fb9a170d2f89a7bd7abfbd07021ace5a4f2e8cab7abd5d158f7a
+-LLVM_assert.v12.0.1+3.i686-linux-gnu-cxx03.tar.gz/md5/bc45e5019e32802cc430c3e9b267e3ff
+-LLVM_assert.v12.0.1+3.i686-linux-gnu-cxx03.tar.gz/sha512/a84fd21fb29781b07ae20a7bcd3204fc48ed109d66318310d95fdf03633eeb02fd81d0ea9647502b0696940b8b03af790846a936d7fe9a0cfc906e6a8150d309
+-LLVM_assert.v12.0.1+3.i686-linux-gnu-cxx11.tar.gz/md5/e30e5b78b50aeeb5f26b1c9825ebf82e
+-LLVM_assert.v12.0.1+3.i686-linux-gnu-cxx11.tar.gz/sha512/38e96b6b214bb731f339cd48387bcdad8efdce1be8e10e6b9762ffdc22c18938112a2f3886d60ab439ce0ed6c6b9f65553ea0316a46f373def02ee481cacb953
+-LLVM_assert.v12.0.1+3.i686-linux-musl-cxx03.tar.gz/md5/33574d54af8ecaef67643f1d23c97a54
+-LLVM_assert.v12.0.1+3.i686-linux-musl-cxx03.tar.gz/sha512/5bbeac360ea5fe8cd3f6d341463bac7aff8b173cc6e3c1566957c8f88e50e51197d094cdc6fdcf01437d0c4a0a9eadc912cab94084c9f549bd29d449b2d82981
+-LLVM_assert.v12.0.1+3.i686-linux-musl-cxx11.tar.gz/md5/ba2480e263bc3c97d580686ddc0b3683
+-LLVM_assert.v12.0.1+3.i686-linux-musl-cxx11.tar.gz/sha512/9c4ac694c45482f7a156a00e357fc966262f26e1dbfbce1c0812824c629f38bbda457d49e1952656993d0e7b8ac72dd56dbabef30c2192d42885aca0db419329
+-LLVM_assert.v12.0.1+3.i686-w64-mingw32-cxx03.tar.gz/md5/11a8ffa4d3e4786bf68b810ae6f66369
+-LLVM_assert.v12.0.1+3.i686-w64-mingw32-cxx03.tar.gz/sha512/dca1cf597ac3014f8e91b9049aab559b6648d9e6e143d926621f45ec0b949ed3527df017258645ce85556f3cc89e15ba92850e53977b94315041a4ae4788ab2c
+-LLVM_assert.v12.0.1+3.i686-w64-mingw32-cxx11.tar.gz/md5/af7db3b8fad4eedd384f79c87c24eefc
+-LLVM_assert.v12.0.1+3.i686-w64-mingw32-cxx11.tar.gz/sha512/ecce308df2f2beb782a3daec890e05f5231ae3f0d92ade72429f2c4b5e53d8003f72b4e580397c5199f1cfdbba31b9d1439cb7ee921a1b7480d16ad38a4f6ffe
+-LLVM_assert.v12.0.1+3.powerpc64le-linux-gnu-cxx03.tar.gz/md5/207ece8c5dfb46a0fb8da91424a98e72
+-LLVM_assert.v12.0.1+3.powerpc64le-linux-gnu-cxx03.tar.gz/sha512/1a89cd456656933d341a742411d8439aea4968c94b23e42fb776690c82630e15fbaf9c3f71f4577377dd6b719a3f8e3c45d9b2e7887b15748f39d8c852943979
+-LLVM_assert.v12.0.1+3.powerpc64le-linux-gnu-cxx11.tar.gz/md5/557492c1ee401357e59412728bff6606
+-LLVM_assert.v12.0.1+3.powerpc64le-linux-gnu-cxx11.tar.gz/sha512/166376da0e6a53bd613f8029bccd1ed348a16226fee7bfeb2ea8682f3a919a243d54c08708bdd0bfed053383f5c9e53ccc494e92289d1418b9dfc7fbca3e0596
+-LLVM_assert.v12.0.1+3.x86_64-apple-darwin.tar.gz/md5/789248a43777cac637c111c29f7bf455
+-LLVM_assert.v12.0.1+3.x86_64-apple-darwin.tar.gz/sha512/6638ef4237961821cedb69b54993609274c10e9b8116b1a64e8cce68c6a09cda4e65f2661a5ea37a359e6bdde7e7b1055571434d852e6edb57f95fb7490b0036
+-LLVM_assert.v12.0.1+3.x86_64-linux-gnu-cxx03.tar.gz/md5/e9c6659bbb538ef970e9b678d2c0e382
+-LLVM_assert.v12.0.1+3.x86_64-linux-gnu-cxx03.tar.gz/sha512/b167c002d394890b304ad245f644754c0077fed559bb0570001cb01bb14341d6f7807a1b231a12aba274a097ccf347fec2e87b5d86a21381685e27bffbfea9d7
+-LLVM_assert.v12.0.1+3.x86_64-linux-gnu-cxx11.tar.gz/md5/a19ade942624f4e0bd589419fd4a4a3d
+-LLVM_assert.v12.0.1+3.x86_64-linux-gnu-cxx11.tar.gz/sha512/a0e1376c598706dccb681acc13a4e653e2cc8d0a9ffbaab39fc242ca4a14bb24ad5579d0caa716f21de9b5cae365c1aaf9245d05364d5d9fbf5bd820585bc824
+-LLVM_assert.v12.0.1+3.x86_64-linux-musl-cxx03.tar.gz/md5/8c9729ce6a72e13c43cd135437e2d4ed
+-LLVM_assert.v12.0.1+3.x86_64-linux-musl-cxx03.tar.gz/sha512/45cff53b9d7444ad50f3e6769b54d5de8ae971909839e8a96207671b6e693ab9583c4d28c9e892190e5826d8c571f746de6298e37dc308c5f79dbc4fc2f4342a
+-LLVM_assert.v12.0.1+3.x86_64-linux-musl-cxx11.tar.gz/md5/5ac2b72a7a51d90a1479b6bd09f1c584
+-LLVM_assert.v12.0.1+3.x86_64-linux-musl-cxx11.tar.gz/sha512/1f64459828c02f76d4a03bf49157ee3e617cf39ffcb4cdadc74444eebd9485393751bfb2fc00b552a52cdfbe2a4a068e8c39ac7eda9744ee0f70159299e8fe25
+-LLVM_assert.v12.0.1+3.x86_64-unknown-freebsd.tar.gz/md5/2fe9735db03a1e3a86065c09e660b589
+-LLVM_assert.v12.0.1+3.x86_64-unknown-freebsd.tar.gz/sha512/d846b78f90c3fda31e228b12c5444fc58a657b7c1a2cedcd2965ae798ce114039b81eb531327a0ee53a87822a2610b11f6a38c5e55fd3f26b37fff2fe6387972
+-LLVM_assert.v12.0.1+3.x86_64-w64-mingw32-cxx03.tar.gz/md5/22fc04ad75e0ecc828b8a41f5aff6741
+-LLVM_assert.v12.0.1+3.x86_64-w64-mingw32-cxx03.tar.gz/sha512/a78770fb2af0ebd4a020b9dcbbfc30b0f422b4d4c2d52e49714f1c3e67bccc492c2ef6e322326899586de45fc2628a36d3a86fba26672f1ac13c152f545725c5
+-LLVM_assert.v12.0.1+3.x86_64-w64-mingw32-cxx11.tar.gz/md5/03f376024f9a8b757c148f23a09f0ffe
+-LLVM_assert.v12.0.1+3.x86_64-w64-mingw32-cxx11.tar.gz/sha512/8ef022894b6d488a93d38837a629ee11b6c6ee2962e7bfc8b169effb6ff7f949aa50b6282b212ca6b3e1cf8fd1c94f2ee4621619c5e1b842385758a07c42be43
+-libLLVM.v12.0.1+4.aarch64-apple-darwin.tar.gz/md5/621f8bfbcbe5f9b7438803620be58eb0
+-libLLVM.v12.0.1+4.aarch64-apple-darwin.tar.gz/sha512/9699c073dbbaa33b9d31fbca5d0ea6d7306d771462f257dce29d95e02bf6272ed3dc16049521ec4628967bf3bb86467b0eb659ca85c12d5c5c80b9a333d8b785
+-libLLVM.v12.0.1+4.aarch64-linux-gnu-cxx03.tar.gz/md5/c06a14c4a509e1257ac2f15abd8e8003
+-libLLVM.v12.0.1+4.aarch64-linux-gnu-cxx03.tar.gz/sha512/e410ce7602e7c167742f865963435c200321d8bb76bfb23c1239008b8c62660bba4735a3b6e0121127db7624d0ff209211b66ca2f57cc736bfc3177d68c1b22c
+-libLLVM.v12.0.1+4.aarch64-linux-gnu-cxx11.tar.gz/md5/c1c8af2f5c640d160283a4d2a54520c1
+-libLLVM.v12.0.1+4.aarch64-linux-gnu-cxx11.tar.gz/sha512/e4fe03a8065358d30954a935307b5589afb8cd979b05d21c1d19efe6bea7b698bcff338c5fe9ff16c2eb03475414b4dce1dbfb513ce43ba7e82ad61c827969af
+-libLLVM.v12.0.1+4.aarch64-linux-musl-cxx03.tar.gz/md5/8ed77b634120fa18d2835470b1967948
+-libLLVM.v12.0.1+4.aarch64-linux-musl-cxx03.tar.gz/sha512/11494d13f855a411a41faf64a59269d9fbe0a82cdc2ce48e435d3d6883e3e48dd8a1c157aa0de2545ef020f061271dadbf1988053d3a908a7e64f8efbda1f9e2
+-libLLVM.v12.0.1+4.aarch64-linux-musl-cxx11.tar.gz/md5/a952dd78e79a3a1923d9cdc9836bc1e7
+-libLLVM.v12.0.1+4.aarch64-linux-musl-cxx11.tar.gz/sha512/64281d032eef688af5ff9828564b1f919526129a7a8b3e14d39819763e65805eb64ddb9cd1c037c76b3fa4f9a31ff5116d5838d36ead33840dd0ef159400d46c
+-libLLVM.v12.0.1+4.armv6l-linux-gnueabihf-cxx03.tar.gz/md5/0cf98dfeb06bbfe271d039c02e1f65a5
+-libLLVM.v12.0.1+4.armv6l-linux-gnueabihf-cxx03.tar.gz/sha512/344f163964299d40c6124375d8ef825afd77616440f0bfa7888407c7ad4ab9b89b605dbb9a8fff78ee14b79fdb56102852e9243a77839902683b87094e808cc3
+-libLLVM.v12.0.1+4.armv6l-linux-gnueabihf-cxx11.tar.gz/md5/8d414f272c7c85806f231219dfb31601
+-libLLVM.v12.0.1+4.armv6l-linux-gnueabihf-cxx11.tar.gz/sha512/4cd1d2b5fb8fab8f97fd409a7e444add73904b5db0ab590efe0c687d6b2a9e12cf3e2937c52b520ad95cfe88ca2ed5f565eb2dfd50be0dfa0e58f694ea456488
+-libLLVM.v12.0.1+4.armv6l-linux-musleabihf-cxx03.tar.gz/md5/7d91435a2ad1e33f0c774437674573eb
+-libLLVM.v12.0.1+4.armv6l-linux-musleabihf-cxx03.tar.gz/sha512/150a220b18f8afbda55a818bbe00f68a64c04f824fbe948c9a227f002d1fe3dbe7cf23f0ff1edb38b42085174f0f8f3a80f512924729ba44b11ee6d5d872b75f
+-libLLVM.v12.0.1+4.armv6l-linux-musleabihf-cxx11.tar.gz/md5/13ca171abf028cd207863967fe4472ca
+-libLLVM.v12.0.1+4.armv6l-linux-musleabihf-cxx11.tar.gz/sha512/4d7a38de2a2d39f06bb37c3621f04ebe23769ccd9958d1235c940b5b12e94128ed0623e7b86a5d579582ec0b6b2191349306cbe1d6af8202e0932ec7609c829b
+-libLLVM.v12.0.1+4.armv7l-linux-gnueabihf-cxx03.tar.gz/md5/a7f2e34c93ec4bbecea33a22c64d889e
+-libLLVM.v12.0.1+4.armv7l-linux-gnueabihf-cxx03.tar.gz/sha512/18c0066daa48fbc87e9501e646e7b3ecf34e8778f159d9ad623950c7a87d27b2cd46a204d948223aa1fdd1c283f89fbaae9096a3b381f641450b4ad720b07738
+-libLLVM.v12.0.1+4.armv7l-linux-gnueabihf-cxx11.tar.gz/md5/84c827833c3d4a3ccee9e31634abd568
+-libLLVM.v12.0.1+4.armv7l-linux-gnueabihf-cxx11.tar.gz/sha512/8aa13a464ff45402cf95b31b15ff410aa6986cc5328867f8b443b940e144eaf7491290c92177b2b3355f40accec3a27254978efb095e5a88be8f4096f2aa464c
+-libLLVM.v12.0.1+4.armv7l-linux-musleabihf-cxx03.tar.gz/md5/0f009e3e1496d6dba9b00a13c2b3f78b
+-libLLVM.v12.0.1+4.armv7l-linux-musleabihf-cxx03.tar.gz/sha512/5f3115b2fcfb5e92c0cbfa1e9f22e62d6ae7ff8b8febd147fa01acfb52ac67a99f7b38df379374fc91506e5b2178ab4672788ee9e39776afe0172485c0585412
+-libLLVM.v12.0.1+4.armv7l-linux-musleabihf-cxx11.tar.gz/md5/2fd2e1f3f61566f99d7532d423c345e1
+-libLLVM.v12.0.1+4.armv7l-linux-musleabihf-cxx11.tar.gz/sha512/2cded91fe2cf936e358204372002abf6b1b3dc4b19f7f858e8d240d7d5f401d28992df9bb06b342217588a2a0f59743e53bd763c5d20da7d6bd28e267a526e9f
+-libLLVM.v12.0.1+4.i686-linux-gnu-cxx03.tar.gz/md5/8f05950d76774eb69496c0405b7867d3
+-libLLVM.v12.0.1+4.i686-linux-gnu-cxx03.tar.gz/sha512/7dabedad8408d7420112c26b34273e40f8a0407115a200dcb3e44865cc74a35102615c75819c5fc07e280e35f7391bd67b5a67db62d2aeaf46fa56005543e1fd
+-libLLVM.v12.0.1+4.i686-linux-gnu-cxx11.tar.gz/md5/faeb19a3c2ba3f960357d792e78367b4
+-libLLVM.v12.0.1+4.i686-linux-gnu-cxx11.tar.gz/sha512/0629a2ff321f6c8e9cefbd40838dea3cd728fafeb2ae65c3feb2296922e07015a6c97161e16a9792bd4675c87f13ea9ad3295c343170ebc99eaf36a444580ada
+-libLLVM.v12.0.1+4.i686-linux-musl-cxx03.tar.gz/md5/ecd268fc164b119365262a7b576ed6c2
+-libLLVM.v12.0.1+4.i686-linux-musl-cxx03.tar.gz/sha512/666978c259f5e7762a75f5fcf9ef0f480cd75d710c14a9e2dd2cf95522404f51e412934c9ffba644b5d065bf8d9e01fb4e8552be1fedd8e01b888de8ab7f30f2
+-libLLVM.v12.0.1+4.i686-linux-musl-cxx11.tar.gz/md5/44f5b84a241ae43381fe63484599a7c0
+-libLLVM.v12.0.1+4.i686-linux-musl-cxx11.tar.gz/sha512/feedcafc79c4d83908ffb06b4d4ae05273c92f2fd775511603af90a154a8be3b61f3d3998366c343b405a6e4365ebd540b29cfe6a3cea7deb843907bff277c27
+-libLLVM.v12.0.1+4.i686-w64-mingw32-cxx03.tar.gz/md5/36476c00f600b9e3aa11e4ff3b2b737a
+-libLLVM.v12.0.1+4.i686-w64-mingw32-cxx03.tar.gz/sha512/8b85b80588a6fdddfc6ac52fb27e5fe337789ae82de86ac436aff05ee18d1771c43628fde7bfe9f4fabdb34cacdc198dc05c1f2c9c1b0ce18f244201a91c94b1
+-libLLVM.v12.0.1+4.i686-w64-mingw32-cxx11.tar.gz/md5/c8594e76923ddb14e054b469b693b1e5
+-libLLVM.v12.0.1+4.i686-w64-mingw32-cxx11.tar.gz/sha512/f846ff64003ec35b608798e4f31f404f0f228b20d0c8d499131ec62d0f3ac688c51a773149a9a3be65e8dedd0bc6ccd76a337ebe347f439290fbb35835aaab10
+-libLLVM.v12.0.1+4.powerpc64le-linux-gnu-cxx03.tar.gz/md5/407e8dbbb31748898960b50b457f643f
+-libLLVM.v12.0.1+4.powerpc64le-linux-gnu-cxx03.tar.gz/sha512/0acf0afe1686943c7c69e55b6419a32a071490fc104cac815aee9529c4dad60ef94617bfc2e865d56a5f064302d1bb69d9caa1211c24364afdea34e7a1d56214
+-libLLVM.v12.0.1+4.powerpc64le-linux-gnu-cxx11.tar.gz/md5/65e5cd3e35cf6823e42e79ea39b1cc1c
+-libLLVM.v12.0.1+4.powerpc64le-linux-gnu-cxx11.tar.gz/sha512/4a3908c699c1d90bf845d1e7dab0a1be1eb32dce5db8916f3498514ba0a09099dada2f2632c418b14b33731d18b802f60844eb333ef53ff642e9d3cd7c2ea1c3
+-libLLVM.v12.0.1+4.x86_64-apple-darwin.tar.gz/md5/848ae9725ce3d3a86c6af68d2fabbbb8
+-libLLVM.v12.0.1+4.x86_64-apple-darwin.tar.gz/sha512/57a445e0e7fe344f3ad486c518b01b1c2713c8b7b5bbe0ff066bd64b49a6c6755f01455745c2c618988655f90977b1562a438d947121c93cefc9a2a5dd3b32a6
+-libLLVM.v12.0.1+4.x86_64-linux-gnu-cxx03.tar.gz/md5/7aada269027b825655011c2f2a797a9e
+-libLLVM.v12.0.1+4.x86_64-linux-gnu-cxx03.tar.gz/sha512/b05e052c403d26e689c625e6ed9c01fac5d5d5e5af246066c3c83a16b92b927a21525955a3a6ddf64afd6921883a5c1631055a6783630455db3815a630a5c172
+-libLLVM.v12.0.1+4.x86_64-linux-gnu-cxx11.tar.gz/md5/6c3c26c9d9af98ed13e1d74287e8a8fa
+-libLLVM.v12.0.1+4.x86_64-linux-gnu-cxx11.tar.gz/sha512/a1530c1c69e44fa7a737219c58a36ebdbdd0fba7abc175660e37a0ee095a11b46e2aa2cf9858a69ca26654293d1ceeb024520762a78ed02178b5979dce6b26ed
+-libLLVM.v12.0.1+4.x86_64-linux-musl-cxx03.tar.gz/md5/c0e3c8d1755dcdbc63c4ae401deddd5e
+-libLLVM.v12.0.1+4.x86_64-linux-musl-cxx03.tar.gz/sha512/f1de0aec33fa628d965d43037dcd1de7838668ac98e7fc338b956f18a770ff1372bc05e13288c5bd45b18b15a6ca0a3ce5c090d869605bd5476bf9ec1c0cf884
+-libLLVM.v12.0.1+4.x86_64-linux-musl-cxx11.tar.gz/md5/252cb346d0f14220ab59150e9f3cba3d
+-libLLVM.v12.0.1+4.x86_64-linux-musl-cxx11.tar.gz/sha512/2fb74c90e9df2d06e7a6dbdc62d6b80b1e9b7d2db80b487210d130788cbc749853776276ad5790d4efc2edf950a7fecbb809b2502a2a44f930518139326cf781
+-libLLVM.v12.0.1+4.x86_64-unknown-freebsd.tar.gz/md5/5f6b694aa723b4596aa5fe494e599769
+-libLLVM.v12.0.1+4.x86_64-unknown-freebsd.tar.gz/sha512/4c1f256522de561d1edd305822da9aed067614e8c46b26bd1448c713e9587ad1f44dd4f539e9eb3f53f6d84a3846567dbbbc6638751afeea17cace6dffa853da
+-libLLVM.v12.0.1+4.x86_64-w64-mingw32-cxx03.tar.gz/md5/55331e2ed8c38591ae62b17d53c99775
+-libLLVM.v12.0.1+4.x86_64-w64-mingw32-cxx03.tar.gz/sha512/b45e87e50f8161b5f234539ab796aa2e0d7845878b6b6aa73e96708a27480ba9dffa0b6d2bb15f19f6b269046b75c67902c7913bdb1fef33a74a78488f7031ae
+-libLLVM.v12.0.1+4.x86_64-w64-mingw32-cxx11.tar.gz/md5/19996847c13ee330b6e3716296c9e0e3
+-libLLVM.v12.0.1+4.x86_64-w64-mingw32-cxx11.tar.gz/sha512/17b8ac789369c27eed7c0cdddffc758a9dc795f38d3cd862d8e87a68186a451a92641cee0ba2dbd5f80bd0b42d832898d79db633bae34fc7659d57308d470df7
+-libLLVM_assert.v12.0.1+4.aarch64-apple-darwin.tar.gz/md5/fb6217c318081e176aa16109f84a5f50
+-libLLVM_assert.v12.0.1+4.aarch64-apple-darwin.tar.gz/sha512/4fa1c310185b81a4ea9908b9fe0c0947f8bd012ec1ff7eab7a12ea37d26d0556b576bab5531c2262f638728efa83d5d7843fe381dd070b45741725171b1c9635
+-libLLVM_assert.v12.0.1+4.aarch64-linux-gnu-cxx03.tar.gz/md5/7bc0b9dfb642a3ddefca68d8ee0a2a6a
+-libLLVM_assert.v12.0.1+4.aarch64-linux-gnu-cxx03.tar.gz/sha512/7b7dbbddb69cb9a261d44dfc01b1443de65770b37ab2e2d4130b34fa00328b166afbed5361b84f92047c152a2754402b4a6bc4d61134f956d38685ab0e514693
+-libLLVM_assert.v12.0.1+4.aarch64-linux-gnu-cxx11.tar.gz/md5/6041ae140d2bcffd58a385f6901ab939
+-libLLVM_assert.v12.0.1+4.aarch64-linux-gnu-cxx11.tar.gz/sha512/1873b4861540ce349d5f6ebd939af793ba876c6270f4f9f11afcda98768201f28c36eb80c3310133be833938367960b4464efaf94051edb21ce332c1b13069af
+-libLLVM_assert.v12.0.1+4.aarch64-linux-musl-cxx03.tar.gz/md5/dba4630abf36ff9e1cc20bd7f18b1982
+-libLLVM_assert.v12.0.1+4.aarch64-linux-musl-cxx03.tar.gz/sha512/9b9b506a0b733f8f61af197b6de3365059346b66c014cfce1488ad03760898ec52ac505e41e14b6dc6db0481cc97b85b6f82b64132060e8c0d40777ba4d20e40
+-libLLVM_assert.v12.0.1+4.aarch64-linux-musl-cxx11.tar.gz/md5/aa120cd6debf20831208543e027199a1
+-libLLVM_assert.v12.0.1+4.aarch64-linux-musl-cxx11.tar.gz/sha512/92bc4d48a8f57939c61c3a4bf8efdf552a43b46898bc67379c541dbfee58641b1591519f55abb35a1f342b43ecd9563d663361e80ca42816b5e89bdaca0eab34
+-libLLVM_assert.v12.0.1+4.armv6l-linux-gnueabihf-cxx03.tar.gz/md5/dea1228bd476eb8550bd3bc47ee5b973
+-libLLVM_assert.v12.0.1+4.armv6l-linux-gnueabihf-cxx03.tar.gz/sha512/f7e878e1c1206cd7a666f3741e12ff09931f13ced2c5eb24222feb10189c690cea294087b50ea974b90386cf91214dc91b0e70f0e2e1cda52f9b6abce65bba8b
+-libLLVM_assert.v12.0.1+4.armv6l-linux-gnueabihf-cxx11.tar.gz/md5/e6927105c60d50d1f6045e65e066f382
+-libLLVM_assert.v12.0.1+4.armv6l-linux-gnueabihf-cxx11.tar.gz/sha512/d17a31d3219c07d4633afc3fcc08e1031cb5a0f2c90b749ce078d3f5ce9cdf653d2cac565ac0ff01813266ae3d5eba899469db7e9ceec5849e89286ce68910f9
+-libLLVM_assert.v12.0.1+4.armv6l-linux-musleabihf-cxx03.tar.gz/md5/740fd5056703049ffee3cfa983f8c2fb
+-libLLVM_assert.v12.0.1+4.armv6l-linux-musleabihf-cxx03.tar.gz/sha512/4eb0a0e5ab3b9d358e1cd266c83a330d507a2ad70719cd0be28ea7bc465d4cef1134cd75f186b9ec7a4932be77e32fa1a0ba3304575d28198c12a3384c3a8aa3
+-libLLVM_assert.v12.0.1+4.armv6l-linux-musleabihf-cxx11.tar.gz/md5/fa4bfeca2b20e59548f1a3b8b033eec9
+-libLLVM_assert.v12.0.1+4.armv6l-linux-musleabihf-cxx11.tar.gz/sha512/7a5294805627f03ebc307a40d623e24b07bc428db200ae7f9dcf19d977426ab996920ea8e023155fedb5dabc6e8bfa12669bc5ebbab579c9380f61fa1082d4b0
+-libLLVM_assert.v12.0.1+4.armv7l-linux-gnueabihf-cxx03.tar.gz/md5/f67bb394d4dc62872ea1e4dc86444e8c
+-libLLVM_assert.v12.0.1+4.armv7l-linux-gnueabihf-cxx03.tar.gz/sha512/885fd434ac972badb040f0a70dfdf4c6dd27e4cd30395b9c6bdd78caf2703ebbda61b5a7137dc42dd4458276bd6821e0027c77e21405812c33999cc910a0d04d
+-libLLVM_assert.v12.0.1+4.armv7l-linux-gnueabihf-cxx11.tar.gz/md5/040dc97394599f9b8bc3f776e0586c66
+-libLLVM_assert.v12.0.1+4.armv7l-linux-gnueabihf-cxx11.tar.gz/sha512/1ec3fe1fac87169667928723f2426ed5321052f6b6731ddb30b42cf50a0e791dfdd706f9c0d3f9c216ac3589baccd08e0f9ac1bc2b4f2974883f13d83367c0cf
+-libLLVM_assert.v12.0.1+4.armv7l-linux-musleabihf-cxx03.tar.gz/md5/aa7320fafbb6289e5814cd30ee433268
+-libLLVM_assert.v12.0.1+4.armv7l-linux-musleabihf-cxx03.tar.gz/sha512/809aa4d7b2e0fb65f8100e75ada90e9bdb8f7f2ef4d30b91af110ed4dd0a5ff7faa35d8384469fef0eb4306bf1f3c7ba678aceeaa1552047b88a5bd3566faeb1
+-libLLVM_assert.v12.0.1+4.armv7l-linux-musleabihf-cxx11.tar.gz/md5/e52889326dfd0987ef586354d2616eb0
+-libLLVM_assert.v12.0.1+4.armv7l-linux-musleabihf-cxx11.tar.gz/sha512/5fde4dd0ec4ed45c11e4c2c44516609c02cf24a7de8bbe2e6c6181738969f32a44d50e1bb0350be250353161b5dd5586b272e1fde135adf834b7114272ab14cd
+-libLLVM_assert.v12.0.1+4.i686-linux-gnu-cxx03.tar.gz/md5/cb0a3775ce8f814a02006abdd14a09b5
+-libLLVM_assert.v12.0.1+4.i686-linux-gnu-cxx03.tar.gz/sha512/e47411e25df40b39cd4ba30fa0525ed563c3664a8381e2d103c77d39e799dfda5f2aa2e5ab188796db5bcc39018a5db85a82b412177982b9fd4aa83d2fffa5ad
+-libLLVM_assert.v12.0.1+4.i686-linux-gnu-cxx11.tar.gz/md5/e96885bc37f46e254df788d9ef617acf
+-libLLVM_assert.v12.0.1+4.i686-linux-gnu-cxx11.tar.gz/sha512/ceee99f7dd64cd2785dfad4d7b172250e12e560fc5e489d907b0b5ea9a363b50e833377ae31ce12e6bf7f640841a108fbea15408bfa15a8609ce3599ab1c67c6
+-libLLVM_assert.v12.0.1+4.i686-linux-musl-cxx03.tar.gz/md5/ed57762608e698bbc1aa47fbebdc4300
+-libLLVM_assert.v12.0.1+4.i686-linux-musl-cxx03.tar.gz/sha512/440061bf11373eb9e1a1d549a0fb7b89010bec464b2da64ad2a067fa53c297d1d8e3590bf5724d656a2664f1ebb3c168c011a267436ccb3a354f9e2cf3e303b4
+-libLLVM_assert.v12.0.1+4.i686-linux-musl-cxx11.tar.gz/md5/a712486b6fa6b1275bc17ed7b7daed94
+-libLLVM_assert.v12.0.1+4.i686-linux-musl-cxx11.tar.gz/sha512/9ba2f48ab4a3c1b25a5e792a4ca54b525b1a54546354baa63169b7eda02456bb7b7c725ce99af5f5ece3ae4a1d342fe535807ff53ba4f72d849846c430e1893f
+-libLLVM_assert.v12.0.1+4.i686-w64-mingw32-cxx03.tar.gz/md5/b34bf1afd4ac90460ff2c7eb2123b1c7
+-libLLVM_assert.v12.0.1+4.i686-w64-mingw32-cxx03.tar.gz/sha512/160e27cb5fefd19759aac18ac720194897142e1aa6d82225ab1c752df121cd10734e24183958ae3b734dfb56bdda73761846d1d051559a8d67e0c64db61b2455
+-libLLVM_assert.v12.0.1+4.i686-w64-mingw32-cxx11.tar.gz/md5/74b2df8045efc59e33a0300d183557b5
+-libLLVM_assert.v12.0.1+4.i686-w64-mingw32-cxx11.tar.gz/sha512/81680815c716e9a50f6c4fa3dbe19d646115eaea19f076ae1a6820cf2b0363862ce8e077fdb1e819e6b33ad040245487281cc3a928798db77fa3ef4719749615
+-libLLVM_assert.v12.0.1+4.powerpc64le-linux-gnu-cxx03.tar.gz/md5/7211cd3d6dc3776f75c2ac9f4391bb38
+-libLLVM_assert.v12.0.1+4.powerpc64le-linux-gnu-cxx03.tar.gz/sha512/1bc70c15fec2f4558e815c6160e84d4802039ec5d2159c71299f7a830a87cd4e5fa7c88ce214bf65b18146c0de178e11ca00f19bb9998567e57c6e0cd9ed4734
+-libLLVM_assert.v12.0.1+4.powerpc64le-linux-gnu-cxx11.tar.gz/md5/cfd50e9f55a048c792baa2750e028084
+-libLLVM_assert.v12.0.1+4.powerpc64le-linux-gnu-cxx11.tar.gz/sha512/0e76ac71af7d1d8af63f245bd6d23b853e477079c469d2ea41fde991a100c9fa5670abdf0c50d62b8ec046bec816f14438d241c6c65790edd315547eac105e51
+-libLLVM_assert.v12.0.1+4.x86_64-apple-darwin.tar.gz/md5/de4388d774bd849388028e45f4746bf6
+-libLLVM_assert.v12.0.1+4.x86_64-apple-darwin.tar.gz/sha512/1196ebc9ccc29ee0ba351fa6d96c07d09a6d7f3aa35928ef6673eb7155a7b0d2658f7eae5ddbda48f567b07736be0473e32d5b4ae72627e500ec68aa44cc09ac
+-libLLVM_assert.v12.0.1+4.x86_64-linux-gnu-cxx03.tar.gz/md5/282a8a04447201dbce2e5d3f4f6dd693
+-libLLVM_assert.v12.0.1+4.x86_64-linux-gnu-cxx03.tar.gz/sha512/23899c5c597f6fdd122eee2cad30acfa81cefc4990665dfe6fe86477a215a4729a5e50c8880a7c8614edcf23fc951fcc4022c4868ea8bc9babe05d373f75fa46
+-libLLVM_assert.v12.0.1+4.x86_64-linux-gnu-cxx11.tar.gz/md5/cdb8ef28e47de1273401bfdc1cc502b1
+-libLLVM_assert.v12.0.1+4.x86_64-linux-gnu-cxx11.tar.gz/sha512/5d8380428f60a06500b0afa3d808d1d01060c28401dc7b9323823011dfe9264d0abf72482c0d3775b586276ec5509aec7bc619c031d31984408cbb6027703ac1
+-libLLVM_assert.v12.0.1+4.x86_64-linux-musl-cxx03.tar.gz/md5/cd0c6b627367cbb82d5ca8c1eca94c33
+-libLLVM_assert.v12.0.1+4.x86_64-linux-musl-cxx03.tar.gz/sha512/c20e070f33ba4bc654dc9e53d5e884b86d0beed9f83a4eacc8eb0792113f1689bda42af6609cde8edf262d4e2325558b06f0acb85a2f0bfc53a220ae54f87bc0
+-libLLVM_assert.v12.0.1+4.x86_64-linux-musl-cxx11.tar.gz/md5/6cf2033565bd51c057113d2ec0cb46f6
+-libLLVM_assert.v12.0.1+4.x86_64-linux-musl-cxx11.tar.gz/sha512/75fd6f53dcf01a40aac5cfd9a7a0edecd3dc99bc1ac32591d8152f3c9930dd1d255219c74e4f609131d271343802a31d487387072ecf6ead3f72a8562513bf57
+-libLLVM_assert.v12.0.1+4.x86_64-unknown-freebsd.tar.gz/md5/28c0970426c16c31d247f521cc4a4196
+-libLLVM_assert.v12.0.1+4.x86_64-unknown-freebsd.tar.gz/sha512/388837a840d4fb07cc991ddbe06e56d3c9747439a11578a565b89b7f44a298d0d1a4aaeb9ead1e4219ea2410215cf8ff51410a93e7389bc9caf4b9b0229ce98a
+-libLLVM_assert.v12.0.1+4.x86_64-w64-mingw32-cxx03.tar.gz/md5/cc94941da66349a81a6e2f7ac39e7282
+-libLLVM_assert.v12.0.1+4.x86_64-w64-mingw32-cxx03.tar.gz/sha512/3300cf6c1d7c860e80a3013f3ca0f2de269543372621a1de0550dd80c198bb500688fb58261f3ddecb4d0cb955c9049c584476faff9762e17e469d5d419e7f8b
+-libLLVM_assert.v12.0.1+4.x86_64-w64-mingw32-cxx11.tar.gz/md5/fd9779e1d84db70068119d36f991114d
+-libLLVM_assert.v12.0.1+4.x86_64-w64-mingw32-cxx11.tar.gz/sha512/70fbee1a6f050c0a0610b246085e1d3dc4e9a3192ba22185752b7e09d2a67f68522572eea7d1d6c5ef04c06b0b6e8053c993a9fd6b42028e1d137c0fd10aefe3
+-llvm-julia-12.0.1-4.tar.gz/md5/1e19759d7c91fed6d2331335140f2dd8
+-llvm-julia-12.0.1-4.tar.gz/sha512/476c5488123cda48a864028068253133811f46ef702014ca0c33d5747a4b9408d5952b84154386fe1ac25f31d7f84ea0ee593ef1875b6ae800dd5b81c427c856
++LLVM.v13.0.0+0.aarch64-apple-darwin.tar.gz/md5/52c98a162d23ab13c443204cf1f49377
++LLVM.v13.0.0+0.aarch64-apple-darwin.tar.gz/sha512/c851ca9780b5847e1710660e62ee09ba54ce59e6295099736f07616790e7861be06f4597a3360aaf60f4ccd52cbd361b5865897087190cb6fcb6dd97ca3479da
++LLVM.v13.0.0+0.aarch64-linux-gnu-cxx03.tar.gz/md5/a8b4f07369e3686218af8dea6e32f770
++LLVM.v13.0.0+0.aarch64-linux-gnu-cxx03.tar.gz/sha512/4e9791bb74a713e18a38734f9b8c5aa5b79dee6bb8b86323126f2c26e18d2eabf1baf2b9e56432583e9918ac19e85000720ae45f495b06f152b74fc7eac10470
++LLVM.v13.0.0+0.aarch64-linux-gnu-cxx11.tar.gz/md5/a316722c18d95b07cd2e376444abc9c3
++LLVM.v13.0.0+0.aarch64-linux-gnu-cxx11.tar.gz/sha512/63659b0ebcc67bacf99a04269d096bf1332a264d6ce54589238ed87de0fed8a382f2b4fbe698c2eef04d7bf5379635fa3ba61814674992fb4429f290243f6950
++LLVM.v13.0.0+0.aarch64-linux-musl-cxx03.tar.gz/md5/62250f037492988b3ac5dab28557b354
++LLVM.v13.0.0+0.aarch64-linux-musl-cxx03.tar.gz/sha512/914c2ccd159956a3df59a322bbbe7aec09bbdb871b8a25b2666b6a04c1f13cbf4573d0772b8365b9b184e08737e25148ee90945ae105371583466670b493e20f
++LLVM.v13.0.0+0.aarch64-linux-musl-cxx11.tar.gz/md5/a28bd5c9e0e1706ba789cef446134012
++LLVM.v13.0.0+0.aarch64-linux-musl-cxx11.tar.gz/sha512/39d13fcea52b0f437417380ee0518e613659abc832d1477333a8b1e978bba2ddb5dad3687aca235345144e141e0f9cf046f595e46a15b7a0f23e8587ff3f94cb
++LLVM.v13.0.0+0.armv6l-linux-gnueabihf-cxx03.tar.gz/md5/894409fcb2ef8660ff354f0237f43070
++LLVM.v13.0.0+0.armv6l-linux-gnueabihf-cxx03.tar.gz/sha512/763153f3addc5de4566bc237fa3d8a8486132b0094a18fb8a7c848fa973f23973cc4dea59659bcd6c1b5ff22034ae1da5feb2c3cb34036689807e768320b2d8d
++LLVM.v13.0.0+0.armv6l-linux-gnueabihf-cxx11.tar.gz/md5/754c5702698346d133b89cea847780fd
++LLVM.v13.0.0+0.armv6l-linux-gnueabihf-cxx11.tar.gz/sha512/f94d10d53f42b8c5b69d47fa13a6c2bd8ecbf516c2e927349a34fb1b395561aece03e8dbae7fed4fec1fd32d85e5bc2971660dc3a929538d2abecdafffcf0665
++LLVM.v13.0.0+0.armv6l-linux-musleabihf-cxx03.tar.gz/md5/1bc04c056d71870e01f0ef236b320cd9
++LLVM.v13.0.0+0.armv6l-linux-musleabihf-cxx03.tar.gz/sha512/1f243283e87305f79fdcf5395a19bbb2847e02002404eb9b4b4f9039076f65906d344f9526e751c3c76cf5f11e2a1704498461f570e8ba35b3abac7ae1a9794a
++LLVM.v13.0.0+0.armv6l-linux-musleabihf-cxx11.tar.gz/md5/42afdf5b67e9b40356cd75108259f462
++LLVM.v13.0.0+0.armv6l-linux-musleabihf-cxx11.tar.gz/sha512/54dbb70c16699ed8841a32894450ba6f0c76075ca3a5dea8494c9940f5a392196fb65310c4723072438a0ceb8c69a74b97a337dca75f2ec8a3743d493ef97dd9
++LLVM.v13.0.0+0.armv7l-linux-gnueabihf-cxx03.tar.gz/md5/fea8e29483bc7be34b705a6e2f640051
++LLVM.v13.0.0+0.armv7l-linux-gnueabihf-cxx03.tar.gz/sha512/3419de96b24f155a95f8c3829e4c291b46e00187b24b06a029b54fedbd8174fab5deeecf568fb5180116e193ce294d5ec9a3bb5a7768aecca4fd746daa970eff
++LLVM.v13.0.0+0.armv7l-linux-gnueabihf-cxx11.tar.gz/md5/88d115eaded87f5fbd8e45c650d12bf1
++LLVM.v13.0.0+0.armv7l-linux-gnueabihf-cxx11.tar.gz/sha512/55427189cbea5e215bc30c6e5d1462f1c890d3900b1a1560b19e3f22bfeacf64983943cbb40eaf1f9a087fc403e0c55f6785d5865fbb112de58a33eb0f5e29df
++LLVM.v13.0.0+0.armv7l-linux-musleabihf-cxx03.tar.gz/md5/a8932dec2789144dacea65ffbc68c3a1
++LLVM.v13.0.0+0.armv7l-linux-musleabihf-cxx03.tar.gz/sha512/858e14a50e8ecd132c86de6368f72ff225691b52aee7d5b24c401af303743d89774a1a75fb7b15c7a79f032d41cb46af987914c0e40ddf7968c1dc1c54e9b2d1
++LLVM.v13.0.0+0.armv7l-linux-musleabihf-cxx11.tar.gz/md5/75a466cefe1629fe65b92df803ac1ef1
++LLVM.v13.0.0+0.armv7l-linux-musleabihf-cxx11.tar.gz/sha512/3fd2f749d19384deb46056c879c37977b47a72a447f31c3be07f481d264dd58e5f9ddde5c9f6e650c3d26c535abfce732c481614b32bb68a5e8e6f599d527f56
++LLVM.v13.0.0+0.i686-linux-gnu-cxx03.tar.gz/md5/9f523f9ab35cfd6349b1693b21c9b5d2
++LLVM.v13.0.0+0.i686-linux-gnu-cxx03.tar.gz/sha512/a4a23050643d5f3f8c3bbdb6efae7f080b5e04e3b38e55ba97979f5a4179e38fc624191c548a5fd02c4d20bfbc09b0f3b8f1eb8a8a9e48fd15246eecce131d68
++LLVM.v13.0.0+0.i686-linux-gnu-cxx11.tar.gz/md5/8b33593600d0a597222f14753f94def7
++LLVM.v13.0.0+0.i686-linux-gnu-cxx11.tar.gz/sha512/5701f4f637353e5f96d13d37aa35508f24889d22fca6da9f5629b0bccec6f35e765651dd9faf2fe6f43d0838a03d7440d132f07c1c14eecbff03af72d9deda95
++LLVM.v13.0.0+0.i686-linux-musl-cxx03.tar.gz/md5/f9f2c2b9b9fe5c33b4535f3bc3a4d15a
++LLVM.v13.0.0+0.i686-linux-musl-cxx03.tar.gz/sha512/f20595f3f62f4cd871f14d737d5e1113cc423f6fba2724ed43a6018b2865f0ec059e117ba37ae4847f8787f7556d6b2aecfc378c955d703101df5d760488cde4
++LLVM.v13.0.0+0.i686-linux-musl-cxx11.tar.gz/md5/34954954437f687370c2c2b983ace335
++LLVM.v13.0.0+0.i686-linux-musl-cxx11.tar.gz/sha512/526145b9a491477b815f221164d8f4be1c1b71404a491d11d3ee0ee89ec3989a88749141ec2cc581c7c2050148eafa7fc735438369a72429e1e635c26de950cf
++LLVM.v13.0.0+0.i686-w64-mingw32-cxx03.tar.gz/md5/fc013fc89a462258796fd5edf0c24170
++LLVM.v13.0.0+0.i686-w64-mingw32-cxx03.tar.gz/sha512/70102e3f6a9cd6aaac76beb71c7d9a0512310243ece64fbacfff1476eac66f9fa265ea822de98b08fd97bdca8de940caa98d0a45453fc746472ee64dbe00faaa
++LLVM.v13.0.0+0.i686-w64-mingw32-cxx11.tar.gz/md5/87d576c0d5350d7a6196bf688047b0e5
++LLVM.v13.0.0+0.i686-w64-mingw32-cxx11.tar.gz/sha512/d8fbf06ec6bbca03fb46ce54a2c318225cf54efc07adc6cbbc4fde9a5429373fe3fc363cd46a3efc6e0ce43481bd341fd525561c2b51cf7ed474a57e8df42041
++LLVM.v13.0.0+0.powerpc64le-linux-gnu-cxx03.tar.gz/md5/5bc803e4434e2e3e066100b227558c90
++LLVM.v13.0.0+0.powerpc64le-linux-gnu-cxx03.tar.gz/sha512/5c48159294547772a5736b8f5ae4ef24c1cc6685a31c3b54b18138a6e895d2049688c303709679fbdd4e76f5e9a6d39f46676b663c903aa0ece47224f319c983
++LLVM.v13.0.0+0.powerpc64le-linux-gnu-cxx11.tar.gz/md5/4ce4a79d2ac7b7714f68aadc76e97eec
++LLVM.v13.0.0+0.powerpc64le-linux-gnu-cxx11.tar.gz/sha512/c17e001c4e234128f5a6c023b0ed9085b508f88585044cb4114158c627d322c8255b1abc4c0f921938c153862ac6c6e96017a9cfc4eb1bfc773a9c39a88fd324
++LLVM.v13.0.0+0.x86_64-apple-darwin.tar.gz/md5/d7f6952b5c4340c0ff01886bb5bcd605
++LLVM.v13.0.0+0.x86_64-apple-darwin.tar.gz/sha512/6ab5033b73126a27f5517d0c08c103f1e567f6f69047e155a33bb7e79a8ec255ee3bf7ff35859e6266c7e0d39da622fa66b6c47cfe75480191ef3ab41d0e77ab
++LLVM.v13.0.0+0.x86_64-linux-gnu-cxx03.tar.gz/md5/1cf51371d229f0f09bb8c9c5d598ff7e
++LLVM.v13.0.0+0.x86_64-linux-gnu-cxx03.tar.gz/sha512/87dc0e3774b4fc6bdb3ddab6410f7125ff5a829014e0c6618102d8d1aed732ec2c21d3e08aa4026abb92d597bf0bdcdf6466f8cebeefd7b0ae3161ab76625d52
++LLVM.v13.0.0+0.x86_64-linux-gnu-cxx11.tar.gz/md5/0188aa465ef9220c5b0bfed639a2c2b4
++LLVM.v13.0.0+0.x86_64-linux-gnu-cxx11.tar.gz/sha512/ce8736ad0b444eedfd628de228319988f0f21097b0a72b456db2a4ef0399d083dfd17f98e70e27bcc6f94fb7d439ced83668730cabb475af1aac157816436e22
++LLVM.v13.0.0+0.x86_64-linux-musl-cxx03.tar.gz/md5/1363427ee8f92c11428bc02c13cf282d
++LLVM.v13.0.0+0.x86_64-linux-musl-cxx03.tar.gz/sha512/c4b947f4b7b9bfe653d407bf3bcc93d17ec185811742f2f5e3c0ae849b54f55df29aeddeb9b33edcb2823af268b9beb268e25d03491389ce1e641eab1ffb938a
++LLVM.v13.0.0+0.x86_64-linux-musl-cxx11.tar.gz/md5/0242218a39a75f383a3ec417bfc998d1
++LLVM.v13.0.0+0.x86_64-linux-musl-cxx11.tar.gz/sha512/d6f7c59103c5efe7937ccdbe796fa83d3093a5af9d7fb5552db817ce4ca21333c7fe7a8b6c6fe31ee47d321542130d1afd61f140bb9fc4cfc19ef7d260e179ec
++LLVM.v13.0.0+0.x86_64-unknown-freebsd.tar.gz/md5/c00f4c2d33137c61597a1c2e202602ff
++LLVM.v13.0.0+0.x86_64-unknown-freebsd.tar.gz/sha512/69174f5d7babe9e4c711f36a18467477773f90e89032d76725e26305aa237d905bfb49dbe072d7b473aed2c23ef932ed948feed9ccfba78531a17d73f9ed9893
++LLVM.v13.0.0+0.x86_64-w64-mingw32-cxx03.tar.gz/md5/0d9f031295fff6ded587dbdbfa256b77
++LLVM.v13.0.0+0.x86_64-w64-mingw32-cxx03.tar.gz/sha512/000377c79557876c4c70944971a757d5430ce18c40f1adf119b26224d1ce677b2c22f3a671f80c950a86ec3782cba11fa85792feb9c23b0433563eed49267b21
++LLVM.v13.0.0+0.x86_64-w64-mingw32-cxx11.tar.gz/md5/ea1d99b6d5bbbe56e92da2e2fa78325a
++LLVM.v13.0.0+0.x86_64-w64-mingw32-cxx11.tar.gz/sha512/8e6f79162c63e2f8e3c9eb1cc92806f1471a0637ee2d06826edf502dc31b602621eaa5a873e720ec73e654df64d8c007e1caa0c654e2799b459e7d5d961b25fe
++LLVM_assert.v13.0.0+0.aarch64-apple-darwin.tar.gz/md5/1a32d0f1d509eac7e406200b7b1dbd26
++LLVM_assert.v13.0.0+0.aarch64-apple-darwin.tar.gz/sha512/66f788bc5a292e48a631a9ae613daca38866f0a95018cd76ba90c24961a7adce44e8af10862ee129ee81b8b7edb43a089da14d45090a86d97e85d3122a4817b6
++LLVM_assert.v13.0.0+0.aarch64-linux-gnu-cxx03.tar.gz/md5/b3d337b276460e52dca5f997053e2fd0
++LLVM_assert.v13.0.0+0.aarch64-linux-gnu-cxx03.tar.gz/sha512/da4cf5df94f45f8e656c963b987e6ef9d9c1fff3bdb5a0c440ade960facd4cf672e9e57b515bb99a559428851b2b58c630f40b13af1db912aca5cb167e7491d8
++LLVM_assert.v13.0.0+0.aarch64-linux-gnu-cxx11.tar.gz/md5/578e0af76d5abc948046cc24c05a29d7
++LLVM_assert.v13.0.0+0.aarch64-linux-gnu-cxx11.tar.gz/sha512/c8ef42279827ddbd6ab0063fe5b391e3a6c67942f526bd108e305d33cd599c315ba570d386b88f6d2a33dcf71f0cdf47d41085e2f1d62dc68912cc55fb6df418
++LLVM_assert.v13.0.0+0.aarch64-linux-musl-cxx03.tar.gz/md5/5fdc3b8a3aaf21da53c2078d4ae02c85
++LLVM_assert.v13.0.0+0.aarch64-linux-musl-cxx03.tar.gz/sha512/d5fee56ba774e01a37f7ad1d060d0f629d8e50a8a54b5dbe341bda5c653124d6be910d0843a64f44d54b4adb309cca0906a7dd5e3f5478ccb1b95b5c06be9dbe
++LLVM_assert.v13.0.0+0.aarch64-linux-musl-cxx11.tar.gz/md5/765b50a4cc2358e6d3e28f50646417f4
++LLVM_assert.v13.0.0+0.aarch64-linux-musl-cxx11.tar.gz/sha512/c5fb029af86dd7fa1dca5775250a615fa0ddc4895e201986b4b8d590bf5d310272a70e2e6c8c8ca40e3bb8409cbc3ebdb629b675d5e847390dfb0dcbaa31572c
++LLVM_assert.v13.0.0+0.armv6l-linux-gnueabihf-cxx03.tar.gz/md5/031b9575cad4219c00df83e2979322c2
++LLVM_assert.v13.0.0+0.armv6l-linux-gnueabihf-cxx03.tar.gz/sha512/3b239a195bc2e6ad1c4f01d575fc0798266a2edaedde81a14c11bd650b8098a7bc0391f29af0f8371b37dc6579360ce1c60d40e855826f19aeb905c6be786f7f
++LLVM_assert.v13.0.0+0.armv6l-linux-gnueabihf-cxx11.tar.gz/md5/d9863b84f95ab7888629c2a9f6f67003
++LLVM_assert.v13.0.0+0.armv6l-linux-gnueabihf-cxx11.tar.gz/sha512/463a941f5d5e8f5bdd250704c68e6971a77d4c77964bc2ded78ee0e2daf197344cec9edb328346ce458423fe0d4d65481151e5da524e7661c978b1b129aa3a53
++LLVM_assert.v13.0.0+0.armv6l-linux-musleabihf-cxx03.tar.gz/md5/f0f518533632fee768a4f3d7d6a83b4e
++LLVM_assert.v13.0.0+0.armv6l-linux-musleabihf-cxx03.tar.gz/sha512/635fbe27be809ae6122c97eba485ced344a8912fa06a9bc04ddb85751dc12898164420d838e35350f885dfdd93ac463d6bb910e734aa126d8bf76de1bc278622
++LLVM_assert.v13.0.0+0.armv6l-linux-musleabihf-cxx11.tar.gz/md5/f98c93117637a81dca163ccd9aaa303f
++LLVM_assert.v13.0.0+0.armv6l-linux-musleabihf-cxx11.tar.gz/sha512/fe7f178c52c8770082d9a757ff2087fce51b4e5749e212d0f00130f4790dc69bf6219275a7a9612189acd0023b175ab00eee346d8997930fd88ece85e513aab0
++LLVM_assert.v13.0.0+0.armv7l-linux-gnueabihf-cxx03.tar.gz/md5/34cc66f58ad9af665e25819cf2af489e
++LLVM_assert.v13.0.0+0.armv7l-linux-gnueabihf-cxx03.tar.gz/sha512/645566c091edb59e5362e06aea88146be12a4f541cffea3458ba70c1abdf90e3031d1242e94f8fafd5104abc2c6263921d28c285befbf664147f36b2030a1a42
++LLVM_assert.v13.0.0+0.armv7l-linux-gnueabihf-cxx11.tar.gz/md5/1bf7c5c4cc49da02c204c27f8708970f
++LLVM_assert.v13.0.0+0.armv7l-linux-gnueabihf-cxx11.tar.gz/sha512/6e44b2c38865f184d6520ba6ea8d58d6bb8811926b570de7d931758dc28d9853e26767b9070fc11f349ff1a770de45b24a300ceb270f9a4daea5526afb502c9d
++LLVM_assert.v13.0.0+0.armv7l-linux-musleabihf-cxx03.tar.gz/md5/c1d0b7ccd3259b96c7ecdad3d0f2a09c
++LLVM_assert.v13.0.0+0.armv7l-linux-musleabihf-cxx03.tar.gz/sha512/a55e2665f823252fc193ea0e8d35a8d4ddb3911875946370fb3737aec33eb67bea88a6a8a85ef2f832d8d9dc15c52ee1916df3d90d3bc2b45fb18792a95a872c
++LLVM_assert.v13.0.0+0.armv7l-linux-musleabihf-cxx11.tar.gz/md5/f7b9c7eb030f89960c88a358d70d69e7
++LLVM_assert.v13.0.0+0.armv7l-linux-musleabihf-cxx11.tar.gz/sha512/3730659d41ada350919fe261e6a70ade38ccee51d363c93c7caa51312f721a8050c0e121819b89734980aff27629fde90734e33cfb9af735f531bebdd4411012
++LLVM_assert.v13.0.0+0.i686-linux-gnu-cxx03.tar.gz/md5/2d6d770af578546e1e7fe66dba143d31
++LLVM_assert.v13.0.0+0.i686-linux-gnu-cxx03.tar.gz/sha512/e727a98748119e9cf17c4913568889cd6ad83afd7e7ebc405eb0ee5d06738988b917bcb3bceaf27a28109cfc5a1a5ba54d17369acf6e1d406f5232adebf03581
++LLVM_assert.v13.0.0+0.i686-linux-gnu-cxx11.tar.gz/md5/b02c7f8fd8014783af8472c17daa6b84
++LLVM_assert.v13.0.0+0.i686-linux-gnu-cxx11.tar.gz/sha512/d9dea64b43ff9b84e1aa71ea6bd177595bdd732ace45ed3a910f0764b1e6d5a57d83c4b619b67c9047b51739461478efed7adccdfdf9c46578da8a7f9a817a02
++LLVM_assert.v13.0.0+0.i686-linux-musl-cxx03.tar.gz/md5/a1599ad23c4452277fa2acfce716f005
++LLVM_assert.v13.0.0+0.i686-linux-musl-cxx03.tar.gz/sha512/698ce14b48bc7507ac2f0e5c4fb3a141193f8e3b69002f22fdab789fb395249f8ee13aa5e81e894985eb0297cdc4d6af0de21970dc3770ab644bc90f908d5f73
++LLVM_assert.v13.0.0+0.i686-linux-musl-cxx11.tar.gz/md5/edb064fc4b21b1950769b4409ec2a164
++LLVM_assert.v13.0.0+0.i686-linux-musl-cxx11.tar.gz/sha512/2fdb3753970157a35a9aa7371d9706a1b754236fc9a349ee323e7b4c853f57e1e2b1de7210e417bcf45c5ec146d3dd9e2b224eaae900215ca3a5e98150f716f1
++LLVM_assert.v13.0.0+0.i686-w64-mingw32-cxx03.tar.gz/md5/acf7ff82bab015d972ca9b62a3ef9876
++LLVM_assert.v13.0.0+0.i686-w64-mingw32-cxx03.tar.gz/sha512/7851eb5043b985bda543d2e7cd51c1da2bbd3ef154a23170e19cd7471b3a38ad6ea7cf11ab842bb370cde10eec681e94aaaac9577305e078b5ebbd547ee6b396
++LLVM_assert.v13.0.0+0.i686-w64-mingw32-cxx11.tar.gz/md5/26d9ed007b9e8af2f4fce03d9d2f0810
++LLVM_assert.v13.0.0+0.i686-w64-mingw32-cxx11.tar.gz/sha512/635bf609152fd8d78ea6d3d5fdc9ac035235e575c76d55706ea02f16cdbaf39eed39d80633c769ce65d7fc5fb3e32ec8a4f999731a7e26cfc54aa751def2c0ee
++LLVM_assert.v13.0.0+0.powerpc64le-linux-gnu-cxx03.tar.gz/md5/9f6609828a5ed0951897e506dfd4b42b
++LLVM_assert.v13.0.0+0.powerpc64le-linux-gnu-cxx03.tar.gz/sha512/b8ea95189497a58376e2c5368663c2154b0d931592acbb9ff2b1eb36fc73dc36dfa0712e29302dd9374fec4d2cb9cb6ec8a3146dcc1af5eb910868f66cbc8e40
++LLVM_assert.v13.0.0+0.powerpc64le-linux-gnu-cxx11.tar.gz/md5/71b32db789079601700613010f9d0b4a
++LLVM_assert.v13.0.0+0.powerpc64le-linux-gnu-cxx11.tar.gz/sha512/37972cab0e47e4d2f3be4bdffe446f3ddab3d60efa9f16a472cf3a52a11ca821977214cc596957af9e3ec26b4283b4105901a140bc565423bf3fdc4903e15156
++LLVM_assert.v13.0.0+0.x86_64-apple-darwin.tar.gz/md5/687a5c445074b3088111de587e89f4e3
++LLVM_assert.v13.0.0+0.x86_64-apple-darwin.tar.gz/sha512/c0bb974b84edaf10d0fe774af440b48720bfe9889bb814d8e7f32da945cda9d4726528d7e030751f44ede76e718cd6b6a087d763a99d0b238766c6c4a2ced62a
++LLVM_assert.v13.0.0+0.x86_64-linux-gnu-cxx03.tar.gz/md5/cfa6bc6630d5adf1d22d9d240615f365
++LLVM_assert.v13.0.0+0.x86_64-linux-gnu-cxx03.tar.gz/sha512/eccfd4f75901f30eca0f4ccd428c5c09b8c6d368e3fdde8c006732f25f364c08041f9077dfd68d8f7390ed7809e50ef97bad69fa8145e4f5a3a788687508b0a6
++LLVM_assert.v13.0.0+0.x86_64-linux-gnu-cxx11.tar.gz/md5/5fe424bf4921ff2325066096e2215eca
++LLVM_assert.v13.0.0+0.x86_64-linux-gnu-cxx11.tar.gz/sha512/8281851b53faf9e548ab8583ed39b5ae8410be71ce0f5e605dfeac00fea35c11a951226ae06fc1ea005b9c6ba0c0e72223d61d13f0ec020cec045cd1e5eb0c15
++LLVM_assert.v13.0.0+0.x86_64-linux-musl-cxx03.tar.gz/md5/b7eb19524a0690b8de347ea671c5a074
++LLVM_assert.v13.0.0+0.x86_64-linux-musl-cxx03.tar.gz/sha512/0142464d9a02d3d746e558e200952c56f58b6d57327fdec9ede9e6d391900f13f604dcc1d675448172c93aceeaf968e65c2e447faf688c40bc6c14948851da0c
++LLVM_assert.v13.0.0+0.x86_64-linux-musl-cxx11.tar.gz/md5/d3646c7296d02566528f888a73396168
++LLVM_assert.v13.0.0+0.x86_64-linux-musl-cxx11.tar.gz/sha512/31b04ff2db15cfa59a409adbf82575f77b9109647747da60796cbb65f8b47261f03565f61c7765b51e1aa6f5838a3db582758cfbf59816cc8be0672e734fcd58
++LLVM_assert.v13.0.0+0.x86_64-unknown-freebsd.tar.gz/md5/ed9e4cb9170c419e8e03d4c5802a5821
++LLVM_assert.v13.0.0+0.x86_64-unknown-freebsd.tar.gz/sha512/80ef88171c00b07580ac39e79f47c9c143a76ec3d427b5634d0312b1c96438cedc67a8042571c369d5cf77b7b12d782efd19fb9af58d4743e7137fc875ac4572
++LLVM_assert.v13.0.0+0.x86_64-w64-mingw32-cxx03.tar.gz/md5/7cd54b0aa56de33426f2468da49c8371
++LLVM_assert.v13.0.0+0.x86_64-w64-mingw32-cxx03.tar.gz/sha512/d30c413a3eab4b4eb034e4ca59e36c66e2792e413f8fe6325a8e07a1a7991ad399266ae7386decd76ec9fecbc86ccf30e13126e5faab8534faa309a3e67f78a1
++LLVM_assert.v13.0.0+0.x86_64-w64-mingw32-cxx11.tar.gz/md5/49f72c2416f023a2e2c204306c57a0aa
++LLVM_assert.v13.0.0+0.x86_64-w64-mingw32-cxx11.tar.gz/sha512/af22c3a9e08a90182a3cb25f8667e61968b2c0ab852675473ca97c9718371e3b6548a4daf1b69c88033ff708f93dbe2884a1a15d5d53b8a82e4bced20a4fc152
++libLLVM.v13.0.0+0.aarch64-apple-darwin.tar.gz/md5/51f5a1bc557b1276faa7f08332fe8079
++libLLVM.v13.0.0+0.aarch64-apple-darwin.tar.gz/sha512/ac16242be9a568181757adaec371a7966d61497635092613d630cb32d8b94663f4645c6510320b587814af663238f9e8cdf87a68ac1da3c5be25b3dd6fabf376
++libLLVM.v13.0.0+0.aarch64-linux-gnu-cxx03.tar.gz/md5/24aeeecefd1db907c42887ceb4f6b56c
++libLLVM.v13.0.0+0.aarch64-linux-gnu-cxx03.tar.gz/sha512/753ee75a62c36e98922e35ea5eb9e7066e945c7af4d321e564ed9fa38ff52fde2b6c15b82ea26a01b5fa94c4318aebd7fd99f10f4d703de1d26dd1c563c05d7e
++libLLVM.v13.0.0+0.aarch64-linux-gnu-cxx11.tar.gz/md5/5a237f9e42cd14abb2d1f01c2f9bbe76
++libLLVM.v13.0.0+0.aarch64-linux-gnu-cxx11.tar.gz/sha512/a2bbba80d7d7d0b5a806b03ae7ed1fbda8305d99999cf29dd58cae6f3fab903fcdfda7923f3902062a4137ecd392885d8c51568445b81b02d09814198b5d292a
++libLLVM.v13.0.0+0.aarch64-linux-musl-cxx03.tar.gz/md5/781008fafe057c332b0886d6d600dc5d
++libLLVM.v13.0.0+0.aarch64-linux-musl-cxx03.tar.gz/sha512/812eb02805642bc94fb2562aca0c26cc6d7c915ccb06eb5b9441819a8501e68b8bf31968463b46fae600ad7f4f5920be231fb3328d08f9fee347d1483c0b05eb
++libLLVM.v13.0.0+0.aarch64-linux-musl-cxx11.tar.gz/md5/8da6fb481c6dfdb608ea1d746a25911b
++libLLVM.v13.0.0+0.aarch64-linux-musl-cxx11.tar.gz/sha512/5fb79bd6fd3f37b2da7902d30e6c08242a302da3294848807881a5f7e7c9d18f47acdc55c8ec36375b8ca7db2c87c9a5720d35655ba3a3834137e318ea58e180
++libLLVM.v13.0.0+0.armv6l-linux-gnueabihf-cxx03.tar.gz/md5/475774feddd0cd0e51155e64af88becd
++libLLVM.v13.0.0+0.armv6l-linux-gnueabihf-cxx03.tar.gz/sha512/92feb0880389fcc51fc006df9cc49ea3b22e9003f44c4b3a79d94083d2ff71a814df58e976374647d7607f5b36817fd7ded31203472ef55abe31eea3b0efd11c
++libLLVM.v13.0.0+0.armv6l-linux-gnueabihf-cxx11.tar.gz/md5/37230057f9d2c3bd2fcf063f886d9dae
++libLLVM.v13.0.0+0.armv6l-linux-gnueabihf-cxx11.tar.gz/sha512/04759662a971ab8cfc9828b222c246ea0d39e4ce5b5e2198c4e3a7fd2448f78bab047081a361cdf8cecfca40785dad27bec0f33a4e453244cbfdb3852214c244
++libLLVM.v13.0.0+0.armv6l-linux-musleabihf-cxx03.tar.gz/md5/96c26564fbfc18c40b2b2dd09c1e91d8
++libLLVM.v13.0.0+0.armv6l-linux-musleabihf-cxx03.tar.gz/sha512/eb1f79214296a45dbed996fd1fb86e9c342915ff093122a40c64c450f693816d15fd4f8158e6e45bdc28481e8a5158abfb231fe324ac87be9832bcfc50f7eb32
++libLLVM.v13.0.0+0.armv6l-linux-musleabihf-cxx11.tar.gz/md5/61d852799fb89f2f588c4000d3402d6e
++libLLVM.v13.0.0+0.armv6l-linux-musleabihf-cxx11.tar.gz/sha512/f1875a8e0e1fb6075fe91ea90a9aa4feb614d4f0f32e30bc53df64c154d1b49c1c569696b0095600983779628c6c2fd3d9c89afd8b3f88e603e6ff117a0f22cd
++libLLVM.v13.0.0+0.armv7l-linux-gnueabihf-cxx03.tar.gz/md5/0f637301b97c1fdac4e397adb1eceb07
++libLLVM.v13.0.0+0.armv7l-linux-gnueabihf-cxx03.tar.gz/sha512/debcb66b1306d8b9ec0d4cdaa272b2a4be53fc33255b892422613e8956a8db4a1dae151bc39d7baaa9aa9b4e785817b45798705e7e20f0adc8f26cf9e885533f
++libLLVM.v13.0.0+0.armv7l-linux-gnueabihf-cxx11.tar.gz/md5/15af253ac8c74f41b2656a464c620d45
++libLLVM.v13.0.0+0.armv7l-linux-gnueabihf-cxx11.tar.gz/sha512/0ae1915eb93374dce9f9e25786c356e57dfc2678a1a93dcc43ee25f1e0a1417ad1bc6ef3da6d6332fbcc4c11faea37397c6429227f2ae0908f479e369c05b6e6
++libLLVM.v13.0.0+0.armv7l-linux-musleabihf-cxx03.tar.gz/md5/68d560f7d38a88fd3949b70da7552674
++libLLVM.v13.0.0+0.armv7l-linux-musleabihf-cxx03.tar.gz/sha512/574d27ee6550c2be6b519a9d34fb9176f233e800763b9f2940be2d47c2d70972287f617b52c8f5ec0696e0836b1954d47a4738dd6a74dc8bf5ab40dce5055d2f
++libLLVM.v13.0.0+0.armv7l-linux-musleabihf-cxx11.tar.gz/md5/44a0e98934a2f01fc931facb8f8424fa
++libLLVM.v13.0.0+0.armv7l-linux-musleabihf-cxx11.tar.gz/sha512/55537d77582c9f0a412d2ecc33484d5315828b1baaa90889b058d359bde724f30ce027bdf41e9e9eb2dc1a5b81e69d9207ffc23cc06af35a1b3775adb45c5362
++libLLVM.v13.0.0+0.i686-linux-gnu-cxx03.tar.gz/md5/3afb198460d724019a995a297cbb47d4
++libLLVM.v13.0.0+0.i686-linux-gnu-cxx03.tar.gz/sha512/542dd08ca063f33665ea441dd863da0e3bce704bd4466434db0c1385855e27ba14dcf05f7f7c5b02913b570d0d4d8714cdcb6b290a160484d63ed55ec21b62b2
++libLLVM.v13.0.0+0.i686-linux-gnu-cxx11.tar.gz/md5/51beef971fe989f0eea14ee8b00ababf
++libLLVM.v13.0.0+0.i686-linux-gnu-cxx11.tar.gz/sha512/5ba67e1cb27183202a35ab1e0e2e18c43bdb51489284bdd6ef1624ea127407fa1501a544ab02f0778631d84cf0890b381137506dfd79caefbefc0e2b58637645
++libLLVM.v13.0.0+0.i686-linux-musl-cxx03.tar.gz/md5/fc8624a64d9c1dc3c4cdc4a24a06f346
++libLLVM.v13.0.0+0.i686-linux-musl-cxx03.tar.gz/sha512/ec30d89f2127d4a5066c4e5be25e2a5ef049ef59bcfbd33ce3403177641eace64441eaa6db644f1c5a3d8125f92e424721b5936cbf80c54eb228b20d2d53336c
++libLLVM.v13.0.0+0.i686-linux-musl-cxx11.tar.gz/md5/19c6609aef42624900659b1f99837a29
++libLLVM.v13.0.0+0.i686-linux-musl-cxx11.tar.gz/sha512/283cd22952451c63d4d3aa261b5608077d144e00a545342d654ef028a81d9af7cedb5ea5a854446474dd9d744ea989ea254df2d65bad468f2b010d31bafd1775
++libLLVM.v13.0.0+0.i686-w64-mingw32-cxx03.tar.gz/md5/7c6780dc6bbcb3becc9067f412886c5a
++libLLVM.v13.0.0+0.i686-w64-mingw32-cxx03.tar.gz/sha512/2b628dcd48f681e4a773783a7620b1a365a6ce5ea6beed71c8e8f0271589131e7d2c6536036e576a6bbe2d2728005a6a8e4242f6a2ca1c834289bec31f986c44
++libLLVM.v13.0.0+0.i686-w64-mingw32-cxx11.tar.gz/md5/fa72efa617d48bd61a12a9949f377db3
++libLLVM.v13.0.0+0.i686-w64-mingw32-cxx11.tar.gz/sha512/d0f18a443077b45d6feeba8a674aeadcc98c4496c877d3ed09c8f41bb10e35b90468c9cc3aaa1efdad1ee641ce7a58bbc3ec6153b7a609e99a3d620b418e0b16
++libLLVM.v13.0.0+0.powerpc64le-linux-gnu-cxx03.tar.gz/md5/9f4afe72d6f63c01649f6efe201a58d1
++libLLVM.v13.0.0+0.powerpc64le-linux-gnu-cxx03.tar.gz/sha512/5cf0cc81bd8b87fe2b03e6f4273785d492f7f4f71c2fb4a6a855738c657cec176b563942f54837dba021d0efe0746c407427d0eb30c973a8df0a53cc3407abe7
++libLLVM.v13.0.0+0.powerpc64le-linux-gnu-cxx11.tar.gz/md5/0779fb1e8deb561273dce6ef50f22756
++libLLVM.v13.0.0+0.powerpc64le-linux-gnu-cxx11.tar.gz/sha512/7d1e8897742411a2f6b7549e018dd244b50642150a2ff1291abfecb01e2e85f5c8ca76fc81adf5aa34290db7155a77d362eecb8b669465ea30c794d068ef7ba3
++libLLVM.v13.0.0+0.x86_64-apple-darwin.tar.gz/md5/b45ab996cef6f992baa708d79a428cfb
++libLLVM.v13.0.0+0.x86_64-apple-darwin.tar.gz/sha512/53eb8fa3a2711c1131554d3ed8b8491942f50c226c903a6dd4fa26cab3c376ecdd91ef7bad13adce77af176ce621810d5d509ebcb1d9bdee8bfefa048e7c831b
++libLLVM.v13.0.0+0.x86_64-linux-gnu-cxx03.tar.gz/md5/009bb3817b4eb4e9028a2669af6a2608
++libLLVM.v13.0.0+0.x86_64-linux-gnu-cxx03.tar.gz/sha512/6028ae5707769dcae4f9c85c3b585819469ca0121c38a08d2dcf3c1f5358b9c90f856225f755669f2b26ca3de90bfaf26d245eb38bd32ec6b9a31a4b54e38ea2
++libLLVM.v13.0.0+0.x86_64-linux-gnu-cxx11.tar.gz/md5/e33cd013be65e1272deda69218392619
++libLLVM.v13.0.0+0.x86_64-linux-gnu-cxx11.tar.gz/sha512/4d50c7aa7a50d7655328a4c9601e3eac2a79e609d51a53f63569c4443e02760de9c28e5f78f404b304c90c559b1b66dcbea883b22bb85fedf6cc8257c17a92e3
++libLLVM.v13.0.0+0.x86_64-linux-musl-cxx03.tar.gz/md5/59407b16b3022c6113aee06083745ae7
++libLLVM.v13.0.0+0.x86_64-linux-musl-cxx03.tar.gz/sha512/96243ca6dc3773e0974d7986300f75d353070c485bc5e08ab5e7faa9206f1e303700a90139d09fdd25a856051a24bbd9ab59a4e504c6645d7c470bd841efcec1
++libLLVM.v13.0.0+0.x86_64-linux-musl-cxx11.tar.gz/md5/710d7a4990e73700f6ca4e0a0537c305
++libLLVM.v13.0.0+0.x86_64-linux-musl-cxx11.tar.gz/sha512/72ec13965c4ea9184b733660ae45ddf66c0923251ec8ceae08874c21173fa575457b3172ee442f2f702ae1b48d710c8352d94cb6844de25afff0c26c2322a25a
++libLLVM.v13.0.0+0.x86_64-unknown-freebsd.tar.gz/md5/650a92189d1e385e90e6727cfa8fbb8b
++libLLVM.v13.0.0+0.x86_64-unknown-freebsd.tar.gz/sha512/4fdebbc3f5a8b51f61d74696fb4c5b3e68eb721ae708461f1f8209b3bb64405217c06cb354efd1973b92107205e5a92817d4622b958db60e8becbf873da14abe
++libLLVM.v13.0.0+0.x86_64-w64-mingw32-cxx03.tar.gz/md5/b68bcc07e0ab1c73661a66d7d1edd120
++libLLVM.v13.0.0+0.x86_64-w64-mingw32-cxx03.tar.gz/sha512/f094fa1675b31a48428f178ccea5ac037ed9e5d97e4b77901b4c2319a1528b28af34addb5f3b0049566ed8ee0286b822438b604f798d6fadf9e872eb5cab2404
++libLLVM.v13.0.0+0.x86_64-w64-mingw32-cxx11.tar.gz/md5/b6dcf9837a6aaa1de80b42e43923a627
++libLLVM.v13.0.0+0.x86_64-w64-mingw32-cxx11.tar.gz/sha512/c7c7553af602920d6ddaa968ae65b636ace852b8034d80ed6f44def4e01ed098d4a2ac7d561708fd7692f7ec8c225b74f7413bf1929165114435a637f6d34b6e
++libLLVM_assert.v13.0.0+0.aarch64-apple-darwin.tar.gz/md5/a9d8459a118c39799e6123d0d55e7111
++libLLVM_assert.v13.0.0+0.aarch64-apple-darwin.tar.gz/sha512/8ae6726aea54d5d6517680b2aa8196277791818f37c87b9035c0d8a27f92048aac2b4a743110866d991feae14fc39e03943be3ac87dc694717a246192337941e
++libLLVM_assert.v13.0.0+0.aarch64-linux-gnu-cxx03.tar.gz/md5/32670721bc53ab0859d41e1c0596f5d4
++libLLVM_assert.v13.0.0+0.aarch64-linux-gnu-cxx03.tar.gz/sha512/142943240b4d648f1b61b7123be9c084e5d10b039e658981f44d5583ce6cad6f25ee84c47ad433cbb18fb983d2db3935fec780df379d2c041160afad89fd2729
++libLLVM_assert.v13.0.0+0.aarch64-linux-gnu-cxx11.tar.gz/md5/3f752d5b38fbc37d955ffe8ea7500c60
++libLLVM_assert.v13.0.0+0.aarch64-linux-gnu-cxx11.tar.gz/sha512/9a86692cb72445f1363ee160041f101defd31071063c112b59063575ce779746a0262b20a0e409c4b5fdaaaf6a293a8a3f5a6e7770b1306d6e417beacb6a300e
++libLLVM_assert.v13.0.0+0.aarch64-linux-musl-cxx03.tar.gz/md5/8863f3973da28cff5af1019b166bf550
++libLLVM_assert.v13.0.0+0.aarch64-linux-musl-cxx03.tar.gz/sha512/8eb80c2a40b79cbf84d2c8733df46545288ba9a1830c9e96e2df3e35d389824589ef7af0c2b9cec531368f3b8bfdca0ba264db3185c350c874f8a180bc402345
++libLLVM_assert.v13.0.0+0.aarch64-linux-musl-cxx11.tar.gz/md5/c851483ad7e81c6966eaa4765648b162
++libLLVM_assert.v13.0.0+0.aarch64-linux-musl-cxx11.tar.gz/sha512/db8a9f7cca76a3a46e79a67e11f9b50304f076e20d69679965d031d13ceb6c005932bca6c6c4b2a8ccc2abd480c40921b06402defaf478d84404f7711d4bbfb4
++libLLVM_assert.v13.0.0+0.armv6l-linux-gnueabihf-cxx03.tar.gz/md5/cc965ad4e5e6706820247f5b27b3e676
++libLLVM_assert.v13.0.0+0.armv6l-linux-gnueabihf-cxx03.tar.gz/sha512/e6907b841f149632d0480e50c4996d72dd86311b19b86ece89a8b266f5161cbc1625ca3161f53838ec2b811480380a94d24e83f4edb4452f72d1a9b9ce6a0add
++libLLVM_assert.v13.0.0+0.armv6l-linux-gnueabihf-cxx11.tar.gz/md5/2ae20a756a0331f507afc3a8596eff11
++libLLVM_assert.v13.0.0+0.armv6l-linux-gnueabihf-cxx11.tar.gz/sha512/576fa98ea234aef4044f367fe7d3fdb3755b5ecd3c59eeb3da95de3a8de03727ee769993622787119bc57032b1b704378b7bd1ad33ea91dc1557e45d4529b82e
++libLLVM_assert.v13.0.0+0.armv6l-linux-musleabihf-cxx03.tar.gz/md5/6530849795e1a95a671d98654633b07d
++libLLVM_assert.v13.0.0+0.armv6l-linux-musleabihf-cxx03.tar.gz/sha512/e5ccb7bdd8d63e9bf474e2a3eefdd66690c314aac771ce653675c9f50c038eddc1d83a5becb0d52ab27c87f53888edde17efdfa30d97c1927cb6bfc541733418
++libLLVM_assert.v13.0.0+0.armv6l-linux-musleabihf-cxx11.tar.gz/md5/4d3d7346d39901688b8bc23f7300ddf2
++libLLVM_assert.v13.0.0+0.armv6l-linux-musleabihf-cxx11.tar.gz/sha512/17ab46ec63670b938d31e260710fef9ab896cc0024551f0ca12fa54e172379ff0d44541d25c9bf4d3730cf5d94582387692e1c02ddc4015930a9a8c146e2ba51
++libLLVM_assert.v13.0.0+0.armv7l-linux-gnueabihf-cxx03.tar.gz/md5/a67dcc4e17942d6fd667a4db0dde08e6
++libLLVM_assert.v13.0.0+0.armv7l-linux-gnueabihf-cxx03.tar.gz/sha512/45ddce01ec120b4f60ff74c5d21114a4aeaf0a66c5919d5cea4a549b6bca7de2bcaf34355f4ca62fe635091858a1b2f68d13b41a60e18c71a4763b7f64094c60
++libLLVM_assert.v13.0.0+0.armv7l-linux-gnueabihf-cxx11.tar.gz/md5/37f8f361c3b4ec5b30a8f12d048dc267
++libLLVM_assert.v13.0.0+0.armv7l-linux-gnueabihf-cxx11.tar.gz/sha512/508babe590c42e4969236d9c72b13c9b8ef4bda849802142409fedbcbe0ee387ae40ff2ba540d2c6f8a5d49f4fc76969380826e615d2fd180fb134e3a77a4c35
++libLLVM_assert.v13.0.0+0.armv7l-linux-musleabihf-cxx03.tar.gz/md5/307389fbe3d1874d1b014ef2ad5dacd3
++libLLVM_assert.v13.0.0+0.armv7l-linux-musleabihf-cxx03.tar.gz/sha512/8b61da02a4ff93bf25797aad17d04b2b966e8c586d2c7fe234121b5790b11270756bd0b7ab39ab7ccbbad6b84bc77e5bbc621c42eae2b4063206b53419d173c0
++libLLVM_assert.v13.0.0+0.armv7l-linux-musleabihf-cxx11.tar.gz/md5/eaf412aa130e361b37c1452a90d280cb
++libLLVM_assert.v13.0.0+0.armv7l-linux-musleabihf-cxx11.tar.gz/sha512/3af077cd7e8f5d4118e83dcd5c34c6923b43465fbdf68d2c3e4cb6b697e9daf037f7b54b716ae2c154b7d9bec7d866d9c05ebdecbcf33abc7593aeacf2552915
++libLLVM_assert.v13.0.0+0.i686-linux-gnu-cxx03.tar.gz/md5/4774dfadee54a30be7b202329919c7a2
++libLLVM_assert.v13.0.0+0.i686-linux-gnu-cxx03.tar.gz/sha512/02009535bd4402d9e36ce9f913d1a2650d6aa24c90d0f92caac9084d316626896e8891bf701b316c6182c8777771376869b159856079e22783e7379417eeec7c
++libLLVM_assert.v13.0.0+0.i686-linux-gnu-cxx11.tar.gz/md5/31754192b894289644573728ccdcc164
++libLLVM_assert.v13.0.0+0.i686-linux-gnu-cxx11.tar.gz/sha512/aff57316dde223f7531693a692893c0a2d57f7f52348fdfbd5ea43324eb3ca5bd3fffc6639cdfa270557475d1d37a992b876ee8a80d1c2bb59027da45e0ee448
++libLLVM_assert.v13.0.0+0.i686-linux-musl-cxx03.tar.gz/md5/51971f8d1815e4b009f51caaefdf7aee
++libLLVM_assert.v13.0.0+0.i686-linux-musl-cxx03.tar.gz/sha512/68d6ae0cbd7e2d56af481fd34f24ce43d37ba9c86173c78be5ccf1a10b0a456ad1d05ec7ce3a0e252bd7df713322d8ac82cf31f9c166affaffa3cefba73fe05a
++libLLVM_assert.v13.0.0+0.i686-linux-musl-cxx11.tar.gz/md5/0544523fd97028a3e05c9a0cd363005f
++libLLVM_assert.v13.0.0+0.i686-linux-musl-cxx11.tar.gz/sha512/4291de34d47ffddfff90a6029299484ec933e276a9b3714e823bb09558416cf671fa4ce28c0632007836271b424b6a804e121447bbcb3f4944300daece578895
++libLLVM_assert.v13.0.0+0.i686-w64-mingw32-cxx03.tar.gz/md5/908308296f47af753e68e1127524f2c0
++libLLVM_assert.v13.0.0+0.i686-w64-mingw32-cxx03.tar.gz/sha512/8c296c645f2be9fa17cf445421c9fa95fa2d918f07918574966427ae4d836c4ea039d73e8a8ceaa687956169409ba50e834279d9948d1565f8904ec4a8ed7561
++libLLVM_assert.v13.0.0+0.i686-w64-mingw32-cxx11.tar.gz/md5/6adf51f5b429cf26a3b9eab70cbd1763
++libLLVM_assert.v13.0.0+0.i686-w64-mingw32-cxx11.tar.gz/sha512/b8dd2f3faf75b3c0d1fe04427aa2ca3af578bd44389da5ae5096f6cd7b3bcb2916686c22197f7087ec1e05ff8dae06ebd8dfe175d42b17fbfbd4eaadcbc13b87
++libLLVM_assert.v13.0.0+0.powerpc64le-linux-gnu-cxx03.tar.gz/md5/7a21fb615d7e273e3ad8f255af7232e7
++libLLVM_assert.v13.0.0+0.powerpc64le-linux-gnu-cxx03.tar.gz/sha512/366f80a6d418030206235075e2816b35cd75cfbdbd77b8f7dfbe028d1a10617927e6631ca57438f78f03907a3e6dca816b70d79b62e86be5da39f5cfb2d0e5c9
++libLLVM_assert.v13.0.0+0.powerpc64le-linux-gnu-cxx11.tar.gz/md5/df5dd3e0186af0ceb3db00f52e6f8716
++libLLVM_assert.v13.0.0+0.powerpc64le-linux-gnu-cxx11.tar.gz/sha512/ac95fb116d7494c38b6a4abf0ce238ab83caf222fcd363975fa6a76bbf4956810055b6f3beaca4678bd559b00d38ef8bff4d2d860ba4eba6a3143cf48aec5988
++libLLVM_assert.v13.0.0+0.x86_64-apple-darwin.tar.gz/md5/a0f236df2f495756db9ef63048b6636b
++libLLVM_assert.v13.0.0+0.x86_64-apple-darwin.tar.gz/sha512/2e6cdc0ff5b278b3a6111eec0f8c821531151104432aac662f5f007b8cba8013ec334b41409430112dc4cf166ad48b6561b14966fe546c1bd0ac55d4c8cedf02
++libLLVM_assert.v13.0.0+0.x86_64-linux-gnu-cxx03.tar.gz/md5/689f613870865182ef80c52af69333af
++libLLVM_assert.v13.0.0+0.x86_64-linux-gnu-cxx03.tar.gz/sha512/a24778e724240ffeac2fddc886d1974e4ea497836b805520cf194a1d5f84f82cb1a1c4f719907511cc62b68440cf9373a8c830e282253c72bc996c318f62a1ec
++libLLVM_assert.v13.0.0+0.x86_64-linux-gnu-cxx11.tar.gz/md5/d57e5b4925f88ecf6b27b7c343ac5ce9
++libLLVM_assert.v13.0.0+0.x86_64-linux-gnu-cxx11.tar.gz/sha512/497d0ca9fdf3d90e459aeba817e93b66271a308b270d9e67433cc2e3dc4a1ed6619848b3220cc5842571874a492465e174169bd2ea31ae3b7c60a5ba195d7d06
++libLLVM_assert.v13.0.0+0.x86_64-linux-musl-cxx03.tar.gz/md5/95d852837c86bc866744e23cf0718403
++libLLVM_assert.v13.0.0+0.x86_64-linux-musl-cxx03.tar.gz/sha512/e38136b1c5e84f63d75ed4cf52f7bf73c5ed23f70bd3af9f56aabd6d0b17b3f0a940279b0d663af109517375acbe3e85ce15e7f46834835d5e02d0d23ca13311
++libLLVM_assert.v13.0.0+0.x86_64-linux-musl-cxx11.tar.gz/md5/f3a74e7affb592022523aabc1f489a8b
++libLLVM_assert.v13.0.0+0.x86_64-linux-musl-cxx11.tar.gz/sha512/132ea16c002b2fc633b66ee0bdf740068ae9df2e305c2fc7b31256b8a0de765ae0a01a18757563e13fc66b3a5f04a6d0d5e91d1700fdfc5614a388cb784b1dc4
++libLLVM_assert.v13.0.0+0.x86_64-unknown-freebsd.tar.gz/md5/525f5841436470cb9f98e8180f87a298
++libLLVM_assert.v13.0.0+0.x86_64-unknown-freebsd.tar.gz/sha512/d000eeebd6a016ae347c42c2c0be6493486b1a925bd7adf0de2bd9576a86c642a5ed6af56ca356a67415e8b36ada64438d7e9974533501108e9cf04019fa2b1b
++libLLVM_assert.v13.0.0+0.x86_64-w64-mingw32-cxx03.tar.gz/md5/dfbeca238d74ce1cd6792fe39e873710
++libLLVM_assert.v13.0.0+0.x86_64-w64-mingw32-cxx03.tar.gz/sha512/f322d672653b246a001059e2e9161e464c13be9578a347b2467f44c8764d67dd78bf2d954e82e892c53693fb6b7c99a3b96849153b32864e8465d29cb8689e75
++libLLVM_assert.v13.0.0+0.x86_64-w64-mingw32-cxx11.tar.gz/md5/dbdaf1d34df146343b50f8219d28dde3
++libLLVM_assert.v13.0.0+0.x86_64-w64-mingw32-cxx11.tar.gz/sha512/dd9768e2a6e0e04fcc8c0f97bd6913d850bae964acd5919cd230f3e9c3fe3306d56594f20df134cab06914f69b31ca23c2bfc7508aa6f31f8255406039792901
++llvm-julia-13.0.0-0.tar.gz/md5/2ba29a6a3146e38fb3c9d0d65ad31488
++llvm-julia-13.0.0-0.tar.gz/sha512/e0cceb27a4072015940d4914477a2748df3a74b99bb9d0246e64bd5bfa282633405f8c9d66a98621a2a2289e62cf7a20f9ad28608a178d269cb2812453446e73
+diff --git a/deps/llvm.version b/deps/llvm.version
+index 45b9c6a057..077843a854 100644
+--- a/deps/llvm.version
++++ b/deps/llvm.version
+@@ -1,2 +1,2 @@
+-LLVM_BRANCH=julia-12.0.1-4
+-LLVM_SHA1=julia-12.0.1-4
++LLVM_BRANCH=julia-13.0.0-0
++LLVM_SHA1=julia-13.0.0-0
+diff --git a/doc/src/devdocs/llvm.md b/doc/src/devdocs/llvm.md
+index 6f3a5ee338..af30e535e9 100644
+--- a/doc/src/devdocs/llvm.md
++++ b/doc/src/devdocs/llvm.md
+@@ -42,7 +42,7 @@ The default version of LLVM is specified in `deps/Versions.make`. You can overri
+ a file called `Make.user` in the top-level directory and adding a line to it such as:
+ 
+ ```
+-LLVM_VER = 12.0.1
++LLVM_VER = 13.0.0
+ ```
+ 
+ Besides the LLVM release numerals, you can also use `LLVM_VER = svn` to build against the latest
+@@ -79,7 +79,7 @@ environment. In addition, it exposes the `-julia` meta-pass, which runs the
+ entire Julia pass-pipeline over the IR. As an example, to generate a system
+ image, one could do:
+ ```
+-opt -load libjulia-internal.so -julia -o opt.bc unopt.bc
++opt -enable-new-pm=0 -load libjulia-internal.so -julia -o opt.bc unopt.bc
+ llc -o sys.o opt.bc
+ cc -shared -o sys.so sys.o
+ ```
+diff --git a/src/Makefile b/src/Makefile
+index 1494fe3be4..283e2645e9 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -124,7 +124,11 @@ else
+ ifneq ($(USE_LLVM_SHLIB),1)
+ CG_LLVMLINK += $(LLVM_LDFLAGS) $(shell $(LLVM_CONFIG_HOST) --libs $(CG_LLVM_LIBS) --link-static) $($(LLVM_LDFLAGS) $(shell $(LLVM_CONFIG_HOST) --system-libs 2> /dev/null)
+ else
++ifeq ($(OS), Darwin)
+ CG_LLVMLINK += $(LLVM_LDFLAGS) -lLLVM
++else
++CG_LLVMLINK += $(LLVM_LDFLAGS) -lLLVM-13jl
++endif
+ endif
+ endif
+ ifeq ($(USE_LLVM_SHLIB),1)
+diff --git a/src/abi_aarch64.cpp b/src/abi_aarch64.cpp
+index 3e6b995f07..1a3f160329 100644
+--- a/src/abi_aarch64.cpp
++++ b/src/abi_aarch64.cpp
+@@ -187,7 +187,7 @@ Type *isHFAorHVA(jl_datatype_t *dt, size_t &nele, LLVMContext &ctx) const
+     return NULL;
+ }
+ 
+-bool needPassByRef(jl_datatype_t *dt, AttrBuilder &ab, LLVMContext &ctx) override
++bool needPassByRef(jl_datatype_t *dt, AttrBuilder &ab, LLVMContext &ctx, Type *Ty) override
+ {
+     // B.2
+     //   If the argument type is an HFA or an HVA, then the argument is used
+diff --git a/src/abi_arm.cpp b/src/abi_arm.cpp
+index 032943abd4..4987d07657 100644
+--- a/src/abi_arm.cpp
++++ b/src/abi_arm.cpp
+@@ -23,7 +23,7 @@
+ 
+ struct ABI_ARMLayout : AbiLayout {
+ 
+-bool needPassByRef(jl_datatype_t *dt, AttrBuilder &abi, LLVMContext &ctx) override
++bool needPassByRef(jl_datatype_t *dt, AttrBuilder &abi, LLVMContext &ctx, Type *Ty) override
+ {
+     return false;
+ }
+diff --git a/src/abi_llvm.cpp b/src/abi_llvm.cpp
+index f21edeadee..181b05ef79 100644
+--- a/src/abi_llvm.cpp
++++ b/src/abi_llvm.cpp
+@@ -45,7 +45,7 @@ bool use_sret(jl_datatype_t *ty, LLVMContext &ctx) override
+     return false;
+ }
+ 
+-bool needPassByRef(jl_datatype_t *ty, AttrBuilder &ab, LLVMContext &ctx) override
++bool needPassByRef(jl_datatype_t *ty, AttrBuilder &ab, LLVMContext &ctx, Type *Ty) override
+ {
+     return false;
+ }
+diff --git a/src/abi_ppc64le.cpp b/src/abi_ppc64le.cpp
+index da1d8484a0..a35223c8dd 100644
+--- a/src/abi_ppc64le.cpp
++++ b/src/abi_ppc64le.cpp
+@@ -101,12 +101,16 @@ bool use_sret(jl_datatype_t *dt, LLVMContext &ctx) override
+     return false;
+ }
+ 
+-bool needPassByRef(jl_datatype_t *dt, AttrBuilder &ab, LLVMContext &ctx) override
++bool needPassByRef(jl_datatype_t *dt, AttrBuilder &ab, LLVMContext &ctx, Type *Ty) override
+ {
+     jl_datatype_t *ty0 = NULL;
+     bool hva = false;
+     if (jl_datatype_size(dt) > 64 && isHFA(dt, &ty0, &hva) > 8) {
++#if JL_LLVM_VERSION < 120000
+         ab.addAttribute(Attribute::ByVal);
++#else
++        ab.addByValAttr(Ty);
++#endif
+         return true;
+     }
+     return false;
+diff --git a/src/abi_win32.cpp b/src/abi_win32.cpp
+index a25fcaec9b..fa1cfe2225 100644
+--- a/src/abi_win32.cpp
++++ b/src/abi_win32.cpp
+@@ -49,11 +49,15 @@ bool use_sret(jl_datatype_t *dt, LLVMContext &ctx) override
+     return true;
+ }
+ 
+-bool needPassByRef(jl_datatype_t *dt, AttrBuilder &ab, LLVMContext &ctx) override
++bool needPassByRef(jl_datatype_t *dt, AttrBuilder &ab, LLVMContext &ctx, Type *Ty) override
+ {
+     // Use pass by reference for all structs
+     if (dt->layout->nfields > 0) {
++#if JL_LLVM_VERSION < 120000
+         ab.addAttribute(Attribute::ByVal);
++#else
++        ab.addByValAttr(Ty);
++#endif
+         return true;
+     }
+     return false;
+diff --git a/src/abi_win64.cpp b/src/abi_win64.cpp
+index 6f6d407cfc..c87e3434f1 100644
+--- a/src/abi_win64.cpp
++++ b/src/abi_win64.cpp
+@@ -56,14 +56,19 @@ bool use_sret(jl_datatype_t *dt, LLVMContext &ctx) override
+     return true;
+ }
+ 
+-bool needPassByRef(jl_datatype_t *dt, AttrBuilder &ab, LLVMContext &ctx) override
++bool needPassByRef(jl_datatype_t *dt, AttrBuilder &ab, LLVMContext &ctx, Type *Ty) override
+ {
+     nargs++;
+     size_t size = jl_datatype_size(dt);
+     if (win64_reg_size(size))
+         return false;
+-    if (nargs <= 4)
++    if (nargs <= 4) {
++#if JL_LLVM_VERSION < 120000
+         ab.addAttribute(Attribute::ByVal);
++#else
++        ab.addByValAttr(Ty);
++#endif
++    }
+     return true;
+ }
+ 
+diff --git a/src/abi_x86.cpp b/src/abi_x86.cpp
+index c68e657695..3c4617c5a3 100644
+--- a/src/abi_x86.cpp
++++ b/src/abi_x86.cpp
+@@ -67,12 +67,16 @@ bool use_sret(jl_datatype_t *dt, LLVMContext &ctx) override
+     return true;
+ }
+ 
+-bool needPassByRef(jl_datatype_t *dt, AttrBuilder &ab, LLVMContext &ctx) override
++bool needPassByRef(jl_datatype_t *dt, AttrBuilder &ab, LLVMContext &ctx, Type *Ty) override
+ {
+     size_t size = jl_datatype_size(dt);
+     if (is_complex64(dt) || is_complex128(dt) || (jl_is_primitivetype(dt) && size <= 8))
+         return false;
+-    ab.addAttribute(Attribute::ByVal);
++#if JL_LLVM_VERSION < 120000
++        ab.addAttribute(Attribute::ByVal);
++#else
++        ab.addByValAttr(Ty);
++#endif
+     return true;
+ }
+ 
+diff --git a/src/abi_x86_64.cpp b/src/abi_x86_64.cpp
+index 898e98dfcc..e5beffce39 100644
+--- a/src/abi_x86_64.cpp
++++ b/src/abi_x86_64.cpp
+@@ -178,11 +178,15 @@ bool use_sret(jl_datatype_t *dt, LLVMContext &ctx) override
+     return sret;
+ }
+ 
+-bool needPassByRef(jl_datatype_t *dt, AttrBuilder &ab, LLVMContext &ctx) override
++bool needPassByRef(jl_datatype_t *dt, AttrBuilder &ab, LLVMContext &ctx, Type *Ty) override
+ {
+     Classification cl = classify(dt);
+     if (cl.isMemory) {
++#if JL_LLVM_VERSION < 120000
+         ab.addAttribute(Attribute::ByVal);
++#else
++        ab.addByValAttr(Ty);
++#endif
+         return true;
+     }
+ 
+@@ -202,7 +206,12 @@ bool needPassByRef(jl_datatype_t *dt, AttrBuilder &ab, LLVMContext &ctx) overrid
+     else if (jl_is_structtype(dt)) {
+         // spill to memory even though we would ordinarily pass
+         // it in registers
++#if JL_LLVM_VERSION < 120000
+         ab.addAttribute(Attribute::ByVal);
++#else
++        Type* Ty = preferred_llvm_type(dt, false, ctx);
++        ab.addByValAttr(Ty);
++#endif
+         return true;
+     }
+     return false;
+diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
+index e0acfe5e53..deb0a1d63a 100644
+--- a/src/aotcompile.cpp
++++ b/src/aotcompile.cpp
+@@ -550,6 +550,10 @@ void jl_dump_native_impl(void *native_code,
+     std::unique_ptr<Module> sysimage(new Module("sysimage", Context));
+     sysimage->setTargetTriple(data->M->getTargetTriple());
+     sysimage->setDataLayout(data->M->getDataLayout());
++#if JL_LLVM_VERSION >= 130000
++    sysimage->setStackProtectorGuard(data->M->getStackProtectorGuard());
++    sysimage->setOverrideStackAlignment(data->M->getOverrideStackAlignment());
++#endif
+     data->M.reset(); // free memory for data->M
+ 
+     if (sysimg_data) {
+diff --git a/src/ccall.cpp b/src/ccall.cpp
+index 426abf6b7d..647735edb3 100644
+--- a/src/ccall.cpp
++++ b/src/ccall.cpp
+@@ -288,7 +288,7 @@ class AbiLayout {
+ public:
+     virtual ~AbiLayout() {}
+     virtual bool use_sret(jl_datatype_t *ty, LLVMContext &ctx) = 0;
+-    virtual bool needPassByRef(jl_datatype_t *ty, AttrBuilder&, LLVMContext &ctx) = 0;
++    virtual bool needPassByRef(jl_datatype_t *ty, AttrBuilder&, LLVMContext &ctx, Type* llvm_t) = 0;
+     virtual Type *preferred_llvm_type(jl_datatype_t *ty, bool isret, LLVMContext &ctx) const = 0;
+ };
+ 
+@@ -891,6 +891,10 @@ static jl_cgval_t emit_llvmcall(jl_codectx_t &ctx, jl_value_t **args, size_t nar
+     // copy module properties that should always match
+     Mod->setTargetTriple(jl_Module->getTargetTriple());
+     Mod->setDataLayout(jl_Module->getDataLayout());
++#if JL_LLVM_VERSION >= 130000
++    Mod->setStackProtectorGuard(jl_Module->getStackProtectorGuard());
++    Mod->setOverrideStackAlignment(jl_Module->getOverrideStackAlignment());
++#endif
+ 
+     // verify the definition
+     Function *def = Mod->getFunction(ir_name);
+@@ -1086,7 +1090,7 @@ std::string generate_func_sig(const char *fname)
+         }
+ 
+         // Whether or not LLVM wants us to emit a pointer to the data
+-        bool byRef = abi->needPassByRef((jl_datatype_t*)tti, ab, jl_LLVMContext);
++        bool byRef = abi->needPassByRef((jl_datatype_t*)tti, ab, jl_LLVMContext, t);
+ 
+         if (jl_is_cpointer_type(tti)) {
+             pat = t;
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index 4b611c9a26..c80f43199c 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -144,7 +144,7 @@ extern JITEventListener *CreateJuliaJITEventListener();
+ bool imaging_mode = false;
+ 
+ // shared llvm state
+-JL_DLLEXPORT LLVMContext &jl_LLVMContext = *(new LLVMContext());
++static LLVMContext &jl_LLVMContext = *(new LLVMContext());
+ TargetMachine *jl_TargetMachine;
+ static DataLayout &jl_data_layout = *(new DataLayout(""));
+ #define jl_Module ctx.f->getParent()
+@@ -1707,6 +1707,16 @@ static void jl_setup_module(Module *m, const jl_cgparams_t *params = &jl_default
+             llvm::DEBUG_METADATA_VERSION);
+     m->setDataLayout(jl_data_layout);
+     m->setTargetTriple(jl_TargetMachine->getTargetTriple().str());
++
++#if defined(_OS_WINDOWS_) && !defined(_CPU_X86_64_) && JL_LLVM_VERSION >= 130000
++    // tell Win32 to assume the stack is always 16-byte aligned,
++    // and to ensure that it is 16-byte aligned for out-going calls,
++    // to ensure compatibility with GCC codes
++    m->setOverrideStackAlignment(16);
++#endif
++#if defined(JL_DEBUG_BUILD) && JL_LLVM_VERSION >= 130000
++    m->setStackProtectorGuard("global");
++#endif
+ }
+ 
+ Module *jl_create_llvm_module(StringRef name)
+@@ -4792,7 +4802,7 @@ static Value *get_current_task(jl_codectx_t &ctx)
+ // Get PTLS through current task.
+ static Value *get_current_ptls(jl_codectx_t &ctx)
+ {
+-    return get_current_ptls_from_task(ctx.builder, get_current_task(ctx));
++    return get_current_ptls_from_task(ctx.builder, get_current_task(ctx), tbaa_gcframe);
+ }
+ 
+ // Store world age at the entry block of the function. This function should be
+@@ -7691,7 +7701,7 @@ void jl_compile_workqueue(
+ 
+ // --- initialization ---
+ 
+-std::pair<MDNode*,MDNode*> tbaa_make_child(const char *name, MDNode *parent=nullptr, bool isConstant=false)
++static std::pair<MDNode*,MDNode*> tbaa_make_child(const char *name, MDNode *parent=nullptr, bool isConstant=false)
+ {
+     MDBuilder mbuilder(jl_LLVMContext);
+     if (tbaa_root == nullptr) {
+@@ -8045,13 +8055,14 @@ extern "C" void jl_init_llvm(void)
+ 
+     TargetOptions options = TargetOptions();
+     //options.PrintMachineCode = true; //Print machine code produced during JIT compiling
+-#if defined(_OS_WINDOWS_) && !defined(_CPU_X86_64_)
++#if defined(_OS_WINDOWS_) && !defined(_CPU_X86_64_) && JL_LLVM_VERSION <= 120000
+     // tell Win32 to assume the stack is always 16-byte aligned,
+     // and to ensure that it is 16-byte aligned for out-going calls,
+     // to ensure compatibility with GCC codes
++    // In LLVM 13 and onwards this has turned into a module option
+     options.StackAlignmentOverride = 16;
+ #endif
+-#ifdef JL_DEBUG_BUILD
++#if defined(JL_DEBUG_BUILD) && JL_LLVM_VERSION <= 120000
+     // LLVM defaults to tls stack guard, which causes issues with Julia's tls implementation
+     options.StackProtectorGuard = StackProtectorGuards::Global;
+ #endif
+diff --git a/src/codegen_shared.h b/src/codegen_shared.h
+index 93c913fd7a..883d804a20 100644
+--- a/src/codegen_shared.h
++++ b/src/codegen_shared.h
+@@ -99,9 +99,6 @@ static inline std::pair<llvm::MDNode*,llvm::MDNode*> tbaa_make_child_with_contex
+     return std::make_pair(n, scalar);
+ }
+ 
+-static inline llvm::MDNode *get_tbaa_gcframe(llvm::LLVMContext &ctxt) {
+-    return tbaa_make_child_with_context(ctxt, "jtbaa_gcframe").first;
+-}
+ static inline llvm::MDNode *get_tbaa_const(llvm::LLVMContext &ctxt) {
+     return tbaa_make_child_with_context(ctxt, "jtbaa_const", nullptr, true).first;
+ }
+@@ -132,7 +129,7 @@ static inline llvm::Value *emit_bitcast_with_builder(llvm::IRBuilder<> &builder,
+ }
+ 
+ // Get PTLS through current task.
+-static inline llvm::Value *get_current_ptls_from_task(llvm::IRBuilder<> &builder, llvm::Value *current_task)
++static inline llvm::Value *get_current_ptls_from_task(llvm::IRBuilder<> &builder, llvm::Value *current_task, llvm::MDNode *tbaa)
+ {
+     using namespace llvm;
+     auto T_ppjlvalue = JuliaType::get_ppjlvalue_ty(builder.getContext());
+@@ -145,9 +142,9 @@ static inline llvm::Value *get_current_ptls_from_task(llvm::IRBuilder<> &builder
+     LoadInst *ptls_load = builder.CreateAlignedLoad(
+         emit_bitcast_with_builder(builder, pptls, T_ppjlvalue), Align(sizeof(void *)), "ptls_load");
+     // Note: Corresponding store (`t->ptls = ptls`) happens in `ctx_switch` of tasks.c.
+-    tbaa_decorate(get_tbaa_gcframe(builder.getContext()), ptls_load);
++    tbaa_decorate(tbaa, ptls_load);
+     // Using `CastInst::Create` to get an `Instruction*` without explicit cast:
+     auto ptls = CastInst::Create(Instruction::BitCast, ptls_load, T_ppjlvalue, "ptls");
+     builder.Insert(ptls);
+     return ptls;
+-}
+\ No newline at end of file
++}
+diff --git a/src/debuginfo.cpp b/src/debuginfo.cpp
+index 956559c179..e7863d5aab 100644
+--- a/src/debuginfo.cpp
++++ b/src/debuginfo.cpp
+@@ -177,13 +177,6 @@ struct revcomp {
+     { return lhs>rhs; }
+ };
+ 
+-struct strrefcomp {
+-    bool operator() (const StringRef& lhs, const StringRef& rhs) const
+-    {
+-        return lhs.compare(rhs) > 0;
+-    }
+-};
+-
+ class JuliaJITEventListener: public JITEventListener
+ {
+     std::map<size_t, ObjectInfo, revcomp> objectmap;
+@@ -234,11 +227,13 @@ public:
+         SavedObject.second.release();
+ 
+         object::section_iterator EndSection = debugObj.section_end();
+-        std::map<StringRef, object::SectionRef, strrefcomp> loadedSections;
++        StringMap<object::SectionRef> loadedSections;
+         for (const object::SectionRef &lSection: Object.sections()) {
+             auto sName = lSection.getName();
+-            if (sName)
+-                loadedSections[*sName] = lSection;
++            if (sName) {
++                bool inserted = loadedSections.insert(std::make_pair(*sName, lSection)).second;
++                assert(inserted); (void)inserted;
++            }
+         }
+         auto getLoadAddress = [&] (const StringRef &sName) -> uint64_t {
+             auto search = loadedSections.find(sName);
+diff --git a/src/disasm.cpp b/src/disasm.cpp
+index 73b394b77d..25e7841bde 100644
+--- a/src/disasm.cpp
++++ b/src/disasm.cpp
+@@ -860,21 +860,21 @@ static void jl_dump_asm_internal(
+     std::unique_ptr<MCRegisterInfo> MRI(TheTarget->createMCRegInfo(TheTriple.str()));
+     assert(MRI && "Unable to create target register info!");
+ 
+-    std::unique_ptr<MCObjectFileInfo> MOFI(new MCObjectFileInfo());
+-#if JL_LLVM_VERSION >= 130000
+-    MCSubtargetInfo *MSTI = TheTarget->createMCSubtargetInfo(TheTriple.str(), cpu, features);
+-    assert(MSTI && "Unable to create subtarget info!");
++    std::unique_ptr<llvm::MCSubtargetInfo> STI(
++      TheTarget->createMCSubtargetInfo(TheTriple.str(), cpu, features));
++    assert(STI && "Unable to create subtarget info!");
+ 
+-    MCContext Ctx(TheTriple, MAI.get(), MRI.get(), MSTI, &SrcMgr);
+-    MOFI->initMCObjectFileInfo(Ctx, /* PIC */ false, /* LargeCodeModel */ false);
++#if JL_LLVM_VERSION >= 130000
++    MCContext Ctx(TheTriple, MAI.get(), MRI.get(), STI.get(), &SrcMgr);
++    std::unique_ptr<MCObjectFileInfo> MOFI(
++      TheTarget->createMCObjectFileInfo(Ctx, /*PIC=*/false, /*LargeCodeModel=*/ false));
++    Ctx.setObjectFileInfo(MOFI.get());
+ #else
++    std::unique_ptr<MCObjectFileInfo> MOFI(new MCObjectFileInfo());
+     MCContext Ctx(MAI.get(), MRI.get(), MOFI.get(), &SrcMgr);
+     MOFI->InitMCObjectFileInfo(TheTriple, /* PIC */ false, Ctx);
+ #endif
+ 
+-    // Set up Subtarget and Disassembler
+-    std::unique_ptr<MCSubtargetInfo>
+-        STI(TheTarget->createMCSubtargetInfo(TheTriple.str(), cpu, features));
+     std::unique_ptr<MCDisassembler> DisAsm(TheTarget->createMCDisassembler(*STI, Ctx));
+     if (!DisAsm) {
+         rstream << "ERROR: no disassembler for target " << TheTriple.str();
+diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
+index 886887f1d3..c6a3de4f4a 100644
+--- a/src/jitlayers.cpp
++++ b/src/jitlayers.cpp
+@@ -1045,7 +1045,7 @@ static void jl_add_to_ee(std::unique_ptr<Module> m)
+             ConstantAggregateZero::get(atype), "__catchjmp") };
+     gvs[0]->setSection(".text");
+     gvs[1]->setSection(".text");
+-    appendToUsed(*m, makeArrayRef((GlobalValue**)gvs, 2));
++    appendToCompilerUsed(*m, makeArrayRef((GlobalValue**)gvs, 2));
+ #endif
+     jl_jit_share_data(*m);
+     assert(jl_ExecutionEngine);
+diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
+index ed5fe7c43a..533ea8f5b1 100644
+--- a/src/llvm-late-gc-lowering.cpp
++++ b/src/llvm-late-gc-lowering.cpp
+@@ -616,7 +616,7 @@ std::vector<Value*> LateLowerGCFrame::MaybeExtractVector(State &S, Value *BaseVe
+     std::vector<Value*> V{Numbers.size()};
+     Value *V_rnull = ConstantPointerNull::get(cast<PointerType>(T_prjlvalue));
+     for (unsigned i = 0; i < V.size(); ++i) {
+-        if (Numbers[i] >= 0)
++        if (Numbers[i] >= 0) // ignores undef and poison values
+             V[i] = GetPtrForNumber(S, Numbers[i], InsertBefore);
+         else
+             V[i] = V_rnull;
+@@ -860,8 +860,9 @@ std::vector<int> LateLowerGCFrame::NumberAllBase(State &S, Value *CurrentV) {
+         std::vector<int> Numbers2 = NumberAll(S, SVI->getOperand(1));
+         auto Mask = SVI->getShuffleMask();
+         for (auto idx : Mask) {
+-            assert(idx != -1 && "Undef tracked value is invalid");
+-            if ((unsigned)idx < Numbers1.size()) {
++            if (idx == -1) {
++                Numbers.push_back(-1);
++            } else if ((unsigned)idx < Numbers1.size()) {
+                 Numbers.push_back(Numbers1.at(idx));
+             } else {
+                 Numbers.push_back(Numbers2.at(idx - Numbers1.size()));
+@@ -966,8 +967,9 @@ std::vector<int> LateLowerGCFrame::NumberAll(State &S, Value *V) {
+             Number = Numbers[CurrentV.second]; // only needed a subset of the values
+             Numbers.resize(tracked.count, Number);
+         }
+-        else
++        else {
+             assert(!isa<PointerType>(V->getType()));
++        }
+     }
+     if (CurrentV.first != V) {
+         if (isa<PointerType>(V->getType())) {
+@@ -2296,7 +2298,7 @@ bool LateLowerGCFrame::CleanupIR(Function &F, State *S) {
+                 // Create a call to the `julia.gc_alloc_bytes` intrinsic, which is like
+                 // `julia.gc_alloc_obj` except it doesn't set the tag.
+                 auto allocBytesIntrinsic = getOrDeclare(jl_intrinsics::GCAllocBytes);
+-                auto ptlsLoad = get_current_ptls_from_task(builder, CI->getArgOperand(0));
++                auto ptlsLoad = get_current_ptls_from_task(builder, CI->getArgOperand(0), tbaa_gcframe);
+                 auto ptls = builder.CreateBitCast(ptlsLoad, Type::getInt8PtrTy(builder.getContext()));
+                 auto newI = builder.CreateCall(
+                     allocBytesIntrinsic,
+diff --git a/src/llvm-multiversioning.cpp b/src/llvm-multiversioning.cpp
+index bc467ec12b..169a41526c 100644
+--- a/src/llvm-multiversioning.cpp
++++ b/src/llvm-multiversioning.cpp
+@@ -40,9 +40,6 @@
+ 
+ using namespace llvm;
+ 
+-extern std::pair<MDNode*,MDNode*> tbaa_make_child(const char *name, MDNode *parent=nullptr,
+-                                                  bool isConstant=false);
+-
+ namespace {
+ 
+ // These are valid detail cloning conditions in the target flags.
+@@ -343,7 +340,7 @@ CloneCtx::CloneCtx(MultiVersioning *pass, Module &M)
+       T_void(Type::getVoidTy(ctx)),
+       T_psize(PointerType::get(T_size, 0)),
+       T_pvoidfunc(FunctionType::get(T_void, false)->getPointerTo()),
+-      tbaa_const(tbaa_make_child("jtbaa_const", nullptr, true).first),
++      tbaa_const(tbaa_make_child_with_context(ctx, "jtbaa_const", nullptr, true).first),
+       pass(pass),
+       specs(jl_get_llvm_clone_targets()),
+       fvars(consume_gv<Function>(M, "jl_sysimg_fvars")),
+diff --git a/src/llvm-pass-helpers.cpp b/src/llvm-pass-helpers.cpp
+index 89263033ce..f6708ef65a 100644
+--- a/src/llvm-pass-helpers.cpp
++++ b/src/llvm-pass-helpers.cpp
+@@ -19,27 +19,31 @@
+ 
+ using namespace llvm;
+ 
+-extern std::pair<MDNode*,MDNode*> tbaa_make_child(const char *name, MDNode *parent=nullptr, bool isConstant=false);
+-
+ JuliaPassContext::JuliaPassContext()
+     : T_size(nullptr), T_int8(nullptr), T_int32(nullptr),
+         T_pint8(nullptr), T_jlvalue(nullptr), T_prjlvalue(nullptr),
+         T_ppjlvalue(nullptr), T_pjlvalue(nullptr), T_pjlvalue_der(nullptr),
+-        T_ppjlvalue_der(nullptr), pgcstack_getter(nullptr), gc_flush_func(nullptr),
++        T_ppjlvalue_der(nullptr),
++
++        tbaa_gcframe(nullptr), tbaa_tag(nullptr),
++
++        pgcstack_getter(nullptr), gc_flush_func(nullptr),
+         gc_preserve_begin_func(nullptr), gc_preserve_end_func(nullptr),
+         pointer_from_objref_func(nullptr), alloc_obj_func(nullptr),
+         typeof_func(nullptr), write_barrier_func(nullptr), module(nullptr)
+ {
+-    tbaa_gcframe = tbaa_make_child("jtbaa_gcframe").first;
+-    MDNode *tbaa_data;
+-    MDNode *tbaa_data_scalar;
+-    std::tie(tbaa_data, tbaa_data_scalar) = tbaa_make_child("jtbaa_data");
+-    tbaa_tag = tbaa_make_child("jtbaa_tag", tbaa_data_scalar).first;
+ }
+ 
+ void JuliaPassContext::initFunctions(Module &M)
+ {
+     module = &M;
++    LLVMContext &llvmctx = M.getContext();
++
++    tbaa_gcframe = tbaa_make_child_with_context(llvmctx, "jtbaa_gcframe").first;
++    MDNode *tbaa_data;
++    MDNode *tbaa_data_scalar;
++    std::tie(tbaa_data, tbaa_data_scalar) = tbaa_make_child_with_context(llvmctx, "jtbaa_data");
++    tbaa_tag = tbaa_make_child_with_context(llvmctx, "jtbaa_tag", tbaa_data_scalar).first;
+ 
+     pgcstack_getter = M.getFunction("julia.get_pgcstack");
+     gc_flush_func = M.getFunction("julia.gcroot_flush");
+diff --git a/src/llvm-ptls.cpp b/src/llvm-ptls.cpp
+index c971774f23..a573d41dae 100644
+--- a/src/llvm-ptls.cpp
++++ b/src/llvm-ptls.cpp
+@@ -32,9 +32,6 @@ using namespace llvm;
+ 
+ typedef Instruction TerminatorInst;
+ 
+-std::pair<MDNode*,MDNode*> tbaa_make_child(const char *name, MDNode *parent=nullptr,
+-                                           bool isConstant=false);
+-
+ namespace {
+ 
+ struct LowerPTLS: public ModulePass {
+@@ -264,7 +261,7 @@ bool LowerPTLS::runOnModule(Module &_M)
+         return false;
+ 
+     ctx = &M->getContext();
+-    tbaa_const = tbaa_make_child("jtbaa_const", nullptr, true).first;
++    tbaa_const = tbaa_make_child_with_context(*ctx, "jtbaa_const", nullptr, true).first;
+ 
+     T_int8 = Type::getInt8Ty(*ctx);
+     T_size = sizeof(size_t) == 8 ? Type::getInt64Ty(*ctx) : Type::getInt32Ty(*ctx);
+diff --git a/stdlib/libLLVM_jll/Project.toml b/stdlib/libLLVM_jll/Project.toml
+index fc28a9eb7d..8012150bb1 100644
+--- a/stdlib/libLLVM_jll/Project.toml
++++ b/stdlib/libLLVM_jll/Project.toml
+@@ -1,13 +1,13 @@
+ name = "libLLVM_jll"
+ uuid = "8f36deef-c2a5-5394-99ed-8e07531fb29a"
+-version = "12.0.1+4"
++version = "13.0.0+0"
+ 
+ [deps]
+ Libdl = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
+ Artifacts = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
+ 
+ [compat]
+-julia = "1.7"
++julia = "1.8"
+ 
+ [extras]
+ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+diff --git a/stdlib/libLLVM_jll/src/libLLVM_jll.jl b/stdlib/libLLVM_jll/src/libLLVM_jll.jl
+index 5186cb13e0..09e01207ec 100644
+--- a/stdlib/libLLVM_jll/src/libLLVM_jll.jl
++++ b/stdlib/libLLVM_jll/src/libLLVM_jll.jl
+@@ -19,11 +19,11 @@ libLLVM_handle = C_NULL
+ libLLVM_path = ""
+ 
+ if Sys.iswindows()
+-    const libLLVM = "libLLVM.dll"
++    const libLLVM = "libLLVM-13jl.dll"
+ elseif Sys.isapple()
+     const libLLVM = "@rpath/libLLVM.dylib"
+ else
+-    const libLLVM = "libLLVM-12jl.so"
++    const libLLVM = "libLLVM-13jl.so"
+ end
+ 
+ function __init__()
+diff --git a/test/llvmpasses/alloc-opt-gcframe.jl b/test/llvmpasses/alloc-opt-gcframe.jl
+index 605ff3d213..8e3de76455 100644
+--- a/test/llvmpasses/alloc-opt-gcframe.jl
++++ b/test/llvmpasses/alloc-opt-gcframe.jl
+@@ -1,6 +1,6 @@
+ # This file is a part of Julia. License is MIT: https://julialang.org/license
+ 
+-# RUN: julia --startup-file=no %s | opt -load libjulia-internal%shlibext -AllocOpt -LateLowerGCFrame -FinalLowerGC -S - | FileCheck %s
++# RUN: julia --startup-file=no %s | opt -enable-new-pm=0 -load libjulia-codegen%shlibext -AllocOpt -LateLowerGCFrame -FinalLowerGC -S - | FileCheck %s
+ 
+ isz = sizeof(UInt) == 8 ? "i64" : "i32"
+ 
+diff --git a/test/llvmpasses/alloc-opt-pass.jl b/test/llvmpasses/alloc-opt-pass.jl
+index 8fbc9d2c7b..3f2b09ebab 100644
+--- a/test/llvmpasses/alloc-opt-pass.jl
++++ b/test/llvmpasses/alloc-opt-pass.jl
+@@ -1,6 +1,6 @@
+ # This file is a part of Julia. License is MIT: https://julialang.org/license
+ 
+-# RUN: julia --startup-file=no %s | opt -load libjulia-internal%shlibext -AllocOpt -S - | FileCheck %s
++# RUN: julia --startup-file=no %s | opt -enable-new-pm=0 -load libjulia-codegen%shlibext -AllocOpt -S - | FileCheck %s
+ 
+ isz = sizeof(UInt) == 8 ? "i64" : "i32"
+ 
+diff --git a/test/llvmpasses/final-lower-gc.ll b/test/llvmpasses/final-lower-gc.ll
+index 6caf6dead7..5e4a23770c 100644
+--- a/test/llvmpasses/final-lower-gc.ll
++++ b/test/llvmpasses/final-lower-gc.ll
+@@ -1,4 +1,4 @@
+-; RUN: opt -load libjulia-internal%shlibext -FinalLowerGC -S %s | FileCheck %s
++; RUN: opt -enable-new-pm=0 -load libjulia-codegen%shlibext -FinalLowerGC -S %s | FileCheck %s
+ 
+ @tag = external addrspace(10) global {}
+ 
+diff --git a/test/llvmpasses/gcroots.ll b/test/llvmpasses/gcroots.ll
+index 00ea20e504..29cb868324 100644
+--- a/test/llvmpasses/gcroots.ll
++++ b/test/llvmpasses/gcroots.ll
+@@ -1,4 +1,4 @@
+-; RUN: opt -load libjulia-internal%shlibext -LateLowerGCFrame -FinalLowerGC -S %s | FileCheck %s
++; RUN: opt -enable-new-pm=0 -load libjulia-codegen%shlibext -LateLowerGCFrame -FinalLowerGC -S %s | FileCheck %s
+ 
+ 
+ declare void @boxed_simple({} addrspace(10)*, {} addrspace(10)*)
+diff --git a/test/llvmpasses/late-lower-gc.ll b/test/llvmpasses/late-lower-gc.ll
+index 9c3b263854..441fce2bba 100644
+--- a/test/llvmpasses/late-lower-gc.ll
++++ b/test/llvmpasses/late-lower-gc.ll
+@@ -1,4 +1,4 @@
+-; RUN: opt -load libjulia-internal%shlibext -LateLowerGCFrame -S %s | FileCheck %s
++; RUN: opt -enable-new-pm=0 -load libjulia-codegen%shlibext -LateLowerGCFrame -S %s | FileCheck %s
+ 
+ @tag = external addrspace(10) global {}, align 16
+ 
+@@ -77,11 +77,11 @@ top:
+     %v = call noalias {} addrspace(10)* @julia.gc_alloc_obj({}** %current_task, i64 8, {} addrspace(10)* @tag)
+ ; CHECK-NEXT: %v64 = bitcast {} addrspace(10)* %v to i64 addrspace(10)*
+     %v64 = bitcast {} addrspace(10)* %v to i64 addrspace(10)*
+-; CHECK-NEXT: %loadedval = load i64, i64 addrspace(10)* %v64, align 8, !range !9
++; CHECK-NEXT: %loadedval = load i64, i64 addrspace(10)* %v64, align 8, !range !7
+     %loadedval = load i64, i64 addrspace(10)* %v64, align 8, !range !0, !invariant.load !1
+-; CHECK-NEXT: store i64 %loadedval, i64 addrspace(10)* %v64, align 8, !noalias !10
++; CHECK-NEXT: store i64 %loadedval, i64 addrspace(10)* %v64, align 8, !noalias !8
+     store i64 %loadedval, i64 addrspace(10)* %v64, align 8, !noalias !2
+-; CHECK-NEXT: %lv2 = load i64, i64 addrspace(10)* %v64, align 8, !tbaa !11, !range !9
++; CHECK-NEXT: %lv2 = load i64, i64 addrspace(10)* %v64, align 8, !tbaa !9, !range !7
+     %lv2 = load i64, i64 addrspace(10)* %v64, align 8, !range !0, !tbaa !4
+ ; CHECK-NEXT: ret void
+     ret void
+@@ -118,8 +118,6 @@ top:
+ ; CHECK-NEXT: !3 = !{!"jtbaa"}
+ ; CHECK-NEXT: !4 = !{!5, !5, i64 0}
+ ; CHECK-NEXT: !5 = !{!"jtbaa_tag", !6, i64 0}
+-; CHECK-NEXT: !6 = !{!"jtbaa_data", !7, i64 0}
+-; CHECK-NEXT: !7 = !{!"jtbaa", !8, i64 0}
+-; CHECK-NEXT: !8 = !{!"jtbaa"}
+-; CHECK-NEXT: !9 = !{i64 0, i64 23}
+-; CHECK-NEXT: !10 = distinct !{!10}
+\ No newline at end of file
++; CHECK-NEXT: !6 = !{!"jtbaa_data", !2, i64 0}
++; CHECK-NEXT: !7 = !{i64 0, i64 23}
++; CHECK-NEXT: !8 = distinct !{!8}
+diff --git a/test/llvmpasses/loopinfo.jl b/test/llvmpasses/loopinfo.jl
+index 4df485c0de..b1831772a4 100644
+--- a/test/llvmpasses/loopinfo.jl
++++ b/test/llvmpasses/loopinfo.jl
+@@ -2,7 +2,7 @@
+ 
+ # RUN: julia --startup-file=no %s %t && llvm-link -S %t/* -o %t/module.ll
+ # RUN: cat %t/module.ll | FileCheck %s
+-# RUN: cat %t/module.ll | opt -load libjulia-internal%shlibext -LowerSIMDLoop -S - | FileCheck %s -check-prefix=LOWER
++# RUN: cat %t/module.ll | opt -enable-new-pm=0 -load libjulia-codegen%shlibext -LowerSIMDLoop -S - | FileCheck %s -check-prefix=LOWER
+ # RUN: julia --startup-file=no %s %t -O && llvm-link -S %t/* -o %t/module.ll
+ # RUN: cat %t/module.ll | FileCheck %s -check-prefix=FINAL
+ 
+diff --git a/test/llvmpasses/lower-handlers.ll b/test/llvmpasses/lower-handlers.ll
+index 4191fa664c..80b6be683c 100644
+--- a/test/llvmpasses/lower-handlers.ll
++++ b/test/llvmpasses/lower-handlers.ll
+@@ -1,4 +1,4 @@
+-; RUN: opt -load libjulia-internal%shlibext -LowerExcHandlers -S %s | FileCheck %s
++; RUN: opt -enable-new-pm=0 -load libjulia-codegen%shlibext -LowerExcHandlers -S %s | FileCheck %s
+ 
+ attributes #1 = { returns_twice }
+ declare i32 @julia.except_enter() #1
+diff --git a/test/llvmpasses/muladd.ll b/test/llvmpasses/muladd.ll
+index ec36f7bd1f..42a6bcff96 100644
+--- a/test/llvmpasses/muladd.ll
++++ b/test/llvmpasses/muladd.ll
+@@ -1,4 +1,4 @@
+-; RUN: opt -load libjulia-internal%shlibext -CombineMulAdd -S %s | FileCheck %s
++; RUN: opt -enable-new-pm=0 -load libjulia-codegen%shlibext -CombineMulAdd -S %s | FileCheck %s
+ 
+ define double @fast_muladd1(double %a, double %b, double %c) {
+ top:
+diff --git a/test/llvmpasses/propagate-addrspace.ll b/test/llvmpasses/propagate-addrspace.ll
+index 1c50c54b4d..4fc357e03a 100644
+--- a/test/llvmpasses/propagate-addrspace.ll
++++ b/test/llvmpasses/propagate-addrspace.ll
+@@ -1,4 +1,4 @@
+-; RUN: opt -load libjulia-internal%shlibext -PropagateJuliaAddrspaces -dce -S %s | FileCheck %s
++; RUN: opt -enable-new-pm=0 -load libjulia-codegen%shlibext -PropagateJuliaAddrspaces -dce -S %s | FileCheck %s
+ 
+ define i64 @simple() {
+ ; CHECK-LABEL: @simple
+diff --git a/test/llvmpasses/refinements.ll b/test/llvmpasses/refinements.ll
+index 40dd020bca..0da965e538 100644
+--- a/test/llvmpasses/refinements.ll
++++ b/test/llvmpasses/refinements.ll
+@@ -1,4 +1,4 @@
+-; RUN: opt -load libjulia-internal%shlibext -LateLowerGCFrame -FinalLowerGC -S %s | FileCheck %s
++; RUN: opt -enable-new-pm=0 -load libjulia-codegen%shlibext -LateLowerGCFrame -FinalLowerGC -S %s | FileCheck %s
+ 
+ 
+ declare {}*** @julia.ptls_states()
+diff --git a/test/llvmpasses/remove-addrspaces.ll b/test/llvmpasses/remove-addrspaces.ll
+index f8b6de024b..80eab21a51 100644
+--- a/test/llvmpasses/remove-addrspaces.ll
++++ b/test/llvmpasses/remove-addrspaces.ll
+@@ -1,4 +1,4 @@
+-; RUN: opt -load libjulia-internal%shlibext -RemoveJuliaAddrspaces -S %s | FileCheck %s
++; RUN: opt -enable-new-pm=0 -load libjulia-codegen%shlibext -RemoveJuliaAddrspaces -S %s | FileCheck %s
+ 
+ 
+ define i64 @getindex({} addrspace(10)* nonnull align 16 dereferenceable(40)) {
+diff --git a/test/llvmpasses/returnstwicegc.ll b/test/llvmpasses/returnstwicegc.ll
+index da281fe85f..ebc6127813 100644
+--- a/test/llvmpasses/returnstwicegc.ll
++++ b/test/llvmpasses/returnstwicegc.ll
+@@ -1,4 +1,4 @@
+-; RUN: opt -load libjulia-internal%shlibext -LateLowerGCFrame -FinalLowerGC -S %s | FileCheck %s
++; RUN: opt -enable-new-pm=0 -load libjulia-codegen%shlibext -LateLowerGCFrame -FinalLowerGC -S %s | FileCheck %s
+ 
+ 
+ declare void @boxed_simple({} addrspace(10)*, {} addrspace(10)*)
+diff --git a/test/llvmpasses/safepoint_stress.jl b/test/llvmpasses/safepoint_stress.jl
+index c5345ad07e..7ecf01a194 100644
+--- a/test/llvmpasses/safepoint_stress.jl
++++ b/test/llvmpasses/safepoint_stress.jl
+@@ -1,6 +1,6 @@
+ # This file is a part of Julia. License is MIT: https://julialang.org/license
+ 
+-# RUN: julia --startup-file=no %s | opt -load libjulia-internal%shlibext -LateLowerGCFrame -FinalLowerGC -S - | FileCheck %s
++# RUN: julia --startup-file=no %s | opt -enable-new-pm=0 -load libjulia-codegen%shlibext -LateLowerGCFrame -FinalLowerGC -S - | FileCheck %s
+ 
+ println("""
+ declare {} addrspace(10)* @alloc()
+diff --git a/test/llvmpasses/simdloop.ll b/test/llvmpasses/simdloop.ll
+index 469e0699b2..ac3c92092b 100644
+--- a/test/llvmpasses/simdloop.ll
++++ b/test/llvmpasses/simdloop.ll
+@@ -1,4 +1,4 @@
+-; RUN: opt -load libjulia-internal%shlibext -LowerSIMDLoop -S %s | FileCheck %s
++; RUN: opt -enable-new-pm=0 -load libjulia-codegen%shlibext -LowerSIMDLoop -S %s | FileCheck %s
+ 
+ declare void @julia.loopinfo_marker()
+ 
