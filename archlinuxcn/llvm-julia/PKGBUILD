@@ -2,8 +2,8 @@
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 
 pkgname=(llvm-julia llvm-libs-julia llvm-ocaml-julia)
-pkgver=12.0.0
-pkgrel=4
+pkgver=13.0.0
+pkgrel=1
 arch=(i686 x86_64 armv7h aarch64)
 url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
@@ -12,35 +12,33 @@ makedepends=(cmake ninja libffi libedit ncurses libxml2 ocaml ocaml-ctypes ocaml
 options=('staticlibs' '!strip')
 _source_base=https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver
 source=($_source_base/llvm-$pkgver.src.tar.xz
-        llvm7-revert-D44485.patch
-        llvm-D75072-SCEV-add-type.patch
-        llvm-julia-tsan-custom-as.patch
-        llvm-D93154-globalisel-as.patch
-        llvm-D94813-mergeicmps.patch
-        llvm-AArch64-FastIsel-bug.patch
-        llvm-D97435-AArch64-movaddrreg.patch
-        llvm-D97571-AArch64-loh.patch # LLVM 13
-        llvm-aarch64-addrspace.patch # LLVM 13
+        0001-Revert-MC-Always-emit-relocations-for-same-section-f.patch
+        0002-Allow-for-custom-address-spaces.patch
+        0004-Don-t-sink-ptrtoint-inttoptr-sequences-into-non-noop.patch
+        0005-GlobalISel-remove-assert-that-memcpy-Src-and-Dst-add.patch
+        0006-Don-t-merge-icmps-derived-from-pointers-with-address.patch
+        0007-AArch64-Remove-Bad-optimization.patch
+        0008-Correct-register-class-for-pseudo-instructions.patch
+        0009-Re-apply-the-fix-on-DwarfEHPrepare-and-add-a-test-2.patch
+        0010-Bad-SLPVectorization-shufflevector-replacement-resul.patch
         # Archlinux Patch
-        force-visibility-of-llvm-Any-to-external.patch
-        llvm-link-with-Bsymbolic-functions.patch
-        add-fno-semantic-interposition.patch
+        don-t-accept-nullptr-as-GEP-element-type.patch
         no-strict-aliasing-DwarfCompileUnit.patch
+        disable-bswap-for-spir.patch
         llvm-config.h)
-sha256sums=('49dc47c8697a1a0abd4ee51629a696d7bfe803662f2a7252a3b16fc75f3a8b50'
-            '1629672afa288b89c09559ecd3c18b8606603f89ebfaa9ebd2fcd671079ea938'
-            '39c37fd49d1d8b992b9e432d87fdcd70554b293763e05e518d0e96623f67388c'
-            '3a3d98f8f457dfd9c5b5eaeb1090c4f960ee605da1496d83e5a452e32620902b'
-            'f27eb3fbb280bcf84a62edac45316c062489e33e2e4ee91f90ffa83b3e69bccc'
-            '49f833616fecf156c0069fac98357ba4792a426ad7b495f2662dfb37b907be32'
-            '09fa7fa3389561e53ab58df3d345decb781faf403d2f88645c93f01a646b5bd4'
-            'e5c6391061ad461bb65bad8dcf9d0aa9bce9ec7176d5c09e1cb723ae2597c92a'
-            'd66c41901b734c8ba2b9f2e12ca879911a46d551e11fa79f8547061ede621f89'
-            'd5c86ea2d9c51938a8776d3130b35c34da77eeb3d7c6bb4a132ef71cddfb6b32'
-            '98721af5a36af2a8e88c14a81b16d3929b12515d7d2d1ba385eb243dca3c32cb'
-            '560ce1e206c19f4b86f4c583b743db0ad47a610418999350710aafd60ae50fcd'
-            'fc8c64267a5d179e9fc24fb2bc6150edef2598c83f5b2d138d14e05ce9f4e345'
+sha256sums=('408d11708643ea826f519ff79761fcdfc12d641a2510229eec459e72f8163020'
+            '420228a334d68c6a682d17ab1616864b3d51de5104c46f820f99c8fe5e4be4f0'
+            '59ce8476845d27b2c8795cf1c7908da86ef2da2421a80fdaed0bbadaf628299d'
+            '2b17a6a93c8b987e0ee03519432d4c0bbd257f39d4fc7488f0e9f0904dd711c4'
+            '22678b40fb7709cacb05c6ef479eab34f598a5f7ab8db5b6dba8cd63cc6a8196'
+            '9b0edfd9241c4e830470ccccec654dff5659261df2d2eabe7bff92bf48b2e2dc'
+            'b9af3fb50b5c8cb1626e815ba5a4a5ae8edf045f2c43f7a8ef8e465b03b17e10'
+            'e388a34869644e32233e87010fa9eecd13a4c56523035f76d31221e294fe671f'
+            'f8e886b98e45ccdc9d3d560b98bd870533813516c1e605f6588365abf3749dd5'
+            '8996b56f6ac6f41bceb58341fa21afd548de68aa12e9ce3072dd7926868085d8'
+            'a7e902a7612d0fdabe436a917468b043cc296bc89d8954bfc3126f737beb9ac4'
             'd1eff24508e35aae6c26a943dbaa3ef5acb60a145b008fd1ef9ac6f6c4faa662'
+            'af163392fbc19d65d11ab4b1510a2eae39b417d6228023b3ba5395b138bb41f5'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
 _FLTO=''
@@ -78,30 +76,28 @@ EOF
   cd "$srcdir/llvm-$pkgver.src"
   mkdir build
 
-  apply_julia_patch llvm7-revert-D44485
-  apply_julia_patch llvm-D75072-SCEV-add-type
-  apply_julia_patch llvm-julia-tsan-custom-as
-  apply_julia_patch llvm-D93154-globalisel-as
-  apply_julia_patch llvm-D94813-mergeicmps
-  apply_julia_proj_patch llvm-AArch64-FastIsel-bug
-  apply_julia_patch llvm-D97435-AArch64-movaddrreg
-  apply_julia_proj_patch llvm-D97571-AArch64-loh
-  apply_julia_proj_patch llvm-aarch64-addrspace
+  apply_julia_patch 0001-Revert-MC-Always-emit-relocations-for-same-section-f
+  apply_julia_patch 0002-Allow-for-custom-address-spaces
+  apply_julia_patch 0004-Don-t-sink-ptrtoint-inttoptr-sequences-into-non-noop
+  apply_julia_patch 0005-GlobalISel-remove-assert-that-memcpy-Src-and-Dst-add
+  apply_julia_patch 0006-Don-t-merge-icmps-derived-from-pointers-with-address
+  apply_julia_patch 0007-AArch64-Remove-Bad-optimization
+  apply_julia_patch 0008-Correct-register-class-for-pseudo-instructions
+  apply_julia_patch 0009-Re-apply-the-fix-on-DwarfEHPrepare-and-add-a-test-2
+  apply_julia_patch 0010-Bad-SLPVectorization-shufflevector-replacement-resul
 
   # Arch patches
   msg "Applying Arch patches"
 
-  # https://bugs.llvm.org/show_bug.cgi?id=48992
-  patch -Np2 -i ../force-visibility-of-llvm-Any-to-external.patch
-
-  # https://bugs.archlinux.org/task/70697
-  patch -Np2 -i ../llvm-link-with-Bsymbolic-functions.patch
-  # https://reviews.llvm.org/D102453
-  patch -Np2 -i ../add-fno-semantic-interposition.patch
+  # https://github.com/intel/intel-graphics-compiler/issues/204
+  patch -Rp2 -i ../don-t-accept-nullptr-as-GEP-element-type.patch
 
   # Work around intermittent 'clang -O -g' crashes
   # https://bugs.llvm.org/show_bug.cgi?id=50611#c3
   patch -Np2 -i ../no-strict-aliasing-DwarfCompileUnit.patch
+
+  # Fix an ISPC build failure (https://github.com/ispc/ispc/issues/2189)
+  patch -Np2 -i ../disable-bswap-for-spir.patch
 }
 
 build() {

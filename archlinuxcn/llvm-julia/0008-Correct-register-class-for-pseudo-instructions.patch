@@ -1,7 +1,7 @@
-From 3adadbab531e0d7dc17499a6570b129e87f00c77 Mon Sep 17 00:00:00 2001
+From 0b28ec6050ff535f2a62fbc0689a5aa3f89a90ec Mon Sep 17 00:00:00 2001
 From: Keno Fischer <keno@juliacomputing.com>
 Date: Wed, 21 Apr 2021 12:38:40 -0400
-Subject: [PATCH] [Aarch64] Correct register class for pseudo instructions
+Subject: [PATCH 08/11] Correct register class for pseudo instructions
 
 This constrains the Mov* and similar pseudo instruction to take
 GPR64common register classes rather than GPR64. GPR64 includs XZR
@@ -26,6 +26,8 @@ Aarch64 architecture to do this quickly.
 Reviewed By: t.p.northover
 
 Differential Revision: https://reviews.llvm.org/D97435
+
+(cherry picked from commit 089b115f4a91d184791e41de0ce58b6bca43ea6e)
 ---
  .../AArch64/AArch64ExpandPseudoInsts.cpp      |  1 +
  llvm/lib/Target/AArch64/AArch64InstrInfo.td   | 32 +++++++++----------
@@ -34,11 +36,11 @@ Differential Revision: https://reviews.llvm.org/D97435
  .../GlobalISel/select-jump-table-brjt.mir     |  2 +-
  5 files changed, 22 insertions(+), 20 deletions(-)
 
-diff --git llvm/lib/Target/AArch64/AArch64ExpandPseudoInsts.cpp llvm/lib/Target/AArch64/AArch64ExpandPseudoInsts.cpp
-index e57650ae60b1..612fbeb5f531 100644
---- llvm/lib/Target/AArch64/AArch64ExpandPseudoInsts.cpp
-+++ llvm/lib/Target/AArch64/AArch64ExpandPseudoInsts.cpp
-@@ -886,6 +886,7 @@ bool AArch64ExpandPseudo::expandMI(MachineBasicBlock &MBB,
+diff --git a/lib/Target/AArch64/AArch64ExpandPseudoInsts.cpp b/lib/Target/AArch64/AArch64ExpandPseudoInsts.cpp
+index b2eee2845ba9..5bbf4f97c54a 100644
+--- a/lib/Target/AArch64/AArch64ExpandPseudoInsts.cpp
++++ b/lib/Target/AArch64/AArch64ExpandPseudoInsts.cpp
+@@ -1049,6 +1049,7 @@ bool AArch64ExpandPseudo::expandMI(MachineBasicBlock &MBB,
    case AArch64::MOVaddrEXT: {
      // Expand into ADRP + ADD.
      Register DstReg = MI.getOperand(0).getReg();
@@ -46,11 +48,11 @@ index e57650ae60b1..612fbeb5f531 100644
      MachineInstrBuilder MIB1 =
          BuildMI(MBB, MBBI, MI.getDebugLoc(), TII->get(AArch64::ADRP), DstReg)
              .add(MI.getOperand(1));
-diff --git llvm/lib/Target/AArch64/AArch64InstrInfo.td llvm/lib/Target/AArch64/AArch64InstrInfo.td
-index 171d3dbaa814..6fe0bd1ef168 100644
---- llvm/lib/Target/AArch64/AArch64InstrInfo.td
-+++ llvm/lib/Target/AArch64/AArch64InstrInfo.td
-@@ -656,40 +656,40 @@ let isReMaterializable = 1, isCodeGenOnly = 1 in {
+diff --git a/lib/Target/AArch64/AArch64InstrInfo.td b/lib/Target/AArch64/AArch64InstrInfo.td
+index 12744e4de09b..f3da6bf057c2 100644
+--- a/lib/Target/AArch64/AArch64InstrInfo.td
++++ b/lib/Target/AArch64/AArch64InstrInfo.td
+@@ -673,40 +673,40 @@ let isReMaterializable = 1, isCodeGenOnly = 1 in {
  // removed, along with the AArch64Wrapper node.
  
  let AddedComplexity = 10 in
@@ -105,7 +107,7 @@ index 171d3dbaa814..6fe0bd1ef168 100644
                                              texternalsym:$low))]>,
        Sched<[WriteAdrAdr]>;
  // Normally AArch64addlow either gets folded into a following ldr/str,
-@@ -697,8 +697,8 @@ def MOVaddrEXT
+@@ -714,8 +714,8 @@ def MOVaddrEXT
  // might appear without either of them, so allow lowering it into a plain
  // add.
  def ADDlowTLS
@@ -116,10 +118,10 @@ index 171d3dbaa814..6fe0bd1ef168 100644
                                              tglobaltlsaddr:$low))]>,
        Sched<[WriteAdr]>;
  
-diff --git llvm/test/CodeGen/AArch64/GlobalISel/select-blockaddress.mir llvm/test/CodeGen/AArch64/GlobalISel/select-blockaddress.mir
-index 45012f23de62..70cb802ed3a3 100644
---- llvm/test/CodeGen/AArch64/GlobalISel/select-blockaddress.mir
-+++ llvm/test/CodeGen/AArch64/GlobalISel/select-blockaddress.mir
+diff --git a/test/CodeGen/AArch64/GlobalISel/select-blockaddress.mir b/test/CodeGen/AArch64/GlobalISel/select-blockaddress.mir
+index 1f63da4d12c5..0737a8ed871f 100644
+--- a/test/CodeGen/AArch64/GlobalISel/select-blockaddress.mir
++++ b/test/CodeGen/AArch64/GlobalISel/select-blockaddress.mir
 @@ -30,9 +30,10 @@ registers:
  body:             |
    ; CHECK-LABEL: name: test_blockaddress
@@ -127,16 +129,16 @@ index 45012f23de62..70cb802ed3a3 100644
 -  ; CHECK:   [[MOVaddrBA:%[0-9]+]]:gpr64 = MOVaddrBA target-flags(aarch64-page) blockaddress(@test_blockaddress, %ir-block.block), target-flags(aarch64-pageoff, aarch64-nc) blockaddress(@test_blockaddress, %ir-block.block)
 +  ; CHECK:   [[MOVaddrBA:%[0-9]+]]:gpr64common = MOVaddrBA target-flags(aarch64-page) blockaddress(@test_blockaddress, %ir-block.block), target-flags(aarch64-pageoff, aarch64-nc) blockaddress(@test_blockaddress, %ir-block.block)
    ; CHECK:   [[MOVaddr:%[0-9]+]]:gpr64common = MOVaddr target-flags(aarch64-page) @addr, target-flags(aarch64-pageoff, aarch64-nc) @addr
--  ; CHECK:   STRXui [[MOVaddrBA]], [[MOVaddr]], 0 :: (store 8 into @addr)
+-  ; CHECK:   STRXui [[MOVaddrBA]], [[MOVaddr]], 0 :: (store (p0) into @addr)
 +  ; CHECK:   [[COPY:%[0-9]+]]:gpr64 = COPY [[MOVaddrBA]]
-+  ; CHECK:   STRXui [[COPY]], [[MOVaddr]], 0 :: (store 8 into @addr)
++  ; CHECK:   STRXui [[COPY]], [[MOVaddr]], 0 :: (store (p0) into @addr)
    ; CHECK:   BR [[MOVaddrBA]]
    ; CHECK: bb.1.block (address-taken):
    ; CHECK:   RET_ReallyLR
-diff --git llvm/test/CodeGen/AArch64/GlobalISel/select-jump-table-brjt-constrain.mir llvm/test/CodeGen/AArch64/GlobalISel/select-jump-table-brjt-constrain.mir
-index 440a03173c83..59b8dea2d0ce 100644
---- llvm/test/CodeGen/AArch64/GlobalISel/select-jump-table-brjt-constrain.mir
-+++ llvm/test/CodeGen/AArch64/GlobalISel/select-jump-table-brjt-constrain.mir
+diff --git a/test/CodeGen/AArch64/GlobalISel/select-jump-table-brjt-constrain.mir b/test/CodeGen/AArch64/GlobalISel/select-jump-table-brjt-constrain.mir
+index affaef15856e..1aec09b69680 100644
+--- a/test/CodeGen/AArch64/GlobalISel/select-jump-table-brjt-constrain.mir
++++ b/test/CodeGen/AArch64/GlobalISel/select-jump-table-brjt-constrain.mir
 @@ -30,7 +30,7 @@ body:             |
    ; CHECK:   Bcc 8, %bb.3, implicit $nzcv
    ; CHECK: bb.1:
@@ -146,10 +148,10 @@ index 440a03173c83..59b8dea2d0ce 100644
    ; CHECK:   early-clobber %6:gpr64, early-clobber %7:gpr64sp = JumpTableDest32 [[MOVaddrJT]], [[SUBREG_TO_REG]], %jump-table.0
    ; CHECK:   BR %6
    ; CHECK: bb.2:
-diff --git llvm/test/CodeGen/AArch64/GlobalISel/select-jump-table-brjt.mir llvm/test/CodeGen/AArch64/GlobalISel/select-jump-table-brjt.mir
+diff --git a/test/CodeGen/AArch64/GlobalISel/select-jump-table-brjt.mir b/test/CodeGen/AArch64/GlobalISel/select-jump-table-brjt.mir
 index 6b84c6d10843..b8c9a6c881da 100644
---- llvm/test/CodeGen/AArch64/GlobalISel/select-jump-table-brjt.mir
-+++ llvm/test/CodeGen/AArch64/GlobalISel/select-jump-table-brjt.mir
+--- a/test/CodeGen/AArch64/GlobalISel/select-jump-table-brjt.mir
++++ b/test/CodeGen/AArch64/GlobalISel/select-jump-table-brjt.mir
 @@ -65,7 +65,7 @@ body:             |
    ; CHECK: bb.1.entry:
    ; CHECK:   successors: %bb.3(0x2aaaaaab), %bb.4(0x2aaaaaab), %bb.2(0x2aaaaaab)
@@ -160,5 +162,5 @@ index 6b84c6d10843..b8c9a6c881da 100644
    ; CHECK:   BR %18
    ; CHECK: bb.2.sw.bb:
 -- 
-2.31.1
+2.33.1
 

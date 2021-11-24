@@ -1,0 +1,51 @@
+From 94fdebc498306c5d4f8052e15a1c50ad00d6bc8d Mon Sep 17 00:00:00 2001
+From: Takafumi Arakaki <aka.tkf@gmail.com>
+Date: Sat, 2 Oct 2021 08:33:31 -0700
+Subject: [PATCH 09/11] Re-apply the fix on DwarfEHPrepare and add a test (#2)
+
+* Ad -run-twice to dwarf-eh-prepare.ll
+
+* In DwarfEHPrepare, after all passes are run, RewindFunction may be a dangling
+pointer to a dead function. To make sure it's valid, doFinalization nullptrs
+RewindFunction just like the constructor and so it will be found on next run.
+
+llvm-svn: 217737
+
+Co-authored-by: Yaron Keren <yaron.keren@gmail.com>
+
+https://reviews.llvm.org/D110979
+(cherry picked from commit 8f6e49e8a3c0f31a55c342a2a41dda630508c5eb)
+---
+ llvm/lib/CodeGen/DwarfEHPrepare.cpp       | 5 +++++
+ llvm/test/CodeGen/X86/dwarf-eh-prepare.ll | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/lib/CodeGen/DwarfEHPrepare.cpp b/lib/CodeGen/DwarfEHPrepare.cpp
+index 5ca1e91cc5f4..fde7b942665d 100644
+--- a/lib/CodeGen/DwarfEHPrepare.cpp
++++ b/lib/CodeGen/DwarfEHPrepare.cpp
+@@ -318,6 +318,11 @@ public:
+     return prepareDwarfEH(OptLevel, RewindFunction, F, TLI, DT, TTI);
+   }
+ 
++  bool doFinalization(Module &M) override {
++    RewindFunction = nullptr;
++    return false;
++  }
++
+   void getAnalysisUsage(AnalysisUsage &AU) const override {
+     AU.addRequired<TargetPassConfig>();
+     AU.addRequired<TargetTransformInfoWrapperPass>();
+diff --git a/test/CodeGen/X86/dwarf-eh-prepare.ll b/test/CodeGen/X86/dwarf-eh-prepare.ll
+index 921f4f9a7d85..c54fdfceea4b 100644
+--- a/test/CodeGen/X86/dwarf-eh-prepare.ll
++++ b/test/CodeGen/X86/dwarf-eh-prepare.ll
+@@ -1,4 +1,4 @@
+-; RUN: opt -mtriple=x86_64-linux-gnu -dwarfehprepare -simplifycfg-require-and-preserve-domtree=1 < %s -S | FileCheck %s
++; RUN: opt -mtriple=x86_64-linux-gnu -dwarfehprepare -simplifycfg-require-and-preserve-domtree=1 -run-twice < %s -S | FileCheck %s
+ 
+ ; Check basic functionality of IR-to-IR DWARF EH preparation. This should
+ ; eliminate resumes. This pass requires a TargetMachine, so we put it under X86
+-- 
+2.33.1
+

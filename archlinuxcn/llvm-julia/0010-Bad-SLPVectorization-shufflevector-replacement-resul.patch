@@ -1,0 +1,121 @@
+From 37f68c77b2bd7c8387b01d7fce4398f0bef5ec67 Mon Sep 17 00:00:00 2001
+From: Jameson Nash <vtjnash@gmail.com>
+Date: Thu, 22 Jul 2021 19:42:23 -0400
+Subject: [PATCH 10/11] Bad SLPVectorization shufflevector replacement,
+ resulting in write to wrong memory location
+
+We see that it might otherwise do:
+
+  %10 = getelementptr {}**, <2 x {}***> %9, <2 x i32> <i32 10, i32 4>
+  %11 = bitcast <2 x {}***> %10 to <2 x i64*>
+...
+  %27 = extractelement <2 x i64*> %11, i32 0
+  %28 = bitcast i64* %27 to <2 x i64>*
+  store <2 x i64> %22, <2 x i64>* %28, align 4, !tbaa !2
+
+Which is an out-of-bounds store (the extractelement got offset 10
+instead of offset 4 as intended). With the fix, we correctly generate
+extractelement for i32 1 and generate correct code.
+
+Differential Revision: https://reviews.llvm.org/D106613
+
+(cherry picked from commit 980d2f60a8524c5546397db9e8bbb7d6ea56c1b7)
+---
+ .../Transforms/Vectorize/SLPVectorizer.cpp    | 25 ++++++++++----
+ .../SLPVectorizer/X86/extract_in_tree_user.ll | 33 +++++++++++++++++++
+ 2 files changed, 52 insertions(+), 6 deletions(-)
+
+diff --git a/lib/Transforms/Vectorize/SLPVectorizer.cpp b/lib/Transforms/Vectorize/SLPVectorizer.cpp
+index cc3f5c7d4b48..1d06bc7d79a7 100644
+--- a/lib/Transforms/Vectorize/SLPVectorizer.cpp
++++ b/lib/Transforms/Vectorize/SLPVectorizer.cpp
+@@ -5430,8 +5430,11 @@ Value *BoUpSLP::vectorizeTree(TreeEntry *E) {
+         // The pointer operand uses an in-tree scalar so we add the new BitCast
+         // to ExternalUses list to make sure that an extract will be generated
+         // in the future.
+-        if (getTreeEntry(PO))
+-          ExternalUses.emplace_back(PO, cast<User>(VecPtr), 0);
++        if (TreeEntry *Entry = getTreeEntry(PO)) {
++          // Find which lane we need to extract.
++          unsigned FoundLane = Entry->findLaneForValue(PO);
++          ExternalUses.emplace_back(PO, cast<User>(VecPtr), FoundLane);
++        }
+ 
+         NewLI = Builder.CreateAlignedLoad(VecTy, VecPtr, LI->getAlign());
+       } else {
+@@ -5474,8 +5477,12 @@ Value *BoUpSLP::vectorizeTree(TreeEntry *E) {
+       // The pointer operand uses an in-tree scalar, so add the new BitCast to
+       // ExternalUses to make sure that an extract will be generated in the
+       // future.
+-      if (getTreeEntry(ScalarPtr))
+-        ExternalUses.push_back(ExternalUser(ScalarPtr, cast<User>(VecPtr), 0));
++      if (TreeEntry *Entry = getTreeEntry(ScalarPtr)) {
++        // Find which lane we need to extract.
++        unsigned FoundLane = Entry->findLaneForValue(ScalarPtr);
++        ExternalUses.push_back(
++            ExternalUser(ScalarPtr, cast<User>(VecPtr), FoundLane));
++      }
+ 
+       Value *V = propagateMetadata(ST, E->Scalars);
+ 
+@@ -5577,8 +5584,14 @@ Value *BoUpSLP::vectorizeTree(TreeEntry *E) {
+       // The scalar argument uses an in-tree scalar so we add the new vectorized
+       // call to ExternalUses list to make sure that an extract will be
+       // generated in the future.
+-      if (ScalarArg && getTreeEntry(ScalarArg))
+-        ExternalUses.push_back(ExternalUser(ScalarArg, cast<User>(V), 0));
++      if (ScalarArg) {
++        if (TreeEntry *Entry = getTreeEntry(ScalarArg)) {
++          // Find which lane we need to extract.
++          unsigned FoundLane = Entry->findLaneForValue(ScalarArg);
++          ExternalUses.push_back(
++              ExternalUser(ScalarArg, cast<User>(V), FoundLane));
++        }
++      }
+ 
+       propagateIRFlags(V, E->Scalars, VL0);
+       ShuffleBuilder.addMask(E->ReuseShuffleIndices);
+diff --git a/test/Transforms/SLPVectorizer/X86/extract_in_tree_user.ll b/test/Transforms/SLPVectorizer/X86/extract_in_tree_user.ll
+index efbdb14ddb8a..d4cb77884f65 100644
+--- a/test/Transforms/SLPVectorizer/X86/extract_in_tree_user.ll
++++ b/test/Transforms/SLPVectorizer/X86/extract_in_tree_user.ll
+@@ -99,3 +99,36 @@ entry:
+   ret void
+ 
+ }
++
++define void @externally_used_ptrs() {
++; CHECK-LABEL: @externally_used_ptrs(
++; CHECK-NEXT:  entry:
++; CHECK-NEXT:    [[TMP0:%.*]] = load i64*, i64** @a, align 8
++; CHECK-NEXT:    [[TMP1:%.*]] = insertelement <2 x i64*> poison, i64* [[TMP0]], i32 0
++; CHECK-NEXT:    [[TMP2:%.*]] = insertelement <2 x i64*> [[TMP1]], i64* [[TMP0]], i32 1
++; CHECK-NEXT:    [[TMP3:%.*]] = getelementptr i64, <2 x i64*> [[TMP2]], <2 x i64> <i64 56, i64 11>
++; CHECK-NEXT:    [[TMP4:%.*]] = ptrtoint <2 x i64*> [[TMP3]] to <2 x i64>
++; CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds i64, i64* [[TMP0]], i64 12
++; CHECK-NEXT:    [[TMP5:%.*]] = extractelement <2 x i64*> [[TMP3]], i32 1
++; CHECK-NEXT:    [[TMP6:%.*]] = bitcast i64* [[TMP5]] to <2 x i64>*
++; CHECK-NEXT:    [[TMP7:%.*]] = load <2 x i64>, <2 x i64>* [[TMP6]], align 8
++; CHECK-NEXT:    [[TMP8:%.*]] = add <2 x i64> [[TMP4]], [[TMP7]]
++; CHECK-NEXT:    [[TMP9:%.*]] = bitcast i64* [[TMP5]] to <2 x i64>*
++; CHECK-NEXT:    store <2 x i64> [[TMP8]], <2 x i64>* [[TMP9]], align 8
++; CHECK-NEXT:    ret void
++;
++entry:
++  %0 = load i64*, i64** @a, align 8
++  %add.ptr = getelementptr inbounds i64, i64* %0, i64 11
++  %1 = ptrtoint i64* %add.ptr to i64
++  %add.ptr1 = getelementptr inbounds i64, i64* %0, i64 56
++  %2 = ptrtoint i64* %add.ptr1 to i64
++  %arrayidx2 = getelementptr inbounds i64, i64* %0, i64 12
++  %3 = load i64, i64* %arrayidx2, align 8
++  %4 = load i64, i64* %add.ptr, align 8
++  %5 = add i64 %1, %3
++  %6 = add i64 %2, %4
++  store i64 %6, i64* %add.ptr, align 8
++  store i64 %5, i64* %arrayidx2, align 8
++  ret void
++}
+-- 
+2.33.1
+
