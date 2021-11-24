@@ -1,4 +1,4 @@
-# Maintainer: graysky <graysky AT archlnux DOT us>
+# Maintainer: graysky <graysky AT archlinux DOT us>
 # Contributor: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Jaroslav Lichtblau <svetlemodry@archlinux.org>
 # Contributor: Geoffroy Carrier <geoffroy@archlinux.org>
@@ -7,7 +7,7 @@
 
 pkgname=autojump
 pkgver=22.5.3
-pkgrel=8
+pkgrel=9
 pkgdesc="A faster way to navigate your filesystem from the command line"
 arch=('any')
 url="https://github.com/wting/autojump"
@@ -45,7 +45,7 @@ package() {
 
   # FS#49601
   install -d "${pkgdir}"/usr/share/fish/completions
-  mv "${pkgdir}"/etc/profile.d/$pkgname.fish "${pkgdir}"/usr/share/fish/completions
+  mv "${pkgdir}"/etc/profile.d/$pkgname.fish "${pkgdir}"/usr/share/fish/functions
 
   # https://github.com/joelthelion/autojump/pull/339
   sed -i "s:/usr/local/:/usr/:g" "${pkgdir}/etc/profile.d/$pkgname.sh"
