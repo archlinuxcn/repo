@@ -2,7 +2,7 @@
 
 pkgname=python-unet
 _pkgname=unet
-pkgver=0.7.7
+pkgver=0.7.8
 pkgrel=1
 pkgdesc='PyTorch Implementation of 2D and 3D U-Net'
 arch=(any)
@@ -19,7 +19,7 @@ checkdepends=(
 )
 
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/fepegar/unet/archive/v${pkgver}.tar.gz")
-sha512sums=('5d22d7c5131c86868e73af18e928f2a7cb0173d25511ac2d86207791df800e27085a231875f5c191c1c31cc5901b1c128beefc4177a3d9572cb82c809d546a3e')
+sha512sums=('da862009639f41d0e637a972c3b3b53b12478458bd6afd4ebb6f2ea0f25b89dedf463892952f6fec18d41f39e664093eeb41622bf164a9f8e81b4b53a025834b')
 
 build() {
   cd "${_pkgname}-${pkgver}"
