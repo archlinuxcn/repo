@@ -16,10 +16,6 @@ if ((BUILD_DOC)); then
   pkgname+=('julia-git-docs')
 fi
 
-makedepends_llvm=("llvm-julia")
-# TODO: automatically detect llvm-libs version
-depends_llvm=("llvm-libs-julia>=12.0" "llvm-libs-julia<13.0")
-
 case "$CARCH" in
   x86_64)
     _soarch=64
@@ -52,8 +48,7 @@ depends_libs=(arpack fftw gmp libgit2-julia "libgit2.so=1.2-$_soarch"
               libnghttp2 ca-certificates-utils
               "libmbedcrypto.so=7-$_soarch" "libmbedtls.so=13-$_soarch"
               "libmbedx509.so=1-$_soarch")
-makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
-             gcc-fortran git patchelf python proot)
+makedepends=("${depends_libs[@]}" llvm-julia gcc-fortran git patchelf python proot)
 options=('debug' '!strip' '!buildflags')
 _patches=(
   0001-Force-enable-GDB-debug-info-registration.patch
@@ -238,8 +233,15 @@ _source_files() {
 }
 
 package-julia-in() {
+  _llvm_ver=$(llvm-config --version)
+  [[ $_llvm_ver =~ ^([0-9]*).* ]]
+  llvm_maj_ver=${BASH_REMATCH[1]}
+  ((next_llvm_maj=llvm_maj_ver + 1))
+
   arch=('i686' 'x86_64' 'armv7h' 'aarch64')
-  depends=("${depends_libs[@]}" "${depends_llvm[@]}"
+  depends=("${depends_libs[@]}"
+           "llvm-libs-julia>=${llvm_maj_ver}.0"
+           "llvm-libs-julia<${next_llvm_maj}.0"
            hicolor-icon-theme xdg-utils)
   opts=("${@:2}")
 
