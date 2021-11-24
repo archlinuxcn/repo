@@ -1,0 +1,24 @@
+pkgname=julia-git-changesofvariables-git
+pkgver=0.1.1.0.2.g9d2a665
+pkgrel=1
+pkgdesc="ChangesOfVariables.jl"
+url="https://github.com/JuliaMath/ChangesOfVariables.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-changesofvariables)
+source=(git://github.com/JuliaMath/ChangesOfVariables.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd ChangesOfVariables.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd ChangesOfVariables.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh ChangesOfVariables "${pkgdir}" "${pkgname}" julia-git
+}
