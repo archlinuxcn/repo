@@ -10,7 +10,7 @@
 
 pkgname=ungoogled-chromium
 pkgver=96.0.4664.45
-pkgrel=1
+pkgrel=2
 _launcher_ver=8
 _gcc_patchset=4
 pkgdesc="A lightweight approach to removing Google web service dependency"
