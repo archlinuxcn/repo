@@ -37,7 +37,7 @@ _neovim="$NEOVIM_YOUCOMPLETEME"
 
 pkgname=vim-youcompleteme-git
 pkgver=r2854.4e10490c
-pkgrel=1
+pkgrel=2
 pkgdesc='A code-completion engine for Vim'
 arch=('x86_64')
 url='https://ycm-core.github.io/YouCompleteMe/'
@@ -64,12 +64,12 @@ if [[ ${_use_system_clang} == "ON" ]]; then
 else
   source=(git+https://github.com/ycm-core/YouCompleteMe.git
           git+https://github.com/ycm-core/ycmd.git
-          clangd-12.0.0.tar.bz2::https://github.com/ycm-core/llvm/releases/download/12.0.0/clangd-12.0.0-x86_64-unknown-linux-gnu.tar.bz2
-          libclang-12.0.0.tar.bz2::https://github.com/ycm-core/llvm/releases/download/12.0.0/libclang-12.0.0-x86_64-unknown-linux-gnu.tar.bz2)
+          clangd-13.0.0.tar.bz2::https://github.com/ycm-core/llvm/releases/download/13.0.0/clangd-13.0.0-x86_64-unknown-linux-gnu.tar.bz2
+          libclang-13.0.0.tar.bz2::https://github.com/ycm-core/llvm/releases/download/13.0.0/libclang-13.0.0-x86_64-unknown-linux-gnu.tar.bz2)
   sha256sums=('SKIP'
               'SKIP'
-              '0bb712b8d2a2d6861ea28b11167fc01c21336e5bce8682caab60257e32d9bba1'
-              'dc7b08d63fcf504fdbcfc5b96c446beee8ee79dc96e8d315666b20030c41e29a')
+              '10a64c468d1dd2a384e0e5fd4eb2582fd9f1dfa706b6d2d2bb88fb0fbfc2718d'
+              '9a5bee818a4995bc52e91588059bef42728d046808206bfb93977f4e3109e50c')
 fi
 
 pkgver() {
