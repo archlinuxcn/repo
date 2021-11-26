@@ -16,10 +16,8 @@ url='http://www.nongnu.org/libunwind/'
 license=('GPL')
 depends=('glibc' 'xz')
 makedepends=('git')
-source=('git://git.savannah.gnu.org/libunwind.git'
-        0001-Prefer-EXTBL-unwinding-on-ARM.patch)
-md5sums=('SKIP'
-         '7cb666de58048d759e06a31debf0bb6e')
+source=('git://git.savannah.gnu.org/libunwind.git')
+md5sums=('SKIP')
 options=('debug' '!strip')
 provides=(libunwind)
 conflicts=(libunwind)
@@ -28,12 +26,6 @@ pkgver() {
   cd libunwind
 
   git describe --tags | sed 's/^v//;s/-/./g'
-}
-
-prepare() {
-  cd libunwind
-
-  patch -Np1 < ../0001-Prefer-EXTBL-unwinding-on-ARM.patch
 }
 
 build() {
