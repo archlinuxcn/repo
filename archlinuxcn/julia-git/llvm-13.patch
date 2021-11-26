@@ -900,7 +900,7 @@ index 426abf6b7d..647735edb3 100644
          if (jl_is_cpointer_type(tti)) {
              pat = t;
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 4b611c9a26..c80f43199c 100644
+index 2ed36f21fa..60e5df62a1 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -144,7 +144,7 @@ extern JITEventListener *CreateJuliaJITEventListener();
@@ -929,7 +929,7 @@ index 4b611c9a26..c80f43199c 100644
  }
  
  Module *jl_create_llvm_module(StringRef name)
-@@ -4792,7 +4802,7 @@ static Value *get_current_task(jl_codectx_t &ctx)
+@@ -4780,7 +4790,7 @@ static Value *get_current_task(jl_codectx_t &ctx)
  // Get PTLS through current task.
  static Value *get_current_ptls(jl_codectx_t &ctx)
  {
@@ -938,7 +938,7 @@ index 4b611c9a26..c80f43199c 100644
  }
  
  // Store world age at the entry block of the function. This function should be
-@@ -7691,7 +7701,7 @@ void jl_compile_workqueue(
+@@ -7679,7 +7689,7 @@ void jl_compile_workqueue(
  
  // --- initialization ---
  
@@ -947,7 +947,7 @@ index 4b611c9a26..c80f43199c 100644
  {
      MDBuilder mbuilder(jl_LLVMContext);
      if (tbaa_root == nullptr) {
-@@ -8045,13 +8055,14 @@ extern "C" void jl_init_llvm(void)
+@@ -8033,13 +8043,14 @@ extern "C" void jl_init_llvm(void)
  
      TargetOptions options = TargetOptions();
      //options.PrintMachineCode = true; //Print machine code produced during JIT compiling
@@ -1129,7 +1129,7 @@ index ed5fe7c43a..533ea8f5b1 100644
                  auto newI = builder.CreateCall(
                      allocBytesIntrinsic,
 diff --git a/src/llvm-multiversioning.cpp b/src/llvm-multiversioning.cpp
-index bc467ec12b..169a41526c 100644
+index c937025fcd..2ab04059f7 100644
 --- a/src/llvm-multiversioning.cpp
 +++ b/src/llvm-multiversioning.cpp
 @@ -40,9 +40,6 @@
@@ -1142,11 +1142,12 @@ index bc467ec12b..169a41526c 100644
  namespace {
  
  // These are valid detail cloning conditions in the target flags.
-@@ -343,7 +340,7 @@ CloneCtx::CloneCtx(MultiVersioning *pass, Module &M)
+@@ -344,7 +341,8 @@ CloneCtx::CloneCtx(MultiVersioning *pass, Module &M)
+       T_int32(Type::getInt32Ty(ctx)),
        T_void(Type::getVoidTy(ctx)),
        T_psize(PointerType::get(T_size, 0)),
-       T_pvoidfunc(FunctionType::get(T_void, false)->getPointerTo()),
 -      tbaa_const(tbaa_make_child("jtbaa_const", nullptr, true).first),
++      T_pvoidfunc(FunctionType::get(T_void, false)->getPointerTo()),
 +      tbaa_const(tbaa_make_child_with_context(ctx, "jtbaa_const", nullptr, true).first),
        pass(pass),
        specs(jl_get_llvm_clone_targets()),
