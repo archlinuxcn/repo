@@ -1,3 +1,53 @@
+From 65ccb0a3d8bce4d1bcbce38912cd6b23d20310e6 Mon Sep 17 00:00:00 2001
+From: Valentin Churavy <v.churavy@gmail.com>
+Date: Sun, 10 Oct 2021 23:18:16 -0400
+Subject: [PATCH 6/6] llvm-13
+
+---
+ Makefile                               |   2 +-
+ deps/Versions.make                     |  12 +-
+ deps/checksums/clang                   | 116 +++---
+ deps/checksums/llvm                    | 468 ++++++++++++-------------
+ deps/llvm.version                      |   4 +-
+ doc/src/devdocs/llvm.md                |   4 +-
+ src/Makefile                           |   4 +
+ src/abi_aarch64.cpp                    |   2 +-
+ src/abi_arm.cpp                        |   2 +-
+ src/abi_llvm.cpp                       |   2 +-
+ src/abi_ppc64le.cpp                    |   6 +-
+ src/abi_win32.cpp                      |   6 +-
+ src/abi_win64.cpp                      |   9 +-
+ src/abi_x86.cpp                        |   8 +-
+ src/abi_x86_64.cpp                     |  11 +-
+ src/aotcompile.cpp                     |   4 +
+ src/ccall.cpp                          |   8 +-
+ src/codegen.cpp                        |  21 +-
+ src/codegen_shared.h                   |   9 +-
+ src/debuginfo.cpp                      |  15 +-
+ src/disasm.cpp                         |  18 +-
+ src/jitlayers.cpp                      |   2 +-
+ src/llvm-late-gc-lowering.cpp          |  12 +-
+ src/llvm-multiversioning.cpp           |   5 +-
+ src/llvm-pass-helpers.cpp              |  20 +-
+ src/llvm-ptls.cpp                      |   5 +-
+ stdlib/libLLVM_jll/Project.toml        |   4 +-
+ stdlib/libLLVM_jll/src/libLLVM_jll.jl  |   4 +-
+ test/llvmpasses/alloc-opt-gcframe.jl   |   2 +-
+ test/llvmpasses/alloc-opt-pass.jl      |   2 +-
+ test/llvmpasses/final-lower-gc.ll      |   2 +-
+ test/llvmpasses/gcroots.ll             |   2 +-
+ test/llvmpasses/late-lower-gc.ll       |  16 +-
+ test/llvmpasses/loopinfo.jl            |   2 +-
+ test/llvmpasses/lower-handlers.ll      |   2 +-
+ test/llvmpasses/muladd.ll              |   2 +-
+ test/llvmpasses/propagate-addrspace.ll |   2 +-
+ test/llvmpasses/refinements.ll         |   2 +-
+ test/llvmpasses/remove-addrspaces.ll   |   2 +-
+ test/llvmpasses/returnstwicegc.ll      |   2 +-
+ test/llvmpasses/safepoint_stress.jl    |   2 +-
+ test/llvmpasses/simdloop.ll            |   2 +-
+ 42 files changed, 431 insertions(+), 394 deletions(-)
+
 diff --git a/Makefile b/Makefile
 index 3452310148..a6a1587bcd 100644
 --- a/Makefile
@@ -852,7 +902,7 @@ index 898e98dfcc..e5beffce39 100644
      }
      return false;
 diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
-index e0acfe5e53..deb0a1d63a 100644
+index 10f635073b..e09d9c1e0a 100644
 --- a/src/aotcompile.cpp
 +++ b/src/aotcompile.cpp
 @@ -550,6 +550,10 @@ void jl_dump_native_impl(void *native_code,
@@ -900,7 +950,7 @@ index 426abf6b7d..647735edb3 100644
          if (jl_is_cpointer_type(tti)) {
              pat = t;
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 2ed36f21fa..60e5df62a1 100644
+index 01de473e76..97e9f94cd8 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -144,7 +144,7 @@ extern JITEventListener *CreateJuliaJITEventListener();
@@ -1129,7 +1179,7 @@ index ed5fe7c43a..533ea8f5b1 100644
                  auto newI = builder.CreateCall(
                      allocBytesIntrinsic,
 diff --git a/src/llvm-multiversioning.cpp b/src/llvm-multiversioning.cpp
-index c937025fcd..2ab04059f7 100644
+index c937025fcd..43a8e0c22e 100644
 --- a/src/llvm-multiversioning.cpp
 +++ b/src/llvm-multiversioning.cpp
 @@ -40,9 +40,6 @@
@@ -1142,12 +1192,11 @@ index c937025fcd..2ab04059f7 100644
  namespace {
  
  // These are valid detail cloning conditions in the target flags.
-@@ -344,7 +341,8 @@ CloneCtx::CloneCtx(MultiVersioning *pass, Module &M)
+@@ -344,7 +341,7 @@ CloneCtx::CloneCtx(MultiVersioning *pass, Module &M)
        T_int32(Type::getInt32Ty(ctx)),
        T_void(Type::getVoidTy(ctx)),
        T_psize(PointerType::get(T_size, 0)),
 -      tbaa_const(tbaa_make_child("jtbaa_const", nullptr, true).first),
-+      T_pvoidfunc(FunctionType::get(T_void, false)->getPointerTo()),
 +      tbaa_const(tbaa_make_child_with_context(ctx, "jtbaa_const", nullptr, true).first),
        pass(pass),
        specs(jl_get_llvm_clone_targets()),
@@ -1434,3 +1483,6 @@ index 469e0699b2..ac3c92092b 100644
  
  declare void @julia.loopinfo_marker()
  
+-- 
+2.34.0
+
