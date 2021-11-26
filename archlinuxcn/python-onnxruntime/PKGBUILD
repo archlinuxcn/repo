@@ -84,13 +84,33 @@ build() {
   #    cicc and ptxas processes for each nvcc invocation. The number of
   #    total processes may be much larger than the number of cores - let
   #    the scheduler handle it.
+  # 3. Work-around the "error: type-id cannot have a name" issue with
+  #    -DCMAKE_CUDA_STANDARD_REQUIRED=ON, which forces -std= to be
+  #    specified [2].
+  #
+  #    $ echo "#include <type_traits>" | nvcc -ccbin /usr/bin/clang -x cu -c - -o /dev/null -v --keep
+  #    /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/11.1.0/../../../../include/c++/11.1.0/type_traits:591:162: error: type-id cannot have a name
+  #    template< class _Tp> using __is_signed_integer = __is_one_of< __remove_cv_t< _Tp> , signed char, signed short, signed int, signed long, signed long long, signed __int128_t> ;
+  #                                                                                                                                                                      ^
+  #    1 error generated.
+  #
+  #    It is a clang bug exposed by CMake and CUDA. Since CMake 3.22,
+  #    -std= flag is no longer specified to nvcc (related to
+  #    CMP0128 [3] ?). On the other hand, when no -std= option is
+  #    specified, clang defines -D__GLIBCXX_TYPE_INT_N_0=__int128, and
+  #    cudafe++ somehow replaces __int128 with __int128_t, which does
+  #    not work with signed/unsigned in clang.
   # [1] https://forums.developer.nvidia.com/t/182176
+  # [2] https://cmake.org/cmake/help/latest/prop_tgt/LANG_STANDARD_REQUIRED.html
+  # [3] https://cmake.org/cmake/help/latest/policy/CMP0128.html
   cmake_args+=(
     -DCMAKE_CUDA_HOST_COMPILER=/usr/bin/clang
     -DCMAKE_CUDA_FLAGS="-D__is_signed=___is_signed -t0"
     -DCMAKE_CUDA_ARCHITECTURES="$_CUDA_ARCHITECTURES"
+    -DCMAKE_CUDA_STANDARD_REQUIRED=ON
     -Donnxruntime_USE_CUDA=ON
     -Donnxruntime_CUDA_HOME=/opt/cuda
+    -DCMAKE_CUDA_COMPILER:PATH=/opt/cuda/bin/nvcc
     -Donnxruntime_CUDNN_HOME=/usr
     -Donnxruntime_USE_NCCL=ON
   )
