@@ -10,7 +10,7 @@
 
 pkgname=ungoogled-chromium
 pkgver=96.0.4664.45
-pkgrel=3
+pkgrel=4
 _launcher_ver=8
 _gcc_patchset=4
 pkgdesc="A lightweight approach to removing Google web service dependency"
@@ -27,7 +27,7 @@ optdepends=('pipewire: WebRTC desktop sharing under Wayland'
             'org.freedesktop.secrets: password storage backend on GNOME / Xfce'
             'kwallet: support for storing passwords in KWallet on Plasma')
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
-        https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
+        chromium-launcher-$_launcher_ver.tar.gz::https://codeload.github.com/foutrelis/chromium-launcher/tar.gz/v$_launcher_ver
         https://github.com/stha09/chromium-patches/releases/download/chromium-${pkgver%%.*}-patchset-$_gcc_patchset/chromium-${pkgver%%.*}-patchset-$_gcc_patchset.tar.xz
         unbundle-fix-visibility-of-build-config-freetype.patch
         sql-make-VirtualCursor-standard-layout-type.patch
