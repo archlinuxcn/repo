@@ -1,0 +1,31 @@
+# Maintainer: Shi Liang <shiliang2008@msn.com>
+
+pkgname="graphite-cursor-theme-git"
+_reponame='Graphite-cursors'
+pkgver=2021.11.26.r0.g4d712ad
+pkgrel=1
+arch=("any")
+pkgdesc="An x-cursor theme inspired by Graphite gtk theme."
+url="https://github.com/vinceliuice/${_reponame}"
+license=("GPL3")
+makedepends=("git")
+provides=("graphite-cursor-theme")
+source=("git+$url.git")
+sha256sums=('SKIP')
+
+pkgver()
+{
+  cd "${srcdir}/${_reponame}"
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+package()
+{
+  cd "${srcdir}/${_reponame}"
+  DEST_DIR="$pkgdir/usr/share/icons"
+  install -d "$DEST_DIR"
+  cp -r dist-light $DEST_DIR/Graphite-light-cursors
+  cp -r dist-dark $DEST_DIR/Graphite-dark-cursors
+  cp -r dist-light-nord $DEST_DIR/Graphite-light-nord-cursors
+  cp -r dist-dark-nord $DEST_DIR/Graphite-dark-nord-cursors
+}
