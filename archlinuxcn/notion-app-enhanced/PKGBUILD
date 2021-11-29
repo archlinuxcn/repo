@@ -2,9 +2,9 @@
 
 pkgname=notion-app-enhanced
 pkgver="2.0.16"
-pkgrel=6
+pkgrel=7
 pkgdesc="The all-in-one workspace for your notes and tasks, but enhanced"
-arch=('i686' 'x86_64')
+arch=('x86_64' 'aarch64')
 url="https://github.com/notion-enhancer/notion-repackaged"
 license=('MIT')
 
@@ -28,9 +28,12 @@ makedepends=()
 provides=('notion-app')
 conflicts=('notion-app')
 
-notion_repackaged_ver="2.0.16-3"
-source=("https://github.com/notion-enhancer/notion-repackaged/releases/download/v${notion_repackaged_ver}/notion-app-enhanced-${notion_repackaged_ver}.pacman")
-md5sums=('032f33e0a34087e8849b42895d40447c')
+notion_repackaged_ver="2.0.16-5"
+
+source_x86_64=("${url}/releases/download/v${notion_repackaged_ver}/notion-app-enhanced-${notion_repackaged_ver}.pacman")
+source_aarch64=("${url}/releases/download/v${notion_repackaged_ver}/notion-app-enhanced-${notion_repackaged_ver}-aarch64.pacman")
+sha256sums_x86_64=('31d9cc4a8219241086fb2913d88d956567d220c4abe51573d357ac57b0b364c2')
+sha256sums_aarch64=('712260918b4d1555e4ecdbc1d60930b7e25cc046ee771decb7d9bbda18d45032')
 
 install=${pkgname}.install
 
@@ -55,3 +58,4 @@ package() {
 
   install -Dm644 "${srcdir}/${desktop_file_path}" "${pkgdir}/${desktop_file_path}"
 }
+
