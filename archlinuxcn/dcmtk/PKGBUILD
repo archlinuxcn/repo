@@ -5,7 +5,7 @@
 pkgname=dcmtk
 _pkgname=dcmtk-DCMTK
 pkgver=3.6.6
-pkgrel=3
+pkgrel=4
 pkgdesc="A collection of libraries and applications implementing large parts the DICOM standard"
 arch=("x86_64")
 url="http://dicom.offis.de/dcmtk"
@@ -56,11 +56,6 @@ package() {
 
   # Move configuration files from /usr/etc to /etc
   mv "${pkgdir}/usr/etc/" "${pkgdir}/"
-
-  # delete conflict file with charls
-  # TODO: use system's charls
-  # rm -vf "${pkgdir}/usr/lib/libcharls.so"
-  rm -vf "${pkgdir}/usr/bin/"*_tests
 }
 # vim:set ts=2 sw=2 et:
 
