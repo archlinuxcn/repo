@@ -5,7 +5,7 @@
 pkgname=inxi
 _pkgver=3.3.09-1
 pkgver=3.3.09.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Full featured CLI system information tool"
 arch=(any)
 url="https://smxi.org/docs/inxi.htm"
@@ -24,7 +24,7 @@ optdepends=(
         "ipmitool: -s IPMI sensors"
         "kmod: inxi -Ax,-Nx module version"
         "lm_sensors: inxi -s sensors output"
-        "mesa-demos: inxi -G glx info"
+        "mesa-utils: inxi -G glx info"
         "net-tools: inxi -i ip lan-deprecated"
         "perl-io-socket-ssl: -U; -w,-W; -i (if dig not installed)"
         "perl-cpanel-json-xs: --output json - required for export"
@@ -46,6 +46,6 @@ sha256sums=('SKIP')
 package() {
   cd "${pkgname}"
   install -D -m755 $pkgname "${pkgdir}/usr/bin/$pkgname"
-  install -D -m755 $pkgname.1 "${pkgdir}/usr/share/man/man1/$pkgname.1"
+  install -D -m644 $pkgname.1 "${pkgdir}/usr/share/man/man1/$pkgname.1"
 }
 
