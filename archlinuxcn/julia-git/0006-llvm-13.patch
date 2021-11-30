@@ -1,4 +1,4 @@
-From 65ccb0a3d8bce4d1bcbce38912cd6b23d20310e6 Mon Sep 17 00:00:00 2001
+From e780e9c9ae9b15dabca0527d23ea72c4bdc6c39e Mon Sep 17 00:00:00 2001
 From: Valentin Churavy <v.churavy@gmail.com>
 Date: Sun, 10 Oct 2021 23:18:16 -0400
 Subject: [PATCH 6/6] llvm-13
@@ -699,7 +699,7 @@ index 45b9c6a057..077843a854 100644
 +LLVM_BRANCH=julia-13.0.0-0
 +LLVM_SHA1=julia-13.0.0-0
 diff --git a/doc/src/devdocs/llvm.md b/doc/src/devdocs/llvm.md
-index 6f3a5ee338..af30e535e9 100644
+index 5659d79ada..d07a6d199c 100644
 --- a/doc/src/devdocs/llvm.md
 +++ b/doc/src/devdocs/llvm.md
 @@ -42,7 +42,7 @@ The default version of LLVM is specified in `deps/Versions.make`. You can overri
@@ -710,7 +710,7 @@ index 6f3a5ee338..af30e535e9 100644
 +LLVM_VER = 13.0.0
  ```
  
- Besides the LLVM release numerals, you can also use `LLVM_VER = svn` to build against the latest
+ Besides the LLVM release numerals, you can also use `DEPS_GIT = llvm` in combination with
 @@ -79,7 +79,7 @@ environment. In addition, it exposes the `-julia` meta-pass, which runs the
  entire Julia pass-pipeline over the IR. As an example, to generate a system
  image, one could do:
@@ -721,7 +721,7 @@ index 6f3a5ee338..af30e535e9 100644
  cc -shared -o sys.so sys.o
  ```
 diff --git a/src/Makefile b/src/Makefile
-index 1494fe3be4..283e2645e9 100644
+index 3646f14c75..ee24c5045e 100644
 --- a/src/Makefile
 +++ b/src/Makefile
 @@ -124,7 +124,11 @@ else
@@ -902,7 +902,7 @@ index 898e98dfcc..e5beffce39 100644
      }
      return false;
 diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
-index 10f635073b..e09d9c1e0a 100644
+index c1857e8db2..8f2d5ffe35 100644
 --- a/src/aotcompile.cpp
 +++ b/src/aotcompile.cpp
 @@ -550,6 +550,10 @@ void jl_dump_native_impl(void *native_code,
@@ -1179,7 +1179,7 @@ index ed5fe7c43a..533ea8f5b1 100644
                  auto newI = builder.CreateCall(
                      allocBytesIntrinsic,
 diff --git a/src/llvm-multiversioning.cpp b/src/llvm-multiversioning.cpp
-index c937025fcd..43a8e0c22e 100644
+index 7cd50ac144..88f09c1cdf 100644
 --- a/src/llvm-multiversioning.cpp
 +++ b/src/llvm-multiversioning.cpp
 @@ -40,9 +40,6 @@
@@ -1189,10 +1189,10 @@ index c937025fcd..43a8e0c22e 100644
 -extern std::pair<MDNode*,MDNode*> tbaa_make_child(const char *name, MDNode *parent=nullptr,
 -                                                  bool isConstant=false);
 -
- namespace {
+ extern Optional<bool> always_have_fma(Function&);
  
- // These are valid detail cloning conditions in the target flags.
-@@ -344,7 +341,7 @@ CloneCtx::CloneCtx(MultiVersioning *pass, Module &M)
+ namespace {
+@@ -346,7 +343,7 @@ CloneCtx::CloneCtx(MultiVersioning *pass, Module &M)
        T_int32(Type::getInt32Ty(ctx)),
        T_void(Type::getVoidTy(ctx)),
        T_psize(PointerType::get(T_size, 0)),
@@ -1484,5 +1484,5 @@ index 469e0699b2..ac3c92092b 100644
  declare void @julia.loopinfo_marker()
  
 -- 
-2.34.0
+2.34.1
 
