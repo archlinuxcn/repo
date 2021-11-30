@@ -1,8 +1,8 @@
 # Maintainer: yjun <jerrysteve1101 at gmail dot com>
 
 pkgname=netease-music-tui
-pkgver=0.1.3
-pkgrel=2
+pkgver=0.1.4
+pkgrel=1
 pkgdesc="Netease cloud music terminal client by rust"
 arch=('x86_64' 'i686' 'aarch64' 'armv7h' 'armv6h' 'arm')
 url="https://github.com/betta-cyber/netease-music-tui"
@@ -13,7 +13,7 @@ depends=('dbus'
          'openssl')
 makedepends=('rust')
 source=(${pkgname}-${pkgver}.tar.gz::"https://github.com/betta-cyber/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('b8f3fb4dbe6785077beec1399cde402ee982230670d85b7d3ce174ca5e0bbcc9')
+sha256sums=('7c7ecd4b7a56365e512a9b209173039d5a9231a306f979ed85d7a616b1fbb3db')
 
 build() {
   cd ${pkgname}-${pkgver}
