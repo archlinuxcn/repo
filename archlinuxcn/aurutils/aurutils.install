@@ -35,4 +35,15 @@ moved from /usr/share/devtools/pacman-aur.conf to
 More information about this file was added to the aur-build man page.
 EOF
     fi
+
+    if (( $(vercmp '3.2.0-1' "$2") == 1 )); then
+       cat >&2 <<-EOF
+As of 3.2.0, if --chroot is specified without --database, aur-build assumes
+pacman.conf is located in /etc/pacman-$(uname -m).conf.
+
+See the 3.2.0 changelog for more information:
+
+https://github.com/AladW/aurutils/releases/tag/3.2.0
+EOF
+    fi
 }
