@@ -6,7 +6,7 @@ pkgname=dingtalk-bin
 _pkgname=dingtalk
 _pkgname2=com.alibabainc.dingtalk
 pkgver=1.2.0.120
-pkgrel=1
+pkgrel=2
 pkgdesc="钉钉"
 arch=("x86_64")
 url="https://gov.dingtalk.com"
@@ -27,7 +27,7 @@ source=("${_pkgname}_${pkgver}-${arch}.deb::https://dtapp-pub.dingtalk.com/dingt
 sha512sums=('18d256786a58eee2e9c41038b74cd23706e121fef478b8e741c5387ebd0b8d2eda41bd6c6e89f63dd851cbd5c0f01f6ebb9a24005fd2d7ff8414cc38d03f6d49'
             'b83d493ed68be0f5a6b851fd93d819bb3a6e62feeb71a5bef10bad24b5ea8f3cf09deea4f31ed727449888a6eae1be99fa9cf263bc921cb8bb2958e2f37a7d64'
             'c8570ec4cd978e26ac622a83db053a0555324752f5000dc5b3cd680d782138e8ef856f09ec9b7850e04e1faa1e39de94dabeb16fbfbe0fd44af43247b30e8b2f'
-            '92216c292ebe74066a51552fce9b93aef3b9ca7d0e25e652852220d13999fc6ca2b7dd126836d375c13ed6bdd169073795f40ad1e0f2c63ea58db40a73deb4c2')
+            '50437762c47843fa9040bfb5a723da246d1496e4dc0937028c0f2cb92e0286dc47b7c2a5a0485a4b667cfb30d7c4d23664a2ccb08c5bd3059aad265532c1140e')
 
 prepare(){
     cd ${srcdir}
