@@ -5,7 +5,7 @@
 #export LG2=en
 
 pkgname=i2p
-pkgver=1.5.0
+pkgver=1.6.1
 pkgrel=1
 pkgdesc="A distributed anonymous network"
 url="https://geti2p.net"
@@ -33,7 +33,7 @@ source=("${_url}/i2psource_${pkgver}.tar.bz2"{,.sig}
         #upstream.patch::'https://github.com/i2p/i2p.i2p/commit/6c0e18d3.patch'
 )
 
-sha256sums=('26e5f4d95b1a0766870f97b30e57c9a8e98690279c3bf09198e30effabecc450'
+sha256sums=('719606c4cb510de4fe74f24bbfa53911a70531821fc1ee79a29e3d96eaa16733'
             'SKIP'
             '644b771ec7f5db3efab3206bf1f896566cdb00d410a54608fda85bdb4c2ad876'
             'fc30dd32f48fe1c93bf36c8297ca48203a1479e4e221ebe62c57cf3c3c0347d3'
@@ -57,7 +57,7 @@ build() {
     ant -Dfile.encoding=UTF-8 \
         -Djavac.compilerargs=-Xlint:-options \
         -Dbuild.reproducible=true \
-        -Djavac.version=11 \
+        -Djavac.version=13 \
         preppkg-linux-only
 }
 
