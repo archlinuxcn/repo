@@ -11,7 +11,7 @@ def pre_build():
     aur_pre_build(maintainers=['S13ntist'])
     for line in edit_file('PKGBUILD'):
         if "git describe --long --tags" in line:
-            print('    printf "%s.%s" "$(git describe --tags --long | cut -d- -f1)" "$(git rev-list --count HEAD)"')
+            line = '    printf "%s.%s" "$(git describe --tags --long | cut -d- -f1)" "$(git rev-list --count HEAD)"'
         print(line)
 
 #if __name__ == '__main__':
