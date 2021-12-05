@@ -73,6 +73,7 @@ build() {
 package() {
   depends+=(
     "seafile-server>=$pkgver"
+    'python-django-jsonfield' # dependency of post-office which we bundle
     # The following list is from seahub/requirements.txt
     # python-django # 2.2.14
     'python-future'
