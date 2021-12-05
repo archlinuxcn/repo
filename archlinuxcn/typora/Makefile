@@ -2,10 +2,14 @@
 # This will update the checksums and build the package
 all: updateinfo
 	makepkg -sr
+# Check if any files are world writable
+	find pkg/typora -type f -perm -o+w -printf "WARNING: '%p' has o+w set\n"
 
 # This will do the same as all, but will install it to the local system as well
 install: updateinfo
 	makepkg -sri
+# Check if any files are world writable
+	find pkg/typora -type f -perm -o+w -printf "WARNING: '%p' has o+w set\n"
 
 # This will update the checksums and .SRCINFO
 updateinfo:
