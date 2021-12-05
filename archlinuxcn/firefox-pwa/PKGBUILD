@@ -10,7 +10,7 @@
 _pkgname="FirefoxPWA"
 pkgname="firefox-pwa"
 pkgdesc="A tool to install, manage and use Progressive Web Apps (PWAs) in Mozilla Firefox (native component)"
-pkgver="1.2.1"
+pkgver="1.2.2"
 pkgrel=1
 url="https://github.com/filips123/FirefoxPWA"
 arch=("x86_64" "i686")
@@ -21,8 +21,8 @@ optdepends=("firefox: Support for browser extension")
 install=package.install
 
 source=("$pkgname-$pkgver.tar.gz::https://github.com/filips123/FirefoxPWA/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('b5759fef28405d82a4cc1ac6b1d15c638436738e5ce7d6d5754c781a0b88140f')
-b2sums=('791c52c544210f59d0634546ba58481fde29e063bed55f52ed5dc6f6dda9c90206fa1ed3d1c86bf85138cb3a9d543e8cacd3147934ea8369579785e92f07ecf4')
+sha256sums=('ec0f1306ac4509c4fa02fe8a006b85da2d8c27e0b8145038ee2b178b0d7d0a22')
+b2sums=('25ba5a4787bbae8a5100d4812288fc59cd9e5100a13503d1acd209bbf44b551fb15ae111a334adec25ba638240194dc9dba226be38e55e069e07859367248fc4')
 
 prepare() {
     cd $srcdir/$_pkgname-$pkgver/native/
@@ -57,7 +57,7 @@ package() {
 
     # Completions
     install -Dm755 target/release/completions/firefoxpwa.bash $pkgdir/usr/share/bash-completion/completions/firefoxpwa
-    install -Dm755 target/release/completions/firefoxpwa.fish $pkgdir/usr/share/fish/completions/firefoxpwa.fish
+    install -Dm755 target/release/completions/firefoxpwa.fish $pkgdir/usr/share/fish/vendor_completions.d/firefoxpwa.fish
     install -Dm755 target/release/completions/_firefoxpwa $pkgdir/usr/share/zsh/vendor-completions/_firefoxpwa
 
     # Documentation
