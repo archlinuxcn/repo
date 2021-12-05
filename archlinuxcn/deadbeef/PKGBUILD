@@ -3,7 +3,7 @@
 
 pkgname=deadbeef
 pkgver=1.8.8
-pkgrel=3
+pkgrel=4
 pkgdesc='A GTK+ audio player for GNU/Linux.'
 arch=('x86_64')
 url='http://deadbeef.sourceforge.net'
@@ -11,7 +11,7 @@ license=('GPL2')
 depends=('alsa-lib' 'hicolor-icon-theme' 'desktop-file-utils' 'jansson' 'libdispatch')
 makedepends=('libvorbis' 'libmad' 'flac' 'curl' 'imlib2' 'wavpack' 'libsndfile' 'libcdio' 'libcddb'
              'libx11' 'faad2' 'zlib' 'intltool' 'pkgconfig' 'libpulse' 'libzip' 'libsamplerate'
-             'yasm' 'ffmpeg' 'gtk2' 'gtk3' 'clang')
+             'yasm' 'ffmpeg' 'gtk2' 'gtk3' 'clang' 'opusfile' 'mpg123')
 optdepends=('gtk2: for the GTK2 interface'
             'gtk3: for the GTK3 interface'
             'libsamplerate: for Resampler plugin'
@@ -31,7 +31,8 @@ optdepends=('gtk2: for the GTK2 interface'
             'libx11: for global hotkeys plugin'
             'zlib: for Audio Overload plugin'
             'libzip: for vfs_zip plugin'
-            'ffmpeg: for ffmpeg plugin')
+            'ffmpeg: for ffmpeg plugin'
+            'opusfile: for opus plugin')
 source=("https://github.com/DeaDBeeF-Player/${pkgname}/archive/${pkgver}.tar.gz"
         apbuild.zip::"https://github.com/DeaDBeeF-Player/apbuild/archive/refs/heads/master.zip"
         mp4p.zip::"https://github.com/DeaDBeeF-Player/mp4p/archive/refs/heads/master.zip")
