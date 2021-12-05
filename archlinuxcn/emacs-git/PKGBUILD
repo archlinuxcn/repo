@@ -42,6 +42,7 @@ AOT=              # Precompile all included elisp. It takes a long time.
 CLI=              # CLI only binary.
 
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
+                  # Bitmap fonts only, 1337!
                
 LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   #
@@ -60,10 +61,6 @@ DOCS_HTML=        # Generate and install html documentation.
                
 DOCS_PDF=         # Generate and install pdf documentation.
                
-MAGICK=           # ImageMagick 7 support. Deprecated (read the logs).
-                  # ImageMagick, like flash, won't die... 
-                  # -->>If you just *believe* you need ImageMagick, you don't.<<--
-               
 NOGZ="YES"        # Don't compress .el files.
 ################################################################################
 
@@ -73,14 +70,14 @@ if [[ $CLI == "YES" ]] ; then
 else
 pkgname="emacs-git"
 fi
-pkgver=29.0.50.152252
+pkgver=29.0.50.152368
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
 url="http://www.gnu.org/software/emacs/"
 license=('GPL3')
 depends_nox=('alsa-lib' 'gnutls' 'libxml2' 'jansson' 'gpm')
-depends=("${depends_nox[@]}" 'm17n-lib' 'libotf' 'harfbuzz')
+depends=("${depends_nox[@]}" 'harfbuzz')
 makedepends=('git')
 provides=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox')
 conflicts=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox')
@@ -128,19 +125,17 @@ fi
 if [[ $CLI == "YES" ]]; then
   depends=("${depends_nox[@]}");
 elif [[ $NOTKIT == "YES" ]]; then
-  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxrandr' 'lcms2' 'librsvg' 'libxfixes' );
+  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxrandr' 'lcms2' 'librsvg' 'libxfixes' 'libxpm' );
   makedepends+=( 'xorgproto' );
 elif [[ $LUCID == "YES" ]]; then
-  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxfixes' 'lcms2' 'librsvg' 'xaw3d' 'libxrandr' );
+  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxfixes' 'lcms2' 'librsvg' 'xaw3d' 'libxrandr' 'libxpm' );
   makedepends+=( 'xorgproto' );
 else
-  depends+=( 'gtk3' );
+  depends+=( 'gtk3' 'libxpm' );
   makedepends+=( 'xorgproto' );
 fi
 
-if [[ $MAGICK == "YES" ]]; then
-  depends+=( 'imagemagick'  'libjpeg-turbo' 'giflib' );
-elif [[ ! $NOX == "YES" ]] && [[ ! $CLI == "YES" ]]; then
+if [[ ! $NOX == "YES" ]] && [[ ! $CLI == "YES" ]]; then
   depends+=( 'libjpeg-turbo' 'giflib' );
 elif [[ $CLI == "YES" ]]; then
   depends+=();
@@ -204,6 +199,8 @@ build() {
     --with-gameuser=:games
     --with-sound=alsa
     --with-modules
+    --without-libotf
+    --without-m17n-flt
 # Beware https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
 # dconf and gconf break font settings you set in ~/.emacs.
 # If you insist you'll need to read that bug report in *full*.
@@ -231,17 +228,11 @@ fi
 if [[ $CLI == "YES" ]]; then
   _conf+=( '--without-x' '--with-x-toolkit=no' '--without-xft' '--without-lcms2' '--without-rsvg' '--without-jpeg' '--without-gif' '--without-tiff' '--without-png' );
 elif [[ $NOTKIT == "YES" ]]; then
-  _conf+=( '--with-x-toolkit=no' '--without-toolkit-scroll-bars' '--with-xft' '--without-xaw3d' );
+  _conf+=( '--with-x-toolkit=no' '--without-toolkit-scroll-bars' '--without-xft' '--without-xaw3d' );
 elif [[ $LUCID == "YES" ]]; then
   _conf+=( '--with-x-toolkit=lucid' '--with-xft' '--with-xaw3d' );
 else
   _conf+=( '--with-x-toolkit=gtk3' '--without-xaw3d' );
-fi
-
-if [[ $MAGICK == "YES" ]]; then
-  _conf+=( '--with-imagemagick');
-else
-  _conf+=();
 fi
 
 if [[ $NOCAIRO == "YES" || $CLI == "YES" ]]; then
@@ -304,17 +295,15 @@ package() {
   if [[ $DOCS_PDF == "YES" ]]; then make DESTDIR="$pkgdir/" install-pdf; fi
 
   # fix user/root permissions on usr/share files
-  # MOVED to install script
-  # find "$pkgdir"/usr/share/emacs/ | xargs chown root:root
+  find "$pkgdir"/usr/share/emacs/ | xargs chown root:root
 
   # fix permssions on /var/games
   mkdir -p "$pkgdir"/var/games/emacs
   chmod 775 "$pkgdir"/var/games
   chmod 775 "$pkgdir"/var/games/emacs
-  # MOVED to install script
-  # chown -R root:games "$pkgdir"/var/games
+  chown -R root:games "$pkgdir"/var/games
 
 }
 
 ################################################################################
-# vim:set ft=sh ts=2 sw=2 et:
+# vim:set ft=bash ts=2 sw=2 et:

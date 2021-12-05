@@ -1,14 +1,14 @@
-# Maintainer: Reto Brunner <brunnre8@gmail.com>
+# Maintainer: Reto Brunner <reto@labrat.space>
 pkgname=thelounge-git
 _realname=thelounge
-pkgver=v3.0.1.r240.g0a1d67bf
+pkgver=v4.3.0.7274
 pkgrel=1
 pkgdesc='Modern self-hosted web IRC client'
 url='https://thelounge.chat/'
 arch=('any')
 license=('MIT')
-depends=('nodejs')
-makedepends=('yarn' 'git')
+depends=('nodejs-lts-gallium') # the build on node 17 is broken
+makedepends=('yarn' 'git' 'python2' 'npm')
 conflicts=('thelounge')
 backup=('etc/thelounge/config.js')
 source=(
@@ -26,24 +26,37 @@ sha256sums=('SKIP'
 
 pkgver() {
     cd $_realname
-    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+    printf "%s.%s" "$(git describe --tags --long | cut -d- -f1)" "$(git rev-list --count HEAD)"
 }
 
 prepare(){
     echo /etc/thelounge > "$_realname/.thelounge_home"
+    cd $_realname
+    yarn install --frozen-lockfile --non-interactive --ignore-optional --ignore-scripts
 }
 
 build() {
     cd $_realname
-    yarn install
     export NODE_ENV=production
     yarn build
+    npm pack .
 }
 
 
 package() {
+    cd $_realname
+    version=`git describe --abbrev=0`
     export NODE_ENV=production
-    yarn global add --prefix "$pkgdir/usr" --global-folder "$pkgdir/usr/lib/$_realname" file:$srcdir/$_realname
+    npm install -g --prefix "$pkgdir/usr" "./$_realname-${version#v}.tgz" \
+        --cache "${srcdir}/npm-cache" --build-from-source=sqlite3
+
+    # Non-deterministic race in npm gives 777 permissions to random directories.
+    # See https://github.com/npm/npm/issues/9359 for details.
+    find "${pkgdir}"/usr -type d -exec chmod 755 {} +
+
+    # npm gives ownership of ALL FILES to build user
+    # https://bugs.archlinux.org/task/63396
+    chown -R root:root "${pkgdir}"
 
     # add default config
     install -Dm 644 "$srcdir/$_realname/defaults/config.js" "$pkgdir/etc/thelounge/config.js"

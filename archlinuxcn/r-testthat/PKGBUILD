@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=testthat
-_pkgver=3.1.0
+_pkgver=3.1.1
 pkgname=r-${_pkgname,,}
-pkgver=3.1.0
+pkgver=3.1.1
 pkgrel=1
 pkgdesc='Unit Testing for R'
 arch=('x86_64')
@@ -45,7 +45,7 @@ optdepends=(
   r-xml2
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('e714b105891a766d03d5bab09d705b1f6c23f04db56dfe310bff8cfa00464987')
+sha256sums=('e6755fb4f5388751af952edfd555533bb55d6252606f6fcef07bdb6268c8cf80')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

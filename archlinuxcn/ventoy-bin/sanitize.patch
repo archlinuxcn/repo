@@ -5,10 +5,10 @@ Let me do some optimisations.
 
 If you are interested to improve this patch, welcome to mail me.
 
-diff -ru old/tool/ventoy_lib.sh new/tool/ventoy_lib.sh
---- tool/ventoy_lib.sh	2021-03-06 14:54:04.163817366 +0100
-+++ tool/ventoy_lib.sh	2021-03-06 14:56:07.053667242 +0100
-@@ -29,7 +29,7 @@
+diff -rup old/tool/ventoy_lib.sh new/tool/ventoy_lib.sh
+--- tool/ventoy_lib.sh	2021-12-02 16:59:42.148650182 +0100
++++ tool/ventoy_lib.sh	2021-12-02 17:01:17.214720518 +0100
+@@ -29,7 +29,7 @@ vterr() {
  }
  
  vtdebug() {
@@ -17,7 +17,7 @@ diff -ru old/tool/ventoy_lib.sh new/tool/ventoy_lib.sh
  }
  
  vtoy_gen_uuid() {
-@@ -52,30 +52,6 @@
+@@ -52,30 +52,6 @@ vtoy_gen_uuid() {
  
  check_tool_work_ok() {
      
@@ -48,7 +48,7 @@ diff -ru old/tool/ventoy_lib.sh new/tool/ventoy_lib.sh
      vtdebug "tool check success ..."
      ventoy_true
  }
-@@ -264,7 +240,7 @@
+@@ -269,7 +245,7 @@ format_ventoy_disk_mbr() {
      else
      vtdebug "format disk by fdisk ..."
      
@@ -57,10 +57,10 @@ diff -ru old/tool/ventoy_lib.sh new/tool/ventoy_lib.sh
  o
  n
  p
-diff -ru old/tool/VentoyWorker.sh new/tool/VentoyWorker.sh
---- tool/VentoyWorker.sh	2021-03-06 14:53:26.603866863 +0100
-+++ tool/VentoyWorker.sh	2021-03-06 14:55:52.493675465 +0100
-@@ -99,7 +99,7 @@
+diff -rup old/tool/VentoyWorker.sh new/tool/VentoyWorker.sh
+--- tool/VentoyWorker.sh	2021-12-02 16:59:31.485642239 +0100
++++ tool/VentoyWorker.sh	2021-12-02 17:02:00.326752183 +0100
+@@ -99,7 +99,7 @@ vtdebug "MODE=$MODE FORCE=$FORCE RESERVE
  if check_tool_work_ok; then
      vtdebug "check tool work ok"
  else
@@ -69,10 +69,10 @@ diff -ru old/tool/VentoyWorker.sh new/tool/VentoyWorker.sh
      exit 1
  fi
  
-diff -ru old/Ventoy2Disk.sh new/Ventoy2Disk.sh
---- Ventoy2Disk.sh	2021-03-06 14:52:52.703911700 +0100
-+++ Ventoy2Disk.sh	2021-03-06 14:55:45.943684011 +0100
-@@ -34,46 +34,4 @@
+diff -rup old/Ventoy2Disk.sh new/Ventoy2Disk.sh
+--- Ventoy2Disk.sh	2021-12-02 16:59:05.205622608 +0100
++++ Ventoy2Disk.sh	2021-12-02 17:03:29.037816991 +0100
+@@ -32,48 +32,4 @@ echo "      https://www.ventoy.net"
  echo '**********************************************'
  echo ''
  
@@ -90,22 +90,24 @@ diff -ru old/Ventoy2Disk.sh new/Ventoy2Disk.sh
 -date >> ./log.txt
 -
 -#decompress tool
--if [ -f ./tool/$TOOLDIR/ash ]; then
--    echo "no need to decompress tools" >> ./log.txt
--else
--    cd ./tool/$TOOLDIR
--    
+-echo "decompress tools" >> ./log.txt
+-cd ./tool/$TOOLDIR
+-
+-ls *.xz > /dev/null 2>&1
+-if [ $? -eq 0 ]; then
 -    [ -f ./xzcat ] && chmod +x ./xzcat
--    
+-
 -    for file in $(ls *.xz); do
+-        echo "decompress $file" >> ./log.txt
 -        xzcat $file > ${file%.xz}
 -        [ -f ./${file%.xz} ] && chmod +x ./${file%.xz}
 -        [ -f ./$file ] && rm -f ./$file
 -    done
--    cd ../../
--    
--    chmod +x -R ./tool/$TOOLDIR
 -fi
+-
+-cd ../../
+-chmod +x -R ./tool/$TOOLDIR
+-
 -
 -if [ -f /bin/bash ]; then
 -    /bin/bash ./tool/VentoyWorker.sh $*
@@ -120,10 +122,73 @@ diff -ru old/Ventoy2Disk.sh new/Ventoy2Disk.sh
 -    fi
 -fi
 +./tool/VentoyWorker.sh $*
-diff -ru old/VentoyWeb.sh new/VentoyWeb.sh
---- VentoyWeb.sh	2021-03-06 14:54:25.383789486 +0100
-+++ VentoyWeb.sh	2021-03-06 14:56:01.253668661 +0100
-@@ -15,12 +15,6 @@
+diff -rup old/VentoyPlugson.sh new/VentoyPlugson.sh
+--- VentoyPlugson.sh	2021-12-02 17:54:36.055868878 +0100
++++ VentoyPlugson.sh	2021-12-02 18:04:40.919633986 +0100
+@@ -25,8 +19,6 @@ if echo $machine | egrep -q 'aarch64|arm
+     TOOLDIR=aarch64
+ elif echo $machine | egrep -q 'x86_64|amd64'; then
+     TOOLDIR=x86_64
+-elif echo $machine | egrep -q 'mips64'; then
+-    TOOLDIR=mips64el
+ elif echo $machine | egrep -q 'i[3-6]86'; then
+     TOOLDIR=i386
+ else
+@@ -35,38 +27,6 @@ else
+ fi
+ 
+ 
+-if ! [ -f "$OLDDIR/tool/plugson.tar.xz" ]; then
+-    echo "Please run under the correct directory!" 
+-    exit 1
+-fi
+-
+-echo "############# VentoyPlugson $* [$TOOLDIR] ################" >> ./VentoyPlugson.log
+-date >> ./VentoyPlugson.log
+-
+-echo "decompress tools" >> ./VentoyPlugson.log
+-cd ./tool/$TOOLDIR
+-
+-ls *.xz > /dev/null 2>&1
+-if [ $? -eq 0 ]; then
+-    [ -f ./xzcat ] && chmod +x ./xzcat
+-
+-    for file in $(ls *.xz); do
+-        echo "decompress $file" >> ./VentoyPlugson.log
+-        xzcat $file > ${file%.xz}
+-        [ -f ./${file%.xz} ] && chmod +x ./${file%.xz}
+-        [ -f ./$file ] && rm -f ./$file
+-    done
+-fi
+-
+-cd ../../
+-chmod +x -R ./tool/$TOOLDIR
+-
+-if ! [ -f "$OLDDIR/tool/$TOOLDIR/Plugson" ]; then
+-    echo "$OLDDIR/tool/$TOOLDIR/Plugson does not exist!" 
+-    exit 1
+-fi
+-
+-
+ PATH=./tool/$TOOLDIR:$PATH
+ 
+ HOST="127.0.0.1"
+@@ -208,11 +168,3 @@ if [ -f /proc/$wID/maps ]; then
+ 
+     wait $wID
+ fi
+-
+-
+-if [ -n "$OLDDIR" ]; then 
+-    CURDIR=$(pwd)
+-    if [ "$CURDIR" != "$OLDDIR" ]; then
+-        cd "$OLDDIR"
+-    fi
+-fi
+diff -rup old/VentoyWeb.sh new/VentoyWeb.sh
+--- VentoyWeb.sh	2021-12-02 16:58:51.885612627 +0100
++++ VentoyWeb.sh	2021-12-02 17:04:43.437871014 +0100
+@@ -15,12 +15,6 @@ print_err() {
      echo ""
  }
  
@@ -136,7 +201,7 @@ diff -ru old/VentoyWeb.sh new/VentoyWeb.sh
  OLDDIR=$(pwd)
  
  if uname -m | egrep -q 'aarch64|arm64'; then
-@@ -85,8 +79,8 @@
+@@ -85,8 +79,8 @@ if ps -ef | grep "V2DServer.*$HOST.*$POR
      exit 1
  fi
  

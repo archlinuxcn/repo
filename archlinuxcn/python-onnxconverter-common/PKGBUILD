@@ -3,8 +3,8 @@
 
 _pkgname=onnxconverter-common
 pkgname=python-onnxconverter-common
-pkgver=1.8.1
-pkgrel=2
+pkgver=1.9.0
+pkgrel=1
 pkgdesc='Common utilities for ONNX converters'
 arch=('any')
 url='https://github.com/microsoft/onnxconverter-common'
@@ -22,7 +22,7 @@ checkdepends=(
   python-pytest
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/microsoft/onnxconverter-common/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('f95f2a2d1fedc20cccbc820d4f63cbe84e287a5bd8c863ced400ae73946e13e6')
+sha256sums=('32315bcc844a8203092f3117a4a092ac6cf03d6a20145477e284f1172557d6f9')
 
 build() {
   cd "${_pkgname}-${pkgver}"
