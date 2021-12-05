@@ -12,6 +12,7 @@ url="http://scikit-image.org/"
 license=('BSD')
 makedepends=(
   cython
+  python-pythran
   python-setuptools
 )
 depends=(
@@ -23,12 +24,6 @@ depends=(
   python-pywavelets
   python-scipy
   python-tifffile
-)
-checkdepends=(
-  python-pytest
-  python-pytest-cov
-  python-pytest-flake8
-  python-pytest-localserver
 )
 optdepends=('python-pyqt5: for imshow(x, fancy=True) and skivi'
             'python-imagecodecs: for reading image formats with various compression algorithm'
@@ -46,11 +41,6 @@ build() {
   cd "${srcdir}/${_name}-${pkgver}"
   python setup.py build_ext --inplace
   python setup.py build
-}
-
-check() {
-  cd "${_name}-${pkgver}"
-  pytest -v
 }
 
 package() {
