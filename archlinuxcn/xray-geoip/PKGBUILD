@@ -2,7 +2,7 @@
 # Contributor: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=xray-geoip
-pkgver=202112060252
+pkgver=202112061314
 pkgrel=1
 pkgdesc="GeoIP List for Xray"
 arch=('any')
