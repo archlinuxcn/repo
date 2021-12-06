@@ -1,3 +1,20 @@
+## 3.2.1
+
+* `aur-query`
+  + support AUR_LOCATION
+  + preserve `curl --parallel` exit codes (requires curl >=7.77.0)
+  + complete aur-query(1) man page
+
+* `aur-pkglist`
+  + support multiinfo and search dumps (`--info`, `--search`)
+  + support HTTP Last-Modified
+
+* `aur-fetch`
+  + add `--existing`
+
+* `aur-view`
+  + new script that includes the package inspection logic from `aur-sync`
+
 ## 3.2.0
 
 * `aur-build`

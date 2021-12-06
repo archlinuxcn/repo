@@ -39,7 +39,7 @@ EOF
     if (( $(vercmp '3.2.0-1' "$2") == 1 )); then
        cat >&2 <<-EOF
 As of 3.2.0, if --chroot is specified without --database, aur-build assumes
-pacman.conf is located in /etc/pacman-$(uname -m).conf.
+pacman.conf is located in /etc/aurutils/pacman-$(uname -m).conf.
 
 See the 3.2.0 changelog for more information:
 
