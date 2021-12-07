@@ -1,0 +1,21 @@
+# Maintainer: sinofp <sinofp@tuta.io>
+pkgname=espresso
+pkgver=2.4
+pkgrel=1
+pkgdesc="A multi-valued PLA minimizer"
+arch=('x86_64')
+url="https://github.com/chipsalliance/espresso"
+license=('custom')
+depends=('glibc')
+makedepends=('cmake' 'ninja' 'gcc')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/chipsalliance/espresso/archive/refs/tags/v$pkgver.tar.gz")
+md5sums=('4893ae8a05abfe45309d8d9932158d8f')
+
+build() {
+	cmake -B build -S "$pkgname-$pkgver" -G Ninja -DCMAKE_BUILD_TYPE=None -DCMAKE_INSTALL_PREFIX=/usr -Wno-dev
+	ninja -C build
+}
+
+package() {
+	DESTDIR="$pkgdir" ninja -C build install
+}
