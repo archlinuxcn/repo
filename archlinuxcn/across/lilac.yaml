@@ -1,0 +1,9 @@
+update_on:
+  - source: cmd
+    cmd: curl -sS https://raw.githubusercontent.com/ArkToria/ACross/master/pkgbuild/arch/across/PKGBUILD | grep pkgver= | awk -F '=' '{print $2}'
+  - source: cmd
+    cmd: curl -sS https://raw.githubusercontent.com/ArkToria/ACross/master/pkgbuild/arch/across/PKGBUILD | grep pkgrel= | awk -F '=' '{print $2}'
+  - alias: clang
+
+maintainers:
+  - github: dctxmei
