@@ -2,8 +2,11 @@ repo_depends:
   - firefox-esr
 
 update_on:
-  - source: cmd
-    cmd: curl -sS https://ftp.mozilla.org/pub/firefox/releases/ | grep releases | grep esr | awk -F '/' '{print $5}' | sort -n -t '.' -k 1,1 -k 2,2 -k 3,3 | tail -n 1 | sed 's/esr//'
+#  - source: cmd
+#    cmd: curl -sS https://ftp.mozilla.org/pub/firefox/releases/ | grep releases | grep esr | awk -F '/' '{print $5}' | sort -n -t '.' -k 1,1 -k 2,2 -k 3,3 | tail -n 1 | sed 's/esr//'
+  - source: aur
+    archpkg: firefox-esr
+    strip_release: true
 
 maintainers:
   - github: dctxmei
