@@ -1,0 +1,42 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=transformers
+pkgname=python-transformers
+pkgver=4.12.5
+pkgrel=1
+pkgdesc='State-of-the-art Machine Learning for Pytorch, TensorFlow, and JAX'
+arch=('any')
+url='https://github.com/huggingface/transformers'
+license=('Apache')
+depends=(
+  python-filelock
+  python-huggingface-hub
+  python-numpy
+  python-regex
+  python-requests
+  python-sacremoses
+  python-tokenizers
+  python-tqdm
+  python-yaml
+)
+makedepends=(
+  python-setuptools
+)
+optdepends=(
+  python-pytorch
+  python-tensorflow
+)
+
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/huggingface/transformers/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('08e9bf62ac5abcd73182b47ba4d9597c897861862a2df8254f621fd03ba3e0fbe1071dfffaae3385c534d3ebfead7f75ae02b739d025acf086e5fbd3c80a1a7c')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+}
+# vim:set ts=2 sw=2 et:

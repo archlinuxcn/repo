@@ -1,0 +1,30 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=tokenizers
+pkgname=python-tokenizers
+pkgver=0.11.0
+pkgrel=1
+pkgdesc='Fast State-of-the-Art Tokenizers optimized for Research and Production'
+arch=('x86_64')
+url='https://github.com/huggingface/tokenizers'
+license=('Apache')
+depends=(
+  python
+)
+makedepends=(
+  python-setuptools-rust
+)
+
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/huggingface/tokenizers/archive/refs/tags/python-v${pkgver}.tar.gz")
+sha512sums=('cc32bde0df6ff827f0ae59218c0c59413ee44ee8112361cb455e60aae41450bd31fc374b22f2ab29a732a46765e6ad18898c6ca4e6151a34f3b2251cf2b15b33')
+
+build() {
+  cd "${_pkgname}-python-v${pkgver}/bindings/python"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-python-v${pkgver}/bindings/python"
+  python setup.py install --root="${pkgdir}" --optimize=1
+}
+# vim:set ts=2 sw=2 et:
