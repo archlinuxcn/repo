@@ -7,16 +7,24 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if line.startswith('pkgname='):
             line = 'pkgname="emacs-native-comp-git"'
+
         if line.startswith('replaces='):
             continue
+        if line.startswith('source='):
+            line = 'source=("emacs-git::git://github.com/emacs-mirror/emacs.git")'
+
+
         if line.startswith('JIT='):
             line = 'JIT="YES"'
         if line.startswith('AOT='):
             line = 'AOT="YES"'
+
+        if line.startswith('XWIDGETS='):
+            line = 'XWIDGETS="YES"'
+
         if line.startswith('install='):
             line = 'install=emacs-git.install'
-        if line.startswith('source='):
-            line = 'source=("emacs-git::git://github.com/emacs-mirror/emacs.git")'
+
         # fix libxpm
         if line.startswith('depends='):
             line = 'depends=("${depends_nox[@]}" "harfbuzz" "libxpm")'
