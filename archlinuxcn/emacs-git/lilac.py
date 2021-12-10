@@ -9,4 +9,7 @@ def pre_build():
             continue
         if line.startswith('source='):
             line = 'source=("emacs-git::git://github.com/emacs-mirror/emacs.git")'
+        # fix libxpm
+        if line.startswith('depends='):
+            line = 'depends=("${depends_nox[@]}" "harfbuzz" "libxpm")'
         print(line)
