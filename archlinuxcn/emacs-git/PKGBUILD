@@ -41,6 +41,8 @@ AOT=              # Precompile all included elisp. It takes a long time.
 
 CLI=              # CLI only binary.
 
+GPM=              # Mouse support in Linux console using gmpd.
+
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
                   # Bitmap fonts only, 1337!
                
@@ -53,9 +55,11 @@ LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   # Xft, if you choose no toolkit or Lucid.
                   #
                
+ALSA=             # Linux sound support.
+
 NOCAIRO=          # Disable here. 
                
-XWIDGETS=         # Use GTK+ widgets pulled from webkit2gtk. Usable.
+XWIDGETS="YES"
                
 DOCS_HTML=        # Generate and install html documentation.
                
@@ -70,14 +74,14 @@ if [[ $CLI == "YES" ]] ; then
 else
 pkgname="emacs-git"
 fi
-pkgver=29.0.50.152393
+pkgver=29.0.50.152539
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
 url="http://www.gnu.org/software/emacs/"
 license=('GPL3')
-depends_nox=('alsa-lib' 'gnutls' 'libxml2' 'jansson' 'gpm')
-depends=("${depends_nox[@]}" 'harfbuzz')
+depends_nox=('gnutls' 'libxml2' 'jansson')
+depends=("${depends_nox[@]}" "harfbuzz" "libxpm")
 makedepends=('git')
 provides=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox')
 conflicts=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox')
@@ -125,13 +129,13 @@ fi
 if [[ $CLI == "YES" ]]; then
   depends=("${depends_nox[@]}");
 elif [[ $NOTKIT == "YES" ]]; then
-  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxrandr' 'lcms2' 'librsvg' 'libxfixes' 'libxpm' );
+  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxrandr' 'lcms2' 'librsvg' 'libxfixes' );
   makedepends+=( 'xorgproto' );
 elif [[ $LUCID == "YES" ]]; then
-  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxfixes' 'lcms2' 'librsvg' 'xaw3d' 'libxrandr' 'libxpm' );
+  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxfixes' 'lcms2' 'librsvg' 'xaw3d' 'libxrandr' );
   makedepends+=( 'xorgproto' );
 else
-  depends+=( 'gtk3' 'libxpm' );
+  depends+=( 'gtk3' );
   makedepends+=( 'xorgproto' );
 fi
 
@@ -139,6 +143,14 @@ if [[ ! $NOX == "YES" ]] && [[ ! $CLI == "YES" ]]; then
   depends+=( 'libjpeg-turbo' 'giflib' );
 elif [[ $CLI == "YES" ]]; then
   depends+=();
+fi
+
+if [[ $ALSA == "YES" ]]; then
+  if [[ $CLI == "YES" ]]; then
+    depends_nox+=( 'alsa-lib' );
+  else
+    depends+=( 'alsa-lib' );
+  fi
 fi
 
 if [[ ! $NOCAIRO == "YES" ]] && [[ ! $CLI == "YES" ]] ; then
@@ -155,6 +167,14 @@ if [[ $XWIDGETS == "YES" ]]; then
     exit 1;
   else
     depends+=( 'webkit2gtk' );
+  fi
+fi
+
+if [[ $GPM == "YES" ]]; then
+  if [[ $CLI == "YES" ]]; then
+    depends_nox+=( 'gpm' );
+  else
+    depends+=( 'gpm' );
   fi
 fi
 
@@ -239,8 +259,20 @@ if [[ $NOCAIRO == "YES" || $CLI == "YES" ]]; then
   _conf+=( '--without-cairo' );
 fi
 
+if [[ $ALSA == "YES" ]]; then
+    _conf+=( '--with-sound=alsa' );
+else
+    _conf+=( '--with-sound=no' );
+fi
+
 if [[ $XWIDGETS == "YES" ]]; then
   _conf+=( '--with-xwidgets' );
+fi
+
+if [[ $GPM == "YES" ]]; then
+    true
+else
+  _conf+=( '--without-gpm' );
 fi
 
 if [[ $NOGZ == "YES" ]]; then
