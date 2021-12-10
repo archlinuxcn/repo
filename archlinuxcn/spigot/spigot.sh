@@ -344,6 +344,7 @@ backup_files() {
 	if socket_has_session "${SESSION_NAME}"; then
 		game_command save-off
 		game_command save-all
+		sleep "${sleep_time:-0.3}"
 		sync && wait
 		${SUDO_CMD} tar -C "${SERVER_ROOT}" -cf "${BACKUP_DEST}/${fname}" ${BACKUP_PATHS} --totals ${BACKUP_FLAGS} 2>&1 | grep -v "tar: Removing leading "
 		game_command save-on
