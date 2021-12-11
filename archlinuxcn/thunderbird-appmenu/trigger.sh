@@ -1,5 +1,7 @@
 cd "$(dirname "$0")"
 
+difff="$(git diff)"
+
 eval $(cat PKGBUILD| grep -P '^_pkgname=')
 eval $(cat PKGBUILD| grep -P '^pkgrel=')
 
@@ -18,6 +20,7 @@ git push
    > home:nicman23/${_pkgname}-appmenu-bin/_service
   cd home:nicman23/${_pkgname}-appmenu-bin/
   osc commit -m "$ver_msg"
+  [ -z "$difff" ] || osc rebuild
   osc results -w
 )
 
