@@ -4,8 +4,8 @@
 # Contributor: Jesus Jerez <jhuss@archlinux.org.ve>
 
 pkgname=eclipse-platform
-pkgver=4.21
-_pkgbuild=202109060500
+pkgver=4.22
+_pkgbuild=202111241800
 pkgrel=1
 pkgdesc="A minimal installation suitable for complete per-user customization with the built-in Eclipse package manager"
 url="https://www.eclipse.org"
@@ -21,9 +21,9 @@ source=("http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/d
         "eclipse.sh"
         "eclipse.desktop")
 
-sha512sums=('71451e58308700da720cf9dc590cd1d0b2d85582b8b415e04836b8dfc8c1d5ec15db6c3b799c7b077d7afd953534400a01aaa50b57c744048079f550702c0593'
+sha512sums=('dd7b0193cfca1ed4e38adfd632778e821b8e92a10738874bc287fbef5f1db2b0cfe2f7e071f85be3b57b7cf6033b0d9e95df3ca4793ef399931a964e4d3cb0c7'
             '71393b01c2774654e1b3348ceedd6b110c7f1b26da93da40dac653ce2103a34997ec0e9e7fd4e977d869c149d19ef39f59738717cc6762e39b0bc0e7d53df4ac'
-            'a681efae478ba217b341df6f8df09e695a9f666b8ceec0ece40501eb1891b054f5627b6f090796e42b9b2ae6ece107f79c0ce2f5d4717839e6c06a587ecf5c3e')
+            '01030223fef09caeffa45945133f78d7671fbca140a54f6ef2aee520317e0928ebd3fa43371c254e6259571fc4b5a684c8b150bcbcd88bcce3ab16a703e8ddc0')
 
 package() {
     install -d ${pkgdir}/usr/bin ${pkgdir}/usr/lib ${pkgdir}/usr/share/applications
