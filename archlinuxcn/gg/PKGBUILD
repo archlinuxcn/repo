@@ -2,8 +2,8 @@
 # Contributor:  mzz2017 < mzz at tuta dot io>
 
 pkgname=gg
-pkgver=0.1.12
-pkgrel=3
+pkgver=0.1.13
+pkgrel=1
 provides=('gg')
 pkgdesc='A command-line tool for one-click proxy in your research and development without installing v2ray or anything else (only for linux). '
 arch=('x86_64' 'aarch64' 'arm' 'armv7h' 'armv6h' 'armv7l')
@@ -12,7 +12,7 @@ license=('AGPL')
 depends=('glibc')
 makedepends=('go')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('66943ca4b7fe4d34a4c313d79200189ca69b9de58e421622005d1d3441ae52fa')
+sha256sums=('83cc459b48505ffed29171fb0677379430c29ee4f54e171d486afa016bbf0626')
 
 prepare(){
     cd "$srcdir/$pkgname-$pkgver"
@@ -32,6 +32,9 @@ build() {
 package() {
     cd "$srcdir/$pkgname-$pkgver"
     install -Dm755 build/$pkgname "$pkgdir"/usr/bin/$pkgname
+    install -Dm644 completion/bash/gg -t "$pkgdir/usr/share/bash-completion/completions"
+    install -Dm644 completion/zsh/_gg -t "$pkgdir/usr/share/zsh/site-functions"
+    install -Dm644 completion/fish/gg.fish -t "$pkgdir/usr/share/fish/vendor_completions.d"
 }
 
 check() {
