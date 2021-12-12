@@ -1,0 +1,30 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=schedule
+pkgname=python-schedule
+pkgver=1.1.0
+pkgrel=1
+pkgdesc='Python job scheduling for humans'
+arch=('any')
+url='https://github.com/dbader/schedule'
+license=('MIT')
+depends=(
+  python
+)
+makedepends=(
+  python-setuptools
+)
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/dbader/schedule/archive/refs/tags/${pkgver}.tar.gz")
+sha512sums=('3fe06e334ed532f013aeb806b7beacd9418c4dbbcb80d4b27090c08178f1874694ecfced24eeddc8450e99a80831d68b34a4a3b2638a870f30f53f570650795c')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
