@@ -4,20 +4,19 @@ pkgbase=python-onnxruntime
 # Not split DNNL EP to another package as it's needed unconditionally at runtime if built at compile time
 # https://github.com/microsoft/onnxruntime/blob/v1.9.1/onnxruntime/python/onnxruntime_pybind_state.cc#L533
 pkgname=(python-onnxruntime python-onnxruntime-cuda)
-pkgver=1.9.1
+pkgver=1.10.0
 pkgdesc='Cross-platform, high performance scoring engine for ML models'
-pkgrel=4
+pkgrel=1
 arch=(x86_64)
 url='https://github.com/microsoft/onnxruntime'
 license=(MIT)
 depends=(nsync re2 python-flatbuffers python-numpy python-onnx python-protobuf openmpi onednn)
-makedepends=(git cmake gtest gmock pybind11 python-setuptools nlohmann-json chrono-date boost eigen flatbuffers cuda cudnn nccl clang)
+makedepends=(git cmake pybind11 python-setuptools nlohmann-json chrono-date boost eigen flatbuffers cuda cudnn nccl clang)
 # not de-vendored libraries
 # onnx: needs shared libonnx (https://github.com/onnx/onnx/issues/3030)
 source=("git+https://github.com/microsoft/onnxruntime#tag=v$pkgver"
         "git+https://github.com/onnx/onnx.git"
         "git+https://github.com/dcleblanc/SafeInt.git"
-        "git+https://github.com/martinmoene/optional-lite.git"
         "git+https://github.com/tensorflow/tensorboard.git"
         "git+https://github.com/dmlc/dlpack.git"
         "git+https://github.com/jarro2783/cxxopts.git"
@@ -32,8 +31,7 @@ sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'SKIP'
-            '685f0235abed6e1277dd0eb9bda56c464d1987fe7fc90a3550e17ec70cc49fd15f34996a0e159f9622c4ca3e6bf29917fe51b7849342531fa2a6808d782f1e06'
+            '80ea85ea20bbbdec7991f965a66b627a5f42828bc0c72be0913078d927833a82402fb1af6c5c9f6ecae861b45582fa42c98ce83b02768e4bf875ab89dd1c607c'
             'ad94af8bb25744b244c4f82e9a06189741f82b295a88523ca0e8005568fac710c2299d783989457e9cf96ef8da0593fb4f70c8792d416f44ab29d6493e204f13'
             '6735c7aca2ba2f1f2a5286eb064125bf7f2c68a575d572dd157769d15778ff3e717b3a53d696c767748229f23ee6c3a7c82679df1d86283d7c4dd0ec9103ae08')
 # CUDA seems not working with LTO
@@ -48,9 +46,11 @@ prepare() {
   patch -Np1 -i ../build-fixes.patch
   patch -Np1 -i ../clang.patch
   patch -Np1 -i ../system-dnnl.diff
+  # Fix building DNNL EP with clang https://github.com/microsoft/onnxruntime/pull/10014
+  git cherry-pick -n c2d08a877b1f661eb99a29a57fd4184aa0918a80
 
   git submodule init
-  for mod in onnx SafeInt optional-lite tensorboard dlpack cxxopts pytorch_cpuinfo; do
+  for mod in onnx SafeInt tensorboard dlpack cxxopts pytorch_cpuinfo; do
     git config submodule.cmake/external/$mod.url "$srcdir"/$mod
     git submodule update cmake/external/$mod
   done
@@ -64,6 +64,7 @@ build() {
     -Donnxruntime_ENABLE_PYTHON=ON
     -Donnxruntime_PREFER_SYSTEM_LIB=ON
     -Donnxruntime_BUILD_SHARED_LIB=ON
+    -Donnxruntime_BUILD_UNIT_TESTS=OFF
     -Donnxruntime_ENABLE_TRAINING=ON
     -Donnxruntime_USE_MPI=ON
     -Donnxruntime_USE_PREINSTALLED_EIGEN=ON
