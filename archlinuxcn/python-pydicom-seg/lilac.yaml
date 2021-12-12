@@ -1,0 +1,14 @@
+maintainers:
+  - github: hubutui
+
+build_prefix: extra-x86_64
+
+repo_deps:
+  - python-pydicom
+
+update_on:
+  - source: github
+    github: razorx89/pydicom-seg
+    use_max_tag: true
+  - alias: python
+# vim:set ts=2 sw=2 et:
