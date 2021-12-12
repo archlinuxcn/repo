@@ -35,7 +35,7 @@ def pre_build():
 provides=("qt6-base=$pkgver")
 conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       checks = checks + '4'
-    elif line.startswith('_pkgfqn='):
+    elif line.startswith('_pkgfn='):
       line = line.replace('${pkgname/6-/}', '${_origpkgname/6-/}')
       checks = checks + '5'
     elif line.startswith('source=('):
