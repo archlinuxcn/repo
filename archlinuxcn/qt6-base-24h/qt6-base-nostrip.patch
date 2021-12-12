@@ -1,0 +1,13 @@
+diff --git a/mkspecs/common/gcc-base.conf b/mkspecs/common/gcc-base.conf
+index 99d77156fd..fc840fe9f6 100644
+--- a/mkspecs/common/gcc-base.conf
++++ b/mkspecs/common/gcc-base.conf
+@@ -31,6 +31,8 @@
+ # you can use the manual test in tests/manual/mkspecs.
+ #
+ 
++CONFIG += nostrip
++
+ QMAKE_CFLAGS_OPTIMIZE      = -O2
+ QMAKE_CFLAGS_OPTIMIZE_FULL = -O3
+ QMAKE_CFLAGS_OPTIMIZE_DEBUG = -Og
