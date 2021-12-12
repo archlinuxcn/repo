@@ -32,7 +32,7 @@
 +      continue;
 +    }
 +
-     if (toolbar.id == "PersonalToolbar" && gBookmarksToolbar2h2020) {
+     if (toolbar.id == "PersonalToolbar") {
        let menu = BookmarkingUI.buildBookmarksToolbarSubmenu(toolbar);
        popup.insertBefore(menu, firstMenuItem);
 --- a/browser/components/places/content/places.xhtml
@@ -5236,7 +5236,7 @@
 +
  EXPORTS.mozilla += [
      "BasicEvents.h",
-     "CommandList.h",
+     "ColorScheme.h",
 --- /dev/null
 +++ b/widget/nsINativeMenuService.h
 @@ -0,0 +1,39 @@
