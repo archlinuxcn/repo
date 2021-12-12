@@ -2,16 +2,16 @@
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 # Contributor: Lucas Magalhães <whoisroot@national.shitposting.agency>
 pkgname=rocm-clang-ocl
-pkgver=4.5.0
+pkgver=4.5.2
 pkgrel=1
 pkgdesc="OpenCL compilation with clang compiler."
 arch=('x86_64')
 url="https://github.com/RadeonOpenCompute/clang-ocl"
 license=('unknown')
-depends=('llvm-amdgpu' 'rocm-opencl-runtime')
+depends=('rocm-llvm' 'rocm-opencl-runtime')
 makedepends=('cmake' 'rocm-cmake')
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('b9ab42629c8697f8ffdae99ffd25f939161fa8a7a1c49a9ce19d8b207bedbbae')
+sha256sums=('8cc7b8658e81ef378c16bbb00fc6b29140c850da70adc4e520ecec9b4517beb8')
 _dirname="$(basename "$url")-$(basename ${source[0]} .tar.gz)"
 
 build() {
