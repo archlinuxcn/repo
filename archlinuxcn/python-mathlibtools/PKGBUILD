@@ -3,7 +3,7 @@
 _pkgname=mathlibtools
 pkgname=python-$_pkgname
 pkgver=1.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc='This package contains leanproject, a supporting tool for Lean mathlib'
 arch=('any')
 url="https://github.com/leanprover-community/mathlib-tools"
