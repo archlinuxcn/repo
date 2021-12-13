@@ -3,7 +3,7 @@
 
 pkgname=python-astropy
 pkgver=5.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A community python library for astronomy"
 arch=('i686' 'x86_64')
 url="http://www.astropy.org/"
