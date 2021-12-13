@@ -3,7 +3,7 @@
 pkgname=python-pyerfa
 _name=${pkgname#python-}
 pkgver=2.0.0.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Python wrapper for the ERFA library "
 arch=('i686' 'x86_64')
 url="https://github.com/liberfa/pyerfa"
