@@ -1,7 +1,7 @@
 #Maintainer: Xyne <gro xunilhcra enyx, backwards>
 pkgname=python3-xcpf
 pkgver=2021.11
-pkgrel=1
+pkgrel=2
 pkgdesc='Xyne'"'"'s common Pacman functions, for internal use.'
 arch=(any)
 license=(GPL)
