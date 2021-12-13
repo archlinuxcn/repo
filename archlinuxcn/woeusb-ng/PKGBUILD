@@ -1,0 +1,65 @@
+# Maintainer: Jakub Szymański <jakubmateusz@poczta.onet.pl>
+pkgname=woeusb-ng
+pkgver=0.2.10
+pkgrel=1
+pkgdesc="Simple tool that enable you to create your own usb stick with Windows installer."
+arch=('any')
+url="https://github.com/WoeUSB/WoeUSB-ng"
+license=('GPL3')
+depends=(
+    'parted'
+    'dosfstools'
+    'ntfs-3g'
+    'grub'
+    'p7zip'
+    'python'
+    'python-pip'
+    'python-wxpython'
+    'xdg-utils'
+    'python-termcolor'
+    )
+makedepends=(
+    'python-setuptools'
+)
+provides=('woeusb')
+conflicts=(
+    'woeusb'
+    'woeusb-git'
+)
+source=(
+    "https://github.com/WoeUSB/WoeUSB-ng/archive/v$pkgver.tar.gz"
+)
+sha256sums=(
+    "ee036451ec4878bd6ec6f16232cb27428c452aacdd62ea42d1a75075246d76f9"
+)
+
+
+build() {
+    cd WoeUSB-ng-$pkgver
+
+    python setup.py build
+}
+
+package() {
+    cd WoeUSB-ng-$pkgver
+
+    python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+
+    mkdir -p $pkgdir/usr/bin
+    mkdir -p $pkgdir/usr/share/icons/WoeUSB-ng
+    mkdir -p $pkgdir/usr/share/applications
+    mkdir -p $pkgdir/usr/share/polkit-1/actions
+
+    # scripts
+    cp WoeUSB/woeusb WoeUSB/woeusbgui $pkgdir/usr/bin
+
+    # icon
+    cp WoeUSB/data/icon.ico $pkgdir/usr/share/icons/WoeUSB-ng/icon.ico
+
+    # shortcut
+    cp miscellaneous/WoeUSB-ng.desktop $pkgdir/usr/share/applications/WoeUSB-ng.desktop
+    chmod 755 $pkgdir/usr/share/applications/WoeUSB-ng.desktop
+
+    # policy
+    cp miscellaneous/com.github.woeusb.woeusb-ng.policy $pkgdir/usr/share/polkit-1/actions/com.github.woeusb.woeusb-ng.policy
+}
