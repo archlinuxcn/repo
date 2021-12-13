@@ -7,41 +7,28 @@ pkgdesc="Pythonic bindings for FFmpeg's libraries"
 url='https://pyav.org'
 pkgver=8.0.3
 pkgrel=1
-arch=("x86_64")
-license=("BSD")
+arch=('x86_64')
+license=('BSD')
 makedepends=(
-  'cython'
-  'python-setuptools'
-)
-checkdepends=(
-  'python-pytest'
+  cython
+  python-setuptools
 )
 depends=(
-  'ffmpeg'
-  'python-numpy'
-  'python-pillow'
+  ffmpeg
+  python-numpy
+  python-pillow
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/PyAV-Org/PyAV/archive/v${pkgver}.tar.gz")
 sha512sums=('52d44a81880ff9c3e6599af3f5864663f6fa7fcca88f2f515950aecccfffb37a7a5ab3616981e8fb06f32fc5f052aabf54ade48124dd31dc18c50157bcc68224')
 
-get_pyver() {
-  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
-}
-
 build() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
+  cd "${_pkgname}-${pkgver}"
   python setup.py build
 }
 
-check() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
-  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-$(get_pyver)" python setup.py test
-}
-
 package() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
+  cd "${_pkgname}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
-
   install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/python-av/LICENSE"
 }
 # vim:set ts=2 sw=2 et:
