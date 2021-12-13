@@ -1,8 +1,8 @@
 # Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
 pkgname=apostrophe
-pkgver=2.4
-pkgrel=3
-_commit="7a69b54589c52197b3cf0d98a8bd10ec01741653"
+pkgver=2.5
+pkgrel=1
+_commit="666e348c9444241c2c0aa5d0145c0191c61b1481"
 pkgdesc="A distraction free Markdown editor for GNU/Linux made with GTK+"
 arch=('x86_64')
 url="https://gitlab.gnome.org/World/apostrophe"
@@ -10,14 +10,15 @@ license=('GPL3')
 depends=('webkit2gtk' 'gspell' 'python-pypandoc' 'python-regex' 'python-levenshtein'
          'python-pyenchant' 'python-gobject' 'python-cairo' 'otf-fira-mono' 'libhandy'
          'python-chardet' 'mathjax2')
-makedepends=('meson' 'gobject-introspection')
+makedepends=('meson' 'gobject-introspection' 'sassc')
+checkdepends=('appstream-glib')
 optdepends=('texlive-latexextra: for the pdftex module'
             'hspell: Hebrew spell-checker'
             'nuspell: Fast and safe spellchecking C++ library'
             'libvoikko: A spelling and grammar checker'
             'appstream: Provides a standard for creating app stores across distributions')
 source=("${pkgname}-${pkgver}.tar.gz::https://gitlab.gnome.org/World/apostrophe/-/archive/v${pkgver}/apostrophe-v{pkgver}.tar.gz")
-sha256sums=('f4878e880a4fda0460a821a0c7ff5020401d944da296cd91c3dd2710fc38ae14')
+sha256sums=('81efdfddb427e2c21fdfac3d5993397afcc6eeda12b41b6462bd91451a65949e')
 
 build() {
 	arch-meson "${pkgname}-v${pkgver}-${_commit}" build
