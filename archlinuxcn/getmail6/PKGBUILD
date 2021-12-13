@@ -4,7 +4,7 @@
 pkgname=getmail6
 
 pkgver=6.18.5
-pkgrel=2
+pkgrel=3
 
 pkgdesc='POP3 mail retriever with reliable Maildir and command delivery; Python 3 port'
 arch=('any')
@@ -26,12 +26,12 @@ b2sums=('7bf2dd5a4d71192d4b604504971574c61f384ca0a799b1dfcd973c8c47caf5689571c2c
 
 build() {
   cd "$pkgname-$pkgver"
-  PYTHONHASHSEED=0 python setup.py build
+  python setup.py build
 }
 
 package() {
   cd "$pkgname-$pkgver"
-  python setup.py install --skip-build --optimize=1 --root="$pkgdir"
+  PYTHONHASHSEED=0 python setup.py install --skip-build --optimize=1 --root="$pkgdir"
 }
 
 
