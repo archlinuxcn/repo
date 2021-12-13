@@ -3,7 +3,7 @@
 
 pkgname=python-humanfriendly
 pkgver=10.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Human friendly input/output in Python"
 arch=('any')
 url="https://github.com/xolox/python-humanfriendly"
