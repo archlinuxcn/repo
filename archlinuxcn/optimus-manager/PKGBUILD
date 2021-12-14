@@ -2,7 +2,7 @@
 
 pkgname=optimus-manager
 pkgver=1.4
-pkgrel=2
+pkgrel=3
 pkgdesc="Management utility to handle GPU switching for Optimus laptops"
 arch=('any')
 url="https://github.com/Askannz/optimus-manager"
