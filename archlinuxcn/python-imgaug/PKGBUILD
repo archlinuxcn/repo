@@ -5,41 +5,26 @@ pkgname=python-imgaug
 pkgver=0.4.0
 pkgrel=13
 pkgdesc='Image augmentation for machine learning experiments'
-arch=(any)
-url=https://github.com/aleju/imgaug
-license=(MIT)
+arch=('any')
+url='https://github.com/aleju/imgaug'
+license=('MIT')
 depends=(
-  'opencv'
-  'python-matplotlib'
-  'python-numpy'
-  'python-pillow'
-  'python-shapely'
-  'python-scikit-image'
-  'python-scipy'
-  'python-six'
+  python-matplotlib
+  python-numpy
+  python-opencv
+  python-pillow
+  python-scikit-image
+  python-scipy
+  python-shapely
+  python-six
 )
 makedepends=(python-setuptools)
-checkdepends=(
-  'flake8'
-  'hdf5'
-  'python-future'
-  'python-matplotlib'
-  'python-nose'
-  'python-pytorch'
-  'python-torchvision'
-  'qt5-base'
-)
 source=("${_pkgname}-${pkgver}.tar.gz"::"https://github.com/aleju/imgaug/archive/${pkgver}.tar.gz")
 sha512sums=('abec5ece42d38b455312154c04641d1c1373a6ed16b879050dcc754c9feb8704c9cea124cc1e990c787fcc7cdbf5894fe37339c4d84f65efd7cfbd23cba7a1e7')
 
 build() {
   cd "${_pkgname}-${pkgver}"
   python setup.py build
-}
-
-check() {
-  cd "${_pkgname}-${pkgver}"
-  nosetests -v
 }
 
 package() {
