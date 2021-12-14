@@ -1,17 +1,10 @@
 maintainers:
   - github: yan12125
-
 build_prefix: extra-x86_64
-
-repo_depends:
-  - doctest
-
 pre_build_script: |
     aur_pre_build(maintainers='aperez')
-
 post_build_script: |
     aur_post_build()
-
 update_on:
   - source: aur
     aur: wf-config
