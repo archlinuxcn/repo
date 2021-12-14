@@ -5,8 +5,8 @@
 
 pkgbase=nvidia-utils-beta
 pkgname=('nvidia-utils-beta' 'opencl-nvidia-beta' 'nvidia-settings-beta')
-pkgver=495.44
-pkgrel=2
+pkgver=495.46
+pkgrel=1
 pkgdesc='NVIDIA drivers utilities (beta version)'
 arch=('x86_64')
 url='https://www.nvidia.com/'
@@ -16,10 +16,12 @@ _pkg="NVIDIA-Linux-${CARCH}-${pkgver}"
 source=("https://us.download.nvidia.com/XFree86/Linux-${CARCH}/${pkgver}/${_pkg}.run"
         'nvidia-drm-outputclass.conf'
         'nvidia-utils.sysusers'
+        'nvidia.rules'
         '120-nvidia-settings-change-desktop-paths.patch')
-sha256sums=('f1876a67815b160a67ef94e16d1b87550e4c302b327d98daec4d71dd5c7f8a48'
+sha256sums=('d83b77d17da0c54667aa5b13d6ea95a5c51304257b1ecf2f8d4a3b5ae31c62f5'
             'be99ff3def641bb900c2486cce96530394c5dc60548fc4642f19d3a4c784134d'
             'd8d1caa5d72c71c6430c2a0d9ce1a674787e9272ccce28b9d5898ca24e60a167'
+            '4fbfd461f939f18786e79f8dba5fdb48be9f00f2ff4b1bb2f184dbce42dd6fc3'
             'd6f80e0166a7db0a618e659ee66d24b24682b40a93cd4b2ad8ab3f26485d02b9')
 
 # create soname links
@@ -30,7 +32,7 @@ _create_links() {
     find "$pkgdir" -type f -name '*.so*' ! -path '*xorg/*' -print0 | while read -d $'\0' _lib
     do
         _soname="$(dirname "$_lib")/$(readelf -d "$_lib" | grep -Po 'SONAME.*: \[\K[^]]*' || true)"
-        _base="$(printf '%s' "$_soname" | sed -r 's/(.*).so.*/\1.so/')"
+        _base="$(printf '%s' "$_soname" | sed -r 's/(.*)\.so.*/\1.so/')"
         [ -e "$_soname" ] || ln -s "$(basename "$_lib")"    "$_soname"
         [ -e "$_base"   ] || ln -s "$(basename "$_soname")" "$_base"
     done
@@ -224,6 +226,10 @@ package_nvidia-utils-beta() {
     install -D -m644 "${srcdir}/nvidia-drm-outputclass.conf" "${pkgdir}/usr/share/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf"
     
     install -D -m644 "${srcdir}/nvidia-utils.sysusers" "${pkgdir}/usr/lib/sysusers.d/${pkgname}.conf"
+    install -D -m644 "${srcdir}/nvidia.rules" "${pkgdir}/usr/lib/udev/rules.d/60-nvidia.rules"
+    
+    install -D -m644 <(printf '%s\n' 'blacklist nouveau') "${pkgdir}/usr/lib/modprobe.d/nvidia.conf"
+    install -D -m644 <(printf '%s\n' 'nvidia-uvm') "${pkgdir}/usr/lib/modules-load.d/${pkgname}.conf"
     
     _create_links
 }
