@@ -5,26 +5,26 @@ _pkgname=torchio
 pkgver=0.18.71
 pkgrel=1
 pkgdesc='Tools for medical image processing in deep learning and PyTorch'
-arch=(any)
+arch=('any')
 url='https://github.com/fepegar/torchio'
-license=(MIT)
+license=('MIT')
 depends=(
-  'python-click'
-  'python-deprecated'
-  'python-humanize'
-  'python-nibabel'
-  'python-numpy'
-  'python-pytorch'
-  'python-scipy'
-  'python-simpleitk'
-  'python-torchvision'
-  'python-tqdm'
+  python-click
+  python-deprecated
+  python-humanize
+  python-nibabel
+  python-numpy
+  python-pytorch
+  python-scipy
+  python-simpleitk
+  python-torchvision
+  python-tqdm
 )
 makedepends=(
-  'python-setuptools'
+  python-setuptools
 )
 checkdepends=(
-  'python-pytest'    
+  python-pytest
 )
 
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/fepegar/torchio/archive/v${pkgver}.tar.gz")
