@@ -4,7 +4,7 @@ pkgname=python-torchgan-git
 pkgver=0.1.0.r2.gf413953
 pkgrel=1
 pkgdesc='Research Framework for easy and efficient training of GANs based on PyTorch'
-arch=(any)
+arch=('any')
 url='https://github.com/torchgan/torchgan'
 license=('MIT')
 depends=(
@@ -16,9 +16,6 @@ depends=(
 makedepends=(
   git
   python-setuptools
-)
-checkdepends=(
-  python-pytest
 )
 provides=(python-torchgan=${pkgver})
 conflicts=(python-torchgan)
@@ -39,13 +36,8 @@ build() {
 	python setup.py build
 }
 
-check() {
-  cd "${pkgname}"
-  PYTHONPATH="${PWD}/build/lib pytest -v"
-}
-
 package() {
-	cd "$${pkgname}"
+	cd "${pkgname}"
 	python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
  	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
   # delete tests folder as they're installed in wrong place
