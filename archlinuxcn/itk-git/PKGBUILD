@@ -7,7 +7,7 @@ pkgver=5.3.r53050.bcac892743
 pkgrel=1
 pkgdesc='An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis'
 arch=('x86_64')
-url="https://www.itk.org/"
+url='https://www.itk.org'
 license=('Apache')
 depends=(
   castxml
@@ -37,9 +37,8 @@ source=("${_pkgname}::git+https://github.com/InsightSoftwareConsortium/ITK.git")
 sha512sums=('SKIP')
 
 pkgver() {
-  cd "${srcdir}/${_pkgname}"
-  ver=$(printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)")
-  echo "${_pkgver}.${ver}"
+  cd "${_pkgname}"
+  printf "%s.r%s.%s" ${ver} "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 get_pyver() {
@@ -73,8 +72,16 @@ build() {
     -DITK_USE_SYSTEM_ZLIB=ON
     -DITK_WRAP_IMAGE_DIMS="2;3;4"
     -DITK_WRAP_PYTHON=ON
+    -DITK_WRAP_complex_double=ON
+    -DITK_WRAP_covariant_vector_double:BOOL=ON
     -DITK_WRAP_double=ON
+    -DITK_WRAP_rgb_unsigned_short=ON
+    -DITK_WRAP_rgba_unsigned_short=ON
+    -DITK_WRAP_signed_char=ON
+    -DITK_WRAP_signed_long_long=ON
+    -DITK_WRAP_unsigned_long_long=ON
     -DITK_WRAP_unsigned_short=ON
+    -DITK_WRAP_vector_double=ON
 )
 
   cmake -B "build" -S "${srcdir}/${_pkgname}" \

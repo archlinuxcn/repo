@@ -10,5 +10,3 @@ def pre_build():
 
 def post_build():
     git_pkgbuild_commit()
-# vim:set ts=2 sw=2 et:
-
