@@ -20,7 +20,7 @@ makedepends=(
 )
 provides=(python-mmclassification)
 conflicts=(python-mmclassification)
-source=("${_pkgname}"::git+https://github.com/open-mmlab/mmclassification.git)
+source=("${_pkgname}::git+https://github.com/open-mmlab/mmclassification.git")
 sha512sums=('SKIP')
 
 pkgver() {
@@ -29,7 +29,7 @@ pkgver() {
 }
 
 build() {
-  cd "${srcdir}/${_pkgname}"
+  cd "${_pkgname}"
   python setup.py build
 }
 
