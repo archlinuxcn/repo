@@ -6,12 +6,16 @@ pkgbase=python-onnxruntime
 pkgname=(python-onnxruntime python-onnxruntime-cuda)
 pkgver=1.10.0
 pkgdesc='Cross-platform, high performance scoring engine for ML models'
-pkgrel=2
+pkgrel=3
 arch=(x86_64)
 url='https://github.com/microsoft/onnxruntime'
 license=(MIT)
-depends=(nsync re2 python-flatbuffers python-numpy python-onnx python-protobuf openmpi onednn)
+depends=(nsync re2 python-flatbuffers python-numpy python-protobuf openmpi onednn)
 makedepends=(git cmake pybind11 python-setuptools nlohmann-json chrono-date boost eigen flatbuffers cuda cudnn nccl clang)
+optdepends=(
+  # https://github.com/microsoft/onnxruntime/pull/9969
+  'python-onnx: for the backend API and transformers'
+)
 # not de-vendored libraries
 # onnx: needs shared libonnx (https://github.com/onnx/onnx/issues/3030)
 source=("git+https://github.com/microsoft/onnxruntime#tag=v$pkgver"
