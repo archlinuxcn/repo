@@ -38,7 +38,7 @@ sha512sums=('SKIP')
 
 pkgver() {
   cd "${_pkgname}"
-  printf "%s.r%s.%s" ${ver} "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  printf "%s.r%s.%s" "${_pkgver}" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 get_pyver() {
@@ -95,7 +95,8 @@ package_itk-git() {
   conflicts=(itk)
 
   make -C "${srcdir}/build" DESTDIR="${pkgdir}" install
-  rm -rf "${pkgdir}/usr/lib/python$(get_pyver)"
+  # quick fix for https://github.com/InsightSoftwareConsortium/ITK/issues/2960
+  rm -rf "${pkgdir}/build"
 }
 
 package_python-itk-git() {
@@ -105,6 +106,7 @@ package_python-itk-git() {
 
   make -C "${srcdir}/build" DESTDIR="${srcdir}/dist" install
   install -dm755 "${pkgdir}/usr/lib"
-  cp -a "${srcdir}/dist/usr/lib/python$(get_pyver)" "${pkgdir}/usr/lib/python$(get_pyver)"
+  # quick fix for https://github.com/InsightSoftwareConsortium/ITK/issues/2960
+  find "${srcdir}/build" -type d -name "python$(get_pyver)" -exec mv -v {} "${pkgdir}/usr/lib" \;
 }
 # vim:set ts=2 sw=2 et:
