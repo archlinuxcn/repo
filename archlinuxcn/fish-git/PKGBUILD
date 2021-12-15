@@ -18,7 +18,7 @@ optdepends=('python: fish_update_completions and other tools'
 			'xsel: clipboard integration'
 			'jq: bower and yarn completions')
 makedepends=('cmake' 'python-sphinx' 'git' 'fish')
-provides=('fish' 'fish-shell')
+provides=('fish='$pkgver 'fish-shell='$pkgver)
 conflicts=('fish' 'fish-shell')
 install='fish.install'
 source=("git://github.com/fish-shell/fish-shell.git")
