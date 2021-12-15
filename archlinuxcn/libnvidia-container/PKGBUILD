@@ -4,7 +4,7 @@
 pkgbase=libnvidia-container
 pkgname=(libnvidia-container libnvidia-container-tools)
 
-pkgver=1.5.1
+pkgver=1.7.0
 pkgrel=1
 _elfver=0.7.1
 _nvmpver=450.57
@@ -32,7 +32,7 @@ source=("https://github.com/NVIDIA/${pkgbase}/archive/v${pkgver}.tar.gz"
         fix_git_rev_unavail.patch
         fix_libelf_so_name.patch
         fix_elftoolchain.patch)
-sha256sums=('b12e1190df03875547628a776f97efe478fac77aa31a0fadfbea10df3bc2dc8d'
+sha256sums=('8229a5931c3a51dddbe4f30ff6d0b298bc80fd2b6da7d1507669f68bb1f75bf5'
             '44f14591fcf21294387215dd7562f3fb4bec2f42f476cf32420a6bbabb2bd2b5'
             '396b4102d3075a2dee3024652fae206a1b38ace54b8efb1e2c20757a11ec19f1'
             'c8c600d753d1f98464667d56e011b868eed3c8364280ed33c0435974f800d3bb'
