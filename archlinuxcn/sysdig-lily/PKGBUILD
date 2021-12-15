@@ -4,14 +4,14 @@
 # Contribuitor: Christian Babeux <christian.babeux@0x80.ca>
 
 pkgname=sysdig-lily
-pkgver=0.27.1
-pkgrel=11
+pkgver=0.28.0
+pkgrel=1
 pkgdesc="Open source system-level exploration and troubleshooting tool"
 arch=('x86_64')
 url="https://www.sysdig.com/"
 license=('GPL2' 'Apache' 'MIT')
 depends=('jsoncpp' 'libjsoncpp.so' 'luajit' 'curl' 'libcurl.so' 'jq' 'libb64' 'intel-tbb' 'grpc' "linux-lily=5.10.71-1" 'libgrpc++_unsecure.so')
-makedepends=('cmake' 'pandoc' 'gtest' 'linux-lily-headers')
+makedepends=('cmake' 'llvm' 'gtest' 'linux-lily-headers')
 source=("https://github.com/draios/sysdig/archive/$pkgver/sysdig-$pkgver.tar.gz"
         "filters-fix.patch"
         "bashcomp-location.patch")
@@ -42,12 +42,9 @@ build() {
         -DSYSDIG_VERSION=$pkgver \
         -DUSE_BUNDLED_DEPS=OFF \
         -DBUILD_DRIVER=ON \
+        -DBUILD_BPF=ON \
         -DENABLE_DKMS=OFF \
         -DBUILD_LIBSCAP_EXAMPLES=OFF
-  make
-
-  ln -srf driver/src/driver_config.h ../driver
-  cd ../driver/bpf
   make
 }
 
@@ -68,6 +65,6 @@ package() {
 
   rm -r "$pkgdir"/usr/src/
   mkdir -p "$pkgdir"/usr/src/sysdig-${pkgver}/bpf/
-  install -Dm644 "$srcdir"/sysdig-$pkgver/driver/bpf/probe.o "$pkgdir"/usr/src/sysdig-${pkgver}/bpf/
-  sed -i '/probe\.o/s/\<mv\>/cp --reflink=auto/' "$pkgdir"/usr/bin/sysdig-probe-loader
+  install -Dm644 "$srcdir"/sysdig-$pkgver/build/driver/bpf/probe.o "$pkgdir"/usr/src/sysdig-${pkgver}/bpf/
+  sed -i '/probe\.o/s/\<mv\>/cp --reflink=auto/' "$pkgdir"/usr/bin/scap-driver-loader
 }
