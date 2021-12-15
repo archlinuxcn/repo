@@ -1828,3 +1828,18 @@ Thu Sep 9 00:12:59 2021 +0200
      2021-06-12 0ec97d0 actionless fix(info_cli): columns alignment in more languages
      2021-06-12 772885f actionless fix(info_cli): correctly highlight 'None' in any language supported by pacman
      2021-06-12 397cd36 actionless feat(args, info_cli, main): support -Sy and -Si together; imprve handling of unsupported pacman commands when using pikaur-specific args (fixes #574)
+
+
+Tue Dec 14 19:13:50 2021 +0100
+-------------------------------------------------
+1.9             Release 1.9
+    
+    Notable changes:
+     2021-12-02 b29699e actionless feat(srcinfo: regenerate): when running as root first copy PKGBUILD to private directory (fixes #448)
+     2021-12-02 f1e630b Drommer fix(locale): minor mistakes in Russian localization. (#606)
+     2021-12-01 5caafcc Drommer feat(locale): Ukranian translation (#604)
+     2021-11-29 a433203 Dylan1496 feat(build): add check() skip to failed build prompt (#602)
+     2021-11-25 62413a0 actionless fix(install_cli: build_pkgs): on build fail dont attepmt to remove split pkg if it wasnt scheduled to be built (fixes #534)
+     2021-11-24 07c7d81 seth feat(install_info_fetcher, print_dept): check if aur packages are orphaned (#600)
+     2021-10-05 cbad87e Naufal Fikri fix(packaging: zsh): completion unnecessarily fetching packages when completing sync options (#593) (fixes #545)
+     2021-09-22 1190271 actionless fix(aur: find_aur_packages): return only explicit results (ie case-sensitive) (fixes #592)
