@@ -3,11 +3,12 @@
 _pkgbase=hysteria
 pkgname=$_pkgbase
 pkgver=0.9.0
-pkgrel=1
+pkgrel=2
 pkgdesc='TCP relay & SOCKS5/HTTP proxy tool optimized for poor network environments'
 arch=('x86_64')
 url="https://github.com/HyNetwork/hysteria"
 license=('MIT')
+depends=('glibc')
 makedepends=('go' 'git')
 source=("$_pkgbase"::"git+$url.git#tag=v$pkgver"
         hysteria@.service
@@ -58,6 +59,9 @@ package() {
   # install systemd service
   install -Dm644 "$srcdir/hysteria@.service" "$pkgdir/usr/lib/systemd/system/hysteria@.service"
   install -Dm644 "$srcdir/hysteria-server@.service" "$pkgdir/usr/lib/systemd/system/hysteria-server@.service"
+
+  # install license
+  install -Dm644 "$srcdir/$_pkgbase/LICENSE.md" "$pkgdir/usr/share/licenses/$_pkgbase/LICENSE"
 
   # install config directory
   install -dm755 "$pkgdir/etc/hysteria"
