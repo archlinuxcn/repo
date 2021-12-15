@@ -3,7 +3,7 @@
 
 pkgname=nvidia-container-toolkit
 
-pkgver=1.5.1
+pkgver=1.7.0
 pkgrel=1
 
 pkgdesc='NVIDIA container runtime toolkit'
@@ -12,7 +12,7 @@ url='https://github.com/NVIDIA/nvidia-container-toolkit'
 license=('Apache')
 
 makedepends=('go')
-depends=('libnvidia-container-tools>=1.4.0')
+depends=('libnvidia-container-tools>=1.7.0')
 conflicts=('nvidia-container-runtime-hook' 'nvidia-container-runtime<2.0.0')
 replaces=('nvidia-container-runtime-hook')
 
@@ -21,17 +21,19 @@ backup=('etc/nvidia-container-runtime/config.toml')
 source=(fix_cgroup.patch
         "v${pkgver}-${pkgrel}.tar.gz"::"${url}/archive/v${pkgver}.tar.gz")
 sha256sums=('48a36a4b01ab64739d55c4a696bbe72f2b90a9e5abc0b9d1c4090a3016d9a1fb'
-            '51d6f2fa0e740d7581f6c632875bb87bafc2351ba32830df11bb7cb19d87b763')
+            'f096b2db7cc837164e9739fc31680ff7c1f4135e6b7290dc68f590df3c651a02')
 
 install=$pkgname.install
 
 _srcdir="nvidia-container-toolkit-${pkgver}"
-_golang_pkg_path="github.com/NVIDIA/nvidia-container-toolkit/pkg"
 
 build() {
   cd "${_srcdir}"
 
+  # TODO: no longer needed after v1.8.0-rc1
   patch -Np1 -i "${srcdir}/fix_cgroup.patch"
+
+  mkdir bin
 
   GOPATH="${srcdir}/gopath" \
   go build -v \
@@ -39,7 +41,7 @@ build() {
     -gcflags "all=-trimpath=${PWD}" \
     -asmflags "all=-trimpath=${PWD}" \
     -ldflags "-s -w -extldflags ${LDFLAGS}" \
-    -o "${pkgname}" \
+    -o bin \
     "./..."
     # -trimpath \  # only go > 1.13
     #-ldflags " -s -w -extldflags=-Wl,-z,now,-z,relro" \
@@ -50,13 +52,14 @@ build() {
 }
 
 package() {
-  install -D -m755 "${_srcdir}/${pkgname}" "$pkgdir/usr/bin/${pkgname}"
+  install -D -m755 "${_srcdir}/bin/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
 
-  pushd "$pkgdir/usr/bin/"
+  pushd "${pkgdir}/usr/bin/"
   ln -sf "${pkgname}" "nvidia-container-runtime-hook"
   popd
-  install -D -m644 "${_srcdir}/config/config.toml.centos" "$pkgdir/etc/nvidia-container-runtime/config.toml"
-  install -D -m644 "${_srcdir}/oci-nvidia-hook.json" "$pkgdir/usr/share/containers/oci/hooks.d/00-oci-nvidia-hook.json"
+  install -D -m644 "${_srcdir}/config/config.toml.centos" "${pkgdir}/etc/nvidia-container-runtime/config.toml"
+  install -D -m644 "${_srcdir}/oci-nvidia-hook.json" "${pkgdir}/usr/share/containers/oci/hooks.d/00-oci-nvidia-hook.json"
 
-  install -D -m644 "${_srcdir}/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -D -m644 "${_srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
 }
+
