@@ -11,6 +11,7 @@ license=('GPL3')
 depends=('fio' 'hicolor-icon-theme' 'qt5-base' 'kauth')
 makedepends=('extra-cmake-modules' 'git' 'qt5-tools')
 provides=("${_pkgname,,}")
+conflicts=("${_pkgname,,}")
 source=("${_pkgname}::git+${url}.git")
 sha256sums=('SKIP')
 
