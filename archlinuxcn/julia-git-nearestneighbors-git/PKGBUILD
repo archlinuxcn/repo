@@ -1,0 +1,24 @@
+pkgname=julia-git-nearestneighbors-git
+pkgver=0.4.9.0.1.g1de39f5
+pkgrel=1
+pkgdesc="NearestNeighbors.jl"
+url="https://github.com/KristofferC/NearestNeighbors.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-nearestneighbors)
+source=(git://github.com/KristofferC/NearestNeighbors.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd NearestNeighbors.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd NearestNeighbors.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh NearestNeighbors "${pkgdir}" "${pkgname}" julia-git
+}
