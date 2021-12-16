@@ -4,8 +4,8 @@ _pkgname=ITK
 pkgname=(itk-git python-itk-git)
 _pkgver=5.3
 pkgver=5.3.r53293.191e122087
-pkgrel=1
-pkgdesc='An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis'
+pkgrel=2
+pkgdesc='An open-source toolkit for multidimensional image analysis'
 arch=('x86_64')
 url='https://www.itk.org'
 license=('Apache')
@@ -73,7 +73,7 @@ build() {
     -DITK_WRAP_IMAGE_DIMS="2;3;4"
     -DITK_WRAP_PYTHON=ON
     -DITK_WRAP_complex_double=ON
-    -DITK_WRAP_covariant_vector_double:BOOL=ON
+    -DITK_WRAP_covariant_vector_double=ON
     -DITK_WRAP_double=ON
     -DITK_WRAP_rgb_unsigned_short=ON
     -DITK_WRAP_rgba_unsigned_short=ON
@@ -100,13 +100,18 @@ package_itk-git() {
 }
 
 package_python-itk-git() {
-  depends+=(itk=${_pkgver})
-  provides=(python-itk)
+  pkgdesc="${pkgdesc} (Python binding)"
+  depends+=(
+    itk=${_pkgver}
+    python-numpy
+    python-xarray
+  )
+  provides=(python-itk=${_pkgver})
   conflicts=(python-itk)
 
   make -C "${srcdir}/build" DESTDIR="${srcdir}/dist" install
   install -dm755 "${pkgdir}/usr/lib"
   # quick fix for https://github.com/InsightSoftwareConsortium/ITK/issues/2960
-  find "${srcdir}/build" -type d -name "python$(get_pyver)" -exec mv -v {} "${pkgdir}/usr/lib" \;
+  find "${srcdir}/dist" -type d -name "python$(get_pyver)" -print0 -quit | xargs -0 mv -vt "${pkgdir}/usr/lib"
 }
 # vim:set ts=2 sw=2 et:
