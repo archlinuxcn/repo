@@ -42,6 +42,11 @@ source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/s
 )
 sha512sums=('bdd75ab0e8164f48f40b1a916abd3512b9d811c8f55d2744c703196fefd5d57e054698fad04e1da7306074f8934a40876d475761dc263d6913e950bfc52f048d')
 
+prepare() {
+  # relax click requirement
+  sed -i 's#click = ">=7.0, <8.0"#click = "*"#' "${_pkgname}-${pkgver}/Pipfile"
+}
+
 build() {
   cd "${_pkgname}-${pkgver}"
   python setup.py build
