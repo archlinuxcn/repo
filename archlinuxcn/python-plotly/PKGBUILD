@@ -4,7 +4,7 @@
 _pkgname=plotly.py
 pkgname=python-plotly
 pkgver=5.4.0
-pkgrel=2
+pkgrel=3
 pkgdesc='The interactive graphing library for Python (includes Plotly Express)'
 url='https://plotly.com/python'
 depends=(
@@ -40,5 +40,6 @@ package() {
   cd ${_pkgname}-${pkgver}/packages/python/plotly
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
   install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  mv -vf "${pkgdir}/usr/etc" "${pkgdir}/usr"
 }
 # vim:set ts=2 sw=2 et:
