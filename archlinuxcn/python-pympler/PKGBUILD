@@ -2,8 +2,8 @@
 
 _pkgname=pympler
 pkgname=python-pympler
-pkgver=0.9
-pkgrel=2
+pkgver=1.0
+pkgrel=1
 pkgdesc='Development tool to measure, monitor and analyze the memory behavior of Python objects in a running Python application'
 arch=('any')
 url='https://github.com/pympler/pympler'
@@ -17,7 +17,7 @@ makedepends=(
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/pympler/pympler/archive/refs/tags/${pkgver}.tar.gz"
 )
-sha512sums=('ca5c640a87d7e04331725596a9dbf417d0e1194b7b9407e49bf4ab64019ff620bcd04f1949f8b3909d5377170e55aa1cd54aa251c48889d9bf5e54863e8c027a')
+sha512sums=('32369abd4a0a64815e658e8f4a98a3ffa11fd5c10369e3f788c700f3e2b48c5145b8f2c2bab4c91c8ab1a9d54a66404eb9571a84134b414194e676dbd077c00f')
 
 build() {
   cd "${_pkgname}-${pkgver}"
