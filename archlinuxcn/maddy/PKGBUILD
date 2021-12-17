@@ -1,7 +1,7 @@
 # Maintainer: Ariel AxionL <i at axionl dot me>
 pkgname=maddy
 pkgver=0.5.2
-pkgrel=5
+pkgrel=6
 pkgdesc='Composable all-in-one mail server'
 arch=('x86_64')
 url="https://github.com/foxcpp/maddy"
@@ -15,11 +15,11 @@ source=("https://github.com/foxcpp/maddy/releases/download/v${pkgver}/${pkgname}
     "maddy.tmpfiles"
     "maddy.service"
     "maddy@.service")
-    
+
 b2sums=('e44d93a12e80d3aeb278ca7b4f554f26cc140bdf1a58bc5e04ad4e81a512d00f50bf16a213e11b78b2725ecd9ed2ed189032ac1b777b8cff46d6afc8fdb0f5f9'
         'SKIP'
-        '4ac9ce8be6f8def47bfc95d5d4528ac8626f6b524ef09d11fa09b2fd2d8a08d283b132aae3c430302c46268b2f3f01485f60d78a8fe884e3403523c8b827a6ba'
-        'd24a6f8bb6cc9cc9360a02150a0b8f76758df55bd69f693ff324014afcc7e90c0f8308377b27e66e02e10b56b893424d4428eebd3e19c4c1fe71705171f6c51a'
+        '2e081425075312f12f3e0a82906016787b195426fa1bd7b664e3eef020407a10fa791ce6af8db30f86c72f0b2b4784c151e1d687c6705d110f965e0dd3d154ac'
+        '44fa4cc5ccd034b939a5800ea3745652500457914470f93374bf4304cd19e5fd5e315b651d5647fa48d570f3880c8a609deddbbdf63a8c9d6432e79dd4e310a5'
         'e7ee65ebc3e3e5578a65bb5abddd4668b1ca16948da64d1f2215b2ccdf0733897514f23b632d8e30e88f14139eb2bbbc3350abf4bb0c88fdf26b65f592163f54'
         '8af5d78df25a4ba37c80207acb5c39335adc6427157d75dccdcf203c250434c2b01b0eb62ac6cbd806e0c9d13e3a855902720665253119b68e88707357451d0c')
 
@@ -68,7 +68,7 @@ package() {
       install -Dm644 "docs/man/${_doc}.5.scd" "${pkgdir}/usr/share/man/man5/${_doc}.5"
   done
 
-  install -Dm644 "maddy.conf" -t "${pkgdir}/etc/maddy/"
+  install -Dm600 "maddy.conf" -t "${pkgdir}/etc/maddy/"
 }
 
 # vim:set ts=2 sw=2 et:
