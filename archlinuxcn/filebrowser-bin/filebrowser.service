@@ -13,7 +13,7 @@ RuntimeDirectory=filebrowser
 LogsDirectory=filebrowser
 StateDirectory=filebrowser
 Environment=USER=filebrowser HOME=/var/lib/filebrowser
-ExecStart=/usr/bin/filebrowser --config /etc/filebrowser/%i.json
+ExecStart=/usr/bin/filebrowser --config /etc/filebrowser/filebrowser.json
 Restart=on-failure
 RestartSec=2s
 ReadWritePaths=/var/lib/filebrowser
