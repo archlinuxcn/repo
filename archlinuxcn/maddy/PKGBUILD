@@ -1,7 +1,7 @@
 # Maintainer: Ariel AxionL <i at axionl dot me>
 pkgname=maddy
 pkgver=0.5.2
-pkgrel=3
+pkgrel=4
 pkgdesc='Composable all-in-one mail server'
 arch=('x86_64')
 url="https://github.com/foxcpp/maddy"
@@ -65,7 +65,7 @@ package() {
   install -Dm644 "docs/man/maddy.1.scd" "${pkgdir}/usr/share/man/man1/maddy.1"
   local docs=("maddy" "maddy-auth" "maddy-blob" "maddy-config" "maddy-filters" "maddy-imap" "maddy-smtp" "maddy-storage" "maddy-tables" "maddy-targets" "maddy-tls")
   for _doc in "${docs[@]}"; do
-      install -Dm644 "docs/man/${_doc}.5.scd" -t "${pkgdir}/usr/share/man/man5/"
+      install -Dm644 "docs/man/${_doc}.5.scd" "${pkgdir}/usr/share/man/man5/${_doc}.5"
   done
 
   install -Dm644 "maddy.conf" -t "${pkgdir}/etc/maddy/"
