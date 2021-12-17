@@ -40,6 +40,6 @@ package() {
   cd ${_pkgname}-${pkgver}/packages/python/plotly
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
   install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-  mv -vf "${pkgdir}/usr/etc" "${pkgdir}/usr"
+  mv -vf "${pkgdir}/usr/etc" "${pkgdir}"
 }
 # vim:set ts=2 sw=2 et:
