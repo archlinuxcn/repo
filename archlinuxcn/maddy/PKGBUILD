@@ -1,12 +1,12 @@
 # Maintainer: Ariel AxionL <i at axionl dot me>
 pkgname=maddy
 pkgver=0.5.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Composable all-in-one mail server'
 arch=('x86_64')
 url="https://github.com/foxcpp/maddy"
 license=('GPL3')
-depends=('glibc')
+depends=('glibc' 'pam')
 makedepends=('go' 'git' 'scdoc')
 backup=("etc/maddy/maddy.conf")
 provides=("maddy" "maddyctl" "maddy-pam-helper" "maddy-shadow-helper")
@@ -41,7 +41,7 @@ build() {
   export CGO_CXXFLAGS="${CXXFLAGS}"
   export CGO_LDFLAGS="${LDFLAGS}"
   export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
-  go build -ldflags "-extldflags ${LDFLAGS} -X github.com/foxcpp/maddy.Version=${pkgver}" -x -o build ./cmd/...
+  go build -ldflags "-extldflags ${LDFLAGS} -s -w -X github.com/foxcpp/maddy.Version=${pkgver}" -x -o build ./cmd/...
 }
 
 check() {
@@ -57,9 +57,15 @@ package() {
 
   cd "${pkgname}-${pkgver}-src"
 
-  targets=("maddy" "maddyctl" "maddy-pam-helper" "maddy-shadow-helper")
+  local targets=("maddy" "maddyctl" "maddy-pam-helper" "maddy-shadow-helper")
   for _binary in "${targets[@]}"; do
     install -Dm755 "build/${_binary}" -t "${pkgdir}/usr/bin/"
+  done
+
+  install -Dm644 "docs/man/maddy.1.scd" "${pkgdir}/usr/share/man/man1/maddy.1"
+  local docs=("maddy" "maddy-auth" "maddy-blob" "maddy-config" "maddy-filters" "maddy-imap" "maddy-smtp" "maddy-storage" "maddy-tables" "maddy-targets" "maddy-tls")
+  for _doc in "${docs[@]}"; do
+      install -Dm644 "docs/man/${_doc}.5.scd" -t "${pkgdir}/usr/share/man/man5/"
   done
 
   install -Dm644 "maddy.conf" -t "${pkgdir}/etc/maddy/"
