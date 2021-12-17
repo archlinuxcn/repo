@@ -1,0 +1,68 @@
+# Maintainer: Ariel AxionL <i at axionl dot me>
+pkgname=maddy
+pkgver=0.5.2
+pkgrel=1
+pkgdesc='Composable all-in-one mail server'
+arch=('x86_64')
+url="https://github.com/foxcpp/maddy"
+license=('GPL3')
+depends=('glibc')
+makedepends=('go' 'git' 'scdoc')
+backup=("etc/maddy/maddy.conf")
+provides=("maddy" "maddyctl" "maddy-pam-helper" "maddy-shadow-helper")
+source=("${pkgname}-${pkgver}.tar.zst::https://github.com/foxcpp/maddy/releases/download/v${pkgver}/${pkgname}-${pkgver}-src.tar.zst"{,.sig}
+    "maddy.sysusers"
+    "maddy.tmpfiles"
+    "maddy.service"
+    "maddy@.service")
+    
+b2sums=('e44d93a12e80d3aeb278ca7b4f554f26cc140bdf1a58bc5e04ad4e81a512d00f50bf16a213e11b78b2725ecd9ed2ed189032ac1b777b8cff46d6afc8fdb0f5f9'
+        'e44d93a12e80d3aeb278ca7b4f554f26cc140bdf1a58bc5e04ad4e81a512d00f50bf16a213e11b78b2725ecd9ed2ed189032ac1b777b8cff46d6afc8fdb0f5f9'
+        '4ac9ce8be6f8def47bfc95d5d4528ac8626f6b524ef09d11fa09b2fd2d8a08d283b132aae3c430302c46268b2f3f01485f60d78a8fe884e3403523c8b827a6ba'
+        'd24a6f8bb6cc9cc9360a02150a0b8f76758df55bd69f693ff324014afcc7e90c0f8308377b27e66e02e10b56b893424d4428eebd3e19c4c1fe71705171f6c51a'
+        'e7ee65ebc3e3e5578a65bb5abddd4668b1ca16948da64d1f2215b2ccdf0733897514f23b632d8e30e88f14139eb2bbbc3350abf4bb0c88fdf26b65f592163f54'
+        '8af5d78df25a4ba37c80207acb5c39335adc6427157d75dccdcf203c250434c2b01b0eb62ac6cbd806e0c9d13e3a855902720665253119b68e88707357451d0c')
+
+validpgpkeys=("3197BBD95137E682A59717B434BB2007081396F4")
+
+prepare(){
+  mkdir -p "gopath"
+  cd "${pkgname}-${pkgver}-src"
+  mkdir -p "build"
+}
+
+build() {
+  export GOPATH="${srcdir}/gopath"
+  chmod -R +w ${GOPATH}
+
+  cd "${pkgname}-${pkgver}-src"
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
+  go build -ldflags "-extldflags ${LDFLAGS} -X github.com/foxcpp/maddy.Version=${pkgver}" -x -o build ./cmd/...
+}
+
+check() {
+  cd "${pkgname}-${pkgver}-src"
+  go test ./...
+}
+
+package() {
+  install -Dm644 "${srcdir}/maddy.sysusers" -t "${pkgdir}/usr/lib/sysusers.d/"
+  install -Dm644 "${srcdir}/maddy.tmpfiles" -t "${pkgdir}/usr/lib/tmpfiles.d/"
+  install -Dm644 "${srcdir}/maddy.service" -t "${pkgdir}/usr/lib/systemd/system/"
+  install -Dm644 "${srcdir}/maddy@.service" -t "${pkgdir}/usr/lib/systemd/system/"
+
+  cd "${pkgname}-${pkgver}-src"
+
+  targets=("maddy" "maddyctl" "maddy-pam-helper" "maddy-shadow-helper")
+  for _binary in "${targets[@]}"; do
+    install -Dm755 "build/${_binary}" -t "${pkgdir}/usr/bin/"
+  done
+
+  install -Dm644 "maddy.conf" -t "${pkgdir}/etc/maddy/"
+}
+
+# vim:set ts=2 sw=2 et:
