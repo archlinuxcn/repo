@@ -1,0 +1,31 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=pympler
+pkgname=python-pympler
+pkgver=0.9
+pkgrel=1
+pkgdesc='Development tool to measure, monitor and analyze the memory behavior of Python objects in a running Python application'
+arch=('any')
+url='https://github.com/pympler/pympler'
+license=('Apache')
+depends=(
+  python
+)
+makedepends=(
+  python-setuptools
+)
+
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/pympler/pympler/archive/refs/tags/${pkgver}.tar.gz"
+)
+sha512sums=('ca5c640a87d7e04331725596a9dbf417d0e1194b7b9407e49bf4ab64019ff620bcd04f1949f8b3909d5377170e55aa1cd54aa251c48889d9bf5e54863e8c027a')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+}
+# vim:set ts=2 sw=2 et:
