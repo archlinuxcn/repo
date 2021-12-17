@@ -22,5 +22,9 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git
     provided: julia
+  - source: alpm
+    from_pattern: ^(\d+\.\d+).*
+    to_pattern: \1
+    alpm: gsl
   - source: manual
     manual: 2
