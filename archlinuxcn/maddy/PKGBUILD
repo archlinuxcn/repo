@@ -1,7 +1,7 @@
 # Maintainer: Ariel AxionL <i at axionl dot me>
 pkgname=maddy
 pkgver=0.5.2
-pkgrel=6
+pkgrel=7
 pkgdesc='Composable all-in-one mail server'
 arch=('x86_64')
 url="https://github.com/foxcpp/maddy"
@@ -50,8 +50,8 @@ check() {
 }
 
 package() {
-  install -Dm644 "${srcdir}/maddy.sysusers" -t "${pkgdir}/usr/lib/sysusers.d/"
-  install -Dm644 "${srcdir}/maddy.tmpfiles" -t "${pkgdir}/usr/lib/tmpfiles.d/"
+  install -Dm644 "${srcdir}/maddy.sysusers" "${pkgdir}/usr/lib/sysusers.d/maddy.conf"
+  install -Dm644 "${srcdir}/maddy.tmpfiles" -t "${pkgdir}/usr/lib/tmpfiles.d/maddy.conf"
   install -Dm644 "${srcdir}/maddy.service" -t "${pkgdir}/usr/lib/systemd/system/"
   install -Dm644 "${srcdir}/maddy@.service" -t "${pkgdir}/usr/lib/systemd/system/"
 
