@@ -16,7 +16,7 @@ pkgname=(
   qemu-guest-agent-git
 )
 pkgdesc="A generic and open source machine emulator and virtualizer. Git version."
-pkgver=6.2.0.r3.g76b56fdfc9
+pkgver=6.2.0.r223.g90978e15bc
 pkgrel=1
 epoch=15
 arch=(i686 x86_64)
@@ -79,10 +79,10 @@ makedepends=(
   usbredir
   vde2
   virglrenderer
-  vte3
+  vte3 libvte-2.91.so
   xfsprogs
   zlib
-  zstd
+  zstd 
 )
 source=(git://git.qemu.org/qemu.git
         qemu-guest-agent.service
@@ -132,10 +132,9 @@ _build() (
     --smbd=/usr/bin/smbd \
     --enable-modules \
     --enable-sdl \
-    --disable-werror \
-    --enable-vhost-user \
     --enable-slirp=system \
     --enable-xfsctl \
+    --disable-werror \
     "${@:2}"
 
   ninja
