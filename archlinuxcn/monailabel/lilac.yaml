@@ -1,0 +1,29 @@
+maintainers:
+  - github: hubutui
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - itk-git: python-itk-git
+  - python-dicomweb-client
+  - python-einops
+  - python-expiringdict
+  - python-monai
+  - python-nibabel
+  - python-openslide
+  - python-pydicom
+  - python-pydicom-seg
+  - python-pynetdicom
+  - python-pytorch-ignite
+  - python-schedule
+  - python-scikit-image
+  - python-simplecrf
+  - python-timeloop
+  - python-torchvision
+
+update_on:
+  - source: github
+    github: Project-MONAI/MONAILabel
+    use_max_tag: true
+  - alias: python
+# vim:set ts=2 sw=2 et:
