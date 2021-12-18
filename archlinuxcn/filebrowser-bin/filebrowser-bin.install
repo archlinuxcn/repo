@@ -6,7 +6,7 @@ Default Config Path: /etc/filebrowser/
 Default Data Path: /var/lib/filebrowser/
 Default User & Group: filebrowser:filebrowser
 
-$ sudo su filebrowser
+$ sudo -u filebrowser -s
 $ cd /var/lib/filebrowser
 $ filebrowser config init
 $ filebrowser config export "/etc/filebrowser/filebrowser.json"
