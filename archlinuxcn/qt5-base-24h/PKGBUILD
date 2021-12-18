@@ -5,7 +5,7 @@ pkgbase=qt5-base-24h
 _origpkgname=qt5-base
 pkgname=(qt5-base-24h)
 pkgver=5.15.2+kde+r263
-pkgrel=1.7
+pkgrel=2.7
 _commit=7c6c0030cf80ef7b9ace42996b0e0c3a72f76860
 arch=('x86_64')
 url='https://www.qt.io'
@@ -95,6 +95,7 @@ install -dm755 "$pkgdir"/usr/share/licenses/
 ln -s /usr/share/licenses/${pkgname} "$pkgdir"/usr/share/licenses/qt5-base
 
   pkgdesc='A cross-platform application and UI framework'
+  depends+=(qt5-translations)
 
   cd ${_pkgfqn}
   make INSTALL_ROOT="${pkgdir}" install
