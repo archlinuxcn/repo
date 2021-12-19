@@ -3,7 +3,7 @@
 pkgname=python-cx-oracle
 _name=cx_Oracle
 pkgver=8.3.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Python interface to Oracle Database conforming to the Python DB API 2.0 specification'
 arch=('x86_64')
 url='https://oracle.github.io/python-cx_Oracle'
@@ -21,14 +21,14 @@ source=(
 sha512sums=('9a2f50b929802311271e5270f118c96968886c6fd3c8677d2e08949d61e9d4d26846bc9e44c674e0bd12a7f8b57bcced9b979f3622a37656e0969ad8ea4e7f70')
 
 build() {
-  cd "${srcdir}/${_name}-${pkgver}"
+  cd "${_name}-${pkgver}"
   python setup.py build
 }
 
 package() {
-  cd "${srcdir}/${_name}-${pkgver}"
+  cd "${_name}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
   install -Dm644 "LICENSE.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}"
-  rm -rfv "${pkgname}/usr/cx_Oracle-doc"
+  rm -rfv "${pkgdir}/usr/cx_Oracle-doc"
 }
 # vim:set ts=2 sw=2 et:
