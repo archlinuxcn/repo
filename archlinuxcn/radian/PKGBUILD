@@ -1,0 +1,32 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=radian
+pkgver=0.5.13
+pkgrel=1
+pkgdesc='A 21 century R console'
+arch=('any')
+url='https://github.com/randy3k/radian'
+license=('MIT')
+depends=(
+  python-lineedit
+  python-rchitect
+)
+makedepends=(
+  python-pip
+  python-setuptools
+)
+
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/randy3k/radian/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('39a1e3d15f4417fda0d09596822faaf74cbc0eff091ffa846c16f1a09a285e687cbd40f93482e92f029103b0b6b94bfa2972d6a77905a77db078de39f9d888dc')
+
+build() {
+  cd "${pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

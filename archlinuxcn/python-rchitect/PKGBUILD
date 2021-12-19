@@ -1,0 +1,33 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=rchitect
+pkgname=python-rchitect
+pkgver=0.3.35
+pkgrel=1
+pkgdesc='Interoperate R with Python'
+arch=('x86_64')
+url='https://github.com/randy3k/rchitect'
+license=('MIT')
+depends=(
+  python-cffi
+  python-six
+)
+makedepends=(
+  python-pip
+  python-setuptools
+)
+
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/randy3k/rchitect/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('0d2d2d5199614212a1e1c9e3d15b03ca5bb68a244f67b452196c34b3e0e5212863aaa2790bc50c81daeb3cc1b42ae0fee6fb67bb76abda02f74b646dd3c2cacf')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

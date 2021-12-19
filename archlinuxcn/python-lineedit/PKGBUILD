@@ -1,0 +1,33 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=lineedit
+pkgname=python-lineedit
+pkgver=0.1.6
+pkgrel=1
+pkgdesc='A readline library based on prompt_toolkit which supports multiple modes'
+arch=('any')
+url='https://github.com/randy3k/lineedit'
+license=('MIT')
+depends=(
+  python-pygments
+  python-six
+  python-wcwidth
+)
+makedepends=(
+  python-setuptools
+)
+
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/randy3k/lineedit/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('bd2d427cfabd20bdffb45b405474ddea9502c821f6727cf0e8821a5473927add75aae57902100a2a0cd85f3656d470b17d2fdb6528134c040359dca8c70d7860')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
