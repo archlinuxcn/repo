@@ -1,0 +1,42 @@
+# Mainainer: edward-p <edward at edward-p dot xyz>
+
+pkgname=kicad-library-git
+pkgver=6.0.0.rc1.r3.gac8de318d
+pkgrel=1
+pkgdesc="Kicad component and footprint libraries"
+arch=('any')
+url="https://kicad.github.io/"
+license=('GPL')
+makedepends=('cmake' 'git')
+options=('!strip')
+source=("git+https://gitlab.com/kicad/libraries/kicad-footprints.git"
+        "git+https://gitlab.com/kicad/libraries/kicad-symbols.git")
+provides=('kicad-library')
+conflicts=('kicad-library')
+sha256sums=('SKIP'
+            'SKIP')
+
+pkgver() {
+  cd kicad-footprints
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+            
+build() {
+  cd "$srcdir/kicad-symbols/"
+  cmake ./ -DCMAKE_INSTALL_PREFIX=/usr
+  make
+
+  cd "$srcdir/kicad-footprints/"
+  cmake ./ -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package() {
+  pkgdesc="Kicad component and footprint libraries"
+  cd "$srcdir/kicad-symbols/"
+  make DESTDIR="$pkgdir" install
+
+  cd "$srcdir/kicad-footprints/"
+  make DESTDIR="$pkgdir" install
+}
+
