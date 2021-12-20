@@ -2,8 +2,8 @@
 
 _pkgname=pydicom-seg
 pkgname=python-pydicom-seg
-pkgver=0.2.3
-pkgrel=2
+pkgver=0.3.0
+pkgrel=1
 pkgdesc='Python package for DICOM-SEG medical segmentation file reading and writing'
 arch=('any')
 url='https://github.com/razorx89/pydicom-seg'
@@ -20,7 +20,7 @@ makedepends=(
   python-setuptools
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/razorx89/pydicom-seg/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('a814370c36735003422372eeaa04238394ae525f7382203abd341868a63abd5040bd8aed830191cdc7a9b1c695278f9f0c2275fe93061398e157af565aae65f0')
+sha512sums=('d0eaaa08726eb95c42b251ac53b268cf8f9db3ceddcab18742c29b9d7f2cfa5e94726561ea5780af55762fbb91707ca0ae0a083eb0cc969db8193523aab9a80e')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
