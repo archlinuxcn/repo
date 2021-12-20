@@ -13,8 +13,10 @@ post_build_script: |
     update_aur_repo()
 
 update_on:
-  - source: alpm
-    alpm: wine
-    repo: multilib
+  # TODO: switch to wine-stable when 7.0 is out
+  # - source: aur
+  #   aur: wine-stable
   - source: manual
-    manual: 2
+    manual: 7.0rc1-1
+  - source: manual
+    manual: 3

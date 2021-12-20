@@ -7,7 +7,7 @@
 -  mv $pkgname-$_pkgbasever $pkgname
 +  mv wine-$_pkgbasever $pkgname
 +
-+  scard4wine_dir=scard4wine/src
++  scard4wine_dir=scard4wine-yan12125/src
 +  cp -v $scard4wine_dir/winscard.c $pkgname/dlls/winscard/winscard.c
 +  cp -v $scard4wine_dir/winscard.spec $pkgname/dlls/winscard/winscard.spec
 +  cp -v $scard4wine_dir/winscard.h $pkgname/include/winscard.h
@@ -23,7 +23,7 @@
  
  # vim:set ts=8 sts=2 sw=2 et:
 +
-+source+=("scard4wine::git+https://git.code.sf.net/p/scard4wine/code.git#commit=484230432f6f29538916872dac495d8a8de45382")
++source+=("scard4wine-yan12125::git+https://git.code.sf.net/u/yan12125/scard4wine.git#branch=7621961210a55b4333f3039bae2355430f9bd8cd")
 +sha512sums+=('SKIP')
 +makedepends+=(git)
 +provides=("$pkgname=$pkgver")
