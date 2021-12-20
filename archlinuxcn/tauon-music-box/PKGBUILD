@@ -25,40 +25,57 @@ depends=('python-pillow'
          'python-beautifulsoup4'
          'python-requests'
          'python-dbus'
+         'python-natsort'
          'alsa-plugins'
          'ffmpeg'
          'flac'
+         'gst-plugins-good'
          'gst-plugins-bad'
-         'gst-plugins-ugly'
-         'noto-fonts-extra'
+         'noto-fonts'
          'noto-fonts-cjk'
+         'noto-fonts-extra'
          'sdl2_image'
-         'xdg-utils')
+         'xdg-utils'
+         'mpg213'
+         'lubpulse'
+         'opusfile'
+         'libvorbis'
+         'libappindicator-gtk3'
+         )
 
-optdepends=('p7zip: 7z archive extraction support'
+optdepends=('noto-fonts-cjk: Matching font for CJK characters'
+            'p7zip: 7z archive extraction support'
             'unrar: RAR archive extraction support'
             'python-plexapi: Plex streaming'
             'python-pypresence: Discord status support'
             'python-tekore: Spotify playback control'
-            'picard: Tag editing')
-
+            'picard: Recommended tag editor'
+            'gst-plugins-ugly: For GStreamer WMA support'
+            )
+provides=('libphazor.so')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/Taiko2k/TauonMusicBox/archive/v$pkgver.tar.gz")
 
 sha256sums=('f66f38fd70bc7f37d8fbaba8d38706b7e52de3b70a1b24c2543c128522f761d7')
+
+build() {
+    cd "$_gitname-$pkgver"
+    python compile-translations.py
+    bash compile-phazor.sh
+}
 
 package() {
     cd "$_gitname-$pkgver"
     install -Dm755 tauon.py -t "$pkgdir/opt/$pkgname"
     install -d "$pkgdir/usr/bin"
     ln -s "/opt/$pkgname/tauon.py" "$pkgdir/usr/bin/$_pkgname"
- 
+
     install -Dm644 input.txt -t "$pkgdir/opt/$pkgname"
     cp -r  assets templates theme t_modules "$pkgdir/opt/$pkgname"
- 
+
     for t in de fr_FR ja_JP nb_NO pt_BR pt_PT sv zh_CN; do
         install -Dm644 locale/${t}/LC_MESSAGES/*.po -t "$pkgdir/usr/share/locale/${t}/LC_MESSAGES"
     done
- 
+
     install -Dm644 "extra/$_pkgname.desktop" -t "$pkgdir/usr/share/applications"
     install -Dm644 "extra/$_pkgname-symbolic.svg" -t "$pkgdir/usr/share/icons/hicolor/symbolic/apps"
     install -Dm644 "extra/$_pkgname.svg" -t "$pkgdir/usr/share/icons/hicolor/scalable/apps"
