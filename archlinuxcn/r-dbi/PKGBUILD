@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=DBI
-_pkgver=1.1.1
+_pkgver=1.1.2
 pkgname=r-${_pkgname,,}
-pkgver=1.1.1
+pkgver=1.1.2
 pkgrel=1
 pkgdesc='R Database Interface'
 arch=('any')
@@ -29,7 +29,7 @@ optdepends=(
   r-xml2
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('572ab3b8a6421d0ac3e7665c4c842826f1723af98fca25d4f43edb419e771344')
+sha256sums=('56ec377d471c76ac234ddfd313bd01a050c99fb6fa5f704f5333b34a5d714f58')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
