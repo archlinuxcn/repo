@@ -4,15 +4,15 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine
-pkgver=6.22
+pkgver=7.0rc1
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 
-source=(https://dl.winehq.org/wine/source/6.x/$pkgname-$_pkgbasever.tar.xz{,.sign}
+source=(https://dl.winehq.org/wine/source/7.0/$pkgname-$_pkgbasever.tar.xz{,.sign}
         30-win32-aliases.conf
         wine-binfmt.conf)
-sha512sums=('5326d500a2c5884e3ff004557a0360f8ff5c29ae42fdc256a13012ab746371dd403c87715efa00e43bf181fbc6d0647372e3e40944e5673b069f6e4f4cc700b5'
+sha512sums=('700359a8353597ce10284152cb318011aef1111cb9bc98e4794cfa6f630d6a03a8ae5556b6f6aaec8b4cd64bc4f21587f5ce2b7cc9635abeacda426dabf268bb'
             'SKIP'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
@@ -104,7 +104,7 @@ prepare() {
   # Allow ccache to work
   mv wine-$_pkgbasever $pkgname
 
-  scard4wine_dir=scard4wine/src
+  scard4wine_dir=scard4wine-yan12125/src
   cp -v $scard4wine_dir/winscard.c $pkgname/dlls/winscard/winscard.c
   cp -v $scard4wine_dir/winscard.spec $pkgname/dlls/winscard/winscard.spec
   cp -v $scard4wine_dir/winscard.h $pkgname/include/winscard.h
@@ -188,7 +188,7 @@ package() {
 
 # vim:set ts=8 sts=2 sw=2 et:
 
-source+=("scard4wine::git+https://git.code.sf.net/p/scard4wine/code.git#commit=484230432f6f29538916872dac495d8a8de45382")
+source+=("scard4wine-yan12125::git+https://git.code.sf.net/u/yan12125/scard4wine.git#commit=7621961210a55b4333f3039bae2355430f9bd8cd")
 sha512sums+=('SKIP')
 makedepends+=(git)
 provides=("$pkgname=$pkgver")
