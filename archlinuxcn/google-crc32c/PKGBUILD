@@ -1,0 +1,34 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=crc32c
+pkgname=google-crc32c
+pkgver=1.1.2
+pkgrel=1
+pkgdesc='CRC32C implementation with support for CPU-specific acceleration instructions'
+arch=('x86_64')
+url='https://github.com/google/crc32c'
+license=('BSD')
+depends=(
+  gcc-libs
+)
+makedepends=(
+  cmake
+)
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/google/crc32c/archive/${pkgver}.tar.gz")
+sha512sums=('6325c52b5a6850b9f90086e0c0c86798c008af36e7cfd3a0216184a2d37b3bf7323481ddc6bfe4cbd5b31288b3ee6c69772d03085a13094cf95d00a9756a7196')
+
+build() {
+  cmake -B build -S "${_pkgname}-${pkgver}" \
+    -DBUILD_SHARED_LIBS=ON \
+    -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_INSTALL_PREFIX="/usr" \
+    -DCRC32C_BUILD_BENCHMARKS=OFF \
+    -DCRC32C_BUILD_TESTS=OFF \
+    -DCRC32C_USE_GLOG=OFF
+  make -C build
+}
+
+package() {
+  make DESTDIR="${pkgdir}" -C build install
+  install -Dm644 "${_pkgname}-${pkgver}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
