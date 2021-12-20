@@ -3,7 +3,7 @@ pkgname='tauon-music-box'
 _pkgname=tauonmb
 _gitname=TauonMusicBox
 pkgver=6.8.3
-pkgrel=2
+pkgrel=3
 pkgdesc='A streamlined music player that uses BASS'
 arch=('x86_64')
 url="https://github.com/Taiko2k/TauonMusicBox"
@@ -11,6 +11,7 @@ license=('GPL3')
 
 depends=('python-pillow'
          'python-pylast'
+         'python-mutagen'
          'python-hsaudiotag3k' # AUR
          'python-pysdl2' # AUR
          'python-stagger' # AUR
