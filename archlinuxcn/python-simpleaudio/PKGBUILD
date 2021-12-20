@@ -1,0 +1,32 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=py-simple-audio
+pkgname=python-simpleaudio
+pkgver=1.0.4
+pkgrel=1
+pkgdesc='A simple audio playback Python extension - cross-platform, asynchronous, dependency-free'
+arch=('x86_64')
+url='https://github.com/hamiltron/py-simple-audio'
+license=('MIT')
+depends=(
+  alsa-lib
+  python
+)
+makedepends=(
+  python-setuptools
+)
+
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/hamiltron/py-simple-audio/archive/refs/tags/${pkgver}.tar.gz")
+sha512sums=('2607e6bb0883929d86341eb387f33475e2724bb0e56a3be0f675d09ba0a2b9973e53ce2a31e254ddd789095076d117f1311628a109a15f00b75c25f0e9101be0')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
