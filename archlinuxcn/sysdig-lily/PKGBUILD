@@ -13,10 +13,8 @@ license=('GPL2' 'Apache' 'MIT')
 depends=('jsoncpp' 'libjsoncpp.so' 'luajit' 'curl' 'libcurl.so' 'jq' 'libb64' 'intel-tbb' 'grpc' "linux-lily=5.10.71-1" 'libgrpc++_unsecure.so')
 makedepends=('cmake' 'llvm' 'clang' 'gtest' 'linux-lily-headers')
 source=("https://github.com/draios/sysdig/archive/$pkgver/sysdig-$pkgver.tar.gz"
-        "filters-fix.patch"
         "bashcomp-location.patch")
-sha256sums=('227eea9ffb65829c079fed379f4830fcb3b3a1ae597aa10d639fb49273afb18c'
-            '36ec117b4556dfed08313d25f5124b22d0f73f7aeb7df68da9a99f987f929eda'
+sha256sums=('817e595d501acf3fe11dc659a154aadbba848dd87ae801f5bf34a42e84979f37'
             'aaee8a0ff414a24c5d5a479229324be1667bc5eb70702838f5d617fd986f947b')
 conflicts=(sysdig)
 provides=(sysdig=$pkgver)
@@ -24,7 +22,6 @@ provides=(sysdig=$pkgver)
 prepare() {
   cd "$srcdir"/sysdig-$pkgver
   patch -p1 -i "$srcdir"/bashcomp-location.patch
-  patch -p1 -i "$srcdir"/filters-fix.patch
 }
 
 build() {
