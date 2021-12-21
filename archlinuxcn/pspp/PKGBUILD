@@ -23,9 +23,12 @@ optdepends=(
   'libxml2: GNUMERIC support'
 )
 options=('!libtool' '!emptydirs')
-source=("${pkgname}-${pkgver}.tar.gz::https://ftp.gnu.org/gnu/pspp/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('56b551184f86f2664a1ae8e1558788c40b30cd4fe876dafa4f609d63a0561953')
-
+source=("${pkgname}-${pkgver}.tar.gz::https://ftp.gnu.org/gnu/pspp/${pkgname}-${pkgver}.tar.gz"
+        "${pkgname}-${pkgver}.tar.gz.sig::https://ftp.gnu.org/gnu/pspp/${pkgname}-${pkgver}.tar.gz.sig"
+)
+sha256sums=('56b551184f86f2664a1ae8e1558788c40b30cd4fe876dafa4f609d63a0561953'
+            'SKIP')
+validpgpkeys=('C2D1AB061656AAC54B5E975485199DE8C6648E90')
 build() {
   cd "${pkgname}-${pkgver}"
   ./configure \
