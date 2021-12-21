@@ -1,13 +1,13 @@
 # Maintainer: Reto Brunner <reto@labrat.space>
 pkgname=thelounge-git
 _realname=thelounge
-pkgver=v4.3.0.7285
+pkgver=v4.3.0.7286
 pkgrel=1
 pkgdesc='Modern self-hosted web IRC client'
 url='https://thelounge.chat/'
 arch=('any')
 license=('MIT')
-depends=('nodejs-lts-gallium') # the build on node 17 is broken
+depends=("nodejs")
 makedepends=('yarn' 'git' 'python2' 'npm')
 conflicts=('thelounge')
 backup=('etc/thelounge/config.js')
