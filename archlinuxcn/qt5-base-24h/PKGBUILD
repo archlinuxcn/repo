@@ -5,7 +5,7 @@ pkgbase=qt5-base-24h
 _origpkgname=qt5-base
 pkgname=(qt5-base-24h)
 pkgver=5.15.2+kde+r263
-pkgrel=2.7
+pkgrel=3.7
 _commit=7c6c0030cf80ef7b9ace42996b0e0c3a72f76860
 arch=('x86_64')
 url='https://www.qt.io'
@@ -41,7 +41,7 @@ sha256sums=(
       '901a764c896559bb472d5ecee4af9ee006b235f73e56959de9ded477a10e5fc6'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       'SKIP'
-            'cf707cd970650f8b60f8897692b36708ded9ba116723ec8fcd885576783fe85c'
+            '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
             '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
 
 pkgver() {
@@ -86,7 +86,8 @@ build() {
     -no-mimetype-database \
     -no-use-gold-linker \
     -reduce-relocations \
-    -no-strip
+    -no-strip \
+    -ltcg
   make
 }
 
