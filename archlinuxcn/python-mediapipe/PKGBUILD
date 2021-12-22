@@ -1,0 +1,42 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=mediapipe
+pkgname=python-mediapipe
+pkgver=0.8.9
+pkgrel=1
+pkgdesc='Cross-platform, customizable ML solutions for live and streaming media'
+arch=('x86_64')
+url='https://mediapipe.dev'
+license=('Apache')
+depends=(
+  absl-py
+  ffmpeg
+  openexr
+  python-attrs
+  python-matplotlib
+  python-numpy
+  python-opencv
+  python-protobuf
+)
+makedepends=(
+  bazel
+  python-setuptools
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/google/mediapipe/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('54ce6da9f167d34fe53f928c804b3bc1fd1dd8fe2b32ca4bf0b63325d34680ac')
+
+prepare() {
+  cd "${_pkgname}-${pkgver}"
+  # remove restriction on bazel version
+  rm -vf .bazelversion
+  # build with opencv4
+  # see also https://google.github.io/mediapipe/getting_started/install.html
+  sed -i 's!#"include/opencv4/!"include/opencv4/!g' third_party/opencv_linux.BUILD
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py gen_protos
+  python setup.py install --root="${pkgdir}" --optimize=1 --link-opencv
+}
+# vim:set ts=2 sw=2 et:
