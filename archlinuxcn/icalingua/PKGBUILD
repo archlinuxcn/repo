@@ -1,5 +1,5 @@
 pkgname=icalingua
-pkgver=2.4.4_Deus_non_vult
+pkgver=2.4.5
 pkgrel=1
 pkgdesc='A Linux client for QQ and more'
 license=('GPL')
@@ -25,9 +25,9 @@ package() {
     install -Dm755 "${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
     ln -s "/usr/bin/${pkgname}" "${pkgdir}/usr/bin/electron-qq"
 }
-sha256sums=('84c8585e8c18504ed83b0d199831b55b9f8f0eb0a5aa4cb9e3dc01b4a17d0e38'
+sha256sums=('648f720db9c2ac9666ec276d4367708f1544a3f732cfe5d8eef026add55d88f2'
             '43da1c99b7a6aee974c20da3bcf925b660dff4ba44a447c86066c84c8bc95fbd'
             '139cd2b15c08236aff65ce1d9b2652b9472e3659671b63e522980b0682f22993')
-sha256sums_aarch64=('f1f22756eb9867aea935e39359ce854fe5a479fa5ca530833f423f8f45eedc5a')
-sha256sums_x86_64=('ad64cddd509fc92d757ffc11af2e2b74387c54e4c8edb72070a14aab182e8381')
-sha256sums_i686=('1cbc0e5577014b89f0cdae7dc1de008e82c4dc7d03d8877969e05c9944b18d25')
+sha256sums_aarch64=('d24543e87c43a6eec9f06456ec581fe3aec4b7776ab7154ec8403473670e6161')
+sha256sums_x86_64=('c800ce77262b70632dc1086e57f766d99cebfaeba0a660c3e8f2ffcb8a59a2c8')
+sha256sums_i686=('7ad33dabfb11536dc2184472c22de0d2f6cd476955c8505ca318fbc9dcb5688f')
