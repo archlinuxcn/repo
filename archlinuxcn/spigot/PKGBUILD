@@ -5,7 +5,8 @@ pkgname=spigot
 _pkgver=1.18.1
 _build=141
 pkgver="${_pkgver}+b${_build}"
-pkgrel=11
+pkgrel=12
+_mng_ver=1.0.0
 pkgdesc="High performance Minecraft server implementation"
 arch=('any')
 url="https://www.spigotmc.org/"
@@ -19,21 +20,9 @@ conflicts=("bukkit" "craftbukkit" "spigot-patcher")
 backup=("etc/conf.d/${pkgname}")
 install="${pkgname}.install"
 source=("BuildTools-${_pkgver}+b${_build}.jar::https://hub.spigotmc.org/jenkins/job/BuildTools/${_build}/artifact/target/BuildTools.jar"
-	"${pkgname}-backup.service"
-	"${pkgname}-backup.timer"
-	"${pkgname}.service"
-	"${pkgname}.sysusers"
-	"${pkgname}.tmpfiles"
-	"${pkgname}.conf"
-	"${pkgname}.sh")
+	"minecraft-server-${_mng_ver}.tar.gz"::"https://github.com/Edenhofer/minecraft-server/archive/refs/tags/v${_mng_ver}.tar.gz")
 sha512sums=('d4ffaf205dd8565f133c0045e8eee1e6ef3cadaff899fa5c04deada1f9727cd025e41e0dbbfdb20a403406e502d92e20cbe62396e78a5f2a7a738976e51571de'
-            '03ba1032b687553831021cfb0bed489e6301d0446c3b4f56d989d203855952911f3b1caaa00596f4731060ddf6684f66c3d674f3c5546b600cbe6585fc8560fb'
-            '76c77e47c442b477216e968db2213612579b24add54cf0e0512f808498673500b4d24e59bce70b1e7479d724a9a897ceb154e937b88a476beb11c8776258b36c'
-            '5a32439ff4b8fa9db89e9242206cf99109e0b00f29f87711c25342dda522171d999f7e18fb2013437ddf62cfec05b6677601933233aaf42bcb5d67eb7a1469ee'
-            'eac1deb53fa9d522af272fa2d9093b98e7d51aa4c0730471e5c575752733500b84a06bc19d1fe83b4c48e41b7f0e11efb23881bfadce4a40d2bfed7cbe5a5bf7'
-            'f3b3005a8ee643cb7d8fa24a3d1141604157efd2147d07aa7f839b070370cbed66ccf3c34317181e9601f2aadb5224002617226c99e36b677c0fc3de0b42d0d8'
-            '2f5d71911c9ee7e7763d3300f335245a531a9e00d23e4d007ce76f4175dd7ecd9d8f0425af86a885797764690db64bfa558b49719f3d9d85a46df89443bcdf7b'
-            '49414f963ad4c8ea49c8dcc05c47f2c2df1733eaaef99980b243d7b158c414c90398493dfcd0e3388d103784c3e6a28a63bf39d9a4261b1024ebbb87d9c62e5a')
+            'e315277da81cb28de338e870f477dc58dc9d8f8542594431ab5321150c92ff5634ace2be8c6778d1edb718fdeb6850d7021bffcbd3cae2a00f20e3a64caa3d92')
 
 _game="spigot"
 _server_root="/srv/craftbukkit"
@@ -41,27 +30,38 @@ _server_root="/srv/craftbukkit"
 build() {
 	export MAVEN_OPTS="-Xmx2g"
 	java -jar "BuildTools-${_pkgver}+b${_build}.jar" --rev "${_pkgver}"
+
+	make -C "${srcdir}/minecraft-server-${_mng_ver}" clean
+
+	make -C "${srcdir}/minecraft-server-${_mng_ver}" \
+		GAME=${_game} \
+		MYNAME=${_game} \
+		SERVER_ROOT=${_server_root} \
+		BACKUP_PATHS="world world_nether world_the_end" \
+		GAME_USER=craftbukkit \
+		MAIN_EXECUTABLE=spigot.jar \
+		SERVER_START_CMD="java -Xms512M -Xmx1024M -jar ./spigot.jar nogui" \
+		all
 }
 
 package() {
-	install -Dm644 "${_game}.conf" "${pkgdir}/etc/conf.d/${_game}"
-	install -Dm755 "${_game}.sh" "${pkgdir}/usr/bin/${_game}"
-	install -Dm644 "${_game}.service" "${pkgdir}/usr/lib/systemd/system/${_game}.service"
-	install -Dm644 "${_game}-backup.service" "${pkgdir}/usr/lib/systemd/system/${_game}-backup.service"
-	install -Dm644 "${_game}-backup.timer" "${pkgdir}/usr/lib/systemd/system/${_game}-backup.timer"
+	make -C "${srcdir}/minecraft-server-${_mng_ver}" \
+		DESTDIR="${pkgdir}" \
+		GAME=${_game} \
+		MYNAME=${_game} \
+		install
+
 	install -Dm644 "${_game}-${_pkgver}.jar" "${pkgdir}${_server_root}/${_game}.${_pkgver}.jar"
-	install -Dm644 "${_game}.sysusers" "${pkgdir}/usr/lib/sysusers.d/${_game}.conf"
-	install -Dm644 "${_game}.tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/${_game}.conf"
 	ln -s "${_game}.${_pkgver}.jar" "${pkgdir}${_server_root}/${_game}.jar"
 
 	# Link the log files
 	mkdir -p "${pkgdir}/var/log/"
-	install -dm775 "${pkgdir}/${_server_root}/logs"
+	install -dm2775 "${pkgdir}/${_server_root}/logs"
 	ln -s "${_server_root}/logs" "${pkgdir}/var/log/${_game}"
 
 	# Give the group write permissions and set user or group ID on execution
 	chmod g+ws "${pkgdir}${_server_root}"
 
 	# Make plugins folder ready for drag and drop
-	install -dm777 "${pkgdir}/${_server_root}/plugins"
+	install -dm2775 "${pkgdir}/${_server_root}/plugins"
 }
