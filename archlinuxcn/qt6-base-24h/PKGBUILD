@@ -5,7 +5,7 @@
 pkgname=qt6-base-24h
 _qtver=6.2.2
 pkgver=${_qtver/-/}
-pkgrel=2.1
+pkgrel=3.1
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -36,7 +36,7 @@ sha256sums=(
       '901a764c896559bb472d5ecee4af9ee006b235f73e56959de9ded477a10e5fc6'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       '85ab9180180c2eaf84cd11ae4c6d5a6a69f2f8fd7260aaccfd91a3e7e7232c1a'
-            'cf707cd970650f8b60f8897692b36708ded9ba116723ec8fcd885576783fe85c'
+            '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
             '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
 
 prepare() {
@@ -65,7 +65,8 @@ build() {
     -DINSTALL_EXAMPLESDIR=share/doc/qt6/examples \
     -DQT_FEATURE_journald=ON \
     -DQT_FEATURE_openssl_linked=ON \
-    -DQT_FEATURE_system_sqlite=ON
+    -DQT_FEATURE_system_sqlite=ON \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
   cmake --build build
 }
 
