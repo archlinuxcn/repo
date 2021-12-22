@@ -5,7 +5,7 @@ pkgbase=qt5-base-24h
 _origpkgname=qt5-base
 pkgname=(qt5-base-24h)
 pkgver=5.15.2+kde+r263
-pkgrel=3.7
+pkgrel=4.7
 _commit=7c6c0030cf80ef7b9ace42996b0e0c3a72f76860
 arch=('x86_64')
 url='https://www.qt.io'
@@ -88,6 +88,8 @@ build() {
     -reduce-relocations \
     -no-strip \
     -ltcg
+# No configure flag for fat static libs with lto
+  bin/qmake CONFIG+=fat-static-lto -- -redo
   make
 }
 
