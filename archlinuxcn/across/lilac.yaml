@@ -5,9 +5,9 @@ update_on:
     cmd: curl -sS https://raw.githubusercontent.com/ArkToria/ACross/master/pkgbuild/arch/across/PKGBUILD | grep pkgrel= | awk -F '=' '{print $2}'
   - alias: clang
   - alias: protobuf
-  - source: alpm
-    alpm: grpc
-    repo: community
+  - alias: grpc
+  - source: manual
+    manual: 1.0
 
 maintainers:
   - github: dctxmei
