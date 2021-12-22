@@ -5,7 +5,8 @@
 pkgname=minecraft-server
 pkgver=1.18.1
 _nonce=125e5adf40c659fd3bce3e66e67a16bb49ecc1b9
-pkgrel=1
+pkgrel=2
+_mng_ver=1.0.0
 pkgdesc="Minecraft server unit files, script, and jar"
 arch=('any')
 url="https://minecraft.net/"
@@ -18,34 +19,35 @@ backup=('etc/conf.d/minecraft')
 install="${pkgname}.install"
 # See https://launchermeta.mojang.com/mc/game/version_manifest.json for a list of all releases
 source=("minecraft_server.${pkgver}.jar"::"https://launcher.mojang.com/v1/objects/${_nonce}/server.jar"
-	"minecraftd-backup.service"
-	"minecraftd-backup.timer"
-	"minecraftd.service"
-	"minecraftd.sysusers"
-	"minecraftd.tmpfiles"
-	"minecraftd.conf"
-	"minecraftd.sh")
+	"minecraft-server-${_mng_ver}.tar.gz"::"https://github.com/Edenhofer/minecraft-server/archive/refs/tags/v${_mng_ver}.tar.gz")
 noextract=("minecraft_server.${pkgver}.jar")
 sha512sums=('cb306772c06e88b70475961ec1f057a9edfcef8db334479ec5c28e8b07287b3209bc54d83f7da7e8c63a8581e7ddbb93109acbf491ff74806b27486368640e71'
-            'a10e38c0e9a09c25e23e46147a8b8ce4d88a62ee780c1c0b525b9e41a563c4a4ed8e94d851abc3936bc31f3faa916ef005543129a039f66878b8f2c34853b91d'
-            '19ee3646bfbace353b65c0373594edb654de11c9671f29cebad3b31109f29f94ade1d529d9f409b0989c376bef9b451585b22a1e0ac4295fcc92d9565f808418'
-            '5203f6331f740ecfcea2a2cc653603ae97419baa89e08512f9d8feb63e4a52978442a69b313eccd9037b676a62ab528e2b533c0fb95a9c7177318279fe0cde79'
-            'a62c8c04e08dbac0db0aa2eeb505d70f8fd925bd2e427899512ba3ac828d4644e1c43c8d92325c6bc49c8d9ecb40cb5c44bf5957a63980b1e2cf86fdb38a05a7'
-            'a74f4e31065b6c6f5c830182de05a8c75a6de6eaac7b3dc26479827646ef20ab872509aac88be613048c97d378711c38612ec7ac92d22134acefd40f6e0a99da'
-            '30e434ba183527da8047b1ffe403a083f1af34dbd229b5871222e9da0004cdf5d4152eaa4b73215befcb1233d08cc757af32ad6b572f4b6d2a623b6f120aa0d9'
-            '301ceadb97f1fd61649dd4bf2ce1082cd4ca6672194783c26dcb6a02616305f1820fc44827a5adc470f2c51380918564ebe1f0f3c206b9f5119e91a905038057')
+            'e315277da81cb28de338e870f477dc58dc9d8f8542594431ab5321150c92ff5634ace2be8c6778d1edb718fdeb6850d7021bffcbd3cae2a00f20e3a64caa3d92')
 
 _game="minecraft"
 _server_root="/srv/minecraft"
 
+build() {
+	make -C "${srcdir}/minecraft-server-${_mng_ver}" clean
+
+	make -C "${srcdir}/minecraft-server-${_mng_ver}" \
+		GAME=${_game} \
+		MYNAME=${_game}d \
+		SERVER_ROOT=${_server_root} \
+		BACKUP_PATHS="world" \
+		GAME_USER=${_game} \
+		MAIN_EXECUTABLE=minecraft_server.jar \
+		SERVER_START_CMD="java -Xms512M -Xmx1024M -jar ./minecraft_server.jar nogui" \
+		all
+}
+
 package() {
-	install -Dm644 ${_game}d.conf              "${pkgdir}/etc/conf.d/${_game}"
-	install -Dm755 ${_game}d.sh                "${pkgdir}/usr/bin/${_game}d"
-	install -Dm644 ${_game}d.service           "${pkgdir}/usr/lib/systemd/system/${_game}d.service"
-	install -Dm644 ${_game}d-backup.service    "${pkgdir}/usr/lib/systemd/system/${_game}d-backup.service"
-	install -Dm644 ${_game}d-backup.timer      "${pkgdir}/usr/lib/systemd/system/${_game}d-backup.timer"
-	install -Dm644 ${_game}d.sysusers          "${pkgdir}/usr/lib/sysusers.d/${_game}d.conf"
-	install -Dm644 ${_game}d.tmpfiles          "${pkgdir}/usr/lib/tmpfiles.d/${_game}d.conf"
+	make -C "${srcdir}/minecraft-server-${_mng_ver}" \
+		DESTDIR="${pkgdir}" \
+		GAME=${_game} \
+		MYNAME=${_game}d \
+		install
+
 	install -Dm644 ${_game}_server.${pkgver}.jar "${pkgdir}${_server_root}/${_game}_server.${pkgver}.jar"
 	ln -s "${_game}_server.${pkgver}.jar" "${pkgdir}${_server_root}/${_game}_server.jar"
 
