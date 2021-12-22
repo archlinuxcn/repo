@@ -1,5 +1,4 @@
-# Maintainer: Łukasz Mariański <lmarianski at protonmail dot com>
-# Contributor: Maxime Gauduin <alucryd@archlinux.org>
+# Maintainer: Maxime Gauduin <alucryd@archlinux.org>
 # Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 # Contributor: Tom Newsom <Jeepster@gmx.co.uk>
@@ -14,6 +13,9 @@ arch=(x86_64)
 url=https://ffmpeg.org/
 license=(GPL3)
 depends=(
+vulkan-icd-loader
+glslang
+spirv-tools
   alsa-lib
   aom
   bzip2
@@ -69,11 +71,9 @@ depends=(
   vmaf
   xz
   zlib
-  vulkan-icd-loader
-  glslang
-  spirv-tools
 )
 makedepends=(
+vulkan-headers
   amf-headers
   avisynthplus
   clang
@@ -81,7 +81,6 @@ makedepends=(
   git
   ladspa
   nasm
-  vulkan-headers
 )
 optdepends=(
   'avisynthplus: AviSynthPlus support'
@@ -89,9 +88,7 @@ optdepends=(
   'ladspa: LADSPA filters'
   'nvidia-utils: Nvidia NVDEC/NVENC support'
 )
-conflicts=(ffmpeg)
-provides=(
-  ffmpeg
+provides=(ffmpeg
   libavcodec.so
   libavdevice.so
   libavfilter.so
@@ -101,8 +98,10 @@ provides=(
   libswresample.so
   libswscale.so
 )
+_tag=7e0d640edf6c3eee1816b105c2f7498c4f948e74
+conflicts=(ffmpeg)
 source=(
-  git+https://git.ffmpeg.org/ffmpeg.git
+  git+https://git.ffmpeg.org/ffmpeg.git#tag=${_tag}
   vmaf-model-path.patch
 )
 sha256sums=(
@@ -118,12 +117,6 @@ pkgver() {
 
 prepare() {
   cd ffmpeg
-
-  git fetch --all --tags
-
-  # Get latest stable tag
-  git checkout tags/$(git tag --list 'n*[!d][!e][!v]' | tail -n1)&>/dev/null
-
   git cherry-pick -n 988f2e9eb063db7c1a678729f58aab6eba59a55b # fix nvenc on older gpus
   patch -Np1 -i "${srcdir}"/vmaf-model-path.patch
 }
@@ -132,6 +125,8 @@ build() {
   cd ffmpeg
 
   ./configure \
+--enable-vulkan \
+--enable-libglslang \
     --prefix=/usr \
     --disable-debug \
     --disable-static \
@@ -186,9 +181,8 @@ build() {
     --enable-nvdec \
     --enable-nvenc \
     --enable-shared \
-    --enable-version3 \
-    --enable-vulkan \
-    --enable-libglslang
+    --enable-version3
+
   make
   make tools/qt-faststart
   make doc/ff{mpeg,play}.1

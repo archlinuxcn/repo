@@ -6,10 +6,7 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['m00nw4tch3r'])
-
-post_build: aur_post_build
-
 update_on:
-  - source: aur
-    aur: 
+    - source: archpkg
+      archpkg: ffmpeg
+      strip_release: true
