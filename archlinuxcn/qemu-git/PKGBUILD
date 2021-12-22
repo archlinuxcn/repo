@@ -16,7 +16,7 @@ pkgname=(
   qemu-guest-agent-git
 )
 pkgdesc="A generic and open source machine emulator and virtualizer. Git version."
-pkgver=6.2.0.r223.g90978e15bc
+pkgver=6.2.0.r413.g8c5f94cd41
 pkgrel=1
 epoch=15
 arch=(i686 x86_64)
@@ -118,6 +118,7 @@ build() {
     --disable-vte \
     --disable-brlapi \
     --disable-opengl \
+    --disable-dbus-display \
     --disable-virglrenderer
 }
 
