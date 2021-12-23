@@ -1,8 +1,8 @@
 # Maintainer: DuckSoft <realducksoft@gmail.com>
 pkgname=across
 _pkgname=ACross
-pkgver=0.1.1
-pkgrel=4
+pkgver=0.1.2
+pkgrel=1
 pkgdesc="The next GUI client for v2ray core"
 arch=('x86_64')
 url='https://github.com/ArkToria/ACross'
@@ -17,7 +17,7 @@ provides=('across')
 
 source=("across-${pkgver}.tar.gz::https://github.com/ArkToria/ACross/archive/refs/tags/v${pkgver}.tar.gz")
 
-sha256sums=('7477ab8a9551373d4f0d237856a4730c4c8854304df1f041afe1d64b0a14b924')
+sha256sums=('6e5c15bbc55e38204852011096f2afc09c35f1c1682f45da3cc85a005a5eaa3e')
 
 build() {
     cd "${srcdir}/${_pkgname}-${pkgver}/"
