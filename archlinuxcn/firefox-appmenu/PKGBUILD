@@ -7,7 +7,7 @@
 
 pkgname=firefox-appmenu
 _pkgname=firefox
-pkgver=95.0
+pkgver=95.0.2
 pkgrel=1
 pkgdesc="Firefox from extra with appmenu patch"
 arch=(x86_64)
@@ -29,14 +29,16 @@ conflicts=("firefox")
 options=(!emptydirs !makeflags !strip)
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         0001-Use-remoting-name-for-GDK-application-names.patch
+        0002-Bug-1745560-Add-missing-stub-for-wl_proxy_marshal_fl.patch 
         $_pkgname.desktop
         identity-icons-brand.svg
         fix-wayland-build.patch
         unity-menubar.patch
         fix_csd_window_buttons.patch)
-sha256sums=('7fa3e43f6ec710b2ebba0e99db713a56d13d85f1f23c4a1399bb594fd74864de'
+sha256sums=('c178cbf61979bd39a8daa9a09c6e03089da37baded692ad1f745ecfcaae74d64'
             'SKIP'
             'a7a5ea4680c0a4c6eb5a5f99970008f5ad3e2f29f0d6d050aa651bce8c713718'
+            '8a893ae44955c90a0fb4a504134773293054ab57a41ba7931df98c8cf5449549'
             '34514a657d6907a159594c51e674eeb81297c431ec26a736417c2fdb995c2c0c'
             'a9b8b4a0a1f4a7b4af77d5fc70c2686d624038909263c795ecc81e0aec7711e9'
             '46724a625f51c358abaee488a7ce75673078e96ba009459339120b8dd11dec25'
@@ -65,6 +67,9 @@ prepare() {
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
   patch -Np1 -i ../0001-Use-remoting-name-for-GDK-application-names.patch
+
+  # Fix build with wayland 1.20
+  patch -Np1 -i ../0002-Bug-1745560-Add-missing-stub-for-wl_proxy_marshal_fl.patch
 
   # actual appmenu patch from ubuntu repos
   # http://archive.ubuntu.com/ubuntu/pool/main/f/firefox/firefox_80.0+build2-0ubuntu0.16.04.1.debian.tar.xz

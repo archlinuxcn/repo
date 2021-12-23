@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Kevin Daudt <kdaudt@alpinelinux.org>
+Date: Sun, 12 Dec 2021 13:38:48 +0000
+Subject: [PATCH] Bug 1745560 - Add missing stub for wl_proxy_marshal_flags,
+ r=stransky
+
+Firefox fails to build against wayland 1.20 because this symbol is missing
+
+Differential Revision: https://phabricator.services.mozilla.com/D133583
+---
+ widget/gtk/mozwayland/mozwayland.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/widget/gtk/mozwayland/mozwayland.c b/widget/gtk/mozwayland/mozwayland.c
+index 7a448e6321e2..1a86468b4f3d 100644
+--- a/widget/gtk/mozwayland/mozwayland.c
++++ b/widget/gtk/mozwayland/mozwayland.c
+@@ -200,3 +200,10 @@ MOZ_EXPORT int wl_list_empty(const struct wl_list* list) { return -1; }
+ 
+ MOZ_EXPORT void wl_list_insert_list(struct wl_list* list,
+                                     struct wl_list* other) {}
++
++MOZ_EXPORT struct wl_proxy* wl_proxy_marshal_flags(
++    struct wl_proxy* proxy, uint32_t opcode,
++    const struct wl_interface* interface, uint32_t version, uint32_t flags,
++    ...) {
++  return NULL;
++}
