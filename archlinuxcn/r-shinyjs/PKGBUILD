@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=shinyjs
-_pkgver=2.0.0
+_pkgver=2.1.0
 pkgname=r-${_pkgname,,}
-pkgver=2.0.0
+pkgver=2.1.0
 pkgrel=1
 pkgdesc='Easily Improve the User Experience of Your Shiny Apps in Seconds'
 arch=('any')
@@ -25,7 +25,7 @@ optdepends=(
   r-testthat
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('c2cdd9fab41f6b46bb41b288cd9b3fb3a7fe9627b664e3a58a0cb5dd4c19f8ff')
+sha256sums=('7ec20cbf1b1fd7a32d85a56dfc0df8b5f67c828d241da400a21d893cb37ea9c5')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
