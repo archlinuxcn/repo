@@ -1,0 +1,65 @@
+diff --git a/alvr/filesystem-layout/src/lib.rs b/alvr/filesystem-layout/src/lib.rs
+index 82c367f0..2d3e127c 100644
+--- a/alvr/filesystem-layout/src/lib.rs
++++ b/alvr/filesystem-layout/src/lib.rs
+@@ -52,9 +52,9 @@ lazy_static! {
+         }
+     } else if cfg!(target_os = "linux") {
+         Layout {
+-            openvr_driver_dir: PathBuf::from("lib64/alvr"),
++            openvr_driver_dir: PathBuf::from("lib/steamvr/alvr"),
+             presets_dir: PathBuf::from("share/alvr/presets"),
+-            vrcompositor_wrapper: PathBuf::from("libexec/alvr/vrcompositor-wrapper"),
++            vrcompositor_wrapper: PathBuf::from("lib/alvr/vrcompositor-wrapper"),
+             launcher_exe: PathBuf::from("bin/alvr_launcher"),
+             dashboard_resources_dir: PathBuf::from("share/alvr/dashboard"),
+         }
+diff --git a/alvr/server/cpp/platform/linux/ffmpeg_helper.h b/alvr/server/cpp/platform/linux/ffmpeg_helper.h
+index 4c91e20b..f4ea9b51 100644
+--- a/alvr/server/cpp/platform/linux/ffmpeg_helper.h
++++ b/alvr/server/cpp/platform/linux/ffmpeg_helper.h
+@@ -46,6 +46,7 @@ public:
+   struct dispatch
+   {
+     PFN_vkImportSemaphoreFdKHR vkImportSemaphoreFdKHR;
++    int getVkHeaderVersion() const { return VK_HEADER_VERSION; }
+   };
+ 
+   VkContext(const char* device, AVDictionary* opt = nullptr);
+diff --git a/alvr/vrcompositor-wrapper/src/main.rs b/alvr/vrcompositor-wrapper/src/main.rs
+index 327ce07b..0dcefa28 100644
+--- a/alvr/vrcompositor-wrapper/src/main.rs
++++ b/alvr/vrcompositor-wrapper/src/main.rs
+@@ -5,7 +5,7 @@ fn main() {
+         Ok(path) => path
+             .parent()
+             .unwrap()
+-            .join("../../share/vulkan/explicit_layer.d"),
++            .join("/usr/share/vulkan/explicit_layer.d/"),
+         Err(err) => panic!("Failed to read vrcompositor symlink: {}", err),
+     };
+     std::env::set_var("VK_LAYER_PATH", layer_path);
+diff --git a/alvr/vulkan-layer/layer/alvr_x86_64.json b/alvr/vulkan-layer/layer/alvr_x86_64.json
+index d0044b89..8706f699 100644
+--- a/alvr/vulkan-layer/layer/alvr_x86_64.json
++++ b/alvr/vulkan-layer/layer/alvr_x86_64.json
+@@ -3,7 +3,7 @@
+ 	"layer" : {
+ 		"name": "VK_LAYER_ALVR_capture",
+ 		"type": "GLOBAL",
+-		"library_path": "../../../lib64/libalvr_vulkan_layer.so",
++		"library_path": "libalvr_vulkan_layer.so",
+ 		"api_version": "1.0.68",
+ 		"implementation_version": "1",
+ 		"description": "ALVR display intercept layer",
+diff --git a/packaging/selinux/alvr.fc b/packaging/selinux/alvr.fc
+index ea28c416..27f5119a 100644
+--- a/packaging/selinux/alvr.fc
++++ b/packaging/selinux/alvr.fc
+@@ -1,4 +1,4 @@
+ /usr/bin/alvr_launcher                  gen_context(system_u:object_r:alvr_exec_t,s0)
+-/usr/lib(64)?/alvr(/.*)?                gen_context(system_u:object_r:alvr_lib_t,s0)  
++/usr/lib(64)?/steamvr/alvr(/.*)?        gen_context(system_u:object_r:alvr_lib_t,s0)  
+ /usr/lib(64)?/libalvr_vulkan_layer.so   gen_context(system_u:object_r:alvr_lib_t,s0)
+-/usr/libexec/alvr(/.*)?                 gen_context(system_u:object_r:alvr_exec_t,s0)
++/usr/bin/alvr(/.*)?                     gen_context(system_u:object_r:alvr_exec_t,s0)
