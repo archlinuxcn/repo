@@ -2,7 +2,7 @@
 # Maintainer: Joseph Donofry <joe at joedonofry dot com>
 
 pkgname=nheko-git
-pkgver=0.9.1.r9.g926c7a89
+pkgver=0.9.1.r10.g3e8734db
 pkgrel=1
 pkgdesc="Desktop client for the Matrix protocol"
 arch=("i686" "x86_64")
@@ -16,7 +16,7 @@ depends=(
   gst-plugins-base-libs gst-plugins-bad-libs libxcb xcb-util-wm hicolor-icon-theme
 )
 
-makedepends=(git cmake qt5-tools boost nlohmann-json fontconfig lmdbxx pkg-config)
+makedepends=(git cmake qt5-tools boost nlohmann-json fontconfig lmdbxx pkg-config asciidoc)
 
 provides=("nheko")
 conflicts=("nheko")
