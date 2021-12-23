@@ -16,12 +16,12 @@ source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/dylan-profiler/tangled
 sha512sums=('a8c8c82dfddd81d170961eea558f0238a3e76ec73590dccfc221842a6dd475846930327dc35412a234b0cd2909fac81217a23e2838e728cac7ad1ecd8495abbd')
 
 build() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
+  cd "${_pkgname}-${pkgver}"
   python setup.py build
 }
 
 package() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
+  cd "${_pkgname}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
