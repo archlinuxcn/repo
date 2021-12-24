@@ -31,7 +31,7 @@ build() {
   cd build
   cmake "$srcdir/$_pkgname" \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DQTERMWIDGET_BUILD_PYTHON_BINDING=ON
+    -DQTERMWIDGET_BUILD_PYTHON_BINDING=OFF
   make
 }
 
