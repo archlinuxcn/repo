@@ -15,16 +15,16 @@ makedepends=(
   python-setuptools-rust
 )
 
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/huggingface/tokenizers/archive/refs/tags/python-v${pkgver}.tar.gz")
-sha512sums=('cc32bde0df6ff827f0ae59218c0c59413ee44ee8112361cb455e60aae41450bd31fc374b22f2ab29a732a46765e6ad18898c6ca4e6151a34f3b2251cf2b15b33')
+source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+sha512sums=('73367bd7c9db5b1a7fb3012bb31c8b462b75bea04c22a15dfcaeefc3f07c9a9ba44ac5fdf37fe58395a2390359f5044d38b93ae09962fa71474f18bf126f8704')
 
 build() {
-  cd "${_pkgname}-python-v${pkgver}/bindings/python"
+  cd "${_pkgname}-${pkgver}"
   python setup.py build
 }
 
 package() {
-  cd "${_pkgname}-python-v${pkgver}/bindings/python"
+  cd "${_pkgname}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1
 }
 # vim:set ts=2 sw=2 et:

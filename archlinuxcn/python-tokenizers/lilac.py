@@ -4,7 +4,8 @@ from lilaclib import *
 
 
 def pre_build():
-  update_pkgver_and_pkgrel(_G.newver.replace('python-', '').lstrip('v'))
+    update_pkgver_and_pkgrel(_G.newver.lstrip("v"))
+
 
 def post_build():
-  git_pkgbuild_commit()
+    git_pkgbuild_commit()
