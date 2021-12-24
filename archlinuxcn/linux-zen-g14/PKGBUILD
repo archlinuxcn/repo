@@ -3,7 +3,7 @@
 
 pkgbase=linux-zen-g14
 _pkgbase=linux-zen
-pkgver=5.15.10.zen1
+pkgver=5.15.11.zen1
 pkgrel=1
 pkgdesc='Linux ZEN'
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -23,7 +23,7 @@ source=(
   "git+https://gitlab.com/asus-linux/fedora-kernel.git#branch=rog-5.15"
 )
 sha256sums=('SKIP'
-            'a8eaf6eb21cca77aa470443c8a0d07577023edee3d589c4de6e7d0f66eebbc99'
+            'b668d0dbb3bc0d9003c670914d0d31ee0755fdcb2e01f424b951a5d52060c296'
             'SKIP')
 
 export KBUILD_BUILD_HOST=archlinux
