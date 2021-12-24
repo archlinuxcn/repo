@@ -2,7 +2,7 @@
 pkgname=alvr
 _pkgname=ALVR
 pkgver=16.0.0
-pkgrel=4
+pkgrel=5
 pkgdesc="Experimental Linux version of ALVR. Stream VR games from your PC to your headset via Wi-Fi."
 arch=('x86_64')
 url="https://github.com/alvr-org/ALVR"
@@ -12,8 +12,8 @@ depends=('vulkan-driver' 'ffmpeg-vulkan' 'gtk3' 'libunwind')
 makedepends=('git' 'rust' 'clang' 'imagemagick' 'vulkan-headers')
 source=("https://github.com/alvr-org/ALVR/archive/v${pkgver}.tar.gz"
 "${pkgname}.patch")
-md5sums=('SKIP'
-	'8a2815f250ac231bb7252599771352f6')
+md5sums=('adbf65029d7658adaa1e00c2ec95e0e3'
+         '8a2815f250ac231bb7252599771352f6')
 
 prepare() {
 	cd "$srcdir/${_pkgname}-${pkgver}"
