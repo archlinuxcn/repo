@@ -9,4 +9,5 @@ def pre_build():
         line = line.strip()
         if line.startswith('depends='):
             print('makedepends=(\'python-setuptools\')')
+            line = line.replace(')', ' python-cffi)') # fix missing dependency
         print(line)
