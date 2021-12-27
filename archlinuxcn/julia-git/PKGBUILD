@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.8.0.DEV.1179.gee16fe622aa
+pkgver=1.8.0.DEV.1182.gc79093821df
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -197,8 +197,11 @@ build_in() {
 
   ver=$(cat VERSION | cut -f 1-2 -d '.')
 
+  # These are to workaround bugs in the hand-made build system that can't handle
+  # parallel build properly.
   make "${opts[@]}" -C base version_git.jl.phony
   make "${opts[@]}" -C deps
+  make "${opts[@]}" -C src jl_internal_funcs.inc
   make "${opts[@]}" julia-cli-release
   make "${opts[@]}" release debug
   # TODO docless build
