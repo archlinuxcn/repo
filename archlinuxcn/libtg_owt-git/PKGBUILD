@@ -7,9 +7,10 @@ pkgrel=1
 pkgdesc='WebRTC library - static linked, git version'
 arch=('x86_64')
 url='https://github.com/desktop-app/tg_owt'
-license=('custom:BSD')
+license=('BSD')
 depends=('protobuf')
-makedepends=('git' 'ninja' 'unzip' 'cmake' 'libxrandr' 'libxcomposite' 'openssl' 'glibc' 'ffmpeg' 'libva' 'opus' 'yasm' 'libjpeg-turbo' 'pipewire' 'libxtst')
+makedepends=('git' 'ninja' 'unzip' 'cmake' 'protobuf' 'libxrandr' 'libxcomposite' 'openssl' 'glibc'
+             'ffmpeg' 'libva' 'opus' 'yasm' 'libjpeg-turbo' 'pipewire' 'libxtst' 'abseil-cpp')
 options=('staticlibs')
 source=("tg_owt::git+${url}.git"
         "libvpx::git+https://chromium.googlesource.com/webm/libvpx.git"
@@ -38,15 +39,19 @@ prepare() {
 
 build() {
   cd tg_owt
+  # Upstream stated that only static builds are really supported so that's what we'll do.
+  # https://github.com/desktop-app/tg_owt/issues/75#issuecomment-992061171
   cmake \
     -B build \
     -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_SHARED_LIBS=OFF
   ninja -C build
 }
 
 package() {
   cd tg_owt
   DESTDIR="${pkgdir}/" ninja -C build install
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 }
