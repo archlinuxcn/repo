@@ -12,99 +12,69 @@
  
  # Header directory for the running kernel
  ifdef LINUXINCLUDE
-From 9fda02bce13527ce94a95df1a98fb6188dea22b8 Mon Sep 17 00:00:00 2001
+From 9a6a17fe0bc6d1ab9e0e0dfa8d587b12a21cd49e Mon Sep 17 00:00:00 2001
 From: Michal Kubecek <mkubecek@suse.cz>
-Date: Wed, 30 Jun 2021 11:05:16 +0200
-Subject: [PATCH] vmmon: fix task_struct::state access patterns
+Date: Sun, 17 Oct 2021 17:06:26 +0200
+Subject: [PATCH] modules: include <linux/stdarg.h> when available
 
-Mainline commit 2f064a59a11f ("sched: Change task_struct::state") in
-5.14-rc1 finishes a series fixing racy access patterns to task state and
-renames task_struct::state to __state so that code old code acessing it
-directly fails to build.
+Workstation/Player code changes between 16.1.2 and 16.2.0 added some
+includes of <stdarg.h> which is interpreted as regular (userspace) header
+file in /usr/include. Shortly before that, mainline commit c0891ac15f04
+("isystem: ship and use stdarg.h") added minimalistic kernel version of
+stdarg.h to avoid including userspace headers from kernel code. As the
+kernel version is sometimes included via other header files, build against
+5.15 kernel results in a lot of warnings (about redefined va_* macros).
 
-Two of these in HostIF_SemaphoreWait() can be rewritten into calls to
-set_current_state() unconditionally (second one may do with
-__set_current_state() but I don't feel confident enough about that).
-There are also two places where vmmon code reads task_struct::state;
-provide a compat accessor using READ_ONCE() and use it instead of
-a direct read. To avoid kernel version check, check presence of
-get_current_state() macro introduced in the same commit as state member
-rename.
+Include <stdarg.h> when building against kernel < 5.15 and <linux/stdarg.h>
+when building against kernel >= 5.15.
 ---
- vmmon-only/include/compat_sched.h | 15 +++++++++++++++
- vmmon-only/linux/hostif.c         | 10 ++++++----
- 2 files changed, 21 insertions(+), 4 deletions(-)
+ vmmon-only/include/vm_assert.h | 4 ++++
+ vmnet-only/vm_assert.h         | 4 ++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/vmmon-only/include/compat_sched.h b/vmmon-only/include/compat_sched.h
-index 3f3304b..72078e0 100644
---- a/vmmon-only/include/compat_sched.h
-+++ b/vmmon-only/include/compat_sched.h
-@@ -289,5 +289,20 @@ typedef struct pid * compat_pid;
- #define compat_kill_pid(pid, sig, flag) kill_pid(pid, sig, flag)
- #endif
+diff --git a/vmmon-only/include/vm_assert.h b/vmmon-only/include/vm_assert.h
+index 4a69dcc..2817a08 100644
+--- a/vmmon-only/include/vm_assert.h
++++ b/vmmon-only/include/vm_assert.h
+@@ -40,7 +40,11 @@
  
-+/*
-+ * Since v5.14-rc1, task_struct::state hase been renamed to __state and is
-+ * is longer supposed to be accessed without READ_ONCE/WRITE_ONCE.
-+ */
-+#ifdef get_current_state
-+static inline int compat_get_task_state(const struct task_struct *t)
-+{
-+	return READ_ONCE(t->__state);
-+}
+ // XXX not necessary except some places include vm_assert.h improperly
+ #include "vm_basic_types.h"
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 15, 0)
+ #include <stdarg.h>
 +#else
-+static inline int compat_get_task_state(const struct task_struct *t)
-+{
-+	return READ_ONCE(t->state);
-+}
++#include <linux/stdarg.h>
 +#endif
  
- #endif /* __COMPAT_SCHED_H__ */
-diff --git a/vmmon-only/linux/hostif.c b/vmmon-only/linux/hostif.c
-index 137062c..6910f69 100644
---- a/vmmon-only/linux/hostif.c
-+++ b/vmmon-only/linux/hostif.c
-@@ -77,6 +77,8 @@
- #include "pgtbl.h"
- #include "versioned_atomic.h"
- 
-+#include "compat_sched.h"
-+
- #if !defined(CONFIG_HIGH_RES_TIMERS)
- #error CONFIG_HIGH_RES_TIMERS required for acceptable performance
- #endif
-@@ -474,7 +476,7 @@ HostIF_WakeUpYielders(VMDriver *vm,     // IN:
-       ASSERT(vcpuid < vm->numVCPUs);
-       t = vm->vmhost->vcpuSemaTask[vcpuid];
-       VCPUSet_Remove(&req, vcpuid);
--      if (t && (t->state & TASK_INTERRUPTIBLE)) {
-+      if (t && (compat_get_task_state(t) & TASK_INTERRUPTIBLE)) {
-          wake_up_process(t);
-       }
-    }
-@@ -2566,14 +2568,14 @@ HostIF_SemaphoreWait(VMDriver *vm,   // IN:
-    }
- 
-    poll_initwait(&table);
--   current->state = TASK_INTERRUPTIBLE;
-+   set_current_state(TASK_INTERRUPTIBLE);
-    mask = file->f_op->poll(file, &table.pt);
-    if (!(mask & (POLLIN | POLLERR | POLLHUP))) {
-       vm->vmhost->vcpuSemaTask[vcpuid] = current;
-       schedule_timeout(timeoutms * HZ / 1000);  // convert to Hz
-       vm->vmhost->vcpuSemaTask[vcpuid] = NULL;
-    }
--   current->state = TASK_RUNNING;
-+   set_current_state(TASK_RUNNING);
-    poll_freewait(&table);
- 
+ #ifdef __cplusplus
+ extern "C" {
+From 4232f780eb114f22498f3274eaeef81d8c63f2ab Mon Sep 17 00:00:00 2001
+From: Michal Kubecek <mkubecek@suse.cz>
+Date: Tue, 9 Nov 2021 09:01:57 +0100
+Subject: [PATCH] modules: fix stddef.h include
+
+After mainline commit 04e85bbf71c9 ("isystem: delete global -isystem
+compile option") in 5.16-rc1, vm_basic_types.h in both vmmon and vmnet
+does not find (userspace) stddef.h any more. As it should not include this
+header anyway, fix the include directives to include stddef.h from kernel.
+
+Kernel version of stddef.h has been available since the beginning of git so
+that it is safe to include it regardless of kernel version.
+---
+ vmmon-only/include/vm_basic_defs.h | 2 +-
+ vmnet-only/vm_basic_defs.h         | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/vmmon-only/include/vm_basic_defs.h b/vmmon-only/include/vm_basic_defs.h
+index 0ec30b3..b920e2d 100644
+--- a/vmmon-only/include/vm_basic_defs.h
++++ b/vmmon-only/include/vm_basic_defs.h
+@@ -51,7 +51,7 @@
+  *   C90 7.17, C99 7.19, C11 7.19
+  */
+ #if !defined(VMKERNEL)
+-#  include <stddef.h>
++#  include <linux/stddef.h>
+ #else
     /*
-@@ -2655,7 +2657,7 @@ HostIF_SemaphoreForceWakeup(VMDriver *vm,       // IN:
-        */
-       struct task_struct *t =
-          (struct task_struct *)xchg(&vm->vmhost->vcpuSemaTask[vcpuid], NULL);
--      if (t && (t->state & TASK_INTERRUPTIBLE)) {
-+      if (t && (compat_get_task_state(t) & TASK_INTERRUPTIBLE)) {
-          wake_up_process(t);
-       }
-    } ROF_EACH_VCPU_IN_SET_WITH_MAX();
+     * Vmkernel's bogus __FreeBSD__ value causes gcc <stddef.h> to break.
