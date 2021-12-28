@@ -1,3 +1,12 @@
+## [3.7.3](https://github.com/RocketChat/Rocket.Chat.Electron/compare/3.7.2...3.7.3) (2021-12-27)
+
+
+### Bug Fixes
+
+* Object has destroyed message ([#2273](https://github.com/RocketChat/Rocket.Chat.Electron/issues/2273)) ([3560b93](https://github.com/RocketChat/Rocket.Chat.Electron/commit/3560b93a541d5ae0b00cb886228942e4525f7246))
+
+
+
 ## [3.7.1](https://github.com/RocketChat/Rocket.Chat.Electron/compare/3.7.0...3.7.1) (2021-12-20)
 
 
