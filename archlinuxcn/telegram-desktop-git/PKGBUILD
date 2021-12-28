@@ -1,7 +1,7 @@
 # Maintainer: Sven-Hendrik Haase <svenstaro@gmail.com>
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-git
-pkgver=3.3.0.r0.g4b03fd0f2
+pkgver=3.3.1.r2.gdad1f196b
 pkgrel=1
 pkgdesc='Official Telegram Desktop client'
 arch=('x86_64')
@@ -19,7 +19,7 @@ provides=("telegram-desktop")
 conflicts=("telegram-desktop")
 ## source array generated from:
 # python -c 'import configparser, os.path; c=configparser.ConfigParser();c.read(".gitmodules"); print("\n".join(f"\t\"telegram-desktop-{path}::git+{u}\"" for s in c.sections() if (url:=c[s]["url"], path:=os.path.basename(c[s]["path"]), u:= url if url.endswith(".git") else url+".git")))'
-source=("tdesktop::git+https://github.com/telegramdesktop/tdesktop.git#branch=master"
+source=("tdesktop::git+https://github.com/telegramdesktop/tdesktop.git#branch=dev"
         "telegram-desktop-libtgvoip::git+https://github.com/telegramdesktop/libtgvoip.git"
         "telegram-desktop-GSL::git+https://github.com/Microsoft/GSL.git"
         "telegram-desktop-Catch::git+https://github.com/philsquared/Catch.git"
@@ -52,8 +52,12 @@ source=("tdesktop::git+https://github.com/telegramdesktop/tdesktop.git#branch=ma
         "telegram-desktop-lib_webview::git+https://github.com/desktop-app/lib_webview.git"
         "telegram-desktop-lib_waylandshells::git+https://github.com/desktop-app/lib_waylandshells.git"
         "telegram-desktop-jemalloc::git+https://github.com/jemalloc/jemalloc.git"
+        "telegram-desktop-kwayland::git+https://github.com/KDE/kwayland.git"
+        "telegram-desktop-dispatch::git+https://github.com/apple/swift-corelibs-libdispatch.git"
 )
 sha512sums=('SKIP'
+            'SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -128,7 +132,13 @@ prepare() {
     git config submodule.Telegram/lib_webview.url "$srcdir/telegram-desktop-lib_webview"
     git config submodule.Telegram/lib_waylandshells.url "$srcdir/telegram-desktop-lib_waylandshells"
     git config submodule.Telegram/ThirdParty/jemalloc.url "$srcdir/telegram-desktop-jemalloc"
+    git config submodule.Telegram/ThirdParty/kwayland.url "$srcdir/telegram-desktop-kwayland"
+    git config submodule.Telegram/ThirdParty/dispatch.url "$srcdir/telegram-desktop-dispatch"
     git submodule update
+
+    # remove -Werror in dispatch
+    sed -i "s/Werror/Wno-error/g" "$srcdir/tdesktop/Telegram/ThirdParty/dispatch/src/CMakeLists.txt"
+    sed -i "s/Werror/Wno-error/g" "$srcdir/tdesktop/Telegram/ThirdParty/dispatch/cmake/modules/DispatchCompilerWarnings.cmake"
 }
 
 build() {
