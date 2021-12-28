@@ -32,5 +32,14 @@ update_on:
   - source: alpm
     alpm: libssh2
     provided: libssh2.so
+  - source: alpm
+    alpm: mbedtls
+    provided: libmbedcrypto.so
+  - source: alpm
+    alpm: mbedtls
+    provided: libmbedtls.so
+  - source: alpm
+    alpm: mbedtls
+    provided: libmbedx509.so
   - source: manual
     manual: 1
