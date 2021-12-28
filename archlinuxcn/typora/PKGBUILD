@@ -3,13 +3,13 @@
 
 pkgname=typora
 pkgver=1.0.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A minimal markdown editor and reader."
 arch=('x86_64')
 filename="${pkgname}_${pkgver}_amd64.deb"
 license=('custom:"Copyright (c) 2015 Abner Lee All Rights Reserved."')
 url="https://typora.io/"
-depends=('libxss')
+depends=('gtk3' 'libxss')
 optdepends=(
 	'noto-fonts-emoji: Or some other emoji font to see emojis'
 	'pandoc: Import/export for extra file formats')
