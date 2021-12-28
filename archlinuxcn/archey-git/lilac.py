@@ -24,7 +24,7 @@ from lilaclib import *
 
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers=['Manouchehri'])
 
     for line in edit_file('PKGBUILD'):
         # edit PKGBUILD
