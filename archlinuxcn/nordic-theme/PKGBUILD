@@ -1,32 +1,18 @@
 # Maintainer: hamki <hamki.do2000@gmail.com>
+# Contributor: Luis Martinez <luis dot martinez at disroot dot org>
+
 pkgname=nordic-theme
-_pkgname=Nordic
-pkgver=2.0.0
+pkgver=2.1.0
 pkgrel=1
-epoch=
-pkgdesc="Nordic is a Gtk3.20+ theme created using the awesome Nord color pallete."
-arch=('i686' 'x86_64')
+pkgdesc="GTK theme using the Nord color palette"
+arch=('any')
 url="https://github.com/EliverLara/Nordic"
 license=('GPL3')
-groups=()
-depends=()
-makedepends=()
-checkdepends=()
-optdepends=()
-provides=()
-conflicts=()
-replaces=()
-backup=()
-options=()
-install=
-changelog=
-source=("https://github.com/EliverLara/Nordic/releases/download/$pkgver/$_pkgname.tar.xz"
-)
-noextract=()
-sha256sums=(c6c75f9474568c2b7a0067490d6a76427b9c2ff9fc6963dd3878efa9c4a24543)
+source=("$pkgname-$pkgver.tar.xz::$url/releases/download/v$pkgver/Nordic.tar.xz")
+sha256sums=('cce429254c31473571963b5125e8fb652ce517bbec5245b1e17fe975b9bfd10b')
 
 package() {
-  cd "${_pkgname}"
-  mkdir -p "${pkgdir}/usr/share/themes/$_pkgname"
-  cp -a "${srcdir}/${_pkgname}/"* "${pkgdir}/usr/share/themes/${_pkgname}/"
+	cd Nordic
+	find assets cinnamon gnome-shell gtk-* metacity-1 xfwm4 index.theme \
+		-type f -exec install -Dm 644 '{}' "$pkgdir/usr/share/themes/Nordic/{}" \;
 }
