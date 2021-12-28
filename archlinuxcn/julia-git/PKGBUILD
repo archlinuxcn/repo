@@ -32,30 +32,25 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.8.0.DEV.1182.gc79093821df
-pkgrel=2
+pkgver=1.8.0.DEV.1184.g722f9d49589
+pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
-# The JLL packages hardcodes the sonames so we can't use autodetection for those.
-# Also, the makepkg autodetection of the soname looks at the linkage info from the ELF files
-# and it doesn't work here since these are either symlinks or hardcoded names in text files.
-depends_libs=(arpack fftw gmp libgit2-julia "libgit2.so=1.3-$_soarch"
-              libunwind-git mpfr pcre2 suitesparse
-              openspecfun openblas-lapack libutf8proc-git "libopenlibm.so=4-$_soarch"
-              mbedtls "libssh2.so=1-$_soarch" zlib p7zip "libcurl.so=4-$_soarch"
-              libnghttp2 ca-certificates-utils
-              "libmbedcrypto.so=7-$_soarch" "libmbedtls.so=13-$_soarch"
-              "libmbedx509.so=1-$_soarch")
-makedepends=("${depends_libs[@]}" llvm-julia gcc-fortran git patchelf python proot)
+_soname_deps=(libcurl.so libgit2.so libopenlibm.so libssh2.so
+              libmbedcrypto.so libmbedtls.so libmbedx509.so)
+depends_libs=(arpack fftw gmp libgit2-julia libunwind-git mpfr pcre2 suitesparse
+              openspecfun openblas-lapack libutf8proc-git
+              mbedtls zlib p7zip libnghttp2 ca-certificates-utils)
+makedepends=("${depends_libs[@]}" llvm-julia gcc-fortran git patchelf python proot
+             "${_soname_deps[@]}")
 options=('debug' '!strip' '!buildflags')
 _patches=(
   0001-Force-enable-GDB-debug-info-registration.patch
   0002-Fix-source-file-paths.patch
   0003-Enable-basic-AA-in-O2.patch
-  0004-Fix-mbedtls-version.patch
-  0005-Update-openlibm-soname.patch
+  0004-Clear-soname.patch
   libgit2-1.2.0.patch
 )
 source=('git://github.com/JuliaLang/julia'
@@ -67,11 +62,10 @@ source=('git://github.com/JuliaLang/julia'
         arch-source-translate.cpp
         sysp7z.diff)
 sha512sums=('SKIP'
-            '0a977bcfb1192ee822eddc88ec0bf472649aebd4ebf4c8030fa5632e0f7ab9af0afa4523238b7340677d4b730ce22aa4d9cdc976ddd451f3d6e029657dd15ecb'
-            'e355749aefc36fdf72d460b626bb99f9a7644d72107070392778cd5123dbfcb580c972c9e5838b64d314c6f6cf443cffbcb80fdb949193e8e5c2ed8446fdd3b9'
-            'b7c5cd03e37694d4367785280d4548dac135d45d4b6fd5b5c2b001dd3dae5aba34a66686e2872e17171988a6256b747355183c526b7cf902d9f40cfbaa6ba977'
-            'e4f5c27b0048d0ae1915065a8eda2ef5bc8396be3b8b91da38f5cf3d9c9995f24a33e9312a1358d96d8067601c848a301dff553b5d59db7777f5e5c10f03abfc'
-            'b25b38c734eec2d22be10bd9fcdf744ce1b023f9903fab5913985451a25861db2d99b3f6085fac5e72387cf7de1fecfa60f737dae4bdd03faee6fb1a48c1558d'
+            '42510b7f594c75c864ad34633d1ea2b6e96ebc2fc2085ca0a9b1f8b17a8c7c7897c4c7d6f0d0c5e2fc44f2abb95cc84d23d9f7dfc7f58febc92b5019010f664c'
+            '5316caf1c3915dc819112d5600532db44bf3398afe5565065d7265e5917baaa5ed52379ace8b30672e5b1875302f2ac19ceb312a6dcc82a19422cea538d91ba9'
+            'e9bff48c0af45d2e905b3141402cae6a8a3718df5377cd335646941910226726323d7db8602e8c6c6d9b560f78580f2ee041b8ac6bbbc76a03bae46f9b8c35a0'
+            'd3daf4a8b70007e58e7c2f78622f9ad7b1d26e0b66e195a99df1843dbd925b4e7e80b7a425f58c9f04084a594e4eb1dcd5c5b800dcf4a655ba9fe2ccf910db43'
             'b971f26e1ec364a81ec518a0bd7a4f88206b8c8fb95ea000acc6e9df9d5ece676beb7f1045b9b5ed252e1991ec40f32fd7a1b092a73eadeff4a18591526cf4e9'
             '2bf050afb5afcd21b23667beb6129e73dc2fb8143366921c8859d7011ed06187db9f4aedae99c0fe31e0bcb7b0896180b006ee542d4b4d592369e9f4f1bd77ec'
             'ce03e2995a45d942f480d25d1ce7cddacb98f2e11eeed19b5564e36d817987f548c313b0d6b139402ba8c203c8ba9a059e1732695517d7b78b7fa88f08429295'
@@ -362,6 +356,32 @@ package-julia-in() {
     echo "}"
   ) > "${startdir}/install.pkg"
   true && install=install.pkg
+
+  # Manually filling in the soname dependencies since makepkg doesn't recognize the symlink
+  # julia uses to specify the soname
+  for libname in "${_soname_deps[@]}"; do
+    local filename="${pkgdir}/usr/lib/julia/${libname}"
+    [[ -f "${filename}" ]] || {
+      echo "Cannot find library: ${libname} in ${pkgdir}/usr/lib/julia/"
+      exit 1
+    }
+    local soarch=$(LC_ALL=C readelf -h "$filename" 2>/dev/null |
+                     sed -n 's/.*Class.*ELF\(32\|64\)/\1/p')
+    [[ -n "$soarch" ]] || [[ "$soarch" != "$_soarch" ]] || {
+      echo "SO arch of library ${libname}: '${soarch}' does not match '${_soarch}'"
+      exit 1
+    }
+
+    local sofile=$(LC_ALL=C readelf -d "$filename" 2>/dev/null |
+                     sed -n 's/.*Library soname: \[\(.*\)\].*/\1/p')
+    if [[ -z "$sofile" ]]; then
+      echo "Library ${libname}: is not versioned"
+      exit 1
+    fi
+
+    local soversion="${sofile##*\.so\.}"
+    depends+=("${libname}=${soversion}-${soarch}")
+  done
 }
 
 package_julia-git() {
