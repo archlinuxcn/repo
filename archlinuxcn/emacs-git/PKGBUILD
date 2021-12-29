@@ -46,6 +46,10 @@ GPM=              # Mouse support in Linux console using gmpd.
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
                   # Bitmap fonts only, 1337!
                
+PGTK="YES"        # Use native GTK3 build. Supports Wayland, yay!
+
+GTK3=             # The new GTK2. Really, why would you?
+
 LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   #
                   # Read https://wiki.archlinux.org/index.php/X_resources
@@ -53,8 +57,10 @@ LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   # and https://www.emacswiki.org/emacs/XftGnuEmacs
                   # for some tips on using outline fonts with
                   # Xft, if you choose no toolkit or Lucid.
-                  #
-               
+
+XI2="YES"         # Use Xinput2 support.
+                  # https://www.x.org/releases/X11R7.7/doc/inputproto/XI2proto.txt
+
 ALSA=             # Linux sound support.
 
 NOCAIRO=          # Disable here. 
@@ -72,9 +78,9 @@ NOGZ="YES"        # Don't compress .el files.
 if [[ $CLI == "YES" ]] ; then
   pkgname="emacs-nox-git"
 else
-pkgname="emacs-git"
+  pkgname="emacs-git"
 fi
-pkgver=29.0.50.153026
+pkgver=29.0.50.153222
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
@@ -83,10 +89,13 @@ license=('GPL3')
 depends_nox=('gnutls' 'libxml2' 'jansson')
 depends=("${depends_nox[@]}" "harfbuzz" "libxpm")
 makedepends=('git')
-provides=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox')
-conflicts=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox')
-#source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
+provides=('emacs' 'emacs-pretest' 'emacs26-git' 'emacs-27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox')
+conflicts=('emacs' 'emacs-pretest' 'emacs26-git' 'emacs-27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox')
+#
 # If Savannah fails for reasons, use Github's mirror
+#
+#source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
+#
 source=("emacs-git::git://github.com/emacs-mirror/emacs.git")
 options=(!strip)
 install=emacs-git.install
@@ -126,17 +135,24 @@ if [[ $JIT == "YES" ]]; then
   fi
 fi
 
+if [[ ! $CLI == "YES" ]]; then
+  depends+=( 'libxi' );
+fi
+
 if [[ $CLI == "YES" ]]; then
   depends=("${depends_nox[@]}");
 elif [[ $NOTKIT == "YES" ]]; then
-  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxrandr' 'lcms2' 'librsvg' 'libxfixes' );
+  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxrandr' 'lcms2' 'librsvg' 'libxfixes' 'libxi' );
   makedepends+=( 'xorgproto' );
 elif [[ $LUCID == "YES" ]]; then
-  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxfixes' 'lcms2' 'librsvg' 'xaw3d' 'libxrandr' );
+  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxfixes' 'lcms2' 'librsvg' 'xaw3d' 'libxrandr' 'libxi' );
   makedepends+=( 'xorgproto' );
-else
+elif [[ $GTK3 == "YES" ]]; then
   depends+=( 'gtk3' );
-  makedepends+=( 'xorgproto' );
+  makedepends+=( 'xorgproto' 'libxi' );
+elif [[ $PGTK == "YES" ]]; then
+  depends+=( 'gtk3' );
+  makedepends+=( 'xorgproto' 'libxi' );
 fi
 
 if [[ ! $NOX == "YES" ]] && [[ ! $CLI == "YES" ]]; then
@@ -153,7 +169,7 @@ if [[ $ALSA == "YES" ]]; then
   fi
 fi
 
-if [[ ! $NOCAIRO == "YES" ]] && [[ ! $CLI == "YES" ]] ; then
+if [[ ! $NOCAIRO == "YES" ]] && [[ ! $CLI == "YES" ]] && [[ ! $PGTK == "YES" ]] ; then
   depends+=( 'cairo' );
 fi
 
@@ -245,17 +261,23 @@ if [[ $JIT == "YES" ]]; then
   _conf+=( '--with-native-compilation' );
 fi
 
+if [[ $XI2 == "YES" ]]; then
+  _conf+=( '--with-xinput2' );
+fi
+
 if [[ $CLI == "YES" ]]; then
   _conf+=( '--without-x' '--with-x-toolkit=no' '--without-xft' '--without-lcms2' '--without-rsvg' '--without-jpeg' '--without-gif' '--without-tiff' '--without-png' );
 elif [[ $NOTKIT == "YES" ]]; then
   _conf+=( '--with-x-toolkit=no' '--without-toolkit-scroll-bars' '--without-xft' '--without-xaw3d' );
 elif [[ $LUCID == "YES" ]]; then
   _conf+=( '--with-x-toolkit=lucid' '--with-xft' '--with-xaw3d' );
-else
+elif [[ $GTK3 == "YES" ]]; then
   _conf+=( '--with-x-toolkit=gtk3' '--without-xaw3d' );
+elif [[ $PGTK == "YES" ]]; then
+  _conf+=( '--with-pgtk' '--without-xaw3d' );
 fi
 
-if [[ $NOCAIRO == "YES" || $CLI == "YES" ]]; then
+if [[ $NOCAIRO == "YES" || $CLI == "YES" || $NOTKIT == "YES" || $LUCID == "YES" ]]; then
   _conf+=( '--without-cairo' );
 fi
 
