@@ -27,7 +27,7 @@ sha256sums=('df45376225956a2160e6c49429277ef776e0643760354d481a98be00f20933e6'
 prepare() {
 	cd "$srcdir"/t-engine4-src-${pkgver}
 	cp premake4.lua premake5.lua
-	patch -p1 < "${srcdir}/aur-${pkgname}-${pkgver}-${pkgrel}.patch"
+	patch -p1 < "${srcdir}/aur-${pkgname}.patch"
 }
 
 ###############################################################################
@@ -36,7 +36,7 @@ prepare() {
 build() {
 	cd t-engine4-src-${pkgver}
 	premake5 gmake
-	make config=debug
+	make config=release
 }
 
 ###############################################################################
