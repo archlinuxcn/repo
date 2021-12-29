@@ -14,5 +14,5 @@ about: other
 
 ----
 
-请在些补充说明。
+请在此补充说明。
 Please describe in detail here.
