@@ -1,0 +1,25 @@
+From: Mikhail Novosyolov <mikhailnov@dumalogiya.ru>
+Date: Thu, 20 Sep 2018 00:18:04 +0300
+Subject: Fix setting the locale of Kazam UI
+
+---
+ kazam/app.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/kazam/app.py b/kazam/app.py
+index d14face..e4e3182 100644
+--- a/kazam/app.py
++++ b/kazam/app.py
+@@ -821,8 +821,11 @@ class KazamApp(GObject.GObject):
+     def setup_translations(self):
+         gettext.bindtextdomain("kazam", "/usr/share/locale")
+         gettext.textdomain("kazam")
++        locale.bindtextdomain("kazam", "/usr/share/locale")
++        locale.textdomain("kazam")
++        currentLocale = locale.getlocale()
+         try:
+-            locale.setlocale(locale.LC_ALL, "")
++            locale.setlocale(locale.LC_ALL, currentLocale)
+         except Exception as e:
+             logger.exception("EXCEPTION: Setlocale failed, no language support.")
+ 

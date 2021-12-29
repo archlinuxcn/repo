@@ -1,0 +1,109 @@
+From: Andrew Starr-Bochicchio <asb@debian.org>
+Date: Sat, 8 Jun 2019 11:01:45 +0300
+Subject: Properly import from PyGI by setting require_version
+
+---
+ bin/kazam                     | 2 ++
+ kazam/backend/gstreamer.py    | 2 ++
+ kazam/frontend/indicator.py   | 6 +++++-
+ kazam/frontend/window_area.py | 2 ++
+ 4 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/bin/kazam b/bin/kazam
+index fb4073b..2382974 100755
+--- a/bin/kazam
++++ b/bin/kazam
+@@ -22,6 +22,7 @@
+ #       MA 02110-1301, USA.
+ 
+ import os
++import gi
+ import sys
+ import dbus
+ import logging
+@@ -29,6 +30,7 @@ import dbus.service
+ from argparse import ArgumentParser
+ from dbus.mainloop.glib import DBusGMainLoop
+ 
++gi.require_version('Gtk', '3.0')
+ from gi.repository import Gtk
+ 
+ class KazamService(dbus.service.Object):
+diff --git a/kazam/backend/gstreamer.py b/kazam/backend/gstreamer.py
+index 8e35db7..f10bd10 100644
+--- a/kazam/backend/gstreamer.py
++++ b/kazam/backend/gstreamer.py
+@@ -20,6 +20,7 @@
+ #       MA 02110-1301, USA.
+ 
+ import os
++import gi
+ import logging
+ logger = logging.getLogger("GStreamer")
+ 
+@@ -32,6 +33,7 @@ import multiprocessing
+ os.environ["GST_DEBUG_DUMP_DOT_DIR"] = "/tmp"
+ os.putenv("GST_DEBUG_DUMP_DOT_DIR", "/tmp")
+ 
++gi.require_version('Gst', '1.0')
+ from gi.repository import GObject, Gst
+ 
+ from kazam.backend.prefs import *
+diff --git a/kazam/frontend/indicator.py b/kazam/frontend/indicator.py
+index d214f9b..97a3885 100644
+--- a/kazam/frontend/indicator.py
++++ b/kazam/frontend/indicator.py
+@@ -24,6 +24,7 @@ import logging
+ logger = logging.getLogger("Indicator")
+ 
+ from gettext import gettext as _
++import gi
+ from gi.repository import Gtk, GObject, GLib
+ 
+ from kazam.backend.prefs import *
+@@ -94,6 +95,8 @@ class KazamSuperIndicator(GObject.GObject):
+         # Setup keybindings - Hardcore way
+         #
+         try:
++            import gi
++            gi.require_version('Keybinder', '3.0')
+             from gi.repository import Keybinder
+             logger.debug("Trying to bind hotkeys.")
+             Keybinder.init()
+@@ -145,6 +148,7 @@ class KazamSuperIndicator(GObject.GObject):
+         self.emit("indicator-quit-request")
+ 
+ try:
++    gi.require_version('AppIndicator3', '0.1')
+     from gi.repository import AppIndicator3
+ 
+     class KazamIndicator(KazamSuperIndicator):
+@@ -219,7 +223,7 @@ try:
+             if not self.silent:
+                 self.indicator.set_status(AppIndicator3.IndicatorStatus.ATTENTION)
+ 
+-except ImportError:
++except (ImportError, ValueError):
+     #
+     # AppIndicator failed to import, not running Ubuntu?
+     # Fallback to Gtk.StatusIcon.
+diff --git a/kazam/frontend/window_area.py b/kazam/frontend/window_area.py
+index 0024afb..2d3487b 100644
+--- a/kazam/frontend/window_area.py
++++ b/kazam/frontend/window_area.py
+@@ -19,6 +19,7 @@
+ #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ #       MA 02110-1301, USA.
+ 
++import gi
+ import time
+ import cairo
+ import math
+@@ -27,6 +28,7 @@ logger = logging.getLogger("Window Select")
+ 
+ from gettext import gettext as _
+ 
++gi.require_version('Wnck', '3.0')
+ from gi.repository import Gtk, GObject, Gdk, Wnck, GdkX11
+ 
+ from kazam.backend.prefs import *

@@ -1,0 +1,53 @@
+# Maintainer: Yurii Kolesykov <root@yurikoles.com>
+
+pkgname=kazam
+pkgver=1.4.5
+pkgrel=10
+pkgdesc="Screencast and screenshot application created with design in mind"
+arch=('any')
+url="https://launchpad.net/kazam"
+license=('GPL')
+depends=(
+    'python-cairo'
+    'python-dbus'
+    'python-gobject'
+    'python-xdg'
+    'python-distutils-extra'
+    'libkeybinder3'
+    'gstreamer'
+    'gst-plugins-base'
+    'gst-libav'
+    'libwnck3'
+    'libcanberra'
+)
+
+source=(
+    "https://launchpad.net/${pkgname}/stable/${pkgver}/+download/${pkgname}-${pkgver}.tar.gz"
+    configparser_api_changes.patch
+    fix-PyGIWarnings.patch
+    setlocale.patch
+)
+sha256sums=('8e4868c09c4b0ad55b3c72407a26ef94020dc1b95ac31dfdea112b5377b6cfe3'
+            '5dd8d693437377b0e9bcd600cc9fd700c855b9b861ed51f3cd061ab0f52d9988'
+            '1e886d680bcc09bd90b45d294496d948fceccae0813cbea5273dc8b493d4e324'
+            '9309d29b33ca78b6c3e3e74222346a0a02068a37c7bf7bf8ce0b50fd79706b82')
+
+_srcname=${pkgname}-${pkgver}
+
+build() {
+    cd "${_srcname}"
+    
+    local src
+    for src in "${source[@]}"; do
+        src="${src%%::*}"
+        src="${src##*/}"
+        [[ $src = *.patch ]] || continue
+        echo "Applying patch $src..."
+        patch -Np1 < "../$src"
+    done
+}
+
+package() {
+    cd "${_srcname}"
+    python3 setup.py install --root ${pkgdir}
+}
