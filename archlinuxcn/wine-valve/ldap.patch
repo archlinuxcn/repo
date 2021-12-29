@@ -1,0 +1,78 @@
+diff --color -rupN a/dlls/adsldp/adsldp.c b/dlls/adsldp/adsldp.c
+--- a/dlls/adsldp/adsldp.c	2021-12-29 11:56:08.068179220 +0800
++++ b/dlls/adsldp/adsldp.c	2021-12-29 12:00:32.458492530 +0800
+@@ -1021,7 +1021,7 @@ static HRESULT WINAPI openobj_OpenDSObje
+             goto fail;
+         }
+ 
+-        err = ldap_connect(ld, NULL);
++        err = oldap_connect(ld, NULL);
+         if (err != LDAP_SUCCESS)
+         {
+             hr = HRESULT_FROM_WIN32(map_ldap_error(err));
+diff --color -rupN a/dlls/wldap32/init.c b/dlls/wldap32/init.c
+--- a/dlls/wldap32/init.c	2021-12-29 11:56:08.278179462 +0800
++++ b/dlls/wldap32/init.c	2021-12-29 11:56:54.601566467 +0800
+@@ -305,7 +305,7 @@ exit:
+ }
+ 
+ /***********************************************************************
+- *      ldap_connect     (WLDAP32.@)
++ *      oldap_connect     (WLDAP32.@)
+  *
+  * Connect to an LDAP server. 
+  *
+@@ -322,7 +322,7 @@ exit:
+  *  The timeout parameter may be NULL in which case a default timeout
+  *  value will be used.
+  */
+-ULONG CDECL ldap_connect( WLDAP32_LDAP *ld, struct l_timeval *timeout )
++ULONG CDECL oldap_connect( WLDAP32_LDAP *ld, struct l_timeval *timeout )
+ {
+     TRACE( "(%p, %p)\n", ld, timeout );
+ 
+diff --color -rupN a/dlls/wldap32/tests/parse.c b/dlls/wldap32/tests/parse.c
+--- a/dlls/wldap32/tests/parse.c	2021-12-29 11:56:08.278179462 +0800
++++ b/dlls/wldap32/tests/parse.c	2021-12-29 12:00:04.971792581 +0800
+@@ -159,7 +159,7 @@ static void test_ldap_bind_sA( void )
+         return;
+     }
+ 
+-    ret = ldap_connect( ld, NULL );
++    ret = oldap_connect( ld, NULL );
+     ok( !ret, "ldap_connect failed 0x%08x\n", ret );
+ 
+     ret = ldap_bind_sA( ld, (char *)"CN=read-only-admin,DC=example,DC=com", (char *)"password", LDAP_AUTH_SIMPLE );
+@@ -190,7 +190,7 @@ static void test_ldap_server_control( vo
+         return;
+     }
+ 
+-    ret = ldap_connect( ld, NULL );
++    ret = oldap_connect( ld, NULL );
+     ok( !ret, "ldap_connect failed 0x%08x\n", ret );
+ 
+     /* test setting a not supported server control */
+diff --color -rupN a/dlls/wldap32/winldap_private.h b/dlls/wldap32/winldap_private.h
+--- a/dlls/wldap32/winldap_private.h	2021-12-29 11:56:08.278179462 +0800
++++ b/dlls/wldap32/winldap_private.h	2021-12-29 11:56:38.581547845 +0800
+@@ -320,7 +320,7 @@ ULONG CDECL ldap_compare_ext_sA(WLDAP32_
+ ULONG CDECL ldap_compare_ext_sW(WLDAP32_LDAP*,PWCHAR,PWCHAR,PWCHAR,struct WLDAP32_berval*,PLDAPControlW*,PLDAPControlW*);
+ ULONG CDECL ldap_compare_sA(WLDAP32_LDAP*,PCHAR,PCHAR,PCHAR);
+ ULONG CDECL ldap_compare_sW(WLDAP32_LDAP*,PWCHAR,PWCHAR,PWCHAR);
+-ULONG CDECL ldap_connect(WLDAP32_LDAP*,LDAP_TIMEVAL*);
++ULONG CDECL oldap_connect(WLDAP32_LDAP*,LDAP_TIMEVAL*);
+ WLDAP32_LDAP * CDECL ldap_conn_from_msg(WLDAP32_LDAP*,WLDAP32_LDAPMessage*);
+ ULONG CDECL ldap_control_freeA(LDAPControlA*);
+ ULONG CDECL ldap_control_freeW(LDAPControlW*);
+diff --color -rupN a/dlls/wldap32/wldap32.spec b/dlls/wldap32/wldap32.spec
+--- a/dlls/wldap32/wldap32.spec	2021-12-29 11:56:08.278179462 +0800
++++ b/dlls/wldap32/wldap32.spec	2021-12-29 11:58:13.231658845 +0800
+@@ -75,7 +75,7 @@
+  85 cdecl ldap_compare_ext_sW(ptr wstr wstr wstr ptr ptr ptr)
+  86 cdecl ldap_compare_sA(ptr str str str)
+  87 cdecl ldap_compare_sW(ptr wstr wstr wstr)
+- 88 cdecl ldap_connect(ptr ptr)
++ 88 cdecl oldap_connect(ptr ptr)
+  89 cdecl ldap_control_free(ptr) ldap_control_freeA
+  90 cdecl ldap_control_freeA(ptr)
+  91 cdecl ldap_control_freeW(ptr)
