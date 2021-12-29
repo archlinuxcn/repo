@@ -3,8 +3,8 @@
 
 _basename=chromaprint
 pkgname=lib32-chromaprint
-pkgver=1.5.0
-pkgrel=6
+pkgver=1.5.1
+pkgrel=1
 pkgdesc="Library for extracting fingerprints from any audio source (32-bit)"
 url="https://acoustid.org/chromaprint"
 arch=('x86_64')
@@ -14,17 +14,15 @@ makedepends=('cmake' 'gtest')
 # upstream signs with DSA key: https://github.com/acoustid/chromaprint/issues/81
 source=("${_basename}-${pkgver}.tar.gz::https://github.com/acoustid/${_basename}/archive/v${pkgver}.tar.gz"
         "fix_build_32bit.patch")
-sha512sums=('333114949928abdf5d4b11aba1db6ec487eebe526324c68d903b3fa80a3af87a28d942af765a2f873e63a1bf222b658b6438cd10cde4446f61b26ea91f537469'
-            'd67e955398cf50e96e3ff5c16544c11745dad84c19d2ea965759f71c05c84cd1b0299becb287575135f8d921c906b2dbfa87ab3da659af3bcc203205e96af5b1')
-b2sums=('930d1a7b8fa30dc726f78e3fc93c4e1aef5036b60ceee003c36ce7ea344523ce8b3abc294a4204e9acb6472600e7cfa5b15b1ca27c2917bd161b59cac1e7120c'
-        '8a0e13c019df0d745ecd7eb4b2a49f1e8a2918c86d751ffadcc033899c091e37434a2e319f820a7f63da841984cf4a36e1849782dabc9a2503ab10ba546efb45')
+sha512sums=('ea16e4d2b879c15b1d9b9ec93878da8b893f1834c70942663e1d2d106c2e0a661094fe2dd3bae7a6c2a1f9d5d8fab5e0b0ba493561090cf57b2228606fad1e66'
+            'da03de548b7f144bf7874af1a630be49ee90c1946063f8ef2d0e9203bc7f0eb7ea6aa328a6eb656942cc57528a34a45c5a2d2a2c09e980f3bf849b098f03567c')
+b2sums=('9f7f030e97d3114cf679df298d313ea826c0fb05e7e7d8a10090d0a27ed0811b380b81b29fce973e0493826c478964367396311fd0484619cb2fc4c2d8e0d4c0'
+        '1720bf9dba67947fed2b35c8648a7936acb6998136d106aa23fbad4d718093060c791a7abe7e88436b091ac1f5b0cfdd3414ed5d0788162d01ddaa9d537f9fdb')
 
 prepare() {
     cd "${_basename}-${pkgver}"
 
     patch -Np1 -i ../fix_build_32bit.patch
-
-    rm -v cmake/modules/FindGTest.cmake
 }
 
 build() {

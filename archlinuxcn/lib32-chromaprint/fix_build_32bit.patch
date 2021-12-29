@@ -1,6 +1,6 @@
-diff '--color=auto' --unified --recursive --text chromaprint-v1.5.0.orig/CMakeLists.txt chromaprint-v1.5.0.new/CMakeLists.txt
---- chromaprint-v1.5.0.orig/CMakeLists.txt	2020-04-15 01:08:10.000000000 -0300
-+++ chromaprint-v1.5.0.new/CMakeLists.txt	2020-06-10 01:42:01.000000000 -0300
+diff '--color=auto' --unified --recursive --text chromaprint-1.5.1.orig/CMakeLists.txt chromaprint-1.5.1.new/CMakeLists.txt
+--- chromaprint-1.5.1.orig/CMakeLists.txt	2021-12-23 02:57:54.000000000 -0300
++++ chromaprint-1.5.1.new/CMakeLists.txt	2021-12-28 18:06:18.377350124 -0300
 @@ -1,11 +1,21 @@
 -cmake_minimum_required(VERSION 3.3)
 +cmake_minimum_required(VERSION 2.8.12)
@@ -17,7 +17,7 @@ diff '--color=auto' --unified --recursive --text chromaprint-v1.5.0.orig/CMakeLi
  
  set(chromaprint_VERSION_MAJOR 1)
  set(chromaprint_VERSION_MINOR 5)
- set(chromaprint_VERSION_PATCH 0)
+ set(chromaprint_VERSION_PATCH 1)
  set(chromaprint_VERSION "${chromaprint_VERSION_MAJOR}.${chromaprint_VERSION_MINOR}.${chromaprint_VERSION_PATCH}")
  
 -project(chromaprint LANGUAGES C CXX VERSION "${chromaprint_VERSION}")
@@ -25,12 +25,10 @@ diff '--color=auto' --unified --recursive --text chromaprint-v1.5.0.orig/CMakeLi
  
  set(chromaprint_SOVERSION 1)
  
-@@ -21,14 +31,14 @@
+@@ -24,12 +34,14 @@
  
- find_package(Threads)
+ option(BUILD_SHARED_LIBS "Build shared libraries" ON)
  
--option(BUILD_SHARED_LIBS "Build shared libraries" ON)
--
 -set(CMAKE_CXX_STANDARD 11)
 +check_cxx_compiler_flag("-std=c++11" COMPILER_SUPPORTS_CXX11)
 +if(COMPILER_SUPPORTS_CXX11)
@@ -47,11 +45,3 @@ diff '--color=auto' --unified --recursive --text chromaprint-v1.5.0.orig/CMakeLi
  endif()
  
  if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_BUILD_TYPE STREQUAL "Debug")
-@@ -60,6 +70,7 @@
- 	set(FRAMEWORK_INSTALL_DIR "/Library/Frameworks" CACHE STRING "Directory to install frameworks to")
- endif()
- 
-+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
- option(BUILD_TOOLS "Build command line tools" OFF)
- option(BUILD_TESTS "Build test suite" OFF)
- 
