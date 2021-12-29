@@ -6,14 +6,9 @@
 
 from lilaclib import *
 
-def post_build():
-    git_add_files('PKGBUILD')
-    git_commit()
-    update_aur_repo()
-
 def pre_build():
-    run_cmd(['updpkgsums'])
-    vcs_update()
+    aur_pre_build(maintainers=['alerque','farseerfc','yar','hcsch'])
+    add_makedepends(['rustup']) 
 
 if __name__ == '__main__':
     single_main()

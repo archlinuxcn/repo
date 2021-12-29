@@ -1,65 +1,72 @@
+# Maintainer: Caleb Maclennan <caleb@alerque.com>
 # Maintainer: Jiachen YANG <farseerfc@gmail.com>
 # Contributor: Vlad M. <vlad@archlinux.net>
 # Contributor: beatgammit
 
-_install_libs=false
-
 pkgname=servo-git
-_pkgname=servo
-pkgver=43687.4c82d3cb861
+pkgver=r44345.4f1ca4d1bc
 pkgrel=1
-pkgdesc="Parallel Browser Project: web browser written in Rust"
-arch=('i686' 'x86_64')
-url="https://github.com/servo/servo"
-license=('MPL')
-depends=('freetype2' 'mesa' 'libxrandr' 'libxi' 'libgl' 'glu' 'fontconfig' 'ttf-font' 'bzip2' 'libxcursor' 'libxmu' 'xcb-util' 'python-dbus' 'gst-plugins-bad')
+pkgdesc='Parallel Browser Project: web browser written in Rust'
+arch=(x86_64 i686)
+url=https://github.com/servo/servo
+license=(MPL)
+depends=(bzip2
+         fontconfig
+         freetype2
+         glu
+         gst-plugins-bad
+         libgl
+         libxcursor
+         libxi
+         libxmu
+         libxrandr
+         mesa
+         python-dbus
+         ttf-font
+         xcb-util)
 install="$pkgname.install"
-makedepends=('git' 'curl' 'python2' 'python2-virtualenv' 'gperf' 'depot-tools-git' 'cmake' 'rustup' 'clang' 'autoconf2.13' 'llvm' 'python2-distlib')
-provides=("$_pkgname")
-conflicts=("$_pkgname")
-_branch=servo
-source=(
-'git+https://github.com/servo/servo.git'
-)
-md5sums=('SKIP')
+makedepends=(autoconf2.13
+             cargo-nightly
+             rustup
+             clang
+             cmake
+             curl
+             depot-tools-git
+             git
+             gperf
+             llvm
+             python
+             python-distlib
+             python-virtualenv)
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+backup=("etc/profile.d/${pkgname%-git}".{csh,sh})
+source=("$pkgname::git+$url.git")
+sha256sums=('SKIP')
 
 pkgver() {
-  cd "$_branch"
-  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+	cd "$pkgname"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+	cd "$pkgname"
+	echo 'export PATH=$PATH:/opt/servo' > "${pkgname%-git}.sh"
+	echo 'setenv PATH ${PATH}:/opt/servo' > "${pkgname%-git}.csh"
 }
 
 build() {
-  cd "$_branch"
-  
-  # fixes build error
-  # possibly _FORTIFY_SOURCE? https://bugs.archlinux.org/task/34759
-  #unset CPPFLAGS
-
-  ./mach build --release
+	cd "$pkgname"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	./mach build --release
 }
 
 package() {
-  servopath=$_branch/target/release
-  install -Dm755 "$servopath/servo" "$pkgdir/opt/servo/servo"
-
-  if [ "$_install_libs" = true ] ; then
-      mkdir -p "$pkgdir/usr/lib"
-
-      find "$servopath/deps" -name "*-*.so" -exec basename {} \; | sort | uniq | while read _f; do
-          _file=$(find "$servopath/deps" -name "$_f" -print | head -n 1)
-          if [ -z "$_file" ]; then
-       	      echo "Skipping: $_f"
-              continue
-          fi
-          install -Dm644 "$_file" "$pkgdir/usr/lib"
-      done
-  fi
-
-  mkdir -p "$pkgdir/opt/servo/resources"
-  cp -r $_branch/resources/* "$pkgdir/opt/servo/resources"
-
-  mkdir -p "$pkgdir/etc/profile.d" 
-  echo 'export PATH=$PATH:/opt/servo' > "$pkgdir/etc/profile.d/${_pkgname}.sh"
-  echo 'setenv PATH ${PATH}:/opt/servo' > "$pkgdir/etc/profile.d/${_pkgname}.csh"
-  chmod 755 "$pkgdir/etc/profile.d/${_pkgname}".{csh,sh}
+	servopath=$pkgname/target/release
+	install -Dm0755 -t "$pkgdir/opt/servo/" "$servopath/servo"
+	install -d "$pkgdir/opt/servo/resources/"
+	cp -r $pkgname/resources/* "$pkgdir/opt/servo/resources"
+	cd "$pkgname"
+	install -Dm0755 -t "$pkgdir/etc/profile.d/" "${pkgname%-git}".{csh,sh}
 }
