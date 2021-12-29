@@ -5,8 +5,8 @@ pkgname=python-av
 _pkgname=PyAV
 pkgdesc="Pythonic bindings for FFmpeg's libraries"
 url='https://pyav.org'
-pkgver=8.0.3
-pkgrel=2
+pkgver=8.1.0
+pkgrel=1
 arch=('x86_64')
 license=('BSD')
 makedepends=(
@@ -19,7 +19,7 @@ depends=(
   python-pillow
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/PyAV-Org/PyAV/archive/v${pkgver}.tar.gz")
-sha512sums=('52d44a81880ff9c3e6599af3f5864663f6fa7fcca88f2f515950aecccfffb37a7a5ab3616981e8fb06f32fc5f052aabf54ade48124dd31dc18c50157bcc68224')
+sha512sums=('6bde39ab63baee8b4939dcc792c8bae39b9c1283121a26677b60b8184743a221d9ea485d5ba8613b8b30bf67e8c9c84f7687eabfdebe4671b6b660153d887a6e')
 
 build() {
   cd "${_pkgname}-${pkgver}"
