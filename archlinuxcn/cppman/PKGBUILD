@@ -1,0 +1,39 @@
+# Maintainer: Y7n05h <Y7n05h(aT)protonmail--d0t--com>
+# Contributor: motte <ettom22 at hotmail dot com>
+# Contributor: Wei-Ning Huang <aitjcize@gmail.com>
+pkgname=cppman
+pkgver=0.5.1
+pkgrel=1
+pkgdesc="C++ 98/11/14 manual pages for Linux/MacOS"
+arch=("any")
+url="https://github.com/aitjcize/cppman"
+license=("GPL3")
+conflicts=(cppman-git)
+depends=(python-beautifulsoup4 python-html5lib)
+optdepends=(
+"vim: For using vim as a pager"
+"perl: for bash/zsh completion"
+)
+
+source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
+sha256sums=('1da27dda46e702063cb9635eac7bd6ca9f73adfab6f015c2659e511fb0f2bcf8')
+
+
+build() {
+  cd "$pkgname-$pkgver"
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  python setup.py install --root=${pkgdir}/ --optimize=1
+
+  mkdir -p ${pkgdir}/usr/share/zsh/site-functions
+  mv ${pkgdir}/usr/share/zsh-completion/completions/cppman.zsh ${pkgdir}/usr/share/zsh/site-functions/_cppman
+  rmdir ${pkgdir}/usr/share/zsh-completion/completions ${pkgdir}/usr/share/zsh-completion/
+
+  chmod 644 ${pkgdir}/usr/share/zsh/site-functions/_cppman \
+    ${pkgdir}/usr/share/bash-completion/completions/cppman.bash \
+    ${pkgdir}/usr/share/man/man1/cppman.1 \
+    ${pkgdir}/usr/share/doc/cppman/*
+}
