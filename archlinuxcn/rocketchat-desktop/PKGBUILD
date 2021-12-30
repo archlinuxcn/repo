@@ -4,20 +4,20 @@
 # Contributor: sum01 <sum01@protonmail.com>
 
 pkgname=rocketchat-desktop
-pkgver=3.7.3
+pkgver=3.7.4
 pkgrel=1
 pkgdesc='Rocket.Chat Native Cross-Platform Desktop Application via Electron.'
 arch=('any')
 url='https://github.com/RocketChat/Rocket.Chat.Electron'
 license=('MIT')
-depends=('electron' 'nodejs>=14.17.0')
+depends=('electron' 'nodejs')
 makedepends=('node-gyp' 'yarn' 'asar')
 install=rocketchat-desktop.install
 changelog=CHANGELOG.md
 source=("$pkgname-$pkgver.tar.gz::${url}/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz"
         rocketchat-desktop
         rocketchat-desktop.desktop)
-sha256sums=('1631592db617d4054e409cd9fd4cceec02a830b97476d3aac947a1892f059790'
+sha256sums=('dfed33a4ca71e81dbe2cf1a69088e863a62a2c22386ee919bd5c287dd3854f60'
             '5fe8f552b4ac1917a1bb08e86f957e9b892220a2aab59b88e8256e2e092e1b1c'
             '31fae4f98a61a774f84030fd43d2ef92c7633740dc5aa55967a21d0e29ea621a')
 # validpgpkeys=('9EA06BE6FD613A03') # Tasso Evangelista
@@ -41,7 +41,7 @@ build() {
 package() {
 	local i686=linux-ia32-unpacked x86_64=linux-unpacked
 	install -Dm644 -t "${pkgdir}/usr/share/applications" "${pkgname}.desktop"
-	install -Dm755 -t "${pkgdir}/usr/bin" "$pkgname"
+	install -D -t "${pkgdir}/usr/bin" "$pkgname"
 
 	cd "Rocket.Chat.Electron-$pkgver"
 	install -Dm644 "build/icons/512x512.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/$pkgname.png"
