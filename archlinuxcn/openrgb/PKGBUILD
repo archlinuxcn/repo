@@ -2,7 +2,7 @@
 # Contributor: Paul Davis <paul@dangersalad.com>
 pkgname=openrgb
 pkgver=0.7
-pkgrel=4
+pkgrel=5
 pkgdesc="Open source RGB lighting control that doesn't depend on manufacturer software."
 arch=("x86_64")
 url="https://gitlab.com/CalcProgrammer1/OpenRGB"
@@ -10,6 +10,11 @@ license=('GPL2')
 depends=('qt5-base' 'libusb' 'hidapi' 'mbedtls')
 makedepends=('pkgconf')
 optdepends=('i2c-tools: Motherboard & RAM access')
+
+# Using Link Time Optimization can cause segment fault at runtime. Disabled until upstream fix
+# https://gitlab.com/CalcProgrammer1/OpenRGB/-/commit/8e6e5c1becdd610cd9206bbdcf5616ce4b43e0f1
+# https://gitlab.com/CalcProgrammer1/OpenRGB/-/merge_requests/668
+options=('!lto')
 source=(
    "https://gitlab.com/CalcProgrammer1/OpenRGB/-/archive/release_$pkgver/OpenRGB-release_$pkgver.tar.gz"
    openrgb.conf
