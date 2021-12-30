@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build(maintainers='adam900710')
+    aur_pre_build(maintainers='rodrigo21')
     add_depends(['libfontconfig.so', 'libfreetype.so', 'libfribidi.so', 'libharfbuzz.so'])
 
 def post_build():
