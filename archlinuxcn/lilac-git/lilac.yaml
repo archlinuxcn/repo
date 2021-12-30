@@ -6,12 +6,6 @@ build_prefix: extra-x86_64
 repo_depends:
   - pid_children-git
 
-pre_build_script: |
-  vcs_update()
-
-post_build_script: |
-  git_pkgbuild_commit()
-
 pre_build: aur_pre_build
 
 post_build: aur_post_build
