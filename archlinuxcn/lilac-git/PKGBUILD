@@ -15,7 +15,7 @@ depends=(python git devtools nvchecker gnupg pid_children fakeroot bubblewrap pa
 makedepends=(python-setuptools-scm)
 optdepends=(
   'smtp-forwarder: for sending error reports'
-  'python-sqlalchemy: sql'
+  'python-sqlalchemy: for recording build results in a database'
 )
 checkdepends=(python-pytest)
 provides=("$_pkgname=$pkgver")
