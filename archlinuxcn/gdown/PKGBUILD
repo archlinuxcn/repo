@@ -1,0 +1,35 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=gdown
+pkgname=gdown
+pkgver=4.2.0
+pkgrel=1
+pkgdesc='Download a large file from Google Drive'
+arch=('any')
+url='https://github.com/wkentaro/gdown'
+license=('MIT')
+depends=(
+  python-beautifulsoup4
+  python-filelock
+  python-pysocks
+  python-requests
+  python-six
+  python-tqdm
+)
+makedepends=(
+  python-setuptools
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/wkentaro/gdown/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('28d91a4308e3179210f641341d29cc05512a4d233317397980a85931aade7b8821707ea8d33e149982ea7e5614bf63727dd356fde0a5ef3a382127210f84935c')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
