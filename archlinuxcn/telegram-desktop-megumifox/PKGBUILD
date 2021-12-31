@@ -3,8 +3,8 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
-pkgver=3.4.0
-pkgrel=1.1
+pkgver=3.4.1
+pkgrel=1
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
@@ -18,7 +18,7 @@ conflicts=('telegram-desktop')
 source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
         "0001-use-system-font-and-use-stylename.patch"
         "0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch")
-sha512sums=('3ad3beb8a63bae98eb85127fdc1cce55baba0f9b0475904e54d4dc3a7679fbbb93e737b98c22c0737ed16204abff0eedd770be0f522de6c9cf8901574cade2c4'
+sha512sums=('e8cb3a5e26e04fe64d1eae84422f8ad2e0abae28569151e88162567a5a66a7335583b7a9a35cb74a16d02188a0c89261b84495889c879ea3dad5fe0f102ebfa1'
             '62c41188d1faf4200167b9086552db092dadcba6000bb3c51d7c79ba22cc453c980f6e50013c76e766c9dd8585e84327d00d289512fc1f7e7222f223a23a14a7'
             '7a1dcfc563b764d1e68acb566df52890ad527ba2c442ac78825239bce64da3d77ca5f7cf965c67dafc5290e3549fa52780fc49b2d991cd798d05735a6143f46b')
 
