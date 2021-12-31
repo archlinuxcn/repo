@@ -58,4 +58,7 @@ package() {
   install -Dm 644 "${srcdir}/pwn.conf" -t "${pkgdir}/etc"
   install -Dm 644 LICENSE-pwntools.txt -t "${pkgdir}/usr/share/licenses/${pkgname}"
   rm -f "${pkgdir}"/usr/lib/python*/site-packages/*.{txt,md}
+
+  install -Dm 644 extra/bash_completion.d/pwn -t  "${pkgdir}/usr/share/bash-completion/completions/"
+  install -Dm 644 extra/zsh_completion/_pwn -t "${pkgdir}/usr/share/zsh/site-functions/"
 }
