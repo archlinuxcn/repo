@@ -4,14 +4,14 @@
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
 pkgver=3.4.0
-pkgrel=1
+pkgrel=1.1
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL3')
 depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
          'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5' 'kwayland' 'gtk3' 'glibmm' 'rnnoise' 'pipewire' 'libxtst' 'libxrandr' 'jemalloc' 'qt5-svg' 'webkit2gtk' 'abseil-cpp')
-makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'python2' 'microsoft-gsl' 'extra-cmake-modules' 'libtg_owt')
+makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'python2' 'microsoft-gsl' 'extra-cmake-modules' 'libtg_owt' 'clang')
 optdepends=('xdg-desktop-portal: desktop integration')
 provides=('telegram-desktop')
 conflicts=('telegram-desktop')
@@ -34,6 +34,8 @@ build() {
     # https://github.com/telegramdesktop/tdesktop/blob/8fab9167beb2407c1153930ed03a4badd0c2b59f/snap/snapcraft.yaml#L87-L88
     # Thanks @primeos!
     # Use Qt5 for the time being until kwayland has an easier way to work with Qt6.
+    export CC=clang
+    export CXX=clang++
     cmake . \
         -B build \
         -G Ninja \
