@@ -1,8 +1,8 @@
 # Maintainer: Jaime Martínez Rincón <jaime@jamezrin.name>
 
 pkgname=notion-app-enhanced
-pkgver="2.0.16"
-pkgrel=7
+pkgver="2.0.18"
+pkgrel=1
 pkgdesc="The all-in-one workspace for your notes and tasks, but enhanced"
 arch=('x86_64' 'aarch64')
 url="https://github.com/notion-enhancer/notion-repackaged"
@@ -28,12 +28,12 @@ makedepends=()
 provides=('notion-app')
 conflicts=('notion-app')
 
-notion_repackaged_ver="2.0.16-5"
+notion_repackaged_ver="2.0.18-1"
 
 source_x86_64=("${url}/releases/download/v${notion_repackaged_ver}/notion-app-enhanced-${notion_repackaged_ver}.pacman")
 source_aarch64=("${url}/releases/download/v${notion_repackaged_ver}/notion-app-enhanced-${notion_repackaged_ver}-aarch64.pacman")
-sha256sums_x86_64=('31d9cc4a8219241086fb2913d88d956567d220c4abe51573d357ac57b0b364c2')
-sha256sums_aarch64=('712260918b4d1555e4ecdbc1d60930b7e25cc046ee771decb7d9bbda18d45032')
+sha256sums_x86_64=('aba41faada6db57fdaeff3ef2f1e866da5a59eb698bf3acbc14095f1b1976b56')
+sha256sums_aarch64=('b625742ab9ecdf3e0365a23754e48f2c9ea872a22e7c2871ed20c8d539fd5f86')
 
 install=${pkgname}.install
 
