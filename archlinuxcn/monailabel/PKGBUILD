@@ -3,7 +3,7 @@
 _pkgname=MONAILabel
 pkgname=monailabel
 pkgver=0.3.1
-pkgrel=1
+pkgrel=2
 pkgdesc='An intelligent open source image labeling and learning tool'
 arch=('any')
 url='https://github.com/Project-MONAI/MONAILabel'
@@ -59,6 +59,7 @@ optdepends=(
   python-transformers
   tensorboard
 )
+install="${pkgname}.install"
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Project-MONAI/MONAILabel/archive/refs/tags/${pkgver}.tar.gz")
 sha512sums=('bfd4c430b6b25f1b7ba4ecd6f75bdf9f9e0af44f54d3de3cf47e13542d8a4bcab200aec819f8d8fd4521113a027ef44f9957c96741fbf2bd2d6e56ade4627324')
 
