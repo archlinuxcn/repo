@@ -11,10 +11,21 @@ arch=(x86_64)
 url='https://github.com/microsoft/onnxruntime'
 license=(MIT)
 depends=(nsync re2 python-flatbuffers python-numpy python-protobuf openmpi onednn)
-makedepends=(git cmake pybind11 python-setuptools nlohmann-json chrono-date boost eigen flatbuffers cuda cudnn nccl clang)
+makedepends=(git cmake pybind11 python-setuptools nlohmann-json chrono-date boost eigen flatbuffers cuda cudnn nccl)
 optdepends=(
   # https://github.com/microsoft/onnxruntime/pull/9969
-  'python-onnx: for the backend API and transformers'
+  'python-onnx: for the backend API, quantization, orttraining, transformers and various tools'
+  'python-coloredlogs: for transformers'  # also used by TensorRT tools, but we don't build for it, anyway
+  'python-psutil: for transformers'
+  'python-py-cpuinfo: for transformers'
+  'python-py3nvml: for transformers'
+  'python-packaging: for transformers and various tools'
+  'python-transformers: for transformers'
+  'python-scipy: for transformers and various tools'
+  'python-pytorch: for transformers, orttraining and various tools'
+  'python-cerberus: for orttraining'
+  'python-h5py: for orttraining'
+  'python-sympy: for transformers and various tools'
 )
 # not de-vendored libraries
 # onnx: needs shared libonnx (https://github.com/onnx/onnx/issues/3030)
@@ -26,7 +37,7 @@ source=("git+https://github.com/microsoft/onnxruntime#tag=v$pkgver"
         "git+https://github.com/jarro2783/cxxopts.git"
         "pytorch_cpuinfo::git+https://github.com/pytorch/cpuinfo.git"
         build-fixes.patch
-        clang.patch
+        install-orttraining-files.diff
         system-dnnl.diff)
 sha512sums=('SKIP'
             'SKIP'
@@ -36,7 +47,7 @@ sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             '80ea85ea20bbbdec7991f965a66b627a5f42828bc0c72be0913078d927833a82402fb1af6c5c9f6ecae861b45582fa42c98ce83b02768e4bf875ab89dd1c607c'
-            'ad94af8bb25744b244c4f82e9a06189741f82b295a88523ca0e8005568fac710c2299d783989457e9cf96ef8da0593fb4f70c8792d416f44ab29d6493e204f13'
+            '06a002361cc324184d0bfcb520b472f57749c0537329f0e0dee833cc7fce2f08b14590b77bc0211422dfb933dbef6f249f19939f9e0df465c48ee8fc7827e31c'
             '6735c7aca2ba2f1f2a5286eb064125bf7f2c68a575d572dd157769d15778ff3e717b3a53d696c767748229f23ee6c3a7c82679df1d86283d7c4dd0ec9103ae08')
 # CUDA seems not working with LTO
 options+=('!lto')
@@ -48,10 +59,8 @@ prepare() {
   cd onnxruntime
 
   patch -Np1 -i ../build-fixes.patch
-  patch -Np1 -i ../clang.patch
+  patch -Np1 -i ../install-orttraining-files.diff
   patch -Np1 -i ../system-dnnl.diff
-  # Fix building DNNL EP with clang https://github.com/microsoft/onnxruntime/pull/10014
-  git cherry-pick -n c2d08a877b1f661eb99a29a57fd4184aa0918a80
 
   git submodule init
   for mod in onnx SafeInt tensorboard dlpack cxxopts pytorch_cpuinfo; do
@@ -83,36 +92,15 @@ build() {
     -Donnxruntime_USE_FULL_PROTOBUF=OFF
   )
 
-  # 1. Redefine ___is_signed to ___is_signed to workaround a regression
-  #    from CUDA 11.3 -> 11.3.1 [1].
-  # 2. Enable parallel builds for NVCC via -t0, which spawns multiple
+  # 1. Enable parallel builds for NVCC via -t0, which spawns multiple
   #    cicc and ptxas processes for each nvcc invocation. The number of
   #    total processes may be much larger than the number of cores - let
   #    the scheduler handle it.
-  # 3. Work-around the "error: type-id cannot have a name" issue with
-  #    -DCMAKE_CUDA_STANDARD_REQUIRED=ON, which forces -std= to be
-  #    specified [2].
-  #
-  #    $ echo "#include <type_traits>" | nvcc -ccbin /usr/bin/clang -x cu -c - -o /dev/null -v --keep
-  #    /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/11.1.0/../../../../include/c++/11.1.0/type_traits:591:162: error: type-id cannot have a name
-  #    template< class _Tp> using __is_signed_integer = __is_one_of< __remove_cv_t< _Tp> , signed char, signed short, signed int, signed long, signed long long, signed __int128_t> ;
-  #                                                                                                                                                                      ^
-  #    1 error generated.
-  #
-  #    It is a clang bug exposed by CMake and CUDA. Since CMake 3.22,
-  #    -std= flag is no longer specified to nvcc (related to
-  #    CMP0128 [3] ?). On the other hand, when no -std= option is
-  #    specified, clang defines -D__GLIBCXX_TYPE_INT_N_0=__int128, and
-  #    cudafe++ somehow replaces __int128 with __int128_t, which does
-  #    not work with signed/unsigned in clang.
-  # [1] https://forums.developer.nvidia.com/t/182176
-  # [2] https://cmake.org/cmake/help/latest/prop_tgt/LANG_STANDARD_REQUIRED.html
-  # [3] https://cmake.org/cmake/help/latest/policy/CMP0128.html
   cmake_args+=(
-    -DCMAKE_CUDA_HOST_COMPILER=/usr/bin/clang
-    -DCMAKE_CUDA_FLAGS="-D__is_signed=___is_signed -t0"
+    -DCMAKE_CUDA_FLAGS="-t0"
     -DCMAKE_CUDA_ARCHITECTURES="$_CUDA_ARCHITECTURES"
     -DCMAKE_CUDA_STANDARD_REQUIRED=ON
+    -DCMAKE_CXX_STANDARD_REQUIRED=ON
     -Donnxruntime_USE_CUDA=ON
     -Donnxruntime_CUDA_HOME=/opt/cuda
     -DCMAKE_CUDA_COMPILER:PATH=/opt/cuda/bin/nvcc
@@ -120,22 +108,17 @@ build() {
     -Donnxruntime_USE_NCCL=ON
   )
 
-  # Use clang as GCC does not work. GCC 11 crashes with internal
-  # compiler errors. GCC 10 does not work as some dependent packages
-  # (ex: re2) are built with libstdc++ from GCC 11, and thus linking
-  # onnxruntime with libstdc++ 10 fails.
-  CC=/usr/bin/clang CXX=/usr/bin/clang++ \
-    cmake -B build -S cmake "${cmake_args[@]}" "$@"
+  cmake -B build -S cmake "${cmake_args[@]}" "$@"
 
   cd build
-  make
+  cmake --build .
   python ../setup.py build
 }
 
 package_python-onnxruntime() {
   cd onnxruntime/build
 
-  make install DESTDIR="$pkgdir"
+  DESTDIR="$pkgdir" cmake --install .
 
   python ../setup.py install --root="$pkgdir" --skip-build --optimize=1
 
@@ -144,7 +127,7 @@ package_python-onnxruntime() {
   for f in LICENSE ThirdPartyNotices.txt ; do
     ln -s "$PY_ORT_DIR/$f" "$pkgdir"/usr/share/licenses/$pkgname/$f
   done
-  # already installed by `make install`, and not useful as this path is not looked up by the linker
+  # already installed by `cmake --install`, and not useful as this path is not looked up by the linker
   rm -vf "$pkgdir/$PY_ORT_DIR"/capi/libonnxruntime_providers_*
 
   # installed as split packages

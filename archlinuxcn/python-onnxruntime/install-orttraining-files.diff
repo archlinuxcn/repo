@@ -1,0 +1,19 @@
+--- a/setup.py	2021-12-29 22:44:09.924917943 +0800
++++ b/setup.py	2021-12-29 22:49:16.216878004 +0800
+@@ -355,7 +355,7 @@
+         'Operating System :: Microsoft :: Windows',
+         'Operating System :: MacOS'])
+ 
+-if enable_training:
++if True:
+     packages.extend(['onnxruntime.training',
+                      'onnxruntime.training.amp',
+                      'onnxruntime.training.optim',
+@@ -373,6 +373,7 @@
+     package_data['onnxruntime.training.ortmodule.torch_cpp_extensions.cuda.torch_gpu_allocator'] = ['*.cc']
+     package_data['onnxruntime.training.ortmodule.torch_cpp_extensions.cuda.fused_ops'] = \
+         ['*.cpp', '*.cu', '*.cuh', '*.h']
++if enable_training:
+     requirements_file = "requirements-training.txt"
+     # with training, we want to follow this naming convention:
+     # stable:
