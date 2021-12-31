@@ -6,14 +6,13 @@ build_prefix: extra-x86_64
 repo_depends:
   - pid_children-git
 
-pre_build_script: |
-  vcs_update()
+pre_build: aur_pre_build
 
-post_build_script: |
-  git_pkgbuild_commit()
-  update_aur_repo()
+post_build: aur_post_build
 
 update_on:
   - source: github
     github: archlinuxcn/lilac
   - alias: python
+  - source: aur
+    aur: lilac-git
