@@ -13,7 +13,3 @@ post_install() {
 	$ newgrp depot_tools
 	EOF
 }
-
-post_remove() {
-	rm -r opt/depot_tools/
-}
