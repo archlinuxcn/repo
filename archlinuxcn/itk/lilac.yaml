@@ -1,0 +1,17 @@
+maintainers:
+  - github: hubutui
+build_prefix: extra-x86_64
+time_limit_hours: 4
+repo_depends:
+  - castxml
+  - dcmtk
+  - gdcm
+  - kwiml-git
+  - vxl
+update_on:
+  - source: github
+    github: InsightSoftwareConsortium/ITK
+    use_latest_release: true
+  - alias: python
+# vim:set ts=2 sw=2 et:
+
