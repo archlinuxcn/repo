@@ -102,5 +102,6 @@ package_python-itk() {
   install -dm755 "${pkgdir}/usr/lib"
   # quick fix for https://github.com/InsightSoftwareConsortium/ITK/issues/2960
   find "${srcdir}/dist" -type d -name "python$(get_pyver)" -print0 -quit | xargs -0 mv -vt "${pkgdir}/usr/lib"
+  python -O -m compileall "${pkgdir}/usr/lib"
 }
 # vim:set ts=2 sw=2 et:
