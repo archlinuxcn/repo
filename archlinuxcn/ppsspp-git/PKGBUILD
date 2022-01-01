@@ -1,4 +1,5 @@
-# Maintainer: Maxime Gauduin <alucryd@archlinux.org>
+# Maintainer: David Wu <xdavidwuph@gmail.com>
+# Contributor: Maxime Gauduin <alucryd@archlinux.org>
 # Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
 # Contributor: Ben Reedy <thebenj88@gmail.com>
 # Contributor: Clement Guerin <geecko.dev@free.fr>
@@ -10,30 +11,30 @@ pkgname=(
   ppsspp-git
   ppsspp-headless-git
   ppsspp-qt-git
+  ppsspp-common-git
 )
-pkgver=1.11.2.r465.0328a0d55
+pkgver=1.12.3.r525.244b0a86f
 pkgrel=1
 pkgdesc='A PSP emulator written in C++'
 arch=(x86_64)
 url=http://www.ppsspp.org/
 license=(GPL2)
 depends=(
-  gcc-libs
   glew
   glibc
   libgl
   sdl2
   zlib
-  qt5-multimedia
+  snappy
 )
 makedepends=(
   cmake
   git
-  glu
   libglvnd
   libzip
   python
   qt5-tools
+  qt5-multimedia
 )
 source=(
   git+https://github.com/hrydgard/ppsspp.git
@@ -45,10 +46,7 @@ source=(
   git+https://github.com/Tencent/rapidjson.git
   git+https://github.com/KhronosGroup/SPIRV-Cross.git
   armips-tinyformat::git+https://github.com/Kingcom/tinyformat.git
-  miniupnp::git+https://github.com/hrydgard/miniupnp.git
-  ppsspp.sh
-  ppsspp-headless.sh
-  ppsspp-qt.sh
+  git+https://github.com/facebook/zstd.git
   ppsspp.desktop
   ppsspp-qt.desktop
 )
@@ -62,11 +60,8 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            '2c2d1ee6d1ce5c2acec372d58b8079885f6d5d674633cfea489cd550252a5426'
-            '1236ce000bb670ee2c0e0645c3d55f4d8c8e74dbc35a1af0962a3bdd7608f1c5'
-            '828b06aacc56672a4d953d77342717c5be414a68261025f74e466abd084b8e6b'
-            '1c332702d0aeced07df7e12ba8530bc3f19a52bc76c355f6c84c141becfd46d8'
-            'b3b1fb9e0ecd3c4472b51f27d028a69514b1a3823c26e33da6ffaebfb1522b7f')
+            '77a88e75f3c090856442b11c8d3f24ed95cc9ca0da1e3f22a40b700b30a3a7b7'
+            '7456207ba3759ee93709e25b7bfce5b560a8cb432e2d578ef0f98cb6da6c4d15')
 
 pkgver() {
   cd ppsspp
@@ -82,11 +77,14 @@ prepare() {
     git config submodule.${submodule}.url ../ppsspp-${submodule#*/}
     git submodule update ${submodule}
   done
-  for submodule in ext/{armips,discord-rpc,rapidjson,SPIRV-Cross,miniupnp}; do
+  for submodule in ext/{armips,discord-rpc,rapidjson,SPIRV-Cross,zstd}; do
     git submodule init ${submodule}
     git config submodule.${submodule}.url ../${submodule#*/}
     git submodule update ${submodule}
   done
+
+  git submodule init ext/miniupnp
+  git submodule update ext/miniupnp
 
   pushd ext/armips
 
@@ -113,7 +111,9 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SKIP_RPATH=ON \
     -DHEADLESS=ON \
-    -DUSE_SYSTEM_LIBZIP=ON
+    -DUSE_SYSTEM_LIBZIP=ON \
+    -DUSE_SYSTEM_SNAPPY=ON \
+    -DOpenGL_GL_PREFERENCE=GLVND
   make
 
   cd ../build-qt
@@ -123,7 +123,8 @@ build() {
     -DCMAKE_SKIP_RPATH=ON \
     -DUSE_SYSTEM_LIBZIP=ON \
     -DUSING_QT_UI=ON \
-    -DQt5Multimedia_DIR=$(pkgconf Qt5Multimedia --variable=includedir)
+    -DUSE_SYSTEM_SNAPPY=ON \
+    -DOpenGL_GL_PREFERENCE=GLVND
   make
 }
 
@@ -131,34 +132,30 @@ package_ppsspp-git() {
   depends+=(
     hicolor-icon-theme
     libzip
+    ppsspp-common-git
   )
   provides=(ppsspp)
-  conflicts=(
-    ppsspp
-    ppsspp-qt
-    ppsspp-qt-git
-  )
+  conflicts=(ppsspp)
 
   cd ppsspp/build-sdl
 
-  install -dm 755 "${pkgdir}"/{opt/ppsspp,usr/{bin,share/{applications,icons,pixmaps}}}
-  install -m 755 PPSSPPSDL "${pkgdir}"/opt/ppsspp/
-  cp -dr --no-preserve=ownership assets "${pkgdir}"/opt/ppsspp/
-  cp -dr --no-preserve=ownership ../icons/hicolor "${pkgdir}"/usr/share/icons/
-  install -m 644 ../icons/icon-512.svg "${pkgdir}"/usr/share/pixmaps/ppsspp.svg
-  install -m 755 ../../ppsspp.sh "${pkgdir}"/usr/bin/ppsspp
+  install -dm 755 "${pkgdir}"/usr/{bin,share/applications}
+  install -m 755 PPSSPPSDL "${pkgdir}"/usr/bin/
   install -m 644 ../../ppsspp.desktop "${pkgdir}"/usr/share/applications/
 }
 
 package_ppsspp-headless-git() {
+  depends+=(
+    ppsspp-common-git
+  )
   provides=(ppsspp-headless)
   conflicts=(ppsspp-headless)
+  pkgdesc='A PSP emulator written in C++ (headless)'
 
   cd ppsspp/build-sdl
 
-  install -dm 755 "${pkgdir}"/{opt/ppsspp,usr/bin}
-  install -m 755 PPSSPPHeadless "${pkgdir}"/opt/ppsspp/
-  install -m 755 ../../ppsspp-headless.sh "${pkgdir}"/usr/bin/ppsspp-headless
+  install -dm 755 "${pkgdir}"/usr/bin
+  install -m 755 PPSSPPHeadless "${pkgdir}"/usr/bin/
 }
 
 package_ppsspp-qt-git() {
@@ -166,23 +163,30 @@ package_ppsspp-qt-git() {
     hicolor-icon-theme
     libzip
     qt5-base
+    qt5-multimedia
+    ppsspp-common-git
   )
   provides=(ppsspp-qt)
-  conflicts=(
-    ppsspp
-    ppsspp-git
-    ppsspp-qt
-  )
+  conflicts=(ppsspp-qt)
+  pkgdesc='A PSP emulator written in C++ (with Qt frontend)'
 
   cd ppsspp/build-qt
 
-  install -dm 755 "${pkgdir}"/{opt/ppsspp,usr/{bin,share/{applications,icons,pixmaps}}}
-  install -m 755 PPSSPPQt "${pkgdir}"/opt/ppsspp/
-  cp -dr --no-preserve=ownership assets "${pkgdir}"/opt/ppsspp/
+  install -dm 755 "${pkgdir}"/usr/{bin,share/applications}
+  install -m 755 PPSSPPQt "${pkgdir}"/usr/bin/
+  install -m 644 ../../ppsspp-qt.desktop "${pkgdir}"/usr/share/applications/
+}
+
+package_ppsspp-common-git() {
+  depends=()
+  pkgdesc='A PSP emulator written in C++ (common assets)'
+
+  cd ppsspp/build-qt
+
+  install -dm 755 "${pkgdir}"/usr/share/{applications,icons,pixmaps,ppsspp}
+  cp -dr --no-preserve=ownership assets "${pkgdir}"/usr/share/ppsspp/
   cp -dr --no-preserve=ownership ../icons/hicolor "${pkgdir}"/usr/share/icons/
   install -m 644 ../icons/icon-512.svg "${pkgdir}"/usr/share/pixmaps/ppsspp.svg
-  install -m 755 ../../ppsspp-qt.sh "${pkgdir}"/usr/bin/ppsspp-qt
-  install -m 644 ../../ppsspp-qt.desktop "${pkgdir}"/usr/share/applications/
 }
 
 # vim: ts=2 sw=2 et:
