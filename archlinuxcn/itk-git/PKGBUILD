@@ -102,7 +102,7 @@ package_itk-git() {
 package_python-itk-git() {
   pkgdesc="${pkgdesc} (Python binding)"
   depends+=(
-    itk=${_pkgver}
+    itk
     python-numpy
     python-xarray
   )
