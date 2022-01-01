@@ -4,7 +4,7 @@ import os
 import glob
 import tornado.template
 
-import pytoml
+import tomli
 
 from lilaclib import s, git_add_files, git_commit, single_main, update_pkgrel, get_pkgver_and_pkgrel
 
@@ -48,7 +48,7 @@ PKGBUILD: str
 
 def prepare():
   toml = s.get(config_url).text
-  toml = pytoml.loads(toml)
+  toml = tomli.loads(toml)
 
   version_date = toml['date']
   version = toml['pkg']['rust']['version'].split('-', 1)[0]
@@ -64,13 +64,6 @@ def prepare():
   except KeyError:
     return 'no clippy available?'
 
-  rls_version = toml['pkg']['rls-preview']['version'].split('-', 1)[0]
-  try:
-    rls_url = toml['pkg']['rls-preview']['target'] \
-        ['x86_64-unknown-linux-gnu']['xz_url']
-  except KeyError:
-    return 'no rls available?'
-
   stds = [Std(target, toml['pkg']['rust-std']['target'][target])
           for target in STDS]
 
@@ -85,8 +78,6 @@ def prepare():
     rustfmt_version = rustfmt_version,
     clippy_version = clippy_version,
     clippy_url = clippy_url,
-    rls_version = rls_version,
-    rls_url = rls_url,
   )
 
 def pre_build():
