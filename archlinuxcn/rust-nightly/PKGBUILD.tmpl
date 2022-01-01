@@ -28,7 +28,7 @@ source=(
         {{ "'%s'" % x.url }}
         {{ "'%s.asc'" % x.url }}{% end %}
         'git://github.com/rust-lang/zsh-config')
-sha512sums=({% for _ in range(9 + len(stds) * 2) %}
+sha512sums=({% for _ in range(7 + len(stds) * 2) %}
             'SKIP'{% end %})
 
 build() {
