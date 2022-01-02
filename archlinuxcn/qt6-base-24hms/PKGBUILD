@@ -2,14 +2,14 @@
 # Maintainer: Felix Yan <felixonmars@archlinux.org>
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
-pkgname=qt6-base-24h
+pkgname=qt6-base-24hms
 _qtver=6.2.2
 pkgver=${_qtver/-/}
-pkgrel=3.1
+pkgrel=4
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
-pkgdesc='A cross-platform application and UI framework. This package uses 24-hour notation in all locales.'
+pkgdesc='A cross-platform application and UI framework. This package uses 24-hour notation HH:mm:ss in all locales.'
 depends=(libjpeg-turbo xcb-util-keysyms xcb-util-cursor libgl fontconfig xdg-utils
          shared-mime-info xcb-util-wm libxrender libxi sqlite mesa vulkan-headers
          tslib libinput libxkbcommon-x11 libproxy libcups double-conversion brotli libb2 md4c)
@@ -27,13 +27,13 @@ provides=("qt6-base=$pkgver")
 conflicts=(qt6-base "qt6-3d>$pkgver" "qt6-5compat>$pkgver" "qt6-base>$pkgver" "qt6-charts>$pkgver" "qt6-connectivity>$pkgver" "qt6-datavis3d>$pkgver" "qt6-declarative>$pkgver" "qt6-doc>$pkgver" "qt6-examples>$pkgver" "qt6-imageformats>$pkgver" "qt6-lottie>$pkgver" "qt6-multimedia>$pkgver" "qt6-networkauth>$pkgver" "qt6-positioning>$pkgver" "qt6-quick3d>$pkgver" "qt6-quicktimeline>$pkgver" "qt6-remoteobjects>$pkgver" "qt6-scxml>$pkgver" "qt6-sensors>$pkgver" "qt6-serialbus>$pkgver" "qt6-serialport>$pkgver" "qt6-shadertools>$pkgver" "qt6-svg>$pkgver" "qt6-tools>$pkgver" "qt6-translations>$pkgver" "qt6-virtualkeyboard>$pkgver" "qt6-wayland>$pkgver" "qt6-webchannel>$pkgver" "qt6-webengine>$pkgver" "qt6-websockets>$pkgver" "qt6-webview>$pkgver" )
 _pkgfn="qtbase-everywhere-src-$_qtver"
 source=(
-      oldherl-24h.patch
+      oldherl-24hms.patch
       'https://build.archlinuxcn.org/~oldherl/files/cldr/36/core.zip'
       https://download.qt.io/official_releases/qt/${pkgver%.*}/$_qtver/submodules/$_pkgfn.tar.xz
         qt6-base-cflags.patch
         qt6-base-nostrip.patch)
 sha256sums=(
-      '901a764c896559bb472d5ecee4af9ee006b235f73e56959de9ded477a10e5fc6'
+      '9c62800980e97b1614e4fc85ecad3b032606d0e620295e791fc3f34629bb0a44'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       '85ab9180180c2eaf84cd11ae4c6d5a6a69f2f8fd7260aaccfd91a3e7e7232c1a'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
@@ -44,7 +44,7 @@ prepare() {
   patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
 
   cd $_pkgfn
-  patch -p1 -i ../oldherl-24h.patch
+  patch -p1 -i ../oldherl-24hms.patch
   cd util/locale_database
   echo "This is slow. It takes about 4 minutes on my desktop."
   ./cldr2qlocalexml.py ../../../ > ./24h.xml
