@@ -4,7 +4,7 @@
 # Contributor: beatgammit
 
 pkgname=servo-git
-pkgver=r44345.4f1ca4d1bc
+pkgver=r44353.8d217ba6cc
 pkgrel=1
 pkgdesc='Parallel Browser Project: web browser written in Rust'
 arch=(x86_64 i686)
@@ -25,9 +25,8 @@ depends=(bzip2
          ttf-font
          xcb-util)
 install="$pkgname.install"
-makedepends=(autoconf2.13
+makedepends=("autoconf2.13" "rustup"
              cargo-nightly
-             rustup
              clang
              cmake
              curl
