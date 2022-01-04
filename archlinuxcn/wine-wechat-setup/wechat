@@ -17,7 +17,7 @@ REG_FILE = r'''REGEDIT4
 "*riched20"="native,builtin"
 
 [HKEY_CURRENT_USER\Software\Wine\Fonts\Replacements]
-"微软雅黑"="文泉驿正黑"
+"微软雅黑"="%s"
 '''
 
 if os.isatty(1):
@@ -44,6 +44,12 @@ else:
     if file_chooser.returncode == 0:
       install(env, prefix, file_chooser.stdout.rstrip('\n'))
 
+def get_preferred_chinese_font():
+  return subprocess.check_output(
+    ['fc-match', ':lang=zh-CN:charset=0x7b80', '-f', '%{family[0]}'],
+    text = True,
+  )
+
 def install(env, prefix, file):
   if not os.path.exists(file):
     error(f'文件 "{file}" 不存在')
@@ -55,8 +61,9 @@ def install(env, prefix, file):
   ], env=env)
 
   regfile = prefix / 'drive_c' / 'wechat.reg'
+  fontname = get_preferred_chinese_font()
   with regfile.open('w') as f:
-    f.write(REG_FILE)
+    f.write(REG_FILE % fontname)
   subprocess.check_call([
     'wine', 'regedit', r'C:\wechat.reg',
   ], env=env)
