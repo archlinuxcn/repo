@@ -1,10 +1,11 @@
-pre_build_script: aur_pre_build(maintainers='wget')
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 
-post_build: aur_post_build
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: aur
-    aur: plasma5-applets-netspeed
+  - source: github
+    github: dfaust/plasma-applet-netspeed-widget
+    use_max_tag: true
 
 maintainers:
   - github: rocka
