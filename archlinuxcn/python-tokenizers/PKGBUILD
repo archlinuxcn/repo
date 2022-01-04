@@ -2,7 +2,7 @@
 
 _pkgname=tokenizers
 pkgname=python-tokenizers
-pkgver=0.11.1
+pkgver=0.11.2
 pkgrel=1
 pkgdesc='Fast State-of-the-Art Tokenizers optimized for Research and Production'
 arch=('x86_64')
@@ -16,7 +16,7 @@ makedepends=(
 )
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha512sums=('1a1e7529663c3679c27312fdb5e090fd4b26aba603600db709c900c3cdb7781af0a720acf6009420c31bb74993ebb185ea1c0ed9a0633989473b1c3b4b6be29c')
+sha512sums=('df1202064d4ce0881006932f0d820223a5ad90bbe6f09844f768699073ee0b539a4d280999d571dfdf2566b275f5d4817e8888ac83f9ff299ac773024c9af9ee')
 
 build() {
   cd "${_pkgname}-${pkgver}"
