@@ -1,7 +1,7 @@
 # Maintainer: Hao Long <imlonghao@archlinuxcn.org>
 
 pkgname=trivy
-pkgver=0.21.2
+pkgver=0.22.0
 pkgrel=1
 pkgdesc="A Simple and Comprehensive Vulnerability Scanner for Containers, Suitable for CI"
 arch=("x86_64" "i686")
@@ -13,7 +13,7 @@ makedepends=("go" "btrfs-progs")
 provides=('trivy')
 conflicts=('trivy')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-b2sums=('f41416dd3693818304f30cf406d68aec4516913e052cdd41fdb08ced8f350450d8ceffee72e1ef0e40e0cef564f2101a9486bb82a6b9c6c25b074b3ce79d5873')
+b2sums=('752f364876ad41392c2f2886f19092945b72be9090ee2b39ddbf264402a62708ffae99173f6ed001db765cc156bc29aa54c31a53cb5e1888f3e20d52ff100858')
 
 build() {
   cd ${pkgname}-${pkgver}/cmd/trivy
@@ -30,4 +30,3 @@ package() {
   install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
   install -Dm755 cmd/trivy/${pkgname} ${pkgdir}/usr/bin/${pkgname}
 }
-
