@@ -6,7 +6,7 @@
 
 pkgname=lib32-libass
 pkgver=0.15.2
-pkgrel=2
+pkgrel=3
 pkgdesc='A portable library for SSA/ASS subtitles rendering (32 bit)'
 arch=(x86_64)
 url=https://github.com/libass/libass/
@@ -52,3 +52,4 @@ package() {
 
     rm -rf "${pkgdir}"/usr/include
 }
+provides=("libass.so")
