@@ -39,6 +39,6 @@ def pre_build():
             checks = checks + '8'
         print(line)
 
-    # make sure PGKBUILD is modified
+    # make sure PKGBUILD is modified
     if len(checks) != 8:
         raise ValueError('PKGBUILD editing not completed. checks=' + checks)
