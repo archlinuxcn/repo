@@ -28,7 +28,7 @@ GOLD=             # Use the gold linker.
 
 LTO=              # Enable link-time optimization. Still experimental.
 
-JIT=              # Enable native just-in-time compilation. libgccjit is in AUR.
+JIT=         # Enable native just-in-time compilation. libgccjit is in AUR.
                   # This compiles only performance critical elisp files.
                   #
                   # To compile all elisp on demand, add
@@ -41,12 +41,12 @@ AOT=              # Precompile all included elisp. It takes a long time.
 
 CLI=              # CLI only binary.
 
-GPM=              # Mouse support in Linux console using gmpd.
+GPM=              # Mouse support in Linux console using gpmd.
 
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
                   # Bitmap fonts only, 1337!
                
-PGTK="YES"        # Use native GTK3 build. Supports Wayland, yay!
+PGTK=        # Use native GTK3 build. Supports Wayland, yay!
 
 GTK3=             # The new GTK2. Really, why would you?
 
@@ -58,7 +58,7 @@ LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   # for some tips on using outline fonts with
                   # Xft, if you choose no toolkit or Lucid.
 
-XI2="YES"         # Use Xinput2 support.
+XI2=         # Use Xinput2 support.
                   # https://www.x.org/releases/X11R7.7/doc/inputproto/XI2proto.txt
 
 ALSA=             # Linux sound support.
@@ -71,7 +71,7 @@ DOCS_HTML=        # Generate and install html documentation.
                
 DOCS_PDF=         # Generate and install pdf documentation.
                
-NOGZ="YES"        # Don't compress .el files.
+NOGZ=        # Don't compress .el files.
 ################################################################################
 
 ################################################################################
@@ -80,7 +80,7 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-git"
 fi
-pkgver=29.0.50.153386
+pkgver=29.0.50.153405
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
