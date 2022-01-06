@@ -1,7 +1,7 @@
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
 
 pkgname=obsidian
-pkgver=0.13.14
+pkgver=0.13.19
 _appimage="${pkgname}-${pkgver}.AppImage"
 pkgrel=1
 pkgdesc="Obsidian is a powerful knowledge base that works on top of a local folder of plain text Markdown files"
@@ -14,7 +14,7 @@ depends=('zlib' 'hicolor-icon-theme' 'fuse')
 options=(!strip)
 source=("${_appimage}::https://github.com/obsidianmd/obsidian-releases/releases/download/v${pkgver}/Obsidian-${pkgver}.AppImage")
 noextract=("${_appimage}")
-sha256sums=('299c92117f0cdf19f56721e0bad45050ac4df01a141087a95f236fa419bb6523')
+sha256sums=('824902a872aebb88a1f479d2f23d640c3a06787700d8f94326eb2648346b37c2')
 
 prepare() {
     # Enable execution of AppImage
