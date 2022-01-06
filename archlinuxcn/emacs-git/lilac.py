@@ -10,6 +10,10 @@ def pre_build():
         if line.startswith('source='):
             line = 'source=("emacs-git::git://github.com/emacs-mirror/emacs.git")'
 
+        # disable build flags
+        if '="YES"' in line:
+            line = line.replace('="YES"', '=')
+
         if line.startswith('XWIDGETS='):
             line = 'XWIDGETS="YES"'
 
