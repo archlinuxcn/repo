@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=ape
-_pkgver=5.6
+_pkgver=5.6-1
 pkgname=r-${_pkgname,,}
-pkgver=5.6
+pkgver=5.6.1
 pkgrel=1
 pkgdesc='Analyses of Phylogenetics and Evolution'
 arch=('x86_64')
@@ -20,7 +20,7 @@ optdepends=(
   r-phangorn
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('ce6f25e13c1ccfea1c81cc3fc4e5f15c90c416eb7b1dc2cffb670c280d21ad1c')
+sha256sums=('25401e036576eed1200e15bf68879ccd85611303a3508b989e15164cd4c0f7f7')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
