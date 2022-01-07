@@ -5,7 +5,7 @@
 pkgname=qt6-base-24h
 _qtver=6.2.2
 pkgver=${_qtver/-/}
-pkgrel=3.1
+pkgrel=4.1
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -15,7 +15,8 @@ depends=(libjpeg-turbo xcb-util-keysyms xcb-util-cursor libgl fontconfig xdg-uti
          tslib libinput libxkbcommon-x11 libproxy libcups double-conversion brotli libb2 md4c)
 makedepends=(python2 cmake ninja libfbclient mariadb-libs unixodbc postgresql alsa-lib gst-plugins-base-libs
              gtk3 libpulse cups freetds xmlstarlet)
-optdepends=('postgresql-libs: PostgreSQL driver'
+optdepends=('qt6-wayland: to run Qt6 applications in a Wayland session'
+            'postgresql-libs: PostgreSQL driver'
             'mariadb-libs: MariaDB driver'
             'unixodbc: ODBC driver'
             'libfbclient: Firebird/iBase driver'
