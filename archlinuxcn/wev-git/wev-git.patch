@@ -1,0 +1,16 @@
+diff -ura wev.old/Makefile wev.new/Makefile
+--- wev.old/Makefile	2020-03-30 13:38:48.947716009 +1100
++++ wev.new/Makefile	2020-03-30 13:40:04.044187743 +1100
+@@ -14,10 +14,10 @@
+ 		$(WAYLAND_PROTOCOLS)/stable/xdg-shell/xdg-shell.xml $@
+ 
+ wev: wev.c shm.c xdg-shell-protocol.h xdg-shell-protocol.c
+-	$(CC) $(CFLAGS) \
++	$(CC) $(CPPFLAGS) $(CFLAGS) \
+ 		-g -std=c11 -I. \
+ 		-o wev wev.c shm.c xdg-shell-protocol.c \
+-		$(LIBS) -lrt
++		$(LIBS) -lrt $(LDFLAGS)
+ 
+ wev.1: wev.1.scd
+ 	$(SCDOC) < wev.1.scd > wev.1

@@ -1,0 +1,17 @@
+maintainers:
+  - github: Y7n05h
+
+build_prefix: extra-x86_64
+
+pre_build: vcs_update
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: git
+    repo: https://git.sr.ht/~sircmpwn/wev
+    use_commit: true
+  - source: aur
+    aur: wev-git
+  - source: manual
+    manual: 1
