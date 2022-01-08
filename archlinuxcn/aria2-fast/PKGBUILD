@@ -6,7 +6,7 @@
 
 pkgname=aria2-fast
 pkgver=1.36.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Aria2 Download utility with little patch to maximize aria2 download speed'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url='http://aria2.sourceforge.net/'
@@ -24,6 +24,7 @@ build() {
 
   ./configure \
     --prefix=/usr \
+    --enable-libaria2 \
     --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt
 
   make
