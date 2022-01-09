@@ -4,26 +4,29 @@
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
 pkgver=3.4.3
-pkgrel=1
+pkgrel=5
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL3')
 depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
-         'qt5-imageformats' 'xxhash' 'libdbusmenu-qt5' 'kwayland' 'gtk3' 'glibmm' 'rnnoise' 'pipewire' 'libxtst' 'libxrandr' 'jemalloc' 'qt5-svg' 'webkit2gtk' 'abseil-cpp')
-makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'python2' 'microsoft-gsl' 'extra-cmake-modules' 'libtg_owt' 'clang')
-optdepends=('xdg-desktop-portal: desktop integration')
+         'qt6-imageformats' 'qt6-svg' 'qt6-wayland' 'qt6-5compat' 'xxhash' 'glibmm'
+         'rnnoise' 'pipewire' 'libxtst' 'libxrandr' 'jemalloc' 'abseil-cpp')
+makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'microsoft-gsl'
+             'extra-cmake-modules' 'wayland-protocols' 'plasma-wayland-protocols' 'libtg_owt')
+optdepends=('webkit2gtk: embedded browser features'
+            'xdg-desktop-portal: desktop integration')
 provides=('telegram-desktop')
 conflicts=('telegram-desktop')
 source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
-        "0001-use-system-font-and-use-stylename.patch"
+        "0001-Use-QGuiApplication-font-instead-of-opensans.patch"
         "0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch")
 sha512sums=('6b27eb14570b55fb14c77f1d557591985a4791712897c2e144196c54c2a98b10c7ece9dac7d039a6bb56f39e3062e4fbfbb60f6822e52b76f927bbf419d88a6b'
-            '62c41188d1faf4200167b9086552db092dadcba6000bb3c51d7c79ba22cc453c980f6e50013c76e766c9dd8585e84327d00d289512fc1f7e7222f223a23a14a7'
+            '3eb297f504f182cd62724bd6a21ef01bf14e440240e170222d766ae952f1428630c27e8d651f0d33fc0930b3d083e4e3e34e3b5bc355e992b426959e59dcbc55'
             '7a1dcfc563b764d1e68acb566df52890ad527ba2c442ac78825239bce64da3d77ca5f7cf965c67dafc5290e3549fa52780fc49b2d991cd798d05735a6143f46b')
 
 prepare() {
-    patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-use-system-font-and-use-stylename.patch
+    patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-Use-QGuiApplication-font-instead-of-opensans.patch
     patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch
  }
 
@@ -33,15 +36,11 @@ build() {
     # Turns out we're allowed to use the official API key that telegram uses for their snap builds:
     # https://github.com/telegramdesktop/tdesktop/blob/8fab9167beb2407c1153930ed03a4badd0c2b59f/snap/snapcraft.yaml#L87-L88
     # Thanks @primeos!
-    # Use Qt5 for the time being until kwayland has an easier way to work with Qt6.
-    export CC=clang
-    export CXX=clang++
     cmake . \
         -B build \
         -G Ninja \
         -DCMAKE_INSTALL_PREFIX="/usr" \
         -DCMAKE_BUILD_TYPE=Release \
-        -DDESKTOP_APP_QT6=OFF \
         -DTDESKTOP_API_ID=611335 \
         -DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c \
         -DTDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME=ON
