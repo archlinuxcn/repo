@@ -3,7 +3,7 @@
 
 pkgname=pacman-lily
 pkgver=6.0.1
-pkgrel=2
+pkgrel=3
 pkgdesc="A library-based package manager with dependency support (no disabling-server-on-error)"
 arch=('x86_64')
 url="https://www.archlinux.org/pacman/"
@@ -23,18 +23,21 @@ validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@a
 source=(pacman.patch
         pacman-syncdb
         https://sources.archlinux.org/other/pacman/pacman-$pkgver.tar.xz{,.sig}
+        add-flto-to-LDFLAGS-for-clang.patch
         pacman.conf
         makepkg.conf)
 sha256sums=(61e0b85dadb341ea14e5aa28b0b1edf98871bc3dffd1083fb5775fc28a65e113
             207d5cee261bba18e650bbd2c249ffd8fe9c1dbd7de6b241d8bf011848faa70b
             '0db61456e56aa49e260e891c0b025be210319e62b15521f29d3e93b00d3bf731'
             'SKIP'
+            '82ff91b85f4c6ceba19f9330437e2a22aabc966c2b9e2a20a53857f98a42c223'
             '606e55f06c297d2b508bc4438890b229a1abaa68b0374a2d7f94c8e7be6792d7'
             '8bf61d04aa67979e58bada8538f62b4b37a58bab1aabe97d6b148da0f4c920d9')
 
 
 prepare() {
   cd "pacman-$pkgver"
+  patch -Np1 -i ../add-flto-to-LDFLAGS-for-clang.patch
 }
 
 build() {

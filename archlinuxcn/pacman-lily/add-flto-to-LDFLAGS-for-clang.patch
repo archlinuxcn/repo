@@ -1,0 +1,24 @@
+From 26ee6ff6adbcd8560ec3a65cf219d2ab98edb804 Mon Sep 17 00:00:00 2001
+From: Allan McRae <allan@archlinux.org>
+Date: Fri, 24 Dec 2021 17:59:32 +1000
+Subject: [PATCH] LTO: Add -flto to LDFLAGS for clang
+
+GCC automatically detects when it is linking LTO objects, but clang does
+not.  Add -flto to LDFLAGS to make this work for clang too.
+
+Signed-off-by: Allan McRae <allan@archlinux.org>
+---
+ scripts/libmakepkg/buildenv/lto.sh.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/scripts/libmakepkg/buildenv/lto.sh.in b/scripts/libmakepkg/buildenv/lto.sh.in
+index 1f1ca53f..c3bd0fa4 100644
+--- a/scripts/libmakepkg/buildenv/lto.sh.in
++++ b/scripts/libmakepkg/buildenv/lto.sh.in
+@@ -33,5 +33,6 @@ buildenv_lto() {
+ 	if check_option "lto" "y"; then
+ 		CFLAGS+=" -flto"
+ 		CXXFLAGS+=" -flto"
++		LDFLAGS+=" -flto"
+ 	fi
+ }
