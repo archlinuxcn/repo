@@ -8,8 +8,8 @@
 
 pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
-_tag=v5.16-rc7
-pkgver=5.16rc7
+_tag=v5.16
+pkgver=5.16
 pkgrel=1
 pkgdesc="Linux Mainline"
 arch=(x86_64)
@@ -75,7 +75,7 @@ _package() {
   optdepends=('crda: to set the correct wireless channels of your country'
               'linux-firmware: firmware images needed for some devices')
   provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
-  replaces=(virtualbox-guest-modules-mainline wireguard-maineline)
+  replaces=(virtualbox-guest-modules-mainline wireguard-mainline)
 
   cd $_srcname
   local kernver="$(<version)"
