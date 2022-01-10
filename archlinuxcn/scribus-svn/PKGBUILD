@@ -3,16 +3,18 @@
 # Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=scribus-svn
-pkgver=24798
+pkgver=24800
 pkgrel=1
 pkgdesc="A desktop publishing program - Version from SVN"
 arch=('i686' 'x86_64')
 license=('GPL' 'LGPL')
 url="http://www.scribus.net"
-depends=('hunspell' 'podofo' 'libcups' 'graphicsmagick' 'poppler'
-	 'libcdr' 'libvisio' 'libpagemaker' 'harfbuzz-icu' 'python'
-	 'qt5-declarative' 'libmspub' 'openscenegraph' 'libqxp'
-	 'desktop-file-utils' 'libzmf' 'libfreehand' 'boost-libs')
+depends=(boost-libs cairo fontconfig freetype2 harfbuzz-icu
+         hunspell lcms2 libcdr libcups libfreehand libjpeg libmspub
+         libpagemaker libpng libqxp librevenge libtiff libvisio libxml2 libzmf
+         openscenegraph openssl podofo poppler python3 qt5-base zlib graphicsmagick)
+
+makedepends=(cmake boost mesa qt5-tools)
 makedepends=('subversion' 'cmake' 'qt5-tools' 'boost')
 optdepends=('lib2geom: for mesh distortion')
 conflicts=('scribus')
@@ -27,14 +29,23 @@ pkgver() {
   printf "%s" "${ver//[[:alpha:]]}"
 }
 
+prepare() {
+  cd $_svnmod/Scribus
+  # fix "error: reference to 'byte' is ambiguous" with C++17 mode
+  sed -i 's/\bbyte\b/prc_&/g' scribus/third_party/prc/oPRCFile.cc
+}
+
 build() {
   cd $_svnmod/Scribus
   cmake . -DCMAKE_INSTALL_PREFIX:PATH=/usr \
-	-DCMAKE_SKIP_RPATH:BOOL=YES \
 	-DWANT_GRAPHICSMAGICK:BOOL=YES \
 	-DCMAKE_LIBRARY_PATH:PATH=/usr/lib \
-	-DCMAKE_INCLUDE_PATH:PATH=/usr/include/python3.7 \
-	-DCMAKE_EXE_LINKER_FLAGS:STRING="-lQt5Quick -lQt5PrintSupport" \
+    -DCMAKE_SKIP_RPATH=ON \
+	-DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=FALSE \
+    -DWANT_HUNSPELL=ON \
+    -DWITH_BOOST=ON \
+    -DWITH_PODOFO=ON \
+    -DWANT_CPP17=ON \
 	-DQT_PREFIX:PATH="/usr" -DWANT_SVNVERSION:BOOL=YES
   make
 }
@@ -44,12 +55,11 @@ package () {
   make DESTDIR="$pkgdir" install
   install -Dm644 COPYING "$pkgdir"/usr/share/licenses/$pkgname/COPYING
   install -Dm644 scribus.desktop $pkgdir/usr/share/applications/scribus.desktop
-  install -d "${pkgdir}"/usr/share/pixmaps
-  ln -s /usr/share/scribus/icons/1_5_0/scribus.png "${pkgdir}"/usr/share/pixmaps/scribus.png
-  # move around some picture files
-  for _i in AppIcon.png AllCaps.png Kapital.xpm Strike.xpm \
-		       outlined.png shadow.png shade.png Revers.png zeichen.png
-  do install "$pkgdir"/usr/share/scribus/icons/1_5_0/$_i "$pkgdir"/usr/share/scribus/icons/1_5_1/$_i
-     rm "$pkgdir"/usr/share/scribus/icons/1_5_0/$_i
+  for i in 16x16 32x32 128x128 256x256 512x512 1024x1024
+  do
+    install -Dm644 resources/iconsets/artwork/icon_${i}.png "${pkgdir}"/usr/share/icons/hicolor/${i}/apps/scribus.png
   done
+  # Use system hyphen
+  rm -rf "${pkgdir}"/usr/share/scribus/dicts/hyph
+  ln -sf /usr/share/hyphen "${pkgdir}"/usr/share/scribus/dicts/hyph
 }
