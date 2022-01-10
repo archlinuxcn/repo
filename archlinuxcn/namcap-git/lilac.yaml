@@ -1,0 +1,18 @@
+maintainers:
+  - github: yan12125
+
+build_prefix: extra-x86_64
+
+pre_build_script: |
+    aur_pre_build(maintainers='PanisSupraOmnia')
+
+post_build_script: |
+    aur_post_build()
+
+update_on:
+  - source: gitlab
+    gitlab: pacman/namcap
+    host: gitlab.archlinux.org
+  - source: aur
+    aur: namcap-git
+  - alias: python
