@@ -2,7 +2,7 @@
 
 pkgname=ds9
 pkgver=8.3
-pkgrel=4
+pkgrel=5
 pkgdesc="SAOImage DS9: Astronomical Data Visualization Application"
 url="http://hea-www.harvard.edu/RD/ds9/"
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('GPL2')
 provides=(ds9)
 conflicts=(ds9-bin)
 depends=("desktop-file-utils" "libx11" "libxml2")
-options=(!strip)
+options=(!strip !lto)
 makedepends=(libx11 libxslt libxml2 libxft tcl zip)
 conflicts=()
 replaces=()
