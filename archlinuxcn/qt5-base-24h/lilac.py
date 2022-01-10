@@ -28,7 +28,7 @@ def pre_build():
       line = 'pkgbase=qt5-base-24h' + '\n' + '_origpkgname=qt5-base'
       checks = checks + '0'
     elif line.startswith('pkgrel='):
-      line = line + '.8'
+      line = line + '.7'
     elif line.startswith('pkgname='):
       line = 'pkgname=(qt5-base-24h)'
       checks = checks + '1'
@@ -52,14 +52,12 @@ provides=("qt5-base=$pkgver")
     elif line.startswith('source=('):
       line = line.replace('=(', '''=(
       oldherl-24h.patch
-      eng11bits-qt5.patch
       'https://build.archlinuxcn.org/~oldherl/files/cldr/36/core.zip'
       ''')
       checks = checks + '6'
     elif line.startswith('sha256sums=('):
       line = line.replace('=(', '''=(
       '901a764c896559bb472d5ecee4af9ee006b235f73e56959de9ded477a10e5fc6'
-      '345c2859387e9aabca5e91a4dd5be832dd6c769e5db333e7843d054c0247e649'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       ''')
       checks = checks + '7'
@@ -68,7 +66,6 @@ provides=("qt5-base=$pkgver")
       checks = checks + '8'
     elif prepare and line.startswith('}'):
       line = '''
-  patch -p1 -i ../eng11bits-qt5.patch
   patch -p1 -i ../oldherl-24h.patch
   cd util/locale_database
   echo "This is slow. It takes about 4 minutes on my desktop."
