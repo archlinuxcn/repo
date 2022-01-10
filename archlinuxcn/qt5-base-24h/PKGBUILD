@@ -5,7 +5,7 @@ pkgbase=qt5-base-24h
 _origpkgname=qt5-base
 pkgname=(qt5-base-24h)
 pkgver=5.15.2+kde+r281
-pkgrel=1.8
+pkgrel=1.9
 _commit=4f74b863c02322832d9174b5e571ab58ff162d9b
 arch=('x86_64')
 url='https://www.qt.io'
@@ -33,14 +33,12 @@ provides=("qt5-base=$pkgver")
 _pkgfqn=qtbase
 source=(
       oldherl-24h.patch
-      eng11bits-qt5.patch
       'https://build.archlinuxcn.org/~oldherl/files/cldr/36/core.zip'
       git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit
         qt5-base-cflags.patch
         qt5-base-nostrip.patch)
 sha256sums=(
       '901a764c896559bb472d5ecee4af9ee006b235f73e56959de9ded477a10e5fc6'
-      '345c2859387e9aabca5e91a4dd5be832dd6c769e5db333e7843d054c0247e649'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       'SKIP'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
@@ -59,7 +57,6 @@ prepare() {
   patch -p1 < ../qt5-base-cflags.patch # Use system CFLAGS in qmake
   patch -p1 < ../qt5-base-nostrip.patch # Don't strip binaries with qmake
 
-  patch -p1 -i ../eng11bits-qt5.patch
   patch -p1 -i ../oldherl-24h.patch
   cd util/locale_database
   echo "This is slow. It takes about 4 minutes on my desktop."
