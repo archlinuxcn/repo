@@ -17,11 +17,12 @@ makedepends=('coreutils' 'npm' 'git')
 backup=()
 options=('!strip')
 source=("${pkgname}"'::git+https://github.com/MarkMindLtd/Mark-Mind.git'
-    "${_pkgname}.desktop")
+    "io.github.markmindltd.mark_mind.desktop"
+    "io.github.markmindltd.mark_mind.metainfo.xml")
 sha256sums=(
-      'SKIP'  
-    'e726247f694723f9c8cec971efa8eabe321b4341df06c0de6157581ecb285764'
-)
+    'SKIP'
+    'bc8c6db34688ad87879871a9ea28c088a1f44fcdfb7f4e4aef52a425283dde9f'
+    'c0050afe68a3c62cc8f15508b1209a41eae4cbd7e358a0bf0ae20bc37178f35f')
 
 pkgver() {
   cd "${srcdir}/${pkgname}"
@@ -50,5 +51,6 @@ package() {
     install -d "${pkgdir}/usr/bin"
     ln -sf "${pkgdir}/opt/${pkgname}/${_oldpkgname}" "${pkgdir}/usr/bin/${pkgname}"
 
-    install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+    install -Dm 0644 "${srcdir}/io.github.markmindltd.mark_mind.desktop" "${pkgdir}/usr/share/applications/io.github.markmindltd.mark_mind.desktop"
+    install -Dm 0644 "${srcdir}/io.github.markmindltd.mark_mind.metainfo.xml" "${pkgdir}/usr/share/metainfo/io.github.markmindltd.mark_mind.metainfo.xml"
 }
