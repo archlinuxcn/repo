@@ -6,7 +6,7 @@ _tarname='et'
 pkgbase='eternalterminal'
 pkgname=('eternalterminal-client' 'eternalterminal-server'
          'eternalterminal-htm' 'eternalterminal')
-pkgver=6.1.10
+pkgver=6.1.11
 pkgrel=1
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 depends=(
@@ -21,7 +21,7 @@ license=('Apache')
 source=(
   "https://github.com/MisterTea/EternalTerminal/archive/et-v${pkgver}.tar.gz"
 )
-sha256sums=('5ac1a1c7dde36a0d61afe41ca27695d9bd1e1fb047cbe83c9c42d568c1553ede')
+sha256sums=('bff58ae9122a39a7012e741d2d514b0966725c942021f3279fa7e2b00cfd20a3')
 
 prepare() {
   cd EternalTerminal-et-v${pkgver}
