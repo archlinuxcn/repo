@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-tensorcore)
-source=(git://github.com/JuliaMath/TensorCore.jl)
+source=(git+https://github.com/JuliaMath/TensorCore.jl)
 md5sums=('SKIP')
 
 pkgver() {

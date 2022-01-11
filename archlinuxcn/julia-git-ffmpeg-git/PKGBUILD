@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-ffmpeg)
-source=(git://github.com/JuliaIO/FFMPEG.jl)
+source=(git+https://github.com/JuliaIO/FFMPEG.jl)
 md5sums=('SKIP')
 
 pkgver() {

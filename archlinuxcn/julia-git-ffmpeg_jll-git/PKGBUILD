@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git ffmpeg)
 provides=(julia-git-ffmpeg_jll)
-source=(git://github.com/JuliaBinaryWrappers/FFMPEG_jll.jl
+source=(git+https://github.com/JuliaBinaryWrappers/FFMPEG_jll.jl
         jll.toml)
 md5sums=('SKIP'
          'a37d9da56ff8c2b77252be8cd4b7f2fb')

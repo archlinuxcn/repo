@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-mbedtls)
-source=(git://github.com/JuliaLang/MbedTLS.jl)
+source=(git+https://github.com/JuliaLang/MbedTLS.jl)
 md5sums=('SKIP')
 
 pkgver() {

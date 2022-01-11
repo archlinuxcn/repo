@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git openspecfun)
 provides=('julia-git-openspecfun_jll')
-source=(git://github.com/JuliaBinaryWrappers/OpenSpecFun_jll.jl
+source=(git+https://github.com/JuliaBinaryWrappers/OpenSpecFun_jll.jl
         jll.toml)
 md5sums=('SKIP'
          '9d061d45c55d47a6f30dd6c4042d35e9')

@@ -22,7 +22,7 @@ optdepends=('jack')
 conflicts=("musescore" 'mscore' 'musescore-svn')
 provides=("musescore=${_realver}" 'musescore-svn')
 replaces=('musescore-svn')
-source=('git://github.com/musescore/MuseScore.git'
+source=('git+https://github.com/musescore/MuseScore.git'
   'mime.xml'
   '0001-Do-not-force-fusion-style.patch')
 md5sums=('SKIP'

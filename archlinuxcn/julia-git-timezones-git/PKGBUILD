@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-timezones)
-source=(git://github.com/JuliaTime/TimeZones.jl)
+source=(git+https://github.com/JuliaTime/TimeZones.jl)
 md5sums=('SKIP')
 
 pkgver() {

@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=('git' 'julia-pkg-scripts')
 depends=(julia-git)
 provides=('julia-git-macrotools')
-source=(git://github.com/MikeInnes/MacroTools.jl)
+source=(git+https://github.com/MikeInnes/MacroTools.jl)
 md5sums=('SKIP')
 
 pkgver() {

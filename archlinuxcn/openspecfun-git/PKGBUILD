@@ -12,7 +12,7 @@ provides=(openspecfun 'libopenspecfun.so')
 conflicts=(openspecfun)
 makedepends=('gcc-fortran' 'git')
 options=('!emptydirs' '!strip' 'debug')
-source=('git://github.com/JuliaLang/openspecfun')
+source=('git+https://github.com/JuliaLang/openspecfun')
 md5sums=('SKIP')
 
 _make() {

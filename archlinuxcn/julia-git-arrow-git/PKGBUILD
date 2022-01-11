@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-arrow "julia-git-arrowtypes-git=${pkgver}-${pkgrel}" julia-git-arrowtypes)
-source=(git://github.com/JuliaData/Arrow.jl)
+source=(git+https://github.com/JuliaData/Arrow.jl)
 md5sums=('SKIP')
 
 pkgver() {

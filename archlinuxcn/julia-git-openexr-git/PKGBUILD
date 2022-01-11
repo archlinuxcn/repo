@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-openexr)
-source=(git://github.com/twadleigh/OpenEXR.jl)
+source=(git+https://github.com/twadleigh/OpenEXR.jl)
 md5sums=('SKIP')
 
 pkgver() {

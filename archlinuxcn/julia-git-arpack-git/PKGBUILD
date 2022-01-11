@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-arpack)
-source=(git://github.com/JuliaLinearAlgebra/Arpack.jl)
+source=(git+https://github.com/JuliaLinearAlgebra/Arpack.jl)
 md5sums=('SKIP')
 
 pkgver() {

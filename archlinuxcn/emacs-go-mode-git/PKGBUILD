@@ -13,7 +13,7 @@ depends=('emacs')
 provides=('emacs-go-mode' 'emacs-go-mode.el')
 conflicts=('emacs-go-mode' 'emacs-go-mode.el')
 install=${pkgname}.install
-source=(git://github.com/dominikh/go-mode.el)
+source=(git+https://github.com/dominikh/go-mode.el)
 md5sums=('SKIP')
 
 pkgver() {

@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-arnoldimethod)
-source=(git://github.com/JuliaLinearAlgebra/ArnoldiMethod.jl)
+source=(git+https://github.com/JuliaLinearAlgebra/ArnoldiMethod.jl)
 md5sums=('SKIP')
 
 pkgver() {

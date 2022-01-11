@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-nlsolversbase)
-source=(git://github.com/JuliaNLSolvers/NLSolversBase.jl)
+source=(git+https://github.com/JuliaNLSolvers/NLSolversBase.jl)
 md5sums=('SKIP')
 
 pkgver() {

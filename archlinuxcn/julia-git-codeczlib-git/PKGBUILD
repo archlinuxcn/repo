@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-codeczlib)
-source=(git://github.com/JuliaIO/CodecZlib.jl)
+source=(git+https://github.com/JuliaIO/CodecZlib.jl)
 md5sums=('SKIP')
 
 pkgver() {

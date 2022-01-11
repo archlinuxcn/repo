@@ -53,7 +53,7 @@ _patches=(
   0004-Clear-soname.patch
   libgit2-1.2.0.patch
 )
-source=('git://github.com/JuliaLang/julia'
+source=('git+https://github.com/JuliaLang/julia'
         "${_patches[@]}"
         julia-compile-pkgs.jl
         julia-clear-precompile.sh

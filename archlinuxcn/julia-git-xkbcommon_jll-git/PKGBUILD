@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git libxkbcommon libxkbcommon-x11)
 provides=(julia-git-xkbcommon_jll)
-source=(git://github.com/JuliaBinaryWrappers/xkbcommon_jll.jl
+source=(git+https://github.com/JuliaBinaryWrappers/xkbcommon_jll.jl
         jll.toml)
 md5sums=('SKIP'
          'b5f2c98a3a11fac79ec9c77e5f1197d4')

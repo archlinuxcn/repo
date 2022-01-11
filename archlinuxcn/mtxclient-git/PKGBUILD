@@ -12,7 +12,7 @@ depends=('boost-libs' 'libcoeurl.so' 'libolm' 'libevent'
 makedepends=('git' 'cmake' 'nlohmann-json' 'boost')
 provides=('mtxclient' 'libmatrix_client.so')
 conflicts=('mtxclient')
-source=("git://github.com/Nheko-Reborn/mtxclient")
+source=("git+https://github.com/Nheko-Reborn/mtxclient")
 sha256sums=('SKIP')
 
 pkgver() {

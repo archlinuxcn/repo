@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git libxau)
 provides=(julia-git-xorg_libxau_jll)
-source=(git://github.com/JuliaBinaryWrappers/Xorg_libXau_jll.jl
+source=(git+https://github.com/JuliaBinaryWrappers/Xorg_libXau_jll.jl
         jll.toml)
 md5sums=('SKIP'
          'f15641be3bebb5f0dd01f06ed4fbcd0c')

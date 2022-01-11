@@ -11,7 +11,7 @@ if [[ $CARCH = x86_64 ]]; then
   depends+=(intel-mkl)
 fi
 provides=(julia-git-intelopenmp_jll)
-source=(git://github.com/JuliaBinaryWrappers/IntelOpenMP_jll.jl
+source=(git+https://github.com/JuliaBinaryWrappers/IntelOpenMP_jll.jl
         jll.toml
         jll_x86_64.toml)
 md5sums=('SKIP'

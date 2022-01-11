@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-runtimegeneratedfunctions)
-source=(git://github.com/SciML/RuntimeGeneratedFunctions.jl)
+source=(git+https://github.com/SciML/RuntimeGeneratedFunctions.jl)
 md5sums=('SKIP')
 
 pkgver() {

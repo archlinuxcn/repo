@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git pacman)
 provides=(julia-git-libalpm)
-source=(git://github.com/yuyichao/LibALPM.jl)
+source=(git+https://github.com/yuyichao/LibALPM.jl)
 md5sums=('SKIP')
 
 pkgver() {

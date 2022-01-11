@@ -15,7 +15,7 @@ fi
 conflicts=('openlibm')
 options=('debug' '!strip')
 makedepends=('git')
-source=("git://github.com/JuliaLang/openlibm")
+source=("git+https://github.com/JuliaLang/openlibm")
 md5sums=('SKIP')
 
 # LTO seems to mess up symbol table

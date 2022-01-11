@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts julia-git-conda)
 depends=(julia-git jupyter)
 provides=(julia-git-ijulia)
-source=(git://github.com/JuliaLang/IJulia.jl)
+source=(git+https://github.com/JuliaLang/IJulia.jl)
 md5sums=('SKIP')
 
 pkgver() {

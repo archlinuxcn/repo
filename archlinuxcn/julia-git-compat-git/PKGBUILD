@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=('git' 'julia-pkg-scripts')
 depends=(julia-git)
 provides=('julia-git-compat')
-source=(git://github.com/JuliaLang/Compat.jl)
+source=(git+https://github.com/JuliaLang/Compat.jl)
 md5sums=('SKIP')
 
 pkgver() {

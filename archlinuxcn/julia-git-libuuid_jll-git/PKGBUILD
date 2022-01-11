@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git util-linux-libs)
 provides=(julia-git-libuuid_jll)
-source=(git://github.com/JuliaBinaryWrappers/Libuuid_jll.jl
+source=(git+https://github.com/JuliaBinaryWrappers/Libuuid_jll.jl
         jll.toml)
 md5sums=('SKIP'
          'c08e9a1e308f153af2ec21c14f93c989')

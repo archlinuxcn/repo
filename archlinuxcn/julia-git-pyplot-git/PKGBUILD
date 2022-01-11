@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git python-matplotlib)
 provides=(julia-git-pyplot)
-source=(git://github.com/stevengj/PyPlot.jl)
+source=(git+https://github.com/stevengj/PyPlot.jl)
 md5sums=('SKIP')
 
 pkgver() {

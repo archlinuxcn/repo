@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git libffi)
 provides=(julia-git-libffi_jll)
-source=(git://github.com/JuliaBinaryWrappers/Libffi_jll.jl
+source=(git+https://github.com/JuliaBinaryWrappers/Libffi_jll.jl
         jll.toml)
 md5sums=('SKIP'
          'dd26da9d1e9035ed52fa961e8f3eebd5')

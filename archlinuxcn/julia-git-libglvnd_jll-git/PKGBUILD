@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git libglvnd)
 provides=(julia-git-libglvnd_jll)
-source=(git://github.com/JuliaBinaryWrappers/Libglvnd_jll.jl
+source=(git+https://github.com/JuliaBinaryWrappers/Libglvnd_jll.jl
         jll.toml)
 md5sums=('SKIP'
          'd0c7431cb1997accb56f678c26c55a36')

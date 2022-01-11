@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-pkgversion)
-source=(git://github.com/KlausC/PkgVersion.jl)
+source=(git+https://github.com/KlausC/PkgVersion.jl)
 md5sums=('SKIP')
 
 pkgver() {

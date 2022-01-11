@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-benchmarktools)
-source=(git://github.com/JuliaCI/BenchmarkTools.jl)
+source=(git+https://github.com/JuliaCI/BenchmarkTools.jl)
 md5sums=('SKIP')
 
 pkgver() {

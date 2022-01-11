@@ -12,7 +12,7 @@ depends=(emacs)
 provides=(emacs-web-mode)
 makedepends=(git)
 install="emacs-web-mode-git.install"
-source=(git://github.com/fxbois/web-mode)
+source=(git+https://github.com/fxbois/web-mode)
 md5sums=('SKIP')
 
 pkgver() {

@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-datastructures)
-source=(git://github.com/JuliaCollections/DataStructures.jl)
+source=(git+https://github.com/JuliaCollections/DataStructures.jl)
 md5sums=('SKIP')
 
 pkgver() {

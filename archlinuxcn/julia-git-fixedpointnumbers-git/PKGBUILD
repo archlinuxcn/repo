@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-fixedpointnumbers)
-source=(git://github.com/JuliaMath/FixedPointNumbers.jl)
+source=(git+https://github.com/JuliaMath/FixedPointNumbers.jl)
 md5sums=('SKIP')
 
 pkgver() {

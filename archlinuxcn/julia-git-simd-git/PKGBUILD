@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-simd)
-source=(git://github.com/eschnett/SIMD.jl)
+source=(git+https://github.com/eschnett/SIMD.jl)
 md5sums=('SKIP')
 
 pkgver() {

@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git wayland-protocols)
 provides=(julia-git-wayland_protocols_jll)
-source=(git://github.com/JuliaBinaryWrappers/Wayland_protocols_jll.jl
+source=(git+https://github.com/JuliaBinaryWrappers/Wayland_protocols_jll.jl
         jll.toml)
 md5sums=('SKIP'
          'd41d8cd98f00b204e9800998ecf8427e')

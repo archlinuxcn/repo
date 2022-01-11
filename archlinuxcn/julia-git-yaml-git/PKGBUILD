@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-yaml)
-source=(git://github.com/BioJulia/YAML.jl)
+source=(git+https://github.com/BioJulia/YAML.jl)
 md5sums=('SKIP')
 
 pkgver() {

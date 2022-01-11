@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git fftw)
 provides=(julia-git-fftw_jll)
-source=(git://github.com/JuliaBinaryWrappers/FFTW_jll.jl
+source=(git+https://github.com/JuliaBinaryWrappers/FFTW_jll.jl
         jll.toml)
 md5sums=('SKIP'
          '15bf7b54e08f974949a438f2023461fd')

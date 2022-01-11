@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-csv)
-source=(git://github.com/JuliaData/CSV.jl)
+source=(git+https://github.com/JuliaData/CSV.jl)
 md5sums=('SKIP')
 
 pkgver() {
