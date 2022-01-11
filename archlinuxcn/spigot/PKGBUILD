@@ -3,10 +3,10 @@
 
 pkgname=spigot
 _pkgver=1.18.1
-_build=141
+_build=144
 pkgver="${_pkgver}+b${_build}"
-pkgrel=12
-_mng_ver=1.0.0
+pkgrel=13
+_mng_ver=1.0.1
 pkgdesc="High performance Minecraft server implementation"
 arch=('any')
 url="https://www.spigotmc.org/"
@@ -21,8 +21,8 @@ backup=("etc/conf.d/${pkgname}")
 install="${pkgname}.install"
 source=("BuildTools-${_pkgver}+b${_build}.jar::https://hub.spigotmc.org/jenkins/job/BuildTools/${_build}/artifact/target/BuildTools.jar"
 	"minecraft-server-${_mng_ver}.tar.gz"::"https://github.com/Edenhofer/minecraft-server/archive/refs/tags/v${_mng_ver}.tar.gz")
-sha512sums=('d4ffaf205dd8565f133c0045e8eee1e6ef3cadaff899fa5c04deada1f9727cd025e41e0dbbfdb20a403406e502d92e20cbe62396e78a5f2a7a738976e51571de'
-            'e315277da81cb28de338e870f477dc58dc9d8f8542594431ab5321150c92ff5634ace2be8c6778d1edb718fdeb6850d7021bffcbd3cae2a00f20e3a64caa3d92')
+sha512sums=('13f41720b581f447eb3c43f4aa37cdb0e0e70e51a832ab5d7868a29a2e725e1459e0a2ccd8e70665b43d02d19e3080ff247af6274ee0e535efe3f5007d91676b'
+            '5fecf7bbcc5e2861640ae34bc32770a02a137cb4cf142adf565997c20141744b00517501ad717f390056bdcf59c4e03e365656454b427e771a15fcf152f1bc97')
 
 _game="spigot"
 _server_root="/srv/craftbukkit"
@@ -35,7 +35,7 @@ build() {
 
 	make -C "${srcdir}/minecraft-server-${_mng_ver}" \
 		GAME=${_game} \
-		MYNAME=${_game} \
+		INAME=${_game} \
 		SERVER_ROOT=${_server_root} \
 		BACKUP_PATHS="world world_nether world_the_end" \
 		GAME_USER=craftbukkit \
@@ -48,7 +48,7 @@ package() {
 	make -C "${srcdir}/minecraft-server-${_mng_ver}" \
 		DESTDIR="${pkgdir}" \
 		GAME=${_game} \
-		MYNAME=${_game} \
+		INAME=${_game} \
 		install
 
 	install -Dm644 "${_game}-${_pkgver}.jar" "${pkgdir}${_server_root}/${_game}.${_pkgver}.jar"
