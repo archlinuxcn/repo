@@ -5,17 +5,17 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=91.4.0
+pkgver=91.5.0
 pkgrel=1
-_commit=dd79d69e5dc6e6e751195001f322b30746be6903
+_commit=c0a504578cb694522c65bb6c36396df8142d4a2a
 pkgdesc="GNU version of the Firefox browser."
 arch=(x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
 license=('GPL' 'MPL' 'LGPL')
 depends=(gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse)
-makedepends=(m4 unzip zip diffutils python2-setuptools python-jsonschema yasm mesa imake inetutils
+makedepends=(m4 unzip zip diffutils python-setuptools python-jsonschema yasm mesa imake inetutils
              xorg-server-xvfb autoconf2.13 rust clang llvm jack gtk2
-             python nodejs python2-psutil cbindgen nasm wget mercurial git lld perl-rename)
+             python nodejs python-psutil cbindgen nasm wget mercurial git lld perl-rename)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
@@ -28,7 +28,7 @@ source=(https://git.savannah.gnu.org/cgit/gnuzilla.git/snapshot/gnuzilla-${_comm
         icecat.desktop icecat-safe.desktop
         "0001-Use-remoting-name-for-GDK-application-names.patch::https://raw.githubusercontent.com/archlinux/svntogit-packages/0adcedc05ce67d53268575f8801c8de872206901/firefox/trunk/0001-Use-remoting-name-for-GDK-application-names.patch")
 
-sha256sums=('feffdda4a0c3154546e4aee6a0a2faf636cbbf23aec80be9a3e2b2dbbbf4f01b'
+sha256sums=('8bf40fb7610e89332fcfef0b81a41bc547733b812c96f42288ffa16ec23c1d57'
             'e00dbf01803cdd36fd9e1c0c018c19bb6f97e43016ea87062e6134bdc172bc7d'
             '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208'
             'bb9769a8fe720abea2bba5b895c70c4fba0d44bb553399d83350268edf85cdeb')
@@ -174,6 +174,7 @@ build() {
   export MOZ_NOSPAM=1
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
   export MACH_USE_SYSTEM_PYTHON=1
+  export LDFLAGS="${LDFLAGS} -lwayland-client"
 
   # LTO needs more open files
   ulimit -n 4096
