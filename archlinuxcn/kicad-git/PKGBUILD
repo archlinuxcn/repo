@@ -1,7 +1,7 @@
 # Maintainer: Nick Østergaard <oe.nick at gmail dot com>
 
 pkgname=kicad-git
-pkgver=6.99.0.r404.gf063c00bf1
+pkgver=6.99.0.r406.g8c6c87eaf4
 pkgrel=1
 pkgdesc="Electronic schematic and printed circuit board (PCB) design tools"
 arch=('i686' 'x86_64')
@@ -30,15 +30,10 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DKICAD_USE_OCC=ON \
-    -DBUILD_GITHUB_PLUGIN=ON \
-    -DKICAD_SCRIPTING=ON \
-    -DKICAD_SCRIPTING_MODULES=ON \
-    -DKICAD_SCRIPTING_ACTION_MENU=ON \
-    -DKICAD_SCRIPTING_PYTHON3=ON \
     -DKICAD_SCRIPTING_WXPYTHON=ON \
     -DKICAD_BUILD_I18N=ON \
     -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config-gtk3 \
-    -DKICAD_SCRIPTING_WXPYTHON_PHOENIX=ON
+    -Wno-dev
 
 ninja
 }
