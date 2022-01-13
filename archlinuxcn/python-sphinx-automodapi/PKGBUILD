@@ -3,7 +3,7 @@
 pkgbase=python-sphinx-automodapi
 _pyname=${pkgbase#python-}
 pkgname=("python-${_pyname}" "python-${_pyname}-doc")
-pkgver=0.14.0
+pkgver=0.14.1
 pkgrel=1
 pkgdesc="Sphinx extension for generating API documentation."
 arch=('any')
@@ -12,7 +12,7 @@ license=('BSD')
 makedepends=('python-setuptools-scm' 'python-sphinx' 'python-sphinx_rtd_theme')
 checkdepends=('python-pytest' 'graphviz')
 source=("https://files.pythonhosted.org/packages/source/${_pyname:0:1}/${_pyname}/${_pyname}-${pkgver}.tar.gz")
-sha256sums=('6fadf79954920f5686da434032239296209d4598316e8548cd62b5d2098ec6d7')
+sha256sums=('a2f9c0f9e2901875e6db75df6c01412875eb15f25e7db1206e1b69fedf75bbc9')
 
 prepare() {
     export _pyver=$(python -c 'import sys; print("%d.%d" % sys.version_info[:2])')
@@ -23,16 +23,16 @@ build() {
     python setup.py build
 
     msg "Building Docs"
-    export _pyver=$(python -c 'import sys; print("%d.%d" % sys.version_info[:2])')
-    ln -rs ${srcdir}/${_pyname}-${pkgver}/${_pyname/-/_}*egg-info \
-        build/lib/${_pyname/-/_}-${pkgver}-py${_pyver}.egg-info
     python setup.py build_sphinx
 }
 
 check() {
     cd ${srcdir}/${_pyname}-${pkgver}
 
-    PYTHONPATH="build/lib" pytest || warning "Tests failed"
+    #export _pyver=$(python -c 'import sys; print("%d.%d" % sys.version_info[:2])')
+    #ln -rs ${srcdir}/${_pyname}-${pkgver}/${_pyname/-/_}*egg-info \
+    #    build/lib/${_pyname/-/_}-${pkgver}-py${_pyver}.egg-info
+    PYTHONPATH="build/lib" pytest ${_pyname/-/_} || warning "Tests failed"
 }
 
 package_python-sphinx-automodapi() {
