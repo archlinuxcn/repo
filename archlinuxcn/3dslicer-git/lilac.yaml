@@ -6,7 +6,8 @@ repo_depends:
   - dcmtk
   - teem
 update_on:
-  - source: cmd
-    cmd: python -c "import time; print(int(time.time()) // (20 * 24 * 60 * 60))"
+  - source: github
+    github: Slicer/Slicer
+    lilac_throttle: 15d
 # vim:set ts=2 sw=2 et:
 

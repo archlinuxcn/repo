@@ -6,8 +6,9 @@ build_prefix: extra-x86_64
 time_limit_hours: 4
 
 update_on:
-  - source: cmd
-    cmd: python -c "import time; print(int(time.time()) // (17 * 24 * 60 * 60))"
+  - source: github
+    github: apache/incubator-mxnet
+    lilac_throttle: 15d
   - alias: python
   - alias: protobuf
 # vim:set ts=2 sw=2 et:

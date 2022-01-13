@@ -9,7 +9,8 @@ repo_depends:
   - kwiml-git
   - vxl
 update_on:
-  - source: cmd
-    cmd: python -c "import time; print(int(time.time()) // (17 * 24 * 60 * 60))"
+  - source: github
+    github: InsightSoftwareConsortium/ITK
+    lilac_throttle: 15d
   - alias: python
 # vim:set ts=2 sw=2 et:
