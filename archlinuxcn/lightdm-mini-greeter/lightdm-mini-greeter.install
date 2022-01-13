@@ -1,0 +1,19 @@
+post_install() {
+    echo "==>"
+    echo "==> To enable lightdm-mini-greeter, change the following config files:"
+    echo "==>"
+    echo "==>  /etc/lightdm/lightdm.conf"
+    echo "==>    greeter-session = lightdm-mini-greeter"
+    echo "==>"
+    echo "==>  /etc/lightdm/lightdm-mini-greeter.conf"
+    echo "==>    user = <your_username>"
+    echo "==>"
+    echo "==> Then logout & restart lightdm:"
+    echo "==>"
+    echo "==>  sudo systemctl restart lightdm"
+    echo "==>"
+}
+
+post_upgrade() {
+    post_install
+}
