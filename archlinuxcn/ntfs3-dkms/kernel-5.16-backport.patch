@@ -1,0 +1,34 @@
+--- a/file.c
++++ b/file.c
+@@ -990,7 +990,7 @@
+ 		frame_vbo = pos & ~(frame_size - 1);
+ 		index = frame_vbo >> PAGE_SHIFT;
+ 
+-		if (unlikely(fault_in_iov_iter_readable(from, bytes))) {
++		if (unlikely(iov_iter_fault_in_readable(from, bytes))) {
+ 			err = -EFAULT;
+ 			goto out;
+ 		}
+
+--- a/inode.c
++++ b/inode.c
+@@ -1046,7 +1046,7 @@
+ 	if (!ret && i2)
+ 		ret = writeback_inode(i2);
+ 	if (!ret)
+-		ret = sync_blockdev_nowait(sb->s_bdev);
++		ret = filemap_flush(sb->s_bdev->bd_inode->i_mapping);
+ 	return ret;
+ }
+
+--- a/super.c
++++ b/super.c
+@@ -921,7 +921,7 @@
+ 
+ 	/* Parse boot. */
+ 	err = ntfs_init_from_boot(sb, rq ? queue_logical_block_size(rq) : 512,
+-				  bdev_nr_bytes(bdev));
++				  bdev->bd_inode->i_size);
+ 	if (err)
+ 		goto out;
+ 
