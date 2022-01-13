@@ -2,8 +2,8 @@
 # Contributor: hdhoang <arch@hdhoang.space>
 
 pkgname=nginx-mod-fancyindex
-pkgver=0.5.1
-pkgrel=2
+pkgver=0.5.2
+pkgrel=1
 
 _modname="${pkgname#nginx-mod-}"
 
@@ -17,7 +17,7 @@ license=('BSD')
 source=(https://github.com/aperezdc/ngx-$_modname/archive/v$pkgver.tar.gz
 )
 validpgpkeys=(B0F4253373F8F6F510D42178520A9993A1C052F8) # Maxim Dounin <mdounin@mdounin.ru>
-md5sums=('231fa02b10fa8c7c94b49e94649e5ad0')
+md5sums=('5d29c959724b7f1b23879cd122bd0b1d')
 
 prepare() {
   cp -r /usr/src/nginx .
