@@ -4,24 +4,28 @@
 _pkgname=cupy
 pkgname=python-cupy
 pkgver=10.0.0
-pkgrel=2
+pkgrel=3
 pkgdesc='A NumPy-compatible array library accelerated by CUDA'
 url='https://cupy.dev'
 arch=('x86_64')
 license=('MIT')
 depends=(
   cuda
-  cudnn
-  nccl
   python-fastrlock
   python-numpy
   )
 makedepends=(
+  cudnn
   cython
   git
+  nccl
   python-setuptools
 )
-optdepends=('libcutensor')
+optdepends=(
+  cudnn
+  libcutensor
+  nccl
+)
 source=("${_pkgname}-${pkgver}::git+https://github.com/cupy/cupy.git#tag=v${pkgver}")
 sha256sums=('SKIP')
 
