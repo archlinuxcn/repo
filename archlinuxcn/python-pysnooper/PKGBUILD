@@ -3,8 +3,8 @@
 
 _pkgname=PySnooper
 pkgname=python-pysnooper
-pkgver=1.0.0
-pkgrel=2
+pkgver=1.1.0
+pkgrel=1
 pkgdesc='PySnooper - Never use print for debugging again'
 url='https://github.com/cool-RR/PySnooper'
 license=('MIT')
@@ -13,7 +13,7 @@ depends=(python)
 makedepends=(python-setuptools)
 checkdepends=(python-pytest)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/cool-RR/PySnooper/archive/${pkgver}.tar.gz")
-sha512sums=('eb913d7eb9c58193f0107ee5db3ddb3cb170a1eb729e2bd16e05c8e3a49dd5d4c91d92f94e8bde2dcdaa873296604501b079f0288f851678336c3c4f5b1b83f3')
+sha512sums=('99d22afba25e675878b499d05583a94289bad5d2cc4211860cbbad372606182281c07c3dacabdf66c03d5d5da30eb88d5bbdd3d6191a6327dee97d16818c6fbf')
 
 build() {
   cd "${_pkgname}-${pkgver}"
