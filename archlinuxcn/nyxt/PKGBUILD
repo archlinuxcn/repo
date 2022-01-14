@@ -5,7 +5,7 @@
 # Contributor: Felix Golatofski <contact@xdfr.de>
 
 pkgname=nyxt
-pkgver=2.2.3
+pkgver=2.2.4
 pkgrel=1
 pkgdesc="A keyboard-oriented, infinitely extensible web browser designed for power users"
 arch=('x86_64')
