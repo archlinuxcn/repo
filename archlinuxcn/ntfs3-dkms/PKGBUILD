@@ -1,6 +1,6 @@
 pkgname=ntfs3-dkms
-pkgver=5.15
-pkgrel=4
+pkgver=5.16
+pkgrel=1
 epoch=1
 pkgdesc="NTFS3 is fully functional NTFS Read-Write driver. The driver works with NTFS versions up to 3.1."
 arch=('any')
@@ -21,15 +21,17 @@ source=(
     "kernel-5.12-backport.patch"
     "kernel-5.14-backport.patch"
     "kernel-5.15-backport.patch"
+    "kernel-5.16-backport.patch"
 )
 
 sha512sums=(
-    'f31ff70afa2c0b5a83f04d862187570174e477b92ac5d503f9fb1d1617a0e16d863b786495c321e41528c4a67ab050a5320b1d875555405a1e6e1f7a3c3b6cc4'
+    'e7e2e3208e681eef8557138763e7460418264d8fbad3dbb965cf7d40e9d55800419199de78774458775ca593f550f6b50e7e3bc8fad75edd085d08d1c5933b40'
     '533c249f0f6bd4833faf02d0d92ca1b5802a49afc5feb2e46a7d37275cfca7896db76cd83593f4f313977d278a9a7e92eda550667be2b93910c49cfb68ead4fb'
-    '5e2f2493fbf7a4d12e7cd7d3c0bb8fc3d8bd5d290f990e5b73c52bfa4ab58127c08eeff09fab7b0ba3a2c4ab1861fec68ce711b1cb57867bb61a81785f312677'
+    'a46d538f3d166741dafcbc880f6322932478170aa0edf17b57a4e9f1543bea4c75970f08b39d67a14d48b63ac7a1c18f3a30fe763660b39ed404933eb0e37308'
     '4b1976b40f67c210ee4052407a359ed8db0709a568387ffacc15e695b43af7c77b53fbe27a3365197521e5c9baa8bd9c7aaffa2f8345be17129216b1ac141fbe'
     '61a1948e3e607dabaca47742777b4ea92fadf9f5416ebaef8c06f1e17aab0f3ced34e900c0cf1ed462303f391f4a4713b5b30a488b349839780bde3248e19f3c'
     '3a9395f5729c14cd8d8bf2ecda566730d90c6990319ed5e33310fa2dbe4d4a33df925950ff652fff338ef0135e5aeecf4b991603bba797847f8f1ef9130420c7'
+    'd13e320a127bb3c8988d040d6c27b98981ca4352fb29ca57e5afa9b549f271c33a668beaefd142ca21f8930371aec5aedaaf1d07c157abb05c30f4899b643cdf'
 )
 
 noextract=("${_archive}")
@@ -53,6 +55,7 @@ package() {
     patch -p0 -N -i "${srcdir}/Makefile.patch"
 
     # For testing
+    # patch -p1 -N -i "${srcdir}/kernel-5.16-backport.patch"
     # patch -p1 -N -i "${srcdir}/kernel-5.15-backport.patch"
     # patch -p1 -N -i "${srcdir}/kernel-5.14-backport.patch"
     # patch -p1 -N -i "${srcdir}/kernel-5.12-backport.patch"

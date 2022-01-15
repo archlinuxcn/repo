@@ -7,5 +7,4 @@ update_on:
   - source: regex
     regex: version (\d+.\d+.\d+)
     url: https://download.slicer.org/
-  - source: cmd
-    cmd: python -c "import time; print(int(time.time()) // (5 * 24 * 60 * 60))"
+    lilac_throttle: 20d

@@ -16,6 +16,7 @@ build() {
 
 	add_binary /usr/bin/plymouthd
 	add_binary /usr/bin/plymouth
+	add_binary /usr/lib/plymouth/plymouthd-fd-escrow
 
 	add_file ${DATADIR}/themes/text/text.plymouth
 	add_binary ${PLYMOUTH_PLUGIN_PATH}/text.so
@@ -35,13 +36,17 @@ build() {
 	
 	if [ -f "/usr/share/fonts/TTF/DejaVuSans.ttf" ]; then
 		add_file "/usr/share/fonts/TTF/DejaVuSans.ttf"
-		add_file "/etc/fonts/conf.d/57-dejavu-sans.conf"
+		if [ -f "/etc/fonts/conf.d/57-dejavu-sans.conf" ]; then
+		  add_file "/etc/fonts/conf.d/57-dejavu-sans.conf"
+		fi
 	fi
 	
 	if [ -f "/usr/share/fonts/cantarell/Cantarell-Thin.otf" ]; then
 		add_file "/usr/share/fonts/cantarell/Cantarell-Thin.otf"
 		add_file "/usr/share/fonts/cantarell/Cantarell-Regular.otf"
-		add_file "/etc/fonts/conf.d/60-latin.conf"
+		if [ -f "/etc/fonts/conf.d/60-latin.conf" ]; then
+		  add_file "/etc/fonts/conf.d/60-latin.conf"
+		fi
 	fi
 
 	if [ ! -f ${PLYMOUTH_PLUGIN_PATH}/${PLYMOUTH_MODULE_NAME}.so ]; then

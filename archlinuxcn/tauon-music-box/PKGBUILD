@@ -2,60 +2,61 @@
 pkgname='tauon-music-box'
 _pkgname=tauonmb
 _gitname=TauonMusicBox
-pkgver=6.8.3
-pkgrel=4
+pkgver=7.0.1
+pkgrel=2
 pkgdesc='A streamlined music player that uses BASS'
 arch=('x86_64')
 url="https://github.com/Taiko2k/TauonMusicBox"
 license=('GPL3')
 
 depends=('python-pillow'
-         'python-pylast'
-         'python-mutagen'
-         'python-hsaudiotag3k' # AUR
-         'python-pysdl2' # AUR
-         'python-stagger' # AUR
-         'python-send2trash'
-         'python-pylyrics' # AUR
-         'python-musicbrainzngs'
-         'python-isounidecode' # AUR
-         'python-setproctitle'
-         'python-gobject'
-         'python-cairo'
-         'python-beautifulsoup4'
-         'python-requests'
-         'python-dbus'
-         'python-natsort'
-         'alsa-plugins'
-         'ffmpeg'
-         'flac'
-         'gst-plugins-good'
-         'gst-plugins-bad'
-         'noto-fonts'
-         'noto-fonts-cjk'
-         'noto-fonts-extra'
-         'sdl2_image'
-         'xdg-utils'
-         'mpg213'
-         'lubpulse'
-         'opusfile'
-         'libvorbis'
-         'libappindicator-gtk3'
-         )
+    'python-pylast'
+    'python-mutagen'
+    'python-send2trash'
+    'python-musicbrainzngs'
+    'python-setproctitle'
+    'python-gobject'
+    'python-cairo'
+    'python-beautifulsoup4'
+    'python-requests'
+    'python-dbus'
+    'python-natsort'
+    'alsa-plugins'
+    'ffmpeg'
+    'flac'
+    'gst-plugins-good'
+    'gst-plugins-bad'
+    'noto-fonts'
+    'noto-fonts-extra'
+    'sdl2_image'
+    'xdg-utils'
+    'mpg123'
+    'libpulse'
+    'opusfile'
+    'libvorbis'
+    'libappindicator-gtk3'
+    'libopenmpt'
+    'python-hsaudiotag3k' # AUR
+    'python-pysdl2'       # AUR
+    'python-stagger'      # AUR
+    'python-pylyrics'     # AUR
+    'python-isounidecode' # AUR
+    'python-pulsectl'     # AUR
+)
 
 optdepends=('noto-fonts-cjk: Matching font for CJK characters'
-            'p7zip: 7z archive extraction support'
-            'unrar: RAR archive extraction support'
-            'python-plexapi: Plex streaming'
-            'python-pypresence: Discord status support'
-            'python-tekore: Spotify playback control'
-            'picard: Recommended tag editor'
-            'gst-plugins-ugly: For GStreamer WMA support'
-            )
+    'p7zip: 7z archive extraction support'
+    'unrar: RAR archive extraction support'
+    'python-plexapi: Plex streaming'
+    'python-pypresence: Discord status support'
+    'python-tekore: Spotify playback control'
+    'picard: Recommended tag editor'
+    'gst-plugins-ugly: For GStreamer WMA support'
+)
 provides=('libphazor.so')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/Taiko2k/TauonMusicBox/archive/v$pkgver.tar.gz")
 
-sha256sums=('f66f38fd70bc7f37d8fbaba8d38706b7e52de3b70a1b24c2543c128522f761d7')
+sha256sums=('8a59de917c90669706e55d0b2ec990691925364163a05fe1f335c9d20bd2fc2d')
 
 build() {
     cd "$_gitname-$pkgver"
@@ -70,7 +71,7 @@ package() {
     ln -s "/opt/$pkgname/tauon.py" "$pkgdir/usr/bin/$_pkgname"
 
     install -Dm644 input.txt -t "$pkgdir/opt/$pkgname"
-    cp -r  assets templates theme t_modules "$pkgdir/opt/$pkgname"
+    cp -r assets templates theme t_modules "$pkgdir/opt/$pkgname"
 
     for t in de fr_FR ja_JP nb_NO pt_BR pt_PT sv zh_CN; do
         install -Dm644 locale/${t}/LC_MESSAGES/*.po -t "$pkgdir/usr/share/locale/${t}/LC_MESSAGES"

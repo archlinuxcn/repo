@@ -3,15 +3,15 @@
 
 pkgbase=linux-zen-g14
 _pkgbase=linux-zen
-pkgver=5.15.13.zen1
-pkgrel=1
+pkgver=5.16.zen1
+pkgrel=3
 pkgdesc='Linux ZEN'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/zen-kernel/zen-kernel/commits/$_srctag"
 arch=(x86_64)
 license=(GPL2)
 makedepends=(
-  bc kmod libelf pahole cpio perl tar xz
+  bc kmod libelf pahole cpio perl tar xz texlive-core
   xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick
   git
 )
@@ -20,10 +20,10 @@ _srcname=zen-kernel
 source=(
   "$_srcname::git+https://github.com/zen-kernel/zen-kernel#tag=$_srctag"
   "config::https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/linux-zen/trunk/config" # the main kernel config file
-  "git+https://gitlab.com/asus-linux/fedora-kernel.git#branch=rog-5.15"
+  "git+https://gitlab.com/asus-linux/fedora-kernel.git#branch=rog-5.16"
 )
 sha256sums=('SKIP'
-            'de0f863e315ab2de7671ce512f6755ae14b58a64f21e48bd2b0158d719533011'
+            'f8d332e96d1d5826b386a87e1588fef9c94c36638228718eb847658efa07dbaa'
             'SKIP')
 
 export KBUILD_BUILD_HOST=archlinux
@@ -56,6 +56,7 @@ prepare() {
   echo "Setting config..."
   cp ../config .config
   make olddefconfig
+  diff -u ../config .config || :
 
   make -s kernelrelease > version
   echo "Prepared $pkgbase version $(<version)"
@@ -108,11 +109,11 @@ _package-headers() {
   install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
   cp -t "$builddir" -a scripts
 
-  # add objtool for external module building and enabled VALIDATION_STACK option
+  # required when STACK_VALIDATION is enabled
   install -Dt "$builddir/tools/objtool" tools/objtool/objtool
 
-  # add xfs and shmem for aufs building
-  mkdir -p "$builddir"/{fs/xfs,mm}
+  # required when DEBUG_INFO_BTF_MODULES is enabled
+  install -Dt "$builddir/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
 
   echo "Installing headers..."
   cp -t "$builddir" -a include

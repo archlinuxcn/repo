@@ -8,7 +8,7 @@ def pre_build():
         if line.startswith('replaces='):
             continue
         if line.startswith('source='):
-            line = 'source=("emacs-git::git://github.com/emacs-mirror/emacs.git")'
+            line = 'source=("emacs-git::git+https://github.com/emacs-mirror/emacs.git")'
 
         # disable build flags
         if '="YES"' in line:

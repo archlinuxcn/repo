@@ -51,8 +51,14 @@ EOF
 
     for cryptopt in ${cryptoptions//,/ }; do
         case ${cryptopt} in
-            allow-discards)
+            allow-discards|discard)
                 cryptargs="${cryptargs} --allow-discards"
+                ;;
+            no-read-workqueue|perf-no_read_workqueue)
+                cryptargs="${cryptargs} --perf-no_read_workqueue"
+                ;;
+            no-write-workqueue|perf-no_write_workqueue)
+                cryptargs="${cryptargs} --perf-no_write_workqueue"
                 ;;
             *)
                 echo "Encryption option '${cryptopt}' not known, ignoring." >&2

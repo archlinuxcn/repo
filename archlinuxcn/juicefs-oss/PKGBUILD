@@ -3,7 +3,8 @@
 
 pkgname=juicefs-oss
 _pkgname=juicefs
-pkgver=0.17.5
+pkgver=1.0.0beta1
+_pkgver=$(echo $pkgver | sed -E 's/^([0-9\.]+)([^0-9].*)?$/\1-\2/' | sed -E 's/-$//')
 pkgrel=1
 pkgdesc="A distributed POSIX file system built on top of Redis and S3. (FOSS version)"
 arch=('x86_64')
@@ -12,16 +13,16 @@ license=('AGPL3')
 conflicts=('juicefs')
 depends=('glibc')
 makedepends=('go')
-source=("juicefs-$pkgver.tar.gz::https://github.com/juicedata/juicefs/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('1b7d665b0e2c62ecfab0c1271059865fa4522d0c8ee526b9ad6dc27748332b13')
+source=("juicefs-$_pkgver.tar.gz::https://github.com/juicedata/juicefs/archive/refs/tags/v$_pkgver.tar.gz")
+sha256sums=('c62b92c144d5adb06e0ef064e1f7f5c860701cc30cae721dff53172c49902291')
 
 prepare() {
-  cd "$_pkgname-$pkgver"
+  cd "$_pkgname-$_pkgver"
   mkdir -p build/
 }
 
 build() {
-  cd "$_pkgname-$pkgver"
+  cd "$_pkgname-$_pkgver"
   export CGO_CPPFLAGS="${CPPFLAGS}"
   export CGO_CFLAGS="${CFLAGS}"
   export CGO_CXXFLAGS="${CXXFLAGS}"
@@ -31,7 +32,7 @@ build() {
 }
 
 package() {
-  cd "$_pkgname-$pkgver"
+  cd "$_pkgname-$_pkgver"
   install -Dm755 build/cmd "$pkgdir"/usr/bin/$_pkgname
   ln -s /usr/bin/$_pkgname "$pkgdir"/usr/bin/mount.$_pkgname
 }

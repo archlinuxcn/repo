@@ -2,9 +2,6 @@
 from lilaclib import *
 from pyalpm import vercmp
 
-build_prefix = 'extra-x86_64'
-time_limit_hours = 4
-
 def pre_build():
   oldver, oldrel = get_pkgver_and_pkgrel()
   aur_pre_build(maintainers=['nikatar'])

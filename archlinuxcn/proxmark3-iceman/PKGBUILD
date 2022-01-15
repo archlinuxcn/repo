@@ -2,7 +2,7 @@
 
 pkgname=proxmark3-iceman
 pkgver=4.14831
-pkgrel=1
+pkgrel=3
 pkgdesc='RRG / Iceman repo - Proxmark3 RDV4.0 and other Proxmark3 platforms.'
 arch=('x86_64')
 url='https://github.com/RfidResearchGroup/proxmark3'
@@ -48,6 +48,7 @@ build() {
           'LF_NEXID'
           'LF_THAREXDE'
           'HF_14ASNIFF'
+          'HF_15SNIFF'
           'HF_BOG'
           'HF_COLIN'
           'HF_ICECLASS'

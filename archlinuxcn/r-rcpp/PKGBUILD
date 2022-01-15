@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=Rcpp
-_pkgver=1.0.7
+_pkgver=1.0.8
 pkgname=r-${_pkgname,,}
-pkgver=1.0.7
+pkgver=1.0.8
 pkgrel=1
 pkgdesc='Seamless R and C++ Integration'
 arch=('x86_64')
@@ -19,7 +19,7 @@ optdepends=(
   r-tinytest
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('15e5a4732216daed16263c79fb37017c2ada84a2d4e785e3b76445d0eba3dc1d')
+sha256sums=('879f9296bc045ac4ed464578723bd37fcabbbdaa30aaaf070cf953e329f678ee')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
