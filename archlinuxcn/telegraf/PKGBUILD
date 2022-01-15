@@ -4,7 +4,7 @@
 
 
 pkgname=telegraf
-pkgver=1.21.1
+pkgver=1.21.2
 pkgrel=1
 pkgdesc='Plugin-driven server agent for reporting metrics into InfluxDB'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
@@ -12,6 +12,7 @@ url='http://influxdb.org/'
 license=('MIT')
 depends=('glibc')
 makedepends=('go' 'git')
+options=('!lto')
 backup=('etc/telegraf/telegraf.conf')
 install="${pkgname}.install"
 source=("https://github.com/influxdata/${pkgname}/archive/v${pkgver}/${pkgname}-v${pkgver}.tar.gz"
@@ -19,7 +20,7 @@ source=("https://github.com/influxdata/${pkgname}/archive/v${pkgver}/${pkgname}-
         "${pkgname}.service"
         "${pkgname}.sysusers"
         "${pkgname}.tmpfiles")
-b2sums=('6668ada762d3c33a291f6205bb68d2bac364a105b4d934698b6f0649b360646c8ffd89f89a2fa57ba4e3e0bd239a96a2336b5759730339afd89cca98f43e74b8'
+b2sums=('ecbecd4d2799dbf31de8a4ca2884a15f1a9beca66c650568c8fd5e7d5003106b41392dda85342ccd7e71941aab0c61acc0e14679660571ac4c698b75ab6a08e0'
         'a99e279fa6057b64b8a531922b9ce249fccea86b777686966932b6101923aaa9bacfe51d14dd2ef3168217b0d2d76fd06ce8ff50ae27d19fee69fcad975a83a9'
         'a0ea1bf213d10a6186993a48e6a8ca0ab70e3a949d85d0f7b881baeea3d051d05596863f1cef28ad83b0d2bc976a101014d7c04ae17a3ce2b98ce73b2b205826'
         'aac77720058d91abbe0ad28dadeb429a812e94c970c29491d787f039aece4a6401e8d52aa8c31b439771e8c31aed97cd822f1d4730eaa86fdff7140a0f45e143'
@@ -36,7 +37,7 @@ build() {
   export CGO_CFLAGS="${CFLAGS}"
   export CGO_CXXFLAGS="${CXXFLAGS}"
   export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
-  _LDFLAGS="-X main.version=${pkgver} -X main.branch=tag-${pkgver} -X main.commit=tag-${pkgver} -extldflags ${LDFLAGS}"
+  _LDFLAGS="-X main.goos=$(go env GOOS) -X main.goarch=$(go env GOARCH) -X main.version=${pkgver} -X main.branch=tag-${pkgver} -X main.commit=tag-${pkgver} -extldflags ${LDFLAGS}"
   go build -o build -ldflags="${_LDFLAGS}" "./cmd/telegraf"
 }
 
