@@ -19,4 +19,5 @@ clean:
 		serialize \
 		rapidjson \
 		qtkeychain \
+		sanitizers-cmake \
 		websocketpp

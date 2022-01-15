@@ -1,8 +1,8 @@
 # Maintainer: Ckat <ckat@teknik.io>
 pkgname=chatterino2-git
 _pkgname=chatterino2
-pkgver=r3419.dfa3818a
-pkgrel=2
+pkgver=r3427.e742860a
+pkgrel=1
 pkgdesc='Second installment of the Twitch chat client series "Chatterino", dev/git version'
 arch=('any')
 url=https://chatterino.com
@@ -15,17 +15,17 @@ optdepends=('streamlink: For piping streams to video players'
 provides=('chatterino')
 conflicts=('chatterino')
 install=$pkgname.install
-source=("git://github.com/Chatterino/chatterino2"
-        "git://github.com/Chatterino/libcommuni#branch=chatterino-cmake"
-        "git://github.com/jiakuan/qBreakpad"
-        "git://github.com/mohabouje/WinToast"
-        "git://github.com/pajlada/settings"
-        "git://github.com/pajlada/signals"
-        "git://github.com/pajlada/serialize"
-        "git://github.com/Tencent/rapidjson"
-        "git://github.com/Chatterino/qtkeychain"
-        "git://github.com/arsenm/sanitizers-cmake"
-        "git://github.com/zaphoyd/websocketpp")
+source=("git+https://github.com/Chatterino/chatterino2"
+        "git+https://github.com/Chatterino/libcommuni#branch=chatterino-cmake"
+        "git+https://github.com/jiakuan/qBreakpad"
+        "git+https://github.com/mohabouje/WinToast"
+        "git+https://github.com/pajlada/settings"
+        "git+https://github.com/pajlada/signals"
+        "git+https://github.com/pajlada/serialize"
+        "git+https://github.com/Tencent/rapidjson"
+        "git+https://github.com/Chatterino/qtkeychain"
+        "git+https://github.com/arsenm/sanitizers-cmake"
+        "git+https://github.com/zaphoyd/websocketpp")
 md5sums=('SKIP'
          'SKIP'
          'SKIP'
