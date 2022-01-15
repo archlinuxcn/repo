@@ -1,0 +1,15 @@
+post_upgrade() {
+  echo ">>    Remember to check for changes in /usr/lib/librewolf/librewolf.cfg.pacnew"
+  echo ">>    as those will not automatically overwrite your existing librewolf.cfg."
+  echo ">>    "
+  echo ">>    We would encourage you to migrate your own changes to the new overrides file"
+  echo ">>    at ~/.librewolf/librewolf.overrides.cfg instead, so making changes directly"
+  echo ">>    in your librewolf.cfg is not necessary anymore (in most cases at least)."
+  echo ">>    "
+  echo ">>    Check out https://gitlab.com/librewolf-community/settings/-/merge_requests/13"
+  echo ">>    for more information on this."
+}
+
+post_install() {
+  post_upgrade
+}
