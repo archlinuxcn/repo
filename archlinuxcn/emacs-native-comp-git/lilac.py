@@ -14,7 +14,7 @@ def pre_build():
             checks = checks + '2'
             continue
         if line.startswith('source='):
-            line = 'source=("emacs-git::git://github.com/emacs-mirror/emacs.git")'
+            line = 'source=("emacs-git::git+https://github.com/emacs-mirror/emacs.git")'
             checks = checks + '3'
 
 
