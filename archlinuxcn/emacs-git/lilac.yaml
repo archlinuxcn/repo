@@ -6,7 +6,7 @@ build_prefix: extra-x86_64
 post_build: aur_post_build
 
 update_on:
-  - source: github
-    github: emacs-mirror/emacs
+  - source: vcs
+    vcs: git://git.savannah.gnu.org/emacs.git
   - source: aur
     aur: emacs-git

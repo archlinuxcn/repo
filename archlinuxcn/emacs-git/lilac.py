@@ -7,8 +7,8 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if line.startswith('replaces='):
             continue
-        if line.startswith('source='):
-            line = 'source=("emacs-git::git+https://github.com/emacs-mirror/emacs.git")'
+        #if line.startswith('source='):
+        #    line = 'source=("emacs-git::git+https://github.com/emacs-mirror/emacs.git")'
 
         # disable build flags
         if '="YES"' in line:
