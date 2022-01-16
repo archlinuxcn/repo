@@ -1,33 +1,23 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
-_pkgname=reticulate
-_pkgver=1.22
+_pkgname=RcppTOML
+_pkgver=0.1.7
 pkgname=r-${_pkgname,,}
-pkgver=1.22
+pkgver=${_pkgver//[:-]/.}
 pkgrel=1
-pkgdesc="Interface to 'Python'"
+pkgdesc="'Rcpp' Bindings to Parser for Tom's Obvious Markup Language"
 arch=('x86_64')
 url="https://cran.r-project.org/package=${_pkgname}"
-license=('Apache')
+license=('GPL')
 depends=(
-  python
   r
-  r-here
-  r-jsonlite
-  r-png
-  r-rappdirs
   r-rcpp
-  r-rcpptoml
-  r-withr
 )
 optdepends=(
-  r-callr
-  r-knitr
-  r-rmarkdown
-  r-testthat
+  r-tinytest
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('b06e7b39abf08ae9604ea26d02e3c6e4ef6dcc4b6c7c98118fd85192f615f56c')
+sha256sums=('2f09f00cbee6c6eeff5d5f0195c10de0155496de15fbe8189c18627ee3090541')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
