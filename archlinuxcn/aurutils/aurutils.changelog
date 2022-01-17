@@ -1,3 +1,59 @@
+## 4.2
+
+* `aur-build`
+  + support PACMAN_AUTH environment variable for custom elevation command
+
+* `aur-repo`
+  + improve error handling
+  + remove extraneous `--` on `--path` output
+
+## 4.1
+
+* `aur-build`
+  + handle absolute paths in `--arg-file`
+
+* `aur-pkglist`
+  + add `--users` (`-U`) to retrieve a list of AUR users
+  + update aur-pkglist(1) man page
+
+* `aur-repo`
+  + fix formatting for `--table` and packages with no dependencies
+
+## 4
+
+* `aur-build`
+  + add `--no-check` (`makepkg --nocheck`)
+
+* `aur-search`
+  + add `--table`
+
+* `aur-fetch`
+  + add compatibility options (`--recurse`)
+
+* `aur-repo`
+  + add compatibility options (`--path`, `--path-list`, `--repo-list`)
+  + fix regression with `AUR_QUERY_PARALLEL`
+
+* `aur-sync`
+  + add `--no-check` (short for `--no-checkdepends`)
+    - implies `aur-build --no-check`
+  + apply `--ignore` to local repository targets
+  + `--ignore-file` now works with process substitution (#880)
+  + remove `--no-depends`, `--no-makedepends`
+
+## 3.3.0
+
+`aur-query` and `aur-fetch` now take arguments from the command-line
+by default. If `-` or `/dev/stdin` is the first (and only) arguments,
+they are taken from `stdin` instead. In particular, `aur fetch --recurse`
+is now written as `aur depends --pkgbase ... | aur fetch -`, and the
+explicit `--recurse` option was removed.
+
+The `-` argument propagates to `aur-depends` and `aur-search`
+transparently. Additionally, `aur-sync` no longer calls `aur-depends`
+and `aur-fetch` with `xargs`, avoiding the 123 exit code on failure of
+these commands.
+
 ## 3.2.1
 
 * `aur-query`
