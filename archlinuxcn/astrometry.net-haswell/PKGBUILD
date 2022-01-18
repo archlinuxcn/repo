@@ -4,7 +4,7 @@
 
 pkgname=astrometry.net-haswell
 _pkgname=astrometry.net
-pkgver=0.88
+pkgver=0.89
 pkgrel=1
 pkgdesc="Automatic recognition of astronomical images. Compiled with -march=haswell for recent Intel CPUs."
 arch=('x86_64')
@@ -21,7 +21,7 @@ optdepends=(
 backup=(etc/astrometry.cfg)
 install=astrometry.net.install
 source=("https://github.com/dstndstn/astrometry.net/releases/download/${pkgver}/astrometry.net-${pkgver}.tar.gz")
-sha1sums=('c5d1c29000503a19af5631b4d24a429200ecf6b1')
+sha1sums=('38583df4f9af05816b4c3c54e09ec105b2c05279')
 
 prepare() {
     cd ${_pkgname}-${pkgver}
