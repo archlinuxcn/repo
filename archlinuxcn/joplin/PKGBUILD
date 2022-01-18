@@ -100,7 +100,7 @@ package_joplin() {
   local pack="$(npm pack | tail -n 1)"
 
   msg2 "Installing CLI ($pack)"
-  npm install --global --production --cache "$cache" \
+  npm install --global --production --user root --cache "$cache" \
     --prefix "${pkgdir}/tmp" "$pack"
 
   msg2 "Rearranging directory tree"
