@@ -2,7 +2,7 @@
 # Contributor: Artyom Olshevskiy <siasia@siasia>
 
 pkgname=java-service-wrapper
-pkgver=3.5.45
+pkgver=3.5.48
 pkgrel=1
 pkgdesc="Enables a Java Application to be run as a Windows Service or Unix Daemon"
 url="https://wrapper.tanukisoftware.com/doc/english/introduction.html"
@@ -10,7 +10,7 @@ arch=('i686' 'x86_64' 'aarch64' 'armv6h' 'armv7h')
 license=('GPL2' 'custom:tanuki-community')
 makedepends=('ant' 'jdk8-openjdk')
 source=("https://wrapper.tanukisoftware.com/download/${pkgver}/wrapper_${pkgver}_src.tar.gz")
-sha256sums=('ae7965a1ad0389c593d5194fdaccc3bc120dbd3e7f459d7b18e6ab533bd7d402')
+sha256sums=('c2800d8702ce86f4e7abe06773ccc220364424ebf7b3035f788ff79d0ed8d523')
 
 prepare() {
     cd "wrapper_${pkgver}_src"
