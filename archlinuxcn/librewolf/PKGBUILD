@@ -5,7 +5,9 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=95.0
+pkgver=96.0.1_1
+_pkgver_real=96.0.1
+_pkgver=96.0.1-1
 pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
@@ -26,7 +28,7 @@ backup=('usr/lib/librewolf/librewolf.cfg'
         'usr/lib/librewolf/distribution/policies.json')
 options=(!emptydirs !makeflags !strip !lto)
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
-_common_tag="v${pkgver}-${pkgrel}"
+_common_tag="v${_pkgver}"
 _settings_tag='5.1'
 install='librewolf.install'
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
@@ -35,7 +37,7 @@ source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-
         "git+https://gitlab.com/${pkgname}-community/settings.git#tag=${_settings_tag}"
         "pref_pane.patch"
         )
-source_aarch64=("${pkgver}-${pkgrel}_build-arm-libopus.patch::https://raw.githubusercontent.com/archlinuxarm/PKGBUILDs/master/extra/firefox/build-arm-libopus.patch")
+source_aarch64=("https://raw.githubusercontent.com/archlinuxarm/PKGBUILDs/master/extra/firefox/build-arm-libopus.patch")
 sha256sums=('b4b03214ad838fe2744fed26c497c8a6fa7aedc95f47d4146da1cf5cc97860c0'
             '0b28ba4cc2538b7756cb38945230af52e8c4659b2006262da6f3352345a8bed2'
             'SKIP'
@@ -115,7 +117,7 @@ END
   # ...or maybe not?
   export LDFLAGS+=" -Wl,--no-keep-memory"
   # patch -Np1 -i ${_patches_dir}/arm.patch # not required anymore?
-  patch -Np1 -i ../${pkgver}-${pkgrel}_build-arm-libopus.patch
+  patch -Np1 -i ../build-arm-libopus.patch
 
 else
 
@@ -306,7 +308,7 @@ END
 
   # cd ${srcdir}/settings
   # git checkout ${_settings_commit}
-  cd ${srcdir}/firefox-$pkgver
+  cd ${srcdir}/firefox-$_pkgver_real
   cp -r ${srcdir}/settings/* ${pkgdir}/usr/lib/${pkgname}/
 
   local distini="$pkgdir/usr/lib/$pkgname/distribution/distribution.ini"
