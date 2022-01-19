@@ -1,18 +1,18 @@
 # Maintainer: c0re100 <corehusky@gmail.com> - https://husky.dev
 
 pkgname=qbittorrent-enhanced-git
-pkgver=4.3.9.10.r0.ga3955360c
-pkgrel=4
-pkgdesc="A bittorrent client powered by C++, Qt5 and the good libtorrent library (Enhanced Edition)"
+pkgver=4.4.0.10.r0.gfd047415f
+pkgrel=1
+pkgdesc="A bittorrent client powered by C++, Qt6 and the good libtorrent library (Enhanced Edition)"
 arch=('arm' 'armv6h' 'armv7h' 'aarch64' 'i686' 'x86_64')
 url="https://github.com/c0re100/qBittorrent-Enhanced-Edition"
 license=('custom' 'GPL')
-depends=('libtorrent-rasterbar' 'qt5-base' 'qt5-svg')
-makedepends=('boost' 'git' 'qt5-tools')
+depends=('libtorrent-rasterbar' 'qt6-base' 'qt6-svg')
+makedepends=('boost' 'git' 'qt6-tools')
 optdepends=('python: needed for torrent search tab')
 conflicts=('qbittorrent')
 provides=('qbittorrent')
-source=("${pkgname%-*}::git+https://github.com/c0re100/qBittorrent-Enhanced-Edition.git#branch=v4_3_x")
+source=("${pkgname%-*}::git+https://github.com/c0re100/qBittorrent-Enhanced-Edition.git#branch=v4_4_x")
 sha256sums=('SKIP')
 
 pkgver() {
