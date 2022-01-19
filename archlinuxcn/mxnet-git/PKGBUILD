@@ -1,6 +1,6 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
-_CUDA_ARCH_LIST="6.0;6.1;6.2;7.0;7.2;7.5;8.0;8.6"
+_CUDA_ARCH_LIST="6.0;6.1;6.2;7.0;7.2;7.5;8.0;8.6;8.6+PTX"
 _pkgname=mxnet
 pkgname=('mxnet-git' 'mxnet-cuda-git')
 _pkgver=2.0.0
@@ -61,6 +61,8 @@ prepare() {
   rm -rfv "${srcdir}/${_pkgname}/3rdparty/nvidia_cub"
   # the latest cmake set OpenMP_FOUND instead of OPENMP_FOUND
   sed -i 's/OPENMP_FOUND/OpenMP_FOUND/g' "${srcdir}/${_pkgname}/CMakeLists.txt"
+  # fix newline error in description
+  sed -i "s#description=open(os.path.join(CURRENT_DIR, 'README.md')).read()#description='A flexible and efficient library for deep learning'#" "python/setup.py"
 
   rm -rf "${srcdir}/${_pkgname}/build"
   mkdir "${srcdir}/${_pkgname}/build"
