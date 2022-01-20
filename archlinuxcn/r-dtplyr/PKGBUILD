@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=dtplyr
-_pkgver=1.2.0
+_pkgver=1.2.1
 pkgname=r-${_pkgname,,}
-pkgver=1.2.0
+pkgver=1.2.1
 pkgrel=1
 pkgdesc="Data Table Back-End for 'dplyr'"
 arch=('any')
@@ -31,7 +31,7 @@ optdepends=(
   r-tidyr
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('a6dedfb6dd80dfc1d29d005ab634c060b7bfda8cb49835ece84d3b7d12077414')
+sha256sums=('2640e9cde4eaa06f02cff29e3f2b99fdd08488df07ea2e6629b2ed6a8285d0f3')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
