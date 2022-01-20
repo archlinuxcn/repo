@@ -2,8 +2,9 @@ maintainers:
   - github: Sasasu
 
 pre_build_script: |
-  add_makedepends(['qt5-base']) # for qmake
   aur_pre_build(maintainers=['c0re100'])
+  add_makedepends(['qt5-tools'])
+  add_depends(['qt5-base', 'qt5-svg'])
 
 post_build: aur_post_build
 
