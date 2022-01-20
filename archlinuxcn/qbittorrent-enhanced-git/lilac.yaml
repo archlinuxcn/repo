@@ -1,7 +1,9 @@
 maintainers:
   - github: Sasasu
 
-pre_build_script: aur_pre_build(maintainers=['c0re100'])
+pre_build_script: |
+  add_makedepends(['qt5-base']) # for qmake
+  aur_pre_build(maintainers=['c0re100'])
 
 post_build: aur_post_build
 
