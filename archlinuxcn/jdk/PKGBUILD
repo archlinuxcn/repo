@@ -3,9 +3,9 @@
 
 pkgbase=jdk
 pkgname=('jre' 'jdk' 'jdk-doc')
-pkgver=17.0.1
-_build=12
-_hash=2a2082e5a09d4267845be086888add4f
+pkgver=17.0.2
+_build=8
+_hash=dfd4a8d0985749f896bed50d7138ee7f
 _majver="${pkgver%%.*}"
 pkgrel=1
 pkgdesc='Oracle Java'
@@ -23,8 +23,8 @@ source=("https://download.oracle.com/java/${_majver}/archive/jdk-${pkgver}_linux
         'java_48.png'
         'LICENSE')
 noextract=("jdk-${pkgver}_doc-all.zip")
-sha256sums=('6f25bcb94d3e22fb52a4632c74e03b403834e81b68701ab7ecd900fb9cd89f43'
-            '126a130be9a45d3f079d462c0b2ece8bcef7d422d252d06d1c8ca37c835e7cf8'
+sha256sums=('342e76bb9ded80aa1edd566efbae42f8f1c2366e19b9189e5941b45893b9861f'
+            'd25b34eb17053bf23a7a4a82ac2ab7a85b5d53a1109d6561e302761e23f33895'
             'ab50940bda40a9e8935d1a8f002debda0fdd0b3e2bcc0319827ec19acd8b34f3'
             'f17fe6e3d1b7ffbe854364e127509144057878a344d74673393782b90b6f054a'
             '321dc88a1a0289c1f0a3113e75bd2f488829a0b82c11ac047272e464fb3f3ab3'
