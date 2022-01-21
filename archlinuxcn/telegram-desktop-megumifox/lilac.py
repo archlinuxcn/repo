@@ -7,7 +7,6 @@ def pre_build():
 
 def post_build():
     git_add_files('PKGBUILD')
-    git_add_files('0001-use-system-font-and-use-stylename.patch')
     git_commit()
 
 if __name__ == '__main__':

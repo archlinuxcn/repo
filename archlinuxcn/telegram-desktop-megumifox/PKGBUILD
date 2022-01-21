@@ -3,8 +3,8 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
-pkgver=3.4.3
-pkgrel=6
+pkgver=3.4.8
+pkgrel=1
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
@@ -13,7 +13,7 @@ depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
          'qt6-imageformats' 'qt6-svg' 'qt6-wayland' 'qt6-5compat' 'xxhash' 'glibmm'
          'rnnoise' 'pipewire' 'libxtst' 'libxrandr' 'jemalloc' 'abseil-cpp')
 makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'microsoft-gsl'
-             'extra-cmake-modules' 'wayland-protocols' 'plasma-wayland-protocols' 'libtg_owt')
+             'extra-cmake-modules' 'wayland-protocols' 'plasma-wayland-protocols' 'libtg_owt' 'meson')
 optdepends=('webkit2gtk: embedded browser features'
             'xdg-desktop-portal: desktop integration')
 provides=('telegram-desktop')
@@ -21,7 +21,7 @@ conflicts=('telegram-desktop')
 source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
         "0001-Use-QGuiApplication-font-instead-of-opensans.patch"
         "0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch")
-sha512sums=('6b27eb14570b55fb14c77f1d557591985a4791712897c2e144196c54c2a98b10c7ece9dac7d039a6bb56f39e3062e4fbfbb60f6822e52b76f927bbf419d88a6b'
+sha512sums=('cdeb5a83a375a494d805bf4198beee1c4bfc94bd9626535721a0cf04a590c70bfdb20e76baaa2a4c8c6db54c5813f22ce2a8c6291786b6b6db3dcde10b266fe1'
             '3eb297f504f182cd62724bd6a21ef01bf14e440240e170222d766ae952f1428630c27e8d651f0d33fc0930b3d083e4e3e34e3b5bc355e992b426959e59dcbc55'
             '7a1dcfc563b764d1e68acb566df52890ad527ba2c442ac78825239bce64da3d77ca5f7cf965c67dafc5290e3549fa52780fc49b2d991cd798d05735a6143f46b')
 
@@ -50,4 +50,6 @@ build() {
 package() {
     cd tdesktop-$pkgver-full
     DESTDIR=$pkgdir ninja -C build install
+    # They botched the release and put a lot of stuff here.
+    rm -rf "$pkgdir/build"
 }
