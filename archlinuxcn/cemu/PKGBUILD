@@ -1,8 +1,8 @@
 # Contributor: chrisl echo archlinux@c2h0r1i2s4t5o6p7h8e9r-l3u4n1a.com|sed 's/[0-9]//g'
 
 pkgname=cemu
-pkgver=1.26.0
-pkgrel=4
+pkgver=1.26.1
+pkgrel=1
 pkgdesc="Wii U emulator (via wine). Includes the Cemuhook plugin"
 arch=(x86_64)
 url="https://cemu.info/"
@@ -20,14 +20,15 @@ source=(
 # The link for the sharedFonts comes from here: https://github.com/decaf-emu/decaf-emu/issues/29#issuecomment-315511347
 noextract=("cemuhook_${_cemuhookver}.zip")
 install=${pkgname}.install
+optdepends=('wine-ge-custom: Vulkan support')
 
 # Sometimes, they update the zip file without changing its name, which causes the md5sum to fail.
 # If you notice this, please mark this package as out-of-date in the aur website and I'll fix it.
 
 md5sums=('4a5add39abfee819f76e4eceef4971b7'
          '54d70005a8975812ab54fcfef53f7bde'
-         '91297906e0e441ae8d1ad4047e6a089a'
-         '158846f9a394ffedfb40bf4df55bafe0'
+         'dd3bfdd9ab2c8b1d21bb83166017c102'
+         '60c4d7a0a513d18661c470924a6df2b4'
          '266d9f45c6c75a1a7d5d80da0e97857e'
          '336a0bc0e44eede4ddf613a0eebf3bb9')
 
