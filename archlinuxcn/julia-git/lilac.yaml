@@ -19,6 +19,7 @@ repo_depends:
 
 update_on:
   - source: vcs
+    lilac_throttle: 1d
   - source: alpm
     alpm: curl
     provided: libcurl.so

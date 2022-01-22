@@ -9,6 +9,7 @@ repo_depends:
 
 update_on:
   - source: vcs
+    lilac_throttle: 3d
   - source: alpm
     from_pattern: ^(.*)
     to_pattern: \1
