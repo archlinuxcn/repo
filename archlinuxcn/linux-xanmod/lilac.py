@@ -6,16 +6,8 @@ def pre_build():
     aur_pre_build('linux-xanmod', maintainers=['figue'])
 
     # pkgrel is set to ${xanmod}
-    xanmod = 0
     for line in edit_file('PKGBUILD'):
-        if line.startswith('xanmod='):
-            xanmod = int(line.split("=")[-1])
-
         if line.startswith('pkgrel='):
-            line = "pkgrel=" + str(xanmod)
+            line = "pkgrel=1"
 
         print(line)
-
-    # make sure pkgrel is modified
-    if xanmod == 0:
-        raise ValueError('pkgrel is not set properly')
