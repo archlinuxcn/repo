@@ -2,8 +2,8 @@
 
 _pkgname=pylibjpeg
 pkgname=python-pylibjpeg
-pkgver=1.3.0
-pkgrel=2
+pkgver=1.4.0
+pkgrel=1
 pkgdesc='A Python framework for decoding JPEG images, with a focus on supporting pydicom'
 arch=(any)
 url='https://github.com/pydicom/pylibjpeg'
@@ -18,7 +18,7 @@ checkdepends=(
   python-pytest
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/pydicom/pylibjpeg/archive/v${pkgver}.tar.gz")
-sha512sums=('133ff61fec6c19809b1769758349d59380fa30d9aea98d818d5f3caa8a4d83287ba5773f26eadd8d9daeaf821b21c7f7e925678661bbd7f5ed8457359ab319ec')
+sha512sums=('316649c6caca151b92a2e3b7ffc9dcf87591ec8d9b4395ac1752bbd877181e732b6897c38c6866403c6556440fc834f3b99881a988b3466a55b124b3e13f0a08')
 
 build() {
   cd "${_pkgname}-${pkgver}"
