@@ -14,8 +14,6 @@ md5sums=(SKIP)
 prepare() {
   cd LIEF
 
-  sed -i 's/class  *BuildToolVersion/class LIEF_API BuildToolVersion/g' \
-      include/LIEF/MachO/BuildVersion.hpp
   # Try to delete first to make sure it exists
   rm cmake/strip.cmake
   # Don't strip
@@ -31,10 +29,17 @@ build() {
   export CXXFLAGS
   # LIEF doesn't use cmake install for python plugin so it'll have
   # the build time RPATH with it. Avoid it by not setting it during build time.
+  # The python command below will run cmake configure again
+  # but it should remember the flags we set here.
   cmake . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1 \
         -DCMAKE_SKIP_BUILD_RPATH=On
-  make -C build
-  python setup.py build --build-temp=build
+  # The python command invokes `make` with a manually set `-j` flag so it won't
+  # respect the one in `MAKEFLAGS`. Manually parse and supply the `-j` flag to setup.py.
+  _build_arg=
+  if [[ " ${MAKEFLAGS} " =~ [[:space:]]-j[[:space:]]*([0-9]*)[[:space:]] ]]; then
+    _build_arg=-j${BASH_REMATCH[1]}
+  fi
+  python setup.py build --build-temp=build $_build_arg
 }
 
 package() {
@@ -42,21 +47,6 @@ package() {
 
   make -C build DESTDIR="${pkgdir}" install
   python setup.py install --optimize=1 --root="${pkgdir}" --skip-build
-
-  if [[ -f "$pkgdir/usr/include/json.hpp" ]]; then
-    mv "$pkgdir/usr/include/json.hpp" "$pkgdir/usr/include/LIEF/json.hpp"
-    cat >> "$pkgdir/usr/include/LIEF/json.hpp" <<EOF
-
-#ifndef LIEF_JSON_H_
-#define LIEF_JSON_H_
-
-#include <LIEF/config.h>
-
-using json = nlohmann::json;
-
-#endif
-EOF
-  fi
 
   pymin_ver=$(python -c 'import sys; print(sys.version_info.minor)')
   ((pynext_min=pymin_ver + 1))

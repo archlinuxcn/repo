@@ -2,11 +2,16 @@ maintainers:
   - github: yuyichao
 
 build_prefix: extra-x86_64
+
+pre_build_script: |
+    update_pkgver_and_pkgrel(_G.newver)
+
 post_build: git_pkgbuild_commit
 
 update_on:
+  - source: github
+    github: lief-project/LIEF
+    use_max_tag: true
   - source: manual
-    manual: 0.10.1
-  - source: manual
-    manual: 3
+    manual: 1
   - alias: python
