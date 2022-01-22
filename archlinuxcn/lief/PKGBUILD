@@ -1,15 +1,15 @@
 # Maintainer: Dobroslaw Kijowski [dobo] <dobo90_at_gmail.com>
 
 pkgname=lief
-pkgver=0.10.1
-pkgrel=8
+pkgver=0.11.5
+pkgrel=1
 pkgdesc='Library to instrument executable formats'
 arch=(x86_64)
 url='https://lief.quarkslab.com/'
 license=(apache)
 makedepends=(git cmake python python-setuptools)
 source=("git+https://github.com/lief-project/LIEF#tag=${pkgver}")
-md5sums=(SKIP)
+md5sums=('SKIP')
 
 prepare() {
   cd LIEF
