@@ -11,6 +11,8 @@ url="https://github.com/ErikBjare/TakeTheTime"
 license=(MIT)
 depends=('python')
 makedepends=('git' 'python-setuptools')
+provides=(python-takethetime)
+conflicts=(python-takethetime)
 source=("$pkgname::git+$url")
 sha256sums=('SKIP')
 
