@@ -9,7 +9,7 @@ _pkgbase=systemd
 pkgname=('systemd-git' 'systemd-libs-git' 'systemd-resolvconf-git' 'systemd-sysvcompat-git')
 pkgdesc="systemd (git version)"
 pkgver=250.231.g578fe556df
-pkgrel=1
+pkgrel=2
 epoch=1 # official repo use systemd-stable as upstream and missing the subversion tags
 arch=('x86_64')
 url="https://www.github.com/systemd/systemd"
@@ -22,7 +22,6 @@ makedepends=('acl' 'cryptsetup' 'docbook-xsl' 'gperf' 'lz4' 'xz' 'pam' 'libelf'
 options=('strip')
 source=('git+https://github.com/systemd/systemd.git'
         '0001-Use-Arch-Linux-device-access-groups.patch'
-        '0003-PARTIAL-REVERT-commit-tree-wide-replace-strverscmp-and-str_verscmp-with-strverscmp_improved.patch'
         'initcpio-hook-udev'
         'initcpio-install-systemd'
         'initcpio-install-udev'
@@ -42,7 +41,6 @@ source=('git+https://github.com/systemd/systemd.git'
         '30-systemd-update.hook')
 sha512sums=('SKIP'
             '10f3b477527ec263cc6465c84d94416e356435930edc9e26844a0fd4f71e87a27fa0f91ce24b43a22cacdd2ead5e760e9d607369bc537a8da8d34021302a89a1'
-            '34541f1967536524329867f9f341f8d9250d9d771c60dc3e6a22ccb82fc01f103cfd3f9903329777591ccbecd2446622a5d6b3804fa0411482b85c70593ee8ad'
             'f0d933e8c6064ed830dec54049b0a01e27be87203208f6ae982f10fb4eddc7258cb2919d594cbfb9a33e74c3510cfd682f3416ba8e804387ab87d1a217eb4b73'
             'f599e1a35cba2c4e83e37c2299fac23ae128d8f68081283e71e1729384975dee1c4b677787f31a17890aeb98c8d2fc90405a202644290708ef9c027315022b17'
             'a25b28af2e8c516c3a2eec4e64b8c7f70c21f974af4a955a4a9d45fd3e3ff0d2a98b4419fe425d47152d5acae77d64e69d8d014a7209524b75a81b0edb10bf3a'
@@ -72,10 +70,6 @@ prepare() {
 
   # Replace cdrom/dialout/tape groups with optical/uucp/storage
   patch -Np1 -i ../0001-Use-Arch-Linux-device-access-groups.patch
-
-  # https://bugs.archlinux.org/task/70264
-  # https://github.com/systemd/systemd/issues/19191
-  patch -Np1 -i ../0003-PARTIAL-REVERT-commit-tree-wide-replace-strverscmp-and-str_verscmp-with-strverscmp_improved.patch
 }
 
 pkgver() {
