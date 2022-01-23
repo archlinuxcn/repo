@@ -9,8 +9,6 @@ pkgdesc="Log what you do on your computer. Simple, extensible, no third parties.
 arch=('any')
 url="https://github.com/ActivityWatch/activitywatch"
 license=('MPL2')
-provides=("activitywatch")
-conflicts=("activitywatch-bin")
 makedepends=(
     cargo-nightly
     git
@@ -53,6 +51,7 @@ _poetry_package() {
 }
 package_aw-core() {
     pkgdesc="Core library for ActivityWatch"
+    url="https://github.com/ActivityWatch/${pkgname}"
     depends=(
         python-jsonschema
         python-peewee
@@ -64,26 +63,33 @@ package_aw-core() {
         python-deprecation
         python-timeslot
         python-json-logger
+        python-rfc3339-validator
     )
     optdepends=(python-pymongo)
     provides=($pkgname)
+    conflicts=("activitywatch-bin" "${pkgname}-git")
 
     _poetry_package $pkgname
 }
 package_aw-client() {
     pkgdesc="Client library for ActivityWatch"
+    url="https://github.com/ActivityWatch/${pkgname}"
     depends=(
         aw-core
         python-requests
         python-persist-queue
         python-click
+        python-tabulate
+        python-typing-extensions
     )
     provides=($pkgname)
+    conflicts=("activitywatch-bin" "${pkgname}-git")
 
     _poetry_package $pkgname
 }
 package_aw-qt() {
     pkgdesc="Tray icon that manages ActivityWatch processes, built with Qt."
+    url="https://github.com/ActivityWatch/${pkgname}"
     depends=(
         aw-core
         aw-server
@@ -91,6 +97,7 @@ package_aw-qt() {
         python-click
     )
     provides=($pkgname)
+    conflicts=("activitywatch-bin" "${pkgname}-git")
 
     cd "${srcdir}/${pkgbase}/${pkgname}"
     install -Dm644 resources/${pkgname}.desktop "${pkgdir}/usr/share/applications/${pkgname}.desktop"
@@ -102,33 +109,38 @@ package_aw-qt() {
 }
 package_aw-watcher-afk() {
     pkgdesc="Watches keyboard and mouse activity to determine if you are AFK or not (for use with ActivityWatch)"
+    url="https://github.com/ActivityWatch/${pkgname}"
     depends=(
         aw-client
         python-xlib
         python-pynput
     )
     provides=($pkgname)
+    conflicts=("activitywatch-bin" "${pkgname}-git")
 
     _poetry_package $pkgname
 }
 package_aw-watcher-window() {
     pkgdesc="Cross-platform window watcher (for use with ActivityWatch)"
+    url="https://github.com/ActivityWatch/${pkgname}"
     depends=(
         aw-client
         python-xlib
     )
     provides=($pkgname)
+    conflicts=("activitywatch-bin" "${pkgname}-git")
 
     _poetry_package $pkgname
 }
 package_aw-server-rust() {
     pkgdesc="High-performance implementation of the ActivityWatch server, written in Rust"
+    url="https://github.com/ActivityWatch/${pkgname}"
     arch=('x86_64')
     depends=(
         gcc-libs
     )
     provides=(aw-server aw-webui)
-    conflicts=(aw-server activitywatch-bin)
+    conflicts=("activitywatch-bin" "${pkgname}" "${pkgname}-git" aw-server aw-server-git aw-webui aw-webui-git)
 
     cd "${srcdir}/${pkgbase}/${pkgname}"
 
