@@ -5,10 +5,10 @@
 _gemname=json_pure
 pkgname=ruby-$_gemname
 pkgver=2.6.1
-pkgrel=1
+pkgrel=2
 pkgdesc='JSON Implementation for Ruby'
 arch=(any)
-url='http://flori.github.com/json'
+url='http://flori.github.io/json/'
 license=(RUBY)
 depends=(ruby)
 makedepends=(ruby-rdoc)
