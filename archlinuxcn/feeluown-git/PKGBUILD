@@ -2,7 +2,7 @@
 _pkgname=feeluown
 pkgname=${_pkgname}-git
 pkgver=r1421.fda117d
-pkgrel=1
+pkgrel=2
 epoch=2
 pkgdesc="FeelUOwn Music Player (Master branch)"
 arch=('any')
@@ -16,7 +16,6 @@ optdepends=(
 	'feeluown-local'
 	'feeluown-netease'
 	'feeluown-kuwo'
-	'feeluown-xiami'
 	'feeluown-qqmusic'
 )
 source=(
@@ -39,6 +38,6 @@ build() {
 package() {
 	cd "$srcdir/$_pkgname"
 	LANG=en_US.UTF-8 python setup.py install --root="$pkgdir/" --optimize=1 --skip-build
-	install -D -m644 "$srcdir/$_pkgname/feeluown/icons/feeluown.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/feeluownapp.png"
+	install -D -m644 "$srcdir/$_pkgname/feeluown/gui/assets/icons/feeluown.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/feeluownapp.png"
 	install -D -m644 "$srcdir/feeluown.desktop" "$pkgdir/usr/share/applications/FeelUOwn.desktop"
 }
