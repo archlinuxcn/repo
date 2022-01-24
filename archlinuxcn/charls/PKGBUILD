@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=charls
-pkgver=2.2.0
+pkgver=2.3.0
 pkgrel=1
 pkgdesc='A C++ JPEG-LS library implementation'
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('BSD')
 depends=('gcc-libs')
 makedepends=('cmake')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/team-charls/charls/archive/${pkgver}.tar.gz")
-sha512sums=('387293f89bc30b50a59de7d5af23d0047bcdba89bd48cdb81e0437adabbfc9e19e135749129334a9db5c3ae5ad0c75b489e6e6545ee0c8134fc432153413793e')
+sha512sums=('2c990dfd2f247741efaeaa16e1eea716eed214ca249ba1f39458ad0011109bb1b56813ff0226365b6b3610cbc73f4853541e91583a096034b3cee007fc8f071c')
 
 build() {
   echo "CXXFLAGS: ${CXXFLAGS}"
