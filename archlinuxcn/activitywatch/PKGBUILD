@@ -31,10 +31,6 @@ prepare() {
     git submodule update --init --recursive
 }
 build() {
-    # cd "${srcdir}/${pkgbase}aw-server/aw-webui"
-    # npm install
-    # npm run build
-
     cd "${srcdir}/${pkgbase}/aw-server-rust"
     cargo build --release --bin aw-server
     cd aw-webui
@@ -101,6 +97,8 @@ package_aw-qt() {
 
     cd "${srcdir}/${pkgbase}/${pkgname}"
     install -Dm644 resources/${pkgname}.desktop "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+    install -Dm644 media/logo/logo.png "${pkgdir}/usr/share/icons/hicolor/512x512/apps/activitywatch.png"
+    install -Dm644 media/logo/logo-128.png "${pkgdir}/usr/share/icons/hicolor/128x128/apps/activitywatch.png"
 
     pyrcc5 -o aw_qt/resources.py aw_qt/resources.qrc
 
