@@ -16,7 +16,7 @@ md5sums=('adbf65029d7658adaa1e00c2ec95e0e3')
 prepare() {
 	cd "$srcdir/${_pkgname}-${pkgver}"
 
-	patch --strip=1 --input=$srcdir/${pkgname}.patch
+	sed -i 's:../../../lib64/libalvr_vulkan_layer.so:libalvr_vulkan_layer.so:' alvr/vulkan-layer/layer/alvr_x86_64.json
 
 	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
