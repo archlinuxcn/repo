@@ -4,17 +4,17 @@
 
 _basename=neon
 pkgname=lib32-neon
-pkgver=0.32.1
+pkgver=0.32.2
 pkgrel=1
 pkgdesc="HTTP and WebDAV client library with a C interface (32 bit)"
 arch=('x86_64')
 url="https://notroj.github.io/neon"
 license=('GPL' 'LGPL')
-depends=('lib32-krb5' 'lib32-expat' 'ca-certificates' 'neon')
+depends=('lib32-krb5' 'lib32-expat' 'lib32-zlib' 'ca-certificates' 'neon')
 makedepends=('xmlto' 'docbook-xsl')
 options=('libtool') # FS#16067
 source=(https://notroj.github.io/neon/${_basename}-${pkgver}.tar.gz)
-sha512sums=('a231865c3aad3668f6effded97a58eb981655f64c71b0954fcb2e667bdec50895d11bf296f4f454bd63e6ce9b02c2fd13cbb17cb82631e16f100000ecd7e1977')
+sha512sums=('2580a3c8c3cf4aff2d399f72a721ccfb4e68434ef92da4af8103c126812d779b9fbe5cafbab512c79f4365bbb3d3eac61568748136470e86f7aa7b98b27053c8')
 validpgpkeys=('190555472DCC589BEF01609C608A86DF9833CC49') # Joe Orton
 
 build() {
@@ -32,7 +32,8 @@ build() {
         --enable-shared \
         --disable-static \
         --with-ssl=openssl \
-        --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt
+        --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt \
+        --without-libproxy
 
     sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
 
