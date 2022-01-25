@@ -2,7 +2,7 @@
 
 _pkgbase=hysteria
 pkgname=$_pkgbase
-pkgver=0.9.4
+pkgver=0.9.5
 pkgrel=1
 pkgdesc='TCP relay & SOCKS5/HTTP proxy tool optimized for poor network environments'
 arch=('x86_64')
@@ -39,9 +39,9 @@ build() {
   local _goldflags="$_goldflags -X 'main.appDate=$(date "+%F %T")'"
   go build \
     -buildmode=pie -trimpath -mod=readonly -modcacherw \
-    -o build/$_pkgbase \
+    -o "build/$_pkgbase" \
     -ldflags "$_goldflags" \
-    ./cmd/...
+    ./cmd
 }
 
 #check() {
