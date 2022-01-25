@@ -1,0 +1,91 @@
+From c76f0f58997eac49a5adf2069ab0a3ac3981180c Mon Sep 17 00:00:00 2001
+From: def <dennis@felsin9.de>
+Date: Sat, 25 Dec 2021 02:21:14 +0100
+Subject: [PATCH] Don't expect "moments ago" string in tests, use regex matcher
+ instead
+
+---
+ CMakeLists.txt     |  6 +++---
+ src/test/score.cpp | 25 ++++++++++++++++++++++---
+ 2 files changed, 25 insertions(+), 6 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fccbf0c838..574018350c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -656,7 +656,7 @@ if(NOT(GTEST_FOUND) AND DOWNLOAD_GTEST)
+       )
+ 
+       if(MSVC)
+-        foreach(target gtest)
++        foreach(target gtest gmock)
+           # `/w` disables all warnings. This is needed because `gtest` enables
+           # `/WX` (equivalent of `-Werror`) for some reason, breaking builds
+           # when MSVS adds new warnings.
+@@ -664,10 +664,10 @@ if(NOT(GTEST_FOUND) AND DOWNLOAD_GTEST)
+         endforeach()
+       endif()
+ 
+-      set(GTEST_LIBRARIES gtest)
++      set(GTEST_LIBRARIES gtest gmock)
+       set(GTEST_INCLUDE_DIRS)
+       if(CMAKE_VERSION VERSION_LESS 2.8.11)
+-        set(GTEST_INCLUDE_DIRS "${gtest_SOURCE_DIR}/include")
++        set(GTEST_INCLUDE_DIRS "${gtest_SOURCE_DIR}/include" "${gmock_SOURCE_DIR}/include")
+       endif()
+     endif()
+   endif()
+diff --git a/src/test/score.cpp b/src/test/score.cpp
+index f99367875e..f7f551a09e 100644
+--- a/src/test/score.cpp
++++ b/src/test/score.cpp
+@@ -1,3 +1,4 @@
++#include <gmock/gmock.h>
+ #include <gtest/gtest.h>
+ 
+ #include <base/detect.h>
+@@ -255,7 +256,13 @@ TEST_P(MapInfo, ExactNoFinish)
+ {
+ 	str_copy(m_PlayerRequest.m_aName, "Kobra 3", sizeof(m_PlayerRequest.m_aName));
+ 	ASSERT_FALSE(CScoreWorker::MapInfo(m_pConn, &m_PlayerRequest, m_aError, sizeof(m_aError))) << m_aError;
+-	ExpectLines(pPlayerResult, {"\"Kobra 3\" by Zerodin on Novice, ★★★★★, 5 points, released moments ago, 0 finishes by 0 tees"});
++
++	EXPECT_EQ(pPlayerResult->m_MessageKind, CScorePlayerResult::DIRECT);
++	EXPECT_THAT(pPlayerResult->m_Data.m_aaMessages[0], testing::MatchesRegex("\"Kobra 3\" by Zerodin on Novice, ★★★★★, 5 points, released .* ago, 0 finishes by 0 tees"));
++	for(int i = 1; i < CScorePlayerResult::MAX_MESSAGES; i++)
++	{
++		EXPECT_STREQ(pPlayerResult->m_Data.m_aaMessages[i], "");
++	}
+ }
+ 
+ TEST_P(MapInfo, ExactFinish)
+@@ -263,7 +270,13 @@ TEST_P(MapInfo, ExactFinish)
+ 	InsertRank();
+ 	str_copy(m_PlayerRequest.m_aName, "Kobra 3", sizeof(m_PlayerRequest.m_aName));
+ 	ASSERT_FALSE(CScoreWorker::MapInfo(m_pConn, &m_PlayerRequest, m_aError, sizeof(m_aError))) << m_aError;
+-	ExpectLines(pPlayerResult, {"\"Kobra 3\" by Zerodin on Novice, ★★★★★, 5 points, released moments ago, 1 finish by 1 tee in 01:40 median"});
++
++	EXPECT_EQ(pPlayerResult->m_MessageKind, CScorePlayerResult::DIRECT);
++	EXPECT_THAT(pPlayerResult->m_Data.m_aaMessages[0], testing::MatchesRegex("\"Kobra 3\" by Zerodin on Novice, ★★★★★, 5 points, released .* ago, 1 finish by 1 tee in 01:40 median"));
++	for(int i = 1; i < CScorePlayerResult::MAX_MESSAGES; i++)
++	{
++		EXPECT_STREQ(pPlayerResult->m_Data.m_aaMessages[i], "");
++	}
+ }
+ 
+ TEST_P(MapInfo, Fuzzy)
+@@ -271,7 +284,13 @@ TEST_P(MapInfo, Fuzzy)
+ 	InsertRank();
+ 	str_copy(m_PlayerRequest.m_aName, "k3", sizeof(m_PlayerRequest.m_aName));
+ 	ASSERT_FALSE(CScoreWorker::MapInfo(m_pConn, &m_PlayerRequest, m_aError, sizeof(m_aError))) << m_aError;
+-	ExpectLines(pPlayerResult, {"\"Kobra 3\" by Zerodin on Novice, ★★★★★, 5 points, released moments ago, 1 finish by 1 tee in 01:40 median"});
++
++	EXPECT_EQ(pPlayerResult->m_MessageKind, CScorePlayerResult::DIRECT);
++	EXPECT_THAT(pPlayerResult->m_Data.m_aaMessages[0], testing::MatchesRegex("\"Kobra 3\" by Zerodin on Novice, ★★★★★, 5 points, released .* ago, 1 finish by 1 tee in 01:40 median"));
++	for(int i = 1; i < CScorePlayerResult::MAX_MESSAGES; i++)
++	{
++		EXPECT_STREQ(pPlayerResult->m_Data.m_aaMessages[i], "");
++	}
+ }
+ 
+ TEST_P(MapInfo, DoesntExit)

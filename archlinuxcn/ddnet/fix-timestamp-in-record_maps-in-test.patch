@@ -1,0 +1,26 @@
+From f346e445bd282567cda4d22180cb2024c8add03a Mon Sep 17 00:00:00 2001
+From: Dennis Felsing <dennis@felsin9.de>
+Date: Mon, 24 Jan 2022 20:58:14 -0300
+Subject: [PATCH] Fix timestamp in record_maps in test (fixes #4631)
+
+---
+ src/test/score.cpp | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/src/test/score.cpp b/src/test/score.cpp
+index f7f551a09e..efe102ad6c 100644
+--- a/src/test/score.cpp
++++ b/src/test/score.cpp
+@@ -81,9 +81,10 @@ struct Score : public testing::TestWithParam<IDbConnection *>
+ 		char aBuf[512];
+ 		str_format(aBuf, sizeof(aBuf),
+ 			"%s into %s_maps(Map, Server, Mapper, Points, Stars, Timestamp) "
+-			"VALUES (\"Kobra 3\", \"Novice\", \"Zerodin\", 5, 5, \"%s\")",
+-			m_pConn->InsertIgnore(), m_pConn->GetPrefix(), aTimestamp);
++			"VALUES (\"Kobra 3\", \"Novice\", \"Zerodin\", 5, 5, %s)",
++			m_pConn->InsertIgnore(), m_pConn->GetPrefix(), m_pConn->InsertTimestampAsUtc());
+ 		ASSERT_FALSE(m_pConn->PrepareStatement(aBuf, m_aError, sizeof(m_aError))) << m_aError;
++		m_pConn->BindString(1, aTimestamp);
+ 		int NumInserted = 0;
+ 		ASSERT_FALSE(m_pConn->ExecuteUpdate(&NumInserted, m_aError, sizeof(m_aError))) << m_aError;
+ 		ASSERT_EQ(NumInserted, 1);
