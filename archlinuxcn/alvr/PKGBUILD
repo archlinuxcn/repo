@@ -10,10 +10,8 @@ license=('MIT')
 groups=()
 depends=('vulkan-driver' 'ffmpeg-vulkan' 'gtk3' 'libunwind')
 makedepends=('git' 'rust' 'clang' 'imagemagick' 'vulkan-headers')
-source=("https://github.com/alvr-org/ALVR/archive/v${pkgver}.tar.gz"
-"${pkgname}.patch")
-md5sums=('adbf65029d7658adaa1e00c2ec95e0e3'
-         '8a2815f250ac231bb7252599771352f6')
+source=("https://github.com/alvr-org/ALVR/archive/v${pkgver}.tar.gz")
+md5sums=('adbf65029d7658adaa1e00c2ec95e0e3')
 
 prepare() {
 	cd "$srcdir/${_pkgname}-${pkgver}"
@@ -28,12 +26,12 @@ build() {
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
 
-	# export ALVR_ROOT_DIR=/usr
+	export ALVR_ROOT_DIR=/usr
 
-	# export ALVR_LIBRARIES_DIR=$ALVR_ROOT_DIR/lib/
+	export ALVR_LIBRARIES_DIR=$ALVR_ROOT_DIR/lib/
 
-	# export ALVR_OPENVR_DRIVER_ROOT_DIR=$ALVR_LIBRARIES_DIR/steamvr/alvr/
-	# export ALVR_VRCOMPOSITOR_WRAPPER_DIR=$ALVR_LIBRARIES_DIR/alvr/
+	export ALVR_OPENVR_DRIVER_ROOT_DIR=$ALVR_LIBRARIES_DIR/steamvr/alvr/
+	export ALVR_VRCOMPOSITOR_WRAPPER_DIR=$ALVR_LIBRARIES_DIR/alvr/
 
 	cargo build \
 		--frozen \
@@ -88,7 +86,7 @@ package() {
 	install -d $pkgdir/usr/share/icons/hicolor/{16x16,32x32,48x48,64x64,128x128,256x256}/apps/
 	cp -r icons/* $pkgdir/usr/share/icons/
 
-	install -Dm644 packaging/firewall/$pkgname-firewalld.xml "$pkgdir/usr/lib/firewalld/services/${pkgname}.xml"
+	install -Dm644 packaging/firewall/$pkgname-firewalld.xml "$pkgdir/usr/lib/firewalld/services/${_pkgname}.xml"
 	install -Dm644 packaging/firewall/ufw-$pkgname -t "$pkgdir/etc/ufw/applications.d/"
 
 	install -Dm755 packaging/firewall/alvr_fw_config.sh -t "$pkgdir/usr/lib/alvr/"
