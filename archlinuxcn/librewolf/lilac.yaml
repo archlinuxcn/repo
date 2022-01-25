@@ -6,14 +6,12 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-post_build: git_pkgbuild_commit
+pre_build: aur_pre_build('librewolf',maintainers=['lsf'])
+
+post_build: aur_post_build
 
 time_limit_hours: 4
 
 update_on:
-  - source: gitlab
-    gitlab: librewolf-community/browser/common
-    use_max_tag: true
-  - source: gitlab
-    gitlab: librewolf-community/settings
-    use_max_tag: true
+  - source: aur
+    aur:
