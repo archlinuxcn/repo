@@ -7,7 +7,7 @@ _setFullLibdir="${_setPrefix}/${_setLibdir}"
 _pkgbasename=glslang
 
 pkgname=lib32-$_pkgbasename
-pkgver=11.6.0
+pkgver=11.7.0
 pkgrel=1
 pkgdesc='OpenGL and OpenGL ES shader front end and validator (32bit)'
 arch=('x86_64')
@@ -31,7 +31,7 @@ source=(
         git+https://github.com/KhronosGroup/SPIRV-Headers#commit=449bc986ba6f4c5e10e32828783f9daef2a77644
         )
 sha256sums=(
-        '99ecd3a0c2c2219293d76723846f762a9f3e7dd0dc2a4f346d0fc3a05a0ce000'
+        'b6c83864c3606678d11675114fa5f358c519fe1dad9a781802bcc87fb8fa32d5'
         'SKIP'
         'SKIP'
         )
