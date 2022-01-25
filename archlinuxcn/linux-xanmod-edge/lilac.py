@@ -8,5 +8,9 @@ def pre_build():
     # pkgrel is set to ${xanmod}
     for line in edit_file('PKGBUILD'):
         if line.startswith('pkgrel='):
-            line = "pkgrel=1"
+            try:
+                int(line.split("=")[-1])
+            except:
+                line = "pkgrel=1"
+
         print(line)
