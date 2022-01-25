@@ -1,8 +1,7 @@
 # Maintainer: Rodrigo Bezerra <rodrigobezerra21 at gmail dot com>
 
-_basename=gupnp
 pkgname=lib32-gupnp
-pkgver=1.4.1
+pkgver=1.4.3
 pkgrel=1
 pkgdesc="An object-oriented UPNP framework (32-bit)"
 arch=(x86_64)
@@ -10,14 +9,21 @@ url="https://wiki.gnome.org/Projects/GUPnP"
 license=(LGPL)
 depends=("gupnp" "lib32-gssdp" "libgio-2.0.so" "libglib-2.0.so" "libgmodule-2.0.so" "libgobject-2.0.so" "libgssdp-1.2.so" "libuuid.so")
 makedepends=(git gobject-introspection meson vala)
-_commit=21cf45befcdfbda8882ff4805f9e791270e28274 # tags/gupnp-1.4.1^0
+_commit=1e752b11dc51673c71c70bbf6deb34c96e3abd19 # tags/gupnp-1.4.3^0
 source=("git+https://gitlab.gnome.org/GNOME/gupnp.git#commit=$_commit")
 sha256sums=('SKIP')
 
 pkgver() {
     cd gupnp
 
-    git describe --tags | sed 's/^gupnp-//;s/-/+/g'
+    git describe --tags | sed 's/^gupnp-//;s/[^-]*-g/r&/;s/-/+/g'
+}
+
+prepare() {
+    cd gupnp
+
+    # Unbreak man page build
+    git revert -n 8795626a07963a91400773cfe04d4f2f1c37ff14
 }
 
 build() {
