@@ -2,7 +2,7 @@
 # Contributor: josephgbr <rafael.f.f1 at gmail dot com>
 
 pkgname=lib32-libexif
-pkgver=0.6.23
+pkgver=0.6.24
 pkgrel=1
 pkgdesc="A library to parse an EXIF file and read the data from those tags (32-bit)"
 arch=('x86_64')
@@ -12,7 +12,7 @@ depends=("${pkgname#lib32-}" 'lib32-glibc')
 makedepends=('gcc-multilib')
 options=('!libtool')
 source=(${url}/archive/${pkgname#lib32-}-${pkgver//./_}-release.tar.gz)
-sha512sums=('9fa2e124d6a5787fd1c6101be9c345e699bc074026f7c0e1d0c8dc202b922e749a76d7a9d4dd7afe880a7e2ff8ac029590b9957743962dbc0e17320c21afd22d')
+sha512sums=('0b15a157c1030490bf1c4239487dffda90daad467ac6281db2a1b34a8419fca32b4b5265452e75cbcd2c9dc9a829643231cd3749e88251ed1b596756d1c5a9f4')
 
 build() {
   # Modify environment to generate 32-bit ELF. Respects flags defined in makepkg.conf
