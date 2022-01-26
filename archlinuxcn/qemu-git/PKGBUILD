@@ -16,7 +16,7 @@ pkgname=(
   qemu-guest-agent-git
 )
 pkgdesc="A generic and open source machine emulator and virtualizer. Git version."
-pkgver=6.2.0.r874.g1cd2ad11d3
+pkgver=6.2.0.r1119.g48302d4eb6
 pkgrel=1
 epoch=15
 arch=(i686 x86_64)
