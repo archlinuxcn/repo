@@ -1,7 +1,7 @@
 # Maintainer: Reto Brunner <reto@labrat.space>
 pkgname=thelounge-git
 _realname=thelounge
-pkgver=v4.3.0.7292
+pkgver=v4.3.0.7293
 pkgrel=1
 pkgdesc='Modern self-hosted web IRC client'
 url='https://thelounge.chat/'
@@ -52,7 +52,8 @@ package() {
 
     # Non-deterministic race in npm gives 777 permissions to random directories.
     # See https://github.com/npm/npm/issues/9359 for details.
-    find "${pkgdir}"/usr -type d -exec chmod 755 {} +
+find "${pkgdir}"/usr -type d -exec chmod 755 {} +
+    find "${pkgdir}" -type f -name .DS_Store -delete
 
     # npm gives ownership of ALL FILES to build user
     # https://bugs.archlinux.org/task/63396
