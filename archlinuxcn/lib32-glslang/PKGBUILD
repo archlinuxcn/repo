@@ -7,7 +7,7 @@ _setFullLibdir="${_setPrefix}/${_setLibdir}"
 _pkgbasename=glslang
 
 pkgname=lib32-$_pkgbasename
-pkgver=11.7.0
+pkgver=11.7.1
 pkgrel=1
 pkgdesc='OpenGL and OpenGL ES shader front end and validator (32bit)'
 arch=('x86_64')
@@ -16,12 +16,12 @@ license=('BSD')
 depends=(
         "$_pkgbasename>=$pkgver"
         'lib32-gcc-libs'
-        'python'
         )
 makedepends=(
         'cmake'
         'ninja'
         'git'
+        'python'
         )
 options=('staticlibs')
 # Get the commits from known_good.json for every release
@@ -31,7 +31,7 @@ source=(
         git+https://github.com/KhronosGroup/SPIRV-Headers#commit=449bc986ba6f4c5e10e32828783f9daef2a77644
         )
 sha256sums=(
-        'b6c83864c3606678d11675114fa5f358c519fe1dad9a781802bcc87fb8fa32d5'
+        'ab2e2ddc507bb418b9227cbe6f443eb06e89e2387944f42026d82c0b4ef79b0a'
         'SKIP'
         'SKIP'
         )
@@ -54,6 +54,7 @@ build() {
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 
   cd ${_pkgbasename}-${pkgver}
+  export CXXFLAGS+=" -ffat-lto-objects"
   cmake \
     -Bbuild-shared \
     -G Ninja \
