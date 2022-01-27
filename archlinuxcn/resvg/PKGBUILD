@@ -1,7 +1,9 @@
 # Maintainer: Philipp A. <flying-sheep@web.de>
+# Contributor: Caleb Maclennan <caleb@alerque.com>
+
 pkgname=resvg
 pkgver=0.20.0
-pkgrel=2
+pkgrel=3
 pkgdesc='SVG rendering library and CLI'
 arch=(i686 x86_64)
 url="https://github.com/RazrFalcon/$pkgname"
@@ -13,20 +15,18 @@ optdepends=(
 	'kio: For the dolphin thumbnailer'
 )
 makedepends=(cargo clang qt5-base qt5-tools kio cairo pango cmake extra-cmake-modules)
-source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+source=("$url/archive/v$pkgver/$pkgname-$pkgver.tar.gz")
 sha256sums=('b85b46e1a420c3c0b1a68187615d38d32dccad9cc86dfab114df3645912188c7')
 
 prepare() {
 	cd "$pkgname-$pkgver"
-
-	export RUSTUP_TOOLCHAIN=stable
-	export CARGO_TARGET_DIR=target
 	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	mkdir -p tools/kde-dolphin-thumbnailer/build
 }
 
 build() {
 	cd "$pkgname-$pkgver"
-
+	
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
 	cargo build --workspace --frozen --release --all-features
@@ -38,9 +38,7 @@ build() {
 	)
 	
 	(
-		cd tools/kde-dolphin-thumbnailer
-		mkdir -p build
-		cd build
+		cd tools/kde-dolphin-thumbnailer/build
 		cmake .. \
 			-Wno-dev \
 			-DCMAKE_CXX_FLAGS="-L../../../target/release" \
@@ -55,24 +53,16 @@ build() {
 
 check() {
 	cd "$pkgname-$pkgver"
-
 	export RUSTUP_TOOLCHAIN=stable
 	cargo test --frozen --all-features
 }
 
 package() {
 	cd "$pkgname-$pkgver"
-	
-	for tool in resvg usvg; do
-		install -Dm755 target/release/$tool "$pkgdir/usr/bin/$tool"
-	done
-	install -Dm755 tools/viewsvg/viewsvg "$pkgdir/usr/bin/viewsvg"
-	(
-		cd tools/kde-dolphin-thumbnailer/build
-		make install
-	)
-	install -Dm755 target/release/libresvg.so "$pkgdir/usr/lib/libresvg.so"
-	install -d "$pkgdir/usr/share/doc/resvg"  "$pkgdir/usr/include"
-	install -Dm644 c-api/*.h "$pkgdir/usr/include/"
+	install -Dm755 -t "$pkgdir/usr/bin/" target/release/{resvg,usvg} tools/viewsvg/viewsvg
+	make -C tools/kde-dolphin-thumbnailer/build install
+	install -Dm755 -t "$pkgdir/usr/lib/" target/release/libresvg.so
+	install -Dm644 -t "$pkgdir/usr/include/" c-api/*.h
+	install -d "$pkgdir/usr/share/doc/resvg"
 	cp -r target/doc/* "$pkgdir/usr/share/doc/resvg"
 }
