@@ -43,6 +43,3 @@ pkgver() {
     git describe --always | sed -e 's/BABL_//g' -e 's/[_-]/./g'
 }
 
-check() {
-    meson test -C "${srcdir}/build"
-}
