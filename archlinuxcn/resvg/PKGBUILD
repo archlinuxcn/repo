@@ -1,7 +1,7 @@
 # Maintainer: Philipp A. <flying-sheep@web.de>
 pkgname=resvg
 pkgver=0.20.0
-pkgrel=1
+pkgrel=2
 pkgdesc='SVG rendering library and CLI'
 arch=(i686 x86_64)
 url="https://github.com/RazrFalcon/$pkgname"
@@ -16,31 +16,33 @@ makedepends=(cargo clang qt5-base qt5-tools kio cairo pango cmake extra-cmake-mo
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
 sha256sums=('b85b46e1a420c3c0b1a68187615d38d32dccad9cc86dfab114df3645912188c7')
 
+prepare() {
+	cd "$pkgname-$pkgver"
+
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
 build() {
 	cd "$pkgname-$pkgver"
-	for dir in usvg c-api .; do
+
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	cargo build --workspace --frozen --release --all-features
+	
 	(
-		msg2 "Building $dir"
-		cd "$dir"
-		if grep -q cairo-backend Cargo.toml; then
-			cargo build --release --features='qt-backend cairo-backend'
-		else
-			cargo build --release
-		fi
-	)
-	done
-	(
-		msg2 "Building tools/viewsvg"
 		cd tools/viewsvg
 		qmake PREFIX="$pkgdir/usr"
 		make
 	)
+	
 	(
-		msg2 "Building tools/kde-dolphin-thumbnailer"
 		cd tools/kde-dolphin-thumbnailer
 		mkdir -p build
 		cd build
 		cmake .. \
+			-Wno-dev \
 			-DCMAKE_CXX_FLAGS="-L../../../target/release" \
 			-DCMAKE_INSTALL_PREFIX="$pkgdir/$(qtpaths --install-prefix)" \
 			-DQT_PLUGIN_INSTALL_DIR="$pkgdir/$(qtpaths --plugin-dir)" \
@@ -48,8 +50,14 @@ build() {
 		make
 	)
 	
-	msg2 'Building docs'
 	cargo doc --release --no-deps -p resvg-capi
+}
+
+check() {
+	cd "$pkgname-$pkgver"
+
+	export RUSTUP_TOOLCHAIN=stable
+	cargo test --frozen --all-features
 }
 
 package() {
