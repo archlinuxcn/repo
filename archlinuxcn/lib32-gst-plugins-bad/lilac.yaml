@@ -33,6 +33,7 @@ repo_depends:
   - lib32-rtmpdump
   - lib32-sbc
   - lib32-shaderc
+  - lib32-soundtouch
   - lib32-spandsp
   - lib32-srt
   - lib32-webrtc-audio-processing
@@ -222,6 +223,10 @@ update_on:
     strip_release: true
     alpm: lib32-libsndfile
     repo: multilib
+  - alias: alpm-lilac
+    alpm: lib32-soundtouch
+    provided: libSoundTouch.so
+    strip_release: true
   - alias: alpm-lilac
     alpm: lib32-spandsp
     provided: libspandsp.so
