@@ -16,7 +16,7 @@ pkgname=(
   qemu-guest-agent-git
 )
 pkgdesc="A generic and open source machine emulator and virtualizer. Git version."
-pkgver=6.2.0.r1119.g48302d4eb6
+pkgver=6.2.0.r1146.g7a1043cef9
 pkgrel=1
 epoch=15
 arch=(i686 x86_64)
@@ -108,8 +108,7 @@ prepare() {
 }
 
 build() {
-  _build full \
-    --audio-drv-list="pa,alsa,sdl,jack"
+  _build full
 
   _build headless \
     --audio-drv-list= \
@@ -119,7 +118,12 @@ build() {
     --disable-brlapi \
     --disable-opengl \
     --disable-dbus-display \
-    --disable-virglrenderer
+    --disable-virglrenderer \
+    --disable-alsa \
+    --disable-jack \
+    --disable-oss \
+    --disable-pa \
+    --disable-sdl
 }
 
 _build() (
