@@ -6,13 +6,13 @@
 
 pkgname=('mysql' 'libmysqlclient' 'mysql-clients')
 pkgbase=mysql
-pkgver=8.0.27
-pkgrel=2
+pkgver=8.0.28
+pkgrel=1
 pkgdesc="Fast SQL database server, community edition"
 arch=('x86_64')
 makedepends=('openssl' 'zlib' 'cmake' 'systemd-tools' 'systemd-libs' 'libaio'
              'jemalloc' 'rpcsvc-proto' 'libtirpc' 'icu' 'libedit' 'libevent'
-             're2' 'rapidjson')
+             'libfido2' 're2' 'rapidjson')
 license=('GPL')
 url="https://www.mysql.com/products/community/"
 source=("https://cdn.mysql.com/Downloads/MySQL-8.0/${pkgbase}-boost-${pkgver}.tar.gz"
@@ -22,12 +22,12 @@ source=("https://cdn.mysql.com/Downloads/MySQL-8.0/${pkgbase}-boost-${pkgver}.ta
         "mysqld_service.patch"
         "systemd-tmpfiles.patch"
         "systemd-sysusers.conf")
-sha256sums=('74b5bc6ff88fe225560174a24b7d5ff139f4c17271c43000dbcf3dcc9507b3f9'
+sha256sums=('6dd0303998e70066d36905bd8fef1c01228ea182dbfbabc6c22ebacdbf8b5941'
             '6bc24ae510f6b6bbad6b3edda2d0028b29292937b482274a4c2fae335f4de328'
             'e1c23fa0971a13d998f2790379b68c475438d05b6d6f2691b99051dbf497567f'
             '203dcd22fea668477ac7123dbd9909fae72d3d07f8855417a669a9c94db072ae'
             '8fbedfc2c5fe271ed13217feeceeac00202d2cb135e4283eeee2f9a13d6251af'
-            'e2abfc23fcc417e201a893cc7c8bdf847a275a35783d4d135d3b3a2ecf108d77'
+            '2df5f37482a5ba8bae3701924a3bd7ff558008b968e3ac2c40e407b1405b3d38'
             '200a992eb41c95efa99845d017439ddd4018a3e51f57ffca8cb802b0d25123f1')
 
 build() {
@@ -60,6 +60,7 @@ build() {
     -DROUTER_INSTALL_RUNTIMEDIR=run \
     -DROUTER_INSTALL_LOGDIR=var/log/mysqlrouter \
     -DWITH_SYSTEM_LIBS=ON \
+    -DWITH_FIDO=system \
     -DWITH_SSL=system \
     -DWITH_LIBWRAP=OFF \
     -DWITH_LTO=ON \
@@ -166,7 +167,7 @@ package_mysql(){
   rm "${pkgdir}/usr/lib/libmysqlclient.a"
   rm "${pkgdir}/usr/lib/libmysqlclient.so"
   rm "${pkgdir}/usr/lib/libmysqlclient.so.21"
-  rm "${pkgdir}/usr/lib/libmysqlclient.so.21.2.27"
+  rm "${pkgdir}/usr/lib/libmysqlclient.so.21.2.28"
   rm "${pkgdir}/usr/lib/libmysqlservices.a"
   rm "${pkgdir}/usr/lib/pkgconfig/mysqlclient.pc"
   rmdir "${pkgdir}/usr/lib/pkgconfig"
