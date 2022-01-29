@@ -3,7 +3,7 @@
 
 pkgbase=linux-zen-g14
 _pkgbase=linux-zen
-pkgver=5.16.2.zen1
+pkgver=5.16.3.zen1
 pkgrel=1
 pkgdesc='Linux ZEN'
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -11,7 +11,7 @@ url="https://github.com/zen-kernel/zen-kernel/commits/$_srctag"
 arch=(x86_64)
 license=(GPL2)
 makedepends=(
-  bc kmod libelf pahole cpio perl tar xz texlive-core
+  bc kmod libelf pahole cpio perl tar xz texlive-core texlive-latexextra
   xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick
   git
 )
@@ -37,6 +37,8 @@ prepare() {
   cp ../fedora-kernel/0*.patch $srcdir
   cp ../fedora-kernel/kernel.spec $srcdir
 
+  sed -i '/0001-squashed-amd-pstate-v3-for-5.14.patch/d' $srcdir/kernel.spec
+
   echo "Setting version..."
   scripts/setlocalversion --save-scmversion
   echo "-$pkgrel" > localversion.10-pkgrel
@@ -47,7 +49,7 @@ prepare() {
   local src
   for src in $(cat kernel.spec | grep "ApplyOptionalPatch 0" | sed -e 's/ApplyOptionalPatch //g'); do
     cd $_srcname
-    echo "Applying patch $src..."
+    msg2 "Applying patch $src..."
     patch -Np1 < "../$src"
     cd ..
   done
