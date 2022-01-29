@@ -3,9 +3,9 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=qt6-base-24h
-_qtver=6.2.2
+_qtver=6.2.3
 pkgver=${_qtver/-/}
-pkgrel=5.1
+pkgrel=6
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -32,20 +32,17 @@ source=(
       'https://build.archlinuxcn.org/~oldherl/files/cldr/36/core.zip'
       https://download.qt.io/official_releases/qt/${pkgver%.*}/$_qtver/submodules/$_pkgfn.tar.xz
         qt6-base-cflags.patch
-        qt6-base-nostrip.patch
-        qtbug-97908.patch::https://code.qt.io/cgit/qt/qtbase.git/patch/?id=9b7f7115)
+        qt6-base-nostrip.patch)
 sha256sums=(
       '901a764c896559bb472d5ecee4af9ee006b235f73e56959de9ded477a10e5fc6'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
-      '85ab9180180c2eaf84cd11ae4c6d5a6a69f2f8fd7260aaccfd91a3e7e7232c1a'
+      '34d6d0072e197241463c417ad72610c3d44e2efd6062868e9a95283103d75df4'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
-            '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094'
-            '06590303498a10950408d26f027928ec12019fe631237d1862c2d720f1d331bb')
+            '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
 
 prepare() {
   patch -d $_pkgfn -p1 < qt6-base-cflags.patch # Use system CFLAGS
   patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
-  patch -d $_pkgfn -p1 < qtbug-97908.patch # Fix scrolling with PgUp/PgDown keys
 
   cd $_pkgfn
   patch -p1 -i ../oldherl-24h.patch
