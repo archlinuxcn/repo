@@ -3,6 +3,10 @@ maintainers:
 
 build_prefix: extra-x86_64
 
+repo_depends:
+    # neovim-coc seems broken with the latest neovim
+    - neovim-coc-git
+
 pre_build_script: |
     aur_pre_build(maintainers='sainnhe')
 
