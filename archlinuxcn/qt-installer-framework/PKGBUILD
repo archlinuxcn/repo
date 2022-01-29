@@ -4,7 +4,7 @@
 
 pkgbase=qt-installer-framework
 pkgname=(qt-installer-framework qt-installer-framework-docs)
-pkgver=4.1.1
+pkgver=4.2.0
 pkgrel=1
 pkgdesc='The Qt Installer Framework used for the Qt SDK installer'
 arch=('x86_64')
@@ -12,7 +12,7 @@ url='http://qt-project.org/wiki/Qt-Installer-Framework'
 license=('FDL' 'LGPL')
 makedepends=('qt5-tools' 'qt5-declarative' 'clang')
 source=("${pkgbase}-${pkgver}.tar.gz"::"https://github.com/qtproject/installer-framework/archive/${pkgver}.tar.gz")
-sha256sums=('0f41f6bd626ab5a725cd64ea1263113962c7a1825e96f085a7a388e8a84f77e1')
+sha256sums=('e0a55955d05d41a722cdf5dc1740118b8d61bf22e9fbe0d77c87a2052784dd55')
 
 build() {
   # Build tools and libraries
