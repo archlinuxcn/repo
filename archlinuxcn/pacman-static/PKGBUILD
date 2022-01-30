@@ -3,22 +3,22 @@
 # All my PKGBUILDs are managed at https://github.com/eli-schwartz/pkgbuilds
 
 pkgname=pacman-static
-pkgver=6.0.0
-_cares_ver=1.17.1
-_nghttp2_ver=1.43.0
-_curlver=7.77.0
-_sslver=1.1.1k
+pkgver=6.0.1
+_cares_ver=1.18.1
+_nghttp2_ver=1.46.0
+_curlver=7.81.0
+_sslver=1.1.1m
 _zlibver=1.2.11
 _xzver=5.2.5
 _bzipver=1.0.8
-_zstdver=1.5.0
-_libarchive_ver=3.5.1
-_gpgerrorver=1.42
+_zstdver=1.5.2
+_libarchive_ver=3.5.2
+_gpgerrorver=1.44
 _libassuanver=2.5.5
-_gpgmever=1.15.1
-pkgrel=15
+_gpgmever=1.16.0
+pkgrel=2
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
-arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
+arch=('i486' 'i686' 'pentium4' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
 license=('GPL')
 depends=('pacman')
@@ -62,17 +62,17 @@ source+=("https://gnupg.org/ftp/gcrypt/libassuan/libassuan-${_libassuanver}.tar.
 # gpgme
 source+=("https://www.gnupg.org/ftp/gcrypt/gpgme/gpgme-${_gpgmever}.tar.bz2"{,.sig})
 # libarchive
-source+=("https://github.com/libarchive/libarchive/releases/download/${_libarchive_ver}/libarchive-${_libarchive_ver}.tar.xz"{,.asc})
+source+=("https://github.com/libarchive/libarchive/releases/download/v${_libarchive_ver}/libarchive-${_libarchive_ver}.tar.xz"{,.asc})
 validpgpkeys+=('A5A45B12AD92D964B89EEE2DEC560C81CEC2276E') # Martin Matuska <mm@FreeBSD.org>
 
-sha512sums=('78fc5b70a2fc356746f8a4580ce7fd01b25b3463db1b9b008f02a97e22c236fdb1d09985769caf6ac675d9b1091ba0f71afa38ec5759cf7911f1b1a33586f563'
+sha512sums=('d17b9aea9f8d51a5a02fc9faa8e36227c0edea73957cc8a8174a23a81ca42737ecfce630aa86008ab26daec584004b772cd2eb3527aeef9e098b445edaa21f6f'
             'SKIP'
-            'eac69ba356870a1cba420a06771082897be8dd40a68f4e04223f41f3d22626e4f5b3766d3dbcc496dd212be01f64c3ac280a2ebddd31dd88f7350c20f56e5d39'
-            'b11887bcc9274d368088e1a8b6aca62414f20675cf0bc58e948f54fa04c327c39dd23cefe7509eec6397db14b550a3f6b77f5c18b3d735b3eef48ce2da1dcd00'
+            'fcf3573bcc421705190c7cf0e3230f6f3028b669cb2976d29cfeb73e706deaae91ce60d0a615472e3f296454049ea5798f1e8defdd260a98895e94fea6a7a16b'
+            '1276ec0799916019f8c0af6b55a139701bd15e0ca4a00811d07963893978bc96c107b980f0fd49f81aa70bc8b3b8cd671195ba357c390772d4c2c5643c50c5a5'
             'SKIP'
-            'cacd85eb9b2ad90f59595b497035f4660b6c5cff2d653da939c9ceac6dd8dd4bc7bdcb2dfd251862af0c29b9299312bf7271ed0249734fca979c9588799635d6'
+            'e3084f0fa083f7f93eac923edbfdddb5fd0a372b94673ba9d4427a2b95508898c15ecdf63b99a1c1f6cf3215e27b06cbaa2b7073df038d43b362e586f92495d3'
             'SKIP'
-            '73cd042d4056585e5a9dd7ab68e7c7310a3a4c783eafa07ab0b560e7462b924e4376436a6d38a155c687f6942a881cfc0c1b9394afcde1d8c46bf396e7d51121'
+            'ba0ef99b321546c13385966e4a607734df38b96f6ed45c4c67063a5f8d1482986855279797a6920d9f86c2ec31ce3e104dcc62c37328caacdd78aec59aa66156'
             'SKIP'
             '3857c298663728a465b5f95a3ef44547efbfb420d755e9dde7f20aa3905171b400e1c126d8db5c2b916c733bbd0724d8753cad16c9baf7b12dcd225a3ee04a97'
             '73fd3fff4adeccd4894084c15ddac89890cd10ef105dd5e1835e1e9bbb6a49ff229713bd197d203edfa17c2727700fce65a2a235f07568212d820dca88b528ae'
@@ -81,24 +81,24 @@ sha512sums=('78fc5b70a2fc356746f8a4580ce7fd01b25b3463db1b9b008f02a97e22c236fdb1d
             'SKIP'
             '083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3'
             'SKIP'
-            '071b4596afbb290fdfab0021b1ddda3e24f508680c643259ced683ec4685fca186f6c9c111097594d2d2911976df1a2f92a321ae71a0d5b9734c9f8e2c1bff76'
+            'bf8183dcb42ac306c120836fdd03a13f3f41de72f697a928a7795008acc86e2533ce42f6b554bde7f1ca834f1a0282f8371585b9129ea88441f3f8dd49f1e923'
             'SKIP'
-            'f6d95712a874edefc39a7746062c8037a62801a550560c5b2eab08b5b86987c1de5be60eba5fcb56d35a37db109aa32d07b7eff2bb99800c1c47d2227421a8f4'
+            'a0eef310b9d44532d1ae6e7266226ea3e82d908aa31f775a026e56a7f8303b78adfdceb3ae5a40f7d242987635e764c539a024ce8dc0d66590e1a3fa50f6b784'
             'SKIP'
             '70117f77aa43bbbe0ed28da5ef23834c026780a74076a92ec775e30f851badb423e9a2cb9e8d142c94e4f6f8a794988c1b788fd4bd2271e562071adf0ab16403'
             'SKIP'
-            '1d75a848cce6389f7cb8896b57a28dfe1dc5a447bfb4f128b0994a43e04134343400a3be063e971f03dfd595474cfd558519741d5d56afb3e84853ad4f2a45c2'
+            '69487be69612e9bf0221ff56ae687248bd13635db1b7087130e93c1670e38f3c810bbca17723555c04fe207976c35871bbc3da005179ce099504321cf33636e4'
             'SKIP'
-            '04ad3e98e840fee19eb4c2652f29eccef1cffc071fd5c6a6feb358fea6048699281c7baacbb9ca8f823b1bfaaef6d4c87d9cf6a8b0c28aab53b75b2d259b2045'
+            'ac7c47f9ddfe5d4d5db6ca9c1bcba788af95662bf0e54ca5426fe66cd8262896e12acc426eecdf0e0d6681c180bcd37f4c4469619273607e95399c7f49b61c7c'
             'SKIP')
-b2sums=('79443cbee5df7b367267c70da04d570455a42d9cfa2e623333fd30e640d3cd9f01da382134efcd1c84202331499fd134b23dde8788a89f6949f0eb40e0e7a38b'
+b2sums=('907c39bb368beea037dcb4b32c56b04a86580123d23ddfe5a1d30ed53143a9b6204044d74040e5bcfe80061673d59597ad2e033525561d6b195a95a104203fa9'
         'SKIP'
-        '0e6c674486c484558a55822501a13ac93c4e890cf62749bc8519690f468912701329b7b9e83b0b68c3f35b72442b1ed47a90050cccd3fc05d79622e1e26634dc'
-        '31dac21ecae231e2a201dc1ba954c1a0663a06f93eb8e7e033ca3c6d385f53e07af0b04854739f1ee8a7f0693f67f620143e152ef092b49342c62279a0480905'
+        '85fe1259b791ff7cda163265f553e0aac8a10ef6674cf6152d5bc7747c7f4f3bc6e9d9c0472534dd7185f093936efed1b4632da64d426b6a7ac432657e8579a1'
+        'c03a572726c6bbb24a3e4773673d0c87f4833bb9582aed57a424eea8c965beb6e232f502b61922b124d37403d91ebfefe0db7373673fc22e0d752c4e5036eb07'
         'SKIP'
-        'b75e0de2f4134444d62c4495e11045181bb10624c0b48efcfdd45d18749936293b9f1b1f3b59b7c80e997d144a6be266b3cd945a147281a193aa040b6995e6be'
+        '662eb940d5b3da8e040c6ff09d5ac5175c7d37fc839a547d30a092ab356dd4fbb0cd7a5e808798268f0dd6a7f769496066b71dea2d153e0689cacc8b7e7ede5a'
         'SKIP'
-        'e9bd90f17bc819c4960d07bbee04346e8a7adb87a764a09d033ef76f1d638c67b180c4f2beb84ec25fbff54ccc9c14c13b9b16a27cac231a5dd22b02635d5cec'
+        '163262933df11afdb7b0c58fbbf0454b05e02951d28ed24e2c530affa18dee884d86555f7314506852ebfcc092bb509b6f9cd33893e30dab67bfb6f5713946eb'
         'SKIP'
         'e2ff99e8236487f43171c771d0ee89137b73f3d0b2756bcb0d6525c810ffa9f5a3763c3744327fb47cef21eabfc50fff96632f4bbe2cd244206a99daffa0c25a'
         '6bfc4bca5dcadba8a0d4121a2b3ed0bfe440c261003521862c8e6381f1a6f0a72d3fc037351d30afd7ef321e8e8d2ec817c046ac749f2ca0c97fbdc2f7e840b7'
@@ -107,15 +107,15 @@ b2sums=('79443cbee5df7b367267c70da04d570455a42d9cfa2e623333fd30e640d3cd9f01da382
         'SKIP'
         '22ab3acd84f4db8c3d6f59340c252faedfd4447cea00dafbd652e65b6cf8a20adf6835c22e58563004cfafdb15348c924996230b4b23cae42da5e25eeac4bdad'
         'SKIP'
-        'cfea18b2347bf893d9bd461e57113d0a141040a1f7a42db6221ed9662f84023f45b058df3382cc06d82596f8eb98e0806f3abe1e79155fafd46da2a8b746bfbe'
+        '513e4526a92bcb59416b3457d186a30e554f9e0cf21d7114eb3e9fbcbd9d662c8d95cf0b06237f6fe3f756862c63de0aa146d6a23cb4111c16e6459608d115f1'
         'SKIP'
-        'eb3381ec7106cfe5dca333391f473e97b03df83f247d3067e9f933ed7206f826e59d2b74b8c28d41e785ffe1c2980b680470064eb2fa2ff1ee3d8fa8be5b81a8'
+        'dc101769510bc9edff38048216a961df8b08373a0b6d04b13c882bbcb43c4d0e05ecfdfd7788c89b5799082f4d15386efac5eb1762a48ae1ab70b554d0bfbb36'
         'SKIP'
         '24952e97c757b97c387ab4c2c4bf7b040f2874e9326c129805c7f5326fa14d80e083b0842e336a635531a2c8d4a66d428c816bae6b175f1c4518add1ffa3554d'
         'SKIP'
-        'd3a6ccaa35360ed3fc79364dfcc3f2fdcb70e5e41ac72ef011373a39d5def9be9ce1be45843ab65a87630d3fc570d29db5f40b9a273aa8e281464c9d1d3477de'
+        'da55e695b148e949a1c0770d0298d7a8c9f87d7a1f9e45d380f8c13c472bd44cb4266adb9a113e2b1dcc2596291744f48fdf998ff2de876059d89d184dc87f3a'
         'SKIP'
-        '0be26a858bffc48bc3dea64e7ea16a703fd7dae1c37dd93e1acde291b6799e323461b3b0bb31c12f63e3429aa4be72d88636606d786978f8d56b94dd2dc144c7'
+        '161ac11115a80c21233e4dbe52f92201fa3372e5750cff38b3f49d60f2440b560c4c9a55dfca8f6313750eb2b65a6b0a8427619c382085bcc24cdfe45f6d6233'
         'SKIP')
 
 export LDFLAGS="$LDFLAGS -static"
@@ -124,7 +124,7 @@ export CXX=musl-gcc
 
 # https://www.openwall.com/lists/musl/2014/11/05/3
 # fstack-protector and musl do not get along but only on i686
-if [[ $CARCH = i686 ]]; then
+if [[ $CARCH = i686 || $CARCH = pentium4 || $CARCH = i486 ]]; then
     # silly build systems have configure checks or buildtime programs that don't CFLAGS but do do CC
     export CC="musl-gcc -fno-stack-protector"
     export CXX="musl-gcc -fno-stack-protector"
@@ -147,9 +147,17 @@ build() {
             openssltarget='linux-x86_64'
             optflags='enable-ec_nistp_64_gcc_128'
             ;;
-        i686)
+        pentium4)
             openssltarget='linux-elf'
             optflags=''
+            ;;
+        i686)
+            openssltarget='linux-elf'
+            optflags='no-sse2'
+            ;;
+        i486)
+            openssltarget='linux-elf'
+            optflags='386'
             ;;
         arm|armv6h|armv7h)
             openssltarget='linux-armv4'
@@ -251,7 +259,7 @@ build() {
     ./configure --prefix="${srcdir}"/temp/usr \
         --disable-shared
     make -C src
-    make -C src install-{{,dist_}binSCRIPTS,libLTLIBRARIES,nodist_includeHEADERS,pkgconfigDATA}
+    make -C src install-{binSCRIPTS,libLTLIBRARIES,nodist_includeHEADERS,pkgconfigDATA}
 
     # libassuan
     cd "${srcdir}"/libassuan-${_libassuanver}
@@ -283,7 +291,7 @@ build() {
         -Dbuildstatic=true \
         -Ddefault_library=static \
         -Ddoc=disabled \
-        -Dldcofig=/usr/bin/ldconfig \
+        -Dldconfig=/usr/bin/ldconfig \
         -Dscriptlet-shell=/usr/bin/bash \
         ..
     ninja
