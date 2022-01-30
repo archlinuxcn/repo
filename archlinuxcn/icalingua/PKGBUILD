@@ -1,6 +1,6 @@
 pkgname=icalingua
-pkgver=2.4.5
-pkgrel=2
+pkgver=2.4.6
+pkgrel=1
 pkgdesc='A Linux client for QQ and more'
 license=('GPL')
 depends=('ffmpeg' 'electron13' 'libappindicator-gtk3')
@@ -28,6 +28,6 @@ package() {
 sha256sums=('648f720db9c2ac9666ec276d4367708f1544a3f732cfe5d8eef026add55d88f2'
             '43da1c99b7a6aee974c20da3bcf925b660dff4ba44a447c86066c84c8bc95fbd'
             'a1cbce70262a3bf3c9a51b1be178378eae13ed454f557f1526b24af87d0be6aa')
-sha256sums_aarch64=('d24543e87c43a6eec9f06456ec581fe3aec4b7776ab7154ec8403473670e6161')
-sha256sums_x86_64=('c800ce77262b70632dc1086e57f766d99cebfaeba0a660c3e8f2ffcb8a59a2c8')
-sha256sums_i686=('7ad33dabfb11536dc2184472c22de0d2f6cd476955c8505ca318fbc9dcb5688f')
+sha256sums_aarch64=('3f0615900c9e115a7b76fbb84dcdae325daf4c5c0af8b2c8240edb02bc2bb742')
+sha256sums_x86_64=('0157513429207a0e4219e05d469f4326582e5c4659d03d65c15f288290910c8c')
+sha256sums_i686=('3d90ce9ad3ae5d7f42fe1fba5514a60a4f6625e949f98223f31bed8c58989877')
