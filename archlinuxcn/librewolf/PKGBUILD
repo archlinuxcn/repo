@@ -5,8 +5,8 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=96.0.2
-pkgrel=1
+pkgver=96.0.3
+pkgrel=2
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
 license=(MPL GPL LGPL)
@@ -27,23 +27,23 @@ backup=('usr/lib/librewolf/librewolf.cfg'
 options=(!emptydirs !makeflags !strip !lto)
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
 _common_tag="v${pkgver}-${pkgrel}"
-_settings_tag='5.2'
+_settings_tag='5.4'
 install='librewolf.install'
-source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
+source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         $pkgname.desktop
         "git+https://gitlab.com/${pkgname}-community/browser/common.git#tag=${_common_tag}"
         "git+https://gitlab.com/${pkgname}-community/settings.git#tag=${_settings_tag}"
-        "mozilla-kde_after_unity.patch"
         "default192x192.png"
         )
 source_aarch64=("${pkgver}-${pkgrel}_build-arm-libopus.patch::https://raw.githubusercontent.com/archlinuxarm/PKGBUILDs/master/extra/firefox/build-arm-libopus.patch")
-sha256sums=('d32d2afa9179a78e6ed97e15e0f39e372c0d662cb9614404db15e7616da31ab8'
+sha256sums=('1a741d6fcf20e6833a90169f41d29141ea4610f58b848e06091a683af6304dea'
+            'SKIP'
             '0b28ba4cc2538b7756cb38945230af52e8c4659b2006262da6f3352345a8bed2'
             'SKIP'
             'SKIP'
-            'fe9dfd79098321faededb85550e3dc78706d60ad80678c3c49de9c1b547095bf'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1')
 sha256sums_aarch64=('2d4d91f7e35d0860225084e37ec320ca6cae669f6c9c8fe7735cdbd542e3a7c9')
+validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
 prepare() {
   mkdir -p mozbuild
@@ -88,11 +88,8 @@ ac_add_options --disable-crashreporter
 ac_add_options --disable-updater
 ac_add_options --disable-tests
 
-# Disables crash reporting, telemetry and other data gathering tools
-mk_add_options MOZ_CRASHREPORTER=0
-mk_add_options MOZ_DATA_REPORTING=0
-mk_add_options MOZ_SERVICES_HEALTHREPORT=0
-mk_add_options MOZ_TELEMETRY_REPORTING=0
+# obsoleted?
+# mk_add_options MOZ_CRASHREPORTER=0
 
 # options for ci / weaker build systems
 # mk_add_options MOZ_MAKE_FLAGS="-j4"
@@ -148,7 +145,7 @@ fi
   # KDE menu
   # patch -Np1 -i ${_patches_dir}/mozilla-kde.patch
   # custom patch that does not conflict with the unity patch
-  patch -Np1 -i ${srcdir}/mozilla-kde_after_unity.patch
+  patch -Np1 -i ${_patches_dir}/mozilla-kde_after_unity.patch
 
   # Disabling Pocket
   patch -Np1 -i ${_patches_dir}/sed-patches/disable-pocket.patch
@@ -183,8 +180,15 @@ fi
   # created directories
   patch -Np1 -i ${_patches_dir}/mozilla_dirs.patch
 
+  # somewhat experimental patch to fix bus/dbus/remoting names to io.gitlab.librewolf
+  # should not break things, buuuuuuuuuut we'll see.
+  patch -Np1 -i ${_patches_dir}/dbus_name.patch
+
   # allow uBlockOrigin to run in private mode by default, without user intervention.
   patch -Np1 -i ${_patches_dir}/allow-ubo-private-mode.patch
+
+  # add custom uBO assets (on first launch only)
+  patch -Np1 -i ${_patches_dir}/custom-ubo-assets-bootstrap-location.patch
 
   # ui patches
 
@@ -212,6 +216,9 @@ fi
 
   # pref pane
   patch -Np1 -i ${_patches_dir}/librewolf-pref-pane.patch
+
+  # fix telemetry removal, see https://gitlab.com/librewolf-community/browser/linux/-/merge_requests/17, for example
+  patch -Np1 -i ${_patches_dir}/disable-data-reporting-at-compile-time.patch
 
   rm -f ${srcdir}/common/source_files/mozconfig
   cp -r ${srcdir}/common/source_files/browser ./
