@@ -1,22 +1,15 @@
 pkgname=devilspie2
-pkgver=0.43
-pkgrel=6
+pkgver=0.44
+pkgrel=1
 pkgdesc="A window matching utility, allowing the user to perform scripted actions on windows as they are created."
 arch=('i686' 'x86_64')
 url="http://www.nongnu.org/$pkgname/"
 license=('GPL3')
 depends=('lua>=5.1' 'gtk3' 'libwnck3')
-source=("http://download.savannah.nongnu.org/releases/$pkgname/${pkgname}_$pkgver-src.tar.gz"{,.asc}
-        "$pkgname-0.43-lua-5.4.patch")
-md5sums=('26eed0b5b4af5c7e13c551eceaeab832'
-         'SKIP'
-         '8fd96127706934b138af50aaa2da0664')
-validpgpkeys=('DB306E4B10FFD98EF4DB55D7194B631AB2DA2888') # Andreas Rönnquist <gusnan@gusnan.se>
-
-prepare() {
-	cd "$pkgname-$pkgver"
-	patch -p1 -i "$srcdir/$pkgname-0.43-lua-5.4.patch"
-}
+source=("http://download.savannah.nongnu.org/releases/$pkgname/$pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=('0a9f1eadd2b22a318163e4180065d495221ba1a43ad2021ea6866cd118042640'
+            'SKIP')
+validpgpkeys=('A523530DD1E9FDDFAD3D5FCAA9B57A926EF302F5') # Darren Salt <devspam@moreofthesa.me.uk>
 
 build() {
 	cd "$pkgname-$pkgver"
