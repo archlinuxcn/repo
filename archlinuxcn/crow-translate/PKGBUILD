@@ -2,7 +2,7 @@
 
 pkgname=crow-translate
 pkgver=2.9.1
-pkgrel=1
+pkgrel=2
 pkgdesc='A simple and lightweight translator that allows you to translate and speak text using Google, Yandex Bing, LibreTranslate and Lingva'
 arch=(x86_64 aarch64)
 url=https://github.com/crow-translate/crow-translate
