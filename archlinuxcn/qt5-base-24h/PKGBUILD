@@ -5,7 +5,7 @@ pkgbase=qt5-base-24h
 _origpkgname=qt5-base
 pkgname=(qt5-base-24h)
 pkgver=5.15.2+kde+r295
-pkgrel=1.9
+pkgrel=2.9
 _commit=03933d189a93c760b642c7021dd9bb63802da254
 arch=('x86_64')
 url='https://www.qt.io'
@@ -43,6 +43,7 @@ sha256sums=(
       'SKIP'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
             '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
+options=(debug)
 
 pkgver() {
   cd $_pkgfqn
