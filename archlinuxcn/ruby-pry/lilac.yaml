@@ -1,18 +1,10 @@
 maintainers:
   - github: a-wing
-
 repo_depends:
   - ruby-coderay
-  - ruby-method_source
-
 update_on:
   - source: aur
     aur: ruby-pry
   - alias: ruby
-#  - source: manual
-#    manual: 0.12.2
-#  - gems: pry
-
 pre_build_script: aur_pre_build(maintainers=['supermario'])
 post_build: git_pkgbuild_commit
-
