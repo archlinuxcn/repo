@@ -4,7 +4,7 @@
 _pkgname=baka-mplayer
 pkgname=${_pkgname}-git
 pkgver=2.0.4.r94.gfb9ca32
-pkgrel=2
+pkgrel=3
 pkgdesc='A free and open source, cross-platform, libmpv based multimedia player. Qt5 build. Development version.'
 arch=('i686' 'x86_64')
 url='https://u8sand.github.io/Baka-MPlayer/'
@@ -20,7 +20,6 @@ optdepends=(
 makedepends=('git' 'qt5-tools')
 provides=("${_pkgname}=${pkgver}")
 conflicts=("${_pkgname}")
-replaces=("${_pkgname}")
 
 source=(
 	"${_pkgname}::git+https://github.com/u8sand/Baka-MPlayer.git"
