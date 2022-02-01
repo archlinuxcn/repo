@@ -6,15 +6,11 @@ pkgdesc="Linux driver for the Xbox One wireless dongle"
 arch=(x86_64)
 url=https://github.com/medusalix/xow
 license=('GPL2')
-depends=(udev)
+depends=('libusb')
 makedepends=('git' 'curl' 'cabextract')
 install=xow.install
-source=('00-make-libusb-static.patch'
-        'git+https://github.com/medusalix/xow'
-        'git+https://github.com/libusb/libusb')
-md5sums=('9038edbe2d9710888f750d0967128c6b'
-         'SKIP'
-         'SKIP')
+source=('git+https://github.com/medusalix/xow')
+md5sums=('SKIP')
 
 pkgver() {
   cd $srcdir/$_pkgname
@@ -24,19 +20,7 @@ pkgver() {
   ) 
 }
 
-prepare(){
-  cd $srcdir/$_pkgname
-  patch -Np1 <../00-make-libusb-static.patch
-
-  cd $srcdir/libusb
-  autoreconf -vfi
-}
-
 build() {
-  cd $srcdir/libusb
-  ./configure --prefix="$PWD/target"
-  make install
-
   cd $srcdir/$_pkgname
   make BUILD=RELEASE
 }
