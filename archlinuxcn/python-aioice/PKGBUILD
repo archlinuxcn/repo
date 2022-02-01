@@ -2,7 +2,7 @@
 
 _pkgname=aioice
 pkgname=python-aioice
-pkgver=0.7.6
+pkgver=0.7.7
 pkgrel=1
 pkgdesc='asyncio-based Interactive Connectivity Establishment (RFC 5245)'
 arch=('any')
@@ -17,7 +17,7 @@ makedepends=(
 )
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/aiortc/aioice/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('88aedf289bc9ec4e5e83109dda860c77cd79c6e56acbe88017a970fad341617a807235e3f001dc1540f52d0475ae207a611a7ade7b591a4c2b3c3e468011675a')
+sha512sums=('09370b2528c7fac9f688fe3db9bb77b51263ac4976f7849481e37f8c3df4590e27ba9b484e9b0d452db9f70fe6890ca6bf8073def16e86106aaee45f24eec915')
 
 build() {
   cd "${_pkgname}-${pkgver}"
