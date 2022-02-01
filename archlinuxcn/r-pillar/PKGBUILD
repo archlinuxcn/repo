@@ -1,9 +1,9 @@
 # Maintainer: hubutui <hot123tea123@gmail.com>
 
 _pkgname=pillar
-_pkgver=1.6.5
+_pkgver=1.7.0
 pkgname=r-${_pkgname,,}
-pkgver=1.6.5
+pkgver=1.7.0
 pkgrel=1
 pkgdesc='Coloured Formatting for Columns'
 arch=('any')
@@ -41,7 +41,7 @@ optdepends=(
   r-withr
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('22fbf1ba0677fbd15cb35729fe4e97fab751a4c1de3eb8a4694f86b2be411bdb')
+sha256sums=('7841f89658cc8935568c0ff24dc480b4481bac896de2f6447050abc4360a13bb')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
