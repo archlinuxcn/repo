@@ -2,17 +2,17 @@
 # Contributor:  mzz2017 < mzz at tuta dot io>
 
 pkgname=gg
-pkgver=0.2.1
+pkgver=0.2.2
 pkgrel=1
 provides=('gg')
-pkgdesc='A command-line tool for one-click proxy in your research and development without installing v2ray or anything else (only for linux). '
+pkgdesc='A command-line tool for one-click proxy in your research and development without installing v2ray or anything else (only for linux).'
 arch=('x86_64' 'aarch64' 'arm' 'armv7h' 'armv6h' 'armv7l')
 url='https://github.com/mzz2017/gg'
 license=('AGPL')
 depends=('glibc')
 makedepends=('go')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('51d1ccfb10ba0d9e8fdd68f4a566b8ed772980be1cf1d03da1969313f88b8bb6')
+sha256sums=('201affc9fce191f4b1e123974364a77e4762d0c26c1af428f960d68e1b9ed267')
 
 prepare(){
     cd "$srcdir/$pkgname-$pkgver"
