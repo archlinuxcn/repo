@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=generics
-_pkgver=0.1.1
+_pkgver=0.1.2
 pkgname=r-${_pkgname,,}
-pkgver=0.1.1
+pkgver=0.1.2
 pkgrel=1
 pkgdesc='Common S3 Generics not Provided by Base R Methods Related to Model Fitting'
 arch=('any')
@@ -19,7 +19,7 @@ optdepends=(
   r-tibble
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('a2478ebf1a0faa8855a152f4e747ad969a800597434196ed1f71975a9eb11912')
+sha256sums=('63eab37a9148f820ce2d67bda3dab6dedb9db6890baa5284949c39ab1b4c5898')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
