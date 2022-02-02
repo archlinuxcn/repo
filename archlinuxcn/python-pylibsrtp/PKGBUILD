@@ -2,7 +2,7 @@
 
 _pkgname=pylibsrtp
 pkgname=python-pylibsrtp
-pkgver=0.7.0
+pkgver=0.7.1
 pkgrel=1
 pkgdesc='Python bindings for libsrtp'
 arch=('x86_64')
@@ -17,7 +17,7 @@ makedepends=(
 )
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/aiortc/pylibsrtp/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('9bde47957b3ca9e568f165d5a488fdeda298ef2623bb936e588780d3b13fff382f826c27e589cb4049c47bdf5ff3aafe1e1393bfb3a609669257e501f0480bc7')
+sha512sums=('ace4337240846b4837855a01a3a651c5785f043283465376ad5c95935d5a36f30ee5f07f7e7019dfc5c828c80748b2aeeb4f52a50ffea6bf4f425508fdf81c99')
 
 build() {
   cd "${_pkgname}-${pkgver}"
