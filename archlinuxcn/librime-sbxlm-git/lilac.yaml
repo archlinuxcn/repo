@@ -1,17 +1,8 @@
 maintainers:
   - github: qwIvan
-
 build_prefix: extra-x86_64
-
-pre_build_script: |
-    update_pkgver_and_pkgrel(_G.newver)
-
-post_build_script: |
-    git_pkgbuild_commit()
-    update_aur_repo()
-
+pre_build: aur_pre_build
+post_build: aur_post_build
 update_on:
-  - source: regex
-    url: https://gitee.com/sbxlm/sbxlm/releases
-    encoding: utf8
-    regex: 声笔系列WIN版(\d{6})\.zip
+  - source: aur
+    aur: librime-sbxlm-git
