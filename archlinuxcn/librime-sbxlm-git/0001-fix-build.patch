@@ -1,0 +1,368 @@
+From 8fe647a911904e979059f268985bface2d7d79ae Mon Sep 17 00:00:00 2001
+From: noodlefighter <noodlefighter@gmail.com>
+Date: Thu, 29 Jul 2021 16:59:39 +0800
+Subject: [PATCH] fix build
+
+---
+ src/rime/gear/script_translator.cc |  1 +
+ src/rime/gear/simplifier.cc        |  2 +-
+ src/rime/gear/table_translator.cc  | 89 +++++++++++++++---------------
+ 3 files changed, 47 insertions(+), 45 deletions(-)
+
+diff --git a/src/rime/gear/script_translator.cc b/src/rime/gear/script_translator.cc
+index 00b4f11..caabf4e 100644
+--- a/src/rime/gear/script_translator.cc
++++ b/src/rime/gear/script_translator.cc
+@@ -23,6 +23,7 @@
+ #include <rime/gear/poet.h>
+ #include <rime/gear/script_translator.h>
+ #include <rime/gear/translator_commons.h>
++#include <cmath>
+ 
+ 
+ //static const char* quote_left = "\xef\xbc\x88";
+diff --git a/src/rime/gear/simplifier.cc b/src/rime/gear/simplifier.cc
+index 98a1c5a..171c415 100644
+--- a/src/rime/gear/simplifier.cc
++++ b/src/rime/gear/simplifier.cc
+@@ -54,7 +54,7 @@ class Opencc {
+       return false;
+     } else {
+       const opencc::DictEntry* entry = item.Get();
+-      for (const char* value : entry->Values()) {
++      for (auto value : entry->Values()) {
+         forms->push_back(value);
+       }
+       return forms->size() > 0;
+diff --git a/src/rime/gear/table_translator.cc b/src/rime/gear/table_translator.cc
+index 6ab6e54..27531d7 100644
+--- a/src/rime/gear/table_translator.cc
++++ b/src/rime/gear/table_translator.cc
+@@ -22,13 +22,14 @@
+ #include <rime/gear/table_translator.h>
+ #include <rime/gear/translator_commons.h>
+ #include <rime/gear/unity_table_encoder.h>
++#include <cmath>
+ 
+ namespace rime {
+-  
++
+   static const char* kUnitySymbol = " \xe2\x98\xaf ";
+-  
++
+   // TableTranslation
+-  
++
+   TableTranslation::TableTranslation(TranslatorOptions* options,
+                                      const Language* language,
+                                      const string& input,
+@@ -44,7 +45,7 @@ namespace rime {
+       options_->preedit_formatter().Apply(&preedit_);
+     CheckEmpty();
+   }
+-  
++
+   bool TableTranslation::Next() {
+     if (exhausted())
+       return false;
+@@ -60,11 +61,11 @@ namespace rime {
+     }
+     return !CheckEmpty();
+   }
+-  
++
+   static bool is_constructed(const DictEntry* e) {
+     return UnityTableEncoder::HasPrefix(e->custom_code);
+   }
+-  
++
+   an<Candidate> TableTranslation::Peek() {
+     if (exhausted())
+       return nullptr;
+@@ -87,13 +88,13 @@ namespace rime {
+     }
+     return phrase;
+   }
+-  
++
+   bool TableTranslation::CheckEmpty() {
+     bool is_empty = iter_.exhausted() && uter_.exhausted();
+     set_exhausted(is_empty);
+     return is_empty;
+   }
+-  
++
+   bool TableTranslation::PreferUserPhrase() {
+     if (uter_.exhausted())
+       return false;
+@@ -106,14 +107,14 @@ namespace rime {
+     else
+       return true;
+   }
+-  
++
+   // LazyTableTranslation
+-  
++
+   class LazyTableTranslation : public TableTranslation {
+   public:
+     static const size_t kInitialSearchLimit = 10;
+     static const size_t kExpandingFactor = 10;
+-    
++
+     LazyTableTranslation(TableTranslator* translator,
+                          const string& input,
+                          size_t start, size_t end,
+@@ -122,7 +123,7 @@ namespace rime {
+     bool FetchUserPhrases(TableTranslator* translator);
+     virtual bool FetchMoreUserPhrases();
+     virtual bool FetchMoreTableEntries();
+-    
++
+   private:
+     Dictionary* dict_;
+     UserDictionary* user_dict_;
+@@ -130,7 +131,7 @@ namespace rime {
+     size_t user_dict_limit_;
+     string user_dict_key_;
+   };
+-  
++
+   LazyTableTranslation::LazyTableTranslation(TableTranslator* translator,
+                                              const string& input,
+                                              size_t start, size_t end,
+@@ -146,7 +147,7 @@ namespace rime {
+     FetchMoreTableEntries();
+     CheckEmpty();
+   }
+-  
++
+   bool LazyTableTranslation::FetchUserPhrases(TableTranslator* translator) {
+     if (!user_dict_)
+       return false;
+@@ -158,7 +159,7 @@ namespace rime {
+     }
+     return !uter_.exhausted();
+   }
+-  
++
+   bool LazyTableTranslation::FetchMoreUserPhrases() {
+     if (!user_dict_ || user_dict_limit_ == 0)
+       return false;
+@@ -173,7 +174,7 @@ namespace rime {
+     }
+     return !uter_.exhausted();
+   }
+-  
++
+   bool LazyTableTranslation::FetchMoreTableEntries() {
+     if (!dict_ || limit_ == 0)
+       return false;
+@@ -197,9 +198,9 @@ namespace rime {
+     }
+     return true;
+   }
+-  
++
+   // TableTranslator
+-  
++
+   TableTranslator::TableTranslator(const Ticket& ticket)
+   : Translator(ticket),
+   Memory(ticket),
+@@ -233,30 +234,30 @@ namespace rime {
+       encoder_->Load(ticket);
+     }
+   }
+-  
++
+   static bool starts_with_completion(an<Translation> translation) {
+     if (!translation)
+       return false;
+     auto cand = translation->Peek();
+     return cand && cand->type() == "completion";
+   }
+-  
++
+   an<Translation> TableTranslator::Query(const string& input,
+                                          const Segment& segment) {
+     if (!segment.HasTag(tag_))
+       return nullptr;
+     DLOG(INFO) << "input = '" << input
+     << "', [" << segment.start << ", " << segment.end << ")";
+-    
++
+     FinishSession();
+-    
++
+     bool enable_user_dict = user_dict_ && user_dict_->loaded() &&
+     !IsUserDictDisabledFor(input);
+-    
++
+     const string& preedit(input);
+     string code = input;
+     boost::trim_right_if(code, boost::is_any_of(delimiters_));
+-    
++
+     an<Translation> translation;
+     if (enable_completion_) {
+       translation = Cached<LazyTableTranslation>(
+@@ -326,7 +327,7 @@ namespace rime {
+     }
+     return translation;
+   }
+-  
++
+   bool TableTranslator::Memorize(const CommitEntry& commit_entry) {
+     if (!user_dict_)
+       return false;
+@@ -400,20 +401,20 @@ namespace rime {
+     }
+     return true;
+   }
+-  
++
+   string TableTranslator::GetPrecedingText(size_t start) const {
+     return !contextual_suggestions_ ? string() :
+     start > 0 ? engine_->context()->composition().GetTextBefore(start) :
+     engine_->context()->commit_history().latest_text();
+   }
+-  
++
+   // SentenceSyllabifier
+-  
++
+   class SentenceSyllabifier : public PhraseSyllabifier {
+   public:
+     virtual Spans Syllabify(const Phrase* phrase);
+   };
+-  
++
+   Spans SentenceSyllabifier::Syllabify(const Phrase* phrase) {
+     Spans result;
+     if (auto sentence = dynamic_cast<const Sentence*>(phrase)) {
+@@ -426,9 +427,9 @@ namespace rime {
+     }
+     return result;
+   }
+-  
++
+   // SentenceTranslation
+-  
++
+   class SentenceTranslation : public Translation {
+   public:
+     SentenceTranslation(TableTranslator* translator,
+@@ -439,12 +440,12 @@ namespace rime {
+                         size_t start);
+     virtual bool Next();
+     virtual an<Candidate> Peek();
+-    
++
+   protected:
+     void PrepareSentence();
+     bool CheckEmpty();
+     bool PreferUserPhrase() const;
+-    
++
+     TableTranslator* translator_;
+     an<Sentence> sentence_;
+     DictEntryCollector collector_;
+@@ -453,7 +454,7 @@ namespace rime {
+     string input_;
+     size_t start_;
+   };
+-  
++
+   SentenceTranslation::SentenceTranslation(TableTranslator* translator,
+                                            an<Sentence>&& sentence,
+                                            DictEntryCollector&& collector,
+@@ -469,7 +470,7 @@ namespace rime {
+     PrepareSentence();
+     CheckEmpty();
+   }
+-  
++
+   bool SentenceTranslation::Next() {
+     if (sentence_) {
+       sentence_.reset();
+@@ -490,7 +491,7 @@ namespace rime {
+     }
+     return !CheckEmpty();
+   }
+-  
++
+   an<Candidate> SentenceTranslation::Peek() {
+     if (exhausted())
+       return nullptr;
+@@ -523,14 +524,14 @@ namespace rime {
+     }
+     return result;
+   }
+-  
++
+   void SentenceTranslation::PrepareSentence() {
+     if (!sentence_)
+       return;
+     sentence_->Offset(start_);
+     sentence_->set_comment(kUnitySymbol);
+     sentence_->set_syllabifier(New<SentenceSyllabifier>());
+-    
++
+     if (!translator_)
+       return;
+     string preedit = input_;
+@@ -547,14 +548,14 @@ namespace rime {
+     translator_->preedit_formatter().Apply(&preedit);
+     sentence_->set_preedit(preedit);
+   }
+-  
++
+   bool SentenceTranslation::CheckEmpty() {
+     set_exhausted(!sentence_ &&
+                   collector_.empty() &&
+                   user_phrase_collector_.empty());
+     return exhausted();
+   }
+-  
++
+   bool SentenceTranslation::PreferUserPhrase() const {
+     // compare code length
+     int user_phrase_code_length = 0;
+@@ -571,7 +572,7 @@ namespace rime {
+     }
+     return false;
+   }
+-  
++
+   inline static size_t consume_trailing_delimiters(size_t pos,
+                                                    const string& input,
+                                                    const string& delimiters) {
+@@ -581,7 +582,7 @@ namespace rime {
+     }
+     return pos;
+   }
+-  
++
+   template <class Iter>
+   inline static void collect_entries(DictEntryList& dest,
+                                      Iter& iter,
+@@ -594,7 +595,7 @@ namespace rime {
+       }
+     }
+   }
+-  
++
+   an<Translation>
+   TableTranslator::MakeSentence(const string& input, size_t start,
+                                 bool include_prefix_phrases) {
+@@ -743,5 +744,5 @@ namespace rime {
+     }
+     return nullptr;
+   }
+-  
++
+ }  // namespace rime
+-- 
+2.32.0
+
