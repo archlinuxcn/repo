@@ -5,7 +5,7 @@
 
 pkgbase=nvidia-utils-beta
 pkgname=('nvidia-utils-beta' 'opencl-nvidia-beta' 'nvidia-settings-beta')
-pkgver=510.39.01
+pkgver=510.47.03
 pkgrel=1
 pkgdesc='NVIDIA drivers utilities (beta version)'
 arch=('x86_64')
@@ -18,7 +18,7 @@ source=("https://us.download.nvidia.com/XFree86/Linux-${CARCH}/${pkgver}/${_pkg}
         'nvidia-utils.sysusers'
         'nvidia.rules'
         '120-nvidia-settings-change-desktop-paths.patch')
-sha256sums=('2e3edc3afba5840a5eb91c9c222c98cb991c3efdd994cf2aaa93d45a5d1b991b'
+sha256sums=('f2a421dae836318d3c0d96459ccb3af27e90e50c95b0faa4288af76279e5d690'
             'be99ff3def641bb900c2486cce96530394c5dc60548fc4642f19d3a4c784134d'
             'd8d1caa5d72c71c6430c2a0d9ce1a674787e9272ccce28b9d5898ca24e60a167'
             '4fbfd461f939f18786e79f8dba5fdb48be9f00f2ff4b1bb2f184dbce42dd6fc3'
@@ -221,6 +221,10 @@ package_nvidia-utils-beta() {
     install -D -m644 systemd/system/*.service -t "${pkgdir}/usr/lib/systemd/system"
     install -D -m755 systemd/system-sleep/nvidia -t "${pkgdir}/usr/lib/systemd/system-sleep"
     install -D -m755 systemd/nvidia-sleep.sh -t "${pkgdir}/usr/bin"
+    
+    # dynamic boost power management
+    install -D -m755 nvidia-powerd -t "${pkgdir}/usr/bin"
+    install -D -m644 nvidia-dbus.conf -t "${pkgdir}/usr/share/dbus-1/system.d"
     
     # distro specific files must be installed in /usr/share/X11/xorg.conf.d
     install -D -m644 "${srcdir}/nvidia-drm-outputclass.conf" "${pkgdir}/usr/share/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf"
