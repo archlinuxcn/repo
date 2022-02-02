@@ -3,7 +3,7 @@
 # Contributor: Michal Marek <reqamst at gmail dot com>
 
 pkgname=('python-pyephem' 'python2-pyephem')
-pkgver=4.1.1
+pkgver=4.1.3
 pkgrel=1
 pkgdesc="PyEphem provides scientific-grade astronomical computations"
 arch=('i686' 'x86_64')
@@ -15,7 +15,7 @@ makedepends=('python'
   'python2-setuptools')
 options=(!emptydirs)
 source=("https://files.pythonhosted.org/packages/source/e/ephem/ephem-$pkgver.tar.gz")
-md5sums=('2a3c3ada17e839ff55b02007f44dbb83')
+md5sums=('c2249ec600238e0af3d12a70871563f4')
 
 build() {
   cp -r ${srcdir}/ephem-${pkgver} ${srcdir}/ephem-${pkgver}-py2
