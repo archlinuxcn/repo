@@ -6,3 +6,5 @@ update_on:
     | grep -A2 'firefox-.*.en-US.linux-x86_64.tar.bz2' | grep -oP '(?<=firefox-).+?(?=\.en-US)|\b\d+-\w+-\d+
     \d+:\d+\b' | tail -2 | xargs
   lilac_throttle: 3d
+- source: manual
+  manual: 1
