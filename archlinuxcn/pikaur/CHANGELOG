@@ -1843,3 +1843,26 @@ Tue Dec 14 19:13:50 2021 +0100
      2021-11-24 07c7d81 seth feat(install_info_fetcher, print_dept): check if aur packages are orphaned (#600)
      2021-10-05 cbad87e Naufal Fikri fix(packaging: zsh): completion unnecessarily fetching packages when completing sync options (#593) (fixes #545)
      2021-09-22 1190271 actionless fix(aur: find_aur_packages): return only explicit results (ie case-sensitive) (fixes #592)
+
+
+Thu Feb 3 04:59:41 2022 +0100
+-------------------------------------------------
+1.10            Release 1.10
+    
+    Notable changes:
+     2022-02-03 7428417 actionless fix,test(core: ComparableType): fix recursion and deep compare not being used if type dont have ignored properties
+     2022-02-03 64032c1 actionless fix(print_department, install_info_fetcher): dont show local PKGBUILDs as orphaned
+     2022-02-02 2a1b2d4 beune feat(urllib): add useragent to base urllib request wrapper (#625)
+     2022-02-02 2a79f9b actionless fix(args, pacman): use --config (fixes #624)
+     2022-01-27 43feabd Bundy01 chore(locale): ES, FR (#622)
+     2021-12-26 18f746f actionless fix(build: deps_lock; config): when using System Dynamic Users, use its dir instead of /tmp/ (fixes #610)
+     2021-12-17 1cdff8f Bundy01 chore(locale): update es and fr po (#614)
+     2021-12-14 9d29016 André Glüpker fix(search_cli): use different terminal escape sequence (see #497) (#613)
+     2021-12-15 2b11ebd Felix Yan chore: doc(readme): explicitly rebuild from AUR (#611)
+
+
+Thu Feb 3 05:06:46 2022 +0100
+-------------------------------------------------
+1.10.1          Hotfix release 1.10.1
+    
+    fix(updates): add missing maintainer field
