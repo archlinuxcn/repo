@@ -3,15 +3,15 @@
 # NOTE: If you are experiencing segmentation fault, delete the ".rstudio-desktop" folder from your home directory then restart the program should fix the issue.
 
 pkgname=rstudio-desktop-bin
-pkgver=2021.09.1.372
-_pkgver=2021.09.1-372
+pkgver=2021.09.2.382
+_pkgver=2021.09.2-382
 pkgrel=1
 pkgdesc="An integrated development environment (IDE) for R (binary from RStudio official repository)"
 arch=('x86_64')
 license=('GPL')
 url="http://www.rstudio.org/"
 depends=('r>=3.0.1' 'hicolor-icon-theme' 'shared-mime-info' 'openssl'
-  'libxkbcommon-x11' 'libedit' 'postgresql-libs' 'sqlite')
+  'libxkbcommon-x11' 'libedit' 'postgresql-libs' 'sqlite' 'nss')
 makedepends=()
 optdepends=(
 'clang: C/C++ and Rcpp support'
@@ -21,7 +21,7 @@ provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
 sha256sums_x86_64=(
-921b4f230d29fab4af7a550f622831f2c364870c0cdf7b8e6ba195ac0448bc75
+f3dd882395ad8fad8ab263284608d50f56eb758a76a9d2a9b7968100c5efe4b0
 #84e61f5eda991b978fa168d6762f7990
 #391ba54997d6faddbfe41a185a823ee4
 )
