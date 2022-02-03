@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=gower
-_pkgver=0.2.2
+_pkgver=1.0.0
 pkgname=r-${_pkgname,,}
-pkgver=0.2.2
+pkgver=1.0.0
 pkgrel=1
 pkgdesc="Gower's Distance"
 arch=('x86_64')
@@ -16,7 +16,7 @@ optdepends=(
   r-tinytest
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('3f022010199fafe34f6e7431730642a76893e6b4249b84e5a61012cb83483631')
+sha256sums=('671cb7baafe05140d822e8f26f9cd3576fc3bf4c6572b7223fb54da754ea385d')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
