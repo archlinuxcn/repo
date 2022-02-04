@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=brew
-_pkgver=1.0-6
+_pkgver=1.0-7
 pkgname=r-${_pkgname,,}
-pkgver=1.0.6
+pkgver=1.0.7
 pkgrel=1
 pkgdesc='Templating Framework for Report Generation'
 arch=('any')
@@ -13,7 +13,7 @@ depends=(
   r
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('d70d1a9a01cf4a923b4f11e4374ffd887ad3ff964f35c6f9dc0f29c8d657f0ed')
+sha256sums=('38b859c1dca63479f6937c593da8f806f2b3279585bb6e20ecff1b898469e76e')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
