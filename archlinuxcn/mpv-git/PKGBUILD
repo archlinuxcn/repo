@@ -16,7 +16,7 @@ depends=('cmocka' 'ffmpeg' 'lcms2' 'libcdio-paranoia' 'libgl' 'libxss'
         'shaderc' 'libplacebo' 'zimg' 'sdl2'
 )
 makedepends=('git' 'mesa' 'python-docutils' 'ladspa' 'vulkan-headers'
-             'wayland-protocols' 'ffnvcodec-headers')
+             'wayland-protocols' 'ffnvcodec-headers' 'meson' 'pipewire' 'pulseaudio')
 optdepends=('youtube-dl: for video-sharing websites playback'
             'nvidia-utils: for hardware accelerated video decoding with CUDA')
 provides=('mpv')
@@ -24,6 +24,7 @@ conflicts=('mpv')
 options=('!emptydirs')
 source=("mpv::git+https://github.com/mpv-player/mpv")
 sha256sums=('SKIP')
+options=('debug' 'strip')
 
 pkgver() {
   cd "$srcdir/mpv"
@@ -32,34 +33,33 @@ pkgver() {
 
 
 build() {
-    local _common_opts=(
-        '--color=yes'
-        '--prefix=/usr'
-        '--progress'
-        '--confdir=/etc/mpv'
-        
-        '--disable-lgpl'
-        '--enable-libmpv-shared'
-        '--enable-dvdnav'
-        '--enable-cdda'
-        '--enable-dvbin'
-        '--enable-sdl2'
-        '--enable-openal'
+    local _opt_extra_flags=(
+        '-Dgpl=true'
+        '-Ddvdnav=enabled'
+        '-Dcdda=enabled'
+        '-Dlua=enabled' '-Dlua=lua52'
+        '-Djavascript=enabled'
+        '-Ddvbin=enabled'
+        '-Dsdl2=enabled'
+        '-Dopenal=enabled'
+        '-Dpulse=enabled'
+        '-Dpipewire=enabled'
+        '-Dmanpage-build=enabled'
     )
     
-    cd "mpv"
-    ./bootstrap.py
-    
-    printf '%s\n' ' -> Building the release files (without tests)...'
-    ./waf configure --disable-tests "${_common_opts[@]}"
-    ./waf build
+    cd "$srcdir/mpv"
+    arch-meson . build \
+        --auto-features auto \
+        -Dlibmpv=true \
+        -Ddefault_library=shared \
+        "${_opt_extra_flags[@]}"
+    meson compile -C build
 }
 
 package() {
-    cd "mpv"
+    cd "$srcdir/mpv"
     
-    export WAFLOCK='.lock-waf_linux_build'
-    ./waf install --destdir="$pkgdir"
+    meson install -C build --no-rebuild --destdir="$pkgdir"
     
     install -D -m644 DOCS/{encoding.rst,tech-overview.txt} "${pkgdir}/usr/share/doc/mpv"
     install -D -m644 TOOLS/lua/* -t "${pkgdir}/usr/share/mpv/script"
