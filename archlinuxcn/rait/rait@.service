@@ -4,9 +4,9 @@ After=network.target network-online.target nss-lookup.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/rait up
-ExecStop=/usr/bin/rait down
-ExecReload=/usr/bin/rait up
+ExecStart=/usr/bin/rait up --config=/etc/rait/%i.conf
+ExecStop=/usr/bin/rait down --config=/etc/rait/%i.conf
+ExecReload=/usr/bin/rait up --config=/etc/rait/%i.conf
 RemainAfterExit=yes
 
 [Install]
