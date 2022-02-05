@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=lme4
-_pkgver=1.1-27.1
+_pkgver=1.1-28
 pkgname=r-${_pkgname,,}
-pkgver=1.1.27.1
+pkgver=1.1.28
 pkgrel=1
 pkgdesc="Linear Mixed-Effects Models using 'Eigen' and S4"
 arch=('x86_64')
@@ -37,7 +37,7 @@ optdepends=(
   r-testthat
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('25fa873e39b8192e48c15eec93db8c8bf6f03baf3bd8d5ca9188482ce8442ec5')
+sha256sums=('d1855ec4d01a677c093cbe39e1e8c4201b3d4bc5dd43966a63462bef9639dc0e')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
