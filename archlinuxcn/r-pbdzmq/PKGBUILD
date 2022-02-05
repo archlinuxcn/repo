@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=pbdZMQ
-_pkgver=0.3-6
+_pkgver=0.3-7
 pkgname=r-${_pkgname,,}
-pkgver=0.3.6
+pkgver=0.3.7
 pkgrel=1
 pkgdesc="Programming with Big Data -- Interface to 'ZeroMQ'"
 arch=('x86_64')
@@ -14,7 +14,7 @@ depends=(
   zeromq
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('9944c8c44221aed1dbd7763ad9ec52c0ad2611d37bee25971ca16f02e8e8c37b')
+sha256sums=('df2d2be14b2f57a64d76cdda4c01fd1c3d9aa12221c63524c01c71849df11808')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
