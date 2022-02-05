@@ -6,7 +6,7 @@
 
 pkgname=firewalld-git
 pkgver=r3403.f3e5384a
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Firewall daemon with D-Bus interface (from git)"
 arch=(any)
@@ -14,25 +14,26 @@ url="https://firewalld.org/"
 license=(GPL2)
 depends=(
   dbus-python
-  dconf
-  glib2
   hicolor-icon-theme
   nftables
   python-gobject
 )
 makedepends=(
+  desktop-file-utils
   docbook-xsl
   git
+  glib2
   intltool
-  ipset
+  libxslt
+  podman
 )
 optdepends=(
-  'bash-completion: bash completion'
-  'gtk3: firewall-config'
+  'iptables-nft: ebtables and iptables support'
   'ipset: ipset support'
-  'libnotify: firewall-applet'
-  'nm-connection-editor: firewalld-applet'
-  'python-pyqt5: firewall-applet'
+  'libnotify: firewall panel applet support'
+  'nm-connection-editor: firewall panel applet support'
+  'python-capng: drop daemon capabilities'
+  'python-pyqt5: firewall panel applet support'
 )
 provides=('firewalld')
 conflicts=('firewalld')
@@ -45,7 +46,7 @@ source=(
   firewalld-sysconfigdir.patch
 )
 sha256sums=('SKIP'
-            'cf7d655230c43acf10a0f97dffdbcba136729967c8b9a25a930871d54a589834')
+            '37860bd444e67741cf4a7817eccc9bdbbf56e68cc9448bb54f44a44050b72045')
 
 pkgver() {
   cd firewalld

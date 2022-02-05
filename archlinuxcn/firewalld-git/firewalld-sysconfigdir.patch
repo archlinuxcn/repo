@@ -1,6 +1,6 @@
 diff -rupN firewalld.orig/config/firewalld.service.in firewalld/config/firewalld.service.in
---- firewalld.orig/config/firewalld.service.in	2018-07-31 22:22:40.786777349 +0200
-+++ firewalld/config/firewalld.service.in	2018-07-31 22:26:40.550121870 +0200
+--- firewalld.orig/config/firewalld.service.in	2022-01-28 11:27:57.000000000 -0500
++++ firewalld/config/firewalld.service.in	2022-01-29 16:30:13.362124135 -0500
 @@ -8,7 +8,7 @@ Conflicts=iptables.service ip6tables.ser
  Documentation=man:firewalld(1)
  
@@ -11,9 +11,9 @@ diff -rupN firewalld.orig/config/firewalld.service.in firewalld/config/firewalld
  ExecReload=/bin/kill -HUP $MAINPID
  # supress to log debug and error output also to /var/log/messages
 diff -rupN firewalld.orig/config/Makefile.am firewalld/config/Makefile.am
---- firewalld.orig/config/Makefile.am	2018-07-31 22:22:40.786777349 +0200
-+++ firewalld/config/Makefile.am	2018-07-31 22:26:21.666787661 +0200
-@@ -329,12 +329,12 @@ firewalld-sysctls.conf: firewalld-sysctl
+--- firewalld.orig/config/Makefile.am	2022-01-28 11:27:57.000000000 -0500
++++ firewalld/config/Makefile.am	2022-01-29 16:30:13.362124135 -0500
+@@ -377,12 +377,12 @@ firewalld.logrotate: firewalld.logrotate
  	$(edit) $< >$@
  
  install-sysconfig:
@@ -31,9 +31,9 @@ diff -rupN firewalld.orig/config/Makefile.am firewalld/config/Makefile.am
  install-rpmmacros:
  	$(MKDIR_P) $(DESTDIR)$(prefix)/lib/rpm/macros.d
 diff -rupN firewalld.orig/src/firewall/config/__init__.py.in firewalld/src/firewall/config/__init__.py.in
---- firewalld.orig/src/firewall/config/__init__.py.in	2018-07-31 22:22:40.800110683 +0200
-+++ firewalld/src/firewall/config/__init__.py.in	2018-07-31 22:24:54.403450272 +0200
-@@ -96,7 +96,7 @@ FIREWALLD_PIDFILE = "/var/run/firewalld.
+--- firewalld.orig/src/firewall/config/__init__.py.in	2022-01-28 11:27:57.000000000 -0500
++++ firewalld/src/firewall/config/__init__.py.in	2022-01-29 16:30:13.362124135 -0500
+@@ -97,7 +97,7 @@ FIREWALLD_PIDFILE = "/var/run/firewalld.
  
  FIREWALLD_TEMPDIR = '/run/firewalld'
  
