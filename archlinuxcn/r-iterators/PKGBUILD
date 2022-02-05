@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=iterators
-_pkgver=1.0.13
+_pkgver=1.0.14
 pkgname=r-${_pkgname,,}
-pkgver=1.0.13
+pkgver=1.0.14
 pkgrel=1
 pkgdesc='Provides Iterator Construct'
 arch=('any')
@@ -17,7 +17,7 @@ optdepends=(
   r-runit
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('778e30e4c292da9f94d62acc637cf55273dae258199d847e62658f44840f11a4')
+sha256sums=('cef3075a0930e1408c764e4da56bbadd4f7d14315809df8f38dd51f80ccc677b')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
