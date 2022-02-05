@@ -4,22 +4,23 @@
 # Maintainer: heavysink <winstonwu91 at gmail>
 
 pkgname=lib32-muparser
-pkgver=2.3.2
-pkgrel=2
+_pkgname=muparser
+pkgver=2.3.3
+pkgrel=1
 pkgdesc="Fast math parser library (32 bit)"
 arch=('x86_64')
 url="http://muparser.beltoforion.de/"
 license=('MIT')
 depends=('muparser' 'lib32-gcc-libs')
 makedepends=('gcc-multilib' 'cmake')
-source=(muparser-$pkgver.tar.gz::"https://github.com/beltoforion/muparser/archive/v$pkgver.tar.gz")
-sha512sums=('8ef5c8b3834da3995a782b7364a4eb4197fb706bee4cadabe5511d2a9cf2912c3db6de422a91eff7f9690f8c9c355b9900335e940749d5c243cb732ac1992aef')
+source=(https://github.com/beltoforion/muparser/archive/v$pkgver-1/$_pkgname-$pkgver.tar.gz)
+sha512sums=('f7e01c83f6ffe71e240653c47fdb8f3152d7fdf61b5997a3c717dec50d0175065c4fc4241ec95fb35b60b968c5c965a820009163ebe84f0fa57d64b3a23226b4')
 
 build() {
   export CC="gcc -m32"
   export CXX="g++ -m32"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
-  cmake -B build -S muparser-$pkgver \
+  cmake -B build -S muparser-$pkgver-1 \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_BINDIR=bin \
     -DCMAKE_INSTALL_LIBDIR=lib32 \
@@ -31,7 +32,5 @@ package() {
   DESTDIR="$pkgdir" cmake --install build
   # remove headers already present in muparser package
   rm -rf "$pkgdir"/usr/include
-  # license
-  install -d "$pkgdir"/usr/share/licenses
-  ln -s muparser "$pkgdir"/usr/share/licenses/$pkgname
+  install -D -m644 $_pkgname-$pkgver-1/LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname
 }
