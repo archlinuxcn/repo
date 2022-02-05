@@ -3,7 +3,7 @@
 _pkgname=citra
 pkgname=$_pkgname-canary-git
 epoch=1
-pkgver=r9135.288968b70
+pkgver=2043.r0.gb292d2965
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger"
 arch=('i686' 'x86_64')
@@ -19,7 +19,7 @@ md5sums=('SKIP')
 
 pkgver() {
 	cd "$srcdir/$_pkgname"
-	echo "r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/canary.//g'
 }
 
 prepare() {
