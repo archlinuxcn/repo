@@ -1,27 +1,21 @@
-From 7e9ccc1b68d9e348930860a8ae285e743e33e600 Mon Sep 17 00:00:00 2001
-From: Megumi_fox <i@megumifox.com>
-Date: Sun, 9 Jan 2022 20:31:07 +0800
-Subject: [PATCH] Use QGuiApplication::font() instead of opensans
-
----
- ui/style/style_core_custom_font.cpp | 30 +++--------------------------
- 1 file changed, 3 insertions(+), 27 deletions(-)
-
 diff --git a/ui/style/style_core_custom_font.cpp b/ui/style/style_core_custom_font.cpp
-index 825726f..bcd7ceb 100644
+index 825726f1af..8525c701c0 100644
 --- a/ui/style/style_core_custom_font.cpp
 +++ b/ui/style/style_core_custom_font.cpp
-@@ -30,40 +30,16 @@ QFont ResolveFont(uint32 flags, int size) {
+@@ -30,40 +30,18 @@ QFont ResolveFont(uint32 flags, int size) {
  	static auto Database = QFontDatabase();
  
  	const auto bold = ((flags & FontBold) || (flags & FontSemibold));
 -	const auto italic = (flags & FontItalic);
 -	const auto &custom = bold ? BoldFont : RegularFont;
 -	const auto useCustom = !custom.family.isEmpty();
++   const QString FontFamilyName = qEnvironmentVariable("TELEGRAM_DESKTOP_UI_FONT");
++   const QString FontFamilyNameMono = qEnvironmentVariable("TELEGRAM_DESKTOP_UI_FONT_MONO");
  
- 	auto result = QFont(QGuiApplication::font().family());
+-	auto result = QFont(QGuiApplication::font().family());
++	auto result = QFont(FontFamilyName.isEmpty() ? QGuiApplication::font().family() : FontFamilyName);
  	if (flags & FontMonospace) {
- 		result.setFamily(MonospaceFont());
+-		result.setFamily(MonospaceFont());
 -	} else if (useCustom) {
 -		const auto sizes = Database.smoothSizes(custom.family, custom.style);
 -		const auto good = sizes.isEmpty()
@@ -44,17 +38,15 @@ index 825726f..bcd7ceb 100644
 -				result.setStyleName("Semibold");
 -			}
 -		}
++       result.setFamily(FontFamilyNameMono.isEmpty() ? MonospaceFont() : FontFamilyNameMono);
  	}
 -	if (italic) {
 -		result.setItalic(true);
 +	if (bold) {
-+			result.setWeight(QFont::Medium);
++           result.setWeight(QFont::Medium);
  	}
  
 +	result.setItalic(flags & FontItalic);
  	result.setUnderline(flags & FontUnderline);
  	result.setStrikeOut(flags & FontStrikeOut);
  	result.setPixelSize(size);
--- 
-2.34.1
-
