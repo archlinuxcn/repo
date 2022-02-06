@@ -12,8 +12,8 @@
 
 _pkgname=thunderbird
 pkgname=thunderbird-appmenu
-pkgver=91.4.1
-pkgrel=9
+pkgver=91.5.1
+pkgrel=1
 pkgdesc="Thunderbird from extra with appmenu patch"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -26,7 +26,7 @@ depends=(
   libffi.so nspr gcc-libs libx11 libxrender libxfixes libxext libxcomposite
   libxdamage pango libpango-1.0.so cairo gdk-pixbuf2 icu libicui18n.so
   libicuuc.so freetype2 libfreetype.so fontconfig libfontconfig.so glib2
-  libglib-2.0.so pixman libpixman-1.so gnupg jack2
+  libglib-2.0.so pixman libpixman-1.so gnupg
 )
 
 optdepends=(
