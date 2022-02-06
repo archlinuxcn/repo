@@ -1,12 +1,12 @@
 # Maintainer: SiHuan <sihuan at sakuya.love>
 pkgname=netclient
 pkgver=0.9.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A component of netmaker"
 arch=(x86_64)
 url='https://github.com/gravitl/netmaker'
 license=("custom:SSPL")
-depends=()
+depends=('wireguard-tools')
 makedepends=('go')
 
 source=("${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
