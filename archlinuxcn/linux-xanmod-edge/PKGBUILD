@@ -62,7 +62,7 @@ fi
 
 pkgbase=linux-xanmod-edge
 _major=5.16
-pkgver=${_major}.5
+pkgver=${_major}.7
 _branch=5.x
 xanmod=1
 pkgrel=1
@@ -99,7 +99,7 @@ done
 
 sha256sums=('027d7e8988bb69ac12ee92406c3be1fe13f990b1ca2249e226225cd1573308bb'
             'SKIP'
-            'd212b80c0460eddd72ee0d9f3bb30f227a57e0592498e97e31212e3600cb5d3f'
+            '834dd6603ec3fb0a72e3a1a97669a7198cd6921c4f355b155b3d587a8f0fcea4'
             '1ac18cad2578df4a70f9346f7c6fccbb62f042a0ee0594817fdef9f2704904ee')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
@@ -223,6 +223,10 @@ _package() {
   depends=(coreutils kmod initramfs)
   optdepends=('crda: to set the correct wireless channels of your country'
               'linux-firmware: firmware images needed for some devices')
+  provides=(VIRTUALBOX-GUEST-MODULES
+            WIREGUARD-MODULE
+            KSMBD-MODULE
+            NTFS3-MODULE)
 
   cd linux-${_major}
   local kernver="$(<version)"
