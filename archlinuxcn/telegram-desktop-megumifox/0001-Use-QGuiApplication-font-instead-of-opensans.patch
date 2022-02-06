@@ -2,7 +2,7 @@ diff --git a/ui/style/style_core_custom_font.cpp b/ui/style/style_core_custom_fo
 index 825726f1af..8525c701c0 100644
 --- a/ui/style/style_core_custom_font.cpp
 +++ b/ui/style/style_core_custom_font.cpp
-@@ -30,40 +30,18 @@ QFont ResolveFont(uint32 flags, int size) {
+@@ -30,40 +30,23 @@ QFont ResolveFont(uint32 flags, int size) {
  	static auto Database = QFontDatabase();
  
  	const auto bold = ((flags & FontBold) || (flags & FontSemibold));
@@ -11,6 +11,7 @@ index 825726f1af..8525c701c0 100644
 -	const auto useCustom = !custom.family.isEmpty();
 +   const QString FontFamilyName = qEnvironmentVariable("TELEGRAM_DESKTOP_UI_FONT");
 +   const QString FontFamilyNameMono = qEnvironmentVariable("TELEGRAM_DESKTOP_UI_FONT_MONO");
++   const QString FontFamilyBoldStyle = qEnvironmentVariable("TELEGRAM_DESKTOP_UI_FONT_BOLD_STYLE");
  
 -	auto result = QFont(QGuiApplication::font().family());
 +	auto result = QFont(FontFamilyName.isEmpty() ? QGuiApplication::font().family() : FontFamilyName);
@@ -43,7 +44,11 @@ index 825726f1af..8525c701c0 100644
 -	if (italic) {
 -		result.setItalic(true);
 +	if (bold) {
-+           result.setWeight(QFont::Medium);
++           if (FontFamilyBoldStyle.isEmpty()){
++               result.setWeight(QFont::Medium);
++           }else{
++               result.setStyleName(FontFamilyBoldStyle);
++           }
  	}
  
 +	result.setItalic(flags & FontItalic);
