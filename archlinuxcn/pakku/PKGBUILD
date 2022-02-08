@@ -1,17 +1,18 @@
-# Maintainer: kitsunyan <`echo a2l0c3VueWFuQGFpcm1haWwuY2MK | base64 -d`>
+# Contributor: kitsunyan <`echo a2l0c3VueWFuQGFpcm1haWwuY2MK | base64 -d`>
+# Maintainer: j-james <jj@j-james.me>
 
 pkgname=pakku
-pkgver=0.14
+pkgver=0.15
 pkgrel=1
-pkgdesc='Pacman wrapper with AUR support'
+pkgdesc='Pacman wrapper and AUR helper with a pacman-like user interface'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
-url="https://github.com/kitsunyan/$pkgname"
+url="https://github.com/zqqw/$pkgname"
 license=('GPL3')
 depends=('libcurl.so' 'git')
-makedepends=('nim')
+makedepends=('nim' 'git' 'asciidoc')
 backup=('etc/pakku.conf')
-source=("$url/releases/download/v$pkgver/$pkgname-$pkgver.tar.xz")
-sha256sums=('2e5e1db1651f3630a3a9f62d8341384c2d24c3573f2a2d0803d8e795990785c7')
+source=("$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('770f4344543d6072ff2b18a2c212a5c3e56e16f6c86ca4b9097eaadf54a26c73')
 
 build() {
   local addargs=()
