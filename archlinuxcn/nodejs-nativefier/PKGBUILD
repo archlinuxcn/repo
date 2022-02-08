@@ -1,7 +1,7 @@
 # Maintainer: Fredy García <frealgagu at gmail dot com>
 
 pkgname=nodejs-nativefier
-pkgver=46.0.4
+pkgver=46.1.0
 pkgrel=1
 pkgdesc="A command-line tool to easily create a desktop app for any web site with minimal configuration"
 arch=("any")
@@ -11,8 +11,8 @@ depends=("nodejs" "unzip")
 makedepends=("jq" "npm")
 source=("${pkgname}-${pkgver}.tgz::http://registry.npmjs.org/${pkgname#nodejs-}/-/${pkgname#nodejs-}-${pkgver}.tgz")
 noextract=("${pkgname}-${pkgver}.tgz")
-sha1sums=("540754bb4e49f51b113029d694f7808fa550e1ed")
-sha256sums=("35b85a8b967135d8599c49721ded147c1550feb0ccef239b37f7d79b154b5262")
+sha1sums=("819f83ba87b4103fce8f43a5b673cab385450863")
+sha256sums=("d98da888437dbb8a7907feb0ba8c35c2b365622f55d88c181b519f80f9844d2c")
 
 prepare() {
   # Unpacking license file
