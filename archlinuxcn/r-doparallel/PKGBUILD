@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=doParallel
-_pkgver=1.0.16
+_pkgver=1.0.17
 pkgname=r-${_pkgname,,}
-pkgver=1.0.16
+pkgver=1.0.17
 pkgrel=1
 pkgdesc="Foreach Parallel Adaptor for the 'parallel' Package"
 arch=('any')
@@ -22,7 +22,7 @@ optdepends=(
   r-runit
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('f1bb26f964f30d47ae4d6cf2b0a2ca0c2122d376424875e82d9abe9e7b054eb2')
+sha256sums=('b96a25ad105a654d70c7b4ca27290dc9967bc47f4668b2763927a886b178abd7')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
