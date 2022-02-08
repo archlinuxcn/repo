@@ -1,4 +1,4 @@
-# Maintainer: Michał Kopeć <michal@nozomi.space>
+# Maintainer: edward-p <edward@edward-p.xyz>
 # Contributor: Michał Kopeć <michal@nozomi.space>
 
 _pkgname=xone
@@ -15,6 +15,7 @@ conflicts=('xone-dkms')
 provides=('xone-dkms')
 source=("git+https://github.com/medusalix/xone.git")
 sha256sums=('SKIP')
+install=xone-dkms.install
 
 pkgver() {
   cd "$srcdir/$_pkgname"
@@ -29,9 +30,11 @@ package() {
 
   echo "* Copying module into /usr/src..."
   install -dm755 "${pkgdir}/usr/src/${_pkgname}-${pkgver}"
-  cp -r ${srcdir}/$_pkgname/* "${pkgdir}/usr/src/${_pkgname}-${pkgver}"
+  cp -r ${srcdir}/$_pkgname/{bus,driver,transport,Kbuild,dkms.conf} "${pkgdir}/usr/src/${_pkgname}-${pkgver}"
 
   echo "* Blacklisting xpad module..."
   install -D -m 644 install/modprobe.conf "${pkgdir}/etc/modprobe.d/xone-blacklist.conf"
+
+  install -Dm 755 install/firmware.sh "${pkgdir}/usr/lib/xone/firmware.sh"
 }
 
