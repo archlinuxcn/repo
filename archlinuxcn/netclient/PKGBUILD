@@ -1,7 +1,7 @@
 # Maintainer: SiHuan <sihuan at sakuya.love>
 pkgname=netclient
-pkgver=0.9.4
-pkgrel=2
+pkgver=0.10.0
+pkgrel=1
 pkgdesc="A component of netmaker"
 arch=(x86_64)
 url='https://github.com/gravitl/netmaker'
@@ -10,7 +10,7 @@ depends=('wireguard-tools')
 makedepends=('go')
 
 source=("${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('0e730d5218544ae77ad82563d43fbce5db0115d71f1e08620dbebde37ed29b25')
+sha256sums=('7f0d32448f26f057cb9104589946f579841183edb9c5e37d9f031780b44e7285')
 
 build() {
 	cd "$srcdir/netmaker-${pkgver}/${pkgname}"
