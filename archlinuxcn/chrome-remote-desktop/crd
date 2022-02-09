@@ -1,11 +1,5 @@
 #!/bin/bash
 
-if [[ $(whoami) = "root" ]]
-then
-  echo "Please run this as a normal user!"
-  exit
-fi
-
 function print_red() {
   printf "$(tput setaf 1)$1$(tput sgr0)"
 }
@@ -20,14 +14,7 @@ function print_blue() {
 
 function status() {
   crd_status=$(/opt/google/chrome-remote-desktop/chrome-remote-desktop --get-status)
-  print_blue "CRD status: ${crd_status}\n"
-}
-
-function restart() {
-  /opt/google/chrome-remote-desktop/chrome-remote-desktop --stop
-  rm -rf ${HOME}/.config/chrome-remote-desktop/pulseaudio*
-  crd_size=$(cat ${HOME}/.config/chrome-remote-desktop/Size)
-  /opt/google/chrome-remote-desktop/chrome-remote-desktop --size="${crd_size}" --start
+  print_blue "CRD status: "; print_green "${crd_status}"; printf "\n"
 }
 
 function reload() {
@@ -40,100 +27,122 @@ function stop() {
 }
 
 function start() {
-  if [ ! -f ${HOME}/.chrome-remote-desktop-session ] | [ ! -f ${HOME}/.config/chrome-remote-desktop/Size ]
+  if [ ! -f ${HOME}/.chrome-remote-desktop-session ]
   then
-    print_red "Seems like you haven't set this up yet. Try running "; print_green "crd --setup"; print_red ".\n"
+    print_red "Seems like you haven't set this up yet. Try running: "; print_green "crd --setup"; print_red "."; printf "\n"
     exit
   fi
 
   if [ ! -f ${HOME}/.config/chrome-remote-desktop/host#*.json ]
   then
-    print_red "Seems like you haven't activated CRD in your browser. Please do that before trying to run the server.\n"
+    print_red "Seems like you haven't activated CRD in your browser. Please do that before trying to run the server."; printf "\n"
     exit
   fi
 
   rm -rf ${HOME}/.config/chrome-remote-desktop/pulseaudio*
   crd_size=$(cat ${HOME}/.config/chrome-remote-desktop/Size)
-  /opt/google/chrome-remote-desktop/chrome-remote-desktop --size="${crd_size}" --start
+  if [ -z "${crd_size}" ]
+  then
+    /opt/google/chrome-remote-desktop/chrome-remote-desktop --start
+  else
+    /opt/google/chrome-remote-desktop/chrome-remote-desktop --size="${crd_size}" --start
+  fi
+}
+
+function restart() {
+  stop
+  sleep 1
+  start
 }
 
 function setup() {
   sudo gpasswd -a ${USER} chrome-remote-desktop
-  print_blue "Checking working directory and session file are present\n"
-  print_blue "That would be ${HOME}/.config/chrome-remote-desktop and\n"
-  print_blue "${HOME}/.chrome-remote-desktop-session\n"
-  [ -d ${HOME}/.config/chrome-remote-desktop ] || mkdir ${HOME}/.config/chrome-remote-desktop
+  print_blue "Checking that working directory and session file are present"; printf "\n"
+  print_blue "That would be "; print_green "${HOME}/.config/chrome-remote-desktop"; print_blue " and"; printf "\n"
+  print_green "${HOME}/.chrome-remote-desktop-session"; printf "\n\n"
+  [ -d "${HOME}/.config/chrome-remote-desktop" ] || mkdir "${HOME}/.config/chrome-remote-desktop"
   touch ${HOME}/.chrome-remote-desktop-session
   touch ${HOME}/.config/chrome-remote-desktop/Size
 
-  if [[ -z $(cat ${HOME}/.chrome-remote-desktop-session) ]]
+  EDITOR="${VISUAL:-${EDITOR:-nano}}"
+  if ! which "${EDITOR}" > /dev/null 2>&1
   then
-    echo '# You will have to uncomment one of the following lines for CRD to work' > ${HOME}/.chrome-remote-desktop-session
-    echo '# Remove the # and select ctrl-X to finish.' >> ${HOME}/.chrome-remote-desktop-session
-    echo '# ' >> ${HOME}/.chrome-remote-desktop-session
-    echo 'export $(dbus-launch)' >> ${HOME}/.chrome-remote-desktop-session
-    grep -R '^Exec=' /usr/share/xsessions/ | sed 's|/usr/.*=|# exec |' >> ${HOME}/.chrome-remote-desktop-session
-    print_blue 'Now entering the editor to make the appropriate changes to your session file.\n'
-    read -rsp $'Press any key to continue...\n' -n1 key
-    nano ${HOME}/.chrome-remote-desktop-session
+    print_red "Editor "; print_green "${EDITOR}"; print_red " not found, please call setup defining an editor first by"; printf "\n"
+    print_red "either exporting "; print_green "EDITOR"; print_red " variable or calling command with "; print_green "EDITOR"; print_red " variable"; printf "\n"
+    print_red "(e.g. "; print_green "EDITOR="; print_blue "<editor_of_your_choice>"; print_green " crd --setup"; print_red ")"; printf "\n"
+    exit
   fi
 
-  if [[ -z $(cat ${HOME}/.config/chrome-remote-desktop/Size) ]]
+  crd_session="${HOME}/.chrome-remote-desktop-session"
+  if [[ -z $(cat "${crd_session}") ]]
   then
-    echo "1366x768" > ${HOME}/.config/chrome-remote-desktop/Size
-    print_blue "Default size is set to 1366x768 in\n"
-    print_blue "${HOME}/.config/chrome-remote-desktop/Size.\n"
-    print_blue "Change this if you want another screen size on your client.\n"
-    print_blue "Remember that this will affect all clients you use.\n"
-    print_blue "Now entering the editor to make the appropriate changes to\n"
-    print_blue "your Size file. Do not enter any comments to this file\n"
-    read -rsp $'Press any key to continue...\n' -n1 key
-    nano ${HOME}/.config/chrome-remote-desktop/Size
+    echo "# You will have to uncomment one of the following lines for CRD to work" >> "${crd_session}"
+    echo "# Remove the # and save the file." >> "${crd_session}"
+    echo "# " >> "${crd_session}"
+    echo "export \$(dbus-launch)" >> "${crd_session}"
+    grep -R "^Exec=" "/usr/share/xsessions/" | sed "s|/usr/.*=|#exec |" >> "${crd_session}"
   fi
+  print_blue "Now entering the editor to make the appropriate changes to your session file."; printf "\n"
+  read -rsp $"Press any key to continue..." -n1 key; printf "\n\n"
+  "${EDITOR}" "${crd_session}"
 
-  print_blue "This completes the setup.\n\n"
-  print_blue "Please remember that you will need to allow Chrome or Chromium\n"
-  print_blue "to act as a server for this to work at all.\n\n"
-  print_blue "To do that, open CRD in your chrome or chromium browser\n"
-  print_blue "and follow the instructions. Clicking the computer will open\n"
-  print_blue "it in the browser window in default resolution.\n"
-  print_blue "For a more pleasant chromoting experience, just issue the command\n"
-  print_green "crd --restart"
-  print_blue "\nHappy chromoting! :)\n"
+  crd_size="${HOME}/.config/chrome-remote-desktop/Size"
+  print_blue "If you want to set a default size for all clients, please add a"; printf "\n"
+  print_blue "value with format "; print_green "[width]x[height]"; print_blue " (e.g "; print_green "1360x768"; print_blue ") in file"; printf "\n"
+  print_green "${crd_size}"; print_blue "."; printf "\n"
+  print_blue "Remember that this will affect all clients you use."; printf "\n"
+  print_blue "If you dont want a default size please leave it blank."; printf "\n"
+  print_blue "Now entering the editor to make the appropriate changes to"; printf "\n"
+  print_blue "your Size file. Do not enter any comments to this file."; printf "\n"
+  read -rsp $"Press any key to continue..." -n1 key; printf "\n\n"
+  "${EDITOR}" "${crd_size}"
+
+  print_blue "This completes the setup."; printf "\n\n"
+  print_blue "Please remember that you will need to allow Chrome or Chromium"; printf "\n"
+  print_blue "to act as a server for this to work at all."; printf "\n\n"
+  print_blue "To do that, open "; print_green "https://remotedesktop.google.com/"; print_blue " in your chrome or chromium browser"; printf "\n"
+  print_blue "and follow the instructions. Clicking the computer will open"; printf "\n"
+  print_blue "it in the browser window in default resolution."; printf "\n"
+  print_blue "For a more pleasant chromoting experience, just issue the command: "; print_green "crd --restart"; printf "\n\n"
+  print_blue "Happy chromoting! "; print_green ":)"; printf "\n\n"
 }
 
 function help() {
-  print_blue "Note: You will have to go into chrome or chromium to enable remote\n"
-  print_blue "connections to this computer before you can run CRD on this machine.\n\n"
-  print_blue "Usage: "; print_green "crd [option]"; print_blue "\n\n"
-  print_blue "Options:\n\n"
-  print_green "--status"
-  print_blue "\nChecks whether CRD is running and returns its status\n\n"
-  print_green "--start"
-  print_blue "\nStarts CRD after destroying old pulse files\n\n"
-  print_green "--stop"
-  print_blue "\nStops CRD if running, deletes old pulse files\n\n"
-  print_green "--restart"
-  print_blue "\nStops and starts CRD, destroying non-functioning pulse files\n\n"
-  print_green "--reload"
-  print_blue "\nJust reloads CRD\n\n"
-  print_green "--help, -h"
-  print_blue "\nThis help message\n\n"
-  print_green "--setup"
-  print_blue "\nSets up CRD for your system by adding folders, sessions, users\n"
-  print_blue "and stuff. You should do this first, after a fresh install. This\n"
-  print_blue "will be done automatically if you just run crd without options.\n\n"
-  print_blue "No sound on client? Try returning the files /etc/pulse/daemon.conf\n"
-  print_blue "and /etc/pulse/client.conf to their default values, that is, the\n"
-  print_blue "values commented out with a ';' – deleting any uncommented settings\n"
-  print_blue "might do the trick, but use your common sense here.\n\n"
-  print_blue "Need another resolution and your Display function on the client\n"
-  print_blue "throws an error? You can change the client resolution in th host by\n"
-  print_blue "issuing the command:\n\n"
-  print_green "nano ${HOME}/.config/chrome-remote-desktop/Size"
-  print_blue "\n\nand adjusting it to whatever resolution you need.\n"
-  print_blue "This will affect all clients though.\n"
+  print_blue "Note: You will have to go into chrome or chromium to enable remote"; printf "\n"
+  print_blue "connections to this computer before you can run CRD on this machine."; printf "\n\n"
+  print_blue "Usage: "; print_green "crd [option]"; printf "\n\n"
+  print_blue "Options:"; printf "\n\n"
+  print_green "--status"; printf "\n"
+  print_blue "Checks whether CRD is running and returns its status."; printf "\n\n"
+  print_green "--start"; printf "\n"
+  print_blue "Starts CRD after destroying old pulse files."; printf "\n\n"
+  print_green "--stop"; printf "\n"
+  print_blue "Stops CRD if running, deletes old pulse files."; printf "\n\n"
+  print_green "--restart"; printf "\n"
+  print_blue "Stops and starts CRD, destroying non-functioning pulse files."; printf "\n\n"
+  print_green "--reload"; printf "\n"
+  print_blue "Just reloads CRD."; printf "\n\n"
+  print_green "--help, -h"; printf "\n"
+  print_blue "This help message."; printf "\n\n"
+  print_green "--setup"; printf "\n"
+  print_blue "Sets up CRD for your system by adding folders, sessions, users"; printf "\n"
+  print_blue "and stuff. You should do this first, after a fresh install."; printf "\n\n"
+  print_blue "No sound on client? Try returning the files "; print_green "/etc/pulse/daemon.conf"; printf "\n"
+  print_blue "and "; print_green "/etc/pulse/client.conf"; print_blue " to their default values, that is, the"; printf "\n"
+  print_blue "values commented out with a ';' – deleting any uncommented settings"; printf "\n"
+  print_blue "might do the trick, but use your common sense here."; printf "\n\n"
+  print_blue "Need another resolution and your Display function on the client"; printf "\n"
+  print_blue "throws an error? You can change the client resolution in the host by"; printf "\n"
+  print_blue "editing the file: "; print_green "${HOME}/.config/chrome-remote-desktop/Size"; printf "\n"
+  print_blue "and adjusting it to whatever resolution you need."; printf "\n"
+  print_blue "This will affect all clients though."; printf "\n\n"
 }
+
+if [[ $(whoami) = "root" ]]
+then
+  print_red "Please run this as a normal user!"; printf "\n"
+  exit
+fi
 
 case $1 in
 
