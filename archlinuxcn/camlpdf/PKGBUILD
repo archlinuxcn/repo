@@ -3,7 +3,7 @@
 # Contributor: oliver < a t >  first . in-berlin . de
 
 pkgname=camlpdf
-pkgver=2.5
+pkgver=2.5.1
 pkgrel=1
 pkgdesc='Coherent Graphics OCaml library for reading, writing and modifying PDF files'
 arch=('x86_64')
@@ -17,7 +17,7 @@ makedepends=(
 )
 options=('!strip' '!makeflags')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/johnwhitington/camlpdf/archive/v${pkgver}.tar.gz")
-sha256sums=('0bf30f5a77f0321cd8f7c22444f0c1a63623c75e80d127ddb88ce2c610e2cf68')
+sha256sums=('56d4fee773a89b78bce70d25db8758a2a88ea6b8910654a828fe34cb5908bbd2')
 
 _setvars() {
   OCAMLFIND_DESTDIR="${pkgdir}/$(ocamlfind printconf destdir)"
