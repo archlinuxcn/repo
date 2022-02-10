@@ -3,22 +3,24 @@
 
 pkgname=rocm-llvm
 pkgdesc='Radeon Open Compute - LLVM toolchain (llvm, clang, lld)'
-pkgver=4.5.2
+pkgver=5.0.0
 pkgrel=1
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/llvm-project'
 license=('custom:Apache 2.0 with LLVM Exception')
 depends=(z3)
-makedepends=(cmake python ninja)
+makedepends=(cmake clang python ninja)
 provides=("llvm-amdgpu")
 replaces=('llvm-amdgpu')
 conflicts=('llvm-amdgpu')
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('36a4f7dd961cf373b743fc679bdf622089d2a905de2cfd6fd6c9e7ff8d8ad61f')
+sha256sums=('bca2db4aaab71541cac588d6a708fde60f0ebe744809bde8a3847044a1a77413')
 options=(staticlibs)
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
 build() {
+    CC=/usr/bin/clang \
+    CXX=/usr/bin/clang++ \
     cmake -GNinja \
         -Wno-dev \
         -S "$_dirname/llvm" \
