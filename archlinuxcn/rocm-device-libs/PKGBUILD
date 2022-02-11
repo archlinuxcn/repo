@@ -2,15 +2,15 @@
 # Contributor: Ranieri Althoff <ranisalt+aur at gmail dot com>
 
 pkgname=rocm-device-libs
-pkgver=4.5.2
+pkgver=5.0.0
 pkgrel=1
 pkgdesc='Radeon Open Compute - device libs'
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/ROCm-Device-Libs'
 license=('custom:NCSAOSL')
-makedepends=(cmake rocm-llvm)
+makedepends=(cmake rocm-cmake rocm-llvm)
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('50e9e87ecd6b561cad0d471295d29f7220e195528e567fcabe2ec73838979f61')
+sha256sums=('83ed7aa1c9322b4fc1f57c48a63fc7718eb4195ee6fde433009b4bc78cb363f0')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
 build() {
