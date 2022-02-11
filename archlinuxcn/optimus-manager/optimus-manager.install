@@ -10,6 +10,8 @@ post_install() {
     red=$(tput setaf 1)
     normal=$(tput sgr0)
     echo "${bold}${red}Please reboot your computer before using optimus-manager${normal}"
+	echo "Start create optimus-manager.conf in /etc/optimus-manager"
+	cp optimus-manager.conf /etc/optimus-manager
 }
 
 post_remove() {
