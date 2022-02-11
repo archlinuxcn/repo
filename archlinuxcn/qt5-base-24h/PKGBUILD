@@ -5,7 +5,7 @@ pkgbase=qt5-base-24h
 _origpkgname=qt5-base
 pkgname=(qt5-base-24h)
 pkgver=5.15.2+kde+r297
-pkgrel=1.9
+pkgrel=2.9
 _commit=d16bf02a11953dcac01dca73e6f3778f293adefe
 arch=('x86_64')
 url='https://www.qt.io'
@@ -35,14 +35,14 @@ source=(
       oldherl-24h.patch
       'https://build.archlinuxcn.org/~oldherl/files/cldr/36/core.zip'
       git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit
-        qt5-base-cflags.patch
-        qt5-base-nostrip.patch)
+        qmake-cflags.patch
+        qmake-config.patch)
 sha256sums=(
       '901a764c896559bb472d5ecee4af9ee006b235f73e56959de9ded477a10e5fc6'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       'SKIP'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
-            '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
+            '4abc22150fa3e06b2fdcec32146abc9be4e316692aa4d5bd5aa53b4b726783fa')
 options=(debug)
 
 pkgver() {
@@ -55,8 +55,8 @@ prepare() {
 
   git revert -n 6344955d17e17e2398720fe60c34cfc2a4a95208 # Revert version bump
 
-  patch -p1 < ../qt5-base-cflags.patch # Use system CFLAGS in qmake
-  patch -p1 < ../qt5-base-nostrip.patch # Don't strip binaries with qmake
+  patch -p1 < ../qmake-cflags.patch # Use system CFLAGS in qmake
+  patch -p1 < ../qmake-config.patch # Don't strip binaries with qmake and use -ltcg, cf. QTBUG-73834
 
   patch -p1 -i ../oldherl-24h.patch
   cd util/locale_database
