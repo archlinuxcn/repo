@@ -12,6 +12,7 @@ post_install() {
     echo "${bold}${red}Please reboot your computer before using optimus-manager${normal}"
 	echo "Start create optimus-manager.conf in /etc/optimus-manager"
 	cp optimus-manager.conf /etc/optimus-manager
+	echo "Finish created in /etc/optimus-manager, and if you can know more on https://github.com/Askannz/optimus-manager"
 }
 
 post_remove() {
@@ -29,5 +30,5 @@ post_remove() {
     if [ -L "$service_file_link" ]; then
         rm $service_file_link
     fi
-
+    rm -d /etc/optimus-manaer/optimus-manaer.conf
 }
