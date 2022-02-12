@@ -2,7 +2,7 @@
 
 _gemname=regexp_parser
 pkgname=ruby-${_gemname}
-pkgver=2.2.0
+pkgver=2.2.1
 pkgrel=1
 pkgdesc="A library for tokenizing, lexing, and parsing Ruby regular expressions."
 arch=(any)
@@ -13,7 +13,7 @@ noextract=($_gemname-$pkgver.gem)
 license=(MIT)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
-sha256sums=('77aa0a9e8092a1feaeb4109c0ff1023883a3c8ed16b06061c724104224b21e01')
+sha256sums=('9503cd0ccba6b808b340d392a85d61108bc1dd2c75b45ef42adce54c3233ae94')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
