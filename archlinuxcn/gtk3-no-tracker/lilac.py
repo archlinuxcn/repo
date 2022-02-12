@@ -13,10 +13,10 @@ def pre_build():
       line = 'pkgbase=gtk3-no-tracker'
     elif line.startswith('pkgname='):
       line = 'pkgname=(gtk3-no-tracker)'
-    elif line.endswith(' tracker3'):
-      line = line.removesuffix(' tracker3')
     elif 'tracker3=true' in line:
       line = line.replace('=true', '=false')
+    elif 'tracker3' in line:
+      line = line.replace('tracker3', '')
     elif 'gtk_doc=true' in line:
       line = line.replace('=true', '=false')
     elif line.startswith('package_gtk3()'):
