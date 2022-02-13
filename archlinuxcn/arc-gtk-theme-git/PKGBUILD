@@ -7,7 +7,7 @@
 pkgbase=arc-gtk-theme-git
 _pkgname=arc-theme
 pkgname=('arc-gtk-theme-git' 'arc-solid-gtk-theme-git')
-pkgver=20211018.r26.gdd225988
+pkgver=20220105.r0.gadcc946b
 pkgrel=1
 pkgdesc="A flat theme suite with transparent elements."
 arch=('any')
@@ -20,10 +20,9 @@ source=("${_pkgname}::git+https://github.com/jnsh/${_pkgname}.git")
 md5sums=('SKIP')
 
 # Latest stable Arch package versions
-_cinnamonver=4.8
-_gnomeshellver=40
-_gtk3ver=3.24
-_gtk4ver=4.4
+_cinnamonver=5.2
+_gnomeshellver=41
+_gtk4ver=4.6
 
 pkgver() {
   cd "${_pkgname}"
@@ -37,7 +36,6 @@ build() {
     -Dgnome_shell_gresource=true \
     -Dcinnamon_version="${_cinnamonver}" \
     -Dgnome_shell_version="${_gnomeshellver}" \
-    -Dgtk3_version="${_gtk3ver}" \
     -Dgtk4_version="${_gtk4ver}"
   meson compile -C build
 
@@ -46,7 +44,6 @@ build() {
     -Dgnome_shell_gresource=true \
     -Dcinnamon_version="${_cinnamonver}" \
     -Dgnome_shell_version="${_gnomeshellver}" \
-    -Dgtk3_version="${_gtk3ver}" \
     -Dgtk4_version="${_gtk4ver}"
   meson compile -C build-solid
 }
