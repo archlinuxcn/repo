@@ -5,7 +5,7 @@
 pkgname=qt6-base-24h
 _qtver=6.2.3
 pkgver=${_qtver/-/}
-pkgrel=9
+pkgrel=10
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -13,7 +13,7 @@ pkgdesc='A cross-platform application and UI framework. This package uses 24-hou
 depends=(libjpeg-turbo xcb-util-keysyms xcb-util-cursor libgl fontconfig xdg-utils
          shared-mime-info xcb-util-wm libxrender libxi sqlite mesa vulkan-headers
          tslib libinput libxkbcommon-x11 libproxy libcups double-conversion brotli libb2 md4c)
-makedepends=(python2 cmake ninja libfbclient mariadb-libs unixodbc postgresql alsa-lib gst-plugins-base-libs
+makedepends=(python cmake ninja libfbclient mariadb-libs unixodbc postgresql alsa-lib gst-plugins-base-libs
              gtk3 libpulse cups freetds xmlstarlet)
 optdepends=('qt6-wayland: to run Qt6 applications in a Wayland session'
             'postgresql-libs: PostgreSQL driver'
@@ -32,18 +32,18 @@ source=(
       oldherl-24h.patch
       'https://build.archlinuxcn.org/~oldherl/files/cldr/36/core.zip'
       https://download.qt.io/official_releases/qt/${pkgver%.*}/$_qtver/submodules/$_pkgfn.tar.xz
-        qt6-base-cflags.patch
-        qt6-base-nostrip.patch)
+        qmake-cflags.patch
+        qmake-config.patch)
 sha256sums=(
       '901a764c896559bb472d5ecee4af9ee006b235f73e56959de9ded477a10e5fc6'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       '34d6d0072e197241463c417ad72610c3d44e2efd6062868e9a95283103d75df4'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
-            '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
+            '4abc22150fa3e06b2fdcec32146abc9be4e316692aa4d5bd5aa53b4b726783fa')
 
 prepare() {
-  patch -d $_pkgfn -p1 < qt6-base-cflags.patch # Use system CFLAGS
-  patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
+  patch -d $_pkgfn -p1 < qmake-cflags.patch # Use system CFLAGS
+  patch -d $_pkgfn -p1 < qmake-config.patch # Don't strip binaries with qmake and use -ltcg, cf. QTBUG-73834
 
   cd $_pkgfn
   patch -p1 -i ../oldherl-24h.patch
