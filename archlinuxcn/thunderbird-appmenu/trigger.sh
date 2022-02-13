@@ -11,6 +11,8 @@ sed -r "s/(pkgver=)(.*)/\1$ver/" -i PKGBUILD
 
 makepkg --printsrcinfo > .SRCINFO
 ver_msg="autohook $ver"
+
+[ -z "$(git diff)" ] && exit
 git commit -am "$ver_msg"
 git push
 
