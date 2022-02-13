@@ -4,7 +4,7 @@ _pkgname=report
 _pkgver=0.5.0
 pkgname=r-${_pkgname,,}
 pkgver=0.5.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Automated Reporting of Results and Statistical Models'
 arch=('any')
 url="https://github.com/easystats/report"
@@ -33,7 +33,7 @@ optdepends=(
   r-testthat
 )
 source=("${_pkgname}_${pkgver}.tar.gz::https://github.com/easystats/report/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('c661f4682cfa03936052fea733043f255b31d653ce3280006adffbc9f48b05fd')
+sha256sums=('328ddf18004a2a8c622a68f3202bee8c6a4479b60dab332e95cc73714bc8def2')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
