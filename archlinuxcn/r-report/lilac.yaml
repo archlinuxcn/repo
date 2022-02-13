@@ -3,11 +3,12 @@ maintainers:
   - github: hubutui
 repo_depends:
   - r-bayestestr
+  - r-datawizard
   - r-effectsize
   - r-insight
   - r-parameters
   - r-performance
 update_on:
-  - regex: report_([\d._-]+).tar.gz
-    source: regex
-    url: https://cran.r-project.org/package=report
+  - source: github
+    github: easystats/report
+    use_max_tag: true
