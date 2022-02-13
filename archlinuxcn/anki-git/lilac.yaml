@@ -4,6 +4,8 @@ maintainers:
 
 build_prefix: extra-x86_64
 
+pre_build_script: aur_pre_build(maintainers=['DarkShadow44'])
+
 update_on:
   - source: github
     github: ankitects/anki
