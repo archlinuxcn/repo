@@ -2,7 +2,7 @@
 # Contributor: Philip Goto <philip.goto@gmail.com>
 
 pkgname=flutter
-pkgver=2.10.0
+pkgver=2.10.1
 pkgrel=1
 pkgdesc="A new mobile app SDK to help developers and designers build modern mobile apps for iOS and Android."
 arch=("x86_64")
@@ -20,15 +20,10 @@ source=(
   "${pkgname}.csh"
 )
 sha256sums=(
-  "e1912964f1959e2b272bd413d68e06d86e8289f95812587e7b7f97f28767c755"
+  "ad27f0720943576aef265d748fb141c805a6821776158c6b9648189ef44ee786"
   "1dea1952d386c43948b9970382c2da5b65b7870684b8ad2ad89124e873aa485a"
   "7ef10d753cfaac52d243549764a793f44f8284a1f4b11715ccd2fa915b026a6f"
 )
-
-build() {
-  cd "${srcdir}/${pkgname}"
-  "${srcdir}/${pkgname}/bin/${pkgname}" doctor
-}
 
 package() {
   rm -rf "${srcdir}/${pkgname}/bin/cache" "${srcdir}/${pkgname}/.pub-cache"
