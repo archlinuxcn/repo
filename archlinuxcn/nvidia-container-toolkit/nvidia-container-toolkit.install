@@ -1,41 +1,14 @@
 post_install() {
 cat <<"EOF"
-Warning about nvidia containers!
+Version 1.8.0 of nvidia-container-toolkit adds native cgroupv2 support and so
+you no longer need to supply `--device /dev/nvida-...` arguments to docker and
+(if applicable) you can remove the following kernel cli flag:
 
-Systemd v247.2-2 introduced a unified cgroup change which has somewhat
-broken nvidia-container's access to the handles in
-/sys/fs/cgroup/devices.
+`systemd.unified_cgroup_hierarchy=false`
 
-If you are using Docker you will then need to explicitly allow access
-to the nvidia devices like:
-
-docker run ... --gpus all --device /dev/nvidia0 --device \
-    /dev/nvidia-uvm --device /dev/nvidia-uvm-tools --device \
-    /dev/nvidiactl ...
-
-or by using a docker-compose which esposes the devices with:
-
-devices:
-  - /dev/nvidia0:/dev/nvidia0
-  - /dev/nvidiactl:/dev/nvidiactl
-  - /dev/nvidia-modeset:/dev/nvidia-modeset
-  - /dev/nvidia-uvm:/dev/nvidia-uvm
-  - /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
-
-
-Alternatively, if you are not currently reliant on the new cgroup v2
-interface you can disable it entirely and go back to the old v1 interface
-by using the following on the kernel command line:
-
-systemd.unified_cgroup_hierarchy=false
-
-And by telling the program to use c-groups again by modifying
-/etc/nvidia-container-runtime/config.toml to set:
-
-no-cgroups = false
-
-See the link for more details:
-https://github.com/NVIDIA/nvidia-docker/issues/1447#issuecomment-757034464
+You might also need to re-enable c-groups in
+/etc/nvidia-container-runtime/config.toml by ensuring `no-cgroups` is not set
+to true.
 EOF
 }
 
