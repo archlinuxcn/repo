@@ -1,0 +1,42 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fc3d9bd..55e1182 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -60,6 +60,7 @@ find_package(Boost COMPONENTS filesystem log serialization system thread program
+ find_package(PkgConfig)
+ find_package(Threads)
+ find_package(SDBus-C++ REQUIRED)
++find_package(CpuFeatures REQUIRED)
+ find_package(EGL REQUIRED)
+ find_package(GLESv2 REQUIRED)
+ find_package(Protobuf REQUIRED)
+diff --git a/external/CMakeLists.txt b/external/CMakeLists.txt
+index 332ca9e..b711e88 100644
+--- a/external/CMakeLists.txt
++++ b/external/CMakeLists.txt
+@@ -5,4 +5,3 @@ add_subdirectory(backward-cpp)
+ 
+ set(BUILD_TESTING OFF)
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error")
+-add_subdirectory(cpu_features EXCLUDE_FROM_ALL)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9b7a508..64ca80d 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -25,7 +25,6 @@ include_directories(
+   ${CMAKE_BINARY_DIR}/external/android-emugl/host/libs/GLESv2_dec
+   ${CMAKE_SOURCE_DIR}/external/android-emugl/host/libs/renderControl_dec
+   ${CMAKE_BINARY_DIR}/external/android-emugl/host/libs/renderControl_dec
+-  ${CMAKE_SOURCE_DIR}/external/cpu_features/include
+ )
+ 
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBINDERFS_PATH=\"\\\"${BINDERFS_PATH}\\\"\"")
+@@ -399,7 +398,7 @@ target_link_libraries(anbox-core
+   ${MIRCLIENT_LIBRARIES}
+   ${LIBSYSTEMD_LDFLAGS}
+   ${LIBSYSTEMD_LIBRARIES}
+-  cpu_features
++  CpuFeatures::cpu_features
+   pthread
+   process-cpp
+   emugl_common
