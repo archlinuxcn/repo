@@ -5,8 +5,8 @@
 pkgname=dingtalk-bin
 _pkgname=dingtalk
 _pkgname2=com.alibabainc.dingtalk
-pkgver=1.3.0.12502
-pkgrel=1
+pkgver=1.3.0.20214
+pkgrel=2
 pkgdesc="钉钉"
 arch=("x86_64")
 url="https://www.dingtalk.com/"
@@ -26,7 +26,7 @@ source=("${_pkgname}_${pkgver}-${arch}.deb::https://dtapp-pub.dingtalk.com/dingt
 
 # DebSource & pkgver can be get here: https://dtapp-pub.dingtalk.com/dingtalk-desktop/xc_dingtalk_update/linux_deb/Update/other/linux_dingtalk_update.json
 
-sha512sums=('f0738dfdafd294c468f06a5977322be0c2945bd6287075b4270b296b83b56face9914e3708735c448db81f99ebf46dba53d1d470935082b93745ebba024d5fb9'
+sha512sums=('63bd96fc2c8827827817087e87977ddacf4f51dc0c8605be859e2f92cd39a3fc2e16e4dac1193bf2972367421a5e54c2d461a70ff7ff8d39ab993292e41277b0'
             'b83d493ed68be0f5a6b851fd93d819bb3a6e62feeb71a5bef10bad24b5ea8f3cf09deea4f31ed727449888a6eae1be99fa9cf263bc921cb8bb2958e2f37a7d64'
             'c8570ec4cd978e26ac622a83db053a0555324752f5000dc5b3cd680d782138e8ef856f09ec9b7850e04e1faa1e39de94dabeb16fbfbe0fd44af43247b30e8b2f'
             '50437762c47843fa9040bfb5a723da246d1496e4dc0937028c0f2cb92e0286dc47b7c2a5a0485a4b667cfb30d7c4d23664a2ccb08c5bd3059aad265532c1140e'
@@ -59,6 +59,9 @@ package(){
 
     # license
     install -Dm644 service-terms-zh ${pkgdir}/usr/share/licenses/${_pkgname}/service-terms-zh.html
+    
+    # fix chinese input in workbench
+    rm -rf ${pkgdir}/opt/${_pkgname}/release/libgtk-x11-2.0.so.*
 
 #     ## libraries
 # 
