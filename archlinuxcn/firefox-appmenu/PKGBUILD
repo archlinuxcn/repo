@@ -7,8 +7,8 @@
 
 pkgname=firefox-appmenu
 _pkgname=firefox
-pkgver=96.0.3
-pkgrel=2
+pkgver=97.0
+pkgrel=1
 pkgdesc="Firefox from extra with appmenu patch"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -26,23 +26,21 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'xdg-desktop-portal: Screensharing with Wayland')
 provides=("firefox=$pkgver")
 conflicts=("firefox")
-options=(!emptydirs !makeflags !strip !lto)
+options=(!emptydirs !makeflags !strip !lto !debug)
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         0001-Use-remoting-name-for-GDK-application-names.patch
-        0002-Bug-1745560-Add-missing-stub-for-wl_proxy_marshal_fl.patch 
         $_pkgname.desktop
         identity-icons-brand.svg
         fix-wayland-build.patch
         unity-menubar.patch
         fix_csd_window_buttons.patch)
-sha256sums=('1a741d6fcf20e6833a90169f41d29141ea4610f58b848e06091a683af6304dea'
+sha256sums=('6c8a7dcb47122d033383fd62a1bcaefff0290a6c23d057898e8ff9c72749df28'
             'SKIP'
-            '5ead90994f91bed3231c2661977c69fc276cfbe278a1ab904daa544c9455ff42'
-            '8a893ae44955c90a0fb4a504134773293054ab57a41ba7931df98c8cf5449549'
+            '8de6c0ecc70d2763936be6df4b91a3d2e806765bf510f987d6f2ffa2377c3f01' 
             '34514a657d6907a159594c51e674eeb81297c431ec26a736417c2fdb995c2c0c'
             'a9b8b4a0a1f4a7b4af77d5fc70c2686d624038909263c795ecc81e0aec7711e9'
             '46724a625f51c358abaee488a7ce75673078e96ba009459339120b8dd11dec25'
-            '0efba173f3e16aaf1726aedfd89e64159d9094cb337b9ec98b4e005824ef13e3'
+            '4ad7d369e79281d2bd9c7364e21b174d76df16558ac21d4400d6ac9f1e04f897'
             'e08d0bc5b7e562f5de6998060e993eddada96d93105384960207f7bdf2e1ed6e')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
