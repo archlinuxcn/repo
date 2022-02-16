@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=tinytex
-_pkgver=0.36
+_pkgver=0.37
 pkgname=r-${_pkgname,,}
-pkgver=0.36
+pkgver=0.37
 pkgrel=1
 pkgdesc='Helper Functions to Install and Maintain TeX Live, and Compile LaTeX Documents'
 arch=('any')
@@ -18,7 +18,7 @@ optdepends=(
   r-testit
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('65e6c1b981686573dd406e97b9639224cc2640d55a59d6381360449f10763b78')
+sha256sums=('2f4f330711fd6cd96927c18f2f649487b8a83a06ed04b5928a0067163e7948d9')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
