@@ -1,0 +1,39 @@
+From 28ac6a15411d01301e171b8a8b0019abd57589b9 Mon Sep 17 00:00:00 2001
+From: Stephan Hartmann <stha09@googlemail.com>
+Date: Mon, 7 Feb 2022 20:09:57 +0000
+Subject: [PATCH] sandbox: build if glibc 2.34+ dynamic stack size is enabled
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Compilation of sandbox fails when using dynamic stack size in glibc
+2.34 or newer. This is because the value is not a literal anymore but
+obtained through sysconf.
+
+To avoid this, use memset to put zeros in the buffer.
+
+Change-Id: Ia479e0f799b77a10a00197aaaa0500e62546f458
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/3436947
+Reviewed-by: Jorge Lucangeli Obes <jorgelo@chromium.org>
+Commit-Queue: José Dapena Paz <jdapena@igalia.com>
+Cr-Commit-Position: refs/heads/main@{#967943}
+---
+ sandbox/linux/services/credentials.cc | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/sandbox/linux/services/credentials.cc b/sandbox/linux/services/credentials.cc
+index ca6b5954798..c933eafd163 100644
+--- a/sandbox/linux/services/credentials.cc
++++ b/sandbox/linux/services/credentials.cc
+@@ -100,7 +100,10 @@ bool ChrootToSafeEmptyDir() {
+   // TODO(crbug.com/1247458) Broken in MSan builds after LLVM f1bb30a4956f.
+   clone_flags |= CLONE_VM | CLONE_VFORK | CLONE_SETTLS;
+ 
+-  char tls_buf[PTHREAD_STACK_MIN] = {0};
++  // PTHREAD_STACK_MIN can be dynamic in glibc2.34+, so it is not possible to
++  // zeroify tls_buf assigning { 0 }
++  char tls_buf[PTHREAD_STACK_MIN];
++  memset(tls_buf, 0, PTHREAD_STACK_MIN);
+   tls = tls_buf;
+ #endif
+ 

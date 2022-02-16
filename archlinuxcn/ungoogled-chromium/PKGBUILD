@@ -9,7 +9,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
  
 pkgname=ungoogled-chromium
-pkgver=98.0.4758.80
+pkgver=98.0.4758.102
 pkgrel=1
 _launcher_ver=8
 _gcc_patchset=5
@@ -32,16 +32,20 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://github.com/stha09/chromium-patches/releases/download/chromium-${pkgver%%.*}-patchset-$_gcc_patchset/chromium-${pkgver%%.*}-patchset-$_gcc_patchset.tar.xz
         downgrade-duplicate-peer-error-to-dvlog.patch
         fix-build-break-with-system-libdrm.patch
+        sandbox-build-if-glibc-2.34-dynamic-stack-size-is-en.patch
+        breakpad-fix-for-non-constant-SIGSTKSZ.patch
         use-FT_Done_MM_Var-in-CFX_Font-AdjustMMParams.patch
         sql-make-VirtualCursor-standard-layout-type.patch
         chromium-93-ffmpeg-4.4.patch
         unbundle-ffmpeg-av_stream_get_first_dts.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('c87266e20f860a32c48affc70a769368d1b876dbad768e3aa93ee3c335944171'
+sha256sums=('415b47e912766cd07f9f52e95bc6470b835acf1d6f566ae32e66ba8be608f33e'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'f561145514e9d30a696a82f6a6a4eca06e664b58d7cda30dad9afb2cef341a4d'
             '291c6a6ad44c06ae8d1b13433f0c4e37d280c70fb06eaa97a1cc9b0dcc122aaa'
             'edf4d973ff197409d319bb6fbbaa529e53bc62347d26b0733c45a116a1b23f37'
+            'f910be9370c880de6e1d61cc30383c069e421d7acf406166e4fbfad324fc7d61'
+            'b4d28867c1fabde6c50a2cfa3f784730446c4d86e5191e0f0000fbf7b0f91ecf'
             '9c9c280be968f06d269167943680fb72a26fbb05d8c15f60507e316e8a9075d5'
             'b94b2e88f63cfb7087486508b8139599c89f96d7a4181c61fec4b4e250ca327a'
             '1a9e074f417f8ffd78bcd6874d8e2e74a239905bf662f76a7755fa40dc476b57'
@@ -54,7 +58,7 @@ source=(${source[@]}
         chromium-drirc-disable-10bpc-color-configs.conf
         wayland-egl.patch)
 sha256sums=(${sha256sums[@]}
-            '78da43f0f5e0b8f361cd40cbde2e2d04b4245add9e8643964f7dc9f9190f5cb7'
+            '48063bb9dbc62326ce66c3e274f38daa70f201d41732825aba8ff28953cc4048'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '34d08ea93cb4762cb33c7cffe931358008af32265fc720f2762f0179c3973574')
 
@@ -117,6 +121,8 @@ prepare() {
   # Upstream fixes
   patch -Np1 -F3 -i ../downgrade-duplicate-peer-error-to-dvlog.patch
   patch -Np1 -i ../fix-build-break-with-system-libdrm.patch
+  patch -Np1 -i ../sandbox-build-if-glibc-2.34-dynamic-stack-size-is-en.patch
+  patch -Np1 -d third_party//breakpad/breakpad <../breakpad-fix-for-non-constant-SIGSTKSZ.patch
   patch -Np1 -d third_party/pdfium <../use-FT_Done_MM_Var-in-CFX_Font-AdjustMMParams.patch
 
   # https://chromium-review.googlesource.com/c/chromium/src/+/2862724
