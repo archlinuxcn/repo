@@ -4,7 +4,7 @@
 pkgbase=linux-zen-g14
 _pkgbase=linux-zen
 pkgver=5.16.9.zen1
-pkgrel=1
+pkgrel=2
 pkgdesc='Linux ZEN'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/zen-kernel/zen-kernel/commits/$_srctag"
@@ -23,7 +23,7 @@ source=(
   "git+https://gitlab.com/asus-linux/fedora-kernel.git#branch=rog-5.16"
 )
 sha256sums=('SKIP'
-            'c2a9b42dbc3fa917726ac2a636c0af5f01829b3231fa8779ac04fb678cc4e3c3'
+            '4fb8b32bd7f9b11fa9e546d705982500f8e6ae63e0a49b9d2f2931f86905648e'
             'SKIP')
 
 export KBUILD_BUILD_HOST=archlinux
@@ -34,10 +34,10 @@ prepare() {
   sed -i 's/CONFIG_AMD_PMC=m/CONFIG_AMD_PMC=y/g' $srcdir/config
   cd $_srcname
 
-  cp ../fedora-kernel/0*.patch $srcdir
+  cp ../fedora-kernel/*.patch $srcdir
   cp ../fedora-kernel/kernel.spec $srcdir
 
-  sed -i '/0001-squashed-amd-pstate-v3-for-5.14.patch/d' $srcdir/kernel.spec
+  #sed -i '/0001-squashed-amd-pstate-v3-for-5.14.patch/d' $srcdir/kernel.spec
 
   echo "Setting version..."
   scripts/setlocalversion --save-scmversion
@@ -47,10 +47,13 @@ prepare() {
   cd $srcdir
 
   local src
-  for src in $(cat kernel.spec | grep "ApplyOptionalPatch 0" | sed -e 's/ApplyOptionalPatch //g'); do
+  for src in $(cat kernel.spec | grep "ApplyOptionalPatch " | sed -e 's/ApplyOptionalPatch //g'); do
     cd $_srcname
-    msg2 "Applying patch $src..."
-    patch -Np1 < "../$src"
+    if [ $src != "patch-%{patchversion}-redhat.patch" ] && [ $src != "linux-kernel-test.patch" ];
+    then
+      msg2 "Applying patch $src..."
+      patch -Np1 < "../$src"
+    fi
     cd ..
   done
   
