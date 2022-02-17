@@ -24,6 +24,7 @@ build() {
   cat > deps/deps.jl <<EOF
 const ROOTENV = joinpath(dirname(@__FILE__), "usr")
 const MINICONDA_VERSION = "3"
+const CONDA_EXE = "/usr/bin/conda"
 EOF
 }
 
