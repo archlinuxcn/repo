@@ -1,13 +1,29 @@
-## 5.2
+## 6
 
-* `aur-seach`
-  + `-a` now correctly returns the union of search results
+In previous versions, `aur search` would display an intersection of search
+results, the symmetric difference with `-a` (bug), and the concatenation with
+`-r`. (#918)
 
-## 5.1
+`aur search -a` now correctly returns the union, and the `-r` output is
+processed with jq(1) to return the intersection by default, or the union (with
+duplicates removed) with `-a`. This processing is done because the RPC
+interface as of aurweb 6.0.11 does not expose set operations, and so
+`aur-search` performs one search for each argument. `aur search --json` was
+added as an alias to `--raw`, and the latter option is now deprecated.
 
-* `aur-query`
-  + correctly evaluate `AUR_QUERY_RPC_SPLITNO_POST`
-  + lower default of `AUR_QUERY_RPC_SPLITNO_POST` to 500
+The implementation is done in `aur-query`, which now takes the intersection of
+search results by default. The union can be taken with `aur query --any`, or
+unprocessed results shown with `-r` or `--raw`. In each case, the output is
+newline delimited (JSON Lines, `jq -r`). If the search completed without
+results, `aur-query` will either exit with status 0 (if no request resulted in
+an error), 1 (if the `-e` option was specified), or 2 (if at least one request
+resulted in an error).
+
+`AUR_QUERY_RPC_SPLITNO_POST` received bug fixes (#920), and the default has
+been reduced to 500 after experiencing issues with a larger number of
+arguments. Users looking to use `aur-query -t info` with a very large number
+of arguments should instead consider `aur pkglist --info`.
+`AUR_QUERY_RPC_PARALLEL` also received several bugfixes.
 
 ## 5
 
