@@ -4,12 +4,12 @@
 # Contributor: Thomas Baechler <thomas@archlinux.org>
 
 pkgname=nvidia-lily
-pkgver=510.47.03
+pkgver=510.54
 pkgrel=1
 pkgdesc="NVIDIA drivers for linux-lily"
 arch=('x86_64')
 url="https://www.nvidia.com/"
-depends=("linux-lily=5.15.13-1" "nvidia-utils=${pkgver}" 'libglvnd')
+depends=("linux-lily=5.15.24-1" "nvidia-utils=${pkgver}" 'libglvnd')
 makedepends=("nvidia-utils=${pkgver}" 'libglvnd' 'linux-lily' 'linux-lily-headers')
 license=('custom')
 options=('!strip')
@@ -17,7 +17,7 @@ provides=("nvidia=$pkgver")
 conflicts=('nvidia-dkms')
 _pkg="NVIDIA-Linux-x86_64-${pkgver}"
 source=("https://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/${_pkg}.run")
-sha512sums=('7488b1ae99acfa4cd6f8fd071a0e7652dcc9e499ff587d1dfdaf5d202a5b9daa43ed014876d2b2c9caf7f7c531ec380540f30833bb9790395cf159d177f2e803')
+sha512sums=('1e65e96c1ae1cccd5cd483f2b65927e3594d28f3774459dfd094530f445f4b0f5368a3b7eebf4970bd2632438cca2cbb93af50a59a3a87a2c13d08ed5155164c')
 
 prepare() {
     sh "${_pkg}.run" --extract-only
