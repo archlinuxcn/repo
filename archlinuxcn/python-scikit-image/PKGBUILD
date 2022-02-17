@@ -4,7 +4,7 @@
 
 _name=scikit-image
 pkgname=python-scikit-image
-pkgver=0.19.1
+pkgver=0.19.2
 pkgrel=1
 pkgdesc="Image processing routines for SciPy"
 arch=('x86_64')
@@ -35,7 +35,7 @@ optdepends=('python-pyqt5: for imshow(x, fancy=True) and skivi'
             'python-simpleitk: Optional I/O plugin providing a wide variety of formats. including specialized formats using in medical imaging')
 options=('!emptydirs')
 source=("${_name}-${pkgver}.tar.gz::https://github.com/scikit-image/scikit-image/archive/v${pkgver}.tar.gz")
-sha256sums=('803ae61cac7459a0b3b112602f2889f2ab0c09ae71c420b0869b8dd8cfdb5e59')
+sha256sums=('e72bb5fbc6d66e250ff52719d573073ed6ac5591411c14ec5fea796f41d7415f')
 
 build() {
   cd "${srcdir}/${_name}-${pkgver}"
