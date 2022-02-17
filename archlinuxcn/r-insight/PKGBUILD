@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=insight
-_pkgver=0.15.0
+_pkgver=0.16.0
 pkgname=r-${_pkgname,,}
-pkgver=0.15.0
+pkgver=0.16.0
 pkgrel=1
 pkgdesc='Easy Access to Model Information for Various Model Objects'
 arch=('any')
@@ -101,7 +101,7 @@ optdepends=(
   r-vgam
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('d6a148c3e1cfcb3829e2f8950bcbf98f500ee88bebd7e2482f9b085542e93fee')
+sha256sums=('7944d7a386c99ea06d9d9e2b5f4aeb98fded7ec90b1cb908d03e278480be9e3d')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
