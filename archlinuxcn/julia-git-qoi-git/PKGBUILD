@@ -1,0 +1,24 @@
+pkgname=julia-git-qoi-git
+pkgver=1.0.0.0.4.ga8fbc6c
+pkgrel=1
+pkgdesc="QOI.jl"
+url="https://github.com/KristofferC/QOI.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-qoi)
+source=(git://github.com/KristofferC/QOI.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd QOI.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd QOI.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh QOI "${pkgdir}" "${pkgname}" julia-git
+}
