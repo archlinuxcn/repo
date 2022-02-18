@@ -3,8 +3,8 @@
 
 pkgbase=linux-zen-g14
 _pkgbase=linux-zen
-pkgver=5.16.9.zen1
-pkgrel=3
+pkgver=5.16.10.zen1
+pkgrel=1
 pkgdesc='Linux ZEN'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/zen-kernel/zen-kernel/commits/$_srctag"
