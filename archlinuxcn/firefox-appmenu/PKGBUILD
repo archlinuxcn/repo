@@ -7,13 +7,13 @@
 
 pkgname=firefox-appmenu
 _pkgname=firefox
-pkgver=97.0
-pkgrel=2
+pkgver=97.0.1
+pkgrel=1
 pkgdesc="Firefox from extra with appmenu patch"
 arch=(x86_64)
 license=(MPL GPL LGPL)
 url="https://www.mozilla.org/firefox/"
-depends=(gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse libdbusmenu-gtk3)
+depends=(gtk3 libxt mime-types dbus-glib ffmpeg4.4 nss ttf-font libpulse libdbusmenu-gtk3)
 makedepends=(unzip zip diffutils yasm mesa imake inetutils xorg-server-xvfb
              autoconf2.13 rust clang llvm jack nodejs cbindgen nasm
              python-setuptools python-psutil python-zstandard lld dump_syms
@@ -34,7 +34,7 @@ source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-
         fix-wayland-build.patch
         unity-menubar.patch
         fix_csd_window_buttons.patch)
-sha256sums=('6c8a7dcb47122d033383fd62a1bcaefff0290a6c23d057898e8ff9c72749df28'
+sha256sums=('3f2c87cf28645130777e875ddc9c67e8994c8d5c859f425f3ddced6fecb78d45'
             'SKIP'
             '8de6c0ecc70d2763936be6df4b91a3d2e806765bf510f987d6f2ffa2377c3f01' 
             '34514a657d6907a159594c51e674eeb81297c431ec26a736417c2fdb995c2c0c'
