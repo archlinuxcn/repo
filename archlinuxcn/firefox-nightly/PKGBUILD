@@ -8,18 +8,18 @@ pkgbase=firefox-nightly
 pkgname=()
 _version=99.0a1
 pkgver=99.0a1.20220215.23
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 license=('MPL' 'GPL' 'LGPL')
 depends=('dbus-glib' 'gtk3' 'libxt' 'nss' 'mime-types')
 optdepends=('pulseaudio: audio support'
-            'ffmpeg: h.264 video'
-            'gtk2: flash plugin support'
+            'ffmpeg4.4: h.264 video'
             'hunspell: spell checking'
             'hyphen: hyphenation'
             'libnotify: notification integration'
             'networkmanager: location detection via available WiFi networks'
             'speech-dispatcher: text-to-speech'
+            'xdg-desktop-portal: Screensharing with Wayland'
             'startup-notification: support for FreeDesktop Startup Notification')
 _url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central-l10n"
 _filename_prefix="20220215.23-"
