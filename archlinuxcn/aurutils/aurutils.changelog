@@ -1,3 +1,21 @@
+## 6.2
+
+* `aur-pkglist`
+  - add `-v` / `--verify` (verifies published sha256sums)
+
+* `aur-repo-filter`
+  - add repository to dependency messages ("dependency foo satisfied by repo/bar")
+  - deduplicate results on stdout
+
+## 6.1
+
+* `aur-search`
+  - do not print additional messages on errors or no results
+
+* `aur-query`
+  - add `-a` alias for `--any`
+  - add missing newline in case of errors (`jq -r`)
+
 ## 6
 
 In previous versions, `aur search` would display an intersection of search
