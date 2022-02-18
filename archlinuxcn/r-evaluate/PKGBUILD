@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=evaluate
-_pkgver=0.14
+_pkgver=0.15
 pkgname=r-${_pkgname,,}
-pkgver=0.14
+pkgver=0.15
 pkgrel=1
 pkgdesc='Parsing and Evaluation Tools that Provide More Details than the Default'
 arch=('any')
@@ -18,7 +18,7 @@ optdepends=(
   r-testthat
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('a8c88bdbe4e60046d95ddf7e181ee15a6f41cdf92127c9678f6f3d328a3c5e28')
+sha256sums=('885aee530a8b6aa7fd3acaa1ecd94ab58b71038c879ca37405f948e105907c5d')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
