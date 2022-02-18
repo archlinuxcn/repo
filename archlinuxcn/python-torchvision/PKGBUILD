@@ -41,6 +41,7 @@ get_pyver() {
 }
 
 prepare() {
+  # fix building with ffmpeg4.4
   sed -i "s#ffmpeg_include_dir = os.path.join(ffmpeg_root, 'include')#ffmpeg_include_dir = os.path.join(ffmpeg_root, 'include', 'ffmpeg4.4')#" "${srcdir}/${_pkgname}-${pkgver}/setup.py"
   sed -i "s#ffmpeg_library_dir = os.path.join(ffmpeg_root, 'lib')#ffmpeg_library_dir = os.path.join(ffmpeg_root, 'lib', 'ffmpeg4.4')#" "${srcdir}/${_pkgname}-${pkgver}/setup.py"
   cp -a "${srcdir}/${_pkgname}-${pkgver}" "${srcdir}/${_pkgname}-cuda-${pkgver}"
@@ -50,7 +51,7 @@ build() {
   cd "${_pkgname}-${pkgver}"
   python setup.py build
   
-  cd "${_pkgname}-cuda-${pkgver}"
+  cd "${srcdir}${_pkgname}-cuda-${pkgver}"
   FORCE_CUDA=1 \
   TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
   python setup.py build
