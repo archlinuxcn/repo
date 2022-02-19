@@ -23,4 +23,8 @@ package() {
   echo "import GR_jll" > deps/deps.jl
 
   . /usr/lib/julia/julia-install-pkg.sh GR "${pkgdir}" "${pkgname}" julia-git
+
+  # GR.jl have check to rebuild at runtime which unconditionally references the build scripts.
+  # We don't care so just provide an empty one.
+  touch "${dest_dir}"/deps/build.jl
 }
