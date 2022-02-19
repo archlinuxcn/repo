@@ -6,12 +6,12 @@ ENABLE_SNAPD=0
 
 pkgname=libpamac-aur
 pkgver=11.2.0
-pkgrel=5
+pkgrel=6
 _pkgfixver=$pkgver
 
-_commit='9e7925dfa2aad9842755dfe2522a6479cf242789'
-sha256sums=('ba85b196677a02c725afe97883cd33d768fef88faa34eb4f87a542b8e064596d'
-            'e9fe7c14d15cbce1d337749cf317e4460bce485b102b5c228b7efa479998d4fa'
+_commit='cea1826792de5eca1d343478b796a09448774702'
+sha256sums=('edce674203efe5955aa6c26be2192b4a214d969ea735727ed20ee3aa138cdf0b'
+            '6e0c25f0fcb0076ce78845b037e32925fcc3f1cd1670062c48ed35f564a10244'
             'c2b943318a01ba1f3dabbf32e48e6a6f4b4b774e167ab86c6bfee31aa4a3424c')
 
 pkgdesc="Pamac package manager library based on libalpm"
