@@ -12,4 +12,9 @@ post_build_script: |
 update_on:
   - source: aur
     aur: python-torchaudio
+
   - alias: python
+
+  - source: alpm
+    alpm: python-pytorch
+    strip_release: true
