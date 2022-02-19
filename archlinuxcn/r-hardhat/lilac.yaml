@@ -1,0 +1,12 @@
+build_prefix: extra-x86_64
+maintainers:
+  - github: hubutui
+repo_depends:
+  - r-glue
+  - r-rlang
+  - r-tibble
+  - r-vctrs
+update_on:
+  - regex: hardhat_([\d._-]+).tar.gz
+    source: regex
+    url: https://cran.r-project.org/package=hardhat
