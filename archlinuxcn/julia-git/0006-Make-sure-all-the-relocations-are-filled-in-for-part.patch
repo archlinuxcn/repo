@@ -1,0 +1,50 @@
+From 2078d337f4eb0437337ac0bd3c02fba025a1d793 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 19 Feb 2022 10:45:13 -0500
+Subject: [PATCH 6/6] Make sure all the relocations are filled in for partially
+ cloned target
+
+We collect the relocations (i.e. the GOT slots that is used in the code) for each target
+in `tgt.relocs`. Needing a relocation, however, does not imply that the function is cloned
+for this target within the group (It does mean that at least one target
+in the group has it cloned). The previous version would miss the relocation in this case.
+
+This was triggerred with the following cloning situation
+
+    caller: clone_1
+    callee: clone_1, clone_1.clone_3
+
+Since caller.clone_1 may call either callee.clone_1 or callee.clone_1.clone_3 a relocation
+for callee will be used and is required to be initialized.
+In addition to target 1, target 2 (and in fact target 3) within group 1
+will also use caller.clone_1. However, since callee isn't cloned for target 2
+the previous version wouldn't have saved this slot in the relocation array.
+---
+ src/llvm-multiversioning.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/llvm-multiversioning.cpp b/src/llvm-multiversioning.cpp
+index 57e90a9aa8..afbe712f32 100644
+--- a/src/llvm-multiversioning.cpp
++++ b/src/llvm-multiversioning.cpp
+@@ -1052,7 +1052,7 @@ void CloneCtx::emit_metadata()
+                 idxs.push_back(baseidx);
+                 for (uint32_t j = 0; j < nfvars; j++) {
+                     auto base_f = grp->base_func(fvars[j]);
+-                    if (shared_relocs.count(j)) {
++                    if (shared_relocs.count(j) || tgt->relocs.count(j)) {
+                         count++;
+                         idxs.push_back(jl_sysimg_tag_mask | j);
+                         auto f = map_get(*tgt->vmap, base_f, base_f);
+@@ -1060,7 +1060,7 @@ void CloneCtx::emit_metadata()
+                     }
+                     else if (auto f = map_get(*tgt->vmap, base_f)) {
+                         count++;
+-                        idxs.push_back(tgt->relocs.count(j) ? (jl_sysimg_tag_mask | j) : j);
++                        idxs.push_back(j);
+                         offsets.push_back(get_ptrdiff32(cast<Function>(f), fbase));
+                     }
+                 }
+-- 
+2.35.1
+

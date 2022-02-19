@@ -1,14 +1,14 @@
-From 08b208fede2d045f2bb5fc385846367f29fc0e2f Mon Sep 17 00:00:00 2001
+From 7774195e32792ae6460418f9940cac308b2a4544 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 31 Aug 2020 12:44:58 -0400
-Subject: [PATCH 3/5] Enable basic AA in O2
+Subject: [PATCH 3/6] Enable basic AA in O2
 
 ---
  src/aotcompile.cpp | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
-index 8eb718836d..a2977e5ac9 100644
+index 344e1ad894..b27e23f6c4 100644
 --- a/src/aotcompile.cpp
 +++ b/src/aotcompile.cpp
 @@ -677,9 +677,7 @@ void addOptimizationPasses(legacy::PassManagerBase *PM, int opt_level,
