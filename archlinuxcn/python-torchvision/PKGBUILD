@@ -51,7 +51,7 @@ build() {
   cd "${_pkgname}-${pkgver}"
   python setup.py build
   
-  cd "${srcdir}${_pkgname}-cuda-${pkgver}"
+  cd "${srcdir}/${_pkgname}-cuda-${pkgver}"
   FORCE_CUDA=1 \
   TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
   python setup.py build
