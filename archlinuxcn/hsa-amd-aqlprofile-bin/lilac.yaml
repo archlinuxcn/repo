@@ -11,10 +11,6 @@ post_build: aur_post_build
 
 update_on:
   - source: aur
-    aur: hsa-rocr
-
-repo_depends:
-  - hsakmt-roct
-  - rocm-device-libs
-  - rocm-llvm
-  - hsa-amd-aqlprofile-bin
+    aur: hsa-amd-aqlprofile-bin
+  - source: manual
+    manual: 1
