@@ -1,0 +1,58 @@
+diff -ruN a/c++/Makefile.in b/c++/Makefile.in
+--- a/c++/Makefile.in	2021-07-03 20:53:57.000000000 +0200
++++ b/c++/Makefile.in	2021-11-03 10:58:04.147647447 +0100
+@@ -118,7 +118,7 @@
+ 		-l@FORM_NAME@@USE_LIB_SUFFIX@ \
+ 		-l@MENU_NAME@@USE_LIB_SUFFIX@ \
+ 		-l@PANEL_NAME@@USE_LIB_SUFFIX@ \
+-		-lncurses@USE_LIB_SUFFIX@ @SHLIB_LIST@
++		-lncurses@USE_LIB_SUFFIX@
+ 
+ LIBROOT		= ncurses++
+ 
+@@ -157,8 +157,7 @@
+ LDFLAGS_DEFAULT	= $(LINK_@DFT_UPR_MODEL@) $(LDFLAGS_@DFT_UPR_MODEL@)
+ 
+ # flags for library built by this makefile
+-LDFLAGS		= $(TEST_ARGS) @LDFLAGS@ \
+-	@LD_MODEL@ $(TEST_LIBS) @LIBS@ $(CXXLIBS)
++LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@ $(CXXLIBS)
+ 
+ AUTO_SRC	= \
+ 		etip.h
+diff -ruN a/form/Makefile.in b/form/Makefile.in
+--- a/form/Makefile.in	2021-07-03 17:45:33.000000000 +0200
++++ b/form/Makefile.in	2021-11-03 10:58:45.301114373 +0100
+@@ -110,7 +110,7 @@
+ LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@
+ 
+ SHLIB_DIRS	= -L../lib
+-SHLIB_LIST	= $(SHLIB_DIRS) -lncurses@USE_LIB_SUFFIX@ @SHLIB_LIST@
++SHLIB_LIST	= $(SHLIB_DIRS) -lncurses@USE_LIB_SUFFIX@
+ 
+ RPATH_LIST	= @RPATH_LIST@
+ RESULTING_SYMS	= @RESULTING_SYMS@
+diff -ruN a/menu/Makefile.in b/menu/Makefile.in
+--- a/menu/Makefile.in	2021-07-03 17:45:33.000000000 +0200
++++ b/menu/Makefile.in	2021-11-03 10:58:59.461160284 +0100
+@@ -110,7 +110,7 @@
+ LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@
+ 
+ SHLIB_DIRS	= -L../lib
+-SHLIB_LIST	= $(SHLIB_DIRS) -lncurses@USE_LIB_SUFFIX@ @SHLIB_LIST@
++SHLIB_LIST	= $(SHLIB_DIRS) -lncurses@USE_LIB_SUFFIX@
+ 
+ RPATH_LIST	= @RPATH_LIST@
+ RESULTING_SYMS	= @RESULTING_SYMS@
+diff -ruN a/panel/Makefile.in b/panel/Makefile.in
+--- a/panel/Makefile.in	2021-07-03 17:45:33.000000000 +0200
++++ b/panel/Makefile.in	2021-11-03 10:59:33.957938691 +0100
+@@ -112,7 +112,7 @@
+ LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@
+ 
+ SHLIB_DIRS	= -L../lib
+-SHLIB_LIST	= $(SHLIB_DIRS) -lncurses@USE_LIB_SUFFIX@ @SHLIB_LIST@
++SHLIB_LIST	= $(SHLIB_DIRS) -lncurses@USE_LIB_SUFFIX@
+ 
+ RPATH_LIST	= @RPATH_LIST@
+ RESULTING_SYMS	= @RESULTING_SYMS@
