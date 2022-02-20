@@ -15,9 +15,9 @@ makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt5-tool
 optdepends=('qt5-wayland: for Wayland support')
 provides=('citra')
 conflicts=('citra')
-source=("$_pkgbase::git+https://github.com/citra-emu/citra")
-md5sums=('SKIP')
-
+source=("$_pkgbase::git+https://github.com/citra-emu/citra" "ffmpeg.patch::https://github.com/citra-emu/citra/commit/04f201ab348f24772156f0e69aee319fc0242700.patch")
+md5sums=('SKIP'
+         '433b9c1a70e6d6dcb10123fe4493fc8d')
 pkgver() {
 	cd "$srcdir/$_pkgbase"
 	echo "r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
@@ -29,6 +29,7 @@ prepare() {
 
 	git submodule init
 	git submodule update --init --recursive
+    patch -p1 -i ../ffmpeg.patch
 }
 
 build() {
