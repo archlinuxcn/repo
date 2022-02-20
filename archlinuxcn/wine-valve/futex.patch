@@ -1,0 +1,10 @@
+diff --color -rupN a/dlls/ntdll/unix/fsync.c b/dlls/ntdll/unix/fsync.c
+--- a/dlls/ntdll/unix/fsync.c  2022-02-16 13:39:18.748009255 +0100
++++ b/dlls/ntdll/unix/fsync.c  2022-02-16 13:39:14.004819301 +0100
+@@ -51,6 +51,7 @@
+ 
+ #include "unix_private.h"
+ #include "fsync.h"
++#include <linux/futex.h>
+ 
+ WINE_DEFAULT_DEBUG_CHANNEL(fsync); 
