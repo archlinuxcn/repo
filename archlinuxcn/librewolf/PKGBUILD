@@ -5,13 +5,13 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=97.0
+pkgver=97.0.1
 pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
 license=(MPL GPL LGPL)
 url="https://librewolf-community.gitlab.io/"
-depends=(gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse)
+depends=(gtk3 libxt mime-types dbus-glib nss ttf-font libpulse)
 makedepends=(unzip zip diffutils yasm mesa imake inetutils xorg-server-xvfb
              autoconf2.13 rust clang llvm jack nodejs cbindgen nasm
              python-setuptools python-psutil python-zstandard git binutils lld dump_syms
@@ -22,21 +22,26 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech'
             'hunspell-en_US: Spell checking, American English'
             'xdg-desktop-portal: Screensharing with Wayland')
+depends_x86_64=(ffmpeg4.4)
+depends_aarch64=(ffmpeg)
 backup=('usr/lib/librewolf/librewolf.cfg'
         'usr/lib/librewolf/distribution/policies.json')
 options=(!emptydirs !makeflags !strip !lto !debug)
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
-_common_tag="v${pkgver}-${pkgrel}"
-_settings_tag='5.5'
+# _source_tag=
+_source_commit='272f05d69b40953729bf05a1d7acda69f30804e6' # !20 is not merged yet
+# _common_tag="v${pkgver}-${pkgrel}"
+# _settings_tag='5.5'
+_settings_commit='f88024283b0dfb60fcaea9a3374aa6ea036260f5' # 5.5 with updated ublock
 install='librewolf.install'
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         $pkgname.desktop
-        "git+https://gitlab.com/${pkgname}-community/browser/common.git#tag=${_common_tag}"
-        "git+https://gitlab.com/${pkgname}-community/settings.git#tag=${_settings_tag}"
+        "git+https://gitlab.com/${pkgname}-community/browser/source.git#tag=${_source_commit}"
+        "git+https://gitlab.com/${pkgname}-community/settings.git#tag=${_settings_commit}"
         "default192x192.png"
         )
 source_aarch64=("${pkgver}-${pkgrel}_build-arm-libopus.patch::https://raw.githubusercontent.com/archlinuxarm/PKGBUILDs/master/extra/firefox/build-arm-libopus.patch")
-sha256sums=('6c8a7dcb47122d033383fd62a1bcaefff0290a6c23d057898e8ff9c72749df28'
+sha256sums=('3f2c87cf28645130777e875ddc9c67e8994c8d5c859f425f3ddced6fecb78d45'
             'SKIP'
             '0b28ba4cc2538b7756cb38945230af52e8c4659b2006262da6f3352345a8bed2'
             'SKIP'
@@ -49,7 +54,7 @@ prepare() {
   mkdir -p mozbuild
   cd firefox-$pkgver
 
-  local _patches_dir="${srcdir}/common/patches"
+  local _patches_dir="${srcdir}/source/patches"
 
   cat >../mozconfig <<END
 ac_add_options --enable-application=browser
@@ -162,7 +167,7 @@ fi
 
   # remove search extensions (experimental)
   # patch -Np1 -i ${_patches_dir}/search-config.patch
-  cp "${srcdir}/common/source_files/search-config.json" services/settings/dumps/main/search-config.json
+  cp "${srcdir}/source/assets/search-config.json" services/settings/dumps/main/search-config.json
 
   # stop some undesired requests (https://gitlab.com/librewolf-community/browser/common/-/issues/10)
   patch -Np1 -i ${_patches_dir}/sed-patches/stop-undesired-requests.patch
@@ -220,8 +225,8 @@ fi
   # fix telemetry removal, see https://gitlab.com/librewolf-community/browser/linux/-/merge_requests/17, for example
   patch -Np1 -i ${_patches_dir}/disable-data-reporting-at-compile-time.patch
 
-  rm -f ${srcdir}/common/source_files/mozconfig
-  cp -r ${srcdir}/common/source_files/browser ./
+  rm -f ${srcdir}/source/mozconfig # what was this for? TODO
+  cp -r ${srcdir}/source/themes/browser ./
 }
 
 
