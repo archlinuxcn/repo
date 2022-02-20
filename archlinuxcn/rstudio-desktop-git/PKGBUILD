@@ -4,16 +4,16 @@
 
 pkgname=rstudio-desktop-git
 _gitname=rstudio
-pkgver=37445.4113d8a08d
+pkgver=37778.2d34f759de
 _gwtver=2.8.2
 _ginver=2.1.2
-_nodever=14.17.5
+_nodever=16.14.0
 pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 arch=('i686' 'x86_64')
 url="https://www.rstudio.com/products/rstudio/"
 license=('AGPL3')
-depends=('r>=3.0.1' quarto-cli-bin boost-libs qt5-sensors qt5-svg qt5-webengine qt5-xmlpatterns postgresql-libs sqlite3 soci clang hunspell-en_US mathjax2 pandoc yaml-cpp)
+depends=('r>=3.0.1' boost-libs qt5-sensors qt5-svg qt5-webengine qt5-xmlpatterns postgresql-libs sqlite3 soci clang hunspell-en_US mathjax2 pandoc yaml-cpp quarto-cli-bin libldap)
 makedepends=(git 'cmake>=3.1.0' boost desktop-file-utils jdk8-openjdk apache-ant unzip openssl libcups pam patchelf wget yarn)
 optdepends=('git: for git support'
             'subversion: for subversion support'
@@ -23,15 +23,15 @@ conflicts=('rstudio-desktop' 'rstudio-desktop-bin' 'rstudio-desktop-preview')
 source=("git+https://github.com/rstudio/rstudio.git"
         "https://s3.amazonaws.com/rstudio-buildtools/gin-${_ginver}.zip"
         "https://storage.googleapis.com/gwt-releases/gwt-${_gwtver}.zip"
-	"https://nodejs.org/dist/v${_nodever}/node-v${_nodever}-linux-x64.tar.gz"
-	"qt.conf"
-	"cran_multithread.patch")
+	    "https://nodejs.org/dist/v${_nodever}/node-v${_nodever}-linux-x64.tar.gz"
+	    "qt.conf"
+	    "cran_multithread.patch")
 sha256sums=('SKIP'
             'b98e704164f54be596779696a3fcd11be5785c9907a99ec535ff6e9525ad5f9a'
             '970701dacc55170088f5eb327137cb4a7581ebb4734188dfcc2fad9941745d1b'
-            'dc04c7e60235ff73536ba0d9e50638090f60cacabfd83184082dce3b330afc6e'
+            '2c69e7b040c208b61ebf9735c63d2e5bcabfed32ef05a9b8dd5823489ea50d6b'
             '723626bfe05dafa545e135e8e61a482df111f488583fef155301acc5ecbbf921'
-            'c907e6eec5ef324ad498b44fb9926bb5baafc4e0778ca01f6ba9b49dd3a2a980')
+            '3906b102e97c26a759c960166542cb7f87c73c3450b3bb5f8c4fc54ffd10f3fe')
 noextract=("gin-${_ginver}.zip")
 
 pkgver() {
@@ -43,7 +43,7 @@ prepare() {
     cd ${srcdir}/${_gitname}
     local JOBS; JOBS="$(grep -oP -- "-j\s*\K[0-9]+" <<< "${MAKEFLAGS}")" || JOBS="1"
     sed "s/@@proc_num@@/${JOBS}/" -i ${srcdir}/cran_multithread.patch
-    git apply -v ${srcdir}/cran_multithread.patch
+    patch -p1 < ${srcdir}/cran_multithread.patch
 
     msg "Extracting dependencies..."
     cd "${srcdir}/${_gitname}/src/gwt"
@@ -59,7 +59,6 @@ prepare() {
     ln -sfT /usr/share/mathjax2 mathjax-27
     ln -sfT /opt/quarto quarto
     ln -sfT /usr/bin/pandoc pandoc/${_pandocver}/pandoc
-    ln -sfT /usr/bin/pandoc-citeproc pandoc/${_pandocver}/pandoc-citeproc
     
     # Nodejs
     install -d node/${_nodever}
@@ -76,11 +75,12 @@ prepare() {
 }
 
 build() {
+    cd ${srcdir}
+
     msg "Downloading and installing R packages..."
     bash "${srcdir}/${_gitname}"/dependencies/common/install-packages
 
     export PATH=/usr/lib/jvm/java-8-openjdk/jre/bin/:${PATH}
-    export JAVA_TOOL_OPTIONS="-Djava.util.prefs.userRoot=${srcdir}"
     export BUILD_ID="local"
     export PACKAGE_OS="Arch Linux"
 
