@@ -1,13 +1,13 @@
 # Maintainer: oscareczek <oscareczek at gmail dot com>
 pkgname=86box-git
-pkgver=3.2.1.r27.g42b22c529
+pkgver=3.2.1.r56.g2a0b7273
 pkgrel=1
 pkgdesc='Emulator of x86-based machines based on PCem.'
 arch=('pentium4' 'x86_64' 'arm7h' 'aarch64')
 url='https://86box.net/'
 license=('GPL2')
-depends=('alsa-lib' 'freetype2' 'libpng' 'libslirp' 'openal' 'qt5-base' 'rtmidi' 'sdl2')
-makedepends=('git' 'cmake>=3.16' 'qt5-tools')
+depends=('alsa-lib' 'freetype2' 'libpng' 'libslirp' 'openal' 'qt6-base' 'rtmidi' 'sdl2' 'faudio')
+makedepends=('git' 'cmake>=3.16' 'qt6-tools')
 optdepends=('86box-roms-git: ROM files')
 source=(
     "${pkgname}::git+https://github.com/86Box/86Box.git"
@@ -27,7 +27,12 @@ pkgver() {
 }
 
 build() {
-    cmake -S"${pkgname}" -Bbuild -DCMAKE_INSTALL_PREFIX=/usr -DRELEASE=on -DDEV_BRANCH=on -DSLIRP_EXTERNAL=on
+    if [ "$CARCH" == arm7h ] || [ "$CARCH" == aarch64 ]; then
+        NDR=on
+    else
+        NDR=off
+    fi
+    cmake -S"${pkgname}" -Bbuild -DCMAKE_INSTALL_PREFIX=/usr -DRELEASE=on -DDEV_BRANCH=on -DUSE_QT6=on -DSLIRP_EXTERNAL=on -DNEW_DYNAREC=$NDR
     cmake --build build
 }
 
