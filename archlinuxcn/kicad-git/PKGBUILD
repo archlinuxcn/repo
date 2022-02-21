@@ -32,6 +32,7 @@ build() {
     -DKICAD_USE_OCC=ON \
     -DKICAD_SCRIPTING_WXPYTHON=ON \
     -DKICAD_BUILD_I18N=ON \
+    -DKICAD_I18N_UNIX_STRICT_PATH=ON \
     -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config-gtk3 \
     -Wno-dev
 
