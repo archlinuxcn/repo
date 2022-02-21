@@ -1,18 +1,18 @@
 # Maintainer: George Rawlinson <george@rawlinson.net.nz>
 
 pkgname=cloudflared
-pkgver=2022.2.0
+pkgver=2022.2.1
 pkgrel=1
 pkgdesc="Command-line client for Cloudflare Tunnel"
 arch=('x86_64' 'armv7h' 'aarch64')
 url="https://github.com/cloudflare/cloudflared"
-license=('custom:cloudflared')
+license=('Apache')
 depends=('glibc')
 makedepends=('git' 'go')
 conflicts=('cloudflared-bin')
 backup=("etc/$pkgname/config.yml")
 options=('!lto')
-_commit='5b12e740995e84eb9d430d05a7fba59219c115d1'
+_commit='4cf462e322f6a5990b0c2a7cdf21ec3e612ed3de'
 source=(
   "$pkgname::git+$url.git#commit=$_commit"
   'config.yml'
@@ -88,9 +88,6 @@ package() {
 
   # binary
   install -vDm755 -t "$pkgdir/usr/bin" "build/$pkgname"
-
-  # license
-  install -vDm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
 
   # man page
   install -vDm644 -t "$pkgdir/usr/share/man/man1" "build/$pkgname.1"
