@@ -3,8 +3,8 @@
 _CUDA_ARCH_LIST="5.2;5.3;6.0;6.1;6.2;7.0;7.2;7.5;8.0;8.6;8.6+PTX"
 _pkgname=mmcv
 pkgname=(python-mmcv python-mmcv-full)
-pkgver=1.4.4
-pkgrel=3
+pkgver=1.4.5
+pkgrel=1
 pkgdesc='OpenMMLab Computer Vision Foundation'
 arch=('x86_64')
 url='https://github.com/open-mmlab/mmcv'
@@ -25,7 +25,7 @@ makedepends=(
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmcv/archive/v${pkgver}.tar.gz"
         "0001-fix-building-with-pytorch.1.11.patch::https://github.com/open-mmlab/mmcv/pull/1653.patch"
 )
-sha512sums=('c49373ec4a32d80eaab6c53c78f8ce28a9b279c4dca4af3a8d39dc9256334b740d2744055e1eabca8b58adb914e26de8b5dee044c891ac4d9be018d0eb77427f'
+sha512sums=('323cfc929b84de509847a6c966ed4b2e9dfba75fef239e65c1fe61c8b8b0b632a2434bbdf68d292eb0590caf738329f3a94447098840a3578391e93fbe76821c'
             '43b845d3cf5e83c998c4f9b78266b3666307232cad9b04366513b161c3e07e611f75c97faf33a46e01f35c9ccaba84770d207daf048c8a1a54521423a6dd5b61')
 
 prepare() {
