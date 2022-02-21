@@ -1,13 +1,13 @@
 # Mantainer: Franco Tortoriello
 
 pkgname=dosbox-x-git
-pkgver=16310.899f7e620
+pkgver=16317.504b33a49
 pkgrel=1
 pkgdesc="x86 emulator with builtin DOS, with patches with more features"
 arch=(i686 x86_64)
 url="http://dosbox.sourceforge.net"
 license=(GPL)
-depends=(fluidsynth libxkbfile libpng libxrandr mesa ffmpeg physfs)
+depends=(fluidsynth libxkbfile libpng libxrandr mesa ffmpeg4.4 physfs)
 makedepends=(git glu libpcap libslirp)
 optdepends=('openglide-git: Third-party 3dfx Glide API support'
  'libpcap: Allows DosBox-X to connect to a network and to the internet'
@@ -24,7 +24,8 @@ pkgver() {
 build() {
   cd "$srcdir/dosbox-x"
   sed -i -e 's/-j3/-j$(nproc)/g' build
-  ./build
+  sed -i 's|"$LIBS -lavcodec -lavformat -lavutil -lswscale "`pkg-config libavcodec --libs`|`pkg-config libavcodec libavformat libavutil libswscale libswresample --libs`"$LIBS"|' configure.ac
+  PKG_CONFIG_PATH="/usr/lib/ffmpeg4.4/pkgconfig" ./build
 }
 
 package() {
