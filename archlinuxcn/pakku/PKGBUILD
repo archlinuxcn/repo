@@ -2,7 +2,7 @@
 # Maintainer: j-james <jj@j-james.me>
 
 pkgname=pakku
-pkgver=0.15
+pkgver=0.16
 pkgrel=1
 pkgdesc='Pacman wrapper and AUR helper with a pacman-like user interface'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
@@ -12,7 +12,7 @@ depends=('libcurl.so' 'git')
 makedepends=('nim' 'git' 'asciidoc')
 backup=('etc/pakku.conf')
 source=("$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('770f4344543d6072ff2b18a2c212a5c3e56e16f6c86ca4b9097eaadf54a26c73')
+sha256sums=('38338000ac436cbc1a1058b125db5e569170fabe1c48bac8bec8c539c982bae4')
 
 build() {
   local addargs=()
