@@ -1,0 +1,44 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_pkgname=hardhat
+_pkgver=0.2.0
+pkgname=r-${_pkgname,,}
+pkgver=0.2.0
+pkgrel=1
+pkgdesc='Construct Modeling Packages'
+arch=('any')
+url="https://cran.r-project.org/package=${_pkgname}"
+license=('MIT')
+depends=(
+  r
+  r-glue
+  r-rlang
+  r-tibble
+  r-vctrs
+)
+optdepends=(
+  r-covr
+  r-crayon
+  r-devtools
+  r-knitr
+  r-matrix
+  r-modeldata
+  r-recipes
+  r-rmarkdown
+  r-roxygen2
+  r-testthat
+  r-usethis
+)
+source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+sha256sums=('9497ca0fe6206c54d1da79f248d44c5faffc7d375b630091ef45dfca46c29628')
+
+build() {
+  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+}
+
+package() {
+  install -dm0755 "${pkgdir}/usr/lib/R/library"
+  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

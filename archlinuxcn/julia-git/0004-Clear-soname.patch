@@ -1,7 +1,7 @@
-From 69762ddd57dfe4b3c95500253f412b499b90640a Mon Sep 17 00:00:00 2001
+From 0e585059c17dbedcc3d77b7fbb9ab4442905bef2 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
-Subject: [PATCH 4/4] Clear soname
+Subject: [PATCH 4/6] Clear soname
 
 ---
  stdlib/LibGit2_jll/src/LibGit2_jll.jl   | 2 +-
@@ -11,14 +11,14 @@ Subject: [PATCH 4/4] Clear soname
  4 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/stdlib/LibGit2_jll/src/LibGit2_jll.jl b/stdlib/LibGit2_jll/src/LibGit2_jll.jl
-index f0d4b5dda6..2ed3017b51 100644
+index 1cd7aaa79f..554c58c397 100644
 --- a/stdlib/LibGit2_jll/src/LibGit2_jll.jl
 +++ b/stdlib/LibGit2_jll/src/LibGit2_jll.jl
 @@ -23,7 +23,7 @@ if Sys.iswindows()
  elseif Sys.isapple()
-     const libgit2 = "@rpath/libgit2.1.1.dylib"
+     const libgit2 = "@rpath/libgit2.1.3.dylib"
  else
--    const libgit2 = "libgit2.so.1.1"
+-    const libgit2 = "libgit2.so.1.3"
 +    const libgit2 = "libgit2.so"
  end
  
@@ -37,15 +37,15 @@ index 66987b30d0..985a33f8b8 100644
  
  function __init__()
 diff --git a/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl b/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl
-index 1006e9fc2f..5e91044eb2 100644
+index 338bec9503..871051ea95 100644
 --- a/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl
 +++ b/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl
 @@ -31,9 +31,9 @@ elseif Sys.isapple()
-     const libmbedtls = "@rpath/libmbedtls.13.dylib"
+     const libmbedtls = "@rpath/libmbedtls.14.dylib"
      const libmbedx509 = "@rpath/libmbedx509.1.dylib"
  else
--    const libmbedcrypto = "libmbedcrypto.so.5"
--    const libmbedtls = "libmbedtls.so.13"
+-    const libmbedcrypto = "libmbedcrypto.so.7"
+-    const libmbedtls = "libmbedtls.so.14"
 -    const libmbedx509 = "libmbedx509.so.1"
 +    const libmbedcrypto = "libmbedcrypto.so"
 +    const libmbedtls = "libmbedtls.so"
@@ -67,5 +67,5 @@ index e3536021ad..cb375a2c25 100644
  
  function __init__()
 -- 
-2.34.1
+2.35.1
 

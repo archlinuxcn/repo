@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=recipes
-_pkgver=0.1.17
+_pkgver=0.2.0
 pkgname=r-${_pkgname,,}
-pkgver=0.1.17
+pkgver=0.2.0
 pkgrel=1
 pkgdesc='Preprocessing and Feature Engineering Steps for Modeling'
 arch=('any')
@@ -16,6 +16,7 @@ depends=(
   r-generics
   r-glue
   r-gower
+  r-hardhat
   r-ipred
   r-lifecycle
   r-lubridate
@@ -51,7 +52,7 @@ optdepends=(
   r-xml2
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('ed20ba0ea0165310e31864ed7d2e005a2a37b76c7913977fd124d8b567616d3d')
+sha256sums=('3d0073e3eb98ac089a94bf8430f3c50915ff1f495d8e967c37baa6a0f6cea0a4')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

@@ -4,8 +4,8 @@
 
 _pkgname=browser-beta
 pkgname=yandex-${_pkgname}
-pkgver=21.11.3.954_1
-_pkgver=21.11.3.954-1
+pkgver=22.1.3.856_1
+_pkgver=22.1.3.856-1
 pkgrel=1
 #epoch=1
 
@@ -25,7 +25,7 @@ optdepends=(
 )
 
 source=("${pkgname}-${pkgver}.deb::http://repo.yandex.ru/yandex-browser/deb/pool/main/y/yandex-browser-beta/yandex-browser-beta_${_pkgver}_amd64.deb")
-md5sums=("2eaa6c5ba9a67e744b055b82485aa323")
+md5sums=("9f95eb345ea34fd6295c8f0aa2337115")
 install=yandex-browser.install
 
 prepare() {

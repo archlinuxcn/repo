@@ -1,6 +1,6 @@
 pkgname=julia-git-linesearches-git
-pkgver=7.1.1
-pkgrel=6
+pkgver=7.1.1.0.1.gdeb5db0
+pkgrel=1
 pkgdesc="LineSearches.jl"
 url="https://github.com/JuliaNLSolvers/LineSearches.jl"
 arch=('any')
@@ -21,5 +21,4 @@ package() {
   cd LineSearches.jl
 
   . /usr/lib/julia/julia-install-pkg.sh LineSearches "${pkgdir}" "${pkgname}" julia-git
-  rm "${dest_dir}"/REQUIRE
 }

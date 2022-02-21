@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.8.0.DEV.1497.g4409a1bf23c
+pkgver=1.9.0.DEV.27.g623ceb7834d
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -51,7 +51,7 @@ _patches=(
   0002-Fix-source-file-paths.patch
   0003-Enable-basic-AA-in-O2.patch
   0004-Clear-soname.patch
-  libgit2-1.2.0.patch
+  0006-Make-sure-all-the-relocations-are-filled-in-for-part.patch
 )
 source=('git+https://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -62,11 +62,11 @@ source=('git+https://github.com/JuliaLang/julia'
         arch-source-translate.cpp
         sysp7z.diff)
 sha512sums=('SKIP'
-            'b2a4d85350e21b603831f23bb072331ff3698cd6936b9643490694afde85bba5bf207d2d96fe4ce286ea5c54dec1f30a8ee8814f99370ea6a4907057b1390426'
-            '10638901a9eca643068fd000f6fc36ced71c6319241d41df105df7b5f61bb9853f7458b1f3fd858806cd8936e99235482e9c64dc1ac657dc6086b84847477810'
-            '3bf0d7f174c2eea85fcf4144a59d87ab752133ab42b3715933928b53745570227dc5bfc74a6cc930dc205181f6c39fd7bd999edfd5fd1f4cd4bb6f155ca08e59'
-            'c03e92caa452314f0625a5948d6709c3a205bc996bd3e6673557d992e299359e75dbc8eeca54036a78a549efdfa113b78fc8a37170fd5c4b21e76096c27e6d95'
-            'b971f26e1ec364a81ec518a0bd7a4f88206b8c8fb95ea000acc6e9df9d5ece676beb7f1045b9b5ed252e1991ec40f32fd7a1b092a73eadeff4a18591526cf4e9'
+            'f1c64ae506fd277c5ee54c486aefce218847575b5ac1753d042284e570ce65575a6bb164f0b26ddbb32cde90154a8eb645feacf2358197ce5ee16e68943364c7'
+            'b2e01837d4d4d6f455130bf0bf116006b2911934b10f89b1e089c4d020bb681f7209da042651921306df5c55ac241686b385bc267139bb2bbf56f2ff28a44271'
+            'dfd22a50ac009e07727b59d9693bc8d5152d00a218a3dfa1497abdda5a3a0a0c7fa4a50d70ab4cd42444929bdde4b7a28726114040b32a4a9cd7a5e677ff86e3'
+            'f746083e325a0f489522691bcd57fd8fbbaa0f72205f65f0482cc16849ec1490d4269e32be3a38cb77ed68a31f15abf37cabee64477e1ce86828cbee37054e20'
+            '155e3e36020e7e6e769e23699f471315f7dc75555c5b27e9fe5be4fe786708db920475d03923d6e495f518fece3521ecf99f1e23626480a90007a53ab5f02632'
             '2bf050afb5afcd21b23667beb6129e73dc2fb8143366921c8859d7011ed06187db9f4aedae99c0fe31e0bcb7b0896180b006ee542d4b4d592369e9f4f1bd77ec'
             'ce03e2995a45d942f480d25d1ce7cddacb98f2e11eeed19b5564e36d817987f548c313b0d6b139402ba8c203c8ba9a059e1732695517d7b78b7fa88f08429295'
             '36df234b634926bc88084e683ee9f495ef0ce4c26d6d6b9f55294098bdcb86f5eaaf6c671afe1a5c4371c428bd7bf3dd617ec1f15a7ff35376d67df22140454c'

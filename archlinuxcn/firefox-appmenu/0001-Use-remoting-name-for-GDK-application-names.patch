@@ -9,10 +9,10 @@ Subject: [PATCH] Use remoting name for GDK application names
  2 files changed, 6 insertions(+), 12 deletions(-)
 
 diff --git a/toolkit/xre/nsAppRunner.cpp b/toolkit/xre/nsAppRunner.cpp
-index ec8eb1ff1075..3da127bf1d1d 100644
+index ce001e93821f..3be817c5cbd5 100644
 --- a/toolkit/xre/nsAppRunner.cpp
 +++ b/toolkit/xre/nsAppRunner.cpp
-@@ -4323,11 +4323,7 @@ int XREMain::XRE_mainStartup(bool* aExitFlag) {
+@@ -4348,11 +4348,7 @@ int XREMain::XRE_mainStartup(bool* aExitFlag) {
    // consistently.
  
    // Set program name to the one defined in application.ini.
@@ -26,7 +26,7 @@ index ec8eb1ff1075..3da127bf1d1d 100644
    // Initialize GTK here for splash.
  
 diff --git a/widget/gtk/nsAppShell.cpp b/widget/gtk/nsAppShell.cpp
-index 7090bd2ef350..76bda087be72 100644
+index c8bbd9a373f5..a6a2186f20fb 100644
 --- a/widget/gtk/nsAppShell.cpp
 +++ b/widget/gtk/nsAppShell.cpp
 @@ -27,6 +27,8 @@
@@ -38,7 +38,7 @@ index 7090bd2ef350..76bda087be72 100644
  #include "ScreenHelperGTK.h"
  #include "HeadlessScreenHelper.h"
  #include "mozilla/widget/ScreenManager.h"
-@@ -256,13 +258,9 @@ nsresult nsAppShell::Init() {
+@@ -257,13 +259,9 @@ nsresult nsAppShell::Init() {
        // See https://bugzilla.gnome.org/show_bug.cgi?id=747634
        //
        // Only bother doing this for the parent process, since it's the one

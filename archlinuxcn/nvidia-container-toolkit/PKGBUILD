@@ -3,7 +3,7 @@
 
 pkgname=nvidia-container-toolkit
 
-pkgver=1.7.0
+pkgver=1.8.1
 pkgrel=1
 
 pkgdesc='NVIDIA container runtime toolkit'
@@ -12,16 +12,15 @@ url='https://github.com/NVIDIA/nvidia-container-toolkit'
 license=('Apache')
 
 makedepends=('go')
-depends=('libnvidia-container-tools>=1.7.0')
+depends=('libnvidia-container-tools>=1.8.1')
 conflicts=('nvidia-container-runtime-hook' 'nvidia-container-runtime<2.0.0')
 replaces=('nvidia-container-runtime-hook')
+options=(!lto)
 
 backup=('etc/nvidia-container-runtime/config.toml')
 
-source=(fix_cgroup.patch
-        "v${pkgver}-${pkgrel}.tar.gz"::"${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('48a36a4b01ab64739d55c4a696bbe72f2b90a9e5abc0b9d1c4090a3016d9a1fb'
-            'f096b2db7cc837164e9739fc31680ff7c1f4135e6b7290dc68f590df3c651a02')
+source=("v${pkgver}-${pkgrel}.tar.gz"::"${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('859c9913e450794e3f4e0b488a7315c6a41906a0ece30c91ffab43f444d8b76f')
 
 install=$pkgname.install
 
@@ -30,13 +29,12 @@ _srcdir="nvidia-container-toolkit-${pkgver}"
 build() {
   cd "${_srcdir}"
 
-  # TODO: no longer needed after v1.8.0-rc1
-  patch -Np1 -i "${srcdir}/fix_cgroup.patch"
-
   mkdir bin
 
+  GO111MODULE=auto \
   GOPATH="${srcdir}/gopath" \
   go build -v \
+    -modcacherw \
     -buildmode=pie \
     -gcflags "all=-trimpath=${PWD}" \
     -asmflags "all=-trimpath=${PWD}" \
@@ -47,6 +45,7 @@ build() {
     #-ldflags " -s -w -extldflags=-Wl,-z,now,-z,relro" \
 
   # go leaves a bunch of local stuff with 0400, making it break future `makepkg -C` _grumble grumble_
+  GO111MODULE=auto \
   GOPATH="${srcdir}/gopath" \
   go clean -modcache
 }

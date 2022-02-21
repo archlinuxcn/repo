@@ -1,3 +1,74 @@
+## 6.3
+
+* `aur-sync`
+  - `--ignore-file` now supports per-repository sections (INI-style)
+  - do not ignore targets when specified on the command-line
+
+## 6.2
+
+* `aur-pkglist`
+  - add `-v` / `--verify` (verifies published sha256sums)
+
+* `aur-repo-filter`
+  - add repository to dependency messages ("dependency foo satisfied by repo/bar")
+  - deduplicate results on stdout
+
+## 6.1
+
+* `aur-search`
+  - do not print additional messages on errors or no results
+
+* `aur-query`
+  - add `-a` alias for `--any`
+  - add missing newline in case of errors (`jq -r`)
+
+## 6
+
+In previous versions, `aur search` would display an intersection of search
+results, the symmetric difference with `-a` (bug), and the concatenation with
+`-r`. (#918)
+
+`aur search -a` now correctly returns the union, and the `-r` output is
+processed with jq(1) to return the intersection by default, or the union (with
+duplicates removed) with `-a`. This processing is done because the RPC
+interface as of aurweb 6.0.11 does not expose set operations, and so
+`aur-search` performs one search for each argument. `aur search --json` was
+added as an alias to `--raw`, and the latter option is now deprecated.
+
+The implementation is done in `aur-query`, which now takes the intersection of
+search results by default. The union can be taken with `aur query --any`, or
+unprocessed results shown with `-r` or `--raw`. In each case, the output is
+newline delimited (JSON Lines, `jq -r`). If the search completed without
+results, `aur-query` will either exit with status 0 (if no request resulted in
+an error), 1 (if the `-e` option was specified), or 2 (if at least one request
+resulted in an error).
+
+`AUR_QUERY_RPC_SPLITNO_POST` received bug fixes (#920), and the default has
+been reduced to 500 after experiencing issues with a larger number of
+arguments. Users looking to use `aur-query -t info` with a very large number
+of arguments should instead consider `aur pkglist --info`.
+`AUR_QUERY_RPC_PARALLEL` also received several bugfixes.
+
+## 5
+
+* `aur-srcver`
+  + add `-E` / `--env` (#898)
+
+* `aur-query`
+  + support HTTP POST for info-type requests
+  + use `aurutils` user agent (`curl -A`)
+
+* `aur-pkglist`
+  + use `aurutils` user agent (`curl -A`)
+
+* `aur-repo-filter`
+  + add `--config` to set pacman configuration
+
+## 4.4
+
+* `aur-sync`
+  + fix regressions with `--ignore` from 4.3 release
+
 ## 4.3
 
 * `aur-build`

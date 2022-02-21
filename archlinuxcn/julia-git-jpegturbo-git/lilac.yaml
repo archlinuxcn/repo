@@ -1,0 +1,26 @@
+maintainers:
+  - github: yuyichao
+
+build_prefix: extra-x86_64
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - julia-git
+  - openspecfun-git
+  - openblas-lapack-git: openblas-git
+  - openblas-lapack-git
+  - libutf8proc-git
+  - openlibm-git
+  - llvm-julia: llvm-libs-julia
+  - libgit2-julia
+  - julia-pkg-scripts
+
+update_on:
+  - source: vcs
+  - alias: alpm-lilac
+    alpm: julia-git
+    provided: julia
+  - source: manual
+    manual: 1

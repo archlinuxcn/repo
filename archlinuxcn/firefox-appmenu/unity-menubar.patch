@@ -5083,8 +5083,8 @@
  #  include "mozilla/a11y/LocalAccessible.h"
  #endif
 @@ -168,6 +170,8 @@ class nsWindow final : public nsBaseWidg
-                                   nsIScreen* aTargetScreen = nullptr) override;
-   virtual void HideWindowChrome(bool aShouldHide) override;
+                           nsIScreen* aTargetScreen = nullptr) override;
+   void HideWindowChrome(bool aShouldHide) override;
  
 +  void SetMenuBar(mozilla::UniquePtr<nsMenuBar> aMenuBar);
 +

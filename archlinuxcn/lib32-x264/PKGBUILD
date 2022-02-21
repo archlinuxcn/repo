@@ -8,7 +8,7 @@
 
 _pkgbasename=x264
 pkgname=lib32-x264
-pkgver=0.163.r3060.5db6aa6
+pkgver=0.164.r3081.19856cc
 pkgrel=1
 epoch=3
 pkgdesc='Open Source H264/AVC video encoder (32 bit)'
@@ -16,6 +16,7 @@ arch=('x86_64')
 url='https://www.videolan.org/developers/x264.html'
 license=('GPL')
 depends=("liblsmash.so"
+#    "x264"
     "x264>=${epoch}:${pkgver}" 
     "lib32-glibc" 
     "lib32-l-smash"
@@ -39,7 +40,7 @@ replaces=(
     'lib32-libx264-10bit' 
     'lib32-libx264-all'
     )
-_commit='5db6aa6cab1b146e07b60cc1736a01f21da01154'
+_commit='19856cc41ad11e434549fb3cc6a019e645ce1efe'
 source=("git+https://git.videolan.org/git/x264.git#commit=${_commit}")
 sha256sums=('SKIP')
 

@@ -4,14 +4,15 @@ _pkgname=report
 _pkgver=0.5.0
 pkgname=r-${_pkgname,,}
 pkgver=0.5.0
-pkgrel=1
+pkgrel=3
 pkgdesc='Automated Reporting of Results and Statistical Models'
 arch=('any')
-url="https://cran.r-project.org/package=${_pkgname}"
+url="https://github.com/easystats/report"
 license=('GPL')
 depends=(
   r
   r-bayestestr
+  r-datawizard
   r-effectsize
   r-insight
   r-parameters
@@ -31,7 +32,7 @@ optdepends=(
   r-spelling
   r-testthat
 )
-source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
+source=("${_pkgname}_${pkgver}.tar.gz::https://github.com/easystats/report/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=('328ddf18004a2a8c622a68f3202bee8c6a4479b60dab332e95cc73714bc8def2')
 
 build() {

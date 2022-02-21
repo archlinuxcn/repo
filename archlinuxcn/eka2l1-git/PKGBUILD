@@ -1,7 +1,7 @@
 # Maintainer: heavysink <winstonwu91@gmail.com>
 _pkgname=eka2l1
 pkgname="${_pkgname}-git"
-pkgver=5244.fb0961948
+pkgver=5267.86df5e678
 pkgrel=1
 pkgdesc="Experimental Symbian OS emulator (GIT version)"
 arch=('x86_64')
@@ -25,6 +25,7 @@ depends=(
     'pango'
 	'vulkan-icd-loader'
   'gtk3'
+  'sdl2'
 )
 provides=('eka2l1')
 conflicts=('eka2l1')

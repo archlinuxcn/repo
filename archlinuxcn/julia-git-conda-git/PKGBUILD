@@ -1,6 +1,6 @@
 pkgname=julia-git-conda-git
-pkgver=1.6.0.0.13.g8f71332
-pkgrel=1
+pkgver=1.7.0
+pkgrel=2
 pkgdesc="Conda.jl"
 url="https://github.com/JuliaPy/Conda.jl"
 arch=('any')
@@ -24,6 +24,7 @@ build() {
   cat > deps/deps.jl <<EOF
 const ROOTENV = joinpath(dirname(@__FILE__), "usr")
 const MINICONDA_VERSION = "3"
+const CONDA_EXE = "/usr/bin/conda"
 EOF
 }
 

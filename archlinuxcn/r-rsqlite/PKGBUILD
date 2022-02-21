@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=RSQLite
-_pkgver=2.2.9
+_pkgver=2.2.10
 pkgname=r-${_pkgname,,}
-pkgver=2.2.9
+pkgver=2.2.10
 pkgrel=1
 pkgdesc="'SQLite' Interface for R"
 arch=('x86_64')
@@ -31,7 +31,7 @@ optdepends=(
   r-xml2
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('4423f1fea179ecd1c09b0b52bfb684983a27de82d5807590b5fc723697d5bb1c')
+sha256sums=('06aeff33902082ef1ebd5378cd0927df7922aaf377c78acfdd8f34f2888800a8')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"

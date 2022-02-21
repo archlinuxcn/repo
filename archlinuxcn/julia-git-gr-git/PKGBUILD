@@ -1,6 +1,6 @@
 pkgname=julia-git-gr-git
-pkgver=0.63.1
-pkgrel=2
+pkgver=0.64.0
+pkgrel=3
 pkgdesc="GR.jl"
 url="https://github.com/jheinen/GR.jl"
 arch=('any')
@@ -23,4 +23,8 @@ package() {
   echo "import GR_jll" > deps/deps.jl
 
   . /usr/lib/julia/julia-install-pkg.sh GR "${pkgdir}" "${pkgname}" julia-git
+
+  # GR.jl have check to rebuild at runtime which unconditionally references the build scripts.
+  # We don't care so just provide an empty one.
+  touch "${dest_dir}"/deps/build.jl
 }

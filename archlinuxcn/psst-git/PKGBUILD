@@ -1,67 +1,53 @@
 # Maintainer: garionion <garionion@entr0py.de>
-
+# contributor: yochananmarqos (thank you very much)
 pkgname=psst-git
-_pkgname="psst"
 pkgver=r406.1627cd4
-pkgrel=1
+pkgrel=4
 pkgdesc="Fast and multi-platform Spotify client with native GUI"
 arch=("x86_64")
+options=(!lto)
 url="https://github.com/jpochyla/psst"
 license=('MIT')
-makedepends=( 'rust'
-              'git'
-              'gtk3'
-              'cairo'
-              'openssl'
-              'clang')
-provides=("psst")
-conflicts=("psst")
-source=("git+https://github.com/jpochyla/psst.git")
+depends=('gtk3' 'openssl' 'alsa-lib')
+makedepends=('rustup' 'cargo' 'git')
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+source=('git+https://github.com/jpochyla/psst.git')
 sha256sums=('SKIP')
 
 pkgver() {
-  cd "$_pkgname"
-  ( set -o pipefail
-    git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-  )
+  cd "$srcdir/${pkgname%-git}"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
-	cd "$_pkgname"
-	git submodule update --recursive --init
+  cd "$srcdir/${pkgname%-git}"
+  export RUSTUP_TOOLCHAIN=stable
   cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+
+  # Add missing entries to desktop file
+  sed -i "$ a Icon=${pkgname%-git}-gui" ".pkg/${pkgname%-git}.desktop"
+  sed -i '$ a StartupWMClass=Psst-gui' ".pkg/${pkgname%-git}.desktop"
 }
 
 build() {
-	cd "$_pkgname"
+  cd "$srcdir/${pkgname%-git}"
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
   cargo build --frozen --release --all-features
 }
 
 check() {
-  cd "$_pkgname"
+  cd "$srcdir/${pkgname%-git}"
   export RUSTUP_TOOLCHAIN=stable
   cargo test --frozen --all-features
 }
 
 package() {
-    # install
-    install -Dm 755 ${_pkgname}/target/release/psst-gui -t "${pkgdir}/usr/bin/"
-    
-    # desktop entry
-
-    install -dm 755 "${pkgdir}/usr/share/applications"
-    cat > ${pkgdir}/usr/share/applications/${_pkgname}.desktop << EOF
-[Desktop Entry]
-Type=Application
-Version=${pkgver}
-Name=Psst
-Comment=Fast and multi-platform Spotify client with native GUI 
-Exec=psst-gui
-Icon=psst-gui
-Terminal=false
-EOF
-
+  cd "$srcdir/${pkgname%-git}"
+  install -Dm755 "target/release/${pkgname%-git}"{-cli,-gui} -t "$pkgdir/usr/bin"
+  install -Dm644 ".pkg/${pkgname%-git}.desktop" -t"$pkgdir/usr/share/applications"
+  install -Dm644 "${pkgname%-git}-gui/assets/logo_256.png" \
+    "$pkgdir/usr/share/icons/hicolor/scalable/apps/${pkgname%-git}-gui.svg"
+  install -Dm644 LICENSE.md -t "$pkgdir/usr/share/licenses/${pkgname%-git}"
 }

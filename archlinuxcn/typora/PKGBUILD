@@ -2,7 +2,7 @@
 # Contributor: Jonathan Duck <duckbrain30@gmail.com>
 
 pkgname=typora
-pkgver=1.0.4
+pkgver=1.1.3
 pkgrel=1
 pkgdesc="A minimal markdown editor and reader."
 arch=('x86_64')
@@ -14,7 +14,7 @@ optdepends=(
 	'noto-fonts-emoji: Or some other emoji font to see emojis'
 	'pandoc: Import/export for extra file formats')
 source=("https://typora.io/linux/$filename")
-sha512sums=('2e9a7eed4cd49d0965ca28ff7d9cbd39add65e5ae9755b904b91c135a36a0127882552291f44381e460a931f2f7b851ea3f1f668f3b4264f8e454453f00aef74')
+sha512sums=('6d9ba8b31dcce0cb3691878a5f12ce4895745e7e5ed002b07113a4052c37d678205a14644208fa9168555e46de6a2d5d95f3e04f59a7dd22b8acd4a5e8dd0f86')
 
 package() {
 	bsdtar -xf data.tar.xz -C "$pkgdir/"

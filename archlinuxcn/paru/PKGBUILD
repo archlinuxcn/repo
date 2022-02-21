@@ -1,6 +1,6 @@
 # Maintainer: Morgan <morganamilo@archlinux.org>
 pkgname=paru
-pkgver=1.9.2
+pkgver=1.9.3
 pkgrel=1
 pkgdesc='Feature packed AUR helper'
 url='https://github.com/morganamilo/paru'
@@ -11,7 +11,7 @@ license=('GPL3')
 makedepends=('cargo')
 depends=('pacman>=6' 'git')
 optdepends=('asp: downloading repo pkgbuilds' 'bat: colored pkgbuild printing')
-sha256sums=('a56de8059575c28b32f39b6407e1768a238851fae96fb25469b2dea3956dd867')
+sha256sums=('afcbe0eb8660d5c01d7ad42ec48002cb0972397fbeffe66009e2691e0747f014')
 
 build () {
   cd "$srcdir/$pkgname-$pkgver"

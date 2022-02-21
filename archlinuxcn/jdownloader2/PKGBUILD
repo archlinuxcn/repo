@@ -1,14 +1,14 @@
-# Maintainer: Holodoc
+# Maintainer: Derson5
 pkgname=jdownloader2
 pkgver=latest
-pkgrel=13
+pkgrel=17
 pkgdesc='Download manager, written in Java, for one-click hosting sites like Rapidshare and Megaupload. Uses its own updater.'
 arch=('any')
 conflicts=('jdownloader')
 replaces=('jdownloader')
-url='http://jdownloader.org/'
+url='https://jdownloader.org/'
 license=('GPL')
-depends=('java-runtime' 'wget' 'bash' 'hicolor-icon-theme' 'unzip' 'shared-mime-info' 'desktop-file-utils' 'fontconfig' 'ttf-dejavu')
+depends=('java-runtime' 'wget' 'libarchive')
 optdepends=('phantomjs: needed for some remote capture solving')
 install='jdownloader.install'
 source=('JDownloader'
@@ -31,7 +31,7 @@ source=('JDownloader'
         'jdownloader32.png'
         'jdownloader48.png'
         'jdownloader256.png'
-        'jdownloader.service' )
+        'jdownloader.service')
 sha256sums=('cab5904f226028fdc9384f407ceca34b4305885176fad29b08a2e8b83653a345'
             'd555c78d8110e536aee67de765ee5134d872fbb48354050f7b2f14ff5499120a'
             'dca392fad29c70eff609ec25abaefd33343c8a6c98088e0719c6746759ed0aa5'
@@ -79,7 +79,7 @@ package() {
 	install -D -m644 "$srcdir/jdownloader48.png" "$pkgdir/usr/share/icons/hicolor/48x48/apps/jdownloader.png"
 	install -D -m644 "$srcdir/jdownloader256.png" "$pkgdir/usr/share/icons/hicolor/256x256/apps/jdownloader.png"
 	install -D -m644 "$srcdir/jdownloader.service" "$pkgdir/usr/lib/systemd/system/jdownloader.service"
-	install -d -m775 "$pkgdir/opt/JDownloader"
+	install -d -m2775 "$pkgdir/opt/JDownloader"
   mkdir -p "$pkgdir/usr/bin"
   
   ln -s "/opt/JDownloaderScripts/JDownloader"  "${pkgdir}/usr/bin/JDownloader"

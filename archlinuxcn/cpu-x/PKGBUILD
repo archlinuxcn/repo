@@ -2,16 +2,17 @@
 
 _realname=CPU-X
 pkgname=cpu-x
-pkgver=4.2.0
+pkgver=4.3.0
 pkgrel=1
 pkgdesc="A Free software that gathers information on CPU, motherboard and more"
 arch=('i686' 'x86_64')
 url="http://X0rg.github.io/CPU-X/"
 license=('GPL3')
-depends=('gtk3' 'ncurses' 'libcpuid' 'pciutils' 'glfw' 'procps-ng')
-makedepends=('cmake' 'ninja' 'nasm')
+depends=('gtk3' 'ncurses' 'libcpuid' 'pciutils' 'glfw' 'opencl-icd-loader' 'procps-ng')
+makedepends=('cmake' 'ninja' 'nasm' 'opencl-headers')
+optdepends=('opencl-driver: packaged opencl driver')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/X0rg/CPU-X/archive/v$pkgver.tar.gz")
-sha512sums=('28d51ecd1086624310825d83820051e2d97f2cb10b8b4af3aa69c372854331fdd29100fb932972a4a787187f42894ae93ad830c29aaa5a75b2dc72d765ee4b10')
+sha512sums=('0edd706dae2ab84e4fa07ea5dc6798132cd6155219acdc20fd32a3a98ca6f17606496a6f578a53b93d5cf2e27f18787ee50329651cf9782d1dedd347818f8811')
 
 build() {
 	cmake -S "$_realname-$pkgver" -B build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
@@ -19,5 +20,5 @@ build() {
 }
 
 package() {
-	DESTDIR="$pkgdir" ninja -C build install
+	DESTDIR="$pkgdir" cmake --install build
 }

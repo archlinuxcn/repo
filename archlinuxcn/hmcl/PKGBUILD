@@ -4,8 +4,8 @@
 
 pkgname=hmcl
 _pkgname=HMCL
-pkgver=3.3.188
-_commit=447afaa76f111936a10f54c884bab5129c50f409
+pkgver=3.5.3
+_commit=d28723916d6d42fbea2a6423a07a74ffdf7cd1bd
 pkgrel=1
 pkgdesc="A Minecraft Launcher which is multi-functional, cross-platform and popular"
 arch=('any')
@@ -18,9 +18,9 @@ depends=('java8-openjfx'
 source=("hmcl-launch-script"
         "${pkgname}.desktop"
         "${pkgname}-${pkgver}.tgz::${url}/archive/${_commit}.tar.gz")
-sha256sums=('b9e66ecda49285fb076f2c383420854b639c56e4bb240e86dbf666f5929dc1a5'
-            '5780cf70f1afec0eb3cd8fc43297d361903c7204e274a28c5edf9b8ac3eea83e'
-            'ac4d57b9c662e1672240ca9b362b64670098a25569f6e6722634424d7fb2f5fc')
+b2sums=('ed19ac232f25c09bd468e6932e97ff406608b64aac337f666d7702f047778e17170054ae5e3b6de8ad2f947c1edab8cd9eb8b1b4886597562137e568ddf3c1de'
+        '6c38da38fa13ad0af061d593f7733d6a406025c473240ccee4d07c89e71f8d5ead430374a7500f1395a7341c67e06ef3664cb1747ab93cba63459f7906b1598a'
+        '24f676aa10d7865f079eb155b44790c344415f1cfcc43ab4dd0ad4f9c408c2b6c622b2d24090fd3eca6bb14f04e19087b56bbb757bfe8b639d1eec20cc00c927')
 
 build() {
   cd "${_pkgname}-${_commit}"

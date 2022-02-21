@@ -11,6 +11,9 @@ post_install() {
   printf "$(tput setaf 4)$(tput sgr0)\n"
   printf "$(tput setaf 4)Re-login your terminal in to the group flutterusers:$(tput sgr0)\n"
   printf "$(tput setaf 2)newgrp flutterusers$(tput sgr0)\n"
+  printf "$(tput setaf 4)$(tput sgr0)\n"
+  printf "$(tput setaf 4)Run the following command to see if there are any dependencies you need to install to complete the setup (for verbose output, add the -v flag):$(tput sgr0)\n"
+  printf "$(tput setaf 2)flutter doctor$(tput sgr0)\n"
 }
 
 post_upgrade() {
