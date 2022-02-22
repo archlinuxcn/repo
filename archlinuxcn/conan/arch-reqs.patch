@@ -1,16 +1,15 @@
-Only in conan-1.44.0-new: arch-reqs.patch
-diff -aur conan-1.44.0-pristine/conans/requirements_server.txt conan-1.44.0-new/conans/requirements_server.txt
---- conan-1.44.0-pristine/conans/requirements_server.txt	2021-12-30 20:25:13.049999993 +0100
-+++ conan-1.44.0-new/conans/requirements_server.txt	2021-12-30 20:26:24.083333329 +0100
+diff -aur conan-1.45.0-pristine/conans/requirements_server.txt conan-1.45.0-new/conans/requirements_server.txt
+--- conan-1.45.0-pristine/conans/requirements_server.txt	2022-02-04 15:11:20.086666662 +0100
++++ conan-1.45.0-new/conans/requirements_server.txt	2022-02-04 15:16:04.076666659 +0100
 @@ -1,3 +1,3 @@
  # Server
 -bottle>=0.12.8, < 0.13
 +bottle>=0.12.8
  pluginbase>=0.5
-diff -aur conan-1.44.0-pristine/conans/requirements.txt conan-1.44.0-new/conans/requirements.txt
---- conan-1.44.0-pristine/conans/requirements.txt	2021-12-30 20:25:13.049999993 +0100
-+++ conan-1.44.0-new/conans/requirements.txt	2021-12-30 20:26:14.263333326 +0100
-@@ -1,14 +1,14 @@
+diff -aur conan-1.45.0-pristine/conans/requirements.txt conan-1.45.0-new/conans/requirements.txt
+--- conan-1.45.0-pristine/conans/requirements.txt	2022-02-04 15:11:20.086666662 +0100
++++ conan-1.45.0-new/conans/requirements.txt	2022-02-04 15:15:49.203333326 +0100
+@@ -1,15 +1,14 @@
 -PyJWT>=1.4.0, <2.0.0
 -requests>=2.25, <3.0.0
 -urllib3>=1.26.6, <1.27
@@ -26,11 +25,12 @@ diff -aur conan-1.44.0-pristine/conans/requirements.txt conan-1.44.0-new/conans/
  fasteners>=0.14.1
 -six>=1.10.0,<=1.16.0
 -node-semver==0.6.1
--distro>=1.0.2, <=1.6.0
+-distro>=1.0.2, <=1.6.0; sys_platform == 'linux' or sys_platform == 'linux2'
 -pygments>=2.0, <3.0
 -tqdm>=4.28.1, <5
 -Jinja2>=2.9, <4.0.0
 -python-dateutil>=2.7.0, <3
+-configparser>=3.5;python_version<='2.7'
 +six>=1.10.0
 +node-semver>=0.6.1
 +distro>=1.0.2
