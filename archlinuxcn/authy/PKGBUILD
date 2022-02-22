@@ -2,7 +2,7 @@
 
 pkgname=authy
 pkgver=1.9.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Two factor authentication desktop application"
 arch=('x86_64')
 url='https://authy.com/'
@@ -15,8 +15,8 @@ optdepends=('libappindicator-gtk3: tray icon support')
 makedepends=('squashfs-tools')
 _snapid="H8ZpNgIoPyvmkgxOWw5MSzsXK1wRZiHn"
 _snaprev="7"
-source=("https://api.snapcraft.io/api/v1/snaps/download/${_snapid}_${_snaprev}.snap")
-sha256sums=('a33f5f40d4bf67ee3800f006aadfa93d396c1150b6d61e416cfad1c1d8215f81')
+source=("https://api.snapcraft.io/api/v1/snaps/download/${_snapid}_${_snaprev}.snap" "no-sandbox.sh")
+sha256sums=('a33f5f40d4bf67ee3800f006aadfa93d396c1150b6d61e416cfad1c1d8215f81' 'fadf94ab33c2609677972ed25910b15cbdffafd8031275a173fcbf0d77d9f763')
 
 prepare() {
     echo "Extracting snap file..."
@@ -34,9 +34,12 @@ package() {
     install -Dm644 "${pkgdir}/opt/${pkgname}/meta/gui/icon.png" "${pkgdir}/usr/share/pixmaps/authy.png"
 
     # Clean up unnecessary files
-    rm -rf "$pkgdir/opt/$pkgname"/{data-dir,gnome-platform,lib,meta,scripts,usr,*.sh}
+    rm -rf "${pkgdir}/opt/${pkgname}"/{data-dir,gnome-platform,lib,meta,scripts,usr,*.sh}
 
     # Symlink binary to /usr/bin
-    install -d "${pkgdir}/usr/bin"
-    ln -s "/opt/${pkgname}/authy" "${pkgdir}/usr/bin"
+    # install -d "${pkgdir}/usr/bin"
+    # ln -s "/opt/${pkgname}/authy" "${pkgdir}/usr/bin"
+
+    # Install wrapper script
+    install -Dm755 "${srcdir}/no-sandbox.sh" "${pkgdir}/usr/bin/authy"
 }
