@@ -10,10 +10,9 @@ update_on:
   - source: github
     github: DeadSix27/waifu2x-converter-cpp
   - source: alpm
-    from_pattern: ^(\d+\.\d+)\..*
-    to_pattern: \1
     alpm: opencv
     repo: extra
+    strip_release: true
   - source: manual
-    manual: 1
+    manual: 2
 staging: true
