@@ -4,8 +4,6 @@ build_prefix: extra-x86_64
 pre_build_script: |
   aur_pre_build(maintainers=['maikoool', 'djmattyg007'])
 post_build: aur_post_build
-repo_depends:
-  - python-humanfriendly
 update_on:
   - source: aur
     aur: python-coloredlogs
