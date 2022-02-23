@@ -5,14 +5,14 @@
 
 pkgname=gegl-git
 _pkgname=gegl
-pkgver=0.4.34.26
+pkgver=0.4.36.2
 pkgrel=1
 pkgdesc="Graph based image processing framework"
 arch=('i686' 'x86_64')
 url="http://www.gegl.org"
 license=('GPL3' 'LGPL3')
 depends=('babl-git' 'libspiro' 'poppler-glib' 'json-glib' 'libgexiv2' 'libraw' 'openexr' 'librsvg' 'libtiff' 'luajit' 'jasper' 'lensfun' 'suitesparse' 'sdl')
-makedepends=('intltool' 'ruby' 'mesa' 'glu' 'ffmpeg' 'exiv2' 'enscript' 'asciidoc' 'vala' 'gobject-introspection' 'meson' 'git')
+makedepends=('intltool' 'ruby' 'mesa' 'glu' 'ffmpeg4.4' 'exiv2' 'enscript' 'asciidoc' 'vala' 'gobject-introspection' 'meson' 'git')
 optdepends=('ffmpeg: ffmpeg plugin')
 provides=("gegl=${pkgver}")
 conflicts=('gegl>=0.3.0')
@@ -26,6 +26,7 @@ pkgver() {
 }
 
 build() {
+  export PKG_CONFIG_PATH='/usr/lib/ffmpeg4.4/pkgconfig'
   meson "${srcdir}/${_pkgname}"\
           "${srcdir}/build" \
         --prefix=/usr \
