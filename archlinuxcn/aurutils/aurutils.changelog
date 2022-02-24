@@ -1,3 +1,25 @@
+## 7
+
+This release adds optional support for the `ninja` build system. If the
+`AUR_SYNC_USE_NINJA` environment variable is set to a positive value,
+`aur-sync` will generate `build.ninja` where each target has an `aur-build`
+command-line. This allows to continue building a series of packages when
+several failed, with the maximum of failed targets controlled by the `-k` /
+`--keep-going` option.  On failure, a summary of successful ("OK") and failed
+("FAIL") package builds is printed. The `--no-build` option in turn only
+generates `build.ninja`, and prints the corresponding directory to `stdout`.
+
+The logic to generate `build.ninja` files is exposed in the `aur-sync--ninja`
+script. It can be used with other `aur` programs that output `pkgbase
+depends_pkgbase` pairs, for example:
+
+  $ aur depends --graph "$@" | aur sync--ninja "$PWD" -- aur build
+
+When running `ninja` on the resulting file, each successfully built `pkgbase`
+will result in a `pkgbase.stamp` file. If the corresponding `PKGBUILD` is
+modified, it will be marked for rebuilding by `ninja`. This can for example be
+used for a git repository which hosts multiple `PKGBUILD` directories.
+
 ## 6.4
 
 * `aur-depends`
