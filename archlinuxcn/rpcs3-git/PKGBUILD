@@ -2,8 +2,8 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.20.13309.10e6b43a2f
-pkgrel=2
+pkgver=0.0.20.13319.86a04a867
+pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator'
 arch=(x86_64)
 url=https://github.com/RPCS3/rpcs3
@@ -34,7 +34,6 @@ depends=(
   zlib
   curl
   wolfssl
-  flatbuffers
   pugixml
   ffmpeg
 )
@@ -52,8 +51,10 @@ source=(
   git+https://github.com/RPCS3/rpcs3.git
   rpcs3-llvm::git+https://github.com/RPCS3/llvm-mirror.git
   git+https://github.com/KhronosGroup/glslang.git
+  git+https://github.com/google/flatbuffers.git
 )
 sha256sums=(
+  SKIP
   SKIP
   SKIP
   SKIP
@@ -70,11 +71,12 @@ pkgver() {
 
 prepare() {
   cd rpcs3
-  
-  git submodule init 3rdparty/glslang/glslang llvm
+
+  git submodule init 3rdparty/glslang/glslang llvm 3rdparty/flatbuffers
   git config submodule.3rdparty/glslang.url ../glslang
+  git config submodule.3rdparty/flatbuffers.url ../flatbuffers
   git config submodule.llvm.url ../rpcs3-llvm
-  
+
   SUBMODULES=($(git config --file .gitmodules --get-regexp path | \
     awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/llvm/ && !/glslang/ && !/wolfssl/ && !/pugixml/ && !/flatbuffers/'))
 
@@ -93,8 +95,8 @@ prepare() {
     git config $urlid https://github.com/$url
     git submodule update --init --depth=1 $path
   done
-  
-  git submodule update 3rdparty/glslang/glslang llvm
+
+  git submodule update 3rdparty/glslang/glslang llvm 3rdparty/flatbuffers
 }
 
 build() {
@@ -108,7 +110,7 @@ build() {
     -DUSE_SYSTEM_ZLIB=ON \
     -DUSE_SYSTEM_CURL=ON \
     -DUSE_SYSTEM_WOLFSSL=ON \
-    -DUSE_SYSTEM_FLATBUFFERS=ON \
+    -DUSE_SYSTEM_FLATBUFFERS=OFF \
     -DUSE_SYSTEM_PUGIXML=ON
   
   make -C build
