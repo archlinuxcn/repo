@@ -3,7 +3,7 @@
 _pkgname=rescrobbled
 pkgname="${_pkgname}-git"
 pkgver=0.5.1.r0.gf901d95
-pkgrel=1
+pkgrel=2
 pkgdesc="Music scrobbler daemon using the MPRIS D-Bus interface."
 arch=('x86_64')
 url="https://github.com/InputUsername/rescrobbled"
@@ -24,23 +24,28 @@ pkgver() {
 
 prepare() {
   cd "${srcdir}/${_pkgname}"
-  cargo fetch --locked
+  cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
 
 build() {
   cd "${srcdir}/${_pkgname}"
-  cargo build --release --locked --all-features --target-dir=target
+  export RUSTUP_TOOLCHAIN=stable
+  export CARGO_TARGET_DIR=target
+  # Workaround https://github.com/rust-lang/cargo/issues/4350
+  export TMPDIR=$XDG_RUNTIME_DIR
+  cargo build --frozen --release --all-features
 }
 
 check() {
   cd "${srcdir}/${_pkgname}"
-  cargo test --release --locked --all-features
+  export RUSTUP_TOOLCHAIN=stable
+  cargo test --frozen --all-features
 }
 
 package() {
   cd "${srcdir}/${_pkgname}"
-  install -Dm755 "target/release/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
-  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE"
-  install -Dm644 "${srcdir}/rescrobbled.service" -t "${pkgdir}/usr/lib/systemd/user"
+  install -Dm755 -t "$pkgdir/usr/bin/" "target/release/${_pkgname}"
+  install -Dm644 -t "$pkgdir/usr/share/licenses/${_pkgname}/" LICENSE
+  install -Dm644 -t "$pkgdir/usr/lib/systemd/user" rescrobbled.service
 }
 
