@@ -2,7 +2,7 @@
 # Contributor: Jonas 'cherti' Große Sundrup <aur@letopolis.de>
 pkgname=elementary-planner
 _app_id=com.github.alainm23.planner
-pkgver=3.0.5
+pkgver=3.0.6
 pkgrel=1
 pkgdesc="Task manager with Todoist support"
 arch=('x86_64')
@@ -15,10 +15,10 @@ checkdepends=('appstream')
 provides=('planner')
 conflicts=('planner')
 source=("planner-$pkgver.tar.gz::https://github.com/alainm23/planner/archive/$pkgver.tar.gz")
-sha256sums=('7bdd53d1bf727d4d0e314ba944f4d294558f52d45272ec8677d5b923fb612ec7')
+sha256sums=('345a9ad2220820f08f583321e874528eee9f7e009236127efacee72d071c7ea5')
 
 build() {
-  arch-meson planner-$pkgver build
+  arch-meson planner-${pkgver} build
   meson compile -C build
 }
 
