@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=XML
-_pkgver=3.99-0.8
+_pkgver=3.99-0.9
 pkgname=r-${_pkgname,,}
-pkgver=3.99.0.8
+pkgver=3.99.0.9
 pkgrel=1
 pkgdesc='Tools for Parsing and Generating XML Within R and S-Plus'
 arch=('x86_64')
@@ -18,7 +18,7 @@ optdepends=(
   r-rcurl
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('081f691c2ee8ad39c7c95281e7d9153ec04cee79ca2d41f5d82c2ec2f1d36b50')
+sha256sums=('9c15dedf3157efc59e0db31506631dfe770a4d397ce52f972434bed60e206a09')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
