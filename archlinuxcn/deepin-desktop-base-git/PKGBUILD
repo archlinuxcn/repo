@@ -1,8 +1,8 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=deepin-desktop-base-git
-pkgver=2021.1.25.r0.g2388ac2
-pkgrel=16
+pkgver=2021.11.08.r2.gc6dd134
+pkgrel=1
 pkgdesc='Base component for Deepin'
 arch=('any')
 url="https://github.com/linuxdeepin/deepin-desktop-base"
@@ -41,9 +41,6 @@ package() {
 
   # Make a symlink for deepin-version
   ln -s ../usr/lib/deepin/desktop-version "$pkgdir"/etc/deepin-version
-
-  # Remove UOS logo
-  rm "$pkgdir"/usr/share/deepin/uos_logo.svg
 
   # Remove apt-specific templates
   rm -r "$pkgdir"/usr/share/python-apt
