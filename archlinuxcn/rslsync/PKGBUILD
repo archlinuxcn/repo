@@ -6,14 +6,14 @@
 
 pkgname=rslsync
 pkgver=2.7.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Resilio Sync (ex:BitTorrent Sync) - automatically sync files via secure, distributed technology"
 license=("custom:resilio")
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.getsync.com"
 install=rslsync.install
 backup=('etc/rslsync.conf')
-conflicts=()
+depends=('libxcrypt-compat')
 source=('rslsync.service'
         'rslsync_user.service'
         'rslsync.tmpfiles'
