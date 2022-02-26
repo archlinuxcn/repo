@@ -1,0 +1,14 @@
+maintainers:
+  - github: yan12125
+
+build_prefix: extra-x86_64
+
+pre_build_script: aur_pre_build(maintainers="yan12125")
+
+post_build_script: aur_post_build()
+
+update_on:
+  - source: github
+    github: input-leap/input-leap
+  - source: aur
+    aur: input-leap-git
