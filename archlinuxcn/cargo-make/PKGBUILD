@@ -1,32 +1,40 @@
 # Maintainer: George Rawlinson <grawlinson@archlinux.org>
 
 pkgname=cargo-make
-pkgver=0.35.8
-pkgrel=2
+pkgver=0.35.9
+pkgrel=1
 pkgdesc="Rust task runner and build tool"
 arch=('x86_64')
 url="https://github.com/sagiegurari/cargo-make"
 license=('Apache')
 depends=('gcc-libs' 'openssl')
-makedepends=('rust')
+makedepends=('git' 'rust')
 options=('!lto')
-source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
-sha512sums=('ff0b3812e7b8031b73f27ef901b15704ac451b6b6eea7f04bd1ed30e909c25a8385de9015162faa3abe41d7e257852893919acf24f3b4be0a5657deb0965783d')
-b2sums=('c6761ddea59fc31f138478a4d153578c4e692908316e11e11eb74e82c3ce6cc9e31cd5eede8960ef7a75167c6ad514d37d0c80b7e4aea314d2aca7d3435ff5e5')
+_commit='8231a904c565e75e47db47cd1770d092a166bb7c'
+source=("$pkgname::git+$url.git#commit=$_commit")
+b2sums=('SKIP')
+
+pkgver() {
+  cd "$pkgname"
+
+  git describe --tags | sed 's/^v//'
+}
 
 prepare() {
+  cd "$pkgname"
+
   # download dependencies
-  cd "$pkgname-$pkgver"
   cargo fetch --target "$CARCH-unknown-linux-gnu"
 }
 
 build() {
-  cd "$pkgname-$pkgver"
+  cd "$pkgname"
+
   cargo build --release --frozen
 }
 
 package() {
-  cd "$pkgname-$pkgver"
+  cd "$pkgname"
 
   # binary
   install -vDm755 -t "$pkgdir/usr/bin" target/release/{cargo-make,makers}
