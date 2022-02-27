@@ -23,14 +23,11 @@ makedepends=(
   python-setuptools
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmcv/archive/v${pkgver}.tar.gz"
-        "0001-fix-building-with-pytorch.1.11.patch::https://github.com/open-mmlab/mmcv/pull/1653.patch"
 )
 sha512sums=('323cfc929b84de509847a6c966ed4b2e9dfba75fef239e65c1fe61c8b8b0b632a2434bbdf68d292eb0590caf738329f3a94447098840a3578391e93fbe76821c'
-            '43b845d3cf5e83c998c4f9b78266b3666307232cad9b04366513b161c3e07e611f75c97faf33a46e01f35c9ccaba84770d207daf048c8a1a54521423a6dd5b61')
-
+)
 prepare() {
   cd "${_pkgname}-${pkgver}"
-  patch -p1 -i "${srcdir}/0001-fix-building-with-pytorch.1.11.patch"
   cp -a "${srcdir}/${_pkgname}-${pkgver}" "${srcdir}/${_pkgname}-full-${pkgver}"
 }
 
