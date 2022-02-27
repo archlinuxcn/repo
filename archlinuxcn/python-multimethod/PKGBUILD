@@ -12,8 +12,10 @@ depends=(
   python
 )
 makedepends=(
-  python-dephell
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 checkdepends=(
   python-pytest
@@ -22,14 +24,9 @@ checkdepends=(
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/coady/multimethod/archive/v${pkgver}.tar.gz")
 sha512sums=('13831989caab4831f5401efd1f99a633195b5141a98119c2660e1b32a4c017814fb86217bb3d165b9d0a2de5999f9f0af388c2bae90b0719b0cdf4e856948ed8')
 
-prepare() {
-  cd "${_pkgname}-${pkgver}"
-  dephell deps convert --from pyproject.toml --to setup.py
-}
-
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 check() {
@@ -39,6 +36,6 @@ check() {
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
 }
 # vim:set ts=2 sw=2 et:
