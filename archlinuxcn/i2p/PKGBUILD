@@ -5,14 +5,14 @@
 #export LG2=en
 
 pkgname=i2p
-pkgver=1.6.1
+pkgver=1.7.0
 pkgrel=1
 pkgdesc="A distributed anonymous network"
 url="https://geti2p.net"
 license=('GPL2')
 arch=('any')
-depends=('java-runtime>=11' 'java-service-wrapper')
-makedepends=('java-environment>=11' 'ant')
+depends=('java-runtime>=13' 'java-service-wrapper')
+makedepends=('java-environment>=13' 'ant')
 #optdepends=('gtk2: for rrd graphs')
 conflicts=('i2p-bin' 'i2p-dev')
 backup=('opt/i2p/wrapper.config')
@@ -30,22 +30,28 @@ source=("${_url}/i2psource_${pkgver}.tar.bz2"{,.sig}
         #"https://download.db-ip.com/free/dbip-country-lite-$(date +%Y-%m).mmdb.gz"
         'i2prouter.service' 'i2p.tmpfiles' 'wrapper.config' 'router.config'
         'i2prouter.bash' 'i2prouter.sh' 'chromium-i2p.sh'
+        speed_up_prng.patch::'https://github.com/i2p/i2p.i2p/commit/63f3d88f785172f747e7f049dfc8badecd963e96.patch'
+        update_firefox_useragent::'https://github.com/i2p/i2p.i2p/commit/265f5ee5dfb0fe977ca8114554b7156e2aa0e40a.patch'
         #upstream.patch::'https://github.com/i2p/i2p.i2p/commit/6c0e18d3.patch'
 )
 
-sha256sums=('719606c4cb510de4fe74f24bbfa53911a70531821fc1ee79a29e3d96eaa16733'
+sha256sums=('aa53591e89eacc3491ab472dc4df998780fb6747eea3b97ecb7a9f81ff2c9a5e'
             'SKIP'
             '644b771ec7f5db3efab3206bf1f896566cdb00d410a54608fda85bdb4c2ad876'
             'fc30dd32f48fe1c93bf36c8297ca48203a1479e4e221ebe62c57cf3c3c0347d3'
-            'ba4bcb8d9aef307045d1d24385a456d096ea45f69d95a474467728ea140188ec'
+            'e3a85d8992a09e8f57498b1eba0aef758ceffdb944d296528e8c5cec970becd9'
             '90f202e5b66d5a5b425522b409e71fb892d34c534e32ce2d6fe5284015cacf94'
             '7a19b9f90c8792460fd58e8b8aa435a065e34d29a942479850472510e9d3078a'
             '8d39f080c7a2e49226db3a785f3e18583159ef2f95e1ab467fd9984c4e38c9f5'
             'a7076156703e2b949331e450455813432caeb4e5712f1c7b668974eb06a69fb9'
+            '55b05dec917d5a55f2a7c3b76c5111d2cdbb3694968049fca5cdb089cb18e390'
+            '70f2ada05fa56e06c7cfc107a87b327aa37683bd0c47f0cb5454c60105a71be8'
 )
 
 prepare() {
     cd "$pkgname-$pkgver"
+    patch -Np1 -i ../speed_up_prng.patch
+    patch -Np1 -i ../update_firefox_useragent
     #patch -Np1 -i ../upstream.patch ||true
     #cp -f ../dbip-country-lite-$(date +%Y-%m).mmdb.gz installer/resources/GeoLite2-Country.mmdb.gz
 }
