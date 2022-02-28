@@ -2,8 +2,8 @@
 
 _pkgname=MONAILabel
 pkgname=monailabel
-pkgver=0.3.1
-pkgrel=4
+pkgver=0.3.2
+pkgrel=1
 pkgdesc='An intelligent open source image labeling and learning tool'
 arch=('any')
 url='https://github.com/Project-MONAI/MONAILabel'
@@ -61,7 +61,7 @@ optdepends=(
 )
 install="${pkgname}.install"
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Project-MONAI/MONAILabel/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('bfd4c430b6b25f1b7ba4ecd6f75bdf9f9e0af44f54d3de3cf47e13542d8a4bcab200aec819f8d8fd4521113a027ef44f9957c96741fbf2bd2d6e56ade4627324')
+sha512sums=('2d1206ad4bb892ec6fd1068113b456e4910f5765bcd43205b9ec4855f887c55f961c28266936e05cf2005c132b00e191e9ad4cc514ff5ff76cbf82ff6ea2f2c3')
 
 prepare() {
   # quick fix to work with python-dicomweb-client > 0.52.0
