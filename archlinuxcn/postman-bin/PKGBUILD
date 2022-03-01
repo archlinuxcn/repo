@@ -1,7 +1,7 @@
 # Maintainer: Jay Ta'ala <jay@jaytaala.com>
 # Contributor: Claudio d'Angelis <claudiodangelis at gmail dot com>
 pkgname=postman-bin
-pkgver=9.13.0
+pkgver=9.14.0
 pkgrel=1
 pkgdesc="Build, test, and document your APIs faster"
 provides=('postman')
@@ -15,7 +15,7 @@ source=(
 	"postman.desktop"
 )
 depends=(libxss nss gtk3)
-sha256sums=('665088a90e22fe369ffee0c1a275577fa900b8a1218a79ca4e4de73bb9a7055e'
+sha256sums=('a40de04f8c6821685a8d8d372735601cae4ac93c75b87ea0c9ab2e2d376de9c3'
             '74b2d8570658e207e31f729e7f4768952252383aee7c695218d077bd0ef13245')
 package() {
 	install -dm755 "${pkgdir}/opt/"
