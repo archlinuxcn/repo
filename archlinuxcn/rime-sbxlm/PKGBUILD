@@ -1,6 +1,6 @@
 pkgname=rime-sbxlm
-pkgver=220202
-pkgrel=2
+pkgver=220301
+pkgrel=1
 pkgdesc='声笔系列码基础配置，包含声笔简码和声笔拼音'
 arch=(any)
 source=("https://gitee.com/sbxlm/sbxlm/attach_files/958461/download/$pkgver.zip" 'sbxlm-init')
