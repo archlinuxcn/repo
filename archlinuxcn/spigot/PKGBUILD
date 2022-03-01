@@ -2,11 +2,11 @@
 # Submitter: Schala Zeal <schalaalexiazeal@gmail.com>
 
 pkgname=spigot
-_pkgver=1.18.1
+_pkgver=1.18.2
 _build=144
 pkgver="${_pkgver}+b${_build}"
-pkgrel=13
-_mng_ver=1.0.1
+pkgrel=14
+_mng_ver=1.0.2
 pkgdesc="High performance Minecraft server implementation"
 arch=('any')
 url="https://www.spigotmc.org/"
@@ -22,7 +22,7 @@ install="${pkgname}.install"
 source=("BuildTools-${_pkgver}+b${_build}.jar::https://hub.spigotmc.org/jenkins/job/BuildTools/${_build}/artifact/target/BuildTools.jar"
 	"minecraft-server-${_mng_ver}.tar.gz"::"https://github.com/Edenhofer/minecraft-server/archive/refs/tags/v${_mng_ver}.tar.gz")
 sha512sums=('13f41720b581f447eb3c43f4aa37cdb0e0e70e51a832ab5d7868a29a2e725e1459e0a2ccd8e70665b43d02d19e3080ff247af6274ee0e535efe3f5007d91676b'
-            '5fecf7bbcc5e2861640ae34bc32770a02a137cb4cf142adf565997c20141744b00517501ad717f390056bdcf59c4e03e365656454b427e771a15fcf152f1bc97')
+            '11d708d511b63e5541bcc1dbcaf29abbf7cb9583b1d313028770a39b26b41d48dcba023f7e1d6fe30f3c093d20e10a43363011edd432e5785a4580e5c5f852a6')
 
 _game="spigot"
 _server_root="/srv/craftbukkit"
