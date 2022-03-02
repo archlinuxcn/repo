@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=openssl
-_pkgver=1.4.6
+_pkgver=2.0.0
 pkgname=r-${_pkgname,,}
-pkgver=1.4.6
+pkgver=2.0.0
 pkgrel=1
 pkgdesc='Toolkit for Encryption, Signatures and Certificates Based on OpenSSL'
 arch=('x86_64')
@@ -24,7 +24,7 @@ optdepends=(
   r-testthat
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('43b832af70e71770168b997107c52c8f406f8c33e9ef9b289610bccea2f34359')
+sha256sums=('eb28fde65f33ffb780abb85ab17d724ae55c2b9dbe171155d3dd2d7154ff564b')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
