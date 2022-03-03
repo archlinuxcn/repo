@@ -18,12 +18,6 @@ pkgver() {
   git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
 }
 
-prepare() {
-  cd PyCall.jl
-
-  patch -Np1 < "../0001-Disable-MKL-check.patch"
-}
-
 build() {
   cd PyCall.jl/deps
 
