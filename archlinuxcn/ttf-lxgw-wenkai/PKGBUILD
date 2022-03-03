@@ -2,7 +2,7 @@
 
 pkgname=ttf-lxgw-wenkai
 pkgver=1.221
-pkgrel=1
+pkgrel=2
 pkgdesc="霞鹜文楷 An open-source Chinese font derived from Fontworks' Klee One."
 url="https://github.com/lxgw/LxgwWenKai"
 license=("custom:OFL")
@@ -13,10 +13,10 @@ source=(
 "https://github.com/lxgw/LxgwWenKai/releases/download/v$pkgver/LXGWWenKai-Regular.ttf"
 "LICENSE::https://raw.githubusercontent.com/lxgw/LxgwWenKai/main/License.txt"
 )
-sha256sums=('3fa619075ccdf8800e12a0ea155b35c9ff7cbbf155ca5668edccc863879bffff'
-            'c902b8ed37792d4623a54d6f9a980597913b818ccb9f6080acf10f82e73993af'
-            '9658b55b6c377ee3f49cf100c7376887a786565848994ff5d7d7430bfa4cd1f3'
-            '7f18ec1ebb6b50e3ed0f74b2c61f25b8d7cd69e43f4de66e991bcfd3c419a8bb')
+sha256sums=('5dcf1b2317a0bdd9304a5888b74431a1a5a29d427325eb646efca87a0722d913'
+            'cae4c8d6c18994ee2133964684dc17040c8b511631d9506db716aa768ffd906f'
+            'bfb83e61001e638b8a22a45ad536c3ae3bea335d79d4039ef43954c8ac3c638a'
+            'e564f06d018e7b95bc3594c96a17f1d41865af4038c375e7aa974dd69df38602')
 
 package(){
   install -d "$pkgdir/usr/share/fonts/TTF"
