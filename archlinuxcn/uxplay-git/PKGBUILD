@@ -25,7 +25,7 @@ build() {
   cd "$srcdir/$_gitname"
   mkdir -p build
   cd build
-  cmake .. -DZOOMFIX=1
+  cmake .. -DZOOMFIX=1 -DNO_MARCH_NATIVE=ON
   cmake --build . --config Release
 }
 
