@@ -1,7 +1,7 @@
 # Maintainer: oldherl <oldherl@gmail.com>
 
 pkgname=ttf-lxgw-wenkai-mono
-pkgver=1.211
+pkgver=1.221
 pkgrel=1
 pkgdesc="霞鹜文楷 An open-source Chinese font derived from Fontworks' Klee One. Monospace variant."
 url="https://github.com/lxgw/LxgwWenKai"
@@ -11,12 +11,12 @@ source=(
 "https://github.com/lxgw/LxgwWenKai/releases/download/v$pkgver/LXGWWenKaiMono-Bold.ttf"
 "https://github.com/lxgw/LxgwWenKai/releases/download/v$pkgver/LXGWWenKaiMono-Light.ttf"
 "https://github.com/lxgw/LxgwWenKai/releases/download/v$pkgver/LXGWWenKaiMono-Regular.ttf"
-"LICENSE::https://raw.githubusercontent.com/lxgw/LxgwWenKai/main/SIL_Open_Font_License_1.1.txt"
+"LICENSE::https://raw.githubusercontent.com/lxgw/LxgwWenKai/main/License.txt"
 )
 sha256sums=('e4055aae00a6d840558859d13af551f0ae00b10b7d129b222903cd0d0b606908'
             'b462c00ed7b16158cec07f635aa982f44f076c7fdd22c27096137cac6ce2735c'
             'b312494a5d974f57f58495512503d13f9850721dcba9dfe3f8a6aa6f438f9855'
-            'e564f06d018e7b95bc3594c96a17f1d41865af4038c375e7aa974dd69df38602')
+            '7f18ec1ebb6b50e3ed0f74b2c61f25b8d7cd69e43f4de66e991bcfd3c419a8bb')
 
 package(){
   install -d "$pkgdir/usr/share/fonts/TTF"
