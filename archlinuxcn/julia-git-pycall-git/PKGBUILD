@@ -9,10 +9,8 @@ makedepends=(git python julia-pkg-scripts julia-git-conda julia-git-json
              julia-git-parsers julia-git-versionparsing)
 depends=(julia-git)
 provides=('julia-git-pycall')
-source=(git+https://github.com/stevengj/PyCall.jl
-        0001-Disable-MKL-check.patch)
-md5sums=('SKIP'
-         '8ea554b6033aa83f1821b2c0a4f0d039')
+source=(git+https://github.com/stevengj/PyCall.jl)
+md5sums=('SKIP')
 
 pkgver() {
   cd PyCall.jl
