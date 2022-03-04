@@ -1,5 +1,5 @@
 pkgname=boringtun-git
-pkgver=0.3.0.65.g42710c9
+pkgver=0.3.0.68.g36f4e4b
 pkgrel=1
 pkgdesc="Userspace WireGuard® Implementation in Rust"
 arch=('x86_64' 'i686' 'aarch64')
@@ -25,5 +25,5 @@ build() {
 
 package() {
 	cd $pkgname
-	install -D -m755 "$srcdir/$pkgname/target/release/boringtun" "$pkgdir/usr/bin/boringtun"
+	install -D -m755 "$srcdir/$pkgname/target/release/boringtun-cli" "$pkgdir/usr/bin/boringtun"
 }
