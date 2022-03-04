@@ -1,7 +1,7 @@
 # Maintainer: Y7n05h <Y7n05h(aT)protonmail--d0t--com>
 pkgname=mariadb-connector-cpp
-pkgver=1.1.0
-pkgrel=2
+pkgver=1.1.1
+pkgrel=1
 pkgdesc=" MariaDB Connector for C++ ."
 arch=('x86_64')
 url="https://github.com/mariadb-corporation/mariadb-connector-cpp"
@@ -11,7 +11,7 @@ depends=('mariadb-libs')
 makedepends=('cmake')
 provides=('mariadb-connector-cpp')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
-sha512sums=('a9172fe1639d242301cfb12126eac38cb27b41045e35333e06d33e369321ee1e8ee5d86998b56c75b5d3242eab48550bc0959dfbc806ef746060a1e0f46a5f0b')
+sha512sums=('299b16a76878f0349af1105afc6ecc548673d6d74f2c33dbb652f90025bdb04244d11cb2b7c9e1d98810f92a387e1439aed4fd533465d2253824486fb3ede150')
 prepare() {
     cd "$pkgname-$pkgver"
     sed -i "1i\INCLUDE_DIRECTORIES(\"/usr/include/mysql\")" ./CMakeLists.txt
