@@ -67,6 +67,9 @@ prepare() {
     git config submodule.cmake/external/$mod.url "$srcdir"/$mod
     git submodule update cmake/external/$mod
   done
+
+  cd onnxruntime/core/flatbuffers/schema
+  python compile_schema.py --flatc /usr/bin/flatc
 }
 
 build() {
