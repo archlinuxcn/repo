@@ -1,9 +1,9 @@
 # Maintainer: hubutui <hot123tea123@gmail.com>
 
 _pkgname=withr
-_pkgver=2.4.3
+_pkgver=2.5.0
 pkgname=r-${_pkgname,,}
-pkgver=2.4.3
+pkgver=2.5.0
 pkgrel=1
 pkgdesc="Run Code 'With' Temporarily Modified Global State"
 arch=('any')
@@ -23,7 +23,7 @@ optdepends=(
   r-testthat
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('9bdac7459ccc6c2d599ecfd132a7f0aa68d958942d9fe7dbb0442c9eda129d4c')
+sha256sums=('37317b3ed790a08407072993a05ab255f6305f95a12a16e0e28aa6aa80fc8bc0')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
