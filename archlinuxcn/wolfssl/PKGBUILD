@@ -4,7 +4,7 @@
 # Contributor: Gustavo Alvarez <sl1pkn07@gmail.com>
 
 pkgname=wolfssl
-pkgver=5.1.1
+pkgver=5.2.0
 pkgrel=1
 pkgdesc='small, fast, portable implementation of TLS/SSL for embedded devices to the cloud (formerly CyaSSL)'
 arch=(i686 x86_64)
@@ -14,7 +14,7 @@ makedepends=('cmake')
 url='https://www.wolfssl.com/'
 source=(${pkgname}-${pkgver}-stable.tar.gz::https://github.com/wolfSSL/wolfssl/archive/v$pkgver-stable.tar.gz
         https://github.com/wolfSSL/wolfssl/releases/download/v${pkgver}-stable/${pkgname}-${pkgver}-stable.tar.gz.asc)
-sha256sums=('d3e0544dbe7e9587c0f6538cdc671b6492663bb7a4281819538abe6c99cdbd92'
+sha256sums=('409b4646c5f54f642de0e9f3544c3b83de7238134f5b1ff93fb44527bf119d05'
             'SKIP')
 validpgpkeys=('A2A48E7BCB96C5BECB987314EBC80E415CA29677')
 
