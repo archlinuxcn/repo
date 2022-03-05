@@ -6,7 +6,7 @@
 # Contributor: Ranieri Althoff <ranisalt+aur at gmail.com>
 
 pkgname=hsa-rocr
-pkgver=5.0.1
+pkgver=5.0.2
 pkgrel=1
 pkgdesc='ROCm Platform Runtime: ROCr a HPC market enhanced HSA based runtime'
 arch=('x86_64')
@@ -20,7 +20,7 @@ conflicts=('rocr-runtime')
 _git='https://github.com/RadeonOpenCompute/ROCR-Runtime'
 source=("${pkgname}-${pkgver}.tar.gz::$_git/archive/rocm-$pkgver.tar.gz"
         'remove-warnings.patch')
-sha256sums=('e34967774449f0859724a1cdf60c89fffb44706c847c704c3250249d32dcc65d'
+sha256sums=('94ce313f3b37e6571778dc6865d73dafa798cbaf4de63b5307382c4a2418e99f'
             '9aecc193aafe58c235b82b7d7c4444fd4175224233fde6a23c54014b3dcc0f6a')
 _dirname="$(basename "$_git")-$(basename "${source[0]}" .tar.gz)"
 
