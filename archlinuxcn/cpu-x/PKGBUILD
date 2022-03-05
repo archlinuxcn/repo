@@ -3,12 +3,12 @@
 _realname=CPU-X
 pkgname=cpu-x
 pkgver=4.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A Free software that gathers information on CPU, motherboard and more"
 arch=('i686' 'x86_64')
 url="http://X0rg.github.io/CPU-X/"
 license=('GPL3')
-depends=('gtk3' 'ncurses' 'libcpuid' 'pciutils' 'glfw' 'opencl-icd-loader' 'procps-ng')
+depends=('gtk3' 'ncurses' 'libcpuid' 'pciutils' 'glfw' 'ocl-icd' 'procps-ng')
 makedepends=('cmake' 'ninja' 'nasm' 'opencl-headers')
 optdepends=('opencl-driver: packaged opencl driver')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/X0rg/CPU-X/archive/v$pkgver.tar.gz")
