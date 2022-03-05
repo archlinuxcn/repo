@@ -3,7 +3,7 @@
 
 pkgbase=gtk3-no-tracker
 pkgname=(gtk3-no-tracker)
-pkgver=3.24.32
+pkgver=3.24.33
 pkgrel=1
 epoch=1
 pkgdesc="GObject-based multi-platform GUI toolkit"
@@ -17,7 +17,7 @@ depends=(atk cairo libxcursor libxinerama libxrandr libxi libepoxy gdk-pixbuf2
 makedepends=(gobject-introspection gtk-doc git glib2-docs sassc meson
              wayland-protocols)
 license=(LGPL)
-_commit=30f9ce09b10059d8f872dd50b5a950d654f84f88  # tags/3.24.32^0
+_commit=8ff9b2f83ff491cbfcbf9b30c706bd917679e7cc  # tags/3.24.33^0
 source=("git+https://gitlab.gnome.org/GNOME/gtk.git#commit=$_commit"
         gtk-query-immodules-3.0.hook)
 sha256sums=('SKIP'
