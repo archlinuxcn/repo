@@ -1,0 +1,22 @@
+post_upgrade(){
+ # notify about breaking changes
+ # https://wiki.archlinux.org/title/PKGBUILD#install
+ if [[ $1 != 0.6* ]] && [[ $2 == 0.6* ]]; then
+  cat <<INFO
+
+Dendrite is now using configuration v2, as it moved from Kafka to NATS Jetstream.
+You are advised to backup your previous configuration located at
+
+    /etc/dendrite/config.yaml
+
+and generate a new one either copying
+
+    /etc/dendrite/config-example.yaml
+
+or by running
+
+    dendrite-generate-config
+
+INFO
+ fi
+}
