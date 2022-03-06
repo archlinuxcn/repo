@@ -1,0 +1,26 @@
+diff -ru vlc-3.0.13.orig/configure.ac vlc-3.0.13/configure.ac
+--- vlc-3.0.13.orig/configure.ac        2021-04-27 15:18:39.000000000 +0200
++++ vlc-3.0.13/configure.ac     2021-05-03 16:26:26.691200904 +0200
+@@ -1825,7 +1825,7 @@
+         AC_MSG_ERROR([Update live555 or pass --disable-live555 to disable RTSP input support.])
+       ])
+     ], [
+-      other_libs="-lgroupsock -lBasicUsageEnvironment -lUsageEnvironment"
++      other_libs="-lcrypto -lssl -lgroupsock -lBasicUsageEnvironment -lUsageEnvironment"
+       other_libs_pic="-lgroupsock_pic -lBasicUsageEnvironment_pic -lUsageEnvironment_pic"
+       AS_IF([test "${SYS}" = "mingw32"], [
+         # add ws2_32 for closesocket, select, recv
+diff -ru vlc-3.0.13.orig/modules/access/live555.cpp vlc-3.0.13/modules/access/live555.cpp
+--- vlc-3.0.13.orig/modules/access/live555.cpp	2019-03-29 20:01:15.000000000 +0100
++++ vlc-3.0.13/modules/access/live555.cpp	2021-05-03 16:04:38.030121796 +0200
+@@ -852,7 +852,9 @@
+             if( !p_sys->b_multicast )
+             {
+                 /* We need different rollover behaviour for multicast */
+-                p_sys->b_multicast = IsMulticastAddress( sub->connectionEndpointAddress() );
++                struct sockaddr_storage tempAddr;
++                sub->getConnectionEndpointAddress(tempAddr);
++                p_sys->b_multicast = IsMulticastAddress( tempAddr );
+             }
+ 
+             tk = (live_track_t*)malloc( sizeof( live_track_t ) );
