@@ -6,7 +6,7 @@
 
 pkgname=mailspring
 pkgver=1.10.0
-pkgrel=2
+pkgrel=3
 pkgdesc="A beautiful, fast and maintained fork of Nylas Mail by one of the original authors."
 arch=('x86_64')
 license=('custom: GPL3 and (C) 2016-2019 Foundry 376, LLC.')
@@ -20,7 +20,7 @@ sha256sums_x86_64=('1c4b391a5118e9a162a3642a57888ee90ecdbe83dac8122268734b39ae8f
 
 depends=("libxss" "libtool" "c-ares" "ctemplate" "tidy" "libxkbfile" "libsecret" "gtk3" "nss" "libglvnd")
 
-optdepends=('libappindicator-gtk3: for system tray support' "libgnome-keyring: keyrings" "gnome-keyring: keyrings" )
+optdepends=('libappindicator-gtk3: for system tray support' 'appmenu-gtk-module: for system tray support' "libgnome-keyring: keyrings" "gnome-keyring: keyrings" )
 
 package() {
 	  	cd ${srcdir}
