@@ -1,5 +1,5 @@
 pkgname=rime-sbxlm
-pkgver=220305
+pkgver=220306
 pkgrel=1
 pkgdesc='声笔系列码基础配置，包含声笔简码和声笔拼音'
 arch=(any)
