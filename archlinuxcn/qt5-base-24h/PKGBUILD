@@ -4,9 +4,10 @@
 pkgbase=qt5-base-24h
 _origpkgname=qt5-base
 pkgname=(qt5-base-24h)
-pkgver=5.15.2+kde+r305
+_basever=5.15.3
+pkgver=5.15.3+kde+r132
 pkgrel=1.9
-_commit=77c620f0a1f8a5e8e126fd00a7beba6ac8005ad0
+_commit=e6c19422a25890b5e9a728f4acb9166a6a11527e
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -30,7 +31,7 @@ conflicts=("qt5-base" "qt5-3d>=5.16" "qt5-charts>=5.16" "qt5-connectivity>=5.16"
 
 provides=("qt5-base=$pkgver")
 
-_pkgfqn=qtbase
+_pkgfqn=${_origpkgname/5-/}
 source=(
       oldherl-24h.patch
       'https://build.archlinuxcn.org/~oldherl/files/cldr/36/core.zip'
@@ -47,14 +48,11 @@ options=(debug)
 
 pkgver() {
   cd $_pkgfqn
-  echo "5.15.2+kde+r"`git rev-list --count origin/5.15.2..$_commit`
+  echo "$_basever+kde+r"`git rev-list --count v$_basever-lts-lgpl..$_commit`
 }
 
 prepare() {
   cd ${_pkgfqn}
-
-  git revert -n 6344955d17e17e2398720fe60c34cfc2a4a95208 # Revert version bump
-
   patch -p1 < ../qmake-cflags.patch # Use system CFLAGS in qmake
   patch -p1 < ../qmake-config.patch # Don't strip binaries with qmake and use -ltcg, cf. QTBUG-73834
 
