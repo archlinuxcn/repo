@@ -4,19 +4,20 @@
 
 pkgname='python-tensorly'
 pkgver=0.7.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Simple and Fast Tensor Learning in Python"
 arch=('any')
 url="https://tensorly.org/stable/home.html"
 license=('BSD')
 depends=(
     python
+    python-numpy
+    python-scipy
 )
 makedepends=(
     python-setuptools
 )
 optdepends=(
-    python-numpy
     python-pytorch
     python-tensorflow
 )
@@ -50,7 +51,7 @@ check() {
         # So many flaky tests...
         # https://github.com/tensorly/tensorly/issues/310
         TENSORLY_BACKEND=$backend pytest -v tensorly \
-          -k 'not test_svd and not test_active_set_nnls and not test_tr_tensor and not test_hals_nnls and not validate_tucker_rank and not test_parafac'
+          -k 'not test_svd and not test_tr_tensor and not validate_tucker_rank and not test_parafac'
     done
 }
 
