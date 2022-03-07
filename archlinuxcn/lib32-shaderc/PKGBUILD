@@ -6,7 +6,7 @@ _setFullLibdir="${_setPrefix}/${_setLibdir}"
 _pkgbasename=shaderc
 
 pkgname=lib32-$_pkgbasename
-pkgver=2021.3
+pkgver=2022.1
 pkgrel=1
 pkgdesc='Collection of tools, libraries and tests for shader compilation (32bit)'
 url='https://github.com/google/shaderc'
@@ -16,8 +16,8 @@ depends=(
         "$_pkgbasename>=$pkgver"
         'lib32-glibc'
         'lib32-gcc-libs'
-        'lib32-glslang>=8.13.3559'
-        'lib32-spirv-tools>=2019.5'
+        'lib32-glslang'
+        'lib32-spirv-tools'
         )
 makedepends=(
         'cmake'
@@ -31,7 +31,7 @@ source=(
         "${_pkgbasename}-${pkgver}.tar.gz::https://github.com/google/shaderc/archive/v${pkgver}.tar.gz"
         )
 sha512sums=(
-        '759eca72564bea59c06d31f70a85571a391360d5d428db85a30f934d080bb25e254ecb5650f71a96742cf417f09d819f36d301e92294a5d0d294581ca554248a'
+        '21c2462cb434d94da87c71ba660f6cd5b161450d7faeff8789b41db25e64f2baa7c560e78aa856d128c5a73699215d6b1085b5ca19a4640237adf194793ad44b'
         )
 
 prepare() {
