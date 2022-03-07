@@ -1,3 +1,42 @@
+## 8
+
+* `aur-chroot`
+
+The `aur-chroot` command-line was changed so that `--create`, `--build` and
+`--update` can be used in a single command. Command-line arguments are now
+exclusively used for packages passed to `mkarchroot` and `arch-nspawn`.
+To set `makechrootpkg` options, the new `--margs` and `--cargs` options are
+available. As `aur-build --margs`, these take a comma-delimited string and
+can be specified multiple times. (Issues: #950, #807)
+
+The `--packagelist` command is now deprecated. The container path can be
+retrieved with the `--path` option, e.g for use with `makepkg --config`.
+
+* `aur-build`
+  + Consider all repositories (`Usage = Install`) for local repository upgrade (#956)
+
+* `aur-srcver`
+  + add `--buildscript`
+  + deprecate `-E` / `--env`
+    - `get_full_version` from `libmakepkg` is now used after running `makepkg`
+  + take arguments from `stdin` if `-` is specified
+
+* `aurvcs.7`
+  + run `aur-fetch` and `aur-view` before `aur-srcver`
+  + sample code remaned to `aur-sync-devel`
+
+## 7.2
+
+* `aur-search`
+  + add `OptDepends` to `--info` output (#945)
+  + handle empty keywords in `--info` output (#946)
+
+* `aur-depends`
+  + add `--optdepends` (#945)
+
+* `aur-sync`
+  + add `--optdepends` (#945)
+
 ## 7.1
 
 * `aur-build`
