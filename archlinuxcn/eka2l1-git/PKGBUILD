@@ -1,7 +1,7 @@
 # Maintainer: heavysink <winstonwu91@gmail.com>
 _pkgname=eka2l1
 pkgname="${_pkgname}-git"
-pkgver=5267.86df5e678
+pkgver=5279.0c5314e82
 pkgrel=1
 pkgdesc="Experimental Symbian OS emulator (GIT version)"
 arch=('x86_64')
@@ -44,19 +44,17 @@ pkgver() {
 prepare() {
 	cd "${srcdir}/${_pkgname}-git"
 	git submodule update --recursive --init
-  #find src/ -type f -exec sed -i 's/std::int16_t/int16_t/g' {} +
-  #find src/ -type f -exec sed -i 's/std::uint32_t/uint32_t/g' {} +
-  #find src/ -type f -exec sed -i 's/std::uint8_t/uint8_t/g' {} +
-  sed -i 's/std::uint64_t surface_handle_64/std::uint32_t surface_handle_64/g' src/emu/drivers/src/graphics/backend/vulkan/graphics_vulkan.cpp
+    sed -i 's/constexpr size_t signal_stack_size = std::max(SIGSTKSZ/const size_t signal_stack_size = std::max<size_t>(SIGSTKSZ/g' src/external/dynarmic/src/backend/x64/exception_handler_posix.cpp 
 }
 
 build() {
 	cd "${srcdir}/${_pkgname}-git"
 
-	mkdir -p build
-	cd build/
-	cmake -DCMAKE_BUILD_TYPE=Release -DGLFW_INSTALL=OFF -DCMAKE_INSTALL_PREFIX=/opt/eka2l1 ..
-  make
+    cmake -B build -DCMAKE_BUILD_TYPE=Release -DEKA2L1_NO_TERMINAL=ON -DEKA2L1_ENABLE_UNEXPECTED_EXCEPTION_HANDLER=ON -DEKA2L1_BUILD_VULKAN_BACKEND=OFF -DCMAKE_INSTALL_PREFIX=/opt/eka2l1 .
+
+    cd build
+
+    make -j1
 }
 
 package() {
