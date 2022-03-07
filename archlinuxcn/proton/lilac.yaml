@@ -4,12 +4,12 @@ maintainers:
   - github: heavysink
     email: winstonwu91@gmail.com
 
-build_prefix: multilib
+build_prefix: extra-x86_64
 
-repo_depends:
-  - wine-valve
+pre_build_script: aur_pre_build(maintainers=['loathingkernel'])
+
+post_build: aur_post_build
 
 update_on:
-  - source: github
-    github: ValveSoftware/Proton
-    use_latest_release: true
+  - source: aur
+    aur: 

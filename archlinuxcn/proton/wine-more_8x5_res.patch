@@ -1,0 +1,15 @@
+diff --git a/dlls/winex11.drv/fs.c b/dlls/winex11.drv/fs.c
+index c37899605e7..6470d2ffbb9 100644
+--- a/dlls/winex11.drv/fs.c
++++ b/dlls/winex11.drv/fs.c
+@@ -78,6 +78,10 @@ static struct fs_monitor_size fs_monitor_sizes[] =
+     {2880, 1620}, /* 16:9 */
+     {2954, 1662}, /* 16:9 - 'FSR 2160p Ultra Quality' */
+     {3200, 1800}, /* 16:9 */
++    {640, 400},  /*  8:5 */
++    {840, 525},  /*  8:5 */
++    {960, 600},  /*  8:5 */
++    {1280, 800},  /*  8:5 */
+     {1440, 900},  /*  8:5 */
+     {1680, 1050}, /*  8:5 */
+     {1920, 1200}, /*  8:5 */
