@@ -1,0 +1,108 @@
+From e1ce2351f5c00dd90104e0f4ce3bf176da28af08 Mon Sep 17 00:00:00 2001
+From: Evangelos Foutras <evangelos@foutrelis.com>
+Date: Thu, 10 Feb 2022 05:15:01 +0200
+Subject: [PATCH] Make link time optimization flags configurable
+
+We want to use -flto=auto in Arch Linux to speed up building, but we
+can't hardcode it in buildenv/lto.sh because other downstreams might
+have clang < 13.0.0 which did not recognize -flto=auto as equivalent
+to -flto=full.
+
+Introducing an LTOFLAGS variable to makepkg.conf seems the way to go.
+
+Signed-off-by: Allan McRae <allan@archlinux.org>
+---
+ doc/makepkg.conf.5.asciidoc                   | 10 ++++++++--
+ etc/makepkg.conf.in                           |  1 +
+ scripts/libmakepkg/buildenv/buildflags.sh.in  |  2 +-
+ scripts/libmakepkg/buildenv/lto.sh.in         |  6 +++---
+ scripts/libmakepkg/lint_config/variable.sh.in |  8 ++++----
+ 5 files changed, 17 insertions(+), 10 deletions(-)
+
+diff --git a/doc/makepkg.conf.5.asciidoc b/doc/makepkg.conf.5.asciidoc
+index 39c5c808..a0d9a6d4 100644
+--- a/doc/makepkg.conf.5.asciidoc
++++ b/doc/makepkg.conf.5.asciidoc
+@@ -81,6 +81,11 @@ Options
+ 	usage resembling ``-Wl,--hash-style=gnu''. Read ld(1) for more details on
+ 	available linker flags.
+ 
++**LTOFLAGS=**"ltoflags"::
++	Additional compiler and linker flags appended to `CFLAGS`, `CXXFLAGS`
++	and `LDFLAGS` when building with link time optimization. If empty,
++	``-flto'' is used.
++
+ **MAKEFLAGS=**"makeflags"::
+ 	This is often used to set the number of jobs used; for example, `-j2`.
+ 	Other flags that make accepts can also be passed.
+@@ -190,8 +195,9 @@ Options
+ 		package containing the debug symbols when used with `strip'.
+ 
+ 	*lto*;;
+-		Enable building packages using link time optimization. Adds '-flto'
+-		to both CFLAGS and CXXFLAGS.
++		Enable building packages using link time optimization. Adds the
++		flags specified in LTOFLAGS to CFLAGS, CXXFLAGS and LDFLAGS (or
++		``-flto'' if LTOFLAGS is empty).
+ 
+ 	*autodep*;;
+ 		Enable the automatic addition of libraries to the depends and
+diff --git a/etc/makepkg.conf.in b/etc/makepkg.conf.in
+index 0c911cce..edc5f442 100644
+--- a/etc/makepkg.conf.in
++++ b/etc/makepkg.conf.in
+@@ -41,6 +41,7 @@ CHOST="@CHOST@"
+ #CFLAGS="-O2 -pipe"
+ #CXXFLAGS="-O2 -pipe"
+ #LDFLAGS=""
++#LTOFLAGS="-flto"
+ #RUSTFLAGS="-C opt-level=2"
+ #-- Make Flags: change this for DistCC/SMP systems
+ #MAKEFLAGS="-j2"
+diff --git a/scripts/libmakepkg/buildenv/buildflags.sh.in b/scripts/libmakepkg/buildenv/buildflags.sh.in
+index 74f91988..07b4a730 100644
+--- a/scripts/libmakepkg/buildenv/buildflags.sh.in
++++ b/scripts/libmakepkg/buildenv/buildflags.sh.in
+@@ -30,6 +30,6 @@ buildenv_functions+=('buildenv_buildflags')
+ 
+ buildenv_buildflags() {
+ 	if check_option "buildflags" "n"; then
+-		unset CPPFLAGS CFLAGS DEBUG_CFLAGS CXXFLAGS DEBUG_CXXFLAGS LDFLAGS RUSTFLAGS DEBUG_RUSTFLAGS
++		unset CPPFLAGS CFLAGS DEBUG_CFLAGS CXXFLAGS DEBUG_CXXFLAGS LDFLAGS LTOFLAGS RUSTFLAGS DEBUG_RUSTFLAGS
+ 	fi
+ }
+diff --git a/scripts/libmakepkg/buildenv/lto.sh.in b/scripts/libmakepkg/buildenv/lto.sh.in
+index 6e500eab..6492def7 100644
+--- a/scripts/libmakepkg/buildenv/lto.sh.in
++++ b/scripts/libmakepkg/buildenv/lto.sh.in
+@@ -31,8 +31,8 @@ buildenv_functions+=('buildenv_lto')
+ 
+ buildenv_lto() {
+ 	if check_option "lto" "y" && ! check_option "buildflags" "n"; then
+-		CFLAGS+=" -flto"
+-		CXXFLAGS+=" -flto"
+-		LDFLAGS+=" -flto"
++		CFLAGS+=" ${LTOFLAGS:--flto}"
++		CXXFLAGS+=" ${LTOFLAGS:--flto}"
++		LDFLAGS+=" ${LTOFLAGS:--flto}"
+ 	fi
+ }
+diff --git a/scripts/libmakepkg/lint_config/variable.sh.in b/scripts/libmakepkg/lint_config/variable.sh.in
+index 8327b0a5..03a67ee2 100644
+--- a/scripts/libmakepkg/lint_config/variable.sh.in
++++ b/scripts/libmakepkg/lint_config/variable.sh.in
+@@ -32,10 +32,10 @@ lint_config_variables() {
+ 	local array=(DLAGENTS VCSCLIENTS BUILDENV OPTIONS INTEGRITY_CHECK MAN_DIRS
+ 	             DOC_DIRS PURGE_TARGETS COMPRESSGZ COMPRESSBZ2 COMPRESSXZ
+ 	             COMPRESSLRZ COMPRESSLZO COMPRESSZ)
+-	local string=(CARCH CHOST CPPFLAGS CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS DEBUG_CFLAGS
+-	              DEBUG_CXXFLAGS DEBUG_RUSTFLAGS DISTCC_HOSTS BUILDDIR STRIP_BINARIES
+-	              STRIP_SHARED STRIP_STATIC PKGDEST SRCDEST SRCPKGDEST LOGDEST PACKAGER
+-	              GPGKEY PKGEXT SRCEXT)
++	local string=(CARCH CHOST CPPFLAGS CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS LTOFLAGS
++	              DEBUG_CFLAGS DEBUG_CXXFLAGS DEBUG_RUSTFLAGS DISTCC_HOSTS BUILDDIR
++	              STRIP_BINARIES STRIP_SHARED STRIP_STATIC PKGDEST SRCDEST SRCPKGDEST
++	              LOGDEST PACKAGER GPGKEY PKGEXT SRCEXT)
+ 
+ 	local i keys ret=0
+ 

@@ -1,0 +1,41 @@
+From 42fe4864a0c8e2846007ffee532fe0cf4b321cdd Mon Sep 17 00:00:00 2001
+From: Allan McRae <allan@archlinux.org>
+Date: Sun, 9 Jan 2022 12:45:58 +1000
+Subject: [PATCH] libmakepkg: add extra buildflags only when buildflags is not
+ disabled
+
+This means options=('!buildflags') will disable the addition of CFLAG
+etc for LTO and debug building.
+
+Signed-off-by: Allan McRae <allan@archlinux.org>
+---
+ scripts/libmakepkg/buildenv/debugflags.sh.in | 2 +-
+ scripts/libmakepkg/buildenv/lto.sh.in        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/libmakepkg/buildenv/debugflags.sh.in b/scripts/libmakepkg/buildenv/debugflags.sh.in
+index 84ca7b71..1cb58613 100644
+--- a/scripts/libmakepkg/buildenv/debugflags.sh.in
++++ b/scripts/libmakepkg/buildenv/debugflags.sh.in
+@@ -29,7 +29,7 @@ source "$LIBRARY/util/option.sh"
+ buildenv_functions+=('buildenv_debugflags')
+ 
+ buildenv_debugflags() {
+-	if check_option "debug" "y"; then
++	if check_option "debug" "y" && ! check_option "buildflags" "n"; then
+ 		DEBUG_CFLAGS+=" -ffile-prefix-map=$srcdir=${DBGSRCDIR:-/usr/src/debug}"
+ 		DEBUG_CXXFLAGS+=" -ffile-prefix-map=$srcdir=${DBGSRCDIR:-/usr/src/debug}"
+ 		DEBUG_RUSTFLAGS+=" --remap-path-prefix=$srcdir=${DBGSRCDIR:-/usr/src/debug}"
+diff --git a/scripts/libmakepkg/buildenv/lto.sh.in b/scripts/libmakepkg/buildenv/lto.sh.in
+index 081d5648..6e500eab 100644
+--- a/scripts/libmakepkg/buildenv/lto.sh.in
++++ b/scripts/libmakepkg/buildenv/lto.sh.in
+@@ -30,7 +30,7 @@ build_options+=('lto')
+ buildenv_functions+=('buildenv_lto')
+ 
+ buildenv_lto() {
+-	if check_option "lto" "y"; then
++	if check_option "lto" "y" && ! check_option "buildflags" "n"; then
+ 		CFLAGS+=" -flto"
+ 		CXXFLAGS+=" -flto"
+ 		LDFLAGS+=" -flto"

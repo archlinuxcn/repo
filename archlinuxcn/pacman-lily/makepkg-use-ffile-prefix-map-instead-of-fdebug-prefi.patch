@@ -1,0 +1,40 @@
+From e37f7d8b6b4d2f9accf97eb96d0eacbddf2a1345 Mon Sep 17 00:00:00 2001
+From: Xiretza <xiretza@xiretza.xyz>
+Date: Sat, 1 Jan 2022 14:40:24 +0100
+Subject: [PATCH] makepkg: use -ffile-prefix-map instead of -fdebug-prefix-map
+
+>From gcc(1):
+
+-ffile-prefix-map=old=new
+	[...] Specifying this option is equivalent to specifying all the
+	individual -f*-prefix-map options. This can be used to make reproducible
+	builds that are location independent.
+
+Specifically, this additionally enables -fmacro-prefix-map=, which causes
+prefix mapping to be applied to expansions of __FILE__ and similar macros.
+
+Without this option, if source files are compiled by passing the
+absolute file path to the compiler (as done by e.g. cmake), any
+expansions of __FILE__ (e.g. from uses of assert()) will contain
+$srcdir.
+
+Signed-off-by: Allan McRae <allan@archlinux.org>
+---
+ scripts/libmakepkg/buildenv/debugflags.sh.in | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/libmakepkg/buildenv/debugflags.sh.in b/scripts/libmakepkg/buildenv/debugflags.sh.in
+index e0a1ed00..84ca7b71 100644
+--- a/scripts/libmakepkg/buildenv/debugflags.sh.in
++++ b/scripts/libmakepkg/buildenv/debugflags.sh.in
+@@ -30,8 +30,8 @@ buildenv_functions+=('buildenv_debugflags')
+ 
+ buildenv_debugflags() {
+ 	if check_option "debug" "y"; then
+-		DEBUG_CFLAGS+=" -fdebug-prefix-map=$srcdir=${DBGSRCDIR:-/usr/src/debug}"
+-		DEBUG_CXXFLAGS+=" -fdebug-prefix-map=$srcdir=${DBGSRCDIR:-/usr/src/debug}"
++		DEBUG_CFLAGS+=" -ffile-prefix-map=$srcdir=${DBGSRCDIR:-/usr/src/debug}"
++		DEBUG_CXXFLAGS+=" -ffile-prefix-map=$srcdir=${DBGSRCDIR:-/usr/src/debug}"
+ 		DEBUG_RUSTFLAGS+=" --remap-path-prefix=$srcdir=${DBGSRCDIR:-/usr/src/debug}"
+ 		CFLAGS+=" $DEBUG_CFLAGS"
+ 		CXXFLAGS+=" $DEBUG_CXXFLAGS"
