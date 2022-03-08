@@ -1,40 +1,31 @@
-# Maintainer: Yuri Pieters <magejohnyjtp@gmail.com>
+# Maintainer: Gregory Land
 
-_pkgname=supergfxctl
-pkgname="$_pkgname-git"
-pkgver=4.0.3.r0.749340e
+pkgname=supergfxctl-git
+pkgver=4.0.4.r0.g7eabe91
 pkgrel=1
 pkgdesc="A utility for Linux graphics switching on Intel/AMD iGPU + nVidia dGPU laptops"
 arch=('x86_64')
-url="https://gitlab.com/asus-linux/$_pkgname"
+url="https://gitlab.com/asus-linux/supergfxctl"
 license=('MPL2')
-depends=('dbus' 'systemd')
-optdepends=()
-makedepends=('git' 'cargo')
-provides=("$_pkgname")
-conflicts=("$_pkgname")
-source=("git+$url.git")
-sha256sums=('SKIP')
+depends=()
+makedepends=('git' 'rust')
+provides=('supergfxctl')
+conflicts=('supergfxctl')
+source=('git+https://gitlab.com/asus-linux/supergfxctl.git')
+md5sums=('SKIP')
+_gitdir=${pkgname%"-git"}
 
 pkgver() {
-  cd "${_pkgname}" || exit
-  printf "%s" "$(git describe --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
-}
-
-prepare() {
-  cd "${_pkgname}" || exit
-  cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	cd "$srcdir/$_gitdir"
+	git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
-  cd "${_pkgname}" || exit
-  export RUSTUP_TOOLCHAIN=stable
-  export CARGO_TARGET_DIR=target
-  cargo build --frozen --release --features cli,daemon
+	cd "$srcdir/$_gitdir"
+	make build
 }
 
 package() {
-  cd "${_pkgname}" || exit
-  make DESTDIR="${pkgdir}" install
+	cd "$srcdir/$_gitdir"
+	make DESTDIR="$pkgdir" install
 }
-
