@@ -24,14 +24,14 @@ sha512sums=('6bde39ab63baee8b4939dcc792c8bae39b9c1283121a26677b60b8184743a221d9e
 build() {
   cd "${_pkgname}-${pkgver}"
   # https://github.com/PyAV-Org/PyAV/issues/817
-  PKG_CONFIG_PATH=/usr/lib/ffmpeg4.4/pkgconfig
+  PKG_CONFIG_PATH=/usr/lib/ffmpeg4.4/pkgconfig \
   python setup.py build
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
-  install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/python-av/LICENSE"
+  install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 # vim:set ts=2 sw=2 et:
 
