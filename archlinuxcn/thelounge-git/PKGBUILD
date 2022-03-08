@@ -2,13 +2,13 @@
 pkgname=thelounge-git
 _realname=thelounge
 pkgver=v4.3.1.7329
-pkgrel=1
+pkgrel=2
 pkgdesc='Modern self-hosted web IRC client'
 url='https://thelounge.chat/'
 arch=('any')
 license=('MIT')
 depends=("nodejs")
-makedepends=('yarn' 'git' 'python2' 'npm')
+makedepends=('yarn' 'git' 'python' 'npm')
 conflicts=('thelounge')
 backup=('etc/thelounge/config.js')
 source=(
@@ -22,7 +22,7 @@ sha256sums=('SKIP'
             'c92210f6ac8f01c1cd01b6b26793094cd2feea583ed21fab3564d6bcafdc7a20'
             'c609f3309f54bd6285e99ff29ca2464828bec7bbbca67243ee688bd2d605dbf0'
             '30fab63b8a4ffcfdda4c5b8d7c66822a323c4f1de6ca62b77fe9500f4befc0a5'
-            'df4f110f8457a6727b5d3d1fead19d01d754f92563952699c3ef413c72366446')
+            'c07fc7aaa91f6d2407d9ea2d15bfa780bfc06e3487efa138a9385307dcf9f41d')
 
 pkgver() {
     cd $_realname
@@ -32,28 +32,27 @@ pkgver() {
 prepare(){
     echo /etc/thelounge > "$_realname/.thelounge_home"
     cd $_realname
-    yarn install --frozen-lockfile --non-interactive --ignore-optional --ignore-scripts
+    yarn install --frozen-lockfile --non-interactive --ignore-scripts --cache-folder "$srcdir/yarn-cache"
 }
 
 build() {
     cd $_realname
     export NODE_ENV=production
     yarn build
-    npm pack .
+    yarn pack --filename "$pkgname-$pkgver.tar.gz" .
 }
 
 
 package() {
     cd $_realname
-    version=`git describe --abbrev=0`
     export NODE_ENV=production
-    npm install -g --prefix "$pkgdir/usr" "./$_realname-${version#v}.tgz" \
-        --cache "${srcdir}/npm-cache" --build-from-source=sqlite3
+    yarn global add --frozen-lockfile --non-interactive --ignore-scripts --cache-folder "$srcdir/yarn-cache" \
+    --prefix "$pkgdir/usr" --global-folder "$pkgdir/opt/thelounge" --offline file:"$(pwd)/$pkgname-$pkgver.tar.gz"
 
     # Non-deterministic race in npm gives 777 permissions to random directories.
     # See https://github.com/npm/npm/issues/9359 for details.
-find "${pkgdir}"/usr -type d -exec chmod 755 {} +
-    find "${pkgdir}" -type f -name .DS_Store -delete
+find "${pkgdir}" -type f -name .DS_Store -delete
+    find "${pkgdir}"/{usr,opt} -type d -exec chmod 755 {} +
 
     # npm gives ownership of ALL FILES to build user
     # https://bugs.archlinux.org/task/63396
