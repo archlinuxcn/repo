@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=maptools
-_pkgver=1.1-2
+_pkgver=1.1-3
 pkgname=r-${_pkgname,,}
-pkgver=1.1.2
+pkgver=1.1.3
 pkgrel=1
 pkgdesc='Tools for Handling Spatial Objects'
 arch=('x86_64')
@@ -28,7 +28,7 @@ optdepends=(
   r-spatstat.utils
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('3995c96e8472cd6717fe3cbd3506358ff460b6c2cf92dbe4b00f75f507514439')
+sha256sums=('f0f6610ea81c6a5eac27fafb80cf49caebe98dc862ad075f0a54cab63081bb47')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
