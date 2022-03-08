@@ -5,7 +5,7 @@ _ver=0.1.215
 # upstream version
 _pkgver=${_ver}-2
 # package version
-pkgver=${_ver}.1
+pkgver=${_ver}.2
 pkgrel=1
 pkgdesc='virtio drivers for Windows 7 and newer guests'
 arch=('any')
