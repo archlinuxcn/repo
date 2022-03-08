@@ -3,7 +3,7 @@
 _pkgname=rescrobbled
 pkgname="${_pkgname}-git"
 pkgver=0.5.2.r0.ge70f327
-pkgrel=1
+pkgrel=2
 pkgdesc="Music scrobbler daemon using the MPRIS D-Bus interface."
 arch=('x86_64')
 url="https://github.com/InputUsername/rescrobbled"
@@ -46,6 +46,8 @@ package() {
   cd "${srcdir}/${_pkgname}"
   install -Dm755 -t "$pkgdir/usr/bin/" "target/release/${_pkgname}"
   install -Dm644 -t "$pkgdir/usr/share/licenses/${_pkgname}/" LICENSE
-  install -Dm644 -t "$pkgdir/usr/lib/systemd/user" rescrobbled.service
+
+  # Note: Use our own service file, not the upstream's.
+  install -Dm644 -t "${pkgdir}/usr/lib/systemd/user/" "${srcdir}/rescrobbled.service"
 }
 
