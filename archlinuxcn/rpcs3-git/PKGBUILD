@@ -1,8 +1,8 @@
-# Maintainer: Zion Nimchuk <zionnimchuk@gmail.com>
+# Maintainer: Zion Nimchuk <zionnimchuk@gmail.com
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.21.13331.e33b130606
+pkgver=0.0.21.13334.00f676322
 pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator'
 arch=(x86_64)
@@ -12,8 +12,6 @@ depends=(
   alsa-lib
   glew
   glu
-  libavcodec.so
-  libavutil.so
   libevdev
   libgl
   libice
@@ -21,7 +19,6 @@ depends=(
   libpng
   libpulse
   libsm
-  libswscale.so
   libx11
   libxext
   openal
@@ -35,7 +32,7 @@ depends=(
   curl
   wolfssl
   pugixml
-  ffmpeg
+  ffmpeg4.4
 )
 makedepends=(
   cmake
@@ -51,10 +48,8 @@ source=(
   git+https://github.com/RPCS3/rpcs3.git
   rpcs3-llvm::git+https://github.com/RPCS3/llvm-mirror.git
   git+https://github.com/KhronosGroup/glslang.git
-  git+https://github.com/google/flatbuffers.git
 )
 sha256sums=(
-  SKIP
   SKIP
   SKIP
   SKIP
@@ -71,14 +66,13 @@ pkgver() {
 
 prepare() {
   cd rpcs3
-
-  git submodule init 3rdparty/glslang/glslang llvm 3rdparty/flatbuffers
+  
+  git submodule init 3rdparty/glslang/glslang llvm
   git config submodule.3rdparty/glslang.url ../glslang
-  git config submodule.3rdparty/flatbuffers.url ../flatbuffers
   git config submodule.llvm.url ../rpcs3-llvm
-
+  
   SUBMODULES=($(git config --file .gitmodules --get-regexp path | \
-    awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/llvm/ && !/glslang/ && !/wolfssl/ && !/pugixml/ && !/flatbuffers/'))
+    awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/llvm/ && !/glslang/ && !/wolfssl/ && !/pugixml/'))
 
   # We need to convert from a relative folder path to a https://github.com path
   for ((i=0;i<${#SUBMODULES[@]};i+=2))
@@ -96,10 +90,12 @@ prepare() {
     git submodule update --init --depth=1 $path
   done
 
-  git submodule update 3rdparty/glslang/glslang llvm 3rdparty/flatbuffers
+  git submodule update 3rdparty/glslang/glslang llvm
 }
 
 build() {
+  export PKG_CONFIG_PATH=/usr/lib/ffmpeg4.4/pkgconfig
+
   cmake -S rpcs3 -B build \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
