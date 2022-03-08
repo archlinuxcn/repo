@@ -21,8 +21,9 @@ def pre_build():
             checks = checks + '2'
 
         # remove .DS_Store
-        if line.strip() == 'find "${pkgdir}"/usr -type d -exec chmod 755 {} +':
-            line = 'find "${pkgdir}"/usr -type d -exec chmod 755 {} +\n    find "${pkgdir}" -type f -name .DS_Store -delete'
+        command = 'find "${pkgdir}"/{usr,opt} -type d -exec chmod 755 {} +'
+        if line.strip() == command:
+            print('find "${pkgdir}" -type f -name .DS_Store -delete')
             checks = checks + '3'
 
         print(line)
