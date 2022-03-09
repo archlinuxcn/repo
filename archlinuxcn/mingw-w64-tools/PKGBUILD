@@ -1,10 +1,12 @@
 pkgname=mingw-w64-tools
 pkgver=9.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="MinGW-w64 utilities"
 arch=(i686 x86_64)
 url="http://mingw-w64.sourceforge.net"
 license=("GPL3" "LGPL2")
+
+
 options=(!libtool !emptydirs)
 validpgpkeys=('CAF5641F74F7DFBA88AE205693BDB53CD4EBC740')
 source=(https://sourceforge.net/projects/mingw-w64/files/mingw-w64/mingw-w64-release/mingw-w64-v${pkgver}.tar.bz2{,.sig})
