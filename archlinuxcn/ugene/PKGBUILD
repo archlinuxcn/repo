@@ -18,33 +18,30 @@ depends=(
 )
 makedepends=(
   cuda
-  gendesk
   qt5-tools
   opencl-headers
 )
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ugeneunipro/ugene/archive/refs/tags/${pkgver}.tar.gz"
-        # "ugene.desktop"
-)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ugeneunipro/ugene/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=('200159838d2d2a4a701be8fb51b0e00c0ca52c4054d72c42cdd6913bbef56d53')
 
 prepare() {
-  echo "generating desktop file"
-  gendesk -f -n --pkgname ${_pkgname} \
-    --pkgdesc "${pkgdesc}" \
-    --categories "Education;Science" \
-    --icon "${_pkgname}" \
-    --mimetypes "application/x-ugene-fa;application/x-ugene-uprj;application/x-ugene-uwl;application/x-ugene-uql;application/x-ugene-abi;application/x-ugene-aln;application/x-ugene-embl;application/x-ugene-sw;application/x-ugene-fastq;application/x-ugene-gb;application/x-ugene-gff;application/x-ugene-msf;application/x-ugene-newick;application/x-ugene-pdb;application/x-ugene-sam-bam;application/x-ugene-srfa;application/x-ugene-sto;application/x-ugene-db;application/x-ugene-scf;application/x-ugene-mmdb;application/x-ugene-hmm;" \
-    --exec "/opt/ugene/ugeneui"
-
   sed -i "s#16384#16384l#" "${_pkgname}-${pkgver}/src/libs_3rdparty/breakpad/src/client/linux/handler/exception_handler.cc"
   cp -a ${_pkgname}-${pkgver} ${_pkgname}-cuda-${pkgver}
 }
 
 build() {
-  cd "${_pkgname}-${pkgver}"
-  qmake \
+  # run twice to generate the right installation files
+  # see https://github.com/ugeneunipro/ugene/issues/683#issuecomment-1046370388
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  qmake -r \
     CONFIG+=x64 \
-    PREFIX=/opt/${_pkgname} \
+    UGENE_CUDA_DETECTED=0 \
+    UGENE_OPENCL_DETECTED=1 \
+    UGENE_USE_BUNDLED_ZLIB=0 \
+    UGENE_USE_SYSTEM_SQLITE=1
+  make
+  qmake -r \
+    CONFIG+=x64 \
     UGENE_CUDA_DETECTED=0 \
     UGENE_OPENCL_DETECTED=1 \
     UGENE_USE_BUNDLED_ZLIB=0 \
@@ -54,23 +51,37 @@ build() {
   cd "${srcdir}/${_pkgname}-cuda-${pkgver}"
   CUDA_LIB_PATH=/opt/cuda/lib64 \
   CUDA_INC_PATH=/opt/cuda/include \
-  qmake \
+  qmake -r \
     CONFIG+=x64 \
-    PREFIX=/opt/${_pkgname} \
     UGENE_CUDA_DETECTED=1 \
     UGENE_OPENCL_DETECTED=1 \
     UGENE_USE_BUNDLED_ZLIB=0 \
     UGENE_USE_SYSTEM_SQLITE=1
+  make
   CUDA_LIB_PATH=/opt/cuda/lib64 \
   CUDA_INC_PATH=/opt/cuda/include \
+  qmake -r \
+    CONFIG+=x64 \
+    UGENE_CUDA_DETECTED=1 \
+    UGENE_OPENCL_DETECTED=1 \
+    UGENE_USE_BUNDLED_ZLIB=0 \
+    UGENE_USE_SYSTEM_SQLITE=1
   make
 }
 
 package_ugene() {
   cd "${pkgname}-${pkgver}"
-  make INSTALL_ROOT=${pkgdir} install
+  make install
+  install -d "${pkgdir}/usr/bin"
   install -d "${pkgdir}/usr/share/applications"
-  install -Dm644 "${srcdir}/${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
+  install -d "${pkgdir}/usr/share/pixmaps"
+  # files installed to dist, move them to ${pkgdir}
+  cp -a "${srcdir}/${pkgname}-${pkgver}/dist" "${pkgdir}/opt"
+  mv -vf "${pkgdir}/opt/${_pkgname}-${pkgver}/${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
+  ln -sf "/opt/${_pkgname}-${pkgver}/ugene" "${pkgdir}/usr/bin/ugene"
+  ln -sf "/opt/${_pkgname}-${pkgver}/ugeneui" "${pkgdir}/usr/bin/ugeneui"
+  ln -sf "/opt/${_pkgname}-${pkgver}/ugenecl" "${pkgdir}/usr/bin/ugenecl"
+  mv -vf "${pkgdir}/opt/${_pkgname}-${pkgver}/${_pkgname}.png" "${pkgdir}/usr/share/pixmaps"
 }
 
 package_ugene-cuda() {
@@ -81,11 +92,17 @@ package_ugene-cuda() {
     cuda
 )
   cd "${pkgname}-${pkgver}"
-  CUDA_LIB_PATH=/opt/cuda/lib64 \
-  CUDA_INC_PATH=/opt/cuda/include \
-  make INSTALL_ROOT=${pkgdir} install
+  make install
+  install -d "${pkgdir}/usr/bin"
   install -d "${pkgdir}/usr/share/applications"
-  install -Dm644 "${srcdir}/${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
+  install -d "${pkgdir}/usr/share/pixmaps"
+  # files installed to dist, move them to ${pkgdir}
+  cp -av "${srcdir}/${pkgname}-${pkgver}/dist" "${pkgdir}/opt"
+  mv -vf "${pkgdir}/opt/${_pkgname}-${pkgver}/${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
+  ln -sf "/opt/${_pkgname}-${pkgver}/ugene" "${pkgdir}/usr/bin/ugene"
+  ln -sf "/opt/${_pkgname}-${pkgver}/ugeneui" "${pkgdir}/usr/bin/ugeneui"
+  ln -sf "/opt/${_pkgname}-${pkgver}/ugenecl" "${pkgdir}/usr/bin/ugenecl"
+  mv -vf "${pkgdir}/opt/${_pkgname}-${pkgver}/${_pkgname}.png" "${pkgdir}/usr/share/pixmaps"
 }
 # vim:set ts=2 sw=2 et:
 
