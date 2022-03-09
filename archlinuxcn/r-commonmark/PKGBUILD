@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=commonmark
-_pkgver=1.7
+_pkgver=1.8.0
 pkgname=r-${_pkgname,,}
-pkgver=1.7
+pkgver=1.8.0
 pkgrel=1
 pkgdesc='High Performance CommonMark and Github Markdown Rendering in R'
 arch=('x86_64')
@@ -18,7 +18,7 @@ optdepends=(
   r-xml2
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('d14a767a3ea9778d6165f44f980dd257423ca6043926e3cd8f664f7171f89108')
+sha256sums=('7d07e72937b1cf158e69f183722bf79dbb91b8967a9dd29f4fa145500c2be668')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
