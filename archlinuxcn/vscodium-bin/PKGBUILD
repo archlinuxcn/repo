@@ -7,7 +7,7 @@
 
 pkgname=vscodium-bin
 _pkgname=VSCodium
-pkgver=1.65.0
+pkgver=1.65.1
 pkgrel=1
 pkgdesc="Binary releases of VS Code without MS branding/telemetry/licensing."
 arch=('x86_64' 'aarch64' 'armv7h')
@@ -26,9 +26,9 @@ conflicts=('vscodium' 'vscodium-git')
 
 sha256sums=('a665ef6e2a1711df2552d7ae49fd7f30f7a2d7e0dea71c7c5f4c90764d8c37ce'
             'fd6b46c021e4f0b75d27fcf67481019dbbaa7059ea186437a47a6b6ae8bb574f')
-sha256sums_x86_64=('3bd468e79607df15527112f0add11c5c2614ac7b305406a9c047593da75c6828')
-sha256sums_aarch64=('cf668912407660ac723fa506fd9dc20495153dd643c01d66f23efada3787b303')
-sha256sums_armv7h=('1e44ae5896b437801f8bd317a819d55c02609949e128cf0ea961916d21291853')
+sha256sums_x86_64=('834cd846c63416f5834a1e6376bf5fa05bb7d13775cd622042ddd0281862f727')
+sha256sums_aarch64=('195b34f5612c25e4b16851d1aa20afb2b0ee7438e00b2ed2f8192ac26ab24ddb')
+sha256sums_armv7h=('365645611d47b9d72c508017f52e52244f514e71c34bff80eb8c25404da426c6')
 source=('vscodium-bin.desktop'
         'vscodium-bin-uri-handler.desktop')
 source_x86_64=("https://github.com/VSCodium/vscodium/releases/download/${pkgver}/${_pkgname}-linux-x64-${pkgver}.tar.gz")
