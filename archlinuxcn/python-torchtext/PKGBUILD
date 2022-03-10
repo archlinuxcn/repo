@@ -2,7 +2,7 @@
 
 pkgname=python-torchtext
 _pkgname=text
-pkgver=0.11.2
+pkgver=0.12.0
 pkgrel=1
 pkgdesc='Data loaders and abstractions for text and NLP'
 arch=('x86_64')
