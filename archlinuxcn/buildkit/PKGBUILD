@@ -1,6 +1,6 @@
 # Maintainer: Songmin Li <lisongmin@protonmail.com>
 pkgname=buildkit
-pkgver=0.9.3
+pkgver=0.10.0
 pkgrel=1
 pkgdesc='A toolkit for converting source code to build artifacts in an efficient, expressive and repeatable manner.'
 makedepends=('go')
@@ -10,7 +10,7 @@ url='https://github.com/moby/buildkit'
 license=('Apache')
 provides=('buildkit')
 source=(${pkgname}-${pkgver}.tar.gz::https://github.com/moby/${pkgname}/archive/v${pkgver}.tar.gz)
-sha256sums=('abe8a15d28c2df05e0eb03a262db16775ca5d46587e8422a87eae9b0e6df35e6')
+sha256sums=('5877faf02cbddfb6c988f44b5b373739fed87f4aeb8802c6777fe7be2f772506')
 
 build() {
   export CGO_CPPFLAGS="${CPPFLAGS}"
