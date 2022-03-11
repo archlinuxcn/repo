@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=caret
-_pkgver=6.0-90
+_pkgver=6.0-91
 pkgname=r-${_pkgname,,}
-pkgver=6.0.90
+pkgver=6.0.91
 pkgrel=1
 pkgdesc='Classification and Regression Training'
 arch=('x86_64')
@@ -56,7 +56,7 @@ optdepends=(
   r-themis
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('e851a4ed7d939c665e57e3551a5464b09fe4285e7c951236efdd890b0da866bc')
+sha256sums=('bfd52ddb8f8563dadb9f038884d3e4a9c9d2a1e5d449a052e8e287e358287dcd')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
