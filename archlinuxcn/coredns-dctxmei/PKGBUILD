@@ -4,8 +4,8 @@
 
 pkgname=coredns-dctxmei
 _pkgname=coredns
-pkgver=1.9.0
-pkgrel=3
+pkgver=1.9.1
+pkgrel=1
 pkgdesc="A DNS server that chains plugins"
 arch=('x86_64')
 url="https://github.com/coredns/coredns"
@@ -18,7 +18,7 @@ backup=('etc/coredns/Corefile')
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "Corefile"
         "coredns.service")
-sha256sums=('f027926c520e63aa7ec134ea89ca0aac5eaaefef7eeb0e5417e063611de37d49'
+sha256sums=('e2181568a8d14147cc1c690dfc2cf560ff1abd0b4e2d65db94c4b9d792390bd5'
             '8996ce8a79d5d4d2015fe69325f9116533d1fc18368198b05ac63af632a51eee'
             '351e88aed0d57e0777ecf7d4ba8d6ae77aa9020c8b7c25ea6d45541abeef11bf')
 
