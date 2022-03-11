@@ -16,7 +16,7 @@
  #endif
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -6251,11 +6251,18 @@ function onViewToolbarsPopupShowing(aEve
+@@ -6451,11 +6451,18 @@ function onViewToolbarsPopupShowing(aEve
    MozXULElement.insertFTLIfNeeded("browser/toolbarContextMenu.ftl");
    let firstMenuItem = aInsertPoint || popup.firstElementChild;
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
@@ -47,7 +47,7 @@
            <menupopup id="organizeButtonPopup">
 --- a/dom/xul/XULPopupElement.cpp
 +++ b/dom/xul/XULPopupElement.cpp
-@@ -211,6 +211,10 @@ void XULPopupElement::GetState(nsString&
+@@ -207,6 +207,10 @@ void XULPopupElement::GetState(nsString&
    // set this here in case there's no frame for the popup
    aState.AssignLiteral("closed");
  
@@ -58,7 +58,7 @@
    if (nsXULPopupManager* pm = nsXULPopupManager::GetInstance()) {
      switch (pm->GetPopupState(this)) {
        case ePopupShown:
-@@ -233,6 +237,11 @@ void XULPopupElement::GetState(nsString&
+@@ -229,6 +233,11 @@ void XULPopupElement::GetState(nsString&
          break;
      }
    }
@@ -72,7 +72,7 @@
  nsINode* XULPopupElement::GetTriggerNode() const {
 --- a/dom/xul/moz.build
 +++ b/dom/xul/moz.build
-@@ -83,4 +83,9 @@ LOCAL_INCLUDES += [
+@@ -82,4 +82,9 @@ LOCAL_INCLUDES += [
  
  include("/ipc/chromium/chromium-config.mozbuild")
  
@@ -84,7 +84,7 @@
  FINAL_LIBRARY = "xul"
 --- a/layout/build/moz.build
 +++ b/layout/build/moz.build
-@@ -68,6 +68,10 @@ elif CONFIG["MOZ_WIDGET_TOOLKIT"] == "an
+@@ -70,6 +70,10 @@ elif CONFIG["MOZ_WIDGET_TOOLKIT"] == "an
          "/dom/system",
          "/dom/system/android",
      ]
@@ -97,7 +97,7 @@
      "components.conf",
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -301,6 +301,9 @@ pref("dom.mouseevent.click.hack.use_lega
+@@ -310,6 +310,9 @@ pref("dom.mouseevent.click.hack.use_lega
  // Fastback caching - if this pref is negative, then we calculate the number
  // of content viewers to cache based on the amount of available memory.
  pref("browser.sessionhistory.max_total_viewers", -1);
@@ -125,7 +125,7 @@
  }
 --- a/widget/gtk/moz.build
 +++ b/widget/gtk/moz.build
-@@ -33,6 +33,7 @@
+@@ -34,6 +34,7 @@ EXPORTS += [
  EXPORTS.mozilla += ["WidgetUtilsGtk.h"]
  
  EXPORTS.mozilla.widget += [
@@ -133,18 +133,11 @@
      "WindowSurface.h",
      "WindowSurfaceProvider.h",
  ]
-@@ -45,6 +46,7 @@
-     "MozContainer.cpp",
-     "MPRISServiceHandler.cpp",
-     "NativeKeyBindings.cpp",
-+    "NativeMenuSupport.cpp",
-     "nsApplicationChooser.cpp",
-     "nsAppShell.cpp",
-     "nsBidiKeyboard.cpp",
-@@ -70,6 +72,15 @@
+@@ -71,6 +72,16 @@ UNIFIED_SOURCES += [
  
  SOURCES += [
      "MediaKeysEventSourceFactory.cpp",
++    "NativeMenuSupport.cpp",
 +    "nsDbusmenu.cpp",
 +    "nsMenu.cpp", # conflicts with X11 headers
 +    "nsMenuBar.cpp",
@@ -157,7 +150,7 @@
      "nsNativeThemeGTK.cpp",  # conflicts with X11 headers
      "nsWindow.cpp",  # conflicts with X11 headers
      "WaylandVsyncSource.cpp",  # conflicts with X11 headers
-@@ -138,6 +149,7 @@
+@@ -138,6 +149,7 @@ LOCAL_INCLUDES += [
      "/layout/base",
      "/layout/forms",
      "/layout/generic",
@@ -5060,7 +5053,7 @@
 +#endif /* __nsNativeMenuService_h__ */
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
-@@ -6436,6 +6436,10 @@ void nsWindow::HideWindowChrome(bool aSh
+@@ -7122,6 +7122,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5073,7 +5066,7 @@
    nsIRollupListener* rollupListener = GetActiveRollupListener();
 --- a/widget/gtk/nsWindow.h
 +++ b/widget/gtk/nsWindow.h
-@@ -39,6 +39,8 @@
+@@ -26,6 +26,8 @@
  #include "nsRefPtrHashtable.h"
  #include "IMContextWrapper.h"
  
@@ -5082,8 +5075,8 @@
  #ifdef ACCESSIBILITY
  #  include "mozilla/a11y/LocalAccessible.h"
  #endif
-@@ -168,6 +170,8 @@ class nsWindow final : public nsBaseWidg
-                           nsIScreen* aTargetScreen = nullptr) override;
+@@ -171,6 +173,8 @@ class nsWindow final : public nsBaseWidg
+   nsresult MakeFullScreen(bool aFullScreen) override;
    void HideWindowChrome(bool aShouldHide) override;
  
 +  void SetMenuBar(mozilla::UniquePtr<nsMenuBar> aMenuBar);
@@ -5091,15 +5084,15 @@
    /**
     * GetLastUserInputTime returns a timestamp for the most recent user input
     * event.  This is intended for pointer grab requests (including drags).
-@@ -708,6 +712,8 @@ class nsWindow final : public nsBaseWidg
-   static GtkWindowDecoration sGtkWindowDecoration;
+@@ -828,6 +832,8 @@ class nsWindow final : public nsBaseWidg
  
    static bool sTransparentMainWindow;
-+
-+  mozilla::UniquePtr<nsMenuBar> mMenuBar;
  
++  mozilla::UniquePtr<nsMenuBar> mMenuBar;
++
  #ifdef ACCESSIBILITY
    RefPtr<mozilla::a11y::LocalAccessible> mRootAccessible;
+ 
 --- /dev/null
 +++ b/xpcom/ds/NativeMenuAtoms.py
 @@ -0,0 +1,9 @@
@@ -5122,7 +5115,7 @@
  import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
-@@ -2506,7 +2507,7 @@ STATIC_ATOMS = [
+@@ -2527,7 +2528,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
      # END ATOMS
@@ -5133,7 +5126,7 @@
  
 --- a/widget/gtk/components.conf
 +++ b/widget/gtk/components.conf
-@@ -82,6 +82,14 @@ Classes = [
+@@ -76,6 +76,14 @@ Classes = [
          'headers': ['/widget/gtk/nsApplicationChooser.h'],
          'processes': ProcessSelector.MAIN_PROCESS_ONLY,
      },
@@ -5161,7 +5154,7 @@
  #endif
 --- /dev/null
 +++ b/widget/gtk/NativeMenuSupport.cpp
-@@ -0,0 +1,25 @@
+@@ -0,0 +1,26 @@
 +/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -5171,6 +5164,7 @@
 +
 +#include "MainThreadUtils.h"
 +#include "nsINativeMenuService.h"
++#include "nsServiceManagerUtils.h"
 +
 +namespace mozilla::widget {
 +
@@ -5223,7 +5217,7 @@
 +#endif  // mozilla_widget_NativeMenuSupport_h
 --- a/widget/moz.build
 +++ b/widget/moz.build
-@@ -144,6 +144,11 @@ EXPORTS += [
+@@ -139,6 +139,11 @@ EXPORTS += [
      "PuppetWidget.h",
  ]
  
