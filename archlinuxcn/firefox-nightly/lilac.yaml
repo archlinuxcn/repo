@@ -4,7 +4,7 @@ update_on:
 - source: cmd
   cmd: curl -sS https://ftp.mozilla.org/pub/firefox/nightly/latest-mozilla-central/
     | grep -A2 'firefox-.*.en-US.linux-x86_64.tar.bz2' | grep -oP '(?<=firefox-).+?(?=\.en-US)|\b\d+-\w+-\d+
-    \d+:\d+\b' | tail -2 | xargs
+    \d+:\d+\b' | uniq | sed 'N;s/\n/ /' | sort -V | tail -1
   lilac_throttle: 3d
 - source: manual
   manual: 3
