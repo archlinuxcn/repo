@@ -5,7 +5,7 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=97.0.2
+pkgver=98.0
 pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
@@ -15,7 +15,7 @@ depends=(gtk3 libxt mime-types dbus-glib nss ttf-font libpulse ffmpeg4.4)
 makedepends=(unzip zip diffutils yasm mesa imake inetutils xorg-server-xvfb
              autoconf2.13 rust clang llvm jack nodejs cbindgen nasm
              python-setuptools python-psutil python-zstandard git binutils lld dump_syms
-             wasi-compiler-rt wasi-libc wasi-libc++ wasi-libc++abi)
+             wasi-compiler-rt wasi-libc wasi-libc++ wasi-libc++abi) # pciutils: only to avoid some PGO warning
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
@@ -27,19 +27,19 @@ backup=('usr/lib/librewolf/librewolf.cfg'
 options=(!emptydirs !makeflags !strip !lto !debug)
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
 # _source_tag=
-_source_commit='272f05d69b40953729bf05a1d7acda69f30804e6' # !20 is not merged yet
+_source_commit='ac5ab3d9d9a64e0e39f9ce60bd14d83318e9636e'
 # _common_tag="v${pkgver}-${pkgrel}"
-# _settings_tag='5.5'
-_settings_commit='f88024283b0dfb60fcaea9a3374aa6ea036260f5' # 5.5 with updated ublock
+_settings_tag='6.0'
+# _settings_commit='d049197f6b31636a18cd410a3dce1a7c9fca8e4c' # 5.5 with updated ublock
 install='librewolf.install'
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         $pkgname.desktop
         "git+https://gitlab.com/${pkgname}-community/browser/source.git#tag=${_source_commit}"
-        "git+https://gitlab.com/${pkgname}-community/settings.git#tag=${_settings_commit}"
+        "git+https://gitlab.com/${pkgname}-community/settings.git#tag=${_settings_tag}"
         "default192x192.png"
         )
 source_aarch64=("${pkgver}-${pkgrel}_build-arm-libopus.patch::https://raw.githubusercontent.com/archlinuxarm/PKGBUILDs/master/extra/firefox/build-arm-libopus.patch")
-sha256sums=('c9f127741beabde78b021dc95b1740259d01677d461400682cb30e072126f075'
+sha256sums=('fd0a4c11d007d9045706667eb0f99f9b7422945188424cb937bfef530cb6f4dd'
             'SKIP'
             '0b28ba4cc2538b7756cb38945230af52e8c4659b2006262da6f3352345a8bed2'
             'SKIP'
@@ -47,6 +47,10 @@ sha256sums=('c9f127741beabde78b021dc95b1740259d01677d461400682cb30e072126f075'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1')
 sha256sums_aarch64=('2d4d91f7e35d0860225084e37ec320ca6cae669f6c9c8fe7735cdbd542e3a7c9')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
+
+# change this to 1 if you want to try running a PGO build for aarch64 as well
+# currently seemingly broken on our build instances (as of 2022-03-10 / v98.0)
+_build_profiled_aarch64=false
 
 prepare() {
   mkdir -p mozbuild
@@ -97,7 +101,6 @@ ac_add_options --disable-tests
 # options for ci / weaker build systems
 # mk_add_options MOZ_MAKE_FLAGS="-j4"
 # ac_add_options --enable-linker=gold
-
 # wasi
 ac_add_options --with-wasi-sysroot=/usr/share/wasi-sysroot
 END
@@ -136,10 +139,6 @@ fi
   # Remove some pre-installed addons that might be questionable
   patch -Np1 -i ${_patches_dir}/remove_addons.patch
 
-  # Disable (some) megabar functionality
-  # Adapted from https://github.com/WesleyBranton/userChrome.css-Customizations
-  patch -Np1 -i ${_patches_dir}/removed-patches/megabar.patch
-
   # Debian patch to enable global menubar
   # disabled for the default build, as it seems to cause issues in some configurations
   # 2022-01-21: re-enabled because it seems to not mess things up anymore nowadays?
@@ -154,7 +153,7 @@ fi
   patch -Np1 -i ${_patches_dir}/sed-patches/disable-pocket.patch
 
   # remove mozilla vpn ads
-  patch -Np1 -i ${_patches_dir}/mozilla-vpn-ad.patch
+  patch -Np1 -i ${_patches_dir}/mozilla-vpn-ad2.patch
 
   # Remove Internal Plugin Certificates
   # patch -Np1 -i ${_patches_dir}/sed-patches/remove-internal-plugin-certs.patch
@@ -200,7 +199,7 @@ fi
   patch -Np1 -i ${_patches_dir}/ui-patches/pref-naming.patch
 
   #
-  patch -Np1 -i ${_patches_dir}/ui-patches/hide-safe-browsing.patch
+  patch -Np1 -i ${_patches_dir}/ui-patches/privacy-preferences.patch
 
   # remove firefox references in the urlbar, when suggesting opened tabs.
   patch -Np1 -i ${_patches_dir}/ui-patches/remove-branding-urlbar.patch
@@ -243,66 +242,76 @@ build() {
   # CFLAGS="${CFLAGS/-fno-plt/}"
   # CXXFLAGS="${CXXFLAGS/-fno-plt/}"
 
-  # Do 3-tier PGO
-  echo "Building instrumented browser..."
+  local _run_pgo_build=true
 
-if [[ $CARCH == 'aarch64' ]]; then
+  if [[ $CARCH == 'aarch64' ]]; then
+    _run_pgo_build=$_build_profiled_aarch64
+  fi
 
-  cat >.mozconfig ../mozconfig - <<END
+  if [[ $_run_pgo_build == true ]]; then
+
+    # Do 3-tier PGO
+    echo "Building instrumented browser..."
+
+    if [[ $CARCH == 'aarch64' ]]; then
+
+    cat >.mozconfig ../mozconfig - <<END
 ac_add_options --enable-profile-generate
 END
 
-else
+    else
 
-  cat >.mozconfig ../mozconfig - <<END
+    cat >.mozconfig ../mozconfig - <<END
 ac_add_options --enable-profile-generate=cross
 END
 
-fi
+    fi
 
-  ./mach build
+    ./mach build
 
-  echo "Profiling instrumented browser..."
-  ./mach package
-  LLVM_PROFDATA=llvm-profdata \
-    JARLOG_FILE="$PWD/jarlog" \
-    xvfb-run -s "-screen 0 1920x1080x24 -nolisten local" \
-    ./mach python build/pgo/profileserver.py
+    echo "Profiling instrumented browser..."
+    ./mach package
+    LLVM_PROFDATA=llvm-profdata \
+      JARLOG_FILE="$PWD/jarlog" \
+      xvfb-run -s "-screen 0 1920x1080x24 -nolisten local" \
+      ./mach python build/pgo/profileserver.py
 
-  stat -c "Profile data found (%s bytes)" merged.profdata
-  test -s merged.profdata
+    stat -c "Profile data found (%s bytes)" merged.profdata
+    test -s merged.profdata
 
-  stat -c "Jar log found (%s bytes)" jarlog
-  test -s jarlog
+    stat -c "Jar log found (%s bytes)" jarlog
+    test -s jarlog
 
-  echo "Removing instrumented browser..."
-  ./mach clobber
+    echo "Removing instrumented browser..."
+    ./mach clobber
 
-  echo "Building optimized browser..."
+    echo "Building optimized browser..."
 
-if [[ $CARCH == 'aarch64' ]]; then
+    if [[ $CARCH == 'aarch64' ]]; then
 
-  cat >.mozconfig ../mozconfig - <<END
+    cat >.mozconfig ../mozconfig - <<END
 ac_add_options --enable-lto
 ac_add_options --enable-profile-use
 ac_add_options --with-pgo-profile-path=${PWD@Q}/merged.profdata
 ac_add_options --with-pgo-jarlog=${PWD@Q}/jarlog
-ac_add_options --enable-linker=lld
 END
 
-else
+    else
 
-  cat >.mozconfig ../mozconfig - <<END
+    cat >.mozconfig ../mozconfig - <<END
 ac_add_options --enable-lto=cross
 ac_add_options --enable-profile-use=cross
 ac_add_options --with-pgo-profile-path=${PWD@Q}/merged.profdata
 ac_add_options --with-pgo-jarlog=${PWD@Q}/jarlog
-ac_add_options --enable-linker=lld
-ac_add_options --disable-elf-hack
-ac_add_options --disable-bootstrap
 END
 
-fi
+    fi
+  fi # end $_run_pgo_build
+
+    cat >.mozconfig ../mozconfig - <<END
+ac_add_options --enable-linker=lld
+ac_add_options --disable-bootstrap
+END
 
   ./mach build
 
