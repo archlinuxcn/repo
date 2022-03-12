@@ -5,7 +5,7 @@
 
 pkgname=dia-git
 _pkgname=dia
-pkgver=6666.0997887d9
+pkgver=6667.e866497fe
 pkgrel=1
 pkgdesc="A GTK+ based diagram creation program (GIT VERSION)"
 arch=('x86_64')
@@ -17,8 +17,8 @@ optdepends=('python2')
 provides=('dia')
 conflicts=('dia')
 options=('docs' '!emptydirs')
-source=("git+https://gitlab.gnome.org/GNOME/dia.git")
-md5sums=('SKIP')
+source=("git+https://gitlab.gnome.org/GNOME/dia.git" "pdf-import.patch")
+md5sums=('SKIP' 'dbf8336aeaa854be4a60d4588c8fb0b2')
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
@@ -35,8 +35,8 @@ prepare() {
   sed -i 's/python23/python3/g' build-aux/*.py
   sed -i 's|#include "tool-icons.h"||g' objects/standard/outline.c
   sed -i 's/22.0.0/99.0.0/g' meson.build
-  sed -i 's/PDFDoc \*doc/std::unique_ptr<PDFDoc> doc/g' plug-ins/pdf/pdf-import.cpp
-  sed -i 's/delete doc/doc.reset()/g' plug-ins/pdf/pdf-import.cpp
+  sed -i '/  sheet,/d' sheets/meson.build
+  patch -p0 < ../pdf-import.patch
 }
 
 build() {

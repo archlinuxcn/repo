@@ -1,0 +1,26 @@
+--- plug-ins/pdf/pdf-import.cpp	2022-03-12 08:17:49.242369295 +0800
++++ plug-ins/pdf/pdf-import.cpp	2022-03-12 08:19:04.302435181 +0800
+@@ -867,11 +867,11 @@ extern "C"
+ gboolean
+ import_pdf(const gchar *filename, DiagramData *dia, DiaContext *ctx, void* user_data)
+ {
+-  PDFDoc *doc;
++  std::unique_ptr<PDFDoc> doc;
+   GooString *fileName = new GooString(filename);
+   // no passwords yet
+-  GooString *ownerPW = NULL;
+-  GooString *userPW = NULL;
++  const std::optional<GooString> ownerPW;
++  const std::optional<GooString> userPW;
+   gboolean ret = FALSE;
+ 
+   // without this we will get strange crashes (at least with /O2 build)
+@@ -899,7 +899,7 @@ import_pdf(const gchar *filename, Diagra
+     delete diaOut;
+     ret = TRUE;
+   }
+-  delete doc;
++  doc.reset();
+   delete fileName;
+ 
+   return ret;
