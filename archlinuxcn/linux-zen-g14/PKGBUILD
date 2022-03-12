@@ -3,8 +3,8 @@
 
 pkgbase=linux-zen-g14
 _pkgbase=linux-zen
-pkgver=5.16.13.zen1
-pkgrel=2
+pkgver=5.16.14.zen1
+pkgrel=1
 pkgdesc='Linux ZEN'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/zen-kernel/zen-kernel/commits/$_srctag"
@@ -25,7 +25,7 @@ source=(
   "0010.patch::https://github.com/torvalds/linux/commit/426c0ff27b833939ed434b4a468bdc010864922a.patch"
 )
 sha256sums=('SKIP'
-            '4fb8b32bd7f9b11fa9e546d705982500f8e6ae63e0a49b9d2f2931f86905648e'
+            '1a0e945f63c45aa876b19645ed1385749d29f7365a717b35298071d78fb75f63'
             'SKIP'
             '848bcbea6810c7e259265313e3307927114e5c87d3e535410490f298e89d55b3'
             '2f25547987bb4938b2f4a8bf419c1689e41ae1360bbe32df29cbf1bf1b438ff8')
