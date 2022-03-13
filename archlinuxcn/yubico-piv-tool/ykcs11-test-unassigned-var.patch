@@ -1,0 +1,10 @@
+--- yubico-piv-tool-2.3.0/ykcs11/tests/ykcs11_tests_util.c	2022-02-23 08:54:47.000000000 -0500
++++ yubico-piv-tool-2.3.0.patch/ykcs11/tests/ykcs11_tests_util.c	2022-03-08 13:37:03.828285732 -0500
+@@ -1039,6 +1039,7 @@
+ 
+       // External verification
+       if(evp != NULL) {
++        hdata_len = 0;
+         asrt(get_digest(mech_type, data, sizeof(data), hdata, &hdata_len), CKR_OK, "GET DIGEST");
+         ctx = EVP_PKEY_CTX_new(evp, NULL);
+         asrt(ctx != NULL, 1, "EVP_KEY_CTX_new");
