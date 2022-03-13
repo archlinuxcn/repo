@@ -3,8 +3,8 @@
 # NOTE: If you are experiencing segmentation fault, delete the ".rstudio-desktop" folder from your home directory then restart the program should fix the issue.
 
 pkgname=rstudio-desktop-bin
-pkgver=2021.09.2.382
-_pkgver=2021.09.2-382
+pkgver=2022.02.0.443
+_pkgver=2022.02.0-443
 pkgrel=1
 pkgdesc="An integrated development environment (IDE) for R (binary from RStudio official repository)"
 arch=('x86_64')
@@ -21,7 +21,7 @@ provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
 sha256sums_x86_64=(
-f3dd882395ad8fad8ab263284608d50f56eb758a76a9d2a9b7968100c5efe4b0
+ad186050952a427272cbd2481cfacbb134ebffffa3b717fdb6226898431e7519
 #84e61f5eda991b978fa168d6762f7990
 #391ba54997d6faddbfe41a185a823ee4
 )
@@ -73,7 +73,7 @@ package() {
 #  cd "$pkgdir/usr/lib/rstudio/bin/rsclang"
 #  patchelf --set-rpath '$ORIGIN/..' libclang.so
 
-  cd "$pkgdir/usr/lib/rstudio/bin/pandoc"
+  #cd "$pkgdir/usr/lib/rstudio/bin/pandoc"
   #ln -sf /usr/bin/pandoc ./
  # ln -sf /usr/bin/pandoc-citeproc ./
  #upx -q pandoc-citeproc
