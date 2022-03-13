@@ -2,7 +2,7 @@
 
 pkgname=chrome-gnome-shell
 pkgver=10.1
-pkgrel=7.1
+pkgrel=8
 pkgdesc='Native browser connector for integration with extensions.gnome.org'
 arch=(any)
 url='https://wiki.gnome.org/Projects/GnomeShellIntegrationForChrome'
@@ -10,7 +10,7 @@ license=(GPL)
 depends=(gnome-shell python-requests python-gobject)
 makedepends=(cmake jq git)
 _commit=815ec9e1afa52bd3af5047e176a4ea9c1bfa2514  # tags/v10.1^0
-source=(git+https://git.gnome.org/browse/chrome-gnome-shell#commit=$_commit)
+source=(git+https://gitlab.gnome.org/GNOME/chrome-gnome-shell#commit=$_commit)
 md5sums=('SKIP')
 
 pkgver() {
