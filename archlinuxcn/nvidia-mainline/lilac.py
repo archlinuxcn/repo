@@ -9,8 +9,8 @@ def pre_build():
   for line in edit_file('PKGBUILD'):
     if 'pkgname=' in line:
       line = 'pkgname=nvidia-mainline'
-    elif 'linux-headers' in line:
-      line = line.replace('linux-headers', 'linux-mainline-headers')
+    elif 'depends' in line:
+      line = line.replace('linux', 'linux-mainline')
     elif '_kernver' in line:
       line = line.replace('linux', 'linux-mainline')
 
