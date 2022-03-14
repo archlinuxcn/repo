@@ -13,9 +13,10 @@ makedepends=('ncurses')
 optdepends=('perl: perl bindings'
             'ncurses: noping CLI tool')
 source=("${url}files/${pkgname}-${pkgver}.tar.bz2"
-        'ncursesw.patch')
+        'ncursesw.patch' 'format.patch')
 sha256sums=('eb38aa93f93e8ab282d97e2582fbaea88b3f889a08cbc9dbf20059c3779d5cd8'
-            '64db954250e7cd4f77ed28d0d4f3deb1525ebe4145c6b20caafc2459c8b1c780')
+            '64db954250e7cd4f77ed28d0d4f3deb1525ebe4145c6b20caafc2459c8b1c780'
+            '1975ebcfeb24e9269f49d23075295866b62511e500574f2c86d562e18f01dda7')
 
 install=install
 
@@ -28,6 +29,7 @@ prepare() {
 
 	# Our ncurses has full UTF8 support although not called ncursesw.
 	patch -p1 -i ../ncursesw.patch
+	patch -p1 -i ../format.patch
 
 	# Be serious.
 	sed '/-Wall -Werror/d' -i src/Makefile.*
