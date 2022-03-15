@@ -20,26 +20,26 @@ _unused_components=(
   'vmware-horizon-scannerclient'
   'vmware-horizon-serialportclient'
   'vmware-horizon-url-redirection')
-pkgver=2111
-_build1=8.4.0
-_build2=18957622
-_cart='CART22FH2'
-pkgrel=3
+pkgver=2111.1
+_build1=8.4.1
+_build2=19480456
+_cart="CART23FQ1_LIN64_${pkgver/./_}"
+pkgrel=4
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
 url='https://www.vmware.com/go/viewclients'
 license=('custom')
 makedepends=('libxslt' 'patchelf' 'librsvg')
-source=("${pkgbase}-${pkgver}-${_build1}-${_build2}-x86_64.bundle::https://download3.vmware.com/software/view/viewclients/${_cart}/VMware-Horizon-Client-${pkgver}-${_build1}-${_build2}.x64.bundle"
+source=("${pkgbase}-${pkgver}-${_build1}-${_build2}-x86_64.bundle::https://download3.vmware.com/software/${_cart}/VMware-Horizon-Client-${pkgver}-${_build1}-${_build2}.x64.bundle"
         "vmware-bundle.eclass-${pkgver}::https://gitweb.gentoo.org/proj/vmware.git/plain/eclass/vmware-bundle.eclass"
         'vmware-horizon-usb'
         'vmware-horizon-usb.service'
         'vmware-horizon.svg')
-sha256sums=('5d05ddbe3e5bb1fc1f9d19766d10dd1dfa261c8fa0d3dc171580e185fb1de4a1'
+sha256sums=('e48249e9eb195de0ed2e591ef08180d2f20a426216c54f00a2d0ec5b8996c890'
             'd6863e92b891fc506fc8e81714a47ca3f9f74b7fe68bdf48be058d5e0d433033'
             '008b60ebf45f7d1e033c8ad8ce1688d5e1c59fc0668493067fb89b563b1dc00f'
             'a897c1b9e8928fc222880ebbfc7bb6aff940bff4acf4e4e0cd4002fff81c7226'
-            'cea92d3ed97b717c631fed5664c06fc71a6deac21ba32da78970c582ed48c747')
+            '0fe0b3d1c253361321e96d50997eaf151d311c55c62c73e8ea5007f9ae4448cb')
 
 # We need these functions for the Gentoo eclass...
 ebegin() {
@@ -133,7 +133,8 @@ package_vmware-horizon-client() {
 	install -D -m0644 "${srcdir}/vmware-horizon.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/vmware-horizon.svg"
 	for SIZE in 16 24 32 48 64 96 128; do
 		install -d "${pkgdir}/usr/share/icons/hicolor/${SIZE}x${SIZE}/apps/"
-		rsvg-convert -w "${SIZE}" -h "${SIZE}" "${srcdir}/vmware-horizon.svg" > "${pkgdir}/usr/share/icons/hicolor/${SIZE}x${SIZE}/apps/vmware-horizon.png"
+		rsvg-convert -w "${SIZE}" -h "${SIZE}" "${srcdir}/vmware-horizon.svg" \
+			-o "${pkgdir}/usr/share/icons/hicolor/${SIZE}x${SIZE}/apps/vmware-horizon.png"
 	done
 }
 
