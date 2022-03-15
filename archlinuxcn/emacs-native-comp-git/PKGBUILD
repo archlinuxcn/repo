@@ -46,10 +46,9 @@ GPM=              # Mouse support in Linux console using gpmd.
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
                   # Bitmap fonts only, 1337!
                
-PGTK=             # Use native GTK3 build. Supports Wayland, yay!
-                  # Menus are broken as of 2022-03-06 when I compiled a new copy..
+PGTK="YES"        # Use native GTK3 build. Supports Wayland, yay!
 
-GTK3="YES"        # GTK3 old windowing interface.
+GTK3=             # GTK3 old windowing interface.
 
 LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   #
@@ -81,7 +80,7 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-native-comp-git"
 fi
-pkgver=29.0.50.154965
+pkgver=29.0.50.154969
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
