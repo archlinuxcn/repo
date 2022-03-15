@@ -1,9 +1,9 @@
 pkgname=1password
 
-_tarver=8.5.0
+_tarver=8.6.0
 _tar="1password-${_tarver}.x64.tar.gz"
 pkgver=${_tarver//-/_}
-pkgrel=121
+pkgrel=122
 conflicts=('1password-beta' '1password-beta-bin')
 pkgdesc="Password manager and secure wallet"
 arch=('x86_64')
@@ -12,10 +12,11 @@ license=('LicenseRef-1Password-Proprietary')
 options=(!strip)
 install="1password.install"
 source=(https://downloads.1password.com/linux/tar/stable/${CARCH}/${_tar}{,.sig})
-sha256sums=('b6766bfaa8d4709f45864e913fc8b0bbefc9b2f612134dcd1e105f85e7720934'
-            '4d934ac9603f84c8543db52232f3834486f8d830c43ff4aae2f2be68e87fcc03'
+sha256sums=('02098b6dfd981d9afc31c4882f9771a791f1382ee02eb656228a6e03b68bd092'
+            'aca0b5bc75c909b362c99b91f7c04cfb0c851ad41051631a5043cba856e2d529'
 )
 validpgpkeys=('3FEF9748469ADBE15DA7CA80AC2D62742012EA22')
+
 
 package() {
     depends=('hicolor-icon-theme' 'libgtk-3.so=0' 'nss')
@@ -32,6 +33,14 @@ package() {
     done
     # Install desktop file
     install -Dm0644 resources/1password.desktop -t "${pkgdir}"/usr/share/applications/
+
+    # Fill in policy kit file with a list of (the first 10) human users of the system.
+    export POLICY_OWNERS
+    POLICY_OWNERS="$(cut -d: -f1,3 /etc/passwd | grep -E ':[0-9]{4}$' | cut -d: -f1 | head -n 10 | sed 's/^/unix-user:/' | tr '\n' ' ')"
+    eval "cat <<EOF
+$(cat ./com.1password.1Password.policy.tpl)
+EOF" > ./com.1password.1Password.policy
+
     # Install system unlock PolKit policy file
     install -Dm0644 com.1password.1Password.policy -t "${pkgdir}"/usr/share/polkit-1/actions/
 
@@ -42,6 +51,11 @@ package() {
     cd "${srcdir}"
     install -dm0755 "${pkgdir}"/opt
     mv "1password-${_tarver}.x64" "${pkgdir}/opt/1Password"
+
+    # Cleanup un-needed files
+    rm "${pkgdir}"/opt/1Password/com.1password.1Password.policy "${pkgdir}"/opt/1Password/com.1password.1Password.policy.tpl "${pkgdir}"/opt/1Password/install_biometrics_policy.sh
+    rm -r "${pkgdir}"/opt/1Password/resources/icons/
+    rm "${pkgdir}"/opt/1Password/resources/1password.desktop "${pkgdir}"/opt/1Password/resources/custom_allowed_browsers
 
     # Symlink /usr/bin executable to opt
     install -dm0755 "${pkgdir}"/usr/bin
