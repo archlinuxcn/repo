@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=uuid
-_pkgver=1.0-3
+_pkgver=1.0-4
 pkgname=r-${_pkgname,,}
-pkgver=1.0.3
+pkgver=1.0.4
 pkgrel=1
 pkgdesc='Tools for Generating and Handling of UUIDs'
 arch=('x86_64')
@@ -13,7 +13,7 @@ depends=(
   r
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('456e4633659f20242fd7cd585ad005a3e07265f1d1db383fca6794c8ac2c8346')
+sha256sums=('289668b091bcf28ac1a6d3daa8fa44101a8eebe871774621d538d1441cf54322')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
