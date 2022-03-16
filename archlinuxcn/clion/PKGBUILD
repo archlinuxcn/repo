@@ -9,7 +9,7 @@ pkgbase=clion
 pkgname=(clion clion-jre clion-cmake clion-gdb clion-lldb)
 _pkgname=clion
 _dlname=CLion
-pkgver=2021.3.3
+pkgver=2021.3.4
 pkgrel=1
 epoch=1
 pkgdesc="C/C++ IDE. Free 30-day trial."
@@ -20,7 +20,7 @@ license=('custom')
 makedepends=('rsync')
 source=("https://download.jetbrains.com/cpp/${_dlname}-${pkgver}.tar.gz"
         "jetbrains-${pkgbase}.desktop")
-sha256sums=('35986be8adfe0a291a0d2d550c1bf4861ae6c33ecbc71198a472e0ac01a0f10d'
+sha256sums=('f3b0b9e0dd0cd4aebef5d424e7a22868c732daad47d6c94f73630cef449ccf78'
             '13c9e7c7f6ef57ee573d133bf30a599390a99087a1f578caea62020e0f742587')
 noextract=("${_dlname}-${pkgver}.tar.gz")
 
@@ -46,7 +46,7 @@ package_clion() {
         'clang: LLVM compiler'
         'biicode: C/C++ dependency manager'
         'gtest: C++ testing'
-        'swift: Swift programming language support (Also requires the plugin)'
+        'swift-language: Swift programming language support (Also requires the plugin)'
         'python: Python 3 programming language support'
         'python2: Python 2 programming language support'
         'doxygen: Code documentation generation'
