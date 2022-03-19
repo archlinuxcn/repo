@@ -3,7 +3,7 @@
 
 pkgbase=linux-zen-g14
 _pkgbase=linux-zen
-pkgver=5.16.14.zen1
+pkgver=5.16.15.zen1
 pkgrel=1
 pkgdesc='Linux ZEN'
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -28,7 +28,7 @@ sha256sums=('SKIP'
             '1a0e945f63c45aa876b19645ed1385749d29f7365a717b35298071d78fb75f63'
             'SKIP'
             '848bcbea6810c7e259265313e3307927114e5c87d3e535410490f298e89d55b3'
-            '2f25547987bb4938b2f4a8bf419c1689e41ae1360bbe32df29cbf1bf1b438ff8')
+            '4042e25817ceb813ba8210ef0f1728359e7e5b01f3eeda41b409532bb4b335bf')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase

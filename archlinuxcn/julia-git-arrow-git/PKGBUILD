@@ -1,5 +1,6 @@
 pkgname=julia-git-arrow-git
-pkgver=2.2.1.0.rc1
+pkgver=2.2.1.0.0.2.g9b4de2b
+epoch=1
 pkgrel=1
 pkgdesc="Arrow.jl"
 url="https://github.com/JuliaData/Arrow.jl"
@@ -14,7 +15,7 @@ md5sums=('SKIP')
 pkgver() {
   cd Arrow.jl
 
-  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0.0./' -e 's/-/./g'
 }
 
 package() {
