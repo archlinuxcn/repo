@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.9.0.DEV.215.g85eaf4e557e
+pkgver=1.9.0.DEV.218.g1b686b26330
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -109,6 +109,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_P7ZIP=1
             USE_LLVM_SHLIB=1
             USE_BINARYBUILDER=0
+            USE_BLAS64=0 # Julia assumes system blas64 on aarch64
             LLVM_USE_CMAKE=0 # Workaround LLVM linking with system LLVM
             LIBBLASNAME=libopenblas
             LIBBLAS=-lopenblas
@@ -169,6 +170,7 @@ EOF
     echo > "$f"
   done
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' */Makefile
+  sed -i -e 's/\(symlink_system_library,CSL,libquadmath,[0-9]*\))/\1,ALLOW_FAILURE)/g' base/Makefile
 }
 
 build_in() {
