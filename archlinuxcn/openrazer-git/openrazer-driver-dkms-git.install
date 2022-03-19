@@ -1,0 +1,13 @@
+post_install() {
+  getent group plugdev >/dev/null || groupadd -r plugdev
+
+  echo -e "\e[31m********************************************"
+  echo -e "\e[31m* To complete installation, please run:    *"
+  echo -e "\e[31m* # sudo gpasswd -a <yourUsername> plugdev *"
+  echo -e "\e[31m*                                          *"
+  echo -e "\e[31m* Please not, that you have to have the    *"
+  echo -e "\e[31m* kernel headers for your current kernel   *"
+  echo -e "\e[31m* installed for dkms to work correctly!    *"
+  echo -e "\e[31m********************************************"
+  echo -e -n "\e[39m"
+}
