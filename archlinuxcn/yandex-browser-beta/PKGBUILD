@@ -6,7 +6,7 @@ _pkgname=browser-beta
 pkgname=yandex-${_pkgname}
 pkgver=22.1.3.907_1
 _pkgver=22.1.3.907-1
-pkgrel=1
+pkgrel=2
 #epoch=1
 
 pkgdesc="The web browser from Yandex.
@@ -23,6 +23,9 @@ optdepends=(
     "ttf-liberation: fix fonts for some PDFs"
     "yandex-libffmpeg"
 )
+
+provides=(yandex-browser-beta)
+conflicts=(yandex-browser-beta)
 
 source=("${pkgname}-${pkgver}.deb::http://repo.yandex.ru/yandex-browser/deb/pool/main/y/yandex-browser-beta/yandex-browser-beta_${_pkgver}_amd64.deb")
 md5sums=("1f456c6f9fb181e747c2b0f112375ae6")
