@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=conquer
-_pkgver=1.2.2
+_pkgver=1.3.0
 pkgname=r-${_pkgname,,}
-pkgver=1.2.2
+pkgver=1.3.0
 pkgrel=1
 pkgdesc='Convolution-Type Smoothed Quantile Regression'
 arch=('x86_64')
@@ -17,7 +17,7 @@ depends=(
   r-rcpparmadillo
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('8869883329dfd20e62410209c473e45b75f6f1c6f0a8f7388b76f7cc3ab907fc')
+sha256sums=('ac354e18c9ad6f41ed5200fad1c99fa5b124fc6fa5bba8f3434be2478f53d5fa')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
