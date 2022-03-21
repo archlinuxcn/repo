@@ -40,6 +40,8 @@ get_pyver() {
 }
 
 build() {
+# we build the default modules by default
+# you could add additional modules by setting -DModule_<NAME>=ON
   cmake_opts=(
     -DBUILD_SHARED_LIBS=ON
     -DBUILD_TESTING=OFF
