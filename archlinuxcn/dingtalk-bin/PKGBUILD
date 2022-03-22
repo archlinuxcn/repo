@@ -6,7 +6,7 @@ pkgname=dingtalk-bin
 _pkgname=dingtalk
 _pkgname2=com.alibabainc.dingtalk
 pkgver=1.4.0.37
-pkgrel=1
+pkgrel=2
 pkgdesc="钉钉"
 arch=("x86_64")
 url="https://www.dingtalk.com/"
@@ -22,7 +22,9 @@ source=("${_pkgname}_${pkgver}-${arch}.deb::https://dtapp-pub.dingtalk.com/dingt
         "service-terms-zh"
         "${_pkgname2}.desktop"
         "dingtalk.sh"
-        "${_pkgname2}.svg")
+        "${_pkgname2}.svg"
+        "https://archive.archlinux.org/packages/c/cairo/cairo-1.17.4-5-x86_64.pkg.tar.zst"
+        )
 
 
 # DebSource & pkgver can be get here: https://dtapp-pub.dingtalk.com/dingtalk-desktop/xc_dingtalk_update/linux_deb/Update/other/linux_dingtalk_update.json
@@ -30,8 +32,9 @@ source=("${_pkgname}_${pkgver}-${arch}.deb::https://dtapp-pub.dingtalk.com/dingt
 sha512sums=('c538677d7944ba4d84edbb0f7df167b30657cb28b5f1228b89e2e69358a16a4feadaf86de579fed8a1c21b8c34f080ec394f0a48ed7aeb93b65a3d1b82da4738'
             'b83d493ed68be0f5a6b851fd93d819bb3a6e62feeb71a5bef10bad24b5ea8f3cf09deea4f31ed727449888a6eae1be99fa9cf263bc921cb8bb2958e2f37a7d64'
             'c8570ec4cd978e26ac622a83db053a0555324752f5000dc5b3cd680d782138e8ef856f09ec9b7850e04e1faa1e39de94dabeb16fbfbe0fd44af43247b30e8b2f'
-            '50437762c47843fa9040bfb5a723da246d1496e4dc0937028c0f2cb92e0286dc47b7c2a5a0485a4b667cfb30d7c4d23664a2ccb08c5bd3059aad265532c1140e'
-            '5f05f90704526fbd16371f6f9deaa171a3cac25a103b21daba72a3028ab7cdf9b566a3ac7842c6ce88d30cc29fe0c8b989c77aa36daab73793a827a1a0d6c775')
+            '5fbd54206362186a6f3a77f07005dbe76682ddafa38e16ed71c52881406e4f5b9f466397c3bb290614c6e0e3bd016ef94081c0a1b84559de8406339859e69264'
+            '5f05f90704526fbd16371f6f9deaa171a3cac25a103b21daba72a3028ab7cdf9b566a3ac7842c6ce88d30cc29fe0c8b989c77aa36daab73793a827a1a0d6c775'
+            '94a108a3f3f88bc7ede370d5e3f84afaedd78d892f7352926091881c066cbe0da55bebb5fc83978ca83c6420ed0c94fbba1f3454c5ff8d33a38669a0a11a80ac')
 
 prepare(){
     cd ${srcdir}
@@ -53,9 +56,6 @@ package(){
     # desktop enrty
     install -Dm644 ${_pkgname2}.desktop -t ${pkgdir}/usr/share/applications/
     
-    # icons
-    #extract single image of size 48x48
-    #icotool -x -i 3 opt/apps/${_pkgname2}/files/logo.ico -o .
     install -Dm644 ${srcdir}/${_pkgname2}.svg ${pkgdir}/usr/share/icons/hicolor/scalable/apps/${_pkgname}.svg
 
     # license
@@ -63,19 +63,10 @@ package(){
     
     # fix chinese input in workbench
     rm -rf ${pkgdir}/opt/${_pkgname}/release/libgtk-x11-2.0.so.*
+    
+    # fix cairo
+    cd $srcdir/usr/lib
+    install -Dm755 libcairo.so.2 -t ${pkgdir}/usr/lib/dingtalk
 
-#     ## libraries
-# 
-#     cd ${pkgdir}/opt/${_pkgname}/release
-#     mkdir ${pkgdir}/opt/${_pkgname}/tmplib
-#     mv {dingtalk*,libcef.so,libgraysdk.so,libahencrypt.so,libpangox-1.0.so.0,libgtkglext-x11-1.0.so.0,libgdkglext-x11-1.0.so.0,libutforpc.so} ${pkgdir}/opt/${_pkgname}/tmplib
-#     
-#     
-#     ## remove unused files
-#     rm  -rf ${pkgdir}/opt/${_pkgname}/release/{libQt*,libm.so.6,imageformats,platforminputcontexts,platforms}
-#     rm  -rf ${pkgdir}/opt/${_pkgname}/release/lib*
-#     mv ${pkgdir}/opt/${_pkgname}/tmplib/* ${pkgdir}/opt/${_pkgname}/release
-#     rmdir ${pkgdir}/opt/${_pkgname}/tmplib 
-    # dingtalk_updater
     rm -rf ${pkgdir}/opt/${_pkgname}/release/{libm.so.6,Resources/{i18n/tool/*.exe,qss/mac}}
 }
