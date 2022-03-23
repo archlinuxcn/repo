@@ -5,7 +5,7 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=98.0
+pkgver=98.0.1
 pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
@@ -27,7 +27,7 @@ backup=('usr/lib/librewolf/librewolf.cfg'
 options=(!emptydirs !makeflags !strip !lto !debug)
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
 # _source_tag=
-_source_commit='ac5ab3d9d9a64e0e39f9ce60bd14d83318e9636e'
+_source_commit='93bd3894f0e1c9d7d237084bffc2766814fffd2f' # not 'stable', but current source head
 # _common_tag="v${pkgver}-${pkgrel}"
 _settings_tag='6.0'
 # _settings_commit='d049197f6b31636a18cd410a3dce1a7c9fca8e4c' # 5.5 with updated ublock
@@ -38,19 +38,22 @@ source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-
         "git+https://gitlab.com/${pkgname}-community/settings.git#tag=${_settings_tag}"
         "default192x192.png"
         )
-source_aarch64=("${pkgver}-${pkgrel}_build-arm-libopus.patch::https://raw.githubusercontent.com/archlinuxarm/PKGBUILDs/master/extra/firefox/build-arm-libopus.patch")
-sha256sums=('fd0a4c11d007d9045706667eb0f99f9b7422945188424cb937bfef530cb6f4dd'
+source_aarch64=("${pkgver}-${pkgrel}_build-arm-libopus.patch::https://raw.githubusercontent.com/archlinuxarm/PKGBUILDs/master/extra/firefox/build-arm-libopus.patch"
+                "${pkgver}-${pkgrel}_revert-crossbeam-crates-upgrade.patch::https://raw.githubusercontent.com/archlinuxarm/PKGBUILDs/434abe24fa6bc70940b2f1e69e047af38b4be68a/extra/firefox/revert-crossbeam-crates-upgrade.patch"
+                "${pkgver}-${pkgrel}_psutil-remove-version-cap.patch::https://github.com/archlinuxarm/PKGBUILDs/raw/434abe24fa6bc70940b2f1e69e047af38b4be68a/extra/firefox/psutil-remove-version-cap.patch")
+sha256sums=('f8de2f514d94cad25a2c8a5d219399de5c05a907607d51c5c5235a8bc9bb361c'
             'SKIP'
             '0b28ba4cc2538b7756cb38945230af52e8c4659b2006262da6f3352345a8bed2'
             'SKIP'
             'SKIP'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1')
-sha256sums_aarch64=('2d4d91f7e35d0860225084e37ec320ca6cae669f6c9c8fe7735cdbd542e3a7c9')
+sha256sums_aarch64=('2d4d91f7e35d0860225084e37ec320ca6cae669f6c9c8fe7735cdbd542e3a7c9'
+                    '56bd09bfd2fa594c2af7dbe923d72bed9da23b7c001f923bf33784554e323541'
+                    '2bb0ac385b54972eb3e665ac70fb13565ed9da77b33349b844b2e0ad4948cff5')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
-# change this to 1 if you want to try running a PGO build for aarch64 as well
-# currently seemingly broken on our build instances (as of 2022-03-10 / v98.0)
-_build_profiled_aarch64=false
+# change this to false if you do not want to run a PGO build for aarch64 as well
+_build_profiled_aarch64=true
 
 prepare() {
   mkdir -p mozbuild
@@ -121,6 +124,16 @@ END
   export LDFLAGS+=" -Wl,--no-keep-memory"
   # patch -Np1 -i ${_patches_dir}/arm.patch # not required anymore?
   patch -Np1 -i ../${pkgver}-${pkgrel}_build-arm-libopus.patch
+
+  # https://github.com/archlinuxarm/PKGBUILDs/commit/434abe24fa6bc70940b2f1e69e047af38b4be68a
+  # Firefox 98+ fails to draw its window on aarch64.
+  # Upstream: https://bugzilla.mozilla.org/show_bug.cgi?id=1757571
+
+  # Also add a hack to remove the psutil version cap, since otherwise it
+  # fails to build with the latest python-psutil version (for no reason).
+
+  patch -p1 -i ../${pkgver}-${pkgrel}_revert-crossbeam-crates-upgrade.patch
+  patch -p1 -i ../${pkgver}-${pkgrel}_psutil-remove-version-cap.patch
 
 else
 
