@@ -1,3 +1,4 @@
 setenv ANDROID_HOME /opt/android-sdk
+setenv ANDROID_SDK_ROOT /opt/android-sdk
 #setenv ANDROID_SWT /usr/share/java
 setenv PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin
