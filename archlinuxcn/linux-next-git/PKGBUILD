@@ -47,7 +47,7 @@ _1k_HZ_ticks=
 ### Do not edit below this line unless you know what you're doing
 
 pkgbase=linux-next-git
-pkgver=20220310.r0.g71941773e143
+pkgver=20220323.r0.gb61581ae229d
 _srcname=linux-next
 pkgrel=1
 pkgdesc='Linux NEXT'
@@ -60,7 +60,8 @@ makedepends=('kmod' 'bc' 'libelf' 'git' 'python-sphinx' 'python-sphinx_rtd_theme
 
 source=("git://git.kernel.org/pub/scm/linux/kernel/git/next/${_srcname}.git"
         # the main kernel config files
-        'config::https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/linux/trunk/config')
+        'config::https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/linux/trunk/config'
+        'sphinx.patch::https://lore.kernel.org/all/20220316025445.103920-1-wanjiabing@vivo.com/raw')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -299,4 +300,5 @@ for _p in "${pkgname[@]}"; do
 done
 
 sha512sums=('SKIP'
+            'SKIP'
             'SKIP')
