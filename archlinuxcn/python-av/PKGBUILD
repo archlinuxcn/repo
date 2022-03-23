@@ -30,6 +30,7 @@ build() {
 
 package() {
   cd "${_pkgname}-${pkgver}"
+  PKG_CONFIG_PATH=/usr/lib/ffmpeg4.4/pkgconfig \
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
   install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
