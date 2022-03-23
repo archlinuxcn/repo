@@ -5,8 +5,8 @@
 
 pkgname=babl-git
 _pkgname=babl
-pkgver=0.1.90.7.g5f1b788
-pkgrel=2
+pkgver=0.1.90.11.g1d72eaf
+pkgrel=1
 pkgdesc="babl is a dynamic, any to any, pixel format translation library."
 arch=('i686' 'x86_64')
 url="https://www.gegl.org/babl"
@@ -23,6 +23,7 @@ _gitname=babl
 
 build() {
     mkdir "${srcdir}/build" -p
+    sed -i 's/stable, Description/stable, description/g' ${srcdir}/${_gitname}/meson.build
 
     meson "${srcdir}/${_gitname}"\
           "${srcdir}/build" \
