@@ -6,7 +6,7 @@ _pkgname=browser-beta
 pkgname=yandex-${_pkgname}
 pkgver=22.1.3.907_1
 _pkgver=22.1.3.907-1
-pkgrel=2
+pkgrel=3
 #epoch=1
 
 pkgdesc="The web browser from Yandex.
@@ -16,6 +16,7 @@ license=("custom:yandex-browser")
 categories=("network")
 
 options=(!strip)
+url=https://browser.yandex.com
 
 depends=("flac" "gconf" "gtk2" "harfbuzz-icu" "libxss" "nss" "opus" "snappy" "ttf-font" "xdg-utils" "libxkbfile" )
 optdepends=(
