@@ -5,7 +5,7 @@
 
 pkgname=sysdig-lily
 pkgver=0.28.0
-pkgrel=10
+pkgrel=11
 
 # from src/sysdig-*/cmake/modules/falcosecurity-libs.cmake
 _falcover=2160111cd088aea9ae2235d3385ecb0b1ab6623c
@@ -14,7 +14,7 @@ pkgdesc="Open source system-level exploration and troubleshooting tool"
 arch=('x86_64')
 url="https://www.sysdig.com/"
 license=('GPL2' 'Apache' 'MIT')
-depends=('jsoncpp' 'libjsoncpp.so' 'luajit' 'curl' 'libcurl.so' 'jq' 'libb64' 'intel-tbb' 'grpc' "linux-lily=5.15.13-1" 'libgrpc++_unsecure.so')
+depends=('jsoncpp' 'libjsoncpp.so' 'luajit' 'curl' 'libcurl.so' 'jq' 'libb64' 'intel-tbb' 'grpc' "linux-lily=5.15.26-2" 'libgrpc++_unsecure.so')
 makedepends=('cmake' 'llvm' 'clang' 'gtest' 'linux-lily-headers')
 source=("https://github.com/draios/sysdig/archive/$pkgver/sysdig-$pkgver.tar.gz"
         "https://github.com/falcosecurity/libs/archive/$_falcover.tar.gz"
