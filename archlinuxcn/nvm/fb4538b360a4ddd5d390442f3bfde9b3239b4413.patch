@@ -1,0 +1,22 @@
+From fb4538b360a4ddd5d390442f3bfde9b3239b4413 Mon Sep 17 00:00:00 2001
+From: lsfxz <1813007-ohfp@users.noreply.gitlab.com>
+Date: Wed, 17 Nov 2021 16:59:53 +0100
+Subject: [PATCH] [Fix] add missing `local` (handle nonexisting /sbin/init a
+ bit more cleanly)
+
+---
+ nvm.sh | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/nvm.sh b/nvm.sh
+index 1a811f7e8..e3098b8e3 100644
+--- a/nvm.sh
++++ b/nvm.sh
+@@ -1871,6 +1871,7 @@ nvm_get_arch() {
+   esac
+ 
+   # If running a 64bit ARM kernel but a 32bit ARM userland, change ARCH to 32bit ARM (armv7l)
++  local L
+   L=$(ls -dl /sbin/init 2>/dev/null) # if /sbin/init is 32bit executable
+   if [ "$(uname)" = "Linux" ] && [ "${NVM_ARCH}" = arm64 ] && [ "$(od -An -t x1 -j 4 -N 1 "${L#*-> }")" = ' 01' ]; then
+     NVM_ARCH=armv7l

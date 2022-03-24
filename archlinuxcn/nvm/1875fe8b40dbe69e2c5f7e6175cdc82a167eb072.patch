@@ -1,0 +1,39 @@
+From 1875fe8b40dbe69e2c5f7e6175cdc82a167eb072 Mon Sep 17 00:00:00 2001
+From: Luke Arms <luke@linacreative.com>
+Date: Sun, 26 Dec 2021 15:31:53 +1100
+Subject: [PATCH] [Fix] avoid OpenBSD `nvm install` error when /sbin/init
+ doesn't exist
+
+`nvm install` fails with "Binary download failed, trying source" when
+- running on Bash;
+- errtrace (`set -E`) is enabled;
+- an ERR trap uses `exit` to return a non-zero status; and
+- /sbin/init doesn't exist.
+
+Resolved by moving `ls -dl /sbin/init` to the following `if` statement.
+In this context, returning non-zero isn't an error and the ERR trap
+isn't executed.
+---
+ nvm.sh | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/nvm.sh b/nvm.sh
+index f40a9f3c1..bb61a7199 100644
+--- a/nvm.sh
++++ b/nvm.sh
+@@ -1870,10 +1870,12 @@ nvm_get_arch() {
+     *) NVM_ARCH="${HOST_ARCH}" ;;
+   esac
+ 
+-  # If running a 64bit ARM kernel but a 32bit ARM userland, change ARCH to 32bit ARM (armv7l)
++  # If running a 64bit ARM kernel but a 32bit ARM userland,
++  # change ARCH to 32bit ARM (armv7l) if /sbin/init is 32bit executable
+   local L
+-  L=$(ls -dl /sbin/init 2>/dev/null) # if /sbin/init is 32bit executable
+-  if [ "$(uname)" = "Linux" ] && [ "${NVM_ARCH}" = arm64 ] && [ "$(od -An -t x1 -j 4 -N 1 "${L#*-> }")" = ' 01' ]; then
++  if [ "$(uname)" = "Linux" ] && [ "${NVM_ARCH}" = arm64 ] &&
++    L="$(ls -dl /sbin/init 2>/dev/null)" &&
++    [ "$(od -An -t x1 -j 4 -N 1 "${L#*-> }")" = ' 01' ]; then
+     NVM_ARCH=armv7l
+     HOST_ARCH=armv7l
+   fi
