@@ -2,7 +2,7 @@
 
 pkgname=nvm
 pkgver=0.39.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Node Version Manager - Simple bash script to manage multiple active node.js versions"
 url="https://github.com/nvm-sh/nvm"
 arch=('any')
@@ -11,14 +11,10 @@ optdepends=('bash: bash completion')
 install="${pkgname}.install"
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/nvm-sh/nvm/archive/v${pkgver}.tar.gz"
         "init-nvm.sh"
-        "install-nvm-exec"
-	"https://github.com/nvm-sh/nvm/commit/fb4538b360a4ddd5d390442f3bfde9b3239b4413.patch"
-	"https://github.com/nvm-sh/nvm/commit/1875fe8b40dbe69e2c5f7e6175cdc82a167eb072.patch")
+        "install-nvm-exec")
 sha256sums=('4b6f6af05f94839b1116d661adb7d3af4ac17a7f10c280cdf84be084c7ab3b61'
             '692317bfd036557f59543fef9b67ff38de68208d30361fe385291f58d3ac0425'
-            '795d3f6ad3076aa4b0bb9cc48a2e6e79331d121278a887667fb707181a54a10b'
-	    'b02c53edc1a40d4c83291c63161dc4e3fd803119b14621a49cd0fb5bc99b8e46'
-	    '727b77692e2d2ae1c13a78dfe2a1fc3df1264f5364660959ffbb51763cd14c0f')
+            '795d3f6ad3076aa4b0bb9cc48a2e6e79331d121278a887667fb707181a54a10b')
 
 package() {
   cd "${srcdir}"
@@ -30,14 +26,6 @@ package() {
   install -Dm644 install-nvm-exec "$pkgdir/usr/share/$pkgname/install-nvm-exec"
 
   cd "${pkgname}-${pkgver}"
-
-  # patch for nvm@0.39.1, should be removed after next nvm release
-  # see https://github.com/archlinuxcn/repo/issues/2702
-  # see also:
-  #   https://github.com/nvm-sh/nvm/commit/fb4538b360a4ddd5d390442f3bfde9b3239b4413
-  #   https://github.com/nvm-sh/nvm/commit/1875fe8b40dbe69e2c5f7e6175cdc82a167eb072
-  patch -p1 <../fb4538b360a4ddd5d390442f3bfde9b3239b4413.patch
-  patch -p1 <../1875fe8b40dbe69e2c5f7e6175cdc82a167eb072.patch
 
   # nvm itself
   install -Dm644 nvm.sh "$pkgdir/usr/share/$pkgname/nvm.sh"
