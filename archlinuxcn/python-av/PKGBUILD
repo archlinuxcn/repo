@@ -11,7 +11,10 @@ arch=('x86_64')
 license=('BSD')
 makedepends=(
   cython
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 depends=(
   ffmpeg4.4
@@ -25,13 +28,12 @@ build() {
   cd "${_pkgname}-${pkgver}"
   # https://github.com/PyAV-Org/PyAV/issues/817
   PKG_CONFIG_PATH=/usr/lib/ffmpeg4.4/pkgconfig \
-  python setup.py build
+  python -m build --wheel --no-isolation --skip-dependency-check
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  PKG_CONFIG_PATH=/usr/lib/ffmpeg4.4/pkgconfig \
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 # vim:set ts=2 sw=2 et:
