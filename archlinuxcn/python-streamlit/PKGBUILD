@@ -32,6 +32,7 @@ depends=(
   python-tzlocal
   python-validators
   python-watchdog
+  semver
 )
 makedepends=(
   python-pipenv
@@ -41,11 +42,6 @@ makedepends=(
 source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"
 )
 sha512sums=('01a60e30c3732e8e5eba1910a4c0c42c78d75b48754d5ddaeaa647b152aafd5edf790e54a3890c0031fd769583690dacb5fae53fd0f9603d0a6157a6af042827')
-
-prepare() {
-  # relax click requirement
-  sed -i 's#click = ">=7.0, <8.0"#click = "*"#' "${_pkgname}-${pkgver}/Pipfile"
-}
 
 build() {
   cd "${_pkgname}-${pkgver}"
