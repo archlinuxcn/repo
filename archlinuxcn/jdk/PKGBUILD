@@ -3,9 +3,9 @@
 
 pkgbase=jdk
 pkgname=('jre' 'jdk' 'jdk-doc')
-pkgver=17.0.2
-_build=8
-_hash=dfd4a8d0985749f896bed50d7138ee7f
+pkgver=18
+_build=36
+_hash=43f95e8614114aeaa8e8a5fcf20a682d
 _majver="${pkgver%%.*}"
 pkgrel=1
 pkgdesc='Oracle Java'
@@ -15,7 +15,7 @@ license=('custom')
 makedepends=('python-html2text')
 source=("https://download.oracle.com/java/${_majver}/archive/jdk-${pkgver}_linux-x64_bin.tar.gz"
         "https://download.oracle.com/otn_software/java/jdk/${pkgver}+${_build}/${_hash}/jdk-${pkgver}_doc-all.zip"
-        "java-${_majver}-jdk-license.html"::"https://download.oracle.com/otndocs/jcp/java_se-${_majver}-final-spec/license.html"
+        "jdk-${_majver}_doc-license.html"::"https://download.oracle.com/otndocs/jcp/java_se-${_majver}-final-spec/license.html"
         'java.desktop'
         'jconsole.desktop'
         'jshell.desktop'
@@ -23,12 +23,12 @@ source=("https://download.oracle.com/java/${_majver}/archive/jdk-${pkgver}_linux
         'java_48.png'
         'LICENSE')
 noextract=("jdk-${pkgver}_doc-all.zip")
-sha256sums=('342e76bb9ded80aa1edd566efbae42f8f1c2366e19b9189e5941b45893b9861f'
-            'd25b34eb17053bf23a7a4a82ac2ab7a85b5d53a1109d6561e302761e23f33895'
-            'ab50940bda40a9e8935d1a8f002debda0fdd0b3e2bcc0319827ec19acd8b34f3'
-            'f17fe6e3d1b7ffbe854364e127509144057878a344d74673393782b90b6f054a'
-            '321dc88a1a0289c1f0a3113e75bd2f488829a0b82c11ac047272e464fb3f3ab3'
-            'e7638e42cbe38f32cb7a1ec800c27408e8559f576d8dd7698fdd5856c4c9b842'
+sha256sums=('d52c868db194c8b474982c83480ab49a4e6f1025ebf4332042b0b5efc334abfe'
+            'f832e9233b07a10f5878094142dfab8501e43fafb920e4e6ef772ad3787fb249'
+            '08deffce836955e426ea1ebc8ea85862fba39bb7a954af9df1752f8f5fac730f'
+            '0275bc0d4620f391d6fafb64ed7d89740b834b8fc810ed82a30a5b0fe7386496'
+            '95596dcb0f48677def0d60277ae6577748e6e9eb8d4567ba11ae8579c6cf57b7'
+            'b47f1675e8a706ade4e3a1e36d782132b70883dccebe55422489f911a18880e9'
             'd27fec1d74f7a3081c3d175ed184d15383666dc7f02cc0f7126f11549879c6ed'
             '7cf8ca096e6d6e425b3434446b0835537d0fc7fe64b3ccba7a55f7bd86c7e176'
             '20becfcac0bdeaa29a76e6966d727f8cc79381354cbd5d530cdec823954df19f')
@@ -38,7 +38,7 @@ DLAGENTS=('https::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -b oraclelicens
 prepare() {
     mkdir -p "jdk-doc-${pkgver}"
     bsdtar -x -f "jdk-${pkgver}_doc-all.zip" -C "jdk-doc-${pkgver}" --strip-components='1'
-    html2text "java-${_majver}-jdk-license.html" > LICENSE-doc
+    html2text "jdk-${_majver}_doc-license.html" > LICENSE-doc
 }
 
 package_jre() {
