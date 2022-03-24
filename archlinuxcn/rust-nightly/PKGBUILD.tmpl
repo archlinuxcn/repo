@@ -5,6 +5,7 @@ pkgname=(rust-nightly
          cargo-nightly
          rust-clippy-nightly
          rust-analyzer-nightly
+         rust-miri-nightly
          rust-src-nightly
          rust-docs-nightly{% for x in stds %}
          {{ x.name }}{% end %}
@@ -25,6 +26,8 @@ source=(
         'https://static.rust-lang.org/dist/{{version_date_raw}}/rust-src-nightly.tar.xz.asc'
         '{{ clippy_url }}'
         '{{ clippy_url }}.asc'
+        '{{ miri_url }}'
+        '{{ miri_url }}.asc'
 {% for x in stds %}
         {{ "'%s'" % x.url }}
         {{ "'%s.asc'" % x.url }}{% end %}
@@ -105,6 +108,17 @@ package_rust-analyzer-nightly() {
   depends=("rust-nightly=$epoch:$pkgver")
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/rust-analyzer-preview
+  mkdir -p "$pkgdir/usr"
+  cp -r bin "$pkgdir/usr"
+}
+
+package_rust-miri-nightly() {
+  pkgdesc="An interpreter for Rust's mid-level intermediate representation (nightly version)"
+  provides=('rust-miri={{miri_version}}')
+  conflicts=('rustup')
+  depends=("rust-nightly=$epoch:$pkgver")
+
+  cd rust-nightly-$CARCH-unknown-linux-gnu/rust-miri-preview
   mkdir -p "$pkgdir/usr"
   cp -r bin "$pkgdir/usr"
 }
