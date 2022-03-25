@@ -34,5 +34,7 @@ package() {
   cd "${_pkgname}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  # remove test files
+  rm -rf "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/tests"
 }
 # vim:set ts=2 sw=2 et:
