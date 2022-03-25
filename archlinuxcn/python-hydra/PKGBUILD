@@ -1,0 +1,34 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=hydra
+pkgname=python-hydra
+pkgver=1.1.1
+pkgrel=1
+pkgdesc='A framework for elegantly configuring complex applications'
+arch=('any')
+url='https://hydra.cc'
+license=('MIT')
+depends=(
+  python-omegaconf
+)
+makedepends=(
+  java-environment
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/facebookresearch/hydra/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('7c7cd6289c951cb097c46729bf1d4dd1464ba0042d223937bad2a0a80bed33e5f5bda1e792fc89b5206861fbc79bee5345cf43db8f654ee7e13b6496641633b8')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
