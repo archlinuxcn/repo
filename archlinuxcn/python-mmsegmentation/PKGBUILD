@@ -19,6 +19,10 @@ makedepends=(
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmsegmentation/archive/v${pkgver}.tar.gz")
 sha512sums=('3d0a249e2caec66d293aaf4b9f0a399ea12b924f4007eadf507c636ed2b02ce36582b2e67f13ad34e2aa3f8e98b3885ea3e1f533fe76d611adac146d94e48948')
 
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
+
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
   python setup.py build
@@ -27,5 +31,7 @@ build() {
 package() {
   cd "${_pkgname}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  # remove unneeded files
+  rm -rf "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/tests"
 }
 # vim:set ts=2 sw=2 et:
