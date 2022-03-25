@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=processx
-_pkgver=3.5.2
+_pkgver=3.5.3
 pkgname=r-${_pkgname,,}
-pkgver=3.5.2
+pkgver=3.5.3
 pkgrel=1
 pkgdesc='Execute and Control System Processes'
 arch=('x86_64')
@@ -26,7 +26,7 @@ optdepends=(
   r-withr
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('ed6f2d1047461c6061e6ed58fb6de65a289b56009867892abad76c6bba46fc2b')
+sha256sums=('679629fa56ec185d4fd52ade5b699c78a2a0e875acdf57555b31bc62111f342a')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
