@@ -2,7 +2,7 @@
 
 _pkgname=streamlit-webrtc
 pkgname=python-streamlit-webrtc
-pkgver=0.36.0
+pkgver=0.36.1
 pkgrel=1
 pkgdesc='Real-time video and audio streams over the network, with Streamlit'
 arch=('any')
@@ -17,7 +17,7 @@ makedepends=(
 )
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha512sums=('bb799542d835673a3e6fe2c289b73237a3b36294b2264c35998ea5cd305815811e4d17c23ace501254397d72e27d36f472c4aaadd00c531dd291cedd2c785470')
+sha512sums=('9799e4c8fdaf923d6994f5423b34a1c851022f46b364478fb71a49b9d15d75bfc027fddcc845fc0d450a0e32e939b3fd199181baf3e847e2fa46683eac485572')
 
 build() {
   cd "${_pkgname}-${pkgver}"
