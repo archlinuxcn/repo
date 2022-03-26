@@ -18,7 +18,7 @@
 
 pkgname='tor-browser'
 pkgver='11.0.9'
-pkgrel=1
+pkgrel=2
 pkgdesc='Tor Browser Bundle: anonymous browsing using Firefox and Tor (international PKGBUILD)'
 url='https://www.torproject.org/projects/torbrowser.html'
 arch=('i686' 'x86_64')
@@ -95,7 +95,7 @@ source=("${pkgname}.desktop.in"
 # No need for `makepkg -g`: the following sha256sums¸don't need to be updated #
 # with each release, everything is done automatically! Leave them like this!  #
 ###############################################################################
-sha256sums=('2fd155207c1cb58b4580cd33545b22d1fef8fe05405936937aed8f1a6ddb7b7a'
+sha256sums=('9af2a432bd6fbcdba8f849350e6f8abd68287d40689e59650bb1ef5d1d766af7'
             '8e171f7ef77058648a88d6b2683db458b217e47597a7ec9232a9505766916cca'
             'f25ccf68b47f5eb14c6fec0664c74f30ea9c6c58d42fc6abac3b64670aaa3152'
             '7b28b5dbe8ad573bb46e61b4d542b33e01ca240825ca640b4893fee6203b021f')
@@ -150,8 +150,8 @@ package() {
 		"${pkgdir}/usr/share/icons/hicolor/scalable/apps" \
 		"${pkgdir}/usr/share/icons/hicolor/128x128/apps"
 
-	install -Dm 644 "${pkgname}.png" "${pkgdir}/usr/share/icons/hicolor/128x128/apps/${pkgname}.png"
-	install -Dm 644 "${pkgname}.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
+	install -Dm 644 "${srcdir}/${pkgname}.png" "${pkgdir}/usr/share/icons/hicolor/128x128/apps/${pkgname}.png"
+	install -Dm 644 "${srcdir}/${pkgname}.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
 
 	install -dm755 "${pkgdir}/usr/share/applications"
 	sed "${_sed_subst}" "${pkgname}.desktop.in" > \
