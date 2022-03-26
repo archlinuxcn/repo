@@ -31,7 +31,7 @@ source=(
 {% for x in stds %}
         {{ "'%s'" % x.url }}
         {{ "'%s.asc'" % x.url }}{% end %}
-        'git://github.com/rust-lang/zsh-config')
+        'git+https://github.com/rust-lang/zsh-config')
 sha512sums=({% for _ in range(9 + len(stds) * 2) %}
             'SKIP'{% end %})
 
