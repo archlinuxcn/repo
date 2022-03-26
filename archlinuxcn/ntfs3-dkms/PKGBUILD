@@ -1,5 +1,5 @@
 pkgname=ntfs3-dkms
-pkgver=5.16
+pkgver=5.17
 pkgrel=1
 epoch=1
 pkgdesc="NTFS3 is fully functional NTFS Read-Write driver. The driver works with NTFS versions up to 3.1."
@@ -24,34 +24,23 @@ source=(
     "kernel-5.16-backport.patch"
 )
 
-sha512sums=(
-    'e7e2e3208e681eef8557138763e7460418264d8fbad3dbb965cf7d40e9d55800419199de78774458775ca593f550f6b50e7e3bc8fad75edd085d08d1c5933b40'
-    '533c249f0f6bd4833faf02d0d92ca1b5802a49afc5feb2e46a7d37275cfca7896db76cd83593f4f313977d278a9a7e92eda550667be2b93910c49cfb68ead4fb'
-    'a46d538f3d166741dafcbc880f6322932478170aa0edf17b57a4e9f1543bea4c75970f08b39d67a14d48b63ac7a1c18f3a30fe763660b39ed404933eb0e37308'
-    '4b1976b40f67c210ee4052407a359ed8db0709a568387ffacc15e695b43af7c77b53fbe27a3365197521e5c9baa8bd9c7aaffa2f8345be17129216b1ac141fbe'
-    '61a1948e3e607dabaca47742777b4ea92fadf9f5416ebaef8c06f1e17aab0f3ced34e900c0cf1ed462303f391f4a4713b5b30a488b349839780bde3248e19f3c'
-    '3a9395f5729c14cd8d8bf2ecda566730d90c6990319ed5e33310fa2dbe4d4a33df925950ff652fff338ef0135e5aeecf4b991603bba797847f8f1ef9130420c7'
-    'd13e320a127bb3c8988d040d6c27b98981ca4352fb29ca57e5afa9b549f271c33a668beaefd142ca21f8930371aec5aedaaf1d07c157abb05c30f4899b643cdf'
+sha256sums=(
+    'f58338c5b06314559a269afe70b33b9b0b75cc2fe5e8a537ac29f70caa6e489b'
+    'fd4cf0e2dc160efecc55d4ea99667669b870599e4e81be435ec2201381b7e2ac'
+    '9cb620446fc07ade4018637313a749e192d44a03e1f8b10529746730bacf6feb'
+    '44ce1edf931aec236d3dcb5a08441f4c03ccd60fdcd5ba949989c11938eeb371'
+    '869165f7b738a5fee41f1015d531459650d2c862fa2aaed252e692474d77c84c'
+    '26613999994cec08dfa4b53e9a5c1f97174ac2fc2b7f99c52b7ff7b88fdd1a45'
+    '8d397fd1c7d64835f712d47bf425732ae8abe8305aea570f1b53cfca9c8a97cf'
 )
 
 noextract=("${_archive}")
 
 prepare() {
     cd "${srcdir}"
-    tar xf "${_archive}" "${_snapshot}/fs/ntfs3" --strip-components=2
-}
-
-package() {
-    cd "${srcdir}"
-
-    local dest=$(install -dm755 "${pkgdir}/usr/src/ntfs3-${pkgver}" && echo "$_")
-
-    install -Dm644 -t "${dest}" "dkms.conf"
-
-    install -dm755 "${dest}/patches" && cp -t "$_" "kernel-"*.patch
+    tar --strip-components=2 -xf "${_archive}" "${_snapshot}/fs/ntfs3"
 
     cd "ntfs3"
-
     patch -p0 -N -i "${srcdir}/Makefile.patch"
 
     # For testing
@@ -59,6 +48,16 @@ package() {
     # patch -p1 -N -i "${srcdir}/kernel-5.15-backport.patch"
     # patch -p1 -N -i "${srcdir}/kernel-5.14-backport.patch"
     # patch -p1 -N -i "${srcdir}/kernel-5.12-backport.patch"
+}
 
+package() {
+    local dest="${pkgdir}/usr/src/ntfs3-${pkgver}"
+    install -dm755 "${dest}"
+
+    cd "${srcdir}"
+    install -Dm644 -t "${dest}" "dkms.conf"
+    install -dm755 "${dest}/patches" && cp -t "$_" "kernel-"*.patch
+
+    cd "ntfs3"
     cp -rt "${dest}" *
 }

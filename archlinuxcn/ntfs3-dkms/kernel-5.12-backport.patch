@@ -1,6 +1,6 @@
 --- a/file.c
 +++ b/file.c
-@@ -69,7 +69,7 @@
+@@ -70,7 +70,7 @@
  /*
   * ntfs_getattr - inode_operations::getattr
   */
@@ -9,7 +9,7 @@
  		 struct kstat *stat, u32 request_mask, u32 flags)
  {
  	struct inode *inode = d_inode(path->dentry);
-@@ -83,7 +83,7 @@
+@@ -84,7 +84,7 @@
  
  	stat->attributes_mask |= STATX_ATTR_COMPRESSED | STATX_ATTR_ENCRYPTED;
  
@@ -18,7 +18,7 @@
  
  	stat->result_mask |= STATX_BTIME;
  	stat->btime = ni->i_crtime;
-@@ -728,7 +728,7 @@
+@@ -729,7 +729,7 @@
  /*
   * ntfs3_setattr - inode_operations::setattr
   */
@@ -27,7 +27,7 @@
  		  struct iattr *attr)
  {
  	struct super_block *sb = dentry->d_sb;
-@@ -747,7 +747,7 @@
+@@ -748,7 +748,7 @@
  		ia_valid = attr->ia_valid;
  	}
  
@@ -36,7 +36,7 @@
  	if (err)
  		goto out;
  
-@@ -772,10 +772,10 @@
+@@ -773,10 +773,10 @@
  		ni->ni_flags |= NI_FLAG_UPDATE_PARENT;
  	}
  
@@ -167,7 +167,7 @@
 
 --- a/ntfs_fs.h
 +++ b/ntfs_fs.h
-@@ -486,11 +486,11 @@
+@@ -485,11 +485,11 @@
  extern const struct file_operations ntfs_dir_operations;
  
  /* Globals from file.c */
@@ -181,7 +181,7 @@
  		  struct iattr *attr);
  int ntfs_file_open(struct inode *inode, struct file *file);
  int ntfs_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
-@@ -695,7 +695,7 @@
+@@ -694,7 +694,7 @@
  int ntfs_flush_inodes(struct super_block *sb, struct inode *i1,
  		      struct inode *i2);
  int inode_write_data(struct inode *inode, const void *data, size_t bytes);
@@ -190,7 +190,7 @@
  				struct inode *dir, struct dentry *dentry,
  				const struct cpu_str *uni, umode_t mode,
  				dev_t dev, const char *symname, u32 size,
-@@ -837,17 +837,17 @@
+@@ -836,17 +836,17 @@
  /* globals from xattr.c */
  #ifdef CONFIG_NTFS3_FS_POSIX_ACL
  struct posix_acl *ntfs_get_acl(struct inode *inode, int type);
