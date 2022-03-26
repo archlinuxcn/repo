@@ -18,13 +18,6 @@ md5sums=('SKIP'
          'faa6cce1d5696a1126a05f5419d22e37')
 options=('debug' '!strip')
 
-# HACK!!! remove after the damange on the build server is repaired.
-if [[ -f ${SRCDEST:-${PWD}}/utf8proc/config ]] && \
-       grep 'url = git://github\.com/JuliaLang' \
-            ${SRCDEST:-${PWD}}/utf8proc/config &> /dev/null; then
-    rm -rf ${SRCDEST:-${PWD}}/utf8proc &> /dev/null || true
-fi
-
 pkgver() {
   cd utf8proc
 
