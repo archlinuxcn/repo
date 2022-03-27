@@ -2,7 +2,7 @@
 # Contributor: Adrian Perez de Castro <aperez@igalia.com>
 pkgname=wlroots-hidpi-git
 pkgver=0.16.0.r5443.4519117a
-pkgrel=1
+pkgrel=1.1
 license=(custom:MIT)
 pkgdesc='Modular Wayland compositor library, with XWayland HiDPI (git version)'
 url=https://gitlab.freedesktop.org/wlroots/wlroots.git
@@ -41,7 +41,6 @@ sha256sums=('SKIP'
 
 
 _builddir="build"
-_builddir_pkgver="build-pkgver"
 
 _meson_setup () {
 	arch-meson \
@@ -54,21 +53,16 @@ _meson_setup () {
 pkgver () {
 	(
 		set -o pipefail
-		meson introspect --projectinfo "${_builddir_pkgver}" \
-			| awk 'match($0, /"version":\s*"([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)"/, ret) {printf "%s",ret[1]}'
+		cd "${pkgname}"
+		cat meson.build | awk 'match($0, /version:\s*'\''([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)'\''/, ret) {printf "%s",ret[1]}'
+		printf ".r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 	)
-	cd "${pkgname}"
-	printf ".r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare () {
-	(
-		cd "${pkgname}"
-		patch -Np1 < "${srcdir}/0001-xwayland-add-support-for-global-scale-factor.patch"
-		patch -Np1 < "${srcdir}/0002-xwayland-add-support-for-changing-global-scale-facto.patch"
-	)
-
-	_meson_setup "${_builddir_pkgver}"
+	cd "${pkgname}"
+	patch -Np1 < "${srcdir}/0001-xwayland-add-support-for-global-scale-factor.patch"
+	patch -Np1 < "${srcdir}/0002-xwayland-add-support-for-changing-global-scale-facto.patch"
 }
 
 build () {
