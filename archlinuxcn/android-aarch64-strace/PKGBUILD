@@ -6,7 +6,7 @@
 _pkgname=strace
 _pkg_arch=aarch64
 pkgname=android-${_pkg_arch/_/-}-$_pkgname
-pkgver=5.16
+pkgver=5.17
 pkgrel=1
 pkgdesc="A diagnostic, debugging and instructional userspace tracer (Android, $_pkg_arch)"
 arch=(any)
@@ -15,7 +15,7 @@ license=(BSD)
 makedepends=(android-ndk)
 options=(!buildflags !strip)
 source=(https://github.com/strace/strace/releases/download/v$pkgver/strace-$pkgver.tar.xz{,.asc})
-sha256sums=('dc7db230ff3e57c249830ba94acab2b862da1fcaac55417e9b85041a833ca285'
+sha256sums=('5fb298dbd1331fd1e1bc94c5c32395860d376101b87c6cd3d1ba9f9aa15c161f'
             'SKIP')
 validpgpkeys=('296D6F29A020808E8717A8842DB5BD89A340AEB7') # Dmitry V. Levin <ldv@altlinux.org>
 
