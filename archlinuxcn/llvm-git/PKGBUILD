@@ -4,7 +4,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=14.0.0_r411692.8f811effac48
+pkgver=15.0.0_r419286.1fd118ffc4b8
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -268,7 +268,6 @@ package_llvm-ocaml-git() {
     conflicts=('llvm-ocaml' 'llvm-ocaml-svn')
 
     _fakeinstall fakeinstall/usr/lib/ocaml
-    _fakeinstall fakeinstall/usr/share/doc/llvm/ocaml-html
 
     install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
