@@ -3,7 +3,7 @@
 
 pkgname=nvidia-container-toolkit
 
-pkgver=1.8.1
+pkgver=1.9.0
 pkgrel=1
 
 pkgdesc='NVIDIA container runtime toolkit'
@@ -12,7 +12,7 @@ url='https://github.com/NVIDIA/nvidia-container-toolkit'
 license=('Apache')
 
 makedepends=('go')
-depends=('libnvidia-container-tools>=1.8.1')
+depends=('libnvidia-container-tools>=1.9.0')
 conflicts=('nvidia-container-runtime-hook' 'nvidia-container-runtime<2.0.0')
 replaces=('nvidia-container-runtime-hook')
 options=(!lto)
@@ -20,7 +20,7 @@ options=(!lto)
 backup=('etc/nvidia-container-runtime/config.toml')
 
 source=("v${pkgver}-${pkgrel}.tar.gz"::"${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('859c9913e450794e3f4e0b488a7315c6a41906a0ece30c91ffab43f444d8b76f')
+sha256sums=('99a78af89b0140bc6c096317f3e64f58482eb7bf28d9959c1f3d40cd88765a76')
 
 install=$pkgname.install
 
@@ -61,4 +61,3 @@ package() {
 
   install -D -m644 "${_srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
 }
-
