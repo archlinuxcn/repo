@@ -1,0 +1,53 @@
+# Maintainer: Megumi_fox <i@megumifox.com>
+
+pkgname=revda-git
+pkgver=5.0.0.r2.g6c067e4
+pkgrel=1
+pkgdesc='Cute and useful Live Stream Player with danmaku support.'
+arch=('x86_64')
+url="https://github.com/THMonster/Revda"
+license=('GPL2')
+provides=('revda' 'qliveplayer-git')
+conflicts=('revda' 'qliveplayer-git')
+replaces=('qliveplayer-git')
+depends=('mpv' 
+         'ffmpeg'
+         'curl'
+         'webkit2gtk')
+makedepends=('cmake'
+             'git'
+             'rust'
+             'ninja'
+             'yarn'
+             'extra-cmake-modules')
+optdepends=('nodejs: for douyu support')
+source=(
+    "Revda::git+https://github.com/THMonster/Revda.git"
+    "dmlive::git+https://github.com/THMonster/dmlive.git"
+)
+sha256sums=('SKIP' 'SKIP')
+
+pkgver(){
+  cd Revda
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+    cd Revda
+    git submodule init
+    git config submodule.src/dmlive.url "$srcdir/dmlive"
+    git submodule update
+}
+
+build() {
+    cd $srcdir/Revda
+    mkdir -p build
+    cd build
+    cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release  ..
+    ninja
+}
+
+package() {
+    cd $srcdir/Revda/build
+    DESTDIR="$pkgdir" ninja install
+}
