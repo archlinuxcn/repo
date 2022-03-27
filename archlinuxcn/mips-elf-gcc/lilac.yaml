@@ -5,8 +5,8 @@ pre_build_script: |
   aur_pre_build(maintainers='angelodalzotto')
 post_build: aur_post_build
 repo_depends:
-  - cross-mips-elf-binutils
+  - mips-elf-binutils
 update_on:
   - source: aur
-    aur: cross-mips-elf-gcc
+    aur: mips-elf-gcc
 staging: true
