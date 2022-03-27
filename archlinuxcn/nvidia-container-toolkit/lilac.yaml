@@ -2,7 +2,7 @@ maintainers:
   - github: DDoSolitary
 build_prefix: extra-x86_64
 pre_build_script: |
-  aur_pre_build(maintainers='jshap')
+  aur_pre_build(maintainers=['jshap', 'kiendang'])
 post_build: aur_post_build
 repo_depends:
   - libnvidia-container: libnvidia-container
@@ -10,4 +10,6 @@ repo_depends:
 update_on:
   - source: aur
     aur: nvidia-container-toolkit
+  - source: manual
+    manual: 1
 staging: true
