@@ -65,11 +65,6 @@ def prepare():
     return 'no clippy available?'
 
   miri_version = toml['pkg']['miri-preview']['version'].split('-', 1)[0]
-  try:
-    miri_url = toml['pkg']['miri-preview']['target'] \
-        ['x86_64-unknown-linux-gnu']['xz_url']
-  except KeyError:
-    return 'no miri available?'
 
   stds = [Std(target, toml['pkg']['rust-std']['target'][target])
           for target in STDS]
@@ -86,7 +81,6 @@ def prepare():
     clippy_version = clippy_version,
     clippy_url = clippy_url,
     miri_version = miri_version,
-    miri_url = miri_url,
   )
 
 def pre_build():

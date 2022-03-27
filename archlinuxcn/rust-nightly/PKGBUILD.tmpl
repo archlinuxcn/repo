@@ -26,13 +26,11 @@ source=(
         'https://static.rust-lang.org/dist/{{version_date_raw}}/rust-src-nightly.tar.xz.asc'
         '{{ clippy_url }}'
         '{{ clippy_url }}.asc'
-        '{{ miri_url }}'
-        '{{ miri_url }}.asc'
 {% for x in stds %}
         {{ "'%s'" % x.url }}
         {{ "'%s.asc'" % x.url }}{% end %}
         'git+https://github.com/rust-lang/zsh-config')
-sha512sums=({% for _ in range(9 + len(stds) * 2) %}
+sha512sums=({% for _ in range(7 + len(stds) * 2) %}
             'SKIP'{% end %})
 
 build() {
@@ -118,7 +116,7 @@ package_rust-miri-nightly() {
   conflicts=('rustup')
   depends=("rust-nightly=$epoch:$pkgver")
 
-  cd rust-nightly-$CARCH-unknown-linux-gnu/rust-miri-preview
+  cd rust-nightly-$CARCH-unknown-linux-gnu/miri-preview
   mkdir -p "$pkgdir/usr"
   cp -r bin "$pkgdir/usr"
 }
