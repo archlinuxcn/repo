@@ -32,9 +32,10 @@ if [ -z ${use_tracers+x} ]; then
 fi
 
 ## Choose between GCC and CLANG config (default is GCC)
-#if [ -z ${_compiler+x} ]; then
+if [ -z ${_compiler+x} ] || [ "$_compiler" = "clang" ]; then
+  msg2 "WARNING: clang config is not ready yet... Using gcc"
   _compiler=gcc
-#fi
+fi
 
 # Compress modules with ZSTD (to save disk space)
 if [ -z ${_compress_modules+x} ]; then
@@ -62,7 +63,7 @@ fi
 
 pkgbase=linux-xanmod-edge
 _major=5.17
-pkgver=${_major}.0
+pkgver=${_major}.1
 _branch=5.x
 xanmod=1
 pkgrel=1
@@ -99,7 +100,7 @@ done
 
 sha256sums=('555fef61dddb591a83d62dd04e252792f9af4ba9ef14683f64840e46fa20b1b1'
             'SKIP'
-            'b827f3e202d3fd1eaf8216a2098f8c86a02fbc33312c68d1741a52325554b8a3'
+            'fe16b85a560b4a36f6855361fe10891d11614ad93d99b243dbcce9004979748d'
             '1ac18cad2578df4a70f9346f7c6fccbb62f042a0ee0594817fdef9f2704904ee')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
