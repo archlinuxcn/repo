@@ -3,7 +3,7 @@
 
 pkgname=firefox-esr-decentraleyes
 _pkgname=decentraleyes
-pkgver=2.0.16
+pkgver=2.0.17
 pkgrel=1
 pkgdesc='Local emulation of Content Delivery Networks'
 arch=('any')
