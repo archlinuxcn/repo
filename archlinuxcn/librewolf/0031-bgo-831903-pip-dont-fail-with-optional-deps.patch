@@ -1,0 +1,14 @@
+diff -Naur a/python/mach/mach/site.py b/python/mach/mach/site.py
+--- a/python/mach/mach/site.py	2022-01-20 00:44:27.000000000 +0200
++++ b/python/mach/mach/site.py	2022-01-24 08:45:34.705599229 +0200
+@@ -797,10 +797,6 @@
+ 
+         if not result.has_all_packages:
+             print(result.report())
+-            raise Exception(
+-                f'The Python packages associated with "{self.python_path}" aren\'t '
+-                f'compatible with the "{virtualenv_name}" virtualenv'
+-            )
+ 
+         return result.provides_any_package
+ 
