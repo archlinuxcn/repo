@@ -3,7 +3,11 @@ maintainers:
 
 build_prefix: extra-x86_64
 
+pre_build: aur_pre_build
+
+post_build: aur_post_build
+
 update_on:
-  - source: manual
-    manual: 2.5
+  - source: aur
+    aur: apostrophe
   - alias: python

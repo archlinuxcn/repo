@@ -1,6 +1,6 @@
 # Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
 pkgname=apostrophe
-pkgver=2.5
+pkgver=2.6.1
 pkgrel=1
 _commit="666e348c9444241c2c0aa5d0145c0191c61b1481"
 pkgdesc="A distraction free Markdown editor for GNU/Linux made with GTK+"
@@ -18,7 +18,7 @@ optdepends=('texlive-latexextra: for the pdftex module'
             'libvoikko: A spelling and grammar checker'
             'appstream: Provides a standard for creating app stores across distributions')
 source=("${pkgname}-${pkgver}.tar.gz::https://gitlab.gnome.org/World/apostrophe/-/archive/v${pkgver}/apostrophe-v{pkgver}.tar.gz")
-sha256sums=('81efdfddb427e2c21fdfac3d5993397afcc6eeda12b41b6462bd91451a65949e')
+sha256sums=('9f4d4afc9d38fcb277dad969f741bb17b1d2540747575b7afb6ecc56fd3957ea')
 
 build() {
 	arch-meson "${pkgname}-v${pkgver}-${_commit}" build
