@@ -1,34 +1,44 @@
 # Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
 pkgname=apostrophe
 pkgver=2.6.1
-pkgrel=1
-_commit="666e348c9444241c2c0aa5d0145c0191c61b1481"
+pkgrel=2
 pkgdesc="A distraction free Markdown editor for GNU/Linux made with GTK+"
-arch=('x86_64')
-url="https://gitlab.gnome.org/World/apostrophe"
+arch=('any')
+url="https://world.pages.gitlab.gnome.org/apostrophe"
 license=('GPL3')
-depends=('webkit2gtk' 'gspell' 'python-pypandoc' 'python-regex' 'python-levenshtein'
-         'python-pyenchant' 'python-gobject' 'python-cairo' 'otf-fira-mono' 'libhandy'
-         'python-chardet' 'mathjax2')
+depends=('gspell' 'libhandy>=1.6' 'otf-fira-mono' 'otf-fira-sans' 'python-cairo'
+         'python-gobject' 'python-levenshtein' 'python-pyenchant' 'python-pypandoc'
+         'python-regex' 'python-setuptools' 'webkit2gtk')
 makedepends=('meson' 'gobject-introspection' 'sassc')
-checkdepends=('appstream-glib')
 optdepends=('texlive-latexextra: for the pdftex module'
-            'hspell: Hebrew spell-checker'
-            'nuspell: Fast and safe spellchecking C++ library'
-            'libvoikko: A spelling and grammar checker'
-            'appstream: Provides a standard for creating app stores across distributions')
-source=("${pkgname}-${pkgver}.tar.gz::https://gitlab.gnome.org/World/apostrophe/-/archive/v${pkgver}/apostrophe-v{pkgver}.tar.gz")
-sha256sums=('9f4d4afc9d38fcb277dad969f741bb17b1d2540747575b7afb6ecc56fd3957ea')
+            'mathjax: for formula preview')
+checkdepends=('appstream-glib')
+changelog="$pkgname-NEWS"
+source=("https://gitlab.gnome.org/World/apostrophe/-/archive/v$pkgver/$pkgname-v$pkgver.tar.gz")
+sha256sums=('f1c38d97cc5413a21017b95c16f0e869fd0d316ec1a3c54ec5607534562cee5c')
+
+prepare() {
+  cd "$pkgname-v$pkgver"
+
+  # Bug 1953395 - Apostrophe can't export to HTML
+  sed -i 's|/app/share/fonts/FiraSans-Regular.ttf|/usr/share/fonts/mozilla-fira/FiraSans-Regular.otf|' \
+    data/media/css/web/base.css
+  sed -i 's|/app/share/fonts/FiraMono-Regular.ttf|/usr/share/fonts/mozilla-fira/FiraMono-Regular.otf|' \
+    data/media/css/web/base.css
+
+  # W: hidden-file-or-dir
+  rm apostrophe/.pylintrc
+}
 
 build() {
-	arch-meson "${pkgname}-v${pkgver}-${_commit}" build
-	meson compile -C build
+  arch-meson "$pkgname-v$pkgver" build
+  meson compile -C build
 }
 
 check() {
-	meson test -C build --print-errorlogs
+  meson test -C build --print-errorlogs
 }
 
 package() {
-	DESTDIR="$pkgdir" meson install -C build
+  meson install -C build --destdir "$pkgdir"
 }
