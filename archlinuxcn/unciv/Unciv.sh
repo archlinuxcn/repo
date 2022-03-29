@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export PATH=/usr/lib/jvm/java-8-openjdk/jre/bin/:$PATH
+export PATH=/usr/lib/jvm/java-11-openjdk/bin/:$PATH
 CONFIG_DIR="$HOME/.local/share/Unciv"
 
 USAGE="Unciv [--help | -h | --config-dir PATH]
