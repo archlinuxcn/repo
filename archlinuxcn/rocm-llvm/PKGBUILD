@@ -4,7 +4,7 @@
 pkgname=rocm-llvm
 pkgdesc='Radeon Open Compute - LLVM toolchain (llvm, clang, lld)'
 pkgver=5.0.2
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/llvm-project'
 license=('custom:Apache 2.0 with LLVM Exception')
@@ -15,7 +15,7 @@ replaces=('llvm-amdgpu')
 conflicts=('llvm-amdgpu')
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
 sha256sums=('99a14394b406263576ed3d8d10334de7c78d42b349109f375d178b11492eecaf')
-options=(staticlibs)
+options=(staticlibs !lto)
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
 # NINJAFLAGS is an env var used to pass commandline options to ninja
