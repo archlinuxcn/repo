@@ -2,7 +2,7 @@
 
 _pkgname=streamlit
 pkgname=python-streamlit
-pkgver=1.8.0
+pkgver=1.8.1
 pkgrel=1
 pkgdesc='The fastest way to build data apps in Python'
 arch=('any')
@@ -41,7 +41,7 @@ makedepends=(
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"
 )
-sha512sums=('8ff2eb533ede7c575b426e062d66a241f3224ec7a73f3a05c1fc007e0ecaf17bd65a5fec314d42caa356d686680abd64626b8cf2f09a43eaa1374aab4c7f5057')
+sha512sums=('092e0ac1f51698e4670ea54425da5d97441710decfc081310223c893d6808342f24bc88ab3c27927161396436a0e7ac853fd03a23b51bffcf9a0c9fbc5bc064c')
 
 build() {
   cd "${_pkgname}-${pkgver}"
