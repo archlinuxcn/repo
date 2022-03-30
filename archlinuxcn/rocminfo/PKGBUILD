@@ -6,7 +6,7 @@
 
 pkgname=rocminfo
 pkgver=5.0.2
-pkgrel=1
+pkgrel=2
 pkgdesc='ROCm info tools - rocm_agent_enumerator'
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/rocminfo'
@@ -31,4 +31,5 @@ package() {
   DESTDIR="$pkgdir" make install
   mkdir -p "$pkgdir/usr/bin"
   ln -st "$pkgdir/usr/bin" /opt/rocm/bin/rocminfo
+  ln -st "$pkgdir/usr/bin" /opt/rocm/bin/rocm_agent_enumerator
 }
