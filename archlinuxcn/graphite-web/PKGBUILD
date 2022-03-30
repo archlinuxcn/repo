@@ -1,0 +1,61 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Steven De Bondt <egnappah at gmail dot com>
+
+pkgname=graphite-web
+pkgver=1.1.8
+pkgrel=4
+pkgdesc="a Django-based web application that renders graphs and dashboards"
+url="https://github.com/graphite-project/graphite-web"
+license=('Apache')
+depends=('python-pytz' 'python-six' 'python-cairocffi' 'python-pyparsing' 'python-django' 'python-django-tagging' 'gunicorn')
+makedepends=('python-setuptools')
+optdepends=('python-flask-cache: For caching'
+            'python-raven: For sentry support')
+arch=('any')
+backup=('etc/graphite/local_settings.py')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/graphite-project/${pkgname}/archive/${pkgver}.tar.gz"
+        "local_settings.py"
+        "graphite-web.service" "graphite-web.socket")
+sha256sums=('6e35629493b9be77fa9902471053f6789e300c06fe74a0215253d986fc0b866c'
+            '98f0660a4346398c4d6a5074ee4ae0d45f0e6461436c9cb7a04fc6b1bfb4f23d'
+            'd89ee1b712783ccfacf55962a2e86b50f03585a8aae829771084777ac6a8f2f4'
+            '318238773e37e1297d1eaf4c7b9e5dc9e8ae74298c381034b5476b14f0ab76bf')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  python setup.py build
+
+  #Dirty Fixing old django references
+  sed -i 's/django.conf.urls/django.urls/g' \
+    webapp/graphite/account/urls.py webapp/graphite/browser/urls.py \
+    webapp/graphite/composer/urls.py webapp/graphite/dashboard/urls.py \
+    webapp/graphite/events/urls.py webapp/graphite/functions/urls.py \
+    webapp/graphite/metrics/urls.py webapp/graphite/render/urls.py \
+    webapp/graphite/tags/urls.py webapp/graphite/urls.py \
+    webapp/graphite/version/urls.py webapp/graphite/whitelist/urls.py
+  sed -i 's/url\b/re_path/g' \
+    webapp/graphite/account/urls.py \
+    webapp/graphite/browser/urls.py \
+    webapp/graphite/composer/urls.py \
+    webapp/graphite/dashboard/urls.py \
+    webapp/graphite/events/urls.py \
+    webapp/graphite/functions/urls.py \
+    webapp/graphite/metrics/urls.py \
+    webapp/graphite/render/urls.py \
+    webapp/graphite/tags/urls.py \
+    webapp/graphite/urls.py \
+    webapp/graphite/version/urls.py \
+    webapp/graphite/whitelist/urls.py
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  python setup.py install --root="${pkgdir}/" --optimize=1
+
+  mkdir -p "$pkgdir/var/log/graphite"
+  mkdir -p "$pkgdir/etc/graphite"
+  install -Dm0644 "$srcdir/local_settings.py" "$pkgdir/etc/graphite/local_settings.py"
+  ln -s "/etc/graphite/local_settings.py" "$pkgdir/opt/graphite/webapp/graphite/local_settings.py"
+  install -Dm0644 "$srcdir/graphite-web.service" "$pkgdir/usr/lib/systemd/system/graphite-web.service"
+  install -Dm0644 "$srcdir/graphite-web.socket" "$pkgdir/usr/lib/systemd/system/graphite-web.socket"
+}

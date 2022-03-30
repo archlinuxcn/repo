@@ -1,0 +1,21 @@
+[Unit]
+Description=Graphite-api daemon
+After=network.target
+
+[Service]
+Type=exec
+# listening address can be configured via a drop-in
+Environment=LISTEN=127.0.0.1:8888 WORKERS=2
+ExecStart=/usr/bin/gunicorn -w $WORKERS graphite.wsgi --pythonpath=/opt/graphite/webapp --bind $LISTEN
+
+# some hardening
+PrivateDevices=true
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+LogsDirectory=graphite
+CapabilityBoundingSet=
+DynamicUser=true
+
+[Install]
+WantedBy=multi-user.target
