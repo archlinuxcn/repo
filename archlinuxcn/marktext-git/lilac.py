@@ -4,7 +4,7 @@ from lilaclib import *
 import subprocess
 
 def apply_patch(filename, patch):
-    patch_proc = subprocess.Popen(["patch", "-p1", filename], stdin=subprocess.PIPE)
+    patch_proc = subprocess.Popen(["patch", "-p1", filename], stdin=subprocess.PIPE, text=True)
     patch_proc.communicate(patch)
 
 def pre_build():
