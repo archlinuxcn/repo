@@ -7,7 +7,7 @@
 
 pkgname=opera-developer
 pkgver=87.0.4374.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A fast and secure web browser and Internet suite - developer stream'
 arch=('x86_64')
 url='https://www.opera.com/computer'
@@ -19,11 +19,11 @@ optdepends=(
     'upower: opera battery save'
 )
 source=(
-    "https://get.geo.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64.rpm"
+    "https://get.geo.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64.deb"
     "opera"
     "default"
 )
-sha256sums=('15c047835f9577ac560c3a39189b2b65dfebe029d3ca64c1005c1fc01f603704'
+sha256sums=('a745d5b2c0a670a5adc7b0dd82276d20f492057a89f28c701fcf17a64cb5c3da'
             '508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
             '99fc0d2822edd14e234d451995db47148125e4580221a292598959421d131231')
 
@@ -35,9 +35,14 @@ prepare() {
 }
 
 package() {
-    install -dm755 "$pkgdir/usr"
-    cp -a usr/share "$pkgdir/usr/"
-    cp -a usr/lib64 "$pkgdir/usr/lib"
+    tar -xf data.tar.xz --exclude=usr/share/{lintian,menu} -C "$pkgdir/"
+
+	# get rid of the extra subfolder {i386,x86_64}-linux-gnu
+	(
+        cd "$pkgdir/usr/lib/"*-linux-gnu/
+        mv "$pkgname" ../
+	)
+    rm -rf "$pkgdir/usr/lib/"*-linux-gnu
 
     # suid opera_sandbox
     chmod 4755 "$pkgdir/usr/lib/$pkgname/opera_sandbox"
@@ -46,12 +51,12 @@ package() {
     install -Dm644 "$srcdir/default" "$pkgdir/etc/$pkgname/default"
 
 	# install opera wrapper
-    #rm "$pkgdir/usr/bin/$pkgname"
+    rm "$pkgdir/usr/bin/$pkgname"
     install -Dm755 "$srcdir/opera" "$pkgdir/usr/bin/$pkgname"
 
 	# license
-	#install -Dm644 \
-        #"$pkgdir/usr/share/doc/$pkgname/copyright" \
-        #"$pkgdir/usr/share/licenses/$pkgname/copyright"
+	install -Dm644 \
+        "$pkgdir/usr/share/doc/$pkgname/copyright" \
+        "$pkgdir/usr/share/licenses/$pkgname/copyright"
 }
 
