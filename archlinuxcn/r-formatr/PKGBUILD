@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=formatR
-_pkgver=1.11
+_pkgver=1.12
 pkgname=r-${_pkgname,,}
-pkgver=1.11
+pkgver=1.12
 pkgrel=1
 pkgdesc='Format R Code Automatically'
 arch=('any')
@@ -20,7 +20,7 @@ optdepends=(
   r-testit
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('bd81662d09cf363652761e63ba5969c71be4dd5ae6fc9098f440d6729254a30c')
+sha256sums=('8b52efbf43cbef25d837bb99a793a590c0958b753052c032b52304724e808c8b')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
