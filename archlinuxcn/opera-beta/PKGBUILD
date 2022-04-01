@@ -6,7 +6,7 @@
 # Contributor: totoloco
 
 pkgname=opera-beta
-pkgver=86.0.4363.9
+pkgver=86.0.4363.12
 pkgrel=1
 pkgdesc='A fast and secure web browser and Internet suite - beta stream'
 arch=('x86_64')
@@ -19,11 +19,11 @@ optdepends=(
     'upower: opera battery save'
 )
 source=(
-    "https://get.geo.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64.rpm"
+    "https://get.geo.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64.deb"
     "opera"
     "default"
 )
-sha256sums=('3bc0de29374e727649c78549b92ccb13f153ea9896efc27b435c78ff66b1a0b5'
+sha256sums=('d8594a5ff0b474a1f36567587bf0396f2d5c4dcd966a792cd8341162106e5e2b'
             '508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
             '99fc0d2822edd14e234d451995db47148125e4580221a292598959421d131231')
 
@@ -35,9 +35,14 @@ prepare() {
 }
 
 package() {
-    install -dm755 "$pkgdir/usr"
-    cp -a usr/share "$pkgdir/usr/"
-    cp -a usr/lib64 "$pkgdir/usr/lib"
+    tar -xf data.tar.xz --exclude=usr/share/{lintian,menu} -C "$pkgdir/"
+
+	# get rid of the extra subfolder {i386,x86_64}-linux-gnu
+	(
+        cd "$pkgdir/usr/lib/"*-linux-gnu/
+        mv "$pkgname" ../
+	)
+    rm -rf "$pkgdir/usr/lib/"*-linux-gnu
 
     # suid opera_sandbox
     chmod 4755 "$pkgdir/usr/lib/$pkgname/opera_sandbox"
@@ -46,12 +51,12 @@ package() {
     install -Dm644 "$srcdir/default" "$pkgdir/etc/$pkgname/default"
 
 	# install opera wrapper
-    #rm "$pkgdir/usr/bin/$pkgname"
+    rm "$pkgdir/usr/bin/$pkgname"
     install -Dm755 "$srcdir/opera" "$pkgdir/usr/bin/$pkgname"
 
 	# license
-	#install -Dm644 \
-        #"$pkgdir/usr/share/doc/$pkgname/copyright" \
-        #"$pkgdir/usr/share/licenses/$pkgname/copyright"
+	install -Dm644 \
+        "$pkgdir/usr/share/doc/$pkgname/copyright" \
+        "$pkgdir/usr/share/licenses/$pkgname/copyright"
 }
 
