@@ -3,16 +3,7 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: |
-    update_pkgver_and_pkgrel(_G.newver)
-
-post_build_script: |
-    git_pkgbuild_commit()
-    update_aur_repo()
-
 update_on:
-  - source: regex
-    regex: Latest (?:LTS|Stable) Version \((r\d+[a-z]?)\)
-    url: https://developer.android.com/ndk/downloads/index.html
-    from_pattern: r(\d+)([a-z])
-    to_pattern: r\1.\2
+  - source: android_sdk
+    android_sdk: ndk;
+    repo: package
