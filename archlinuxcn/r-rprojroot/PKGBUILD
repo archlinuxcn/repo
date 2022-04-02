@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=rprojroot
-_pkgver=2.0.2
+_pkgver=2.0.3
 pkgname=r-${_pkgname,,}
-pkgver=2.0.2
+pkgver=2.0.3
 pkgrel=1
 pkgdesc='Finding Files in Project Subdirectories'
 arch=('any')
@@ -22,7 +22,7 @@ optdepends=(
   r-withr
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('5fa161f0d4ac3b7a99dc6aa2d832251001dc92e93c828593a51fe90afd019e1f')
+sha256sums=('50604247470e910cecfe9b76df754bf96a0d701f81b732f7aa9c90a20d30f897')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
