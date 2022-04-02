@@ -8,24 +8,22 @@ pkgver=0.28.0
 pkgrel=11
 
 # from src/sysdig-*/cmake/modules/falcosecurity-libs.cmake
-_falcover=2160111cd088aea9ae2235d3385ecb0b1ab6623c
+_falcover=e5c53d648f3c4694385bbe488e7d47eaa36c229a
 
 pkgdesc="Open source system-level exploration and troubleshooting tool"
 arch=('x86_64')
 url="https://www.sysdig.com/"
 license=('GPL2' 'Apache' 'MIT')
-depends=('jsoncpp' 'libjsoncpp.so' 'luajit' 'curl' 'libcurl.so' 'jq' 'libb64' 'intel-tbb' 'grpc' "linux-lily=5.15.26-2" 'libgrpc++_unsecure.so')
+depends=('jsoncpp' 'libjsoncpp.so' 'luajit' 'curl' 'libcurl.so' 'jq' 'libb64' 'intel-tbb' 'grpc' "linux-lily=5.15.26-2" 'libgrpc++_unsecure.so' 'yaml-cpp')
 makedepends=('cmake' 'llvm' 'clang' 'gtest' 'linux-lily-headers')
 source=("https://github.com/draios/sysdig/archive/$pkgver/sysdig-$pkgver.tar.gz"
-        "https://github.com/falcosecurity/libs/archive/$_falcover.tar.gz"
+        "falcosecurity-libs-$_falcover.tar.gz::https://github.com/falcosecurity/libs/archive/$_falcover.tar.gz"
         "bashcomp-location.patch"
-        "falcosecurity-libs-nodownload.patch"
-        "falcosecurity-liblua-2.1.patch")
+        "falcosecurity-libs-nodownload.patch")
 sha256sums=('817e595d501acf3fe11dc659a154aadbba848dd87ae801f5bf34a42e84979f37'
-            'f84edc4f7490064a0e2264594013c01c205bc5fc968376bfb0ecc17582e5e112'
+            '80903bc57b7f9c5f24298ecf1531cf66ef571681b4bd1e05f6e4db704ffb380b'
             'aaee8a0ff414a24c5d5a479229324be1667bc5eb70702838f5d617fd986f947b'
-            'b8cedef6766c691a8a92810eb459593d80070f0cf5dfc32cae2a80ec00639429'
-            '11863751dc555a2a406e5276bbafa9185f1031d6f12c4cb051ac7097e7467889')
+            'b8cedef6766c691a8a92810eb459593d80070f0cf5dfc32cae2a80ec00639429')
 conflicts=(sysdig)
 provides=(sysdig=$pkgver)
 
@@ -33,9 +31,6 @@ prepare() {
   cd "$srcdir"/sysdig-$pkgver
   patch -p1 -i "$srcdir"/bashcomp-location.patch
   patch -p1 -i "$srcdir"/falcosecurity-libs-nodownload.patch
-
-  cd "$srcdir/libs-$_falcover"
-  patch -p1 -i "$srcdir"/falcosecurity-liblua-2.1.patch
 }
 
 build() {
