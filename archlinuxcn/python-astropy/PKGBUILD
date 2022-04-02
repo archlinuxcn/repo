@@ -2,7 +2,7 @@
 # Contributor: Luis Martinez <luis dot martinez at disroot dot org>
 
 pkgname=python-astropy
-pkgver=5.0.3
+pkgver=5.0.4
 pkgrel=1
 pkgdesc="A community python library for astronomy"
 arch=('i686' 'x86_64')
@@ -30,7 +30,7 @@ optdepends=('python-scipy: powers a variety of features in several modules'
 conflicts=('python-pyfits' 'python-vo')
 makedepends=('cython' 'python-jinja' 'python-setuptools-scm' 'python-extension-helpers')
 source=("https://files.pythonhosted.org/packages/source/a/astropy/astropy-${pkgver}.tar.gz")
-sha512sums=('cd107744789c6ed15f48b77af6f2ed3d961a28c63ded3daaf18403ce67a73b5f2c7d66a1c97588ca4c32e52b5d2ec3ffd801803e2ae7317ecf86ff57a81da5a0')
+sha512sums=('9076b364d7da2ba9a6a43946be5050261eabc46ef755c65bf7733927d26dd0fa23e0f95ef9a6992f4871319fef040972c4449de9bfa24421cc3711716dfb136c')
 
 build() {
   cd "${srcdir}/astropy-${pkgver}"
