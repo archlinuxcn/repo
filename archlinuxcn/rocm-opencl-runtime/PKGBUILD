@@ -3,7 +3,7 @@
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 
 pkgname=rocm-opencl-runtime
-pkgver=5.0.2
+pkgver=5.1.0
 pkgrel=1
 pkgdesc='Radeon Open Compute - OpenCL runtime'
 arch=('x86_64')
@@ -16,14 +16,15 @@ conflicts=('opencl-amdgpu-pro-pal')
 _rocclr='https://github.com/ROCm-Developer-Tools/ROCclr'
 source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz"
         "$pkgname-rocclr-$pkgver.tar.gz::$_rocclr/archive/rocm-$pkgver.tar.gz")
-sha256sums=('3edb1992ba28b4a7f82dd66fbd121f62bd859c1afb7ceb47fa856bd68feedc95'
-            '34decd84652268dde865f38e66f8fb4750a08c2457fea52ad962bced82a03e5e')
+sha256sums=('362d81303048cf7ed5d2f69fb65ed65425bc3da4734fff83e3b8fbdda51b0927'
+            'f4f265604b534795a275af902b2c814f416434d9c9e16db81b3ed5d062187dfa')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 _rocclr_dir="$(basename "$_rocclr")-$(basename "${source[1]}" .tar.gz)"
 
 build() {
     cmake -Wno-dev -B build-rocclr \
 	-S "$_rocclr_dir" \
+    -DCMAKE_BUILD_TYPE=Release \
     -DAMD_OPENCL_PATH="$srcdir/$_dirname"
 
     make -C build-rocclr
@@ -31,8 +32,9 @@ build() {
     cmake -Wno-dev -B build \
     -S "$_dirname" \
     -DCMAKE_INSTALL_PREFIX=/opt/rocm \
-    -DUSE_COMGR_LIBRARY=yes \
-    -DROCCLR_PATH="$srcdir/$_rocclr_dir" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DROCM_PATH=/opt/rocm \
+    -DCMAKE_PREFIX_PATH="$srcdir/$_rocclr_dir;/opt/rocm" \
     -DAMD_OPENCL_PATH="$srcdir/$_dirname"
 
     make -C build
