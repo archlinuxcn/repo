@@ -1,0 +1,28 @@
+maintainers:
+  - github: yuyichao
+
+build_prefix: extra-x86_64
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - libsearpc
+
+update_on:
+  - source: github
+    github: haiwen/seadrive-gui
+    use_max_tag: true
+  - source: alpm-lilac
+    alpm: glib2
+    provided: libgobject-2.0.so
+  - source: alpm-lilac
+    alpm: glib2
+    provided: libglib-2.0.so
+  - source: alpm
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+    alpm: qt6-base
+    repo: extra
+  - source: manual
+    manual: 1
