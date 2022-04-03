@@ -10,10 +10,10 @@ pkgver=6.1.11
 pkgrel=1
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 depends=(
-  'libsodium' 'libutempter' 'libunwind'
+  'libsodium' 'libutempter' 'libunwind' 'libprotobuf.so'
 )
 makedepends=(
-  'patch' 'protobuf' 'cmake' 'unzip' 'wget'
+  'patch' 'cmake' 'unzip' 'wget'
 )
 url='https://mistertea.github.io/EternalTerminal/'
 license=('Apache')
@@ -46,12 +46,6 @@ build() {
   make
 }
 
-_add_protobuf_depends() {
-  protobufver=$(objdump -p /usr/lib/libprotobuf.so | \
-                  grep SONAME | sed -e 's/.*protobuf\.so\.//')
-  depends+=("libprotobuf.so=${protobufver}")
-}
-
 _install_client() {
   mkdir -p "${pkgdir}/usr/local/bin/"
   # /usr/bin/et conflicts with wps...
@@ -79,7 +73,6 @@ package_eternalterminal-client() {
 
   cd EternalTerminal-et-v${pkgver}/build
   _install_client
-  _add_protobuf_depends
 }
 
 package_eternalterminal-server() {
@@ -88,7 +81,6 @@ package_eternalterminal-server() {
   cd EternalTerminal-et-v${pkgver}/build
 
   _install_server
-  _add_protobuf_depends
 }
 
 package_eternalterminal-htm() {
@@ -96,7 +88,6 @@ package_eternalterminal-htm() {
 
   cd EternalTerminal-et-v${pkgver}/build
   _install_htm
-  _add_protobuf_depends
 }
 
 package_eternalterminal() {
@@ -108,5 +99,4 @@ package_eternalterminal() {
 
   _install_client
   _install_server
-  _add_protobuf_depends
 }
