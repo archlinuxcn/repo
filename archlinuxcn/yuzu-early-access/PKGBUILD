@@ -2,7 +2,7 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=2640
+pkgver=2641
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
@@ -15,7 +15,7 @@ provides=('yuzu')
 conflicts=('yuzu')
 source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz"
     "inject-git-info.patch")
-md5sums=('b422a49b97dd9208644e040581c4442c'
+md5sums=('a6cb26b60a1716db479f51da63d639f1'
          '3f0a9f3d79cbe4759e9ef550dbad0baa')
 
 prepare() {
