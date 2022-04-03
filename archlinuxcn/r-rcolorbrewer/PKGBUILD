@@ -1,9 +1,9 @@
 # Maintainer: hubutui <hot123tea123@gmail.com>
 
 _pkgname=RColorBrewer
-_pkgver=1.1-2
+_pkgver=1.1-3
 pkgname=r-${_pkgname,,}
-pkgver=1.1.2
+pkgver=1.1.3
 pkgrel=1
 pkgdesc='ColorBrewer Palettes'
 arch=('any')
@@ -13,7 +13,7 @@ depends=(
   r
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('f3e9781e84e114b7a88eb099825936cc5ae7276bbba5af94d35adb1b3ea2ccdd')
+sha256sums=('4f42f5423c45688b39f492c7892d93f37b4541831c8ffb140364d2bd89031ac0')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
