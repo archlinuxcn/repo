@@ -1,0 +1,38 @@
+maintainers:
+  - github: yuyichao
+
+build_prefix: extra-x86_64
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - libsearpc
+
+update_on:
+  - source: github
+    github: haiwen/seadrive-fuse
+    use_max_tag: true
+  - source: alpm
+    from_pattern: ^(\d\.\d)\..*
+    to_pattern: \1
+    alpm: openssl
+    repo: core
+  - source: alpm
+    provided: libuuid.so
+    alpm: util-linux-libs
+  - source: alpm
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+    alpm: libevent
+  - source: alpm
+    alpm: curl
+    provided: libcurl.so
+  - source: alpm-lilac
+    alpm: glib2
+    provided: libgobject-2.0.so
+  - source: alpm-lilac
+    alpm: glib2
+    provided: libglib-2.0.so
+  - source: manual
+    manual: 1
