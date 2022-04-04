@@ -14,7 +14,7 @@ depends=(
   charls
   libxml2
   openjpeg2
-# poppler
+  poppler
   python
 # vtk
 )
@@ -46,7 +46,6 @@ get_pyver() {
 }
 
 # disable vtk, see also https://sourceforge.net/p/gdcm/bugs/509/
-# disable poppler
 build() {
   export CXXFLAGS+=" ${CPPFLAGS} -fpermissive"
   cmake \
@@ -68,7 +67,7 @@ build() {
     -DGDCM_USE_SYSTEM_LIBXML2:BOOL=ON \
     -DGDCM_USE_SYSTEM_OPENJPEG:BOOL=ON \
     -DGDCM_USE_SYSTEM_OPENSSL:BOOL=ON \
-    -DGDCM_USE_SYSTEM_POPPLER:BOOL=OFF \
+    -DGDCM_USE_SYSTEM_POPPLER:BOOL=ON \
     -DGDCM_USE_SYSTEM_UUID:BOOL=ON \
     -DGDCM_USE_SYSTEM_ZLIB:BOOL=ON \
     -DGDCM_USE_VTK:BOOL=OFF \
@@ -87,6 +86,7 @@ package() {
   ln -s "/usr/lib/_gdcmswig.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/_gdcmswig.so"
   #ln -s "/usr/lib/vtkgdcmPython.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/vtkgdcmPython.so"
   find "${pkgdir}/usr/lib" -type f -name "*.py" -exec mv -vf {} "${pkgdir}/usr/lib/python$(get_pyver)/site-packages" \;
+  python -O -m compileall "${pkgdir}/usr/lib"
 }
 # vim:set ts=2 sw=2 et:
 
