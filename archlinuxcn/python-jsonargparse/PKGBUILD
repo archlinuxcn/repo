@@ -1,0 +1,35 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=jsonargparse
+pkgname=python-jsonargparse
+pkgver=4.5.0
+pkgrel=1
+pkgdesc='Parsing of command line options, yaml/jsonnet config files and/or environment variables based on argparse'
+arch=('any')
+url='https://github.com/omni-us/jsonargparse'
+license=('MIT')
+depends=(
+  python-yaml
+)
+makedepends=(
+  python-setuptools
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/omni-us/jsonargparse/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('53205d78fc1a44d129cafe4e4821edef0bba96820098f395b62271a54896c8dc25fbbffdd4c3daf8ce69f36b6d2b9cbcc0d44ea5ef5a337df936362f80996aae')
+
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE.rst -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  rm -rf "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/jsonargparse_tests"
+}
+# vim:set ts=2 sw=2 et:
