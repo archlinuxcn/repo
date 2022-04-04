@@ -1,0 +1,60 @@
+# Maintainer: Juanma Hernandez <juanmah@gmail.com>
+
+pkgname=zotero
+pkgver=6.0.4
+pkgrel=1
+pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
+arch=(aarch64)
+url="https://www.zotero.org/download"
+license=('AGPL3')
+makedepends=(git perl python2 python curl wget zip unzip awk chromium rsync)
+# Build error with nodejs 17
+depends=(dbus-glib gtk3 nss libxt npm poppler nodejs-lts-gallium)
+install='zotero.install'
+source=("zotero-client::git+https://github.com/zotero/zotero#tag=$pkgver"
+        "git+https://github.com/zotero/zotero-build"
+        "git+https://github.com/yuyichao/zotero-standalone-build#branch=aarch64-hack"
+        zotero.desktop)
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc')
+options=(!makeflags)
+
+prepare() {
+  (cd zotero-client
+   git submodule update --init --recursive)
+  (cd zotero-build
+   git submodule update --init --recursive)
+  (cd zotero-standalone-build
+   git submodule update --init --recursive)
+}
+
+build() {
+  (cd zotero-client
+
+   npm install
+   npm run build)
+  (cd zotero-standalone-build
+   ./fetch_xulrunner.sh -p l
+   ./fetch_pdftools
+   scripts/dir_build)
+}
+
+package() {
+  cd zotero-standalone-build
+
+  install -dDm755 "$pkgdir"/usr/{bin,lib/zotero}
+  cp -a staging/Zotero_linux-aarch64/* "$pkgdir"/usr/lib/zotero
+  ln -s /usr/lib/zotero/zotero "$pkgdir"/usr/bin/zotero
+  install -Dm644 "$srcdir"/zotero.desktop "$pkgdir"/usr/share/applications/zotero.desktop
+  # Copy zotero icons to a standard location
+  install -Dm644 "$pkgdir"/usr/lib/zotero/chrome/icons/default/default16.png "$pkgdir"/usr/share/icons/hicolor/16x16/apps/zotero.png
+  install -Dm644 "$pkgdir"/usr/lib/zotero/chrome/icons/default/default32.png "$pkgdir"/usr/share/icons/hicolor/32x32/apps/zotero.png
+  install -Dm644 "$pkgdir"/usr/lib/zotero/chrome/icons/default/default48.png "$pkgdir"/usr/share/icons/hicolor/48x48/apps/zotero.png
+  install -Dm644 "$pkgdir"/usr/lib/zotero/chrome/icons/default/default256.png "$pkgdir"/usr/share/icons/hicolor/256x256/apps/zotero.png
+  # Disable APP update
+  sed -i '/pref("app.update.enabled", true);/c\pref("app.update.enabled", false);' "$pkgdir"/usr/lib/zotero/defaults/preferences/prefs.js
+  # No need to keep a shell around when launching Zotero
+  sed -i -r 's/^("\$CALLDIR\/zotero-bin" -app "\$CALLDIR\/application.ini" "\$@")/exec \1/' "$pkgdir"/usr/lib/zotero/zotero
+}
