@@ -1,3 +1,35 @@
+## 9.2
+
+* `aur-build`
+  + deprecate `--results`
+  + retrieve repository before setting `--chroot` paths
+  + unset `PKGEXT` when using `--chroot`
+
+* `aur-search`
+  + use OSC8 terminal hyperlinks (#849)
+
+## 9.1
+
+`aur-build` now uses `setpriv(1)` to run unprivileged commands (`makepkg`, `gpg`,
+`repo-add`) when `AUR_ASROOT` is combined with `--user`. This change has no
+effect when running `aur-build` as a regular user.
+
+Usage:
+
+  $ sudo env AUR_ASROOT=1 aur build --chroot --user <build_user> ...
+
+The above works with `--chroot` (`makechrootpkg -U`). Environment variables in
+the root environment are preserved for user commands, similar to `runuser -c`.
+Host builds using `makepkg --syncdeps` to install dependencies require further
+configuration.
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ WARNING!                                                                     │
+│                                                                              │
+│ Running `aur-build` as root is experimental and disabled by default. If your │
+│ install breaks, you get to keep both pieces.                                 │
+└──────────────────────────────────────────────────────────────────────────────┘
+
 ## 9
 
 * `examples`
