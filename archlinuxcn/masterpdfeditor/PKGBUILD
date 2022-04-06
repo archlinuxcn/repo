@@ -6,7 +6,7 @@
 
 pkgname=masterpdfeditor
 pkgver=5.8.46
-pkgrel=1
+pkgrel=2
 pkgdesc='A complete solution for viewing, creating and editing PDF files'
 url='https://code-industry.net/free-pdf-editor/'
 arch=('x86_64')
@@ -16,7 +16,7 @@ source_x86_64=("https://code-industry.net/public/master-pdf-editor-${pkgver}-qt5
 sha1sums_x86_64=('6d9b66dfa35effa0ccb659f7f9d94a8e1ade460f')
 
 package() {
-  depends=('libgl' 'nspr' 'nss' 'qt5-base' 'qt5-svg' 'sane')
+  depends=('libgl' 'nspr' 'nss' 'qt5-base' 'qt5-svg' 'qt5-declarative' 'sane')
 
   install -d "$pkgdir"{/opt/,/usr/bin/}
   cp -a --no-preserve=ownership master-pdf-editor-${pkgver%%.*} "$pkgdir/opt/"
