@@ -4,7 +4,7 @@ pkgbase=intellij-idea-ultimate-edition
 pkgname=(intellij-idea-ultimate-edition intellij-idea-ultimate-edition-jre)
 pkgver=2021.3.3
 _buildver=213.7172.25
-pkgrel=1
+pkgrel=2
 arch=('any')
 pkgdesc="An intelligent IDE for Java, Groovy and other programming languages with advanced refactoring features intensely focused on developer productivity."
 url="https://www.jetbrains.com/idea/"
@@ -39,7 +39,7 @@ package_intellij-idea-ultimate-edition() {
 
   ln -s /opt/$pkgname/bin/idea.sh "$pkgdir"/usr/bin/$pkgname
   install -D -m644 "$srcdir"/jetbrains-idea.desktop "$pkgdir"/usr/share/applications/jetbrains-idea.desktop
-  install -D -m644 "$pkgdir"/opt/$pkgbase/bin/idea.png "$pkgdir"/usr/share/pixmaps/"$pkgname".png
+  install -D -m644 "$pkgdir"/opt/$pkgbase/bin/idea.svg "$pkgdir"/usr/share/pixmaps/"$pkgname".svg
 
   # workaround FS#40934
   sed -i 's|lcd|on|'  "$pkgdir"/opt/$pkgname/bin/*.vmoptions
