@@ -3,7 +3,7 @@
 
 _pkgname=PySimpleGUI
 pkgname=('python-pysimplegui')
-pkgver=4.58.0
+pkgver=4.59.0
 pkgrel=1
 pkgdesc='Python GUIs for Humans'
 arch=('any')
@@ -17,7 +17,7 @@ makedepends=(
   python-setuptools
 )
 source=(${pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz)
-sha256sums=('cd582b8e944e0dd7a480f109f8cec1ddc0887bb5e66692501b9260c9e7b98710')
+sha256sums=('196e81c0a437eac4893595f2ee69515b9841e608d351bd3c577dd7a913454f51')
 
 build() {
   cd "${_pkgname}-${pkgver}"
