@@ -1,13 +1,12 @@
-pre_build_script: aur_pre_build(maintainers=['slondr'])
+pre_build_script: aur_pre_build(maintainers=['slondr', 'mandeepsan'])
 
 post_build: aur_post_build
-
-repo_depends:
-  - gconf
 
 update_on:
   - source: aur
     aur: mailspring
+  - source: manual
+    manual: 1.0
 
 maintainers:
   - github: dctxmei
