@@ -2,8 +2,8 @@
 
 pkgname=python-multimethod
 _pkgname=multimethod
-pkgver=1.7
-pkgrel=2
+pkgver=1.8
+pkgrel=1
 pkgdesc='Multiple argument dispatching'
 arch=('any')
 url='https://github.com/coady/multimethod'
@@ -22,7 +22,7 @@ checkdepends=(
   python-pytest-cov
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/coady/multimethod/archive/v${pkgver}.tar.gz")
-sha512sums=('13831989caab4831f5401efd1f99a633195b5141a98119c2660e1b32a4c017814fb86217bb3d165b9d0a2de5999f9f0af388c2bae90b0719b0cdf4e856948ed8')
+sha512sums=('433a2c72a6c98129df70aa09d1e640f2f23be6c42236cb88ad4ef9dee89406a9b6a2c01771b2b7e69ffa8d6b6cae05a8e0cd273d77c2eed86c5b8ee0c6887c8c')
 
 build() {
   cd "${_pkgname}-${pkgver}"
