@@ -28,6 +28,8 @@ prepare() {
   git submodule init
   git config submodule.${_name}.url "${srcdir}/${_name}"
   git submodule update
+  # use https instead of git for git protocol
+  sed -i "s,-DSimpleITK_GIT_PROTOCOL:STRING=git,-DSimpleITK_GIT_PROTOCOL:STRING=https," "${srcdir}/${pkgname}-${pkgver}/CMakeLists.txt"
 }
 
 build() {
