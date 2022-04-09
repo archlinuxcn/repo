@@ -1,22 +1,23 @@
 # Maintainer: Reto Brunner <reto@labrat.space>
 pkgname=thelounge-git
 _realname=thelounge
-pkgver=v4.3.1.7330
+pkgver=v4.3.1.7337
 pkgrel=1
 pkgdesc='Modern self-hosted web IRC client'
 url='https://thelounge.chat/'
 arch=('any')
 license=('MIT')
 depends=("nodejs")
-makedepends=('yarn' 'git' 'python' 'npm')
+makedepends=('yarn' 'git' 'python')
+options=('!lto')
 conflicts=('thelounge')
 backup=('etc/thelounge/config.js')
 source=(
-    'git+https://github.com/thelounge/thelounge.git'
-    'system.service'
-    'user.service'
-    'sysusers.d'
-    'tmpfiles.d'
+	'git+https://github.com/thelounge/thelounge.git'
+	'system.service'
+	'user.service'
+	'sysusers.d'
+	'tmpfiles.d'
 )
 sha256sums=('SKIP'
             'c92210f6ac8f01c1cd01b6b26793094cd2feea583ed21fab3564d6bcafdc7a20'
@@ -25,47 +26,63 @@ sha256sums=('SKIP'
             'c07fc7aaa91f6d2407d9ea2d15bfa780bfc06e3487efa138a9385307dcf9f41d')
 
 pkgver() {
-    cd $_realname
+	cd $_realname
     printf "%s.%s" "$(git describe --tags --long | cut -d- -f1)" "$(git rev-list --count HEAD)"
 }
 
-prepare(){
-    echo /etc/thelounge > "$_realname/.thelounge_home"
-    cd $_realname
-    yarn install --frozen-lockfile --non-interactive --ignore-scripts --cache-folder "$srcdir/yarn-cache"
+prepare() {
+	echo /etc/thelounge > "$_realname/.thelounge_home"
+	cd $_realname
+	yarn install --frozen-lockfile --non-interactive --ignore-scripts --cache-folder "$srcdir/yarn-cache"
 }
 
 build() {
-    cd $_realname
-    export NODE_ENV=production
-    yarn build
-    yarn pack --filename "$pkgname-$pkgver.tar.gz" .
+	cd $_realname
+	export NODE_ENV=production
+	yarn build
+	yarn pack --filename "$pkgname-$pkgver.tar.gz" .
+
+	mkdir _build
+	# ensure we get the lockfile that we expect and fetch the deps
+	cp package.json yarn.lock _build
+	cd _build
+
+	# Install the package itself
+	# we on purpose don't use yarn global add, because --ignore-scripts
+	# is ignored: https://github.com/yarnpkg/yarn/issues/8291 but we tried
+	yarn add --no-default-rc --frozen-lockfile \
+		--prod --non-interactive --ignore-scripts \
+		--cache-folder "$srcdir/yarn-cache" --offline \
+		file:"$srcdir/$_realname/$pkgname-$pkgver.tar.gz"
+
+	# build sqlite3 from source, avoids the binary blob (kinda)
+	cd node_modules/sqlite3
+	./node_modules/.bin/node-pre-gyp rebuild
 }
 
 
 package() {
-    cd $_realname
-    export NODE_ENV=production
-    yarn global add --frozen-lockfile --non-interactive --ignore-scripts --cache-folder "$srcdir/yarn-cache" \
-    --prefix "$pkgdir/usr" --global-folder "$pkgdir/opt/thelounge" --offline file:"$(pwd)/$pkgname-$pkgver.tar.gz"
+	install -dm755 "$pkgdir/usr/lib/thelounge"
+	cp -r "$srcdir/$_realname/_build/node_modules" "$pkgdir/usr/lib/thelounge"
 
-    # Non-deterministic race in npm gives 777 permissions to random directories.
-    # See https://github.com/npm/npm/issues/9359 for details.
+	install -dm755 "$pkgdir/usr/bin/"
+	ln -s "/usr/lib/thelounge/node_modules/thelounge/index.js" "$pkgdir/usr/bin/thelounge"
+
+	# Non-deterministic race in npm gives 777 permissions to random directories.
+	# See https://github.com/npm/npm/issues/9359 for details.
+	# yarn is probably not much better
 find "${pkgdir}" -type f -name .DS_Store -delete
-    find "${pkgdir}"/{usr,opt} -type d -exec chmod 755 {} +
+	find "${pkgdir}"/usr/lib/thelounge -type d -exec chmod 755 {} +
+	chown -R root:root "${pkgdir}"
 
-    # npm gives ownership of ALL FILES to build user
-    # https://bugs.archlinux.org/task/63396
-    chown -R root:root "${pkgdir}"
+	# add default config
+	install -Dm 644 "$srcdir/$_realname/defaults/config.js" "$pkgdir/etc/thelounge/config.js"
 
-    # add default config
-    install -Dm 644 "$srcdir/$_realname/defaults/config.js" "$pkgdir/etc/thelounge/config.js"
+	# services
+	install -Dm644 "$srcdir/system.service" "$pkgdir/usr/lib/systemd/system/$_realname.service"
+	install -Dm644 "$srcdir/user.service" "$pkgdir/usr/lib/systemd/user/$_realname.service"
 
-    # services
-    install -Dm644 "$srcdir/system.service" "$pkgdir/usr/lib/systemd/system/$_realname.service"
-    install -Dm644 "$srcdir/user.service" "$pkgdir/usr/lib/systemd/user/$_realname.service"
-
-    # setting up system user
-    install -Dm644 "${srcdir}/sysusers.d" "${pkgdir}/usr/lib/sysusers.d/thelounge.conf"
-    install -Dm644 "${srcdir}/tmpfiles.d" "${pkgdir}/usr/lib/tmpfiles.d/thelounge.conf"
+	# setting up system user
+	install -Dm644 "${srcdir}/sysusers.d" "${pkgdir}/usr/lib/sysusers.d/thelounge.conf"
+	install -Dm644 "${srcdir}/tmpfiles.d" "${pkgdir}/usr/lib/tmpfiles.d/thelounge.conf"
 }
