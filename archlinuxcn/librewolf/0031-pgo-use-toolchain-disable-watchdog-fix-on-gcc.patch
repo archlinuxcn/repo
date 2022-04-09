@@ -1,0 +1,115 @@
+diff -up firefox-99.0/build/moz.configure/lto-pgo.configure.pgo firefox-99.0/build/moz.configure/lto-pgo.configure
+--- firefox-99.0/build/moz.configure/lto-pgo.configure.pgo	2022-03-31 01:24:38.000000000 +0200
++++ firefox-99.0/build/moz.configure/lto-pgo.configure	2022-04-04 10:15:45.387694143 +0200
+@@ -247,8 +247,8 @@ def lto(
+             cflags.append("-flto")
+             ldflags.append("-flto")
+         else:
+-            cflags.append("-flto=thin")
+-            ldflags.append("-flto=thin")
++            cflags.append("-flto")
++            ldflags.append("-flto")
+ 
+         if target.os == "Android" and value == "cross":
+             # Work around https://github.com/rust-lang/rust/issues/90088
+@@ -264,7 +264,7 @@ def lto(
+         if value == "full":
+             cflags.append("-flto")
+         else:
+-            cflags.append("-flto=thin")
++            cflags.append("-flto")
+         # With clang-cl, -flto can only be used with -c or -fuse-ld=lld.
+         # AC_TRY_LINKs during configure don't have -c, so pass -fuse-ld=lld.
+         cflags.append("-fuse-ld=lld")
+diff -up firefox-99.0/build/pgo/profileserver.py.pgo firefox-99.0/build/pgo/profileserver.py
+--- firefox-99.0/build/pgo/profileserver.py.pgo	2022-03-31 01:24:38.000000000 +0200
++++ firefox-99.0/build/pgo/profileserver.py	2022-04-04 10:15:45.387694143 +0200
+@@ -11,7 +11,7 @@ import glob
+ import subprocess
+ 
+ import mozcrash
+-from mozbuild.base import MozbuildObject, BinaryNotFoundException
++from mozbuild.base import MozbuildObject, BinaryNotFoundException, BuildEnvironmentNotFoundException
+ from mozfile import TemporaryDirectory
+ from mozhttpd import MozHttpd
+ from mozprofile import FirefoxProfile, Preferences
+@@ -87,9 +87,22 @@ if __name__ == "__main__":
+     locations = ServerLocations()
+     locations.add_host(host="127.0.0.1", port=PORT, options="primary,privileged")
+ 
+-    old_profraw_files = glob.glob("*.profraw")
+-    for f in old_profraw_files:
+-        os.remove(f)
++    using_gcc = False
++    try:
++        if build.config_environment.substs.get('CC_TYPE') == 'gcc':
++            using_gcc = True
++    except BuildEnvironmentNotFoundException:
++        pass
++
++    if using_gcc:
++        for dirpath, _, filenames in os.walk('.'):
++            for f in filenames:
++                if f.endswith('.gcda'):
++                    os.remove(os.path.join(dirpath, f))
++    else:
++        old_profraw_files = glob.glob('*.profraw')
++        for f in old_profraw_files:
++            os.remove(f)
+ 
+     with TemporaryDirectory() as profilePath:
+         # TODO: refactor this into mozprofile
+@@ -212,6 +225,10 @@ if __name__ == "__main__":
+             print("Firefox exited successfully, but produced a crashreport")
+             sys.exit(1)
+ 
++        print('Copying profile data....')
++        os.system('pwd');
++        os.system('tar cf profdata.tar.gz `find . -name "*.gcda"`; cd ..; tar xf instrumented/profdata.tar.gz;');
++
+         llvm_profdata = env.get("LLVM_PROFDATA")
+         if llvm_profdata:
+             profraw_files = glob.glob("*.profraw")
+diff -up firefox-99.0/build/unix/mozconfig.unix.pgo firefox-99.0/build/unix/mozconfig.unix
+--- firefox-99.0/build/unix/mozconfig.unix.pgo	2022-03-31 01:24:38.000000000 +0200
++++ firefox-99.0/build/unix/mozconfig.unix	2022-04-04 10:15:45.387694143 +0200
+@@ -4,6 +4,15 @@ if [ -n "$FORCE_GCC" ]; then
+     CC="$MOZ_FETCHES_DIR/gcc/bin/gcc"
+     CXX="$MOZ_FETCHES_DIR/gcc/bin/g++"
+ 
++    if [ -n "$MOZ_PGO" ]; then
++        if [ -z "$USE_ARTIFACT" ]; then
++            ac_add_options --enable-lto
++        fi
++        export AR="$topsrcdir/gcc/bin/gcc-ar"
++        export NM="$topsrcdir/gcc/bin/gcc-nm"
++        export RANLIB="$topsrcdir/gcc/bin/gcc-ranlib"
++    fi
++
+     # We want to make sure we use binutils and other binaries in the tooltool
+     # package.
+     mk_add_options "export PATH=$MOZ_FETCHES_DIR/gcc/bin:$PATH"
+diff -up firefox-99.0/extensions/spellcheck/src/moz.build.pgo firefox-99.0/extensions/spellcheck/src/moz.build
+--- firefox-99.0/extensions/spellcheck/src/moz.build.pgo	2022-03-31 01:24:50.000000000 +0200
++++ firefox-99.0/extensions/spellcheck/src/moz.build	2022-04-04 10:15:45.387694143 +0200
+@@ -28,3 +28,5 @@ EXPORTS.mozilla += [
+     "mozInlineSpellChecker.h",
+     "mozSpellChecker.h",
+ ]
++
++CXXFLAGS += ['-fno-devirtualize']
+diff -up firefox-99.0/toolkit/components/terminator/nsTerminator.cpp.pgo firefox-99.0/toolkit/components/terminator/nsTerminator.cpp
+--- firefox-99.0/toolkit/components/terminator/nsTerminator.cpp.pgo	2022-04-04 10:15:45.387694143 +0200
++++ firefox-99.0/toolkit/components/terminator/nsTerminator.cpp	2022-04-04 10:19:07.022239556 +0200
+@@ -466,6 +466,11 @@ void nsTerminator::StartWatchdog() {
+   }
+ #endif
+ 
++  // Disable watchdog for PGO train builds - writting profile information at
++  // exit may take time and it is better to make build hang rather than
++  // silently produce poorly performing binary.
++  crashAfterMS = INT32_MAX;
++
+   UniquePtr<Options> options(new Options());
+   // crashAfterTicks is guaranteed to be > 0 as
+   // crashAfterMS >= ADDITIONAL_WAIT_BEFORE_CRASH_MS >> HEARTBEAT_INTERVAL_MS

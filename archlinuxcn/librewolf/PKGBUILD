@@ -5,13 +5,13 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=98.0.2
+pkgver=99.0
 pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
 license=(MPL GPL LGPL)
 url="https://librewolf-community.gitlab.io/"
-depends=(gtk3 libxt mime-types dbus-glib nss ttf-font libpulse ffmpeg4.4)
+depends=(gtk3 libxt mime-types dbus-glib nss ttf-font libpulse ffmpeg)
 makedepends=(unzip zip diffutils yasm mesa imake inetutils xorg-server-xvfb
              autoconf2.13 rust clang llvm jack nodejs cbindgen nasm
              python-setuptools python-psutil python-zstandard git binutils lld dump_syms
@@ -26,25 +26,23 @@ backup=('usr/lib/librewolf/librewolf.cfg'
         'usr/lib/librewolf/distribution/policies.json')
 options=(!emptydirs !makeflags !strip !lto !debug)
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
-_source_tag=98.0.2-1
-# _source_commit='93bd3894f0e1c9d7d237084bffc2766814fffd2f' # not 'stable', but current source head
+# _source_tag=99.0-1
+_source_commit='94365400be86a22b7aaaba86627c0aca7dc8f50a' # not 'stable', but current source head
 # _common_tag="v${pkgver}-${pkgrel}"
-_settings_tag='6.0'
-# _settings_commit='d049197f6b31636a18cd410a3dce1a7c9fca8e4c' # 5.5 with updated ublock
+# _settings_tag='6.1'
+_settings_commit='bc71d27b8efacf6dcc3fe2c62d3fc5555e4e0890' # hottest of fixes: 6.1 with a pref fix on top ^^
 install='librewolf.install'
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         $pkgname.desktop
-        "git+https://gitlab.com/${pkgname}-community/browser/source.git#tag=${_source_tag}"
-        "git+https://gitlab.com/${pkgname}-community/settings.git#tag=${_settings_tag}"
+        "git+https://gitlab.com/${pkgname}-community/browser/source.git#commit=${_source_commit}"
+        "git+https://gitlab.com/${pkgname}-community/settings.git#commit=${_settings_commit}"
         "default192x192.png"
-        "0031-bgo-831903-pip-dont-fail-with-optional-deps.patch"
-        "0032-skip-pip-check.patch"
-        "0033-resolve-fs-symlinks-bmo1753182.patch"
+        "0028-bgo-831903-pip-dont-fail-with-optional-deps.patch"
+        "0029-skip-pip-check.patch"
+        "0031-pgo-use-toolchain-disable-watchdog-fix-on-gcc.patch"
         )
-source_aarch64=("${pkgver}-${pkgrel}_build-arm-libopus.patch::https://raw.githubusercontent.com/archlinuxarm/PKGBUILDs/master/extra/firefox/build-arm-libopus.patch"
-                "${pkgver}-${pkgrel}_revert-crossbeam-crates-upgrade.patch::https://raw.githubusercontent.com/archlinuxarm/PKGBUILDs/434abe24fa6bc70940b2f1e69e047af38b4be68a/extra/firefox/revert-crossbeam-crates-upgrade.patch"
-                "${pkgver}-${pkgrel}_psutil-remove-version-cap.patch::https://github.com/archlinuxarm/PKGBUILDs/raw/434abe24fa6bc70940b2f1e69e047af38b4be68a/extra/firefox/psutil-remove-version-cap.patch")
-sha256sums=('c144b6016aaa8ceab8154b9f0b2bbeee6cbc22ab7f811fcece28d36e49565890'
+source_aarch64=("${pkgver}-${pkgrel}_psutil-remove-version-cap.patch::https://github.com/archlinuxarm/PKGBUILDs/raw/434abe24fa6bc70940b2f1e69e047af38b4be68a/extra/firefox/psutil-remove-version-cap.patch")
+sha256sums=('513f8d2cafa39a2d50f2c4a25cc48093e89f715a706b941170fa48e397976327'
             'SKIP'
             '0b28ba4cc2538b7756cb38945230af52e8c4659b2006262da6f3352345a8bed2'
             'SKIP'
@@ -52,10 +50,8 @@ sha256sums=('c144b6016aaa8ceab8154b9f0b2bbeee6cbc22ab7f811fcece28d36e49565890'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1'
             '582303b7d97dae11f1c760e129be03e270a0800a0bae9e140c032e57ae00c06d'
             '35eaa5ad3ade5351dc072f7e3e240265818d40c77c637dfdb492a91128b65d27'
-            '5d4117f2aa185495d0e94318a7945c43df0dce9afb4a3e0972ef516c4b84e5fd')
-sha256sums_aarch64=('2d4d91f7e35d0860225084e37ec320ca6cae669f6c9c8fe7735cdbd542e3a7c9'
-                    '56bd09bfd2fa594c2af7dbe923d72bed9da23b7c001f923bf33784554e323541'
-                    '2bb0ac385b54972eb3e665ac70fb13565ed9da77b33349b844b2e0ad4948cff5')
+            '3735197d2c6c38b0482ae56a7b7dbd5815a38042ba7e1418cd93cdea1b564391')
+sha256sums_aarch64=('2bb0ac385b54972eb3e665ac70fb13565ed9da77b33349b844b2e0ad4948cff5')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
 # change this to false if you do not want to run a PGO build for aarch64 as well
@@ -85,7 +81,19 @@ export CXX='clang++'
 # Branding
 ac_add_options --enable-update-channel=release
 ac_add_options --with-app-name=${pkgname}
-ac_add_options --with-app-basename=${_pkgname}
+
+# ac_add_options --with-app-basename=${_pkgname}
+
+# switch to env vars like in librewolf source repo
+# this is in browser/branding/librewolf/configure.sh as well
+# so it _should_ already be applied, buuuuut just in case?
+
+MOZ_APP_NAME=${pkgname}
+MOZ_APP_BASENAME=${_pkgname}
+MOZ_APP_PROFILE=${pkgname}
+MOZ_APP_VENDOR=${_pkgname}
+MOZ_APP_DISPLAYNAME=${_pkgname}
+
 ac_add_options --with-branding=browser/branding/${pkgname}
 ac_add_options --with-distribution-id=io.gitlab.${pkgname}-community
 ac_add_options --with-unsigned-addon-scopes=app,system
@@ -105,7 +113,11 @@ ac_add_options --disable-updater
 ac_add_options --disable-tests
 
 # obsoleted?
-# mk_add_options MOZ_CRASHREPORTER=0
+# TODO: use source/assets/moczonfig in the future
+mk_add_options MOZ_CRASHREPORTER=0
+mk_add_options MOZ_DATA_REPORTING=0
+mk_add_options MOZ_SERVICES_HEALTHREPORT=0
+mk_add_options MOZ_TELEMETRY_REPORTING=0
 
 # options for ci / weaker build systems
 # mk_add_options MOZ_MAKE_FLAGS="-j4"
@@ -129,7 +141,7 @@ END
   # ...or maybe not?
   export LDFLAGS+=" -Wl,--no-keep-memory"
   # patch -Np1 -i ${_patches_dir}/arm.patch # not required anymore?
-  patch -Np1 -i ../${pkgver}-${pkgrel}_build-arm-libopus.patch
+  # patch -Np1 -i ../${pkgver}-${pkgrel}_build-arm-libopus.patch
 
   # https://github.com/archlinuxarm/PKGBUILDs/commit/434abe24fa6bc70940b2f1e69e047af38b4be68a
   # Firefox 98+ fails to draw its window on aarch64.
@@ -138,7 +150,6 @@ END
   # Also add a hack to remove the psutil version cap, since otherwise it
   # fails to build with the latest python-psutil version (for no reason).
 
-  patch -Np1 -i ../${pkgver}-${pkgrel}_revert-crossbeam-crates-upgrade.patch
   patch -Np1 -i ../${pkgver}-${pkgrel}_psutil-remove-version-cap.patch
 
 else
@@ -156,9 +167,11 @@ fi
   # upstream patches from gentoo
   # hopefully fixing the pip issues people have every now and then
 
-  patch -Np1 -i ../0031-bgo-831903-pip-dont-fail-with-optional-deps.patch
-  patch -Np1 -i ../0032-skip-pip-check.patch
-  patch -Np1 -i ../0033-resolve-fs-symlinks-bmo1753182.patch
+  patch -Np1 -i ../0028-bgo-831903-pip-dont-fail-with-optional-deps.patch
+  patch -Np1 -i ../0029-skip-pip-check.patch
+
+  # pgo improvements
+  patch -Np1 -i ../0031-pgo-use-toolchain-disable-watchdog-fix-on-gcc.patch
 
   # LibreWolf
 
@@ -178,9 +191,6 @@ fi
   # Disabling Pocket
   patch -Np1 -i ${_patches_dir}/sed-patches/disable-pocket.patch
 
-  # remove mozilla vpn ads
-  patch -Np1 -i ${_patches_dir}/mozilla-vpn-ad2.patch
-
   # Remove Internal Plugin Certificates
   # patch -Np1 -i ${_patches_dir}/sed-patches/remove-internal-plugin-certs.patch
   # => breaks profiled builds since 90.0, it seems
@@ -193,7 +203,7 @@ fi
   cp "${srcdir}/source/assets/search-config.json" services/settings/dumps/main/search-config.json
 
   # stop some undesired requests (https://gitlab.com/librewolf-community/browser/common/-/issues/10)
-  patch -Np1 -i ${_patches_dir}/sed-patches/stop-undesired-requests.patch
+  patch -Np1 -i ${_patches_dir}/sed-patches/stop-undesired-requests2.patch
 
   # Assorted patches
   patch -Np1 -i ${_patches_dir}/context-menu.patch
@@ -223,6 +233,12 @@ fi
   # remove references to firefox from the settings UI, change text in some of the links,
   # explain that we force en-US and suggest enabling history near the session restore checkbox.
   patch -Np1 -i ${_patches_dir}/ui-patches/pref-naming.patch
+
+  #
+  patch -Np1 -i ${_patches_dir}/ui-patches/remap-links.patch
+
+  #
+  patch -Np1 -i ${_patches_dir}/ui-patches/hide-default-browser.patch
 
   #
   patch -Np1 -i ${_patches_dir}/ui-patches/privacy-preferences.patch
