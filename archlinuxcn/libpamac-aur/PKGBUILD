@@ -5,12 +5,12 @@ ENABLE_FLATPAK=0
 ENABLE_SNAPD=0
 
 pkgname=libpamac-aur
-pkgver=11.2.0
-pkgrel=7
+pkgver=11.3.0
+pkgrel=0
 _pkgfixver=$pkgver
 
-_commit='c11324de9e5615f2947f09e2c4d6de00e59e5ff3'
-sha256sums=('1e32d68ccc2874192b6b7ada333b685ab345a69e1e8fbe72acca5ffad6a0e03f'
+_commit='269b2e48315f29f97539a34e0ab9efd0c4b3f930'
+sha256sums=('c4c21fcd1d2e6a293615de33950faa60ea354dbf43e832e6d140cf5fde5be18e'
             '6e0c25f0fcb0076ce78845b037e32925fcc3f1cd1670062c48ed35f564a10244'
             'c2b943318a01ba1f3dabbf32e48e6a6f4b4b774e167ab86c6bfee31aa4a3424c')
 
