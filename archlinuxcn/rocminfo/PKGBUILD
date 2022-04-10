@@ -6,16 +6,23 @@
 
 pkgname=rocminfo
 pkgver=5.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc='ROCm info tools - rocm_agent_enumerator'
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/rocminfo'
 license=('custom:NCSAOSL')
 depends=('pciutils' 'python' 'hsa-rocr')
 makedepends=('cmake' 'git' 'rocm-cmake')
-source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('e3b01b457164d91cd1178e38f572b6fd1a44867b046d924e335d6b1df997a1aa')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz"
+        "fix-kfd.patch::https://patch-diff.githubusercontent.com/raw/RadeonOpenCompute/rocminfo/pull/53.patch")
+sha256sums=('e3b01b457164d91cd1178e38f572b6fd1a44867b046d924e335d6b1df997a1aa'
+            'SKIP')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
+
+prepare() {
+    cd "$_dirname"
+    patch -Np1 < "${srcdir}/fix-kfd.patch"
+}
 
 build() {
   # ROCRTST_BLD_TYPE=Release fixes a build error regarding _FORTIFY_SOURCE=2
