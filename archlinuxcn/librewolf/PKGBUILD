@@ -6,7 +6,7 @@
 pkgname=librewolf
 _pkgname=LibreWolf
 pkgver=99.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
 license=(MPL GPL LGPL)
@@ -30,7 +30,7 @@ _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages
 _source_commit='94365400be86a22b7aaaba86627c0aca7dc8f50a' # not 'stable', but current source head
 # _common_tag="v${pkgver}-${pkgrel}"
 # _settings_tag='6.1'
-_settings_commit='bc71d27b8efacf6dcc3fe2c62d3fc5555e4e0890' # hottest of fixes: 6.1 with a pref fix on top ^^
+_settings_commit='1a84d38bab56551f9ec2650644c4906650e75603' # hottest of fixes: 6.1 with a pref fix on top ^^
 install='librewolf.install'
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         $pkgname.desktop
