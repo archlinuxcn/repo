@@ -1,2 +1,2 @@
 #!/bin/bash
-exec electron /usr/lib/electron-netease-cloud-music
+exec electron17 /usr/lib/electron-netease-cloud-music
