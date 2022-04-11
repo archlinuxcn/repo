@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=polynom
-_pkgver=1.4-0
+_pkgver=1.4-1
 pkgname=r-${_pkgname,,}
-pkgver=1.4.0
+pkgver=1.4.1
 pkgrel=1
 pkgdesc='A Collection of Functions to Implement a Class for Univariate Polynomial Manipulations'
 arch=('any')
@@ -17,7 +17,7 @@ optdepends=(
   r-rmarkdown
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('c5b788b26f7118a18d5d8e7ba93a0abf3efa6603fa48603c70ed63c038d3d4dd')
+sha256sums=('bc1edb7bb16c8b299103f80a52ab8c5fc200cd07a9056578c1f672e9f5019278')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
