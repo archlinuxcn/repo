@@ -1,185 +1,98 @@
-# Maintainer: Alfredo Palhares <alfredo at palhares dot me>
-# Contributor: Mark Wagie <mark dot wagie at tutanota dot com>
-# Contributor:  Matteo Parolari
-# Contributor: gardar <aur@gardar.net>
-
-# Please contribute to:
-# https://github.com/alfredopalhares/arch-pkgbuilds
-
-pkgbase="joplin"
+pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
-pkgver=2.4.12
+pkgver=2.7.15
 groups=('joplin')
 pkgrel=1
-install="joplin.install"
-depends=('electron' 'gtk3' 'libexif' 'libgsf' 'libjpeg-turbo' 'libwebp' 'libxss' 'nodejs'
-         'nss' 'orc' 'rsync' )
+_electronVersion=17
+depends=("electron${_electronVersion}" "nodejs")
 optdepends=('libappindicator-gtk3: for tray icon')
-arch=('x86_64' 'i686')
-makedepends=("electron" "git" "jq" "npm" "python2" "rsync")
+arch=('x86_64')
+makedepends=('npm' 'git' 'rsync' 'yarn' 'python2')
 url="https://joplinapp.org/"
 license=('MIT')
-source=("joplin.desktop" "joplin-desktop.sh" "joplin.sh"
-        "joplin-${pkgver}.tar.gz::https://github.com/laurent22/joplin/archive/v${pkgver}.tar.gz")
-sha256sums=('c7c5d8b0ff9edb810ed901ea21352c9830bfa286f3c18b1292deca5b2f8febd2'
-            'a450284fe66d89aa463d129ce8fff3a0a1a783a64209e4227ee47449d5737be8'
-            'dc1236767ee055ea1d61f10e5266a23e70f3e611b405fe713ed24ca18ee9eeb5'
-            '0887038e9ff500af6f2b153c0e811e70986b14a1fbc0fb3d5634a8e92d68dbec')
+source=(
+    "joplin-desktop.sh"
+    "joplin-desktop.desktop"
+    "joplin-${pkgver}.tar.gz::https://github.com/laurent22/joplin/archive/v${pkgver}.tar.gz"
+)
+sha256sums=(
+    'SKIP'
+    'SKIP'
+    '1e605cf5519d8bd32cda541f5c693083183ddde6edeb5ce3cb440f14bb32d999'
+)
 
-
-# local npm cache directory
-_npm_cache="npm-cache"
-
-_get_cache() {
-  if [[ "${_npm_cache}" =~ ^/ ]]; then
-    printf "%s" "${_npm_cache}"
-  else
-    printf "%s" "${srcdir}/${_npm_cache}"
-  fi
+_setup_env() {
+    export ELECTRON_SKIP_BINARY_DOWNLOAD=1
+    export npm_config_build_from_source=true
+    export npm_config_python=/usr/bin/python2
 }
 
 prepare() {
-  local cache=$(_get_cache)
-  msg2 "npm cache directory: $cache"
+    cd "${srcdir}/joplin-${pkgver}"
 
-  msg2 "Disabling husky (git hooks)"
-  sed -i '/"husky": ".*"/d' "${srcdir}/joplin-${pkgver}/package.json"
+    # Disable useless dependencies
+    sed -i '/"7zip-bin-.*": ".*"/d' package.json packages/*/package.json
+    sed -i '/"husky": ".*"/d' package.json packages/*/package.json
 
-  msg2 "Tweaking lerna.json"
-  local tmp_json="$(mktemp --tmpdir="$srcdir")"
-  local lerna_json="${srcdir}/joplin-${pkgver}/lerna.json"
-  # TODO: Add check for lerna.json file
-  jq ".packages = [
-        \"packages/app-cli\", \"packages/app-desktop\",
-        \"packages/fork-htmlparser2\", \"packages/fork-sax\",
-        \"packages/lib\", \"packages/renderer\", \"packages/tools\",
-        \"packages/turndown\", \"packages/turndown-plugin-gfm\"
-        ] |
-      . += {\"npmClient\": \"npm\", \"npmClientArgs\": [\"--cache $cache\"]}" \
-    "$lerna_json" > "$tmp_json"
-  cat "$tmp_json" > "$lerna_json"
-  rm "$tmp_json"
+    # Delete unused components
+    rm -r "packages/app-mobile" "packages/app-clipper" "packages/server"
 }
-
 
 build() {
-  local cache=$(_get_cache)
-  msg2 "npm cache directory: $cache"
-  cd "${srcdir}/joplin-${pkgver}"
-
-  # Force Lang
-  # INFO: https://github.com/alfredopalhares/joplin-pkgbuild/issues/25
-  export LANG=en_US.utf8
-
-  msg2 "Installing dependencies through Lerna"
-  npm install --cache "$cache"
-
-}
-
-#FIXME: These checks fail on some machines, even with the exit 0
-# Something related with the number of allowed processes I guess
-check() {
-  cd "${srcdir}/joplin-${pkgver}"
-  msg2 "Not Running any tests for now"
-  #npm run test || exit 0
+    cd "${srcdir}/joplin-${pkgver}"
+    _setup_env
+    yarn install
 }
 
 package_joplin() {
-  pkgdesc="A note taking and to-do application with synchronization capabilities - CLI App"
-  depends=('coreutils' 'libsecret' 'nodejs' 'python')
+    pkgdesc="A note taking and to-do application with synchronization capabilities - CLI App"
+    depends=('nodejs')
 
-  local cache=$(_get_cache)
-  msg2 "npm cache directory: $cache"
+    cd "${srcdir}/joplin-${pkgver}/packages"
+    _setup_env
 
-  msg2 "Building CLI"
-  cd "${srcdir}/joplin-${pkgver}/packages/app-cli"
-  npm run build
+    package_files=()
 
-  msg2 "Packaging CLI"
-  cd "${srcdir}/joplin-${pkgver}/packages/app-cli/build"
-  local pack="$(npm pack | tail -n 1)"
+    for package in fork-htmlparser2 fork-sax fork-uslug htmlpack renderer turndown turndown-plugin-gfm lib; do
+        ( cd "${package}" && npm pack )
+        package_files+=("$(realpath "${package}/"*.tgz)")
+    done
 
-  msg2 "Installing CLI ($pack)"
-  npm install --global --production --user root --cache "$cache" \
-    --prefix "${pkgdir}/tmp" "$pack"
+    cd app-cli && npx gulp build && cd build && npm pack && cd ../..
+    package_files+=("$(realpath "app-cli/build/"*.tgz)")
 
-  msg2 "Rearranging directory tree"
-  mkdir -p "${pkgdir}/usr/share/"
-  mv "${pkgdir}/tmp/lib/node_modules/joplin/" "${pkgdir}/usr/share/"
-  rm -r "${pkgdir}/tmp"
+    npm install -g --prefix "${pkgdir}/usr" "${package_files[@]}"
 
-  msg2 "Fixing Directories Permissions"
-  # Non-deterministic race in npm gives 777 permissions to random directories.
-  # See https://github.com/npm/cli/issues/1103 for details.
-  find "${pkgdir}/usr" -type d -exec chmod 755 {} +
-
-  msg2 "Removing References to \$pkgdir"
-  find "$pkgdir" -name package.json -print0 | xargs -0 sed -i "/_where/d"
-
-  msg2 "Removing References to \$srcdir"
-  local tmppackage="$(mktemp --tmpdir="$srcdir")"
-  local pkgjson="$pkgdir/usr/share/joplin/package.json" # TODO joplin name
-  jq '.|=with_entries(select(.key|test("_.+")|not))' "$pkgjson" > "$tmppackage"
-  mv "$tmppackage" "$pkgjson"
-  chmod 644 "$pkgjson"
-
-  msg2 "Fixing Permissions set by npm"
-  # npm gives ownership of ALL FILES to build user
-  # https://bugs.archlinux.org/task/63396
-  chown -R root:root "${pkgdir}"
-
-  msg2 "Installing LICENSE"
-  install -Dm644 "${srcdir}/joplin-${pkgver}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
-
-  msg2 "Installing Startup Script"
-  cd "${srcdir}"
-  install -Dm755 joplin.sh "${pkgdir}/usr/bin/joplin"
+    # Fix permissions set by npm
+    chown -R root:root "${pkgdir}"
 }
-
 
 package_joplin-desktop() {
-  pkgdesc="A note taking and to-do application with synchronization capabilities - Desktop"
-  depends=('electron' 'gtk3' 'libexif' 'libgsf' 'libjpeg-turbo' 'libwebp' 'libxss' 'nodejs'
-         'nss' 'orc')
-  optdepends=('libappindicator-gtk3: for tray icon')
-  conflicts=('joplin-desktop-electron')
+    pkgdesc="A note taking and to-do application with synchronization capabilities - Desktop"
+    depends=('electron17' 'nodejs')
+    optdepends=('libappindicator-gtk3: for tray icon')
 
-  # ./generateSha512.js fails if AppImage is not built
-  mkdir -p "${srcdir}/joplin-${pkgver}/packages/app-desktop/dist/"
-  touch "${srcdir}/joplin-${pkgver}/packages/app-desktop/dist/AppImage"
+    cd "${srcdir}/joplin-${pkgver}/packages/app-desktop"
 
-  msg2 "Building Desktop with packaged Electron..."
-  mkdir -p "${pkgdir}/usr/share/joplin-desktop"
-  cd "${srcdir}/joplin-${pkgver}/packages/app-desktop"
-  electron_dir="/usr/lib/electron"
-  electron_version=$(cat /usr/lib/electron/version)
-  msg2 "Using Electron Version ${electron_version}"
-  # Current version of electron does not work
-  USE_HARD_LINKS=false npm run dist -- --publish=never  --linux  --x64 \
-    --dir="dist/"
-    #--dir="dist/" -c.electronDist=$electron_dir -c.electronVersion=$electron_version
+    electronRoot=/usr/lib/electron${_electronVersion}/
+    electronVersion="$(<${electronRoot}/version)"
 
-  # TODO: Cleanup app.asar file
-  cd dist/linux-unpacked/
-  cp -R "." "${pkgdir}/usr/share/joplin-desktop"
+    npx electron-builder \
+      --linux --x64 --dir=dist/ \
+      -c.electronDist="${electronRoot}" \
+      -c.electronVersion="${electronVersion}"
 
-  msg2 "Installing LICENSE..."
-  cd "${srcdir}/joplin-${pkgver}/"
-  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+    install -vDm644 dist/linux-unpacked/resources/app.asar -t "${pkgdir}/usr/lib/${pkgname}"
+    cp -vr build -t "${pkgdir}/usr/lib/${pkgname}"
+    cp -vr dist/linux-unpacked/resources/app.asar.unpacked -t "${pkgdir}/usr/lib/${pkgname}"
 
-  msg2 "Installing startup script and desktop file..."
-  cd "${srcdir}"
-  install -Dm755 ${srcdir}/joplin-desktop.sh "${pkgdir}/usr/bin/joplin-desktop"
-  install -Dm644 ${srcdir}/joplin.desktop -t "${pkgdir}/usr/share/applications"
+    while read -r size; do
+        mkdir -p "${pkgdir}/usr/share/icons/hicolor/${size}/apps/"
+        cp "${pkgdir}/usr/lib/${pkgname}/build/icons/${size}.png" \
+           "${pkgdir}/usr/share/icons/hicolor/${size}/apps/${pkgname}.png"
+    done < <(ls build/icons | grep -Po '^(\d+)x\1+(?=\.png)')
 
-  msg2 "Installing icons"
-  local -r src_icon_dir="${srcdir}/joplin-${pkgver}/packages/app-desktop/build/icons"
-  local -i size
-  for size in 16 22 24 32 36 48 64 72 96 128 192 256 512; do
-    [[ -f "${src_icon_dir}/${size}x${size}.png" ]] &&
-      install -Dm644 \
-        "${src_icon_dir}/${size}x${size}.png" \
-        "${pkgdir}/usr/share/icons/hicolor/${size}x${size}/apps/joplin.png"
-  done
+    install -vDm644 "${srcdir}/${pkgname}.desktop" -t "${pkgdir}/usr/share/applications"
+    install -vDm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+    sed -i "s|@electronversion@|${_electronVersion}|" "${pkgdir}/usr/bin/${pkgname}"
 }
-

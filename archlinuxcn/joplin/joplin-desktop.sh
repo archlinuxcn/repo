@@ -1,13 +1,5 @@
 #!/bin/bash
 
-readonly joplin_dir="/usr/share/joplin-desktop/"
-
-if [[ ! -d $joplin_dir ]]; then
-  echo "Cannot find /usr/share/joplin-desktop/"
-  exit 1
-fi
-
-cd $joplin_dir
-
-./@joplinapp-desktop "$@"
-
+export ELECTRON_IS_DEV=0
+cd /usr/lib/joplin-desktop || exit 1
+exec electron@electronversion@ /usr/lib/joplin-desktop/app.asar "$@"
