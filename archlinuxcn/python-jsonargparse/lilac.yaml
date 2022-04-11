@@ -7,6 +7,7 @@ update_on:
   - source: github
     github: omni-us/jsonargparse
     use_max_tag: true
+    include_regex: 'v(\d+.\d+.\d+)'
   - source: manual
     manual: 1
   - alias: python
