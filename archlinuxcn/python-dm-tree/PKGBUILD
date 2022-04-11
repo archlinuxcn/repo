@@ -3,8 +3,8 @@
 
 _pkgname=tree
 pkgname=python-dm-tree
-pkgver=0.1.6
-pkgrel=3
+pkgver=0.1.7
+pkgrel=1
 pkgdesc='A library for working with nested data structures'
 arch=('x86_64')
 url='https://github.com/deepmind/tree'
@@ -19,7 +19,7 @@ makedepends=(
   python-setuptools
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/deepmind/tree/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('8b8d2f77e09059cf9004a6a258bb8d06771be6eb7a5fd6a453a5012f0c59ac08')
+sha256sums=('a54a5794b51ba585dc62f5d19c9d907f73107d5f0569417f8866ef3f75be5134')
 
 build() {
   cd "${_pkgname}-${pkgver}"
