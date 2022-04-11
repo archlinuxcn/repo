@@ -1,4 +1,5 @@
-# Maintainer: acxz <akashpatel2008 at yahoo dot com>
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+# Contributor: acxz <akashpatel2008 at yahoo dot com>
 
 _pkgname=tree
 pkgname=python-dm-tree
@@ -13,6 +14,8 @@ depends=(
 )
 makedepends=(
   bazel
+  cmake
+  git
   python-setuptools
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/deepmind/tree/archive/refs/tags/${pkgver}.tar.gz")
@@ -27,3 +30,4 @@ package() {
   cd "${_pkgname}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1
 }
+# vim:set ts=2 sw=2 et:
