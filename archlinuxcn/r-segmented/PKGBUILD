@@ -1,9 +1,9 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 _pkgname=segmented
-_pkgver=1.4-1
+_pkgver=1.5-0
 pkgname=r-${_pkgname,,}
-pkgver=1.4.1
+pkgver=1.5.0
 pkgrel=1
 pkgdesc='Regression Models with Break-Points / Change-Points Estimation'
 arch=('any')
@@ -13,7 +13,7 @@ depends=(
   r
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('2376f541c51333bbace10adb80980384bd4515b50118984eef9c5944b6b04fa9')
+sha256sums=('d65c9a6268844d86fe5b842a587a46d7e06bee8e27b4ded7c01e57abafb916b5')
 
 build() {
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
