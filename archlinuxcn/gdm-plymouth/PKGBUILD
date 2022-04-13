@@ -7,7 +7,7 @@
 _pkgbase=gdm
 pkgbase=gdm-plymouth
 pkgname=(gdm-plymouth libgdm-plymouth)
-pkgver=42.0
+pkgver=42.0+r11+g4a52f026d
 pkgrel=1
 pkgdesc="Display manager and login screen with plymouth support"
 url="https://wiki.gnome.org/Projects/GDM"
@@ -17,7 +17,7 @@ depends=(plymouth gnome-shell gnome-session upower systemd xorg-xrdb xorg-server
 makedepends=(yelp-tools gobject-introspection git docbook-xsl meson)
 checkdepends=(check)
 options=(debug)
-_commit=55f5724789f9f8e85af310c69d8f7096b8e730e8  # tags/42.0^0
+_commit=4a52f026dc0b218a2ca33fa32853c71a0f88a2b4  # main
 source=("git+https://gitlab.gnome.org/GNOME/gdm.git#commit=$_commit"
         0001-Xsession-Don-t-start-ssh-agent-by-default.patch)
 sha256sums=('SKIP'
