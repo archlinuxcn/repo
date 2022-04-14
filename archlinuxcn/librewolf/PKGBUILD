@@ -5,8 +5,8 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=99.0
-pkgrel=2
+pkgver=99.0.1
+pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
 license=(MPL GPL LGPL)
@@ -26,23 +26,23 @@ backup=('usr/lib/librewolf/librewolf.cfg'
         'usr/lib/librewolf/distribution/policies.json')
 options=(!emptydirs !makeflags !strip !lto !debug)
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
-# _source_tag=99.0-1
-_source_commit='94365400be86a22b7aaaba86627c0aca7dc8f50a' # not 'stable', but current source head
+_source_tag="${pkgver}-${pkgrel}"
+# _source_commit='94365400be86a22b7aaaba86627c0aca7dc8f50a' # not 'stable', but current source head
 # _common_tag="v${pkgver}-${pkgrel}"
-# _settings_tag='6.1'
-_settings_commit='1a84d38bab56551f9ec2650644c4906650e75603' # hottest of fixes: 6.1 with a pref fix on top ^^
+_settings_tag='6.2'
+# _settings_commit='1a84d38bab56551f9ec2650644c4906650e75603' # hottest of fixes: 6.1 with a pref fix on top ^^
 install='librewolf.install'
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         $pkgname.desktop
-        "git+https://gitlab.com/${pkgname}-community/browser/source.git#commit=${_source_commit}"
-        "git+https://gitlab.com/${pkgname}-community/settings.git#commit=${_settings_commit}"
+        "git+https://gitlab.com/${pkgname}-community/browser/source.git#tag=${_source_tag}"
+        "git+https://gitlab.com/${pkgname}-community/settings.git#tag=${_settings_tag}"
         "default192x192.png"
         "0028-bgo-831903-pip-dont-fail-with-optional-deps.patch"
         "0029-skip-pip-check.patch"
         "0031-pgo-use-toolchain-disable-watchdog-fix-on-gcc.patch"
         )
 source_aarch64=("${pkgver}-${pkgrel}_psutil-remove-version-cap.patch::https://github.com/archlinuxarm/PKGBUILDs/raw/434abe24fa6bc70940b2f1e69e047af38b4be68a/extra/firefox/psutil-remove-version-cap.patch")
-sha256sums=('513f8d2cafa39a2d50f2c4a25cc48093e89f715a706b941170fa48e397976327'
+sha256sums=('76d22279ce99588a728bb2d034064be0d5918b5900631f2148d4565b8a72e00b'
             'SKIP'
             '0b28ba4cc2538b7756cb38945230af52e8c4659b2006262da6f3352345a8bed2'
             'SKIP'
@@ -257,6 +257,9 @@ fi
 
   # add warning that sanitizing exceptions are bypassed by the options in History > Clear History when LibreWolf closes > Settings
   patch -Np1 -i ${_patches_dir}/ui-patches/sanitizing-description.patch
+
+  #
+  patch -Np1 -i ${_patches_dir}/ui-patches/handlers.patch
 
   # pref pane
   patch -Np1 -i ${_patches_dir}/librewolf-pref-pane.patch
