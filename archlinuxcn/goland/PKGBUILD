@@ -2,7 +2,7 @@
 
 pkgbase=goland
 pkgname=(goland goland-jre)
-pkgver=2021.3.4
+pkgver=2022.1
 pkgrel=1
 arch=('x86_64' 'i686')
 url='https://www.jetbrains.com/go/'
@@ -12,7 +12,7 @@ options=('!strip')
 source=("https://download.jetbrains.com/go/${pkgbase}-${pkgver}.tar.gz"
         jetbrains-goland.desktop
         LICENSE)
-b2sums=('d929302a2ac66869e549d0b2bcae58fd73f9bf684368a9a914529975de1cde9b80d3689c9c05335b122aa7a8f19275b25668fb21e5b0191b46ee6082faca1be9'
+b2sums=('2e07731355940dfd21523c821e1728f19965938f7165d10e3944481847b735d296a664b7434ccc50fd556054dc60887593939102f43e4afaccc5bd1c86b40707'
         '69a09c3ff4182cd5ae43c967b4a58ce3bdf428f0fb87f91f835ffcde5c10019cf4a789cfdb8966ad98c95dda47517a6c49e9c4bf6c217f0cb1b553100730a6a6'
         'dadaf0e67b598aa7a7a4bf8644943a7ee8ebf4412abb17cd307f5989e36caf9d0db529a0e717a9df5d9537b10c4b13e814b955ada6f0d445913c812b63804e77')
 
@@ -33,7 +33,7 @@ package_goland() {
 
   ln -s /opt/${pkgbase}/bin/${pkgbase}.sh "${pkgdir}"/usr/bin/${pkgbase}
   install -m644 "${srcdir}"/jetbrains-${pkgbase}.desktop "${pkgdir}"/usr/share/applications/
-  install -m644 "${pkgdir}"/opt/${pkgbase}/bin/${pkgbase}.png "${pkgdir}"/usr/share/pixmaps/${pkgbase}.png
+  install -m644 "${pkgdir}"/opt/${pkgbase}/bin/${pkgbase}.svg "${pkgdir}"/usr/share/pixmaps/${pkgbase}.svg
   install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE.txt
 }
 
