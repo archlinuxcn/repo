@@ -1,8 +1,8 @@
 # Maintainer: Piotr Miller <nwg.piotr@gmail.com>
 # Project: nwg-shell for sway, https://github.com/nwg-piotr/nwg-shell
 pkgname=('nwg-drawer')
-pkgver=0.2.8
-pkgrel=2
+pkgver=0.2.9
+pkgrel=1
 pkgdesc="Application drawer for sway and other wlroots-based compositors"
 arch=('x86_64')
 url="https://github.com/nwg-piotr/nwg-drawer"
@@ -15,7 +15,7 @@ optdepends=('alacritty: to open .desktop files with Terminal=true'
             'thunar: to open files and directories')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/nwg-piotr/nwg-drawer/archive/v"$pkgver".tar.gz")
 
-md5sums=('23cd54e45aa5fc397207bbe489e5689e')
+md5sums=('ac4e812d3e0d6eee57daa4a0cf24d938')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -23,7 +23,7 @@ build() {
   export CGO_CFLAGS="${CFLAGS}"
   export CGO_CPPFLAGS="${CPPFLAGS}"
   export CGO_CXXFLAGS="${CXXFLAGS}"
-  export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
+  export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw -ldflags=-linkmode=external"
   export GOPATH="${srcdir}"/go
   export PATH=$PATH:$GOPATH/bin
   go build -o bin/"$pkgname" *.go
