@@ -5,17 +5,31 @@
 
 pkgname=gegl-git
 _pkgname=gegl
-pkgver=0.4.36.22
+pkgver=0.4.36.24
 pkgrel=1
 pkgdesc="Graph based image processing framework"
 arch=('i686' 'x86_64')
 url="http://www.gegl.org"
 license=('GPL3' 'LGPL3')
-depends=('babl-git' 'libspiro' 'poppler-glib' 'json-glib' 'libgexiv2' 'libraw' 'openexr' 'librsvg' 'libtiff' 'luajit' 'jasper' 'lensfun' 'suitesparse' 'sdl')
-makedepends=('intltool' 'ruby' 'mesa' 'glu' 'ffmpeg4.4' 'exiv2' 'enscript' 'asciidoc' 'vala' 'gobject-introspection' 'meson' 'git')
-optdepends=('ffmpeg: ffmpeg plugin')
+depends=('babl-git' 'libspiro' 'json-glib' 'sdl2') #'mrg'
+makedepends=('git' 'meson' 'intltool' 'python' 'ruby' 'luajit'
+             'libraw' 'openexr' 'ffmpeg4.4' 'librsvg' 'jasper'
+             'libtiff' 'libnsgif' 'exiv2' 'libgexiv2' 'lensfun'
+             'vala' 'python-gobject'
+             'suitesparse' 'gobject-introspection')
+optdepends=('openexr: for using the openexr plugin'
+            'ffmpeg4.4: for using the ffmpeg plugin'
+            'librsvg: for using the svg plugin'
+            'libtiff: tiff plugin'
+            'jasper: for using the jasper plugin'
+            'libraw: raw plugin'
+            'suitesparse: matting-levin plugin'
+            'luajit: lua plugin'
+            'libgexiv2: for image metadata'
+            'lensfun: for lens distortion'
+            'libnsgif: gif plugin')
 provides=("gegl=${pkgver}")
-conflicts=('gegl>=0.3.0')
+conflicts=('gegl')
 options=(!libtool)
 source=(git+https://gitlab.gnome.org/GNOME/gegl.git)
 md5sums=('SKIP')
@@ -25,18 +39,22 @@ pkgver() {
   git describe --always | sed -e 's/GEGL_//' -e 's/-g.*$//' -e 's/[_-]/./g'
 }
 
-build() {
-  export PKG_CONFIG_PATH='/usr/lib/ffmpeg4.4/pkgconfig'
-  meson "${srcdir}/${_pkgname}"\
+prepare() {
+    mkdir "${srcdir}/build" -p
+
+    export PKG_CONFIG_PATH='/usr/lib/ffmpeg4.4/pkgconfig'
+    export CFLAGS CXXFLAGS LDFLAGS
+    meson "${srcdir}/${_pkgname}"\
           "${srcdir}/build" \
         --prefix=/usr \
-        -Dbuildtype=release \
-        -Ddocs=true \
         -Dworkshop=true
-  ninja -C "${srcdir}/build"
+}
+
+build() {
+    export NINJA_STATUS="[%p | %f<%r<%u | %cbps ] "
+    ninja -C "${srcdir}/build"
 }
 
 package() {
-  cd ${_pkgname}
-  DESTDIR="${pkgdir}" ninja -C "${srcdir}/build" install
+    DESTDIR="${pkgdir}" ninja -C "${srcdir}/build" install
 }
