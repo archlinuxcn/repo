@@ -9,6 +9,9 @@ pre_build_script: aur_pre_build(maintainers=['imlonghao'])
 
 post_build: aur_post_build
 
+repo_depends:
+  - liberica-jdk-11-full-bin
+
 update_on:
   - source: aur
     aur: hmcl
