@@ -1,7 +1,7 @@
 # Maintainer: Martin Hundebøll <martin@hundeboll.net>
 pkgname=tio
-pkgver=1.36
-pkgrel=2
+pkgver=1.37
+pkgrel=1
 pkgdesc="The simple TTY terminal I/O application"
 url="http://tio.github.io/"
 arch=('x86_64' 'i686' 'arm' 'armv7h' 'armv6h' 'aarch64')
@@ -9,7 +9,7 @@ license=('GPLv2')
 depends=('glibc' 'libinih')
 makedepends=('meson')
 source=("https://github.com/tio/tio/releases/download/v$pkgver/$pkgname-$pkgver.tar.xz")
-sha256sums=('4a73ddfceed9851944e651e21a4f45a0526f15585a26420f2afef0283b7c477c')
+sha256sums=('a54cd09baeaabd306fdea486b8161eea6ea75bb970b27cae0e8e407fb2dd7181')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
