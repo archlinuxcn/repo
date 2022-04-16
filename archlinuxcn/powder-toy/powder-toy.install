@@ -1,0 +1,10 @@
+post_upgrade() {
+  local new_pkgver="$1" old_pkgver="$2"
+  if [ "$(vercmp "$old_pkgver" 96.0)" -lt 0 ] && [ "$(vercmp "$new_pkgver" 96.0)" -ge 0 ]; then
+    cat <<EOF
+The saves directory has been changed from \`~/.local/share/powder-toy\` to
+\`~/.local/share/The Powder Toy\` in the version 96.0, please, move your saves
+accordingly.
+EOF
+  fi
+}

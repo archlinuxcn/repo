@@ -1,77 +1,94 @@
-# Maintainer: farseerfc <farseerfc@archlinuxcn.org>
+# Maintainer:	Dmytro Meleshko	<qzlgeb.zryrfuxb@tznvy.pbz(rot13)>
+# Contributor:	farseerfc	<farseerfc@archlinuxcn.org>
 # Contributor:	refujee		<gmail.com: refujee>
 # Contributor:	sausageandeggs	<archlinux.us: sausageandeggs>
 # Contributor:	Jesse Jaara	<gmail.com: jesse.jaara>
+# Mesonification is based on <https://aur.archlinux.org/cgit/aur.git/commit/PKGBUILD?h=powder-toy-git&id=65c5f88eb2df75df77c4da139859232d7d94f2c0>
 
-# Set to 'y' if you want native optimizations (-march=native)
-# based on your hardware. Enabled automatically if -march
-# is set to native in makepkg.conf.
-NATIVE_OPTIMIZATIONS=n
-
-
+# Select version of Lua. Possible values are luajit, lua51, lua52 and an empty
+# string to disable Lua support. luajit is used in the official builds.
+_lua=luajit
 
 pkgname=powder-toy
-#pkgver=${_sver}.${_mver}
-pkgver=94.1
-_sver=${pkgver/.*/}
-_mver=${pkgver/*./}
-_build=340
-pkgrel=6
+pkgver=96.2.350
+pkgrel=1
 pkgdesc="Desktop version of the classic falling sand physics sandbox, simulates air pressure, velocity & heat!"
-arch=(i686 x86_64)
-depends=('sdl2' 'lua52' 'fftw' 'bzip2' 'zlib')
-makedepends=('python2' 'scons')
-url="http://powdertoy.co.uk/"
+arch=(x86_64 i686)
+depends=('glibc' 'libx11' 'sdl2' "$_lua" 'fftw' 'zlib' 'curl' 'hicolor-icon-theme')
+makedepends=('meson' 'ninja' 'libicns')
+url="https://powdertoy.co.uk/"
 license=('GPL3')
-source=("${pkgname}-${pkgver}-${_build}.tar.gz::http://github.com/ThePowderToy/The-Powder-Toy/archive/v${pkgver}.tar.gz"
-	${pkgname}.desktop ${pkgname}.png)
-
-prepare() {
-  cd "${srcdir}/The-Powder-Toy-${pkgver}"
-
-  #Disable the updates. I cant get the buildsystem to not compile a beta version.
-  #Also I do not know the logic behind the generated snapshotids.
-  sed 's|//#define I|#define I|' -i src/Config.h
-
-  sed "s|Version=.*|Version=$pkgver|" -i ../${pkgname}.desktop
-}
+install="${pkgname}.install"
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/The-Powder-Toy/The-Powder-Toy/archive/refs/tags/v${pkgver}.tar.gz"
+        "${pkgname}.sh"
+        "${pkgname}.desktop"
+        "${pkgname}-open.desktop"
+        "${pkgname}-ptsave.desktop")
+sha256sums=('d95cbadee22632687661e8fc488bd64405d81c0dca737e16420f26e93ea5bf58'
+            'b5d181c3141715b7dced8813cae6d07d2adc03bca2a7efe527592740de2d45e2'
+            '265f530be7597fcc7bbaf2690fd517fe4f8f18372c808a90ddef49a604c8d455'
+            '398f6d068dd37e12989f4132ea5966886b14036bac07a589991b283d242b4ca5'
+            'fcbf035d286d805dced55f147d649aa0bc74d3be873d5430de92d175d9f59431')
 
 build() {
-  unset _xarch _ssever _native
-  cd "${srcdir}/The-Powder-Toy-${pkgver}"
+  cd "The-Powder-Toy-${pkgver}"
 
-  if $(grep -q 'pni' -i /proc/cpuinfo); then
-    _ssever="sse3"
-  elif $(grep -q sse2 -i /proc/cpuinfo); then
-    _ssever="sse2"
-  elif $(grep -q sse -i /proc/cpuinfo); then
-    _ssever="sse"
+  # extract document icons from macOS .icns files
+  pushd >/dev/null resources
+  icns2png -x document.icns
+  popd >/dev/null
+
+  local extra_flags=()
+
+  extra_flags+=(-Dignore_updates=true)
+  extra_flags+=(-Dinstall_check=false)
+
+  if   grep -q -i pni  /proc/cpuinfo; then
+    extra_flags+=(-Dx86_sse=sse3)
+  elif grep -q -i sse2 /proc/cpuinfo; then
+    extra_flags+=(-Dx86_sse=sse2)
+  elif grep -q -i sse  /proc/cpuinfo; then
+    extra_flags+=(-Dx86_sse=sse)
   else
-    _ssever="no-sse"
+    extra_flags+=(-Dx86_sse=none)
   fi
 
-#  if [ NATIVE_OPTIMIZATIONS == "y"  ] || $(echo ${CXXFLAGS} | grep -q -- "-march=native"); then
-#    _native="--native"
-#  fi
+  case "$_lua" in
+    luajit) extra_flags+=(-Dlua=luajit) ;;
+     lua51) extra_flags+=(-Dlua=lua5.1) ;;
+     lua52) extra_flags+=(-Dlua=lua5.2) ;;
+  esac
 
-  if [ "${CARCH}" == "x86_64" ]; then
-    _xarch="--64bit"
-  fi
+  msg2 "building ${pkgname} with the following extra flags: ${extra_flags[*]}"
+  arch-meson --buildtype=release build "${extra_flags[@]}"
+  meson compile -C build
+}
 
-  msg2 "building powder with options with following extra flags ${_xarch} --${_ssever} ${_native}"
-  scons --lin ${_xarch} --release --${_ssever} ${_native} --save-version=${_sver} \
-	--minor-version=${_mver} --build-number=${_build} ${MAKEFLAGS} \
-    --lua52
-
-  mv build/{powder*,binary}
+check() {
+  cd "The-Powder-Toy-${pkgver}"
+  meson test -C build
 }
 
 package() {
-  install -Dm 755 "${srcdir}/The-Powder-Toy-${pkgver}/build/binary" "${pkgdir}/usr/bin/powder-toy"
-  install -Dm 644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
-  install -Dm 644 "${srcdir}/${pkgname}.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
-}
+  install -Dm755 "${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm644 "${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  install -Dm644 "${pkgname}-open.desktop" "${pkgdir}/usr/share/applications/${pkgname}-open.desktop"
+  install -Dm644 "${pkgname}-ptsave.desktop" "${pkgdir}/usr/share/applications/${pkgname}-ptsave.desktop"
 
-md5sums=('7e55a347df49c5df23dc977fb719c208'
-         'e223e1d622f11c03af26ba3e60c7d500'
-         'bb40bf9c2fa3982e2872b5d32de3b006')
+  cd "The-Powder-Toy-${pkgver}"
+
+  install -Dm755 "build/powder" "${pkgdir}/usr/lib/${pkgname}/${pkgname}"
+  install -Dm644 "resources/powdertoy-save.xml" "${pkgdir}/usr/share/mime/packages/${pkgname}-save.xml"
+  install -Dm644 "resources/powder.appdata.xml" "${pkgdir}/usr/share/metainfo/${pkgname}.appdata.xml"
+  install -Dm644 "resources/powder.man" "${pkgdir}/usr/share/man/man6/${pkgname}.6"
+
+  local icon_size
+  for icon_size in 16 24 32 48 128 256; do
+    install -Dm644 "resources/icon/powder-${icon_size}.png" \
+      "${pkgdir}/usr/share/icons/hicolor/${icon_size}x${icon_size}/apps/${pkgname}.png"
+  done
+  for icon_size in 16 32 128 256 512; do
+    install -Dm644 "resources/document_${icon_size}x${icon_size}x32.png" \
+      "${pkgdir}/usr/share/icons/hicolor/${icon_size}x${icon_size}/mimetypes/application-vnd.${pkgname}.save.png"
+  done
+}

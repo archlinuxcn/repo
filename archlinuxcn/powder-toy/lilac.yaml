@@ -4,8 +4,9 @@ maintainers:
   - github: farseerfc
 
 build_prefix: extra-x86_64
+pre_build_script: aur_pre_build(maintainers=['dmitmel'])
+post_build: aur_post_build
 
 update_on:
-  - source: github
-    github: ThePowderToy/The-Powder-Toy
-    use_max_tag: true
+  - source: aur
+    aur: powder-toy
