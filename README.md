@@ -1,7 +1,7 @@
 Arch Linux Chinese Community Repository
 ====
 
-Packaging consistency check: [![Build Status](https://travis-ci.org/archlinuxcn/repo.svg?branch=master)](https://travis-ci.org/archlinuxcn/repo)
+[![Packaging consistency check](https://github.com/archlinuxcn/repo/actions/workflows/test.yml/badge.svg)](https://github.com/archlinuxcn/repo/actions/workflows/test.yml)
 
 For detailed information in Chinese, [visit here](https://www.archlinuxcn.org/archlinux-cn-repo-and-mirror/).
 中文介绍[请看这里](https://www.archlinuxcn.org/archlinux-cn-repo-and-mirror/)。
