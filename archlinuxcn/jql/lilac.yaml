@@ -1,10 +1,12 @@
-pre_build_script: aur_pre_build(maintainers=['frol'])
+pre_build_script: aur_pre_build(maintainers=['qufiwefefwoyn'])
 
 post_build: aur_post_build
 
 update_on:
   - source: aur
     aur: jql
+  - source: manual
+    manual: 1.0
 
 maintainers:
   - github: dctxmei
