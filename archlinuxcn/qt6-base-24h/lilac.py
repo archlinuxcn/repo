@@ -42,12 +42,14 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       line = line.replace('=(', '''=(
       oldherl-24h.patch
       'https://build.archlinuxcn.org/~oldherl/files/cldr/36/core.zip'
+      'https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab'
       ''')
       checks = checks + '6'
     elif line.startswith('sha256sums=('):
       line = line.replace('=(', '''=(
       '901a764c896559bb472d5ecee4af9ee006b235f73e56959de9ded477a10e5fc6'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
+      '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
       ''')
       checks = checks + '7'
     elif line.startswith('prepare('):
@@ -60,7 +62,7 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
   cd util/locale_database
   echo "This is slow. It takes about 4 minutes on my desktop."
   ./cldr2qlocalexml.py ../../../ > ./24h.xml
-  ./qlocalexml2cpp.py ./24h.xml ../..
+  ./qlocalexml2cpp.py ./24h.xml ../../../iso-639-3.tab ../..
 ''' + line
       prepare = False
       checks = checks + '9'
