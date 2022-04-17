@@ -17,7 +17,8 @@ git commit -am "$ver_msg"
 git push
 
 (
-  [ -e 'home:nicman23/${_pkgname}-appmenu-bin/' ] || osc co home:nicman23 ${_pkgname}-appmenu-bin
+  rm -rf 'home:nicman23'
+  osc co home:nicman23 ${_pkgname}-appmenu-bin
   sed "s/PKGVER/${ver}/g" _service \
    > home:nicman23/${_pkgname}-appmenu-bin/_service
   cd home:nicman23/${_pkgname}-appmenu-bin/
