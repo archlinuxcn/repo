@@ -10,7 +10,7 @@ pkgname=($pkgbase gcc10-libs gcc10-fortran)
 pkgver=10.3.0
 _majorver=${pkgver%%.*}
 _islver=0.24
-pkgrel=2
+pkgrel=3
 pkgdesc='The GNU Compiler Collection (10.x.x)'
 arch=(x86_64)
 license=(GPL LGPL FDL custom)
@@ -48,16 +48,15 @@ prepare() {
 
   # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" gcc/configure
-  
-  sed -i "/HAVE_LIMITS_H/d" libiberty/fibheap.c
-  
-  sed -i -e '/limits.h/{n;d}' libiberty/fibheap.c
+sed -i '/HAVE_LIMITS_H/d' libiberty/fibheap.c
+
+sed -i -e '/limits.h/{n;d}' libiberty/fibheap.c
+
+sed -i '/HAVE_FCNTL_H/d' libiberty/pex-unix.c
+
+sed -i -e '/fcntl.h/{n;d}' libiberty/pex-unix.c
 
 
-  sed -i "/HAVE_FCNTL_H/d" libiberty/pex-unix.c
-  
-  sed -i -e '/fcntl.h/{n;d}' libiberty/pex-unix.c
-  
   mkdir -p "$srcdir/gcc-build"
 }
 
