@@ -28,7 +28,7 @@ def pre_build():
       line = 'pkgbase=qt5-base-24h' + '\n' + '_origpkgname=qt5-base'
       checks = checks + '0'
     elif line.startswith('pkgrel='):
-      line = line + '.9'
+      line = line + '.10'
     elif line.startswith('pkgname='):
       line = 'pkgname=(qt5-base-24h)'
       checks = checks + '1'
@@ -86,8 +86,12 @@ ln -s /usr/share/licenses/${pkgname} "$pkgdir"/usr/share/licenses/qt5-base
       # other split packages. do not build them.
       line = 'no' + line
       logger.info('removed: %s', line)
+    elif line.startswith('depends=('):
+      # let it conflict with incompatable icu versions, @q234rty
+      line = line.replace('=(', '=(libicudata.so ')
+      checks = checks + 'c'
     print(line)
-  if len(checks) != 12:
+  if len(checks) != 13:
     raise ValueError('PKGBUILD editing not completed. checks=' + checks)
 
 def post_build():
