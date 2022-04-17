@@ -7,6 +7,7 @@ pkgrel=3
 pkgdesc='Utilities for use with XDP and libxdp'
 url='https://github.com/xdp-project/xdp-tools'
 license=('GPL' 'LGPL' 'BSD')
+provides=('libxdp' 'xdp-filter' 'xdp-loader' 'xdpdump' 'libxdp.so')
 depends=('libelf' 'linux-api-headers' 'libbpf' 'libpcap.so')
 makedepends=('clang' 'llvm' 'gcc' 'make' 'm4' 'pkgconfig' 'libpcap' 'zlib')
 arch=('x86_64')
