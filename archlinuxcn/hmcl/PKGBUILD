@@ -6,7 +6,7 @@ pkgname=hmcl
 _pkgname=HMCL
 pkgver=3.5.3
 _commit=d28723916d6d42fbea2a6423a07a74ffdf7cd1bd
-pkgrel=3
+pkgrel=4
 pkgdesc="A Minecraft Launcher which is multi-functional, cross-platform and popular"
 arch=('any')
 url="https://github.com/huanghongxun/HMCL"
@@ -24,6 +24,7 @@ b2sums=('5712d2ade1c3df38b1e96f978337d4c693bece3691b8b8f333299395242349340d2086c
 
 build() {
   cd "${_pkgname}-${_commit}"
+  export JAVA_HOME=/usr/lib/jvm/liberica-jdk-11-full
   ./gradlew clean build
 }
 
