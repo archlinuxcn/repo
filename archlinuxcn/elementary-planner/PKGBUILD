@@ -3,7 +3,7 @@
 pkgname=elementary-planner
 _app_id=com.github.alainm23.planner
 pkgver=3.0.6
-pkgrel=3
+pkgrel=4
 pkgdesc="Task manager with Todoist support"
 arch=('x86_64')
 url="https://useplanner.com"
@@ -11,7 +11,7 @@ license=('GPL3')
 depends=('elementary-icon-theme' 'evolution-data-server' 'granite'
          'gtk-theme-elementary' 'libgee' 'libhandy' 'libpeas' 'libsoup' 'webkit2gtk')
 makedepends=('gobject-introspection' 'meson' 'vala' )
-checkdepends=('appstream')
+#checkdepends=('appstream')
 provides=('planner')
 conflicts=('planner')
 source=("planner-$pkgver.tar.gz::https://github.com/alainm23/planner/archive/$pkgver.tar.gz"
@@ -37,7 +37,7 @@ check() {
 #  meson test -C build --print-errorlogs
 
   desktop-file-validate build/data/${_app_id}.desktop
-  appstreamcli validate build/data/${_app_id}.appdata.xml
+#  appstreamcli validate build/data/${_app_id}.appdata.xml
 }
 
 package() {
