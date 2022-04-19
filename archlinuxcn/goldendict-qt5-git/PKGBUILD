@@ -3,40 +3,51 @@
 # Contributor:  VirtualTam <virtualtam@flibidi.net>
 # Contributor: Eugene Yudin aka Infy <Eugene dot Yudin at gmail dot com>
 
-pkgname=goldendict-qt5-git
-pkgver=1.5.0.RC2.505.g8acb288c
+pkgname=goldendict-git
+pkgver=1.5.0rc2.r505.g8acb288c
 pkgrel=1
-pkgdesc="Feature-rich dictionary lookup program."
+epoch=1
+pkgdesc="A feature-rich dictionary lookup program, supporting multiple dictionary formats."
 arch=('i686' 'x86_64')
-url="http://goldendict.org/"
+url="https://github.com/goldendict/goldendict"
 license=('GPL3')
-depends=('ffmpeg' 'hunspell' 'libao' 'libeb' 'qt5-multimedia' 'qt5-svg' 'qt5-tools' 'qt5-webkit' 'qt5-x11extras' 'libxtst' 'opencc')
+depends=('ffmpeg' 'hunspell' 'libao' 'libvorbis' 'libxtst' 'lzo' 'zlib' 'xz' 'libeb' 'libiconv' 'opencc'
+	'qt5-webkit' 'qt5-svg' 'qt5-tools' 'qt5-x11extras' 'qt5-multimedia')
 makedepends=('git')
-conflicts=('goldendict' 'goldendict-svn' 'goldendict-git-opt')
+conflicts=('goldendict')
 provides=('goldendict')
-_gitname="goldendict"
-source=("git+https://github.com/goldendict/goldendict.git")
-sha256sums=(SKIP)
+source=("$pkgname::git+${url}.git")
+sha256sums=('SKIP')
 
 pkgver() {
-  cd ${_gitname}
-  git describe --always --tags | sed 's|-|.|g'
+	cd "$srcdir/$pkgname"
+
+	# Generate git tag based version. Count only proper (v)#.#* [#=number] tags.
+	local _gitversion=$(git describe --long --tags --match '[v0-9][0-9.][0-9.]*' | sed -e 's|^v||' | tr '[:upper:]' '[:lower:]') 
+
+	# Format git-based version for pkgver
+	echo "${_gitversion}" | sed \
+		-e 's|^\([0-9][0-9.]*\)-\([a-zA-Z]\+\)|\1\2|' \
+		-e 's|\([0-9]\+-g\)|r\1|' \
+		-e 's|-|.|g'
 }
 
 prepare() {
-  cd ${_gitname}
-  echo "QMAKE_CXXFLAGS_RELEASE = $CFLAGS" >> goldendict.pro
-  echo "QMAKE_CFLAGS_RELEASE = $CXXFLAGS" >> goldendict.pro
+	cd "$srcdir/$pkgname"
+	msg "Fixing flags"
+	echo "QMAKE_CXXFLAGS_RELEASE = $CFLAGS" >> goldendict.pro
+	echo "QMAKE_CFLAGS_RELEASE = $CXXFLAGS" >> goldendict.pro
 }
 
 build(){
-  cd ${_gitname}
-  PREFIX="/usr" qmake-qt5 "CONFIG+=zim_support" "CONFIG+=chinese_conversion_support"
-  make
+	cd "$srcdir/$pkgname"
+	qmake-qt5 "CONFIG+=zim_support" "CONFIG+=chinese_conversion_support" PREFIX="/usr" goldendict.pro
+	make
 }
 
 package() {
-  cd ${_gitname}
-  make INSTALL_ROOT="${pkgdir}" install
+	cd "$srcdir/$pkgname"
+	make INSTALL_ROOT="$pkgdir" install
 }
+
 # vim:set ts=2 sw=2 et:
