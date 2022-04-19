@@ -1,0 +1,37 @@
+# Maintainer: George Rawlinson <grawlinson@archlinux.org>
+
+pkgname=pict-rs
+_pkgver=0.3.1
+pkgver="${_pkgver/-/.}"
+pkgrel=1
+pkgdesc="A simple image hosting service"
+arch=('x86_64')
+url="https://git.asonix.dog/asonix/pict-rs"
+license=('AGPL3')
+depends=('gcc-libs' 'imagemagick' 'ffmpeg' 'perl-image-exiftool')
+makedepends=('rust')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$_pkgver.tar.gz")
+sha512sums=('038cb78cbfbfb19984b55042a92737c47e669e77957425f278150aa69765492eebc455e191a00589cb43380e0e61a6e85976d5e412de0d0cdaa421ea8771ecb1')
+b2sums=('7215343aaf384eb34ed304374097199d6ac3c4367782ffb78324d8eedc52cee7b475b457f6679cdd134c14640a0ec639bd4e5a80f0bcdc77efb6dbdc26e9ea91')
+
+prepare() {
+  cd "$pkgname"
+
+  # download dependencies
+  cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+  cd "$pkgname"
+  cargo build --frozen --release --all-features
+}
+
+check() {
+  cd "$pkgname"
+  cargo test --frozen --all-features
+}
+
+package() {
+  cd "$pkgname"
+  install -vDm755 -t "$pkgdir/usr/bin" "target/release/$pkgname"
+}
