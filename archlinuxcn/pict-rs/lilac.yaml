@@ -4,7 +4,7 @@ maintainers:
 build_prefix: extra-x86_64
 
 pre_build_script: |
-    vsc_update()
+    vcs_update()
 
 post_build_script: |
     git_pkgbuild_commit()
