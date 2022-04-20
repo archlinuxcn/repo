@@ -3,6 +3,11 @@
 # Contributor: Jean Lucas <jean@4ray.co>
 # Based on python-torchvision-git; original contributors:
 # Contributor: Stephen Zhang <zsrkmyn at gmail dot com>
+#
+# to build with GPU deocder, you need to add https://aur.archlinux.org/packages/nvidia-sdk to depends
+# set environment variable `TORCHVISION_INCLUDE` and `TORCHVISION_LIBRARY`
+# see also https://github.com/pytorch/vision/blob/main/torchvision/csrc/io/decoder/gpu/README.rst
+#
 
 _CUDA_ARCH_LIST="5.2;5.3;6.0;6.1;6.2;7.0;7.2;7.5;8.0;8.6;8.6+PTX"
 pkgname=('python-torchvision' 'python-torchvision-cuda')
@@ -41,9 +46,15 @@ get_pyver() {
 }
 
 prepare() {
-  # fix building with ffmpeg4.4
-  sed -i 's#ffmpeg_include_dir = os.path.join(ffmpeg_root, "include")#ffmpeg_include_dir = os.path.join(ffmpeg_root, "include", "ffmpeg4.4")#' "${srcdir}/${_pkgname}-${pkgver}/setup.py"
-  sed -i 's#ffmpeg_library_dir = os.path.join(ffmpeg_root, "lib")#ffmpeg_library_dir = os.path.join(ffmpeg_root, "lib", "ffmpeg4.4")#' "${srcdir}/${_pkgname}-${pkgver}/setup.py"
+  # fix building with ffmpeg4.4 by manually setup include and lib dir
+  # and remove other codes to find ffmpeg exe, as ffmpeg4.4 are only headers and libs without ffmpeg cmd
+  sed -i '351,358d' "${srcdir}/${_pkgname}-${pkgver}/setup.py"
+  sed -i 's#ffmpeg_include_dir = os.path.join(ffmpeg_root, "include")#ffmpeg_include_dir = "/usr/include/ffmpeg4.4"#' "${srcdir}/${_pkgname}-${pkgver}/setup.py"
+  sed -i 's#ffmpeg_library_dir = os.path.join(ffmpeg_root, "lib")#ffmpeg_library_dir = "/usr/lib/ffmpeg4.4"#' "${srcdir}/${_pkgname}-${pkgver}/setup.py"
+  sed -i 's#has_ffmpeg = ffmpeg_exe is not None#has_ffmpeg = True#' "${srcdir}/${_pkgname}-${pkgver}/setup.py"
+  sed -i '/ffmpeg_exe/d' "${srcdir}/${_pkgname}-${pkgver}/setup.py"
+  sed -i '/ffmpeg_bin/d' "${srcdir}/${_pkgname}-${pkgver}/setup.py"
+  sed -i '/ffmpeg_root/d' "${srcdir}/${_pkgname}-${pkgver}/setup.py"
   cp -a "${srcdir}/${_pkgname}-${pkgver}" "${srcdir}/${_pkgname}-cuda-${pkgver}"
 }
 
