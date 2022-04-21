@@ -1,6 +1,6 @@
-# Maintainer: Yuanji <self@gimo.me>
-# Contributor: Mohammadreza Abdollahzadeh <morealaz at gmail dot com>
-# Contributor:  VirtualTam <virtualtam@flibidi.net>
+# Maintainer:  Marcell Meszaros < marcell.meszaros AT runbox.eu >
+# Contributor: aksr <aksr at t-com dot me>
+# Contributor: VirtualTam <virtualtam@flibidi.net>
 # Contributor: Eugene Yudin aka Infy <Eugene dot Yudin at gmail dot com>
 
 pkgname=goldendict-git
@@ -49,5 +49,3 @@ package() {
 	cd "$srcdir/$pkgname"
 	make INSTALL_ROOT="$pkgdir" install
 }
-
-# vim:set ts=2 sw=2 et:
