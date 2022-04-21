@@ -10,7 +10,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
 pkgver=94657
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='http://virtualbox.org'
 license=('GPL' 'custom')
@@ -131,7 +131,7 @@ package_virtualbox-svn() {
     depends=('glibc' 'openssl' 'curl' 'gcc-libs' 'libpng' 'python' 'sdl'
              'libvpx' 'libxml2' 'procps-ng' 'shared-mime-info' 'zlib'
              'libxcursor' 'libxinerama' 'libx11' 'libxext' 'libxmu' 'libxt'
-             'opus' 'qt5-base' 'qt5-x11extras' 'VIRTUALBOX-HOST-MODULES-SVN')
+             'opus' 'qt5-base' 'qt5-x11extras' 'qt5-tools' 'VIRTUALBOX-HOST-MODULES-SVN')
     optdepends=('vde2: Virtual Distributed Ethernet support'
                 'virtualbox-guest-iso: Guest Additions CD image'
                 'virtualbox-ext-vnc: VNC server support'
