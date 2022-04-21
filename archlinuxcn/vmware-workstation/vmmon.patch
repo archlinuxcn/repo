@@ -78,3 +78,31 @@ index 0ec30b3..b920e2d 100644
  #else
     /*
      * Vmkernel's bogus __FreeBSD__ value causes gcc <stddef.h> to break.
+From 16d490ae022d7fc4ca867971e20e2dcd59e6ca5a Mon Sep 17 00:00:00 2001
+From: Michal Kubecek <mkubecek@suse.cz>
+Date: Mon, 4 Apr 2022 01:57:28 +0200
+Subject: [PATCH] vmmon: do not rely on HAVE_GET_KERNEL_NOFAULT
+
+Mainline commit 34737e269803 ("uaccess: add generic
+__{get,put}_kernel_nofault") in 5.18-rc1 removes HAVE_GET_KERNEL_NOFAULT
+macro as all architectures can use get_kernel_nofault() now. Check for
+existence of __get_kernel_nofault() instead and add also a version check in
+case it stops being a macro or is removed in the future.
+---
+ vmmon-only/linux/hostif.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/vmmon-only/linux/hostif.c b/vmmon-only/linux/hostif.c
+index a21c300..b6326e9 100644
+--- a/vmmon-only/linux/hostif.c
++++ b/vmmon-only/linux/hostif.c
+@@ -2356,7 +2356,8 @@ isVAReadable(VA r)  // IN:
+    int ret;
+ 
+    r = APICR_TO_ADDR(r, APICR_VERSION);
+-#ifdef HAVE_GET_KERNEL_NOFAULT
++#if defined(HAVE_GET_KERNEL_NOFAULT) || defined(__get_kernel_nofault) || \
++    (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 18, 0))
+    ret = get_kernel_nofault(dummy, (void *)r);
+ #else
+    {

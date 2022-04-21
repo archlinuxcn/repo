@@ -91,3 +91,66 @@ index 0ec30b3..b920e2d 100644
  #else
     /*
      * Vmkernel's bogus __FreeBSD__ value causes gcc <stddef.h> to break.
+From 409623bd4693afada659af82e823a6291f70797a Mon Sep 17 00:00:00 2001
+From: Michal Kubecek <mkubecek@suse.cz>
+Date: Mon, 4 Apr 2022 02:05:17 +0200
+Subject: [PATCH] vmnet: use netif_rx() on newer kernels
+
+In mainline 5.18-rc1, commit baebdf48c360 ("net: dev: Makes sure netif_rx()
+can be invoked in any context.") allows calling netif_rx() from any context
+and commit 2655926aea9b ("net: Remove netif_rx_any_context() and
+netif_rx_ni().") drops netif_rx_ni() as it is no longer needed.
+
+Replace calls of netif_rx_ni() in VNetBridgeReceiveFromVNet() and
+VNetNetIfReceive() by netif_rx() when building against kernel 5.18 and
+newer.
+---
+ vmnet-only/bridge.c           | 2 +-
+ vmnet-only/compat_netdevice.h | 9 +++++++++
+ vmnet-only/netif.c            | 2 +-
+ 3 files changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/vmnet-only/bridge.c b/vmnet-only/bridge.c
+index c84f8ee..d6bd3c4 100644
+--- a/vmnet-only/bridge.c
++++ b/vmnet-only/bridge.c
+@@ -691,7 +691,7 @@ VNetBridgeReceiveFromVNet(VNetJack        *this, // IN: jack
+           * not do it, or netif_rx_ni() will deadlock on the cli() lock --hpreg
+           */
+ 
+-	 netif_rx_ni(clone);
++	 compat_netif_rx_ni(clone);
+ #	 if LOGLEVEL >= 4
+ 	 do_gettimeofday(&vnetTime);
+ #	 endif
+diff --git a/vmnet-only/compat_netdevice.h b/vmnet-only/compat_netdevice.h
+index bb5001b..c6cc706 100644
+--- a/vmnet-only/compat_netdevice.h
++++ b/vmnet-only/compat_netdevice.h
+@@ -196,4 +196,13 @@ typedef u32 compat_netdev_features_t;
+ #define compat_netif_trans_update(d) do { (d)->trans_start = jiffies; } while (0)
+ #endif
+ 
++static inline int compat_netif_rx_ni(struct sk_buff *skb)
++{
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 18, 0)
++	return netif_rx(skb);
++#else
++	return netif_rx_ni(skb);
++#endif
++}
++
+ #endif /* __COMPAT_NETDEVICE_H__ */
+diff --git a/vmnet-only/netif.c b/vmnet-only/netif.c
+index 8c3bbf8..35256a0 100644
+--- a/vmnet-only/netif.c
++++ b/vmnet-only/netif.c
+@@ -345,7 +345,7 @@ VNetNetIfReceive(VNetJack        *this, // IN: jack
+    /* send to the host interface */
+    skb->dev = netIf->dev;
+    skb->protocol = eth_type_trans(skb, netIf->dev);
+-   netif_rx_ni(skb);
++   compat_netif_rx_ni(skb);
+    netIf->stats.rx_packets++;
+ 
+    return;
