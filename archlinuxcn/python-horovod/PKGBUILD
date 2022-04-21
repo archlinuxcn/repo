@@ -2,7 +2,7 @@
 
 _pkgname=horovod
 pkgname=python-horovod
-pkgver=0.24.2
+pkgver=0.24.3
 pkgrel=1
 pkgdesc='Distributed training framework for TensorFlow, Keras, PyTorch, and Apache MXNet'
 arch=('x86_64')
