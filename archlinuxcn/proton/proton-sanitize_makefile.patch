@@ -1,5 +1,5 @@
 diff --git a/Makefile.in b/Makefile.in
-index 52528f5..b0d08c4 100644
+index 6e1b4d1..da46c76 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -63,7 +63,6 @@ ifeq ($(ENABLE_CCACHE),1)
@@ -10,7 +10,7 @@ index 52528f5..b0d08c4 100644
  	override DOCKER_OPTS := $(CCACHE_ENV) -e CCACHE_DISABLE=1 $(DOCKER_OPTS)
  endif
  
-@@ -121,7 +120,7 @@ container-build:
+@@ -125,7 +124,7 @@ container-build:
  all32 $(MAKECMDGOALS32): container-build
  all64 $(MAKECMDGOALS64): container-build
  else
@@ -19,7 +19,7 @@ index 52528f5..b0d08c4 100644
  endif
  
  
-@@ -171,11 +170,12 @@ else
+@@ -175,11 +174,12 @@ else
  endif
  
  CROSSLDFLAGS   += -Wl,--file-alignment,4096
@@ -34,7 +34,7 @@ index 52528f5..b0d08c4 100644
  CARGO_BUILD_ARG := --release
  
  ##
-@@ -360,8 +360,8 @@ ALL_TARGETS += dist
+@@ -364,8 +364,8 @@ ALL_TARGETS += dist
  GOAL_TARGETS += dist
  
  dist_prefix: wine gst_good gst_libav gst_plugins_rs
@@ -115,11 +115,42 @@ index 52528f5..b0d08c4 100644
  $(eval $(call rules-source,vkd3d-proton,$(SRCDIR)/vkd3d-proton))
  $(eval $(call rules-meson,vkd3d-proton,32,CROSS))
  $(eval $(call rules-meson,vkd3d-proton,64,CROSS))
+@@ -1081,14 +1103,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
+ 	mkdir -p $(FONTS_OBJ)/source-han
+ 	# Do not immediately create the target file, so that make is interrupted
+ 	# it will restart again
+-	afdko makeotfexe -f $($(notdir $@)_CIDFONT) -omitMacNames -ff $($(notdir $@)_FEATURES) \
++	makeotfexe -f $($(notdir $@)_CIDFONT) -omitMacNames -ff $($(notdir $@)_FEATURES) \
+ 		-lic ADOBE -mf $($(notdir $@)_MENUNAMEDB) -r -nS -cs 25 -ch $($(notdir $@)_UNISOURCE) \
+ 		-ci $($(notdir $@)_SEQUENCES) -o $@.tmp
+-	afdko tx -cff +S -no_futile $($(notdir $@)_CIDFONT) $@.cff
++	tx -cff +S -no_futile $($(notdir $@)_CIDFONT) $@.cff
+ 	# sftnedit uses a hardcoded temporary file in the local directory, so we have
+ 	# to run it in a dedicated temporary directory to prevent concurrent instances
+ 	# to step onto each other's feet
+-	(TEMP_DIR=`mktemp -d` && cd $$TEMP_DIR && afdko sfntedit -a CFF=$(abspath $($(notdir $@)).cff) $(abspath $@.tmp) && rm -fr $$TEMP_DIR)
++	(TEMP_DIR=`mktemp -d` && cd $$TEMP_DIR && sfntedit -a CFF=$(abspath $($(notdir $@)).cff) $(abspath $@.tmp) && rm -fr $$TEMP_DIR)
+ 	mv $@.tmp $@
+ 
+ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
+@@ -1098,10 +1120,10 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
+ 	ttx -o $@ -m $($(notdir $@)_FONT) $(FONTS_OBJ)/ume-gothic/$(notdir $(basename $($(notdir $@)_NAMETABLE_PATCH))).ttx
+ 
+ $(simsun.ttc): $(simsun.ttf) $(nsimsun.ttf)
+-	afdko otf2otc -o $@ $^
++	otf2otc -o $@ $^
+ 
+ $(msgothic.ttc): $(msgothic.ttf) $(mspgothic.ttf) $(msuigothic.ttf)
+-	afdko otf2otc -o $@ $^
++	otf2otc -o $@ $^
+ 
+ $(micross.ttf): $(noto_sans.ttf) $(noto_sans_arabic.ttf) $(noto_sans_armenian.ttf) $(noto_sans_bengali.ttf) $(noto_sans_coptic.ttf) \
+ 		$(noto_sans_georgian.ttf) $(noto_sans_gujarati.ttf) $(noto_sans_hebrew.ttf) $(noto_sans_khmer.ttf) $(noto_sans_tamil.ttf) \
 diff --git a/configure.sh b/configure.sh
-index 48d6004..33eb9f3 100755
+index 7000c86..a41c52b 100755
 --- a/configure.sh
 +++ b/configure.sh
-@@ -141,6 +141,7 @@ function configure() {
+@@ -126,6 +126,7 @@ function configure() {
      CONTAINER_MOUNT_OPTS=:Z
    fi
  
@@ -127,7 +158,7 @@ index 48d6004..33eb9f3 100755
    if [[ -n "$arg_container_engine" ]]; then
      check_container_engine "$arg_container_engine" || die "Specified container engine \"$arg_container_engine\" doesn't work"
    else
-@@ -153,6 +154,7 @@ function configure() {
+@@ -138,6 +139,7 @@ function configure() {
          die "${arg_container_engine:-Container engine discovery} has failed. Please fix your setup."
      fi
    fi
@@ -184,23 +215,22 @@ index c70751a..1096dc1 100644
  endif
  endef
 diff --git a/make/rules-common.mk b/make/rules-common.mk
-index ec08369..0705133 100644
+index 78f0f61..1ab144c 100644
 --- a/make/rules-common.mk
 +++ b/make/rules-common.mk
-@@ -119,8 +119,12 @@ $(2)_LIBFLAGS$(3) = $$(foreach d,$$($(2)_DEPS$(3)),-L$$($$(d)_LIBDIR$(3))) \
+@@ -113,7 +113,11 @@ $(2)_LIBFLAGS$(3) = $$(foreach d,$$($(2)_DEPS$(3)),-L$$($$(d)_LIBDIR$(3))) \
  # native version doesn't exist.
  
  $(2)_ENV$(3) = \
 +    WINEDEBUG="-all" \
 +    WINEPREFIX="$$(OBJ)/pfx-wine$(3)" \
 +    WINEDLLOVERRIDES="winemenubuilder=d;" \
-     CARGO_HOME=$$(OBJ)/.cargo \
      CARGO_TARGET_$$(call toupper,$$(CARGO_TARGET_$(3)))_LINKER="$$(TARGET_$(4)$(3))-gcc" \
 +    CARGO_TARGET_$$(call toupper,$$(CARGO_TARGET_$(3)))_RUSTFLAGS="$$(RUSTFLAGS)" \
      CCACHE_BASEDIR="$$(CCACHE_BASEDIR)" \
      STRIP="$$(STRIP)" \
      AR="$$(TARGET_$(4)$(3))-ar" \
-@@ -134,7 +138,7 @@ $(2)_ENV$(3) = \
+@@ -127,7 +131,7 @@ $(2)_ENV$(3) = \
      PATH="$$(call list-join,:,$$(foreach d,$$($(2)_DEPS$(3)),$$($$(d)_BINDIR$(3))),,:):$$(SRC)/glslang/bin:$$$$PATH" \
      LD_LIBRARY_PATH="$$(call list-join,:,$$(foreach d,$$($(2)_DEPS$(3)),$$($$(d)_LIBDIR$(3))),,:)$$$$LD_LIBRARY_PATH" \
      PKG_CONFIG_PATH="$$(call list-join,:,$$(foreach d,$$($(2)_DEPS$(3)),$$($$(d)_LIBDIR$(3))/pkgconfig))" \
@@ -209,7 +239,7 @@ index ec08369..0705133 100644
      CFLAGS="$$($(2)_INCFLAGS$(3)) $$($(2)_CFLAGS) $$(COMMON_FLAGS) $$(COMMON_FLAGS$(3))" \
      CPPFLAGS="$$($(2)_INCFLAGS$(3)) $$($(2)_CPPFLAGS) $$(COMMON_FLAGS) $$(COMMON_FLAGS$(3))" \
      CXXFLAGS="$$($(2)_INCFLAGS$(3)) $$($(2)_CXXFLAGS) $$(COMMON_FLAGS) $$(COMMON_FLAGS$(3)) -std=c++17" \
-@@ -158,7 +162,7 @@ $(2)_ENV$(3) += \
+@@ -151,7 +155,7 @@ $(2)_ENV$(3) += \
      CROSSCPPFLAGS="$$($(2)_INCFLAGS$(3)) $$($(2)_CPPFLAGS) $$(COMMON_FLAGS) $$(COMMON_FLAGS$(3))" \
      CROSSCXXFLAGS="$$($(2)_INCFLAGS$(3)) $$($(2)_CXXFLAGS) $$(COMMON_FLAGS) $$(COMMON_FLAGS$(3)) -std=c++17" \
      CROSSLDFLAGS="$$($(2)_LIBFLAGS$(3)) $$($(2)_LDFLAGS$(3)) $$($(2)_LDFLAGS) $$(CROSSLDFLAGS)" \
@@ -218,7 +248,7 @@ index ec08369..0705133 100644
  
  endif
  
-@@ -171,14 +175,14 @@ else
+@@ -164,14 +168,14 @@ else
  install-strip = objcopy --file-alignment=4096 --strip-debug $(1) $(2)/$(notdir $(1)) && rm -f $(2)/$(notdir $(1)).debug
  endif
  
