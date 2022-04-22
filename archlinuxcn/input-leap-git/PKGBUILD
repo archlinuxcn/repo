@@ -6,7 +6,7 @@ _pkgname=input-leap
 pkgbase=$_pkgname-git
 pkgname=($_pkgname-headless-git $_pkgname-git)
 pkgver=2.4.0+178+gfc398830
-pkgrel=1
+pkgrel=2
 pkgdesc="Open-source KVM software"
 arch=(x86_64)
 url="https://github.com/input-leap/input-leap"
@@ -56,8 +56,8 @@ _package_common() {
 package_input-leap-headless-git() {
   pkgdesc+=" (client and server CLI binaries)"
   depends=(${_core_deps[@]})
-  provides=("input-leap-headless=$pkgver")
-  confclits=(input-leap-headless)
+  provides=("input-leap-headless=$pkgver" "barrier-headless=$pkgver")
+  conflicts=(input-leap-headless barrier-headless)
 
   # Install all the files:
   _package_common
@@ -77,8 +77,8 @@ package_input-leap-headless-git() {
 package_input-leap-git() {
   pkgdesc+=" (GUI)"
   depends=(input-leap-headless-git ${_gui_deps[@]})
-  provides=("input-leap=$pkgver")
-  confclits=(input-leap)
+  provides=("input-leap=$pkgver" "barrier=$pkgver")
+  conflicts=(input-leap barrier)
 
   # Install all the files:
   _package_common
