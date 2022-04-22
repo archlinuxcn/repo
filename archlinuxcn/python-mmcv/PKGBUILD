@@ -11,9 +11,10 @@ url='https://github.com/open-mmlab/mmcv'
 license=('Apache')
 depends=(
   python-addict
-  python-lmdb
-  python-opencv
+  python-numpy
   python-pillow
+  python-yaml
+  yapf
 )
 makedepends=(
   cuda
@@ -32,18 +33,14 @@ prepare() {
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  MMCV_WITH_OPS=1 python setup.py build_py
-  MMCV_WITH_OPS=1 python setup.py build_ext
+  MMCV_WITH_OPS=1 \
+  python setup.py build
   
   cd "${srcdir}/${_pkgname}-full-${pkgver}"
   FORCE_CUDA=1 \
   MMCV_WITH_OPS=1 \
   TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
-  python setup.py build_py
-  FORCE_CUDA=1 \
-  MMCV_WITH_OPS=1 \
-  TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
-  python setup.py build_ext
+  python setup.py build
 }
 
 package_python-mmcv() {
