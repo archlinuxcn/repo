@@ -2,29 +2,20 @@
 # Contributor: Jonas 'cherti' Große Sundrup <aur@letopolis.de>
 pkgname=elementary-planner
 _app_id=com.github.alainm23.planner
-pkgver=3.0.6
-pkgrel=4
+pkgver=3.0.7
+pkgrel=1
 pkgdesc="Task manager with Todoist support"
 arch=('x86_64')
 url="https://useplanner.com"
 license=('GPL3')
-depends=('elementary-icon-theme' 'evolution-data-server' 'granite'
-         'gtk-theme-elementary' 'libgee' 'libhandy' 'libpeas' 'libsoup' 'webkit2gtk')
+depends=('elementary-icon-theme' 'evolution-data-server' 'granite' 'gtk-theme-elementary'
+         'gtksourceview4' 'libgee' 'libhandy' 'libpeas' 'libsoup' 'webkit2gtk')
 makedepends=('gobject-introspection' 'meson' 'vala' )
 #checkdepends=('appstream')
 provides=('planner')
 conflicts=('planner')
-source=("planner-$pkgver.tar.gz::https://github.com/alainm23/planner/archive/$pkgver.tar.gz"
-        'https://patch-diff.githubusercontent.com/raw/alainm23/planner/pull/884.patch')
-sha256sums=('345a9ad2220820f08f583321e874528eee9f7e009236127efacee72d071c7ea5'
-            '67eb146791da6fc6eecf07278aecc102d93c42d42f33bf2ed8800990a03b54d5')
-
-prepare() {
-  cd planner-${pkgver}
-
-  # Fix build with vala 0.56
-  patch -Np1 -i ../884.patch
-}
+source=("planner-$pkgver.tar.gz::https://github.com/alainm23/planner/archive/$pkgver.tar.gz")
+sha256sums=('64c39f8444832cdba0c7a88eea23fe3d56ba9102bf75f5201cf2080b87a696a2')
 
 build() {
   arch-meson planner-${pkgver} build
