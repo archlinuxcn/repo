@@ -2,7 +2,7 @@
 
 pkgname=rambox-bin
 _pkgname=Rambox
-pkgver=0.7.9
+pkgver=0.8.0
 pkgrel=1
 pkgdesc='Free and Open Source messaging and emailing app that combines common web applications into one.'
 arch=('i686' 'x86_64')
@@ -15,8 +15,8 @@ license=('GPL3')
 source_i686=("https://github.com/ramboxapp/community-edition/releases/download/$pkgver/${_pkgname}-$pkgver-linux-i386.deb")
 source_x86_64=("https://github.com/ramboxapp/community-edition/releases/download/$pkgver/${_pkgname}-$pkgver-linux-amd64.deb")
 
-sha256sums_i686=('d8a820b32152dfb8404522cdaeec44da40f0879b3945a7db7bbf6ca35b9a21b0')
-sha256sums_x86_64=('04b9aaae7ced1e1ba71800bea861a45e57fed73a53923d263e7cb173a04c779f')
+sha256sums_i686=('3529e194add9d1994c9cec09208609405d161e49e9a783e2eec9ad50ae54047f')
+sha256sums_x86_64=('87fecf3985fed9b3cbc09aa544c738cbaae2cfab9bd49bdc5c613bace404055f')
 
 package() {
     # extract package data
