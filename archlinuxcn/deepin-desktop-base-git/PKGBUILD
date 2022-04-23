@@ -1,7 +1,7 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=deepin-desktop-base-git
-pkgver=2021.11.08.r4.gc574dc7
+pkgver=2022.03.07.r1.gc574dc7
 pkgrel=1
 pkgdesc='Base component for Deepin'
 arch=('any')
@@ -20,6 +20,13 @@ sha512sums=('SKIP'
 pkgver() {
     cd $pkgname
     git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+    cd $pkgname
+    if [[ ! -z ${sha} ]];then
+      git checkout -b $sha
+    fi
 }
 
 build() {
