@@ -16,7 +16,7 @@ optdepends=('tmux: session starting support'
 makedepends=('git')
 provides=("${_pkgname}")
 md5sums=('SKIP')
-source=("git://github.com/noctuid/${_pkgname}.git")
+source=("git+https://github.com/noctuid/${_pkgname}.git")
 
 pkgver() {
   cd "$srcdir/$_pkgname"

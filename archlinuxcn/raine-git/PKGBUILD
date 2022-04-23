@@ -15,7 +15,7 @@ makedepends=('mesa' 'git')
 optdepends=('raine-emudx: improved graphic and sound files for some classic games'
             'arcade-history-dat: database with various information about the loaded rom'
             'arcade-command-dat: database with button combinations for special moves in (mostly fighting) games')
-source=(git://github.com/zelurker/raine)
+source=(git+https://github.com/zelurker/raine)
 sha256sums=('SKIP')
 options=('emptydirs')
 provides=('raine')

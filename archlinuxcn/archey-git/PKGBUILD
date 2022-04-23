@@ -12,7 +12,7 @@ pkgrel=3
 pkgdesc="A script that displays the arch logo and some basic information, written in Python."
 url="https://github.com/${_gitauthor}/${_gitname}"
 license=('GPL')
-source=("git://github.com/${_gitauthor}/${_gitname}#branch=${_gitbranch}")
+source=("git+https://github.com/${_gitauthor}/${_gitname}#branch=${_gitbranch}")
 sha512sums=('SKIP')
 arch=('any')
 depends=('python')

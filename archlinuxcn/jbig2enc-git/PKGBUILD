@@ -12,7 +12,7 @@ optdepends=('python2: for pdf.py')
 provides=("jbig2enc" "libjbig2enc.so")
 conflicts=('jbig2enc')
 makedepends=('git')
-source=("git://github.com/agl/$_pkgname.git")
+source=("git+https://github.com/agl/$_pkgname.git")
 md5sums=('SKIP')
 
 pkgver() {

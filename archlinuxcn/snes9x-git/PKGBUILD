@@ -11,7 +11,7 @@ license=('LGPL')
 depends=('minizip')
 makedepends=('git' 'portaudio' 'glslang' 'intltool' 'nasm' 'mesa' 'libpulse'  'libpng' 'sdl2' 'gtk3' 'libxv'
              'adwaita-icon-theme' 'autogen' 'meson' 'minizip' 'gtkmm3')
-source=("$pkgname"::'git://github.com/snes9xgit/snes9x.git')
+source=("$pkgname"::'git+https://github.com/snes9xgit/snes9x.git')
 sha1sums=('SKIP')
 
 pkgver() {

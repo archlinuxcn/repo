@@ -19,7 +19,7 @@ makedepends=('cmake' 'boost' 'git' 'gtest' 'ninja')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 source=("0001-fix-build.patch"
-        "git://github.com/sbxlmdsl/librime.git"
+        "git+https://github.com/sbxlmdsl/librime.git"
         "https://github.com/lotem/librime-octagram/archive/$_octagramcommit/librime-octagram-$_octagramcommit.tar.gz"
         "https://github.com/hchunhui/librime-lua/archive/$_luacommit/librime-lua-$_luacommit.tar.gz")
 sha512sums=('SKIP'

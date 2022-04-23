@@ -14,7 +14,7 @@ optdepends=('python' 'jack-audio-connection-kit' 'catalyst-utils' 'nvidia-utils'
 install=openmsx.install
 provides=('openmsx')
 conflicts=('openmsx')
-source=("git://github.com/openMSX/openMSX")
+source=("git+https://github.com/openMSX/openMSX")
 
 pkgver() {
   cd "${srcdir}/openMSX"

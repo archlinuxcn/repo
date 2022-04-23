@@ -10,7 +10,7 @@ license=('GPL')
 depends=('glib2' 'sqlite')
 makedepends=('git')
 conflicts=('duperemove')
-source=("$pkgname"::'git://github.com/markfasheh/duperemove.git#branch=master')
+source=("$pkgname"::'git+https://github.com/markfasheh/duperemove.git#branch=master')
 md5sums=( 'SKIP' )
 
 pkgver() {

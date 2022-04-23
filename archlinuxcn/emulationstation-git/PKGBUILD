@@ -17,8 +17,8 @@ depends+=('raspberrypi-firmware')
 else
 depends+=('libgl')
 fi
-source=('git://github.com/RetroPie/EmulationStation.git'
-        'git://github.com/zeux/pugixml.git')
+source=('git+https://github.com/RetroPie/EmulationStation.git'
+        'git+https://github.com/zeux/pugixml.git')
 md5sums=('SKIP'
          'SKIP')
 provides=('emulationstation')

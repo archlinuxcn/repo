@@ -9,7 +9,7 @@ url="https://github.com/Zygo/bees"
 license=('GPL3')
 depends=('btrfs-progs' 'markdown')
 makedepends=('git' 'make' 'gcc' 'markdown' 'btrfs-progs')
-source=("$pkgname"::'git://github.com/zygo/bees.git#branch=master')
+source=("$pkgname"::'git+https://github.com/zygo/bees.git#branch=master')
 md5sums=('SKIP')
 
 pkgver() {

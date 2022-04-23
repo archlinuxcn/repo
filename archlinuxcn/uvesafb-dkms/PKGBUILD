@@ -17,8 +17,8 @@ provides=("v86d")
 replaces=("v86d")
 #conflicts=("v86d")
 
-source=("git://github.com/jghodd/uvesafb-dkms.git#tag=$pkgname-$pkgver"
-        "git://github.com/mjanusz/v86d.git#tag=$_v86d-$_v86dver"
+source=("git+https://github.com/jghodd/uvesafb-dkms.git#tag=$pkgname-$pkgver"
+        "git+https://github.com/mjanusz/v86d.git#tag=$_v86d-$_v86dver"
         v86d_install
         v86d_hook
         'dkms.conf'

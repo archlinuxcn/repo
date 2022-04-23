@@ -9,7 +9,7 @@ pkgrel=1
 install=${pkgname}.install
 #changelog=.CHANGELOG
 conflicts=("${pkgname}-git")
-source=("${pkgname}::git://github.com/itdelatrisu/opsu.git#tag=${pkgver}"
+source=("${pkgname}::git+https://github.com/itdelatrisu/opsu.git#tag=${pkgver}"
         "${pkgname}.sh"
         "${pkgname}.desktop")
 sha512sums=('SKIP'

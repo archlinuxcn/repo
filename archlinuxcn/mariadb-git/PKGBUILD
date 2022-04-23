@@ -12,7 +12,7 @@ license=('GPL')
 url='https://mariadb.org/'
 makedepends=('git' 'boost' 'bzip2' 'cmake' 'jemalloc' 'libaio' 'libxml2' 'lz4' 'lzo'
              'openssl' 'systemd' 'zlib' 'zstd')
-source=("$_pkgbase::git://github.com/MariaDB/server.git"
+source=("$_pkgbase::git+https://github.com/MariaDB/server.git"
         '0001-arch-specific.patch')
 sha256sums=('SKIP'
             'e14e1ce5f0d7117dfa7870e92e1224d4ca5e6b3fc395ab6da78aa777e3e403ab')

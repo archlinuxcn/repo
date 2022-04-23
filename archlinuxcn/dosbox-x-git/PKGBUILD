@@ -14,7 +14,7 @@ optdepends=('openglide-git: Third-party 3dfx Glide API support'
  'libslirp: Allows DosBox-X to connect to the internet rootless solution')
 optdepends=()
 install='dosbox-x.install'
-source=(dosbox-x::git://github.com/joncampbell123/dosbox-x.git)
+source=(dosbox-x::git+https://github.com/joncampbell123/dosbox-x.git)
 
 pkgver() {
   cd "$SRCDEST/dosbox-x"
