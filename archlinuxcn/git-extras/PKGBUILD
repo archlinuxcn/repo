@@ -1,12 +1,11 @@
 # Maintainer: Zhanibek Adilbekov <zhanibek.adilbekov@pm.me>
-# Maintainer: Eli Schwartz <eschwartz@archlinux.org>
+# Maintainer: Caleb Macalennan <caleb@alerque.com>
+# Contributor: Eli Schwartz <eschwartz@archlinux.org>
 # Contributor: Stefan Tatschner <stefan.tatschner@gmail.com>
 
-# All my PKGBUILDs are managed at https://github.com/eli-schwartz/pkgbuilds
-
 pkgname=git-extras
-pkgver=6.3.0
-pkgrel=2
+pkgver=6.4.0
+pkgrel=1
 pkgdesc="GIT utilities -- repo summary, commit counting, repl, changelog population and more"
 arch=('any')
 url="https://github.com/tj/${pkgname}"
@@ -14,7 +13,7 @@ license=('MIT')
 depends=('git')
 install=$pkgname.install
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-b2sums=('263e192015e46da7867f131c19ae47243e60355cba02b1860b45abafdc4fc6adf916dffce58b853960d8bb22f5da067e1dca6ed0b02f108953571896d1c981c4')
+b2sums=('bffbc8efcf1cf030bceb20b953e1cbbc067c8383ced38b786c21eb9bd9b7d3febd3d8aae652c0dd731de688d3cfa225c3aec91d6b9c590459b576db113ca0af0')
 
 package() {
     cd "${srcdir}/${pkgname}-${pkgver}"
