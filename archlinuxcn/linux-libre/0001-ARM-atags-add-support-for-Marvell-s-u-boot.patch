@@ -1,0 +1,51 @@
+From 42e09fd36133dd064fac728d0b8d80ddbb219ffb Mon Sep 17 00:00:00 2001
+From: Willy Tarreau <w@xxxxxx>
+Date: Sun, 2 Dec 2012 19:59:28 +0100
+Subject: [PATCH 1/9] ARM: atags: add support for Marvell's u-boot
+
+Marvell uses a specific atag in its u-boot which includes among other
+information the MAC addresses for up to 4 network interfaces.
+
+Signed-off-by: Willy Tarreau <w@xxxxxx>
+---
+ arch/arm/include/uapi/asm/setup.h | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/arch/arm/include/uapi/asm/setup.h b/arch/arm/include/uapi/asm/setup.h
+index 25ceda63b284..83578c54975b 100644
+--- a/arch/arm/include/uapi/asm/setup.h
++++ b/arch/arm/include/uapi/asm/setup.h
+@@ -144,6 +144,18 @@ struct tag_memclk {
+ 	__u32 fmemclk;
+ };
+ 
++/* Marvell uboot parameters */
++#define ATAG_MV_UBOOT          0x41000403
++struct tag_mv_uboot {
++	__u32 uboot_version;
++	__u32 tclk;
++	__u32 sysclk;
++	__u32 isUsbHost;
++	__u8  macAddr[4][6];
++	__u16 mtu[4];
++	__u32 nand_ecc;
++};
++
+ struct tag {
+ 	struct tag_header hdr;
+ 	union {
+@@ -166,6 +178,11 @@ struct tag {
+ 		 * DC21285 specific
+ 		 */
+ 		struct tag_memclk	memclk;
++
++		/*
++		 * Marvell specific
++		 */
++		struct tag_mv_uboot	mv_uboot;
+ 	} u;
+ };
+ 
+-- 
+2.30.0
+

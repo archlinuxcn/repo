@@ -1,0 +1,38 @@
+From c36f74ab5103410009e01d6de01be70958c721a7 Mon Sep 17 00:00:00 2001
+From: Willy Tarreau <w@xxxxxx>
+Date: Sun, 2 Dec 2012 19:56:58 +0100
+Subject: [PATCH 2/9] ARM: atags/fdt: retrieve MAC addresses from Marvell boot
+ loader
+
+The atags are parsed and if a Marvell atag is found, up to 4 MAC
+addresses are extracted there and assigned to node aliases eth0..3
+with the name "mac-address".
+
+This was tested on my Mirabox and the two NICs had their correct
+address set.
+
+Signed-off-by: Willy Tarreau <w@xxxxxx>
+---
+ arch/arm/boot/compressed/atags_to_fdt.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm/boot/compressed/atags_to_fdt.c b/arch/arm/boot/compressed/atags_to_fdt.c
+index 8452753efebe..3393a10741bb 100644
+--- a/arch/arm/boot/compressed/atags_to_fdt.c
++++ b/arch/arm/boot/compressed/atags_to_fdt.c
+@@ -204,6 +204,12 @@ int atags_to_fdt(void *atag_list, void *fdt, int total_space)
+ 			hex_str(serno, atag->u.serialnr.high);
+ 			hex_str(serno+8, atag->u.serialnr.low);
+ 			setprop_string(fdt, "/", "serial-number", serno);
++		} else if (atag->hdr.tag == ATAG_MV_UBOOT) {
++			/* This ATAG provides up to 4 MAC addresses */
++			setprop(fdt, "eth0", "mac-address", atag->u.mv_uboot.macAddr[0], 6);
++			setprop(fdt, "eth1", "mac-address", atag->u.mv_uboot.macAddr[1], 6);
++			setprop(fdt, "eth2", "mac-address", atag->u.mv_uboot.macAddr[2], 6);
++			setprop(fdt, "eth3", "mac-address", atag->u.mv_uboot.macAddr[3], 6);
+ 		}
+ 	}
+ 
+-- 
+2.30.0
+

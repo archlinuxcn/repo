@@ -1,0 +1,33 @@
+From c22b09283934f39b059b42e3c29985ba81bc8af7 Mon Sep 17 00:00:00 2001
+From: Kevin Mihelich <kevin@archlinuxarm.org>
+Date: Sat, 14 Feb 2015 12:32:27 +0100
+Subject: [PATCH 6/9] set default cubietruck led triggers
+
+Signed-off-by: Kevin Mihelich <kevin@archlinuxarm.org>
+---
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+index 9109ca0919ad..43460add4609 100644
+--- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
++++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+@@ -78,6 +78,7 @@ leds {
+ 		blue {
+ 			label = "cubietruck:blue:usr";
+ 			gpios = <&pio 7 21 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
+ 		};
+ 
+ 		orange {
+@@ -93,6 +94,7 @@ white {
+ 		green {
+ 			label = "cubietruck:green:usr";
+ 			gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "mmc0";
+ 		};
+ 	};
+ 
+-- 
+2.30.0
+

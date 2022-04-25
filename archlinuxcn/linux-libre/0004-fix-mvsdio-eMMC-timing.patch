@@ -1,0 +1,38 @@
+From 35bff27d14f5c3f29e42bf0bcde31dfc820f67a9 Mon Sep 17 00:00:00 2001
+From: Kevin Mihelich <kevin@archlinuxarm.org>
+Date: Fri, 5 Sep 2014 15:43:56 -0600
+Subject: [PATCH 4/9] fix mvsdio eMMC timing
+
+These changes from Globalscale change the MMC timing to allow the eMMC versions
+of the Mirabox and SMILE Plug to work.
+
+Signed-off-by: Kevin Mihelich <kevin@archlinuxarm.org>
+---
+ drivers/mmc/host/mvsdio.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/mvsdio.c b/drivers/mmc/host/mvsdio.c
+index 629efbe639c4..c507c064736c 100644
+--- a/drivers/mmc/host/mvsdio.c
++++ b/drivers/mmc/host/mvsdio.c
+@@ -90,7 +90,7 @@ static int mvsd_setup_data(struct mvsd_host *host, struct mmc_data *data)
+ 	tmout_index = fls(tmout - 1) - 12;
+ 	if (tmout_index < 0)
+ 		tmout_index = 0;
+-	if (tmout_index > MVSD_HOST_CTRL_TMOUT_MAX)
++//	if (tmout_index > MVSD_HOST_CTRL_TMOUT_MAX)	//by steven, try to setup the timeout to maximum value
+ 		tmout_index = MVSD_HOST_CTRL_TMOUT_MAX;
+ 
+ 	dev_dbg(host->dev, "data %s at 0x%08x: blocks=%d blksz=%d tmout=%u (%d)\n",
+@@ -613,6 +613,8 @@ static void mvsd_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+ 		u32 m = DIV_ROUND_UP(host->base_clock, ios->clock) - 1;
+ 		if (m > MVSD_BASE_DIV_MAX)
+ 			m = MVSD_BASE_DIV_MAX;
++		if(ios->clock==50000000 )	//by steven
++			m=1;
+ 		mvsd_write(MVSD_CLK_DIV, m);
+ 		host->clock = ios->clock;
+ 		host->ns_per_clk = 1000000000 / (host->base_clock / (m+1));
+-- 
+2.30.0
+
