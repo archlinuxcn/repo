@@ -10,13 +10,9 @@ url="https://github.com/v2rayA/v2rayA"
 license=('AGPL3')
 depends=('glibc')
 optdepends=('v2ray>=4.37.0-1' 'xray>=1.4.2-1')
-makedepends=('go>=2:1.16.0-1' 'nodejs>=14' 'yarn' 'python2')
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
-        "v2raya.service"
-        "v2raya@.service")
-sha256sums=('6d203ef95ac2a48f6f1808b93fc1cd1a4f32a0419710d0c7a74169f27c38ed9c'
-            '3498f63fc9c4472d817d16e878ebe603889249710b890578901b884a689d3713'
-            '6a7009695ab2eea3ff1970f4472f84f6c439dc766ac19485a8d72a1caac90383')
+makedepends=('go>=2:1.17.0-1' 'nodejs>=14' 'yarn' 'python2')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+b2sums=('f62c7f21a9591260ffcd13f605e6f3a850a073747ae02b975c9de51bb23898ef1d7bef1b28400f3a18ea32e52bb7d1faebb2670574cb90a7a3a3c38e5abf99fa')
 
 build() {
     export OUTPUT_DIR="${srcdir}/${_pkgname}-${pkgver}/service/server/router/web/"
@@ -38,8 +34,8 @@ package() {
     install -Dm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/v2raya/
     install -Dm 755 service/v2raya -t "${pkgdir}"/usr/bin/
     install -dm 750 "${pkgdir}"/etc/v2raya/
-    install -Dm 644 "${srcdir}"/v2raya.service -t "${pkgdir}"/usr/lib/systemd/system/
-    install -Dm 644 "${srcdir}"/v2raya@.service -t "${pkgdir}"/usr/lib/systemd/system/
+    install -Dm 644 install/universal/v2raya.service -t "${pkgdir}"/usr/lib/systemd/system/
+    install -Dm 644 install/universal/v2raya-lite.service -t "${pkgdir}"/usr/lib/systemd/user/
     install -Dm 644 install/universal/v2raya.desktop -t "${pkgdir}"/usr/share/applications/
     install -Dm 644 gui/public/img/icons/android-chrome-512x512.png "${pkgdir}"/usr/share/icons/hicolor/512x512/apps/v2raya.png
 }
