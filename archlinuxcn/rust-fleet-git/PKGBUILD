@@ -1,7 +1,7 @@
 # Maintainer: Y7n05h <Y7n05h(aT)protonmail--d0t--com>
 # Contributor: icepie <icepie.dev@gmail.com>
 
-pkgname="fleet-rust-git"
+pkgname="rust-fleet-git"
 _pkgname="fleet"
 pkgver=0.0.8.87.gf991666
 pkgrel=2
@@ -12,8 +12,9 @@ license=("MIT")
 depends=('rust-nightly' 'cargo-nightly' 'lld' 'clang' 'sccache')
 optdepends=()
 makedepends=("git")
-provides=("fleet-rust")
-conflicts=("fleet-rust-bin")
+provides=("rust-fleet")
+conflicts=("fleet-rust-bin" "fleet-rust-git" "rust-fleet")
+replaces=("fleet-rust-git")
 source=("$_pkgname::git+https://github.com/dimensionhq/fleet.git")
 sha256sums=("SKIP")
 
