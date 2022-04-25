@@ -1,9 +1,0 @@
-[Unit]
-Description=Nextcloud; generate previews for new files only
-
-[Service]
-User=nextcloud
-ExecStart=/usr/bin/php -f /usr/share/webapps/nextcloud/occ preview:pre-generate
-
-[Install]
-WantedBy=basic.target

@@ -1,9 +1,0 @@
-[Unit]
-Description=Nextcloud; scan all files
-
-[Service]
-User=nextcloud
-ExecStart=/usr/bin/php -f /usr/share/webapps/nextcloud/occ files:scan --all
-
-[Install]
-WantedBy=basic.target
