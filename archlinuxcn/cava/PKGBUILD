@@ -2,8 +2,8 @@
 # Ex-Maintainer: Celestial Walrus <aur@celestial.cf>
 
 pkgname=cava
-pkgver=0.8.1
-pkgrel=2
+pkgver=0.8.2
+pkgrel=1
 pkgdesc='Console-based Audio Visualizer for Alsa'
 arch=('any')
 url='https://github.com/karlstav/cava'
@@ -12,7 +12,7 @@ makedepends=('vim')
 depends=('fftw' 'alsa-lib' 'ncurses' 'iniparser')
 optdepends=('sndio' 'pulseaudio' 'portaudio')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/karlstav/cava/archive/${pkgver}.tar.gz")
-sha512sums=('fad4e4fefe98300cc2774a168322056e4181cd2a0cc77a8622471d86512bab9eea6c09559a75518785fbcafee5a958e6d95c8fe5ce1816253e4dec99a23fae1c')
+sha512sums=('8ab146987324fad97dea5e9fd893de6c12b00cbb074d835c1e334d75c0d32cb4cbbc13cf72f7899191ebd5d346505b2639dcad5312e5ab00975b29a006ba41b3')
 
 build() {
   cd ${pkgname}-${pkgver}
