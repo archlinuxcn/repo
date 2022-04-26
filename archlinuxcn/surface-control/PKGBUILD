@@ -2,7 +2,7 @@
 
 pkgname="surface-control"
 pkgver=0.4.1
-pkgrel=2
+pkgrel=3
 _pkgrel=1
 pkgdesc='Control various aspects of Microsoft Surface devices from the Command-Line'
 url='https://github.com/linux-surface/surface-control'
@@ -21,7 +21,7 @@ sha256sums=('42d9c0e14b68fea4f0b23ecc19a0c7bc04395c2902f49d1ae92223c56b4a45cb')
 
 build(){
     cd "${srcdir}/${pkgname}-${pkgver}-${_pkgrel}"
-    env CARGO_TARGET_DIR="target" CARGO_INCREMENTAL=0 cargo build --release --locked
+    env CARGO_TARGET_DIR="target" CARGO_INCREMENTAL=0 RUSTUP_TOOLCHAIN="stable" cargo build --release --locked
     strip --strip-all "target/release/surface"
 }
 
