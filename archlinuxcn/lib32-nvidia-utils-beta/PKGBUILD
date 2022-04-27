@@ -8,7 +8,7 @@
 
 pkgbase=lib32-nvidia-utils-beta
 pkgname=('lib32-nvidia-utils-beta' 'lib32-opencl-nvidia-beta')
-pkgver=510.60.02
+pkgver=510.68.02
 pkgrel=1
 pkgdesc='NVIDIA drivers utilities (32-bit, beta version)'
 arch=('x86_64')
@@ -18,7 +18,7 @@ makedepends=("nvidia-utils-beta>=${pkgver}") # to avoid conflict during installa
 options=('!strip')
 _pkg="NVIDIA-Linux-${CARCH}-${pkgver}"
 source=("https://us.download.nvidia.com/XFree86/Linux-${CARCH}/${pkgver}/${_pkg}.run")
-sha256sums=('a800dfc0549078fd8c6e8e6780efb8eee87872e6055c7f5f386a4768ce07e003')
+sha256sums=('bd2c344ac92b2fc12b06043590a4fe8d4eb0ccb74d0c49352f004cf2d299f4c5')
 
 # create soname links
 _create_links() {
