@@ -1,29 +1,20 @@
 # Maintainer: taotieren <admin@taotieren.com>
 
 pkgname=xrock-git
-pkgver=1.0.2.r4.g5458355
+pkgver=1.0.4.r0.gac2fee6
 pkgrel=1
 epoch=
 pkgdesc="The low level tools for rockchip SOC with maskrom and loader mode support."
-arch=('any')
+arch=('x86_64')
 url="https://github.com/xboot/xrock"
 license=('MIT')
-groups=()
 depends=('libusb')
-makedepends=("gcc")
-checkdepends=()
+makedepends=('git' 'gcc')
 optdepends=()
-provides=()
+provides=(${pkgname%-git})
 conflicts=(${pkgname%-git})
-replaces=()
-backup=()
-options=('!strip')
-install=
-changelog=
-source=("${pkgname%-git}::git+https://ghproxy.com/${url}.git")
-noextract=()
+source=("${pkgname%-git}::git+${url}.git")
 sha256sums=('SKIP')
-#validpgpkeys=()
 
 pkgver() {
     cd "${srcdir}/${pkgname%-git}"
@@ -38,5 +29,5 @@ build() {
 package() {
     install -Dm0755 "${srcdir}/${pkgname%-git}/${pkgname%-git}" "${pkgdir}/usr/bin/${pkgname%-git}"
     install -Dm0644 "${srcdir}/${pkgname%-git}/99-xrock.rules" "${pkgdir}/etc/udev/rules.d/99-xrock.rules"
-    install -Dm0644 "${srcdir}/${pkgname%-git}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname%-git}/LICENSE"
+    install -Dm0644 "${srcdir}/${pkgname%-git}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
