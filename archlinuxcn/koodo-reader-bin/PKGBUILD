@@ -3,7 +3,7 @@
 pkgname=koodo-reader-bin
 _pkgname=Koodo.Reader
 _pkgname2=koodo-reader
-pkgver=1.4.2
+pkgver=1.4.3
 pkgrel=1
 pkgdesc="A cross-platform ebook reader"
 arch=("x86_64")
@@ -13,7 +13,7 @@ depends=('gtk3' 'libnotify' 'nss' 'libxss' 'libxtst' 'xdg-utils' 'python-atspi' 
 provides=("koodo-reader")
 source=("$pkgname-$pkgver.deb::https://github.com/troyeguo/${_pkgname2}/releases/download/v$pkgver/${_pkgname}-$pkgver.deb"
         "${_pkgname2}.desktop")
-sha256sums=('1c171aad3558d609d166bda67a4723e943ccd0d8a0066a6890e26831c87fd90b'
+sha256sums=('1e05ddb55ca431b8f75e17201a4c0eaaed7eff9e9b82451d1592123e8eee8c0e'
             '9fd70a6316a1fd9369bd1c1c0b1b6583da0eed85502804deea2042b4a38aaa0e')
 
 prepare() {
