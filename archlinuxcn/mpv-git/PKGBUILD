@@ -9,18 +9,21 @@ pkgdesc='A free, open source, and cross-platform media player (with all possible
 arch=('x86_64')
 license=('GPL3')
 url='https://mpv.io/'
-depends=('cmocka' 'ffmpeg' 'lcms2' 'libcdio-paranoia' 'libgl' 'libxss'
+depends=('lcms2' 'libcdio-paranoia' 'libgl' 'libxss'
         'libxinerama' 'libxv' 'libxkbcommon' 'libva' 'wayland' 'libcaca'
-        'desktop-file-utils' 'hicolor-icon-theme' 'xdg-utils' 'lua52' 'mujs'
+        'desktop-file-utils' 'hicolor-icon-theme' 'xdg-utils' 'luajit' 'mujs'
         'libdvdnav' 'libxrandr' 'jack' 'rubberband' 'uchardet' 'libarchive'
         'smbclient' 'zlib' 'vapoursynth' 'sndio' 'openal' 'vulkan-icd-loader'
-        'shaderc' 'libplacebo' 'zimg' 'sdl2'
+        'zimg' 'sdl2' 'libsixel' 'alsa-lib'
+        'ffmpeg' 'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so' 'libavutil.so' 'libswresample.so' 'libswscale.so'
+        'libplacebo' 'libplacebo.so'
+        'shaderc' 'libshaderc_shared.so' 
 )
 makedepends=('git' 'mesa' 'python-docutils' 'ladspa' 'vulkan-headers'
              'wayland-protocols' 'ffnvcodec-headers' 'meson' 'pipewire' 'pulseaudio')
 optdepends=('youtube-dl: for video-sharing websites playback'
             'nvidia-utils: for hardware accelerated video decoding with CUDA')
-provides=('mpv')
+provides=('mpv' 'libmpv.so')
 conflicts=('mpv')
 options=('!emptydirs')
 source=("mpv::git+https://github.com/mpv-player/mpv")
@@ -36,24 +39,53 @@ pkgver() {
 build() {
     local _opt_extra_flags=(
         '-Dgpl=true'
-        '-Ddvdnav=enabled'
         '-Dcdda=enabled'
-        '-Dlua=enabled' '-Dlua=lua52'
-        '-Djavascript=enabled'
+        '-Dlua=enabled' '-Dlua=luajit'
         '-Ddvbin=enabled'
         '-Dsdl2=enabled'
-        '-Dopenal=enabled'
-        '-Dpulse=enabled'
-        '-Dpipewire=enabled'
-        '-Dmanpage-build=enabled'
+        '-Dspirv-cross=disabled'
+    )
+    
+    local _other_os_flags=(
+        '-Dmacos-10-11-features=disabled' # macOS
+        '-Dmacos-10-12-2-features=disabled' # macOS
+        '-Dmacos-10-14-features=disabled' # macOS
+        '-Dmacos-cocoa-cb=disabled' # macOS
+        '-Dmacos-media-player=disabled' # macOS
+        '-Dmacos-touchbar=disabled' # macOS
+        '-Dswift-build=disabled' # macOS
+        '-Dswift-flags=disabled' # macOS
+        '-Dgl-cocoa=disabled' # macOS
+        '-Dcocoa=disabled' # macOS
+        '-Daudiounit=disabled' # macOS
+        '-Dvideotoolbox-gl=disabled' # macOS and iOS
+        '-Dcoreaudio=disabled' # iOS
+        '-Dios-gl=disabled' # iOS
+        '-Dgl-dxinterop=disabled' # Windows
+        '-Dd3d-hwaccel=disabled' # Windows
+        '-Dd3d9-hwaccel=disabled' # Windows
+        '-Dgl-dxinterop-d3d9=disabled' # Windows
+        '-Dgl-win32=disabled' # Windows
+        '-Degl-angle-win32=disabled' # Windows
+        '-Degl-angle-lib=disabled' # Windows
+        '-Degl-angle=disabled' # Windows
+        '-Ddirect3d=disabled' # Windows
+        '-Dd3d11=disabled' # Windows
+        '-Dwasapi=disabled' # Windows
+        '-Dwin32-internal-pthreads=disabled' # Windows
+        '-Duwp=disabled' # Windows
+        '-Dopensles=disabled' # Android
+        '-Degl-android=disabled' # Android
+        '-Doss-audio=disabled' # Not Linux
+        '-Drpi-mmal=disabled' # RPI only
     )
     
     cd "$srcdir/mpv"
     arch-meson . build \
-        --auto-features auto \
         -Dlibmpv=true \
         -Ddefault_library=shared \
-        "${_opt_extra_flags[@]}"
+        "${_opt_extra_flags[@]}" \
+        "${_other_os_flags[@]}"
     meson compile -C build
 }
 
