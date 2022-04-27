@@ -4,7 +4,7 @@
 
 pkgname=minify
 pkgver=2.11.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Minifier CLI for HTML, CSS, JS, JSON, SVG and XML"
 arch=('x86_64')
 url="https://github.com/tdewolff/minify"
@@ -21,12 +21,9 @@ prepare() {
 
 build() {
   cd "$pkgname-$pkgver"
-  export CGO_CPPFLAGS="${CPPFLAGS}"
-  export CGO_CFLAGS="${CFLAGS}"
-  export CGO_CXXFLAGS="${CXXFLAGS}"
-  export CGO_LDFLAGS="${LDFLAGS}"
-  export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
-  go build -ldflags "-X 'main.Version=v$pkgver'" -o build ./cmd/minify
+  export CGO_ENABLED=0
+  go build -trimpath -buildmode=pie -mod=readonly -modcacherw \
+           -ldflags "-X 'main.Version=v$pkgver'" -o build ./cmd/minify
 }
 
 check() {
