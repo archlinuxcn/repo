@@ -2,7 +2,7 @@
 # Contributor: krevedko <helllamer-gmail.com>
 
 pkgname=seaweedfs
-pkgver=2.94
+pkgver=3.00
 pkgrel=1
 pkgdesc="SeaweedFS is a simple and highly scalable distributed file system"
 arch=('i686' 'x86_64' 'aarch64' 'armv7h' 'armv6h' 'arm')
@@ -11,7 +11,7 @@ license=('APACHE')
 makedepends=('git' 'go')
 options=('!lto')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
-b2sums=('246b71a0feead5f43547aa351ed6266a26379870b09e9d68cf36b332a7930495b432e697811aeed07bf055512ff925c4ed917b70bc03c906f4d4ac6740f48a7f')
+b2sums=('d00fc0ef83f1b050eca08f4289b295209f33f7e28e7f46c9b1116ca7fa259306be6479e6f9aebc72b549eb0ee5bdf63966472803dc694e602d4ae2f38ee5db43')
 _shortcommit=5799a20
 
 prepare() {
