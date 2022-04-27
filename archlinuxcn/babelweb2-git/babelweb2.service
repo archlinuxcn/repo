@@ -1,0 +1,13 @@
+[Unit]
+Description=Yet Another Monitoring Tool for the Babel routing daemon
+After=network.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+ExecStart=/usr/bin/babelweb2 -static /usr/share/babelweb2/static/
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
