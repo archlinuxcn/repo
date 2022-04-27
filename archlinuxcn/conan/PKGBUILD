@@ -2,7 +2,7 @@
 
 pkgname=('conan')
 pkgver=1.47.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A distributed, open source, C/C++ package manager."
 arch=('any')
 url="https://conan.io"
@@ -25,7 +25,7 @@ depends=('python-pyjwt>=1.4.0'
          'python-bottle>=0.12.8'
          'python-pluginbase>=0.5')
 
-source=("https://github.com/conan-io/conan/archive/${pkgver}.tar.gz" "arch-reqs.patch")
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/conan-io/conan/archive/${pkgver}.tar.gz" "arch-reqs.patch")
 
 prepare() {
   cd $pkgname-$pkgver
