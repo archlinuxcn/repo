@@ -2,7 +2,7 @@
 # Maintainer: Stefan Tatschner <stefan@rumpelsepp.org>
 
 pkgname="dendrite"
-pkgver=0.8.1
+pkgver=0.8.2
 pkgrel=1
 pkgdesc="A second-generation Matrix homeserver written in Go"
 url="https://matrix.org/docs/projects/server/dendrite"
@@ -14,10 +14,10 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/matrix-org/dendrite/archive
         "$pkgname.sysusers"
         "$pkgname.tmpfiles"
         "$pkgname.service")
-sha256sums=('e26d306b008c9a88da31449e51df4c97e991d99b7954ab130f4fcf00371aa503'
+sha256sums=('c09c53964434785d9828482a00e3300a7e54692a0052c71f6a245e147b46cd01'
             'aba328d7a7244e82f866f9d0ead0a53e79e1590b9c449ad6d18ff2659cb5e035'
             '8da956f9fcc7c6ea844cea53c823fcfa4376acf04ecd9bceb1a908a85846c90f'
-            '8aac18652906202cd2eedbcc5ea68d87a3ece27cfcba13762b66802c046e0e49')
+            '2ce2e6fd819087bc47f4b369205afeaf0070dacf3305efcfbec5365bd11af6e7')
 install="$pkgname.install"
 
 build(){

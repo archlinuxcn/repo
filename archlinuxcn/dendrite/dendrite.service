@@ -8,6 +8,7 @@ Wants=postgresql.service
 User=dendrite
 ExecStart=/usr/bin/dendrite --config=/etc/dendrite/config.yaml
 WorkingDirectory=/var/lib/dendrite/
+LimitNOFILE=65536
 
 [Install]
 WantedBy=multi-user.target
