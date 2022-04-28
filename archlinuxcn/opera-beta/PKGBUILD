@@ -6,7 +6,7 @@
 # Contributor: totoloco
 
 pkgname=opera-beta
-pkgver=86.0.4363.17
+pkgver=87.0.4390.8
 pkgrel=1
 pkgdesc='A fast and secure web browser and Internet suite - beta stream'
 arch=('x86_64')
@@ -23,7 +23,7 @@ source=(
     "opera"
     "default"
 )
-sha256sums=('3d7a684baba5f00ee3a0b9ebb6d553663960cde455b2db462635fdadd3530cb7'
+sha256sums=('da07bcf0dcb38b71bfdd308f33e9ae39b0ac4c4b6612c1c584ad0b18dd34ff49'
             '508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
             '99fc0d2822edd14e234d451995db47148125e4580221a292598959421d131231')
 
