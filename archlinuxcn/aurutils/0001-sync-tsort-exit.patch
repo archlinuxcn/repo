@@ -1,0 +1,27 @@
+From 6f56ae7e4df06a0142d8970275986754041955c4 Mon Sep 17 00:00:00 2001
+From: Alad Wenter <alad@archlinux.org>
+Date: Thu, 21 Apr 2022 19:11:27 +0200
+Subject: [PATCH] sync: preserve tsort exit status
+
+Regression in commit 01af4500d77ac1bce6105089603051b4ad554c92
+---
+ lib/aur-sync | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/lib/aur-sync b/lib/aur-sync
+index f2cf93d07..248a0565e 100755
+--- a/lib/aur-sync
++++ b/lib/aur-sync
+@@ -355,6 +355,12 @@ cut -f1-3 depends | tr_ver 2 | select_ignores 2 filter - | lib32 - >graph_0
+ # (e.g. sort -u) with checks for cycles done at build-time.
+ select_pkgbase graph_0 graph_0 | tee graph | tsort | tac >queue
+ 
++# XXX: preserve tsort exit status
++if (( PIPESTATUS[2] )); then
++    error '%s: dependency cycle detected' "$argv0"
++    exit 22
++fi
++
+ if [[ -s queue ]]; then
+     cd_safe "$AURDEST"
+ else

@@ -1,0 +1,91 @@
+From 3c818fccc3b431d7aea4198e82cd1ccda1e43e5c Mon Sep 17 00:00:00 2001
+From: Alad Wenter <alad@archlinux.org>
+Date: Thu, 28 Apr 2022 14:44:28 +0200
+Subject: [PATCH] sync: filter dependency graph by pkgname, not depends
+
+Before filtering, the dependency graph is in the format:
+
+  $pkgname  $depends    $pkgbase
+
+Since revision 01af4500d77ac1bce6105089603051b4ad554c92, this graph is
+filtered (e.g. by packages already in the local repository) by $depends.
+In some cases, this does not filter all targets.
+
+For example, when uprading r-cli and r-testthat, aur-sync would build 7
+targets instead of 2:
+
+  # cut -f1-3 $tmp/depends
+  ...
+  r-tibble r-vctrs r-tibble
+  r-pillar r-vctrs r-pillar
+  r-vctrs r-vctrs r-vctrs
+  r-vctrs r r-vctrs
+  r-vctrs r-cli r-vctrs
+  r-vctrs r-glue  r-vctrs
+  r-vctrs r-rlang r-vctrs
+  ...
+
+  # after filtering r-vctrs from $2
+  # r-vctrs is still a target!
+  ...
+  r-vctrs r r-vctrs
+  r-vctrs r-cli r-vctrs
+  r-vctrs r-glue  r-vctrs
+  r-vctrs r-rlang r-vctrs
+  ...
+---
+ lib/aur-sync               | 16 ++++++++--------
+ makepkg/aurutils.changelog |  3 ++-
+ 2 files changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/lib/aur-sync b/lib/aur-sync
+index 6bb0d5559..6d3e93a4e 100755
+--- a/lib/aur-sync
++++ b/lib/aur-sync
+@@ -44,21 +44,21 @@ select_pkgbase() {
+ # argv[1]: $1 pkgname (possibly empty, #910)
+ # argv[2]: $1 pkgname $2 pkgver
+ select_ignores() {
+-    awk -v target="$1" 'ARGV[1] == FILENAME {
++    awk 'ARGV[1] == FILENAME {
+         map[$1] = 1
+         next
+     }
+-    !($target in map) {
++    !($1 in map) {
+         print
+-    }' "${@:2}"
++    }' "$@"
+ }
+ 
+ # argv[1]: $1 pkgname $2 depends[<>=]
+ tr_ver() {
+-    awk -v target="$1" '{
+-        sub(/[<>=].*/, "", $target)
++    awk '{
++        sub(/[<>=].*/, "", $2)
+         print
+-    }' "${@:2}"
++    }' "$@"
+ }
+ 
+ complement() {
+@@ -285,7 +285,7 @@ fi >&2
+ 
+ # db_info: $1 pkgname $2 pkgver
+ ( set -o pipefail
+-  aur repo "${repo_args[@]}" --list -d "$db_name" -r "$db_root" | select_ignores 1 igni -
++  aur repo "${repo_args[@]}" --list -d "$db_name" -r "$db_root" | select_ignores igni -
+ ) >db_info
+ 
+ { if (( $# )); then
+@@ -344,7 +344,7 @@ cut -f2,5 --complement depends | sort -u >pkginfo
+ } >filter
+ 
+ # $1 pkgname $2 depends $3 pkgbase, filter by $2 (depends and self)
+-cut -f1-3 depends | tr_ver 2 | select_ignores 2 filter - | lib32 - >graph_0
++cut -f1-3 depends | tr_ver | select_ignores filter - | lib32 - >graph_0
+ 
+ # XXX a flat file is needed for aur-{graph,fetch,view}. `ninja` requires the
+ # build files to be present before dependency resolution (with `ninja -n`) can
+

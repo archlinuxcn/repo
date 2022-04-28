@@ -1,0 +1,33 @@
+From c9e57188b5bb356b2373bc087474e2e68872505d Mon Sep 17 00:00:00 2001
+From: Alad Wenter <alad@archlinux.org>
+Date: Thu, 28 Apr 2022 15:16:31 +0200
+Subject: [PATCH] fetch: use git-checkout instead of git-merge for empty
+ working tree
+
+---
+ lib/aur-fetch | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/lib/aur-fetch b/lib/aur-fetch
+index a21a8a130..104be7794 100755
+--- a/lib/aur-fetch
++++ b/lib/aur-fetch
+@@ -147,16 +147,12 @@ fi | while read -r pkg; do
+                 results 'fetch' "${prev_head:-0}" "$fetch_head" "$PWD/$pkg" "$results_file"
+             fi
+         else
++            error '%s: %s: failed to %s repository' "$argv0" "$pkg" fetch
+             exit 1
+         fi
+ 
+-        # If the index has no commits, merge from upstream and move to the next package.
+         if [[ ! $prev_head ]]; then
+-            git merge 'origin/master'
+-
+-            if [[ -v results_file ]]; then
+-                results 'merge' '0' "$fetch_head" "$PWD/$pkg" "$results_file"
+-            fi
++            git checkout 'master'
+             continue
+         fi
+ 
