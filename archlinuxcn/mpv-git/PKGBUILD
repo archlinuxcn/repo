@@ -3,7 +3,7 @@
 
 pkgname=mpv-git
 _gitname=mpv
-pkgver=0.34.0_280_g6605b6d619
+pkgver=0.34.0_282_g05f0ff304e
 pkgrel=1
 pkgdesc='A free, open source, and cross-platform media player (with all possible libs)'
 arch=('x86_64')
@@ -31,10 +31,9 @@ sha256sums=('SKIP')
 options=('debug' 'strip')
 
 pkgver() {
-  cd "$srcdir/mpv"
-  ./version.sh | sed s/-/_/g
+    cd "$srcdir/mpv"
+    ./version.sh | sed s/-/_/g
 }
-
 
 build() {
     local _opt_extra_flags=(
@@ -82,6 +81,7 @@ build() {
     
     cd "$srcdir/mpv"
     arch-meson . build \
+        --buildtype=debugoptimized \
         -Dlibmpv=true \
         -Ddefault_library=shared \
         "${_opt_extra_flags[@]}" \
