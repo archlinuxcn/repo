@@ -3,7 +3,7 @@
 # Contributor: Ivan Shapovalov <intelfx@intelfx.name>
 
 pkgname=hplip-plugin
-pkgver=3.22.2
+pkgver=3.22.4
 pkgrel=1
 epoch=1
 pkgdesc="Binary plugin for HPs hplip printer driver library"
@@ -14,7 +14,7 @@ depends=("hplip>=$pkgver")
 backup=(var/lib/hp/hplip.state)
 #source=("http://www.openprinting.org/download/printdriver/auxfiles/HP/plugins/hplip-$pkgver-plugin.run")
 source=("https://developers.hp.com/sites/default/files/hplip-$pkgver-plugin.run")
-md5sums=('e3d0500b4a67b9c51a86b925ff1452a0')
+md5sums=('96c9a9c99c8df6f14761aea5a364202a')
 
 prepare() {
     sh "hplip-$pkgver-plugin.run" --target "$srcdir/hplip-$pkgver-plugin" --noexec
