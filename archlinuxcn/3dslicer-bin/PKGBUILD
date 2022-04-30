@@ -15,10 +15,10 @@ conflicts=('3dslicer')
 options=(!strip !emptydirs)
 source=(
     "${_pkgname}-${pkgver}.tar.gz::http://download.slicer.org/download?os=linux&stability=release"
-    "${_pkgname}.svg::https://github.com/Slicer/Slicer/raw/v4.11/Resources/3DSlicerLogo-app-icon.svg"
+    "${_pkgname}.svg::https://www.slicer.org/assets/img/3D-Slicer-Mark.svg"
 )
 sha512sums=('882c61da94f378326697ba777cc321d463e768cf00f5e3c85913027a909884a26589abf057a0020a6e02982eb15a1b8065a8e19ff1bba7b0fed89287698a3aa6'
-            'c23104efcbec3d49b5c26ad5514ed74316423db4aa9e6c7894f02f7ddbe509b577de358dfdd2f7c492963f312b7c146f03d5e41a89ab1298811894dc18746225')
+    '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014')
 
 prepare() {
 # manually extract tarball due to their unpredicted name
