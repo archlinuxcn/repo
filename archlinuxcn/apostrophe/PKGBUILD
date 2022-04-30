@@ -1,6 +1,6 @@
 # Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
 pkgname=apostrophe
-pkgver=2.6.2
+pkgver=2.6.3
 pkgrel=1
 pkgdesc="A distraction free Markdown editor for GNU/Linux made with GTK+"
 arch=('any')
@@ -15,7 +15,7 @@ optdepends=('texlive-latexextra: for the pdftex module'
 checkdepends=('appstream-glib')
 changelog="$pkgname-NEWS"
 source=("https://gitlab.gnome.org/World/apostrophe/-/archive/v$pkgver/$pkgname-v$pkgver.tar.gz")
-sha256sums=('b06ca4593ceb21bcd7f9734e41ba3fb69f632b5ab24afcdc66500d18d242c068')
+sha256sums=('6f73c80146af0820ec705ec8b32ec64f0f323f51de6b6a4cfd4d02f0719876f3')
 
 prepare() {
   cd "$pkgname-v$pkgver"
