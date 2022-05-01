@@ -18,3 +18,8 @@ update_on:
   - source: alpm
     alpm: python-pytorch
     strip_release: true
+
+  # Yet another Google library that does not really care about ABI stability...
+  - source: alpm
+    alpm: google-glog
+    strip_release: true
