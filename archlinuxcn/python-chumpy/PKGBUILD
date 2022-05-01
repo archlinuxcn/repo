@@ -1,0 +1,36 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=chumpy
+pkgname=python-chumpy
+pkgver=0.70
+pkgrel=1
+pkgdesc='Autodifferentiation tool for Python'
+arch=('any')
+url='https://pypi.org/project/chumpy'
+license=('MIT')
+depends=(
+  python-numpy
+  python-scipy
+  python-six
+)
+makedepends=(
+  python-pip
+  python-setuptools
+)
+source=("${pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"
+        "LICENSE::https://github.com/mattloper/chumpy/raw/master/LICENSE.txt"
+)
+sha512sums=('a5bbef9da5065520ed7aecb92c82deedf41bcc2caccc48642571244a03a12f6aa6935b85149372d2b8a2257ec8f4514ab8e8c7f60fd485647cf3e12280f95312'
+            'dffa3b1e3f03ff837da0071f9cdd8b47198c6dd87e4a90bdf601711dde59be65798fb2ae0ed1aa3efe2660c9f76dff18c17f0b1cc0eb77f6ee871efc3d559c24')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 "${srcdir}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

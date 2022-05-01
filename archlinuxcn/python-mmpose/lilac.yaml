@@ -1,0 +1,18 @@
+maintainers:
+  - github: hubutui
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - python-chumpy
+  - python-json-tricks
+  - python-mmcv
+  - python-xcocotools
+  - python-torchvision
+
+update_on:
+  - source: github
+    github: open-mmlab/mmpose
+    use_latest_release: true
+  - alias: python
+# vim:set ts=2 sw=2 et:
