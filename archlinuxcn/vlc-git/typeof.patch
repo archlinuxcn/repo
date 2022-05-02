@@ -1,0 +1,12 @@
+diff --git a/include/vlc_list.h b/include/vlc_list.h
+index 6dc7e107fc..8166164697 100644
+--- a/include/vlc_list.h
++++ b/include/vlc_list.h
+@@ -23,6 +23,7 @@
+
+ # include <stdalign.h>
+ # include <stdbool.h>
++# define typeof(x) __typeof__(x)
+
+ /**
+  * \defgroup list Linked lists

@@ -9,33 +9,33 @@
 # Contributor: MacWolf <macwolf at archlinux dot de>
 
 pkgname=vlc-git
-pkgver=4.0.0.r19114.g960ef3f8ef
-pkgrel=2
+pkgver=4.0.0.r19241.g9bdbd49c68
+pkgrel=1
 pkgdesc="A multi-platform MPEG, VCD/DVD, and DivX player (GIT Version)"
 url='https://www.videolan.org/vlc/'
 arch=('i686' 'x86_64')
 license=('LGPL2.1' 'GPL2')
-depends=('a52dec' 'libdvbpsi' 'libxpm' 'libdca' 'libproxy' 'lua52' 'libidn'
-         'libmatroska' 'taglib' 'libmpcdec' 'ffmpeg4.4' 'faad2' 'libmad'
+depends=('a52dec' 'libdvbpsi' 'libxpm' 'libdca' 'libproxy' 'lua'
+         'libmatroska' 'taglib' 'libmpcdec' 'ffmpeg4.4' 'faad2' 'libupnp' 'libmad'
          'libmpeg2' 'xcb-util-keysyms' 'libtar' 'libxinerama' 'libsecret'
-         'libupnp' 'libixml.so' 'libupnp.so' 'libarchive' 'qt5-base' 
-         'qt5-x11extras' 'qt5-svg' 'freetype2' 'fribidi' 'harfbuzz' 
-         'fontconfig' 'libxml2' 'gnutls' 'wayland-protocols' 'qt5-quickcontrols2' 
-         'qt5-graphicaleffects' 'libplacebo')
+         'libarchive' 'qt5-base' 'qt5-x11extras' 'qt5-svg' 'freetype2'
+         'fribidi' 'harfbuzz' 'fontconfig' 'libxml2' 'gnutls' 'wayland-protocols'
+         'libidn' 'aribb24' 'qt5-quickcontrols2' 'qt5-graphicaleffects' 'libmicrodns>=0.1.2'
+         'libplacebo' 'libixml.so')
 makedepends=('gst-plugins-base-libs' 'live-media' 'libnotify' 'libbluray'
              'flac' 'libdc1394' 'libavc1394' 'libcaca' 'gtk3'
-             'librsvg' 'libgme' 'xosd' 'twolame' 'aalib' 'avahi' 'systemd-libs'
-             'libmtp' 'libmicrodns' 'libdvdcss' 'vcdimager' 'libssh2' 'mesa' 'protobuf' 'libnfs' 'mpg123'
-             'libdvdread' 'libdvdnav' 'libogg' 'libshout' 'libvncserver' 'libmodplug' 'libvpx'
+             'librsvg' 'libgme' ''xosd' 'twolame' 'aalib' 'avahi' 'systemd-libs'
+             'libmtp' 'libupnp' 'libmicrodns' 'libdvdcss' 'smbclient'
+             'vcdimager' 'libssh2' 'mesa' 'protobuf' 'libnfs' 'mpg123'
+             'libdvdread' 'libdvdnav' 'libogg' 'libshout' 'libmodplug' 'libvpx'
              'libvorbis' 'speex' 'opus' 'libtheora' 'libpng' 'libjpeg-turbo'
              'libx265.so' 'libx264.so' 'zvbi' 'libass' 'libkate' 'libtiger'
              'sdl_image' 'libpulse' 'alsa-lib' 'jack' 'libsamplerate' 'libsoxr'
-             'lirc' 'libgoom2' 'projectm' 'chromaprint' 'git' 'aom' 'srt'
-             'vulkan-icd-loader' 'vulkan-headers' 'dav1d' 'flex' 'bison' 'libebur128' 'fluidsynth' 'samba' 'freerdp' 'libsidplayfp' 'rnnoise' 'aribb24' 'aribb25')
+             'lirc' 'libgoom2' 'projectm' 'git' 'aom' 'srt' 'chromaprint'
+             'vulkan-icd-loader' 'vulkan-headers' 'dav1d' 'flex' 'bison' 'aribb25' 'pcsclite'
+             'libebur128' 'fluidsynth' 'samba' 'freerdp' 'libsidplayfp' 'rnnoise' 'aribb24')
 optdepends=('avahi: service discovery using bonjour protocol'
-            'aom: AOM AV1 codec'
             'gst-plugins-base-libs: for libgst plugins'
-            'dav1d: dav1d AV1 decoder'
             'libdvdcss: decoding encrypted DVDs'
             'libavc1394: devices using the 1394ta AV/C'
             'libdc1394: IEEE 1394 access plugin'
@@ -51,14 +51,14 @@ optdepends=('avahi: service discovery using bonjour protocol'
             'systemd-libs: udev services discovery'
             'smbclient: SMB access plugin'
             'libcdio: audio CD playback'
-            'gnu-free-fonts: subtitle font '
+            'ttf-freefont: subtitle font '
             'ttf-dejavu: subtitle font'
             'libssh2: sftp access'
             'libnfs: NFS access'
             'mpg123: mpg123 codec'
             'protobuf: chromecast streaming'
-            'libmicrodns: mDNS services discovery (chromecast etc)'
-            'lua52-socket: http interface'
+            'lua-socket: http interface'
+            'live-media: RTSP input'
             'libdvdread: DVD input module'
             'libdvdnav: DVD with navigation input module'
             'libogg: Ogg and OggSpots codec'
@@ -74,12 +74,11 @@ optdepends=('avahi: service discovery using bonjour protocol'
             'librsvg: SVG plugin'
             'x264: H264 encoding'
             'x265: HEVC/H.265 encoder'
-            'zvbi: VBI/Teletext/webcam/v4l2 capture/decoding'
+            'zvbi: VBI/Teletext decoding'
             'libass: Subtitle support'
             'libkate: Kate codec'
             'libtiger: Tiger rendering for Kate streams'
             'sdl_image: SDL image support'
-            'srt: SRT input/output plugin'
             'aalib: ASCII art video output'
             'libcaca: colored ASCII art video output'
             'libpulse: PulseAudio audio output'
@@ -87,26 +86,31 @@ optdepends=('avahi: service discovery using bonjour protocol'
             'jack: jack audio server'
             'libsamplerate: audio Resampler'
             'libsoxr: SoX audio Resampler'
+            'chromaprint: Chromaprint audio fingerprinter'
             'lirc: lirc control'
             'libgoom2: Goom visualization'
             'projectm: ProjectM visualisation'
             'ncurses: ncurses interface'
             'libnotify: notification plugin'
             'gtk3: notification plugin'
-            'aribb24: aribsub support'
-            'aribb25: aribcam support'
-            'pcsclite: aribcam support')
+            'aom: AOM AV1 codec'
+            'srt: SRT input/output plugin'
+            'dav1d: dav1d AV1 decoder')
 
 _name=vlc
 conflicts=("${_name}" 'vlc-dev' 'vlc-plugin' 'vlc-stable-git')
 provides=("${_name}=${pkgver}")
-options=(!emptydirs)
-source=('git+https://code.videolan.org/videolan/vlc.git'
+options=(debug !emptydirs)
+source=('git+https://github.com/videolan/vlc.git'
+        'lua53_compat.patch'
+        'vlc-live-media-2021.patch'
         'update-vlc-plugin-cache.hook'
-        'vlc-live-media-2021.patch')
+        'typeof.patch')
 sha512sums=('SKIP'
-            'SKIP'            'ad17d6f4f2cc83841c1c89623c339ec3ee94f6084ea980e2c8cbc3903854c85e5396e31bfd8dc90745b41794670903d854c4d282d8adec263087a9d47b226ccc')
-
+            '33cda373aa1fb3ee19a78748e2687f2b93c8662c9fda62ecd122a2e649df8edaceb54dda3991bc38c80737945a143a9e65baa2743a483bb737bb94cd590dc25f'
+            'ad17d6f4f2cc83841c1c89623c339ec3ee94f6084ea980e2c8cbc3903854c85e5396e31bfd8dc90745b41794670903d854c4d282d8adec263087a9d47b226ccc'
+            '2f1015af384559bf4868bb989c06a7d281a8e32afb175ef397dbf1671bae3540a3a6b073a74ed77ed82e79a81f964a5a58a98c2a3f1b5e5cd5e9ea60d58c737f'
+            'SKIP')
 
 pkgver() {
   cd "${srcdir}/${_name}"
@@ -116,14 +120,16 @@ pkgver() {
 prepare() {
   cd "${srcdir}/${_name}"
 
-  local src
-  for src in "${source[@]}"; do
-    src="${src%%::*}"
-    src="${src##*/}"
-    [[ $src = *.patch ]] || continue
-    echo "Applying patch $src..."
-    patch -Np1 < "../$src"
-  done
+  ./bootstrap
+
+  sed -e 's:truetype/ttf-dejavu:TTF:g' -i modules/visualization/projectm.cpp
+  sed -e 's|-Werror-implicit-function-declaration||g' -i configure
+  patch -Np1 < "${srcdir}"/lua53_compat.patch
+  patch -Np1 < "${srcdir}"/vlc-live-media-2021.patch
+  patch -Np1 < "${srcdir}"/typeof.patch
+  sed 's|whoami|echo builduser|g' -i configure
+  sed 's|hostname -f|echo arch|g' -i configure
+  autoreconf -vf
 }
 
 build() {
@@ -132,15 +138,11 @@ build() {
   export CFLAGS+=" -I/usr/include/samba-4.0 -ffat-lto-objects"
   export CPPFLAGS+=" -I/usr/include/samba-4.0"
   export CXXFLAGS+=" -std=c++11"
-  export LUAC=/usr/bin/luac5.2
-  export LUA_LIBS="$(pkg-config --libs lua5.2)"
+  export LUAC=/usr/bin/luac
+  export LUA_LIBS="$(pkg-config --libs lua)"
   export RCC=/usr/bin/rcc-qt5
   export PKG_CONFIG_PATH="/usr/lib/ffmpeg4.4/pkgconfig/:$PKG_CONFIG_PATH"
-  ./bootstrap
-  sed -e 's:truetype/ttf-dejavu:TTF:g' -i modules/visualization/projectm.cpp
-  sed -e 's|-Werror-implicit-function-declaration||g' -i configure
-  sed 's|whoami|echo builduser|g' -i configure
-  sed 's|hostname -f|echo arch|g' -i configure
+
   ./configure --prefix=/usr \
               --sysconfdir=/etc \
               --libexecdir=/usr/lib \
@@ -210,7 +212,7 @@ build() {
               --enable-jack \
               --enable-samplerate \
               --enable-soxr \
-              --enable-chromaprint \
+              --disable-chromaprint \
               --enable-chromecast \
               --enable-qt \
               --enable-skins2 \
@@ -238,6 +240,7 @@ build() {
               --enable-aom \
               --enable-srt \
               --enable-dav1d
+
   # prevent excessive overlinking due to libtool
   sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
 
@@ -256,4 +259,3 @@ package() {
 
   install -Dm 644 "${srcdir}"/update-vlc-plugin-cache.hook -t "${pkgdir}"/usr/share/libalpm/hooks
 }
-
