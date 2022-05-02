@@ -2,42 +2,104 @@
 # shellcheck shell=bash disable=SC2034,SC2164
 _pkgname=xemu
 pkgname=$_pkgname-git
-pkgver=0.6.2.r95.g5c02155e56
+pkgver=0.6.4.r1.ga809d8557d
 pkgrel=1
 pkgdesc="Original Xbox emulator (fork of XQEMU)"
 arch=('x86_64')
 url="https://xemu.app/"
 license=('GPL2')
-depends=('gtk3' 'libsamplerate' 'libslirp' 'sdl2')
-makedepends=('git' 'glu' 'meson' 'python')
+depends=('sdl2')
+makedepends=(
+	'git'
+	'glib2'
+	'glu'
+	'gtk3'
+	'libepoxy'
+	'libpcap'
+	'libsamplerate'
+	'libslirp'
+	'meson'
+	'openssl'
+	'pixman'
+	'python-yaml'
+	'samurai'
+	'tomlplusplus>=3.1.0'
+	'xxhash>=0.7.4.r137'
+)
 provides=("$_pkgname")
 conflicts=("$_pkgname")
-source=('git+https://github.com/mborgerson/xemu.git')
-md5sums=('SKIP')
+source=('git+https://github.com/mborgerson/xemu.git'
+	'berkeley-softfloat-3::git+https://gitlab.com/qemu-project/berkeley-softfloat-3.git'
+	'berkeley-testfloat-3::git+https://gitlab.com/qemu-project/berkeley-testfloat-3.git'
+	'genconfig::git+https://github.com/mborgerson/genconfig.git'
+	'imgui::git+https://github.com/ocornut/imgui.git'
+	'implot::git+https://github.com/epezent/implot.git'
+	'keycodemapdb::git+https://gitlab.com/qemu-project/keycodemapdb.git'
+    )
+b2sums=(
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP'
+)
 
 pkgver() {
 	cd $_pkgname
-	git describe --long | sed 's/^xemu-v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+    git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
 	cd $_pkgname
-	git submodule update --init --recursive
+    git submodule init genconfig tests/fp/berkeley-{soft,test}float-3 ui/{imgui,implot,keycodemapdb}
+	git config submodule.genconfig.url ../genconfig
+	git config submodule.tests/fp/berkeley-softfloat-3.url ../berkeley-softfloat-3
+	git config submodule.tests/fp/berkeley-testfloat-3.url ../berkeley-testfloat-3
+	git config submodule.ui/imgui.url ../imgui
+	git config submodule.ui/implot.url ../implot
+	git config submodule.ui/keycodemapdb.url ../keycodemapdb
+	git submodule update
+    python scripts/gen-license.py > XEMU_LICENSE
+	# unbundle tomlplusplus
+	sed -i 's/<toml\.hpp>/<toml++\/toml.h>/' genconfig/cnode.h toml.cpp ui/xemu-settings.cc
+	# unbundle xxhash
+	sed -i 's/"util\/xxHash\/xxh3\.h"/<xxh3.h>/' util/fast-hash.c
 }
 
 build() {
 	cd $_pkgname
-	./build.sh --with-git-submodules=ignore --enable-slirp=system
+    ./configure \
+		--audio-drv-list="sdl" \
+		--disable-debug-info \
+		--enable-slirp=system \
+		--extra-cflags="-DXBOX=1" \
+		--ninja=samu \
+		--target-list=i386-softmmu \
+		--with-git-submodules=ignore
+	make qemu-system-i386
 }
 
 package() {
+    depends+=(
+		'libepoxy.so'
+		'libgdk-3.so'
+		'libglib-2.0.so'
+		'libgobject-2.0.so'
+		'libgtk-3.so'
+		'libpcap.so'
+		'libpixman-1.so'
+		'libsamplerate.so'
+		'libslirp.so'
+	)
 	cd $_pkgname
 	# shellcheck disable=SC2154
-	install -Dm644 -t "$pkgdir"/usr/share/$_pkgname/data data/*
 	install -Dm755 build/qemu-system-i386 "$pkgdir"/usr/bin/$_pkgname
 	install -Dm644 ui/xemu.desktop "$pkgdir"/usr/share/applications/$_pkgname.desktop
 	for size in 24 32 48 256 512; do
 		install -Dm644 ui/icons/xemu_${size}x${size}.png "$pkgdir"/usr/share/icons/hicolor/${size}x${size}/apps/$_pkgname.png
 	done
 	install -Dm644 ui/icons/xemu.svg "$pkgdir"/usr/share/icons/hicolor/scalable/apps/$_pkgname.svg
+	install -Dm644 XEMU_LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE.txt
 }
