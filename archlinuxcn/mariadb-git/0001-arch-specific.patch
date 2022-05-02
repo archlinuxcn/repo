@@ -1,52 +1,53 @@
-From 07abbcbbe129a4c44c58fa2496b0921e52a759c2 Mon Sep 17 00:00:00 2001
+From bf66e7d610de0d7d3651742342c01ed9ff93f363 Mon Sep 17 00:00:00 2001
 From: Christian Hesse <mail@eworm.de>
-Date: Tue, 29 Jan 2019 23:12:01 +0100
-Subject: enable PrivateTmp for a little bit more security
+Date: Wed, 19 Feb 2020 13:10:17 +0100
+Subject: [PATCH 1/3] enable PrivateTmp for a little bit more security
 ---
  support-files/mariadb.service.in  | 2 +-
  support-files/mariadb@.service.in | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/support-files/mariadb.service.in b/support-files/mariadb.service.in
-index 8d43b6db428..a96fbcc9d2c 100644
+index e7665ed1219..a1fe69d61c4 100644
 --- a/support-files/mariadb.service.in
 +++ b/support-files/mariadb.service.in
-@@ -117,7 +117,7 @@ UMask=007
+@@ -129,7 +129,7 @@ UMask=007
  
  # If you don't use the /tmp directory for SELECT ... OUTFILE and
  # LOAD DATA INFILE you can enable PrivateTmp=true for a little more security.
 -PrivateTmp=false
 +PrivateTmp=true
  
- ##
- ## Options previously available to be set via [mysqld_safe]
+ # Set an explicit Start and Stop timeout of 900 seconds (15 minutes!)
+ # this is the same value as used in SysV init scripts in the past
 diff --git a/support-files/mariadb@.service.in b/support-files/mariadb@.service.in
-index a2f5cff0828..30631a8738a 100644
+index ffefc2f22d8..f8b0b8aad8d 100644
 --- a/support-files/mariadb@.service.in
 +++ b/support-files/mariadb@.service.in
-@@ -138,7 +138,7 @@ UMask=007
+@@ -241,7 +241,7 @@ UMask=007
  
  # If you don't use the /tmp directory for SELECT ... OUTFILE and
  # LOAD DATA INFILE you can enable PrivateTmp=true for a little more security.
 -PrivateTmp=false
 +PrivateTmp=true
  
- ##
- ## Options previously available to be set via [mysqld_safe]
-From 0e4a158086b765aa3a12b84646aefb9b192443f7 Mon Sep 17 00:00:00 2001
+ # Set an explicit Start and Stop timeout of 900 seconds (15 minutes!)
+ # this is the same value as used in SysV init scripts in the past
+
+From 00aab78891a19a14a92039fcc6a73e391a3bb471 Mon Sep 17 00:00:00 2001
 From: Christian Hesse <mail@eworm.de>
-Date: Tue, 29 Jan 2019 23:12:54 +0100
-Subject: force preloading jemalloc for memory management
+Date: Wed, 19 Feb 2020 13:10:46 +0100
+Subject: [PATCH 2/3] force preloading jemalloc for memory management
 ---
  support-files/mariadb.service.in  | 1 +
  support-files/mariadb@.service.in | 1 +
  2 files changed, 2 insertions(+)
 
 diff --git a/support-files/mariadb.service.in b/support-files/mariadb.service.in
-index a96fbcc9d2c..6bb5d4227b9 100644
+index a1fe69d61c4..9a2941ae917 100644
 --- a/support-files/mariadb.service.in
 +++ b/support-files/mariadb.service.in
-@@ -140,6 +140,7 @@ LimitNOFILE=16364
+@@ -159,6 +159,7 @@ LimitNOFILE=16364
  # Library substitutions. previously [mysqld_safe] malloc-lib with explicit paths
  # (in LD_LIBRARY_PATH) and library name (in LD_PRELOAD).
  # Environment="LD_LIBRARY_PATH=/path1 /path2" "LD_PRELOAD=
@@ -55,10 +56,10 @@ index a96fbcc9d2c..6bb5d4227b9 100644
  # Flush caches. previously [mysqld_safe] flush-caches=1
  # ExecStartPre=sync
 diff --git a/support-files/mariadb@.service.in b/support-files/mariadb@.service.in
-index 83d75f80b87..d1d24d685f9 100644
+index f8b0b8aad8d..3309127330c 100644
 --- a/support-files/mariadb@.service.in
 +++ b/support-files/mariadb@.service.in
-@@ -161,6 +161,7 @@ LimitNOFILE=16364
+@@ -282,6 +282,7 @@ LimitNOFILE=16364
  # Library substitutions. previously [mysqld_safe] malloc-lib with explicit paths
  # (in LD_LIBRARY_PATH) and library name (in LD_PRELOAD).
  # Environment="LD_LIBRARY_PATH=/path1 /path2" "LD_PRELOAD=
@@ -66,46 +67,28 @@ index 83d75f80b87..d1d24d685f9 100644
  
  # Flush caches. previously [mysqld_safe] flush-caches=1
  # ExecStartPre=sync
-From 820b47c1e70d36f1272cca3ddbdf4bbd2dd62bde Mon Sep 17 00:00:00 2001
-From: Christian Hesse <mail@eworm.de>
-Date: Wed, 30 Jan 2019 00:46:47 +0100
-Subject: remove aliases from systemd unit files
----
- support-files/mariadb.service.in  | 2 --
- support-files/mariadb@.service.in | 2 --
- 2 files changed, 4 deletions(-)
 
-diff --git a/support-files/mariadb.service.in b/support-files/mariadb.service.in
-index 8d43b6db428..d7fa6bf5b14 100644
---- a/support-files/mariadb.service.in
-+++ b/support-files/mariadb.service.in
-@@ -20,8 +20,6 @@ After=network.target
- 
- [Install]
- WantedBy=multi-user.target
--Alias=mysql.service
--Alias=mysqld.service
- 
- 
- [Service]
-From 974bd397ff3492c57799e11a02cc3c07081bb1fc Mon Sep 17 00:00:00 2001
+From a78ff18c83a5eb2556d4f3716f13786dcd8395d2 Mon Sep 17 00:00:00 2001
 From: Christian Hesse <mail@eworm.de>
-Date: Tue, 2 Jan 2018 14:36:49 +0100
-Subject: Make systemd-tmpfiles create MYSQL_DATADIR
+Date: Wed, 19 Feb 2020 13:11:31 +0100
+Subject: [PATCH 3/3] Make systemd-tmpfiles create MYSQL_DATADIR
 
 This is a no-op if the directory exists, but makes sure it is created by
 systemd-tmpfiles with proper permissions otherwise.
 
 This solves packaging issues when the user MYSQLD_USER is created by
 systemd-sysusers and uid is not known in advance.
+
+Also this now sets the No_COW attribute.
 ---
- support-files/tmpfiles.conf.in | 1 +
- 1 file changed, 1 insertion(+)
+ support-files/tmpfiles.conf.in | 2 +
+ 1 file changed, 2 insertion(+)
 
 diff --git a/support-files/tmpfiles.conf.in b/support-files/tmpfiles.conf.in
 index 03d66abc0c7..3c89cb258c9 100644
 --- a/support-files/tmpfiles.conf.in
 +++ b/support-files/tmpfiles.conf.in
-@@ -1 +1,2 @@
+@@ -1 +1,3 @@
  d @MYSQL_UNIX_DIR@ 0755 @MYSQLD_USER@ @MYSQLD_USER@ -
 +d @MYSQL_DATADIR@ 0700 @MYSQLD_USER@ @MYSQLD_USER@ -
++h @MYSQL_DATADIR@ - - - - +C
