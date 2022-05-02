@@ -1,78 +1,95 @@
-# Maintainer: Michael DeGuzis <mdeguzis@gmail.com>
+# Maintainer: Joey Dumont <joey.dumont@gmail.com>
+# Contributor: LIN Ruohshoei <lin dot ruohshoei+arch at gmail dot com>
+# Contributor: Michael DeGuzis <mdeguzis@gmail.com>
 
 pkgbase=snes9x-git
-pkgname=('snes9x-git' 'snes9x-gtk-git')
-pkgver=1.61.r2.ga8fafcd
-pkgrel=11
-pkgdesc="Port of the Snes9x emulator (git version). Includes Gtk version."
-arch=('i686' 'x86_64')
+_pkgbase=snes9x
+pkgname=(snes9x-git snes9x-gtk-git)
+pkgver=1.61.r13.g78d006ff
+pkgrel=1
+pkgdesc="Port of the Snes9x emulator (git version)"
+arch=('x86_64')
 url="http://www.snes9x.com/"
-license=('LGPL')
-depends=('minizip')
-makedepends=('git' 'portaudio' 'glslang' 'intltool' 'nasm' 'mesa' 'libpulse'  'libpng' 'sdl2' 'gtk3' 'libxv'
-             'adwaita-icon-theme' 'autogen' 'meson' 'minizip' 'gtkmm3')
-source=("$pkgname"::'git+https://github.com/snes9xgit/snes9x.git')
-sha1sums=('SKIP')
+license=('custom')
+makedepends=(alsa-lib cairo gdk-pixbuf2 git glib2
+  gtk3 intltool libepoxy libpng libpulse libx11 libxext libxml2
+  libxrandr libxv meson minizip nasm portaudio sdl2 zlib gtkmm3
+  cmake
+)
+source=(
+  git+https://github.com/snes9xgit/snes9x.git
+)
+sha256sums=('SKIP')
 
 pkgver() {
-
-  cd "$srcdir/$pkgname"
+  cd "${_pkgbase}"
   git describe --long --tags | sed -E 's/([^-]*-g)/r\1/;s/-/./g'
 
 }
-
 prepare() {
-  cd "${pkgbase}"
-  git submodule init
-  git submodule update
-}
-build() {
+  cd ${_pkgbase}
+  git submodule update --init --recursive
 
-  cd ${pkgbase}/unix
-  # work around problems with automake & cvs
-  touch configure
-  ./configure --prefix=/usr --enable-netplay
+  cd unix
+  autoreconf -fiv
+}
+
+build() {
+  cd "${_pkgbase}/unix"
+
+  ./configure \
+    --prefix='/usr' \
+    --enable-netplay
   make
 
-  cd ../gtk
-  meson -Dbuildtype=release -Dprefix=/usr -Dlocalstatedir=/var -Dsharedstatedir=/var/lib . build
-  meson configure build
-  cd build
-  ninja
-
+  cd "${srcdir}"
+  arch-meson snes9x/gtk build
+  ninja -C build
 }
 
 package_snes9x-git() {
 
-  pkgdesc="A portable Emulator for the Super Nintendo Entertainment System"
-  depends=('libpng' 'libxinerama' 'libxext' 'libsm' 'libxv' 'minizip')
+  pkgdesc="portable Emulator for the Super Nintendo Entertainment System"
+  depends=(libpng libxinerama libxv minizip)
+
   conflicts=('snes9x')
   provides=('snesx')
 
-  cd ${pkgbase}/unix
-  install -D -m755 snes9x "${pkgdir}/usr/bin/snes9x"
+  cd "${_pkgbase}"
+  install -D -m755 unix/snes9x -t "${pkgdir}"/usr/bin/
   install -d "${pkgdir}/usr/share/doc/${pkgname}"
-  install -D -m644 ../{unix/snes9x.conf.default,docs/{control-inputs,controls,snapshots}.txt} \
+  install -D -m644  {unix/snes9x.conf.default,docs/{control-inputs,controls,snapshots}.txt} \
     "${pkgdir}/usr/share/doc/${pkgname}/"
-  install -D -m644 ../LICENSE \
-    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-
+  install -vDm644  LICENSE -t \
+    "${pkgdir}"/usr/share/licenses/"${pkgname}"
 }
 
 package_snes9x-gtk-git() {
 
-  pkgdesc="A portable Emulator for the Super Nintendo Entertainment System - GTK version"
-  license=('custom' 'LGPL')
-  depends=('sdl2' 'glslang' 'portaudio' 'libpulse' 'gtk3' 'libxv' 'adwaita-icon-theme' 'minizip' 'libgl' 'gtkmm3')
+  pkgdesc="Portable Emulator for the Super Nintendo Entertainment System - GTK version"
+  depends=(alsa-lib cairo gdk-pixbuf2 glib2 gtk3 hicolor-icon-theme libepoxy libpng libpulse libxext libxml2 libxrandr libxv minizip portaudio sdl2 gtkmm3)
+
   conflicts=('snes9x-gtk')
   provides=('snes9x-gtk')
 
-  cd ${pkgbase}/gtk
   DESTDIR="${pkgdir}" ninja -C build install
+
+  cd "${_pkgbase}"
+
   install -d "${pkgdir}/usr/share/doc/${pkgname}"
-  install -D -m644 ../{unix/snes9x.conf.default,docs/{control-inputs,controls,snapshots}.txt} \
+  install -Dm644 {unix/snes9x.conf.default,docs/{control-inputs,controls,snapshots}.txt} \
     "${pkgdir}/usr/share/doc/${pkgname}/"
-  install -D -m644 ../LICENSE \
-    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -vDm644 LICENSE -t \
+    "${pkgdir}/usr/share/licenses/${pkgname}"
+
+   # Remove glslang files
+   rm "${pkgdir}/usr/bin/glslangValidator"
+   rm "${pkgdir}/usr/lib/libHLSL.a"
+   rm "${pkgdir}/usr/lib/libOGLCompiler.a"
+   rm "${pkgdir}/usr/lib/libOSDependent.a"
+   rm "${pkgdir}/usr/lib/libSPIRV.a"
+   rm "${pkgdir}/usr/lib/libSPVRemapper.a"
+   rm "${pkgdir}/usr/lib/libglslang.a"
+
 
 }
