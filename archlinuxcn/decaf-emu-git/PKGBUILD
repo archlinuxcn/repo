@@ -4,16 +4,16 @@
 
 _pkgname='decaf-emu'
 pkgname="${_pkgname}-git"
-pkgver=5205.417cea7c
+pkgver=5207.4e11ceea
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Wii U emulator"
 arch=('x86_64')
 url="https://github.com/decaf-emu/decaf-emu"
 license=('GPL')
-depends=('c-ares' 'libuv' 'curl' 'ffmpeg' 'openssl' 'qt5-base' 'qt5-svg' 'sdl2' 'vulkan-icd-loader' 'zlib' 'qt5-x11extras')
-makedepends=('cmake' 'glslang' 'git' 'python' 'vulkan-validation-layers' 'catch2')
+depends=('c-ares' 'curl' 'ffmpeg' 'openssl' 'qt5-base' 'qt5-svg' 'sdl2' 'vulkan-icd-loader' 'zlib' 'qt5-x11extras')
+makedepends=('cmake' 'glslang' 'git' 'python' 'vulkan-validation-layers')
 optdepends=('qt5-wayland: for Wayland support')
-source=("git+https://github.com/decaf-emu/decaf-emu")
+source=("git+$url")
 md5sums=('SKIP')
 
 pkgver() {
@@ -23,16 +23,18 @@ pkgver() {
 
 prepare() {
   cd "$srcdir/$_pkgname"
-  mkdir -p build
-  git submodule init
+  
   git submodule update --init --recursive
 }
 
 build() {
   cd "$srcdir/$_pkgname"
-  cd build
-  cmake .. -DCMAKE_BUILD_TYPE=Release -DFMT_INSTALL=OFF -DDECAF_QT=ON -DCMAKE_INSTALL_PREFIX=/usr
-  make
+    mkdir -p build && cd build
+    cmake .. \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DDECAF_QT=ON
+    make
 }
 
 package() {
