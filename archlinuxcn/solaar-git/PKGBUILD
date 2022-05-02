@@ -2,9 +2,8 @@
 # Contributor: Arnaud Taffanel <dev@taffanel.org>
 # Contributor: Victor Häggqvist <aur a snilius d com>
 
-_name=Solaar
 pkgname=solaar-git
-pkgver=1897.8e61ada
+pkgver=1911.97dca3d
 pkgrel=1
 pkgdesc="Device manager for Logitech's Unifying receiver peripherals"
 url="https://pwr-solaar.github.io/Solaar/"
@@ -12,7 +11,18 @@ license=('GPL2')
 arch=('any')
 provides=("solaar")
 conflicts=("solaar")
-depends=('gtk3' 'libnotify' 'python-dbus' 'python-gobject' 'python-pyudev')
+depends=(
+  'gtk3'
+  'libnotify'
+  'python-dbus'
+  'python-gobject'
+  'python-pyudev'
+  'python-yaml'
+  'python-xlib'
+  'python-psutil'
+  'python-evdev'
+)
+optdepends=('libappindicator-gtk3: tray icon support')
 makedepends=('git')
 source=("${pkgname}::git+https://github.com/pwr-Solaar/Solaar.git")
 sha512sums=('SKIP')
@@ -29,6 +39,9 @@ build() {
 
 package() {
   cd "${pkgname}"
+
+  tools/po-compile.sh
+
   python setup.py install --skip-build \
     --optimize=1 \
     --prefix=/usr \
@@ -37,6 +50,6 @@ package() {
   install -vDm 644 rules.d/42-logitech-unify-permissions.rules \
     "${pkgdir}/usr/lib/udev/rules.d/42-logitech-unify-permissions.rules"
   # docs
-  install -vDm 644 {ChangeLog,README.md} \
+  install -vDm 644 {ChangeLog.md,README.md} \
     -t "${pkgdir}/usr/share/doc/${pkgname}/"
 }
