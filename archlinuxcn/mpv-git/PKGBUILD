@@ -13,15 +13,21 @@ depends=('lcms2' 'libcdio-paranoia' 'libgl' 'libxss'
         'libxinerama' 'libxv' 'libxkbcommon' 'libva' 'wayland' 'libcaca'
         'desktop-file-utils' 'hicolor-icon-theme' 'xdg-utils' 'luajit' 'mujs'
         'libdvdnav' 'libxrandr' 'jack' 'rubberband' 'uchardet' 'libarchive'
-        'smbclient' 'zlib' 'vapoursynth' 'sndio' 'openal' 'vulkan-icd-loader'
-        'zimg' 'sdl2' 'libsixel' 'alsa-lib'
+        'zlib' 'vapoursynth' 'sndio' 'vulkan-icd-loader' 'zimg' 'sdl2' 'libsixel'
         'ffmpeg' 'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so' 'libavutil.so' 'libswresample.so' 'libswscale.so'
         'libplacebo' 'libplacebo.so'
-        'shaderc' 'libshaderc_shared.so' 
+        'shaderc' 'libshaderc_shared.so'
 )
-makedepends=('git' 'mesa' 'python-docutils' 'ladspa' 'vulkan-headers'
-             'wayland-protocols' 'ffnvcodec-headers' 'meson' 'pipewire' 'pulseaudio')
+makedepends=('git' 'mesa' 'python-docutils' 'vulkan-headers' 'wayland-protocols'
+             'ffnvcodec-headers' 'meson' 'pipewire' 'pulseaudio' 'openal' 'alsa-lib'
+)
 optdepends=('youtube-dl: for video-sharing websites playback'
+            'yt-dlp: for video-sharing websites playback'
+            'openal: OpenAL audio output'
+            'pipewire: PipeWire audio output'
+            'pulseaudio: PulseAudio audio output'
+            'alsa-lib: ALSA audio output'
+            'smbclient: Samba support'
             'nvidia-utils: for hardware accelerated video decoding with CUDA')
 provides=('mpv' 'libmpv.so')
 conflicts=('mpv')
