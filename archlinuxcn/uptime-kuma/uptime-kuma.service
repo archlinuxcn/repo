@@ -1,0 +1,13 @@
+[Unit]
+Description=Uptime-Kuma - A uptime monitor
+Documentation=https://github.com/louislam/uptime-kuma
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=/usr/lib/node_modules/uptime-kuma/
+ExecStart=/usr/bin/node ./server/server.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

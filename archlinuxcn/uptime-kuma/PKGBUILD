@@ -1,0 +1,40 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+
+pkgname=uptime-kuma
+pkgver=1.15.0
+pkgrel=1
+pkgdesc="A free and open source uptime monitoring solution"
+arch=('any')
+url="https://github.com/louislam/uptime-kuma"
+license=('MIT')
+depends=('nodejs')
+makedepends=('npm')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
+        "uptime-kuma.service"
+)
+b2sums=('876b5159444ed15b5a5f9168ca5b67a877cb208118a8befb45b2c14592f83320c2e7ddf300954241a7e8c66f49926aa8841a96210dc688d1a12d388ac0194ff0'
+        'f4f4451c3786acfe2c540f8e55707f3c7fc7f4d5d122f8c2f6ba065df56e59c0094c1fe74056b524f3bfaf37599932b00662c5667475086b13904f61af8f6dd0')
+
+build() {
+    cd ${srcdir}/${pkgname}-${pkgver}
+    npm ci
+    ./node_modules/.bin/vite build --config ./config/vite.config.js
+}
+
+package() {
+    npm install -g --prefix "${pkgdir}/usr" "${srcdir}/${pkgname}-${pkgver}.tar.gz"
+
+    # npm gives ownership of ALL FILES to build user
+    # https://bugs.archlinux.org/task/63396
+    chown -R root:root "${pkgdir}"
+    
+    # Remove references to $pkgdir
+    find "$pkgdir" -type f -name package.json -print0 | xargs -0 sed -i "/_where/d"
+    
+    install -d ${pkgdir}/usr/lib/node_modules/uptime-kuma/dist/
+    cp -r ${srcdir}/${pkgname}-${pkgver}/dist/* -t ${pkgdir}/usr/lib/node_modules/uptime-kuma/dist/
+    
+    install -d ${pkgdir}/usr/lib/systemd/system
+    install -Dm644 "${srcdir}/uptime-kuma.service" ${pkgdir}/usr/lib/systemd/system/uptime-kuma.service
+    install -Dm644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}

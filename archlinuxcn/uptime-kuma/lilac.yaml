@@ -1,0 +1,11 @@
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com
+
+pre_build: vcs_update
+
+post_build: git_pkgbuild_commit
+
+update_on:
+- source: github
+  github: louislam/uptime-kuma
