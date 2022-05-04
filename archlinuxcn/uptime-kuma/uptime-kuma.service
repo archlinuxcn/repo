@@ -5,7 +5,10 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
+DynamicUser=yes
+StateDirectory=uptime-kuma
 WorkingDirectory=/usr/lib/node_modules/uptime-kuma/
+Environment="DATA_DIR=/var/lib/uptime-kuma/"
 ExecStart=/usr/bin/node ./server/server.js
 Restart=on-failure
 
