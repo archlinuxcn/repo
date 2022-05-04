@@ -5,7 +5,7 @@ post_install() {
   printf "$(tput setaf 4)Flutter was installed on $(tput setaf 2)/opt/flutter$(tput sgr0)\n"
   printf "$(tput setaf 4)$(tput sgr0)\n"
   printf "$(tput setaf 4)If you intend to use it as a regular user, add your user into the group flutterusers:$(tput sgr0)\n"
-  printf "$(tput setaf 2)gpasswd -a <user> flutterusers$(tput sgr0)\n"
+  printf "$(tput setaf 2)gpasswd -a \${USER} flutterusers$(tput sgr0)\n"
   printf "$(tput setaf 4)$(tput sgr0)\n"
   printf "$(tput setaf 4)You need to source $(tput setaf 2)/etc/profile$(tput setaf 4) or relogin to add flutter to your path.$(tput sgr0)\n"
   printf "$(tput setaf 4)$(tput sgr0)\n"
