@@ -8,8 +8,7 @@ Wants=network-online.target
 DynamicUser=yes
 StateDirectory=uptime-kuma
 WorkingDirectory=/usr/lib/node_modules/uptime-kuma/
-Environment="DATA_DIR=/var/lib/uptime-kuma/"
-ExecStart=/usr/bin/node ./server/server.js
+ExecStart=/usr/bin/node ./server/server.js --data-dir=/var/lib/uptime-kuma --host=::1
 Restart=on-failure
 
 [Install]
