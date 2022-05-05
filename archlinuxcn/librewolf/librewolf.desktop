@@ -121,7 +121,7 @@ MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme
 StartupNotify=true
 StartupWMClass=LibreWolf
 Categories=Network;WebBrowser;
-Actions=new-window;new-private-window;
+Actions=new-window;new-private-window;profile-manager;
 
 [Desktop Action new-window]
 Name=New Window
@@ -338,3 +338,7 @@ Name[xh]=Ifestile yangasese entsha
 Name[zh_CN]=新建隐私浏览窗口
 Name[zh_TW]=新增隱私視窗
 Exec=/usr/lib/librewolf/librewolf --private-window %u
+
+[Desktop Action profile-manager]
+Name=Open the Profile Manager
+Exec=/usr/lib/librewolf/librewolf --ProfileManager %u

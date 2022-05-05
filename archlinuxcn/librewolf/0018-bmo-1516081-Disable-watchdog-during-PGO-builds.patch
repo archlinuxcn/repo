@@ -1,0 +1,21 @@
+diff --git a/toolkit/components/terminator/nsTerminator.cpp b/toolkit/components/terminator/nsTerminator.cpp
+index 194bb36e2d..c960d44137 100644
+--- a/toolkit/components/terminator/nsTerminator.cpp
++++ b/toolkit/components/terminator/nsTerminator.cpp
+@@ -466,6 +466,13 @@ void nsTerminator::StartWatchdog() {
+   }
+ #endif
+ 
++  // Disable watchdog for PGO train builds - writting profile information at
++  // exit may take time and it is better to make build hang rather than
++  // silently produce poorly performing binary.
++#ifdef MOZ_PROFILE_INSTRUMENTATION
++  crashAfterMS = INT32_MAX;
++#endif
++
+   UniquePtr<Options> options(new Options());
+   const PRIntervalTime ticksDuration =
+       PR_MillisecondsToInterval(HEARTBEAT_INTERVAL_MS);
+-- 
+2.34.1
+
