@@ -3,7 +3,7 @@
 # Contributors: teutat3s
 
 pkgname=k6
-pkgver=0.37.0
+pkgver=0.38.0
 pkgrel=2
 pkgdesc="A modern load testing tool, using Go and JavaScript"
 arch=('x86_64' 'i686')
@@ -12,7 +12,7 @@ license=('AGPL3')
 depends=('glibc')
 makedepends=('go')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/grafana/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('a0bb00caa1eb404b53d6296c81bde917c7ea9b6f50c8c49c1985b95a3dd82002')
+sha256sums=('e121b247f8d169feb3c5de374a01728fea45ce8a8e0fd943b887722d130b63a2')
 
 build() {
 	cd "${pkgname}-${pkgver}"
@@ -28,4 +28,16 @@ package() {
 	cd "${pkgname}-${pkgver}"
 	install -vDm 755 ${pkgname} -t "${pkgdir}/usr/bin/"
 	install -vDm 644 README.md -t "${pkgdir}/usr/share/doc/${pkgname}"
+
+	# build bash completions
+	mkdir -p "${pkgdir}/usr/share/bash-completion/completions"
+	./${pkgname} completion bash > "${pkgdir}/usr/share/bash-completion/completions/k6"
+
+	# build zsh completions
+	mkdir -p "${pkgdir}/usr/share/zsh/site-functions"
+	./${pkgname} completion zsh > "${pkgdir}/usr/share/zsh/site-functions/_k6"
+
+	# build fish completions
+	mkdir -p "${pkgdir}/usr/share/fish/vendor_completions.d/"
+	./${pkgname} completion fish > "${pkgdir}/usr/share/fish/vendor_completions.d/k6.fish"
 }
