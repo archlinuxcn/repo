@@ -1,15 +1,19 @@
 # Maintainer: Chih-Hsuan Yen <yan12125@gmail.com>
 
 pkgname=python-onnxoptimizer
-pkgver=0.2.6
+pkgver=0.2.7
 pkgdesc='ONNX model optimizer'
-pkgrel=5
+pkgrel=1
 arch=(x86_64)
 url='https://github.com/onnx/optimizer'
 license=(MIT)
 depends=(python python-onnx)
 makedepends=(python-setuptools cmake pybind11 git)
-checkdepends=(python-pytest python-nbval python-torchvision python-onnxruntime)
+checkdepends=(python-pytest python-nbval python-onnxruntime
+  # Disable tests using torchvision for now due to a pytorch bug
+  # https://bugs.archlinux.org/task/74593
+  # python-torchvision
+)
 source=("onnx-optimizer::git+https://github.com/onnx/optimizer.git#tag=v$pkgver"
         "git+https://github.com/onnx/onnx.git")
 sha256sums=('SKIP'
@@ -18,6 +22,8 @@ sha256sums=('SKIP'
 prepare() {
   cd onnx-optimizer
   sed -i '/pytest-runner/d' setup.py
+  # Use system protobuf
+  sed -i '/third_party\/protobuf/d' CMakeLists.txt
 
   git submodule init
   git config submodule.third_party/onnx.url "$srcdir"/onnx
