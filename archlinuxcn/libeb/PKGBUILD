@@ -1,9 +1,10 @@
 # Maintainer:  Marcell Meszaros < marcell.meszaros AT runbox.eu >
 # Contributor: aksr <aksr at t-com dot me>
+
 pkgname=libeb
 _pkgname=eb
 pkgver=4.4.3
-pkgrel=4
+pkgrel=5
 epoch=
 pkgdesc='C library for accessing CD-ROM books. Supports EB, EBG, EBXA, EBXA-C, S-EBXA and EPWING formats.'
 arch=('i686' 'x86_64')
@@ -40,6 +41,7 @@ build() {
   ./configure \
     --prefix='/usr' \
     --libexecdir="/usr/lib/${_pkgname}" \
+    --sysconfdir='/etc' \
     --with-pkgdocdir="/usr/share/doc/${_pkgname}" \
     --disable-silent-rules \
     --disable-static
@@ -55,5 +57,4 @@ package() {
   cd "${_pkgname}-${pkgver}"
   make DESTDIR="$pkgdir" install
   install -D -m644 'COPYING' "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-  rm -r "${pkgdir}/usr/etc/"
 }
