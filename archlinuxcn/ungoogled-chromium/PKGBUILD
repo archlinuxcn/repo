@@ -10,7 +10,7 @@
 
 pkgname=ungoogled-chromium
 pkgver=101.0.4951.54
-pkgrel=1
+pkgrel=2
 _launcher_ver=8
 _gcc_patchset=4
 pkgdesc="A lightweight approach to removing Google web service dependency"
@@ -48,10 +48,12 @@ _uc_ver=$pkgver-1
 source=(${source[@]}
         $pkgname-$_uc_ver.tar.gz::https://github.com/$_uc_usr/ungoogled-chromium/archive/$_uc_ver.tar.gz
         chromium-drirc-disable-10bpc-color-configs.conf
+        ozone-add-va-api-support-to-wayland.patch
         wayland-egl.patch)
 sha256sums=(${sha256sums[@]}
             '8c5da085191a8586bf52ff3bbd0548f1af0fe1792c5db8530d4b158df83a092b'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
+            '07bdc1b3fc8f0d0a4804d111c46ce3343cd7824de562f2848d429b917ce4bcfd'
             '34d08ea93cb4762cb33c7cffe931358008af32265fc720f2762f0179c3973574')
  
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
@@ -116,6 +118,9 @@ prepare() {
 
   # Wayland/EGL regression (crbug #1071528 #1071550)
   patch -Np1 -i ../wayland-egl.patch
+
+  # Enable vaapi on wayland
+  patch -Np1 -i ../ozone-add-va-api-support-to-wayland.patch
 
   # Ungoogled Chromium changes
   _ungoogled_repo="$srcdir/$pkgname-$_uc_ver"

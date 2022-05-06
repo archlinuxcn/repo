@@ -1,0 +1,156 @@
+From ddb186d8904d6ec80d1084a1cc495b824381a565 Mon Sep 17 00:00:00 2001
+From: Maksim Sisov <msisov@igalia.com>
+Date: Wed, 20 Jan 2021 09:50:22 +0200
+Subject: [PATCH] ozone/wayland: add VA-API support.
+
+This patch ads VA-API support utilizing old VA-API path used for
+ChromeOS, which can be buggy on some devices (currently tested
+on Intel Gen8 and Gen9 with Gen8 having some minor bugs).
+
+It's known that a new VA-API is being developed atm and once it's ready,
+we will switch to a new path, which should be more stable.
+
+Upstream-Status: Inappropriate
+
+The patch is based on the old va-api path. ChromeOS
+team is working on the new path, which will be also employed
+by Wayland later.
+
+Signed-off-by: Maksim Sisov <msisov@igalia.com>
+---
+ media/gpu/vaapi/vaapi_picture_factory.cc        |  2 +-
+ media/gpu/vaapi/vaapi_picture_native_pixmap.cc  | 17 ++++++++++++++++-
+ .../gpu/vaapi/vaapi_video_decode_accelerator.cc |  4 ++--
+ .../platform/wayland/gpu/gbm_pixmap_wayland.cc  | 14 ++++++++++++--
+ .../platform/wayland/gpu/gbm_pixmap_wayland.h   |  3 +++
+ .../platform/wayland/ozone_platform_wayland.cc  |  3 +++
+ 6 files changed, 37 insertions(+), 6 deletions(-)
+
+diff --git a/media/gpu/vaapi/vaapi_picture_factory.cc b/media/gpu/vaapi/vaapi_picture_factory.cc
+index 62e3a429239eb..df4905a10f68b 100644
+--- a/media/gpu/vaapi/vaapi_picture_factory.cc
++++ b/media/gpu/vaapi/vaapi_picture_factory.cc
+@@ -105,7 +105,7 @@ uint32_t VaapiPictureFactory::GetGLTextureTarget() {
+ }
+ 
+ gfx::BufferFormat VaapiPictureFactory::GetBufferFormat() {
+-#if BUILDFLAG(USE_VAAPI_X11)
++#if defined(OS_LINUX)
+   return gfx::BufferFormat::RGBX_8888;
+ #else
+   return gfx::BufferFormat::YUV_420_BIPLANAR;
+diff --git a/media/gpu/vaapi/vaapi_picture_native_pixmap.cc b/media/gpu/vaapi/vaapi_picture_native_pixmap.cc
+index 941f24cc59590..a9c80356e7109 100644
+--- a/media/gpu/vaapi/vaapi_picture_native_pixmap.cc
++++ b/media/gpu/vaapi/vaapi_picture_native_pixmap.cc
+@@ -4,6 +4,7 @@
+ 
+ #include "media/gpu/vaapi/vaapi_picture_native_pixmap.h"
+ 
++#include "media/gpu/macros.h"
+ #include "media/gpu/vaapi/va_surface.h"
+ #include "media/gpu/vaapi/vaapi_wrapper.h"
+ #include "ui/gfx/buffer_format_util.h"
+@@ -40,7 +41,21 @@ VaapiPictureNativePixmap::~VaapiPictureNativePixmap() = default;
+ bool VaapiPictureNativePixmap::DownloadFromSurface(
+     scoped_refptr<VASurface> va_surface) {
+   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
+-  return vaapi_wrapper_->BlitSurface(*va_surface, *va_surface_);
++  if (!vaapi_wrapper_->SyncSurface(va_surface->id())) {
++    VLOGF(1) << "Cannot sync VPP input surface";
++    return false;
++  }
++  if (!vaapi_wrapper_->BlitSurface(*va_surface, *va_surface_)) {
++    VLOGF(1) << "Cannot convert decoded image into output buffer";
++    return false;
++  }
++
++  // Sync target surface since the buffer is returning to client.
++  if (!vaapi_wrapper_->SyncSurface(va_surface_->id())) {
++    VLOGF(1) << "Cannot sync VPP output surface";
++    return false;
++  }
++  return true;
+ }
+ 
+ bool VaapiPictureNativePixmap::AllowOverlay() const {
+diff --git a/media/gpu/vaapi/vaapi_video_decode_accelerator.cc b/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
+index baaf2ae468d36..4d6933d869933 100644
+--- a/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
++++ b/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
+@@ -562,12 +562,12 @@ void VaapiVideoDecodeAccelerator::InitiateSurfaceSetChange(
+   requested_visible_rect_ = visible_rect;
+   if (buffer_allocation_mode_ == BufferAllocationMode::kSuperReduced) {
+     // Add one to the reference frames for the one being currently egressed.
+-    requested_num_reference_frames_ = num_reference_frames + 1;
++    requested_num_reference_frames_ = num_reference_frames + 4;
+     requested_num_pics_ = num_pics - num_reference_frames;
+   } else if (buffer_allocation_mode_ == BufferAllocationMode::kReduced) {
+     // Add one to the reference frames for the one being currently egressed,
+     // and an extra allocation for both |client_| and |decoder_|.
+-    requested_num_reference_frames_ = num_reference_frames + 2;
++    requested_num_reference_frames_ = num_reference_frames + 5;
+     requested_num_pics_ = num_pics - num_reference_frames + 1;
+   } else {
+     requested_num_reference_frames_ = 0;
+diff --git a/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.cc b/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.cc
+index 2ec4e4e01729e..e73af1fe781c6 100644
+--- a/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.cc
++++ b/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.cc
+@@ -33,8 +33,12 @@ GbmPixmapWayland::GbmPixmapWayland(WaylandBufferManagerGpu* buffer_manager)
+       buffer_id_(buffer_manager->AllocateBufferID()) {}
+ 
+ GbmPixmapWayland::~GbmPixmapWayland() {
+-  if (gbm_bo_ && widget_ != gfx::kNullAcceleratedWidget)
++  // gfx::BufferUsage::SCANOUT_VDA_WRITE doesn't result in creation of
++  // wl_buffers.
++  if (gbm_bo_ && usage_ != gfx::BufferUsage::SCANOUT_VDA_WRITE &&
++      widget_ != gfx::kNullAcceleratedWidget) {
+     buffer_manager_->DestroyBuffer(buffer_id_);
++  }
+ }
+ 
+ bool GbmPixmapWayland::InitializeBuffer(
+@@ -83,8 +87,14 @@ bool GbmPixmapWayland::InitializeBuffer(
+            << " usage=" << gfx::BufferUsageToString(usage);
+ 
+   visible_area_size_ = visible_area_size ? visible_area_size.value() : size;
+-  if (widget_ != gfx::kNullAcceleratedWidget)
++  usage_ = usage;
++  // Do not create wl_buffers for SCANOUT_VDA_WRITE usages. These buffers are
++  // only used by video decoders and are not going to be requested to be
++  // attached to Wayland surfaces.
++  if (usage_ != gfx::BufferUsage::SCANOUT_VDA_WRITE &&
++      widget_ != gfx::kNullAcceleratedWidget) {
+     CreateDmabufBasedBuffer();
++  }
+   return true;
+ }
+ 
+diff --git a/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.h b/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.h
+index e9b25a7452882..3eb91765eba30 100644
+--- a/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.h
++++ b/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.h
+@@ -87,6 +87,9 @@ class GbmPixmapWayland : public gfx::NativePixmap {
+ 
+   // Size of the visible area of the buffer.
+   gfx::Size visible_area_size_;
++
++  // Tells the usage of this pixmap.
++  gfx::BufferUsage usage_ = gfx::BufferUsage::SCANOUT;
+ };
+ 
+ }  // namespace ui
+diff --git a/ui/ozone/platform/wayland/ozone_platform_wayland.cc b/ui/ozone/platform/wayland/ozone_platform_wayland.cc
+index 661859754cd80..665e6de2616bb 100644
+--- a/ui/ozone/platform/wayland/ozone_platform_wayland.cc
++++ b/ui/ozone/platform/wayland/ozone_platform_wayland.cc
+@@ -289,6 +289,9 @@ class OzonePlatformWayland : public OzonePlatform,
+       // arbitrary position.
+       properties->supports_global_screen_coordinates = false;
+ 
++      // Let the media know this platform supports va-api.
++      properties->supports_vaapi = true;
++
+       initialised = true;
+     }
