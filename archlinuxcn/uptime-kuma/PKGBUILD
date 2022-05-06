@@ -2,7 +2,7 @@
 
 pkgname=uptime-kuma
 pkgver=1.15.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A free and open source uptime monitoring solution"
 arch=('any')
 url="https://github.com/louislam/uptime-kuma"
@@ -10,9 +10,11 @@ license=('MIT')
 depends=('nodejs')
 makedepends=('npm')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
+        "https://github.com/louislam/uptime-kuma/commit/429ad384d081ee8e228b192ff82ae27c45dfdd70.patch"
         "uptime-kuma.service"
 )
 b2sums=('7a81b084110612de762f675c6e72fea0af64f80966b8d2fa5e54adbe2bef764a11d26d262ebe4e78f9f5b2e9fc76b68e252df3a405826573fd0baf8ce317fa01'
+        '8e88b6bb7b312e51230e9baf4d5553e11238e5cba2df5f3895aef397b187b7f67985f83240d8df54610ba069ec26ad51bd659e8c88f128de0f8783b8932e6876'
         '4a0d02dc226a6d80400d16300f672e7fcf50bdb112e2629e1f1c8177cac499e2ca23f0e3fee4c314f50610b2daea3a98a839c04cd960aaba94765399ffd1b30a')
 
 build() {
@@ -30,6 +32,9 @@ package() {
     
     # Remove references to $pkgdir
     find "$pkgdir" -type f -name package.json -print0 | xargs -0 sed -i "/_where/d"
+    
+    cd ${pkgdir}/usr/lib/node_modules/uptime-kuma/
+    patch -Np1 -i ${srcdir}/429ad384d081ee8e228b192ff82ae27c45dfdd70.patch
     
     install -d ${pkgdir}/usr/lib/node_modules/uptime-kuma/dist/
     cp -r ${srcdir}/${pkgname}-${pkgver}/dist/* -t ${pkgdir}/usr/lib/node_modules/uptime-kuma/dist/
