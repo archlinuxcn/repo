@@ -2,13 +2,16 @@
 
 pkgname=uptime-kuma
 pkgver=1.15.1
-pkgrel=3
+pkgrel=4
 pkgdesc="A free and open source uptime monitoring solution"
 arch=('any')
 url="https://github.com/louislam/uptime-kuma"
 license=('MIT')
 depends=('nodejs')
 makedepends=('npm')
+optdepends=(
+            'cloudflared: reverse proxy with Cloudflare tunnel'
+)
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
         "https://github.com/louislam/uptime-kuma/commit/429ad384d081ee8e228b192ff82ae27c45dfdd70.patch"
         "uptime-kuma.service"
