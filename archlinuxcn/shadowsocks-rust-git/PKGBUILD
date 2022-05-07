@@ -9,8 +9,8 @@ pkgdesc='Rust port of Shadowsocks'
 arch=('x86_64')
 url='https://github.com/shadowsocks/shadowsocks-rust'
 license=('MIT')
-depends=('openssl')
-makedepends=('cargo' 'libsodium' 'git')
+depends=()
+makedepends=('cargo' 'git')
 source=("git+$url.git" shadowsocks-rust{,-server}@.service)
 
 pkgver() {
@@ -31,7 +31,7 @@ package() {
     install -Dm644 examples/config{,_ext}.json -vt "$pkgdir"/etc/shadowsocks-rust/
     
     cd target/release
-    for name in sslocal ssserver ssurl ssmanager; do
+    for name in sslocal ssserver ssurl ssmanager ssservice; do
         install -Dm755 -v $name "$pkgdir"/usr/bin/${name}-rust
     done
 }
