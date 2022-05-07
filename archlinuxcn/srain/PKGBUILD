@@ -2,7 +2,7 @@
 
 pkgname=srain
 epoch=1
-pkgver=1.3.2
+pkgver=1.4.0
 pkgrel=1
 pkgdesc="Modern IRC client written in GTK."
 arch=('i686' 'x86_64')
@@ -11,7 +11,7 @@ url="https://srain.im"
 makedepends=('python-sphinx' 'meson')
 depends=('gtk3' 'libconfig' 'libsoup' 'libsecret')
 source=("https://github.com/SrainApp/${pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('a9e0a6d36e57c091236f9a4aaddb255173411a8532499658fa6e464d40ebb665')
+sha256sums=('48e1ec20fb64c0cc04698200049a0a5258875510d172d00433b402273f7b69c3')
 
 _prefix='/usr'
 
