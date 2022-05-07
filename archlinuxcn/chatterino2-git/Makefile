@@ -20,4 +20,5 @@ clean:
 		rapidjson \
 		qtkeychain \
 		sanitizers-cmake \
-		websocketpp
+		websocketpp \
+		magic_enum
