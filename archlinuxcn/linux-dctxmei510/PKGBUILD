@@ -6,15 +6,15 @@
 # Contributor: Thomas Baechler <thomas@archlinux.org>
 
 pkgbase=linux-dctxmei510
-pkgver=5.10.61
-pkgrel=2
+pkgver=5.10.113
+pkgrel=1
 pkgdesc='Security-Hardened 5.10 Linux - Dct Mei'
 url="https://github.com/anthraxx/linux-hardened"
 arch=(x86_64)
 license=(GPL2)
 makedepends=(
   bc kmod libelf pahole cpio perl tar xz
-  xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick
+  xmlto python-sphinx python-sphinx_rtd_theme python-six graphviz imagemagick
 )
 options=('!strip')
 _srcname=linux-${pkgver}
@@ -29,9 +29,9 @@ validpgpkeys=(
   '647F28654894E3BD457199BE38DBBDC86092693E'  # Greg Kroah-Hartman
   'E240B57E2C4630BA768E2F26FC1B547C8D8172C8'  # Levente Polyak
 )
-sha256sums=('82eae38cc5cd11dd6aaac91c02ff0d006c7bafd6d4cf5c6a791930820a3a91d1'
+sha256sums=('82516a02bb52456f6e8057217dde6e02b78003b1e058117557c2ae9661696dfc'
             'SKIP'
-            'c0a15212df86b0f0432fe8f7a08dd2a28a6508b32c008fb2aaee5ba3133fe641'
+            '3be614eef19a506ca849ecf1802064634331cceb7ae652359c8e1c6fafa2cb6c'
             'SKIP'
             'f4c02a78ed4e2150349be53c35b7b6c3cede7a99fbb976d23e801a94ee8abe0e')
 
