@@ -1,7 +1,16 @@
 pre_build_script: aur_pre_build(maintainers=['Xorg'])
+
 post_build: aur_post_build
+
 update_on:
   - source: aur
     aur: cpu-x
+  - source: alpm
+    alpm: glibc
+    strip_release: true
+    provided: libc.so.6
+  - source: manual
+    manual: 1.0
+
 maintainers:
   - github: dctxmei
