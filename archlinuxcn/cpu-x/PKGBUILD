@@ -2,8 +2,8 @@
 
 _realname=CPU-X
 pkgname=cpu-x
-pkgver=4.3.0
-pkgrel=4
+pkgver=4.3.1
+pkgrel=1
 pkgdesc="A Free software that gathers information on CPU, motherboard and more"
 arch=('i686' 'x86_64')
 url="http://X0rg.github.io/CPU-X/"
@@ -12,7 +12,7 @@ depends=('gtk3' 'ncurses' 'libcpuid' 'pciutils' 'glfw' 'opencl-icd-loader' 'proc
 makedepends=('cmake' 'ninja' 'nasm' 'opencl-headers')
 optdepends=('opencl-driver: packaged opencl driver')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/X0rg/CPU-X/archive/v$pkgver.tar.gz")
-sha512sums=('0edd706dae2ab84e4fa07ea5dc6798132cd6155219acdc20fd32a3a98ca6f17606496a6f578a53b93d5cf2e27f18787ee50329651cf9782d1dedd347818f8811')
+sha512sums=('43e7bc4b82a15545e4c2f69f598a94706ef2c5f5594ff50763f71722d1b98e6dd56e907a4f35917500debf11522c5908dbebf51f515fe5a51af7282254210bc1')
 
 build() {
 	cmake -S "$_realname-$pkgver" -B build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBEXECDIR="lib/cpu-x"
