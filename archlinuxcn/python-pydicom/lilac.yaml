@@ -3,14 +3,11 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-repo_depends:
-  - python-pylibjpeg
-  - python-pylibjpeg-openjpeg
-  - python-pylibjpeg-rle
-
 update_on:
   - source: github
     github: pydicom/pydicom
     use_latest_release: true
+  - source: manual
+    manual: 1
   - alias: python
 

@@ -8,15 +8,18 @@ pkgdesc='Read, modify and write DICOM files with python code'
 arch=(any)
 url='https://github.com/pydicom/pydicom'
 license=(MIT)
+depends=(
+  python
+)
 optdepends=(
+  'gdcm: for working with compressed JPEG, JPEG-LS and JPEG 2000 images'
   'python-numpy: for working with pixel data'
   'python-pillow: for working with compressed image data'
-  'python-pylibjpeg'
-  'python-pylibjpeg-openjpeg'
-  'python-pylibjpeg-rle'
+  'python-pylibjpeg-openjpeg: or working with compressed JPEG-LS or JPEG 2000 images'
+  'python-pylibjpeg-rle: for working with compressed RLE images'
+  'python-pylibjpeg: for working with compressed JPEG images'
 )
 makedepends=(
-  git
   python-setuptools
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/pydicom/pydicom/archive/v${pkgver}.tar.gz")
