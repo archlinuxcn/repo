@@ -8,7 +8,7 @@
 pkgname=gimp-git
 _pkgname=${pkgname%-git}
 epoch=2
-pkgver=48333.09dfb3b05b
+pkgver=48356.5e9c92c5de
 pkgrel=1
 pkgdesc="GNU Image Manipulation Program (non-conflicting git version)"
 arch=('i686' 'x86_64')
@@ -100,6 +100,5 @@ package() {
 
   #fix metainfo
   rm -rf ${pkgdir}/usr/share/metainfo
-  rm ${pkgdir}/usr/share/appdata/gimp-data-extras.metainfo.xml
 }
 
