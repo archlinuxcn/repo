@@ -1,0 +1,35 @@
+# Maintainer: Solomon Choina <shlomochoina@gmail.com>
+pkgname=wf-config-git
+pkgver=0.8.0.20210803.043821
+pkgrel=1
+pkgdesc="A library for managing configuration files, written for wayfire"
+arch=('x86_64')
+url="https://github.com/WayfireWM/wf-config"
+license=('MIT')
+depends=('libevdev' 'libxml2')
+makedepends=('git' 'wlroots' 'meson' 'ninja' 'wayland-protocols' 
+              'glm' 'doctest' 'cmake')
+provides=("wf-config=0.4.0")
+conflicts=("${pkgname%-git}")
+replaces=()
+source=("${pkgname}::git+https://github.com/WayfireWM/wf-config")
+sha256sums=('SKIP')
+
+pkgver () {
+    cd "${srcdir}/${pkgname}"
+    (
+        set -o pipefail
+        version=$(grep -zoP "project\([^)]*\)" meson.build | xargs --null echo | grep -oP "^\sversion:\s'\K[^']*")
+        printf "${version}.%s" "$(TZ=UTC git log -1 --pretty='%cd' --date=format-local:%Y%m%d.%H%M%S)"
+    )
+}
+
+build() {
+    arch-meson "$srcdir/${pkgname}/" build
+    ninja -C build
+}
+
+
+package() {
+    DESTDIR="$pkgdir/" ninja -C build install
+}

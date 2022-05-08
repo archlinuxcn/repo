@@ -1,0 +1,69 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Adrian Perez de Castro <aperez@igalia.com>
+# Contributor: Antonin Décimo <antonin dot decimo at gmail dot com>
+pkgname=wlroots-lily-git
+pkgver=0.16.0.20220502.154416
+pkgrel=1
+license=(MIT)
+pkgdesc='Modular Wayland compositor library (git version, with patches)'
+url=https://gitlab.freedesktop.org/wlroots/wlroots
+arch=(x86_64)
+provides=("libwlroots.so" "wlroots=${pkgver%%.r*}")
+conflicts=(wlroots wlroots-git)
+options=(debug)
+depends=(
+	glslang
+	libinput
+	libxcb
+	libxkbcommon
+	opengl-driver
+	pixman
+	wayland
+	xcb-util-errors
+	xcb-util-renderutil
+	xcb-util-wm
+	seatd
+	vulkan-icd-loader
+	xorg-xwayland)
+optdepends=(xorg-xwayland-lily: HiDPI support, see https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/733)
+makedepends=(
+	git
+	meson
+	vulkan-headers
+	wayland-protocols
+	xorgproto)
+source=("${pkgname}::git+${url}.git"
+        https://gitlab.freedesktop.org/lilydjwg/wlroots/-/commit/6c5ffcd1fee9e44780a6a8792f74ecfbe24a1ca7.patch
+        https://gitlab.freedesktop.org/wlroots/wlroots/-/merge_requests/3514.patch)
+sha512sums=('SKIP'
+            'c2193fb6d3063919ecb427a72d09fd11563a9de68e848e9721d7a7d9dc67e700654067ce154b1ddc5fb4587b9cea71d29a73a55a18f54d6ecd60897989677bb2'
+            'ec2cc8dc26f9acc0b28e7ab8ea99c3a8842194b7a4224601391f7ce862ad3b9920fbc0f9455fec47e8d367cc082a369864abd40b62eee7e79a7e0d01c2301c7a')
+
+pkgver () {
+  cd "${pkgname}"
+  (
+     set -o pipefail
+     version=$(grep -zoP "project\([^)]*\)" meson.build | xargs --null echo | grep -oP "^\sversion:\s'\K[^']*")
+     printf "${version}.%s" "$(TZ=UTC git log -1 --pretty='%cd' --date=format-local:%Y%m%d.%H%M%S)"
+  )
+}
+
+prepare () {
+  cd "${pkgname}"
+  patch -Np1 < ../6c5ffcd1fee9e44780a6a8792f74ecfbe24a1ca7.patch
+  patch -Np1 < ../3514.patch
+}
+
+build () {
+  arch-meson \
+    --buildtype=debug \
+    -Dwerror=false \
+    -Dexamples=false \
+    "${pkgname}" build
+  meson compile -C build
+}
+
+package () {
+  DESTDIR="${pkgdir}" meson install -C build
+  install -Dm644 "${pkgname}/"LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
