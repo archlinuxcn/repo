@@ -2,7 +2,7 @@
 
 _gemname=activesupport
 pkgname=ruby-$_gemname-5
-pkgver=5.2.7.1
+pkgver=5.2.8
 pkgrel=1
 pkgdesc='A toolkit of support libraries and Ruby core extensions extracted from the Rails framework.'
 arch=(any)
@@ -12,7 +12,7 @@ depends=(ruby ruby-i18n ruby-tzinfo-1 ruby-minitest ruby-concurrent)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha256sums=('1e5ba6dfad573c768b62ce4d205d5fbd1667d61fa91469f927f4fe29cba32c59')
+sha256sums=('0270a49c397ce4b66c7f19506ed702ef345bbaf9951a03c36681c527fb85db2a')
 provides=('ruby-activesupport')
 
 package() {
