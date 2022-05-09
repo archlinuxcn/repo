@@ -4,8 +4,8 @@
 # Contributor: vscncls <lucaslou4@protonmail.com>
 
 pkgname=insomnia
-pkgver=2021.7.2
-pkgrel=2
+pkgver=2022.3.0
+pkgrel=1
 _nodeversion=12.18.3
 pkgdesc="Cross-platform HTTP and GraphQL Client"
 url="https://github.com/Kong/insomnia"
@@ -17,7 +17,7 @@ source=(
   "https://github.com/Kong/insomnia/archive/refs/tags/core@${pkgver}.tar.gz"
   "insomnia.desktop"
 )
-b2sums=('7efd5e63b66489c76edd727bf9c8dda93ae54d05528c6629533a0d2187b558313a24c9591c0b9eadac8538f3f6a2b1dd63a5806784ecffd084f5560f640575dd'
+b2sums=('6230402003fc67059fa2f679cf0519c9eb8aa4821fa9fe6f17b2d85deccbfec2082c40f02de29eea6130582aedaf10c781d6d6ef3fc132b2018753e82db8b240'
         '38c2edd681b012931e25498a4a65007cc2a2152c9bbc5505dbb7cf03e1143a7365c41e9ad7eb2318c8ea894dccad0e0b6601cf76f680ea4085d12b5059e61a6e')
 
 _ensure_local_nvm() {
@@ -41,7 +41,7 @@ build() {
   _ensure_local_nvm
   cd ${pkgname}-core-${pkgver}
   npm run bootstrap  
-  GIT_TAG="core@${pkgver}" npm run app-package
+  GIT_TAG="core@${pkgver}" BUILD_TARGETS="tar.gz" npm run app-package
 }
 
 package() {
@@ -49,7 +49,7 @@ package() {
   cd ${pkgname}-core-${pkgver}
   install -d "${pkgdir}/opt/insomnia"
   cp -r "packages/insomnia-app/dist/linux-unpacked/." "$pkgdir/opt/insomnia"
-  install -Dm644 packages/insomnia-app/app/ui/images/insomnia-core-logo.png "${pkgdir}/usr/share/pixmaps/insomnia.png"
+  install -Dm644 packages/insomnia-app/app/ui/images/insomnia-logo.svg "${pkgdir}/usr/share/pixmaps/insomnia.svg"
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 
