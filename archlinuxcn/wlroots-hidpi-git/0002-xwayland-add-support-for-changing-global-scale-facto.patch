@@ -1,4 +1,4 @@
-From eae4b468fc2d04e9db5688abaf4e34ea472d8aaf Mon Sep 17 00:00:00 2001
+From 01f7101240890ed386b890695d81fb52ce1dfee3 Mon Sep 17 00:00:00 2001
 From: Dario Nieuwenhuis <dirbaio@dirbaio.net>
 Date: Tue, 10 Mar 2020 23:21:11 +0100
 Subject: [PATCH 2/2] xwayland: add support for changing global scale factor on
@@ -13,11 +13,11 @@ Content-Transfer-Encoding: 8bit
 ---
  include/xwayland/xwm.h |  3 +++
  xwayland/xwayland.c    |  3 +++
- xwayland/xwm.c         | 44 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 50 insertions(+)
+ xwayland/xwm.c         | 43 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 49 insertions(+)
 
 diff --git a/include/xwayland/xwm.h b/include/xwayland/xwm.h
-index 0cdf6ea1..367605d9 100644
+index 41e35ef3..62994f56 100644
 --- a/include/xwayland/xwm.h
 +++ b/include/xwayland/xwm.h
 @@ -122,6 +122,7 @@ struct wlr_xwm {
@@ -25,10 +25,10 @@ index 0cdf6ea1..367605d9 100644
  	const xcb_query_extension_reply_t *xfixes;
  	const xcb_query_extension_reply_t *xres;
 +	const xcb_query_extension_reply_t *xwayland_ext;
+ 	uint32_t xfixes_major_version;
  #if HAS_XCB_ERRORS
  	xcb_errors_context_t *errors_context;
- #endif
-@@ -156,4 +157,6 @@ char *xwm_get_atom_name(struct wlr_xwm *xwm, xcb_atom_t atom);
+@@ -157,4 +158,6 @@ char *xwm_get_atom_name(struct wlr_xwm *xwm, xcb_atom_t atom);
  bool xwm_atoms_contains(struct wlr_xwm *xwm, xcb_atom_t *atoms,
  	size_t num_atoms, enum atom_name needle);
  
@@ -36,10 +36,10 @@ index 0cdf6ea1..367605d9 100644
 +
  #endif
 diff --git a/xwayland/xwayland.c b/xwayland/xwayland.c
-index a6397a1a..8868b10f 100644
+index 09f48c60..5d12c949 100644
 --- a/xwayland/xwayland.c
 +++ b/xwayland/xwayland.c
-@@ -106,6 +106,9 @@ struct wlr_xwayland *wlr_xwayland_create(struct wl_display *wl_display,
+@@ -111,6 +111,9 @@ struct wlr_xwayland *wlr_xwayland_create(struct wl_display *wl_display,
  
  void wlr_xwayland_set_scale(struct wlr_xwayland *xwayland, int32_t scale) {
  	xwayland->server->scale = scale;
@@ -50,18 +50,18 @@ index a6397a1a..8868b10f 100644
  
  void wlr_xwayland_set_cursor(struct wlr_xwayland *xwayland,
 diff --git a/xwayland/xwm.c b/xwayland/xwm.c
-index d0423126..a20a89d9 100644
+index f16caf8d..16a87122 100644
 --- a/xwayland/xwm.c
 +++ b/xwayland/xwm.c
-@@ -17,6 +17,7 @@
+@@ -16,6 +16,7 @@
+ #include <xcb/render.h>
  #include <xcb/res.h>
- #include <xcb/xcb_icccm.h>
  #include <xcb/xfixes.h>
 +#include <xcb/xcbext.h>
  #include "util/signal.h"
  #include "xwayland/xwm.h"
  
-@@ -28,6 +29,10 @@ static int32_t unscale(struct wlr_xwm *xwm, int32_t val) {
+@@ -27,6 +28,10 @@ static int32_t unscale(struct wlr_xwm *xwm, int32_t val) {
  	return (val + xwm->xwayland->server->scale/2) / xwm->xwayland->server->scale;
  }
  
@@ -72,7 +72,7 @@ index d0423126..a20a89d9 100644
  const char *const atom_map[ATOM_LAST] = {
  	[WL_SURFACE_ID] = "WL_SURFACE_ID",
  	[WM_DELETE_WINDOW] = "WM_DELETE_WINDOW",
-@@ -1832,6 +1837,7 @@ static void xwm_get_resources(struct wlr_xwm *xwm) {
+@@ -1822,6 +1827,7 @@ static void xwm_get_resources(struct wlr_xwm *xwm) {
  	xcb_prefetch_extension_data(xwm->xcb_conn, &xcb_xfixes_id);
  	xcb_prefetch_extension_data(xwm->xcb_conn, &xcb_composite_id);
  	xcb_prefetch_extension_data(xwm->xcb_conn, &xcb_res_id);
@@ -80,7 +80,7 @@ index d0423126..a20a89d9 100644
  
  	size_t i;
  	xcb_intern_atom_cookie_t cookies[ATOM_LAST];
-@@ -1863,6 +1869,8 @@ static void xwm_get_resources(struct wlr_xwm *xwm) {
+@@ -1853,6 +1859,8 @@ static void xwm_get_resources(struct wlr_xwm *xwm) {
  		wlr_log(WLR_DEBUG, "xfixes not available");
  	}
  
@@ -89,11 +89,10 @@ index d0423126..a20a89d9 100644
  	xcb_xfixes_query_version_cookie_t xfixes_cookie;
  	xcb_xfixes_query_version_reply_t *xfixes_reply;
  	xfixes_cookie =
-@@ -2253,3 +2261,39 @@ enum wlr_xwayland_icccm_input_model wlr_xwayland_icccm_input_model(
+@@ -2252,3 +2260,38 @@ enum wlr_xwayland_icccm_input_model wlr_xwayland_icccm_input_model(
  	}
  	return WLR_ICCCM_INPUT_MODEL_NONE;
  }
-+
 +
 +typedef struct {
 +	uint8_t      major_opcode;
@@ -130,5 +129,5 @@ index d0423126..a20a89d9 100644
 +	xcb_flush(xwm->xcb_conn);
 +}
 -- 
-2.33.1
+2.36.0
 

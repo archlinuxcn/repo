@@ -1,4 +1,4 @@
-From c84ece04da099f7d6bae6d3341918f4f80bf9e29 Mon Sep 17 00:00:00 2001
+From f266a784db18b760721437f0378a893fad9d5f24 Mon Sep 17 00:00:00 2001
 From: Dario Nieuwenhuis <dirbaio@dirbaio.net>
 Date: Fri, 31 Jan 2020 22:57:48 +0100
 Subject: [PATCH 1/2] xwayland: add support for global scale factor
@@ -22,10 +22,10 @@ Co-authored-by: Antonin Décimo <antonin.decimo@gmail.com>
  4 files changed, 44 insertions(+), 13 deletions(-)
 
 diff --git a/include/wlr/xwayland.h b/include/wlr/xwayland.h
-index 3689b8b3..00cee542 100644
+index 165ea944..c6a64c55 100644
 --- a/include/wlr/xwayland.h
 +++ b/include/wlr/xwayland.h
-@@ -32,6 +32,8 @@ struct wlr_xwayland_server {
+@@ -35,6 +35,8 @@ struct wlr_xwayland_server {
  
  	time_t server_start;
  
@@ -34,7 +34,7 @@ index 3689b8b3..00cee542 100644
  	/* Anything above display is reset on Xwayland restart, rest is conserved */
  
  	int display;
-@@ -262,6 +264,8 @@ struct wlr_xwayland *wlr_xwayland_create(struct wl_display *wl_display,
+@@ -240,6 +242,8 @@ struct wlr_xwayland *wlr_xwayland_create(struct wl_display *wl_display,
  
  void wlr_xwayland_destroy(struct wlr_xwayland *wlr_xwayland);
  
@@ -44,10 +44,10 @@ index 3689b8b3..00cee542 100644
  	uint8_t *pixels, uint32_t stride, uint32_t width, uint32_t height,
  	int32_t hotspot_x, int32_t hotspot_y);
 diff --git a/xwayland/server.c b/xwayland/server.c
-index 7af01b6f..fa4dfb34 100644
+index 8502fcec..e42b711b 100644
 --- a/xwayland/server.c
 +++ b/xwayland/server.c
-@@ -449,6 +449,8 @@ struct wlr_xwayland_server *wlr_xwayland_server_create(
+@@ -453,6 +453,8 @@ struct wlr_xwayland_server *wlr_xwayland_server_create(
  	server->wl_fd[0] = server->wl_fd[1] = -1;
  	server->wm_fd[0] = server->wm_fd[1] = -1;
  
@@ -57,10 +57,10 @@ index 7af01b6f..fa4dfb34 100644
  	wl_signal_init(&server->events.destroy);
  
 diff --git a/xwayland/xwayland.c b/xwayland/xwayland.c
-index 86e8c6eb..a6397a1a 100644
+index cb62fcc1..09f48c60 100644
 --- a/xwayland/xwayland.c
 +++ b/xwayland/xwayland.c
-@@ -104,6 +104,10 @@ struct wlr_xwayland *wlr_xwayland_create(struct wl_display *wl_display,
+@@ -109,6 +109,10 @@ struct wlr_xwayland *wlr_xwayland_create(struct wl_display *wl_display,
  	return xwayland;
  }
  
@@ -72,10 +72,10 @@ index 86e8c6eb..a6397a1a 100644
  		uint8_t *pixels, uint32_t stride, uint32_t width, uint32_t height,
  		int32_t hotspot_x, int32_t hotspot_y) {
 diff --git a/xwayland/xwm.c b/xwayland/xwm.c
-index 313bfc0a..d0423126 100644
+index b398f2ab..f16caf8d 100644
 --- a/xwayland/xwm.c
 +++ b/xwayland/xwm.c
-@@ -20,6 +20,14 @@
+@@ -19,6 +19,14 @@
  #include "util/signal.h"
  #include "xwayland/xwm.h"
  
@@ -90,7 +90,7 @@ index 313bfc0a..d0423126 100644
  const char *const atom_map[ATOM_LAST] = {
  	[WL_SURFACE_ID] = "WL_SURFACE_ID",
  	[WM_DELETE_WINDOW] = "WM_DELETE_WINDOW",
-@@ -948,8 +956,13 @@ static void xwm_handle_create_notify(struct wlr_xwm *xwm,
+@@ -938,8 +946,13 @@ static void xwm_handle_create_notify(struct wlr_xwm *xwm,
  		return;
  	}
  
@@ -106,7 +106,7 @@ index 313bfc0a..d0423126 100644
  }
  
  static void xwm_handle_destroy_notify(struct wlr_xwm *xwm,
-@@ -980,10 +993,10 @@ static void xwm_handle_configure_request(struct wlr_xwm *xwm,
+@@ -970,10 +983,10 @@ static void xwm_handle_configure_request(struct wlr_xwm *xwm,
  
  	struct wlr_xwayland_surface_configure_event wlr_event = {
  		.surface = surface,
@@ -121,7 +121,7 @@ index 313bfc0a..d0423126 100644
  		.mask = mask,
  	};
  
-@@ -998,14 +1011,16 @@ static void xwm_handle_configure_notify(struct wlr_xwm *xwm,
+@@ -988,14 +1001,16 @@ static void xwm_handle_configure_notify(struct wlr_xwm *xwm,
  	}
  
  	bool geometry_changed =
@@ -144,7 +144,7 @@ index 313bfc0a..d0423126 100644
  	}
  
  	if (xsurface->override_redirect != ev->override_redirect) {
-@@ -1717,7 +1732,13 @@ void wlr_xwayland_surface_configure(struct wlr_xwayland_surface *xsurface,
+@@ -1707,7 +1722,13 @@ void wlr_xwayland_surface_configure(struct wlr_xwayland_surface *xsurface,
  	uint32_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y |
  		XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT |
  		XCB_CONFIG_WINDOW_BORDER_WIDTH;
@@ -160,5 +160,5 @@ index 313bfc0a..d0423126 100644
  	xcb_flush(xwm->xcb_conn);
  }
 -- 
-2.33.1
+2.36.0
 
