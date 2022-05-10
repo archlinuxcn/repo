@@ -1,8 +1,8 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=openturns
-pkgver=1.18
-pkgrel=2
+pkgver=1.19
+pkgrel=1
 pkgdesc='Uncertainty treatment library'
 license=('LGPL')
 arch=('x86_64')
@@ -30,7 +30,7 @@ makedepends=(
   swig
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/openturns/openturns/archive/v${pkgver}.tar.gz")
-sha256sums=('1840d3fd8b38fd5967b1fa04e49d8f760c2c497400430e97623595ca48754ae0')
+sha256sums=('1d61cb6ce8ec1121db9f1e9fb490aaa056d2ff250db26df05d2e3e30ceb32344')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
