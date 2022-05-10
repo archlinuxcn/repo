@@ -10,11 +10,17 @@ license=('MIT')
 depends=('xdg-utils')
 makedepends=('git' 'nvm')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz"
+        "ariang-allinone-1.2.3.patch"
         "${pkgname}.desktop"
         "${pkgname}.sh")
-sha256sums=('c4a6eaa009bd7dc746deacd1b74171c2fb02c6315664205abe8e5631cde5b913'
-            'f39fe16d7a1c94179917158716acf54d5d62e77be6827ccfc0daa4e45d6f8d48'
-            'c6c617a9bc32885b8f89c8b7120b67f98f6df52e141db6cfd24ffcd89435ec6a')
+b2sums=('ed39b83b0ca6479f0d00044a82e6ed46c3b233c024d6f844fd075d956ec42baf1237849698e68a5921071fa86fae50f1b160b2902bd9a7d25bf6f566e18bce90'
+        '75f9cd947d78ff94a20104cc2d138d82fdb47d8ba994292b27bf88f5e9a5204e989af39a738821bd4dfb500b63e45103cf70ddddc7523e3175b53652241c4701'
+        '8585359a12bf26f10923a073fc2b7cb4bcef95ee46c67664356819d959bfbb2f4b8279fd57664e44d569077ff63a4da298b3a36276a423af0c3e8a1e3641133a')
+
+prepare() {
+    cd "${srcdir}"/"AriaNg-${pkgver}"/
+    patch -p1 -i ../ariang-allinone-1.2.3.patch
+}
 
 build() {
     cd "${srcdir}"/"AriaNg-${pkgver}"/

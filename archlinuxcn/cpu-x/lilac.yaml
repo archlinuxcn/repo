@@ -5,10 +5,9 @@ post_build: aur_post_build
 update_on:
   - source: aur
     aur: cpu-x
-  - source: alpm
-    alpm: glibc
+  - source: archpkg
+    archpkg: glibc
     strip_release: true
-    provided: libc.so.6
   - source: manual
     manual: 1.0
 
