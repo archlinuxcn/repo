@@ -1,0 +1,28 @@
+From 68c9c63c0b148ff5246a0cdad59000697bbd8645 Mon Sep 17 00:00:00 2001
+From: Maksim Sisov <msisov@igalia.com>
+Date: Tue, 12 Apr 2022 15:11:34 +0000
+Subject: [PATCH] Fix no member named 'tie' in namespace 'std'
+
+Bug: None
+Change-Id: I8a097af2b16b738fa9bbb8231536bca85522f350
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/3581869
+Auto-Submit: Maksim Sisov <msisov@igalia.com>
+Reviewed-by: Matt Menke <mmenke@chromium.org>
+Commit-Queue: Matt Menke <mmenke@chromium.org>
+Cr-Commit-Position: refs/heads/main@{#991529}
+---
+ net/base/address_list.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/net/base/address_list.h b/net/base/address_list.h
+index 029af1aded3..a93093e41f3 100644
+--- a/net/base/address_list.h
++++ b/net/base/address_list.h
+@@ -8,6 +8,7 @@
+ #include <stdint.h>
+ 
+ #include <string>
++#include <tuple>
+ #include <utility>
+ #include <vector>
+ 

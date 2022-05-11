@@ -1,0 +1,27 @@
+From 9dd0503835dc875807ab63efb1f477bffed2a852 Mon Sep 17 00:00:00 2001
+From: Stephan Hartmann <stha09@googlemail.com>
+Date: Mon, 25 Apr 2022 23:18:30 +0000
+Subject: [PATCH] IWYU: add utility for std::exchange
+
+Bug: 957519
+Change-Id: I307d520fdc34d2452018ed32a505e7e519739410
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/3604643
+Reviewed-by: Wez <wez@chromium.org>
+Commit-Queue: Stephan Hartmann <stha09@googlemail.com>
+Cr-Commit-Position: refs/heads/main@{#995855}
+---
+ base/third_party/symbolize/symbolize.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/base/third_party/symbolize/symbolize.h b/base/third_party/symbolize/symbolize.h
+index 99029a968d5..278078f6071 100644
+--- a/base/third_party/symbolize/symbolize.h
++++ b/base/third_party/symbolize/symbolize.h
+@@ -61,6 +61,7 @@
+ #ifdef HAVE_SYMBOLIZE
+ 
+ #include <algorithm>
++#include <utility>
+ 
+ #if defined(__ELF__)  // defined by gcc
+ #if defined(__OpenBSD__)
