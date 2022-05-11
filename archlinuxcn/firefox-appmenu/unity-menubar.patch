@@ -3026,6 +3026,7 @@
 +#include "mozilla/Preferences.h"
 +#include "mozilla/PresShell.h"
 +#include "mozilla/PresShellInlines.h"
++#include "mozilla/GRefPtr.h"
 +#include "nsAttrValue.h"
 +#include "nsComputedDOMStyle.h"
 +#include "nsContentUtils.h"
@@ -3166,12 +3167,11 @@
 +        return;
 +    }
 +
-+    GdkPixbuf *pixbuf = nsImageToPixbuf::ImageToPixbuf(img);
++    RefPtr<GdkPixbuf> pixbuf = nsImageToPixbuf::ImageToPixbuf(img);
 +    if (pixbuf) {
 +        dbusmenu_menuitem_property_set_image(mOwner->GetNativeData(),
 +                                             DBUSMENU_MENUITEM_PROP_ICON_DATA,
 +                                             pixbuf);
-+        g_object_unref(pixbuf);
 +    }
 +
 +    return;
