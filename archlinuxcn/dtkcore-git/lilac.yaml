@@ -6,8 +6,11 @@ maintainers:
 pre_build_script: aur_pre_build(maintainers='justforlxz')
 build_prefix : 'extra-x86_64'
 post_build: aur_post_build
+repo_depends:
+  - dtkcommon-git
+  - deepin-desktop-base-git
 update_on:
   - source: github
-    github: linuxdeepin/deepin-desktop-base
+    github: linuxdeepin/dtkcore
   - source: aur
-    aur: deepin-desktop-base-git
+    aur: dtkcore-git
