@@ -6,6 +6,8 @@ build_prefix: extra-x86_64
 update_on:
   - source: github
     github: huggingface/huggingface_hub
-    use_max_tag: true
+    use_latest_release: true
+  - source: manual
+    manual: 1
   - alias: python
 # vim:set ts=2 sw=2 et:
