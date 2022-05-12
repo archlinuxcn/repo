@@ -31,9 +31,18 @@ if [ -z ${use_tracers+x} ]; then
   use_tracers=y
 fi
 
+## NOTICE: clang config is not ready yet in 5.17.x
 ## Choose between GCC and CLANG config (default is GCC)
-if [ -z ${_compiler+x} ]; then
+if [ -z ${_compiler+x} ] || [ "$_compiler" = "clang" ]; then
   _compiler=gcc
+fi
+
+# Choose between the 3 main configs for EDGE branch. Default x86-64-v2 which use CONFIG_GENERIC_CPU2:
+# Possible values: config_x86-64 (default) / config_x86-64-v2 / config_x86-64-v3
+# This will be overwritten by selecting any option in microarchitecture script
+# Source files: https://github.com/xanmod/linux/tree/5.17/CONFIGS/xanmod/gcc
+if [ -z ${_config+x} ]; then
+  _config=config_x86-64
 fi
 
 # Compress modules with ZSTD (to save disk space)
@@ -61,8 +70,8 @@ fi
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 
 pkgbase=linux-xanmod
-_major=5.15
-pkgver=${_major}.36
+_major=5.17
+pkgver=${_major}.6
 _branch=5.x
 xanmod=1
 pkgrel=1
@@ -97,9 +106,9 @@ for _patch in ${_patches[@]}; do
     source+=("${_patch}::https://raw.githubusercontent.com/archlinux/svntogit-packages/${_commit}/trunk/${_patch}")
 done
 
-sha256sums=('57b2cf6991910e3b67a1b3490022e8a0674b6965c74c12da1e99d138d1991ee8'
+sha256sums=('555fef61dddb591a83d62dd04e252792f9af4ba9ef14683f64840e46fa20b1b1'
             'SKIP'
-            '04d763e02ef3490ca439fded8df3c629900a5a7ff4fe484d909158afe3cc6e40'
+            '6ec09e74f3f04e47d5b1925dda7d911a45c4a61d525e5e53814a1640599cde98'
             '1ac18cad2578df4a70f9346f7c6fccbb62f042a0ee0594817fdef9f2704904ee')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
@@ -128,7 +137,7 @@ prepare() {
   done
 
   # Applying configuration
-  cp -vf CONFIGS/xanmod/${_compiler}/config .config
+  cp -vf CONFIGS/xanmod/${_compiler}/${_config} .config
   # enable LTO_CLANG_THIN
   if [ "${_compiler}" = "clang" ]; then
     scripts/config --disable LTO_CLANG_FULL
