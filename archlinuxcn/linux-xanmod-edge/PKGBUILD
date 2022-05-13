@@ -74,7 +74,7 @@ _major=5.17
 pkgver=${_major}.7
 _branch=5.x
 xanmod=1
-pkgrel=1
+pkgrel=2
 pkgdesc='Linux Xanmod - Latest Mainline (EDGE)'
 url="http://www.xanmod.org/"
 arch=(x86_64)
@@ -109,7 +109,7 @@ done
 sha256sums=('555fef61dddb591a83d62dd04e252792f9af4ba9ef14683f64840e46fa20b1b1'
             'SKIP'
             'bd58952f92badc91fd52e3a8c07605546c7ece1620f63b9837677ded73647e1c'
-            '1ac18cad2578df4a70f9346f7c6fccbb62f042a0ee0594817fdef9f2704904ee')
+            '110f3412c902cdbf34b42d94b95a9c74faa3bd4bc3e9fd1efc8eb94c09ae43aa')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
 export KBUILD_BUILD_USER=${KBUILD_BUILD_USER:-makepkg}
@@ -172,10 +172,10 @@ prepare() {
   fi
 
   # Let's user choose microarchitecture optimization in GCC
-  sh ${srcdir}/choose-gcc-optimization.sh $_microarchitecture
-  # Disable CONFIG_GENERIC_CPU2 if we have choosen another microarchitecture
-  # https://github.com/xanmod/linux/issues/240
-  #[ "$_microarchitecture" = "0" ] || scripts/config --disable CONFIG_GENERIC_CPU2
+  # Use default microarchitecture only if we have not choosen another microarchitecture
+  if [ "$_microarchitecture" -ne "0" ]; then
+    sh ../choose-gcc-optimization.sh $_microarchitecture
+  fi
 
   # This is intended for the people that want to build this package with their own config
   # Put the file "myconfig" at the package folder (this will take preference) or "${XDG_CONFIG_HOME}/linux-xanmod/myconfig"
