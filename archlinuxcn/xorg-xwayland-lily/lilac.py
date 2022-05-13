@@ -18,14 +18,13 @@ def pre_build():
       line = "provides=('xorg-server-xwayland' 'xorg-xwayland')"
     elif line.startswith('conflicts'):
       line = "conflicts=('xorg-server-xwayland' 'xorg-xwayland')"
-    elif line.startswith('validgpgkeys='):
+    elif line.startswith('validpgpkeys='):
       line += '''
 
 prepare() {
   cd "${srcdir}/xwayland-$pkgver"
   patch -Np1 < ../hidpi.patch
-}
-'''
+}'''
     elif line.startswith('source=('):
       line = line.replace(')', ' hidpi.patch)')
     elif "'SKIP'" in line:
