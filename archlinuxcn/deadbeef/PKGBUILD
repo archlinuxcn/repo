@@ -2,8 +2,8 @@
 # Contributor: Alexey Yakovenko <waker@users.sourceforge.net>
 
 pkgname=deadbeef
-pkgver=1.8.8
-pkgrel=5
+pkgver=1.9.0
+pkgrel=1
 pkgdesc='A GTK+ audio player for GNU/Linux.'
 arch=('x86_64')
 url='http://deadbeef.sourceforge.net'
@@ -36,9 +36,9 @@ optdepends=('gtk2: for the GTK2 interface'
 source=("https://github.com/DeaDBeeF-Player/${pkgname}/archive/${pkgver}.tar.gz"
         apbuild.zip::"https://github.com/DeaDBeeF-Player/apbuild/archive/refs/heads/master.zip"
         mp4p.zip::"https://github.com/DeaDBeeF-Player/mp4p/archive/refs/heads/master.zip")
-sha512sums=('4c43dbb0872cd9c101064cdc871e4ae87bab02024e9f7b2b866e418682d4989c8f2bed54f816833d7cbedcf59b1db28740d6fdcfd6e6c1a4ae95159845448200'
+sha512sums=('bb40b128653fa007b0eef8beadc7cc28214e76b6648a16b84cfeab9b140098ef169a147cb750ba165922731ef6c281f6413519b89ba8b028bdb47221e3e0f919'
             'bd40c513387ec2e24b4d0b4a8fb36955ef81ba81bc79fbe8c2e60f733103df61ebf230729bd1d4988306d8386415ed13932629d084238f1b8b22e9d18f2955d6'
-            '3af7b63c07b5754e04763d344268fb1f75a962cf886b84b34307fcb44d91e16e21967022d9752adaaa83ad873595688f4fe1d16a645b9871879f94f7c8561009')
+            'b66a8c172c6ab0bf858a8b5b4f590015a9560987ee1db14d0b2af4619905059b99bf7942295efdf72526d73aafba4633d870c6da2239d7a8b3c158545fdc8d89')
 prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	cp -R ${srcdir}/mp4p-master/* external/mp4p/
