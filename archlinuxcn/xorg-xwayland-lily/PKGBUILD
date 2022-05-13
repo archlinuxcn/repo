@@ -2,7 +2,7 @@
 
 pkgname=xorg-xwayland-lily
 pkgver=22.1.1
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 license=('custom')
 url="https://xorg.freedesktop.org"
@@ -24,6 +24,11 @@ conflicts=('xorg-server-xwayland' 'xorg-xwayland')
 replaces=('xorg-server-xwayland')
 #validpgpkeys=('B09FAF35BE914521980951145A81AF8E6ADBB200') # "Michel Daenzer <michel@daenzer.net>"
 validpgpkeys=('67DC86F2623FC5FD4BB5225D14706DBE1E4B4540') # "Olivier Fourdan <fourdan@xfce.org>"
+
+prepare() {
+  cd "${srcdir}/xwayland-$pkgver"
+  patch -Np1 < ../hidpi.patch
+}
 
 build() {
   arch-meson xwayland-$pkgver build \
