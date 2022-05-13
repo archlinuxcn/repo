@@ -5,7 +5,7 @@ pkgname=android-sdk-build-tools
 #_ver=$(cat "${srcdir}/$_android/source.properties" |grep ^Pkg.Revision=|sed 's/Pkg.Revision=\([0-9.]*\).*/\1/')
 _ver=32
 pkgver=r$_ver
-pkgrel=9
+pkgrel=10
 pkgdesc='Build-Tools for Google Android SDK (aapt, aidl, dexdump, dx, llvm-rs-cc)'
 arch=('x86_64')
 url="https://developer.android.com/studio/releases/build-tools"
@@ -39,8 +39,8 @@ package() {
   # Add symlinks to binaries to usr/bin/
   mkdir -p usr/bin/
   # lld is also provided by extra/lld, not creating symlink
-  binaries=("aapt" "aapt2" "aidl" "apksigner" "bcc_compat" "d8" "dexdump" "dx" "llvm-rs-cc" "mainDexClasses" "split-select" "zipalign")
-  for f in "${binaries[@]}"
+  binaries=$(find "${target}" -maxdepth 1 -type f -executable -printf "%f\n" | grep -v lld)
+  for f in ${binaries[@]}
   do
     ln -s "/$target/$f" "usr/bin/$f"
   done
