@@ -2,7 +2,7 @@
 # Contributor: Simon Conseil <contact+aur at saimon dot org>
 
 pkgname=pip-tools
-pkgver=6.6.0
+pkgver=6.6.1
 pkgrel=1
 pkgdesc="A set of tools to keep your pinned Python dependencies fresh."
 arch=('any')
@@ -11,12 +11,12 @@ license=('BSD')
 depends=('python-click>=7' 'python-pep517' 'python-pip>=20.3' 'python-setuptools' 'python-wheel')
 makedepends=('python-setuptools-scm')
 source=("https://files.pythonhosted.org/packages/source/${pkgname::1}/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('98aa24004440a1c0489d71a567a4e8afdf23c7782bff483d1219881e7302de83')
+sha256sums=('634e3e8d4707257c004313d16a9d6c14c1ce94d3c0fa1f93c38d264401f2e4f2')
 
 prepare() {
   cd "$srcdir/$pkgname-$pkgver"
 
-  # extra/python-pip is still at version 20.3.x due to packaging issues
+  # extra/python-pip is still at version 21.0 due to packaging issues
   sed -i -e 's/pip >= .*/pip/' setup.cfg
 }
 
