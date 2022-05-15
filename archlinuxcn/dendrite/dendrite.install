@@ -1,3 +1,17 @@
+post_install(){
+ cat <<INFO
+
+You should now generate a new configuration either with
+
+    sudo cp /etc/dendrite/config-example.yaml /etc/dendrite/config.yaml
+
+or
+
+    dendrite-generate-config | sudo tee /etc/dendrite/config.yaml
+
+INFO
+}
+
 post_upgrade(){
  # notify about breaking changes
  # https://wiki.archlinux.org/title/PKGBUILD#install
@@ -15,7 +29,7 @@ and generate a new one either copying
 
 or by running
 
-    dendrite-generate-config
+    dendrite-generate-config | sudo tee /etc/dendrite/config.yaml
 
 INFO
  fi
