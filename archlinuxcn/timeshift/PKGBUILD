@@ -6,7 +6,7 @@
 # Contributor: Robert Orzanna <orschiro at gmail dot com>
 pkgname=timeshift
 pkgver=21.09.1
-pkgrel=3
+pkgrel=4
 pkgdesc="A system restore utility for Linux"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/teejee2008/timeshift"
@@ -21,11 +21,13 @@ options=('!emptydirs')
 install="$pkgname.install"
 _commit=ade651c0c8199a6f99344ecf6fc5061b741494eb
 source=("git+https://github.com/teejee2008/timeshift.git#commit=$_commit"
+        'https://github.com/teejee2008/timeshift/pull/904.patch'
         "read-only-btrfs-snapshot.patch"
         "grub-btrfs.path"
         "snapshot-detect.desktop"
         "snapshot-detect")
 sha256sums=('SKIP'
+            '561fd266992458da028d31abfda0b15193568bb28e71ece618e2500ac4fd2263'
             '17b4f01d131c4c0b0fe5c5b55142c45deca7d1448e85736a23b65226e6dd6eb1'
             'b48a3e22d238fbfd22324d0444312559e7b740fd591fa7eb4e9c3d2717c79dfa'
             '97b38f4dbd6819542eab0a9217e399f55ec7339af4529432cfab1eb3cff8e0eb'
@@ -39,6 +41,9 @@ pkgver() {
 prepare() {
   cd "$srcdir/$pkgname"
   sed -i -e 's/--Xcc="-O3" //g' src/makefile
+
+  # Force rsync to output decimals in C locale
+  patch -Np1 -i "$srcdir/904.patch"
 
   # https://github.com/teejee2008/timeshift/pull/685
   #patch -Np1 -i "$srcdir"/read-only-btrfs-snapshot.patch
