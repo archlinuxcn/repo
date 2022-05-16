@@ -11,7 +11,7 @@ license=('GPL2')
 depends=('alsa-lib' 'hicolor-icon-theme' 'desktop-file-utils' 'jansson' 'libdispatch')
 makedepends=('libvorbis' 'libmad' 'flac' 'curl' 'imlib2' 'wavpack' 'libsndfile' 'libcdio' 'libcddb'
              'libx11' 'faad2' 'zlib' 'intltool' 'pkgconfig' 'libpulse' 'libzip' 'libsamplerate'
-             'yasm' 'ffmpeg' 'gtk2' 'gtk3' 'clang' 'opusfile' 'mpg123')
+             'yasm' 'ffmpeg4.4' 'gtk2' 'gtk3' 'clang' 'opusfile' 'mpg123')
 optdepends=('gtk2: for the GTK2 interface'
             'gtk3: for the GTK3 interface'
             'libsamplerate: for Resampler plugin'
@@ -31,7 +31,7 @@ optdepends=('gtk2: for the GTK2 interface'
             'libx11: for global hotkeys plugin'
             'zlib: for Audio Overload plugin'
             'libzip: for vfs_zip plugin'
-            'ffmpeg: for ffmpeg plugin'
+            'ffmpeg4.4: for ffmpeg plugin'
             'opusfile: for opus plugin')
 source=("https://github.com/DeaDBeeF-Player/${pkgname}/archive/${pkgver}.tar.gz"
         apbuild.zip::"https://github.com/DeaDBeeF-Player/apbuild/archive/refs/heads/master.zip"
@@ -39,6 +39,8 @@ source=("https://github.com/DeaDBeeF-Player/${pkgname}/archive/${pkgver}.tar.gz"
 sha512sums=('8d3e1c22cc5472679586d12019544fd3a79abf27796436816877fecf84e5521209af2081c45b57e0573a3fe100ec1ba70988e933a50d7f05cdca91a7bbbf7893'
             'bd40c513387ec2e24b4d0b4a8fb36955ef81ba81bc79fbe8c2e60f733103df61ebf230729bd1d4988306d8386415ed13932629d084238f1b8b22e9d18f2955d6'
             'b66a8c172c6ab0bf858a8b5b4f590015a9560987ee1db14d0b2af4619905059b99bf7942295efdf72526d73aafba4633d870c6da2239d7a8b3c158545fdc8d89')
+export PKG_CONFIG_PATH='/usr/lib/ffmpeg4.4/pkgconfig'
+
 prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	cp -R ${srcdir}/mp4p-master/* external/mp4p/
