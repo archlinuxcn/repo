@@ -44,7 +44,8 @@ build() {
   export CFLAGS
   export CXXFLAGS
   # Debug build has `Werror` on
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release ..
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=Off ..
   make
 }
 
