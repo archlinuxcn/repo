@@ -10,7 +10,11 @@ url='http://rr-project.org/'
 license=('custom')
 depends=(python python-pexpect gdb libcapnp.so libkj.so)
 makedepends=(git cmake capnproto)
-source=('git+https://github.com/mozilla/rr')
+if [[ $CARCH = aarch64 ]]; then
+  source=('git+https://github.com/yuyichao/rr#branch=apple-m1')
+else
+  source=('git+https://github.com/mozilla/rr')
+fi
 sha1sums=('SKIP')
 provides=('rr')
 conflicts=('rr')
