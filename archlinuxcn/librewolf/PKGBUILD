@@ -2,8 +2,8 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=100.0
-pkgrel=2
+pkgver=100.0.1
+pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
 license=(MPL GPL LGPL)
@@ -36,7 +36,7 @@ source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-
         "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
         )
 # source_aarch64=()
-sha256sums=('664c0cc4e0fb70886aa4e652d144996045d533a18eebc7d61093103cbb2d5e7f'
+sha256sums=('13bc55e1c32a6ad32b4a3b37296a0459f41b0981489fc22da491256773c51c9d'
             'SKIP'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
             'SKIP'
@@ -183,7 +183,7 @@ fi
   cp "${srcdir}/source/assets/search-config.json" services/settings/dumps/main/search-config.json
 
   # stop some undesired requests (https://gitlab.com/librewolf-community/browser/common/-/issues/10)
-  patch -Np1 -i ${_patches_dir}/sed-patches/stop-undesired-requests2.patch
+  patch -Np1 -i ${_patches_dir}/sed-patches/stop-undesired-requests.patch
 
   # Assorted patches
   patch -Np1 -i ${_patches_dir}/context-menu.patch
@@ -266,6 +266,7 @@ build() {
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
   # export MOZ_ENABLE_FULL_SYMBOLS=1
   export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=system
+  export PIP_NETWORK_INSTALL_RESTRICTED_VIRTUALENVS=mach # let us hope this is a working _new_ workaround for the pip env issues?
 
   # LTO needs more open files
   ulimit -n 4096
