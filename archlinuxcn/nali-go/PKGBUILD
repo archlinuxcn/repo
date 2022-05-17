@@ -1,0 +1,40 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+
+pkgname=nali-go
+pkgver=0.4.0
+pkgrel=1
+pkgdesc='An offline tool for querying IP geographic information and CDN provider.'
+arch=('x86_64')
+url="https://github.com/zu1k/nali"
+license=('MIT')
+conflicts=('nali-cli')
+makedepends=('go')
+source=("$pkgname-$pkgver::https://github.com/zu1k/nali/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('55838bb8884bbd0dc5ecc00e89edd170c74eb62e3b2ac426bb78df6e89062d6f')
+b2sums=('d805bd4272a6fd526db9668df66246c1326639a36b4fe1d402f0297ebc17ca035ef87efaf4f8aabf103462ad6c965d8e4d6697c9a740bc5dde4281655c5afd02')
+# Golang no support
+options=(!lto)
+
+build() {
+    cd "$srcdir/nali-$pkgver"
+    go build \
+        -trimpath \
+        -buildmode=pie \
+        -mod=readonly \
+        -modcacherw \
+        -ldflags "-linkmode external -X \"github.com/zu1k/nali/constant.Version=$pkgver\" -extldflags $LDFLAGS" \
+        -o $pkgname .
+}
+
+package() {
+    cd "$srcdir/nali-$pkgver"
+    install -Dm755 $pkgname "$pkgdir"/usr/bin/$pkgname
+    ln -sf ./$pkgname "$pkgdir"/usr/bin/nali
+    mkdir -p "$pkgdir/usr/share/bash-completion/completions/"
+    ./$pkgname completion bash > "$pkgdir/usr/share/bash-completion/completions/nali"
+    mkdir -p "$pkgdir/usr/share/zsh/site-functions/"
+    ./$pkgname completion zsh > "$pkgdir/usr/share/zsh/site-functions/_nali"
+    mkdir -p "$pkgdir/usr/share/fish/completions/"
+    ./$pkgname completion fish > "$pkgdir/usr/share/fish/completions/nali.fish"
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
