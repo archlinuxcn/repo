@@ -13,8 +13,8 @@ _neovim="n"
 
 _name='deoplete'
 pkgname="${_name}-git"
-pkgver=r2044.1c40f64
-pkgrel=2
+pkgver=r2045.33ed4fa
+pkgrel=1
 pkgdesc="deoplete completion plugin for neovim"
 # i.e. seems to build and work fine on raspberrypi
 arch=('any')
@@ -35,7 +35,7 @@ replaces=('')
 backup=()
 options=()
 install="${_name}.install"
-source=("${_name}::${url//https/git}")
+source=("${_name}::git+${url}")
 noextract=()
 md5sums=('SKIP')
 
