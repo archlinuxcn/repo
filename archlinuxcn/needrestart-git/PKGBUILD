@@ -1,6 +1,6 @@
 # Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
 pkgname=needrestart-git
-pkgver=3.5.r77.g8476627
+pkgver=3.6.r0.gbaf5e54
 pkgrel=1
 pkgdesc='Restart daemons after library updates.'
 arch=('any')
@@ -12,7 +12,8 @@ makedepends=('git')
 optdepends=('iucode-tool: for outdated Intel microcode detection')
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
-backup=("etc/${pkgname%-git}/${pkgname%-git}.conf")
+backup=("etc/${pkgname%-git}/${pkgname%-git}.conf"
+        "etc/${pkgname%-git}/notify.conf")
 source=('git+https://github.com/liske/needrestart.git')
 sha256sums=('SKIP')
 
@@ -37,4 +38,7 @@ package() {
   cd "$srcdir/${pkgname%-git}"
   unset PERL5LIB PERL_MM_OPT PERL_LOCAL_LIB_ROOT
   make DESTDIR="$pkgdir/" install
+
+  # remove empty dirs; '!emptydirs' doesn't remove them
+  rm -rf "$pkgdir/usr/lib/perl5/"
 }
