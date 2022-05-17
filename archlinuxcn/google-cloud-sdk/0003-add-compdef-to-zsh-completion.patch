@@ -1,0 +1,9 @@
+diff -urN --color a/completion.zsh.inc b/completion.zsh.inc
+--- a/completion.zsh.inc	2020-05-04 13:47:11.211895195 +0200
++++ b/completion.zsh.inc	2020-05-04 13:47:32.197626189 +0200
+@@ -1,3 +1,5 @@
++#compdef gcloud
++
+ autoload -U +X bashcompinit && bashcompinit
+ zmodload -i zsh/parameter
+ if ! (( $+functions[compdef] )) ; then

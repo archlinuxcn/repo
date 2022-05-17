@@ -1,0 +1,113 @@
+diff --git a/lib/third_party/dns/namedict.py b/lib/third_party/dns/namedict.py
+index 37a13104..e2309c1f 100644
+--- a/lib/third_party/dns/namedict.py
++++ b/lib/third_party/dns/namedict.py
+@@ -32,7 +32,14 @@ import dns.name
+ from ._compat import xrange
+ 
+ 
+-class NameDict(collections.MutableMapping):
++try:
++  # Python 3.3 and above.
++  collections_abc = collections.abc
++except AttributeError:
++  collections_abc = collections
++
++
++class NameDict(collections_abc.MutableMapping):
+     """A dictionary whose keys are dns.name.Name objects.
+ 
+     In addition to being like a regular Python dictionary, this
+diff --git a/lib/third_party/functools32/functools32.py b/lib/third_party/functools32/functools32.py
+index c44551fa..291f81d0 100644
+--- a/lib/third_party/functools32/functools32.py
++++ b/lib/third_party/functools32/functools32.py
+@@ -12,7 +12,7 @@ __all__ = ['update_wrapper', 'wraps', 'WRAPPER_ASSIGNMENTS', 'WRAPPER_UPDATES',
+            'total_ordering', 'cmp_to_key', 'lru_cache', 'reduce', 'partial']
+ 
+ from _functools import partial, reduce
+-from collections import MutableMapping, namedtuple
++from collections import namedtuple
+ from .reprlib32 import recursive_repr as _recursive_repr
+ from weakref import proxy as _proxy
+ import sys as _sys
+@@ -21,6 +21,11 @@ try:
+ except ImportError:
+     from ._dummy_thread32 import allocate_lock as Lock
+ 
++try:
++    from collections.abc import MutableMapping
++except ImportError:
++    from collections import MutableMapping
++
+ ################################################################################
+ ### OrderedDict
+ ################################################################################
+diff --git a/lib/third_party/ml_sdk/cloud/ml/prediction/prediction_utils.py b/lib/third_party/ml_sdk/cloud/ml/prediction/prediction_utils.py
+index 0439728d..f4a75eda 100644
+--- a/lib/third_party/ml_sdk/cloud/ml/prediction/prediction_utils.py
++++ b/lib/third_party/ml_sdk/cloud/ml/prediction/prediction_utils.py
+@@ -32,6 +32,13 @@ collections_lib = collections
+ if sys.version_info > (3, 8):
+   collections_lib = collections.abc
+ 
++try:
++  # Python 3.3 and above.
++  collections_abc = collections.abc
++except AttributeError:
++  collections_abc = collections
++
++
+ # --------------------------
+ # prediction.common
+ # --------------------------
+diff --git a/platform/gsutil/gslib/vendored/boto/boto/dynamodb/types.py b/platform/gsutil/gslib/vendored/boto/boto/dynamodb/types.py
+index d9aaaa4c..1d50fb0c 100644
+--- a/platform/gsutil/gslib/vendored/boto/boto/dynamodb/types.py
++++ b/platform/gsutil/gslib/vendored/boto/boto/dynamodb/types.py
+@@ -27,11 +27,17 @@ Python types and vice-versa.
+ import base64
+ from decimal import (Decimal, DecimalException, Context,
+                      Clamped, Overflow, Inexact, Underflow, Rounded)
+-from collections import Mapping
+ from boto.dynamodb.exceptions import DynamoDBNumberError
+ from boto.compat import filter, map, six, long_type
+ 
+ 
++
++try:
++    from collections.abc import Mapping
++except ImportError:
++    from collections import Mapping
++
++
+ DYNAMODB_CONTEXT = Context(
+     Emin=-128, Emax=126, rounding=None, prec=38,
+     traps=[Clamped, Overflow, Inexact, Rounded, Underflow])
+diff --git a/platform/gsutil/gslib/vendored/boto/boto/mws/connection.py b/platform/gsutil/gslib/vendored/boto/boto/mws/connection.py
+index 687fae74..ae92d087 100644
+--- a/platform/gsutil/gslib/vendored/boto/boto/mws/connection.py
++++ b/platform/gsutil/gslib/vendored/boto/boto/mws/connection.py
+@@ -29,6 +29,13 @@ import boto.mws.response
+ from boto.handler import XmlHandler
+ from boto.compat import filter, map, six, encodebytes
+ 
++try:
++  # Python 3.3 and above.
++  collections_abc = collections.abc
++except AttributeError:
++  collections_abc = collections
++
++
+ __all__ = ['MWSConnection']
+ 
+ api_version_path = {
+@@ -109,7 +116,7 @@ def http_body(field):
+ def destructure_object(value, into, prefix, members=False):
+     if isinstance(value, boto.mws.response.ResponseElement):
+         destructure_object(value.__dict__, into, prefix, members=members)
+-    elif isinstance(value, collections.Mapping):
++    elif isinstance(value, collections_abc.Mapping):
+         for name in value:
+             if name.startswith('_'):
+                 continue
