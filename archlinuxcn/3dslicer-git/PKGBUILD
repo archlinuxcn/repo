@@ -40,13 +40,9 @@ provides=(3dslicer=${pkgver})
 conflicts=(3dslicer)
 source=("${_pkgname}::git+https://github.com/Slicer/Slicer.git"
         "${_pkgname}.svg::https://www.slicer.org/assets/img/3D-Slicer-Mark.svg"
-        "itk_limits.patch"
-        "vtk_limits.patch"
 )
 sha512sums=('SKIP'
-            '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014'
-            'e0c19c5fc2580366b91b16f20e6b8914dbb003a5ce2741fd5b2d2f5520724266c037b1edac33dc00a344a96c627743c5670f861065e28d81a4b207ab8082cc2e'
-            '1a1720317e2536b7fba556fcf8d7844b968ee37d08e47cd14a372d0058b27c377fca56a6079616e5da4f2b1902566bf5182f28d30d936a16acbfa7801fbd52fe')
+            '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014')
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
@@ -65,11 +61,9 @@ prepare() {
   sed -i 's/find_package(${proj} REQUIRED)/find_package(SQLite3 REQUIRED)/' "${srcdir}/${_pkgname}/SuperBuild/External_sqlite.cmake"
   # fix building with system teem
   sed -i '/ExternalProject_Add_Empty/d' "${srcdir}/${_pkgname}/SuperBuild/External_teem.cmake"
-  # quick fix clang:12/gcc:11 <limits> header regression
+  # quick fix for std::unique_ptr error, see also https://github.com/Slicer/Slicer/issues/6367
   cd ${_pkgname}
-  grep -lR 'std::numeric_limits'|xargs sed -i '1 i\#include <limits>'
-  patch -p1 -i "${srcdir}/itk_limits.patch"
-  patch -p1 -i "${srcdir}/vtk_limits.patch"
+  grep -lR 'std::unique_ptr'|xargs sed -i '1 i\#include <memory>'
 }
 
 build() {
