@@ -2,7 +2,7 @@
 
 _pkgname=3dslicer
 pkgname=3dslicer-git
-_pkgver=4.13
+_pkgver=5.1.0
 pkgver=4.13.r27813.dcd132b264
 pkgrel=1
 pkgdesc='A free, open source and multi-platform software package widely used for medical, biomedical, and related imaging research'
@@ -61,9 +61,6 @@ prepare() {
   sed -i 's/find_package(${proj} REQUIRED)/find_package(SQLite3 REQUIRED)/' "${srcdir}/${_pkgname}/SuperBuild/External_sqlite.cmake"
   # fix building with system teem
   sed -i '/ExternalProject_Add_Empty/d' "${srcdir}/${_pkgname}/SuperBuild/External_teem.cmake"
-  # quick fix for std::unique_ptr error, see also https://github.com/Slicer/Slicer/issues/6367
-  cd ${_pkgname}
-  grep -lR 'std::unique_ptr'|xargs sed -i '1 i\#include <memory>'
 }
 
 build() {
