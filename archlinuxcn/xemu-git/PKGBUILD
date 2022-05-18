@@ -1,8 +1,7 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
-# shellcheck shell=bash disable=SC2034,SC2164
 _pkgname=xemu
 pkgname=$_pkgname-git
-pkgver=0.6.4.r3.g306891b98c
+pkgver=0.7.0.r19.g38a0e46f8c
 pkgrel=1
 pkgdesc="Original Xbox emulator (fork of XQEMU)"
 arch=('x86_64')
@@ -28,14 +27,16 @@ makedepends=(
 )
 provides=("$_pkgname")
 conflicts=("$_pkgname")
-source=('git+https://github.com/mborgerson/xemu.git'
+install=$_pkgname.install
+source=(
+	"$_pkgname::git+https://github.com/mborgerson/xemu.git"
 	'berkeley-softfloat-3::git+https://gitlab.com/qemu-project/berkeley-softfloat-3.git'
 	'berkeley-testfloat-3::git+https://gitlab.com/qemu-project/berkeley-testfloat-3.git'
 	'genconfig::git+https://github.com/mborgerson/genconfig.git'
 	'imgui::git+https://github.com/ocornut/imgui.git'
 	'implot::git+https://github.com/epezent/implot.git'
 	'keycodemapdb::git+https://gitlab.com/qemu-project/keycodemapdb.git'
-    )
+)
 b2sums=(
 	'SKIP'
 	'SKIP'
@@ -48,20 +49,20 @@ b2sums=(
 
 pkgver() {
 	cd $_pkgname
-    git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+	git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
 	cd $_pkgname
-    git submodule init genconfig tests/fp/berkeley-{soft,test}float-3 ui/{imgui,implot,keycodemapdb}
+	git submodule init genconfig tests/fp/berkeley-{soft,test}float-3 ui/{keycodemapdb,thirdparty/{imgui,implot}}
 	git config submodule.genconfig.url ../genconfig
 	git config submodule.tests/fp/berkeley-softfloat-3.url ../berkeley-softfloat-3
 	git config submodule.tests/fp/berkeley-testfloat-3.url ../berkeley-testfloat-3
-	git config submodule.ui/imgui.url ../imgui
-	git config submodule.ui/implot.url ../implot
 	git config submodule.ui/keycodemapdb.url ../keycodemapdb
+	git config submodule.ui/thirdparty/imgui.url ../imgui
+	git config submodule.ui/thirdparty/implot.url ../implot
 	git submodule update
-    python scripts/gen-license.py > XEMU_LICENSE
+	python scripts/gen-license.py > XEMU_LICENSE
 	# unbundle tomlplusplus
 	sed -i 's/<toml\.hpp>/<toml++\/toml.h>/' genconfig/cnode.h toml.cpp ui/xemu-settings.cc
 	# unbundle xxhash
@@ -70,7 +71,7 @@ prepare() {
 
 build() {
 	cd $_pkgname
-    ./configure \
+	./configure \
 		--audio-drv-list="sdl" \
 		--disable-debug-info \
 		--enable-slirp=system \
@@ -82,7 +83,7 @@ build() {
 }
 
 package() {
-    depends+=(
+	depends+=(
 		'libepoxy.so'
 		'libgdk-3.so'
 		'libglib-2.0.so'
