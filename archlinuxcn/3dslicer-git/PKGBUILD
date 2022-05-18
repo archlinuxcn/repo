@@ -14,6 +14,7 @@ depends=(
   curl
   dcmtk
   libarchive
+  libffi
   libxt
   openssl
   qt5-base
@@ -29,7 +30,6 @@ depends=(
   teem
 )
 makedepends=(
-  clang
   cmake
   gendesk
   git
@@ -70,8 +70,6 @@ build() {
   cmake -B build -S "${srcdir}/${_pkgname}" \
     -DBUILD_TESTING=OFF \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_CXX_COMPILER=clang++ \
-    -DCMAKE_C_COMPILER=clang \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DSlicer_BUILD_DOCUMENTATION=OFF \
     -DSlicer_BUILD_I18N_SUPPORT=ON \
@@ -86,6 +84,7 @@ build() {
     -DSlicer_USE_SYSTEM_JsonCpp=OFF \
     -DSlicer_USE_SYSTEM_LZMA=ON \
     -DSlicer_USE_SYSTEM_LibArchive=ON \
+    -DSlicer_USE_SYSTEM_LibFFI=ON \
     -DSlicer_USE_SYSTEM_OpenSSL=ON \
     -DSlicer_USE_SYSTEM_PCRE=OFF \
     -DSlicer_USE_SYSTEM_ParameterSerializer=OFF \
