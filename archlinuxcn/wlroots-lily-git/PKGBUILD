@@ -15,15 +15,19 @@ depends=(
 	glslang
 	libinput
 	libxcb
-	libxkbcommon
 	opengl-driver
-	pixman
-	wayland
 	xcb-util-errors
 	xcb-util-renderutil
 	xcb-util-wm
-	seatd
-	vulkan-icd-loader
+
+        'libpixman-1.so'
+        'libseat.so'
+        'libudev.so'
+        'libvulkan.so'
+        'libwayland-client.so'
+        'libwayland-server.so'
+        'libxkbcommon.so'
+
 	xorg-xwayland)
 optdepends=('xorg-xwayland-lily: HiDPI support, see https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/733')
 makedepends=(
