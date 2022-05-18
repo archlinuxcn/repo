@@ -2,20 +2,20 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=2724
+pkgver=2729
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
 url="https://yuzu-emu.org/"
 license=('GPL2')
 depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'mbedtls' 'openssl' 'zstd')
-makedepends=('git' 'glslang' 'cmake' 'ninja' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils')
+makedepends=('git' 'glslang' 'cmake' 'ninja' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
 source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz"
     "inject-git-info.patch")
-md5sums=('bb00a724838d927acd6db51f593f3f38'
+md5sums=('859561a9743087b187e0d909a35c6c1f'
          '3f0a9f3d79cbe4759e9ef550dbad0baa')
 
 prepare() {
@@ -29,6 +29,8 @@ prepare() {
   #find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*)$/ )/g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/-Werror/-W/g' {} +
+  sed -i 's/static constexpr/const/g' src/shader_recompiler/frontend/maxwell/structured_control_flow.cpp
+  sed -i 's/add_subdirectory(mcl)/add_subdirectory(mcl EXCLUDE_FROM_ALL)/g' externals/dynarmic/externals/CMakeLists.txt
   sed -i -e 's/--quiet //g' src/video_core/host_shaders/CMakeLists.txt
   sed -i -e 's#${SPIRV_HEADER_FILE} ${SOURCE_FILE}#${SPIRV_HEADER_FILE} ${SOURCE_FILE} 2>/dev/null#g' src/video_core/host_shaders/CMakeLists.txt
   sed -i -e '/Name=yuzu/ s/$/ Early Access/' dist/yuzu.desktop
@@ -44,19 +46,17 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DYUZU_ENABLE_COMPATIBILITY_REPORTING=ON \
-    -DYUZU_USE_BUNDLED_UNICORN=ON \
     -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
     -DYUZU_USE_QT_WEB_ENGINE=ON \
     -DUSE_DISCORD_PRESENCE=ON \
     -DENABLE_QT_TRANSLATION=ON \
-    -DYUZU_USE_EXTERNAL_SDL2=OFF
+    -DYUZU_USE_EXTERNAL_SDL2=OFF \
+    -DYUZU_USE_BUNDLED_OPUS=OFF \
+    -DDYNARMIC_NO_BUNDLED_FMT=ON \
+    -DDYNARMIC_NO_BUNDLED_ROBIN_MAP=ON \
+    -DYUZU_USE_BUNDLED_FFMPEG=OFF
 
   ninja
-}
-
-check() {
-	cd "$srcdir/pineapple-src-EA-${pkgver}/build"
-	ninja test
 }
 
 package() {

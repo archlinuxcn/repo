@@ -2,14 +2,14 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-git
-pkgver=r21388.f345ffdc0f
+pkgver=r21404.b57df1dcb
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (master GIT version)"
 arch=('i686' 'x86_64')
 url="https://github.com/yuzu-emu/yuzu"
 license=('GPL2')
-depends=('shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'mbedtls' 'openssl' 'zstd')
-makedepends=('git' 'cmake' 'ninja' 'python2' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'desktop-file-utils' 'glslang')
+depends=('shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'mbedtls' 'openssl' 'zstd' 'qt5-webengine' 'boost-libs')
+makedepends=('git' 'cmake' 'ninja' 'python2' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'desktop-file-utils' 'glslang' 'robin-map')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
@@ -27,9 +27,6 @@ prepare() {
 
 	git submodule update --init --recursive
 
-#  sed -i 's/1.73/1.72/g' CMakeLists.txt
-#  sed -i 's/Werror=reorder/Wno-reorder/g' src/CMakeLists.txt
-#  sed -i 's/Werror=conversion/Wno-conversion/g' src/video_core/CMakeLists.txt
 }
 
 build() {
@@ -40,33 +37,45 @@ build() {
 	export TRAVIS=true
 	export TRAVIS_REPO_SLUG=yuzu-emu/yuzu-mainline
 	export TRAVIS_TAG=$(git describe --tags)
-	
-	# Hopefully temporary fix for a compilation error involving fmt
-#	CXXFLAGS+=" -DFMT_USE_USER_DEFINED_LITERALS=0"
+
+    find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror$/-W/g' {} +
+    find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
+    find . -name "CMakeLists.txt" -exec sed -i 's/-Werror/-W/g' {} +
+
+    sed -i 's/static constexpr/const/g' src/shader_recompiler/frontend/maxwell/structured_control_flow.cpp
+	sed -i 's/add_subdirectory(mcl)/add_subdirectory(mcl EXCLUDE_FROM_ALL)/g' externals/dynarmic/externals/CMakeLists.txt
+
+    # Hopefully temporary fix for a compilation error involving fmt
+	#CXXFLAGS+=" -DFMT_USE_USER_DEFINED_LITERALS=0"
 
 	# Flag to disable pre-compiled headers so boost can build properly
 	# CXXFLAGS+=" -DENABLE_PRECOMPILED_HEADERS=OFF"
 
 	# Flag to fix SDL exceptions occurring in some users' builds
-#	CXXFLAGS+=" -I/usr/include/SDL2 -D_REENTRANT -pthread -lSDL2"
-  
-#  CXXFLAGS+=" -I/usr/include/libusb-1.0"
+	#CXXFLAGS+=" -I/usr/include/SDL2 -D_REENTRANT -pthread -lSDL2"
+
+  #CXXFLAGS+=" -I/usr/include/libusb-1.0"
 
 	mkdir -p build && cd build
-
 	cmake -GNinja .. \
 	  -DCMAKE_INSTALL_PREFIX=/usr \
 	  -DCMAKE_BUILD_TYPE=Release \
 	  -DYUZU_ENABLE_COMPATIBILITY_REPORTING=ON \
-    -DYUZU_USE_BUNDLED_UNICORN=ON \
 	  -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
-	  -DUSE_DISCORD_PRESENCE=ON
- ninja
-}
+	  -DUSE_DISCORD_PRESENCE=ON \
+      -DYUZU_USE_QT_WEB_ENGINE=ON \
+      -DENABLE_QT_TRANSLATION=ON \
+      -DDYNARMIC_NO_BUNDLED_FMT=ON \
+      -DDYNARMIC_NO_BUNDLED_ROBIN_MAP=ON \
+      -DBUILD_REPOSITORY=yuzu-emu/yuzu \
+      -DBUILD_TAG=${pkgver} \
+      -DTITLE_BAR_FORMAT_IDLE="yuzu | ${pkgver} {}" \
+      -DTITLE_BAR_FORMAT_RUNNING="yuzu | ${pkgver} | {}" \
+      -DYUZU_USE_BUNDLED_OPUS=OFF \
+      -DYUZU_USE_EXTERNAL_SDL2=OFF \
+      -DYUZU_USE_BUNDLED_FFMPEG=OFF
 
-check() {
-	cd "$srcdir/$_pkgname/build"
-	ninja test
+ ninja
 }
 
 package() {
