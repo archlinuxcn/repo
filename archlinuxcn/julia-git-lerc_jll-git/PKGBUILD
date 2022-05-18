@@ -1,0 +1,32 @@
+pkgname=julia-git-lerc_jll-git
+pkgver=3.0.0+1
+pkgrel=1
+pkgdesc="LERC_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/LERC_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-lerc_jll)
+source=(git+https://github.com/JuliaBinaryWrappers/LERC_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         'dcf39952fac7280af01ae97f187207ae')
+
+pkgver() {
+  cd LERC_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd LERC_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl LERC_jll ../jll.toml
+}
+
+package() {
+  cd LERC_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh LERC_jll "${pkgdir}" "${pkgname}" julia-git
+}
