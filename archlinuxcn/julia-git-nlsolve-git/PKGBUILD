@@ -1,0 +1,24 @@
+pkgname=julia-git-nlsolve-git
+pkgver=4.5.1
+pkgrel=1
+pkgdesc="NLsolve.jl"
+url="https://github.com/JuliaNLSolvers/NLsolve.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-nlsolve)
+source=(git+https://github.com/JuliaNLSolvers/NLsolve.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd NLsolve.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd NLsolve.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh NLsolve "${pkgdir}" "${pkgname}" julia-git
+}
