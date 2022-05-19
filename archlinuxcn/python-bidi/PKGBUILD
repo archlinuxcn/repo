@@ -1,0 +1,36 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+# Contributor: tinywrkb <tinywrkb@gmail.com>
+# Contributor: Johannes Titz <johannes.titz@gmail.com>
+# Contributor: Doron Behar <doron.behar@gmail.com>
+
+_pkgname=python-bidi
+pkgname=python-bidi
+pkgver=0.4.2
+pkgrel=1
+pkgdesc='BIDI algorithm related functions'
+url='https://github.com/MeirKriheli/python-bidi'
+license=(GPL3)
+arch=(any)
+depends=(
+  python
+)
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
+
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/MeirKriheli/python-bidi/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('6e03f84c1f8d541e6671f602e29990e57c373564fee0693a0dbb036cdab4fedc1b8060abd282523917b1b323fc1ca3245cb81fa3f959f03dc2ab041631e6dfff')
+
+build() {
+  cd ${_pkgname}-${pkgver}
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd ${_pkgname}-${pkgver}
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+}
+# vim:set ts=2 sw=2 et:

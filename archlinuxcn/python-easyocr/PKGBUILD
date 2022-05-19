@@ -1,0 +1,37 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=EasyOCR
+pkgname=python-easyocr
+pkgver=1.4.2
+pkgrel=1
+pkgdesc='End-to-End Multi-Lingual Optical Character Recognition (OCR) Solution for 80+ supported languages'
+arch=('any')
+url='https://github.com/jaidedai/easyocr'
+license=('Apache')
+depends=(
+  python-bidi
+  python-numpy
+  python-opencv
+  python-pillow
+  python-pytorch
+  python-scikit-image
+  python-scipy
+  python-torchvision
+  python-yaml
+)
+makedepends=(
+  python-setuptools
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/JaidedAI/EasyOCR/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('21cfc6a73e0c1ff54bc0860bab51c0b555e956f0860b52f9f93492f7e3883a406659cab91778c6a9de4f213d9a4fd3d23cc0a8c51cc9b79763f33082a490c0df')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+}
+# vim:set ts=2 sw=2 et:
