@@ -19,6 +19,7 @@ depends=(
 makedepends=(
   cuda
   cython
+  gcc10
   python-pip
   python-pytorch-cuda
   python-setuptools
@@ -32,6 +33,8 @@ prepare() {
 }
 
 build() {
+  export CC=gcc-10
+  export CXX=g++-10
   cd "${srcdir}/${_pkgname}-${pkgver}"
   MMCV_WITH_OPS=1 \
   python setup.py build
