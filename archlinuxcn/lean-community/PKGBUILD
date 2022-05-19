@@ -3,7 +3,7 @@
 
 pkgname=lean-community
 _pkgname=lean
-pkgver=3.42.1
+pkgver=3.43.0
 pkgrel=1
 pkgdesc='Lean Theorem Prover, maintained by the Lean community'
 arch=('x86_64' 'i386')
@@ -13,7 +13,7 @@ makedepends=('cmake' 'ninja' 'python')
 optdepends=('python-mathlibtools')
 conflicts=('lean-bin' 'lean-git' 'lean3-bin' 'lean2-git')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/leanprover-community/lean/archive/v$pkgver.tar.gz")
-sha256sums=('5b8cbfdea6cf4de5488467297958876aa0b3a79ed5806f7d0f01a0c396beb4e2')
+sha256sums=('e48beb00b823ae2dfc90841a0f413df1a11260de7ab47878153bc570c9335f75')
 
 build() {
   cd "$_pkgname-$pkgver"
@@ -21,6 +21,11 @@ build() {
   cd build
   cmake ../src -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -G Ninja
   ninja
+}
+
+check() {
+  cd "$_pkgname-$pkgver"/build
+  ninja test
 }
 
 package() {
