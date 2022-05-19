@@ -1,5 +1,23 @@
+From 7b588c7238904a574ed18d474e6e8e85887c774b Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Mon, 18 Oct 2021 21:31:31 +0300
+Subject: [PATCH 1/2] AUR pkgbuild changes
+
+---
+ Makefile.in             | 51 +++++++++++++++++++++++++++++++----------
+ configure.sh            |  2 ++
+ make/rules-autoconf.mk  |  4 ++--
+ make/rules-cargo.mk     |  4 +++-
+ make/rules-cmake.mk     |  4 ++--
+ make/rules-common.mk    | 18 +++++++++------
+ make/rules-configure.mk |  4 ++--
+ make/rules-meson.mk     |  2 +-
+ make/rules-winemaker.mk |  2 +-
+ proton                  |  6 ++---
+ 10 files changed, 65 insertions(+), 32 deletions(-)
+
 diff --git a/Makefile.in b/Makefile.in
-index 6e1b4d1..da46c76 100644
+index 6e1b4d1..eb459b8 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -63,7 +63,6 @@ ifeq ($(ENABLE_CCACHE),1)
@@ -66,7 +84,24 @@ index 6e1b4d1..da46c76 100644
  	$(GST_COMMON_MESON_ARGS)
  
  GSTREAMER_DEPENDS = gst_orc
-@@ -692,7 +699,13 @@ WINE_SOURCE_ARGS = \
+@@ -519,11 +526,16 @@ $(eval $(call rules-meson,gst_good,64))
+ 
+ FFMPEG_CONFIGURE_ARGS := \
+ 	--enable-shared \
++	--enable-lto \
++	--disable-optimizations \
+ 	--disable-static \
+ 	--disable-everything \
+ 	--disable-programs \
+ 	--disable-doc \
+ 
++FFMPEG_CONFIGURE_ARGS64 = --optflags="$(COMMON_FLAGS) $(COMMON_FLAGS64)"
++FFMPEG_CONFIGURE_ARGS32 = --optflags="$(COMMON_FLAGS) $(COMMON_FLAGS32)" --disable-inline-asm
++
+ $(eval $(call rules-source,ffmpeg,$(SRCDIR)/ffmpeg))
+ $(eval $(call rules-configure,ffmpeg,32))
+ $(eval $(call rules-configure,ffmpeg,64))
+@@ -692,7 +704,13 @@ WINE_SOURCE_ARGS = \
    --exclude include/config.h.in \
  
  WINE_CONFIGURE_ARGS = \
@@ -80,7 +115,7 @@ index 6e1b4d1..da46c76 100644
    --disable-tests
  
  WINE_CONFIGURE_ARGS64 = --enable-win64
-@@ -755,6 +768,9 @@ $(OBJ)/.vrclient-post-source:
+@@ -755,6 +773,9 @@ $(OBJ)/.vrclient-post-source:
  DXVK_MESON_ARGS32 = --bindir=$(DXVK_DST32)/lib/wine/dxvk
  DXVK_MESON_ARGS64 = --bindir=$(DXVK_DST64)/lib64/wine/dxvk
  
@@ -90,7 +125,7 @@ index 6e1b4d1..da46c76 100644
  $(eval $(call rules-source,dxvk,$(SRCDIR)/dxvk))
  $(eval $(call rules-meson,dxvk,32,CROSS))
  $(eval $(call rules-meson,dxvk,64,CROSS))
-@@ -777,6 +793,9 @@ $(OBJ)/.dxvk-post-build32:
+@@ -777,6 +798,9 @@ $(OBJ)/.dxvk-post-build32:
  DXVK_NVAPI_MESON_ARGS32 = --bindir=$(DXVK_NVAPI_DST32)/lib/wine/nvapi
  DXVK_NVAPI_MESON_ARGS64 = --bindir=$(DXVK_NVAPI_DST64)/lib64/wine/nvapi
  
@@ -100,7 +135,7 @@ index 6e1b4d1..da46c76 100644
  $(eval $(call rules-source,dxvk-nvapi,$(SRCDIR)/dxvk-nvapi))
  $(eval $(call rules-meson,dxvk-nvapi,32,CROSS))
  $(eval $(call rules-meson,dxvk-nvapi,64,CROSS))
-@@ -840,10 +859,13 @@ VKD3D_PROTON_SOURCE_ARGS = \
+@@ -840,10 +864,13 @@ VKD3D_PROTON_SOURCE_ARGS = \
    --exclude vkd3d_build.h.in \
    --exclude vkd3d_version.h.in \
  
@@ -115,7 +150,7 @@ index 6e1b4d1..da46c76 100644
  $(eval $(call rules-source,vkd3d-proton,$(SRCDIR)/vkd3d-proton))
  $(eval $(call rules-meson,vkd3d-proton,32,CROSS))
  $(eval $(call rules-meson,vkd3d-proton,64,CROSS))
-@@ -1081,14 +1103,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
+@@ -1081,14 +1108,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
  	mkdir -p $(FONTS_OBJ)/source-han
  	# Do not immediately create the target file, so that make is interrupted
  	# it will restart again
@@ -133,7 +168,7 @@ index 6e1b4d1..da46c76 100644
  	mv $@.tmp $@
  
  $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
-@@ -1098,10 +1120,10 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
+@@ -1098,10 +1125,10 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
  	ttx -o $@ -m $($(notdir $@)_FONT) $(FONTS_OBJ)/ume-gothic/$(notdir $(basename $($(notdir $@)_NAMETABLE_PATCH))).ttx
  
  $(simsun.ttc): $(simsun.ttf) $(nsimsun.ttf)
@@ -310,3 +345,37 @@ index 69688a0..1c0d1d3 100644
  	cd "$$($(2)_OBJ$(3))" && touch "$(basename $(4)).spec" && env $$($(2)_ENV$(3)) \
  	winebuild --$(lastword $(subst ., ,$(4))) --fake-module -E "$(basename $(4)).spec" -o "$(4).fake"
  	mkdir -p $$($(2)_LIBDIR$(3))/$(LIBDIR_WINE_$(3))
+diff --git a/proton b/proton
+index 399b21a..40cd918 100755
+--- a/proton
++++ b/proton
+@@ -356,7 +356,6 @@ class Proton:
+         self.wine_bin = self.bin_dir + "wine"
+         self.wine64_bin = self.bin_dir + "wine64"
+         self.wineserver_bin = self.bin_dir + "wineserver"
+-        self.dist_lock = FileLock(self.path("dist.lock"), timeout=-1)
+ 
+     def path(self, d):
+         return self.base_dir + d
+@@ -1377,8 +1376,6 @@ if __name__ == "__main__":
+ 
+     g_proton = Proton(os.path.dirname(sys.argv[0]))
+ 
+-    if g_proton.need_tarball_extraction():
+-        g_proton.extract_tarball()
+ 
+     g_compatdata = CompatData(os.environ["STEAM_COMPAT_DATA_PATH"])
+ 
+@@ -1387,7 +1384,8 @@ if __name__ == "__main__":
+     g_session.init_wine()
+ 
+     if g_proton.missing_default_prefix():
+-        g_proton.make_default_prefix()
++        log("Default prefix is missing, something is very wrong.")
++        sys.exit(1)
+ 
+     g_session.init_session(sys.argv[1] != "runinprefix")
+ 
+-- 
+2.36.1
+

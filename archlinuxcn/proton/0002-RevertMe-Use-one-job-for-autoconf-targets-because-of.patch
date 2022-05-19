@@ -1,0 +1,29 @@
+From 96c4133bd89bb31385dc618d9076383065f26876 Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Sun, 8 May 2022 12:58:59 +0300
+Subject: [PATCH 2/2] RevertMe: Use one job for autoconf targets because of an
+ unresolved build failure in Wine
+
+---
+ make/rules-autoconf.mk | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/make/rules-autoconf.mk b/make/rules-autoconf.mk
+index 4e6d19f..41a17e0 100644
+--- a/make/rules-autoconf.mk
++++ b/make/rules-autoconf.mk
+@@ -31,9 +31,9 @@ $$(OBJ)/.$(1)-configure$(3): $$(OBJ)/.$(1)-pre-configure
+ $$(OBJ)/.$(1)-build$(3):
+ 	@echo ":: building $(3)bit $(1)..." >&2
+ 	cd "$$($(2)_OBJ$(3))" && env $$($(2)_ENV$(3)) \
+-	$$(MAKE) -j$$(SUBJOBS)
++	$$(MAKE) -j1
+ 	cd "$$($(2)_OBJ$(3))" && env $$($(2)_ENV$(3)) \
+-	$$(MAKE) -j$$(SUBJOBS) install
++	$$(MAKE) -j1 install
+ 	touch $$@
+ endif
+ endef
+-- 
+2.36.1
+
