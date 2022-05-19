@@ -3,7 +3,7 @@
 
 pkgsubn=violentmonkey
 pkgname=chromium-extension-violentmonkey-git
-pkgver=2212.1a8c5c53
+pkgver=2216.95e21042
 pkgrel=1
 pkgdesc="Chrome/Chromium extension for Violentmonkey - git/dev"
 arch=('any')
@@ -20,6 +20,7 @@ pkgver() {
 }
 build() {
 	cd "${srcdir}/${pkgsubn}"
+    rm test/injected/gm-resource.test.js
 	yarn
 	yarn build
 }
