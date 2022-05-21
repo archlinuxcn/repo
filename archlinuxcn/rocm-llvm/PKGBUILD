@@ -3,7 +3,7 @@
 
 pkgname=rocm-llvm
 pkgdesc='Radeon Open Compute - LLVM toolchain (llvm, clang, lld)'
-pkgver=5.1.1
+pkgver=5.1.3
 pkgrel=1
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/llvm-project'
@@ -14,7 +14,7 @@ provides=("llvm-amdgpu")
 replaces=('llvm-amdgpu')
 conflicts=('llvm-amdgpu')
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('471c63681d1c2b97c431e62d24e3193527698295dd80483383068537634481ec')
+sha256sums=('d236a2064363c0278f7ba1bb2ff1545ee4c52278c50640e8bb2b9cfef8a2f128')
 options=(staticlibs !lto)
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
