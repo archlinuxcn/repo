@@ -4,7 +4,7 @@
 # Contributor: Ranieri Althoff <ranisalt+aur at gmail.com>
 
 pkgname=rocm-cmake
-pkgver=5.1.1
+pkgver=5.1.3
 pkgrel=1
 pkgdesc='CMake modules for common build tasks needed for the ROCm software stack'
 arch=('x86_64')
@@ -12,7 +12,7 @@ url='https://github.com/RadeonOpenCompute/rocm-cmake'
 license=('MIT')
 makedepends=('cmake')
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('16e48d472345f353b5394d8ff734a5b0c80bbb05a407a023f2a0126b77f79dc1')
+sha256sums=('19b2da0d56300aab454655b57435ab3ed9e101ecb96561336ea8865bbd993c23')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
 build() {
