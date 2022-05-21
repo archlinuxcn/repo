@@ -10,7 +10,7 @@
 pkgbase=firefox-esr
 pkgname=(firefox-esr)
 pkgver=91.9.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org, Extended Support Release"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -224,7 +224,7 @@ _package_i18n() {
   pkgdesc="$2 language pack for Firefox ESR"
   depends=("firefox-esr>=$pkgver")
   install -Dm644 firefox-esr-i18n-$pkgver-$1.xpi \
-    "$pkgdir/usr/lib/firefox-esr/extensions/langpack-$1@firefox.mozilla.org.xpi"
+    "$pkgdir/usr/lib/firefox-esr/browser/extensions/langpack-$1@firefox.mozilla.org.xpi"
 }
 
 _languages=(
