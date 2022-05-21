@@ -2,8 +2,8 @@
 
 _pkgbasename=dav1d
 pkgname=("lib32-$_pkgbasename" "lib32-lib$_pkgbasename")
-pkgver=0.9.2
-pkgrel=2
+pkgver=1.0.0
+pkgrel=1
 pkgdesc='AV1 cross-platform decoder focused on speed and correctness (32 bit)'
 url='https://code.videolan.org/videolan/dav1d/'
 arch=('x86_64')
@@ -19,26 +19,25 @@ makedepends=(
       )
 source=(
       https://downloads.videolan.org/pub/videolan/${_pkgbasename}/${pkgver}/${_pkgbasename}-${pkgver}.tar.xz{,.asc}
-      "https://code.videolan.org/videolan/dav1d/-/commit/c6a08b3aa1ee99dade53e5e32033bc1d14455a22.patch"
+      "https://code.videolan.org/videolan/dav1d-test-data/-/archive/${pkgver}/dav1d-test-data-${pkgver}.tar.gz"
       )
 sha512sums=(
-      '87026f8b14e408ff50fc8f137ec2ede4b14c5f69687e615d2359d0f718ae5cb5176522490786d9ae1f7838182f82615c2674f7c2961b6dcec83f1ee587c3af7c'
+      'a3a7e162e45181449cd42af3a4d36669a850a4ee9ab17641dcd63d84406444566e8ebc7caa55b0620ab581039f36d19a90218a40f52ebbe525b37ed9493fb3f3'
       'SKIP'
-      'SKIP'
+      '6ce106e13217296ab9521dfb447c988f499770b201bc34b3aa4e161274139f6c6654d01b0a09f75e599c485ab8ff1bbac417acab6716f8f7c7c134278eea2e0e'
       )
 b2sums=(
-      '7baa28821b06b05b95d3ea80b22dffe59d0793c9b4be4231ba0be99b548e1f5517a956dc865c2be1702576d078c2218e7e80342a26ab4003b4f06bcb0cdbb769'
+      '792ba23ce3bd2ed9245d94daebf3a1e3e1df3cb463a9c54a0c23190801fc71c98c66f54f52b821f7741c818c80b308f41c5aed3ba68e234034285a48044f433e'
       'SKIP'
-      'SKIP'
+      '76a41bdfa50c68cb1133b7669698e2f463c5ddd716919235d7b3624039dd4ed1e78b2e917796372caec2290affb3713d118373109d6baec921adeb7367a8117c'
       )
 validpgpkeys=('65F7C6B4206BD057A7EB73787180713BE58D1ADC') # VideoLAN Release Signing Key
 
 prepare() {
   cd ${_pkgbasename}-${pkgver}
+  ln -s "${srcdir}/dav1d-test-data-${pkgver}" tests/dav1d-test-data
 
   # Patching if needed
-  echo "Patching meson.build"
-  patch -p1 < ../c6a08b3aa1ee99dade53e5e32033bc1d14455a22.patch
 }
 
 build() {
@@ -52,7 +51,8 @@ build() {
   arch-meson build \
     --prefix=/usr \
     --libdir=lib32 \
-    -D enable_tests=false
+    -D enable_tests=false \
+    -D enable_docs=false
 
 # Options disabled
 #     --cross-file x86-linux-gnu \ ## Meson doesn't use the system's LDFLAGS with cross-file yet...
