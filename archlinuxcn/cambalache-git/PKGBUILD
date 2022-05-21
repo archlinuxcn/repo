@@ -2,13 +2,13 @@
 
 pkgname=cambalache-git
 _pkgname=cambalache
-pkgver=0.8.1.r169.gb567711
+pkgver=0.8.1.r214.g40a5847
 pkgrel=1
 pkgdesc='A new RAD tool for Gtk 4 and 3 with a clear MVC design and data model first philosophy'
 url=https://gitlab.gnome.org/jpu/cambalache
 arch=(any)
 license=(LGPL)
-depends+=('python-gobject' 'glib2' 'gtk3' 'gtk4' 'python-lxml' 'webkit2gtk')
+depends+=('python-gobject' 'glib2' 'gtk3' 'gtk4' 'python-lxml' 'webkit2gtk' 'gobject-introspection')
 makedepends+=(git 'meson>=0.50.0' 'cmake')
 conflicts=($_pkgname)
 provides=($_pkgname=$pkgver)
