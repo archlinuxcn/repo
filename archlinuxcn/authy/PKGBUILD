@@ -1,7 +1,7 @@
 # Maintainer: Tonkku <contact@tonkku.me>
 
 pkgname=authy
-pkgver=2.1.0
+pkgver=2.2.0
 pkgrel=1
 pkgdesc="Two factor authentication desktop application"
 arch=('x86_64')
@@ -10,14 +10,12 @@ provides=('authy')
 conflicts=('authy-snap')
 replaces=('authy-snap')
 license=('unknown')
-depends=('nss' 'gtk3' 'libxss')
-optdepends=('libappindicator-gtk3: tray icon support')
+depends=('nss' 'gtk3')
 makedepends=('squashfs-tools')
 _snapid="H8ZpNgIoPyvmkgxOWw5MSzsXK1wRZiHn"
-_snaprev="9"
-source=("https://api.snapcraft.io/api/v1/snaps/download/${_snapid}_${_snaprev}.snap" "no-sandbox.sh")
-sha256sums=('4718f1398adb9de55cb724c94ccbe837f51d444a2169959bd644dd11e23a9945'
-            'fadf94ab33c2609677972ed25910b15cbdffafd8031275a173fcbf0d77d9f763')
+_snaprev="10"
+source=("https://api.snapcraft.io/api/v1/snaps/download/${_snapid}_${_snaprev}.snap")
+sha256sums=('b01f7f7d557faa9f837e3c69bf32141ec2e4784bb7e62dab12fd7f258332b46f')
 
 prepare() {
     echo "Extracting snap file..."
@@ -38,9 +36,6 @@ package() {
     rm -rf "${pkgdir}/opt/${pkgname}"/{data-dir,gnome-platform,lib,meta,scripts,usr,*.sh}
 
     # Symlink binary to /usr/bin
-    # install -d "${pkgdir}/usr/bin"
-    # ln -s "/opt/${pkgname}/authy" "${pkgdir}/usr/bin"
-
-    # Install wrapper script
-    install -Dm755 "${srcdir}/no-sandbox.sh" "${pkgdir}/usr/bin/authy"
+    install -d "${pkgdir}/usr/bin"
+    ln -s "/opt/${pkgname}/authy" "${pkgdir}/usr/bin"
 }
