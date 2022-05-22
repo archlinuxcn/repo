@@ -3,7 +3,7 @@
 _CUDA_ARCH_LIST="5.2;5.3;6.0;6.1;6.2;7.0;7.2;7.5;8.0;8.6;8.6+PTX"
 pkgname=python-apex-git
 pkgver=0.1.r989.c3018b13
-_pkgver=0.1
+_pkgver=22.03
 pkgrel=1
 pkgdesc="A PyTorch Extension for easy mixed precision and distributed training"
 arch=('x86_64')
@@ -11,10 +11,11 @@ url="https://github.com/NVIDIA/apex"
 license=('BSD')
 depends=(python-pytorch-cuda)
 makedepends=(
-  'git'
-  'python-setuptools'
-  'python-pip'
-  'qt5-base'
+  gcc10
+  git
+  python-setuptools
+  python-pip
+  qt5-base
 )
 checkdepends=(python-pytest)
 provides=(python-apex=${pkgver})
@@ -29,6 +30,8 @@ pkgver() {
 }
 
 build() {
+  export CC=gcc-10
+  export CXX=g++-10
   export TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST}
   cd "${srcdir}/${pkgname}"
   python setup.py --cuda_ext --cpp_ext build
