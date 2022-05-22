@@ -1,7 +1,7 @@
 # Maintainer: Ckat <ckat@teknik.io>
 pkgname=chatterino2-git
 _pkgname=chatterino2
-pkgver=r3532.bd3d2ed82
+pkgver=r3538.21934b6aa
 pkgrel=1
 pkgdesc='Second installment of the Twitch chat client series "Chatterino", dev/git version'
 arch=('any')
@@ -26,8 +26,10 @@ source=("git+https://github.com/Chatterino/chatterino2"
         "git+https://github.com/Chatterino/qtkeychain"
         "git+https://github.com/arsenm/sanitizers-cmake"
         "git+https://github.com/zaphoyd/websocketpp"
-        "git+https://github.com/Neargye/magic_enum")
+        "git+https://github.com/Neargye/magic_enum"
+        "git+https://github.com/google/googletest.git")
 md5sums=('SKIP'
+         'SKIP'
          'SKIP'
          'SKIP'
          'SKIP'
@@ -61,6 +63,7 @@ prepare () {
     # We can't set the local directory of this submodule as we have no way of accessing the config name `submodule.magic_enum` because underscores are actually not allowed.
     # The only thing I can think of is moving the submodule to `lib/magicenum` but that feels like an off approach. I'll look into it only if builds fail because of the below call is missing.
     # git config submodule.magic_enum $srcdir/$_pkgname/lib/magic_enum
+    git config submodule.googletest $srcdir/$_pkgname/lib/googletest
     git submodule update
 }
 

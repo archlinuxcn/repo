@@ -21,4 +21,5 @@ clean:
 		qtkeychain \
 		sanitizers-cmake \
 		websocketpp \
-		magic_enum
+		magic_enum \
+		googletest
