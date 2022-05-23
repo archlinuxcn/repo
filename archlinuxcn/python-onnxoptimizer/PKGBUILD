@@ -3,21 +3,18 @@
 pkgname=python-onnxoptimizer
 pkgver=0.2.7
 pkgdesc='ONNX model optimizer'
-pkgrel=2
+pkgrel=3
 arch=(x86_64)
 url='https://github.com/onnx/optimizer'
 license=(MIT)
 depends=(python python-onnx)
 makedepends=(python-setuptools cmake pybind11 git)
-checkdepends=(python-pytest python-nbval python-onnxruntime
-  # Disable tests using torchvision for now due to a pytorch bug
-  # https://bugs.archlinux.org/task/74593
-  # python-torchvision
-)
+checkdepends=(python-pytest python-nbval python-onnxruntime python-torchvision)
 source=("onnx-optimizer::git+https://github.com/onnx/optimizer.git#tag=v$pkgver"
         "git+https://github.com/onnx/onnx.git")
 sha256sums=('SKIP'
             'SKIP')
+options=('debug')
 
 prepare() {
   cd onnx-optimizer
