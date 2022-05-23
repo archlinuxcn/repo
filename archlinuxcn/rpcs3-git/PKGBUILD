@@ -2,7 +2,7 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.22.13604.5a581f46df
+pkgver=0.0.22.13641.608f82351
 pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator'
 arch=(x86_64)
@@ -12,6 +12,8 @@ depends=(
   alsa-lib
   glew
   glu
+  libavcodec.so
+  libavutil.so
   libevdev
   libgl
   libice
@@ -19,6 +21,7 @@ depends=(
   libpng
   libpulse
   libsm
+  libswscale.so
   libx11
   libxext
   openal
@@ -30,9 +33,7 @@ depends=(
   vulkan-icd-loader
   zlib
   curl
-  wolfssl
   pugixml
-  ffmpeg4.4
 )
 makedepends=(
   cmake
@@ -72,7 +73,7 @@ prepare() {
   git config submodule.llvm.url ../rpcs3-llvm
   
   SUBMODULES=($(git config --file .gitmodules --get-regexp path | \
-    awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/llvm/ && !/glslang/ && !/wolfssl/ && !/pugixml/'))
+    awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/llvm/ && !/glslang/ && !/pugixml/'))
 
   # We need to convert from a relative folder path to a https://github.com path
   for ((i=0;i<${#SUBMODULES[@]};i+=2))
@@ -94,7 +95,8 @@ prepare() {
 }
 
 build() {
-  export PKG_CONFIG_PATH=/usr/lib/ffmpeg4.4/pkgconfig
+  BAD_FLAG="-Wp,-D_GLIBCXX_ASSERTIONS"
+  CXXFLAGS="${CXXFLAGS//$BAD_FLAG/}"
 
   cmake -S rpcs3 -B build \
     -DCMAKE_BUILD_TYPE=Release \
@@ -105,7 +107,6 @@ build() {
     -DUSE_SYSTEM_LIBPNG=ON \
     -DUSE_SYSTEM_ZLIB=ON \
     -DUSE_SYSTEM_CURL=ON \
-    -DUSE_SYSTEM_WOLFSSL=ON \
     -DUSE_SYSTEM_FLATBUFFERS=OFF \
     -DUSE_SYSTEM_PUGIXML=ON
   
