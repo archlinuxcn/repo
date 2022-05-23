@@ -6,7 +6,7 @@
 # Contributor: Hexchain Tong <i at hexchain dot org>
 
 pkgname=megasync
-pkgver=4.6.3.0
+pkgver=4.6.6.0
 pkgrel=1
 pkgdesc="Easy automated syncing between your computers and your MEGA cloud drive"
 arch=('i686' 'x86_64')
@@ -24,7 +24,7 @@ source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}${_extname}"
 sha256sums=('SKIP'
             'SKIP'
             'bdad237f67d772789bf6e6835108827201296fc5cf793d28d94af8a1b04e56c9'
-            '3a15322d39b7f69a21c866cd1965893c5c1b4285b1a079593a183aefcff0f8c2')
+            '939a46fb0c54f900156e9e68ec4369926e9610b1ca6e9fd6ca09e538fbb84688')
 
 prepare() {
     cd "MEGAsync"

@@ -1,8 +1,17 @@
 diff --git a/src/gfx/freeimage.cpp b/src/gfx/freeimage.cpp
-index 50271f9a9..e427b5e54 100644
+index b65b6f38f..e6ee148e1 100644
 --- a/src/gfx/freeimage.cpp
 +++ b/src/gfx/freeimage.cpp
-@@ -253,7 +253,6 @@ bool GfxProcFreeImage::readbitmapFfmpeg(FileAccess* fa, const LocalPath& imagePa
+@@ -240,7 +240,7 @@ bool GfxProcFreeImage::readbitmapFfmpeg(FileAccess* fa, const LocalPath& imagePa
+ 
+     // Find decoder for video stream
+     AVCodecID codecId = codecParm->codec_id;
+-    AVCodec* decoder = avcodec_find_decoder(codecId);
++    const AVCodec* decoder = avcodec_find_decoder(codecId);
+     if (!decoder)
+     {
+         LOG_warn << "Codec not found: " << codecId;
+@@ -257,7 +257,6 @@ bool GfxProcFreeImage::readbitmapFfmpeg(FileAccess* fa, const LocalPath& imagePa
  
      // Force seeking to key frames
      formatContext->seek2any = false;
