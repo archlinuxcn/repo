@@ -1,8 +1,8 @@
 # Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
 
 pkgname=nali-go
-pkgver=0.4.0
-pkgrel=2
+pkgver=0.4.1
+pkgrel=1
 pkgdesc='An offline tool for querying IP geographic information and CDN provider.'
 arch=('x86_64')
 url="https://github.com/zu1k/nali"
@@ -10,8 +10,8 @@ license=('MIT')
 conflicts=('nali-cli')
 makedepends=('go')
 source=("$pkgname-$pkgver::https://github.com/zu1k/nali/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('55838bb8884bbd0dc5ecc00e89edd170c74eb62e3b2ac426bb78df6e89062d6f')
-b2sums=('d805bd4272a6fd526db9668df66246c1326639a36b4fe1d402f0297ebc17ca035ef87efaf4f8aabf103462ad6c965d8e4d6697c9a740bc5dde4281655c5afd02')
+sha256sums=('4bbfd5f174516ccb2a02a3e3e689aad26a1c6f7244c3b849b010103cd0ac0ee5')
+b2sums=('fb16c61d6f1e6bb86ce8ae236491108226bc7aecea429e7ab7309c3eab24c3fa5b850862d8cf05abc7ab31b8e766f0d420c587c11a56368b80f9b0e55d61b739')
 # Golang no support
 options=(!lto)
 
