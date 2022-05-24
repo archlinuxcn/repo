@@ -4,21 +4,14 @@ maintainers:
 build_prefix: extra-x86_64
 
 pre_build_script: |
-    _G.files = download_official_pkgbuild('unbound')
-    run_cmd(['sed', '-r', '-e', 's#--with-pyunbound#--with-pyunbound --with-pythonmodule#',
-                          '-e', r's#pkgname#_pkgname#g;s#licenses/$\{_pkgname\}#licenses/$\{pkgname\}#',
-                          '-e', '/_pkgname=/a pkgname=unbound-python',
-                          '-e', r's#pkgdesc="(.*)"#pkgdesc="\1, with Python bindings"#', '-i', 'PKGBUILD'])
-    add_depends(['python'])
-    add_provides(['unbound=$pkgver'])
-    add_conflicts(['unbound'])
+    update_pkgver_and_pkgrel(_G.newver)
 
 post_build_script: |
-    git_add_files(_G.files)
     git_pkgbuild_commit()
     update_aur_repo()
 
 update_on:
   - source: alpm
     alpm: unbound
+    strip_release: true
   - alias: python

@@ -7,19 +7,19 @@
 _pkgname=unbound
 pkgname=unbound-python
 pkgver=1.15.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Validating, recursive, and caching DNS resolver, with Python bindings"
 arch=(x86_64)
 url="https://unbound.net/"
 license=(BSD)
-depends=("dnssec-anchors" "fstrm" "hiredis" "ldns" "libevent" "libnghttp2" "libsodium" "openssl" "python")
-makedepends=(expat protobuf-c python swig systemd)
+depends=(dnssec-anchors fstrm hiredis ldns libevent libnghttp2 libsodium openssl python)
+makedepends=(expat protobuf-c swig systemd)
 optdepends=(
   'expat: for unbound-anchor'
   'sh: for unbound-control-setup'
-  'python: for python-bindings'
 )
 provides=("libunbound.so" "unbound=$pkgver")
+conflicts=("unbound")
 backup=(etc/${_pkgname}/${_pkgname}.conf)
 source=(
   "https://unbound.net/downloads/${_pkgname}-${pkgver}.tar.gz"{,.asc}
@@ -43,9 +43,14 @@ b2sums=('e67756fb28aac784431484e5f834cbe3864a0ec021a8c9eb3124a6d5732fea99a073815
 validpgpkeys=(EDFAA3F2CA4E6EB05681AF8E9F6F1C2D7E045F8D) # W.C.A. Wijngaards <wouter@nlnetlabs.nl>
 
 prepare() {
+  # borrowed from community/hyperkitty
+  local python_stdlib_basepath="$(python -c "from sysconfig import get_path; print(get_path('stdlib'))")"
+
   cd ${_pkgname}-${pkgver}
   # enable trusted-anchor-file and set it to an unbound specific location
   patch -Np1 -i ../"${_pkgname}-1.14.0-trust_anchor_file.patch"
+  # Not sure if there is a way to patch autoconf - this line should exist only when --with-pythonmodule
+  echo BindReadOnlyPaths=$python_stdlib_basepath:/etc/unbound$python_stdlib_basepath >> contrib/${_pkgname}.service.in
   autoreconf -fiv
 }
 
@@ -71,7 +76,8 @@ build() {
               --with-rootkey-file=/etc/trusted-key.key \
               --with-libevent \
               --with-libnghttp2 \
-              --with-pyunbound --with-pythonmodule
+              --with-pyunbound \
+              --with-pythonmodule
   sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
   make
 }
@@ -87,10 +93,11 @@ package() {
   cd ${_pkgname}-${pkgver}
   make DESTDIR="${pkgdir}" install
   install -vDm 644 contrib/${_pkgname}.service -t "${pkgdir}"/usr/lib/systemd/system/
-  install -vDm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/${_pkgname}/
+  install -vDm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/${pkgname}/
   install -vDm 644 ../${_pkgname}-sysusers.conf "${pkgdir}"/usr/lib/sysusers.d/${_pkgname}.conf
   install -vDm 644 ../${_pkgname}-tmpfiles.conf "${pkgdir}"/usr/lib/tmpfiles.d/${_pkgname}.conf
   # libalpm hook to copy the dnssec-anchors provided key to /etc/unbound
   install -vDm 644 ../unbound-trusted-key.hook -t "${pkgdir}"/usr/share/libalpm/hooks/
+
+  python -m compileall -s "$pkgdir" -p / "$pkgdir"/usr/lib
 }
-conflicts=("unbound")
