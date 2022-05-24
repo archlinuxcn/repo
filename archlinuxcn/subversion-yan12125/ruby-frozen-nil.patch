@@ -1,0 +1,42 @@
+commit 6c69127693e9e395c026d982f871253548037a4d
+Author: James McCoy <jamessan@debian.org>
+Date:   Sun Nov 8 23:06:45 2015 -0500
+
+    Create a new Ruby Object instead of attempting to modify nil.
+    
+    Starting in Ruby 2.2, the nil, true, and false objects are frozen.  This
+    was causing test_repos.rb's test_load to fail due to calling
+    "repos.load_fs(nil)".  This results in svn_swig_rb_make_stream trying to
+    attributes on nil, which isn't allowed.
+    
+    * subversion/bindings/swig/ruby/libsvn_swig_ruby/swigutil_rb.c:
+      (svn_swig_rb_make_stream): Create a new Object if the given io is nil.
+       Also call svn_swig_rb_get_pool in order to deduplicate some
+       pool-handling code.
+
+diff --git a/subversion/bindings/swig/ruby/libsvn_swig_ruby/swigutil_rb.c b/subversion/bindings/swig/ruby/libsvn_swig_ruby/swigutil_rb.c
+index a25ec5a..2210853 100644
+--- a/subversion/bindings/swig/ruby/libsvn_swig_ruby/swigutil_rb.c
++++ b/subversion/bindings/swig/ruby/libsvn_swig_ruby/swigutil_rb.c
+@@ -3230,14 +3230,16 @@ svn_swig_rb_make_stream(VALUE io)
+     stream_p = &stream;
+     r2c_swig_type2(io, "svn_stream_t *", (void **)stream_p);
+   } else {
++    if (NIL_P(io)) {
++      io = rb_class_new_instance(0, NULL, rb_cObject);
++    }
+     VALUE rb_pool = rb_pool_new(Qnil);
+-    apr_pool_wrapper_t *pool_wrapper;
+-    apr_pool_wrapper_t **pool_wrapper_p;
++    apr_pool_t *pool;
++
++    svn_swig_rb_get_pool(0, NULL, io, &rb_pool, &pool);
+ 
+     rb_set_pool(io, rb_pool);
+-    pool_wrapper_p = &pool_wrapper;
+-    r2c_swig_type2(rb_pool, "apr_pool_wrapper_t *", (void **)pool_wrapper_p);
+-    stream = svn_stream_create((void *)io, pool_wrapper->pool);
++    stream = svn_stream_create((void *)io, pool);
+     svn_stream_set_read2(stream, NULL /* only full read support */,
+                          read_handler_rbio);
+     svn_stream_set_write(stream, write_handler_rbio);

@@ -1,0 +1,11 @@
+service svn
+{
+	flags			= REUSE
+	socket_type		= stream
+	wait			= no
+	user			= root
+	server			= /usr/bin/svnserve
+	server_args		= -i
+	log_on_failure		+= USERID
+	disable			= yes
+}

@@ -1,0 +1,11 @@
+--- Makefile.in.orig	2009-02-16 14:10:48.000000000 -0200
++++ Makefile.in	2009-06-04 00:56:29.000000000 -0300
+@@ -678,6 +678,7 @@
+ 
+ $(SWIG_PL_DIR)/native/Makefile: $(SWIG_PL_DIR)/native/Makefile.PL
+ 	cd $(SWIG_PL_DIR)/native; $(PERL) Makefile.PL PREFIX=$(prefix)
++	cd $(SWIG_PL_DIR)/native; sed -i 's|LD_RUN_PATH|DIE_RPATH_DIE|g' Makefile{,.{client,delta,fs,ra,repos,wc}}
+ 
+ # There is a "readlink -f" command on some systems for the same purpose,
+ # but it's not as portable (e.g. Mac OS X doesn't have it).  These should
+ # only be used where Python/Perl are known to be available.
