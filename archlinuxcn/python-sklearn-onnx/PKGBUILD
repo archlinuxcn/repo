@@ -2,7 +2,7 @@
 
 _pkgname=sklearn-onnx
 pkgname=python-sklearn-onnx
-pkgver=1.11.1
+pkgver=1.11.2
 pkgrel=1
 pkgdesc='Convert scikit-learn models and pipelines to ONNX'
 arch=('any')
@@ -20,7 +20,7 @@ makedepends=(
   python-setuptools
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/onnx/sklearn-onnx/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('0b45e70d3e29e2c22c8586803392b40f3eb979439c3ac7249d0c61ff09801a98')
+sha256sums=('21ad237a6a122779df9693f4236a92aaf080e05e4472aef2ca8770160b1fe3ba')
 
 build() {
   cd "${_pkgname}-${pkgver}"
