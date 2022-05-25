@@ -6,12 +6,12 @@ _pkgname=audio
 pkgver=0.11.0
 pkgrel=1
 pkgdesc="Data manipulation and transformation for audio signal processing, powered by PyTorch"
-arch=('any')
+arch=('x86_64' 'i686')
 url="https://github.com/pytorch/audio"
 license=('BSD')
 depends=('python' 'python-pytorch')
 optdepends=('python-kaldi-io')
-makedepends=('git' 'python-setuptools' 'cmake' 'ninja')
+makedepends=('git' 'python-setuptools' 'cmake' 'ninja' 'gcc11')
 conflicts=('python-torchaudio-git')
 source=("git+$url#tag=v${pkgver}")
 sha512sums=('SKIP')
@@ -25,6 +25,15 @@ prepare() {
 
 build() {
   cd "$srcdir/${_pkgname}"
+
+  # Allow this to build with CUDA, which is not compatible with GCC 12 yet
+  export CC=/usr/bin/gcc-11
+  export CXX=/usr/bin/g++-11
+  export CUDAHOSTCXX=$CXX
+  # Follow architectures used by pytorch
+  # https://github.com/archlinux/svntogit-community/blob/packages/python-pytorch/trunk/PKGBUILD
+  export TORCH_CUDA_ARCH_LIST="5.2;6.0;6.2;7.0;7.2;7.5;8.0;8.6;8.6+PTX"
+
   CUDA_HOME=/opt/cuda/ BUILD_SOX=1 python setup.py build
 }
 
