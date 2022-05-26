@@ -1,7 +1,7 @@
 # Maintainer: Antonin Décimo <antonin dot decimo at gmail dot com>
 # Contributor: Adrian Perez de Castro <aperez@igalia.com>
 pkgname=wlroots-hidpi-git
-pkgver=0.16.0.r5505.4ac19e9f9
+pkgver=0.16.0.r5519.1cb6b2cf
 pkgrel=1
 license=(custom:MIT)
 pkgdesc='Modular Wayland compositor library, with XWayland HiDPI (git version)'
@@ -54,7 +54,7 @@ pkgver () {
 	(
 		set -o pipefail
 		cd "${pkgname}"
-		cat meson.build | awk 'match($0, /version:\s*'\''([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)'\''/, ret) {printf "%s",ret[1]}'
+		cat meson.build | awk 'match($0, /version:\s*'\''([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)(-.*)?'\''/, ret) {printf "%s",ret[1]}'
 		printf ".r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 	)
 }
