@@ -16,7 +16,7 @@ pkgname=(
   qemu-guest-agent-git
 )
 pkgdesc="A generic and open source machine emulator and virtualizer. Git version."
-pkgver=7.0.0.r1245.g58b53669e8
+pkgver=7.0.0.r1253.g2417cbd591
 pkgrel=1
 epoch=16
 arch=(i686 x86_64)
@@ -200,7 +200,7 @@ package_qemu-git() {
     'brltty: for braille device support'
     'qemu-arch-extra-git: extra architectures support'
   )
-  conflicts=('qemu-headless' 'qemu')
+  conflicts=('qemu-headless' 'qemu' 'qemu-desktop')
   provides=('qemu-headless' 'qemu')
   replaces=(qemu-kvm)
 
@@ -247,7 +247,7 @@ package_qemu-headless-git() {
     zstd libzstd.so
   )
   optdepends=('qemu-headless-arch-extra-git: extra architectures support')
-  conflicts=('qemu-headless' 'qemu')
+  conflicts=('qemu-headless' 'qemu' 'qemu-base')
   provides=('qemu-headless' 'qemu')
   replaces=(qemu-kvm)
 
@@ -370,7 +370,7 @@ package_qemu-arch-extra-git() {
   )
   options=(!strip)
   provides=(qemu-arch-extra)
-  conflicts=(qemu-arch-extra)
+  conflicts=(qemu-arch-extra qemu-emulators-full)
 
   mv -v "$srcdir/$_gitname/extra-arch-full/usr" "$pkgdir"
 }
@@ -408,7 +408,7 @@ package_qemu-headless-arch-extra-git() {
     'edk2-ovmf: for ia32 and x64 UEFI support'
   )
   options=(!strip)
-  conflicts=(qemu-headless-arch-extra)
+  conflicts=(qemu-headless-arch-extra qemu-emulators-full)
   provides=(qemu-headless-arch-extra)
 
   mv -v "$srcdir/$_gitname/extra-arch-headless/usr" "$pkgdir"
