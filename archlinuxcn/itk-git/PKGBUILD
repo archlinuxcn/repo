@@ -10,7 +10,7 @@ arch=('x86_64')
 url='https://www.itk.org'
 license=('Apache')
 depends=(
-  castxml
+  #castxml
   dcmtk
   eigen
   expat
@@ -54,7 +54,7 @@ build() {
     -DCMAKE_SKIP_INSTALL_RPATH=ON
     -DITK_BUILD_DEFAULT_MODULES=ON
     -DITK_USE_MKL=ON
-    -DITK_USE_SYSTEM_CASTXML=ON
+    -DITK_USE_SYSTEM_CASTXML=OFF
     -DITK_USE_SYSTEM_DCMTK=ON
     -DITK_USE_SYSTEM_DOUBLECONVERSION=OFF
     -DITK_USE_SYSTEM_EIGEN=ON
@@ -82,13 +82,10 @@ build() {
     -DITK_WRAP_unsigned_long_long=ON
     -DITK_WRAP_unsigned_short=ON
     -DITK_WRAP_vector_double=ON
-    -DModule_ITKImageIO=ON
-    -DModule_ITKMeshIO=ON
-    -DModule_ITKTransformIO=ON
-    -DModule_MorphologicalContourInterpolation=ON
 )
 
   cmake -B "build" -S "${srcdir}/${_pkgname}" \
+    -DCMAKE_CXX_FLAGS="-fno-sized-deallocation" \
     ${cmake_opts[@]} \
     -DITK_USE_GPU=ON
   make -C "${srcdir}/build"
