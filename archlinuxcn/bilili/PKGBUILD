@@ -2,7 +2,7 @@
 # Contributor: Yufan You <ouuansteve at gmail>
 
 pkgname=bilili
-pkgver=1.4.11
+pkgver=1.4.12
 pkgrel=1
 pkgdesc='bilibili video (including bangumi) and danmaku downloader'
 arch=('any')
@@ -11,7 +11,7 @@ license=('GPL3')
 depends=('python-requests' 'python-biliass' 'ffmpeg')
 makedepends=('python-setuptools' 'python-wheel')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('7d4088370bc4c26252c491e0a4a87bdb4e7a35aedadba2c2084c7307d6885e07')
+sha256sums=('53ad433c7d54469fd4911bd8b6f7a73d711efb4eb15915afcab3ce3e9e4b9ab9')
 prepare(){
   cd "$pkgname-$pkgver"
   rm tests -r
