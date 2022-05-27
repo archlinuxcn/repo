@@ -1,0 +1,427 @@
+diff --git a/include/types/wlr_xdg_shell.h b/include/types/wlr_xdg_shell.h
+index cfed6ee1..37ef2a95 100644
+--- a/include/types/wlr_xdg_shell.h
++++ b/include/types/wlr_xdg_shell.h
+@@ -26,6 +26,10 @@ void create_xdg_popup(struct wlr_xdg_surface *surface,
+ void unmap_xdg_popup(struct wlr_xdg_popup *popup);
+ void destroy_xdg_popup(struct wlr_xdg_popup *popup);
+ void handle_xdg_popup_committed(struct wlr_xdg_popup *popup);
++struct wlr_xdg_popup_configure *send_xdg_popup_configure(
++	struct wlr_xdg_popup *popup);
++void handle_xdg_popup_ack_configure(struct wlr_xdg_popup *popup,
++	struct wlr_xdg_popup_configure *configure);
+ 
+ void create_xdg_toplevel(struct wlr_xdg_surface *surface,
+ 	uint32_t id);
+diff --git a/include/wlr/types/wlr_xdg_shell.h b/include/wlr/types/wlr_xdg_shell.h
+index 51ba0584..04463d2c 100644
+--- a/include/wlr/types/wlr_xdg_shell.h
++++ b/include/wlr/types/wlr_xdg_shell.h
+@@ -56,9 +56,14 @@ struct wlr_xdg_positioner_rules {
+ 	enum xdg_positioner_gravity gravity;
+ 	enum xdg_positioner_constraint_adjustment constraint_adjustment;
+ 
++	bool reactive;
++
++	bool has_parent_configure_serial;
++	uint32_t parent_configure_serial;
++
+ 	struct {
+ 		int32_t width, height;
+-	} size;
++	} size, parent_size;
+ 
+ 	struct {
+ 		int32_t x, y;
+@@ -70,6 +75,22 @@ struct wlr_xdg_positioner {
+ 	struct wlr_xdg_positioner_rules rules;
+ };
+ 
++struct wlr_xdg_popup_state {
++	// Position of the popup relative to the upper left corner of
++	// the window geometry of the parent surface
++	struct wlr_box geometry;
++
++	bool reactive;
++};
++
++struct wlr_xdg_popup_configure {
++	struct wlr_box geometry;
++	struct wlr_xdg_positioner_rules rules;
++
++	bool has_reposition_token;
++	uint32_t reposition_token;
++};
++
+ struct wlr_xdg_popup {
+ 	struct wlr_xdg_surface *base;
+ 	struct wl_list link;
+@@ -79,11 +100,13 @@ struct wlr_xdg_popup {
+ 	struct wlr_surface *parent;
+ 	struct wlr_seat *seat;
+ 
+-	// Position of the popup relative to the upper left corner of the window
+-	// geometry of the parent surface
+-	struct wlr_box geometry;
++	struct wlr_xdg_popup_configure scheduled;
++
++	struct wlr_xdg_popup_state current, pending;
+ 
+-	struct wlr_xdg_positioner_rules positioner_rules;
++	struct {
++		struct wl_signal reposition;
++	} events;
+ 
+ 	struct wl_list grab_link; // wlr_xdg_popup_grab.popups
+ };
+@@ -173,7 +196,10 @@ struct wlr_xdg_surface_configure {
+ 	struct wl_list link; // wlr_xdg_surface.configure_list
+ 	uint32_t serial;
+ 
+-	struct wlr_xdg_toplevel_configure *toplevel_configure;
++	union {
++		struct wlr_xdg_toplevel_configure *toplevel_configure;
++		struct wlr_xdg_popup_configure *popup_configure;
++	};
+ };
+ 
+ struct wlr_xdg_surface_state {
+diff --git a/tinywl/tinywl.c b/tinywl/tinywl.c
+index bf3fb433..d8e171e1 100644
+--- a/tinywl/tinywl.c
++++ b/tinywl/tinywl.c
+@@ -860,14 +860,14 @@ int main(int argc, char *argv[]) {
+ 	server.scene = wlr_scene_create();
+ 	wlr_scene_attach_output_layout(server.scene, server.output_layout);
+ 
+-	/* Set up xdg-shell version 2. The xdg-shell is a Wayland protocol which is
++	/* Set up xdg-shell version 3. The xdg-shell is a Wayland protocol which is
+ 	 * used for application windows. For more detail on shells, refer to my
+ 	 * article:
+ 	 *
+ 	 * https://drewdevault.com/2018/07/29/Wayland-shells.html
+ 	 */
+ 	wl_list_init(&server.views);
+-	server.xdg_shell = wlr_xdg_shell_create(server.wl_display, 2);
++	server.xdg_shell = wlr_xdg_shell_create(server.wl_display, 3);
+ 	server.new_xdg_surface.notify = server_new_xdg_surface;
+ 	wl_signal_add(&server.xdg_shell->events.new_surface,
+ 			&server.new_xdg_surface);
+diff --git a/types/scene/xdg_shell.c b/types/scene/xdg_shell.c
+index 9b3ad71c..909719d1 100644
+--- a/types/scene/xdg_shell.c
++++ b/types/scene/xdg_shell.c
+@@ -60,7 +60,7 @@ static void scene_xdg_surface_update_position(
+ 	if (xdg_surface->role == WLR_XDG_SURFACE_ROLE_POPUP) {
+ 		struct wlr_xdg_popup *popup = xdg_surface->popup;
+ 		wlr_scene_node_set_position(&scene_xdg_surface->tree->node,
+-			popup->geometry.x, popup->geometry.y);
++			popup->current.geometry.x, popup->current.geometry.y);
+ 	}
+ }
+ 
+diff --git a/types/wlr_layer_shell_v1.c b/types/wlr_layer_shell_v1.c
+index 107dac63..038ea1d8 100644
+--- a/types/wlr_layer_shell_v1.c
++++ b/types/wlr_layer_shell_v1.c
+@@ -552,16 +552,15 @@ void wlr_layer_surface_v1_for_each_surface(struct wlr_layer_surface_v1 *surface,
+ 
+ void wlr_layer_surface_v1_for_each_popup_surface(struct wlr_layer_surface_v1 *surface,
+ 		wlr_surface_iterator_func_t iterator, void *user_data){
+-	struct wlr_xdg_popup *popup_state;
+-	wl_list_for_each(popup_state, &surface->popups, link) {
+-		struct wlr_xdg_surface *popup = popup_state->base;
+-		if (!popup->configured || !popup->mapped) {
++	struct wlr_xdg_popup *popup;
++	wl_list_for_each(popup, &surface->popups, link) {
++		if (!popup->base->configured || !popup->base->mapped) {
+ 			continue;
+ 		}
+ 
+ 		double popup_sx, popup_sy;
+-		popup_sx = popup->popup->geometry.x - popup->current.geometry.x;
+-		popup_sy = popup->popup->geometry.y - popup->current.geometry.y;
++		popup_sx = popup->current.geometry.x - popup->base->current.geometry.x;
++		popup_sy = popup->current.geometry.y - popup->base->current.geometry.y;
+ 
+ 		struct layer_surface_iterator_data data = {
+ 			.user_iterator = iterator,
+@@ -569,7 +568,8 @@ void wlr_layer_surface_v1_for_each_popup_surface(struct wlr_layer_surface_v1 *su
+ 			.x = popup_sx, .y = popup_sy,
+ 		};
+ 
+-		wlr_xdg_surface_for_each_surface(popup, layer_surface_iterator, &data);
++		wlr_xdg_surface_for_each_surface(popup->base,
++			layer_surface_iterator, &data);
+ 	}
+ }
+ 
+@@ -587,20 +587,18 @@ struct wlr_surface *wlr_layer_surface_v1_surface_at(
+ struct wlr_surface *wlr_layer_surface_v1_popup_surface_at(
+ 		struct wlr_layer_surface_v1 *surface, double sx, double sy,
+ 		double *sub_x, double *sub_y) {
+-	struct wlr_xdg_popup *popup_state;
+-	wl_list_for_each(popup_state, &surface->popups, link) {
+-		struct wlr_xdg_surface *popup = popup_state->base;
+-		if (!popup->mapped) {
++	struct wlr_xdg_popup *popup;
++	wl_list_for_each(popup, &surface->popups, link) {
++		if (!popup->base->mapped) {
+ 			continue;
+ 		}
+ 
+-		double popup_sx = popup_state->geometry.x - popup->current.geometry.x;
+-		double popup_sy = popup_state->geometry.y - popup->current.geometry.y;
++		double popup_sx, popup_sy;
++		popup_sx = popup->current.geometry.x - popup->base->current.geometry.x;
++		popup_sy = popup->current.geometry.y - popup->base->current.geometry.y;
+ 
+-		struct wlr_surface *sub = wlr_xdg_surface_surface_at(popup,
+-			sx - popup_sx,
+-			sy - popup_sy,
+-			sub_x, sub_y);
++		struct wlr_surface *sub = wlr_xdg_surface_surface_at(
++			popup->base, sx - popup_sx, sy - popup_sy, sub_x, sub_y);
+ 		if (sub != NULL) {
+ 			return sub;
+ 		}
+diff --git a/types/xdg_shell/wlr_xdg_popup.c b/types/xdg_shell/wlr_xdg_popup.c
+index 973a339b..5f8cd454 100644
+--- a/types/xdg_shell/wlr_xdg_popup.c
++++ b/types/xdg_shell/wlr_xdg_popup.c
+@@ -4,6 +4,37 @@
+ #include "types/wlr_xdg_shell.h"
+ #include "util/signal.h"
+ 
++void handle_xdg_popup_ack_configure(
++		struct wlr_xdg_popup *popup,
++		struct wlr_xdg_popup_configure *configure) {
++	popup->pending.geometry = configure->geometry;
++	popup->pending.reactive = configure->rules.reactive;
++}
++
++struct wlr_xdg_popup_configure *send_xdg_popup_configure(
++		struct wlr_xdg_popup *popup) {
++	struct wlr_xdg_popup_configure *configure =
++		calloc(1, sizeof(*configure));
++	if (configure == NULL) {
++		wl_resource_post_no_memory(popup->resource);
++		return NULL;
++	}
++	*configure = popup->scheduled;
++
++	if (popup->scheduled.has_reposition_token) {
++		popup->scheduled.has_reposition_token = false;
++		xdg_popup_send_repositioned(popup->resource,
++			popup->scheduled.reposition_token);
++	}
++
++	struct wlr_box *geometry = &configure->geometry;
++	xdg_popup_send_configure(popup->resource,
++		geometry->x, geometry->y,
++		geometry->width, geometry->height);
++
++	return configure;
++}
++
+ static void xdg_popup_grab_end(struct wlr_xdg_popup_grab *popup_grab) {
+ 	struct wlr_xdg_popup *popup, *tmp;
+ 	wl_list_for_each_safe(popup, tmp, &popup_grab->popups, grab_link) {
+@@ -214,7 +245,10 @@ void handle_xdg_popup_committed(struct wlr_xdg_popup *popup) {
+ 	if (!popup->committed) {
+ 		wlr_xdg_surface_schedule_configure(popup->base);
+ 		popup->committed = true;
++		return;
+ 	}
++
++	popup->current = popup->pending;
+ }
+ 
+ static const struct xdg_popup_interface xdg_popup_implementation;
+@@ -267,6 +301,28 @@ static void xdg_popup_handle_grab(struct wl_client *client,
+ 		&popup_grab->touch_grab);
+ }
+ 
++static void xdg_popup_handle_reposition(
++		struct wl_client *client, struct wl_resource *resource,
++		struct wl_resource *positioner_resource, uint32_t token) {
++	struct wlr_xdg_popup *popup =
++		wlr_xdg_popup_from_resource(resource);
++	if (!popup) {
++		return;
++	}
++
++	struct wlr_xdg_positioner *positioner =
++		wlr_xdg_positioner_from_resource(positioner_resource);
++	wlr_xdg_positioner_rules_get_geometry(
++		&positioner->rules, &popup->scheduled.geometry);
++	popup->scheduled.rules = positioner->rules;
++	popup->scheduled.has_reposition_token = true;
++	popup->scheduled.reposition_token = token;
++
++	wlr_xdg_surface_schedule_configure(popup->base);
++
++	wlr_signal_emit_safe(&popup->events.reposition, NULL);
++}
++
+ static void xdg_popup_handle_destroy(struct wl_client *client,
+ 		struct wl_resource *resource) {
+ 	struct wlr_xdg_popup *popup =
+@@ -285,6 +341,7 @@ static void xdg_popup_handle_destroy(struct wl_client *client,
+ static const struct xdg_popup_interface xdg_popup_implementation = {
+ 	.destroy = xdg_popup_handle_destroy,
+ 	.grab = xdg_popup_handle_grab,
++	.reposition = xdg_popup_handle_reposition,
+ };
+ 
+ static void xdg_popup_handle_resource_destroy(struct wl_resource *resource) {
+@@ -348,10 +405,11 @@ void create_xdg_popup(struct wlr_xdg_surface *surface,
+ 
+ 	surface->role = WLR_XDG_SURFACE_ROLE_POPUP;
+ 
+-	memcpy(&surface->popup->positioner_rules,
+-		&positioner->rules, sizeof(positioner->rules));
+ 	wlr_xdg_positioner_rules_get_geometry(
+-		&positioner->rules, &surface->popup->geometry);
++		&positioner->rules, &surface->popup->scheduled.geometry);
++	surface->popup->scheduled.rules = positioner->rules;
++
++	wl_signal_init(&surface->popup->events.reposition);
+ 
+ 	if (parent) {
+ 		surface->popup->parent = parent->surface;
+@@ -380,7 +438,7 @@ void unmap_xdg_popup(struct wlr_xdg_popup *popup) {
+ 			if (grab->seat->touch_state.grab == &grab->touch_grab) {
+ 				wlr_seat_touch_end_grab(grab->seat);
+ 			}
+-			
++
+ 			destroy_xdg_popup_grab(grab);
+ 		}
+ 
+@@ -417,8 +475,8 @@ void wlr_xdg_popup_get_toplevel_coords(struct wlr_xdg_popup *popup,
+ 			wlr_xdg_surface_from_wlr_surface(parent);
+ 
+ 		if (xdg_surface->role == WLR_XDG_SURFACE_ROLE_POPUP) {
+-			popup_sx += xdg_surface->popup->geometry.x;
+-			popup_sy += xdg_surface->popup->geometry.y;
++			popup_sx += xdg_surface->popup->current.geometry.x;
++			popup_sy += xdg_surface->popup->current.geometry.y;
+ 			parent = xdg_surface->popup->parent;
+ 		} else {
+ 			popup_sx += xdg_surface->current.geometry.x;
+@@ -443,6 +501,7 @@ void wlr_xdg_popup_unconstrain_from_box(struct wlr_xdg_popup *popup,
+ 		.width = toplevel_space_box->width,
+ 		.height = toplevel_space_box->height,
+ 	};
+-	wlr_xdg_positioner_rules_unconstrain_box(&popup->positioner_rules,
+-		&popup_constraint, &popup->geometry);
++	wlr_xdg_positioner_rules_unconstrain_box(&popup->scheduled.rules,
++		&popup_constraint, &popup->scheduled.geometry);
++	wlr_xdg_surface_schedule_configure(popup->base);
+ }
+diff --git a/types/xdg_shell/wlr_xdg_positioner.c b/types/xdg_shell/wlr_xdg_positioner.c
+index eff81ea3..6a991bba 100644
+--- a/types/xdg_shell/wlr_xdg_positioner.c
++++ b/types/xdg_shell/wlr_xdg_positioner.c
+@@ -95,6 +95,34 @@ static void xdg_positioner_handle_set_offset(struct wl_client *client,
+ 	positioner->rules.offset.y = y;
+ }
+ 
++static void xdg_positioner_handle_set_reactive(
++		struct wl_client *client, struct wl_resource *resource) {
++	struct wlr_xdg_positioner *positioner =
++		wlr_xdg_positioner_from_resource(resource);
++
++	positioner->rules.reactive = true;
++}
++
++static void xdg_positioner_handle_set_parent_configure(
++		struct wl_client *client, struct wl_resource *resource,
++		uint32_t serial) {
++	struct wlr_xdg_positioner *positioner =
++		wlr_xdg_positioner_from_resource(resource);
++
++	positioner->rules.has_parent_configure_serial = true;
++	positioner->rules.parent_configure_serial = serial;
++}
++
++static void xdg_positioner_handle_set_parent_size(struct wl_client *client,
++		struct wl_resource *resource,
++		int32_t parent_width, int32_t parent_height) {
++	struct wlr_xdg_positioner *positioner =
++		wlr_xdg_positioner_from_resource(resource);
++
++	positioner->rules.parent_size.width = parent_width;
++	positioner->rules.parent_size.height = parent_height;
++}
++
+ static void xdg_positioner_handle_destroy(struct wl_client *client,
+ 		struct wl_resource *resource) {
+ 	wl_resource_destroy(resource);
+@@ -110,6 +138,9 @@ static const struct xdg_positioner_interface
+ 	.set_constraint_adjustment =
+ 		xdg_positioner_handle_set_constraint_adjustment,
+ 	.set_offset = xdg_positioner_handle_set_offset,
++	.set_reactive = xdg_positioner_handle_set_reactive,
++	.set_parent_size = xdg_positioner_handle_set_parent_size,
++	.set_parent_configure = xdg_positioner_handle_set_parent_configure,
+ };
+ 
+ static void xdg_positioner_handle_resource_destroy(
+diff --git a/types/xdg_shell/wlr_xdg_shell.c b/types/xdg_shell/wlr_xdg_shell.c
+index 0d40b553..7e6bf5f8 100644
+--- a/types/xdg_shell/wlr_xdg_shell.c
++++ b/types/xdg_shell/wlr_xdg_shell.c
+@@ -3,7 +3,7 @@
+ #include "types/wlr_xdg_shell.h"
+ #include "util/signal.h"
+ 
+-#define WM_BASE_VERSION 2
++#define WM_BASE_VERSION 3
+ 
+ static const struct xdg_wm_base_interface xdg_shell_impl;
+ 
+diff --git a/types/xdg_shell/wlr_xdg_surface.c b/types/xdg_shell/wlr_xdg_surface.c
+index 73ed66c9..9ea8fa33 100644
+--- a/types/xdg_shell/wlr_xdg_surface.c
++++ b/types/xdg_shell/wlr_xdg_surface.c
+@@ -107,9 +107,11 @@ static void xdg_surface_handle_ack_configure(struct wl_client *client,
+ 		break;
+ 	case WLR_XDG_SURFACE_ROLE_TOPLEVEL:
+ 		handle_xdg_toplevel_ack_configure(surface->toplevel,
+-				configure->toplevel_configure);
++			configure->toplevel_configure);
+ 		break;
+ 	case WLR_XDG_SURFACE_ROLE_POPUP:
++		handle_xdg_popup_ack_configure(surface->popup,
++			configure->popup_configure);
+ 		break;
+ 	}
+ 
+@@ -145,11 +147,8 @@ static void surface_send_configure(void *user_data) {
+ 			send_xdg_toplevel_configure(surface->toplevel);
+ 		break;
+ 	case WLR_XDG_SURFACE_ROLE_POPUP:
+-		xdg_popup_send_configure(surface->popup->resource,
+-			surface->popup->geometry.x,
+-			surface->popup->geometry.y,
+-			surface->popup->geometry.width,
+-			surface->popup->geometry.height);
++		configure->popup_configure =
++			send_xdg_popup_configure(surface->popup);
+ 		break;
+ 	}
+ 
+@@ -465,9 +464,9 @@ void wlr_xdg_popup_get_position(struct wlr_xdg_popup *popup,
+ 		wlr_xdg_surface_from_wlr_surface(popup->parent);
+ 	struct wlr_box parent_geo;
+ 	wlr_xdg_surface_get_geometry(parent, &parent_geo);
+-	*popup_sx = parent_geo.x + popup->geometry.x -
++	*popup_sx = parent_geo.x + popup->current.geometry.x -
+ 		popup->base->current.geometry.x;
+-	*popup_sy = parent_geo.y + popup->geometry.y -
++	*popup_sy = parent_geo.y + popup->current.geometry.y -
+ 		popup->base->current.geometry.y;
+ }
+ 
