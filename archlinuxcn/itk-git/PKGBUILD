@@ -21,14 +21,14 @@ depends=(
   kwiml-git
   libpng
   libtiff
-  ocl-icd
+#  ocl-icd
   vxl
 )
 makedepends=(
   cmake
   git
   gtest
-  opencl-headers
+#  opencl-headers
   subversion
   swig
 )
@@ -87,7 +87,7 @@ build() {
   cmake -B "build" -S "${srcdir}/${_pkgname}" \
     -DCMAKE_CXX_FLAGS="-fno-sized-deallocation" \
     ${cmake_opts[@]} \
-    -DITK_USE_GPU=ON
+    -DITK_USE_GPU=OFF
   make -C "${srcdir}/build"
 }
 
