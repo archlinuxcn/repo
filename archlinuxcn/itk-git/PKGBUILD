@@ -3,7 +3,7 @@
 _pkgname=ITK
 pkgname=(itk-git python-itk-git)
 _pkgver=5.3
-pkgver=5.3.r53887.c7f80fc195
+pkgver=5.3.r53971.ee664da6bb
 pkgrel=1
 pkgdesc='An open-source toolkit for multidimensional image analysis'
 arch=('x86_64')
@@ -21,14 +21,14 @@ depends=(
   kwiml-git
   libpng
   libtiff
-  ocl-icd
+#  ocl-icd
   vxl
 )
 makedepends=(
   cmake
   git
   gtest
-  opencl-headers
+#  opencl-headers
   subversion
   swig
 )
@@ -87,7 +87,7 @@ build() {
   cmake -B "build" -S "${srcdir}/${_pkgname}" \
     -DCMAKE_CXX_FLAGS="-fno-sized-deallocation" \
     ${cmake_opts[@]} \
-    -DITK_USE_GPU=ON
+    -DITK_USE_GPU=OFF
   make -C "${srcdir}/build"
 }
 

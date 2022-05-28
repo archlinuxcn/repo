@@ -1,7 +1,7 @@
 # Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
 pkgname=apostrophe
 pkgver=2.6.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A distraction free Markdown editor for GNU/Linux made with GTK+"
 arch=('any')
 url="https://world.pages.gitlab.gnome.org/apostrophe"
@@ -21,9 +21,9 @@ prepare() {
   cd "$pkgname-v$pkgver"
 
   # Bug 1953395 - Apostrophe can't export to HTML
-  sed -i 's|/app/share/fonts/FiraSans-Regular.ttf|/usr/share/fonts/mozilla-fira/FiraSans-Regular.otf|' \
+  sed -i 's|/app/share/fonts/FiraSans-Regular.ttf|/usr/share/fonts/OTF/FiraSans-Regular.otf|' \
     data/media/css/web/base.css
-  sed -i 's|/app/share/fonts/FiraMono-Regular.ttf|/usr/share/fonts/mozilla-fira/FiraMono-Regular.otf|' \
+  sed -i 's|/app/share/fonts/FiraMono-Regular.ttf|/usr/share/fonts/OTF/FiraMono-Regular.otf|' \
     data/media/css/web/base.css
 
   # W: hidden-file-or-dir
