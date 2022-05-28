@@ -3,7 +3,7 @@
 _pkgname=devtools
 pkgname=devtools-archlinuxcn
 pkgver=20200407
-pkgrel=1
+pkgrel=2
 pkgdesc='Tools for Arch Linux package maintainers, archlinuxcn fork'
 arch=('any')
 license=('GPL')
@@ -15,8 +15,9 @@ optdepends=('btrfs-progs: btrfs support')
 provides=("devtools=$pkgver-$pkgrel")
 conflicts=("devtools")
 source=(https://sources.archlinux.org/other/${_pkgname}/${_pkgname}-${pkgver}.tar.gz{,.sig}
-        "no-yes-y.patch::https://git.archlinux.org/devtools.git/patch/?id=b7893a2ca8e09062197129881bce3fd6700a573a"
-        "unshare-pacstrap.patch")
+        "no-yes-y.patch"
+        "unshare-pacstrap.patch"
+        "arch-nspawn-read-CacheDir-from-host.patch")
 
 validpgpkeys=('487EACC08557AD082088DABA1EB2638FF56C0C53'
               '4AA4767BBC9C4B1D18AE28B77F2D434B9741E8AC'
@@ -30,12 +31,15 @@ validpgpkeys=('487EACC08557AD082088DABA1EB2638FF56C0C53'
 b2sums=('01ff4d17a9502df468d545e273e94ab7d7b6817efa6d7f2fe661b4a978a5051a03a8a04ea1e82902b30988413f32f65afdf49a234d82ab05fa510ffc52f62e02'
         'SKIP'
         '2da933aa8a0bce8acab22fcbdf857462a28bb313e4554b73cf4cb02dafb40ad124b71e5666cd88257dee8a1721a57e6659581026ab2ff21aa2c257df2397db0c'
-        'ad659b04b7b7a9111ceace6629e971ef775e73a2b68a82dc13d3dd5b732f3e7a056b3328fab54fa6b16e520212e4b5a6d5d27e1b0b87d10495c89a17ff130fc5')
+        'ad659b04b7b7a9111ceace6629e971ef775e73a2b68a82dc13d3dd5b732f3e7a056b3328fab54fa6b16e520212e4b5a6d5d27e1b0b87d10495c89a17ff130fc5'
+        '158a1e7608d804649b74e21ed54d5d8fd0f8f191eeb73f09347b9bc4795dd9cb88e68a25e37434a4ed7d964d2acae355b671953ed01ba1ca638a307bf9d5d7d1')
 
 prepare() {
   cd ${_pkgname}-${pkgver}
   patch -RNp1 -i ../no-yes-y.patch
   patch -Np1 -i ../unshare-pacstrap.patch
+  # Manual backport for devtools 20200407 from https://gitlab.archlinux.org/archlinux/devtools/-/merge_requests/95
+  patch -Np1 -i ../arch-nspawn-read-CacheDir-from-host.patch
 
   ## silent while show errors for curl
   sed "s|bin/curl -g|bin/curl -sS -g|g" -i makepkg-x86_64.conf

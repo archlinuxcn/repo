@@ -1,0 +1,33 @@
+From d0847a2a1c5d183d8df9d9c7640a8f8e68455bc8 Mon Sep 17 00:00:00 2001
+From: Evangelos Foutras <evangelos@foutrelis.com>
+Date: Fri, 18 Mar 2022 17:16:24 +0200
+Subject: [PATCH] arch-nspawn: read CacheDir option from host's conf
+
+This went unnoticed on build.archlinux.org until we tried switching away
+from its local /srv/ftp/ mirror. With a remote mirror, the chroots would
+ignore all the cached packages under /srv/ftp/pool/{packages,community}.
+
+With the local file:// mirror gone, arch-nspawn wouldn't mount the cache
+directories from the host into the chroot. The fix is to read the option
+from the host's pacman.conf, instead of the one given to arch-nspawn and
+the one existing inside the working directory.
+---
+ arch-nspawn.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch-nspawn.in b/arch-nspawn.in
+index 275cff7..b6c9cb1 100644
+--- a/arch-nspawn.in
++++ b/arch-nspawn.in
+@@ -50,7 +50,7 @@ shift 1
+ pacconf_cmd=$(command -v pacman-conf || command -v pacconf)
+ 
+ if (( ${#cache_dirs[@]} == 0 )); then
+-	mapfile -t cache_dirs < <($pacconf_cmd --config "${pac_conf:-$working_dir/etc/pacman.conf}" CacheDir)
++	mapfile -t cache_dirs < <($pacconf_cmd CacheDir)
+ fi
+ 
+ # shellcheck disable=2016
+-- 
+GitLab
+
