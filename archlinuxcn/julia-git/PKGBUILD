@@ -60,7 +60,9 @@ source=('git+https://github.com/JuliaLang/julia'
         julia-precompile.hook
         julia-clear-precompile.hook
         arch-source-translate.cpp
-        sysp7z.diff)
+        sysp7z.diff
+        0001-Use-strdup-to-copy-strings.patch
+        0001-Remove-const-qualifier-on-return-type.patch)
 sha512sums=('SKIP'
             '3afb8bd88f82f963be4c9c5f6dfd260b7586e42dd768552189bf649d6431abef0fb63078e5ba2cf4f65a573613d8ac6389509e1ba866388b223eb99152f11678'
             '46078ec275f827010ff81b3aebb04365aab6a14ddda5cf1f1821f14848b589909e1478bfda6b58dd410fa25a86f00cbb2a566d1a967d31abc477062f6e56ad06'
@@ -72,7 +74,9 @@ sha512sums=('SKIP'
             '36df234b634926bc88084e683ee9f495ef0ce4c26d6d6b9f55294098bdcb86f5eaaf6c671afe1a5c4371c428bd7bf3dd617ec1f15a7ff35376d67df22140454c'
             'adf0fef964e8bdee9926f1127177bc0ddea0d2dbb1090ab94555c3599b87cf03b489dfe92fda3453bf68385f4b69556f396b1ecfb8a9525c23a3ed808e2eb370'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
-            '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849')
+            '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849'
+            '10e79339e097a68b47e0353980a89ba0404bb4c96396e2c6f3d2b9abbf4872f79a11cd91d41c4c320f51432a75e197fa3aa9d643fe42d4b9ef72c7e1f5446f08'
+            '02353ed7711597f83d370d6b0d92538ca29ab18252808973c75f07f48cb3f8c1384f8bb4e672f4b971ca53ffca99b77be75d7151a70705e4c21744cf46aef17b')
 
 pkgver() {
   cd julia
@@ -196,6 +200,14 @@ build_in() {
   # These are to workaround bugs in the hand-made build system that can't handle
   # parallel build properly.
   make "${opts[@]}" -C base version_git.jl.phony
+
+  rm -rf deps/scratch
+  make "${opts[@]}" -C deps extract-blastrampoline
+  (
+    cd deps/scratch/blastrampoline-*
+    patch -Np1 < "$srcdir/0001-Use-strdup-to-copy-strings.patch"
+    patch -Np1 < "$srcdir/0001-Remove-const-qualifier-on-return-type.patch"
+  )
   make "${opts[@]}" -C deps
   make "${opts[@]}" -C src jl_internal_funcs.inc
   make "${opts[@]}" julia-cli-release
