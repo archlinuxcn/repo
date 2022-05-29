@@ -1,11 +1,11 @@
 # Maintainer: George Rawlinson <grawlinson@archlinux.org>
 
 pkgname=lemmy
-pkgver=0.16.3
-pkgrel=2
-pkgdesc="A link aggregator for the fediverse"
+pkgver=0.16.4
+pkgrel=1
+pkgdesc='A link aggregator for the fediverse'
 arch=('x86_64')
-url="https://join-lemmy.org"
+url='https://join-lemmy.org'
 license=('AGPL3')
 depends=('gcc-libs' 'openssl' 'postgresql-libs')
 makedepends=('git' 'rust')
@@ -14,7 +14,7 @@ optdepends=(
   'pict-rs: for image hosting backend'
 )
 options=('!lto')
-_commit='c232564fdadd06a66841bfb1ad6aafc7ace51aab'
+_commit='00bf9b4e8f41f3b00f130b063e715633addb638a'
 source=(
   "$pkgname::git+https://github.com/LemmyNet/lemmy.git#commit=$_commit"
   'git+https://github.com/LemmyNet/lemmy-translations.git'
