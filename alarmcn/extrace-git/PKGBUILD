@@ -1,0 +1,34 @@
+# Maintainer: aksr <aksr at t-com dot me>
+pkgname=extrace-git
+pkgver=0.9.r2.g9a0e8ce
+pkgrel=1
+pkgdesc="Trace exec() calls system-wide."
+arch=('i686' 'x86_64' 'aarch64')
+url="https://github.com/chneukirchen/extrace"
+license=('custom')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/chneukirchen/extrace")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/$pkgname"
+  git describe --long | sed -E 's/^v//g;s/([^-]*-g)/r\1/;s/-/./g'
+}
+
+build() {
+  cd "$srcdir/$pkgname"
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+  install -Dm755 extrace $pkgdir/usr/bin/extrace
+  install -Dm644 extrace.1 $pkgdir/usr/share/man/man1/extrace.1
+  mkdir -p $pkgdir/usr/share/licenses/$pkgname/
+  sed '16,49!d' extrace.c > $pkgdir/usr/share/licenses/$pkgname/LICENSE.extrace
+  # conflicts with procps-ng and their implementation is better (uses pidfd)
+  # install -m755 pwait $pkgdir/usr/bin/pwait
+  # install -Dm644 pwait.1 $pkgdir/usr/share/man/man1/pwait.1
+  # sed '10,46!d' pwait.c > $pkgdir/usr/share/licenses/$pkgname/LICENSE.pwait
+}
+
