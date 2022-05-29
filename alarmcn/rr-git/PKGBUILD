@@ -1,0 +1,52 @@
+# Maintainer: dequis <dx@dxzone.com.ar>
+# Previous maintainer: Joel Teichroeb <joel@teichroeb.net>
+
+pkgname=rr-git
+pkgver=5.5.0.r303.g36b4026d
+pkgrel=1
+pkgdesc='a nondeterministic debugger'
+arch=(i686 x86_64 aarch64)
+url='http://rr-project.org/'
+license=('custom')
+depends=(python python-pexpect gdb libcapnp.so libkj.so)
+makedepends=(git cmake capnproto)
+source=('git+https://github.com/mozilla/rr')
+sha1sums=('SKIP')
+provides=('rr')
+conflicts=('rr')
+options=('debug' '!strip')
+
+pkgver() {
+  cd rr
+  git describe --long --tags | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd rr
+  # patch -Np1 < ../
+}
+
+build() {
+  cd rr
+  mkdir -p build
+
+  cd build
+  CPPFLAGS+=" -U_FORTIFY_SOURCE"
+  ASMFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  export ASMFLAGS
+  export CPPFLAGS
+  export CFLAGS
+  export CXXFLAGS
+  # Debug build has `Werror` on
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=Off ..
+  make
+}
+
+package() {
+  cd rr/build
+  make DESTDIR="${pkgdir}" install
+  install -D ../LICENSE "${pkgdir}/usr/share/licenses/rr/LICENSE"
+}
