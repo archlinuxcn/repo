@@ -1,0 +1,17 @@
+#
+
+maintainers:
+  - github: yuyichao
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: vcs
+  - source: alpm-lilac
+    alpm: openlibm-git
+    provided: libopenlibm.so
+  - source: manual
+    manual: 1
+repo_depends:
+  - openlibm-git

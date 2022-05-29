@@ -1,0 +1,133 @@
+# Maintainer: all3fox <all3fox [at] gmail __DoT_ com>
+# Contributor: eolianoe <eolianoe [at] gmail [DoT] com>
+# Contributor: Jiaxi Hu <sftrytry _AT_ gmail _DOT_ com>
+# Contributor: Giuseppe Borzi <gborzi _AT_ ieee _DOT_ org>
+
+pkgbase=openblas-git
+pkgname=(openblas-git openblas-lapack-git)
+pkgver=0.3.20.0.128.g28a24a4d4
+pkgrel=1
+pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD"
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+url="http://xianyi.github.com/OpenBLAS/"
+license=('BSD')
+makedepends=('git' 'perl' 'gcc-fortran')
+options=(!emptydirs debug strip)
+source=("git+https://github.com/xianyi/OpenBLAS")
+md5sums=('SKIP')
+
+_config=(
+  'SMP=1'
+  'USE_OPENMP=1'
+  'USE_THREAD=1'
+  'NUM_THREADS=8'
+  'MAJOR_VERSION=3'
+  'NO_LAPACK=0'
+  'GEMM_MULTITHREADING_THRESHOLD=50'
+  'NO_AFFINITY=1'
+)
+
+case "$CARCH" in
+  x86_64)
+    _config=("${_config[@]}" 'DYNAMIC_ARCH=1' 'NUM_THREAD=64')
+    ;;
+  i686)
+    _config=("${_config[@]}" 'DYNAMIC_ARCH=1' 'NUM_THREAD=64')
+    ;;
+  armv7h)
+    _config=("${_config[@]}" 'TARGET=CORTEXA9' 'NUM_THREAD=64')
+    ;;
+  aarch64)
+    _config=("${_config[@]}" 'DYNAMIC_ARCH=1' 'NUM_THREAD=64')
+    ;;
+  *)
+    echo "Unknown CARCH: ${CARCH}"
+    ;;
+esac
+
+pkgver() {
+  cd OpenBLAS
+
+  _last_tag=$(git describe --tags --abbrev=0)
+  _commit_short=$(git rev-parse --short HEAD)
+  _build_number=$(git rev-list --count HEAD "^$_last_tag")
+  # openblas versions goes as 0.0.1 -> 0.0.1.dev -> 0.0.2
+  # Change the .dev into .1dev so that it is treated as a newer version
+  # after adding the .0.* suffix
+  _ver=$(sed -ne 's/^VERSION\s*=\s*\([^[:space:]]*\).*/\1/p' Makefile.rule |
+      sed -e 's/\.dev/.1dev/')
+
+  printf "%s.0.%s.g%s" "$_ver" "$_build_number" "$_commit_short"
+}
+
+prepare() {
+  cd OpenBLAS
+
+  # patch -Np1 < ../.patch
+}
+
+build() {
+  cd OpenBLAS
+
+  export FFLAGS="-g -O3 -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+
+  # The OpenBLAS build system doesn't handle update very well.
+  git clean -fdx
+  make "${_config[@]}" libs netlib shared 2> error.log || {
+    cat error.log
+    return 1
+  }
+}
+
+package_openblas-git() {
+  depends=('gcc-libs')
+  provides=('openblas')
+  conflicts=('openblas')
+
+  cd OpenBLAS
+
+  make "${_config[@]}" DESTDIR="${pkgdir}" PREFIX="/usr" install &> install.log || {
+    cat install.log
+    return 1
+  }
+
+  # Install license
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+  # Remove reference to ${pkgdir}
+  # sed -i -e "s%${pkgdir}%%" \
+  #     "${pkgdir}/usr/lib/cmake/openblas/OpenBLASConfig.cmake"
+
+  rm "${pkgdir}/usr/include/"{lapack,cblas}*
+}
+
+package_openblas-lapack-git() {
+  depends=('openblas-git')
+  provides=('openblas-lapack')
+  conflicts=('openblas-lapack' 'blas' 'lapack' 'cblas' 'lapacke')
+  rm -rf pkg
+  mkdir -p "${pkgdir}/usr/"{include,lib}/
+  cd OpenBLAS
+
+  _lapack_ver=$(sed -ne 's/^PROJECT_NUMBER\s*=\s*\([0-9][0-9.]*\).*/\1/p' lapack-netlib/DOCS/Doxyfile)
+
+  make "${_config[@]}" DESTDIR="${srcdir}/pkg" PREFIX="/usr" install
+
+  mv "${srcdir}/pkg/usr/include/"{lapack,cblas}* "${pkgdir}/usr/include/"
+
+  # Symlink to provide blas, cblas and lapack
+  cd "${pkgdir}/usr/lib/"
+  for lib in blas cblas lapack lapacke; do
+    ln -sf libopenblas.so lib$lib.so
+    ln -sf libopenblas.so lib$lib.so.${_lapack_ver%%.*}
+    ln -sf libopenblas.so lib$lib.so.${_lapack_ver}
+  done
+
+  # `makepkg` has a really stupid check for `provides=` **BEFORE**
+  # compiling the package and will complain that we have an empty pkgver here.
+  # Disable that check by using a variable that is not recognized by `makepkg`...
+  _provides=("blas=${_lapack_ver}" "lapack=${_lapack_ver}"
+             "cblas=${_lapack_ver}" "lapacke=${_lapack_ver}")
+
+  provides+=("${_provides[@]}")
+}

@@ -1,0 +1,63 @@
+# Maintainer: Lukas Fleischer <lfleischer@archlinux.org>
+# Contributor: Hilton Medeiros <medeiros.hilton@gmail.com>
+# Contributor: Dave Reisner <d@falconindy.com>
+
+pkgname=libgit2-julia
+pkgver=1.4.2
+pkgrel=2
+epoch=1
+pkgdesc="A linkable library for Git"
+arch=(i686 x86_64 armv7h aarch64)
+url="https://libgit2.github.com/"
+license=(GPL2)
+depends=(glibc http-parser openssl pcre zlib)
+makedepends=(cmake libssh2 python)
+provides=(libgit2.so "libgit2=$epoch:$pkgver")
+conflicts=(libgit2)
+options=(debug !strip)
+source=(
+  libgit2-$pkgver.tar.gz::https://github.com/libgit2/libgit2/archive/v${pkgver}.tar.gz
+  libgit2-agent-nonfatal.patch
+  libgit2-1.2.0-remove_http-parse_incompatible_tests.patch)
+sha512sums=('144bec7f8e66d97b20335d87d1eb68d522f5e59064b0c557505c088d3c486d45704f023d701f51de572efa8e2eb111e3136eb5d23c035e29d16698206b5ec277'
+            'f12cf1513d47d8697adcec9d57156dd3b035b669d454c3a1da704f44fd5f829fc2166f64acaeb48008109d0925cbc3559cd8641ced051d8b16344c920493e905'
+            '01bf3a960b2e6d441017af363bff267bd1513915ebefda95012d7feb38f7020778ea0908664cc479da82f441a4dd2788772005006a9c19e87cfc234268dc3785')
+b2sums=('61e269fd08beb9579838a13b661b4270f1e8d2d3d1e67f6b8357e92a5ee4aaccbe637644dc87cc8b04d9c181e37808352077b75fed8753a4b2d8868eaf248b62'
+        'aa372d560135f2cbbad03ac0f4c7e22e2461a8bf87b4d8330072a3f52e9d41c1afb01997d0a497a23ae8d07ba978f1b2f7fb1878008edac64859c83eeaf5056b'
+        'e725fb41c9bdfd9952693c9c47be90c10a16a78ab91f80e74c40c5510a83325575ce95674a2e21282e9c300f2bc8d430c896fa379ef744b8a8a912729fa88827')
+
+prepare() {
+  cd "libgit2-$pkgver"
+  mkdir -p build
+  # remove tests that are only compatible with the (modified) vendored version
+  # of http-parser, but not with upstream http-parser
+  patch -Np1 -i "../libgit2-1.2.0-remove_http-parse_incompatible_tests.patch"
+  patch -p1 < ../libgit2-agent-nonfatal.patch
+}
+
+
+build() {
+  cd "libgit2-$pkgver"
+  export LANG=en_US.UTF-8
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  export CFLAGS+=' -g'
+  export CXXFLAGS+=' -g'
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DUSE_HTTP_PARSER=system \
+        -DUSE_SSH=ON \
+        -DTHREADSAFE=ON \
+        -Wno-dev \
+        -B build \
+        -S .
+  make -C build
+}
+
+package() {
+  depends+=(libssh2.so)
+
+  cd "libgit2-$pkgver"
+  make -C build DESTDIR="$pkgdir" install
+  install -vDm 644 {AUTHORS,README.md} -t "${pkgdir}/usr/share/doc/libgit2"
+}

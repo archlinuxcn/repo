@@ -1,0 +1,62 @@
+# Maintainer: Arthur Zamarin <arthurzam@gmail.com>
+
+pkgname=openlibm-git
+pkgver=0.8.1
+pkgrel=1
+pkgdesc="standalone implementation of C mathematical functions"
+arch=(i686 x86_64 armv7h aarch64)
+url="https://github.com/JuliaLang/openlibm"
+license=('BSD')
+provides=('openlibm=0.7.0' 'libopenlibm.so')
+if [[ $CARCH = x86_64 ]]; then
+  provides+=(openlibm-git-avx2 openlibm-avx2)
+  replaces+=(openlibm-git-avx2)
+fi
+conflicts=('openlibm')
+options=('debug' '!strip')
+makedepends=('git')
+source=("git+https://github.com/JuliaLang/openlibm")
+md5sums=('SKIP')
+
+# LTO seems to mess up symbol table
+_CFLAGS=' -g -O3'
+_LDFLAGS=' -g -O3 -fno-plt -Wl,-Bsymbolic-functions'
+
+if [[ $CARCH = x86_64 ]]; then
+  _CFLAGS+=' -mtune=skylake'
+  _LDFLAGS+=' -mtune=skylake'
+fi
+
+pkgver() {
+  cd openlibm
+
+  git describe --tags | sed 's/^v//;s/-/./g'
+}
+
+prepare() {
+  cd openlibm
+  git reset --hard HEAD
+  git clean -fdx
+
+  if [[ $CARCH = x86_64 ]] || [[ $CARCH = i686 ]]; then
+    find -iname '*.c' -not -name 'fenv.c' -exec sed -i -e 's/OLM_DLLEXPORT/OLM_DLLEXPORT __attribute__((flatten, target_clones("default,avx2,avx512f")))/' {} \;
+  fi
+
+  sed -i "s@/usr/local@/usr@" Make.inc
+}
+
+build() {
+  CFLAGS+="$_CFLAGS"
+  LDFLAGS+="$_LDFLAGS"
+  cd openlibm
+  make
+}
+
+package_openlibm-git() {
+  cd openlibm
+  provides+=('openlibm-git-debug')
+  replaces+=('openlibm-git-debug')
+  CFLAGS+="$_CFLAGS"
+  LDFLAGS+="$_LDFLAGS"
+  make DESTDIR="$pkgdir" install
+}

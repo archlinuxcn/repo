@@ -1,0 +1,65 @@
+# Maintainer: Ingo Meyer <i.meyer@fz-juelich.de>
+
+pkgname="gr-framework-git"
+pkgver=0.64.3.r7.g7df1468a
+pkgrel=1
+pkgdesc="A universal framework for cross-platform visualization applications."
+arch=("i686" "x86_64" "armv6h" "armv7h" "aarch64")
+url="https://gr-framework.org"
+license=("MIT")
+depends=("bzip2" "cairo" "fontconfig" "freetype2" "ghostscript" "glfw-x11"
+         "libjpeg-turbo" "libpng" "libtiff" "libx11" "libxft" "libxt" "pixman"
+         "qhull" "qt5-base" "zlib")
+makedepends=("git" "cmake" "patchelf")
+optdepends=("ffmpeg: video support")
+provides=("${pkgname%-*}=${pkgver}")
+conflicts=("${pkgname%-*}")
+source=("gr-framework::git+https://github.com/sciapp/gr.git#branch=develop"
+        0001-Fix-loading-paths.patch)
+sha256sums=('SKIP'
+            'd58f6b7776101596657d03ee4dd44e11c2779c5740e38f95aba9eaee5a33a4c9')
+
+pkgver() {
+  cd gr-framework
+
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd gr-framework
+
+  patch -Np1 < ../0001-Fix-loading-paths.patch
+}
+
+build() {
+  cd gr-framework
+
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DGR_USE_BUNDLED_LIBRARIES=OFF \
+        -S . \
+        -B build
+
+  cd build
+  make
+}
+
+package() {
+  cd gr-framework/build
+
+  make install DESTDIR="${pkgdir}"
+  mkdir "${pkgdir}/usr/lib/gr/"
+  mv "${pkgdir}/usr/lib/"*.so "${pkgdir}/usr/lib/gr/"
+  mv "${pkgdir}/usr/lib/gr/"lib* "${pkgdir}/usr/lib/"
+  for f in "${pkgdir}/usr/lib/"*.so; do
+    patchelf --set-rpath '/usr/lib/:$ORIGIN:$ORIGIN/gr' "$f"
+  done
+  for f in "${pkgdir}/usr/lib/gr/"*.so; do
+    patchelf --set-rpath '/usr/lib/:$ORIGIN/..:$ORIGIN/gr' "$f"
+  done
+  mkdir "${pkgdir}/usr/share/fonts/"
+  mv "${pkgdir}/usr/fonts/" "${pkgdir}/usr/share/fonts/gr"
+}

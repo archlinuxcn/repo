@@ -1,0 +1,77 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+
+ENABLE_QT4=1
+if [ $CARCH = aarch64 ] || [ $CARCH = armv7h ]; then
+  # qt4 is out of the official repo and I don't want to compile qt4 myself on arm...
+  ENABLE_QT4=0
+fi
+
+pkgname=qtcurve-git
+_realver=1.8.18
+pkgver=1.9.0.rc1.78.g701d2a73
+pkgrel=1
+pkgdesc='A configurable set of widget styles for KDE and Gtk.'
+arch=(i686 x86_64 armv7h aarch64)
+url="https://github.com/QtCurve/qtcurve"
+license=('GPL')
+# groups=(qtcurve)
+depends=(qt5-base qt5-svg libxcb qt5-x11extras
+         libx11 gcc-libs kinit karchive kconfig kconfigwidgets frameworkintegration ki18n
+         kguiaddons kio kiconthemes kwidgetsaddons kwindowsystem kxmlgui)
+optdepends=(gtk2)
+makedepends=(cmake git python mesa extra-cmake-modules gtk2)
+provides=(
+  "qtcurve-utils=${_realver}"
+  "qtcurve-gtk2=${_realver}"
+  "qtcurve-qt5=${_realver}"
+  "qtcurve-utils-git"
+  "qtcurve-gtk2-git"
+  "qtcurve-qt5-git")
+conflicts=("qtcurve-qt5" "qtcurve-gtk2" "qtcurve-utils")
+if ((ENABLE_QT4)); then
+  optdepends+=(qt4)
+  makedepends+=(qt4)
+  provides+=("qtcurve-qt4=${_realver}"
+             "qtcurve-qt4-git")
+  conflicts=("qtcurve-qt4")
+  _qt4_opt="-DENABLE_QT4=On"
+else
+  _qt4_opt="-DENABLE_QT4=Off"
+fi
+options=('debug' 'strip')
+source=("git+https://invent.kde.org/system/qtcurve.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd qtcurve
+
+  git describe --tags | sed -e 's/-/./g'
+}
+
+build() {
+  cd qtcurve
+
+  mkdir -p build
+  cd build
+
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+
+  export CFLAGS
+  export CXXFLAGS
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    "${_qt4_opt}" \
+    -DENABLE_QT5=On \
+    -DENABLE_GTK2=On \
+    -DQTC_QT4_ENABLE_KDE=Off \
+    -DQTC_QT5_ENABLE_KDE=On
+  make
+}
+
+package() {
+  cd qtcurve/build
+
+  make DESTDIR="$pkgdir/" install
+}

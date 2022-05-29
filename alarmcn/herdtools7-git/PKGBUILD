@@ -1,0 +1,33 @@
+# Maintainer: Nathaniel R. Lewis <linux.robotdude@gmail.com>
+
+_pkgbase='herdtools7'
+pkgname=('herdtools7-git')
+provides=('herdtools7')
+conflicts=('herdtools7')
+pkgver=7.52.r1504.g7fdc531e
+pkgrel=1
+pkgdesc="The Herd toolsuite to deal with .cat memory models"
+arch=(armv7h aarch64 i686 x86_64)
+url='https://github.com/herd/herdtools7'
+license=('CeCILL-B')
+depends=(ocaml)
+makedepends=(git ocamlbuild  ocaml-menhir dune)
+source=('git+https://github.com/herd/herdtools7')
+sha256sums=('SKIP')
+
+build() {
+  cd $_pkgbase
+  make PREFIX="/usr"
+}
+
+pkgver() {
+  cd $_pkgbase
+  ( set -o pipefail
+    git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+      printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  )
+}
+
+package() {
+  make -C $_pkgbase PREFIX="$pkgdir/usr" install
+}

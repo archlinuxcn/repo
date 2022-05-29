@@ -1,0 +1,18 @@
+maintainers:
+  - github: yuyichao
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - ocaml-menhir
+
+update_on:
+  - source: vcs
+  - source: alpm
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+    alpm: ocaml
+    repo: extra
+  - source: manual
+    manual: 2

@@ -1,0 +1,11 @@
+post_install() {
+cat << EOF
+==> For GNU Emacs, the recommended way to activate 
+==> AUCTeX and preview-latex is to add the
+==> following lines to your ~/.emacs file:
+(load "auctex.el" nil t t)
+(load "preview-latex.el" nil t t)
+
+The file /var/auctex/.nosearch was removed from this package.
+EOF
+}

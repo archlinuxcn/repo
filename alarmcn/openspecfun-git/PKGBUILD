@@ -1,0 +1,45 @@
+# Maintainer: kusakata <shohei atmark kusakata period com>
+
+pkgname=openspecfun-git
+pkgver=0.5.5.4.g3d4bbcf
+pkgrel=2
+pkgdesc="A collection of special mathematical functions"
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+url="https://github.com/JuliaLang/openspecfun"
+license=('custom')
+depends=('gcc-libs' 'libopenlibm.so')
+provides=(openspecfun 'libopenspecfun.so')
+conflicts=(openspecfun)
+makedepends=('gcc-fortran' 'git')
+options=('!emptydirs' '!strip' 'debug')
+source=('git+https://github.com/JuliaLang/openspecfun')
+md5sums=('SKIP')
+
+_make() {
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  FFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  LDFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  make prefix=/usr bindir=/usr/bin libdir=/usr/lib includedir=/usr/include \
+       USE_OPENLIBM=1 CFLAGS="$CFLAGS -std=c99 -Wall -O3 -g -flto" \
+       LDFLAGS="$LDFLAGS -g -O3 -flto  -fno-plt -Wl,-Bsymbolic-functions" \
+       FFLAGS="$FFLAGS -O3 -g -flto" "$@"
+}
+
+pkgver() {
+  cd openspecfun
+
+  git describe --tags | sed 's/^v//;s/-/./g'
+}
+
+build() {
+  cd openspecfun
+
+  _make
+}
+
+package() {
+  cd openspecfun
+
+  _make DESTDIR="$pkgdir" install
+  install -Dm644 LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

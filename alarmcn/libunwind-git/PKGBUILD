@@ -1,0 +1,43 @@
+# Maintainer: Sébastien Luttringer
+# Contributor: Lawrence Lee <valheru@facticius.net>
+# Contributor: Phillip Marvin <phillip.marvin@gmail.com>
+# Contributor: keystone <phillip.marvin@gmail.com>
+
+# ALARM: Kevin Mihelich <kevin@archlinuxarm.org>
+#  - build v5 with system libatomic_ops
+
+pkgname=libunwind-git
+epoch=1
+pkgver=1.5.rc1.142.g7cf6e84b
+pkgrel=1
+pkgdesc='Portable and efficient C programming interface (API) to determine the call-chain of a program'
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+url='http://www.nongnu.org/libunwind/'
+license=('GPL')
+depends=('glibc' 'xz')
+makedepends=('git')
+source=('git://git.savannah.gnu.org/libunwind.git')
+md5sums=('SKIP')
+options=('debug' '!strip')
+provides=(libunwind)
+conflicts=(libunwind)
+
+pkgver() {
+  cd libunwind
+
+  git describe --tags | sed 's/^v//;s/-/./g'
+}
+
+build() {
+  cd libunwind
+
+  autoreconf -fi
+  ./configure CFLAGS="$CFLAGS -U_FORTIFY_SOURCE" --prefix=/usr
+  make
+}
+
+package() {
+  cd libunwind
+
+  make DESTDIR="$pkgdir/" install
+}

@@ -1,0 +1,13 @@
+pre_build_script: aur_pre_build(maintainers=['soimort', 'xuanruiqi'])
+post_build: aur_post_build
+update_on:
+  - source: aur
+    aur: ocaml-menhir
+  - source: alpm
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+    alpm: ocaml
+    repo: extra
+maintainers:
+  - github: dctxmei
+  - github: yuyichao

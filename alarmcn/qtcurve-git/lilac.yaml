@@ -1,0 +1,20 @@
+maintainers:
+  - github: yuyichao
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: vcs
+  - source: alpm
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+    alpm: qt5-base
+    repo: extra
+  - source: alpm
+    from_pattern: ^(\d+\.\d+\.\d+).*
+    to_pattern: \1
+    alpm: kconfig
+    repo: extra
+  - source: manual
+    manual: 1

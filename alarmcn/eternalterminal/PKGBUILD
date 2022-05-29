@@ -1,0 +1,102 @@
+# Maintainer: Jason Gauci <contact+jgmath2000@gmail.com>
+# Contributor: Joel Goguen <contact+aur@jgoguen.ca>
+
+_ghname='EternalTerminal'
+_tarname='et'
+pkgbase='eternalterminal'
+pkgname=('eternalterminal-client' 'eternalterminal-server'
+         'eternalterminal-htm' 'eternalterminal')
+pkgver=6.2.1
+pkgrel=2
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+depends=(
+  'libsodium' 'libutempter' 'libunwind' 'libprotobuf-lite.so'
+)
+makedepends=(
+  'patch' 'cmake' 'unzip' 'wget'
+)
+url='https://mistertea.github.io/EternalTerminal/'
+license=('Apache')
+
+source=(
+  "https://github.com/MisterTea/EternalTerminal/archive/et-v${pkgver}.tar.gz"
+)
+sha256sums=('fdf68a51cb8b62b3dbbacd1d2aeba5d5491e5142e65c97713c2f1ce61d4fdbed')
+
+prepare() {
+  cd EternalTerminal-et-v${pkgver}
+
+  echo '=> Preparing directories'
+  mkdir -p build
+}
+
+build() {
+  cd EternalTerminal-et-v${pkgver}/build
+
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  export CFLAGS
+  export CXXFLAGS
+
+  echo '=> Running cmake'
+  cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr \
+        -DDISABLE_VCPKG=On
+
+  echo '=> Building EternalTerminal'
+  make
+}
+
+_install_client() {
+  mkdir -p "${pkgdir}/usr/local/bin/"
+  # /usr/bin/et conflicts with wps...
+  # put it in /usr/local/bin and use ett as the real name for now.
+  # Ref. https://github.com/MisterTea/EternalTerminal/issues/316
+  ln -sf ../../bin/ett "${pkgdir}/usr/local/bin/et"
+  install -D -m 0755 et "${pkgdir}/usr/bin/ett"
+  install -D -m 0755 htm "${pkgdir}/usr/bin/htm"
+}
+
+_install_htm() {
+  install -D -m 0755 htm "${pkgdir}/usr/bin/htm"
+  install -D -m 0755 htmd "${pkgdir}/usr/bin/htmd"
+}
+
+_install_server() {
+  install -D -m 0755 etserver "${pkgdir}/usr/bin/etserver"
+  install -D -m 0755 etterminal "${pkgdir}/usr/bin/etterminal"
+  install -D -m 0644 ../systemctl/et.service "${pkgdir}/usr/lib/systemd/system/et.service"
+  install -D -m 0644 ../etc/et.cfg "${pkgdir}/etc/et.cfg"
+}
+
+package_eternalterminal-client() {
+  pkgdesc='Re-Connectable Terminal connection. (client)'
+
+  cd EternalTerminal-et-v${pkgver}/build
+  _install_client
+}
+
+package_eternalterminal-server() {
+  pkgdesc='Re-Connectable Terminal connection. (server)'
+
+  cd EternalTerminal-et-v${pkgver}/build
+
+  _install_server
+}
+
+package_eternalterminal-htm() {
+  pkgdesc='Re-Connectable Terminal connection. (headless terminal multiplexer)'
+
+  cd EternalTerminal-et-v${pkgver}/build
+  _install_htm
+}
+
+package_eternalterminal() {
+  pkgdesc='Re-Connectable Terminal connection. (both client and server)'
+  provides=("eternalterminal-client=${pkgver}" "eternalterminal-server=${pkgver}")
+  conflicts=('eternalterminal-client' 'eternalterminal-server')
+
+  cd EternalTerminal-et-v${pkgver}/build
+
+  _install_client
+  _install_server
+}

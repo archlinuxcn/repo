@@ -1,0 +1,59 @@
+From abff1bfceab21dd1f9d48024a15a8602579f0814 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 29 Aug 2021 19:31:10 -0400
+Subject: [PATCH] Fix loading paths
+
+---
+ lib/gks/font.c   | 2 +-
+ lib/gks/ft.c     | 4 ++--
+ lib/gks/plugin.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/lib/gks/font.c b/lib/gks/font.c
+index fab43270..b1c53871 100644
+--- a/lib/gks/font.c
++++ b/lib/gks/font.c
+@@ -33,7 +33,7 @@ int gks_open_font(void)
+     }
+   strcpy(fontdb, (char *)path);
+ #ifndef _WIN32
+-  strcat(fontdb, "/fonts/gksfont.dat");
++  strcat(fontdb, "/share/fonts/gr/gksfont.dat");
+ #else
+   strcat(fontdb, "\\FONTS\\GKSFONT.DAT");
+ #endif
+diff --git a/lib/gks/ft.c b/lib/gks/ft.c
+index 5c9998cb..773694bf 100644
+--- a/lib/gks/ft.c
++++ b/lib/gks/ft.c
+@@ -629,12 +629,12 @@ static char *gks_ft_get_font_path(const char *font_name, const char *font_file_e
+       prefix = GRDIR;
+     }
+ 
+-  font_path = (char *)gks_malloc(strlen(prefix) + 7 + strlen(font_name) + strlen(font_file_extension) + 1);
++  font_path = (char *)gks_malloc(strlen(prefix) + 20 + strlen(font_name) + strlen(font_file_extension) + 1);
+   strcpy(font_path, prefix);
+ #ifdef _WIN32
+   strcat(font_path, "\\FONTS\\");
+ #else
+-  strcat(font_path, "/fonts/");
++  strcat(font_path, "/share/fonts/gr/");
+ #endif
+   strcat(font_path, font_name);
+   strcat(font_path, font_file_extension);
+diff --git a/lib/gks/plugin.c b/lib/gks/plugin.c
+index f1522b9d..eb8db6ae 100644
+--- a/lib/gks/plugin.c
++++ b/lib/gks/plugin.c
+@@ -63,7 +63,7 @@ static void *load_library(const char *name)
+     {
+       grdir = gks_getenv("GRDIR");
+       if (grdir == NULL) grdir = GRDIR;
+-      sprintf(pathname, "%s/lib/%s.%s", grdir, name, EXTENSION);
++      sprintf(pathname, "%s/lib/gr/%s.%s", grdir, name, EXTENSION);
+       handle = dlopen(pathname, RTLD_LAZY);
+     }
+ #endif
+-- 
+2.33.0
+
