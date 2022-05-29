@@ -7,7 +7,7 @@ pkgbase=mesa-git
 pkgname=('vulkan-mesa-layers-git' 'opencl-mesa-git' 'vulkan-intel-git' 'vulkan-radeon-git' 'vulkan-swrast-git' 'mesa-git')
 pkgdesc="mesa trunk (git version)"
 epoch=1
-pkgver=22.2.0_devel.154519.01ba3460
+pkgver=22.2.0_devel.154533.09caa890
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
@@ -37,7 +37,7 @@ build() {
     -D platforms=x11,wayland \
     -D egl-native-platform=auto \
     -D gallium-drivers=r300,r600,radeonsi,nouveau,iris,zink,virgl,svga,swrast,panfrost,lima,asahi,crocus \
-    -D vulkan-drivers=amd,intel,swrast,panfrost \
+    -D vulkan-drivers=amd,intel,swrast \
     -D vulkan-layers=device-select,intel-nullhw,overlay \
     -D opencl-native=true \
     -D dri3=enabled \
@@ -89,6 +89,7 @@ _install() {
 package_vulkan-mesa-layers-git() {
   pkgdesc="Mesa's Vulkan overlay layers (git version)"
   provides=('vulkan-mesa-layers')
+  depends=('wayland' 'libxcb' 'python')
   conflicts=('vulkan-mesa-layer-git' 'vulkan-mesa-layers')
   replaces=('vulkan-mesa-layer-git')
 
@@ -103,7 +104,7 @@ package_vulkan-mesa-layers-git() {
 
 package_opencl-mesa-git() {
   pkgdesc="OpenCL support for mesa drivers (git version)"
-  depends=('libdrm' 'libclc-git' 'clang-git')
+  depends=('libdrm' 'libclc-git' 'clang-git' 'expat')
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('opencl-mesa' 'opencl-driver')
   conflicts=('opencl-mesa')
@@ -117,7 +118,7 @@ package_opencl-mesa-git() {
 
 package_vulkan-intel-git() {
   pkgdesc="Intel's Vulkan mesa driver (git version)"
-  depends=('wayland' 'libx11' 'libxshmfence' 'libdrm' 'zstd')
+  depends=('wayland' 'libx11' 'libxshmfence' 'libdrm' 'zstd' 'systemd-libs' 'libdrm')
   optdepends=('vulkan-mesa-layer-git: additional vulkan layers')
   provides=('vulkan-intel' 'vulkan-driver')
   conflicts=('vulkan-intel')
@@ -155,33 +156,20 @@ package_vulkan-swrast-git() {
   install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
 }
 
-package_vulkan-panfrost-git() {
-  pkgdesc="vulkan software panfrost driver (git version)"
-  depends=('wayland' 'libx11' 'libxshmfence' 'libdrm' 'zstd' 'llvm-libs-git' )
-  optdepends=('vulkan-mesa-layers-git: additional vulkan layers')
-  provides=('vulkan-panfrost')
-  conflicts=('vulkan-panfrost')
-
-  _install fakeinstall/usr/share/vulkan/icd.d/panfrost_icd*.json
-  _install fakeinstall/usr/lib/libvulkan_panfrost.so
-
-  install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
-
-}
 package_mesa-git() {
   pkgdesc="an open-source implementation of the OpenGL specification (git version)"
   depends=('libdrm' 'wayland' 'libxxf86vm' 'libxdamage' 'libxshmfence' 'libsystemd' 'libelf'
-           'libomxil-bellagio' 'libunwind' 'llvm-libs-git' 'lm_sensors' 'libglvnd')
+           'libomxil-bellagio' 'libunwind' 'llvm-libs-git' 'lm_sensors' 'libglvnd' 'libxv' 'libxvmc')
   optdepends=('opengl-man-pages: for the OpenGL API man pages')
-  provides=('mesa' 'mesa-vdpau' 'libva-mesa-driver' 'mesa-libgl' 'ope
-    ngl-driver')
+  provides=('mesa' 'mesa-vdpau' 'libva-mesa-driver' 'mesa-libgl' 'opengl-driver')
   conflicts=('mesa' 'mesa-vdpau' 'libva-mesa-driver' 'mesa-libgl')
 
   # libva-mesa-driver
   _install fakeinstall/usr/lib/dri/*_drv_video.so
   # mesa-vdpau
   _install fakeinstall/usr/lib/vdpau
-
+  _install fakeinstall/usr/share/drirc.d/00-mesa-defaults.conf
+  _install fakeinstall/usr/share/drirc.d/00-radv-defaults.conf
   _install fakeinstall/usr/share/glvnd/egl_vendor.d/50_mesa.json
 
   # ati-dri, nouveau-dri, intel-dri, svga-dri, swrast
