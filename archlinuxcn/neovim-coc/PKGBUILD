@@ -1,9 +1,9 @@
 # Maintainer: Sainnhe Park <sainnhe@gmail.com>
 pkgname=neovim-coc
 # Coc.nvim creates tags on release branch but the source code is only available on master branch, so I have to use commit hash to specify the version to use.
-_hash='c90a07eec847d38909702454c9e096ac6d392aff'
-pkgver=0.0.80
-pkgrel=5
+_hash='21a8e00b3c62faca4fdda5fa16b4f3ed4c03cf09'
+pkgver=0.0.81
+pkgrel=1
 pkgdesc='Intellisense engine for Vim8 & Neovim, full language server protocol support as VSCode'
 arch=('any')
 url='https://github.com/neoclide/coc.nvim'
@@ -16,13 +16,11 @@ makedepends=('yarn')
 provides=('neovim-coc')
 conflicts=('neovim-coc')
 source=("https://github.com/neoclide/coc.nvim/archive/${_hash}.zip")
-sha256sums=('3942014f681bfe2b25f3653fbb1108dbaf1de9f4f6993e9770a7fd42a92014f2')
+sha256sums=('97374516741d70615a0878a7072307fe58e13f4d13333fb67f88a8f706972c76')
 
 build() {
     cd "${srcdir}/coc.nvim-${_hash}"
-    sed -i "3s/=.*/= '${_hash}'/" webpack.config.js
     yarn install --frozen-lockfile --preferred-cache-folder "${srcdir}/.cache"
-    yarn run build
 }
 
 package() {

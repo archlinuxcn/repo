@@ -2,7 +2,7 @@
 # Contributor: Adrian Perez de Castro <aperez@igalia.com>
 # Contributor: Antonin Décimo <antonin dot decimo at gmail dot com>
 pkgname=wlroots-lily-git
-pkgver=0.16.0.20220502.154416
+pkgver=0.16.0.20220526.161629
 pkgrel=1
 license=(MIT)
 pkgdesc='Modular Wayland compositor library (git version, with patches)'
@@ -38,16 +38,16 @@ makedepends=(
 	xorgproto)
 source=("${pkgname}::git+${url}.git"
         https://gitlab.freedesktop.org/lilydjwg/wlroots/-/commit/6c5ffcd1fee9e44780a6a8792f74ecfbe24a1ca7.patch
-        https://gitlab.freedesktop.org/wlroots/wlroots/-/merge_requests/3514.patch)
+        3514.patch)
 sha512sums=('SKIP'
             'c2193fb6d3063919ecb427a72d09fd11563a9de68e848e9721d7a7d9dc67e700654067ce154b1ddc5fb4587b9cea71d29a73a55a18f54d6ecd60897989677bb2'
-            'ec2cc8dc26f9acc0b28e7ab8ea99c3a8842194b7a4224601391f7ce862ad3b9920fbc0f9455fec47e8d367cc082a369864abd40b62eee7e79a7e0d01c2301c7a')
+            'd86265fcc9de284dc046839b089475f97deb1e96568c13d9ceadfc5b2665c7f5c12cdb996a40ed70afae02b2c8e6bdecf56171819ed1320bb5c796802c635436')
 
 pkgver () {
   cd "${pkgname}"
   (
      set -o pipefail
-     version=$(grep -zoP "project\([^)]*\)" meson.build | xargs --null echo | grep -oP "^\sversion:\s'\K[^']*")
+     version=$(grep -zoP "project\([^)]*\)" meson.build | xargs --null echo | grep -oP "^\sversion:\s'\K[^-']*")
      printf "${version}.%s" "$(TZ=UTC git log -1 --pretty='%cd' --date=format-local:%Y%m%d.%H%M%S)"
   )
 }
