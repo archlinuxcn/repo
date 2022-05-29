@@ -4,7 +4,7 @@
 pkgbase=lib32-llvm-git
 pkgname=('lib32-llvm-libs-git' 'lib32-clang-git' 'lib32-llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=15.0.0_r425082.503d5771b6c5e
+pkgver=15.0.0_r425063.0bd645d3
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
@@ -72,6 +72,7 @@ build() {
         -D LLVM_ENABLE_FFI=ON \
         -D LLVM_BUILD_TESTS=OFF \
         -D LLVM_BUILD_DOCS=OFF \
+        -D LLVM_ENABLE_OCAMLDOC=OFF \
         -D LLVM_ENABLE_SPHINX=OFF \
         -D LLVM_ENABLE_DOXYGEN=OFF \
         -D FFI_INCLUDE_DIR="$(pkg-config --variable=includedir libffi)" \
