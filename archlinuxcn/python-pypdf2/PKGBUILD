@@ -2,7 +2,7 @@
 
 _pkgname=PyPDF2
 pkgname=python-pypdf2
-pkgver=1.28.3
+pkgver=1.28.4
 pkgrel=1
 pkgdesc='A utility to read and write PDFs with Python'
 arch=('any')
@@ -15,7 +15,7 @@ makedepends=(
   python-setuptools
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/mstamy2/PyPDF2/archive/${pkgver}.tar.gz")
-sha512sums=('0a7b54759b0ce6a5383364ea1014e8c3bf80c180ab533b905dc676df8d0307ad6ae46007033b8c23f2c7986d45086d98485631f867d562e70cc09c52862142d9')
+sha512sums=('a93406f9a0e177f0ad1d92430f212abbc7b7486b86f37b281e68595de125e0fcdfbf73fc7d66490698d8355875659633c3785e8c2725e52ef9d615441b5aa517')
 
 build() {
   cd "${_pkgname}-${pkgver}"
