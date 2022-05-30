@@ -166,6 +166,12 @@ EOF
   for p in "${_patches[@]}"; do
     _apply_patch "$p"
   done
+  make "${opts[@]}" -C deps extract-blastrampoline
+  (
+    cd deps/scratch/blastrampoline-*
+    patch -Np1 < "$srcdir/0001-Use-strdup-to-copy-strings.patch"
+    patch -Np1 < "$srcdir/0001-Remove-const-qualifier-on-return-type.patch"
+  )
   make "${julia_opts[@]}" julia-stdlib
   (
     cd usr/share/julia/stdlib/v*/Pkg
@@ -200,14 +206,6 @@ build_in() {
   # These are to workaround bugs in the hand-made build system that can't handle
   # parallel build properly.
   make "${opts[@]}" -C base version_git.jl.phony
-
-  rm -rf deps/scratch
-  make "${opts[@]}" -C deps extract-blastrampoline
-  (
-    cd deps/scratch/blastrampoline-*
-    patch -Np1 < "$srcdir/0001-Use-strdup-to-copy-strings.patch"
-    patch -Np1 < "$srcdir/0001-Remove-const-qualifier-on-return-type.patch"
-  )
   make "${opts[@]}" -C deps
   make "${opts[@]}" -C src jl_internal_funcs.inc
   make "${opts[@]}" julia-cli-release
