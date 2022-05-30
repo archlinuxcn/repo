@@ -1,9 +1,9 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
-_pkgname=PySceneDetect
+_pkgname=scenedetect
 pkgname=python-scenedetect
-pkgver=0.5.6.1
-pkgrel=2
+pkgver=0.6.0.2
+pkgrel=1
 pkgdesc='Python and OpenCV-based scene cut/transition detection program & library'
 arch=('any')
 url='http://scenedetect.com'
@@ -15,24 +15,26 @@ depends=(
   python-tqdm
 )
 makedepends=(
+  python-build
+  python-installer
+  python-wheel
   python-setuptools
-  python-pip
 )
 optdepends=(
   "ffmpeg: required to split video files"
   "mkvtoolnix-cli: required to split video files in stream copy mode"
 )
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Breakthrough/PySceneDetect/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('6d3837f03d1b119c609d5f4331d2f02c90d0e14621efe0e5ab132edcf3008eeaa818d55bd2e21dac6986e7db3637380026588070d8c5c93d149a60f9bbb900fd')
+source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+sha512sums=('204475d7af18031e50fd3dfe515373b39fc5ae904c13916e6c79ece253ca21817725d9f1239efac6faff6a41c24113938a88a722b06e33e987f471d8429b3c8f')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="$pkgdir" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
