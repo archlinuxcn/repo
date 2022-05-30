@@ -166,7 +166,7 @@ EOF
   for p in "${_patches[@]}"; do
     _apply_patch "$p"
   done
-  make "${opts[@]}" -C deps extract-blastrampoline
+  make "${julia_opts[@]}" -C deps extract-blastrampoline
   (
     cd deps/scratch/blastrampoline-*
     patch -Np1 < "$srcdir/0001-Use-strdup-to-copy-strings.patch"
