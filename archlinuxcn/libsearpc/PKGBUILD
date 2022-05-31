@@ -6,6 +6,8 @@
 pkgname=libsearpc
 epoch=2
 pkgver=3.2.0
+# tagname=$pkgver
+_tagname=3.2-latest
 pkgrel=8
 pkgdesc="A simple C language RPC framework (including both server side & client side)"
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
@@ -14,28 +16,23 @@ license=('Apache')
 depends=("glib2>=2.26.0" "jansson>=2.2.1")
 makedepends=(python)
 # upstream seems to change tag so let's rename the download...
-source=("libsearpc-${pkgver}-5.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('cd00197fcc40b45b1d5e892b2d08dfa5947f737e0d80f3ef26419334e75b0bff')
+source=("libsearpc-${pkgver}-6.tar.gz::${url}/archive/v${_tagname}.tar.gz")
+sha256sums=('683a78cc6dc66d4db5fd90e3260a23845c6a5ff2510b8f55d2f46b86f9c3f271')
 
 prepare () {
-  cd ${pkgname}-${pkgver}
+  cd ${pkgname}-${_tagname}
   sed -i 's|(DESTDIR)@prefix@|@prefix@|' './libsearpc.pc.in'
 }
 
 build () {
   echo "Building python3 version"
-  cd ${pkgname}-${pkgver}
+  cd ${pkgname}-${_tagname}
   ./autogen.sh
   ./configure --prefix=/usr PYTHON=/usr/bin/python
   make
 }
 
-check () {
-  cd ${pkgname}-${pkgver}
-  make check
-}
-
 package () {
-  cd ${pkgname}-${pkgver}
+  cd ${pkgname}-${_tagname}
   make DESTDIR="${pkgdir}" install
 }
