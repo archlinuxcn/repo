@@ -14,6 +14,7 @@ arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/haiwen/libsearpc"
 license=('Apache')
 depends=("glib2>=2.26.0" "jansson>=2.2.1")
+provides=(libsearpc.so)
 makedepends=(python)
 # upstream seems to change tag so let's rename the download...
 source=("libsearpc-${pkgver}-6.tar.gz::${url}/archive/v${_tagname}.tar.gz")
