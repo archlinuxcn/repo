@@ -20,6 +20,7 @@ depends=(
 makedepends=(
   clang
   cmake
+  gcc11
   git
   python-setuptools
 )
@@ -36,6 +37,8 @@ prepare() {
 }
 
 build() {
+  export CC=gcc-11
+  export CXX=g++-11
   cmake \
     -B "${srcdir}/build" \
     -DBUILD_LMDB=ON \
