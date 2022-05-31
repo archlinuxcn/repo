@@ -1,0 +1,24 @@
+[Unit]
+Description=BIRD routing daemon
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/bird
+ExecReload=/usr/bin/birdc configure
+ExecStop=/usr/bin/birdc down
+RuntimeDirectory=bird
+RuntimeDirectoryMode=0750
+DynamicUser=true
+User=bird
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+PrivateTmp=true
+PrivateDevices=true
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_NET_RAW
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_NET_RAW
+
+[Install]
+WantedBy=multi-user.target
