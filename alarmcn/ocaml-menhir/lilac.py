@@ -11,5 +11,5 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         # edit PKGBUILD
         if line.strip().startswith("arch="):
-            line = 'arch=(x86_64 armv7h aarch64)"'
+            line = 'arch=(x86_64 armv7h aarch64)'
         print(line)
