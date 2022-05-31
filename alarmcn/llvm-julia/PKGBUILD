@@ -1,0 +1,204 @@
+# Maintainer: Evangelos Foutras <evangelos@foutrelis.com>
+# Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
+
+pkgname=(llvm-julia llvm-libs-julia llvm-ocaml-julia)
+pkgver=13.0.0
+pkgrel=4
+arch=(i686 x86_64 armv7h aarch64)
+url="https://llvm.org/"
+license=('custom:Apache 2.0 with LLVM Exception')
+makedepends=(cmake ninja libffi libedit ncurses libxml2 ocaml ocaml-ctypes ocaml-findlib
+             python-setuptools python-psutil python-sphinx python-recommonmark)
+options=('staticlibs' '!strip')
+_source_base=https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver
+source=($_source_base/llvm-$pkgver.src.tar.xz
+        0001-Revert-MC-Always-emit-relocations-for-same-section-f.patch
+        0002-Allow-for-custom-address-spaces.patch
+        0004-Don-t-sink-ptrtoint-inttoptr-sequences-into-non-noop.patch
+        0005-GlobalISel-remove-assert-that-memcpy-Src-and-Dst-add.patch
+        0006-Don-t-merge-icmps-derived-from-pointers-with-address.patch
+        0007-AArch64-Remove-Bad-optimization.patch
+        0008-Correct-register-class-for-pseudo-instructions.patch
+        0009-Re-apply-the-fix-on-DwarfEHPrepare-and-add-a-test-2.patch
+        0010-Bad-SLPVectorization-shufflevector-replacement-resul.patch
+        # Archlinux Patch
+        don-t-accept-nullptr-as-GEP-element-type.patch
+        no-strict-aliasing-DwarfCompileUnit.patch
+        disable-bswap-for-spir.patch
+        llvm-config.h)
+sha256sums=('408d11708643ea826f519ff79761fcdfc12d641a2510229eec459e72f8163020'
+            '420228a334d68c6a682d17ab1616864b3d51de5104c46f820f99c8fe5e4be4f0'
+            '59ce8476845d27b2c8795cf1c7908da86ef2da2421a80fdaed0bbadaf628299d'
+            '2b17a6a93c8b987e0ee03519432d4c0bbd257f39d4fc7488f0e9f0904dd711c4'
+            '22678b40fb7709cacb05c6ef479eab34f598a5f7ab8db5b6dba8cd63cc6a8196'
+            '9b0edfd9241c4e830470ccccec654dff5659261df2d2eabe7bff92bf48b2e2dc'
+            'b9af3fb50b5c8cb1626e815ba5a4a5ae8edf045f2c43f7a8ef8e465b03b17e10'
+            'e388a34869644e32233e87010fa9eecd13a4c56523035f76d31221e294fe671f'
+            'f8e886b98e45ccdc9d3d560b98bd870533813516c1e605f6588365abf3749dd5'
+            '8996b56f6ac6f41bceb58341fa21afd548de68aa12e9ce3072dd7926868085d8'
+            'a7e902a7612d0fdabe436a917468b043cc296bc89d8954bfc3126f737beb9ac4'
+            'd1eff24508e35aae6c26a943dbaa3ef5acb60a145b008fd1ef9ac6f6c4faa662'
+            'af163392fbc19d65d11ab4b1510a2eae39b417d6228023b3ba5395b138bb41f5'
+            '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
+
+_FLTO=''
+
+# _FLTO='-flto'
+# if [[ "${CARCH}" == "aarch64" ]] || [[ "${CARCH}" == "armv7h" ]]; then
+#     # GCC miscompiles LLVM on AArch64 with LTO and segfault on arm during linking...
+#     _FLTO=''
+# fi
+
+apply_julia_patch() {
+  local name=$1
+  msg "Applying Julia patch $name"
+  patch -p1 < ../$name.patch
+}
+
+apply_julia_proj_patch() {
+  local name=$1
+  msg "Applying Julia patch $name"
+  patch -p2 < ../$name.patch
+}
+
+prepare() {
+  rm -rf bin/
+  mkdir -p bin/
+
+  for p in cc c++ gcc g++; do
+    cat > bin/$p <<EOF
+#!/bin/bash
+exec /usr/bin/$p $_FLTO "\${@}"
+EOF
+    chmod +x bin/$p
+  done
+
+  cd "$srcdir/llvm-$pkgver.src"
+  mkdir build
+
+  apply_julia_patch 0001-Revert-MC-Always-emit-relocations-for-same-section-f
+  apply_julia_patch 0002-Allow-for-custom-address-spaces
+  apply_julia_patch 0004-Don-t-sink-ptrtoint-inttoptr-sequences-into-non-noop
+  apply_julia_patch 0005-GlobalISel-remove-assert-that-memcpy-Src-and-Dst-add
+  apply_julia_patch 0006-Don-t-merge-icmps-derived-from-pointers-with-address
+  apply_julia_patch 0007-AArch64-Remove-Bad-optimization
+  apply_julia_patch 0008-Correct-register-class-for-pseudo-instructions
+  apply_julia_patch 0009-Re-apply-the-fix-on-DwarfEHPrepare-and-add-a-test-2
+  apply_julia_patch 0010-Bad-SLPVectorization-shufflevector-replacement-resul
+
+  # Arch patches
+  msg "Applying Arch patches"
+
+  # https://github.com/intel/intel-graphics-compiler/issues/204
+  patch -Rp2 -i ../don-t-accept-nullptr-as-GEP-element-type.patch
+
+  # Work around intermittent 'clang -O -g' crashes
+  # https://bugs.llvm.org/show_bug.cgi?id=50611#c3
+  patch -Np2 -i ../no-strict-aliasing-DwarfCompileUnit.patch
+
+  # Fix an ISPC build failure (https://github.com/ispc/ispc/issues/2189)
+  patch -Np2 -i ../disable-bswap-for-spir.patch
+}
+
+build() {
+  cd "$srcdir/llvm-$pkgver.src/build"
+
+  export PATH="${srcdir}/bin:${PATH}"
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CFLAGS+=' -ggdb1 -O3 -fasynchronous-unwind-tables'
+  CXXFLAGS+=' -ggdb1 -O3 -fasynchronous-unwind-tables'
+  LDFLAGS+=' -O3 -fasynchronous-unwind-tables'
+
+  cmake .. -G Ninja \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DLLVM_HOST_TRIPLE=$CHOST \
+        -DLLVM_BUILD_LLVM_DYLIB=ON \
+        -DLLVM_LINK_LLVM_DYLIB=ON \
+        -DLLVM_INSTALL_UTILS=ON \
+        -DLLVM_ENABLE_RTTI=ON \
+        -DLLVM_ENABLE_FFI=ON \
+        -DLLVM_BUILD_TESTS=ON \
+        -DLLVM_BUILD_DOCS=ON \
+        -DLLVM_ENABLE_SPHINX=ON \
+        -DLLVM_ENABLE_DOXYGEN=OFF \
+        -DSPHINX_WARNINGS_AS_ERRORS=OFF \
+        -DLLVM_BINUTILS_INCDIR=/usr/include
+  ninja all ocaml_doc
+}
+
+package_llvm-julia() {
+  pkgdesc="Collection of modular and reusable compiler and toolchain technologies (with patch for julia)"
+  depends=("llvm-libs-julia=$pkgver-$pkgrel" perl)
+  optdepends=('python-setuptools: for using lit (LLVM Integrated Tester)')
+  conflicts=(llvm)
+  provides=("llvm=$pkgver-$pkgrel")
+
+  cd "$srcdir/llvm-$pkgver.src/build"
+
+  DESTDIR="$pkgdir" ninja install
+
+  # Include lit for running lit-based tests in other projects
+  pushd ../utils/lit
+  python3 setup.py install --root="$pkgdir" -O1
+  popd
+
+  # Remove documentation sources
+  rm -r "$pkgdir"/usr/share/doc/llvm/html/{_sources,.buildinfo}
+
+  # The runtime libraries go into llvm-libs
+  mv -f "$pkgdir"/usr/lib/lib{LLVM,LTO,Remarks}*.so* "$srcdir"
+  mv -f "$pkgdir"/usr/lib/LLVMgold.so "$srcdir"
+
+  # OCaml bindings go to a separate package
+  rm -rf "$srcdir"/ocaml.{lib,doc}
+  mv "$pkgdir/usr/lib/ocaml" "$srcdir/ocaml.lib"
+  mv "$pkgdir/usr/share/doc/llvm/ocaml-html" "$srcdir/ocaml.doc"
+
+  if [[ $CARCH == x86_64 ]]; then
+    # Needed for multilib (https://bugs.archlinux.org/task/29951)
+    # Header stub is taken from Fedora
+    mv "$pkgdir/usr/include/llvm/Config/llvm-config"{,-64}.h
+    cp "$srcdir/llvm-config.h" "$pkgdir/usr/include/llvm/Config/llvm-config.h"
+  fi
+
+  install -Dm644 ../LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_llvm-libs-julia() {
+  pkgdesc="LLVM runtime libraries (with patch for julia)"
+  depends=(gcc-libs zlib libffi.so libedit ncurses libxml2)
+  conflicts=("llvm-libs")
+  provides=("llvm-libs=$pkgver-$pkgrel")
+
+  install -d "$pkgdir/usr/lib"
+  cp -P \
+     "$srcdir"/lib{LLVM,LTO,Remarks}*.so* \
+     "$srcdir"/LLVMgold.so \
+     "$pkgdir/usr/lib/"
+
+  # Symlink LLVMgold.so from /usr/lib/bfd-plugins
+  # https://bugs.archlinux.org/task/28479
+  install -d "$pkgdir/usr/lib/bfd-plugins"
+  ln -s ../LLVMgold.so "$pkgdir/usr/lib/bfd-plugins/LLVMgold.so"
+
+  install -Dm644 "$srcdir/llvm-$pkgver.src/LICENSE.TXT" \
+          "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_llvm-ocaml-julia() {
+  _ocaml_ver=$(ocamlc --version)
+
+  pkgdesc="OCaml bindings for LLVM (with patch for julia)"
+  depends=("llvm-julia=$pkgver-$pkgrel" "ocaml=$_ocaml_ver" ocaml-ctypes)
+  conflicts=("llvm-ocaml")
+  provides=("llvm-ocaml=$pkgver-$pkgrel")
+
+  install -d "$pkgdir"/{usr/lib,usr/share/doc/llvm-ocaml}
+  cp -a "$srcdir/ocaml.lib" "$pkgdir/usr/lib/ocaml"
+  cp -a "$srcdir/ocaml.doc" "$pkgdir/usr/share/doc/llvm-ocaml/html"
+
+  install -Dm644 "$srcdir/llvm-$pkgver.src/LICENSE.TXT" \
+          "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

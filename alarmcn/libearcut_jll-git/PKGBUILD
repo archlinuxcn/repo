@@ -1,0 +1,38 @@
+#
+
+pkgname=libearcut_jll-git
+pkgver=v1.0.2.r0.gf176b89
+pkgrel=3
+pkgdesc='Deps for EarCuts.jl'
+arch=(aarch64 armv7h i686 x86_64)
+url='https://github.com/SimonDanisch/EarCutBuilder'
+license=('MIT')
+makedepends=(git)
+source=('git+https://github.com/SimonDanisch/EarCutBuilder')
+sha1sums=('SKIP')
+provides=('libearcut_jll')
+conflicts=('libearcut_jll')
+
+pkgver() {
+  cd EarCutBuilder
+
+  git describe --long --tags | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+}
+
+build() {
+  cd EarCutBuilder
+
+  g++ ${CFLAGS} -c -fPIC -O3 cwrapper.cpp -o earcut.o
+  g++ ${LDFLAGS} -shared -o libearcut_jll.so earcut.o
+}
+
+package() {
+  cd EarCutBuilder
+
+  mkdir -p "${pkgdir}/usr/lib/"
+  install -Dm755 libearcut_jll.so "${pkgdir}/usr/lib/"
+
+  # No need to install for now
+  # mkdir -p "${pkgdir}/usr/include/"
+  # install -Dm644 earcut.hpp "${pkgdir}/usr/include/"
+}

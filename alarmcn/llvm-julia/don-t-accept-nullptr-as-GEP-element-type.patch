@@ -1,0 +1,63 @@
+From b00cff56cfb15cbfa74cb512c9cee1c402cce55b Mon Sep 17 00:00:00 2001
+From: Nikita Popov <nikita.ppv@gmail.com>
+Date: Thu, 8 Jul 2021 20:56:05 +0200
+Subject: [PATCH] Reapply [IR] Don't accept nullptr as GEP element type
+
+Reapply after fixing another occurrence in lldb that was relying
+on this in the preceding commit.
+
+-----
+
+GetElementPtrInst::Create() (and IRBuilder methods based on it)
+currently accept nullptr as the element type, and will fetch the
+element type from the pointer in that case. Remove this fallback,
+as it is incompatible with opaque pointers. I've removed a handful
+of leftover calls using this behavior as a preliminary step.
+
+Out-of-tree code affected by this change should either pass a proper
+type, or can temporarily explicitly call getPointerElementType(),
+if the newly added assertion is encountered.
+
+Differential Revision: https://reviews.llvm.org/D105653
+---
+ llvm/include/llvm/IR/Instructions.h | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
+
+diff --git a/llvm/include/llvm/IR/Instructions.h b/llvm/include/llvm/IR/Instructions.h
+index a5cebf0a4626..0c43a56daa33 100644
+--- a/llvm/include/llvm/IR/Instructions.h
++++ b/llvm/include/llvm/IR/Instructions.h
+@@ -956,13 +956,9 @@ public:
+                                    const Twine &NameStr = "",
+                                    Instruction *InsertBefore = nullptr) {
+     unsigned Values = 1 + unsigned(IdxList.size());
+-    if (!PointeeType) {
+-      PointeeType =
+-          cast<PointerType>(Ptr->getType()->getScalarType())->getElementType();
+-    } else {
+-      assert(cast<PointerType>(Ptr->getType()->getScalarType())
+-                 ->isOpaqueOrPointeeTypeMatches(PointeeType));
+-    }
++    assert(PointeeType && "Must specify element type");
++    assert(cast<PointerType>(Ptr->getType()->getScalarType())
++               ->isOpaqueOrPointeeTypeMatches(PointeeType));
+     return new (Values) GetElementPtrInst(PointeeType, Ptr, IdxList, Values,
+                                           NameStr, InsertBefore);
+   }
+@@ -972,13 +968,9 @@ public:
+                                    const Twine &NameStr,
+                                    BasicBlock *InsertAtEnd) {
+     unsigned Values = 1 + unsigned(IdxList.size());
+-    if (!PointeeType) {
+-      PointeeType =
+-          cast<PointerType>(Ptr->getType()->getScalarType())->getElementType();
+-    } else {
+-      assert(cast<PointerType>(Ptr->getType()->getScalarType())
+-                 ->isOpaqueOrPointeeTypeMatches(PointeeType));
+-    }
++    assert(PointeeType && "Must specify element type");
++    assert(cast<PointerType>(Ptr->getType()->getScalarType())
++               ->isOpaqueOrPointeeTypeMatches(PointeeType));
+     return new (Values) GetElementPtrInst(PointeeType, Ptr, IdxList, Values,
+                                           NameStr, InsertAtEnd);
+   }
