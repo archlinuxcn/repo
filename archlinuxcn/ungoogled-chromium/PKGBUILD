@@ -10,7 +10,7 @@
  
 pkgname=ungoogled-chromium
 pkgver=102.0.5005.61
-pkgrel=1
+pkgrel=2
 _launcher_ver=8
 _gcc_patchset=5
 pkgdesc="A lightweight approach to removing Google web service dependency"
@@ -50,14 +50,14 @@ sha256sums=('1a3797d36901fa3ba63744b9a870b65a8890c9a850442c160196bc64df886b1f'
 provides=('chromium')
 conflicts=('chromium')
 _uc_usr=Eloston
-_uc_ver=$pkgver-1
+_uc_ver=$pkgver-3
 source=(${source[@]}
         $pkgname-$_uc_ver.tar.gz::https://github.com/$_uc_usr/ungoogled-chromium/archive/$_uc_ver.tar.gz
         chromium-drirc-disable-10bpc-color-configs.conf
         ozone-add-va-api-support-to-wayland.patch
         wayland-egl.patch)
 sha256sums=(${sha256sums[@]}
-            '88a0f277fab63ab6aa673ac2a11c65e41624e6576f31a89f473c967997421ce5'
+            'f93d69a7cf7a608e6b825dbfe33d7c92197e7caa730c94342e0c2c7e0483dacc'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '07bdc1b3fc8f0d0a4804d111c46ce3343cd7824de562f2848d429b917ce4bcfd'
             '34d08ea93cb4762cb33c7cffe931358008af32265fc720f2762f0179c3973574')
