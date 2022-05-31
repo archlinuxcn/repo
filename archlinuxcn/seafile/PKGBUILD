@@ -11,47 +11,53 @@ arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/haiwen/$pkgname"
 license=('GPL2')
 depends=(
-    'libsearpc'
-    'libevent'
-    'fuse'
-    'python-future'
-    'sqlite'
+  openssl
+  libuuid.so
+  libevent
+  libcurl.so
+  libgio-2.0.so
+  libgobject-2.0.so
+  libglib-2.0.so
+  libsearpc.so
+  jansson
+  zlib
+  sqlite
 )
 makedepends=(
-    'vala'
-    'intltool'
+  'vala'
+  'intltool'
 )
 conflicts=('seafile-server')
 source=(
-    "seafile-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
-    "seaf-cli@.service"
+  "seafile-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
+  "seaf-cli@.service"
 )
 sha256sums=(
-    'c6c703476907b9c84ec25fd681d85bced876ee2528409060f7e24058c73cad0a'
-    'c37510109c1de64c774896df39aece240c056b54414d2119fca01860211156ba'
+  'c6c703476907b9c84ec25fd681d85bced876ee2528409060f7e24058c73cad0a'
+  'c37510109c1de64c774896df39aece240c056b54414d2119fca01860211156ba'
 )
-provides=('seafile-client-cli')
+provides=(seafile-client-cli libseafile.so)
 
 prepare() {
-    cd "$srcdir/seafile-$pkgver"
-    sed -i 's|(DESTDIR)@prefix@|@prefix@|' './lib/libseafile.pc.in'
+  cd "$srcdir/seafile-$pkgver"
+  sed -i 's|(DESTDIR)@prefix@|@prefix@|' './lib/libseafile.pc.in'
 }
 
 build() {
-    cd "$srcdir/seafile-$pkgver"
-    ./autogen.sh
-    ./configure \
-        --enable-console \
-        --prefix='/usr' \
-        PYTHON='/usr/bin/python'
-    make
+  cd "$srcdir/seafile-$pkgver"
+  ./autogen.sh
+  ./configure \
+    --enable-console \
+    --prefix='/usr' \
+    PYTHON='/usr/bin/python'
+  make
 }
 
 package() {
-    cd "$srcdir/seafile-$pkgver"
-    make DESTDIR="$pkgdir" install
+  cd "$srcdir/seafile-$pkgver"
+  make DESTDIR="$pkgdir" install
 
-    install -Dm644 \
-        "$srcdir/seaf-cli@.service" \
-        "$pkgdir/usr/lib/systemd/system/seaf-cli@.service"
+  install -Dm644 \
+          "$srcdir/seaf-cli@.service" \
+          "$pkgdir/usr/lib/systemd/system/seaf-cli@.service"
 }
