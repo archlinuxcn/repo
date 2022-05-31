@@ -11,7 +11,7 @@ pkgname=ocaml-menhir
 pkgver=20211128
 pkgrel=2
 pkgdesc="Menhir is a LR(1) parser generator for the OCaml."
-arch=("x86_64")
+arch=(armv7h aarch64 x86_64)
 url="http://cristal.inria.fr/~fpottier/menhir/"
 license=('GPL' 'QPL')
 depends=('ocaml>=4.02.3')
@@ -27,7 +27,6 @@ build() {
 
 package() {
   cd "$srcdir/${pkgname/ocaml-/}-$pkgver"
-  dune install --prefix "${pkgdir}/usr" \
-       --libdir "lib/ocaml"
+  DESTDIR="${pkgdir}" dune install --prefix=/usr \
+         --libdir="$(ocamlfind printconf destdir)"
 }
-

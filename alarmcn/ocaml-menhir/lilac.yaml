@@ -1,7 +1,7 @@
-post_build: aur_post_build
+# post_build: aur_post_build
 update_on:
-  - source: aur
-    aur: ocaml-menhir
+  - source: manual
+    manual: 20211128
   - source: alpm
     from_pattern: ^(\d+\.\d+)\..*
     to_pattern: \1
