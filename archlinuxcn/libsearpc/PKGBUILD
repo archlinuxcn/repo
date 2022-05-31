@@ -13,7 +13,7 @@ pkgdesc="A simple C language RPC framework (including both server side & client 
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/haiwen/libsearpc"
 license=('Apache')
-depends=("glib2>=2.26.0" "jansson>=2.2.1")
+depends=("glib2>=2.26.0" libgobject-2.0.so libglib-2.0.so "jansson>=2.2.1")
 provides=(libsearpc.so)
 makedepends=(python)
 # upstream seems to change tag so let's rename the download...
