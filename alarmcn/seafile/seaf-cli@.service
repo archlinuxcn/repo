@@ -1,0 +1,14 @@
+[Unit]
+Description=Seafile command line client
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+User=%I
+Type=oneshot
+ExecStart=/usr/bin/seaf-cli start
+ExecStop=/usr/bin/seaf-cli stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

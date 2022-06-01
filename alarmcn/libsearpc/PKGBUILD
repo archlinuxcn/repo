@@ -1,0 +1,39 @@
+# Maintainer: eolianoe <eolianoe [at] gmail [DoT] com>
+# Contributor: Aaron Lindsay <aaron@aclindsay.com>
+# Contributor: Edvinas Valatka <edacval@gmail.com>
+# Contributor: Adrian Hühn <adrian.huehn@web.de>
+
+pkgname=libsearpc
+epoch=2
+pkgver=3.2.0
+# tagname=$pkgver
+_tagname=3.2-latest
+pkgrel=9
+pkgdesc="A simple C language RPC framework (including both server side & client side)"
+arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
+url="https://github.com/haiwen/libsearpc"
+license=('Apache')
+depends=("glib2>=2.26.0" libgobject-2.0.so libglib-2.0.so "jansson>=2.2.1")
+provides=(libsearpc.so)
+makedepends=(python)
+# upstream seems to change tag so let's rename the download...
+source=("libsearpc-${pkgver}-6.tar.gz::${url}/archive/v${_tagname}.tar.gz")
+sha256sums=('683a78cc6dc66d4db5fd90e3260a23845c6a5ff2510b8f55d2f46b86f9c3f271')
+
+prepare () {
+  cd ${pkgname}-${_tagname}
+  sed -i 's|(DESTDIR)@prefix@|@prefix@|' './libsearpc.pc.in'
+}
+
+build () {
+  echo "Building python3 version"
+  cd ${pkgname}-${_tagname}
+  ./autogen.sh
+  ./configure --prefix=/usr PYTHON=/usr/bin/python
+  make
+}
+
+package () {
+  cd ${pkgname}-${_tagname}
+  make DESTDIR="${pkgdir}" install
+}
