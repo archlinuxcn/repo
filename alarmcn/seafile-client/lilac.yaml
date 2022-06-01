@@ -1,0 +1,42 @@
+#
+
+maintainers:
+  - github: yuyichao
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - seafile
+  - libsearpc
+
+update_on:
+  - source: github
+    github: haiwen/seafile-client
+    use_max_tag: true
+    include_regex: 'v(\d+.\d+.\d+)'
+  - source: alpm
+    from_pattern: ^(\d\.\d)\..*
+    to_pattern: \1
+    alpm: openssl
+    repo: core
+  - source: alpm
+    provided: libuuid.so
+    alpm: util-linux-libs
+  - source: alpm
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+    alpm: libevent
+  - source: alpm
+    alpm: curl
+    provided: libcurl.so
+  - source: alpm
+    alpm: glib2
+    provided: libgobject-2.0.so
+  - source: alpm
+    alpm: glib2
+    provided: libglib-2.0.so
+  - alias: python
+  - source: manual
+    manual: 1
