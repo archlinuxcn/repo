@@ -1,0 +1,40 @@
+From a82a97e415d46f2d07bcd1c878753b2f1283892c Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 12 May 2022 10:46:02 -0400
+Subject: [PATCH] Remove const qualifier on return type
+
+These does nothing and causes an warning with -Wextra.
+---
+ src/deepbindless.c      | 2 +-
+ src/libblastrampoline.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/deepbindless.c b/src/deepbindless.c
+index 0de758b..aef1d60 100644
+--- a/src/deepbindless.c
++++ b/src/deepbindless.c
+@@ -11,7 +11,7 @@ uint8_t use_deepbind = 0x00;
+ #else
+ uint8_t use_deepbind = 0x01;
+ #endif
+-LBT_DLLEXPORT const uint8_t lbt_get_use_deepbind() {
++LBT_DLLEXPORT uint8_t lbt_get_use_deepbind() {
+     return use_deepbind;
+ }
+ 
+diff --git a/src/libblastrampoline.h b/src/libblastrampoline.h
+index 3703fee..d3b97af 100644
+--- a/src/libblastrampoline.h
++++ b/src/libblastrampoline.h
+@@ -208,7 +208,7 @@ LBT_DLLEXPORT void lbt_set_default_func(const void * addr);
+  * `LBT_USE_RTLD_DEEPBIND=0` in their environment.  This function returns `0x01` if it will
+  *  use `RTLD_DEEPBIND` when loading a library, and `0x00` otherwise.
+  */
+- LBT_DLLEXPORT const uint8_t lbt_get_use_deepbind();
++ LBT_DLLEXPORT uint8_t lbt_get_use_deepbind();
+ 
+ /*
+  * Returns the currently-configured forward target for the given `symbol_name`, according to the
+-- 
+2.36.1
+

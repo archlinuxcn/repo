@@ -1,0 +1,30 @@
+From 21022f74ec9b751425fd8890c66374793be8e446 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 12 May 2022 10:41:46 -0400
+Subject: [PATCH] Use strdup to copy strings
+
+The previous code failed to allocate space for the terminal NUL byte.
+---
+ src/threading.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/src/threading.c b/src/threading.c
+index e45ecd4..7838d17 100644
+--- a/src/threading.c
++++ b/src/threading.c
+@@ -40,10 +40,8 @@ LBT_DLLEXPORT void lbt_register_thread_interface(const char * getter, const char
+         idx++;
+     }
+ 
+-    getter_names[idx] = (char *) malloc(strlen(getter));
+-    strcpy(getter_names[idx], getter);
+-    setter_names[idx] = (char *) malloc(strlen(setter));
+-    strcpy(setter_names[idx], setter);
++    getter_names[idx] = strdup(getter);
++    setter_names[idx] = strdup(setter);
+ }
+ 
+ /*
+-- 
+2.36.1
+

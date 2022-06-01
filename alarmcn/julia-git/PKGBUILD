@@ -1,0 +1,419 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+# Contributor: Lex Black <autumn-wind at web dot de>
+# Contributor: Michael Jakl <jakl.michael@gmail.com>
+# With contributions from many kind people at https://aur.archlinux.org/packages/julia-git/
+
+BUILD_DOC=1
+
+pkgbase=julia-git
+pkgname=(julia-git)
+
+if [[ $CARCH != x86_64 ]]; then
+  BUILD_DOC=0
+fi
+
+if ((BUILD_DOC)); then
+  pkgname+=('julia-git-docs')
+fi
+
+case "$CARCH" in
+  x86_64)
+    _soarch=64
+    ;;
+  i686)
+    _soarch=32
+    ;;
+  aarch64)
+    _soarch=64
+    ;;
+  armv7h)
+    _soarch=32
+    ;;
+esac
+
+epoch=1
+pkgver=1.9.0.DEV.687.gf5ebcc97f1c
+pkgrel=1
+pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+url="http://julialang.org"
+license=('GPL')
+_soname_deps=(libcurl.so libgit2.so libopenlibm.so libssh2.so
+              libmbedcrypto.so libmbedtls.so libmbedx509.so)
+depends_libs=(arpack fftw gmp libgit2-julia libunwind mpfr pcre2 suitesparse
+              openspecfun openblas-lapack libutf8proc-git
+              mbedtls zlib p7zip libnghttp2 ca-certificates-utils)
+makedepends=("${depends_libs[@]}" llvm-julia gcc-fortran git patchelf python proot
+             "${_soname_deps[@]}")
+options=('debug' '!strip' '!buildflags')
+_patches=(
+  0001-Force-enable-GDB-debug-info-registration.patch
+  0002-Fix-source-file-paths.patch
+  0003-Enable-basic-AA-in-O2.patch
+  0004-Clear-soname.patch
+  julia-libgit-1.4.patch
+)
+source=('git+https://github.com/JuliaLang/julia'
+        "${_patches[@]}"
+        julia-compile-pkgs.jl
+        julia-clear-precompile.sh
+        julia-precompile.hook
+        julia-clear-precompile.hook
+        arch-source-translate.cpp
+        sysp7z.diff
+        0001-Use-strdup-to-copy-strings.patch
+        0001-Remove-const-qualifier-on-return-type.patch)
+sha512sums=('SKIP'
+            '3afb8bd88f82f963be4c9c5f6dfd260b7586e42dd768552189bf649d6431abef0fb63078e5ba2cf4f65a573613d8ac6389509e1ba866388b223eb99152f11678'
+            '46078ec275f827010ff81b3aebb04365aab6a14ddda5cf1f1821f14848b589909e1478bfda6b58dd410fa25a86f00cbb2a566d1a967d31abc477062f6e56ad06'
+            '7c3f0e9bbcc25aa8efa47e2093dc69f5870a669d257328f1075736f1060612f996beb638edc5ca17af18ba8e91ebfa596226d6a3fee65700bfbcab30c9ee9dbb'
+            '787e7537228f08a354225a329c1dcbf434d60454ba727586472fba15fd304905508c1f0a4a542ed12046ad3b62a00f882c609eff3c061fc082a3215cce7e9c30'
+            '044b1fdc31a767c36b8df1f0582f64051450903be4a4ab668d8b7a8c666be800a51250825d807a4503594b73bb5c2e4e9eef4c61363a1484f328138a1871ff60'
+            '2bf050afb5afcd21b23667beb6129e73dc2fb8143366921c8859d7011ed06187db9f4aedae99c0fe31e0bcb7b0896180b006ee542d4b4d592369e9f4f1bd77ec'
+            'ce03e2995a45d942f480d25d1ce7cddacb98f2e11eeed19b5564e36d817987f548c313b0d6b139402ba8c203c8ba9a059e1732695517d7b78b7fa88f08429295'
+            '36df234b634926bc88084e683ee9f495ef0ce4c26d6d6b9f55294098bdcb86f5eaaf6c671afe1a5c4371c428bd7bf3dd617ec1f15a7ff35376d67df22140454c'
+            'adf0fef964e8bdee9926f1127177bc0ddea0d2dbb1090ab94555c3599b87cf03b489dfe92fda3453bf68385f4b69556f396b1ecfb8a9525c23a3ed808e2eb370'
+            'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
+            '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849'
+            '10e79339e097a68b47e0353980a89ba0404bb4c96396e2c6f3d2b9abbf4872f79a11cd91d41c4c320f51432a75e197fa3aa9d643fe42d4b9ef72c7e1f5446f08'
+            '02353ed7711597f83d370d6b0d92538ca29ab18252808973c75f07f48cb3f8c1384f8bb4e672f4b971ca53ffca99b77be75d7151a70705e4c21744cf46aef17b')
+
+pkgver() {
+  cd julia
+
+  last_tag=$(git describe --tags --abbrev=0)
+
+  #collect the contents
+  commit_short=$(git rev-parse --short HEAD)
+  verchanged=$(git blame -L ,1 -sl -- VERSION | cut -f 1 -d " ")
+  build_number=$(git rev-list --count HEAD "^$verchanged")
+  # Combine version from VERSION file with rev-count and latest commit
+  printf "%s.%s.g%s" "$(git show HEAD:VERSION | sed 's/-/./g')" \
+         "$build_number" "$commit_short"
+}
+
+julia_opts=(prefix=/usr sysconfdir=/etc
+            USE_SYSTEM_LIBWHICH=0
+            USE_SYSTEM_CSL=1
+            USE_SYSTEM_LLVM=1
+            USE_SYSTEM_LIBUNWIND=1
+            USE_SYSTEM_PCRE=1
+            USE_SYSTEM_OPENLIBM=1
+            USE_SYSTEM_BLAS=1
+            USE_SYSTEM_LAPACK=1
+            USE_SYSTEM_GMP=1
+            USE_SYSTEM_MPFR=1
+            USE_SYSTEM_LIBSUITESPARSE=1
+            USE_SYSTEM_UTF8PROC=1
+            USE_SYSTEM_MBEDTLS=1
+            USE_SYSTEM_LIBSSH2=1
+            USE_SYSTEM_NGHTTP2=1
+            USE_SYSTEM_CURL=1
+            USE_SYSTEM_LIBGIT2=1
+            USE_SYSTEM_PATCHELF=1
+            USE_SYSTEM_ZLIB=1
+            USE_SYSTEM_P7ZIP=1
+            USE_LLVM_SHLIB=1
+            USE_BINARYBUILDER=0
+            USE_BLAS64=0 # Julia assumes system blas64 on aarch64
+            LLVM_USE_CMAKE=0 # Workaround LLVM linking with system LLVM
+            LIBBLASNAME=libopenblas
+            LIBBLAS=-lopenblas
+            LIBLAPACKNAME=libopenblas
+            LIBLAPACK=-lopenblas
+            BUNDLE_DEBUG_LIBS=1)
+
+_x86_target='generic,opt_size;haswell,clone_all,-rdrnd;skylake,base(1),-rdrnd,-rdseed,-rtm;cannonlake,base(1),-rdrnd,-rdseed,-rtm'
+_arm_target='armv7-a;armv7-a,neon;armv7-a,neon,vfp4'
+_aa64_target='generic;cortex-a57;apple-m1,clone_all'
+
+case "$CARCH" in
+  x86_64)
+    julia_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET="${_x86_target}")
+    ;;
+  i686)
+    julia_opts=("${julia_opts[@]}" MARCH=pentium4 JULIA_CPU_TARGET="${_x86_target}")
+    ;;
+  aarch64)
+    julia_opts=("${julia_opts[@]}" MARCH=armv8-a JULIA_CPU_TARGET="${_aa64_target}")
+    ;;
+  armv7h)
+    julia_opts=("${julia_opts[@]}" MARCH=armv7-a JULIA_CPU_TARGET="${_arm_target}")
+    ;;
+esac
+
+_apply_patch() {
+  echo "Applying $1"
+  patch -Np1 < "../$1"
+}
+
+prepare() {
+  rm -rf bin/
+  mkdir -p bin/
+
+  for p in cc c++ gcc g++; do
+    cat > bin/$p <<EOF
+exec /usr/bin/$p "\${@/#-O0/-Og}" -fasynchronous-unwind-tables -ffile-prefix-map="${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+EOF
+    chmod +x bin/$p
+  done
+
+  cd julia
+
+  git reset --hard HEAD
+  git clean -fdx
+
+  for p in "${_patches[@]}"; do
+    _apply_patch "$p"
+  done
+  make "${julia_opts[@]}" -C deps extract-blastrampoline
+  (
+    cd deps/scratch/blastrampoline-*
+    patch -Np1 < "$srcdir/0001-Use-strdup-to-copy-strings.patch"
+    patch -Np1 < "$srcdir/0001-Remove-const-qualifier-on-return-type.patch"
+  )
+  make "${julia_opts[@]}" julia-stdlib
+  (
+    cd usr/share/julia/stdlib/v*/Pkg
+    patch -Np0 < "$srcdir/sysp7z.diff"
+  )
+  for f in usr/share/julia/stdlib/v*/*/*Artifacts.toml; do
+    echo "Clearing $f"
+    echo > "$f"
+  done
+  sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' */Makefile
+  sed -i -e 's/\(symlink_system_library,CSL,libquadmath,[0-9]*\))/\1,ALLOW_FAILURE)/g' base/Makefile
+}
+
+build_in() {
+  cd "$1"
+
+  export JL_MAKEPKG_SRCDIR="${PWD}"
+
+  opts=("${@:3}")
+  export PATH="${srcdir}/bin:${PATH}"
+  if [[ $CARCH = i686 ]]; then
+    CFLAGS="${CFLAGS//-march=i686/-march=pentium4} -march=pentium4"
+    CXXFLAGS="${CXXFLAGS//-march=i686/-march=pentium4} -march=pentium4"
+  fi
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  export CFLAGS+=' -Wno-pedantic -Wno-clobbered'
+  export CXXFLAGS+=' -Wno-pedantic -Wno-clobbered'
+
+  ver=$(cat VERSION | cut -f 1-2 -d '.')
+
+  # These are to workaround bugs in the hand-made build system that can't handle
+  # parallel build properly.
+  make "${opts[@]}" -C base version_git.jl.phony
+  make "${opts[@]}" -C deps
+  make "${opts[@]}" -C src jl_internal_funcs.inc
+  make "${opts[@]}" julia-cli-release
+  make "${opts[@]}" release debug
+  # TODO docless build
+  JL_MAKEPKG_SRCDIR= make "${opts[@]}" docs
+
+  # Check to detect issues like JuliaLang/julia#13820
+  LD_PRELOAD= JL_MAKEPKG_SRCDIR= usr/bin/julia -e '0'
+  LD_PRELOAD= JL_MAKEPKG_SRCDIR= usr/bin/julia-debug -e '0'
+}
+
+build() {
+  if [[ $(vercmp $(g++ -dumpversion) 10) = -1 ]]; then
+    g20=gnu++2a
+  else
+    g20=gnu++20
+  fi
+  g++ -fPIC -Wall -Wextra -shared -o libarch-source-translate.so -O2 \
+      -std=$g20 arch-source-translate.cpp
+  # _ld_preload="${srcdir}/libarch-source-translate.so"
+  # if [[ -n $LD_PRELOAD ]]; then
+  #   _ld_preload="${_ld_preload}:$LD_PRELOAD"
+  # fi
+  (LD_PRELOAD="${_ld_preload}" build_in julia $BUILD_DOC "${julia_opts[@]}")
+}
+
+_source_files() {
+  # Copied from /usr/share/makepkg/tidy/strip.sh
+  LANG=C readelf "$1" --debug-dump 2>/dev/null | \
+    awk '/DW_AT_name +:/{name=$NF}/DW_AT_comp_dir +:/{{if (name == "<artificial>") next}{if (name !~ /^[<\/]/) {printf "%s/", $NF}}{print name}}'
+}
+
+package-julia-in() {
+  _llvm_ver=$(llvm-config --version)
+  [[ $_llvm_ver =~ ^([0-9]*).* ]]
+  llvm_maj_ver=${BASH_REMATCH[1]}
+  ((next_llvm_maj=llvm_maj_ver + 1))
+
+  arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+  depends=("${depends_libs[@]}"
+           "llvm-libs-julia>=${llvm_maj_ver}.0"
+           "llvm-libs-julia<${next_llvm_maj}.0"
+           hicolor-icon-theme xdg-utils)
+  opts=("${@:2}")
+
+  cd "$1"
+
+  export JL_MAKEPKG_SRCDIR="${PWD}"
+
+  # TODO docless build
+  # if ((BUILD_DOC)); then
+  make install DESTDIR="$pkgdir" "${opts[@]}"
+  # else
+  #   make install-nodoc DESTDIR="$pkgdir" "${opts[@]}"
+  #   # Manually install man pages
+  #   mkdir -p "$pkgdir"/usr/share/man/man1/
+  #   install -m644 -t "$pkgdir"/usr/share/man/man1/ usr/share/man/man1/julia.1
+  # fi
+
+  # Remove doc files (should be non for nodoc install)
+  rm -rf "$pkgdir/usr/share/doc/julia"
+
+  ver=$("$pkgdir/usr/bin/julia" \
+          --startup-file=no \
+          -e 'print(VERSION.major, ".", VERSION.minor, ".", VERSION.patch)')
+  ver_short=$("$pkgdir/usr/bin/julia" \
+                --startup-file=no \
+                -e 'print(VERSION.major, ".", VERSION.minor)')
+  stdlib_dir="$pkgdir/usr/share/julia/stdlib/v$ver_short"
+  builtin_pkgs=()
+  for pkg in $(ls -1 "$stdlib_dir"); do
+    if [[ -f "$stdlib_dir/$pkg/Project.toml" ]]; then
+      builtin_pkgs=("${builtin_pkgs[@]}" "julia-git-${pkg,,}")
+      echo "$pkg"
+    fi
+    # Keep a list of the builtin stdlibs so that we can compile these as a whole
+    # in a single package. Note that even though these are builtin,
+    # not all of them are in the system image.
+  done > "$pkgdir/usr/share/julia/builtin_stdlib.v$ver_short"
+  provides=("julia=2:$ver" "${builtin_pkgs[@]}")
+  conflicts=('julia' "${builtin_pkgs[@]}")
+  replaces=("${builtin_pkgs[@]}")
+
+  install -Dm644 ../julia-compile-pkgs.jl "${pkgdir}/usr/lib/julia/"
+  install -Dm644 ../julia-clear-precompile.sh "${pkgdir}/usr/lib/julia/"
+  sed "s|@VER@|$ver_short|" ../julia-precompile.hook |
+    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-precompile.hook"
+  sed "s|@VER@|$ver_short|" ../julia-clear-precompile.hook |
+    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-clear-precompile.hook"
+  mkdir -p "${pkgdir}/usr/share/julia/compiled/v$ver_short"
+
+  mkdir -p "${pkgdir}/usr/share/julia/contrib"
+  install -m644 -t "${pkgdir}/usr/share/julia/contrib" contrib/generate_precompile.jl
+
+  # From ca-certificates-utils, needed by Download stdlib
+  ln -sf /etc/ssl/cert.pem "${pkgdir}/usr/share/julia/cert.pem"
+
+  # Without stripping, makepkg doesn't copy the source for us...
+  dbgsrcdir="${DBGSRCDIR:-/usr/src/debug}"
+  for binary in usr/bin/julia usr/bin/julia-debug \
+                              usr/lib/libjulia.so usr/lib/libjulia-debug.so \
+                              usr/lib/julia/libjulia-internal.so \
+                              usr/lib/julia/libjulia-internal-debug.so; do
+    binary="${pkgdir}/${binary}"
+    ls "$binary"
+    # copy source files to debug directory
+    local f t
+    while IFS= read -r t; do
+      f=${t/${dbgsrcdir}/"$srcdir"}
+      if ! [[ -f "$f" ]]; then
+        echo "Cannot find source file: '$f'"
+        continue
+      fi
+      case "${t%/*}" in
+        "${srcdir}"*)
+          echo "Source file path not mapped: '${t%/*}'."
+          continue
+          ;;
+      esac
+      mkdir -p "${pkgdir}/${t%/*}"
+      cp -- "$f" "${pkgdir}/${t%/*}"
+    done < <(_source_files "$binary")
+  done
+  # Files that are not compiled directly aren't being copied by the code above.
+  # This include all headers as well as some cpp files
+  #   (e.g. `cgutils.cpp`, `processor_*.cpp` etc)
+  # that are included from other files. Copy these directly for now.
+  cp src/*.{c,cpp} "${pkgdir}/${dbgsrcdir}/julia/src/"
+  (
+    cd "${pkgdir}/usr/include/julia"
+    mkdir -p "${pkgdir}/${dbgsrcdir}/julia/src/"
+    for f in *; do
+      ln -sf "/usr/include/julia/$f" "${pkgdir}/${dbgsrcdir}/julia/src/$f"
+    done
+  )
+
+  env JULIA_PRECOMPILE_STDLIB_DIR="/usr/share/julia/stdlib/v$ver_short" \
+      proot -b "${pkgdir}/usr/share/julia/:/usr/share/julia/" \
+      "${pkgdir}/usr/bin/julia" --startup-file=no "${srcdir}/julia-compile-pkgs.jl" \
+      /usr/share/julia
+  for f in "${pkgdir}/usr/share/julia/compiled/v$ver_short/"*; do
+    touch "$f/.archpkg"
+  done
+
+  # The ji file records the exact time stamps so we need to fix those in post_install
+  (
+    echo "_fix_timestamps() {"
+    cd "${pkgdir}"
+    find usr/share/julia/stdlib -type f -exec \
+         sh -c 'echo "  touch -c -d \"$(stat -c %y "{}")\" \"{}\""' \;
+    echo "}"
+
+    echo "post_install() {"
+    echo "  _fix_timestamps"
+    echo "}"
+
+    echo "post_upgrade() {"
+    echo "  _fix_timestamps"
+    echo "}"
+  ) > "${startdir}/install.pkg"
+  true && install=install.pkg
+
+  # Manually filling in the soname dependencies since makepkg doesn't recognize the symlink
+  # julia uses to specify the soname
+  for libname in "${_soname_deps[@]}"; do
+    local filename="${pkgdir}/usr/lib/julia/${libname}"
+    [[ -f "${filename}" ]] || {
+      echo "Cannot find library: ${libname} in ${pkgdir}/usr/lib/julia/"
+      exit 1
+    }
+    local soarch=$(LC_ALL=C readelf -h "$filename" 2>/dev/null |
+                     sed -n 's/.*Class.*ELF\(32\|64\)/\1/p')
+    [[ -n "$soarch" ]] || [[ "$soarch" != "$_soarch" ]] || {
+      echo "SO arch of library ${libname}: '${soarch}' does not match '${_soarch}'"
+      exit 1
+    }
+
+    local sofile=$(LC_ALL=C readelf -d "$filename" 2>/dev/null |
+                     sed -n 's/.*Library soname: \[\(.*\)\].*/\1/p')
+    if [[ -z "$sofile" ]]; then
+      echo "Library ${libname}: is not versioned"
+      exit 1
+    fi
+
+    local soversion="${sofile##*\.so\.}"
+    depends+=("${libname}=${soversion}-${soarch}")
+  done
+}
+
+package_julia-git() {
+  # export LD_PRELOAD="${srcdir}/libarch-source-translate.so:$LD_PRELOAD"
+  package-julia-in julia "${julia_opts[@]}"
+  if [[ "$CARCH" = x86_64 ]]; then
+    replaces=(julia-git-avx2)
+  fi
+}
+
+package_julia-git-docs() {
+  arch=('any')
+  pkgdesc+=" (Documents)"
+  provides=('julia-docs' 'julia-doc')
+  conflicts=('julia-docs' 'julia-doc' 'julia-git-doc' 'julia-doc-git')
+  replaces=('julia-git-doc' 'julia-doc-git')
+
+  cd julia/doc/_build
+
+  mkdir -p "$pkgdir"/usr/share/doc/julia/
+  cp -dpr --no-preserve=ownership html "$pkgdir"/usr/share/doc/julia/
+  find "$pkgdir/usr/share/doc/julia/" -type f -exec sed -i -e "s|$srcdir/julia||g" '{}' \+
+}

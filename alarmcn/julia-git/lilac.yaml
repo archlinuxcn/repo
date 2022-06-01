@@ -1,0 +1,43 @@
+maintainers:
+  - github: yuyichao
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - openspecfun-git
+  - openblas-lapack-git: openblas-git
+  - openblas-lapack-git
+  - libutf8proc-git
+  - openlibm-git
+  - llvm-julia
+  - llvm-julia: llvm-libs-julia
+  - libgit2-julia
+  - proot-git
+
+update_on:
+  - source: vcs
+    lilac_throttle: 2d
+  - source: alpm
+    alpm: curl
+    provided: libcurl.so
+  - source: alpm-lilac
+    alpm: libgit2-julia
+    provided: libgit2.so
+  - source: alpm-lilac
+    alpm: openlibm-git
+    provided: libopenlibm.so
+  - source: alpm
+    alpm: libssh2
+    provided: libssh2.so
+  - source: alpm
+    alpm: mbedtls
+    provided: libmbedcrypto.so
+  - source: alpm
+    alpm: mbedtls
+    provided: libmbedtls.so
+  - source: alpm
+    alpm: mbedtls
+    provided: libmbedx509.so
+  - source: manual
+    manual: 4
