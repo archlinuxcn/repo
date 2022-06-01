@@ -65,6 +65,8 @@ def prepare():
     return 'no clippy available?'
 
   miri_version = toml['pkg']['miri-preview']['version'].split('-', 1)[0]
+  if not miri_version:
+    return 'miri version is empty. not available?'
 
   stds = [Std(target, toml['pkg']['rust-std']['target'][target])
           for target in STDS]
