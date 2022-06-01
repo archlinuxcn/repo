@@ -1,14 +1,15 @@
 # Maintainer: Federico Di Pierro <nierro92@gmail.com>
+# Maintainer: Sefa Eyeoglu <contact@scrumplex.net>
 
 pkgname=systemd-boot-pacman-hook
-pkgver=2
-pkgrel=3
+pkgver=3
+pkgrel=2
 pkgdesc="Pacman hook to upgrade systemd-boot after systemd upgrade."
 arch=("any")
 license=("GPL")
 depends=('systemd')
 source=(systemd-boot.hook)
-md5sums=("13c7893e3e8b34479c42795d8f9e1ad3")
+md5sums=('cd8b1e530ce6f239923362492fda3f4f')
 
 package() {
     install -m755 -d "${pkgdir}/usr/share/libalpm/hooks"
