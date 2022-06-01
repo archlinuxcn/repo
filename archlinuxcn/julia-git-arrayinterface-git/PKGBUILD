@@ -1,13 +1,21 @@
-pkgname=julia-git-arrayinterface-git
-pkgver=6.0.5.0.5.gfbaab13
-pkgrel=2
+pkgbase=julia-git-arrayinterface-git
+_subpkg_suffix=(BandedMatrices
+                BlockBandedMatrices
+                CUDA
+                Core
+                GPUArrays
+                OffsetArrays
+                StaticArrays
+                Tracker)
+pkgname=(julia-git-arrayinterface-git)
+pkgver=6.0.5.0.6.gf67325d
+pkgrel=1
 pkgdesc="ArrayInterface.jl"
 url="https://github.com/JuliaArrays/ArrayInterface.jl"
 arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-provides=(julia-git-arrayinterface)
 source=(git+https://github.com/JuliaArrays/ArrayInterface.jl)
 md5sums=('SKIP')
 
@@ -17,8 +25,21 @@ pkgver() {
   git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
 }
 
-package() {
+package_julia-git-arrayinterface-git() {
+  provides=(julia-git-arrayinterface)
   cd ArrayInterface.jl
 
   . /usr/lib/julia/julia-install-pkg.sh ArrayInterface "${pkgdir}" "${pkgname}" julia-git
 }
+
+_subpackage() {
+  local _suffix=$1
+  provides=(julia-git-arrayinterface${_suffix,,})
+  cd ArrayInterface.jl/lib/ArrayInterface${_suffix}
+
+  . /usr/lib/julia/julia-install-pkg.sh ArrayInterface${_suffix} "${pkgdir}" "${pkgname}" julia-git
+}
+for _suffix in "${_subpkg_suffix[@]}"; do
+  pkgname=("${pkgname[@]}" julia-git-arrayinterface${_suffix,,}-git)
+  eval "package_julia-git-arrayinterface${_suffix,,}-git() { _subpackage ${_suffix}; }"
+done
