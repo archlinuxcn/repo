@@ -1,4 +1,10 @@
 maintainers:
 - github: lilydjwg
 
-managed: false
+repo_depends:
+- python-django-tagging
+
+update_on:
+- source: github
+  github: graphite-project/graphite-web
+  use_latest_release: true

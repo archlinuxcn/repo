@@ -110,7 +110,7 @@ DEFAULT_XFILES_FACTOR = 0
 # need to change these settings. Note that the default settings for each
 # of these is relative to GRAPHITE_ROOT.
 #CONF_DIR = '/opt/graphite/conf'
-#STORAGE_DIR = '/opt/graphite/storage'
+STORAGE_DIR = '/var/lib/graphite'
 #STATIC_ROOT = '/opt/graphite/static'
 #LOG_DIR = '/opt/graphite/storage/log/webapp'
 #INDEX_FILE = '/opt/graphite/storage/index'     # Search index file
