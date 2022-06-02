@@ -1,0 +1,44 @@
+# Maintainer: Luca Weiss <luca (at) z3ntu (dot) xyz>
+
+pkgname=mtxclient-git
+pkgver=0.7.0.r14.g754800d
+pkgrel=1
+pkgdesc="Client API library for Matrix, built on top of Boost.Asio<Paste>"
+arch=('x86_64' 'i686')
+url="https://github.com/Nheko-Reborn/mtxclient"
+license=('MIT')
+depends=('boost-libs' 'libcoeurl.so' 'libolm' 'libevent'
+         'libsodium' 'openssl')
+makedepends=('git' 'cmake' 'nlohmann-json' 'boost')
+provides=('mtxclient' 'libmatrix_client.so')
+conflicts=('mtxclient')
+source=("git+https://github.com/Nheko-Reborn/mtxclient")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd mtxclient
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+
+  cmake ../mtxclient \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DBUILD_LIB_TESTS=OFF \
+    -DBUILD_LIB_EXAMPLES=OFF \
+    -DBUILD_SHARED_LIBS=ON \
+    -DHUNTER_ENABLED=OFF
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="$pkgdir" install
+  install -Dm644 ../mtxclient/LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}

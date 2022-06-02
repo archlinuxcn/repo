@@ -1,0 +1,33 @@
+#
+
+pkgname=coeurl-git
+pkgver=0.0.0.70.87517c5
+pkgrel=1
+pkgdesc="Client API library for Matrix, built on top of Boost.Asio<Paste>"
+arch=('x86_64' 'i686')
+url="https://nheko.im/nheko-reborn/coeurl"
+license=('MIT')
+depends=('libcurl.so' 'libfmt.so' 'libevent' 'libspdlog.so')
+provides=('coeurl' 'libcoeurl.so')
+makedepends=('git' 'meson' 'ninja')
+source=("git+https://nheko.im/nheko-reborn/coeurl.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd coeurl
+  echo "0.0.0.$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+build() {
+  meson coeurl \
+        build \
+        --prefix=/usr \
+        -Dbuildtype=release
+
+  ninja -C build
+}
+
+package() {
+  DESTDIR="${pkgdir}" ninja -C build install
+  install -Dm644 coeurl/LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
