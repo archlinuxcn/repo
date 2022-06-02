@@ -1,7 +1,10 @@
+# Maintainer: Coelacanthus <coelacanthus@outlook.com>
+# Contributor: JerryXiao 
+
 _pkgname=bird
 pkgname=$_pkgname-babel-rtt-git
 pkgver=r3826.4c582913
-pkgrel=2
+pkgrel=3
 pkgdesc='RIP, OSPF, BGP, MPLS, BFD, Babel routing daemon (with babel-rtt)'
 arch=('x86_64')
 url='https://github.com/tohojo/bird'
@@ -32,8 +35,8 @@ build() {
     --sbindir=/usr/bin \
     --sysconfdir=/etc \
     --localstatedir=/var \
-    --runstatedir=/run/$pkgname \
-    --docdir=/usr/share/doc/$pkgname
+    --runstatedir=/run/$_pkgname \
+    --docdir=/usr/share/doc/$_pkgname
   make
 }
 
@@ -42,7 +45,7 @@ package () {
   make DESTDIR="$pkgdir" install
 
   # systemd
-  install -D -m 644 "$srcdir/bird.service" "$pkgdir/usr/lib/systemd/system/bird.service"
+  install -Dm644 "$srcdir/bird.service" "$pkgdir/usr/lib/systemd/system/bird.service"
 }
 
 # vim:set ts=2 sw=2 et:
