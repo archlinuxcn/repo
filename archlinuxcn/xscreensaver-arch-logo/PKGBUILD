@@ -5,7 +5,7 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=xscreensaver-arch-logo
-pkgver=6.03
+pkgver=6.04
 pkgrel=1
 pkgdesc="Screen saver and locker for the X Window System with Arch Linux branding"
 url="https://www.jwz.org/${pkgname%%-*}/"
@@ -31,7 +31,7 @@ source=("${pkgname}-${pkgver}.tar.gz::https://www.jwz.org/${pkgname%%-*}/${pkgna
         logo-180.xpm 
         logo-50.png 
         logo-180.png)
-sha512sums=('4aa30824c972a73dc09aeba478cad074f273839a4c7641cddd292da38fc75db10a3f6243cbe8619c5e39cad54c27d33e1e271dfed167458faa7747fb0a090630'
+sha512sums=('7e8f01853b3d9252ce0120894db7dd4fa3cd19114602a09aa770ec750e2f3742585ca4daf19b009e97386f8c0e3cc89330fe760148c6388f41de8cc1f48f8071'
             '529ed9b7904631989803a4e1f306a0f3e496e50a123ebbd6ff77058e52aeb1b2328148d8224e54b547faff14e9d591146b9849c5fb9d1063e6db41f295f3074e'
             'dcaa60ffc8e871ce6b4199ff5cdb6ac4d391ff8c1f548f9d6a098e33ba45532dc6e4854e0ae20fbaf0f18ffc5acb2d318e558a0c94254a298ce1ec92ee1b8ec3'
             '2f9bbbd6a7fba30ed3935e4e8106642b393984ccfb6fd2e202be22021651810f8f29f21b523607268b79c7bd3f3de9fea6731a8002d027d1b1568bb6f25c9c2c'
@@ -55,7 +55,6 @@ build() {
 	--libexecdir=/usr/lib \
 	--with-app-defaults=/usr/share/X11/app-defaults \
 	--without-setuid-hacks \
-	--without-setcap-hacks \
 	--with-pam \
 	--with-login-manager \
 	--with-gtk \
