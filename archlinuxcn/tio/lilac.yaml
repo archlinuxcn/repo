@@ -4,6 +4,7 @@ maintainers:
 update_on:
   - source: aur
     aur: tio
-pre_build_script: aur_pre_build(maintainers='nickoe')
+    manual: 1
+pre_build_script: aur_pre_build(maintainers=['nickoe','jledet'])
 
 post_build: aur_post_build
