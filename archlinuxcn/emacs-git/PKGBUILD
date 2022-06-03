@@ -35,10 +35,6 @@ JIT=         # Enable native just-in-time compilation. libgccjit is in AUR.
                   #    (setq comp-deferred-compilation t)
                   # to your .emacs file.
 
-AOT=              # Precompile all included elisp. It takes a long time.
-                  # You still need to enable on-demand compilation
-                  # for your own packages.
-
 CLI=              # CLI only binary.
 
 GPM=              # Mouse support in Linux console using gpmd.
@@ -46,9 +42,9 @@ GPM=              # Mouse support in Linux console using gpmd.
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
                   # Bitmap fonts only, 1337!
                
-PGTK=        # Use native GTK3 build. Supports Wayland, yay!
+PGTK=             # Use native GTK3 build. Supports Wayland, yay!
 
-GTK3=             # GTK3 old windowing interface.
+GTK3=        # GTK3 old windowing interface.
 
 LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   #
@@ -80,8 +76,8 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-git"
 fi
-pkgver=29.0.50.156993
-pkgrel=1
+pkgver=29.0.50.156996
+pkgrel=2
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
 url="http://www.gnu.org/software/emacs/"
@@ -89,8 +85,8 @@ license=('GPL3')
 depends_nox=('gnutls' 'libxml2' 'jansson')
 depends=("${depends_nox[@]}" "harfbuzz" "libxpm")
 makedepends=('git')
-provides=('emacs' 'emacs-pretest' 'emacs26-git' 'emacs-27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox')
-conflicts=('emacs' 'emacs-pretest' 'emacs26-git' 'emacs-27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox')
+provides=('emacs')
+conflicts=('emacs')
 #source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
 source=("emacs-git::git+https://git.savannah.gnu.org/git/emacs.git")
 options=(!strip)
@@ -238,7 +234,6 @@ build() {
 # If you insist you'll need to read that bug report in *full*.
 # Good luck!
    --without-gconf
-   --without-gsettings
   )
 
 ################################################################################
@@ -273,9 +268,9 @@ elif [[ $PGTK == "YES" ]]; then
   _conf+=( '--with-pgtk' '--without-xaw3d' );
 fi
 
-#if [[ ! $PGTK == "YES" ]]; then
-#    _conf+=( '--without-gsettings' ) :
-#fi
+if [[ ! $PGTK == "YES" ]]; then
+    _conf+=( '--without-gsettings' ) :
+fi
 
 if [[ $NOCAIRO == "YES" || $CLI == "YES" || $NOTKIT == "YES" || $LUCID == "YES" ]]; then
   _conf+=( '--without-cairo' );
@@ -318,11 +313,8 @@ _conf+=('--program-transform-name=s/\([ec]tags\)/\1.emacs/')
   # Please note that incremental compilation implies that you
   # are reusing your src directory!
   #
-  if [[ $JIT == "YES" ]] && [[ $AOT == "YES" ]]; then
-    make NATIVE_FULL_AOT=1
-  else
-    make
-  fi
+
+  make
 
   # You may need to run this if 'loaddefs.el' files become corrupt.
   #cd "$srcdir/emacs-git/lisp"
