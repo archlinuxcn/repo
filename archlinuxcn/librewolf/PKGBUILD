@@ -2,8 +2,8 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=100.0.2
-pkgrel=1
+pkgver=101.0
+pkgrel=2
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
 license=(MPL GPL LGPL)
@@ -25,7 +25,7 @@ options=(!emptydirs !makeflags !strip !lto !debug)
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
 _source_tag="${pkgver}-${pkgrel}"
 # _source_commit='63e85e5a55c9efc38b9ff45e822fb55c076f045a' # not 'stable', but current source head
-_settings_tag='6.4'
+_settings_tag='6.5'
 # _settings_commit='1a84d38bab56551f9ec2650644c4906650e75603' # hottest of fixes: 6.1 with a pref fix on top ^^
 install='librewolf.install'
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
@@ -36,7 +36,7 @@ source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-
         "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
         )
 # source_aarch64=()
-sha256sums=('dc109861204f6938fd8f147af89a694eb516f3d4bb64ce3f0116452d654a8417'
+sha256sums=('55ab5b517d58bbcbc837640263a8371cf1fba3d9f508e54537c4d2cbbfb86095'
             'SKIP'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
             'SKIP'
@@ -166,7 +166,8 @@ fi
   # KDE menu
   # patch -Np1 -i ${_patches_dir}/mozilla-kde.patch
   # custom patch that does not conflict with the unity patch
-  patch -Np1 -i ${_patches_dir}/mozilla-kde_after_unity.patch
+  # NOTO: currently broken
+  # patch -Np1 -i ${_patches_dir}/mozilla-kde_after_unity.patch
 
   # Disabling Pocket
   patch -Np1 -i ${_patches_dir}/sed-patches/disable-pocket.patch
