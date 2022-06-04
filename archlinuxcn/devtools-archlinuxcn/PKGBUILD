@@ -2,22 +2,25 @@
 
 _pkgname=devtools
 pkgname=devtools-archlinuxcn
-pkgver=20200407
-pkgrel=2
+pkgver=20220609
+pkgrel=1
+_upstream_pkgrel=1
 pkgdesc='Tools for Arch Linux package maintainers, archlinuxcn fork'
 arch=('any')
 license=('GPL')
-url='https://git.archlinux.org/devtools.git/'
+url='https://gitlab.archlinux.org/archlinux/devtools'
 depends=('bash' 'openssh' 'subversion' 'rsync' 'arch-install-scripts'
          'git' 'bzr' 'mercurial' 'diffutils' 'util-linux' 'awk')
 makedepends=('asciidoc')
 optdepends=('btrfs-progs: btrfs support')
 provides=("devtools=$pkgver-$pkgrel")
 conflicts=("devtools")
-source=(https://sources.archlinux.org/other/${_pkgname}/${_pkgname}-${pkgver}.tar.gz{,.sig}
-        "no-yes-y.patch"
-        "unshare-pacstrap.patch"
-        "arch-nspawn-read-CacheDir-from-host.patch")
+source=(${url}/uploads/0b749ede35fe2728632644675019ca00/devtools-${pkgver}.tar.gz
+        ${url}/uploads/ee188507bfb2dc11c49272ab45a529c3/devtools-${pkgver}.tar.gz.sig
+        0001-arch-nspawn-read-CacheDir-option-from-host-s-conf.patch
+        0002-Revert-makechrootpkg-when-installing-with-I-ensure-p.patch
+        0003-Handle-ArchLinuxARM-server-URL-in-arch-nspawn.patch
+        0004-Change-default-BUILDTOOL-to-devtools-archlinuxcn.patch)
 
 validpgpkeys=('487EACC08557AD082088DABA1EB2638FF56C0C53'
               '4AA4767BBC9C4B1D18AE28B77F2D434B9741E8AC'
@@ -28,18 +31,20 @@ validpgpkeys=('487EACC08557AD082088DABA1EB2638FF56C0C53'
               'F3691687D867B81B51CE07D9BBE43771487328A9'
               '6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'
               'E240B57E2C4630BA768E2F26FC1B547C8D8172C8')
-b2sums=('01ff4d17a9502df468d545e273e94ab7d7b6817efa6d7f2fe661b4a978a5051a03a8a04ea1e82902b30988413f32f65afdf49a234d82ab05fa510ffc52f62e02'
+b2sums=('ef08def317e8c398eaf35c70bb02f804422d8880ba1bfd418d38b09cbf91336106deb20fc222d749608ab428602c0bbe41cb026152dd72e11889e3e8217f7a24'
         'SKIP'
-        '2da933aa8a0bce8acab22fcbdf857462a28bb313e4554b73cf4cb02dafb40ad124b71e5666cd88257dee8a1721a57e6659581026ab2ff21aa2c257df2397db0c'
-        'ad659b04b7b7a9111ceace6629e971ef775e73a2b68a82dc13d3dd5b732f3e7a056b3328fab54fa6b16e520212e4b5a6d5d27e1b0b87d10495c89a17ff130fc5'
-        '158a1e7608d804649b74e21ed54d5d8fd0f8f191eeb73f09347b9bc4795dd9cb88e68a25e37434a4ed7d964d2acae355b671953ed01ba1ca638a307bf9d5d7d1')
+        '701828387960ed64243513814b4b40de8b53b27f25f619e8e4e160dca5b98c3854981b11e17cf4c69445c60c70e77f84786228782b90cbd4f544837871e4a8ce'
+        '8b3288b8cfce7d6cc671233b1a36e2b67dcd05533f24495180c83d4ba65cb747f49aa77c92a4c2761861434e6826bccc71802f39ad1225036c5bf5791abf2f17'
+        'ce510aaf7c01ed677be35b63c834832d13dd6ba6c7b8635109899adaa7c73b2eea860cc4332e2e27a6fbc94f3fcccbbcccb5804eae8fda1fdd5011e5223f60c8'
+        'e247c3a3b9aa56f93a914c2091d2dc09707f9a50ae5456a787afda4673acd376bf916069ad9b551141857a36f41cb194befa6f7f0bad013a828d93a4d61c3a60')
 
 prepare() {
   cd ${_pkgname}-${pkgver}
-  patch -RNp1 -i ../no-yes-y.patch
-  patch -Np1 -i ../unshare-pacstrap.patch
-  # Manual backport for devtools 20200407 from https://gitlab.archlinux.org/archlinux/devtools/-/merge_requests/95
-  patch -Np1 -i ../arch-nspawn-read-CacheDir-from-host.patch
+  # Manual backport from https://gitlab.archlinux.org/archlinux/devtools/-/merge_requests/95
+  patch -Np1 -i ../0001-arch-nspawn-read-CacheDir-option-from-host-s-conf.patch
+  patch -Np1 -i ../0002-Revert-makechrootpkg-when-installing-with-I-ensure-p.patch
+  patch -Np1 -i ../0003-Handle-ArchLinuxARM-server-URL-in-arch-nspawn.patch
+  patch -Np1 -i ../0004-Change-default-BUILDTOOL-to-devtools-archlinuxcn.patch
 
   ## silent while show errors for curl
   sed "s|bin/curl -g|bin/curl -sS -g|g" -i makepkg-x86_64.conf
@@ -47,7 +52,7 @@ prepare() {
 
 build() {
   cd ${_pkgname}-${pkgver}
-  make PREFIX=/usr
+  make BUILDTOOLVER="${pkgver}-${_upstream_pkgrel}-${arch}" PREFIX=/usr
 }
 
 package() {
