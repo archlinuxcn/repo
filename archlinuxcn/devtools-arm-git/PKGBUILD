@@ -1,6 +1,6 @@
 pkgname=devtools-arm-git
-pkgver=0.0.0.7.d63d94b
-pkgrel=1
+pkgver=0.0.0.8.71d7120
+pkgrel=2
 pkgdesc='Tools for Arch Linux ARM package maintainers'
 arch=('any')
 url='http://github.com/yuyichao/devtools-arm'
@@ -11,6 +11,9 @@ provides=('devtools-arm')
 conflicts=('devtools-arm')
 source=('git+https://github.com/yuyichao/devtools-arm')
 sha256sums=('SKIP')
+# People doing cross compilation with qemu and alike might want to override these
+backup=(usr/share/devtools/setarch-aliases.d/armv6h
+        usr/share/devtools/setarch-aliases.d/armv7h)
 
 pkgver() {
   cd devtools-arm
@@ -31,4 +34,9 @@ package() {
   cd devtools-arm/build
 
   make DESTDIR="${pkgdir}" install
+  mkdir -p "${pkgdir}"/usr/share/devtools/setarch-aliases.d
+  # The kernel calls all 32bit arm "arm".
+  # setarch does recognize some aliases but they are all the same
+  echo arm > "${pkgdir}"/usr/share/devtools/setarch-aliases.d/armv6h
+  echo arm > "${pkgdir}"/usr/share/devtools/setarch-aliases.d/armv7h
 }
