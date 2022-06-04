@@ -1,0 +1,40 @@
+# Maintainer: c0gnitivefl0w
+
+pkgname=seadrive-gui
+pkgver=2.0.21
+pkgrel=3
+pkgdesc="GUI part of seadrive"
+arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
+url="https://github.com/haiwen/seadrive-gui"
+license=('Apache')
+depends=(qt6-base qt6-5compat qt6-webengine libgobject-2.0.so libglib-2.0.so
+         jansson libsearpc sqlite)
+makedepends=(git cmake qt6-tools)
+source=("git+https://github.com/haiwen/seadrive-gui#tag=v${pkgver}")
+sha256sums=('SKIP')
+
+prepare() {
+  mkdir bin
+  ln -sf /usr/bin/qmake6 bin/qmake
+}
+
+build() {
+  cd seadrive-gui
+
+  mkdir -p build
+  cd build
+
+  # Build with Qt6 since the Qt5 cmake configuration is very buggy...
+  PATH="${srcdir}/bin:${PATH}" cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+
+  make
+}
+
+package() {
+  depends+=(seadrive-daemon)
+  cd seadrive-gui/build
+
+  make DESTDIR="${pkgdir}" install
+}
