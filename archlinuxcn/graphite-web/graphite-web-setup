@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+if [ ! -d /var/lib/graphite ]; then
+  Environment=PYTHONPATH=/opt/graphite/webapp django-admin migrate --settings=graphite.settings
+fi

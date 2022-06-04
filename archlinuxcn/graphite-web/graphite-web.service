@@ -1,11 +1,13 @@
 [Unit]
 Description=Graphite web daemon
 After=network.target
+Wants=graphite-web-firstrun.service
 
 [Service]
 Type=exec
 # listening address can be configured via a drop-in
 Environment=LISTEN=127.0.0.1:8888 WORKERS=2
+ExecStartPre=/usr/bin/graphite-web-setup
 ExecStart=/usr/bin/gunicorn -w $WORKERS graphite.wsgi --pythonpath=/opt/graphite/webapp --bind $LISTEN
 
 # some hardening

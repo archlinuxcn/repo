@@ -1,5 +1,0 @@
-#!/bin/sh
-
-post_install () {
-  PYTHONPATH=/opt/graphite/webapp django-admin migrate --settings=/etc/graphite/local_settings.py
-}
