@@ -1,5 +1,26 @@
-#!/bin/sh -e
+#!/usr/bin/python3
 
-if [ ! -d /var/lib/graphite ]; then
-  Environment=PYTHONPATH=/opt/graphite/webapp django-admin migrate --settings=graphite.settings
-fi
+import os
+import subprocess
+
+VAR_DIR = '/var/lib/graphite'
+
+def initialized():
+  files = os.listdir(VAR_DIR)
+  if not files:
+    return False
+  return any(
+    os.path.getsize(os.path.join(VAR_DIR, f)) != 0
+    for f in files
+  )
+
+def main():
+  if not initialized():
+    env = os.environ.copy()
+    env['PYTHONPATH'] = '/opt/graphite/webapp'
+    subprocess.check_call([
+      'django-admin', 'migrate', '--settings=graphite.settings',
+    ], env = env)
+
+if __name__ == '__main__':
+  main()
