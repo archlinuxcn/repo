@@ -24,7 +24,7 @@ CHECK=            # Run tests. May fail, this is developement after all.
 
 CLANG=            # Use clang.
 
-GOLD="YES"             # Use the gold linker.
+GOLD=             # Use the gold linker.
 
 LTO=              # Enable link-time optimization. Still experimental.
 
@@ -36,8 +36,6 @@ JIT="YES"
                   # to your .emacs file.
 
 AOT="YES"
-                  # You still need to enable on-demand compilation
-                  # for your own packages.
 
 CLI=              # CLI only binary.
 
@@ -46,9 +44,9 @@ GPM=              # Mouse support in Linux console using gpmd.
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
                   # Bitmap fonts only, 1337!
                
-PGTK="YES"        # Use native GTK3 build. Supports Wayland, yay!
+PGTK=             # Use native GTK3 build. Supports Wayland, yay!
 
-GTK3=             # GTK3 old windowing interface.
+GTK3="YES"        # GTK3 old windowing interface.
 
 LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   #
@@ -80,7 +78,7 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-native-comp-git"
 fi
-pkgver=29.0.50.156993
+pkgver=29.0.50.157001
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
@@ -89,13 +87,14 @@ license=('GPL3')
 depends_nox=('gnutls' 'libxml2' 'jansson')
 depends=("${depends_nox[@]}" "harfbuzz" "libxpm")
 makedepends=('git')
-provides=('emacs' 'emacs-pretest' 'emacs26-git' 'emacs-27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox')
-conflicts=('emacs' 'emacs-pretest' 'emacs26-git' 'emacs-27-git' 'emacs28-git' 'emacs-seq' 'emacs-nox')
-#source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
-source=("emacs-git::git+https://git.savannah.gnu.org/git/emacs.git")
+provides=('emacs')
+#source=("emacs-git::git://git.savannah.gnu.org/emacs.git"
+source=("emacs-git::git+https://git.savannah.gnu.org/git/emacs.git"
+        "nemacs")
 options=(!strip)
 install=emacs-git.install
-b2sums=('SKIP')
+b2sums=('SKIP'
+        '58e028b439d3c7cf03ea0be617b429a2c54e7aa1b8ca32b5ed489214daaa71e22c323de9662761ad2ce4de58e21dbe45ce6ce198f402686828574f8043d053d0')
 ################################################################################
 
 ################################################################################
@@ -238,7 +237,6 @@ build() {
 # If you insist you'll need to read that bug report in *full*.
 # Good luck!
    --without-gconf
-   --without-gsettings
   )
 
 ################################################################################
@@ -273,9 +271,9 @@ elif [[ $PGTK == "YES" ]]; then
   _conf+=( '--with-pgtk' '--without-xaw3d' );
 fi
 
-#if [[ ! $PGTK == "YES" ]]; then
-#    _conf+=( '--without-gsettings' ) :
-#fi
+if [[ ! $PGTK == "YES" ]]; then
+    _conf+=( '--without-gsettings' ) :
+fi
 
 if [[ $NOCAIRO == "YES" || $CLI == "YES" || $NOTKIT == "YES" || $LUCID == "YES" ]]; then
   _conf+=( '--without-cairo' );
@@ -318,7 +316,8 @@ _conf+=('--program-transform-name=s/\([ec]tags\)/\1.emacs/')
   # Please note that incremental compilation implies that you
   # are reusing your src directory!
   #
-  if [[ $JIT == "YES" ]] && [[ $AOT == "YES" ]]; then
+
+  if [[ $JIT=="YES" ]] && [[ $AOT == "YES" ]]; then
     make NATIVE_FULL_AOT=1
   else
     make
@@ -343,6 +342,10 @@ package() {
   cd "$srcdir/emacs-git/build"
 
   make DESTDIR="$pkgdir/" install
+
+  install -D -m 755 "$srcdir"/nemacs "$pkgdir"/usr/bin/nemacs
+  
+  #if [[ ! $CLI == "YES" ]]; then
 
   # Install optional documentation formats
   if [[ $DOCS_HTML == "YES" ]]; then make DESTDIR="$pkgdir/" install-html; fi
