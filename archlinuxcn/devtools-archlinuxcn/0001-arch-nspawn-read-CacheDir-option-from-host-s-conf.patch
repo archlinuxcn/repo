@@ -1,7 +1,7 @@
-From d0847a2a1c5d183d8df9d9c7640a8f8e68455bc8 Mon Sep 17 00:00:00 2001
+From 7439b0cef820321f3234d4344b6ab93ea44dd378 Mon Sep 17 00:00:00 2001
 From: Evangelos Foutras <evangelos@foutrelis.com>
 Date: Fri, 18 Mar 2022 17:16:24 +0200
-Subject: [PATCH] arch-nspawn: read CacheDir option from host's conf
+Subject: [PATCH 1/4] arch-nspawn: read CacheDir option from host's conf
 
 This went unnoticed on build.archlinux.org until we tried switching away
 from its local /srv/ftp/ mirror. With a remote mirror, the chroots would
@@ -20,14 +20,14 @@ index 275cff7..b6c9cb1 100644
 --- a/arch-nspawn.in
 +++ b/arch-nspawn.in
 @@ -50,7 +50,7 @@ shift 1
- pacconf_cmd=$(command -v pacman-conf || command -v pacconf)
+ [[ -z $working_dir ]] && die 'Please specify a working directory.'
  
  if (( ${#cache_dirs[@]} == 0 )); then
--	mapfile -t cache_dirs < <($pacconf_cmd --config "${pac_conf:-$working_dir/etc/pacman.conf}" CacheDir)
-+	mapfile -t cache_dirs < <($pacconf_cmd CacheDir)
+-	mapfile -t cache_dirs < <(pacman-conf --config "${pac_conf:-$working_dir/etc/pacman.conf}" CacheDir)
++	mapfile -t cache_dirs < <(pacman-conf CacheDir)
  fi
  
  # shellcheck disable=2016
 -- 
-GitLab
+2.36.1
 

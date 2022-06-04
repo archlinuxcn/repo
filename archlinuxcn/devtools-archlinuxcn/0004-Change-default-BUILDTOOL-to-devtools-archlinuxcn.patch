@@ -1,0 +1,25 @@
+From 012642c47e1c14540d1d0a5039644033425dfcb9 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 10 Jun 2022 08:31:10 -0400
+Subject: [PATCH 4/4] Change default BUILDTOOL to devtools-archlinuxcn
+
+---
+ lib/common.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/common.sh b/lib/common.sh
+index 0996247..99bef11 100644
+--- a/lib/common.sh
++++ b/lib/common.sh
+@@ -16,7 +16,7 @@ $_INCLUDE_COMMON_SH
+ export LANG=C
+ 
+ # Set buildtool properties
+-export BUILDTOOL=devtools
++export BUILDTOOL=${BUILDTOOL:-devtools-archlinuxcn}
+ export BUILDTOOLVER=m4_devtools_version
+ 
+ shopt -s extglob
+-- 
+2.36.1
+
