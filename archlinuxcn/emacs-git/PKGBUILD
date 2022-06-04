@@ -35,6 +35,8 @@ JIT=         # Enable native just-in-time compilation. libgccjit is in AUR.
                   #    (setq comp-deferred-compilation t)
                   # to your .emacs file.
 
+AOT=         # Compile all elisp files.
+
 CLI=              # CLI only binary.
 
 GPM=              # Mouse support in Linux console using gpmd.
@@ -76,8 +78,8 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-git"
 fi
-pkgver=29.0.50.156996
-pkgrel=2
+pkgver=29.0.50.157001
+pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
 url="http://www.gnu.org/software/emacs/"
@@ -86,12 +88,13 @@ depends_nox=('gnutls' 'libxml2' 'jansson')
 depends=("${depends_nox[@]}" "harfbuzz" "libxpm")
 makedepends=('git')
 provides=('emacs')
-conflicts=('emacs')
-#source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
-source=("emacs-git::git+https://git.savannah.gnu.org/git/emacs.git")
+#source=("emacs-git::git://git.savannah.gnu.org/emacs.git"
+source=("emacs-git::git+https://git.savannah.gnu.org/git/emacs.git"
+        "nemacs")
 options=(!strip)
 install=emacs-git.install
-b2sums=('SKIP')
+b2sums=('SKIP'
+        '58e028b439d3c7cf03ea0be617b429a2c54e7aa1b8ca32b5ed489214daaa71e22c323de9662761ad2ce4de58e21dbe45ce6ce198f402686828574f8043d053d0')
 ################################################################################
 
 ################################################################################
@@ -314,7 +317,11 @@ _conf+=('--program-transform-name=s/\([ec]tags\)/\1.emacs/')
   # are reusing your src directory!
   #
 
-  make
+  if [[ $JIT== ]] && [[ $AOT == "YES" ]]; then
+    make NATIVE_FULL_AOT=1
+  else
+    make
+  fi
 
   # You may need to run this if 'loaddefs.el' files become corrupt.
   #cd "$srcdir/emacs-git/lisp"
@@ -335,6 +342,10 @@ package() {
   cd "$srcdir/emacs-git/build"
 
   make DESTDIR="$pkgdir/" install
+
+  install -D -m 755 "$srcdir"/nemacs "$pkgdir"/usr/bin/nemacs
+  
+  #if [[ ! $CLI == "YES" ]]; then
 
   # Install optional documentation formats
   if [[ $DOCS_HTML == "YES" ]]; then make DESTDIR="$pkgdir/" install-html; fi
