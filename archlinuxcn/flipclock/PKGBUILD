@@ -1,6 +1,6 @@
 # Maintainer: Alynx Zhou <alynx.zhou@gmail.com>
 pkgname=flipclock
-pkgver=2.9.2
+pkgver=2.10.0
 pkgrel=1
 pkgdesc="A flip clock screensaver supported by SDL2."
 arch=('x86_64' 'i686' 'aarch64' 'armv7h' 'armv6h')
@@ -9,7 +9,7 @@ license=('Apache')
 depends=('sdl2' 'sdl2_ttf')
 makedepends=('meson')
 source=("https://github.com/AlynxZhou/${pkgname}/archive/v${pkgver}.tar.gz")
-sha512sums=('96db65b21307cd93f3495d5504978fa6d0dfcbf5a4f6ba12d91e74d5753e32d3dd20c6d49bdcd6c838805f97871a56ce3818db195f0599135e1b8292567fdbf8')
+sha512sums=('71196c708b845164e22f20fd2b3d2752e877f0084d4e04baf2da34e594e263c30da69d277a78f379ef3b87dccd245201142b2656ee84e692bda395fae5cebdc7')
 
 prepare() {
   cd "${pkgname}-${pkgver}"
