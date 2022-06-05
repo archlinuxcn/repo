@@ -14,8 +14,10 @@ depends=(
   python-numpy
 )
 makedepends=(
+  gcc10
   python-pip
   python-setuptools
+  python-wheel
 )
 optdepends=(
   gdown
@@ -40,6 +42,8 @@ sha512sums=('ad0043c730eece395e03e907604dd40fb254e8494396a210463cabe8cbc5fb0d8b4
 build() {
   cd "${_pkgname}-${pkgver}"
   BUILD_MONAI=1 \
+  CC=gcc-10 \
+  CXX=g++-10 \
   FORCE_CUDA=1 \
   TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
   python setup.py build
@@ -48,6 +52,8 @@ build() {
 package() {
   cd "${_pkgname}-${pkgver}"
   BUILD_MONAI=1 \
+  CC=gcc-10 \
+  CXX=g++-10 \
   FORCE_CUDA=1 \
   TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
