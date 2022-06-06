@@ -45,10 +45,12 @@ package_eww-x11() {
 	export CARGO_TARGET_DIR=target
 	cargo build --release
 	install -Dm755 target/release/$pkgbase "$pkgdir/usr/bin/$pkgbase"
+	install -D -m644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 package_eww-wayland() {
 	pkgdesc="ElKowars wacky widgets(For wayland only)"
 	depends=(
+		gtk-layer-shell
 		libgobject-2.0.so
 		libgtk-3.so=0-64
 		libgdk-3.so=0-64
@@ -66,4 +68,5 @@ package_eww-wayland() {
 	export CARGO_TARGET_DIR=target
 	cargo build --release --no-default-features --features=wayland
 	install -Dm755 target/release/$pkgbase "$pkgdir/usr/bin/$pkgbase"
+	install -D -m644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
