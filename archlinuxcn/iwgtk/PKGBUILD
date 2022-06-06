@@ -1,15 +1,15 @@
-# Maintainer: Jesse Lentz <jesselnz@gmail.com>
+# Maintainer: Jesse Lentz <jesse@twosheds.org>
 
 pkgname=iwgtk
-pkgver=0.4
-pkgrel=2
-pkgdesc='Lightweight, graphical wifi management utility'
+pkgver=0.5
+pkgrel=1
+pkgdesc='Lightweight, graphical wifi management front-end for iwd'
 arch=(x86_64)
 url='https://github.com/J-Lentz/iwgtk'
 license=(GPL3)
-depends=(iwd gtk3)
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/J-Lentz/iwgtk/archive/v0.4.tar.gz")
-sha256sums=(71bb85546a55bf710052d4947f6be5f5a01033d04d2d14a85a7e734dd570657d)
+depends=('iwd>=1.28' gtk4 adwaita-icon-theme)
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/J-Lentz/iwgtk/archive/v0.5.tar.gz")
+sha256sums=(5465721f79090d342c389c8748ba6ef679fa83ae5ed23cea90bcb4e1b9017689)
 
 build() {
     cd ${pkgname}-${pkgver}
@@ -18,5 +18,5 @@ build() {
 
 package() {
     cd ${pkgname}-${pkgver}
-    make prefix=/usr DESTDIR=${pkgdir} install
+    make PREFIX=/usr DESTDIR=${pkgdir} install
 }
