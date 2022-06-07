@@ -1,0 +1,25 @@
+#
+
+maintainers:
+  - github: yuyichao
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: git
+    git: https://sourceware.org/git/binutils-gdb.git
+    use_commit: true
+    lilac_throttle: 2d
+  - source: alpm
+    alpm: readline
+    provided: libreadline.so
+  - source: alpm
+    alpm: ncurses
+    provided: libncursesw.so
+  - source: alpm
+    alpm: expat
+    provided: libexpat.so
+  - alias: python
+  - source: manual
+    manual: 1

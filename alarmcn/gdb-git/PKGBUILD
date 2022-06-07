@@ -1,0 +1,79 @@
+# Contributor: Lukas Jirkovsky <l.jirkovsky@gmail.com>
+# Contributor: Allan McRae <allan@archlinux.org>
+# Contributor: Stefan Husmann <stefan-husmann@t-online.de>
+
+pkgname=('gdb-git' 'gdb-common-git')
+pkgver=110341.f3cdb436240
+pkgrel=1
+pkgdesc="The GNU Debugger from git"
+arch=(armv7h aarch64 i686 x86_64)
+url="http://www.gnu.org/software/gdb/"
+license=('GPL3')
+makedepends=(git texinfo python "guile>=2.2" "guile<2.3" ncurses expat xz
+             mpfr source-highlight readline libelf)
+provides=('gdb-common' 'gdb')
+conflicts=('gdb-common' 'gdb')
+backup=('etc/gdb/gdbinit')
+options=('!libtool')
+source=('gdb::git+https://sourceware.org/git/binutils-gdb.git')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/gdb"
+  echo $(git rev-list --count master).$(git rev-parse --short master)
+}
+
+prepare() {
+  cd gdb
+
+  # fixes build, copied from the gdb PKGBUILD
+  # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
+}
+
+build() {
+  cd gdb
+
+  mkdir -p build
+  cd build
+  ../configure \
+    --prefix=/usr \
+    --disable-nls \
+    --disable-werror \
+    --enable-source-highlight \
+    --enable-tui \
+    --with-system-readline \
+    --with-python=/usr/bin/python \
+    --with-guile=guile-2.2 \
+    --with-system-gdbinit=/etc/gdb/gdbinit
+  make
+}
+
+package_gdb-common-git() {
+  provides=('gdb-common')
+  conflicts=('gdb-common')
+  depends=('python' 'guile')
+  cd gdb/build
+
+  make -C gdb/data-directory DESTDIR="$pkgdir" install
+}
+
+package_gdb-git() {
+  depends=(libreadline.so libncursesw.so  "guile>=2.2" "guile<2.3" python
+           libexpat.so xz mpfr gmp source-highlight libelf
+           "gdb-common-git=$pkgver")
+  provides=('gdb')
+  conflicts=('gdb')
+  backup=(etc/gdb/gdbinit)
+  cd gdb/build
+
+  make -C gdb DESTDIR="$pkgdir" install
+  make -C gdbserver DESTDIR="$pkgdir" install
+
+  # install "custom" system gdbinit
+  install -dm 755 "$pkgdir/etc/gdb"
+  touch "$pkgdir/etc/gdb/gdbinit"
+
+  # comes from gdb-common
+  rm -r "$pkgdir/usr/share/gdb/"
+}
