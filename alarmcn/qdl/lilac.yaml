@@ -11,15 +11,15 @@ update_on:
   - source: github
     github: andersson/qdl
     use_max_tag: true
-    include_regex: 'v(\d+.\d+.\d+)'
+    include_regex: 'v(\d+.\d+)'
   - source: alpm
     provided: libxml.so
-    alpm: libxml
+    alpm: libxml2
   - source: alpm
     provided: libicui18n.so
     alpm: icu
   - source: alpm
-    provided: libicuiuc.so
+    provided: libicuuc.so
     alpm: icu
   - source: alpm
     provided: libicudata.so
