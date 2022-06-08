@@ -4,32 +4,21 @@
 
 _basename=libdvdread
 pkgname=lib32-libdvdread
-pkgver=6.1.2
+pkgver=6.1.3
 pkgrel=1
 pkgdesc="Provides a simple foundation for reading DVD video disks (32 bit)"
 arch=(x86_64)
 url="https://www.videolan.org/developers/libdvdnav.html"
 license=(GPL)
 depends=(lib32-glibc libdvdread)
-makedepends=(lib32-libdvdcss git)
-_commit=37e2354e016648f7c74ad48fcb5524919bb228de
-source=("git+https://code.videolan.org/videolan/libdvdread.git#commit=$_commit")
-sha256sums=('SKIP')
-
-pkgver() {
-    cd "${_basename}"
-
-    git describe --tags | sed -e 's/-/+/g'
-}
-
-prepare() {
-    cd "${_basename}"
-
-    autoreconf -fi
-}
+makedepends=(lib32-libdvdcss)
+source=(https://download.videolan.org/pub/videolan/$_basename/$pkgver/$_basename-$pkgver.tar.bz2{,.asc})
+sha256sums=('ce35454997a208cbe50e91232f0e73fb1ac3471965813a13b8730a8f18a15369'
+            'SKIP')
+validpgpkeys=(65F7C6B4206BD057A7EB73787180713BE58D1ADC)
 
 build() {
-    cd "${_basename}"
+    cd $_basename-$pkgver
 
     export CC='gcc -m32'
     export CXX='g++ -m32'
@@ -44,7 +33,7 @@ build() {
 }
 
 package() {
-    cd "${_basename}"
+    cd $_basename-$pkgver
 
     make DESTDIR="${pkgdir}" install
 
