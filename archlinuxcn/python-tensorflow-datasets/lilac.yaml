@@ -4,8 +4,12 @@ maintainers:
 build_prefix: extra-x86_64
 
 repo_depends:
+  # depends
   - python-tensorflow-metadata
   - python-etils
+  # checkdepends
+  - python-dm-tree
+  - python-pydub
 
 pre_build_script: |
     update_pkgver_and_pkgrel(_G.newver)
