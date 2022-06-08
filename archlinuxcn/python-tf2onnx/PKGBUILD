@@ -1,28 +1,35 @@
 # Maintainer: Chih-Hsuan Yen <yan12125@archlinux.org>
 
 pkgname=python-tf2onnx
-pkgver=1.10.1
+pkgver=1.11.1
 pkgrel=1
 pkgdesc='Convert TensorFlow models to ONNX'
 arch=(any)
 url='https://github.com/onnx/tensorflow-onnx'
 license=(MIT)
 depends=(python python-tensorflow python-numpy python-onnx python-requests python-six)
-makedepends=(python-setuptools python-build python-install python-wheel)
+makedepends=(python-setuptools python-build python-installer python-wheel)
 checkdepends=(python-pytest python-graphviz python-parameterized python-yaml python-onnxruntime)
-source=("https://github.com/onnx/tensorflow-onnx/archive/v$pkgver/tf2onnx-v$pkgver.tar.gz")
-sha256sums=('60f342b8f5a67482a067b3fa7aa26110a806bba82ddd0cb188189e097de95835')
+source=("https://github.com/onnx/tensorflow-onnx/archive/v$pkgver/tf2onnx-v$pkgver.tar.gz"
+        "onnxruntime.diff")
+sha256sums=('3b41c22a1bd08f08521aab8b5a8f9351457dcd93b602b9e63fe811aaa9477b69'
+            '7e8ab46940aff7cac8d535436c8e201f37c66637416ae9b795706a4c3dd01232')
 
 prepare() {
   cd tensorflow-onnx-$pkgver
+
   sed -i -r 's#--cov\S+##' setup.cfg
   sed -i "s#'pytest-runner'##" setup.py
+
+  # The latest upstream tag may not sync with the version file
+  echo $pkgver > VERSION_NUMBER
+
+  patch -Np1 -i ../onnxruntime.diff
 }
 
 build() {
   cd tensorflow-onnx-$pkgver
   python -m build --wheel --no-isolation
-  python -m install --cache dist/*.whl
 }
 
 check() {
@@ -32,6 +39,6 @@ check() {
 
 package() {
   cd tensorflow-onnx-$pkgver
-  python -m install --destdir="$pkgdir" --skip-build --verify-dependencies
+  python -m installer --destdir="$pkgdir" --compile-bytecode 0 --compile-bytecode 1 --compile-bytecode 2 dist/*.whl
   install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname
 }
