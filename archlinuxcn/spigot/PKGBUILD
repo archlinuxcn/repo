@@ -2,26 +2,26 @@
 # Submitter: Schala Zeal <schalaalexiazeal@gmail.com>
 
 pkgname=spigot
-_pkgver=1.18.2
-_build=144
+_pkgver=1.19
+_build=147
 pkgver="${_pkgver}+b${_build}"
-pkgrel=14
+pkgrel=15
 _mng_ver=1.0.2
 pkgdesc="High performance Minecraft server implementation"
 arch=('any')
 url="https://www.spigotmc.org/"
 license=("LGPL")
-depends=("java-runtime-headless>=16" 'tmux' 'sudo' 'fontconfig' 'bash' 'awk' 'sed')
+depends=("java-runtime-headless>=17" 'tmux' 'sudo' 'fontconfig' 'bash' 'awk' 'sed')
 optdepends=("tar: needed in order to create world backups"
 	"netcat: required in order to suspend an idle server")
-makedepends=("java-environment>=16" 'git')
+makedepends=("java-environment>=17" 'git')
 provides=("minecraft-server=${_pkgver%_*}" "bukkit=${_pkgver%_*}" "craftbukkit=${_pkgver%_*}")
 conflicts=("bukkit" "craftbukkit" "spigot-patcher")
 backup=("etc/conf.d/${pkgname}")
 install="${pkgname}.install"
 source=("BuildTools-${_pkgver}+b${_build}.jar::https://hub.spigotmc.org/jenkins/job/BuildTools/${_build}/artifact/target/BuildTools.jar"
 	"minecraft-server-${_mng_ver}.tar.gz"::"https://github.com/Edenhofer/minecraft-server/archive/refs/tags/v${_mng_ver}.tar.gz")
-sha512sums=('13f41720b581f447eb3c43f4aa37cdb0e0e70e51a832ab5d7868a29a2e725e1459e0a2ccd8e70665b43d02d19e3080ff247af6274ee0e535efe3f5007d91676b'
+sha512sums=('8adf51d70bb01d9df6d159cfa317d0d087d4098a36779478d425d2a7fc7de255d6705fad7f44f4875d082e16c4d012fcf80225dd8444b15583c34e2e6d4a428e'
             '11d708d511b63e5541bcc1dbcaf29abbf7cb9583b1d313028770a39b26b41d48dcba023f7e1d6fe30f3c093d20e10a43363011edd432e5785a4580e5c5f852a6')
 
 _game="spigot"
