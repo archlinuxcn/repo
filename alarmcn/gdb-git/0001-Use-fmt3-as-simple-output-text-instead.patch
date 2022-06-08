@@ -1,0 +1,43 @@
+From e20bddd06065d57d9fb0a5b8e63b4b22dac21145 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 8 Jun 2022 07:37:22 -0400
+Subject: [PATCH] Use fmt3 as simple output text instead
+
+---
+ gprofng/src/Print.cc | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/gprofng/src/Print.cc b/gprofng/src/Print.cc
+index d6662df4745..e74ea097471 100644
+--- a/gprofng/src/Print.cc
++++ b/gprofng/src/Print.cc
+@@ -2514,7 +2514,7 @@ er_print_experiment::overview_summary (Ovw_data *ovw_data, int &maxlen)
+   len = snprintf (buf, sizeof (buf), "%.3lf", tstodouble (totals.total.t));
+   if (maxlen < len)
+     maxlen = len;
+-  snprintf (buf, sizeof (buf), NTXT ("%%#%d.0lf    (  %#1.0f %%%%%%%%)"),
++  snprintf (buf, sizeof (buf), NTXT ("%%#%d.0lf    (  %#1.0f %%%%)"),
+ 	    maxlen - 3, 0.);
+   snprintf (fmt2, sizeof (fmt2), NTXT ("%%%d.3lf"), maxlen);
+   snprintf (fmt3, sizeof (fmt3), buf, 0.0);
+@@ -2605,7 +2605,7 @@ er_print_experiment::overview_value (Value *value, ValueTag value_tag,
+     case VT_HRTIME:
+       dvalue = tstodouble (value->t);
+       if (dvalue == 0.0)
+-	fprintf (out_file, fmt3, 0., 0.);
++	fputs (fmt3, out_file);
+       else
+ 	fprintf (out_file, fmt4, dvalue, 100.0 * dvalue / total_value);
+       break;
+@@ -2613,7 +2613,7 @@ er_print_experiment::overview_value (Value *value, ValueTag value_tag,
+       fprintf (out_file, NTXT ("%d"), value->i);
+       break;
+     default:
+-      fprintf (out_file, fmt3);
++      fputs (fmt3, out_file);
+     }
+ }
+ 
+-- 
+2.36.1
+
