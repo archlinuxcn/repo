@@ -39,6 +39,7 @@ build() {
   cd gdb
 
   mkdir -p build
+  CXXFLAGS+=' -Wno-error=format-security'
   cd build
   ../configure \
     --prefix=/usr \
