@@ -4,15 +4,13 @@
 pkgname='libeb'
 _pkgname='eb'
 pkgver=4.4.3
-pkgrel=8
+pkgrel=9
 _pkgrel_debian=14  # Version of Debian package patch
 pkgdesc='C library for accessing CD-ROM books. Supports EB, EBG, EBXA, EBXA-C, S-EBXA and EPWING formats.'
 arch=('i686' 'x86_64')
 url='http://www.mistys-internet.website/eb/index-en.html'
 license=('BSD')
-depends=('libnsl'
-         'perl'
-         'zlib')
+depends=('perl' 'zlib')
 provides=('libeb.so' 'eb-library')
 conflicts=('eb-library')
 replaces=('eb-library')  # Has been deleted from AUR and merged into this package
@@ -27,6 +25,17 @@ prepare() {
 
   msg2 "[patch] Applying ${_patch1_name}..."
   patch --forward --strip=1 --input="../${_patch1_name}"
+
+  msg2 "Removing link configuration for unused libraries"
+  sed -e 's/-liconv//g' \
+      -i 'm4/gettext.m4' \
+      -i 'configure'
+  sed -e 's/-lnsl//g' \
+      -e 's/-lresolv//g' \
+      -i 'configure'
+  sed -e '/AC_CHECK_LIB(nsl/c/' \
+      -e '/AC_CHECK_LIB(resolv/c/' \
+      -i 'configure.ac'
 
   msg2 "[autoupdate] Refreshing configure.ac..."
   autoupdate --force
