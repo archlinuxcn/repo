@@ -12,6 +12,7 @@ depends=(
   python-click
   python-deprecated
   python-humanize
+  python-matplotlib
   python-nibabel
   python-numpy
   python-pytorch
@@ -21,7 +22,10 @@ depends=(
   python-tqdm
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/fepegar/torchio/archive/v${pkgver}.tar.gz")
@@ -29,12 +33,12 @@ sha512sums=('4e6074601d26af00cc2a75e0ad9cc09de02d835f028bd75e372e41177c4f079d601
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
