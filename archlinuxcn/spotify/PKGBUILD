@@ -7,13 +7,13 @@ pkgname=spotify
 pkgver=1.1.84.716
 epoch=1
 _commit=gc5f8b819
-pkgrel=1
+pkgrel=2
 pkgdesc='A proprietary music streaming service'
 arch=('x86_64')
 license=('custom')
 url='https://www.spotify.com'
 depends=('alsa-lib>=1.0.14' 'gtk3' 'libxss' 'desktop-file-utils' 'openssl' 'nss' 'at-spi2-atk' 'libcurl-gnutls' 'libsm')
-optdepends=('ffmpeg-compat-57: Adds support for playback of local files'
+optdepends=('ffmpeg4.4: Adds support for playback of local files'
             'zenity: Adds support for importing local files'
             'libnotify: Desktop notifications')
 options=('!strip')
