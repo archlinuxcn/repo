@@ -1,0 +1,540 @@
+From 4a7c9b7d6f4a183fef8f43aef004ec865c37bbd8 Mon Sep 17 00:00:00 2001
+From: Hans Wennborg <hans@chromium.org>
+Date: Thu, 13 Jan 2022 11:31:11 +0100
+Subject: [PATCH 1/2] Simplify llvm/test/Transforms/Inline/inline_ssp.ll (NFC)
+
+The nounwind and uwtable attributes were just cluttering up the test.
+Using regexes to give symbolic names to the attribute lists make the
+test more readable.
+
+This is pre-committing parts of D116589.
+
+(cherry picked from commit 2eb7d8d749997e5f3048d39201a4d38b6b8d6455)
+---
+ llvm/test/Transforms/Inline/inline_ssp.ll | 81 +++++++++++------------
+ 1 file changed, 40 insertions(+), 41 deletions(-)
+
+diff --git a/llvm/test/Transforms/Inline/inline_ssp.ll b/llvm/test/Transforms/Inline/inline_ssp.ll
+index 2bf93d322842..ccfe93453159 100644
+--- a/llvm/test/Transforms/Inline/inline_ssp.ll
++++ b/llvm/test/Transforms/Inline/inline_ssp.ll
+@@ -12,150 +12,149 @@
+ ; propagated correctly.  The caller should have its SSP attribute set as:
+ ; strictest(caller-ssp-attr, callee-ssp-attr), where strictness is ordered as:
+ ;  sspreq > sspstrong > ssp > [no ssp]
+-define internal void @fun_sspreq() nounwind sspreq uwtable {
++define internal void @fun_sspreq() sspreq {
+ entry:
+   %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([12 x i8], [12 x i8]* @.str3, i32 0, i32 0))
+   ret void
+ }
+ 
+-define internal void @fun_sspstrong() nounwind sspstrong uwtable {
++define internal void @fun_sspstrong() sspstrong {
+ entry:
+   %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str2, i32 0, i32 0))
+   ret void
+ }
+ 
+-define internal void @fun_ssp() nounwind ssp uwtable {
++define internal void @fun_ssp() ssp {
+ entry:
+   %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str1, i32 0, i32 0))
+   ret void
+ }
+ 
+-define internal void @fun_nossp() nounwind uwtable {
++define internal void @fun_nossp() {
+ entry:
+   %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([11 x i8], [11 x i8]* @.str, i32 0, i32 0))
+   ret void
+ }
+ 
+-; Tests start below 
++; Tests start below.
+ 
+-define void @inline_req_req() nounwind sspreq uwtable {
++define void @inline_req_req() sspreq {
+ entry:
+-; CHECK: @inline_req_req() #0
++; CHECK: @inline_req_req() #[[SSPREQ:[0-9]]]
+   call void @fun_sspreq()
+   ret void
+ }
+ 
+-define void @inline_req_strong() nounwind sspstrong uwtable {
++define void @inline_req_strong() sspstrong {
+ entry:
+-; CHECK: @inline_req_strong() #0
++; CHECK: @inline_req_strong() #[[SSPREQ]]
+   call void @fun_sspreq()
+   ret void
+ }
+ 
+-define void @inline_req_ssp() nounwind ssp uwtable {
++define void @inline_req_ssp() ssp {
+ entry:
+-; CHECK: @inline_req_ssp() #0
++; CHECK: @inline_req_ssp() #[[SSPREQ]]
+   call void @fun_sspreq()
+   ret void
+ }
+ 
+-define void @inline_req_nossp() nounwind uwtable {
++define void @inline_req_nossp() {
+ entry:
+-; CHECK: @inline_req_nossp() #3
++; CHECK: @inline_req_nossp() {
+   call void @fun_sspreq()
+   ret void
+ }
+ 
+-define void @inline_strong_req() nounwind sspreq uwtable {
++define void @inline_strong_req() sspreq {
+ entry:
+-; CHECK: @inline_strong_req() #0
++; CHECK: @inline_strong_req() #[[SSPREQ]]
+   call void @fun_sspstrong()
+   ret void
+ }
+ 
+ 
+-define void @inline_strong_strong() nounwind sspstrong uwtable {
++define void @inline_strong_strong() sspstrong {
+ entry:
+-; CHECK: @inline_strong_strong() #1
++; CHECK: @inline_strong_strong() #[[SSPSTRONG:[0-9]]]
+   call void @fun_sspstrong()
+   ret void
+ }
+ 
+-define void @inline_strong_ssp() nounwind ssp uwtable {
++define void @inline_strong_ssp() ssp {
+ entry:
+-; CHECK: @inline_strong_ssp() #1
++; CHECK: @inline_strong_ssp() #[[SSPSTRONG]]
+   call void @fun_sspstrong()
+   ret void
+ }
+ 
+-define void @inline_strong_nossp() nounwind uwtable {
++define void @inline_strong_nossp() {
+ entry:
+-; CHECK: @inline_strong_nossp() #3
++; CHECK: @inline_strong_nossp() {
+   call void @fun_sspstrong()
+   ret void
+ }
+ 
+-define void @inline_ssp_req() nounwind sspreq uwtable {
++define void @inline_ssp_req() sspreq {
+ entry:
+-; CHECK: @inline_ssp_req() #0
++; CHECK: @inline_ssp_req() #[[SSPREQ]]
+   call void @fun_ssp()
+   ret void
+ }
+ 
+ 
+-define void @inline_ssp_strong() nounwind sspstrong uwtable {
++define void @inline_ssp_strong() sspstrong {
+ entry:
+-; CHECK: @inline_ssp_strong() #1
++; CHECK: @inline_ssp_strong() #[[SSPSTRONG]]
+   call void @fun_ssp()
+   ret void
+ }
+ 
+-define void @inline_ssp_ssp() nounwind ssp uwtable {
++define void @inline_ssp_ssp() ssp {
+ entry:
+-; CHECK: @inline_ssp_ssp() #2
++; CHECK: @inline_ssp_ssp() #[[SSP:[0-9]]]
+   call void @fun_ssp()
+   ret void
+ }
+ 
+-define void @inline_ssp_nossp() nounwind uwtable {
++define void @inline_ssp_nossp() {
+ entry:
+-; CHECK: @inline_ssp_nossp() #3
++; CHECK: @inline_ssp_nossp() {
+   call void @fun_ssp()
+   ret void
+ }
+ 
+-define void @inline_nossp_req() nounwind uwtable sspreq {
++define void @inline_nossp_req() sspreq {
+ entry:
+-; CHECK: @inline_nossp_req() #0
++; CHECK: @inline_nossp_req() #[[SSPREQ]]
+   call void @fun_nossp()
+   ret void
+ }
+ 
+ 
+-define void @inline_nossp_strong() nounwind sspstrong uwtable {
++define void @inline_nossp_strong() sspstrong {
+ entry:
+-; CHECK: @inline_nossp_strong() #1
++; CHECK: @inline_nossp_strong() #[[SSPSTRONG]]
+   call void @fun_nossp()
+   ret void
+ }
+ 
+-define void @inline_nossp_ssp() nounwind ssp uwtable {
++define void @inline_nossp_ssp() ssp {
+ entry:
+-; CHECK: @inline_nossp_ssp() #2
++; CHECK: @inline_nossp_ssp() #[[SSP]]
+   call void @fun_nossp()
+   ret void
+ }
+ 
+-define void @inline_nossp_nossp() nounwind uwtable {
++define void @inline_nossp_nossp() {
+ entry:
+-; CHECK: @inline_nossp_nossp() #3
++; CHECK: @inline_nossp_nossp() {
+   call void @fun_nossp()
+   ret void
+ }
+ 
+ declare i32 @printf(i8*, ...)
+ 
+-; CHECK: attributes #0 = { nounwind sspreq uwtable }
+-; CHECK: attributes #1 = { nounwind sspstrong uwtable }
+-; CHECK: attributes #2 = { nounwind ssp uwtable }
+-; CHECK: attributes #3 = { nounwind uwtable }
++; CHECK: attributes #[[SSPREQ]] = { sspreq }
++; CHECK: attributes #[[SSPSTRONG]] = { sspstrong }
++; CHECK: attributes #[[SSP]] = { ssp }
+
+From b52296ecaa3878648ceeb3aa39df05dc71e44597 Mon Sep 17 00:00:00 2001
+From: Hans Wennborg <hans@chromium.org>
+Date: Mon, 3 Jan 2022 18:03:43 +0100
+Subject: [PATCH 2/2] Don't override __attribute__((no_stack_protector)) by
+ inlining (PR52886)
+
+Since 26c6a3e736d3, LLVM's inliner will "upgrade" the caller's stack protector
+attribute based on the callee. This lead to surprising results with Clang's
+no_stack_protector attribute added in 4fbf84c1732f (D46300). Consider the
+following code compiled with clang -fstack-protector-strong -Os
+(https://godbolt.org/z/7s3rW7a1q).
+
+  extern void h(int* p);
+
+  inline __attribute__((always_inline)) int g() {
+    return 0;
+  }
+
+  int __attribute__((__no_stack_protector__)) f() {
+    int a[1];
+    h(a);
+    return g();
+  }
+
+LLVM will inline g() into f(), and f() would get a stack protector, against the
+users explicit wishes, potentially breaking the program e.g. if h() changes the
+value of the stack cookie. That's a miscompile.
+
+More recently, bc044a88ee3c (D91816) addressed this problem by preventing
+inlining when the stack protector is disabled in the caller and enabled in the
+callee or vice versa. However, the problem remained if the callee is marked
+always_inline as in the example above. This affected users, see e.g.
+http://crbug.com/1274129 and http://llvm.org/pr52886.
+
+One way to fix this would be to prevent inlining also in the always_inline
+case. Despite the name, always_inline does not guarantee inlining, so this
+would be legal but potentially surprising to users.
+
+However, I think the better fix is to not enable the stack protector in a
+caller based on the callee. The motivation for the old behaviour is unclear, it
+seems counter-intuitive, and causes real problems as we've seen.
+
+This commit implements that fix, which means in the example above, g() gets
+inlined into f() (also without always_inline), and f() is emitted without stack
+protector. I think that matches most developers' expectations, and that's also
+what GCC does.
+
+Another effect of this change is that a no_stack_protector function can now be
+inlined into a stack protected function, e.g. (https://godbolt.org/z/hafP6W856):
+
+  extern void h(int* p);
+
+  inline int __attribute__((__no_stack_protector__)) __attribute__((always_inline)) g() {
+    return 0;
+  }
+
+  int f() {
+    int a[1];
+    h(a);
+    return g();
+  }
+
+I think that's fine. Such code would be unusual since no_stack_protector is
+normally applied to a program entry point which sets up the stack canary. And
+even if such code exists, inlining doesn't change the semantics: there is still
+no stack cookie setup/check around entry/exit of the g() code region, but there
+may be in the surrounding context, as there was before inlining. This also
+matches GCC.
+
+See also the discussion at https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94722
+
+Differential revision: https://reviews.llvm.org/D116589
+
+(cherry picked from commit 2bc57d85ebf244f19a3046295b58eb8c667f947d)
+---
+ llvm/docs/LangRef.rst                       | 26 +++++------
+ llvm/lib/Analysis/InlineCost.cpp            |  9 ----
+ llvm/lib/IR/Attributes.cpp                  |  6 +++
+ llvm/test/ThinLTO/X86/nossp.ll              | 23 ++++++----
+ llvm/test/Transforms/Inline/inline_nossp.ll | 50 ---------------------
+ llvm/test/Transforms/Inline/inline_ssp.ll   | 19 +++++++-
+ 6 files changed, 48 insertions(+), 85 deletions(-)
+ delete mode 100644 llvm/test/Transforms/Inline/inline_nossp.ll
+
+diff --git a/llvm/docs/LangRef.rst b/llvm/docs/LangRef.rst
+index 36e09355e485..69393eba3906 100644
+--- a/llvm/docs/LangRef.rst
++++ b/llvm/docs/LangRef.rst
+@@ -1965,11 +1965,9 @@ example:
+     Variables that are identified as requiring a protector will be arranged
+     on the stack such that they are adjacent to the stack protector guard.
+ 
+-    A function with the ``ssp`` attribute but without the ``alwaysinline``
+-    attribute cannot be inlined into a function without a
+-    ``ssp/sspreq/sspstrong`` attribute. If inlined, the caller will get the
+-    ``ssp`` attribute. ``call``, ``invoke``, and ``callbr`` instructions with
+-    the ``alwaysinline`` attribute force inlining.
++    If a function with an ``ssp`` attribute is inlined into a calling function,
++    the attribute is not carried over to the calling function.
++
+ ``sspstrong``
+     This attribute indicates that the function should emit a stack smashing
+     protector. This attribute causes a strong heuristic to be used when
+@@ -1994,12 +1992,10 @@ example:
+ 
+     This overrides the ``ssp`` function attribute.
+ 
+-    A function with the ``sspstrong`` attribute but without the
+-    ``alwaysinline`` attribute cannot be inlined into a function without a
+-    ``ssp/sspstrong/sspreq`` attribute. If inlined, the caller will get the
+-    ``sspstrong`` attribute unless the ``sspreq`` attribute exists.  ``call``,
+-    ``invoke``, and ``callbr`` instructions with the ``alwaysinline`` attribute
+-    force inlining.
++    If a function with an ``sspstrong`` attribute is inlined into a calling
++    function which has an ``ssp`` attribute, the calling function's attribute
++    will be upgraded to ``sspstrong``.
++
+ ``sspreq``
+     This attribute indicates that the function should *always* emit a stack
+     smashing protector. This overrides the ``ssp`` and ``sspstrong`` function
+@@ -2016,11 +2012,9 @@ example:
+     #. Variables that have had their address taken are 3rd closest to the
+        protector.
+ 
+-    A function with the ``sspreq`` attribute but without the ``alwaysinline``
+-    attribute cannot be inlined into a function without a
+-    ``ssp/sspstrong/sspreq`` attribute. If inlined, the caller will get the
+-    ``sspreq`` attribute.  ``call``, ``invoke``, and ``callbr`` instructions
+-    with the ``alwaysinline`` attribute force inlining.
++    If a function with an ``sspreq`` attribute is inlined into a calling
++    function which has an ``ssp`` or ``sspstrong`` attribute, the calling
++    function's attribute will be upgraded to ``sspreq``.
+ 
+ ``strictfp``
+     This attribute indicates that the function was called from a scope that
+diff --git a/llvm/lib/Analysis/InlineCost.cpp b/llvm/lib/Analysis/InlineCost.cpp
+index e8f79a28a8e8..1e68ec8ff7d6 100644
+--- a/llvm/lib/Analysis/InlineCost.cpp
++++ b/llvm/lib/Analysis/InlineCost.cpp
+@@ -2823,15 +2823,6 @@ Optional<InlineResult> llvm::getAttributeBasedInliningDecision(
+   if (Call.isNoInline())
+     return InlineResult::failure("noinline call site attribute");
+ 
+-  // Don't inline functions if one does not have any stack protector attribute
+-  // but the other does.
+-  if (Caller->hasStackProtectorFnAttr() && !Callee->hasStackProtectorFnAttr())
+-    return InlineResult::failure(
+-        "stack protected caller but callee requested no stack protector");
+-  if (Callee->hasStackProtectorFnAttr() && !Caller->hasStackProtectorFnAttr())
+-    return InlineResult::failure(
+-        "stack protected callee but caller requested no stack protector");
+-
+   return None;
+ }
+ 
+diff --git a/llvm/lib/IR/Attributes.cpp b/llvm/lib/IR/Attributes.cpp
+index 5cd1bafccc47..eec4629aa725 100644
+--- a/llvm/lib/IR/Attributes.cpp
++++ b/llvm/lib/IR/Attributes.cpp
+@@ -1957,6 +1957,12 @@ static void setOR(Function &Caller, const Function &Callee) {
+ /// If the inlined function had a higher stack protection level than the
+ /// calling function, then bump up the caller's stack protection level.
+ static void adjustCallerSSPLevel(Function &Caller, const Function &Callee) {
++  // If the calling function has *no* stack protection level (e.g. it was built
++  // with Clang's -fno-stack-protector or no_stack_protector attribute), don't
++  // change it as that could change the program's semantics.
++  if (!Caller.hasStackProtectorFnAttr())
++    return;
++
+   // If upgrading the SSP attribute, clear out the old SSP Attributes first.
+   // Having multiple SSP attributes doesn't actually hurt, but it adds useless
+   // clutter to the IR.
+diff --git a/llvm/test/ThinLTO/X86/nossp.ll b/llvm/test/ThinLTO/X86/nossp.ll
+index c542a85c6f74..cfc54d595ad7 100644
+--- a/llvm/test/ThinLTO/X86/nossp.ll
++++ b/llvm/test/ThinLTO/X86/nossp.ll
+@@ -23,7 +23,8 @@ declare void @ssp_callee() ssp
+ 
+ ; nossp caller should be able to inline nossp callee.
+ define void @nossp_caller() {
+-; CHECK-LABEL: @nossp_caller
++; CHECK-LABEL: define void @nossp_caller()
++; CHECK-NOT: #0
+ ; CHECK-NEXT: tail call void @foo
+   tail call void @nossp_callee()
+   ret void
+@@ -31,28 +32,34 @@ define void @nossp_caller() {
+ 
+ ; ssp caller should be able to inline ssp callee.
+ define void @ssp_caller() ssp {
+-; CHECK-LABEL: @ssp_caller
++; CHECK-LABEL: define void @ssp_caller()
++; CHECK-SAME: #0
+ ; CHECK-NEXT: tail call void @foo
+   tail call void @ssp_callee()
+   ret void
+ }
+ 
+-; nossp caller should *NOT* be able to inline ssp callee.
++; nossp caller should be able to inline ssp callee.
++; the ssp attribute is not propagated.
+ define void @nossp_caller2() {
+-; CHECK-LABEL: @nossp_caller2
+-; CHECK-NEXT: tail call void @ssp_callee
++; CHECK-LABEL: define void @nossp_caller2()
++; CHECK-NOT: #0
++; CHECK-NEXT: tail call void @foo
+   tail call void @ssp_callee()
+   ret void
+ }
+ 
+-; ssp caller should *NOT* be able to inline nossp callee.
++; ssp caller should be able to inline nossp callee.
+ define void @ssp_caller2() ssp {
+-; CHECK-LABEL: @ssp_caller2
+-; CHECK-NEXT: tail call void @nossp_callee
++; CHECK-LABEL: define void @ssp_caller2()
++; CHECK-SAME: #0
++; CHECK-NEXT: tail call void @foo
+   tail call void @nossp_callee()
+   ret void
+ }
+ 
++; CHECK: attributes #0 = { ssp }
++
+ ;--- b.ll
+ target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
+ target triple = "x86_64-pc-linux-gnu"
+diff --git a/llvm/test/Transforms/Inline/inline_nossp.ll b/llvm/test/Transforms/Inline/inline_nossp.ll
+deleted file mode 100644
+index 24fdab0b9f13..000000000000
+--- a/llvm/test/Transforms/Inline/inline_nossp.ll
++++ /dev/null
+@@ -1,50 +0,0 @@
+-; NOTE: Assertions have been autogenerated by utils/update_test_checks.py
+-; RUN: opt -passes='cgscc(inline)' %s -S -pass-remarks-missed=inline 2>&1 | FileCheck --check-prefixes=CHECK,CHECK-INLINE %s
+-; RUN: opt -passes=always-inline -o - -S %s | FileCheck %s
+-
+-; CHECK-INLINE: ssp not inlined into nossp_caller because it should never be inlined (cost=never): stack protected callee but caller requested no stack protector
+-; CHECK-INLINE: nossp not inlined into ssp_caller because it should never be inlined (cost=never): stack protected caller but callee requested no stack protector
+-
+-; Not interesting to test.
+-define i32 @nossp() { ret i32 41 }
+-define i32 @ssp() sspstrong { ret i32 42 }
+-define i32 @nossp_alwaysinline() alwaysinline { ret i32 43 }
+-define i32 @ssp_alwaysinline() sspstrong alwaysinline { ret i32 44 }
+-
+-; @ssp should not be inlined due to mismatch stack protector.
+-; @ssp_alwaysinline should be inlined due to alwaysinline.
+-define i32 @nossp_caller() {
+-; CHECK-LABEL: @nossp_caller(
+-; CHECK-NEXT:    [[TMP1:%.*]] = call i32 @ssp()
+-; CHECK-NEXT:    ret i32 44
+-;
+-  call i32 @ssp()
+-  %2 = call i32 @ssp_alwaysinline()
+-  ret i32 %2
+-}
+-; @nossp should not be inlined due to mismatch stack protector.
+-; @nossp_alwaysinline should be inlined due to alwaysinline.
+-define i32 @ssp_caller() sspstrong {
+-; CHECK-LABEL: @ssp_caller(
+-; CHECK-NEXT:    [[TMP1:%.*]] = call i32 @nossp()
+-; CHECK-NEXT:    ret i32 43
+-;
+-  call i32 @nossp()
+-  %2 = call i32 @nossp_alwaysinline()
+-  ret i32 %2
+-}
+-
+-; The alwaysinline attribute can also appear on the CallBase (ie. the call
+-; site), ie. when __attribute__((flatten)) is used on the caller. Treat this
+-; the same as if the caller had the fn attr alwaysinline and permit inline
+-; substitution, despite the mismatch between caller and callee on ssp attrs.
+-;
+-; Curiously, the always_inline attribute on a CallInst is only expanded by the
+-; inline pass, but not always_inline pass!
+-define i32 @nossp_alwaysinline_caller() {
+-; CHECK-INLINE-LABEL: @nossp_alwaysinline_caller(
+-; CHECK-INLINE-NEXT:    ret i32 42
+-;
+-  %1 = call i32 @ssp() alwaysinline
+-  ret i32 %1
+-}
+diff --git a/llvm/test/Transforms/Inline/inline_ssp.ll b/llvm/test/Transforms/Inline/inline_ssp.ll
+index ccfe93453159..a4f73f4dcd5a 100644
+--- a/llvm/test/Transforms/Inline/inline_ssp.ll
++++ b/llvm/test/Transforms/Inline/inline_ssp.ll
+@@ -9,15 +9,23 @@
+ 
+ ; These first four functions (@fun_sspreq, @fun_sspstrong, @fun_ssp, @fun_nossp)
+ ; are used by the remaining functions to ensure that the SSP attributes are
+-; propagated correctly.  The caller should have its SSP attribute set as:
++; propagated correctly.  If the caller had an SSP attribute before inlining, it
++; should have its new SSP attribute set as:
+ ; strictest(caller-ssp-attr, callee-ssp-attr), where strictness is ordered as:
+-;  sspreq > sspstrong > ssp > [no ssp]
++;  sspreq > sspstrong > ssp
++
+ define internal void @fun_sspreq() sspreq {
+ entry:
+   %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([12 x i8], [12 x i8]* @.str3, i32 0, i32 0))
+   ret void
+ }
+ 
++define internal void @fun_sspreq_alwaysinline() sspreq alwaysinline {
++entry:
++  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([12 x i8], [12 x i8]* @.str3, i32 0, i32 0))
++  ret void
++}
++
+ define internal void @fun_sspstrong() sspstrong {
+ entry:
+   %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str2, i32 0, i32 0))
+@@ -66,6 +74,13 @@ entry:
+   ret void
+ }
+ 
++define void @alwaysinline_req_nossp() {
++entry:
++; CHECK: @alwaysinline_req_nossp() {
++  call void @fun_sspreq_alwaysinline()
++  ret void
++}
++
+ define void @inline_strong_req() sspreq {
+ entry:
+ ; CHECK: @inline_strong_req() #[[SSPREQ]]
