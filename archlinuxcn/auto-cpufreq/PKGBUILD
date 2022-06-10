@@ -1,6 +1,6 @@
 # Maintainer: Zhanibek Adilbekov <zhanibek.adilbekov@pm.me>
 pkgname=auto-cpufreq
-pkgver=1.9.3
+pkgver=1.9.4
 pkgrel=1
 pkgdesc="Automatic CPU speed & power optimizer"
 arch=('any')
@@ -14,7 +14,7 @@ optdepends=(
 makedepends=('python-setuptools' 'python-pip')
 install="$pkgname.install"
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz" "$pkgname.service")
-b2sums=('e283ceab60dd8a972fc5e50fff3c0005f36bc0af954ae74baae4463d9d9bd197f4bdb2925b2293b4deca35b32e65bfd5cb886f70c5dbc7d2bc3e05368666b858'
+b2sums=('37048f760b1da90f8f655115138b975dc49edd0e2a4a04e1c9f3c7e66570690dc7242f9547fcb7ad35de79ff7b4105b6922a6c8aa44aef52abbf14c9d35a8a0b'
         '90d9a6e0a86d01803527462e0ed0ce93d04d245c2c99ab773f31e1eb46dd86b209f98af50967bbdb6627563b0aae0ca4bbc861c812576a243b07c40a483c37db')
 
 prepare() {
