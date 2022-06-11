@@ -1,7 +1,7 @@
-From 7439b0cef820321f3234d4344b6ab93ea44dd378 Mon Sep 17 00:00:00 2001
+From 9953c43d3b0144c0349c9c585e6b18b246846405 Mon Sep 17 00:00:00 2001
 From: Evangelos Foutras <evangelos@foutrelis.com>
 Date: Fri, 18 Mar 2022 17:16:24 +0200
-Subject: [PATCH 1/4] arch-nspawn: read CacheDir option from host's conf
+Subject: [PATCH 1/5] arch-nspawn: read CacheDir option from host's conf
 
 This went unnoticed on build.archlinux.org until we tried switching away
 from its local /srv/ftp/ mirror. With a remote mirror, the chroots would
