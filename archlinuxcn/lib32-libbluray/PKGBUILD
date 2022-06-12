@@ -4,30 +4,28 @@
 # Contributor: Johannes Dewender  arch at JonnyJD dot net
 # Contributor: josephgbr <rafael.f.f1@gmail.com>
 
-
-
-_pkgbase=libbluray
-pkgname=lib32-${_pkgbase}
-pkgver=1.3.0
+_pkgname=libbluray
+pkgname=lib32-${_pkgname}
+pkgver=1.3.1
 pkgrel=1
-pkgdesc='Library to access Blu-Ray disks for video playback (32 bit)'
+pkgdesc='A library to access Blu-Ray disks for video playback (32 bit)'
 arch=('x86_64')
 url='https://www.videolan.org/developers/libbluray.html'
 license=('LGPL2.1')
-depends=("$_pkgbase" "lib32-fontconfig" "lib32-freetype2" "lib32-glibc" "lib32-libxml2" "libfontconfig.so" "libfreetype.so")
+depends=("${_pkgname}" "lib32-fontconfig" "lib32-freetype2" "lib32-gcc-libs" "lib32-libxml2" "libfontconfig.so" "libfreetype.so")
 provides=('libbluray.so')
-source=("https://download.videolan.org/pub/videolan/$_pkgbase/$pkgver/$_pkgbase-$pkgver.tar.bz2")
-sha256sums=('e2dbaf99e84e0a9725f4985bcb85d41e52c2261cc651d8884b1b790b5ef016f9')
+source=("https://download.videolan.org/pub/videolan/${_pkgname}/${pkgver}/${_pkgname}-${pkgver}.tar.bz2")
+sha256sums=('c24b0f41c5b737bbb65c544fe63495637a771c10a519dfc802e769f112b43b75')
 
 build() {
-    cd $_pkgbase-$pkgver
+    cd ${_pkgname}-${pkgver}
 
     export CC='gcc -m32'
     export CXX='g++ -m32'
     export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
 
-    ./configure --libdir=/usr/lib32 \
-                --prefix=/usr \
+    ./configure --prefix=/usr \
+                --libdir=/usr/lib32 \
                 --disable-doxygen-doc \
                 --disable-bdjava-jar \
                 --host=i686-unknown-linux-gnu
@@ -35,8 +33,8 @@ build() {
 }
 
 package() {
-    cd $_pkgbase-$pkgver
+    cd ${_pkgname}-${pkgver}
 
-    make DESTDIR="$pkgdir" install
+    make DESTDIR="${pkgdir}" install
     rm -rf "${pkgdir}"/usr/{bin,include,share}
 }
