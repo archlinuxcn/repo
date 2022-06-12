@@ -3,7 +3,7 @@
 # Contributor: KokaKiwi <kokakiwi+aur@kokakiwi.net>
 
 pkgname=ventoy-bin
-pkgver=1.0.75
+pkgver=1.0.76
 pkgrel=1
 pkgdesc="A new multiboot USB solution"
 arch=('aarch64' 'i686' 'x86_64')
@@ -25,7 +25,7 @@ source=("https://github.com/ventoy/Ventoy/releases/download/v${pkgver}/${pkgname
         "${pkgname%-bin}-extend-persistent"
         "${pkgname%-bin}.desktop"
         'sanitize.patch')
-sha256sums=('64487c11da3be1aa95ae5631c12fcfefbabf3d27c80d8992145e572c5e44a535'
+sha256sums=('f13c3c81eafe15ae4b3de3d98d240d94eabba7cda8e3330ff1769502ecfa33c0'
             '1ad5d314e02b84127a5a59f3871eb1d28617218cad07cde3eeddcac391473000'
             '620f6cd35d4480a157b7950c405688915a6658e0c321dc0a0d0c9c20968604ed'
             'c3d4463a878a89d96e5f0bc4e1a43e48f27af5965bd4c977567695d7cf91fe5f'
