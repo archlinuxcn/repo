@@ -2,7 +2,7 @@
 # Contributor: Jonathan Duck <duckbrain30@gmail.com>
 
 pkgname=typora
-pkgver=1.2.4
+pkgver=1.3.6
 pkgrel=1
 pkgdesc="A minimal markdown editor and reader."
 arch=('x86_64')
@@ -14,11 +14,21 @@ optdepends=(
 	'pandoc: Import/export for extra file formats')
 _filename="${pkgname}_${pkgver}_amd64.deb"
 source=("https://typora.io/linux/$_filename")
-sha512sums=('ae3822e3c8c3281ee689e8f5642e3f6db6b9b57847793727d7d263a45353514397f7e552f1cce67228eead1acb8b7cf30466867f4b2b6448b7d71730f0ed3ee3')
+sha512sums=('cae9c1ab90da1e40e35f8bc6f28433c75d0cf9cc720142aeedfbaf7199376b4b89d261746945c93c89a62a400208bfeec57d9b83d6716bd42ef167ef3deb9320')
 
 package() {
+	# unpack archive
 	bsdtar -xf data.tar.xz -C "$pkgdir/"
+	# remove lintian overrides
 	rm -rf "$pkgdir/usr/share/lintian/"
+	# move license to correct path
+	install -Dm644 "$pkgdir/usr/share/doc/$pkgname/copyright" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+	# delete previous copyright path
+	rm "$pkgdir/usr/share/doc/$pkgname/copyright"
+	# delete doc dir if empty
+	rmdir --ignore-fail-on-non-empty "$pkgdir/usr/share/doc/$pkgname" "$pkgdir/usr/share/doc"
+	# remove change log from application comment
 	sed -i '/Change Log/d' "$pkgdir/usr/share/applications/typora.desktop"
+	# fix dir permissions
 	find "$pkgdir" -type d -exec chmod 755 {} \;
 }
