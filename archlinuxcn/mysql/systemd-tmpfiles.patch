@@ -13,7 +13,7 @@ diff -Naur a/usr/lib/tmpfiles.d/mysqlrouter.conf b/usr/lib/tmpfiles.d/mysqlroute
  # along with this program; if not, write to the Free Software
  # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
  
--d run 0755 mysqlrouter mysqlrouter  -
+-d /run 0755 mysqlrouter mysqlrouter  -
 +d /run/mysqlrouter 0755 mysqlrouter mysqlrouter  -
 +d /var/lib/mysqlrouter 0700 mysqlrouter mysqlrouter  -
 +d /var/log/mysqlrouter 0750 mysqlrouter mysqlrouter  -
