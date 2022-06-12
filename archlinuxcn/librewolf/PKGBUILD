@@ -2,8 +2,8 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=101.0
-pkgrel=2
+pkgver=101.0.1
+pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
 license=(MPL GPL LGPL)
@@ -23,26 +23,28 @@ backup=('usr/lib/librewolf/librewolf.cfg'
         'usr/lib/librewolf/distribution/policies.json')
 options=(!emptydirs !makeflags !strip !lto !debug)
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
-_source_tag="${pkgver}-${pkgrel}"
-# _source_commit='63e85e5a55c9efc38b9ff45e822fb55c076f045a' # not 'stable', but current source head
+# _source_tag="${pkgver}-${pkgrel}"
+_source_commit='414f21962832bb861d8878a1a32d65f9eae5df54' # not 'stable', but current source head
 _settings_tag='6.5'
 # _settings_commit='1a84d38bab56551f9ec2650644c4906650e75603' # hottest of fixes: 6.1 with a pref fix on top ^^
 install='librewolf.install'
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         $pkgname.desktop
-        "git+https://gitlab.com/${pkgname}-community/browser/source.git#tag=${_source_tag}"
+        "git+https://gitlab.com/${pkgname}-community/browser/source.git#commit=${_source_commit}"
         "git+https://gitlab.com/${pkgname}-community/settings.git#tag=${_settings_tag}"
         "default192x192.png"
         "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
+        "0032-bmo-1773259-cbindgen-root_clip_chain-fix.patch"
         )
 # source_aarch64=()
-sha256sums=('55ab5b517d58bbcbc837640263a8371cf1fba3d9f508e54537c4d2cbbfb86095'
+sha256sums=('b4c76e8bdf81f473f3e56b2f69dbe5119bba5cab38e36ab0f3f38cf0cdc4a9c2'
             'SKIP'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
             'SKIP'
             'SKIP'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1'
-            'ea172cd8ade700fc46e9afcdec52718d9fea17bb7ddf93c75b3b6bb4944cef78')
+            'ea172cd8ade700fc46e9afcdec52718d9fea17bb7ddf93c75b3b6bb4944cef78'
+            'd3ea2503dff0a602bb058153533ebccd8232e8aac1dc82437a55d724b8d22bc2')
 # sha256sums_aarch64=()
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
@@ -151,6 +153,14 @@ fi
   # pgo improvements
   patch -Np1 -i ../0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch
 
+  # address build failure when building with most recent (>=0.24.0) cbindgen
+  # also catch systems (Manjaro, at the time of writing this) where cbindgen
+  # is not yet at 24. probably not elegant, but it works.
+  _cbindgen_ver=$(cbindgen --version | sed -e 's/cbindgen[[:space:]]0.\([0-9]*\).[0-9]/\1/g')
+  if [ "${_cbindgen_ver}" -gt 23 ]; then
+    patch -Np1 -i ../0032-bmo-1773259-cbindgen-root_clip_chain-fix.patch
+  fi
+
   # pip issues seem to be fixed upstream?
 
   # LibreWolf
@@ -166,8 +176,7 @@ fi
   # KDE menu
   # patch -Np1 -i ${_patches_dir}/mozilla-kde.patch
   # custom patch that does not conflict with the unity patch
-  # NOTO: currently broken
-  # patch -Np1 -i ${_patches_dir}/mozilla-kde_after_unity.patch
+  patch -Np1 -i ${_patches_dir}/mozilla-kde_after_unity.patch
 
   # Disabling Pocket
   patch -Np1 -i ${_patches_dir}/sed-patches/disable-pocket.patch
@@ -206,6 +215,9 @@ fi
 
   # add custom uBO assets (on first launch only)
   patch -Np1 -i ${_patches_dir}/custom-ubo-assets-bootstrap-location.patch
+
+  #
+  patch -Np1 -i ${_patches_dir}/faster-package-multi-locale.patch
 
   # ui patches
 
