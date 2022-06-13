@@ -44,7 +44,7 @@ GPM=              # Mouse support in Linux console using gpmd.
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
                   # Bitmap fonts only, 1337!
                
-PGTK=             # Use native GTK3 build. Supports Wayland, yay!
+PGTK="YES"
 
 GTK3="YES"        # GTK3 old windowing interface.
 
@@ -78,14 +78,14 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-native-comp-git"
 fi
-pkgver=29.0.50.157234
+pkgver=29.0.50.157238
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
 url="http://www.gnu.org/software/emacs/"
 license=('GPL3')
 depends_nox=('gnutls' 'libxml2' 'jansson')
-depends=("${depends_nox[@]}" "harfbuzz" "libxpm")
+depends=("${depends_nox[@]}" 'harfbuzz')
 makedepends=('git')
 provides=('emacs')
 #source=("emacs-git::git://git.savannah.gnu.org/emacs.git"
