@@ -7,9 +7,9 @@
 # Contributor: heavysink <winstonwu91 at gmail>
 pkgname=wine-valve
 epoch=3
-pkgver=7.0.2
-_pkgver='7.0-2'
-pkgrel=2
+pkgver=7.0.3
+_pkgver='7.0-3'
+pkgrel=1
 pkgdesc='A compatibility layer for running Windows programs (Valve version)'
 arch=('i686' 'x86_64')
 url='https://github.com/ValveSoftware/wine.git'
@@ -213,7 +213,7 @@ package() {
     done
 }
 
-sha256sums=('c4185d7dc3f3882238fa0410760aa26ce6eb17db01dd25b9486ab8b569c428af'
+sha256sums=('e1064339892fedeb03e08a0f2eeb64e5e1cc2e6698fb33de1da7f0a3a2f8213d'
             '9901a5ee619f24662b241672a7358364617227937d5f6d3126f70528ee5111e7'
             '6dfdefec305024ca11f35ad7536565f5551f09119dda2028f194aee8f77077a4'
             '7c73a0fd35d8905d5d0fc33f5cf1558f77b4d70e544c92034ffe41a9d50d8c40'
