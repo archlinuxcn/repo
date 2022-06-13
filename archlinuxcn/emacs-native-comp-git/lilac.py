@@ -25,13 +25,12 @@ def pre_build():
             line = 'XWIDGETS="YES"'
             checks = checks + '5'
 
-        if line.startswith('install='):
-            line = 'install=emacs-git.install'
+        if line.startswith('PGTK='):
+            line = 'PGTK="YES"'
             checks = checks + '6'
 
-        # fix libxpm
-        if line.startswith('depends='):
-            line = 'depends=("${depends_nox[@]}" "harfbuzz" "libxpm")'
+        if line.startswith('install='):
+            line = 'install=emacs-git.install'
             checks = checks + '7'
 
         #if line.startswith('source='):
