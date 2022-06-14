@@ -1,9 +1,5 @@
-# Maintainer: Limao Luo <luolimao+AUR@gmail.com>
-# Contributor: Marco A Rojas <marquicus@gmail.com>
-# Contributor: Pavel Larev <pavel@larev.ws>
-
 pkgname=apache-tools
-pkgver=2.4.53
+pkgver=2.4.54
 pkgrel=1
 pkgdesc="Useful Apache tools - htdigest, htpasswd, ab (Apache Benchmark), htdbm"
 arch=("i686" "x86_64" "armv6h" "armv7h" "aarch64")
@@ -14,7 +10,7 @@ makedepends=("apr-util")
 conflicts=(apache)
 source=(http://www.apache.org/dist/httpd/httpd-$pkgver.tar.bz2
         $pkgname-Makefile.patch)
-sha256sums=('d0bbd1121a57b5f2a6ff92d7b96f8050c5a45d3f14db118f64979d525858db63'
+sha256sums=('eb397feeefccaf254f8d45de3768d9d68e8e73851c49afd5b7176d1ecf80c340'
             '2dc48d34773b0c873d10e3542f77a4f7b50d5fb9bd8c52e3bb28b76ff9587f3f')
 
 prepare() {
