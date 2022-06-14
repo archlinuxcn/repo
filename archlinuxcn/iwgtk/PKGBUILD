@@ -1,15 +1,15 @@
 # Maintainer: Jesse Lentz <jesse@twosheds.org>
 
 pkgname=iwgtk
-pkgver=0.5
+pkgver=0.6
 pkgrel=1
-pkgdesc='Lightweight, graphical wifi management front-end for iwd'
+pkgdesc='Lightweight wireless network management GUI (front-end for iwd)'
 arch=(x86_64)
 url='https://github.com/J-Lentz/iwgtk'
 license=(GPL3)
 depends=('iwd>=1.28' gtk4 adwaita-icon-theme)
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/J-Lentz/iwgtk/archive/v0.5.tar.gz")
-sha256sums=(5465721f79090d342c389c8748ba6ef679fa83ae5ed23cea90bcb4e1b9017689)
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/J-Lentz/iwgtk/archive/v0.6.tar.gz")
+sha256sums=(43e128c1ef123d115cda34a66f9a79b63560e0e7b658a6f34c60ddeb3a740704)
 
 build() {
     cd ${pkgname}-${pkgver}
