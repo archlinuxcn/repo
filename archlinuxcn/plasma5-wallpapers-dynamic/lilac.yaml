@@ -4,9 +4,11 @@ maintainers:
 
 build_prefix: extra-x86_64
 
+pre_build_script: aur_pre_build(maintainers=['zzag'])
+
+post_build: aur_post_build
+
 update_on:
-  - source: github
-    github: zzag/plasma5-wallpapers-dynamic
   - source: aur
     aur: plasma5-wallpapers-dynamic
 # vim:set ts=2 sw=2 et:
