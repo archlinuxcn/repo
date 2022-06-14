@@ -2,7 +2,10 @@ maintainers:
   - github: zjuyk
     email: zjuyk@archlinuxcn.org
 
+build_prefix: extra-x86_64
+
+post_build: update_aur_repo
+
 update_on:
-  - source: github
-    github: badboy/mdbook-toc
-pre_build: vcs_update
+  - source: manual
+    manual: 1
