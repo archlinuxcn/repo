@@ -1,0 +1,13 @@
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: paulmcauley/classik
+    use_max_tag: true
+    # 3.0.breeze5.23.80
+    include_regex: ^(\d+\.)+breeze\d+\.\d+\.\d+$
+
+maintainers:
+  - github: rocka
