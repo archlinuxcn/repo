@@ -3,7 +3,7 @@
 
 pkgname=juicefs-oss
 _pkgname=juicefs
-pkgver=1.0.0beta3
+pkgver=1.0.0rc1
 _pkgver=$(echo $pkgver | sed -E 's/^([0-9\.]+)([^0-9].*)?$/\1-\2/' | sed -E 's/-$//')
 pkgrel=1
 pkgdesc="A distributed POSIX file system built on top of Redis and S3. (FOSS version)"
@@ -14,7 +14,7 @@ conflicts=('juicefs')
 depends=('glibc')
 makedepends=('go')
 source=("juicefs-$_pkgver.tar.gz::https://github.com/juicedata/juicefs/archive/refs/tags/v$_pkgver.tar.gz")
-sha256sums=('5a52ac1516e23e07086292a155ba734dda0852543c1f89251a69411b9451f7e4')
+sha256sums=('571ccafec99e195486c6bac2924a718d58dd43ef252006642938cade4af0ba5c')
 
 prepare() {
   cd "$_pkgname-$_pkgver"
@@ -28,11 +28,11 @@ build() {
   export CGO_CXXFLAGS="${CXXFLAGS}"
   export CGO_LDFLAGS="${LDFLAGS}"
   export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
-  go build -o build ./cmd/...
+  go build -o build/$_pkgname .
 }
 
 package() {
   cd "$_pkgname-$_pkgver"
-  install -Dm755 build/cmd "$pkgdir"/usr/bin/$_pkgname
+  install -Dm755 build/$_pkgname "$pkgdir"/usr/bin/$_pkgname
   ln -s /usr/bin/$_pkgname "$pkgdir"/usr/bin/mount.$_pkgname
 }
