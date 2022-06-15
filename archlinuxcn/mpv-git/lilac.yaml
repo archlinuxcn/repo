@@ -16,7 +16,7 @@ update_on:
   - source: github
     github: mpv-player/mpv
     branch: master
-  - alias: alpm-lilac
+  - source: alpm
     alpm: libplacebo-git
     provided: libplacebo.so
   - source: alpm
@@ -68,7 +68,7 @@ update_on:
     alpm: alsa-lib
     provided: libasound.so
   - source: alpm
-    alpm: jack
+    alpm: jack2
     provided: libjack.so
   - source: alpm
     alpm: sndio
