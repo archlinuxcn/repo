@@ -10,8 +10,93 @@ post_build: git_pkgbuild_commit
 
 repo_depends:
   - libsixel
+  - libplacebo-git
 
 update_on:
   - source: github
     github: mpv-player/mpv
     branch: master
+  - alias: alpm-lilac
+    alpm: libplacebo-git
+    provided: libplacebo.so
+  - source: alpm
+    alpm: vulkan-icd-loader
+    provided: libvulkan.so
+  - source: alpm
+    alpm: lcms2
+    provided: liblcms2.so
+  - source: alpm
+    alpm: shaderc
+    provided: libshaderc_shared.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavcodec.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavutil.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavformat.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavdevice.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavfilter.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libswresample.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libswscale.so
+  - source: alpm
+    alpm: libass
+    provided: libass.so
+  - source: alpm
+    alpm: libarchive
+    provided: libarchive.so
+  - source: alpm
+    alpm: libbluray
+    provided: libbluray.so
+  - source: alpm
+    alpm: rubberband
+    provided: librubberband.so
+  - source: alpm
+    alpm: zimg
+    provided: libzimg.so
+  - source: alpm
+    alpm: alsa-lib
+    provided: libasound.so
+  - source: alpm
+    alpm: jack
+    provided: libjack.so
+  - source: alpm
+    alpm: sndio
+    provided: libsndio.so
+  - source: alpm
+    alpm: libjpeg-turbo
+    provided: libjpeg.so
+  - source: alpm
+    alpm: wayland
+    provided: libwayland-client.so
+  - source: alpm
+    alpm: wayland
+    provided: libwayland-cursor.so
+  - source: alpm
+    alpm: wayland
+    provided: libwayland-egl.so
+  - source: alpm
+    alpm: libxkbcommon
+    provided: libxkbcommon.so
+  - source: alpm
+    alpm: libva
+    provided: libva.so
+  - source: alpm
+    alpm: libva
+    provided: libva-x11.so
+  - source: alpm
+    alpm: libva
+    provided: libva-wayland.so
+  - source: alpm
+    alpm: libva
+    provided: libva-drm.so

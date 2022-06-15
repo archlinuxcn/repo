@@ -4,29 +4,43 @@
 pkgname=mpv-git
 _gitname=mpv
 pkgver=0.34.0_325_g602995fd40
-pkgrel=1
+pkgrel=2
 pkgdesc='A free, open source, and cross-platform media player (with all possible libs)'
 arch=('x86_64')
 license=('GPL3')
 url='https://mpv.io/'
-depends=('lcms2' 'libcdio-paranoia' 'libgl' 'libxss'
-        'libxinerama' 'libxv' 'libxkbcommon' 'libva' 'wayland' 'libcaca'
+depends=(
+        'libx11' 'libxext' 'libxrandr' 'libxss' 'libxinerama' 'libxv'
         'desktop-file-utils' 'hicolor-icon-theme' 'xdg-utils' 'luajit' 'mujs'
-        'libdvdnav' 'libxrandr' 'jack' 'rubberband' 'uchardet' 'libarchive'
-        'zlib' 'vapoursynth' 'sndio' 'vulkan-icd-loader' 'zimg' 'sdl2' 'libsixel'
+        'libgl' 'libdvdnav' 'uchardet' 'mesa' 'libdrm' 'libcaca'
+        'zlib' 'vapoursynth' 'sdl2' 'libsixel' 'libcdio-paranoia' 'libcdio'
+
+        'libva' 'libva.so' 'libva-x11.so' 'libva-wayland.so' 'libva-drm.so'
+        'libxkbcommon' 'libxkbcommon.so'
+        'wayland' 'libwayland-client.so' 'libwayland-cursor.so' 'libwayland-egl.so'
+        'libjpeg' 'libjpeg.so'
+        'sndio' 'libsndio.so' 
+        'jack' 'libjack.so'
+        'alsa-lib' 'libasound.so'
+        'zimg' 'libzimg.so'
+        'rubberband' 'librubberband.so'
+        'libbluray' 'libbluray.so'
+        'libarchive' 'libarchive.so'
+        'libass' 'libass.so'
+        'lcms2' 'liblcms2.so'
+        'vulkan-icd-loader' 'libvulkan.so'
         'ffmpeg' 'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so' 'libavutil.so' 'libswresample.so' 'libswscale.so'
-        'libplacebo' 'libplacebo.so'
+        'libplacebo-git' 'libplacebo.so'
         'shaderc' 'libshaderc_shared.so'
 )
-makedepends=('git' 'mesa' 'python-docutils' 'vulkan-headers' 'wayland-protocols'
-             'ffnvcodec-headers' 'meson' 'pipewire' 'pulseaudio' 'openal' 'alsa-lib'
+makedepends=('git' 'python-docutils' 'vulkan-headers' 'wayland-protocols'
+             'ffnvcodec-headers' 'meson' 'pipewire' 'pulseaudio' 'openal'
 )
 optdepends=('youtube-dl: for video-sharing websites playback'
             'yt-dlp: for video-sharing websites playback'
             'openal: OpenAL audio output'
             'pipewire: PipeWire audio output'
             'pulseaudio: PulseAudio audio output'
-            'alsa-lib: ALSA audio output'
             'smbclient: Samba support'
             'nvidia-utils: for hardware accelerated video decoding with CUDA')
 provides=('mpv' 'libmpv.so')
