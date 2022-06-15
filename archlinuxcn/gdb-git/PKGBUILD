@@ -3,7 +3,7 @@
 # Contributor: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=('gdb-git' 'gdb-common-git')
-pkgver=110405.536595b7123
+pkgver=110421.d712f2768ac
 pkgrel=1
 pkgdesc="The GNU Debugger from git"
 arch=(armv7h aarch64 i686 x86_64)
@@ -15,10 +15,8 @@ provides=('gdb-common' 'gdb')
 conflicts=('gdb-common' 'gdb')
 backup=('etc/gdb/gdbinit')
 options=('!libtool')
-source=('gdb::git+https://sourceware.org/git/binutils-gdb.git'
-        0001-Use-fmt3-as-simple-output-text-instead.patch)
-sha256sums=('SKIP'
-            'a80c1d25bd38fbd72a8bf60290911b74ef17863d58d9b3de31fc2028c6d37bff')
+source=('gdb::git+https://sourceware.org/git/binutils-gdb.git')
+sha256sums=('SKIP')
 
 pkgver() {
   cd "$srcdir/gdb"
@@ -27,8 +25,6 @@ pkgver() {
 
 prepare() {
   cd gdb
-
-  patch -Np1 -i ../0001-Use-fmt3-as-simple-output-text-instead.patch
 
   # fixes build, copied from the gdb PKGBUILD
   # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
@@ -40,7 +36,6 @@ build() {
 
   mkdir -p build
   cd build
-  CXXFLAGS+=' -Wno-error=format-security'
   ../configure \
     --prefix=/usr \
     --disable-nls \
