@@ -4,8 +4,8 @@
 # Contributor: Jesus Jerez <jhuss@archlinux.org.ve>
 
 pkgname=eclipse-platform
-pkgver=4.23
-_pkgbuild=202203080310
+pkgver=4.24
+_pkgbuild=202206070700
 pkgrel=1
 pkgdesc="A minimal installation suitable for complete per-user customization with the built-in Eclipse package manager"
 url="https://www.eclipse.org"
@@ -17,22 +17,26 @@ conflicts=("eclipse-common")
 provides=("eclipse=$pkgver")
 options=(!strip)
 
-source=("http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-${pkgver}-${_pkgbuild}/eclipse-platform-${pkgver}-linux-gtk-x86_64.tar.gz&r=1"
-        "eclipse.sh"
-        "eclipse.desktop")
+source=(
+  "http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-${pkgver}-${_pkgbuild}/eclipse-platform-${pkgver}-linux-gtk-x86_64.tar.gz&r=1"
+  "eclipse.sh"
+  "eclipse.desktop"
+)
 
-sha512sums=('004184344e405d7526211c2ff07a772c1c9f3edb86fc7be2a6a90ca2af8ae00fbc63b35909140cf5849ff33af8d92d1a613afaaf03fa5496a3a458b3e22c542e'
-            '71393b01c2774654e1b3348ceedd6b110c7f1b26da93da40dac653ce2103a34997ec0e9e7fd4e977d869c149d19ef39f59738717cc6762e39b0bc0e7d53df4ac'
-            '6ea9f91f0704ec775aed2520737e4139ed7efcf89fd51220614e8fb8e8ce9e7460b8ff77d01519e5921f449752f60a1b36196c057e78a1906bfa4b2d346bdae2')
+sha512sums=(
+  "3cf805b62e945129080c4501198e2d0d57e76855f14d421122f7cc3955d5c48afe72218ad9d387a50ecaf617189d6aa822e9716bf7d5f935d023787370845500"
+  "71393b01c2774654e1b3348ceedd6b110c7f1b26da93da40dac653ce2103a34997ec0e9e7fd4e977d869c149d19ef39f59738717cc6762e39b0bc0e7d53df4ac"
+  "4155321f6a6f4671aa2753daa6466f4a06806b2d6fbc442066b75cbfd3ca3f45d61eb25bf9c662026fec7ffd307d30b3f1604792d0dfec4cca202656be627b97"
+)
 
 package() {
-    install -d ${pkgdir}/usr/bin ${pkgdir}/usr/lib ${pkgdir}/usr/share/applications
-    install -m755 "${srcdir}/eclipse.sh" "${pkgdir}/usr/bin/eclipse"
-    install -Dm644 "${srcdir}/eclipse.desktop" "${pkgdir}/usr/share/applications/"
+  install -d ${pkgdir}/usr/bin ${pkgdir}/usr/lib ${pkgdir}/usr/share/applications
+  install -m755 "${srcdir}/eclipse.sh" "${pkgdir}/usr/bin/eclipse"
+  install -Dm644 "${srcdir}/eclipse.desktop" "${pkgdir}/usr/share/applications/"
 
-    for _i in 16 32 48 256; do
-        install -Dm644 "${srcdir}"/eclipse/plugins/org.eclipse.platform_*/eclipse${_i}.png "$pkgdir/usr/share/icons/hicolor/${_i}x${_i}/apps/eclipse.png"
-    done
+  for _i in 16 32 48 256; do
+    install -Dm644 "${srcdir}"/eclipse/plugins/org.eclipse.platform_*/eclipse${_i}.png "$pkgdir/usr/share/icons/hicolor/${_i}x${_i}/apps/eclipse.png"
+  done
 
-    mv "${srcdir}/eclipse" "${pkgdir}/usr/lib/"
+  mv "${srcdir}/eclipse" "${pkgdir}/usr/lib/"
 }
