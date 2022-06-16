@@ -1,0 +1,47 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: Aetf <aetf at unlimitedcodeworks dor xyz>
+
+pkgname=libtsm-patched-git
+_pkgname=libtsm
+pkgver=4.0.2.r0.g4faef1e
+pkgrel=1
+pkgdesc="Terminal-emulator State Machine. Patched flavor (using patches from http://github.com/Aetf/libtsm)"
+arch=('x86_64' 'armv7h' 'aarch')
+url="http://www.freedesktop.org/wiki/Software/kmscon/$_pkgname"
+license=('MIT')
+depends=('glibc')
+makedepends=('cmake' 'git' 'ninja' 'libxkbcommon')
+provides=('libtsm-patched' 'libtsm')
+conflicts=('libtsm-patched' 'libtsm')
+options=(debug strip)
+source=('git+https://github.com/Aetf/libtsm.git')
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "$_pkgname"
+    git describe --long | sed -r "s/^$_pkgname-//;s/^v//;s/([^-]*-g)/r\\1/;s/-/./g"
+}
+
+prepare() {
+    cd "$srcdir/$_pkgname"
+
+    cmake -S . -B build \
+        -DBUILD_TESTING=OFF \
+        -DBUILD_GTKTSM=OFF \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -G Ninja
+}
+
+build() {
+    cd "$srcdir/$_pkgname"
+    ninja -C build
+}
+
+package() {
+    cd "$srcdir/$_pkgname"
+
+    DESTDIR="$pkgdir" cmake --install build
+    install -Dm644 COPYING "$pkgdir/usr/share/licenses/$_pkgname/COPYING"
+}
