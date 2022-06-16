@@ -6,7 +6,7 @@ pkgver=5.9.18
 #_pkgrel=24
 _pkgtyp=stable
 _pkghash=5db94058d7ad
-pkgrel=1
+pkgrel=2
 pkgdesc="Linux client of Feishu (Lark) from Bytedance."
 arch=('x86_64')
 url="https://www.feishu.cn/"
@@ -27,12 +27,17 @@ package(){
   # Modify files
   cd "${pkgdir}"
   ln -s bytedance-feishu-${_pkgtyp} usr/bin/feishu
+
   sed -i "s/bytedance-feishu-${_pkgtyp}/feishu/g" "${pkgdir}/usr/share/applications/bytedance-feishu.desktop"
   sed -i "s/bytedance-feishu/feishu/g" "${pkgdir}/usr/share/applications/bytedance-feishu.desktop"
   sed -i 's/StartupNotify=true/StartupNotify=true\nStartupWMClass=feishu/g' "${pkgdir}/usr/share/applications/bytedance-feishu.desktop"
+
   sed -i "s/bytedance-feishu/feishu/g" "${pkgdir}/usr/share/menu/bytedance-feishu.menu"
+
   sed -i 's/bytedance-feishu/feishu/g' "${pkgdir}/usr/share/appdata/bytedance-feishu.appdata.xml"
+
   sed -i 's/bytedance-feishu/feishu/g' "${pkgdir}/opt/bytedance/feishu/bytedance-feishu"
+
   mv "${pkgdir}"/usr/share/menu/{bytedance-,}feishu.menu
   mv "${pkgdir}"/usr/share/applications/{bytedance-,}feishu.desktop
   mv "${pkgdir}"/usr/share/appdata/{bytedance-,}feishu.appdata.xml
