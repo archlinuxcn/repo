@@ -3,7 +3,7 @@
 
 _pkgname=easy-format
 pkgname=ocaml-${_pkgname}
-pkgver=1.3.3
+pkgver=1.3.4
 pkgrel=1
 pkgdesc="Pretty-printing library for OCaml"
 arch=('x86_64')
@@ -14,7 +14,7 @@ provides=('ocaml-easy-format')
 depends=('glibc')
 makedepends=('dune')
 source=(${url}/releases/download/${pkgver}/${_pkgname}-${pkgver}.tbz )
-sha256sums=('eafccae911c26ca23e4ddacee3eaa54654d20f973b8680f84b708cef43adc416')
+sha256sums=('1dbf051e9f68574dde6e2e254a66b9c524ca425e80b36e99af96ed964ab610c3')
 
 build() {
     cd "${srcdir}/${_pkgname}-${pkgver}"
