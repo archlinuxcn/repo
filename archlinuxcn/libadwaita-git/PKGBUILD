@@ -26,7 +26,7 @@ sha256sums=(SKIP)
 
 pkgver() {
   cd "${_pkgname}"
-  git describe --tags | sed 's/-/+/g'
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build() {
