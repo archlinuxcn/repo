@@ -2,7 +2,7 @@
 
 _basename=aom
 pkgname=lib32-aom
-pkgver=3.3.0
+pkgver=3.4.0
 pkgrel=1
 pkgdesc="Alliance for Open Media video codec (32-bit)"
 url="https://aomedia.org/"
@@ -11,7 +11,7 @@ license=(BSD custom:PATENTS)
 depends=(lib32-glibc aom)
 makedepends=(cmake ninja yasm)
 source=(https://storage.googleapis.com/aom-releases/libaom-$pkgver.tar.gz{,.asc})
-b2sums=('22060694019bcd925cb38c365063b8f2be60aed4cc6f9b0aa95cf8b4c4c5b40f5c603359d8c0728c5650fe9f7eea7573b8fd4a93975481c67409b201b4c48428'
+b2sums=('7a38cc1a1871f044018a8ebf5022810b753b099ad61e0c6e2625a0480946e8b5e066fd1e1abc5523e817025c8a59d6f1092c12d632c5b602cf3a80f6ef8daa0e'
         'SKIP')
 validpgpkeys=(B002F08B74A148DAA01F7123A48E86DB0B830498) # AOMedia release signing key <av1-discuss@aomedia.org>
 
