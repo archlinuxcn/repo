@@ -1,5 +1,15 @@
+From de564c641c6ff4cd2b0b66e456a4c1f52ad23216 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 18 Jun 2022 18:01:49 -0400
+Subject: [PATCH 5/6] Support libgit2 1.4.0
+
+---
+ stdlib/LibGit2/src/consts.jl | 5 +++++
+ stdlib/LibGit2/src/types.jl  | 6 ++++++
+ 2 files changed, 11 insertions(+)
+
 diff --git a/stdlib/LibGit2/src/consts.jl b/stdlib/LibGit2/src/consts.jl
-index 2bc9edaf89..55887ebe2a 100644
+index dfe327935e..33ec672303 100644
 --- a/stdlib/LibGit2/src/consts.jl
 +++ b/stdlib/LibGit2/src/consts.jl
 @@ -247,6 +247,11 @@ const RESET_HARD  = Cint(3) # MIXED plus changes in working tree discarded
@@ -15,10 +25,10 @@ index 2bc9edaf89..55887ebe2a 100644
  const FETCH_PRUNE_UNSPECIFIED = Cint(0)
  const FETCH_PRUNE             = Cint(1)
 diff --git a/stdlib/LibGit2/src/types.jl b/stdlib/LibGit2/src/types.jl
-index 9ffcaa3646..98d938df65 100644
+index 2d95596cb2..211bb4c08a 100644
 --- a/stdlib/LibGit2/src/types.jl
 +++ b/stdlib/LibGit2/src/types.jl
-@@ -343,6 +343,9 @@ The fields represent:
+@@ -346,6 +346,9 @@ The fields represent:
      @static if LibGit2.VERSION >= v"0.25.0"
          proxy_opts::ProxyOptions       = ProxyOptions()
      end
@@ -28,7 +38,7 @@ index 9ffcaa3646..98d938df65 100644
      @static if LibGit2.VERSION >= v"0.24.0"
          custom_headers::StrArrayStruct = StrArrayStruct()
      end
-@@ -674,6 +677,9 @@ The fields represent:
+@@ -677,6 +680,9 @@ The fields represent:
      @static if LibGit2.VERSION >= v"0.25.0"
          proxy_opts::ProxyOptions       = ProxyOptions()
      end
@@ -38,3 +48,6 @@ index 9ffcaa3646..98d938df65 100644
      @static if LibGit2.VERSION >= v"0.24.0"
          custom_headers::StrArrayStruct = StrArrayStruct()
      end
+-- 
+2.36.1
+
