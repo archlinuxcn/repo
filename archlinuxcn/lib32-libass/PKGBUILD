@@ -5,15 +5,15 @@
 # Contributor: Adam <adam900710@gmail.com>
 
 pkgname=lib32-libass
-pkgver=0.15.2
-pkgrel=3
+pkgver=0.16.0
+pkgrel=1
 pkgdesc='A portable library for SSA/ASS subtitles rendering (32 bit)'
 arch=(x86_64)
 url=https://github.com/libass/libass/
 license=(BSD)
 depends=("lib32-fontconfig" "lib32-freetype2" "lib32-fribidi" "lib32-glib2" "lib32-glibc" "lib32-harfbuzz" "libass" "libfontconfig.so" "libfreetype.so" "libfribidi.so" "libharfbuzz.so")
 makedepends=(git nasm)
-_tag=c967a5a3d9ec0d36af1148b3fdf2f307a21dd122
+_tag=1af6240c5d1e499326146e0b88c987e626b13c23
 source=(git+https://github.com/libass/libass.git#tag=${_tag})
 validpgpkeys=(5458C3100671F252B0F4C7708079D18C21AAAAFF) # Oleg Oshmyan (Chortos-2) <chortos@inbox.lv>
 b2sums=(SKIP)
