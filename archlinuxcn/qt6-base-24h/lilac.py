@@ -28,7 +28,7 @@ def pre_build():
       line = "pkgdesc='A cross-platform application and UI framework. This package uses 24-hour notation in all locales.'"
       checks = checks + 'b'
     elif line.startswith('makedepends=('):
-      line = line.replace('(', "(python zstd>=1.5.2-7 ")
+      line = line.replace('(', "(python 'zstd>=1.5.2-7' ")
       checks = checks + '2'
     elif line.startswith('groups=('):
       line = '''
