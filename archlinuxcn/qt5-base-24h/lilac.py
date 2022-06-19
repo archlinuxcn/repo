@@ -19,7 +19,7 @@ def pre_build():
   # qt5-* packages would differ.
   for line in open('qt5-pkgs').readlines():
     p = line.strip()
-    conflict_string = conflict_string + '"' + p + '>=5.16" '
+    conflict_string = conflict_string + '"' + p + '>$_basever" '
 
   prepare = False
   checks = ''
@@ -28,7 +28,7 @@ def pre_build():
       line = 'pkgbase=qt5-base-24h' + '\n' + '_origpkgname=qt5-base'
       checks = checks + '0'
     elif line.startswith('pkgrel='):
-      line = line + '.10'
+      line = line + '.11'
     elif line.startswith('pkgname='):
       line = 'pkgname=(qt5-base-24h)'
       checks = checks + '1'
