@@ -6,7 +6,7 @@ _origpkgname=qt5-base
 pkgname=(qt5-base-24hms)
 _basever=5.15.5
 pkgver=5.15.5+kde+r163
-pkgrel=1.12
+pkgrel=1.13
 _commit=c772781e57db1da8ac2ed9036aee39137c216017
 arch=('x86_64')
 url='https://www.qt.io'
@@ -27,7 +27,7 @@ optdepends=('qt5-svg: to use SVG icon themes'
             'freetds: MS SQL driver'
             'gtk3: GTK platform plugin'
             'perl: for fixqt4headers and syncqt')
-conflicts=("qt5-base" "qt5-3d>$_basever.99" "qt5-charts>$_basever.99" "qt5-connectivity>$_basever.99" "qt5-datavis3d>$_basever.99" "qt5-declarative>$_basever.99" "qt5-doc>$_basever.99" "qt5-examples>$_basever.99" "qt5-gamepad>$_basever.99" "qt5-graphicaleffects>$_basever.99" "qt5-imageformats>$_basever.99" "qt5-location>$_basever.99" "qt5-lottie>$_basever.99" "qt5-multimedia>$_basever.99" "qt5-networkauth>$_basever.99" "qt5-purchasing>$_basever.99" "qt5-quick3d>$_basever.99" "qt5-quickcontrols>$_basever.99" "qt5-quickcontrols2>$_basever.99" "qt5-remoteobjects>$_basever.99" "qt5-script>$_basever.99" "qt5-scxml>$_basever.99" "qt5-sensors>$_basever.99" "qt5-serialbus>$_basever.99" "qt5-serialport>$_basever.99" "qt5-speech>$_basever.99" "qt5-svg>$_basever.99" "qt5-tools>$_basever.99" "qt5-translations>$_basever.99" "qt5-virtualkeyboard>$_basever.99" "qt5-wayland>$_basever.99" "qt5-webchannel>$_basever.99" "qt5-webglplugin>$_basever.99" "qt5-websockets>$_basever.99" "qt5-webview>$_basever.99" "qt5-x11extras>$_basever.99" "qt5-xmlpatterns>$_basever.99" 'qtchooser')
+conflicts=("qt5-base" "qt5-3d>$_basever.99" "qt5-charts>$_basever.99" "qt5-connectivity>$_basever.99" "qt5-datavis3d>$_basever.99" "qt5-declarative>$_basever.99" "qt5-doc>$_basever.99" "qt5-examples>$_basever.99" "qt5-gamepad>$_basever.99" "qt5-graphicaleffects>$_basever.99" "qt5-imageformats>$_basever.99" "qt5-location>$_basever.99" "qt5-lottie>$_basever.99" "qt5-multimedia>$_basever.99" "qt5-networkauth>$_basever.99" "qt5-purchasing>$_basever.99" "qt5-quick3d>$_basever.99" "qt5-quickcontrols>$_basever.99" "qt5-quickcontrols2>$_basever.99" "qt5-remoteobjects>$_basever.99" "qt5-scxml>$_basever.99" "qt5-sensors>$_basever.99" "qt5-serialbus>$_basever.99" "qt5-serialport>$_basever.99" "qt5-speech>$_basever.99" "qt5-svg>$_basever.99" "qt5-tools>$_basever.99" "qt5-translations>$_basever.99" "qt5-virtualkeyboard>$_basever.99" "qt5-wayland>$_basever.99" "qt5-webchannel>$_basever.99" "qt5-webglplugin>$_basever.99" "qt5-websockets>$_basever.99" "qt5-webview>$_basever.99" "qt5-x11extras>$_basever.99" "qt5-xmlpatterns>$_basever.99" 'qtchooser')
 
 provides=("qt5-base=$pkgver")
 
