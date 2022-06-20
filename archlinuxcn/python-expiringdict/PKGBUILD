@@ -2,8 +2,8 @@
 
 _pkgname=expiringdict
 pkgname=python-expiringdict
-pkgver=1.2.1
-pkgrel=3
+pkgver=1.2.2
+pkgrel=1
 pkgdesc='Dictionary with auto-expiring values for caching purposes'
 arch=('any')
 url='https://github.com/mailgun/expiringdict'
@@ -15,7 +15,7 @@ makedepends=(
   python-setuptools
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mailgun/expiringdict/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('21c6c91cfe427e8f14b0b67fadca2fe27b430daee0a40135fe8a610d5539c672440c8eafc4e325f866fb6b01d12643b1110a19381b85cfebf1dcdb29edc444d7')
+sha512sums=('5465cf193c4c5f5ebf72c58e3ee82e994f20bdd5d34ba6ead2a43544c4ab66a542ab47c87fbd653927f23b042e4c079fd3a60ba3edeebcdc9cf83813bb127c24')
 
 build() {
   cd "${_pkgname}-${pkgver}"
