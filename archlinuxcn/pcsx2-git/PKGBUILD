@@ -3,7 +3,7 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.2954
+pkgver=1.7.2978
 pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
@@ -15,40 +15,33 @@ license=(
   LGPL3
 )
 depends=(
-  gdk-pixbuf2
-  glibc
   libaio
-  libasound.so
-  libfmt.so
-  libfreetype.so
-  libgdk-3.so
-  libgio-2.0.so
-  libgl
-  libGLEW.so
-  libglib-2.0.so
-  libgobject-2.0.so
-  libgtk-3.so
+  libjpeg-turbo
   libpcap
-  libpng
-  libportaudio.so
-  libpulse.so
-  libudev.so
-  libx11
-  libxcb
-  libxml2
-  sdl2
+  libzip
+  libgl # For Steam Deck
+  xorg-xrandr # For Steam Deck
+  libxrender # For Steam Deck
+  linux-api-headers # For Steam Deck
+  libpulse
+  portaudio
   libsamplerate
-  soundtouch
+  sdl2
   wxgtk3
-  wxgtk-common
-  xz
-  zlib
+  fmt
+  soundtouch
+  wayland
+  rapidyaml
+  zstd
 )
 makedepends=(
   cmake
   git
+  xorgproto
   ninja
-  png++
+  swig
+  python
+  vulkan-headers
 )
 install='pcsx2.install'
 provides=('pcsx2')
@@ -77,18 +70,13 @@ build() {
     -DGAMEINDEX_DIR=/usr/share/pcsx2 \
     -DPLUGIN_DIR=/usr/lib/pcsx2 \
     -DDISABLE_ADVANCE_SIMD=ON \
-    -DDISABLE_BUILD_DATE=ON \
-    -DDISABLE_PCSX2_WRAPPER=ON \
-    -DENABLE_TESTS=OFF \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
     -DEXTRA_PLUGINS=ON \
-    -DSDL2_API=ON \
-    -DPACKAGE_MODE=ON \
-    -DREBUILD_SHADER=ON \
-    -DUSE_LTO=OFF \
-    -DUSE_VTUNE=OFF \
-    -DXDG_STD=ON \
-    -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config-gtk3 \
-    -Wno-dev
+    -DWAYLAND_API=ON \
+    -DXDG_STD=TRUE \
+    -DUSE_VULKAN=ON \
+    -DUSE_SYSTEM_LIBS=ON \
+    -DPACKAGE_MODE=ON
 
     ninja -C build
 }
