@@ -1,8 +1,8 @@
 # Maintainer: nl6720 <nl6720@archlinux.org>
 
 pkgname='shim-signed'
-pkgver='15.4+fedora+5'
-pkgrel='2'
+pkgver='15.6+fedora+1'
+pkgrel='1'
 pkgdesc='Initial UEFI bootloader that handles chaining to a trusted full bootloader under secure boot environments (prebuilt X64 and IA32 EFI binaries from Fedora)'
 url='https://koji.fedoraproject.org/koji/packageinfo?packageID=14502'
 arch=('any')
@@ -10,8 +10,8 @@ license=('BSD')
 options=('!strip')
 install="${pkgname}.install"
 source=("https://kojipkgs.fedoraproject.org/packages/shim/${pkgver//+fedora+/\/}/x86_64/shim-"{x64,ia32}"-${pkgver//+fedora+/-}.x86_64.rpm")
-sha512sums=('966836d71ad4b6cca44e650893aeb09e69d1ca9d192d61a8b9efef8d7389b2a6e0ff0f488c3c00dd895427ac2ae1a4778e62d39340d7bd0ff9e809a45cebd014'
-            'e53954689f22fa98cdbf5aaf20d0adb50425d6ad1974606762e05c5b8b5aa9a0e5d81ab9e4333f23657cd1e32c0f0d7a5d35d10068b089d0b365646d9cf72dfc')
+sha512sums=('222d1f2a6931e1f34725f637cb9ac965fb761d13aaab162227d28280dd2bf7ce06193cf01024cf589e394b5169f6631e6df80ebc10818f88da16765d6a761522'
+            '68a730dd1497677a957e59d80a23cd2f78a3e4e4f5fd575882cd5efc1fbefd66b7e50308b85034e83dfeeffdff6e9aef3436c8cfb7693385b4fe43d7113b8399')
 
 package() {
 	install -D -m0644 -t "${pkgdir}/usr/share/${pkgname}/" "${srcdir}/boot/efi/EFI/fedora/shimx64.efi"
