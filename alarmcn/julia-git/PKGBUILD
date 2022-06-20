@@ -61,9 +61,7 @@ source=('git+https://github.com/JuliaLang/julia'
         julia-precompile.hook
         julia-clear-precompile.hook
         arch-source-translate.cpp
-        sysp7z.diff
-        0001-Use-strdup-to-copy-strings.patch
-        0001-Remove-const-qualifier-on-return-type.patch)
+        sysp7z.diff)
 sha512sums=('SKIP'
             'fbd4f6fe2ada1c60904b6365bef34b60f524f75e24baa0289cf0118b384800e71b5931b856738c75a55279feb09c9e3c0e51242de92963b4d730b9e9488f701a'
             'ffff075e3e9a0e3de064d96b4f8ddd313bf735ad94a23996a137b4854b00f74529d5df3fdd13d4d27568323599b5a0211b6a726cbbec75eaa76cfac95fbbb4bc'
@@ -76,9 +74,7 @@ sha512sums=('SKIP'
             '36df234b634926bc88084e683ee9f495ef0ce4c26d6d6b9f55294098bdcb86f5eaaf6c671afe1a5c4371c428bd7bf3dd617ec1f15a7ff35376d67df22140454c'
             'adf0fef964e8bdee9926f1127177bc0ddea0d2dbb1090ab94555c3599b87cf03b489dfe92fda3453bf68385f4b69556f396b1ecfb8a9525c23a3ed808e2eb370'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
-            '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849'
-            '10e79339e097a68b47e0353980a89ba0404bb4c96396e2c6f3d2b9abbf4872f79a11cd91d41c4c320f51432a75e197fa3aa9d643fe42d4b9ef72c7e1f5446f08'
-            '02353ed7711597f83d370d6b0d92538ca29ab18252808973c75f07f48cb3f8c1384f8bb4e672f4b971ca53ffca99b77be75d7151a70705e4c21744cf46aef17b')
+            '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849')
 
 pkgver() {
   cd julia
@@ -168,12 +164,6 @@ EOF
   for p in "${_patches[@]}"; do
     _apply_patch "$p"
   done
-  make "${julia_opts[@]}" -C deps extract-blastrampoline
-  (
-    cd deps/scratch/blastrampoline-*
-    patch -Np1 < "$srcdir/0001-Use-strdup-to-copy-strings.patch"
-    patch -Np1 < "$srcdir/0001-Remove-const-qualifier-on-return-type.patch"
-  )
   make "${julia_opts[@]}" julia-stdlib
   (
     cd usr/share/julia/stdlib/v*/Pkg
