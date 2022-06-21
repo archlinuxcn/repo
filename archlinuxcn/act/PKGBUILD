@@ -2,8 +2,8 @@
 # Contributor: Sven Lechner <sven[dot]lechner[at]rwth-aachen[dot]de>
 
 pkgname=act
-pkgver=0.2.26
-pkgrel=2
+pkgver=0.2.27
+pkgrel=1
 pkgdesc="Run your GitHub Actions locally"
 arch=('i686' 'x86_64')
 url="https://github.com/nektos/act"
@@ -11,7 +11,7 @@ license=('MIT')
 depends=('docker')
 makedepends=('go')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('73d75205293bd18e4f529ef1aa47da79fcd7eda2413b790816f4ca63b7aa02ce')
+sha256sums=('15fb430e888411c00160571762a7a6d0dc9db1010d1a978fbb575cc03ca71a20')
 
 build() {
     cd $pkgname-$pkgver
