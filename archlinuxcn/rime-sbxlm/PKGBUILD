@@ -3,19 +3,17 @@ pkgver=220618
 pkgrel=1
 pkgdesc='声笔系列码基础配置，包含声笔简码和声笔拼音'
 arch=(any)
-source=('fetch-release.sh' 'get-comp-addr.js' 'sbxlm-init')
+source=('fetch-release.sh' 'sbxlm-init')
 sha256sums=('SKIP'
-            'SKIP'
             '496953ce12837de3f575c913a5317996002bcbf8ba2337f697b2efe15d2e0e5e')
-makedepends=('nodejs' 'unzip')
+makedepends=('jq' 'unzip')
 optdepends=('librime-sbxlm-git' 'fcitx5-rime')
 install=$pkgname.install
 groups=(sbxlm)
 
 prepare () {
   cd "$srcdir"
-  ./fetch-release.sh
-  curl -L $(./get-comp-addr.js WIN) -o assets.zip
+  curl -L $(./fetch-release.sh WIN) -o assets.zip
   unzip -uo ./assets.zip -d ./assets
   cd $srcdir/assets/sbxlm
   chmod 755 $srcdir/assets/sbxlm

@@ -3,16 +3,15 @@ pkgver=220618
 pkgrel=1
 pkgdesc='声笔系列码，声笔飞码'
 arch=(any)
-source=('fetch-release.sh' 'get-comp-addr.js')
-sha256sums=('SKIP' 'SKIP')
-makedepends=('nodejs' 'unzip')
+source=(fetch-release.sh)
+sha256sums=(SKIP)
+makedepends=('unzip' 'jq')
 depends=('rime-sbxlm')
 groups=(sbxlm)
 
 prepare() {
   cd $srcdir
-  ./fetch-release.sh
-  curl -L $(./get-comp-addr.js 飞码) -o assets.zip
+  curl -L $(./fetch-release.sh "飞码") -o assets.zip
   unzip -uo assets.zip -d ./assets
   cd ./assets
   sed -i 's/import_preset: symbols/import_preset: sbxlm-symbols/g' *.schema.yaml
