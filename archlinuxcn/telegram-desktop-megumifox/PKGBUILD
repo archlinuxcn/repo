@@ -3,8 +3,8 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
-pkgver=3.7.3
-pkgrel=2
+pkgver=4.0.0
+pkgrel=1
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
@@ -19,22 +19,23 @@ optdepends=('webkit2gtk: embedded browser features'
 provides=('telegram-desktop')
 conflicts=('telegram-desktop')
 source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
-        "0001-Use-QGuiApplication-font-instead-of-opensans.patch"
-        "0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch")
-sha512sums=('f35052e514d520796296fa88e3affa1734973164e4b72f0120b78fc586de98a15e64a4e25f436ee4c2c2c0e100c64b3dbd2d96401dff19c382a6ad1fde88e859'
+        "0001-Use-font-from-environment-variables.patch"
+        "0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch"
+        "fix-tgcalls-cstdint.patch")
+sha512sums=('11004d7a889e64da0f9a9d976fc9665974e000b9aefd909723606639d97df07c62e86fce6b496e40ebdb954acc410609959cd94ca5d7b18c1d89373a09e970f1'
             'cc48d9116a918df5479c4508e9b98536772cafd9bc736ca40fdbedc3ea8ee0188eb0434046177ef49e0a124668e8c707433af90b11879ef0cf43911ab67a56cb'
-            '7a1dcfc563b764d1e68acb566df52890ad527ba2c442ac78825239bce64da3d77ca5f7cf965c67dafc5290e3549fa52780fc49b2d991cd798d05735a6143f46b')
+            '7a1dcfc563b764d1e68acb566df52890ad527ba2c442ac78825239bce64da3d77ca5f7cf965c67dafc5290e3549fa52780fc49b2d991cd798d05735a6143f46b'
+            'ba24a2f1524010b4891764aacee2e27a5ebae44cf7626ab2aaf9e6c48b0f8088bf920886ceeb497b3c463fa0c3b885dd63db273d4c29cab6c96c8193c0c5c888')
 
 prepare() {
-    patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-Use-QGuiApplication-font-instead-of-opensans.patch
+    patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-Use-font-from-environment-variables.patch
     patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch
+    cd tdesktop-$pkgver-full
+    patch -Np1 -i "$srcdir"/fix-tgcalls-cstdint.patch -d Telegram/ThirdParty/tgcalls
  }
 
 build() {
     cd tdesktop-$pkgver-full
-
-    # Fix https://bugs.archlinux.org/task/73220
-    export CXXFLAGS+=" -Wp,-U_GLIBCXX_ASSERTIONS"
 
     export PKG_CONFIG_PATH='/usr/lib/ffmpeg4.4/pkgconfig'
     # Turns out we're allowed to use the official API key that telegram uses for their snap builds:
