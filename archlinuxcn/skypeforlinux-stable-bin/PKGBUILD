@@ -3,7 +3,7 @@
 
 _pkgname=skypeforlinux
 pkgname=$_pkgname-stable-bin
-pkgver=8.83.0.411
+pkgver=8.85.0.409
 pkgrel=1
 pkgdesc="Skype for Linux - Stable/Release Version"
 arch=("x86_64")
@@ -20,7 +20,7 @@ install=install.sh
 source=(
 "https://repo.skype.com/rpm/stable/${_pkgname}_${pkgver}-1.x86_64.rpm"
 )
-sha256sums=('fa8f1ccc15b37f8287866fa69f555802182a5e86bc724664adb72612c4c240e3')
+sha256sums=('365b849e05e1d0cf0bf6c3a8e3d34bee3547348c068e2dfb9d10cea6a9a58518')
 
 package() {
   cd $pkgdir
