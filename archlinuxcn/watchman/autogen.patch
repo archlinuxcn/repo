@@ -1,0 +1,11 @@
+--- watchman-4.9.0/autogen.sh.old	2021-01-31 05:39:03.639533048 +0900
++++ watchman-4.9.0/autogen.sh	2021-01-31 05:39:36.825677454 +0900
+@@ -21,7 +21,7 @@
+ # should be the case provided pkg-config is installed AND the above commands
+ # have been run to prep the source tree with local set-up. 
+ CHECK_PKG_CONFIG_M4='m4_ifdef([PKG_CHECK_MODULES], [errprint([ok])])'
+-if [ "x$(autoconf <(echo "$CHECK_PKG_CONFIG_M4") 2>&1)" != "xok" ] ; then
++if [ "x$(autoconf -Wnone <(echo "$CHECK_PKG_CONFIG_M4") 2>&1)" != "xok" ] ; then
+   echo 'pkg-config appears to be missing (not available to autoconf tools)'
+   echo 'please install the pkg-config package for your system.'
+   exit 1
