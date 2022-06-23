@@ -2,8 +2,8 @@
 
 pkgname=python-pyreadr
 _pkgname=pyreadr
-pkgver=0.4.4
-pkgrel=2
+pkgver=0.4.6
+pkgrel=1
 pkgdesc='Read and write R RData and Rds files into/from pandas dataframes'
 arch=('x86_64')
 url='https://github.com/ofajardo/pyreadr'
@@ -25,7 +25,7 @@ optdepends=(
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ofajardo/pyreadr/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha512sums=('522d2da66455f1464506cfe636f4d8d3ffb4213a412db0914ff259908ae650219ae6915e746bef4ce72fd204bc780f3243872fed596aaefa0f0a9424aeac7deb')
+sha512sums=('673015f9f461663cce4471c33470ae7522e8dc54b4339f5c902e368c6382f4032771fa32fd3127a84060aeecaa9f392888de9ae28c9f89e3035d340ed9c94074')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
