@@ -2,12 +2,12 @@
 
 pkgname=uptime-kuma
 pkgver=1.17.0
-pkgrel=1
+pkgrel=1.1
 pkgdesc="A free and open source uptime monitoring solution"
 arch=('aarch64' 'armv7h')
 url="https://github.com/louislam/uptime-kuma"
 license=('MIT')
-depends=('nodejs')
+depends=('nodejs' 'sqlite')
 makedepends=('npm' 'chromium')
 optdepends=(
             'cloudflared: reverse proxy with Cloudflare tunnel'
@@ -20,12 +20,15 @@ b2sums=('246c348e2f162c5ea8c75750594a59bea706b6adc4430386a9d6ef64eba4461fcc42f6b
 
 build() {
     cd ${srcdir}/${pkgname}-${pkgver}
+    export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
     npm ci
     ./node_modules/.bin/vite build --config ./config/vite.config.js
 }
 
 package() {
-    npm install -g --prefix "${pkgdir}/usr" "${srcdir}/${pkgname}-${pkgver}.tar.gz"
+    npm install \
+        --build-from-source --sqlite=/usr \
+        -g --prefix "${pkgdir}/usr" "${srcdir}/${pkgname}-${pkgver}.tar.gz"
 
     # npm gives ownership of ALL FILES to build user
     # https://bugs.archlinux.org/task/63396
