@@ -3,7 +3,7 @@
 pkgname=git-delta-git
 _pkgname=delta
 pkgver=0.13.0.20220616
-pkgrel=1
+pkgrel=2
 pkgdesc="A syntax-highlighting pager for git"
 arch=('any')
 url="https://github.com/dandavison/delta"
@@ -13,6 +13,10 @@ provides=(git-delta)
 source=(git+$url)
 md5sums=('SKIP')
 
+# May fail to build with LTO,
+# see https://github.com/archlinuxcn/repo/discussions/2815
+options=('!lto')
+
 pkgver() {
   cd "$srcdir/$_pkgname"
   echo $(grep -oPm1 '(?<=^version = ")[^"]+' Cargo.toml).$(TZ=UTC git log -1 --pretty='%cd' --date=short-local | tr -d '-')
@@ -20,9 +24,9 @@ pkgver() {
 
 build() {
   cd "$srcdir/$_pkgname"
-  sed -i '/profile.release/alto = true' Cargo.toml
+  # sed -i '/profile.release/alto = true' Cargo.toml
   cargo build --release
-  git checkout Cargo.toml
+  # git checkout Cargo.toml
 }
 
 package() {
