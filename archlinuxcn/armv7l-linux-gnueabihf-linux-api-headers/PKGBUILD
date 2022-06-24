@@ -21,7 +21,6 @@ build() {
   cd linux-$pkgver
 
   make ARCH=$_target_arch mrproper
-  make ARCH=$_target_arch headers_check
 }
 
 package() {
