@@ -4,6 +4,7 @@ maintainers:
 # This package actually has a makedepends on itself
 # so we kinda have to grab some dependencies from the repo
 build_prefix: archlinuxcn-x86_64
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build: git_pkgbuild_commit
 
 repo_depends:
@@ -11,6 +12,10 @@ repo_depends:
   - armv7l-linux-gnueabihf-binutils
   # - armv7l-linux-gnueabihf-gcc-stage2 # use arm-linux-gnueabihf-gcc from repo
 
+# Synchronize version with Archlinux ARM
 update_on:
+  - source: regex
+    url: https://archlinuxarm.org/packages/armv7h/glibc
+    regex: 'glibc *([0-9.]+)'
   - source: manual
-    manual: 2.32
+    manual: 1
