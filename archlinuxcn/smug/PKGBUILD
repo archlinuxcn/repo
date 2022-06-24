@@ -1,6 +1,6 @@
 # Maintainer: John Downey <jdowney@gmail.com>
 pkgname=smug
-pkgver=0.2.9
+pkgver=0.3.0
 pkgrel=1
 pkgdesc='A session manager for tmux written in Go'
 arch=('x86_64')
@@ -8,7 +8,7 @@ url="https://github.com/ivaaaan/smug"
 license=('MIT')
 makedepends=('go')
 source=("https://github.com/ivaaaan/smug/archive/v${pkgver}.tar.gz")
-sha256sums=('23b402d49923451fd5f7268eec59f3b9b36841be8bc0ee33e9b93fdf50f7af8c')
+sha256sums=('2659e312fe49b3129c30db6a72191ad986c900c1f8845b7bab1d09da45be8a4e')
 
 prepare(){
   cd "$pkgname-$pkgver"
