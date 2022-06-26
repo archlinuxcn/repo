@@ -1,11 +1,12 @@
 maintainers:
   - github: yuyichao
 
-build_prefix: extra-x86_64
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build: git_pkgbuild_commit
 
 update_on:
-  - source: manual
-    manual: 2020.3.11
+  - source: regex
+    url: 'https://sourceforge.net/projects/flightgear/rss?path=/'
+    regex: FlightGear-([0-9.]+)-data\.txz
   - source: manual
     manual: 1
