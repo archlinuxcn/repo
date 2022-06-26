@@ -1,6 +1,7 @@
 maintainers:
   - github: yuyichao
 
+build_prefix: archlinuxcn-aarch64
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build: git_pkgbuild_commit
 
@@ -14,4 +15,4 @@ update_on:
 repo_depends:
   - plib
   - simgear
-  - flightgear-data
+  # - flightgear-data
