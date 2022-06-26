@@ -10,7 +10,7 @@ url="http://plib.sourceforge.net/"
 license=('custom:LGPL')
 makedepends=('mesa-libgl' 'libxi' 'libxmu')
 source=(http://plib.sourceforge.net/dist/$pkgname-$pkgver.tar.gz)
-options=('staticlibs')
+options=('staticlibs' '!lto')
 md5sums=('47a6fbf63668c1eed631024038b2ea90')
 sha1sums=('c2cf7e3e1e58f7b63dae4bb21e4fa82c3e4d4cfc')
 
