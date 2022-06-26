@@ -1,6 +1,9 @@
 pre_build_script: aur_pre_build(maintainers=['condy'])
+
 post_build: aur_post_build
+
 repo_depends:
+  - camlp-streams
   - ocaml-easy-format
 
 update_on:
@@ -11,5 +14,8 @@ update_on:
     to_pattern: \1
     alpm: ocaml
     repo: extra
+  - source: manual
+    manual: 1.0
+
 maintainers:
   - github: dctxmei
