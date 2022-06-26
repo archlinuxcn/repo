@@ -7,28 +7,27 @@
 _target="arm-linux-gnueabihf"
 pkgbase="${_target}-gcc"
 _pkgname=(gcc gcc-libs gcc-fortran gcc-objc)
-pkgver=10.2.0
+pkgver=12.1.0
 _majorver=${pkgver%%.*}
-_islver=0.21
 pkgrel=1
 pkgdesc="The GNU Compiler Collection (${_target})"
-arch=(i686 x86_64)
+arch=(armv7h aarch64 i686 x86_64)
 license=(GPL LGPL FDL custom)
 url='https://gcc.gnu.org'
-depends=("${_target}-binutils>=2.35.1-1" "${_target}-glibc>=2.32-1" libmpc elfutils zlib)
-checkdepends=(dejagnu inetutils)
-options=(!emptydirs !distcc !strip)
+makedepends=(${_target}-binutils
+             ${_target}-glibc
+             libisl
+             libmpc
+             libxcrypt
+             zstd)
+options=(!emptydirs !distcc debug)
 # source=(https://sources.archlinux.org/other/gcc/gcc-${pkgver/+/-}.tar.xz)
 source=(https://sourceware.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.xz
-        http://isl.gforge.inria.fr/isl-${_islver}.tar.xz
-        fs64270.patch
-        ipa-fix-bit-CPP-when-combined-with-IPA-bit-CP.patch
-        ipa-fix-ICE-in-get_default_value.patch)
-sha256sums=('b8dd4368bb9c7f0b98188317ee0254dd8cc99d1e3a18d0ff146c855fe16c1d8c'
-            '777058852a3db9500954361e294881214f6ecd4b594c00da5eee974cd6a54960'
-            '1ef190ed4562c4db8c1196952616cd201cfdd788b65f302ac2cc4dabb4d72cee'
-            'fcb11c9bcea320afd202b031b48f8750aeaedaa4b0c5dddcd2c0a16381e927e4'
-            '42865f2af3f48140580c4ae70b6ea03b5bdca0f29654773ef0d42ce00d60ea16')
+        gcc-ada-repro.patch
+        844a5c8ca.patch::'https://gcc.gnu.org/git/?p=gcc.git;a=patch;h=844a5c8ca768dc0cc90c1a943756610832d686a8')
+sha256sums=('62fd634889f31c02b64af2c468f064b47ad1ca78411c45abe6ac4b5f8dd19c7b'
+            '1773f5137f08ac1f48f0f7297e324d5d868d55201c03068670ee4602babdef2f'
+            '6dc8d32e76bc6c7c1a24ae527062ec1b4f393c9f7e0e25f6ab4acc98f622a80f')
 
 _libdir="usr/lib/gcc/${_target}/${pkgver%%+*}"
 
@@ -36,61 +35,28 @@ prepare() {
   [[ ! -d gcc ]] && ln -s gcc-${pkgver/+/-} gcc
   cd gcc
 
-  # link isl for in-tree build
-  ln -sf ../isl-${_islver} isl
-
   # Do not run fixincludes
   sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
 
   # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
 
-  # Turn off SSP for nostdlib|nodefaultlibs|ffreestanding
-  # https://bugs.archlinux.org/task/64270
-  patch -p1 -i "$srcdir/fs64270.patch"
+  # Reproducible gcc-ada
+  patch -Np0 < "$srcdir/gcc-ada-repro.patch"
 
-  # Fix a crash in mpv when mesa 20.2 is compiled with LTO
-  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/3239
-  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96482
-  patch -Np1 -i ../ipa-fix-bit-CPP-when-combined-with-IPA-bit-CP.patch
-  patch -Np1 -i ../ipa-fix-ICE-in-get_default_value.patch
+  # tree-optimization/105562 - avoid uninit diagnostic with better FRE
+  patch -Np1 < "$srcdir/844a5c8ca.patch"
 
   mkdir -p "$srcdir/gcc-build"
-
-  #   rm -rf "${srcdir}/bin"
-  #   mkdir -p "${srcdir}/bin"
-  #   for c in cc c++ gcc g++; do
-  #     cat > "${srcdir}/bin/arm-linux-gnueabihf-${c}" <<EOF
-  # #!/bin/bash
-  # exec /usr/bin/arm-linux-gnueabihf-${c} -Wl,-rpath-link,/usr/arm-linux-gnueabihf/lib "\$@"
-  # EOF
-  #     chmod +x "${srcdir}/bin/arm-linux-gnueabihf-${c}"
-  #   done
-  #   # Try to make gccgo compilation happy
-  #   cat > "${srcdir}/bin/arm-linux-gnueabihf-ld" <<EOF
-  # #!/bin/bash
-  # exec /usr/bin/arm-linux-gnueabihf-ld -rpath-link /usr/arm-linux-gnueabihf/lib "\$@"
-  # EOF
-  #   chmod +x "${srcdir}/bin/arm-linux-gnueabihf-ld"
 }
 
-# setup_env() {
-#   export PATH="${srcdir}/bin:${PATH}"
-#   export CFLAGS="-O2"
-#   export CXXFLAGS="-O2"
-#   export CPP=/usr/bin/cpp
-#   export CXXCPP=/usr/bin/cpp
-# }
-
 build() {
-  # setup_env
-
   cd gcc-build
 
-  # using -pipe causes spurious test-suite failures
-  # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=48565
-  CFLAGS=${CFLAGS/-pipe/}
-  CXXFLAGS=${CXXFLAGS/-pipe/}
+  CFLAGS=${CFLAGS/-Werror=format-security/}
+  CXXFLAGS=${CXXFLAGS/-Werror=format-security/}
+  ASMFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  export ASMFLAGS
 
   "$srcdir/gcc/configure" \
     --prefix=/usr \
@@ -104,7 +70,8 @@ build() {
     --libexecdir=/usr/lib \
     --disable-nls \
     --enable-languages=c,c++,fortran,lto,objc,obj-c++ \
-    --with-isl \
+    --with-system-isl \
+    --with-bugurl=https://github.com/archlinuxcn/repo/issues \
     --with-linker-hash-style=gnu \
     --with-system-zlib \
     --enable-__cxa_atexit \
@@ -138,9 +105,9 @@ build() {
 }
 
 package_gcc-libs() {
-  # setup_env
   pkgdesc="Runtime libraries shipped by GCC (${_target})"
   depends=("${_target}-glibc")
+  options=(!emptydirs !strip)
 
   cd gcc-build
 
@@ -153,21 +120,26 @@ package_gcc-libs() {
                libitm \
                libquadmath \
                libsanitizer/{a,l,ub}san \
-               libstdc++-v3/src; do
+               libstdc++-v3/src \
+               libvtv; do
     make -C $_target/$lib DESTDIR="${pkgdir}" install-toolexeclibLTLIBRARIES
   done
 
   make -C $_target/libobjc DESTDIR="${pkgdir}" install-libs
+
+  # Install Runtime Library Exception
+  install -Dm644 "$srcdir/gcc/COPYING.RUNTIME" \
+          "$pkgdir/usr/share/licenses/${pkgname}/RUNTIME.LIBRARY.EXCEPTION"
 }
 
 package_gcc() {
-  # setup_env
   pkgdesc="The GNU Compiler Collection - C and C++ frontends (${_target})"
   depends=("${_target}-gcc-libs=$pkgver-$pkgrel"
-           "${_target}-binutils>=2.25" 'libmpc')
+           "${_target}-binutils>=2.28" zlib libmpc libzstd.so libisl.so)
   conflicts=("${_target}-gcc-stage1" "${_target}-gcc-stage2")
   replaces=("${_target}-gcc-stage1" "${_target}-gcc-stage2")
   provides=("${_target}-gcc-stage1=${pkgver}" "${_target}-gcc-stage2=${pkgver}")
+  options=(!emptydirs staticlibs debug)
 
   cd gcc-build
 
@@ -203,6 +175,8 @@ package_gcc() {
        install-nodist_toolexeclibHEADERS
   make -C $_target/libsanitizer/asan DESTDIR="${pkgdir}" \
        install-nodist_toolexeclibHEADERS
+  make -C $_target/libsanitizer/lsan DESTDIR="${pkgdir}" \
+       install-nodist_toolexeclibHEADERS
 
   make -C libiberty DESTDIR="${pkgdir}" install
   mkdir -p "${pkgdir}"/usr/${_target}/include
@@ -216,14 +190,13 @@ package_gcc() {
 }
 
 package_gcc-fortran() {
-  # setup_env
   pkgdesc="Fortran front-end for GCC (${_target})"
-  depends=("${_target}-gcc=$pkgver-$pkgrel")
+  depends=("${_target}-gcc=$pkgver-$pkgrel" libisl.so)
 
   cd gcc-build
   make -C $_target/libgfortran DESTDIR="$pkgdir" \
        install-cafexeclibLTLIBRARIES \
-       install-{toolexeclibDATA,nodist_fincludeHEADERS}
+       install-{toolexeclibDATA,nodist_fincludeHEADERS,gfor_cHEADERS}
   make -C $_target/libgomp DESTDIR="$pkgdir" install-nodist_fincludeHEADERS
   make -C gcc DESTDIR="$pkgdir" fortran.install-common
 
@@ -231,9 +204,8 @@ package_gcc-fortran() {
 }
 
 package_gcc-objc() {
-  # setup_env
   pkgdesc="Objective-C front-end for GCC (${_target})"
-  depends=("${_target}-gcc=$pkgver-$pkgrel")
+  depends=("${_target}-gcc=$pkgver-$pkgrel" libisl.so)
 
   cd gcc-build
   make DESTDIR="$pkgdir" -C $_target/libobjc install-headers
@@ -242,7 +214,6 @@ package_gcc-objc() {
 }
 
 package_gcc-go() {
-  # setup_env
   pkgdesc="Go front-end for GCC (${_target})"
   depends=("${_target}-gcc=$pkgver-$pkgrel")
 

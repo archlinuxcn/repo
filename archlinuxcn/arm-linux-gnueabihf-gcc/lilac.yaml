@@ -2,6 +2,7 @@ maintainers:
   - github: yuyichao
 
 build_prefix: extra-x86_64
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build: git_pkgbuild_commit
 
 repo_depends:
@@ -9,6 +10,16 @@ repo_depends:
   - arm-linux-gnueabihf-binutils
   - arm-linux-gnueabihf-glibc
 
+# Synchronize version with Archlinux ARM
 update_on:
+  - source: regex
+    url: https://archlinuxarm.org/packages/armv7h/gcc
+    regex: 'gcc *([0-9.]+)'
+  - source: alpm
+    alpm: libisl
+    provided: libisl.so
+  - source: alpm
+    alpm: zstd
+    provided: libzstd.so
   - source: manual
-    manual: 10.2.0
+    manual: 1

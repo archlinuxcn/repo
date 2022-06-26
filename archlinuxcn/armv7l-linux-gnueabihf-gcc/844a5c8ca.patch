@@ -1,0 +1,161 @@
+From 844a5c8ca768dc0cc90c1a943756610832d686a8 Mon Sep 17 00:00:00 2001
+From: Richard Biener <rguenther@suse.de>
+Date: Thu, 12 May 2022 12:13:29 +0200
+Subject: [PATCH] tree-optimization/105562 - avoid uninit diagnostic with
+ better FRE
+
+We can avoid some uninit diagnostics by making FRE disambiguate
+against CLOBBERs since any aliasing there would invoke undefined
+behavior for a read we are looking up.
+
+2022-05-12  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/105562
+	* tree-ssa-sccvn.cc (vn_reference_lookup_3): Disambiguate
+	against all CLOBBER defs if there's not an obvious must-alias
+	and we are not doing redundant store elimination.
+	(vn_walk_cb_data::redundant_store_removal_p): New field.
+	(vn_reference_lookup_pieces): Initialize it.
+	(vn_reference_lookup): Add argument to specify if we are
+	doing redundant store removal.
+	(eliminate_dom_walker::eliminate_stmt): Specify we do.
+	* tree-ssa-sccvn.h (vn_reference_lookup): Adjust.
+
+	* g++.dg/warn/uninit-pr105562.C: New testcase.
+
+(cherry picked from commit 94b8a37fa16f7638cc1965718f4ec71719506743)
+---
+ gcc/testsuite/g++.dg/warn/uninit-pr105562.C | 10 ++++++
+ gcc/tree-ssa-sccvn.cc                       | 37 ++++++++++++++++-----
+ gcc/tree-ssa-sccvn.h                        |  2 +-
+ 3 files changed, 40 insertions(+), 9 deletions(-)
+ create mode 100644 gcc/testsuite/g++.dg/warn/uninit-pr105562.C
+
+diff --git a/gcc/testsuite/g++.dg/warn/uninit-pr105562.C b/gcc/testsuite/g++.dg/warn/uninit-pr105562.C
+new file mode 100644
+index 00000000000..ec3a5503c80
+--- /dev/null
++++ b/gcc/testsuite/g++.dg/warn/uninit-pr105562.C
+@@ -0,0 +1,10 @@
++// { dg-require-effective-target c++11 }
++// { dg-options "-O -Wall -fno-strict-aliasing" }
++
++#include <regex>
++
++int main()
++{
++  std::regex a(".");
++  std::regex b(std::move(a));
++}
+diff --git a/gcc/tree-ssa-sccvn.cc b/gcc/tree-ssa-sccvn.cc
+index d4d0aba880c..d9eaaa9b7d8 100644
+--- a/gcc/tree-ssa-sccvn.cc
++++ b/gcc/tree-ssa-sccvn.cc
+@@ -1799,11 +1799,13 @@ struct pd_data
+ struct vn_walk_cb_data
+ {
+   vn_walk_cb_data (vn_reference_t vr_, tree orig_ref_, tree *last_vuse_ptr_,
+-		   vn_lookup_kind vn_walk_kind_, bool tbaa_p_, tree mask_)
++		   vn_lookup_kind vn_walk_kind_, bool tbaa_p_, tree mask_,
++		   bool redundant_store_removal_p_)
+     : vr (vr_), last_vuse_ptr (last_vuse_ptr_), last_vuse (NULL_TREE),
+       mask (mask_), masked_result (NULL_TREE), vn_walk_kind (vn_walk_kind_),
+-      tbaa_p (tbaa_p_), saved_operands (vNULL), first_set (-2),
+-      first_base_set (-2), known_ranges (NULL)
++      tbaa_p (tbaa_p_), redundant_store_removal_p (redundant_store_removal_p_),
++      saved_operands (vNULL), first_set (-2), first_base_set (-2),
++      known_ranges (NULL)
+   {
+     if (!last_vuse_ptr)
+       last_vuse_ptr = &last_vuse;
+@@ -1862,6 +1864,7 @@ struct vn_walk_cb_data
+   tree masked_result;
+   vn_lookup_kind vn_walk_kind;
+   bool tbaa_p;
++  bool redundant_store_removal_p;
+   vec<vn_reference_op_s> saved_operands;
+ 
+   /* The VDEFs of partial defs we come along.  */
+@@ -2620,6 +2623,19 @@ vn_reference_lookup_3 (ao_ref *ref, tree vuse, void *data_,
+ 	  return NULL;
+ 	}
+ 
++      /* When the def is a CLOBBER we can optimistically disambiguate
++	 against it since any overlap it would be undefined behavior.
++	 Avoid this for obvious must aliases to save compile-time though.
++	 We also may not do this when the query is used for redundant
++	 store removal.  */
++      if (!data->redundant_store_removal_p
++	  && gimple_clobber_p (def_stmt)
++	  && !operand_equal_p (ao_ref_base (&lhs_ref), base, OEP_ADDRESS_OF))
++	{
++	  *disambiguate_only = TR_DISAMBIGUATE;
++	  return NULL;
++	}
++
+       /* Besides valueizing the LHS we can also use access-path based
+          disambiguation on the original non-valueized ref.  */
+       if (!ref->ref
+@@ -3604,7 +3620,8 @@ vn_reference_lookup_pieces (tree vuse, alias_set_type set,
+     {
+       ao_ref r;
+       unsigned limit = param_sccvn_max_alias_queries_per_access;
+-      vn_walk_cb_data data (&vr1, NULL_TREE, NULL, kind, true, NULL_TREE);
++      vn_walk_cb_data data (&vr1, NULL_TREE, NULL, kind, true, NULL_TREE,
++			    false);
+       vec<vn_reference_op_s> ops_for_ref;
+       if (!valueized_p)
+ 	ops_for_ref = vr1.operands;
+@@ -3649,12 +3666,14 @@ vn_reference_lookup_pieces (tree vuse, alias_set_type set,
+    MASK is either NULL_TREE, or can be an INTEGER_CST if the result of the
+    load is bitwise anded with MASK and so we are only interested in a subset
+    of the bits and can ignore if the other bits are uninitialized or
+-   not initialized with constants.  */
++   not initialized with constants.  When doing redundant store removal
++   the caller has to set REDUNDANT_STORE_REMOVAL_P.  */
+ 
+ tree
+ vn_reference_lookup (tree op, tree vuse, vn_lookup_kind kind,
+ 		     vn_reference_t *vnresult, bool tbaa_p,
+-		     tree *last_vuse_ptr, tree mask)
++		     tree *last_vuse_ptr, tree mask,
++		     bool redundant_store_removal_p)
+ {
+   vec<vn_reference_op_s> operands;
+   struct vn_reference_s vr1;
+@@ -3695,7 +3714,8 @@ vn_reference_lookup (tree op, tree vuse, vn_lookup_kind kind,
+ 					     vr1.type, ops_for_ref))
+ 	ao_ref_init (&r, op);
+       vn_walk_cb_data data (&vr1, r.ref ? NULL_TREE : op,
+-			    last_vuse_ptr, kind, tbaa_p, mask);
++			    last_vuse_ptr, kind, tbaa_p, mask,
++			    redundant_store_removal_p);
+ 
+       wvnresult
+ 	= ((vn_reference_t)
+@@ -6520,7 +6540,8 @@ eliminate_dom_walker::eliminate_stmt (basic_block b, gimple_stmt_iterator *gsi)
+       tree val = NULL_TREE;
+       if (lookup_lhs)
+ 	val = vn_reference_lookup (lookup_lhs, gimple_vuse (stmt),
+-				   VN_WALKREWRITE, &vnresult, false);
++				   VN_WALKREWRITE, &vnresult, false,
++				   NULL, NULL_TREE, true);
+       if (TREE_CODE (rhs) == SSA_NAME)
+ 	rhs = VN_INFO (rhs)->valnum;
+       if (val
+diff --git a/gcc/tree-ssa-sccvn.h b/gcc/tree-ssa-sccvn.h
+index c4e341021e8..a1b1e6bdd1e 100644
+--- a/gcc/tree-ssa-sccvn.h
++++ b/gcc/tree-ssa-sccvn.h
+@@ -265,7 +265,7 @@ tree vn_reference_lookup_pieces (tree, alias_set_type, alias_set_type, tree,
+ 				 vec<vn_reference_op_s> ,
+ 				 vn_reference_t *, vn_lookup_kind);
+ tree vn_reference_lookup (tree, tree, vn_lookup_kind, vn_reference_t *, bool,
+-			  tree * = NULL, tree = NULL_TREE);
++			  tree * = NULL, tree = NULL_TREE, bool = false);
+ void vn_reference_lookup_call (gcall *, vn_reference_t *, vn_reference_t);
+ vn_reference_t vn_reference_insert_pieces (tree, alias_set_type, alias_set_type,
+ 					   tree, vec<vn_reference_op_s>,
+-- 
+2.31.1
+
