@@ -4,7 +4,7 @@
 pkgname=rocm-llvm
 pkgdesc='Radeon Open Compute - LLVM toolchain (llvm, clang, lld)'
 pkgver=5.1.3
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/llvm-project'
 license=('custom:Apache 2.0 with LLVM Exception')
@@ -13,14 +13,23 @@ makedepends=(cmake python ninja)
 provides=("llvm-amdgpu")
 replaces=('llvm-amdgpu')
 conflicts=('llvm-amdgpu')
-source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('d236a2064363c0278f7ba1bb2ff1545ee4c52278c50640e8bb2b9cfef8a2f128')
+source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz"
+        "noinline-attribute.patch")
+sha256sums=('d236a2064363c0278f7ba1bb2ff1545ee4c52278c50640e8bb2b9cfef8a2f128'
+            'bd35ee2e5fb39f449564336a9769e5cae3502e98998659508191118da1124c37')
 options=(staticlibs !lto)
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
 # NINJAFLAGS is an env var used to pass commandline options to ninja
 # NOTE: It's your responbility to validate the value of $NINJAFLAGS. If unsure, don't set it.
 # NINJAFLAGS="-j20"
+
+prepare() {
+    cd "$_dirname"
+    # Modified patch from https://reviews.llvm.org/D124866
+    # Upstream issue: https://github.com/ROCm-Developer-Tools/HIP/issues/2678
+    patch -Np1 -i "$srcdir/noinline-attribute.patch"
+}
 
 build() {
     cmake -GNinja -S "$_dirname/llvm" \
