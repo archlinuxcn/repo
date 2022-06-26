@@ -20,12 +20,10 @@ conflicts=("${_target}-glibc-headers" "${_target}-eglibc")
 replaces=("${_target}-glibc-headers")
 options=(!buildflags !strip staticlibs)
 source=(https://ftp.gnu.org/gnu/glibc/glibc-$pkgver.tar.xz
-        sdt.h sdt-config.h
-        bz26534.patch)
+        sdt.h sdt-config.h)
 md5sums=('720c7992861c57cf97d66a2f36d8d1fa'
          '91fec3b7e75510ae2ac42533aa2e695e'
-         '680df504c683640b02ed4a805797c0b2'
-         'fc57038c1297c7c11258e8dda1623ec2')
+         '680df504c683640b02ed4a805797c0b2')
 
 prepare() {
   rm -rf glibc-build
