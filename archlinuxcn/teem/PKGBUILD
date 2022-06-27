@@ -1,7 +1,6 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 # Contributor: Martino Pilia <martino.pilia@gmail.com>
 
-_revision=6479
 pkgname=teem
 pkgver=1.11.0
 pkgrel=8
@@ -16,13 +15,21 @@ depends=(
 )
 makedepends=(
   cmake
-  subversion
 )
-source=("${pkgname}-${pkgver}::svn+https://svn.code.sf.net/p/teem/code#revision=${_revision}")
-sha512sums=('SKIP')
+source=("${pkgname}-${pkgver}.tar.gz::https://sourceforge.net/projects/teem/files/teem/${pkgver}/teem-${pkgver}-src.tar.gz"
+        "0001.fix-cmake-file-path.patch"
+)
+sha512sums=('48b171a12db0f02dcfdaa87aa84464c651d661fa66201dc966b3cd5a8134c5bad1dad8987ffcc5d7c21c5d14c2eb617d48200410a1bda19008ef743c093ed575'
+            '659d910a58264114f8808cf39e3113c6d368ca74a40940d73cb453107eeddcc78a9800e6b6d948e8f82b72e9353428b70709a275daa991fd6346b42b05747e0c')
+
+prepare() {
+  cd "${pkgname}-${pkgver}-src"
+  patch -Np1 -i "${srcdir}/0001.fix-cmake-file-path.patch"
+}
 
 build() {
-  cmake -S "${srcdir}/${pkgname}-${pkgver}/${pkgname}/trunk" -B "build" \
+  cmake -S "${srcdir}/${pkgname}-${pkgver}-src" \
+    -B "build" \
     -DBUILD_EXPERIMENTAL_APPS=ON \
     -DBUILD_EXPERIMENTAL_LIBS=ON \
     -DBUILD_SHARED_LIBS:BOOL=ON \
@@ -37,10 +44,7 @@ build() {
 }
 
 package() {
-  cd "build"
-  make DESTDIR="${pkgdir}" install
-  install -Dm644 "${srcdir}/${pkgname}-${pkgver}/${pkgname}/trunk/LICENSE.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-  # fix cmake path
-  sed -i "s,lib/TeemUse.cmake,lib/cmake/teem/TeemUse.cmake," "${pkgdir}/usr/lib/cmake/teem/TeemConfig.cmake"
+  make -C build DESTDIR="${pkgdir}" install
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}-src/LICENSE.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 # vim:set ts=2 sw=2 et:
