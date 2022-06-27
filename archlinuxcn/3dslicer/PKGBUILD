@@ -27,7 +27,7 @@ depends=(
   teem
 )
 makedepends=(
-  clang
+  gcc11
   cmake
   gendesk
   git
@@ -45,8 +45,6 @@ sha512sums=('SKIP'
 prepare() {
   # find sqlite with cmake's FindSQLite3
   sed -i 's/find_package(${proj} REQUIRED)/find_package(SQLite3 REQUIRED)/' "${srcdir}/${pkgname}/SuperBuild/External_sqlite.cmake"
-  # fix building with system teem
-  sed -i '/ExternalProject_Add_Empty/d' "${srcdir}/${pkgname}/SuperBuild/External_teem.cmake"
   # quick fix clang:12/gcc:11 <limits> header regression
   git -C "${srcdir}/${pkgname}" apply -v "${srcdir}/itk_limits.patch"
   echo "Creating desktop file"
@@ -59,9 +57,9 @@ prepare() {
 
 build() {
   cmake -B build -S "${srcdir}/${pkgname}" \
-    -DCMAKE_C_COMPILER=clang \
-    -DCMAKE_CXX_COMPILER=clang++ \
     -DBUILD_TESTING=OFF \
+    -DCMAKE_C_COMPILER=gcc-11 \
+    -DCMAKE_CXX_COMPILER=g++-11 \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DSlicer_BUILD_DOCUMENTATION=OFF \
