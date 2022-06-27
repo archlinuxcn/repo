@@ -101,7 +101,8 @@ build() {
     --with-float=hard \
     --with-fpu=vfpv3-d16
 
-  make
+  # Fills up /tmp on build machine otherwise...
+  make -j1
 }
 
 package_gcc-libs() {
