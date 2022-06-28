@@ -59,8 +59,6 @@ prepare() {
     --pkgdesc "${pkgdesc}"
   # find sqlite with cmake's FindSQLite3
   sed -i 's/find_package(${proj} REQUIRED)/find_package(SQLite3 REQUIRED)/' "${srcdir}/${_pkgname}/SuperBuild/External_sqlite.cmake"
-  # fix building with system teem
-  sed -i '/ExternalProject_Add_Empty/d' "${srcdir}/${_pkgname}/SuperBuild/External_teem.cmake"
   # fix issue https://github.com/Slicer/Slicer/issues/6437
   sed -i "s,list(APPEND Slicer_REQUIRED_QT_MODULES Script),list(APPEND Slicer_REQUIRED_QT_MODULES Script Test)," "${srcdir}/${_pkgname}/CMakeLists.txt"
 }
