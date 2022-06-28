@@ -10,7 +10,7 @@
  
 pkgname=ungoogled-chromium
 pkgver=103.0.5060.53
-pkgrel=1
+pkgrel=2
 _launcher_ver=8
 _gcc_patchset=4
 pkgdesc="A lightweight approach to removing Google web service dependency"
@@ -54,7 +54,7 @@ source=(${source[@]}
 sha256sums=(${sha256sums[@]}
             '96c7adbe1d9ec6fe77bb3d299a4bbcc63bcdbec04f736a73f218949a0ea5a83e'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
-            '07bdc1b3fc8f0d0a4804d111c46ce3343cd7824de562f2848d429b917ce4bcfd')
+            'af20fc58aef22dd0b1fb560a1fab68d0d27187ff18fad7eb1670feab9bc4a8d8')
  
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -119,7 +119,7 @@ prepare() {
   #patch -Np1 -i ../patches/
 
   # Enable vaapi on wayland
-  #patch -Np1 -i ../ozone-add-va-api-support-to-wayland.patch
+  patch -Np1 -i ../ozone-add-va-api-support-to-wayland.patch
 
   # Ungoogled Chromium changes
   _ungoogled_repo="$srcdir/$pkgname-$_uc_ver"
