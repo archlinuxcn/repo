@@ -3,7 +3,7 @@
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 
 pkgname=rocm-opencl-runtime
-pkgver=5.1.3
+pkgver=5.2.0
 pkgrel=1
 pkgdesc='Radeon Open Compute - OpenCL runtime'
 arch=('x86_64')
@@ -17,8 +17,8 @@ _rocclr='https://github.com/ROCm-Developer-Tools/ROCclr'
 source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz"
         "$pkgname-rocclr-$pkgver.tar.gz::$_rocclr/archive/rocm-$pkgver.tar.gz"
         "enable-gfx800.patch")
-sha256sums=('44a7fac721abcd93470e1a7e466bdea0c668c253dee93e4f1ea9a72dbce4ba31'
-            'ddee63cdc6515c90bab89572b13e1627b145916cb8ede075ef8446cbb83f0a48'
+sha256sums=('80f73387effdcd987a150978775a87049a976aa74f5770d4420847b004dd59f0'
+            '37f5fce04348183bce2ece8bac1117f6ef7e710ca68371ff82ab08e93368bafb'
             'b186dd4a604d6e8a2c94ba6569638aaa8066558d764aa0d9cf76f998724ed90a')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 _rocclr_dir="$(basename "$_rocclr")-$(basename "${source[1]}" .tar.gz)"
