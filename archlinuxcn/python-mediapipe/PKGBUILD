@@ -2,7 +2,7 @@
 
 _pkgname=mediapipe
 pkgname=python-mediapipe
-pkgver=0.8.10.1
+pkgver=0.8.10.2
 pkgrel=1
 pkgdesc='Cross-platform, customizable ML solutions for live and streaming media'
 arch=('x86_64')
@@ -23,7 +23,7 @@ makedepends=(
   python-setuptools
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/google/mediapipe/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('8c2178eb80403ce40643afb9643f754672815553ed148e1261a444690020a67a')
+sha256sums=('a312bf8e69dbe34d3b5c7ea226dcc122aa9e640cbfbf35e1be65d0150b35f1e5')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
