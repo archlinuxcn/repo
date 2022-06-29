@@ -5,7 +5,7 @@
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 
 pkgname=rocminfo
-pkgver=5.1.3
+pkgver=5.2.0
 pkgrel=1
 pkgdesc='ROCm info tools - rocm_agent_enumerator'
 arch=('x86_64')
@@ -15,7 +15,7 @@ depends=('pciutils' 'python' 'hsa-rocr')
 makedepends=('cmake' 'git' 'rocm-cmake')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz"
         "fix-kfd.patch::https://patch-diff.githubusercontent.com/raw/RadeonOpenCompute/rocminfo/pull/53.patch")
-sha256sums=('7aecd7b189e129b77c8f2af70be2926a0f3a5ee89814879bc8477924a7e6f2ae'
+sha256sums=('e721eb81efd384abd22ff01cdcbb6245b11084dc11a867c74c8ad6b028aa0404'
             'SKIP')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
