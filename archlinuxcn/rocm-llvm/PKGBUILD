@@ -3,22 +3,23 @@
 
 pkgname=rocm-llvm
 pkgdesc='Radeon Open Compute - LLVM toolchain (llvm, clang, lld)'
-pkgver=5.1.3
-pkgrel=2
+pkgver=5.2.0
+pkgrel=1
 arch=('x86_64')
-url='https://github.com/RadeonOpenCompute/llvm-project'
+url='https://docs.amd.com/bundle/ROCm-Compiler-Reference-Guide-v5.2/page/Overview_of_ROCmCC_Compiler.html'
 license=('custom:Apache 2.0 with LLVM Exception')
 depends=(z3)
 makedepends=(cmake python ninja)
 provides=("llvm-amdgpu")
 replaces=('llvm-amdgpu')
 conflicts=('llvm-amdgpu')
-source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz"
+_git='https://github.com/RadeonOpenCompute/llvm-project'
+source=("${pkgname}-${pkgver}.tar.gz::$_git/archive/rocm-$pkgver.tar.gz"
         "noinline-attribute.patch")
-sha256sums=('d236a2064363c0278f7ba1bb2ff1545ee4c52278c50640e8bb2b9cfef8a2f128'
+sha256sums=('0f892174111b78a02d1a00f8f46d9f80b9abb95513a7af38ecf2a5a0882fe87f'
             'bd35ee2e5fb39f449564336a9769e5cae3502e98998659508191118da1124c37')
 options=(staticlibs !lto)
-_dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
+_dirname="$(basename "$_git")-$(basename "${source[0]}" .tar.gz)"
 
 # NINJAFLAGS is an env var used to pass commandline options to ninja
 # NOTE: It's your responbility to validate the value of $NINJAFLAGS. If unsure, don't set it.
