@@ -24,7 +24,7 @@ prepare () {
 }
 
 build() {
-  cd /MUMPS_${pkgver}
+  cd MUMPS_${pkgver}
 
   CFLAGS+=' -fno-strict-aliasing'
   CXXFLAGS+=' -fno-strict-aliasing'
