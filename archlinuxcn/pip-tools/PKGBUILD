@@ -2,7 +2,7 @@
 # Contributor: Simon Conseil <contact+aur at saimon dot org>
 
 pkgname=pip-tools
-pkgver=6.7.0
+pkgver=6.8.0
 pkgrel=1
 pkgdesc='A set of tools to keep your pinned Python dependencies fresh'
 arch=(any)
@@ -11,7 +11,7 @@ license=(BSD)
 depends=('python-click>=7' python-build 'python-pip>=21' python-setuptools python-wheel)
 makedepends=(python-setuptools-scm)
 source=("https://files.pythonhosted.org/packages/source/${pkgname::1}/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('0aeedc28c0316a30c561893a1f41c3611b46ac536bc271082ffdbdbd1d26924c')
+sha256sums=('39e8aee465446e02278d80dbebd4325d1dd8633248f43213c73a25f58e7d8a55')
 
 prepare() {
   cd $pkgname-$pkgver
