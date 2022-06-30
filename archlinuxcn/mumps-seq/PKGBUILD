@@ -1,0 +1,82 @@
+# Maintainer : eolianoe <eolianoe At GoogleMAIL DoT CoM>
+# Contributor: Michele Mocciola <mickele>
+# Contributor: Guillaume Dollé <dolle dot guillaume at gmail dot com >
+
+pkgname=mumps-seq
+_pkgname=mumps
+_PKGNAME=MUMPS
+pkgver=5.5.0
+pkgrel=1
+pkgdesc="Sparse solver library using Gaussian elimination (sequential version)"
+url="http://mumps.enseeiht.fr"
+license=('custom')
+# The build system only links to blas but uses lapack function
+# Just use openblas for now but this could probably be fixed fairly easily...
+depends=('gcc-libs' 'openblas-lapack' 'metis')
+makedepends=(gcc-fortran)
+arch=('aarch64' 'armv7h' 'i686' 'x86_64')
+source=("http://mumps.enseeiht.fr/${_PKGNAME}_${pkgver}.tar.gz"
+        "Makefile.seq.inc")
+sha256sums=('e54d17c5e42a36c40607a03279e0704d239d71d38503aab68ef3bfe0a9a79c13'
+            '42625aa6749cedbbd9b19f527a002b0dec36b521f6a55dec20798ac399a768bf')
+options=(staticlibs '!lto')
+
+prepare(){
+  cd ${_PKGNAME}_${pkgver}
+
+  ln -sf "${srcdir}/Makefile.seq.inc" Makefile.inc
+}
+
+build() {
+  cd ${_PKGNAME}_${pkgver}
+
+  make -j1 all
+
+  # Convert static libs to shared libs
+  # for mumps libs
+  cd lib
+  _libs=$(find . -maxdepth 1 -regex ".*\.a" | xargs | sed "s|\.a||g")
+  for _FILE in ${_libs}; do
+    ld -Bshareable -o ${_FILE}_seq.so -x -soname ${_FILE}_seq.so --whole-archive ${_FILE}.a
+  done
+  # for mpiseq libs
+  cd "${srcdir}/${_PKGNAME}_${pkgver}/libseq"
+  ld -Bshareable -o libmpiseq.so -x -soname libmpiseq.so --whole-archive libmpiseq.a
+}
+
+package(){
+  # Install all headers
+  cd "${srcdir}/${_PKGNAME}_${pkgver}/include"
+  install -m 755 -d "${pkgdir}/usr/include/${pkgname}"
+  install -D -m644 -- *.h "${pkgdir}/usr/include/${pkgname}"
+
+  # Install all libraries
+  cd "${srcdir}/${_PKGNAME}_${pkgver}/lib"
+  install -m 755 -d "${pkgdir}/usr/lib"
+  _libs=$(find . -maxdepth 1 -regex ".*\.a" | xargs | sed "s|\.a||g")
+  for _FILE in ${_libs}; do
+    install -m 755 ${_FILE}_seq.so "${pkgdir}/usr/lib"
+    install -m 644 ${_FILE}.a "${pkgdir}/usr/lib"
+  done
+
+  # Install mpiseq headers
+  cd "${srcdir}/${_PKGNAME}_${pkgver}/libseq"
+  install -m 755 -d "${pkgdir}/usr/include/mpiseq"
+  install -D -m644 -- *.h "${pkgdir}/usr/include/mpiseq"
+  # Install mpiseq libraries
+  install -m 755 libmpiseq.so "${pkgdir}/usr/lib"
+  install -m 644 libmpiseq.a "${pkgdir}/usr/lib"
+
+  # Install license
+  install -D -m644 "${srcdir}/${_PKGNAME}_${pkgver}/LICENSE"\
+          "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+  # Install examples
+  install -m 755 -d "${pkgdir}/usr/share/doc/${pkgname}/examples"
+  cd "${srcdir}/${_PKGNAME}_${pkgver}/examples"
+  install -m 644 * "${pkgdir}/usr/share/doc/${pkgname}/examples"
+  for _FILE in ssimpletest dsimpletest csimpletest zsimpletest c_example; do
+    chmod 0755 "${pkgdir}/usr/share/doc/${pkgname}/examples/${_FILE}"
+  done
+  rm -- "${pkgdir}/usr/share/doc/${pkgname}/examples/"*.o
+}
