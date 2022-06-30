@@ -1,0 +1,35 @@
+pkgname=coin-or-ipopt
+pkgver=3.14.7
+pkgrel=1
+pkgdesc="Interior Point OPTimizer"
+arch=('aarch64' 'armv7h' 'x86_64')
+url="https://github.com/coin-or/Ipopt"
+license=('EPL')
+depends=('lapack' 'coin-or-asl' 'mumps-seq')
+source=("https://github.com/coin-or/Ipopt/archive/refs/tags/releases/${pkgver}.tar.gz")
+sha256sums=('cb5615d6d78e7a183288e4f0011a487c23caaf884ac8a2e0075dd134c3b0219e')
+
+build() {
+  cd "$srcdir"
+  mkdir -p build && cd build
+
+  ../Ipopt-releases-$pkgver/configure \
+    --prefix=/usr \
+    --enable-shared \
+    --enable-static \
+    --with-pic \
+    --disable-dependency-tracking \
+    lt_cv_deplibs_check_method=pass_all \
+    --with-mumps-cflags="-I/usr/include/mumps-seq -I/usr/include/mpiseq" \
+    --with-mumps-lflags="-ldmumps -lzmumps -lcmumps -lsmumps -lmumps_common -lmpiseq -lpord -lmetis -llapack -lgfortran -lpthread" \
+    --with-asl-cflags="-I/usr/include/coin-or/asl" \
+    --with-asl-lflags="-lcoinasl -lrt"
+
+  make -j1
+}
+
+package() {
+  cd "$srcdir/build"
+  PKG_CONFIG_LIBDIR="${pkgdir}/usr/lib/pkgconfig/" \
+                   make DESTDIR="$pkgdir" install
+}
