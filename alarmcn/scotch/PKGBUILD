@@ -17,7 +17,7 @@ sha256sums=('0618e9bc33c02172ea7351600fce4fccd32fe00b3359c4aabb5e415f17c06fed')
 options=(!emptydirs)
 
 prepare() {
-  cd ${pkgname}-v${pkgver}
+  cd ${pkgname}-v${pkgver}/src
 
   [ -e Makefile.inc ] && rm Makefile.inc
   cp "Make.inc/Makefile.inc.x86-64_pc_linux2.shlib" \
