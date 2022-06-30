@@ -4,6 +4,10 @@ maintainers:
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build: git_pkgbuild_commit
 
+repo_depends:
+  - scotch
+  - scalapack
+
 update_on:
   - source: regex
     regex: '> *(\d+\.\d+[.0-9]*) *<'
