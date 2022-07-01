@@ -4,19 +4,15 @@ maintainers:
 build_prefix: multilib
 
 pre_build_script: |
-    _G.files = download_official_pkgbuild('wine')
-    run_cmd(['patch', '-Np0', '-i', 'PKGBUILD.diff'])
+    update_pkgver_and_pkgrel(_G.newver)
 
 post_build_script: |
-    git_add_files(_G.files)
-    git_commit()
+    git_pkgbuild_commit()
     update_aur_repo()
 
 update_on:
-  # TODO: switch to wine-stable when 7.0 is out
-  # - source: aur
-  #   aur: wine-stable
-  - source: manual
-    manual: 7.0rc1-1
+  - source: aur
+    aur: wine-stable
+    strip_release: true
   - source: manual
     manual: 4

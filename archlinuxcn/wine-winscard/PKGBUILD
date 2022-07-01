@@ -3,26 +3,30 @@
 # Contributor: Eduardo Romero <eduardo@archlinux.org>
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
-pkgname=wine
-pkgver=7.0rc1
+_pkgname=wine
+pkgname=$_pkgname-winscard
+_scard4wine_commit=7621961210a55b4333f3039bae2355430f9bd8cd
+pkgver=7.0
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 
-source=(https://dl.winehq.org/wine/source/7.0/$pkgname-$_pkgbasever.tar.xz{,.sign}
+source=(https://dl.winehq.org/wine/source/7.0/$_pkgname-$_pkgbasever.tar.xz{,.sign}
         30-win32-aliases.conf
-        wine-binfmt.conf)
-sha512sums=('700359a8353597ce10284152cb318011aef1111cb9bc98e4794cfa6f630d6a03a8ae5556b6f6aaec8b4cd64bc4f21587f5ce2b7cc9635abeacda426dabf268bb'
+        wine-binfmt.conf
+        "scard4wine-yan12125::git+https://git.code.sf.net/u/yan12125/scard4wine.git#commit=$_scard4wine_commit")
+sha512sums=('eec17b046ed5447eb540f421c9b2748d9419ce087496c2743a9914fd27bbe5ff9da0cfe47d3cd76fa97323bd1188a1d82b1eef4968d86ed1957dc1a95e28529c'
             'SKIP'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
-            'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
+            'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
+            'SKIP')
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
 
-pkgdesc="A compatibility layer for running Windows programs"
+pkgdesc="A compatibility layer for running Windows programs (with IDRASSI's winscard patch)"
 url="http://www.winehq.com"
 arch=(x86_64)
-options=(staticlibs)
+options=(staticlibs !lto)
 license=(LGPL)
 depends=(
   fontconfig      lib32-fontconfig
@@ -41,7 +45,7 @@ depends=(
   faudio          lib32-faudio
   desktop-file-utils
 )
-makedepends=(autoconf bison perl fontforge flex mingw-w64-gcc
+makedepends=(autoconf bison perl fontforge flex mingw-w64-gcc git
   giflib                lib32-giflib
   libpng                lib32-libpng
   gnutls                lib32-gnutls
@@ -99,6 +103,8 @@ optdepends=(
 )
 makedepends=(${makedepends[@]} ${depends[@]})
 install=wine.install
+provides=("$_pkgname=$pkgver")
+conflicts=("$_pkgname")
 
 prepare() {
   # Allow ccache to work
@@ -187,11 +193,3 @@ package() {
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
-
-source+=("scard4wine-yan12125::git+https://git.code.sf.net/u/yan12125/scard4wine.git#commit=7621961210a55b4333f3039bae2355430f9bd8cd")
-sha512sums+=('SKIP')
-makedepends+=(git)
-provides=("$pkgname=$pkgver")
-conflicts=("$pkgname")
-pkgname+='-winscard'
-pkgdesc+=" (with IDRASSI's winscard patch)"
