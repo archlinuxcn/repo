@@ -1,7 +1,7 @@
 # Maintainer: axionl <axionl@aosc.io>
 # Contributor: Sherlock Holo <sherlockya(at)gmail.com>
 pkgname=filebrowser-bin
-pkgver=2.22.1
+pkgver=2.22.2
 pkgrel=1
 pkgdesc="Web File Manager which can be used as a middleware or standalone app."
 arch=('x86_64' 'aarch64')
@@ -25,8 +25,8 @@ sha256sums=('1d85acca4ca9bcdb6767ff60891d6e0a4e9c324fc50bed1231e8c891eb9c4420'
             '6246fbeac57750e146216892ed6eb1d43a995f987bb89ef12bcbfb3963f5aa2d'
             'fd3da1de58e98185e0043070f55b46a86a78b9ebcdda949d0cd8a83e9b0b230c'
             '1fc20cab3a7d67d7997126a98dd151a362dc4600201ca37fd608b959d25985db')
-sha256sums_x86_64=('f11fb7070c726d395caa0ae11f269e8a26211557fb5bbb3739a3e280ce07bef5')
-sha256sums_aarch64=('763ce24b2892d9aeb389a7500a90bc3bd8c04863c0168a4ff7f2f64884f96649')
+sha256sums_x86_64=('5d3e0638416ef00d7876212b26f3d897f44e06ce3dc219c5c0bcda491d35da45')
+sha256sums_aarch64=('f3ba6c7932bce751522fccb0264da1287ae0764aa996d20e8dc0a7c66e300d06')
 
 package() {
     install -Dm644 "${srcdir}/filebrowser.sysusers" "${pkgdir}/usr/lib/sysusers.d/filebrowser.conf"
