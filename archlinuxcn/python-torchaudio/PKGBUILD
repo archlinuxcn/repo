@@ -3,24 +3,43 @@
 
 pkgname=python-torchaudio
 _pkgname=audio
-pkgver=0.11.0
+pkgver=0.12.0
+_sox_ver=14.4.2
 pkgrel=1
 pkgdesc="Data manipulation and transformation for audio signal processing, powered by PyTorch"
 arch=('x86_64' 'i686')
 url="https://github.com/pytorch/audio"
 license=('BSD')
-depends=('python' 'python-pytorch')
+depends=('python' 'python-pytorch' 'bzip2' 'xz' 'opencore-amr' 'lame' 'libogg' 'flac' 'libvorbis' 'opus' 'opusfile' 'zlib')
 optdepends=('python-kaldi-io')
-makedepends=('git' 'python-setuptools' 'cmake' 'ninja' 'gcc11')
+makedepends=('git' 'python-setuptools' 'cmake' 'ninja' 'gcc11' 'boost')
 conflicts=('python-torchaudio-git')
-source=("git+$url#tag=v${pkgver}")
-sha512sums=('SKIP')
+source=("git+$url#tag=v${pkgver}"
+        "git+https://github.com/kaldi-asr/kaldi.git"
+        "git+https://github.com/kpu/kenlm.git"
+        # Files downloaded by ExternalProject_Add
+        "https://downloads.sourceforge.net/project/sox/sox/$_sox_ver/sox-$_sox_ver.tar.bz2"
+        "$pkgname-use-system-libs.diff::https://github.com/yan12125/torchaudio/commit/8d10b1646767f45be9cd2ceaf50e401bb010127f.diff")
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            '81a6956d4330e75b5827316e44ae381e6f1e8928003c6aa45896da9041ea149c'
+            'b576b8e9311128d652727e65d79c58869a024d20fc541af62c6ceb403b2ef598')
 
 prepare() {
   cd "$srcdir/${_pkgname}"
-  # Use sourceforge url to fetch zlib
-  # See https://github.com/pytorch/audio/pull/2297
-  git cherry-pick -n e92a17c35fdff6b0622b0791b43e665c5d05c4b4
+
+  mkdir -p third_party/archives
+  ln -s "$srcdir"/sox-$_sox_ver.tar.bz2 third_party/archives/
+
+  patch -Np1 -i ../$pkgname-use-system-libs.diff
+
+  # loop stolen from python-onnxruntime :)
+  git submodule init
+  for mod in kaldi kenlm; do
+    git config submodule.third_party/$mod/submodule.url "$srcdir"/$mod
+    git submodule update third_party/$mod/submodule
+  done
 }
 
 build() {
