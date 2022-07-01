@@ -2,7 +2,7 @@
 
 _pkgname=mmsegmentation
 pkgname=python-mmsegmentation
-pkgver=0.25.0
+pkgver=0.26.0
 pkgrel=1
 pkgdesc='OpenMMLab Semantic Segmentation Toolbox and Benchmark'
 arch=('any')
@@ -17,7 +17,7 @@ makedepends=(
   python-setuptools
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmsegmentation/archive/v${pkgver}.tar.gz")
-sha512sums=('600f6e1c523c15372557cb89b77b6c6183597cc70765c606877796761c584704796a1444d47d0d9136d03f1605019d9916f044998f2881d74b3840bfe91f749b')
+sha512sums=('ba08a602d425f429dfc482d9045d0664267cd1e2acfc81ae7e691af19e2c1fbe9227278153e645e25a96950bb15f3019a842f8c38b3d8b7036d20fe83da84c29')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
