@@ -4,7 +4,7 @@
 _pkgname=bird
 pkgname=$_pkgname-babel-rtt-git
 pkgver=r3826.4c582913
-pkgrel=4
+pkgrel=5
 pkgdesc='RIP, OSPF, BGP, MPLS, BFD, Babel routing daemon (with babel-rtt)'
 arch=('x86_64')
 url='https://github.com/tohojo/bird'
@@ -15,7 +15,7 @@ depends=('glibc' 'readline' 'ncurses' 'libssh')
 conflicts=("$_pkgname")
 provides=("$_pkgname")
 replaces=('bird6')
-options=(!emptydirs)
+options=(!emptydirs debug strip)
 source=("${_pkgname}::git+https://github.com/tohojo/bird.git#branch=babel-rtt-01"
         'bird.service'
         )
