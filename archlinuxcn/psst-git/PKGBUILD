@@ -1,15 +1,16 @@
 # Maintainer: garionion <garionion@entr0py.de>
 # contributor: yochananmarqos (thank you very much)
+
 pkgname=psst-git
 pkgver=r417.f1300bf
-pkgrel=1
+pkgrel=2
 pkgdesc="Fast and multi-platform Spotify client with native GUI"
 arch=("x86_64")
 options=(!lto)
 url="https://github.com/jpochyla/psst"
 license=('MIT')
 depends=('gtk3' 'openssl' 'alsa-lib')
-makedepends=('rustup' 'cargo' 'git')
+makedepends=('cargo' 'git')
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
 source=('git+https://github.com/jpochyla/psst.git')
@@ -26,7 +27,7 @@ prepare() {
   cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 
   # Add missing entries to desktop file
-  sed -i "$ a Icon=${pkgname%-git}-gui" ".pkg/${pkgname%-git}.desktop"
+  sed -i "$ a Icon=${pkgname%-git}" ".pkg/${pkgname%-git}.desktop"
   sed -i '$ a StartupWMClass=Psst-gui' ".pkg/${pkgname%-git}.desktop"
 }
 
@@ -46,8 +47,11 @@ check() {
 package() {
   cd "$srcdir/${pkgname%-git}"
   install -Dm755 "target/release/${pkgname%-git}"{-cli,-gui} -t "$pkgdir/usr/bin"
-  install -Dm644 ".pkg/${pkgname%-git}.desktop" -t"$pkgdir/usr/share/applications"
-  install -Dm644 "${pkgname%-git}-gui/assets/logo_256.png" \
-    "$pkgdir/usr/share/icons/hicolor/scalable/apps/${pkgname%-git}-gui.svg"
+  install -Dm644 ".pkg/${pkgname%-git}.desktop" -t "$pkgdir/usr/share/applications"
+  install -Dm644 LICENSE.md -t "$pkgdir/usr/share/licenses/$pkgname"
+  for iconsize in 32 64 128 256 512; do
+    install -Dm644 "${pkgname%-git}-gui/assets/logo_${iconsize}.png" \
+      "$pkgdir/usr/share/icons/hicolor/${iconsize}x${iconsize}/apps/${pkgname%-git}.png"
+  done
   install -Dm644 LICENSE.md -t "$pkgdir/usr/share/licenses/${pkgname%-git}"
 }
