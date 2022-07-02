@@ -9,4 +9,3 @@ rm -rf trilium-* pkg/ src/
 git add .
 git commit
 git push
-
