@@ -9,6 +9,9 @@ pre_build_script: aur_pre_build(maintainers=['stevenhoneyman'])
 
 post_build: aur_post_build
 
+repo_depends:
+  - python2-gobject
+
 update_on:
   - source: github
     github: stevenhoneyman/obkey
