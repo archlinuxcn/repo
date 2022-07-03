@@ -1,19 +1,18 @@
 # Maintainer: Sven-Hendrik Haase <svenstaro@gmail.com>
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-git
-pkgver=3.4.8.r4.g8407b0ccc
+pkgver=4.0.2.r8.g5c3f15af4
 pkgrel=1
 pkgdesc='Official Telegram Desktop client'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL3')
-depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal' 'ttf-opensans'
-         'qt5-imageformats' 'qt5-svg' 'qt5-wayland' 'libdbusmenu-qt5' 'xxhash' 'kwayland' 'glibmm'
-         'rnnoise' 'pipewire' 'libxtst' 'libxrandr' 'jemalloc' 'abseil-cpp')
-makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'microsoft-gsl'
-             'extra-cmake-modules' 'gtk3' 'webkit2gtk' 'libtg_owt-git' 'clang')
-optdepends=('gtk3: GTK environment integration'
-            'webkit2gtk: embedded browser features'
+depends=('hunspell' 'ffmpeg4.4' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal' 'ttf-opensans'
+         'qt6-imageformats' 'qt6-svg' 'qt6-wayland' 'qt6-5compat' 'xxhash' 'glibmm'
+         'rnnoise' 'pipewire' 'libxtst' 'libxrandr' 'jemalloc' 'abseil-cpp' 'libdispatch')
+makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'microsoft-gsl' 'meson'
+             'extra-cmake-modules' 'wayland-protocols' 'plasma-wayland-protocols' 'libtg_owt-git')
+optdepends=('webkit2gtk: embedded browser features'
             'xdg-desktop-portal: desktop integration')
 provides=("telegram-desktop")
 conflicts=("telegram-desktop")
@@ -54,6 +53,7 @@ source=("tdesktop::git+https://github.com/telegramdesktop/tdesktop.git#branch=de
         "telegram-desktop-jemalloc::git+https://github.com/jemalloc/jemalloc.git"
         "telegram-desktop-kwayland::git+https://github.com/KDE/kwayland.git"
         "telegram-desktop-dispatch::git+https://github.com/apple/swift-corelibs-libdispatch.git"
+        "fix-tgcalls-cstdint.patch"
 )
 sha512sums=('SKIP'
             'SKIP'
@@ -89,7 +89,8 @@ sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'SKIP')
+            'SKIP'
+            'ba24a2f1524010b4891764aacee2e27a5ebae44cf7626ab2aaf9e6c48b0f8088bf920886ceeb497b3c463fa0c3b885dd63db273d4c29cab6c96c8193c0c5c888')
 pkgver() {
     cd "$srcdir/tdesktop"
     git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
@@ -139,18 +140,20 @@ prepare() {
     # remove -Werror in dispatch
     sed -i "s/Werror/Wno-error/g" "$srcdir/tdesktop/Telegram/ThirdParty/dispatch/src/CMakeLists.txt"
     sed -i "s/Werror/Wno-error/g" "$srcdir/tdesktop/Telegram/ThirdParty/dispatch/cmake/modules/DispatchCompilerWarnings.cmake"
+
+    patch -Np1 -i "$srcdir"/fix-tgcalls-cstdint.patch -d Telegram/ThirdParty/tgcalls
 }
 
 build() {
     cd "$srcdir/tdesktop"
 
+    export PKG_CONFIG_PATH='/usr/lib/ffmpeg4.4/pkgconfig'
     # Turns out we're allowed to use the official API key that telegram uses for their snap builds:
     # https://github.com/telegramdesktop/tdesktop/blob/8fab9167beb2407c1153930ed03a4badd0c2b59f/snap/snapcraft.yaml#L87-L88
     # Thanks @primeos!
     cmake \
         -B build \
         -G Ninja \
-        -DDESKTOP_APP_QT6=off \
         -DCMAKE_INSTALL_PREFIX="/usr" \
         -DCMAKE_BUILD_TYPE=Release \
         -DTDESKTOP_API_ID=611335 \
