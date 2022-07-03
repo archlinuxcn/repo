@@ -12,6 +12,7 @@ depends=('openssl' 'zlib' 'curl' 'libxcb')
 makedepends=('cargo' 'git' 'libx11' 'python')
 provides=('nu' 'nushell')
 conflicts=('nushell')
+options+=(!lto)
 license=('MIT')
 source=("$pkgname::git+https://github.com/nushell/nushell.git#branch=main"
 		"LICENSE::https://raw.githubusercontent.com/nushell/nushell/main/LICENSE")
