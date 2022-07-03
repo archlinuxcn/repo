@@ -1,66 +1,33 @@
-pkgname=genie-systemd
+# Maintainer: Ong Yong Xin <ongyongxin2020+github AT gmail DOT com>
+# Contributor: Xuanrui Qi <me@xuanruiqi.com>
+# Contributor: Rayfalling <Rayfalling@outlook.com>
+# Contributor: facekapow, rayfalling, Ducksoft
 _pkgname=genie
-pkgver=1.44
+pkgname=${_pkgname}-systemd
+pkgver=2.4
 pkgrel=1
 pkgdesc="A quick way into a systemd \"bottle\" for WSL"
 arch=('x86_64')
 url="https://github.com/arkane-systems/genie"
-depends=('daemonize' 'dotnet-runtime' 'dotnet-host')
-makedepends=('git' 'dotnet-sdk')
-conflicts=('genie-systemd')
+license=('Unlicense')
+depends=('daemonize' 'python>=3.7' 'python-psutil' 'systemd>=232.25' 'inetutils')
+makedepends=('git' 'python-pip')
 options=(!strip)
-provides=('genie-systemd')
 source=("git+https://github.com/arkane-systems/genie.git#tag=v$pkgver")
 sha256sums=('SKIP')
+backup=('etc/genie.ini')
 
-
-pkgver() {
-  cd "$srcdir"/"$_pkgname"/package
-  grep VersionPrefix ../binsrc/genie/genie.csproj | sed 's/.*<VersionPrefix>\(.*\)<\/VersionPrefix>/\1/' | tr -d '\r\n'
-}
+# pkgver() {
+#    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//g'
+# }
 
 build() {
-  cd "$srcdir"/"$_pkgname"/package
-  make -C ../binsrc
+    cd genie
+    make build-binaries
 }
 
 package() {
-  cd "$srcdir"/"$_pkgname"/package
-  # Binaries
-  install -Dm 4755 -o root "../binsrc/genie/bin/Release/net5.0/linux-x64/publish/genie" -t "${pkgdir}/usr/libexec/genie"
-  install -Dm 0755 -o root "../binsrc/runinwsl/bin/Release/net5.0/linux-x64/publish/runinwsl" -t "${pkgdir}/usr/libexec/genie"
-
-  # Environment generator.
-  install -Dm 0755 -o root "../othersrc/scripts/80-genie-envar.sh" -t "${pkgdir}/usr/libexec/genie"
-
-  # Runtime dir mapping
-  install -Dm 0755 -o root "../othersrc/scripts/map-user-runtime-dir.sh" -t "${pkgdir}/usr/libexec/genie"
-  install -Dm 0755 -o root "../othersrc/scripts/unmap-user-runtime-dir.sh" -t "${pkgdir}/usr/libexec/genie"
-
-  # Configuration file.
-  install -Dm 0644 -o root "../othersrc/etc/genie.ini" -t "${pkgdir}/etc"
-
-  # genie symlink
-  mkdir -p ${pkgdir}/usr/bin
-  ln -s /usr/libexec/genie/genie ${pkgdir}/usr/bin/genie
-
-  # 10-genie-envar.sh symlinks
-  mkdir -p ${pkgdir}/usr/lib/systemd/user-environment-generators
-  mkdir -p ${pkgdir}/usr/lib/systemd/system-environment-generators
-  ln -s /usr/libexec/genie/80-genie-envar.sh ${pkgdir}/usr/lib/systemd/user-environment-generators/80-genie-envar.sh
-  ln -s /usr/libexec/genie/80-genie-envar.sh ${pkgdir}/usr/lib/systemd/system-environment-generators/80-genie-envar.sh
-
-	# Unit files.
-  install -Dm 0644 -o root "../othersrc/lib-systemd-system/wslg-xwayland.service" -t "${pkgdir}/usr/lib/systemd/system"
-  install -Dm 0644 -o root "../othersrc/lib-systemd-system/wslg-xwayland.socket" -t "${pkgdir}/usr/lib/systemd/system"
-  mkdir -p ${pkgdir}/usr/lib/systemd/system/sockets.target.wants
-  ln -s /usr/lib/systemd/system/wslg-xwayland.socket ${pkgdir}/usr/lib/systemd/system/sockets.target.wants/wslg-xwayland.socket
-
-  install -Dm 0644 -o root "../othersrc/lib-systemd-system/user-runtime-dir@.service.d/override.conf" -t "${pkgdir}/usr/lib/systemd/system/user-runtime-dir@.service.d"
-
-  # man page
-  cp ../othersrc/docs/genie.8 /tmp/genie.8
-  gzip -9 /tmp/genie.8
-  install -Dm 0644 -o root /tmp/genie.8.gz -t "${pkgdir}/usr/share/man/man8"
-  rm /tmp/genie.8.gz
+    cd genie
+    make DESTDIR=${pkgdir} internal-package
+    make DESTDIR=${pkgdir} internal-supplement
 }
