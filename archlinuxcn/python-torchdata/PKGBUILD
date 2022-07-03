@@ -9,6 +9,8 @@ arch=('any')
 url='https://github.com/pytorch/data'
 license=('BSD')
 depends=(
+  python-portalocker
+  python-pytorch
   python-requests
   python-urllib3
 )
@@ -23,6 +25,7 @@ sha512sums=('201ba2ee2b9c227b9a3a61eee317a2e84f5957b8aa8a6d00cf48d4b055f6bc2332c
 
 build() {
   cd "${_pkgname}-${pkgver}"
+  USE_SYSTEM_LIBS=ON \
   python -m build --wheel --no-isolation
 }
 
