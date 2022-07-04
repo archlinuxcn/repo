@@ -48,6 +48,7 @@ build() {
   # Allow this to build with CUDA, which is not compatible with GCC 12 yet
   export CC=/usr/bin/gcc-11
   export CXX=/usr/bin/g++-11
+  export CUDACXX=/opt/cuda/bin/nvcc
   export CUDAHOSTCXX=$CXX
   # Follow architectures used by pytorch
   # https://github.com/archlinux/svntogit-community/blob/packages/python-pytorch/trunk/PKGBUILD
