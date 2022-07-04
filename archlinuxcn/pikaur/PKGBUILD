@@ -2,7 +2,7 @@
 # shellcheck disable=SC2034,SC2154
 
 pkgname=pikaur
-pkgver=1.10.1
+pkgver=1.11
 pkgrel=1
 pkgdesc="AUR helper which asks all questions before installing/building. Inspired by pacaur, yaourt and yay."
 arch=('any')
@@ -11,7 +11,7 @@ license=('GPL3')
 source=(
 	"$pkgname-$pkgver.tar.gz"::https://github.com/actionless/pikaur/archive/"$pkgver".tar.gz
 )
-md5sums=('a68c5728cb89d8e16f2f87820d864f56')
+b2sums=('2182b8a79b15e1d8da239933a0540ec5a602823dc7f11f1ff8deab301f01f6e73b20f46c8e5e8bb07ccacb9dee24321096f0eb761d20d5e39b7f8816d3ccea43')
 depends=(
 	'pyalpm'
 	'git'
@@ -22,6 +22,7 @@ makedepends=(
 optdepends=(
 	'asp: for ABS support in -G/--getpkgbuild operation'
 	'python-pysocks: for socks5 proxy support'
+	'python-defusedxml: wrap Arch news replies'
 )
 conflicts=('pikaur-git')
 provides=('pikaur')

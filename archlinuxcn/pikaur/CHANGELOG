@@ -1866,3 +1866,29 @@ Thu Feb 3 05:06:46 2022 +0100
 1.10.1          Hotfix release 1.10.1
     
     fix(updates): add missing maintainer field
+
+
+Sun Jul 3 22:16:28 2022 +0200
+-------------------------------------------------
+1.11            Release 1.11
+    
+    Notable changes:
+     2022-07-03 24112ff actionless fix(news): if there are more than one news - only one latest entry was printed anyway
+     2022-06-27 4f7b996 Henry-Joseph Audéoud feat(packaging: bash-completion): when aliases of mv, mkdir or rm declared in shell (fixes #651) (#652)
+     2022-06-21 379a793 actionless fix(pacman: get_print_format_output; install_cli: get_all_packages_info): pop the error message to the upper level (re: #650)
+     2022-06-21 8005cce actionless fix(install_cli: get_all_packages_info): pass also --ignore-d packages to InstallInfoFetcher
+     2022-06-21 17fc1d9 actionless fix(install_cli: _find_extra_aur_build_deps): split in case of multiple deps
+     2022-06-09 167aa46 actionless fix(version: VersionMatcher: cmp_eq): = works different when computing deps/conflicts (ex. '<=1' should match '1.2.3')
+     2022-06-08 6f61bc1 actionless fix(install info fetcher: mark_dependant): process all entries of packages' `provides` field
+     2022-04-13 d7ee1a4 Andres Monge doc(faq): include downgrade information (#643)
+     2022-03-28 f475fdc actionless refactor(install_info_fetcher: get_aur_pkgs_info): more general handling of avoiding double-removing aur pkg which was already re-added as pkgbuild
+     2022-03-28 d034cb2 actionless fix(install_info_fetcher: get_aur_pkgs_info): remove manually edited pkgbuild from list of aur pkgs to be installed only if it's still still in that list
+     2022-03-28 30cba82 actionless fix(core: ComparableType: __eq__): consider different type as always non-equal (fixes #639)
+     2022-03-28 94effeb actionless fix(build: set_built_package_path): check exit code of makepkg --packagelist
+     2022-03-17 122c5ff Bundy01 fix(locale): update, es.po and fr.po corrected (#636)
+     2022-03-18 49f40e8 linweiyuan doc: remove tuna aur config for China users (#638)
+     2022-02-25 afc18e7 kyak fix(locale): update po.ru (#635)
+     2022-02-12 03ba5f3 actionless fix,refactor(conflicts, install_info_fetcher, install cli): allow local pkg builds without internet if they not require not installed AUR packages
+     2022-02-09 76c2d81 Aditya Gupta fix(install_info_fetch): add `new_thirdparty_repo_deps_install_info` (Fixes #627) (#628)
+     2022-02-09 fdf7baf actionless fix(search_cli; test: cli): new workaround for #298
+     2022-02-09 65f4e85 Osman Karagöz chore(locale): update TR translation (#626)
