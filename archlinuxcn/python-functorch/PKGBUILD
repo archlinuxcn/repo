@@ -2,7 +2,7 @@
 
 _pkgname=functorch
 pkgname=python-functorch
-pkgver=0.1.1
+pkgver=0.2.0
 pkgrel=1
 pkgdesc='JAX-like composable function transforms for PyTorch'
 arch=('x86_64')
@@ -15,7 +15,7 @@ makedepends=(
   python-setuptools
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/pytorch/functorch/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('c75ada73b35956d19508ea5e1d3f3fc1699da158a136f4969180796c626cef3ee587161ea09e9c02b26e3338cb7dec2050179140f1c87627aae959a2567166e9')
+sha512sums=('099c5f0205575ae960890067e8a36b2d5d8d5aebac3cbca0c530ffd339d0d8bf253ce4d6b21100bb4da78b40a24371538009e6887815ee8529557ddd1fca6613')
 
 build() {
   cd "${_pkgname}-${pkgver}"
