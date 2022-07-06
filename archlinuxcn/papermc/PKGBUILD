@@ -1,50 +1,53 @@
-# Maintainer: Gordian Edenhofer <gordian.edenhofer@gmail.com>
+# Maintainer: edward-p <edward at edward-p.xyz>
+# Contributer: Gordian Edenhofer <gordian.edenhofer@gmail.com>
 
 pkgname=papermc
 pkgver=1.19+b50
-_license_commit=4a7962c
+_license_commit=31f0137
 pkgrel=1
+_mng_ver=1.0.2
 pkgdesc="Next generation of Minecraft server, compatible with Spigot plugins and offering uncompromising performance"
 arch=('any')
 url="https://papermc.io/"
 license=('custom')
-depends=('java-runtime-headless>=8' 'tmux' 'sudo' 'bash' 'awk' 'sed')
+depends=('java-runtime-headless>=16' 'tmux' 'sudo' 'bash' 'awk' 'sed')
 optdepends=("tar: needed in order to create world backups"
 	"netcat: required in order to suspend an idle server")
 conflicts=('papermc-git')
 backup=('etc/conf.d/papermc')
 install="${pkgname}.install"
 source=("papermc.${pkgver}.jar"::"https://papermc.io/api/v2/projects/paper/versions/${pkgver%%+*}/builds/${pkgver##*b}/downloads/paper-${pkgver%%+*}-${pkgver##*b}.jar"
-	"papermc-backup.service"
-	"papermc-backup.timer"
-	"papermc.service"
-	"papermc.conf"
-	"papermc.sh"
-	"papermc.tmpfiles"
-	"papermc.sysusers"
-	"LICENSE_${pkgver}.md"::"https://raw.githubusercontent.com/PaperMC/Paper/${_license_commit}/LICENSE.md")
+	"LICENSE_${pkgver}.md"::"https://raw.githubusercontent.com/PaperMC/Paper/${_license_commit}/LICENSE.md"
+	"minecraft-server-${_mng_ver}.tar.gz"::"https://github.com/Edenhofer/minecraft-server/archive/refs/tags/v${_mng_ver}.tar.gz")
 noextract=("papermc.${pkgver}.jar")
 sha512sums=('bdeb61db7630b4aeacac13820e3245a64d20f030c2f8a6a0141576fea7ea6b4bc1a1fc4856c3e558f8ad02d09fafcc80853ac0e032b614c71cf1ed62221ea023'
-            'a4fcc9f28436c0163e9414f2793fcbd4f6ea74772230cdff4a628246eae2a8008688b3dfb94d433f8f0887cd7eea3fe43ce25f9d5812d46e62179ff315b62895'
-            '51c5345155e8640d4f1eaef0c8cfb890ae46063f2d4e7a0fe181ad4c8ff7b96fea88b0f9fc74031d589dfd61602f37b440f183ca1859835930fe69d37508cd42'
-            'f29c4044d9e3cc5ab137c21f7e62399b36d7e1f777d5558a39f7b4a01de75bdf2de0b8678e424accc03934ca7db9ebb6a22c78c8c4497759287dd55e1c3eb456'
-            'bec77bc748ee9b9efe4913608f7a6f9b1bd40ed8f018a431981451f8ad77accc4b3670096a8523ddd9f745aef5edb7294ef3b15f483cf9af32c69f9a40ef40a1'
-            'bb0633de2da12b0f9e8c9ba29ef61c91785e9e6fb65f7712d60cf99d2045a38321073b78d7a7e1b34078e5627acbe42e8f3ad7164bbf6eef27dbbb3c5d41d748'
-            '961626b9d4f6efdaeafa123471e4ac3d6a4be06a546e4a3c1ada75a3e2694c5e29634bd419bdec71b1c7ea7cb95fbbec4180cb17ee6fd32a9549a4d90c672c0a'
-            '115fe7213d7edd0e3159607a31b28edb6e6b3bd1d454d516973e38c8cf0b803275c2c4e59b29e2260561270d931c71bad134046535e5add309e0a8d055cde0ff'
-            'd4c645a58e1a17a0a1e42856a3cc43097711a05bf3d9f18c77c3bc9874417f223552859042ff00b7d3dda0003f49a9ee568540c2eb24e9f8fbb3c055f3b6e0a5')
+            'e801ac8f8902483adf67f3b5029c8710bf378b27f5b5860d4fff169cedacc856b987333afed9e2640fdd8f6d5d98ca5eef076b82b720be7335ab46ecd5dfa184'
+            '11d708d511b63e5541bcc1dbcaf29abbf7cb9583b1d313028770a39b26b41d48dcba023f7e1d6fe30f3c093d20e10a43363011edd432e5785a4580e5c5f852a6')
 
 _game="papermc"
 _server_root="/srv/papermc"
 
+build() {
+	make -C "${srcdir}/minecraft-server-${_mng_ver}" clean
+
+	make -C "${srcdir}/minecraft-server-${_mng_ver}" \
+		GAME=${_game} \
+		INAME=${_game} \
+		SERVER_ROOT=${_server_root} \
+		BACKUP_PATHS="world" \
+		GAME_USER=${_game} \
+		MAIN_EXECUTABLE=papermc_server.jar \
+		SERVER_START_CMD="java -Xms512M -Xmx1024M -jar ./papermc_server.jar nogui" \
+		all
+}
+
 package() {
-	install -Dm644 ${_game}.conf              "${pkgdir}/etc/conf.d/${_game}"
-	install -Dm755 ${_game}.sh                "${pkgdir}/usr/bin/${_game}"
-	install -Dm644 ${_game}.service           "${pkgdir}/usr/lib/systemd/system/${_game}.service"
-	install -Dm644 ${_game}-backup.service    "${pkgdir}/usr/lib/systemd/system/${_game}-backup.service"
-	install -Dm644 ${_game}-backup.timer      "${pkgdir}/usr/lib/systemd/system/${_game}-backup.timer"
-	install -Dm644 ${_game}.sysusers          "${pkgdir}/usr/lib/sysusers.d/${_game}.conf"
-	install -Dm644 ${_game}.tmpfiles          "${pkgdir}/usr/lib/tmpfiles.d/${_game}.conf"
+	make -C "${srcdir}/minecraft-server-${_mng_ver}" \
+		DESTDIR="${pkgdir}" \
+		GAME=${_game} \
+		INAME=${_game} \
+		install
+
 	install -Dm644 ${_game}.${pkgver}.jar     "${pkgdir}/${_server_root}/${_game}.${pkgver}.jar"
 	ln -s "${_game}.${pkgver}.jar" "${pkgdir}${_server_root}/${_game}_server.jar"
 
