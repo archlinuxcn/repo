@@ -31,7 +31,8 @@ LTO=              # Enable link-time optimization. Still experimental.
 JIT=         # Enable native just-in-time compilation. libgccjit is in AUR.
                   # This compiles only performance critical elisp files.
                   #
-                  # To compile all elisp on demand, add
+                  # To compile all site-lisp on demand (repos/AUR packages,
+                  # ELPA, MELPA, whatever), add
                   #    (setq comp-deferred-compilation t)
                   # to your .emacs file.
 
@@ -78,7 +79,7 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-git"
 fi
-pkgver=29.0.50.157913
+pkgver=29.0.50.157957
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
@@ -199,9 +200,9 @@ pkgver() {
   cd "$srcdir/emacs-git"
 
   printf "%s.%s" \
-    "$(grep AC_INIT configure.ac | \
-    sed -e 's/^.\+\ \([0-9]\+\.[0-9]\+\.[0-9]\+\?\).\+$/\1/')" \
-    "$(git rev-list --count HEAD)"
+    $(grep AC_INIT configure.ac | \
+    awk -F',' '{ gsub("[ \\[\\]]","",$2); print $2 }') \
+    $(git rev-list --count HEAD)
 }
 
 # There is no need to run autogen.sh after first checkout.
