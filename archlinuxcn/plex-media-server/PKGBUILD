@@ -10,8 +10,8 @@
 # Contributor: Praekon <praekon@googlemail.com>
 
 pkgname=plex-media-server
-pkgver=1.27.1.5916
-_pkgsum=6b0e31a64
+pkgver=1.27.2.5929
+_pkgsum=a806c5905
 pkgrel=1
 pkgdesc='The back-end media server component of Plex.'
 arch=('x86_64' 'i686' 'armv7h' 'aarch64')
@@ -39,10 +39,10 @@ sha256sums=('398ba7958598609453f5289b3d5f2389d2756158b340cf28e83c39d9ed60280b'
             'c597bee0bcbb59ed791651555a904e5f7e9d2e82f6c6986b6352e5fc38e5b557'
             'b7ff6525a3c7a8be885edc85bb523095f8e25ddb38873127e2a4e97b28f2c7ad'
             'dbfb5a9a7146a975863c0932f1a68c4b040ec5d7e693361f39ddfbf60885e631')
-sha256sums_x86_64=('96ff9ab04e049a4ae375824f86dc61dafe4599dfefa29c20134a2d1571b8fac4')
-sha256sums_i686=('3a348d91cfa972b0c986163ebec7222921c4582d73cdfac146e8df105dd626c8')
-sha256sums_armv7h=('508f9314a015a8d449285a62342a4db119d8ac8a61084716b74698b0c5a4a6da')
-sha256sums_aarch64=('0275b4b5a9ddbec49ed09ec7a84bf68ca6ce956d4c6b3b3132b86d62d440dd33')
+sha256sums_x86_64=('8b8473c80bc3606d6972f6ad749514c5bb13872981f6e407a525b9e08a982979')
+sha256sums_i686=('537bfa03636ba789d93a4910b3b142ffb60b10a1e5e1212b82ccfe3bf947bde8')
+sha256sums_armv7h=('5b07346481a7c0b2d4143722e39425c02bd02e2538f1a7ac2e4d293e832468ad')
+sha256sums_aarch64=('7da8b92c79cbc8b49808aaeb1c48de9606d3ee1016ddb86cd8be2e5fab5ca876')
 
 prepare() {
   if [[ $CARCH = armv7h ]] || [[ $CARCH = aarch64 ]]; then
