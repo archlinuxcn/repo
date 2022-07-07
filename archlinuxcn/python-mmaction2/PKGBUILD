@@ -36,7 +36,7 @@ sha512sums=('a49e73d23ca39d2a8e39271bc1e5e47d5338e3f3ce230f8815ebd3c98fd397a3025
 prepare() {
   cd "${_pkgname}-${pkgver}"
   # uncomment this line to relax mmcv version requirement
-  # sed -i '10,13d' "mmaction/__init__.py"
+  sed -i '10,14d' "mmaction/__init__.py"
 }
 
 build() {
