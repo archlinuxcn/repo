@@ -1,0 +1,24 @@
+maintainers:
+  - github: yan12125
+    email: f2q9sf79f9owdg2o@chyen.cc
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - lxqt-build-tools-qt6-git
+  - libqt6xdg-git
+  - libfm-qt6-git
+
+pre_build: vcs_update
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: lxqt/lxqt-qtplugin
+    branch: wip_qt6
+
+  - source: alpm
+    strip_release: true
+    alpm: qt6-base
+    repo: extra

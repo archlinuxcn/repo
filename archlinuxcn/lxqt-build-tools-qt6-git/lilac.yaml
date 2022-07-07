@@ -1,0 +1,14 @@
+maintainers:
+  - github: yan12125
+    email: f2q9sf79f9owdg2o@chyen.cc
+
+build_prefix: extra-x86_64
+
+pre_build: vcs_update
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: lxqt/lxqt-build-tools
+    branch: lxqt2-qt6
