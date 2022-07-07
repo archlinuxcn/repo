@@ -4,7 +4,7 @@
 
 pkgname=pcsx2-git
 pkgver=1.7.3058
-pkgrel=1
+pkgrel=2
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
 url=https://www.pcsx2.net
@@ -14,25 +14,28 @@ license=(
   LGPL2.1
   LGPL3
 )
+
 depends=(
+  fmt
   libaio
   libjpeg-turbo
   libpcap
   libzip
-  libgl # For Steam Deck
-  xorg-xrandr # For Steam Deck
-  libxrender # For Steam Deck
-  linux-api-headers # For Steam Deck
+  libgl
+  xorg-xrandr
+  libxrender
+  linux-api-headers
   libpulse
   portaudio
   libsamplerate
   sdl2
-  wxgtk3
-  fmt
+  qt6-base
+  qt6-wayland
+  qt6-svg
   soundtouch
   wayland
-  rapidyaml
   zstd
+  rapidyaml
 )
 makedepends=(
   cmake
@@ -42,6 +45,7 @@ makedepends=(
   swig
   python
   vulkan-headers
+  qt6-tools
 )
 install='pcsx2.install'
 provides=('pcsx2')
@@ -60,23 +64,25 @@ prepare() {
   cd pcsx2
 
   git submodule update --init --recursive
+
+  sed -i 's/env GDK_BACKEND=x11 MESA_NO_ERROR=1 pcsx2/pcsx2-qt/g' linux_various/PCSX2.desktop.in
 }
 
 build() {
     cmake -S pcsx2 -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DDOC_DIR=/usr/share/doc/pcsx2 \
-    -DGAMEINDEX_DIR=/usr/share/pcsx2 \
-    -DPLUGIN_DIR=/usr/lib/pcsx2 \
+    -DQT_BUILD=ON \
     -DDISABLE_ADVANCE_SIMD=ON \
+    -DPCSX2_APP_DATADIR=/usr/share \
     -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
     -DEXTRA_PLUGINS=ON \
     -DWAYLAND_API=ON \
     -DXDG_STD=TRUE \
     -DUSE_VULKAN=ON \
     -DUSE_SYSTEM_LIBS=ON \
-    -DPACKAGE_MODE=ON
+    -DPACKAGE_MODE=ON \
+    -DDISABLE_SETCAP=ON
 
     ninja -C build
 }
