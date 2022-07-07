@@ -3,7 +3,8 @@
 
 pkgname=libplacebo-git
 _pkgname=libplacebo
-pkgver=4.208.0.rc1.r3.g55500b5
+epoch=1
+pkgver=4.208.0rc1.r3.g55500b5
 pkgrel=1
 pkgdesc='Reusable library for GPU-accelerated video/image rendering primitives'
 url='https://github.com/haasn/libplacebo'
@@ -37,7 +38,7 @@ options=('debug' 'strip')
 
 pkgver() {
     cd ${srcdir}/libplacebo
-    git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+    git describe --long | sed 's/^v//;s/-rc/rc/;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
