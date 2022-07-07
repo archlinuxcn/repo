@@ -5,9 +5,9 @@
 pkgname=palemoon
 _repo=Pale-Moon
 epoch=1
-pkgver=31.1.0
+pkgver=31.1.1
 # Commit ID can be found at https://repo.palemoon.org/MoonchildProductions/Pale-Moon/releases
-_commit=2338cf345f
+_commit=ffd78091d8
 pkgrel=1
 pkgdesc="Open source web browser based on Firefox focusing on efficiency."
 arch=('i686' 'x86_64')
