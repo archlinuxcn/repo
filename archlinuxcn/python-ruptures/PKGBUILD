@@ -2,8 +2,8 @@
 
 _pkgname=ruptures
 pkgname=python-ruptures
-pkgver=1.1.6
-pkgrel=2
+pkgver=1.1.7
+pkgrel=1
 pkgdesc='Change point detection in Python'
 arch=('x86_64')
 url='https://github.com/deepcharles/ruptures'
@@ -23,7 +23,7 @@ checkdepends=(
   python-pytest
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/deepcharles/ruptures/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('907ae94f55c1aefc43c99f8c7a316e30701062884dc60b86d68a64f30974b881ba6b3ae13a78daf13178de509448a66213065e8e91c030e78b1c9e7d6f225300')
+sha512sums=('8445f7c1a211c16adab7008ab779aa9206214b4db33c8a975126ad5df98c594ed1fab9a000b457d56593d0005f0479886578358c295559cd81b6752cc20cd64b')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
