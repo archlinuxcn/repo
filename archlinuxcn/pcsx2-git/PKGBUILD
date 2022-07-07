@@ -65,6 +65,7 @@ prepare() {
 
   git submodule update --init --recursive
 
+  sed -i 's@EmuFolders::Resources = Path::Combine(EmuFolders::AppRoot, "resources")@EmuFolders::Resources = Path::Combine("/usr/share", "PCSX2/resources")@g' pcsx2-qt/QtHost.cpp
   sed -i 's/env GDK_BACKEND=x11 MESA_NO_ERROR=1 pcsx2/pcsx2-qt/g' linux_various/PCSX2.desktop.in
 }
 
