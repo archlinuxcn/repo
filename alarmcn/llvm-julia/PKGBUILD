@@ -1,33 +1,20 @@
 # Maintainer: Evangelos Foutras <evangelos@foutrelis.com>
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 
-pkgname=(llvm-julia llvm-libs-julia llvm-ocaml-julia)
-pkgver=13.0.1
-_julia_rel=1
-pkgrel=2
+pkgname=(llvm-julia llvm-libs-julia)
+pkgver=14.0.5
+_julia_rel=2
+pkgrel=1
 arch=(i686 x86_64 armv7h aarch64)
 url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
-makedepends=(cmake ninja libffi libedit ncurses libxml2 ocaml ocaml-ctypes ocaml-findlib
+makedepends=(cmake ninja libffi libedit ncurses libxml2
              python-setuptools python-psutil python-sphinx python-recommonmark git)
 # Disable LTO for now since there seems to be some issue at least on aarch64
 options=('staticlibs' '!strip' '!lto')
 source=(https://github.com/JuliaLang/llvm-project/archive/refs/tags/julia-$pkgver-$_julia_rel.tar.gz
-        # Archlinux Patch
-        don-t-accept-nullptr-as-GEP-element-type.patch
-        don-t-override-__attribute__-no_stack_protector.patch
-        don-t-move-DBG_VALUE-instructions.patch
-        no-strict-aliasing-DwarfCompileUnit.patch
-        disable-A-B-A-B-and-BSWAP-in-InstCombine.patch
-        disable-DIArgList-in-SPIR-V.patch
         llvm-config.h)
-sha256sums=('c5ad2dc78219b196d8b46fa07ac8ed7e64f3ad11b88a2769ea60f45d1c245582'
-            'a7e902a7612d0fdabe436a917468b043cc296bc89d8954bfc3126f737beb9ac4'
-            '9f0a4578b94eb8853b83af2f65e92705254b4b56d96f9a941714d174b932f465'
-            'f7d69f84241416398fdb3df8bb44f9fae3c49d89889c7ffa3b37aa2e9d78f708'
-            'd1eff24508e35aae6c26a943dbaa3ef5acb60a145b008fd1ef9ac6f6c4faa662'
-            '34cc0d79a30599cb2287b47b4e9a1a5bf03d57a1f8bb35be3fe976ffc4a604f6'
-            '8642da2d556092e4284873ba6ddc6c9a67841f42cc16f923bcd523e4b304a3ff'
+sha256sums=('04e08ff162845c3b44003affc28644ffd0001d14a3f8d5fdb8337eeac6ea7a28'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
 prepare() {
@@ -36,30 +23,10 @@ prepare() {
 
   # Arch patches
   msg "Applying Arch patches"
-
-  # https://github.com/intel/intel-graphics-compiler/issues/204
-  patch -Rp2 -i ../../don-t-accept-nullptr-as-GEP-element-type.patch
-
-  # Fixes Chromium error "*** stack smashing detected ***: terminated"
-  # (which also goes away with "--change-stack-guard-on-fork=disabled")
-  # https://reviews.llvm.org/D116589
-  patch -Np2 -i ../../don-t-override-__attribute__-no_stack_protector.patch
-
-  # https://github.com/llvm/llvm-project/issues/53243
-  # https://github.com/rust-lang/rust/issues/92869
-  patch -Np2 -i ../../don-t-move-DBG_VALUE-instructions.patch
-
-  # Work around intermittent 'clang -O -g' crashes
-  # https://bugs.llvm.org/show_bug.cgi?id=50611#c3
-  patch -Np2 -i ../../no-strict-aliasing-DwarfCompileUnit.patch
-
-  # Patches needed for ISPC for Xe only
-  patch -Np2 -i ../../disable-A-B-A-B-and-BSWAP-in-InstCombine.patch
-  patch -Np2 -i ../../disable-DIArgList-in-SPIR-V.patch
 }
 
 build() {
-  cd "$srcdir/llvm-project-julia-$pkgver-$_julia_rel/llvm/build"
+  cd llvm-project-julia-$pkgver-$_julia_rel/llvm/build
 
   export PATH="${srcdir}/bin:${PATH}"
   CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
@@ -70,30 +37,32 @@ build() {
 
   cmake .. -G Ninja \
         -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_DOCDIR=share/doc \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        -DLLVM_HOST_TRIPLE=$CHOST \
-        -DLLVM_BUILD_LLVM_DYLIB=ON \
-        -DLLVM_LINK_LLVM_DYLIB=ON \
-        -DLLVM_INSTALL_UTILS=ON \
-        -DLLVM_ENABLE_RTTI=ON \
-        -DLLVM_ENABLE_FFI=ON \
-        -DLLVM_BUILD_TESTS=OFF \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DLLVM_BINUTILS_INCDIR=/usr/include \
         -DLLVM_BUILD_DOCS=ON \
+        -DLLVM_BUILD_LLVM_DYLIB=ON \
+        -DLLVM_BUILD_TESTS=OFF \
+        -DLLVM_ENABLE_BINDINGS=OFF \
+        -DLLVM_ENABLE_FFI=ON \
+        -DLLVM_ENABLE_RTTI=ON \
         -DLLVM_ENABLE_SPHINX=ON \
-        -DLLVM_ENABLE_DOXYGEN=OFF \
-        -DSPHINX_WARNINGS_AS_ERRORS=OFF \
-        -DLLVM_BINUTILS_INCDIR=/usr/include
-  ninja all ocaml_doc
+        -DLLVM_HOST_TRIPLE=$CHOST \
+        -DLLVM_INSTALL_UTILS=ON \
+        -DLLVM_LINK_LLVM_DYLIB=ON \
+        -DSPHINX_WARNINGS_AS_ERRORS=OFF
+  ninja
 }
 
 package_llvm-julia() {
-  pkgdesc="Collection of modular and reusable compiler and toolchain technologies (with patch for julia)"
+  pkgdesc="Compiler infrastructure (with patch for julia)"
   depends=("llvm-libs-julia=$pkgver-$pkgrel" perl)
   optdepends=('python-setuptools: for using lit (LLVM Integrated Tester)')
   conflicts=(llvm)
   provides=("llvm=$pkgver-$pkgrel")
 
-  cd "$srcdir/llvm-project-julia-$pkgver-$_julia_rel/llvm/build"
+  cd llvm-project-julia-$pkgver-$_julia_rel/llvm/build
 
   DESTDIR="$pkgdir" ninja install
 
@@ -105,11 +74,6 @@ package_llvm-julia() {
   # The runtime libraries go into llvm-libs
   mv -f "$pkgdir"/usr/lib/lib{LLVM,LTO,Remarks}*.so* "$srcdir"
   mv -f "$pkgdir"/usr/lib/LLVMgold.so "$srcdir"
-
-  # OCaml bindings go to a separate package
-  rm -rf "$srcdir"/ocaml.{lib,doc}
-  mv "$pkgdir/usr/lib/ocaml" "$srcdir/ocaml.lib"
-  mv "$pkgdir/usr/share/doc/llvm/ocaml-html" "$srcdir/ocaml.doc"
 
   if [[ $CARCH == x86_64 ]]; then
     # Needed for multilib (https://bugs.archlinux.org/task/29951)
@@ -140,22 +104,6 @@ package_llvm-libs-julia() {
   # https://bugs.archlinux.org/task/28479
   install -d "$pkgdir/usr/lib/bfd-plugins"
   ln -s ../LLVMgold.so "$pkgdir/usr/lib/bfd-plugins/LLVMgold.so"
-
-  install -Dm644 "$srcdir/llvm-project-julia-$pkgver-$_julia_rel/llvm/LICENSE.TXT" \
-          "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-}
-
-package_llvm-ocaml-julia() {
-  _ocaml_ver=$(ocamlc --version)
-
-  pkgdesc="OCaml bindings for LLVM (with patch for julia)"
-  depends=("llvm-julia=$pkgver-$pkgrel" "ocaml=$_ocaml_ver" ocaml-ctypes)
-  conflicts=("llvm-ocaml")
-  provides=("llvm-ocaml=$pkgver-$pkgrel")
-
-  install -d "$pkgdir"/{usr/lib,usr/share/doc/llvm-ocaml}
-  cp -a "$srcdir/ocaml.lib" "$pkgdir/usr/lib/ocaml"
-  cp -a "$srcdir/ocaml.doc" "$pkgdir/usr/share/doc/llvm-ocaml/html"
 
   install -Dm644 "$srcdir/llvm-project-julia-$pkgver-$_julia_rel/llvm/LICENSE.TXT" \
           "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
