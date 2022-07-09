@@ -2,7 +2,7 @@
 
 pkgname=libpdfium-nojs
 pkgver=5060.r1.558516c323
-pkgrel=2
+pkgrel=3
 pkgdesc="Open-source PDF rendering engine."
 arch=('x86_64')
 url="https://pdfium.googlesource.com/pdfium/"
@@ -29,13 +29,10 @@ pkgver() {
 
   cd $srcdir/pdfium
   
-  # Default branch can be either master or main
-  local _default_branch=$(git symbolic-ref refs/remotes/origin/HEAD | cut -f4 -d"/")
-  
   # Version = branch name/number + number of commits since branch creation
   # + short head
   printf  "%s.r%s.%s" $(git rev-parse --abbrev-ref HEAD | cut -d '/' -f2)\
-   $(git rev-list --count $_default_branch..) $(git rev-parse --short HEAD)
+   $(git rev-list --count main..) $(git rev-parse --short HEAD)
 
 }
 
@@ -78,7 +75,7 @@ _prepare() {
   # Download and decode shim header script needed to unbundle icu (gittiles is weird)
   mkdir -p "$srcdir/pdfium/tools/generate_shim_headers/"
   echo "Downloading generate_shim_headers script from Chromium."
-  curl https://chromium.googlesource.com/chromium/src/+/master/tools/generate_shim_headers/generate_shim_headers.py?format=TEXT \
+  curl https://chromium.googlesource.com/chromium/src/+/main/tools/generate_shim_headers/generate_shim_headers.py?format=TEXT \
     | base64 --decode > "$srcdir/pdfium/tools/generate_shim_headers/generate_shim_headers.py"
   echo "Done."
   
