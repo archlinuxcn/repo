@@ -1,7 +1,7 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 _pkgname=xemu
 pkgname=$_pkgname-git
-pkgver=0.7.0.r60.gcc21fbea78
+pkgver=0.7.58.r0.g6f878ede01
 pkgrel=1
 pkgdesc="Original Xbox emulator (fork of XQEMU)"
 arch=('x86_64')
@@ -21,9 +21,8 @@ makedepends=(
 	'openssl'
 	'pixman'
 	'python-yaml'
-	'samurai'
-	'tomlplusplus>=3.1.0'
-	'xxhash>=0.7.4.r137'
+	'tomlplusplus>=3.1'
+	'xxhash>=0.8'
 )
 provides=("$_pkgname")
 conflicts=("$_pkgname")
@@ -36,8 +35,10 @@ source=(
 	'imgui::git+https://github.com/ocornut/imgui.git'
 	'implot::git+https://github.com/epezent/implot.git'
 	'keycodemapdb::git+https://gitlab.com/qemu-project/keycodemapdb.git'
+	'nv2a_vsh_cpu::git+https://github.com/abaire/nv2a_vsh_cpu.git'
 )
 b2sums=(
+	'SKIP'
 	'SKIP'
 	'SKIP'
 	'SKIP'
@@ -49,34 +50,31 @@ b2sums=(
 
 pkgver() {
 	cd $_pkgname
-	git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
 	cd $_pkgname
-	git submodule init genconfig tests/fp/berkeley-{soft,test}float-3 ui/{keycodemapdb,thirdparty/{imgui,implot}}
 	git config submodule.genconfig.url ../genconfig
+	git config submodule.hw/xbox/nv2a/thirdparty/nv2a_vsh_cpu.url ../nv2a_vsh_cpu
 	git config submodule.tests/fp/berkeley-softfloat-3.url ../berkeley-softfloat-3
 	git config submodule.tests/fp/berkeley-testfloat-3.url ../berkeley-testfloat-3
 	git config submodule.ui/keycodemapdb.url ../keycodemapdb
 	git config submodule.ui/thirdparty/imgui.url ../imgui
 	git config submodule.ui/thirdparty/implot.url ../implot
 	git submodule update
+	mkdir ../build tomlplusplus/include
 	python scripts/gen-license.py > XEMU_LICENSE
-	# unbundle tomlplusplus
-	sed -i 's/<toml\.hpp>/<toml++\/toml.h>/' genconfig/cnode.h toml.cpp ui/xemu-settings.cc
-	# unbundle xxhash
-	sed -i 's/"util\/xxHash\/xxh3\.h"/<xxh3.h>/' util/fast-hash.c
 }
 
 build() {
-	cd $_pkgname
-	./configure \
+	cd build
+	../$_pkgname/configure \
 		--audio-drv-list="sdl" \
 		--disable-debug-info \
 		--enable-slirp=system \
 		--extra-cflags="-DXBOX=1" \
-		--ninja=samu \
+		--ninja="$NINJA" \
 		--target-list=i386-softmmu \
 		--with-git-submodules=ignore
 	make qemu-system-i386
@@ -96,10 +94,10 @@ package() {
 	)
 	cd $_pkgname
 	# shellcheck disable=SC2154
-	install -Dm755 build/qemu-system-i386 "$pkgdir"/usr/bin/$_pkgname
+	install -Dm755 ../build/qemu-system-i386 "$pkgdir"/usr/bin/$_pkgname
 	install -Dm644 ui/xemu.desktop "$pkgdir"/usr/share/applications/$_pkgname.desktop
-	for size in 24 32 48 256 512; do
-		install -Dm644 ui/icons/xemu_${size}x${size}.png "$pkgdir"/usr/share/icons/hicolor/${size}x${size}/apps/$_pkgname.png
+	for _size in 16 24 32 48 64 128 256 512; do
+		install -Dm644 ui/icons/xemu_${_size}x${_size}.png "$pkgdir"/usr/share/icons/hicolor/${_size}x${_size}/apps/$_pkgname.png
 	done
 	install -Dm644 ui/icons/xemu.svg "$pkgdir"/usr/share/icons/hicolor/scalable/apps/$_pkgname.svg
 	install -Dm644 XEMU_LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE.txt
