@@ -36,17 +36,13 @@ makedepends=(
 options=(!emptydirs !strip)
 source=("${pkgname}::git+https://github.com/Slicer/Slicer.git#tag=v${pkgver}"
         "${pkgname}.svg::https://www.slicer.org/assets/img/3D-Slicer-Mark.svg"
-        "itk_limits.patch"
 )
 sha512sums=('SKIP'
-            '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014'
-            'e0c19c5fc2580366b91b16f20e6b8914dbb003a5ce2741fd5b2d2f5520724266c037b1edac33dc00a344a96c627743c5670f861065e28d81a4b207ab8082cc2e')
+            '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014')
 
 prepare() {
   # find sqlite with cmake's FindSQLite3
   sed -i 's/find_package(${proj} REQUIRED)/find_package(SQLite3 REQUIRED)/' "${srcdir}/${pkgname}/SuperBuild/External_sqlite.cmake"
-  # quick fix clang:12/gcc:11 <limits> header regression
-  git -C "${srcdir}/${pkgname}" apply -v "${srcdir}/itk_limits.patch"
   echo "Creating desktop file"
   gendesk -f -n --pkgname ${pkgname} \
     --pkgdesc "${pkgdesc}" \
