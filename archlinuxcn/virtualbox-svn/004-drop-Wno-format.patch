@@ -1,0 +1,130 @@
+From ff59d7f89a64a9386b3b97a3e7b062df59474192 Mon Sep 17 00:00:00 2001
+From: Christian Hesse <mail@eworm.de>
+Date: Tue, 18 Jan 2022 21:16:33 +0100
+Subject: [PATCH 1/1] drop -Wno-format
+
+---
+ src/VBox/Devices/EFI/Firmware/Config.kmk                      | 2 +-
+ .../EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLib.inf  | 4 ++--
+ .../CryptoPkg/Library/OpensslLib/OpensslLibCrypto.inf         | 4 ++--
+ src/VBox/Devices/Makefile.kmk                                 | 2 +-
+ src/VBox/Devices/PC/ipxe/Makefile.kmk                         | 2 +-
+ src/VBox/ExtPacks/VBoxDTrace/Makefile.kmk                     | 2 +-
+ src/VBox/Main/webservice/Makefile.kmk                         | 2 --
+ 7 files changed, 8 insertions(+), 10 deletions(-)
+
+diff --git a/src/VBox/Devices/EFI/Firmware/Config.kmk b/src/VBox/Devices/EFI/Firmware/Config.kmk
+index a5affd4d..d8dd9ed0 100644
+--- a/src/VBox/Devices/EFI/Firmware/Config.kmk
++++ b/src/VBox/Devices/EFI/Firmware/Config.kmk
+@@ -126,7 +126,7 @@ TEMPLATE_VBoxEfiBldProg_LIBS = \
+ ifn1of ($(KBUILD_HOST),win) # This stuff isn't up to our standard at all! :/
+  TEMPLATE_VBoxEfiBldProg_CFLAGS = $(filter-out -pedantic,$(TEMPLATE_VBoxBldProg_CFLAGS)) \
+  	-Wno-sign-compare -Wno-missing-prototypes -Wno-strict-prototypes \
+-	-Wno-implicit-function-declaration -Wno-missing-declarations -Wno-shadow -Wno-format \
++	-Wno-implicit-function-declaration -Wno-missing-declarations -Wno-shadow \
+ 	-Wno-empty-body -Wno-unused-parameter -Wno-unused-variable -Wno-unused-label
+  TEMPLATE_VBoxEfiBldProg_CXXFLAGS = $(filter-out -pedantic,$(TEMPLATE_VBoxBldProg_CXXFLAGS)) \
+  	-Wno-all -Wno-shadow -Wno-empty-body -Wno-unused-parameter -Wno-unused-variable \
+diff --git a/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLib.inf b/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLib.inf
+index 83831a1a..8b22fa0b 100644
+--- a/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLib.inf
++++ b/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLib.inf
+@@ -618,10 +618,10 @@
+   #   -Werror=unused-but-set-variable: Warn whenever a local variable is assigned to, but otherwise unused (aside from its declaration).
+   #
+   GCC:*_*_IA32_CC_FLAGS    = -U_WIN32 -U_WIN64 $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-variable
+-  GCC:*_*_X64_CC_FLAGS     = -U_WIN32 -U_WIN64 $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -DNO_MSABI_VA_FUNCS
++  GCC:*_*_X64_CC_FLAGS     = -U_WIN32 -U_WIN64 $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=format -Wno-error=unused-but-set-variable -DNO_MSABI_VA_FUNCS
+   GCC:*_*_ARM_CC_FLAGS     = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-variable
+-  GCC:*_*_AARCH64_CC_FLAGS = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-format -Wno-error=unused-but-set-variable
+-  GCC:*_*_RISCV64_CC_FLAGS = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-format -Wno-error=unused-but-set-variable
++  GCC:*_*_AARCH64_CC_FLAGS = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-variable
++  GCC:*_*_RISCV64_CC_FLAGS = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-variable
+   GCC:*_CLANG35_*_CC_FLAGS = -std=c99 -Wno-error=uninitialized
+   GCC:*_CLANG38_*_CC_FLAGS = -std=c99 -Wno-error=uninitialized
+   GCC:*_CLANGPDB_*_CC_FLAGS = -std=c99 -Wno-error=uninitialized -Wno-error=incompatible-pointer-types -Wno-error=pointer-sign -Wno-error=implicit-function-declaration -Wno-error=ignored-pragma-optimize
+ 
+diff --git a/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLibCrypto.inf b/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLibCrypto.inf
+index fe28ee67..de03e6df 100644
+--- a/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLibCrypto.inf
++++ b/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLibCrypto.inf
+@@ -567,10 +567,10 @@
+   #   -Werror=unused-but-set-variable: Warn whenever a local variable is assigned to, but otherwise unused (aside from its declaration).
+   #
+   GCC:*_*_IA32_CC_FLAGS    = -U_WIN32 -U_WIN64 $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-variable
+-  GCC:*_*_X64_CC_FLAGS     = -U_WIN32 -U_WIN64 $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -DNO_MSABI_VA_FUNCS
++  GCC:*_*_X64_CC_FLAGS     = -U_WIN32 -U_WIN64 $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=format -Wno-error=unused-but-set-variable -DNO_MSABI_VA_FUNCS
+   GCC:*_*_ARM_CC_FLAGS     = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-variable
+-  GCC:*_*_AARCH64_CC_FLAGS = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-format -Wno-error=unused-but-set-variable
+-  GCC:*_*_RISCV64_CC_FLAGS = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-format -Wno-error=unused-but-set-variable
++  GCC:*_*_AARCH64_CC_FLAGS = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-variable
++  GCC:*_*_RISCV64_CC_FLAGS = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-variable
+   GCC:*_CLANG35_*_CC_FLAGS = -std=c99 -Wno-error=uninitialized
+   GCC:*_CLANG38_*_CC_FLAGS = -std=c99 -Wno-error=uninitialized
+   GCC:*_CLANGPDB_*_CC_FLAGS = -std=c99 -Wno-error=uninitialized -Wno-error=incompatible-pointer-types -Wno-error=pointer-sign -Wno-error=implicit-function-declaration -Wno-error=ignored-pragma-optimize
+ 
+diff --git a/src/VBox/Devices/Makefile.kmk b/src/VBox/Devices/Makefile.kmk
+index bd64e790..136e203b 100644
+--- a/src/VBox/Devices/Makefile.kmk
++++ b/src/VBox/Devices/Makefile.kmk
+@@ -727,7 +727,7 @@ endif
+   ifeq ($(KBUILD_TARGET),win)
+    $(file)_CFLAGS = -wd4018
+   else
+-   $(file)_CFLAGS += -Wno-sign-compare -Wno-format -Wno-bad-function-cast
++   $(file)_CFLAGS += -Wno-sign-compare -Wno-bad-function-cast
+   endif
+  endef
+ 
+diff --git a/src/VBox/Devices/PC/ipxe/Makefile.kmk b/src/VBox/Devices/PC/ipxe/Makefile.kmk
+index d35d50c0..64d0079b 100644
+--- a/src/VBox/Devices/PC/ipxe/Makefile.kmk
++++ b/src/VBox/Devices/PC/ipxe/Makefile.kmk
+@@ -358,7 +358,7 @@ endif
+  #
+  BLDPROGS += ipxezbin
+  ipxezbin_TEMPLATE = VBoxBldProg
+- ipxezbin_CFLAGS   = -Wno-format -Wno-unused-function
++ ipxezbin_CFLAGS   = -Wno-unused-function
+  ipxezbin_SOURCES  = src/util/zbin.c
+ 
+ endif
+diff --git a/src/VBox/ExtPacks/VBoxDTrace/Makefile.kmk b/src/VBox/ExtPacks/VBoxDTrace/Makefile.kmk
+index 4c1a863f..c1af03f6 100644
+--- a/src/VBox/ExtPacks/VBoxDTrace/Makefile.kmk
++++ b/src/VBox/ExtPacks/VBoxDTrace/Makefile.kmk
+@@ -107,7 +107,7 @@ if defined(VBOX_WITH_EXTPACK_VBOXDTRACE) && defined(VBOX_WITH_EXTPACK)
+  VBoxDTraceCmd_DEFS.win = YY_USE_PROTOS=1 YYENABLE_NLS=0 YYLTYPE_IS_TRIVIAL=0
+  VBoxDTraceCmd_SDKS = VBOX_ZLIB
+  ifn1of ($(KBUILD_TARGET), win)
+-  VBoxDTraceCmd_CFLAGS = -Wno-format $(VBOX_GCC_Wno-overlength-strings) -Wno-sign-compare -Wno-strict-prototypes -Wno-missing-prototypes -Wno-missing-declarations -Wno-shadow
++  VBoxDTraceCmd_CFLAGS = $(VBOX_GCC_Wno-overlength-strings) -Wno-sign-compare -Wno-strict-prototypes -Wno-missing-prototypes -Wno-missing-declarations -Wno-shadow
+  endif
+  VBoxDTraceCmd_INCS = \
+  	include \
+diff --git a/src/VBox/Main/webservice/Makefile.kmk b/src/VBox/Main/webservice/Makefile.kmk
+index 6e088b14..3c1d9fa7 100644
+--- a/src/VBox/Main/webservice/Makefile.kmk
++++ b/src/VBox/Main/webservice/Makefile.kmk
+@@ -250,7 +250,7 @@ ifdef VBOX_GSOAP_INSTALLED
+   ifn1of ($(KBUILD_TARGET), win)
+    vboxsoap_CXXFLAGS += -Wno-shadow -Wno-parentheses $(VBOX_GCC_Wno-literal-suffix) \
+    	$(VBOX_GCC_Wno-stringop-overflow) $(VBOX_GCC_Wno-stringop-truncation) \
+-   	$(VBOX_GCC_Wno-vla) -Wno-format -Wno-deprecated-declarations $(VBOX_GCC_fno-printf-return-value)
++   	$(VBOX_GCC_Wno-vla) -Wno-deprecated-declarations $(VBOX_GCC_fno-printf-return-value)
+    ifn1of ($(KBUILD_TYPE), debug) # Save time+memory by using -O0 instead of -O2.
+     vboxsoap_CXXFLAGS += -O0 ## @todo this could be interesting for g++ (not clang++): -fcprop-registers
+    endif
+@@ -321,7 +321,6 @@ ifdef VBOX_GSOAP_INSTALLED
+   	$(VBOXWEB_OUT_DIR)/gsoap_copy_all_ts
+   ifn1of ($(KBUILD_TARGET), win)
+    $(VBOX_GSOAP_CXX_SOURCES)_CXXFLAGS = \
+-	-Wno-format \
+ 	$(VBOX_GCC_Wno-int-in-bool-context) \
+ 	$(VBOX_GCC_Wno-logical-op)
+    # currently necessary when compiling against OpenSSL 1.0 due to a missing
+
+-- 
+2.34.1
+

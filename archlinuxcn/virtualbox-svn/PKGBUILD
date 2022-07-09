@@ -9,7 +9,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=95063
+pkgver=95556
 pkgrel=1
 arch=('x86_64')
 url='http://virtualbox.org'
@@ -66,8 +66,8 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         'vboxweb.service'
         'vboxreload'
         '001-disable-update.patch'
+        '004-drop-Wno-format.patch'
         '005-gsoap-build.patch'
-        '006-rdesktop-vrdp-keymap-path.patch'
         '008-no-vboxvideo.patch'
         '009-i3wm.patch'
         '012-vbglR3GuestCtrlDetectPeekGetCancelSupport.patch'
@@ -116,8 +116,8 @@ build() {
     source ./env.sh
     kmk
 
-    echo 'Build rdesktop-vrdp'
-    kmk -C src/VBox/RDP/client-1.8.4
+    #echo 'Build rdesktop-vrdp'
+    #kmk -C src/VBox/RDP/client-1.8.4
 
     echo 'Build VNC extension pack'
     kmk -C src/VBox/ExtPacks/VNC packing
@@ -151,8 +151,8 @@ package_virtualbox-svn() {
         ln -sf VBox "$pkgdir/usr/bin/$i"
         ln -sf VBox "$pkgdir/usr/bin/${i,,}"
     done
-    install -m0755 VBoxTunctl "$pkgdir/usr/bin"
-    install -m0755 rdesktop-vrdp "$pkgdir/usr/bin"
+    #install -m0755 VBoxTunctl "$pkgdir/usr/bin"
+    #install -m0755 rdesktop-vrdp "$pkgdir/usr/bin"
     install -m0755 vboximg-mount "$pkgdir/usr/bin"
 
     # libraries
@@ -160,9 +160,9 @@ package_virtualbox-svn() {
     install -m0755 *.so "$pkgdir/usr/lib/virtualbox"
     install -m0644 *.r0 VBoxEFI*.fd "$pkgdir/usr/lib/virtualbox"
     ## setuid root binaries
-    install -m4755 VBoxSDL VirtualBoxVM VBoxHeadless VBoxNetDHCP VBoxNetAdpCtl VBoxNetNAT -t "$pkgdir/usr/lib/virtualbox"
+    install -m4755 VirtualBoxVM VBoxHeadless VBoxNetDHCP VBoxNetAdpCtl VBoxNetNAT -t "$pkgdir/usr/lib/virtualbox"
     ## other binaries
-    install -m0755 VirtualBox VBoxManage VBoxSVC VBoxExtPackHelperApp VBoxXPCOMIPCD VBoxTestOGL VBoxBalloonCtrl vboxwebsrv webtest -t "$pkgdir/usr/lib/virtualbox"
+    install -m0755 VirtualBox VBoxManage VBoxSVC VBoxExtPackHelperApp VBoxXPCOMIPCD VBoxTestOGL VBoxBalloonCtrl -t "$pkgdir/usr/lib/virtualbox"
 
     # components
     install -dm0755 "$pkgdir/usr/lib/virtualbox/components"
@@ -182,8 +182,8 @@ package_virtualbox-svn() {
     install -m0755 nls/*.qm -t "$pkgdir/usr/share/virtualbox/nls"
 
     # rdesktop keymaps
-    install -dm0755 "$pkgdir/usr/share/virtualbox/rdesktop-vrdp-keymaps"
-    install -m0644 rdesktop-vrdp-keymaps/* "$pkgdir/usr/share/virtualbox/rdesktop-vrdp-keymaps"
+    #install -dm0755 "$pkgdir/usr/share/virtualbox/rdesktop-vrdp-keymaps"
+    #install -m0644 rdesktop-vrdp-keymaps/* "$pkgdir/usr/share/virtualbox/rdesktop-vrdp-keymaps"
 
     # useless scripts
     install -m0755 VBoxCreateUSBNode.sh VBoxSysInfo.sh -t "$pkgdir/usr/share/virtualbox"
@@ -353,8 +353,8 @@ sha256sums=('SKIP'
             'e6e875ef186578b53106d7f6af48e426cdaf1b4e86834f01696b8ef1c685787f'
             '4001b5927348fe669a541e80526d4f9ea91b883805f102f7d571edbb482a9b9d'
             '9ee947c9b5ec5b25f52d3e72340fc3a57ca6e65a604e15b669ac582a3fb0dc1b'
+            '37e77dca542ee07152101fbfa81ab924dc36c19520320410e77df2a68c75cdd8'
             '7d2da8fe10a90f76bbfc80ad1f55df4414f118cd10e10abfb76070326abebd46'
-            '13c6ca9be0f91582445fd2a14a8c58a0625a15d9cb98cb6e8c2736d77ea976ab'
             '053bfeee8863f3ffdf2f0e3f9f0d77dc61dd32764700a97a7635fd8611e20491'
             'cd83f4c9f3befb344c7e143aec65550444647890b676d6ea8502d67c7c1b3d93'
             '81900e13d36630488accd8c0bfd2ceb69563fb2c4f0f171caba1cca59d438024'
