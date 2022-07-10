@@ -2,7 +2,7 @@
 # Contributor: Damir Perisa <damir.perisa@bluewin.ch>
 
 pkgname=stellarium
-pkgver=0.22.0
+pkgver=0.22.2
 pkgrel=1
 pkgdesc="A stellarium with great graphics and a nice database of sky-objects"
 arch=('x86_64')
@@ -13,7 +13,7 @@ depends=('libpng' 'libgl' 'freetype2' 'openssl' 'gpsd'
 makedepends=('cmake' 'mesa' 'qt5-tools')
 source=(https://github.com/Stellarium/stellarium/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz{,.asc})
 validpgpkeys=('79151C2E6351E7278DA1A730BF38D4D02A328DFF')  # Alexander Wolf <alex.v.wolf@gmail.com>
-sha256sums=('0b4dc23cf9054b5e76cd9bc5ad68e172eb221999e90af37e93667d04fe78c885'
+sha256sums=('31e965d32cafc0fbad212c7ef4efbeac988f909206013554e1fe35123ebb9376'
             'SKIP')
 
 build() {
