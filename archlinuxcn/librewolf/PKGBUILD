@@ -2,8 +2,8 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=102.0
-pkgrel=2
+pkgver=102.0.1
+pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
 license=(MPL GPL LGPL)
@@ -23,30 +23,30 @@ backup=('usr/lib/librewolf/librewolf.cfg'
         'usr/lib/librewolf/distribution/policies.json')
 options=(!emptydirs !makeflags !strip !lto !debug)
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
-# _source_tag="${pkgver}-${pkgrel}"
-_source_commit='328f531b1b18ca0ba4f96483db89eeb129c41c4c' # not 'stable', but current source head
+_source_tag="${pkgver}-${pkgrel}"
+# _source_commit='328f531b1b18ca0ba4f96483db89eeb129c41c4c' # not 'stable', but current source head
 _settings_tag='6.6'
 # _settings_commit='1a84d38bab56551f9ec2650644c4906650e75603' # hottest of fixes: 6.1 with a pref fix on top ^^
 install='librewolf.install'
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         https://raw.githubusercontent.com/archlinux/svntogit-packages/1f6f9abcdcb2a03f259602b4671208b15cc6d4b9/trunk/zstandard-0.18.0.diff
+        https://raw.githubusercontent.com/archlinux/svntogit-packages/62e2fb9a401dea5a1a1152fd0f0029123e8187e1/trunk/cbindgen-0.24.0.diff
         $pkgname.desktop
-        "git+https://gitlab.com/${pkgname}-community/browser/source.git#commit=${_source_commit}"
+        "git+https://gitlab.com/${pkgname}-community/browser/source.git#tag=${_source_tag}"
         "git+https://gitlab.com/${pkgname}-community/settings.git#tag=${_settings_tag}"
         "default192x192.png"
         "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
-        "0032-bmo-1773259-cbindgen-root_clip_chain-fix.patch"
         )
 # source_aarch64=()
-sha256sums=('01797f04bd8d65f4c7f628d7ce832bf52a0874433886e4d0d78ef33c1ca66abf'
+sha256sums=('7bba6ffd6e8e42d5c38aa2a453f5fa30dfc9ef150f2175aa0625edb68fddae70'
             'SKIP'
             'a6857ad2f2e2091c6c4fdcde21a59fbeb0138914c0e126df64b50a5af5ff63be'
+            '4628d136c3beada292e83cd8e89502cac4aa3836851b34259a665582a7713978'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
             'SKIP'
             'SKIP'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1'
-            '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d'
-            'd3ea2503dff0a602bb058153533ebccd8232e8aac1dc82437a55d724b8d22bc2')
+            '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d')
 # sha256sums_aarch64=()
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
@@ -150,6 +150,9 @@ fi
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
   # patch -Np1 -i ${srcdir}/0001-Use-remoting-name-for-GDK-application-names.patch
 
+  # Unbreak build with cbindgen 0.24.0
+  patch -Np1 -i ../cbindgen-0.24.0.diff
+
   # Unbreak build with python-zstandard 0.18.0
   patch -Np1 -i ../zstandard-0.18.0.diff
 
@@ -157,14 +160,6 @@ fi
 
   # pgo improvements
   patch -Np1 -i ../0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch
-
-  # address build failure when building with most recent (>=0.24.0) cbindgen
-  # also catch systems (Manjaro, at the time of writing this) where cbindgen
-  # is not yet at 24. probably not elegant, but it works.
-  _cbindgen_ver=$(cbindgen --version | sed -e 's/cbindgen[[:space:]]0.\([0-9]*\).[0-9]/\1/g')
-  if [ "${_cbindgen_ver}" -gt 23 ]; then
-    patch -Np1 -i ../0032-bmo-1773259-cbindgen-root_clip_chain-fix.patch
-  fi
 
   # pip issues seem to be fixed upstream?
 
