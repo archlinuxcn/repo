@@ -1,3 +1,58 @@
+## 10
+
+* `aur`
+  + support environment files (`$AUR_ENV`, defaults to `$XDG_CONFIG_HOME/aurutils/env`)
+  + add `--env`
+
+* `aur-build`
+  + use `AUR_PACMAN_AUTH` as elevation command (prior: `PACMAN_AUTH`)
+  + use `$PWD` as default value for `$LOGDEST`
+  + bug fixes for gpg signing (`--sign`)
+
+* `aur-chroot`
+  + use `AUR_PACMAN_AUTH` as elevation command (prior: `PACMAN_AUTH`)
+
+* `aur-fetch`
+  + `--sync=auto`: run `git-merge` instead of `git-reset`
+    - add `--ff`, `--ff-only`, `--no-ff`, `--no-commit` options
+    - fix a bug where setting `aurutils.rebase` affected unrelated targets
+    - set default author for merge commits to `aurutils@localhost`
+  + `--sync=auto` now preserves local changes by default
+    - `--discard` (`-f`) resets the branch on new upstream commits
+  + add `--reset`, `--rebase`, `--auto` (`--sync=reset`, `--sync=rebase`, `--sync=auto`)
+  + support multiple branches, with commits merged from `origin/master`
+
+* `aur-pkglist`
+  + output is now independent of command-line argument order
+  + deprecate `-I`, `-S`, `-u`
+    - renamed to: `-i` (`--info`), `-s` (`--search`) `-q` (`--quiet`)
+  + deprecate `-J` (`--json`)
+    - behaves like `--plain`, remove pretty-printing with `jq`
+  + add `--systime`
+
+* `aur-repo`
+  + `-q` now applies to `--list` and `--upgrades`
+  + add `--list-attr`
+  + deprecate `--status-file`
+
+* `aur-search`
+  + add `--color` (`auto`, `always`, `none`)
+
+* `aur-srcver`
+  + remove `-E`, `--env` (deprecated in v8)
+
+* `aur-sync`
+  + use pkgspec `<REPOSITORY>/<PACKAGE>` format for `--ignore-file`
+    - support for sections (introduced with v6.3) is removed (#880)
+    - <PACKAGE> ignores apply to all local repositories
+  + add `--rebase`, `--reset` options for `aur-fetch`
+  + exit 22 on dependency cycles (v7 regression)
+  + filter dependency graph by pkgname, not depends (v7 regression)
+  + store `build.ninja` files in `$XDG_RUNTIME_DIR/aurutils`
+
+* `completions`
+  + major overhaul of zsh completions (#990)
+
 ## 9.6
 
 * `aur-pkglist`
