@@ -1,6 +1,6 @@
 pkgname='alacritty-git'
 _pkgname="alacritty"
-pkgver=0.11.0.2001.g694a52bc
+pkgver=0.11.0.2003.g40bbdce6
 pkgrel=1
 epoch=1
 arch=('x86_64' 'i686')
@@ -33,7 +33,7 @@ package_alacritty-git() {
 
 	install -D -m755 "target/release/alacritty" "$pkgdir/usr/bin/alacritty"
 	install -D -m644 "extra/alacritty.man" "$pkgdir/usr/share/man/man1/alacritty.1"
-	install -D -m644 "extra/linux/io.alacritty.Alacritty.appdata.xml" "$pkgdir/usr/share/appdata/io.alacritty.Alacritty.appdata.xml"
+	install -D -m644 "extra/linux/org.alacritty.Alacritty.appdata.xml" "$pkgdir/usr/share/appdata/org.alacritty.Alacritty.appdata.xml"
 	install -D -m644 "alacritty.yml" "$pkgdir/usr/share/doc/alacritty/example/alacritty.yml"
 	install -D -m644 "extra/completions/alacritty.bash" "$pkgdir/usr/share/bash-completion/completions/alacritty"
 	install -D -m644 "extra/completions/_alacritty" "$pkgdir/usr/share/zsh/site-functions/_alacritty"
