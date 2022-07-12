@@ -17,7 +17,4 @@ def pre_build():
         if line.startswith('XWIDGETS='):
             line = 'XWIDGETS="YES"'
 
-        # fix libxpm
-        if line.startswith('depends='):
-            line = 'depends=("${depends_nox[@]}" "harfbuzz" "libxpm")'
         print(line)
