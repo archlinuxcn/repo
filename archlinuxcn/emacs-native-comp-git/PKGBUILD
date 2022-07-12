@@ -45,9 +45,9 @@ GPM=              # Mouse support in Linux console using gpmd.
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
                   # Bitmap fonts only, 1337!
                
-PGTK="YES"
+PGTK=             # Use native GTK3 build. Supports Wayland, yay!
 
-GTK3="YES"        # GTK3 old windowing interface.
+GTK3=        # GTK3 old windowing interface.
 
 LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   #
@@ -57,7 +57,7 @@ LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   # for some tips on using outline fonts with
                   # Xft, if you choose no toolkit or Lucid.
 
-XI2="YES"         # Use Xinput2 support.
+XI2=         # Use Xinput2 support.
                   # https://www.x.org/releases/X11R7.7/doc/inputproto/XI2proto.txt
 
 ALSA=             # Linux sound support.
@@ -70,18 +70,18 @@ DOCS_HTML=        # Generate and install html documentation.
                
 DOCS_PDF=         # Generate and install pdf documentation.
                
-NOGZ="YES"        # Don't compress .el files.
+NOGZ=        # Don't compress .el files.
 ################################################################################
 
 ################################################################################
 if [[ $CLI == "YES" ]] ; then
-  pkgname="emacs-nox-git"
+  pkgname="emacs-native-comp-git"
 else
   pkgname="emacs-native-comp-git"
 fi
-pkgver=29.0.50.158122
+pkgver=29.0.50.158141
 pkgrel=1
-pkgdesc="GNU Emacs. Development master branch."
+pkgdesc="GNU Emacs. Development master branch. AOT&JIT enabled."
 arch=('x86_64')
 url="http://www.gnu.org/software/emacs/"
 license=('GPL3')
@@ -318,7 +318,7 @@ _conf+=('--program-transform-name=s/\([ec]tags\)/\1.emacs/')
   # are reusing your src directory!
   #
 
-  if [[ $JIT=="YES" ]] && [[ $AOT == "YES" ]]; then
+  if [[ $JIT== ]] && [[ $AOT == "YES" ]]; then
     make NATIVE_FULL_AOT=1
   else
     make
