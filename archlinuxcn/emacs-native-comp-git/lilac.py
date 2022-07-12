@@ -6,13 +6,21 @@ def pre_build():
     aur_pre_build('emacs-git', maintainers=['toropisco'])
     checks = ''
     for line in edit_file('PKGBUILD'):
-        if line.startswith('  pkgname="emacs-git"'):
+        if 'pkgdesc=' in line:
+            line = 'pkgdesc="GNU Emacs. Development master branch. AOT&JIT enabled."'
+
+        if 'pkgname=' in line:
             line = '  pkgname="emacs-native-comp-git"'
             checks = checks + '1'
 
         if line.startswith('replaces='):
             checks = checks + '2'
+            line = 'replaces=("emacs-native-comp-nopgtk-git")'
             continue
+
+        #disable all flags
+        if '="YES"' in line:
+            line = line.replace('="YES"', '=')
 
         if line.startswith('JIT='):
             line = 'JIT="YES"'
@@ -25,13 +33,9 @@ def pre_build():
             line = 'XWIDGETS="YES"'
             checks = checks + '5'
 
-        if line.startswith('PGTK='):
-            line = 'PGTK="YES"'
-            checks = checks + '6'
-
         if line.startswith('install='):
             line = 'install=emacs-git.install'
-            checks = checks + '7'
+            checks = checks + '6'
 
         #if line.startswith('source='):
         #    line = 'source=("emacs-git::git+https://github.com/emacs-mirror/emacs.git")'
@@ -40,5 +44,5 @@ def pre_build():
         print(line)
 
     # make sure PKGBUILD is modified
-    if len(checks) != 7:
+    if len(checks) != 6:
         raise ValueError('PKGBUILD editing not completed. checks=' + checks)
