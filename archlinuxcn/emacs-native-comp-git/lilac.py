@@ -44,5 +44,6 @@ def pre_build():
         print(line)
 
     # make sure PKGBUILD is modified
-    if len(checks) != 6:
+    # it's 7 because there are 2 pkgname (if $CLI)
+    if len(checks) != 7:
         raise ValueError('PKGBUILD editing not completed. checks=' + checks)
