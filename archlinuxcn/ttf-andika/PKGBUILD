@@ -1,0 +1,37 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: Anton Leontiev <scileont /at/ gmail.com>
+# Contributor: Caleb Maclennan <caleb@alerque.com>
+# Contributor: Baptiste Grenier <baptiste@bapt.name>
+
+pkgbase=ttf-andika
+pkgname=('ttf-andika' 'woff-andika' 'woff2-andika')
+pkgver=6.101
+pkgrel=1
+pkgdesc='A sans serif, Unicode-compliant font designed especially for literacy use'
+url='https://software.sil.org/andika/'
+arch=('any')
+license=('OFL')
+conflicts=('ttf-sil-fonts<=6')
+source=(https://github.com/silnrsi/font-andika/releases/download/v$pkgver/Andika-$pkgver.tar.xz{,.asc})
+b2sums=('3fb82149db0213d03a69d22a57237ae15786bae01775f72686117da7b2ce00388563212f43cc1641c982e81f73826d2eb0531b439bb97c06e456d6727813b696'
+        'SKIP')
+validpgpkeys=('15D41BC02EB807D405EFFAF6C9183BEA0288CDEE') # Robert de Vos <bobby_devos@sil.org>
+
+package_ttf-andika() {
+    cd Andika-$pkgver
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF" Andika-*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" README.txt FONTLOG.txt documentation/pdf/*
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" OFL.txt
+}
+package_woff-andika() {
+    cd Andika-$pkgver
+    install -Dm644 -t "$pkgdir/usr/share/fonts/WOFF" web/Andika-*.woff
+    install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" README.txt FONTLOG.txt documentation/pdf/*
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" OFL.txt
+}
+package_woff2-andika() {
+    cd Andika-$pkgver
+    install -Dm644 -t "$pkgdir/usr/share/fonts/WOFF2" web/Andika-*.woff2
+    install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" README.txt FONTLOG.txt documentation/pdf/*
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" OFL.txt
+}
