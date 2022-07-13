@@ -1,25 +1,47 @@
-From decc162399a0ffb55e2b46264899d5ebfb786242 Mon Sep 17 00:00:00 2001
+From fc0ebe128bf0c9612b87e4480b87db3d4ed9d108 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
-Date: Wed, 2 Dec 2020 15:29:40 -0500
+Date: Wed, 13 Jul 2022 09:08:18 -0400
 Subject: [PATCH] Do not force fusion style
 
 ---
- src/appshell/appshell.cpp | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ src/appshell/appshell.cpp         |  1 -
+ src/framework/ui/view/uitheme.cpp | 10 +++++++++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/src/appshell/appshell.cpp b/src/appshell/appshell.cpp
-index 8aa0083cd..d85ba9a9c 100644
+index 4bd0d1065e..d36e48dbc7 100644
 --- a/src/appshell/appshell.cpp
 +++ b/src/appshell/appshell.cpp
-@@ -37,7 +37,7 @@ AppShell::AppShell()
- 
- int AppShell::run(int argc, char** argv, std::function<void()> moduleSetup)
- {
+@@ -61,7 +61,6 @@ int AppShell::run(int argc, char** argv)
+     // ====================================================
+     // Setup global Qt application variables
+     // ====================================================
 -    qputenv("QT_STYLE_OVERRIDE", "Fusion");
-+    // qputenv("QT_STYLE_OVERRIDE", "Fusion");
-     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+     qputenv("QML_DISABLE_DISK_CACHE", "true");
  
      const char* appName;
+diff --git a/src/framework/ui/view/uitheme.cpp b/src/framework/ui/view/uitheme.cpp
+index cd42b1d878..652d0b262d 100644
+--- a/src/framework/ui/view/uitheme.cpp
++++ b/src/framework/ui/view/uitheme.cpp
+@@ -89,8 +89,16 @@ struct FontConfig
+     FontSizeType sizeType = FontSizeType::BODY;
+ };
+ 
++static QString _get_style_name()
++{
++    auto style = QApplication::style();
++    if (style)
++        return style->objectName();
++    return "Fusion";
++}
++
+ UiTheme::UiTheme()
+-    : QProxyStyle(QStyleFactory::create("Fusion"))
++    : QProxyStyle(QStyleFactory::create(_get_style_name()))
+ {
+     setObjectName("UiTheme");
+ }
 -- 
-2.29.2
+2.37.0
 
