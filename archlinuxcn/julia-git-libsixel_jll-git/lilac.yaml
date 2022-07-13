@@ -16,14 +16,11 @@ repo_depends:
   - llvm-julia: llvm-libs-julia
   - libgit2-julia
   - julia-pkg-scripts
-  - libsixel
 
 update_on:
   - source: vcs
   - alias: alpm-lilac
     alpm: julia-git
     provided: julia
-  - alias: alpm-lilac
-    alpm: libsixel
   - source: manual
     manual: 1
