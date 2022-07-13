@@ -1,0 +1,81 @@
+# Contributor: Dr.Egg <hondoheal@gmail.com>
+# Contributor: Stefan Husmann <stefan-husmann@t-online.de>
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+
+pkgname=musescore-git
+_realver=2.0.4
+pkgver=26309.9f13d1cc1e
+pkgrel=1
+epoch=1
+pkgdesc="A music score editor - git-version"
+arch=(aarch64 i686 x86_64)
+url="http://www.musescore.org/en/"
+license=('GPL')
+depends=('shared-mime-info' 'alsa-lib' 'zlib' 'libvorbis'
+         'qt5-base' 'qt5-networkauth' 'qt5-quickcontrols2'
+         'qt5-svg' 'qt5-tools' 'qt5-x11extras' 'qt5-xmlpatterns'
+         'portaudio' 'libpulse' 'libsndfile' 'libogg' 'gcc-libs'
+         'portmidi')
+makedepends=('cmake' 'doxygen' 'git' 'lame')
+optdepends=('jack')
+conflicts=("musescore" 'mscore' 'musescore-svn')
+provides=("musescore=${_realver}" 'musescore-svn')
+replaces=('musescore-svn')
+source=('git+https://github.com/musescore/MuseScore.git'
+  'mime.xml'
+  '0001-Do-not-force-fusion-style.patch')
+md5sums=('SKIP'
+         '969696178e56de36f9af37d7da61baaa'
+         '6995ea515f7f21565669ce3377616ef3')
+options=(strip debug)
+
+pkgver() {
+  cd MuseScore
+
+  echo "$(git rev-list --count master).$(git rev-parse --short master)"
+}
+
+build() {
+  cd MuseScore
+
+  # Upstream add hard coded Fusion theme and they refuse to change it.
+  patch -Np1 < ../0001-Do-not-force-fusion-style.patch
+
+  # Fix Musescore + gcc's broken pch.
+  # `-DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-fPIC"`:
+  #     Make sure the pch compilation doesn't error, since musescore passes the
+  #     wrong flags to GCC.
+  # Not defining `__cpp_aggregate_nsdmi`:
+  #     Seems to cause GCC to ignore the PCH file.
+  # `-Wno-invalid-pch`:
+  #     Suppresses invalid PCH warning (doesn't seem to work....).
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  # LTO is otherwise incompatible with QRC
+  CXXFLAGS+=" -ffat-lto-objects"
+  export CFLAGS
+  export CXXFLAGS+=" -fPIC -std=gnu++11 -Wno-unused-local-typedefs -Wno-unused-parameter -Wno-maybe-uninitialized -Wno-unused-function -Wno-invalid-pch"
+  mkdir -p build.release
+  cd build.release
+  cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_SKIP_RPATH=On \
+    -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-fPIC" \
+    -DBUILD_UNIT_TESTS=Off
+  make lrelease -j1
+  make manpages -j1
+  make mscore_alias -j1
+  make
+}
+
+package() {
+  cd MuseScore/build.release
+
+  make DESTDIR="$pkgdir" install
+  install -Dm644 "$srcdir/mime.xml" \
+    "$pkgdir/usr/share/mime/packages/x-musescore.xml"
+  # ln -s mscore "$pkgdir/usr/bin/musescore"
+  # install -dm755 "$pkgdir/usr/share/mscore-2.0/manual"
+  # mv share/manual/plugins/* \
+  #   "$pkgdir/usr/share/mscore-2.0/manual/plugins"
+}
