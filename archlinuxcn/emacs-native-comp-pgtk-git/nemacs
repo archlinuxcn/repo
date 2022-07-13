@@ -1,0 +1,7 @@
+#!/usr/bin/bash -e
+
+# Hi there, if you need to use emacs in a console, but compile the
+# gui version, this is for your.
+
+[[ -x /usr/bin/emacs ]] && /usr/bin/emacs -nw $*
+
