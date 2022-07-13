@@ -6,7 +6,7 @@ pkgver=0.5.0
 pkgrel=1
 pkgdesc='Toolbox of models, callbacks, and datasets for AI/ML researchers'
 arch=('any')
-url='https://github.com/PyTorchLightning/lightning-bolts'
+url='https://github.com/Lightning-AI/lightning-bolts'
 license=('Apache')
 depends=(
   python-pytorch
@@ -14,9 +14,12 @@ depends=(
   python-torchmetrics
 )
 makedepends=(
-  python-setuptools
+  python-build
+  python-installer
+  python-wheel
+#  python-setuptools
 )
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/PyTorchLightning/lightning-bolts/archive/refs/tags/${pkgver}.tar.gz")
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Lightning-AI/lightning-bolts/archive/refs/tags/${pkgver}.tar.gz")
 sha512sums=('cf54f5ee436b226053ed94596a53da7d82f87c990142af968dfab2da3434fceb1e45c97ecedf518fee38a9e1890204572a31c48653ebfdf5078e7c57447c7bd5')
 
 get_pyver() {
@@ -25,12 +28,12 @@ get_pyver() {
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   rm -rf "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/tests"
 }
 # vim:set ts=2 sw=2 et:
