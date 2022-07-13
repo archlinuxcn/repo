@@ -2,7 +2,7 @@
 # Contributor: YuutaW <i@yuuta.moe>
 
 pkgname=rsshub-git
-pkgver=r7721.d874a000b
+pkgver=r7724.d4a196333
 pkgrel=1
 pkgdesc="Everything is RSSible"
 # The built package bundles native Node.js extensions like OpenCC
@@ -10,7 +10,8 @@ arch=('x86_64')
 url="https://rsshub.app/"
 license=('MIT')
 depends=('nodejs')
-makedepends=('npm' 'node-gyp' 'git')
+# rsshub uses yarn, and some deps (ex: re2) uses npm
+makedepends=('npm' 'yarn' 'node-gyp' 'git')
 optdepends=(
   'chromium: for routes using a headless browser'
 )
@@ -45,7 +46,7 @@ build() {
     cd $pkgname
     # Not using --production here as minify-docker.js needs devDependencies.
     # Unused dependencies will be cleaned up, anyway.
-    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install --cache "${srcdir}/npm-cache"
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true yarn --cache-folder "${srcdir}/yarn-cache"
 
     # Cleanup node modules, as Dockerfile does.
     node ./scripts/docker/minify-docker.js
