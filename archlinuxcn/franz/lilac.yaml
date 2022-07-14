@@ -2,18 +2,18 @@
 
 maintainers:
   - github: yuyichao
-build_prefix: extra-x86_64
+
 post_build: git_pkgbuild_commit
 repo_depends:
   - nvm
 
 update_on:
   - source: manual
-    manual: 5.7.0
+    manual: 5.9.2
   - source: alpm
     from_pattern: ^(\d+\.\d+.\d+).*
     to_pattern: \1
-    alpm: electron12
+    alpm: electron18
     repo: community
   - source: manual
-    manual: 2
+    manual: 1
