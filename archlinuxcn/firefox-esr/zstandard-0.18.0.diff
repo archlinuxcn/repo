@@ -1,0 +1,10 @@
+diff --git i/python/sites/mach.txt w/python/sites/mach.txt
+index 01f4f8c23da3b..85cfaf2b273ac 100644
+--- i/python/sites/mach.txt
++++ w/python/sites/mach.txt
+@@ -134,4 +134,4 @@ pypi-optional:glean-sdk==50.1.0:telemetry will not be collected
+ # We aren't (yet) able to pin packages in automation, so we have to
+ # support down to the oldest locally-installed version (5.4.2).
+ pypi-optional:psutil>=5.4.2,<=5.8.0:telemetry will be missing some data
+-pypi-optional:zstandard>=0.11.1,<=0.17.0:zstd archives will not be possible to extract
++pypi-optional:zstandard>=0.11.1,<=0.18.0:zstd archives will not be possible to extract
