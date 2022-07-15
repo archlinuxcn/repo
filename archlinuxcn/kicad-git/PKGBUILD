@@ -1,7 +1,7 @@
 # Maintainer: Nick Østergaard <oe.nick at gmail dot com>
 
 pkgname=kicad-git
-pkgver=6.99.0.r2439.g199d595ccd
+pkgver=6.99.0.r2446.g2de10080cd
 pkgrel=1
 pkgdesc="Electronic schematic and printed circuit board (PCB) design tools"
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ depends=(
   'opencascade'
   'python'
   'python-wxpython'
-  'wxgtk3'
+  'wxwidgets-gtk3'
 )
 makedepends=(
   'git'
@@ -44,10 +44,9 @@ build() {
   cmake .. -G Ninja\
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=lib \
     -DKICAD_USE_OCC=ON \
+    -DKICAD_USE_EGL=ON \
     -DKICAD_SCRIPTING_WXPYTHON=ON \
-    -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config-gtk3 \
     -DKICAD_BUILD_I18N=ON \
     -DKICAD_I18N_UNIX_STRICT_PATH=ON \
     -DKICAD_BUILD_QA_TESTS=OFF \
