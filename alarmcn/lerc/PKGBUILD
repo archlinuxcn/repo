@@ -1,15 +1,15 @@
 # Maintainer: Sylvain POULAIN <sylvain dot poulain at giscan dot com>
 
 pkgname=lerc
-pkgver=3.0
-pkgrel=3
+pkgver=4.0.0
+pkgrel=1
 pkgdesc='Limited Error Raster Compression library'
 arch=(aarch64 x86_64)
 url='https://github.com/Esri/lerc'
 license=('Apache-2.0')
 makedepends=('cmake')
 source=("https://github.com/Esri/lerc/archive/refs/tags/v$pkgver.tar.gz")
-sha512sums=('8e04d890c4d46528641b354ec3f47f2b0563e1740927ac894925a30f7de2b235cb3517ce7e477886bd3eb50ebd6c6e78f22d73d5500877e552d9e684e626293b')
+sha512sums=('36fe453b6e732f6bed554d1c1c5cd4668aec63593d6de11f12b659c7b9cbc059ac9aaacc6cea483b3257d522f1b07e13c299914d08b1f8aeb0bb2cde42ba47cf')
 
 build() {
   cd ${pkgname}-${pkgver}
