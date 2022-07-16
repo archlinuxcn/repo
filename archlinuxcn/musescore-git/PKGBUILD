@@ -103,4 +103,6 @@ package() {
   # mv share/manual/plugins/* \
   #   "$pkgdir/usr/share/mscore-2.0/manual/plugins"
   rm -rf "$pkgdir/usr/include/kddockwidgets"
+  rm -rf "$pkgdir/usr/lib/cmake/KDDockWidgets"
+  rm -rf "$pkgdir/usr/lib/libkddockwidgets.a"
 }
