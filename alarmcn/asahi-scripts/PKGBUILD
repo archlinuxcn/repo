@@ -1,0 +1,20 @@
+# Maintainer: Hector Martin <marcan@marcan.st>
+
+pkgname=asahi-scripts
+pkgver=20220712
+pkgrel=1
+pkgdesc='Asahi Linux maintenance scripts'
+arch=('any')
+url='http://asahilinux.org'
+license=('MIT')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AsahiLinux/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('9ca4217385db9b728fbfdc1422b6b4b3cd27c1c74dc70c39a1fb6ebc76f2dc46')
+b2sums=('9bc19ba7286dc3b3d40e47744c2e30ff698ce6aa2bfe73b8bf250184722ff6c270342536453cd9d2a17ff21523945e88d35ce118d90b5a5bedef0acec7fb0c10')
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make PREFIX=/usr DESTDIR=${pkgdir} install
+
+  install -Dm644 "$srcdir/${pkgname}-${pkgver}/LICENSE" \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
