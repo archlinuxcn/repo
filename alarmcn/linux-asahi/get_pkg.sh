@@ -11,6 +11,9 @@ for f in *; do
         get_pkg.sh)
             continue
             ;;
+        package.list)
+            continue
+            ;;
         *)
             rm -v "$f"
             ;;
