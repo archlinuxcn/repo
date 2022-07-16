@@ -11,7 +11,7 @@ pkgdesc="A music score editor - git-version"
 arch=(aarch64 i686 x86_64)
 url="http://www.musescore.org/en/"
 license=('GPL')
-depends=('shared-mime-info' 'alsa-lib' 'zlib'
+depends=('shared-mime-info' 'alsa-lib' 'zlib' 'freetype2'
          'libvorbis' 'libopusenc' 'flac'
          'qt5-base' 'qt5-networkauth' 'qt5-quickcontrols2'
          'qt5-svg' 'qt5-tools' 'qt5-x11extras' 'qt5-xmlpatterns'
@@ -85,7 +85,10 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_RPATH=On \
     -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-fPIC" \
-    -DBUILD_UNIT_TESTS=Off
+    -DBUILD_UNIT_TESTS=Off \
+    -DBUILD_CRASHPAD_CLIENT=Off \
+    -DMUSESCORE_BUILD_CONFIG=release \
+    -DUSE_SYSTEM_FREETYPE=On
   make lrelease -j1
   make manpages -j1
   make mscore_alias -j1
@@ -105,4 +108,5 @@ package() {
   rm -rf "$pkgdir/usr/include/kddockwidgets"
   rm -rf "$pkgdir/usr/lib/cmake/KDDockWidgets"
   rm -rf "$pkgdir/usr/lib/libkddockwidgets.a"
+  rm -rf "$pkgdir/usr/bin/crashpad_handler"
 }
