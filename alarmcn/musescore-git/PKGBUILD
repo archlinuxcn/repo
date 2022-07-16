@@ -4,14 +4,15 @@
 
 pkgname=musescore-git
 _realver=2.0.4
-pkgver=26410.315cfb3eaa
+pkgver=26419.d000040de3
 pkgrel=1
 epoch=1
 pkgdesc="A music score editor - git-version"
 arch=(aarch64 i686 x86_64)
 url="http://www.musescore.org/en/"
 license=('GPL')
-depends=('shared-mime-info' 'alsa-lib' 'zlib' 'libvorbis'
+depends=('shared-mime-info' 'alsa-lib' 'zlib'
+         'libvorbis' 'libopusenc' 'flac'
          'qt5-base' 'qt5-networkauth' 'qt5-quickcontrols2'
          'qt5-svg' 'qt5-tools' 'qt5-x11extras' 'qt5-xmlpatterns'
          'portaudio' 'libpulse' 'libsndfile' 'libogg' 'gcc-libs'
@@ -35,11 +36,32 @@ pkgver() {
   echo "$(git rev-list --count master).$(git rev-parse --short master)"
 }
 
-build() {
+prepare() {
   cd MuseScore
 
   # Upstream add hard coded Fusion theme and they refuse to change it.
   patch -Np1 < ../0001-Do-not-force-fusion-style.patch
+
+  rm -rf thirdparty/lame/*/
+  cat > thirdparty/lame/CMakeLists.txt <<EOF
+add_library(lame INTERFACE)
+target_link_libraries(lame INTERFACE libmp3lame.so)
+target_include_directories(lame INTERFACE /usr/include/lame)
+EOF
+  rm -rf thirdparty/opusenc/*/
+  echo > thirdparty/opusenc/CMakeLists.txt
+  rm -rf thirdparty/opus/*/
+  echo > thirdparty/opus/CMakeLists.txt
+  rm -rf thirdparty/flac/*/
+  cat > thirdparty/flac/CMakeLists.txt <<EOF
+add_library(flac INTERFACE)
+target_link_libraries(flac INTERFACE libFLAC.so)
+target_link_libraries(flac INTERFACE libFLAC++.so)
+EOF
+}
+
+build() {
+  cd MuseScore
 
   # Fix Musescore + gcc's broken pch.
   # `-DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-fPIC"`:
@@ -53,6 +75,8 @@ build() {
   CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   # LTO is otherwise incompatible with QRC
   CXXFLAGS+=" -ffat-lto-objects"
+  CFLAGS+=' -I/usr/include/opus'
+  CXXFLAGS+=' -I/usr/include/opus'
   export CFLAGS
   export CXXFLAGS+=" -fPIC -std=gnu++11 -Wno-unused-local-typedefs -Wno-unused-parameter -Wno-maybe-uninitialized -Wno-unused-function -Wno-invalid-pch"
   mkdir -p build.release
@@ -78,4 +102,5 @@ package() {
   # install -dm755 "$pkgdir/usr/share/mscore-2.0/manual"
   # mv share/manual/plugins/* \
   #   "$pkgdir/usr/share/mscore-2.0/manual/plugins"
+  rm -rf "$pkgdir/usr/include/kddockwidgets"
 }
