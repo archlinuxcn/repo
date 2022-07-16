@@ -4,6 +4,9 @@ maintainers:
 pre_build_script: run_cmd(['sh', './get_pkg.sh', 'asahi-fwextract'])
 post_build: git_pkgbuild_commit
 
+repo_depends:
+  - asahi-scripts
+
 update_on:
   - source: github
     github: AsahiLinux/PKGBUILDs

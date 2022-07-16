@@ -1,0 +1,18 @@
+# Maintainer: Hector Martin <marcan@marcan.st>
+
+pkgname=asahi-meta
+pkgver=2
+pkgrel=1
+pkgdesc='Asahi Linux core support meta package'
+url='https://www.asahilinux.org'
+arch=('any')
+license=('MIT')
+package() {
+depends=(
+'linux-asahi' 'uboot-asahi' 'm1n1' 'asahi-scripts' 'asahilinux-keyring' 'asahi-fwextract'
+)
+}
+
+# vim: ts=2 sw=2 et:
+
+
