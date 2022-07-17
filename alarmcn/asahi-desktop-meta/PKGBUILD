@@ -2,14 +2,16 @@
 
 pkgname=asahi-desktop-meta
 pkgver=2
-pkgrel=1
+pkgrel=2
 pkgdesc='Asahi Linux Plasma support meta package'
 url='https://www.asahilinux.org'
 arch=('any')
 license=('MIT')
 install=asahi-desktop-meta.install
-depends=(bluedevil bluez-utils pulseaudio-bluetooth bluez-tools)
+
+package() {
+  # Put depends in package() to avoid unecessary build dependencies
+  depends=(bluedevil bluez-utils pulseaudio-bluetooth bluez-tools)
+}
 
 # vim: ts=2 sw=2 et:
-
-
