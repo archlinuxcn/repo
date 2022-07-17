@@ -1,7 +1,7 @@
 maintainers:
   - github: yuyichao
 
-pre_build_script: run_cmd(['bash', 'get-asahi-meta.sh'])
+pre_build_script: run_cmd(['bash', './get_pkg.sh', 'asahi-meta'])
 post_build: git_pkgbuild_commit
 
 update_on:
