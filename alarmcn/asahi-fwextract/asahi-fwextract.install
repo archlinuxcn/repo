@@ -1,0 +1,19 @@
+#!/bin/sh
+
+post_install() {
+  set -e
+  if [ ! -e /boot/efi/asahi/all_firmware.tar.gz ]; then
+    printf '==> No /boot/efi/asahi/all_firmware.tar.gz, skipping firmware extraction'
+    return 0
+  fi
+  printf '==> Upgrading vendor firmware package...\n'
+  python -m asahi_firmware.update /boot/efi/asahi /boot/efi/vendorfw/firmware.tar.new /boot/efi/vendorfw/manifest.txt.new
+  mv -f /boot/efi/vendorfw/manifest.txt{.new,}
+  mv -f /boot/efi/vendorfw/firmware.tar{.new,}
+  printf '    Firmware upgraded\n'
+  /usr/bin/update-vendor-firmware
+}
+
+post_upgrade() {
+  post_install
+}
