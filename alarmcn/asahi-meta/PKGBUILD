@@ -2,17 +2,17 @@
 
 pkgname=asahi-meta
 pkgver=2
-pkgrel=2
+pkgrel=3
 pkgdesc='Asahi Linux core support meta package'
 url='https://www.asahilinux.org'
 arch=('any')
 license=('MIT')
+
 package() {
-depends=(
-'linux-asahi' 'uboot-asahi' 'm1n1' 'asahi-scripts' 'asahilinux-keyring' 'asahi-fwextract'
-)
+  # Put depends in package() to avoid unecessary build dependencies
+  depends=(
+    'linux-asahi' 'uboot-asahi' 'm1n1' 'asahi-scripts' 'asahilinux-keyring' 'asahi-fwextract'
+  )
 }
 
 # vim: ts=2 sw=2 et:
-
-
