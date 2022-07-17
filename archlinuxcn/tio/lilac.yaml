@@ -1,10 +1,12 @@
 maintainers:
   - github: oldherl
 
-update_on:
-  - source: aur
-    aur: tio
-    manual: 1
-pre_build_script: aur_pre_build(maintainers=['nickoe','jledet'])
+build_prefix: extra-x86_64
 
-post_build: aur_post_build
+update_on:
+  - source: github
+    github: tio/tio
+    use_latest_release: true
+    prefix: v
+  - source: manual
+    manual: 1
