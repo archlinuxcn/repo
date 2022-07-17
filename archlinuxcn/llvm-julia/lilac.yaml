@@ -1,10 +1,26 @@
 maintainers:
   - github: yuyichao
+
 post_build: git_pkgbuild_commit
 time_limit_hours: 3
+
 update_on:
+  - source: alpm
+    alpm: llvm
+    # Get the major version
+    from_pattern: ^(\d+)\..*
   - source: manual
-    manual: 14.0.5-2
+    # This is the expected major version.
+    # we'll check in pre_build if this matches since manual update
+    # may be necessary when a major version update happens.
+    manual: 14
+  - source: github
+    # This may cause spurious update if julia releases a new version that isn't
+    # the major version we want. This shouldn't happen that often though
+    # so it should be fine. Otherwise we could use a custom script to get the versions
+    github: JuliaLang/llvm-project
+    use_latest_tag: true
+    include_regex: 'julia-[0-9.]+-\d+'
   - source: manual
     manual: 1
   - alias: python
