@@ -57,7 +57,6 @@ pkgver() {
 
 prepare() {
     cd "$srcdir/mpv"
-    git cherry-pick -n 70d67aad09d072a73bf989bdf6fbdd88c4ebea4b # fix compatibility with libplacebo >= 5
 }
 
 build() {
