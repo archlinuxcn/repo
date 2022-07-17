@@ -2,7 +2,7 @@
 # Contributor: AndyRTR <andyrtr@archlinux.org>
 
 pkgname=xorg-xwayland-hidpi-git
-pkgver=21.1.4.r383.g2ec7c1680
+pkgver=21.1.4.r418.g6907b6ea2
 pkgrel=1
 arch=('x86_64')
 license=('custom')
@@ -22,7 +22,7 @@ makedepends=('meson' 'git'
 source=("xserver-hidpi::git+https://gitlab.freedesktop.org/xorg/xserver.git"
        'xwlScaling.diff')
 sha256sums=('SKIP'
-            'b30b67a5c5292f63b3bd433881be37782986f5cc333ca48335482f7b77e78624')
+            'fddcf53f25b9caeb21fe6ed75c8d6f3f3e8ad346dcb87dd21b8fa7ea69e3bb87')
 provides=('xorg-xwayland' 'xorg-server-xwayland' 'xorg-server-xwayland-git' 'xorg-server-xwayland-hidpi-git')
 conflicts=('xorg-xwayland' 'xorg-server-xwayland' 'xorg-server-xwayland-git' 'xorg-server-xwayland-hidpi-git')
 replaces=('xorg-server-xwayland-hidpi-git')
