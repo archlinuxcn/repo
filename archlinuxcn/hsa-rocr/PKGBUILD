@@ -7,7 +7,7 @@
 
 pkgname=hsa-rocr
 pkgver=5.2.0
-pkgrel=1
+pkgrel=2
 pkgdesc='ROCm Platform Runtime: ROCr a HPC market enhanced HSA based runtime'
 arch=('x86_64')
 url='https://rocmdocs.amd.com/en/latest/Installation_Guide/ROCR-Runtime.html'
@@ -18,16 +18,9 @@ provides=("rocr-runtime=$pkgver")
 replaces=('rocr-runtime')
 conflicts=('rocr-runtime')
 _git='https://github.com/RadeonOpenCompute/ROCR-Runtime'
-source=("${pkgname}-${pkgver}.tar.gz::$_git/archive/rocm-$pkgver.tar.gz"
-        'remove-warnings.patch')
-sha256sums=('529e49693dd9f6459586dd0a26f14dd77dbdf8c0b45fb54830b294eba7babd27'
-            '9aecc193aafe58c235b82b7d7c4444fd4175224233fde6a23c54014b3dcc0f6a')
+source=("${pkgname}-${pkgver}.tar.gz::$_git/archive/rocm-$pkgver.tar.gz")
+sha256sums=('529e49693dd9f6459586dd0a26f14dd77dbdf8c0b45fb54830b294eba7babd27')
 _dirname="$(basename "$_git")-$(basename "${source[0]}" .tar.gz)"
-
-prepare() {
-  cd "$srcdir/$_dirname"
-  patch -Np1 -i "$srcdir/remove-warnings.patch"
-}
 
 build() {
   cmake -DCMAKE_INSTALL_PREFIX=/opt/rocm \
