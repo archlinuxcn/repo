@@ -9,6 +9,7 @@ update_on:
     alpm: llvm
     # Get the major version
     from_pattern: ^(\d+)\..*
+    to_pattern: \1
   - source: manual
     # This is the expected major version.
     # we'll check in pre_build if this matches since manual update
