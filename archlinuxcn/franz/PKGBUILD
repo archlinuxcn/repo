@@ -49,18 +49,6 @@ _ensure_nvm_setup() {
   export npm_config_cache="$srcdir/npm_cache"
 }
 
-_run_unsafe() {
-  # Run command with the error options disabled for shell functions that aren't written
-  # to run with these options set...
-  local restoreshopt=$(shopt -p)
-  shopt -o -u errexit errtrace
-  "$@"
-  local ret=$?
-  eval "$restoreshopt"
-  # Forward the return value for the whole command
-  return $?
-}
-
 prepare() {
   # Small patching
   cd $pkgname
@@ -81,14 +69,15 @@ prepare() {
   _ensure_nvm_setup
 
   echo "--> Install toolchain with nvm"
-
-  # nvm is a shell function and as of version 0.39.0 it is not compatible with
-  # the shell options set by makepkg.
-  # (check for /sbin/init in nvm_get_arch fails)
-  _run_unsafe nvm install
+  nvm install
 
   echo "--> Install modules dependencies with lerna"
-  npx --package="lerna@^3.8.0" lerna bootstrap
+  # The author still uses old dependencies resolution.
+  # Luckily it is "documented" in the Appveyor CI file.
+  # About the double double escape, that is because the first '--' is for
+  # npm exec, while the second is for lerna.
+  # See: https://github.com/lerna/lerna/issues/2921
+  npm exec --yes -- lerna bootstrap -- --legacy-peer-deps
 }
 
 build() {
@@ -99,8 +88,9 @@ build() {
 
   # Actually build the package
   echo "--> Building the package"
-  npx gulp build
-  npx electron-builder --linux dir
+  npm exec lerna run build
+  npm exec gulp build
+  npm exec -- electron-builder --linux dir
 }
 
 package() {
