@@ -3,12 +3,11 @@
 maintainers:
   - github: yuyichao
 
-build_prefix: extra-x86_64
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 
-pre_build_script: aur_pre_build(maintainers=['z3ntu'])
-
-post_build: aur_post_build
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: aur
-    aur: lmdbxx
+  - source: github
+    github: hoytech/lmdbxx
+    use_max_tag: true
