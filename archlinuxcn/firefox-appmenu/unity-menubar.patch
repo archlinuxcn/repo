@@ -767,7 +767,7 @@
 +}
 +
 +void
-+nsMenu::Update(ComputedStyle *aComputedStyle)
++nsMenu::Update(const ComputedStyle *aComputedStyle)
 +{
 +    if (mNeedsUpdate) {
 +        mNeedsUpdate = false;
@@ -819,10 +819,10 @@
 +        UpdateLabel();
 +    } else if (aAttribute == nsGkAtoms::hidden ||
 +        aAttribute == nsGkAtoms::collapsed) {
-+        RefPtr<ComputedStyle> style = GetComputedStyle();
++        RefPtr<const ComputedStyle> style = GetComputedStyle();
 +        UpdateVisibility(style);
 +    } else if (aAttribute == nsGkAtoms::image) {
-+        RefPtr<ComputedStyle> style = GetComputedStyle();
++        RefPtr<const ComputedStyle> style = GetComputedStyle();
 +        UpdateIcon(style);
 +    }
 +}
@@ -1210,7 +1210,7 @@
 +                              nsIContent *aChild);
 +
 +    void InitializeNativeData() override;
-+    void Update(mozilla::ComputedStyle *aComputedStyle) override;
++    void Update(const mozilla::ComputedStyle *aComputedStyle) override;
 +    nsMenuObject::PropertyFlags SupportedProperties() const override;
 +
 +    void OnAttributeChanged(nsIContent *aContent, nsAtom *aAttribute) override;
@@ -2803,7 +2803,7 @@
 +}
 +
 +void
-+nsMenuItem::Update(ComputedStyle *aComputedStyle)
++nsMenuItem::Update(const ComputedStyle *aComputedStyle)
 +{
 +    if (mNeedsUpdate) {
 +        mNeedsUpdate = false;
@@ -2878,10 +2878,10 @@
 +            UpdateState();
 +        } else if (aAttribute == nsGkAtoms::hidden ||
 +                   aAttribute == nsGkAtoms::collapsed) {
-+            RefPtr<ComputedStyle> style = GetComputedStyle();
++            RefPtr<const ComputedStyle> style = GetComputedStyle();
 +            UpdateVisibility(style);
 +        } else if (aAttribute == nsGkAtoms::image) {
-+            RefPtr<ComputedStyle> style = GetComputedStyle();
++            RefPtr<const ComputedStyle> style = GetComputedStyle();
 +            UpdateIcon(style);
 +        }
 +    } else if (aContent == mKeyContent &&
@@ -2988,7 +2988,7 @@
 +
 +    void InitializeNativeData() override;
 +    void UpdateContentAttributes() override;
-+    void Update(mozilla::ComputedStyle *aComputedStyle) override;
++    void Update(const mozilla::ComputedStyle *aComputedStyle) override;
 +    bool IsCompatibleWithNativeData(DbusmenuMenuitem *aNativeData) const override;
 +    nsMenuObject::PropertyFlags SupportedProperties() const override;
 +
@@ -3082,7 +3082,7 @@
 +
 +    nsMenuObjectIconLoader(nsMenuObject *aOwner) : mOwner(aOwner) { };
 +
-+    void LoadIcon(ComputedStyle *aComputedStyle);
++    void LoadIcon(const ComputedStyle *aComputedStyle);
 +    void Destroy();
 +
 +private:
@@ -3178,7 +3178,7 @@
 +}
 +
 +void
-+nsMenuObjectIconLoader::LoadIcon(ComputedStyle *aComputedStyle)
++nsMenuObjectIconLoader::LoadIcon(const ComputedStyle *aComputedStyle)
 +{
 +    dom::Document *doc = mOwner->ContentNode()->OwnerDoc();
 +
@@ -3444,7 +3444,7 @@
 +}
 +
 +void
-+nsMenuObject::UpdateVisibility(ComputedStyle *aComputedStyle)
++nsMenuObject::UpdateVisibility(const ComputedStyle *aComputedStyle)
 +{
 +    bool vis = true;
 +
@@ -3475,7 +3475,7 @@
 +}
 +
 +void
-+nsMenuObject::UpdateIcon(ComputedStyle *aComputedStyle)
++nsMenuObject::UpdateIcon(const ComputedStyle *aComputedStyle)
 +{
 +    if (ShouldShowIcon()) {
 +        if (!mIconLoader) {
@@ -3493,10 +3493,10 @@
 +    }
 +}
 +
-+already_AddRefed<ComputedStyle>
++already_AddRefed<const ComputedStyle>
 +nsMenuObject::GetComputedStyle()
 +{
-+    RefPtr<ComputedStyle> style =
++    RefPtr<const ComputedStyle> style =
 +        nsComputedDOMStyle::GetComputedStyleNoFlush(
 +            mContent->AsElement());
 +
@@ -3526,7 +3526,7 @@
 +}
 +
 +void
-+nsMenuObject::Update(ComputedStyle *aComputedStyle)
++nsMenuObject::Update(const ComputedStyle *aComputedStyle)
 +{
 +}
 +
@@ -3630,7 +3630,7 @@
 +
 +    UpdateContentAttributes();
 +
-+    RefPtr<ComputedStyle> style = GetComputedStyle();
++    RefPtr<const ComputedStyle> style = GetComputedStyle();
 +    Update(style);
 +}
 +
@@ -3762,11 +3762,11 @@
 +    };
 +
 +    void UpdateLabel();
-+    void UpdateVisibility(mozilla::ComputedStyle *aComputedStyle);
++    void UpdateVisibility(const mozilla::ComputedStyle *aComputedStyle);
 +    void UpdateSensitivity();
-+    void UpdateIcon(mozilla::ComputedStyle *aComputedStyle);
++    void UpdateIcon(const mozilla::ComputedStyle *aComputedStyle);
 +
-+    already_AddRefed<mozilla::ComputedStyle> GetComputedStyle();
++    already_AddRefed<const mozilla::ComputedStyle> GetComputedStyle();
 +
 +private:
 +    friend class nsMenuObjectIconLoader;
@@ -3793,7 +3793,7 @@
 +    // Update properties that should be refreshed when the container opens.
 +    // This should be implemented by subclasses that have properties which
 +    // need refreshing
-+    virtual void Update(mozilla::ComputedStyle *aComputedStyle);
++    virtual void Update(const mozilla::ComputedStyle *aComputedStyle);
 +
 +    bool ShouldShowIcon() const;
 +    void ClearIcon();
@@ -3873,7 +3873,7 @@
 +}
 +
 +void
-+nsMenuSeparator::Update(ComputedStyle *aComputedStyle)
++nsMenuSeparator::Update(const ComputedStyle *aComputedStyle)
 +{
 +    UpdateVisibility(aComputedStyle);
 +}
@@ -3906,7 +3906,7 @@
 +
 +    if (aAttribute == nsGkAtoms::hidden ||
 +        aAttribute == nsGkAtoms::collapsed) {
-+        RefPtr<ComputedStyle> style = GetComputedStyle();
++        RefPtr<const ComputedStyle> style = GetComputedStyle();
 +        UpdateVisibility(style);
 +    }
 +}
@@ -3960,7 +3960,7 @@
 +
 +private:
 +    void InitializeNativeData() override;
-+    void Update(mozilla::ComputedStyle *aComputedStyle) override;
++    void Update(const mozilla::ComputedStyle *aComputedStyle) override;
 +    bool IsCompatibleWithNativeData(DbusmenuMenuitem *aNativeData) const override;
 +    nsMenuObject::PropertyFlags SupportedProperties() const override;
 +

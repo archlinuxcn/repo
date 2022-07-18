@@ -7,7 +7,7 @@
 
 pkgname=firefox-appmenu
 _pkgname=firefox
-pkgver=101.0
+pkgver=102.0.1
 pkgrel=1
 pkgdesc="Firefox from extra with appmenu patch"
 arch=(x86_64)
@@ -28,17 +28,21 @@ provides=("firefox=$pkgver")
 conflicts=("firefox")
 options=(!emptydirs !makeflags !strip !lto !debug)
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
+        cbindgen-0.24.0.diff
+        zstandard-0.18.0.diff
         $_pkgname.desktop
         identity-icons-brand.svg
         fix-wayland-build.patch
         unity-menubar.patch
         fix_csd_window_buttons.patch)
-sha256sums=('55ab5b517d58bbcbc837640263a8371cf1fba3d9f508e54537c4d2cbbfb86095'
+sha256sums=('7bba6ffd6e8e42d5c38aa2a453f5fa30dfc9ef150f2175aa0625edb68fddae70'
             'SKIP'
+            '4628d136c3beada292e83cd8e89502cac4aa3836851b34259a665582a7713978'
+            'a6857ad2f2e2091c6c4fdcde21a59fbeb0138914c0e126df64b50a5af5ff63be'
             '34514a657d6907a159594c51e674eeb81297c431ec26a736417c2fdb995c2c0c'
             'a9b8b4a0a1f4a7b4af77d5fc70c2686d624038909263c795ecc81e0aec7711e9'
             '46724a625f51c358abaee488a7ce75673078e96ba009459339120b8dd11dec25'
-            '0c6e1cf2bee5445cda5209ea6e4745a1175f863204245aa9be9c77073a017dd6'
+            '5f89ca3305411c1a21bdf3f3c9135be149f0fcd8ce470b681ce1ef52a4b25983'
             'e08d0bc5b7e562f5de6998060e993eddada96d93105384960207f7bdf2e1ed6e')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
@@ -57,6 +61,12 @@ _mozilla_api_key=e05d56db0a694edc8b5aaebda3f2db6a
 prepare() {
   mkdir mozbuild
   cd firefox-$pkgver
+
+  # Unbreak build with python-zstandard 0.18.0
+  patch -Np1 -i ../zstandard-0.18.0.diff
+
+  # Unbreak build with cbindgen 0.24.0
+  patch -Np1 -i ../cbindgen-0.24.0.diff
 
   #https://aur.archlinux.org/packages/firefox-appmenu nicman32 comment 2021-08-16
   patch -Np1 -i ../fix-wayland-build.patch
