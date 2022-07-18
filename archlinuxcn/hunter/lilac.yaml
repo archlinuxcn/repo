@@ -1,13 +1,7 @@
 maintainers:
   - github: a-wing
-
-repo_depends:
-  - libsixel
-
 pre_build_script: aur_pre_build(maintainers=['ragouel'])
-
 post_build: aur_post_build
-
 update_on:
   - source: aur
     aur: hunter
