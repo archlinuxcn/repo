@@ -1,6 +1,6 @@
 # Maintainer of this PKGBUILD file: Martino Pilia <martino.pilia@gmail.com>
 pkgname=vsce
-pkgver=2.9.3
+pkgver=2.10.0
 pkgrel=1
 pkgdesc="Visual Studio Code extension manager"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 depends=('nodejs')
 makedepends=('npm' 'typescript' 'yarn')
 source=("https://registry.npmjs.org/$pkgname/-/$pkgname-$pkgver.tgz")
-sha256sums=('c2579fc5962d6ecd646d883e22b4e712abb1c625ca0decab3bec52f1cedb0c0f')
+sha256sums=('af3e2e8aaf5d59f27d123762aadc3cb59b3afedfb3a6f9be11be2b546b80a368')
 
 package() {
   npm install -g \
