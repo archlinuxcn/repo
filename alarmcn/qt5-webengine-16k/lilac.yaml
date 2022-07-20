@@ -1,0 +1,61 @@
+maintainers:
+  - github: yuyichao
+
+pre_build_script: run_cmd(['bash', './get_pkg.sh'])
+post_build: git_pkgbuild_commit
+time_limit_hours: 10
+
+update_on:
+  - source: alpm
+    alpm: qt5-webengine
+  - source: alpm
+    alpm: freetype2
+    provided: libfreetype.so
+  - source: alpm
+    alpm: libjpeg-turbo
+    provided: libjpeg.so
+  - source: alpm
+    alpm: icu
+    provided: libicui18n.so
+  - source: alpm
+    alpm: icu
+    provided: libicuuc.so
+  - source: alpm
+    alpm: icu
+    provided: libicudata.so
+  - source: alpm
+    alpm: opus
+    provided: libopus.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavcodec.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavformat.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavutil.so
+  - source: alpm
+    alpm: libvpx
+    provided: libvpx.so
+  - source: alpm
+    alpm: libwebp
+    provided: libwebp.so
+  - source: alpm
+    alpm: libwebp
+    provided: libwebpmux.so
+  - source: alpm
+    alpm: libwebp
+    provided: libwebpdemux.so
+  - source: alpm
+    alpm: expat
+    provided: libexpat.so
+  - source: alpm
+    alpm: libxml2
+    provided: libxml2.so
+  - source: alpm
+    alpm: libxslt
+    provided: libxslt.so
+  - source: alpm
+    alpm: lcms2
+    provided: liblcms2.so
