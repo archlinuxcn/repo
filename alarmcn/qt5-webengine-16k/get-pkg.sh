@@ -17,7 +17,6 @@ sed -i -e 's/\bpkgname\b/_orig_pkgname/g' PKGBUILD
             arch=*)
                 # Fix arch
                 line='arch=(aarch64 armv7h x86_64)'
-                continue
                 ;;
             _orig_pkgname=*)
                 # Replace pkgname
