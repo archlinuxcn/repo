@@ -51,14 +51,14 @@ pkgver() {
 }
 
 prepare() {
+  # find sqlite with cmake's FindSQLite3
+  sed -i 's/find_package(${proj} REQUIRED)/find_package(SQLite3 REQUIRED)/' "${srcdir}/${_pkgname}/SuperBuild/External_sqlite.cmake"
   echo "Creating desktop file"
   gendesk -f -n --pkgname ${_pkgname} \
     --categories "Graphics;MedicalSoftware;Science;" \
     --exec "Slicer" \
     --icon "${_pkgname}" \
     --pkgdesc "${pkgdesc}"
-  # find sqlite with cmake's FindSQLite3
-  sed -i 's/find_package(${proj} REQUIRED)/find_package(SQLite3 REQUIRED)/' "${srcdir}/${_pkgname}/SuperBuild/External_sqlite.cmake"
 }
 
 build() {
