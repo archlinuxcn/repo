@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=python-pytorch-lightning
-_pkgname=lightning
+_pkgname=pytorch-lightning
 pkgver=1.6.5
 pkgrel=2
 pkgdesc="The lightweight PyTorch wrapper for high-performance AI research"
@@ -32,8 +32,8 @@ makedepends=(
   python-installer
   python-wheel
 )
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Lightning-AI/lightning/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('e257dca3ac3ee82e2684501a91000cb26b735935b86dff3ff5ebe73b185be7809b8b13d1afae751b75a6107476ca0ca8848ef2aaa9d244b8ac8cc64971d0b946')
+source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+sha512sums=('3fbbe4abb180b62f9960c6923f1789f608d1fe329a2fd52777832739b407c3761741b0012335199656d7c80771abc6f44a12b27b0acac9123aa4261f88d810b2')
 
 build() {
   cd "${_pkgname}-${pkgver}"
