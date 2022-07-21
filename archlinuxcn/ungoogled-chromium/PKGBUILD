@@ -9,8 +9,8 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=103.0.5060.114
-pkgrel=2
+pkgver=103.0.5060.134
+pkgrel=1
 _launcher_ver=8
 _gcc_patchset=4
 pkgdesc="A lightweight approach to removing Google web service dependency"
@@ -35,7 +35,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         sql-make-VirtualCursor-standard-layout-type.patch
         remove-no-opaque-pointers-flag.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('77683510f03b947332461b03954488474d95e49992efc11908f4bd8045635965'
+sha256sums=('e48a272481e41b1aae7aba71b55c41fe9e994cf71edd01c8ca1d0b604af0b571'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'fed11a8987d9f9baa04457fb114f8f7fdb800300a3780927020865bcc43e4f52'
             '779fb13f2494209d3a7f1f23a823e59b9dded601866d3ab095937a1a04e19ac6'
@@ -46,13 +46,13 @@ sha256sums=('77683510f03b947332461b03954488474d95e49992efc11908f4bd8045635965'
 provides=('chromium')
 conflicts=('chromium')
 _uc_usr=ungoogled-software
-_uc_ver=$pkgver-2
+_uc_ver=$pkgver-1
 source=(${source[@]}
         $pkgname-$_uc_ver.tar.gz::https://github.com/$_uc_usr/ungoogled-chromium/archive/$_uc_ver.tar.gz
         chromium-drirc-disable-10bpc-color-configs.conf
         ozone-add-va-api-support-to-wayland.patch)
 sha256sums=(${sha256sums[@]}
-            'b324485cf413f104da78116139b1c6c01f241bc5eaec7064224937f0cbd1ac44'
+            'da6cac43b587a88032760ebebada96b10bb1a170a451e22a507b48aae2e977ec'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             'af20fc58aef22dd0b1fb560a1fab68d0d27187ff18fad7eb1670feab9bc4a8d8')
  
