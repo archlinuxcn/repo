@@ -20,7 +20,7 @@ sha256sums=('SKIP')
 
 pkgver() {
     cd ${_gitname}
-    printf "%s.r%s.%s" $(git describe --tags $(git rev-list --tags --max-count=1) | sed 's/^v//g') $(git rev-list --count HEAD) $(git rev-parse --short HEAD)
+    printf "0.10.8.r%s.%s" $(git rev-list --count HEAD) $(git rev-parse --short HEAD)
 }
 
 prepare() {
