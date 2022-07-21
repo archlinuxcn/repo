@@ -1,0 +1,115 @@
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+
+# ALARM: Kevin Mihelich <kevin@archlinuxarm.org>
+#  - patch for chromium GN
+#  - patch for chromium skia
+#  - patch for chromium to run blink bindings generation single threaded
+#  - build v7 with -j4
+
+highmem=1
+
+pkgname=qt5-webengine-16k
+_orig_pkgname=qt5-webengine
+_basever=5.15.5
+pkgver=5.15.10
+pkgrel=3
+arch=(aarch64 armv7h x86_64)
+url='https://www.qt.io'
+license=('LGPL3' 'LGPL2.1' 'BSD')
+pkgdesc='Provides support for web applications using the Chromium browser project'
+depends=('qt5-webchannel' 'qt5-location' 'libxcomposite' 'libxrandr' 'pciutils' 'libxss' 'libxkbfile' 
+         'libevent' 'snappy' 'nss' 'libxslt' 'minizip' 'ffmpeg' 're2' 'libvpx' 'libxtst' 'ttf-font')
+makedepends=('git' 'python' 'gperf' 'jsoncpp' 'ninja' 'qt5-tools' 'poppler' 'pipewire' 'nodejs')
+optdepends=('pipewire: WebRTC desktop sharing under Wayland')
+_pkgfqn=${_orig_pkgname/5-/}
+source=(git+https://code.qt.io/qt/qtwebengine.git#tag=v${pkgver}-lts
+        git+https://code.qt.io/qt/qtwebengine-chromium.git
+        git+https://chromium.googlesource.com/catapult#commit=5eedfe23148a234211ba477f76fc2ea2e8529189
+        qt5-webengine-python3.patch
+        qt5-webengine-chromium-python3.patch
+        qt5-webengine-ffmpeg5.patch
+        qt5-webengine-pipewire-0.3.patch
+        qt5-webengine-gcc12.patch
+        0001-ARM-toolchain-fixes.patch
+        0002-Fix-ARM-skia-ICE.patch
+        0003-bind-gen-Support-single_process-flag-in-generate_bin.patch
+        0004-Run-blink-bindings-generation-single-threaded.patch)
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            '398c996cb5b606695ac93645143df39e23fa67e768b09e0da6dbd37342a43f32'
+            'fda4ff16790799fb285847918a677f4f3f7c0f513d4751f846ffc5aa5d873932'
+            'c50d3019626183e753c53a997dc8a55938847543aa3178d4c51f377be741c693'
+            '5e3a3c4711d964d5152a04059a2b5c1d14bb13dd29bce370120f60e85b476b6f'
+            'cf9be3ffcc3b3cd9450b1ff13535ff7d76284f73173412d097a6ab487463a379'
+            '81b7a62368f40d757b165b88df4813413f30db797e4f93a84dd75e12e1ebd679'
+            '298037fcbc132f1539616cdf6149ad5da104f8e2345a9c1af1e7bf8b0dd52c70'
+            'b878770648437c9bc24023b1d5a47bcd51382d7142b695864c3379826511bcd9'
+            'e447f5d2635f8f32914c912d7f99b38726c1541334f3a2c1a8ca2dbde565a7de'
+            '370b8169cb5acaa51d0287850e75baabd9b54486a425ee27c75077ff0edab529')
+options=(debug)
+
+prepare() {
+  mkdir -p build
+
+  cd ${_pkgfqn}
+  git submodule init
+  git submodule set-url src/3rdparty "$srcdir"/qtwebengine-chromium
+  git submodule set-branch --branch 87-based src/3rdparty
+  git submodule update
+
+  patch -p1 -i "$srcdir"/qt5-webengine-python3.patch # Fix build with Python 3
+  patch -p1 -d src/3rdparty -i "$srcdir"/qt5-webengine-chromium-python3.patch
+
+  patch -p1 -d src/3rdparty -i "$srcdir"/qt5-webengine-ffmpeg5.patch # Fix build with ffmpeg 5
+  patch -p1 -d src/3rdparty -i "$srcdir"/qt5-webengine-pipewire-0.3.patch # Port to pipewire 0.3
+  patch -p1 -d src/3rdparty -i "$srcdir"/qt5-webengine-gcc12.patch # Fix build with GCC 12
+
+# Update catapult for python3 compatibility
+  rm -r src/3rdparty/chromium/third_party/catapult
+  mv "$srcdir"/catapult src/3rdparty/chromium/third_party
+
+  [[ $CARCH == "armv7h" ]] && export NINJAJOBS="-j4"
+  cd "$srcdir/$_pkgfqn/src/3rdparty"
+  patch -p1 -i ${srcdir}/0001-ARM-toolchain-fixes.patch
+  patch -p1 -i ${srcdir}/0002-Fix-ARM-skia-ICE.patch
+  patch -p1 -i ${srcdir}/0003-bind-gen-Support-single_process-flag-in-generate_bin.patch
+  patch -p1 -i ${srcdir}/0004-Run-blink-bindings-generation-single-threaded.patch
+}
+
+build() {
+  _prebuild
+  cd build
+  qmake ../${_pkgfqn} CONFIG+=force_debug_info -- \
+    -proprietary-codecs \
+    -system-ffmpeg \
+    -webp \
+    -spellchecker \
+    -webengine-icu \
+    -webengine-kerberos \
+    -webengine-webrtc-pipewire
+  make
+}
+
+package() {
+  cd build
+  make INSTALL_ROOT="$pkgdir" install
+
+  # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+  find "$pkgdir/usr/lib" -type f -name '*.prl' \
+    -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+
+  install -Dm644 "$srcdir"/${_pkgfqn}/src/3rdparty/chromium/LICENSE "$pkgdir"/usr/share/licenses/${_orig_pkgname}/LICENSE.chromium
+
+  # Fix cmake dependency versions
+  sed -e "s|$pkgver\ |$_basever |" -i "$pkgdir"/usr/lib/cmake/*/*Config.cmake
+}
+source+=(qt5-webengine-16kpage.patch)
+provides+=(qt5-webengine)
+conflicts+=(qt5-webengine)
+_prebuild() {
+  export NINJAJOBS="-j2"
+  export NINJAFLAGS="-j2"
+  patch -p1 -d "$srcdir/qtwebengine/src/3rdparty" -i "$srcdir"/qt5-webengine-16kpage.patch # Support 16k page
+}
