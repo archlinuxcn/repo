@@ -109,7 +109,7 @@ source+=(qt5-webengine-16kpage.patch)
 provides+=(qt5-webengine)
 conflicts+=(qt5-webengine)
 _prebuild() {
-  export NINJAJOBS="-j2"
-  export NINJAFLAGS="-j2"
+  export NINJAJOBS="-j3"
+  export NINJAFLAGS="-j3"
   patch -p1 -d "$srcdir/qtwebengine/src/3rdparty" -i "$srcdir"/qt5-webengine-16kpage.patch # Support 16k page
 }

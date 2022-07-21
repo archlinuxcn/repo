@@ -1,0 +1,9 @@
+#!/bin/sh
+
+post_upgrade() {
+  if [ "$(vercmp 2 "$2")" -eq 1 ]; then
+    printf '==> Enabling bluetooth.service...\n'
+    systemctl enable bluetooth.service
+  fi
+}
+

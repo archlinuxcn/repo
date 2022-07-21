@@ -1,0 +1,58 @@
+From 831eeefaebc489ecb64f945cfa62f79771be3bf5 Mon Sep 17 00:00:00 2001
+From: Kevin Mihelich <kevin@archlinuxarm.org>
+Date: Tue, 4 Jul 2017 11:54:39 -0600
+Subject: [PATCH 1/4] ARM toolchain fixes
+
+---
+ chromium/build/toolchain/linux/BUILD.gn | 24 ++++++++++--------------
+ 1 file changed, 10 insertions(+), 14 deletions(-)
+
+diff --git a/chromium/build/toolchain/linux/BUILD.gn b/chromium/build/toolchain/linux/BUILD.gn
+index fa8b17e9db3..7398b7556ec 100644
+--- a/chromium/build/toolchain/linux/BUILD.gn
++++ b/chromium/build/toolchain/linux/BUILD.gn
+@@ -30,15 +30,13 @@ clang_toolchain("clang_arm64") {
+ }
+ 
+ gcc_toolchain("arm64") {
+-  toolprefix = "aarch64-linux-gnu-"
+-
+-  cc = "${toolprefix}gcc"
+-  cxx = "${toolprefix}g++"
++  cc = "gcc"
++  cxx = "g++"
+ 
+-  ar = "${toolprefix}ar"
++  ar = "ar"
+   ld = cxx
+-  readelf = "${toolprefix}readelf"
+-  nm = "${toolprefix}nm"
++  readelf = "readelf"
++  nm = "nm"
+ 
+   toolchain_args = {
+     current_cpu = "arm64"
+@@ -48,15 +46,13 @@ gcc_toolchain("arm64") {
+ }
+ 
+ gcc_toolchain("arm") {
+-  toolprefix = "arm-linux-gnueabihf-"
+-
+-  cc = "${toolprefix}gcc"
+-  cxx = "${toolprefix}g++"
++  cc = "gcc"
++  cxx = "g++"
+ 
+-  ar = "${toolprefix}ar"
++  ar = "ar"
+   ld = cxx
+-  readelf = "${toolprefix}readelf"
+-  nm = "${toolprefix}nm"
++  readelf = "readelf"
++  nm = "nm"
+ 
+   toolchain_args = {
+     current_cpu = "arm"
+-- 
+2.33.0
+

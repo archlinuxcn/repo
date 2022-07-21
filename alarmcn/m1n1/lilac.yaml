@@ -2,7 +2,9 @@ maintainers:
   - github: yuyichao
 
 pre_build_script: run_cmd(['sh', './get_pkg.sh', 'm1n1'])
-post_build: git_pkgbuild_commit
+post_build_script: |
+  git_add_files('.')
+  git_commit()
 
 update_on:
   - source: github

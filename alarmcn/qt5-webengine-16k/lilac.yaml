@@ -2,7 +2,9 @@ maintainers:
   - github: yuyichao
 
 pre_build_script: run_cmd(['bash', './get-pkg.sh'])
-post_build: git_pkgbuild_commit
+post_build_script: |
+  git_add_files('.')
+  git_commit()
 time_limit_hours: 8
 
 update_on:

@@ -1,0 +1,25 @@
+From 895dec8c2d626f176cb85af81c09c7bf30e2ad43 Mon Sep 17 00:00:00 2001
+From: Kevin Mihelich <kevin@archlinuxarm.org>
+Date: Mon, 1 Jul 2019 07:10:36 -0600
+Subject: [PATCH 2/4] Fix ARM skia ICE
+
+---
+ chromium/third_party/skia/third_party/skcms/src/Transform_inl.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/chromium/third_party/skia/third_party/skcms/src/Transform_inl.h b/chromium/third_party/skia/third_party/skcms/src/Transform_inl.h
+index 2dcf717f3b7..8e1acb01fee 100644
+--- a/chromium/third_party/skia/third_party/skcms/src/Transform_inl.h
++++ b/chromium/third_party/skia/third_party/skcms/src/Transform_inl.h
+@@ -687,7 +687,7 @@ SI void sample_clut_16(const skcms_A2B* a2b, I32 ix, F* r, F* g, F* b) {
+ // GCC 7.2.0 hits an internal compiler error with -finline-functions (or -O3)
+ // when targeting MIPS 64, i386, or s390x,  I think attempting to inline clut() into exec_ops().
+ #if 1 && defined(__GNUC__) && !defined(__clang__) \
+-      && (defined(__mips64) || defined(__i386) || defined(__s390x__))
++      && (defined(__mips64) || defined(__i386) || defined(__s390x__) || defined(__arm__))
+     #define MAYBE_NOINLINE __attribute__((noinline))
+ #else
+     #define MAYBE_NOINLINE
+-- 
+2.33.0
+
