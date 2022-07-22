@@ -1,15 +1,15 @@
 # Maintainer: katt <magunasu.b97@gmail.com>
 
 pkgname=duckstation-git
-pkgver=5418.97730b56
+pkgver=5443.667726bb
 pkgdesc='A Sony PlayStation (PSX) emulator, focusing on playability, speed, and long-term maintainability (git version)'
 pkgrel=1
 epoch=1
 arch=(x86_64 aarch64)
 url=https://github.com/stenzek/duckstation
 license=(GPL3)
-makedepends=(git cmake extra-cmake-modules qt5-tools libdrm gtk3 ninja)
-depends=(sdl2 qt5-base)
+makedepends=(git cmake extra-cmake-modules qt6-tools libdrm gtk3 ninja)
+depends=(sdl2 qt6-base)
 optdepends=()
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
