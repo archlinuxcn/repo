@@ -36,8 +36,6 @@ source+=(qt6-webengine-16kpage.patch)
 provides+=(qt6-webengine)
 conflicts+=(qt6-webengine)
 _prebuild() {
-  export NINJAJOBS="-j3"
-  export NINJAFLAGS="-j3"
   patch -p1 -d "\$srcdir/\$_pkgfn/src/3rdparty" -i "\$srcdir"/qt6-webengine-16kpage.patch # Support 16k page
 }
 EOF
