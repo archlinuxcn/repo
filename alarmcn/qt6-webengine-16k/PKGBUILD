@@ -1,0 +1,73 @@
+# Maintainer: Antonio Rojas <arojas@archlinux.org>
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+
+# ALARM: Kevin Mihelich <kevin@archlinuxarm.org>
+#  - patch for chromium GN
+#  - patch for chromium skia
+#  - patch for chromium to run blink bindings generation single threaded
+#  - patch for chromium aw snap on ARM
+#  - restrict job count on v7 - RAM constraints
+
+highmem=1
+
+pkgname=qt6-webengine-16k
+_orig_pkgname=qt6-webengine
+_qtver=6.3.1
+pkgver=${_qtver/-/}
+pkgrel=3
+arch=(aarch64 armv7h x86_64)
+url='https://www.qt.io'
+license=(GPL3 LGPL3 FDL custom)
+pkgdesc='Provides support for web applications using the Chromium browser project'
+depends=(qt6-webchannel qt6-positioning libxcomposite libxrandr libxkbfile 
+         libevent snappy nss libxslt minizip ffmpeg re2 libvpx libxtst ttf-font pciutils)
+makedepends=(cmake ninja python-html5lib gperf jsoncpp qt6-tools pipewire nodejs qt6-websockets)
+optdepends=('pipewire: WebRTC desktop sharing under Wayland')
+options=(debug)
+_pkgfn=${_orig_pkgname/6-/}-everywhere-src-$_qtver
+source=(https://download.qt.io/official_releases/qt/${pkgver%.*}/$_qtver/submodules/$_pkgfn.tar.xz
+        0001-ARM-toolchain-fixes.patch
+        0002-Run-blink-bindings-generation-single-threaded.patch)
+sha256sums=('ad7a33b21a956deda37c587d50f821ca3816403ae31ba9b5d59d01561ad66e47'
+            'c5d8fc6b3b832a2b4b14c926c36051d7245d5fc37a1c3a54657afd5b5c4ed623'
+            '1a5858dd198dd0db649c55357941c9bfa9ad678b5d4b93121f87fa9f314d4e6e'
+            '82fca8551849ac95d1aa7f22e2c1a9c191a198ed48b806ac1517704c3c68d1ad')
+
+prepare() {
+  cd $_pkgfn
+
+  if [[ $CARCH == "armv7h" ]]; then
+    export MAKEFLAGS="-j4"
+    export ALARM_NINJA_JOBS="2"
+  fi
+  cd "$srcdir/$_pkgfn/src/3rdparty"
+  patch -p1 -i ${srcdir}/0001-ARM-toolchain-fixes.patch
+  patch -p1 -i ${srcdir}/0002-Run-blink-bindings-generation-single-threaded.patch
+}
+
+build() {
+  _prebuild
+  cmake -B build -S $_pkgfn -G Ninja \
+    -DCMAKE_TOOLCHAIN_FILE=/usr/lib/cmake/Qt6/qt.toolchain.cmake \
+    -DQT_FEATURE_webengine_system_ffmpeg=ON \
+    -DQT_FEATURE_webengine_system_icu=ON \
+    -DQT_FEATURE_webengine_system_libevent=ON \
+    -DQT_FEATURE_webengine_system_libxslt=ON \
+    -DQT_FEATURE_webengine_proprietary_codecs=ON \
+    -DQT_FEATURE_webengine_kerberos=ON \
+    -DQT_FEATURE_webengine_webrtc_pipewire=ON \
+    -DQT_FEATURE_webengine_full_debug_info=ON
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+
+  install -Dm644 "$srcdir"/${_pkgfn}/src/3rdparty/chromium/LICENSE "$pkgdir"/usr/share/licenses/${_orig_pkgname}/LICENSE.chromium
+}
+source+=(qt6-webengine-16kpage.patch)
+provides+=(qt6-webengine)
+conflicts+=(qt6-webengine)
+_prebuild() {
+  patch -p1 -d "$srcdir/$_pkgfn/src/3rdparty" -i "$srcdir"/qt6-webengine-16kpage.patch # Support 16k page
+}
