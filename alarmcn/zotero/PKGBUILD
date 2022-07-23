@@ -3,25 +3,44 @@
 pkgname=zotero
 pkgver=6.0.11
 pkgrel=1
+_xpdf_ver=4.03
 pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=(aarch64)
 url="https://www.zotero.org/download"
 license=('AGPL3')
-makedepends=(git perl python2 python curl wget zip unzip awk chromium rsync)
+makedepends=(git perl python2 python curl wget zip unzip awk chromium rsync cmake)
 # Build error with nodejs 17
-depends=(dbus-glib gtk3 nss libxt npm poppler nodejs-lts-gallium)
+depends=(dbus-glib gtk3 nss libxt npm poppler nodejs-lts-gallium
+         libfontconfig.so libpaper)
 install='zotero.install'
 source=("zotero-client::git+https://github.com/zotero/zotero#tag=$pkgver"
         "git+https://github.com/zotero/zotero-build"
         "git+https://github.com/yuyichao/zotero-standalone-build#branch=aarch64-hack"
+        "git+https://github.com/yuyichao/cross-xpdf#branch=aarch64"
+        "https://dl.xpdfreader.com/old/xpdf-${_xpdf_ver}.tar.gz"
         zotero.desktop)
 sha256sums=('SKIP'
             'SKIP'
             'SKIP'
+            'SKIP'
+            '0fe4274374c330feaadcebb7bd7700cb91203e153b26aa95952f02bf130be846'
             'eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc')
 options=(!makeflags)
 
+_prepare_xpdf() {
+  cd xpdf-${_xpdf_ver}
+  mkdir -p build
+  sed -i "/^\s\sfixCommandLine(&argc,/a if(argc!=3 || argv[1][0]=='-' || argv[2][0]=='-') {fprintf(stderr,\"This is a custom xpdf pdfinfo build. Please use the original version!\\\\n%s\\\\n%s\\\\npdfinfo <PDF-file> <output-file>\\\\n\",xpdfVersion,xpdfCopyright); return 1;} else {freopen( argv[argc-1], \"w\", stdout); argc--;}" xpdf/pdfinfo.cc
+  cp ../cross-xpdf/pdftotext.cc xpdf/pdftotext.cc
+  cp ../cross-xpdf/GlobalParams.h xpdf/GlobalParams.h
+  cp ../cross-xpdf/GlobalParams.cc xpdf/GlobalParams.cc
+  cp ../cross-xpdf/gfile.h goo/gfile.h
+  cp ../cross-xpdf/gfile.cc goo/gfile.cc
+  cp ../cross-xpdf/cmake-config.txt cmake-config.txt
+}
+
 prepare() {
+  (_prepare_xpdf)
   (cd zotero-client
    git submodule update --init --recursive)
   (cd zotero-build
@@ -30,7 +49,14 @@ prepare() {
    git submodule update --init --recursive)
 }
 
+_build_xpdf() {
+  cd xpdf-${_xpdf_ver}/build
+  cmake .. -DCMAKE_CXX_FLAGS="-Os"
+  make
+}
+
 build() {
+  (_build_xpdf)
   (cd zotero-client
 
    npm install --legacy-peer-deps
@@ -46,6 +72,8 @@ package() {
 
   install -dDm755 "$pkgdir"/usr/{bin,lib/zotero}
   cp -a staging/Zotero_linux-aarch64/* "$pkgdir"/usr/lib/zotero
+  cp -a "${srcdir}/xpdf-${_xpdf_ver}/build/xpdf/"{pdfinfo,pdftotext} \
+     "$pkgdir"/usr/lib/zotero
   ln -s /usr/lib/zotero/zotero "$pkgdir"/usr/bin/zotero
   install -Dm644 "$srcdir"/zotero.desktop "$pkgdir"/usr/share/applications/zotero.desktop
   # Copy zotero icons to a standard location
