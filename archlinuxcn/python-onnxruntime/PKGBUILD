@@ -6,28 +6,26 @@ pkgbase=python-onnxruntime
 # Not split DNNL EP to another package as it's needed unconditionally at runtime if built at compile time
 # https://github.com/microsoft/onnxruntime/blob/v1.9.1/onnxruntime/python/onnxruntime_pybind_state.cc#L533
 pkgname=(python-onnxruntime)
-pkgver=1.11.1
+pkgver=1.12.0
 pkgdesc='Cross-platform, high performance scoring engine for ML models'
-pkgrel=3
+pkgrel=1
 arch=(x86_64)
 url='https://github.com/microsoft/onnxruntime'
 license=(MIT)
-depends=(nsync re2 python-flatbuffers python-numpy python-protobuf openmpi onednn libprotobuf-lite.so)
+depends=(nsync re2 openmpi onednn libprotobuf-lite.so
+         python-coloredlogs python-flatbuffers python-numpy python-packaging python-protobuf python-sympy)
 makedepends=(git cmake pybind11 python-setuptools nlohmann-json chrono-date boost eigen flatbuffers)
 optdepends=(
   # https://github.com/microsoft/onnxruntime/pull/9969
   'python-onnx: for the backend API, quantization, orttraining, transformers and various tools'
-  'python-coloredlogs: for transformers'  # also used by TensorRT tools, but we don't build for it, anyway
   'python-psutil: for transformers'
   'python-py-cpuinfo: for transformers'
   'python-py3nvml: for transformers'
-  'python-packaging: for transformers and various tools'
   'python-transformers: for transformers'
   'python-scipy: for transformers and various tools'
   'python-pytorch: for transformers, orttraining and various tools'
   'python-cerberus: for orttraining'
   'python-h5py: for orttraining'
-  'python-sympy: for transformers and various tools'
 )
 # not de-vendored libraries
 # onnx: needs shared libonnx (https://github.com/onnx/onnx/issues/3030)
@@ -48,8 +46,8 @@ sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            '80ea85ea20bbbdec7991f965a66b627a5f42828bc0c72be0913078d927833a82402fb1af6c5c9f6ecae861b45582fa42c98ce83b02768e4bf875ab89dd1c607c'
-            '06a002361cc324184d0bfcb520b472f57749c0537329f0e0dee833cc7fce2f08b14590b77bc0211422dfb933dbef6f249f19939f9e0df465c48ee8fc7827e31c'
+            'ab0446ede08e528ca631a73e536ff42009ee8f152972d37050b2f9b44b3d1c06d19bd8a91c31b09c26f5db1482a699b8fe2c221b78199199dfa245728856b196'
+            '7d55b0d4232183a81c20a5049f259872150536eed799d81a15e7f10b5c8b5279b443ba96d7b97c0e4338e95fc18c9d6f088e348fc7002256ee7170d25b27d80d'
             '6735c7aca2ba2f1f2a5286eb064125bf7f2c68a575d572dd157769d15778ff3e717b3a53d696c767748229f23ee6c3a7c82679df1d86283d7c4dd0ec9103ae08')
 # CUDA seems not working with LTO
 options+=('!lto')

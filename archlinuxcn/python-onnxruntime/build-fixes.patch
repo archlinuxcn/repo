@@ -2,23 +2,17 @@ diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
 index a027c69e0..eb7608518 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -841,7 +841,9 @@ add_library(safeint_interface INTERFACE)
- target_include_directories(safeint_interface INTERFACE ${SAFEINT_INCLUDE_DIR})
+@@ -733,7 +733,7 @@
  
- if (onnxruntime_PREFER_SYSTEM_LIB)
--  find_package(boost_mp11)
-+  # boost on Arch does not support find_package(boost_mp11)
-+  add_library(boost_mp11 INTERFACE)
-+  add_library(Boost::mp11 ALIAS boost_mp11)
+ if (NOT WIN32)
+   if (onnxruntime_PREFER_SYSTEM_LIB)
+-    find_package(nsync)
++    find_package(nsync_cpp)
+   endif()
+   if (TARGET nsync_cpp)  # linking error with nsync_FOUND (why?)
+     message("Use nsync from preinstalled system lib")
+@@ -764,9 +765,11 @@ if(onnxruntime_DISABLE_EXCEPTIONS)
  endif()
- if (NOT TARGET Boost::mp11)
-   add_subdirectory(external/mp11 EXCLUDE_FROM_ALL)
-@@ -764,10 +765,12 @@ if(onnxruntime_DISABLE_EXCEPTIONS)
- 
- set(JSON_BuildTests OFF CACHE INTERNAL "")
- set(JSON_Install OFF CACHE INTERNAL "")
--add_subdirectory(external/json EXCLUDE_FROM_ALL)
-+find_package(nlohmann_json REQUIRED)
  
  if (onnxruntime_PREFER_SYSTEM_LIB)
 -  find_package(re2)
@@ -26,14 +20,28 @@ index a027c69e0..eb7608518 100644
 +  pkg_check_modules(RE2 IMPORTED_TARGET re2)
 +  add_library(re2::re2 ALIAS PkgConfig::RE2)
  endif()
- if (NOT TARGET re2::re2)
+-if (re2_FOUND)
++if (TARGET re2::re2)
+   message("Use re2 from preinstalled system lib")
+ else()
    add_subdirectory(external/re2 EXCLUDE_FROM_ALL)
 @@ -1421,7 +1421,7 @@
-   find_package(Flatbuffers)
  endif()
  if (Flatbuffers_FOUND)
+   message("Use flatbuffers from preinstalled system lib")
 -  add_library(flatbuffers ALIAS flatbuffers::flatbuffers)
 +  add_library(flatbuffers ALIAS flatbuffers::flatbuffers_shared)
  else()
-   add_subdirectory(external/flatbuffers EXCLUDE_FROM_ALL)
- endif()
+   message("Use flatbuffers from submodule")
+   # We do not need to build flatc for iOS or Android Cross Compile
+--- a/setup.py	2022-07-22 17:00:19.638893453 +0800
++++ b/setup.py	2022-07-22 17:02:00.686317628 +0800
+@@ -16,7 +16,7 @@
+ 
+ from setuptools import Extension, setup
+ from setuptools.command.install import install as InstallCommandBase
+-from wheel.vendored.packaging.tags import sys_tags
++from packaging.tags import sys_tags
+ 
+ nightly_build = False
+ package_name = "onnxruntime"
