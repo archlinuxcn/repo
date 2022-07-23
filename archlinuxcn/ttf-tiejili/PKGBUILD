@@ -1,0 +1,22 @@
+# Maintainer: oldherl <oldherl@gmail.com>
+
+pkgname=ttf-tiejili
+pkgver=0.0
+pkgrel=1
+pkgdesc="Spiky artistic Chinese font derived from Reggae One."
+url="https://github.com/Buernia/Tiejili"
+license=("custom:OFL")
+arch=(any)
+source=(
+"https://github.com/Buernia/Tiejili/releases/download/v$pkgver/Tiejili.zip"
+)
+sha256sums=("SKIP")
+makedepends=('git')
+
+package(){
+  ls
+  install -d "$pkgdir/usr/share/fonts/TTF"
+  install -d "$pkgdir/usr/share/licenses/${pkgname}"
+  install -m644 ./*.ttf "$pkgdir/usr/share/fonts/TTF/"
+  install -m644 OFL.txt "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+} 
