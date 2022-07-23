@@ -1,15 +1,14 @@
 # Maintainer: Tomislav Ivek <tomislav.ivek@gmail.com>
 
 pkgname=('conan')
-pkgver=1.48.2
+pkgver=1.50.0
 pkgrel=1
 pkgdesc="A distributed, open source, C/C++ package manager."
 arch=('any')
 url="https://conan.io"
 license=('MIT')
 makedepends=('python-setuptools' 'patch')
-depends=('python-pyjwt>=1.4.0'
-         'python-requests>=2.25'
+depends=('python-requests>=2.25'
          'python-urllib3>=1.26.6'
          'python-colorama>=0.3.3'
          'python-yaml>=3.11'
@@ -23,7 +22,8 @@ depends=('python-pyjwt>=1.4.0'
          'python-jinja>=3.0'
          'python-dateutil>=2.7.0'
          'python-bottle>=0.12.8'
-         'python-pluginbase>=0.5')
+         'python-pluginbase>=0.5'
+         'python-pyjwt>=2.4.0')
 
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/conan-io/conan/archive/${pkgver}.tar.gz" "arch-reqs.patch")
 
@@ -45,5 +45,5 @@ package() {
   install -m755 -d "${pkgdir}/usr/share/doc/conan"
   install -m644 contributors.txt "${pkgdir}/usr/share/doc/conan/"
 }
-md5sums=('df45a575a12d672d86792f13b50495b7'
-         'f220688daf73d0a5f536ba7bf448c763')
+md5sums=('5db9db10f2acf65d12912d1762c2d42d'
+         'd4ed16f0a9cd5af77eb3b6a0326f52ec')
