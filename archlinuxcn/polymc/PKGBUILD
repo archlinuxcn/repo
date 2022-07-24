@@ -6,7 +6,7 @@
 _pkgname=polymc
 pkgname=${_pkgname}
 pkgver=1.3.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Custom launcher for Minecraft that focuses on predictability, long term stability and simplicity."
 arch=('i686' 'x86_64')
 url="https://github.com/PolyMC/PolyMC"
@@ -14,7 +14,7 @@ license=('GPL3')
 depends=('java-runtime' 'libgl' 'qt5-base' 'zlib')
 provides=('polymc')
 conflicts=('polymc-git' 'multimc')
-makedepends=('cmake' 'git' 'jdk-openjdk')
+makedepends=('cmake' 'git' 'jdk-openjdk' 'extra-cmake-modules')
 optdepends=('glfw: to use system GLFW libraries'
             'openal: to use system OpenAL libraries'
             'visualvm: Profiling support'
