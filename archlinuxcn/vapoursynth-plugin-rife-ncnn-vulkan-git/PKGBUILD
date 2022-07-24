@@ -3,8 +3,9 @@
 
 _plug=rife-ncnn-vulkan
 pkgname=vapoursynth-plugin-${_plug}-git
-pkgver=5.5.gbf2d4ce
+pkgver=5.r5.gbf2d4ce
 pkgrel=1
+epoch=1
 pkgdesc="Plugin for Vapoursynth: ${_plug} (GIT version)"
 arch=('x86_64')
 url='https://github.com/HomeOfVapourSynthEvolution/VapourSynth-RIFE-ncnn-Vulkan'
@@ -29,7 +30,7 @@ options=('debug' 'strip')
 
 pkgver() {
     cd "${_plug}"
-    echo "$(git describe --long --tags | tr - . | tr -d r)"
+    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^r//'
 }
 
 prepare() {
