@@ -3,29 +3,27 @@
 
 _plug=rife-ncnn-vulkan
 pkgname=vapoursynth-plugin-${_plug}-git
-pkgver=5.5.gb85b529
+pkgver=5.5.gbf2d4ce
 pkgrel=1
 pkgdesc="Plugin for Vapoursynth: ${_plug} (GIT version)"
 arch=('x86_64')
 url='https://github.com/HomeOfVapourSynthEvolution/VapourSynth-RIFE-ncnn-Vulkan'
 license=('MIT')
 depends=('vapoursynth'
-         'vulkan-icd-loader' 'libvulkan.so'
+         'ncnn'
+         'gcc-libs'
          )
 makedepends=('git'
              'meson'
              'cmake'
+             'vulkan-icd-loader'
              'vulkan-headers'
              )
 provides=("vapoursynth-plugin-${_plug}")
 conflicts=("vapoursynth-plugin-${_plug}")
 source=("${_plug}::git+https://github.com/HomeOfVapourSynthEvolution/VapourSynth-RIFE-ncnn-Vulkan.git"
-        'git+https://github.com/Tencent/ncnn.git'
-        'git+https://github.com/KhronosGroup/glslang.git'
         )
 sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
             )
 options=('debug' 'strip')
 
@@ -36,19 +34,14 @@ pkgver() {
 
 prepare() {
     cd "${_plug}"
-    git config submodule.subprojects/ncnn.url "${srcdir}/ncnn"
-    git submodule update --init subprojects/ncnn
-
+    git cherry-pick -n 50229146dcaafb310c7843f394c0083a42070271 # remove wrong cmake module caused compile error
     sed "s|models|${_plug}-models|g" -i RIFE/plugin.cpp
-
-    cd subprojects/ncnn
-    git config submodule.glslang.url "${srcdir}/glslang"
-    git submodule update --init glslang
 }
 
 build() {
     arch-meson "${_plug}" build \
-        -Ddebug=true -Doptimization=3
+        -Ddebug=true -Doptimization=3 \
+        -Duse_system_ncnn=true
 
     meson compile -C build
 }
