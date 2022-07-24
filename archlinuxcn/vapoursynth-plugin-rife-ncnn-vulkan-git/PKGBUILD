@@ -3,7 +3,7 @@
 
 _plug=rife-ncnn-vulkan
 pkgname=vapoursynth-plugin-${_plug}-git
-pkgver=5.r5.gbf2d4ce
+pkgver=5.r8.gfbb49ad
 pkgrel=1
 epoch=1
 pkgdesc="Plugin for Vapoursynth: ${_plug} (GIT version)"
@@ -35,7 +35,6 @@ pkgver() {
 
 prepare() {
     cd "${_plug}"
-    git cherry-pick -n 50229146dcaafb310c7843f394c0083a42070271 # remove wrong cmake module caused compile error
     sed "s|models|${_plug}-models|g" -i RIFE/plugin.cpp
 }
 
