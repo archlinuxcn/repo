@@ -8,9 +8,9 @@
 
 pkgname=android-platform
 _apilevel=33
-_rev=r01
+_rev=r02
 pkgver=${_apilevel}_${_rev}
-pkgrel=6
+pkgrel=7
 pkgdesc="Android SDK Platform, latest API"
 arch=('any')
 url="http://developer.android.com/sdk/index.html"
@@ -20,8 +20,8 @@ conflicts=("${pkgname}-${_apilevel}")
 options=('!strip')
 source=("https://dl.google.com/android/repository/platform-${_apilevel}_${_rev}.zip"
          "package.xml")
-sha256sums=('4a1deecb5d9521bca90b8a50d7c9d83e9cf117a581a9418dc941d30c552c04b7'
-            'a58de101f2e4eaa3e8e359fd4c094007935182bfbf4a7a023704fb93c7d9f66f')
+sha256sums=('f851b13fe89f8510a1250df5e8593e86176b2428f4f3cbe0e304a85818c07bc8'
+            '4d10dc4169a78a44176598ae4d34b268ccf0ad22a65f50becff804f26751c496')
 
 package() {
   depends=('android-sdk' 'android-sdk-platform-tools')
