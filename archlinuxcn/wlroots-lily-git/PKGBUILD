@@ -2,8 +2,8 @@
 # Contributor: Adrian Perez de Castro <aperez@igalia.com>
 # Contributor: Antonin Décimo <antonin dot decimo at gmail dot com>
 pkgname=wlroots-lily-git
-pkgver=0.16.0.20220711.090135
-pkgrel=3
+pkgver=0.16.0.20220724.115238
+pkgrel=1
 license=(MIT)
 pkgdesc='Modular Wayland compositor library (git version, with patches)'
 url=https://gitlab.freedesktop.org/wlroots/wlroots
@@ -36,12 +36,8 @@ makedepends=(
 	vulkan-headers
 	wayland-protocols
 	xorgproto)
-source=("${pkgname}::git+${url}.git"
-        https://gitlab.freedesktop.org/lilydjwg/wlroots/-/commit/6c5ffcd1fee9e44780a6a8792f74ecfbe24a1ca7.patch
-        https://gitlab.freedesktop.org/wlroots/wlroots/-/merge_requests/3652.patch)
-sha512sums=('SKIP'
-            'ea7e2ca89496c398fbf631828e208f0fc4b3e77aa05f19e2d0ece2b21856677feab05b1139093f0c2e5f1d0369ce4de9dcbd4b8971ab4ad90a2783f01967ecc2'
-            'cff4d8015a0ba53a408fd11db52bca86698d6c8d0569496c6d998bf79c65c80bea8a7eb0d0970f5831b220106a5bf5a3c96ccb8894fdd5a7c33f749050a43e36')
+source=("${pkgname}::git+https://gitlab.freedesktop.org/lilydjwg/wlroots.git#branch=lilydjwg")
+sha512sums=('SKIP')
 
 pkgver () {
   cd "${pkgname}"
@@ -50,14 +46,6 @@ pkgver () {
      version=$(grep -zoP "project\([^)]*\)" meson.build | xargs --null echo | grep -oP "^\sversion:\s'\K[^-']*")
      printf "${version}.%s" "$(TZ=UTC git log -1 --pretty='%cd' --date=format-local:%Y%m%d.%H%M%S)"
   )
-}
-
-prepare () {
-  cd "${pkgname}"
-  patch -Np1 < ../6c5ffcd1fee9e44780a6a8792f74ecfbe24a1ca7.patch
-  patch -Np1 < ../3652.patch
-  # my xwayland patch needs this.
-  git show 18595000f3a21502fd60bf213122859cc348f9af | patch -R -Np1
 }
 
 build () {
