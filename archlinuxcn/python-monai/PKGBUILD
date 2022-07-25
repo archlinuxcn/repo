@@ -3,7 +3,7 @@
 _CUDA_ARCH_LIST="5.2;5.3;6.0;6.1;6.2;7.0;7.2;7.5;8.0;8.6;8.6+PTX"
 pkgname=python-monai
 _pkgname=MONAI
-pkgver=0.9.0
+pkgver=0.9.1
 pkgrel=1
 pkgdesc='AI Toolkit for Healthcare Imaging'
 arch=('x86_64')
@@ -37,7 +37,7 @@ optdepends=(
   tensorboard
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Project-MONAI/MONAI/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('f150e44c42a0c770c4ef1051976ab5ae38699fa1f6f56ad95e2be5add2eec85dbe797254c5cfcfa5a11b20b25ad49269cb0959e064ff22ef4536980ddda9099b')
+sha512sums=('7f9e5fe25e932b7b1e2735523bb4a19d809e5286d66ac9840aa60600128d1f648f3786d6c18eaf80a3787571ad124d2bf5fdc4b70a3f73d3bb472951f35f163b')
 
 build() {
   cd "${_pkgname}-${pkgver}"
