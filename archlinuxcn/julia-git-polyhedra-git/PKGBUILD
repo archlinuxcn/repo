@@ -1,0 +1,24 @@
+pkgname=julia-git-polyhedra-git
+pkgver=0.7.5.0.1.g07567d4
+pkgrel=1
+pkgdesc="Polyhedra.jl"
+url="https://github.com/JuliaPolyhedra/Polyhedra.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-polyhedra)
+source=(git+https://github.com/JuliaPolyhedra/Polyhedra.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Polyhedra.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Polyhedra.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Polyhedra "${pkgdir}" "${pkgname}" julia-git
+}
