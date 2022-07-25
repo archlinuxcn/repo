@@ -1,0 +1,24 @@
+pkgname=julia-git-bittwiddlingconveniencefunctions-git
+pkgver=0.1.4.0.2.g5f4d1a8
+pkgrel=1
+pkgdesc="BitTwiddlingConvenienceFunctions.jl"
+url="https://github.com/JuliaSIMD/BitTwiddlingConvenienceFunctions.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-bittwiddlingconveniencefunctions)
+source=(git+https://github.com/JuliaSIMD/BitTwiddlingConvenienceFunctions.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd BitTwiddlingConvenienceFunctions.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd BitTwiddlingConvenienceFunctions.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh BitTwiddlingConvenienceFunctions "${pkgdir}" "${pkgname}" julia-git
+}
