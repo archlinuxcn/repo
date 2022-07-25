@@ -3,9 +3,9 @@
 pkgname="python-imageio"
 _pkgname="imageio"
 pkgver=2.19.5
-pkgrel=1
+pkgrel=2
 pkgdesc="a Python library that provides an easy interface to read and write a wide range of image data"
-arch=('x86_64')
+arch=('any')
 _github="imageio/imageio"
 _pypiname="imageio"
 url="https://github.com/imageio/imageio"
