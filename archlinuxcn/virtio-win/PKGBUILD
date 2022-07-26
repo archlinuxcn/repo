@@ -1,11 +1,11 @@
 # Maintainer: Javier Tiá <javier dot tia at gmail dot com>
 
 pkgname=virtio-win
-_ver=0.1.217
+_ver=0.1.221
 # upstream version
-_pkgver=${_ver}-2
+_pkgver=${_ver}-1
 # package version
-pkgver=${_ver}.2
+pkgver=${_ver}.1
 pkgrel=1
 pkgdesc='virtio drivers for Windows 7 and newer guests'
 arch=('any')
@@ -18,7 +18,7 @@ changelog="${pkgname}.changelog"
 _url=https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio
 source=("${pkgname}-${_pkgver}.iso::${_url}/${pkgname}-${_pkgver}/${pkgname}.iso")
 noextract=("${pkgname}-${_pkgver}.iso")
-sha256sums=('8d17ae343e60f0463ce0393035c6efe209d213cf1938d0a25ce09fc55a666e7b')
+sha256sums=('196817297921be7b65d73dd2ad7fd9a7c825b455eaa218432f351c3300ecacf5')
 
 note() {
 	printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
