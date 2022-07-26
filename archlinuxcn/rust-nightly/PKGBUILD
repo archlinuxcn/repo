@@ -18,7 +18,7 @@ pkgname=(rust-nightly
          rust-std-nightly-aarch64-linux-android
          rust-std-nightly-x86_64-unknown-linux-musl
         )
-pkgver=1.64.0_20220719
+pkgver=1.64.0_20220726
 pkgrel=1
 epoch=4
 pkgdesc="A safe, concurrent, practical language from Mozilla (nightly version)"
@@ -28,31 +28,31 @@ license=('MIT' 'Apache')
 validpgpkeys=('108F66205EAEB0AAA8DD5E1C85AB96E6FA1BE5FE')
 makedepends=('git')
 source=(
-        'https://static.rust-lang.org/dist/2022-07-19/rust-nightly-x86_64-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-src-nightly.tar.xz'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-src-nightly.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2022-07-19/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2022-07-19/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-nightly-x86_64-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-src-nightly.tar.xz'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-src-nightly.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2022-07-26/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2022-07-26/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
 
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.xz'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-i686-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-i686-unknown-linux-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-i686-pc-windows-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-i686-pc-windows-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-x86_64-pc-windows-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-x86_64-pc-windows-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-wasm32-unknown-unknown.tar.xz'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-wasm32-unknown-unknown.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-aarch64-linux-android.tar.xz'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-aarch64-linux-android.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-x86_64-unknown-linux-musl.tar.xz'
-        'https://static.rust-lang.org/dist/2022-07-19/rust-std-nightly-x86_64-unknown-linux-musl.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.xz'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-i686-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-i686-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-i686-pc-windows-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-i686-pc-windows-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-x86_64-pc-windows-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-x86_64-pc-windows-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-wasm32-unknown-unknown.tar.xz'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-wasm32-unknown-unknown.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-aarch64-linux-android.tar.xz'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-aarch64-linux-android.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-x86_64-unknown-linux-musl.tar.xz'
+        'https://static.rust-lang.org/dist/2022-07-26/rust-std-nightly-x86_64-unknown-linux-musl.tar.xz.asc'
         'git+https://github.com/rust-lang/zsh-config')
 sha512sums=(
             'SKIP'
@@ -83,6 +83,27 @@ sha512sums=(
 
 build() {
   true
+}
+
+_copy_files () {
+  _name=$1
+
+  mkdir -p "$pkgdir/usr"
+  cp -r bin share "$pkgdir/usr"
+
+  mkdir -p "$pkgdir/usr/share/licenses/$pkgname"
+  mv "$pkgdir/usr/share/doc/$_name/"LICENSE* "$pkgdir/usr/share/licenses/$pkgname/"
+  mv "$pkgdir/usr/share/doc/$_name" "$pkgdir/usr/share/doc/$pkgname"
+
+  if [[ -d etc/bash_completion.d ]]; then
+    mkdir "$pkgdir/usr/share/bash-completion"
+    cp -r etc/bash_completion.d "$pkgdir/usr/share/bash-completion/completions"
+  fi
+
+  if [[ -d libexec ]]; then
+    mkdir "$pkgdir/usr/lib"
+    cp -r libexec/* "$pkgdir/usr/lib"
+  fi
 }
 
 package_rust-nightly() {
@@ -125,6 +146,7 @@ package_rust-nightly() {
 package_rust-docs-nightly() {
   pkgdesc="A safe, concurrent, practical language from Mozilla. (Language and API documentation, for nightly version)"
   arch=('any')
+  options+=('!strip')
   optdepends=('rust-nightly: to compile and run the programs you can write using this documentation')
   provides=('rust-doc=1.64.0')
   conflicts=('rust-doc')
@@ -140,8 +162,7 @@ package_rustfmt-nightly() {
   conflicts=('rustup')
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/rustfmt-preview
-  mkdir -p "$pkgdir/usr"
-  cp -r bin "$pkgdir/usr"
+  _copy_files rustfmt
 }
 
 package_rust-clippy-nightly() {
@@ -151,8 +172,7 @@ package_rust-clippy-nightly() {
   depends=("rust-nightly=$epoch:$pkgver")
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/clippy-preview
-  mkdir -p "$pkgdir/usr"
-  cp -r bin "$pkgdir/usr"
+  _copy_files clippy
 }
 
 package_rust-analyzer-nightly() {
@@ -162,8 +182,7 @@ package_rust-analyzer-nightly() {
   depends=("rust-nightly=$epoch:$pkgver")
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/rust-analyzer-preview
-  mkdir -p "$pkgdir/usr"
-  cp -r bin "$pkgdir/usr"
+  _copy_files rust-analyzer
 }
 
 package_rust-miri-nightly() {
@@ -173,8 +192,7 @@ package_rust-miri-nightly() {
   depends=("rust-nightly=$epoch:$pkgver")
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/miri-preview
-  mkdir -p "$pkgdir/usr"
-  cp -r bin "$pkgdir/usr"
+  _copy_files miri
 }
 
 package_cargo-nightly() {
@@ -183,13 +201,13 @@ package_cargo-nightly() {
   conflicts=('rustup')
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/cargo
-  mkdir -p "$pkgdir/usr"
-  cp -r bin etc share "$pkgdir/usr"
+  _copy_files cargo
 }
 
 package_rust-src-nightly() {
   pkgdesc="A safe, concurrent, practical language from Mozilla. (Source code, for nightly version)"
   arch=('any')
+  options+=('!strip')
   optdepends=('rust-nightly')
   provides=('rust-src=1.64.0')
   conflicts=('rust-src')
@@ -212,6 +230,10 @@ package_rust-std-nightly-arm-unknown-linux-gnueabihf(){
   ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
   rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
   find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
+
+  mkdir -p "$pkgdir/usr/share/"{doc,licenses}"/$pkgname"
+  cp COPYRIGHT LICENSE-* "$pkgdir/usr/share/licenses/$pkgname"
+  cp README.md "$pkgdir/usr/share/doc/$pkgname"
 }
 
 package_rust-std-nightly-armv7-unknown-linux-gnueabihf(){
@@ -226,6 +248,10 @@ package_rust-std-nightly-armv7-unknown-linux-gnueabihf(){
   ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
   rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
   find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
+
+  mkdir -p "$pkgdir/usr/share/"{doc,licenses}"/$pkgname"
+  cp COPYRIGHT LICENSE-* "$pkgdir/usr/share/licenses/$pkgname"
+  cp README.md "$pkgdir/usr/share/doc/$pkgname"
 }
 
 package_rust-std-nightly-x86_64-unknown-linux-gnu(){
@@ -240,6 +266,10 @@ package_rust-std-nightly-x86_64-unknown-linux-gnu(){
   ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
   rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
   find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
+
+  mkdir -p "$pkgdir/usr/share/"{doc,licenses}"/$pkgname"
+  cp COPYRIGHT LICENSE-* "$pkgdir/usr/share/licenses/$pkgname"
+  cp README.md "$pkgdir/usr/share/doc/$pkgname"
 }
 
 package_rust-std-nightly-i686-unknown-linux-gnu(){
@@ -254,6 +284,10 @@ package_rust-std-nightly-i686-unknown-linux-gnu(){
   ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
   rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
   find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
+
+  mkdir -p "$pkgdir/usr/share/"{doc,licenses}"/$pkgname"
+  cp COPYRIGHT LICENSE-* "$pkgdir/usr/share/licenses/$pkgname"
+  cp README.md "$pkgdir/usr/share/doc/$pkgname"
 }
 
 package_rust-std-nightly-i686-pc-windows-gnu(){
@@ -269,6 +303,10 @@ package_rust-std-nightly-i686-pc-windows-gnu(){
   ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
   rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
   find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
+
+  mkdir -p "$pkgdir/usr/share/"{doc,licenses}"/$pkgname"
+  cp COPYRIGHT LICENSE-* "$pkgdir/usr/share/licenses/$pkgname"
+  cp README.md "$pkgdir/usr/share/doc/$pkgname"
 }
 
 package_rust-std-nightly-x86_64-pc-windows-gnu(){
@@ -284,6 +322,10 @@ package_rust-std-nightly-x86_64-pc-windows-gnu(){
   ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
   rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
   find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
+
+  mkdir -p "$pkgdir/usr/share/"{doc,licenses}"/$pkgname"
+  cp COPYRIGHT LICENSE-* "$pkgdir/usr/share/licenses/$pkgname"
+  cp README.md "$pkgdir/usr/share/doc/$pkgname"
 }
 
 package_rust-std-nightly-wasm32-unknown-unknown(){
@@ -298,6 +340,10 @@ package_rust-std-nightly-wasm32-unknown-unknown(){
   ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
   rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
   find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
+
+  mkdir -p "$pkgdir/usr/share/"{doc,licenses}"/$pkgname"
+  cp COPYRIGHT LICENSE-* "$pkgdir/usr/share/licenses/$pkgname"
+  cp README.md "$pkgdir/usr/share/doc/$pkgname"
 }
 
 package_rust-std-nightly-aarch64-linux-android(){
@@ -313,6 +359,10 @@ package_rust-std-nightly-aarch64-linux-android(){
   ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
   rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
   find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
+
+  mkdir -p "$pkgdir/usr/share/"{doc,licenses}"/$pkgname"
+  cp COPYRIGHT LICENSE-* "$pkgdir/usr/share/licenses/$pkgname"
+  cp README.md "$pkgdir/usr/share/doc/$pkgname"
 }
 
 package_rust-std-nightly-x86_64-unknown-linux-musl(){
@@ -327,5 +377,9 @@ package_rust-std-nightly-x86_64-unknown-linux-musl(){
   ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
   rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
   find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
+
+  mkdir -p "$pkgdir/usr/share/"{doc,licenses}"/$pkgname"
+  cp COPYRIGHT LICENSE-* "$pkgdir/usr/share/licenses/$pkgname"
+  cp README.md "$pkgdir/usr/share/doc/$pkgname"
 }
 
