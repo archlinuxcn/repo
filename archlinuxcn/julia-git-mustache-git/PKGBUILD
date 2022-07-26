@@ -1,0 +1,24 @@
+pkgname=julia-git-mustache-git
+pkgver=1.0.14.0.2.gd71b8b4
+pkgrel=1
+pkgdesc="Mustache.jl"
+url="https://github.com/jverzani/Mustache.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-mustache)
+source=(git+https://github.com/jverzani/Mustache.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Mustache.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Mustache.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Mustache "${pkgdir}" "${pkgname}" julia-git
+}
