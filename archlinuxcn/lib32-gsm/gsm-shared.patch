@@ -1,6 +1,14 @@
---- Makefile	2006-04-26 15:14:26.000000000 -0400
-+++ Makefile	2010-06-19 16:53:25.000000000 -0400
-@@ -96,11 +96,11 @@
+--- Makefile	2022-07-03 19:49:29.000000000 +0200
++++ Makefile	2022-07-26 11:44:36.474008372 +0200
+@@ -75,6 +75,7 @@
+ 
+ # What's this release's version? Part of the directory and archive file name.
+ VERSION = 1.0-pl20
++DOTTED_VERSION = 1.0.20
+ 
+ # Where do you want to install the gsm library, header file, and manpages?
+ #
+@@ -99,7 +100,7 @@
  #  Other tools
  
  SHELL		= /bin/sh
@@ -9,21 +17,16 @@
  BASENAME 	= basename
  AR		= ar
  ARFLAGS		= cr
--RMFLAGS		=
-+RMFLAGS		= -f
- FIND		= find
- COMPRESS 	= compress
- COMPRESSFLAGS 	= 
-@@ -139,7 +139,7 @@
+@@ -142,7 +143,7 @@
  
  # Targets
  
 -LIBGSM	= $(LIB)/libgsm.a
-+LIBGSMSO = $(LIB)/libgsm.so
++LIBGSMSO	= $(LIB)/libgsm.so
  
  TOAST	= $(BIN)/toast
  UNTOAST	= $(BIN)/untoast
-@@ -257,7 +257,7 @@
+@@ -260,7 +261,7 @@
  # Install targets
  
  GSM_INSTALL_TARGETS =	\
@@ -32,7 +35,7 @@
  		$(GSM_INSTALL_INC)/gsm.h		\
  		$(GSM_INSTALL_MAN)/gsm.3		\
  		$(GSM_INSTALL_MAN)/gsm_explode.3	\
-@@ -279,7 +279,7 @@
+@@ -282,7 +283,7 @@
  
  # Target rules
  
@@ -41,7 +44,7 @@
  		@-echo $(ROOT): Done.
  
  tst:		$(TST)/lin2cod $(TST)/cod2lin $(TOAST) $(TST)/test-result
-@@ -299,24 +299,23 @@
+@@ -302,16 +303,16 @@
  
  # The basic API: libgsm
  
@@ -49,11 +52,11 @@
 -		-rm $(RMFLAGS) $(LIBGSM)
 -		$(AR) $(ARFLAGS) $(LIBGSM) $(GSM_OBJECTS)
 -		$(RANLIB) $(LIBGSM)
--
-+$(LIBGSMSO): $(LIB) $(GSM_OBJECTS)
-+	$(LD) -shared -Wl,-soname,libgsm.so.1 -o $@.1.0.13 $(GSM_OBJECTS)
-+	$(LN) libgsm.so.1.0.13 $(LIBGSMSO).1
-+	$(LN) libgsm.so.1.0.13 $(LIBGSMSO)
++$(LIBGSMSO):	$(LIB) $(GSM_OBJECTS)
++		$(LD) -shared -Wl,-soname,libgsm.so.1 -o $@.$(DOTTED_VERSION) $(GSM_OBJECTS)
++		$(LN) `$(BASENAME) $@.$(DOTTED_VERSION)` $@.1
++		$(LN) `$(BASENAME) $@.$(DOTTED_VERSION)` $@
+ 
  
  # Toast, Untoast and Tcat -- the compress-like frontends to gsm.
  
@@ -64,97 +67,33 @@
  
  $(UNTOAST):	$(BIN) $(TOAST)
  		-rm $(RMFLAGS) $(UNTOAST)
--		$(LN) $(TOAST) $(UNTOAST)
-+		$(LN) toast $(UNTOAST)
- 
- $(TCAT):	$(BIN) $(TOAST)
- 		-rm $(RMFLAGS) $(TCAT)
--		$(LN) $(TOAST) $(TCAT)
-+		$(LN) toast $(TCAT)
- 
- 
- # The local bin and lib directories
-@@ -351,53 +350,54 @@
- 		fi
- 
- $(TOAST_INSTALL_BIN)/toast:	$(TOAST)
--		-rm $@
-+		-rm $(RMFLAGS) $@
- 		cp $(TOAST) $@
- 		chmod 755 $@
- 
- $(TOAST_INSTALL_BIN)/untoast:	$(TOAST_INSTALL_BIN)/toast
--		-rm $@
--		ln $? $@
-+		-rm $(RMFLAGS) $@
-+		$(LN) toast $@
- 
- $(TOAST_INSTALL_BIN)/tcat:	$(TOAST_INSTALL_BIN)/toast
--		-rm $@
--		ln $? $@
-+		-rm $(RMFLAGS) $@
-+		$(LN) toast $@
- 
- $(TOAST_INSTALL_MAN)/toast.1:	$(MAN)/toast.1
--		-rm $@
-+		-rm $(RMFLAGS) $@
+@@ -396,10 +397,12 @@
  		cp $? $@
  		chmod 444 $@
  
- $(GSM_INSTALL_MAN)/gsm.3:	$(MAN)/gsm.3
--		-rm $@
-+		-rm $(RMFLAGS) $@
- 		cp $? $@
- 		chmod 444 $@
- 
- $(GSM_INSTALL_MAN)/gsm_option.3:	$(MAN)/gsm_option.3
--		-rm $@
-+		-rm $(RMFLAGS) $@
- 		cp $? $@
- 		chmod 444 $@
- 
- $(GSM_INSTALL_MAN)/gsm_explode.3:	$(MAN)/gsm_explode.3
--		-rm $@
-+		-rm $(RMFLAGS) $@
- 		cp $? $@
- 		chmod 444 $@
- 
- $(GSM_INSTALL_MAN)/gsm_print.3:	$(MAN)/gsm_print.3
--		-rm $@
-+		-rm $(RMFLAGS) $@
- 		cp $? $@
- 		chmod 444 $@
- 
- $(GSM_INSTALL_INC)/gsm.h:	$(INC)/gsm.h
--		-rm $@
+-$(GSM_INSTALL_LIB)/libgsm.a:	$(LIBGSM)
+-		-rm $(RMFLAGS) $@
 -		cp $? $@
 -		chmod 444 $@
--
--$(GSM_INSTALL_LIB)/libgsm.a:	$(LIBGSM)
--		-rm $@
-+		-rm $(RMFLAGS) $@
- 		cp $? $@
- 		chmod 444 $@
- 
 +$(GSM_INSTALL_LIB)/libgsm.so:	$(LIBGSMSO)
-+		-rm $(RMFLAGS) $@ $@.1 $@.1.0.13
-+		cp $?.1.0.13 $@.1.0.13
-+		chmod 755 $@.1.0.13
-+		$(LN) libgsm.so.1.0.13 $@
-+		$(LN) libgsm.so.1.0.13 $@.1
++		-rm $(RMFLAGS) $@ $@.1 $@.$(DOTTED_VERSION)
++		cp $?.$(DOTTED_VERSION) $@.$(DOTTED_VERSION)
++		chmod 755 $@.$(DOTTED_VERSION)
++		$(LN) libgsm.so.$(DOTTED_VERSION) $@
++		$(LN) libgsm.so.$(DOTTED_VERSION) $@.1
+ 
  
  # Distribution
- 
-@@ -425,7 +425,7 @@
+@@ -428,7 +431,7 @@
  			-print | xargs rm $(RMFLAGS)
  
  clean:	semi-clean
 -		-rm $(RMFLAGS) $(LIBGSM) $(ADDTST)/add		\
 +		-rm $(RMFLAGS) $(LIBGSMSO)* $(ADDTST)/add		\
  			$(TOAST) $(TCAT) $(UNTOAST)	\
- 			$(ROOT)/gsm-1.0.tar.Z
+ 			$(ROOT)/gsm-1.0.tar.gz
  
-@@ -473,22 +473,22 @@
+@@ -476,22 +479,22 @@
  $(TST)/test-result:	$(TST)/lin2cod $(TST)/cod2lin $(TOAST) $(TST)/run
  			( cd $(TST); ./run ) 
  
