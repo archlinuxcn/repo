@@ -413,21 +413,20 @@ index 784972aed..9df672bb2 100644
      }
  }
 diff --git a/hw/xwayland/xwayland-output.c b/hw/xwayland/xwayland-output.c
-index 818df6d08..89625f525 100644
+index 818df6d08..e986ad11c 100644
 --- a/hw/xwayland/xwayland-output.c
 +++ b/hw/xwayland/xwayland-output.c
-@@ -184,8 +184,8 @@ update_backing_pixmaps(struct xwl_screen *xwl_screen, int width, int height)
+@@ -184,6 +184,9 @@ update_backing_pixmaps(struct xwl_screen *xwl_screen, int width, int height)
  static void
  update_screen_size(struct xwl_screen *xwl_screen, int width, int height)
  {
--    xwl_screen->width = width;
--    xwl_screen->height = height;
-+    xwl_screen->width = width * xwl_screen->global_output_scale;
-+    xwl_screen->height = height * xwl_screen->global_output_scale;
++    width = width * xwl_screen->global_output_scale;
++    height = height * xwl_screen->global_output_scale;
++    
+     xwl_screen->width = width;
+     xwl_screen->height = height;
  
-     if (xwl_screen->root_clip_mode == ROOT_CLIP_FULL)
-         SetRootClip(xwl_screen->screen, ROOT_CLIP_NONE);
-@@ -594,14 +594,15 @@ xwl_output_set_emulated_mode(struct xwl_output *xwl_output, ClientPtr client,
+@@ -594,14 +597,15 @@ xwl_output_set_emulated_mode(struct xwl_output *xwl_output, ClientPtr client,
                                               new_emulated_height);
  }
  
@@ -445,7 +444,7 @@ index 818df6d08..89625f525 100644
  
      /* Clear out the "done" received flags */
      xwl_output->wl_output_done = FALSE;
-@@ -620,10 +621,10 @@ apply_output_change(struct xwl_output *xwl_output)
+@@ -620,10 +624,10 @@ apply_output_change(struct xwl_output *xwl_output)
      }
      if (xwl_output->randr_output) {
          /* Build a fresh modes array using the current refresh rate */
@@ -458,7 +457,7 @@ index 818df6d08..89625f525 100644
                       xwl_output->rotation, NULL, 1, &xwl_output->randr_output);
          /* RROutputSetModes takes ownership of the passed in modes, so we only
           * have to free the pointer array.
-@@ -666,7 +667,7 @@ output_handle_done(void *data, struct wl_output *wl_output)
+@@ -666,7 +670,7 @@ output_handle_done(void *data, struct wl_output *wl_output)
       */
      if (xwl_output->xdg_output_done || !xwl_output->xdg_output ||
          zxdg_output_v1_get_version(xwl_output->xdg_output) >= 3)
@@ -467,7 +466,7 @@ index 818df6d08..89625f525 100644
  }
  
  static void
-@@ -709,7 +710,7 @@ xdg_output_handle_done(void *data, struct zxdg_output_v1 *xdg_output)
+@@ -709,7 +713,7 @@ xdg_output_handle_done(void *data, struct zxdg_output_v1 *xdg_output)
      xwl_output->xdg_output_done = TRUE;
      if (xwl_output->wl_output_done &&
          zxdg_output_v1_get_version(xdg_output) < 3)
@@ -476,7 +475,7 @@ index 818df6d08..89625f525 100644
  }
  
  static void
-@@ -815,6 +816,9 @@ xwl_output_create(struct xwl_screen *xwl_screen, uint32_t id, Bool with_xrandr)
+@@ -815,6 +819,9 @@ xwl_output_create(struct xwl_screen *xwl_screen, uint32_t id, Bool with_xrandr)
          RROutputSetConnection(xwl_output->randr_output, RR_Connected);
          RRTellChanged(xwl_screen->screen);
      }
@@ -622,7 +621,7 @@ index 0f6cacd3f..005fd9fc8 100644
      /* Arbitrary limit to try to avoid flooding the Wayland
       * connection. If we flood it too much anyway, this could
 diff --git a/hw/xwayland/xwayland.c b/hw/xwayland/xwayland.c
-index 51d3147f1..05c39704e 100644
+index a15b1f3ee..7c9ef9b92 100644
 --- a/hw/xwayland/xwayland.c
 +++ b/hw/xwayland/xwayland.c
 @@ -47,12 +47,15 @@
@@ -641,7 +640,7 @@ index 51d3147f1..05c39704e 100644
  void
  ddxGiveUp(enum ExitCode error)
  {
-@@ -299,6 +302,7 @@ xwl_log_handler(const char *format, va_list args)
+@@ -302,6 +305,7 @@ xwl_log_handler(const char *format, va_list args)
  static const ExtensionModule xwayland_extensions[] = {
  #ifdef XF86VIDMODE
      { xwlVidModeExtensionInit, XF86VIDMODENAME, &noXFree86VidModeExtension },
