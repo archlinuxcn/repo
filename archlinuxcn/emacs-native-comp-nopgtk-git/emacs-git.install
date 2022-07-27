@@ -1,8 +1,0 @@
-post_install() {
-    # fix user/root permissions on usr/share files
-    find "$pkgdir"/usr/share/emacs/ | xargs chown root:root
-    # make sure directory has the correct owner and group
-    chown -R root:games "$pkgdir"/var/games
-}
-
-# vim:sw=4:ts=4:et:ft=bash
