@@ -1,34 +1,33 @@
 # Maintainer: Rodrigo Bezerra <rodrigobezerra21 at gmail dot com>
 # Contributor: orumin <dev@orum.in>
 
-_basename=sbc
 pkgname=lib32-sbc
-pkgver=1.5
-pkgrel=2
+pkgver=2.0
+pkgrel=1
 pkgdesc="Bluetooth Subband Codec (SBC) library (32-bit)"
 url="https://git.kernel.org/pub/scm/bluetooth/sbc.git"
 arch=(x86_64)
 license=(GPL LGPL)
 depends=(lib32-glibc sbc)
 makedepends=(git lib32-gcc-libs)
-_commit=b2c20a3ecf5ed00f63c94077a9762b505935ede9  # tags/1.5^0
+_commit=8dc5d5ba381512ad5b1afa45c63ec6b0a3833244 # tags/2.0^0
 source=("git+$url#commit=$_commit")
-sha512sums=('SKIP')
+b2sums=('SKIP')
 
 pkgver() {
-    cd $_basename
+    cd sbc
 
-    git describe --tags | sed 's/-/+/g'
+    git describe --tags | sed 's/[^-]*-g/r&/;s/-/+/g'
 }
 
 prepare() {
-    cd $_basename
+    cd sbc
 
     autoreconf -fvi
 }
 
 build() {
-    cd $_basename
+    cd sbc
 
     export CC='gcc -m32'
     export CXX='g++ -m32'
@@ -44,13 +43,13 @@ build() {
 }
 
 check() {
-    cd $_basename
+    cd sbc
 
     make check
 }
 
 package() {
-    cd $_basename
+    cd sbc
 
     make DESTDIR="$pkgdir" install
 
