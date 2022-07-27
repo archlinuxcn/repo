@@ -2,7 +2,7 @@
 
 _pkgname=remi
 pkgname=python-remi
-pkgver=2022.03.07
+pkgver=2022.7.27
 pkgrel=1
 pkgdesc='Cross-platform GUI library which renders in a web browser'
 arch=('any')
@@ -18,7 +18,7 @@ optdepends=(
   'python-pywebview: for standalone app'
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/dddomodossola/remi/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('81965937ac80599b7342af6ec57c415b962b2e629fe733b6759e8f4d7d7e9667')
+sha256sums=('362375d60e4e460a88c9f2198a83ae7a6476a32987d2fc97154211be829331f5')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
