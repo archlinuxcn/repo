@@ -16,7 +16,7 @@
  #endif
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -6251,11 +6251,18 @@ function onViewToolbarsPopupShowing(aEve
+@@ -6466,11 +6466,18 @@ function onViewToolbarsPopupShowing(aEve
    MozXULElement.insertFTLIfNeeded("browser/toolbarContextMenu.ftl");
    let firstMenuItem = aInsertPoint || popup.firstElementChild;
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
@@ -32,23 +32,22 @@
 +      continue;
 +    }
 +
-     if (toolbar.id == "PersonalToolbar" && gBookmarksToolbar2h2020) {
+     if (toolbar.id == "PersonalToolbar") {
        let menu = BookmarkingUI.buildBookmarksToolbarSubmenu(toolbar);
        popup.insertBefore(menu, firstMenuItem);
 --- a/browser/components/places/content/places.xhtml
 +++ b/browser/components/places/content/places.xhtml
-@@ -169,7 +169,7 @@
-         <toolbarbutton type="menu" class="tabbable" wantdropmarker="true"
-               onpopupshowing="document.getElementById('placeContent').focus()"
+@@ -165,6 +165,7 @@
  #else
--      <menubar id="placesMenu">
-+      <menubar id="placesMenu" _moz-menubarkeeplocal="true">
-         <menu accesskey="&organize.accesskey;" class="menu-iconic"
+       <menubar id="placesMenu">
+         <menu class="menu-iconic" data-l10n-id="places-organize-button"
++              _moz-menubarkeeplocal="true"
  #endif
-               id="organizeButton" label="&organize.label;"
+               id="organizeButton">
+           <menupopup id="organizeButtonPopup">
 --- a/dom/xul/XULPopupElement.cpp
 +++ b/dom/xul/XULPopupElement.cpp
-@@ -211,6 +211,10 @@ void XULPopupElement::GetState(nsString&
+@@ -208,6 +208,10 @@ void XULPopupElement::GetState(nsString&
    // set this here in case there's no frame for the popup
    aState.AssignLiteral("closed");
  
@@ -59,7 +58,7 @@
    if (nsXULPopupManager* pm = nsXULPopupManager::GetInstance()) {
      switch (pm->GetPopupState(this)) {
        case ePopupShown:
-@@ -233,6 +237,11 @@ void XULPopupElement::GetState(nsString&
+@@ -230,6 +234,11 @@ void XULPopupElement::GetState(nsString&
          break;
      }
    }
@@ -73,7 +72,7 @@
  nsINode* XULPopupElement::GetTriggerNode() const {
 --- a/dom/xul/moz.build
 +++ b/dom/xul/moz.build
-@@ -83,6 +83,11 @@ LOCAL_INCLUDES += [
+@@ -82,4 +82,9 @@ LOCAL_INCLUDES += [
  
  include("/ipc/chromium/chromium-config.mozbuild")
  
@@ -83,11 +82,9 @@
 +    ]
 +
  FINAL_LIBRARY = "xul"
- 
- if CONFIG["CC_TYPE"] in ("clang", "gcc"):
 --- a/layout/build/moz.build
 +++ b/layout/build/moz.build
-@@ -68,6 +68,10 @@ elif CONFIG["MOZ_WIDGET_TOOLKIT"] == "an
+@@ -70,6 +70,10 @@ elif CONFIG["MOZ_WIDGET_TOOLKIT"] == "an
          "/dom/system",
          "/dom/system/android",
      ]
@@ -100,7 +97,7 @@
      "components.conf",
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -301,6 +301,9 @@ pref("dom.mouseevent.click.hack.use_lega
+@@ -311,6 +311,9 @@ pref("dom.mouseevent.click.hack.use_lega
  // Fastback caching - if this pref is negative, then we calculate the number
  // of content viewers to cache based on the amount of available memory.
  pref("browser.sessionhistory.max_total_viewers", -1);
@@ -112,39 +109,23 @@
  // 0 = no external leading,
 --- a/toolkit/content/xul.css
 +++ b/toolkit/content/xul.css
-@@ -230,6 +230,13 @@ toolbar[type="menubar"] {
+@@ -229,6 +229,13 @@ toolbox {
+   }
  }
- %endif
  
-+%ifdef MOZ_WIDGET_GTK
++@media (-moz-platform: linux) {
 +*|*:root[shellshowingmenubar="true"]
 +toolbar[type="menubar"]:not([customizing="true"]) {
 +  display: none !important;
 +}
-+%endif
++}
 +
  toolbarspring {
    -moz-box-flex: 1000;
  }
 --- a/widget/gtk/moz.build
 +++ b/widget/gtk/moz.build
-@@ -33,6 +33,7 @@
- EXPORTS.mozilla += ["WidgetUtilsGtk.h"]
- 
- EXPORTS.mozilla.widget += [
-+    "NativeMenuSupport.h",
-     "WindowSurface.h",
-     "WindowSurfaceProvider.h",
- ]
-@@ -45,6 +46,7 @@
-     "MozContainer.cpp",
-     "MPRISServiceHandler.cpp",
-     "NativeKeyBindings.cpp",
-+    "NativeMenuSupport.cpp",
-     "nsApplicationChooser.cpp",
-     "nsAppShell.cpp",
-     "nsBidiKeyboard.cpp",
-@@ -70,6 +72,15 @@
+@@ -77,6 +77,15 @@ UNIFIED_SOURCES += [
  
  SOURCES += [
      "MediaKeysEventSourceFactory.cpp",
@@ -160,7 +141,7 @@
      "nsNativeThemeGTK.cpp",  # conflicts with X11 headers
      "nsWindow.cpp",  # conflicts with X11 headers
      "WaylandVsyncSource.cpp",  # conflicts with X11 headers
-@@ -138,6 +149,7 @@
+@@ -152,6 +161,7 @@ LOCAL_INCLUDES += [
      "/layout/base",
      "/layout/forms",
      "/layout/generic",
@@ -786,7 +767,7 @@
 +}
 +
 +void
-+nsMenu::Update(ComputedStyle *aComputedStyle)
++nsMenu::Update(const ComputedStyle *aComputedStyle)
 +{
 +    if (mNeedsUpdate) {
 +        mNeedsUpdate = false;
@@ -838,10 +819,10 @@
 +        UpdateLabel();
 +    } else if (aAttribute == nsGkAtoms::hidden ||
 +        aAttribute == nsGkAtoms::collapsed) {
-+        RefPtr<ComputedStyle> style = GetComputedStyle();
++        RefPtr<const ComputedStyle> style = GetComputedStyle();
 +        UpdateVisibility(style);
 +    } else if (aAttribute == nsGkAtoms::image) {
-+        RefPtr<ComputedStyle> style = GetComputedStyle();
++        RefPtr<const ComputedStyle> style = GetComputedStyle();
 +        UpdateIcon(style);
 +    }
 +}
@@ -1087,7 +1068,7 @@
 +
 +    OnOpen();
 +
-+    mOpenDelayTimer = do_CreateInstance(NS_TIMER_CONTRACTID);
++    mOpenDelayTimer = NS_NewTimer();
 +    if (!mOpenDelayTimer) {
 +        return;
 +    }
@@ -1229,7 +1210,7 @@
 +                              nsIContent *aChild);
 +
 +    void InitializeNativeData() override;
-+    void Update(mozilla::ComputedStyle *aComputedStyle) override;
++    void Update(const mozilla::ComputedStyle *aComputedStyle) override;
 +    nsMenuObject::PropertyFlags SupportedProperties() const override;
 +
 +    void OnAttributeChanged(nsIContent *aContent, nsAtom *aAttribute) override;
@@ -2822,7 +2803,7 @@
 +}
 +
 +void
-+nsMenuItem::Update(ComputedStyle *aComputedStyle)
++nsMenuItem::Update(const ComputedStyle *aComputedStyle)
 +{
 +    if (mNeedsUpdate) {
 +        mNeedsUpdate = false;
@@ -2897,10 +2878,10 @@
 +            UpdateState();
 +        } else if (aAttribute == nsGkAtoms::hidden ||
 +                   aAttribute == nsGkAtoms::collapsed) {
-+            RefPtr<ComputedStyle> style = GetComputedStyle();
++            RefPtr<const ComputedStyle> style = GetComputedStyle();
 +            UpdateVisibility(style);
 +        } else if (aAttribute == nsGkAtoms::image) {
-+            RefPtr<ComputedStyle> style = GetComputedStyle();
++            RefPtr<const ComputedStyle> style = GetComputedStyle();
 +            UpdateIcon(style);
 +        }
 +    } else if (aContent == mKeyContent &&
@@ -3007,7 +2988,7 @@
 +
 +    void InitializeNativeData() override;
 +    void UpdateContentAttributes() override;
-+    void Update(mozilla::ComputedStyle *aComputedStyle) override;
++    void Update(const mozilla::ComputedStyle *aComputedStyle) override;
 +    bool IsCompatibleWithNativeData(DbusmenuMenuitem *aNativeData) const override;
 +    nsMenuObject::PropertyFlags SupportedProperties() const override;
 +
@@ -3045,6 +3026,7 @@
 +#include "mozilla/Preferences.h"
 +#include "mozilla/PresShell.h"
 +#include "mozilla/PresShellInlines.h"
++#include "mozilla/GRefPtr.h"
 +#include "nsAttrValue.h"
 +#include "nsComputedDOMStyle.h"
 +#include "nsContentUtils.h"
@@ -3100,7 +3082,7 @@
 +
 +    nsMenuObjectIconLoader(nsMenuObject *aOwner) : mOwner(aOwner) { };
 +
-+    void LoadIcon(ComputedStyle *aComputedStyle);
++    void LoadIcon(const ComputedStyle *aComputedStyle);
 +    void Destroy();
 +
 +private:
@@ -3185,19 +3167,18 @@
 +        return;
 +    }
 +
-+    GdkPixbuf *pixbuf = nsImageToPixbuf::ImageToPixbuf(img);
++    RefPtr<GdkPixbuf> pixbuf = nsImageToPixbuf::ImageToPixbuf(img);
 +    if (pixbuf) {
 +        dbusmenu_menuitem_property_set_image(mOwner->GetNativeData(),
 +                                             DBUSMENU_MENUITEM_PROP_ICON_DATA,
 +                                             pixbuf);
-+        g_object_unref(pixbuf);
 +    }
 +
 +    return;
 +}
 +
 +void
-+nsMenuObjectIconLoader::LoadIcon(ComputedStyle *aComputedStyle)
++nsMenuObjectIconLoader::LoadIcon(const ComputedStyle *aComputedStyle)
 +{
 +    dom::Document *doc = mOwner->ContentNode()->OwnerDoc();
 +
@@ -3463,7 +3444,7 @@
 +}
 +
 +void
-+nsMenuObject::UpdateVisibility(ComputedStyle *aComputedStyle)
++nsMenuObject::UpdateVisibility(const ComputedStyle *aComputedStyle)
 +{
 +    bool vis = true;
 +
@@ -3494,7 +3475,7 @@
 +}
 +
 +void
-+nsMenuObject::UpdateIcon(ComputedStyle *aComputedStyle)
++nsMenuObject::UpdateIcon(const ComputedStyle *aComputedStyle)
 +{
 +    if (ShouldShowIcon()) {
 +        if (!mIconLoader) {
@@ -3512,12 +3493,12 @@
 +    }
 +}
 +
-+already_AddRefed<ComputedStyle>
++already_AddRefed<const ComputedStyle>
 +nsMenuObject::GetComputedStyle()
 +{
-+    RefPtr<ComputedStyle> style =
++    RefPtr<const ComputedStyle> style =
 +        nsComputedDOMStyle::GetComputedStyleNoFlush(
-+            mContent->AsElement(), nullptr);
++            mContent->AsElement());
 +
 +    return style.forget();
 +}
@@ -3545,7 +3526,7 @@
 +}
 +
 +void
-+nsMenuObject::Update(ComputedStyle *aComputedStyle)
++nsMenuObject::Update(const ComputedStyle *aComputedStyle)
 +{
 +}
 +
@@ -3649,7 +3630,7 @@
 +
 +    UpdateContentAttributes();
 +
-+    RefPtr<ComputedStyle> style = GetComputedStyle();
++    RefPtr<const ComputedStyle> style = GetComputedStyle();
 +    Update(style);
 +}
 +
@@ -3781,11 +3762,11 @@
 +    };
 +
 +    void UpdateLabel();
-+    void UpdateVisibility(mozilla::ComputedStyle *aComputedStyle);
++    void UpdateVisibility(const mozilla::ComputedStyle *aComputedStyle);
 +    void UpdateSensitivity();
-+    void UpdateIcon(mozilla::ComputedStyle *aComputedStyle);
++    void UpdateIcon(const mozilla::ComputedStyle *aComputedStyle);
 +
-+    already_AddRefed<mozilla::ComputedStyle> GetComputedStyle();
++    already_AddRefed<const mozilla::ComputedStyle> GetComputedStyle();
 +
 +private:
 +    friend class nsMenuObjectIconLoader;
@@ -3812,7 +3793,7 @@
 +    // Update properties that should be refreshed when the container opens.
 +    // This should be implemented by subclasses that have properties which
 +    // need refreshing
-+    virtual void Update(mozilla::ComputedStyle *aComputedStyle);
++    virtual void Update(const mozilla::ComputedStyle *aComputedStyle);
 +
 +    bool ShouldShowIcon() const;
 +    void ClearIcon();
@@ -3892,7 +3873,7 @@
 +}
 +
 +void
-+nsMenuSeparator::Update(ComputedStyle *aComputedStyle)
++nsMenuSeparator::Update(const ComputedStyle *aComputedStyle)
 +{
 +    UpdateVisibility(aComputedStyle);
 +}
@@ -3925,7 +3906,7 @@
 +
 +    if (aAttribute == nsGkAtoms::hidden ||
 +        aAttribute == nsGkAtoms::collapsed) {
-+        RefPtr<ComputedStyle> style = GetComputedStyle();
++        RefPtr<const ComputedStyle> style = GetComputedStyle();
 +        UpdateVisibility(style);
 +    }
 +}
@@ -3979,7 +3960,7 @@
 +
 +private:
 +    void InitializeNativeData() override;
-+    void Update(mozilla::ComputedStyle *aComputedStyle) override;
++    void Update(const mozilla::ComputedStyle *aComputedStyle) override;
 +    bool IsCompatibleWithNativeData(DbusmenuMenuitem *aNativeData) const override;
 +    nsMenuObject::PropertyFlags SupportedProperties() const override;
 +
@@ -5063,7 +5044,7 @@
 +#endif /* __nsNativeMenuService_h__ */
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
-@@ -6436,6 +6436,10 @@ void nsWindow::HideWindowChrome(bool aSh
+@@ -7060,6 +7060,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5076,7 +5057,7 @@
    nsIRollupListener* rollupListener = GetActiveRollupListener();
 --- a/widget/gtk/nsWindow.h
 +++ b/widget/gtk/nsWindow.h
-@@ -39,6 +39,8 @@
+@@ -26,6 +26,8 @@
  #include "nsRefPtrHashtable.h"
  #include "IMContextWrapper.h"
  
@@ -5085,24 +5066,24 @@
  #ifdef ACCESSIBILITY
  #  include "mozilla/a11y/LocalAccessible.h"
  #endif
-@@ -168,6 +170,8 @@ class nsWindow final : public nsBaseWidg
-                                   nsIScreen* aTargetScreen = nullptr) override;
-   virtual void HideWindowChrome(bool aShouldHide) override;
+@@ -172,6 +174,8 @@ class nsWindow final : public nsBaseWidg
+   nsresult MakeFullScreen(bool aFullScreen) override;
+   void HideWindowChrome(bool aShouldHide) override;
  
 +  void SetMenuBar(mozilla::UniquePtr<nsMenuBar> aMenuBar);
 +
    /**
     * GetLastUserInputTime returns a timestamp for the most recent user input
     * event.  This is intended for pointer grab requests (including drags).
-@@ -708,6 +712,8 @@ class nsWindow final : public nsBaseWidg
-   static GtkWindowDecoration sGtkWindowDecoration;
+@@ -824,6 +828,8 @@ class nsWindow final : public nsBaseWidg
  
    static bool sTransparentMainWindow;
-+
-+  mozilla::UniquePtr<nsMenuBar> mMenuBar;
  
++  mozilla::UniquePtr<nsMenuBar> mMenuBar;
++
  #ifdef ACCESSIBILITY
    RefPtr<mozilla::a11y::LocalAccessible> mRootAccessible;
+ 
 --- /dev/null
 +++ b/xpcom/ds/NativeMenuAtoms.py
 @@ -0,0 +1,9 @@
@@ -5125,7 +5106,7 @@
  import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
-@@ -2506,7 +2507,7 @@ STATIC_ATOMS = [
+@@ -2529,7 +2530,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
      # END ATOMS
@@ -5136,9 +5117,9 @@
  
 --- a/widget/gtk/components.conf
 +++ b/widget/gtk/components.conf
-@@ -82,6 +82,14 @@ Classes = [
-         'headers': ['/widget/gtk/nsApplicationChooser.h'],
-         'processes': ProcessSelector.MAIN_PROCESS_ONLY,
+@@ -76,6 +76,14 @@ Classes = [
+         'headers': ['/widget/gtk/nsUserIdleServiceGTK.h'],
+         'constructor': 'nsUserIdleServiceGTK::GetInstance',
      },
 +    {
 +        'cid': '{0b3fe5aa-bc72-4303-85ae-76365df1251d}',
@@ -5150,7 +5131,7 @@
 +    },
  ]
  
- if defined('MOZ_X11'):
+ if defined('NS_PRINTING'):
 --- a/xpfe/appshell/AppWindow.cpp
 +++ b/xpfe/appshell/AppWindow.cpp
 @@ -80,7 +80,7 @@
@@ -5162,34 +5143,33 @@
  #  include "mozilla/widget/NativeMenuSupport.h"
  #  define USE_NATIVE_MENUS
  #endif
---- /dev/null
+--- a/widget/gtk/NativeMenuSupport.cpp
 +++ b/widget/gtk/NativeMenuSupport.cpp
-@@ -0,0 +1,25 @@
-+/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
-+/* This Source Code Form is subject to the terms of the Mozilla Public
-+ * License, v. 2.0. If a copy of the MPL was not distributed with this
-+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-+
-+#include "mozilla/widget/NativeMenuSupport.h"
-+
-+#include "MainThreadUtils.h"
+@@ -7,6 +7,8 @@
+ 
+ #include "MainThreadUtils.h"
+ #include "NativeMenuGtk.h"
 +#include "nsINativeMenuService.h"
++#include "nsServiceManagerUtils.h"
+ 
+ namespace mozilla::widget {
+ 
+@@ -14,7 +16,14 @@ void NativeMenuSupport::CreateNativeMenu
+                                             dom::Element* aMenuBarElement) {
+   MOZ_RELEASE_ASSERT(NS_IsMainThread(),
+                      "Attempting to create native menu bar on wrong thread!");
+-  // TODO
 +
-+namespace mozilla::widget {
++  nsCOMPtr<nsINativeMenuService> nms =
++      do_GetService("@mozilla.org/widget/nativemenuservice;1");
++  if (!nms) {
++    return;
++  }
 +
-+void NativeMenuSupport::CreateNativeMenuBar(nsIWidget* aParent, dom::Element* aMenuBarElement) {
-+    MOZ_RELEASE_ASSERT(NS_IsMainThread(), "Attempting to create native menu bar on wrong thread!");
-+
-+    nsCOMPtr<nsINativeMenuService> nms =
-+        do_GetService("@mozilla.org/widget/nativemenuservice;1");
-+    if (!nms) {
-+        return;
-+    }
-+
-+    nms->CreateNativeMenuBar(aParent, aMenuBarElement);
-+}
-+
-+}  // namespace mozilla::widget
++  nms->CreateNativeMenuBar(aParent, aMenuBarElement);
+ }
+ 
+ already_AddRefed<NativeMenu> NativeMenuSupport::CreateNativeContextMenu(
 --- /dev/null
 +++ b/widget/gtk/NativeMenuSupport.h
 @@ -0,0 +1,31 @@
@@ -5226,7 +5206,7 @@
 +#endif  // mozilla_widget_NativeMenuSupport_h
 --- a/widget/moz.build
 +++ b/widget/moz.build
-@@ -144,6 +144,11 @@ EXPORTS += [
+@@ -157,6 +157,11 @@ EXPORTS += [
      "PuppetWidget.h",
  ]
  
@@ -5237,7 +5217,7 @@
 +
  EXPORTS.mozilla += [
      "BasicEvents.h",
-     "CommandList.h",
+     "ColorScheme.h",
 --- /dev/null
 +++ b/widget/nsINativeMenuService.h
 @@ -0,0 +1,39 @@

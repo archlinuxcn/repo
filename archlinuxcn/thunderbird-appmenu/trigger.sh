@@ -9,6 +9,13 @@ ver="$(curl https://releases.mozilla.org/pub/${_pkgname}/releases/ | sed -rn 's/
 #ver=91.0
 sed -r "s/(pkgver=)(.*)/\1$ver/" -i PKGBUILD
 
+#rm -rf debian
+#curl "$(curl https://packages.ubuntu.com/bionic/firefox | grep debian | cut -f2 -d \" | tail -n1)" |
+# unxz |
+# tar xf -
+#cp `find debian/patches/ | grep -v 'armh\|s390\|ppc\|386\|ubuntu'` .
+#rm -rf debian
+
 makepkg --printsrcinfo > .SRCINFO
 ver_msg="autohook $ver"
 
