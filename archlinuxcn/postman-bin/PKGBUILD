@@ -1,7 +1,7 @@
 # Maintainer: Jay Ta'ala <jay@jaytaala.com>
 # Contributor: Claudio d'Angelis <claudiodangelis at gmail dot com>
 pkgname=postman-bin
-pkgver=9.25.0
+pkgver=9.25.2
 pkgrel=1
 pkgdesc="Build, test, and document your APIs faster"
 provides=('postman')
@@ -11,11 +11,11 @@ url="https://www.getpostman.com"
 options=(!strip)
 license=('custom')
 source=(
-	"Postman-linux-x64-${pkgver}.tar.gz::https://dl.pstmn.io/download/version/${pkgver}/linux64"
+	"postman-${pkgver}-linux-x64.tar.gz::https://dl.pstmn.io/download/version/${pkgver}/linux64"
 	"postman.desktop"
 )
 depends=(libxss nss gtk3)
-sha256sums=('b4fa3f0bc93d80a7634adf629e7c9920b855a50bee9a423c521e86e2be024847'
+sha256sums=('118da102904cd7b04c50d3e2c2daac3fc1228f05e541eacef55e8ecbf73d3896'
             '74b2d8570658e207e31f729e7f4768952252383aee7c695218d077bd0ef13245')
 package() {
 	install -dm755 "${pkgdir}/opt/"
