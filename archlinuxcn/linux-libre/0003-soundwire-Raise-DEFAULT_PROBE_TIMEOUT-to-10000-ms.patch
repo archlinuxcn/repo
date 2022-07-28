@@ -1,0 +1,26 @@
+From 2da21cf28e573b84e5a5baecc1eda7372322375d Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <heftig@archlinux.org>
+Date: Sat, 23 Jul 2022 11:14:46 +0200
+Subject: [PATCH 3/3] soundwire: Raise DEFAULT_PROBE_TIMEOUT to 10000 ms
+
+See: https://github.com/thesofproject/linux/issues/3777#issuecomment-1192655300
+---
+ drivers/soundwire/bus.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
+index 7631ef5e71fb..d3ed828daac0 100644
+--- a/drivers/soundwire/bus.h
++++ b/drivers/soundwire/bus.h
+@@ -5,7 +5,7 @@
+ #define __SDW_BUS_H
+ 
+ #define DEFAULT_BANK_SWITCH_TIMEOUT 3000
+-#define DEFAULT_PROBE_TIMEOUT       2000
++#define DEFAULT_PROBE_TIMEOUT       10000
+ 
+ u64 sdw_dmi_override_adr(struct sdw_bus *bus, u64 addr);
+ 
+-- 
+2.37.1
+

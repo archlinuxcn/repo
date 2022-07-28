@@ -1,7 +1,7 @@
-From d174311bd7469ddf9c292ab41f2bca0a21b12ab2 Mon Sep 17 00:00:00 2001
+From 915405b2da517ee56a07e57230273ab2ff4e522d Mon Sep 17 00:00:00 2001
 From: Kevin Mihelich <kevin@archlinuxarm.org>
 Date: Sun, 11 Aug 2019 12:34:17 -0600
-Subject: [PATCH 9/9] USB Armory MkII support
+Subject: [PATCH 7/7] USB Armory MkII support
 
 ---
  arch/arm/boot/dts/Makefile              |   2 +
@@ -12,23 +12,25 @@ Subject: [PATCH 9/9] USB Armory MkII support
  create mode 100644 arch/arm/boot/dts/imx6ull-usbarmory.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 8f4062d549e2..9af811420ae6 100644
+index 235ad559acb2..ca79830160bd 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -626,11 +626,13 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
+@@ -694,6 +694,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
  	imx6ul-tx6ul-0010.dtb \
  	imx6ul-tx6ul-0011.dtb \
  	imx6ul-tx6ul-mainboard.dtb \
 +	imx6ul-usbarmory.dtb \
  	imx6ull-14x14-evk.dtb \
+ 	imx6ull-colibri-emmc-eval-v3.dtb \
  	imx6ull-colibri-eval-v3.dtb \
- 	imx6ull-colibri-wifi-eval-v3.dtb \
- 	imx6ull-myir-mys-6ulx-eval.dtb \
- 	imx6ull-opos6uldev.dtb \
-+	imx6ull-usbarmory.dtb \
+@@ -704,6 +705,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
  	imx6ull-phytec-segin-ff-rdk-nand.dtb \
  	imx6ull-phytec-segin-ff-rdk-emmc.dtb \
  	imx6ull-phytec-segin-lc-rdk-nand.dtb \
++	imx6ull-usbarmory.dtb \
+ 	imx6ulz-14x14-evk.dtb \
+ 	imx6ulz-bsh-smm-m2.dtb
+ dtb-$(CONFIG_SOC_IMX7D) += \
 diff --git a/arch/arm/boot/dts/imx6ul-usbarmory.dts b/arch/arm/boot/dts/imx6ul-usbarmory.dts
 new file mode 100644
 index 000000000000..1fdcd6f611d5
@@ -555,5 +557,5 @@ index 000000000000..f74d0296d5f6
 +	status = "okay";
 +};
 -- 
-2.30.0
+2.35.1
 

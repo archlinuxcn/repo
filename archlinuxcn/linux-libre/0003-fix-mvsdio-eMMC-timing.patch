@@ -1,7 +1,7 @@
-From 35bff27d14f5c3f29e42bf0bcde31dfc820f67a9 Mon Sep 17 00:00:00 2001
+From e8da1680d0273aaca806c23a10b4f3467a6b4f96 Mon Sep 17 00:00:00 2001
 From: Kevin Mihelich <kevin@archlinuxarm.org>
 Date: Fri, 5 Sep 2014 15:43:56 -0600
-Subject: [PATCH 4/9] fix mvsdio eMMC timing
+Subject: [PATCH 3/7] fix mvsdio eMMC timing
 
 These changes from Globalscale change the MMC timing to allow the eMMC versions
 of the Mirabox and SMILE Plug to work.
@@ -34,5 +34,5 @@ index 629efbe639c4..c507c064736c 100644
  		host->clock = ios->clock;
  		host->ns_per_clk = 1000000000 / (host->base_clock / (m+1));
 -- 
-2.30.0
+2.35.1
 
