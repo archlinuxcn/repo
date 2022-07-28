@@ -2,7 +2,7 @@
 
 _pkgname=mmpose
 pkgname=python-mmpose
-pkgver=0.28.0
+pkgver=0.28.1
 pkgrel=1
 pkgdesc='OpenMMLab Pose Estimation Toolbox and Benchmark'
 arch=('any')
@@ -33,7 +33,7 @@ optdepends=(
   python-trimesh
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmpose/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('236ab512a3c036c150f3acf068d33be505757d735e665ed4d01af71f5015bd9479301ceb9a28c2c434e01bdb545fdba2f8d9149cf70578b3f7b60b67976a5f29')
+sha512sums=('fa5450fc5ae16f93fa5ebcb2c70bcba7e065a747ba2137f2970f8eb3eb588eac55054cd6d2455a887f56abe59eb768dc79814fe854e0e843641864c0b1d2e5ec')
 
 build() {
   cd "${_pkgname}-${pkgver}"
