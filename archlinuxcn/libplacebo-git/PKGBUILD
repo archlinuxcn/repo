@@ -4,8 +4,8 @@
 pkgname=libplacebo-git
 _pkgname=libplacebo
 epoch=1
-pkgver=4.208.0.r42.gddc4181
-pkgrel=2
+pkgver=4.208.0.r58.gb8928ff
+pkgrel=1
 pkgdesc='Reusable library for GPU-accelerated video/image rendering primitives'
 url='https://github.com/haasn/libplacebo'
 arch=('x86_64')
@@ -14,14 +14,13 @@ depends=('vulkan-icd-loader' 'libvulkan.so'
          'glslang'
          'lcms2' 'liblcms2.so'
          'shaderc' 'libshaderc_shared.so'
-         'libepoxy' 'libepoxy.so'
          'libunwind'
          # for demos
          #'ffmpeg' 'libavcodec.so' 'libavutil.so' 'libavformat.so'
          #'glfw'
          #'sdl2' 'sdl2_image'
          )
-makedepends=('git' 'meson' 'ninja' 'vulkan-headers' 'python' 'python-mako')
+makedepends=('git' 'meson' 'ninja' 'vulkan-headers' 'python' 'python-mako' 'python-jinja' 'python-markupsafe')
 checkdepends=(
               'ffmpeg'
               'dav1d'
@@ -31,8 +30,10 @@ conflicts=('libplacebo')
 source=(
         'git+https://code.videolan.org/videolan/libplacebo.git'
         'git+https://github.com/Immediate-Mode-UI/Nuklear.git'
+        'git+https://github.com/Dav1dde/glad.git'
         )
 b2sums=('SKIP'
+        'SKIP'
         'SKIP')
 options=('debug' 'strip')
 
@@ -44,8 +45,10 @@ pkgver() {
 prepare() {
     cd ${srcdir}/libplacebo
     git config submodule.demos/3rdparty/nuklear.url "${srcdir}/Nuklear"
+    git config submodule.3rdparty/glad.url "${srcdir}/glad"
     git submodule update --init \
-        demos/3rdparty/nuklear
+        demos/3rdparty/nuklear \
+        3rdparty/glad
 }
 
 build() {
