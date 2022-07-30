@@ -2,8 +2,8 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=102.0.1
-pkgrel=1
+pkgver=103.0
+pkgrel=3
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
 license=(MPL GPL LGPL)
@@ -12,7 +12,7 @@ depends=(gtk3 libxt mime-types dbus-glib nss ttf-font libpulse ffmpeg)
 makedepends=(unzip zip diffutils yasm mesa imake inetutils xorg-server-xvfb
              autoconf2.13 rust clang llvm jack nodejs cbindgen nasm
              python-setuptools python-zstandard git binutils lld dump_syms
-             wasi-compiler-rt wasi-libc wasi-libc++ wasi-libc++abi pciutils) # pciutils: only to avoid some PGO warning
+             'wasi-compiler-rt>13' 'wasi-libc>=1:0+258+30094b6' 'wasi-libc++>13' 'wasi-libc++abi>13' pciutils) # pciutils: only to avoid some PGO warning
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
@@ -25,23 +25,21 @@ options=(!emptydirs !makeflags !strip !lto !debug)
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
 _source_tag="${pkgver}-${pkgrel}"
 # _source_commit='328f531b1b18ca0ba4f96483db89eeb129c41c4c' # not 'stable', but current source head
-_settings_tag='6.6'
-# _settings_commit='1a84d38bab56551f9ec2650644c4906650e75603' # hottest of fixes: 6.1 with a pref fix on top ^^
+# _settings_tag='6.7'
+_settings_commit='02212c3f44e7aa68b22c8febd9158580d7e4b74f'
 install='librewolf.install'
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         https://raw.githubusercontent.com/archlinux/svntogit-packages/1f6f9abcdcb2a03f259602b4671208b15cc6d4b9/trunk/zstandard-0.18.0.diff
-        https://raw.githubusercontent.com/archlinux/svntogit-packages/62e2fb9a401dea5a1a1152fd0f0029123e8187e1/trunk/cbindgen-0.24.0.diff
         $pkgname.desktop
         "git+https://gitlab.com/${pkgname}-community/browser/source.git#tag=${_source_tag}"
-        "git+https://gitlab.com/${pkgname}-community/settings.git#tag=${_settings_tag}"
+        "git+https://gitlab.com/${pkgname}-community/settings.git#commit=${_settings_commit}"
         "default192x192.png"
         "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
         )
 # source_aarch64=()
-sha256sums=('7bba6ffd6e8e42d5c38aa2a453f5fa30dfc9ef150f2175aa0625edb68fddae70'
+sha256sums=('acc41d050560db4c4177ea86e2d00e47d74229041fea4c02c0e9e87e64093773'
             'SKIP'
             'a6857ad2f2e2091c6c4fdcde21a59fbeb0138914c0e126df64b50a5af5ff63be'
-            '4628d136c3beada292e83cd8e89502cac4aa3836851b34259a665582a7713978'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
             'SKIP'
             'SKIP'
@@ -150,9 +148,6 @@ fi
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
   # patch -Np1 -i ${srcdir}/0001-Use-remoting-name-for-GDK-application-names.patch
 
-  # Unbreak build with cbindgen 0.24.0
-  patch -Np1 -i ../cbindgen-0.24.0.diff
-
   # Unbreak build with python-zstandard 0.18.0
   patch -Np1 -i ../zstandard-0.18.0.diff
 
@@ -207,9 +202,6 @@ fi
   # should not break things, buuuuuuuuuut we'll see.
   patch -Np1 -i ${_patches_dir}/dbus_name.patch
 
-  # add v100 about dialog
-  patch -Np1 -i ${_patches_dir}/aboutLogos.patch
-
   # allow uBlockOrigin to run in private mode by default, without user intervention.
   patch -Np1 -i ${_patches_dir}/allow-ubo-private-mode.patch
 
@@ -248,9 +240,6 @@ fi
 
   # hide "snippets" section from the home page settings, as it was already locked.
   patch -Np1 -i ${_patches_dir}/ui-patches/remove-snippets-from-home.patch
-
-  # add warning that sanitizing exceptions are bypassed by the options in History > Clear History when LibreWolf closes > Settings
-  patch -Np1 -i ${_patches_dir}/ui-patches/sanitizing-description.patch
 
   # add patch to hide website appearance settings
   patch -Np1 -i ${_patches_dir}/ui-patches/website-appearance-ui-rfp.patch
