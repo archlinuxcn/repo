@@ -2,10 +2,10 @@
 # Submitter: Schala Zeal <schalaalexiazeal@gmail.com>
 
 pkgname=spigot
-_pkgver=1.19
-_build=147
+_pkgver=1.19.1
+_build=148
 pkgver="${_pkgver}+b${_build}"
-pkgrel=15
+pkgrel=16
 _mng_ver=1.0.2
 pkgdesc="High performance Minecraft server implementation"
 arch=('any')
@@ -21,7 +21,7 @@ backup=("etc/conf.d/${pkgname}")
 install="${pkgname}.install"
 source=("BuildTools-${_pkgver}+b${_build}.jar::https://hub.spigotmc.org/jenkins/job/BuildTools/${_build}/artifact/target/BuildTools.jar"
 	"minecraft-server-${_mng_ver}.tar.gz"::"https://github.com/Edenhofer/minecraft-server/archive/refs/tags/v${_mng_ver}.tar.gz")
-sha512sums=('8adf51d70bb01d9df6d159cfa317d0d087d4098a36779478d425d2a7fc7de255d6705fad7f44f4875d082e16c4d012fcf80225dd8444b15583c34e2e6d4a428e'
+sha512sums=('d80c6a17f4dc539b06f2b8cc6c978a2d40a3629595e04706fec79535d6bb75c6d1c5e94661581a07836f3567d08f5d2fa663fae5a0eb492c6c2340013f4c09b7'
             '11d708d511b63e5541bcc1dbcaf29abbf7cb9583b1d313028770a39b26b41d48dcba023f7e1d6fe30f3c093d20e10a43363011edd432e5785a4580e5c5f852a6')
 
 _game="spigot"
