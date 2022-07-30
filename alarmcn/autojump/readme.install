@@ -1,0 +1,12 @@
+## arg 1:  the new package version
+## arg 2:  the old package version
+
+post_install() {
+  cat <<END
+>>>  Bash users will need to add the following to ~/.bashrc:
+     [[ -s /etc/profile.d/autojump.sh ]] && source /etc/profile.d/autojump.sh
+
+     Fish users will need to add the following to ~/.config/fish/config.fish:
+     [ -f /usr/share/autojump/autojump.fish ]; and source /usr/share/autojump/autojump.fish
+END
+}
