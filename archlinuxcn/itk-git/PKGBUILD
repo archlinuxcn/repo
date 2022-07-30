@@ -82,6 +82,7 @@ build() {
     -DITK_WRAP_unsigned_long_long=ON
     -DITK_WRAP_unsigned_short=ON
     -DITK_WRAP_vector_double=ON
+    -DModule_MorphologicalContourInterpolation=ON
 )
 
   cmake -B "build" -S "${srcdir}/${_pkgname}" \
