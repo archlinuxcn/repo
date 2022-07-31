@@ -2,13 +2,13 @@
 
 pkgname=bees-git
 pkgver=v0.7.r52.gfbf6b39
-pkgrel=1
+pkgrel=2
 pkgdesc="Best-Effort Extent-Same, a btrfs deduplicator daemon"
 arch=('x86_64')
 url="https://github.com/Zygo/bees"
 license=('GPL3')
-depends=('btrfs-progs' 'markdown')
-makedepends=('git' 'make' 'gcc' 'markdown' 'btrfs-progs')
+depends=('util-linux-libs' 'bash')
+makedepends=('git' 'make' 'gcc' 'discount' 'btrfs-progs' 'systemd')
 source=("$pkgname"::'git+https://github.com/zygo/bees.git#branch=master')
 md5sums=('SKIP')
 
