@@ -2,7 +2,7 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=2859
+pkgver=2877
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
@@ -15,7 +15,7 @@ provides=('yuzu')
 conflicts=('yuzu')
 source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz"
     "inject-git-info.patch")
-md5sums=('5a3590b6ed40f49122d415792ac50b26'
+md5sums=('bc66c5cb8b9daa1e30fdd855607cbe57'
          '3f0a9f3d79cbe4759e9ef550dbad0baa')
 
 prepare() {
@@ -34,6 +34,7 @@ prepare() {
   sed -i -e '/Name=yuzu/ s/$/ Early Access/' dist/yuzu.desktop
   sed -i -e '/yuzu %f/a StartupWMClass=yuzu' dist/yuzu.desktop
   sed -i -e 's_^MimeType=.*_&application/x-nx-nsp;application/x-nx-xci;_' dist/yuzu.desktop
+ 
   curl -s https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml > ./dist/yuzu.xml || curl -s https://gitlab.com/samantas5855/pineapple/-/raw/master/yuzu.xml > ./dist/yuzu.xml
 }
 build() {
@@ -56,6 +57,7 @@ build() {
     -DYUZU_USE_BUNDLED_LIBUSB=OFF \
     -DYUZU_USE_BUNDLED_QT=OFF \
     -DYUZU_USE_EXTERNAL_SDL2=OFF
+  rm ../src/core/network/network.h 
 
   ninja
 }
