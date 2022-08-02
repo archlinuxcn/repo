@@ -101,8 +101,7 @@ package_itk-git() {
   conflicts=(itk)
 
   make -C "${srcdir}/build" DESTDIR="${pkgdir}" install
-  # quick fix for https://github.com/InsightSoftwareConsortium/ITK/issues/2960
-  rm -rf "${pkgdir}/build"
+  rm -rf "${pkgdir}/usr/lib/python$(get_pyver)"
 }
 
 package_python-itk-git() {
@@ -117,8 +116,7 @@ package_python-itk-git() {
 
   make -C "${srcdir}/build" DESTDIR="${srcdir}/dist" install
   install -dm755 "${pkgdir}/usr/lib"
-  # quick fix for https://github.com/InsightSoftwareConsortium/ITK/issues/2960
-  find "${srcdir}/dist" -type d -name "python$(get_pyver)" -print0 -quit | xargs -0 mv -vt "${pkgdir}/usr/lib"
+  cp -a "${srcdir}/dist/usr/lib/python$(get_pyver)" "${pkgdir}/usr/lib"
   python -O -m compileall "${pkgdir}/usr/lib"
 }
 # vim:set ts=2 sw=2 et:
