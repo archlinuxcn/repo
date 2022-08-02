@@ -8,7 +8,7 @@
 pkgname=vscodium-bin
 _pkgname=VSCodium
 pkgver=1.69.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Binary releases of VS Code without MS branding/telemetry/licensing."
 arch=('x86_64' 'aarch64')
 url="https://github.com/VSCodium/vscodium"
@@ -21,7 +21,7 @@ optdepends=(
         'gvfs: For move to trash functionality'
         'libdbusmenu-glib: For KDE global menu'
 )
-provides=('codium' 'vscodium')
+provides=('vscode' 'codium' 'vscodium')
 conflicts=('vscodium' 'vscodium-git')
 
 sha256sums=('a665ef6e2a1711df2552d7ae49fd7f30f7a2d7e0dea71c7c5f4c90764d8c37ce'
