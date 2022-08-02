@@ -5,8 +5,8 @@
 
 pkgname=lib32-gsm
 _pkgbase=gsm
-pkgver=1.0.20
-pkgrel=2
+pkgver=1.0.21
+pkgrel=1
 pkgdesc="Shared libraries for GSM 06.10 lossy speech compression"
 arch=('x86_64')
 url="http://www.quut.com/gsm/"
@@ -15,8 +15,8 @@ depends=('gsm' 'lib32-glibc')
 makedepends=('lib32-gcc-libs')
 source=("http://www.quut.com/${_pkgbase}/${_pkgbase}-${pkgver}.tar.gz"
         'gsm-shared.patch')
-sha256sums=('6315c38518b81e899c3fc2ed463cc623af29c5c231a48c137b24302234ae90bf'
-            'b402f0d0f3b829783a04b3582a883a49d091167d2ef2578a0faf38bbbae31a88')
+sha256sums=('7d8439fc6ed8bfba1a85011f26800b2afee78b96555c9ed9ce9d3024d4da7754'
+            'c551ef1efef5b6a56fb8d955d1c8adf89f11556330dc8df405e3ffb0e3f3f8d7')
 
 
 prepare() {
