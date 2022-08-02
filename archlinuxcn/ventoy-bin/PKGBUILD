@@ -4,7 +4,7 @@
 
 pkgname=ventoy-bin
 pkgver=1.0.79
-pkgrel=1
+pkgrel=2
 pkgdesc="A new multiboot USB solution"
 arch=('aarch64' 'i686' 'x86_64')
 url="http://www.ventoy.net"
@@ -86,5 +86,7 @@ package() {
   install -Dm755 "$srcdir/${pkgname%-bin}"{,gui,web,plugson,-{,extend-}persistent} -vt "$pkgdir"/usr/bin/
 
   # Remove Gtk 2 files
-  rm "$pkgdir/opt/${pkgname%-bin}/tool/$CARCH/Ventoy2Disk.gtk2"
+  if [ $CARCH == "x86_64" ]; then
+    rm "$pkgdir/opt/${pkgname%-bin}/tool/$CARCH/Ventoy2Disk.gtk2"
+  fi
 }
