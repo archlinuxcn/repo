@@ -2,7 +2,7 @@
 
 pkgname=v2raya
 _pkgname=v2rayA
-pkgver=1.5.8.1
+pkgver=1.5.9.1698
 pkgrel=1
 pkgdesc="A Linux web GUI client of Project V"
 arch=('x86_64')
@@ -12,7 +12,7 @@ depends=('glibc')
 optdepends=('v2ray>=4.37.0-1' 'xray>=1.4.2-1')
 makedepends=('go>=2:1.17.0-1' 'nodejs>=14' 'yarn' 'python2')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-b2sums=('217b86f0785d0851e94008695242a3c6be73cc14c77155772ff210511001da7b1a231597ab58e45d03c35a14b71cb0016121480f9c91e6e18e229714e6df347f')
+b2sums=('4039c403966026c956d24b0cd74a7eacaa2deb1883760d3f484737b2b4a8aa326e9f1bf23b6ef80b76b33302f14baec8c6523e276fa7afeb1fe0e36de61e5112')
 
 build() {
     export OUTPUT_DIR="${srcdir}/${_pkgname}-${pkgver}/service/server/router/web/"
