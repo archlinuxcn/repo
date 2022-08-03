@@ -2,7 +2,7 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=2878
+pkgver=2888
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
@@ -15,7 +15,7 @@ provides=('yuzu')
 conflicts=('yuzu')
 source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz"
     "inject-git-info.patch")
-md5sums=('30b69ffb0ff2d897a372893915e43460'
+md5sums=('36aec66aeb8ae3597bcdef76abdab67c'
          '3f0a9f3d79cbe4759e9ef550dbad0baa')
 
 prepare() {
@@ -29,8 +29,8 @@ prepare() {
   #find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*)$/ )/g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/-Werror/-W/g' {} +
-  #sed -i -e 's/--quiet //g' src/video_core/host_shaders/CMakeLists.txt
-  #sed -i -e 's#${SPIRV_HEADER_FILE} ${SOURCE_FILE}#${SPIRV_HEADER_FILE} ${SOURCE_FILE} 2>/dev/null#g' src/video_core/host_shaders/CMakeLists.txt
+  sed -i -e 's/--quiet //g' src/video_core/host_shaders/CMakeLists.txt
+  sed -i -e 's#${SPIRV_HEADER_FILE} ${SOURCE_FILE}#${SPIRV_HEADER_FILE} ${SOURCE_FILE} 2>/dev/null#g' src/video_core/host_shaders/CMakeLists.txt
   sed -i -e '/Name=yuzu/ s/$/ Early Access/' dist/yuzu.desktop
   sed -i -e '/yuzu %f/a StartupWMClass=yuzu' dist/yuzu.desktop
   sed -i -e 's_^MimeType=.*_&application/x-nx-nsp;application/x-nx-xci;_' dist/yuzu.desktop
@@ -41,6 +41,8 @@ build() {
   cd "$srcdir/pineapple-src-EA-${pkgver}"
 	mkdir -p build && cd build
   cmake .. -GNinja \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_C_COMPILER=clang \
     -DTITLE_BAR_FORMAT_IDLE="yuzu Early Access $pkgver" \
     -DTITLE_BAR_FORMAT_RUNNING="yuzu Early Access $pkgver | {3}" \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -57,7 +59,6 @@ build() {
     -DYUZU_USE_BUNDLED_LIBUSB=OFF \
     -DYUZU_USE_BUNDLED_QT=OFF \
     -DYUZU_USE_EXTERNAL_SDL2=OFF
-  rm ../src/core/network/network.h 
 
   ninja
 }
