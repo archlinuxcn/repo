@@ -1,0 +1,13 @@
+maintainers:
+  - github: wuyudi
+
+build_prefix: extra-x86_64
+
+post_build: aur_post_build
+
+update_on:
+  - source: github
+    github: TDesktop-x64/tdesktop
+    use_latest_release: true
+  - source: aur
+    aur: 64gram-desktop
