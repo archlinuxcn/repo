@@ -1,0 +1,20 @@
+https://forum.palemoon.org/viewtopic.php?f=62&t=28676
+diff -aur a/platform/ipc/chromium/src/third_party/libevent/arc4random.c b/platform/ipc/chromium/src/third_party/libevent/arc4random.c
+--- a/platform/ipc/chromium/src/third_party/libevent/arc4random.c	2022-08-03 10:28:29.353126800 +0100
++++ b/platform/ipc/chromium/src/third_party/libevent/arc4random.c	2022-08-03 21:16:14.795881259 +0100
+@@ -482,6 +482,7 @@
+ #endif
+ 
+ #if defined(_we_have_arc4random_buf) || !defined(XP_SOLARIS)
++#if (__GLIBC__ <= 2 && __GLIBC_MINOR__ < 36) || !defined(XP_LINUX)
+ ARC4RANDOM_EXPORT void
+ arc4random_buf(void *_buf, size_t n)
+ {
+@@ -496,6 +497,7 @@
+ 	_ARC4_UNLOCK();
+ }
+ #endif
++#endif
+ 
+ #ifndef ARC4RANDOM_NOUNIFORM
+ /*
