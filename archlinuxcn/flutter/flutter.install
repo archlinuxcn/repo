@@ -4,10 +4,8 @@ post_install() {
   chmod -R g+w /opt/flutter
   printf "$(tput setaf 4)Flutter was installed on $(tput setaf 2)/opt/flutter$(tput sgr0)\n"
   printf "$(tput setaf 4)$(tput sgr0)\n"
-  printf "$(tput setaf 4)If you intend to use it as a regular user, add your user into the group flutterusers:$(tput sgr0)\n"
+  printf "$(tput setaf 4)In case you encounter problems using Flutter as regular user, add your user into the group flutterusers:$(tput sgr0)\n"
   printf "$(tput setaf 2)gpasswd -a \${USER} flutterusers$(tput sgr0)\n"
-  printf "$(tput setaf 4)$(tput sgr0)\n"
-  printf "$(tput setaf 4)You need to source $(tput setaf 2)/etc/profile$(tput setaf 4) or relogin to add flutter to your path.$(tput sgr0)\n"
   printf "$(tput setaf 4)$(tput sgr0)\n"
   printf "$(tput setaf 4)Re-login your terminal in to the group flutterusers:$(tput sgr0)\n"
   printf "$(tput setaf 2)newgrp flutterusers$(tput sgr0)\n"

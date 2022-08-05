@@ -1,11 +1,11 @@
 # Maintainer: Fredy García <frealgagu at gmail dot com>
-# Contributor: Philip Goto <philip.goto@gmail.com>
+# Contributor: Philip Goto <philip.goto@gmail.com>, WithTheBraid <the-one@with-the-braid.cf>
 
 pkgname=flutter
-pkgver=3.0.3
+pkgver=3.0.5
 pkgrel=1
 pkgdesc="A new mobile app SDK to help developers and designers build modern mobile apps for iOS and Android."
-arch=("x86_64")
+arch=("x86_64" "aarch64")
 url="https://${pkgname}.dev"
 license=("custom" "BSD" "CCPL")
 depends=("git" "glu" "java-environment" "libglvnd" "unzip")
@@ -20,7 +20,7 @@ source=(
   "${pkgname}.csh"
 )
 sha256sums=(
-  "f3806787f3afc379769024f4f9b20c243811881a72bc9c6e62bfc2fd50676c48"
+  "691a125ce790faf8a34536b9bd298c31adbf2d2568fc9384e2d43a69c5c1d6cc"
   "1dea1952d386c43948b9970382c2da5b65b7870684b8ad2ad89124e873aa485a"
   "7ef10d753cfaac52d243549764a793f44f8284a1f4b11715ccd2fa915b026a6f"
 )
@@ -37,6 +37,7 @@ package() {
   "${pkgdir}/opt/${pkgname}/bin/flutter" precache
   find "${pkgdir}/opt/${pkgname}" -type d -exec chmod a+rx {} +
   find "${pkgdir}/opt/${pkgname}" -type f -exec chmod a+r {} +
-  chmod a+rw "${pkgdir}/opt/${pkgname}/version"
+  # those files *must* be read-write for end-users; not my fault *grumble*
+  chmod a+rw "${pkgdir}/opt/${pkgname}/version" "${pkgdir}/opt/${pkgname}/bin/cache/lockfile" "${pkgdir}/opt/${pkgname}/bin/cache/usbmuxd.stamp" "${pkgdir}/opt/${pkgname}/bin/cache/libimobiledevice.stamp"
   ln -s "/opt/${pkgname}/bin/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
 }
