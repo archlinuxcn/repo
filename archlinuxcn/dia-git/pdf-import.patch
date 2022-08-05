@@ -1,26 +1,79 @@
 --- plug-ins/pdf/pdf-import.cpp	2022-03-12 08:17:49.242369295 +0800
 +++ plug-ins/pdf/pdf-import.cpp	2022-03-12 08:19:04.302435181 +0800
-@@ -867,11 +867,11 @@ extern "C"
- gboolean
- import_pdf(const gchar *filename, DiagramData *dia, DiaContext *ctx, void* user_data)
- {
--  PDFDoc *doc;
-+  std::unique_ptr<PDFDoc> doc;
+@@ -318,10 +318,10 @@
+     //FIXME: Dia is really unhappy about zero size fonts
+     if (!(state->getFontSize() > 0.0))
+       return;
+-    GfxFont *f = state->getFont();
+-
++   const std::shared_ptr<GfxFont> f = state->getFont();  // poppler 22.05 ... header changed
++   gconstpointer f1 = &f;  // GLib typedef const void * gconstpointer;
+     // instead of building the same font over and over again
+-    if (g_hash_table_lookup (this->font_map, f)) {
++    if (g_hash_table_lookup (this->font_map, f1)) {
+       ++font_map_hits;
+       return;
+     }
+@@ -333,10 +333,9 @@ public :
+     gchar *family = g_strdup (f->getFamily() ? f->getFamily()->c_str() : "sans");
+ 
+     // we are (not anymore) building the same font over and over again
+-    g_print ("Font 0x%x: '%s' size=%g (* %g)\n",
+-	     GPOINTER_TO_INT (f), family, state->getTransformedFontSize(), scale);
+-
+     // now try to make a fontname Dia/Pango can cope with
++   f1  = &f;
++    g_print ("Font 0x%x: '%s' size=%g (* %g)\n", GPOINTER_TO_INT (f1), family, state->getTransformedFontSize(), scale);
+     // strip style postfix - we already have extracted the style bits above
+     char *pf;
+     if ((pf = strstr (family, " Regular")) != NULL)
+@@ -353,8 +353,9 @@
+     if (fm[0] != 0)
+       fsize *= fabs(fm[3] / fm[0]);
+     font = dia_font_new (family, style, fsize * scale / 0.8);
+-
+-    g_hash_table_insert (this->font_map, f, font);
++   f1  = &f;
++   gpointer f2 = (gpointer)f1;  // GLib typedef void* gpointer;
++    g_hash_table_insert (this->font_map, f2, font);
+     g_free (family);
+   }
+   void updateTextShift(GfxState *state, double shift)
+@@ -721,11 +722,12 @@
+     return;
+   if (!(state->getFontSize() > 0.0))
+     return;
+-  font = (DiaFont *)g_hash_table_lookup (this->font_map, state->getFont());
++  font = (DiaFont *)g_hash_table_lookup (this->font_map, &(state->getFont()));
+
+   // we have to decode the string data first
+   {
+-    GfxFont *f = state->getFont();
++//    GfxFont *f = state->getFont();
++   const std::shared_ptr<GfxFont> f = state->getFont();
+     const char *p = s->c_str();
+     CharCode code;
+     int   j = 0, m, n;
+@@ -870,8 +872,10 @@
+   std::unique_ptr<PDFDoc> doc;
    GooString *fileName = new GooString(filename);
    // no passwords yet
 -  GooString *ownerPW = NULL;
 -  GooString *userPW = NULL;
++  //GooString *ownerPW = NULL;
++  //GooString *userPW = NULL;
 +  const std::optional<GooString> ownerPW;
 +  const std::optional<GooString> userPW;
    gboolean ret = FALSE;
- 
+
    // without this we will get strange crashes (at least with /O2 build)
-@@ -899,7 +899,7 @@ import_pdf(const gchar *filename, Diagra
+@@ -899,7 +903,8 @@
      delete diaOut;
      ret = TRUE;
    }
--  delete doc;
-+  doc.reset();
-   delete fileName;
- 
+-  delete fileName;
++ doc.reset();
++ delete fileName;
+
    return ret;
+ }
