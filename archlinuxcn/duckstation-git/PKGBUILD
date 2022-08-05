@@ -1,7 +1,7 @@
 # Maintainer: katt <magunasu.b97@gmail.com>
 
 pkgname=duckstation-git
-pkgver=5443.667726bb
+pkgver=5541.bdb486cc
 pkgdesc='A Sony PlayStation (PSX) emulator, focusing on playability, speed, and long-term maintainability (git version)'
 pkgrel=1
 epoch=1
@@ -22,10 +22,11 @@ pkgver() {
 }
 
 build() {
-    cmake -B build -S duckstation \
-        -DUSE_DRMKMS=ON \
+   cmake -B build -S duckstation \
+        -DBUILD_NOGUI_FRONTEND=OFF \
         -DUSE_WAYLAND=ON \
-        -G Ninja
+        -G Ninja \
+        -Wno-dev
     ninja -C build
 }
 
@@ -36,11 +37,11 @@ package() {
 
     # Symlink to /usr/bin
     install -m755 -d "${pkgdir}/usr/bin"
-    ln -svt "${pkgdir}/usr/bin" /opt/"${pkgname%-git}"/"${pkgname%-git}"-{qt,nogui}
+    ln -svt "${pkgdir}/usr/bin" /opt/"${pkgname%-git}"/"${pkgname%-git}"-qt
 
     # Desktop file
-    install -Dm644 -t "${pkgdir}/usr/share/applications/" "${pkgname%-git}"/extras/linux-desktop-files/duckstation-{qt,nogui}.desktop
+    install -Dm644 -t "${pkgdir}/usr/share/applications/" "${pkgname%-git}"/extras/linux-desktop-files/duckstation-qt.desktop
     sed -e 's/Icon=duckstation-qt/Icon=duckstation/' -i "${pkgdir}/usr/share/applications/duckstation-qt.desktop"
-    sed -e 's/Icon=duckstation-qt/Icon=duckstation/' -i "${pkgdir}/usr/share/applications/duckstation-nogui.desktop"
+    #sed -e 's/Icon=duckstation-qt/Icon=duckstation/' -i "${pkgdir}/usr/share/applications/duckstation-nogui.desktop"
     install -Dm644 "${pkgname%-git}"/extras/icons/icon-256px.png "${pkgdir}/usr/share/pixmaps/duckstation.png"
 }
