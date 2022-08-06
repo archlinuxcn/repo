@@ -1,9 +1,9 @@
 # Maintainer: Chih-Hsuan Yen <yan12125@gmail.com>
 
 pkgname=python-onnxoptimizer
-pkgver=0.2.7
+pkgver=0.3.0
 pkgdesc='ONNX model optimizer'
-pkgrel=5
+pkgrel=1
 arch=(x86_64)
 url='https://github.com/onnx/optimizer'
 license=(MIT)
@@ -11,7 +11,7 @@ depends=(python python-onnx)
 makedepends=(python-setuptools cmake pybind11 git)
 checkdepends=(python-pytest python-nbval python-onnxruntime python-torchvision)
 source=("onnx-optimizer::git+https://github.com/onnx/optimizer.git#tag=v$pkgver"
-        "git+https://github.com/onnx/onnx.git")
+        "onnx-daquexian"::"git+https://github.com/daquexian/onnx.git")
 sha256sums=('SKIP'
             'SKIP')
 options=('debug')
@@ -19,18 +19,16 @@ options=('debug')
 prepare() {
   cd onnx-optimizer
   sed -i '/pytest-runner/d' setup.py
-  # Use system protobuf
-  sed -i '/third_party\/protobuf/d' CMakeLists.txt
 
   git submodule init
-  git config submodule.third_party/onnx.url "$srcdir"/onnx
+  git config submodule.third_party/onnx.url "$srcdir"/onnx-daquexian
   git submodule update third_party/onnx
 }
 
 build() {
   cd onnx-optimizer
-  # https://github.com/onnx/optimizer/issues/38
-  CMAKE_ARGS="-DONNX_USE_LITE_PROTO=ON" python setup.py build
+  # Use system protobuf and protobuf-lite (https://github.com/onnx/optimizer/issues/38)
+  CMAKE_ARGS="-DONNX_OPT_USE_SYSTEM_PROTOBUF=ON -DONNX_USE_PROTOBUF_SHARED_LIBS=ON -DONNX_USE_LITE_PROTO=ON" python setup.py build
 }
 
 check() {
