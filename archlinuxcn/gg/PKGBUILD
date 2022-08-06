@@ -2,7 +2,7 @@
 # Contributor:  mzz2017 < mzz at tuta dot io>
 
 pkgname=gg
-pkgver=0.2.6
+pkgver=0.2.8
 pkgrel=1
 provides=('gg')
 pkgdesc='A command-line tool for one-click proxy in your research and development without installing v2ray or anything else (only for linux).'
@@ -12,7 +12,7 @@ license=('AGPL')
 depends=('glibc')
 makedepends=('go')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('0ad99e4580212364705762c2a8b964d54d4025b446d4d7e32fa749f4b6b38228')
+sha256sums=('d2312eb3feaa331e9139ab5f683516baa9cd8551753a6be59b902214c64b6021')
 
 prepare(){
     cd "$srcdir/$pkgname-$pkgver"
