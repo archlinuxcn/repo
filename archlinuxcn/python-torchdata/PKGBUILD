@@ -2,7 +2,7 @@
 
 _pkgname=data
 pkgname=python-torchdata
-pkgver=0.4.0
+pkgver=0.4.1
 pkgrel=1
 pkgdesc='A PyTorch repo for data loading and utilities to be shared by the PyTorch domain libraries'
 arch=('any')
@@ -21,7 +21,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/pytorch/data/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('b33c21b04efc5c78f3d25c04f499e40b542f61c486dddad43ef605cf958089087a8612a609c4946ca43bdf408172d9a96130c008fd7b29ccf2e34562785f1bc7')
+sha512sums=('1723aa052db374945c6fd73e012a0668fe8b74afce107ea65c7b65ed9acebfd8e500c3dd6223cf483ff61d90f0898aaa7492165c4fc68c2e2e0c64b29d005408')
 
 build() {
   cd "${_pkgname}-${pkgver}"
