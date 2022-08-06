@@ -1,13 +1,14 @@
-# Maintainer: Aaron Paden <aaronbpaden@gmail.com>
+# Maintainer: Nathan Jensen <nathanjensen1@outlook.com>
+# Contributor: Aaron Paden <aaronbpaden@gmail.com>
 # Contributor: Natalia Portillo <claunia@clania.com>
 pkgname=pcem
 pkgver=17
-pkgrel=4
+pkgrel=5
 pkgdesc="Emulator for various IBM PC computers and clones."
 url="http://pcem-emulator.co.uk/"
 arch=('x86_64' 'i686')
 license=('GPL2')
-depends=('wxgtk3' 'openal' 'sdl2' 'alsa-lib')
+depends=('wxwidgets-gtk3' 'openal' 'sdl2' 'alsa-lib')
 source=("http://pcem-emulator.co.uk/files/PCemV${pkgver}Linux.tar.gz")
 
 build() {
