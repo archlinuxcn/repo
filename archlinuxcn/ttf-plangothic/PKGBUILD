@@ -1,19 +1,21 @@
 # Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
 
 pkgname=ttf-plangothic
-pkgver=0.4.0000
-pkgrel=2
+epoch=1
+pkgver=0.3.4084
+pkgrel=1
 pkgdesc='A project based on SourceHan to expand and supplement characters, and its ultimate goal is to complete the entire Unicode as much as possible.'
 url='https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic'
 arch=('any')
 license=('OFL')
 replaces=('ttf-plangothic-mob')
 source=($pkgname-$pkgver::https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/archive/refs/tags/V$pkgver.tar.gz)
-b2sums=('eb6a4ba7f60cda621a2f8fd1b7eee1074138ca39cae3b856faba086c600415a6f0d97191107f90fd45a041c059b5d9faf483ac6692f69f04e03cfb668c935a50')
+b2sums=('235c28f859e31f58e893684a08cfafb602b9602e35186dbb6a66e45da768835dd20e321e616eec02d1ca1ad04b1a6fbca821742f0546787da4499349e7696701')
 
 package_ttf-plangothic() {
     cd Plangothic-$pkgver
-    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/Plangothic.ttf" "Plangothic Release.ttf"
+    install -Dm755 -d "$pkgdir/usr/share/fonts/TTF/Plangothic"
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/Plangothic" PlangothicP*
     install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" README.md
     install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname/pic" pic/*
     install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
