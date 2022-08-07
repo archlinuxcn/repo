@@ -173,7 +173,7 @@ package_compiler-rt-git() {
 
     local _llvmver=$(echo "$pkgver" | grep -Po "(^[\.\d]+)")
 
-    _fakeinstall fakeinstall/usr/lib/clang/"$_llvmver"/lib/linux
+    _fakeinstall fakeinstall/usr/lib/clang/"$_llvmver"/lib/"$CHOST"
     _fakeinstall fakeinstall/usr/lib/clang/"$_llvmver"/include/{sanitizer,xray}
     _fakeinstall fakeinstall/usr/lib/clang/"$_llvmver"/share
 
@@ -195,7 +195,7 @@ package_clang-git() {
 
     _fakeinstall fakeinstall/usr/bin/*clang*
     _fakeinstall fakeinstall/usr/bin/{c-index-test,diagtool,find-all-symbols}
-    _fakeinstall fakeinstall/usr/bin/{hmaptool,modularize,scan-build,scan-view}
+    _fakeinstall fakeinstall/usr/bin/{hmaptool,modularize,scan-build,scan-build-py,scan-view,analyze-build,intercept-build}
     _fakeinstall fakeinstall/usr/bin/pp-trace
 
     _fakeinstall fakeinstall/usr/include/clang*
