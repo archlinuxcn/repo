@@ -137,6 +137,7 @@ package_vulkan-radeon-git() {
   conflicts=('vulkan-radeon')
 
   _install fakeinstall/usr/share/vulkan/icd.d/radeon_icd*.json
+  _install fakeinstall/usr/share/drirc.d/00-radv-defaults.conf
   _install fakeinstall/usr/lib/libvulkan_radeon.so
 
   install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
@@ -169,7 +170,6 @@ package_mesa-git() {
   # mesa-vdpau
   _install fakeinstall/usr/lib/vdpau
   _install fakeinstall/usr/share/drirc.d/00-mesa-defaults.conf
-  _install fakeinstall/usr/share/drirc.d/00-radv-defaults.conf
   _install fakeinstall/usr/share/glvnd/egl_vendor.d/50_mesa.json
 
   # ati-dri, nouveau-dri, intel-dri, svga-dri, swrast
