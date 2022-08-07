@@ -1,7 +1,7 @@
 # Maintainer: heavysink <winstonwu91@gmail.com>
 _pkgname=eka2l1
 pkgname="${_pkgname}-git"
-pkgver=5504.4d6a6af85
+pkgver=5520.05d057636
 pkgrel=1
 pkgdesc="Experimental Symbian OS emulator (GIT version)"
 arch=('x86_64')
@@ -15,13 +15,15 @@ makedepends=(
     'glfw'
     'vulkan-headers'
     'python'
-    'qt5-tools'
+    'qt6-tools'
     'imagemagick'
+    'clang'
 )
 depends=(
 	'boost-libs'
-  'qt5-base'
-  'qt5-svg'
+  'qt6-base'
+  'qt6-svg'
+  'qt6-declarative'
     'freetype2'
     'pango'
 	'vulkan-icd-loader'
