@@ -2,20 +2,22 @@
 
 pkgbase=sheepshaver-git
 pkgname=(basiliskii-git sheepshaver-git sheepnet-dkms-git)
-pkgver=r2682.g6393d14a
+epoch=1
+pkgver=r3305.g4b1bc7c3
 pkgrel=1
 pkgdesc="An Open Source PowerMac and Classic Macintosh Emulator"
 arch=('x86_64')
 url="http://sheepshaver.cebix.net"
 license=('GPL')
-depends=('gtk2' 'sdl' 'vde2')
-source=('git+https://github.com/cebix/macemu'
+depends=('gtk2' 'sdl2' 'vde2')
+options=('!makeflags' '!buildflags')
+source=('git+https://github.com/kanjitalk755/macemu'
         'SheepShaver.sysctl'
         'SheepShaver.desktop'
         'SheepShaver.png'
         'BasiliskII.desktop'
         'BasiliskII.png'
-        'ss_configure.patch')
+        'ss_bincue.patch')
 makedepends=('git')
 sha256sums=('SKIP'
             'a4aa858b95d29906873693988d5db42d5a4da8aa94a72c79374f59fc488efd51'
@@ -33,19 +35,18 @@ pkgver() {
 prepare() {
   cd macemu/SheepShaver/src/Unix
   sed -i "s/#error \"You don't have ANSI C header files.\"//g" sysdeps.h 
-#  patch -p0 -i ${srcdir}/ss_configure.patch
+  patch -p0 -i ${srcdir}/ss_bincue.patch
 }
+
 build() {
   cd macemu/SheepShaver/src/Unix
   NO_CONFIGURE=1 ./autogen.sh
-  ./configure \
+  CXX="g++ -DBINCUE" ./configure \
     --prefix=/usr \
-    --enable-addressing=direct \
     --enable-standalone-gui \
-    --enable-sdl-audio \
+    --with-bincue \
     --enable-sdl-video \
-    --enable-addressing=real \
-    --with-bincue
+    --enable-sdl-audio
 
   make -j1
 
@@ -53,14 +54,14 @@ build() {
 #  sed -i 's/I_PUSH/TIOCPKT/g' sshpty.c
 
   NO_CONFIGURE=1 ./autogen.sh
-  sed -i 's/config.rpath //g' configure
-  ./configure \
+  #sed -i 's/config.rpath //g' configure
+  CXX="g++ -DBINCUE" ./configure \
 		--prefix=/usr \
-		--enable-sdl-video \
-		--enable-sdl-audio \
 		--enable-jit-compiler \
 		--with-bincue \
-		--with-vdeplug
+		--with-vdeplug \
+    --enable-sdl-video \
+    --enable-sdl-audio
 
 	make -j1
 }
