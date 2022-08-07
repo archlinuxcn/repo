@@ -2,7 +2,7 @@
 # Contributor: Andre Schröder <andre.schroedr at gmail dot com>
 
 pkgname=x11docker
-pkgver=7.4.1
+pkgver=7.4.2
 pkgrel=1
 pkgdesc='Run GUI applications and desktops in Docker. Focus on security.'
 arch=('any')
@@ -32,7 +32,7 @@ optdepends=('cups: --printer support'
             'xorg-server: --xorg, --xdummy support')
 
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/v${pkgver}.tar.gz")
-sha256sums=('f7f94102c2a851039b5db6651d525f1459f5ffb1a28b05e08b2c9479467a61bb')
+sha256sums=('0ec3e07d852061a9290726c4a918994458c270bc43d31223ea38e7b832c76c9d')
 
 package() {
   cd "${pkgname}-${pkgver}"
