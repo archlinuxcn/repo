@@ -5,7 +5,7 @@
 
 pkgname=insomnia
 pkgver=2022.5.0
-pkgrel=1
+pkgrel=2
 _nodeversion=12.18.3
 pkgdesc="Cross-platform HTTP and GraphQL Client"
 url="https://github.com/Kong/insomnia"
@@ -41,7 +41,7 @@ build() {
   _ensure_local_nvm
   cd ${pkgname}-core-${pkgver}
   npm run bootstrap  
-  GIT_TAG="core@${pkgver}" BUILD_TARGETS="tar.gz" npm run app-package
+  GIT_TAG="core@${pkgver}" NODE_OPTIONS="--max-old-space-size=4096" BUILD_TARGETS="tar.gz" npm run app-package
 }
 
 package() {
