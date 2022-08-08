@@ -2,7 +2,7 @@
 
 pkgbase=sheepshaver-git
 pkgname=(basiliskii-git sheepshaver-git sheepnet-dkms-git)
-epoch=1
+epoch=2
 pkgver=r3305.g4b1bc7c3
 pkgrel=1
 pkgdesc="An Open Source PowerMac and Classic Macintosh Emulator"
@@ -21,11 +21,11 @@ source=('git+https://github.com/kanjitalk755/macemu'
 makedepends=('git')
 sha256sums=('SKIP'
             'a4aa858b95d29906873693988d5db42d5a4da8aa94a72c79374f59fc488efd51'
-            'cb002e73e864a6ca271e0bbaa6df6eb89dc1df86856fc575c20bf79367458c39'
+            'fa5e3828b40dfa5196c4b801b9a6761f57dde47756734f37bdd3c8333eec5670'
             'b7f67b1f8424f3e0ffa1a5e57597f368c4c4f93ea1f871ec0a76700b7519b241'
-            '9adf6c8a64191ef54c98db071685743ef0badd0deb58204b8ca4ab256e326444'
+            '435c68f045cff3a8e407a13bf6d25f81a045cb6477bf3d116ec7e83c0218668d'
             '66635f63471e314fcc587d1a14b6caf87ed582ba80525e12462da0dba87eec60'
-            'SKIP')
+            '104c0f56b52215fce509dc07a3f8b036e63495289b1ee6d53723ebf936c66bd9')
 
 pkgver() {
   cd macemu
@@ -41,7 +41,7 @@ prepare() {
 build() {
   cd macemu/SheepShaver/src/Unix
   NO_CONFIGURE=1 ./autogen.sh
-  CXX="g++ -DBINCUE" ./configure \
+  ./configure \
     --prefix=/usr \
     --enable-standalone-gui \
     --with-bincue \
@@ -55,8 +55,9 @@ build() {
 
   NO_CONFIGURE=1 ./autogen.sh
   #sed -i 's/config.rpath //g' configure
-  CXX="g++ -DBINCUE" ./configure \
+  ./configure \
 		--prefix=/usr \
+    --enable-standalone-gui \
 		--enable-jit-compiler \
 		--with-bincue \
 		--with-vdeplug \
@@ -79,6 +80,7 @@ package_sheepshaver-git() {
   conflicts=("sheepshaver")
 
   install -Dm755 macemu/SheepShaver/src/Unix/SheepShaver    "$pkgdir"/usr/bin/SheepShaver
+  install -Dm755 macemu/SheepShaver/src/Unix/SheepShaverGUI    "$pkgdir"/usr/bin/SheepShaverGUI
 
   mkdir -p "$pkgdir"/usr/share/doc
   cp -a macemu/SheepShaver/doc/Linux "$pkgdir"/usr/share/doc/SheepShaver
