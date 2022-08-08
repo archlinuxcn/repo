@@ -1,14 +1,17 @@
---- Makefile	2022-07-03 19:49:29.000000000 +0200
-+++ Makefile	2022-07-26 11:44:36.474008372 +0200
-@@ -75,6 +75,7 @@
+--- Makefile	2022-08-04 20:46:46.107815841 +0200
++++ Makefile	2022-08-08 17:22:23.799342237 +0200
+@@ -65,6 +65,10 @@
+ ######### Additional libraries needed by $(LD)
  
- # What's this release's version? Part of the directory and archive file name.
- VERSION = 1.0-pl20
-+DOTTED_VERSION = 1.0.21
  
- # Where do you want to install the gsm library, header file, and manpages?
++# What is the version of this release (in standard dotted syntax)?
++DOTTED_VERSION = 1.0.22
++
++
+ # Where do you want to install libraries, binaries, a header file
+ # and the manual pages?
  #
-@@ -99,7 +100,7 @@
+@@ -96,7 +100,7 @@
  #  Other tools
  
  SHELL		= /bin/sh
@@ -17,7 +20,7 @@
  BASENAME 	= basename
  AR		= ar
  ARFLAGS		= cr
-@@ -142,7 +143,7 @@
+@@ -139,7 +143,7 @@
  
  # Targets
  
@@ -26,7 +29,7 @@
  
  TOAST	= $(BIN)/toast
  UNTOAST	= $(BIN)/untoast
-@@ -260,7 +261,7 @@
+@@ -257,7 +261,7 @@
  # Install targets
  
  GSM_INSTALL_TARGETS =	\
@@ -35,7 +38,7 @@
  		$(GSM_INSTALL_INC)/gsm.h		\
  		$(GSM_INSTALL_MAN)/gsm.3		\
  		$(GSM_INSTALL_MAN)/gsm_explode.3	\
-@@ -282,7 +283,7 @@
+@@ -279,7 +283,7 @@
  
  # Target rules
  
@@ -44,7 +47,7 @@
  		@-echo $(ROOT): Done.
  
  tst:		$(TST)/lin2cod $(TST)/cod2lin $(TOAST) $(TST)/test-result
-@@ -302,16 +303,16 @@
+@@ -299,16 +303,16 @@
  
  # The basic API: libgsm
  
@@ -67,7 +70,7 @@
  
  $(UNTOAST):	$(BIN) $(TOAST)
  		-rm $(RMFLAGS) $(UNTOAST)
-@@ -396,10 +397,12 @@
+@@ -393,10 +397,12 @@
  		cp $? $@
  		chmod 444 $@
  
@@ -84,7 +87,7 @@
  
  
  # Distribution
-@@ -428,7 +431,7 @@
+@@ -425,7 +431,7 @@
  			-print | xargs rm $(RMFLAGS)
  
  clean:	semi-clean
@@ -93,7 +96,7 @@
  			$(TOAST) $(TCAT) $(UNTOAST)	\
  			$(ROOT)/gsm-1.0.tar.gz
  
-@@ -476,22 +479,22 @@
+@@ -473,22 +479,22 @@
  $(TST)/test-result:	$(TST)/lin2cod $(TST)/cod2lin $(TOAST) $(TST)/run
  			( cd $(TST); ./run ) 
  
