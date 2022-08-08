@@ -1,0 +1,21 @@
+maintainers:
+  - github: yuyichao
+
+update_on:
+  # Note that we need to get the official package and not the archlinux arm package
+  # (which doesn't exist yet) in this case.
+  - source: archpkg
+    alpm: obs-studio
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavcodec.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavutil.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavformat.so
+  - source: alpm
+    alpm: curl
+    provided: libcurl.so
+  - alias: python
