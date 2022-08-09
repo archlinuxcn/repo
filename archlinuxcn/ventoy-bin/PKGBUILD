@@ -4,7 +4,7 @@
 
 pkgname=ventoy-bin
 pkgver=1.0.79
-pkgrel=2
+pkgrel=3
 pkgdesc="A new multiboot USB solution"
 arch=('aarch64' 'i686' 'x86_64')
 url="http://www.ventoy.net"
@@ -27,7 +27,7 @@ source=("https://github.com/ventoy/Ventoy/releases/download/v${pkgver}/${pkgname
         'sanitize.patch')
 sha256sums=('6b39280eab8dfe2d35407b1dd70246efd91d847841bd7ccf5c84678ca1c01cd1'
             '1ad5d314e02b84127a5a59f3871eb1d28617218cad07cde3eeddcac391473000'
-            '620f6cd35d4480a157b7950c405688915a6658e0c321dc0a0d0c9c20968604ed'
+            'd32110d0d8a41a80fa98702f1db2a75e97eef55f98b2627d4dc09e5dd999011b'
             'c3d4463a878a89d96e5f0bc4e1a43e48f27af5965bd4c977567695d7cf91fe5f'
             '1bbe66b52398be96402604562bddb5c9fbebfe345f0de184709e1c74086f2be6'
             '51029745da197dded6e007aee3f30f7ea1aa6e898172a6ea176cc2f3a842d0ff'

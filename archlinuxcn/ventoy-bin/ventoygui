@@ -1,4 +1,9 @@
 #!/bin/sh
 
 cd /opt/ventoy || exit 1
-./VentoyGUI.x86_64 "$@"
+
+if [[ $(uname -m) = x86_64 ]]; then
+  exec ./VentoyGUI.x86_64 "$@"
+elif [[ $(uname -m) = aarch64 ]]; then
+  exec ./VentoyGUI.aarch64 "$@"
+fi
