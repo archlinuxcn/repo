@@ -90,7 +90,7 @@ index 2a32e2eb13..0c15ef3260 100644
  #ifndef __ASSUME_TIME64_SYSCALLS
    if (ret == 0 || errno != ENOSYS)
 diff --git a/sysdeps/unix/sysv/linux/faccessat.c b/sysdeps/unix/sysv/linux/faccessat.c
-index 59ee4b6f8b..e80f431f95 100644
+index 1378bb2db8..c4944f65b0 100644
 --- a/sysdeps/unix/sysv/linux/faccessat.c
 +++ b/sysdeps/unix/sysv/linux/faccessat.c
 @@ -26,7 +26,8 @@
@@ -126,7 +126,7 @@ index 74adc3956b..da28b563c7 100644
  # define __ASSUME_FACCESSAT2 0
  #endif
 diff --git a/sysdeps/unix/sysv/linux/mq_timedreceive.c b/sysdeps/unix/sysv/linux/mq_timedreceive.c
-index 834cd7a484..59554e535e 100644
+index 5bf1e0a83b..8abea336b9 100644
 --- a/sysdeps/unix/sysv/linux/mq_timedreceive.c
 +++ b/sysdeps/unix/sysv/linux/mq_timedreceive.c
 @@ -39,8 +39,8 @@ ___mq_timedreceive_time64 (mqd_t mqdes, char *__restrict msg_ptr, size_t msg_len
@@ -137,7 +137,7 @@ index 834cd7a484..59554e535e 100644
 -			      msg_prio, abs_timeout);
 +      int r = -1; // SYSCALL_CANCEL (mq_timedreceive_time64, mqdes, msg_ptr, msg_len, msg_prio, abs_timeout);
 +      errno = ENOSYS;
-       if (r == 0 || errno != ENOSYS)
+       if (r >= 0 || errno != ENOSYS)
  	return r;
        __set_errno (EOVERFLOW);
 diff --git a/sysdeps/unix/sysv/linux/mq_timedsend.c b/sysdeps/unix/sysv/linux/mq_timedsend.c
@@ -215,7 +215,7 @@ index 19abc995b9..2426cba814 100644
    if (ret == 0 || errno != ENOSYS)
      return ret;
 diff --git a/sysdeps/unix/sysv/linux/select.c b/sysdeps/unix/sysv/linux/select.c
-index 3bc8b0cc3d..c197545c31 100644
+index a3f0a2eba7..63c4a5991b 100644
 --- a/sysdeps/unix/sysv/linux/select.c
 +++ b/sysdeps/unix/sysv/linux/select.c
 @@ -75,8 +75,8 @@ __select64 (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,

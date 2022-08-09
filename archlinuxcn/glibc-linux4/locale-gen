@@ -11,9 +11,8 @@ fi
 
 [ -f $LOCALEGEN -a -s $LOCALEGEN ] || exit 0;
 
-# Remove all old locale dir and locale-archive before generating new
-# locale data.
-rm -rf /usr/lib/locale/* || true
+# Remove old locale-archive before generating new locale data.
+rm -rf /usr/lib/locale/locale-archive || true
 
 umask 022
 

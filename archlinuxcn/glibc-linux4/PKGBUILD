@@ -9,17 +9,16 @@
 
 pkgbase=glibc-linux4
 pkgname=(glibc-linux4 lib32-glibc-linux4)
-pkgver=2.35
-pkgrel=2
+pkgver_=c804cd1c00adde061ca51711f63068c103e94eef
+pkgver=2.36
+pkgrel=1
 arch=(x86_64)
 url="https://www.gnu.org/software/libc/"
 license=(GPL LGPL)
 makedepends=(git gd lib32-gcc-libs python)
-optdepends=("perl: for mtrace")
-options=(!strip staticlibs !lto)
-# _commit=3de512be7ea6053255afed6154db9ee31d4e557a
+options=(debug staticlibs !lto)
 source=(
-	# git+https://sourceware.org/git/glibc.git#commit=$_commit
+	# git+https://sourceware.org/git/glibc.git#commit=$pkgver_
 	https://ftp.gnu.org/gnu/glibc/glibc-$pkgver.tar.xz{,.sig}
 	glibc-linux4.patch
 	locale.gen.txt
@@ -33,11 +32,11 @@ validpgpkeys=(
 	BC7C7372637EC10C57D7AA6579C43DFBF1CF2187 # Siddhesh Poyarekar
 )
 sha256sums=(
-	#
-	"5123732f6b67ccd319305efd399971d58592122bcc2a6518a1bd2510dd0cf52e" "SKIP"
-	"640450afbcb4a0951e56e89d1d8d384e09589032ef32605c08d9894311dda852"
+	# "SKIP"
+	"1c959fea240906226062cb4b1e7ebce71a9f0e3c0836c09e7e3423d434fcfe75" "SKIP"
+	"69573c1c4eee6216f4f345647aed938d13994bf19a7e3a6ba9ed8bab85f23bef"
 	"fbd57987ca24d71305eda9e0dd76143b422118e12f76b2b0d555f86763e14cd2"
-	"83f108f915863c7ed0338e2d3e8f2e071a531a090ef8f8b2eb3a956a3c4f04d7"
+	"7503947e23cecc8307e8f7ce2a792eecb6f72f22d6838b34417c2489a259fde9"
 	"c27424154a6096ae32c0824b785e05de6acef33d9224fd6147d1936be9b4962b"
 	"774061aff612a377714a509918a9e0e0aafce708b87d2d7e06b1bd1f6542fe70"
 	"cdc234959c6fdb43f000d3bb7d1080b0103f4080f5e67bcfe8ae1aaf477812f0"
@@ -50,7 +49,7 @@ prepare() {
 	cd glibc
 
 	# compatibility with linux 4.x hosts
-	patch -Np1 < "$srcdir"/glibc-linux4.patch
+	# patch -Np1 < "$srcdir"/glibc-linux4.patch
 }
 
 build() {
@@ -60,6 +59,7 @@ build() {
 		--with-bugurl=https://bugs.archlinux.org/
 		--enable-bind-now
 		--enable-cet
+		--enable-kernel=4.4.0
 		--enable-multi-arch
 		--enable-stack-protector=strong
 		--enable-systemtap
@@ -75,15 +75,10 @@ build() {
 	echo "sbindir=/usr/bin" >> configparms
 	echo "rootsbindir=/usr/bin" >> configparms
 
+	# Credits @allanmcrae
+	# https://github.com/allanmcrae/toolchain/blob/f18604d70c5933c31b51a320978711e4e6791cf1/glibc/PKGBUILD
 	# remove fortify for building libraries
-	CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2/} # Before and
-	CFLAGS=${CFLAGS/,-D_FORTIFY_SOURCE=2/} # after https://github.com/archlinux/svntogit-packages/commit/a790c38
-	CFLAGS=${CFLAGS/-Wp /}
-
-	#
-	CFLAGS=${CFLAGS/-fno-plt/}
-	CXXFLAGS=${CXXFLAGS/-fno-plt/}
-	LDFLAGS=${LDFLAGS/,-z,now/}
+	CFLAGS=${CFLAGS/-Wp,-D_FORTIFY_SOURCE=2/}
 
 	"$srcdir/glibc/configure" \
 		--libdir=/usr/lib \
@@ -96,12 +91,10 @@ build() {
 
 	# re-enable fortify for programs
 	sed -i "/build-programs=/s#no#yes#" configparms
-
-	echo "CC += -D_FORTIFY_SOURCE=2" >> configparms
-	echo "CXX += -D_FORTIFY_SOURCE=2" >> configparms
+	echo "CFLAGS += -Wp,-D_FORTIFY_SOURCE=2" >> configparms
 	make -O
 
-	# build info pages manually for reprducibility
+	# build info pages manually for reproducibility
 	make info
 
 	cd -- "$srcdir/lib32-glibc-build"
@@ -112,11 +105,6 @@ build() {
 	echo "rtlddir=/usr/lib32" >> configparms
 	echo "sbindir=/usr/bin" >> configparms
 	echo "rootsbindir=/usr/bin" >> configparms
-
-	# remove fortify for building libraries
-	CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2/}
-	CFLAGS=${CFLAGS/-fno-plt/}
-	CXXFLAGS=${CXXFLAGS/-fno-plt/}
 
 	"$srcdir/glibc/configure" \
 		--host=i686-pc-linux-gnu \
@@ -130,20 +118,29 @@ build() {
 
 	# re-enable fortify for programs
 	sed -i "/build-programs=/s#no#yes#" configparms
-
-	echo "CC += -D_FORTIFY_SOURCE=2" >> configparms
-	echo "CXX += -D_FORTIFY_SOURCE=2" >> configparms
+	echo "CFLAGS += -Wp,-D_FORTIFY_SOURCE=2" >> configparms
 	make -O
+
+	# pregenerate C.UTF-8 locale until it is built into glibc
+	# (https://sourceware.org/glibc/wiki/Proposals/C.UTF-8, FS#74864)
+	locale/localedef -c -f ../glibc/localedata/charmaps/UTF-8 -i ../glibc/localedata/locales/C ../C.UTF-8/ \
+		|| localedef -c -f ../glibc/localedata/charmaps/UTF-8 -i ../glibc/localedata/locales/C ../C.UTF-8/ \
+		|| true
 }
 
 check() {
 	cd glibc-build
 
-	# remove fortify in preparation to run test-suite
-	sed -i '/FORTIFY/d' configparms
+	# adjust/remove buildflags that cause false-positive testsuite failures
+	sed -i '/FORTIFY/d' configparms # failure to build testsuite
+	sed -i 's/-Werror=format-security/-Wformat-security/' config.make # failure to build testsuite
+	sed -i '/CFLAGS/s/-fno-plt//' config.make # 16 failures
+	sed -i '/CFLAGS/s/-fexceptions//' config.make # 1 failure
+	LDFLAGS=${LDFLAGS/,-z,now/} # 10 failures
 
 	# some failures are "expected"
-	make check || true
+	# make -O check || \ #
+	true
 }
 
 package_glibc-linux4() {
@@ -151,7 +148,7 @@ package_glibc-linux4() {
 	depends=("linux-api-headers>=4.10" tzdata filesystem)
 	provides=("glibc=$pkgver")
 	conflicts=("glibc")
-	optdepends=("gd: for memusagestat")
+	optdepends=("gd: for memusagestat" "perl: for mtrace")
 	install=glibc.install
 	backup=(
 		etc/gai.conf
@@ -159,11 +156,8 @@ package_glibc-linux4() {
 		etc/nscd.conf
 	)
 
-	install -dm755 "$pkgdir/etc"
-	touch "$pkgdir/etc/ld.so.conf"
-
 	make -C glibc-build install_root="$pkgdir" install
-	rm -f "$pkgdir"/etc/ld.so.{cache,conf}
+	rm -f "$pkgdir"/etc/ld.so.cache
 
 	# Shipped in tzdata
 	rm -f "$pkgdir"/usr/bin/{tzselect,zdump,zic}
@@ -185,33 +179,21 @@ package_glibc-linux4() {
 	sed -e '1,3d' -e 's|/| |g' -e 's|\\| |g' -e 's|^|#|g' \
 		"$srcdir/glibc/localedata/SUPPORTED" >> "$pkgdir/etc/locale.gen"
 
-	if check_option "debug" n; then
-		find "$pkgdir"/usr/bin -type f -executable -exec strip $STRIP_BINARIES {} + 2> /dev/null || true
-		find "$pkgdir"/usr/lib -name '*.a' -type f -exec strip $STRIP_STATIC {} + 2> /dev/null || true
-
-		# Do not strip these for gdb and valgrind functionality, but strip the rest
-		find "$pkgdir"/usr/lib \
-			-not -name 'ld-*.so*' \
-			-not -name 'libc.so*' \
-			-not -name 'libc-*.so' \
-			-not -name 'libpthread.so*' \
-			-not -name 'libpthread-*.so' \
-			-not -name 'libthread_db.so*' \
-			-not -name 'libthread_db-*.so' \
-			-name '*.so*' -type f -exec strip $STRIP_SHARED {} + 2> /dev/null || true
+	if [[ -f "$srcdir/C.UTF-8" ]]; then
+		# install C.UTF-8 so that it is always available
+		install -dm755 "$pkgdir/usr/lib/locale"
+		cp -r "$srcdir/C.UTF-8" -t "$pkgdir/usr/lib/locale"
+		sed -i '/#C\.UTF-8 /d' "$pkgdir/etc/locale.gen"
 	fi
 
 	# Provide tracing probes to libstdc++ for exceptions, possibly for other
 	# libraries too. Useful for gdb's catch command.
 	install -Dm644 "$srcdir/sdt.h" "$pkgdir/usr/include/sys/sdt.h"
 	install -Dm644 "$srcdir/sdt-config.h" "$pkgdir/usr/include/sys/sdt-config.h"
-
-	# Provided by libxcrypt; keep the old shared library for backwards compatibility
-	rm -f "$pkgdir"/usr/include/crypt.h "$pkgdir"/usr/lib/libcrypt.{a,so}
 }
 
 package_lib32-glibc-linux4() {
-	pkgdesc="GNU C Library (32-bit, linux 4.x compat)"
+	pkgdesc="GNU C Library (linux 4.x compat, 32-bit)"
 	depends=("glibc=$pkgver")
 	provides=("lib32-glibc=$pkgver")
 	conflicts=("lib32-glibc")
@@ -234,20 +216,4 @@ package_lib32-glibc-linux4() {
 
 	# Symlink /usr/lib32/locale to /usr/lib/locale
 	ln -s ../lib/locale "$pkgdir/usr/lib32/locale"
-
-	if check_option "debug" n; then
-		find "$pkgdir"/usr/lib32 -name '*.a' -type f -exec strip $STRIP_STATIC {} + 2> /dev/null || true
-		find "$pkgdir"/usr/lib32 \
-			-not -name 'ld-*.so*' \
-			-not -name 'libc.so*' \
-			-not -name 'libc-*.so' \
-			-not -name 'libpthread.so*' \
-			-not -name 'libpthread-*.so' \
-			-not -name 'libthread_db.so*' \
-			-not -name 'libthread_db-*.so' \
-			-name '*.so*' -type f -exec strip $STRIP_SHARED {} + 2> /dev/null || true
-	fi
-
-	# Provided by lib32-libxcrypt; keep the old shared library for backwards compatibility
-	rm -f "$pkgdir"/usr/lib32/libcrypt.{a,so}
 }
