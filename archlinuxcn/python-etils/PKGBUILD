@@ -36,18 +36,14 @@ build() {
 
 check() {
   cd etils-$pkgver
-  pacman -Qi python-six
-  # etils/array_types/typing_test.py, etils/enp, etils/etree/tree_utils_test.py: needs jax
+  # etils/enp, etils/etree/tree_utils_test.py: needs jax
   # etils/ecolab: needs mediapy
   # etils/edc/frozen_utils_test.py: needs chex
-  # test_repr, test_resource_path: broken on Python 3.10 https://github.com/google/etils/issues/143
   pytest \
-    --ignore etils/array_types/typing_test.py \
     --ignore etils/ecolab \
     --ignore etils/edc/frozen_utils_test.py \
     --ignore etils/enp \
-    --ignore etils/etree/tree_utils_test.py \
-    -k 'not test_repr and not test_resource_path'
+    --ignore etils/etree/tree_utils_test.py
 }
 
 package() {
