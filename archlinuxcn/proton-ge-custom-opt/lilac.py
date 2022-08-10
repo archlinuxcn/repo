@@ -6,7 +6,7 @@ g = SimpleNamespace()
 
 def pre_build():
   
-  aur_pre_build(maintainers=['loathingkernel'])
+  aur_pre_build(name='proton-ge-custom', maintainers=['loathingkernel'])
   
   for line in edit_file('PKGBUILD'):
     if 'nocona' in line:
