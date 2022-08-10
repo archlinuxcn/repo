@@ -1,0 +1,16 @@
+build_prefix: multilib
+
+update_on:
+  - source: aur
+    aur: proton-ge-custom
+  - alias: python
+
+repo_depends:
+  - lib32-lzo
+  - mingw-w64-tools
+
+time_limit_hours: 5
+  
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com
