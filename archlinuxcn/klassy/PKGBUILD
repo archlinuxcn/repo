@@ -1,30 +1,24 @@
 # Maintainer: Rocket Aaron <i at rocka dot me>
 # Contributor: Art Dev <artdevjs at gmail dot com>
 
-_pkgname=klassy
-pkgname=${_pkgname}-git
-pkgver=4.0.breeze5.25.80.r0.g9f2ad89c
+pkgname=klassy
+pkgver=4.0.breeze5.25.80
 pkgrel=1
 pkgdesc='Klassy is a highly customizable binary Window Decoration and Application Style plugin for recent versions of the KDE Plasma desktop. It provides the Klassy, Kite, Oxygen/Breeze, and Redmond icon styles.'
 arch=(x86_64)
 url="https://github.com/paulmcauley/klassy"
 license=(GPL)
-replaces=(classik-git)
+replaces=(classik)
 depends=(frameworkintegration kdecoration breeze-icons kwayland kirigami2 hicolor-icon-theme)
-makedepends=(git extra-cmake-modules kcmutils)
+makedepends=(extra-cmake-modules kcmutils)
 optdepends=('kcmutils: for klassy-settings')
-provides=(klassy)
+provides=()
 conflicts=()
-source=("${_pkgname}::git+https://github.com/paulmcauley/klassy.git#branch=master")
-sha256sums=('SKIP')
-
-pkgver () {
-  cd "${_pkgname}"
-  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
-}
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('3b2b93333beda0c6354a4528767ba2262e0bf9fba01841307ca10dff30465249')
 
 build() {
-  cd "${_pkgname}"
+  cd "${pkgname}-${pkgver}"
   cmake -B build \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
@@ -34,7 +28,7 @@ build() {
 }
 
 package() {
-  cd "${_pkgname}"
+  cd "${pkgname}-${pkgver}"
   DESTDIR="${pkgdir}" cmake --install build
 }
 
