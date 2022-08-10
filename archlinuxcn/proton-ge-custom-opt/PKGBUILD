@@ -1,4 +1,5 @@
-# Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-ge-custom-opt
 _pkgname=proton-ge-custom
@@ -7,7 +8,7 @@ _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.3
 _monover=7.3.0
-pkgrel=1
+pkgrel=2
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, GloriousEggroll's custom build"
 url="https://github.com/GloriousEggroll/proton-ge-custom"
@@ -32,8 +33,9 @@ depends=(
   libpcap          lib32-libpcap
   lzo              lib32-lzo
   libxkbcommon     lib32-libxkbcommon
+  faudio           lib32-faudio
   libvpx           lib32-libvpx
-  'sdl2>=2.0.16'   'lib32-sdl2>=2.0.16'
+  sdl2             lib32-sdl2
   libsoup3         lib32-libsoup3
   desktop-file-utils
   python
@@ -41,10 +43,14 @@ depends=(
   cabextract
 )
 
-makedepends=(autoconf bison perl fontforge flex mingw-w64-gcc
-  git wget rsync mingw-w64-tools lld nasm meson cmake python-virtualenv python-pip
-  glslang vulkan-headers
-  clang
+makedepends=(
+  git wget rsync 
+  perl fontforge
+  autoconf meson cmake
+  glslang vulkan-headers opencl-headers libgphoto2 gsm
+  clang mingw-w64-tools mingw-w64-gcc lld nasm bison flex
+  python-virtualenv python-pip
+
   giflib                lib32-giflib
   libpng                lib32-libpng
   gnutls                lib32-gnutls
@@ -67,11 +73,8 @@ makedepends=(autoconf bison perl fontforge flex mingw-w64-gcc
   gtk3                  lib32-gtk3
   gst-plugins-base-libs lib32-gst-plugins-base-libs
   vulkan-icd-loader     lib32-vulkan-icd-loader
-  'sdl2>=2.0.16'        'lib32-sdl2>=2.0.16'
+  sdl2                  lib32-sdl2
   rust                  lib32-rust-libs
-  libgphoto2
-  gsm
-  opencl-headers
 )
 
 optdepends=(
@@ -101,7 +104,6 @@ optdepends=(
 
 makedepends=(${makedepends[@]} ${depends[@]})
 provides=('proton')
-#install=${_pkgname}.install
 source=(
     proton-ge-custom::git+https://github.com/gloriouseggroll/proton-ge-custom.git#tag=${_srctag}
     wine-valve::git+https://github.com/ValveSoftware/wine.git
