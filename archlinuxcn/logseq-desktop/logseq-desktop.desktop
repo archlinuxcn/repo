@@ -7,3 +7,8 @@ Icon=logseq
 StartupWMClass=logseq
 Comment=Open Source platform for knowledge sharing and management
 Categories=Office
+Actions=Wayland;
+
+[Desktop Action Wayland]
+Name=Wayland Backend
+Exec=/usr/bin/logseq --enable-features=UseOzonePlatform --ozone-platform=wayland

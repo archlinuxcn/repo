@@ -1,27 +1,30 @@
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
 # Acknowledgment: Borrowed a lot from logseq-desktop-git, thank @pychuang 
 pkgname=logseq-desktop
-pkgver=0.7.9
+pkgver=0.8.0
 pkgrel=1
 pkgdesc="A privacy-first, open-source platform for knowledge sharing and management."
 arch=("x86_64")
 url="https://github.com/logseq/logseq"
 license=('AGPL3')
-makedepends=("git" "yarn" "npm" "clojure" "nodejs-lts-gallium")
+makedepends=("git" "yarn" "npm" "clojure" "nodejs>=16")
 provides=("logseq-desktop")
 conflicts=("logseq-desktop-git" "logseq-desktop-bin")
 source=("${pkgname}-${pkgver}.zip::https://github.com/logseq/logseq/archive/refs/tags/${pkgver}.zip"
       "build.patch"
       "${pkgname}.desktop")
-sha256sums=('d79ace441ce64735aa5b3f83c204295b2ac009318a1f1155d3f41d4568c5e276'
+sha256sums=('2e4ea1ddfb5644fca4fd443d9c99de738208c720662382e62967f33b19ddf810'
             'b26c6ed39e2635e08a0df83d92883e670b75b02ed1c2c279044909c04edf8fc2'
-            '6e834466132551c721ba2ffe92fc0f81056b3151fe6b5f0f469ece937f9b7e84')
+            'bfa7d2cd6869968d7a77d317e966aec67ed4b4aa17fe7931e920c00f40218e3c')
 
 prepare() {
     cd "$srcdir/logseq-${pkgver}"
 
     # patch :parallel-build true in shadow-cljs.edn
     patch -p1 -i "${srcdir}/build.patch"
+
+    # patch electron version (temporary fix; should be remove fro version > 0.8)
+    sed -i "s/15\.1\.2/19\.0\.10/g" resources/package.json
 
     # download required js modules
     yarn install
