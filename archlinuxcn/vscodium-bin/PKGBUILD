@@ -8,7 +8,7 @@
 pkgname=vscodium-bin
 _pkgname=VSCodium
 pkgver=1.70.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Binary releases of VS Code without MS branding/telemetry/licensing."
 arch=('x86_64' 'aarch64')
 url="https://github.com/VSCodium/vscodium"
@@ -39,11 +39,17 @@ package() {
   install -d -m755 ${pkgdir}/opt/${pkgname}
   install -d -m755 ${pkgdir}/usr/bin
   install -d -m755 ${pkgdir}/usr/share/{applications,pixmaps}
-  cp -r ${srcdir}/!(vscodium-bin.desktop|${pkgname}-${pkgver}.tar.gz) ${pkgdir}/opt/${pkgname}
+  cp -r ${srcdir}/!(vscodium-bin?(-uri-handler).desktop|${_pkgname}-linux-@(x|arm)64-${pkgver}.tar.gz) ${pkgdir}/opt/${pkgname}
   ln -s /opt/${pkgname}/bin/codium ${pkgdir}/usr/bin/codium
   ln -s /opt/${pkgname}/bin/codium ${pkgdir}/usr/bin/vscodium
   install -D -m644 ${srcdir}/vscodium-bin.desktop ${pkgdir}/usr/share/applications/codium.desktop
   install -D -m644 ${srcdir}/vscodium-bin-uri-handler.desktop ${pkgdir}/usr/share/applications/codium-uri-handler.desktop
   install -D -m644 ${srcdir}/resources/app/resources/linux/code.png \
           ${pkgdir}/usr/share/pixmaps/vscodium.png
+
+  # Symlink shell completions
+  install -d -m755 ${pkgdir}/usr/share/zsh/site-functions
+  install -d -m755 ${pkgdir}/usr/share/bash-completion/completions
+  ln -s /opt/${pkgname}/resources/completions/zsh/_codium ${pkgdir}/usr/share/zsh/site-functions
+  ln -s /opt/${pkgname}/resources/completions/bash/codium ${pkgdir}/usr/share/bash-completion/completions
 }
