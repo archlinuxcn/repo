@@ -42,7 +42,7 @@ depends=(
 )
 
 makedepends=(autoconf bison perl fontforge flex mingw-w64-gcc
-  git wget rsync mingw-w64-tools lld nasm meson cmake afdko python-pefile
+  git wget rsync mingw-w64-tools lld nasm meson cmake python-virtualenv python-pip
   glslang vulkan-headers
   clang
   giflib                lib32-giflib
@@ -169,6 +169,14 @@ EOF
 }
 
 prepare() {
+    # I know this is fugly and it should NOT be done
+    # but the afdko package from AUR breaks regularly.
+    # Install it from pip in a virtualenv
+    [ -d build_venv ] && rm -rf build_venv
+    virtualenv --app-data "$srcdir"/build_venv/cache --no-wheel build_venv
+    source build_venv/bin/activate
+    pip install --no-cache-dir afdko
+    pip install --no-cache-dir pefile
 
     # Provide wrappers to compiler tools
     rm -rf wrappers && mkdir wrappers

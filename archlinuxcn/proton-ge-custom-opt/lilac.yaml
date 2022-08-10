@@ -1,9 +1,12 @@
 build_prefix: multilib
 
+post_build_script: |
+    git_pkgbuild_commit()
+
 update_on:
-  - source: aur
-    aur: proton-ge-custom
-  - alias: python
+  - source: github
+    github: GloriousEggroll/proton-ge-custom
+    use_latest_release: true
 
 repo_depends:
   - lib32-lzo
