@@ -7,8 +7,8 @@
 # Contributor: Joshua Stiefer <facedelajunk@gmail.com>
 
 pkgname=exaile
-pkgver=4.1.1
-pkgrel=2
+pkgver=4.1.2
+pkgrel=1
 pkgdesc="A full-featured Amarok-style media player for GTK+"
 arch=('any')
 url="https://www.exaile.org/"
@@ -24,7 +24,7 @@ depends=('python>=3.6'
 	'python-cairo'
 	'python-gobject')
 makedepends=('pygobject-devel>=3.22.0' 'help2man')
-checkdepends=('python-mox3' 'python-pytest')
+checkdepends=('python-pytest')
 optdepends=('udisks2: device detection'
 	#'python-discid: CD info'
 	'spydaap: DAAP server'
@@ -42,11 +42,7 @@ optdepends=('udisks2: device detection'
 	'moodbar: moodbar plugin'
 	'gst-plugins-bad: BPM Counter plugin')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/exaile/exaile/archive/$pkgver.tar.gz")
-sha512sums=('babf37253054fbeb6dad33aedafe969201860d4f35222d577343256730be943682c1a5f2f7cec7c574695624cb2b7abbdff4e6eaada848d22fea073c2c44bd23')
-
-prepare() {
-	sed -i 's/new_for_uri/new_for_path/' "$srcdir/$pkgname-$pkgver/xl/trax/util.py"
-}
+sha512sums=('7711f9e062088b02362bbd404f7c61a0f1c128e29e42ce657dc092cac351641f6000846c9da843866bf28ccbd68cf1b07731ba1c9854d52b33c0448e87d0e93b')
 
 build() {
 	cd "$srcdir/$pkgname-$pkgver"
