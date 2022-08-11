@@ -12,12 +12,12 @@ pkgname=(
   qemu-headless-git
   qemu-arch-extra-git
   qemu-headless-arch-extra-git
-  qemu-block-{iscsi,rbd,gluster}-git
+  qemu-block-{iscsi,gluster}-git
   qemu-guest-agent-git
 )
 pkgdesc="A generic and open source machine emulator and virtualizer. Git version."
-pkgver=7.1.0.rc2.r0.g61b6e67171
-pkgrel=2
+pkgver=7.1.0.rc2.r2.ga6b1c53e79
+pkgrel=1
 epoch=16
 arch=(i686 x86_64)
 license=(GPL2 LGPL2.1)
@@ -29,7 +29,6 @@ makedepends=(
   brltty
   bzip2
   cairo
-  ceph
   curl
   cdrtools
   dtc
@@ -86,12 +85,10 @@ makedepends=(
 )
 source=(git://git.qemu.org/qemu.git
         qemu-guest-agent.service
-        65-kvm.rules
-        qemu-7.0.0-glibc-2.36.patch)
+        65-kvm.rules)
 sha256sums=('SKIP'
             'c39bcde4a09165e64419fd2033b3532378bba84d509d39e2d51694d44c1f8d88'
-            'a66f0e791b16b03b91049aac61a25950d93e962e1b2ba64a38c6ad7f609b532c'
-            '1eee1b5d839fdfc5cd5a18f0c769b01228c14781de1368670e2c589cd6903a6e')
+            'a66f0e791b16b03b91049aac61a25950d93e962e1b2ba64a38c6ad7f609b532c')
 
 case $CARCH in
   i?86) _corearch=i386 ;;
@@ -105,7 +102,6 @@ pkgver() {
 
 prepare() {
   cd "${srcdir}/${_gitname}"
-  patch -Np1 < ../qemu-7.0.0-glibc-2.36.patch
   mkdir build-{full,headless}
   mkdir -p extra-arch-{full,headless}/usr/{bin,share/qemu}
 }
@@ -261,7 +257,6 @@ _package() {
   optdepends+=('ovmf: Tianocore UEFI firmware for qemu'
                'samba: SMB/CIFS server support'
                'qemu-block-iscsi-git: iSCSI block support'
-               'qemu-block-rbd-git: RBD block support'
                'qemu-block-gluster-git: glusterfs block support')
   install=qemu.install
   options=(!strip !emptydirs)
@@ -282,7 +277,7 @@ _package() {
   chmod u+s qemu/qemu-bridge-helper
 
   # remove split block modules
-  rm qemu/block-{iscsi,rbd,gluster}.so
+  rm qemu/block-{iscsi,gluster}.so
 
   cd ../bin
 
@@ -424,15 +419,6 @@ package_qemu-block-iscsi-git() {
   provides=(qemu-block-iscsi)
 
   install -vDm 755 "$srcdir/$_gitname/build-full/block-iscsi.so" -t "$pkgdir/usr/lib/qemu/"
-}
-
-package_qemu-block-rbd-git() {
-  pkgdesc="QEMU RBD block module. Git version."
-  depends=(glibc ceph-libs)
-  conflicts=(qemu-block-rbd)
-  provides=(qemu-block-rbd)
-
-  install -vDm 755 "$srcdir/$_gitname/build-full/block-rbd.so" -t "$pkgdir/usr/lib/qemu/"
 }
 
 package_qemu-block-gluster-git() {
