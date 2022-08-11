@@ -15,7 +15,7 @@ arch=(armv7h aarch64 x86_64)
 url="http://cristal.inria.fr/~fpottier/menhir/"
 license=('GPL' 'QPL')
 depends=('ocaml>=4.02.3')
-makedepends=('dune>=2.0')
+makedepends=('dune>=2.0' ocaml-findlib)
 options=(!strip !makeflags)
 source=("https://gitlab.inria.fr/fpottier/menhir/-/archive/${pkgver}/menhir-${pkgver}.tar.gz")
 sha256sums=('7f29f717b67ff31ad3dbabb17996f5171e6bba417f6fff1458dbdee71966c126')
