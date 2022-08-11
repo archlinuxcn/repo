@@ -1,12 +1,16 @@
-# post_build: aur_post_build
+maintainers:
+  - github: dctxmei
+  - github: yuyichao
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
 update_on:
-  - source: manual
-    manual: 20211128
+  - source: gitlab
+    gitlab: fpottier/menhir
+    host: gitlab.inria.fr
+    use_max_tag: true
   - source: alpm
     from_pattern: ^(\d+\.\d+)\..*
     to_pattern: \1
     alpm: ocaml
     repo: extra
-maintainers:
-  - github: dctxmei
-  - github: yuyichao
