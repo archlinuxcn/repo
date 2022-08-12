@@ -1,5 +1,6 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
+_CUDA_ARCH_LIST="52;53;60;61;62;70;72;75;80;86"
 pkgname=python-nvidia-dali
 _pkgname=dali
 pkgver=1.16.0
@@ -11,19 +12,18 @@ license=('Apache')
 depends=(
   cuda
   ffmpeg
-  libtar
   lmdb
   opencv
-  protobuf
   python
 )
 makedepends=(
   clang
   cmake
   git
+  nvidia-utils
   python-setuptools
 )
-OPTIONS=(!lto)
+options=(!emptydirs !lto)
 source=("${pkgname}::git+https://github.com/NVIDIA/DALI.git#tag=v${pkgver}")
 sha512sums=('SKIP')
 
@@ -34,16 +34,36 @@ get_pyver() {
 prepare() {
   cd "${srcdir}/${pkgname}"
   git submodule update --init --recursive
+  # quick fix for https://github.com/archlinuxcn/repo/issues/2877
+  export CXXFLAGS=${CXXFLAGS/-Wp,-D_GLIBCXX_ASSERTIONS}
 }
 
 build() {
   cmake \
     -B "${srcdir}/build" \
+    -DBUILD_BENCHMARK=OFF \
+    -DBUILD_CUFILE=ON \
+    -DBUILD_FFTS=ON \
+    -DBUILD_LIBSND=ON \
+    -DBUILD_LIBTAR=ON \
+    -DBUILD_LIBTIFF=ON \
     -DBUILD_LMDB=ON \
+    -DBUILD_NVDEC=ON \
+    -DBUILD_NVJPEG2K=ON \
+    -DBUILD_NVJPEG=ON \
+    -DBUILD_NVML=ON \
+    -DBUILD_NVOF=ON \
+    -DBUILD_NVTX=OFF \
+    -DBUILD_PROTOBUF=ON \
+    -DBUILD_PYTHON=ON \
+    -DBUILD_TEST=OFF \
     -DCMAKE_BUILD_TYPE=None \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_RPATH=ON \
+    -DCUDA_TARGET_ARCHS=${_CUDA_ARCH_LIST} \
     -DProtobuf_USE_STATIC_LIBS=OFF \
+    -DVERBOSE_LOGS=ON \
+    -DWITH_DYNAMIC_CUDA_TOOLKIT=ON \
     -S "${srcdir}/${pkgname}"
   make -C "${srcdir}/build"
   cd "${srcdir}/build/dali/python"
@@ -61,4 +81,3 @@ package() {
   ln -sf "/usr/lib/python$(get_pyver)/site-packages/nvidia/dali/libdali_operators.so" "${pkgdir}/usr/lib/libdali_operators.so"
 }
 # vim:set ts=2 sw=2 et:
-
