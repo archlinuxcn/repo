@@ -1,22 +1,26 @@
-# Maintainer: farseerfc <farseerfc@archlinuxcn.org>
-# Contributor: Chuan Ji <ji@chu4n.com>
+# Maintainer: Chuan Ji <chuan@jichu4n.com>
+# Contributor: farseerfc <farseerfc@archlinuxcn.org>
 
 pkgname=jfbview
 pkgver=0.6.0
-pkgrel=2
+pkgrel=3
 pkgdesc="PDF and image viewer for the Linux framebuffer"
-arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+arch=('i686' 'pentium4' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/jichu4n/jfbview"
 license=('Apache')
-makedepends=('cmake')
-depends=('ncurses' 'imlib2' 'libjpeg-turbo')
-conflicts=('jfbpdf')
-replaces=('jfbpdf')
-source=("https://github.com/jichu4n/jfbview/releases/download/${pkgver}/jfbview-${pkgver}-full-source.zip")
-md5sums=('ac41da35a97c008424662d7dc489b841')
+makedepends=('cmake' 'git')
+depends=('freetype2' 'harfbuzz' 'imlib2' 'libjpeg-turbo' 'ncurses' 'openjpeg2' 'zlib')
+source=("git+${url}.git#tag=${pkgver}")
+sha512sums=('SKIP')
+
+prepare() {
+  cd "${srcdir}/${pkgname}"
+  git submodule update --init --recursive
+}
 
 build(){
-  cd "${srcdir}/${pkgname}-${pkgver}-full-source"
+  cd "${srcdir}/${pkgname}"
+  LDFLAGS='-lImlib2' \
   cmake -H. -Bbuild \
       -DBUILD_TESTING=OFF \
       -DCMAKE_BUILD_TYPE=Release \
@@ -25,7 +29,7 @@ build(){
 }
 
 package(){
-  cd "${srcdir}/${pkgname}-${pkgver}-full-source/build"
+  cd "${srcdir}/${pkgname}/build"
   make DESTDIR="${pkgdir}" install
 }
 
