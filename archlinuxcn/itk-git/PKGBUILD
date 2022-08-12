@@ -88,9 +88,7 @@ build() {
     -DModule_MorphologicalContourInterpolation=ON
 )
 
-# quick fix for https://github.com/InsightSoftwareConsortium/ITK/issues/3452
   cmake -B "build" -S "${srcdir}/${_pkgname}" \
-    -DCMAKE_CXX_FLAGS="-fno-sized-deallocation" \
     ${cmake_opts[@]} \
     -DITK_USE_GPU=OFF
   make -C "${srcdir}/build"
