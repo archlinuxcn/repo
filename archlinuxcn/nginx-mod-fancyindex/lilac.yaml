@@ -1,13 +1,16 @@
-maintainers:
-  - github: DDoSolitary
-build_prefix: extra-x86_64
-pre_build_script: |
-  aur_pre_build(maintainers='markzz')
+pre_build_script: aur_pre_build(maintainers=['markzz'])
+
 post_build: aur_post_build
+
 update_on:
   - source: aur
     aur: nginx-mod-fancyindex
   - source: alpm
     alpm: nginx
     strip_release: true
-staging: true
+  - source: manual
+    manual: 1.0
+
+maintainers:
+  - github: DDoSolitary
+  - github: dctxmei
