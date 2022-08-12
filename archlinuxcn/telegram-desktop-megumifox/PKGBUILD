@@ -3,8 +3,8 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
-pkgver=4.0.2
-pkgrel=2
+pkgver=4.1.0
+pkgrel=1
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
@@ -22,7 +22,7 @@ source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver
         "0001-Use-font-from-environment-variables.patch"
         "0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch"
         "fix-tgcalls-cstdint.patch")
-sha512sums=('0078b627d06dd8e655bd2bcc222ecbb3b15b7d88f858810bccdca84793ad02a60f4a4bf3808838752d65d4f6cffa3ddb5f70c5afc8e94cb6edae52101362feeb'
+sha512sums=('d58ad4b3eaf72b4885612ecca0b29057a1f0e7efc7a539c4ed7cdfa9f6b8dd19e378f1e4b9f28a644d8c8559a5310a168e0b949aafac6902bd21155795db2574'
             'cc48d9116a918df5479c4508e9b98536772cafd9bc736ca40fdbedc3ea8ee0188eb0434046177ef49e0a124668e8c707433af90b11879ef0cf43911ab67a56cb'
             '7a1dcfc563b764d1e68acb566df52890ad527ba2c442ac78825239bce64da3d77ca5f7cf965c67dafc5290e3549fa52780fc49b2d991cd798d05735a6143f46b'
             'ba24a2f1524010b4891764aacee2e27a5ebae44cf7626ab2aaf9e6c48b0f8088bf920886ceeb497b3c463fa0c3b885dd63db273d4c29cab6c96c8193c0c5c888')
