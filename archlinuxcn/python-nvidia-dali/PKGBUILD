@@ -20,8 +20,11 @@ makedepends=(
   clang
   cmake
   git
-  nvidia-utils
   python-setuptools
+)
+optdepends=(
+  python-pytorch
+  python-tensorflow
 )
 options=(!emptydirs !lto)
 source=("${pkgname}::git+https://github.com/NVIDIA/DALI.git#tag=v${pkgver}")
@@ -68,6 +71,11 @@ build() {
   make -C "${srcdir}/build"
   cd "${srcdir}/build/dali/python"
   python setup.py build
+  # built tf plugin
+  cmake -B ${srcdir}/build-tf \
+    -DCUDA_VERSION=11.7 \
+    -S ${srcdir}/${pkgname}/dali_tf_plugin
+  make -C ${srcdir}/build-tf
 }
 
 package() {
@@ -79,5 +87,8 @@ package() {
   ln -sf "/usr/lib/python$(get_pyver)/site-packages/nvidia/dali/libdali_core.so" "${pkgdir}/usr/lib/libdali_core.so"
   ln -sf "/usr/lib/python$(get_pyver)/site-packages/nvidia/dali/libdali_kernels.so" "${pkgdir}/usr/lib/libdali_kernels.so"
   ln -sf "/usr/lib/python$(get_pyver)/site-packages/nvidia/dali/libdali_operators.so" "${pkgdir}/usr/lib/libdali_operators.so"
+  # install tf plugin
+  make -C ${srcdir}/build-tf
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
 }
 # vim:set ts=2 sw=2 et:
