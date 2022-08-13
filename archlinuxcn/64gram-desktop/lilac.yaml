@@ -1,0 +1,16 @@
+pre_build_script: aur_pre_build(maintainers=['solopasha'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: github
+    github: TDesktop-x64/tdesktop
+    use_latest_release: true
+  - source: aur
+    aur: 64gram-desktop
+  - source: manual
+    manual: 1.0
+
+maintainers:
+  - github: wuyudi
+  - github: dctxmei
