@@ -76,6 +76,10 @@ package_rust-nightly() {
   ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig --components=rustc
   rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
 
+  mkdir "$pkgdir"/usr/lib/rust-nightly
+  mv "$pkgdir"/usr/libexec/* "$pkgdir"/usr/lib/rust-nightly
+  rm -r "$pkgdir"/usr/libexec
+
   rm -r "$pkgdir/usr/share/doc"
   cd "$pkgdir"/usr/lib
   for so in *.so; do
