@@ -1,0 +1,47 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: silverhikari <kerrickethan@gmail.com>
+# Contributor: Wouter Wijsman <wwijsman@live.nl>
+
+pkgname=dosbox-staging
+pkgver=0.78.1
+pkgrel=1
+pkgdesc="DOS/x86 emulator focusing on ease of use. Based on DOSBox"
+arch=('x86_64')
+url="https://github.com/dosbox-staging/dosbox-staging"
+license=('GPL2')
+depends=('sdl2' 'sdl2_net' 'opusfile'  'alsa-lib' 'fluidsynth' 'libpng' 'munt' 'libslirp' 'glib2')
+optdepends=(
+            'ncurses'
+            )
+makedepends=('meson' 'ninja' 'gcc' 'gzip' 'gtest')
+provides=("dosbox")
+conflicts=("dosbox")
+source=(
+  "${pkgname}-${pkgver}.gz::https://github.com/dosbox-staging/${pkgname}/archive/v${pkgver}.tar.gz"
+)
+sha256sums=('dcd93ce27f5f3f31e7022288f7cbbc1f1f6eb7cc7150c2c085eeff8ba76c3690')
+
+prepare() {
+  cd "$srcdir/${pkgname}-${pkgver}"
+}
+
+build() {
+  cd "$srcdir/${pkgname}-${pkgver}"
+  arch-meson . build \
+    --buildtype=release
+  meson compile -C build
+}
+
+package() {
+  cd "$srcdir/${pkgname}-${pkgver}"
+  
+  meson install -C build --no-rebuild --destdir="$pkgdir"
+
+  # dosbox-staging documents
+  install -Dm 644 "docs/README.video" "$pkgdir/usr/share/doc/${pkgname}/video.txt"
+  install -Dm 644 "README" "$pkgdir/usr/share/doc/${pkgname}/manual.txt"
+
+  # bash completions
+  install -Dm 644 "contrib/linux/bash-completion/dosbox" "$pkgdir/usr/share/bash-completion/completions/dosbox"
+}
+# vim: set sts=2 sw=2:
