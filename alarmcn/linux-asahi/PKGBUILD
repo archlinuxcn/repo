@@ -6,7 +6,7 @@ buildarch=8
 _rcver=5.19
 #_rcrel=
 _asahirel=3
-pkgrel=2
+pkgrel=3
 
 pkgbase=linux-asahi
 #_commit_id=asahi-${_nextver}-${_asahirel}
@@ -28,9 +28,9 @@ source=(
   config         # the main kernel config file
 )
 sha256sums=('778a56e44c10b945ff9385dc0d8a9382fc5cb9cac47fc0548c3477454074a5f3'
-            '7ab5525c437e3aaa02d617b6051e93055097a1f1c215b569eb2b5a7826ccadaf')
+            '0e859860e0650ae5ae264bb05c2be1831c02d3425762a387bdb9b08afa9ad6f8')
 b2sums=('5faf87233f94e42c69cf5f51732ab333b65257c2271734cb9b9d12025c7e15852a349069fcfe9998f11e3e4566e65d675275fa7738c951a2b3c6a9f23f051a43'
-        'cb429ba2f121d1f0c8f1295b120edd779a87dca0c063f997f2fb27efa4f0d46d76cd336f8ff12c4a13620d93c29b87070fa7cbc91b90058ffc87c66dbb94ec04')
+        '2ca3497a1b4f3d3494dd9dbb248cd2fbadb9d5fd0e79120369217e4dfe9091af16ae4559162fe3f9a8ab049d5e01720c5f9e32c435104b6d9297c01ccbfcc9a7')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
