@@ -1,7 +1,7 @@
-From 01f7101240890ed386b890695d81fb52ce1dfee3 Mon Sep 17 00:00:00 2001
+From 1757cd5d53a950459bc3bf167f78b2db8c3acffa Mon Sep 17 00:00:00 2001
 From: Dario Nieuwenhuis <dirbaio@dirbaio.net>
 Date: Tue, 10 Mar 2020 23:21:11 +0100
-Subject: [PATCH 2/2] xwayland: add support for changing global scale factor on
+Subject: [PATCH 2/3] xwayland: add support for changing global scale factor on
  the fly via x extension.
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -50,7 +50,7 @@ index 09f48c60..5d12c949 100644
  
  void wlr_xwayland_set_cursor(struct wlr_xwayland *xwayland,
 diff --git a/xwayland/xwm.c b/xwayland/xwm.c
-index f16caf8d..16a87122 100644
+index 2789b773..dedb04c3 100644
 --- a/xwayland/xwm.c
 +++ b/xwayland/xwm.c
 @@ -16,6 +16,7 @@
@@ -129,5 +129,5 @@ index f16caf8d..16a87122 100644
 +	xcb_flush(xwm->xcb_conn);
 +}
 -- 
-2.36.0
+2.37.1
 

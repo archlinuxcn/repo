@@ -1,0 +1,47 @@
+From 51aca983f735b7e57f683e7d35d704c845ed3274 Mon Sep 17 00:00:00 2001
+From: Peter Cai <peter@typeblog.net>
+Date: Sun, 14 Aug 2022 10:38:32 -0400
+Subject: [PATCH 3/3] Revert "compositor: send WL_SURFACE_ERROR_INVALID_SIZE
+ for non-cursor surfaces"
+
+This reverts commit 18595000f3a21502fd60bf213122859cc348f9af.
+
+XWayland scaling triggers the same case as libwayland-cursor.
+---
+ types/wlr_compositor.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
+
+diff --git a/types/wlr_compositor.c b/types/wlr_compositor.c
+index 331d932d..252ccc3f 100644
+--- a/types/wlr_compositor.c
++++ b/types/wlr_compositor.c
+@@ -189,21 +189,12 @@ static void surface_finalize_pending(struct wlr_surface *surface) {
+ 	if (!pending->viewport.has_src &&
+ 			(pending->buffer_width % pending->scale != 0 ||
+ 			pending->buffer_height % pending->scale != 0)) {
+-		// TODO: send WL_SURFACE_ERROR_INVALID_SIZE error to cursor surfaces
+-		// once this issue is resolved:
++		// TODO: send WL_SURFACE_ERROR_INVALID_SIZE error once this issue is
++		// resolved:
+ 		// https://gitlab.freedesktop.org/wayland/wayland/-/issues/194
+-		if (!surface->role
+-				|| strcmp(surface->role->name, "wl_pointer-cursor") == 0
+-				|| strcmp(surface->role->name, "wp_tablet_tool-cursor") == 0) {
+-			wlr_log(WLR_DEBUG, "Client bug: submitted a buffer whose size (%dx%d) "
+-				"is not divisible by scale (%d)", pending->buffer_width,
+-				pending->buffer_height, pending->scale);
+-		} else {
+-			wl_resource_post_error(surface->resource,
+-				WL_SURFACE_ERROR_INVALID_SIZE,
+-				"Buffer size (%dx%d) is not divisible by scale (%d)",
+-				pending->buffer_width, pending->buffer_height, pending->scale);
+-		}
++		wlr_log(WLR_DEBUG, "Client bug: submitted a buffer whose size (%dx%d) "
++			"is not divisible by scale (%d)", pending->buffer_width,
++			pending->buffer_height, pending->scale);
+ 	}
+ 
+ 	if (pending->viewport.has_dst) {
+-- 
+2.37.1
+

@@ -34,10 +34,12 @@ makedepends=(
 source=("${pkgname}::git+${url}"
         "0001-xwayland-add-support-for-global-scale-factor.patch"
         "0002-xwayland-add-support-for-changing-global-scale-facto.patch"
+        "0003-Revert-compositor-send-WL_SURFACE_ERROR_INVALID_SIZE.patch"
        )
 sha256sums=('SKIP'
-            '29ecc1ee26285fdcdfefe40010784769779e7c399a4ce8cfcc75cab105b37338'
-            '54e3d7cf5a07e3b40f81dd1f005662c226e6ace58f09f742272f3681403da3ef')
+            'ae7c740a3ef9475ce042601d1fde32d584f52c9877a26086dc16ea480c55da5f'
+            'fe5534b1d6b5cae7e5b4fc05af10ce5507f479b09b9d31cc42f084d162b799d4'
+            '5ca48b64d052f6f2009a2b77634813671c4023fbf9b46ec1f1d044fa7244276b')
 
 
 _builddir="build"
@@ -63,6 +65,7 @@ prepare () {
 	cd "${pkgname}"
 	patch -Np1 < "${srcdir}/0001-xwayland-add-support-for-global-scale-factor.patch"
 	patch -Np1 < "${srcdir}/0002-xwayland-add-support-for-changing-global-scale-facto.patch"
+        patch -Np1 < "${srcdir}/0003-Revert-compositor-send-WL_SURFACE_ERROR_INVALID_SIZE.patch"
 }
 
 build () {
