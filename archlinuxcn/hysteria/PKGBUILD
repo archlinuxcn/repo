@@ -2,12 +2,12 @@
 
 _pkgbase=hysteria
 pkgname=$_pkgbase
-pkgver=1.1.0
+pkgver=1.2.0
 pkgrel=1
 pkgdesc='A feature-packed network utility optimized for networks of poor quality'
 arch=('x86_64')
 url="https://github.com/HyNetwork/hysteria"
-license=('MIT')
+license=('GPL3')
 depends=('glibc')
 makedepends=('go' 'git')
 source=("$_pkgbase"::"git+$url.git#tag=v$pkgver"
@@ -41,6 +41,7 @@ build() {
     -buildmode=pie -trimpath -mod=readonly -modcacherw \
     -o "build/$_pkgbase" \
     -ldflags "$_goldflags" \
+    -tags=gpl \
     ./cmd
 }
 
@@ -59,9 +60,6 @@ package() {
   # install systemd service
   install -Dm644 "$srcdir/hysteria@.service" "$pkgdir/usr/lib/systemd/system/hysteria@.service"
   install -Dm644 "$srcdir/hysteria-server@.service" "$pkgdir/usr/lib/systemd/system/hysteria-server@.service"
-
-  # install license
-  install -Dm644 "$srcdir/$_pkgbase/LICENSE.md" "$pkgdir/usr/share/licenses/$_pkgbase/LICENSE"
 
   # install config directory
   install -dm755 "$pkgdir/etc/hysteria"
