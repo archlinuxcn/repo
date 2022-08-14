@@ -4,8 +4,8 @@
 # Contributor: Vyacheslav Konovalov <echo dnlhY2hrb25vdmFsb3ZAZ21haWwuY29tCg== | base64 -d>
 
 pkgname=resp-app
-pkgver=2022.2
-pkgrel=2
+pkgver=2022.4.2
+pkgrel=1
 pkgdesc='RESP.app - Open source cross-platform Redis Desktop Manager GUI based on Qt 5'
 arch=('x86_64')
 url="https://resp.app"
@@ -40,7 +40,7 @@ build() {
 	cd "$srcdir/resp/3rdparty/zstd/build/cmake"
 	cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release . && make libzstd_static
 	cd "$srcdir/resp/3rdparty/snappy"
-	cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release . && make
+	cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DSNAPPY_BUILD_BENCHMARKS=0 . && make
 	cd "$srcdir/resp/3rdparty/brotli"
 	cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release . && make
 	cd "$srcdir/resp/src"
