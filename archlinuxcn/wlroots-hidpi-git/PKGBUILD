@@ -1,8 +1,9 @@
+# Maintainer: Peter Cai <peter at typeblog dot net>
 # Maintainer: Antonin Décimo <antonin dot decimo at gmail dot com>
 # Contributor: Adrian Perez de Castro <aperez@igalia.com>
 pkgname=wlroots-hidpi-git
 pkgver=0.16.0.r5635.c2359d032
-pkgrel=1
+pkgrel=2
 license=(custom:MIT)
 pkgdesc='Modular Wayland compositor library, with XWayland HiDPI (git version)'
 url=https://gitlab.freedesktop.org/wlroots/wlroots.git
@@ -65,7 +66,7 @@ prepare () {
 	cd "${pkgname}"
 	patch -Np1 < "${srcdir}/0001-xwayland-add-support-for-global-scale-factor.patch"
 	patch -Np1 < "${srcdir}/0002-xwayland-add-support-for-changing-global-scale-facto.patch"
-        patch -Np1 < "${srcdir}/0003-Revert-compositor-send-WL_SURFACE_ERROR_INVALID_SIZE.patch"
+	patch -Np1 < "${srcdir}/0003-Revert-compositor-send-WL_SURFACE_ERROR_INVALID_SIZE.patch"
 }
 
 build () {
