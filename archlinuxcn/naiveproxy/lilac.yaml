@@ -1,9 +1,13 @@
-maintainers:
-  - github: yingziwu
+pre_build_script: aur_pre_build(maintainers=['rrenn'])
+
+post_build: aur_post_build
 
 update_on:
   - source: aur
     aur: naiveproxy
-pre_build_script: aur_pre_build(maintainers='rrenn')
+  - source: manual
+    manual: 1.0
 
-post_build: aur_post_build
+maintainers:
+  - github: yingziwu
+  - github: dctxmei
