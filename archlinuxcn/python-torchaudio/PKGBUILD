@@ -3,9 +3,9 @@
 
 pkgname=python-torchaudio
 _pkgname=audio
-pkgver=0.12.0
+pkgver=0.12.1
 _sox_ver=14.4.2
-pkgrel=3
+pkgrel=1
 pkgdesc="Data manipulation and transformation for audio signal processing, powered by PyTorch"
 arch=('x86_64' 'i686')
 url="https://github.com/pytorch/audio"
@@ -19,12 +19,12 @@ source=("git+$url#tag=v${pkgver}"
         "git+https://github.com/kpu/kenlm.git"
         # Files downloaded by ExternalProject_Add
         "https://downloads.sourceforge.net/project/sox/sox/$_sox_ver/sox-$_sox_ver.tar.bz2"
-        "$pkgname-use-system-libs.diff::https://github.com/yan12125/torchaudio/commit/8d10b1646767f45be9cd2ceaf50e401bb010127f.diff")
+        "use-system-libs.diff")
 sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             '81a6956d4330e75b5827316e44ae381e6f1e8928003c6aa45896da9041ea149c'
-            'b576b8e9311128d652727e65d79c58869a024d20fc541af62c6ceb403b2ef598')
+            '02e7c503a8b876246801d8d9e223992928ee7df8c2009239ffce96583faf52a0')
 
 prepare() {
   cd "$srcdir/${_pkgname}"
@@ -32,7 +32,7 @@ prepare() {
   mkdir -p third_party/archives
   ln -s "$srcdir"/sox-$_sox_ver.tar.bz2 third_party/archives/
 
-  patch -Np1 -i ../$pkgname-use-system-libs.diff
+  patch -Np1 -i ../use-system-libs.diff
 
   # loop stolen from python-onnxruntime :)
   git submodule init
