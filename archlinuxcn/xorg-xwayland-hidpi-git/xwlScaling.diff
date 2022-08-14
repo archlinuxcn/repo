@@ -1,16 +1,3 @@
-diff --git a/hw/xwayland/meson.build b/hw/xwayland/meson.build
-index 6c04c4cf6..cfc5ad04d 100644
---- a/hw/xwayland/meson.build
-+++ b/hw/xwayland/meson.build
-@@ -6,6 +6,8 @@ srcs = [
-     'xwayland-cursor.h',
-     'xwayland-drm-lease.h',
-     'xwayland-drm-lease.c',
-+    'xwayland-ext.c',
-+    'xwayland-ext.h',
-     'xwayland-glamor.h',
-     'xwayland-glx.h',
-     'xwayland-pixmap.c',
 diff --git a/hw/xwayland/xwayland-cursor.c b/hw/xwayland/xwayland-cursor.c
 index e3c1aaa50..2c2ea6f79 100644
 --- a/hw/xwayland/xwayland-cursor.c
@@ -62,230 +49,8 @@ index e3c1aaa50..2c2ea6f79 100644
  
      xwl_cursor_attach_pixmap(xwl_seat, xwl_cursor, pixmap);
  }
-diff --git a/hw/xwayland/xwayland-ext.c b/hw/xwayland/xwayland-ext.c
-new file mode 100644
-index 000000000..1668dda57
---- /dev/null
-+++ b/hw/xwayland/xwayland-ext.c
-@@ -0,0 +1,134 @@
-+/*
-+ * Copyright © 2020 Dario Nieuwenhuis
-+ *
-+ * Permission to use, copy, modify, distribute, and sell this software
-+ * and its documentation for any purpose is hereby granted without
-+ * fee, provided that the above copyright notice appear in all copies
-+ * and that both that copyright notice and this permission notice
-+ * appear in supporting documentation, and that the name of the
-+ * copyright holders not be used in advertising or publicity
-+ * pertaining to distribution of the software without specific,
-+ * written prior permission.  The copyright holders make no
-+ * representations about the suitability of this software for any
-+ * purpose.  It is provided "as is" without express or implied
-+ * warranty.
-+ *
-+ * THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
-+ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-+ * FITNESS, IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
-+ * SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
-+ * AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
-+ * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
-+ * SOFTWARE.
-+ */
-+
-+#ifdef HAVE_DIX_CONFIG_H
-+#include <dix-config.h>
-+#endif
-+
-+#include "dixstruct.h"
-+
-+#include <X11/X.h>
-+#include "misc.h"
-+#include "os.h"
-+#include "extinit.h"
-+
-+#include "xwayland-ext.h"
-+#include "xwayland-screen.h"
-+
-+#ifdef DEBUG
-+#define DEBUG_P(x) DebugF(x"\n")
-+#else
-+#define DEBUG_P(x) /**/
-+#endif
-+
-+static int XwaylandErrorBase;
-+
-+static int
-+ProcXwaylandQueryVersion(ClientPtr client)
-+{
-+    xXwaylandQueryVersionReply rep = {
-+        .type = X_Reply,
-+        .sequenceNumber = client->sequence,
-+        .length = 0,
-+        .majorVersion = XWAYLAND_MAJOR_VERSION,
-+        .minorVersion = XWAYLAND_MINOR_VERSION
-+    };
-+
-+    DEBUG_P("XwaylandQueryVersion");
-+
-+    REQUEST_SIZE_MATCH(xXwaylandQueryVersionReq);
-+
-+    if (client->swapped) {
-+        swaps(&rep.sequenceNumber);
-+        swapl(&rep.length);
-+        swaps(&rep.majorVersion);
-+        swaps(&rep.minorVersion);
-+    }
-+    WriteToClient(client, sizeof(xXwaylandQueryVersionReply), &rep);
-+    return Success;
-+}
-+
-+static int
-+ProcXwaylandSetScale(ClientPtr client)
-+{
-+    DEBUG_P("XwaylandSetScale");
-+
-+    REQUEST(xXwaylandSetScaleReq);
-+    REQUEST_SIZE_MATCH(xXwaylandSetScaleReq);
-+
-+    if (stuff->screen >= screenInfo.numScreens)
-+        return BadValue;
-+    ScreenPtr pScreen = screenInfo.screens[stuff->screen];
-+
-+    struct xwl_screen* xwl_screen = xwl_screen_get(pScreen);
-+    if (xwl_screen == NULL)
-+        return BadImplementation;
-+
-+    if(stuff->scale < 1)
-+        return BadValue;
-+
-+    xwl_screen_set_global_scale(xwl_screen, stuff->scale);
-+
-+    return Success;
-+}
-+
-+static int
-+ProcXwaylandDispatch(ClientPtr client)
-+{
-+    REQUEST(xReq);
-+    switch (stuff->data) {
-+        case X_XwaylandQueryVersion:
-+            return ProcXwaylandQueryVersion(client);
-+        case X_XwaylandSetScale:
-+            return ProcXwaylandSetScale(client);
-+        default:
-+            return BadRequest;
-+    }
-+}
-+
-+static int _X_COLD
-+SProcXwaylandDispatch(ClientPtr client)
-+{
-+    REQUEST(xReq);
-+    switch (stuff->data) {
-+        default:
-+            return BadRequest;
-+    }
-+}
-+
-+void
-+xwlExtensionInit(void)
-+{
-+    ExtensionEntry* extEntry;
-+    if ((extEntry = AddExtension(XWAYLANDNAME,
-+                                 XwaylandNumberEvents,
-+                                 XwaylandNumberErrors,
-+                                 ProcXwaylandDispatch,
-+                                 SProcXwaylandDispatch,
-+                                 NULL, StandardMinorOpcode))) {
-+        XwaylandErrorBase = extEntry->errorBase;
-+    }
-+}
-+
-diff --git a/hw/xwayland/xwayland-ext.h b/hw/xwayland/xwayland-ext.h
-new file mode 100644
-index 000000000..be8fb39d9
---- /dev/null
-+++ b/hw/xwayland/xwayland-ext.h
-@@ -0,0 +1,76 @@
-+/*
-+ * Copyright © 2020 Dario Nieuwenhuis
-+ *
-+ * Permission to use, copy, modify, distribute, and sell this software
-+ * and its documentation for any purpose is hereby granted without
-+ * fee, provided that the above copyright notice appear in all copies
-+ * and that both that copyright notice and this permission notice
-+ * appear in supporting documentation, and that the name of the
-+ * copyright holders not be used in advertising or publicity
-+ * pertaining to distribution of the software without specific,
-+ * written prior permission.  The copyright holders make no
-+ * representations about the suitability of this software for any
-+ * purpose.  It is provided "as is" without express or implied
-+ * warranty.
-+ *
-+ * THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
-+ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-+ * FITNESS, IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
-+ * SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
-+ * AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
-+ * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
-+ * SOFTWARE.
-+ */
-+
-+#ifndef XWAYLAND_EXT_H
-+#define XWAYLAND_EXT_H
-+
-+#include <xwayland-config.h>
-+
-+#define XWAYLANDNAME "XWAYLAND"
-+#define XwaylandNumberEvents 0
-+#define XwaylandNumberErrors 0
-+
-+#define XWAYLAND_MAJOR_VERSION	1	/* current version numbers */
-+#define XWAYLAND_MINOR_VERSION	0
-+
-+#define X_XwaylandQueryVersion	0
-+#define X_XwaylandSetScale  	1
-+
-+
-+typedef struct _XwaylandQueryVersion {
-+    CARD8	reqType;		    /* always XwaylandReqCode */
-+    CARD8	xwaylandReqType;	/* always X_XwaylandQueryVersion */
-+    CARD16	length;
-+} xXwaylandQueryVersionReq;
-+#define sz_xXwaylandQueryVersionReq	4
-+
-+typedef struct {
-+    BYTE	type;			    /* X_Reply */
-+    BOOL	pad1;
-+    CARD16	sequenceNumber;
-+    CARD32	length;
-+    CARD16	majorVersion;		/* major version of Xwayland */
-+    CARD16	minorVersion;		/* minor version of Xwayland */
-+    CARD32	pad2;
-+    CARD32	pad3;
-+    CARD32	pad4;
-+    CARD32	pad5;
-+    CARD32	pad6;
-+} xXwaylandQueryVersionReply;
-+#define sz_xXwaylandQueryVersionReply	32
-+
-+
-+typedef struct {
-+    CARD8	reqType;		    /* always XwaylandReqCode */
-+    CARD8	xwaylandReqType;	/* always X_XwaylandSetScale */
-+    CARD16	length;
-+    CARD16	screen;
-+    CARD16	scale;
-+} xXwaylandSetScaleReq;
-+#define sz_xXwaylandSetScaleReq	8
-+
-+void xwlExtensionInit(void);
-+
-+#endif /* XWAYLAND_EXT_H */
 diff --git a/hw/xwayland/xwayland-input.c b/hw/xwayland/xwayland-input.c
-index 784972aed..9df672bb2 100644
+index 16b58a2d5..8fcd2d95d 100644
 --- a/hw/xwayland/xwayland-input.c
 +++ b/hw/xwayland/xwayland-input.c
 @@ -504,8 +504,8 @@ pointer_handle_enter(void *data, struct wl_pointer *pointer,
@@ -621,30 +386,63 @@ index 0f6cacd3f..005fd9fc8 100644
      /* Arbitrary limit to try to avoid flooding the Wayland
       * connection. If we flood it too much anyway, this could
 diff --git a/hw/xwayland/xwayland.c b/hw/xwayland/xwayland.c
-index a15b1f3ee..7c9ef9b92 100644
+index 9a1f4a6da..3f04e11e6 100644
 --- a/hw/xwayland/xwayland.c
 +++ b/hw/xwayland/xwayland.c
-@@ -47,12 +47,15 @@
+@@ -302,6 +302,18 @@ xwl_log_handler(const char *format, va_list args)
+ #ifdef XWL_HAS_XWAYLAND_EXTENSION
+ #include <X11/extensions/xwaylandproto.h>
  
- #include "xwayland-screen.h"
- #include "xwayland-vidmode.h"
-+#include "xwayland-ext.h"
- 
- #ifdef XF86VIDMODE
- #include <X11/extensions/xf86vmproto.h>
- extern _X_EXPORT Bool noXFree86VidModeExtension;
- #endif
- 
-+_X_EXPORT Bool noXwaylandExtension;
++// Custom extensions for xwl for setting scale
++#define X_XwlSetScale  	1
 +
- void
- ddxGiveUp(enum ExitCode error)
- {
-@@ -302,6 +305,7 @@ xwl_log_handler(const char *format, va_list args)
- static const ExtensionModule xwayland_extensions[] = {
- #ifdef XF86VIDMODE
-     { xwlVidModeExtensionInit, XF86VIDMODENAME, &noXFree86VidModeExtension },
-+    { xwlExtensionInit, XWAYLANDNAME, &noXwaylandExtension },
- #endif
- };
++typedef struct {
++    CARD8	reqType;		    /* always XwaylandReqCode */
++    CARD8	xwaylandReqType;	/* always X_XwaylandSetScale */
++    CARD16	length;
++    CARD16	screen;
++    CARD16	scale;
++} xXwaylandSetScaleReq;
++#define sz_xXwaylandSetScaleReq	8
++
+ Bool noXWaylandExtension = FALSE;
  
+ static int
+@@ -355,6 +367,28 @@ SProcXwlQueryVersion(ClientPtr client)
+     return ProcXwlQueryVersion(client);
+ }
+ 
++static int
++ProcXwlSetScale(ClientPtr client)
++{
++    REQUEST(xXwaylandSetScaleReq);
++    REQUEST_SIZE_MATCH(xXwaylandSetScaleReq);
++
++    if (stuff->screen >= screenInfo.numScreens)
++        return BadValue;
++    ScreenPtr pScreen = screenInfo.screens[stuff->screen];
++
++    struct xwl_screen* xwl_screen = xwl_screen_get(pScreen);
++    if (xwl_screen == NULL)
++        return BadImplementation;
++
++    if (stuff->scale < 1)
++        return BadValue;
++
++    xwl_screen_set_global_scale(xwl_screen, stuff->scale);
++
++    return Success;
++}
++
+ static int
+ ProcXWaylandDispatch(ClientPtr client)
+ {
+@@ -363,6 +397,8 @@ ProcXWaylandDispatch(ClientPtr client)
+     switch (stuff->data) {
+     case X_XwlQueryVersion:
+         return ProcXwlQueryVersion(client);
++    case X_XwlSetScale:
++        return ProcXwlSetScale(client);
+     }
+     return BadRequest;
+ }
