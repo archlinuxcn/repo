@@ -1,10 +1,12 @@
-pre_build_script: aur_pre_build(maintainers=['Conni2461'])
+pre_build_script: aur_pre_build(maintainers=['orhun'])
 
 post_build: aur_post_build
 
 update_on:
   - source: aur
     aur: spotify-tui
+  - source: manual
+    manual: 1.0.0
 
 maintainers:
   - github: dctxmei
