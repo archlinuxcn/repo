@@ -3,7 +3,7 @@
 
 pkgname=gnome-browser-connector
 pkgver=42.0
-pkgrel=1.1
+pkgrel=2
 pkgdesc='Native browser connector for integration with extensions.gnome.org'
 arch=(any)
 url="https://wiki.gnome.org/Projects/GnomeShellIntegration"
@@ -19,7 +19,7 @@ md5sums=('SKIP')
 
 pkgver() {
   cd $pkgname
-  python3 -c 'from gnome_browser_connector.version import __version__; print(__version__, end="");' | sed 's|\.rc|rc|'
+  git describe --tags | sed 's/^v//;s/-/+/g'
 }
 
 prepare() {
@@ -36,5 +36,5 @@ check() {
 }
 
 package() {
-  meson install --destdir="$pkgdir" -C build
+  meson install -C build --destdir="$pkgdir"
 }
