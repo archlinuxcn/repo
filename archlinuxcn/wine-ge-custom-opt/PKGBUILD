@@ -160,6 +160,12 @@ build() {
   # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90458
   export CFLAGS="${CFLAGS//-fstack-clash-protection/}"
   export CXXFLAGS="${CXXFLAGS//-fstack-clash-protection/}"
+
+  # MinGW don't support fortified functions at all
+  # https://github.com/msys2/MINGW-packages/issues/5803
+  # https://sourceforge.net/p/mingw-w64/mailman/message/36764708/
+  export CFLAGS="${CFLAGS//-Wp,-D_FORTIFY_SOURCE=2/}"
+  export CXXFLAGS="${CXXFLAGS//-Wp,-D_FORTIFY_SOURCE=2/}"
   
   # Doesn't compile without remove these flags as of 4.10
   export CFLAGS="${CFLAGS//-fno-plt/}"
