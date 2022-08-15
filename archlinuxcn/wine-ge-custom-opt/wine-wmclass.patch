@@ -1,0 +1,24 @@
+diff --git a/dlls/winex11.drv/window.c b/dlls/winex11.drv/window.c
+index 221f4392aa9..5485eb0f8e8 100644
+--- a/dlls/winex11.drv/window.c
++++ b/dlls/winex11.drv/window.c
+@@ -1034,8 +1034,17 @@ static void set_initial_wm_hints( Display *display, Window window )
+     /* class hints */
+     if ((class_hints = XAllocClassHint()))
+     {
+-        class_hints->res_name = process_name;
+-        class_hints->res_class = process_name;
++        const char *wine_wmclass = getenv("WINE_WMCLASS");
++        char window_class[128];
++
++        if (wine_wmclass && *wine_wmclass){
++            snprintf(window_class, sizeof(window_class), "%s", wine_wmclass);
++            class_hints->res_name = window_class;
++            class_hints->res_class = window_class;
++        } else {
++            class_hints->res_name = process_name;
++            class_hints->res_class = process_name;
++        }
+         XSetClassHint( display, window, class_hints );
+         XFree( class_hints );
+     }

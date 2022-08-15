@@ -1,0 +1,13 @@
+build_prefix: multilib
+
+post_build_script: |
+    git_pkgbuild_commit()
+
+update_on:
+  - source: github
+    github: GloriousEggroll/wine-ge-custom
+    use_latest_release: true
+
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com

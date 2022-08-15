@@ -1,0 +1,17 @@
+diff --git a/dlls/shell32/shellpath.c b/dlls/shell32/shellpath.c
+index 7bfa504a62f..4896bbad88f 100644
+--- a/dlls/shell32/shellpath.c
++++ b/dlls/shell32/shellpath.c
+@@ -3007,7 +3007,12 @@ HRESULT WINAPI SHGetFolderPathAndSubDirW(
+ 
+     /* create symbolic links rather than directories for specific
+      * user shell folders */
++    const WCHAR *sandbox = _wgetenv( L"WINEUSERSANDBOX" );
++    int isolate = 0;
++    isolate = sandbox && !strcmp(sandbox, "1");
++    if(!isolate) {
+     _SHCreateSymbolicLink(folder, szBuildPath);
++    }
+ 
+     /* create directory/directories */
+     ret = SHCreateDirectoryExW(hwndOwner, szBuildPath, NULL);
