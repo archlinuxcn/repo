@@ -10,5 +10,5 @@ def pre_build():
                     "depends=('camlp-streams' 'ocaml-easy-format')")
         elif line.startswith('makedepends='):
             line = ('#' + line + '\n'
-                    "makedepends=('dune' 'ocaml')")
+                    "makedepends=('dune' 'ocaml' 'ocaml-findlib')")
         print(line)
