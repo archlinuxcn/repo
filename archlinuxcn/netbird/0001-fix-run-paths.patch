@@ -1,0 +1,13 @@
+diff --git a/client/cmd/root.go b/client/cmd/root.go
+index 26e9a76..3fd7ead 100644
+--- a/client/cmd/root.go
++++ b/client/cmd/root.go
+@@ -76,7 +76,7 @@ func init() {
+ 	oldDefaultConfigPath = oldDefaultConfigPathDir + "config.json"
+ 	oldDefaultLogFile = oldDefaultLogFileDir + "client.log"
+ 
+-	defaultDaemonAddr := "unix:///var/run/netbird.sock"
++	defaultDaemonAddr := "unix:///var/run/netbird/netbird.sock"
+ 	if runtime.GOOS == "windows" {
+ 		defaultDaemonAddr = "tcp://127.0.0.1:41731"
+ 	}

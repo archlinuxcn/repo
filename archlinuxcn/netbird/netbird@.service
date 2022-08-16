@@ -1,0 +1,50 @@
+[Unit]
+Description = Netbird Service (%i)
+Documentation = https://netbird.io/docs
+After = network-online.target syslog.target
+Wants = network-online.target
+
+[Service]
+Type = simple
+EnvironmentFile = -/etc/default/netbird
+ExecStartPre = +-/usr/bin/chown netbird:netbird -R /etc/netbird
+ExecStart = /usr/bin/netbird service run --config /etc/netbird/%i.json --log-file console $NETBIRD_CLIENT_ARGS
+Restart = on-failure
+RestartSec = 5
+TimeoutStopSec = 10
+
+User = netbird
+RuntimeDirectory = netbird
+ConfigurationDirectory = netbird
+
+AmbientCapabilities = CAP_NET_ADMIN
+CapabilityBoundingSet = CAP_NET_ADMIN
+
+DevicePolicy = closed
+LockPersonality = yes
+MemoryDenyWriteExecute = yes
+NoNewPrivileges = yes
+PrivateDevices = yes
+PrivateMounts = yes
+PrivateTmp = yes
+ProcSubset = pid
+ProtectClock = yes
+ProtectControlGroups = yes
+ProtectHome = yes
+ProtectHostname = yes
+ProtectKernelLogs = yes
+ProtectKernelModules = yes
+ProtectKernelTunables = yes
+ProtectProc = invisible
+ProtectSystem = strict
+RemoveIPC = yes
+RestrictAddressFamilies = AF_UNIX AF_NETLINK AF_INET AF_INET6
+RestrictNamespaces = yes
+RestrictRealtime = yes
+RestrictSUIDSGID = yes
+SystemCallArchitectures = native
+SystemCallFilter = ~@clock @cpu-emulation @privileged @module @raw-io @reboot @mount @obsolete @debug @swap
+
+[Install]
+WantedBy = multi-user.target
+
