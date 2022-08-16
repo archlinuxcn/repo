@@ -3,13 +3,14 @@
 _projectname='octavius'
 pkgname="ocaml-$_projectname"
 pkgver='1.2.2'
-pkgrel=7
+pkgrel=8
 pkgdesc='Ocamldoc comment syntax parser'
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/ocaml-doc/$_projectname"
 license=('ISC')
 depends=('ocaml>=4.03.0')
-makedepends=('dune>=1.11.0')
+#makedepends=('dune>=1.11.0')
+makedepends=('dune' 'ocaml-compiler-libs')
 options=('!strip')
 source=("$pkgname-$pkgver-$pkgrel.tar.gz::$url/archive/v$pkgver.tar.gz")
 sha512sums=('57e40f0bd03599bf0b14d85b29bef2214f9b9393917c0a65acf60cf028fe028a730a804f3c0101fee1378cacd4feb7a4f2df3c8411ceeb6bb34d47f849b7a55e')
