@@ -1,7 +1,7 @@
 # Maintainer: Michael Duell < mail at akurei dot me >
 # Contributor: Myles English <myles at rockhead dot biz>
 pkgname=btrbk
-pkgver=0.32.2
+pkgver=0.32.3
 pkgrel=1
 pkgdesc="Backup tool for btrfs subvolumes, taking advantage of btrfs specific capabilities to create atomic snapshots and transfer them incrementally to your backup locations"
 url="https://digint.ch/btrbk"
@@ -9,7 +9,6 @@ arch=('any')
 license=('GPL3')
 depends=('perl' 'btrfs-progs')
 makedepends=('asciidoctor')
-options=('!makeflags') # temporary fix for https://github.com/digint/btrbk/pull/341
 optdepends=('openssh: remote backup support',
         'mbuffer: --progress support and add buffering to send-stream'
         'sudo: support for the btrfs-progs-sudo backend')
@@ -20,4 +19,4 @@ package() {
   make DESTDIR="${pkgdir}" BINDIR="/usr/bin" install
 }
 
-b2sums=('f06e563d0a3f6a7096426b205c56446c8cba34767a0a2cd092f1d0d2661c1a38d88adfae0cd2046d2f43623fb236e9a2d7ef7281938a37b410f2cf842f5df83c')
+b2sums=('f0e389891bfdfa961187505548ec5139aa8967932d2fcca43c151c8ca25664c30af96f0f52531507e7c838ca3df16f371f7419df226283734fee23f6af56b3cf')
