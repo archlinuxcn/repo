@@ -1,0 +1,49 @@
+# Maintainer: Adam Goldsmith <contact@adamgoldsmith.name>
+pkgname=arcus-git
+pkgver=r680.6901ccf
+pkgrel=1
+pkgdesc="A library designed to facilitate the communication between Cura and its backend and similar code."
+arch=('i686' 'x86_64')
+url="https://github.com/Ultimaker/libArcus"
+license=('GPL2')
+provides=('arcus' 'libarcus')
+conflicts=('arcus' 'libarcus')
+makedepends=('cmake' 'git')
+depends=('protobuf')
+source=('git+https://github.com/Ultimaker/libArcus.git'
+'ArcusConfig.cmake'
+'ArcusConfigVersion.cmake'
+'Arcus-targets.cmake'
+'Arcus-targets-none.cmake')
+md5sums=('SKIP'
+         'c35f5b8d7eef7b6eed9d3fa4d3c26865'
+         'daaa270f4a53c01fbf5e116fa4d241d7'
+         'e6b0d2ad9807b9ee3da32da80f9e5f2d'
+         '15ad93508d78c9cdca8da344a9afbb68')
+
+pkgver() {
+  cd libArcus
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd libArcus
+  mkdir build && cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=/usr/lib/ -DCMAKE_BUILD_TYPE=None -DBUILD_SHARED_LIBS=ON ..
+  make
+}
+
+package() {
+  cd libArcus/build
+  install -Dm755 libArcus.so "${pkgdir}/usr/lib/libArcus.so.5.1.0"
+  ln -sf /usr/lib/libArcus.so.5.1.0 "${pkgdir}/usr/lib/libArcus.so.5"
+  ln -sf /usr/lib/libArcus.so.5.1.0 "${pkgdir}/usr/lib/libArcus.so"
+  install -Dm644 ${srcdir}/ArcusConfig.cmake "${pkgdir}/usr/lib/cmake/Arcus/ArcusConfig.cmake" 
+  install -Dm644 ${srcdir}/ArcusConfigVersion.cmake "${pkgdir}/usr/lib/cmake/Arcus/ArcusConfigVersion.cmake" 
+  install -Dm644 ${srcdir}/Arcus-targets.cmake "${pkgdir}/usr/lib/cmake/Arcus/Arcus-targets.cmake" 
+  install -Dm644 ${srcdir}/Arcus-targets-none.cmake "${pkgdir}/usr/lib/cmake/Arcus/Arcus-targets-none.cmake" 
+
+  install -Dm644 "${srcdir}/libArcus/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:
