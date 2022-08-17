@@ -1,14 +1,14 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=dtkcore-git
-pkgver=5.5.32.r63.g7b13e5c
+pkgver=5.5.32.r71.gc19f743
 pkgrel=1
 pkgdesc='DTK core modules'
 arch=('x86_64' 'aarch64')
 url="https://github.com/linuxdeepin/dtkcore"
 license=('LGPL3')
 depends=('dconf' 'deepin-desktop-base-git' 'python' 'gsettings-qt' 'lshw')
-makedepends=('git' 'qt5-tools' 'gtest' 'dtkcommon-git')
+makedepends=('git' 'qt5-tools' 'cmake' 'ninja' 'gtest' 'dtkcommon-git' 'doxygen')
 conflicts=('dtkcore')
 provides=('dtkcore')
 groups=('deepin-git')
@@ -29,11 +29,17 @@ prepare() {
 
 build() {
   cd $pkgname
-  qmake-qt5 PREFIX=/usr DTK_VERSION=$pkgver LIB_INSTALL_DIR=/usr/lib
-  make
+  cmake -GNinja \
+    -DNOTPACKAGE=OFF \
+    -DLINUXNAME="archlinux"\
+    -DBUILD_DOCS=OFF \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+  ninja
 }
 
 package() {
   cd $pkgname
-  make INSTALL_ROOT="$pkgdir" install
+  DESTDIR="$pkgdir" ninja install
 }
