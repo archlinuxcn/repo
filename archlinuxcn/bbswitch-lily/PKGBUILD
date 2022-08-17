@@ -20,7 +20,7 @@ sha512sums=('11ab163931feb6c0e202d04c4552b848e999fedea9990390c26b28abdb4a69081cc
             'c658e0e8de95c678d1a3ea5659344fff9fce14a93e0f8da3f21f79dc9c820feb3c540e1892ffc10a444c96a768d6d3fecd684315988da5f401f5c6ef6f37be79')
 
 prepare() {
-  cd ${pkgbase}-${pkgver}
+  cd bbswitch-${pkgver}
   patch -Np1 < ../0001-proc_ops-struct.patch
   patch -Np1 < ../0002-kernel-5.7.patch
   patch -Np1 < ../0003-kernel-5.18.patch
