@@ -1,0 +1,11 @@
+diff -u -r bbswitch-0.8/bbswitch.c bbswitch-0.8-5.7/bbswitch.c
+--- bbswitch-0.8/bbswitch.c	2020-06-02 00:34:20.370571802 +0000
++++ bbswitch-0.8-5.7/bbswitch.c	2020-06-02 00:35:18.161403639 +0000
+@@ -29,6 +29,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/pci.h>
++#include <linux/proc_fs.h>
+ #include <linux/acpi.h>
+ #include <linux/module.h>
+ #include <asm/uaccess.h>
