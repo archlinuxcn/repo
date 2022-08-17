@@ -116,8 +116,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             LIBBLASNAME=libopenblas
             LIBBLAS=-lopenblas
             LIBLAPACKNAME=libopenblas
-            LIBLAPACK=-lopenblas
-            BUNDLE_DEBUG_LIBS=1)
+            LIBLAPACK=-lopenblas)
 
 _x86_target='generic,opt_size;haswell,clone_all,-rdrnd;skylake,base(1),-rdrnd,-rdseed,-rtm;cannonlake,base(1),-rdrnd,-rdseed,-rtm'
 _arm_target='armv7-a;armv7-a,neon;armv7-a,neon,vfp4'
@@ -248,7 +247,10 @@ package-julia-in() {
 
   # TODO docless build
   # if ((BUILD_DOC)); then
-  make install DESTDIR="$pkgdir" "${opts[@]}"
+  # Install the debug version first. If there's any file conflict
+  # due to build system bugs, I want the final version to be the release one.
+  make install DESTDIR="$pkgdir" "${opts[@]}" JULIA_BUILD_MODE=debug
+  make install DESTDIR="$pkgdir" "${opts[@]}" JULIA_BUILD_MODE=release
   # else
   #   make install-nodoc DESTDIR="$pkgdir" "${opts[@]}"
   #   # Manually install man pages
