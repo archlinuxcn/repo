@@ -19,18 +19,25 @@ makedepends=('cmake' 'llvm' 'clang' 'gtest' 'linux-lily-headers')
 source=("https://github.com/draios/sysdig/archive/$pkgver/sysdig-$pkgver.tar.gz"
         "falcosecurity-libs-$_falcover.tar.gz::https://github.com/falcosecurity/libs/archive/$_falcover.tar.gz"
         "bashcomp-location.patch"
-        "falcosecurity-libs-nodownload.patch")
-sha256sums=('38ea602085f706af5d07630189216fa240064122650a81456cb092579313ae8e'
+        "falcosecurity-libs-nodownload.patch"
+        "sme.patch")
+sha256sums=('6b96797859002ab69a2bed4fdba1c7fe8064ecf8661621ae7d8fbf8599ffa636'
             '80903bc57b7f9c5f24298ecf1531cf66ef571681b4bd1e05f6e4db704ffb380b'
             'aaee8a0ff414a24c5d5a479229324be1667bc5eb70702838f5d617fd986f947b'
-            'b8cedef6766c691a8a92810eb459593d80070f0cf5dfc32cae2a80ec00639429')
+            'b8cedef6766c691a8a92810eb459593d80070f0cf5dfc32cae2a80ec00639429'
+            'eac65420a1f564b2336336b22a2717e5fb5c15928f859995152d00e2e4ed90d5')
 conflicts=(sysdig)
 provides=(sysdig=$pkgver)
 
 prepare() {
-  cd "$srcdir"/sysdig-$pkgver
+  cd "$srcdir/sysdig-$pkgver"
   patch -p1 -i "$srcdir"/bashcomp-location.patch
   patch -p1 -i "$srcdir"/falcosecurity-libs-nodownload.patch
+
+  sed s/USE_BUNDLED_DEPS/USE_BUNDLED_NJSON/ -i cmake/modules/nlohmann-json.cmake
+
+  cd "$srcdir/libs-$_falcover"
+  patch -p1 -i "$srcdir"/sme.patch
 }
 
 build() {
@@ -51,7 +58,8 @@ build() {
         -DBUILD_DRIVER=ON \
         -DBUILD_BPF=ON \
         -DENABLE_DKMS=OFF \
-        -DBUILD_LIBSCAP_EXAMPLES=OFF
+        -DBUILD_LIBSCAP_EXAMPLES=OFF \
+        -DUSE_BUNDLED_NJSON=ON
   make
 }
 
