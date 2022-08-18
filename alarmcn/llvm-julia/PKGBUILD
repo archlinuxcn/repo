@@ -13,8 +13,10 @@ makedepends=(cmake ninja libffi libedit ncurses libxml2
 # Disable LTO for now since there seems to be some issue at least on aarch64
 options=('staticlibs' '!strip' '!lto')
 source=(https://github.com/JuliaLang/llvm-project/archive/refs/tags/julia-$pkgver-$_julia_rel.tar.gz
+        llvm-coroutines-ubsan.patch
         llvm-config.h)
 sha256sums=('a3f0cec7dd78107de3c929bc05e2966fbe083c23b162f740eea044ee29724406'
+            'ee9baf6df05474083857044d92f26f59d3ee709cdf82ba3bdb2792e6645f71d9'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
 prepare() {
@@ -23,6 +25,7 @@ prepare() {
 
   # Arch patches
   msg "Applying Arch patches"
+  patch -Np2 -i ../llvm-coroutines-ubsan.patch
 }
 
 build() {
