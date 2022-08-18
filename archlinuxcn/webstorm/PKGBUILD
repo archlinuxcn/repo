@@ -4,7 +4,7 @@
 
 pkgbase=webstorm
 pkgname=(webstorm webstorm-jre)
-pkgver=2022.2b222.3345.108
+pkgver=2022.2.1b222.3739.57
 pkgrel=1
 pkgdesc='JavaScript IDE and HTML editor'
 arch=('x86_64' 'i686')
@@ -15,7 +15,7 @@ options=('!strip')
 source=("https://download.jetbrains.com/webstorm/WebStorm-${pkgver%b*}.tar.gz"
         jetbrains-webstorm.desktop
         LICENSE)
-b2sums=('bae9fef9883c09806a0237c5b1c3a62134c6d55ae4a7980490d5797bcbf729ae15e490b65191ce6f4b94ee2f17b135bda9e2082dcaff504463a5d48fc110934e'
+b2sums=('0b485928a5043103213859679379a446a0d6f7e734920f2461ae49404f761b63993a3fca4dc197dffb1e8ad0016e682896e2a599d5587c914506d96c9ac171fb'
         '0d4e900eb8c78abf7acbbcc86400065d63d9cd3fec77299d7d6abf540a9bf589f879b274f9bb23573f6ef78592b8987414816a56397b9d8d80d6bad29ad4440d'
         'dadaf0e67b598aa7a7a4bf8644943a7ee8ebf4412abb17cd307f5989e36caf9d0db529a0e717a9df5d9537b10c4b13e814b955ada6f0d445913c812b63804e77')
 
