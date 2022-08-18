@@ -25,7 +25,7 @@ prepare() {
 
   # Arch patches
   msg "Applying Arch patches"
-  patch -Np2 -i ../llvm-coroutines-ubsan.patch
+  patch -Np2 -i "$srcdir"/llvm-coroutines-ubsan.patch
 }
 
 build() {
