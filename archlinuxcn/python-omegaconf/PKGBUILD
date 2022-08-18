@@ -2,7 +2,7 @@
 
 _pkgname=omegaconf
 pkgname=python-omegaconf
-pkgver=2.2.2
+pkgver=2.2.3
 pkgrel=1
 pkgdesc='Flexible Python configuration system'
 arch=('any')
@@ -18,7 +18,7 @@ makedepends=(
   python-setuptools
 )
 source=(${pkgname}-${pkgver}.tar.gz::https://github.com/omry/omegaconf/archive/refs/tags/v${pkgver}.tar.gz)
-sha256sums=('10a89b5cb81887d68137b69a7c5c046a060e2239af4e37f20c3935ad2e5fd865')
+sha256sums=('9586b6623d4abf514979612f987261971a58da2dc7a9224bebd017848c9ad80a')
 
 build() {
   cd "${_pkgname}-${pkgver}"
