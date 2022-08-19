@@ -9,7 +9,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=104.0.5112.79
+pkgver=104.0.5112.101
 pkgrel=1
 _launcher_ver=8
 _gcc_patchset=2
@@ -36,7 +36,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-tflite-system-zlib.patch
         remove-no-opaque-pointers-flag.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('9cc662f1a84c796521ee17ed2808795ca937fe7f77bc605e788f0304a81dabf3'
+sha256sums=('60f015e1559de4044cdfa3bdc1f8fde535927c8ab15b0959ccc9b6feec832f5b'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'ce702099849465927cf47f7bc3a4a27045d0e35e16b17481ebf35e14506bafa7'
             '9956a843bc8a765c130080616ccd3ebc46ea95c3a2324c4b403bc293a8705eb2'
@@ -48,15 +48,15 @@ sha256sums=('9cc662f1a84c796521ee17ed2808795ca937fe7f77bc605e788f0304a81dabf3'
 provides=('chromium')
 conflicts=('chromium')
 _uc_usr=ungoogled-software
-_uc_ver=104.0.5112.81-1
+_uc_ver=104.0.5112.102-1
 source=(${source[@]}
         $pkgname-$_uc_ver.tar.gz::https://github.com/$_uc_usr/ungoogled-chromium/archive/$_uc_ver.tar.gz
         chromium-drirc-disable-10bpc-color-configs.conf
         ozone-add-va-api-support-to-wayland.patch)
 sha256sums=(${sha256sums[@]}
-            '75fbb5a8679522cd81520a5623e18d8aa4783d5403d2bc26aacab90d899a7a15'
+            'f25da82edebd3bdc4bc40bef6a517f84d6b6987550a2374305bc97964ebe2cc2'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
-            'af20fc58aef22dd0b1fb560a1fab68d0d27187ff18fad7eb1670feab9bc4a8d8')
+            'bf19251261208e9a19e8514d0de97e573e5d932f323368819aa341fdfdcb00db')
  
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch

@@ -113,12 +113,12 @@ index 06d0290..c217e91 100644
  
  }  // namespace ui
 diff --git a/ui/ozone/platform/wayland/ozone_platform_wayland.cc b/ui/ozone/platform/wayland/ozone_platform_wayland.cc
-index 8d8621b..a1ca29c 100644
+index 8d82c2d..6bb1670 100644
 --- a/ui/ozone/platform/wayland/ozone_platform_wayland.cc
 +++ b/ui/ozone/platform/wayland/ozone_platform_wayland.cc
-@@ -289,6 +289,9 @@ class OzonePlatformWayland : public OzonePlatform,
-       // arbitrary position.
-       properties->supports_global_screen_coordinates = false;
+@@ -291,6 +291,9 @@ class OzonePlatformWayland : public OzonePlatform,
+       properties->supports_global_screen_coordinates =
+           features::IsWaylandScreenCoordinatesEnabled();
  
 +      // Let the media know this platform supports va-api.
 +      properties->supports_vaapi = true;
