@@ -3,7 +3,7 @@
 
 pkgname=comgr
 pkgdesc='Radeon Open Compute - compiler support'
-pkgver=5.2.1
+pkgver=5.2.3
 pkgrel=1
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/ROCm-CompilerSupport'
@@ -11,7 +11,7 @@ license=('custom:NCSAOSL')
 depends=(zlib rocm-device-libs)
 makedepends=(cmake rocm-llvm rocm-cmake)
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('ebeaea8e653fc2b9d67d3271be44690ac7876ee679baa01d47863e75362b8c85')
+sha256sums=('36d67dbe791d08ad0a02f0f3aedd46059848a0a232c5f999670103b0410c89dc')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
 build() {
