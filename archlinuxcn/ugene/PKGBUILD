@@ -3,7 +3,7 @@
 
 _pkgname=ugene
 pkgname=('ugene' 'ugene-cuda')
-pkgver=43.0
+pkgver=44.0
 pkgrel=1
 pkgdesc='A free open-source cross-platform bioinformatics software'
 arch=('x86_64')
@@ -21,7 +21,7 @@ makedepends=(
   opencl-headers
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ugeneunipro/ugene/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('029dfa4e4e1ce64ffd41c37119eaab5a28b3a11201b23f283c79a98d69ef906f')
+sha256sums=('a7ab510abdda5bb50f6deb31fff41d5671efa3b3293127cd96ba48ba672d5335')
 
 prepare() {
   sed -i "s#16384#16384l#" "${_pkgname}-${pkgver}/src/libs_3rdparty/breakpad/src/client/linux/handler/exception_handler.cc"
