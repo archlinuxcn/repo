@@ -5,8 +5,8 @@ buildarch=8
 
 _rcver=5.19
 #_rcrel=
-_asahirel=3
-pkgrel=3
+_asahirel=5
+pkgrel=4
 
 pkgbase=linux-asahi
 #_commit_id=asahi-${_nextver}-${_asahirel}
@@ -27,9 +27,9 @@ source=(
   https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
   config         # the main kernel config file
 )
-sha256sums=('778a56e44c10b945ff9385dc0d8a9382fc5cb9cac47fc0548c3477454074a5f3'
+sha256sums=('b51abc76506743d385244ecaa8a3e34be76c94ccf30e43dfc3ec649b218c274a'
             '0e859860e0650ae5ae264bb05c2be1831c02d3425762a387bdb9b08afa9ad6f8')
-b2sums=('5faf87233f94e42c69cf5f51732ab333b65257c2271734cb9b9d12025c7e15852a349069fcfe9998f11e3e4566e65d675275fa7738c951a2b3c6a9f23f051a43'
+b2sums=('19c235ab4b5583e3d5f480688a9d7e061aa36d3fc414d4203b950a2188ae70ef4aba5fb25dace7011c01c4614397fec65ce2a117c6791e400fefb4924336545c'
         '2ca3497a1b4f3d3494dd9dbb248cd2fbadb9d5fd0e79120369217e4dfe9091af16ae4559162fe3f9a8ab049d5e01720c5f9e32c435104b6d9297c01ccbfcc9a7')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -79,7 +79,7 @@ _package() {
   echo "Installing boot image..."
   # systemd expects to find the kernel here to allow hibernation
   # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab8128dcf99161d2344
-  install -Dm644 "$(make -s image_name)" "$modulesdir/vmlinuz"
+  install -Dm644 arch/arm64/boot/Image "$modulesdir/vmlinuz"
 
   # Used by mkinitcpio to name the kernel
   echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
