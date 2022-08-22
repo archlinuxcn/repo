@@ -3,14 +3,11 @@
 
 pkgname=vscodium
 # Make sure the pkgver matches the git tags in vscodium and vscode git repo's!
-pkgver='1.70.1'
-pkgrel=1
+pkgver='1.70.2.22230'
+pkgrel=2
 pkgdesc="Free/Libre Open Source Software Binaries of VSCode (git build from latest release)."
 arch=('x86_64' 'aarch64' 'armv7h')
-# The vscodium repo that will be checked out.
 url='https://github.com/VSCodium/vscodium.git'
-# The vscode repo that will also be checked out.
-microsofturl='https://github.com/microsoft/vscode.git'
 license=('MIT')
 
 depends=(
@@ -43,11 +40,9 @@ makedepends=(
 )
 source=(
     "git+${url}#tag=${pkgver}"
-    "git+${microsofturl}#tag=${pkgver}"
     'vscodium.desktop'
 )
 sha256sums=(
-    'SKIP'
     'SKIP'
     '63eccd0977b9dc783a11ff401940f48bbabd0d098b9563b7ef26402495dc9b88'
 )
@@ -73,52 +68,51 @@ case "$CARCH" in
     ;;
 esac
 
-prepare() {
-    cd 'vscodium'
-    # Normally, we would execute get_repo.sh to clone the Microsoft repo here, but makepkg can't do this.
-    # So we rely on the clone that happened earlier, and move the git directory to the expected place.
-    rm -rf 'vscode'
-    mv '../vscode' 'vscode'
-}
-
-build() {
-    cd "vscodium"
-
-    # Export some environment variables that would normally be set by Travis CI.
-    export SHOULD_BUILD="yes"
-    export VSCODE_ARCH="${_vscode_arch}"
-    export OS_NAME="linux"
-    export LATEST_MS_COMMIT=$(git rev-list --tags --max-count=1)
-    export LATEST_MS_TAG=$(git describe --tags "${LATEST_MS_COMMIT}")
-
-    # Disable building rpm, deb, and AppImage packages which are not needed in an AUR build
-    export SKIP_LINUX_PACKAGES="True"
-
+install_node() {
     # Deactivate any pre-loaded nvm, and make sure we use our own in the current source directory
-    which nvm >/dev/null 2>&1 && nvm deactivate && nvm unload
+    command -v nvm >/dev/null && nvm deactivate && nvm unload
     export NVM_DIR="${srcdir}/.nvm"
     source /usr/share/nvm/init-nvm.sh || [[ $? != 1 ]]
-
-    # TODO: Remove this when VSCodium adds the .nvmrc file
-    if [ ! -f .nvmrc ]
-    then
-        echo "v14.19.0" > .nvmrc
-    fi
-    # TODO: End remove this
-
-	# Install the correct version of NodeJS (read from .nvmrc)
+    
+    # Install the correct version of NodeJS (read from .nvmrc)
 	nvm install $(cat .nvmrc)
     nvm use
-
+    
     # Check if the correct version of node is being used
     if [[ "$(node --version)" != "$(cat .nvmrc)" ]]
     then
     	echo "Using the wrong version of NodeJS! Expected ["$(cat .nvmrc)"] but using ["$(node --version)"]."
     	exit 1
     fi
+}
 
-    # Build!
-    ./build.sh
+prepare() {
+    cd "vscodium"
+    
+    install_node
+}
+
+build() {
+    cd "vscodium"
+    
+    # Remove old build
+    if [ -d "vscode" ]; then
+        rm -rf VSCode*
+        rm -rf vscode*
+    fi
+    
+    # Export necessary environment variables
+    export SHOULD_BUILD=yes
+    export CI_BUILD=no
+    export OS_NAME=linux
+    export VSCODE_ARCH="${_vscode_arch}"
+    export RELEASE_VERSION="${pkgver}"
+    
+    # Disable building rpm, deb, and AppImage packages which are not needed in an AUR build
+    export SKIP_LINUX_PACKAGES="True"
+    
+    . get_repo.sh
+    . build.sh
 }
 
 package() {
