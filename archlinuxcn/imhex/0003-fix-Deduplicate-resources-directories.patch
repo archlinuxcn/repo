@@ -1,0 +1,64 @@
+From 013aed0e9131461157c199edfd9565a82657f293 Mon Sep 17 00:00:00 2001
+From: KokaKiwi <kokakiwi+git@kokakiwi.net>
+Date: Sat, 11 Jun 2022 23:08:31 +0200
+Subject: [PATCH 3/3] fix: Deduplicate resources directories
+
+It seems to actually happens despite xdgpp already doing that...
+---
+ lib/libimhex/include/hex/helpers/utils.hpp | 11 +++++++++++
+ lib/libimhex/source/helpers/fs.cpp         |  5 +++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/lib/libimhex/include/hex/helpers/utils.hpp b/lib/libimhex/include/hex/helpers/utils.hpp
+index f5666254..5d86768a 100644
+--- a/lib/libimhex/include/hex/helpers/utils.hpp
++++ b/lib/libimhex/include/hex/helpers/utils.hpp
+@@ -189,6 +189,17 @@ namespace hex {
+         return result;
+     }
+ 
++    template<typename T>
++    void deduplicateVector(std::vector<T> &items) {
++        auto end = items.end();
++
++        for (auto it = items.begin(); it != end; ++it) {
++            end = std::remove(it + 1, end, *it);
++        }
++
++        items.erase(end, items.end());
++    }
++
+     std::vector<std::string> splitString(const std::string &string, const std::string &delimiter);
+     std::string combineStrings(const std::vector<std::string> &strings, const std::string &delimiter = "");
+ 
+diff --git a/lib/libimhex/source/helpers/fs.cpp b/lib/libimhex/source/helpers/fs.cpp
+index dc58ced3..5c346ec8 100644
+--- a/lib/libimhex/source/helpers/fs.cpp
++++ b/lib/libimhex/source/helpers/fs.cpp
+@@ -1,4 +1,5 @@
+ #include <hex/helpers/fs.hpp>
++#include <hex/helpers/utils.hpp>
+ 
+ #include <hex/api/content_registry.hpp>
+ #include <hex/helpers/fs_macos.hpp>
+@@ -156,6 +157,8 @@ namespace hex::fs {
+         auto additionalDirs = ImHexApi::System::getAdditionalFolderPaths();
+         std::copy(additionalDirs.begin(), additionalDirs.end(), std::back_inserter(paths));
+ 
++        hex::deduplicateVector(paths);
++
+         return paths;
+     }
+ 
+@@ -175,6 +178,8 @@ namespace hex::fs {
+             for (auto &path : paths)
+                 path = path / "imhex";
+ 
++            hex::deduplicateVector(paths);
++
+             return paths;
+         #endif
+     }
+-- 
+2.37.2
+

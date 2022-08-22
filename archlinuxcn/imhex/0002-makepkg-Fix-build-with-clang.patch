@@ -1,0 +1,26 @@
+From 63d0b8a6e2abe14f4d1947cc9ef9b2905f117801 Mon Sep 17 00:00:00 2001
+From: KokaKiwi <kokakiwi+git@kokakiwi.net>
+Date: Sun, 14 Aug 2022 23:59:30 +0200
+Subject: [PATCH 2/3] makepkg: Fix build with clang
+
+clang does not support some C++20 features
+---
+ lib/libimhex/include/hex/data_processor/node.hpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/libimhex/include/hex/data_processor/node.hpp b/lib/libimhex/include/hex/data_processor/node.hpp
+index c5fcde80..1a5d9fde 100644
+--- a/lib/libimhex/include/hex/data_processor/node.hpp
++++ b/lib/libimhex/include/hex/data_processor/node.hpp
+@@ -90,7 +90,7 @@ namespace hex::dp {
+ 
+     protected:
+         [[noreturn]] void throwNodeError(const std::string &message) {
+-            throw NodeError(this, message);
++            throw NodeError { this, message };
+         }
+ 
+         std::vector<u8> getBufferOnInput(u32 index);
+-- 
+2.37.2
+

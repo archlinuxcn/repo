@@ -1,0 +1,44 @@
+From c5e69f9670f8b6e5d6f223c312807f2ecd204493 Mon Sep 17 00:00:00 2001
+From: KokaKiwi <kokakiwi+git@kokakiwi.net>
+Date: Sun, 14 Aug 2022 23:01:45 +0200
+Subject: [PATCH 1/3] makepkg: Fix compiler check
+
+---
+ cmake/build_helpers.cmake | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/cmake/build_helpers.cmake b/cmake/build_helpers.cmake
+index e46ffa5e..c7aa712c 100644
+--- a/cmake/build_helpers.cmake
++++ b/cmake/build_helpers.cmake
+@@ -344,7 +344,7 @@ function(verifyCompiler)
+         message(FATAL_ERROR "ImHex requires GCC 12.0.0 or newer. Please use the latest GCC version.")
+     elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "14.0.0")
+         message(FATAL_ERROR "ImHex requires Clang 14.0.0 or newer. Please use the latest Clang version.")
+-    elseif (NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
++    elseif (NOT (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
+         message(FATAL_ERROR "ImHex can only be compiled with GCC or Clang. ${CMAKE_CXX_COMPILER_ID} is not supported.")
+     endif()
+ endfunction()
+@@ -384,10 +384,14 @@ function(downloadImHexPatternsFiles dest)
+ endfunction()
+ 
+ macro(setupCompilerWarnings target)
+-    set(IMHEX_COMMON_FLAGS "-Wall -Wextra -Werror")
+-    set(IMHEX_C_FLAGS "${IMHEX_COMMON_FLAGS} -Wno-restrict -Wno-stringop-overread")
++    set(IMHEX_COMMON_FLAGS "")
++    set(IMHEX_C_FLAGS "${IMHEX_COMMON_FLAGS}")
++
++    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
++        set(IMHEX_C_FLAGS "${IMHEX_C_FLAGS} -Wno-restrict -Wno-stringop-overread")
++    endif()
+ 
+     set(CMAKE_C_FLAGS    "${CMAKE_C_FLAGS}    ${IMHEX_C_FLAGS}")
+     set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS}  ${IMHEX_C_FLAGS}")
+     set(CMAKE_OBJC_FLAGS "${CMAKE_OBJC_FLAGS} ${IMHEX_COMMON_FLAGS}")
+-endmacro()
+\ No newline at end of file
++endmacro()
+-- 
+2.37.2
+
