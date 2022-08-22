@@ -2,7 +2,7 @@
 # Maintainer: Edgar Luque <git@edgarluque.com>
 
 pkgname=ddnet
-pkgver=16.3
+pkgver=16.3.1
 pkgrel=1
 pkgdesc="A Teeworlds modification with a unique cooperative gameplay."
 arch=('x86_64')
@@ -15,7 +15,7 @@ optdepends=('ddnet-maps-git: All the maps used on the official DDNet Servers.')
 backup=('usr/share/ddnet/data/autoexec_server.cfg')
 source=("https://ddnet.tw/downloads/DDNet-$pkgver.tar.xz"
         "ddnet-server.service" "ddnet-sysusers.conf" "ddnet-tmpfiles.conf")
-sha256sums=('e51b7135c5223accd69f06b1d209a0d380d93c4815962f06c895a88f046edab3'
+sha256sums=('d5b346398d39ad36a6b893bae3604f2b60c35b02da23dff5a9f935f6e3cc1951'
             '9377a9d7c87abae166c8fa98cd79a61c74482f80f80bc930ae043349e9a84965'
             '70034f237270b38bf312238a26cfd322e212ca5714bfea4ae91e80c639ce8738'
             '043452f4de3c86d903973009bb3e59b3492a6669b86d0b1410e59a1476a87369')
