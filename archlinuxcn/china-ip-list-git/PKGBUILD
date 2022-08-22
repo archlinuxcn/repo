@@ -1,0 +1,24 @@
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+
+pkgname=china-ip-list-git
+pkgver=0.82.28e7ddb
+pkgrel=1
+pkgdesc="Better aggregated chnroutes"
+arch=('any')
+url="https://github.com/17mon/china_ip_list"
+license=('custom:CC-BY-NC-SA-4.0') 
+makedepends=('git')
+source=("git+https://github.com/17mon/china_ip_list.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd china_ip_list
+  echo 0.$(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd china_ip_list
+  install -Dm644 china_ip_list.txt -t "$pkgdir"/usr/share/
+}
+
+# vim:set ts=2 sw=2 et:
