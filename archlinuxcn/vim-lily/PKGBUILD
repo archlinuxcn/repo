@@ -76,8 +76,8 @@ package_vim-lily() {
   pkgdesc='Vi Improved, a highly configurable, improved version of the vi text editor with additional scripting support'
   depends=('gpm' 'vim-runtime-lily' 'acl')
   optdepends=('luajit' 'ruby' 'python' 'perl')
-  conflicts=('vim' 'gvim' 'vim-python3' 'gvim-python3' 'vim-minimal')
-  provides=("vim=${pkgver}-${pkgrel}" "vim-python3=${pkgver}-${pkgrel}")
+  conflicts=('vim' 'gvim' 'vim-minimal')
+  provides=("vim=${pkgver}-${pkgrel}" xxd vim-minimal vim-plugin-runtime)
 
   rm -f "${srcdir}"/$pkgbase
   ln -sr "${srcdir}"/vim-build "${srcdir}"/$pkgbase
@@ -106,8 +106,8 @@ package_gvim-lily() {
   pkgdesc='Vi Improved, a highly configurable, improved version of the vi text editor (with advanced features, such as a GUI) with additional scripting support'
   depends=('gpm' 'gtk3' 'vim-runtime-lily' 'desktop-file-utils' 'libxt')
   optdepends=('luajit' 'ruby' 'python' 'perl')
-  conflicts=('vim' 'gvim' 'vim-python3' 'gvim-python3' 'vim-minimal')
-  provides=("vim=${pkgver}-${pkgrel}" "gvim=${pkgver}-${pkgrel}" "gvim-python3=${pkgver}-${pkgrel}")
+  conflicts=('vim' 'gvim' 'vim-minimal')
+  provides=("vim=${pkgver}-${pkgrel}" "gvim=${pkgver}-${pkgrel}" xxd vim-plugin-runtime)
 
   rm -f "${srcdir}"/$pkgbase
   ln -sr "${srcdir}"/gvim-build "${srcdir}"/$pkgbase
