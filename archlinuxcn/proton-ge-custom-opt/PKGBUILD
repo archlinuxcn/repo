@@ -3,11 +3,11 @@
 
 pkgname=proton-ge-custom-opt
 _pkgname=proton-ge-custom
-_srctag=GE-Proton7-29
+_srctag=GE-Proton7-30
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.3
-_monover=7.3.0
+_monover=7.3.1
 pkgrel=4
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, GloriousEggroll's custom build"
@@ -25,6 +25,7 @@ depends=(
   libxrandr        lib32-libxrandr
   libxdamage       lib32-libxdamage
   libxi            lib32-libxi
+  libxcb           lib32-libxcb
   gettext          lib32-gettext
   freetype2        lib32-freetype2
   glu              lib32-glu
@@ -37,6 +38,8 @@ depends=(
   libvpx           lib32-libvpx
   sdl2             lib32-sdl2
   libsoup3         lib32-libsoup3
+  orc              lib32-orc
+  libgudev         lib32-libgudev
   desktop-file-utils
   python
   steam-native-runtime
@@ -44,7 +47,7 @@ depends=(
 )
 
 makedepends=(
-  git wget rsync 
+  git wget rsync
   perl fontforge
   autoconf meson cmake
   glslang vulkan-headers opencl-headers libgphoto2 gsm
@@ -58,6 +61,7 @@ makedepends=(
   libxcomposite         lib32-libxcomposite
   libxmu                lib32-libxmu
   libxxf86vm            lib32-libxxf86vm
+  libxcb                lib32-libxcb
   libldap               lib32-libldap
   mpg123                lib32-mpg123
   openal                lib32-openal
@@ -65,7 +69,6 @@ makedepends=(
   alsa-lib              lib32-alsa-lib
   libxcomposite         lib32-libxcomposite
   mesa                  lib32-mesa
-  mesa-libgl            lib32-mesa-libgl
   opencl-icd-loader     lib32-opencl-icd-loader
   libxslt               lib32-libxslt
   libpulse              lib32-libpulse
@@ -75,6 +78,8 @@ makedepends=(
   vulkan-icd-loader     lib32-vulkan-icd-loader
   sdl2                  lib32-sdl2
   rust                  lib32-rust-libs
+  orc                   lib32-orc
+  libgudev              lib32-libgudev
 )
 
 optdepends=(
@@ -130,6 +135,8 @@ source=(
     protonfixes-gloriouseggroll::git+https://github.com/gloriouseggroll/protonfixes.git
     gst-plugins-bad::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad.git
     gst-plugins-ugly::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-ugly.git
+    graphene::git+https://github.com/ebassi/graphene.git
+    mingw-directx-headers::git+https://github.com/Joshua-Ashton/mingw-directx-headers.git
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     0001-AUR-pkgbuild-changes.patch
@@ -217,6 +224,7 @@ prepare() {
         protonfixes-gloriouseggroll::protonfixes
         gst-plugins-bad
         gst-plugins-ugly
+        graphene
     )
 
     for submodule in "${_submodules[@]}"; do
@@ -244,6 +252,20 @@ prepare() {
         git submodule update external/Vulkan-Headers
         # GCC 12 build failure
         git cherry-pick -n 33bf3c7a6a3dc9e330cd338bf1877b5481c655e3
+    popd
+    
+    pushd dxvk
+        git submodule init include/vulkan
+        git config submodule.include/vulkan.url "$srcdir"/Vulkan-Headers
+        git submodule update include/vulkan
+        
+        git submodule init include/spirv
+        git config submodule.include/spirv.url "$srcdir"/SPIRV-Headers
+        git submodule update include/spirv
+        
+        git submodule init include/native/directx
+        git config submodule.include/native/directx.url "$srcdir"/mingw-directx-headers
+        git submodule update include/native/directx
     popd
 
     for submodule in gst-plugins-rs media-converter; do
@@ -403,8 +425,10 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
+            'SKIP'
+            'SKIP'
             '08d318f3dd6440a8a777cf044ccab039b0d9c8809991d2180eb3c9f903135db3'
             '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
-            '60314f255031b2f4dc49f22eacfcd2b3b8b2b491120d703b4b62cc1fef0f9bdd'
+            '55ca808868599b1d8ad53b222b8cb26fd96fa818c511163e361238025c76e9fe'
             '78030aad04ff9965676849ca97dd952bee1352e16748b8a73507b3f0948258e6')
 
