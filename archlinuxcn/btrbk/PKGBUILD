@@ -1,7 +1,7 @@
 # Maintainer: Michael Duell < mail at akurei dot me >
 # Contributor: Myles English <myles at rockhead dot biz>
 pkgname=btrbk
-pkgver=0.32.3
+pkgver=0.32.4
 pkgrel=1
 pkgdesc="Backup tool for btrfs subvolumes, taking advantage of btrfs specific capabilities to create atomic snapshots and transfer them incrementally to your backup locations"
 url="https://digint.ch/btrbk"
@@ -19,4 +19,4 @@ package() {
   make DESTDIR="${pkgdir}" BINDIR="/usr/bin" install
 }
 
-b2sums=('f0e389891bfdfa961187505548ec5139aa8967932d2fcca43c151c8ca25664c30af96f0f52531507e7c838ca3df16f371f7419df226283734fee23f6af56b3cf')
+b2sums=('e76a0b6ed8d54f97fa0ac2dad139891ae0f9450095e08d560f5a62ad28e3cc2e39da0a3a094ca841c5debbe9d34ca1cb3930cb3a16877b1547fb81f9c5e7e244')
