@@ -4,7 +4,7 @@
 pkgname=vscodium
 # Make sure the pkgver matches the git tags in vscodium and vscode git repo's!
 pkgver='1.70.2.22230'
-pkgrel=2
+pkgrel=3
 pkgdesc="Free/Libre Open Source Software Binaries of VSCode (git build from latest release)."
 arch=('x86_64' 'aarch64' 'armv7h')
 url='https://github.com/VSCodium/vscodium.git'
@@ -46,7 +46,16 @@ sha256sums=(
     'SKIP'
     '63eccd0977b9dc783a11ff401940f48bbabd0d098b9563b7ef26402495dc9b88'
 )
-provides=('codium')
+provides=(
+    'codium'
+    'vscodium'
+)
+conflicts=(
+    'codium'
+    'vscodium'
+    'vscodium-bin'
+    'vscodium-git'
+)
 
 ###############################################################################
 
@@ -68,32 +77,24 @@ case "$CARCH" in
     ;;
 esac
 
-install_node() {
+build() {
+    cd "vscodium"
+
     # Deactivate any pre-loaded nvm, and make sure we use our own in the current source directory
     command -v nvm >/dev/null && nvm deactivate && nvm unload
     export NVM_DIR="${srcdir}/.nvm"
     source /usr/share/nvm/init-nvm.sh || [[ $? != 1 ]]
-    
+
     # Install the correct version of NodeJS (read from .nvmrc)
 	nvm install $(cat .nvmrc)
     nvm use
-    
+
     # Check if the correct version of node is being used
     if [[ "$(node --version)" != "$(cat .nvmrc)" ]]
     then
     	echo "Using the wrong version of NodeJS! Expected ["$(cat .nvmrc)"] but using ["$(node --version)"]."
     	exit 1
     fi
-}
-
-prepare() {
-    cd "vscodium"
-    
-    install_node
-}
-
-build() {
-    cd "vscodium"
     
     # Remove old build
     if [ -d "vscode" ]; then
@@ -110,7 +111,7 @@ build() {
     
     # Disable building rpm, deb, and AppImage packages which are not needed in an AUR build
     export SKIP_LINUX_PACKAGES="True"
-    
+
     . get_repo.sh
     . build.sh
 }
