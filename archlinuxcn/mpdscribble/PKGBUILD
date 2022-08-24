@@ -6,7 +6,7 @@
 
 pkgname=mpdscribble
 pkgver=0.24
-pkgrel=1
+pkgrel=2
 pkgdesc='MPD client which submits track info to {Libre,Last}.fm'
 url='https://www.musicpd.org/clients/mpdscribble/'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
@@ -23,6 +23,7 @@ sha256sums=('f6b4cba748b3b87e705270b4923c8e23e94c2e00fedd50beb1468dbe2fb2a8e7'
 
 prepare() {
   cd "${pkgname}"-"${pkgver}"
+  sed -i "27i #include <ctime>" src/Log.cxx
   DESTDIR="${pkgdir}" meson build \
      --prefix=/usr \
      --sysconfdir=/etc
