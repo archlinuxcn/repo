@@ -2,11 +2,11 @@
 # Maintainer: Allen Zhong <allen@moe.cat>
 # Contributor: Feishu Linux Team <contact@feishu.cn>
 pkgname=feishu-bin
-pkgver=5.9.18
+pkgver=5.14.14
 #_pkgrel=24
 _pkgtyp=stable
-_pkghash=5db94058d7ad
-pkgrel=2
+_pkghash=2844ab12b34f
+pkgrel=1
 pkgdesc="Linux client of Feishu (Lark) from Bytedance."
 arch=('x86_64')
 url="https://www.feishu.cn/"
@@ -18,7 +18,7 @@ provides=('bytedance-feishu' 'feishu')
 options=('!strip' '!emptydirs')
 install=${pkgname}.install
 source=("https://sf3-cn.feishucdn.com/obj/ee-appcenter/${_pkghash}/Feishu-linux_x64-${pkgver}.deb")
-sha256sums=('ffb29b5a184b025d4e4ea468a8f684a7067ab5bfd45867abc370e59be63892c7')
+sha256sums=('c0ca999edc10d8ada08c46b33b15d7db0ced264248abd3ebfdb895d8457e1bec')
 
 package(){
   # Extract package data
