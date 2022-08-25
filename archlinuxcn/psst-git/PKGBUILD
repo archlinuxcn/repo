@@ -2,15 +2,15 @@
 # contributor: yochananmarqos (thank you very much)
 
 pkgname=psst-git
-pkgver=r417.f1300bf
-pkgrel=3
+pkgver=r436.642e441
+pkgrel=1
 pkgdesc="Fast and multi-platform Spotify client with native GUI"
 arch=("x86_64")
 options=(!lto)
 url="https://github.com/jpochyla/psst"
 license=('MIT')
 depends=('gtk3' 'openssl' 'alsa-lib')
-makedepends=('cargo' 'git')
+makedepends=('cargo' 'git' 'cmake')
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
 source=('git+https://github.com/jpochyla/psst.git')
@@ -35,13 +35,13 @@ build() {
   cd "$srcdir/${pkgname%-git}"
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
-  cargo build --frozen --release --all-features
+  cargo build --frozen --release
 }
 
 check() {
   cd "$srcdir/${pkgname%-git}"
   export RUSTUP_TOOLCHAIN=stable
-  cargo test --frozen --all-features
+  cargo test --frozen
 }
 
 package() {
