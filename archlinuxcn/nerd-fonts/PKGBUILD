@@ -60,8 +60,8 @@ declare -A _fonts=(
 )
 
 pkgname=("$pkgbase-complete" ${!_fonts[@]})
-pkgver=2.1.0
-pkgrel=4
+pkgver=2.2.0
+pkgrel=1
 pkgdesc='Nerd Fonts: Iconic font aggregator, collection, & patcher. 3,600+ icons, 50+ patched fonts.'
 arch=('any')
 url='https://github.com/ryanoasis/nerd-fonts'
@@ -73,7 +73,7 @@ source=(
   "${pkgbase}-${pkgver}.tar.gz::https://github.com/ryanoasis/nerd-fonts/archive/v${pkgver}.tar.gz"
 )
 sha256sums=('ccf93b108044a87bfb29c3f836d2ce4d5bdb1829702e532a69ccb4ab4aecaceb'
-            'a084ca91a174b547bab4523507824c76aa91ebcf38f9256a4ffd181813f87bd8')
+            'd915e6b45d9d51a577dcc17f1951a32f476c54fb1b3c6502cd672edf878dfeeb')
 
 prepare() {
   cd "$srcdir/$pkgbase-$pkgver"
