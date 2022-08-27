@@ -46,7 +46,7 @@ sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'ab0446ede08e528ca631a73e536ff42009ee8f152972d37050b2f9b44b3d1c06d19bd8a91c31b09c26f5db1482a699b8fe2c221b78199199dfa245728856b196'
+            '6ad02636e2cba8f2e82f5ac733856eee3016750e809ee18a41c4edc78bca761f30ac174d7d683f9b14b9f72310dd654811b1ecc9dda514e12bac6b7440c449c2'
             '7d55b0d4232183a81c20a5049f259872150536eed799d81a15e7f10b5c8b5279b443ba96d7b97c0e4338e95fc18c9d6f088e348fc7002256ee7170d25b27d80d'
             '6735c7aca2ba2f1f2a5286eb064125bf7f2c68a575d572dd157769d15778ff3e717b3a53d696c767748229f23ee6c3a7c82679df1d86283d7c4dd0ec9103ae08')
 # CUDA seems not working with LTO
@@ -66,11 +66,6 @@ prepare() {
   patch -Np1 -i ../build-fixes.patch
   patch -Np1 -i ../install-orttraining-files.diff
   patch -Np1 -i ../system-dnnl.diff
-
-  # Protobuf 3.20 incompatibility https://github.com/microsoft/onnxruntime/pull/11639
-  git cherry-pick -n 6aa286f1e3ece96a7326ea55fdcd225f1ff8bbf2
-  # Fix building DNNL EP with GCC 12 https://github.com/microsoft/onnxruntime/pull/11667
-  git cherry-pick -n 59ca05cb1c1de0492d10ac895904b217c86e612d
 
   git submodule init
   for mod in onnx SafeInt tensorboard dlpack cxxopts pytorch_cpuinfo; do

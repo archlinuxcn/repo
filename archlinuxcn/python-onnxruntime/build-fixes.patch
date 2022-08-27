@@ -25,9 +25,15 @@ index a027c69e0..eb7608518 100644
    message("Use re2 from preinstalled system lib")
  else()
    add_subdirectory(external/re2 EXCLUDE_FROM_ALL)
-@@ -1421,7 +1421,7 @@
+@@ -1421,11 +1421,11 @@
+ #Dependencies end. In the next we'll enable "treat warning as error"
+ 
+ if (onnxruntime_PREFER_SYSTEM_LIB)
+-  find_package(Flatbuffers)
++  find_package(FlatBuffers)
  endif()
- if (Flatbuffers_FOUND)
+-if (Flatbuffers_FOUND)
++if (FlatBuffers_FOUND)
    message("Use flatbuffers from preinstalled system lib")
 -  add_library(flatbuffers ALIAS flatbuffers::flatbuffers)
 +  add_library(flatbuffers ALIAS flatbuffers::flatbuffers_shared)
