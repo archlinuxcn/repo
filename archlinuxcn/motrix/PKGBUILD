@@ -11,7 +11,7 @@ url="https://github.com/agalwood/Motrix"
 license=('MIT')
 groups=()
 depends=('gtk3' 'libxcb' 'electron11')
-makedepends=('aria2-fast' 'npm' 'yarn' "nodejs<17")
+makedepends=('aria2-fast' 'npm' 'yarn' "nvm")
 checkdepends=()
 optdepends=()
 provides=()
@@ -23,27 +23,33 @@ install=
 changelog=
 source=("motrix.desktop"
     "motrix"
-    "Motrix.tar.gz"::"https://github.com/agalwood/Motrix/archive/v${pkgver}.tar.gz"
-    "https://raw.githubusercontent.com/agalwood/Motrix/732327f5a3516c875b06401ef0c9b8b5d2e3029c/package.json"
-    "https://raw.githubusercontent.com/agalwood/Motrix/732327f5a3516c875b06401ef0c9b8b5d2e3029c/yarn.lock")
+    "Motrix.tar.gz"::"https://github.com/agalwood/Motrix/archive/v${pkgver}.tar.gz")
 noextract=()
 sha256sums=('af5092a2a599bd23c13303ad1e7b745992a7af141278d13abe4297ca50a77bd8'
             'becf35e632c6124792a2c8ee9233f3357ffbee08b81820c3f41bdbb5a2a7ead0'
-            '9a1558063d32dd100aa289db601f01497d518c070f0ba570efd446830697089e'
-            '13f0c3f8a785c368e2054b90c72129a0359943e001ba0113a2a3921ee467e14c'
-            'c051a2cef0fadf678e239f69d34454c7cdecd0bd8bd9905437a827f833653fcd')
+            '9a1558063d32dd100aa289db601f01497d518c070f0ba570efd446830697089e')
 validpgpkeys=()
+
+_ensure_local_nvm() {
+    # let's be sure we are starting clean
+    which nvm >/dev/null 2>&1 && nvm deactivate && nvm unload
+    export NVM_DIR="${srcdir}/.nvm"
+
+    # The init script returns 3 if version specified
+    # in ./.nvrc is not (yet) installed in $NVM_DIR
+    # but nvm itself still gets loaded ok
+    source /usr/share/nvm/init-nvm.sh || [[ $? != 1 ]]
+}
 
 prepare() {
     mv ${_pkgname}-${pkgver} ${_pkgname}
-
-    # a small fix for v1.6.11
-    mv ${srcdir}/package.json ${_pkgname}/
-    mv ${srcdir}/yarn.lock ${_pkgname}/
+    _ensure_local_nvm
+    nvm install 14
 }
 
 build() {
     cd ${_pkgname}/
+    _ensure_local_nvm
     export YARN_CACHE_FOLDER="${srcdir}/yarn_cache"
     yarn
     yarn run build:dir
