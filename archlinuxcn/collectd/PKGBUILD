@@ -49,6 +49,11 @@ sha256sums=('5bae043042c19c31f77eb8464e56a01a5454e0b39fa07cf7ad0f1bfc9c3a09d6'
 
 backup=('etc/collectd.conf')
 
+prepare() {
+	cd ${pkgname}-${pkgver}
+	sed -i '/sys\/mount.h/d' src/utils/mount/mount.h
+}
+
 build() {
 	cd ${pkgname}-${pkgver}
 	./configure \
