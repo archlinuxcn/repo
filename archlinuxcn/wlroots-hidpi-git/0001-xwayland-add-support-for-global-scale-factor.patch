@@ -1,4 +1,4 @@
-From a197d12b71dcc8e4f41b9d4d9856d2ecb234e4bb Mon Sep 17 00:00:00 2001
+From 078a9848b789f63ab3bf13bad30e95501c2889f7 Mon Sep 17 00:00:00 2001
 From: Dario Nieuwenhuis <dirbaio@dirbaio.net>
 Date: Fri, 31 Jan 2020 22:57:48 +0100
 Subject: [PATCH 1/3] xwayland: add support for global scale factor
@@ -44,10 +44,10 @@ index ca35da80..d707a46c 100644
  	uint8_t *pixels, uint32_t stride, uint32_t width, uint32_t height,
  	int32_t hotspot_x, int32_t hotspot_y);
 diff --git a/xwayland/server.c b/xwayland/server.c
-index 0086ad65..aa40250c 100644
+index 75b919b4..f144bee4 100644
 --- a/xwayland/server.c
 +++ b/xwayland/server.c
-@@ -461,6 +461,8 @@ struct wlr_xwayland_server *wlr_xwayland_server_create(
+@@ -460,6 +460,8 @@ struct wlr_xwayland_server *wlr_xwayland_server_create(
  	server->wl_fd[0] = server->wl_fd[1] = -1;
  	server->wm_fd[0] = server->wm_fd[1] = -1;
  
@@ -57,10 +57,10 @@ index 0086ad65..aa40250c 100644
  	wl_signal_init(&server->events.destroy);
  
 diff --git a/xwayland/xwayland.c b/xwayland/xwayland.c
-index cb62fcc1..09f48c60 100644
+index d76f0eec..6a46a6cf 100644
 --- a/xwayland/xwayland.c
 +++ b/xwayland/xwayland.c
-@@ -109,6 +109,10 @@ struct wlr_xwayland *wlr_xwayland_create(struct wl_display *wl_display,
+@@ -108,6 +108,10 @@ struct wlr_xwayland *wlr_xwayland_create(struct wl_display *wl_display,
  	return xwayland;
  }
  
@@ -72,11 +72,11 @@ index cb62fcc1..09f48c60 100644
  		uint8_t *pixels, uint32_t stride, uint32_t width, uint32_t height,
  		int32_t hotspot_x, int32_t hotspot_y) {
 diff --git a/xwayland/xwm.c b/xwayland/xwm.c
-index 1bacd1ce..2789b773 100644
+index fb9e7f44..faeb7a3f 100644
 --- a/xwayland/xwm.c
 +++ b/xwayland/xwm.c
-@@ -19,6 +19,14 @@
- #include "util/signal.h"
+@@ -18,6 +18,14 @@
+ #include <xcb/xfixes.h>
  #include "xwayland/xwm.h"
  
 +static int32_t scale(struct wlr_xwm *xwm, int32_t val) {
@@ -90,7 +90,7 @@ index 1bacd1ce..2789b773 100644
  const char *const atom_map[ATOM_LAST] = {
  	[WL_SURFACE_ID] = "WL_SURFACE_ID",
  	[WM_DELETE_WINDOW] = "WM_DELETE_WINDOW",
-@@ -938,8 +946,13 @@ static void xwm_handle_create_notify(struct wlr_xwm *xwm,
+@@ -937,8 +945,13 @@ static void xwm_handle_create_notify(struct wlr_xwm *xwm,
  		return;
  	}
  
@@ -106,7 +106,7 @@ index 1bacd1ce..2789b773 100644
  }
  
  static void xwm_handle_destroy_notify(struct wlr_xwm *xwm,
-@@ -970,10 +983,10 @@ static void xwm_handle_configure_request(struct wlr_xwm *xwm,
+@@ -969,10 +982,10 @@ static void xwm_handle_configure_request(struct wlr_xwm *xwm,
  
  	struct wlr_xwayland_surface_configure_event wlr_event = {
  		.surface = surface,
@@ -121,7 +121,7 @@ index 1bacd1ce..2789b773 100644
  		.mask = mask,
  	};
  
-@@ -988,14 +1001,16 @@ static void xwm_handle_configure_notify(struct wlr_xwm *xwm,
+@@ -987,14 +1000,16 @@ static void xwm_handle_configure_notify(struct wlr_xwm *xwm,
  	}
  
  	bool geometry_changed =
@@ -144,7 +144,7 @@ index 1bacd1ce..2789b773 100644
  	}
  
  	if (xsurface->override_redirect != ev->override_redirect) {
-@@ -1707,7 +1722,13 @@ void wlr_xwayland_surface_configure(struct wlr_xwayland_surface *xsurface,
+@@ -1706,7 +1721,13 @@ void wlr_xwayland_surface_configure(struct wlr_xwayland_surface *xsurface,
  	uint32_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y |
  		XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT |
  		XCB_CONFIG_WINDOW_BORDER_WIDTH;
@@ -160,5 +160,5 @@ index 1bacd1ce..2789b773 100644
  	xcb_flush(xwm->xcb_conn);
  }
 -- 
-2.37.1
+2.37.2
 
