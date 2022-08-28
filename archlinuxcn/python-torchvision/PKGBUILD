@@ -48,7 +48,7 @@ sha512sums=('219e787cd04632f480120d6ff74d092f6804beb9543dbc9fc9be6cc0dd0c7271bb9
             '89f8d4410a238dc52b27200dfb8db9ff1a58777bdfebb346f3d157e16108930dc3b56f18b611f5de1cb081afa6be6768b52e2486cca57703b490194305dc1c67')
 
 get_pyver() {
-  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+  python -c 'import sys; print("".join(map(str, sys.version_info[:2])))'
 }
 
 prepare() {
