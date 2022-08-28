@@ -6,7 +6,7 @@
 
 pkgname=gnome-shell-extension-dash-to-dock
 _pkgname=dash-to-dock
-pkgver=72+14+g0fc9d94
+pkgver=73
 pkgrel=1
 epoch=1
 pkgdesc="Move the dash out of the overview transforming it in a dock"
@@ -15,7 +15,7 @@ url="https://micheleg.github.io/dash-to-dock/"
 license=('GPL')
 depends=('gnome-shell')
 makedepends=('intltool' 'gettext' 'git' 'sassc')
-_commit=0fc9d94b59e91e1c08ad38762ebc55b7deaf99ab
+_commit=a6a13c72c7d4187f466788978585d80aedc95916
 source=("git+https://github.com/micheleg/dash-to-dock.git#commit=$_commit"
   "1720.patch")
 sha256sums=('SKIP'
