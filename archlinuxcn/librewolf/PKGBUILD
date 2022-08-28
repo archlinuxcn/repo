@@ -2,8 +2,8 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=103.0.2
-pkgrel=1.1
+pkgver=104.0
+pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
 license=(MPL GPL LGPL)
@@ -23,23 +23,23 @@ backup=('usr/lib/librewolf/librewolf.cfg'
         'usr/lib/librewolf/distribution/policies.json')
 options=(!emptydirs !makeflags !strip !lto !debug)
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
-_source_tag="${pkgver}-${pkgrel%.*}"
-# _source_commit='328f531b1b18ca0ba4f96483db89eeb129c41c4c' # not 'stable', but current source head
-_settings_tag='6.8'
+# _source_tag="${pkgver}-${pkgrel%.*}"
+_source_tag="${pkgver}-${pkgrel}"
+_source_commit='ee6c58fd8d0d7f7b58baff70e75873184d3114fb'
+_settings_tag='6.9'
 # _settings_commit='02212c3f44e7aa68b22c8febd9158580d7e4b74f'
 install='librewolf.install'
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         https://raw.githubusercontent.com/archlinux/svntogit-packages/1f6f9abcdcb2a03f259602b4671208b15cc6d4b9/trunk/zstandard-0.18.0.diff
         https://github.com/archlinuxarm/PKGBUILDs/raw/20308ce75b0eecf1fae0db7d7ab07fb68b3000dc/extra/firefox/arc4random.diff
         $pkgname.desktop
-        "git+https://gitlab.com/${pkgname}-community/browser/source.git#tag=${_source_tag}"
+        "git+https://gitlab.com/${pkgname}-community/browser/source.git#commit=${_source_commit}"
         "git+https://gitlab.com/${pkgname}-community/settings.git#tag=${_settings_tag}"
         "default192x192.png"
         "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
-        "update-packed_simd_2-to-0.3.8-rc37c77a20f96.patch"
         )
 # source_aarch64=()
-sha256sums=('766183e8e39c17a84305a85da3237919ffaeb018c6c9d97a7324aea51bd453aa'
+sha256sums=('1a294a651dc6260f9a72a3ab9f10e7792a4ab41a9cfa8527ad3dd9979cdc98ce'
             'SKIP'
             'a6857ad2f2e2091c6c4fdcde21a59fbeb0138914c0e126df64b50a5af5ff63be'
             '714ca50b2ce0cac470dbd5a60e9a0101b28072f08a5e7a9bba94fef2058321c4'
@@ -47,8 +47,8 @@ sha256sums=('766183e8e39c17a84305a85da3237919ffaeb018c6c9d97a7324aea51bd453aa'
             'SKIP'
             'SKIP'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1'
-            '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d'
-            '971876ce7ea002caf1bee7bca242e9f780030a28320194c1f91c75b6e154ad75')
+            '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d')
+
 # sha256sums_aarch64=()
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
@@ -156,6 +156,8 @@ fi
 
   # needs to be kept until alarm/manjaro aarch64 also have switched to 36
   # this is not beautiful
+  export LANG=C
+  # thanks @ZhangHua for advising me on taking care of LANG when using grep! :)
   local _glibc_minor=$(pacman -Qi glibc | grep Version | sed -e 's/Version[[:space:]]*:[[:space:]][0-9]\.\(.*\)-[0-9]/\1/')
   if [ "${_glibc_minor}" -gt 35 ]; then
     patch -Np1 -i ../arc4random.diff
@@ -168,10 +170,6 @@ fi
 
   # pgo improvements
   patch -Np1 -i ../0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch
-
-  # rust 1.63 compatibility issue
-  # see: https://hg.mozilla.org/releases/mozilla-beta/rev/c37c77a20f96
-  patch -Np1 -i ../update-packed_simd_2-to-0.3.8-rc37c77a20f96.patch
 
   # pip issues seem to be fixed upstream?
 
