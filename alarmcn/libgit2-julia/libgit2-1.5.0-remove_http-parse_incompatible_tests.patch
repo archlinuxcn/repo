@@ -1,6 +1,6 @@
-diff -ruN a/tests/network/url/parse.c b/tests/network/url/parse.c
---- a/tests/network/url/parse.c	2021-09-02 05:06:19.000000000 +0200
-+++ b/tests/network/url/parse.c	2021-09-10 09:17:34.775074427 +0200
+diff -ruN a/tests/libgit2/network/url/parse.c b/tests/libgit2/network/url/parse.c
+--- a/tests/libgit2/network/url/parse.c	2022-07-14 02:06:59.000000000 +0200
++++ b/tests/libgit2/network/url/parse.c	2022-08-07 14:28:45.012518372 +0200
 @@ -63,18 +63,6 @@
  	cl_assert_equal_i(git_net_url_is_default_port(&conndata), 0);
  }

@@ -18,20 +18,20 @@ options=(debug !strip)
 source=(
   libgit2-$pkgver.tar.gz::https://github.com/libgit2/libgit2/archive/v${pkgver}.tar.gz
   libgit2-agent-nonfatal.patch
-  libgit2-1.2.0-remove_http-parse_incompatible_tests.patch)
-sha512sums=('8f4cc43de9b92866ac12e01613efe0ff808deca29ff82b6da98a38c814bb711ff3133145d0219210af7015955fbe381be6f1cb98915811d3c37e92b01eb522e9'
-            'f12cf1513d47d8697adcec9d57156dd3b035b669d454c3a1da704f44fd5f829fc2166f64acaeb48008109d0925cbc3559cd8641ced051d8b16344c920493e905'
-            '01bf3a960b2e6d441017af363bff267bd1513915ebefda95012d7feb38f7020778ea0908664cc479da82f441a4dd2788772005006a9c19e87cfc234268dc3785')
-b2sums=('2668e351521e1cd9d2998c45c65e2a8c30f3436d94f86ebaa10382d01afb136bbde28c71d359fb57757ebbd44b1cef1bacd302023d0803a23697aee10f03ebac'
-        'aa372d560135f2cbbad03ac0f4c7e22e2461a8bf87b4d8330072a3f52e9d41c1afb01997d0a497a23ae8d07ba978f1b2f7fb1878008edac64859c83eeaf5056b'
-        'e725fb41c9bdfd9952693c9c47be90c10a16a78ab91f80e74c40c5510a83325575ce95674a2e21282e9c300f2bc8d430c896fa379ef744b8a8a912729fa88827')
+  libgit2-1.5.0-remove_http-parse_incompatible_tests.patch)
+sha512sums=('7a32b27cd32bd03ce7be6c127317f82a4ac6f16615c3234699676781f4858d057edb0410b2fe36fd2e634b00748a8b0be17f23809e09a7602ba48185134300f7'
+            '98cef8eadbb0b3497d005d8b5dfbb9ce8443e57c8388fb1ef7f8ec7bfeaacad701ce2be6a0f927b659cd5a77a51da75b85133a07b0810aacdc19b2c141351b49'
+            'f9bb9ad7eb0f43003f5f72c81575ef5751b893fdf257d888b56818ee2c136b496b7cf72627a53dbd01319e33d0dd373e9d6df887360f7bec367419ef0c7ab711')
+b2sums=('4108de0e8fc6a02e4172f47cb69cdfe8c85a0a72235432ca58b02d94e0bcb8390caf0c710060772551cc3a392291778ae14b561256c6d88058d0ae5a277f2fbf'
+        'f6efe5aa17a595be0d9871c3aad994229aae3481c7999f5e18a000d2ee3753446df619b121194babb012c5a47862bb14bf282b6069f0e4f3edb9bc32c0eec4ab'
+        'b3c2386ba84664318573e5c24797d28db914d60782397d8b39a21b54b4fb19502945fa8fcc0d8bbe8949349b5ec705d3e1345b0cbbb51b7d9631fec922f3ac41')
 
 prepare() {
   cd "libgit2-$pkgver"
   mkdir -p build
   # remove tests that are only compatible with the (modified) vendored version
   # of http-parser, but not with upstream http-parser
-  patch -Np1 -i "../libgit2-1.2.0-remove_http-parse_incompatible_tests.patch"
+  patch -Np1 -i "../libgit2-1.5.0-remove_http-parse_incompatible_tests.patch"
   patch -p1 < ../libgit2-agent-nonfatal.patch
 }
 
