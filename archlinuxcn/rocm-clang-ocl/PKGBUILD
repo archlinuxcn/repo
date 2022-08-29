@@ -2,7 +2,7 @@
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 # Contributor: Lucas Magalhães <whoisroot@national.shitposting.agency>
 pkgname=rocm-clang-ocl
-pkgver=5.2.1
+pkgver=5.2.3
 pkgrel=1
 pkgdesc="OpenCL compilation with clang compiler."
 arch=('x86_64')
@@ -11,7 +11,7 @@ license=('unknown')
 depends=('rocm-llvm' 'rocm-opencl-runtime')
 makedepends=('cmake' 'rocm-cmake')
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('693a9a360cb2f7e6910a6714df236df6a9d984f94b01712103a520d8e506c03f')
+sha256sums=('9cdb387168975207314c08ba63ae7cd11f70542117a5390eddbec77ebb84bed0')
 _dirname="$(basename "$url")-$(basename ${source[0]} .tar.gz)"
 
 build() {
