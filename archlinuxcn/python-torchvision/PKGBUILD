@@ -47,10 +47,6 @@ sha512sums=('219e787cd04632f480120d6ff74d092f6804beb9543dbc9fc9be6cc0dd0c7271bb9
             '8f97deedab5b0de1154ce7f8486eadcc7556a9cbb01fb44a988729da80b982daafbfe8da32b7f3ced78c1544b3ac696a569c50a6b4cb244f502b07e615b4de10'
             '89f8d4410a238dc52b27200dfb8db9ff1a58777bdfebb346f3d157e16108930dc3b56f18b611f5de1cb081afa6be6768b52e2486cca57703b490194305dc1c67')
 
-get_pyver() {
-  python -c 'import sys; print("".join(map(str, sys.version_info[:2])))'
-}
-
 prepare() {
   # fix building with ffmpeg4.4 by manually setup include and lib dir
   # and remove other codes to find ffmpeg exe, as ffmpeg4.4 are only headers and libs without ffmpeg cmd
@@ -67,7 +63,6 @@ prepare() {
 build() {
   cd "${_pkgname}-${pkgver}"
   python setup.py build
-  
   cd "${srcdir}/${_pkgname}-cuda-${pkgver}"
   TORCHVISION_INCLUDE=${srcdir} \
   TORCHVISION_LIBRARY=/usr/lib \
@@ -77,12 +72,15 @@ build() {
 }
 
 check() {
+  local python_version=$(python -c 'import sys; print("".join(map(str, sys.version_info[:2])))')
   # check if VideoReader is build
   # VideoReader depends on ffmpeg
-  PYTHONPATH="${srcdir}/${_pkgname}-${pkgver}/build/lib.linux-${CARCH}-$(get_pyver)" \
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-cpython-${python_version}" \
   python -c "from torchvision.io import VideoReader"
 
-  PYTHONPATH="${srcdir}/${_pkgname}-cuda-${pkgver}/build/lib.linux-${CARCH}-$(get_pyver)" \
+  cd "${srcdir}/${_pkgname}-cuda-${pkgver}"
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-cpython-${python_version}" \
   python -c "from torchvision.io import VideoReader"
 }
 
@@ -99,7 +97,7 @@ package_python-torchvision-cuda() {
   depends+=(python-pytorch-cuda)
   provides+=(python-torchvision=${pkgver})
   conflicts+=(python-torchvision=${pkgver})
-  
+
   cd "${_pkgname}-cuda-${pkgver}"
   TORCHVISION_INCLUDE=${srcdir} \
   TORCHVISION_LIBRARY=/usr/lib \
