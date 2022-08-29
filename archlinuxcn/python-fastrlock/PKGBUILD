@@ -10,21 +10,17 @@ url='https://github.com/scoder/fastrlock'
 arch=('x86_64')
 license=('MIT')
 depends=(
-  'glibc'
+  glibc
 )
 makedepends=(
-  'cython'
-  'python-setuptools'
+  cython
+  python-setuptools
 )
 checkdepends=(
-  'python-pytest'
+  python-pytest
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/scoder/fastrlock/archive/refs/tags/v${pkgver}.tar.gz")
 sha512sums=('88992a7db4e42366055bf9b1b7bab23e60e04fad5acc97286372a5baaaf8b2f19ba9ce65b8ba284680fb30f576ae26ed9cee2bbb33ffa0fd069ab9ba41cb45a9')
-
-get_pyver() {
-  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
-}
 
 build() {
   cd "${_pkgname}-${pkgver}"
@@ -33,8 +29,9 @@ build() {
 }
 
 check() {
+  local python_version=$(python -c 'import sys; print("".join(map(str, sys.version_info[:2])))')
   cd "${_pkgname}-${pkgver}"
-  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-$(get_pyver)" pytest -v
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-cpython-${python_version}" pytest -v
 }
 
 package() {
