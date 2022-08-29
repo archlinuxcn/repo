@@ -27,18 +27,15 @@ source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ofajardo/pyreadr/archi
 )
 sha512sums=('673015f9f461663cce4471c33470ae7522e8dc54b4339f5c902e368c6382f4032771fa32fd3127a84060aeecaa9f392888de9ae28c9f89e3035d340ed9c94074')
 
-get_pyver() {
-  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
-}
-
 build() {
   cd "${_pkgname}-${pkgver}"
   python setup.py build
 }
 
 check() {
+  local python_version=$(python -c 'import sys; print("".join(map(str, sys.version_info[:2])))')
   cd "${_pkgname}-${pkgver}"
-  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-$(get_pyver)" python tests/test_basic.py
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-cpython-${python_version}" python tests/test_basic.py
 }
 
 package() {
