@@ -1,0 +1,54 @@
+BOLD='\033[1m'
+GREEN='\033[32m'
+RESET='\033[0m'
+
+msg_replug() {
+	echo -e "${BOLD}${GREEN}Replug${RESET} your tablet if it is connected. This will re-trigger the udev rules accordingly."
+	echo
+}
+
+msg_starting() {
+	echo "The daemon can be started with:"
+	echo -e "  $ ${GREEN}otd${RESET}"
+	echo "You can fork it to the background and use output redirection to a log file if desired."
+	echo "A systemd user service is also provided and can be used instead:"
+	echo -e "  $ ${GREEN}systemctl --user enable --now opentabletdriver.service${RESET}"
+	echo
+}
+
+msg_modules() {
+	echo "You will have to manually disable built-in kernel modules in order for this driver to work properly."
+	echo -e "This can be done by blacklisting the kernel module by creating a file in ${GREEN}/etc/modprobe.d/blacklist.conf${RESET} with a single line:"
+	echo -e "    ${GREEN}blacklist <module>${RESET}"
+	echo "Where <module> is 'wacom' if you own a wacom tablet, and 'hid_uclogic' otherwise."
+	echo "To unload the module immediately, run:"
+	echo -e "  # ${GREEN}rmmod <module>${RESET}"
+	echo
+}
+
+msg_faq() {
+	echo -e "In the case that you still have issues after following these instructions, the FAQ at ${GREEN}https://opentabletdriver.net/Wiki/FAQ/Linux${RESET} may help."
+	echo
+}
+
+post_install() {
+	echo
+	echo -e "${BOLD}Welcome to OpenTabletDriver!${RESET}"
+	echo "In order to start using this driver, there are certain things that have to be configured manually."
+	echo
+	msg_replug
+	msg_starting
+	msg_modules
+	msg_faq
+}
+
+post_upgrade() {
+  echo -e "${BOLD}Mismatching OpenTabletDriver versions between GUI and daemon isn't supported${RESET}"
+  echo -e "Restart your daemon with ${GREEN}systemctl --user restart opentabletdriver${RESET}"
+  echo
+  if [ $(vercmp $2 0.6.0-1) -lt 0 ]; then
+    echo -e "${BOLD}The plugin API and tablet configuration format has changed in OpenTabletDriver 0.6${RESET}"
+    echo -e "You may want to clear the contents of the ${GREEN}Plugins/${RESET} and ${GREEN}Configurations/${RESET} folder in ${GREEN}~/.config/OpenTabletDriver/${RESET}"
+    echo
+  fi
+}

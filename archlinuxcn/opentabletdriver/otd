@@ -1,0 +1,13 @@
+#!/bin/bash
+cd /usr/share/OpenTabletDriver
+if [ $# -eq 0 ]
+then
+    if [[ ! -v DISPLAY ]] && [[ ! -v WAYLAND_DISPLAY ]]
+    then
+        echo "DISPLAY and/or WAYLAND_DISPLAY is not set"
+        exit 64
+    fi
+    dotnet ./OpenTabletDriver.Daemon.dll -c ./Configurations
+else
+    dotnet ./OpenTabletDriver.Console.dll "$@"
+fi
