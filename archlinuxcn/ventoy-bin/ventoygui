@@ -3,7 +3,7 @@
 cd /opt/ventoy || exit 1
 
 if [ "$(uname -m)" = "x86_64" ]; then
-  exec ./VentoyGUI.x86_64 "$@"
+  ./VentoyGUI.x86_64 "$@"
 elif [ "$(uname -m)" = "aarch64" ]; then
-  exec ./VentoyGUI.aarch64 "$@"
+  ./VentoyGUI.aarch64 "$@"
 fi
