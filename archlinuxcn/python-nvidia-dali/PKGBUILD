@@ -31,10 +31,6 @@ options=(!emptydirs !lto)
 source=("${pkgname}::git+https://github.com/NVIDIA/DALI.git#tag=v${pkgver}")
 sha512sums=('SKIP')
 
-get_pyver() {
-  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
-}
-
 prepare() {
   cd "${srcdir}/${pkgname}"
   git submodule update --init --recursive
@@ -80,14 +76,15 @@ build() {
 }
 
 package() {
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   make -C "${srcdir}/build" DESTDIR="${pkgdir}" install
   cd "${srcdir}/build/dali/python"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
   # create softlink to save space
-  ln -sf "/usr/lib/python$(get_pyver)/site-packages/nvidia/dali/libdali.so" "${pkgdir}/usr/lib/libdali.so"
-  ln -sf "/usr/lib/python$(get_pyver)/site-packages/nvidia/dali/libdali_core.so" "${pkgdir}/usr/lib/libdali_core.so"
-  ln -sf "/usr/lib/python$(get_pyver)/site-packages/nvidia/dali/libdali_kernels.so" "${pkgdir}/usr/lib/libdali_kernels.so"
-  ln -sf "/usr/lib/python$(get_pyver)/site-packages/nvidia/dali/libdali_operators.so" "${pkgdir}/usr/lib/libdali_operators.so"
+  ln -sf "${site_packages}/nvidia/dali/libdali.so" "${pkgdir}/usr/lib/libdali.so"
+  ln -sf "${site_packages}/nvidia/dali/libdali_core.so" "${pkgdir}/usr/lib/libdali_core.so"
+  ln -sf "${site_packages}/nvidia/dali/libdali_kernels.so" "${pkgdir}/usr/lib/libdali_kernels.so"
+  ln -sf "${site_packages}/nvidia/dali/libdali_operators.so" "${pkgdir}/usr/lib/libdali_operators.so"
   # install tf plugin
   make -C ${srcdir}/build-tf
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
