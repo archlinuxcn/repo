@@ -7,7 +7,7 @@ _channel=nightly
 pkgbase=firefox-nightly
 pkgname=()
 _version=106.0a1
-pkgver=106.0a1.20220829.11
+pkgver=106.0a1.20220829.23
 pkgrel=1
 arch=('x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -22,16 +22,16 @@ optdepends=('pulseaudio: audio support'
             'xdg-desktop-portal: Screensharing with Wayland'
             'startup-notification: support for FreeDesktop Startup Notification')
 _url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central-l10n"
-_filename_prefix="20220829.11-"
+_filename_prefix="20220829.23-"
 source=("${pkgbase}.desktop")
 sha512sums=('b58c1b3b09772d0866d511e83e3c7f54db0fe71d2978d2a06bd19b25c020f16e201aab825f0b3d5e9f0c1a3e9db028018e5e38f7ee4868e321938f11cb5ac817'
-            'b28bccbbc0618be31e9e1ea84eb5ca74c2382ea932404de84f6df2deb170e6dc0c4a090976bb1ba00afb426f7c5ffcfe0e9ee073a465bd2dc2971ed2d58e7d70'
+            '7ad856a82d9ca88624ccf0097283a2842619e5dbffc0869df2ca1b5314e7d3e623ac69438bcc241b21cf24b3f79e3e22126d23955139f236fe9dfd7176eea2f0'
             'SKIP'
-            '789ebb1b2aa05380a1b4cb6bbe76fbe4daf367bf39db279c1814b343112b23c1ea3cb7d9c5f50c86a4cc7cf4e0d26dfc8730f0db39b627e01e534f03c16d725c'
+            '71f732a7671f44e96b4b0ee3f4a57812e6e490e30e5061b1b2990f990ad6345ced6c2a4c71e32c238a0a1f68a482b4dbf7ce58d8f59129595283050c504aeaa1'
             'SKIP'
-            '6885cf001d969f041391afb6f06557b5eb568f168f27b7d7955dda5242e47e9d3955a5cdf85e431fa9753dba453217d784eba049b68e94472446e6b942fa3419'
+            'bf6f8a2e1af9745ff961473e0ce6574d641331748fd860730e12a0a8216ddfa112689fc64777f587b2826335cc2301e9691d5932574d3e291b63116c74144ef3'
             'SKIP'
-            '7a1bf52041155f0a2946c55388238fd1b77e03d60b56172d8850a4b4e64c974f62979fbe812df407f7c517dd17db43372b359ec48cacd6415334d37687d2ad1a'
+            '46931778abd5d8ea94f2cb6fc259843cfe9e0b4297160cbaa16b87b942fd4047c70d20794d511685672ed104dc83b66ccf5a57c0149f4e31d43cb16c503196d9'
             'SKIP')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353'
               '097B313077AE62A02F84DA4DF1A6668FBB7D572E') # Mozilla’s GnuPG release key
