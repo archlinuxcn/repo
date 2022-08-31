@@ -56,7 +56,6 @@ prepare() {
   export HOROVOD_BUILD_CUDA_CC_LIST="52,53,60,61,62,70,72,75,80,86"
   export CC=/opt/cuda/bin/gcc
   export CXX=/opt/cuda/bin/g++
-  export MAKEFLAGS="-j1"
 }
 
 build() {
