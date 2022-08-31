@@ -30,7 +30,7 @@ depends=(
   python-imread
   python-numpy
   snappy
-  zfp
+  # zfp
   zopfli
 )
 makedepends=(
@@ -42,6 +42,7 @@ sha256sums=('f1b2ff010e1b74c7acf16615759c4a155b11d77791d59c0f028eb458654195da')
 
 build() {
   cd "${srcdir}/${_name}-${pkgver}"
+  sed -i '224 a\    del EXTENSIONS["zfp"]' setup.py
   python setup.py build
 }
 
