@@ -2,48 +2,43 @@
 
 _pkgname=ASAP
 pkgname=asap
-pkgver=2.0
-pkgrel=6
+pkgver=2.1
+pkgrel=1
 pkgdesc='Program for the analysis and visualization of whole-slide images in digital pathology'
 arch=('x86_64')
 url='https://github.com/computationalpathologygroup/ASAP'
 license=('GPL')
+#options=(!lto)
 depends=(
   boost
-  libtiff
-  libjpeg
   gcc-libs
+  libjpeg
+  libtiff
   opencv
   openslide
-  qt5-base
-  qt5-tools
   pugixml
   python
+  qt5-base
+  qt5-tools
   swig
 )
 makedepends=(
+  clang
   cmake
   gendesk
   git
 )
 source=(
-  "${pkgname}-${pkgver}.tar.gz::https://github.com/computationalpathologygroup/ASAP/archive/refs/tags/ASAP-${pkgver}-(Nightly).tar.gz"
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/computationalpathologygroup/ASAP/archive/refs/tags/v${pkgver}.tar.gz"
   "pugixml::git+https://github.com/zeux/pugixml.git"
 )
-noextract=(${pkgname}-${pkgver}.tar.gz)
-sha256sums=('830a9874b143c5bf738eabf594fc91465df9cb5482391caf51cc4a2b945352cc'
+sha256sums=('22bc8d97e231a4c3aea5e05d574b6add1f11127efc7621ecaeb6a84f0f18fd9d'
             'SKIP')
 
-get_pyver() {
-  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
-}
-
 prepare() {
-  mkdir "${srcdir}/${pkgname}-${pkgver}"
-  tar xvf "${srcdir}/${pkgname}-${pkgver}.tar.gz" -C "${srcdir}/${pkgname}-${pkgver}" --strip-components 1
-  # fix for CMAKE_DL_LIBS
-  sed -i 's/target_link_libraries(multiresolutionimageinterface PUBLIC core PRIVATE jpeg2kcodec libtiff Boost::disable_autolinking Boost::thread)/target_link_libraries(multiresolutionimageinterface PUBLIC core PRIVATE jpeg2kcodec libtiff Boost::disable_autolinking Boost::thread ${CMAKE_DL_LIBS})/' \
-    "${srcdir}/${pkgname}-${pkgver}/multiresolutionimageinterface/CMakeLists.txt"
+  # fix https://github.com/computationalpathologygroup/ASAP/issues/244
+  sed -i "34i#include <utility>" "${srcdir}/${_pkgname}-${pkgver}/core/argparse.hpp"
+
   echo "Creating desktop file"
   gendesk -f -n --pkgname ${pkgname} \
     --pkgdesc "${pkgdesc}" \
@@ -53,28 +48,33 @@ prepare() {
 }
 
 build() {
-  cmake -B build -S "${srcdir}/${pkgname}-${pkgver}" \
+  cmake \
+    -B build \
     -DBUILD_ASAP=ON \
     -DBUILD_EXECUTABLES=ON \
     -DBUILD_IMAGEPROCESSING=ON \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_C_COMPILER=clang \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_INSTALL_RPATH=ON \
     -DOPENSLIDE_INCLUDE_DIR=/usr/include/openslide \
     -DPugiXML_INCLUDE_DIR=${srcdir}/pugixml/src \
-    -DWRAP_WHOLESLIDEFILTERS_PYTHON=ON
+    -DWRAP_WHOLESLIDEFILTERS_PYTHON=ON \
+    -S "${srcdir}/${_pkgname}-${pkgver}"
   make -C build
 }
 
 package() {
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   make -C build DESTDIR="${pkgdir}" install
-  install -Dm644 "${pkgname}-${pkgver}/Copyright.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -Dm644 "${_pkgname}-${pkgver}/Copyright.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}"
   install -d \
     "${pkgdir}/usr/cmake" \
     "${pkgdir}/usr/lib/cmake/${pkgname}" \
-    "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
-  mv -vf "${pkgdir}/usr/bin/_wholeslidefilters.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
+    "${pkgdir}${site_packages}"
+  mv -vf "${pkgdir}/usr/bin/_wholeslidefilters.so" "${pkgdir}${site_packages}"
   mv -vf "${pkgdir}/usr/cmake" "${pkgdir}/usr/lib/cmake/${pkgname}"
   install -Dm644 "${srcdir}/${pkgname}.desktop" -t "${pkgdir}/usr/share/applications"
-  install -Dm644 "${srcdir}/${pkgname}-${pkgver}/ASAP/resources/application.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+  install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/ASAP/resources/application.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
 }
 # vim:set ts=2 sw=2 et:
