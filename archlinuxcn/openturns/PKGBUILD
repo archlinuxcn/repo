@@ -16,6 +16,7 @@ depends=(
   hdf5
   intel-tbb
   lapack
+  libmpc
   libxml2
   muparser
   nlopt
@@ -32,10 +33,6 @@ makedepends=(
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/openturns/openturns/archive/v${pkgver}.tar.gz")
 sha256sums=('1d61cb6ce8ec1121db9f1e9fb490aaa056d2ff250db26df05d2e3e30ceb32344')
 
-get_pyver() {
-  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
-}
-
 build() {
   cmake -B 'build' -S "${srcdir}/${pkgname}-${pkgver}" \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -46,7 +43,7 @@ build() {
 
 package() {
   make DESTDIR="${pkgdir}" -C 'build' install
-  python -O -m compileall "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
+  python -O -m compileall "${pkgdir}/usr/lib/"
 }
 # vim:set ts=2 sw=2 et:
 
