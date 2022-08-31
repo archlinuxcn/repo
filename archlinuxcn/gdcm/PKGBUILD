@@ -41,10 +41,6 @@ source=(
 )
 sha512sums=('5e2903ea27d9b1e4a959567612d272263c1b2781706119622f424dbb5c629c911dbb5ba187f9cc36fe15c11ca51a94a5d508b7c40f4639fe0cad19ac7ecbdd21')
 
-get_pyver() {
-  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
-}
-
 # disable vtk, see also https://sourceforge.net/p/gdcm/bugs/509/
 build() {
   export CXXFLAGS+=" ${CPPFLAGS} -fpermissive"
@@ -76,16 +72,17 @@ build() {
 }
 
 package() {
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   cd "${srcdir}/${_pkgname}-${pkgver}"
   install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/Copyright.txt" "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
 
   make -C "${srcdir}/build" DESTDIR="${pkgdir}" install
 
   # fix python binding installation
-  install -d "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
-  ln -s "/usr/lib/_gdcmswig.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/_gdcmswig.so"
+  install -d "${pkgdir}${site_packages}"
+  ln -s "/usr/lib/_gdcmswig.so" "${pkgdir}${site_packages}/_gdcmswig.so"
   #ln -s "/usr/lib/vtkgdcmPython.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/vtkgdcmPython.so"
-  find "${pkgdir}/usr/lib" -type f -name "*.py" -exec mv -vf {} "${pkgdir}/usr/lib/python$(get_pyver)/site-packages" \;
+  find "${pkgdir}/usr/lib" -type f -name "*.py" -exec mv -vf {} "${pkgdir}${site_packages}" \;
   python -O -m compileall "${pkgdir}/usr/lib"
 }
 # vim:set ts=2 sw=2 et:
