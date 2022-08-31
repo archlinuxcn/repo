@@ -50,7 +50,7 @@ index e3c1aaa50..2c2ea6f79 100644
      xwl_cursor_attach_pixmap(xwl_seat, xwl_cursor, pixmap);
  }
 diff --git a/hw/xwayland/xwayland-input.c b/hw/xwayland/xwayland-input.c
-index 16b58a2d5..8fcd2d95d 100644
+index 240eb0139..f82e3c4c5 100644
 --- a/hw/xwayland/xwayland-input.c
 +++ b/hw/xwayland/xwayland-input.c
 @@ -504,8 +504,8 @@ pointer_handle_enter(void *data, struct wl_pointer *pointer,
@@ -81,7 +81,7 @@ index 16b58a2d5..8fcd2d95d 100644
  
      if (wl_proxy_get_version((struct wl_proxy *) xwl_seat->wl_pointer) < 5)
          dispatch_pointer_motion_event(xwl_seat);
-@@ -777,14 +778,15 @@ pointer_handle_axis(void *data, struct wl_pointer *pointer,
+@@ -777,15 +778,16 @@ pointer_handle_axis(void *data, struct wl_pointer *pointer,
                      uint32_t time, uint32_t axis, wl_fixed_t value)
  {
      struct xwl_seat *xwl_seat = data;
@@ -92,14 +92,15 @@ index 16b58a2d5..8fcd2d95d 100644
          xwl_seat->pending_pointer_event.has_vertical_scroll = TRUE;
 -        xwl_seat->pending_pointer_event.scroll_dy = value;
 +        xwl_seat->pending_pointer_event.scroll_dy = value * scale;
+         break;
      case WL_POINTER_AXIS_HORIZONTAL_SCROLL:
          xwl_seat->pending_pointer_event.has_horizontal_scroll = TRUE;
 -        xwl_seat->pending_pointer_event.scroll_dx = value;
 +        xwl_seat->pending_pointer_event.scroll_dx = value * scale;
+         break;
      }
  }
- 
-@@ -863,12 +865,13 @@ relative_pointer_handle_relative_motion(void *data,
+@@ -865,12 +867,13 @@ relative_pointer_handle_relative_motion(void *data,
                                          wl_fixed_t dy_unaccelf)
  {
      struct xwl_seat *xwl_seat = data;
@@ -117,7 +118,7 @@ index 16b58a2d5..8fcd2d95d 100644
  
      if (!xwl_seat->focus_window)
          return;
-@@ -1361,8 +1364,8 @@ touch_handle_down(void *data, struct wl_touch *wl_touch,
+@@ -1363,8 +1366,8 @@ touch_handle_down(void *data, struct wl_touch *wl_touch,
  
      xwl_touch->window = wl_surface_get_user_data(surface);
      xwl_touch->id = id;
@@ -128,7 +129,7 @@ index 16b58a2d5..8fcd2d95d 100644
      xorg_list_add(&xwl_touch->link_touch, &xwl_seat->touches);
  
      xwl_touch_send_event(xwl_touch, xwl_seat, XI_TouchBegin);
-@@ -1398,8 +1401,8 @@ touch_handle_motion(void *data, struct wl_touch *wl_touch,
+@@ -1400,8 +1403,8 @@ touch_handle_motion(void *data, struct wl_touch *wl_touch,
      if (!xwl_touch)
          return;
  
@@ -139,7 +140,7 @@ index 16b58a2d5..8fcd2d95d 100644
      xwl_touch_send_event(xwl_touch, xwl_seat, XI_TouchUpdate);
  }
  
-@@ -2088,8 +2091,8 @@ tablet_tool_motion(void *data, struct zwp_tablet_tool_v2 *tool,
+@@ -2090,8 +2093,8 @@ tablet_tool_motion(void *data, struct zwp_tablet_tool_v2 *tool,
      struct xwl_tablet_tool *xwl_tablet_tool = data;
      struct xwl_seat *xwl_seat = xwl_tablet_tool->seat;
      int32_t dx, dy;
@@ -150,7 +151,7 @@ index 16b58a2d5..8fcd2d95d 100644
  
      if (!xwl_seat->tablet_focus_window)
          return;
-@@ -3130,6 +3133,7 @@ xwl_pointer_warp_emulator_set_fake_pos(struct xwl_pointer_warp_emulator *warp_em
+@@ -3132,6 +3135,7 @@ xwl_pointer_warp_emulator_set_fake_pos(struct xwl_pointer_warp_emulator *warp_em
                                         int x,
                                         int y)
  {
@@ -158,7 +159,7 @@ index 16b58a2d5..8fcd2d95d 100644
      struct zwp_locked_pointer_v1 *locked_pointer =
          warp_emulator->locked_pointer;
      WindowPtr window;
-@@ -3141,6 +3145,7 @@ xwl_pointer_warp_emulator_set_fake_pos(struct xwl_pointer_warp_emulator *warp_em
+@@ -3143,6 +3147,7 @@ xwl_pointer_warp_emulator_set_fake_pos(struct xwl_pointer_warp_emulator *warp_em
      if (!warp_emulator->xwl_seat->focus_window)
          return;
  
@@ -166,7 +167,7 @@ index 16b58a2d5..8fcd2d95d 100644
      window = warp_emulator->xwl_seat->focus_window->window;
      if (x >= window->drawable.x ||
          y >= window->drawable.y ||
-@@ -3149,8 +3154,8 @@ xwl_pointer_warp_emulator_set_fake_pos(struct xwl_pointer_warp_emulator *warp_em
+@@ -3151,8 +3156,8 @@ xwl_pointer_warp_emulator_set_fake_pos(struct xwl_pointer_warp_emulator *warp_em
          sx = x - window->drawable.x;
          sy = y - window->drawable.y;
          zwp_locked_pointer_v1_set_cursor_position_hint(locked_pointer,
