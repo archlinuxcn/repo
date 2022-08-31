@@ -25,10 +25,6 @@ checkdepends=(
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/deepcharles/ruptures/archive/refs/tags/v${pkgver}.tar.gz")
 sha512sums=('8445f7c1a211c16adab7008ab779aa9206214b4db33c8a975126ad5df98c594ed1fab9a000b457d56593d0005f0479886578358c295559cd81b6752cc20cd64b')
 
-get_pyver() {
-  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
-}
-
 build() {
   cd "${_pkgname}-${pkgver}"
   SETUPTOOLS_SCM_PRETEND_VERSION=${pkgver} \
@@ -36,8 +32,9 @@ build() {
 }
 
 check() {
+  local python_version=$(python -c 'import sys; print("".join(map(str, sys.version_info[:2])))')
   cd "${_pkgname}-${pkgver}"
-  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-$(get_pyver)" pytest -v
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-cpython-${python_version}" pytest -v
 }
 
 package() {
