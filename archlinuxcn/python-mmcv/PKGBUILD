@@ -3,7 +3,7 @@
 _CUDA_ARCH_LIST="5.2;5.3;6.0;6.1;6.2;7.0;7.2;7.5;8.0;8.6;8.6+PTX"
 _pkgname=mmcv
 pkgname=(python-mmcv python-mmcv-full)
-pkgver=1.6.1
+pkgver=2.0.0rc1
 pkgrel=1
 pkgdesc='OpenMMLab Computer Vision Foundation'
 arch=('x86_64')
@@ -26,7 +26,7 @@ makedepends=(
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmcv/archive/v${pkgver}.tar.gz"
 )
-sha512sums=('88a08d66348f7344639e8f1bd6d3590a9b2ad925f8927bbc260d6687d7927563045a4d0f0b128acc16881c560bc10dbdb7af1cacf4bb5a2755cb63e902017b17')
+sha512sums=('48960a150498aa5e754e858373d48d93c43addeebe79ce728b55a746669370171b00fd807346f2ec252dfbb88dee78328f4d0a913688b66e4c766913bcd9424c')
 prepare() {
   cd "${_pkgname}-${pkgver}"
   cp -a "${srcdir}/${_pkgname}-${pkgver}" "${srcdir}/${_pkgname}-full-${pkgver}"
