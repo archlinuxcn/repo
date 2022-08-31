@@ -1,14 +1,16 @@
 # Maintainer: Toke Høiland-Jørgensen <toke@toke.dk>
 _pkgname=cyrus-sasl-xoauth2
 pkgname=${_pkgname}-git
-pkgrel=3
-pkgver=r22.43d03523fecf
+pkgrel=1
+pkgver=r24.36aabca54fd6
 pkgdesc="XOAUTH2 mechanism plugin for cyrus-sasl"
 arch=(x86_64)
 url="https://github.com/moriyoshi/$_pkgname"
 license=('MIT')
 makedepends=('git')
 depends=('libsasl')
+provides=('cyrus-sasl-xoauth2')
+conflicts=('cyrus-sasl-xoauth2')
 source=(git+$url.git)
 md5sums=('SKIP')
 
