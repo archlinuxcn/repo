@@ -4,7 +4,7 @@
 
 _pkgname=teleport
 pkgname=teleport-bin
-pkgver=10.1.4
+pkgver=10.1.9
 pkgrel=1
 pkgdesc="Modern SSH server for teams managing distributed infrastructure"
 arch=('i386' 'x86_64' 'armv7h' 'aarch64')
@@ -26,10 +26,10 @@ source_aarch64=("teleport-bin-${pkgver}-aarch64.tar.gz::https://get.gravitationa
 sha256sums=('22fd1ee136e9422458740811c9946de447105f26e87dbbc8daa35d17bd1f3894'
             '21ca4e56c9c5e1ce11570894e85ded853e26e91cc2e16ed9114b3d6a2c5c22ef'
             'ce2dd61cae3c0c3684e7e629f98b77551e66ddedca2194250a34f0efbc674f3a')
-sha256sums_i386=('3ebe00fd5c758ffd0e54b2d149d85fe8f0d9f68e0397014460d97d6e646f578b')
-sha256sums_x86_64=('0d707af3aa5d7e92c24666e3c43836dad5de469dc99835602e94a7057591e3ed')
-sha256sums_armv7h=('aef9944b9c4b70e0900e7ecd991f968ca3cbd8e2dc5b05a0dd68e6495cb99af6')
-sha256sums_aarch64=('6ce0083fae99a35e31708537f7ebd11cdaa9fd1be6b77c3c083053de41da31cf')
+sha256sums_i386=('bf581fa2d83a9ecb49bc4b9aa64dd84e6b022de2c48da9714842602b37964474')
+sha256sums_x86_64=('eda9c9e524c42eeae2d9caeb351acc461e155cc514f74a7005414a0f609fe38a')
+sha256sums_armv7h=('674621c99691482d383a6e3bc8a1f2983d8073e7e69f827a4694221d28103f65')
+sha256sums_aarch64=('2287e40127c7aae2370bb3f46fa3aa95c226724b0e4afa66baa185682a94c356')
 
 options=(!strip)
 
