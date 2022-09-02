@@ -4,7 +4,7 @@
 
 pkgname=gdcm
 _pkgname=GDCM
-pkgver=3.0.16
+pkgver=3.0.17
 pkgrel=1
 pkgdesc='A C++ library for DICOM medical files'
 arch=('x86_64')
@@ -39,7 +39,7 @@ makedepends=(
 source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/malaterre/GDCM/archive/v${pkgver}.tar.gz"
 )
-sha512sums=('5e2903ea27d9b1e4a959567612d272263c1b2781706119622f424dbb5c629c911dbb5ba187f9cc36fe15c11ca51a94a5d508b7c40f4639fe0cad19ac7ecbdd21')
+sha512sums=('666d99c658d76b8c7512d8c27306d47330e16fb957d609b8bddddfb58c35e1f766f3565c0b4be40feea9b21ad86ca53f59fc01ca1d072c5fa9cb2591bd0161ff')
 
 # disable vtk, see also https://sourceforge.net/p/gdcm/bugs/509/
 build() {
