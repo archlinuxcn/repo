@@ -18,13 +18,12 @@ depends=(
   gdcm
   hdf5
   intel-oneapi-mkl
-  kwiml-git
   libpng
   libtiff
-  tbb
   vxl
 )
 makedepends=(
+  chrpath
   cmake
   git
   gtest
@@ -45,8 +44,14 @@ get_pyver() {
 }
 
 build() {
-# we build the default modules by default
-# you could add additional modules by setting -DModule_<NAME>=ON
+  # fix building with system hdf5
+  sed -i 's,find_package(HDF5 ${_HDF5_NO_MODULE_ARG} REQUIRED COMPONENTS CXX C,find_package(HDF5 ${_HDF5_NO_MODULE_ARG} REQUIRED COMPONENTS CXX C HL,' "${srcdir}/${_pkgname}/Modules/ThirdParty/HDF5/CMakeLists.txt"
+  sed -i "s,find_package(HDF5 QUIET NO_MODULE COMPONENTS CXX C shared),find_package(HDF5 QUIET NO_MODULE COMPONENTS CXX C HL shared)," "${srcdir}/${_pkgname}/Modules/ThirdParty/HDF5/itk-module-init.cmake"
+  sed -i "s,find_package(HDF5 QUIET NO_MODULE COMPONENTS CXX C static),find_package(HDF5 QUIET NO_MODULE COMPONENTS CXX C HL static)," "${srcdir}/${_pkgname}/Modules/ThirdParty/HDF5/itk-module-init.cmake"
+  sed -i "s,find_package(HDF5 REQUIRED COMPONENTS CXX C),find_package(HDF5 REQUIRED COMPONENTS CXX C HL)," "${srcdir}/${_pkgname}/Modules/ThirdParty/HDF5/itk-module-init.cmake"
+
+  # we build the default modules by default
+  # you could add additional modules by setting -DModule_<NAME>=ON
   cmake_opts=(
     -DBUILD_SHARED_LIBS=ON
     -DBUILD_TESTING=OFF
@@ -65,11 +70,9 @@ build() {
     -DITK_USE_SYSTEM_GOOGLETEST=ON
     -DITK_USE_SYSTEM_HDF5=ON
     -DITK_USE_SYSTEM_JPEG=ON
-    -DITK_USE_SYSTEM_KWIML=ON
     -DITK_USE_SYSTEM_MINC=OFF
     -DITK_USE_SYSTEM_PNG=ON
     -DITK_USE_SYSTEM_SWIG=ON
-    -DITK_USE_SYSTEM_TBB=ON
     -DITK_USE_SYSTEM_TIFF=ON
     -DITK_USE_SYSTEM_VXL=ON
     -DITK_USE_SYSTEM_ZLIB=ON
@@ -116,5 +119,9 @@ package_python-itk-git() {
   install -dm755 "${pkgdir}/usr/lib"
   cp -a "${srcdir}/dist/usr/lib/python$(get_pyver)" "${pkgdir}/usr/lib"
   python -O -m compileall "${pkgdir}/usr/lib"
+  # delete rpath
+  find "${pkgdir}/usr/lib" -type f -name "*.so*" -exec chrpath --delete {} \;
+  # delete unused file
+  find "${pkgdir}/usr/lib" -type f -name itkTestDriver -delete
 }
 # vim:set ts=2 sw=2 et:
