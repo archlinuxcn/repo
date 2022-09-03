@@ -65,10 +65,10 @@ index 941f24c..a9c8035 100644
  
  bool VaapiPictureNativePixmap::AllowOverlay() const {
 diff --git a/media/gpu/vaapi/vaapi_video_decode_accelerator.cc b/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
-index 3a07fa2..306313d 100644
+index bf791d8..9e394eb 100644
 --- a/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
 +++ b/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
-@@ -561,12 +561,12 @@ void VaapiVideoDecodeAccelerator::InitiateSurfaceSetChange(
+@@ -560,12 +560,12 @@ void VaapiVideoDecodeAccelerator::InitiateSurfaceSetChange(
    requested_visible_rect_ = visible_rect;
    if (buffer_allocation_mode_ == BufferAllocationMode::kSuperReduced) {
      // Add one to the reference frames for the one being currently egressed.
@@ -99,10 +99,10 @@ index 35378d1..68969d2 100644
  }
  
 diff --git a/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.h b/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.h
-index 06d0290..c217e91 100644
+index 9e8b2fa..9918508 100644
 --- a/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.h
 +++ b/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.h
-@@ -91,6 +91,9 @@ class GbmPixmapWayland : public gfx::NativePixmap {
+@@ -92,6 +92,9 @@ class GbmPixmapWayland : public gfx::NativePixmap {
  
    // Says a wl_buffer has been created and must removed.
    bool created_wl_buffer_ = false;
@@ -113,10 +113,10 @@ index 06d0290..c217e91 100644
  
  }  // namespace ui
 diff --git a/ui/ozone/platform/wayland/ozone_platform_wayland.cc b/ui/ozone/platform/wayland/ozone_platform_wayland.cc
-index 8d82c2d..6bb1670 100644
+index c13bd3a..04fa160 100644
 --- a/ui/ozone/platform/wayland/ozone_platform_wayland.cc
 +++ b/ui/ozone/platform/wayland/ozone_platform_wayland.cc
-@@ -291,6 +291,9 @@ class OzonePlatformWayland : public OzonePlatform,
+@@ -297,6 +297,9 @@ class OzonePlatformWayland : public OzonePlatform,
        properties->supports_global_screen_coordinates =
            features::IsWaylandScreenCoordinatesEnabled();
  
