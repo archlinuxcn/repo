@@ -1,0 +1,17 @@
+diff --unified --recursive --text xscreensaver-6.04.orig/hacks/xscreensaver-getimage-file xscreensaver-6.04.new/hacks/xscreensaver-getimage-file
+--- xscreensaver-6.04.orig/hacks/xscreensaver-getimage-file	2022-04-11 05:03:33.093334265 +1200
++++ xscreensaver-6.04.new/hacks/xscreensaver-getimage-file	2022-09-03 17:26:56.970837016 +1200
+@@ -1545,6 +1545,13 @@
+   my $abs_p = 0;
+   my $flush_p = 0;
+ 
++  # Some time between perl 5.16.3 and 5.28.3, invoking a script with >&-
++  # started writing "Unable to flush stdout: Bad file descriptor" to stderr
++  # at exit. So if stdout is closed, open it as /dev/null instead.
++  #
++  open (STDOUT, '>', '/dev/null')
++	if (! defined (syswrite (STDOUT, "")));  # undef if fd closed; 0 if open.
++
+   while ($_ = $ARGV[0]) {
+     shift @ARGV;
+     if    (m/^--?verbose$/s)      { $verbose++; }

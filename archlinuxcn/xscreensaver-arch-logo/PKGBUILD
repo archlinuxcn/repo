@@ -6,7 +6,7 @@
 
 pkgname=xscreensaver-arch-logo
 pkgver=6.04
-pkgrel=2
+pkgrel=3
 pkgdesc="Screen saver and locker for the X Window System with Arch Linux branding"
 url="https://www.jwz.org/${pkgname%%-*}/"
 arch=('x86_64')
@@ -39,7 +39,8 @@ source=("${pkgname}-${pkgver}.tar.gz::https://www.jwz.org/${pkgname%%-*}/${pkgna
 		logo-512.png
 		logo-50.xpm
         logo-180.xpm
-		logo-360.xpm) 
+		logo-360.xpm
+        perl-stdout-bad-fd.patch) 
 sha512sums=('7e8f01853b3d9252ce0120894db7dd4fa3cd19114602a09aa770ec750e2f3742585ca4daf19b009e97386f8c0e3cc89330fe760148c6388f41de8cc1f48f8071'
             '529ed9b7904631989803a4e1f306a0f3e496e50a123ebbd6ff77058e52aeb1b2328148d8224e54b547faff14e9d591146b9849c5fb9d1063e6db41f295f3074e'
             'a63d93f148500eb8ae4a011286c1e762a38575773381d33fa1c79cb1b94df8bdba54b40c52c5861ab865934f1d3a3a225c1ef5758a698a9e587b0779d76a0a34'
@@ -54,11 +55,14 @@ sha512sums=('7e8f01853b3d9252ce0120894db7dd4fa3cd19114602a09aa770ec750e2f3742585
             'e650ad1351107aef023420bcb7422279efb1f2594362e66b737c960e2a1a5444f4925449ecae5b4ffa3a0127d6645f9d466f3b5d17767c865dcaf438b3b0e44f'
             '306f5b305c3e628e660d284d0e6cd5cf2ee939e01dccd7f1c91afe35e49c96f7697ef7e62678eb17647abdc2c7ae6105e33a290fe6b79dbca50b4f9e954b3b47'
             'b5172c09bbc65e5adf2ce4ca8c84391aec99cd1d5120380fa6f4878e2ec01a758f10d4ef89c78a93d2d2dd418a6054bdc1d532aac46c47f48cf803f0f83a863b'
-            '376892f2dea54cd93c8e2f20ed76b0779ad2a038a6b590da189aedbd8c7fdd4d1f16add323a5f94e3772e0cc7e5ca74a74c20be3da54c637b76577a388e93fce')
+            '376892f2dea54cd93c8e2f20ed76b0779ad2a038a6b590da189aedbd8c7fdd4d1f16add323a5f94e3772e0cc7e5ca74a74c20be3da54c637b76577a388e93fce'
+            '2cb0dd77589eee09ba2e06d000b13aaee4f5a3a2ffde595559b3b261a2337580e6f3e108e1617e78741f2cb8c66306f2ac2e41c7f97d83510304edd58ea2e023')
 
 prepare() {
   local logos_png
   local logos
+
+  patch --directory="${pkgname%%-*}-${pkgver}" --forward --strip=1 --input="${srcdir}/perl-stdout-bad-fd.patch"
 
   cd "${srcdir}"
   logos_png=(logo-32.png
