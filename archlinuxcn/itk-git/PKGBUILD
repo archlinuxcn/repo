@@ -44,12 +44,6 @@ get_pyver() {
 }
 
 build() {
-  # fix building with system hdf5
-  sed -i 's,find_package(HDF5 ${_HDF5_NO_MODULE_ARG} REQUIRED COMPONENTS CXX C,find_package(HDF5 ${_HDF5_NO_MODULE_ARG} REQUIRED COMPONENTS CXX C HL,' "${srcdir}/${_pkgname}/Modules/ThirdParty/HDF5/CMakeLists.txt"
-  sed -i "s,find_package(HDF5 QUIET NO_MODULE COMPONENTS CXX C shared),find_package(HDF5 QUIET NO_MODULE COMPONENTS CXX C HL shared)," "${srcdir}/${_pkgname}/Modules/ThirdParty/HDF5/itk-module-init.cmake"
-  sed -i "s,find_package(HDF5 QUIET NO_MODULE COMPONENTS CXX C static),find_package(HDF5 QUIET NO_MODULE COMPONENTS CXX C HL static)," "${srcdir}/${_pkgname}/Modules/ThirdParty/HDF5/itk-module-init.cmake"
-  sed -i "s,find_package(HDF5 REQUIRED COMPONENTS CXX C),find_package(HDF5 REQUIRED COMPONENTS CXX C HL)," "${srcdir}/${_pkgname}/Modules/ThirdParty/HDF5/itk-module-init.cmake"
-
   # we build the default modules by default
   # you could add additional modules by setting -DModule_<NAME>=ON
   cmake_opts=(
