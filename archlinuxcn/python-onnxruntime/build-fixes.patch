@@ -25,29 +25,12 @@ index a027c69e0..eb7608518 100644
    message("Use re2 from preinstalled system lib")
  else()
    add_subdirectory(external/re2 EXCLUDE_FROM_ALL)
-@@ -1421,11 +1421,11 @@
- #Dependencies end. In the next we'll enable "treat warning as error"
- 
- if (onnxruntime_PREFER_SYSTEM_LIB)
--  find_package(Flatbuffers)
-+  find_package(FlatBuffers)
+@@ -1421,7 +1421,7 @@
  endif()
--if (Flatbuffers_FOUND)
-+if (FlatBuffers_FOUND)
+ if (Flatbuffers_FOUND)
    message("Use flatbuffers from preinstalled system lib")
 -  add_library(flatbuffers ALIAS flatbuffers::flatbuffers)
 +  add_library(flatbuffers ALIAS flatbuffers::flatbuffers_shared)
  else()
    message("Use flatbuffers from submodule")
    # We do not need to build flatc for iOS or Android Cross Compile
---- a/setup.py	2022-07-22 17:00:19.638893453 +0800
-+++ b/setup.py	2022-07-22 17:02:00.686317628 +0800
-@@ -16,7 +16,7 @@
- 
- from setuptools import Extension, setup
- from setuptools.command.install import install as InstallCommandBase
--from wheel.vendored.packaging.tags import sys_tags
-+from packaging.tags import sys_tags
- 
- nightly_build = False
- package_name = "onnxruntime"

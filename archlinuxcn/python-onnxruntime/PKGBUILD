@@ -5,28 +5,16 @@ _ENABLE_CUDA=1
 pkgbase=python-onnxruntime
 # Not split DNNL EP to another package as it's needed unconditionally at runtime if built at compile time
 # https://github.com/microsoft/onnxruntime/blob/v1.9.1/onnxruntime/python/onnxruntime_pybind_state.cc#L533
-pkgname=(python-onnxruntime)
-pkgver=1.12.1
+pkgname=(onnxruntime python-onnxruntime)
+pkgver=1.13.1
 pkgdesc='Cross-platform, high performance scoring engine for ML models'
 pkgrel=1
 arch=(x86_64)
 url='https://github.com/microsoft/onnxruntime'
 license=(MIT)
-depends=(nsync re2 openmpi onednn libprotobuf-lite.so
-         python-coloredlogs python-flatbuffers python-numpy python-packaging python-protobuf python-sympy)
-makedepends=(git cmake pybind11 python-setuptools nlohmann-json chrono-date boost eigen flatbuffers)
-optdepends=(
-  # https://github.com/microsoft/onnxruntime/pull/9969
-  'python-onnx: for the backend API, quantization, orttraining, transformers and various tools'
-  'python-psutil: for transformers'
-  'python-py-cpuinfo: for transformers'
-  'python-py3nvml: for transformers'
-  'python-transformers: for transformers'
-  'python-scipy: for transformers and various tools'
-  'python-pytorch: for transformers, orttraining and various tools'
-  'python-cerberus: for orttraining'
-  'python-h5py: for orttraining'
-)
+depends=(nsync re2 openmpi libprotobuf-lite.so)
+makedepends=(git cmake pybind11 python-setuptools nlohmann-json chrono-date boost eigen flatbuffers onednn
+             python-coloredlogs python-flatbuffers python-numpy python-packaging python-protobuf python-sympy)
 # not de-vendored libraries
 # onnx: needs shared libonnx (https://github.com/onnx/onnx/issues/3030)
 source=("git+https://github.com/microsoft/onnxruntime#tag=v$pkgver"
@@ -46,19 +34,19 @@ sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            '6ad02636e2cba8f2e82f5ac733856eee3016750e809ee18a41c4edc78bca761f30ac174d7d683f9b14b9f72310dd654811b1ecc9dda514e12bac6b7440c449c2'
+            '8f0bd7ae59f86f002c88368a8c2852b9613363771aae61f91a90bfc13dcd3173e43d7988a59ccef86657cf6abfcc53837bbf445c216a7994a765a7e0770d0f5f'
             '7d55b0d4232183a81c20a5049f259872150536eed799d81a15e7f10b5c8b5279b443ba96d7b97c0e4338e95fc18c9d6f088e348fc7002256ee7170d25b27d80d'
-            '6735c7aca2ba2f1f2a5286eb064125bf7f2c68a575d572dd157769d15778ff3e717b3a53d696c767748229f23ee6c3a7c82679df1d86283d7c4dd0ec9103ae08')
+            'ab48d27be98a88d3c361e1d0aac3b1e078096c0902ba7a543261a1c24faed0f1f44947a1b7ea1f264434cd2199b9d563d2447c14b6afbdf9900e68a65f7d2619')
 # CUDA seems not working with LTO
 options+=('!lto')
 
 if [[ $_ENABLE_CUDA = 1 ]]; then
-  pkgname+=(python-onnxruntime-cuda)
+  pkgname+=(onnxruntime-cuda)
   makedepends+=(cuda cudnn nccl gcc11)
 fi
 
 # Check PKGBUILDs of python-pytorch and tensorflow for CUDA architectures built by official packages
-_CUDA_ARCHITECTURES="52-real;53-real;60-real;61-real;62-real;70-real;72-real;75-real;80-real;86-real;86-virtual"
+_CUDA_ARCHITECTURES="52-real;53-real;60-real;61-real;62-real;70-real;72-real;75-real;80-real;86-real;87-real;89-real;90-real;90-virtual"
 
 prepare() {
   cd onnxruntime
@@ -86,6 +74,8 @@ build() {
     export CUDAHOSTCXX=$CXX
   fi
 
+  # Use -Donnxruntime_ENABLE_LAZY_TENSOR=OFF as it requires patched python-pytorch
+  # See: https://github.com/microsoft/onnxruntime/pull/10460 https://github.com/pytorch/pytorch/pulls/wschin
   local cmake_args=(
     -DCMAKE_INSTALL_PREFIX=/usr
     -Donnxruntime_ENABLE_PYTHON=ON
@@ -93,6 +83,7 @@ build() {
     -Donnxruntime_BUILD_SHARED_LIB=ON
     -Donnxruntime_BUILD_UNIT_TESTS=OFF
     -Donnxruntime_ENABLE_TRAINING=ON
+    -Donnxruntime_ENABLE_LAZY_TENSOR=OFF
     -Donnxruntime_USE_MPI=ON
     -Donnxruntime_USE_PREINSTALLED_EIGEN=ON
     -Donnxruntime_USE_DNNL=ON
@@ -131,31 +122,60 @@ build() {
   python ../setup.py build
 }
 
-package_python-onnxruntime() {
+package_onnxruntime() {
+  depends+=(onednn)
+
   cd onnxruntime/build
 
   DESTDIR="$pkgdir" cmake --install .
 
-  python ../setup.py install --root="$pkgdir" --skip-build --optimize=1
-
-  PY_ORT_DIR="$(python -c 'import site; print(site.getsitepackages()[0])')/onnxruntime"
-  install -Ddm755 "$pkgdir"/usr/share/licenses/$pkgname
+  install -Ddm755 "$pkgdir"/usr/share/licenses
   for f in LICENSE ThirdPartyNotices.txt ; do
-    ln -s "$PY_ORT_DIR/$f" "$pkgdir"/usr/share/licenses/$pkgname/$f
+    install -Dm644 ../$f -t "$pkgdir"/usr/share/licenses/$pkgname
   done
-  # already installed by `cmake --install`, and not useful as this path is not looked up by the linker
-  rm -vf "$pkgdir/$PY_ORT_DIR"/capi/libonnxruntime_providers_*
 
   # installed as split packages
   rm -vf "$pkgdir"/usr/lib/libonnxruntime_providers_cuda.so
 }
 
-package_python-onnxruntime-cuda() {
+package_python-onnxruntime() {
+  depends+=(onnxruntime python-coloredlogs python-flatbuffers python-numpy python-packaging python-protobuf python-sympy)
+  optdepends=(
+    # https://github.com/microsoft/onnxruntime/pull/9969
+    'python-onnx: for the backend API, quantization, orttraining, transformers and various tools'
+    'python-psutil: for transformers'
+    'python-py-cpuinfo: for transformers'
+    'python-py3nvml: for transformers'
+    'python-transformers: for transformers'
+    'python-scipy: for transformers and various tools'
+    'python-pytorch: for transformers, orttraining and various tools'
+    'python-cerberus: for orttraining'
+    'python-h5py: for orttraining'
+  )
+
+  cd onnxruntime/build
+
+  python ../setup.py install --root="$pkgdir" --skip-build --optimize=1
+
+  PY_ORT_DIR="$(python -c 'import site; print(site.getsitepackages()[0])')/onnxruntime"
+  # already installed by `cmake --install`, and not useful as this path is not looked up by the linker
+  rm -vf "$pkgdir/$PY_ORT_DIR"/capi/libonnxruntime_providers_*
+
+  install -Ddm755 "$pkgdir"/usr/share/licenses
+  ln -s onnxruntime "$pkgdir"/usr/share/licenses/$pkgname
+
+  # installed as split packages
+  rm -vf "$pkgdir"/usr/lib/libonnxruntime_providers_cuda.so
+}
+
+package_onnxruntime-cuda() {
   depends=(cuda cudnn nccl openmpi nsync)
+  conflicts=('python-onnxruntime-cuda')
+  replaces=('python-onnxruntime-cuda')
   pkgdesc+=' (CUDA execution provider)'
 
   cd onnxruntime/build
   install -Dm755 libonnxruntime_providers_cuda.so -t "$pkgdir"/usr/lib
   install -Ddm755 "$pkgdir"/usr/share/licenses
-  ln -s python-onnxruntime "$pkgdir"/usr/share/licenses/$pkgname
+  ln -s onnxruntime "$pkgdir"/usr/share/licenses/$pkgname
 }

@@ -1,35 +1,52 @@
 diff --git a/cmake/external/dnnl.cmake b/cmake/external/dnnl.cmake
-index 6a51a3d5d..a89635210 100644
+index 5c42216..bc0a63f 100644
 --- a/cmake/external/dnnl.cmake
 +++ b/cmake/external/dnnl.cmake
-@@ -26,6 +26,13 @@ elseif(onnxruntime_USE_DNNL AND onnxruntime_DNNL_GPU_RUNTIME STREQUAL "ocl" AND
+@@ -26,6 +26,17 @@ elseif(onnxruntime_USE_DNNL AND onnxruntime_DNNL_GPU_RUNTIME STREQUAL "ocl" AND
  endif()
  
  if (onnxruntime_USE_DNNL)
 +if (onnxruntime_PREFER_SYSTEM_LIB)
 +  # https://oneapi-src.github.io/oneDNN/dev_guide_transition_to_dnnl.html
-+  find_package(dnnl CONFIG REQUIRED)
++  find_package(dnnl CONFIG)
++endif ()
++if (TARGET DNNL::dnnl)
++  message("Use DNNL from preinstalled system lib")
 +  add_library(project_dnnl INTERFACE)
 +  add_library(dnnl INTERFACE)
 +  target_link_libraries(dnnl INTERFACE DNNL::dnnl)
 +else ()
++  message("Use DNNL from submodule")
    set(DNNL_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/dnnl/src/dnnl/src)
    set(DNNL_INSTALL ${CMAKE_CURRENT_BINARY_DIR}/dnnl/install)
    set(DNNL_LIB_DIR ${DNNL_INSTALL}/${CMAKE_INSTALL_LIBDIR})
-@@ -55,3 +62,4 @@ if (onnxruntime_USE_DNNL)
+@@ -55,3 +66,4 @@ if (onnxruntime_USE_DNNL)
    )
    link_directories(${DNNL_LIB_DIR})
  endif()
 +endif()
+diff --git a/cmake/onnxruntime_python.cmake b/cmake/onnxruntime_python.cmake
+index b23d731..13ef7c3 100644
+--- a/cmake/onnxruntime_python.cmake
++++ b/cmake/onnxruntime_python.cmake
+@@ -752,7 +752,7 @@ if (onnxruntime_ENABLE_TRAINING)
+   endif()
+ endif()
+ 
+-if (onnxruntime_USE_DNNL)
++if (onnxruntime_USE_DNNL AND NOT TARGET DNNL::dnnl)
+   add_custom_command(
+     TARGET onnxruntime_pybind11_state POST_BUILD
+     COMMAND ${CMAKE_COMMAND} -E copy
 diff --git a/cmake/onnxruntime_unittests.cmake b/cmake/onnxruntime_unittests.cmake
-index 6bdb2d03c..514faa375 100644
+index c5e1dfe..a9cb311 100644
 --- a/cmake/onnxruntime_unittests.cmake
 +++ b/cmake/onnxruntime_unittests.cmake
-@@ -744,10 +744,12 @@ add_custom_command(
- if (NOT onnxruntime_ENABLE_TRAINING_TORCH_INTEROP)
+@@ -836,10 +836,12 @@ if (NOT onnxruntime_ENABLE_TRAINING_TORCH_INTEROP)
+   endif()
    if (onnxruntime_USE_DNNL)
      list(APPEND onnx_test_libs dnnl)
-+    if (NOT onnxruntime_PREFER_SYSTEM_LIB)
++    if (NOT TARGET DNNL::dnnl)
      add_custom_command(
        TARGET ${test_data_target} POST_BUILD
        COMMAND ${CMAKE_COMMAND} -E copy ${DNNL_DLL_PATH} $<TARGET_FILE_DIR:${test_data_target}>
@@ -37,4 +54,4 @@ index 6bdb2d03c..514faa375 100644
 +    endif()
    endif()
    if(WIN32)
-     if (onnxruntime_USE_TVM)
+     if (onnxruntime_USE_NUPHAR_TVM)
