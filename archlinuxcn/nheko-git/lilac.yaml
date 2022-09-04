@@ -1,6 +1,6 @@
 maintainers:
   - github: yuyichao
-build_prefix: extra-x86_64
+
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
 repo_depends:
@@ -22,5 +22,14 @@ update_on:
     repo: extra
   - alias: alpm-lilac
     alpm: mtxclient-git
+  - source: alpm
+    alpm: spdlog
+    provided: libspdlog.so
+  - source: alpm
+    alpm: fmt
+    provided: libfmt.so
+  - source: alpm
+    alpm: olm
+    provided: libolm.so
   - source: manual
-    manual: 2
+    manual: 1

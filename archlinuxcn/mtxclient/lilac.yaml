@@ -3,8 +3,6 @@
 maintainers:
   - github: yuyichao
 
-build_prefix: extra-x86_64
-
 pre_build_script: aur_pre_build(maintainers=['z3ntu'])
 
 post_build: aur_post_build
@@ -16,5 +14,14 @@ update_on:
   - source: aur
     aur: mtxclient
   - alias: boost
+  - source: alpm
+    alpm: olm
+    provided: libolm.so
+  - source: alpm
+    alpm: spdlog
+    provided: libspdlog.so
+  - source: alpm
+    alpm: fmt
+    provided: libfmt.so
   - source: manual
     manual: 2

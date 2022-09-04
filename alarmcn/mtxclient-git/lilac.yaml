@@ -11,13 +11,16 @@ repo_depends:
 
 update_on:
   - source: vcs
-  - alias: boost
-  - source: alpm
-    from_pattern: ^(\d+\.\d+)\..*
-    to_pattern: \1
-    alpm: libevent
-    repo: core
   - alias: alpm-lilac
     alpm: coeurl-git
+  - source: alpm
+    alpm: olm
+    provided: libolm.so
+  - source: alpm
+    alpm: spdlog
+    provided: libspdlog.so
+  - source: alpm
+    alpm: fmt
+    provided: libfmt.so
   - source: manual
     manual: 1

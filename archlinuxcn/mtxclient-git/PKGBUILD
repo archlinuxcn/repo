@@ -7,9 +7,9 @@ pkgdesc="Client API library for Matrix, built on top of Boost.Asio<Paste>"
 arch=(armv7h aarch64 x86_64 i686)
 url="https://github.com/Nheko-Reborn/mtxclient"
 license=('MIT')
-depends=('boost-libs' 'libcoeurl.so' 'libolm' 'libevent'
-         'libsodium' 'openssl')
-makedepends=('git' 'cmake' 'nlohmann-json' 'boost')
+depends=('libspdlog.so' 'libolm.so' 'libfmt.so' 'libcoeurl.so'
+         'openssl')
+makedepends=('git' 'cmake' 'nlohmann-json')
 provides=('mtxclient' 'libmatrix_client.so')
 conflicts=('mtxclient')
 source=("git+https://github.com/Nheko-Reborn/mtxclient")
