@@ -2,8 +2,8 @@
 
 pkgbase=eww
 pkgname=(eww-x11 eww-wayland)
-pkgver=0.3.0
-pkgrel=3
+pkgver=0.4.0
+pkgrel=1
 arch=("x86_64")
 url="https://github.com/elkowar/eww"
 license=("MIT")
@@ -23,7 +23,7 @@ makedepends=("cargo-nightly" "rust-nightly"
 provides=("eww")
 replaces=()
 source=("$pkgbase-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('5b6ef95836e298b856498c9fb75d24b6abed4bb3275137d00fe31cceffe3ced1')
+sha256sums=('67f1dfdf856168d4b0e731acdd9e7bed034c09480ce2264f857d7e48f576fc8a')
 
 package_eww-x11() {
 	pkgdesc="ElKowars wacky widgets(For x11 only)"
