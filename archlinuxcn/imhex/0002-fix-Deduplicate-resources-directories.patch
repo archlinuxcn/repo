@@ -1,7 +1,7 @@
-From 013aed0e9131461157c199edfd9565a82657f293 Mon Sep 17 00:00:00 2001
+From c4ddb152eeb58598cc060f4d93ae7aed231723fe Mon Sep 17 00:00:00 2001
 From: KokaKiwi <kokakiwi+git@kokakiwi.net>
 Date: Sat, 11 Jun 2022 23:08:31 +0200
-Subject: [PATCH 3/3] fix: Deduplicate resources directories
+Subject: [PATCH 2/2] fix: Deduplicate resources directories
 
 It seems to actually happens despite xdgpp already doing that...
 ---
@@ -10,10 +10,10 @@ It seems to actually happens despite xdgpp already doing that...
  2 files changed, 16 insertions(+)
 
 diff --git a/lib/libimhex/include/hex/helpers/utils.hpp b/lib/libimhex/include/hex/helpers/utils.hpp
-index f5666254..5d86768a 100644
+index b2edc4ff..9f0a66d2 100644
 --- a/lib/libimhex/include/hex/helpers/utils.hpp
 +++ b/lib/libimhex/include/hex/helpers/utils.hpp
-@@ -189,6 +189,17 @@ namespace hex {
+@@ -199,6 +199,17 @@ namespace hex {
          return result;
      }
  
@@ -60,5 +60,5 @@ index dc58ced3..5c346ec8 100644
          #endif
      }
 -- 
-2.37.2
+2.37.3
 

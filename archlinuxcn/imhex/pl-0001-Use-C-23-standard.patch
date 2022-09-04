@@ -1,14 +1,14 @@
-From 5a5a97b49ff7fb6dc3786917f59322df67e42816 Mon Sep 17 00:00:00 2001
+From ad63c8c5217cc5767c55cc289b20a6857ce9eeef Mon Sep 17 00:00:00 2001
 From: KokaKiwi <kokakiwi+git@kokakiwi.net>
 Date: Thu, 18 Aug 2022 00:57:02 +0200
-Subject: [PATCH 2/2] Use C++23 standard
+Subject: [PATCH] Use C++23 standard
 
 ---
  lib/CMakeLists.txt | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 5822e0a..11511ba 100644
+index 8fb4265..00af7f1 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
 @@ -1,7 +1,7 @@
@@ -22,5 +22,5 @@ index 5822e0a..11511ba 100644
  if (LIBPL_SHARED_LIBRARY)
      set(LIBRARY_TYPE SHARED)
 -- 
-2.37.2
+2.37.3
 

@@ -3,8 +3,8 @@
 
 _pkgname=ImHex
 pkgname=${_pkgname,,}
-pkgver=1.21.2
-pkgrel=2
+pkgver=1.22.0
+pkgrel=1
 pkgdesc='A Hex Editor for Reverse Engineers, Programmers and people that value their eye sight when working at 3 AM'
 url='https://imhex.werwolv.net'
 license=('GPL2')
@@ -23,32 +23,26 @@ source=("$pkgname::git+https://github.com/WerWolv/ImHex.git#tag=v$pkgver"
         "capstone::git+https://github.com/capstone-engine/capstone#branch=next"
         "pattern_language::git+https://github.com/WerWolv/PatternLanguage#tag=ImHex-v$pkgver"
         0001-makepkg-Fix-compiler-check.patch
-        0002-makepkg-Fix-build-with-clang.patch
-        0003-fix-Deduplicate-resources-directories.patch
-        pl-0001-fix-Copy-elision-not-applying.patch
-        pl-0002-Use-C-23-standard.patch)
+        0002-fix-Deduplicate-resources-directories.patch
+        pl-0001-Use-C-23-standard.patch)
 sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'fe029ddb8ac99bd0cec7ee849ca597eb771a0be29e774afebe890997756d815d'
-            '309c303817210ded39d0edaec5c2e9dee59f0a3a34e833227353bcd56931f439'
-            '9741c1e3d6c1786c335b578d0ecc68592e29c98c5b9e051257948cd3c137c339'
-            '1635946b85e0e228ed75a4e3f3231ddf99b8d3674c1d3cdb1be028571d8e6f57'
-            '94ada965ad0be7fe511b42e9f5726cd071385f43393aeaebfca71899aad32ed4')
+            '228d94e8f851b14f3fd58f9ad113440b8ed9c2a11eaaeb81f631a74a3813a210'
+            '8a6090179fde3abf336213021e2fa15f2b7ea57b6acaf9f0b91fee45fd479135'
+            '9b9c70facd7a017d561cdd14e73efed3f6026430560831e31a2afa640e8baff7')
 b2sums=('SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
-        '4e7ad0db57425a05ed78eb5cfa600f1225db11e55ebc2cd399aaa37dd068b5a9fbbc30fc18b65190a3b59ad46393bdc57da79ce8306007c15f74874c6d7cb4e5'
-        'c3e7286f3673da385d89b9edc5af218fbdb6bb8465b599668bdfb9bf0d216eec67508302ded50a4d046825c2fafd2b77a71d0d4e4807713cdff5aa416e249140'
-        'deb706d01827ae67309d0a0341c79c2255166ba731632d0a29afcf875d57ac9885a5203de65fd9b0fa03ff13197af5a1fb1e1aba2e5a4904093a11e388c0d706'
-        '973d4cf8472c132f7e470945bff1ea8afb113834913cce8bf553dd2f29c28a9e8b93f94b331443f2d5c350f1d6141677cda4f7d30e1bd4e547cb489fff435029'
-        '029ac69a0824c61ce92a26eafe37e082c25bab633bf48b64b10b212e61b579bd7b35470bba901da5cf0068db28917a50d83140790aad44d28c8d5647e01cd473')
+        'd6028eb5098a2a6209b1f5c9840a0949afd366258eacbe5c8f335d5d3bb382df969b63cd7cfbb11124d215a1eb0c3b297d0754119eed1a7f28207343235ddda9'
+        '541c17e9d9cf3f0471092187f9ce804c9e28031cbb76901d35a6390b8753b927697516168e8414fc0ad3ca12e3d5de5bffdda3e0de93d50903e98123c6aad073'
+        '1623828330a814cf3ae19c95709e313ddd4f8477e8d794c042b6dbedde4200a278843b51a19d0c7483e4d231a9669d24ef864be59a125f02f2a1ff57c72265d0')
 options=(!lto !strip)
 
 prepare() {
@@ -65,12 +59,10 @@ prepare() {
 
   git apply \
     "$srcdir/0001-makepkg-Fix-compiler-check.patch" \
-    "$srcdir/0002-makepkg-Fix-build-with-clang.patch" \
-    "$srcdir/0003-fix-Deduplicate-resources-directories.patch"
+    "$srcdir/0002-fix-Deduplicate-resources-directories.patch"
 
   git -C lib/external/pattern_language apply \
-    "$srcdir/pl-0001-fix-Copy-elision-not-applying.patch" \
-    "$srcdir/pl-0002-Use-C-23-standard.patch"
+    "$srcdir/pl-0001-Use-C-23-standard.patch"
 }
 
 build() {
@@ -90,6 +82,7 @@ build() {
     -D USE_SYSTEM_CURL=ON \
     -D USE_SYSTEM_NLOHMANN_JSON=ON \
     -D USE_SYSTEM_CAPSTONE=OFF \
+    -D LIBPL_ENABLE_CLI=OFF \
     -D IMHEX_VERSION="$pkgver"
 
   make -C build
