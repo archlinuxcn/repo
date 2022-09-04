@@ -64,7 +64,7 @@ build() {
   make all
 }
 
-_package() {
+_origin_package() {
   pkgdesc="The $pkgdesc kernel and modules"
   depends=(coreutils kmod initramfs)
   optdepends=('crda: to set the correct wireless channels of your country'
@@ -188,3 +188,11 @@ for _p in "${pkgname[@]}"; do
 done
 
 # vim:set ts=8 sts=2 sw=2 et:
+_package() {
+  _origin_package
+  cd "$srcdir/$_srcname"
+  local kernver="$(<version)"
+  local modulesdir="$pkgdir/usr/lib/modules/$kernver"
+  install -Dm644 "$(make -s image_name)" "$modulesdir/vmlinuz"
+  install -Dm644 arch/arm64/boot/Image "$modulesdir/vmlinuz-nogz"
+}

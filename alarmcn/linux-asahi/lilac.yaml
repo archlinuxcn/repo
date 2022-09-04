@@ -1,7 +1,9 @@
 maintainers:
   - github: yuyichao
 
-pre_build_script: run_cmd(['sh', './get_pkg.sh', 'linux-asahi'])
+pre_build_script: |
+  run_cmd(['sh', './get_pkg.sh', 'linux-asahi'])
+  run_cmd(['sh', './patch_pkg.sh'])
 post_build_script: |
   git_add_files('.')
   git_commit()
@@ -11,4 +13,4 @@ update_on:
     github: AsahiLinux/PKGBUILDs
     path: linux-asahi
   - source: manual
-    manual: 1
+    manual: 2
