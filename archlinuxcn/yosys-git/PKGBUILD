@@ -1,0 +1,91 @@
+# Maintainer: Stefan Biereigel <$(base64 --decode <<<'c3RlZmFuQGJpZXJlaWdlbC5kZQo=')>
+# Contributor: xiretza <xiretza+aur@gmail.com>
+# Contributor: Patrick Lloyd <$(base64 --decode <<<'cGF0cmlja0BsbG95ZC5zaAo=')>
+# Contributor: Sebastian Bøe <$(base64 --decode <<<'c2ViYXN0aWFuYm9vZUBnbWFpbC5jb20K')>
+# Contributor: Darren Wu <$(base64 --decode <<<'ZGFycmVuMTk5NzA4MTBAZ21haWwuY29tCg==')>
+
+pkgname=yosys-git
+pkgrel=1
+pkgver=0.20+70.r11787.6e907acf8
+pkgdesc='A framework for RTL synthesis'
+arch=('armv7h' 'aarch64' 'x86_64' 'i686')
+url='https://yosyshq.net/yosys/'
+license=('custom:ISC')
+provides=("yosys=$pkgver")
+conflicts=("yosys")
+depends=('bash' 'tcl' 'libffi' 'protobuf') # boost-libs python (added in package())
+makedepends=('git' 'boost' 'clang')
+optdepends=('graphviz: Schematics display support'
+            'xdot: Display netlists'
+            'yices: default solver for yosys-smtbmc'
+            'cvc4: alternative solver for yosys-smtbmc'
+            'z3: alternative solver for yosys-smtbmc')
+options=('!lto') # getting SIGSEGV when running the tests with LTO
+# checkdepends=('iverilog')
+source=('git+https://github.com/YosysHQ/yosys.git'
+        'git+https://github.com/YosysHQ/abc.git')
+sha512sums=('SKIP'
+            'SKIP')
+
+pkgver() {
+  cd yosys
+  printf "%s.r%s.%s" "$(make echo-yosys-ver)" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "${srcdir}/abc"
+  git checkout "$(make --silent -C "${srcdir}/yosys" echo-abc-rev)"
+}
+
+_make() {
+  make \
+    PREFIX="/usr" \
+    CONFIG=gcc \
+    ENABLE_TCL=1 \
+    ENABLE_ABC=1 \
+    ENABLE_GLOB=1 \
+    ENABLE_PLUGINS=1 \
+    ENABLE_LIBYOSYS=1 \
+    ENABLE_PROTOBUF=1 \
+    ENABLE_ZLIB=1 \
+    ENABLE_PYOSYS=1 \
+    ABCPULL=0 \
+    ABCREV=default \
+    BOOST_PYTHON_LIB="-lpython3 -lboost_python3" $@
+}
+
+build() {
+  cd yosys
+
+  ln -s "${srcdir}/abc/" .
+
+  _make
+}
+
+# check() {
+#   cd yosys
+#   _make test
+# }
+
+package() {
+  cd yosys
+
+  # disable stripping in the makefile - duplicated effort and makes debug packages impossible
+  _make STRIP=':' PREFIX="/usr" PYTHON_PREFIX="${pkgdir}/usr" DESTDIR="${pkgdir}" install
+
+  install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+  boostver=$(objdump -p /usr/lib/libboost_system.so | \
+               grep SONAME | sed -e 's/.*boost_system\.so\.//')
+  [[ $boostver =~ ^([0-9]*)\.([0-9]*)\.([0-9]*) ]]
+  maj_ver=${BASH_REMATCH[1]}
+  min_ver=${BASH_REMATCH[2]}
+  patch_ver=${BASH_REMATCH[3]}
+  ((next_min=min_ver + 1))
+  depends+=("boost-libs>=${maj_ver}.${min_ver}.${patch_ver}"
+            "boost-libs<${maj_ver}.${next_min}.0")
+
+  pymin_ver=$(python -c 'import sys; print(sys.version_info.minor)')
+  ((pynext_min=pymin_ver + 1))
+  depends+=("python>=3.${pymin_ver}.0" "python<3.${pynext_min}.0")
+}
