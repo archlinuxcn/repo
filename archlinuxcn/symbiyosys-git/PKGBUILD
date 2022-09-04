@@ -1,12 +1,12 @@
 # Maintainer: Benoît Allard <benoit dot allard at gmx dot de>
 # Contributor: promach
-_gitname=SymbiYosys
-pkgname="${_gitname,,}-git"
+_gitname=SymbiYosys # TODO: git name has been changed to sby
+pkgname=symbiyosys-git
 pkgver=r431.46ca20f
 pkgrel=1
 pkgdesc="A front-end driver program for Yosys-based formal hardware verification flows"
 arch=('any')
-url="https://github.com/YosysHQ/${_gitname}.git"
+url="https://github.com/YosysHQ/sby"
 license=('custom:ISC')
 depends=('python')
 makedepends=('git')
@@ -26,7 +26,8 @@ pkgver() {
 }
 
 package() {
-  depends+=(yosys)
+  # SymbiYosys uses features in yosys that has not been released
+  depends+=(yosys-git)
   cd "${_gitname}"
   make PREFIX=/usr DESTDIR="$pkgdir" install
   python -m compileall -d /usr/share/yosys "$pkgdir"/usr/share/yosys
