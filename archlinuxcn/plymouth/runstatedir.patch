@@ -1,0 +1,46 @@
+diff --git a/configure.ac b/configure.ac
+index 608ad02c8b268f1ffa6e0ba62dea7da2eaed0636..34a2f2ce68abe648f79ccbf93505f1ccf8c4d744 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -140,9 +140,7 @@ if test x$enable_systemd_integration = xyes; then
+   AC_SUBST(SYSTEMD_UNIT_DIR)
+ fi
+ 
+-AC_ARG_WITH([runtimedir],
+-            AC_HELP_STRING([--with-runtimedir=DIR], [runtime data dir [LOCALSTATEDIR/run]]),
+-            [plymouthruntimedir=${withval}/plymouth], [plymouthruntimedir=""])
++AC_ARG_WITH([runtimedir], [], [AC_MSG_ERROR([--with-runtimedir is obsolete, use --runstatedir instead])], [])
+ 
+ AC_ARG_WITH(system-root-install, AS_HELP_STRING([--with-system-root-install],[Install client in /bin and daemon in /sbin]),with_system_root_install=${withval},with_system_root_install=no)
+ AM_CONDITIONAL(WITH_SYSTEM_ROOT_INSTALL,  [test "$with_system_root_install" = yes])
+@@ -150,16 +148,11 @@ AM_CONDITIONAL(WITH_SYSTEM_ROOT_INSTALL,  [test "$with_system_root_install" = ye
+ if test x$with_system_root_install = xyes; then
+   plymouthclientdir=/bin
+   plymouthdaemondir=/sbin
+-  if (test -z "${plymouthruntimedir}"); then
+-    plymouthruntimedir=/run/plymouth
+-  fi
+ else
+   plymouthclientdir=$bindir
+   plymouthdaemondir=$sbindir
+-  if (test -z "${plymouthruntimedir}"); then
+-    plymouthruntimedir=$localstatedir/run/plymouth
+-  fi
+ fi
++plymouthruntimedir=$runstatedir/plymouth
+ AC_SUBST(plymouthclientdir)
+ AC_SUBST(plymouthdaemondir)
+ AC_SUBST(plymouthruntimedir)
+diff --git a/src/Makefile.am b/src/Makefile.am
+index ad3655d5944cebad36761cee44d9d79241a6d942..abd7a4ce2aafa21b73303b9cc6d3639c58706a90 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -37,7 +37,7 @@ escrow_PROGRAMS = plymouthd-fd-escrow
+ 
+ plymouthd_fd_escrow_SOURCES = plymouthd-fd-escrow.c
+ 
+-plymouthdrundir = $(localstatedir)/run/plymouth
++plymouthdrundir = $(plymouthruntimedir)
+ plymouthdspooldir = $(localstatedir)/spool/plymouth
+ plymouthdtimedir = $(localstatedir)/lib/plymouth
+ 

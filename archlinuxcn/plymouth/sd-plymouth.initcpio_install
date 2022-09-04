@@ -28,22 +28,10 @@ build() {
 	add_file /etc/plymouth/plymouthd.conf
 	add_file ${DATADIR}/plymouthd.defaults
 	
-	
-	if [ -f "/usr/share/fonts/TTF/DejaVuSans.ttf" -o -f "/usr/share/fonts/cantarell/Cantarell-Thin.otf" ]; then
+	if [ -f "/usr/share/fonts/cantarell/Cantarell-Thin.otf" ]; then
 		add_binary ${PLYMOUTH_PLUGIN_PATH}/label.so
 		add_file "/etc/fonts/fonts.conf"
-	fi
-	
-	if [ -f "/usr/share/fonts/TTF/DejaVuSans.ttf" ]; then
-		add_file "/usr/share/fonts/TTF/DejaVuSans.ttf"
-		if [ -f "/etc/fonts/conf.d/57-dejavu-sans.conf" ]; then
-		  add_file "/etc/fonts/conf.d/57-dejavu-sans.conf"
-		fi
-	fi
-	
-	if [ -f "/usr/share/fonts/cantarell/Cantarell-Thin.otf" ]; then
-		add_file "/usr/share/fonts/cantarell/Cantarell-Thin.otf"
-		add_file "/usr/share/fonts/cantarell/Cantarell-Regular.otf"
+		add_file "/usr/share/fonts/cantarell/Cantarell-VF.otf"
 		if [ -f "/etc/fonts/conf.d/60-latin.conf" ]; then
 		  add_file "/etc/fonts/conf.d/60-latin.conf"
 		fi
