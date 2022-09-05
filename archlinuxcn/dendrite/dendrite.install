@@ -1,19 +1,27 @@
 post_install(){
  cat <<INFO
 
-You should now generate a new configuration either with
+Dendrite has been installed, you should now generate a new configuration and a private key files by running
 
-    sudo cp /etc/dendrite/config-example.yaml /etc/dendrite/config.yaml
+    dendrite-generate-config --dir "/var/lib/dendrite" | sudo -u dendrite tee "/etc/dendrite/config.yaml"
+    
+and then
 
-or
+    sudo -u dendrite dendrite-generate-keys --private-key "/var/lib/dendrite/matrix_key.pem"
+    
+An example configuration file with comments can be found at
 
-    dendrite-generate-config | sudo tee /etc/dendrite/config.yaml
+    /etc/dendrite/config-example.yaml
+    
+You can start the Dentrite server by running
+
+    sudo systemctl start dendrite
 
 INFO
 }
 
 post_upgrade(){
- # notify about breaking changes
+ # notify about breaking changes from v1 to v2
  # https://wiki.archlinux.org/title/PKGBUILD#install
  if [[ $1 != 0.6* ]] && [[ $2 == 0.6* ]]; then
   cat <<INFO
@@ -23,14 +31,25 @@ You are advised to backup your previous configuration located at
 
     /etc/dendrite/config.yaml
 
-and generate a new one either copying
+and generate a new configuration by running
 
-    /etc/dendrite/config-example.yaml
-
-or by running
-
-    dendrite-generate-config | sudo tee /etc/dendrite/config.yaml
+    dendrite-generate-config --dir "/var/lib/dendrite" | sudo -u dendrite tee "/etc/dendrite/config.yaml"
 
 INFO
  fi
+
+  # tee cannot be used to replace the input file, mv is necessary
+  cat <<INFO
+
+Dendrite has been updated, you should now update its configuration file by running
+
+    sudo -u dendrite bash
+    cd "/var/lib/dendrite"
+    dendrite-generate-config --normalise "/etc/dendrite/config.yaml" | tee "/etc/dendrite/config.yaml.new"
+    mv "/etc/dendrite/config.yaml" "/etc/dendrite/config.yaml.bkp"
+    mv "/etc/dendrite/config.new" "/etc/dendrite/config.yaml"
+    exit
+    sudo systemctl restart dendrite
+
+INFO
 }
