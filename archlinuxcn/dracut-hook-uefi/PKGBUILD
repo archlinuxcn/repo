@@ -4,12 +4,13 @@
 
 pkgname=dracut-hook-uefi
 pkgver=14
-pkgrel=1
+pkgrel=2
 pkgdesc="Install/remove hooks for dracut unified kernel images for systemd-boot"
 url=https://codeberg.org/flausch/pkgbuilds/src/branch/main/dracut-hook-uefi
 arch=('any')
 license=('APACHE')
-depends=('dracut')
+# dracut requires binutils for --uefi support
+depends=('dracut' 'binutils')
 noextract=()
 conflicts=()
 source=(
