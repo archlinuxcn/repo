@@ -5,7 +5,7 @@ pkgname=libplacebo-git
 _pkgname=libplacebo
 epoch=1
 pkgver=4.208.0.r102.gad913a6
-pkgrel=1
+pkgrel=1.1
 pkgdesc='Reusable library for GPU-accelerated video/image rendering primitives'
 url='https://github.com/haasn/libplacebo'
 arch=('x86_64')
@@ -16,9 +16,9 @@ depends=('vulkan-icd-loader' 'libvulkan.so'
          'shaderc' 'libshaderc_shared.so'
          'libunwind'
          # for demos
-         #'ffmpeg' 'libavcodec.so' 'libavutil.so' 'libavformat.so'
-         #'glfw'
-         #'sdl2' 'sdl2_image'
+         'ffmpeg' 'libavcodec.so' 'libavutil.so' 'libavformat.so'
+         'glfw'
+         'sdl2' 'sdl2_image'
          )
 makedepends=('git' 'meson' 'ninja' 'vulkan-headers' 'python' 'python-mako' 'python-jinja' 'python-markupsafe')
 checkdepends=(
@@ -63,7 +63,7 @@ build() {
         -D glslang=enabled \
         -D shaderc=enabled \
         -D lcms=enabled \
-        -D demos=false  \
+        -D demos=true  \
         -D d3d11=disabled
     ninja -C build
 }
