@@ -2,7 +2,7 @@
 # Contributor: shyokou <shyokou at gmail dot com>
 # Contributor: FzerorubigD <Fzerorubigd {AT} GMail {DOT} com>
 pkgname=obfs4proxy
-pkgver=0.0.13
+pkgver=0.0.14
 pkgrel=1
 pkgdesc='The obfourscator - a pluggable transport proxy written in Go'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
@@ -11,7 +11,7 @@ license=('BSD')
 makedepends=('git' 'go')
 optdepends=('tor: you need tor to use this package')
 source=("https://gitlab.com/yawning/obfs4/-/archive/obfs4proxy-${pkgver}/obfs4-obfs4proxy-${pkgver}.tar.bz2")
-sha512sums=('1e9f05b381ab681a0f255d84fb5c1b0e5f2f52d9bd6d3ac14db36879f99d157d78b72411a09c7066317ef3ac957eea33fe0a8659434376f277fd8f358639b8bb')
+sha512sums=('a720d45250140e3ba02b176d84fd80cca55304c09d5cebbd0fda45a3f5cfd7c2e8ffb6a2588a7b98a2ce03854969b0b1f949dca0405b16de29e90842861657c1')
 
 build()	{
   export GOPATH="$srcdir"
