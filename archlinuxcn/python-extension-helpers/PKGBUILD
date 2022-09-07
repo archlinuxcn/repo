@@ -2,24 +2,41 @@
 pkgbase=python-extension-helpers
 _pyname=${pkgbase#python-}
 pkgname=("python-${_pyname}" "python-${_pyname}-doc")
-pkgver=0.1
-pkgrel=3
+pkgver=1.0.0
+pkgrel=1
 pkgdesc="Helpers to assist with building Python packages with compiled C/Cython extensions"
 arch=('any')
 url="http://extension-helpers.readthedocs.io"
 license=('BSD')
-makedepends=('python-setuptools-scm' 'python-sphinx-automodapi')
+makedepends=('python-setuptools-scm'
+             'python-wheel'
+             'python-build'
+             'python-installer'
+             'python-sphinx-automodapi')
 checkdepends=('python-pytest')
 #'python-pytest-cov')
 source=("https://files.pythonhosted.org/packages/source/${_pyname:0:1}/${_pyname}/${_pyname}-${pkgver}.tar.gz")
-md5sums=('3d37bf28543e7ed2e226db28be2cfbe5')
+md5sums=('6825c71ff1369bd5a27d53098a6b44bf')
+
+get_pyver() {
+    python -c "import sys; print('$1'.join(map(str, sys.version_info[:2])))"
+}
+
+prepare() {
+    cd ${srcdir}/${_pyname}-${pkgver}/docs
+
+    sed -i "/language\ = /s/None/'en'/" conf.py
+}
 
 build() {
     cd ${srcdir}/${_pyname}-${pkgver}
-    python setup.py build
+    python -m build --wheel --no-isolation
 
     msg "Building Docs"
-    python setup.py build_sphinx
+    ln -rs ${srcdir}/${_pyname}-${pkgver}/${_pyname/-/_}*egg-info \
+        build/lib/${_pyname/-/_}-${pkgver}-py$(get_pyver .).egg-info
+    cd ${srcdir}/${_pyname}-${pkgver}/docs
+    PYTHONPATH="../build/lib" make html
 }
 
 check() {
@@ -29,19 +46,19 @@ check() {
 }
 
 package_python-extension-helpers() {
-    depends=('python>=3.6' 'python-setuptools')
+    depends=('python>=3.6' 'python-setuptools>=40.2')
     optdepends=('python-extension-helpers-doc: Documentation for Python Extension helpers')
     cd ${srcdir}/${_pyname}-${pkgver}
 
     install -D -m644 LICENSE.rst -t "${pkgdir}/usr/share/licenses/${pkgname}"
     install -m644 -t "${pkgdir}/usr/share/licenses/${pkgname}" licenses/*
     install -D -m644 README.rst -t "${pkgdir}/usr/share/doc/${pkgname}"
-    python setup.py install --root=${pkgdir} --prefix=/usr --optimize=1
+    python -m installer --destdir="${pkgdir}" dist/*.whl
 }
 
 package_python-extension-helpers-doc() {
     pkgdesc="Documentation for Python Extension helpers"
-    cd ${srcdir}/${_pyname}-${pkgver}/build/sphinx
+    cd ${srcdir}/${_pyname}-${pkgver}/docs/_build
 
     install -D -m644 -t "${pkgdir}/usr/share/licenses/${pkgname}" ../../licenses/*
     install -D -m644 -t "${pkgdir}/usr/share/licenses/${pkgname}" ../../LICENSE.rst
