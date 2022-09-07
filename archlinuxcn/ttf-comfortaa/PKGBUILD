@@ -1,21 +1,21 @@
-# Maintainer: Arnold G. <aurnoldg@gmail.com>
+# Maintainer: Arnold G. <aurnold at gmail dot com>
 
 pkgname=ttf-comfortaa
-pkgver=3.100
-pkgrel=3
+pkgver=3.101
+pkgrel=1
 pkgdesc='Rounded geometric sans-serif typeface from Google by Johan Aakerlund'
 arch=('any')
 url='https://fonts.google.com/specimen/Comfortaa'
 license=('custom:OFL')
-conflicts=('ttf-google-fonts-git' 'ttf-google-fonts-opinionated-git')
-source=("Comfortaa-Bold-${pkgver}.ttf::https://github.com/google/fonts/raw/4e6d978a7432514a9918b07863bb5280e7cc8815/ofl/comfortaa/Comfortaa-Bold.ttf"
-        "Comfortaa-Light-${pkgver}.ttf::https://github.com/google/fonts/raw/4e6d978a7432514a9918b07863bb5280e7cc8815/ofl/comfortaa/Comfortaa-Light.ttf"
-        "Comfortaa-Regular-${pkgver}.ttf::https://github.com/google/fonts/raw/4e6d978a7432514a9918b07863bb5280e7cc8815/ofl/comfortaa/Comfortaa-Regular.ttf"
-        "${pkgname}-${pkgver}-OFL.txt::https://github.com/google/fonts/raw/4e6d978a7432514a9918b07863bb5280e7cc8815/ofl/comfortaa/OFL.txt")
-sha256sums=('cc4756819298e823a066213a3ebc577a4a3e9e981fe66d25f00abbce84ca1675'
-            'b92162d95548d8eef82928bc5c477def13dcdcfc1b37e3edfa4ec01957f1c9af'
-            '96d580be232f31f051ec0573da14daf0490a0ff3e138cb616c443a14941c114f'
-            '874ba013dd0547ea1d098cdc786297055333199d37ac1a6f8cef2577d2bc0531')
+conflicts=('ttf-google-fonts-git')
+source=("Comfortaa-Bold-${pkgver}.ttf::https://github.com/googlefonts/comfortaa/raw/${pkgver}/fonts/TTF/Comfortaa-Bold.ttf"
+        "Comfortaa-Light-${pkgver}.ttf::https://github.com/googlefonts/comfortaa/raw/${pkgver}/fonts/TTF/Comfortaa-Light.ttf"
+        "Comfortaa-Regular-${pkgver}.ttf::https://github.com/googlefonts/comfortaa/raw/${pkgver}/fonts/TTF/Comfortaa-Regular.ttf"
+        "${pkgname}-${pkgver}-OFL.txt::https://raw.githubusercontent.com/googlefonts/comfortaa/${pkgver}/OFL.txt")
+sha256sums=('32ff43f8112ececd38a15b4b7a9273ddb6a133d711e1df2e6280a881f76f06e2'
+            'bec64af51957b6b25c6cc9edcf5fe4480fbde825a46b367a9a3189317275dda1'
+            '096bf9e1ebb88fa17406dd1a2829d39e2ab2834058277655d9ee332e743a66c7'
+            'bc85bae0b512b799bbfb2b916e4d0a34cfd963d09778cd783e248b479e67760a')
 
 package() {
   install -dm 755 "${pkgdir}/usr/share/fonts/TTF"
