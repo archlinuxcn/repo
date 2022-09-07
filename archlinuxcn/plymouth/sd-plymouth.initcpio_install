@@ -28,7 +28,7 @@ build() {
 	add_file /etc/plymouth/plymouthd.conf
 	add_file ${DATADIR}/plymouthd.defaults
 	
-	if [ -f "/usr/share/fonts/cantarell/Cantarell-Thin.otf" ]; then
+	if [ -f "/usr/share/fonts/cantarell/Cantarell-VF.otf" ]; then
 		add_binary ${PLYMOUTH_PLUGIN_PATH}/label.so
 		add_file "/etc/fonts/fonts.conf"
 		add_file "/usr/share/fonts/cantarell/Cantarell-VF.otf"
