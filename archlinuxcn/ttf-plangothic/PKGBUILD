@@ -3,7 +3,7 @@
 pkgname=ttf-plangothic
 epoch=1
 pkgver=0.5.5689
-pkgrel=1
+pkgrel=1.1
 pkgdesc='A project based on SourceHan to expand and supplement characters, and its ultimate goal is to complete the entire Unicode as much as possible.'
 url='https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic'
 arch=('any')
@@ -15,7 +15,8 @@ b2sums=('c92a32d2a7a249ac43c47dd5b72269098ea826b72b3571b97812f243e58a2da8f47af94
 package_ttf-plangothic() {
     cd Plangothic-$pkgver
     install -Dm755 -d "$pkgdir/usr/share/fonts/TTF/Plangothic"
-    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/Plangothic" PlangothicP*
+    install -Dm644 'PlangothicP1-Regular (fallback).ttf' "$pkgdir/usr/share/fonts/TTF/Plangothic/PlangothicP1-Regular.ttf"
+    install -Dm644 'PlangothicP2-Regular.ttf' "$pkgdir/usr/share/fonts/TTF/Plangothic/PlangothicP2-Regular.ttf"
     install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" README.md
     install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname/pic" pic/*
     install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
