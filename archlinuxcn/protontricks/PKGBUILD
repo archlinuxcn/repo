@@ -1,7 +1,7 @@
 # Maintainer: Jason Stryker <public at jasonstryker dot com>
 
 pkgname=protontricks
-pkgver=1.9.0
+pkgver=1.9.1
 pkgrel=1
 pkgdesc="A simple wrapper that does winetricks things for Proton enabled games."
 arch=('any')
