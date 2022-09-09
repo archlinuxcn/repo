@@ -2,7 +2,7 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=104.0
+pkgver=104.0.2
 pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
@@ -10,8 +10,8 @@ license=(MPL GPL LGPL)
 url="https://librewolf.net/"
 depends=(gtk3 libxt mime-types dbus-glib nss ttf-font libpulse ffmpeg)
 makedepends=(unzip zip diffutils yasm mesa imake inetutils xorg-server-xvfb
-             autoconf2.13 rust clang llvm jack nodejs cbindgen nasm
-             python-setuptools python-zstandard git binutils lld dump_syms
+             autoconf2.13 rust clang llvm jack nodejs cbindgen nasm python
+             git binutils lld dump_syms
              'wasi-compiler-rt>13' 'wasi-libc>=1:0+258+30094b6' 'wasi-libc++>13' 'wasi-libc++abi>13' pciutils) # pciutils: only to avoid some PGO warning
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
@@ -25,12 +25,11 @@ options=(!emptydirs !makeflags !strip !lto !debug)
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
 # _source_tag="${pkgver}-${pkgrel%.*}"
 _source_tag="${pkgver}-${pkgrel}"
-_source_commit='ee6c58fd8d0d7f7b58baff70e75873184d3114fb'
+_source_commit='64ade27afdf4fd9da67cdc04b55eefe5542e70be'
 _settings_tag='6.9'
 # _settings_commit='02212c3f44e7aa68b22c8febd9158580d7e4b74f'
 install='librewolf.install'
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
-        https://raw.githubusercontent.com/archlinux/svntogit-packages/1f6f9abcdcb2a03f259602b4671208b15cc6d4b9/trunk/zstandard-0.18.0.diff
         https://github.com/archlinuxarm/PKGBUILDs/raw/20308ce75b0eecf1fae0db7d7ab07fb68b3000dc/extra/firefox/arc4random.diff
         $pkgname.desktop
         "git+https://gitlab.com/${pkgname}-community/browser/source.git#commit=${_source_commit}"
@@ -39,9 +38,8 @@ source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-
         "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
         )
 # source_aarch64=()
-sha256sums=('1a294a651dc6260f9a72a3ab9f10e7792a4ab41a9cfa8527ad3dd9979cdc98ce'
+sha256sums=('72bba06f04e7745f6b02951906413eb1c15a7e253e06e373302162c6219f286a'
             'SKIP'
-            'a6857ad2f2e2091c6c4fdcde21a59fbeb0138914c0e126df64b50a5af5ff63be'
             '714ca50b2ce0cac470dbd5a60e9a0101b28072f08a5e7a9bba94fef2058321c4'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
             'SKIP'
@@ -163,9 +161,6 @@ fi
     patch -Np1 -i ../arc4random.diff
   fi
 
-  # Unbreak build with python-zstandard 0.18.0
-  patch -Np1 -i ../zstandard-0.18.0.diff
-
   # upstream patches from gentoo
 
   # pgo improvements
@@ -282,8 +277,8 @@ build() {
   export MOZ_NOSPAM=1
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
   # export MOZ_ENABLE_FULL_SYMBOLS=1
-  export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=system
-  export PIP_NETWORK_INSTALL_RESTRICTED_VIRTUALENVS=mach # let us hope this is a working _new_ workaround for the pip env issues?
+  export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=pip
+  # export PIP_NETWORK_INSTALL_RESTRICTED_VIRTUALENVS=mach # let us hope this is a working _new_ workaround for the pip env issues?
 
   # LTO needs more open files
   ulimit -n 4096
