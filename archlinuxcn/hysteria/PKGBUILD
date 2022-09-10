@@ -2,7 +2,7 @@
 
 _pkgbase=hysteria
 pkgname=$_pkgbase
-pkgver=1.2.0
+pkgver=1.2.1
 pkgrel=1
 pkgdesc='A feature-packed network utility optimized for networks of poor quality'
 arch=('x86_64')
@@ -36,7 +36,7 @@ build() {
   local _goldflags="-w -s -linkmode=external"
   local _goldflags="$_goldflags -X 'main.appVersion=$(git describe --tags)'"
   local _goldflags="$_goldflags -X 'main.appCommit=$(git rev-parse HEAD)'"
-  local _goldflags="$_goldflags -X 'main.appDate=$(date "+%F %T")'"
+  local _goldflags="$_goldflags -X 'main.appDate=$(date -u '+%FT%TZ')'"
   go build \
     -buildmode=pie -trimpath -mod=readonly -modcacherw \
     -o "build/$_pkgbase" \
