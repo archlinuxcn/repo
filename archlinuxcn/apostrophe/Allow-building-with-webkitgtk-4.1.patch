@@ -1,0 +1,61 @@
+From: Jeremy Bicha <jeremy.bicha@canonical.com>
+Date: Wed, 31 Aug 2022 06:24:41 -0400
+Subject: Allow building with webkitgtk 4.1
+
+4.1 is the same as 4.0 except that it uses libsoup3
+
+https://gitlab.gnome.org/World/apostrophe/-/merge_requests/256
+---
+ apostrophe/inline_preview.py   | 5 ++++-
+ apostrophe/preview_handler.py  | 5 ++++-
+ apostrophe/preview_web_view.py | 5 ++++-
+ 3 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/apostrophe/inline_preview.py b/apostrophe/inline_preview.py
+index 6e2fcc8..55ef85c 100644
+--- a/apostrophe/inline_preview.py
++++ b/apostrophe/inline_preview.py
+@@ -22,7 +22,10 @@ from urllib.parse import unquote
+ import gi
+ 
+ gi.require_version("Gtk", "3.0")
+-gi.require_version("WebKit2", "4.0")
++try:
++    gi.require_version('WebKit2', '4.1')
++except ValueError:
++    gi.require_version('WebKit2', '4.0')
+ from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
+ from gi.repository import WebKit2
+ from apostrophe import latex_to_PNG, markup_regex
+diff --git a/apostrophe/preview_handler.py b/apostrophe/preview_handler.py
+index f2edd61..a1b9981 100644
+--- a/apostrophe/preview_handler.py
++++ b/apostrophe/preview_handler.py
+@@ -22,7 +22,10 @@ import gi
+ from apostrophe.preview_renderer import PreviewRenderer
+ from apostrophe.settings import Settings
+ 
+-gi.require_version('WebKit2', '4.0')
++try:
++    gi.require_version('WebKit2', '4.1')
++except ValueError:
++    gi.require_version('WebKit2', '4.0')
+ from gi.repository import WebKit2, GLib, Gtk, GObject
+ 
+ from apostrophe.preview_converter import PreviewConverter
+diff --git a/apostrophe/preview_web_view.py b/apostrophe/preview_web_view.py
+index bfd932c..f2c7146 100644
+--- a/apostrophe/preview_web_view.py
++++ b/apostrophe/preview_web_view.py
+@@ -17,7 +17,10 @@ import webbrowser
+ 
+ import gi
+ 
+-gi.require_version('WebKit2', '4.0')
++try:
++    gi.require_version('WebKit2', '4.1')
++except ValueError:
++    gi.require_version('WebKit2', '4.0')
+ from gi.repository import WebKit2, GLib, GObject
+ 
+ 

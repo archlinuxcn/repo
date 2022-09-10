@@ -1,21 +1,22 @@
 # Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
 pkgname=apostrophe
 pkgver=2.6.3
-pkgrel=3
+pkgrel=4
 pkgdesc="A distraction free Markdown editor for GNU/Linux made with GTK+"
 arch=('any')
 url="https://world.pages.gitlab.gnome.org/apostrophe"
 license=('GPL3')
-depends=('gspell' 'libhandy' 'lua-lpeg' 'otf-fira-mono' 'otf-fira-sans' 'python-cairo'
+depends=('gspell' 'libhandy' 'otf-fira-mono' 'otf-fira-sans' 'python-cairo'
          'python-gobject' 'python-levenshtein' 'python-pyenchant' 'python-pypandoc'
-         'python-regex' 'python-setuptools' 'webkit2gtk')
+         'python-regex' 'python-setuptools' 'webkit2gtk-4.1')
 makedepends=('meson' 'gobject-introspection' 'sassc')
 optdepends=('texlive-latexextra: for the pdftex module'
             'mathjax: for formula preview')
 checkdepends=('appstream-glib')
-changelog="$pkgname-NEWS"
-source=("https://gitlab.gnome.org/World/apostrophe/-/archive/v$pkgver/$pkgname-v$pkgver.tar.gz")
-sha256sums=('6f73c80146af0820ec705ec8b32ec64f0f323f51de6b6a4cfd4d02f0719876f3')
+source=("https://gitlab.gnome.org/World/apostrophe/-/archive/v$pkgver/$pkgname-v$pkgver.tar.gz"
+        'Allow-building-with-webkitgtk-4.1.patch')
+sha256sums=('6f73c80146af0820ec705ec8b32ec64f0f323f51de6b6a4cfd4d02f0719876f3'
+            'c5c64aa312a17fcf761b0da956147f91532c8c43b33d608ca3acb6f10bd53d12')
 
 prepare() {
   cd "$pkgname-v$pkgver"
@@ -28,6 +29,8 @@ prepare() {
 
   # W: hidden-file-or-dir
   rm apostrophe/.pylintrc
+
+  patch -Np1 -i ../Allow-building-with-webkitgtk-4.1.patch
 }
 
 build() {
