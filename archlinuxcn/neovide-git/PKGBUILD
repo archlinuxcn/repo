@@ -4,13 +4,13 @@
 
 pkgname=neovide-git
 pkgver=0.10.1.r16.gf7ad535
-pkgrel=1
+pkgrel=2
 pkgdesc='No Nonsense Neovim Client in Rust'
 arch=('x86_64')
 url='https://github.com/Kethku/neovide'
 license=('MIT')
 depends=('neovim' 'fontconfig' 'freetype2' 'libglvnd' 'sndio')
-makedepends=('git' 'rust' 'gtk3' 'cmake' 'sdl2' 'make' 'python')
+makedepends=('git' 'cargo' 'gtk3' 'cmake' 'sdl2' 'make' 'python')
 provides=("neovide")
 conflicts=("neovide")
 source=("${pkgname}::git+${url}")
@@ -23,15 +23,14 @@ pkgver() {
 
 prepare() {
   cd "${srcdir}/${pkgname}"
-  sed -i 's/debug = true/opt-level = 3\ndebug = false/' Cargo.toml
-  sed -i 's/Icon=neovide/Icon=nvim/' assets/neovide.desktop
+  sed -i -e '/^incremental/a opt-level = 3' Cargo.toml
 }
 
 build() {
   cd "${srcdir}/${pkgname}"
   export CARGO_HOME="${srcdir}/${pkgname}/CARGO"
-  export CFLAGS="-fcommon -fPIE"
-  cargo build --release
+  CFLAGS+=' -ffat-lto-objects'
+  cargo build --release --all-features
 }
 
 package() {
