@@ -8,8 +8,8 @@
 
 pkgname=wine-ge-custom-opt
 _pkgname=wine-ge-custom
-_srctag=GE-Proton7-28
-pkgver=${_srctag//-/.}
+pkgver=GE.Proton7.28
+_srctag=${pkgver//./-} # _srctag=GE-Proton7-28
 pkgrel=5
 
 #_winever=${pkgver%.*}
