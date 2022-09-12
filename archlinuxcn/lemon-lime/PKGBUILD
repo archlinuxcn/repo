@@ -1,8 +1,8 @@
 # Maintainer: Coelacanthus <coelacanthus@outlook.com>
 
 pkgname=lemon-lime
-pkgver=0.3.4
-pkgrel=3
+pkgver=0.3.4.2
+pkgrel=1
 epoch=
 pkgdesc="为了 OI 比赛而生的基于 Lemon 的轻量评测系统 | A tiny judging environment for OI contest based on Project_LemonPlus"
 arch=('x86_64' 'i686')
@@ -29,7 +29,7 @@ source=(
     "https://github.com/Project-LemonLime/Project_LemonLime/releases/download/${pkgver}/Lemon-${pkgver}-source-all.7z"
 )
 noextract=("Lemon-${pkgver}-source-all.7z")
-b2sums=('3edd72f75b66db6fd81d9171bca98fc0113a66e91ac52d58ff0bc4480df80c4181fea9fc30f0ec4a02026acd89f1c947c36505d82f1c77f1632af4fc6f4c0014')
+b2sums=('e9ebf93c514595b04d9c9bf1aae4f091009d464b6e196407e1b920673a5ca203b4b3db8b67cfb0e7d82a5c9eaebd70522a62652071202f29a3b6ca678d16306a')
 
 prepare() {
     cd "$srcdir"
