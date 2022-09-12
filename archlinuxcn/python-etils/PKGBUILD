@@ -1,7 +1,7 @@
 # Maintainer: Chih-Hsuan Yen <yan12125@archlinux.org>
 
 pkgname=python-etils
-pkgver=0.7.1
+pkgver=0.8.0
 pkgrel=1
 pkgdesc='Collection of eclectic utils for python'
 url='https://github.com/google/etils'
@@ -27,7 +27,7 @@ optdepends=(
   'python-tensorflow: for etils.etree.nest'
 )
 source=("https://github.com/google/etils/archive/v$pkgver/$pkgname-$pkgver.tar.gz")
-sha512sums=('9215b719fc3712633267fd8ff35f0b14852bf9212cef28a5961351c09cc1d9d4bf2d45dbe6ca0d0cef39b3090cc693c2c50a8fb68306b79fc50d966241a2c816')
+sha512sums=('c9cc3c6eec06b2a92cdeddfb7f316be19c0948853534cd89f64bbb17bab0d9c32c75565669685c5487ff1918048d5126c05c45acfac2d3b9360097c2b99ef77f')
 
 build() {
   cd etils-$pkgver
