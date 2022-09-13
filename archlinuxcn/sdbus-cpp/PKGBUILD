@@ -3,7 +3,7 @@
 pkgbase=sdbus-cpp
 pkgname=(${pkgbase} ${pkgbase}-doc)
 pkgver=1.2.0
-pkgrel=1
+pkgrel=2
 pkgdesc="sdbus-c++ is a high-level C++ D-Bus library for Linux designed to provide expressive, easy-to-use API in modern C++"
 url="https://github.com/Kistler-Group/sdbus-cpp"
 arch=('i686' 'x86_64')
@@ -39,7 +39,7 @@ package_sdbus-cpp() {
   local dir
   install -Dm644 "$srcdir/${pkgbase}/COPYING-LGPL-Exception" "$pkgdir/usr/share/licenses/$pkgbase/LICENSE"
 
-  for dir in lib include ; do
+  for dir in lib include bin ; do
     install -dm755 "$pkgdir/usr/$dir"
     cp  -dr --no-preserve=owner "$srcdir/fakeinstall/usr/$dir/"* "$pkgdir/usr/$dir"
   done
