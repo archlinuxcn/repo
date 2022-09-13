@@ -1,0 +1,181 @@
+From f40f0f994d6fbabf75f6acf796fa4b62809851c0 Mon Sep 17 00:00:00 2001
+From: Tom Anderson <thomasanderson@chromium.org>
+Date: Thu, 18 Aug 2022 23:00:41 +0000
+Subject: [PATCH] Fix debug crash and log spam with
+ GTK3+Wayland+text-input-unstable-v3
+
+This fixes a regression after [1].  The GTK IME doesn't work on
+Wayland+GTK3, so this change skips GTK IME creation for that case.
+This effectively restores the behavior to before [1].
+
+[1] https://chromium-review.googlesource.com/c/chromium/src/+/3759236
+
+Change-Id: I4019e8da6929489e302ba7f8699ad62ca604b4aa
+Fixed: 1347979
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/3836775
+Auto-Submit: Thomas Anderson <thomasanderson@chromium.org>
+Reviewed-by: Nick Yamane <nickdiego@igalia.com>
+Commit-Queue: Nick Yamane <nickdiego@igalia.com>
+Cr-Commit-Position: refs/heads/main@{#1036838}
+---
+ ui/gtk/gtk_ui.cc                          |  2 +-
+ ui/gtk/gtk_ui_platform.h                  | 10 +++++++++-
+ ui/gtk/gtk_ui_platform_stub.cc            |  6 ++++++
+ ui/gtk/gtk_ui_platform_stub.h             |  2 ++
+ ui/gtk/wayland/gtk_ui_platform_wayland.cc | 12 ++++++++++++
+ ui/gtk/wayland/gtk_ui_platform_wayland.h  |  2 ++
+ ui/gtk/x/gtk_ui_platform_x11.cc           |  7 +++++++
+ ui/gtk/x/gtk_ui_platform_x11.h            |  2 ++
+ 8 files changed, 41 insertions(+), 2 deletions(-)
+
+diff --git a/ui/gtk/gtk_ui.cc b/ui/gtk/gtk_ui.cc
+index 1fbb58152c..dd42b1e87c 100644
+--- a/ui/gtk/gtk_ui.cc
++++ b/ui/gtk/gtk_ui.cc
+@@ -447,7 +447,7 @@ void GtkUi::SetWindowFrameAction(WindowFrameActionSource source,
+ 
+ std::unique_ptr<ui::LinuxInputMethodContext> GtkUi::CreateInputMethodContext(
+     ui::LinuxInputMethodContextDelegate* delegate) const {
+-  return std::make_unique<InputMethodContextImplGtk>(delegate);
++  return GetPlatform()->CreateInputMethodContext(delegate);
+ }
+ 
+ gfx::FontRenderParams GtkUi::GetDefaultFontRenderParams() const {
+diff --git a/ui/gtk/gtk_ui_platform.h b/ui/gtk/gtk_ui_platform.h
+index 390d90af83..633efbcf16 100644
+--- a/ui/gtk/gtk_ui_platform.h
++++ b/ui/gtk/gtk_ui_platform.h
+@@ -10,11 +10,15 @@
+ #include "ui/gfx/native_widget_types.h"
+ #include "ui/gtk/gtk_compat.h"
+ 
+-using GdkKeymap = struct _GdkKeymap;
+ using GtkWindow = struct _GtkWindow;
+ using GtkWidget = struct _GtkWidget;
+ using GdkWindow = struct _GdkWindow;
+ 
++namespace ui {
++class LinuxInputMethodContext;
++class LinuxInputMethodContextDelegate;
++}  // namespace ui
++
+ namespace gtk {
+ 
+ // GtkUiPlatform encapsulates platform-specific functionalities required by
+@@ -52,6 +56,10 @@ class GtkUiPlatform {
+   // Presents |window|, doing all the necessary platform-specific operations
+   // needed, if any.
+   virtual void ShowGtkWindow(GtkWindow* window) = 0;
++
++  // Creates a new IME context or may return nullptr.
++  virtual std::unique_ptr<ui::LinuxInputMethodContext> CreateInputMethodContext(
++      ui::LinuxInputMethodContextDelegate* delegate) const = 0;
+ };
+ 
+ }  // namespace gtk
+diff --git a/ui/gtk/gtk_ui_platform_stub.cc b/ui/gtk/gtk_ui_platform_stub.cc
+index 76746254ef..5f01c8bd8f 100644
+--- a/ui/gtk/gtk_ui_platform_stub.cc
++++ b/ui/gtk/gtk_ui_platform_stub.cc
+@@ -43,4 +43,10 @@ void GtkUiPlatformStub::ShowGtkWindow(GtkWindow* window) {
+   gtk_window_present(window);
+ }
+ 
++std::unique_ptr<ui::LinuxInputMethodContext>
++GtkUiPlatformStub::CreateInputMethodContext(
++    ui::LinuxInputMethodContextDelegate* delegate) const {
++  return nullptr;
++}
++
+ }  // namespace gtk
+diff --git a/ui/gtk/gtk_ui_platform_stub.h b/ui/gtk/gtk_ui_platform_stub.h
+index ae186455bd..708e05ab04 100644
+--- a/ui/gtk/gtk_ui_platform_stub.h
++++ b/ui/gtk/gtk_ui_platform_stub.h
+@@ -26,6 +26,8 @@ class GtkUiPlatformStub : public GtkUiPlatform {
+                                 gfx::AcceleratedWidget parent) override;
+   void ClearTransientFor(gfx::AcceleratedWidget parent) override;
+   void ShowGtkWindow(GtkWindow* window) override;
++  std::unique_ptr<ui::LinuxInputMethodContext> CreateInputMethodContext(
++      ui::LinuxInputMethodContextDelegate* delegate) const override;
+ };
+ 
+ }  // namespace gtk
+diff --git a/ui/gtk/wayland/gtk_ui_platform_wayland.cc b/ui/gtk/wayland/gtk_ui_platform_wayland.cc
+index 13fb58a84a..cae3475b14 100644
+--- a/ui/gtk/wayland/gtk_ui_platform_wayland.cc
++++ b/ui/gtk/wayland/gtk_ui_platform_wayland.cc
+@@ -11,7 +11,9 @@
+ #include "base/logging.h"
+ #include "ui/base/glib/glib_cast.h"
+ #include "ui/events/event_utils.h"
++#include "ui/gtk/gtk_compat.h"
+ #include "ui/gtk/gtk_util.h"
++#include "ui/gtk/input_method_context_impl_gtk.h"
+ #include "ui/linux/linux_ui_delegate.h"
+ 
+ namespace gtk {
+@@ -145,4 +147,14 @@ void GtkUiPlatformWayland::OnHandleSetTransient(GtkWidget* widget,
+   }
+ }
+ 
++std::unique_ptr<ui::LinuxInputMethodContext>
++GtkUiPlatformWayland::CreateInputMethodContext(
++    ui::LinuxInputMethodContextDelegate* delegate) const {
++  // GDK3 doesn't have a way to create foreign wayland windows, so we can't
++  // translate from ui::KeyEvent to GdkEventKey for InputMethodContextImplGtk.
++  if (!GtkCheckVersion(4))
++    return nullptr;
++  return std::make_unique<InputMethodContextImplGtk>(delegate);
++}
++
+ }  // namespace gtk
+diff --git a/ui/gtk/wayland/gtk_ui_platform_wayland.h b/ui/gtk/wayland/gtk_ui_platform_wayland.h
+index 2c444793db..315d6ced31 100644
+--- a/ui/gtk/wayland/gtk_ui_platform_wayland.h
++++ b/ui/gtk/wayland/gtk_ui_platform_wayland.h
+@@ -31,6 +31,8 @@ class GtkUiPlatformWayland : public GtkUiPlatform {
+                                 gfx::AcceleratedWidget parent) override;
+   void ClearTransientFor(gfx::AcceleratedWidget parent) override;
+   void ShowGtkWindow(GtkWindow* window) override;
++  std::unique_ptr<ui::LinuxInputMethodContext> CreateInputMethodContext(
++      ui::LinuxInputMethodContextDelegate* delegate) const override;
+ 
+  private:
+   GdkDisplay* GetDefaultGdkDisplay();
+diff --git a/ui/gtk/x/gtk_ui_platform_x11.cc b/ui/gtk/x/gtk_ui_platform_x11.cc
+index 5fa9d040c6..f7ba25c30c 100644
+--- a/ui/gtk/x/gtk_ui_platform_x11.cc
++++ b/ui/gtk/x/gtk_ui_platform_x11.cc
+@@ -19,6 +19,7 @@
+ #include "ui/gfx/x/xproto_util.h"
+ #include "ui/gtk/gtk_compat.h"
+ #include "ui/gtk/gtk_util.h"
++#include "ui/gtk/input_method_context_impl_gtk.h"
+ #include "ui/gtk/x/gtk_event_loop_x11.h"
+ #include "ui/linux/linux_ui_delegate.h"
+ 
+@@ -114,4 +115,10 @@ void GtkUiPlatformX11::ShowGtkWindow(GtkWindow* window) {
+       static_cast<uint32_t>(ui::X11EventSource::GetInstance()->GetTimestamp()));
+ }
+ 
++std::unique_ptr<ui::LinuxInputMethodContext>
++GtkUiPlatformX11::CreateInputMethodContext(
++    ui::LinuxInputMethodContextDelegate* delegate) const {
++  return std::make_unique<InputMethodContextImplGtk>(delegate);
++}
++
+ }  // namespace gtk
+diff --git a/ui/gtk/x/gtk_ui_platform_x11.h b/ui/gtk/x/gtk_ui_platform_x11.h
+index 3055b7d7ff..74011a8a1c 100644
+--- a/ui/gtk/x/gtk_ui_platform_x11.h
++++ b/ui/gtk/x/gtk_ui_platform_x11.h
+@@ -34,6 +34,8 @@ class GtkUiPlatformX11 : public GtkUiPlatform {
+                                 gfx::AcceleratedWidget parent) override;
+   void ClearTransientFor(gfx::AcceleratedWidget parent) override;
+   void ShowGtkWindow(GtkWindow* window) override;
++  std::unique_ptr<ui::LinuxInputMethodContext> CreateInputMethodContext(
++      ui::LinuxInputMethodContextDelegate* delegate) const override;
+ 
+  private:
+   GdkDisplay* GetGdkDisplay();
