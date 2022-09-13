@@ -2,15 +2,15 @@
 
 pkgname=ttf-plangothic
 epoch=1
-pkgver=0.5.5689
-pkgrel=2
+pkgver=0.5.5691
+pkgrel=1
 pkgdesc='A project based on SourceHan to expand and supplement characters, and its ultimate goal is to complete the entire Unicode as much as possible.'
 url='https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic'
 arch=('any')
 license=('OFL')
 replaces=('ttf-plangothic-mob')
 source=($pkgname-$pkgver::https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/archive/refs/tags/V$pkgver.tar.gz)
-b2sums=('c92a32d2a7a249ac43c47dd5b72269098ea826b72b3571b97812f243e58a2da8f47af94346d7ab1a7ae545ef114276dfdf79fc49bed2708e36715bae5dcc64f6')
+b2sums=('5ab9f074ae64aa9c7762f92c1d9b2c652c0b93251e363d397d8d17395fd7aca8370e6f348e75c1fdc988df63113a45b823f20ca50fdda12a906ee6daf3a428b2')
 
 package_ttf-plangothic() {
     cd Plangothic-$pkgver
