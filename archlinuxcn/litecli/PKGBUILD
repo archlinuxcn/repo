@@ -1,7 +1,7 @@
 # Maintainer: Andrej Radović <r.andrej@gmail.com>
 
 pkgname=litecli
-pkgver=1.8.0
+pkgver=1.9.0
 pkgrel=1
 pkgdesc="A command-line client for SQLite databases that has auto-completion "\
 "and syntax highlighting."
@@ -23,7 +23,7 @@ source=(
 )
 provides=('litecli')
 conflicts=('litecli-git')
-md5sums=('fe3d17d365ef87fa3be4b90ab3c12521')
+md5sums=('e66dbb68cf5a42d0c272412e78e5bfb8')
 
 package() {
   cd "$srcdir/${pkgname}-${pkgver}"
