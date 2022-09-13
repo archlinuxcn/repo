@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build('linux-xanmod', maintainers=['figue'])
+    aur_pre_build('linux-xanmod', maintainers=['figue', 'jfigueras'])
 
     # pkgrel is set to ${xanmod}
     for line in edit_file('PKGBUILD'):
