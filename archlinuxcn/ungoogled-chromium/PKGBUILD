@@ -9,8 +9,8 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=105.0.5195.102
-pkgrel=3
+pkgver=105.0.5195.125
+pkgrel=1
 _launcher_ver=8
 _gcc_patchset=1
 pkgdesc="A lightweight approach to removing Google web service dependency"
@@ -36,7 +36,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         roll-src-third_party-ffmpeg.patch
         angle-wayland-include-protocol.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('1cba0527c951e3c506ade96cf6ec2507ee9d43661764731ed896348182369262'
+sha256sums=('201b5c44668a415e3e05c0a806ab43a0904024340531332fc3ce39eb0cf10a66'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'f0c437c02cab7a6efc958f82fbb4ea35d5440f73d65731bad7c0dcaecb932121'
             '5db1fae8a452774b5b177e493a2d1a435b980137b16ed74616d1fb86fe342ec7'
@@ -55,7 +55,7 @@ source=(${source[@]}
         remove-main-main10-profile-limit.patch
         chromium-drirc-disable-10bpc-color-configs.conf)
 sha256sums=(${sha256sums[@]}
-            '7f6b3397aee0b659c5964a6419f2cdf28e2b19e16700da4613f3aa9c7dde876d'
+            '1b5ae7912099d9a2a9aed97f3978e9c09bedb603313cb18204e2d64ecbe25d1f'
             'e08a2c4c1e1059c767343ea7fbf3c77e18c8daebbb31f8019a18221d5da05293'
             '01ba9fd3f791960aa3e803de4a101084c674ce8bfbaf389953aacc6beedd66dc'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb')
