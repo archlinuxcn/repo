@@ -3,8 +3,8 @@
 
 _basename=numactl
 pkgname=lib32-libnuma
-pkgver=2.0.14
-pkgrel=4
+pkgver=2.0.15
+pkgrel=1
 pkgdesc='Simple NUMA policy support 32-bit version. Libraries only'
 arch=('x86_64')
 url='https://github.com/numactl/numactl'
@@ -12,22 +12,27 @@ license=('LGPL2.1' 'GPL2')
 depends=('perl' 'numactl' 'lib32-gcc-libs')
 conflicts=('lib32-numactl')
 provides=("lib32-numactl=${pkgver}" "libnuma.so")
-source=("$url/releases/download/v${pkgver}/${_basename}-${pkgver}.tar.gz")
-sha256sums=('826bd148c1b6231e1284e42a4db510207747484b112aee25ed6b1078756bcff6')
+source=("$_basename-${pkgver}.tar.gz::$url/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('1508bb02f56f1b9376243980ba96291856ba083e7a3480fdcb0fbf11ff01d6fa')
 
-build() {
-  cd "$srcdir/$_basename-${pkgver/_/-}"
+prepare() {
+  cd "${_basename}-${pkgver}"
   export CC='gcc -m32' CXX='g++ -m32' \
          PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
+  autoreconf -i
   ./configure \
     --prefix=/usr \
     --libdir=/usr/lib32 \
     --host=i686-unknown-linux-gnu
+}
+
+build() {
+  cd "${_basename}-${pkgver}"
   make
 }
 
 package() {
-  cd "$srcdir/$_basename-${pkgver/_/-}"
-  make DESTDIR="$pkgdir" install
-  rm -rf "$pkgdir"/usr/{share,bin,include}
+  cd "${_basename}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+  rm -rf "${pkgdir}"/usr/{share,bin,include}
 }
