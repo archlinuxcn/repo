@@ -17,8 +17,8 @@ User = netbird
 RuntimeDirectory = netbird
 ConfigurationDirectory = netbird
 
-AmbientCapabilities = CAP_NET_ADMIN
-CapabilityBoundingSet = CAP_NET_ADMIN
+AmbientCapabilities = CAP_NET_ADMIN CAP_SYS_MODULE
+CapabilityBoundingSet = CAP_NET_ADMIN CAP_SYS_MODULE
 
 DevicePolicy = closed
 LockPersonality = yes
@@ -32,8 +32,8 @@ ProtectControlGroups = yes
 ProtectHome = yes
 ProtectHostname = yes
 ProtectKernelLogs = yes
-ProtectKernelModules = yes
-ProtectKernelTunables = yes
+ProtectKernelModules = no
+ProtectKernelTunables = no
 ProtectSystem = strict
 RemoveIPC = yes
 RestrictAddressFamilies = AF_UNIX AF_NETLINK AF_INET AF_INET6
