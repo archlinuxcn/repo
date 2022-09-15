@@ -8,7 +8,7 @@ arch=('x86_64' 'aarch64')
 url="https://github.com/linuxdeepin/dtkgui"
 license=('LGPL3')
 depends=('dtkcore-git' 'librsvg' 'qt5-x11extras')
-makedepends=('git' 'qt5-tools' 'dtkcore-git' 'librsvg' 'qt5-x11extras' 'gtest' 'gmock')
+makedepends=('git' 'cmake' 'ninja' 'qt5-tools' 'dtkcore-git' 'librsvg' 'qt5-x11extras' 'gtest' 'gmock' 'doxygen')
 conflicts=('dtkgui')
 provides=('dtkgui')
 groups=('deepin-git')
@@ -20,20 +20,20 @@ pkgver() {
     git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
-prepare() {
-    cd $pkgname
-    if [[ ! -z ${sha} ]];then
-      git checkout -b $sha
-    fi
-}
-
 build() {
   cd $pkgname
-  qmake-qt5 PREFIX=/usr DTK_VERSION=$pkgver LIB_INSTALL_DIR=/usr/lib
-  make
+  cmake -GNinja \
+    -DNOTPACKAGE=OFF \
+    -DMKSPECS_INSTALL_DIR=/usr/lib/qt/mkspecs/modules/ \
+    -DBUILD_DOCS=ON \
+    -DQCH_INSTALL_DESTINATION=/usr/share/doc/qt \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+  ninja
 }
 
 package() {
   cd $pkgname
-  make INSTALL_ROOT="$pkgdir" install
+  DESTDIR="$pkgdir" ninja install
 }
