@@ -1,0 +1,60 @@
+# Maintainer: Sergej Pupykin <arch+pub@sergej.pp.ru>
+
+pkgname=bluez-utils-old
+pkgver=5.65
+pkgrel=1
+pkgdesc="deprecated tools from bluez"
+url="http://www.bluez.org/"
+arch=('i686' 'x86_64' 'mips64el' 'armv6h' 'armv7h' 'arm' 'aarch64' 'riscv64')
+license=('GPL2')
+depends=(
+         'systemd-libs' 'libudev.so'
+         'glib2' 'libglib-2.0.so'
+         )
+makedepends=('dbus' 'libical' 'glib2' 'systemd' 'alsa-lib' 'json-c' 'ell' 'python-docutils' 'zsh' 'bluez-libs')
+conflicts=('bluez-hciattach' 'bluez-hciconfig' 'bluez-hcitool' 'bluez-rfcomm' 'bluez-sdptool' 'bluez-ciptool' 'bluez-gatttool') # bluz-utils provides bluez-hcidump?
+provides=('bluez-hciattach' 'bluez-hciconfig' 'bluez-hcitool' 'bluez-rfcomm' 'bluez-sdptool' 'bluez-ciptool' 'bluez-gatttool')
+source=(https://www.kernel.org/pub/linux/bluetooth/bluez-${pkgver}.tar.{xz,sign})
+b2sums=('9d2937e2e14d8d8945183c6436921d9d16a6d3bcb5dbe3e2493554fbc4972bb4c006aabc793c9fb8eae47a7e9f29ae9fdf47551dfc0a238e86f5a76ce7436ae2'
+        'SKIP')
+validpgpkeys=('E932D120BC2AEC444E558F0106CA9F5D1DCF2659') # Marcel Holtmann <marcel@holtmann.org>
+
+build() {
+  cd "bluez-${pkgver}"
+  ./configure \
+          --prefix=/usr \
+          --mandir=/usr/share/man \
+          --sysconfdir=/etc \
+          --localstatedir=/var \
+          --libexecdir=/usr/lib \
+          --with-dbusconfdir=/usr/share \
+          --enable-tools \
+          --disable-cups \
+          --disable-monitor \
+          --disable-midi \
+          --disable-mesh \
+          --enable-experimental \
+          --enable-library \
+          --enable-deprecated # to enable deprectated tools
+  make
+}
+
+package() {
+  cd "bluez-${pkgver}"
+  make DESTDIR="${pkgdir}" \
+       install-binPROGRAMS \
+       install-man1
+       
+  cat <<EOF | zsh -
+  old_utils=(hciattach hciconfig hcitool hcidump rfcomm sdptool ciptool gatttool)
+  for i in "${pkgdir}"/usr/bin/* ; do
+    (( \$old_utils[(I)\${i:t}] )) || rm \$i
+  done
+  for i in "${pkgdir}"/usr/share/man/man1/* ; do
+    (( \$old_utils[(I)\${i:t:r}] )) || rm \$i
+  done
+EOF
+  
+  rm -rf "${pkgdir}"/usr/lib
+}
+

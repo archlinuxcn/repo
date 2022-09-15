@@ -1,0 +1,18 @@
+maintainers:
+  - github: CoelacanthusHex
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: manual
+    manual: 1
+  - source: alpm
+    alpm: bluez-utils
+    strip_release: true
+  - source: alpm
+    alpm: glib2
+    provided: libglib-2.0.so
+  - source: alpm
+    alpm: systemd-libs
+    provided: libudev.so
