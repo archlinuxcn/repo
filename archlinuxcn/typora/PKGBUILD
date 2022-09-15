@@ -2,7 +2,7 @@
 # Contributor: Jonathan Duck <duckbrain30@gmail.com>
 
 pkgname=typora
-pkgver=1.3.6
+pkgver=1.4.4
 pkgrel=1
 pkgdesc="A minimal markdown editor and reader."
 arch=('x86_64')
@@ -14,7 +14,7 @@ optdepends=(
 	'pandoc: Import/export for extra file formats')
 _filename="${pkgname}_${pkgver}_amd64.deb"
 source=("https://typora.io/linux/$_filename")
-sha512sums=('cae9c1ab90da1e40e35f8bc6f28433c75d0cf9cc720142aeedfbaf7199376b4b89d261746945c93c89a62a400208bfeec57d9b83d6716bd42ef167ef3deb9320')
+sha512sums=('b316fb571eb37845ea665ab2a14c7dc6f36192c40f45da7fb8498b01423df897f0c93691d31d35dcc8b682206a37a9d69e85b0a70a2aec409b3056e1e89aee70')
 
 package() {
 	# unpack archive
