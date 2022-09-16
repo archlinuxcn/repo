@@ -3,7 +3,7 @@
 # Contributor: Francois Boulogne <fboulogne at april dot org>
 _base=pywavelets
 pkgname=python-${_base}
-pkgver=1.4.0
+pkgver=1.4.1
 pkgrel=1
 pkgdesc="Wavelet transform module"
 arch=(x86_64)
@@ -12,8 +12,8 @@ license=(MIT)
 depends=(python-numpy)
 makedepends=(python-setuptools cython)
 # checkdepends=(python-pytest python-matplotlib)
-source=(${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('41f6d6751daf8b287b345cece45583a153c44be3d478f0cfe9788a5199d19fb9959919cb498443e0a18d9f0bdeef9dc809d364e13929b2b1f28d5c78990dbfcb')
+source=(${_base::3}t-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
+sha512sums=('3950b45ce7abdae2d2bb52fbaf4b01b3a2f15761ab4814fdafa0d791d37126ab13a5dbeeb577c6f51d809a81293f7303d94b8dc2f9cca29106ee63e176816c8e')
 
 build() {
   cd ${_base::3}t-${pkgver}
