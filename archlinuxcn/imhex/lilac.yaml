@@ -10,8 +10,6 @@ post_build_script: |
 
 
 update_on:
-  - source: manual
-    manual: 1
   - source: github
     github: WerWolv/ImHex
-    branch: master
+    use_latest_release: true
