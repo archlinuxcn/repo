@@ -4,15 +4,11 @@
 pkgname=rocm-llvm
 pkgdesc='Radeon Open Compute - LLVM toolchain (llvm, clang, lld)'
 pkgver=5.2.3
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='https://docs.amd.com/bundle/ROCm-Compiler-Reference-Guide-v5.2/page/Overview_of_ROCmCC_Compiler.html'
 license=('custom:Apache 2.0 with LLVM Exception')
-depends=(z3)
 makedepends=(cmake python ninja)
-provides=("llvm-amdgpu")
-replaces=('llvm-amdgpu')
-conflicts=('llvm-amdgpu')
 _git='https://github.com/RadeonOpenCompute/llvm-project'
 source=("${pkgname}-${pkgver}.tar.gz::$_git/archive/rocm-$pkgver.tar.gz"
         "glibc2.36.patch"
@@ -22,10 +18,6 @@ sha256sums=('1b852711aec3137b568fb65f93606d37fdcd62e06f5da3766f2ffcd4e0c646df'
             'bd35ee2e5fb39f449564336a9769e5cae3502e98998659508191118da1124c37')
 options=(staticlibs !lto)
 _dirname="$(basename "$_git")-$(basename "${source[0]}" .tar.gz)"
-
-# NINJAFLAGS is an env var used to pass commandline options to ninja
-# NOTE: It's your responbility to validate the value of $NINJAFLAGS. If unsure, don't set it.
-# NINJAFLAGS="-j20"
 
 prepare() {
     cd "$_dirname"
@@ -37,7 +29,10 @@ prepare() {
 }
 
 build() {
-    cmake -GNinja -S "$_dirname/llvm" \
+    cmake \
+        -GNinja \
+        -B build \
+        -S "$_dirname/llvm" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX='/opt/rocm/llvm' \
         -DLLVM_HOST_TRIPLE=$CHOST \
@@ -50,11 +45,11 @@ build() {
         -DLLVM_ENABLE_PROJECTS='llvm;clang;compiler-rt;lld' \
         -DLLVM_TARGETS_TO_BUILD='AMDGPU;X86' \
         -DLLVM_BINUTILS_INCDIR=/usr/include
-    ninja $NINJAFLAGS
+    cmake --build build
 }
 
 package() {
-    DESTDIR="$pkgdir" ninja $NINJAFLAGS install
+    DESTDIR="$pkgdir" cmake --install build
 
     # https://bugs.archlinux.org/task/28479
     install -d "$pkgdir/opt/rocm/llvm/lib/bfd-plugins"
