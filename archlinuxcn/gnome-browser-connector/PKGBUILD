@@ -2,8 +2,8 @@
 # Maintainer: Rafael Fontenelle <rafaelff@gnome.org>
 
 pkgname=gnome-browser-connector
-pkgver=42.0
-pkgrel=2.1
+pkgver=42.1
+pkgrel=1
 pkgdesc='Native browser connector for integration with extensions.gnome.org'
 arch=(any)
 url="https://wiki.gnome.org/Projects/GnomeShellIntegration"
@@ -13,8 +13,8 @@ makedepends=(meson git)
 provides=(chrome-gnome-shell)
 replaces=(chrome-gnome-shell gs-chrome-connector)
 conflicts=(chrome-gnome-shell gs-chrome-connector)
-_commit=0a3045c16f7add7c867f2681debfd4b870d4163d # tags/v42.0
-source=(git+https://gitlab.gnome.org/nE0sIghT/$pkgname.git#commit=$_commit)
+_commit=1ed2008a39acceaed153b8b3b865081ceba98ab2 # tags/v42.1
+source=("git+https://gitlab.gnome.org/GNOME/$pkgname.git#commit=$_commit")
 md5sums=('SKIP')
 
 pkgver() {
