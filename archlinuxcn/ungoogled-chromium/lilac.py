@@ -10,4 +10,6 @@ def pre_build():
                     '# -fvar-tracking-assignments is not recognized by clang' + '\n' + '  '
                     'CFLAGS=${CFLAGS/-fvar-tracking-assignments}' + '\n' + '  '
                     'CXXFLAGS=${CXXFLAGS/-fvar-tracking-assignments}')
+        elif line.startswith('depends+='):
+            line = 'depends+=(libFLAC.so ${_system_libs[@]})'
         print(line)
