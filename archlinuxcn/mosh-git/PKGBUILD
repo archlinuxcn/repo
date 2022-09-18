@@ -11,12 +11,18 @@ makedepends=(git)
 conflicts=(mosh)
 provides=(mosh)
 options=(!emptydirs)
-source=("git+https://github.com/mobile-shell/mosh")
-sha512sums=('SKIP')
+source=("git+https://github.com/mobile-shell/mosh"
+        https://github.com/mobile-shell/mosh/pull/1167.patch)
+sha512sums=('SKIP' 9cdc30c0c0d63a4ce72dfebbcc2b94d9cad8a139ac26f6df4d8e8ea082cef702ccc81204fd85de813eb66c3daad50dd84f5d3c450d667117ac12b8b22b160b8b)
 
 pkgver() {
   cd "$srcdir/mosh"
   git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g;s/^mosh\.//'
+}
+
+prepare() {
+  cd "$srcdir/mosh"
+  patch -Np1 < ../1167.patch
 }
 
 build() {
