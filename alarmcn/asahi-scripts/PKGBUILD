@@ -1,19 +1,27 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=asahi-scripts
-pkgver=20220821
+pkgver=20220918.2
 pkgrel=1
 pkgdesc='Asahi Linux maintenance scripts'
 arch=('any')
 url='http://asahilinux.org'
 license=('MIT')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AsahiLinux/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('bbcd2602a2c0498873dd5dc82bd4954498c3825b0c025b9d399c8c4b09ffe16d')
-b2sums=('78edb12604cded22aec6d7257303468f1c611d4daeb0350dbd1f3b21cea23be387a04608a30d235bd40539e7b1dde1d633086594166c2315971826423a302442')
+sha256sums=('f7627bb1d6552abd8d9f4d84d7bee888a1d469cec03ebf0a1883241605fa148c')
+b2sums=('b09abf765796e4d4212abdb7d58ae7d5f96732c5918b3624ff03d0b0b6b901f5ae64336d8e6f8ffad0e92d2ec127d6643edbf89df57df0e7f1e68566cc2d1e78')
+backup=(etc/m1n1.conf)
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  make PREFIX=/usr DESTDIR=${pkgdir} all
+}
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  make PREFIX=/usr DESTDIR=${pkgdir} install
+
+  make PREFIX=/usr DESTDIR=${pkgdir} install-arch
 
   install -Dm644 "$srcdir/${pkgname}-${pkgver}/LICENSE" \
     "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
