@@ -10,7 +10,7 @@
 
 pkgname=ungoogled-chromium
 pkgver=105.0.5195.125
-pkgrel=1
+pkgrel=2
 _launcher_ver=8
 _gcc_patchset=1
 pkgdesc="A lightweight approach to removing Google web service dependency"
@@ -90,7 +90,7 @@ declare -gA _system_libs=(
 _unwanted_bundled_libs=(
   $(printf "%s\n" ${!_system_libs[@]} | sed 's/^libjpeg$/&_turbo/')
 )
-depends+=(${_system_libs[@]})
+depends+=(libFLAC.so ${_system_libs[@]})
 
 prepare() {
   cd chromium-$pkgver
