@@ -1,7 +1,7 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=m1n1
-pkgver=1.1.4
+pkgver=1.1.5
 pkgrel=1
 pkgdesc='Asahi Linux bootloader'
 _artwork_commit_id=35626c31f5c5a8a884aaff93f864795026495742
@@ -17,9 +17,9 @@ source=(
   "m1n1-${_m1n1_commit_id}.tar.gz::https://github.com/AsahiLinux/m1n1/archive/${_m1n1_commit_id}.tar.gz"
 )
 sha256sums=('ffa129b5cae8debd4ffd97f7f1ac7f571c7ba4679793cd138918c2ae76a7103d'
-            '6039f879ed7c508bba902530ac3bf96fefe71a31b219ac7279a4f49f4879881d')
+            'c50884c3fd609bb90ce591ba1151e70b0d24a6fa5dcd7d314d613d1eec7939a6')
 b2sums=('26e9668f7c7393fec24b53b184ea0eabed4f46479c1aab26728d01c179091683cc4387ff83796bdcbb289376236faf9f651197b9fbba51e52540e58ebdc8bcc5'
-        '641f6ca966bd74e47cda537cae55546f0717a05e4f3cb4e692002053435706c2f913d1ff75ae0ead8e85dc6f76f7de5349cd420f697f113f0c635d80acc36641')
+        '070a2bd09cf44e6be6e2ae81ce8c35da2b8fc1a6b386813c503b3ea774e2f66f48f5627efd8cafd7c676681fd204bd5bdc312336a849c29a9da1421cc8a948e5')
 
 prepare() {
   rm -rf "${srcdir}/$_m1n1_srcname"/artwork
