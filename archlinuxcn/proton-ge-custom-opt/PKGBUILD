@@ -3,7 +3,7 @@
 
 pkgname=proton-ge-custom-opt
 _pkgname=proton-ge-custom
-pkgver=GE.Proton7.33
+pkgver=GE.Proton7.35
 _srctag=${pkgver//./-} # _srctag=GE-Proton7-32
 _geckover=2.47.3
 _monover=7.3.1
@@ -136,6 +136,7 @@ source=(
     gst-plugins-ugly::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-ugly.git
     graphene::git+https://github.com/ebassi/graphene.git
     mingw-directx-headers::git+https://github.com/Joshua-Ashton/mingw-directx-headers.git
+    glslang::git+https://github.com/KhronosGroup/glslang.git
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     0001-AUR-pkgbuild-changes.patch
@@ -224,6 +225,7 @@ prepare() {
         gst-plugins-bad
         gst-plugins-ugly
         graphene
+        glslang
     )
 
     for submodule in "${_submodules[@]}"; do
@@ -400,6 +402,7 @@ package() {
 }
 
 sha256sums=('SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
