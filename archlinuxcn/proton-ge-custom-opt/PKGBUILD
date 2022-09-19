@@ -139,7 +139,7 @@ source=(
     glslang::git+https://github.com/KhronosGroup/glslang.git
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
-    0001-AUR-pkgbuild-changes.patch
+    0001-AUR-PKGBUILD-changes.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -288,15 +288,8 @@ prepare() {
         sed 's/-lldap_r/-lldap/' -i configure
     popd
 
-    patch -p1 -i "$srcdir"/0001-AUR-pkgbuild-changes.patch
+    patch -p1 -i "$srcdir"/0001-AUR-PKGBUILD-changes.patch
 
-    # Remove repos from srcdir to save space
-    for submodule in "${_submodules[@]}"; do
-        rm -rf "$srcdir"/"${submodule%::*}"
-    done
-    rm -rf "$srcdir"/dxil-spirv
-    rm -rf "$srcdir"/Vulkan-Headers
-    rm -rf "$srcdir"/SPIRV-Headers
 }
 
 build() {
@@ -432,5 +425,5 @@ sha256sums=('SKIP'
             '08d318f3dd6440a8a777cf044ccab039b0d9c8809991d2180eb3c9f903135db3'
             '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
             '55ca808868599b1d8ad53b222b8cb26fd96fa818c511163e361238025c76e9fe'
-            '78030aad04ff9965676849ca97dd952bee1352e16748b8a73507b3f0948258e6')
+            '13ba9025b532371ee6d504de184ddb57322e276332f2c6a38c050e90c1a4f119')
 
