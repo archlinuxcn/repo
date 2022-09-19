@@ -3,8 +3,8 @@
 # Contributor: Wouter Wijsman <wwijsman@live.nl>
 
 pkgname=dosbox-staging
-pkgver=0.78.1
-pkgrel=2
+pkgver=0.79.0
+pkgrel=1
 pkgdesc="DOS/x86 emulator focusing on ease of use. Based on DOSBox"
 arch=('x86_64')
 url="https://github.com/dosbox-staging/dosbox-staging"
@@ -16,10 +16,11 @@ optdepends=(
 makedepends=('meson' 'ninja' 'gcc' 'gzip' 'gtest')
 provides=("dosbox")
 conflicts=("dosbox")
+options=(debug)
 source=(
   "${pkgname}-${pkgver}.gz::https://github.com/dosbox-staging/${pkgname}/archive/v${pkgver}.tar.gz"
 )
-sha256sums=('dcd93ce27f5f3f31e7022288f7cbbc1f1f6eb7cc7150c2c085eeff8ba76c3690')
+b2sums=('1206aed3d87ead0315a1e7e4ff814c4a787026521653b68532cb231590417c9124511ad8f39132d8d595b227675cfafdec4236a6f8dece43c139a401b7e9d11a')
 
 prepare() {
   cd "$srcdir/${pkgname}-${pkgver}"
@@ -28,14 +29,18 @@ prepare() {
 build() {
   cd "$srcdir/${pkgname}-${pkgver}"
   arch-meson . build \
-    --buildtype=release
+    --wrap-mode default \
+    --buildtype=debugoptimized \
+    -Ddefault_library=shared \
+    -Dtry_static_libs=iir \
+    -Dsystem_libraries=fluidsynth,glib,mt32emu,opusfile,png,sdl2,sdl2_net,slirp,speexdsp,zlib
   meson compile -C build
 }
 
 package() {
   cd "$srcdir/${pkgname}-${pkgver}"
   
-  meson install -C build --no-rebuild --destdir="$pkgdir"
+  meson install -C build --no-rebuild --skip-subprojects --destdir="$pkgdir"
 
   # dosbox-staging documents
   install -Dm 644 "docs/README.video" "$pkgdir/usr/share/doc/${pkgname}/video.txt"
