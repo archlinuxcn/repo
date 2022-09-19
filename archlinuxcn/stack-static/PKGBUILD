@@ -1,8 +1,10 @@
 # Maintainer:  <me@sfxr.de>
 
 pkgname=stack-static
-pkgver=2.7.5
+_pkgver=2.9.1
+pkgver=${_pkgver}
 pkgrel=1
+_vpref=''
 pkgdesc="The Haskell Tool Stack (linked statically)"
 arch=('x86_64')
 url="https://github.com/commercialhaskell/stack"
@@ -15,16 +17,16 @@ optdepends=(
   "ncurses5-compat-libs: using older ghc's linking against libtinfo.so.5"
 )
 source=(
-  "https://github.com/commercialhaskell/stack/releases/download/v${pkgver}/stack-${pkgver}-linux-x86_64.tar.gz"
-  "https://github.com/commercialhaskell/stack/releases/download/v${pkgver}/stack-${pkgver}-linux-x86_64.tar.gz.asc"
+  "https://github.com/commercialhaskell/stack/releases/download/${_vpref}v${_pkgver}/stack-${_pkgver}-linux-x86_64-static.tar.gz"
+  "https://github.com/commercialhaskell/stack/releases/download/${_vpref}v${_pkgver}/stack-${_pkgver}-linux-x86_64-static.tar.gz.asc"
 )
-sha256sums=('9bcd165358d4dcafd2b33320d4fe98ce72faaf62300cc9b0fb86a27eb670da50'
+sha256sums=('cd8ef4a844f141159189899a128a33f4beb9ec4e66ac96fc2ada47a626a9d462'
             'SKIP')
 validpgpkeys=('C5705533DA4F78D8664B5DC0575159689BEFB442')
 
 package() {
   cd "${srcdir}"
-  local d="stack-${pkgver}-linux-x86_64"
+  local d="stack-${_pkgver}-linux-x86_64-static"
   mkdir -p "${pkgdir}"/usr/{bin,share/{doc,licenses}/"${pkgname}"}
   mkdir -p "${pkgdir}"/usr/share/{bash-completion/completions,fish/vendor_completions.d}
   cp "${d}/stack" "${pkgdir}/usr/bin"
