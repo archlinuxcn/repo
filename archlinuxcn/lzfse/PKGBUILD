@@ -1,0 +1,28 @@
+# Maintainer: Laurent Tréguier <laurent@treguier.org>
+
+pkgname=lzfse
+pkgver=1.0
+pkgrel=2
+pkgdesc="The LZFSE compression library and command line tool"
+arch=(aarch64 i686 x86_64)
+url="https://github.com/lzfse/lzfse"
+license=("BSD")
+makedepends=(cmake)
+source=("https://github.com/lzfse/lzfse/archive/lzfse-${pkgver}.tar.gz")
+md5sums=('53e89f88d9cb0f4cb9c3f366dfb239a9')
+
+build() {
+  cmake -B build -S lzfse-lzfse-${pkgver} \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX='/usr' \
+        -Wno-dev
+  cmake --build build
+}
+
+check() {
+  ctest --test-dir build --output-on-failure
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}
