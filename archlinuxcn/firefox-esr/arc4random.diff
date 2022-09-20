@@ -1,0 +1,33 @@
+diff --git i/ipc/chromium/src/third_party/libevent/linux/event2/event-config.h w/ipc/chromium/src/third_party/libevent/linux/event2/event-config.h
+index 101d39d455107..3764806240f9f 100644
+--- i/ipc/chromium/src/third_party/libevent/linux/event2/event-config.h
++++ w/ipc/chromium/src/third_party/libevent/linux/event2/event-config.h
+@@ -30,13 +30,13 @@
+ /* #undef EVENT__HAVE_AFUNIX_H 1 */
+ 
+ /* Define to 1 if you have the `arc4random' function. */
+-/* #undef EVENT__HAVE_ARC4RANDOM */
++#define EVENT__HAVE_ARC4RANDOM 1
+ 
+ /* Define to 1 if you have the `arc4random_addrandom' function. */
+ /* #undef EVENT__HAVE_ARC4RANDOM_ADDRANDOM */
+ 
+ /* Define to 1 if you have the `arc4random_buf' function. */
+-/* #undef EVENT__HAVE_ARC4RANDOM_BUF */
++#define EVENT__HAVE_ARC4RANDOM_BUF 1
+ 
+ /* Define to 1 if you have the <arpa/inet.h> header file. */
+ #define EVENT__HAVE_ARPA_INET_H 1
+diff --git i/toolkit/crashreporter/client/ping.cpp w/toolkit/crashreporter/client/ping.cpp
+index 57cf85de80b79..93a2f6e80ad0b 100644
+--- i/toolkit/crashreporter/client/ping.cpp
++++ w/toolkit/crashreporter/client/ping.cpp
+@@ -53,7 +53,7 @@ static string GenerateUUID() {
+ 
+   CFRelease(uuid);
+ #elif defined(HAVE_ARC4RANDOM_BUF)  // Android, BSD, ...
+-  arc4random_buf(id, sizeof(UUID));
++  arc4random_buf(&id, sizeof(UUID));
+ #else                               // Linux
+   int fd = open("/dev/urandom", O_RDONLY);
+ 
