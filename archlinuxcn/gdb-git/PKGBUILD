@@ -3,14 +3,14 @@
 # Contributor: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=('gdb-git' 'gdb-common-git')
-pkgver=111243.99d679e7b30
+pkgver=111253.1588d98babe
 pkgrel=1
 pkgdesc="The GNU Debugger from git"
 arch=(armv7h aarch64 i686 x86_64)
 url="http://www.gnu.org/software/gdb/"
 license=('GPL3')
 makedepends=(git texinfo python "guile>=2.2" "guile<2.3" ncurses expat xz
-             mpfr source-highlight readline libelf)
+             mpfr source-highlight readline libelf help2man xxhash boost)
 provides=('gdb-common' 'gdb')
 conflicts=('gdb-common' 'gdb')
 backup=('etc/gdb/gdbinit')
@@ -60,7 +60,7 @@ package_gdb-common-git() {
 
 package_gdb-git() {
   depends=(libreadline.so libncursesw.so  "guile>=2.2" "guile<2.3" python
-           libexpat.so xz mpfr gmp source-highlight libelf
+           libexpat.so xz mpfr gmp source-highlight libxxhash.so libelf
            "gdb-common-git=$pkgver")
   provides=('gdb')
   conflicts=('gdb')
