@@ -5,7 +5,6 @@ Subject: [PATCH] patch build
 
 ---
  src/rime/gear/script_translator.cc | 1 +
- src/rime/gear/simplifier.cc        | 2 +-
  src/rime/gear/table_translator.cc  | 1 +
  3 files changed, 3 insertions(+), 1 deletion(-)
 
@@ -21,19 +20,6 @@ index 00b4f110..caabf4e8 100644
  
  
  //static const char* quote_left = "\xef\xbc\x88";
-diff --git a/src/rime/gear/simplifier.cc b/src/rime/gear/simplifier.cc
-index 98a1c5a9..171c4153 100644
---- a/src/rime/gear/simplifier.cc
-+++ b/src/rime/gear/simplifier.cc
-@@ -54,7 +54,7 @@ class Opencc {
-       return false;
-     } else {
-       const opencc::DictEntry* entry = item.Get();
--      for (const char* value : entry->Values()) {
-+      for (auto value : entry->Values()) {
-         forms->push_back(value);
-       }
-       return forms->size() > 0;
 diff --git a/src/rime/gear/table_translator.cc b/src/rime/gear/table_translator.cc
 index a5bf83f9..b726ce3e 100644
 --- a/src/rime/gear/table_translator.cc
