@@ -3,9 +3,9 @@
 
 pkgbase=jdk
 pkgname=('jre' 'jdk' 'jdk-doc')
-pkgver=18.0.2
-_build=9
-_hash=f6ad4b4450fd4d298113270ec84f30ee
+pkgver=19
+_build=36
+_hash=877d6127e982470ba2a7faa31cc93d04
 _majver="${pkgver%%.*}"
 pkgrel=1
 pkgdesc='Oracle Java'
@@ -23,12 +23,12 @@ source=("https://download.oracle.com/java/${_majver}/archive/jdk-${pkgver}_linux
         'java_48.png'
         'LICENSE')
 noextract=("jdk-${pkgver}_doc-all.zip")
-sha256sums=('70ba0921ad5c3f716b29c9e6a7444abbfb8361aefa54c9852e9e4348ce4b61ba'
-            '2e47fe855417b2eb7014d8305a1693deed135dcc5597a965367a8b43b65e15dc'
-            '08deffce836955e426ea1ebc8ea85862fba39bb7a954af9df1752f8f5fac730f'
-            '0275bc0d4620f391d6fafb64ed7d89740b834b8fc810ed82a30a5b0fe7386496'
-            '95596dcb0f48677def0d60277ae6577748e6e9eb8d4567ba11ae8579c6cf57b7'
-            'b47f1675e8a706ade4e3a1e36d782132b70883dccebe55422489f911a18880e9'
+sha256sums=('7582c634f159dc5f6578007370f7682638fc22395ca31bc9091d26b7e015e884'
+            '008cf4dd1e76b6b3111d827a1fc3220f91a73b9aaeec7d550b73aa186c10b86c'
+            '9e601ec00778d4ca3a604298802f1bc8f5dfe274f0ecda397fbb9d641bdc7dcc'
+            '572c5542bb6debfde01388197e429844679f1e6be7c7a39fd129a8f8cad2c562'
+            '8b1699882c1a28b841bfc60fa958ddd5db80c56987d9da8735d31209a145f92f'
+            '37053c3ba8bf933fb76e27b9c686019f00a260c9401e279a575584e633911ff7'
             'd27fec1d74f7a3081c3d175ed184d15383666dc7f02cc0f7126f11549879c6ed'
             '7cf8ca096e6d6e425b3434446b0835537d0fc7fe64b3ccba7a55f7bd86c7e176'
             '20becfcac0bdeaa29a76e6966d727f8cc79381354cbd5d530cdec823954df19f')
@@ -80,7 +80,7 @@ package_jre() {
     ln -s "../../../../etc/java-${pkgbase}" "${pkgdir}/${_jvmdir}/conf"
     
     # bin
-    install -D -m755 bin/{java,jfr,jrunscript} -t "${pkgdir}/${_jvmdir}/bin"
+    install -D -m755 bin/{java,jfr,jrunscript,jwebserver} -t "${pkgdir}/${_jvmdir}/bin"
     install -D -m755 bin/{keytool,rmiregistry} -t "${pkgdir}/${_jvmdir}/bin"
     
     # libs
@@ -123,7 +123,7 @@ package_jdk() {
     
     # bin
     cp -a bin "${pkgdir}/${_jvmdir}"
-    rm "${pkgdir}/${_jvmdir}/bin/"{java,jfr,jrunscript,keytool,rmiregistry}
+    rm "${pkgdir}/${_jvmdir}/bin/"{java,jfr,jrunscript,keytool,rmiregistry,jwebserver}
     
     # libs
     install -D -m644 lib/ct.sym       -t "${pkgdir}/${_jvmdir}/lib"
