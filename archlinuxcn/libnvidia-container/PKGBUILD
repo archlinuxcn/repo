@@ -4,10 +4,10 @@
 pkgbase=libnvidia-container
 pkgname=(libnvidia-container libnvidia-container-tools)
 
-pkgver=1.10.0
+pkgver=1.11.0
 pkgrel=1
 _elfver=0.7.1
-_nvmpver=450.57
+_nvmpver=495.44
 
 pkgdesc='NVIDIA container runtime library'
 arch=('x86_64')
@@ -23,8 +23,8 @@ options=(!makeflags !lto)
 # This make process downloads files from other sources to build the libs as deps cleanly in place.
 # This pkgbuild elects to download them ahead of time so their checksums can be validated.
 # See:
-# https://github.com/NVIDIA/libnvidia-container/blob/e3a2035da5a44b8a83d9568b91a8a0b542ee15d5/mk/elftoolchain.mk
-# https://github.com/NVIDIA/libnvidia-container/blob/56704b8dd297bf4daf82a2da4b270dc7f14e0008/mk/nvidia-modprobe.mk
+# https://github.com/NVIDIA/libnvidia-container/blob/c8f267be0bac1c654d59ad4ea5df907141149977/mk/elftoolchain.mk
+# https://github.com/NVIDIA/libnvidia-container/blob/c8f267be0bac1c654d59ad4ea5df907141149977/mk/nvidia-modprobe.mk
 source=("https://github.com/NVIDIA/${pkgbase}/archive/v${pkgver}.tar.gz"
         "https://sourceforge.net/projects/elftoolchain/files/Sources/elftoolchain-${_elfver}/elftoolchain-${_elfver}.tar.bz2"
         "https://github.com/NVIDIA/nvidia-modprobe/archive/${_nvmpver}.tar.gz"
@@ -32,9 +32,9 @@ source=("https://github.com/NVIDIA/${pkgbase}/archive/v${pkgver}.tar.gz"
         fix_git_rev_unavail.patch
         fix_libelf_so_name.patch
         fix_elftoolchain.patch)
-sha256sums=('418bdfa14d6339e21a401b945967945ff0b1e99a319783f84ee59a032ff7759d'
+sha256sums=('ff09fa96615d26b2484588bbd5a8e435fa9c2d931838c3de48c990892960d6b7'
             '44f14591fcf21294387215dd7562f3fb4bec2f42f476cf32420a6bbabb2bd2b5'
-            '396b4102d3075a2dee3024652fae206a1b38ace54b8efb1e2c20757a11ec19f1'
+            'ae6e9c7e6b43368945c28f6b8b6d0d7cc36ee7e1be8955a009a1cb189e46de92'
             '6738c0f8738cb272ee5c723e77008f5f512be842bad26abc2e8f78911131165a'
             '12986dd405971dd2af9cd8ab0c75db37e09c8ec0657f1b148d59822831b8e40e'
             '42412db6bbcf0c2f76c426b6f51cf12eda6a78b5c9c64d29e9a80739790ea6b9'
