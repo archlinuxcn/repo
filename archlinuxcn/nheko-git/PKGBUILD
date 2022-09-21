@@ -2,7 +2,7 @@
 # Maintainer: Joseph Donofry <joe at joedonofry dot com>
 
 pkgname=nheko-git
-pkgver=0.10.1.1.r13.g603b90a6
+pkgver=0.10.1.1.r20.g7562b03b
 pkgrel=1
 pkgdesc="Desktop client for the Matrix protocol"
 arch=(armv7h aarch64 i686 x86_64)
@@ -12,17 +12,19 @@ license=("GPL3")
 
 depends=(
   lmdb qt5-base qt5-svg qt5-multimedia qt5-declarative qt5-quickcontrols2 qtkeychain-qt5
-  boost-libs openssl mtxclient-git libmatrix_client.so libolm.so libspdlog.so libfmt.so
+  openssl mtxclient-git libmatrix_client.so libolm.so libspdlog.so libfmt.so
   cmark gst-plugins-base-libs gst-plugins-bad-libs libxcb xcb-util-wm hicolor-icon-theme
 )
 
-makedepends=(git cmake qt5-tools boost nlohmann-json fontconfig lmdbxx pkg-config asciidoc)
+makedepends=(git cmake qt5-tools nlohmann-json fontconfig lmdbxx pkg-config asciidoc)
 
 provides=("nheko")
 conflicts=("nheko")
 
-source=($pkgname::git+https://github.com/Nheko-Reborn/nheko.git#branch=master)
-md5sums=("SKIP")
+source=($pkgname::git+https://github.com/Nheko-Reborn/nheko.git#branch=master
+        0001-Fix-missing-arguments-in-logging.patch)
+md5sums=('SKIP'
+         '96c9c5e561d7b3acd92fd84f83b86941')
 
 pkgver() {
   cd $pkgname
@@ -30,7 +32,15 @@ pkgver() {
 }
 
 prepare() {
-  mkdir -p $pkgname/build
+  cd $pkgname
+
+  mkdir -p build
+
+  # mtxclient switched to requiring c++20 but nheko has not been updated yet.
+  sed -i -e 's/CMAKE_CXX_STANDARD 17/CMAKE_CXX_STANDARD 20/' CMakeLists.txt
+  sed -i -e 's/CMAKE_CXX_STANDARD 17/CMAKE_CXX_STANDARD 20/' toolchain.cmake
+
+  patch -Np1 < ../0001-Fix-missing-arguments-in-logging.patch
 }
 
 build() {
@@ -49,16 +59,6 @@ package() {
   cd $pkgname/build
 
   make DESTDIR="$pkgdir" install
-
-  boostver=$(objdump -p /usr/lib/libboost_system.so | \
-               grep SONAME | sed -e 's/.*boost_system\.so\.//')
-  [[ $boostver =~ ^([0-9]*)\.([0-9]*)\.([0-9]*) ]]
-  maj_ver=${BASH_REMATCH[1]}
-  min_ver=${BASH_REMATCH[2]}
-  patch_ver=${BASH_REMATCH[3]}
-  ((next_min=min_ver + 1))
-  depends+=("boost-libs>=${maj_ver}.${min_ver}.${patch_ver}"
-            "boost-libs<${maj_ver}.${next_min}.0")
 
   cmarkver=$(objdump -p /usr/lib/libcmark.so | \
                grep SONAME | sed -e 's/.*cmark\.so\.//')
