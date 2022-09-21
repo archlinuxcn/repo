@@ -2,7 +2,7 @@
 # Contributor: Nils Czernia <nils@czserver.de>
 
 pkgname=prometheus-postgresql-exporter
-pkgver=0.11.0
+pkgver=0.11.1
 pkgrel=1
 pkgdesc="Prometheus exporter for PostgreSQL"
 arch=('x86_64')
@@ -13,7 +13,7 @@ backup=('etc/conf.d/prometheus-postgresql-exporter')
 source=("https://github.com/prometheus-community/postgres_exporter/archive/v${pkgver}.tar.gz"
 	"prometheus-postgresql-exporter.service"
 	"prometheus-postgresql-exporter.conf")
-sha256sums=('2b71340ddb533a0c7372d38d5b09bd79e6737a2a1f8ce0c46900f172ccb1e8e4'
+sha256sums=('48e38e5cc8f093f93a84b1536c2ae7dc480760f9c443ae654a9f1f83d289a7bc'
 	'0d86e650d88c8d4a8bc5b26faecb75023e069eaf29582135bcb0202e4a69a9b9'
 	'5436ad34fbcd6faab69da8675631f3eb5b89d964682eb23164bf4bb816ad1897')
 
@@ -26,22 +26,21 @@ prepare() {
 }
 
 build() {
+	export CGO_CPPFLAGS="${CPPFLAGS}"
+	export CGO_CFLAGS="${CFLAGS}"
+	export CGO_CXXFLAGS="${CXXFLAGS}"
+	export CGO_LDFLAGS="${LDFLAGS}"
+	export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
 	export GOPATH="${srcdir}/gopath"
 	cd "${GOPATH}/src/github.com/prometheus-community/postgres_exporter"
 	make build
 }
 
-check() {
-	export GOPATH="${srcdir}/gopath"
-	cd "${GOPATH}/src/github.com/prometheus-community/postgres_exporter"
-	make test
-}
-
 package() {
 	install -Dm644 "prometheus-postgresql-exporter.service" \
-	"${pkgdir}/usr/lib/systemd/system/prometheus-postgresql-exporter.service"
+	  "${pkgdir}/usr/lib/systemd/system/prometheus-postgresql-exporter.service"
 	install -Dm644 "prometheus-postgresql-exporter.conf" \
-	"${pkgdir}/etc/conf.d/prometheus-postgresql-exporter"
+	  "${pkgdir}/etc/conf.d/prometheus-postgresql-exporter"
 
 	cd "postgres_exporter-${pkgver}"
 	install -Dm755 "postgres_exporter" "${pkgdir}/usr/bin/prometheus_postgresql_exporter"
