@@ -3,7 +3,7 @@
 
 pkgname=nvidia-container-toolkit
 
-pkgver=1.10.0
+pkgver=1.11.0
 pkgrel=1
 
 pkgdesc='NVIDIA container runtime toolkit'
@@ -20,7 +20,7 @@ options=(!lto)
 backup=('etc/nvidia-container-runtime/config.toml')
 
 source=("v${pkgver}-${pkgrel}.tar.gz"::"${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('7c88e6b16df92feac9a14f7ca7f2960409c71760b2563fea29c57c8799930db3')
+sha256sums=('016e20b3a1a59409da131817d84b9fc56eab72d3f69a9797bbf960f73c9e5262')
 
 install=$pkgname.install
 
@@ -51,12 +51,13 @@ build() {
 }
 
 package() {
-  install -D -m755 "${_srcdir}/bin/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+  install -D -m755 "${_srcdir}/bin/nvidia-container-runtime-hook" "${pkgdir}/usr/bin/nvidia-container-runtime-hook"
+  install -D -m755 "${_srcdir}/bin/nvidia-ctk" "${pkgdir}/usr/bin/nvidia-ctk"
 
   pushd "${pkgdir}/usr/bin/"
-  ln -sf "${pkgname}" "nvidia-container-runtime-hook"
+  ln -sf "nvidia-container-runtime-hook" "${pkgname}"
   popd
-  install -D -m644 "${_srcdir}/config/config.toml.centos" "${pkgdir}/etc/nvidia-container-runtime/config.toml"
+  install -D -m644 "${_srcdir}/config/config.toml.rpm-yum" "${pkgdir}/etc/nvidia-container-runtime/config.toml"
   install -D -m644 "${_srcdir}/oci-nvidia-hook.json" "${pkgdir}/usr/share/containers/oci/hooks.d/00-oci-nvidia-hook.json"
 
   install -D -m644 "${_srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
