@@ -18,6 +18,5 @@ update_on:
   - source: github
     github: onnx/tensorflow-onnx
     use_latest_release: true
-    from_pattern: '^v\.?(.*)'
-    to_pattern: '\1'
+    prefix: v
   - alias: python
