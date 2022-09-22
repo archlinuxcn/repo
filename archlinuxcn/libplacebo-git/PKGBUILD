@@ -5,7 +5,7 @@ pkgname=libplacebo-git
 _pkgname=libplacebo
 epoch=1
 pkgver=4.208.0.r144.g0c81570
-pkgrel=1
+pkgrel=1.1
 pkgdesc='Reusable library for GPU-accelerated video/image rendering primitives'
 url='https://github.com/haasn/libplacebo'
 arch=('x86_64')
@@ -59,10 +59,6 @@ build() {
         --buildtype=debugoptimized \
         -D default_library=shared \
         -D tests=true \
-        -D vulkan=enabled \
-        -D glslang=enabled \
-        -D shaderc=enabled \
-        -D lcms=enabled \
         -D demos=true  \
         -D d3d11=disabled
     ninja -C build
