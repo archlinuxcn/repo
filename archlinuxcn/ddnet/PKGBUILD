@@ -2,20 +2,20 @@
 # Maintainer: Edgar Luque <git@edgarluque.com>
 
 pkgname=ddnet
-pkgver=16.3.2
+pkgver=16.4
 pkgrel=1
 pkgdesc="A Teeworlds modification with a unique cooperative gameplay."
 arch=('x86_64')
-url="https://ddnet.tw"
+url="https://ddnet.org"
 license=('custom:BSD' 'CCPL:by-nc-sa')
 depends=('freetype2' 'opusfile' 'curl' 'glew' 'wavpack' 'ffmpeg' 'libnotify' 'miniupnpc' 'sqlite' 'mariadb-libs' 'vulkan-icd-loader')
 makedepends=('cmake' 'ninja' 'python' 'vulkan-headers' 'glslang' 'spirv-tools')
 checkdepends=('gmock')
 optdepends=('ddnet-maps-git: All the maps used on the official DDNet Servers.')
 backup=('usr/share/ddnet/data/autoexec_server.cfg')
-source=("https://ddnet.tw/downloads/DDNet-$pkgver.tar.xz"
+source=("https://ddnet.org/downloads/DDNet-$pkgver.tar.xz"
         "ddnet-server.service" "ddnet-sysusers.conf" "ddnet-tmpfiles.conf")
-sha256sums=('7e4437130624e67a9e03d623a549418695b45786daa52274392980428e3ef521'
+sha256sums=('1a00f882efed2c5a4bc95fb948adbce57dc43254b71375d9fee9fac7a020755c'
             '9377a9d7c87abae166c8fa98cd79a61c74482f80f80bc930ae043349e9a84965'
             '70034f237270b38bf312238a26cfd322e212ca5714bfea4ae91e80c639ce8738'
             '043452f4de3c86d903973009bb3e59b3492a6669b86d0b1410e59a1476a87369')
@@ -37,6 +37,7 @@ build() {
 }
 
 check() {
+    export GTEST_FILTER='-Net.Ipv4AndIpv6Work'
     ninja run_tests -C build
 }
 
