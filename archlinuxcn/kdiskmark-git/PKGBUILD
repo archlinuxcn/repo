@@ -2,7 +2,7 @@
 
 _pkgname='KDiskMark'
 pkgname="${_pkgname,,}-git"
-pkgver=3.0.0.r7.g41475c2
+pkgver=3.1.2.r3.g59c9758
 pkgrel=1
 pkgdesc='Simple disk benchmark tool'
 arch=('x86_64')
@@ -17,6 +17,12 @@ sha256sums=('SKIP')
 
 pkgver() {
   git -C "${_pkgname}" describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd ${_pkgname}
+  git submodule init
+  git submodule update
 }
 
 build() {
