@@ -1,23 +1,28 @@
 pkgname=rime-sbxlm-sbxh
-pkgver=220301
+pkgver=220618
 pkgrel=1
 pkgdesc='声笔系列码，声笔小鹤'
 arch=(any)
-source=("https://gitee.com/sbxlm/sbxlm/attach_files/958324/download/$pkgver.zip")
-sha256sums=('a17439f7de55d033c727e9b8835d79d4b44a92d0bfc176c15868662391de1ffa')
+source=(fetch-release.sh)
+sha256sums=(SKIP)
+makedepends=('unzip' 'jq')
 depends=('rime-sbxlm')
 groups=(sbxlm)
 
 prepare() {
   cd $srcdir
+  curl -L $(./fetch-release.sh "小鹤") -o assets.zip
+  unzip -uo assets.zip -d ./assets
+  cd ./assets
   sed -i 's/import_preset: symbols/import_preset: sbxlm-symbols/g' *.schema.yaml
 }
 
 package() {
   mkdir -p $pkgdir/usr/share/sbxlm/init-userdb
-  cd $srcdir
+  cd $srcdir/assets
   tar czf $pkgdir/usr/share/sbxlm/init-userdb/$pkgname.tar.gz *.userdb
-  cp -r $srcdir/ $pkgdir/usr/share/rime-data/
+  cp -r $srcdir/assets $pkgdir/usr/share/rime-data/
   rm -rf $pkgdir/usr/share/rime-data/{*.userdb,$pkgver.zip}
   chmod 755 $pkgdir/usr/share/rime-data/
 }
+
