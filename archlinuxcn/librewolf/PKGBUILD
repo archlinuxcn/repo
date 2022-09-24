@@ -2,7 +2,7 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=104.0.2
+pkgver=105.0.1
 pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
@@ -25,20 +25,20 @@ options=(!emptydirs !makeflags !strip !lto !debug)
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
 # _source_tag="${pkgver}-${pkgrel%.*}"
 _source_tag="${pkgver}-${pkgrel}"
-_source_commit='64ade27afdf4fd9da67cdc04b55eefe5542e70be'
-_settings_tag='6.9'
-# _settings_commit='02212c3f44e7aa68b22c8febd9158580d7e4b74f'
+# _source_commit='bbfb175306ac9d1590d59699bfbfe88eb2b1d2a0'
+# _settings_tag='6.10'
+_settings_commit='4445fa8ee9ba6cbd0b6c44ec296500ac92ca991a'
 install='librewolf.install'
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         https://github.com/archlinuxarm/PKGBUILDs/raw/20308ce75b0eecf1fae0db7d7ab07fb68b3000dc/extra/firefox/arc4random.diff
         $pkgname.desktop
-        "git+https://gitlab.com/${pkgname}-community/browser/source.git#commit=${_source_commit}"
-        "git+https://gitlab.com/${pkgname}-community/settings.git#tag=${_settings_tag}"
+        "git+https://gitlab.com/${pkgname}-community/browser/source.git#tag=${_source_tag}"
+        "git+https://gitlab.com/${pkgname}-community/settings.git#commit=${_settings_commit}"
         "default192x192.png"
         "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
         )
 # source_aarch64=()
-sha256sums=('72bba06f04e7745f6b02951906413eb1c15a7e253e06e373302162c6219f286a'
+sha256sums=('70ecea0d26242d0c3613b9524405d72a22b52ae346072ac229a58c48634975cd'
             'SKIP'
             '714ca50b2ce0cac470dbd5a60e9a0101b28072f08a5e7a9bba94fef2058321c4'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
@@ -149,17 +149,6 @@ fi
   # upstream Arch fixes
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
   # patch -Np1 -i ${srcdir}/0001-Use-remoting-name-for-GDK-application-names.patch
-
-  # Unbreak build with glibc 2.36
-
-  # needs to be kept until alarm/manjaro aarch64 also have switched to 36
-  # this is not beautiful
-  export LANG=C
-  # thanks @ZhangHua for advising me on taking care of LANG when using grep! :)
-  local _glibc_minor=$(pacman -Qi glibc | grep Version | sed -e 's/Version[[:space:]]*:[[:space:]][0-9]\.\(.*\)-[0-9]/\1/')
-  if [ "${_glibc_minor}" -gt 35 ]; then
-    patch -Np1 -i ../arc4random.diff
-  fi
 
   # upstream patches from gentoo
 
