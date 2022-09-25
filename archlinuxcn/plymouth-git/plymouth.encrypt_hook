@@ -51,8 +51,14 @@ EOF
 
     for cryptopt in ${cryptoptions//,/ }; do
         case ${cryptopt} in
-            allow-discards)
+            allow-discards|discard)
                 cryptargs="${cryptargs} --allow-discards"
+                ;;
+            no-read-workqueue|perf-no_read_workqueue)
+                cryptargs="${cryptargs} --perf-no_read_workqueue"
+                ;;
+            no-write-workqueue|perf-no_write_workqueue)
+                cryptargs="${cryptargs} --perf-no_write_workqueue"
                 ;;
             *)
                 echo "Encryption option '${cryptopt}' not known, ignoring." >&2
@@ -63,29 +69,34 @@ EOF
     if resolved=$(resolve_device "${cryptdev}" ${rootdelay}); then
         if cryptsetup isLuks ${resolved} >/dev/null 2>&1; then
             [ ${DEPRECATED_CRYPT} -eq 1 ] && warn_deprecated
-            dopassphrase=1
-            # If keyfile exists, try to use that
-            if [ -f ${ckeyfile} ]; then
-                if eval cryptsetup --key-file ${ckeyfile} luksOpen ${resolved} ${cryptname} ${cryptargs} ${CSQUIET}; then
-                    dopassphrase=0
-                else
-                    echo "Invalid keyfile. Reverting to passphrase."
-                fi
-            fi
-            # Ask for a passphrase
-            if [ ${dopassphrase} -gt 0 ]; then
-                echo
-                echo "A password is required to access the ${cryptname} volume:"
-                plymouth ask-for-password --prompt="Password for ${cryptname} volume" --dont-pause-progress --number-of-tries=5 --command="/sbin/cryptsetup luksOpen --key-file=- ${resolved} ${cryptname} ${cryptargs} ${CSQUIET}"
-                sleep 2
-            fi
+            # Check whether device has already been decrypted
             if [ -e "/dev/mapper/${cryptname}" ]; then
-                if [ ${DEPRECATED_CRYPT} -eq 1 ]; then
-                    export root="/dev/mapper/root"
-                fi
+                echo "${cryptname} already unlocked, continuing..."
             else
-                err "Password succeeded, but ${cryptname} creation failed, aborting..."
-                exit 1
+                dopassphrase=1
+                # If keyfile exists, try to use that
+                if [ -f ${ckeyfile} ]; then
+                    if eval cryptsetup --key-file ${ckeyfile} luksOpen ${resolved} ${cryptname} ${cryptargs} ${CSQUIET}; then
+                        dopassphrase=0
+                    else
+                        echo "Invalid keyfile. Reverting to passphrase."
+                    fi
+                fi
+                # Ask for a passphrase
+                if [ ${dopassphrase} -gt 0 ]; then
+                    echo
+                    echo "A password is required to access the ${cryptname} volume:"
+                    plymouth ask-for-password --prompt="Password for ${cryptname} volume" --dont-pause-progress --number-of-tries=5 --command="/sbin/cryptsetup luksOpen --key-file=- ${resolved} ${cryptname} ${cryptargs} ${CSQUIET}"
+                    sleep 2
+                fi
+                if [ -e "/dev/mapper/${cryptname}" ]; then
+                    if [ ${DEPRECATED_CRYPT} -eq 1 ]; then
+                        export root="/dev/mapper/root"
+                    fi
+                else
+                    err "Password succeeded, but ${cryptname} creation failed, aborting..."
+                    exit 1
+                fi
             fi
         elif [ -n "${crypto}" ]; then
             [ ${DEPRECATED_CRYPT} -eq 1 ] && warn_deprecated
