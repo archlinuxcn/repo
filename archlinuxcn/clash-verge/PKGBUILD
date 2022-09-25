@@ -7,7 +7,7 @@ arch=('x86_64' 'aarch64')
 url="https://github.com/zzzgydi/clash-verge"
 license=('GPL3')
 depends=('webkit2gtk' 'clash-geoip')
-makedepends=('yarn' 'cargo-tauri' 'clash-premium-bin>=2022.04.01' 'clash-meta'  'jq' 'moreutils')
+makedepends=('yarn' 'cargo-tauri' 'clash-premium-bin>=2022.04.01' 'clash-meta'  'jq' 'moreutils' 'rust')
 optdepends=('clash-premium-bin>=2022.04.01: clash-core'
 'clash-meta: clash-core')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
