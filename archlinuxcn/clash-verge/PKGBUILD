@@ -1,6 +1,6 @@
 # maintainer: sukanka<su975853527 AT gmail dot com>
 pkgname=clash-verge
-pkgver=1.0.6
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="A Clash GUI based on tauri."
 arch=('x86_64' 'aarch64')
@@ -14,7 +14,7 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz
 "${pkgname}.desktop"
 )
 
-sha512sums=('c9587e8518273fe0a0b1f5664c688dba21fe6886912cd9dd4112b3f653427799a890b8d36c17850a13062a39dea26f64bd92886f90467dc09385c6684218a3ed'
+sha512sums=('a2e7c2414edf4c2192a0f6c74b9fbffd5f7b30e38abc2ceaedee706a986d92121cbcead8045522b2ecb19fcd926088dca6fb6d037f507c40a96ce8010941c06e'
             '2066dacf2e5e0135e6403cbfb825efcdf08bbcdc781407e6bb1fbb85143817b2b1abef641d20390ff7e5b3e91a509933e9eb17a64f9de7671445ac6d5363a44a')
 
 prepare(){
