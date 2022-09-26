@@ -9,10 +9,8 @@ arch=('any')
 url="https://github.com/Dreamacro/maxmind-geoip"
 license=('custom')
 source=("${url}/releases/download/${pkgver}/Country.mmdb")
-md5sums=('7b2c7084ad1b71146948d62d60e3cacd')
-sha1sums=('b540bca1bcb46a37b1879893f3f82fc83aa7905c')
-sha256sums=('532a0c07ea092cfd25e4678ba4cb31e728e34634cc334582d65a245c6d85ab75')
+sha256sums=('608423b966e2ce178413d9202fe8414b518019fd8f6e9696e66bbf9629bd43d0')
 
 package() {
-    install -Dm 644 Country.mmdb -t "${pkgdir}"/etc/clash/
+    install -Dm0644 Country.mmdb -t "${pkgdir}"/etc/clash/
 }

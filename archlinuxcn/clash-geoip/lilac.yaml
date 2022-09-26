@@ -1,7 +1,16 @@
+pre_build_script: |
+    update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: |
+    git_pkgbuild_commit()
+    update_aur_repo()
+
 update_on:
   - source: github
     github: Dreamacro/maxmind-geoip
     use_latest_release: true
+  - source: manual
+    manual: 1.0.0
 
 maintainers:
   - github: dctxmei
