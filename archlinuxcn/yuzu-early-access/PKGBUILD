@@ -2,7 +2,7 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=2956
+pkgver=2974
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
@@ -13,18 +13,11 @@ makedepends=('git' 'glslang' 'cmake' 'ninja' 'graphviz' 'doxygen' 'clang' 'boost
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
-source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz"
-    "inject-git-info.patch")
-md5sums=('00944411db18d28390c1bff728991e1a'
-         '3f0a9f3d79cbe4759e9ef550dbad0baa')
+source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz")
+sha256sums=('541338b0ee34c2020d0e62260c808db6dc1ea27e597a41ffe46823b1088cccb2')
 
 prepare() {
   cd "$srcdir/pineapple-src-EA-${pkgver}"
-  cp $srcdir/inject-git-info.patch patches/
-
-  for i in patches/*.patch; do
-    patch -p1 --verbose --ignore-whitespace < $i
-  done
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror$/-W/g' {} +
   #find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*)$/ )/g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
@@ -34,7 +27,8 @@ prepare() {
   sed -i -e '/Name=yuzu/ s/$/ Early Access/' dist/yuzu.desktop
   sed -i -e '/yuzu %f/a StartupWMClass=yuzu' dist/yuzu.desktop
   sed -i -e 's_^MimeType=.*_&application/x-nx-nsp;application/x-nx-xci;_' dist/yuzu.desktop
- 
+  sed -i -e 's| (%2)||' src/yuzu/aboutdialog.ui
+
   curl -s https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml > ./dist/yuzu.xml || curl -s https://gitlab.com/samantas5855/pineapple/-/raw/master/yuzu.xml > ./dist/yuzu.xml
 }
 build() {
