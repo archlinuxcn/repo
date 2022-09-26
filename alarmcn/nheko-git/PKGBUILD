@@ -21,10 +21,8 @@ makedepends=(git cmake qt5-tools nlohmann-json fontconfig lmdbxx pkg-config asci
 provides=("nheko")
 conflicts=("nheko")
 
-source=($pkgname::git+https://github.com/Nheko-Reborn/nheko.git#branch=master
-        0001-Fix-missing-arguments-in-logging.patch)
-md5sums=('SKIP'
-         '96c9c5e561d7b3acd92fd84f83b86941')
+source=($pkgname::git+https://github.com/Nheko-Reborn/nheko.git#branch=master)
+md5sums=('SKIP')
 
 pkgver() {
   cd $pkgname
@@ -35,12 +33,6 @@ prepare() {
   cd $pkgname
 
   mkdir -p build
-
-  # mtxclient switched to requiring c++20 but nheko has not been updated yet.
-  sed -i -e 's/CMAKE_CXX_STANDARD 17/CMAKE_CXX_STANDARD 20/' CMakeLists.txt
-  sed -i -e 's/CMAKE_CXX_STANDARD 17/CMAKE_CXX_STANDARD 20/' toolchain.cmake
-
-  patch -Np1 < ../0001-Fix-missing-arguments-in-logging.patch
 }
 
 build() {
