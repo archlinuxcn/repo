@@ -1,13 +1,13 @@
-# maintainer: sukanka<su975853527 AT gmail dot com>
+# Maintainer: sukanka<su975853527 AT gmail dot com>
 pkgname=clash-verge
 pkgver=1.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A Clash GUI based on tauri."
 arch=('x86_64' 'aarch64')
 url="https://github.com/zzzgydi/clash-verge"
 license=('GPL3')
 depends=('webkit2gtk' 'clash-geoip')
-makedepends=('yarn' 'cargo-tauri' 'clash-premium-bin>=2022.04.01' 'clash-meta'  'jq' 'moreutils' 'rust')
+makedepends=('yarn' 'cargo-tauri' 'clash-premium-bin>=2022.04.01' 'clash-meta'  'jq' 'moreutils' 'rust' 'quickjs')
 optdepends=('clash-premium-bin>=2022.04.01: clash-core'
 'clash-meta: clash-core')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
@@ -38,6 +38,7 @@ prepare(){
 build(){
 	cd $srcdir/${pkgname}-${pkgver}
 	# export HOME=$srcdir
+	export RUSTFLAGS="-L /usr/lib/quickjs"
 	yarn install
 	yarn run check
 	cargo-tauri build
