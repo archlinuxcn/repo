@@ -3,7 +3,7 @@
 
 pkgname=pacman-lily
 pkgver=6.0.1
-pkgrel=7
+pkgrel=8
 pkgdesc="A library-based package manager with dependency support (no disabling-server-on-error)"
 arch=('x86_64')
 url="https://www.archlinux.org/pacman/"
@@ -24,6 +24,7 @@ source=(pacman.patch
         pacman-syncdb
         https://sources.archlinux.org/other/pacman/pacman-$pkgver.tar.xz{,.sig}
         "fix-wkd-lookup.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/e1246baddd14ec6f4b6270b59bea0e1b639472a7.patch"
+        "patch-updatedb.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/58d678fa289034f1fe2a56adbb5e496b774755fc.patch"
         add-flto-to-LDFLAGS-for-clang.patch
         makepkg-use-ffile-prefix-map-instead-of-fdebug-prefi.patch
         libmakepkg-add-extra-buildflags-only-when-buildflags.patch
@@ -35,6 +36,7 @@ sha256sums=(61e0b85dadb341ea14e5aa28b0b1edf98871bc3dffd1083fb5775fc28a65e113
             '0db61456e56aa49e260e891c0b025be210319e62b15521f29d3e93b00d3bf731'
             'SKIP'
             '8ab5b1338874d7d58e11c5d1185ea3454fcc89755f9c18faf87ff348ad1ed16c'
+            '988acbb76a0bbd866ab76121191ba4a968bf12970d581fb81b47504c4d998e96'
             '82ff91b85f4c6ceba19f9330437e2a22aabc966c2b9e2a20a53857f98a42c223'
             'b940e6c0c05a185dce1dbb9da0dcbebf742fca7a63f3e3308d49205afe5a6582'
             '7d0aee976c9c71fcf7c96ef1d99aa76efe47d8c1f4451842d6d159ec7deb4278'
@@ -50,6 +52,7 @@ prepare() {
   patch -Np1 -i ../libmakepkg-add-extra-buildflags-only-when-buildflags.patch
   patch -Np1 -i ../make-link-time-optimization-flags-configurable.patch
   patch -Np1 -i ../fix-wkd-lookup.patch
+  patch -Np1 -i ../patch-updatedb.patch
 }
 
 build() {
