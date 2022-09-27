@@ -2,7 +2,7 @@
 
 _basename=serd
 pkgname=lib32-serd
-pkgver=0.30.14
+pkgver=0.30.16
 pkgrel=1
 pkgdesc="Lightweight C library for RDF syntax supporting reading/ writing Turtle and NTriples (32-bit)"
 arch=(x86_64)
@@ -11,9 +11,9 @@ license=(custom:ISC)
 depends=(lib32-gcc-libs serd)
 makedepends=(meson)
 source=(https://download.drobilla.net/$_basename-$pkgver.tar.xz{,.sig})
-sha512sums=('d753bf60d4ff37220e64fda6a5dc6c69dc1a52ef435ab5b1e698f72dc5a7280ea764bb53b015753c3dc0910f252ca96c0ebafcb902a9956fcbf0a4480ce4e1dc'
+sha512sums=('1bc2e310027d52ea675aa261b52e89c4c1ccb622fa9fef11c874876de7821fe94672918ff58b9edcc7995daa70fc88b7ceb88fae61dd40f601285de1995b39ff'
             'SKIP')
-b2sums=('42ed92e8eed3564c2625dd2f8e9bff55b65d1c8c993f13f2aa7ea0ab41a4c261b6b8fe9d4c61a915157616df1dba11d37f3813cd7bf7cd4571cb535895cb8f9c'
+b2sums=('0021125505bf23565a1cca24dc83eff3496fc11fe6b38dc07b68d800c7bd6a854923bc7c529161b659bd80cb7aa8c3b45e767f0841b57d4803d820e0016e2ed2'
         'SKIP')
 validpgpkeys=('907D226E7E13FA337F014A083672782A9BF368F3') # David Robillard <d@drobilla.net>
 
