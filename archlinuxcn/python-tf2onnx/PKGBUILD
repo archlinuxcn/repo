@@ -3,12 +3,12 @@
 pkgname=python-tf2onnx
 epoch=1
 pkgver=1.12.1
-pkgrel=2
+pkgrel=3
 pkgdesc='Convert TensorFlow models to ONNX'
 arch=(any)
 url='https://github.com/onnx/tensorflow-onnx'
 license=(MIT)
-depends=(python python-tensorflow python-numpy python-onnx python-requests python-six)
+depends=(python python-tensorflow python-numpy python-onnx python-requests python-six python-flatbuffers)
 makedepends=(python-setuptools python-build python-installer python-wheel)
 checkdepends=(python-pytest python-graphviz python-parameterized python-yaml python-onnxruntime)
 source=("https://github.com/onnx/tensorflow-onnx/archive/v$pkgver/tf2onnx-v$pkgver.tar.gz"
@@ -21,6 +21,9 @@ prepare() {
 
   sed -i -r 's#--cov\S+##' setup.cfg
   sed -i "s#'pytest-runner'##" setup.py
+
+  # https://github.com/onnx/tensorflow-onnx/issues/1977
+  sed -i 's#flatbuffers~=1.12#flatbuffers#' setup.py
 
   # The latest upstream tag may not sync with the version file
   echo $pkgver > VERSION_NUMBER
