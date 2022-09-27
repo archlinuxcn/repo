@@ -4,7 +4,7 @@
 # Contributor: Hans Janssen <hans@janserv.xs4all.nl>
 
 pkgname=simgear
-pkgver=2020.3.13
+pkgver=2020.3.14
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc="A set of open-source libraries designed to be used as building blocks for quickly assembling 3d simulations, games, and visualization applications."
@@ -16,7 +16,7 @@ license=("GPL")
 url="http://www.flightgear.org/"
 options=('makeflags' 'staticlibs')
 source=("https://downloads.sourceforge.net/project/flightgear/release-${_pkgver}/${pkgname}-${pkgver}.tar.bz2")
-sha256sums=('dc09906fda8b1810fe2cb22b5f5171d208ba901c5b9d390bad6d1f3fd66c51e8')
+sha256sums=('35ba479f57bdf930fef7f892141c35ebf090317631dc3fda4838644867414f74')
 
 prepare() {
   cd "$srcdir"/simgear-$pkgver
