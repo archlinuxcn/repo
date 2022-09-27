@@ -33,8 +33,12 @@ JIT="YES"
                   #
                   # To compile all site-lisp on demand (repos/AUR packages,
                   # ELPA, MELPA, whatever), add
-                  #    (setq comp-deferred-compilation t)
+                  #    (setq native-comp-deferred-compilation t)
                   # to your .emacs file.
+                  # 
+                  # And to keep the eln cache clean add 
+                  #    (setq native-compile-prune-cache t)
+                  # to delete old versions.
 
 AOT="YES"
 
@@ -79,7 +83,7 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-native-comp-pgtk-git"
 fi
-pkgver=29.0.50.160132
+pkgver=29.0.50.160137
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch. AOT&JIT&PGTK enabled."
 arch=('x86_64')
