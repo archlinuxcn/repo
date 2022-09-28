@@ -1,15 +1,15 @@
 # Maintainer: Static_Rocket
 
 pkgname=asusctl-git
-pkgver=4.3.4.r43.gd1bdf4d
+pkgver=4.5.0.rc3.r3.g2a4754c
 pkgrel=1
 pkgdesc="Asus laptop control utilities"
 arch=('x86_64')
 url="https://gitlab.com/asus-linux/asusctl"
 license=('Mozilla Public License Version 2.0')
-depends=('libusb' 'udev' 'systemd')
+depends=('libusb' 'udev' 'systemd' 'freetype2' 'fontconfig')
 optdepends=('acpi_call: fan control' 'supergfxctl-git: switch graphics card mode')
-makedepends=('git' 'rust')
+makedepends=('git' 'rust' 'cmake')
 provides=('asus-nb-ctrl')
 replaces=('asus-nb-ctrl-git')
 source=('git+https://gitlab.com/asus-linux/asusctl.git')
