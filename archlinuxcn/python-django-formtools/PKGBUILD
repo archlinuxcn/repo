@@ -1,23 +1,23 @@
 _name=django-formtools
 pkgname=python-django-formtools
-pkgver=2.3
-pkgrel=2
+pkgver=2.4
+pkgrel=1
 pkgdesc="A set of high-level abstractions for Django forms"
 arch=(any)
 url="https://django-formtools.readthedocs.io/en/latest/"
 license=('BSD')
 depends=('python-django' 'python-setuptools-scm')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/django-formtools-2.3.tar.gz")
-sha256sums=('9663b6eca64777b68d6d4142efad8597fe9a685924673b25aa8a1dcff4db00c3')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/django-formtools-2.4.tar.gz")
+sha256sums=('deb932be55b1d9419e37dc4d65dfbfeb8d307b71c8c11fd52f159aba5fc0deed')
 
 build() {
-  cd "$srcdir/django-formtools-2.3"
+  cd "$srcdir/django-formtools-2.4"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/django-formtools-2.3"
+  cd "$srcdir/django-formtools-2.4"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install any world-writable or root-readable-only files
