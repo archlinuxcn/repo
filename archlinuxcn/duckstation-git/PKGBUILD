@@ -1,14 +1,14 @@
 # Maintainer: katt <magunasu.b97@gmail.com>
 
 pkgname=duckstation-git
-pkgver=5613.5e73242d
+pkgver=5743.8aa1c882
 pkgdesc='A Sony PlayStation (PSX) emulator, focusing on playability, speed, and long-term maintainability (git version)'
 pkgrel=1
 epoch=1
 arch=(x86_64 aarch64)
 url=https://github.com/stenzek/duckstation
 license=(GPL3)
-makedepends=(git cmake extra-cmake-modules qt6-tools libdrm gtk3 ninja)
+makedepends=(git cmake extra-cmake-modules qt6-tools libdrm libpulse alsa-lib sndio gtk3 ninja)
 depends=(sdl2 qt6-base)
 optdepends=()
 provides=("${pkgname%-git}")
@@ -19,6 +19,22 @@ sha256sums=('SKIP')
 pkgver() {
     cd "${srcdir}/duckstation"
     printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+    # fix build for commit ef3ad91a
+    patch -p1 -d "${srcdir}/${pkgname%-git}" << EOF
+--- a/src/frontend-common/fullscreen_ui.cpp 2022-09-17 22:10:40.988720185 +0000
++++ b/src/frontend-common/fullscreen_ui.cpp 2022-09-17 22:37:55.911769613 +0000
+@@ -1134,7 +1134,7 @@
+     ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() - rev_size.x - LayoutScale(20.0f),
+                                ImGui::GetWindowHeight() - rev_size.y - LayoutScale(20.0f)));
+     ImGui::PushFont(g_medium_font);
+-    ImGui::Text(g_scm_tag_str);
++    ImGui::TextUnformatted(g_scm_tag_str);
+     ImGui::PopFont();
+   }
+EOF
 }
 
 build() {
@@ -40,8 +56,18 @@ package() {
     ln -svt "${pkgdir}/usr/bin" /opt/"${pkgname%-git}"/"${pkgname%-git}"-qt
 
     # Desktop file
-    install -Dm644 -t "${pkgdir}/usr/share/applications/" "${pkgname%-git}"/extras/linux-desktop-files/duckstation-qt.desktop
-    sed -e 's/Icon=duckstation-qt/Icon=duckstation/' -i "${pkgdir}/usr/share/applications/duckstation-qt.desktop"
-    #sed -e 's/Icon=duckstation-qt/Icon=duckstation/' -i "${pkgdir}/usr/share/applications/duckstation-nogui.desktop"
-    install -Dm644 "${pkgname%-git}"/extras/icons/icon-256px.png "${pkgdir}/usr/share/pixmaps/duckstation.png"
+    cat > "${pkgname%-git}/data/resources/.desktop" << EOF
+[Desktop Entry]
+Type=Application
+Name=DuckStation
+GenericName=PlayStation 1 Emulator
+Comment=Fast PlayStation 1 emulator
+Icon=duckstation
+TryExec=duckstation-qt
+Exec=duckstation-qt %f
+Categories=Game;Emulator;Qt;
+EOF
+    install -Dm644 "${pkgname%-git}/data/resources/.desktop" "${pkgdir}/usr/share/applications/duckstation-qt.desktop"
+    install -Dm644 "${pkgname%-git}/data/resources/images/duck.png" "${pkgdir}/usr/share/pixmaps/duckstation.png"
 }
+
