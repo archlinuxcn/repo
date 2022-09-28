@@ -4,17 +4,16 @@
 
 pkgname=rstudio-desktop-git
 _gitname=rstudio
-pkgver=39480.2a3eead88a
-_gwtver=2.8.2
+pkgver=39559.c11dacb820
+_gwtver=2.9.0
 _ginver=2.1.2
-_nodever=16.14.0
 pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 arch=('i686' 'x86_64')
 url="https://www.rstudio.com/products/rstudio/"
 license=('AGPL3')
 depends=('r>=3.0.1' boost-libs qt5-sensors qt5-svg qt5-webengine qt5-xmlpatterns postgresql-libs sqlite3 soci clang hunspell-en_US mathjax2 pandoc yaml-cpp quarto-cli-bin libldap)
-makedepends=(git 'cmake>=3.1.0' boost desktop-file-utils jdk8-openjdk apache-ant unzip openssl libcups pam patchelf wget yarn)
+makedepends=(git 'cmake>=3.1.0' boost desktop-file-utils jdk8-openjdk apache-ant unzip openssl libcups pam patchelf wget yarn nodejs)
 optdepends=('git: for git support'
             'subversion: for subversion support'
             'openssh-askpass: for a git ssh access')
@@ -23,15 +22,15 @@ conflicts=('rstudio-desktop' 'rstudio-desktop-bin' 'rstudio-desktop-preview')
 source=("git+https://github.com/rstudio/rstudio.git"
         "https://s3.amazonaws.com/rstudio-buildtools/gin-${_ginver}.zip"
         "https://storage.googleapis.com/gwt-releases/gwt-${_gwtver}.zip"
-	    "https://nodejs.org/dist/v${_nodever}/node-v${_nodever}-linux-x64.tar.gz"
 	    "qt.conf"
-	    "cran_multithread.patch")
+	    "cran_multithread.patch"
+        "nodejs-external.patch")
 sha256sums=('SKIP'
             'b98e704164f54be596779696a3fcd11be5785c9907a99ec535ff6e9525ad5f9a'
-            '970701dacc55170088f5eb327137cb4a7581ebb4734188dfcc2fad9941745d1b'
-            '2c69e7b040c208b61ebf9735c63d2e5bcabfed32ef05a9b8dd5823489ea50d6b'
+            '253911e3be63c19628ffef5c1082258704e7896f81b855338c6a036f524fbd42'
             '723626bfe05dafa545e135e8e61a482df111f488583fef155301acc5ecbbf921'
-            '3906b102e97c26a759c960166542cb7f87c73c3450b3bb5f8c4fc54ffd10f3fe')
+            'b57a080325a9153ef47bcf5ded256e90816080384cc0c686b7fe0d54d46f7bd5'
+            '8366b6293e445abce7baf864405900bcf310fb8f73915113837946f92a717d47')
 noextract=("gin-${_ginver}.zip")
 
 pkgver() {
@@ -40,6 +39,8 @@ pkgver() {
 }
 
 prepare() {
+    git -C "${srcdir}/${_gitname}" apply -v "${srcdir}"/nodejs-external.patch
+    
     cd ${srcdir}/${_gitname}
     local JOBS; JOBS="$(grep -oP -- "-j\s*\K[0-9]+" <<< "${MAKEFLAGS}")" || JOBS="1"
     sed "s/@@proc_num@@/${JOBS}/" -i ${srcdir}/cran_multithread.patch
@@ -60,13 +61,6 @@ prepare() {
     ln -sfT /opt/quarto quarto
     ln -sfT /usr/bin/pandoc pandoc/${_pandocver}/pandoc
     
-    # Nodejs
-    install -d node/${_nodever}
-    cp -r "${srcdir}/node-v${_nodever}-linux-x64/"* node/${_nodever}
-    cd "${srcdir}/${_gitname}/src/gwt/panmirror/src/editor"
-    yarn config set ignore-engines true
-    yarn install
-
     cd "${srcdir}/${_gitname}/dependencies"
     ln -sfT common/dictionaries dictionaries
     ln -sfT common/mathjax-27 mathjax-27
@@ -94,7 +88,6 @@ build() {
           -DBoost_NO_BOOST_CMAKE=ON \
           -DRSTUDIO_USE_SYSTEM_SOCI=yes \
           -DRSTUDIO_BUNDLE_QT=FALSE
-#    make -C build
 }
 
 package() {
