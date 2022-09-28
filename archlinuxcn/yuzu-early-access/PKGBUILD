@@ -2,7 +2,7 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=2974
+pkgver=2975
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
@@ -13,8 +13,10 @@ makedepends=('git' 'glslang' 'cmake' 'ninja' 'graphviz' 'doxygen' 'clang' 'boost
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
-source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz")
-sha256sums=('541338b0ee34c2020d0e62260c808db6dc1ea27e597a41ffe46823b1088cccb2')
+source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz"
+"https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml")
+sha256sums=('7e62a9352e6840f2be8570435c4b1ce59364d03c19ac2cf0ba5ea97b155393c9'
+            'e76ab2b3566d8135930e570ede5bed3da8f131270b60db818e453d248880bdf2')
 
 prepare() {
   cd "$srcdir/pineapple-src-EA-${pkgver}"
@@ -29,7 +31,7 @@ prepare() {
   sed -i -e 's_^MimeType=.*_&application/x-nx-nsp;application/x-nx-xci;_' dist/yuzu.desktop
   sed -i -e 's| (%2)||' src/yuzu/aboutdialog.ui
 
-  curl -s https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml > ./dist/yuzu.xml || curl -s https://gitlab.com/samantas5855/pineapple/-/raw/master/yuzu.xml > ./dist/yuzu.xml
+  cp -f  $srcdir/yuzu.xml dist/yuzu.xml
 }
 build() {
   cd "$srcdir/pineapple-src-EA-${pkgver}"
