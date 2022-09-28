@@ -1,5 +1,16 @@
 post_install() {
-	echo "Note: Remember you need a powerful computer with an nvidia or ati card to execute this emulator"
-	echo "Download shader caches for your games from reddit.com/r/CEMUcaches, and install them on the ~/.cemu/shaderCache dir, otherwise the performance could be poor"
+	cat << 'EOF'
++------------------------------------------------------------------------------+
+| This software is still experimental! Many features are missing (e.g. Online) |
+| and current performance is worse than running through Wine (AUR: cemu-wine)  |
+| and much worse than Windows.                                                 |
+|                                                                              |
+| This package follows the XDG Base Directory Specification:                   |
+| - Put your keys in your $XDG_CONFIG_HOME (default: ~/.config/cemu/keys.txt)  |
+| - Put your mlc01 in your $XDG_DATA_HOME (default: ~/.local/share/cemu/mlc01) |
+|                                                                              |
+| Linux specific issues: https://github.com/cemu-project/Cemu/issues           |
+| Arch specific issues:  https://aur.archlinux.org/packages/cemu               |
++------------------------------------------------------------------------------+
+EOF
 }
-
