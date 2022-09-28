@@ -1,0 +1,30 @@
+#!/bin/sh
+
+set -e
+
+YELLOW="$(tput setaf 3 2>/dev/null || printf '')"
+RED="$(tput setaf 1 2>/dev/null || printf '')"
+NO_COLOR="$(tput sgr0 2>/dev/null || printf '')"
+
+warn() {
+  printf '%s\n' "${YELLOW}! $*${NO_COLOR}"
+}
+
+error() {
+  printf '%s\n' "${RED}! $*${NO_COLOR}"
+  exit 1
+}
+
+ptrace_scope=$(cat /proc/sys/kernel/yama/ptrace_scope)
+
+case $ptrace_scope in
+  2)
+    warn "Your ptrace_scope is 2, give the correct capability to gg."
+    /usr/bin/setcap cap_net_raw,cap_sys_ptrace+ep /usr/bin/gg
+    ;;
+  3)
+    error "Your kernel does not allow ptrace permission, gg may not work."
+    ;;
+  *)
+    echo "No need to setcap."
+esac

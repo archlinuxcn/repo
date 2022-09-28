@@ -1,0 +1,12 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Path
+Target = usr/bin/gg
+
+[Action]
+Description = setcap to gg
+Depends = libcap
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/gg-cap
+NeedsTargets

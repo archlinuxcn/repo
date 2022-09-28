@@ -1,0 +1,12 @@
+post_install() {
+cat <<'EOF'
+If your kernel does not allow ptrace permission,
+please set kernel parameter kernel.yama.ptrace_scope to 1.
+EOF
+}
+
+post_upgrade() {
+    if (( $(vercmp "$2" '0.2.13-2') < 0)); then
+        post_install
+    fi
+}
