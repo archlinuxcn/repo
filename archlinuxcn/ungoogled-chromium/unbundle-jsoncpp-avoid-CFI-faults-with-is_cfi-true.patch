@@ -1,0 +1,38 @@
+From ed8d931e35f81d8566835a579caf7d61368f85b7 Mon Sep 17 00:00:00 2001
+From: Evangelos Foutras <evangelos@foutrelis.com>
+Date: Tue, 27 Sep 2022 22:20:41 +0000
+Subject: [PATCH] unbundle/jsoncpp: avoid CFI faults with is_cfi=true
+
+Ensure jsoncpp symbols have public visibility and are thus excluded from
+CFI checks and whole-program optimization. This is achieved by defining
+JSON_DLL_BUILD which in turn causes json/config.h to define JSON_API as
+__attribute__((visibility("default"))). The latter macro is used to tag
+jsoncpp classes and namespace functions throughout jsoncpp's headers.
+
+BUG=1365218
+
+Change-Id: I56277737b7d9ecaeb5e17c8d21a2e55f3d5d5bc9
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/3919652
+Reviewed-by: Thomas Anderson <thomasanderson@chromium.org>
+Commit-Queue: Thomas Anderson <thomasanderson@chromium.org>
+Cr-Commit-Position: refs/heads/main@{#1052077}
+---
+ build/linux/unbundle/jsoncpp.gn | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/build/linux/unbundle/jsoncpp.gn b/build/linux/unbundle/jsoncpp.gn
+index 544f9d13c9..e84a0ef27a 100644
+--- a/build/linux/unbundle/jsoncpp.gn
++++ b/build/linux/unbundle/jsoncpp.gn
+@@ -3,6 +3,11 @@ import("//build/shim_headers.gni")
+ 
+ pkg_config("jsoncpp_config") {
+   packages = [ "jsoncpp" ]
++
++  # Defining JSON_DLL_BUILD applies public visibility to jsoncpp classes
++  # thus deactivating CFI checks for them. This avoids CFI violations in
++  # virtual calls to system jsoncpp library (https://crbug.com/1365218).
++  defines = [ "JSON_DLL_BUILD" ]
+ }
+ 
+ shim_headers("jsoncpp_shim") {
