@@ -1,0 +1,10 @@
+--- Makefile.pre.in.orig	2020-03-21 08:40:27.031543502 +0800
++++ Makefile.pre.in	2020-03-21 08:47:27.277107917 +0800
+@@ -1137,6 +1137,7 @@
+ 		$(INSTALL_DATA) $(srcdir)/Modules/xxmodule.c \
+ 			$(DESTDIR)$(LIBDEST)/distutils/tests ; \
+ 	fi
++	find $(DESTDIR)$(LIBDEST) -exec touch -h -d @$(SOURCE_DATE_EPOCH) {} +
+ 	PYTHONPATH=$(DESTDIR)$(LIBDEST)  $(RUNSHARED) \
+ 		$(PYTHON_FOR_BUILD) -Wi -tt $(DESTDIR)$(LIBDEST)/compileall.py \
+ 		-d $(LIBDEST) -f \
