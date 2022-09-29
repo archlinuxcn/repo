@@ -2,14 +2,14 @@
 # Contributor: YuutaW <i@yuuta.moe>
 
 pkgname=rsshub-git
-pkgver=r8142.1fd2a8f27
+pkgver=r8146.d1b4a0510
 pkgrel=1
 pkgdesc="Everything is RSSible"
 # The built package bundles native Node.js extensions like OpenCC
 arch=('x86_64')
 url="https://rsshub.app/"
 license=('MIT')
-depends=('nodejs')
+depends=('nodejs' 'pango')
 # rsshub uses yarn, and some deps (ex: re2) uses npm
 makedepends=('npm' 'yarn' 'node-gyp' 'git')
 optdepends=(
