@@ -1,9 +1,9 @@
-# Maintainer: Maxime Gauduin <alucryd@archlinux.org>
-# Contributor: josephgbr <rafael.f.f1@gmail.com>
+# Maintainer: rafaelff <rafaelff@gnome.org>, WeirdBeard <obarrtimothy@gmail.com>
+# Contributor: Maxime Gauduin <alucryd@archlinux.org>
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.3257
+pkgver=v1.7.3342.r0.g7d1e7f2b5
 pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
@@ -15,27 +15,36 @@ license=(
   LGPL3
 )
 
+install=post.install
+
+OPTIONS+=(
+  debug !strip
+  epoch = 1
+)
+
+depends=('rapidyaml>=0.4')
+
 depends=(
-  fmt
   libaio
   libjpeg-turbo
   libpcap
   libzip
-  libgl
-  xorg-xrandr
-  libxrender
-  linux-api-headers
+  libgl # For Steam Deck
+  xorg-xrandr # For Steam Deck
+  libxrender # For Steam Deck
+  linux-api-headers # For Steam Deck
   libpulse
   portaudio
   libsamplerate
   sdl2
+  rapidyaml
   qt6-base
   qt6-wayland
+  qt6-tools
   qt6-svg
   soundtouch
   wayland
   zstd
-  rapidyaml
 )
 makedepends=(
   cmake
@@ -45,50 +54,59 @@ makedepends=(
   swig
   python
   vulkan-headers
-  qt6-tools
 )
-install='pcsx2.install'
-provides=('pcsx2')
-conflicts=('pcsx2')
-replaces=('pcsx2-avx-git' 'pcsx2-avx2-git')
-source=('git+https://github.com/PCSX2/pcsx2.git')
-sha256sums=('SKIP')
 
-pkgver() {
-  cd pcsx2
+provides=(pcsx2-qt)
 
-  git describe --tags | sed 's/^v//; s/-dev//; s/-/.r/; s/-g/./'
-}
+conflicts=(pcsx2)
 
-prepare() {
-  cd pcsx2
+source=(
+git+https://github.com/PCSX2/pcsx2.git
+qtdesktop.patch::https://github.com/PCSX2/pcsx2/commit/1c6334b6e8adb2a2f5a7e6f607863bec77814dd6.patch
+resources.patch::https://github.com/PCSX2/pcsx2/commit/f5bd6a30dc4f715ad38ca748ffcc241ad43d18e0.patch
+)
 
+sha256sums=('SKIP'
+            '8f0a78a98b8d184920c405968a558923fc269bec386ea22f7177b9549da7f34c'
+            '62448559503183f1d8af97cc9f6d3ac2cb95bea9ad231819d671b3642d47d70e')
+
+prepare()
+{
+  cd $srcdir/pcsx2
   git submodule update --init --recursive
-
-  sed -i 's@EmuFolders::Resources = Path::Combine(EmuFolders::AppRoot, "resources")@EmuFolders::Resources = Path::Combine("/usr/share", "PCSX2/resources")@g' pcsx2-qt/QtHost.cpp
-  sed -i 's/env GDK_BACKEND=x11 MESA_NO_ERROR=1 pcsx2/pcsx2-qt/g' linux_various/PCSX2.desktop.in
+  patch -p1 < ../qtdesktop.patch
+  patch -p1 < ../resources.patch
 }
 
-build() {
-    cmake -S pcsx2 -B build -G Ninja \
-    -DCMAKE_BUILD_TYPE=Release \
+pkgver()
+{
+  cd $srcdir/pcsx2
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build()
+{
+  mkdir -p build
+  cd build
+
+  cmake ../pcsx2 \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DQT_BUILD=ON \
-    -DDISABLE_ADVANCE_SIMD=ON \
-    -DPCSX2_APP_DATADIR=/usr/share \
     -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
-    -DEXTRA_PLUGINS=ON \
     -DWAYLAND_API=ON \
+    -DQT_BUILD=ON \
     -DXDG_STD=TRUE \
     -DUSE_VULKAN=ON \
-    -DUSE_SYSTEM_LIBS=ON \
+    -GNinja \
     -DPACKAGE_MODE=ON \
     -DDISABLE_SETCAP=ON
-
-    ninja -C build
+  ninja -j$(nproc)
 }
 
-package() {
-  DESTDIR="${pkgdir}" ninja -C build install
+package()
+{
+    DESTDIR="${pkgdir}" cmake --install build
 }
+
 # vim: ts=2 sw=2 et:
+
