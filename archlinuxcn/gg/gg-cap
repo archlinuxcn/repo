@@ -15,16 +15,23 @@ error() {
   exit 1
 }
 
-ptrace_scope=$(cat /proc/sys/kernel/yama/ptrace_scope)
-
-case $ptrace_scope in
-  2)
-    warn "Your ptrace_scope is 2, give the correct capability to gg."
-    /usr/bin/setcap cap_net_raw,cap_sys_ptrace+ep /usr/bin/gg
-    ;;
-  3)
-    error "Your kernel does not allow ptrace permission, gg may not work."
-    ;;
-  *)
-    echo "No need to setcap."
-esac
+if [[ -f /proc/sys/kernel/yama/ptrace_scope ]]; then
+  ptrace_scope=$(cat /proc/sys/kernel/yama/ptrace_scope)
+  case $ptrace_scope in
+    2)
+      warn "Your ptrace_scope is 2, give the correct capability to
+gg."
+      /usr/bin/setcap cap_net_raw,cap_sys_ptrace+ep /usr/bin/gg
+      ;;
+    3)
+      error "Your kernel does not allow ptrace permission, gg may not
+work."
+      ;;
+    *)
+      echo "No need to setcap."
+  esac
+else
+  warn "YAMA support is not enabled in the kernel, still setting
+capabilities..."
+  /usr/bin/setcap cap_net_raw,cap_sys_ptrace+ep /usr/bin/gg
+fi
