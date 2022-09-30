@@ -3,9 +3,9 @@
 
 pkgname=libuvc
 pkgver=0.0.6
-pkgrel=1
+pkgrel=2
 pkgdesc="a cross-platform library for USB video devices"
-arch=('i686' 'x86_64')
+arch=('i686' 'x86_64' 'aarch64')
 url="https://int80k.com/libuvc/"
 license=('BSD')
 depends=('libusb' 'libjpeg')
