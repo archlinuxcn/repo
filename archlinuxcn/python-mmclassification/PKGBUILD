@@ -2,8 +2,8 @@
 
 _pkgname=mmclassification
 pkgname=python-mmclassification
-pkgver=0.23.2
-pkgrel=2
+pkgver=0.24.0
+pkgrel=1
 pkgdesc='OpenMMLab Image Classification Toolbox and Benchmark'
 arch=('any')
 url='https://github.com/open-mmlab/mmclassification'
@@ -24,7 +24,7 @@ optdepends=(
   python-rich
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmclassification/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('8d23329ba20e8c0a7e4be6e5318a968d6304ce820a1b890522b31a3c5f2d9f1dd441045d0e86c713d812344cd0f92f47a4f49746cbc1a3762ac7a78b3e4be1a8')
+sha512sums=('cb5a2c5ee89be9bee9b15accd482ed4ba8464b87c2616d935fcd3312290b58c1a9c6bfaeac76444b6e04c48d230bcd7874f24ecbb1a9e574017326723a3ab841')
 
 build() {
   cd "${_pkgname}-${pkgver}"
