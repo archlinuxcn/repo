@@ -3,9 +3,9 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=qt6-base-24hms
-_qtver=6.3.2
+_qtver=6.4.0
 pkgver=${_qtver/-/}
-pkgrel=16
+pkgrel=17
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -39,7 +39,7 @@ sha256sums=(
       '9c62800980e97b1614e4fc85ecad3b032606d0e620295e791fc3f34629bb0a44'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
-      '7929ba4df870b6b30870bc0aed2525cfc606ed7091107b23cf7ed7e434caa9a6'
+      'cb6475a0bd8567c49f7ffbb072a05516ee6671171bed55db75b22b94ead9b37d'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
             '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
 
@@ -72,7 +72,8 @@ build() {
     -DQT_FEATURE_openssl_linked=ON \
     -DQT_FEATURE_system_sqlite=ON \
     -DQT_FEATURE_system_xcb_xinput=ON \
-    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+    -DCMAKE_MESSAGE_LOG_LEVEL=STATUS
   cmake --build build
 }
 
@@ -80,7 +81,7 @@ package() {
   depends+=(qt6-translations)
   DESTDIR="$pkgdir" cmake --install build
 
-  install -Dm644 $_pkgfn/LICENSE* -t "$pkgdir"/usr/share/licenses/$pkgbase
+  install -Dm644 $_pkgfn/LICENSES/* -t "$pkgdir"/usr/share/licenses/$pkgbase
 
 # Install symlinks for user-facing tools
   cd "$pkgdir"
