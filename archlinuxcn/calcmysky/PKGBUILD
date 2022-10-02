@@ -17,6 +17,7 @@ md5sums=('SKIP')
 
 prepare() {
 	mkdir -p build
+    # to prevent the 'sudo' usage in version.sh
     rm -r $_pkgname/.git
 }
 
@@ -30,8 +31,5 @@ build() {
 
 package() {
 	cd build
-    # to prevent the 'sudo' usage in version.sh
-    mv ../$_pkgname/.git{,_}
 	make DESTDIR="$pkgdir/" install
-    mv ../$_pkgname/.git{_,}
 }
