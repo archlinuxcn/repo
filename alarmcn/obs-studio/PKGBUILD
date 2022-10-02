@@ -3,7 +3,7 @@
 
 pkgname=obs-studio
 pkgver=28.0.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Free, open source software for live streaming and recording"
 arch=(aarch64 x86_64)
 url="https://obsproject.com"
@@ -42,6 +42,7 @@ build() {
     -DENABLE_VLC=OFF \
     -DENABLE_NEW_MPEGTS_OUTPUT=OFF \
     -DENABLE_AJA=OFF \
+    -DENABLE_JACK=ON \
     -DOBS_VERSION_OVERRIDE="$pkgver-$pkgrel" ..
 
   make
