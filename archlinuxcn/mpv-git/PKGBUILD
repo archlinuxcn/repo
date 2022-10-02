@@ -3,7 +3,7 @@
 
 pkgname=mpv-git
 _gitname=mpv
-pkgver=0.34.0_494_g2207236aaa
+pkgver=0.34.0_495_g5463d3eeff
 pkgrel=1
 pkgdesc='A free, open source, and cross-platform media player (with all possible libs)'
 arch=('x86_64')
@@ -19,7 +19,7 @@ depends=(
         'libxkbcommon' 'libxkbcommon.so'
         'wayland' 'libwayland-client.so' 'libwayland-cursor.so' 'libwayland-egl.so'
         'libjpeg' 'libjpeg.so'
-        'sndio' 'libsndio.so' 
+        'sndio' 'libsndio.so'
         'libjack.so'
         'alsa-lib' 'libasound.so'
         'zimg' 'libzimg.so'
@@ -32,14 +32,14 @@ depends=(
         'ffmpeg' 'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so' 'libavutil.so' 'libswresample.so' 'libswscale.so'
         'libplacebo-git' 'libplacebo.so'
         'shaderc' 'libshaderc_shared.so'
+        'pipewire'
 )
 makedepends=('git' 'python-docutils' 'vulkan-headers' 'wayland-protocols'
-             'ffnvcodec-headers' 'meson' 'pipewire' 'pulseaudio' 'openal'
+             'ffnvcodec-headers' 'meson' 'pulseaudio' 'openal'
 )
 optdepends=('youtube-dl: for video-sharing websites playback'
             'yt-dlp: for video-sharing websites playback'
             'openal: OpenAL audio output'
-            'pipewire: PipeWire audio output'
             'pulseaudio: PulseAudio audio output'
             'smbclient: Samba support'
             'nvidia-utils: for hardware accelerated video decoding with CUDA')
@@ -99,6 +99,7 @@ build() {
         '-Duwp=disabled' # Windows
         '-Dopensles=disabled' # Android
         '-Degl-android=disabled' # Android
+        '-Dandroid-media-ndk=disabled' # Android
         '-Doss-audio=disabled' # Not Linux
         '-Drpi-mmal=disabled' # RPI only
     )
