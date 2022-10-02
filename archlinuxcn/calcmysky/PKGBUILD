@@ -1,0 +1,37 @@
+# Maintainer: oldherl <oldherl@gmail.com>
+
+pkgname=calcmysky-qt6
+_pkgname=CalcMySky
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Simulates scattering of light by the atmosphere to render daytime and twilight skies'
+arch=('x86_64')
+url='https://10110111.github.io/CalcMySky/'
+license=('GPL3')
+depends=('qt6-base')
+makedepends=('cmake' 'git' 'gcc' 'eigen' 'glm')
+#provides=('')
+conflicts=('calcmysky-qt5')
+source=("git+https://github.com/10110111/CalcMySky.git#tag=v$pkgver")
+md5sums=('SKIP')
+
+prepare() {
+	mkdir -p build
+    rm -r $_pkgname/.git
+}
+
+build() {
+	cd build
+	cmake ../$_pkgname \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DQT_VERSION=6
+	make
+}
+
+package() {
+	cd build
+    # to prevent the 'sudo' usage in version.sh
+    mv ../$_pkgname/.git{,_}
+	make DESTDIR="$pkgdir/" install
+    mv ../$_pkgname/.git{_,}
+}
