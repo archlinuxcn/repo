@@ -3,7 +3,7 @@
 
 pkgname=stellarium
 pkgver=1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A stellarium with great graphics and a nice database of sky-objects"
 arch=('x86_64')
 url="https://stellarium.org/"
@@ -15,8 +15,8 @@ source=(https://github.com/Stellarium/stellarium/releases/download/v$pkgver/$pkg
         qt6-qvariant.patch)
 validpgpkeys=('79151C2E6351E7278DA1A730BF38D4D02A328DFF') # Alexander Wolf <alex.v.wolf@gmail.com>
 sha256sums=('5a1912c1c1eb04b22128c6fc98935e87f9faa3844796285b01418139b5d5f33f'
-            "SKIP"
-            "51efda739131ecc6f5527a4df6562c7782140126c2a5d8a8181d232e4ebc1ba0")
+            'SKIP'
+            '51efda739131ecc6f5527a4df6562c7782140126c2a5d8a8181d232e4ebc1ba0')
 
 prepare() {
   cd ${pkgname}-${pkgver}
