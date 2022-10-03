@@ -1,12 +1,13 @@
 maintainers:
   - github: oldherl
 
-build_prefix: multilib
-
-pre_build_script: aur_pre_build(maintainers='rsa')
+pre_build_script: aur_pre_build(maintainers=['rsa','yochananmarqos'])
 
 post_build: aur_post_build
 
 update_on:
   - source: aur
     aur: mangohud
+  - source: manual
+    manual: 1
+
