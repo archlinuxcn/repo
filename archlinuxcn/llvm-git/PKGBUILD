@@ -2,7 +2,7 @@
 
 # Based on LordHeavy's LLVM
 pkgbase=llvm-git
-pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git')
+pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
 pkgver=15.0.0_r425804.a7b154aa1770a
 pkgrel=1
@@ -11,9 +11,9 @@ arch=('x86_64' 'armv7h' 'aarch64')
 url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
-             'python-sphinx' 'ocaml' 'ocaml-ctypes' 'ocaml-findlib' 'lua53'
+             'python-sphinx' 'lua53'
              'python-recommonmark' 'python-sphinx-automodapi' 'cuda' 'ocl-icd' 'opencl-headers'
-             'swig' 'python' 'libunwind' 'python2')
+             'swig' 'python' 'libunwind')
 
 source=("llvm-project::git+https://github.com/llvm/llvm-project.git"
         "llvm-config.h")
@@ -27,12 +27,7 @@ options=('staticlibs') # 'debug' takes way too long to scan for the source files
 # NINJAFLAGS is an env var used to pass commandline options to ninja
 # NOTE: It's your responbility to validate the value of $NINJAFLAGS. If unsure, don't set it.
 
-_python2_optimize() {
-    python2 -m compileall "$@"
-    python2 -O -m compileall "$@"
-}
-
-_python3_optimize() {
+_python_optimize() {
     python -m compileall "$@"
     python -O -m compileall "$@"
     python -OO -m compileall "$@"
@@ -56,6 +51,8 @@ prepare() {
     cd llvm-project
     # llvm-project contains a lot of stuff, remove parts that aren't used by this package
     rm -rf "$srcdir"/fakeinstall
+     2to3 -wn --no-diffs \
+    clang/tools/extra/clang-include-fixer/find-all-symbols/tool/run-find-all-symbols.py
 }
 
 build() {
@@ -78,6 +75,7 @@ build() {
         -D CMAKE_CXX_FLAGS="$CXXFLAGS" \
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr \
+        -D CMAKE_INSTALL_DOCDIR=share/doc \
         -D LLVM_APPEND_VC_REV=ON \
         -D LLVM_HOST_TRIPLE="$CHOST" \
         -D LLVM_ENABLE_RTTI=ON \
@@ -86,8 +84,10 @@ build() {
         -D FFI_INCLUDE_DIR="$(pkg-config --variable=includedir libffi)" \
         -D LLVM_BUILD_LLVM_DYLIB=ON \
         -D LLVM_LINK_LLVM_DYLIB=ON \
+        -D LLVM_ENABLE_BINDINGS=OFF \
         -D LLVM_INSTALL_UTILS=ON \
         -D LLVM_BUILD_DOCS=ON \
+        -D LLVM_INCLUDE_BENCHMARKS=OFF \
         -D LLVM_EXPERIMENTAL_TARGETS_TO_BUILD=AVR \
         -D LLVM_ENABLE_SPHINX=ON \
         -D SPHINX_OUTPUT_HTML=OFF \
@@ -142,8 +142,10 @@ package_lld-git(){
     _fakeinstall fakeinstall/usr/lib/liblld*
     _fakeinstall fakeinstall/usr/lib/cmake/lld/
     _fakeinstall fakeinstall/usr/bin/{lld*,*.lld,wasm-ld}
+    _fakeinstall fakeinstall/usr/share/doc/lld/
     install -Dm644 "$srcdir"/llvm-project/lld/docs/ld.lld.1 "$pkgdir/usr/share/man/man1"
     install -Dm644 "$srcdir"/llvm-project/lld/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    rm -r "$pkgdir"/usr/share/doc/lld/html/{_sources,.buildinfo}
 }
 
 package_polly-git() {
@@ -159,8 +161,9 @@ package_polly-git() {
     _fakeinstall fakeinstall/usr/lib/*Polly*
     _fakeinstall fakeinstall/usr/lib/libGPU*
     install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
- #    _fakeinstall fakeinstall/usr/share/doc/polly
+     _fakeinstall fakeinstall/usr/share/doc/polly
      _fakeinstall fakeinstall/usr/share/man/man1/polly*
+     rm -r "$pkgdir"/usr/share/doc/polly/html/{_sources,.buildinfo}
 }
 
 package_compiler-rt-git() {
@@ -214,29 +217,21 @@ package_clang-git() {
     # Remove documentation sources
     rm -rf "$pkgdir"/usr/share/doc/clang{,-tools}/html/{_sources,.buildinfo}
 
+    # Move scanbuild-py into site-packages and install Python bindings
+    local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+    install -d "$pkgdir/$site_packages"
+    mv "$pkgdir"/usr/lib/{libear,libscanbuild} "$pkgdir/$site_packages/"
+    cp -a ../bindings/python/clang "$pkgdir/$site_packages/"
+
     # Move analyzer scripts out of /usr/libexec
     mv "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/clang/"
     rmdir "$pkgdir/usr/libexec"
-    sed -i 's|libexec|lib/clang|' "$pkgdir/usr/bin/scan-build"
-    # Install Python bindings
-    for _py in 2.7 "$_pythonver"; do
-        install -d "$pkgdir/usr/lib/python$_py/site-packages"
-        cp -a "$srcdir"/llvm-project/clang/bindings/python/clang "$pkgdir/usr/lib/python$_py/site-packages/"
-        # `-d` doesn't seem to work on python2...
-        # It also seems to parse the arguments differently.
-        # Using `-d` without a space makes sure the code works as expected on python3
-        # while not erroring on python2.
-        _python"${_py%%.*}"_optimize "$pkgdir/usr/lib/python$_py" -d"/usr/lib/python$_py"
-    done
-
-    # Fix shebang in Python 2 script
-    sed -i '1s|/usr/bin/env python$|&2|' \
-        "$pkgdir"/usr/share/clang/run-find-all-symbols.py
+    sed -i 's|libexec|lib/clang|' \
+    "$pkgdir/usr/bin/scan-build" \
+    "$pkgdir/$site_packages/libscanbuild/analyze.py"
 
     # Compile Python scripts
-    _python2_optimize "$pkgdir/usr/share/clang" -d/usr/share/clang
-    _python3_optimize "$pkgdir/usr/share" -x 'clang-include-fixer|run-find-all-symbols' \
-                      -d/usr/share
+    _python_optimize "$pkgdir/usr/share" "$pkgdir/$site_packages"
 
     install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
@@ -254,20 +249,6 @@ package_llvm-libs-git() {
     _fakeinstall fakeinstall/usr/lib/LLVMgold.so
     install -d "$pkgdir/usr/lib/bfd-plugins"
     ln -s ../LLVMgold.so "$pkgdir/usr/lib/bfd-plugins/LLVMgold.so"
-
-    install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-}
-
-package_llvm-ocaml-git() {
-    _ocamlver="$(ocamlc --version)"
-
-    pkgdesc="OCaml bindings for LLVM (git version)"
-    depends=("llvm-git=$pkgver-$pkgrel" "ocaml=$_ocamlver" 'ocaml-ctypes')
-    provides=("llvm-ocaml=$pkgver")
-    replaces=('llvm-ocaml-svn')
-    conflicts=('llvm-ocaml' 'llvm-ocaml-svn')
-
-    _fakeinstall fakeinstall/usr/lib/ocaml
 
     install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
