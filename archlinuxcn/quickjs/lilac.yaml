@@ -1,0 +1,11 @@
+maintainers:
+  - github: sukanka
+
+build_prefix: extra-x86_64
+
+pre_build_script: |
+  update_pkgver_and_pkgrel(_G.newver)
+
+update_on:
+  - source: aur
+    aur: quickjs
