@@ -1,10 +1,9 @@
-# Maintainer: Peter Smit <peter@smitmail.eu>
-
+# Contributor: Peter Smit <peter@smitmail.eu>
+# Maintainer: Matrix <thysupremematrix@tuta.io>
 _pkgname=onedrive
 pkgname=$_pkgname-abraunegg
-pkgver=2.4.20
+pkgver=2.4.21
 pkgrel=1
-epoch=
 pkgdesc="Free OneDrive client written in D - abraunegg's fork. Follows the releases on https://github.com/abraunegg/onedrive/releases"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="https://github.com/abraunegg/onedrive"
@@ -12,12 +11,21 @@ license=('GPL')
 conflicts=('onedrive' 'onedrive-abraunegg-git' 'onedrive-bin' 'onedrive-git' 'onedrive-fork-git')
 source=("https://github.com/abraunegg/onedrive/archive/v$pkgver.tar.gz")
 provides=("onedrive=$pkgver")
-depends=('curl' 'libnotify' 'sqlite' 'd-runtime')
+depends=('libnotify' 'sqlite' 'd-runtime')
 makedepends=('d-compiler')
+md5sums=('51c9b0946da6fa3373fe6505cf2387ea')
 
 build() {
 	cd "$_pkgname-$pkgver"
-        ./configure --sysconfdir=/etc --prefix=/usr --with-systemdsystemunitdir=/usr/lib/systemd/system --with-systemduserunitdir=/usr/lib/systemd/user --enable-notifications --enable-completions --with-zsh-completion-dir=/usr/share/zsh/site-functions --with-fish-completion-dir=/usr/share/fish/vendor_completions.d --with-bash-completion-dir=/usr/share/bash-completion/completions
+        ./configure --sysconfdir=/etc \
+                    --prefix=/usr \
+                    --with-systemdsystemunitdir=/usr/lib/systemd/system \
+                    --with-systemduserunitdir=/usr/lib/systemd/user \
+                    --enable-notifications \
+                    --enable-completions \
+                    --with-zsh-completion-dir=/usr/share/zsh/site-functions \
+                    --with-fish-completion-dir=/usr/share/fish/vendor_completions.d \
+                    --with-bash-completion-dir=/usr/share/bash-completion/completions
         make
 }
 
@@ -25,4 +33,3 @@ package() {
 	cd "$_pkgname-$pkgver"
 	make DESTDIR=$pkgdir PREFIX=/usr install
 }
-md5sums=('0f9f0fcf35ff40743bd0b5e222ce1b74')
