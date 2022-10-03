@@ -12,7 +12,10 @@ depends=(
   python
 )
 makedepends=(
-  python-setuptools
+  python-build
+  python-hatchling
+  python-installer
+  python-wheel
 )
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/arogozhnikov/einops/archive/refs/tags/v${pkgver}.tar.gz")
@@ -20,12 +23,12 @@ sha512sums=('21a414b0c673ef02bf182ec3469e465c65c8ca73c52de50a444ae4e2842287798bc
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
