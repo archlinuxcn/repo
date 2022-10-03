@@ -2,7 +2,7 @@
 
 _pkgname=einops
 pkgname=python-einops
-pkgver=0.4.1
+pkgver=0.5.0
 pkgrel=1
 pkgdesc='Deep learning operations reinvented (for pytorch, tensorflow, jax and others)'
 arch=('any')
@@ -19,7 +19,7 @@ makedepends=(
 )
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/arogozhnikov/einops/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('21a414b0c673ef02bf182ec3469e465c65c8ca73c52de50a444ae4e2842287798bcd67e989f4f0c0f3185fa4038dfeb549625a0d822c63b3f9b46756b406a272')
+sha512sums=('0f74003d0a2d5eb6fdf65ac33c7f4d8385abc6227762498be79d471ba40788eb2240881ef84cc5a75cb64a27614a88526d424fb672ce0ca746a159ca8bc9c206')
 
 build() {
   cd "${_pkgname}-${pkgver}"
