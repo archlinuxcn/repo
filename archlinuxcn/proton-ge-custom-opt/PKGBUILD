@@ -3,7 +3,7 @@
 
 pkgname=proton-ge-custom-opt
 _pkgname=proton-ge-custom
-pkgver=GE.Proton7.35
+pkgver=GE.Proton7.36
 _srctag=${pkgver//./-} # _srctag=GE-Proton7-32
 _geckover=2.47.3
 _monover=7.3.1
@@ -30,6 +30,7 @@ depends=(
   glu              lib32-glu
   libsm            lib32-libsm
   gcc-libs         lib32-gcc-libs
+  gtk3             lib32-gtk3
   libpcap          lib32-libpcap
   lzo              lib32-lzo
   libxkbcommon     lib32-libxkbcommon
@@ -41,8 +42,8 @@ depends=(
   libgudev         lib32-libgudev
   desktop-file-utils
   python
-  steam-native-runtime
   cabextract
+  steam-native-runtime
 )
 
 makedepends=(
@@ -72,7 +73,6 @@ makedepends=(
   libxslt               lib32-libxslt
   libpulse              lib32-libpulse
   libva                 lib32-libva
-  gtk3                  lib32-gtk3
   gst-plugins-base-libs lib32-gst-plugins-base-libs
   vulkan-icd-loader     lib32-vulkan-icd-loader
   sdl2                  lib32-sdl2
