@@ -1,42 +1,29 @@
-# Tom < reztho at archlinux dot org >
+# Maintainer: Adrian Perez de Castro <aperez@igalia.com>
+# Contributor: Tom < reztho at archlinux dot org >
 # Based on the munt-git package from Franco Tortoriello
-
 pkgname=munt
 pkgdesc='Software synthesizer emulating pre-GM MIDI devices such as the Roland MT-32, CM-32L, CM-64 and LAPC-I'
-pkgver=2.6.3
+pkgver=2.7.0
 pkgrel=1
 arch=('i686' 'x86_64')
-url='http://munt.sourceforge.net'
+url=http://munt.sourceforge.net
 license=('GPL2')
 depends=('qt5-multimedia' 'portaudio' 'hicolor-icon-theme')
-makedepends=('cmake' 'imagemagick' 'gendesk')
-options=('staticlibs')
-__mt32suffix=libmt32emu
-source=("https://github.com/${pkgname}/${pkgname}/archive/${__mt32suffix}_${pkgver//./_}.zip")
+makedepends=('cmake')
 install=${pkgname}.install
-sha512sums=('638ea1dbe5340f74642536c3fd8edd3cb5bd2947db95472b739066ecb85104dddfbb3fd0d4cd2f17962e8e2546c6abf9203b08a319dde026e4c0f3e2fa32210f')
+source=("$pkgname-$pkgver.tar.gz::https://sourceforge.net/projects/$pkgname/files/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz/download")
+b2sums=('099beab9a568bbe9775730a8bf4d541ea367a78e12d726f3b1cd418d7b6d802f2d8680fa29a005f43b5b8c5f0a942f3ad95f120d295be71b77c379c5adb3f2c7')
 
 build() {
-  cd "${srcdir}"
-  gendesk -n -f \
-          --pkgname="${pkgname}" \
-          --pkgdesc="${pkgdesc}" \
-          --name="Munt" \
-          --categories="Audio;AudioVideo;Midi;X-Alsa;X-Jack;Qt" \
-          --exec="/usr/bin/mt32emu-qt" \
-          --startupnotify=true
-  
-  convert "${srcdir}/${pkgname}-${__mt32suffix}_${pkgver//./_}/mt32emu_qt/src/images/Icon.gif" -resize 32x32 "${srcdir}/munt.png"
-
-  cd "${srcdir}/${pkgname}-${__mt32suffix}_${pkgver//./_}"
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -Dlibmt32emu_SHARED=ON
-  make
+	rm -rf _build
+	cmake -S"$startdir/src/$pkgname-$pkgver" -B_build \
+		-DBUILD_SHARED_LIBS=ON \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-Dmunt_WITH_MT32EMU_QT=ON \
+		-Dmunt_WITH_MT32EMU_SMF2WAV=OFF
+	make -C_build
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${__mt32suffix}_${pkgver//./_}"
-  make DESTDIR="${pkgdir}" install
-  
-  install -Dm644 "${srcdir}/munt.png" "${pkgdir}/usr/share/icons/hicolor/32x32/apps/munt.png"
-  install -Dm644 "${srcdir}/munt.desktop" "${pkgdir}/usr/share/applications/munt.desktop"
+	make -C_build DESTDIR="${pkgdir}" install
 }
