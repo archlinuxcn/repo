@@ -1,10 +1,12 @@
-pre_build_script: aur_pre_build(maintainers='Pete')
+pre_build_script: aur_pre_build(maintainers=['Pete', 'Matr1x-101'])
 
 post_build: aur_post_build
 
 update_on:
   - source: aur
     aur: onedrive-abraunegg
+  - source: manual
+    manual: 1
 
 maintainers:
   - github: oldherl
