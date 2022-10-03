@@ -2,7 +2,7 @@
 
 _pkgname=datasets
 pkgname=ncbi-datasets-cli
-pkgver=13.41.0
+pkgver=13.42.1
 pkgrel=1
 pkgdesc='An experimental resource for finding and building datasets across NCBI databases'
 arch=('x86_64')
@@ -15,7 +15,7 @@ makedepends=(
   bazel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ncbi/datasets/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('30c7e604a4bbb9538c2fd7d1344f84f3ac9a8dcf297f29221ffdec7a740f7ac3485a00b23d8a3cebe9bc0dcaed26eb91ddaad614d5c258c2e5cdc6229e7658b4')
+sha512sums=('01760681c75462ef2654dce579e645de637eb08f405c8bf9d48c944d738a84f39af7b0cfed53a3d5b0bd16d00209c35140c2d4b52d2f640742bc21572851d5d9')
 
 build() {
   cd "${_pkgname}-${pkgver}/pkgs/ncbi-datasets-cli"
