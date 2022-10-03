@@ -1,0 +1,60 @@
+# Maintainer: Puqns67 <me@puqns67.icu>
+
+pkgname='osu-lazer'
+pkgver=2022.923.1
+pkgrel=1
+pkgdesc='A free-to-win rhythm game. Rhythm is just a click away!'
+url='https://github.com/ppy/osu'
+license=('MIT' 'custom:CC-BY-NC 4.0')
+arch=('x86_64')
+
+# other variables
+_pkgname='osu'
+_url_resources='https://github.com/ppy/osu-resources'
+_dotnet_version='6.0'
+
+depends=('ffmpeg' 'libgl' 'sdl2' 'shared-mime-info' "dotnet-runtime>=${_dotnet_version}.0")
+makedepends=("dotnet-sdk>=${_dotnet_version}.0")
+
+source=("${pkgname}_${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
+        "${_pkgname}-resources_LICENCE.md::${_url_resources}/raw/master/LICENCE.md"
+        "${pkgname}.desktop"
+        "${pkgname}_mime.xml")
+
+sha256sums=('b6133907ba265294b6b9f7cc473962cc875217c04e0637d95ae0459dd52bb045'
+            '30b914824784b6ba6b30a44b22bea4f3c6fbc10f3f0e74fde5ca76a92ef57244'
+            '61aeaa19a696e96a97b6a6c5d5a5999d502114a043882c48a8b64b7734d0f38a'
+            '647fb0c77d8fad2e1923ade901ebf051407a529bc4f34b0320d01a745f9846ac')
+
+b2sums=('90339aa48ad54703e17ef44fcecc10971e0fc0524f736450c1c264598a01be6e024e66b2ec77df876364d41f9a2bbcde634d40ed0236a7f8875359d36718a556'
+        '7b7d10932a3c9b07ae10870c7830cacb2dd7164ec3e13ca419a931d6702c496b3ca2b7430f52aa3e71727b8d5f089f174ab13b1c69698925b2e37f8634e3fbff'
+        '66698d2c93f94268e5070c818e4cff24ad5a2038546b027af8b4c50fada5966e9a44d82436af9000fac6111639e5499198e25de6643faebb821bd615e4819448'
+        'e0e5a9d2042de044ed84a72eada13311c08d767bd3ad97a68df60c10aa3f662933a929243b4ca4c88dcd8e7f4a6b83e9370f374edac46bb27dad771980d7e933')
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  dotnet publish \
+    "${_pkgname}.Desktop" \
+    --configuration Release \
+    --runtime linux-x64 \
+    --no-self-contained \
+    --output "${srcdir}/${_pkgname}-${pkgver}/${_pkgname}.Desktop/bin/Release/net${_dotnet_version}/linux-x64/" \
+    /property:Version=$pkgver
+}
+
+package() {
+  mkdir -p "${pkgdir}/opt/${pkgname}/" "${pkgdir}/usr/bin/"
+  cp -r "${srcdir}/${_pkgname}-${pkgver}/${_pkgname}.Desktop/bin/Release/net${_dotnet_version}/linux-x64"/* "${pkgdir}/opt/${pkgname}/"
+  ln -s "/opt/${pkgname}/${_pkgname}!" "${pkgdir}/usr/bin/osu-lazer"
+  chmod 755 "${pkgdir}/opt/${pkgname}/${_pkgname}!"
+
+  # icon, mime and desktop files
+  install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/assets/lazer.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+  install -Dm644 "${srcdir}/${pkgname}_mime.xml" "${pkgdir}/usr/share/mime/application/x-${pkgname}.xml"
+  install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+  # license
+  install -Dm644 "${srcdir}/osu-resources_LICENCE.md" "${pkgdir}/usr/share/license/${pkgname}/LICENCE.md"
+}
+
+# vim:set ts=2 sw=2 et:

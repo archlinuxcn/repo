@@ -1,0 +1,19 @@
+maintainers:
+  - github: Puqns67
+    email: me@puqns67.icu
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - ffmpeg
+  - libgl
+  - sdl2
+  - shared-mime-info
+  - dotnet-runtime
+
+update_on:
+  - source: github
+    github: ppy/osu
+    use_latest_release: true
+  - source: manual
+    manual: 1
