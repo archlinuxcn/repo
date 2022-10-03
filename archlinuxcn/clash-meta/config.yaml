@@ -1,0 +1,540 @@
+# port: 7890                 #本地http代理端口
+# socks-port: 7891           #本地socks5代理端口
+mixed-port: 7890             #本地混合代理(http和socks5合并）端口
+# redir-port: 7892           #本地Linux/macOS Redir代理端口
+# tproxy-port: 7893          #本地Linux Tproxy代理端口
+
+# authentication:            # 本地SOCKS5/HTTP(S)代理端口认证设置
+#  - "user1:pass1"
+#  - "user2:pass2"
+
+# geodata-mode: true         #【Meta专属】使用geoip.dat数据库(默认：false使用mmdb数据库)
+tcp-concurrent: true         #【Meta专属】TCP连接并发，如果域名解析结果对应多个IP，
+                             # 并发所有IP，选择握手最快的IP进行连接
+
+allow-lan: false                  #允许局域网连接(false/true)
+bind-address:                     #监听IP白名单（当allow-lan：true），只允许列表设备
+  '*'                             #全部设备
+  # 192.168.122.11                #单个ip4地址
+  # "[aaaa::a8aa:ff:fe09:57d8]"   #单个ip6地址
+
+mode: rule                 #clash工作模式（rule/global/direct,meta暂不支持script）
+
+log-level: info            #日志等级（info/warning/error/debug/silent）
+
+ipv6: false                #ip6开关，当为false时，停止解析hostanmes为ip6地址
+
+external-controller: 127.0.0.1:9090   #控制器监听地址
+# external-ui: folder                   #http服务路径，可以放静态web网页，如yacd的控制面板
+                                      #可通过`http://{{external-controller}}/ui`直接使用
+# secret: ""                          #控制器登录密码
+
+
+interface-name: en0        #出口网卡名称
+routing-mark: 6666         #流量标记(仅Linux)
+
+profile:                   #缓存设置(文件位置./cache.db)
+  store-selected: false    #节点状态记忆（若不同配置有同代理名称,设置值共享）
+  store-fake-ip: true      #fake-ip缓存
+
+sniffer:                         #【Meta专属】sniffer域名嗅探器
+  enable: true                   #嗅探开关
+  sniffing:                      #嗅探协议对象：目前支持tls/http
+    - tls
+    - http
+  skip-domain:                   #列表中的sni字段，保留mapping结果，不通过嗅探还原域名
+                                 #优先级比force-domain高
+    - 'Mijia Cloud'              #米家设备，建议加
+    - 'dlg.io.mi.com'
+    - '+.apple.com'              #苹果域名，建议加
+  # - '*.baidu.com'              #支持通配符
+
+  force-domain:                  #需要强制嗅探的域名，默认只对IP嗅探
+  # - '+'                        #去掉注释后等于全局嗅探
+    - 'google.com'
+
+  #port-whitelist:               #端口白名单，只对名单内的端口进行还原域名
+  # - 80
+  # - 443
+  # - 8000-9000
+
+hosts:                           #host，支持通配符（非通配符域名优先级高于通配符域名）
+  # '*.clash.dev': 127.0.0.1     #例如foo.example.com>*.example.com>.example.com
+  # '.dev': 127.0.0.1
+  # 'alpha.clash.dev': '::1'
+dns:
+  enable: true                 #DNS开关(false/true)
+  listen: 0.0.0.0:53           #DNS监听地址
+  # ipv6: false                #IP6解析开关；如果为false，将返回ip6结果为空
+
+  default-nameserver:          #解析非IP的dns用的dns服务器,只支持纯IP
+    - 114.114.114.114
+    - 8.8.8.8
+
+  #nameserver-policy:                #指定域名使用自定义DNS解析
+  # 'www.baidu.com': 'https://223.5.5.5/dns-query'
+  # '+.internal.crop.com': '114.114.114.114'
+
+  enhanced-mode: redir-host          #DNS模式(redir-host/fake-ip)
+                                     #【Meta专属】redir-host传递域名，可远程解析
+  fake-ip-range: 198.18.0.1/16       #Fake-IP解析地址池
+  # use-hosts: true                  #查询hosts配置并返回真实IP
+
+  # fake-ip-filter:                  #Fake-ip过滤，列表中的域名返回真实ip
+  #   - '*.lan'
+  #   - '*.linksys.com'
+  #   - '+.pool.ntp.org'
+  #   - localhost.ptlogin2.qq.com
+
+  #proxy-server-nameserver:          #【Meta专属】解析代理服务器域名的dns
+  # - tls://1.0.0.1:853              # 不写时用nameserver解析
+
+  nameserver:                        #默认DNS服务器，支持udp/tcp/dot/doh/doq
+    - 114.114.114.114
+    - https://doh.pub/dns-query
+    - tls://101.101.101.101:853
+  # - dhcp://en0                     #dns from dhcp
+
+  fallback:                          #回落DNS服务器，支持udp/tcp/dot/doh/doq
+    - https://doh.dns.sb/dns-query
+    - tcp://208.67.222.222:443
+    - quic://a.passcloud.xyz:784     #【Meta专属】Dns over quic
+    - 'tls://8.8.4.4:853#DNSg'       #【Meta专属】"#DNSg"代表该DNS服务器通过
+                                     # 名为"DNSg"的proxy Group访问
+
+  fallback-filter:                   #回落DNS服务器过滤
+    geoip: true                      #为真时，不匹配为geoip规则的使用fallback返回结果
+    geoip-code: CN                   #geoip匹配区域设定
+    geosite:                         #【Meta专属】设定geosite某分类使用fallback返回结果
+      - gfw
+    ipcidr:                          #列表中的ip使用fallback返回解析结果
+      - 240.0.0.0/4
+    domain:                          #列表中的域名使用fallback返回解析结果
+      - '+.google.com'
+      - '+.facebook.com'
+      - '+.youtube.com'
+
+proxies:
+    #【Meta专属】Hysteria
+  - name: "hysteria"
+    type: hysteria
+    server: server.com
+    port: 443
+    auth_str: yourpassword
+    #obfs: yourpassword
+    alpn: h3
+    protocol: udp          #支持udp/wechat-video/faketcp
+    up: '30 Mbps'          #若不写单位，默认为Mbps
+    down: '200 Mbps'       #若不写单位，默认为Mbps
+    #sni: server.com
+    #skip-cert-verify: false
+    #recv_window_conn: 12582912
+    #recv_window: 52428800
+    #auth_str: "yubiyubi"
+    #ca: "./my.ca"
+    #ca_str: "xyz"
+    #disable_mtu_discovery: false
+
+  #【Meta专属】Vless
+  - name: "vless-tcp"
+    type: vless
+    server: server
+    port: 443
+    uuid: uuid
+    network: tcp
+    servername: example.com # AKA SNI
+    # flow: xtls-rprx-direct # xtls-rprx-origin  # enable XTLS
+    # skip-cert-verify: true
+
+  #【Meta专属】Vless
+  - name: "vless-ws"
+    type: vless
+    server: server
+    port: 443
+    uuid: uuid
+    udp: true
+    tls: true
+    network: ws
+    servername: example.com # priority over wss host
+    # skip-cert-verify: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: example.com
+
+  # Shadowsocks
+  # 加密支持:
+  #   aes-128-gcm aes-192-gcm aes-256-gcm
+  #   aes-128-cfb aes-192-cfb aes-256-cfb
+  #   aes-128-ctr aes-192-ctr aes-256-ctr
+  #   rc4-md5 chacha20-ietf xchacha20
+  #   chacha20-ietf-poly1305 xchacha20-ietf-poly1305
+  #【Meta专属】支持SS2022加密：
+  #   2022-blake3-aes-128-gcm
+  #   2022-blake3-aes-256-gcm
+  #   2022-blake3-chacha20-poly1305
+  - name: "ss1"
+    type: ss
+    server: server
+    port: 443
+    cipher: chacha20-ietf-poly1305
+    password: "password"
+    # udp: true
+
+  - name: "ss2"
+    type: ss
+    server: server
+    port: 443
+    cipher: chacha20-ietf-poly1305
+    password: "password"
+    plugin: obfs
+    plugin-opts:
+      mode: tls # or http
+      # host: bing.com
+
+  - name: "ss3"
+    type: ss
+    server: server
+    port: 443
+    cipher: chacha20-ietf-poly1305
+    password: "password"
+    plugin: v2ray-plugin
+    plugin-opts:
+      mode: websocket # no QUIC now
+      # tls: true # wss
+      # skip-cert-verify: true
+      # host: bing.com
+      # path: "/"
+      # mux: true
+      # headers:
+      #   custom: value
+
+  # vmess
+  # 加密支持 auto/aes-128-gcm/chacha20-poly1305/none
+  - name: "vmess"
+    type: vmess
+    server: server
+    port: 443
+    uuid: uuid
+    alterId: 32
+    cipher: auto
+    # udp: true
+    # tls: true
+    # skip-cert-verify: true
+    # servername: example.com # priority over wss host
+    # network: ws
+    # ws-opts:
+    #   path: /path
+    #   headers:
+    #     Host: v2ray.com
+    #   max-early-data: 2048
+    #   early-data-header-name: Sec-WebSocket-Protocol
+
+  - name: "vmess-h2"
+    type: vmess
+    server: server
+    port: 443
+    uuid: uuid
+    alterId: 32
+    cipher: auto
+    network: h2
+    tls: true
+    h2-opts:
+      host:
+        - http.example.com
+        - http-alt.example.com
+      path: /
+
+  - name: "vmess-http"
+    type: vmess
+    server: server
+    port: 443
+    uuid: uuid
+    alterId: 32
+    cipher: auto
+    # udp: true
+    # network: http
+    # http-opts:
+    #   # method: "GET"
+    #   # path:
+    #   #   - '/'
+    #   #   - '/video'
+    #   # headers:
+    #   #   Connection:
+    #   #     - keep-alive
+
+  - name: vmess-grpc
+    server: server
+    port: 443
+    type: vmess
+    uuid: uuid
+    alterId: 32
+    cipher: auto
+    network: grpc
+    tls: true
+    servername: example.com
+    # skip-cert-verify: true
+    grpc-opts:
+      grpc-service-name: "example"
+
+  # socks5
+  - name: "socks"
+    type: socks5
+    server: server
+    port: 443
+    # username: username
+    # password: password
+    # tls: true
+    # skip-cert-verify: true
+    # udp: true
+
+  # http
+  - name: "http"
+    type: http
+    server: server
+    port: 443
+    # username: username
+    # password: password
+    # tls: true # https
+    # skip-cert-verify: true
+    # sni: custom.com
+    # headers:                      #【Meta专属】
+    #   X-T5-Auth: "1962xxxxx709"
+    #   User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 ...... "
+
+  # Snell
+  # 不支持UDP
+  - name: "snell"
+    type: snell
+    server: server
+    port: 44046
+    psk: yourpsk
+    # version: 2
+    # obfs-opts:
+      # mode: http # or tls
+      # host: bing.com
+
+  # Trojan
+  - name: "trojan"
+    type: trojan
+    server: server
+    port: 443
+    password: yourpsk
+    # udp: true
+    # sni: example.com # aka server name
+    # alpn:
+    #   - h2
+    #   - http/1.1
+    # skip-cert-verify: true
+
+  - name: trojan-grpc
+    server: server
+    port: 443
+    type: trojan
+    password: "example"
+    network: grpc
+    sni: example.com
+    # skip-cert-verify: true
+    udp: true
+    grpc-opts:
+      grpc-service-name: "example"
+
+  - name: trojan-ws
+    server: server
+    port: 443
+    type: trojan
+    password: "example"
+    network: ws
+    sni: example.com
+    # skip-cert-verify: true
+    udp: true
+    # ws-opts:
+      # path: /path
+      # headers:
+      #   Host: example.com
+
+  # ShadowsocksR
+  # 支持的加密: ss中的所有加密方法
+  # 支持的obfses:
+  #   plain http_simple http_post
+  #   random_head tls1.2_ticket_auth tls1.2_ticket_fastauth
+  # 支持的protocols:
+  #   origin auth_sha1_v4 auth_aes128_md5
+  #   auth_aes128_sha1 auth_chain_a auth_chain_b
+  - name: "ssr"
+    type: ssr
+    server: server
+    port: 443
+    cipher: chacha20-ietf
+    password: "password"
+    obfs: tls1.2_ticket_auth
+    protocol: auth_sha1_v4
+    # obfs-param: domain.tld
+    # protocol-param: "#"
+    # udp: true
+
+
+proxy-groups:
+  - name: DNSg             #【Meta专属】DNS代理组，配合上文"DNS配置"使用
+    type: url-test         #可任意name/type，此处仅做举例
+    proxies:
+      - ss1
+      - ss2
+
+  - name: "relay"          #【Meta专属】relay支持UDP over TCP
+    type: relay            #中继代理，不能中继套娃中继
+    proxies:               #流量走向：clash <-> http <-> vmess <-> ss1 <-> Internet
+      - http
+      - vmess
+      - ss1
+
+  - name: "auto"
+    type: url-test         #通过httping URL 自动切换延迟最低的节点
+    proxies:
+      - ss1
+      - ss2
+      - vmess
+    # tolerance: 150       #容差值：节点差值低于设定值时，不自动切换
+    # lazy: true           #为true时，未被使用时不进行测ping
+    url: 'http://www.gstatic.com/generate_204'      #用来测ping的地址
+    interval: 300          #测ping时间(秒)
+    # disable-udp: true    #关闭UDP
+    # filter: 'HK'         #【Meta专属】代理筛选
+
+  - name: "fallback-auto"
+    type: fallback         #通过httping URL，当没有ping值时，自动切换下一个节点
+    proxies:
+      - ss1
+      - ss2
+      - vmess
+    url: 'http://www.gstatic.com/generate_204'
+    interval: 300
+    # lazy: true
+    # disable-udp: true
+    # filter: 'HK'          #【Meta专属】代理筛选
+
+  - name: "load-balance"
+    type: load-balance      #负载均衡：同一域名(eTLD+1)使用同一代理
+    proxies:
+      - ss1
+      - ss2
+      - vmess
+    url: 'http://www.gstatic.com/generate_204'
+    interval: 300
+    # lazy: true
+    # disable-udp: true
+    # filter: 'HK'            #【Meta专属】代理筛选
+    # strategy: round-robin   #策略：round-robin ：所有请求不使用同一代理
+                              #consistent-hashing：同一有效顶级域名(eTLD)使用同一代理
+
+  - name: Proxy
+    type: select              #手动代理组
+    # disable-udp: true
+    proxies:
+      - PASS                  #【Meta专属】跳过：命中的规则会被忽略，继续向下查询
+      - ss1
+      - ss2
+      - vmess
+      - auto
+    # filter: 'HK'            #【Meta专属】代理筛选
+
+  - name: en1
+    type: select
+    interface-name: en1       #指定网口
+    proxies:
+      - DIRECT
+
+  - name: UseProvider
+    type: select
+    use:
+      - provider1
+    # filter: 'HK'            #【Meta专属】代理筛选
+    proxies:
+      - Proxy
+      - DIRECT
+
+proxy-providers:
+  provider1:
+    type: http
+    url: "https://abc.com/xhYdgd"    #【Meta专属】支持解析V2rayN等工具使用的普通订阅
+    interval: 3600
+    path: ./provider1.yaml
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+  test:
+    type: file
+    path: /test.yaml
+    health-check:
+      enable: true
+      interval: 36000
+      url: http://www.gstatic.com/generate_204
+
+rule-providers:
+  google:
+    type: http
+    behavior: classical
+    path: ./rule1.yaml
+    #【Meta专属】URL可根据rule设定匹配对应的策略，方便更新provider
+    url: "https://raw.githubusercontent.com/../Google.yaml"
+    interval: 600
+
+rules:
+  #目的域名后缀规则
+  - DOMAIN-SUFFIX,githubusercontent.com,auto
+  - DOMAIN-SUFFIX,ad.com,REJECT
+  - DOMAIN-SUFFIX,bilibili.com,DIRECT,tcp   #【Meta专属】可指定协议类型(tcp/udp)
+
+  #目的域名规则
+  - DOMAIN,google.com,auto
+
+  #目的域名关键字规则
+  - DOMAIN-KEYWORD,google,auto
+
+  #目的IP规则
+  - IP-CIDR,127.0.0.0/8,DIRECT
+  - IP-CIDR,122.122.0.0/8,DIRECT,no-resolve #no-resolve:不解析，可应用于GEOIP, IP-CIDR
+
+  #来源IP规则
+  - SRC-IP-CIDR,192.168.1.201/32,DIRECT
+
+  #目的端口规则
+  - DST-PORT,123/136/137-139,DIRECT         #【Meta专属】可指定端口范围
+
+  #来源端口规则
+  - SRC-PORT,123/136/137-139,DIRECT,udp     #【Meta专属】可指定端口范围
+
+  #【Meta专属】入站规则
+  #支持HTTP/HTTPS/SOCKS5/SOCKS4/SOCKS/TUN/TPROXY/REDIR/INNER
+  - IN-TYPE,SOCKS5/HTTP,auto
+
+  #【Meta专属】逻辑判断规则
+  - AND,((DOMAIN,baidu.com),(NETWORK,UDP)),DIRECT #AND(和):域名为baidu.com的UDP协议
+  - OR,((NETWORK,UDP),(DOMAIN,baidu.com)),REJECT  #OR(或):UDP的协议，或者域名为baidu.com
+  - NOT,((DOMAIN,baidu.com)),Proxy                #NOT(否)：域名不为baidu.com访问
+  #域名关键词为bilibili或者douyu的UDP协议
+  - AND,((OR,((DOMAIN-KEYWORD,bilibili),(DOMAIN-KEYWORD,douyu))),(NETWORK,UDP)),REJECT
+
+  #【Meta专属】GEOSITE规则
+  - GEOSITE,category-ads-all,REJECT
+  - GEOSITE,icloud@cn,DIRECT
+  - GEOSITE,apple@cn,DIRECT
+  - GEOSITE,apple-cn,DIRECT
+  - GEOSITE,microsoft@cn,DIRECT
+  - GEOSITE,facebook,Proxy
+  - GEOSITE,youtube,Proxy
+  - GEOSITE,geolocation-cn,DIRECT
+  - GEOSITE,geolocation-!cn,Proxy
+
+  #GEOIP规则
+  - GEOIP,telegram,Proxy,no-resolve
+  - GEOIP,private,DIRECT,no-resolve
+  - GEOIP,cn,DIRECT
+
+  #Rule Provider规则
+  - RULE-SET,google,REJECT                   # Meta支持RULE-SET规则
+
+  #兜底规则
+  - MATCH,auto
