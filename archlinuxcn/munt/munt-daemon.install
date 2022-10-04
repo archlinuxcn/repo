@@ -1,0 +1,14 @@
+# vim: ft=sh ts=4 sw=4 noet
+
+post_install () {
+	cat <<-EOF
+	Please ensure that ROM files are installed in /usr/share/mt32-rom-data
+
+	If the ROM files are correctly installed yet the program cannot open
+	them, check the filenames (case sensitive) and permissions.
+	EOF
+}
+
+post_upgrade () {
+	post_install
+}
