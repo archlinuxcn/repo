@@ -1,0 +1,37 @@
+# Maintainer: Sven-Hendrik Haase <svenstaro@gmail.com>
+pkgname=elfx86exts-git
+_pkgname=elfx86exts
+_srcdir="${_pkgname}"
+pkgver=0.4.0.r112.g8f814b3
+pkgrel=1
+pkgdesc="Decode ELF and MachO binaries and print out which instruction set extensions they use"
+arch=('x86_64')
+url="https://github.com/pkgw/elfx86exts"
+license=(MIT)
+depends=('gcc-libs')
+makedepends=('cargo' 'git')
+provides=($_pkgname)
+conflicts=($_pkgname)
+source=("${_srcdir}::git+https://github.com/pkgw/elfx86exts.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/${_pkgname}"
+  git describe --long --tags | sed -e 's:^v::g' -e 's/\([^-]*-g\)/r\1/' -e 's/-/./g'
+}
+
+build() {
+  cd "${_srcdir}"
+  cargo build --release --locked
+}
+
+check() {
+  cd "${_srcdir}"
+  cargo test --release --locked
+}
+
+package() {
+  cd "${_srcdir}"
+  install -Dm755 target/release/elfx86exts "$pkgdir"/usr/bin/elfx86exts
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
