@@ -70,9 +70,9 @@ fi
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 
 pkgbase=linux-xanmod-edge
-_major=5.19
-pkgver=${_major}.12
-_branch=5.x
+_major=6.0
+pkgver=${_major}.0
+_branch=6.x
 xanmod=1
 pkgrel=1
 pkgdesc='Linux Xanmod - Latest Mainline (EDGE)'
@@ -106,9 +106,9 @@ for _patch in ${_patches[@]}; do
     source+=("${_patch}::https://raw.githubusercontent.com/archlinux/svntogit-packages/${_commit}/trunk/${_patch}")
 done
 
-sha256sums=('ff240c579b9ee1affc318917de07394fc1c3bb49dac25ec1287370c2e15005a8'
+sha256sums=('5c2443a5538de52688efb55c27ab0539c1f5eb58c0cfd16a2b9fbb08fd81788e'
             'SKIP'
-            'adb2a2e0e8cb1c8caf184712f486e4631324dda8a5686dde27dee253af4b0a13'
+            'c4c9ceae47e1809d2e32ef5980f4e9410777273eb6d1cae67788367a2a2d5cd4'
             'dda2e928f3b02c28e71d4e99f90b499b4c99a265d30fceec7dc1dd7082afc285')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
