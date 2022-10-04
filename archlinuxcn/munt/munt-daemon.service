@@ -1,0 +1,10 @@
+[Unit]
+Description=Munt MT32/CM32L ALSA MIDI synthesizer
+After=
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/mt32d
+
+[Install]
+WantedBy=multi-user.target
