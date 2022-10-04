@@ -1,7 +1,7 @@
 # Maintainer: DDoSolitary <DDoSolitary@gmail.com>
 
 pkgname=gtkwave-gtk3
-pkgver=3.3.112
+pkgver=3.3.113
 pkgrel=1
 pkgdesc='A wave viewer which reads LXT, LXT2, VZT, GHW and VCD/EVCD files (gtk3 version)'
 arch=(x86_64)
@@ -15,7 +15,7 @@ makedepends=(gperf)
 conflicts=(gtkwave)
 provides=(gtkwave)
 source=(http://gtkwave.sourceforge.net/$pkgname-$pkgver.tar.gz)
-sha256sums=('9275e8d783c14af61e2fac519d99e397bbb8910be4c57d051b16a992cdb651af')
+sha256sums=('6eff35a6e0528855643b684d93adeb31c85b4d23772ad4a7c879cbd3f6a941ed')
 
 prepare() {
 	cd $pkgname-$pkgver
