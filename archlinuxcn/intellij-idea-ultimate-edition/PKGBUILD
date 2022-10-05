@@ -4,9 +4,9 @@
 
 pkgbase=intellij-idea-ultimate-edition
 pkgname=(intellij-idea-ultimate-edition intellij-idea-ultimate-edition-jre)
-pkgver=2022.2.2
-pkgrel=2
-_buildver=222.4167.29
+pkgver=2022.2.3
+pkgrel=1
+_buildver=222.4345.14
 jbr_ver=17.0.4
 jbr_build=aarch64-b469
 jbr_minor=53
@@ -19,7 +19,7 @@ source=("https://download.jetbrains.com/idea/ideaIU-$pkgver.tar.gz"
         "jetbrains-idea.desktop")
 source_aarch64=("https://cache-redirector.jetbrains.com/intellij-jbr/jbr-$jbr_ver-linux-$jbr_build.$jbr_minor.tar.gz"
                 "https://github.com/JetBrains/intellij-community/raw/master/bin/linux/aarch64/fsnotifier")
-sha256sums=('bbc1793715c7a75228de6914bea0a881d982d38da3b48b89df08f08fbe8e5e54'
+sha256sums=('e1f9de8173cec9f7166894d66b82b89dee4da9022c05366d192f6112956184b3'
             '83af2ba8f9f14275a6684e79d6d4bd9b48cd852c047dacfc81324588fa2ff92b')
 sha256sums_aarch64=('b86531e3bc2f3760636e818dab80f3967935ffdf77996b19fda2bdb72f9b258b'
                     'eb3c61973d34f051dcd3a9ae628a6ee37cd2b24a1394673bb28421a6f39dae29')
@@ -43,7 +43,7 @@ prepare() {
 
 package_intellij-idea-ultimate-edition() {
   backup=("opt/${pkgname}/bin/idea64.vmoptions" "opt/${pkgname}/bin/idea.properties")
-  depends=('giflib' 'libxtst')
+  depends=('giflib' 'libxtst' 'libxrender')
   optdepends=(
     'intellij-idea-ultimate-edition-jre: JetBrains custom JRE (Recommended)' 'java-environment: Required if intellij-idea-ultimate-edition-jre is not installed'
     'libdbusmenu-glib: For global menu support'
