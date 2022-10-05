@@ -1,8 +1,8 @@
 # Maintainer: Chih-Hsuan Yen <yan12125@archlinux.org>
 
 pkgname=python-tensorflow-datasets
-pkgver=4.6.0
-pkgrel=4
+pkgver=4.7.0
+pkgrel=1
 pkgdesc='A collection of datasets ready to use with TensorFlow, Jax, ...'
 arch=(any)
 url='https://github.com/tensorflow/datasets'
@@ -42,7 +42,7 @@ optdepends=(
 )
 source=(https://github.com/tensorflow/datasets/archive/v$pkgver/$pkgname-$pkgver.tar.gz
         get_optdepends.py)
-sha256sums=('42fcb55829f96cfc7f0ee74a502950b052149811bb867371880b8235e7d8d6d3'
+sha256sums=('ed7c3b959d10ba762137e18b93631ab42f4ed0915bc3d9ce98ee66eef9c61418'
             '91f3819b43c38faa17120ea6bc36e0733470acc9e8f91cf614954416b4904d9a')
 
 prepare() {
