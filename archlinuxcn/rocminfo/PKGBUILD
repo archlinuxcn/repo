@@ -5,24 +5,17 @@
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 
 pkgname=rocminfo
-pkgver=5.2.3
-pkgrel=2
+pkgver=5.3.0
+pkgrel=1
 pkgdesc='ROCm Application for Reporting System Info '
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/rocminfo'
 license=('custom:NCSAOSL')
 depends=('pciutils' 'python' 'hsa-rocr')
 makedepends=('rocm-cmake')
-source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz"
-        "fix-kfd.patch::https://patch-diff.githubusercontent.com/raw/RadeonOpenCompute/rocminfo/pull/53.patch")
-sha256sums=('38fe8db21077100ee2242bd087371f6b8e0078d3a269e145d3a4ab314d0b8902'
-            'SKIP')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
+sha256sums=('c279da1d946771d120611b64974fde751534e787a394ceb6b8e0b743c143d782')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
-
-prepare() {
-    cd "$_dirname"
-    patch -Np1 < "${srcdir}/fix-kfd.patch"
-}
 
 build() {
   # ROCRTST_BLD_TYPE=Release fixes a build error regarding _FORTIFY_SOURCE=2
