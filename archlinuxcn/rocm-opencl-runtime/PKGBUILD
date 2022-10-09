@@ -3,20 +3,20 @@
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 
 pkgname=rocm-opencl-runtime
-pkgver=5.2.3
-pkgrel=3
+pkgver=5.3.0
+pkgrel=1
 pkgdesc='OpenCL implementation for AMD'
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/ROCm-OpenCL-Runtime'
 license=('MIT')
 depends=('hsakmt-roct' 'hsa-rocr' 'comgr' 'mesa' 'opencl-icd-loader')
-makedepends=('cmake' 'rocm-cmake')
+makedepends=('rocm-cmake')
 provides=('opencl-driver')
 _rocclr='https://github.com/ROCm-Developer-Tools/ROCclr'
 source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz"
         "$pkgname-rocclr-$pkgver.tar.gz::$_rocclr/archive/rocm-$pkgver.tar.gz")
-sha256sums=('932ea3cd268410010c0830d977a30ef9c14b8c37617d3572a062b5d4595e2b94'
-            '0493c414d4db1af8e1eb30a651d9512044644244488ebb13478c2138a7612998')
+sha256sums=('d251e2efe95dc12f536ce119b2587bed64bbda013969fa72be58062788044a9e'
+            '2bf14116b5e2270928265f5d417b3d0f0f2e13cbc8ec5eb8c80d4d4a58ff7e94')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 _rocclr_dir="$(basename "$_rocclr")-$(basename "${source[1]}" .tar.gz)"
 
