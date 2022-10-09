@@ -2,7 +2,7 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=105.0.1
+pkgver=105.0.3
 pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
@@ -26,21 +26,19 @@ _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages
 # _source_tag="${pkgver}-${pkgrel%.*}"
 _source_tag="${pkgver}-${pkgrel}"
 # _source_commit='bbfb175306ac9d1590d59699bfbfe88eb2b1d2a0'
-# _settings_tag='6.10'
-_settings_commit='4445fa8ee9ba6cbd0b6c44ec296500ac92ca991a'
+_settings_tag='7.0'
+# _settings_commit='4445fa8ee9ba6cbd0b6c44ec296500ac92ca991a'
 install='librewolf.install'
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
-        https://github.com/archlinuxarm/PKGBUILDs/raw/20308ce75b0eecf1fae0db7d7ab07fb68b3000dc/extra/firefox/arc4random.diff
         $pkgname.desktop
         "git+https://gitlab.com/${pkgname}-community/browser/source.git#tag=${_source_tag}"
-        "git+https://gitlab.com/${pkgname}-community/settings.git#commit=${_settings_commit}"
+        "git+https://gitlab.com/${pkgname}-community/settings.git#tag=${_settings_tag}"
         "default192x192.png"
         "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
         )
 # source_aarch64=()
-sha256sums=('70ecea0d26242d0c3613b9524405d72a22b52ae346072ac229a58c48634975cd'
+sha256sums=('f2fa1e03aecdd4dca0bcda94fd228d3a9ef3635862a2c140f8982d32ae7761e7'
             'SKIP'
-            '714ca50b2ce0cac470dbd5a60e9a0101b28072f08a5e7a9bba94fef2058321c4'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
             'SKIP'
             'SKIP'
@@ -95,7 +93,8 @@ ac_add_options --with-branding=browser/branding/${pkgname}
 ac_add_options --with-unsigned-addon-scopes=app,system
 ac_add_options --allow-addon-sideload
 export MOZ_REQUIRE_SIGNING=
-# export MOZ_APP_REMOTINGNAME=${pkgname//-/}
+export MOZ_APP_REMOTINGNAME=${_pkgname}
+# export MOZ_APP_REMOTINGNAME=${pkgname}
 
 # System libraries
 ac_add_options --with-system-nspr
