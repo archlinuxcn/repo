@@ -3,7 +3,7 @@
 # Contributor: ful1e5 <kaizmandhu at gmail dot com>
 
 pkgname=bibata-cursor-theme
-pkgver=2.0.1
+pkgver=2.0.2
 pkgrel=1
 pkgdesc="Material Based Cursor Theme"
 arch=('any')
@@ -12,7 +12,7 @@ license=('GPL3')
 makedepends=('python-clickgen>=2.0.0')
 options=('!strip')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('2f1f093e422f38467f7dc3726062c63c78c8197a2e1472642d54e7580a7e6f14')
+sha256sums=('2f5fa22eab91397845d8d64082c3daf3932a25f10a7178159708e78d9b6906e1')
 
 prepare() {
   cd Bibata_Cursor-$pkgver
