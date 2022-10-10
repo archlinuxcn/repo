@@ -6,7 +6,7 @@
 
 pkgname=python2
 pkgver=2.7.18
-pkgrel=7
+pkgrel=8
 _pybasever=2.7
 pkgdesc="A high-level scripting language"
 arch=('x86_64')
@@ -14,7 +14,7 @@ license=('PSF')
 url="https://www.python.org/"
 depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl' 'sqlite' 'zlib')
 makedepends=('tk' 'bluez-libs')
-checkdepends=('gdb' 'file' 'xorg-server-xvfb')
+checkdepends=('gdb' 'file' 'xorg-server-xvfb' 'xterm')
 optdepends=('tk: for IDLE'
             'python2-setuptools'
             'python2-pip')
@@ -102,7 +102,7 @@ check() {
   # Since 2.7.15: test_ctypes
   # test_ftplib test_imaplib test_urllib2_localnet: krb5 errors
   # test_codecmaps_jp: TODO
-
+  export TERM=xterm
   cd Python-${pkgver}
   LD_LIBRARY_PATH="${srcdir}/Python-${pkgver}":${LD_LIBRARY_PATH} \
     xvfb-run "${srcdir}/Python-${pkgver}/python" -m test.regrtest -v -uall -x test_idle test_tk test_ttk_guionly test_ctypes test_ssl test_ftplib test_imaplib test_urllib2_localnet test_codecmaps_jp
