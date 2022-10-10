@@ -56,6 +56,9 @@ package_python-detectron2() {
   )
   cd "${pkgname}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  # remove unused files
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rfv ${pkgdir}${site_packages}/tools
 }
 
 package_python-detectron2-cuda() {
@@ -69,5 +72,8 @@ package_python-detectron2-cuda() {
   cd "${pkgname}-${pkgver}"
   TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
   FORCE_CUDA=1 python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  # remove unused files
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rfv ${pkgdir}${site_packages}/tools
 }
 # vim:set ts=2 sw=2 et:
