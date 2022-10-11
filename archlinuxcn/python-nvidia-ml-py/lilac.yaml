@@ -1,12 +1,11 @@
 maintainers:
   - github: hubutui
+
 build_prefix: extra-x86_64
-repo_depends:
-  - python-nvidia-ml-py
+
 update_on:
-  - source: github
-    github: wookayin/gpustat
-    use_latest_release: true
+  - source: pypi
+    pypi: nvidia-ml-py
   - source: manual
     manual: 1
   - alias: python
