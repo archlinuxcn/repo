@@ -4,7 +4,7 @@
 # Contributor: Vyacheslav Konovalov <echo dnlhY2hrb25vdmFsb3ZAZ21haWwuY29tCg== | base64 -d>
 
 pkgname=resp-app
-pkgver=2022.4.2
+pkgver=2022.5
 pkgrel=1
 pkgdesc='RESP.app - Open source cross-platform Redis Desktop Manager GUI based on Qt 5'
 arch=('x86_64')
