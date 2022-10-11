@@ -3,24 +3,38 @@
 _pkgname=ImHex-Patterns
 pkgname=${_pkgname,,}-git
 pkgver=r171.8e70a55
-pkgrel=2
+pkgrel=3
 pkgdesc='Hex patterns, include patterns and other files for the use with the ImHex Hex Editor'
 url='https://github.com/WerWolv/ImHex-Patterns'
 license=('GPL2')
 arch=('any')
+depends=('bash' 'python')
 makedepends=('git')
-source=("${pkgname}::git+${url}.git")
-sha256sums=('SKIP')
-b2sums=('SKIP')
+source=("${pkgname}::git+${url}.git"
+        "yara::git+https://github.com/Yara-Rules/rules.git"
+        )
+sha256sums=('SKIP'
+            'SKIP')
+b2sums=('SKIP'
+        'SKIP')
+options=(!strip)
 
 pkgver() {
   cd "${pkgname}"
-
   printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
+prepare() {
+  cd "${pkgname}"
+  git submodule init
+  git config submodule."yara/official_rules".url "${srcdir}/yara"
+  git submodule update
+}
+
 package() {
-  install -dm0755 "$pkgdir/usr/share/imhex"
+  install -dm755 "$pkgdir/usr/share/imhex"
+  shopt -u dotglob
   cp -r -t "$pkgdir/usr/share/imhex" \
-    "$pkgname"/{constants,includes,magic,patterns,tips,yara}
+    "$pkgname"/*/
+  rm -rf "$pkgdir"/usr/share/imhex/tests
 }
