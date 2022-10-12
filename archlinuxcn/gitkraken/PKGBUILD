@@ -9,7 +9,7 @@
 # Contributor: KokaKiwi <kokakiwi+aur@kokakiwi.net>
 
 pkgname=gitkraken
-pkgrel=2
+pkgrel=3
 pkgver=8.10.0
 pkgdesc="The intuitive, fast, and beautiful cross-platform Git client."
 url="https://www.gitkraken.com/"
@@ -36,14 +36,6 @@ sha256sums=('d783870479ac40f86a71e4da8d468a636872e41dff9141b6657b57cb254409ff'
 package() {
     install -d "$pkgdir"/opt
     cp -R "$srcdir"/gitkraken "$pkgdir"/opt/gitkraken
-
-    find "$pkgdir"/opt/gitkraken/ -type f -exec chmod 644 {} \;
-    chmod 755 "$pkgdir"/opt/gitkraken/gitkraken
-    chmod 755 "$pkgdir"/opt/gitkraken/chrome_crashpad_handler
-    chmod 755 "$pkgdir"/opt/gitkraken/resources/app.asar.unpacked/src/js/redux/domain/AskPass/AskPass.sh
-    chmod 755 "$pkgdir"/opt/gitkraken/resources/app.asar.unpacked/resources/cli/unix/gk
-    chmod 755 "$pkgdir"/opt/gitkraken/resources/app.asar.unpacked/resources/cli/unix/gkrc
-    chmod 4755 "$pkgdir"/opt/gitkraken/chrome-sandbox
 
     install -d "$pkgdir"/usr/bin
 
