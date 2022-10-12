@@ -2,8 +2,8 @@
 
 pkgname=clash-geoip
 _pkgname=maxmind-geoip
-pkgver=20220912
-pkgrel=2
+pkgver=20221012
+pkgrel=1
 pkgdesc="A GeoLite2 data created by MaxMind"
 arch=('any')
 url="https://github.com/Dreamacro/maxmind-geoip"
