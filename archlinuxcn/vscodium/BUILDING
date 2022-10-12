@@ -1,14 +1,16 @@
 To build the package, execute the following commands:
 
-$ cd /path/to/vscodium.git
-$ makepkg
+$ git clone https://aur.archlinux.org/vscodium.git
+$ cd vscodium
+$ makepkg -sr
 
 Wait for the build to complete, then install the package:
 
-$ paru -U vscodium-git-${version}-${arch}.pkg.tar.zst
+$ pacman -U vscodium-*.pkg.tar.zst
 
 If the package installed correctly, and VSCodium runs correctly, update the AUR with the new code:
 
 $ makepkg --printsrcinfo > .SRCINFO
-$ git commit -am "Updated to ${version}."
+$ git add PKGBUILD .SRCINFO
+$ git commit -am "Updated to $( cat .SRCINFO | sed -n -E "s/.*pkgver = (.*)/\1/p" )"
 $ git push
