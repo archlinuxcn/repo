@@ -8,7 +8,7 @@ arch=(armv7h aarch64 x86_64 i686)
 url="https://github.com/Nheko-Reborn/mtxclient"
 license=('MIT')
 depends=('libspdlog.so' 'libolm.so' 'libfmt.so' 'libcoeurl.so'
-         'openssl')
+         'openssl' 're2')
 makedepends=('git' 'cmake' 'nlohmann-json')
 provides=('mtxclient' 'libmatrix_client.so')
 conflicts=('mtxclient')
