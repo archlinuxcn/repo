@@ -4,7 +4,7 @@
 # Contributor: Hans Janssen <hans@janserv.xs4all.nl>
 
 pkgname=flightgear
-pkgver=2020.3.14
+pkgver=2020.3.15
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc="An open-source, multi-platform flight simulator"
@@ -20,7 +20,7 @@ optdepends=('qt5-base: fgfs --launcher'
 license=("GPL")
 url="http://www.flightgear.org/"
 source=("http://downloads.sourceforge.net/project/flightgear/release-${_pkgver}/${pkgname}-${pkgver}.tar.bz2")
-sha256sums=('57a2692eee6825eb7ae9210c4a11cd22895c35b5196bcace8af2668cfad5b5c9')
+sha256sums=('f99c19dee29738059ca19c3cc4872c05bc987da226b8f1c493647fc8c31319ce')
 
 prepare() {
   cd flightgear-$pkgver
