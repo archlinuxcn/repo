@@ -15,7 +15,8 @@ depends=(
 makedepends=(
   python-setuptools-rust
 )
-
+# ref https://bugs.gentoo.org/show_bug.cgi?id=860063
+options=(!lto)
 source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
 sha512sums=('7d323af0d9d7a7a3aa9e7f5e7837ad167ce0030e38ed7596eb166d7e772c877b3f42a354f160ce11f338e607221b8bcb69554d8b8fc1a360ba4e9c7319b23cb2')
 
