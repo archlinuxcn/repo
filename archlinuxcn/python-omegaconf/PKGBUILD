@@ -13,12 +13,18 @@ depends=(
   python-yaml
 )
 makedepends=(
+  antlr4
   java-environment
   python-pip
   python-setuptools
 )
-source=(${pkgname}-${pkgver}.tar.gz::https://github.com/omry/omegaconf/archive/refs/tags/v${pkgver}.tar.gz)
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/omry/omegaconf/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('9586b6623d4abf514979612f987261971a58da2dc7a9224bebd017848c9ad80a')
+
+prepare() {
+  # fix antlr jar issue
+  sed -i 's#str(build_dir / "bin" / "antlr-4.9.3-complete.jar")#"/usr/share/java/antlr-complete.jar"#' ${_pkgname}-${pkgver}/build_helpers/build_helpers.py
+}
 
 build() {
   cd "${_pkgname}-${pkgver}"
