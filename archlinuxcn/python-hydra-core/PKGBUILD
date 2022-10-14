@@ -10,9 +10,10 @@ url='https://hydra.cc'
 license=('MIT')
 depends=(
   python-omegaconf
+  python-packaging
 )
 makedepends=(
-  java-environment
+  antlr4
   python-build
   python-installer
   python-setuptools
@@ -21,6 +22,10 @@ makedepends=(
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/facebookresearch/hydra/archive/refs/tags/v${pkgver}.tar.gz")
 sha512sums=('921456019c7d4929245af471dda1b276f9085f50a7cc0f0fb78f8f333150d38eb223da07b422135409542acdee55bcb79f04f53fa6c8a9f6b63b04bd7fea8a3b')
 
+prepare() {
+  # use system antlr4
+  sed -i 's#join(root_dir, "bin/antlr-4.9.3-complete.jar")#"/usr/share/java/antlr-complete.jar"#' "${_pkgname}-${pkgver}/build_helpers/build_helpers.py"
+}
 build() {
   cd "${_pkgname}-${pkgver}"
   python -m build --wheel --no-isolation
