@@ -6,7 +6,7 @@
 # Contributor: Robert Orzanna <orschiro at gmail dot com>
 pkgname=timeshift
 pkgver=22.06.5
-pkgrel=1
+pkgrel=2
 pkgdesc="A system restore utility for Linux"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/linuxmint/timeshift"
@@ -34,7 +34,12 @@ pkgver() {
 
 prepare() {
   cd "$srcdir/$pkgname"
-  sed -i -e 's/--Xcc="-O3" //g' src/makefile
+
+  # Use -Os for compilation instead of -O3
+  git fetch https://github.com/teejee2008/timeshift.git && git cherry-pick -n 2d52682 --no-commit
+
+  # #939, #937: Fix crash on ArchLinux and Ubuntu 22.10 Kinetic
+  git fetch https://github.com/teejee2008/timeshift.git && git cherry-pick -n 5a78bb7 --no-commit
 
   # https://github.com/teejee2008/timeshift/pull/685
   #patch -Np1 -i "$srcdir"/read-only-btrfs-snapshot.patch
