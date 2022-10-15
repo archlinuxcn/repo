@@ -3,8 +3,16 @@ maintainers:
 
 build_prefix: extra-x86_64
 
+repo_depends:
+  - python-iopath
+  - python-yacs
+
 update_on:
   - source: pypi
     pypi: fvcore
+  - source: manual
+    manual: 1
   - alias: python
+
+# vim:set ts=2 sw=2 et:
 

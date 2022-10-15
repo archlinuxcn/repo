@@ -2,10 +2,10 @@
 
 from lilaclib import *
 
+
 def pre_build():
-  update_pkgver_and_pkgrel(_G.newver)
+    update_pkgver_and_pkgrel(_G.newver)
+
 
 def post_build():
-  git_pkgbuild_commit()
-# vim:set ts=2 sw=2 et:
-
+    git_pkgbuild_commit()
