@@ -1,10 +1,12 @@
 maintainers:
   - github: oldherl
 build_prefix: extra-x86_64
+repo_depends:
+  - python2
 update_on:
   - source: alpm
     alpm: qt5-base
     repo: extra
   - alias: icu
   - source: manual
-    manual: 10
+    manual: 11
