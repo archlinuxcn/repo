@@ -3,7 +3,7 @@
 
 pkgname=obs-studio
 pkgver=28.0.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Free, open source software for live streaming and recording"
 arch=(aarch64 x86_64)
 url="https://obsproject.com"
@@ -38,7 +38,7 @@ build() {
 
   cmake -DCMAKE_INSTALL_PREFIX="/usr" \
     -DENABLE_BROWSER=OFF \
-    -DENABLE_VST=OFF \
+    -DENABLE_VST=ON \
     -DENABLE_VLC=OFF \
     -DENABLE_NEW_MPEGTS_OUTPUT=OFF \
     -DENABLE_AJA=OFF \
