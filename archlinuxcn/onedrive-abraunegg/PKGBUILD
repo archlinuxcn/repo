@@ -3,7 +3,7 @@
 _pkgname=onedrive
 pkgname=$_pkgname-abraunegg
 pkgver=2.4.21
-pkgrel=1
+pkgrel=2
 pkgdesc="Free OneDrive client written in D - abraunegg's fork. Follows the releases on https://github.com/abraunegg/onedrive/releases"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="https://github.com/abraunegg/onedrive"
@@ -16,6 +16,10 @@ makedepends=('d-compiler')
 md5sums=('51c9b0946da6fa3373fe6505cf2387ea')
 
 build() {
+	# Fix "W: ELF file ('usr/bin/onedrive') lacks FULL RELRO, check LDFLAGS."
+        # https://bbs.archlinux.org/viewtopic.php?id=280157
+        export DCFLAGS='-L-zrelro -L-znow'
+
 	cd "$_pkgname-$pkgver"
         ./configure --sysconfdir=/etc \
                     --prefix=/usr \
@@ -32,4 +36,7 @@ build() {
 package() {
 	cd "$_pkgname-$pkgver"
 	make DESTDIR=$pkgdir PREFIX=/usr install
+
+	# Move documentation to onedrive-abraunegg to avoid conflicts
+	mv $pkgdir/usr/share/doc/onedrive $pkgdir/usr/share/doc/onedrive-abraunegg
 }
