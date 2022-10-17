@@ -12,5 +12,5 @@ If the package installed correctly, and VSCodium runs correctly, update the AUR 
 
 $ makepkg --printsrcinfo > .SRCINFO
 $ git add PKGBUILD .SRCINFO
-$ git commit -am "Updated to $( cat .SRCINFO | sed -n -E "s/.*pkgver = (.*)/\1/p" )"
+$ git commit -am "Updated to $( cat .SRCINFO | sed -n -E "s/.*pkgver = (.*)/\1/p" )-$( cat .SRCINFO | sed -n -E "s/.*pkgrel = (.*)/\1/p" )"
 $ git push
