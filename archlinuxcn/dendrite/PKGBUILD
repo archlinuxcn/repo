@@ -3,7 +3,7 @@
 
 pkgname="dendrite"
 pkgver=0.10.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A second-generation Matrix homeserver written in Go"
 url="https://matrix-org.github.io/dendrite/"
 license=("Apache")
@@ -27,10 +27,13 @@ build(){
  export CGO_CXXFLAGS="${CXXFLAGS}"
  export CGO_LDFLAGS="${LDFLAGS}"
  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
- go build "./cmd/dendrite-monolith-server"
- go build "./cmd/generate-config"
- go build "./cmd/generate-keys"
- go build "./cmd/create-account"
+ install -d -m 755 "bin"
+ cd "bin"
+ rm -r "../cmd/$pkgname-polylith-multi/"
+ for dir in "../cmd/"*/; do
+  go build "$dir"
+  echo "[OK] built $(basename "$dir")"
+ done
 }
 
 check(){
@@ -40,15 +43,19 @@ check(){
  export CGO_CXXFLAGS="${CXXFLAGS}"
  export CGO_LDFLAGS="${LDFLAGS}"
  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
- go test "./cmd/dendrite-monolith-server"
+ go test "./cmd/$pkgname-monolith-server"
 }
 
 package(){
  cd "$pkgname-$pkgver"
- install -D -m 755 "$pkgname-monolith-server"      "$pkgdir/usr/bin/$pkgname"
- install -D -m 755 "generate-config"               "$pkgdir/usr/bin/$pkgname-generate-config"
- install -D -m 755 "generate-keys"                 "$pkgdir/usr/bin/$pkgname-generate-keys"
- install -D -m 755 "create-account"                "$pkgdir/usr/bin/$pkgname-create-account"
+ for bin in "bin"/*; do
+  if [[ "$bin" =~ .*$pkgname* ]]; then
+   install -D -m 755 "$bin" "$pkgdir/usr/bin/$(basename "$bin")"
+  else
+   install -D -m 755 "$bin" "$pkgdir/usr/bin/$pkgname-$(basename "$bin")"
+  fi
+ done
+ mv "$pkgdir/usr/bin/$pkgname-monolith-server" "$pkgdir/usr/bin/$pkgname"
  install -d -m 750                                 "$pkgdir/etc/$pkgname"
  install -D -m 644 "$pkgname-sample.monolith.yaml" "$pkgdir/etc/$pkgname/config-example.yaml"
  install -D -m 644 "$srcdir/$pkgname.service"      "$pkgdir/usr/lib/systemd/system/$pkgname.service"
