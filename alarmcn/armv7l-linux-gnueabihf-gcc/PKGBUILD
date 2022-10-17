@@ -157,7 +157,7 @@ package_gcc() {
   make -C $_target/libstdc++-v3/include DESTDIR="${pkgdir}" install
   make -C $_target/libstdc++-v3/libsupc++ DESTDIR="${pkgdir}" install
 
-  rm "${pkgdir}"/usr/${_target}/lib/libstdc++.*
+  rm "${pkgdir}"/usr/${_target}/lib/libstdc++.so*
 
   make DESTDIR="${pkgdir}" install-fixincludes
   make -C gcc DESTDIR="${pkgdir}" install-mkheaders
