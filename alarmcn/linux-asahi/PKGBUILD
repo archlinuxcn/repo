@@ -3,10 +3,10 @@
 
 buildarch=8
 
-_rcver=6.0
-_rcrel=6
+_rcver=6.1
+_rcrel=1
 _asahirel=1
-pkgrel=8
+pkgrel=9
 
 pkgbase=linux-asahi
 #_commit_id=asahi-${_nextver}-${_asahirel}
@@ -20,17 +20,17 @@ url="http://www.kernel.org/"
 license=('GPL2')
 
 makedepends=(
-  bc dtc kmod libelf pahole cpio perl tar xz xmlto
+  bc dtc kmod libelf pahole cpio perl rust rust-src rust-bindgen tar xz xmlto
 )
 options=('!strip')
 source=(
   https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
   config         # the main kernel config file
 )
-sha256sums=('bdf56caae41a1e9a79c889bcb191c4f6255e31b972b139308147e7fa40fc7f87'
-            'bc25773cbeaa5f7c3e294ef4d1489e8e838f91bc4acef118ca5d9bd5ddc2e4a7')
-b2sums=('cb21b5ffda8cc08e1d6c00254b9e6345aab18f3374015456bd45f361dc2203d8f06630835c8616394044839b9d517c119324f64e7e2da391fd77fb0c7899f77d'
-        '33942a706bc04b77834abfad66bcd78596c6352f1b7f1ea9acb97ff807b36ed5ced8d11c9b28e62172ccb7fe65408f16a30fa5083e4542f18d8015e87dcb961b')
+sha256sums=('04d7616a2b7bba120f36ba5557d8a496d7539dd7dd030caabd0c9cafee970395'
+            '9b38373a4e465595e3ac63a4935d2d33da903a51a717349be29aabd6a0670dc6')
+b2sums=('94490e90d5a49ec9ddc4e06efde3eb3532d43c3dc636eb8a9fb6a261ceab90d786197a83ecd272a039db5c288900645568d08d624afcf90abc78bdc80dcb93d2'
+        '90ea7c4e211773ad54d852f1e191899cb76af60557054a3fbe488d088c93b45b9d031dcbfd5877791228075bc1a8ca6d265231dc166fd652978539924ddfd464')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
