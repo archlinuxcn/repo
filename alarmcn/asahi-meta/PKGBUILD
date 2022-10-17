@@ -1,8 +1,8 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=asahi-meta
-pkgver=2
-pkgrel=3
+pkgver=3
+pkgrel=1
 pkgdesc='Asahi Linux core support meta package'
 url='https://www.asahilinux.org'
 arch=('any')
@@ -12,6 +12,7 @@ package() {
   # Put depends in package() to avoid unecessary build dependencies
   depends=(
     'linux-asahi' 'uboot-asahi' 'm1n1' 'asahi-scripts' 'asahilinux-keyring' 'asahi-fwextract'
+    'alsa-ucm-conf-asahi'
   )
 }
 
