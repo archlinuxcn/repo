@@ -2,7 +2,7 @@
 
 _pkgname=gdown
 pkgname=gdown
-pkgver=4.5.1
+pkgver=4.5.2
 pkgrel=1
 pkgdesc='Download a large file from Google Drive'
 arch=('any')
@@ -20,7 +20,7 @@ makedepends=(
   python-setuptools
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/wkentaro/gdown/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('ecc3d7b549570b2b5c2527f2cf3c33312c791a6324d6a46f6f4c5c470e38ad5ea465570539f9b0152baf61b9db1b52f14204aec0d9c22e36fdb4978fb90fddc6')
+sha512sums=('60ec1a3ceaad7dc5ddd7b31e88d9c582621723c8d85c26338708ca191733f04561ae9ded9224a0137ca8ad959a8fe6bd55c8b9325e0390bad526d60ed35caca6')
 
 build() {
   cd "${_pkgname}-${pkgver}"
