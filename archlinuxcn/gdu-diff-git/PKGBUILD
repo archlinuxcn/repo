@@ -1,0 +1,27 @@
+pkgname=gdu-diff-git
+pkgver=20221017.063843
+pkgrel=1
+pkgdesc='Use gdu to diff and compare directory usages'
+url='https://github.com/lilydjwg/gdu-diff'
+license=('MIT')
+depends=('gdu' 'python')
+makedepends=('git')
+arch=('any')
+source=(git+https://github.com/lilydjwg/gdu-diff)
+sha256sums=('SKIP')
+_gitname=gdu-diff
+
+pkgver() {
+  cd "${srcdir}/${_gitname}"
+  TZ=UTC git log -1 --pretty='%cd' --date=format-local:%Y%m%d.%H%M%S
+}
+
+build() {
+  true
+}
+
+package() {
+  cd "${srcdir}/${_gitname}"
+  install -Dm755 gdu-diff "${pkgdir}/usr/bin/gdu-diff"
+  install -Dm755 gdu-diffdir "${pkgdir}/usr/bin/gdu-diffdir"
+}
