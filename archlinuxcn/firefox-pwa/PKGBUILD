@@ -10,7 +10,7 @@
 _pkgname="PWAsForFirefox"
 pkgname="firefox-pwa"
 pkgdesc="A tool to install, manage and use Progressive Web Apps (PWAs) in Mozilla Firefox (native component)"
-pkgver="2.1.1"
+pkgver="2.1.2"
 pkgrel=1
 url="https://github.com/filips123/PWAsForFirefox"
 arch=("x86_64" "i686")
@@ -21,8 +21,8 @@ optdepends=("firefox: Support for browser extension")
 install=package.install
 
 source=("$pkgname-$pkgver.tar.gz::https://github.com/filips123/PWAsForFirefox/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('c99c66d80597f8f5160bcd802e65fd16b9156710549b2867013e591f1277eeb6')
-b2sums=('23e31149c18770398bfbc6d51cc8fe26582719e1c0a109fc0e3203335f58e867eb144670c774500b68ee6ebc9299b36b53f142178f1ec74b98320f445fb75260')
+sha256sums=('ceec8d6a40fef5de29a23abe00ce3e7fa78d14ebc6954ca4e4b733b2c785b7d7')
+b2sums=('2041cd98d1e21b3095e4253e18e333912491e52f1d18ff33ffe17c473ed762e6f6c40f425506267b11549dc592f8cdaada678a5db63b4e90d2679eeb0cbc90d9')
 
 prepare() {
     cd $srcdir/$_pkgname-$pkgver/native/
