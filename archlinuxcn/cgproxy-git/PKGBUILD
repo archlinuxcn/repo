@@ -13,8 +13,10 @@ depends=('libbpf'  'iproute2' 'which')
 provides=('cgproxy')
 conflicts=('cgproxy')
 
-source=("${pkgname}::git+https://github.com/springzfx/cgproxy#branch=master")
-md5sums=('SKIP')
+source=("${pkgname}::git+https://github.com/springzfx/cgproxy#branch=master"
+        "fix_libbpf.patch::https://github.com/springzfx/cgproxy/commit/e88dc22803ea2fa7a6b62050178862e8a4ec10ab.patch")
+sha256sums=('SKIP'
+            '874ca17cded7406eac5243b816adf61cbe03ac204ade10e18b91cf9a00629e85')
 
 pkgver() {
   cd "$pkgname"
@@ -22,6 +24,11 @@ pkgver() {
     git describe --long --tags 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
     printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
   )
+}
+
+prepare() {
+  cd "$pkgname"
+  patch -Np1 -i ${srcdir}/fix_libbpf.patch
 }
 
 backup=('etc/cgproxy/config.json')
