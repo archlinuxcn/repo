@@ -11,3 +11,8 @@ update_on:
   - source: github
     github: springzfx/cgproxy
     branch: master
+  - source: alpm
+    alpm: libbpf
+    provided: libbpf.so
+    strip_release: true
+
