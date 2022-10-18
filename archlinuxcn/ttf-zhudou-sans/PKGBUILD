@@ -1,0 +1,27 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+
+pkgbase=ttf-zhudou-sans
+pkgname=('ttf-zhudou-sans' 'ttf-zhudou-sans-vf')
+pkgver=1.000
+pkgrel=1
+pkgdesc='A font family for CJK symbols and punctuation, derived from Noto Sans.'
+url='https://github.com/Buernia/Zhudou-Sans'
+arch=('any')
+license=('OFL')
+source=($pkgbase-$pkgver.tar.gz::https://github.com/Buernia/Zhudou-Sans/archive/refs/tags/v$pkgver.tar.gz)
+b2sums=('bb96330012084f9dd72e03fcfbde8f5a492a7707fe1bddbdce67edbafcec4a48090087821c21fe25a30e500b5779c7f448701472e33549265c1c70ee15bb82cc')
+
+package_ttf-zhudou-sans() {
+    cd "Zhudou-Sans-$pkgver"
+    rename ' ' '-' fonts/ttf/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF" fonts/ttf/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" README.md
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+}
+package_ttf-zhudou-sans-vf() {
+    cd "Zhudou-Sans-$pkgver"
+    rename ' ' '-' fonts/variable\ ttf/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF" fonts/variable\ ttf/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" README.md
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+}
