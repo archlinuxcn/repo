@@ -14,7 +14,7 @@ _pkgname=thunderbird
 pkgbase=thunderbird-appmenu
 pkgname=thunderbird-appmenu
 pkgver=102.0.3
-pkgrel=4
+pkgrel=5
 pkgdesc="Thunderbird from extra with appmenu patch"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -23,8 +23,10 @@ url="https://www.mozilla.org/thunderbird/"
 depends=(gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse)
 makedepends=(unzip zip diffutils yasm mesa imake inetutils xorg-server-xvfb
              autoconf2.13 rust clang llvm jack nodejs cbindgen nasm
-             python-setuptools python-zstandard lld dump_syms
-             wasi-compiler-rt wasi-libc wasi-libc++ wasi-libc++abi)
+             python lld dump_syms
+             wasi-compiler-rt wasi-libc wasi-libc++ wasi-libc++abi
+             at-spi2-core
+             )
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'pulseaudio: Audio support'
@@ -32,26 +34,11 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'hunspell-en_US: Spell checking, American English'
             'xdg-desktop-portal: Screensharing with Wayland')
 options=(!emptydirs !makeflags !strip !lto !debug)
+source=(https://archive.mozilla.org/pub/thunderbird/releases/${pkgver}/source/thunderbird-${pkgver}.source.tar.xz{,.asc}
+        cbindgen-0.24.0.diff arc4random.diff unity-menubar.patch
+        ${_pkgname}.desktop identity-icons-brand.svg)
+validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
-provides=("thunderbird=$pkgver")
-conflicts=("thunderbird")
-
-source=(https://ftp.mozilla.org/pub/mozilla.org/thunderbird/releases/$pkgver/source/thunderbird-$pkgver.source.tar.xz{,.asc}
-        cbindgen-0.24.0.diff
-        zstandard-0.18.0.diff
-        unity-menubar.patch
-        $_pkgname.desktop)
-
-
-md5sums=('d74f2d068e97491aa498e7c8ed2f8877'
-         'SKIP'
-         'bb20e95b9d65d59ba39f2f7f1c853c27'
-         '29ce7c26f14c9c4169d88d1b05552189'
-         '63ebf05aea29545081dab2cb023e2bba'
-         '10872ca39ebb8844ec753203c55bccc4')
-
-
-validpgpkeys=(14F26682D0916CDD81E37B6D61B7B526D98F0353) # Mozilla Software Releases <release@mozilla.com>
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
 # Note: These are for Arch Linux use ONLY. For your own distribution, please
 # get your own set of keys. Feel free to contact foutrelis@archlinux.org for
@@ -65,14 +52,17 @@ _google_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM
 _mozilla_api_key=e05d56db0a694edc8b5aaebda3f2db6a
 
 prepare() {
-  mkdir mozbuild
+  mkdir -p mozbuild
   cd thunderbird-$pkgver
+
+  echo "${noextract[@]}"
 
   # Unbreak build with cbindgen 0.24.0
   patch -Np1 -i ../cbindgen-0.24.0.diff
 
-  # Unbreak build with python-zstandard 0.18.0
-  patch -Np1 -i ../zstandard-0.18.0.diff
+  # Fix arc4random
+  patch -Np1 -i ../arc4random.diff
+
   patch -Np1 -i ../unity-menubar.patch
 
   echo -n "$_google_api_key" >google-api-key
@@ -86,7 +76,7 @@ ac_add_options --prefix=/usr
 ac_add_options --enable-release
 ac_add_options --enable-hardening
 ac_add_options --enable-optimize
-ac_add_options --enable-rust-simd
+#ac_add_options --enable-rust-simd
 ac_add_options --enable-linker=lld
 ac_add_options --disable-elf-hack
 ac_add_options --disable-bootstrap
@@ -98,8 +88,10 @@ ac_add_options --enable-update-channel=release
 ac_add_options --with-distribution-id=org.archlinux
 ac_add_options --with-unsigned-addon-scopes=app,system
 ac_add_options --allow-addon-sideload
+ac_add_options --with-app-name=${_pkgname}
 export MOZILLA_OFFICIAL=1
-export MOZ_APP_REMOTINGNAME=${_pkgname//-/}
+export MOZ_APP_REMOTINGNAME=${_pkgname}
+export MOZ_APP_PROFILE="mozilla/thunderbird"
 
 # Keys
 ac_add_options --with-google-location-service-api-keyfile=${PWD@Q}/google-api-key
@@ -117,10 +109,6 @@ ac_add_options --enable-crashreporter
 ac_add_options --disable-updater
 ac_add_options --disable-tests
 END
-
-  for i in tools/fuzzing/smoke/grizzly_requirements.txt build/psutil_requirements.txt build/psutil_requirements.in python/sites/mach.txt
-  do sed 's/5.8.0/5.9.1/g' -i $i
-  done
 }
 
 build() {
@@ -129,82 +117,116 @@ build() {
   export MOZ_NOSPAM=1
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
 #  export MOZ_ENABLE_FULL_SYMBOLS=1
-  export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=system
+  export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=pip
+
+  export MOZ_BUILD_DATE=$(head -1 sourcestamp.txt)
+  export RUSTFLAGS="-C debuginfo=1"
 
   # LTO needs more open files
   ulimit -n 4096
 
   # Do 3-tier PGO
-  echo "Building instrumented browser..."
+#  echo "Building instrumented browser..."
   cat >.mozconfig ../mozconfig - <<END
+#ac_add_options --enable-profile-generate=cross
 END
+#  ./mach build
+#
+#  echo "Profiling instrumented browser..."
+#  ./mach package
+#  LLVM_PROFDATA=llvm-profdata \
+#    JARLOG_FILE="$PWD/jarlog" \
+#    xvfb-run -s "-screen 0 1920x1080x24 -nolisten local" \
+#    ./mach python build/pgo/profileserver.py
+#
+#  stat -c "Profile data found (%s bytes)" merged.profdata
+#  test -s merged.profdata
+#
+#  stat -c "Jar log found (%s bytes)" jarlog
+#  test -s jarlog
+#
+#  echo "Removing instrumented browser..."
+#  ./mach clobber
+#
+#  echo "Building optimized browser..."
+#  cat >.mozconfig ../mozconfig - <<END
+#ac_add_options --enable-lto=cross
+#ac_add_options --enable-profile-use=cross
+#ac_add_options --with-pgo-profile-path=${PWD@Q}/merged.profdata
+#ac_add_options --with-pgo-jarlog=${PWD@Q}/jarlog
+#END
   ./mach build
+
+#  echo "Building symbol archive..."
+#  ./mach buildsymbols
 }
 
 package() {
   cd thunderbird-$pkgver
   DESTDIR="$pkgdir" ./mach install
 
-#  local vendorjs="$pkgdir/usr/lib/$pkgname/browser/defaults/preferences/vendor.js"
-#  install -Dvm644 /dev/stdin "$vendorjs" <<END
-#// Use LANG environment variable to choose locale
-#pref("intl.locale.requested", "");
-#
-#// Use system-provided dictionaries
-#pref("spellchecker.dictionary_path", "/usr/share/hunspell");
-#
-#// Disable default browser checking.
-#pref("browser.shell.checkDefaultBrowser", false);
-#
-#// Don't disable extensions in the application directory
-#pref("extensions.autoDisableScopes", 11);
-#END
+  local vendorjs="$pkgdir/usr/lib/${_pkgname}/browser/defaults/preferences/vendor.js"
+  install -Dvm644 /dev/stdin "$vendorjs" <<END
+// Use LANG environment variable to choose locale
+pref("intl.locale.requested", "");
 
-  local distini="$pkgdir/usr/lib/$_pkgname/distribution/distribution.ini"
+// Use system-provided dictionaries
+pref("spellchecker.dictionary_path", "/usr/share/hunspell");
+
+// Disable default browser checking.
+pref("browser.shell.checkDefaultBrowser", false);
+
+// Don't disable extensions in the application directory
+pref("extensions.autoDisableScopes", 11);
+END
+
+  local distini="$pkgdir/usr/lib/${_pkgname}/distribution/distribution.ini"
   install -Dvm644 /dev/stdin "$distini" <<END
 [Global]
 id=archlinux
 version=1.0
-about=Mozilla thunderbird for Arch Linux
+about=Mozilla Thunderbird for Arch Linux
 
 [Preferences]
 app.distributor=archlinux
-app.distributor.channel=$_pkgname
+app.distributor.channel=${_pkgname}
 app.partner.archlinux=archlinux
 END
 
-#  local i theme=official
-#  for i in 16 22 24 32 48 64 128 256; do
-#    install -Dvm644 browser/branding/$theme/default$i.png \
-#      "$pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/$pkgname.png"
-#  done
-#  install -Dvm644 browser/branding/$theme/content/about-logo.png \
-#    "$pkgdir/usr/share/icons/hicolor/192x192/apps/$pkgname.png"
-#  install -Dvm644 browser/branding/$theme/content/about-logo@2x.png \
-#    "$pkgdir/usr/share/icons/hicolor/384x384/apps/$pkgname.png"
-#  install -Dvm644 browser/branding/$theme/content/about-logo.svg \
-#    "$pkgdir/usr/share/icons/hicolor/scalable/apps/$pkgname.svg"
-#
-#  install -Dvm644 ../$pkgname.desktop \
-#    "$pkgdir/usr/share/applications/$pkgname.desktop"
+  local i theme=official
+  for i in 16 22 24 32 48 64 128 256; do
+    install -Dvm644 browser/branding/$theme/default$i.png \
+      "$pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/${_pkgname}.png"
+  done
+  install -Dvm644 browser/branding/$theme/content/about-logo.png \
+    "$pkgdir/usr/share/icons/hicolor/192x192/apps/${_pkgname}.png"
+  install -Dvm644 browser/branding/$theme/content/about-logo@2x.png \
+    "$pkgdir/usr/share/icons/hicolor/384x384/apps/${_pkgname}.png"
+  install -Dvm644 browser/branding/$theme/content/about-logo.svg \
+    "$pkgdir/usr/share/icons/hicolor/scalable/apps/${_pkgname}.svg"
+  install -Dvm644 ../identity-icons-brand.svg \
+    "$pkgdir/usr/share/icons/hicolor/symbolic/apps/${_pkgname}-symbolic.svg"
+
+  install -Dvm644 ../${_pkgname}.desktop \
+    "$pkgdir/usr/share/applications/${_pkgname}.desktop"
 
   # Install a wrapper to avoid confusion about binary path
-  install -Dvm755 /dev/stdin "$pkgdir/usr/bin/$_pkgname" <<END
+  install -Dvm755 /dev/stdin "$pkgdir/usr/bin/${_pkgname}" <<END
 #!/bin/sh
-exec /usr/lib/$_pkgname/thunderbird "\$@"
+exec /usr/lib/${_pkgname}/thunderbird "\$@"
 END
 
   # Replace duplicate binary with wrapper
   # https://bugzilla.mozilla.org/show_bug.cgi?id=658850
-  ln -srfv "$pkgdir/usr/bin/$_pkgname" "$pkgdir/usr/lib/$_pkgname/thunderbird-bin"
+  ln -srfv "$pkgdir/usr/bin/${_pkgname}" "$pkgdir/usr/lib/${_pkgname}/thunderbird-bin"
 
   # Use system certificates
-  local nssckbi="$pkgdir/usr/lib/$_pkgname/libnssckbi.so"
+  local nssckbi="$pkgdir/usr/lib/${_pkgname}/libnssckbi.so"
   if [[ -e $nssckbi ]]; then
     ln -srfv "$pkgdir/usr/lib/libnssckbi.so" "$nssckbi"
   fi
 
-#  export SOCORRO_SYMBOL_UPLOAD_TOKEN_FILE="$startdir/.crash-stats-api.token"
+  export SOCORRO_SYMBOL_UPLOAD_TOKEN_FILE="$startdir/.crash-stats-api.token"
 #  if [[ -f $SOCORRO_SYMBOL_UPLOAD_TOKEN_FILE ]]; then
 #    make -C obj uploadsymbols
 #  else
@@ -213,3 +235,10 @@ END
 }
 
 # vim:set sw=2 et:
+md5sums=('d74f2d068e97491aa498e7c8ed2f8877'
+         'SKIP'
+         'bb20e95b9d65d59ba39f2f7f1c853c27'
+         '6fcf81de61fa98bccedf1f7b8656d83a'
+         '63ebf05aea29545081dab2cb023e2bba'
+         '10872ca39ebb8844ec753203c55bccc4'
+         '68708a0695494a318f13425f0c608d72')

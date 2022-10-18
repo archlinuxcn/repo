@@ -6,7 +6,7 @@ eval $(cat PKGBUILD| grep -P '^_pkgname=')
 eval $(cat PKGBUILD| grep -P '^pkgrel=')
 
 ver="$(curl https://releases.mozilla.org/pub/${_pkgname}/releases/ | sed -rn 's/([^0-9]*)([0-9]*\.[0-9]*?(\.[0-9]*)).*/\2/p' | sort -V | tail -n1)"
-#ver=91.0
+ver=102.0.3
 sed -r "s/(pkgver=)(.*)/\1$ver/" -i PKGBUILD
 
 #rm -rf debian
@@ -19,16 +19,18 @@ sed -r "s/(pkgver=)(.*)/\1$ver/" -i PKGBUILD
 makepkg --printsrcinfo > .SRCINFO
 ver_msg="autohook $ver"
 
-[ -z "$(git diff)" ] && exit
+[ -z "$(git diff)" ] && [[ ! "$1" == "force" ]] && exit
 git commit -am "$ver_msg"
 git push
 
 (
   rm -rf 'home:nicman23'
   osc co home:nicman23 ${_pkgname}-appmenu-bin
+  cp `git ls-tree -r master --name-only | grep -Pv '^\.'` home:nicman23/${_pkgname}-appmenu-bin/
   sed "s/PKGVER/${ver}/g" _service \
    > home:nicman23/${_pkgname}-appmenu-bin/_service
   cd home:nicman23/${_pkgname}-appmenu-bin/
+  osc add *
   osc commit -m "$ver_msg"
   [ -z "$difff" ] || osc rebuild
   osc results -w
