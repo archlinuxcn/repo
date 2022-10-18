@@ -1,0 +1,41 @@
+_pkgname=ydotool
+pkgname=$_pkgname-git
+pkgver=1.0.1.r2.g1d5d227
+pkgrel=1
+pkgdesc="Generic command-line automation tool (no X!), works on Wayland & tty"
+arch=('x86_64')
+makedepends=('cmake' 'git' 'make' 'pkg-config' 'scdoc')
+url="https://github.com/ReimuNotMoe/ydotool"
+license=('AGPL3')
+source=(${_pkgname}::git+https://github.com/ReimuNotMoe/ydotool.git
+        66-uinput.rules)
+sha256sums=('SKIP'
+            'be97caf82374a487acc618b84a502613d6c219b73991c8d764f6b6b41617f740')
+provides=($_pkgname)
+conflicts=($_pkgname)
+
+pkgver() {
+  cd "$srcdir/$_pkgname"
+  # seems to be a wrong tag
+  git tag -d v0.0.1 >/dev/null || true
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//'
+}
+
+build() {
+  cd "$srcdir/${_pkgname}"
+
+  mkdir -p build && cd build
+  
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+    -DCMAKE_INSTALL_MANDIR=/usr/share/man \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo
+  make
+}
+
+package() {
+  cd "$srcdir/${_pkgname}"
+  make DESTDIR="$pkgdir" install -C build
+  install -Dm755 ../66-uinput.rules "$pkgdir"/usr/lib/udev/rules.d/66-uinput.rules
+}
