@@ -2,7 +2,7 @@
 
 pkgname=python-visdom
 _name=${pkgname#python-}
-pkgver=0.2.1
+pkgver=0.2.2
 pkgrel=1
 pkgdesc='A flexible tool for creating, organizing, and sharing visualizations of live, rich data. Supports Torch and Numpy.'
 arch=(any)
@@ -25,7 +25,7 @@ source=(
   "${pkgname}-${pkgver}.tar.gz"::"https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz"
   "LICENSE"::"https://github.com/facebookresearch/visdom/raw/master/LICENSE"
 )
-sha512sums=('2294d7433440b07c9a2b70bd961f2bffc6be97e4c80aecdd67912fb5074031fafe10907251910a6a0175e3da50b1d58c81009caf35e55e418c236e5d45549ca1'
+sha512sums=('3396d6f3651975ef7d9a944b2b660372f84e758f9818289bb2380190d3e1157865408f0c4eb20785701dd27d20ca2ac637ca4f229e4bc89fee1cef9664c1f99e'
             '31cc38066678c030e8f6378dcae59add64566a977f92983c3a4c929c9b76424291915ea4283e1367ece50b9537f8d51970aa8fd5ce063037aa3a7c45f0677d25')
 
 build() {
