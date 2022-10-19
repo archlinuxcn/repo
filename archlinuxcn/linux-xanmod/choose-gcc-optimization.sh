@@ -66,7 +66,7 @@ cat << EOF
    98) Intel-Native optimizations autodetected by GCC
    99) AMD-Native optimizations autodetected by GCC
 
-    0) Generic (default)
+    0) Generic x64-v1 (default)
     
 EOF
 
@@ -133,7 +133,16 @@ warning "According to PKGBUILD variable _microarchitecture, your choice is $answ
 msg "Building this package for microarchitecture: $Microarchitecture$default"
 sleep 5
 
+_defaultmicro=$(grep ^CONFIG_LOCALVERSION .config)
+if [ -z "${default}" ]; then
+    _localversion=$(echo ${Microarchitecture,,} | sed -e 's/config_m/-/g' -e 's/config_generic_cpu/-x64v/g')
+    sed -e "s|^$_defaultmicro|CONFIG_LOCALVERSION=\"$_localversion\"|g" -i .config
+fi
+
 sed -e 's|^CONFIG_GENERIC_CPU=y|# CONFIG_GENERIC_CPU is not set|g' -i .config
+sed -e 's|^CONFIG_GENERIC_CPU2=y|# CONFIG_GENERIC_CPU2 is not set|g' -i .config
+sed -e 's|^CONFIG_GENERIC_CPU3=y|# CONFIG_GENERIC_CPU3 is not set|g' -i .config
+sed -e 's|^CONFIG_GENERIC_CPU4=y|# CONFIG_GENERIC_CPU4 is not set|g' -i .config
 sed -e "s|^# $Microarchitecture is not set|$Microarchitecture=y|g" -i .config
 
 echo
