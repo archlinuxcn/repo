@@ -4,7 +4,7 @@
 
 pkgname=bibata-cursor-theme
 pkgver=2.0.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Material Based Cursor Theme"
 arch=('any')
 url="https://github.com/ful1e5/Bibata_Cursor"
@@ -21,35 +21,21 @@ prepare() {
 
 build() {
   cd Bibata_Cursor-$pkgver
-  echo "Building 'Bibata Modern Amber' Cursors"
-  ctgen build.toml -p 'x11' -n 'Bibata-Modern-Amber' \
-    -c 'Yellowish and rounded edge Bibata cursors.' \
-    -d 'bitmaps/Bibata-Modern-Amber'
 
-  echo "Building 'Bibata Original Amber' Cursors"
-  ctgen build.toml -p 'x11' -n 'Bibata-Original-Amber' \
-    -c 'Yellowish and sharp edge Bibata cursors.' \
-    -d 'bitmaps/Bibata-Original-Amber'
+  declare -A names
+  names["Bibata-Modern-Amber"]="Yellowish and rounded edge Bibata cursors."
+  names["Bibata-Modern-Classic"]="Black and rounded edge Bibata cursors."
+  names["Bibata-Modern-Ice"]="White and rounded edge Bibata cursors."
+  names["Bibata-Original-Amber"]="Yellowish and sharp edge Bibata cursors."
+  names["Bibata-Original-Classic"]="Black and sharp edge Bibata cursors."
+  names["Bibata-Original-Ice"]="White and sharp edge Bibata cursors."
 
-  echo "Building 'Bibata Modern Classic' Cursors"
-  ctgen build.toml -p 'x11' -n 'Bibata-Modern-Classic' \
-    -c 'Black and rounded edge Bibata cursors.' \
-    -d 'bitmaps/Bibata-Modern-Classic'
-
-  echo "Building 'Bibata Original Classic' Cursors"
-  ctgen build.toml -p 'x11' -n 'Bibata-Original-Classic' \
-    -c 'Black and sharp edge Bibata cursors.' \
-    -d 'bitmaps/Bibata-Original-Classic'
-
-  echo "Building 'Bibata Modern Ice' Cursors"
-  ctgen build.toml -p 'x11' -n 'Bibata-Modern-Ice' \
-    -c 'White and rounded edge Bibata cursors.' \
-    -d 'bitmaps/Bibata-Modern-Ice'
-
-  echo "Building 'Bibata Original Ice' Cursors"
-  ctgen build.toml -p 'x11' -n 'Bibata-Original-Ice' \
-    -c 'White and sharp edge bibata cursors.' \
-    -d 'bitmaps/Bibata-Original-Ice'
+  for key in "${!names[@]}"; do
+    comment="${names[$key]}";
+    ctgen build.toml -p x11 -d "bitmaps/$key" -n "$key" -c "$comment" &
+    PID=$!
+    wait $PID
+  done
 }
 
 package() {
