@@ -2,7 +2,7 @@
 
 _pkgname=jsonargparse
 pkgname=python-jsonargparse
-pkgver=4.15.1
+pkgver=4.15.2
 pkgrel=1
 pkgdesc='Parsing of command line options, yaml/jsonnet config files and/or environment variables based on argparse'
 arch=('any')
@@ -15,7 +15,7 @@ makedepends=(
   python-setuptools
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/omni-us/jsonargparse/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('899d7d0ec7cf1eba24bc1338cddbb47f78b63fd4686333ee86300096d8477d4fb90c48ad5e3f5d421b5daa59d495c55c9fb80d1e3bf59c1719b3441fc753c91d')
+sha512sums=('80fcf457008200faf1bb8aa2a220d0562c9275f3820856608d3adbf128203ce767b294a423ea13b5ab6ca082e545255274b0e4cb39653295072b2d899623ea31')
 
 build() {
   cd "${_pkgname}-${pkgver}"
