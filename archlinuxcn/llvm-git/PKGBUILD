@@ -51,8 +51,6 @@ prepare() {
     cd llvm-project
     # llvm-project contains a lot of stuff, remove parts that aren't used by this package
     rm -rf "$srcdir"/fakeinstall
-     2to3 -wn --no-diffs \
-    clang/tools/extra/clang-include-fixer/find-all-symbols/tool/run-find-all-symbols.py
 }
 
 build() {
