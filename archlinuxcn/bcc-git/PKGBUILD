@@ -29,7 +29,7 @@ prepare() {
   cd "$srcdir/bcc-git"
   git submodule init
   git config submodule.src/cc/libbpf.url "$srcdir/libbpf"
-  git submodule update
+  git -c protocol.file.allow=always submodule update
 }
 
 build() {
