@@ -15,8 +15,8 @@ source=("${_pkgname}::git+${url}.git"
         "gulrak-filesystem::git+https://github.com/gulrak/filesystem.git")
 sha512sums=('SKIP'
             'SKIP')
-_core_deps=(libx11 libxrandr libxext libxinerama xorgproto libxtst libxi openssl)
-_gui_deps=(avahi qt5-base)
+_core_deps=(glibc gcc-libs libx11 libxrandr libxext libxinerama xorgproto libxtst libxi openssl)
+_gui_deps=(glibc gcc-libs libx11 openssl avahi qt5-base)
 makedepends=(${_core_deps[@]} ${_gui_deps[@]}
              # referenced in CMakeLists.txt but does not seem to be actually used
              curl libsm libice
@@ -31,7 +31,7 @@ prepare() {
   cd $_pkgname
   git submodule init
   git config submodule.ext/gulrak-filesystem.url "$srcdir"/gulrak-filesystem
-  git submodule update ext/gulrak-filesystem
+  git -c protocol.file.allow=always submodule update ext/gulrak-filesystem
 }
 
 build() {
