@@ -1,7 +1,7 @@
 # Maintainer: Hao Long <aur@esd.cc>
 
 pkgname=gobuster
-pkgver=3.1.0
+pkgver=3.2.0
 pkgrel=1
 pkgdesc="Directory/File, DNS and VHost busting tool written in Go"
 arch=("x86_64" "i686")
@@ -10,13 +10,18 @@ license=('Apache')
 provides=('gobuster')
 conflicts=('gobuster')
 depends=('glibc')
-makedepends=('go-pie')
+makedepends=('go')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/OJ/gobuster/archive/v${pkgver}.tar.gz")
-sha256sums=('a49e597412a0be68020f2836c4f33276cb653d00543f59d4cff34b053b8d9a10')
+sha256sums=('63094d24b79622d798f1aed2e497c8a6dd2bbeaa4fda7162ec71bc7070bf1a61')
 
 build() {
   cd ${pkgname}-${pkgver}
-  go build -trimpath -ldflags "-extldflags ${LDFLAGS}" .
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+  go build .
 }
 
 package() {
