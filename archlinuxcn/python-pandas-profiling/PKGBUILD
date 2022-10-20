@@ -2,8 +2,8 @@
 
 pkgname=python-pandas-profiling
 _pkgname=pandas-profiling
-pkgver=3.3.0
-pkgrel=2
+pkgver=3.4.0
+pkgrel=1
 pkgdesc='Create HTML profiling reports from pandas DataFrame objects'
 arch=('any')
 url='https://github.com/ydataai/pandas-profiling'
@@ -34,7 +34,7 @@ depends=(
 makedepends=(python-setuptools)
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/pandas-profiling/pandas-profiling/archive/v${pkgver}.tar.gz")
-sha512sums=('77f8aa68fe821c77fd9530f15b17bae0e46ee5d9d2a1b416527b2a8d15a060e0f431f526dffba0662d515c28768505c7d3bea5f93fb82a6e65f90a13d4dcdd27')
+sha512sums=('a51b553658f41a594a4b868a663345649a60076cdc38bec595f20d942892cce3ea766d487c56f600ae2092abb3dcb90be6d5fd59b386307920f4e30f5ba09e46')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
