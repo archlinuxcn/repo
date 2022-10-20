@@ -1,0 +1,24 @@
+pkgname=julia-git-jlfzf-git
+pkgver=0.1.2.0.11.gb20b670
+pkgrel=1
+pkgdesc="JLFzf.jl"
+url="https://github.com/Moelf/JLFzf.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-jlfzf)
+source=(git+https://github.com/Moelf/JLFzf.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd JLFzf.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd JLFzf.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh JLFzf "${pkgdir}" "${pkgname}" julia-git
+}

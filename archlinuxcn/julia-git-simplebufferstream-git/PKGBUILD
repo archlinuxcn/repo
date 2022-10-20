@@ -1,0 +1,24 @@
+pkgname=julia-git-simplebufferstream-git
+pkgver=1.0.0.0.9.ge592419
+pkgrel=1
+pkgdesc="SimpleBufferStream.jl"
+url="https://github.com/staticfloat/SimpleBufferStream.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-simplebufferstream)
+source=(git+https://github.com/staticfloat/SimpleBufferStream.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd SimpleBufferStream.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd SimpleBufferStream.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh SimpleBufferStream "${pkgdir}" "${pkgname}" julia-git
+}

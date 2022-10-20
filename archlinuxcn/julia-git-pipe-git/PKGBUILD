@@ -1,0 +1,24 @@
+pkgname=julia-git-pipe-git
+pkgver=1.3.0.0.2.gf721896
+pkgrel=1
+pkgdesc="Pipe.jl"
+url="https://github.com/oxinabox/Pipe.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-pipe)
+source=(git+https://github.com/oxinabox/Pipe.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd Pipe.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd Pipe.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh Pipe "${pkgdir}" "${pkgname}" julia-git
+}

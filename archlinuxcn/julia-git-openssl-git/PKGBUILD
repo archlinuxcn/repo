@@ -1,0 +1,25 @@
+pkgname=julia-git-openssl-git
+pkgver=0.0.0.0.38.27ec24a
+pkgrel=1
+pkgdesc="OpenSSL.jl"
+url="https://github.com/JuliaWeb/OpenSSL.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-openssl)
+source=(git+https://github.com/JuliaWeb/OpenSSL.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd OpenSSL.jl
+
+  echo "0.0.0.0.$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+  # git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd OpenSSL.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh OpenSSL "${pkgdir}" "${pkgname}" julia-git
+}
