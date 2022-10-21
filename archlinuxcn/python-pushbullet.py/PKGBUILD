@@ -1,0 +1,28 @@
+# Maintainer: Hideaki Takahashi <mymelo+aur@gmail.com>
+pkgname=python-pushbullet.py
+_name=${pkgname#python-}
+pkgver=0.12.0
+pkgrel=1
+pkgdesc="A simple python client for pushbullet.com."
+depends=('python-requests' 'python-magic' 'python-websocket-client')
+makedepends=('python-setuptools')
+arch=('any')
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz)
+sha256sums=('917883e1af4a0c979ce46076b391e0243eb8fe0a81c086544bcfa10f53e5ae64')
+
+url="https://github.com/rbrcsk/pushbullet.py"
+license=("MIT")
+
+build() {
+    cd $srcdir/$_name-$pkgver
+
+    python setup.py build || return 1
+}
+
+package() {
+    cd $srcdir/$_name-$pkgver
+
+    python setup.py install --root=$pkgdir
+
+    install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}
