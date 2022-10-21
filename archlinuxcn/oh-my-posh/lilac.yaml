@@ -1,0 +1,19 @@
+maintainers:
+  - github: wszqkzqk
+    email: wszqkzqk <wszqkzqk@qq.org>
+
+build_prefix: extra-x86_64
+
+pre_build_script: |
+    update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: |
+    git_pkgbuild_commit()
+
+update_on:
+  - source: github
+    github: JanDeDobbeleer/oh-my-posh
+    use_latest_release: true
+    prefix: v
+  - source: aur
+    aur: oh-my-posh
