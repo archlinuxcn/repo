@@ -96,7 +96,7 @@ build() {
         -D LLDB_USE_SYSTEM_SIX=1 \
         -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang" 
 
-    ninja -C _build LLVMgold all ocaml_doc
+    ninja -C _build LLVMgold all
     DESTDIR="$srcdir/fakeinstall" ninja -C _build install
 }
 
