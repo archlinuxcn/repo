@@ -1,0 +1,50 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=grad-cam
+pkgname=python-grad-cam
+pkgver=1.4.6
+pkgrel=1
+pkgdesc='Image Test Time Augmentation with PyTorch'
+arch=('any')
+url='https://github.com/jacobgil/pytorch-grad-cam/'
+license=('MIT')
+depends=(
+  python-matplotlib
+  python-numpy
+  python-opencv
+  python-pillow
+  python-pytorch
+  python-scikit-learn
+  python-torchvision
+  python-tqdm
+  python-ttach
+)
+checkdepends=(
+  python-pytest
+  python-psutil
+)
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+sha512sums=('164ec3311c5cff5d631eee8cc065608be258968fcd3524e4308ba0cd2b484a2ee2a2d769ab2399e9a03cd01ee43aabf4e8a19621a845d1d92dba4e82c83001b7')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python -m build --wheel --no-isolation
+}
+
+check() {
+  cd "${_pkgname}-${pkgver}"
+  PYTHONPATH=${PWD}/build/lib pytest -v
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
