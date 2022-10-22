@@ -37,5 +37,5 @@ build() {
 package() {
   cd "$srcdir/${_pkgname}"
   make DESTDIR="$pkgdir" install -C build
-  install -Dm755 ../66-uinput.rules "$pkgdir"/usr/lib/udev/rules.d/66-uinput.rules
+  install -Dm644 ../66-uinput.rules "$pkgdir"/usr/lib/udev/rules.d/66-uinput.rules
 }
