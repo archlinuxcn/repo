@@ -36,7 +36,7 @@ prepare() {
 
   git submodule init
   git config submodule.cmake-fedora.url "$srcdir/cmake-fedora"
-  git submodule update
+  git -c protocol.file.allow=always submodule update
 }
 
 build() {

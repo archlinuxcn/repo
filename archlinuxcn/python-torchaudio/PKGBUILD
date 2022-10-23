@@ -38,7 +38,7 @@ prepare() {
   git submodule init
   for mod in kaldi kenlm; do
     git config submodule.third_party/$mod/submodule.url "$srcdir"/$mod
-    git submodule update third_party/$mod/submodule
+    git -c protocol.file.allow=always submodule update third_party/$mod/submodule
   done
 }
 

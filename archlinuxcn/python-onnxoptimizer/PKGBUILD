@@ -22,7 +22,7 @@ prepare() {
 
   git submodule init
   git config submodule.third_party/onnx.url "$srcdir"/onnx-daquexian
-  git submodule update third_party/onnx
+  git -c protocol.file.allow=always submodule update third_party/onnx
 }
 
 build() {
