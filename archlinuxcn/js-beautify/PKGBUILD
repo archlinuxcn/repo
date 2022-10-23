@@ -1,5 +1,5 @@
 pkgname=js-beautify
-pkgver=1.14.4
+pkgver=1.14.7
 pkgrel=1
 pkgdesc="CSS, HTML & JavaScript unobfuscator and beautifier"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=('npm')
 conflicts=('python-cssbeautifier' 'python-jsbeautifier')
 source=("https://registry.npmjs.org/js-beautify/-/$pkgname-$pkgver.tgz")
 noextract=("$pkgname-$pkgver.tgz")
-sha256sums=('92a59149a112265435173570e8551953fe02c2ff6905d82e51658ced0129356a')
+sha256sums=('4346e3adc0a9c7e3c950c4182680c425d388fb5572510072011ace424da9123f')
 
 package() {
   npm install -g --prefix "$pkgdir/usr" "$pkgname-$pkgver.tgz"
