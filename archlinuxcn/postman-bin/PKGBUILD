@@ -2,7 +2,7 @@
 # Contributor: Claudio d'Angelis <claudiodangelis at gmail dot com>
 pkgname=postman-bin
 pkgver=10.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Build, test, and document your APIs faster"
 provides=('postman')
 conflicts=('postman')
@@ -16,7 +16,7 @@ source=(
 )
 depends=(libxss nss gtk3)
 sha256sums=('f4bff0f708de0c59481bd2189a61c21f56c81b3ceb423c6c1816bf8359b29e44'
-            '74b2d8570658e207e31f729e7f4768952252383aee7c695218d077bd0ef13245')
+            'd87542ac18455ff341da7c5efd01db96a01f659b1bf546840aa4ac8bd085802d')
 package() {
 	install -dm755 "${pkgdir}/opt/"
 	cp -r "Postman" "${pkgdir}/opt/postman"
