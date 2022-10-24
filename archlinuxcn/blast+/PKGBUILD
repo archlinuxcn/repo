@@ -23,6 +23,7 @@ depends=(
 makedepends=(
   arrow
   boost
+  chrpath
   cpio
   fcgi
   freeglut
@@ -71,5 +72,16 @@ package() {
   install -Dm644 "scripts/projects/blast/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
   # delete conflict files
   rm -vf "${pkgdir}/usr/lib/libproj.so"
+  # delete unused files
+  rm -vf ${pkgdir}/usr/bin/test_*
+  rm -vf ${pkgdir}/usr/bin/*_test
+  rm -vf ${pkgdir}/usr/lib/*.a
+  rm -vf ${pkgdir}/usr/lib/libtest_*
+  rm -vf ${pkgdir}/usr/lib/libseqtest.so
+  rm -vf ${pkgdir}/usr/lib/libxregexp_template_tester.so
+  # fix permission
+  chmod 0755 ${pkgdir}/usr/lib/*.so
+  # fix rpath
+  chrpath --delete ${pkgdir}/usr/lib/*.so ${pkgdir}/usr/bin/* || true
 }
 # vim:set ts=2 sw=2 et:
