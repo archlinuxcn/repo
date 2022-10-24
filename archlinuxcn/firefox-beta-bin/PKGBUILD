@@ -3,7 +3,7 @@
 
 pkgname=firefox-beta-bin
 _pkgname=firefox-beta
-pkgver=107.0b3
+pkgver=107.0b4
 _major=${pkgver/rc*}
 _build=${pkgver/*rc}
 pkgrel=1
@@ -22,10 +22,10 @@ optdepends=('ffmpeg: H264/AAC/MP3 decoding'
 provides=("firefox=$pkgver")
 conflicts=('firefox-beta')
 install=$pkgname.install
-source=("https://archive.mozilla.org/pub/firefox/releases/$pkgver/linux-x86_64/en-US/firefox-$pkgver.tar.bz2"
+source=("http://archive.mozilla.org/pub/firefox/releases/107.0b4/linux-x86_64/en-US/firefox-$pkgver.tar.bz2"
         "$_pkgname.sh"
         "$pkgname.desktop")
-sha256sums=('176955541079576bfd88f30821bf4af87d316ddc9ec46ba7da130f10e20d5aca'
+sha256sums=('17cac33652489ea6e33603c3a7815ff4620a24a2f51c5b24539b5ea6c0ff5605'
             '4bec62032e49c28ff27750abddbdbdbb1a4b5cba719c39498968fe53adee790b'
             '210f13ea47c4b96387f26ee7fc4dfc5c192cfb169aef2a13303fbd1ee58b3761')
 # RC
