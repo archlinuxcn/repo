@@ -4,7 +4,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=15.0.0_r425804.a7b154aa1770a
+pkgver=16.0.0_r439696.9cedab654d58
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -12,7 +12,7 @@ url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
              'python-sphinx' 'lua53'
-             'python-recommonmark' 'python-sphinx-automodapi' 'cuda' 'ocl-icd' 'opencl-headers'
+             'python-recommonmark' 'python-sphinx-automodapi' 'cuda' 'ocl-icd' 'opencl-headers' 'python-yaml' 'python-setuptools'
              'swig' 'python' 'libunwind')
 
 source=("llvm-project::git+https://github.com/llvm/llvm-project.git"
@@ -73,7 +73,7 @@ build() {
         -D CMAKE_CXX_FLAGS="$CXXFLAGS" \
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr \
-        -D CMAKE_INSTALL_DOCDIR=share/doc \
+        -D CMAKE_INSTALL_DOCDIR=/usr/share/doc \
         -D LLVM_APPEND_VC_REV=ON \
         -D LLVM_HOST_TRIPLE="$CHOST" \
         -D LLVM_ENABLE_RTTI=ON \
@@ -85,18 +85,20 @@ build() {
         -D LLVM_ENABLE_BINDINGS=OFF \
         -D LLVM_INSTALL_UTILS=ON \
         -D LLVM_BUILD_DOCS=ON \
+        -D LLVM_INCLUDE_DOCS=ON \
         -D LLVM_INCLUDE_BENCHMARKS=OFF \
         -D LLVM_EXPERIMENTAL_TARGETS_TO_BUILD=AVR \
         -D LLVM_ENABLE_SPHINX=ON \
-        -D SPHINX_OUTPUT_HTML=OFF \
+        -D SPHINX_OUTPUT_HTML=ON \
+        -D SPHINX_OUTPUT_MAN=ON \
         -D SPHINX_WARNINGS_AS_ERRORS=OFF \
         -D POLLY_ENABLE_GPGPU_CODEGEN=ON \
         -D LLVM_VERSION_SUFFIX="" \
         -D LLDB_ENABLE_PYTHON=ON \
         -D LLDB_USE_SYSTEM_SIX=1 \
-        -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang" 
+        -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang"
 
-    ninja -C _build LLVMgold all ocaml_doc
+    ninja -C _build LLVMgold all
     DESTDIR="$srcdir/fakeinstall" ninja -C _build install
 }
 
@@ -125,7 +127,9 @@ package_lldb-git() {
     _fakeinstall fakeinstall/usr/lib/liblldb*
     _fakeinstall fakeinstall/usr/lib/python"$_pythonver"/site-packages/lldb
     _fakeinstall fakeinstall/usr/share/man/man1/lldb*
+    _fakeinstall fakeinstall/usr/share/doc/lldb/*
     install -Dm644 "$srcdir"/llvm-project/lldb/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    rm -r "$pkgdir"/usr/share/doc/lldb/html/.buildinfo
 }
 
 package_lld-git(){
@@ -140,9 +144,11 @@ package_lld-git(){
     _fakeinstall fakeinstall/usr/lib/liblld*
     _fakeinstall fakeinstall/usr/lib/cmake/lld/
     _fakeinstall fakeinstall/usr/bin/{lld*,*.lld,wasm-ld}
-    _fakeinstall fakeinstall/usr/share/doc/lld/
+    _fakeinstall fakeinstall/usr/share/doc/lld/*
     install -Dm644 "$srcdir"/llvm-project/lld/docs/ld.lld.1 "$pkgdir/usr/share/man/man1"
     install -Dm644 "$srcdir"/llvm-project/lld/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    #cd $pkgdir/usr/share/doc/lld
+    #mv lld/* .
     rm -r "$pkgdir"/usr/share/doc/lld/html/{_sources,.buildinfo}
 }
 
@@ -159,7 +165,7 @@ package_polly-git() {
     _fakeinstall fakeinstall/usr/lib/*Polly*
     _fakeinstall fakeinstall/usr/lib/libGPU*
     install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-     _fakeinstall fakeinstall/usr/share/doc/polly
+     _fakeinstall fakeinstall/usr/share/doc/polly/*
      _fakeinstall fakeinstall/usr/share/man/man1/polly*
      rm -r "$pkgdir"/usr/share/doc/polly/html/{_sources,.buildinfo}
 }
@@ -207,7 +213,7 @@ package_clang-git() {
     _fakeinstall fakeinstall/usr/lib/cmake/clang
 
     _fakeinstall fakeinstall/usr/libexec
- #   _fakeinstall fakeinstall/usr/share/doc/clang*
+    _fakeinstall fakeinstall/usr/share/doc/clang*
     _fakeinstall fakeinstall/usr/share/clang
     _fakeinstall fakeinstall/usr/share/scan{-build,-view}
     _fakeinstall fakeinstall/usr/share/man/man1/{clang,diagtool,extraclangtools,scan-build}*
@@ -218,8 +224,9 @@ package_clang-git() {
     # Move scanbuild-py into site-packages and install Python bindings
     local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
     install -d "$pkgdir/$site_packages"
+    _fakeinstall fakeinstall/usr/lib/{libear,libscanbuild}
     mv "$pkgdir"/usr/lib/{libear,libscanbuild} "$pkgdir/$site_packages/"
-    cp -a ../bindings/python/clang "$pkgdir/$site_packages/"
+    cp -a $srcdir/llvm-project/clang/bindings/python/clang "$pkgdir/$site_packages/"
 
     # Move analyzer scripts out of /usr/libexec
     mv "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/clang/"
