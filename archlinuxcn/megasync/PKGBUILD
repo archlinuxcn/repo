@@ -7,7 +7,7 @@
 
 pkgname=megasync
 pkgver=4.6.8.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Easy automated syncing between your computers and your MEGA cloud drive"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/MEGAsync"
@@ -30,7 +30,7 @@ prepare() {
     cd "MEGAsync"
     git submodule init
     git config submodule.src/MEGASync/mega.url "../meganz-sdk"
-    git submodule update
+    git -c protocol.file.allow=always submodule update
 
     cd "src/MEGASync/mega"
     patch -Np1 -i "$srcdir/pdfium.patch"
