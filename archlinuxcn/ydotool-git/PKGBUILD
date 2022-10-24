@@ -1,7 +1,7 @@
 _pkgname=ydotool
 pkgname=$_pkgname-git
 pkgver=1.0.1.r2.g1d5d227
-pkgrel=2
+pkgrel=3
 pkgdesc="Generic command-line automation tool (no X!), works on Wayland & tty"
 arch=('x86_64')
 makedepends=('cmake' 'git' 'make' 'pkg-config' 'scdoc')
@@ -37,5 +37,5 @@ build() {
 package() {
   cd "$srcdir/${_pkgname}"
   make DESTDIR="$pkgdir" install -C build
-  install -Dm755 ../66-uinput.rules "$pkgdir"/usr/lib/udev/rules.d/66-uinput.rules
+  install -Dm644 ../66-uinput.rules "$pkgdir"/usr/lib/udev/rules.d/66-uinput.rules
 }

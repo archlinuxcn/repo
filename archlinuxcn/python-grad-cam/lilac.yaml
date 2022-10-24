@@ -1,0 +1,16 @@
+maintainers:
+  - github: hubutui
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - python-torchvision
+  - python-ttach
+
+update_on:
+  - source: pypi
+    pypi: grad-cam
+  - source: manual
+    manual: 1
+  - alias: python
+# vim:set ts=2 sw=2 et:

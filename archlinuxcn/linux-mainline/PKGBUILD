@@ -8,8 +8,8 @@
 
 pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
-_tag=v6.1-rc1
-pkgver=6.1rc1
+_tag=v6.1-rc2
+pkgver=6.1rc2
 pkgrel=1
 pkgdesc="Linux Mainline"
 arch=(x86_64)

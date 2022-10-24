@@ -1,0 +1,41 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=ttach
+pkgname=python-ttach
+pkgver=0.0.3
+pkgrel=2
+pkgdesc='Image Test Time Augmentation with PyTorch'
+arch=('any')
+url='https://github.com/qubvel/ttach'
+license=('MIT')
+depends=(
+  python-pytorch
+)
+checkdepends=(
+  python-pytest
+)
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/qubvel/ttach/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('84c0dc442a560521b5321695926d28ce3353be3af609c607ab1cbb68cb78bfcbf5e5cebbc885c26acfefb488a12d7fcb499e1a41fda957b0f5f9f1754f557d37')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python -m build --wheel --no-isolation
+}
+
+check() {
+  cd "${_pkgname}-${pkgver}"
+  PYTHONPATH=${PWD}/build/lib pytest -v
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

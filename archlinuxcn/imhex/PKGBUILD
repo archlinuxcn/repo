@@ -50,7 +50,7 @@ prepare() {
   for name in fmt curl yara/yara; do
     git config --remove-section submodule.lib/external/$name
   done
-  git submodule update
+  git -c protocol.file.allow=always submodule update
 
   patch -Np1 -i \
     "$srcdir/0002-fix-Deduplicate-resources-directories.patch"

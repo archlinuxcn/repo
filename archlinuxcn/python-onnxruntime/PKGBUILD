@@ -70,7 +70,7 @@ prepare() {
   git submodule init
   for mod in onnx SafeInt tensorboard dlpack cxxopts pytorch_cpuinfo; do
     git config submodule.cmake/external/$mod.url "$srcdir"/$mod
-    git submodule update cmake/external/$mod
+    git -c protocol.file.allow=always submodule update cmake/external/$mod
   done
 
   cd onnxruntime/core/flatbuffers/schema

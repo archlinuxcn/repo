@@ -28,7 +28,7 @@ prepare() {
   cd "${pkgname}"
   git submodule init
   git config submodule."yara/official_rules".url "${srcdir}/yara"
-  git submodule update
+  git -c protocol.file.allow=always submodule update
 }
 
 package() {

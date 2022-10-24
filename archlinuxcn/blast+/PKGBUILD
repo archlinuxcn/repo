@@ -4,15 +4,18 @@
 
 pkgname=blast+
 pkgver=2.13.0
-pkgrel=1
+pkgrel=2
 pkgdesc='BLAST tool suite from NCBI (blastn, blastp, blastx, psiblast, etc)'
 arch=('x86_64')
 url='http://blast.ncbi.nlm.nih.gov'
 license=('custom')
 depends=(
   grpc
+  libnghttp2
+  libuv
   lmdb
   lzo
+  pcre
   perl
   python
   sqlite
@@ -37,7 +40,6 @@ makedepends=(
   libpng
   librdkafka
   libtiff
-  libuv
   libx11
   libxext
   libxmu
@@ -49,10 +51,8 @@ makedepends=(
   microsoft-gsl
   mimetic
   muparser
-  pcre
   procps-ng
   protobuf
-  wxgtk2
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://ftp.ncbi.nlm.nih.gov/blast/executables/LATEST/ncbi-blast-${pkgver}+-src.tar.gz")
 sha256sums=('89553714d133daf28c477f83d333794b3c62e4148408c072a1b4620e5ec4feb2')
