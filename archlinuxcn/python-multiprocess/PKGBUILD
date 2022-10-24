@@ -3,7 +3,7 @@
 _base=multiprocess
 pkgname=python-${_base}
 pkgdesc="better multiprocessing and multithreading in python"
-pkgver=0.70.13
+pkgver=0.70.14
 pkgrel=1
 url="https://github.com/uqfoundation/${_base}"
 arch=(any)
@@ -11,7 +11,7 @@ license=('custom:BSD-3-clause')
 depends=(python-dill)
 makedepends=(python-setuptools)
 source=(${url}/archive/${_base}-${pkgver}.tar.gz)
-sha512sums=('8d9bb74d86a83c98865055e63db2af31b5393b7d41b61d8173cf1f710e21b1862fc407ab8dca1bc0ed1e2aaaecbfe5c527f00aa17aa67cc576fc1d6d1dcc2c32')
+sha512sums=('c9127b833ee41cd0a93464603bb1c32e02b09281aa3f44dbf92bb740c67513e0b40981aaca59eec236fc5221303f8285d6fa950a9f07df7f00fd6466979c8112')
 
 build() {
   cd ${_base}-${_base}-${pkgver}
