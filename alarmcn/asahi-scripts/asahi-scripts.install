@@ -1,0 +1,17 @@
+#!/bin/sh
+
+post_install() {
+  set -e
+
+  cd /lib/firmware
+  [ -e .vendorfw.manifest ] || return 0
+ 
+  printf '==> Removing obsolete vendor firmware from /lib/firmware...\n'
+  awk '{ print $2 }' < .vendorfw.manifest | xargs rm -f
+  rmdir asmedia brcm 2>/dev/null || true
+  rm .vendorfw.manifest
+}
+
+post_upgrade() {
+  post_install
+}
