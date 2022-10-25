@@ -10,9 +10,9 @@ post_install() {
     return 0
   fi
   printf '==> Upgrading vendor firmware package...\n'
-  python -m asahi_firmware.update "$esp/asahi" "$esp/vendorfw/firmware.tar.new" "$esp/vendorfw/manifest.txt.new"
-  mv -f "$esp/vendorfw/manifest.txt"{.new,}
-  mv -f "$esp/vendorfw/firmware.tar"{.new,}
+  mkdir -p /run/.vendorfw-tmp
+  python -m asahi_firmware.update "$esp/asahi" /run/.vendorfw-tmp
+  mv -f "/run/.vendorfw-tmp"/* "$esp/vendorfw/"
   printf '    Firmware upgraded\n'
   /usr/bin/update-vendor-firmware
 }
