@@ -1,0 +1,14 @@
+#
+
+maintainers:
+  - github: yuyichao
+
+pre_build_script: aur_pre_build(maintainers=['yurikoles'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: electron20-bin
+  - source: manual
+    manual: 1
