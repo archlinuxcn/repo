@@ -7,8 +7,6 @@ g = SimpleNamespace()
 def pre_build():
   g.files = download_official_pkgbuild('xorg-xwayland')
 
-  prepare = False
-  sumwhich = 0
   for line in edit_file('PKGBUILD'):
     if line.startswith('pkgname='):
       line = 'pkgname=xorg-xwayland-lily'
@@ -19,17 +17,13 @@ def pre_build():
     elif line.startswith('conflicts'):
       line = "conflicts=('xorg-server-xwayland' 'xorg-xwayland')"
     elif line.startswith('validpgpkeys='):
-      line += '''
-options=('debug' 'strip')
-
-prepare() {
-  cd "${srcdir}/xwayland-$pkgver"
-  patch -Np1 < ../hidpi.patch
-}'''
-    elif line.startswith('source=('):
+      line += '''\noptions=('debug' 'strip')'''
+    elif line.lstrip().startswith('patch -Np1'):
+      line += '''\n  patch -Np1 < ../hidpi.patch'''
+    elif line.startswith('.patch )'):
       line = line.replace(')', ' hidpi.patch)')
-    elif "'SKIP'" in line:
-      line = line.replace(')', ' d0e7dfe38157947dc4b3a3e7ac0c867d06eeb8d760035227a7cb4aca987a91053cc3c7c4f50d4ade6f1eb7fad631a173ceb75c6b9a896dc22a3aba2221264131)')
+    elif "d0c87face4485050db134e5ed14d930bdae05d81149b2b573b97fc6dd96d9234e709d6f0523221747293da20cbd012e1e1da00e12b227f98597ffa320bcd3e3c" in line:
+      line = line.replace(')', '\n            d0e7dfe38157947dc4b3a3e7ac0c867d06eeb8d760035227a7cb4aca987a91053cc3c7c4f50d4ade6f1eb7fad631a173ceb75c6b9a896dc22a3aba2221264131)')
     elif line.startswith('groups='):
       continue
     print(line)
