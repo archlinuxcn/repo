@@ -1,0 +1,15 @@
+#
+
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - electron20-bin
+
+update_on:
+  - source: manual
+    manual: 2.3.1.fix
+  - source: manual
+    manual: 1

@@ -1,0 +1,61 @@
+# Maintainer: Kimiblock Zhou <pn3535 at icloud dot com>
+# Contributor: qing <qing at he dot email>
+pkgname=electronic-wechat-uos-bin
+pkgver=v2.3.1.fix
+pkgrel=1
+pkgdesc="Linux 下更好用的微信客户端. 更多功能, 更少bug. 使用Electron构建, 利用UOS请求头修复了登陆问题."
+arch=(aarch64)
+url="https://github.com/Riceneeder/electronic-wechat"
+license=('MIT')
+depends=('nss' 'xdg-utils' 'libxss' 'electron20')
+makedepends=(git npm)
+optdepends=(
+  'xdg-desktop-portal-kde: KDE下的原生对话框'
+  'xdg-desktop-portal-lxqt: lxqt下的原生对话框'
+  'xdg-desktop-portal-gnome: Gnome下的原生对话框'
+  'libnotify: 桌面通知, 需要搭配通知服务器使用'
+)
+provides=(electronic-wechat)
+source=(
+  electronic-wechat-uos-bin
+  electronic-wechat-uos-bin.desktop
+  electronic-wechat-uos-bin.svg
+  'git+https://github.com/Riceneeder/electronic-wechat#tag=v2.3.1.fix'
+  0001-aarch64-build-support.patch
+  0002-electron-12-compatibility.patch
+)
+md5sums=('419f95794818102d9ff6e01dcf4e5fed'
+         '8c37e57654fb5a5ecd72e8ad9ea74ce4'
+         '600e74549ce2258c045d5c2f7689ea63'
+         'SKIP'
+         '78758b003ff4596276f5dc55008f2bae'
+         'b3035905ff290f337f3baad25b9f0ebf')
+
+prepare() {
+  cd electronic-wechat
+  patch -Np1 < ../0001-aarch64-build-support.patch
+  patch -Np1 < ../0002-electron-12-compatibility.patch
+}
+
+build() {
+  cd electronic-wechat
+  npm install
+  npm run build:linuxarm64
+}
+
+
+package() {
+  cd electronic-wechat/dist
+
+  for directory in /usr/bin /opt/electronic-wechat-uos-bin /usr/share/applications; do
+    mkdir -p "${pkgdir}/${directory}"
+  done
+  cp -r electronic-wechat-linux-arm64/resources \
+     "${pkgdir}/opt/electronic-wechat-uos-bin/"
+  cp "${srcdir}/electronic-wechat-uos-bin.svg" "${pkgdir}/opt/electronic-wechat-uos-bin"
+  cp "${srcdir}/electronic-wechat-uos-bin.desktop" "${pkgdir}/usr/share/applications"
+  cp "${srcdir}/electronic-wechat-uos-bin" "${pkgdir}/usr/bin"
+  chmod -R 755 "${pkgdir}/opt/electronic-wechat-uos-bin"
+  chmod a=rx "${pkgdir}/usr/bin/electronic-wechat-uos-bin"
+  chmod u=rwx "${pkgdir}/usr/bin/electronic-wechat-uos-bin"
+}

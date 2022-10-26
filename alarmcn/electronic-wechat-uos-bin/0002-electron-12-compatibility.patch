@@ -1,0 +1,28 @@
+From c55f783d74f471e1808e38fb492fe0b23ebd0618 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 26 Oct 2022 00:05:41 -0400
+Subject: [PATCH 2/2] electron 12+ compatibility
+
+---
+ src/windows/controllers/settings.js | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/windows/controllers/settings.js b/src/windows/controllers/settings.js
+index 3c48112..c8a0a59 100755
+--- a/src/windows/controllers/settings.js
++++ b/src/windows/controllers/settings.js
+@@ -30,6 +30,11 @@ class SettingsWindow {
+       alwaysOnTop: true,
+       icon: 'assets/icon.png',
+       titleBarStyle: 'hidden',
++      webPreferences: {
++        nodeIntegration: true,
++        contextIsolation: false,
++        enableRemoteModule: true,
++      },
+     });
+ 
+     this.initWindowEvents();
+-- 
+2.38.1
+

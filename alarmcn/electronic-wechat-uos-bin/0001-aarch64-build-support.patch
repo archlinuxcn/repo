@@ -1,0 +1,39 @@
+From 7502ea28c026b9522ff6b65a858e86ae89d84693 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 25 Oct 2022 23:41:17 -0400
+Subject: [PATCH] aarch64 build support
+
+---
+ package.json     | 1 +
+ scripts/build.sh | 6 +++---
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/package.json b/package.json
+index 4476746..178f700 100755
+--- a/package.json
++++ b/package.json
+@@ -11,6 +11,7 @@
+     "build:linux32": "./scripts/build.sh linux ia32",
+     "build:linux": "./scripts/build.sh linux x64",
+     "build:linux64": "./scripts/build.sh linux x64",
++    "build:linuxarm64": "./scripts/build.sh linux arm64",
+     "build:win": ".\\scripts\\build-win32.bat win32 ia32",
+     "build:win32": ".\\scripts\\build-win32.bat win32 ia32",
+     "build:win64": ".\\scripts\\build-win32.bat win32 x64"
+diff --git a/scripts/build.sh b/scripts/build.sh
+index 90c5770..24afe80 100755
+--- a/scripts/build.sh
++++ b/scripts/build.sh
+@@ -38,6 +38,6 @@ if [ $PLATFORM = "darwin" ]; then
+     echo "$(tput setaf 3)App copied to /Applications. You can open Electronic WeChat there or from Spotlight.$(tput sgr0)"
+ fi
+ 
+-cp ./electronic-wechat.desktop ./dist/electronic-wechat-linux-x64/
+-mkdir ./dist/electronic-wechat-linux-x64/assets
+-cp ./assets/icon.png ./dist/electronic-wechat-linux-x64/assets/icon.png
++cp ./electronic-wechat.desktop ./dist/electronic-wechat-linux-$ARCH/
++mkdir ./dist/electronic-wechat-linux-$ARCH/assets
++cp ./assets/icon.png ./dist/electronic-wechat-linux-$ARCH/assets/icon.png
+-- 
+2.38.1
+
