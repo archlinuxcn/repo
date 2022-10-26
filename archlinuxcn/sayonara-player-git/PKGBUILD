@@ -3,14 +3,15 @@
 
 pkgname=sayonara-player-git
 pkgver=1.8.0.beta1.r38.g3d444b4a
-pkgrel=1
+pkgrel=2
 pkgdesc="Small, clear and fast audio player for Linux written in C++, supported by the Qt framework. It uses Gstreamer as audio backend."
 arch=(x86_64 i686 aarch64)
 url="https://sayonara-player.com/"
 license=(GPL3)
-depends=(qt5-base taglib gst-plugins-base gst-plugins-good)
-makedepends=(cmake qt5-tools qt5-svg git gst-plugins-bad)
+depends=(qt5-base qt5-svg gst-plugins-base taglib python)
+makedepends=(cmake git qt5-tools)
 optdepends=('gst-libav: additional codecs'
+            'gst-plugins-good: additional codecs'
             'gst-plugins-bad: additional codecs'
             'gst-plugins-ugly: additional codecs')
 provides=(sayonara-player)
@@ -19,31 +20,31 @@ source=("git+https://gitlab.com/luciocarreras/sayonara-player.git")
 sha512sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/${pkgname%-git}"
+  cd "${srcdir}/sayonara-player"
   git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
-  cd "$srcdir/${pkgname%-git}"
+  cd "${srcdir}/sayonara-player"
   [[ -d build ]] || mkdir build
 }
  
 build() {
-  cd "$srcdir/${pkgname%-git}/build"
+  cd "${srcdir}/sayonara-player/build"
   cmake .. \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_BUILD_TYPE=Debug \
 
   make
 }
 
 check() {
-  cd "$srcdir/${pkgname%-git}/build"
+  cd "${srcdir}/sayonara-player/build"
 
 }
  
 package() {
-  cd "$srcdir/${pkgname%-git}/build"
+  cd "${srcdir}/sayonara-player/build"
   make DESTDIR="$pkgdir/" install
 }
 
