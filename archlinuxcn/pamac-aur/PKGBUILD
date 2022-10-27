@@ -5,17 +5,17 @@ ENABLE_FAKE_GNOME_SOFTWARE=0
 
 pkgname=pamac-aur
 pkgver=10.4.2
-pkgrel=0
+pkgrel=1
 _pkgfixver=$pkgver
 
-_commit='d178313a23c7e1441eea17f7fb7f656528067694'
-sha256sums=('01a9b2f6fe29acde1ac38b574effdda7ba7befcf03d920715d7944259cfb3fe6')
+_commit='d08ed1704fd3ed6ee7944f57b0b51a741cb97003'
+sha256sums=('8fa00ad41e60ec43dd84a91a2785606eed1ecb9169b54f182201888a44190870')
 
 pkgdesc="A Gtk3 frontend, Package Manager based on libalpm with AUR and Appstream support"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://gitlab.manjaro.org/applications/pamac"
 license=('GPL3')
-depends=('glib2>=2.42' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3>=0.38' 'gtk3>=3.24'
+depends=('glib2>=2.42' 'json-glib' 'dbus-glib' 'polkit' 'vte3>=0.38' 'gtk3>=3.24'
          'libnotify' 'desktop-file-utils' 'libpamac-aur>=11.2' 'gnutls>=3.4' 'git'
          'appstream-glib>=0.7.18-1' 'archlinux-appstream-data' 'libhandy' 'git')
 
