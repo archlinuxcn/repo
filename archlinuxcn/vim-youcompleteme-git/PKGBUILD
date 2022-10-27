@@ -37,7 +37,7 @@ _neovim="$NEOVIM_YOUCOMPLETEME"
 
 pkgname=vim-youcompleteme-git
 pkgver=r3012.99ccab25
-pkgrel=1
+pkgrel=2
 pkgdesc='A code-completion engine for Vim'
 arch=('x86_64')
 url='https://ycm-core.github.io/YouCompleteMe/'
@@ -81,7 +81,7 @@ prepare() {
   cd "${srcdir}"/YouCompleteMe || exit
   git submodule init third_party/ycmd
   git config submodule.ycmd.url "$srcdir"/ycmd
-  git submodule update third_party/ycmd
+  git -c protocol.file.allow=always submodule update third_party/ycmd
 
   rm -rf "${srcdir}"/YouCompleteMe/third_party/ycmd/cpp/pybind11 || exit
   if [[ ${_use_system_clang} == "ON" ]]; then
