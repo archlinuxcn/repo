@@ -7,6 +7,11 @@ pre_build: vcs_update
 
 post_build: git_pkgbuild_commit
 
+post_build_script: |
+  update_aur_repo()
+
 update_on:
   - source: github
     github: xboot/xfel
+  - source: aur
+    github: xfel-git
