@@ -2,7 +2,7 @@
 # shellcheck disable=SC2034,SC2154
 
 pkgname=pikaur
-pkgver=1.13
+pkgver=1.13.1
 pkgrel=1
 pkgdesc="AUR helper which asks all questions before installing/building. Inspired by pacaur, yaourt and yay."
 arch=('any')
@@ -11,7 +11,7 @@ license=('GPL3')
 source=(
 	"$pkgname-$pkgver.tar.gz"::https://github.com/actionless/pikaur/archive/"$pkgver".tar.gz
 )
-b2sums=('56e7cb09f7cfe86a3351c356896f6b91f0e2b22c53c214b00cef485cca021488ca800e6c19a663e43697a1b8601bb8e64a3b03caaca74d21075d3ce7d2fa91e4')
+b2sums=('84c054c7588c58785da6e4daaa3059b1446583c7415a851fe55d14f9c77e09e1030907eb82e4f75c6c3cc7a11a163f84c89cb3be7633432ba66449fff81677a3')
 depends=(
 	'pyalpm'
 	'git'
