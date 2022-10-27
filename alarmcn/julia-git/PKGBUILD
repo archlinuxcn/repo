@@ -199,7 +199,8 @@ build_in() {
   make "${opts[@]}" -C deps
   make "${opts[@]}" -C src jl_internal_funcs.inc
   make "${opts[@]}" julia-cli-release
-  make "${opts[@]}" release debug
+  make "${opts[@]}" release
+  make "${opts[@]}" debug
   # TODO docless build
   JL_MAKEPKG_SRCDIR= make "${opts[@]}" docs
 
