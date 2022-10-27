@@ -1929,3 +1929,12 @@ Thu Oct 27 13:16:13 2022 +0200
      2022-10-27 b301cca actionless feat(build: recovery prompt): add `[n] skip 'prepare()' function of PKGBUILD` (re: #671)
      2022-10-27 0925f84 actionless fix(pacman: find_upgradeable_packages): check per-peckage deps only if they can't be resolved for the whole transaction (fixes #672)
      2022-10-22 498dbbd actionless fix(print_department: version): print current year
+
+
+Thu Oct 27 17:26:44 2022 +0200
+-------------------------------------------------
+1.13.2          Release 1.13.2
+    
+    Notable changes:
+     2022-10-27 a8afb44 actionless fix(pikaur: pacman: get_print_format_output; install_info_fetcher: get_repo_pkgs_info): still check deps when needed (re: #665, #656)
+     2022-10-27 feb6347 actionless fix(install_info_fetcher; update: print_upgradeable): don't fetch update info twice when printing ignored packages
