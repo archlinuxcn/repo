@@ -10,9 +10,9 @@ groups=('chaotic-mesa-git')
 arch=('x86_64')
 url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
-makedepends=('git' 'cmake' 'ninja' 'python' 'python2'
+makedepends=('git' 'cmake' 'ninja' 'python'
              'lib32-gcc-libs' 'lib32-libffi' 'lib32-libunwind'
-             'lib32-libxml2' 'lib32-zlib')
+             'lib32-libxml2' 'lib32-zlib' 'lib32-zstd')
 
 source=("llvm-project::git+https://github.com/llvm/llvm-project.git")
 
@@ -68,18 +68,17 @@ build() {
         -D LLVM_BINUTILS_INCDIR=/usr/include \
         -D LLVM_BUILD_LLVM_DYLIB=ON \
         -D LLVM_LINK_LLVM_DYLIB=ON \
+        -D LLVM_ENABLE_BINDINGS=OFF \
         -D LLVM_ENABLE_RTTI=ON \
         -D LLVM_ENABLE_FFI=ON \
         -D LLVM_BUILD_TESTS=OFF \
         -D LLVM_BUILD_DOCS=OFF \
-        -D LLVM_ENABLE_OCAMLDOC=OFF \
         -D LLVM_ENABLE_SPHINX=OFF \
         -D LLVM_ENABLE_DOXYGEN=OFF \
         -D FFI_INCLUDE_DIR="$(pkg-config --variable=includedir libffi)" \
-        -D LLVM_BINUTILS_INCDIR=/usr/include \
         -D LLVM_APPEND_VC_REV=ON
 
-    ninja -C _build all LLVMgold
+    ninja -C _build all
     DESTDIR="$srcdir/fakeinstall" ninja -C _build install
 }
 
@@ -95,7 +94,7 @@ _fakeinstall () {
 
 package_lib32-llvm-libs-git() {
     pkgdesc='Low Level Virtual Machine library (runtime library)(32-bit)(git version)'
-    depends=('lib32-libffi' 'lib32-zlib' 'lib32-libxml2' 'lib32-gcc-libs')
+    depends=('lib32-libffi' 'lib32-zlib' 'lib32-libxml2' 'lib32-gcc-libs' 'lib32-zstd')
     provides=("lib32-llvm-libs=$pkgver")
     replaces=('lib32-llvm-libs-svn')
     conflicts=('lib32-llvm-libs-svn' 'lib32-llvm-libs')
