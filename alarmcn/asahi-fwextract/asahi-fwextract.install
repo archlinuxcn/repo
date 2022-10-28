@@ -13,8 +13,7 @@ post_install() {
   mkdir -p /run/.vendorfw-tmp
   python -m asahi_firmware.update "$esp/asahi" /run/.vendorfw-tmp
   mv -f "/run/.vendorfw-tmp"/* "$esp/vendorfw/"
-  printf '    Firmware upgraded\n'
-  /usr/bin/update-vendor-firmware
+  printf '    Firmware upgraded.\n'
 }
 
 post_upgrade() {
