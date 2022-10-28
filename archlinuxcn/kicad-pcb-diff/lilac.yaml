@@ -1,0 +1,16 @@
+maintainers:
+  - github: taotieren
+
+build_prefix: extra-x86_64
+
+post_build_script: |
+  update_aur_repo()
+
+update_on:
+  - source: github
+    github: INTI-CMNB/KiDiff
+    use_max_tag: true
+    prefix: v
+    exclude_regex: ".*ui.*"
+  - source: manual
+    manual: 6
