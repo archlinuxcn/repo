@@ -37,8 +37,6 @@ sha512sums=('SKIP'
             '8f0bd7ae59f86f002c88368a8c2852b9613363771aae61f91a90bfc13dcd3173e43d7988a59ccef86657cf6abfcc53837bbf445c216a7994a765a7e0770d0f5f'
             '7d55b0d4232183a81c20a5049f259872150536eed799d81a15e7f10b5c8b5279b443ba96d7b97c0e4338e95fc18c9d6f088e348fc7002256ee7170d25b27d80d'
             'ab48d27be98a88d3c361e1d0aac3b1e078096c0902ba7a543261a1c24faed0f1f44947a1b7ea1f264434cd2199b9d563d2447c14b6afbdf9900e68a65f7d2619')
-# CUDA seems not working with LTO
-options+=('!lto')
 
 if [[ $_ENABLE_CUDA = 1 ]]; then
   pkgname+=(onnxruntime-cuda)
@@ -103,7 +101,6 @@ build() {
     #    total processes may be much larger than the number of cores - let
     #    the scheduler handle it.
     cmake_args+=(
-      -DCMAKE_CUDA_FLAGS="-t0"
       -DCMAKE_CUDA_ARCHITECTURES="$_CUDA_ARCHITECTURES"
       -DCMAKE_CUDA_STANDARD_REQUIRED=ON
       -DCMAKE_CXX_STANDARD_REQUIRED=ON
@@ -112,6 +109,7 @@ build() {
       -DCMAKE_CUDA_COMPILER:PATH=/opt/cuda/bin/nvcc
       -Donnxruntime_CUDNN_HOME=/usr
       -Donnxruntime_USE_NCCL=ON
+      -Donnxruntime_NVCC_THREADS=0
     )
   fi
 
