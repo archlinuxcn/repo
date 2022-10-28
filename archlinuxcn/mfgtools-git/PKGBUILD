@@ -1,0 +1,49 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=mfgtools-git
+pkgver=1.5.4.r2.gf7aaaae
+pkgrel=1
+epoch=
+pkgdesc="uuu (Universal Update Utility), mfgtools 3.0. Freescale/NXP I.MX Chip image deploy tools."
+arch=('x86_64')
+url="https://github.com/NXPmicro/mfgtools"
+license=('BSD')
+groups=()
+depends=('bzip2' 'zlib' 'libusb' 'libzip' 'openssl')
+makedepends=('cmake' 'git')
+checkdepends=()
+optdepends=()
+provides=('uuu' 'mfgtool')
+conflicts=(${pkgname%-git})
+replaces=()
+backup=()
+options=('!strip')
+install=
+changelog=
+source=("${pkgname%-git}::git+${url}.git"
+        "uuu-complete.bash")
+noextract=()
+sha256sums=('SKIP'
+            'ffc8e32655ce574a4719c85c5c9a3530a5ec619e933fc801a291df8ec506a442')
+#validpgpkeys=()
+
+pkgver() {
+    cd "${srcdir}/${pkgname%-git}"
+    git describe --long --tags |  sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/uuu_//g' | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+    cd "${srcdir}/${pkgname%-git}"
+    cmake -Bbuild -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
+    make -C build
+}
+
+package() {
+    cd "${srcdir}/${pkgname%-git}/build"
+    make DESTDIR="$pkgdir/" install
+    install -Dm0644 "${srcdir}/uuu-complete.bash" "${pkgdir}/etc/bash_completion.d/uuu-complete.bash"
+    install -Dm0644 "${srcdir}/${pkgname%-git}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname%-git}/LICENSE"
+    install -dm0755  "${pkgdir}/etc/udev/rules.d/"
+    ./uuu/uuu -udev > "${pkgdir}/etc/udev/rules.d/70-uuu.rules"
+
+}
