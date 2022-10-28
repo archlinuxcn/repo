@@ -13,8 +13,10 @@ groups=('chaotic-mesa-git')
 arch=('x86_64')
 
 makedepends=('python-mako' 'libxml2' 'libx11' 'libdrm' 'xorgproto' 'libxrandr' 'valgrind'
-	     'libxshmfence' 'libxxf86vm' 'libxdamage' 'libvdpau' 'libva' 'libxv' 'polly-git' 'wayland' 'wayland-protocols' 'elfutils' 'llvm-git' 'systemd' 'libxvmc'
-	     'libomxil-bellagio' 'libglvnd' 'libunwind' 'lm_sensors' 'meson' 'libclc-git' 'clang-git' 'glslang' 'zstd' 'vulkan-icd-loader' 'git')
+	     'libxshmfence' 'libxxf86vm' 'libxdamage' 'libvdpau' 'libva' 'libxv'
+             'polly-git' 'wayland' 'wayland-protocols' 'elfutils' 'llvm-git' 'llvm-libs-git' 'systemd' 'libsystemd'
+	     'libomxil-bellagio' 'libglvnd' 'libunwind' 'lm_sensors' 'libxvmc'
+             'meson' 'libclc' 'clang-git' 'glslang' 'zstd' 'vulkan-icd-loader' 'git')
 url="https://mesa3d.org"
 license=('custom')
 source=('mesa::git+https://gitlab.freedesktop.org/mesa/mesa.git'
@@ -39,7 +41,6 @@ build() {
     -D gallium-drivers=r300,r600,radeonsi,nouveau,iris,zink,virgl,svga,swrast,panfrost,lima,asahi,crocus \
     -D vulkan-drivers=amd,intel,swrast \
     -D vulkan-layers=device-select,intel-nullhw,overlay \
-    -D opencl-native=true \
     -D dri3=enabled \
     -D egl=enabled \
     -D gallium-extra-hud=true \
@@ -49,7 +50,6 @@ build() {
     -D gallium-va=enabled \
     -D gallium-vdpau=enabled \
     -D gallium-xa=enabled \
-    -D gallium-xvmc=enabled \
     -D gbm=enabled \
     -D gles1=disabled \
     -D gles2=enabled \
@@ -89,7 +89,7 @@ _install() {
 package_vulkan-mesa-layers-git() {
   pkgdesc="Mesa's Vulkan overlay layers (git version)"
   provides=('vulkan-mesa-layers')
-  depends=('wayland' 'libxcb' 'python')
+  depends=('wayland' 'libxcb' 'python' 'libdrm')
   conflicts=('vulkan-mesa-layer-git' 'vulkan-mesa-layers')
   replaces=('vulkan-mesa-layer-git')
 
@@ -131,13 +131,12 @@ package_vulkan-intel-git() {
 
 package_vulkan-radeon-git() {
   pkgdesc="Radeon's Vulkan mesa driver (git version)"
-  depends=('wayland' 'libx11' 'libxshmfence' 'libelf' 'libdrm' 'llvm-libs-git')
+  depends=('wayland' 'libx11' 'libxshmfence' 'libelf' 'libdrm' 'llvm-libs-git' 'systemd-libs')
   optdepends=('vulkan-mesa-layer-git: additional vulkan layers')
   provides=('vulkan-radeon' 'vulkan-driver')
   conflicts=('vulkan-radeon')
 
   _install fakeinstall/usr/share/vulkan/icd.d/radeon_icd*.json
-  _install fakeinstall/usr/share/drirc.d/00-radv-defaults.conf
   _install fakeinstall/usr/lib/libvulkan_radeon.so
 
   install -m644 -Dt "$pkgdir/usr/share/licenses/$pkgname" LICENSE
@@ -145,7 +144,7 @@ package_vulkan-radeon-git() {
 
 package_vulkan-swrast-git() {
   pkgdesc="Vulkan software rasteriser driver (git version)"
-  depends=('wayland' 'libx11' 'libxshmfence' 'libdrm' 'zstd' 'llvm-libs-git')
+  depends=('wayland' 'libx11' 'libxshmfence' 'libdrm' 'zstd' 'llvm-libs-git' 'libunwind')
   optdepends=('vulkan-mesa-layers-git: additional vulkan layers')
   provides=('vulkan-swrast' 'vulkan-driver')
   conflicts=('vulkan-swrast' 'vulkan-mesa-git')
@@ -170,6 +169,7 @@ package_mesa-git() {
   # mesa-vdpau
   _install fakeinstall/usr/lib/vdpau
   _install fakeinstall/usr/share/drirc.d/00-mesa-defaults.conf
+  _install fakeinstall/usr/share/drirc.d/00-radv-defaults.conf
   _install fakeinstall/usr/share/glvnd/egl_vendor.d/50_mesa.json
 
   # ati-dri, nouveau-dri, intel-dri, svga-dri, swrast
@@ -191,9 +191,6 @@ package_mesa-git() {
   # libglvnd support
   _install fakeinstall/usr/lib/libGLX_mesa.so*
   _install fakeinstall/usr/lib/libEGL_mesa.so*
-
-# Video Acceleration
-  _install fakeinstall/usr/lib/libXvMC*
 
   # indirect rendering
   ln -s /usr/lib/libGLX_mesa.so.0 "$pkgdir/usr/lib/libGLX_indirect.so.0"
