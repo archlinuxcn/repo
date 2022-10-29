@@ -38,8 +38,10 @@ package() {
     cd "${srcdir}/${pkgname%-git}"
     make -f Makefile.linux install
     install -dm0755 "${pkgdir}/usr" \
-                    "${pkgdir}/usr/lib/systemd/system/"
+                    "${pkgdir}/usr/lib/systemd/system/" \
+                    "${pkgdir}/usr/share/opengnb/"
     cp -rv bin "${pkgdir}/usr"
     cp -rv scripts/opengnb@.service "${pkgdir}/usr/lib/systemd/system/"
+    cp -rv examples/* "${pkgdir}/usr/share/opengnb/"
     install -Dm0644 "${srcdir}/${pkgname%-git}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname%-git}/LICENSE"
 }
