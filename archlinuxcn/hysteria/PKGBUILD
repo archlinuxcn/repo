@@ -3,22 +3,25 @@
 _pkgbase=hysteria
 pkgname=$_pkgbase
 pkgver=1.2.2
-pkgrel=1
+pkgrel=2
 pkgdesc='A feature-packed network utility optimized for networks of poor quality'
 arch=('x86_64')
 url="https://github.com/HyNetwork/hysteria"
 license=('GPL3')
-depends=('glibc')
+depends=('glibc' 'acl' 'shadow')
 makedepends=('go' 'git')
+install=$_pkgbase.install
 source=("$_pkgbase"::"git+$url.git#tag=v$pkgver"
         hysteria@.service
         hysteria-server@.service
         sysusers.conf
+	tmpfiles.conf
         )
 sha256sums=('SKIP'
             '61ef8c91f417d83411d89295495e0c926ded7ed02302e7a0efa123d564e12f7e'
             '5a0fb1185e7bff6e05ec8ecb8a45b269fd4c7fa562ab107954ab87642a71f8d0'
-            'abaab463035e67c1e1728e5378b8f4a50960bf80d5005e02b3b2c9468f06150d')
+            '44f1cb2fedfc94dc396ceb215e62237dbc8c74c035c45a3430c1f3748d266dd9'
+            '1e93d9f2b312eaf02ac00229106cd796e0cd54a9a468a0a8d3ae843399c1c310')
 
 prepare(){
   mkdir -p "$srcdir/gopath"
@@ -56,6 +59,7 @@ package() {
 
   # install sysusers
   install -Dm644 "$srcdir/sysusers.conf" "$pkgdir/usr/lib/sysusers.d/hysteria.conf"
+  install -Dm644 "$srcdir/tmpfiles.conf" "$pkgdir/usr/lib/tmpfiles.d/hysteria.conf"
 
   # install systemd service
   install -Dm644 "$srcdir/hysteria@.service" "$pkgdir/usr/lib/systemd/system/hysteria@.service"

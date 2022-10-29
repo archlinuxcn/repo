@@ -1,0 +1,28 @@
+_hysteria_user="hysteria"
+_hysteria_homedir="/var/lib/hysteria"
+
+all_off="$(tput sgr0)"
+bold="${all_off}$(tput bold)"
+blue="${bold}$(tput setaf 4)"
+yellow="${bold}$(tput setaf 3)"
+note() {
+    printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
+}
+
+_hysteria_ensure_usermod() {
+  local _origin_homedir=$(eval echo ~"$_hysteria_user")
+  # in the old version, homedir is not specified in the sysusers.conf
+  # and therefore set to / by default.
+  if [[ "$_origin_homedir" == "/" ]]; then
+    usermod -d "$_hysteria_homedir" "$_hysteria_user"
+    note "The homedir of user $_hysteria_user has been changed from $_origin_homedir to $_hysteria_homedir"
+  fi
+}
+
+post_install() {
+  _hysteria_ensure_usermod
+}
+
+post_upgrade() {
+  post_install
+}
