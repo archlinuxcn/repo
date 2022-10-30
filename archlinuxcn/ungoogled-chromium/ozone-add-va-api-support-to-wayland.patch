@@ -17,7 +17,7 @@ by Wayland later.
 
 ---
 diff --git a/media/gpu/vaapi/vaapi_picture_factory.cc b/media/gpu/vaapi/vaapi_picture_factory.cc
-index 62e3a42..bde9c2d 100644
+index 54825cd..0a57166 100644
 --- a/media/gpu/vaapi/vaapi_picture_factory.cc
 +++ b/media/gpu/vaapi/vaapi_picture_factory.cc
 @@ -105,7 +105,7 @@ uint32_t VaapiPictureFactory::GetGLTextureTarget() {
@@ -30,7 +30,7 @@ index 62e3a42..bde9c2d 100644
  #else
    return gfx::BufferFormat::YUV_420_BIPLANAR;
 diff --git a/media/gpu/vaapi/vaapi_picture_native_pixmap.cc b/media/gpu/vaapi/vaapi_picture_native_pixmap.cc
-index 941f24c..a9c8035 100644
+index 18c6c22..fe614b6 100644
 --- a/media/gpu/vaapi/vaapi_picture_native_pixmap.cc
 +++ b/media/gpu/vaapi/vaapi_picture_native_pixmap.cc
 @@ -4,6 +4,7 @@
@@ -65,7 +65,7 @@ index 941f24c..a9c8035 100644
  
  bool VaapiPictureNativePixmap::AllowOverlay() const {
 diff --git a/media/gpu/vaapi/vaapi_video_decode_accelerator.cc b/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
-index bf791d8..9e394eb 100644
+index 37e3520..9d17122 100644
 --- a/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
 +++ b/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
 @@ -560,12 +560,12 @@ void VaapiVideoDecodeAccelerator::InitiateSurfaceSetChange(
@@ -84,7 +84,7 @@ index bf791d8..9e394eb 100644
    } else {
      requested_num_reference_frames_ = 0;
 diff --git a/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.cc b/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.cc
-index 35378d1..68969d2 100644
+index 1a5016b..eca714b 100644
 --- a/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.cc
 +++ b/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.cc
 @@ -32,7 +32,9 @@ GbmPixmapWayland::GbmPixmapWayland(WaylandBufferManagerGpu* buffer_manager)
@@ -99,7 +99,7 @@ index 35378d1..68969d2 100644
  }
  
 diff --git a/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.h b/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.h
-index 9e8b2fa..9918508 100644
+index 84ebcba..dfb2675 100644
 --- a/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.h
 +++ b/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.h
 @@ -92,6 +92,9 @@ class GbmPixmapWayland : public gfx::NativePixmap {
@@ -113,10 +113,10 @@ index 9e8b2fa..9918508 100644
  
  }  // namespace ui
 diff --git a/ui/ozone/platform/wayland/ozone_platform_wayland.cc b/ui/ozone/platform/wayland/ozone_platform_wayland.cc
-index c13bd3a..04fa160 100644
+index afbd464..189678f 100644
 --- a/ui/ozone/platform/wayland/ozone_platform_wayland.cc
 +++ b/ui/ozone/platform/wayland/ozone_platform_wayland.cc
-@@ -297,6 +297,9 @@ class OzonePlatformWayland : public OzonePlatform,
+@@ -295,6 +295,9 @@ class OzonePlatformWayland : public OzonePlatform,
        properties->supports_global_screen_coordinates =
            features::IsWaylandScreenCoordinatesEnabled();
  
