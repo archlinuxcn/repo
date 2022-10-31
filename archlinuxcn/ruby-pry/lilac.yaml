@@ -1,8 +1,0 @@
-maintainers:
-  - github: a-wing
-update_on:
-  - source: aur
-    aur: ruby-pry
-  - alias: ruby
-pre_build_script: aur_pre_build(maintainers=['supermario'])
-post_build: git_pkgbuild_commit
