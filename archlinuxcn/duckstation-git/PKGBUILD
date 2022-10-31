@@ -21,22 +21,6 @@ pkgver() {
     printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
-prepare() {
-    # fix build for commit ef3ad91a
-    patch -p1 -d "${srcdir}/${pkgname%-git}" << EOF
---- a/src/frontend-common/fullscreen_ui.cpp 2022-09-17 22:10:40.988720185 +0000
-+++ b/src/frontend-common/fullscreen_ui.cpp 2022-09-17 22:37:55.911769613 +0000
-@@ -1134,7 +1134,7 @@
-     ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() - rev_size.x - LayoutScale(20.0f),
-                                ImGui::GetWindowHeight() - rev_size.y - LayoutScale(20.0f)));
-     ImGui::PushFont(g_medium_font);
--    ImGui::Text(g_scm_tag_str);
-+    ImGui::TextUnformatted(g_scm_tag_str);
-     ImGui::PopFont();
-   }
-EOF
-}
-
 build() {
    cmake -B build -S duckstation \
         -DBUILD_NOGUI_FRONTEND=OFF \
