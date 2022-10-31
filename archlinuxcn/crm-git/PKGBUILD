@@ -1,7 +1,7 @@
 # Maintainer: taotieren <admin@taotieren.com>
 
 pkgname=crm-git
-pkgver=0.1.8.r16.g7d4f255
+pkgver=0.2.0.r1.gcb4f0ce
 pkgrel=1
 pkgdesc="crm (Cargo registry manager)"
 arch=('any')
@@ -13,7 +13,7 @@ replaces=()
 depends=('cargo')
 makedepends=('git' 'rust')
 backup=()
-options=('!strip')
+options=('!strip' '!lto')
 install=
 source=("${pkgname%-git}::git+${url}.git")
 sha256sums=('SKIP')
@@ -24,24 +24,23 @@ pkgver() {
 }
 
 build() {
-# build crm
     cd "${srcdir}/${pkgname%-git}/"
-    cargo build --release
+
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo build --release --all-features
 }
 
 check() {
     cd "${srcdir}/${pkgname%-git}/"
-    cargo test --release
+
+    export RUSTUP_TOOLCHAIN=stable
+    cargo test --all-features
 }
 
 package() {
-# install crm
-    install -Dm0755 "${srcdir}/${pkgname%-git}/target/release/${pkgname%-git}" "${pkgdir}/usr/share/${pkgname%-git}/${pkgname%-git}"
+    cd "${srcdir}/${pkgname%-git}/"
 
-    install -Dm0755 /dev/stdin "${pkgdir}/usr/bin/${pkgname%-git}" << EOF
-#!/bin/env bash
-cd /usr/share/${pkgname%-git}/
-./${pkgname%-git} "\$@"
-EOF
-
+    export RUSTUP_TOOLCHAIN=stable
+    cargo install --no-track --all-features --root "$pkgdir/usr/" --path .
 }
