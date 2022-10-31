@@ -1,6 +1,26 @@
---- plug-ins/pdf/pdf-import.cpp	2022-03-12 08:17:49.242369295 +0800
-+++ plug-ins/pdf/pdf-import.cpp	2022-03-12 08:19:04.302435181 +0800
-@@ -318,10 +318,10 @@
+--- plug-ins/pdf/pdf-import.cpp 2022-05-25 17:35:28.000000000 +0200
++++ plug-ins/pdf/pdf-import.cpp 2022-09-27 20:25:47.183817900 +0200
+@@ -152,13 +152,12 @@ public :
+   void
+   updateLineDash (GfxState *state)
+   {
+-    double *dashPattern;
+-    int dashLength;
+-    double dashStart;
+-
+-    state->getLineDash (&dashPattern, &dashLength, &dashStart);
+-    this->dash_length = dashLength ? dashPattern[0] * scale : 1.0;
+-
++    const double *dashPattern=NULL;
++    int dashLength=0;
++    double dashStart=0;
++    const std::vector<double> &dash = state->getLineDash(&dashStart);  // > Poppler 22.09 ...
++    dashPattern = dash.data();
++    dashLength = dash.size();
+     if (dashLength == 0)
+       this->line_style = DIA_LINE_STYLE_SOLID;
+     else if (dashLength > 5)
+@@ -318,10 +317,10 @@ public :
      //FIXME: Dia is really unhappy about zero size fonts
      if (!(state->getFontSize() > 0.0))
        return;
@@ -14,20 +34,18 @@
        ++font_map_hits;
        return;
      }
-@@ -333,10 +333,9 @@ public :
+@@ -333,8 +332,9 @@ public :
      gchar *family = g_strdup (f->getFamily() ? f->getFamily()->c_str() : "sans");
  
      // we are (not anymore) building the same font over and over again
--    g_print ("Font 0x%x: '%s' size=%g (* %g)\n",
++    f1  = &f;
+     g_print ("Font 0x%x: '%s' size=%g (* %g)\n",
 -	     GPOINTER_TO_INT (f), family, state->getTransformedFontSize(), scale);
--
++	     GPOINTER_TO_INT (f1), family, state->getTransformedFontSize(), scale);
+ 
      // now try to make a fontname Dia/Pango can cope with
-+   f1  = &f;
-+    g_print ("Font 0x%x: '%s' size=%g (* %g)\n", GPOINTER_TO_INT (f1), family, state->getTransformedFontSize(), scale);
      // strip style postfix - we already have extracted the style bits above
-     char *pf;
-     if ((pf = strstr (family, " Regular")) != NULL)
-@@ -353,8 +353,9 @@
+@@ -353,8 +353,9 @@ public :
      if (fm[0] != 0)
        fsize *= fabs(fm[3] / fm[0]);
      font = dia_font_new (family, style, fsize * scale / 0.8);
@@ -39,13 +57,16 @@
      g_free (family);
    }
    void updateTextShift(GfxState *state, double shift)
-@@ -721,11 +722,12 @@
+@@ -721,11 +722,15 @@ DiaOutputDev::drawString(GfxState *state
      return;
    if (!(state->getFontSize() > 0.0))
      return;
 -  font = (DiaFont *)g_hash_table_lookup (this->font_map, state->getFont());
-+  font = (DiaFont *)g_hash_table_lookup (this->font_map, &(state->getFont()));
-
++gconstpointer f_1 = &state->getFont();
++// g_print ("f_1 %p\n", f_1);
++font = (DiaFont *)g_hash_table_lookup (this->font_map, f_1);
++//  font = (DiaFont *)g_hash_table_lookup (this->font_map, &(state->getFont()));
+ 
    // we have to decode the string data first
    {
 -    GfxFont *f = state->getFont();
@@ -54,7 +75,7 @@
      const char *p = s->c_str();
      CharCode code;
      int   j = 0, m, n;
-@@ -870,8 +872,10 @@
+@@ -870,8 +875,10 @@ import_pdf(const gchar *filename, Diagra
    std::unique_ptr<PDFDoc> doc;
    GooString *fileName = new GooString(filename);
    // no passwords yet
@@ -65,15 +86,16 @@
 +  const std::optional<GooString> ownerPW;
 +  const std::optional<GooString> userPW;
    gboolean ret = FALSE;
-
+ 
    // without this we will get strange crashes (at least with /O2 build)
-@@ -899,7 +903,8 @@
+@@ -899,7 +906,8 @@ import_pdf(const gchar *filename, Diagra
      delete diaOut;
      ret = TRUE;
    }
 -  delete fileName;
 + doc.reset();
 + delete fileName;
-
+ 
    return ret;
  }
+
