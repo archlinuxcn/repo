@@ -1,19 +1,25 @@
 # Maintainer: taotieren <admin@taotieren.com>
 
 pkgname=crm-git
-pkgver=0.1.8.r16.g7d4f255
-pkgrel=1
+pkgver=0.2.2.r0.gd392e9a
+pkgrel=5
 pkgdesc="crm (Cargo registry manager)"
-arch=('any')
+arch=($CARCH)
 url="https://github.com/wtklbm/crm"
-license=('MIT' 'Apache-2.0')
+license=('MIT AND Apache-2.0')
 provides=(${pkgname%-git})
 conflicts=(${pkgname%-git})
 replaces=()
-depends=('cargo')
-makedepends=('git' 'rust')
+depends=(
+    gcc-libs
+    glibc
+)
+makedepends=(
+    git
+    cargo
+)
 backup=()
-options=('!strip')
+options=('!lto' '!debug')
 install=
 source=("${pkgname%-git}::git+${url}.git")
 sha256sums=('SKIP')
@@ -23,25 +29,32 @@ pkgver() {
     git describe --long --tags | sed 's/v//g;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
+prepare() {
+    git -C "${srcdir}/${pkgname%-git}" clean -dfx
+}
+
 build() {
-# build crm
     cd "${srcdir}/${pkgname%-git}/"
-    cargo build --release
+
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+
+    cargo build --release --all-features
 }
 
 check() {
     cd "${srcdir}/${pkgname%-git}/"
-    cargo test --release
+
+    export RUSTUP_TOOLCHAIN=stable
+    cargo test --all-features
 }
 
 package() {
-# install crm
-    install -Dm0755 "${srcdir}/${pkgname%-git}/target/release/${pkgname%-git}" "${pkgdir}/usr/share/${pkgname%-git}/${pkgname%-git}"
+    cd "${srcdir}/${pkgname%-git}/"
 
-    install -Dm0755 /dev/stdin "${pkgdir}/usr/bin/${pkgname%-git}" << EOF
-#!/bin/env bash
-cd /usr/share/${pkgname%-git}/
-./${pkgname%-git} "\$@"
-EOF
+    export RUSTUP_TOOLCHAIN=stable
 
+    cargo install --no-track --all-features --root "$pkgdir/usr/" --path .
+    install -Dm0644 "LICENSE-MIT" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+    install -Dm0644 "LICENSE-Apache-2.0" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
