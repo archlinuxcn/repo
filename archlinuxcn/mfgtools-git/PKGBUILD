@@ -1,49 +1,163 @@
 # Maintainer: taotieren <admin@taotieren.com>
 
-pkgname=mfgtools-git
-pkgver=1.5.4.r2.gf7aaaae
-pkgrel=1
+pkgbase=mfgtools-git
+pkgname=(mfgtools{,-doc}-git
+    python-libuuu-git)
+pkgver=1.5.201.r7.g40bd85c
+pkgrel=2
 epoch=
 pkgdesc="uuu (Universal Update Utility), mfgtools 3.0. Freescale/NXP I.MX Chip image deploy tools."
-arch=('x86_64')
-url="https://github.com/NXPmicro/mfgtools"
-license=('BSD')
+arch=($CARCH)
+url="https://github.com/nxp-imx/mfgtools"
+license=('BSD-3-Clause')
 groups=()
-depends=('bzip2' 'zlib' 'libusb' 'libzip' 'openssl')
-makedepends=('cmake' 'git')
+depends=(
+    bzip2
+    gcc-libs
+    glibc
+    libusb
+    tinyxml2
+    openssl
+    zlib
+    zstd)
+makedepends=(
+    cmake
+    git
+    ninja
+    asciidoc
+    dblatex
+    doxygen
+    findutils
+    coreutils
+    texlive-fontutils
+    meson
+    python
+    python-build
+    python-installer
+    python-wheel
+    python-setuptools-scm
+)
 checkdepends=()
 optdepends=()
-provides=('uuu' 'mfgtool')
-conflicts=(${pkgname%-git})
 replaces=()
 backup=()
-options=('!strip')
+options=()
 install=
 changelog=
-source=("${pkgname%-git}::git+${url}.git"
-        "uuu-complete.bash")
+source=("${pkgbase}::git+${url}.git"
+    "mfgtools-doc-git::git+${url}.wiki.git"
+    "uuu-complete.bash")
 noextract=()
 sha256sums=('SKIP'
-            'ffc8e32655ce574a4719c85c5c9a3530a5ec619e933fc801a291df8ec506a442')
+    'SKIP'
+    'ffc8e32655ce574a4719c85c5c9a3530a5ec619e933fc801a291df8ec506a442')
 #validpgpkeys=()
 
 pkgver() {
-    cd "${srcdir}/${pkgname%-git}"
-    git describe --long --tags |  sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/uuu_//g' | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+    cd "${srcdir}/${pkgbase}"
+    (
+        set -o pipefail
+        git describe --long --tag --abbrev=7 2>/dev/null | sed 's/^uuu_//g;s/\([^-]*-g\)/r\1/;s/-/./g' ||
+            printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+    )
+}
+
+prepare() {
+    git -C "${srcdir}/${pkgbase}" clean -dfx
+    git -C "${srcdir}/mfgtools-doc-git" clean -dfx
+    #     cd "${srcdir}/${pkgbase}"
+    #     git submodule update --init --recursive
 }
 
 build() {
-    cd "${srcdir}/${pkgname%-git}"
-    cmake -Bbuild -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
-    make -C build
+    export CFLAGS+=" ${CPPFLAGS}"
+    export CXXFLAGS+=" ${CPPFLAGS}"
+    export LDFLAGS+=" ${LDFLAGS}"
+
+    cd "${srcdir}/${pkgbase}"
+    cmake -Bbuild -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=None \
+        -DBUILD_DOC=ON \
+        -GNinja \
+        -Wno-dev
+
+    ninja -C build
+
+    cd "${srcdir}/${pkgbase}/wrapper"
+    cmake -DCMAKE_BUILD_TYPE=None \
+        -B build \
+        -Wno-dev
+    cmake --build build
+    mkdir -p libuuu/lib
+    cp -rv build/libuuu.so libuuu/lib
+    python -m build --wheel --no-isolation
 }
 
-package() {
-    cd "${srcdir}/${pkgname%-git}/build"
-    make DESTDIR="$pkgdir/" install
-    install -Dm0644 "${srcdir}/uuu-complete.bash" "${pkgdir}/etc/bash_completion.d/uuu-complete.bash"
-    install -Dm0644 "${srcdir}/${pkgname%-git}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname%-git}/LICENSE"
-    install -dm0755  "${pkgdir}/etc/udev/rules.d/"
-    ./uuu/uuu -udev > "${pkgdir}/etc/udev/rules.d/70-uuu.rules"
+package_mfgtools-git() {
+    provides=('uuu' ${pkgname%-git})
+    conflicts=('uuu' ${pkgname%-git})
+    depends=(
+        bzip2
+        gcc-libs
+        glibc
+        libusb
+        tinyxml2
+        openssl
+        zlib
+        zstd
+    )
 
+    cd "${srcdir}/${pkgbase}/build/"
+    DESTDIR="$pkgdir/" ninja -C "${srcdir}/${pkgbase}/build" install
+    install -Dm0644 "${srcdir}/uuu-complete.bash" "${pkgdir}/etc/bash_completion.d/uuu-complete.bash"
+    install -dm0755 "${pkgdir}/etc/udev/rules.d/"
+    ./uuu/uuu -udev >"${pkgdir}/etc/udev/rules.d/70-uuu.rules"
+    install -Dm644 ${srcdir}/${pkgbase}/LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
+
+package_mfgtools-doc-git() {
+    pkgdesc+=" (doc)"
+    depends=(
+        asciidoc
+        dblatex
+        findutils
+        coreutils
+    )
+    provides=(${pkgname%-git})
+    conflicts=(${pkgname%-git})
+
+    cd "${srcdir}/${pkgname}/"
+    find . -type f -name "*.asciidoc" -exec sh -c 'mv "$0" "${0%.asciidoc}"' {} \;
+    sed -i 's|=====|====|g' Release-Notes
+    #     sed -i '$ a ....' cmdhelp
+    echo "<revhistory>" >UUU-docinfo.xml
+    git log -n25 --reverse --format="format:<revision><revnumber>%h</revnumber><date>%cd</date><authorinitials>%an</authorinitials><revremark>%s</revremark></revision>" >>UUU-docinfo.xml
+    echo "</revhistory>" >>UUU-docinfo.xml
+    a2x -L -a docinfo UUU
+
+    install -Dm0644 "${srcdir}/${pkgname}/UUU.pdf" -t "${pkgdir}/usr/share/doc/${pkgname}/"
+    cp -r "${srcdir}"/${pkgbase}/build/docs/{html,latex} "${pkgdir}/usr/share/doc/${pkgname}/"
+    install -Dm644 "${srcdir}"/${pkgbase}/LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
+
+package_python-libuuu-git() {
+    pkgdesc="A python wrapper for libuuu"
+    provides=(${pkgname%-git})
+    conflicts=(${pkgname%-git})
+    depends=(
+        python
+        python-setuptools-scm
+        bzip2
+        gcc-libs
+        glibc
+        libusb
+        tinyxml2
+        openssl
+        zlib
+        zstd
+    )
+
+    cd "${srcdir}/${pkgbase}/wrapper"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
+    install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
