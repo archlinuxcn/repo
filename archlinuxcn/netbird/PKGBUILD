@@ -1,7 +1,7 @@
 # Maintainer: tarball <bootctl@gmail.com>
 
 pkgname=netbird
-pkgver=0.10.2
+pkgver=0.10.3
 pkgrel=1
 pkgdesc='A WireGuard-based mesh network that connects your devices into a single private network'
 url='https://netbird.io'
@@ -25,7 +25,7 @@ source=(
   'netbird.sysusers'
   '0001-fix-run-paths.patch'
 )
-sha256sums=('e4bd11454ece40f19fde5294b7c8cd4f1d3ab1b9e164e54c50b02effa9f2b92a'
+sha256sums=('ed277643c49bd7130823695ca213f7cda702021229a9c01382a9c596d982df6c'
             '128e36e1f814a12886f3122a1809a404be17f81481275b6624e66937941f5269'
             '5bea27f707291fc5fe7c43f3ff9ea302a07029e7a4866180a4933df41fa7c45f'
             '5bea27f707291fc5fe7c43f3ff9ea302a07029e7a4866180a4933df41fa7c45f'
