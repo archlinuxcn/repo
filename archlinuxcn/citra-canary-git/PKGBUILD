@@ -3,13 +3,13 @@
 _pkgname=citra
 pkgname=$_pkgname-canary-git
 epoch=1
-pkgver=2306.r0.g0f8f1f9f1
+pkgver=2312.r0.g62507595f
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra-canary/tree/master"
 license=('GPL2')
-depends=('boost-libs' 'libfdk-aac' 'shared-mime-info' 'desktop-file-utils' 'ffmpeg' 'libusb' 'sdl2' 'qt5-base' 'qt5-multimedia' 'libxkbcommon-x11')
+depends=('boost-libs' 'libfdk-aac' 'shared-mime-info' 'desktop-file-utils' 'ffmpeg' 'libusb' 'sdl2' 'qt5-base' 'qt5-multimedia' 'libxkbcommon-x11' 'qt5-wayland')
 makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt5-tools')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('citra')
@@ -27,7 +27,6 @@ prepare() {
 
 	git submodule init
 	git submodule update --init --recursive
-  sed -i 's|libusb.h|libusb-1.0/libusb.h|g' src/input_common/gcadapter/gc_adapter.cpp
 }
 
 build() {
@@ -38,21 +37,22 @@ build() {
 	export TRAVIS=true
 	export TRAVIS_REPO_SLUG=citra-emu/citra-canary
 	export TRAVIS_TAG=$(git describe --tags)
-	
-	# Hopefully temporary fix for a compilation error involving fmt
-	CXXFLAGS+=" -DFMT_USE_USER_DEFINED_LITERALS=0"
-	
+
+    CXXFLAGS+=" -I/usr/include/libusb-1.0"
 	mkdir -p build && cd build
 	cmake .. \
 	  -DCMAKE_INSTALL_PREFIX=/usr \
 	  -DCMAKE_BUILD_TYPE=Release \
 	  -DENABLE_QT_TRANSLATION=ON \
-	  -DCITRA_ENABLE_COMPATIBILITY_REPORTING=ON \
-	  -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
-	  -DUSE_DISCORD_PRESENCE=ON \
-    -DUSE_SYSTEM_BOOST=ON \
-	  -DENABLE_FFMPEG_VIDEO_DUMPER=ON \
-    -DENABLE_MF=OFF \
+      -DCITRA_ENABLE_COMPATIBILITY_REPORTING=ON \
+      -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
+      -DUSE_DISCORD_PRESENCE=ON \
+      -DENABLE_SCRIPTING=ON \
+      -DENABLE_FFMPEG_VIDEO_DUMPER=ON \
+      -DENABLE_FFMPEG_AUDIO_DECODER=ON \
+      -DUSE_SYSTEM_BOOST=ON \
+      -DUSE_SYSTEM_SDL2=ON \
+      -DENABLE_MF=OFF \
 	  -DENABLE_FDK=ON
 	make
 }
