@@ -1,8 +1,8 @@
 # Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
 pkgname=vimix-gtk-themes
-_pkgver=2022-04-24
+_pkgver=2022-10-30
 pkgver=${_pkgver//-/.}
-pkgrel=8
+pkgrel=9
 pkgdesc="A flat Material Design theme for GTK 3, GTK 2, GNOME Shell, etc."
 arch=('any')
 url="https://vinceliuice.github.io/theme-vimix.html"
@@ -17,7 +17,7 @@ optdepends=('gtk-engine-murrine: GTK2 theme support'
             'plank: for Plank theme')
 options=('!strip')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/vinceliuice/$pkgname/archive/$_pkgver.tar.gz")
-sha256sums=('5ce0200148fe7f85a38ef147918677db22496253a603d7eb9ca00f0265c2c2a1')
+sha256sums=('42253bb970852ee9fb0ae3d425134091acf12c4435485d0cbcd4537bec359388')
 
 package() {
   cd "$pkgname-$_pkgver"
