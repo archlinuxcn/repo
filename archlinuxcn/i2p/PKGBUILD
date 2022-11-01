@@ -5,14 +5,14 @@
 #export LG2=en
 
 pkgname=i2p
-pkgver=1.8.0
+pkgver=1.9.0
 pkgrel=1
 pkgdesc="A distributed anonymous network"
 url="https://geti2p.net"
 license=('GPL2')
 arch=('any')
-depends=('java-runtime>=13' 'java-service-wrapper')
-makedepends=('java-environment>=13' 'ant')
+depends=('java-runtime>=17' 'java-service-wrapper')
+makedepends=('java-environment>=17' 'ant')
 #optdepends=('gtk2: for rrd graphs')
 conflicts=('i2p-bin' 'i2p-dev')
 backup=('opt/i2p/wrapper.config')
@@ -33,7 +33,7 @@ source=("${_url}/i2psource_${pkgver}.tar.bz2"{,.sig}
         #upstream.patch::'https://github.com/i2p/i2p.i2p/commit/6c0e18d3.patch'
 )
 
-sha256sums=('525f2ad3267f130b81296b3dd24102fdcf2adf098d54272da4e1be4abd87df04'
+sha256sums=('57f61815098c35593d7ede305f98b9015c4c613c72231ad084e6806a3e2aa371'
             'SKIP'
             '644b771ec7f5db3efab3206bf1f896566cdb00d410a54608fda85bdb4c2ad876'
             'fc30dd32f48fe1c93bf36c8297ca48203a1479e4e221ebe62c57cf3c3c0347d3'
@@ -57,7 +57,7 @@ build() {
     ant -Dfile.encoding=UTF-8 \
         -Djavac.compilerargs=-Xlint:-options \
         -Dbuild.reproducible=true \
-        -Djavac.version=13 \
+        -Djavac.release=17 \
         preppkg-linux-only
 }
 
