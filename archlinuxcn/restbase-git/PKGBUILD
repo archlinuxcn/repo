@@ -3,14 +3,14 @@
 
 pkgname=restbase-git
 _pkgname=restbase
-pkgver=v1.1.4.r137.gc45fefc5
+pkgver=v1.1.4.r157.gc1d391c7
 pkgrel=1
 pkgdesc="A a caching / storing API proxy backing the Wikimedia REST API"
 arch=('any')
 url="https://www.mediawiki.org/wiki/RESTBase"
 license=('Apache')
-depends=('nodejs' 'sqlite')
-makedepends=('git' 'npm' 'python2')
+depends=('nodejs')
+makedepends=('git' 'npm')
 optdepends=(
     'mediawiki: MediaWiki engine'
 )
@@ -36,7 +36,8 @@ pkgver() {
 }
 build() { 
     cd $srcdir/restbase
-    npm install --build-from-source --sqlite=/usr --python=/usr/bin/python2
+    npm install
+    find "$pkgdir" -name package.json -print0 | xargs -r -0 sed -i '/_where/d'
 }
 package() {
     cd $srcdir/restbase
@@ -44,8 +45,6 @@ package() {
     mkdir -p "${pkgdir}/usr/share/webapps/${_pkgname}"
     tar c --exclude=.git . | tar x -C "${pkgdir}/usr/share/webapps/${_pkgname}/"
     install -Dm644 "${srcdir}/restbase.service" "${pkgdir}/usr/lib/systemd/system/restbase.service"
-    install -Dm644 "$srcdir"/restbase.sysusers "$pkgdir"/usr/lib/sysusers.d/restbase.conf
-    install -Dm644 "$srcdir"/restbase.tmpfiles "$pkgdir"/usr/lib/tmpfiles.d/restbase.conf
     install -D "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
