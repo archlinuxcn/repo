@@ -3,7 +3,7 @@
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
 pkgver=3073
-pkgrel=1
+pkgrel=2
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
 url="https://yuzu-emu.org/"
@@ -39,6 +39,9 @@ build() {
   cmake .. -GNinja \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_C_FLAGS="$CFLAGS -flto=thin" \
+    -DCMAKE_CXX_FLAGS="$CXXFLAGS -flto=thin" \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
     -DTITLE_BAR_FORMAT_IDLE="yuzu Early Access $pkgver" \
     -DTITLE_BAR_FORMAT_RUNNING="yuzu Early Access $pkgver | {3}" \
     -DCMAKE_INSTALL_PREFIX=/usr \
