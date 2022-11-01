@@ -5,7 +5,7 @@
 
 pkgname=soci
 pkgver=4.0.3.r0.g438e3549
-pkgrel=1
+pkgrel=2
 pkgdesc="Database access library for C++"
 arch=('x86_64')
 url="http://soci.sf.net"
@@ -21,12 +21,12 @@ source=("git+https://github.com/SOCI/soci.git#branch=release/4.0")
 sha1sums=('SKIP')
 
 pkgver() {
-    cd "${srcdir}/${pkgname_}"
+    cd "${srcdir}/${pkgname}"
     git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/; s/-/./g'
 }
 
 build() {
-    cmake -B build "${pkgname_}" \
+    cmake -B build "${pkgname}" \
         -DSOCI_TESTS=OFF \
         -DCMAKE_INSTALL_PREFIX="/usr" \
         -DCMAKE_CXX_FLAGS="-Wno-format-overflow" \
@@ -42,6 +42,6 @@ package() {
     if [ -e "${pkgdir}/usr/lib64" ]; then
         mv "${pkgdir}/usr/lib64" "${pkgdir}/usr/lib"
     fi
-    install -Dm0644 "${srcdir}/${pkgname_}/LICENSE_1_0.txt" \
+    install -Dm0644 "${srcdir}/${pkgname}/LICENSE_1_0.txt" \
         "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
