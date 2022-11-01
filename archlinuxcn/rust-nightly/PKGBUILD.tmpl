@@ -56,6 +56,7 @@ _copy_files () {
     mkdir "$pkgdir/usr/lib"
     cp -r libexec/* "$pkgdir/usr/lib"
   fi
+  hardlink "$pkgdir"
 }
 
 package_rust-nightly() {
@@ -89,6 +90,7 @@ package_rust-nightly() {
     rm $so
     ln -s rustlib/"$CARCH"-unknown-linux-gnu/lib/$so .
   done
+  hardlink "$pkgdir"
 }
 
 package_rust-docs-nightly() {
@@ -102,6 +104,7 @@ package_rust-docs-nightly() {
   cd rust-nightly-$CARCH-unknown-linux-gnu/rust-docs
   mkdir -p "$pkgdir/usr"
   cp -r share "$pkgdir/usr"
+  hardlink "$pkgdir"
 }
 
 package_rustfmt-nightly() {
@@ -163,6 +166,7 @@ package_rust-src-nightly() {
   cd rust-src-nightly/rust-src
   mkdir -p "$pkgdir/usr"
   cp -r lib "$pkgdir/usr"
+  hardlink "$pkgdir"
 }
 
 {% for x in stds %}
@@ -183,5 +187,6 @@ package_{{x.name}}(){
   mkdir -p "$pkgdir/usr/share/"{doc,licenses}"/$pkgname"
   cp COPYRIGHT LICENSE-* "$pkgdir/usr/share/licenses/$pkgname"
   cp README.md "$pkgdir/usr/share/doc/$pkgname"
+  hardlink "$pkgdir"
 }
 {% end %}{# vim: se ft=tornadotmpl syntax=sh.tornadotmpl: #}
