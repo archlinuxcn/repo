@@ -1,39 +1,51 @@
 # Maintainer: Dct Mei <dctxmei@yandex.com>
+# Maintainer: Andreas Radke <andyrtr@archlinux.org>
 # Maintainer: Levente Polyak <anthraxx[at]archlinux[dot]org>
 # Contributor: Daniel Micay <danielmicay@gmail.com>
 # Contributor: Tobias Powalowski <tpowa@archlinux.org>
 # Contributor: Thomas Baechler <thomas@archlinux.org>
-# Contributor: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=linux-dctxmei
-pkgver=5.12.19
+pkgver=5.15.76
 pkgrel=1
 pkgdesc='Security-Hardened Linux - Dct Mei'
-url="https://github.com/anthraxx/linux-hardened"
+url='https://github.com/anthraxx/linux-hardened'
 arch=(x86_64)
 license=(GPL2)
 makedepends=(
-  bc kmod libelf pahole cpio perl tar xz
-  xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick
+  bc libelf pahole cpio perl tar xz
+  xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick texlive-latexextra
 )
 options=('!strip')
 _srcname=linux-${pkgver}
 _srctag=${pkgver}-hardened1
 source=(
-  https://www.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
+  https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
   https://github.com/anthraxx/${pkgbase%-*}-hardened/releases/download/${_srctag}/${pkgbase%-*}-hardened-${_srctag}.patch{,.sig}
   config         # the main kernel config file
+#  0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
+  0002-PCI-Add-more-NVIDIA-controllers-to-the-MSI-masking-q.patch
+  0003-iommu-intel-do-deep-dma-unmapping-to-avoid-kernel-fl.patch
+  0004-Bluetooth-btintel-Fix-bdaddress-comparison-with-garb.patch
+  0005-lg-laptop-Recognize-more-models.patch
+  0006-Fix-NFSv4-mount-regression.patch
 )
 validpgpkeys=(
   'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds
   '647F28654894E3BD457199BE38DBBDC86092693E'  # Greg Kroah-Hartman
   'E240B57E2C4630BA768E2F26FC1B547C8D8172C8'  # Levente Polyak
 )
-sha256sums=('e9381cd3525a02f5b895f74147e2440be443ecd45484c6c64075046bc6f94c73'
+# https://www.kernel.org/pub/linux/kernel/v5.x/sha256sums.asc
+sha256sums=('9007a020c419e3625b980e361be09f70ebd99e156ccb66129a981483d065d57f'
             'SKIP'
-            'ac19f4aedf7309b0c94cf1562dcd92def86be778e95e566632349af6844823db'
+            'b146ce12ff77df934d76921dd1e25e085e9c356b755c69a08e9fc9c581f63973'
             'SKIP'
-            'f4c02a78ed4e2150349be53c35b7b6c3cede7a99fbb976d23e801a94ee8abe0e')
+            '8e8bf635b2dbf24be1ecbf202f4b507301c545218e3d865f5d4c2ec3c5257bf4'
+            'c175fbb141c3cec013c799f694d88310375ac5456042f6a4a1adc7667836d786'
+            '8357f000b2b622e73dcfd41c2bad42b5e99fffe8f7ee64f774aa771f86cef43c'
+            '5c1ee81fdd5818442af6081de987f9c1a9ce3c8d183566b3dfc19a8433aa3dde'
+            '067e8995fcd6f6ed25e0253e9374c0e179a000c154da3e59ce62634945ac5be9'
+            '10801c245064777873b580bea1fc17a4288ec519e0ce9500aa1b7c6e19fe777b')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -59,6 +71,7 @@ prepare() {
   echo "Setting config..."
   cp ../config .config
   make olddefconfig
+  diff -u ../config .config || :
 
   make -s kernelrelease > version
   echo "Prepared $pkgbase version $(<version)"
@@ -66,17 +79,15 @@ prepare() {
 
 build() {
   cd $_srcname
-  make all
-  make htmldocs
+  make htmldocs all
 }
 
 _package() {
   pkgdesc="The $pkgdesc kernel and modules (disable nouveau, disable uvcvideo, default apparmor, default bbr)"
   depends=(coreutils kmod initramfs)
-  optdepends=('crda: to set the correct wireless channels of your country'
-              'linux-firmware: firmware images needed for some devices'
-              'usbctl: deny_new_usb control')
-  provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
+  optdepends=('wireless-regdb: to set the correct wireless channels of your country'
+              'linux-firmware: firmware images needed for some devices')
+  provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE)
 
   cd $_srcname
   local kernver="$(<version)"
@@ -91,7 +102,8 @@ _package() {
   echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
   echo "Installing modules..."
-  make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 modules_install
+  make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
+    DEPMOD=/doesnt/exist modules_install  # Suppress depmod
 
   # remove build and source links
   rm "$modulesdir"/{source,build}
@@ -99,6 +111,7 @@ _package() {
 
 _package-headers() {
   pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
+  depends=(pahole)
 
   cd $_srcname
   local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
@@ -110,11 +123,11 @@ _package-headers() {
   install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
   cp -t "$builddir" -a scripts
 
-  # add objtool for external module building and enabled VALIDATION_STACK option
+  # required when STACK_VALIDATION is enabled
   install -Dt "$builddir/tools/objtool" tools/objtool/objtool
 
-  # add xfs and shmem for aufs building
-  mkdir -p "$builddir"/{fs/xfs,mm}
+  # required when DEBUG_INFO_BTF_MODULES is enabled
+  install -Dt "$builddir/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
 
   echo "Installing headers..."
   cp -t "$builddir" -a include
