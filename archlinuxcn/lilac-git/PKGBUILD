@@ -4,7 +4,7 @@
 
 _pkgname=lilac
 pkgname=$_pkgname-git
-pkgver=r1047.9bbc121
+pkgver=r1050.e4afddb
 pkgrel=1
 pkgdesc='The build bot for archlinuxcn'
 arch=(any)
@@ -43,4 +43,6 @@ package() {
   cd $_pkgname
   python setup.py install --root="$pkgdir" --optimize=1 --skip-build
   install -Dm644 config.toml.sample scripts/dbsetup.sql -t "$pkgdir"/usr/share/doc/lilac
+  install -Dm755 scripts/cleanup-dblck "$pkgdir"/usr/bin/cleanup-dblck
+  install -Dm644 scripts/cleanup-dblck.service "$pkgdir"/usr/lib/systemd/system/cleanup-dblck.service
 }
