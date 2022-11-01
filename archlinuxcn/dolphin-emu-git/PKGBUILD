@@ -3,7 +3,7 @@
 
 pkgbase=dolphin-emu-git
 pkgname=('dolphin-emu-git' 'dolphin-emu-nogui-git')
-pkgver=5.0.r17781.5488d3b125d
+pkgver=5.0.r17781.5488d3b125
 pkgrel=1
 pkgdesc='A GameCube / Wii / Triforce emulator'
 arch=('x86_64')
@@ -11,12 +11,12 @@ url='http://www.dolphin-emu.org/'
 license=('GPL')
 depends=(
   'alsa-lib' 'bluez-libs' 'enet' 'hidapi' 'libevdev' 'libgl' 'libpng'
-  'libpulse' 'libx11' 'libxi' 'libxrandr' 'lzo' 'mbedtls' 'pugixml' 'qt5-base'
-  'sfml' 'zlib'
+  'libpulse' 'libx11' 'libxi' 'libxrandr' 'lzo' 'mbedtls' 'pugixml' 'qt6-base'
+  'sfml' 'zlib' 'minizip-ng'
   'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libcurl.so'
   'libminiupnpc.so' 'libswscale.so' 'libudev.so' 'libusb-1.0.so' 'libxxhash.so'
 )
-makedepends=('cmake' 'git' 'libglvnd' 'python')
+makedepends=('cmake' 'git' 'libglvnd' 'python' 'ninja')
 optdepends=('pulseaudio: PulseAudio backend')
 options=('!emptydirs')
 source=('dolphin-emu::git+https://github.com/dolphin-emu/dolphin.git')
@@ -31,43 +31,44 @@ pkgver() {
 prepare() {
   cd dolphin-emu
   git submodule update --init --recursive
-  
-  cd ${srcdir}
-  if [[ -d build ]]; then
-    rm -rf build
-  fi
-  mkdir build
 }
 
 build() {
-  cd build
+  cd dolphin-emu
 
-  cmake ../dolphin-emu \
+  cmake -S . -B build -G Ninja \
+    -DCMAKE_BUILD_TYPE=None \
     -DCMAKE_INSTALL_PREFIX='/usr' \
     -DCMAKE_INSTALL_LIBDIR='/usr/lib' \
     -DENABLE_QT='TRUE' \
     -DUSE_SHARED_ENET='TRUE' \
     -DXXHASH_FOUND='TRUE'\
-    -DDISTRIBUTOR='aur.archlinux.org'
-  make
+    -DDISTRIBUTOR='archlinuxcn.org'
+  cmake --build build/
 }
 
 package_dolphin-emu-git() {
   provides=('dolphin-emu')
   conflicts=('dolphin-emu')
 
-  make DESTDIR="${pkgdir}" -C build install
+  cd dolphin-emu
+  DESTDIR="$pkgdir" cmake --install 'build/'
   rm "${pkgdir}"/usr/bin/dolphin-emu-nogui
   rm -rf "${pkgdir}"/usr/{include,lib/libdiscord-rpc.a}
-
-  install -Dm 644 dolphin-emu/Data/51-usb-device.rules -t "${pkgdir}"/usr/lib/udev/rules.d/
+  rm -rf "$pkgdir/usr/share/man/man6/dolphin-emu-nogui.6"
+  install -Dm 644 Data/51-usb-device.rules -t "${pkgdir}"/usr/lib/udev/rules.d/
 }
 
 package_dolphin-emu-nogui-git() {
   depends=('dolphin-emu-git')
+  provides=("dolphin-emu-nogui" "dolphin-emu-cli")
+  conflicts=("dolphin-emu-nogui" "dolphin-emu-cli")
 
+  cd dolphin-emu
   install -dm 755 "${pkgdir}"/usr/bin
-  install -m 755 build/Binaries/dolphin-emu-nogui "${pkgdir}"/usr/bin/dolphin-emu-cli
+  install -m 755 build/Binaries/dolphin-emu-nogui "${pkgdir}"/usr/bin/dolphin-emu-nogui
+  ln -sf /usr/bin/dolphin-emu-nogui "${pkgdir}"/usr/bin/dolphin-emu-cli
+  install -Dm644 "Data/dolphin-emu-nogui.6" "$pkgdir/usr/share/man/man6/dolphin-emu-nogui.6"
 }
 
 # vim: ts=2 sw=2 et:
