@@ -1,47 +1,47 @@
-# Maintainer:  Marcin (CTRL) Wieczorek <marcin@marcin.co>
+# Maintainer: Guillaume Horel <guillaume.horel@gmail.com>
+# Contributor:  Marcin (CTRL) Wieczorek <marcin@marcin.co>
 # Contributor: Daniel Nagy <danielnagy at gmx de>
 # Contributor: Mika Fischer <mika.fischer@zoopnet.de>
 
 pkgname=soci
-pkgver=4.0.3
-pkgrel=3
+pkgver=4.0.3.r0.g438e3549
+pkgrel=1
 pkgdesc="Database access library for C++"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://soci.sf.net"
 license=('custom:boost')
-depends=('gcc-libs')
-makedepends=('cmake' 'postgresql-libs' 'sqlite3' 'unixodbc' 'boost')
-optdepends=('oracle-instantclient-basic: support for oracle databases'
+depends=('postgresql-libs' 'sqlite3' 'unixodbc' 'boost-libs' 'mariadb-libs') 
+makedepends=('cmake' 'git' 'boost')
+optdepends=('instantclient-basic: support for oracle databases'
             'libmysqlclient: support for mysql databases'
             'postgresql-libs: support for postgresql databases'
             'sqlite3: support for sqlite databases'
-            'unixodbc: support for ODBC databases'
-            'libmysqlclient'
-            'boost-libs')
-options=('staticlibs')
-source=("http://downloads.sourceforge.net/project/soci/soci/${pkgname}-${pkgver}/${pkgname}-${pkgver}.zip")
-sha1sums=('e76d5862f90cfa8a0f9fe6ce477c3c7fa669af62')
+            'unixodbc: support for ODBC databases')
+source=("git+https://github.com/SOCI/soci.git#branch=release/4.0")
+sha1sums=('SKIP')
+
+pkgver() {
+    cd "${srcdir}/${pkgname_}"
+    git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/; s/-/./g'
+}
 
 build() {
-    rm -rf "${srcdir}/${pkgname}-${pkgver}-build"
-    mkdir -p "${srcdir}/${pkgname}-${pkgver}-build"
-    cd "${srcdir}/${pkgname}-${pkgver}-build"
-    cmake \
+    cmake -B build "${pkgname_}" \
         -DSOCI_TESTS=OFF \
         -DCMAKE_INSTALL_PREFIX="/usr" \
-        -DCMAKE_CXX_STANDARD=11       \
-        "${srcdir}/${pkgname}-${pkgver}"
-    make
+        -DCMAKE_CXX_FLAGS="-Wno-format-overflow" \
+        -DSOCI_CXX11=ON \
+        -Wno-dev
+    make -C build
 }
 
 package() {
-    cd "${srcdir}/${pkgname}-${pkgver}-build"
-    make DESTDIR="${pkgdir}" install
+    make DESTDIR="${pkgdir}" -C build install
 
     # For some reason -DLIBDIR=lib causes libsoci_empty.so to disappear
     if [ -e "${pkgdir}/usr/lib64" ]; then
         mv "${pkgdir}/usr/lib64" "${pkgdir}/usr/lib"
     fi
-    install -Dm0644 "${srcdir}/${pkgname}-${pkgver}/LICENSE_1_0.txt" \
+    install -Dm0644 "${srcdir}/${pkgname_}/LICENSE_1_0.txt" \
         "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
