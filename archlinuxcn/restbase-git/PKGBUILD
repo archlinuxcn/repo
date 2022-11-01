@@ -45,6 +45,8 @@ package() {
     mkdir -p "${pkgdir}/usr/share/webapps/${_pkgname}"
     tar c --exclude=.git . | tar x -C "${pkgdir}/usr/share/webapps/${_pkgname}/"
     install -Dm644 "${srcdir}/restbase.service" "${pkgdir}/usr/lib/systemd/system/restbase.service"
+    install -Dm644 "${srcdir}/restbase.sysusers" "$pkgdir"/usr/lib/sysusers.d/restbase.conf
+    install -Dm644 "${srcdir}/restbase.tmpfiles" "$pkgdir"/usr/lib/tmpfiles.d/restbase.conf
     install -D "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
