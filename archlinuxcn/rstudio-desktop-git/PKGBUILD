@@ -4,16 +4,17 @@
 
 pkgname=rstudio-desktop-git
 _gitname=rstudio
-pkgver=39795.a5e9aee2f5
+pkgver=39804.2ece69d564
 _gwtver=2.9.0
 _ginver=2.1.2
+_nodever=16.14.0
 pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 arch=('i686' 'x86_64')
 url="https://www.rstudio.com/products/rstudio/"
 license=('AGPL3')
 depends=('r>=3.0.1' boost-libs qt5-sensors qt5-svg qt5-webengine qt5-xmlpatterns postgresql-libs sqlite3 soci clang hunspell-en_US mathjax2 pandoc yaml-cpp quarto-cli-bin libldap)
-makedepends=(git 'cmake>=3.1.0' boost desktop-file-utils jdk8-openjdk apache-ant unzip openssl libcups pam patchelf wget yarn nodejs)
+makedepends=(git 'cmake>=3.1.0' boost desktop-file-utils jdk8-openjdk apache-ant unzip openssl libcups pam patchelf wget yarn nodejs ninja)
 optdepends=('git: for git support'
             'subversion: for subversion support'
             'openssh-askpass: for a git ssh access')
@@ -23,14 +24,12 @@ source=("git+https://github.com/rstudio/rstudio.git"
         "https://s3.amazonaws.com/rstudio-buildtools/gin-${_ginver}.zip"
         "https://storage.googleapis.com/gwt-releases/gwt-${_gwtver}.zip"
 	    "qt.conf"
-	    "cran_multithread.patch"
-        "nodejs-external.patch")
+	    "cran_multithread.patch")
 sha256sums=('SKIP'
             'b98e704164f54be596779696a3fcd11be5785c9907a99ec535ff6e9525ad5f9a'
             '253911e3be63c19628ffef5c1082258704e7896f81b855338c6a036f524fbd42'
             '723626bfe05dafa545e135e8e61a482df111f488583fef155301acc5ecbbf921'
-            'b57a080325a9153ef47bcf5ded256e90816080384cc0c686b7fe0d54d46f7bd5'
-            '8366b6293e445abce7baf864405900bcf310fb8f73915113837946f92a717d47')
+            'b57a080325a9153ef47bcf5ded256e90816080384cc0c686b7fe0d54d46f7bd5')
 noextract=("gin-${_ginver}.zip")
 
 pkgver() {
@@ -39,8 +38,6 @@ pkgver() {
 }
 
 prepare() {
-    git -C "${srcdir}/${_gitname}" apply -v "${srcdir}"/nodejs-external.patch
-    
     cd ${srcdir}/${_gitname}
     local JOBS; JOBS="$(grep -oP -- "-j\s*\K[0-9]+" <<< "${MAKEFLAGS}")" || JOBS="1"
     sed "s/@@proc_num@@/${JOBS}/" -i ${srcdir}/cran_multithread.patch
@@ -56,11 +53,16 @@ prepare() {
     _pandocver=$(grep -oP "(?<=PANDOC_VERSION=\").*(?=\"$)" install-pandoc)
     install -d pandoc/${_pandocver}
  
+    cd "${srcdir}/${_gitname}/dependencies/common"
+    install -d node/${_nodever}/bin
+
     ln -sfT /usr/share/myspell/dicts dictionaries
     ln -sfT /usr/share/mathjax2 mathjax-27
     ln -sfT /opt/quarto quarto
     ln -sfT /usr/bin/pandoc pandoc/${_pandocver}/pandoc
-    
+    ln -sfT /usr/bin/node node/${_nodever}/bin/node
+    ln -sfT /usr/bin/corepack node/${_nodever}/bin/corepack
+
     cd "${srcdir}/${_gitname}/dependencies"
     ln -sfT common/dictionaries dictionaries
     ln -sfT common/mathjax-27 mathjax-27
@@ -75,10 +77,12 @@ build() {
     bash "${srcdir}/${_gitname}"/dependencies/common/install-packages
 
     export PATH=/usr/lib/jvm/java-8-openjdk/jre/bin/:${PATH}
+    export JAVA_TOOL_OPTIONS="-Djava.util.prefs.userRoot=${srcdir}"
     export BUILD_ID="local"
     export PACKAGE_OS="Arch Linux"
 
     cmake -S "${srcdir}/${_gitname}" -B build \
+          -GNinja \
           -DRSTUDIO_TARGET=Desktop \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_INSTALL_PREFIX=/usr/lib/rstudio \
@@ -88,11 +92,14 @@ build() {
           -DBoost_NO_BOOST_CMAKE=ON \
           -DRSTUDIO_USE_SYSTEM_SOCI=yes \
           -DRSTUDIO_BUNDLE_QT=FALSE
+    cd ${srcdir}/build
+    ninja
 }
 
 package() {
     # Install the program
-    make -C build DESTDIR="${pkgdir}" install
+    cd ${srcdir}/build
+    DESTDIR="${pkgdir}" ninja install
 
     # Install the license
     install -Dm 644 "${srcdir}/${_gitname}/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
