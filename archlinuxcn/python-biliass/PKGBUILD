@@ -3,25 +3,26 @@
 
 pkgname=python-biliass
 _pkgname=biliass
-pkgver=1.3.5
+pkgver=1.3.7
 pkgrel=1
 pkgdesc='将 B 站 XML/protobuf 弹幕转换为 ASS 弹幕 '
 arch=('any')
 url='https://github.com/ShigureLab/biliass'
 license=('GPL3')
 depends=('python-protobuf')
-makedepends=('python-setuptools' 'python-wheel')
+makedepends=('python-setuptools' 'python-poetry')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('ca8ed504e1e0dc62a6de9a6f4890f41510327fd04f220e91f02caae859352e9b')
+sha256sums=('6b61a5d2a430a474f06175880c09f6feed8ca3e0b1e4ecb299de807a01d628f7')
 prepare(){
   cd "$_pkgname-$pkgver"
   rm tests -r
 }
 build() {
   cd "$_pkgname-$pkgver"
-  python setup.py build
+	poetry build
+	tar -xvf "./dist/$_pkgname-$pkgver.tar.gz"
 }
 package() {
-  cd "$_pkgname-$pkgver"
+  cd "$_pkgname-$pkgver/$_pkgname-$pkgver"
   python setup.py install --root="$pkgdir" --optimize=1 --skip-build
 }
