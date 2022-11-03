@@ -1,8 +1,8 @@
-# Maintainer: skydrome <skydrome@i2pmail.org>
+# Maintainer: skydrome <skydrome@mail.i2p>
 # Contributor: Artyom Olshevskiy <siasia@siasia>
 
 pkgname=java-service-wrapper
-pkgver=3.5.49
+pkgver=3.5.50
 pkgrel=1
 pkgdesc="Enables a Java Application to be run as a Windows Service or Unix Daemon"
 url="https://wrapper.tanukisoftware.com/doc/english/introduction.html"
@@ -10,7 +10,7 @@ arch=('i686' 'x86_64' 'aarch64' 'armv6h' 'armv7h')
 license=('GPL2' 'custom:tanuki-community')
 makedepends=('ant' 'jdk8-openjdk')
 source=("https://wrapper.tanukisoftware.com/download/${pkgver}/wrapper_${pkgver}_src.tar.gz")
-sha256sums=('81c49c1792c8a96541bfc7ab237846e6db790593ced979611400b3d58eb4fafe')
+sha256sums=('570e7fc0dd18af7f5b6b1e176af84ce6efac0a0100ed00ab842d95dc1c41ed5a')
 
 prepare() {
     cd "wrapper_${pkgver}_src"
@@ -32,11 +32,9 @@ build() {
     source /etc/profile.d/jre.sh
     export JAVA_HOME="${JAVA_HOME:-/usr/lib/jvm/default}"
 
-    [[ "$CARCH" = @(x86_64|aarch64) ]] && _bits=64    || _bits=32
-    [[ "$CARCH" = arm*              ]] && _arch=armhf || _arch=x86
+    [[ "$CARCH" = @(x86_64|aarch64) ]] && _bits=64 || _bits=32
 
-    ant -Dfile.encoding=UTF-8 \
-        -Dbits="$_bits" -Ddist.arch="$_arch" -Djavac.target.version=8 \
+    ant -Dfile.encoding=UTF-8 -Djavac.target.version=8 -Dbits="$_bits" \
         jar compile-c-unix
 }
 
