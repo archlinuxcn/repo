@@ -4,12 +4,12 @@
 ENABLE_FAKE_GNOME_SOFTWARE=0
 
 pkgname=pamac-aur
-pkgver=10.4.2
+pkgver=10.4.3
 pkgrel=1
 _pkgfixver=$pkgver
 
-_commit='d08ed1704fd3ed6ee7944f57b0b51a741cb97003'
-sha256sums=('8fa00ad41e60ec43dd84a91a2785606eed1ecb9169b54f182201888a44190870')
+_commit='d314d7026b9114af8cedaeec64a24c6cb55ab1e4'
+sha256sums=('b385dd7c9df798913eadabba7e880ed46b43863832d6d46b82c9e9d973a982bd')
 
 pkgdesc="A Gtk3 frontend, Package Manager based on libalpm with AUR and Appstream support"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
