@@ -1,4 +1,4 @@
-From f2f6abcda9c797cfd94f1eaf8cfa4c1931356ce4 Mon Sep 17 00:00:00 2001
+From 81ed62b281b6a2191ddac209bcdbf35a0a24ed50 Mon Sep 17 00:00:00 2001
 From: Dario Nieuwenhuis <dirbaio@dirbaio.net>
 Date: Tue, 10 Mar 2020 23:21:11 +0100
 Subject: [PATCH 2/3] xwayland: add support for changing global scale factor on
@@ -36,7 +36,7 @@ index 41e35ef3..62994f56 100644
 +
  #endif
 diff --git a/xwayland/xwayland.c b/xwayland/xwayland.c
-index 6a46a6cf..d93d233a 100644
+index 05d8e4b5..fa1d97b8 100644
 --- a/xwayland/xwayland.c
 +++ b/xwayland/xwayland.c
 @@ -110,6 +110,9 @@ struct wlr_xwayland *wlr_xwayland_create(struct wl_display *wl_display,
@@ -50,7 +50,7 @@ index 6a46a6cf..d93d233a 100644
  
  void wlr_xwayland_set_cursor(struct wlr_xwayland *xwayland,
 diff --git a/xwayland/xwm.c b/xwayland/xwm.c
-index faeb7a3f..87a2b668 100644
+index 93ad853b..ae790fbe 100644
 --- a/xwayland/xwm.c
 +++ b/xwayland/xwm.c
 @@ -16,6 +16,7 @@
@@ -72,7 +72,7 @@ index faeb7a3f..87a2b668 100644
  const char *const atom_map[ATOM_LAST] = {
  	[WL_SURFACE_ID] = "WL_SURFACE_ID",
  	[WM_DELETE_WINDOW] = "WM_DELETE_WINDOW",
-@@ -1821,6 +1826,7 @@ static void xwm_get_resources(struct wlr_xwm *xwm) {
+@@ -1810,6 +1815,7 @@ static void xwm_get_resources(struct wlr_xwm *xwm) {
  	xcb_prefetch_extension_data(xwm->xcb_conn, &xcb_xfixes_id);
  	xcb_prefetch_extension_data(xwm->xcb_conn, &xcb_composite_id);
  	xcb_prefetch_extension_data(xwm->xcb_conn, &xcb_res_id);
@@ -80,7 +80,7 @@ index faeb7a3f..87a2b668 100644
  
  	size_t i;
  	xcb_intern_atom_cookie_t cookies[ATOM_LAST];
-@@ -1852,6 +1858,8 @@ static void xwm_get_resources(struct wlr_xwm *xwm) {
+@@ -1841,6 +1847,8 @@ static void xwm_get_resources(struct wlr_xwm *xwm) {
  		wlr_log(WLR_DEBUG, "xfixes not available");
  	}
  
@@ -89,7 +89,7 @@ index faeb7a3f..87a2b668 100644
  	xcb_xfixes_query_version_cookie_t xfixes_cookie;
  	xcb_xfixes_query_version_reply_t *xfixes_reply;
  	xfixes_cookie =
-@@ -2251,3 +2259,38 @@ enum wlr_xwayland_icccm_input_model wlr_xwayland_icccm_input_model(
+@@ -2240,3 +2248,38 @@ enum wlr_xwayland_icccm_input_model wlr_xwayland_icccm_input_model(
  	}
  	return WLR_ICCCM_INPUT_MODEL_NONE;
  }
@@ -129,5 +129,5 @@ index faeb7a3f..87a2b668 100644
 +	xcb_flush(xwm->xcb_conn);
 +}
 -- 
-2.37.2
+2.38.1
 
