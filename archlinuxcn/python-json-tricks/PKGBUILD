@@ -3,7 +3,7 @@
 
 _pkgname=pyjson_tricks
 pkgname=python-json-tricks
-pkgver=3.16.0
+pkgver=3.16.1
 pkgrel=1
 pkgdesc="Extra features for Python's JSON"
 arch=('any')
@@ -27,7 +27,7 @@ checkdepends=(
   python-pandas
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/mverleg/pyjson_tricks/archive/v${pkgver}.tar.gz")
-sha1sums=('e269714f5c112012a0fc6bf47cac511d1669f527')
+sha1sums=('a27088d2ddef3d805f9c175234caba0025a39181')
 
 build() {
   cd "${_pkgname}-${pkgver}"
