@@ -3,9 +3,9 @@
 
 pkgname=naiveproxy
 pkgdesc="A Proxy using Chrome's network stack to camouflage traffic with strong censorship resistence and low detectablility."
-pkgver=106.0.5249.91_1
+pkgver=107.0.5304.87_1
 pkgrel=1
-_pkgver=106.0.5249.91
+_pkgver=107.0.5304.87
 _pkgrel=1
 arch=('x86_64')
 url='https://github.com/klzgrad/naiveproxy'
@@ -14,8 +14,8 @@ depends=("gcc-libs" "glibc")
 makedepends=("ninja" "gn" "ccache" "python" "unzip")
 checkdepends=("python")
 
-_PGO_PATH='chrome-linux-5249-1664382991-4c3563c0a634429d8d381274051e58611ae6cfe3.profdata'
-_clang_path='clang-llvmorg-16-init-907-g8b740747-1.tgz'
+_PGO_PATH='chrome-linux-5304-1666778341-6952d9583ad8c5425ae6677daa28778c2175311f.profdata'
+_clang_path='clang-llvmorg-16-init-4609-g025a5b22-2.tgz'
 
 source=(
   "naiveproxy.service"
@@ -34,15 +34,15 @@ noextract=(
 sha1sums=('4c18f44ba51d40bfd7e6ae8ecb30b8e812acb8e8'
           '013b31ae43e309bc6560b61e8b4196f8f14f738f'
           '3727d7da81b1480d60e593a7d6878d981b35c4f6'
-          '23538391d933bd245e6e283730aed228e95f46e4'
-          '4c3563c0a634429d8d381274051e58611ae6cfe3'
-          '05d439cc6a7280a4fb33c7bb93e7168617e3ffdb')
+          '0a966fd5fa266227bdec0480731a13255cfea896'
+          '6952d9583ad8c5425ae6677daa28778c2175311f'
+          '36dafead1accea863154570e6d520e9b94945682')
 sha256sums=('c05026423ca08e2c712745b717c23395e344f2c99b2dad30beed8e26922d268f'
             'daa0f591233625730168f3ea006f1d5a7e439e26b35a1051d957e394aa8a4440'
             '5bc9ef361e6303e151b6e63deb31b47e24a4f34ade4d8f092a04bc98e89a2edb'
-            '691dea8921b7ef48f5073b1a262584ae6b27c844fc28ce0474c98cd4e8ecce04'
-            '91cca2a7922040625c4fdb18db6035a2ffbf59b737bd1706966f1e4da06b468d'
-            'fc874a199fcb217e246c70a8280f959ad1bfed5de27ab25877421e8588237194')
+            'f97f0ad880e5a784bd3fa5dd5d114434ab7e393736d90a902c0d2d3ec95e9ff0'
+            '7ac8186cec385515c6164dbfe05b05e4c6c2b25b5733e2d6b2c932670b2bd6cf'
+            'bbcf6a3456cb6d8648a6bb15fca27bcb77902318090d2eee6cbc9472acc0ef69')
 
 
 backup=(etc/naiveproxy/config.json)
@@ -84,6 +84,11 @@ build() {
   WITH_CLANG=Linux_x64
   WITH_PGO=linux
   WITH_GN=linux
+
+  pushd "tools/clang/scripts"
+  CLANG_REVISION=$($PYTHON -c 'import update; print(update.PACKAGE_VERSION)')
+  popd
+  echo $CLANG_REVISION >third_party/llvm-build/Release+Asserts/cr_build_revision
 
   PGO_PATH=$(cat chrome/build/$WITH_PGO.pgo.txt)
 
