@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.9.0.DEV.1709.g59b52df2a31
+pkgver=1.9.0.DEV.1750.g4053f69bacb
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -199,6 +199,9 @@ build_in() {
   make "${opts[@]}" -C deps
   make "${opts[@]}" -C src jl_internal_funcs.inc
   make "${opts[@]}" julia-cli-release
+  # I'm a bit too lazy to fix this properly
+  # so I'm just going to create this missing symlink
+  ln -sf /usr/lib/libgcc_s.so.1 usr/lib/julia/
   make "${opts[@]}" release debug
   # TODO docless build
   JL_MAKEPKG_SRCDIR= make "${opts[@]}" docs
