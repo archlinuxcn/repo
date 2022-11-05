@@ -27,13 +27,13 @@ depends=(
   python-scipy
 )
 optdepends=(
-  'ffmpeg4.4: video reader backend (the recommended one with better performance)'
+  'ffmpeg: video reader backend (the recommended one with better performance)'
   'python-av: video reader backend (the default one)'
   'python-pycocotools: support for MS-COCO dataset'
 )
 makedepends=(
   cuda
-  ffmpeg4.4
+  ffmpeg
   python-av
   python-pytorch-cuda
   python-setuptools
@@ -48,15 +48,6 @@ sha512sums=('219e787cd04632f480120d6ff74d092f6804beb9543dbc9fc9be6cc0dd0c7271bb9
             '89f8d4410a238dc52b27200dfb8db9ff1a58777bdfebb346f3d157e16108930dc3b56f18b611f5de1cb081afa6be6768b52e2486cca57703b490194305dc1c67')
 
 prepare() {
-  # fix building with ffmpeg4.4 by manually setup include and lib dir
-  # and remove other codes to find ffmpeg exe, as ffmpeg4.4 are only headers and libs without ffmpeg cmd
-  sed -i '351,358d' "${srcdir}/${_pkgname}-${pkgver}/setup.py"
-  sed -i 's#ffmpeg_include_dir = os.path.join(ffmpeg_root, "include")#ffmpeg_include_dir = "/usr/include/ffmpeg4.4"#' "${srcdir}/${_pkgname}-${pkgver}/setup.py"
-  sed -i 's#ffmpeg_library_dir = os.path.join(ffmpeg_root, "lib")#ffmpeg_library_dir = "/usr/lib/ffmpeg4.4"#' "${srcdir}/${_pkgname}-${pkgver}/setup.py"
-  sed -i 's#has_ffmpeg = ffmpeg_exe is not None#has_ffmpeg = True#' "${srcdir}/${_pkgname}-${pkgver}/setup.py"
-  sed -i '/ffmpeg_exe/d' "${srcdir}/${_pkgname}-${pkgver}/setup.py"
-  sed -i '/ffmpeg_bin/d' "${srcdir}/${_pkgname}-${pkgver}/setup.py"
-  sed -i '/ffmpeg_root/d' "${srcdir}/${_pkgname}-${pkgver}/setup.py"
   cp -a "${srcdir}/${_pkgname}-${pkgver}" "${srcdir}/${_pkgname}-cuda-${pkgver}"
 }
 
