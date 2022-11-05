@@ -1,9 +1,10 @@
 # vim: set ts=2 sw=2 et:
-# Maintainer: 
+# Maintainer: Levente Polyak <anthraxx[at]archlinux[dot]org>
+# Maintainer: Morten Linderud <foxboron@archlinux.org>
 
 pkgname=pacman-lily
-pkgver=6.0.1
-pkgrel=8
+pkgver=6.0.2
+pkgrel=5
 pkgdesc="A library-based package manager with dependency support (no disabling-server-on-error)"
 arch=('x86_64')
 url="https://www.archlinux.org/pacman/"
@@ -23,41 +24,39 @@ validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@a
 source=(pacman.patch
         pacman-syncdb
         https://sources.archlinux.org/other/pacman/pacman-$pkgver.tar.xz{,.sig}
-        "fix-wkd-lookup.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/e1246baddd14ec6f4b6270b59bea0e1b639472a7.patch"
-        "patch-updatedb.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/58d678fa289034f1fe2a56adbb5e496b774755fc.patch"
-        add-flto-to-LDFLAGS-for-clang.patch
-        makepkg-use-ffile-prefix-map-instead-of-fdebug-prefi.patch
-        libmakepkg-add-extra-buildflags-only-when-buildflags.patch
-        make-link-time-optimization-flags-configurable.patch
+        pacman-always-create-directories-from-debugedit.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/efd0c24c07b86be014a4edb5a8ece021b87e3900.patch
+        pacman-always-create-directories-from-debugedit-fixup.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/86981383a2f4380bda26311831be94cdc743649b.patch
+        pacman-fix-unique-source-paths.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/478af273dfe24ded197ec54ae977ddc3719d74a0.patch
+        pacman-strip-include-o-files-similar-to-kernel-modules.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/de11824527ec4e2561e161ac40a5714ec943543c.patch
         pacman.conf
         makepkg.conf)
 sha256sums=(61e0b85dadb341ea14e5aa28b0b1edf98871bc3dffd1083fb5775fc28a65e113
             207d5cee261bba18e650bbd2c249ffd8fe9c1dbd7de6b241d8bf011848faa70b
-            '0db61456e56aa49e260e891c0b025be210319e62b15521f29d3e93b00d3bf731'
+            '7d8e3e8c5121aec0965df71f59bedf46052c6cf14f96365c4411ec3de0a4c1a5'
             'SKIP'
-            '8ab5b1338874d7d58e11c5d1185ea3454fcc89755f9c18faf87ff348ad1ed16c'
-            '988acbb76a0bbd866ab76121191ba4a968bf12970d581fb81b47504c4d998e96'
-            '82ff91b85f4c6ceba19f9330437e2a22aabc966c2b9e2a20a53857f98a42c223'
-            'b940e6c0c05a185dce1dbb9da0dcbebf742fca7a63f3e3308d49205afe5a6582'
-            '7d0aee976c9c71fcf7c96ef1d99aa76efe47d8c1f4451842d6d159ec7deb4278'
-            '5b43e26a76be3ed10a69d4bfb2be48db8cce359baf46583411c7f124737ebe6a'
+            '522b789e442b3bb3afa7ea3fa417a99554f36ec00de3986cbe92c80f09a7db99'
+            'dab7c70fb9d77d702069bb57f5a12496b463d68ae20460fb0a3ffcb4791321a9'
+            '0b56c61eac3d9425d68faa2eccbaefdc5ed422b643974ae829eaca0460043da1'
+            'acd0b149b6324dc1eca3cd2d3b30df6ef64c5653e83523d77200ec593e01d2a7'
             '606e55f06c297d2b508bc4438890b229a1abaa68b0374a2d7f94c8e7be6792d7'
             '072020e34f2c55b94a9a486829a7eadab0a830ddb4d8e759b0c4e6cf1bde73a6')
 
-
 prepare() {
-  cd "pacman-$pkgver"
-  patch -Np1 -i ../add-flto-to-LDFLAGS-for-clang.patch
-  patch -Np1 -i ../makepkg-use-ffile-prefix-map-instead-of-fdebug-prefi.patch
-  patch -Np1 -i ../libmakepkg-add-extra-buildflags-only-when-buildflags.patch
-  patch -Np1 -i ../make-link-time-optimization-flags-configurable.patch
-  patch -Np1 -i ../fix-wkd-lookup.patch
-  patch -Np1 -i ../patch-updatedb.patch
+  cd "pacman-${pkgver}"
+  # we backport way too often in pacman
+  # lets at least make it more convenient
+  local src
+  for src in "${source[@]}"; do
+    src="${src%%::*}"
+    src="${src##*/}"
+    [[ $src = *.patch ]] || continue
+    msg2 "Applying patch $src..."
+    patch -Np1 < "../$src"
+  done
 }
 
 build() {
   cd "pacman-$pkgver"
-  patch -p1 -i "${srcdir}/pacman.patch"
 
   meson --prefix=/usr \
         --buildtype=plain \
