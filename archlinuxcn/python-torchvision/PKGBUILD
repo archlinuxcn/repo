@@ -14,8 +14,8 @@
 _CUDA_ARCH_LIST="5.2;5.3;6.0;6.1;6.2;7.0;7.2;7.5;8.0;8.6;8.6+PTX"
 pkgname=('python-torchvision' 'python-torchvision-cuda')
 _pkgname=vision
-pkgver=0.13.1
-pkgrel=3
+pkgver=0.14.0
+pkgrel=1
 pkgdesc='Datasets, transforms, and models specific to computer vision'
 arch=('x86_64')
 url='https://github.com/pytorch/vision'
@@ -43,7 +43,7 @@ source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/pytorch/vision/archive
         "https://github.com/NVIDIA/DALI/raw/main/dali/operators/reader/loader/video/nvdecode/cuviddec.h"
         "https://github.com/NVIDIA/DALI/raw/main/dali/operators/reader/loader/video/nvdecode/nvcuvid.h"
 )
-sha512sums=('219e787cd04632f480120d6ff74d092f6804beb9543dbc9fc9be6cc0dd0c7271bb91508a2183c11f2faf6365e73ed16c2501dc6f6e7cb49f61deb6ce44476e70'
+sha512sums=('db918a7dd9db93558fd1cc87721fe31ed24cf56945dba1f1377bc0270708836089a47ab9e700d00b7a01d262e3d0d2cea475d68ddca7f2c9f889bbb63cec59cf'
             '8f97deedab5b0de1154ce7f8486eadcc7556a9cbb01fb44a988729da80b982daafbfe8da32b7f3ced78c1544b3ac696a569c50a6b4cb244f502b07e615b4de10'
             '89f8d4410a238dc52b27200dfb8db9ff1a58777bdfebb346f3d157e16108930dc3b56f18b611f5de1cb081afa6be6768b52e2486cca57703b490194305dc1c67')
 
