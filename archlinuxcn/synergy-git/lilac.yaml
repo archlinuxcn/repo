@@ -13,3 +13,7 @@ post_build_script: |
 update_on:
   - source: github
     github: symless/synergy-core
+  - source: alpm
+    alpm: openssl
+    provided: libcrypto.so
+    strip_release: true
