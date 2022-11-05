@@ -7,9 +7,8 @@ repo_depends:
   - python-portalocker
 
 update_on:
-  - source: github
-    github: pytorch/data
-    use_latest_release: true
+  - source: pypi
+    pypi: torchdata
   - source: manual
     manual: 1
   - alias: python

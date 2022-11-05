@@ -1,11 +1,12 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
-_pkgname=data
+_pkgname=torchdata
+_py=cp310
 pkgname=python-torchdata
-pkgver=0.4.1
+pkgver=0.5.0
 pkgrel=1
 pkgdesc='A PyTorch repo for data loading and utilities to be shared by the PyTorch domain libraries'
-arch=('any')
+arch=('x86_64')
 url='https://github.com/pytorch/data'
 license=('BSD')
 depends=(
@@ -15,23 +16,16 @@ depends=(
   python-urllib3
 )
 makedepends=(
-  python-build
   python-installer
-  python-setuptools
-  python-wheel
 )
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/pytorch/data/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('1723aa052db374945c6fd73e012a0668fe8b74afce107ea65c7b65ed9acebfd8e500c3dd6223cf483ff61d90f0898aaa7492165c4fc68c2e2e0c64b29d005408')
-
-build() {
-  cd "${_pkgname}-${pkgver}"
-  USE_SYSTEM_LIBS=ON \
-  python -m build --wheel --no-isolation
-}
+source=("https://files.pythonhosted.org/packages/${_py}/${_pkgname::1}/${_pkgname}/${_pkgname//-/_}-${pkgver}-${_py}-${_py}-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+        "https://github.com/pytorch/data/raw/main/LICENSE"
+)
+sha512sums=('14183eab81f26085d88569501966dde4c4b1132e68e5f4681da853c6191be73948be15cf084f4af515b8412b6b4a9a5a716def865359da28213be6a2f3614b87'
+            '2d437cc8226bf32ddcf8e12f2583c5777afd3d9932b6b97a65f8fcf3d115a64749ebf37737fa9a69cea01e59649ba49b011ab219d1636ad970e79613a406f837')
 
 package() {
-  cd "${_pkgname}-${pkgver}"
-  python -m installer --destdir="${pkgdir}" dist/*.whl
-  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  python -m installer --destdir="${pkgdir}" *.whl
+  install -Dm644 "${srcdir}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
