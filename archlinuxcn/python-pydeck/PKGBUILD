@@ -2,8 +2,8 @@
 
 _pkgname=pydeck
 pkgname=python-pydeck
-pkgver=0.7.1
-pkgrel=4
+pkgver=0.8.0
+pkgrel=1
 pkgdesc='Widget for deck.gl maps'
 arch=('any')
 url='https://pypi.org/project/pydeck'
@@ -25,7 +25,7 @@ makedepends=(
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"
 )
-sha512sums=('7d4d392a11ae26a9efd138eac6286ed08055613b8aba10ea8888d3d862ef21af13d588ceb6058a5cedbff564fed17b9da5c19f7deeacd6030f0c7dd0ac9afaa3')
+sha512sums=('117ba93c3338ab53b34afd9974b4b6408f4287d2f2db340ffa63a6bbe1ca6632939ea50dd5e81d04d76c69634b486a4d34a119eb3a3ad3fa7cb4087c87f8c932')
 
 build() {
   cd "${_pkgname}-${pkgver}"
