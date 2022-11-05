@@ -3,7 +3,7 @@
 
 _pkgname=pywebview
 pkgname=python-pywebview
-pkgver=3.6.3
+pkgver=3.7
 pkgrel=1
 pkgdesc='Build GUI for your Python program with JavaScript, HTML, and CSS'
 arch=('any')
@@ -23,7 +23,7 @@ optdepends=(
   'qt5-webkit: use with Qt')
 install="${pkgname}.install"
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/r0x0r/pywebview/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('2826d28bdb9ed2b027b7415543bd9ecc93272b683ae99a76d89378e3de9d1669')
+sha256sums=('d555d2d6a86a55ba843207c19114c19530651e5f132d2147ae181335d8ac1105')
 
 build() {
   cd "${_pkgname}-${pkgver}"
