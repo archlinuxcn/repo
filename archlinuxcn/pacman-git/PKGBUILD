@@ -5,8 +5,8 @@
 # Contributor: Andres Perera <aepd87@gmail.com>
 
 pkgname=pacman-git
-pkgver=6.0.0.r5.g542910d6
-pkgrel=2
+pkgver=6.0.1.r89.gda68447e
+pkgrel=1
 pkgdesc="A library-based package manager with dependency support"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
@@ -15,23 +15,23 @@ depends=('archlinux-keyring' 'bash' 'curl' 'gpgme' 'libarchive'
          'pacman-mirrorlist')
 optdepends=('pacman-contrib: various helper utilities'
             'perl-locale-gettext: translation support in makepkg-template')
-makedepends=('git' 'asciidoc' 'meson')
+makedepends=('git' 'asciidoc' 'doxygen' 'meson')
 checkdepends=('python' 'fakechroot')
-provides=("pacman=${pkgver%.*.*}" "libalpm.so=13")
+provides=("pacman=${pkgver%.*.*}")
 conflicts=('pacman')
 backup=("etc/pacman.conf"
         "etc/makepkg.conf")
 options=('emptydirs' 'strip' 'debug')
-source=("git+https://git.archlinux.org/pacman.git"
+source=("git+https://gitlab.archlinux.org/pacman/pacman.git"
         "pacman.conf.i686"
         "pacman.conf.x86_64"
         "pacman.conf.arm"
         "makepkg.conf")
 sha256sums=('SKIP'
-            '07b4e78745b9c9ecd93b703649b24b05803941f02ac2142ef62d50e36cb865a7'
-            '4f349704aee808873bef4759a56d92e7985c3f9bffdd7b00bfaa988110124208'
-            '6185dc65b18d1d085f65281c6bd1ce556466a64bf883d1f27c89b7e620570334'
-            '54b7b886d6b35a35f4edc1829ea398db0d83d334a99cfe80ff4110d722da5c6d')
+            '0e09eb240512da85f7eaa314a5a98fe7d4c4e7ed5eebde7e3e937c0ae4ee7054'
+            '7ff75a61a07eabbc1718a7171b897b6504a6370f2f59a14caf42bbf0dce26ea6'
+            '3fa640a4a2138b8d07b6e6366ff0743206ecb32fc3b7f53490a614388c492cf3'
+            '0c1ecbb8c57e8ef2c600b41d4458269095fc4ddb6778d0000d4a9a067f68fe2d')
 
 pkgver() {
   cd pacman
@@ -46,6 +46,7 @@ build() {
   meson --prefix=/usr \
         --buildtype=plain \
         -Ddoc=enabled \
+        -Ddoxygen=enabled \
         -Duse-git-version=true \
         -Dscriptlet-shell=/usr/bin/bash \
         -Dldconfig=/usr/bin/ldconfig \
@@ -75,6 +76,7 @@ package() {
   fi
 
   # set things correctly in the default conf file
+  local mychost myflags moresed=()
   case $CARCH in
     i686)
       mychost="i686-pc-linux-gnu"
@@ -84,6 +86,9 @@ package() {
       mychost="x86_64-pc-linux-gnu"
       myflags="-march=x86-64"
       ;;
+    arm*|aarch64)
+      moresed+=('-e' 's/-fcf-protection//')
+      ;;&
     arm)
       mychost="armv5tel-unknown-linux-gnueabi"
       myflags="-march=armv5te"
@@ -107,7 +112,8 @@ package() {
   sed -i "$pkgdir/etc/makepkg.conf" \
     -e "s|@CARCH[@]|$CARCH|g" \
     -e "s|@CHOST[@]|$mychost|g" \
-    -e "s|@CARCHFLAGS[@]|$myflags|g"
+    -e "s|@CARCHFLAGS[@]|$myflags|g" \
+    "${moresed[@]}"
 }
 
 # vim: set ts=2 sw=2 et:
