@@ -3,12 +3,11 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-repo_depends:
-  - python-torchvision
-
 update_on:
   - source: github
     github: StacyYang/gluoncv-torch
+  - source: manual
+    manual: 1
   - alias: python
 
 # vim:set ts=2 sw=2 et:
