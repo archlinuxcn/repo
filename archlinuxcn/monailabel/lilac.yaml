@@ -20,11 +20,12 @@ repo_depends:
   - python-scikit-image
   - python-simplecrf
   - python-timeloop
-  - python-torchvision
 
 update_on:
   - source: github
     github: Project-MONAI/MONAILabel
-    use_max_tag: true
+    use_latest_release: true
+  - source: manual
+    manual: 1
   - alias: python
 # vim:set ts=2 sw=2 et:
