@@ -1,23 +1,24 @@
 _name=statsd
 pkgname=python-statsd
-pkgver=3.3.0
-pkgrel=5
+pkgver=4.0.0
+pkgrel=1
 pkgdesc="A simple statsd client."
 arch=(any)
-url="https://github.com/jsocol/pystatsd"
+url=""
 license=('MIT')
-depends=('python' 'python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/statsd-3.3.0.tar.gz")
-sha256sums=('e3e6db4c246f7c59003e51c9720a51a7f39a396541cb9b147ff4b14d15b5dd1f')
+depends=('python')
+makedepends=('python-setuptools' 'python-setuptools' 'python-build' 'python-installer' 'python-wheel')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/statsd-4.0.0.tar.gz")
+sha256sums=('e767eb2b8c705ca4c0a55b96fe47f80ce15ba98c7a851dd2ad00504d29cb2e3c')
 
 build() {
-  cd "$srcdir/statsd-3.3.0"
-  python3 setup.py build
+  cd "$srcdir/statsd-4.0.0"
+  python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "$srcdir/statsd-3.3.0"
-  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  cd "$srcdir/statsd-4.0.0"
+  python -m installer --destdir="$pkgdir" dist/*.whl
 
   # make sure we don't install any world-writable or root-readable-only files
   # we shouldn't need to fix ownership as we extract tarballs as a non-root user
