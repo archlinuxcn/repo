@@ -18,7 +18,7 @@ license=(Apache)
 # the executable matches the package name (as of 2020-11-15).
 _electron='electron18'
 depends=($_electron bash)
-makedepends=(expac git nvm python)
+makedepends=(expac git nvm python python2)
 source=("git+https://github.com/meetfranz/$pkgname#tag=v$_pkgver"
         franz.desktop
         franz.sh.in
