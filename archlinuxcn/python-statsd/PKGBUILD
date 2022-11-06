@@ -1,6 +1,6 @@
 _name=statsd
 pkgname=python-statsd
-pkgver=4.0.0
+pkgver=4.0.1
 pkgrel=1
 pkgdesc="A simple statsd client."
 arch=(any)
@@ -8,16 +8,16 @@ url=""
 license=('MIT')
 depends=('python')
 makedepends=('python-setuptools' 'python-setuptools' 'python-build' 'python-installer' 'python-wheel')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/statsd-4.0.0.tar.gz")
-sha256sums=('e767eb2b8c705ca4c0a55b96fe47f80ce15ba98c7a851dd2ad00504d29cb2e3c')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/statsd-4.0.1.tar.gz")
+sha256sums=('99763da81bfea8daf6b3d22d11aaccb01a8d0f52ea521daab37e758a4ca7d128')
 
 build() {
-  cd "$srcdir/statsd-4.0.0"
+  cd "$srcdir/statsd-4.0.1"
   python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "$srcdir/statsd-4.0.0"
+  cd "$srcdir/statsd-4.0.1"
   python -m installer --destdir="$pkgdir" dist/*.whl
 
   # make sure we don't install any world-writable or root-readable-only files
