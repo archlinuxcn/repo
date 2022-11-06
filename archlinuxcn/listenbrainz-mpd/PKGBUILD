@@ -1,7 +1,7 @@
 # Maintainer: elomatreb <ole@bertr.am>
 pkgname=listenbrainz-mpd
 pkgver=2.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="ListenBrainz submission client for MPD"
 arch=('x86_64')
 url='https://codeberg.org/elomatreb/listenbrainz-mpd'
