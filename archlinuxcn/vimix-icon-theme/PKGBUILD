@@ -5,7 +5,7 @@
 pkgname=vimix-icon-theme
 _pkgver=2021-11-09
 pkgver=${_pkgver//-/.}
-pkgrel=2
+pkgrel=3
 pkgdesc="A Material Design icon theme based on Paper Icon Theme"
 arch=('any')
 url="https://github.com/vinceliuice/vimix-icon-theme"
@@ -14,6 +14,13 @@ depends=('hicolor-icon-theme' 'gtk-update-icon-cache')
 options=('!strip')
 source=("$pkgname-$_pkgver.tar.gz::$url/archive/$_pkgver.tar.gz")
 sha256sums=('2f70825717a0414a441c5bc75f0a5417c97c9fe775ac0b0d2db618cafb2a2a89')
+
+prepare() {
+   cd "$pkgname-$_pkgver"
+
+  # Disable running gtk-update-icon-cache
+  sed -i '/gtk-update-icon-cache/d' install.sh
+}
 
 package() {
   cd "$pkgname-$_pkgver"
