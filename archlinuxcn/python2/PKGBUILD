@@ -6,27 +6,27 @@
 
 pkgname=python2
 pkgver=2.7.18
-pkgrel=8
+pkgrel=9
 _pybasever=2.7
 pkgdesc="A high-level scripting language"
-arch=('x86_64')
+arch=('x86_64' 'aarch64')
 license=('PSF')
 url="https://www.python.org/"
-depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl' 'sqlite' 'zlib')
+depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl-1.1'  'sqlite' 'zlib')
 makedepends=('tk' 'bluez-libs')
 checkdepends=('gdb' 'file' 'xorg-server-xvfb' 'xterm')
 optdepends=('tk: for IDLE'
             'python2-setuptools'
             'python2-pip')
 conflicts=('python<3')
-_gentoo_patches="python-gentoo-patches-${pkgver}_p15"
+_gentoo_patches="python-gentoo-patches-${pkgver}_p16"
 source=("https://www.python.org/ftp/python/${pkgver%rc?}/Python-${pkgver}.tar.xz"{,.asc}
         mtime-workaround.patch
         "https://dev.gentoo.org/~mgorny/dist/python/$_gentoo_patches.tar.xz")
 sha512sums=('a7bb62b51f48ff0b6df0b18f5b0312a523e3110f49c3237936bfe56ed0e26838c0274ff5401bda6fc21bf24337477ccac49e8026c5d651e4b4cafb5eb5086f6c'
             'SKIP'
             '4e761cfd57791e8b72ecdf84c2e03875bf074311130eea5b8e97409fa304fa3468dbd359a511c4e9978e686e662c58054b4174d3e73f845fa9ded2e83a3a8076'
-            'd9386808265f978808e5c0ffd384cefe54fb0e05aeccfd394167d5227d9cd66e25c8e93c54914762b2cfc3c2dd851b26a7a84d62634c6aa8a0798aacbb7ac25f')
+            '810be590d0e06fab4b2165e6852ca49662f09dcd7e20b47a29f613ad7653252c8dfac3f0eb228d77c8a914efa7c08788b2fbd552a4b47504f5fd0ec17450c48f')
 validpgpkeys=('C01E1CAD5EA2C4F0B8E3571504C367C218ADD4FF')  # Benjamin Peterson
 noextract=("$_gentoo_patches.tar.xz")
 
@@ -79,7 +79,8 @@ prepare() {
 
 build() {
   cd "${srcdir}/Python-${pkgver}"
-
+  CPPFLAGS+=" -I/usr/include/openssl-1.1"
+  LDFLAGS+=" -L/usr/lib/openssl-1.1"
   export OPT="${CFLAGS}"
   ./configure --prefix=/usr \
               --enable-shared \
