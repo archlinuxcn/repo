@@ -4,7 +4,7 @@
 pkgname=comgr
 pkgdesc='Compiler support library for ROCm LLVM'
 pkgver=5.3.0
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/ROCm-CompilerSupport'
 license=('custom:NCSAOSL')
@@ -20,8 +20,14 @@ build() {
     -S "$_dirname/lib/comgr" \
     -B build \
     -DCMAKE_INSTALL_PREFIX=/opt/rocm \
-    -DCMAKE_PREFIX_PATH='/opt/rocm/llvm'
+    -DCMAKE_BUILD_TYPE=None \
+    -DBUILD_TESTING=ON \
+    -DCMAKE_PREFIX_PATH=/opt/rocm/llvm
   cmake --build build
+}
+
+check() {
+    cmake --build build --target check-comgr
 }
 
 package() {
