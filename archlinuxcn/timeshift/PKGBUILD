@@ -5,8 +5,8 @@
 # Contributor: Doug Newgard <scimmia22 at outlook dot com>
 # Contributor: Robert Orzanna <orschiro at gmail dot com>
 pkgname=timeshift
-pkgver=22.06.5
-pkgrel=2
+pkgver=22.06.5+12+g92ad80c
+pkgrel=1
 pkgdesc="A system restore utility for Linux"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/linuxmint/timeshift"
@@ -18,7 +18,7 @@ checkdepends=('appstream-glib' 'desktop-file-utils')
 optdepends=('btrfs-progs: BTRFS support'
             'grub-btrfs: BTRFS snapshots in grub')
 install="$pkgname.install"
-_commit=dad9aeb520554b72763c8f016f213077ee71ba55
+_commit=92ad80cb0fba0520846108b021022dfbfd807335  # tags/master.mint21
 source=("git+https://github.com/linuxmint/timeshift.git#commit=$_commit"
 #        "read-only-btrfs-snapshot.patch"
         "snapshot-detect.desktop"
@@ -29,17 +29,15 @@ sha256sums=('SKIP'
 
 pkgver() {
   cd "$srcdir/$pkgname"
-  git describe --tags | sed 's/^v//;s/-/+/g'
+  git describe --tags --exclude master* | sed 's/^v//;s/-/+/g'
 }
 
 prepare() {
   cd "$srcdir/$pkgname"
 
-  # Use -Os for compilation instead of -O3
-  git fetch https://github.com/teejee2008/timeshift.git && git cherry-pick -n 2d52682 --no-commit
-
-  # #939, #937: Fix crash on ArchLinux and Ubuntu 22.10 Kinetic
-  git fetch https://github.com/teejee2008/timeshift.git && git cherry-pick -n 5a78bb7 --no-commit
+  # Recursive make commands should always use the variable MAKE, not the explicit command name make
+  # https://real-world-systems.com/docs/make.1.html#SEC59
+  sed -i 's/make/$(MAKE)/g' makefile
 
   # https://github.com/teejee2008/timeshift/pull/685
   #patch -Np1 -i "$srcdir"/read-only-btrfs-snapshot.patch
@@ -48,7 +46,7 @@ prepare() {
 build() {
   export CFLAGS="${CFLAGS} --std=c99"
 
-  cd "$srcdir/$pkgname/src"
+  cd "$srcdir/$pkgname"
   make app-gtk
   make app-console
 }
