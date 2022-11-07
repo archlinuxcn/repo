@@ -4,15 +4,14 @@
 
 _pkgbase='citra'
 pkgname="$_pkgbase-git"
-pkgver=r9313.4d684174e
+pkgver=r9329.c7e259366
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger (Master branch)"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra/"
 license=('GPL2')
-depends=('boost-libs' 'shared-mime-info' 'desktop-file-utils' 'ffmpeg' 'libfdk-aac' 'libusb' 'sdl2' 'qt5-base' 'qt5-multimedia' 'libxkbcommon-x11')
+depends=('boost-libs' 'shared-mime-info' 'desktop-file-utils' 'ffmpeg' 'libfdk-aac' 'libusb' 'sdl2' 'qt5-base' 'qt5-multimedia' 'libxkbcommon-x11' 'qt5-wayland')
 makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt5-tools')
-optdepends=('qt5-wayland: for Wayland support')
 provides=('citra')
 conflicts=('citra')
 source=("$_pkgbase::git+https://github.com/citra-emu/citra")
@@ -35,20 +34,27 @@ build() {
 	# Trick the compiler into thinking we're building from a continuous
 	# integration tool so the build number is correctly shown in the title
 	cd "$srcdir/$_pkgbase"
-	CXXFLAGS+=" -DFMT_USE_USER_DEFINED_LITERALS=0"
-	
+	export CI=true
+	export TRAVIS=true
+	export TRAVIS_REPO_SLUG=citra-emu/citra
+	export TRAVIS_TAG=$(git rev-list --count HEAD)
+
+    CXXFLAGS+=" -I/usr/include/libusb-1.0"
 	mkdir -p build && cd build
 	cmake .. \
 	  -DCMAKE_INSTALL_PREFIX=/usr \
 	  -DCMAKE_BUILD_TYPE=Release \
 	  -DENABLE_QT_TRANSLATION=ON \
-	  -DCITRA_ENABLE_COMPATIBILITY_REPORTING=ON \
-	  -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
-	  -DUSE_DISCORD_PRESENCE=ON \
-    -DUSE_SYSTEM_BOOST=ON \
-	  -DENABLE_FFMPEG_VIDEO_DUMPER=ON \
-    -DENABLE_MF=OFF \
-    -DENABLE_FDK=ON
+      -DCITRA_ENABLE_COMPATIBILITY_REPORTING=ON \
+      -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
+      -DUSE_DISCORD_PRESENCE=ON \
+      -DENABLE_SCRIPTING=ON \
+      -DENABLE_FFMPEG_VIDEO_DUMPER=ON \
+      -DENABLE_FFMPEG_AUDIO_DECODER=ON \
+      -DUSE_SYSTEM_BOOST=ON \
+      -DUSE_SYSTEM_SDL2=ON \
+      -DENABLE_MF=OFF \
+	  -DENABLE_FDK=ON
 	make
 }
 

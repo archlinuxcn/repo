@@ -11,7 +11,6 @@ url="https://github.com/citra-emu/citra-canary/tree/master"
 license=('GPL2')
 depends=('boost-libs' 'libfdk-aac' 'shared-mime-info' 'desktop-file-utils' 'ffmpeg' 'libusb' 'sdl2' 'qt5-base' 'qt5-multimedia' 'libxkbcommon-x11' 'qt5-wayland')
 makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt5-tools')
-optdepends=('qt5-wayland: for Wayland support')
 provides=('citra')
 conflicts=('citra')
 source=("$_pkgname::git+https://github.com/citra-emu/citra-canary#branch=master")
