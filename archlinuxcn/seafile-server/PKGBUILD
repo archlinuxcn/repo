@@ -16,7 +16,8 @@ depends=(
   'libevhtp-seafile'
   'libarchive'
   libcrypto.so)
-makedepends=('vala')
+# libevhtp-seafile uses oniguruma headers
+makedepends=('vala' 'oniguruma')
 conflicts=('seafile')
 source=(
   "$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver-server.tar.gz"
