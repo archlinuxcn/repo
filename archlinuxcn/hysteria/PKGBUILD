@@ -2,8 +2,8 @@
 
 _pkgbase=hysteria
 pkgname=$_pkgbase
-pkgver=1.2.2
-pkgrel=2
+pkgver=1.3.0
+pkgrel=1
 pkgdesc='A feature-packed network utility optimized for networks of poor quality'
 arch=('x86_64')
 url="https://github.com/HyNetwork/hysteria"
@@ -37,9 +37,9 @@ build() {
   export CGO_CXXFLAGS="${CXXFLAGS} -DLWIP_NOASSERT"
   export CGO_LDFLAGS="${LDFLAGS}"
   local _goldflags="-w -s -linkmode=external"
-  local _goldflags="$_goldflags -X 'main.appVersion=$(git describe --tags)'"
+  local _goldflags="$_goldflags -X 'main.appVersion=$(git describe --tags --always)'"
   local _goldflags="$_goldflags -X 'main.appCommit=$(git rev-parse HEAD)'"
-  local _goldflags="$_goldflags -X 'main.appDate=$(date -u '+%FT%TZ')'"
+  local _goldflags="$_goldflags -X 'main.appDate=$(date -u '+%F %T')'"
   go build \
     -buildmode=pie -trimpath -mod=readonly -modcacherw \
     -o "build/$_pkgbase" \
