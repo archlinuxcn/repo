@@ -2,7 +2,7 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=3081
+pkgver=3098
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
@@ -14,11 +14,16 @@ optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
 source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz"
-"https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml")
-sha256sums=('d77cddb64017f60e348a65d4045a8bfd1fd32a9ff749dd1f3bf10debe3b63ffd'
-            'e76ab2b3566d8135930e570ede5bed3da8f131270b60db818e453d248880bdf2')
+"https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml"
+"git+https://github.com/yuzu-emu/yuzu-mainline.git")
+sha256sums=('afed8f0b0591f3dda2297bd97af502d0741173283f86be10978a1457d55fb90e'
+            'e76ab2b3566d8135930e570ede5bed3da8f131270b60db818e453d248880bdf2'
+            'SKIP')
 
 prepare() {
+  cd "$srcdir/yuzu-mainline"
+  git submodule update --init --recursive
+
   cd "$srcdir/pineapple-src-EA-${pkgver}"
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror$/-W/g' {} +
   #find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*)$/ )/g' {} +
@@ -32,6 +37,19 @@ prepare() {
   sed -i -e 's| (%2)||' src/yuzu/aboutdialog.ui
 
   cp -f  $srcdir/yuzu.xml dist/yuzu.xml
+
+  cp -R $srcdir/yuzu-mainline/externals/xbyak externals/
+  cp -R $srcdir/yuzu-mainline/externals/dynarmic externals/
+  cp -R $srcdir/yuzu-mainline/externals/enet externals/
+  cp -R $srcdir/yuzu-mainline/externals/mbedtls externals/
+  cp -R $srcdir/yuzu-mainline/externals/cubeb externals/
+  cp -R $srcdir/yuzu-mainline/externals/discord-rpc externals/
+  cp -R $srcdir/yuzu-mainline/externals/sirit externals/
+  cp -R $srcdir/yuzu-mainline/externals/inih externals/
+  cp -R $srcdir/yuzu-mainline/externals/Vulkan-Headers externals/
+  cp -R $srcdir/yuzu-mainline/externals/cpp-httplib externals/
+  cp -R $srcdir/yuzu-mainline/externals/cpp-jwt externals/
+  cp -R $srcdir/yuzu-mainline/externals/libressl externals/
 }
 build() {
   cd "$srcdir/pineapple-src-EA-${pkgver}"
