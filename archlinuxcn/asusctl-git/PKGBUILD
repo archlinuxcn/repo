@@ -1,16 +1,16 @@
 # Maintainer: Static_Rocket
 
-pkgname=asusctl-git
-pkgver=4.5.0.rc3.r22.g5f4e950
+pkgbase=asusctl-git
+pkgname=(asusctl-git rog-control-center-git)
+pkgver=4.5.0.rc3.r29.g3654da2
 pkgrel=1
-pkgdesc="Asus laptop control utilities"
+pkgdesc="A control daemon, tools, and a collection of crates for interacting with ASUS ROG laptops"
 arch=('x86_64')
 url="https://gitlab.com/asus-linux/asusctl"
-license=('Mozilla Public License Version 2.0')
-depends=('libusb' 'udev' 'systemd' 'freetype2' 'fontconfig')
-optdepends=('acpi_call: fan control' 'supergfxctl-git: switch graphics card mode')
-makedepends=('git' 'rust' 'cmake')
-provides=('asus-nb-ctrl')
+url="https://gitlab.com/asus-linux/asusctl"
+license=('MPL2')
+makedepends=('cmake' 'git' 'rust' 'gtk3'
+             'hicolor-icon-theme' 'libusb' 'fontconfig' 'systemd' 'power-profiles-daemon')
 replaces=('asus-nb-ctrl-git')
 source=('git+https://gitlab.com/asus-linux/asusctl.git')
 md5sums=('SKIP')
@@ -26,8 +26,42 @@ build() {
 	make build
 }
 
-package() {
-	cd "$_gitdir"
-	make DESTDIR="$pkgdir" install
+_pick() {
+  local p="$1" f d; shift
+  for f; do
+    d="$srcdir/$p/${f#$pkgdir/}"
+    mkdir -p "$(dirname "$d")"
+    mv "$f" "$d"
+    rmdir -p --ignore-fail-on-non-empty "$(dirname "$f")"
+  done
+}
+
+package_asusctl-git() {
+  pkgdesc="${pkgdesc/tools/CLI tools}"
+  depends=('libusb' 'systemd' 'power-profiles-daemon' 'hicolor-icon-theme')
+  install='asusctl.install'
+  optdepends=('acpi_call: fan control'
+            'supergfxctl: hybrid GPU control'
+            'asusctltray: tray profile switcher'
+            'rog-control-center: app to control asusctl')
+  provides=('asusctl')
+  conflicts=('asusctl')
+
+  cd "$_gitdir"
+  make DESTDIR="${pkgdir}" install
+
+  _pick rogcc "${pkgdir}/usr/bin/rog-control-center" \
+     "${pkgdir}/usr/share/applications/rog-control-center.desktop" \
+     "${pkgdir}/usr/share/icons/hicolor/512x512/apps/rog-control-center.png" \
+     "${pkgdir}/usr/share/rog-gui"
+}
+
+package_rog-control-center-git() {
+  depends=('asusctl' 'fontconfig' 'gtk3')
+  provides=('rog-control-center')
+  conflicts=('rog-control-center')
+  pkgdesc="App to control asusctl"
+
+  mv rogcc/* "$pkgdir"
 }
 

@@ -1,0 +1,7 @@
+post_upgrade() {
+  if [ $(systemctl is-active asusd.service) == "active" ]
+    then
+      printf ":: asusd is running, and requires a restart of the service…\n"
+      systemctl restart asusd.service
+  fi
+}
