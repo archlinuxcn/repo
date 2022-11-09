@@ -9,14 +9,14 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=95556
-pkgrel=2
+pkgver=97258
+_tarver=${pkgver}
+pkgrel=1
 arch=('x86_64')
 url='http://virtualbox.org'
-license=('GPL' 'custom')
+license=('GPL' 'custom:CDDL')
 makedepends=('subversion'
              'alsa-lib'
-             'bin86'
              'cdrkit'
              'curl'
              'dev86'
@@ -24,6 +24,7 @@ makedepends=('subversion'
              'git'
              'glu'
              'gsoap'
+             'glslang'
              'iasl'
              'jdk8-openjdk'
              'libidl2'
@@ -69,10 +70,11 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         '004-drop-Wno-format.patch'
         '005-gsoap-build.patch'
         '008-no-vboxvideo.patch'
-        '009-i3wm.patch'
+        '009-properly-handle-i3wm.patch'
         '012-vbglR3GuestCtrlDetectPeekGetCancelSupport.patch'
-        '013-Makefile.patch'
-        '017-fix-narrowing-conversion.patch')
+        '013-support-building-from-dkms.patch'
+        '018-upate-xclient-script.patch'
+        '019-fix-liblzf-linkage.patch')
 
 pkgver() {
   cd "VirtualBox"
@@ -116,22 +118,16 @@ build() {
     source ./env.sh
     kmk
 
-    #echo 'Build rdesktop-vrdp'
-    #kmk -C src/VBox/RDP/client-1.8.4
-
     echo 'Build VNC extension pack'
     kmk -C src/VBox/ExtPacks/VNC packing
-
-    echo 'Build vboximg-mount'
-    kmk -C src/VBox/ImageMounter/vboximg-mount
 }
 
 package_virtualbox-svn() {
     pkgdesc='Powerful x86 virtualization for enterprise as well as home use'
-    depends=('glibc' 'openssl' 'curl' 'gcc-libs' 'libpng' 'python' 'sdl'
-             'libvpx' 'libxml2' 'procps-ng' 'shared-mime-info' 'zlib'
-             'libxcursor' 'libxinerama' 'libx11' 'libxext' 'libxmu' 'libxt'
-             'opus' 'qt5-base' 'qt5-x11extras' 'qt5-tools' 'VIRTUALBOX-HOST-MODULES-SVN')
+    depends=('curl' 'gcc-libs' 'glibc' 'liblzf' 'libpng' 'libtpms' 'libvpx' 'libx11' 'libxcursor'
+             'libxext' 'libxinerama' 'libxml2' 'libxmu' 'libxt' 'openssl' 'procps-ng' 'python'
+             'qt5-base' 'qt5-tools' 'qt5-x11extras' 'sdl' 'shared-mime-info' 'zlib'
+             'VIRTUALBOX-HOST-MODULES-SVN')
     optdepends=('vde2: Virtual Distributed Ethernet support'
                 'virtualbox-guest-iso: Guest Additions CD image'
                 'virtualbox-ext-vnc: VNC server support'
@@ -144,25 +140,25 @@ package_virtualbox-svn() {
     source "VirtualBox/env.sh"
     cd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin"
 
-    # binaries
-    install -dm0755 "$pkgdir/usr/bin"
-    install -m0755 VBox.sh "$pkgdir/usr/bin/VBox"
-    for i in VBoxHeadless VBoxManage VBoxSDL VirtualBox vboxwebsrv VBoxBalloonCtrl; do
-        ln -sf VBox "$pkgdir/usr/bin/$i"
-        ln -sf VBox "$pkgdir/usr/bin/${i,,}"
-    done
-    #install -m0755 VBoxTunctl "$pkgdir/usr/bin"
-    #install -m0755 rdesktop-vrdp "$pkgdir/usr/bin"
-    install -m0755 vboximg-mount "$pkgdir/usr/bin"
-
-    # libraries
-    install -dm0755 "$pkgdir/usr/lib/virtualbox"
-    install -m0755 *.so "$pkgdir/usr/lib/virtualbox"
-    install -m0644 *.r0 VBoxEFI*.fd "$pkgdir/usr/lib/virtualbox"
+    # libraries (and non-PATH executables)
+    install -d -m0755 "${pkgdir}/usr/lib/virtualbox"
+    install -m0755 *.so -t "${pkgdir}/usr/lib/virtualbox"
+    install -m0644 *.r0 VBoxEFI*.fd -t "${pkgdir}/usr/lib/virtualbox"
     ## setuid root binaries
-    install -m4755 VirtualBoxVM VBoxHeadless VBoxNetDHCP VBoxNetAdpCtl VBoxNetNAT -t "$pkgdir/usr/lib/virtualbox"
+    install -m4755 VirtualBoxVM VBoxHeadless VBoxNetAdpCtl VBoxNetDHCP VBoxNetNAT -t "${pkgdir}/usr/lib/virtualbox"
     ## other binaries
-    install -m0755 VirtualBox VBoxManage VBoxSVC VBoxExtPackHelperApp VBoxXPCOMIPCD VBoxTestOGL VBoxBalloonCtrl -t "$pkgdir/usr/lib/virtualbox"
+    install -m0755 VirtualBox VBoxManage VBoxSVC VBoxExtPackHelperApp VBoxXPCOMIPCD VBoxTestOGL VBoxBalloonCtrl vboximg-mount vboxwebsrv webtest -t "${pkgdir}/usr/lib/virtualbox"
+
+    # binaries (in /usr/bin)
+    install -d -m0755 "${pkgdir}/usr/bin"
+    install -m0755 VBox.sh "${pkgdir}/usr/bin/VBox"
+    for i in VirtualBox VirtualBoxVM VBoxManage VBoxHeadless VBoxBugReport VBoxBalloonCtrl VBoxAutostart vboxwebsrv; do
+        ln -sf VBox "${pkgdir}/usr/bin/${i}"
+        ln -sf VBox "${pkgdir}/usr/bin/${i,,}"
+    done
+    for i in vboximg-mount; do
+        ln -s ../lib/virtualbox/"${i}" "${pkgdir}/usr/bin/${i}"
+    done
 
     # components
     install -dm0755 "$pkgdir/usr/lib/virtualbox/components"
@@ -180,10 +176,6 @@ package_virtualbox-svn() {
     # languages
     install -dm0755 "$pkgdir/usr/share/virtualbox/nls"
     install -m0755 nls/*.qm -t "$pkgdir/usr/share/virtualbox/nls"
-
-    # rdesktop keymaps
-    #install -dm0755 "$pkgdir/usr/share/virtualbox/rdesktop-vrdp-keymaps"
-    #install -m0644 rdesktop-vrdp-keymaps/* "$pkgdir/usr/share/virtualbox/rdesktop-vrdp-keymaps"
 
     # useless scripts
     install -m0755 VBoxCreateUSBNode.sh VBoxSysInfo.sh -t "$pkgdir/usr/share/virtualbox"
@@ -211,7 +203,8 @@ package_virtualbox-svn() {
 
     #licence
     install -Dm0644 VirtualBox/COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-
+    install -D -m0644 VirtualBox/COPYING.CDDL "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.CDDL"
+    
     # install systemd stuff
     install -Dm0644 60-vboxdrv.rules "$pkgdir/usr/lib/udev/rules.d/60-vboxdrv.rules"
     install -Dm0644 vboxweb.service "$pkgdir/usr/lib/systemd/system/vboxweb.service"
@@ -243,6 +236,8 @@ package_virtualbox-sdk-svn() {
     # licence
     install -Dm0644 "$srcdir/VirtualBox/COPYING" \
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -D -m0644 "${srcdir}/VirtualBox/COPYING.CDDL" \
+        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.CDDL"
 }
 
 package_virtualbox-host-dkms-svn() {
@@ -262,6 +257,8 @@ package_virtualbox-host-dkms-svn() {
     # licence
     install -Dm0644 "$srcdir/VirtualBox/COPYING" \
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -D -m0644 "${srcdir}/VirtualBox/COPYING.CDDL" \
+        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.CDDL"
     # module loading
     local _p="$pkgdir/usr/lib/modules-load.d/virtualbox-host-dkms.conf"
     install -Dm0644 /dev/null "$_p"
@@ -299,6 +296,7 @@ package_virtualbox-guest-utils-svn() {
     install -Dm0644 virtualbox-guest-utils.sysusers "$pkgdir/usr/lib/sysusers.d/virtualbox-guest-utils.conf"
     # licence
     install -Dm0644 VirtualBox/COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm0644 VirtualBox/COPYING.CDDL "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.CDDL"
 }
 
 package_virtualbox-guest-utils-nox-svn() {
@@ -321,6 +319,8 @@ package_virtualbox-guest-utils-nox-svn() {
     # licence
     install -Dm0644 "$srcdir/VirtualBox/COPYING" \
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm0644 "${srcdir}/VirtualBox/COPYING.CDDL" \
+        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.CDDL"
 }
 
 package_virtualbox-ext-vnc-svn() {
@@ -337,8 +337,9 @@ package_virtualbox-ext-vnc-svn() {
     # licence
     install -Dm0644 "$srcdir/VirtualBox/COPYING" \
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm0644 "${srcdir}/VirtualBox/COPYING.CDDL" \
+        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.CDDL"
 }
-
 sha256sums=('SKIP'
             '76d98ea062fcad9e5e3fa981d046a6eb12a3e718a296544a68b66f4b65cb56db'
             '2101ebb58233bbfadf3aa74381f22f7e7e508559d2b46387114bc2d8e308554c'
@@ -353,10 +354,11 @@ sha256sums=('SKIP'
             'e6e875ef186578b53106d7f6af48e426cdaf1b4e86834f01696b8ef1c685787f'
             '4001b5927348fe669a541e80526d4f9ea91b883805f102f7d571edbb482a9b9d'
             '9ee947c9b5ec5b25f52d3e72340fc3a57ca6e65a604e15b669ac582a3fb0dc1b'
-            '37e77dca542ee07152101fbfa81ab924dc36c19520320410e77df2a68c75cdd8'
+            'f11d8bd17e4e2a13d00a621373a2c26e5703870f110ea7de78c540d7d169e734'
             '7d2da8fe10a90f76bbfc80ad1f55df4414f118cd10e10abfb76070326abebd46'
             '053bfeee8863f3ffdf2f0e3f9f0d77dc61dd32764700a97a7635fd8611e20491'
-            'cd83f4c9f3befb344c7e143aec65550444647890b676d6ea8502d67c7c1b3d93'
+            'c74a5daca598c12d375026fddc557b487d213fe46bb1c8ef1f7b6d1c44500eb4'
             '81900e13d36630488accd8c0bfd2ceb69563fb2c4f0f171caba1cca59d438024'
-            'fb21aafdc0bc14312b9618ebd7550cb7ecf2228486a121c75a0d94bf90ba54fb'
-            '5aac692909a0a0ec56b08bdece9e42cf7463abdca9da2f990d441ff463be6a99')
+            '00f68b86d32a1fada900c2da8dad2ab4215106cd58004f049bded99727cda2ff'
+            '87dddfd9047480e4c2b73367facf5dd3702148418c2efcd606af17c07da90fe0'
+            'df9cc091d577935ea56d86d07be6abf519ab119a3558ded566507083f9d3fea5')

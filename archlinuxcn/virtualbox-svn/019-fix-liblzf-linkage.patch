@@ -1,0 +1,13 @@
+Fix compiling with shared liblzf library by not mangling the needed symbols
+--- a/src/VBox/Runtime/common/zip/zip.cpp	2022-10-07 01:11:55.000000000 +0800
++++ b/src/VBox/Runtime/common/zip/zip.cpp	2022-10-19 22:35:37.996450458 +0800
+@@ -61,7 +61,9 @@
+ # include <zlib.h>
+ #endif
+ #ifdef RTZIP_USE_LZF
++extern "C" {
+ # include <lzf.h>
++}
+ # include <iprt/crc.h>
+ #endif
+ #ifdef RTZIP_USE_LZJB

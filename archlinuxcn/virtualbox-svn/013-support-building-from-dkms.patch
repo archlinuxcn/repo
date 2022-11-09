@@ -1,19 +1,28 @@
+From eb9ded87d9d1a6755f2bb7258641c9c80c54c347 Mon Sep 17 00:00:00 2001
+From: Christian Hesse <mail@eworm.de>
+Date: Mon, 17 Oct 2022 16:30:32 +0200
+Subject: [PATCH] support building from dkms
+
+---
+ src/VBox/HostDrivers/linux/Makefile | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
 diff --git a/src/VBox/HostDrivers/linux/Makefile b/src/VBox/HostDrivers/linux/Makefile
-index 18466b48..7c7de4e5 100644
+index badeb4f4..314281f3 100644
 --- a/src/VBox/HostDrivers/linux/Makefile
 +++ b/src/VBox/HostDrivers/linux/Makefile
-@@ -23,25 +23,25 @@
- # terms and conditions of either the GPL or the CDDL or both.
+@@ -33,25 +33,25 @@
+ # SPDX-License-Identifier: GPL-3.0-only OR CDDL-1.0
  #
-
+ 
 -ifneq ($(KERNELRELEASE),)
 +ifneq ($(KBUILD_EXTMOD),)
-
+ 
 -# Building from kBuild (make -C <kernel_directory> M=`pwd`),
 -# or inside a kernel source tree.
 +# Building from kBuild (make -C <kernel_directory> M=`pwd`).
 +# KBUILD_EXTMOD is set to $(M) in this case.
-
+ 
  obj-m = vboxdrv/
 - ifneq ($(wildcard $(CURDIR)/vboxnetflt/Makefile),)
 + ifneq ($(wildcard $(KBUILD_EXTMOD)/vboxnetflt/Makefile),)
@@ -27,18 +36,19 @@ index 18466b48..7c7de4e5 100644
 + ifneq ($(wildcard $(KBUILD_EXTMOD)/vboxpci/Makefile),)
  obj-m += vboxpci/
   endif
-
+ 
 -else # ! KERNELRELEASE
 +else # ! KBUILD_EXTMOD
-
+ 
 -# convenience Makefile without KERNELRELEASE
 +# convenience Makefile without KBUILD_EXTMOD
-
+ 
  ifndef SUDO
   ifneq ($(shell id -u),0)
-@@ -234,5 +234,5 @@
+@@ -244,5 +244,5 @@ load: unload
  		fi; \
  	done
-
+ 
 -endif # ! KERNELRELEASE
 +endif # ! KBUILD_EXTMOD
+ 
