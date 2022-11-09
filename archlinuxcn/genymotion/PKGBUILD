@@ -6,7 +6,7 @@
 
 pkgname=genymotion
 pkgver=3.3.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Complete set of tools that provides a virtual environment for Android."
 arch=('x86_64')
 url="http://www.genymotion.com/"
@@ -39,4 +39,3 @@ package(){
 
   install -Dm644 $srcdir/virtualbox.conf $pkgdir/etc/modules-load.d/virtualbox.conf
 }
-
