@@ -9,8 +9,7 @@ license=('GPL')
 depends=('libxml2' 'wxwidgets-gtk2' 'zlib' 'libjpeg' 'libpng' 'libtiff')
 makedepends=('python' 'git')
 optdepends=('openmsx')
-source=("git+https://github.com/openMSX/wxcatapult.git"
-        "wx3-fix.diff")
+source=("git+https://github.com/openMSX/wxcatapult.git")
 provides=("openmsx-catapult")
 conflicts=("openmsx-catapult")
 
@@ -35,9 +34,6 @@ build() {
   echo 'INSTALL_SHARE_DIR:=/usr/share/openmsx-catapult' >> build/custom.mk
   echo 'INSTALL_BINARY_DIR:=/usr/bin' >> build/custom.mk
 
-  # Fixes WX Issues. Thanks @pjag
-  patch --forward --strip=1 --input="${srcdir}/wx3-fix.diff"
-
   # Compiling
   make
 }
@@ -55,5 +51,4 @@ package() {
   "${pkgdir}/usr/share/applications/openMSX-Catapult.desktop"
 }
 
-md5sums=('SKIP'
-         'c5b96def2590cef7d5250b0e21f52edc')
+md5sums=('SKIP')
