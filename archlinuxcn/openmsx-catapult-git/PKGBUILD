@@ -6,10 +6,11 @@ pkgdesc="Front-end for openMSX: the MSX emulator that aims for perfection."
 arch=('i686' 'x86_64')
 url="http://openmsx.org"
 license=('GPL')
-depends=('libxml2' 'wxgtk2' 'zlib' 'libjpeg' 'libpng' 'libtiff')
+depends=('libxml2' 'wxwidgets-gtk2' 'zlib' 'libjpeg' 'libpng' 'libtiff')
 makedepends=('python' 'git')
 optdepends=('openmsx')
-source=("git+https://github.com/openMSX/wxcatapult.git")
+source=("git+https://github.com/openMSX/wxcatapult.git"
+        "wx3-fix.diff")
 provides=("openmsx-catapult")
 conflicts=("openmsx-catapult")
 
@@ -21,8 +22,9 @@ pkgver() {
 build() {
   cd "${srcdir}/wxcatapult"
 
-  # Catapult requires python2
-  # sed -i 's@=python@=python2@' build/main.mk
+  # Catapult uses wxwidgets-gtk2
+  sed -i 's@wx-config@wx-config-gtk2@' build/probe.mk
+  sed -i 's@wx-config@wx-config-gtk2@' build/main.mk
 
   # Changing some default configurations...
   sed -i 's@SYMLINK_FOR_BINARY:=true@SYMLINK_FOR_BINARY:=false@' build/custom.mk
@@ -32,6 +34,9 @@ build() {
   echo 'INSTALL_DOC_DIR:=/usr/share/doc/openmsx-catapult' >> build/custom.mk
   echo 'INSTALL_SHARE_DIR:=/usr/share/openmsx-catapult' >> build/custom.mk
   echo 'INSTALL_BINARY_DIR:=/usr/bin' >> build/custom.mk
+
+  # Fixes WX Issues. Thanks @pjag
+  patch --forward --strip=1 --input="${srcdir}/wx3-fix.diff"
 
   # Compiling
   make
@@ -50,4 +55,5 @@ package() {
   "${pkgdir}/usr/share/applications/openMSX-Catapult.desktop"
 }
 
-md5sums=('SKIP')
+md5sums=('SKIP'
+         'c5b96def2590cef7d5250b0e21f52edc')
