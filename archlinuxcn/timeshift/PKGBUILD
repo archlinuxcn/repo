@@ -6,13 +6,13 @@
 # Contributor: Robert Orzanna <orschiro at gmail dot com>
 pkgname=timeshift
 pkgver=22.06.5+12+g92ad80c
-pkgrel=1
+pkgrel=2
 pkgdesc="A system restore utility for Linux"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/linuxmint/timeshift"
 license=('GPL3')
-depends=('cronie' 'gtk3' 'libgee' 'libnotify' 'libsoup' 'rsync' 'vte3' 'xapp'
-         'xorg-xhost')
+depends=('cronie' 'gtk3' 'libgee' 'libnotify' 'libsoup' 'rsync' 'vte3' 'which'
+         'xapp' 'xorg-xhost')
 makedepends=('git' 'vala')
 checkdepends=('appstream-glib' 'desktop-file-utils')
 optdepends=('btrfs-progs: BTRFS support'
@@ -40,7 +40,7 @@ prepare() {
   sed -i 's/make/$(MAKE)/g' makefile
 
   # https://github.com/teejee2008/timeshift/pull/685
-  #patch -Np1 -i "$srcdir"/read-only-btrfs-snapshot.patch
+#  patch -Np1 -i "$srcdir"/read-only-btrfs-snapshot.patch
 }
 
 build() {
