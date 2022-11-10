@@ -41,6 +41,6 @@ package() {
 	install -D ryujinx.desktop "${pkgdir}/usr/share/applications/ryujinx.desktop"
 	install -D ryujinx.png "${pkgdir}/usr/share/icons/hicolor/256x256/apps/ryujinx.png"
 
-	cp -R ${srcdir}/Ryujinx/Ryujinx/bin/Release/net6.0/linux-x64/publish/* "${pkgdir}/opt/ryujinx/"
+	cp -R ${srcdir}/Ryujinx/Ryujinx/bin/Release/net7.0/linux-x64/publish/* "${pkgdir}/opt/ryujinx/"
 	ln -s "/opt/ryujinx/Ryujinx" "${pkgdir}/usr/bin/ryujinx"
 }
