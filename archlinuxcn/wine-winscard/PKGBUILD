@@ -6,8 +6,8 @@
 _pkgname=wine
 pkgname=$_pkgname-winscard
 _scard4wine_commit=7621961210a55b4333f3039bae2355430f9bd8cd
-pkgver=7.0
-pkgrel=2
+pkgver=7.0.1
+pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 
@@ -15,7 +15,7 @@ source=(https://dl.winehq.org/wine/source/7.0/$_pkgname-$_pkgbasever.tar.xz{,.si
         30-win32-aliases.conf
         wine-binfmt.conf
         "scard4wine-yan12125::git+https://git.code.sf.net/u/yan12125/scard4wine.git#commit=$_scard4wine_commit")
-sha512sums=('eec17b046ed5447eb540f421c9b2748d9419ce087496c2743a9914fd27bbe5ff9da0cfe47d3cd76fa97323bd1188a1d82b1eef4968d86ed1957dc1a95e28529c'
+sha512sums=('5a5258132fe30bfb5313454598b85e7d97a74d1e0c7ca7af16aa8c486e316ad34ab74a25fd9a403c98ad1f3280385232f7d159bb824f713e920a4a0dae62c944'
             'SKIP'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
