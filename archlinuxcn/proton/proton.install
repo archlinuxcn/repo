@@ -1,0 +1,16 @@
+#!/bin/sh
+
+post_install() {
+  echo ":: This package, due to the way it is built and packaged is officialy UNSUPPORTED"
+  echo "   by Valve. Please do not bother them if something doesn't run with it."
+  echo "   If something does NOT run with this package, but DOES run with the same official"
+  echo "   version, installed according to upstream instructions, feel free to report it through"
+  echo "   the AUR comment section."
+  echo "   "
+  echo "   This version of Proton is meant to be used with \"steam-native\" from the"
+  echo "   \"steam-native-rutime\" package on Arch Linux"
+}
+
+post_upgrade() {
+  post_install
+}
