@@ -2,7 +2,7 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=3100
+pkgver=3103
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
@@ -15,16 +15,23 @@ provides=('yuzu')
 conflicts=('yuzu')
 source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz"
 "https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml"
-"git+https://github.com/yuzu-emu/yuzu-mainline.git")
-sha256sums=('f6dbef5ae6543ed72e4ab644431deed8f62c6798412156fcba2b45cb75d4546a'
+"https://github.com/pineappleEA/pineapple-src/releases/download/EA-${pkgver}/Windows-Yuzu-EA-${pkgver}.zip")
+sha256sums=('8760b6e9ea01d1a11643ba9b6d14c93ca1a17ffccb1dfbbd94fc9ba1332339e7'
             'e76ab2b3566d8135930e570ede5bed3da8f131270b60db818e453d248880bdf2'
             'SKIP')
 
 prepare() {
-  cd "$srcdir/yuzu-mainline"
-  git submodule update --init --recursive
+  cd "$srcdir/yuzu-windows-msvc-early-access"
+  tar -xvf *.tar.xz
+  cd $(ls *.tar.xz | sed -e 's/.tar.xz//')
+  cp -R .git* $srcdir/pineapple-src-EA-${pkgver}/
 
   cd "$srcdir/pineapple-src-EA-${pkgver}"
+  for i in $(git config --file .gitmodules --get-regexp path | awk '{ print $2 }') ; do
+      rm -rf "$i"
+  done
+  git submodule update --init --recursive
+
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror$/-W/g' {} +
   #find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*)$/ )/g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
@@ -37,19 +44,6 @@ prepare() {
   sed -i -e 's| (%2)||' src/yuzu/aboutdialog.ui
 
   cp -f  $srcdir/yuzu.xml dist/yuzu.xml
-
-  cp -R $srcdir/yuzu-mainline/externals/xbyak externals/
-  cp -R $srcdir/yuzu-mainline/externals/dynarmic externals/
-  cp -R $srcdir/yuzu-mainline/externals/enet externals/
-  cp -R $srcdir/yuzu-mainline/externals/mbedtls externals/
-  cp -R $srcdir/yuzu-mainline/externals/cubeb externals/
-  cp -R $srcdir/yuzu-mainline/externals/discord-rpc externals/
-  cp -R $srcdir/yuzu-mainline/externals/sirit externals/
-  cp -R $srcdir/yuzu-mainline/externals/inih externals/
-  cp -R $srcdir/yuzu-mainline/externals/Vulkan-Headers externals/
-  cp -R $srcdir/yuzu-mainline/externals/cpp-httplib externals/
-  cp -R $srcdir/yuzu-mainline/externals/cpp-jwt externals/
-  cp -R $srcdir/yuzu-mainline/externals/libressl externals/
 }
 build() {
   cd "$srcdir/pineapple-src-EA-${pkgver}"
@@ -83,4 +77,6 @@ build() {
 package() {
 	cd "$srcdir/pineapple-src-EA-${pkgver}/build"
 	DESTDIR="$pkgdir" ninja install
+
+    rm -rf $pkgdir/usr/lib $pkgdir/usr/include 
 }
