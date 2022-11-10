@@ -1,14 +1,14 @@
 # Maintainer: Gregory Land
 
 pkgname=supergfxctl-git
-pkgver=4.0.5.r2.g46f808d
+pkgver=5.0.1.r6.g3ee8fdf
 pkgrel=1
 pkgdesc="A utility for Linux graphics switching on Intel/AMD iGPU + nVidia dGPU laptops"
 arch=('x86_64')
 url="https://gitlab.com/asus-linux/supergfxctl"
 license=('MPL2')
-depends=()
-makedepends=('git' 'rust')
+depends=('systemd-libs')
+makedepends=('git' 'rust' 'systemd')
 provides=('supergfxctl')
 conflicts=('supergfxctl')
 source=('git+https://gitlab.com/asus-linux/supergfxctl.git')
