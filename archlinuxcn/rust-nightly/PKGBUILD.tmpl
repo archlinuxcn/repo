@@ -131,6 +131,7 @@ package_rust-analyzer-nightly() {
   provides=('rust-analyzer')
   conflicts=('rustup' 'rust-analyzer')
   depends=("rust-nightly=$epoch:$pkgver")
+  optdepends=('rust-src')
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/rust-analyzer-preview
   _copy_files rust-analyzer
