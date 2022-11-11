@@ -23,7 +23,7 @@ pkgver=2209
 _build1=8.7.0
 _build2=20616018
 _cart="CART23FQ3_LIN64_${pkgver/./_}"
-pkgrel=1
+pkgrel=2
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
 url='https://www.vmware.com/go/viewclients'
@@ -93,10 +93,9 @@ package_vmware-horizon-client() {
 	conflicts=('vmware-view-open-client' 'vmware-view-open-client-beta' 'vmware-view-client'
 		'vmware-horizon-pcoip' 'vmware-horizon-teams-optimization')
 	replaces=('vmware-horizon-pcoip' 'vmware-horizon-teams-optimization')
-	depends=('gtk3' 'libudev0-shim' 'libxml2' 'libxss'
-		'libxtst' 'openssl' 'binutils' 'glib2' 'expat' 'vmware-keymaps')
+	depends=('binutils' 'expat' 'ffmpeg4.4' 'glib2' 'gtk3' 'libudev0-shim' 'libxml2' 'libxss'
+		'libxtst' 'openssl' 'vmware-keymaps')
 	optdepends=('alsa-lib: audio support via alsa'
-		'ffmpeg4.4: support VAAPI'
 		'freerdp: RDP remote desktop connections'
 		'libpulse: audio support via pulse sound server'
 		'rdesktop: RDP remote desktop connections'
