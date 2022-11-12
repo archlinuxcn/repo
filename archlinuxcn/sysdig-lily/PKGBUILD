@@ -4,8 +4,8 @@
 # Contribuitor: Christian Babeux <christian.babeux@0x80.ca>
 
 pkgname=sysdig-lily
-pkgver=0.29.3
-pkgrel=5
+pkgver=0.30.1
+pkgrel=1
 
 # from src/sysdig-*/cmake/modules/falcosecurity-libs.cmake
 _falcover=0.9.1
@@ -20,9 +20,9 @@ source=("https://github.com/draios/sysdig/archive/$pkgver/sysdig-$pkgver.tar.gz"
         "falcosecurity-libs-$_falcover.tar.gz::https://github.com/falcosecurity/libs/archive/$_falcover.tar.gz"
         "bashcomp-location.patch"
         "falcosecurity-libs-nodownload.patch")
-sha256sums=('6b96797859002ab69a2bed4fdba1c7fe8064ecf8661621ae7d8fbf8599ffa636'
-            '80903bc57b7f9c5f24298ecf1531cf66ef571681b4bd1e05f6e4db704ffb380b'
-            'aaee8a0ff414a24c5d5a479229324be1667bc5eb70702838f5d617fd986f947b'
+sha256sums=('34f78113873983a4d6e8db22ba2cdc3731bf53cb3fcbf1ad14cf28a87ba0f214'
+            'b1591cdf4604312a876efebf0f133f1b34bbb1e9951075d8bab8de2f91f2dff8'
+            '3b659326176c314eee9115adac39a249dc4b9530511b344ea6a2b23236bb8386'
             'b8cedef6766c691a8a92810eb459593d80070f0cf5dfc32cae2a80ec00639429')
 conflicts=(sysdig)
 provides=(sysdig=$pkgver)
