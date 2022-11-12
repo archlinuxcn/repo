@@ -6,7 +6,7 @@
 # Contributor: ahrs
 
 pkgname=mailspring
-pkgver=1.10.5
+pkgver=1.10.6
 pkgrel=1
 pkgdesc="A beautiful, fast and maintained fork of Nylas Mail by one of the original authors."
 arch=('x86_64')
@@ -17,7 +17,7 @@ options=('!strip')
 source=()
 
 source_x86_64=("https://github.com/Foundry376/Mailspring/releases/download/${pkgver}/mailspring-${pkgver}-amd64.deb")
-sha256sums_x86_64=('795c1bec4d380f319da9f1f84fe824be606dbcdee36b8a3cbbb2ef1e4ff9f352')
+sha256sums_x86_64=('890abcbe594e22f6cdf7c3da6a2ad2b7e6977c2114156bdb74ae8bf2389f45cb')
 
 depends=("libxss" "libtool" "c-ares" "ctemplate" "tidy" "libxkbfile" "libsecret" "gtk3" "nss" "libglvnd")
 
