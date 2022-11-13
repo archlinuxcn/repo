@@ -4,7 +4,7 @@
 pkgname=rocm-llvm
 pkgdesc='Radeon Open Compute - LLVM toolchain (llvm, clang, lld)'
 pkgver=5.3.2
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='https://docs.amd.com/bundle/ROCm-Compiler-Reference-Guide-v5.3/page/Overview_of_ROCmCC_Compiler.html'
 license=('custom:Apache 2.0 with LLVM Exception')
@@ -31,7 +31,7 @@ build() {
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX='/opt/rocm/llvm' \
         -DLLVM_HOST_TRIPLE=$CHOST \
-        -DLLVM_BUILD_UTILS=ON \
+        -DLLVM_INSTALL_UTILS=ON \
         -DLLVM_ENABLE_BINDINGS=OFF \
         -DOCAMLFIND=NO \
         -DLLVM_ENABLE_OCAMLDOC=OFF \
