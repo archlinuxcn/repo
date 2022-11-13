@@ -20,10 +20,9 @@ depends=(
 makedepends=(
   cuda
   cython
-  gcc10
   python-pip
   python-pytorch-cuda
-#  python-setuptools
+  python-setuptools
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmcv/archive/v${pkgver}.tar.gz"
 )
@@ -36,8 +35,6 @@ prepare() {
 }
 
 build() {
-  export CC=gcc-10
-  export CXX=g++-10
   cd "${srcdir}/${_pkgname}-${pkgver}"
   MMCV_WITH_OPS=1 \
   python setup.py build

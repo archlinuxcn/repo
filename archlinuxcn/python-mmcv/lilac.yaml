@@ -4,8 +4,6 @@ maintainers:
 build_prefix: extra-x86_64
 
 repo_depends:
-  - gcc10
-  - gcc10: gcc10-libs
   - python-addict
 
 time_limit_hours: 4
@@ -13,10 +11,9 @@ time_limit_hours: 4
 update_on:
   - source: github
     github: open-mmlab/mmcv
-    use_max_tag: true
-    include_regex: 'v(\d+.\d+.\d+)'
+    use_latest_release: true
   - source: manual
-    manual: 3
+    manual: 4
   - alias: python
 # vim:set ts=2 sw=2 et:
 
