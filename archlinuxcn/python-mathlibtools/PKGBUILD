@@ -2,7 +2,7 @@
 
 _pkgname=mathlibtools
 pkgname=python-$_pkgname
-pkgver=1.2.0
+pkgver=1.3.0
 pkgrel=1
 pkgdesc='This package contains leanproject, a supporting tool for Lean mathlib'
 arch=('any')
@@ -24,7 +24,7 @@ depends=(
 makedepends=('python-setuptools')
 optdepends=('lean-community')
 source=("https://pypi.io/packages/source/${_pkgname:0:1}/${_pkgname}/$_pkgname-$pkgver.tar.gz")
-sha256sums=('8c85a23a67b50333797d4682b91ad9fbd204a4e2edaf5e3d516b37598bcfc918')
+sha256sums=('88161287963c318ab38de36def479446be344922a1d31e35a657a679a68e7f2f')
 
 build() {
   cd "$_pkgname-$pkgver"
