@@ -9,7 +9,7 @@ pkgdesc="The GNU Debugger from git"
 arch=(armv7h aarch64 i686 x86_64)
 url="http://www.gnu.org/software/gdb/"
 license=('GPL3')
-makedepends=(git texinfo python "guile>=2.2" "guile<2.3" ncurses expat xz
+makedepends=(git texinfo python guile ncurses expat xz
              mpfr source-highlight readline libelf help2man xxhash boost)
 provides=('gdb-common' 'gdb')
 conflicts=('gdb-common' 'gdb')
@@ -44,7 +44,6 @@ build() {
     --enable-tui \
     --with-system-readline \
     --with-python=/usr/bin/python \
-    --with-guile=guile-2.2 \
     --with-system-gdbinit=/etc/gdb/gdbinit
   make
 }
@@ -59,12 +58,20 @@ package_gdb-common-git() {
 }
 
 package_gdb-git() {
-  depends=(libreadline.so libncursesw.so  "guile>=2.2" "guile<2.3" python
+  depends=(libreadline.so libncursesw.so python
            libexpat.so xz mpfr gmp source-highlight libxxhash.so libelf
            "gdb-common-git=$pkgver")
   provides=('gdb')
   conflicts=('gdb')
   backup=(etc/gdb/gdbinit)
+
+  guilever=$(guile-config --version 2>&1 | sed -n -e 's/.*version *\([0-9]\.[0-9]\).*/\1/p')
+  [[ $guilever =~ ^([0-9]*)\.([0-9]*) ]]
+  maj_ver=${BASH_REMATCH[1]}
+  min_ver=${BASH_REMATCH[2]}
+  ((next_min=min_ver + 1))
+  depends+=("guile>=${guilever}" "guile<${maj_ver}.${next_min}")
+
   cd gdb/build
 
   make -C gdb DESTDIR="$pkgdir" install
