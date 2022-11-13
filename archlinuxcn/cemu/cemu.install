@@ -1,16 +1,30 @@
 post_install() {
 	cat << 'EOF'
-+------------------------------------------------------------------------------+
-| This software is still experimental! Many features are missing (e.g. Online) |
-| and current performance is worse than running through Wine (AUR: cemu-wine)  |
-| and much worse than Windows.                                                 |
++-Cemu-------------------------------------------------------------------------+
+| This software is still experimental! Some features are missing (e.g. Online) |
+| but performance is already great. If you rely on a specific feature you can  |
+| still run the Windows version through Wine (AUR: cemu-wine) although doing   |
+| that is no longer recommended.                                               |
 |                                                                              |
 | This package follows the XDG Base Directory Specification:                   |
-| - Put your keys in your $XDG_CONFIG_HOME (default: ~/.config/cemu/keys.txt)  |
-| - Put your mlc01 in your $XDG_DATA_HOME (default: ~/.local/share/cemu/mlc01) |
+| - Config files (e.g. settings.txt) are found in $XDG_CONFIG_HOME.            |
+|   Default: ~/.config/cemu                                                    |
+| - Data files (e.g. mlc01, keys.txt, log.txt) are found in $XDG_DATA_HOME.    |
+|   Default: ~/.local/share/cemu                                               |
+| - Cache files (e.g. shaderCache) are found in $XDG_CACHE_HOME.               |
+|   Default: ~/.cache/cemu                                                     |
 |                                                                              |
-| Linux specific issues: https://github.com/cemu-project/Cemu/issues           |
-| Arch specific issues:  https://aur.archlinux.org/packages/cemu               |
+| Report Linux issues here: https://github.com/cemu-project/Cemu/issues        |
+| Report Arch issues here:  https://aur.archlinux.org/packages/cemu            |
++------------------------------------------------------------------------------+
+EOF
+}
+
+post_upgrade() {
+	cat << 'EOF'
++-Cemu-------------------------------------------------------------------------+
+| The location of the keys file recently changed from $XDG_CONFIG_HOME to      |
+| $XDG_DATA_HOME (defaults to ~/.local/share/cemu/keys.txt).                   |
 +------------------------------------------------------------------------------+
 EOF
 }
