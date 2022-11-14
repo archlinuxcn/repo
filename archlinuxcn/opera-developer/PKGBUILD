@@ -6,7 +6,7 @@
 # Contributor: totoloco
 
 pkgname=opera-developer
-pkgver=94.0.4597.0
+pkgver=94.0.4604.0
 pkgrel=1
 pkgdesc='A fast and secure web browser and Internet suite - developer stream'
 arch=('x86_64')
@@ -23,7 +23,7 @@ source=(
     "opera"
     "default"
 )
-sha256sums=('3ecc63ef0f3c74bd1f255af7762bed897ca652b7d92f8719c805d4aea74af5f0'
+sha256sums=('2dd3e8983382fb6a1b7fac2ad2b0482024852396a32c41f6789c8a533e38f8a9'
             '508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
             '99fc0d2822edd14e234d451995db47148125e4580221a292598959421d131231')
 
