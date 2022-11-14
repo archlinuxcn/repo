@@ -1,7 +1,7 @@
-From 806dfec5949f583c142d3c599a62134b819ded33 Mon Sep 17 00:00:00 2001
+From 32868a74fcbaaf4e412ede8fbd6dd7df64f7d620 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
-Subject: [PATCH 4/5] Clear soname
+Subject: [PATCH 4/6] Clear soname
 
 ---
  stdlib/LibGit2_jll/src/LibGit2_jll.jl   | 2 +-
@@ -11,7 +11,7 @@ Subject: [PATCH 4/5] Clear soname
  4 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/stdlib/LibGit2_jll/src/LibGit2_jll.jl b/stdlib/LibGit2_jll/src/LibGit2_jll.jl
-index 88480bbd84..ce97776038 100644
+index d672996f96..303f05f097 100644
 --- a/stdlib/LibGit2_jll/src/LibGit2_jll.jl
 +++ b/stdlib/LibGit2_jll/src/LibGit2_jll.jl
 @@ -23,7 +23,7 @@ if Sys.iswindows()
@@ -67,5 +67,5 @@ index e3536021ad..cb375a2c25 100644
  
  function __init__()
 -- 
-2.36.1
+2.38.1
 

@@ -1,7 +1,7 @@
-From 5080681a8cf42dca34945d0e4d269a355cae5721 Mon Sep 17 00:00:00 2001
+From 7f9af6b7888eba4cead65495f9a4a185aeee0ba3 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 19 Jul 2020 09:40:32 -0400
-Subject: [PATCH 2/5] Fix source file paths
+Subject: [PATCH 2/6] Fix source file paths
 
 ---
  base/sysimg.jl          |  7 +++++++
@@ -11,10 +11,10 @@ Subject: [PATCH 2/5] Fix source file paths
  4 files changed, 26 insertions(+), 2 deletions(-)
 
 diff --git a/base/sysimg.jl b/base/sysimg.jl
-index f5a7fb22bf..2abc4ad8d6 100644
+index ef7bad929b..2786eaf22d 100644
 --- a/base/sysimg.jl
 +++ b/base/sysimg.jl
-@@ -94,6 +94,13 @@ let
+@@ -105,6 +105,13 @@ let
  
          print_time("Stdlibs total", tot_time_stdlib)
      end
@@ -29,10 +29,10 @@ index f5a7fb22bf..2abc4ad8d6 100644
      # Clear global state
      empty!(Core.ARGS)
 diff --git a/base/sysinfo.jl b/base/sysinfo.jl
-index f0852f32fc..fccd378a8a 100644
+index 85bf53efba..903e9aae00 100644
 --- a/base/sysinfo.jl
 +++ b/base/sysinfo.jl
-@@ -50,7 +50,7 @@ A string containing the full path to the directory containing the `stdlib` packa
+@@ -52,7 +52,7 @@ A string containing the full path to the directory containing the `stdlib` packa
  global STDLIB::String = "$BINDIR/../share/julia/stdlib/v$(VERSION.major).$(VERSION.minor)" # for bootstrap
  # In case STDLIB change after julia is built, the variable below can be used
  # to update cached method locations to updated ones.
@@ -90,5 +90,5 @@ index 70ee915475..cc96f662e3 100644
                                                jl_string_len(filename));
      fl_gc_handle(fl_ctx, &fl_filename);
 -- 
-2.36.1
+2.38.1
 
