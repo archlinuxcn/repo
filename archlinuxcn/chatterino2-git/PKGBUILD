@@ -1,13 +1,13 @@
 # Maintainer: Ckat <ckat@teknik.io>
 pkgname=chatterino2-git
 _pkgname=chatterino2
-pkgver=r3735.9fbdb936a
+pkgver=r3736.8031f33b5
 pkgrel=1
 pkgdesc='Second installment of the Twitch chat client series "Chatterino", dev/git version'
 arch=('any')
 url=https://chatterino.com
 license=('MIT')
-depends=('qt5-multimedia' 'qt5-base' 'qt5-tools' 'boost-libs' 'openssl' 'qt5-imageformats')
+depends=('qt5-multimedia' 'qt5-base' 'qt5-tools' 'boost-libs' 'openssl' 'qt5-imageformats' 'qtkeychain-qt5')
 makedepends=('git' 'qt5-svg' 'boost' 'cmake')
 optdepends=('streamlink: For piping streams to video players'
             'pulseaudio: For audio output'
@@ -23,13 +23,11 @@ source=("git+https://github.com/Chatterino/chatterino2"
         "git+https://github.com/pajlada/signals"
         "git+https://github.com/pajlada/serialize"
         "git+https://github.com/Tencent/rapidjson"
-        "git+https://github.com/Chatterino/qtkeychain"
         "git+https://github.com/arsenm/sanitizers-cmake"
         "git+https://github.com/zaphoyd/websocketpp"
         "git+https://github.com/Neargye/magic_enum"
         "git+https://github.com/google/googletest.git")
 md5sums=('SKIP'
-         'SKIP'
          'SKIP'
          'SKIP'
          'SKIP'
@@ -57,7 +55,6 @@ prepare () {
     git config submodule.signals $srcdir/$_pkgname/lib/signals
     git config submodule.serialize $srcdir/$_pkgname/lib/serialize
     git config submodule.rapidjson $srcdir/$_pkgname/lib/rapidjson
-    git config submodule.qtkeychain $srcdir/$_pkgname/lib/qtkeychain
     git config submodule.sanitizers-cmake $srcdir/$_pkgname/lib/sanitizers-cmake
     git config submodule.websocketpp $srcdir/$_pkgname/lib/websocketpp
     # We can't set the local directory of this submodule as we have no way of accessing the config name `submodule.magic_enum` because underscores are actually not allowed.
@@ -71,7 +68,7 @@ build() {
     cd "$srcdir/chatterino2"
     mkdir -p build
     cd build
-    cmake -DCMAKE_BUILD_TYPE=Release ..
+    cmake -DCMAKE_BUILD_TYPE=Release -DUSE_SYSTEM_QTKEYCHAIN=ON ..
     if [ -z "$CCACHE_SLOPPINESS" ]; then
         # We need to set the ccache sloppiness for the chatterino build to use it properly
         # This is due to our use of precompiled headers
