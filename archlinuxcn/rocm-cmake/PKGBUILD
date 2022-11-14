@@ -4,24 +4,39 @@
 # Contributor: Ranieri Althoff <ranisalt+aur at gmail.com>
 
 pkgname=rocm-cmake
-pkgver=5.3.0
+pkgver=5.3.2
 pkgrel=1
 pkgdesc='CMake modules for common build tasks needed for the ROCm software stack'
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/rocm-cmake'
 license=('MIT')
 depends=('cmake')
+checkdepends=('git' 'rocm-llvm')
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('659a8327f13e6786103dd562d3632e89a51244548fca081f46c753857cf09d04')
+sha256sums=('e1b3f81def1e23e8e65e8e0b0758cca425897735de07b674871293543cb71f22')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
+
+prepare() {
+    # Git version tests fail with cmake 3.12+
+    rm "$_dirname/test/pass/"{version-norepo.cmake,version-parent.cmake}
+}
 
 build() {
   cmake \
     -Wno-dev \
     -B build \
     -S "$_dirname" \
+    -DCMAKE_BUILD_TYPE=None \
     -DCMAKE_INSTALL_PREFIX=/opt/rocm
   cmake --build build
+}
+
+check() {
+    export GIT_AUTHOR_NAME="builduser"
+    export GIT_AUTHOR_EMAIL="builduser@archlinux.local"
+    export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
+    export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
+    cmake --build build --target check
 }
 
 package() {
