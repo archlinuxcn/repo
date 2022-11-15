@@ -4,7 +4,7 @@
 pkgname=megatools
 pkgver=1.11.0+20220519
 _pkgver=${pkgver/+/.}
-pkgrel=1
+pkgrel=2
 pkgdesc='CLI for MEGA'
 arch=(i686 x86_64 armv6h armv7h aarch64)
 url=https://megatools.megous.com
