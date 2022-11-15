@@ -1,7 +1,7 @@
 # Maintainer: Chih-Hsuan Yen <yan12125@gmail.com>
 
 pkgname=python-onnxoptimizer
-pkgver=0.3.2
+pkgver=0.3.3
 pkgdesc='ONNX model optimizer'
 pkgrel=1
 arch=(x86_64)
