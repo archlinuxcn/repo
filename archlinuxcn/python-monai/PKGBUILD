@@ -1,6 +1,6 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
-_CUDA_ARCH_LIST="5.2;5.3;6.0;6.1;6.2;7.0;7.2;7.5;8.0;8.6;8.6+PTX"
+_CUDA_ARCH_LIST="6.0;6.1;6.2;7.0;7.2;7.5;8.0;8.6;8.6;8.9;9.0;9.0+PTX"
 pkgname=python-monai
 _pkgname=MONAI
 pkgver=1.0.1
@@ -14,7 +14,6 @@ depends=(
   python-numpy
 )
 makedepends=(
-  gcc10
   python-pip
   python-setuptools
   python-wheel
@@ -37,13 +36,11 @@ optdepends=(
   tensorboard
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Project-MONAI/MONAI/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('82857e54a15059656431bbd9fd9194b4b27ad2a2f27b23fc13e65b0f08c876174663fce500f5e88557b3f0762d7f12501292b0131e48d1587c546d893b3125b4')
+sha512sums=('9f96936decb80866aaa440d7736f1e798392819d2361af782b0ec8e86907f844b5a64d92b5347e71a1bf9f56024c9d3f9eaf195c5d7cc2d59ce6e1695f8dd1c9')
 
 build() {
   cd "${_pkgname}-${pkgver}"
   BUILD_MONAI=1 \
-  CC=gcc-10 \
-  CXX=g++-10 \
   FORCE_CUDA=1 \
   TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
   python setup.py build
@@ -52,8 +49,6 @@ build() {
 package() {
   cd "${_pkgname}-${pkgver}"
   BUILD_MONAI=1 \
-  CC=gcc-10 \
-  CXX=g++-10 \
   FORCE_CUDA=1 \
   TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build

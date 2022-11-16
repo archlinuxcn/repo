@@ -3,13 +3,11 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-repo_depends:
-  - gcc10
-  - gcc10: gcc10-libs
-
 update_on:
   - source: github
     github: Project-MONAI/MONAI
     use_latest_release: true
+  - source: manual
+    manual: 1
   - alias: python
 # vim:set ts=2 sw=2 et:
