@@ -4,9 +4,11 @@
 buildarch=8
 
 _rcver=6.1
-_rcrel=3
-_asahirel=1
-pkgrel=12
+_rcrel=5
+_asahirel=9
+pkgrel=1
+
+_m1n1_version=1.1.8
 
 pkgbase=linux-asahi
 #_commit_id=asahi-${_nextver}-${_asahirel}
@@ -26,11 +28,14 @@ options=('!strip')
 source=(
   https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
   config         # the main kernel config file
+  config.edge    # overrides for linux-asahi-edge
 )
-sha256sums=('e2437843610c3f4b17f876bd9b1abaebedc415097c49c15ce7bdc7933461c87c'
-            'bc049d45eb552d7b3a487fba57c2261257dd2cef21a44b4913f0ea0b06cf0b5f')
-b2sums=('d42afcf2392a10034703fb7cb72823a97b4e2c4dd2f809efa69fac6fde948f8f2c5a17d4546ea6974af1f2c24b78ec4f4c82e3f7b0e96513065862a7d8b065a2'
-        'e7f6a0df2b6a30eade41fc231f40072b2e158879d6600eb255f6fc1f78c08d03ca77ca90eca3e73e2c43c9b7b24ea904388f48d32fdacf735e44ceca49996f2c')
+sha256sums=('cd4f2352c3d4a7045e900bf1804b49cf2daf7a23714a8fd5ed9bfaf2651eea4b'
+            '317693819c9a76b8121f897a4aa98ef4471e23174b15cd6ef235429c69374ec6'
+            '6e80401616564843ffdc4d70f94f0db70e87bfeff444c86176b720ad7b9453ca')
+b2sums=('1d0fc5d1873b690407e964f07e4e7e46057bfa5b22f5f0f39f5d1e1fe12e0f4fd0beb7d294cd21482b2032fb6edae25d9654725381c2b613fb2ac43758988bd6'
+        '19338a051dead84802266178f38db7af27028adff2fe066fdb89e8daac27ba1dbaac707743540613dfd289d386fb757e1aab12d25e38e31bef6e8ebafb235301'
+        '723d434de47aea0055dc94ab572765fe715de39c77d75ab9e8fa4f28ccf46fc3ed82230bd5b079f69dd572ca9da615b2c1a8e3d2e423564ad4cf5bfe04418165')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
@@ -50,48 +55,78 @@ prepare() {
     patch -Np1 < "../$src"
   done
 
-  echo "Setting config..."
-  cp ../config .config
-  make olddefconfig
-  diff -u ../config .config || :
+  echo "Creating build directories..."
+  mkdir -p build/base build/edge
 
-  make -s kernelrelease > version
-  echo "Prepared $pkgbase version $(<version)"
+  echo "Setting config (base)..."
+  cp ../config build/base/.config
+  make olddefconfig prepare O=$PWD/build/base
+  diff -u ../config build/base/.config || :
+  make -s kernelrelease O=$PWD/build/base > build/base/version
+
+  echo "Setting config (edge)..."
+  cat build/base/.config ../config.edge > build/edge/.config
+  make olddefconfig prepare O=$PWD/build/edge
+  make -s kernelrelease O=$PWD/build/edge > build/edge/version
+
+  echo "Prepared $pkgbase version $(<build/base/version)"
 }
 
 build() {
   cd $_srcname
-  make all
+  echo "Building base..."
+  make all O=$PWD/build/base
+  echo "Copying objects..."
+  cp build/edge/.config{,.save}
+  touch build/base/.config
+  cp -urT build/{base,edge}
+  rm build/edge/init/version.o
+  make O=$PWD/build/edge oldconfig prepare
+  cp build/edge/.config{.save,}
+  echo "Building edge..."
+  make O=$PWD/build/edge oldconfig prepare
+  make O=$PWD/build/edge all
 }
 
-_origin_package() {
+_origin_package_kernel() {
   pkgdesc="The $pkgdesc kernel and modules"
-  depends=(coreutils kmod initramfs)
+  depends=(coreutils kmod initramfs "m1n1>=$_m1n1_version")
   optdepends=('crda: to set the correct wireless channels of your country'
               'linux-firmware: firmware images needed for some devices')
   provides=(WIREGUARD-MODULE linux=${pkgver})
   replaces=(wireguard-arch)
 
-  cd $_srcname
-  local kernver="$(<version)"
+  local kernver="$(<$O/version)"
   local modulesdir="$pkgdir/usr/lib/modules/$kernver"
 
   echo "Installing boot image..."
   # systemd expects to find the kernel here to allow hibernation
   # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab8128dcf99161d2344
-  install -Dm644 arch/arm64/boot/Image "$modulesdir/vmlinuz"
+  install -Dm644 "$O"/arch/arm64/boot/Image "$modulesdir/vmlinuz"
 
   # Used by mkinitcpio to name the kernel
-  echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
+  echo "$1" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
   echo "Installing modules..."
-  make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 modules_install
+  make O="$O" INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 modules_install
 
   echo "Installing device trees..."
-  install -Dt "$modulesdir/dtbs" arch/arm64/boot/dts/apple/*.dtb
+  install -Dt "$modulesdir/dtbs" "$O"/arch/arm64/boot/dts/apple/*.dtb
 
   # remove build and source links
   rm "$modulesdir"/{source,build}
+}
+
+_package() {
+  cd $_srcname
+  export O="$PWD/build/base"
+  _package_kernel "$pkgbase"
+}
+
+_package-edge() {
+  cd $_srcname
+  export O="$PWD/build/edge"
+  _package_kernel "$pkgbase-edge"
 }
 
 _package-headers() {
@@ -101,11 +136,12 @@ _package-headers() {
   KARCH=arm64
 
   cd $_srcname
+  O=build/base
   local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
 
   echo "Installing build files..."
-  install -Dt "$builddir" -m644 .config Makefile Module.symvers System.map \
-    localversion.* version vmlinux
+  install -Dt "$builddir" -m644 $O/.config $O/Makefile $O/Module.symvers $O/System.map \
+    localversion.* $O/version $O/vmlinux
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
   cp -t "$builddir" -a scripts
 
@@ -116,11 +152,11 @@ _package-headers() {
   #install -Dt "$builddir/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
 
   echo "Installing headers..."
-  cp -t "$builddir" -a include
+  cp -t "$builddir" -a include $O/include
 
   install -Dt "${builddir}/arch/${KARCH}" -m644 arch/${KARCH}/Makefile
-  install -Dt "${builddir}/arch/${KARCH}/kernel" -m644 arch/${KARCH}/kernel/asm-offsets.s
-  cp -t "${builddir}/arch/${KARCH}" -a arch/${KARCH}/include
+  install -Dt "${builddir}/arch/${KARCH}/kernel" -m644 $O/arch/${KARCH}/kernel/asm-offsets.s
+  cp -t "${builddir}/arch/${KARCH}" -a arch/${KARCH}/include $O/arch/${KARCH}/include
 
   install -Dt "$builddir/drivers/md" -m644 drivers/md/*.h
   install -Dt "$builddir/net/mac80211" -m644 net/mac80211/*.h
@@ -179,7 +215,7 @@ _package-headers() {
   ln -sr "$builddir" "$pkgdir/usr/src/$pkgbase"
 }
 
-pkgname=("$pkgbase" "$pkgbase-headers")
+pkgname=("$pkgbase" "$pkgbase-headers" "$pkgbase-edge")
 for _p in "${pkgname[@]}"; do
   eval "package_$_p() {
     $(declare -f "_package${_p#$pkgbase}")
@@ -188,10 +224,10 @@ for _p in "${pkgname[@]}"; do
 done
 
 # vim:set ts=8 sts=2 sw=2 et:
-_package() {
-  _origin_package
+_package_kernel() {
+  _origin_package_kernel
   cd "$srcdir/$_srcname"
-  local kernver="$(<version)"
+  local kernver="$(<$O/version)"
   local modulesdir="$pkgdir/usr/lib/modules/$kernver"
   install -Dm644 "$(make -s image_name)" "$modulesdir/vmlinuz"
   install -Dm644 arch/arm64/boot/Image "$modulesdir/vmlinuz-nogz"
