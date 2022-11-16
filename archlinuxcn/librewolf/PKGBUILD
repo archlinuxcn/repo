@@ -2,7 +2,7 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=106.0.4
+pkgver=107.0
 pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 arch=(x86_64 aarch64)
@@ -25,9 +25,9 @@ options=(!emptydirs !makeflags !strip !lto !debug)
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
 # _source_tag="${pkgver}-${pkgrel%.*}"
 _source_tag="${pkgver}-${pkgrel}"
-_source_commit='9faab3bbf1f9563f79d74d508756cdce4b461bb7'
+_source_commit='3c61a7f27eb18e8412826af2b85eaabe3e5d6a10'
 # _settings_tag='7.2-hotfix'
-_settings_commit='9395f5c0e061250acbcbcb523d2270d57136d411'
+_settings_commit='486637e9dfd1352e427e73eef354d22bfbd026f5'
 install='librewolf.install'
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         $pkgname.desktop
@@ -36,17 +36,17 @@ source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-
         "default192x192.png"
         "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
         "${_arch_git}/0001-libwebrtc-screen-cast-sync.patch"
+        '0001-allow-JXL-in-non-nightly-browser.patch'
         )
-source_aarch64=('https://github.com/mozilla/gecko-dev/commit/60858bce4bb1b426c07ec0e9e7f627f59b8aca45.patch')
-sha256sums=('e619d0f524c95bf78af0008cc22fe284ff398d72fc0b6cc9d8737b3b5a9b9eb7'
+sha256sums=('8a562e5a397b57e9bf383c2988308ab494c5d28844e792c658fedea27756584a'
             'SKIP'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
             'SKIP'
             'SKIP'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1'
             '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d'
-            '5c164f6dfdf2d97f3f317e417aaa2e6ae46a9b3a160c3162d5073fe39d203286')
-sha256sums_aarch64=('19d1a61b903926623a3f5d0db9b63bdbbc191589f8735d3696025abbfd6dd1c4')
+            '5c164f6dfdf2d97f3f317e417aaa2e6ae46a9b3a160c3162d5073fe39d203286'
+            'b6c9026cdfe8c5155af57cf1012f4ab1a08e5860fb0513db90a91e34cdfad7fe')
 
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
@@ -114,6 +114,9 @@ ac_add_options --disable-updater
 
 # wasi
 ac_add_options --with-wasi-sysroot=/usr/share/wasi-sysroot
+
+# experimental JXL support
+ac_add_options --enable-jxl
 END
 
 if [[ $CARCH == 'aarch64' ]]; then
@@ -133,8 +136,6 @@ END
   # patch -Np1 -i ${_patches_dir}/arm.patch # not required anymore?
   # patch -Np1 -i ../${pkgver}-${pkgrel}_build-arm-libopus.patch
 
-  # libav related aarch64 build failure
-  patch -Np1 -i ../60858bce4bb1b426c07ec0e9e7f627f59b8aca45.patch
 else
 
   cat >>../mozconfig <<END
@@ -166,6 +167,9 @@ fi
   # pip issues seem to be fixed upstream?
 
   # LibreWolf
+
+  # experimental: allow enabling JPEG XL in non-nightly browser
+  patch -Np1 -i ${srcdir}/0001-allow-JXL-in-non-nightly-browser.patch
 
   # Remove some pre-installed addons that might be questionable
   patch -Np1 -i ${_patches_dir}/remove_addons.patch

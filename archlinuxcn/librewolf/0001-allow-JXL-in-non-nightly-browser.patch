@@ -1,0 +1,30 @@
+From 55d449fbb8855ce34c047a4b031f0bd1d9f782e8 Mon Sep 17 00:00:00 2001
+From: ohfp <1813007-ohfp@users.noreply.gitlab.com>
+Date: Wed, 16 Nov 2022 09:53:57 +0100
+Subject: [PATCH] allow JXL in non nightly browser
+
+---
+ toolkit/moz.configure | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/toolkit/moz.configure b/toolkit/moz.configure
+index c99b4d628c54..0b1b1614620a 100644
+--- a/toolkit/moz.configure
++++ b/toolkit/moz.configure
+@@ -703,9 +703,10 @@ set_define("MOZ_AV1", av1)
+ option("--disable-jxl", help="Disable jxl image support")
+ 
+ 
+-@depends("--disable-jxl", milestone.is_nightly)
+-def jxl(value, is_nightly):
+-    if is_nightly and value:
++@depends("--disable-jxl")
++def jxl(value):
++    enabled = bool(value)
++    if enabled:
+         return True
+ 
+ 
+-- 
+2.38.1
+
