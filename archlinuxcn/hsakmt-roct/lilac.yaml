@@ -12,8 +12,10 @@ post_build: aur_post_build
 repo_depends:
   - rocm-llvm
 
+makepkg_args: ["--nocheck"]
+
 update_on:
   - source: aur
     aur: hsakmt-roct
   - source: manual
-    manual: 1
+    manual: 2
