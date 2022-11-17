@@ -9,6 +9,11 @@ pre_build: aur_pre_build
 
 post_build: aur_post_build
 
+repo_depends:
+  - rocm-llvm
+
 update_on:
   - source: aur
     aur: hsakmt-roct
+  - source: manual
+    manual: 1
