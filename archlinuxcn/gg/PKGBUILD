@@ -2,7 +2,7 @@
 # Contributor:  mzz2017 < mzz at tuta dot io>
 
 pkgname=gg
-pkgver=0.2.14
+pkgver=0.2.15
 pkgrel=1
 provides=('gg')
 pkgdesc='A command-line tool for one-click proxy in your research and development without installing v2ray or anything else (only for linux).'
@@ -15,7 +15,7 @@ optdepends=('libcap: for setcap')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
         gg-cap
         gg.hook)
-sha256sums=('f1438f2f2d4f376c3cec69d6a822fdf00f8511c56c32f6f48b13ee67b361341c'
+sha256sums=('8fde9a593daa535a186bacf909e41a4154ce666fb7c395bdccf81994c4658089'
             'd1c4f10188f1180b907309e321ef2cb3a5a61e09ac2543809b226c6e40c8e433'
             '7cec4ef2c0681366ec729e673db0411e69da5b08b8d23da7628bd6bac3a233cc')
 install=$pkgname.install
