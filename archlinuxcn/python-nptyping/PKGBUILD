@@ -3,7 +3,7 @@
 
 _pkgname=nptyping
 pkgname=python-nptyping
-pkgver=2.4.0
+pkgver=2.4.1
 pkgrel=1
 pkgdesc='Type hints for Numpy'
 url='https://github.com/ramonhagenaars/nptyping'
@@ -16,7 +16,7 @@ makedepends=(
   python-setuptools
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ramonhagenaars/nptyping/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('ae8875ae4f4b78c8a862e10abe354dd4a49bc8d78a2c08236f7109b2228f2c2a48e06b978e1997e6a7369898aeac73fb7d21e69971acbabccb53058c1aa47fdd')
+sha512sums=('df2694743c5ee349f2dc2b119b38f2d0d5d38b51a0dcf8336c7e17bd9075e05e94d76d01a35156069a6c95310f69bca9040f972a7efa6e7e581503ad77730520')
 
 build() {
   cd ${_pkgname}-${pkgver}
