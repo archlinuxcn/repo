@@ -145,6 +145,33 @@ _apply_patch() {
   patch -Np1 < "../$1"
 }
 
+_patch_suitesparse() {
+  echo "Patching suitesparse version"
+  local cholmod_libs=(/usr/lib/libcholmod.so.*.*.*)
+  local cholmod_maj_ver=
+  local cholmod_min_ver=
+  local cholmod_patch_ver=
+  local lib
+  for lib in "${cholmod_libs[@]}"; do
+    [[ $lib =~ /usr/lib/libcholmod\.so\.([0-9]+)\.([0-9]+)\.([0-9]+) ]] || continue
+    if [[ -z $cholmod_maj_ver ]]; then
+      cholmod_maj_ver=${BASH_REMATCH[1]}
+      cholmod_min_ver=${BASH_REMATCH[2]}
+      cholmod_patch_ver=${BASH_REMATCH[2]}
+    else
+      echo "WARNING: Multiple versions of cholmod libraries found" >&2
+    fi
+  done
+  # Patch the code to assume newer cholmod version. This is generally unsafe
+  # but should be fine for 3->4 according to the suitesparse changelog.
+  for f in usr/share/julia/stdlib/v*/SparseArrays/src/solvers/lib/*.jl; do
+    echo "Updating $f"
+    sed -i -e "s/\(CHOLMOD_MAIN_VERSION *= *\)[0-9]*/\1${cholmod_maj_ver}/" "$f"
+    sed -i -e "s/\(CHOLMOD_SUB_VERSION *= *\)[0-9]*/\1${cholmod_min_ver}/" "$f"
+    sed -i -e "s/\(CHOLMOD_SUBSUB_VERSION *= *\)[0-9]*/\1${cholmod_patch_ver}/" "$f"
+  done
+}
+
 prepare() {
   rm -rf bin/
   mkdir -p bin/
@@ -173,6 +200,7 @@ EOF
     echo "Clearing $f"
     echo > "$f"
   done
+  _patch_suitesparse
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' */Makefile
   sed -i -e 's/\(symlink_system_library,CSL,libquadmath,[0-9]*\))/\1,ALLOW_FAILURE)/g' base/Makefile
 }
