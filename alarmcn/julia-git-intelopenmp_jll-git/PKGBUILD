@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 if [[ $CARCH = x86_64 ]]; then
-  depends+=(intel-mkl)
+  depends+=(intel-oneapi-openmp)
 fi
 provides=(julia-git-intelopenmp_jll)
 source=(git+https://github.com/JuliaBinaryWrappers/IntelOpenMP_jll.jl
@@ -16,7 +16,7 @@ source=(git+https://github.com/JuliaBinaryWrappers/IntelOpenMP_jll.jl
         jll_x86_64.toml)
 md5sums=('SKIP'
          'd41d8cd98f00b204e9800998ecf8427e'
-         '8659ddd6d9f3e7c4e24921335cc7efef')
+         'f91d9637b21861f7e67501ee09614d7b')
 
 pkgver() {
   cd IntelOpenMP_jll.jl
