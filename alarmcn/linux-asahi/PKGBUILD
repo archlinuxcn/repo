@@ -230,5 +230,5 @@ _package_kernel() {
   local kernver="$(<$O/version)"
   local modulesdir="$pkgdir/usr/lib/modules/$kernver"
   install -Dm644 "$(make -s image_name O="$O")" "$modulesdir/vmlinuz"
-  install -Dm644 arch/arm64/boot/Image "$modulesdir/vmlinuz-nogz"
+  install -Dm644 "$O"/arch/arm64/boot/Image "$modulesdir/vmlinuz-nogz"
 }
