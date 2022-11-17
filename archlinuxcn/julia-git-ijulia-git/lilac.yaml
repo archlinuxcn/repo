@@ -20,6 +20,7 @@ repo_depends:
   - julia-git-json-git
   - julia-git-parsers-git
   - julia-git-versionparsing-git
+  - julia-git-snoopcompile-git: julia-git-snoopprecompile-git
 
 update_on:
   - source: vcs
@@ -27,4 +28,4 @@ update_on:
     alpm: julia-git
     provided: julia
   - source: manual
-    manual: 2
+    manual: 3
