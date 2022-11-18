@@ -10,7 +10,7 @@ pkgdesc="A linkable library for Git"
 arch=(i686 x86_64 armv7h aarch64)
 url="https://libgit2.github.com/"
 license=(GPL2)
-depends=(glibc http-parser openssl pcre zlib)
+depends=(glibc http-parser pcre zlib libcrypto.so libssl.so)
 makedepends=(cmake libssh2 python)
 provides=(libgit2.so "libgit2=$epoch:$pkgver")
 conflicts=(libgit2)

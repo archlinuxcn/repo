@@ -11,6 +11,7 @@ pkgrel=4
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 depends=(
   'libsodium' 'libutempter' 'libunwind' 'libprotobuf-lite.so'
+  libcrypto.so libssl.so
 )
 makedepends=(
   'patch' 'cmake' 'unzip' 'wget'
