@@ -21,20 +21,16 @@ _gitname=Tela-circle-icon-theme
 _basename=tela-circle-icon-theme
 pkgdesc="A flat colorful Design icon theme."
 pkgver=348.1960676a
-pkgrel=2
+pkgrel=3
 arch=('any')
 url="https://github.com/vinceliuice/Tela-circle-icon-theme"
 license=('GPL3')
 depends=('gtk-update-icon-cache')
 makedepends=('git')
 options=('!strip')
-source=("git+https://github.com/vinceliuice/${_gitname}.git"
-		"${pkgbase}.hook")
+source=("git+https://github.com/vinceliuice/${_gitname}.git")
 
-b2sums=('SKIP'
-        '0e970d102427c3f92f07dc4b8d73fa99f3a5b24a0fd29c135794bae8a94881ef4922bb33854aca0ed15ba2b066f77f7de680dbe3a0ba7d748c7cce6a9829b8a3')
-
-install="${pkgbase}.hook"
+b2sums=('SKIP')
 
 pkgver() {
 	cd "${srcdir}/${_gitname}"
