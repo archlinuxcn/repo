@@ -1,7 +1,7 @@
 # Maintainer: George Rawlinson <grawlinson@archlinux.org>
 
 pkgname=cargo-make
-pkgver=0.36.1
+pkgver=0.36.3
 pkgrel=1
 pkgdesc='Rust task runner and build tool'
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('Apache')
 depends=('gcc-libs' 'openssl')
 makedepends=('git' 'rust')
 options=('!lto')
-_commit='2d6bb6be3de230fe3b09ca07bea87a50119a3432'
+_commit='25265cea2163de2ddc74cb1d09d93d7b3ecc28f6'
 source=("$pkgname::git+$url.git#commit=$_commit")
 b2sums=('SKIP')
 
