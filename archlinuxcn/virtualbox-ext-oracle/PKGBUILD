@@ -1,19 +1,19 @@
 # Maintainer: Sébastien Luttringer
 
 pkgname=virtualbox-ext-oracle
-pkgver=7.0.2
+pkgver=7.0.4
 pkgrel=1
 pkgdesc='Oracle VM VirtualBox Extension Pack'
 arch=('any')
 url='https://www.virtualbox.org/'
 license=('custom:PUEL')
-depends=('virtualbox')
+depends=("virtualbox=${pkgver}")
 optdepends=('rdesktop: client to connect vm via RDP')
 options=('!strip')
 install=virtualbox-ext-oracle.install
 source=("https://download.virtualbox.org/virtualbox/$pkgver/Oracle_VM_VirtualBox_Extension_Pack-$pkgver.vbox-extpack")
 noextract=("Oracle_VM_VirtualBox_Extension_Pack-$pkgver.vbox-extpack")
-sha256sums=('f692008df0fe03c4d7397b3104e0ef71464385eb911858611c628fa32eb610a4')
+sha256sums=('bf22f698075685e1d71845d76c3b393b45d72e4b0206d7d434338a99d610e14c')
 
 prepare() {
   # shrink uneeded cpuarch
