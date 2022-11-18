@@ -1,28 +1,135 @@
 # Maintainer: Ariel AxionL <i at axionl dot me>
 
-pkgname=tela-circle-icon-theme-git
+pkgbase=tela-circle-icon-theme-git
+pkgname=('tela-circle-icon-theme-all-git'
+         'tela-circle-icon-theme-standard-git'
+         'tela-circle-icon-theme-black-git'
+         'tela-circle-icon-theme-blue-git'
+         'tela-circle-icon-theme-brown-git'
+         'tela-circle-icon-theme-green-git'
+         'tela-circle-icon-theme-grey-git'
+         'tela-circle-icon-theme-orange-git'
+         'tela-circle-icon-theme-pink-git'
+         'tela-circle-icon-theme-purple-git'
+         'tela-circle-icon-theme-red-git'
+         'tela-circle-icon-theme-yellow-git'
+         'tela-circle-icon-theme-manjaro-git'
+         'tela-circle-icon-theme-ubuntu-git'
+         'tela-circle-icon-theme-dracula-git'
+         'tela-circle-icon-theme-nord-git')
 _gitname=Tela-circle-icon-theme
+_basename=tela-circle-icon-theme
 pkgdesc="A flat colorful Design icon theme."
 pkgver=348.1960676a
-pkgrel=1
+pkgrel=2
 arch=('any')
 url="https://github.com/vinceliuice/Tela-circle-icon-theme"
 license=('GPL3')
+depends=('gtk-update-icon-cache')
 makedepends=('git')
 options=('!strip')
+source=("git+https://github.com/vinceliuice/${_gitname}.git"
+		"${pkgbase}.hook")
 
-source=("git+https://github.com/vinceliuice/${_gitname}.git")
+b2sums=('SKIP'
+        '0e970d102427c3f92f07dc4b8d73fa99f3a5b24a0fd29c135794bae8a94881ef4922bb33854aca0ed15ba2b066f77f7de680dbe3a0ba7d748c7cce6a9829b8a3')
 
-sha256sums=('SKIP')
+install="${pkgbase}.hook"
 
 pkgver() {
 	cd "${srcdir}/${_gitname}"
 	echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
 }
-
-package() {
-	cd "${srcdir}/${_gitname}"
-	install -dm755 "${pkgdir}/"usr/share/icons
+prepare() {
+  	cd "${srcdir}/${_gitname}"
 	sed -i '/gtk-update-icon-cache/d' install.sh
-	./install.sh -a -d "${pkgdir}"/usr/share/icons
 }
+
+_package() {
+  	pkgdesc="${pkgdesc} (${1} variant) (git version)"
+	provides=("${_basename}-${1}")
+	conflicts=("${_basename}" 
+		"${_basename}-all" 
+		"${_basename}-all-git" 
+		"${_basename}-${1}"
+	)
+
+	cd "${srcdir}/${_gitname}"
+	install -dm755 "${pkgdir}/usr/share/icons"
+	./install.sh -d "${pkgdir}/usr/share/icons" ${1}
+}
+
+package_tela-circle-icon-theme-all-git() {
+	pkgdesc="${pkgdesc} (all variants) (git version)"
+	provides=("${pkgbase}" "${_basename}-all")
+	for _p in ${pkgname[@]}; 
+		do _p=${_p//-git}; conflicts+=(${_p}); 
+	done
+	replaces=("${pkgbase}")
+
+	cd "${srcdir}/${_gitname}"
+	install -dm755 "${pkgdir}/usr/share/icons"
+	./install.sh -a -d "${pkgdir}/usr/share/icons"
+}
+
+package_tela-circle-icon-theme-standard-git() {
+  	_package standard
+}
+
+package_tela-circle-icon-theme-black-git() {
+  	_package black
+}
+
+package_tela-circle-icon-theme-blue-git() {
+  	_package blue
+}
+
+package_tela-circle-icon-theme-brown-git() {
+  	_package brown
+}
+
+package_tela-circle-icon-theme-green-git() {
+  	_package green
+}
+
+package_tela-circle-icon-theme-grey-git() {
+  	_package grey
+}
+
+package_tela-circle-icon-theme-orange-git() {
+  	_package orange
+}
+
+package_tela-circle-icon-theme-pink-git() {
+  	_package pink
+}
+
+package_tela-circle-icon-theme-purple-git() {
+  	_package purple
+}
+
+package_tela-circle-icon-theme-red-git() {
+  	_package red
+}
+
+package_tela-circle-icon-theme-yellow-git() {
+  	_package yellow
+}
+
+package_tela-circle-icon-theme-manjaro-git() {
+  	_package manjaro
+}
+
+package_tela-circle-icon-theme-ubuntu-git() {
+  	_package ubuntu
+}
+
+package_tela-circle-icon-theme-dracula-git() {
+  	_package dracula
+}
+
+package_tela-circle-icon-theme-nord-git() {
+  	_package nord
+}
+
+# vim:set noet sts=0 sw=4 ts=4 ft=PKGBUILD:
