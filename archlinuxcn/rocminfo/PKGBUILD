@@ -5,7 +5,7 @@
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 
 pkgname=rocminfo
-pkgver=5.3.0
+pkgver=5.3.3
 pkgrel=1
 pkgdesc='ROCm Application for Reporting System Info '
 arch=('x86_64')
@@ -14,7 +14,7 @@ license=('custom:NCSAOSL')
 depends=('pciutils' 'python' 'hsa-rocr')
 makedepends=('rocm-cmake')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('c279da1d946771d120611b64974fde751534e787a394ceb6b8e0b743c143d782')
+sha256sums=('77e6adc81da6c1d153517e1d28db774205531a2ec188e6518f998328ef7897c6')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
 build() {
