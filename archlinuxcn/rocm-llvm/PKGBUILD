@@ -3,8 +3,8 @@
 
 pkgname=rocm-llvm
 pkgdesc='Radeon Open Compute - LLVM toolchain (llvm, clang, lld)'
-pkgver=5.3.2
-pkgrel=2
+pkgver=5.3.3
+pkgrel=1
 arch=('x86_64')
 url='https://docs.amd.com/bundle/ROCm-Compiler-Reference-Guide-v5.3/page/Overview_of_ROCmCC_Compiler.html'
 license=('custom:Apache 2.0 with LLVM Exception')
@@ -12,7 +12,7 @@ makedepends=('cmake' 'python' 'ninja')
 _git='https://github.com/RadeonOpenCompute/llvm-project'
 source=("${pkgname}-${pkgver}.tar.gz::$_git/archive/rocm-$pkgver.tar.gz"
         "glibc2.36.patch")
-sha256sums=('52c2822d3fccdfc124649c088640fcea537cd6f287162eb24c1de6d961b614d4'
+sha256sums=('5296d5e474811c7d1e456cb6d5011db248b79b8d0512155e8a6c2aa5b5f12d38'
             '8b667dd13cabedcdbc8cf2600d08f7a2b69d3f2a8a3b0e3b28c2f91ba3a61c50')
 options=(staticlibs !lto)
 _dirname="$(basename "$_git")-$(basename "${source[0]}" .tar.gz)"
