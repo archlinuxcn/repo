@@ -4112,7 +4112,7 @@
 +}
 +
 +void
-+nsNativeMenuDocListener::NodeWillBeDestroyed(const nsINode *aNode)
++nsNativeMenuDocListener::NodeWillBeDestroyed(nsINode *aNode)
 +{
 +    mDocument = nullptr;
 +}
