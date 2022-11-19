@@ -3,7 +3,7 @@
 pkgname=('mangohud' 'mangoapp' 'mangohud-common')
 pkgbase=mangohud
 pkgver=0.6.8
-pkgrel=2
+pkgrel=3
 _imgui_ver=1.81
 pkgdesc="A Vulkan overlay layer for monitoring FPS, temperatures, CPU/GPU load and more."
 arch=('x86_64')
@@ -30,7 +30,7 @@ prepare() {
   cd "$srcdir/MangoHud"
   git submodule init modules/minhook
   git config submodule.minhook.url "$srcdir/minhook"
-  git submodule update
+  git -c protocol.file.allow=always submodule update
 
   ln -sfv "$srcdir/imgui-${_imgui_ver}" subprojects
 }
