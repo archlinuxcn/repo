@@ -5,12 +5,12 @@
 pkgbase=jellyfin
 pkgname=(jellyfin jellyfin-web jellyfin-server)
 pkgver=10.8.7
-pkgrel=2
+pkgrel=3
 pkgdesc='The Free Software Media System'
 arch=('i686' 'x86_64' 'armv6h')
 url='https://github.com/jellyfin/jellyfin'
 license=('GPL2')
-makedepends=('dotnet-sdk-6.0>=6' 'dotnet-sdk-6.0<7' 'nodejs' 'npm' 'git')
+makedepends=('dotnet-sdk-6.0' 'nodejs' 'npm' 'git')
 source=("jellyfin-$pkgver.tar.gz::https://github.com/jellyfin/jellyfin/archive/v$pkgver.tar.gz"
         "jellyfin-web-$pkgver.tar.gz::https://github.com/jellyfin/jellyfin-web/archive/v$pkgver.tar.gz"
         'jellyfin.conf'
@@ -54,7 +54,7 @@ package_jellyfin() {
 
 package_jellyfin-server() {
   pkgdesc="Jellyfin server component"
-  depends=('dotnet-runtime-6.0>=6' 'dotnet-runtime-6.0<7' 'aspnet-runtime-6.0>=6' 'aspnet-runtime-6.0<7' 'ffmpeg' 'sqlite')
+  depends=('dotnet-runtime-6.0' 'aspnet-runtime-6.0' 'ffmpeg' 'sqlite')
   backup=('etc/conf.d/jellyfin')
 
   mkdir -p "$pkgdir"/usr/lib
