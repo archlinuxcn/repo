@@ -6,7 +6,7 @@
 # Contributor: Ranieri Althoff <ranisalt+aur at gmail.com>
 
 pkgname=hsa-rocr
-pkgver=5.3.2
+pkgver=5.3.3
 pkgrel=1
 pkgdesc='HSA Runtime API and runtime for ROCm'
 arch=('x86_64')
@@ -16,7 +16,7 @@ depends=('libelf' 'hsakmt-roct' 'rocm-device-libs')
 makedepends=('cmake' 'rocm-llvm' 'xxd')
 _git='https://github.com/RadeonOpenCompute/ROCR-Runtime'
 source=("${pkgname}-${pkgver}.tar.gz::$_git/archive/rocm-$pkgver.tar.gz")
-sha256sums=('37280ce692242736ee6d4927a3f4f78fd572db091c29cea38e27543a45b82a49')
+sha256sums=('aca88d90f169f35bd65ce3366b8670c7cdbe3abc0a2056eab805d0192cfd7130')
 _dirname="$(basename "$_git")-$(basename "${source[0]}" .tar.gz)"
 
 build() {
