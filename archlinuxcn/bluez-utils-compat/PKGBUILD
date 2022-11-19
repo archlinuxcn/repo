@@ -6,7 +6,7 @@
 
 pkgname='bluez-utils-compat'
 _pkgbase='bluez'
-pkgver=5.65
+pkgver=5.66
 pkgrel=1
 url="http://www.bluez.org/"
 arch=('i686' 'x86_64' 'mips64el' 'armv6h' 'armv7h' 'arm' 'aarch64')
@@ -20,7 +20,7 @@ provides=('bluez-hcidump' "bluez-utils=${pkgver}" 'bluez-hcitool')
 backup=('etc/bluetooth/mesh-main.conf')
 source=(https://www.kernel.org/pub/linux/bluetooth/"${_pkgbase}-${pkgver}".tar.xz) #{xz,sign})
 # see https://www.kernel.org/pub/linux/bluetooth/sha256sums.asc
-sha256sums=('2565a4d48354b576e6ad92e25b54ed66808296581c8abb80587051f9993d96d4')
+sha256sums=('39fea64b590c9492984a0c27a89fc203e1cdc74866086efb8f4698677ab2b574')
 #validpgpkeys=('E932D120BC2AEC444E558F0106CA9F5D1DCF2659') # Marcel Holtmann <marcel@holtmann.org>
 
 build() {
@@ -67,7 +67,7 @@ package() {
   rm -rf "${pkgdir}"/usr/lib
 
   # ship upstream mesh config file
-  install -dm755 "${pkgdir}"/etc/bluetooth
+  install -dm555 "${pkgdir}"/etc/bluetooth
   install -Dm644 "${srcdir}/${_pkgbase}-${pkgver}"/mesh/mesh-main.conf "${pkgdir}"/etc/bluetooth/mesh-main.conf
   
   # move the hid2hci man page out
