@@ -7,7 +7,7 @@
 
 pkgname=hsa-rocr
 pkgver=5.3.3
-pkgrel=1
+pkgrel=2
 pkgdesc='HSA Runtime API and runtime for ROCm'
 arch=('x86_64')
 url='https://rocmdocs.amd.com/en/latest/Installation_Guide/ROCR-Runtime.html'
@@ -25,6 +25,7 @@ build() {
     -B build \
     -S "$_dirname/src" \
     -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_CXX_FLAGS='-DNDEBUG' \
     -DCMAKE_INSTALL_PREFIX=/opt/rocm \
     -DCMAKE_PREFIX_PATH=/opt/rocm
   cmake --build build
