@@ -1,7 +1,7 @@
 # Maintainer: Sainnhe Park <sainnhe@gmail.com>
 pkgname=neovim-coc-git
 epoch=1
-pkgver=0.0.82.r123.gd227a0f0
+pkgver=0.0.82.r124.gc4e46ef1
 pkgrel=1
 pkgdesc='Intellisense engine for Vim8 & Neovim, full language server protocol support as VSCode'
 arch=('any')
@@ -30,7 +30,7 @@ build() {
 package() {
     cd "${srcdir}/coc.nvim"
     nvim -es --cmd ":helptags doc" --cmd ":q"
-    find autoload build data doc package.json plugin -type f -exec \
+    find autoload bin build data doc package.json plugin -type f -exec \
         install -Dm 644 '{}' "${pkgdir}/usr/share/nvim/runtime/pack/coc/start/coc.nvim/{}" \;
     install -Dm 644 "${srcdir}/coc.nvim/LICENSE.md" \
         "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.md"
