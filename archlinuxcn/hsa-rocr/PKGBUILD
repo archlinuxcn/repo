@@ -7,7 +7,7 @@
 
 pkgname=hsa-rocr
 pkgver=5.3.3
-pkgrel=2
+pkgrel=3
 pkgdesc='HSA Runtime API and runtime for ROCm'
 arch=('x86_64')
 url='https://rocmdocs.amd.com/en/latest/Installation_Guide/ROCR-Runtime.html'
@@ -18,6 +18,7 @@ _git='https://github.com/RadeonOpenCompute/ROCR-Runtime'
 source=("${pkgname}-${pkgver}.tar.gz::$_git/archive/rocm-$pkgver.tar.gz")
 sha256sums=('aca88d90f169f35bd65ce3366b8670c7cdbe3abc0a2056eab805d0192cfd7130')
 _dirname="$(basename "$_git")-$(basename "${source[0]}" .tar.gz)"
+options=(!lto)
 
 build() {
   cmake \
@@ -25,7 +26,6 @@ build() {
     -B build \
     -S "$_dirname/src" \
     -DCMAKE_BUILD_TYPE=None \
-    -DCMAKE_CXX_FLAGS='-DNDEBUG' \
     -DCMAKE_INSTALL_PREFIX=/opt/rocm \
     -DCMAKE_PREFIX_PATH=/opt/rocm
   cmake --build build
