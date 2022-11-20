@@ -4,14 +4,14 @@
 
 pkgname=nvchecker-git
 epoch=1
-pkgver=2.10.r1
+pkgver=2.11dev.r11
 pkgrel=1
 pkgdesc="a tool for checking if a new version of some software has been released."
 arch=('any')
 url="https://github.com/lilydjwg/nvchecker"
 license=('MIT')
 depends=('python' 'python-structlog' 'python-tornado' 'python-pycurl' 'python-tomli' 'python-appdirs')
-makedepends=('git' 'python-setuptools')
+makedepends=('git' 'python-build' 'python-installer' 'python-wheel' 'python-setuptools')
 optdepends=('pyalpm: for "sort_version_key = vercmp" config'
             'python-awesomeversion: for "sort_version_key = awesomeversion" config'
             'python-packaging: for "pypi" source'
@@ -32,12 +32,12 @@ pkgver() {
 
 build() {
   cd $srcdir/$_gitroot
-  python3 setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd $srcdir/$_gitroot
-  python3 setup.py install --root="$pkgdir" --optimize=1 --skip-build
+  python -m installer --destdir="$pkgdir" dist/*.whl
   install -Dm644 sample_config.toml docs/usage.rst -t "$pkgdir/usr/share/doc/$pkgname/"
 }
 
