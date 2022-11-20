@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 from datetime import datetime
 
 from lilaclib import *
@@ -20,6 +21,10 @@ def pre_build():
 
   update_pkgver_and_pkgrel(f'{version}.{dt}')
   run_cmd(['updpkgsums'])
+  # we may have downloaded stale signatures; remove for redownloading
+  for f in os.listdir('.'):
+    if f.endswith('.asc'):
+      os.unlink(f)
 
 def post_build():
   git_add_files('PKGBUILD')
