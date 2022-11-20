@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=labelme
-pkgver=5.1.0
+pkgver=5.1.1
 pkgrel=1
 pkgdesc='Image Polygonal Annotation with Python (polygon, rectangle, circle, line, point and image-level flag annotation).'
 arch=('any')
@@ -22,7 +22,7 @@ makedepends=(
   python-setuptools
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/wkentaro/labelme/archive/v${pkgver}.tar.gz")
-sha512sums=('9a22572af0965a7dec7efa829cfb2c94c21a2da5de57a00473382547f97f4e91712c35516835e409f4beca325a850c1ca58a24ef42d5f239170a13a9f800d8d4')
+sha512sums=('0b84ce2fa09836e555db58b3cb170f5dc71bfe80a50259321c0044dd7ce84b3c493abb7b3571b15ec6e8201c8af2575e9c6d8216a07ad9774e218f66b0c4aad0')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
