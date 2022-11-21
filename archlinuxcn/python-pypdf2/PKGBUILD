@@ -12,19 +12,22 @@ depends=(
   python
 )
 makedepends=(
-  python-setuptools
+  python-build
+  python-flit-core
+  python-installer
+  python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/mstamy2/PyPDF2/archive/${pkgver}.tar.gz")
-sha512sums=('d1742a96db4b1385c0d670c682dd326d2a12e4ef36bff281bdf56b5df463c1a6ae023e40a4c591afc3c7176a73ceb610f23819cdcfebd2ecca7b327c1d21cec3')
+sha512sums=('4405ea7594c2d6ce691a8421f874ac551ae55f03d3bec32e7384ad0385581ecb4bdf1582f7c3f3d7da64871a80c0e5691fc5cdcafc3cb3d88e89225fd30bb788')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
