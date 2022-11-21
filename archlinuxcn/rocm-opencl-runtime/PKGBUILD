@@ -3,7 +3,7 @@
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 
 pkgname=rocm-opencl-runtime
-pkgver=5.3.0
+pkgver=5.3.3
 pkgrel=1
 pkgdesc='OpenCL implementation for AMD'
 arch=('x86_64')
@@ -15,8 +15,8 @@ provides=('opencl-driver')
 _rocclr='https://github.com/ROCm-Developer-Tools/ROCclr'
 source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz"
         "$pkgname-rocclr-$pkgver.tar.gz::$_rocclr/archive/rocm-$pkgver.tar.gz")
-sha256sums=('d251e2efe95dc12f536ce119b2587bed64bbda013969fa72be58062788044a9e'
-            '2bf14116b5e2270928265f5d417b3d0f0f2e13cbc8ec5eb8c80d4d4a58ff7e94')
+sha256sums=('cab394e6ef16c35bab8de29a66b96a7dc0e7d1297aaacba3718fa1d369233c9f'
+            'f8133a5934f9c53b253d324876d74f08a19e2f5b073bc94a62fe64b0d2183a18')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 _rocclr_dir="$(basename "$_rocclr")-$(basename "${source[1]}" .tar.gz)"
 
@@ -28,15 +28,24 @@ build() {
         -DAMD_OPENCL_PATH="$srcdir/$_dirname"
     cmake --build build-rocclr
 
+    # Tests do not compile with strict format security
+    CXXFLAGS=${CXXFLAGS//-Werror=format-security/}
     cmake \
         -Wno-dev \
         -B build \
         -S "$_dirname" \
         -DCMAKE_INSTALL_PREFIX=/opt/rocm \
         -DROCM_PATH=/opt/rocm \
+        -DBUILD_TESTS=ON \
         -DCMAKE_PREFIX_PATH="$srcdir/$_rocclr_dir;/opt/rocm" \
         -DAMD_OPENCL_PATH="$srcdir/$_dirname"
     cmake --build build
+}
+
+check() {
+    # Two test targets are defined: runtime and performance.
+    # Performance tests freeze video output thus we're not calling them here.
+    cmake --build build --target test.ocltst.oclruntime
 }
 
 package() {
