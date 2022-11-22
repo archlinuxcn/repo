@@ -5,9 +5,9 @@
 pkgname=palemoon
 _repo=Pale-Moon
 epoch=1
-pkgver=31.3.1
+pkgver=31.4.0
 # Commit ID can be found at https://repo.palemoon.org/MoonchildProductions/Pale-Moon/tags
-_commit=89e277c709
+_commit=ebb86b36d8
 pkgrel=1
 pkgdesc="Open source web browser based on Firefox focusing on efficiency."
 arch=('i686' 'x86_64')
@@ -26,17 +26,17 @@ validpgpkeys=('3DAD8CD107197488D2A2A0BD40481E7B8FCF9CEC'
               '3059E09144F56804F0FBF4E126B40624BDBFD9F3')
 sha1sums=('SKIP'
           'SKIP'
-          '46ca1b46b59a99084f36ad80bfaff8b8c34fcbcb')
+          '0b75dea3b0873eea46140b3d04bb88bd0e9b3756')
 sha256sums=('SKIP'
             'SKIP'
-            '2237b01b6db7f847b6aa576dc5ed922994a23d4abfacfca2185a5185c5c68faa')
+            'd7d6a0ab2fb7f1dd4c56d429d718a03fa466c4b3cc18d89de31bef668b5c9675')
 
 prepare() {
   sed 's#%SRCDIR%#'"${srcdir}"'#g' mozconfig.in > mozconfig
   cd ${_repo}
   git submodule init
   git config submodule.platform.url "${srcdir}/UXP"
-  git submodule--helper update
+  git -c protocol.file.allow=always submodule update
 }
 
 build() {
