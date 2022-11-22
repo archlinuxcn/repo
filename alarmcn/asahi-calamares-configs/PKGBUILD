@@ -1,15 +1,15 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=asahi-calamares-configs
-pkgver=20220712
+pkgver=20221122
 pkgrel=1
 pkgdesc='Asahi Linux Calamares setup configs'
 arch=('any')
 url='http://asahilinux.org'
 license=('MIT')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AsahiLinux/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('27f79ac4e03848fecb6535d1301ef3e2757271fcfaa08c0eeb2296e3835b052d')
-b2sums=('87d95405b7438ec7a9f9f19bc391979c75012ed7716c29bbfea9f9fff76fcb06ae419e01afe43d74215a0357bf1969963dbbc56bf3c5b6156a68f57a3af5ec23')
+sha256sums=('5def9747efe95b84bdfd9fd90772691d21dcfaad199609849ee393edcbb5107a')
+b2sums=('9fe6337566f4b5fc5e26f35dab58d74ebf45db12a454842f74e2eb6fe0ed159bc20ae06b96745f946b245f4216ba7d70405a49c065aa3dad041dc940269eeb53')
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
