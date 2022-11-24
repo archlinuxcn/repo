@@ -2,7 +2,7 @@
 
 _pkgname=3dslicer
 pkgname=3dslicer
-pkgver=5.2.0
+pkgver=5.2.1
 pkgrel=1
 pkgdesc='A free, open source and multi-platform software package widely used for medical, biomedical, and related imaging research'
 arch=('x86_64')
