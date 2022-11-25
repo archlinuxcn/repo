@@ -67,7 +67,7 @@ build() {
 
 _package() {
   options=('strip' 'debug')
-  pkgdesc="The $pkgdesc kernel and modules (cjktty, uksm, android binder, default bbr)"
+  pkgdesc="The $pkgdesc kernel and modules (cjktty, android binder, default bbr)"
   depends=(coreutils kmod initramfs)
   optdepends=('wireless-regdb: to set the correct wireless channels of your country'
               'linux-firmware: firmware images needed for some devices')
