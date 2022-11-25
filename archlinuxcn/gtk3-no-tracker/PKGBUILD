@@ -4,7 +4,7 @@
 pkgbase=gtk3-no-tracker
 pkgname=(gtk3-no-tracker)
 pkgver=3.24.35
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="GObject-based multi-platform GUI toolkit"
 url="https://www.gtk.org/"
@@ -65,6 +65,14 @@ pkgver() {
 
 prepare() {
   cd gtk
+
+  # Crash in gnome-screenshot
+  # https://gitlab.gnome.org/GNOME/gtk/-/issues/4456
+  git cherry-pick -n e413f5c43259a22269aa1e75767dd545e10119b5
+
+  # https://bugs.archlinux.org/task/76651
+  # https://gitlab.gnome.org/GNOME/gtk/-/issues/5365
+  git cherry-pick -n 3f1536632f682c355d0c3abe1afc80cf975c2cce
 }
 
 build() {
