@@ -1,16 +1,16 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-lily
-pkgver=5.15.60
+pkgver=6.0.9
 pkgrel=1
 pkgdesc='Linux-lily'
 url="https://www.kernel.org/"
 arch=(x86_64)
 license=(GPL2)
 makedepends=(
-  bc kmod libelf pahole cpio perl tar xz
+  bc libelf pahole cpio perl tar xz
+  # xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick texlive-latexextra
   parallel git
-  # xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick
 )
 options=('strip' 'debug')
 STRIP_BINARIES=-S
@@ -67,11 +67,11 @@ build() {
 
 _package() {
   options=('strip' 'debug')
-  pkgdesc="The $pkgdesc kernel and modules (cjktty, uksm, android ashmem and binder, default bbr)"
+  pkgdesc="The $pkgdesc kernel and modules (cjktty, uksm, android binder, default bbr)"
   depends=(coreutils kmod initramfs)
-  optdepends=('crda: to set the correct wireless channels of your country'
+  optdepends=('wireless-regdb: to set the correct wireless channels of your country'
               'linux-firmware: firmware images needed for some devices')
-  provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
+  provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE)
   replaces=(virtualbox-guest-modules-lily wireguard-lily)
 
   cd $_srcname
@@ -127,11 +127,11 @@ _package-headers() {
   install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
   cp -t "$builddir" -a scripts
 
-  # add objtool for external module building and enabled VALIDATION_STACK option
+  # required when STACK_VALIDATION is enabled
   install -Dt "$builddir/tools/objtool" tools/objtool/objtool
 
-  # add xfs and shmem for aufs building
-  mkdir -p "$builddir"/{fs/xfs,mm}
+  # required when DEBUG_INFO_BTF_MODULES is enabled
+  install -Dt "$builddir/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
 
   echo "Installing headers..."
   cp -t "$builddir" -a include
@@ -175,7 +175,7 @@ _package-headers() {
   echo "Stripping build tools..."
   local file
   while read -rd '' file; do
-    case "$(file -bi "$file")" in
+    case "$(file -Sib "$file")" in
       application/x-sharedlib\;*)      # Libraries (.so)
         strip -v $STRIP_SHARED "$file" ;;
       application/x-archive\;*)        # Libraries (.a)
