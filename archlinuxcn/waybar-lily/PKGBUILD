@@ -1,0 +1,61 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Brett Cornwall <ainola@archlinux.org>
+# Contributor: Maxim Baz <$pkgname at maximbaz dot com>
+
+pkgname=waybar-lily
+pkgver=0.9.16
+pkgrel=1
+pkgdesc='Highly customizable Wayland bar for Sway and Wlroots based compositors, with less modules and deps, for PulseAudio users'
+arch=('x86_64')
+url="https://github.com/Alexays/Waybar/"
+license=('MIT')
+depends=(
+    'gtkmm3'
+    'libjsoncpp.so'
+    'libsigc++'
+    'fmt'
+    'wayland'
+    'libdate-tz.so'
+    'libspdlog.so'
+    'gtk-layer-shell'
+    'libpulse'
+    'libnl'
+    'libappindicator-gtk3'
+    'libdbusmenu-gtk3'
+    'libxkbcommon'
+)
+makedepends=(
+    'cmake'
+    'catch2'
+    'meson'
+    'scdoc' # For generating manpages
+    'wayland-protocols'
+)
+backup=(
+    etc/xdg/waybar/config
+    etc/xdg/waybar/style.css
+)
+optdepends=(
+    'otf-font-awesome: Icons in the default configuration'
+)
+source=("$pkgname-$pkgver.tar.gz::https://github.com/Alexays/Waybar/archive/$pkgver.tar.gz")
+sha256sums=('37ebd7b10e32e802afe9236ea9374fabb77b1abb2c203ca6173b27dc03128096')
+provides=(waybar=$pkgver)
+conflicts=(waybar)
+
+build() {
+    cd "Waybar-$pkgver"
+    # TODO tests depend on catch2 v3
+    meson --prefix=/usr \
+          --buildtype=plain \
+          --wrap-mode=nodownload \
+          -Dtests=disabled \
+          build
+    ninja -C build
+}
+
+package() {
+    cd "Waybar-$pkgver"
+    DESTDIR="$pkgdir" ninja -C build install
+    install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
+}
