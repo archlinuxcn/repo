@@ -2,7 +2,7 @@
 
 _pkgbase=hysteria
 pkgname=$_pkgbase
-pkgver=1.3.0
+pkgver=1.3.1
 pkgrel=1
 pkgdesc='A feature-packed network utility optimized for networks of poor quality'
 arch=('x86_64')
@@ -45,7 +45,7 @@ build() {
     -o "build/$_pkgbase" \
     -ldflags "$_goldflags" \
     -tags=gpl \
-    ./cmd
+    ./app/cmd
 }
 
 #check() {
