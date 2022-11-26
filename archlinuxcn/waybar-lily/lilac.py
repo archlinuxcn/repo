@@ -1,4 +1,4 @@
-from lilaclib import update_pkgver_and_pkgrel, git_pkgbuild_commit, _G
+from lilaclib import *
 
 def pre_build():
   update_pkgver_and_pkgrel(_G.newver)
