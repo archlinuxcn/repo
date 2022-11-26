@@ -1,16 +1,17 @@
 _pkgname=ydotool
 pkgname=$_pkgname-git
 pkgver=1.0.1.r2.g1d5d227
-pkgrel=3
+pkgrel=4
 pkgdesc="Generic command-line automation tool (no X!), works on Wayland & tty"
 arch=('x86_64')
 makedepends=('cmake' 'git' 'make' 'pkg-config' 'scdoc')
 url="https://github.com/ReimuNotMoe/ydotool"
 license=('AGPL3')
 source=(${_pkgname}::git+https://github.com/ReimuNotMoe/ydotool.git
-        66-uinput.rules)
+        66-uinput.rules uinput.conf)
 sha256sums=('SKIP'
-            'be97caf82374a487acc618b84a502613d6c219b73991c8d764f6b6b41617f740')
+            'be97caf82374a487acc618b84a502613d6c219b73991c8d764f6b6b41617f740'
+            'a771c9695d7283f7771adc00b680bd27391e6ac00e9fd026f4796067ee9a87eb')
 provides=($_pkgname)
 conflicts=($_pkgname)
 
@@ -38,4 +39,5 @@ package() {
   cd "$srcdir/${_pkgname}"
   make DESTDIR="$pkgdir" install -C build
   install -Dm644 ../66-uinput.rules "$pkgdir"/usr/lib/udev/rules.d/66-uinput.rules
+  install -Dm644 ../uinput.conf "$pkgdir"/usr/lib/modules-load.d/uinput.conf
 }
