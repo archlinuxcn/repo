@@ -7,18 +7,10 @@ Wants = network-online.target
 [Service]
 Type = simple
 EnvironmentFile = -/etc/default/netbird
-ExecStartPre = +-/usr/bin/chown netbird:netbird -R /etc/netbird
 ExecStart = /usr/bin/netbird service run --config /etc/netbird/%i.json --log-file console $NETBIRD_CLIENT_ARGS
 Restart = on-failure
 RestartSec = 5
 TimeoutStopSec = 10
-
-User = netbird
-RuntimeDirectory = netbird
-ConfigurationDirectory = netbird
-
-AmbientCapabilities = CAP_NET_ADMIN CAP_SYS_MODULE
-CapabilityBoundingSet = CAP_NET_ADMIN CAP_SYS_MODULE
 
 DevicePolicy = closed
 LockPersonality = yes
