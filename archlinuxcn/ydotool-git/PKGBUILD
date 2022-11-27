@@ -38,6 +38,6 @@ build() {
 package() {
   cd "$srcdir/${_pkgname}"
   make DESTDIR="$pkgdir" install -C build
-  install -Dm644 ../66-uinput.rules "$pkgdir"/usr/lib/udev/rules.d/66-uinput.rules
-  install -Dm644 ../uinput.conf "$pkgdir"/usr/lib/modules-load.d/uinput.conf
+  install -Dm644 ../66-uinput.rules "$pkgdir"/usr/lib/udev/rules.d/66-uinput-ydotool.rules
+  install -Dm644 ../uinput.conf "$pkgdir"/usr/lib/modules-load.d/uinput-ydotool.conf
 }
