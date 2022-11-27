@@ -9,7 +9,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=107.0.5304.110
+pkgver=107.0.5304.121
 pkgrel=1
 _launcher_ver=8
 _gcc_patchset=1
@@ -37,7 +37,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         REVERT-roll-src-third_party-ffmpeg-m106.patch
         angle-wayland-include-protocol.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('d33548074a62ee63b3b790fc7cfdf5a1935cc43f1b05306b89a89e489696fecc'
+sha256sums=('12b0ab045715a18abaf0c833c98c1001a43da4aae9690bb571b369d61f74e08b'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '2b26c16f8326803ef287fb443a17bc139a440673955c5a6a38e9368bcaeed7c4'
             'b908f37c5a886e855953f69e4dd6b90baa35e79f5c74673f7425f2cdb642eb00'
@@ -58,7 +58,7 @@ source=(${source[@]}
         remove-main-main10-profile-limit.patch
         chromium-drirc-disable-10bpc-color-configs.conf)
 sha256sums=(${sha256sums[@]}
-            'c497b0f3256a3c0bb1e48dd14115040b97bd7319b9def1c6501f9155fc56fef6'
+            '0c729f29fbfc655fca477862daa7b73b041fc3e3d594b01d07fc709657e79d52'
             'e9e8d3a82da818f0a67d4a09be4ecff5680b0534d7f0198befb3654e9fab5b69'
             'fc810e3c495c77ac60b383a27e48cf6a38b4a95b65dd2984baa297c5df83133c'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb')
