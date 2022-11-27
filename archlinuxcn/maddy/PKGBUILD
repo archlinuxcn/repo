@@ -8,6 +8,7 @@ url="https://github.com/foxcpp/maddy"
 license=('GPL3')
 depends=('glibc' 'pam')
 makedepends=('go' 'git' 'scdoc')
+options=('!lto')
 backup=("etc/maddy/maddy.conf")
 provides=("maddy" "maddyctl" "maddy-pam-helper" "maddy-shadow-helper")
 source=("https://github.com/foxcpp/maddy/releases/download/v${pkgver}/${pkgname}-${pkgver}-src.tar.zst"{,.sig}
