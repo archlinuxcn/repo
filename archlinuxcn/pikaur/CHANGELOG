@@ -1938,3 +1938,45 @@ Thu Oct 27 17:26:44 2022 +0200
     Notable changes:
      2022-10-27 a8afb44 actionless fix(pikaur: pacman: get_print_format_output; install_info_fetcher: get_repo_pkgs_info): still check deps when needed (re: #665, #656)
      2022-10-27 feb6347 actionless fix(install_info_fetcher; update: print_upgradeable): don't fetch update info twice when printing ignored packages
+
+
+Fri Nov 25 20:21:19 2022 +0100
+-------------------------------------------------
+1.14            Relase 1.14
+    
+    Notable changes:
+     2022-11-25 a8cc477 actionless fix(build): always remove installed build deps when build fails also improve exception types being raised
+     2022-11-25 02ace37 actionless feat(pkg_cache_cli): improve message when removing cache
+     2022-11-24 1b50155 actionless feat(urllib: read_bytes_from_url, read_gzip_from_url): a bit more sane behavior with --noconfirm flag
+     2022-11-24 49d77a8 actionless feat(pkg_cache_cli): improve message when cache dir is already empty
+     2022-11-24 3a28899 actionless feat(main: cli_clean_pkg_cache): when running `-Scc --noconfirm` always default everything to yes
+     2022-11-24 f220c6a actionless fix(install_info_fetcher: _get_install_pkgs_info): correctly ask user to continue
+     2022-11-10 933f2b0 Bundy01 chore(po): update fr and es (#674)
+
+
+Fri Nov 25 20:57:25 2022 +0100
+-------------------------------------------------
+1.14.1          Hotfix release 1.14.1
+    
+    refactor(core: datatype): chaining classmethod descriptors (introduced in python 3.9) will be deprecated in 3.11
+      https://docs.python.org/3.11/whatsnew/3.11.html#language-builtins
+
+
+Sat Nov 26 08:31:02 2022 +0100
+-------------------------------------------------
+1.14.2          Release 1.14.2
+    
+    Notable changes:
+     2022-11-26 0fed425 actionless fix(pkgbuild): remove prev built wheels before building a new one
+     2022-11-26 9c21455 actionless fix(build, config, core): remove runtime dependency on `typing_extensions`
+     2022-11-26 2bdb925 actionless fix(pprint: create_debug_logger): use `X is not None` except of `not X`
+     2022-11-26 a50ae21 actionless fix(main: OutputEncodingWrapper): reraise exception before stderr closes
+     2022-11-26 a8f3af6 actionless fix(InstallInfoFetcher: get_repo_pkgs_info): correctly determine if pkg already processed
+
+
+Sat Nov 26 21:27:02 2022 +0100
+-------------------------------------------------
+1.14.3          Hotfix release 1.14.3
+    
+    2022-11-26 376b3cc actionless chore(pkgbuild): fix dep chain problem
+    with python-pep517
