@@ -4,7 +4,7 @@
 pkgname=rocm-llvm
 pkgdesc='Radeon Open Compute - LLVM toolchain (llvm, clang, lld)'
 pkgver=5.3.3
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='https://docs.amd.com/bundle/ROCm-Compiler-Reference-Guide-v5.3/page/Overview_of_ROCmCC_Compiler.html'
 license=('custom:Apache 2.0 with LLVM Exception')
@@ -31,16 +31,27 @@ build() {
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX='/opt/rocm/llvm' \
         -DLLVM_HOST_TRIPLE=$CHOST \
+        -DLLVM_ENABLE_PROJECTS='llvm;clang;compiler-rt;lld' \
+        -DLLVM_TARGETS_TO_BUILD='AMDGPU;X86' \
         -DLLVM_INSTALL_UTILS=ON \
         -DLLVM_ENABLE_BINDINGS=OFF \
+        -DLLVM_LINK_LLVM_DYLIB=OFF \
+        -DLLVM_BUILD_LLVM_DYLIB=OFF \
+        -DLLVM_LINK_LLVM_DYLIB=OFF \
+        -DLLVM_ENABLE_ASSERTIONS=ON \
         -DOCAMLFIND=NO \
         -DLLVM_ENABLE_OCAMLDOC=OFF \
         -DLLVM_INCLUDE_BENCHMARKS=OFF \
-        -DLLVM_BUILD_TESTS=OFF \
-        -DLLVM_ENABLE_PROJECTS='llvm;clang;compiler-rt;lld' \
-        -DLLVM_TARGETS_TO_BUILD='AMDGPU;X86' \
+        -DLLVM_BUILD_TESTS=ON \
+        -DLLVM_INCLUDE_TESTS=ON \
+        -DCLANG_INCLUDE_TESTS=ON \
         -DLLVM_BINUTILS_INCDIR=/usr/include
     cmake --build build
+}
+
+check() {
+    LD_LIBRARY_PATH="$PWD/build/lib" \
+    cmake --build build --target check-llvm{,-unit} check-clang{,-unit} check-lld
 }
 
 package() {
