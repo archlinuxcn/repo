@@ -3,8 +3,8 @@
 # Contributor: Astro Benzene <universebenzene at sina dot com>
 
 pkgname=astrometry.net
-pkgver=0.91
-pkgrel=3
+pkgver=0.92
+pkgrel=1
 pkgdesc="Automatic recognition of astronomical images. Compiled with -march=x86-64 -mtune=core2 for most modern x86-64 CPUs."
 arch=('x86_64')
 url="http://astrometry.net/"
@@ -18,7 +18,7 @@ optdepends=(
 backup=(etc/astrometry.cfg)
 install=astrometry.net.install
 source=("https://github.com/dstndstn/astrometry.net/releases/download/${pkgver}/astrometry.net-${pkgver}.tar.gz")
-sha1sums=('c02a6f7b3b4754ac052fe74b9c00be804950a357')
+sha1sums=('a043e404e78f8e3b2bdfd2b2a69eb0266112b8be')
 
 prepare() {
     cd ${pkgname}-${pkgver}
