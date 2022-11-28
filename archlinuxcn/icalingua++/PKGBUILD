@@ -1,7 +1,7 @@
 pkgname=icalingua++
 _pkgname=icalingua
 pkgver=2.7.7
-pkgrel=1
+pkgrel=2
 pkgdesc='A branch of deleted Icalingua,with limited support'
 license=('AGPL3')
 depends=('ffmpeg' 'electron' 'libappindicator-gtk3')
@@ -28,7 +28,7 @@ package() {
 }
 sha256sums=('84c8585e8c18504ed83b0d199831b55b9f8f0eb0a5aa4cb9e3dc01b4a17d0e38'
             '43da1c99b7a6aee974c20da3bcf925b660dff4ba44a447c86066c84c8bc95fbd'
-            '71a583dae6d4352481bed0062c82558c627be0dd4917f2179e7d41c46d51d5eb')
+            '33a02b61af9cd48abd332b6a13964c939649c7ec089bc1a1aca4014bbb8785d2')
 sha256sums_aarch64=('ea9bdf00389312e32b95278c39b7fbca5f6d4994c620cf06e9b69cfa5fbe6298')
 sha256sums_x86_64=('c84dc847f2445316a508f31e5cfb71c6fdadec94409560b1511dce81ef8f47a6')
 sha256sums_i686=('cfdd74ea231735e2ac31152721cd036c246cc203bd44baee66975611c785b47e')
