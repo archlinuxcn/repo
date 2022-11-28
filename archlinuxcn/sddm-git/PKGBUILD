@@ -4,7 +4,7 @@
 _pkgbase="sddm"
 pkgname="$_pkgbase-git"
 pkgver=0.19.0.170.g3e486499
-pkgrel=1
+pkgrel=2
 pkgdesc="The Simple Desktop Display Manager"
 arch=("x86_64")
 url="https://github.com/sddm/sddm"
@@ -37,7 +37,8 @@ build() {
         -DCMAKE_INSTALL_LIBEXECDIR=/usr/lib/sddm \
         -DDBUS_CONFIG_DIR=/usr/share/dbus-1/system.d \
         -DDBUS_CONFIG_FILENAME=sddm_org.freedesktop.DisplayManager.conf \
-        -DBUILD_MAN_PAGES=ON
+        -DBUILD_MAN_PAGES=ON \
+        -DUID_MAX=60513
   cmake --build build
 }
 
@@ -50,7 +51,7 @@ package() {
   install -d "$pkgdir"/usr/lib/sddm/sddm.conf.d
   "$pkgdir"/usr/bin/sddm --example-config > "$pkgdir"/usr/lib/sddm/sddm.conf.d/default.conf
   # Don't set PATH in sddm.conf
-  sed -r 's|DefaultPath=.*|DefaultPath=/usr/local/sbin:/usr/local/bin:/usr/bin|g' -i "$pkgdir"/usr/lib/sddm/sddm.conf.d/default.conf 
+  sed -r 's|DefaultPath=.*|DefaultPath=/usr/local/sbin:/usr/local/bin:/usr/bin|g' -i "$pkgdir"/usr/lib/sddm/sddm.conf.d/default.conf
   # Unset InputMethod https://github.com/sddm/sddm/issues/952
   sed -e "/^InputMethod/s/qtvirtualkeyboard//" -i "$pkgdir"/usr/lib/sddm/sddm.conf.d/default.conf
 }
