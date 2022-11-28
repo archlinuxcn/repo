@@ -2,12 +2,12 @@
 
 pkgname=alsa-ucm-conf-asahi
 pkgver=1
-pkgrel=1
+pkgrel=2
 pkgdesc="ALSA Use Case Manager configuration (and topologies) for Apple silicon devices"
 arch=(any)
 depends=('alsa-ucm-conf>=1.2.7.2')
 url="https://asahilinux.org/"
-license=(MIT)
+license=(BSD)
 _commit_id=v$pkgver
 source=("$pkgname-$pkgver-$_commit_id.tar.gz::https://github.com/povik/$pkgname/archive/$_commit_id.tar.gz")
 sha512sums=('ac55e735a916513f583a242e270aef971d0539584764d1acae1973f6587ca7943be962526625696bc3ddf350534d7e3655e6af6c6ed015a8dd786f467ea7659c')
