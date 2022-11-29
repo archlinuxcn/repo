@@ -1990,3 +1990,13 @@ Sun Nov 27 14:02:42 2022 +0100
      2022-11-27 e611a58 actionless feat(info_cli): add new Submitter and Co-maintainers fields
      2022-11-27 77fe74a actionless fix(aur: AURPackageInfo): allow AUR having some extra fields and only print warning instead of throwing an exception
      2022-11-27 9d90136 actionless fix(AURPackageInfo): now AUR returns more data, add `submitter` and `comaintainers` fields
+
+
+Tue Nov 29 04:10:58 2022 +0100
+-------------------------------------------------
+1.14.5          Release 1.14.5
+    
+    Notable changes:
+     2022-11-29 f43cab0 actionless fix(pkgbuild): remove wheel after running python-installer (fixes #683)
+     2022-11-29 ef3a925 actionless fix(filelock: __exit__): remove the file after unlocking (fixes #685)
+     2022-11-29 91ba397 actionless fix(updates: print_upgradeable): `not X` vs `X is not None` ; use aur packages as input argument, as repo packages info is already cached in Pacman class anyway (fixes #687)
