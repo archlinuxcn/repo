@@ -28,8 +28,8 @@ GOLD=             # Use the gold linker.
 
 LTO=              # Enable link-time optimization. Still experimental.
 
-JIT=         # Enable native just-in-time compilation. libgccjit is in AUR.
-                  # This compiles only performance critical elisp files.
+JIT=         # Enable native just-in-time compilation with libgccjit available
+                  # in core. This compiles only performance critical elisp files.
                   #
                   # To compile all site-lisp on demand (repos/AUR packages,
                   # ELPA, MELPA, whatever), add
@@ -40,7 +40,7 @@ JIT=         # Enable native just-in-time compilation. libgccjit is in AUR.
                   #    (setq native-compile-prune-cache t)
                   # to delete old versions.
 
-AOT=              # Compile all elisp files.
+AOT=              # Compile all elisp files provided by upstream.
 
 CLI=              # CLI only binary.
 
@@ -49,7 +49,9 @@ GPM=              # Mouse support in Linux console using gpmd.
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
                   # Bitmap fonts only, 1337!
                
-PGTK=             # Use native GTK3 build. Supports Wayland, yay!
+PGTK=             # Use native GTK3 build. Supports Wayland, yay! Still
+                  # has some problems if running under Xorg. Remember,
+                  # this is my personal build file!
 
 GTK3=        # GTK3 old windowing interface.
 
@@ -74,9 +76,11 @@ SITTER=      # Use tree-sitter incremental language parsing.
                
 DOCS_HTML=        # Generate and install html documentation.
                
-DOCS_PDF=         # Generate and install pdf documentation.
+DOCS_PDF=         # Generate and install pdf documentation. You need
+                  # a TeX installation. I'm partial to upstream TeXLive.
                
-NOGZ=        # Don't compress .el files.
+NOGZ=        # Don't compress .el files. (Gain is neglible, IMHO)
+
 ################################################################################
 
 ################################################################################
@@ -85,7 +89,7 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-git"
 fi
-pkgver=30.0.50.162621
+pkgver=30.0.50.162658
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
@@ -266,7 +270,15 @@ if [[ $LTO == "YES" ]]; then
 fi
 
 if [[ $JIT == "YES" ]]; then
-  _conf+=( '--with-native-compilation' );
+  _conf+=( '--with-native-compilation=yes' );
+fi
+
+if [[ $JIT == "YES" ]] && [[ $AOT == "YES" ]]; then
+  _conf+=( '--with-native-compilation=aot' );
+fi
+
+if [[ ! $JIT == "YES" ]] && [[ ! $AOT == "YES" ]]; then
+  _conf+=( '--with-native-compilation=no' );
 fi
 
 if [[ $XI2 == "YES" ]]; then
@@ -334,12 +346,6 @@ _conf+=('--program-transform-name=s/\([ec]tags\)/\1.emacs/')
   # Please note that incremental compilation implies that you
   # are reusing your src directory!
   #
-
-  if [[ $JIT== ]] && [[ $AOT == "YES" ]]; then
-    make NATIVE_FULL_AOT=1
-  else
-    make
-  fi
 
   # You may need to run this if 'loaddefs.el' files become corrupt.
   #cd "$srcdir/emacs-git/lisp"
