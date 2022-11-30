@@ -225,7 +225,7 @@ done
 
 # vim:set ts=8 sts=2 sw=2 et:
 _package_kernel() {
-  _origin_package_kernel
+  _origin_package_kernel "$@"
   cd "$srcdir/$_srcname"
   local kernver="$(<$O/version)"
   local modulesdir="$pkgdir/usr/lib/modules/$kernver"

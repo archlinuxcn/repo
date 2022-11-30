@@ -4,7 +4,7 @@ sed -i -e 's/_package_kernel()/_origin_package_kernel()/' PKGBUILD
 
 cat >> PKGBUILD <<EOF
 _package_kernel() {
-  _origin_package_kernel
+  _origin_package_kernel "\$@"
   cd "\$srcdir/\$_srcname"
   local kernver="\$(<\$O/version)"
   local modulesdir="\$pkgdir/usr/lib/modules/\$kernver"
