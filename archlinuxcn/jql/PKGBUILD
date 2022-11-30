@@ -2,7 +2,7 @@
 # Contributor: Vlad Frolov <frolvlad@gmail.com>
 
 pkgname=jql
-pkgver=5.1.0
+pkgver=5.1.3
 pkgrel=1
 pkgdesc="A JSON Query Language CLI tool"
 url="https://github.com/yamafaktory/jql"
@@ -11,7 +11,7 @@ makedepends=('cargo')
 arch=('i686' 'x86_64')
 license=('MIT')
 source=(${pkgname}-${pkgver}.tar.gz::https://github.com/yamafaktory/jql/archive/v${pkgver}.tar.gz)
-sha512sums=('ea610f8710ca6fb1535ff76de45b881c6f1f65803cdf70b968d3a6c49621189bdd10be8dd4f1969b93f7c71b7b247f9fb09911d2370f4dda32d19cc6171e77f2')
+sha512sums=('99ac3671352d9945ed5b59776c3b0694560f6cb96cf45182e5a1136aef43750505a622b976295e6d84b29d3ce38fd399790e9295b602c208cdcc7d98236cfae4')
 
 build() {
   cd "${pkgname}-${pkgver}"
