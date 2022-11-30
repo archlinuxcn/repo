@@ -1,10 +1,11 @@
 [Unit]
 Description=Hysteria Client Service
+Documentation=https://hysteria.network/
 After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/hysteria -config /etc/hysteria/%i.json
+ExecStart=/usr/bin/hysteria client --config %i.json --no-check
 WorkingDirectory=/etc/hysteria
 User=hysteria
 Group=hysteria
