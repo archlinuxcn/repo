@@ -4,8 +4,8 @@
 
 pkgbase=jellyfin
 pkgname=(jellyfin jellyfin-web jellyfin-server)
-pkgver=10.8.7
-pkgrel=3
+pkgver=10.8.8
+pkgrel=1
 pkgdesc='The Free Software Media System'
 arch=('i686' 'x86_64' 'armv6h')
 url='https://github.com/jellyfin/jellyfin'
@@ -17,8 +17,8 @@ source=("jellyfin-$pkgver.tar.gz::https://github.com/jellyfin/jellyfin/archive/v
         'jellyfin.service'
         'jellyfin.sysusers'
         'jellyfin.tmpfiles')
-sha512sums=('c97ed624bfc6810be99f2e837b8553b420033abfe57d1402fea60cd8a382dcf52a2235a3c031131b63006f5f349c1cd3c97d1c2feaa6bd11b15d58ed768993b9'
-            'd4b5ae31bf411de0a097dbc0a44248cb5d7722b045f7c91abe6e6fc49c5f44ce809a54576098db0e96fe46f4faef016beb4dc7df908c40f372347a1d8c5ec873'
+sha512sums=('1866a8e6a730d2d2211a907aa9087c8bc7069ef53010ba652f1dbbe2c6c638a29259531e31ccf5bee797651999ec0963b2ff3588e791f3b523e43bf4a3556070'
+            '88a829248f1d2506509a3610cc67575899df4fcb371fdd766b4a91f2005f387055ac716047293882cc494e2894f4121049c9525f468a33c99a12ff5d0c87fb19'
             '2aa97a1a7a8a447171b59be3e93183e09cbbc32c816843cc47c6777b9aec48bd9c1d9d354f166e0b000ad8d2e94e6e4b0559aa52e5c159abbc103ed2c5afa3f0'
             '99d02080b1b92e731250f39ddd13ceca7129d69d0c05e0939620cbc3f499a9574668c63fa889704a4905560888131e980d7ab1fbcc5837b04d33ce26daa9d42b'
             '6fc2638e6ec4b1ee0240e17815c91107b694e5fde72c1bc7956c83067bbeacb632de899b86837e47a0ec04288131b15c20746373b45e0669c8976069a55d627a'
@@ -35,6 +35,9 @@ build(){
 
   # Disable dotnet telemetry
   export DOTNET_CLI_TELEMETRY_OPTOUT=1
+
+  # Force dotnet to use 6.x when multiple SDKs are installed
+  dotnet new globaljson --sdk-version 6.0.0 --roll-forward latestMinor --force
 
   dotnet build --configuration Release Jellyfin.Server
   # Ideally, this would be run in package() with the --output variable pointing
