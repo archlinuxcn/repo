@@ -14,17 +14,16 @@ diff --git a/src/VBox/Frontends/VirtualBox/src/globals/UIDesktopWidgetWatchdog.c
 index 9c5faa42..5439e2a7 100644
 --- a/src/VBox/Frontends/VirtualBox/src/globals/UIDesktopWidgetWatchdog.cpp
 +++ b/src/VBox/Frontends/VirtualBox/src/globals/UIDesktopWidgetWatchdog.cpp
-@@ -443,8 +443,8 @@ const QRect UIDesktopWidgetWatchdog::availableGeometry(int iHostScreenIndex /* =
+@@ -385,7 +385,7 @@ QRect UIDesktopWidgetWatchdog::available
      /* Get cached available-geometry: */
-     const QRect availableGeometry = m_availableGeometryData.value(iHostScreenIndex);
+     const QRect availableGeometry = m_availableGeometryData.value(screenToIndex(pScreen));
      /* Return cached available-geometry if it's valid or screen-geometry otherwise: */
--    return availableGeometry.isValid() ? availableGeometry :
--           QApplication::desktop()->screenGeometry(iHostScreenIndex);
-+    return availableGeometry.isValid() && NativeWindowSubsystem::X11WindowManagerType() != X11WMType_i3 ?
-+           availableGeometry : QApplication::desktop()->screenGeometry(iHostScreenIndex);
- #  endif /* !VBOX_GUI_WITH_CUSTOMIZATIONS1 */
- # else /* !VBOX_WS_X11 */
-     /* Redirect call to desktop-widget: */
+-    return availableGeometry.isValid() ? availableGeometry : screenGeometry(pScreen);
++    return availableGeometry.isValid() && NativeWindowSubsystem::X11WindowManagerType() != X11WMType_i3 ? availableGeometry : screenGeometry(pScreen);
+ # endif /* !VBOX_GUI_WITH_CUSTOMIZATIONS1 */
+ #else /* !VBOX_WS_X11 */
+     /* Just return screen available-geometry: */
+
 diff --git a/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-x11.cpp b/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-x11.cpp
 index 53927559..ea648da7 100644
 --- a/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-x11.cpp
