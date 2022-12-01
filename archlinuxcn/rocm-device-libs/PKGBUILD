@@ -2,7 +2,7 @@
 # Contributor: Ranieri Althoff <ranisalt+aur at gmail dot com>
 
 pkgname=rocm-device-libs
-pkgver=5.3.3
+pkgver=5.4.0
 pkgrel=1
 pkgdesc='ROCm Device Libraries'
 arch=('x86_64')
@@ -10,7 +10,7 @@ url='https://github.com/RadeonOpenCompute/ROCm-Device-Libs'
 license=('custom:NCSAOSL')
 makedepends=('rocm-cmake' 'rocm-llvm')
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('963c9a0561111788b55a8c3b492e2a5737047914752376226c97a28122a4d768')
+sha256sums=('d68813ded47179c39914c8d1b76af3dad8c714b10229d1e2246af67609473951')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
 build() {
