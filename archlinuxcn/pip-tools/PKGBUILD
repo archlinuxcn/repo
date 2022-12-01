@@ -2,19 +2,19 @@
 # Contributor: Simon Conseil <contact+aur at saimon dot org>
 
 pkgname=pip-tools
-pkgver=6.10.0
+pkgver=6.11.0
 pkgrel=1
 pkgdesc='A set of tools to keep your pinned Python dependencies fresh'
 arch=(any)
 url='https://github.com/jazzband/pip-tools/'
 license=(BSD)
-depends=('python-click>=7' python-build 'python-pip>=21' python-setuptools python-wheel)
-makedepends=(python-build python-installer python-setuptools-scm python-wheel)
-source=("https://files.pythonhosted.org/packages/source/${pkgname::1}/${pkgname}/${pkgname}-${pkgver}.tar.gz"
+depends=(python-build 'python-click>=7' 'python-pip>=22' python-setuptools python-wheel)
+makedepends=(python-installer python-setuptools-scm python-wheel)
+source=("https://files.pythonhosted.org/packages/source/${pkgname::1}/$pkgname/$pkgname-$pkgver.tar.gz"
         'pip-tools-bash-completion.sh'
         'pip-tools-zsh-completion.zsh'
         'pip-tools-fish-completion.fish')
-sha256sums=('7f9f7356052db6942b5aaabc8eba29983591ca0ad75affbf2f0a25d9361be624'
+sha256sums=('90c5dc150e3856e4463b81ccc99307ccf9554e5db8393eb273705cb0b8f71c60'
             '12d90c4aab717d58a435610a3cdc94aa925b4f89f9f9f700a05c8cfa058f7960'
             '63f8d032a742ae33903040477c777922ec06241383d165c93803f1b41316ff51'
             '9c60407e485e71ded1d695455378fa4f09e76ecb8556d21c31f8610cb47cf525')
