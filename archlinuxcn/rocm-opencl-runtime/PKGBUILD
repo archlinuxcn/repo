@@ -3,7 +3,7 @@
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 
 pkgname=rocm-opencl-runtime
-pkgver=5.3.3
+pkgver=5.4.0
 pkgrel=1
 pkgdesc='OpenCL implementation for AMD'
 arch=('x86_64')
@@ -15,8 +15,8 @@ provides=('opencl-driver')
 _rocclr='https://github.com/ROCm-Developer-Tools/ROCclr'
 source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz"
         "$pkgname-rocclr-$pkgver.tar.gz::$_rocclr/archive/rocm-$pkgver.tar.gz")
-sha256sums=('cab394e6ef16c35bab8de29a66b96a7dc0e7d1297aaacba3718fa1d369233c9f'
-            'f8133a5934f9c53b253d324876d74f08a19e2f5b073bc94a62fe64b0d2183a18')
+sha256sums=('a294639478e76c75dac0e094b418f9bd309309b07faf6af126cdfad9aab3c5c7'
+            '46a1579310b3ab9dc8948d0fb5bed4c6b312f158ca76967af7ab69e328d43138')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 _rocclr_dir="$(basename "$_rocclr")-$(basename "${source[1]}" .tar.gz)"
 
