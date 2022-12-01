@@ -5,7 +5,7 @@
 # Contributor: Ranieri Althoff <ranisalt+aur at gmail.com>
 
 pkgname=hsakmt-roct
-pkgver=5.3.2
+pkgver=5.4.0
 pkgrel=1
 pkgdesc='Radeon Open Compute Thunk Interface'
 arch=('x86_64')
@@ -16,7 +16,7 @@ makedepends=('cmake')
 checkdepends=('rocm-llvm')
 _git='https://github.com/RadeonOpenCompute/ROCT-Thunk-Interface'
 source=("${pkgname}-${pkgver}.tar.gz::$_git/archive/rocm-$pkgver.tar.gz")
-sha256sums=('0543bea35ff5c15c25772112d5cdcf1d1f173e2910b70f0192ad14fa5cc4ebea')
+sha256sums=('690a78a6e67ae2b3f518dbc4a1e267237d6a342e1063b31eef297f4a04d780f8')
 options=(!lto)
 _dirname="$(basename "$_git")-$(basename "${source[0]}" .tar.gz)"
 
