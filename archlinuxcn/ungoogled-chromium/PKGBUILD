@@ -9,10 +9,10 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=107.0.5304.121
+pkgver=108.0.5359.71
 pkgrel=1
 _launcher_ver=8
-_gcc_patchset=1
+_gcc_patchset=2
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -30,21 +30,19 @@ options=('debug' '!lto') # Chromium adds its own flags for ThinLTO
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
         https://github.com/stha09/chromium-patches/releases/download/chromium-${pkgver%%.*}-patchset-$_gcc_patchset/chromium-${pkgver%%.*}-patchset-$_gcc_patchset.tar.xz
-        unbundle-jsoncpp-avoid-CFI-faults-with-is_cfi-true.patch
         re-fix-TFLite-build-error-on-linux-with-system-zlib.patch
-        REVERT-enable-GlobalMediaControlsCastStartStop.patch
         REVERT-roll-src-third_party-ffmpeg-m102.patch
         REVERT-roll-src-third_party-ffmpeg-m106.patch
+        disable-GlobalMediaControlsCastStartStop.patch
         angle-wayland-include-protocol.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('12b0ab045715a18abaf0c833c98c1001a43da4aae9690bb571b369d61f74e08b'
+sha256sums=('cb6ca080c492ede34df7bf9c4eca45576e6306865985465bd0319c96bb71ff5d'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
-            '2b26c16f8326803ef287fb443a17bc139a440673955c5a6a38e9368bcaeed7c4'
-            'b908f37c5a886e855953f69e4dd6b90baa35e79f5c74673f7425f2cdb642eb00'
+            '40ef8af65e78901bb8554eddbbb5ebc55c0b8e7927f6ca51b2a353d1c7c50652'
             '9015b9d6d5b4c1e7248d6477a4b4b6bd6a3ebdc57225d2d8efcd79fc61790716'
-            '779fb13f2494209d3a7f1f23a823e59b9dded601866d3ab095937a1a04e19ac6'
             '30df59a9e2d95dcb720357ec4a83d9be51e59cc5551365da4c0073e68ccdec44'
             '4c12d31d020799d31355faa7d1fe2a5a807f7458e7f0c374adf55edb37032152'
+            '7f3b1b22d6a271431c1f9fc92b6eb49c6d80b8b3f868bdee07a6a1a16630a302'
             'cd0d9d2a1d6a522d47c3c0891dabe4ad72eabbebc0fe5642b9e22efa3d5ee572'
             'e393174d7695d0bafed69e868c5fbfecf07aa6969f3b64596d0bae8b067e1711')
 
@@ -58,7 +56,7 @@ source=(${source[@]}
         remove-main-main10-profile-limit.patch
         chromium-drirc-disable-10bpc-color-configs.conf)
 sha256sums=(${sha256sums[@]}
-            '0c729f29fbfc655fca477862daa7b73b041fc3e3d594b01d07fc709657e79d52'
+            'e50a612d4b0b68ee57bf2410c847fe20bfef0c7332fb706a3b5bee36682c5025'
             'e9e8d3a82da818f0a67d4a09be4ecff5680b0534d7f0198befb3654e9fab5b69'
             'fc810e3c495c77ac60b383a27e48cf6a38b4a95b65dd2984baa297c5df83133c'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb')
@@ -76,7 +74,7 @@ declare -gA _system_libs=(
   [icu]=icu
   [jsoncpp]=jsoncpp
   [libaom]=aom
-  #[libavif]=libavif  # needs https://github.com/AOMediaCodec/libavif/commit/d22d4de94120
+  [libavif]=libavif
   [libdrm]=
   [libjpeg]=libjpeg
   [libpng]=libpng
@@ -115,18 +113,17 @@ prepare() {
   patch -Np1 -i ../use-oauth2-client-switches-as-default.patch
 
   # Upstream fixes
-  patch -Np1 -i ../unbundle-jsoncpp-avoid-CFI-faults-with-is_cfi-true.patch
   patch -Np1 -i ../re-fix-TFLite-build-error-on-linux-with-system-zlib.patch
-
-  # Revert kGlobalMediaControlsCastStartStop enabled by default
-  # https://crbug.com/1314342
-  patch -Rp1 -F3 -i ../REVERT-enable-GlobalMediaControlsCastStartStop.patch
 
   # Revert ffmpeg roll requiring new channel layout API support
   # https://crbug.com/1325301
   patch -Rp1 -i ../REVERT-roll-src-third_party-ffmpeg-m102.patch
   # Revert switch from AVFrame::pkt_duration to AVFrame::duration
   patch -Rp1 -i ../REVERT-roll-src-third_party-ffmpeg-m106.patch
+
+  # Disable kGlobalMediaControlsCastStartStop by default
+  # https://crbug.com/1314342
+  patch -Np1 -i ../disable-GlobalMediaControlsCastStartStop.patch
 
   # https://crbug.com/angleproject/7582
   patch -Np0 -i ../angle-wayland-include-protocol.patch
@@ -200,9 +197,9 @@ build() {
     'link_pulseaudio=true'
     'use_custom_libcxx=false'
     'use_gnome_keyring=false'
-    'use_qt=false' # look into enabling this for M108
+    'use_qt=false' # look into enabling this
     'use_sysroot=false'
-    'use_system_libwayland_server=true'
+    'use_system_libwayland=true'
     'use_system_wayland_scanner=true'
     'enable_widevine=true'
     'enable_platform_hevc=true'
