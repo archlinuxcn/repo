@@ -1,8 +1,8 @@
 # Maintainer: Felix Kauselmann <licorn@gmail.com>
 
 pkgname=libpdfium-nojs
-pkgver=5304.r1.6d0a3d5365
-pkgrel=1
+pkgver=5359.r0.9d2c662f55
+pkgrel=2
 pkgdesc="Open-source PDF rendering engine."
 arch=('x86_64')
 url="https://pdfium.googlesource.com/pdfium/"
@@ -19,10 +19,9 @@ source=("git+https://pdfium.googlesource.com/pdfium"
     )
 
 md5sums=('SKIP'
-    'SKIP'
-    'SKIP'
-    'feb270967925a0844b1b9a9e15288eb3'
-    )
+         'SKIP'
+         'SKIP'
+         'feb270967925a0844b1b9a9e15288eb3')
 
 pkgver() {
   _prepare >/dev/null 2>&1
@@ -56,10 +55,7 @@ _prepare() {
   # Extract build repo revision needed from DEPS file and do a checkout
   cd "$srcdir/pdfium/build"
   git checkout $(awk '/build_revision/ {print substr($2,2,40)}' $srcdir/pdfium/DEPS) -q
-  
-  # Fix visibilty for system Freetype
-  git cherry-pick -n bfd6ff0
-  
+    
   # Extract abseil-cpp repo revision needed from DEPS file and do a checkout
   cd "$srcdir/pdfium/third_party/abseil-cpp"
   git checkout $(awk '/abseil_revision/ {print substr($2,2,40)}' $srcdir/pdfium/DEPS) -q
@@ -111,6 +107,7 @@ build() {
       'use_system_libopenjpeg2 = true'
       'is_component_build = true'
       'use_gold = false' 
+      'pdf_use_partition_alloc = false'
   )
   
   gn gen out/Release --args="${_flags[*]}"
