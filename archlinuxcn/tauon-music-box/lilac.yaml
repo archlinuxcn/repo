@@ -13,7 +13,11 @@ repo_depends:
   - python-pulsectl
 
 update_on:
+  - source: aur
+    aur: tauon-music-box
   - source: github
     github: Taiko2k/tauonmb
     use_latest_release: true
+  - source: manual
+    manual: 1
   - alias: python
