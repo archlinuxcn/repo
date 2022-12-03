@@ -5,9 +5,9 @@ _projectname=electron
 _major=19
 _pkgname="${_projectname}${_major}"
 pkgname="${_pkgname}"-bin
-_pkgver="${_major}.1.5"
+_pkgver="${_major}.1.9"
 pkgver="${_pkgver/-/.}"
-pkgrel=10
+pkgrel=11
 pkgdesc="Build cross platform desktop apps with web technologies - binary version ${_major}"
 arch=('x86_64' 'aarch64')
 url=https://electronjs.org/
@@ -30,10 +30,10 @@ source_aarch64=(
 	"${pkgname}-chromedriver-${pkgver}-${pkgrel}-aarch64.zip::${_releaseurl}/chromedriver-v${_pkgver}-linux-arm64.zip"
 	"${pkgname}-${pkgver}-${pkgrel}-aarch64.zip::${_releaseurl}/${_projectname}-v${_pkgver}-linux-arm64.zip"
 )
-sha256sums_x86_64=('d5395483f41ae69a55a0bf09ef57af9a5131e4f841b39476e95bf1a47aabf187'
-                   '6292c8ce0d9068b2c8a9b4a917585a3a4fac6110f5a7ee1e81e27b15e6cb2efa')
-sha256sums_aarch64=('01d79f86df5c0a635187bafbeecac63dac70a058ece62c066ca037fe31da77cd'
-                    '2e60e505b6bac1b614ddf669d394f0597146529f3a2b0b7e1258fb3317ea7dc9')
+sha256sums_x86_64=('6b066a9784e86e8710ccbf6224ca143b12d0f3b2988c34a4852d0d1002bb08a6'
+                   'fd320675f1647e03d96764a906c51c567bf0bcbe0301550e4559d66dd76796df')
+sha256sums_aarch64=('72d48a1d35ee2b952ce79d7786bc82dd12b54adfb7ad96a6a0cb5c11f512c47e'
+                    '473e07a6db8a92d4627ef1012dda590c5a04fb3d9804cc5237b033fdb6f52211')
 
 package() {
 	install -dm755 "${pkgdir}/usr/lib/${_pkgname}/"
