@@ -4,13 +4,12 @@
 _pkgname=easy-format
 pkgname=ocaml-${_pkgname}
 pkgver=1.3.4
-pkgrel=3
+pkgrel=4
 pkgdesc="Pretty-printing library for OCaml"
 arch=('x86_64')
 url="https://github.com/ocaml-community/${_pkgname}"
 license=('BSD')
 options=('!strip' 'staticlibs')
-provides=('ocaml-easy-format')
 depends=('glibc')
 makedepends=('dune' 'ocaml')
 source=(${url}/releases/download/${pkgver}/${_pkgname}-${pkgver}.tbz )
