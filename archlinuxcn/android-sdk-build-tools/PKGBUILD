@@ -27,7 +27,7 @@ package() {
 
   install -d usr/share/licenses/$pkgname/
   ln -s /opt/$_sdk/build-tools/$_ver/NOTICE.txt usr/share/licenses/$pkgname/NOTICE.txt
-  sed -i "s/@major@/$_ver/g;s/@minor@/0/g;s/@micro@/0/g" "$srcdir/package.xml"
+  sed -i "s/@major@/${_ver:0:0-4}/g;s/@minor@/${_ver:0-3:1}/g;s/@micro@/${_ver:0-1:1}/g" "$srcdir/package>
   install -Dm644 "${srcdir}/package.xml" opt/$_sdk/build-tools/$_ver/package.xml
   ln -s /opt/$_sdk/build-tools/$_ver/package.xml usr/share/licenses/$pkgname/package.xml
 
