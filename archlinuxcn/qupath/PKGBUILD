@@ -2,8 +2,8 @@
 
 _pkgname=QuPath
 pkgname=qupath
-pkgver=0.3.2
-pkgrel=2
+pkgver=0.4.0
+pkgrel=1
 pkgdesc='Bioimage analysis & digital pathology'
 arch=('x86_64')
 url="https://qupath.github.io"
@@ -16,7 +16,7 @@ optdepends=(
   'ttf-droid: font for CJK characters'
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/qupath/qupath/archive/v${pkgver}.tar.gz")
-sha512sums=('115b800c76f47f80dc32bd2deab06789dfb77c42cca7e12a0eaa18d8591ed0acf9d46a720319b8756df43b0c6f7f50af365dd3c04bacc090d8bb438b435a8d04')
+sha512sums=('09ffa998a56898e7d483b582e7c9e0a047da63bd72bdc746395be9e513b676645096b0d4497c255a9236de7c7ac1ddc40705e52bd4cea56e95857f89e6a986fd')
 
 prepare() {
   echo "Creating desktop file"
