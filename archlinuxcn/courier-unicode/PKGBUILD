@@ -2,7 +2,7 @@
 # Contributor: Robert Knauer <robert@capsaicin-dev.de>
 
 pkgname=courier-unicode
-pkgver=2.2.5
+pkgver=2.2.6
 pkgrel=1
 pkgdesc="Courier Unicode Library"
 arch=("i686" "x86_64" "aarch64")
@@ -13,7 +13,7 @@ source=(
   "https://sourceforge.net/projects/courier/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2"
 )
 sha256sums=(
-  '5f42cbaec318ad69366745c9409025c7e0eb8692e887a8382e46b9767b8b98b8'
+  '513f68066ed192ace630f601984c565b5c1d1c81d98c6478ebe4edb3a15be03a'
 )
 
 build() {
