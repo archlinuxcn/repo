@@ -6,7 +6,7 @@ _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.3
 _monover=7.3.1
-pkgrel=7
+pkgrel=3
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 url="https://github.com/ValveSoftware/Proton"
@@ -40,8 +40,8 @@ depends=(
   steam-native-runtime
 )
 
-makedepends=("autoconf" "bison" "flex" "fontforge" "mingw-w64-gcc" "perl" "python-pip" "python-virtualenv"
-  git wget rsync mingw-w64-tools lld nasm meson cmake  python-pefile
+makedepends=(autoconf bison perl fontforge flex mingw-w64-gcc
+  git wget rsync mingw-w64-tools lld nasm meson cmake afdko python-pefile
   glslang vulkan-headers
   clang
   giflib                lib32-giflib
@@ -98,7 +98,7 @@ optdepends=(
   dosbox
 )
 
-makedepends=("${depends[@]}" "${makedepends[@]}" "python-pip" "python-virtualenv")
+makedepends=(${makedepends[@]} ${depends[@]})
 provides=('proton-native')
 conflicts=('proton-native')
 install=${pkgname}.install
@@ -130,6 +130,9 @@ source=(
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     0001-wldap32-25946b48148784e8275c1685f6498ab88f553ca3.patch
     0001-AUR-pkgbuild-changes.patch
+)
+# Optional patches
+source+=(
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -168,14 +171,6 @@ EOF
 }
 
 prepare() {
-[ -d build_venv ] && rm -rf build_venv
-
-virtualenv --app-data "$srcdir"/build_venv/cache --no-wheel build_venv
-
-source build_venv/bin/activate
-
-pip install --no-cache-dir afdko
-
 
     # Provide wrappers to compiler tools
     rm -rf wrappers && mkdir wrappers
@@ -287,9 +282,9 @@ build() {
     # This overrides FLAGS from makepkg.conf, if you comment these you are on your own
     # If you want the "best" possible optimizations for your system you can use
     # `-march=native` and remove the `-mtune=core-avx2` option.
-    export CFLAGS="-O2 -march=nocona -mtune=core-avx2 -pipe"
-    export CXXFLAGS="-O2 -march=nocona -mtune=core-avx2 -pipe"
-    export RUSTFLAGS="-C opt-level=2 -C target-cpu=nocona"
+    export CFLAGS="-O2 -march=haswell -mtune=haswell -pipe -fno-semantic-interposition"
+    export CXXFLAGS="-O2 -march=haswell -mtune=haswell -pipe -fno-semantic-interposition"
+    export RUSTFLAGS="-C opt-level=2 -C target-cpu=haswell"
     export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
 
     # If using -march=native and the CPU supports AVX, launching a d3d9
@@ -327,17 +322,20 @@ package() {
         "$pkgdir/usr/share/licenses/${pkgname}"
 
     cd "$_compatdir/${pkgname}/dist"
+    # NOTE: Reduces size by 40 MiB, worth it
     i686-w64-mingw32-strip --strip-unneeded \
         $(find lib/wine \( -iname fakedlls -or -iname i386-windows \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
     x86_64-w64-mingw32-strip --strip-unneeded \
         $(find lib64/wine \( -iname fakedlls -or -iname x86_64-windows \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
 
+    # NOTE: Reduces size by 38 MiB, worth it
     local _geckodir="share/wine/gecko/wine-gecko-${_geckover}"
     i686-w64-mingw32-strip --strip-unneeded \
         $(find "$_geckodir"-x86 -iname "*.dll" -or -iname "*.exe")
     x86_64-w64-mingw32-strip --strip-unneeded \
         $(find "$_geckodir"-x86_64 -iname "*.dll" -or -iname "*.exe")
 
+    # NOTE: Reduces size by 0.16 MiB, not worth it
     local _monodir="share/wine/mono/wine-mono-${_monover}"
     i686-w64-mingw32-strip --strip-unneeded \
         $(find "$_monodir"/lib/mono -iname "*.dll" -or -iname "*.exe")
@@ -376,4 +374,6 @@ sha256sums=('SKIP'
             '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
             '55ca808868599b1d8ad53b222b8cb26fd96fa818c511163e361238025c76e9fe'
             '11aa65bb6b8da1814557edf18a3cdada80135b021634236feabf93d2a194838b'
-            'b116ce08086513c0a69f7e0071f8b617fa50022c3e7349b69fca6ea4adc08b18')
+            'SKIP')
+sha256sums+=(
+)
