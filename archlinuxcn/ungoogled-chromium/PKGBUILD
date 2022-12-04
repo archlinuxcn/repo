@@ -9,7 +9,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=108.0.5359.71
+pkgver=108.0.5359.94
 pkgrel=1
 _launcher_ver=8
 _gcc_patchset=2
@@ -36,7 +36,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         disable-GlobalMediaControlsCastStartStop.patch
         angle-wayland-include-protocol.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('cb6ca080c492ede34df7bf9c4eca45576e6306865985465bd0319c96bb71ff5d'
+sha256sums=('0607518481a8a5b993fb371eec544f7d20e43c2eb706ca7bf40ef584496cb6fe'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '40ef8af65e78901bb8554eddbbb5ebc55c0b8e7927f6ca51b2a353d1c7c50652'
             '9015b9d6d5b4c1e7248d6477a4b4b6bd6a3ebdc57225d2d8efcd79fc61790716'
@@ -56,7 +56,7 @@ source=(${source[@]}
         remove-main-main10-profile-limit.patch
         chromium-drirc-disable-10bpc-color-configs.conf)
 sha256sums=(${sha256sums[@]}
-            'e50a612d4b0b68ee57bf2410c847fe20bfef0c7332fb706a3b5bee36682c5025'
+            '26379c097c7ba655e4d943523575f00647308e2a75ab79c8ff99e4b62b40ae1a'
             'e9e8d3a82da818f0a67d4a09be4ecff5680b0534d7f0198befb3654e9fab5b69'
             'fc810e3c495c77ac60b383a27e48cf6a38b4a95b65dd2984baa297c5df83133c'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb')
@@ -92,6 +92,14 @@ _unwanted_bundled_libs=(
   $(printf "%s\n" ${!_system_libs[@]} | sed 's/^libjpeg$/&_turbo/')
 )
 depends+=(libFLAC.so ${_system_libs[@]})
+
+# Google API keys (see https://www.chromium.org/developers/how-tos/api-keys)
+# Note: These are for Arch Linux use ONLY. For your own distribution, please
+# get your own set of keys.
+#
+# Starting with Chromium 89 (2021-03-02) the OAuth2 credentials have been left
+# out: https://archlinux.org/news/chromium-losing-sync-support-in-early-march/
+_google_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM
 
 prepare() {
   cd chromium-$pkgver
@@ -201,14 +209,21 @@ build() {
     'use_sysroot=false'
     'use_system_libwayland=true'
     'use_system_wayland_scanner=true'
+    'enable_hangout_services_extension=true'
     'enable_widevine=true'
-    'enable_platform_hevc=true'
-    'enable_hevc_parser_and_hw_decoder=true'
+    'enable_nacl=false'
+    "google_api_key=\"$_google_api_key\""
   )
 
   if [[ -n ${_system_libs[icu]+set} ]]; then
     _flags+=('icu_use_data_file=false')
   fi
+
+  # enable HEVC decoding
+  _flags+=(
+    'enable_platform_hevc=true'
+    'enable_hevc_parser_and_hw_decoder=true'
+  )
 
   # Append ungoogled chromium flags to _flags array
   _ungoogled_repo="$srcdir/$pkgname-$_uc_ver"
@@ -259,9 +274,6 @@ package() {
   install -D out/Release/chrome "$pkgdir/usr/lib/chromium/chromium"
   install -D out/Release/chromedriver "$pkgdir/usr/bin/chromedriver"
   install -Dm4755 out/Release/chrome_sandbox "$pkgdir/usr/lib/chromium/chrome-sandbox"
-
-  install -Dm644 ../chromium-drirc-disable-10bpc-color-configs.conf \
-    "$pkgdir/usr/share/drirc.d/10-$pkgname.conf"
 
   install -Dm644 chrome/installer/linux/common/desktop.template \
     "$pkgdir/usr/share/applications/chromium.desktop"
