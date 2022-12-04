@@ -1,16 +1,16 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=asahi-scripts
-pkgver=20221122
-pkgrel=3
+pkgver=20221129
+pkgrel=1
 pkgdesc='Asahi Linux maintenance scripts'
 arch=('any')
 url='http://asahilinux.org'
 license=('MIT')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AsahiLinux/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
 install=asahi-scripts.install
-sha256sums=('c266d2ee178419dd5ee8506506549345490c9113b445596f3bd748437d79d25c')
-b2sums=('0ef330e58cdf87d647206645b2066a76cb4c6f85f5a588f3d1ddab6331270f252a9b59ae80df9d769aac83ebef7f5668c506acdb3190f63a0d0461e085462cd1')
+sha256sums=('370f19ef738cc61081218e3b91240395f7dc08ad4d63299b1de5aba8debe8f4c')
+b2sums=('d4c7316d2f64f349a649ce8c4a660259c161e4b1b5f5d4c142f166c05fc7527a1b79e8464bc552806053ce03e886665e4efb75d52da4f7df40277d606888b9d1')
 backup=(etc/m1n1.conf)
 
 build() {
