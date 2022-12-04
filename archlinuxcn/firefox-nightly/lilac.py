@@ -27,7 +27,7 @@ def pre_build():
     if f.endswith('.asc'):
       os.unlink(f)
   # try to wait for a refresh copy
-  time.sleep(5)
+  time.sleep(15)
 
 def post_build():
   git_add_files('PKGBUILD')
