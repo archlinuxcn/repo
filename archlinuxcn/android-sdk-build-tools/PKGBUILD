@@ -3,9 +3,12 @@
 
 pkgname=android-sdk-build-tools
 #_ver=$(cat "${srcdir}/$_android/source.properties" |grep ^Pkg.Revision=|sed 's/Pkg.Revision=\([0-9.]*\).*/\1/')
-_ver=33.0.1
+_major=33
+_minor=0
+_micro=1
+_ver=$_major.$_minor.$_micro
 pkgver=r$_ver
-pkgrel=12
+pkgrel=13
 pkgdesc='Build-Tools for Google Android SDK (aapt, aidl, dexdump, dx, llvm-rs-cc)'
 arch=('x86_64')
 url="https://developer.android.com/studio/releases/build-tools"
@@ -26,12 +29,12 @@ package() {
   cd "$pkgdir"
 
   install -d usr/share/licenses/$pkgname/
-  ln -s /opt/$_sdk/build-tools/$_ver.0.0/NOTICE.txt usr/share/licenses/$pkgname/NOTICE.txt
-  sed -i "s/@major@/$_ver/g;s/@minor@/0/g;s/@micro@/0/g" "$srcdir/package.xml"
-  install -Dm644 "${srcdir}/package.xml" opt/$_sdk/build-tools/$_ver.0.0/package.xml
-  ln -s /opt/$_sdk/build-tools/$_ver.0.0/package.xml usr/share/licenses/$pkgname/package.xml
+  ln -s /opt/$_sdk/build-tools/$_ver/NOTICE.txt usr/share/licenses/$pkgname/NOTICE.txt
+  sed -i "s/@major@/$_major/g;s/@minor@/$_minor/g;s/@micro@/$_micro/g" "$srcdir/package.xml"
+  install -Dm644 "${srcdir}/package.xml" opt/$_sdk/build-tools/$_ver/package.xml
+  ln -s /opt/$_sdk/build-tools/$_ver/package.xml usr/share/licenses/$pkgname/package.xml
 
-  target="opt/$_sdk/build-tools/$_ver.0.0"
+  target="opt/$_sdk/build-tools/$_ver"
   mkdir -p "$target"
   cp -r "$srcdir/$_android/"* "$target"
   chmod +Xr -R "$target"
