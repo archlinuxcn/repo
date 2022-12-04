@@ -2,6 +2,7 @@
 
 import os
 from datetime import datetime
+import time
 
 from lilaclib import *
 
@@ -25,6 +26,8 @@ def pre_build():
   for f in os.listdir('.'):
     if f.endswith('.asc'):
       os.unlink(f)
+  # try to wait for a refresh copy
+  time.sleep(5)
 
 def post_build():
   git_add_files('PKGBUILD')
