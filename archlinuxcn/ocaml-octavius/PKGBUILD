@@ -1,31 +1,31 @@
-# Maintainer: Daniel Peukert <daniel@peukert.cc>
+# Maintainer: éclairevoyant
+# Contributor: Daniel Peukert <daniel@peukert.cc>
 # Contributor: Jakob Gahde <j5lx@fmail.co.uk>
-_projectname='octavius'
-pkgname="ocaml-$_projectname"
-pkgver='1.2.2'
-pkgrel=8
+
+_pkgname='octavius'
+pkgname="ocaml-$_pkgname"
+pkgver=1.2.2
+pkgrel=9
 pkgdesc='Ocamldoc comment syntax parser'
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
-url="https://github.com/ocaml-doc/$_projectname"
+url="https://github.com/ocaml-doc/$_pkgname"
 license=('ISC')
 depends=('ocaml>=4.03.0')
-#makedepends=('dune>=1.11.0')
+#makedepends=('dune>=1.11' 'ocaml-compiler-libs')
 makedepends=('dune' 'ocaml-compiler-libs')
 options=('!strip')
-source=("$pkgname-$pkgver-$pkgrel.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha512sums=('57e40f0bd03599bf0b14d85b29bef2214f9b9393917c0a65acf60cf028fe028a730a804f3c0101fee1378cacd4feb7a4f2df3c8411ceeb6bb34d47f849b7a55e')
-
-_sourcedirectory="$_projectname-$pkgver"
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+md5sums=('72f9e1d996e6c5089fc513cc9218607b')
 
 build() {
-	cd "$srcdir/$_sourcedirectory/"
+	cd $_pkgname-$pkgver
 	dune build --release --verbose
 }
 
 package() {
-	cd "$srcdir/$_sourcedirectory/"
+	cd $_pkgname-$pkgver
 	DESTDIR="$pkgdir" dune install --prefix '/usr' --libdir '/usr/lib/ocaml' --docdir '/usr/share/doc' --mandir '/usr/share/man' --release --verbose
 
 	install -dm755 "$pkgdir/usr/share/licenses/$pkgname"
-	ln -sf "/usr/share/doc/$pkgname/LICENSE.md" "$pkgdir/usr/share/licenses/$pkgname/LICENSE.md"
+	ln -sf /usr/share/doc/$pkgname/LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/"
 }
