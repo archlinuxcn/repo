@@ -1,63 +1,71 @@
 # Maintainer: Taiko2k <captain dot gxj at gmail dot com>
-pkgname='tauon-music-box'
+
+pkgname=tauon-music-box
 _pkgname=tauonmb
 _gitname=TauonMusicBox
-pkgver=7.3.1
+pkgver=7.4.5
 pkgrel=1
-pkgdesc='A streamlined music player that uses BASS'
-arch=('x86_64')
-url="https://github.com/Taiko2k/TauonMusicBox"
+_kissfftver=131.1.0
+_miniaudiocommit=1778a5e839514f35f41d31449f3573e3adffc51a
+pkgdesc="A modern streamlined music player"
+arch=('any')
+url="https://tauonmusicbox.rocks"
 license=('GPL3')
 
 depends=('python-pillow'
-    'python-pylast'
-    'python-mutagen'
-    'python-send2trash'
-    'python-musicbrainzngs'
-    'python-setproctitle'
-    'python-gobject'
-    'python-cairo'
-    'python-beautifulsoup4'
-    'python-requests'
-    'python-dbus'
-    'python-natsort'
-    'alsa-plugins'
-    'ffmpeg'
-    'flac'
-    'gst-plugins-good'
-    'gst-plugins-bad'
-    'noto-fonts'
-    'noto-fonts-extra'
-    'sdl2_image'
-    'xdg-utils'
-    'mpg123'
-    'libpulse'
-    'opusfile'
-    'libvorbis'
-    'libappindicator-gtk3'
-    'libopenmpt'
-    'python-hsaudiotag3k' # AUR
-    'python-pysdl2'       # AUR
-    'python-pylyrics'     # AUR
-    'python-isounidecode' # AUR
-    'python-pulsectl'     # AUR
-)
-
+         'python-pylast'
+         'python-pysdl2' # AUR
+         'python-send2trash'
+         'python-musicbrainzngs'
+         'python-mutagen'
+         'python-isounidecode' # AUR
+         'python-setproctitle'
+         'python-gobject'
+         'python-cairo'
+         'python-beautifulsoup4'
+         'python-requests'
+         'python-dbus'
+         'python-natsort'
+         'python-websocket-client'
+         'libnotify'
+         'ffmpeg'
+         'flac'
+         'noto-fonts-extra'
+         'noto-fonts'
+         'sdl2_image'
+         'xdg-utils'
+         'mpg123'
+         'opusfile'
+         'wavpack'
+         'libvorbis'
+         'libappindicator-gtk3'
+         'libopenmpt'
+         'libsamplerate'
+         'python-httpx' # Workaround for https://bugs.archlinux.org/task/74611
+         )
+         
 optdepends=('noto-fonts-cjk: Matching font for CJK characters'
-    'p7zip: 7z archive extraction support'
-    'unrar: RAR archive extraction support'
-    'python-plexapi: Plex streaming'
-    'python-pypresence: Discord status support'
-    'python-tekore: Spotify playback control'
-    'picard: Recommended tag editor'
-    'gst-plugins-ugly: For GStreamer WMA support'
-)
-provides=('libphazor.so')
-source=("$pkgname-$pkgver.tar.gz::https://github.com/Taiko2k/TauonMusicBox/archive/v$pkgver.tar.gz")
+            'p7zip: 7z archive extraction support'
+            'unrar: RAR archive extraction support'
+            'python-plexapi: Plex streaming'
+            'python-pypresence: Discord status support'
+            'python-pychromecast: Chromecast stream support' 
+            'picard: Recommended tag editor'
+            'python-jxlpy: JPEG XL image support' # AUR
+            )
+            
+source=("$pkgname-$pkgver.tar.gz::https://github.com/Taiko2k/TauonMusicBox/archive/v$pkgver.tar.gz"
+	"kissfft.tar.gz::https://github.com/mborgerding/kissfft/archive/refs/tags/$_kissfftver.tar.gz"
+	"miniaudio.tar.gz::https://github.com/mackron/miniaudio/archive/$_miniaudiocommit.tar.gz"
+	)
 
-sha256sums=('15883f69e97e5c1c1b6779a99abd3259a41c1b74faeb0f83fc9ec51e334ee7cf')
+b2sums=('7ce38544bce98dc430ab75e54cb2a066907c9ca8782819b29a5878959deb4cf067b9ff7468f8e06560c7e32098d5b0278d3c440b1ca4ca66fec09b88828a8a7e'
+        '74e6d2e7d132a311b31c28a468e13d9772a53f0ea0abed0e0f49d8db9c183fb0646f58fd38df3e797b8577285899daf6b80446b149ce2582bb828410656d96df'
+        '4a1de7006beae269b7109dfd6e3b9f2402e2c408d85ec982184295746934aca32d8452ad39cc4fa3a615b8549bd75d4551fa885b42c282a4a0c8b9c98bb22ae6')
 
 build() {
+    mv kissfft-$_kissfftver/* $_gitname-$pkgver/src/phazor/kissfft/
+    mv miniaudio-$_miniaudiocommit/* $_gitname-$pkgver/src/phazor/miniaudio/
     cd "$_gitname-$pkgver"
     python compile-translations.py
     bash compile-phazor.sh
@@ -66,16 +74,14 @@ build() {
 package() {
     cd "$_gitname-$pkgver"
     install -Dm755 tauon.py -t "$pkgdir/opt/$pkgname"
-    install -d "$pkgdir/usr/bin"
-    ln -s "/opt/$pkgname/tauon.py" "$pkgdir/usr/bin/$_pkgname"
-
     install -Dm644 input.txt -t "$pkgdir/opt/$pkgname"
-    cp -r assets templates theme t_modules "$pkgdir/opt/$pkgname"
-
-    for t in de fr_FR ja_JP nb_NO pt_BR pt_PT sv zh_CN; do
-        install -Dm644 locale/${t}/LC_MESSAGES/*.po -t "$pkgdir/usr/share/locale/${t}/LC_MESSAGES"
+    
+    cp -r  assets templates theme t_modules lib "$pkgdir/opt/$pkgname"
+ 
+    for t in de es fr_FR hu id ja_JP nb_NO pl pt pt_BR pt_PT ru sv zh_CN tr; do
+        install -Dm644 locale/${t}/LC_MESSAGES/*.mo -t "$pkgdir/usr/share/locale/${t}/LC_MESSAGES"
     done
-
+ 
     install -Dm644 "extra/$_pkgname.desktop" -t "$pkgdir/usr/share/applications"
     install -Dm644 "extra/$_pkgname-symbolic.svg" -t "$pkgdir/usr/share/icons/hicolor/symbolic/apps"
     install -Dm644 "extra/$_pkgname.svg" -t "$pkgdir/usr/share/icons/hicolor/scalable/apps"
