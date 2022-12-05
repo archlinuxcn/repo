@@ -5,16 +5,16 @@
 
 gitname=uBlock
 pkgname=chromium-ublock-origin-git
-epoch=1
-pkgver=1.45.3b0.5.g14d4eeab3
+epoch=2
+pkgver=1.45.3b8.4.g76d70102f
 pkgrel=1
 pkgdesc="An efficient blocker for Chromium"
 arch=('any')
 url="https://github.com/gorhill/${gitname}"
 license=('GPL3')
 makedepends=(git zip python)
-source=("git+${url}.git" "git+https://github.com/uBlockOrigin/uAssets.git")
-sha512sums=('SKIP' 'SKIP')
+source=("git+${url}.git")
+sha512sums=('SKIP')
 
 pkgver() {
     cd "${srcdir}/${gitname}"
@@ -23,6 +23,7 @@ pkgver() {
 }
 build() {
     cd "${srcdir}/${gitname}"
+    ./tools/pull-assets.sh
     ./tools/make-chromium.sh
 }
 package() {
