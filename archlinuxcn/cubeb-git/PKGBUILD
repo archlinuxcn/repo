@@ -40,10 +40,6 @@ build() {
 	cmake --build build
 }
 
-check() {
-	ctest --test-dir build -E 'audio|callback_ret|device_changed_callback|devices|duplex|latency|record|sanity|tone'
-}
-
 package() {
 	depends+=('libspeexdsp.so')
 	# shellcheck disable=SC2154
