@@ -1,6 +1,6 @@
 # Maintainer: Zhanibek Adilbekov <zhanibek.adilbekov@pm.me>
 pkgname=auto-cpufreq
-pkgver=1.9.6
+pkgver=1.9.7
 pkgrel=1
 pkgdesc="Automatic CPU speed & power optimizer"
 arch=('any')
@@ -12,10 +12,10 @@ optdepends=(
 	'gnome-shell-extension-cpufreq: CPU Power Manager for GNOME Shell'
 	'thermald: recommended to have running alongside by upstream'
 )
-makedepends=('python-setuptools' 'python-pip')
+makedepends=('python-setuptools' 'python-pip' 'python-wheel')
 install="$pkgname.install"
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz" "$pkgname.service")
-b2sums=('a4204cdfe549743c6781c4cf26c97133e488735d806d97205af2d956500b7b867c1635f6f20ee9940d9b98377b20fc83a31953099319e4e245a381754e35e8ee'
+b2sums=('77355e2e101204c66d28b082bd2dc20b706ca3880ff888c3b9325475e3cff6ad9631c04e1be059f4644bccc25b6c5d256aa13f4009c494bdc41adcee695a82d8'
         '90d9a6e0a86d01803527462e0ed0ce93d04d245c2c99ab773f31e1eb46dd86b209f98af50967bbdb6627563b0aae0ca4bbc861c812576a243b07c40a483c37db')
 
 prepare() {
