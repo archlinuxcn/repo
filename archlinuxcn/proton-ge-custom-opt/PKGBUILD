@@ -377,7 +377,7 @@ build() {
     export WINEFSYNC=0
     export DISPLAY=
     SUBJOBS=$([[ "$MAKEFLAGS" =~ -j\ *([1-9][0-9]*) ]] && echo "${BASH_REMATCH[1]}" || echo "$(nproc)") \
-        make -j1 dist
+        make USE_LTO=1 -j1 dist
 }
 
 package() {
@@ -457,6 +457,6 @@ sha256sums=('SKIP'
             '08d318f3dd6440a8a777cf044ccab039b0d9c8809991d2180eb3c9f903135db3'
             '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
             '9249ece664bcf2fecb1308ea1d2542c72923df9fe3df891986f137b2266a9ba3'
-            '13ba9025b532371ee6d504de184ddb57322e276332f2c6a38c050e90c1a4f119'
+            '9a5a393b867bddd66cef0f487691a27d5e3e3bba729fe20b6eeabf9112846455'
             '85d41eb3879cd69cbc711923611c3a9703f8ef946df526956b484d0c560c4b5f')
 
