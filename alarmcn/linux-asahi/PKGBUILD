@@ -4,11 +4,11 @@
 buildarch=8
 
 _rcver=6.1
-_rcrel=6
-_asahirel=5
-pkgrel=5
+_rcrel=7
+_asahirel=2
+pkgrel=6
 
-_m1n1_version=1.1.8
+_m1n1_version=1.2.2
 
 pkgbase=linux-asahi
 #_commit_id=asahi-${_nextver}-${_asahirel}
@@ -30,11 +30,11 @@ source=(
   config         # the main kernel config file
   config.edge    # overrides for linux-asahi-edge
 )
-sha256sums=('dc8765542447d33230cdf217507038670677aaee6d15aeb8e41181214e9877c6'
-            '317693819c9a76b8121f897a4aa98ef4471e23174b15cd6ef235429c69374ec6'
+sha256sums=('58ef871f550ced6c364cfd41ef65001bc4ebf0b9fc9fbfc57b3fe6d8552a8a4b'
+            'a682080e5f34231243ad7e23b4b6c9957675add7fafd07e599be353e2acb177f'
             '0fa0a930e37b34e4f846c01cc4a7c27daa922ff399f76514e453db299100af4b')
-b2sums=('7a6d134e05be87bea6c872f577c71d5a8d9467f7e1c18f5d7720c8b3dd6efb7096b881ba2230c91e08bce5a01a54fd23f16fd1d83f35188e033360208f680a3c'
-        '19338a051dead84802266178f38db7af27028adff2fe066fdb89e8daac27ba1dbaac707743540613dfd289d386fb757e1aab12d25e38e31bef6e8ebafb235301'
+b2sums=('4413fc1b7a10d88ebd63955cc5d8fd02675e5c5bf52c737a083c151102fee7735e43c52c49fdac0c6a31226dd623a392ab7f4b566a2eb31a7df4b28d4d86c70a'
+        '809e7cf9c2ba9adcde38a6c27f96ed953ad4010b29641c4b9e5dcd9989115358d65c9f277f884c42605a10c58e4dc4a852ebd2dff084d084ec72d6fe48584e32'
         '0f0139d740c761c92014bf195f23bf7309de1ca070c47536cd35371eba840a53fab139a623edc5cbb6c82377099ba81acf59b4f60610f2a222aa43f9b084b113')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -54,6 +54,11 @@ prepare() {
     echo "Applying patch $src..."
     patch -Np1 < "../$src"
   done
+
+  # Fix for newer bindgen versions
+  sed -i -e s/blacklist/blocklist/ \
+    -e s/whitelist/allowlist/ \
+    rust/Makefile
 
   echo "Creating build directories..."
   mkdir -p build/base build/edge
