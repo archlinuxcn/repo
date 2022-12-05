@@ -1,24 +1,24 @@
-From 8d8337df0e97c91714bf5d3a13dffde944d67fa4 Mon Sep 17 00:00:00 2001
+From b452adc335f4542523ec151e670d4a215e68e997 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Mon, 18 Oct 2021 21:31:31 +0300
 Subject: [PATCH] AUR pkgbuild changes
 
 ---
- Makefile.in                    | 63 ++++++++++++++++++++++++++++------
+ Makefile.in                    | 69 ++++++++++++++++++++++++++++------
  compatibilitytool.vdf.template |  2 +-
- configure.sh                   |  2 ++
- make/rules-autoconf.mk         |  4 +--
- make/rules-cargo.mk            |  4 ++-
- make/rules-cmake.mk            |  4 +--
- make/rules-common.mk           | 18 ++++++----
- make/rules-configure.mk        |  4 +--
+ configure.sh                   |  2 +
+ make/rules-autoconf.mk         |  4 +-
+ make/rules-cargo.mk            |  4 +-
+ make/rules-cmake.mk            |  4 +-
+ make/rules-common.mk           | 18 +++++----
+ make/rules-configure.mk        |  4 +-
  make/rules-meson.mk            |  3 +-
  make/rules-winemaker.mk        |  2 +-
- proton                         |  6 ++--
- 11 files changed, 80 insertions(+), 32 deletions(-)
+ proton                         |  6 +--
+ 11 files changed, 86 insertions(+), 32 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 546cac8..9c3f297 100644
+index 546cac8..f281d6e 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -63,7 +63,6 @@ ifeq ($(ENABLE_CCACHE),1)
@@ -103,16 +103,29 @@ index 546cac8..9c3f297 100644
  	-Dbash-completion=disabled
  
  GSTREAMER_DEPENDS = gst_orc
-@@ -469,6 +489,8 @@ $(eval $(call rules-meson,graphene,64))
+@@ -459,6 +479,11 @@ $(eval $(call rules-meson,gstreamer,64))
+ ## graphene
+ ##
+ 
++GRAPHENE_MESON_ARGS := \
++	-Dtests=false \
++	-Dintrospection=disabled \
++	-Dinstalled_tests=false
++
+ $(eval $(call rules-source,graphene,$(SRCDIR)/graphene))
+ $(eval $(call rules-meson,graphene,32))
+ $(eval $(call rules-meson,graphene,64))
+@@ -469,6 +494,9 @@ $(eval $(call rules-meson,graphene,64))
  ##
  
  GST_BASE_MESON_ARGS := \
 +	$(GST_LTO) \
 +	-Ddoc=disabled \
++	-Dtools=disabled \
  	-Dauto_features=disabled \
  	-Dadder=enabled \
  	-Dapp=enabled \
-@@ -502,6 +524,8 @@ $(eval $(call rules-meson,gst_base,64))
+@@ -502,6 +530,8 @@ $(eval $(call rules-meson,gst_base,64))
  ##
  
  GST_GOOD_MESON_ARGS := \
@@ -121,7 +134,7 @@ index 546cac8..9c3f297 100644
  	-Dauto_features=disabled \
  	-Daudioparsers=enabled \
  	-Dautodetect=enabled \
-@@ -532,11 +556,15 @@ $(eval $(call rules-meson,gst_good,64))
+@@ -532,11 +562,15 @@ $(eval $(call rules-meson,gst_good,64))
  
  FFMPEG_CONFIGURE_ARGS := \
  	--enable-shared \
@@ -137,7 +150,7 @@ index 546cac8..9c3f297 100644
  $(eval $(call rules-source,ffmpeg,$(SRCDIR)/ffmpeg))
  $(eval $(call rules-configure,ffmpeg,32))
  $(eval $(call rules-configure,ffmpeg,64))
-@@ -743,7 +771,11 @@ WINE_SOURCE_ARGS = \
+@@ -743,7 +777,11 @@ WINE_SOURCE_ARGS = \
    --exclude include/config.h.in \
  
  WINE_CONFIGURE_ARGS = \
@@ -149,7 +162,7 @@ index 546cac8..9c3f297 100644
    --disable-tests
  
  WINE_CONFIGURE_ARGS64 = --enable-win64
-@@ -807,6 +839,9 @@ DXVK_MESON_ARGS32 = --bindir=$(DXVK_DST32)/lib/wine/dxvk
+@@ -807,6 +845,9 @@ DXVK_MESON_ARGS32 = --bindir=$(DXVK_DST32)/lib/wine/dxvk
  DXVK_MESON_ARGS64 = --bindir=$(DXVK_DST64)/lib64/wine/dxvk
  DXVK_DEPENDS = glslang
  
@@ -159,7 +172,7 @@ index 546cac8..9c3f297 100644
  $(eval $(call rules-source,dxvk,$(SRCDIR)/dxvk))
  $(eval $(call rules-meson,dxvk,32,CROSS))
  $(eval $(call rules-meson,dxvk,64,CROSS))
-@@ -829,6 +864,9 @@ $(OBJ)/.dxvk-post-build32:
+@@ -829,6 +870,9 @@ $(OBJ)/.dxvk-post-build32:
  DXVK_NVAPI_MESON_ARGS32 = --bindir=$(DXVK_NVAPI_DST32)/lib/wine/nvapi
  DXVK_NVAPI_MESON_ARGS64 = --bindir=$(DXVK_NVAPI_DST64)/lib64/wine/nvapi
  
@@ -169,7 +182,7 @@ index 546cac8..9c3f297 100644
  $(eval $(call rules-source,dxvk-nvapi,$(SRCDIR)/dxvk-nvapi))
  $(eval $(call rules-meson,dxvk-nvapi,32,CROSS))
  $(eval $(call rules-meson,dxvk-nvapi,64,CROSS))
-@@ -896,6 +934,9 @@ VKD3D_PROTON_MESON_ARGS32 = --bindir=$(VKD3D_PROTON_DST32)/lib/wine/vkd3d-proton
+@@ -896,6 +940,9 @@ VKD3D_PROTON_MESON_ARGS32 = --bindir=$(VKD3D_PROTON_DST32)/lib/wine/vkd3d-proton
  VKD3D_PROTON_MESON_ARGS64 = --bindir=$(VKD3D_PROTON_DST64)/lib64/wine/vkd3d-proton
  VKD3D_PROTON_DEPENDS = glslang
  
@@ -179,7 +192,7 @@ index 546cac8..9c3f297 100644
  $(eval $(call rules-source,vkd3d-proton,$(SRCDIR)/vkd3d-proton))
  $(eval $(call rules-meson,vkd3d-proton,32,CROSS))
  $(eval $(call rules-meson,vkd3d-proton,64,CROSS))
-@@ -1133,14 +1174,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
+@@ -1133,14 +1180,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
  	mkdir -p $(FONTS_OBJ)/source-han
  	# Do not immediately create the target file, so that make is interrupted
  	# it will restart again
@@ -197,7 +210,7 @@ index 546cac8..9c3f297 100644
  	mv $@.tmp $@
  
  $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
-@@ -1150,10 +1191,10 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
+@@ -1150,10 +1197,10 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
  	ttx -o $@ -m $($(notdir $@)_FONT) $(FONTS_OBJ)/ume-gothic/$(notdir $(basename $($(notdir $@)_NAMETABLE_PATCH))).ttx
  
  $(simsun.ttc): $(simsun.ttf) $(nsimsun.ttf)
