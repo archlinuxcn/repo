@@ -1,7 +1,7 @@
 # Maintainer: Chih-Hsuan Yen <yan12125@archlinux.org>
 
 pkgname=python-tensorflow-metadata
-pkgver=1.11.0
+pkgver=1.12.0
 pkgrel=1
 pkgdesc='Utilities for passing TensorFlow-related metadata between tools'
 arch=(any)
@@ -10,7 +10,7 @@ license=(Apache)
 depends=(python absl-py python-googleapis-common-protos python-protobuf)
 makedepends=(python-setuptools bazel)
 source=(https://github.com/tensorflow/metadata/archive/v$pkgver/$pkgname-$pkgver.tar.gz)
-sha256sums=('9b0363f0dd7d479dffaa9c7a6d8bae81069adeeb665f196a056233f4cbd3fe1b')
+sha256sums=('45297b5b1f9eb45a2608274f1227174ab4ea794a5a61354b9610cafd55424cea')
 
 build() {
   cd metadata-$pkgver
