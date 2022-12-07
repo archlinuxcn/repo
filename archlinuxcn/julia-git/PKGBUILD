@@ -284,7 +284,12 @@ package-julia-in() {
   # if ((BUILD_DOC)); then
   # Install the debug version first. If there's any file conflict
   # due to build system bugs, I want the final version to be the release one.
+
+  # Delete precompiled environment since it seems to be picking up the one compiled
+  # for the wrong julia build during document generation.
+  rm -rf doc/deps/compiled
   make install DESTDIR="$pkgdir" "${opts[@]}" JULIA_BUILD_MODE=debug
+  rm -rf doc/deps/compiled
   make install DESTDIR="$pkgdir" "${opts[@]}" JULIA_BUILD_MODE=release
   # else
   #   make install-nodoc DESTDIR="$pkgdir" "${opts[@]}"
