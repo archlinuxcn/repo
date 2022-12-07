@@ -1,46 +1,44 @@
 # The default settings for Geph4 client Service
 
 # Fill in the subcommand here, you can run
-# `geph4-client -h` to view:
-# binder-proxy | connect | sync
+# `geph4-client --help` to view:
+# binder-proxy | bridge-test | connect | sync
 SUBCOMMAND=connect
+
 # Fill in some flags here, you can run
-# `geph4-client connect -h` to view:
-# --stdio-vpn: whether or not to wait for VPN commands on stdio
-# --use-bridges: whether or not to use bridges
+# `geph4-client connect --help` to view:
+#
+# --exclude-prc: Whether or not to exclude PRC domains
+# --stdio-vpn: Whether or not to wait for VPN commands on stdio
+# --sticky-bridges: Whether or not to stick to the same set of bridges
+# --use-bridges: Whether or not to use bridges
+# --use-tcp: Whether or not to force TCP mode
+#
 FLAGS="--use-bridges"
+
 # Fill in some options here, you can run
-# `geph4-client connect -h` to view:
+#
+# `geph4-client connect --help` to view:
+#
 # --credential-cache:
 # /var/cache/geph4-client/
+#
 # --dns-listen:
-# where to listen for proxied DNS requests
-# --exit-server:
-# ca-mtl-01.exits.geph.io
-# fi-hel-01.exits.geph.io
-# sg-sgp-02.exits.geph.io
-# sosistab-jp-test.labooyah.be
-# tw-rmq-01.exits.geph.io
-# us-hio-01.exits.geph.io (default)
+# Where to listen for proxied DNS requests [default: 127.0.0.1:15353]
+#
 # --http-listen:
-# where to listen for HTTP proxy connections (default: 127.0.0.1:9910)
-# --nettest-name:
-# a name for this test instance
-# --nettest-server:
-# an endpoint to send test results
+# Where to listen for HTTP proxy connections [default: 127.0.0.1:9910]
+#
 # --socks5-listen:
-# where to listen for SOCKS5 connections (default: 127.0.0.1:9909)
+# Where to listen for SOCKS5 connections [default: 127.0.0.1:9909]
+#
 # --stats-listen:
-# where to listen for REST-based local connections (default: 127.0.0.1:9809)
-OPTIONS="--exit-server us-hio-01.exits.geph.io"
+# Where to listen for REST-based local connections [default: 127.0.0.1:9809]
+#
+OPTIONS=""
+#
 # Please enter the password you want to use:
 PASSWORD=password
 # Please enter the username you want to use:
 USERNAME=username
-
-# geph4-vpn-helper
-VPN_SUBCOMMAND=connect
-VPN_FLAGS="--stdio-vpn --use-bridges"
-VPN_OPTIONS="--dns-listen 127.0.0.1:15353 --exit-server us-hio-01.exits.geph.io"
-VPN_PASSWORD=password
-VPN_USERNAME=username
+#

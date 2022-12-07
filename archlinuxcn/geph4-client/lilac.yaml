@@ -1,8 +1,15 @@
+pre_build_script: |
+    update_pkgver_and_pkgrel(_G.newver.replace('-', '.'))
+
+post_build_script: |
+    git_pkgbuild_commit()
+    update_aur_repo()
+
 update_on:
   - source: cratesio
     cratesio: geph4-client
   - source: manual
-    manual: 1.0
+    manual: 1.1
 
 maintainers:
   - github: dctxmei

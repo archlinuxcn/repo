@@ -1,7 +1,7 @@
 # Maintainer: Dct Mei <dctxmei@yandex.com>
 
 pkgname=geph4-client
-pkgver=4.5.2.alpha.2
+pkgver=4.6.6
 pkgrel=1
 pkgdesc="A command-line Geph4 toolset"
 arch=('x86_64')
@@ -12,11 +12,12 @@ depends=('gcc-libs')
 makedepends=('rust')
 conflicts=('geph4-client-git')
 backup=('etc/default/geph4-client')
+options=('!lto')
 source=("geph4-client.default"
         "geph4-client.service")
-sha256sums=('fe10aa9e8ecc58e3b01487cb60c6fe970dd80343d1b715744e734077b1e14f66'
-            '2aef927e466ce22796bbaec6d618f6178d0251e6d0ba1df3c526d3374dd903da'
-            'a5e1765549c7f25d2578d05de302fcf6bcddc375863433ad315d1cc2ce15db42')
+sha256sums=('4e6ac4d3e31d7bf0fd4cb4b9269bbb124501a07a4701ce9728e857751773e4dd'
+            'e3d7e3afb1b524e93e60a80a21773a16de17643865bdf6a1a1f2e17fc2cc8e2d'
+            'a10582bdc20b72054877d65aa5a30d0702a63a6362f60edd4960c9be5dc3f7d3')
 
 _prepare() {
     if [[ "${pkgver}" =~ '.alpha' ]]; then
@@ -29,18 +30,21 @@ _prepare() {
         _beta="${pkgver#*.beta}"
         source+=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${_pkgver}-beta${_beta}.tar.gz")
         _pkgver="${_pkgver}-beta${_beta}"
+    else
+        source+=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+        _pkgver="${pkgver}"
     fi
 }
 
 _prepare
 
 build() {
-    cd "${srcdir}"/"${groups}-${_pkgver}"/
+    cd "${srcdir}"/"${pkgname}-${_pkgver}"/
     cargo build --release --manifest-path=Cargo.toml
 }
 
 package() {
-    cd "${srcdir}"/"${groups}-${_pkgver}"/
+    cd "${srcdir}"/"${pkgname}-${_pkgver}"/
     install -Dm 644 LICENSE.md "${pkgdir}"/usr/share/licenses/geph4-client/LICENSE
     install -Dm 755 target/release/geph4-client -t "${pkgdir}"/usr/bin/
     install -Dm 644 "${srcdir}"/geph4-client.default "${pkgdir}"/etc/default/geph4-client
