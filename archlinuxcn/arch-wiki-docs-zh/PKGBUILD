@@ -1,0 +1,37 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Maintainer: George Rawlinson <grawlinson@archlinux.org>
+# Maintainer: Sergej Pupykin <pupykin.s+arch@gmail.com>
+
+pkgname=arch-wiki-docs-zh
+pkgver=20221208
+pkgrel=1
+pkgdesc='Pages from www.archlinuxcn.org optimized for offline browsing'
+arch=('any')
+url='https://github.com/lahwaacz/arch-wiki-docs'
+license=('FDL')
+makedepends=(
+  'git' 'python' 'python-simplemediawiki' 'python-lxml' 'python-cssselect' 'python-requests'
+)
+options=('!strip')
+_commit='8082524dda618479fca65ab6cb13d69822d444bd'
+source=("$pkgname::git+https://github.com/lahwaacz/arch-wiki-docs#commit=$_commit")
+b2sums=('SKIP')
+
+pkgver() {
+  date "+%Y%m%d"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  sed -i 's|^url = .*|url = "https://wiki.archlinuxcn.org/wzh/api.php"|' ArchWiki/ArchWiki.py
+  LANG=en_US.UTF-8 python \
+    arch-wiki-docs.py \
+    --output-directory "$srcdir/build_wiki" \
+    --clean
+}
+
+package() {
+  install -vdm755 "$pkgdir/usr/share/doc/arch-wiki-zh/html"
+  cp -r build_wiki/* "$pkgdir/usr/share/doc/arch-wiki-zh/html"
+}
