@@ -6,11 +6,11 @@ pkgname=('dolphin-emu-git' 'dolphin-emu-nogui-git')
 pkgver=5.0.r18021.abf08b58699
 pkgrel=1
 pkgdesc='A GameCube / Wii / Triforce emulator'
-arch=('x86_64')
+arch=('x86_64' 'aarch64')
 url='http://www.dolphin-emu.org/'
 license=('GPL')
 depends=(
-  'alsa-lib' 'bluez-libs' 'enet' 'hidapi' 'libevdev' 'libgl' 'libpng'
+  'alsa-lib' 'bluez-libs' 'cubeb' 'enet' 'hidapi' 'libevdev' 'libgl' 'libpng'
   'libpulse' 'libx11' 'libxi' 'libxrandr' 'lzo' 'mbedtls' 'pugixml' 'qt6-base'
   'sfml' 'zlib' 'minizip-ng'
   'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libcurl.so'
