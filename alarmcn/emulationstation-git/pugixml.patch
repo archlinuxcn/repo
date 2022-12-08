@@ -1,0 +1,213 @@
+diff --git a/CMake/Packages/Findpugixml.cmake b/CMake/Packages/Findpugixml.cmake
+new file mode 100755
+index 0000000..ce0c637
+--- /dev/null
++++ b/CMake/Packages/Findpugixml.cmake
+@@ -0,0 +1,25 @@
++# CMake Module to locate the pugixml library
++#
++# Use via find_package( pugixml ) in CMakeLists.txt
++#
++# Sets the following variables:
++#
++# pugixml_INCLUDE_DIR
++# pugixml_LIBRARY_DIR
++# pugixml_LIBRARIES
++# pugixml_FOUND
++#
++
++find_path (pugixml_INCLUDE_DIR NAMES pugixml.hpp)
++find_library (pugixml_LIBRARIES NAMES pugixml)
++get_filename_component (pugixml_LIBRARY_PATH ${pugixml_LIBRARIES} DIRECTORY)
++
++set (pugixml_INCLUDE_DIR ${pugixml_INCLUDE_DIR})
++set (pugixml_LIBRARIES ${pugixml_LIBRARIES})
++
++include (FindPackageHandleStandardArgs)
++
++find_package_handle_standard_args (pugixml DEFAULT_MSG pugixml_LIBRARIES
++                                                       pugixml_INCLUDE_DIR)
++
++mark_as_advanced (pugixml_LIBRARIES pugixml_INCLUDE_DIR)
+\ No newline at end of file
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index eb9f403..22a2341 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -92,6 +92,7 @@ find_package(FreeImage REQUIRED)
+ find_package(SDL2 REQUIRED)
+ find_package(CURL REQUIRED)
+ find_package(VLC REQUIRED)
++find_package(pugixml REQUIRED)
+ find_package(RapidJSON REQUIRED)
+ 
+ #add libCEC support
+@@ -162,6 +163,7 @@ set(COMMON_INCLUDE_DIRS
+     ${SDL2_INCLUDE_DIR}
+     ${CURL_INCLUDE_DIR}
+     ${VLC_INCLUDE_DIR}
++    ${pugixml_INCLUDE_DIR}
+     ${RAPIDJSON_INCLUDE_DIRS}
+     ${CMAKE_CURRENT_SOURCE_DIR}/external
+     ${CMAKE_CURRENT_SOURCE_DIR}/es-core/src
+@@ -200,7 +202,7 @@ set(COMMON_LIBRARIES
+     ${SDL2_LIBRARY}
+     ${CURL_LIBRARIES}
+     ${VLC_LIBRARIES}
+-    pugixml
++    ${pugixml_LIBRARIES}
+     nanosvg
+ )
+ 
+diff --git a/es-app/src/CollectionSystemManager.cpp b/es-app/src/CollectionSystemManager.cpp
+index 372c64b..a10bc04 100644
+--- a/es-app/src/CollectionSystemManager.cpp
++++ b/es-app/src/CollectionSystemManager.cpp
+@@ -12,7 +12,7 @@
+ #include "Settings.h"
+ #include "SystemData.h"
+ #include "ThemeData.h"
+-#include <pugixml/src/pugixml.hpp>
++#include <pugixml.hpp>
+ #include <fstream>
+ 
+ std::string myCollectionsName = "collections";
+diff --git a/es-app/src/Gamelist.cpp b/es-app/src/Gamelist.cpp
+index c4c712b..c10d8df 100644
+--- a/es-app/src/Gamelist.cpp
++++ b/es-app/src/Gamelist.cpp
+@@ -8,7 +8,7 @@
+ #include "Log.h"
+ #include "Settings.h"
+ #include "SystemData.h"
+-#include <pugixml/src/pugixml.hpp>
++#include <pugixml.hpp>
+ 
+ FileData* findOrCreateFile(SystemData* system, const std::string& path, FileType type)
+ {
+diff --git a/es-app/src/MetaData.cpp b/es-app/src/MetaData.cpp
+index f5d466b..9893773 100644
+--- a/es-app/src/MetaData.cpp
++++ b/es-app/src/MetaData.cpp
+@@ -2,7 +2,7 @@
+ 
+ #include "utils/FileSystemUtil.h"
+ #include "Log.h"
+-#include <pugixml/src/pugixml.hpp>
++#include <pugixml.hpp>
+ 
+ MetaDataDecl gameDecls[] = {
+ 	// key,         type,                   default,            statistic,  name in GuiMetaDataEd,  prompt in GuiMetaDataEd
+diff --git a/es-app/src/SystemData.h b/es-app/src/SystemData.h
+index 688bc80..5a2e8fa 100644
+--- a/es-app/src/SystemData.h
++++ b/es-app/src/SystemData.h
+@@ -9,7 +9,7 @@
+ #include <string>
+ #include <vector>
+ 
+-#include <pugixml/src/pugixml.hpp>
++#include <pugixml.hpp>
+ 
+ class FileData;
+ class FileFilterIndex;
+diff --git a/es-app/src/scrapers/GamesDBJSONScraper.cpp b/es-app/src/scrapers/GamesDBJSONScraper.cpp
+index 3bf0d6e..9cfcd7c 100644
+--- a/es-app/src/scrapers/GamesDBJSONScraper.cpp
++++ b/es-app/src/scrapers/GamesDBJSONScraper.cpp
+@@ -10,7 +10,7 @@
+ #include "Settings.h"
+ #include "SystemData.h"
+ #include "utils/TimeUtil.h"
+-#include <pugixml/src/pugixml.hpp>
++#include <pugixml.hpp>
+ 
+ /* When raspbian will get an up to date version of rapidjson we'll be
+    able to have it throw in case of error with the following:
+diff --git a/es-app/src/scrapers/ScreenScraper.cpp b/es-app/src/scrapers/ScreenScraper.cpp
+index e7f9625..74b77d7 100644
+--- a/es-app/src/scrapers/ScreenScraper.cpp
++++ b/es-app/src/scrapers/ScreenScraper.cpp
+@@ -7,7 +7,7 @@
+ #include "PlatformId.h"
+ #include "Settings.h"
+ #include "SystemData.h"
+-#include <pugixml/src/pugixml.hpp>
++#include <pugixml.hpp>
+ #include <cstring>
+ 
+ using namespace PlatformIds;
+diff --git a/es-core/src/InputConfig.cpp b/es-core/src/InputConfig.cpp
+index eb5e59c..3b557d0 100644
+--- a/es-core/src/InputConfig.cpp
++++ b/es-core/src/InputConfig.cpp
+@@ -1,7 +1,7 @@
+ #include "InputConfig.h"
+ 
+ #include "Log.h"
+-#include <pugixml/src/pugixml.hpp>
++#include <pugixml.hpp>
+ 
+ //some util functions
+ std::string inputTypeToString(InputType type)
+diff --git a/es-core/src/InputManager.cpp b/es-core/src/InputManager.cpp
+index 57c64b4..75c6889 100644
+--- a/es-core/src/InputManager.cpp
++++ b/es-core/src/InputManager.cpp
+@@ -6,7 +6,7 @@
+ #include "platform.h"
+ #include "Scripting.h"
+ #include "Window.h"
+-#include <pugixml/src/pugixml.hpp>
++#include <pugixml.hpp>
+ #include <SDL.h>
+ #include <iostream>
+ #include <assert.h>
+diff --git a/es-core/src/MameNames.cpp b/es-core/src/MameNames.cpp
+index e0dee5c..f05e864 100644
+--- a/es-core/src/MameNames.cpp
++++ b/es-core/src/MameNames.cpp
+@@ -3,7 +3,7 @@
+ #include "resources/ResourceManager.h"
+ #include "utils/FileSystemUtil.h"
+ #include "Log.h"
+-#include <pugixml/src/pugixml.hpp>
++#include <pugixml.hpp>
+ #include <string.h>
+ 
+ MameNames* MameNames::sInstance = nullptr;
+diff --git a/es-core/src/Settings.cpp b/es-core/src/Settings.cpp
+index 71317c9..a346d6b 100644
+--- a/es-core/src/Settings.cpp
++++ b/es-core/src/Settings.cpp
+@@ -4,7 +4,7 @@
+ #include "Log.h"
+ #include "Scripting.h"
+ #include "platform.h"
+-#include <pugixml/src/pugixml.hpp>
++#include <pugixml.hpp>
+ #include <algorithm>
+ #include <vector>
+ 
+diff --git a/es-core/src/ThemeData.cpp b/es-core/src/ThemeData.cpp
+index cb1b265..92a60b7 100644
+--- a/es-core/src/ThemeData.cpp
++++ b/es-core/src/ThemeData.cpp
+@@ -7,7 +7,7 @@
+ #include "Log.h"
+ #include "platform.h"
+ #include "Settings.h"
+-#include <pugixml/src/pugixml.hpp>
++#include <pugixml.hpp>
+ #include <algorithm>
+ 
+ std::vector<std::string> ThemeData::sSupportedViews { { "system" }, { "basic" }, { "detailed" }, { "grid" }, { "video" } };
+diff --git a/external/CMakeLists.txt b/external/CMakeLists.txt
+index 03b743b..deec3de 100644
+--- a/external/CMakeLists.txt
++++ b/external/CMakeLists.txt
+@@ -2,4 +2,3 @@
+ # package managers are included with the project (in the 'external' folder)
+ 
+ add_subdirectory("nanosvg")
+-add_subdirectory("pugixml")
