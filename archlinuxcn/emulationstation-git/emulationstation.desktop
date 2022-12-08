@@ -1,0 +1,25 @@
+[Desktop Entry]
+Name=EmulationStation
+GenericName=EmulationStation
+Comment=Front-end for emulators
+Exec=emulationstation
+Icon=emulationstation
+Terminal=false
+Type=Application
+StartupNotify=false
+Categories=Game;Emulator;
+
+[Desktop Action Windowed]
+Name=Open as window
+Exec=emulationstation --windowed
+OnlyShowIn=Unity;GNOME;
+
+[Desktop Action NoExit]
+Name=Don't display exit button
+Exec=emulationstation --no-exit
+OnlyShowIn=Unity;GNOME;
+
+[Desktop Action Vsync off]
+Name=Open in standalone mode
+Exec=emulationstation -vsync 0
+OnlyShowIn=Unity;GNOME;

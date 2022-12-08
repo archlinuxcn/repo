@@ -1,0 +1,79 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index eb9f403..96fde23 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -18,6 +18,10 @@ endif()
+ 
+ project(emulationstation-all)
+ 
++# program name to be used as a reference when looking up resources
++set(AppDataName "EmulationStation" CACHE STRING "Internal program name passed to compiler")
++add_definitions(-DAPPDATANAME="${AppDataName}")
++
+ #-------------------------------------------------------------------------------
+ #add local find scripts to CMAKE path
+ LIST(APPEND CMAKE_MODULE_PATH
+@@ -251,7 +255,9 @@ set(dir ${CMAKE_CURRENT_SOURCE_DIR})
+ set(EXECUTABLE_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
+ set(LIBRARY_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
+ 
+-
++# install rules for resources
++include(GNUInstallDirs)
++install(DIRECTORY resources DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/${AppDataName}")
+ #-------------------------------------------------------------------------------
+ # add each component
+ 
+diff --git a/es-app/CMakeLists.txt b/es-app/CMakeLists.txt
+index 4ff4fdc..3c2f11e 100644
+--- a/es-app/CMakeLists.txt
++++ b/es-app/CMakeLists.txt
+@@ -143,9 +143,10 @@ endif()
+ #-------------------------------------------------------------------------------
+ # set up CPack install stuff so `make install` does something useful
+ 
++include(GNUInstallDirs)
+ install(TARGETS emulationstation
+     RUNTIME
+-    DESTINATION bin)
++    DESTINATION "${CMAKE_INSTALL_BINDIR}")
+ 
+ INCLUDE(InstallRequiredSystemLibraries)
+ 
+diff --git a/es-core/src/resources/ResourceManager.cpp b/es-core/src/resources/ResourceManager.cpp
+index 9353dda..95d446d 100644
+--- a/es-core/src/resources/ResourceManager.cpp
++++ b/es-core/src/resources/ResourceManager.cpp
+@@ -3,6 +3,10 @@
+ #include "utils/FileSystemUtil.h"
+ #include <fstream>
+ 
++#ifndef APPDATANAME
++#define APPDATANAME "EmulationStation"
++#endif
++
+ auto array_deleter = [](unsigned char* p) { delete[] p; };
+ auto nop_deleter = [](unsigned char* /*p*/) { };
+ 
+@@ -27,6 +31,21 @@ std::string ResourceManager::getResourcePath(const std::string& path) const
+ 	{
+ 		std::string test;
+ 
++// check in standard AppData locations
++#if defined(__linux__)
++		test = Utils::FileSystem::getHomePath() + "/.local/share/" + APPDATANAME + "/resources/" + &path[2];
++		if (Utils::FileSystem::exists(test))
++			return test;
++
++		test = std::string("/usr/local/share/") + APPDATANAME + "/resources/" + &path[2];
++		if (Utils::FileSystem::exists(test))
++			return test;
++
++		test = std::string("/usr/share/") + APPDATANAME + "/resources/" + &path[2];
++		if (Utils::FileSystem::exists(test))
++			return test;
++#endif
++
+ 		// check in homepath
+ 		test = Utils::FileSystem::getHomePath() + "/.emulationstation/resources/" + &path[2];
+ 		if(Utils::FileSystem::exists(test))

@@ -5,22 +5,32 @@
 pkgname=emulationstation-git
 _gitname=EmulationStation
 pkgrel=1
-pkgver=1705.0c4b42de
+pkgver=1707.91d27892
 pkgdesc="A graphical front-end for emulators with controller navigation. Developed for the Raspbery Pi, but runs on most Linux systems."
-arch=('i686' 'x86_64' 'armv6h' 'armv7h')
+arch=('x86_64' 'aarch64')
 url="https://github.com/RetroPie/EmulationStation"
 license=('MIT')
-makedepends=('git' 'boost' 'freetype2' 'eigen' 'cmake' 'mesa' 'libsm')
-depends=('alsa-lib' 'curl' 'sdl2' 'boost-libs' 'freeimage' 'ttf-dejavu' 'libcec' 'rapidjson' 'glu' 'vlc')
-if [ "$CARCH" = "armv6h" ]; then
-depends+=('raspberrypi-firmware')
-else
-depends+=('libgl')
-fi
+install=emulationstation.install
+depends=('python' 'vlc' 'alsa-lib' 'sdl2' 'boost-libs' 'freeimage' 'curl' 'libraw' 'libcec' 'rapidjson' 'pugixml')
+makedepends=('git' 'boost' 'freetype2' 'cmake' 'curl')
+optdepends=('ttf-droid: Fallback fonts for Chinese/Japanese/Korean characters'
+            'dolphin-emu: GameCube and Wii support'
+            'mupen64plus: Nintendo 64 support'
+            'mednafen: NES and GBA support'
+            'zsnes: SNES support'
+            'stella: Atari 2600 support'
+            'ppsspp-headless: PSP support'
+            'steam: Steam support')
 source=('git+https://github.com/RetroPie/EmulationStation.git'
-        'git+https://github.com/zeux/pugixml.git')
-md5sums=('SKIP'
-         'SKIP')
+        "install.patch"
+        "pugixml.patch"
+        "emulationstation.desktop"
+        "emulationstation.png")
+sha256sums=('SKIP'
+         '2608b7de63be4d4d117c2712517e3c40df872f6619f08ac9356f13bdc8c179ab'
+         'e6cb6a134117cb734c69ed86eecd31cfe29b5d52aa3e00b71a614809c1d7e0fe'
+         '56a68a60577d015224d721ab169f1439d1545a0fdcf1c23eeee599dc49ea51c6'
+         'ac589d9da5c258226f8de76e99afe2b07ac86030ced90d284d31b51193057f9c')
 provides=('emulationstation')
 conflicts=('emulationstation')
 
@@ -30,22 +40,39 @@ pkgver() {
 }
 
 prepare() {
-	cd "$srcdir/$_gitname"
-	git submodule init
-	git config submodule.external/pugixml.url $srcdir/pugixml
-	git submodule update
+    rm -rf "${_gitname}/external/pugixml"
+    rm -rf "${_gitname}/.gitmodules"
+
+    patch -d "${_gitname}" -Np1 -i "${srcdir}/install.patch"
+    patch -d "${_gitname}" -Np1 -i "${srcdir}/pugixml.patch"
 }
 
 build() {
-    cd "$srcdir/$_gitname"
-    mkdir -p "$srcdir/$_gitname/build"
-    cd "$srcdir/$_gitname/build"
-    cmake ..
-    make
+    # Default to using desktop GL
+    _cmakeflags='-DGL:BOOL=ON'
+
+    if [[ "${CARCH}" = 'armv6h' ]]; then
+        # Raspberry Pi Model 1 only supports embedded GLES, also enable omxplayer
+        _cmakeflags='-DGLES:BOOL=ON -DRPI:BOOL=ON'
+    elif [[ "${CARCH}" == 'armv7h' || "${CARCH}" = 'aarch64' ]]; then
+        # Raspberry Pi Model 2 and up use mesa drivers
+        _cmakeflags='-DUSE_MESA_GLES:BOOL=ON'
+    fi
+
+    cmake -B "${_gitname}/build" \
+        -S "${_gitname}" \
+        -DCMAKE_BUILD_TYPE:STRING='None' \
+        -DCMAKE_INSTALL_LIBDIR:PATH='lib' \
+        -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
+        ${_cmakeflags} \
+        -Wno-dev -Wno-deprecated \
+    ..
+    make -C "${_gitname}/build" all
 }
 
 package() {
-    cd $_gitname
-    install -Dm755 "$srcdir/$_gitname/emulationstation" "$pkgdir/usr/bin/emulationstation"
+    make -C "${_gitname}/build" DESTDIR="${pkgdir}" install
+    install -Dm644 "$srcdir/emulationstation.png" "$pkgdir/usr/share/icons/hicolor/256x256/apps/emulationstation.png"
+    install -Dm644 "$srcdir/emulationstation.desktop" "$pkgdir/usr/share/applications/emulationstation.desktop"
     install -Dm644 "$srcdir/$_gitname/LICENSE.md" "$pkgdir/usr/share/licenses/emulationstation-git/LICENSE"
 }
