@@ -2,36 +2,50 @@
 # Maintainer: George Rawlinson <grawlinson@archlinux.org>
 # Maintainer: Sergej Pupykin <pupykin.s+arch@gmail.com>
 
-pkgname=arch-wiki-docs-zh
-pkgver=20221208
+pkgbase=arch-wiki-docs-zh
+pkgname=(arch-wiki-docs-zh-cn arch-wiki-docs-zh-tw)
+pkgver=20221209
 pkgrel=1
 pkgdesc='Pages from www.archlinuxcn.org optimized for offline browsing'
 arch=('any')
-url='https://github.com/lahwaacz/arch-wiki-docs'
+url='https://github.com/archlinuxcn/arch-wiki-docs-zh'
 license=('FDL')
 makedepends=(
   'git' 'python' 'python-simplemediawiki' 'python-lxml' 'python-cssselect' 'python-requests'
 )
 options=('!strip')
-_commit='8082524dda618479fca65ab6cb13d69822d444bd'
-source=("$pkgname::git+https://github.com/lahwaacz/arch-wiki-docs#commit=$_commit")
+source=("$pkgbase::git+https://github.com/archlinuxcn/arch-wiki-docs-zh.git")
 b2sums=('SKIP')
 
 pkgver() {
   date "+%Y%m%d"
 }
 
-prepare() {
-  cd "$pkgname"
+build() {
+  cd "$pkgbase"
 
-  sed -i 's|^url = .*|url = "https://wiki.archlinuxcn.org/wzh/api.php"|' ArchWiki/ArchWiki.py
   LANG=en_US.UTF-8 python \
     arch-wiki-docs.py \
-    --output-directory "$srcdir/build_wiki" \
+    --output-directory "$srcdir/build_wiki_zh-cn" \
+    --variant "zh-cn" \
+    --clean
+
+  LANG=en_US.UTF-8 python \
+    arch-wiki-docs.py \
+    --output-directory "$srcdir/build_wiki_zh-tw" \
+    --variant "zh-tw" \
     --clean
 }
 
-package() {
-  install -vdm755 "$pkgdir/usr/share/doc/arch-wiki-zh/html"
-  cp -r build_wiki/* "$pkgdir/usr/share/doc/arch-wiki-zh/html"
+package_arch-wiki-docs-zh-cn() {
+  _package zh-cn
+}
+
+package_arch-wiki-docs-zh-tw() {
+  _package zh-tw
+}
+
+_package() {
+  install -vdm755 "$pkgdir/usr/share/doc/arch-wiki-$1/html"
+  cp -r build_wiki_$1/* "$pkgdir/usr/share/doc/arch-wiki-$1/html"
 }
