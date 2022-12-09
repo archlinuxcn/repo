@@ -12,11 +12,11 @@ license=("GPL3")
 
 depends=(
   lmdb qt5-base qt5-svg qt5-multimedia qt5-declarative qt5-quickcontrols2 qtkeychain-qt5
-  openssl mtxclient-git libmatrix_client.so libolm.so libspdlog.so libfmt.so
+  openssl libmatrix_client.so libolm.so libspdlog.so libfmt.so
   cmark gst-plugins-base-libs gst-plugins-bad-libs libxcb xcb-util-wm hicolor-icon-theme
 )
 
-makedepends=(git cmake qt5-tools nlohmann-json fontconfig lmdbxx pkg-config asciidoc)
+makedepends=(git cmake qt5-tools nlohmann-json fontconfig lmdbxx pkg-config asciidoc mtxclient-git)
 
 provides=("nheko")
 conflicts=("nheko")
@@ -60,4 +60,6 @@ package() {
   ((next_min=min_ver + 1))
   depends+=("cmark>=${maj_ver}.${min_ver}"
             "cmark<${maj_ver}.${next_min}")
+
+  depends+=("mtxclient-git=$(pacman -Q mtxclient-git | cut -d \  -f 2 | sed 's/-.*//')")
 }
