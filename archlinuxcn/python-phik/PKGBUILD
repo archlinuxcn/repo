@@ -2,8 +2,8 @@
 
 _pkgname=PhiK
 pkgname=python-phik
-pkgver=0.12.2
-pkgrel=2
+pkgver=0.12.3
+pkgrel=1
 pkgdesc='Phi_K correlation analyzer library'
 arch=('x86_64')
 url='https://github.com/kaveio/phik'
@@ -30,7 +30,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/KaveIO/PhiK/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('b310cb84eb8947807911856c7bf9968f111b5fba8e7f60116ab6dfc038418755a015c80f6049dc6e138126fbe80ecf413b00f9b26d8d75a02669b83098757f29')
+sha512sums=('ab56b640542ffdf67fe91c65f580e07a591cc1c28c1d071d9bf76acee911eb79e0671882242af83250607775154b69539dcdaa7c7dae49715cc7a827191e9fdd')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
