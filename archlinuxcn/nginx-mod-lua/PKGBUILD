@@ -1,0 +1,43 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
+# from: github
+# what: openresty/lua-nginx-module
+# match! rc[0-9]*$
+
+pkgname=nginx-mod-lua
+_modname="${pkgname#nginx-mod-}"
+pkgver=0.10.22
+pkgrel=1
+pkgdesc='Lua script engine module for nginx'
+arch=('x86_64')
+depends=('nginx' 'nginx-mod-ndk' 'luajit' 'lua-resty-core' 'pcre')
+makedepends=('nginx-src')
+url="https://github.com/openresty/lua-nginx-module"
+license=('BSD')
+source=(https://github.com/openresty/$_modname-nginx-module/archive/v$pkgver/$_modname-$pkgver.tar.gz)
+sha256sums=('294d3d4b2d14fda1b8c539ff86f90047d203df861eb9a1ac44ec5c679ef55408')
+
+prepare() {
+	mkdir -p build
+	cd build
+	ln -sf /usr/src/nginx/auto
+	ln -sf /usr/src/nginx/src
+}
+
+build() {
+	cd build
+	export LUAJIT_INC=$(pkg-config luajit --variable=includedir)
+	export LUAJIT_LIB=$(pkg-config luajit --variable=libdir)
+	/usr/src/nginx/configure \
+		--with-compat \
+		--with-ld-opt='-lpcre -Wl,-E'  \
+		--add-dynamic-module=../$_modname-nginx-module-$pkgver
+	make modules
+}
+
+package() {
+	cd build/objs
+	for mod in *.so; do
+		install -Dm755 $mod "$pkgdir"/usr/lib/nginx/modules/$mod
+	done
+}

@@ -1,0 +1,29 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Ahmad Hasan Mubashshir <ahmubashshir@gmail.com>
+# from: github
+# what: openresty/lua-resty-core
+# match! rc[0-9]*$
+
+pkgname=lua-resty-core
+pkgver=0.1.24
+pkgrel=1
+
+pkgdesc='Lua script engine for nginx lua module'
+arch=('any')
+depends=('luajit' 'lua-resty-lrucache')
+url="https://github.com/openresty/lua-resty-core"
+license=('BSD')
+
+source=("$pkgname-$pkgver.tar.gz::https://github.com/openresty/$pkgname/archive/v$pkgver.tar.gz")
+
+sha256sums=('f6aabb0811cfd8b0b0c986399f713fd66c559623b6b534f33783da0e3bb68ea3')
+
+build() {
+	cd "$pkgname-$pkgver"
+	make
+}
+
+package() {
+	cd "$pkgname-$pkgver"
+	make DESTDIR="$pkgdir" PREFIX=/usr LUA_LIB_DIR='$(PREFIX)/share/lua/$(LUA_VERSION)' LUA_VERSION=5.1 install
+}
