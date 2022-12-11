@@ -1,0 +1,58 @@
+From 81dd64c3705f89653859a5d0001dd0ca983a92e2 Mon Sep 17 00:00:00 2001
+From: Frank Tang <ftang@chromium.org>
+Date: Wed, 16 Nov 2022 09:18:45 -0800
+Subject: [PATCH] [intl] Enhance Date parser to take Unicode SPACE
+
+This is needed to prepare for the landing of ICU72.
+Allow U+202F in the Date String, which the toLocaleString("en-US")
+will generate w/ ICU72.
+
+Bug: v8:13494
+Change-Id: I41b83c4094ce3d0737a72dcd6310b52c68fdcdca
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/4027341
+Reviewed-by: Yang Guo <yangguo@chromium.org>
+Reviewed-by: Jungshik Shin <jshin@chromium.org>
+Commit-Queue: Frank Tang <ftang@chromium.org>
+Cr-Commit-Position: refs/heads/main@{#84308}
+
+(cherry picked from commit 2ada52cffbff11074abfaac18938bf02d85454f5)
+---
+ src/date/dateparser-inl.h | 2 +-
+ src/date/dateparser.h     | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/date/dateparser-inl.h b/src/date/dateparser-inl.h
+index 623986d2b1..b45479dc51 100644
+--- a/src/date/dateparser-inl.h
++++ b/src/date/dateparser-inl.h
+@@ -192,7 +192,7 @@ DateParser::DateToken DateParser::DateStringTokenizer<CharType>::Scan() {
+   if (in_->Skip('+')) return DateToken::Symbol('+');
+   if (in_->Skip('.')) return DateToken::Symbol('.');
+   if (in_->Skip(')')) return DateToken::Symbol(')');
+-  if (in_->IsAsciiAlphaOrAbove()) {
++  if (in_->IsAsciiAlphaOrAbove() && !in_->IsWhiteSpaceChar()) {
+     DCHECK_EQ(KeywordTable::kPrefixLength, 3);
+     uint32_t buffer[3] = {0, 0, 0};
+     int length = in_->ReadWord(buffer, 3);
+diff --git a/src/date/dateparser.h b/src/date/dateparser.h
+index 1a0a0b15ab..59b2f3c9fd 100644
+--- a/src/date/dateparser.h
++++ b/src/date/dateparser.h
+@@ -91,7 +91,8 @@ class DateParser : public AllStatic {
+     // Return word length.
+     int ReadWord(uint32_t* prefix, int prefix_size) {
+       int len;
+-      for (len = 0; IsAsciiAlphaOrAbove(); Next(), len++) {
++      for (len = 0; IsAsciiAlphaOrAbove() && !IsWhiteSpaceChar();
++           Next(), len++) {
+         if (len < prefix_size) prefix[len] = AsciiAlphaToLower(ch_);
+       }
+       for (int i = len; i < prefix_size; i++) prefix[i] = 0;
+@@ -115,6 +116,7 @@ class DateParser : public AllStatic {
+     bool IsEnd() const { return ch_ == 0; }
+     bool IsAsciiDigit() const { return IsDecimalDigit(ch_); }
+     bool IsAsciiAlphaOrAbove() const { return ch_ >= 'A'; }
++    bool IsWhiteSpaceChar() const { return IsWhiteSpace(ch_); }
+     bool IsAsciiSign() const { return ch_ == '+' || ch_ == '-'; }
+ 
+     // Return 1 for '+' and -1 for '-'.
