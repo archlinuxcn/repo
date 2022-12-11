@@ -8,7 +8,7 @@ arch=("x86_64" 'aarch64')
 url="https://github.com/MetaCubeX/Clash.Meta"
 license=("GPL3")
 depends=('glibc' 'clash-geoip')
-makedepends=('go' 'libcap')
+makedepends=('go')
 conflicts=(clash-meta)
 backup=('etc/clash-meta/config.yaml')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
@@ -44,7 +44,6 @@ package() {
     install -Dm644 "config.yaml" -t "${pkgdir}/etc/clash-meta"
     install -Dm644 "clash-meta.service"  -t "${pkgdir}/usr/lib/systemd/system"
     install -Dm644 "clash-meta@.service" -t "${pkgdir}/usr/lib/systemd/system"
-    setcap cap_net_bind_service,cap_net_admin=+ep "${pkgdir}"/usr/bin/clash-meta
     ln -sf /etc/clash/Country.mmdb ${pkgdir}/etc/${pkgname}/Country.mmdb
     #geosite.dat from community repo does not work
     # ln -sf /usr/share/v2ray/geosite.dat ${pkgdir}/etc/${pkgname}/GeoSite.dat
