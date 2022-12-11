@@ -10,6 +10,9 @@ pre_build_script: aur_pre_build(maintainers=['j.taala'])
 
 post_build: aur_post_build
 
+repo_depends:
+  - qt5-webkit
+
 update_on:
   - source: aur
     aur: genymotion
