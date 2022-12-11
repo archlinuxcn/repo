@@ -70,6 +70,25 @@ properties:
           required:
             - alias
     minItems: 1
+  update_on_build:
+    description: Build this package if the configured packages are built in the same batch. Note that the packages should also be added to "repo_depends".
+    type: array
+    items:
+      type: object
+      description: on_build configuration
+      properties:
+        pkgbase:
+          type: string
+          description: pkgbase to build on
+        from_pattern:
+          type: string
+          description: a regex to transform pkgbase's version
+        to_pattern:
+          type: string
+          description: a replacement string to transform pkgbase's version to
+      required:
+        - pkgbase
+    minItems: 0
   maintainers:
     description: List of maintainers for receiving email notifications
     type: array
