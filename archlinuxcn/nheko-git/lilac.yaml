@@ -20,8 +20,6 @@ update_on:
     to_pattern: \1
     alpm: cmark
     repo: extra
-  - alias: alpm-lilac
-    alpm: mtxclient-git
   - source: alpm
     alpm: spdlog
     provided: libspdlog.so
@@ -33,3 +31,6 @@ update_on:
     provided: libolm.so
   - source: manual
     manual: 1
+
+update_on_build:
+  - pkgbase: mtxclient-git
