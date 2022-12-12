@@ -6,7 +6,7 @@
 
 pkgname=hsakmt-roct
 pkgver=5.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Radeon Open Compute Thunk Interface'
 arch=('x86_64')
 url='https://rocmdocs.amd.com/en/latest/Installation_Guide/ROCt.html'
@@ -29,27 +29,6 @@ build() {
     -DBUILD_SHARED_LIBS=ON \
     -DCMAKE_INSTALL_PREFIX=/opt/rocm
   cmake --build build
-}
-
-check() {
-  local _tmpdir="$(mktemp -d -p $_dirname)"
-  DESTDIR="$_tmpdir" cmake --install build
-
-  LIBHSAKMT_PATH="$srcdir/$_tmpdir/opt/rocm" \
-  cmake \
-    -B kfd-build \
-    -Wno-dev \
-    -S "$_dirname/tests/kfdtest" \
-    -DCMAKE_BUILD_TYPE=None \
-    -DLLVM_DIR=/opt/rocm/llvm/lib/cmake/llvm \
-    -DCMAKE_LINK_DIRECTORIES_BEFORE=ON
-  cmake --build kfd-build
-
-  cd kfd-build
-  # Stress tests cause system crash,
-  # https://github.com/RadeonOpenCompute/ROCT-Thunk-Interface/issues/76
-  LD_LIBRARY_PATH="$srcdir/$_tmpdir/opt/rocm" \
-  ./run_kfdtest.sh -e "KFDMemoryTest.LargestSysBufferTest:KFDMemoryTest.BigSysBufferStressTest:KFDQMTest.CreateQueueStressSingleThreaded"
 }
 
 package() {
