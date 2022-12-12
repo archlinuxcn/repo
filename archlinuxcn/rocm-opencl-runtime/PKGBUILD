@@ -4,7 +4,7 @@
 
 pkgname=rocm-opencl-runtime
 pkgver=5.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc='OpenCL implementation for AMD'
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/ROCm-OpenCL-Runtime'
@@ -24,28 +24,21 @@ build() {
     cmake \
         -Wno-dev \
         -B build-rocclr \
-	    -S "$_rocclr_dir" \
+        -S "$_rocclr_dir" \
+        -DCMAKE_BUILD_TYPE=None \
         -DAMD_OPENCL_PATH="$srcdir/$_dirname"
     cmake --build build-rocclr
 
-    # Tests do not compile with strict format security
-    CXXFLAGS=${CXXFLAGS//-Werror=format-security/}
     cmake \
         -Wno-dev \
         -B build \
         -S "$_dirname" \
+        -DCMAKE_BUILD_TYPE=None \
         -DCMAKE_INSTALL_PREFIX=/opt/rocm \
         -DROCM_PATH=/opt/rocm \
-        -DBUILD_TESTS=ON \
         -DCMAKE_PREFIX_PATH="$srcdir/$_rocclr_dir;/opt/rocm" \
         -DAMD_OPENCL_PATH="$srcdir/$_dirname"
     cmake --build build
-}
-
-check() {
-    # Two test targets are defined: runtime and performance.
-    # Performance tests freeze video output thus we're not calling them here.
-    cmake --build build --target test.ocltst.oclruntime
 }
 
 package() {
