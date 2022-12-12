@@ -1,0 +1,9 @@
+# arg 1:  the new package version
+post_install() {
+  /sbin/ldconfig -r .
+}
+
+# arg 1:  the old package version
+post_remove() {
+  post_install
+}
