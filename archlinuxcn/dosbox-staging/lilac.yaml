@@ -6,6 +6,10 @@ build_prefix: extra-x86_64
 
 repo_depends:
   - munt
+update_on_build:
+  - pkgbase: munt
+    from_pattern: ^(\d+)\.(\d+)\..*
+    to_pattern: \1
 
 pre_build_script: |
     update_pkgver_and_pkgrel(_G.newver)

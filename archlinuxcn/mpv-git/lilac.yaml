@@ -4,8 +4,11 @@ maintainers:
 build_prefix: extra-x86_64
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
+
 repo_depends:
   - libplacebo-git
+update_on_build:
+  - pkgbase: libplacebo-git
 
 update_on:
   - source: github
