@@ -17,7 +17,7 @@
 
 
 pkgname='tor-browser'
-pkgver='11.5.8'
+pkgver='12.0'
 pkgrel=1
 pkgdesc='Tor Browser Bundle: anonymous browsing using Firefox and Tor (international PKGBUILD)'
 url='https://www.torproject.org/projects/torbrowser.html'
@@ -61,7 +61,7 @@ _localetor() {
 	elif curl --output /dev/null --silent --head --fail "${_urlbase}/${pkgname}-${_archstr}-${pkgver}_${_shortlocale}.tar.xz"; then
 		echo -n "${_shortlocale}"
 	else
-		echo -n 'en-US'
+		echo -n 'ALL'
 	fi
 
 }
