@@ -1,0 +1,37 @@
+# Maintainer: Antonio Rojas <arojas@archlinux.org>
+# Contributor: jedbrown
+# Contributor: eleftg
+# Contributor: mickele
+# Contributor: gborzi
+# Contributor: abenson
+
+pkgname=metis
+pkgver=5.1.0.p10
+_pkgver=5.1.0-p10
+pkgrel=2
+arch=(aarch64 x86_64)
+pkgdesc="A set of serial programs for partitioning graphs, partitioning finite element meshes, and producing fill reducing orderings for sparse matrices"
+url="http://glaros.dtc.umn.edu/gkhome/metis/metis/overview"
+license=(custom)
+depends=(glibc)
+makedepends=(cmake)
+options=(docs)
+source=($pkgname-$pkgver.tar.bz2::https://bitbucket.org/petsc/pkg-metis/get/v$_pkgver.tar.bz2)
+sha256sums=('ddcb99746a8795ebb9d9c020acc31b85fe696eb2992c9ee5ac7588074a503a4b')
+
+prepare() {
+  mv petsc-pkg-metis-* $pkgname-$_pkgver
+}
+
+build() {
+  cmake -B build -S $pkgname-$_pkgver \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DSHARED=ON \
+        -DMATH_LIB=m
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+  install -m644 -D $pkgname-$_pkgver/LICENSE.txt "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
