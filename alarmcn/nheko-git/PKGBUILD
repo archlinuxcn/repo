@@ -52,14 +52,20 @@ package() {
 
   make DESTDIR="$pkgdir" install
 
+  # Use a different variable name to hide the automatically generated deps
+  # from makepkg/devtools
+  _deps=()
+
   cmarkver=$(objdump -p /usr/lib/libcmark.so | \
                grep SONAME | sed -e 's/.*cmark\.so\.//')
   [[ $cmarkver =~ ^([0-9]*)\.([0-9]*)\.([0-9]*) ]]
   maj_ver=${BASH_REMATCH[1]}
   min_ver=${BASH_REMATCH[2]}
   ((next_min=min_ver + 1))
-  depends+=("cmark>=${maj_ver}.${min_ver}"
-            "cmark<${maj_ver}.${next_min}")
+  _deps+=("cmark>=${maj_ver}.${min_ver}"
+          "cmark<${maj_ver}.${next_min}")
 
-  depends+=("mtxclient-git=$(pacman -Q mtxclient-git | cut -d \  -f 2 | sed 's/-.*//')")
+  _deps+=("mtxclient-git=$(pacman -Q mtxclient-git | cut -d \  -f 2 | sed 's/-.*//')")
+
+  depends+=("${_deps[@]}")
 }
