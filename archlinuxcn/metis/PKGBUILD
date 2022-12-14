@@ -20,7 +20,23 @@ source=($pkgname-$pkgver.tar.bz2::https://bitbucket.org/petsc/pkg-metis/get/v$_p
 sha256sums=('ddcb99746a8795ebb9d9c020acc31b85fe696eb2992c9ee5ac7588074a503a4b')
 
 prepare() {
+  echo "ls:"
+  ls
+  echo
+  echo
+
+  echo "echo petsc-pkg-metis-*:"
+  echo petsc-pkg-metis-*
+  echo
+  echo
+
+  echo "_pkgver=$_pkgver"
   mv petsc-pkg-metis-* $pkgname-$_pkgver
+  echo
+  echo
+
+  echo "GKlib/GKlibSystem.cmake:"
+  cat $pkgname-$_pkgver/GKlib/GKlibSystem.cmake
 }
 
 build() {
