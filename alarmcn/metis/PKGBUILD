@@ -16,7 +16,7 @@ license=(custom)
 depends=(glibc)
 makedepends=(cmake)
 options=(docs)
-source=($pkgname-$pkgver.tar.bz2::https://bitbucket.org/petsc/pkg-metis/get/v$_pkgver.tar.bz2)
+source=(https://bitbucket.org/petsc/pkg-metis/get/v$_pkgver.tar.bz2)
 sha256sums=('ddcb99746a8795ebb9d9c020acc31b85fe696eb2992c9ee5ac7588074a503a4b')
 
 prepare() {
