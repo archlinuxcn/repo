@@ -1,7 +1,7 @@
 # Maintainer: AndyRTR <andyrtr@archlinux.org>
 
 pkgname=xorg-xwayland-lily
-pkgver=22.1.5
+pkgver=22.1.6
 pkgrel=1
 arch=('x86_64')
 license=('custom')
@@ -16,15 +16,23 @@ makedepends=('meson' 'xorgproto' 'xtrans' 'libxkbfile' 'dbus'
              'systemd'
              'egl-wayland'
 )
-source=(https://xorg.freedesktop.org/archive/individual/xserver/xwayland-$pkgver.tar.xz{,.sig})
-sha512sums=('806219692be297419777ad5343158f72473a691f7c8be4468fac185a3bc5e3b6811755de3133c12f3694480e51529ac3fa409b22640a80a233925716fec24c06'
-            'SKIP')
+source=(https://xorg.freedesktop.org/archive/individual/xserver/xwayland-$pkgver.tar.xz{,.sig} hidpi.patch)
+sha512sums=('a78f44f14a6c1e25afbf245c5c757a253f0607afdc80c8b852cf6f810247566d1cc17b63d4442a21d8e69bdb696faf1014438ad98a977fbed9a11b9c5b85e0a4'
+            'SKIP'
+            7132c44d9bbf1c5f93906ef301a6e946f0909da0b9273f397281e681ad0da77d62b960a9dd0a640c7209548192fefba9bde03c493f3a89d08cd73a12844bb518)
 provides=('xorg-server-xwayland' 'xorg-xwayland')
 conflicts=('xorg-server-xwayland' 'xorg-xwayland')
 replaces=('xorg-server-xwayland')
 #validpgpkeys=('B09FAF35BE914521980951145A81AF8E6ADBB200') # "Michel Daenzer <michel@daenzer.net>"
-validpgpkeys=('67DC86F2623FC5FD4BB5225D14706DBE1E4B4540') # "Olivier Fourdan <fourdan@xfce.org>"
+#validpgpkeys=('67DC86F2623FC5FD4BB5225D14706DBE1E4B4540') # "Olivier Fourdan <fourdan@xfce.org>"
+validpgpkeys=('3C2C43D9447D5938EF4551EBE23B7E70B467F0BF') # Peter Hutterer (Who-T) <office@who-t.net>
 options=('debug' 'strip')
+
+prepare() {
+  cd "${srcdir}/xwayland-$pkgver"
+  patch -Np1 < ../hidpi.patch
+}
+
 
 build() {
   arch-meson xwayland-$pkgver build \
