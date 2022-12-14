@@ -20,7 +20,7 @@ sha512sums=('71f4c6745c6094ab1832a0f19f3e65621af93dd57c2cd780b8702886481e5568d70
 build() {
     cd shellcheck-$pkgver
 
-    if [[ ! -d ~/.ghcup ]]; then
+    if [[ ! -f ~/.ghcup/env ]]; then
       curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | BOOTSTRAP_HASKELL_NONINTERACTIVE=1 BOOTSTRAP_HASKELL_MINIMAL=1 sh
     fi
     source ~/.ghcup/env
