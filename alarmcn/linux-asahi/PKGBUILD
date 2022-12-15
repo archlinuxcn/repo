@@ -4,9 +4,9 @@
 buildarch=8
 
 _rcver=6.1
-_rcrel=8
-_asahirel=3
-pkgrel=3
+#_rcrel=
+_asahirel=2
+pkgrel=4
 
 _m1n1_version=1.2.2
 
@@ -30,10 +30,10 @@ source=(
   config         # the main kernel config file
   config.edge    # overrides for linux-asahi-edge
 )
-sha256sums=('d36d8a204ed78da82cc4254a70362db3dddfcbad91258a090d18bf4a853908d9'
+sha256sums=('a308564a13dd89144200a1058ad34ff8e26b0822e143fbeda0b3769a5fa1c60e'
             '16e41a2337369b031cc9a83162a77db9f3719d26c53937a058e77327ab2568f0'
             'f13f40ff0f8dd12761f714f035dcb137798adf3131086a419cfb48c859379906')
-b2sums=('7f089dfdc2e3e054949c1b5818e340d44b7c611776203314636048dcb04e64beaf7f59ba83437b51d3d37c5d9f7b22469053065564384d8175ba282967013c7b'
+b2sums=('1364df2caf1cc05ca959a50ad0b8df4730a81fbbcbb2dd9966c9daee9b8475a8732f25a4e15246b7e00887c1b4516e4d938c2aa927cd2e95b5bc049a9056f618'
         'dd38f02438633adbcdcc04c25dc509c9741b5aee6a0f9407418c95e8082252dfe130607c659962f0101b8687a7dd75007947e71548dfb52c439d780ace9c0fbc'
         'a24dd662e938a0ddd3c61df3307a1b301d2b01ed8fe4bc77d0599b55ce38e028237c11d70b3554f0c47572a3cce6b96cb5c4531031f5ca1f8056f9bb27b957d1')
 export KBUILD_BUILD_HOST=archlinux
@@ -145,7 +145,7 @@ _package-headers() {
   local builddir="$pkgdir/usr/lib/modules/$(<${O}/version)/build"
 
   echo "Installing build files..."
-  install -Dt "$builddir" -m644 $O/.config $O/Makefile $O/Module.symvers $O/System.map \
+  install -Dt "$builddir" -m644 $O/.config Makefile $O/Module.symvers $O/System.map \
     localversion.* $O/version $O/vmlinux
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
   cp -t "$builddir" -a scripts
