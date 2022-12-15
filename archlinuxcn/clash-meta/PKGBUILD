@@ -26,7 +26,7 @@ sha256sums=('8f11a82a2eb24d8c0aea027b4674cc6d4165c2f7c8e9c7e136b7961f4ce22bf8'
 
 build(){
     cd "${srcdir}"/Clash.Meta-${pkgver}
-
+    sed -i "s|1.10.0|${pkgver}|g;s|unknown time|$(date -u)|" constant/version.go
     GOOS=linux CGO_ENABLED=0 go build \
     -trimpath \
     -buildmode=pie \
