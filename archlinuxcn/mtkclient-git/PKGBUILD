@@ -1,0 +1,44 @@
+# Maintainer: Ben Westover <kwestover.kw@gmail.com>
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=mtkclient-git
+pkgver=1.52.r267.g5714a30
+pkgrel=1
+pkgdesc="Unofficial MTK reverse engineering and flash tool"
+arch=('any')
+url="https://github.com/bkerler/mtkclient"
+license=('GPL')
+depends=('libusb' 'python' 'python-pyusb' 'python-pyserial' 'python-pycryptodome' 'python-colorama' 'python-mock' 'shiboken6' 'pyside6')
+makedepends=('git' 'python-build' 'python-installer' 'python-wheel' 'python-setuptools')
+conflicts=('mtkclient')
+provides=('mtkclient')
+install=mtkclient.install
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+prepare() {
+	cd mtkclient
+	git tag --delete 1.9
+	# Remove problematic "usb" dependency (package already depends on pyusb)
+	sed -i '/usb/d' pyproject.toml
+	sed -i '/usb/d' requirements.txt
+}
+
+pkgver() {
+	cd mtkclient
+	git describe --long --tags | sed 's/^v//g;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+	cd mtkclient
+	python -m build --wheel --no-isolation
+}
+
+package() {
+	cd mtkclient
+	python -m installer --destdir="$pkgdir" dist/*.whl
+	install -Dm644 Setup/Linux/50-android.rules "${pkgdir}"/etc/udev/rules.d/50-android.rules
+	install -Dm644 Setup/Linux/51-edl.rules "${pkgdir}"/etc/udev/rules.d/51-edl.rules
+	mkdir -pv "${pkgdir}"/usr/share/doc/${pkgname%-git}
+	mv "${pkgdir}"/usr/LICENSE "${pkgdir}"/usr/README.md "${pkgdir}"/usr/share/doc/${pkgname%-git}
+}

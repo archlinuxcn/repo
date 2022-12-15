@@ -1,0 +1,15 @@
+post_install() {
+	echo -e "\033[1;32m==>\033[0m \033[1mInstall the correct udev rules with the instructions at \e[4mhttps://github.com/bkerler/mtkclient#install-rules"
+    groupadd dialout
+    usermod -a -G lock,uucp,dialout,plugdev $(whoami)
+    udevadm trigger
+    udevadm control --reload-rules
+}
+
+post_upgrade() {
+  post_install
+}
+
+post_remove() {
+  post_install
+}
