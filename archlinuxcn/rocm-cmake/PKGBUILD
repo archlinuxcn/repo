@@ -1,10 +1,10 @@
-# Maintainer: Torsten Keßler <t dot kessler at posteo dot de>
+# Maintainer: Torsten Keßler <tpkessler at archlinux dot org>
 # Contributor: Markus Näther <naetherm@cs.uni-freiburg.de>
 # Contributor: fermyon <antifermion@protonmail.com>
 # Contributor: Ranieri Althoff <ranisalt+aur at gmail.com>
 
 pkgname=rocm-cmake
-pkgver=5.4.0
+pkgver=5.4.1
 pkgrel=1
 pkgdesc='CMake modules for common build tasks needed for the ROCm software stack'
 arch=('x86_64')
@@ -13,7 +13,7 @@ license=('MIT')
 depends=('cmake')
 checkdepends=('git' 'rocm-llvm')
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('617faa9a1e51db3c7a59bd0393e054ab67e57be357d59cb0cd9b677f47824946')
+sha256sums=('fdcc97db4c7d418e2b99182947d2e1da2715602eb9f140f6e42c7c056c37aaed')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
 prepare() {
