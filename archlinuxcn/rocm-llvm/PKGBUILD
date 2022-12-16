@@ -1,17 +1,17 @@
-# Maintainer: Torsten Keßler <t dot kessler at posteo dot de>
+# Maintainer: Torsten Keßler <tpkessler at archlinux dot org>
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 
 pkgname=rocm-llvm
 pkgdesc='Radeon Open Compute - LLVM toolchain (llvm, clang, lld)'
-pkgver=5.4.0
+pkgver=5.4.1
 pkgrel=1
 arch=('x86_64')
-url='https://docs.amd.com/bundle/ROCm-Compiler-Reference-Guide-v5.3/page/Overview_of_ROCmCC_Compiler.html'
+url='https://docs.amd.com/bundle/ROCm-Compiler-Reference-Guide-v5.4/page/Introduction_to_Compiler_Reference_Guide.html'
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('cmake' 'python' 'ninja')
 _git='https://github.com/RadeonOpenCompute/llvm-project'
 source=("${pkgname}-${pkgver}.tar.gz::$_git/archive/rocm-$pkgver.tar.gz")
-sha256sums=('ff54f45a17723892cd775c1eaff9e5860527fcfd33d98759223c70e3362335bf')
+sha256sums=('909bdceef34814e83d29a71c668c72b04e832377e277a56895733d11e23822b3')
 options=(staticlibs !lto)
 _dirname="$(basename "$_git")-$(basename "${source[0]}" .tar.gz)"
 
