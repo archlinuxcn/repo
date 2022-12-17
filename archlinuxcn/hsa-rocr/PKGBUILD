@@ -1,4 +1,4 @@
-# Maintainer: Torsten Keßler <t dot kessler at posteo dot de>
+# Maintainer: Torsten Keßler <tpkessler at archlinux dot org>
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 # Contributor: Olaf Leidinger <oleid@mescharet.de>
 # Contributor: Bruno Filipe <bmilreu@gmail.com>
@@ -6,7 +6,7 @@
 # Contributor: Ranieri Althoff <ranisalt+aur at gmail.com>
 
 pkgname=hsa-rocr
-pkgver=5.4.0
+pkgver=5.4.1
 pkgrel=1
 pkgdesc='HSA Runtime API and runtime for ROCm'
 arch=('x86_64')
@@ -16,7 +16,7 @@ depends=('libelf' 'hsakmt-roct' 'rocm-device-libs')
 makedepends=('cmake' 'rocm-llvm' 'xxd')
 _git='https://github.com/RadeonOpenCompute/ROCR-Runtime'
 source=("${pkgname}-${pkgver}.tar.gz::$_git/archive/rocm-$pkgver.tar.gz")
-sha256sums=('476cd18500cc227d01f6b44c00c7adc8574eb8234b6b4daefc219650183fa090')
+sha256sums=('f306bf15803d2de07e5b9d6e7040ecba043ff1c91efdc14e6d576a1d7902f8f0')
 _dirname="$(basename "$_git")-$(basename "${source[0]}" .tar.gz)"
 options=(!lto)
 
