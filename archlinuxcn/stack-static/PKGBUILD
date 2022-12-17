@@ -1,9 +1,9 @@
 # Maintainer:  <me@sfxr.de>
 
 pkgname=stack-static
-_pkgver=2.9.1
+_pkgver=2.9.3
 pkgver=${_pkgver}
-pkgrel=1
+pkgrel=2
 _vpref=''
 pkgdesc="The Haskell Tool Stack (linked statically)"
 arch=('x86_64')
@@ -20,7 +20,7 @@ source=(
   "https://github.com/commercialhaskell/stack/releases/download/${_vpref}v${_pkgver}/stack-${_pkgver}-linux-x86_64-static.tar.gz"
   "https://github.com/commercialhaskell/stack/releases/download/${_vpref}v${_pkgver}/stack-${_pkgver}-linux-x86_64-static.tar.gz.asc"
 )
-sha256sums=('cd8ef4a844f141159189899a128a33f4beb9ec4e66ac96fc2ada47a626a9d462'
+sha256sums=('b1cc32d772456b6ee7aefdd606c25c341670400cec577f8966365f962f883ec5'
             'SKIP')
 validpgpkeys=('C5705533DA4F78D8664B5DC0575159689BEFB442')
 
