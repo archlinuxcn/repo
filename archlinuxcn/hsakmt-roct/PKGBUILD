@@ -1,12 +1,12 @@
-# Maintainer: Torsten Keßler <t dot kessler at posteo dot de>
+# Maintainer: Torsten Keßler <tpkessler at archlinux dot org>
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 # Contributor: Jakub Okoński <jakub@okonski.org>
 # Contributor: Olaf Leidinger <oleid@mescharet.de>
 # Contributor: Ranieri Althoff <ranisalt+aur at gmail.com>
 
 pkgname=hsakmt-roct
-pkgver=5.4.0
-pkgrel=2
+pkgver=5.4.1
+pkgrel=1
 pkgdesc='Radeon Open Compute Thunk Interface'
 arch=('x86_64')
 url='https://rocmdocs.amd.com/en/latest/Installation_Guide/ROCt.html'
@@ -16,7 +16,7 @@ makedepends=('cmake')
 checkdepends=('rocm-llvm')
 _git='https://github.com/RadeonOpenCompute/ROCT-Thunk-Interface'
 source=("${pkgname}-${pkgver}.tar.gz::$_git/archive/rocm-$pkgver.tar.gz")
-sha256sums=('690a78a6e67ae2b3f518dbc4a1e267237d6a342e1063b31eef297f4a04d780f8')
+sha256sums=('c1f728cc285d1feb80120b485f8c06b64e7580df8ecd47a448bc4ff923bac2b3')
 options=(!lto)
 _dirname="$(basename "$_git")-$(basename "${source[0]}" .tar.gz)"
 
