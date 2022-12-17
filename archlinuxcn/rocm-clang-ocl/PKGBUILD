@@ -1,8 +1,8 @@
-# Maintainer: Torsten Keßler <t dot kessler at posteo dot de>
+# Maintainer: Torsten Keßler <tpkessler at archlinux dot org>
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 # Contributor: Lucas Magalhães <whoisroot@national.shitposting.agency>
 pkgname=rocm-clang-ocl
-pkgver=5.4.0
+pkgver=5.4.1
 pkgrel=1
 pkgdesc="OpenCL compilation with clang compiler"
 arch=('x86_64')
@@ -11,7 +11,7 @@ license=('MIT')
 depends=('rocm-llvm' 'rocm-opencl-runtime')
 makedepends=('rocm-cmake')
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('602f8fb1f36587543cc0ee95fd1938f8eeb03de79119101e128150332cc8d89c')
+sha256sums=('96d12412dccd648eeac06b91d199565c030db9edc2f006d5abd0e4b12325fcca')
 _dirname="$(basename "$url")-$(basename ${source[0]} .tar.gz)"
 
 build() {
