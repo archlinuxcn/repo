@@ -1,10 +1,10 @@
-# Maintainer: Torsten Keßler <t dot kessler at posteo dot de>
+# Maintainer: Torsten Keßler <tpkessler at archlinux dot org>
 # Contributor: Ranieri Althoff <ranisalt+aur at gmail dot com>
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 
 pkgname=rocm-opencl-runtime
-pkgver=5.4.0
-pkgrel=2
+pkgver=5.4.1
+pkgrel=1
 pkgdesc='OpenCL implementation for AMD'
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/ROCm-OpenCL-Runtime'
@@ -15,8 +15,8 @@ provides=('opencl-driver')
 _rocclr='https://github.com/ROCm-Developer-Tools/ROCclr'
 source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz"
         "$pkgname-rocclr-$pkgver.tar.gz::$_rocclr/archive/rocm-$pkgver.tar.gz")
-sha256sums=('a294639478e76c75dac0e094b418f9bd309309b07faf6af126cdfad9aab3c5c7'
-            '46a1579310b3ab9dc8948d0fb5bed4c6b312f158ca76967af7ab69e328d43138')
+sha256sums=('2b3d7b365f569ce64d1408d6e745d005aa10eca3623891be50f6b1b2e802d875'
+            'c0926fa5dad71cd02f21504d82e218d482779df579a400604e13864e6b2a7d9c')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 _rocclr_dir="$(basename "$_rocclr")-$(basename "${source[1]}" .tar.gz)"
 
