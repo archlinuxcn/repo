@@ -1,9 +1,9 @@
-# Maintainer: Torsten Keßler <t dot kessler at posteo dot de>
+# Maintainer: Torsten Keßler <tpkessler at archlinux dot org>
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 
 pkgname=comgr
 pkgdesc='Compiler support library for ROCm LLVM'
-pkgver=5.4.0
+pkgver=5.4.1
 pkgrel=1
 arch=('x86_64')
 url='https://github.com/RadeonOpenCompute/ROCm-CompilerSupport'
@@ -11,7 +11,7 @@ license=('custom:NCSAOSL')
 depends=('rocm-device-libs')
 makedepends=('rocm-cmake' 'rocm-llvm')
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('f4b83b27ff6195679d695c3f41fa25456e9c50bae6d978f46d3541b472aef757')
+sha256sums=('a46ad7a53034417615d4cf9375909400dbe7198ea8076b524c22e2653728c06b')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
 build() {
