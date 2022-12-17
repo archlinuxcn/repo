@@ -1,11 +1,11 @@
-# Maintainer: Torsten Keßler <t dot kessler at posteo dot de>
+# Maintainer: Torsten Keßler <tpkessler at archlinux dot org>
 # Contributor: Markus Näther <naetherm@cs.uni-freiburg.de>
 # Contributor: Jakub Okoński <jakub@okonski.org>
 # Contributor: Ranieri Althoff <ranisalt+aur at gmail.com>
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 
 pkgname=rocminfo
-pkgver=5.4.0
+pkgver=5.4.1
 pkgrel=1
 pkgdesc='ROCm Application for Reporting System Info '
 arch=('x86_64')
@@ -14,7 +14,7 @@ license=('custom:NCSAOSL')
 depends=('pciutils' 'python' 'hsa-rocr')
 makedepends=('rocm-cmake')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/rocm-$pkgver.tar.gz")
-sha256sums=('79123b92992cce75ae679caf9a6bf57b16d24e96e54b36eb002511f3800e29c6')
+sha256sums=('633a7d5bc6bc7b99c85c1f87fd41b32cd704c4a1b0b2a61f3c7a871ce93bc772')
 _dirname="$(basename "$url")-$(basename "${source[0]}" .tar.gz)"
 
 build() {
