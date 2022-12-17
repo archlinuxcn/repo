@@ -26,8 +26,17 @@ sha256sums=('8f11a82a2eb24d8c0aea027b4674cc6d4165c2f7c8e9c7e136b7961f4ce22bf8'
 
 build(){
     cd "${srcdir}"/Clash.Meta-${pkgver}
-    GOOS=linux  go build  -o ${pkgname}-${pkgver}
-
+    BUILDTIME=$(date -u)
+    GOOS=linux CGO_ENABLED=0 go build \
+    -trimpath \
+    -buildmode=pie \
+    -mod=readonly \
+    -modcacherw \
+    -ldflags "-linkmode external -extldflags \"${LDFLAGS}\" \
+    -X \"github.com/Dreamacro/clash/constant.Version=${pkgver}\" \
+    -X \"github.com/Dreamacro/clash/constant.BuildTime=${BUILDTIME}\" \
+    " \
+    -tags with_gvisor -o ${pkgname}-${pkgver}
 }
 package() {
     cd "${srcdir}"/Clash.Meta-${pkgver}
@@ -38,7 +47,6 @@ package() {
     install -Dm644 "config.yaml" -t "${pkgdir}/etc/clash-meta"
     install -Dm644 "clash-meta.service"  -t "${pkgdir}/usr/lib/systemd/system"
     install -Dm644 "clash-meta@.service" -t "${pkgdir}/usr/lib/systemd/system"
-
     ln -sf /etc/clash/Country.mmdb ${pkgdir}/etc/${pkgname}/Country.mmdb
     #geosite.dat from community repo does not work
     # ln -sf /usr/share/v2ray/geosite.dat ${pkgdir}/etc/${pkgname}/GeoSite.dat
