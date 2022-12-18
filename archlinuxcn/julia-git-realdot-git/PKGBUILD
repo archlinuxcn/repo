@@ -1,0 +1,24 @@
+pkgname=julia-git-realdot-git
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="RealDot.jl"
+url="https://github.com/JuliaMath/RealDot.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-realdot)
+source=(git+https://github.com/JuliaMath/RealDot.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd RealDot.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd RealDot.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh RealDot "${pkgdir}" "${pkgname}" julia-git
+}
