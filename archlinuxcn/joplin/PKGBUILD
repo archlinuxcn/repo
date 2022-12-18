@@ -1,13 +1,13 @@
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
-pkgver=2.8.8
+pkgver=2.9.17
 groups=('joplin')
 pkgrel=1
-_electronVersion=17
+_electronVersion=19
 depends=("electron${_electronVersion}" "nodejs")
 optdepends=('libappindicator-gtk3: for tray icon')
 arch=('x86_64')
-makedepends=('npm' 'git' 'rsync' 'yarn' 'python2')
+makedepends=('npm' 'git' 'rsync' 'yarn')
 url="https://joplinapp.org/"
 license=('MIT')
 source=(
@@ -18,13 +18,12 @@ source=(
 sha256sums=(
     'SKIP'
     'SKIP'
-    'b6e0a3a5d59882de37494c0b3b1d28df407e86d06e81bc8201cb912e2711949b'
+    '5a1d205bd52b86182b281f7c83b8a7b463941f5043729b4408490b249dfa0af8'
 )
 
 _setup_env() {
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
     export npm_config_build_from_source=true
-    export npm_config_python=/usr/bin/python2
 }
 
 prepare() {
@@ -69,7 +68,7 @@ package_joplin() {
 
 package_joplin-desktop() {
     pkgdesc="A note taking and to-do application with synchronization capabilities - Desktop"
-    depends=('electron17' 'nodejs')
+    depends=("electron${_electronVersion}" "nodejs")
     optdepends=('libappindicator-gtk3: for tray icon')
 
     cd "${srcdir}/joplin-${pkgver}/packages/app-desktop"
