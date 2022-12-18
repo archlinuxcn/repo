@@ -3,8 +3,8 @@
 
 _name=esbuild
 pkgname=${_name}
-pkgver=0.16.8
-pkgrel=2
+pkgver=0.16.9
+pkgrel=1
 pkgdesc="An extremely fast JavaScript and CSS bundler and minifier."
 arch=('x86_64' 'i686' 'aarch64' 'armv7h')
 url="https://${_name}.github.io/"
@@ -12,7 +12,7 @@ license=('MIT')
 makedepends=('go')
 _snapshot="${_name}-${pkgver}"
 source=("${_snapshot}.tar.gz::https://github.com/evanw/${_name}/archive/v${pkgver}.tar.gz")
-b2sums=('6fbbe55747313d85e92dafd691a277d8f4806fd3ed23a0430361e53a63e920d1951ede9d65247b59f72c15ce6319525179854712b63a4fe18fbfed89752bbb03')
+b2sums=('71fb0b1d0018a5ba92ac819977ca8631d3a63a4a046715ccfb129e1e8ea40668aafbb2079e7ddb9b58fcee91e0f03207e696e6be75d21b6e4ddaebda56d81f91')
 
 build() {
     set -a
