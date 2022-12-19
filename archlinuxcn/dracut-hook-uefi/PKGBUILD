@@ -3,27 +3,17 @@
 # Maintainer: Kevin Del Castillo <quebin31@gmail.com>
 
 pkgname=dracut-hook-uefi
-pkgver=15
+pkgver=16
 pkgrel=1
 pkgdesc="Install/remove hooks for dracut unified kernel images for systemd-boot"
-url="https://aur.archlinux.org/packages/$pkgname"
+url="https://github.com/swsnr/dracut-hook-uefi"
 arch=('any')
 license=('APACHE')
 # dracut requires binutils for --uefi support
 depends=('dracut' 'binutils')
-noextract=()
-conflicts=()
-source=(
-    "dracut-uefi"
-    "90-dracut-uefi-install.hook"
-    "91-dracut-uefi-remove.hook"
-)
-sha256sums=('98fd28dce6462bed1d965235a4d3ca44e7cdd83d8349677c17d141f0624ebaf2'
-            '2be12b974da5ad380b590ce5d90aa5108530f65ceb848be3e361b1eb62ac7f5b'
-            '1daaad5f60d89c5198419db7e8a8d7599e9a4e252907437a1dc8f65f2ccd61b8')
+source=("https://github.com/swsnr/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('3b2946ce3af2c61c1197a3a1d654204f82b95ff83a7c625e1410cad87dd06935')
 
 package() {
-    install -Dm644 "${srcdir}/90-dracut-uefi-install.hook" "${pkgdir}/usr/share/libalpm/hooks/90-dracut-uefi-install.hook"
-    install -Dm644 "${srcdir}/91-dracut-uefi-remove.hook" "${pkgdir}/usr/share/libalpm/hooks/91-dracut-uefi-remove.hook"
-    install -Dm755 "${srcdir}/dracut-uefi" "${pkgdir}/usr/share/libalpm/scripts/dracut-uefi"
+    make -C "${srcdir}/${pkgname}-${pkgver}" DESTDIR="${pkgdir}" install
 }
