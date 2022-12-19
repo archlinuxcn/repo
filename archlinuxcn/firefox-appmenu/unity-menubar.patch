@@ -5054,7 +5054,7 @@
 +
  bool nsWindow::CheckForRollup(gdouble aMouseX, gdouble aMouseY, bool aIsWheel,
                                bool aAlwaysRollup) {
-   nsIRollupListener* rollupListener = GetActiveRollupListener();
+   LOG("nsWindow::CheckForRollup() aAlwaysRollup %d", aAlwaysRollup);
 --- a/widget/gtk/nsWindow.h
 +++ b/widget/gtk/nsWindow.h
 @@ -26,6 +26,8 @@
