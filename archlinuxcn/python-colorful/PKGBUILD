@@ -2,8 +2,8 @@
 
 _name=colorful
 pkgname=python-colorful
-pkgver=0.5.4
-pkgrel=4
+pkgver=0.5.5
+pkgrel=1
 pkgdesc='Terminal string styling done right, in Python'
 arch=('any')
 url='https://github.com/timofurrer/colorful'
@@ -13,7 +13,7 @@ makedepends=(
   python-setuptools
 )
 source=("${_name}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha256sums=('86848ad4e2eda60cd2519d8698945d22f6f6551e23e95f3f14dfbb60997807ea')
+sha256sums=('66f8c1264b2a26f7293b96a03bb7a76c4bc8b9634369a0bffdcd12d618056a1d')
 
 build() {
   cd "${_name}-${pkgver}"
