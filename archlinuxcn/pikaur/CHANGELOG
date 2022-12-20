@@ -2000,3 +2000,22 @@ Tue Nov 29 04:10:58 2022 +0100
      2022-11-29 f43cab0 actionless fix(pkgbuild): remove wheel after running python-installer (fixes #683)
      2022-11-29 ef3a925 actionless fix(filelock: __exit__): remove the file after unlocking (fixes #685)
      2022-11-29 91ba397 actionless fix(updates: print_upgradeable): `not X` vs `X is not None` ; use aur packages as input argument, as repo packages info is already cached in Pacman class anyway (fixes #687)
+
+
+Tue Dec 20 00:29:21 2022 +0100
+-------------------------------------------------
+1.14.6          Release 1.14.6
+    
+    Notable changes:
+     2022-12-19 64ac32f actionless fix(build): update spawn kwargs instead of replacing when using `--hide-build-log` flag
+     2022-12-19 fa5c7c8 actionless fix(build: PackageBuild: init): regenerate srcinfo (fixes the case when having multiple pkgbuilds in the same directory)
+     2022-12-19 55d27d0 actionless feat(args, help_cli): add new `--skip-failed-build` flag (similar to existing SkipFailedBuild config option)
+     2022-12-19 f95d194 actionless feat(help_cli): document `--hide-build-log` pikaur flag
+     2022-12-19 c561535 actionless fix(search_cli): support `--namesonly` in cases when one of search words returned expected error from aur
+     2022-12-19 f00b99c actionless fix(args, main): `-Qu` means `--query --upgrades`, not `--query --sysupgrade`
+     2022-12-18 8c0c83e actionless fix(makefile): throw error if can't determine path to Python (re: #695)
+     2022-12-12 741146f actionless fix(args: get_pikaur_long_opts): include also pikaur_count_opts
+     2022-12-10 a255eb9 actionless fix(aur: rpc_info): smarter split packages into chunks
+     2022-12-01 04703fd actionless fix(install_info_fetcher: get_aur_pkgs_info): don't print ignored package as it's already done in a different part of the code (fixes #687)
+     2022-11-29 40c98ca Osman Karagöz chore(locale): update TR translation (#689)
+     2022-11-29 370a4d9 actionless fix(pkgbuild): python-installer already copying stuff from `./dist/` dir
