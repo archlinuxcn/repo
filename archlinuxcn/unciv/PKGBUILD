@@ -45,6 +45,6 @@ build() {
 package() {
   install -Dm755 $_pkgname.sh "$pkgdir/usr/bin/$_pkgname"
   install -Dm644 $pkgname.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
-  install -Dm644 $_srcdir/extraImages/"Unciv icon v4.png" "$pkgdir/usr/share/pixmaps/unciv.png"
+  install -Dm644 $_srcdir/extraImages/Icons/"Unciv icon v6.png" "$pkgdir/usr/share/pixmaps/unciv.png"
   install -Dm644 $_srcdir/desktop/build/libs/$_pkgname.jar "$pkgdir/usr/share/$_pkgname/$_pkgname.jar"
 }
