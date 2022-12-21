@@ -3,7 +3,7 @@
 _pkgname=ITK
 pkgname=(itk python-itk)
 pkgver=5.2.1
-pkgrel=10
+pkgrel=1
 pkgdesc='An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis'
 arch=('x86_64')
 url='https://www.itk.org'
@@ -17,10 +17,8 @@ depends=(
   gdcm
   hdf5
   intel-oneapi-mkl
-  kwiml-git
   libpng
   libtiff
-  ocl-icd
   vxl
 )
 makedepends=(
@@ -28,29 +26,16 @@ makedepends=(
   cmake
   git
   gtest
-  opencl-headers
   subversion
   swig
 )
 options=(!emptydirs !lto)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/InsightSoftwareConsortium/ITK/archive/refs/tags/v${pkgver}.tar.gz"
-        "https://github.com/InsightSoftwareConsortium/ITK/pull/3736.patch"
-        "https://github.com/InsightSoftwareConsortium/ITK/pull/3541.patch"
 )
-sha512sums=('cccb64766acaebe49ee2dd8b82b7b5aaa6a35e97f2cc7738ad7f3cd65006b73b880ac59341cd640abd64c2ac665633f01504760071f5492e40aa97e7ba6db2a9'
-            '549abece039dce431564fa0c51851417d76ddc8b8896cb6d2dcda0b5cb2651a145a84fc8f5bc390406a92dc9bbc736490c3e0ee7e79d6108324bde11c7aba169'
-            'f8b6cf6c8a4abd93f4c21eb6c89e0b1f6a8c7ddf0a7a63f50e9489beb2a8759a53119f5bc7fb4d80af61fa139c439257468f613404079b96029319bf6aea5b53')
+sha512sums=('cccb64766acaebe49ee2dd8b82b7b5aaa6a35e97f2cc7738ad7f3cd65006b73b880ac59341cd640abd64c2ac665633f01504760071f5492e40aa97e7ba6db2a9')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
-}
-
-prepare() {
-  cd ${_pkgname}-${pkgver}
-  # fix building with gcc12, see also https://github.com/InsightSoftwareConsortium/ITK/issues/3452
-  patch -p1 -i $srcdir/3541.patch
-  # fix swig typemap, see also https://github.com/InsightSoftwareConsortium/ITK/issues/3506
-  patch -p1 -i $srcdir/3736.patch
 }
 
 build() {
@@ -100,7 +85,7 @@ build() {
 
   cmake -B "build" -S "${srcdir}/${_pkgname}-${pkgver}" \
     ${cmake_opts[@]} \
-    -DITK_USE_GPU=ON
+    -DITK_USE_GPU=OFF
   make -C "${srcdir}/build"
 }
 
