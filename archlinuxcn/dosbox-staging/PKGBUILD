@@ -3,13 +3,13 @@
 # Contributor: Wouter Wijsman <wwijsman@live.nl>
 
 pkgname=dosbox-staging
-pkgver=0.79.1
+pkgver=0.80.0
 pkgrel=1
 pkgdesc="DOS/x86 emulator focusing on ease of use. Based on DOSBox"
 arch=('x86_64')
 url="https://github.com/dosbox-staging/dosbox-staging"
 license=('GPL2')
-depends=('sdl2' 'sdl2_net' 'opusfile'  'alsa-lib' 'fluidsynth' 'libpng' 'munt' 'libslirp' 'glib2')
+depends=('sdl2' 'sdl2_net' 'sdl2_image' 'opusfile'  'alsa-lib' 'fluidsynth' 'libpng' 'munt' 'libslirp' 'glib2')
 optdepends=(
             'ncurses'
             )
@@ -20,7 +20,7 @@ options=(debug)
 source=(
   "${pkgname}-${pkgver}.gz::https://github.com/dosbox-staging/${pkgname}/archive/v${pkgver}.tar.gz"
 )
-b2sums=('48fd371df026392d59db2c9874f81b772b6595e2471a7ad1200e27e94fc87892f8e1c51288c1b0a430d8c3260535e35a00025047248551569f402b32a1ca3cf8')
+b2sums=('59cb6515f17b9a661f5e9d7787b01ecef4fe047dfd0ca4573cc12c73af1f9fe433f4c20a1c42e1fcd259c31af3922738c057aa64fc777a513a7881a86436a1fa')
 
 prepare() {
   cd "$srcdir/${pkgname}-${pkgver}"
@@ -33,7 +33,7 @@ build() {
     --buildtype=debugoptimized \
     -Ddefault_library=shared \
     -Dtry_static_libs=iir \
-    -Dsystem_libraries=fluidsynth,glib,mt32emu,opusfile,png,sdl2,sdl2_net,slirp,speexdsp,zlib
+    -Dsystem_libraries=fluidsynth,glib,mt32emu,opusfile,png,sdl2,sdl2_net,sdl2_image.slirp,speexdsp,zlib
   meson compile -C build
 }
 
