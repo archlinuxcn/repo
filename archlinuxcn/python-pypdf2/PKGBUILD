@@ -1,6 +1,6 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
-_pkgname=PyPDF2
+_pkgname=pypdf2
 pkgname=python-pypdf2
 pkgver=2.12.1
 pkgrel=1
@@ -10,6 +10,10 @@ url='https://mstamy2.github.io/PyPDF2'
 license=('BSD')
 depends=(
   python
+)
+optdepends=(
+  python-pillow
+  python-pycryptodome
 )
 makedepends=(
   python-build
