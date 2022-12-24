@@ -36,7 +36,6 @@ build() {
 
     # generate default config
     ./v2raya --report config | sed '1,6d' | fold -s -w 78 | sed -E 's/^([^#].+)/# \1/' >> "${srcdir}"/v2raya.default
-
 }
 
 package() {

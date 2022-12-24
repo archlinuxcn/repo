@@ -8,9 +8,9 @@ pkgdesc="A GeoLite2 data created by MaxMind"
 arch=('any')
 url="https://github.com/Dreamacro/maxmind-geoip"
 license=('custom')
-source=("${url}/releases/download/${pkgver}/Country.mmdb")
-sha256sums=('b22fd1cc9bd76c0706ed6cafefcd07c2bfb5a22581faebdcd9161b9d8a44d0c0')
+source=("${_pkgname}-${pkgver}.mmdb::${url}/releases/download/${pkgver}/Country.mmdb")
+sha256sums=('a40a4f3d122f1bca9a939721ba94cddaed4850a00d5ed91c10c95200f79d8c7e')
 
 package() {
-    install -Dm0644 Country.mmdb -t "${pkgdir}"/etc/clash/
+    install -Dm0644 "${_pkgname}-${pkgver}.mmdb" "${pkgdir}"/etc/clash/Country.mmdb
 }
