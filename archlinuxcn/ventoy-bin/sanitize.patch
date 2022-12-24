@@ -123,68 +123,17 @@ diff -rup old/Ventoy2Disk.sh new/Ventoy2Disk.sh
 -fi
 +./tool/VentoyWorker.sh $*
 diff -rup old/VentoyPlugson.sh new/VentoyPlugson.sh
---- VentoyPlugson.sh	2021-12-02 17:54:36.055868878 +0100
-+++ VentoyPlugson.sh	2021-12-02 18:04:40.919633986 +0100
-@@ -25,8 +19,6 @@ if echo $machine | egrep -q 'aarch64|arm
+--- VentoyPlugson.sh	2022-12-24 06:00:51.000000000 -0700
++++ VentoyPlugson.sh	2022-12-24 08:18:59.154268575 -0700
+@@ -34,8 +34,6 @@ if echo $machine | grep -E -q 'aarch64|a
      TOOLDIR=aarch64
- elif echo $machine | egrep -q 'x86_64|amd64'; then
+ elif echo $machine | grep -E -q 'x86_64|amd64'; then
      TOOLDIR=x86_64
--elif echo $machine | egrep -q 'mips64'; then
+-elif echo $machine | grep -E -q 'mips64'; then
 -    TOOLDIR=mips64el
- elif echo $machine | egrep -q 'i[3-6]86'; then
+ elif echo $machine | grep -E -q 'i[3-6]86'; then
      TOOLDIR=i386
  else
-@@ -35,38 +27,6 @@ else
- fi
- 
- 
--if ! [ -f "$OLDDIR/tool/plugson.tar.xz" ]; then
--    echo "Please run under the correct directory!" 
--    exit 1
--fi
--
--echo "############# VentoyPlugson $* [$TOOLDIR] ################" >> ./VentoyPlugson.log
--date >> ./VentoyPlugson.log
--
--echo "decompress tools" >> ./VentoyPlugson.log
--cd ./tool/$TOOLDIR
--
--ls *.xz > /dev/null 2>&1
--if [ $? -eq 0 ]; then
--    [ -f ./xzcat ] && chmod +x ./xzcat
--
--    for file in $(ls *.xz); do
--        echo "decompress $file" >> ./VentoyPlugson.log
--        xzcat $file > ${file%.xz}
--        [ -f ./${file%.xz} ] && chmod +x ./${file%.xz}
--        [ -f ./$file ] && rm -f ./$file
--    done
--fi
--
--cd ../../
--chmod +x -R ./tool/$TOOLDIR
--
--if ! [ -f "$OLDDIR/tool/$TOOLDIR/Plugson" ]; then
--    echo "$OLDDIR/tool/$TOOLDIR/Plugson does not exist!" 
--    exit 1
--fi
--
--
- PATH=./tool/$TOOLDIR:$PATH
- 
- HOST="127.0.0.1"
-@@ -208,11 +168,3 @@ if [ -f /proc/$wID/maps ]; then
- 
-     wait $wID
- fi
--
--
--if [ -n "$OLDDIR" ]; then 
--    CURDIR=$(pwd)
--    if [ "$CURDIR" != "$OLDDIR" ]; then
--        cd "$OLDDIR"
--    fi
--fi
 diff -rup old/VentoyWeb.sh new/VentoyWeb.sh
 --- VentoyWeb.sh	2021-12-02 16:58:51.885612627 +0100
 +++ VentoyWeb.sh	2021-12-02 17:04:43.437871014 +0100
