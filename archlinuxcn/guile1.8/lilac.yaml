@@ -1,0 +1,14 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: manual
+    manual: 1.8.8
+  - source: alpm
+    alpm: readline
+    provided: libreadline.so
+  - source: alpm
+    alpm: ncurses
+    provided: libncursesw.so

@@ -1,0 +1,41 @@
+# Maintainer: Carlos Aznarán <caznaranl@uni.pe>
+# Contributor: Ronald van Haren <ronald.archlinux.org>
+# Contributor: Antonio Rojas <arojas@archlinux.org>
+# Contributor: Damir Perisa <damir.perisa@bluewin.ch>
+# Contributor: Christopher Reimer <c.reimer1993@gmail.com>
+
+pkgname=texmacs
+pkgver=2.1.2
+pkgrel=1
+pkgdesc="Free scientific text editor, inspired by TeX and GNU Emacs. WYSIWYG editor TeX-fonts and CAS-interface (Giac, GTybalt, Macaulay 2, Maxima, Octave, Pari, Qcl, R and Yacas) in one."
+arch=(aarch64 x86_64)
+url="http://www.texmacs.org"
+license=('GPL')
+# do not remove texlive-core dependency, as it is needed!
+depends=('perl' 'libguile.so' 'zlib' 'texlive-core' 'python'
+         'libjpeg.so' 'libpng' 'libsqlite3.so' 'libfreetype.so'
+         'qt5-svg' 'qt5-base')
+optdepends=('transfig: convert images using fig2ps'
+  'gawk: conversion of some files'
+  'ghostscript: rendering ps files'
+  'imagemagick: convert images'
+  'aspell: spell checking')
+makedepends=('ghostscript' 'cmake')
+source=(https://github.com/texmacs/texmacs/archive/refs/tags/v${pkgver}.tar.gz)
+options=('!emptydirs')
+sha512sums=('7462deef349f95968ee99c37617f722bfddd0b1efb6d5e413fd7a3b53b77840609807ef0bc6f9a83973fe2d1b71bf032d38e7c6a35d69c6954653449c43425a2')
+
+build() {
+  cmake \
+    -S texmacs-${pkgver} \
+    -B build \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DGUILECONFIG_EXECUTABLE=/usr/bin/guile-config1.8 \
+    -Wno-dev
+  cmake --build build
+}
+
+package() {
+  DESTDIR="${pkgdir}" cmake --build build --target install
+}

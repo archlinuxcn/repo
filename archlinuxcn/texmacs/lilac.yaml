@@ -1,0 +1,28 @@
+maintainers:
+  - github: yuyichao
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - guile1.8
+
+update_on:
+  - source: github
+    github: texmacs/texmacs
+    use_latest_tag: true
+    include_regex: 'v\d+\.\d+.*'
+  - source: alpm
+    alpm: libjpeg-turbo
+    provided: libjpeg.so
+  - source: alpm
+    alpm: sqlite
+    provided: libsqlite3.so
+  - source: alpm
+    alpm: freetype2
+    provided: libfreetype.so
+  - source: manual
+    manual: 1
+
+update_on_build:
+  - pkgbase: guile1.8
