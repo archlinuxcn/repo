@@ -28,7 +28,7 @@ set -e
 _TB_PKGNAME_='@PACKAGE_NAME@'
 _TB_VERSION_='@PACKAGE_VERSION@'
 _TB_RELEASE_='@PACKAGE_RELEASE@'
-_TB_LANGUAGE_="@PACKAGE_LANGUAGE@"
+_TB_SERIES_="@PACKAGE_SUFFIX@"
 _TB_ARCH_='@PACKAGE_ARCH@'
 
 # other constants
@@ -94,7 +94,7 @@ _refresh_local_() {
 	echo "${0}: Extracting files to ${_TB_APP_DIR_}." >> "${_TB_LOG_FILE_}"
 	rm -rf "${_TB_APP_DIR_}"/*
 
-	tar -xJf "/opt/${_TB_PKGNAME_}/tor-browser-${_TB_ARCH_}-${_TB_VERSION_}_${_TB_LANGUAGE_}.tar.xz" \
+	tar -xJf "/opt/${_TB_PKGNAME_}/tor-browser-${_TB_ARCH_}-${_TB_VERSION_}_${_TB_SERIES_}.tar.xz" \
 		--strip-components=1 -C "${_TB_APP_DIR_}" >> \
 		"${_TB_LOG_FILE_}" 2>&1 && _notify_ 'Tor Browser' \
 		'A new version of Tor Browser has been installed' || \
