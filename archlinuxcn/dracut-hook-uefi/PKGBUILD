@@ -3,7 +3,7 @@
 # Maintainer: Kevin Del Castillo <quebin31@gmail.com>
 
 pkgname=dracut-hook-uefi
-pkgver=16
+pkgver=17
 pkgrel=1
 pkgdesc="Install/remove hooks for dracut unified kernel images for systemd-boot"
 url="https://github.com/swsnr/dracut-hook-uefi"
@@ -12,7 +12,7 @@ license=('APACHE')
 # dracut requires binutils for --uefi support
 depends=('dracut' 'binutils')
 source=("https://github.com/swsnr/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('3b2946ce3af2c61c1197a3a1d654204f82b95ff83a7c625e1410cad87dd06935')
+sha256sums=('2dca141c7ceed8f0b85b04fb8781e440f7e0f263afa7145541deb098c637cd7d')
 
 package() {
     make -C "${srcdir}/${pkgname}-${pkgver}" DESTDIR="${pkgdir}" install
