@@ -32,6 +32,8 @@ source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/plotly/plotly.py/archi
 sha512sums=('0dfeaf4fe8bc04cd534d91a33d238e69d2ab6dd174cd458837c1280ad129b7f985fc34edf468f0ae7d5ee8b4397ec4bafa92f990184e735e66c351de16a4112b')
 
 build() {
+  # https://github.com/webpack/webpack/issues/14532
+  export NODE_OPTIONS=--openssl-legacy-provider
   cd ${_pkgname}-${pkgver}/packages/python/plotly
   python setup.py build
 }
