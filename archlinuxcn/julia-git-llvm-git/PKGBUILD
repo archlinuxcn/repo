@@ -1,0 +1,24 @@
+pkgname=julia-git-llvm-git
+pkgver=4.14.1
+pkgrel=1
+pkgdesc="LLVM.jl"
+url="https://github.com/maleadt/LLVM.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-llvm)
+source=(git+https://github.com/maleadt/LLVM.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd LLVM.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd LLVM.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh LLVM "${pkgdir}" "${pkgname}" julia-git
+}

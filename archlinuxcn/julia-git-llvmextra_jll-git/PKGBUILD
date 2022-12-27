@@ -1,0 +1,38 @@
+pkgname=julia-git-llvmextra_jll-git
+pkgver=0.0.16+0
+pkgrel=1
+pkgdesc="LLVMExtra_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/LLVMExtra_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libllvmextra_jll)
+provides=(julia-git-llvmextra_jll)
+source=(git+https://github.com/JuliaBinaryWrappers/LLVMExtra_jll.jl
+        jll.toml.in)
+md5sums=('SKIP'
+         '038bc368fc1d8d89b2dac640915352cb')
+
+pkgver() {
+  cd LLVMExtra_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  _llvm_ver=$(llvm-config --version)
+  [[ $_llvm_ver =~ ^([0-9]*).* ]]
+  llvm_maj_ver=${BASH_REMATCH[1]}
+
+  sed -e "s/@LLVM_VER@/${llvm_maj_ver}/g" jll.toml.in > jll.toml
+
+  cd LLVMExtra_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl LLVMExtra_jll ../jll.toml
+}
+
+package() {
+  cd LLVMExtra_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh LLVMExtra_jll "${pkgdir}" "${pkgname}" julia-git
+}
