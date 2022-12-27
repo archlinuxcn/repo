@@ -32,6 +32,7 @@ build() {
 	cd "Rocket.Chat.Electron-$pkgver"
 	local i686=ia32 x86_64=x64
 	export NODE_ENV=production
+	export NODE_OPTIONS='--openssl-legacy-provider'
 	yarn build
 	yarn run electron-builder --linux --"${!CARCH}" --dir \
 		-c.electronDist=/usr/lib/electron \
