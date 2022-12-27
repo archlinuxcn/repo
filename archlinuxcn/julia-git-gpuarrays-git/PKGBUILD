@@ -1,0 +1,39 @@
+pkgbase=julia-git-gpuarrays-git
+_subpkgs=(GPUArraysCore
+          JLArrays)
+pkgname=(julia-git-gpuarrays-git)
+pkgver=8.5.0.0.10.gbf72dc8
+pkgrel=1
+pkgdesc="GPUArrays.jl"
+url="https://github.com/JuliaGPU/GPUArrays.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=(git+https://github.com/JuliaGPU/GPUArrays.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd GPUArrays.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package_julia-git-gpuarrays-git() {
+  provides=(julia-git-gpuarrays)
+  cd GPUArrays.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh GPUArrays "${pkgdir}" "${pkgname}" julia-git
+}
+
+_subpackage() {
+  local _subpkg=$1
+  provides=(julia-git-${_subpkg,,})
+  cd GPUArrays.jl/lib/${_subpkg}
+
+  . /usr/lib/julia/julia-install-pkg.sh ${_subpkg} "${pkgdir}" "${pkgname}" julia-git
+}
+for _subpkg in "${_subpkgs[@]}"; do
+  pkgname=("${pkgname[@]}" julia-git-${_subpkg,,}-git)
+  eval "package_julia-git-${_subpkg,,}-git() { _subpackage ${_subpkg}; }"
+done
