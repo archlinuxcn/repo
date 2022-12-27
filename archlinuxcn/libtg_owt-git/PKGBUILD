@@ -2,25 +2,23 @@
 
 _pkgname=libtg_owt
 pkgname=${_pkgname}-git
-pkgver=0.git.r327.621f3da5
-pkgrel=3
+pkgver=0.git.r378.1512ef69
+pkgrel=1
 pkgdesc='WebRTC library - static linked, git version'
 arch=('x86_64')
 url='https://github.com/desktop-app/tg_owt'
 license=('BSD')
 depends=('libdrm')
 makedepends=('git' 'ninja' 'unzip' 'cmake' 'protobuf' 'libxrandr' 'libxcomposite' 'openssl' 'glibc'
-             'ffmpeg4.4' 'libva' 'opus' 'yasm' 'libjpeg-turbo' 'pipewire' 'libxtst' 'libepoxy')
+             'ffmpeg' 'libva' 'opus' 'yasm' 'libjpeg-turbo' 'pipewire' 'libxtst' 'libepoxy')
 options=('staticlibs')
 source=("tg_owt::git+${url}.git"
         "libvpx::git+https://chromium.googlesource.com/webm/libvpx.git"
         "libyuv::git+https://chromium.googlesource.com/libyuv/libyuv.git"
-        https://patch-diff.githubusercontent.com/raw/desktop-app/tg_owt/pull/101.patch
         "pipewire::git+https://github.com/PipeWire/pipewire.git")
 b2sums=('SKIP'
         'SKIP'
         'SKIP'
-        '3029740444c95cc99eb39fcb255ae1969e4111d6d21caef50481b183713e787c489ef8b3944f06dd27310c1a6dbaa5ae4639f5406e31c09e67b532e1f0da942c'
         'SKIP')
 provides=('libtg_owt')
 conflicts=('libtg_owt')
@@ -36,9 +34,7 @@ prepare() {
   git config submodule.src/third_party/libvpx/source/libvpx.url "$srcdir"/libvpx
   git config submodule.src/third_party/libyuv.url "$srcdir"/libyuv
   git config submodule.src/third_party/pipewire.url "$srcdir"/pipewire
-  git submodule update
-
-  patch -Np1 -i "$srcdir"/101.patch
+  git -c protocol.file.allow=always submodule update
 }
 
 build() {
@@ -46,7 +42,7 @@ build() {
 
   export CFLAGS+=" -ffat-lto-objects"
   export CXXFLAGS+=" -ffat-lto-objects -I/usr/include/libdrm"
-  export PKG_CONFIG_PATH='/usr/lib/ffmpeg4.4/pkgconfig'
+  export PKG_CONFIG_PATH='/usr/lib/openssl-1.1/pkgconfig'
   # Upstream stated that only static builds are really supported so that's what we'll do.
   # https://github.com/desktop-app/tg_owt/issues/75#issuecomment-992061171
   cmake \
@@ -55,13 +51,6 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DBUILD_SHARED_LIBS=OFF
-  sed -i "s|/usr/lib/libav|/usr/lib/ffmpeg4.4/libav|g" build/build.ninja
-  sed -i "s|/usr/lib/libsw|/usr/lib/ffmpeg4.4/libsw|g" build/build.ninja
-  sed -i "s|-lavcodec|/usr/lib/ffmpeg4.4/libavcodec.so|g" build/build.ninja
-  sed -i "s|-lavformat|/usr/lib/ffmpeg4.4/libavformat.so|g" build/build.ninja
-  sed -i "s|-lavutil|/usr/lib/ffmpeg4.4/libavutil.so|g" build/build.ninja
-  sed -i "s|-lswscale|/usr/lib/ffmpeg4.4/libswscale.so|g" build/build.ninja
-  sed -i "s|-lswresample|/usr/lib/ffmpeg4.4/libswresample.so|g" build/build.ninja
   ninja -C build
 }
 

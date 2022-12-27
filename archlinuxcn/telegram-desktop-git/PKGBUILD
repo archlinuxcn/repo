@@ -1,22 +1,22 @@
 # Maintainer: Sven-Hendrik Haase <svenstaro@gmail.com>
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-git
-pkgver=4.2.4.r10.g7b5781b84
+pkgver=4.4.1.r107.g690e1013c
 pkgrel=1
 pkgdesc='Official Telegram Desktop client'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL3')
-depends=('hunspell' 'ffmpeg4.4' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal' 'ttf-opensans'
-         'qt6-imageformats' 'qt6-svg' 'qt6-wayland' 'qt6-5compat' 'xxhash' 'glibmm'
-         'rnnoise' 'pipewire' 'libxtst' 'libxrandr' 'jemalloc' 'abseil-cpp' 'libdispatch')
+depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal' 'ttf-opensans'
+         'qt6-imageformats' 'qt6-svg' 'qt6-wayland' 'qt6-5compat' 'xxhash' 'glibmm-2.68'
+         'rnnoise' 'pipewire' 'libxtst' 'libxrandr' 'jemalloc' 'abseil-cpp' 'libdispatch'
+         'openssl-1.1' 'protobuf')
 makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'microsoft-gsl' 'meson'
              'extra-cmake-modules' 'wayland-protocols' 'plasma-wayland-protocols' 'libtg_owt-git')
 optdepends=('webkit2gtk: embedded browser features'
             'xdg-desktop-portal: desktop integration')
 provides=("telegram-desktop")
 conflicts=("telegram-desktop")
-_kcoreaddons_version="5.98.0"
 ## source array generated from:
 # python -c 'import configparser, os.path; c=configparser.ConfigParser();c.read(".gitmodules"); print("\n".join(f"\t\"telegram-desktop-{path}::git+{u}\"" for s in c.sections() if (url:=c[s]["url"], path:=os.path.basename(c[s]["path"]), u:= url if url.endswith(".git") else url+".git")))'
 source=("tdesktop::git+https://github.com/telegramdesktop/tdesktop.git#branch=dev"
@@ -53,8 +53,10 @@ source=("tdesktop::git+https://github.com/telegramdesktop/tdesktop.git#branch=de
         "telegram-desktop-wayland-protocols::git+https://github.com/gitlab-freedesktop-mirrors/wayland-protocols.git"
         "telegram-desktop-kimageformats::git+https://github.com/KDE/kimageformats.git"
         "telegram-desktop-kcoreaddons::git+https://github.com/KDE/kcoreaddons.git"
+        "telegram-desktop-cld3::git+https://github.com/google/cld3.git"
 )
 sha512sums=('SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -131,7 +133,8 @@ prepare() {
     git config submodule.Telegram/ThirdParty/wayland-protocols.url "$srcdir/telegram-desktop-wayland-protocols"
     git config submodule.Telegram/ThirdParty/kimageformats.url "$srcdir/telegram-desktop-kimageformats"
     git config submodule.Telegram/ThirdParty/kcoreaddons.url "$srcdir/telegram-desktop-kcoreaddons"
-    git submodule update
+    git config submodule.Telegram/ThirdParty/cld3.url "$srcdir/telegram-desktop-cld3"
+    git -c protocol.file.allow=always submodule update
 }
 
 build() {
