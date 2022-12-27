@@ -1,27 +1,27 @@
-From c5a05b95c18ec425102260291aaae8c767a92151 Mon Sep 17 00:00:00 2001
+From 20fa5c19a40cbad31d053f1769ac4cde5b1608bf Mon Sep 17 00:00:00 2001
 From: Megumi_fox <i@megumifox.com>
 Date: Wed, 14 Apr 2021 22:56:55 +0800
 Subject: [PATCH] add TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME back
 
 ---
- Telegram/SourceFiles/core/application.cpp              | 2 ++
- Telegram/SourceFiles/settings/settings_codes.cpp       | 2 ++
- Telegram/cmake/telegram_options.cmake                  | 5 +++++
- 3 files changed, 10 insertions(+)
+ Telegram/SourceFiles/core/application.cpp        | 2 ++
+ Telegram/SourceFiles/settings/settings_codes.cpp | 2 ++
+ Telegram/cmake/telegram_options.cmake            | 5 +++++
+ 3 files changed, 9 insertions(+)
 
 diff --git a/Telegram/SourceFiles/core/application.cpp b/Telegram/SourceFiles/core/application.cpp
-index 7ba879a82..52b4a487b 100644
+index e5f3bb478..2bff304cb 100644
 --- a/Telegram/SourceFiles/core/application.cpp
 +++ b/Telegram/SourceFiles/core/application.cpp
-@@ -1442,6 +1442,7 @@ void Application::startShortcuts() {
+@@ -1468,6 +1468,7 @@ void Application::startShortcuts() {
  }
  
  void Application::RegisterUrlScheme() {
 +#ifndef TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME
  	base::Platform::RegisterUrlScheme(base::Platform::UrlSchemeDescriptor{
  		.executable = cExeDir() + cExeName(),
- 		.arguments = qsl("-workdir \"%1\"").arg(cWorkingDir()),
-@@ -1452,6 +1453,7 @@ void Application::RegisterUrlScheme() {
+ 		.arguments = Sandbox::Instance().customWorkingDir()
+@@ -1480,6 +1481,7 @@ void Application::RegisterUrlScheme() {
  		.displayAppName = AppName.utf16(),
  		.displayAppDescription = AppName.utf16(),
  	});
@@ -30,27 +30,27 @@ index 7ba879a82..52b4a487b 100644
  
  bool IsAppLaunched() {
 diff --git a/Telegram/SourceFiles/settings/settings_codes.cpp b/Telegram/SourceFiles/settings/settings_codes.cpp
-index 409ff780f..c72e5f761 100644
+index 47d49ab30..258a8dcd4 100644
 --- a/Telegram/SourceFiles/settings/settings_codes.cpp
 +++ b/Telegram/SourceFiles/settings/settings_codes.cpp
-@@ -175,6 +175,7 @@ auto GenerateCodes() {
+@@ -176,6 +176,7 @@ auto GenerateCodes() {
  			window->showSettings(Settings::Folders::Id());
  		}
  	});
 +#ifndef TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME
- 	codes.emplace(qsl("registertg"), [](SessionController *window) {
+ 	codes.emplace(u"registertg"_q, [](SessionController *window) {
  		Core::Application::RegisterUrlScheme();
  		Ui::Toast::Show("Forced custom scheme register.");
-@@ -183,6 +184,7 @@ auto GenerateCodes() {
+@@ -184,6 +185,7 @@ auto GenerateCodes() {
  		Platform::InstallLauncher(true);
  		Ui::Toast::Show("Forced launcher installation.");
  	});
 +#endif // !TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME
  
  #if defined Q_OS_WIN || defined Q_OS_MAC
- 	codes.emplace(qsl("freetype"), [](SessionController *window) {
+ 	codes.emplace(u"freetype"_q, [](SessionController *window) {
 diff --git a/Telegram/cmake/telegram_options.cmake b/Telegram/cmake/telegram_options.cmake
-index 1c3c25431..253fa9ea7 100644
+index ff6bd398a..c9a9d8456 100644
 --- a/Telegram/cmake/telegram_options.cmake
 +++ b/Telegram/cmake/telegram_options.cmake
 @@ -5,6 +5,7 @@
@@ -61,7 +61,7 @@ index 1c3c25431..253fa9ea7 100644
  set(TDESKTOP_API_ID "0" CACHE STRING "Provide 'api_id' for the Telegram API access.")
  set(TDESKTOP_API_HASH "" CACHE STRING "Provide 'api_hash' for the Telegram API access.")
  
-@@ -50,6 +51,10 @@ if (DESKTOP_APP_DISABLE_AUTOUPDATE)
+@@ -46,6 +47,10 @@ if (DESKTOP_APP_DISABLE_AUTOUPDATE)
      target_compile_definitions(Telegram PRIVATE TDESKTOP_DISABLE_AUTOUPDATE)
  endif()
  
@@ -72,4 +72,6 @@ index 1c3c25431..253fa9ea7 100644
  if (DESKTOP_APP_SPECIAL_TARGET)
      target_compile_definitions(Telegram PRIVATE TDESKTOP_ALLOW_CLOSED_ALPHA)
  endif()
- 
+-- 
+2.39.0
+

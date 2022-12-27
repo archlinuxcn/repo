@@ -24,7 +24,7 @@ source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver
         "0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch")
 sha512sums=('91038f0a615ef7ae1050cbfa614041a3d6a45fdbd26d120ef98cca3c31377612c3bb1e80f9aff58c4853a1726bf2cfb427f752a4f88a796f05b381516c981563'
             'cc48d9116a918df5479c4508e9b98536772cafd9bc736ca40fdbedc3ea8ee0188eb0434046177ef49e0a124668e8c707433af90b11879ef0cf43911ab67a56cb'
-            '09095415092458e33277bab880ca9d3a89bb16cc5bf19e54da8f283d11a1d54e5ae68fb2ea56ca5c04c082cf4a5de5e30832dfe4254bad512b84d983d013c806')
+            '31d7a4c091abae49631598f2f41c8382550312e080fca784ed5a19cbaef0c6cdf2a2a4ffeffd78cd41f32dd49fb60ead2c12b3febce7cdf9a9ede6ea3c938a2b')
 
 prepare() {
     patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-Use-font-from-environment-variables.patch
