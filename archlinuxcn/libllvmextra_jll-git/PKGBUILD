@@ -1,0 +1,51 @@
+#
+
+pkgname=libllvmextra_jll-git
+pkgver=v4.14.1.r0.gd21df91
+pkgrel=1
+pkgdesc='Deps for LLVM.jl'
+arch=(aarch64 armv7h i686 x86_64)
+url='https://github.com/maleadt/LLVM'
+license=('MIT')
+depends=(llvm-julia)
+makedepends=(git)
+source=('git+https://github.com/maleadt/LLVM.jl')
+sha1sums=('SKIP')
+provides=('libllvmextra_jll')
+conflicts=('libllvmextra_jll')
+options=('debug')
+
+pkgver() {
+  cd LLVM.jl
+
+  git describe --long --tags | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+}
+
+build() {
+  cd LLVM.jl/deps/LLVMExtra
+
+  mkdir -p build
+  cd build
+  cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package() {
+  _llvm_ver=$(llvm-config --version)
+  [[ $_llvm_ver =~ ^([0-9]*).* ]]
+  llvm_maj_ver=${BASH_REMATCH[1]}
+  ((next_llvm_maj=llvm_maj_ver + 1))
+
+  _deps=("llvm-libs-julia>=${llvm_maj_ver}.0"
+         "llvm-libs-julia<${next_llvm_maj}.0")
+
+  depends+=("${_deps[@]}")
+
+  cd LLVM.jl/deps/LLVMExtra/build
+
+  make install DESTDIR="${pkgdir}"
+
+  mkdir "${pkgdir}/usr/lib/julia"
+  mv "${pkgdir}/usr/lib/"libLLVMExtra-* "${pkgdir}/usr/lib/julia"
+}
