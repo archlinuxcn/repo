@@ -2,8 +2,8 @@
 
 _pkgname=xtcocoapi
 pkgname=python-xcocotools
-pkgver=1.12
-pkgrel=2
+pkgver=1.13
+pkgrel=1
 pkgdesc='Extended COCO-API'
 arch=('x86_64')
 url='https://github.com/jin-s13/xtcocoapi'
@@ -17,7 +17,7 @@ makedepends=(
   python-setuptools
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/jin-s13/xtcocoapi/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('bef2d183267a4134f66d6f7bdaf2d93c31b8a3c19584facbafc107622ddf2695ed0369e12e3e07ef4c1e6ed0450d6d5fe26bbda03ca9a88da8bf5a538415411a')
+sha512sums=('32d68ee387e4833a6b86f50809b9a61f4bcbb4bbfec5b377e13cce1588b10a4ceabe8cb3d4367d9be4ae25306a450ad99a24bb42657c85bf3b91c56c9588c3c6')
 
 build() {
   cd "${_pkgname}-${pkgver}"
