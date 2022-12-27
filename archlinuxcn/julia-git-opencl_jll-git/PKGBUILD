@@ -1,0 +1,32 @@
+pkgname=julia-git-opencl_jll-git
+pkgver=2022.9.23+1
+pkgrel=1
+pkgdesc="OpenCL_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/OpenCL_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git opencl-icd-loader)
+provides=(julia-git-opencl_jll)
+source=(git+https://github.com/JuliaBinaryWrappers/OpenCL_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         'e1f87f371df27b39a5fc612dfb5b00eb')
+
+pkgver() {
+  cd OpenCL_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd OpenCL_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl OpenCL_jll ../jll.toml
+}
+
+package() {
+  cd OpenCL_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh OpenCL_jll "${pkgdir}" "${pkgname}" julia-git
+}
