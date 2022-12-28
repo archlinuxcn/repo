@@ -8,13 +8,21 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 provides=(julia-git-gr)
-source=(git+https://github.com/jheinen/GR.jl)
-md5sums=('SKIP')
+source=(git+https://github.com/jheinen/GR.jl
+        0001-Get-rid-of-problematic-path-dance.patch)
+md5sums=('SKIP'
+         '5baf2e950a79f4707f618db43ed83a31')
 
 pkgver() {
   cd GR.jl
 
   git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+prepare() {
+  cd GR.jl
+
+  patch -Np1 < ../0001-Get-rid-of-problematic-path-dance.patch
 }
 
 package() {
