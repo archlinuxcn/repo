@@ -1,0 +1,14 @@
+[Unit]
+Description=Clash-Meta Daemon for %i.
+After=network.target NetworkManager.service systemd-networkd.service iwd.service
+
+[Service]
+Type=exec
+User=%i
+CapabilityBoundingSet=cap_net_admin
+AmbientCapabilities=cap_net_admin
+Restart=on-abort
+ExecStart=/usr/bin/clash-meta
+
+[Install]
+WantedBy=multi-user.target
