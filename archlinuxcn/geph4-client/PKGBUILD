@@ -1,7 +1,7 @@
 # Maintainer: Dct Mei <dctxmei@yandex.com>
 
 pkgname=geph4-client
-pkgver=4.7.0.beta.6
+pkgver=4.7.0.beta.9
 pkgrel=1
 pkgdesc="A command-line Geph4 toolset"
 arch=('x86_64')
@@ -17,7 +17,7 @@ source=("geph4-client.default"
         "geph4-client.service")
 sha256sums=('4e6ac4d3e31d7bf0fd4cb4b9269bbb124501a07a4701ce9728e857751773e4dd'
             'e3d7e3afb1b524e93e60a80a21773a16de17643865bdf6a1a1f2e17fc2cc8e2d'
-            'f300b3c2c54e05afbb52b172dfb64469a67512c26f5ee69424861244dcfd73ea')
+            'c9404b94b33c887aacc31a70b6156a29d603d622cc1d477f72146a6116d9a7a7')
 
 _prepare() {
     if [[ "${pkgver}" =~ '.alpha' ]]; then
