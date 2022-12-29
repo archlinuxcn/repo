@@ -1,0 +1,450 @@
+#!/bin/bash
+#
+# sogrep - find shared library links in an Arch Linux repository.
+#
+# Copyright (c) 2019 by Eli Schwartz <eschwartz@archlinux.org>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+#!/hint/bash
+#
+# This may be included with or without `set -euE`
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+[[ -z ${_INCLUDE_COMMON_SH:-} ]] || return 0
+_INCLUDE_COMMON_SH="$(set +o|grep nounset)"
+
+set +u +o posix
+# shellcheck disable=1091
+. /usr/share/makepkg/util.sh
+$_INCLUDE_COMMON_SH
+
+# Avoid any encoding problems
+export LANG=C
+
+# Set buildtool properties
+export BUILDTOOL=devtools
+export BUILDTOOLVER=20221012-2-any
+
+# check if messages are to be printed using color
+if [[ -t 2 && "$TERM" != dumb ]]; then
+	colorize
+else
+	# shellcheck disable=2034
+	declare -gr ALL_OFF='' BOLD='' BLUE='' GREEN='' RED='' YELLOW=''
+fi
+
+stat_busy() {
+	local mesg=$1; shift
+	# shellcheck disable=2059
+	printf "${GREEN}==>${ALL_OFF}${BOLD} ${mesg}...${ALL_OFF}" "$@" >&2
+}
+
+stat_done() {
+	# shellcheck disable=2059
+	printf "${BOLD}done${ALL_OFF}\n" >&2
+}
+
+_setup_workdir=false
+setup_workdir() {
+	[[ -z ${WORKDIR:-} ]] && WORKDIR=$(mktemp -d --tmpdir "${0##*/}.XXXXXXXXXX")
+	_setup_workdir=true
+	trap 'trap_abort' INT QUIT TERM HUP
+	trap 'trap_exit' EXIT
+}
+
+cleanup() {
+	if [[ -n ${WORKDIR:-} ]] && $_setup_workdir; then
+		rm -rf "$WORKDIR"
+	fi
+	exit "${1:-0}"
+}
+
+abort() {
+	error 'Aborting...'
+	cleanup 255
+}
+
+trap_abort() {
+	trap - EXIT INT QUIT TERM HUP
+	abort
+}
+
+trap_exit() {
+	local r=$?
+	trap - EXIT INT QUIT TERM HUP
+	cleanup $r
+}
+
+die() {
+	(( $# )) && error "$@"
+	cleanup 255
+}
+
+##
+#  usage : lock( $fd, $file, $message, [ $message_arguments... ] )
+##
+lock() {
+	# Only reopen the FD if it wasn't handed to us
+	if ! [[ "/dev/fd/$1" -ef "$2" ]]; then
+		mkdir -p -- "$(dirname -- "$2")"
+		eval "exec $1>"'"$2"'
+	fi
+
+	if ! flock -n "$1"; then
+		stat_busy "${@:3}"
+		flock "$1"
+		stat_done
+	fi
+}
+
+##
+#  usage : slock( $fd, $file, $message, [ $message_arguments... ] )
+##
+slock() {
+	# Only reopen the FD if it wasn't handed to us
+	if ! [[ "/dev/fd/$1" -ef "$2" ]]; then
+		mkdir -p -- "$(dirname -- "$2")"
+		eval "exec $1>"'"$2"'
+	fi
+
+	if ! flock -sn "$1"; then
+		stat_busy "${@:3}"
+		flock -s "$1"
+		stat_done
+	fi
+}
+
+##
+#  usage : lock_close( $fd )
+##
+lock_close() {
+	local fd=$1
+	# https://github.com/koalaman/shellcheck/issues/862
+	# shellcheck disable=2034
+	exec {fd}>&-
+}
+
+##
+# usage: pkgver_equal( $pkgver1, $pkgver2 )
+##
+pkgver_equal() {
+	if [[ $1 = *-* && $2 = *-* ]]; then
+		# if both versions have a pkgrel, then they must be an exact match
+		[[ $1 = "$2" ]]
+	else
+		# otherwise, trim any pkgrel and compare the bare version.
+		[[ ${1%%-*} = "${2%%-*}" ]]
+	fi
+}
+
+##
+#  usage: find_cached_package( $pkgname, $pkgver, $arch )
+#
+#    $pkgver can be supplied with or without a pkgrel appended.
+#    If not supplied, any pkgrel will be matched.
+##
+find_cached_package() {
+	local searchdirs=("$PWD" "$PKGDEST") results=()
+	local targetname=$1 targetver=$2 targetarch=$3
+	local dir pkg packages pkgbasename name ver rel arch r results
+
+	for dir in "${searchdirs[@]}"; do
+		[[ -d $dir ]] || continue
+
+		shopt -s extglob nullglob
+		mapfile -t packages < <(printf "%s\n" "$dir"/"${targetname}"-"${targetver}"-*"${targetarch}".pkg.tar?(.!(sig|*.*)))
+		shopt -u extglob nullglob
+
+		for pkg in "${packages[@]}"; do
+			[[ -f $pkg ]] || continue
+
+			# avoid adding duplicates of the same inode
+			for r in "${results[@]}"; do
+				[[ $r -ef $pkg ]] && continue 2
+			done
+
+			# split apart package filename into parts
+			pkgbasename=${pkg##*/}
+			pkgbasename=${pkgbasename%.pkg.tar*}
+
+			arch=${pkgbasename##*-}
+			pkgbasename=${pkgbasename%-"$arch"}
+
+			rel=${pkgbasename##*-}
+			pkgbasename=${pkgbasename%-"$rel"}
+
+			ver=${pkgbasename##*-}
+			name=${pkgbasename%-"$ver"}
+
+			if [[ $targetname = "$name" && $targetarch = "$arch" ]] &&
+					pkgver_equal "$targetver" "$ver-$rel"; then
+				results+=("$pkg")
+			fi
+		done
+	done
+
+	case ${#results[*]} in
+		0)
+			return 1
+			;;
+		1)
+			printf '%s\n' "${results[0]}"
+			return 0
+			;;
+		*)
+			error 'Multiple packages found:'
+			printf '\t%s\n' "${results[@]}" >&2
+			return 1
+	esac
+}
+
+
+check_package_validity(){
+	local pkgfile=$1
+	if grep -q "packager = Unknown Packager" <(bsdtar -xOqf "$pkgfile" .PKGINFO); then
+		die "PACKAGER was not set when building package"
+	fi
+	hashsum=sha256sum
+	pkgbuild_hash=$(awk -v"hashsum=$hashsum" -F' = ' '$1 == "pkgbuild_"hashsum {print $2}' <(bsdtar -xOqf "$pkgfile" .BUILDINFO))
+	if [[ "$pkgbuild_hash" != "$($hashsum PKGBUILD|cut -d' ' -f1)" ]]; then
+		die "PKGBUILD $hashsum mismatch: expected $pkgbuild_hash"
+	fi
+}
+
+
+# usage: grep_pkginfo pkgfile pattern
+grep_pkginfo() {
+	local _ret=()
+	mapfile -t _ret < <(bsdtar -xOqf "$1" ".PKGINFO" | grep "^${2} = ")
+	printf '%s\n' "${_ret[@]#${2} = }"
+}
+
+
+# Get the package name
+getpkgname() {
+	local _name
+
+	_name="$(grep_pkginfo "$1" "pkgname")"
+	if [[ -z $_name ]]; then
+		error "Package '%s' has no pkgname in the PKGINFO. Fail!" "$1"
+		exit 1
+	fi
+
+	echo "$_name"
+}
+
+
+# Get the package base or name as fallback
+getpkgbase() {
+	local _base
+
+	_base="$(grep_pkginfo "$1" "pkgbase")"
+	if [[ -z $_base ]]; then
+		getpkgname "$1"
+	else
+		echo "$_base"
+	fi
+}
+
+
+getpkgdesc() {
+	local _desc
+
+	_desc="$(grep_pkginfo "$1" "pkgdesc")"
+	if [[ -z $_desc ]]; then
+		error "Package '%s' has no pkgdesc in the PKGINFO. Fail!" "$1"
+		exit 1
+	fi
+
+	echo "$_desc"
+}
+
+
+is_debug_package() {
+	local pkgfile=${1} pkgbase pkgname pkgdesc
+	pkgbase="$(getpkgbase "${pkgfile}")"
+	pkgname="$(getpkgname "${pkgfile}")"
+	pkgdesc="$(getpkgdesc "${pkgfile}")"
+	[[ ${pkgdesc} == "Detached debugging symbols for "* && ${pkgbase}-debug = "${pkgname}" ]]
+}
+
+
+# globals
+: ${SOLINKS_MIRROR:="https://riscv.mirror.pkgbuild.com/repo"}
+: ${SOCACHE_DIR:="${XDG_CACHE_HOME:-${HOME}/.cache}/sogrep"}
+
+#!/hint/bash
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+:
+
+# shellcheck disable=2034
+_repos=(
+	core
+	extra
+	community
+	unsupported
+)
+
+# shellcheck disable=2034
+_build_repos=(
+	extra
+)
+
+arches=('riscv64')
+
+# options
+REFRESH=0
+VERBOSE=0
+
+source /usr/share/makepkg/util/parseopts.sh
+source /usr/share/makepkg/util/util.sh
+
+recache() {
+    local repo arch verbosity=-s
+
+    (( VERBOSE )) && verbosity=--progress-bar
+
+    for repo in "${_repos[@]}"; do
+        for arch in "${arches[@]}"; do
+            # delete extracted tarballs from previous sogrep versions
+            rm -rf "${SOCACHE_DIR}/${arch}/${repo}"
+
+            # fetch repo links database if newer than our cached copy
+            local dbpath=${SOCACHE_DIR}/${arch}/${repo}.links.tar.gz
+            mkdir -p "${dbpath%/*}"
+            (( VERBOSE )) && echo "Fetching ${repo}.links.tar.gz..."
+            if ! curl -fLR "${verbosity}" -o "${dbpath}" -z "${dbpath}" \
+                    "${SOLINKS_MIRROR}/${repo}/${repo}.links.tar.gz"; then
+                echo "error: failed to download links database for repo ${repo}"
+                exit 1
+            fi
+        done
+    done
+}
+
+is_outdated_cache() {
+    local repo arch
+
+    # links databases are generated at about the same time every day; we should
+    # attempt to check for new database files if any of them are over a day old
+
+    for repo in "${_repos[@]}"; do
+        for arch in "${arches[@]}"; do
+            local dbpath=${SOCACHE_DIR}/${arch}/${repo}.links.tar.gz
+            if [[ ! -f ${dbpath} ]] || [[ $(find "${dbpath}" -mtime +0) ]]; then
+                return 0
+            fi
+        done
+    done
+
+    return 1
+}
+
+search() {
+    local repo=$1 arch lib=$2 srepos=("${_repos[@]}")
+
+    if [[ $repo != all ]]; then
+        if ! in_array "${repo}" "${_repos[@]}"; then
+            echo "${BASH_SOURCE[0]##*/}: unrecognized repo '$repo'"
+            echo "Try '${BASH_SOURCE[0]##*/} --help' for more information."
+            exit 1
+        fi
+        srepos=("${repo}")
+    fi
+
+    setup_workdir
+
+    for arch in "${arches[@]}"; do
+        for repo in "${srepos[@]}"; do
+            local prefix=
+            (( VERBOSE && ${#srepos[@]} > 1 )) && prefix=${repo}/
+            local db=${SOCACHE_DIR}/${arch}/${repo}.links.tar.gz
+            if [[ -f ${db} ]]; then
+                local extracted=${WORKDIR}/${arch}/${repo}
+                mkdir -p "${extracted}"
+                bsdtar -C "${extracted}" -xf "${db}"
+                while read -rd '' pkg; do
+                    read -r match
+                    pkg=${pkg#${extracted}/}
+                    pkg="${prefix}${pkg%-*-*/links}"
+
+                    if (( VERBOSE )); then
+                        printf '%-35s %s\n' "${pkg}" "${match}"
+                    else
+                        printf '%s\n' "${pkg}"
+                    fi
+                done < <(grep -rZ "${lib}" "${extracted}") | sort -u
+            fi
+        done
+    done | resort
+}
+
+usage() {
+    cat <<- _EOF_
+		Usage: ${BASH_SOURCE[0]##*/} [OPTIONS] REPO LIBNAME
+
+		Check the soname links database for Arch Linux repositories containing
+		packages linked to a given shared library. If the repository specified
+		is "all", then all repositories will be searched, otherwise only the
+		named repository will be searched.
+
+		If the links database does not exist, it will be downloaded first.
+
+		OPTIONS
+		    -v, --verbose   Show matched links in addition to pkgname
+		    -r, --refresh   Refresh the links databases
+		    -h, --help      Show this help text
+_EOF_
+}
+
+# utility function to resort with multiple repos + no-verbose
+resort() { sort -u; }
+
+if (( $# == 0 )); then
+    echo "error: No arguments passed."
+    echo "Try '${BASH_SOURCE[0]##*/} --help' for more information."
+    exit 1
+fi
+OPT_SHORT='vrh'
+OPT_LONG=('verbose' 'refresh' 'help')
+if ! parseopts "$OPT_SHORT" "${OPT_LONG[@]}" -- "$@"; then
+    exit 1
+fi
+set  -- "${OPTRET[@]}"
+
+while :; do
+    case $1 in
+        -v|--verbose)
+            resort() { cat; }
+            VERBOSE=1
+            ;;
+        -r|--refresh)
+            REFRESH=1
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        --)
+            shift; break
+            ;;
+    esac
+    shift
+done
+
+if ! (( ( REFRESH && $# == 0 ) || $# == 2 )); then
+    echo "error: Incorrect number of arguments passed."
+    echo "Try '${BASH_SOURCE[0]##*/} --help' for more information."
+    exit 1
+fi
+
+# trigger a refresh if requested explicitly or the cached dbs might be outdated
+if (( REFRESH )) || [[ ! -d ${SOCACHE_DIR} ]] || is_outdated_cache; then
+    recache
+    (( $# == 2 )) || exit 0
+fi
+
+search "$@"
