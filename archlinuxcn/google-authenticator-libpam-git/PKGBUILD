@@ -3,7 +3,7 @@
 
 pkgname='google-authenticator-libpam-git'
 
-pkgver=1.09.r12.g55fe25a
+pkgver=1.09.r13.gfdd8289
 pkgver() {
   cd "$srcdir/$pkgname-2"
   local count=$(git rev-list --count HEAD)
@@ -14,7 +14,7 @@ pkgver() {
   )
 }
 
-pkgrel=2
+pkgrel=1
 pkgdesc='PAM module for google authenticator app'
 arch=('i686' 'x86_64' 'armv7h')
 url='https://github.com/google/google-authenticator'
