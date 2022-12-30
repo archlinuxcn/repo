@@ -1,7 +1,7 @@
-From 366ed49bdad4ae335dfad1135a1eb6a78288d0e8 Mon Sep 17 00:00:00 2001
+From e8526039d65e91b3b0bbb64102b2b81d456bd0e0 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 13 Nov 2022 19:35:34 -0500
-Subject: [PATCH 6/6] Remove library patching that should not be done for
+Subject: [PATCH 6/7] Remove library patching that should not be done for
  system libraries
 
 ---
@@ -9,10 +9,10 @@ Subject: [PATCH 6/6] Remove library patching that should not be done for
  1 file changed, 10 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 15a8cd1c85..6804eb2355 100644
+index d41f3e50d9..a09addfa72 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -382,16 +382,6 @@ else ifeq ($(JULIA_BUILD_MODE),debug)
+@@ -420,16 +420,6 @@ else ifeq ($(JULIA_BUILD_MODE),debug)
  endif
  endif
  
@@ -30,5 +30,5 @@ index 15a8cd1c85..6804eb2355 100644
  ifneq ($(LOADER_BUILD_DEP_LIBS),$(LOADER_INSTALL_DEP_LIBS))
  	# Next, overwrite relative path to libjulia-internal in our loader if $$(LOADER_BUILD_DEP_LIBS) != $$(LOADER_INSTALL_DEP_LIBS)
 -- 
-2.38.1
+2.39.0
 
