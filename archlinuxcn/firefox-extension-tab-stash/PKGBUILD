@@ -2,7 +2,7 @@
 
 pkgname=firefox-extension-tab-stash
 _pkgname=tab-stash
-pkgver=2.11.1
+pkgver=2.12.0.1
 pkgrel=1
 pkgdesc="Firefox extension to save and restore tabs as bookmarks"
 arch=('any')
