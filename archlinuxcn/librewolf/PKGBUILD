@@ -2,7 +2,7 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=108.0
+pkgver=108.0.1
 pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
@@ -69,7 +69,7 @@ options=(
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
 # _source_tag="${pkgver}-${pkgrel%.*}"
 # _source_tag="${pkgver}-${pkgrel}"
-_source_commit='6c36676c883d4113c7aad0212a6890b11e95f23e'
+_source_commit='4af48fa20359dfbe9ffd8ac57619bd234923eb0e'
 # _settings_tag='7.3'
 _settings_commit='424560ba704960d712242d0e2f9e92f2027a2d15'
 
@@ -83,7 +83,7 @@ source=(
   "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
   "${_arch_git}/0001-libwebrtc-screen-cast-sync.patch"
 )
-sha256sums=('ce0d31f89111fcce9e2dd490d810b6a704f7214ba0186fa2d2ec960099808e63'
+sha256sums=('9821ac130dad01383e03276bf6cc92d41329d351da1fa7fa238168f8890611ea'
             'SKIP'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
             'SKIP'
