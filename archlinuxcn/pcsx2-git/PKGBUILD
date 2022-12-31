@@ -3,7 +3,7 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.3519.r330.gfacbfa479b
+pkgver=1.7.3822.r0.g9aa46e854
 pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
@@ -62,26 +62,27 @@ conflicts=(pcsx2)
 
 source=(
 git+https://github.com/PCSX2/pcsx2.git
-qtdesktop.patch::https://github.com/PCSX2/pcsx2/commit/1c6334b6e8adb2a2f5a7e6f607863bec77814dd6.patch
-resources.patch::https://github.com/PCSX2/pcsx2/commit/f5bd6a30dc4f715ad38ca748ffcc241ad43d18e0.patch
+0001-Fix-resources-Fix-CMake.patch
 )
 
 sha256sums=('SKIP'
-            '8f0a78a98b8d184920c405968a558923fc269bec386ea22f7177b9549da7f34c'
-            '62448559503183f1d8af97cc9f6d3ac2cb95bea9ad231819d671b3642d47d70e')
-
+            'd345759a6ca19023ba9775c6f4b847d5510c38eea83406571dc0d2fc72ec3d3a')
 prepare()
 {
   cd $srcdir/pcsx2
   git submodule update --init --recursive
-  patch -p1 < ../qtdesktop.patch
-  patch -p1 < ../resources.patch
+  git apply -3 "${srcdir}/0001-Fix-resources-Fix-CMake.patch"
+
+  export CMAKE_C_COMPILER=/usr/bin/clang
+  export CMAKE_CXX_COMPILER=/usr/bin/clang++
+  export CMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld"
+  export CMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld"
 }
 
 pkgver()
 {
   cd $srcdir/pcsx2
-  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//'
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//'
 }
 
 build()
@@ -97,6 +98,7 @@ build()
     -DQT_BUILD=ON \
     -DXDG_STD=TRUE \
     -DUSE_VULKAN=ON \
+    -DDISABLE_ADVANCE_SIMD=ON \
     -GNinja \
     -DPACKAGE_MODE=ON \
     -DDISABLE_SETCAP=ON

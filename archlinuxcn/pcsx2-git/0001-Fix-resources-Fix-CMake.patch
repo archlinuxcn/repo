@@ -1,0 +1,111 @@
+From 4d2bcaa7d92a8a3c02d788bf784e9b3a329dc141 Mon Sep 17 00:00:00 2001
+From: kenshen112 <finalfantasytimothy@gmail.com>
+Date: Sat, 24 Dec 2022 10:00:03 -0700
+Subject: [PATCH] Fix resources, Fix CMake
+
+---
+ CMakeLists.txt                 | 6 ++++++
+ cmake/BuildParameters.cmake    | 9 +++++++++
+ linux_various/PCSX2.desktop.in | 2 +-
+ pcsx2-qt/CMakeLists.txt        | 7 ++++---
+ pcsx2/Frontend/CommonHost.cpp  | 8 +++++---
+ 5 files changed, 25 insertions(+), 7 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4059d9e72..bc0a5e1fc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -18,6 +18,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+ # include some generic functions to ensure correctness of the env
+ include(Pcsx2Utils)
+ 
++set(EXECUTEABLE "pcsx2-qt")
++set(PCSX2_MENU_CATEGORIES "Game;Emulator;")
++
+ check_no_parenthesis_in_path()
+ detectOperatingSystem()
+ check_compiler_version("7.0" "7.0")
+@@ -56,3 +59,6 @@ if(ACTUALLY_ENABLE_TESTS)
+ 	add_subdirectory(tests/ctest)
+ endif()
+ 
++configure_file("${CMAKE_SOURCE_DIR}/linux_various/PCSX2.desktop.in" "${CMAKE_BINARY_DIR}/linux_various/PCSX2.desktop" @ONLY)
++
++INSTALL(FILES "${CMAKE_BINARY_DIR}/linux_various/PCSX2.desktop" DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/applications")
+\ No newline at end of file
+diff --git a/cmake/BuildParameters.cmake b/cmake/BuildParameters.cmake
+index f38e0bea8..2e11ee7f7 100644
+--- a/cmake/BuildParameters.cmake
++++ b/cmake/BuildParameters.cmake
+@@ -54,6 +54,15 @@ if(UNIX AND NOT APPLE)
+ 	option(WAYLAND_API "Enable Wayland support" OFF)
+ endif()
+ 
++if(PACKAGE_MODE)
++	file(RELATIVE_PATH relative_datadir ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DATADIR}/PCSX2)
++	file(RELATIVE_PATH relative_docdir ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_DOCDIR})
++	# Compile all source codes with those defines
++	list(APPEND PCSX2_DEFS
++		PCSX2_APP_DATADIR="${relative_datadir}"
++		PCSX2_APP_DOCDIR="${relative_docdir}")
++endif()
++
+ if(APPLE)
+ 	option(OSX_USE_DEFAULT_SEARCH_PATH "Don't prioritize system library paths" OFF)
+ 	option(SKIP_POSTPROCESS_BUNDLE "Skip postprocessing bundle for redistributability" OFF)
+diff --git a/linux_various/PCSX2.desktop.in b/linux_various/PCSX2.desktop.in
+index 9dbc8f2d1..8b6831142 100644
+--- a/linux_various/PCSX2.desktop.in
++++ b/linux_various/PCSX2.desktop.in
+@@ -9,7 +9,7 @@ GenericName[zh_CN]=PlayStation 2 模拟器
+ Comment=Sony PlayStation 2 emulator
+ Comment[ru]=Эмулятор Sony PlayStation 2
+ Comment[zh_CN]=索尼 PlayStation 2 模拟器
+-Exec=env GDK_BACKEND=x11 MESA_NO_ERROR=1 pcsx2
++Exec=env QT_QPA_PLATFORM=xcb MESA_NO_ERROR=1 @EXECUTEABLE@
+ Icon=PCSX2
+ Keywords=game;emulator;
+ Categories=@PCSX2_MENU_CATEGORIES@
+diff --git a/pcsx2-qt/CMakeLists.txt b/pcsx2-qt/CMakeLists.txt
+index 7e822cb2a..319d442d5 100644
+--- a/pcsx2-qt/CMakeLists.txt
++++ b/pcsx2-qt/CMakeLists.txt
+@@ -4,9 +4,10 @@ set(CMAKE_AUTOUIC ON)
+ 
+ add_executable(pcsx2-qt)
+ 
+-if (PACKAGE_MODE)
+-	message(FATAL_ERROR "Package mode is not supported for Qt builds.")
+-else()
++if(PACKAGE_MODE)
++	install(TARGETS pcsx2-qt DESTINATION ${CMAKE_INSTALL_BINDIR})
++	install(DIRECTORY resources DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/PCSX2)
++ else()
+ 	install(TARGETS pcsx2-qt DESTINATION ${CMAKE_SOURCE_DIR}/bin)
+ endif()
+ 
+diff --git a/pcsx2/Frontend/CommonHost.cpp b/pcsx2/Frontend/CommonHost.cpp
+index ab992e483..6269b9748 100644
+--- a/pcsx2/Frontend/CommonHost.cpp
++++ b/pcsx2/Frontend/CommonHost.cpp
+@@ -128,12 +128,14 @@ void CommonHost::SetAppRoot()
+ 
+ void CommonHost::SetResourcesDirectory()
+ {
+-#ifndef __APPLE__
++#ifdef __APPLE__
++	// On macOS, this is in the bundle resources directory.
++	EmuFolders::Resources = Path::Canonicalize(Path::Combine(EmuFolders::AppRoot, "../Resources"));
++#elif !defined(PCSX2_APP_DATADIR)
+ 	// On Windows/Linux, these are in the binary directory.
+ 	EmuFolders::Resources = Path::Combine(EmuFolders::AppRoot, "resources");
+ #else
+-	// On macOS, this is in the bundle resources directory.
+-	EmuFolders::Resources = Path::Canonicalize(Path::Combine(EmuFolders::AppRoot, "../Resources"));
++	EmuFolders::Resources = Path::Canonicalize(Path::Combine(EmuFolders::AppRoot, PCSX2_APP_DATADIR "/resources"));
+ #endif
+ }
+ 
+-- 
+2.39.0
+
