@@ -3,8 +3,8 @@
 
 pkgname=(llvm-julia llvm-libs-julia)
 pkgver=14.0.6
-_julia_rel=0
-pkgrel=3
+_julia_rel=1
+pkgrel=4
 arch=(i686 x86_64 armv7h aarch64)
 url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
@@ -15,7 +15,7 @@ options=('staticlibs' '!strip' '!lto')
 source=(https://github.com/JuliaLang/llvm-project/archive/refs/tags/julia-$pkgver-$_julia_rel.tar.gz
         llvm-coroutines-ubsan.patch
         llvm-config.h)
-sha256sums=('60958e73a7c02b79414c486ba16bef226300a03568d95fe62610f29cd924baac'
+sha256sums=('8dab13702a3a012d9215fd4b9aa98d22ff6bd9597b563e3493cae0e11ae833a4'
             'ee9baf6df05474083857044d92f26f59d3ee709cdf82ba3bdb2792e6645f71d9'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
