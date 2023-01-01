@@ -1,0 +1,28 @@
+# Maintainer: Puqns67 <me@puqns67.icu>
+# Contributor: Danct12 <danct12@disroot.org>
+
+# This PKGBUILD is base on the AUR repo libgbinder, by Danct12 <danct12@disroot.org>
+
+pkgname='libgbinder'
+pkgver=1.1.30
+pkgrel=1
+pkgdesc='GLib-style interface to binder'
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+url='https://github.com/mer-hybris/libgbinder'
+license=('BSD')
+depends=('libglibutil' 'glib2')
+source=("${pkgname}::git+${url}.git#tag=${pkgver}")
+sha512sums=('SKIP')
+
+build() {
+	cd "${srcdir}/${pkgname}/"
+	make release pkgconfig KEEP_SYMBOLS=1
+}
+
+package() {
+	cd "${srcdir}/${pkgname}/"
+	make install-dev DESTDIR="${pkgdir}"
+
+	# license
+	install -Dm 644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
