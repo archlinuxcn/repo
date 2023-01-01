@@ -1,0 +1,11 @@
+--- rstudio-2022.07.0-548/CMakeGlobals.txt	2022-07-07 07:59:49.000000000 +1200
++++ rstudio-2022.07.0-548.patched/CMakeGlobals.txt	2022-07-08 09:24:27.069195093 +1200
+@@ -231,7 +231,7 @@
+ endif()
+ 
+ # pandoc version
+-set(PANDOC_VERSION "2.18" CACHE INTERNAL "Pandoc version")
++set(PANDOC_VERSION "current" CACHE INTERNAL "Pandoc version")
+ 
+ # detect Centos 7, because we don't support Quarto on Centos7
+ set(IS_CENTOS7 FALSE)
