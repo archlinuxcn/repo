@@ -24,8 +24,6 @@ sha256sums=('a17dfdf1fd046219daeacc60065e3a81c80c2eb2cfdf6d8068278c509577f571'
 
 prepare(){
   cd "$srcdir/${pkgname}"
-
-  patch -Np1 < ../0001-fix-build-error-on-linux-6.1.patch
 }
 
 pkgver() {
