@@ -2,14 +2,14 @@
 
 pkgbase=asusctl-git
 pkgname=(asusctl-git rog-control-center-git)
-pkgver=4.5.5.r4.g6ae0d6d
+pkgver=4.5.8.r0.g067738b
 pkgrel=1
 pkgdesc="A control daemon, tools, and a collection of crates for interacting with ASUS ROG laptops"
 arch=('x86_64')
 url="https://gitlab.com/asus-linux/asusctl"
 url="https://gitlab.com/asus-linux/asusctl"
 license=('MPL2')
-makedepends=('cmake' 'git' 'rust' 'gtk3'
+makedepends=('cmake' 'git' 'rust' 'gtk3' 'clang'
              'hicolor-icon-theme' 'libusb' 'fontconfig' 'systemd' 'power-profiles-daemon')
 replaces=('asus-nb-ctrl-git')
 source=('git+https://gitlab.com/asus-linux/asusctl.git')
@@ -57,7 +57,7 @@ package_asusctl-git() {
 }
 
 package_rog-control-center-git() {
-  depends=('asusctl' 'fontconfig' 'gtk3')
+  depends=('asusctl' 'fontconfig' 'libappindicator-gtk3' 'supergfxctl')
   provides=('rog-control-center')
   conflicts=('rog-control-center')
   pkgdesc="App to control asusctl"
