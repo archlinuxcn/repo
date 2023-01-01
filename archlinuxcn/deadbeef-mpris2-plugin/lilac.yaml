@@ -6,13 +6,12 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['Serra'])
-
 post_build: aur_post_build
 
 repo_depends:
   - deadbeef
 
 update_on:
-  - source: aur
-    aur: deadbeef-mpris2-plugin
+  - source: github
+    github: DeaDBeeF-Player/deadbeef-mpris2-plugin
+    use_max_tag: True
