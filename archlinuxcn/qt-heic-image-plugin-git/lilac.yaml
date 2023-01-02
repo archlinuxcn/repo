@@ -1,0 +1,18 @@
+maintainers:
+  - github: yuyichao
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: vcs
+  - source: alpm
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+    alpm: qt5-base
+  - source: alpm
+    from_pattern: ^(\d+).*
+    to_pattern: \1
+    alpm: libheic
+  - source: manual
+    manual: 1

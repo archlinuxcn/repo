@@ -1,0 +1,40 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+
+pkgname=qt-heic-image-plugin-git
+pkgver=0.0.3.0.7.0.g74a8ab4
+pkgrel=1
+pkgdesc='Qt plug-in to allow Qt and KDE based applications to read/write HEIF/HEIC images.'
+arch=(i686 x86_64 armv7h aarch64)
+url="https://github.com/novomesk/qt-heic-image-plugin"
+license=('GPL')
+depends=(qt5-base libheif)
+makedepends=(cmake git extra-cmake-modules)
+provides=(qt-heic-image-plugin)
+conflicts=(qt-heic-image-plugin)
+options=('debug')
+source=("git+https://github.com/novomesk/qt-heic-image-plugin")
+md5sums=('SKIP')
+
+pkgver() {
+  cd qt-heic-image-plugin
+
+  git describe --tags | sed -e 's/^v//' -e 's/-/.0./g'
+}
+
+build() {
+  cd qt-heic-image-plugin
+
+  mkdir -p build
+  cd build
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package() {
+  cd qt-heic-image-plugin/build
+
+  make DESTDIR="$pkgdir/" install
+}
