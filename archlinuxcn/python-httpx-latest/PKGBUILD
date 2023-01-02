@@ -1,21 +1,21 @@
 _name=httpx
 pkgname=python-httpx-latest
-pkgver=0.23.1
+pkgver=0.23.2
 pkgrel=1
 pkgdesc="The next generation HTTP client."
 arch=(any)
-url=""
+url="https://github.com/encode/httpx"
 license=('')
 depends=('python-sniffio' 'python-rfc3986' 'python-httpcore-latest' 'python-idna' 'python-setuptools')
 makedepends=('python-hatchling' 'python-hatch-fancy-pypi-readme' 'python-build' 'python-installer' 'python-wheel')
 optdepends=('python-h2: HTTP/2 support' 'python-brotli: decoding for "brotli" compressed responses' 'python-brotlicffi: decoding for "brotli" compressed responses' 'python-socksio: SOCKS proxy support' 'python-click: command line client support' 'python-rich: command line client support' 'python-pygments: command line client support' 'python-trio: alternative async library')
 conflicts=('python-httpx')
 provides=('python-httpx')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/httpx-0.23.1.tar.gz")
-sha256sums=('202ae15319be24efe9a8bd4ed4360e68fde7b38bcc2ce87088d416f026667d19')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/httpx-0.23.2.tar.gz")
+sha256sums=('e824a6fa18ffaa6423c6f3a32d5096fc15bd8dff43663a223f06242fc69451a8')
 
 prepare() {
-  cd "$srcdir/httpx-0.23.1"
+  cd "$srcdir/httpx-0.23.2"
   sed -i '/certifi/d' pyproject.toml
   sed -e '/import certifi/d' \
       -e 's|certifi.where()|"/etc/ssl/certs/ca-certificates.crt"|' \
@@ -23,12 +23,12 @@ prepare() {
 }
 
 build() {
-  cd "$srcdir/httpx-0.23.1"
+  cd "$srcdir/httpx-0.23.2"
   python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "$srcdir/httpx-0.23.1"
+  cd "$srcdir/httpx-0.23.2"
   python -m installer --destdir="$pkgdir" dist/*.whl
 
   # make sure we don't install any world-writable or root-readable-only files
