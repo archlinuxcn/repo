@@ -7,7 +7,7 @@ _binname=stdiscosrv
 _pkgname=syncthing
 pkgname=$_pkgname-discosrv
 epoch=1
-pkgver=1.22.2
+pkgver=1.23.0
 pkgrel=1
 pkgdesc='Discover server for the syncthing P2P synchronization utility'
 url='http://syncthing.net'
@@ -24,7 +24,7 @@ source=(
 )
 
 sha512sums=(
-  '5b724beb139ec2701222cf77c540cb3f4525db3b1102ccc9ac55829dda668e7fe4b962c7263fbe6bc4efa813d0e783486a7b329f903ded1cef47be585c1e8787'
+  'b0122923ad3ed4cc50aafe89bb94e13b44998483db0b1df795e05ff17bcbc029a17ed3af187b615154cf88d4c964cb5bdb84e25b6f5548ccf29545b6d2a1cd4f'
   'f67a6051a1bbe9d3b562caaaecfc4829afa25cfddc5d5dd70dc8170bddc9d938fd85ab89b1c198f074f323d8e385d9fa8bc3a9bfe53594629dbfbf984c2e7015'
   '28b0bb6a6f2fa536ec8cb887cfebf4706be25af5e29da39e2e3776daeeeb48f75fb5be255472920355948d8905830342866e89299facd626ddf8a658d84faf27'
 )
