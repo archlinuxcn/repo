@@ -1,7 +1,8 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=dtkgui-git
-pkgver=5.6.3.r8.ga69ed2e
+_pkgname=dtkgui
+pkgver=5.6.3.r11.ga74f91c
 pkgrel=1
 pkgdesc='Deepin Toolkit, gui module for DDE look and feel'
 arch=('x86_64' 'aarch64')
@@ -12,16 +13,16 @@ makedepends=('git' 'qt5-tools' 'dtkcommon-git' 'dtkcore-git' 'librsvg' 'qt5-x11e
 conflicts=('dtkgui')
 provides=('dtkgui')
 groups=('deepin-git')
-source=("$pkgname::git+https://github.com/linuxdeepin/dtkgui")
+source=("git+https://github.com/linuxdeepin/dtkgui.git")
 sha512sums=('SKIP')
 
 pkgver() {
-    cd $pkgname
+    cd $srcdir/$_pkgname
     git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
-  cd $pkgname
+  cd $srcdir/$_pkgname
   cmake -B build -GNinja \
     -DNOTPACKAGE=OFF \
     -DMKSPECS_INSTALL_DIR=lib/qt/mkspecs/modules/ \
@@ -34,6 +35,6 @@ build() {
 }
 
 package() {
-  cd $pkgname/build
+  cd $srcdir/$_pkgname/build
   DESTDIR="$pkgdir" ninja install
 }
