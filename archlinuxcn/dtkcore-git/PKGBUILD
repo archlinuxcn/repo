@@ -1,7 +1,8 @@
 # Maintainer: justforlxz <justforlxz@gmail.com>
 
 pkgname=dtkcore-git
-pkgver=5.6.3.r17.gb2308b3
+_pkgname=dtkcore
+pkgver=5.6.3.r19.gd3e83fd
 pkgrel=1
 pkgdesc='DTK core modules'
 arch=('x86_64' 'aarch64')
@@ -12,16 +13,16 @@ makedepends=('git' 'qt5-tools' 'uchardet' 'gtest' 'dtkcommon-git' 'cmake' 'ninja
 conflicts=('dtkcore')
 provides=('dtkcore')
 groups=('deepin-git')
-source=("$pkgname::git+https://github.com/linuxdeepin/dtkcore.git")
+source=("git+https://github.com/linuxdeepin/dtkcore.git")
 sha512sums=('SKIP')
 
 pkgver() {
-    cd $pkgname
+    cd $srcdir/$_pkgname
     git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
-  cd $pkgname
+  cd $srcdir/$_pkgname
   cmake -B build -GNinja \
       -DMKSPECS_INSTALL_DIR=lib/qt/mkspecs/modules/\
       -DBUILD_DOCS=ON \
@@ -34,6 +35,6 @@ build() {
 }
 
 package() {
-  cd $pkgname/build
+  cd $srcdir/$_pkgname/build
   DESTDIR="$pkgdir" ninja install
 }
