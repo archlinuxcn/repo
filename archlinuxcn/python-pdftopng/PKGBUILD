@@ -1,0 +1,49 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=pdftopng
+pkgname=python-pdftopng
+pkgver=0.2.3
+pkgrel=1
+pkgdesc='A PDF to PNG conversion library (based on pdftoppm from poppler)'
+arch=('x86_64')
+url='https://github.com/vinayak-mehta/pdftopng'
+license=('GPL2')
+depends=(
+  poppler
+  python-click
+)
+makedepends=(
+  pybind11
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/vinayak-mehta/pdftopng/archive/refs/tags/v${pkgver}.tar.gz"
+        "https://github.com/freedesktop/poppler/raw/fcdff7bb19e2ac0fab6505f17e0c18c8faa86323/utils/numberofcharacters.h"
+        "setOverprintPreview.patch"
+)
+sha512sums=('c2061879cb2be10a6313e097669a0f737c64946f980a155118b4cb86dc268d522ad7f7eeb7ca4f0cfbc0b6a9eb492a557b7b11b977c123552210748af9ca5f9e'
+            'cb3f133df77319e1e04e97e7d391f0bdfb242bf18d0e64459eed5f96c6e835a8c0b4b28de3a354e7e910c38a5bcdf70d9dc729fa5e84b54104cdb80d51d41b63'
+            '653f6fb1d001e71fc8e3285ad12778cba84493ea49c2823ea17bf40d56d88053f0ab05eaa19b922701be2505f90ddff3f0780555b71f225fe29554dc1de32705')
+
+prepare() {
+  cd "${_pkgname}-${pkgver}"
+  sed -i '/#include "config.h"/d' src/pdftopng/pdftopng.cpp
+  sed -i 's#^poppler_dir = .*$#poppler_dir = "/usr/include/poppler"#g' setup.py
+  sed -i 's#lib/poppler/build#/usr/lib#g' setup.py
+  sed -i 's#flags = \["-std=c++14", "-std=c++11"\]#flags = \["-std=c++17", "-std=c++14", "-std=c++11"\]#' setup.py
+  cp "$srcdir"/numberofcharacters.h src/pdftopng
+  patch -p1 -i "${srcdir}/setOverprintPreview.patch"
+}
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+}
+# vim:set ts=2 sw=2 et:

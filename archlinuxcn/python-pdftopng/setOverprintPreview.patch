@@ -1,0 +1,22 @@
+diff --git a/src/pdftopng/pdftopng.cpp b/src/pdftopng/pdftopng.cpp
+index 26f2791..7c8081a 100644
+--- a/src/pdftopng/pdftopng.cpp
++++ b/src/pdftopng/pdftopng.cpp
+@@ -187,7 +187,6 @@ void convert(char *pdfFilePath, char *pngFilePath)
+ 
+     // write PPM files
+     if (jpegcmyk || overprint) {
+-        globalParams->setOverprintPreview(true);
+         splashClearColor(paperColor);
+     } else {
+         paperColor[0] = 255;
+@@ -195,7 +194,7 @@ void convert(char *pdfFilePath, char *pngFilePath)
+         paperColor[2] = 255;
+     }
+ 
+-    splashOut = new SplashOutputDev(mono ? splashModeMono1 : gray ? splashModeMono8 : (jpegcmyk || overprint) ? splashModeDeviceN8 : splashModeRGB8, 4, false, paperColor, true, thinLineMode);
++    splashOut = new SplashOutputDev(mono ? splashModeMono1 : gray ? splashModeMono8 : (jpegcmyk || overprint) ? splashModeDeviceN8 : splashModeRGB8, 4, false, paperColor, true, thinLineMode, jpegcmyk || overprint);
+ 
+     splashOut->setFontAntialias(fontAntialias);
+     splashOut->setVectorAntialias(vectorAntialias);
+

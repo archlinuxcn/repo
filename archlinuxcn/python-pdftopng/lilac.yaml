@@ -1,15 +1,11 @@
 maintainers:
   - github: hubutui
+
 build_prefix: extra-x86_64
-repo_depends:
-    - python-pdftopng
-    - python-pypdf2
+
 update_on:
   - source: github
-    github: camelot-dev/camelot
+    github: vinayak-mehta/pdftopng
     use_max_tag: true
-  - source: manual
-    manual: 1
   - alias: python
 # vim:set ts=2 sw=2 et:
-
