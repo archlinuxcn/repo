@@ -1,0 +1,29 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_name=ghostscript
+pkgname=python-ghostscript
+pkgver=0.7
+pkgrel=1
+pkgdesc='Python interface to the Ghostscript C-API using ctypes'
+arch=('any')
+url='https://gitlab.com/pdftools/python-ghostscript'
+license=('GPL3')
+depends=(
+  ghostscript
+)
+makedepends=(
+  python-setuptools
+)
+source=("${_name}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha512sums=('2a9c538e161bc83181992ac5fb521b10c133a4662472a2c4de2fa50e2f4128f742c2d369dd87b4cb3915086d07f1faa49af71287b62706efed19b76ca3eb3350')
+
+build() {
+  cd "${_name}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${_name}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+}
+# vim:set ts=2 sw=2 et:
