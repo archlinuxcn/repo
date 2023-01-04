@@ -36,6 +36,7 @@ sha512sums=('aeb1446021caccb0aa302d68d8ec17e0598debc29f0521d910c9a14c140a526d14a
 prepare() {
   cd "${_pkgname}-${pkgver}"
   patch -p1 -i "${srcdir}/0001.fix-pypdf-version.patch"
+  sed -i 's,isEncrypted,is_encrypted,g' camelot/handlers.py
   # python package name is renamed to `pypdf`
   sed -i 's,PyPDF2,pypdf,' camelot/handlers.py
 }
