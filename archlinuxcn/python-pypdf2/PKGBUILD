@@ -1,12 +1,13 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
-_pkgname=pypdf
+_pkgname=PyPDF2
 pkgname=python-pypdf2
-pkgver=3.2.0
+pkgver=2.12.1
+epoch=1
 pkgrel=1
-pkgdesc='A utility to read and write PDFs with Python'
+pkgdesc='A utility to read and write PDFs with Python (legacy PyPDF2 2.x)'
 arch=('any')
-url='https://mstamy2.github.io/PyPDF2'
+url='https://pypi.org/project/PyPDF2'
 license=('BSD')
 depends=(
   python
@@ -21,8 +22,8 @@ makedepends=(
   python-installer
   python-wheel
 )
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/mstamy2/PyPDF2/archive/${pkgver}.tar.gz")
-sha512sums=('a3db36086733f6bfdfd4e6b56dc976e30c2940362fcf1e8b4c61b3c8d421c870821eb7c5dcbc41e6362f487d474c5d2bcfbe6b9aabd8c496d3a030aa40d1af57')
+source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+sha512sums=('6b03f307aa06ff062a7580deb10ef0d201891a4d8858ab72f7773c7b10e0783585ba834c359e13f244b99f743129094094ca024c958df6159eec2d7a2a2cde3d')
 
 build() {
   cd "${_pkgname}-${pkgver}"
