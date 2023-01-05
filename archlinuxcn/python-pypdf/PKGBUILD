@@ -1,0 +1,37 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=pypdf
+pkgname=python-pypdf
+pkgver=3.2.0
+pkgrel=1
+pkgdesc='A utility to read and write PDFs with Python (v3+)'
+arch=('any')
+url='https://github.com/py-pdf/pypdf'
+license=('BSD')
+depends=(
+  python
+)
+optdepends=(
+  python-pillow
+  python-pycryptodome
+)
+makedepends=(
+  python-build
+  python-flit-core
+  python-installer
+  python-wheel
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/py-pdf/pypdf/archive/refs/tags/${pkgver}.tar.gz")
+sha512sums=('a3db36086733f6bfdfd4e6b56dc976e30c2940362fcf1e8b4c61b3c8d421c870821eb7c5dcbc41e6362f487d474c5d2bcfbe6b9aabd8c496d3a030aa40d1af57')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
