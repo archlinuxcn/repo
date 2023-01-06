@@ -9,4 +9,7 @@ repo_depends:
 update_on:
   - source: github
     github: mer-hybris/libgbinder
-    use_latest_tag: true
+    use_max_tag: true
+  - source: alpm
+    alpm: glib2
+    provided: libglib-2.0.so
