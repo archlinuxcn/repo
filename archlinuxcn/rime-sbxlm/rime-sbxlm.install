@@ -3,3 +3,17 @@ post_install() {
   echo -e "  \033[1;33m提示：执行命令 sbxlm-init 初始化 rime 配置\033[0m"
   echo
 }
+post_upgrade()  {
+  echo
+  # check if sbxlm-rime-* is installed using pacman
+  if pacman -Qq | grep -q "^rime-sbxlm-"; then
+    echo -e "  \033[1;33m提示：所有的声笔输入方案拓展包已被废弃，这些包可以被卸载：  \033[0m"
+    pacman -Qq | grep "^rime-sbxlm-" | sed 's/^/    /'
+    echo -e "  \033[1;33m提示：请查看文档更新配置文件： https://sbxlm.gitee.io/fzlc/\033[0m"
+  fi
+  # check if sbxlm-rime-sbzr is installed
+  if pacman -Qq | grep -q "^rime-sbxlm-sbzr"; then
+    echo -e "  \033[1;33m提示：声笔自然(sbzr)方案更名为声笔双拼(sbsp)，需要手动更新相关配置文件\033[0m"
+  fi
+  echo
+}
