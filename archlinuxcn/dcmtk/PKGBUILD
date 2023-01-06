@@ -13,7 +13,7 @@ license=("custom")
 depends=(
   charls
   libsndfile
-  libtiff
+  libtiff.so
   libwrap
   libxml2
   openjpeg2
@@ -28,7 +28,7 @@ build() {
     -DBUILD_SHARED_LIBS:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
-    -DDCMTK_ENABLE_BUILTIN_DICTIONARY:BOOL=ON \
+    -DDCMTK_DEFAULT_DICT=builtin \
     -DDCMTK_ENABLE_CXX11:BOOL=ON \
     -DDCMTK_ENABLE_PRIVATE_TAGS:BOOL=ON \
     -DDCMTK_ENABLE_STL:BOOL=ON \
