@@ -8,12 +8,11 @@ pkgdesc='Program for the analysis and visualization of whole-slide images in dig
 arch=('x86_64')
 url='https://github.com/computationalpathologygroup/ASAP'
 license=('GPL')
-#options=(!lto)
 depends=(
   boost
   gcc-libs
   libjpeg
-  libtiff
+  libtiff.so
   opencv
   openslide
   pugixml
