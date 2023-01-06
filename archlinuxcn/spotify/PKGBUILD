@@ -7,7 +7,7 @@ pkgname=spotify
 pkgver=1.1.84.716
 epoch=1
 _commit=gc5f8b819-2
-pkgrel=3
+pkgrel=4
 pkgdesc='A proprietary music streaming service'
 arch=('x86_64')
 license=('custom')
@@ -59,7 +59,7 @@ prepare() {
 package() {
     cd "${srcdir}"
 
-    tar -xzf data.tar.gz -C "${pkgdir}"
+    tar -xzf data.tar.gz --no-same-owner -C "${pkgdir}"
 
     # Enable spotify to open URLs from the webapp
     sed -i 's/^Exec=.*/Exec=spotify --uri=%U/' "${pkgdir}"/usr/share/spotify/spotify.desktop
