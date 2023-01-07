@@ -8,7 +8,7 @@ arch=('x86_64')
 url='https://github.com/vxl/vxl'
 license=('BSD')
 depends=(
-  ffmpeg
+#  ffmpeg
   freeglut
   glu
   libdc1394
@@ -23,26 +23,21 @@ depends=(
   libxres
   libxss
   libxt
-  openjpeg2
 )
 makedepends=('cmake')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/vxl/vxl/archive/v${pkgver}.tar.gz")
 sha512sums=('90394e07f3f7fc049fac9d3e28782ca4793a7fe04232d4e4160a775d048495a149b12ba62b4902d69598757bb01679252f5df400f642f265d22afaee65af467f')
 
 build() {
- cmake \
-   -B "build" \
-   -S "${pkgname}-${pkgver}" \
-   -DVXL_BUILD_EXAMPLES:BOOL=OFF \
-   -DBUILD_SHARED_LIBS=BOOL:ON \
-   -DBUILD_TESTING:BOOL=OFF \
-   -DCMAKE_INSTALL_PREFIX=/usr \
-   -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
-   -DVXL_BUILD_CORE_VIDEO:BOOL=ON \
-   -DVXL_BUILD_DCMTK:BOOL=ON \
-   -DVXL_BUILD_VGUI:BOOL=ON \
-   -DVXL_USE_LFS:BOOL=ON \
-   -Wno-dev
+  cmake \
+    -B "build" \
+    -S "${pkgname}-${pkgver}" \
+    -DVXL_BUILD_CONTRIB:BOOL=ON \
+    -DVXL_BUILD_EXAMPLES:BOOL=OFF \
+    -DBUILD_SHARED_LIBS=BOOL:ON \
+    -DBUILD_TESTING:BOOL=OFF \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
  make -C "build"
 }
 
