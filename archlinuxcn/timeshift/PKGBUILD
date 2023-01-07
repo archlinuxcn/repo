@@ -5,7 +5,7 @@
 # Contributor: Doug Newgard <scimmia22 at outlook dot com>
 # Contributor: Robert Orzanna <orschiro at gmail dot com>
 pkgname=timeshift
-pkgver=22.11.1
+pkgver=22.11.2
 pkgrel=1
 pkgdesc="A system restore utility for Linux"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
@@ -18,7 +18,7 @@ checkdepends=('appstream-glib' 'desktop-file-utils')
 optdepends=('btrfs-progs: BTRFS support'
             'grub-btrfs: BTRFS snapshots in grub')
 install="$pkgname.install"
-_commit=3e0b78586012c87ef70cd30258f21016893f56a3  # tags/22.11.1^0
+_commit=d29a7ab6bea9b11610478795ae2d160c52834b4c  # tags/22.11.2^0
 source=("git+https://github.com/linuxmint/timeshift.git#commit=$_commit"
 #        "read-only-btrfs-snapshot.patch"
         "snapshot-detect.desktop"
