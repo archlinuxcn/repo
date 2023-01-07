@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=vxl
-pkgver=3.3.2
+pkgver=3.5.0
 pkgrel=1
 pkgdesc='A multi-platform collection of C++ software libraries for Computer Vision and Image Understanding'
 arch=('x86_64')
@@ -26,7 +26,7 @@ depends=(
 )
 makedepends=('cmake')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/vxl/vxl/archive/v${pkgver}.tar.gz")
-sha512sums=('90394e07f3f7fc049fac9d3e28782ca4793a7fe04232d4e4160a775d048495a149b12ba62b4902d69598757bb01679252f5df400f642f265d22afaee65af467f')
+sha512sums=('0b33e12557315058e7786c2049af3b01f1208e50660ccbc45f4d9a4dba4eeadfa5e3125380d8781eed2a9abf1d153ffb71c416ed2d196ab4194f5b3722fe6f2b')
 
 build() {
   cmake \
