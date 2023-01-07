@@ -5,7 +5,7 @@
 
 pkgname=waifu2x-converter-cpp-cuda-git
 pkgver=5.3.4.2.g57520b2
-pkgrel=1
+pkgrel=2
 pkgdesc="Image Super-Resolution for Anime-Style-Art. (re-implementation in C++ using OpenCV). with CUDA support (GIT Version)"
 arch=('x86_64')
 url='https://github.com/DeadSix27/waifu2x-converter-cpp'
@@ -23,7 +23,7 @@ conflicts=('waifu2x-converter-cpp')
 source=('git+https://github.com/DeadSix27/waifu2x-converter-cpp.git'
         'https://patch-diff.githubusercontent.com/raw/DeadSix27/waifu2x-converter-cpp/pull/267.diff')
 sha256sums=('SKIP'
-            'fa49ef26b94c57356897d1b8aa3324f07deb25448ba8768ea2ed474015875583'
+            'e1a630b22ad9520dcfdbe22fe44cf640def66ceaec626b41d3994ce077a539b3'
            )
 options=('debug')
 
@@ -50,7 +50,7 @@ build() {
 }
 
 package() {
-  DESTDIR="${pkgdir}" cmake --build build --target install
+  DESTDIR="${pkgdir}" cmake --install build
 
   install -Dm644 waifu2x-converter-cpp/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
