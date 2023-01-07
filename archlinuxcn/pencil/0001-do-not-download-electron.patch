@@ -1,0 +1,59 @@
+From cc00ba3113081561a4bd2938badc8f05d4729bf9 Mon Sep 17 00:00:00 2001
+From: BrLi <brli@chakralinux.org>
+Date: Sun, 8 Jan 2023 00:24:57 +0800
+Subject: [PATCH] do not download electron
+
+---
+ app/package.json | 2 --
+ package.json     | 8 --------
+ 2 files changed, 10 deletions(-)
+
+diff --git a/app/package.json b/app/package.json
+index a0555af..c4099d2 100644
+--- a/app/package.json
++++ b/app/package.json
+@@ -129,8 +129,6 @@
+     }
+   },
+   "scripts": {
+-    "postinstall": "install-app-deps",
+-    "install-app-deps": "node ./node_modules/electron-builder/out/install-app-deps.js",
+     "start": "./node_modules/.bin/electron .",
+     "start:dev": "./node_modules/.bin/electron . --enable-dev --enable-transparent-visuals",
+     "start:mac": "./node_modules/.bin/electron . --enable-dev",
+diff --git a/package.json b/package.json
+index b3ce0fa..f525c86 100644
+--- a/package.json
++++ b/package.json
+@@ -1,9 +1,6 @@
+ {
+   "name": "Pencil",
+   "devDependencies": {
+-    "electron": "16.0.0",
+-    "electron-builder": "23.3.3",
+-    "electron-rebuild": "^1.8.5",
+     "rimraf": "^2.5.4"
+   },
+   "build": {
+@@ -59,9 +56,6 @@
+       "perMachine": true,
+       "allowToChangeInstallationDirectory": true
+     },
+-    "electronDownload": {
+-      "cache": ".electron-cache"
+-    },
+     "fileAssociations": {
+       "ext": [
+         "ep",
+@@ -72,8 +66,6 @@
+     }
+   },
+   "scripts": {
+-    "postinstall": "install-app-deps",
+-    "install-app-deps": "node ./node_modules/electron-builder/out/install-app-deps.js",
+     "start": "./node_modules/.bin/electron ./app",
+     "start:dev": "./node_modules/.bin/electron ./app --enable-dev --enable-transparent-visuals",
+     "start:mac": "./node_modules/.bin/electron ./app --enable-dev",
+-- 
+2.39.0
+

@@ -2,30 +2,29 @@
 # Maintainer: BrLi <brli at chakralinux dot org>
 
 pkgname=pencil
-pkgver=3.1.0
-pkgrel=7
+pkgver=3.1.1
+pkgrel=1
 pkgdesc="Sketching and GUI prototyping/wireframing tool"
 arch=('any')
 license=('GPL2')
 url="https://github.com/evolus/pencil"
-depends=(electron)
+_electron=electron21
+depends=($_electron)
 makedepends=(yarn)
+options=('!strip')
 source=("https://github.com/evolus/pencil/archive/v$pkgver.tar.gz"
-        'fix-package-json.patch'
-        'upstream.patch')
-sha256sums=('e14eddd0aad28919cfdf8d47b726f9c75a3a0d2042605e8da96309c23a995f44'
-            '7094d33707a1fa27b79f296b3083584643150935ac4e464ebd44a82ed04ad036'
-            '78c28950a497495f3efef0b915283c10fd834c83996471291ae6ac18e3256997')
+        '0001-do-not-download-electron.patch')
+sha256sums=('84675567281ccdd0d5e273e628cf99a9b76d15245794ef4d38c5bfb2d64c0468'
+            '273aa85290169ac313d0990c41d9d697a1266dbca885fc389d9ef8f415d37720')
 conflicts=('evolus-pencil-bin' 'pencil-v2')
 
 prepare() {
     cd "${srcdir}/${pkgname}-${pkgver}"
-    
-    patch -Np1 -i "${srcdir}/upstream.patch"
 
     # We don't build electron and friends, and don't depends on postinstall script
-    patch -Np1 -i "${srcdir}/fix-package-json.patch"
-    sed '/^\s*\"electron.*$/d;/postinstall/d' -i app/package.json
+    patch -Np1 -i "${srcdir}/0001-do-not-download-electron.patch"
+
+    rm -rfv {./,app/}{yarn.lock,package-lock.json}
 }
 
 build() {
@@ -61,7 +60,7 @@ package() {
 
     install -Dm755 /dev/stdin "${pkgdir}/usr/bin/${pkgname}" <<END
 #!/bin/sh
-exec electron /${_destdir} "\$@"
+exec $_electron /${_destdir} "\$@"
 END
 
     cd "${srcdir}/${pkgname}-${pkgver}"
@@ -70,7 +69,7 @@ END
 
     # install icons of vary sizes to hi-color theme
     for px in 16 24 32 48 64 96 128 256; do
-        install -Dm644 "build/icons/${px}x${px}.png" \
+        install -Dm644 "app/build/icons/${px}x${px}.png" \
             "${pkgdir}/usr/share/icons/hicolor/${px}x${px}/apps/${pkgname}.png"
     done
 
