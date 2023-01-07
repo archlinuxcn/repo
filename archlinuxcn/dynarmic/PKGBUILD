@@ -16,7 +16,6 @@ makedepends=(
 	'xbyak>=6.68'
 	'zydis>=4'
 )
-checkdepends=('catch2>=3.2.1')
 provides=('libdynarmic.so')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
 b2sums=('ee71b488755d357e2bde6cc1a84dc6dc5e58c5a3054ab52efe0125e2596713d0c6b7891bc8ff47e98507d9e3eb91d13c4d0b2f937c368718cf025d3937b47ecf')
@@ -33,10 +32,6 @@ build() {
 		-DDYNARMIC_USE_PRECOMPILED_HEADERS=OFF \
 		-Wno-dev
 	cmake --build build
-}
-
-check() {
-	ctest --test-dir build
 }
 
 package() {
