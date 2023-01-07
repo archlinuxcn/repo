@@ -8,8 +8,8 @@ pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early ac
 arch=('i686' 'x86_64')
 url="https://yuzu-emu.org/"
 license=('GPL2')
-depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'mbedtls' 'openssl' 'zstd')
-makedepends=('llvm' 'git' 'glslang' 'cmake' 'ninja' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map')
+depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'mbedtls' 'openssl' 'zstd' 'cubeb' 'dynarmic' 'enet' 'libinih' 'discord-rpc' 'cpp-httplib')
+makedepends=('llvm' 'git' 'glslang' 'cmake' 'ninja' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
@@ -30,6 +30,11 @@ prepare() {
   for i in $(git config --file .gitmodules --get-regexp path | awk '{ print $2 }') ; do
       rm -rf "$i"
   done
+
+  mv .gitmodule .gitmodule_orig
+  grep sirit .gitmodule_orig > .gitmodule
+  grep mbedtls .gimodule_orig >> .gitmodule
+  rm .gitmodule_orig
   git submodule update --init --recursive
 
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror$/-W/g' {} +
@@ -64,13 +69,16 @@ build() {
     -DUSE_DISCORD_PRESENCE=ON \
     -DENABLE_QT_TRANSLATION=ON \
     -DYUZU_USE_BUNDLED_OPUS=OFF \
-    -DDYNARMIC_NO_BUNDLED_FMT=ON \
-    -DDYNARMIC_NO_BUNDLED_ROBIN_MAP=ON \
     -DYUZU_USE_BUNDLED_FFMPEG=OFF \
     -DYUZU_USE_BUNDLED_LIBUSB=OFF \
     -DYUZU_USE_BUNDLED_QT=OFF \
-    -DYUZU_USE_EXTERNAL_SDL2=OFF
-
+    -DYUZU_USE_EXTERNAL_SDL2=OFF \
+    -DSIRIT_USE_SYSTEM_SPIRV_HEADERS=ON \
+    -DYUZU_CHECK_SUBMODULES=OFF \
+    -DYUZU_USE_EXTERNAL_VULKAN_HEADERS=OFF \
+    -DYUZU_USE_FASTER_LD=OFF \
+    -DYUZU_USE_PRECOMPILED_HEADERS=OFF \
+	-DYUZU_USE_QT_MULTIMEDIA=ON
   ninja
 }
 
