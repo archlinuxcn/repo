@@ -1,0 +1,31 @@
+# Maintainer: George Rawlinson <grawlinson@archlinux.org>
+
+pkgname=zycore-c
+pkgver=1.4.1
+pkgrel=1
+pkgdesc='Zyan Core Library for C'
+arch=('x86_64')
+url='https://github.com/zyantific/zycore-c'
+license=('MIT')
+depends=('glibc')
+makedepends=('git' 'cmake')
+source=("$url/archive/refs/tags/v$pkgver.tar.gz")
+b2sums=('883e92ee1578b4f27e7e3ecf9630dd2f10c8a3282868b9f8fddbce6ed060996b699db30407467d415639ae9f1c1956d4da529163fe659c7dbfe97b227b908cb3')
+
+prepare() {
+  cmake \
+    -S "$pkgname-$pkgver" \
+    -B build \
+    -D CMAKE_INSTALL_PREFIX=/usr \
+    -D ZYCORE_BUILD_SHARED_LIB=ON
+}
+
+build() {
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+
+  install -vDm644 -t "$pkgdir/usr/share/licenses/$pkgname" "$pkgname-$pkgver/LICENSE"
+}

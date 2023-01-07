@@ -1,0 +1,14 @@
+maintainers:
+  - github: heavysink
+    email: winstonwu91@gmail.com
+
+build_prefix: extra-x86_64
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: zyantific/zycore-c
+    use_max_tag: true

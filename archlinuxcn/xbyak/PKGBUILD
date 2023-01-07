@@ -1,0 +1,45 @@
+# Maintainer: George Rawlinson <grawlinson@archlinux.org>
+
+pkgname=xbyak
+pkgver=6.68
+pkgrel=1
+pkgdesc='A C++ JIT assembler for x86 (IA32), x64 (AMD64, x86-64)'
+arch=('any')
+url='https://github.com/herumi/xbyak'
+license=('BSD')
+makedepends=('git' 'cmake')
+# tests require multilib repository
+#checkdepends=('nasm' 'yasm' 'boost')
+source=("$url/archive/refs/tags/v$pkgver.tar.gz")
+b2sums=('8a3d069637bd539e9b88f193dbd3b0c193b0305092cf02fd5a01c475511f1f5b693e0bd87648dba124425d05419c6f5a1d3e03ed3cfe80b4128b4af5e31f036d')
+
+build() {
+  cmake \
+    -B build \
+    -S "$pkgname-$pkgver" \
+    -DCMAKE_BUILD_TYPE='None' \
+    -DCMAKE_INSTALL_PREFIX='/usr' \
+    -Wno-dev
+
+  cmake --build build
+}
+
+#check() {
+#  cd "$pkgname"
+#
+#  make test
+#
+#  make -C sample CXXFLAGS+="-DXBYAK_NO_EXCEPTION"
+#}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+
+  cd "$pkgname-$pkgver"
+
+  # documentation
+  install -vDm644 -t "$pkgdir/usr/share/doc/$pkgname" readme.{md,txt}
+
+  # license
+  install -vDm644 -t "$pkgdir/usr/share/licenses/$pkgname" COPYRIGHT
+}

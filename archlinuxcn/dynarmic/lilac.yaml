@@ -1,0 +1,20 @@
+maintainers:
+  - github: heavysink
+    email: winstonwu91@gmail.com
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - zydis
+  - xbyak
+
+pre_build: update_pkgver_and_pkgrel
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: merryhime/dynarmic
+    use_max_tag: true
+  - source: alpm
+    alpm: fmt
