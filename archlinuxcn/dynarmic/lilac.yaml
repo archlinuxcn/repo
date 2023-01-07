@@ -8,7 +8,7 @@ repo_depends:
   - zydis
   - xbyak
 
-pre_build: update_pkgver_and_pkgrel
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 
 post_build: git_pkgbuild_commit
 
