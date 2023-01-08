@@ -6,7 +6,7 @@ _setFullLibdir="${_setPrefix}/${_setLibdir}"
 _pkgbasename=shaderc
 
 pkgname=lib32-$_pkgbasename
-pkgver=2022.1
+pkgver=2022.4
 pkgrel=1
 pkgdesc='Collection of tools, libraries and tests for shader compilation (32bit)'
 url='https://github.com/google/shaderc'
@@ -28,10 +28,13 @@ makedepends=(
 provides=('libshaderc_shared.so')
 conflicts=('lib32-shaderc-git')
 source=(
-        "${_pkgbasename}-${pkgver}.tar.gz::https://github.com/google/shaderc/archive/v${pkgver}.tar.gz"
+        "${_pkgbasename}-${pkgver}.tar.gz::https://github.com/google/shaderc/archive/v${pkgver}/${_pkgbasename}-${pkgver}.tar.gz"
         )
 sha512sums=(
-        '21c2462cb434d94da87c71ba660f6cd5b161450d7faeff8789b41db25e64f2baa7c560e78aa856d128c5a73699215d6b1085b5ca19a4640237adf194793ad44b'
+        '56c2b06e613059e1d1eec0df283ec463d449ed84d80a57e223ebe5ea0186e7a4a7a1cb6e4c12a0ee0561ae1a1bce238322163acec407d39bd3e0fc3192142305'
+        )
+b2sums=(
+        '637c6142915140cd0fa0c9b842bf41ff3164fbd6389a35670a9f966a7a98080d39a46324a550c78813d65ece1f3a2082b84044d27591168fe6ffa57e5552acb2'
         )
 
 prepare() {
@@ -60,6 +63,7 @@ build() {
       -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_PREFIX="/usr" \
       -DCMAKE_INSTALL_LIBDIR="lib32" \
+      -DCMAKE_CXX_FLAGS="$CXXFLAGS -ffat-lto-objects" \
       -DSHADERC_SKIP_TESTS=ON \
       -Dglslang_SOURCE_DIR=/usr/include/glslang \
       -G Ninja
@@ -67,6 +71,11 @@ build() {
 
 #  cd glslc
 #  asciidoctor -b manpage README.asciidoc -o glslc.1
+}
+
+check() {
+  cd ${_pkgbasename}-${pkgver}
+  ninja -C build test
 }
 
 package() {
