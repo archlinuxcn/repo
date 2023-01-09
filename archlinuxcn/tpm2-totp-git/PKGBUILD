@@ -1,0 +1,47 @@
+# Maintainer: Jonas Witschel <diabonas@archlinux.org>
+pkgname=tpm2-totp-git
+pkgver=0.3.0.r38.826c103
+pkgrel=1
+pkgdesc='Attest the trustworthiness of a device against a human using time-based one-time passwords'
+arch=('x86_64')
+url='https://github.com/tpm2-software/tpm2-totp'
+license=('BSD')
+depends=('qrencode' 'tpm2-tss' 'libtss2-esys.so' 'libtss2-mu.so' 'libtss2-tctildr.so')
+makedepends=('git' 'autoconf-archive' 'doxygen' 'pandoc')
+checkdepends=('iproute2' 'oath-toolkit' 'procps-ng' 'swtpm' 'tpm2-tools')
+optdepends=('initramfs: dracut and mkinitcpio hooks to display the TOTP during boot')
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+source=("git+$url.git")
+sha512sums=('SKIP')
+
+pkgver() {
+	cd "${pkgname%-git}"
+	git describe --long | sed 's/^v//;s/[-_]rc/rc/;s/\([^-]*-\)g/r\1/;s/-/./g'
+}
+
+prepare() {
+	cd "${pkgname%-git}"
+	autoreconf --install --force
+}
+
+build() {
+	cd "${pkgname%-git}"
+	./configure --prefix=/usr \
+	            --libexecdir=/usr/lib \
+	            --with-dracutmodulesdir=/usr/lib/dracut/modules.d \
+	            --with-mkinitcpiodir=/usr/lib/initcpio \
+	            $( ((CHECKFUNC)) && echo --enable-integration)
+	make
+}
+
+check() {
+	cd "${pkgname%-git}"
+	make check
+}
+
+package() {
+	cd "${pkgname%-git}"
+	make DESTDIR="$pkgdir" install
+	install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+}
