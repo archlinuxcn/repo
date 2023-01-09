@@ -7,9 +7,10 @@ arch=('x86_64')
 url='https://github.com/tpm2-software/tpm2-totp'
 license=('BSD')
 depends=('qrencode' 'tpm2-tss' 'libtss2-esys.so' 'libtss2-mu.so' 'libtss2-tctildr.so')
-makedepends=('git' 'autoconf-archive' 'doxygen' 'pandoc')
+makedepends=('git' 'autoconf-archive' 'doxygen' 'pandoc' 'plymouth')
 checkdepends=('iproute2' 'oath-toolkit' 'procps-ng' 'swtpm' 'tpm2-tools')
-optdepends=('initramfs: dracut and mkinitcpio hooks to display the TOTP during boot')
+optdepends=('initramfs: dracut and mkinitcpio hooks to display the TOTP during boot'
+            'plymouth: display the TOTP during boot using plymouth messages')
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
 source=("git+$url.git")
