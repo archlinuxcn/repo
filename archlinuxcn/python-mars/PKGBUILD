@@ -2,7 +2,7 @@
 
 _pkgname=mars
 pkgname=python-mars
-pkgver=0.9.0
+pkgver=0.10.0
 pkgrel=1
 pkgdesc='A tensor-based unified framework for large-scale data computation which scales Numpy, pandas, Scikit-learn and Python functions'
 arch=('x86_64')
@@ -29,7 +29,7 @@ makedepends=(
   python-setuptools
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/mars-project/mars/archive/v${pkgver}.tar.gz")
-sha512sums=('d63ef8fa36f1a0490f6edba042ecf3b0a48c9ab3711de6f26eb6c0dc3838e11eb2fda51ca28790f7208b9698cc21df0d89ec6b30fcfcb04e8f562703d97e3efe')
+sha512sums=('e1873193c96baa7d472c015a184b386a6584d0399c755883f57ec67cdd10bae36395e62f2c43451389cdaf7181c9e9c72512e92305d40ffec103251b98b11b57')
 
 build() {
   cd "${_pkgname}-${pkgver}"
