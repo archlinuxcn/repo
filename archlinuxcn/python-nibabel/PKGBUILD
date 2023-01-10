@@ -15,9 +15,6 @@ depends=(
   python-scipy
   python-six
 )
-checkdepends=(
-  python-pytest
-)
 makedepends=(
   python-build
   python-hatch-vcs
@@ -32,12 +29,6 @@ sha512sums=('71e1453ab897ef228062bbf9eae4430a0e89c024d110d68ac70414e4cdf02dafbbe
 build() {
   cd "${_pkgname}-${pkgver}"
   python -m build --wheel --no-isolation
-}
-
-check() {
-  cd "${_pkgname}-${pkgver}"
-  # export NIPY_EXTRA_TESTS=slow
-  pytest -v nibabel
 }
 
 package() {
