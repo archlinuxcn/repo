@@ -2,8 +2,8 @@
 
 pkgname=python-nibabel
 _pkgname=nibabel
-pkgver=4.0.2
-pkgrel=2
+pkgver=5.0.0
+pkgrel=1
 pkgdesc='Package to access a cacophony of neuro-imaging file formats'
 arch=('any')
 url='http://nipy.org/nibabel'
@@ -24,7 +24,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/nipy/nibabel/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('71e1453ab897ef228062bbf9eae4430a0e89c024d110d68ac70414e4cdf02dafbbe3f0f640ef8b1adfe59c9171839d3f398b34b6bcd39aa4826960135187d3cd')
+sha512sums=('5e7cfb54963d1f22175e71b14752b6657a7d79a929ee2dc4133b2395c6531628957df54da5b6988f3a0922ea7a3c3206d0f083eb8577c86514b138d22f2879a8')
 
 build() {
   cd "${_pkgname}-${pkgver}"
