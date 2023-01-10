@@ -5,11 +5,11 @@
 
 pkgname=nvidia-lily
 pkgver=525.78.01
-pkgrel=1
+pkgrel=2
 pkgdesc="NVIDIA drivers for linux-lily"
 arch=('x86_64')
 url="https://www.nvidia.com/"
-depends=("linux-lily=6.0.9-1" "nvidia-utils=${pkgver}" 'libglvnd')
+depends=("linux-lily=6.0.18-1" "nvidia-utils=${pkgver}" 'libglvnd')
 makedepends=("nvidia-utils=${pkgver}" 'libglvnd' 'linux-lily' 'linux-lily-headers')
 license=('custom')
 options=('!strip')
