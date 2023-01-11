@@ -4,9 +4,6 @@ maintainers:
   - github: yuyichao
 
 post_build: git_pkgbuild_commit
-repo_depends:
-  - nvm
-  - python2
 
 update_on:
   - source: manual
@@ -14,7 +11,7 @@ update_on:
   - source: alpm
     from_pattern: ^(\d+\.\d+.\d+).*
     to_pattern: \1
-    alpm: electron18
+    alpm: electron19
     repo: community
   - source: manual
     manual: 1

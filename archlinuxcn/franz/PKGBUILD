@@ -13,13 +13,13 @@ arch=(x86_64 i686 armv7h aarch64)
 url='https://meetfranz.com'
 license=(Apache)
 # Allow to easily switch between Electron versions.
-# Expected one is 'electron18' (Electron 18). May change soon.
+# Expected one is 'electron19' (Electron 19). May change soon.
 # This is automatically replaced in `franz.sh` with the package name, as
 # the executable matches the package name (as of 2020-11-15).
-_electron='electron18'
+_electron='electron19'
 depends=($_electron bash)
-makedepends=(expac git nvm python python2)
-source=("git+https://github.com/meetfranz/$pkgname#tag=v$_pkgver"
+makedepends=(git python python2 nodejs-lts-gallium npm)
+source=("git+https://github.com/meetfranz/$pkgname#branch=chore/electron-19"
         franz.desktop
         franz.sh.in
         0001-Add-cmdline-option-to-open-with-window-closed.patch)
@@ -28,20 +28,7 @@ sha512sums=('SKIP'
             '44486b524353eb06fd6b4e65ed586b10a765c9da7b5da9ccd98146cc7dc91fe0a8fdbfe8c792061b047d35f43338536acc7bd8ebadcee6793f194dad75ae50cd'
             '8f59b911eccd4f8c965f60ae4ba111195f48a76326e1c63391b1ab61b74d74dcb021fdb835da07037b28823cac1c3fd3b01f5ace501b6b6b7fe6db5e2aef8068')
 
-# Helper function for setting up nvm nicely.
-# Found here: https://wiki.archlinux.org/title/Node.js_package_guidelines#Using_nvm
-# Personal extras at the bottom of the function :)
-_ensure_nvm_setup() {
-  # let's be sure we are starting clean
-  which nvm >/dev/null 2>&1 && nvm deactivate && nvm unload
-  export NVM_DIR="$srcdir/.nvm"
-
-  # The init script returns 3 if version specified
-  # in ./.nvrc is not (yet) installed in $NVM_DIR
-  # but nvm itself still gets loaded ok
-  source /usr/share/nvm/init-nvm.sh || [[ $? != 1 ]]
-
-  # Personal extras
+_env_setup() {
   # Avoid installing Electron as we use the system one
   export ELECTRON_SKIP_BINARY_DOWNLOAD=1
   # For safety, define the NPM cache in $srcdir
@@ -55,21 +42,15 @@ prepare() {
 
   patch -Np1 --no-backup-if-mismatch < ../0001-Add-cmdline-option-to-open-with-window-closed.patch
 
-  # Adjust the electron version to use when building
-  echo "--> Using Electron package:   $_electron"
-  electron_version="`expac %v $_electron | cut -d'-' -f1`"
-  echo "--> Electron package version: $electron_version"
-  sed -i -E "s|(\s+\"electron\":).*,|\1 \"$electron_version\",|" package.json
+  # # Adjust the electron version to use when building
+  # echo "--> Electron package version: $electron_version"
+  # sed -i -E "s|(\s+\"electron\":).*,|\1 \"$electron_version\",|" package.json
 
   # Prevent Franz from being launched in development mode
   # This changes all the occurences where 'isDevMode' is set to a value.
   grep -lr 'isDevMode =' src | xargs sed -E 's|^(.*isDevMode =) .*$|\1 false|' -i
 
-  # Setup nvm
-  _ensure_nvm_setup
-
-  echo "--> Install toolchain with nvm"
-  nvm install
+  _env_setup
 
   echo "--> Install modules dependencies with lerna"
   # The author still uses old dependencies resolution.
@@ -83,27 +64,30 @@ prepare() {
 build() {
   cd $pkgname
 
-  # Be sure we are correctly setup
-  _ensure_nvm_setup
+  _env_setup
 
   # Actually build the package
-  echo "--> Building the package"
+  echo "--> lerna run build"
   npm exec lerna run build
+  echo "--> gulp build"
   npm exec gulp build
-  npm exec -- electron-builder --linux dir
+  echo "--> electron-builder"
+  # Not setting locale makes sh unhappy and makes somes node-gyp fail...
+  LANG=C npm exec -- electron-builder --linux dir
 }
 
 package() {
   cd $pkgname
 
-  # Point the proper Electron package version, so that people can complain when it's updated.
-  # This is for extra safety & reminds me of upgrading the package.
-  electron_version="`expac %v $_electron | cut -d'-' -f1`"
-  depends=("${_electron}=${electron_version}")
-
   # Install the .asar files
   install -dm 755 "$pkgdir/usr/lib/$pkgname"
-  cp -r --no-preserve=ownership --preserve=mode out/linux-unpacked/resources "$pkgdir/usr/lib/$pkgname/"
+  if [[ $CARCH = aarch64 ]]; then
+    cp -r --no-preserve=ownership --preserve=mode \
+       out/linux-arm64-unpacked/resources "$pkgdir/usr/lib/$pkgname/"
+  else
+    cp -r --no-preserve=ownership --preserve=mode \
+       out/linux-unpacked/resources "$pkgdir/usr/lib/$pkgname/"
+  fi
 
   # Install icon
   install -Dm 644 "$srcdir/franz.desktop" "$pkgdir/usr/share/applications/franz.desktop"
