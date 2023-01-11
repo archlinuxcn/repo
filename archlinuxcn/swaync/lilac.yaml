@@ -1,0 +1,14 @@
+maintainers:
+  - github: Y7n05h
+
+build_prefix: extra-x86_64
+
+pre_build_script: aur_pre_build(maintainers=['ErikR'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: swaync
+  - source: github
+    github: ErikReider/SwayNotificationCenter
