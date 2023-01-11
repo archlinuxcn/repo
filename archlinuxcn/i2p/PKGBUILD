@@ -5,7 +5,7 @@
 #export LG2=en
 
 pkgname=i2p
-pkgver=2.0.0
+pkgver=2.1.0
 pkgrel=1
 pkgdesc="A distributed anonymous network"
 url="https://geti2p.net"
@@ -33,7 +33,7 @@ source=("${_url}/i2psource_${pkgver}.tar.bz2"{,.sig}
         #upstream.patch::'https://github.com/i2p/i2p.i2p/commit/6c0e18d3.patch'
 )
 
-sha256sums=('1d50831e72a8f139cc43d5584c19ca48580d72f1894837689bf644c299df9099'
+sha256sums=('83098c1277204c5569284b32b37ef137656b27bfe15ef903eca2da7c269288d1'
             'SKIP'
             '644b771ec7f5db3efab3206bf1f896566cdb00d410a54608fda85bdb4c2ad876'
             'fc30dd32f48fe1c93bf36c8297ca48203a1479e4e221ebe62c57cf3c3c0347d3'
@@ -42,7 +42,6 @@ sha256sums=('1d50831e72a8f139cc43d5584c19ca48580d72f1894837689bf644c299df9099'
             '7a19b9f90c8792460fd58e8b8aa435a065e34d29a942479850472510e9d3078a'
             '8d39f080c7a2e49226db3a785f3e18583159ef2f95e1ab467fd9984c4e38c9f5'
             'a7076156703e2b949331e450455813432caeb4e5712f1c7b668974eb06a69fb9')
-
 prepare() {
     cd "$pkgname-$pkgver"
     #patch -Np1 -i ../upstream.patch ||true
