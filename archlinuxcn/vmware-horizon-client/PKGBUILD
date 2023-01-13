@@ -19,11 +19,11 @@ _unused_components=(
   'vmware-horizon-scannerclient'
   'vmware-horizon-serialportclient'
   'vmware-horizon-url-redirection')
-pkgver=2209
-_build1=8.7.0
-_build2=20616018
-_cart="CART23FQ3_LIN64_${pkgver/./_}"
-pkgrel=2
+pkgver=2212
+_build1=8.8.0
+_build2=21079016
+_cart="CART23FQ4_LIN64_${pkgver/./_}"
+pkgrel=1
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
 url='https://www.vmware.com/go/viewclients'
@@ -34,7 +34,7 @@ source=("${pkgbase}-${pkgver}-${_build1}-${_build2}-x86_64.bundle::https://downl
         'vmware-horizon-usb'
         'vmware-horizon-usb.service'
         'vmware-horizon.svg')
-sha256sums=('f1e7a48db91a70448027993e0d8d00dfccd5306938aa68cae35d83ceceb878bb'
+sha256sums=('d5d8e175479120cab97e1789a30e90e9cd1f0f963821be9de247198897abd688'
             'd6863e92b891fc506fc8e81714a47ca3f9f74b7fe68bdf48be058d5e0d433033'
             '008b60ebf45f7d1e033c8ad8ce1688d5e1c59fc0668493067fb89b563b1dc00f'
             'a897c1b9e8928fc222880ebbfc7bb6aff940bff4acf4e4e0cd4002fff81c7226'
