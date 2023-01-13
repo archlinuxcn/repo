@@ -1,0 +1,39 @@
+# Maintainer: Ray Ganardi <rayganardi [at] gmail [dot] com>
+# Contributor: Andres F. Urquijo <alfagalileox@gmail.com>
+# Contributor: Sebastian Krämer <basti.kr@gmail.com>
+
+pkgname=python-qutip
+pkgver=4.7.1
+pkgrel=1
+pkgdesc="QuTiP is open-source software for simulating the dynamics of open quantum systems"
+arch=("aarch64" "x86_64")
+url="http://qutip.org/index.html"
+license=('BSD')
+depends=("python-setuptools" "python-numpy" "python-scipy"
+         "python-matplotlib" "cython")
+makedepends=("gcc-fortran" "openmp")
+optdepends=(
+  "blas: Needed for installing Fortran Monte Carlo solver."
+  "mayavi: Needed for using the Bloch3d class."
+  "python-pyqt4: required only for GUI elements."
+  "texlive-bin: Needed if using LaTeX in figures."
+  "python-nose: For running tests."
+  "python-scikit-umfpack: Faster (~2-5x) steady state calculations."
+  "openmp: For OPENMP support"
+)
+
+source=("https://github.com/qutip/qutip/archive/v$pkgver.tar.gz")
+sha256sums=('9b40ce42e881061c3fe4f0484bc049d4dc9afc1931826836231313c4f8ab321d')
+
+build() {
+  cd qutip-$pkgver
+
+  python setup.py build --with-openmp
+}
+
+package() {
+  cd qutip-$pkgver
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 --skip-build
+  install -D -m644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

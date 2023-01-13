@@ -1,0 +1,17 @@
+#
+
+maintainers:
+  - github: yuyichao
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: qutip/qutip
+    use_max_tag: true
+    include_regex: 'v(\d+.\d+.\d+)'
+  - alias: python
+  - source: manual
+    manual: 1
