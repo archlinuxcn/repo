@@ -6,7 +6,7 @@ buildarch=8
 _rcver=6.2
 _rcrel=2
 _asahirel=1
-pkgrel=6
+pkgrel=7
 
 _m1n1_version=1.2.2
 
@@ -100,7 +100,7 @@ build() {
 
 _origin_package_kernel() {
   pkgdesc="The $pkgdesc kernel and modules"
-  depends=(coreutils kmod initramfs "m1n1>=$_m1n1_version")
+  depends=(coreutils kmod initramfs $2 "m1n1>=$_m1n1_version")
   optdepends=('crda: to set the correct wireless channels of your country'
               'linux-firmware: firmware images needed for some devices')
   provides=(WIREGUARD-MODULE linux=${pkgver})
@@ -136,7 +136,7 @@ _package() {
 _package-edge() {
   cd $_srcname
   export O="$PWD/build/edge"
-  _package_kernel "$pkgbase-edge"
+  _package_kernel "$pkgbase-edge" "$pkgbase=$pkgver"
 }
 
 _package-headers() {
