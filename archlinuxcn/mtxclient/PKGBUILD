@@ -1,16 +1,16 @@
 # Maintainer: Luca Weiss <luca (at) z3ntu (dot) xyz>
 
 pkgname=mtxclient
-pkgver=0.8.2
-pkgrel=4
+pkgver=0.9.1
+pkgrel=1
 pkgdesc="Client API library for Matrix, built on top of Boost.Asio"
 arch=('x86_64')
 url="https://github.com/Nheko-Reborn/mtxclient"
 license=('MIT')
-depends=('libolm' 'libsodium' 'openssl' 'boost-libs' 'libevent' 'spdlog' 'coeurl')
+depends=('libolm' 'libsodium' 'openssl' 'boost-libs' 'libevent' 'spdlog' 'coeurl' 're2')
 makedepends=('cmake' 'nlohmann-json' 'boost')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/Nheko-Reborn/mtxclient/archive/v$pkgver.tar.gz")
-sha256sums=('4caa12ddf954b9492d1ec9b6ca32ef0fc6478555f229db074d43bc5cc29a9c89')
+sha256sums=('bae82daa019ecdedb2433177b3d973b72f337d14e7a4f480a490559235391005')
 
 prepare() {
   mkdir -p build
