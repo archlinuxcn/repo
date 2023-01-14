@@ -13,11 +13,10 @@ url='https://github.com/waydroid/waydroid'
 license=('GPL3')
 depends=('dnsmasq' 'lxc' 'nftables' 'python' 'python-gbinder' 'python-gobject' 'which')
 optdepends=('waydroid-image: Android image for use with waydroid'
-			'python-pyclip: share clipboard with container')
-source=("${pkgname}::git+${url}.git#tag=${pkgver}")
-sha512sums=('SKIP')
+            'python-pyclip: share clipboard with container')
+source=("${pkgname}-${pkgver}.tar.gz"::"${url}/archive/refs/tags/${pkgver}.tar.gz")
+sha512sums=('2c7feb8cfe2b6e2738159d07e12f378250f5ba6a0d0f47c0ff904af934eacde193ae0fcae1cb4fb67d1687a2ffcd2864c1eea4fa5e52c19685ffad5c702359a5')
 
 package() {
-	cd "${srcdir}/${pkgname}/"
-	make install DESTDIR="${pkgdir}" USE_NFTABLES=1
+  make -C "${srcdir}/${pkgname}-${pkgver}/" install DESTDIR="${pkgdir}" USE_NFTABLES=1
 }

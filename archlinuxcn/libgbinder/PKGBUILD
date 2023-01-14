@@ -4,25 +4,23 @@
 # This PKGBUILD is base on the AUR repo libgbinder, by Danct12 <danct12@disroot.org>
 
 pkgname='libgbinder'
-pkgver=1.1.30
+pkgver=1.1.31
 pkgrel=1
 pkgdesc='GLib-style interface to binder'
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url='https://github.com/mer-hybris/libgbinder'
 license=('BSD')
 depends=('libglibutil' 'glib2')
-source=("${pkgname}::git+${url}.git#tag=${pkgver}")
-sha512sums=('SKIP')
+source=("${pkgname}-${pkgver}.tar.gz"::"${url}/archive/refs/tags/${pkgver}.tar.gz")
+sha512sums=('519cc015a97d6ebcb410efcbff54f01afc401de85efb0a5c1128b57f996f23b352fa5dd70f06ac5b9205c3f0770ffabfd82f367c85ca18a5012f715d09bce690')
 
 build() {
-	cd "${srcdir}/${pkgname}/"
-	make release pkgconfig KEEP_SYMBOLS=1
+  make -C "${srcdir}/${pkgname}-${pkgver}/" KEEP_SYMBOLS=1 release pkgconfig
 }
 
 package() {
-	cd "${srcdir}/${pkgname}/"
-	make install-dev DESTDIR="${pkgdir}"
+  make -C "${srcdir}/${pkgname}-${pkgver}/" DESTDIR="${pkgdir}" install-dev
 
-	# license
-	install -Dm 644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  # license
+  install -Dm 644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
