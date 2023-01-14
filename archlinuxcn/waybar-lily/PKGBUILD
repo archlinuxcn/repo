@@ -3,8 +3,8 @@
 # Contributor: Maxim Baz <$pkgname at maximbaz dot com>
 
 pkgname=waybar-lily
-pkgver=0.9.16
-pkgrel=3
+pkgver=0.9.17
+pkgrel=1
 pkgdesc='Highly customizable Wayland bar for Sway and Wlroots based compositors, with less modules and deps, for PulseAudio users'
 arch=('x86_64')
 url="https://github.com/Alexays/Waybar/"
@@ -38,7 +38,7 @@ optdepends=(
     'otf-font-awesome: Icons in the default configuration'
 )
 source=("$pkgname-$pkgver.tar.gz::https://github.com/Alexays/Waybar/archive/$pkgver.tar.gz")
-sha256sums=('37ebd7b10e32e802afe9236ea9374fabb77b1abb2c203ca6173b27dc03128096')
+sha256sums=('da6f448be343a593ee092486fb4744502aa1e6ad85f4eccc3670d0b84a2a4266')
 provides=(waybar=$pkgver)
 conflicts=(waybar)
 
