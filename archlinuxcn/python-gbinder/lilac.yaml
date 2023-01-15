@@ -1,0 +1,17 @@
+maintainers:
+  - github: Puqns67
+
+build_prefix: extra-x86_64
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - libgbinder
+
+update_on:
+  - source: github
+    github: erfanoabdi/gbinder-python
+    use_max_tag: true
+  - alias: python

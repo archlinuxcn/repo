@@ -1,0 +1,16 @@
+maintainers:
+  - github: Puqns67
+
+build_prefix: extra-x86_64
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: sailfishos/libglibutil
+    use_max_tag: true
+  - source: alpm
+    alpm: glib2
+    provided: libglib-2.0.so

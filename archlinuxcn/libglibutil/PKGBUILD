@@ -1,0 +1,26 @@
+# Maintainer: Puqns67 <me@puqns67.icu>
+# Contributor: Danct12 <danct12@disroot.org>
+
+# This PKGBUILD is base on the AUR repo libglibutil, by Danct12 <danct12@disroot.org>
+
+pkgname='libglibutil'
+pkgver=1.0.67
+pkgrel=1
+pkgdesc='Library of glib utilities'
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+url='https://github.com/sailfishos/libglibutil'
+license=('BSD')
+depends=('glib2')
+source=("${pkgname}-${pkgver}.tar.gz"::"${url}/archive/refs/tags/${pkgver}.tar.gz")
+sha512sums=('5b8d4b00ae149bba0b2df55d5e23910dc52ef3a7ee9162202afe4774e246e9389ba971b3d54ac0542b3678b15a3310c8d0e7536b7296d1a3b82e2ae2f021c541')
+
+build() {
+  make -C "${srcdir}/${pkgname}-${pkgver}/" KEEP_SYMBOLS=1 release pkgconfig
+}
+
+package() {
+  make -C "${srcdir}/${pkgname}-${pkgver}/" DESTDIR="${pkgdir}" install-dev
+
+  # license
+  install -Dm 644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
