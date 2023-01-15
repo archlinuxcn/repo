@@ -38,7 +38,7 @@ b2sums=('SKIP'
         'SKIP'
         'SKIP'
         '541c17e9d9cf3f0471092187f9ce804c9e28031cbb76901d35a6390b8753b927697516168e8414fc0ad3ca12e3d5de5bffdda3e0de93d50903e98123c6aad073')
-options=(!lto debug strip)
+options=(!lto)
 
 prepare() {
   cd "$srcdir/$pkgname"
@@ -62,7 +62,7 @@ build() {
   cd "$srcdir"
   cmake -B build -S "$pkgname" \
     -Wno-dev \
-    -D CMAKE_BUILD_TYPE=RelWithDebugInfo \
+    -D CMAKAE_BUILD_TYPE=None \
     -D CMAKE_INSTALL_PREFIX=/usr \
     -D CMAKE_SKIP_RPATH=ON \
     -D IMHEX_OFFLINE_BUILD=ON \

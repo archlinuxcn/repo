@@ -18,11 +18,10 @@ options=(!lto)
 build() {
     cd "$srcdir/nali-$pkgver"
     go build \
-        -trimpath \
         -buildmode=pie \
         -mod=readonly \
         -modcacherw \
-        -ldflags "-linkmode external -X \"github.com/zu1k/nali/constant.Version=$pkgver\" -extldflags $LDFLAGS" \
+        -ldflags "-compressdwarf=false -linkmode external -X \"github.com/zu1k/nali/constant.Version=$pkgver\" -extldflags $LDFLAGS" \
         -o $pkgname .
 }
 

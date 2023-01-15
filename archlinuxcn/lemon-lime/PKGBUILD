@@ -19,11 +19,6 @@ optdepends=('gcc: C and C++ support'
             'python: Python support')
 provides=("lemon-lime")
 conflicts=("lemon-lime-git")
-replaces=()
-backup=()
-options=(debug strip)
-install=
-changelog=
 
 source=(
     "https://github.com/Project-LemonLime/Project_LemonLime/releases/download/${pkgver}/Lemon-${pkgver}-source-all.7z"
@@ -39,7 +34,7 @@ prepare() {
 build() {
 	cd "$srcdir"
 	cmake -S. -B build \
-		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
+		-DCMAKE_BUILD_TYPE=None \
 		-GNinja \
 		-DCMAKE_INSTALL_PREFIX=${pkgdir}/usr \
 		-DLEMON_BUILD_INFO="Build for Arch Linux" \
