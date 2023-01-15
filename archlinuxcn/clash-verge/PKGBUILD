@@ -1,13 +1,13 @@
 # Maintainer: sukanka<su975853527 AT gmail dot com>
 pkgname=clash-verge
 pkgver=1.2.1
-pkgrel=2
+pkgrel=3
 pkgdesc="A Clash GUI based on tauri."
 arch=('x86_64' 'aarch64')
 url="https://github.com/zzzgydi/clash-verge"
 license=('GPL3')
-depends=('webkit2gtk' 'clash-geoip')
-makedepends=('yarn' 'cargo-tauri' 'clash-premium-bin>=2022.04.01' 'clash-meta'  'jq' 'moreutils' 'rust' 'quickjs')
+depends=('webkit2gtk' 'clash-geoip' 'libappindicator-gtk3' 'libayatana-appindicator')
+makedepends=('yarn' 'cargo-tauri' 'clash-premium-bin' 'clash-meta'  'jq' 'moreutils' 'rust' 'quickjs')
 optdepends=('clash-premium-bin>=2022.04.01: clash-core'
 'clash-meta: clash-core')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
