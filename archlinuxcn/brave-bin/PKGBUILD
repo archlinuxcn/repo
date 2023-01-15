@@ -13,10 +13,10 @@
 
 pkgname=brave-bin
 pkgver=1.47.171
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc='Web browser that blocks ads and trackers by default (binary release)'
-arch=(x86_64)
+arch=(x86_64 aarch64)
 url=https://brave.com
 license=(MPL2 BSD custom:chromium)
 depends=(alsa-lib
@@ -30,17 +30,19 @@ optdepends=('cups: Printer support'
 provides=("${pkgname%-bin}=$pkgver" 'brave-browser')
 conflicts=("${pkgname%-bin}")
 options=(!strip)
-source=("$pkgname-$pkgver.zip::https://github.com/brave/brave-browser/releases/download/v$pkgver/brave-browser-$pkgver-linux-amd64.zip"
-        "$pkgname.sh"
-        'brave-browser.desktop')
-noextract=("$pkgname-$pkgver.zip")
-sha256sums=('8beea410b5416ce884be1770ff08a1865bb233386e91ed7166d5ab8c28762e82'
-            'ba7d57a3328c68e6a78e49506af0e238936e823b2f463e8087c20fcf4300232a'
+source=($pkgname.sh brave-browser.desktop)
+source_x86_64=(${pkgname}-${pkgver}-x86_64.zip::https://github.com/brave/brave-browser/releases/download/v${pkgver}/brave-browser-${pkgver}-linux-amd64.zip)
+source_aarch64=(${pkgname}-${pkgver}-aarch64.zip::https://github.com/brave/brave-browser/releases/download/v${pkgver}/brave-browser-${pkgver}-linux-arm64.zip)
+
+noextract=(${pkgname}-${pkgver}-x86_64.zip ${pkgname}-${pkgver}-aarch64.zip)
+sha256sums=('ba7d57a3328c68e6a78e49506af0e238936e823b2f463e8087c20fcf4300232a'
             'c07276b69c7304981525ecb022f92daf7ae125a4fb05ac3442157b50826e257a')
+sha256sums_x86_64=('8beea410b5416ce884be1770ff08a1865bb233386e91ed7166d5ab8c28762e82')
+sha256sums_aarch64=('fcc51b5896b962a4c98fb1175e444b5511f6ed759681cd919cd234fb1e0eb07c')
 
 prepare() {
 	mkdir -p brave
-	bsdtar -xf "$pkgname-$pkgver.zip" -C brave
+	bsdtar -xf "$pkgname-$pkgver-$CARCH.zip" -C brave
 	chmod +x brave/brave
 }
 
