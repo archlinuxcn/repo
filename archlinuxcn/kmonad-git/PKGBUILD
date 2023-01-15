@@ -33,6 +33,7 @@ package() {
 	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
 	install -Dm644 "doc/faq.md" "$pkgdir/usr/share/doc/$pkgname/faq.md"
+	install -Dm644 "doc/quick-reference.md" "$pkgdir/usr/share/doc/$pkgname/quick-reference.md"
 
 	install -Dm755 "keymap/tutorial.kbd" "$pkgdir/usr/share/doc/$pkgname/keymap/tutorial.kbd"
 
