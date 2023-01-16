@@ -59,6 +59,8 @@ build() {
   (_build_xpdf)
   (cd zotero-client
 
+   export NODE_OPTIONS=--openssl-legacy-provider
+
    npm install --legacy-peer-deps
    npm run build)
   (cd zotero-standalone-build
