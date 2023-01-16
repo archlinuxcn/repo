@@ -3,7 +3,7 @@
 # Contributor: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=('gdb-git' 'gdb-common-git')
-pkgver=112885.81c0c22bc8f
+pkgver=112999.24669c55aed
 pkgrel=1
 pkgdesc="The GNU Debugger from git"
 arch=(armv7h aarch64 i686 x86_64)
@@ -36,6 +36,11 @@ build() {
 
   mkdir -p build
   cd build
+
+  # This is a hack but I don't know why it's missing from the linking...
+  LDFLAGS+=' -lbfd'
+  export LDFLAGS
+
   ../configure \
     --prefix=/usr \
     --disable-nls \
