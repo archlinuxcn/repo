@@ -36,6 +36,11 @@ build() {
 
   mkdir -p build
   cd build
+
+  # This is a hack but I don't know why it's missing from the linking...
+  LDFLAGS+=' -lbfd'
+  export LDFLAGS
+
   ../configure \
     --prefix=/usr \
     --disable-nls \
