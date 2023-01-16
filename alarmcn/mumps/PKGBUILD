@@ -7,13 +7,13 @@ pkgname=mumps
 pkgver=5.5.1
 pkgrel=1
 pkgdesc='Sparse solver library using Gaussian elimination'
-url='http://mumps.enseeiht.fr'
+url='https://mumps-solver.org'
 license=('custom')
 depends=('lapack' 'openmpi' 'scotch' 'scalapack' 'metis' 'zlib' 'bzip2')
 makedepends=('gcc-fortran')
 conflicts=('mumps-par' 'mumps4')
 arch=('aarch64' 'armv7h' 'i686' 'x86_64')
-source=(http://mumps.enseeiht.fr/MUMPS_${pkgver}.tar.gz
+source=(https://mumps-solver.org/MUMPS_${pkgver}.tar.gz
         Makefile.inc)
 sha512sums=('51ebc680ada41f5d622a353778233d6306f78ac25e30a3a5ba181b16961093215d4a2e715727340f6865abd0cf0a90d88665b13ddc36007f76eb8fcbc0ed5adf'
             'bd1d72ab2638b4d28c560c182c5b5bd2c67d269ddcbe27afd7077caad4007fd0475a442710f27edaca293ecaf4ae70e7b2adc1e16e81e683929634c89c30a43f')

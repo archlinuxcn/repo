@@ -8,14 +8,14 @@ _PKGNAME=MUMPS
 pkgver=5.5.1
 pkgrel=1
 pkgdesc="Sparse solver library using Gaussian elimination (sequential version)"
-url="http://mumps.enseeiht.fr"
+url="http://mumps-solver.org"
 license=('custom')
 # The build system only links to blas but uses lapack function
 # Just use openblas for now but this could probably be fixed fairly easily...
 depends=('gcc-libs' 'openblas-lapack' 'metis')
 makedepends=(gcc-fortran)
 arch=('aarch64' 'armv7h' 'i686' 'x86_64')
-source=("http://mumps.enseeiht.fr/${_PKGNAME}_${pkgver}.tar.gz"
+source=("http://mumps-solver.org/${_PKGNAME}_${pkgver}.tar.gz"
         "Makefile.seq.inc")
 sha256sums=('1abff294fa47ee4cfd50dfd5c595942b72ebfcedce08142a75a99ab35014fa15'
             '42625aa6749cedbbd9b19f527a002b0dec36b521f6a55dec20798ac399a768bf')
