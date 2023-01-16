@@ -5,9 +5,9 @@
 
 
 pkgname=lib32-spirv-tools
-pkgver=2022.2
+pkgver=2022.4
 pkgrel=1
-_headers_version=sdk-1.3.211.0
+_headers_version=sdk-1.3.236.0
 pkgdesc="API and commands for processing SPIR-V modules"
 arch=('i686' 'x86_64')
 url='https://github.com/KhronosGroup/SPIRV-Tools'
