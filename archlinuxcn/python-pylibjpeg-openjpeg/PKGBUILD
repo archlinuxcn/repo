@@ -2,7 +2,7 @@
 
 _pkgname=pylibjpeg-openjpeg
 pkgname=python-pylibjpeg-openjpeg
-pkgver=1.3.0
+pkgver=1.3.1
 pkgrel=1
 pkgdesc='A J2K and JP2 plugin for pylibjpeg'
 arch=('x86_64')
