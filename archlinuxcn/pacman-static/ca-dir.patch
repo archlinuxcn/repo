@@ -1,17 +1,19 @@
---- apps/CA.pl.in	2016-09-26 11:46:04.000000000 +0200
-+++ apps/CA.pl.in	2016-11-01 16:02:16.709616823 +0100
-@@ -33,7 +33,7 @@
+diff -rauN openssl-3.0.7/apps/CA.pl.in openssl-3.0.7-patched/apps/CA.pl.in
+--- openssl-3.0.7/apps/CA.pl.in	2022-11-01 15:14:36.000000000 +0100
++++ openssl-3.0.7-patched/apps/CA.pl.in	2022-11-07 21:35:19.641418630 +0100
+@@ -29,7 +29,7 @@
  my $PKCS12 = "$openssl pkcs12";
  
- # default openssl.cnf file has setup as per the following
+ # Default values for various configuration settings.
 -my $CATOP = "./demoCA";
 +my $CATOP = "/etc/ssl";
  my $CAKEY = "cakey.pem";
  my $CAREQ = "careq.pem";
  my $CACERT = "cacert.pem";
---- apps/openssl.cnf	2016-09-26 11:46:04.000000000 +0200
-+++ apps/openssl.cnf	2016-11-01 16:02:48.378503427 +0100
-@@ -39,7 +39,7 @@
+diff -rauN openssl-3.0.7/apps/openssl.cnf openssl-3.0.7-patched/apps/openssl.cnf
+--- openssl-3.0.7/apps/openssl.cnf	2022-11-01 15:14:36.000000000 +0100
++++ openssl-3.0.7-patched/apps/openssl.cnf	2022-11-07 21:34:48.351281834 +0100
+@@ -79,7 +79,7 @@
  ####################################################################
  [ CA_default ]
  
@@ -20,7 +22,7 @@
  certs		= $dir/certs		# Where the issued certs are kept
  crl_dir		= $dir/crl		# Where the issued crl are kept
  database	= $dir/index.txt	# database index file.
-@@ -323,7 +323,7 @@
+@@ -309,7 +309,7 @@
  [ tsa_config1 ]
  
  # These are used by the TSA reply generation only.

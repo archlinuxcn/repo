@@ -15,6 +15,9 @@ repo_depends:
   - libgit2-julia
   - proot-git
 
+update_on_build:
+  - pkgbase: llvm-julia
+
 update_on:
   - source: vcs
     lilac_throttle: 1d
