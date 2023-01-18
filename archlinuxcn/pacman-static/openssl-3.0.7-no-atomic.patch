@@ -1,0 +1,22 @@
+diff -rauN openssl-3.0.7/Configurations/10-main.conf openssl-3.0.7-no-atomic-patch/Configurations/10-main.conf
+--- openssl-3.0.7/Configurations/10-main.conf	2022-11-01 14:14:36.000000000 +0000
++++ openssl-3.0.7-no-atomic-patch/Configurations/10-main.conf	2022-11-18 11:10:30.699600180 +0000
+@@ -703,6 +703,9 @@
+         inherit_from     => [ "linux-generic32" ],
+         ex_libs          => add(threads("-latomic")),
+     },
++    "linux-not-latomic" => {
++        inherit_from     => [ "linux-generic32" ]
++    },
+     "linux-generic64" => {
+         inherit_from     => [ "linux-generic32" ],
+         bn_ops           => "SIXTY_FOUR_BIT_LONG RC4_CHAR",
+@@ -764,7 +767,7 @@
+         #
+         # ./Configure linux-armv4 -march=armv6 -D__ARM_MAX_ARCH__=8
+         #
+-        inherit_from     => [ "linux-latomic" ],
++        inherit_from     => [ "linux-not-latomic" ],
+         asm_arch         => 'armv4',
+         perlasm_scheme   => "linux32",
+     },
