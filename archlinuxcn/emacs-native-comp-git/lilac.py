@@ -33,6 +33,11 @@ def pre_build():
             line = 'XWIDGETS="YES"'
             checks = checks + '5'
 
+        # enable tree-sitter, request from #3094
+        if line.startswith('SITTER='):
+            line = 'SITTER="YES"'
+            checks = checks + '8'
+
         if line.startswith('install='):
             line = 'install=emacs-git.install'
             checks = checks + '6'
@@ -45,5 +50,5 @@ def pre_build():
 
     # make sure PKGBUILD is modified
     # it's 7 because there are 2 pkgname (if $CLI)
-    if len(checks) != 7:
+    if len(checks) != 8:
         raise ValueError('PKGBUILD editing not completed. checks=' + checks)
