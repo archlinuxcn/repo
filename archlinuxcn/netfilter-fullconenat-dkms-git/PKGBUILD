@@ -22,11 +22,6 @@ sha256sums=('a17dfdf1fd046219daeacc60065e3a81c80c2eb2cfdf6d8068278c509577f571'
             '7ff12ad066a68c65f23fc7e01654ca459ce3458172e3dce30f42553fa44dd7c2'
             'SKIP')
 
-prepare(){
-  cd "$srcdir/${pkgname}"
-  printf "MODULE_VERSION(\"%s\");\n" $pkgver >> xt_FULLCONENAT.c
-}
-
 pkgver() {
   cd "$srcdir/${pkgname}"
   ( set -o pipefail
