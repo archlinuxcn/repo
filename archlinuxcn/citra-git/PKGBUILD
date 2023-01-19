@@ -5,17 +5,19 @@
 _pkgbase='citra'
 pkgname="$_pkgbase-git"
 pkgver=r9391.9c6035f25
-pkgrel=1
+pkgrel=2
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger (Master branch)"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra/"
 license=('GPL2')
-depends=('boost-libs' 'shared-mime-info' 'desktop-file-utils' 'ffmpeg' 'libfdk-aac' 'libusb' 'sdl2' 'qt5-base' 'qt5-multimedia' 'libxkbcommon-x11' 'qt5-wayland')
-makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt5-tools')
+depends=('boost-libs' 'shared-mime-info' 'ffmpeg' 'libusb' 'sdl2' 'qt5-multimedia' 'libxkbcommon-x11' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'fmt' 'dynarmic' 'crypto++')
+makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt5-tools' 'xbyak' 'cpp-jwt' 'nlohmann-json' 'cpp-httplib' 'qt5-wayland' 'desktop-file-utils')
 provides=('citra')
 conflicts=('citra')
-source=("$_pkgbase::git+https://github.com/citra-emu/citra")
-md5sums=('SKIP')
+source=("$_pkgbase::git+https://github.com/citra-emu/citra"
+ext-lib.patch)
+md5sums=('SKIP'
+         'c374128f3352af1d2a5f2fd05235d388')
 
 pkgver() {
 	cd "$srcdir/$_pkgbase"
@@ -24,10 +26,13 @@ pkgver() {
 
 prepare() {
 	cd "$srcdir/$_pkgbase"
+    patch -p1 -i ../ext-lib.patch
 	mkdir -p build
 
-	git submodule init
-	git submodule update --init --recursive
+    git submodule update --init --remote externals/lodepng
+    git submodule update --init --remote externals/nihstro
+    git submodule update --init --remote externals/soundtouch
+    git submodule update --init --remote externals/teakra
 }
 
 build() {
@@ -52,15 +57,11 @@ build() {
       -DENABLE_FFMPEG_VIDEO_DUMPER=ON \
       -DENABLE_FFMPEG_AUDIO_DECODER=ON \
       -DUSE_SYSTEM_BOOST=ON \
-      -DUSE_SYSTEM_SDL2=ON \
+      -DCITRA_USE_SYSTEM_SDL2=ON \
       -DENABLE_MF=OFF \
-	  -DENABLE_FDK=ON
+      -DCITRA_TESTS=OFF \
+      -DCITRA_CHECK_SUBMODULES=OFF
 	make
-}
-
-check() {
-	cd "$srcdir/$_pkgbase/build"
-	make test
 }
 
 package() {

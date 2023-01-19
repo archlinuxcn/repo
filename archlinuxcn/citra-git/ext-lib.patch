@@ -1,0 +1,976 @@
+diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
+--- citra/CMakeLists.txt	2023-01-20 00:44:13.675597719 +0800
++++ citra/CMakeLists.txt	2023-01-20 00:41:12.801915797 +0800
+@@ -5,9 +5,13 @@ cmake_minimum_required(VERSION 3.15)
+ cmake_policy(SET CMP0092 NEW)
+ # Enforce new LTO setting
+ cmake_policy(SET CMP0069 NEW)
++# Dynarmic has cmake_minimum_required(3.12) and we may want to override
++# some of its variables, which is only possible in 3.13+
++set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+ 
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/externals/cmake-modules")
++list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/externals/find-modules")
+ include(DownloadExternals)
+ include(CMakeDependentOption)
+ 
+@@ -20,7 +24,7 @@ endif()
+ option(ENABLE_LTO "Enable link time optimization" OFF)
+ 
+ option(ENABLE_SDL2 "Enable the SDL2 frontend" ON)
+-option(USE_SYSTEM_SDL2 "Use the system SDL2 lib (instead of the bundled one)" OFF)
++option(CITRA_USE_SYSTEM_SDL2 "Use the system SDL2 lib (instead of the bundled one)" OFF)
+ 
+ # Set bundled qt as dependent options.
+ option(ENABLE_QT "Enable the Qt frontend" ON)
+@@ -69,6 +73,12 @@ if (CITRA_USE_PRECOMPILED_HEADERS)
+     set(CMAKE_PCH_INSTANTIATE_TEMPLATES ON)
+ endif()
+ 
++option(CITRA_CHECK_SUBMODULES "Check if submodules are present" ON)
++
++CMAKE_DEPENDENT_OPTION(CITRA_USE_FASTER_LD "Check if a faster linker is available" ON "NOT WIN32" OFF)
++
++option(CITRA_TESTS "Compile tests" ON)
++
+ if(NOT EXISTS ${PROJECT_SOURCE_DIR}/.git/hooks/pre-commit)
+     message(STATUS "Copying pre-commit hook")
+     file(COPY hooks/pre-commit
+@@ -109,11 +119,14 @@ function(check_submodules_present)
+         string(REGEX REPLACE "path *= *" "" module ${module})
+         if (NOT EXISTS "${PROJECT_SOURCE_DIR}/${module}/.git")
+             message(SEND_ERROR "Git submodule ${module} not found."
+-                    "Please run: git submodule update --init --recursive")
++                    "Please run: \ngit submodule update --init --recursive")
+         endif()
+     endforeach()
+ endfunction()
+-check_submodules_present()
++
++if(EXISTS ${PROJECT_SOURCE_DIR}/.gitmodules AND CITRA_CHECK_SUBMODULES)
++    check_submodules_present()
++endif()
+ 
+ configure_file(${PROJECT_SOURCE_DIR}/dist/compatibility_list/compatibility_list.qrc
+                ${PROJECT_BINARY_DIR}/dist/compatibility_list/compatibility_list.qrc
+@@ -190,6 +203,36 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
+ set(THREADS_PREFER_PTHREAD_FLAG ON)
+ find_package(Threads REQUIRED)
+ 
++find_package(enet 1.3 QUIET)
++find_package(fmt 8.1.1 CONFIG QUIET)
++find_package(inih QUIET)
++find_package(libusb 1.0.24 QUIET)
++find_package(cryptopp QUIET)
++find_package(nlohmann_json 3.8 QUIET)
++find_package(zstd 1.4 QUIET)
++
++if (ARCHITECTURE_x86 OR ARCHITECTURE_x86_64)
++    find_package(xbyak 6 QUIET)
++    find_package(dynarmic 6.4.0 QUIET)
++endif()
++
++if (ENABLE_CUBEB)
++    find_package(cubeb QUIET)
++endif()
++
++if (USE_DISCORD_PRESENCE)
++    find_package(DiscordRPC QUIET)
++endif()
++
++if (ENABLE_WEB_SERVICE)
++    find_package(cpp-jwt 1.4 QUIET)
++    find_package(httplib 0.10.3 QUIET)
++endif()
++
++if (CITRA_TESTS)
++    find_package(Catch2 2 QUIET)
++endif()
++
+ if (ENABLE_QT)
+     if (CITRA_USE_BUNDLED_QT)
+         if (MSVC_VERSION GREATER_EQUAL 1920 AND "x86_64" IN_LIST ARCHITECTURE)
+@@ -216,17 +259,6 @@ if (ENABLE_QT)
+     endif()
+ endif()
+ 
+-# Ensure libusb is properly configured (based on dolphin libusb include)
+-if(NOT APPLE)
+-    include(FindPkgConfig)
+-    find_package(LibUSB)
+-endif()
+-if (NOT LIBUSB_FOUND)
+-    add_subdirectory(externals/libusb)
+-    set(LIBUSB_INCLUDE_DIR "")
+-    set(LIBUSB_LIBRARIES usb)
+-endif()
+-
+ if (ENABLE_FFMPEG)
+     if (CITRA_USE_BUNDLED_FFMPEG)
+         if ((MSVC_VERSION GREATER_EQUAL 1920 AND MSVC_VERSION LESS 1940) AND "x86_64" IN_LIST ARCHITECTURE)
+@@ -376,6 +408,21 @@ if (NOT USE_SYSTEM_BOOST)
+     add_definitions( -DBOOST_ALL_NO_LIB )
+ endif()
+ 
++if (CITRA_USE_FASTER_LD AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
++    # We will assume that if the compiler is GCC, it will attempt to use ld.bfd by default.
++    # Try to pick a faster linker.
++    find_program(LLD lld)
++    find_program(MOLD mold)
++
++    if (MOLD AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "12.1")
++        message(NOTICE "Selecting mold as linker")
++        add_link_options("-fuse-ld=mold")
++    elseif (LLD)
++        message(NOTICE "Selecting lld as linker")
++        add_link_options("-fuse-ld=lld")
++    endif()
++endif()
++
+ enable_testing()
+ add_subdirectory(externals)
+ 
+@@ -388,7 +435,7 @@ else()
+ endif()
+ 
+ # SDL2
+-if (ENABLE_SDL2 AND USE_SYSTEM_SDL2)
++if (ENABLE_SDL2 AND CITRA_USE_SYSTEM_SDL2)
+     find_package(SDL2 REQUIRED)
+     add_library(SDL2 INTERFACE)
+     target_link_libraries(SDL2 INTERFACE "${SDL2_LIBRARY}")
+@@ -399,7 +446,6 @@ endif()
+ add_subdirectory(src)
+ add_subdirectory(dist/installer)
+ 
+-
+ # Set citra-qt project or citra project as default StartUp Project in Visual Studio depending on whether QT is enabled or not
+ if(ENABLE_QT)
+     set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT citra-qt)
+diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
+--- citra/externals/CMakeLists.txt	2023-01-20 00:44:13.712264461 +0800
++++ citra/externals/CMakeLists.txt	2023-01-20 04:34:47.512808459 +0800
+@@ -10,29 +10,38 @@ include(DownloadExternals)
+ include(ExternalProject)
+ 
+ # Boost
+-set(BOOST_ROOT "${CMAKE_SOURCE_DIR}/externals/boost")
+-set(Boost_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/boost")
+-set(Boost_NO_SYSTEM_PATHS ON)
+-add_library(boost INTERFACE)
+-target_include_directories(boost SYSTEM INTERFACE ${Boost_INCLUDE_DIR})
++if (NOT USE_SYSTEM_BOOST)
++    set(BOOST_ROOT "${CMAKE_SOURCE_DIR}/externals/boost")
++    set(Boost_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/boost")
++    set(Boost_NO_SYSTEM_PATHS ON)
++    add_library(boost INTERFACE)
++    target_include_directories(boost SYSTEM INTERFACE ${Boost_INCLUDE_DIR})
++endif()
+ 
+ # Boost::serialization
+-file(GLOB boost_serialization_SRC "${CMAKE_SOURCE_DIR}/externals/boost/libs/serialization/src/*.cpp")
+-add_library(boost_serialization STATIC ${boost_serialization_SRC})
+-target_link_libraries(boost_serialization PUBLIC boost)
++if (NOT USE_SYSTEM_BOOST)
++    file(GLOB boost_serialization_SRC "${CMAKE_SOURCE_DIR}/externals/boost/libs/serialization/src/*.cpp")
++    add_library(boost_serialization STATIC ${boost_serialization_SRC})
++    target_link_libraries(boost_serialization PUBLIC boost)
++endif()
+ 
+ # Add additional boost libs here; remember to ALIAS them in the root CMakeLists!
+ 
+ # Catch2
+-set(CATCH_INSTALL_DOCS OFF)
+-set(CATCH_INSTALL_EXTRAS OFF)
+-add_subdirectory(catch2)
++if (CITRA_TESTS AND NOT TARGET Catch2::Catch2)
++    message(STATUS "Using bundled catch2")
++    set(CATCH_INSTALL_DOCS OFF)
++    set(CATCH_INSTALL_EXTRAS OFF)
++    set(CATCH_BUILD_STATIC_LIBRARY ON)
++    add_subdirectory(catch2 EXCLUDE_FROM_ALL)
++endif()
+ 
+ # Crypto++
+-set(CRYPTOPP_BUILD_DOCUMENTATION OFF)
+-set(CRYPTOPP_BUILD_TESTING OFF)
+-set(CRYPTOPP_INSTALL OFF)
+-add_subdirectory(cryptopp-cmake)
++if (NOT TARGET cryptopp::cryptopp)
++    message(STATUS "Using bundled cryptopp")
++    add_subdirectory(cryptopp)
++    add_library(cryptopp::cryptopp ALIAS cryptopp)
++endif()
+ 
+ # HACK: The logic to set up the base include directory for CryptoPP does not work with Android SDK CMake 3.22.1.
+ # Until there is a fixed version available, this code will detect and add in the proper include if it does not exist.
+@@ -50,19 +59,21 @@ endif()
+ 
+ # fmt and Xbyak need to be added before dynarmic
+ # libfmt
+-option(FMT_INSTALL "" ON)
+-add_subdirectory(fmt)
++if (NOT TARGET fmt::fmt)
++    add_subdirectory(fmt)
++endif()
+ 
+ # Xbyak
+-if ("x86_64" IN_LIST ARCHITECTURE)
+-    add_subdirectory(xbyak)
++if ("x86_64" IN_LIST ARCHITECTURE AND NOT TARGET xbyak::xbyak)
++    add_subdirectory(xbyak EXCLUDE_FROM_ALL)
+ endif()
+ 
+ # Dynarmic
+-if ("x86_64" IN_LIST ARCHITECTURE OR "arm64" IN_LIST ARCHITECTURE)
++if (("x86_64" IN_LIST ARCHITECTURE OR "arm64" IN_LIST ARCHITECTURE) AND NOT TARGET dynarmic::dynarmic)
+     set(DYNARMIC_TESTS OFF)
+     set(DYNARMIC_FRONTENDS "A32")
+-    add_subdirectory(dynarmic)
++    add_subdirectory(dynarmic EXCLUDE_FROM_ALL)
++    add_library(dynarmic::dynarmic ALIAS dynarmic)
+ endif()
+ 
+ # getopt
+@@ -74,7 +85,10 @@ endif()
+ add_subdirectory(glad)
+ 
+ # inih
+-add_subdirectory(inih)
++if (NOT TARGET inih::INIReader)
++    message(STATUS "Using bundled inih")
++    add_subdirectory(inih)
++endif()
+ 
+ # MicroProfile
+ add_library(microprofile INTERFACE)
+@@ -95,39 +109,59 @@ target_include_directories(SoundTouch IN
+ # Teakra
+ add_subdirectory(teakra EXCLUDE_FROM_ALL)
+ 
++if (NOT TARGET libusb::usb)
++    message(STATUS "Using bundled libusb")
++    add_subdirectory(libusb EXCLUDE_FROM_ALL)
++endif()
++
+ # SDL2
+-if (ENABLE_SDL2 AND NOT USE_SYSTEM_SDL2)
++if (ENABLE_SDL2 AND NOT CITRA_USE_SYSTEM_SDL2)
++    message(STATUS "Using bundled sdl2")
+     add_subdirectory(sdl2)
+ endif()
+ 
+ # Zstandard
+-set(ZSTD_LEGACY_SUPPORT OFF)
+-set(ZSTD_BUILD_PROGRAMS OFF)
+-set(ZSTD_BUILD_SHARED OFF)
+-add_subdirectory(zstd/build/cmake EXCLUDE_FROM_ALL)
+-target_include_directories(libzstd_static INTERFACE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/externals/zstd/lib>)
++if (NOT TARGET zstd::zstd)
++    message(STATUS "Using bundled zstd")
++    set(ZSTD_LEGACY_SUPPORT OFF)
++    set(ZSTD_BUILD_PROGRAMS OFF)
++    set(ZSTD_BUILD_SHARED OFF)
++    add_subdirectory(zstd/build/cmake EXCLUDE_FROM_ALL)
++    target_include_directories(libzstd_static INTERFACE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/externals/zstd/lib>)
++    add_library(zstd::zstd ALIAS libzstd_static)
++endif()
+ 
+ # ENet
+-add_subdirectory(enet)
+-target_include_directories(enet INTERFACE ./enet/include)
++if (NOT TARGET enet::enet)
++    message(STATUS "Using bundled enet")
++    add_subdirectory(enet EXCLUDE_FROM_ALL)
++    target_include_directories(enet INTERFACE ./enet/include)
++    add_library(enet::enet ALIAS enet)
++endif()
+ 
+ # Cubeb
+-if (ENABLE_CUBEB)
++if (ENABLE_CUBEB AND NOT TARGET cubeb::cubeb)
+     set(BUILD_TESTS OFF CACHE BOOL "")
+     add_subdirectory(cubeb EXCLUDE_FROM_ALL)
++    add_library(cubeb::cubeb ALIAS cubeb)
+ endif()
+ 
+ # DiscordRPC
+-if (USE_DISCORD_PRESENCE)
++if (USE_DISCORD_PRESENCE AND NOT TARGET DiscordRPC::discord-rpc)
+     add_subdirectory(discord-rpc EXCLUDE_FROM_ALL)
+     target_include_directories(discord-rpc INTERFACE ./discord-rpc/include)
++    add_library(DiscordRPC::discord-rpc ALIAS discord-rpc)
+ endif()
+ 
+ if (ENABLE_WEB_SERVICE)
+-    find_package(OpenSSL 1.1)
+-    if (OPENSSL_FOUND)
+-        set(OPENSSL_LIBRARIES OpenSSL::SSL OpenSSL::Crypto)
+-    else()
++    if (NOT WIN32)
++        find_package(OpenSSL 1.1)
++        if (OPENSSL_FOUND)
++            set(OPENSSL_LIBRARIES OpenSSL::SSL OpenSSL::Crypto)
++        endif()
++    endif()
++
++    if (WIN32 OR NOT OPENSSL_FOUND)
+         # LibreSSL
+         set(LIBRESSL_SKIP_INSTALL ON CACHE BOOL "")
+         set(OPENSSLDIR "/etc/ssl/")
+@@ -138,24 +172,39 @@ if (ENABLE_WEB_SERVICE)
+             DIRECTORY libressl
+             DEFINITION OPENSSL_LIBS)
+     endif()
+-    # JSON
+-    add_library(json-headers INTERFACE)
+-    target_include_directories(json-headers INTERFACE ./json)
+ 
+-    if(ANDROID)
+-        add_subdirectory(android-ifaddrs)
++    if (NOT TARGET httplib::httplib)
++        message(STATUS "Using bundled httplib")
++        add_library(httplib INTERFACE)
++        target_include_directories(httplib INTERFACE ./httplib)
++        target_compile_definitions(httplib INTERFACE -DCPPHTTPLIB_OPENSSL_SUPPORT)
++        target_link_libraries(httplib INTERFACE ${OPENSSL_LIBRARIES})
++        if (WIN32)
++            target_link_libraries(httplib INTERFACE crypt32 cryptui ws2_32)
++        endif()
++        add_library(httplib::httplib ALIAS httplib)
+     endif()
++endif()
+ 
+-    # httplib
+-    add_library(httplib INTERFACE)
+-    target_include_directories(httplib INTERFACE ./httplib)
+-    target_compile_options(httplib INTERFACE -DCPPHTTPLIB_OPENSSL_SUPPORT)
+-    target_link_libraries(httplib INTERFACE ${OPENSSL_LIBRARIES})
++# JSON
++if (ENABLE_WEB_SERVICE AND NOT TARGET nlohmann_json::nlohmann_json)
++    message(STATUS "Using bundled json")
++    add_library(nlohmann_json INTERFACE)
++    target_include_directories(nlohmann_json INTERFACE ./json)
++    add_library(nlohmann_json::nlohmann_json ALIAS nlohmann_json)
++endif()
+ 
+-    # cpp-jwt
++# cpp-jwt
++if (ENABLE_WEB_SERVICE AND NOT TARGET cpp-jwt::cpp-jwt)
++    message(STATUS "Using bundled cpp-jwt")
+     add_library(cpp-jwt INTERFACE)
+     target_include_directories(cpp-jwt INTERFACE ./cpp-jwt/include)
+     target_compile_definitions(cpp-jwt INTERFACE CPP_JWT_USE_VENDORED_NLOHMANN_JSON)
++    add_library(cpp-jwt::cpp-jwt ALIAS cpp-jwt)
++endif()
++
++if (ENABLE_WEB_SERVICE AND ANDROID)
++    add_subdirectory(android-ifaddrs)
+ endif()
+ 
+ # lodepng
+diff --color -rupN citra/externals/find-modules/Findcryptopp.cmake citra/externals/find-modules/Findcryptopp.cmake
+--- citra/externals/find-modules/Findcryptopp.cmake	1970-01-01 08:00:00.000000000 +0800
++++ citra/externals/find-modules/Findcryptopp.cmake	2023-01-20 00:41:12.715249024 +0800
+@@ -0,0 +1,50 @@
++#
++# This file is open source software, licensed to you under the terms
++# of the Apache License, Version 2.0 (the "License").  See the NOTICE file
++# distributed with this work for additional information regarding copyright
++# ownership.  You may not use this file except in compliance with the License.
++#
++# You may obtain a copy of the License at
++#
++#   http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing,
++# software distributed under the License is distributed on an
++# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++# KIND, either express or implied.  See the License for the
++# specific language governing permissions and limitations
++# under the License.
++#
++
++#
++# Copyright (C) 2018 Scylladb, Ltd.
++#
++
++find_library(cryptopp_LIBRARY NAMES cryptopp)
++
++find_path(cryptopp_INCLUDE_DIR
++  NAMES cryptopp/aes.h
++  PATH_SUFFIXES cryptopp)
++
++mark_as_advanced(
++  cryptopp_LIBRARY
++  cryptopp_INCLUDE_DIR)
++
++include(FindPackageHandleStandardArgs)
++
++find_package_handle_standard_args(cryptopp
++  REQUIRED_VARS
++    cryptopp_LIBRARY
++    cryptopp_INCLUDE_DIR)
++
++set(cryptopp_LIBRARIES ${cryptopp_LIBRARY})
++set(cryptopp_INCLUDE_DIRS ${cryptopp_INCLUDE_DIR})
++
++if(cryptopp_FOUND AND NOT (TARGET cryptopp::cryptopp))
++  add_library(cryptopp::cryptopp UNKNOWN IMPORTED)
++
++  set_target_properties(cryptopp::cryptopp
++    PROPERTIES
++      IMPORTED_LOCATION ${cryptopp_LIBRARIES}
++      INTERFACE_INCLUDE_DIRECTORIES ${cryptopp_INCLUDE_DIRS})
++endif()
+diff --color -rupN citra/externals/find-modules/FindDiscordRPC.cmake citra/externals/find-modules/FindDiscordRPC.cmake
+--- citra/externals/find-modules/FindDiscordRPC.cmake	1970-01-01 08:00:00.000000000 +0800
++++ citra/externals/find-modules/FindDiscordRPC.cmake	2023-01-20 00:41:12.715249024 +0800
+@@ -0,0 +1,27 @@
++# SPDX-FileCopyrightText: 2022 Alexandre Bouvier <contact@amb.tf>
++#
++# SPDX-License-Identifier: GPL-3.0-or-later
++
++find_path(DiscordRPC_INCLUDE_DIR discord_rpc.h)
++
++find_library(DiscordRPC_LIBRARY discord-rpc)
++
++include(FindPackageHandleStandardArgs)
++find_package_handle_standard_args(DiscordRPC
++    REQUIRED_VARS
++        DiscordRPC_LIBRARY
++        DiscordRPC_INCLUDE_DIR
++)
++
++if (DiscordRPC_FOUND AND NOT TARGET DiscordRPC::discord-rpc)
++    add_library(DiscordRPC::discord-rpc UNKNOWN IMPORTED)
++    set_target_properties(DiscordRPC::discord-rpc PROPERTIES
++        IMPORTED_LOCATION "${DiscordRPC_LIBRARY}"
++        INTERFACE_INCLUDE_DIRECTORIES "${DiscordRPC_INCLUDE_DIR}"
++    )
++endif()
++
++mark_as_advanced(
++    DiscordRPC_INCLUDE_DIR
++    DiscordRPC_LIBRARY
++)
+\ No newline at end of file
+diff --color -rupN citra/externals/find-modules/Findenet.cmake citra/externals/find-modules/Findenet.cmake
+--- citra/externals/find-modules/Findenet.cmake	1970-01-01 08:00:00.000000000 +0800
++++ citra/externals/find-modules/Findenet.cmake	2023-01-20 00:41:12.715249024 +0800
+@@ -0,0 +1,17 @@
++# SPDX-FileCopyrightText: 2022 Alexandre Bouvier <contact@amb.tf>
++#
++# SPDX-License-Identifier: GPL-3.0-or-later
++
++find_package(PkgConfig QUIET)
++if (PKG_CONFIG_FOUND)
++    pkg_search_module(ENET QUIET IMPORTED_TARGET GLOBAL libenet)
++    if (ENET_FOUND)
++        add_library(enet::enet ALIAS PkgConfig::ENET)
++    endif()
++endif()
++
++include(FindPackageHandleStandardArgs)
++find_package_handle_standard_args(enet
++    REQUIRED_VARS ENET_LINK_LIBRARIES
++    VERSION_VAR ENET_VERSION
++)
+\ No newline at end of file
+diff --color -rupN citra/externals/find-modules/Findhttplib.cmake citra/externals/find-modules/Findhttplib.cmake
+--- citra/externals/find-modules/Findhttplib.cmake	1970-01-01 08:00:00.000000000 +0800
++++ citra/externals/find-modules/Findhttplib.cmake	2023-01-20 00:41:12.715249024 +0800
+@@ -0,0 +1,22 @@
++# SPDX-FileCopyrightText: 2022 Andrea Pappacoda <andrea@pappacoda.it>
++#
++# SPDX-License-Identifier: GPL-2.0-or-later
++
++include(FindPackageHandleStandardArgs)
++
++find_package(httplib QUIET CONFIG)
++if (httplib_FOUND)
++    find_package_handle_standard_args(httplib CONFIG_MODE)
++else()
++    find_package(PkgConfig QUIET)
++    if (PKG_CONFIG_FOUND)
++        pkg_search_module(HTTPLIB QUIET IMPORTED_TARGET GLOBAL cpp-httplib)
++        if (HTTPLIB_FOUND)
++            add_library(httplib::httplib ALIAS PkgConfig::HTTPLIB)
++        endif()
++    endif()
++    find_package_handle_standard_args(httplib
++        REQUIRED_VARS HTTPLIB_INCLUDEDIR
++        VERSION_VAR HTTPLIB_VERSION
++    )
++endif()
+\ No newline at end of file
+diff --color -rupN citra/externals/find-modules/Findinih.cmake citra/externals/find-modules/Findinih.cmake
+--- citra/externals/find-modules/Findinih.cmake	1970-01-01 08:00:00.000000000 +0800
++++ citra/externals/find-modules/Findinih.cmake	2023-01-20 00:41:12.715249024 +0800
+@@ -0,0 +1,17 @@
++# SPDX-FileCopyrightText: 2022 Alexandre Bouvier <contact@amb.tf>
++#
++# SPDX-License-Identifier: GPL-3.0-or-later
++
++find_package(PkgConfig QUIET)
++if (PKG_CONFIG_FOUND)
++    pkg_search_module(INIREADER QUIET IMPORTED_TARGET GLOBAL INIReader)
++    if (INIREADER_FOUND)
++        add_library(inih::INIReader ALIAS PkgConfig::INIREADER)
++    endif()
++endif()
++
++include(FindPackageHandleStandardArgs)
++find_package_handle_standard_args(inih
++    REQUIRED_VARS INIREADER_LINK_LIBRARIES
++    VERSION_VAR INIREADER_VERSION
++)
+\ No newline at end of file
+diff --color -rupN citra/externals/find-modules/Findlibusb.cmake citra/externals/find-modules/Findlibusb.cmake
+--- citra/externals/find-modules/Findlibusb.cmake	1970-01-01 08:00:00.000000000 +0800
++++ citra/externals/find-modules/Findlibusb.cmake	2023-01-20 00:41:12.715249024 +0800
+@@ -0,0 +1,18 @@
++# SPDX-FileCopyrightText: 2022 Alexandre Bouvier <contact@amb.tf>
++#
++# SPDX-License-Identifier: GPL-3.0-or-later
++
++find_package(PkgConfig QUIET)
++if (PKG_CONFIG_FOUND)
++    pkg_search_module(LIBUSB QUIET IMPORTED_TARGET libusb-1.0)
++endif()
++
++include(FindPackageHandleStandardArgs)
++find_package_handle_standard_args(libusb
++    REQUIRED_VARS LIBUSB_LINK_LIBRARIES
++    VERSION_VAR LIBUSB_VERSION
++)
++
++if (libusb_FOUND AND NOT TARGET libusb::usb)
++    add_library(libusb::usb ALIAS PkgConfig::LIBUSB)
++endif()
+\ No newline at end of file
+diff --color -rupN citra/externals/find-modules/Findzstd.cmake citra/externals/find-modules/Findzstd.cmake
+--- citra/externals/find-modules/Findzstd.cmake	1970-01-01 08:00:00.000000000 +0800
++++ citra/externals/find-modules/Findzstd.cmake	2023-01-20 00:41:12.715249024 +0800
+@@ -0,0 +1,30 @@
++# SPDX-FileCopyrightText: 2022 yuzu Emulator Project
++# SPDX-License-Identifier: GPL-2.0-or-later
++
++include(FindPackageHandleStandardArgs)
++
++find_package(zstd QUIET CONFIG)
++if (zstd_FOUND)
++    find_package_handle_standard_args(zstd CONFIG_MODE)
++    if (NOT TARGET zstd::zstd)
++        if (TARGET zstd::libzstd_shared)
++            set_target_properties(zstd::libzstd_shared PROPERTIES IMPORTED_GLOBAL TRUE)
++            add_library(zstd::zstd ALIAS zstd::libzstd_shared)
++        else()
++            set_target_properties(zstd::libzstd_static PROPERTIES IMPORTED_GLOBAL TRUE)
++            add_library(zstd::zstd ALIAS zstd::libzstd_static)
++        endif()
++    endif()
++else()
++    find_package(PkgConfig QUIET)
++    if (PKG_CONFIG_FOUND)
++        pkg_search_module(libzstd QUIET IMPORTED_TARGET GLOBAL libzstd)
++        if (libzstd_FOUND)
++            add_library(zstd::zstd ALIAS PkgConfig::libzstd)
++        endif()
++    endif()
++    find_package_handle_standard_args(zstd
++        REQUIRED_VARS libzstd_LINK_LIBRARIES
++        VERSION_VAR libzstd_VERSION
++    )
++endif()
+\ No newline at end of file
+diff --color -rupN citra/externals/inih/CMakeLists.txt citra/externals/inih/CMakeLists.txt
+--- citra/externals/inih/CMakeLists.txt	2023-01-20 00:44:13.722264481 +0800
++++ citra/externals/inih/CMakeLists.txt	2023-01-20 00:41:12.705249011 +0800
+@@ -6,4 +6,5 @@ add_library(inih
+ )
+ 
+ create_target_directory_groups(inih)
+-target_include_directories(inih INTERFACE .)
++target_include_directories(inih INTERFACE inih/cpp)
++add_library(inih::INIReader ALIAS inih)
+diff --color -rupN citra/externals/libusb/CMakeLists.txt citra/externals/libusb/CMakeLists.txt
+--- citra/externals/libusb/CMakeLists.txt	2023-01-20 00:44:13.725597822 +0800
++++ citra/externals/libusb/CMakeLists.txt	2023-01-20 00:41:12.708582349 +0800
+@@ -150,3 +150,4 @@ check_include_files(sys/timerfd.h USBI_T
+ 
+ 
+ configure_file(config.h.in config.h)
++add_library(libusb::usb ALIAS usb)
+\ No newline at end of file
+diff --color -rupN citra/src/audio_core/CMakeLists.txt citra/src/audio_core/CMakeLists.txt
+--- citra/src/audio_core/CMakeLists.txt	2023-01-20 00:44:13.802264646 +0800
++++ citra/src/audio_core/CMakeLists.txt	2023-01-20 00:41:12.745249061 +0800
+@@ -87,7 +87,7 @@ if(ENABLE_SDL2)
+ endif()
+ 
+ if(ENABLE_CUBEB)
+-    target_link_libraries(audio_core PRIVATE cubeb)
++    target_link_libraries(audio_core PRIVATE cubeb::cubeb)
+     target_compile_definitions(audio_core PUBLIC HAVE_CUBEB)
+ endif()
+ 
+diff --color -rupN citra/src/citra/CMakeLists.txt citra/src/citra/CMakeLists.txt
+--- citra/src/citra/CMakeLists.txt	2023-01-20 00:44:13.805597987 +0800
++++ citra/src/citra/CMakeLists.txt	2023-01-20 00:41:12.745249061 +0800
+@@ -17,7 +17,7 @@ add_executable(citra
+ create_target_directory_groups(citra)
+ 
+ target_link_libraries(citra PRIVATE common core input_common network)
+-target_link_libraries(citra PRIVATE inih glad lodepng)
++target_link_libraries(citra PRIVATE inih::INIReader glad lodepng)
+ if (MSVC)
+     target_link_libraries(citra PRIVATE getopt)
+ endif()
+diff --color -rupN citra/src/citra/config.cpp citra/src/citra/config.cpp
+--- citra/src/citra/config.cpp	2023-01-20 00:44:13.805597987 +0800
++++ citra/src/citra/config.cpp	2023-01-20 00:41:12.745249061 +0800
+@@ -7,7 +7,7 @@
+ #include <sstream>
+ #include <unordered_map>
+ #include <SDL.h>
+-#include <inih/cpp/INIReader.h>
++#include <INIReader.h>
+ #include "citra/config.h"
+ #include "citra/default_ini.h"
+ #include "common/file_util.h"
+diff --color -rupN citra/src/citra_qt/CMakeLists.txt citra/src/citra_qt/CMakeLists.txt
+--- citra/src/citra_qt/CMakeLists.txt	2023-01-20 00:44:13.805597987 +0800
++++ citra/src/citra_qt/CMakeLists.txt	2023-01-20 00:41:12.755249073 +0800
+@@ -297,7 +297,7 @@ if (USE_DISCORD_PRESENCE)
+         discord_impl.cpp
+         discord_impl.h
+     )
+-    target_link_libraries(citra-qt PRIVATE discord-rpc)
++    target_link_libraries(citra-qt PRIVATE DiscordRPC::discord-rpc)
+     target_compile_definitions(citra-qt PRIVATE -DUSE_DISCORD_PRESENCE)
+ endif()
+ 
+diff --color -rupN citra/src/CMakeLists.txt citra/src/CMakeLists.txt
+--- citra/src/CMakeLists.txt	2023-01-20 00:44:13.768931244 +0800
++++ citra/src/CMakeLists.txt	2023-01-20 00:41:12.801915797 +0800
+@@ -148,7 +148,10 @@ add_subdirectory(video_core)
+ add_subdirectory(audio_core)
+ add_subdirectory(network)
+ add_subdirectory(input_common)
+-add_subdirectory(tests)
++
++if (CITRA_TESTS)
++    add_subdirectory(tests)
++endif()
+ 
+ if (ENABLE_SDL2)
+     add_subdirectory(citra)
+diff --color -rupN citra/src/common/CMakeLists.txt citra/src/common/CMakeLists.txt
+--- citra/src/common/CMakeLists.txt	2023-01-20 00:44:13.822264687 +0800
++++ citra/src/common/CMakeLists.txt	2023-01-20 00:42:58.732110108 +0800
+@@ -137,11 +137,11 @@ add_library(common STATIC
+ create_target_directory_groups(common)
+ 
+ target_link_libraries(common PUBLIC fmt::fmt microprofile Boost::boost Boost::serialization)
+-target_link_libraries(common PRIVATE libzstd_static)
++target_link_libraries(common PRIVATE zstd::zstd)
+ set_target_properties(common PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${ENABLE_LTO})
+ 
+ if ("x86_64" IN_LIST ARCHITECTURE)
+-    target_link_libraries(common PRIVATE xbyak)
++    target_link_libraries(common PRIVATE xbyak::xbyak)
+ endif()
+ 
+ if (CITRA_USE_PRECOMPILED_HEADERS)
+diff --color -rupN citra/src/core/CMakeLists.txt citra/src/core/CMakeLists.txt
+--- citra/src/core/CMakeLists.txt	2023-01-20 00:44:13.828931368 +0800
++++ citra/src/core/CMakeLists.txt	2023-01-20 00:41:12.788582447 +0800
+@@ -477,12 +477,13 @@ endif()
+ create_target_directory_groups(core)
+ 
+ target_link_libraries(core PUBLIC common PRIVATE audio_core network video_core)
+-target_link_libraries(core PUBLIC Boost::boost PRIVATE cryptopp fmt::fmt open_source_archives Boost::serialization)
++target_link_libraries(core PUBLIC Boost::boost Boost::serialization)
++target_link_libraries(core PRIVATE cryptopp::cryptopp fmt::fmt open_source_archives)
+ set_target_properties(core PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${ENABLE_LTO})
+ 
+ if (ENABLE_WEB_SERVICE)
+     target_compile_definitions(core PRIVATE -DENABLE_WEB_SERVICE -DCPPHTTPLIB_OPENSSL_SUPPORT)
+-    target_link_libraries(core PRIVATE web_service ${OPENSSL_LIBS} httplib)
++    target_link_libraries(core PRIVATE web_service ${OPENSSL_LIBS} httplib::httplib)
+     if (ANDROID)
+         target_link_libraries(core PRIVATE ifaddrs)
+     endif()
+@@ -499,7 +500,7 @@ if ("x86_64" IN_LIST ARCHITECTURE OR "ar
+         arm/dynarmic/arm_tick_counts.cpp
+         arm/dynarmic/arm_tick_counts.h
+     )
+-    target_link_libraries(core PRIVATE dynarmic)
++    target_link_libraries(core PRIVATE dynarmic::dynarmic)
+ endif()
+ 
+ if (ENABLE_FFMPEG_VIDEO_DUMPER)
+diff --color -rupN citra/src/input_common/CMakeLists.txt citra/src/input_common/CMakeLists.txt
+--- citra/src/input_common/CMakeLists.txt	2023-01-20 00:44:13.872264790 +0800
++++ citra/src/input_common/CMakeLists.txt	2023-01-20 00:41:12.788582447 +0800
+@@ -34,9 +34,7 @@ if(ENABLE_SDL2)
+ endif()
+ 
+ create_target_directory_groups(input_common)
+-target_link_libraries(input_common PUBLIC core PRIVATE common ${Boost_LIBRARIES})
+-target_include_directories(input_common PRIVATE ${LIBUSB_INCLUDE_DIR})
+-target_link_libraries(input_common PUBLIC ${LIBUSB_LIBRARIES})
++target_link_libraries(input_common PUBLIC core PRIVATE common ${Boost_LIBRARIES} libusb::usb)
+ set_target_properties(input_common PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${ENABLE_LTO})
+ 
+ if (CITRA_USE_PRECOMPILED_HEADERS)
+diff --color -rupN citra/src/network/CMakeLists.txt citra/src/network/CMakeLists.txt
+--- citra/src/network/CMakeLists.txt	2023-01-20 00:44:13.872264790 +0800
++++ citra/src/network/CMakeLists.txt	2023-01-20 00:41:12.791915785 +0800
+@@ -20,13 +20,13 @@ create_target_directory_groups(network)
+ 
+ if (ENABLE_WEB_SERVICE)
+     target_compile_definitions(network PRIVATE -DENABLE_WEB_SERVICE -DCPPHTTPLIB_OPENSSL_SUPPORT)
+-    target_link_libraries(network PRIVATE web_service httplib)
++    target_link_libraries(network PRIVATE web_service httplib::httplib)
+     if (ANDROID)
+         target_link_libraries(network PRIVATE ifaddrs)
+     endif()
+ endif()
+ 
+-target_link_libraries(network PRIVATE common enet Boost::serialization)
++target_link_libraries(network PRIVATE common enet::enet Boost::serialization)
+ set_target_properties(network PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${ENABLE_LTO})
+ 
+ if (CITRA_USE_PRECOMPILED_HEADERS)
+diff --color -rupN citra/src/tests/audio_core/decoder_tests.cpp citra/src/tests/audio_core/decoder_tests.cpp
+--- citra/src/tests/audio_core/decoder_tests.cpp	2023-01-20 00:44:13.875598130 +0800
++++ citra/src/tests/audio_core/decoder_tests.cpp	2023-01-20 00:41:12.791915785 +0800
+@@ -3,7 +3,7 @@
+ // Refer to the license.txt file included.
+ #if defined(HAVE_MF) || defined(HAVE_FFMPEG)
+ 
+-#include <catch2/catch_test_macros.hpp>
++#include <catch2/catch.hpp>
+ #include "core/core.h"
+ #include "core/core_timing.h"
+ #include "core/hle/kernel/memory.h"
+diff --color -rupN citra/src/tests/common/bit_field.cpp citra/src/tests/common/bit_field.cpp
+--- citra/src/tests/common/bit_field.cpp	2023-01-20 00:44:13.875598130 +0800
++++ citra/src/tests/common/bit_field.cpp	2023-01-20 00:41:12.791915785 +0800
+@@ -5,7 +5,7 @@
+ #include <array>
+ #include <cstring>
+ #include <type_traits>
+-#include <catch2/catch_test_macros.hpp>
++#include <catch2/catch.hpp>
+ #include "common/bit_field.h"
+ 
+ TEST_CASE("BitField", "[common]") {
+diff --color -rupN citra/src/tests/common/param_package.cpp citra/src/tests/common/param_package.cpp
+--- citra/src/tests/common/param_package.cpp	2023-01-20 00:44:13.875598130 +0800
++++ citra/src/tests/common/param_package.cpp	2023-01-20 00:41:12.791915785 +0800
+@@ -3,7 +3,7 @@
+ // Refer to the license.txt file included.
+ 
+ #include <cmath>
+-#include <catch2/catch_test_macros.hpp>
++#include <catch2/catch.hpp>
+ #include "common/param_package.h"
+ 
+ namespace Common {
+diff --color -rupN citra/src/tests/core/arm/dyncom/arm_dyncom_vfp_tests.cpp citra/src/tests/core/arm/dyncom/arm_dyncom_vfp_tests.cpp
+--- citra/src/tests/core/arm/dyncom/arm_dyncom_vfp_tests.cpp	2023-01-20 00:44:13.875598130 +0800
++++ citra/src/tests/core/arm/dyncom/arm_dyncom_vfp_tests.cpp	2023-01-20 00:41:12.791915785 +0800
+@@ -2,7 +2,7 @@
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
+-#include <catch2/catch_test_macros.hpp>
++#include <catch2/catch.hpp>
+ #include "core/arm/dyncom/arm_dyncom.h"
+ #include "core/core.h"
+ #include "core/core_timing.h"
+diff --color -rupN citra/src/tests/core/core_timing.cpp citra/src/tests/core/core_timing.cpp
+--- citra/src/tests/core/core_timing.cpp	2023-01-20 00:44:13.878931471 +0800
++++ citra/src/tests/core/core_timing.cpp	2023-01-20 00:41:12.791915785 +0800
+@@ -2,7 +2,7 @@
+ // Licensed under GPLv2+
+ // Refer to the license.txt file included.
+ 
+-#include <catch2/catch_test_macros.hpp>
++#include <catch2/catch.hpp>
+ 
+ #include <array>
+ #include <bitset>
+diff --color -rupN citra/src/tests/core/file_sys/path_parser.cpp citra/src/tests/core/file_sys/path_parser.cpp
+--- citra/src/tests/core/file_sys/path_parser.cpp	2023-01-20 00:44:13.878931471 +0800
++++ citra/src/tests/core/file_sys/path_parser.cpp	2023-01-20 00:41:12.791915785 +0800
+@@ -2,7 +2,7 @@
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
+-#include <catch2/catch_test_macros.hpp>
++#include <catch2/catch.hpp>
+ #include "common/file_util.h"
+ #include "core/file_sys/path_parser.h"
+ 
+diff --color -rupN citra/src/tests/core/hle/kernel/hle_ipc.cpp citra/src/tests/core/hle/kernel/hle_ipc.cpp
+--- citra/src/tests/core/hle/kernel/hle_ipc.cpp	2023-01-20 00:44:13.878931471 +0800
++++ citra/src/tests/core/hle/kernel/hle_ipc.cpp	2023-01-20 00:41:12.791915785 +0800
+@@ -2,7 +2,7 @@
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
+-#include <catch2/catch_test_macros.hpp>
++#include <catch2/catch.hpp>
+ #include "common/archives.h"
+ #include "core/core.h"
+ #include "core/core_timing.h"
+diff --color -rupN citra/src/tests/core/memory/memory.cpp citra/src/tests/core/memory/memory.cpp
+--- citra/src/tests/core/memory/memory.cpp	2023-01-20 00:44:13.878931471 +0800
++++ citra/src/tests/core/memory/memory.cpp	2023-01-20 00:41:12.791915785 +0800
+@@ -2,7 +2,7 @@
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
+-#include <catch2/catch_test_macros.hpp>
++#include <catch2/catch.hpp>
+ #include "core/core_timing.h"
+ #include "core/hle/kernel/process.h"
+ #include "core/memory.h"
+diff --color -rupN citra/src/tests/core/memory/vm_manager.cpp citra/src/tests/core/memory/vm_manager.cpp
+--- citra/src/tests/core/memory/vm_manager.cpp	2023-01-20 00:44:13.878931471 +0800
++++ citra/src/tests/core/memory/vm_manager.cpp	2023-01-20 00:41:12.791915785 +0800
+@@ -3,7 +3,7 @@
+ // Refer to the license.txt file included.
+ 
+ #include <vector>
+-#include <catch2/catch_test_macros.hpp>
++#include <catch2/catch.hpp>
+ #include "core/core_timing.h"
+ #include "core/hle/kernel/errors.h"
+ #include "core/hle/kernel/memory.h"
+diff --color -rupN citra/src/tests/video_core/shader/shader_jit_x64_compiler.cpp citra/src/tests/video_core/shader/shader_jit_x64_compiler.cpp
+--- citra/src/tests/video_core/shader/shader_jit_x64_compiler.cpp	2023-01-20 00:44:13.878931471 +0800
++++ citra/src/tests/video_core/shader/shader_jit_x64_compiler.cpp	2023-01-20 00:41:12.791915785 +0800
+@@ -8,8 +8,7 @@
+ #include <algorithm>
+ #include <cmath>
+ #include <memory>
+-#include <catch2/catch_approx.hpp>
+-#include <catch2/catch_test_macros.hpp>
++#include <catch2/catch.hpp>
+ #include <nihstro/inline_assembly.h>
+ #include "video_core/shader/shader_interpreter.h"
+ #include "video_core/shader/shader_jit_x64_compiler.h"
+@@ -82,9 +81,9 @@ TEST_CASE("LG2", "[video_core][shader][s
+     REQUIRE(std::isnan(shader.Run(NAN)));
+     REQUIRE(std::isnan(shader.Run(-1.f)));
+     REQUIRE(std::isinf(shader.Run(0.f)));
+-    REQUIRE(shader.Run(4.f) == Catch::Approx(2.f));
+-    REQUIRE(shader.Run(64.f) == Catch::Approx(6.f));
+-    REQUIRE(shader.Run(1.e24f) == Catch::Approx(79.7262742773f));
++    REQUIRE(shader.Run(4.f) == Approx(2.f));
++    REQUIRE(shader.Run(64.f) == Approx(6.f));
++    REQUIRE(shader.Run(1.e24f) == Approx(79.7262742773f));
+ }
+ 
+ TEST_CASE("EX2", "[video_core][shader][shader_jit]") {
+@@ -99,11 +98,11 @@ TEST_CASE("EX2", "[video_core][shader][s
+     });
+ 
+     REQUIRE(std::isnan(shader.Run(NAN)));
+-    REQUIRE(shader.Run(-800.f) == Catch::Approx(0.f));
+-    REQUIRE(shader.Run(0.f) == Catch::Approx(1.f));
+-    REQUIRE(shader.Run(2.f) == Catch::Approx(4.f));
+-    REQUIRE(shader.Run(6.f) == Catch::Approx(64.f));
+-    REQUIRE(shader.Run(79.7262742773f) == Catch::Approx(1.e24f));
++    REQUIRE(shader.Run(-800.f) == Approx(0.f));
++    REQUIRE(shader.Run(0.f) == Approx(1.f));
++    REQUIRE(shader.Run(2.f) == Approx(4.f));
++    REQUIRE(shader.Run(6.f) == Approx(64.f));
++    REQUIRE(shader.Run(79.7262742773f) == Approx(1.e24f));
+     REQUIRE(std::isinf(shader.Run(800.f)));
+ }
+ 
+@@ -141,7 +140,7 @@ TEST_CASE("Nested Loop", "[video_core][s
+         shader_test.RunJit(shader_unit_jit, input);
+ 
+         REQUIRE(shader_unit_jit.address_registers[2] == expected_aL);
+-        REQUIRE(shader_unit_jit.registers.output[0].x.ToFloat32() == Catch::Approx(expected_out));
++        REQUIRE(shader_unit_jit.registers.output[0].x.ToFloat32() == Approx(expected_out));
+     }
+     {
+         shader_test.shader_setup->uniforms.i[0] = {9, 0, 2, 0};
+@@ -158,7 +157,7 @@ TEST_CASE("Nested Loop", "[video_core][s
+         shader_test.RunJit(shader_unit_jit, input);
+ 
+         REQUIRE(shader_unit_jit.address_registers[2] == expected_aL);
+-        REQUIRE(shader_unit_jit.registers.output[0].x.ToFloat32() == Catch::Approx(expected_out));
++        REQUIRE(shader_unit_jit.registers.output[0].x.ToFloat32() == Approx(expected_out));
+     }
+ }
+ 
+diff --color -rupN citra/src/video_core/CMakeLists.txt citra/src/video_core/CMakeLists.txt
+--- citra/src/video_core/CMakeLists.txt	2023-01-20 00:44:13.878931471 +0800
++++ citra/src/video_core/CMakeLists.txt	2023-01-20 00:43:41.148864090 +0800
+@@ -155,7 +155,7 @@ target_link_libraries(video_core PRIVATE
+ set_target_properties(video_core PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${ENABLE_LTO})
+ 
+ if ("x86_64" IN_LIST ARCHITECTURE)
+-    target_link_libraries(video_core PUBLIC xbyak)
++    target_link_libraries(video_core PUBLIC xbyak::xbyak)
+ endif()
+ 
+ if (CITRA_USE_PRECOMPILED_HEADERS)
+diff --color -rupN citra/src/web_service/announce_room_json.cpp citra/src/web_service/announce_room_json.cpp
+--- citra/src/web_service/announce_room_json.cpp	2023-01-20 00:44:13.892264831 +0800
++++ citra/src/web_service/announce_room_json.cpp	2023-01-20 00:41:12.801915797 +0800
+@@ -3,7 +3,7 @@
+ // Refer to the license.txt file included.
+ 
+ #include <future>
+-#include <json.hpp>
++#include <nlohmann/json.hpp>
+ #include "common/detached_tasks.h"
+ #include "common/logging/log.h"
+ #include "web_service/announce_room_json.h"
+diff --color -rupN citra/src/web_service/CMakeLists.txt citra/src/web_service/CMakeLists.txt
+--- citra/src/web_service/CMakeLists.txt	2023-01-20 00:44:13.892264831 +0800
++++ citra/src/web_service/CMakeLists.txt	2023-01-20 00:41:12.801915797 +0800
+@@ -15,7 +15,7 @@ add_library(web_service STATIC
+ create_target_directory_groups(web_service)
+ 
+ target_compile_definitions(web_service PRIVATE -DCPPHTTPLIB_OPENSSL_SUPPORT)
+-target_link_libraries(web_service PRIVATE common network json-headers httplib cpp-jwt)
++target_link_libraries(web_service PRIVATE common network nlohmann_json::nlohmann_json httplib::httplib cpp-jwt::cpp-jwt)
+ target_link_libraries(web_service PUBLIC ${OPENSSL_LIBS})
+ set_target_properties(web_service PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${ENABLE_LTO})
+ if (ANDROID)
+diff --color -rupN citra/src/web_service/telemetry_json.cpp citra/src/web_service/telemetry_json.cpp
+--- citra/src/web_service/telemetry_json.cpp	2023-01-20 00:44:13.892264831 +0800
++++ citra/src/web_service/telemetry_json.cpp	2023-01-20 00:41:12.801915797 +0800
+@@ -2,7 +2,7 @@
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
+-#include <json.hpp>
++#include <nlohmann/json.hpp>
+ #include "common/detached_tasks.h"
+ #include "common/web_result.h"
+ #include "web_service/telemetry_json.h"
+diff --color -rupN citra/src/web_service/verify_login.cpp citra/src/web_service/verify_login.cpp
+--- citra/src/web_service/verify_login.cpp	2023-01-20 00:44:13.892264831 +0800
++++ citra/src/web_service/verify_login.cpp	2023-01-20 00:41:12.801915797 +0800
+@@ -2,7 +2,7 @@
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
+-#include <json.hpp>
++#include <nlohmann/json.hpp>
+ #include "common/web_result.h"
+ #include "web_service/verify_login.h"
+ #include "web_service/web_backend.h"

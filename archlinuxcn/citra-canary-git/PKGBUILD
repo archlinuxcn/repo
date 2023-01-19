@@ -2,19 +2,21 @@
 
 _pkgname=citra
 pkgname=$_pkgname-canary-git
-epoch=1
+epoch=2
 pkgver=2371.r0.g66afc941f
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra-canary/tree/master"
 license=('GPL2')
-depends=('boost-libs' 'libfdk-aac' 'shared-mime-info' 'desktop-file-utils' 'ffmpeg' 'libusb' 'sdl2' 'qt5-base' 'qt5-multimedia' 'libxkbcommon-x11' 'qt5-wayland')
-makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt5-tools')
+depends=('boost-libs' 'shared-mime-info' 'ffmpeg' 'libusb' 'sdl2' 'qt5-multimedia' 'libxkbcommon-x11' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'fmt' 'dynarmic' 'crypto++')
+makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt5-tools' 'xbyak' 'cpp-jwt' 'nlohmann-json' 'cpp-httplib' 'qt5-wayland' 'desktop-file-utils')
 provides=('citra')
 conflicts=('citra')
-source=("$_pkgname::git+https://github.com/citra-emu/citra-canary#branch=master")
-md5sums=('SKIP')
+source=("$_pkgname::git+https://github.com/citra-emu/citra-canary"
+ext-lib.patch)
+md5sums=('SKIP'
+         'c374128f3352af1d2a5f2fd05235d388')
 
 pkgver() {
 	cd "$srcdir/$_pkgname"
@@ -23,9 +25,13 @@ pkgver() {
 
 prepare() {
 	cd "$srcdir/$_pkgname"
+    patch -p1 -i ../ext-lib.patch
+	mkdir -p build
 
-	git submodule init
-	git submodule update --init --recursive
+    git submodule update --init --remote externals/lodepng
+    git submodule update --init --remote externals/nihstro
+    git submodule update --init --remote externals/soundtouch
+    git submodule update --init --remote externals/teakra
 }
 
 build() {
@@ -50,15 +56,11 @@ build() {
       -DENABLE_FFMPEG_VIDEO_DUMPER=ON \
       -DENABLE_FFMPEG_AUDIO_DECODER=ON \
       -DUSE_SYSTEM_BOOST=ON \
-      -DUSE_SYSTEM_SDL2=ON \
+      -DCITRA_USE_SYSTEM_SDL2=ON \
       -DENABLE_MF=OFF \
-	  -DENABLE_FDK=ON
+      -DCITRA_TESTS=OFF \
+      -DCITRA_CHECK_SUBMODULES=OFF
 	make
-}
-
-check() {
-	cd "$srcdir/$_pkgname/build"
-	make test
 }
 
 package() {
