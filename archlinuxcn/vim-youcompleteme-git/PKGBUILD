@@ -37,12 +37,12 @@ _neovim="$NEOVIM_YOUCOMPLETEME"
 
 pkgname=vim-youcompleteme-git
 pkgver=r3059.50379d35
-pkgrel=2
+pkgrel=3
 pkgdesc='A code-completion engine for Vim'
 arch=('x86_64')
 url='https://ycm-core.github.io/YouCompleteMe/'
 license=('GPL3')
-depends=('vim' 'python>=3.6' 'python-watchdog' 'python-bottle' 'clang>=11.0')
+depends=('vim' 'python>=3.6' 'python-watchdog' 'python-bottle' 'clang')
 makedepends=('git' 'cmake' 'pybind11')
 optdepends=(
   'gopls: Go semantic completion'
@@ -64,8 +64,8 @@ if [[ ${_use_system_clang} == "ON" ]]; then
 else
   source=(git+https://github.com/ycm-core/YouCompleteMe.git
           git+https://github.com/ycm-core/ycmd.git
-          clangd-13.0.0.tar.bz2::https://github.com/ycm-core/llvm/releases/download/13.0.0/clangd-13.0.0-x86_64-unknown-linux-gnu.tar.bz2
-          libclang-13.0.0.tar.bz2::https://github.com/ycm-core/llvm/releases/download/13.0.0/libclang-13.0.0-x86_64-unknown-linux-gnu.tar.bz2)
+          clangd-15.0.1.tar.bz2::https://github.com/ycm-core/llvm/releases/download/15.0.1/clangd-15.0.1-x86_64-unknown-linux-gnu.tar.bz2
+          libclang-15.0.1.tar.bz2::https://github.com/ycm-core/llvm/releases/download/15.0.1/libclang-15.0.1-x86_64-unknown-linux-gnu.tar.bz2)
   sha256sums=('SKIP'
               'SKIP'
               '10a64c468d1dd2a384e0e5fd4eb2582fd9f1dfa706b6d2d2bb88fb0fbfc2718d'
