@@ -17,4 +17,7 @@ def pre_build():
         if line.startswith('XWIDGETS='):
             line = 'XWIDGETS="YES"'
 
+        if line.startswith('SITTER='):
+            line = 'SITTER="YES"'
+
         print(line)
