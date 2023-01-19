@@ -3,7 +3,7 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.3838.r0.g3ed489f35c
+pkgver=1.7.3922.r0.g41a47f99f
 pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
@@ -18,7 +18,6 @@ license=(
 install=post.install
 
 OPTIONS+=(
-  debug !strip
   epoch = 1
 )
 
@@ -45,9 +44,14 @@ depends=(
   soundtouch
   wayland
   zstd
+  ffmpeg
+  fmt
 )
 makedepends=(
   cmake
+  clang
+  lld
+  llvm
   git
   xorgproto
   ninja
@@ -66,17 +70,12 @@ git+https://github.com/PCSX2/pcsx2.git
 )
 
 sha256sums=('SKIP'
-            'd345759a6ca19023ba9775c6f4b847d5510c38eea83406571dc0d2fc72ec3d3a')
+            'b69b3369e62bee6b6063b49621144343bb9ba81fd51f38e5e9bee4efbc731230')
 prepare()
 {
   cd $srcdir/pcsx2
   git submodule update --init --recursive
   git apply -3 "${srcdir}/0001-Fix-resources-Fix-CMake.patch"
-
-  export CMAKE_C_COMPILER=/usr/bin/clang
-  export CMAKE_CXX_COMPILER=/usr/bin/clang++
-  export CMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld"
-  export CMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld"
 }
 
 pkgver()
@@ -91,18 +90,23 @@ build()
   cd build
 
   cmake ../pcsx2 \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+    -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
     -DWAYLAND_API=ON \
     -DQT_BUILD=ON \
-    -DXDG_STD=TRUE \
     -DUSE_VULKAN=ON \
     -DDISABLE_ADVANCE_SIMD=ON \
     -GNinja \
-    -DPACKAGE_MODE=ON \
-    -DDISABLE_SETCAP=ON
+    -DPACKAGE_MODE=ON
   ninja -j$(nproc)
+
+  cd ..
+  cp -r pcsx2/.github/workflows/scripts/linux/pcsx2-qt.desktop build/bin/PCSX2.desktop
 }
 
 package()
