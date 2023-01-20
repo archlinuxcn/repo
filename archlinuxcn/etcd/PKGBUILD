@@ -7,8 +7,8 @@
 
 pkgbase=etcd
 pkgname=(etcd etcdctl etcdutl)
-pkgver=3.5.6
-pkgrel=2
+pkgver=3.5.7
+pkgrel=1
 arch=('x86_64' 'armv6h' 'armv7h')
 url='https://github.com/etcd-io/etcd'
 license=('Apache')
@@ -18,7 +18,7 @@ source=(
 	"${pkgname}"-"${pkgver}".tar.gz::https://github.com/etcd-io/"${pkgname}"/archive/v"${pkgver}".tar.gz
 	10-EnvironmentFile.conf
 	etcd.env)
-sha512sums=('68b5c2210735240d3386e06aea783365f3cacbdf92cd389df1e65c45ddb5ddf646eaceb3085e40fbb65956e4292654050f78f240ee85fd389278375053861a38'
+sha512sums=('d865f23bd7dc664a73e3fbb78f812d73aba2437aa1430a1ebbfe665d8e2bdee0e4784c4e36f12c58e3407273e0e6c0ac12fa65b1f268beda86e54a359fd0d372'
             'fa85d772929ea7e0a18bddd4b9c41d043a7f75e560eacfab67b979985e510dea694c332b5130570e47101c1ec5c25925872c6a581568390e7b141d9c6c26aae2'
             'a4843be558e401fa6c612c88059fbe83025eb86077bec70331bc43b7dd48cc09fd186f0ea9d4b45c802a617d5f771752bb2ed8113ce02a6b6eaaabd926e227e9')
 
