@@ -72,7 +72,7 @@ build() {
   python setup.py build
   # built tf plugin
   cmake -B ${srcdir}/build-tf \
-    -DCUDA_VERSION=11.7 \
+    -DCUDA_VERSION=11.8 \
     -S ${srcdir}/${pkgname}/dali_tf_plugin
   make -C ${srcdir}/build-tf
 }
