@@ -4,7 +4,7 @@ pkgrel=1
 pkgdesc='声笔系列码配置'
 arch=(any)
 source=('fetch-release.sh' 'sbxlm-init')
-sha256sums=('83a0814043600c31743c09917b7ffc7d1e22b7a055950b85ce494700947d6923'
+sha256sums=('8a63e188b5f0601d881503d7d058362eda5fcfdfcf88fa6b4010c8f063c5689e'
             '496953ce12837de3f575c913a5317996002bcbf8ba2337f697b2efe15d2e0e5e')
 makedepends=('jq' 'unzip')
 optdepends=('librime-sbxlm-git' 'fcitx5-rime')
@@ -14,7 +14,7 @@ groups=(sbxlm)
 
 prepare () {
   cd "$srcdir"
-  curl -L $(./fetch-release.sh WIN url) -o assets.zip
+  curl -L $(./fetch-release.sh url $pkgver) -o assets.zip
   unzip -uo ./assets.zip -d ./assets
   cd $srcdir/assets/sbxlm
   chmod 755 $srcdir/assets/sbxlm

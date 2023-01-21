@@ -1,20 +1,28 @@
 #!/usr/bin/bash
-variant=$1
-prop=$2 # url or version
+variant=WIN
+sub_command=$1
 
-releases=$(curl -X GET --header 'Content-Type: application/json;chartset=UTF-8' 'https://gitee.com/api/v5/repos/sbxlm/sbxlm/releases/latest')
-# switch prop
-case $prop in
+case $sub_command in
+    # retrieve the latest tag
+    latest-tag)
+        # echo in green to stderr
+        echo -e "\033[0;32mRetrieving latest tag...\033[0m" >&2
+        latests_json=$(curl -X GET --header 'Content-Type: application/json;chartset=UTF-8' 'https://gitee.com/api/v5/repos/sbxlm/sbxlm/releases/latest')
+        tag=$(echo $latests_json | jq -r ".tag_name")
+        echo $tag
+        ;;
+    # retrieve the sbxlm assets with the given tag
     url)
-        download_url=$(echo $releases | jq -r ".assets[] | select(.name) | select(.name | contains(\"$variant\")) | .browser_download_url")
+        tag_name=$2
+        echo -e "\033[0;32mRetrieving assets for tag $tag_name...\033[0m" >&2
+        resp=$(curl -X GET --header 'Content-Type: application/json;chartset=UTF-8' "https://gitee.com/api/v5/repos/sbxlm/sbxlm/releases/tags/$tag_name")
+        download_url=$(echo $resp | jq -r ".assets[] | select(.name) | select(.name | contains(\"$variant\")) | .browser_download_url")
         echo $download_url
         ;;
-    version)
-        version=$(echo $releases | jq -r ".tag_name")
-        echo $version
-        ;;
     *)
-        echo "Invalid property"
+        # show usage
+        echo "Usage: fetch-release.sh latest-tag"
+        echo "Usage: fetch-release.sh url <tag>"
         exit 1
         ;;
 esac
