@@ -14,6 +14,6 @@ post_build_script: |
 
 update_on:
   - source: regex
-    url: https://gitee.com/sbxlm/sbxlm/releases
+    url: https://gitee.com/api/v5/repos/sbxlm/sbxlm/releases/latest
     encoding: utf8
-    regex: 声笔系列WIN版(\d{6})\.zip
+    regex: "\"tag_name\":\"(\\d{8})\""
