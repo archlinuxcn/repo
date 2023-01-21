@@ -1,12 +1,19 @@
+pre_build_script: |
+    update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+
+post_build_script: |
+    git_pkgbuild_commit()
+    update_aur_repo()
+
 repo_depends:
   - i3lock-color
 
 update_on:
   - source: github
-    github: pavanjadhaw/betterlockscreen
+    github: betterlockscreen/betterlockscreen
     use_latest_release: true
   - source: manual
-    manual: 1.3
+    manual: 1.3.1
 
 maintainers:
   - github: dctxmei
