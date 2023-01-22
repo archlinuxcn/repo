@@ -1,0 +1,32 @@
+# Maintainer: Shengyu Zhang <la@archlinux.cn>
+# Contributor: Brenden Hoffman <hbrenden@fastmail.com>
+
+pkgname=fzf-tab-git
+_pkgname=fzf-tab
+pkgver=r199.220bee3
+pkgrel=3
+pkgdesc="Replace zsh's default completion selection menu with fzf (git version)"
+url='https://github.com/Aloxaf/fzf-tab'
+arch=('any')
+license=('MIT')
+depends=('zsh' 'fzf')
+makedepends=('git')
+conflicts=('fzf-tab-bin-git')
+source=("git+https://github.com/Aloxaf/fzf-tab.git")
+sha512sums=('SKIP')
+install="${_pkgname}.install"
+
+pkgver() {
+  cd "$srcdir/$_pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+  cd "$srcdir/$_pkgname"
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -dm755 "${pkgdir}/usr/share/zsh/plugins/${pkgname}"
+  cp -dr --no-preserve=ownership {fzf-tab.zsh,lib,modules,test} \
+    "${pkgdir}/usr/share/zsh/plugins/${pkgname}"
+  ln -s "fzf-tab.zsh" \
+    "${pkgdir}/usr/share/zsh/plugins/${pkgname}/fzf-tab.plugin.zsh"
+}

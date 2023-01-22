@@ -1,0 +1,8 @@
+post_install() {
+  cat << EOF
+To activate fzf-tab, add the following line after loading compinit, and before plugins which will wrap widgets, such as zsh-autosuggestions or fast-syntax-highlighting:
+    source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+EOF
+}
+
+# vim:set ts=2 sw=2 et:
