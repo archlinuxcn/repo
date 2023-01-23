@@ -5,8 +5,8 @@
 # Contributor: TuxSpirit <tuxspirit AT archlinux DOT fr>
 
 pkgname=rar
-pkgver=6.12.0
-__pkgver=612
+pkgver=6.20.0
+__pkgver=620
 pkgrel=1
 pkgdesc="A command-line port of the rar compression utility"
 url="https://www.rarlab.com"
@@ -20,8 +20,8 @@ source=('rar.1')
 source_i686+=("https://www.rarlab.com/rar/rarlinux-x32-${__pkgver}.tar.gz")
 source_x86_64+=("https://www.rarlab.com/rar/rarlinux-x64-${__pkgver}.tar.gz")
 sha512sums=('d78fb6d77a3e2c088cdf0586b6346c0025fb18be04f79cc6c081e49a05ba48347d55e1ff62c753c13377e2985978cf0bfdb6c60496a1e298974c70687194b3b6')
-sha512sums_i686=('8f67a365145d6fe7c9db1458a67f29a6b878f1969842f0cb43f639af1f8c304b0f4174f83b070f7d821316fdd9dcd2e1788bca2d6af5ef60fdb951924ebc71a4')
-sha512sums_x86_64=('bccb64b077fa044a920f02a826bafd4a07c446f2ff2ce88b7c8f27d49c6ac48108711880ad43aac89c034f582979cad8b332d675ea483eca9f76bcd892949423')
+sha512sums_i686=('e84571752e92f940249e6db95fcfc9f686351546935d07388b85c74da8df862ecf4d935c68eee0f99c62430c37d855f63708ab874ab87ed7e68a77e81e14b30e')
+sha512sums_x86_64=('f9cd780c77241bbe75711d82b7180178c2f647a062b31401e65dd5be7a98ab4ed48577b9b471e8636cb32c62b3c4cfab798e9687ba191819e1b674747ce59574')
 
 
 package() {
