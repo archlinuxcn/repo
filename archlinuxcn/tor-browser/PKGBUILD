@@ -17,7 +17,7 @@
 
 
 pkgname='tor-browser'
-pkgver='12.0.1'
+pkgver='12.0.2'
 pkgrel=1
 pkgdesc='Tor Browser Bundle: anonymous browsing using Firefox and Tor'
 url='https://www.torproject.org/projects/torbrowser.html'
