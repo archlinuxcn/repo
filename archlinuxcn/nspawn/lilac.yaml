@@ -1,0 +1,10 @@
+pre_build_script: aur_pre_build(maintainers=['k4yt3x'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: nspawn
+
+maintainers:
+  - github: dctxmei
