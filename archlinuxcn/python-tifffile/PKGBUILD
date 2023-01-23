@@ -3,7 +3,7 @@
 
 _name=tifffile
 pkgname=python-tifffile
-pkgver=2022.10.10
+pkgver=2023.1.23.1
 pkgrel=1
 pkgdesc="Read and write image data from and to TIFF files"
 arch=('any')
@@ -19,7 +19,7 @@ makedepends=(
   python-setuptools
 )
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha256sums=('50b61ba943b866d191295bc38a00191c9fdab23ece063544c7f1a264e3f6aa8e')
+sha256sums=('a3d0c149cc7faef796fd598856314f43fdcd0895c79c3cb662a38c1c1bd49572')
 
 build() {
   cd "${srcdir}/${_name}-${pkgver}"
