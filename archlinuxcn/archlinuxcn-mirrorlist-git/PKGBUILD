@@ -1,8 +1,9 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 # Contributor: Stephen Zhang <zsrkmyn at gmail dot com>
 _mirrorlist_name=archlinuxcn-mirrorlist
-pkgname=$_mirrorlist_name-git
-pkgver=20221017
+pkgbase=$_mirrorlist_name-git
+pkgname=($_mirrorlist_name-git $_mirrorlist_name-debuginfod-git)
+pkgver=20230125
 pkgver() {
   date +'%Y%m%d'
 }
@@ -18,10 +19,17 @@ md5sums=('SKIP')
 
 _gitname=mirrorlist-repo
 
-package() {
+package_archlinuxcn-mirrorlist-git() {
   cd "$srcdir/$_gitname"
   mkdir -p "$pkgdir/etc/pacman.d/"
   cp "$_mirrorlist_name" "$pkgdir/etc/pacman.d/"
+}
+
+package_archlinuxcn-mirrorlist-debuginfod-git() {
+  pkgdesc="Arch Linux CN repo mirror list for use by debuginfod"
+  depends=(debuginfod)
+  cd "$srcdir/$_gitname"
+  install -Dm644 archlinuxcn.urls "$pkgdir"/etc/debuginfod/archlinuxcn.urls
 }
 
 # vim:set ts=2 sw=2 et:
