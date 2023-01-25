@@ -1,0 +1,21 @@
+maintainers:
+  - github: Y7n05h
+
+build_prefix: extra-x86_64
+
+pre_build_script: |
+  update_pkgrel()
+  vcs_update()
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: pierrechevalier83/find_unicode
+  - source: httpheader
+    url: https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt
+    header: Last-Modified
+    regex: ".*"
+  - source: github
+    github: ryanoasis/nerd-fonts
+    path: css/nerd-fonts-generated.css

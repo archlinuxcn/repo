@@ -1,0 +1,55 @@
+# Maintainer: Y7n05h < echo WTduMDVoQHk3bjA1aC5kZXY= | base64 -d >
+# Contributor: Pierre Viseu Chevalier <pierrechevalier83@gmail.com>
+
+pkgname=find-unicode-git
+_pkgname=fu
+pkgver=0.4.0.r42.g3afc33a.20230125
+pkgrel=1
+pkgdesc='Find unicode characters from the comfort of your shell'
+arch=('x86_64')
+url='https://github.com/pierrechevalier83/find_unicode'
+license=('MIT')
+makedepends=('git' 'cargo')
+provides=("$_pkgname" "find-unicode")
+conflicts=("$_pkgname" "find-unicode")
+source=(
+	"$_pkgname::git+$url"
+	"UnicodeData.txt::https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+	"NerdFontsData.css::https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/css/nerd-fonts-generated.css"
+)
+sha256sums=(
+	'SKIP'
+	'806e9aed65037197f1ec85e12be6e8cd870fc5608b4de0fffd990f689f376a73'
+	'f351cb637f0161b85442ae01eb478671c3281795a6a500be2cb5bfb6f728f596'
+)
+prepare() {
+
+	cp NerdFontsData.css $_pkgname/src
+	cp UnicodeData.txt $_pkgname/src
+	cd $_pkgname
+
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	cargo build --frozen --bin gen_data
+
+	_data_path=$(./target/debug/gen_data | tail -n1 | sed 's/\"//g')
+	echo path is $_data_path
+	cp $_data_path src
+}
+pkgver() {
+	cd "$_pkgname"
+	echo $(grep '^version =' Cargo.toml | head -n1 | cut -d\" -f2).r$(git rev-list --count HEAD).g$(git describe --always).$(date +%Y%m%d)
+}
+
+build() {
+	cd "$_pkgname"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	cargo build --frozen --release --all-features
+}
+
+package() {
+	cd "$_pkgname"
+	install -Dm755 "target/release/$_pkgname" "$pkgdir/usr/bin/$_pkgname"
+}
