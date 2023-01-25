@@ -2,7 +2,7 @@
 # Contributor: Philip Goto <philip.goto@gmail.com>, WithTheBraid <the-one@with-the-braid.cf>
 
 pkgname=flutter
-pkgver=3.3.10
+pkgver=3.7.0
 pkgrel=1
 pkgdesc="A new mobile app SDK to help developers and designers build modern mobile apps for iOS and Android."
 arch=("x86_64" "aarch64")
@@ -19,7 +19,7 @@ source=(
   "${pkgname}.sh"
   "${pkgname}.csh"
 )
-sha256sums=('d24e83f7a6b829d163feeef1abfcc30869f0c5d1af93e9917426265dad507024'
+sha256sums=('51160abac1d0d82b45647be6b2a6ed2d3827d51c3920f2c8ebf3ea8cebe6f484'
             '1dea1952d386c43948b9970382c2da5b65b7870684b8ad2ad89124e873aa485a'
             '7ef10d753cfaac52d243549764a793f44f8284a1f4b11715ccd2fa915b026a6f')
 
