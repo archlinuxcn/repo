@@ -2,7 +2,7 @@
 
 _pkgname=huggingface_hub
 pkgname=python-huggingface-hub
-pkgver=0.11.1
+pkgver=0.12.0
 pkgrel=1
 epoch=1
 pkgdesc='All the open source things related to the Hugging Face Hub'
@@ -22,7 +22,7 @@ makedepends=(
 )
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/huggingface/huggingface_hub/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('db06e8b770991dfd17c24215bb0e89bcc7235ed4b9274ffcc351fcba75341be70043eade7563cf0d53a5380b7d8ea19d56d0f8ce4ea4be8b116a94600954bfb2')
+sha512sums=('0a71598484a02567b31702a85017ca71d068ac67ed31938e489a3ee79a1eb9e1d8ae4e31400a104f88d718fe7684f4e3c37a27625551e4e31dc78b0809ded3fe')
 
 build() {
   cd "${_pkgname}-${pkgver}"
