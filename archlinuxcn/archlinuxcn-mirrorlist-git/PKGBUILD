@@ -22,6 +22,8 @@ package() {
   cd "$srcdir/$_gitname"
   mkdir -p "$pkgdir/etc/pacman.d/"
   cp "$_mirrorlist_name" "$pkgdir/etc/pacman.d/"
+  mkdir -p "$pkgdir/etc/debuginfod/"
+  cp "archlinuxcn.urls" "$pkgdir/etc/debuginfod/"
 }
 
 # vim:set ts=2 sw=2 et:
