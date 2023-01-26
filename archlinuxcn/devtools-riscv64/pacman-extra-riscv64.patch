@@ -1,0 +1,27 @@
+--- /usr/share/devtools/pacman-extra.conf	2023-01-06 03:00:58.000000000 +0800
++++ pacman-extra-riscv64.conf	2023-01-24 22:31:14.871571646 +0800
+@@ -71,19 +71,19 @@
+ # after the header, and they will be used before the default mirrors.
+ 
+ #[testing]
+-#Include = /etc/pacman.d/mirrorlist
++#Server = https://archriscv.felixc.at/repo/$repo
+ 
+ [core]
+-Include = /etc/pacman.d/mirrorlist
++Server = https://archriscv.felixc.at/repo/$repo
+ 
+ [extra]
+-Include = /etc/pacman.d/mirrorlist
++Server = https://archriscv.felixc.at/repo/$repo
+ 
+ #[community-testing]
+-#Include = /etc/pacman.d/mirrorlist
++#Server = https://archriscv.felixc.at/repo/$repo
+ 
+ [community]
+-Include = /etc/pacman.d/mirrorlist
++Server = https://archriscv.felixc.at/repo/$repo
+ 
+ # An example of a custom package repository.  See the pacman manpage for
+ # tips on creating your own repositories.

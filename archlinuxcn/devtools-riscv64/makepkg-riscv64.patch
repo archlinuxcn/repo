@@ -1,0 +1,21 @@
+--- /usr/share/devtools/makepkg-x86_64.conf	2023-01-06 03:00:58.000000000 +0800
++++ makepkg-riscv64.conf	2023-01-16 23:30:46.599890442 +0800
+@@ -35,14 +35,14 @@
+ # ARCHITECTURE, COMPILE FLAGS
+ #########################################################################
+ #
+-CARCH="x86_64"
+-CHOST="x86_64-pc-linux-gnu"
++CARCH="riscv64"
++CHOST="riscv64-unknown-linux-gnu"
+ 
+ #-- Compiler and Linker Flags
+ #CPPFLAGS=""
+-CFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions \
++CFLAGS="-march=rv64gc -mabi=lp64d -O2 -pipe -fno-plt -fexceptions \
+         -Wp,-D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security \
+-        -fstack-clash-protection -fcf-protection"
++        -fstack-clash-protection"
+ CXXFLAGS="$CFLAGS -Wp,-D_GLIBCXX_ASSERTIONS"
+ LDFLAGS="-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now"
+ LTOFLAGS="-flto=auto"
