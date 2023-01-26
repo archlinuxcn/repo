@@ -11,7 +11,7 @@ pkgname=fritzing
 # while there is also "d" for development versions. This would not be correctly
 # parsed by `pkgver` anyway (d > b), so let's leave out the b suffix entirely.
 pkgver=0.9.10
-pkgrel=2
+pkgrel=3
 
 # Tag version can be obtained from github release page. Sometimes this is the
 # version number itself, sometimes some CD-magicnumber thing. There can be
@@ -42,7 +42,7 @@ source=("git+https://github.com/fritzing/fritzing-app.git#commit=${_gitrev}"
         0001-Quick-Dirty-patch-to-allow-finding-quazip-qt5-on-Arc.patch)
 sha256sums=('SKIP'
             'SKIP'
-            '38de6f5092987b9d53ced366f1b0fb77981f3cf45159c2d204ac3c72b85c456b')
+            '65e0818e959f07209928907ddeb76c3e73229fdc0a049c433c842621d59e6e32')
 
 prepare() {
   cd "${srcdir}"/fritzing-app
