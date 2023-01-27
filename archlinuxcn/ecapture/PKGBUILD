@@ -7,7 +7,7 @@ arch=("x86_64" "aarch64")
 url="https://github.com/gojue/ecapture"
 license=("Apache")
 depends=("glibc")
-makedepends=("clang" "llvm" "go" "bpf" "git")
+makedepends=("clang" "go" "bpf" "git")
 source=("${pkgname}::git+${url}#tag=v${pkgver}")
 sha256sums=('SKIP')
 prepare() {
