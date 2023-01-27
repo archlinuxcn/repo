@@ -4,7 +4,7 @@
 options=(!lto)
 pkgname=("wezterm-git")
 pkgdesc="A terminal emulator implemented in Rust, using OpenGL ES 2 for rendering."
-pkgver=20230125.180646.f15bb186
+pkgver=20230126.170021.36519f0d
 pkgrel=1
 arch=("x86_64" "i686")
 url="https://github.com/wez/wezterm"
@@ -33,36 +33,46 @@ source=(
 sha256sums=("SKIP" "SKIP" "SKIP" "SKIP" "SKIP")
 
 prepare() {
-  cd $srcdir/wezterm
+  cd "$srcdir/wezterm"
   git submodule init
-  git config -f .gitmodules "submodule.harfbuzz/harfbuzz.url" $srcdir/harfbuzz
-  git config -f .gitmodules "submodule.freetype/libpng.url" $srcdir/libpng
-  git config -f .gitmodules "submodule.deps/freetype/zlib.url" $srcdir/zlib
-  git config -f .gitmodules "submodule.freetype2.url" $srcdir/freetype2
+  git config -f .gitmodules "submodule.harfbuzz/harfbuzz.url" "$srcdir/harfbuzz"
+  git config -f .gitmodules "submodule.freetype/libpng.url" "$srcdir/libpng"
+  git config -f .gitmodules "submodule.deps/freetype/zlib.url" "$srcdir/zlib"
+  git config -f .gitmodules "submodule.freetype2.url" "$srcdir/freetype2"
   git submodule update
   cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
 
 pkgver() {
-  cd $srcdir/wezterm
+  cd "$srcdir/wezterm" || exit 1
   git -c "core.abbrev=8" show -s "--format=%cd-%h" "--date=format:%Y%m%d-%H%M%S" | tr - .
 }
 
 build() {
-  cd $srcdir/wezterm
+  cd "$srcdir/wezterm" || exit 1
   bash ci/check-rust-version.sh
   cargo build --frozen --release
+  tic -x -o "$srcdir/terminfo" "$srcdir/wezterm/termwiz/data/wezterm.terminfo"
 }
 
 package() {
-  cd $srcdir/wezterm
-  install -Dsm755 target/release/wezterm $pkgdir/usr/bin/wezterm
-  install -Dsm755 target/release/wezterm-gui $pkgdir/usr/bin/wezterm-gui
-  install -Dsm755 target/release/wezterm-mux-server $pkgdir/usr/bin/wezterm-mux-server
-  install -Dsm755 target/release/strip-ansi-escapes $pkgdir/usr/bin/strip-ansi-escapes
-  install -Dm644 assets/icon/terminal.png $pkgdir/usr/share/icons/hicolor/128x128/apps/org.wezfurlong.wezterm.png
-  install -Dm644 assets/wezterm.desktop $pkgdir/usr/share/applications/org.wezfurlong.wezterm.desktop
-  install -Dm644 assets/wezterm.appdata.xml $pkgdir/usr/share/metainfo/org.wezfurlong.wezterm.appdata.xml
+  cd "$srcdir/wezterm" || exit 1
+
+  install -Dsm755 target/release/wezterm "$pkgdir/usr/bin/wezterm"
+  install -Dsm755 target/release/wezterm-gui "$pkgdir/usr/bin/wezterm-gui"
+  install -Dsm755 target/release/wezterm-mux-server "$pkgdir/usr/bin/wezterm-mux-server"
+  install -Dsm755 target/release/strip-ansi-escapes "$pkgdir/usr/bin/strip-ansi-escapes"
+
+  install -Dm644 assets/icon/terminal.png "$pkgdir/usr/share/icons/hicolor/128x128/apps/org.wezfurlong.wezterm.png"
+  install -Dm644 assets/wezterm.desktop "$pkgdir/usr/share/applications/org.wezfurlong.wezterm.desktop"
+  install -Dm644 assets/wezterm.appdata.xml "$pkgdir/usr/share/metainfo/org.wezfurlong.wezterm.appdata.xml"
+  install -Dm644 assets/wezterm-nautilus.py "$pkgdir/usr/share/nautilus-python/extensions/wezterm-nautilus.py"
+  install -Dm644 ../terminfo/w/wezterm "$pkgdir/usr/share/terminfo/w/wezterm"
+
+  install -Dm644 assets/shell-integration/wezterm.sh "$pkgdir/etc/profile.d/wezterm.sh"
+  install -Dm644 assets/shell-completion/bash "$pkgdir/usr/share/bash-completion/completions/wezterm"
+  install -Dm644 assets/shell-completion/zsh "$pkgdir/usr/share/zsh/site-functions/_wezterm"
+  install -Dm644 assets/shell-completion/fish "$pkgdir/usr/share/fish/completions/wezterm.fish"
+
   install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
-
