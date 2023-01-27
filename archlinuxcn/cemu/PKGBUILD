@@ -1,24 +1,24 @@
 # Maintainer: Jeremy Kescher <jeremy@kescher.at>
 
 pkgname=cemu
-pkgver=2.0.223
-pkgrel=1
-pkgdesc='Software to emulate Wii U games and applications on PC (with cutting edge Linux patches)'
+pkgver=2.0.274
+pkgrel=3
+pkgdesc='Software to emulate Wii U games and applications on PC'
 arch=(x86_64)
 url=https://cemu.info
 license=(MPL2)
 options+=(!strip)
 depends=(
 	# unbundled vcpkg
-	'fmt>=9.1' 'sdl2>=2.0.22' 'pugixml>=1.12.1' 'libzip>=1.9.2' 'libpng>=1.6.37' 'wxwidgets-gtk3>=3.2'
+	'boost-libs>=1.79' 'fmt>=9.1' 'libzip>=1.9.2' 'libpng>=1.6.37' 'pugixml>=1.12.1' 'sdl2>=2.0.22' 'wxwidgets-gtk3>=3.2' 'wayland'
+	'llvm-libs>=12'
 )
 makedepends=(
-	git 'cmake>=3.21.1'
-	# clang
-	$([[ $CC+$CXX == *clang* ]] && echo 'clang>=12 llvm>=12')
+	# build setup
+	git 'cmake>=3.21.1' 'clang>=12' 'llvm>=12' ninja
 	# unbundled vcpkg
-	rapidjson 'boost>=1.79' 'glslang>=11.8' 'glm>=0.9.9.8'
-	# cemu
+	'boost>=1.79' 'glslang>=11.8' 'glm>=0.9.9.8' rapidjson
+	# direct cemu dependencies
 	nasm 'vulkan-headers>=1.3.225'
 	# wxwidgets
 	glu
@@ -31,7 +31,7 @@ optdepends=(
 )
 install=cemu.install
 source=(
-	git+https://github.com/cemu-project/Cemu#commit=138510106c63ff697d31fe8e57391e245e477b5c # v2.0-14
+	git+https://github.com/cemu-project/Cemu#tag=v2.0-23
 	# submodules
 	git+https://github.com/mozilla/cubeb#commit=dc511c6b3597b6384d28949285b9289e009830ea
 	git+https://github.com/ocornut/imgui#commit=8a44c31c95c8e0217f6e1fc814cbbbcca4981f14
@@ -39,18 +39,13 @@ source=(
 	# cubeb submodules
 	git+https://github.com/arsenm/sanitizers-cmake#commit=aab6948fa863bc1cbe5d0850bc46b9ef02ed4c1a
 	git+https://github.com/google/googletest#commit=800f5422ac9d9e0ad59cd860a2ef3a679588acb4
-	# upstream proposed patches
-	overlay.diff # 6aa7a0c7b2003f625bfecd64f6143a10605234b2 (https://github.com/cemu-project/Cemu/pull/142)
-	gui.diff # ffed93a69bb8f38a7c81624411bf8be0b45b8646 (https://github.com/cemu-project/Cemu/pull/439)
 )
 sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'SKIP'
-            'f25d13fe76cc6a0b475f0131211a951288160ddae92cd7a815f5aea61d7cfc0f'
-            'dcb405fd9b77d73eee4a9591c606a5b7d121999b936920520518e70dcb16ea0e')
+            'SKIP')
 
 pkgver() {
 	cd Cemu
@@ -91,31 +86,26 @@ prepare() {
 
 	# gamelist column width improvement
 	sed -i '/InsertColumn/s/kListIconWidth/&+8/;/SetColumnWidth/s/last_col_width/&-1/' src/gui/components/wxGameList.cpp
-
-	rm -rf src/util/SystemInfo
-	git apply "$srcdir/overlay.diff"
-	sed -i '/add_library/aSystemInfo/SystemInfo.cpp SystemInfo/SystemInfoLinux.cpp' src/util/CMakeLists.txt
-
-	git apply "$srcdir/gui.diff"
 }
 
 build() {
-	# prefer clang (faster)
-	if [[ $(clang --version 2> /dev/null | sed -E '1!d;s/^clang version ([0-9]+)\.[0-9]+\.[0-9]+$/\1/') -ge 12 ]] &&
-	   [[ $(llvm-config --version 2> /dev/null | sed -E 's/^([0-9]+)\.[0-9]+\.[0-9]+$/\1/') -ge 12 ]]; then
-		[[ -z $CC  ]] && export CC=$(which clang)
-		[[ -z $CXX ]] && export CXX=$(which clang++)
-	fi
+	# Upstream prefers a build with clang+llvm and Ninja.
 
 	cd Cemu
 	rm -f build/CMakeCache.txt
-	cmake -B build \
-	      $(which ninja &> /dev/null && echo '-G Ninja') \
-	      -DCMAKE_CXX_FLAGS="$CXXFLAGS -w" -Wno-dev \
-	      -DENABLE_VCPKG=OFF \
-	      -DPORTABLE=OFF \
-	      -DCMAKE_BUILD_TYPE=Release
-	$(which ninja 2> /dev/null || which make) -C build $([[ "$MAKEFLAGS" == *-j* ]] && echo "$MAKEFLAGS" || echo -j $(nproc))
+	local cmake_args=(
+		-B build
+		-G Ninja
+		-Wno-dev
+		-DCMAKE_BUILD_TYPE=Release
+		-DCMAKE_C_COMPILER=clang
+		-DCMAKE_CXX_COMPILER=clang++
+		-DCMAKE_CXX_FLAGS="$CXXFLAGS -w"
+		-DENABLE_VCPKG=OFF
+		-DPORTABLE=OFF
+	)
+	cmake "${cmake_args[@]}"
+	cmake --build build
 }
 
 package() {
@@ -130,6 +120,6 @@ package() {
 
 	install -Dm644 src/resource/logo_icon.png -T "$pkgdir/usr/share/icons/hicolor/128x128/apps/cemu.png"
 	# https://github.com/cemu-project/Cemu/issues/92
-	sed -i -e '/^Icon=/cIcon=cemu' -e '/^Exec=/cExec=env GDK_BACKEND=x11 cemu' dist/linux/info.cemu.Cemu.desktop
+	sed -i -e '/^Icon=/cIcon=cemu' -e '/^Exec=Cemu/cExec=cemu' dist/linux/info.cemu.Cemu.desktop
 	install -Dm644 dist/linux/info.cemu.Cemu.desktop -T "$pkgdir/usr/share/applications/cemu.desktop"
 }
