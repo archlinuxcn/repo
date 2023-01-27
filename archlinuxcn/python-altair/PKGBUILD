@@ -1,6 +1,6 @@
 _name=altair
 pkgname=python-altair
-pkgver=4.2.0
+pkgver=4.2.1
 pkgrel=1
 pkgdesc="Altair: A declarative statistical visualization library for Python."
 arch=(any)
@@ -8,16 +8,16 @@ url="http://altair-viz.github.io"
 license=('BSD 3-clause')
 depends=('python-entrypoints' 'python-jinja' 'python-jsonschema' 'python-numpy' 'python-pandas' 'python-toolz')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/altair-4.2.0.tar.gz")
-sha256sums=('d87d9372e63b48cd96b2a6415f0cf9457f50162ab79dc7a31cd7e024dd840026')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/altair-4.2.1.tar.gz")
+sha256sums=('4939fd9119c57476bf305af9ca0bd1aa7779b2450b874d3623660e879d0fcad1')
 
 build() {
-  cd "$srcdir/altair-4.2.0"
+  cd "$srcdir/altair-4.2.1"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/altair-4.2.0"
+  cd "$srcdir/altair-4.2.1"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install any world-writable or root-readable-only files
