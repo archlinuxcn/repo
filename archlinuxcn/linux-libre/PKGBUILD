@@ -15,7 +15,7 @@ _replacesoldkernels=() # '%' gets replaced with kernel suffix
 _replacesoldmodules=() # '%' gets replaced with kernel suffix
 
 pkgbase=linux-libre
-pkgver=5.18.14
+pkgver=6.1.5
 pkgrel=1
 pkgdesc='Linux-libre'
 rcnver=5.18.12
@@ -29,7 +29,7 @@ makedepends=(
 )
 makedepends_armv7h=(uboot-tools vboot-utils dtc) # required by linux-libre-chromebook
 options=('!strip')
-_srcname=linux-5.18
+_srcname=linux-6.1
 source=(
   "https://linux-libre.fsfla.org/pub/linux-libre/releases/${_srcname##*-}-gnu/linux-libre-${_srcname##*-}-gnu.tar.xz"{,.sign}
   "https://linux-libre.fsfla.org/pub/linux-libre/releases/$pkgver-gnu/patch-${_srcname##*-}-gnu-$pkgver-gnu.xz"{,.sign}
@@ -47,8 +47,8 @@ source=(
   0002-fix-Atmel-maXTouch-touchscreen-support.patch
   # Arch Linux patches
   0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
-  0002-HID-apple-Properly-handle-function-keys-on-Keychron-.patch
-  0003-soundwire-Raise-DEFAULT_PROBE_TIMEOUT-to-10000-ms.patch
+  0002-docs-Fix-the-docs-build-with-Sphinx-6.0.patch
+  0003-Revert-drm-display-dp_mst-Move-all-payload-info-into.patch
 )
 source_i686=(
   # avoid using zstd compression in ultra mode (exhausts virtual memory)
@@ -72,9 +72,9 @@ validpgpkeys=(
   '474402C8C582DAFBE389C427BCB7CF877E7D47A7' # Alexandre Oliva
   '6DB9C4B4F0D8C0DC432CF6E4227CA7C556B2BA78' # David P.
 )
-sha512sums=('13be3762fffd74c63eeb23b0d34b994a3e5198bfdbda4f013b38f8d3edd24b9bbebe5a4bfde0f5191aa1cf2678e4517f3b5540a40b30ebc05da1f6708cbb98bb'
+sha512sums=('1791227e4eef3be119fcbdbf3c8d441ae77badb6565c4b918130328fa24711b09128d4aabb26cd2adf453726bcb4b30b8c5199794114050835e3875bea169224'
             'SKIP'
-            '9016e87060d3ddbf4bad5adee54f07cba3930a23a5c2a7ca32338a98d0c51676228f3d97405c624f2f48a67849f9b40a5dc670e10fbc02bc75cc4d47deab4c34'
+            '309ce36c543c30fe2211368ea566d143b6b6fc766e509c3c0e9884618e9e71428f22d532dd8448a73c54d741795194afe4a04e6b2a5fccfd7de1f7fd5ad89f9d'
             'SKIP'
             '13cb5bc42542e7b8bb104d5f68253f6609e463b6799800418af33eb0272cc269aaa36163c3e6f0aacbdaaa1d05e2827a4a7c4a08a029238439ed08b89c564bb3'
             'SKIP'
@@ -82,8 +82,8 @@ sha512sums=('13be3762fffd74c63eeb23b0d34b994a3e5198bfdbda4f013b38f8d3edd24b9bbeb
             'SKIP'
             '267295aa0cea65684968420c68b32f1a66a22d018b9d2b2c1ef14267bcf4cb68aaf7099d073cbfefe6c25c8608bdcbbd45f7ac8893fdcecbf1e621abdfe9ecc1'
             'SKIP'
-            '3fd9234a6803150edfff413a3ee7e0d91c4e943417ec5c866b8f92cb0c0413f6d38da3306c39abc7cb7fdc0fc5fc2aa5898b16bc1baa1fbdb61a8ab5553241a0'
-            'ac9525c3afe45c0018caf5225bb0d3a4c0fad8cf2ee101b0c1f84369b29574e91138e2ca558282f8a9d7a4e7d30a345bae5a7bcfa0346faf3702a08ffb515321'
+            'b00a4c1aecd9d14a198595223559a70291682ceafa997637d472aac6487eb55f55e706eab67abbc1d6e51a40ad062d8f9b6993e116aaf8398b61148179f294c1'
+            '4fc56b1e48e402e0ee6d103dc6b53e7a5ae71945551189df7cdbfce516c8f5cd182bb541e793e0e9444be094a322e6c33ba401f7bca05534f348eff2c7d4df9f'
             '47d16ffc94510d4a8773146a46cfb35aca8cfdae38d17283334cd62d92de36250fbec90e9892357033398ecc7d970127b1a41b703a8372972422ca4af7c90c70'
             '53103bf55b957b657039510527df0df01279dec59cda115a4d6454e4135025d4546167fa30bdc99107f232561c1e096d8328609ab5a876cf7017176f92ad3e0b'
             'f10af02f0cb2d31259d9633e1ba845f555f525789f750fc2ddc51bd18c5ff64fcdd242dae801623887f5ce5cdb5528bce890459f0fab9fd31a28868bb7f6bba5'
@@ -91,9 +91,9 @@ sha512sums=('13be3762fffd74c63eeb23b0d34b994a3e5198bfdbda4f013b38f8d3edd24b9bbeb
             '143dea30c6da00e504c99984a98a0eb2411f558fcdd9dfa7f607d6c14e9e7dffff9cb00121d9317044b07e3e210808286598c785ee854084b993ec9cb14d8232'
             '02af4dd2a007e41db0c63822c8ab3b80b5d25646af1906dc85d0ad9bb8bbf5236f8e381d7f91cf99ed4b0978c50aee37cb9567cdeef65b7ec3d91b882852b1af'
             'b8fe56e14006ab866970ddbd501c054ae37186ddc065bb869cf7d18db8c0d455118d5bda3255fb66a0dde38b544655cfe9040ffe46e41d19830b47959b2fb168'
-            '671ab29fb1858c3898792164ac49d57103ecdeff220d7b262efb0c74ee270a670cf40f746a76f400513019989d858326fb3da507a0159418215e0b645011c406'
-            '2fecb2fb31981af21e17ce08c8352236f8817e6000f7e542f7479eaa7300238c4581f992b4da4d49dd2657d3e3c038eb0369954559f233b2913c382ef25b5753'
-            '816ad9cb93a473376487234d4bf255f7d081c37186b1715e914c2c30dcdcfaee7b6db4eeb427969190d0cffa7499bc99c95ef58fb8c632d27e51d0350990f0ce')
+            '5640d6f9226ef6c172a4d0b74fd32f2e3ad5b3fca8c75d1f07fe83c083aadc7d59273823b77d9d75a5539ec16bb7d4aba32e58bda991144d2773a7fad6848841'
+            'ab6bf4664911dbe526dc611d53f9d2ba1a84d96ddb38befaa1b3bfad60e4371c2229cb620612894b28af29562494eedf8e3f63a792d2a63e33a3b8cd0076b000'
+            'f74f8c6a6a6fe4159fc03f0ae8f12f661ee39e918d8a3a1abbd6d35538bab6807b5413136f032ac617e2882a71db9969fb14fe23c31a20d236350825ddfb5876')
 sha512sums_i686=('bca15cc96f64c38adcd13a46752866b5b30555ac21e19b3f7afcd20fcb7ec585c9d990fe8f842f44d5f69d477d72867fe6a9102729f26f93f5a80b372e41ce85')
 sha512sums_armv7h=('94c6243d23bc995dec3edcb1dd5cc7d5e7d30fec70fc32b9be5f3e7d934da7035e9152fea3cce58a53b0f35f29060bdef2a3a2dac3c46f520adf1088897362f9'
                    'SKIP'
@@ -186,7 +186,7 @@ _package() {
   depends=(coreutils kmod initramfs)
   optdepends=('wireless-regdb: to set the correct wireless channels of your country'
               'linux-libre-firmware: firmware images needed for some devices')
-  provides=(LINUX-ABI_VERSION="$pkgver" VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
+  provides=(LINUX-ABI_VERSION="$pkgver" VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE)
 
   cd $_srcname
   local kernver="$(<version)"
@@ -231,7 +231,7 @@ _package-headers() {
     localversion.* version vmlinux
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
   install -Dt "$builddir/arch/$KARCH" -m644 arch/$KARCH/Makefile
-  if [ "$CARCH" = i686 ]; then
+  if [ "$CARCH" = "i686" ]; then
     install -Dt "$builddir/arch/$KARCH" -m644 arch/$KARCH/Makefile_32.cpu
   fi
   cp -t "$builddir" -a scripts
@@ -250,18 +250,6 @@ _package-headers() {
   cp -t "$builddir" -a include
   cp -t "$builddir/arch/$KARCH" -a arch/$KARCH/include
   install -Dt "$builddir/arch/$KARCH/kernel" -m644 arch/$KARCH/kernel/asm-offsets.s
-
-  # from linux-armv7
-  if [ "$CARCH" = "armv7h" ]; then
-    for i in dove omap2; do
-      mkdir -p "$builddir/arch/$KARCH/mach-$i"
-      cp -t "$builddir/arch/$KARCH/mach-$i/" -a arch/$KARCH/mach-$i/include
-    done
-    for i in omap orion versatile; do
-      mkdir -p "$builddir/arch/$KARCH/plat-$i"
-      cp -t "$builddir/arch/$KARCH/plat-$i/" -a arch/$KARCH/plat-$i/include
-    done
-  fi
 
   install -Dt "$builddir/drivers/md" -m644 drivers/md/*.h
   install -Dt "$builddir/net/mac80211" -m644 net/mac80211/*.h
@@ -300,7 +288,7 @@ _package-headers() {
   echo "Stripping build tools..."
   local file
   while read -rd '' file; do
-    case "$(file -bi "$file")" in
+    case "$(file -Sib "$file")" in
       application/x-sharedlib\;*)      # Libraries (.so)
         strip -v $STRIP_SHARED "$file" ;;
       application/x-archive\;*)        # Libraries (.a)
@@ -371,7 +359,7 @@ _package-chromebook() {
 }
 
 pkgname=("$pkgbase" "$pkgbase-headers" "$pkgbase-docs")
-[ "$CARCH" = armv7h ] && pkgname+=("$pkgbase-chromebook")
+[ "$CARCH" = "armv7h" ] && pkgname+=("$pkgbase-chromebook")
 for _p in "${pkgname[@]}"; do
   eval "package_$_p() {
     $(declare -f "_package${_p#$pkgbase}")
