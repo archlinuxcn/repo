@@ -6,7 +6,7 @@
 _pkgname=wine
 pkgname=wine-for-wechat
 pkgver=8.0
-pkgrel=1
+pkgrel=2
 
 _pkgbasever=${pkgver/rc/-rc}
 
@@ -22,38 +22,27 @@ validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
 
 pkgdesc="A patched version of Wine for running Wechat and Netease Music without persistent shadow windows"
-url="http://www.winehq.com"
+url="https://www.winehq.org"
 arch=(x86_64)
 options=(staticlibs !lto)
 license=(LGPL)
 depends=(
   fontconfig      lib32-fontconfig
-  lcms2           lib32-lcms2
-  libxml2         lib32-libxml2
   libxcursor      lib32-libxcursor
   libxrandr       lib32-libxrandr
-  libxdamage      lib32-libxdamage
   libxi           lib32-libxi
   gettext         lib32-gettext
   freetype2       lib32-freetype2
-  glu             lib32-glu
-  libsm           lib32-libsm
   gcc-libs        lib32-gcc-libs
   libpcap         lib32-libpcap
-  faudio          lib32-faudio
   desktop-file-utils
 )
-makedepends=(autoconf bison perl fontforge flex mingw-w64-gcc
+makedepends=(autoconf bison perl flex mingw-w64-gcc
   giflib                lib32-giflib
-  libpng                lib32-libpng
   gnutls                lib32-gnutls
   libxinerama           lib32-libxinerama
   libxcomposite         lib32-libxcomposite
-  libxmu                lib32-libxmu
   libxxf86vm            lib32-libxxf86vm
-  libldap               lib32-libldap
-  mpg123                lib32-mpg123
-  openal                lib32-openal
   v4l-utils             lib32-v4l-utils
   libpulse              lib32-libpulse
   alsa-lib              lib32-alsa-lib
@@ -61,41 +50,31 @@ makedepends=(autoconf bison perl fontforge flex mingw-w64-gcc
   mesa                  lib32-mesa
   mesa-libgl            lib32-mesa-libgl
   opencl-icd-loader     lib32-opencl-icd-loader
-  libxslt               lib32-libxslt
   gst-plugins-base-libs lib32-gst-plugins-base-libs
   vulkan-icd-loader     lib32-vulkan-icd-loader
-  vkd3d                 lib32-vkd3d
   sdl2                  lib32-sdl2
   libcups               lib32-libcups
   libgphoto2
   sane
-  gsm
   vulkan-headers
   samba
   opencl-headers
 )
 optdepends=(
   giflib                lib32-giflib
-  libpng                lib32-libpng
   libldap               lib32-libldap
   gnutls                lib32-gnutls
-  mpg123                lib32-mpg123
-  openal                lib32-openal
   v4l-utils             lib32-v4l-utils
   libpulse              lib32-libpulse
   alsa-plugins          lib32-alsa-plugins
   alsa-lib              lib32-alsa-lib
-  libjpeg-turbo         lib32-libjpeg-turbo
   libxcomposite         lib32-libxcomposite
   libxinerama           lib32-libxinerama
   opencl-icd-loader     lib32-opencl-icd-loader
-  libxslt               lib32-libxslt
   gst-plugins-base-libs lib32-gst-plugins-base-libs
-  vkd3d                 lib32-vkd3d
   sdl2                  lib32-sdl2
   libgphoto2
   sane
-  gsm
   cups
   samba           dosbox
 )
@@ -114,9 +93,6 @@ prepare() {
   export LDFLAGS="${LDFLAGS/,-z,now/}"
 
   sed 's|OpenCL/opencl.h|CL/opencl.h|g' -i $_pkgname/configure*
-
-  # Fix openldap 2.5+ detection
-  sed 's/-lldap_r/-lldap/' -i $_pkgname/configure
 
   # Get rid of old build dirs
   rm -rf $_pkgname-{32,64}-build
