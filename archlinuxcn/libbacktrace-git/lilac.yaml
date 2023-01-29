@@ -1,0 +1,15 @@
+maintainers:
+  - github: SilverRainZ
+    email: Shengyu Zhang <la@archlinuxcn.org>
+
+build_prefix: extra-x86_64
+
+pre_build_script: aur_pre_build(maintainers=['Chocobo1'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: libbacktrace-git
+  - source: github
+    github: ianlancetaylor/libbacktrace
