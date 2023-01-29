@@ -52,7 +52,7 @@ options=('debug' 'strip')
 
 pkgver() {
     cd "$srcdir/mpv"
-    ./version.sh | sed s/-/_/g
+    ./version.py | sed s/-/_/g
 }
 
 prepare() {
