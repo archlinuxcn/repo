@@ -22,13 +22,6 @@ def pre_build():
 
   update_pkgver_and_pkgrel(f'{version}.{dt}')
   run_cmd(['updpkgsums'])
-  # we may have downloaded stale signatures; remove for redownloading
-  for f in os.listdir('.'):
-    if f.endswith('.asc'):
-      os.unlink(f)
-  # try to wait for a refresh copy
-  # 300 is from the cache-control header
-  time.sleep(300)
 
 def post_build():
   git_add_files('PKGBUILD')
