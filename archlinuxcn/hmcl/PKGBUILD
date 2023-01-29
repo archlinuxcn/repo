@@ -6,7 +6,7 @@ pkgname=hmcl
 _pkgname=HMCL
 pkgver=3.5.3
 _commit=d28723916d6d42fbea2a6423a07a74ffdf7cd1bd
-pkgrel=5
+pkgrel=6
 pkgdesc="A Minecraft Launcher which is multi-functional, cross-platform and popular"
 arch=('any')
 url="https://github.com/huanghongxun/HMCL"
@@ -18,7 +18,7 @@ makedepends=('liberica-jdk-11-full-bin')
 source=("hmcl-launch-script"
         "${pkgname}.desktop"
         "${pkgname}-${pkgver}.tgz::${url}/archive/${_commit}.tar.gz")
-b2sums=('83e56b3942091976e34c0d904e568a9ef3d5375bae05f31e1199f773e6e08e1b6683c5e1ecc820f2d1ad9c3807c436e69403f4fd7c14a58d5d9c9742ada82a38'
+b2sums=('1de8eca922b01b9c4c6d9a173143f05b900fd6b12b1b27bae175948a43125619d0e14c82d704548f70539af13eb4fd9f7288749265949089c7d6a8fe9032d284'
         '6c38da38fa13ad0af061d593f7733d6a406025c473240ccee4d07c89e71f8d5ead430374a7500f1395a7341c67e06ef3664cb1747ab93cba63459f7906b1598a'
         '24f676aa10d7865f079eb155b44790c344415f1cfcc43ab4dd0ad4f9c408c2b6c622b2d24090fd3eca6bb14f04e19087b56bbb757bfe8b639d1eec20cc00c927')
 
