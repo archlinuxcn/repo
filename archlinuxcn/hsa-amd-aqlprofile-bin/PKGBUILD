@@ -6,12 +6,12 @@ _pkgbase=hsa-amd-aqlprofile
 pkgname=${_pkgbase}-bin
 _pkgver_major=5
 _pkgver_minor=4
-_pkgver_patch=1
+_pkgver_patch=2
 _pkgver_str="${_pkgver_major}$(printf '%02d' $_pkgver_minor $_pkgver_patch)"
-_pkgver_magic=84
+_pkgver_magic=104
 _pkgver_ubunturel=22.04
 pkgver=$_pkgver_major.$_pkgver_minor.$_pkgver_patch
-pkgrel=4
+pkgrel=5
 pkgdesc='AQLPROFILE library for AMD HSA runtime API extension support'
 arch=('x86_64')
 url='https://docs.amd.com/'
@@ -19,9 +19,9 @@ license=('EULA')
 depends=()
 provides=('hsa-amd-aqlprofile')
 conflicts=('hsa-amd-aqlprofile')
-source=(# https://repo.radeon.com/rocm/apt/5.4/pool/main/h/hsa-amd-aqlprofile/hsa-amd-aqlprofile_1.0.0.50400-72~22.04_amd64.deb
+source=(# https://repo.radeon.com/rocm/apt/5.4.2/pool/main/h/hsa-amd-aqlprofile/hsa-amd-aqlprofile_1.0.0.50402-104~22.04_amd64.deb
         "${_pkgbase}-${pkgver}.deb::https://repo.radeon.com/rocm/apt/${pkgver}/pool/main/${_pkgbase:0:1}/${_pkgbase}/${_pkgbase}_1.0.0.${_pkgver_str}-${_pkgver_magic}~${_pkgver_ubunturel}_amd64.deb")
-sha256sums=('3531b7f6d33040dad1d4221f43c25606719e2d39444766d148a66a29c46af18b')
+sha256sums=('5b53671c2c4e9bdfd2c21d62a69181bae21626fc5dba1d755fa98911e566d110')
 
 prepare() {
   tar -xf data.tar.gz
