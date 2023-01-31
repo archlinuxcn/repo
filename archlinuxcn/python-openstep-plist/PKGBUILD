@@ -1,0 +1,35 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-openstep-plist
+_name=openstep_plist
+pkgver=0.3.0
+pkgrel=1
+pkgdesc='OpenStep plist parser and writer written in Cython'
+url='https://github.com/fonttools/openstep-plist'
+license=('MIT')
+arch=(any)
+depends=(python)
+checkdepends=(python-pytest)
+makedepends=(python-{build,installer}
+              python-setuptools-scm
+              python-wheel
+              cython)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.zip)
+sha256sums=('28ee2c18a8e8779070505435314d92d5d1b40f2889d3a99dae831b443b2e8019')
+
+build() {
+   cd "$_name-$pkgver"
+    python -m build -wn
+}
+
+check() {
+   cd "$_name-$pkgver"
+    PYTHONPATH="$PWD/build/lib" pytest -v
+}
+
+package() {
+   cd "$_name-$pkgver"
+    python -m installer -d "$pkgdir" dist/*.whl
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+

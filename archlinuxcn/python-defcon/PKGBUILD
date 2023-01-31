@@ -1,0 +1,35 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-defcon
+_name=${pkgname#python-}
+pkgver=0.10.2
+pkgrel=1
+pkgdesc='A set of UFO based objects for use in font editing applications.'
+url='https://github.com/robotools/defcon'
+license=('MIT')
+arch=(any)
+_pydeps=(fonttools
+         fs # for fonttools[ufo]
+         unicodedata2) # for fonttools[unicode]
+depends=(python
+         "${_pydeps[@]/#/python-}")
+makedepends=(python-{build,installer}
+             python-setuptools-scm
+             python-wheel
+             git)
+optdepends=(python-fontpens
+            python-lxml)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.zip)
+sha256sums=('aee396e6d69e45ae65c8264781392d4c29116934b2737ad76d8230b40c182a44')
+
+build() {
+    cd "$_name-$pkgver"
+    python -m build -wn
+}
+
+package() {
+    cd "$_name-$pkgver"
+    python -m installer -d "$pkgdir" dist/*.whl
+    install -Dm644 License.txt "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+

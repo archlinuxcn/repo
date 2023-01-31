@@ -1,0 +1,19 @@
+maintainers:
+  - github: taotieren
+
+build_prefix: extra-x86_64
+repo_depends:
+  - python-booleanoperations
+  - python-compreffor
+  - python-cffsubr
+  - python-cu2qu
+  - python-defcon
+  - python-skia-pathops
+
+post_build_script: |
+  git_pkgbuild_commit()
+
+update_on:
+  - source: pypi
+    pypi: ufo2ft
+  - alias: python

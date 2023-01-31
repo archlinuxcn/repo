@@ -1,0 +1,28 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-xmldiff
+_name=${pkgname#python-}
+pkgver=2.5
+pkgrel=1
+pkgdesc='A library and command line utility for diffing xml'
+url='https://github.com/Shoobx/xmldiff'
+license=('MIT')
+arch=(any)
+depends=(python
+         python-lxml
+         python-six)
+makedepends=(python-setuptools)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz)
+sha256sums=('6c5f30bc65ce6e81d9a70a3cb0269f7ba61852fd6caa7a0fbfc0edf33b3cb717')
+
+build() {
+   cd "$_name-$pkgver"
+    python setup.py build
+}
+
+package() {
+   cd "$_name-$pkgver"
+    python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+    install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+

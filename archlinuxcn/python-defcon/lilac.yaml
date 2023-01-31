@@ -1,0 +1,15 @@
+maintainers:
+  - github: taotieren
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - python-fontpens
+
+post_build_script: |
+  git_pkgbuild_commit()
+
+update_on:
+  - source: pypi
+    pypi: defcon
+  - alias: python

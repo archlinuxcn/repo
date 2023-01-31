@@ -1,0 +1,22 @@
+maintainers:
+  - github: taotieren
+
+build_prefix: extra-x86_64
+repo_depends:
+  - python-compreffor
+  - python-defcon
+  - python-fontpens
+  - python-fontmath
+  - python-glyphslib
+  - python-ttfautohint-py
+  - python-mutatormath
+  - python-skia-pathops
+  - python-ufo2ft
+
+post_build_script: |
+  git_pkgbuild_commit()
+
+update_on:
+  - source: pypi
+    pypi: fontmake
+  - alias: python

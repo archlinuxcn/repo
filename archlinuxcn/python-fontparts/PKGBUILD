@@ -1,0 +1,39 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-fontparts
+_name=fontParts
+pkgver=0.11.0
+pkgrel=1
+pkgdesc='The replacement for RoboFab'
+url='https://github.com/robotools/fontParts'
+license=('MIT')
+arch=(any)
+_pydeps=(booleanoperations
+         defcon
+         fontmath
+         fontpens # for defcon[pens]
+         fonttools
+         fs # for fonttools[ufo]
+         lxml # for fonttools[lxml]
+         pyclipper
+         unicodedata2) # for fonttools[unicode]
+depends=(python
+         "${_pydeps[@]/#/python-}")
+makedepends=(python-{build,installer}
+             python-setuptools-scm
+             python-wheel)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.zip)
+sha256sums=('1dedc10085b1c0320cf348b19988f20079700caf5b05efea4bc3f8f935449048')
+
+build() {
+    cd "$_name-$pkgver"
+    python setup.py build_ext --inplace
+    python setup.py build
+}
+
+package() {
+    cd "$_name-$pkgver"
+    python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+

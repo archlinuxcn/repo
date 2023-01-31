@@ -1,0 +1,19 @@
+maintainers:
+  - github: taotieren
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - python-booleanoperations
+  - python-defcon
+  - python-fontpens
+  - python-fontmath
+  - python-pyclipper
+
+post_build_script: |
+  git_pkgbuild_commit()
+
+update_on:
+  - source: pypi
+    pypi: fontParts
+  - alias: python

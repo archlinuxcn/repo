@@ -1,0 +1,35 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-pyclipper
+_name=${pkgname#python-}
+pkgver=1.3.0.post4
+pkgrel=1
+pkgdesc='Cython wrapper for the C++ translation of the Angus Johnsons Clipper library'
+url='https://github.com/fonttools/pyclipper'
+license=('MIT')
+arch=(any)
+depends=(python)
+makedepends=(cython
+             python-{build,installer,wheel,pip}
+             python-setuptools-scm)
+checkdepends=(python-pytest)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz)
+sha256sums=('b73b19d2a1b895edcacaf4acb441e13e99b9e5fd53b9c0dfd2e1326e2bf68a7a')
+
+build() {
+   cd "$_name-$pkgver"
+    python setup.py build_ext --inplace
+    python setup.py build
+}
+
+check() {
+   cd "$_name-$pkgver"
+    PYTHONPATH="$PWD/build/lib.linux-$CARCH-cpython-${python_version}" pytest -v
+}
+
+package() {
+   cd "$_name-$pkgver"
+    python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+

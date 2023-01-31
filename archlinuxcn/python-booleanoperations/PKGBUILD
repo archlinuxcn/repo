@@ -1,0 +1,38 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-booleanoperations
+_name=booleanOperations
+pkgver=0.9.0
+pkgrel=1
+pkgdesc='Boolean operations on paths'
+url='https://github.com/typemytype/booleanOperations'
+license=('MIT')
+arch=(any)
+_pydeps=(pyclipper
+         fonttools)
+depends=(python
+         "${_pydeps[@]/#/python-}")
+checkdepends=(python-defcon
+              python-fontpens
+              python-pytest)
+makedepends=(python-setuptools-scm)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.zip)
+sha256sums=('8cfa821c32ad374fa120d6b2e0b444ebeac57c91e6631528645fa19ac2a281b8')
+
+build() {
+    cd "$_name-$pkgver"
+    python setup.py build_ext --inplace
+    python setup.py build
+}
+
+check() {
+    cd "$_name-$pkgver"
+    PYTHONPATH="$PWD/build/lib" pytest -v
+}
+
+package() {
+    cd "$_name-$pkgver"
+    python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+

@@ -1,0 +1,47 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-ufo2ft
+_name=${pkgname#python-}
+pkgver=2.30.0
+pkgrel=1
+pkgdesc='A bridge from UFOs to FontTools objects'
+url="https://github.com/googlefonts/ufo2ft"
+license=(MIT)
+arch=(any)
+_pydeps=(booleanoperations
+         cffsubr
+         cu2qu
+         lxml # for fonttools[lxml]
+         defcon
+         fonttools
+         fs) # for fonttools[ufo]
+depends=(python
+         "${_pydeps[@]/#/python-}")
+makedepends=(python-{build,installer}
+             python-setuptools-scm
+             python-wheel)
+checkdepends=(python-compreffor
+              python-pytest
+              python-ufolib2
+              python-skia-pathops)
+optdepends=(python-compreffor
+            python-skia-pathops)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz)
+sha256sums=('6693b9e6b3579156ea31d1b1b199fbee02671816ccf1cf062006909d3cd59dff')
+
+build() {
+   cd "$_name-$pkgver"
+    python -m build -wn
+}
+
+check() {
+   cd "$_name-$pkgver"
+    PYTHONPATH="${PWD}/build/lib" pytest tests
+}
+
+package() {
+   cd "$_name-$pkgver"
+    python -m installer -d "$pkgdir" dist/*.whl
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+

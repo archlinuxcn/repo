@@ -1,0 +1,37 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-compreffor
+_name=${pkgname#python-}
+pkgver=0.5.3
+pkgrel=1
+pkgdesc='A CFF table subroutinizer for FontTools'
+url='https://github.com/googlefonts/compreffor'
+license=('Apache-2.0')
+arch=(any)
+depends=(python
+         python-fonttools)
+checkdepends=(python-pytest)
+makedepends=(cython
+              python-setuptools-git-ls-files
+              python-setuptools-scm
+              python-wheel)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz)
+sha256sums=('7d41296d4fb0aa1ef696dfd925d2af3227d4030622be99b3c7d4107dc6f8713a')
+
+build() {
+    cd "$_name-$pkgver"
+    python setup.py build_ext --inplace
+	python setup.py build
+}
+
+check() {
+    cd "$_name-$pkgver"
+    PYTHONPATH="$PWD/build/lib.linux-$CARCH-cpython-${python_version}" pytest -v
+}
+
+package() {
+    cd "$_name-$pkgver"
+    python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+

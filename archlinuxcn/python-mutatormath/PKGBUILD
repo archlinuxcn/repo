@@ -1,0 +1,31 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-mutatormath
+_name=${pkgname#python-}
+_name=${_name//m/M}
+pkgver=3.0.1
+pkgrel=1
+pkgdesc='Python library for piecewise linear interpolation in multiple dimensions with multiple, arbitrarily placed, masters.'
+url='https://github.com/LettError/MutatorMath'
+license=('BSD')
+arch=(any)
+depends=(python
+         python-defcon
+         python-fontmath
+         python-fonttools)
+makedepends=(python-{build,installer}
+            python-setuptools
+            python-wheel)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.zip)
+sha256sums=('8127c1ffad1646f11a953752296c43f5d88cbd5293fff03f093d916b0bc13864')
+
+build() {
+    cd "$_name-$pkgver"
+    python -m build -wn
+}
+
+package() {
+    cd "$_name-$pkgver"
+    python -m installer -d "$pkgdir" dist/*.whl
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
