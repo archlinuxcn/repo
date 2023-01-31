@@ -1,7 +1,7 @@
 # Maintainer: elomatreb <ole@bertr.am>
 pkgname=listenbrainz-mpd
 pkgver=2.0.1
-pkgrel=1
+pkgrel=3
 pkgdesc="ListenBrainz submission client for MPD"
 arch=('x86_64')
 url='https://codeberg.org/elomatreb/listenbrainz-mpd'
@@ -13,7 +13,7 @@ sha256sums=('45a58e1d51a6c2c7f27b2790d9fddf979bbbbefeece7013be86d249cf36c36da')
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"
-    cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+    cargo fetch --locked --target "$(rustc -vV | sed -n 's|host: ||p')"
 }
 
 build() {
