@@ -3,7 +3,7 @@
 _pkgbase=iptables
 pkgbase=iptables-fullconenat
 pkgname=(iptables-fullconenat iptables-fullconenat-nft)
-pkgver=1.8.8
+pkgver=1.8.9
 pkgrel=2
 epoch=1
 pkgdesc='Linux kernel packet control tool with FULLCONENAT support.'
@@ -17,7 +17,7 @@ provides=('iptables')
 conflicts=(iptables)
 install=${pkgbase}.install
 backup=(etc/ethertypes etc/iptables/{ip,ip6}tables.rules)
-source=(https://www.netfilter.org/projects/iptables/files/$_pkgbase-$pkgver.tar.bz2{,.sig}
+source=(https://www.netfilter.org/projects/iptables/files/$_pkgbase-$pkgver.tar.xz{,.sig}
         empty.rules simple_firewall.rules empty-{filter,mangle,nat,raw,security}.rules
         {arp,eb,ip,ip6}tables.service iptables-{legacy,nft}-flush
         "iptables-format-security.patch::https://git.netfilter.org/iptables/patch/?id=b72eb12e"
