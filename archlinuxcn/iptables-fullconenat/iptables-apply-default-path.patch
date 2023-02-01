@@ -1,0 +1,53 @@
+--- iptables/iptables-apply.8.in.orig	2022-07-25 17:12:06.833791345 +0300
++++ iptables/iptables-apply.8.in	2022-07-25 17:13:35.780742653 +0300
+@@ -21,11 +21,11 @@
+ Successfully applied rules can also be written to savefile and later used
+ to roll back to this state. This can be used to implement a store last good
+ configuration mechanism when experimenting with an iptables setup script:
+-iptables-apply \-w /etc/network/iptables.up.rules \-c /etc/network/iptables.up.run
++iptables-apply \-w /etc/iptables/iptables.rules \-c /etc/iptables/iptables.run
+ .PP
+ When called as ip6tables\-apply, the script will use
+ ip6tables\-save/\-restore and IPv6 default values instead. Default
+-value for rulesfile is '/etc/network/iptables.up.rules'.
++value for rulesfile is '/etc/iptables/iptables.rules'.
+ .SH OPTIONS
+ .TP
+ \fB\-t\fP \fIseconds\fR, \fB\-\-timeout\fP \fIseconds\fR
+@@ -34,11 +34,11 @@
+ .TP
+ \fB\-w\fP \fIsavefile\fR, \fB\-\-write\fP \fIsavefile\fR
+ Specify the savefile where successfully applied rules will be written to
+-(default if empty string is given: /etc/network/iptables.up.rules).
++(default if empty string is given: /etc/iptables/iptables.rules).
+ .TP
+ \fB\-c\fP \fIruncmd\fR, \fB\-\-command\fP \fIruncmd\fR
+ Run command runcmd to configure iptables instead of applying a rulesfile
+-(default: /etc/network/iptables.up.run).
++(default: /etc/iptables/iptables.run).
+ .TP
+ \fB\-h\fP, \fB\-\-help\fP
+ Display usage information.
+--- iptables/iptables-apply.orig	2022-07-25 17:12:11.713806961 +0300
++++ iptables/iptables-apply	2022-07-25 17:12:34.573880116 +0300
+@@ -31,16 +31,16 @@
+ 	(*6*)
+ 		SAVE=ip6tables-save
+ 		RESTORE=ip6tables-restore
+-		DEF_RULESFILE="/etc/network/ip6tables.up.rules"
++		DEF_RULESFILE="/etc/iptables/ip6tables.rules"
+ 		DEF_SAVEFILE="$DEF_RULESFILE"
+-		DEF_RUNCMD="/etc/network/ip6tables.up.run"
++		DEF_RUNCMD="/etc/iptables/ip6tables.run"
+ 		;;
+ 	(*)
+ 		SAVE=iptables-save
+ 		RESTORE=iptables-restore
+-		DEF_RULESFILE="/etc/network/iptables.up.rules"
++		DEF_RULESFILE="/etc/iptables/iptables.rules"
+ 		DEF_SAVEFILE="$DEF_RULESFILE"
+-		DEF_RUNCMD="/etc/network/iptables.up.run"
++		DEF_RUNCMD="/etc/iptables/iptables.run"
+ 		;;
+ esac
+ 
