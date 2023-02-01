@@ -3,11 +3,10 @@
 # Previous Maintainer: Kenneth Endfinger <kaendfinger@gmail.com>
 # Contributor: Alexandre Demers <alexandre.f.demers@gmail.com>
 
-
 pkgname=lib32-spirv-tools
-pkgver=2022.4
+pkgver=2023.1
 pkgrel=1
-_headers_version=sdk-1.3.236.0
+_headers_version=sdk-1.3.239.0
 pkgdesc="API and commands for processing SPIR-V modules"
 arch=('i686' 'x86_64')
 url='https://github.com/KhronosGroup/SPIRV-Tools'
@@ -29,9 +28,9 @@ sha256sums=('SKIP'
 conflicts=('lib32-spirv-tools')
 provides=('lib32-spirv-tools')
 
-pkgver() {
-  git -C SPIRV-Tools describe --tags --abbrev=10 | sed 's/^v//; s/-/+/; s/-/./'
-}
+# pkgver() {
+#   git -C SPIRV-Tools describe --tags --abbrev=10 | sed 's/^v//; s/-/+/; s/-/./'
+# }
 
 build() {
   export CC="gcc -m32"
@@ -60,8 +59,8 @@ package() {
   DESTDIR="${pkgdir}" ninja -C build install
 
   # remove files
-  rm -fr "${pkgdir}/usr/include"
-  rm -fr "${pkgdir}/usr/share"
+  rm -fr "${pkgdir:?}/usr/include"
+  rm -fr "${pkgdir:?}/usr/share"
 
   install -Dm644 "$srcdir"/SPIRV-Tools/LICENSE "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 
