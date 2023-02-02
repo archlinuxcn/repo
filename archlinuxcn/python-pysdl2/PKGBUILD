@@ -3,7 +3,7 @@
 # Contributor: feuri <mail at feuri dot de>
 
 pkgname=python-pysdl2
-pkgver=0.9.14
+pkgver=0.9.15
 pkgrel=1
 pkgdesc="Python ctypes wrapper around SDL2"
 arch=("any")
@@ -12,7 +12,7 @@ license=("custom:CC0")
 depends=("python-setuptools" "sdl2")
 optdepends=("sdl2_gfx" "sdl2_image" "sdl2_mixer" "sdl2_ttf")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/marcusva/${pkgname/python-py/py-}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=("8c8aa946f33fc29ae86d0a1b9fc4bd8db045bad074bd7b9f5c0605cc87441fdc")
+sha256sums=("144d92a948bf36e12ed9fb31f80055b0eaf049b0f7fe0c5d9a495c85cd5f4ddd")
 
 package() {
   cd "${srcdir}/${pkgname/python-py/py-}-${pkgver}"
