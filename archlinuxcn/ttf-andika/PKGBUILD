@@ -5,16 +5,15 @@
 
 pkgbase=ttf-andika
 pkgname=('ttf-andika' 'woff-andika' 'woff2-andika')
-pkgver=6.101
-pkgrel=2
+pkgver=6.200
+pkgrel=1
 pkgdesc='A sans serif, Unicode-compliant font designed especially for literacy use'
 url='https://software.sil.org/andika/'
 arch=('any')
 license=('OFL')
 conflicts=('ttf-sil-fonts<=6')
-source=(https://github.com/silnrsi/font-andika/releases/download/v$pkgver/Andika-$pkgver.tar.xz{,.asc})
-b2sums=('3fb82149db0213d03a69d22a57237ae15786bae01775f72686117da7b2ce00388563212f43cc1641c982e81f73826d2eb0531b439bb97c06e456d6727813b696'
-        'SKIP')
+source=(https://github.com/silnrsi/font-andika/releases/download/v$pkgver/Andika-$pkgver.tar.xz)
+b2sums=('47e40f19490564a480e62ad17246748b53b35655fb34a87c051b755700516cace0f469bee25eb81af7511ede6411caaea5108d5e62ae2d76ce8e17d4ac288bad')
 validpgpkeys=('15D41BC02EB807D405EFFAF6C9183BEA0288CDEE') # Robert de Vos <bobby_devos@sil.org>
 
 package_ttf-andika() {
