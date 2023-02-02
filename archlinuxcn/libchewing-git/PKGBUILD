@@ -7,15 +7,15 @@ pkgver=0.5.1.r159.gfad98d6
 pkgrel=1
 epoch=1
 pkgdesc='Intelligent Chinese phonetic input method'
-url='http://chewing.im/'
+url='https://chewing.im/'
 arch=('i686' 'x86_64')
 license=('LGPL2.1')
 conflicts=("$_pkgname")
+provides=("$_pkgname")
 depends=('sqlite')
 makedepends=('cmake' 'git')
 source=("git+https://github.com/chewing/libchewing/")
 md5sums=('SKIP')
-options=('debug')
 
 pkgver() {
   cd "$_pkgname"
@@ -34,6 +34,7 @@ build() {
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+    -DBUILD_INFO=ON \
     ..
   make
 }
