@@ -1,0 +1,42 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+
+pkgbase=ttf-maple
+pkgname=('ttf-maple' 'otf-maple' 'woff2-maple' 'ttf-maple-nerd')
+pkgver=6.1
+pkgrel=1
+pkgdesc='Open source monospace / Nerd-Font font with round corner and ligatures for IDE and command line.'
+url='https://github.com/subframe7536/Maple-font/'
+arch=('any')
+license=('OFL')
+source=($pkgname-$pkgver-MapleMono.zip::https://github.com/subframe7536/Maple-font/releases/download/v$pkgver/MapleMono.zip
+        $pkgname-$pkgver-MapleMono-woff2.zip::https://github.com/subframe7536/Maple-font/releases/download/v$pkgver/MapleMono-woff2.zip
+        $pkgname-$pkgver-MapleMono-otf.zip::https://github.com/subframe7536/Maple-font/releases/download/v$pkgver/MapleMono-otf.zip
+        $pkgname-$pkgver-MapleMono-NF.zip::https://github.com/subframe7536/Maple-font/releases/download/v$pkgver/MapleMono-NF.zip
+        $pkgname-$pkgver-OFL.txt::https://raw.githubusercontent.com/subframe7536/Maple-font/v6.1/OFL.txt
+        )
+b2sums=('6bae6a28df4082f68b423589b0d2c9b98ee20997bfe3a8870dc72e989e1e1825d99da31dfd887194509cc079e7ee9462e85478e2a1141a69438b6717cc924917'
+        'ffa83bffcc5c7333e0b7e3e490611972a745441e67d40e99380ea760df17d9219cbcda179f6ca77e23b9baaa804f41bbb30149841b6e206263632ccb4ca287dd'
+        'b53a09629bfa659e48e601338837ea85fd0f32fe20469ae1c3d28ce943d2b87d2e3084b267abc63ff7f0d1a12e7c564550fa625c3742cd53abbe51b56215a779'
+        '21db465974cf6038be8f1f7dfe1e2126f7c6188bfb6c332b106542d7983a87e8bf47428d9bc3db73d004edf1037c9a74be23109c4e37629342a63c6c2b5dca86'
+        '4c0d42227fd7722ef0a517a74c51cbee7ac4a0a9dce006de27f49195d22ced78f816e26f3623cfd0ef6214881f095a6977518d012cea41be41b6434dc4ec0825')
+
+prepare() {
+    mv $pkgname-$pkgver-OFL.txt OFL.txt
+}
+
+package_ttf-maple() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF" ttf/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" OFL.txt
+}
+package_otf-maple() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF" otf/*.otf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" OFL.txt
+}
+package_woff2-maple() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/WOFF2" woff2/*.woff2
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" OFL.txt
+}
+package_ttf-maple-nerd() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF" NF/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" OFL.txt
+}
