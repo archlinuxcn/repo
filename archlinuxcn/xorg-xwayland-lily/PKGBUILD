@@ -2,13 +2,13 @@
 
 pkgname=xorg-xwayland-lily
 pkgver=22.1.7
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 license=('custom')
 url="https://xorg.freedesktop.org"
 pkgdesc="run X clients under wayland, with !733 HiDPI patch"
 depends=('nettle' 'libepoxy' 'systemd-libs' 'libxfont2' 
-         'pixman' 'xorg-server-common' 'libxcvt')
+         'pixman' 'xorg-server-common' 'libxcvt' 'mesa')
 makedepends=('meson' 'xorgproto' 'xtrans' 'libxkbfile' 'dbus'
              'xorg-font-util'
              'wayland' 'wayland-protocols'
