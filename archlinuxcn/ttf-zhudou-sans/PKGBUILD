@@ -13,14 +13,14 @@ b2sums=('bb96330012084f9dd72e03fcfbde8f5a492a7707fe1bddbdce67edbafcec4a480900878
 
 package_ttf-zhudou-sans() {
     cd "Zhudou-Sans-$pkgver"
-    rename ' ' '-' fonts/ttf/*.ttf
+    rename --all ' ' '-' fonts/ttf/*.ttf
     install -Dm644 -t "$pkgdir/usr/share/fonts/TTF" fonts/ttf/*.ttf
     install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" README.md
     install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
 }
 package_ttf-zhudou-sans-vf() {
     cd "Zhudou-Sans-$pkgver"
-    rename ' ' '-' fonts/variable\ ttf/*.ttf
+    rename --all ' ' '-' fonts/variable\ ttf/*.ttf
     install -Dm644 -t "$pkgdir/usr/share/fonts/TTF" fonts/variable\ ttf/*.ttf
     install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" README.md
     install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
