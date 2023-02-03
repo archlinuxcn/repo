@@ -1,42 +1,28 @@
-From 5f314b75a300399dcc6f8e6d08ba40bbe75b84b2 Mon Sep 17 00:00:00 2001
+From ad8102f2e0ab93f104f5bafb6c844787ba2247dc Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 3 Feb 2023 10:18:30 -0500
 Subject: [PATCH 7/7] LLVM 15 fix
 
+The attribute should not be applied to return value.
+Too lazy to figure out the proper fix.
 ---
- src/codegen.cpp | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ src/codegen.cpp | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index ce5a9aa539..67fa470b33 100644
+index ce5a9aa539..c6c614200a 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -525,6 +525,13 @@ AttributeSet Attributes(LLVMContext &C, std::initializer_list<Attribute::AttrKin
-     return AttributeSet::get(C, makeArrayRef(attrs));
- }
- 
-+AttributeSet Attributes(LLVMContext &C, std::initializer_list<Attribute::AttrKind> attrkinds, SmallVector<Attribute, 8> attrs)
-+{
-+    for (size_t i = 0; i < attrkinds.size(); i++)
-+        attrs.push_back(Attribute::get(C, attrkinds.begin()[i]));
-+    return AttributeSet::get(C, makeArrayRef(attrs));
-+}
-+
- static Type *get_pjlvalue(LLVMContext &C) { return JuliaType::get_pjlvalue_ty(C); }
- 
- static FunctionType *get_func_sig(LLVMContext &C) { return JuliaType::get_jlfunc_ty(C); }
-@@ -898,11 +905,11 @@ static const auto jl_alloc_obj_func = new JuliaFunction{
+@@ -898,11 +898,7 @@ static const auto jl_alloc_obj_func = new JuliaFunction{
      [](LLVMContext &C) { return AttributeList::get(C,
              AttributeSet::get(C, makeArrayRef({Attribute::getWithAllocSizeArgs(C, 1, None)})), // returns %1 bytes
  
 -            Attributes(C, {Attribute::NoAlias, Attribute::NonNull,
-+            Attributes(C, {Attribute::NoAlias, Attribute::NonNull}
- #if JL_LLVM_VERSION >= 150000
+-#if JL_LLVM_VERSION >= 150000
 -            Attribute::get(C, Attribute::AllocKind, AllocFnKind::Alloc | AllocFnKind::Uninitialized | AllocFnKind::Aligned),
-+                       , { Attribute::get(C, Attribute::AllocKind, static_cast<uint64_t>(AllocFnKind::Alloc | AllocFnKind::Uninitialized | AllocFnKind::Aligned)) }
- #endif
+-#endif
 -            }),
-+            ),
++            Attributes(C, {Attribute::NoAlias, Attribute::NonNull}),
              None); },
  };
  static const auto jl_newbits_func = new JuliaFunction{
