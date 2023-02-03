@@ -18,6 +18,7 @@ depends=(
   'python-wxpython'
   'wxwidgets-gtk3'
   'unixodbc'
+  'kicad-library'
 )
 makedepends=(
   'git'
@@ -27,7 +28,7 @@ makedepends=(
   'swig'
   'ninja'
 )
-optdepends=('kicad-library: for footprints')
+optdepends=('kicad-library-3d: KiCad 3D render model libraries')
 conflicts=('kicad' 'kicad-bzr')
 provides=('kicad')
 source=("${pkgname}"'::git+https://gitlab.com/kicad/code/kicad.git')
