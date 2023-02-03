@@ -1,20 +1,24 @@
 # Maintainer: George Rawlinson <grawlinson@archlinux.org>
 
 pkgname=lemmy
-pkgver=0.16.7
+pkgver=0.17.0
 pkgrel=2
 pkgdesc='A link aggregator for the fediverse'
 arch=('x86_64')
 url='https://join-lemmy.org'
 license=('AGPL3')
-depends=('gcc-libs' 'openssl' 'postgresql-libs')
-makedepends=('git' 'rust')
-optdepends=(
-  'lemmy-ui: for the web app'
-  'pict-rs: for image hosting backend'
+depends=(
+  'gcc-libs'
+  'openssl'
+  'postgresql-libs'
+  'imagemagick'
+  'ffmpeg'
+  'perl-image-exiftool'
 )
+makedepends=('git' 'rust' 'protobuf')
+optdepends=('lemmy-ui: for the web app')
 options=('!lto')
-_commit='31530e1be409930c6be3e15106991ae35cd6a847'
+_commit='53bc0311b156c6459c39c4ed3f6174ee65726afd'
 source=(
   "$pkgname::git+https://github.com/LemmyNet/lemmy.git#commit=$_commit"
   'git+https://github.com/LemmyNet/lemmy-translations.git'
@@ -32,7 +36,7 @@ prepare() {
   # setup submodules
   git submodule init
   git config submodule.crates/utils/translations.url ../lemmy-translations
-  git submodule update
+  git -c protocol.file.allow=always submodule update
 
   # set version
   sed -i "s/unknown version/$pkgver/" crates/utils/src/version.rs
