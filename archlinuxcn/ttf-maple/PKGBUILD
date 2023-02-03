@@ -1,7 +1,7 @@
 # Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
 
 pkgbase=ttf-maple
-pkgname=('ttf-maple' 'otf-maple' 'woff2-maple' 'ttf-maple-nerd')
+pkgname=('ttf-maple' 'otf-maple' 'woff2-maple' 'ttf-maple-nerd' 'ttf-maple-sc-nerd')
 pkgver=6.1
 pkgrel=2
 pkgdesc='Open source monospace / Nerd-Font font with round corner and ligatures for IDE and command line.'
@@ -12,6 +12,7 @@ source=($pkgname-$pkgver-MapleMono.zip::https://github.com/subframe7536/Maple-fo
         $pkgname-$pkgver-MapleMono-woff2.zip::https://github.com/subframe7536/Maple-font/releases/download/v$pkgver/MapleMono-woff2.zip
         $pkgname-$pkgver-MapleMono-otf.zip::https://github.com/subframe7536/Maple-font/releases/download/v$pkgver/MapleMono-otf.zip
         $pkgname-$pkgver-MapleMono-NF.zip::https://github.com/subframe7536/Maple-font/releases/download/v$pkgver/MapleMono-NF.zip
+        $pkgname-$pkgver-MapleMono-SC-NF.zip::https://github.com/subframe7536/Maple-font/releases/download/v$pkgver/MapleMono-SC-NF.zip
         $pkgname-$pkgver-OFL.txt::https://raw.githubusercontent.com/subframe7536/Maple-font/v6.1/OFL.txt
         )
 b2sums=('6bae6a28df4082f68b423589b0d2c9b98ee20997bfe3a8870dc72e989e1e1825d99da31dfd887194509cc079e7ee9462e85478e2a1141a69438b6717cc924917'
@@ -38,5 +39,9 @@ package_woff2-maple() {
 }
 package_ttf-maple-nerd() {
     install -Dm644 -t "$pkgdir/usr/share/fonts/TTF" NF/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" OFL.txt
+}
+package_ttf-maple-sc-nerd() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF" SC-NF/*.ttf
     install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" OFL.txt
 }
