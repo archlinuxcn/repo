@@ -1,4 +1,4 @@
-From 6d435e3878c85f0d9080771075ec43a6a4b360c2 Mon Sep 17 00:00:00 2001
+From dda6b4203fb1d737d0c733e3bd7c1e635b5401ac Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 19 Jul 2020 09:40:32 -0400
 Subject: [PATCH 2/7] Fix source file paths
@@ -59,7 +59,7 @@ index a81908b96a..4c463db143 100644
          write(io, filename)
          write(io, UInt64(sizeof(src)))
 diff --git a/src/ast.c b/src/ast.c
-index b3f5041712..7a522f1c27 100644
+index 0ff7c882ab..0ae0afd4b2 100644
 --- a/src/ast.c
 +++ b/src/ast.c
 @@ -779,6 +779,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v, int check_vali

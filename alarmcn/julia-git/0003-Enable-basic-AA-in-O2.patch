@@ -1,4 +1,4 @@
-From a0e13d86a9faad825792da0b9be7e0c9a0435429 Mon Sep 17 00:00:00 2001
+From 0eddaee660db8d8902c0f9d040f601105dea9e6b Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 31 Aug 2020 12:44:58 -0400
 Subject: [PATCH 3/7] Enable basic AA in O2
@@ -8,10 +8,10 @@ Subject: [PATCH 3/7] Enable basic AA in O2
  1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
-index bd4c896a39..1fbc79d00a 100644
+index 3f986cbbc4..b48469ac8c 100644
 --- a/src/aotcompile.cpp
 +++ b/src/aotcompile.cpp
-@@ -847,9 +847,7 @@ void addOptimizationPasses(legacy::PassManagerBase *PM, int opt_level,
+@@ -851,9 +851,7 @@ void addOptimizationPasses(legacy::PassManagerBase *PM, int opt_level,
      PM->add(createPropagateJuliaAddrspaces());
      PM->add(createScopedNoAliasAAWrapperPass());
      PM->add(createTypeBasedAAWrapperPass());

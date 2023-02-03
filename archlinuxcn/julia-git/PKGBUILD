@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.10.0.DEV.382.g5f40f156c15
+pkgver=1.10.0.DEV.485.gbebff475197
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -52,8 +52,8 @@ _patches=(
   0003-Enable-basic-AA-in-O2.patch
   0004-Clear-soname.patch
   0005-Fix-LLVM-13-support.patch
-  # 0006-Remove-library-patching-that-should-not-be-done-for-.patch
-  0007-Use-libc-for-libssp.patch
+  0006-Use-libc-for-libssp.patch
+  0007-LLVM-15-fix.patch
 )
 source=('git+https://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -64,12 +64,13 @@ source=('git+https://github.com/JuliaLang/julia'
         arch-source-translate.cpp
         sysp7z.diff)
 sha512sums=('SKIP'
-            '7dea233a37bd554b477a189feb946fe1edd846e51d2bc4d0e547a66a6105191900ef0674f829eaa5322b53d5100bd4504060ca6fe55e406d2b9a3ffbe2b5a516'
-            '55d97efa4e9df26778d6ffc2e2806004864217c2b86a42b89440e6d7fcfe6cfce3630f7f37d1207fb85d2128421d4e65020d1704e91427654b79750ff4663d64'
-            '43f912baeeb540ac14eb357a006eabbef15defc9a35340a94255c3b760aa56996d70e20cbfd2ef87f4b0b5e04b6fc0768d16fa89b74a00ee8604fca7bfd0fc3b'
-            'a756b17d745872e294133970809be03bc35f7c6eaba8f647943dc6f6bdc7df39205e87f80170924f26886431e2409c4ba19ed08d553cba9e07e6412c9370c9e0'
-            '648134f00da8c53e98f60408209764b13b9389e08e3a203e8beb6e416b250df0242e853159444b2f6f8a5c8e4f5f37fa94b97f9a3b96d77dc2b5c8fee181a02c'
-            'd609f74822747bbc5918d04d5f68c73d59e689a09d08bb5f0eb60e364c27b0ee8c11c49f2788c02c5f8034cdd9db86b78174d95af6134e4561277f1d3817a0e2'
+            '8d57ee818e98980152fde0c7aa3160257131a46d0dfd2df2c15cd17ad9731b64fe2a24ad5f61edbe7dde70592d290a5e43064b56aa470a0526c7ca8f671f4349'
+            'c32ad3d454421153031ba6961d231214abd5dafb79277af540977d0d1a9c107836904be1b5badd2e0cfeff8ce2492c8fb9f54f26b05964805191e2470a398040'
+            'a837c271281774972562976edaf0cb4b3c3463dfe770ffdbbbc3905119c74110b5dfb82d2c0d71354b71bf3caea55c8477b738de3e3c14531e166cb08f8181d8'
+            'f7b9dc9f1b52a34407ac2d9a03d12f8326bd715bc2f1a55b50c3dedc852cb1484ff008a41a5892377c8e91faf1eeb007d858ebe7a5caa76b16aeb5ae84bc374a'
+            'f4192c755767055c45ece87d4bf1f8b488cb70b4890c90ca65754fec9b488811da630b10c0126c4fdb0da0b6d6f9097094bc7073e37bb194550a60dc0f904929'
+            'ab2c9f06c41cfaf7c0d18ed9e6f5c75cbd53aad868dc080b0163c88edf2ac0cc591f20f268f130e45f5a35190cc56dea29507c35a42dbca164dc45222c0cc4a1'
+            '93bd79be58002e463782f0962aa296a3bef2d55e77dea8e58b04c7fb9dc3dbb33c4fa36413a691d6170f8e0b35adee556d52aa49c3ca8fad3a525d5936afaafe'
             '2bf050afb5afcd21b23667beb6129e73dc2fb8143366921c8859d7011ed06187db9f4aedae99c0fe31e0bcb7b0896180b006ee542d4b4d592369e9f4f1bd77ec'
             'ce03e2995a45d942f480d25d1ce7cddacb98f2e11eeed19b5564e36d817987f548c313b0d6b139402ba8c203c8ba9a059e1732695517d7b78b7fa88f08429295'
             '36df234b634926bc88084e683ee9f495ef0ce4c26d6d6b9f55294098bdcb86f5eaaf6c671afe1a5c4371c428bd7bf3dd617ec1f15a7ff35376d67df22140454c'
