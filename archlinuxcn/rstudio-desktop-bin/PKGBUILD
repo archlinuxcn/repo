@@ -3,13 +3,13 @@
 pkgname=rstudio-desktop-bin
 pkgver=2022.12.0.353
 _pkgver=2022.12.0-353
-pkgrel=1
+pkgrel=2
 pkgdesc="An integrated development environment (IDE) for R (binary from RStudio official repository)"
 arch=('x86_64')
 license=('GPL')
 url="http://www.rstudio.org/"
-depends=('r>=3.3.0' 'hicolor-icon-theme' 'shared-mime-info' 'openssl'
-  'libxkbcommon-x11' 'libedit' 'postgresql-libs' 'sqlite')
+depends=('r>=3.3.0' 'hicolor-icon-theme' 'shared-mime-info' 'openssl' 'openssl-1.1'
+  'at-spi2-core' 'gtk3' 'alsa-lib' 'libedit' 'postgresql-libs' 'sqlite')
 makedepends=()
 optdepends=('clang: C/C++ and Rcpp support')
 conflicts=('rstudio-desktop' 'rstudio-desktop-git' 'rstudio-desktop-preview-bin')
