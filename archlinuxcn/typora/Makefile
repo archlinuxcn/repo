@@ -18,7 +18,7 @@ updateinfo:
 
 # This will update PKGBUILD with the latest version and build the package
 update:
-	sed 's/^pkgver=.*$$/pkgver=$(shell $(MAKE) versions | tail -n 1)/' -i PKGBUILD
+	sed 's/^pkgver=.*$$/pkgver=$(shell curl -s https://www.typora.io/linux/Packages | grep Version | cut -f 2 -d ' ' | sort -V | cut -f 1 -d '-' | uniq | tail -n 1)/' -i PKGBUILD
 	sed 's/^pkgrel=.*$$/pkgrel=1/' -i PKGBUILD
 	$(MAKE)
 
@@ -32,5 +32,5 @@ clean:
 
 publish:
 	git add .
-	git commit -m "Update to version $(shell $(MAKE) versions | tail -n 1)"
+	git commit -m "Update to version $(shell sed -n 's/^pkgver=\(.*\)$$/\1/p' PKGBUILD)"
 #	git push
