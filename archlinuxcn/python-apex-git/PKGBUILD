@@ -11,7 +11,6 @@ url="https://github.com/NVIDIA/apex"
 license=('BSD')
 depends=(python-pytorch-cuda)
 makedepends=(
-  gcc10
   git
   python-setuptools
   python-pip
@@ -30,8 +29,6 @@ pkgver() {
 }
 
 build() {
-  export CC=gcc-10
-  export CXX=g++-10
   export TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST}
   cd "${srcdir}/${pkgname}"
   python setup.py --cuda_ext --cpp_ext build
