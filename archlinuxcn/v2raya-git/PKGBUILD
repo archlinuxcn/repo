@@ -1,7 +1,7 @@
 # Maintainer: mzz2017 <mzz@tuta.io>
 
 pkgname=v2raya-git
-pkgver=20230130.r1292.ecbd2dd
+pkgver=20230205.r1294.312f470
 pkgrel=1
 install=.INSTALL
 pkgdesc="v2rayA nightly version"
@@ -45,6 +45,7 @@ build() {
 # change
 EOF
     set -o pipefail
+    chmod +x ./v2raya
     ./v2raya --report config | sed '1,6d' | fold -s -w 78 | sed -E 's/^([^#].+)/# \1/'  >> "$srcdir/v2raya.conf"
 }
 
