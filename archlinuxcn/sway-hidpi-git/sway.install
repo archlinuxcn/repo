@@ -1,3 +1,7 @@
 post_install() {
     setcap cap_sys_nice+ep usr/bin/sway
 }
+
+post_upgrade() {
+    setcap cap_sys_nice+ep usr/bin/sway
+}
