@@ -2,7 +2,7 @@
 # Co-Maintainer: jbouter <aur@kn0x.org>
 
 pkgname=touchegg
-pkgver=2.0.15
+pkgver=2.0.16
 pkgrel=1
 pkgdesc="Multitouch gesture recognizer"
 arch=('i686' 'x86_64')
@@ -11,7 +11,7 @@ license=('GPL3')
 depends=('libinput' 'cairo' 'systemd-libs' 'libx11' 'libxi' 'libxrandr' 'libxtst' 'pugixml' 'gtk3' 'glib2')
 makedepends=('cmake')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
-sha512sums=('eca1567d30a53b0ec0904bf8c7c705bdf909df4d16afcad4581d42ad0d35947fcd46ba1d36796539972c2d9f95cb0bd504c6ee887e19ca3087100bb728ce06f5')
+sha512sums=('92a5409c1f570de2690e57e8ae291bda1c07b5d5c1094fd80a9648c5986f5dc8cd5a8e03c3714a8dc10b5305a75e52a0ef86f5bf52a038db08fedb86620af76f')
 build() {
 	cmake -B build -S "$pkgname-$pkgver" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
