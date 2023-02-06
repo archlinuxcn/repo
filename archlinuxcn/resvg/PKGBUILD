@@ -2,7 +2,7 @@
 # Contributor: Caleb Maclennan <caleb@alerque.com>
 
 pkgname=resvg
-pkgver=0.23.0
+pkgver=0.29.0
 pkgrel=1
 pkgdesc='SVG rendering library and CLI'
 arch=(i686 x86_64)
@@ -16,7 +16,7 @@ optdepends=(
 )
 makedepends=(cargo clang qt5-base qt5-tools kio cairo pango cmake extra-cmake-modules)
 source=("$url/archive/v$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('a6121e3bf39be4c04bee508f699a853c5c207509cde953750dda8b9f32bbc94e')
+sha256sums=('efc1055dd52a4ca79e0d9ad0a83e90c13eae0232d2897d86a2aee8ab7cfecfc1')
 
 prepare() {
 	cd "$pkgname-$pkgver"
@@ -59,7 +59,7 @@ check() {
 
 package() {
 	cd "$pkgname-$pkgver"
-	install -Dm755 -t "$pkgdir/usr/bin/" target/release/{resvg,usvg} tools/viewsvg/viewsvg
+	install -Dm755 -t "$pkgdir/usr/bin/" target/release/resvg tools/viewsvg/viewsvg
 	make -C tools/kde-dolphin-thumbnailer/build install
 	install -Dm755 -t "$pkgdir/usr/lib/" target/release/libresvg.so
 	install -Dm644 -t "$pkgdir/usr/include/" c-api/*.h
