@@ -3,7 +3,7 @@
 _pkgbase=hysteria
 pkgname=$_pkgbase
 pkgver=1.3.2
-pkgrel=1
+pkgrel=2
 pkgdesc='A feature-packed network utility optimized for networks of poor quality'
 arch=('x86_64')
 url="https://hysteria.network/"
@@ -12,12 +12,14 @@ depends=('glibc' 'acl' 'shadow')
 makedepends=('go' 'git')
 install=$_pkgbase.install
 source=("$_pkgbase-git"::"git+https://github.com/apernet/hysteria.git#tag=v$pkgver"
+        0001-update-tun2socks-gvisor-quic-go.patch
         hysteria@.service
         hysteria-server@.service
         sysusers.conf
         tmpfiles.conf
         )
 sha256sums=('SKIP'
+            'b693e6f2e11500ac43eb6ec1c4b4e43bca52804f5bbc298804bc7fecdcc2ffd8'
             'e5816c4c66ae564ab927e1460b4f1f89d7bbd5b957634723ef24a82eaf814d06'
             'f79262911516c65a0574c12df5415c62b264e15c2d437635b6b10ef9689e0b94'
             '44f1cb2fedfc94dc396ceb215e62237dbc8c74c035c45a3430c1f3748d266dd9'
@@ -28,6 +30,11 @@ prepare(){
   export GOPATH="$srcdir/gopath"
   cd "$srcdir/$_pkgbase-git"
   mkdir -p build/
+
+  # dirty fix for go1.20
+  # the master branch has already contains this fix, so this shall be removed in the subseq versions
+  cd "$srcdir/$_pkgbase-git"
+  patch -Np1 -i "$srcdir/0001-update-tun2socks-gvisor-quic-go.patch"
 }
 
 build() {
