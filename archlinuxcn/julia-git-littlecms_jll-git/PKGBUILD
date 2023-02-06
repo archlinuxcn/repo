@@ -1,0 +1,32 @@
+pkgname=julia-git-littlecms_jll-git
+pkgver=2.12.0+0.0.1.g5f02dd3
+pkgrel=1
+pkgdesc="LittleCMS_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/LittleCMS_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git liblcms2.so)
+provides=(julia-git-littlecms_jll)
+source=(git+https://github.com/JuliaBinaryWrappers/LittleCMS_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         'f55218736cddb937187053eb853fadf4')
+
+pkgver() {
+  cd LittleCMS_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd LittleCMS_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl LittleCMS_jll ../jll.toml
+}
+
+package() {
+  cd LittleCMS_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh LittleCMS_jll "${pkgdir}" "${pkgname}" julia-git
+}

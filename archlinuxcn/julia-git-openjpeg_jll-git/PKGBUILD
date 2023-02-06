@@ -1,0 +1,32 @@
+pkgname=julia-git-openjpeg_jll-git
+pkgver=2.4.0+0.0.1.gbc96dd2
+pkgrel=1
+pkgdesc="OpenJpeg_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/OpenJpeg_jll.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git openjpeg2)
+provides=(julia-git-openjpeg_jll)
+source=(git+https://github.com/JuliaBinaryWrappers/OpenJpeg_jll.jl
+        jll.toml)
+md5sums=('SKIP'
+         '5a1655e495e57657331eb600547d5a0e')
+
+pkgver() {
+  cd OpenJpeg_jll.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd OpenJpeg_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl OpenJpeg_jll ../jll.toml
+}
+
+package() {
+  cd OpenJpeg_jll.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh OpenJpeg_jll "${pkgdir}" "${pkgname}" julia-git
+}
