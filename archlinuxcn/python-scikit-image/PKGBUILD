@@ -12,11 +12,16 @@ url="http://scikit-image.org/"
 license=('BSD')
 makedepends=(
   cython
+  meson-python
+  python-build
+  python-installer
   python-pythran
   python-setuptools
+  python-wheel
 )
 depends=(
   python-imageio
+  python-lazy-loader
   python-matplotlib
   python-networkx
   python-numpy
@@ -39,14 +44,13 @@ sha256sums=('4eb877c98d1395769daef5bc2ba8a7efd3f736c87086aecb3775a9174593398b')
 
 build() {
   cd "${srcdir}/${_name}-${pkgver}"
-  python setup.py build_ext --inplace
-  python setup.py build
+  python -m build --wheel --no-isolation --skip-dependency-check
 }
 
 package() {
   cd ${srcdir}/${_name}-${pkgver}
   install -D -m644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}"
-  python setup.py install --root=${pkgdir} --prefix=/usr --optimize=1 --skip-build
+  python -m installer --destdir="$pkgdir" dist/*.whl
 }
 # vim:set ts=2 sw=2 et:
 
