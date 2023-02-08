@@ -2,8 +2,8 @@
 
 pkgname=('python-pyqt5-webkit')
 pkgdesc="A set of Python bindings for the Qt5 toolkit with Qt5WebKit support"
-pkgver=5.15.8
-pkgrel=3
+pkgver=5.15.9
+pkgrel=1
 arch=('x86_64')
 url="https://riverbankcomputing.com/software/pyqt/intro"
 license=('GPL')
@@ -34,7 +34,7 @@ makedepends=('sip' 'pyqt-builder' 'python-opengl' 'python-dbus'
              'qt5-quick3d' 'qt5-sensors' 'qt5-webchannel' 'qt5-location')
 conflicts=('pyqt5-common' 'python-pyqt5')
 source=("https://pypi.python.org/packages/source/P/PyQt5/PyQt5-$pkgver.tar.gz")
-sha256sums=('bc85e3efb9135c56c8b88157c8825005fb7cd0f14babd93976778aae82eda360')
+sha256sums=('dc41e8401a90dc3e2b692b411bd5492ab559ae27a27424eed4bd3915564ec4c0')
 options=(debug)
 
 build() {
