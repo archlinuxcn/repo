@@ -1,20 +1,19 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 pkgname=dynarmic
 pkgver=6.4.5
-pkgrel=1
+pkgrel=3
 pkgdesc="An ARM dynamic recompiler"
 arch=('aarch64' 'x86_64')
 url="https://github.com/merryhime/dynarmic"
 license=('BSD')
-depends=('llvm-libs')
+depends=('llvm-libs' 'fmt' 'zydis')
 makedepends=(
 	'boost>=1.57'
 	'cmake>=3.12'
-	'fmt>=9'
 	'llvm'
 	'robin-map>=0.6.2'
 	'xbyak>=6.68'
-	'zydis>=4'
+    'clang'
 )
 provides=('libdynarmic.so')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
@@ -22,12 +21,16 @@ b2sums=('07e48b284816dfe7a94b15499945068bb25410e4c735f0119768db91ff7de54c719ddcb
 
 build() {
 	cmake -S $pkgname-$pkgver -B build \
+        -DCMAKE_CXX_COMPILER=clang++ \
+        -DCMAKE_C_COMPILER=clang \
+        -DCMAKE_C_FLAGS="$CFLAGS -flto=thin" \
+        -DCMAKE_CXX_FLAGS="$CXXFLAGS -flto=thin" \
 		-DBUILD_SHARED_LIBS=ON \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DDYNARMIC_IGNORE_ASSERTS=ON \
-		-DDYNARMIC_TESTS="$CHECKFUNC" \
+		-DDYNARMIC_TESTS=OFF \
 		-DDYNARMIC_USE_LLVM=ON \
 		-DDYNARMIC_USE_PRECOMPILED_HEADERS=OFF \
 		-Wno-dev
@@ -35,7 +38,6 @@ build() {
 }
 
 package() {
-	depends+=('libfmt.so' 'libZydis.so')
 	# shellcheck disable=SC2154
 	DESTDIR="$pkgdir" cmake --install build
 	install -Dm644 -t "$pkgdir"/usr/share/licenses/$pkgname $pkgname-$pkgver/LICENSE.txt

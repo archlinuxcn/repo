@@ -45,7 +45,7 @@ conflicts=(waybar)
 build() {
     cd "Waybar-$pkgver"
     # TODO tests depend on catch2 v3
-    meson --prefix=/usr \
+    meson setup --prefix=/usr \
           --buildtype=plain \
           --wrap-mode=nodownload \
           -Dtests=disabled \
