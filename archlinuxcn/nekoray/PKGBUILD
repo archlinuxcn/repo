@@ -1,0 +1,72 @@
+# Maintainer: Molyuu <zhangjtroger@gmail.com>
+pkgname='nekoray'
+pkgver=2.14
+pkgrel=1
+pkgdesc='Qt based cross-platform GUI proxy configuration manager (backend: v2ray / sing-box)'
+arch=('x86_64')
+url='https://github.com/MatsuriDayo/nekoray'
+license=('GPL3')
+makedepends=(
+	'cmake' 'git' 'ninja' 'go=2:1.19.5-1'
+	'protobuf' 'yaml-cpp' 'zxing-cpp'
+)
+depends=(
+	'qt5-base' 'qt5-svg' 'qt5-tools' 'qt5-x11extras'
+)
+optdepends=(
+	'v2ray-domain-list-community: geosite data for NekoRay'
+	'v2ray-geoip: geoip data for NekoRay'
+	'hysteria: Hysteria support for Nekoray'
+	'sing-geoip: geoip data for NekoBox'
+	'sing-geosite: geosite data for NekoBox'
+)
+source=(
+	'git+https://github.com/MatsuriDayo/nekoray.git'
+	'nekoray.desktop'
+)
+sha256sums=(
+	"SKIP"
+	'23954e5c027f218c30ac656fc45b36f4eb16d928234a7b0fa1490f3a4d58927e'
+)
+
+pkgver() {
+	cd "${srcdir}/nekoray"
+	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+	# Clone and checkout
+	cd "${srcdir}/nekoray"
+	git submodule init
+	git submodule update
+
+	# Buidling C++
+	NKR_PACKAGE=1 bash libs/build_deps_all.sh
+	mkdir build && cd build
+	cmake -GNinja -DQT_VERSION_MAJOR=5 -DNKR_PACKAGE=ON ..
+	ninja
+
+	# Building Go
+	cd "${srcdir}/nekoray"
+	bash libs/get_source.sh
+	GOOS=linux GOARCH=amd64 bash libs/build_go.sh
+}
+
+package() {
+	mkdir -p "${pkgdir}/usr/lib/nekoray"
+	mkdir -p "${pkgdir}/usr/bin"
+	mkdir -p "${pkgdir}/usr/share/pixmaps"
+	mkdir -p "${pkgdir}/usr/share/applications"
+	# assets
+	cp "${srcdir}/nekoray.desktop" "${pkgdir}/usr/share/applications/nekoray.desktop"
+	cp -a "${srcdir}/nekoray/res/public/nekoray.png" "${pkgdir}/usr/lib/nekoray/"
+	cp -a "${srcdir}/nekoray/res/public/nekobox.png" "${pkgdir}/usr/lib/nekoray/"
+	ln -s "/usr/lib/nekoray/nekoray.png" "${pkgdir}/usr/share/pixmaps/nekoray.png"
+	ln -s "/usr/lib/nekoray/nekobox.png" "${pkgdir}/usr/share/pixmaps/nekobox.png"
+	# core
+	cp -a "${srcdir}/nekoray/deployment/linux64/nekoray_core" "${pkgdir}/usr/lib/nekoray/"
+	cp -a "${srcdir}/nekoray/deployment/linux64/nekobox_core" "${pkgdir}/usr/lib/nekoray/"
+	# app
+	cp -a "${srcdir}/nekoray/build/nekoray" "${pkgdir}/usr/lib/nekoray/"
+	ln -s "/usr/lib/nekoray/nekoray" "${pkgdir}/usr/bin/nekoray"
+}
