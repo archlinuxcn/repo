@@ -1,14 +1,14 @@
 # Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
 
 pkgname=('otf-nazonomincho')
-pkgver=0.003
-pkgrel=2
+pkgver=0.004
+pkgrel=1
 pkgdesc='A customized version of Hanazono Mincho '
 url='https://github.com/ge9/NazonoMincho'
 arch=('any')
 license=('custom')
 source=(https://github.com/ge9/NazonoMincho/releases/download/$pkgver/NazoMin${pkgver#*.}.zip)
-b2sums=('4f27f01815545b98f23d0eb00e17d6d9cf713303ce6f089bcdeb3dd51a5d6d3125aa9855809f4ef24adbc8905748aa7d6d8ea8b390ce0d7c9aa14ab9a9b01743')
+b2sums=('9f95ab4f24f0ca25eab6db8a255f77d146d58347c9b08fb07dd2f7961c2da1ae4984be71f809e976ca7b681808510249bfa9db98b9768f3ae4ffe206eaddd006')
 
 package() {
     install -Dm644 -t "$pkgdir/usr/share/fonts/TTF" *.otf
