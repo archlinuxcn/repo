@@ -1,0 +1,51 @@
+From 1245d8c56a0e9197e20f73b33b31f2bf6cfbe4bd Mon Sep 17 00:00:00 2001
+From: Xuanxi Leng <xuanxi.leng@intel.com>
+Date: Fri, 14 Oct 2022 09:36:39 -0400
+Subject: [PATCH] VaVDA: Add 'VDAVideoDecoder' support for AV1.
+
+This CL adds 'VDAVideoDecoder' support for AV1.
+
+Bug: 1325824
+Change-Id: I7787761c080aba680543e173bef12254ab7ccafe
+---
+
+diff --git a/media/gpu/vaapi/vaapi_video_decode_accelerator.cc b/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
+index 37e3520..4e77924 100644
+--- a/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
++++ b/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
+@@ -41,6 +41,7 @@
+ #include "media/gpu/vaapi/vaapi_utils.h"
+ #include "media/gpu/vaapi/vp8_vaapi_video_decoder_delegate.h"
+ #include "media/gpu/vaapi/vp9_vaapi_video_decoder_delegate.h"
++#include "media/gpu/vaapi/av1_vaapi_video_decoder_delegate.h"
+ #include "media/gpu/vp8_decoder.h"
+ #include "media/gpu/vp9_decoder.h"
+ #include "media/video/picture.h"
+@@ -229,6 +230,12 @@
+     decoder_delegate_ = accelerator.get();
+     decoder_.reset(new VP9Decoder(std::move(accelerator), profile,
+                                   config.container_color_space));
++  } else if (profile >= AV1PROFILE_MIN && profile <= AV1PROFILE_MAX) {
++    auto accelerator =
++        std::make_unique<AV1VaapiVideoDecoderDelegate>(this, vaapi_wrapper_);
++    decoder_delegate_ = accelerator.get();
++    decoder_.reset(new AV1Decoder(std::move(accelerator), profile,
++                                  config.container_color_space));
+   } else {
+     VLOGF(1) << "Unsupported profile " << GetProfileName(profile);
+     return false;
+@@ -1196,12 +1203,11 @@
+ VaapiVideoDecodeAccelerator::GetSupportedProfiles() {
+   VideoDecodeAccelerator::SupportedProfiles profiles =
+       VaapiWrapper::GetSupportedDecodeProfiles();
+-  // VaVDA never supported VP9 Profile 2, AV1 and HEVC, but VaapiWrapper does.
++  // VaVDA never supported VP9 Profile 2 and HEVC, but VaapiWrapper does.
+   // Filter them out.
+   base::EraseIf(profiles, [](const auto& profile) {
+     VideoCodec codec = VideoCodecProfileToVideoCodec(profile.profile);
+-    return profile.profile == VP9PROFILE_PROFILE2 ||
+-           codec == VideoCodec::kAV1 || codec == VideoCodec::kHEVC;
++    return profile.profile == VP9PROFILE_PROFILE2 || codec == VideoCodec::kHEVC;
+   });
+   return profiles;
+ }
