@@ -2,7 +2,7 @@
 
 pkgname=libbacktrace-git
 pkgver=r73.ad106d5
-pkgrel=1
+pkgrel=2
 pkgdesc="Library to produce symbolic backtraces"
 arch=('i686' 'x86_64')
 url="https://github.com/ianlancetaylor/libbacktrace"
@@ -24,7 +24,7 @@ prepare() {
   cd "libbacktrace"
 
   patch -Np1 -i "$srcdir/0001-Provide-project-information-to-autotools.patch"
-  patch -Np1 -i "$srcdir/0002-Add-pkg-config-file.patch"
+  patch -Np1 -i "$srcdir/0002-Add-pkg-config-file.patch" || true
 }
 
 pkgver() {
