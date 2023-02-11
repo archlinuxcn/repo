@@ -9,7 +9,7 @@
 # Contributor: sl1pkn07 <sl1pkn07 at gmail dot com>
 
 pkgname=nvidia-beta-dkms
-pkgver=525.85.05
+pkgver=525.89.02
 pkgrel=1
 pkgdesc='NVIDIA driver sources for linux (beta version)'
 arch=('x86_64')
@@ -23,8 +23,8 @@ _pkg="NVIDIA-Linux-${CARCH}-${pkgver}-no-compat32"
 source=("https://us.download.nvidia.com/XFree86/Linux-${CARCH}/${pkgver}/${_pkg}.run"
         '110-nvidia-change-dkms-conf.patch'
         '120-nvidia-linux-rt-gift.patch')
-sha256sums=('a6109c2fc1d271185f5ae2b997dc68c93af43e1583143bf80e254290a9a3b039'
-            '49a614457a1127afdd85a1e28c927498712c0deb0be8d556e980130c641ec2bf'
+sha256sums=('66f576ea0a8c158daead52928495e432395d895b7365f3e516977e601b8244f5'
+            'f81799833c138b61ddc34a0db976d973a580f7f61cea20dacf4fa4c9b209fdb1'
             '291bc6568e18496a4c2e732fd8616f6d536d8e9f3ab51f1959e3fc08f0de126b')
 
 prepare() {
