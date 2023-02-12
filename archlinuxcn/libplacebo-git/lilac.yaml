@@ -30,16 +30,16 @@ update_on:
   - source: alpm
     alpm: libepoxy
     provided: libepoxy.so
-#  - source: alpm
-#    alpm: ffmpeg
-#    provided: libavcodec.so
-#  - source: alpm
-#    alpm: ffmpeg
-#    provided: libavutil.so
-#  - source: alpm
-#    alpm: ffmpeg
-#    provided: libavformat.so
-#  - source: alpm
-#    alpm: gflw-x11
-#    from_pattern: ^(\d+\.\d+).*
-#    to_pattern: \1
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavcodec.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavutil.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavformat.so
+  - source: alpm
+    alpm: gflw-x11
+    from_pattern: ^(\d+\.\d+).*
+    to_pattern: \1
