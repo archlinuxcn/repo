@@ -1,0 +1,43 @@
+diff --git a/data/icons/hicolor/scalable/actions/external-link-symbolic.svg b/data/icons/hicolor/scalable/actions/com.raggesilver.BlackBox-external-link-symbolic.svg
+similarity index 100%
+rename from data/icons/hicolor/scalable/actions/external-link-symbolic.svg
+rename to data/icons/hicolor/scalable/actions/com.raggesilver.BlackBox-external-link-symbolic.svg
+diff --git a/data/icons/hicolor/scalable/actions/settings-symbolic.svg b/data/icons/hicolor/scalable/actions/com.raggesilver.BlackBox-settings-symbolic.svg
+similarity index 100%
+rename from data/icons/hicolor/scalable/actions/settings-symbolic.svg
+rename to data/icons/hicolor/scalable/actions/com.raggesilver.BlackBox-settings-symbolic.svg
+diff --git a/data/icons/meson.build b/data/icons/meson.build
+index 6596c86..81536ea 100644
+--- a/data/icons/meson.build
++++ b/data/icons/meson.build
+@@ -8,6 +8,6 @@ install_data(['hicolor/scalable/apps/com.raggesilver.BlackBox.svg'],
+ 
+ install_data(['hicolor/scalable/actions/com.raggesilver.BlackBox-fullscreen-symbolic.svg',
+               'hicolor/scalable/actions/com.raggesilver.BlackBox-show-headerbar-symbolic.svg',
+-              'hicolor/scalable/actions/settings-symbolic.svg',
+-              'hicolor/scalable/actions/external-link-symbolic.svg',
++              'hicolor/scalable/actions/com.raggesilver.BlackBox-settings-symbolic.svg',
++              'hicolor/scalable/actions/com.raggesilver.BlackBox-external-link-symbolic.svg',
+              ], install_dir: join_paths(icondir, 'scalable/actions'))
+diff --git a/src/gtk/preferences-window.ui b/src/gtk/preferences-window.ui
+index adbd5dc..6f01543 100644
+--- a/src/gtk/preferences-window.ui
++++ b/src/gtk/preferences-window.ui
+@@ -7,7 +7,7 @@
+     <child>
+       <object class="AdwPreferencesPage">
+         <property name="title" translatable="yes">General</property>
+-        <property name="icon-name">settings-symbolic</property>
++        <property name="icon-name">com.raggesilver.BlackBox-settings-symbolic</property>
+         <child>
+           <object class="AdwPreferencesGroup">
+             <property name="title" translatable="yes">Window</property>
+@@ -346,7 +346,7 @@
+                 </child>
+                 <child>
+                   <object class="GtkButton">
+-                    <property name="icon-name">external-link-symbolic</property>
++                    <property name="icon-name">com.raggesilver.BlackBox-external-link-symbolic</property>
+                     <property name="tooltip-text" translatable="yes">Get more themes online</property>
+                     <signal name="clicked" handler="on_get_more_themes_online" swapped="no" />
+                     <style />

@@ -1,0 +1,13 @@
+diff --git a/src/widgets/Terminal.vala b/src/widgets/Terminal.vala
+index 65b0042..6b52854 100644
+--- a/src/widgets/Terminal.vala
++++ b/src/widgets/Terminal.vala
+@@ -72,7 +72,7 @@ public class Terminal.Terminal : Vte.Terminal {
+     this.connect_accels ();
+     this.on_theme_changed ();
+     this.on_font_changed ();
+-    this.on_padding_changed ();
++    this.settings.terminal_padding = this.settings.schema.get_value ("terminal-padding");
+ 
+     this.spawn (command, cwd);
+   }
