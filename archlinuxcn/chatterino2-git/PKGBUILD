@@ -1,7 +1,7 @@
 # Maintainer: Ckat <ckat@teknik.io>
 pkgname=chatterino2-git
 _pkgname=chatterino2
-pkgver=v2.4.0.r99.g56adaf81a
+pkgver=v2.4.0.r100.gdf9836f59
 pkgrel=1
 pkgdesc='Second installment of the Twitch chat client series "Chatterino", dev/git version'
 arch=('any')
@@ -15,21 +15,17 @@ provides=('chatterino')
 conflicts=('chatterino')
 install=$pkgname.install
 source=("git+https://github.com/Chatterino/chatterino2"
+        "git+https://github.com/arsenm/sanitizers-cmake"
         "git+https://github.com/Chatterino/libcommuni#branch=chatterino-cmake"
-        "git+https://github.com/jiakuan/qBreakpad"
-        "git+https://github.com/mohabouje/WinToast"
+        "git+https://github.com/getsentry/crashpad"
         "git+https://github.com/pajlada/settings"
         "git+https://github.com/pajlada/signals"
         "git+https://github.com/pajlada/serialize"
         "git+https://github.com/Tencent/rapidjson"
-        "git+https://github.com/arsenm/sanitizers-cmake"
         "git+https://github.com/zaphoyd/websocketpp"
         "git+https://github.com/Neargye/magic_enum"
-        "git+https://github.com/mackron/miniaudio"
-        "git+https://github.com/google/googletest.git")
+        "git+https://github.com/mackron/miniaudio")
 md5sums=('SKIP'
-         'SKIP'
-         'SKIP'
          'SKIP'
          'SKIP'
          'SKIP'
@@ -52,21 +48,18 @@ pkgver() {
 prepare () {
     cd "$srcdir/$_pkgname"
     git submodule init
-    git config submodule.libcommuni $srcdir/$_pkgname/lib/libcommuni
-    git config submodule.qBreakpad $srcdir/$_pkgname/lib/qBreakpad
-    git config submodule.WinToast $srcdir/$_pkgname/lib/WinToast
-    git config submodule.settings $srcdir/$_pkgname/lib/settings
-    git config submodule.signals $srcdir/$_pkgname/lib/signals
-    git config submodule.serialize $srcdir/$_pkgname/lib/serialize
-    git config submodule.rapidjson $srcdir/$_pkgname/lib/rapidjson
-    git config submodule.sanitizers-cmake $srcdir/$_pkgname/lib/sanitizers-cmake
-    git config submodule.websocketpp $srcdir/$_pkgname/lib/websocketpp
-    git config submodule.miniaudio $srcdir/$_pkgname/lib/miniaudio
-    # We can't set the local directory of this submodule as we have no way of accessing the config name `submodule.magic_enum` because underscores are actually not allowed.
-    # The only thing I can think of is moving the submodule to `lib/magicenum` but that feels like an off approach. I'll look into it only if builds fail because of the below call is missing.
-    # git config submodule.magic_enum $srcdir/$_pkgname/lib/magic_enum
-    git config submodule.googletest $srcdir/$_pkgname/lib/googletest
-    git submodule update
+    git config submodule.cmake/sanitizers-cmake.url "$srcdir/sanitizers-cmake"
+    git config submodule.lib/libcommuni.url "$srcdir/libcommuni"
+    git config submodule.lib/crashpad.url "$srcdir/crashpad"
+    # TODO: crashpad contains its own submodules, this needs to be resolved
+    git config submodule.lib/settings.url "$srcdir/settings"
+    git config submodule.lib/signals.url "$srcdir/signals"
+    git config submodule.lib/serialize.url "$srcdir/serialize"
+    git config submodule.lib/rapidjson.url "$srcdir/rapidjson"
+    git config submodule.lib/websocketpp.url "$srcdir/websocketpp"
+    git config submodule.lib/miniaudio.url "$srcdir/miniaudio"
+    git config submodule.lib/magicenum.url "$srcdir/magicenum"
+    git -c protocol.file.allow=always submodule update
 }
 
 build() {

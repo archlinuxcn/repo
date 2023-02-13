@@ -12,8 +12,7 @@ clean:
 	rm -rf pkg src chatterino2/ chatterino2-*.pkg.tar.xz \
 		libcommuni \
 		humanize \
-		qBreakpad \
-		WinToast \
+		crashpad \
 		settings \
 		signals \
 		serialize \
@@ -22,5 +21,4 @@ clean:
 		sanitizers-cmake \
 		websocketpp \
 		magic_enum \
-		miniaudio \
-		googletest
+		miniaudio
