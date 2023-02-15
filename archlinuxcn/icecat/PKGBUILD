@@ -5,9 +5,9 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=102.7.0
+pkgver=102.8.0
 pkgrel=1
-_commit=7f76da3cfd5d04fa38d894f6ea6ac5f2fd0ea837
+_commit=03d9e3db5affe21db077c410ec08c313d6aa280e
 pkgdesc="GNU version of the Firefox browser."
 arch=(x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
@@ -15,7 +15,7 @@ license=('GPL' 'MPL' 'LGPL')
 depends=(gtk3 libxt mime-types dbus-glib ffmpeg nss ttf-font libpulse)
 makedepends=(m4 unzip zip diffutils python-setuptools python-jsonschema yasm mesa imake inetutils
              xorg-server-xvfb autoconf2.13 rust clang llvm jack gtk2
-             python nodejs python-psutil cbindgen nasm wget mercurial git lld perl-rename
+             python nodejs python-psutil cbindgen nasm wget mercurial git lld
              wasi-compiler-rt wasi-libc wasi-libc++ wasi-libc++abi)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
@@ -31,7 +31,7 @@ source=(https://git.savannah.gnu.org/cgit/gnuzilla.git/snapshot/gnuzilla-${_comm
         #'arc4random.patch::https://hg.mozilla.org/mozilla-central/raw-rev/970ebbe54477'
         #'arc4random_buf.patch::https://hg.mozilla.org/mozilla-central/raw-rev/a61813bd9f0a')
 
-sha256sums=('f7adb3ab04c7a3f5ab2ec358848c2f573171825cba27e70ad009e84fff5a4164'
+sha256sums=('334ef1791bde0caf84e9b81495356efeaf6611b8cc1a1fdf08471fdc4e3b0412'
             'e00dbf01803cdd36fd9e1c0c018c19bb6f97e43016ea87062e6134bdc172bc7d'
             '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208')
 
@@ -59,68 +59,6 @@ prepare() {
     [ -z "$_LOCALE" ] || sed -e "s/es-ES/$_LOCALE/g" -i makeicecat && echo "$_LOCALE" > custom-shipped-locales
     rm -rf data/files-to-append/l10n/*
   fi
-
-  patch -p1 << 'EOF'
---- a/makeicecat	2021-10-12 17:14:08.000000000 +0200
-+++ b/makeicecat	2021-10-12 17:16:43.831787739 +0200
-@@ -143,16 +143,23 @@
-     do which ${rename_cmd} &> /dev/null && RENAME_CMD=${rename_cmd}
-     done
-     readonly RENAME_CMD
--    if ! ( [[ "$( ${RENAME_CMD} --version )" =~ 'File::Rename version '([0-9]+)\.([0-9]+) ]] &&
-+    if ! ( [[ "$( ${RENAME_CMD} --version )" =~ ([0-9]+)\.([0-9]+) ]] &&
-                (( ${BASH_REMATCH[1]} >= MIN_RENAME_VER_MAJ )) &&
-                (( ${BASH_REMATCH[2]} >= MIN_RENAME_VER_MIN )) )
-     then
-         required_ver=${MIN_RENAME_VER_MAJ}.${MIN_RENAME_VER_MIN}
-         echo -e "\nERROR: This script requires the Perl rename program (version >= ${required_ver})
-  e.g.: 'rename' from the Guix 'rename' package
--       'perl-rename' from the Parabola 'perl-file-rename' package
-+       'perl-rename' from the Archlinux package or 'perl-file-rename' in the Parabola project
-        'prename' from the Trisquel 'rename' package"
-         return 1
-+    else
-+        if [[ "$( ${RENAME_CMD} --version )" =~ 'File::Rename' ]]
-+        then
-+            RENAME_FLAVOUR=RMBARKER
-+        else
-+            RENAME_FLAVOUR=PEDERST
-+        fi
-     fi
- 
-     # verify that Wget is available
-@@ -562,9 +569,13 @@
- 
- apply_batch_branding()
- {
--    find . | tac | grep -i fennec  | ${RENAME_CMD} --nofullpath -E 's/fennec/icecatmobile/;' -E 's/Fennec/IceCatMobile/;'
--    find . | tac | grep -i firefox | ${RENAME_CMD} --nofullpath -E 's/firefox/icecat/;' -E 's/Firefox/IceCat/;'
--
-+    if [ "${RENAME_FLAVOUR}" = "PEDERST" ]
-+    then
-+        find . | tac | grep -i firefox | ${RENAME_CMD} 's/firefox/icecat/ if -f;'
-+        find . | tac | grep -i firefox | ${RENAME_CMD} 's/Firefox/IceCat/ if -f;'
-+    else
-+        find . | tac | grep -i firefox | ${RENAME_CMD} --nofullpath -E 's/firefox/icecat/;' -E 's/Firefox/IceCat/;'
-+    fi
-     echo "Running batch rebranding (this will take a while)"
-     local sed_script="
- s|marketplace\\.firefox\\.com|f-droid.org/repository/browse|g;
-@@ -625,7 +636,12 @@
- 
-     sed 's/mozilla-bin/icecat-bin/' -i build/unix/run-mozilla.sh
- 
--    find . | tac | grep run-mozilla | ${RENAME_CMD} --nofullpath -E 's/mozilla/icecat/;'
-+    if [ "${RENAME_FLAVOUR}" = "PEDERST" ]
-+    then
-+        find . | tac | grep run-mozilla | ${RENAME_CMD} 's/mozilla/icecat/ if -f;'
-+    else
-+        find . | tac | grep run-mozilla | ${RENAME_CMD} --nofullpath -E 's/mozilla/icecat/;'
-+    fi
- 
-     # do not alter useragent/platform/oscpu/etc with fingerprinting countermeasure, it makes things worse
-     sed '/ShouldResistFingerprinting/,/}/s/^/\/\//' -i ./netwerk/protocol/http/nsHttpHandler.cpp
-EOF
 
   # Produce IceCat sources
   bash makeicecat
