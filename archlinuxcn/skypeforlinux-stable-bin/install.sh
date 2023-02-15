@@ -3,7 +3,7 @@ _userns="kernel.unprivileged_userns_clone"
 
 post_install() {
     userns="$(sysctl -n $_userns 2>/dev/null)"
-    if [[ $? -ne 0 || $userns -ne 1 ]]; then
+    if [[ $? -eq 0 && $userns -ne 1 ]]; then
 	echo -e "\e[34;1m"
 	echo ===
 	echo === !!! WARNING !!!

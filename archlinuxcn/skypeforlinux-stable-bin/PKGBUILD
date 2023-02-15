@@ -2,9 +2,9 @@
 # Original Maintainer: Jameson Pugh <imntreal@gmail.com>
 
 _pkgname=skypeforlinux
-pkgname=$_pkgname-stable-bin
-pkgver=8.93.0.406
-pkgrel=1
+pkgname="$_pkgname-stable-bin"
+pkgver=8.93.0.408
+pkgrel=2
 pkgdesc="Skype for Linux - Stable/Release Version"
 arch=("x86_64")
 url="http://www.skype.com"
@@ -20,7 +20,7 @@ install=install.sh
 source=(
 "https://repo.skype.com/rpm/stable/${_pkgname}_${pkgver}-1.x86_64.rpm"
 )
-sha256sums=('2928dd4b7375ae24221f41e6ca5c9e07a63e04af22ec0e75da67736b0c76a5f4')
+sha256sums=('43d8611c016c7aedfbb15825a875095e63f38ad46ccc7e35991c29318ceb39a6')
 
 package() {
   cd $pkgdir
