@@ -2,7 +2,7 @@
 # Contributor: AndyRTR <andyrtr@archlinux.org>
 
 pkgname=xorg-xwayland-hidpi-git
-pkgver=21.1.4.r552.ge196535abb
+pkgver=21.1.4.r564.g462b06033
 pkgrel=1
 arch=('x86_64')
 license=('custom')
@@ -22,7 +22,7 @@ makedepends=('meson' 'git'
 source=("xserver-hidpi::git+https://gitlab.freedesktop.org/xorg/xserver.git"
        'xwlScaling.diff')
 sha256sums=('SKIP'
-            'a4cbf9dddcd552d7d6a37ea80010f39cc13fbd12f94624f5ae0308bd26e8906e')
+            '03c8eaf30601762f94226330ea5555c5c53f4b0949d806d7929d7fd151010e64')
 provides=('xorg-xwayland' 'xorg-server-xwayland' 'xorg-server-xwayland-git' 'xorg-server-xwayland-hidpi-git')
 conflicts=('xorg-xwayland' 'xorg-server-xwayland' 'xorg-server-xwayland-git' 'xorg-server-xwayland-hidpi-git')
 replaces=('xorg-server-xwayland-hidpi-git')
@@ -78,7 +78,6 @@ package() {
   # bin + manpage + .pc file
   install -m755 -Dt "${pkgdir}"/usr/bin build/hw/xwayland/Xwayland
   install -m644 -Dt "${pkgdir}"/usr/share/man/man1 build/hw/xwayland/Xwayland.1
-  install -m644 -Dt "${pkgdir}"/usr/lib/pkgconfig build/hw/xwayland/xwayland.pc
 
   # license
   install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" xserver-hidpi/COPYING
