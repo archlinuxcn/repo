@@ -8,5 +8,6 @@ update_on:
     github: etcd-io/etcd
     use_max_tag: true
     prefix: v
+    include_regex: 'v\d+\.\d+\.\d+'
 post_build: git_pkgbuild_commit
 
