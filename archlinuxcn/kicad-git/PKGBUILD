@@ -1,7 +1,7 @@
 # Maintainer: Nick Østergaard <oe.nick at gmail dot com>
 
 pkgname=kicad-git
-pkgver=7.0.0.rc2.r284.gefe49ecfd2
+pkgver=7.99.0.r141.gfc68b8d71a
 pkgrel=1
 pkgdesc="Electronic schematic and printed circuit board (PCB) design tools"
 arch=('i686' 'x86_64')
@@ -39,24 +39,21 @@ pkgver() {
 }
 
 build() {
-  cd "${srcdir}/${pkgname}"
-  mkdir -p build
-  cd build
-  cmake .. -G Ninja\
+  cmake -S ${pkgname} \
+    -B build \
+    -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DKICAD_USE_OCC=ON \
     -DKICAD_USE_EGL=ON \
     -DKICAD_SCRIPTING_WXPYTHON=ON \
     -DKICAD_BUILD_I18N=ON \
     -DKICAD_I18N_UNIX_STRICT_PATH=ON \
     -DKICAD_BUILD_QA_TESTS=OFF \
     -Wno-dev
-ninja
+
+    ninja -C build
 }
 
 package() {
-  cd "${srcdir}/${pkgname}"
-  cd build
-  DESTDIR="$pkgdir" ninja install
+    DESTDIR="$pkgdir" ninja -C build install
 }
