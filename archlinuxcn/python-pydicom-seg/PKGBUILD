@@ -25,7 +25,7 @@ sha512sums=('f5aacfe39140d0345d938fec1d42ab5330ffed82e568df440e91e8197666d563bd0
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python -m build --wheel --no-isolation
+  python -m build --wheel --no-isolation -x
 }
 
 package() {
