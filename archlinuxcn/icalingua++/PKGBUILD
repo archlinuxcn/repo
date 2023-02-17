@@ -1,6 +1,6 @@
 pkgname=icalingua++
 _pkgname=icalingua
-pkgver=2.8.7
+pkgver=2.8.8
 pkgrel=1
 pkgdesc='A branch of deleted Icalingua, with limited support'
 license=('AGPL3')
@@ -30,5 +30,5 @@ package() {
 }
 sha256sums=('43da1c99b7a6aee974c20da3bcf925b660dff4ba44a447c86066c84c8bc95fbd'
             '33a02b61af9cd48abd332b6a13964c939649c7ec089bc1a1aca4014bbb8785d2')
-sha256sums_aarch64=('efda8484d47b0589204dd65970a500e4548c9a6df21137f8850e0304074f597c')
-sha256sums_x86_64=('5405e3935f3b2a6b8415adb487b368fe5e7384762eaeaa6829976635ea43284a')
+sha256sums_aarch64=('0328adfeec7ad0d7ae4f900c20011978b2e60d7b9b732dcca662693e5135ab7e')
+sha256sums_x86_64=('3a617b307b19e88d88fb9c39c226c566b16a0a7e13e56d5a309596d3567bf450')
