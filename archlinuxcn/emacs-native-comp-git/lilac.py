@@ -8,15 +8,10 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if 'pkgdesc=' in line:
             line = 'pkgdesc="GNU Emacs. Development master branch. AOT&JIT enabled."'
-
         if 'pkgname=' in line:
             line = '  pkgname="emacs-native-comp-git"'
-            checks = checks + '1'
-
         if line.startswith('replaces='):
-            checks = checks + '2'
-            line = 'replaces=("emacs-native-comp-nopgtk-git")'
-            continue
+            line = ''
 
         #disable all flags
         if '="YES"' in line:
@@ -49,6 +44,5 @@ def pre_build():
         print(line)
 
     # make sure PKGBUILD is modified
-    # it's 7 because there are 2 pkgname (if $CLI)
-    if len(checks) != 8:
+    if len(checks) != 5:
         raise ValueError('PKGBUILD editing not completed. checks=' + checks)
