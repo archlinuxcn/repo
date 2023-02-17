@@ -1,11 +1,11 @@
-# Maintainer: Pedro A. López-Valencia <https://aur.archlinux.org/users/vorbote>
+# Maintainer: Pedro A. López-Valencia <https://aur.archlinux.org/users/toropisco>
 
 ################################################################################
 # CAVEAT LECTOR: This PKGBUILD is highly opinionated. I give you
 #                enough rope to hang yourself, but by default it
 #                only enables the features I use.
 #
-#        TLDR: yaourt users, cry me a river.
+#        TLDR:   yaourt users, cry me a river.
 #
 #        Everyone else: do not update blindly this PKGBUILD. At least
 #        make sure to compare and understand the changes.
@@ -93,7 +93,7 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-native-comp-git"
 fi
-pkgver=30.0.50.165017
+pkgver=30.0.50.165025
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch. AOT&JIT enabled."
 arch=('x86_64')
@@ -103,6 +103,7 @@ depends_nox=('gnutls' 'libxml2' 'jansson')
 depends=("${depends_nox[@]}" 'harfbuzz')
 makedepends=('git')
 provides=('emacs')
+conflicts=('emacs')
 source=("emacs-git::git+https://git.savannah.gnu.org/git/emacs.git"
         "nemacs")
 options=(!strip)
