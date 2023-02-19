@@ -16,7 +16,7 @@ sha256sums=('SKIP')
 
 pkgver() {
   cd kicad-packages3D
-  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+  git describe --long | sed 's/-rc/rc/;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
         
 build() {
