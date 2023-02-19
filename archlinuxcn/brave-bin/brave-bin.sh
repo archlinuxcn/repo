@@ -9,4 +9,4 @@ fi
 
 export CHROME_VERSION_EXTRA="stable"
 
-exec /usr/lib/brave-bin/brave "$@" $USER_FLAGS
+exec /opt/brave-bin/brave "$@" $USER_FLAGS

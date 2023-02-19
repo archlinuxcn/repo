@@ -13,7 +13,7 @@
 
 pkgname=brave-bin
 pkgver=1.48.164
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc='Web browser that blocks ads and trackers by default (binary release)'
 arch=(x86_64 aarch64)
@@ -35,7 +35,7 @@ source_x86_64=(${pkgname}-${pkgver}-x86_64.zip::https://github.com/brave/brave-b
 source_aarch64=(${pkgname}-${pkgver}-aarch64.zip::https://github.com/brave/brave-browser/releases/download/v${pkgver}/brave-browser-${pkgver}-linux-arm64.zip)
 
 noextract=(${pkgname}-${pkgver}-x86_64.zip ${pkgname}-${pkgver}-aarch64.zip)
-sha256sums=('ba7d57a3328c68e6a78e49506af0e238936e823b2f463e8087c20fcf4300232a'
+sha256sums=('e7cd5f3d9b394d9add6b02f94cc78d6db589ae5d1ce06011bf69fa1f9b57365c'
             'c07276b69c7304981525ecb022f92daf7ae125a4fb05ac3442157b50826e257a')
 sha256sums_x86_64=('e00c27d0554634153727892626a46665817cf1f698e3192507e134d8c8ed2264')
 sha256sums_aarch64=('a75abd716131039c31d8415974c2c0c24e1891dbd2e3bfbf3441b1467ae83556')
@@ -47,18 +47,18 @@ prepare() {
 }
 
 package() {
-	install -dm0755 "$pkgdir/usr/lib"
-	cp -a brave "$pkgdir/usr/lib/$pkgname"
+	install -dm0755 "$pkgdir/opt"
+	cp -a brave "$pkgdir/opt/$pkgname"
 
 	# allow firejail users to get the suid sandbox working
-	chmod 4755 "$pkgdir/usr/lib/brave-bin/chrome-sandbox"
+	chmod 4755 "$pkgdir/opt/brave-bin/chrome-sandbox"
 
 	install -Dm0755 "$pkgname.sh" "$pkgdir/usr/bin/brave"
 	install -Dm0644 -t "$pkgdir/usr/share/applications/" "brave-browser.desktop"
 	install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" brave/LICENSE
 	pushd "$pkgdir/usr/"
 	for size in 16x16 24x24 32x32 48x48 64x64 128x128 256x256; do
-		install -Dm0644 "lib/$pkgname/product_logo_${size/x*/}.png" \
+		install -Dm0644 "$pkgdir/opt/$pkgname/product_logo_${size/x*/}.png" \
 			"share/icons/hicolor/$size/apps/brave-desktop.png"
 	done
 }
