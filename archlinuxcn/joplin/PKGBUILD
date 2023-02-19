@@ -2,7 +2,7 @@ pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
 pkgver=2.9.17
 groups=('joplin')
-pkgrel=1
+pkgrel=3
 _electronVersion=19
 depends=("electron${_electronVersion}" "nodejs")
 optdepends=('libappindicator-gtk3: for tray icon')
@@ -38,29 +38,42 @@ prepare() {
 }
 
 build() {
-    cd "${srcdir}/joplin-${pkgver}"
     _setup_env
+
+    cd "${srcdir}/joplin-${pkgver}"
     yarn install
+
+    # Fix "Error: Cannot find module '../../vendor/...'" error
+    sed -i '/^\/vendor\/$/d' .gitignore
+    # Fix https://github.com/laurent22/joplin/issues/7770
+    sed -i "1s/^.*$/const BaseCommand = require('.\/base-command').default;/" packages/app-cli/app/command-done.js
+
+    # Pack local packages
+    cd "packages"
+
+    for package in fork-htmlparser2 fork-sax fork-uslug htmlpack renderer turndown turndown-plugin-gfm lib; do
+        ( cd "${package}" && npm pack )
+        npm_pack_path=$(realpath "${package}/"*.tgz)
+
+        # Replace dependencies with local packages
+        sed -i 's_\("@joplin/'${package}'": \)".*"_\1 "file://'${npm_pack_path}'"_' */package.json
+    done
 }
 
 package_joplin() {
     pkgdesc="A note taking and to-do application with synchronization capabilities - CLI App"
     depends=('nodejs')
 
-    cd "${srcdir}/joplin-${pkgver}/packages"
     _setup_env
 
-    package_files=()
+    # Pack the app-cli package
+    cd "${srcdir}/joplin-${pkgver}/packages/app-cli"
+    npx gulp build
 
-    for package in fork-htmlparser2 fork-sax fork-uslug htmlpack renderer turndown turndown-plugin-gfm lib; do
-        ( cd "${package}" && npm pack )
-        package_files+=("$(realpath "${package}/"*.tgz)")
-    done
-
-    cd app-cli && npx gulp build && cd build && npm pack && cd ../..
-    package_files+=("$(realpath "app-cli/build/"*.tgz)")
-
-    npm install -g --prefix "${pkgdir}/usr" "${package_files[@]}"
+    # Install the package
+    cd build
+    npm pack
+    npm install -g --prefix "${pkgdir}/usr" *.tgz
 
     # Fix permissions set by npm
     chown -R root:root "${pkgdir}"
@@ -70,6 +83,8 @@ package_joplin-desktop() {
     pkgdesc="A note taking and to-do application with synchronization capabilities - Desktop"
     depends=("electron${_electronVersion}" "nodejs")
     optdepends=('libappindicator-gtk3: for tray icon')
+
+    _setup_env
 
     cd "${srcdir}/joplin-${pkgver}/packages/app-desktop"
 
@@ -85,6 +100,7 @@ package_joplin-desktop() {
     cp -vr build -t "${pkgdir}/usr/lib/${pkgname}"
     cp -vr dist/linux-unpacked/resources/app.asar.unpacked -t "${pkgdir}/usr/lib/${pkgname}"
 
+    # Install icons
     while read -r size; do
         mkdir -p "${pkgdir}/usr/share/icons/hicolor/${size}/apps/"
         cp "${pkgdir}/usr/lib/${pkgname}/build/icons/${size}.png" \
