@@ -1,11 +1,6 @@
 maintainers:
   - github: yuyichao
 
-# This depends on lmdbxx which is an any package from archlinuxcn
-# for now we can only grab it from the x86 build server
-# by specifying the build prefix
-build_prefix: archlinuxcn-aarch64
-
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
 repo_depends:
