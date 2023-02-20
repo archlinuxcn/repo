@@ -1,8 +1,8 @@
 # Maintainer: quietvoid <tcChlisop0@gmail.com>
 
 pkgname=libdovi
-pkgver=3.1.1
-pkgrel=2
+pkgver=3.1.2
+pkgrel=1
 pkgdesc='Library to read and write Dolby Vision metadata (C-API)'
 arch=('x86_64')
 url='https://github.com/quietvoid/dovi_tool/tree/main/dolby_vision'
@@ -16,7 +16,6 @@ sha256sums=(SKIP)
 
 prepare() {
   cargo fetch \
-    --locked \
     --manifest-path dovi_tool/dolby_vision/Cargo.toml
 }
 
