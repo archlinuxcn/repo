@@ -2,8 +2,8 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=108.0.1
-pkgrel=1
+pkgver=110.0
+pkgrel=2
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
 arch=(x86_64 aarch64)
@@ -41,10 +41,10 @@ makedepends=(
   python
   rust
   unzip
-  'wasi-compiler-rt>13'
-  'wasi-libc++>13'
-  'wasi-libc++abi>13'
-  'wasi-libc>=1:0+258+30094b6'
+  'wasi-compiler-rt>15'
+  'wasi-libc++>15'
+  'wasi-libc++abi>15'
+  'wasi-libc>=1:0+314+a1c7c2c'
   xorg-server-xvfb
   yasm
   zip
@@ -67,11 +67,12 @@ options=(
   !strip
 )
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
+_arch_git_blob=https://raw.githubusercontent.com/archlinux/svntogit-packages
 # _source_tag="${pkgver}-${pkgrel%.*}"
 # _source_tag="${pkgver}-${pkgrel}"
-_source_commit='4af48fa20359dfbe9ffd8ac57619bd234923eb0e'
-# _settings_tag='7.3'
-_settings_commit='424560ba704960d712242d0e2f9e92f2027a2d15'
+_source_commit='19d2fe15c83e448e0b11e0530a576875e408ceeb'
+# _settings_tag='7.4'
+_settings_commit='ebec9c7db23ec1d1407da547b05207f49ff9c575'
 
 install='librewolf.install'
 source=(
@@ -81,21 +82,27 @@ source=(
   "git+https://gitlab.com/${pkgname}-community/settings.git#commit=${_settings_commit}"
   "default192x192.png"
   "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
-  "${_arch_git}/0001-libwebrtc-screen-cast-sync.patch"
+  "${_arch_git_blob}/15a316eae92227054a924561172c8271bee7fc9c/trunk/0001-libwebrtc-screen-cast-sync.patch"
 )
-sha256sums=('9821ac130dad01383e03276bf6cc92d41329d351da1fa7fa238168f8890611ea'
+
+source_aarch64=("0001-libwebrtc-screen-cast-sync_additional_aarch64.patch") # include scoped_glib.cc for aarch64 as well; breaks x86_64 build though?
+
+sha256sums=('d3882492190e4fdcfa142772cf35de5403effb011d24357b315d643ed9168a39'
             'SKIP'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
             'SKIP'
             'SKIP'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1'
             '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d'
-            '5c164f6dfdf2d97f3f317e417aaa2e6ae46a9b3a160c3162d5073fe39d203286')
+            '43c83101b7ad7dba6f5fffeb89b70a661a547d506a031ea2beada42ccf04eec7')
+sha256sums_aarch64=('358655062957b12255977714f3d04123857e562679cd35efb2b67b2e182a464a')
 
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
-# change this to false if you do not want to run a PGO build for aarch64 as well
-_build_profiled_aarch64=true
+# change this to true if you do want to run a PGO build for aarch64 or x86_64
+# seems to be broken since 109.somethingsomething, so disabled by default in the AUR PKGBUILD for now
+_build_profiled_aarch64=false
+_build_profiled_x86_64=false
 
 prepare() {
   mkdir -p mozbuild
@@ -203,6 +210,11 @@ fi
   # https://src.fedoraproject.org/rpms/firefox/blob/rawhide/f/libwebrtc-screen-cast-sync.patch
   patch -Np1 -i ../0001-libwebrtc-screen-cast-sync.patch
 
+  if [[ $CARCH == 'aarch64' ]]; then
+    # separate patch to also allow aarch64 to build without breaking x86_64 builds
+    patch -Np1 -i ../0001-libwebrtc-screen-cast-sync_additional_aarch64.patch
+  fi
+
   # upstream patches from gentoo
 
   # pgo improvements
@@ -215,15 +227,10 @@ fi
   # Remove some pre-installed addons that might be questionable
   patch -Np1 -i ${_patches_dir}/remove_addons.patch
 
-  # Debian patch to enable global menubar
-  # disabled for the default build, as it seems to cause issues in some configurations
-  # 2022-01-21: re-enabled because it seems to not mess things up anymore nowadays?
-  patch -Np1 -i ${_patches_dir}/unity-menubar.patch
-
-  # KDE menu
-  # patch -Np1 -i ${_patches_dir}/mozilla-kde.patch
-  # custom patch that does not conflict with the unity patch
-  patch -Np1 -i ${_patches_dir}/mozilla-kde_after_unity.patch
+  # KDE menu and unity menubar
+  patch -Np1 -i ${_patches_dir}/unity_kde/mozilla-kde.patch
+  patch -Np1 -i ${_patches_dir}/unity_kde/firefox-kde.patch
+  patch -Np1 -i ${_patches_dir}/unity_kde/unity-menubar.patch
 
   # Disabling Pocket
   patch -Np1 -i ${_patches_dir}/sed-patches/disable-pocket.patch
@@ -241,8 +248,10 @@ fi
   # Assorted patches
   patch -Np1 -i ${_patches_dir}/context-menu.patch
   patch -Np1 -i ${_patches_dir}/urlbarprovider-interventions.patch
+  patch -Np1 -i ${_patches_dir}/rfp-performance-api.patch
+  patch -Np1 -i ${_patches_dir}/unified-extensions-dont-show-recommendations.patch
 
-# allow enabling JPEG XL in non-nightly browser
+  # allow enabling JPEG XL in non-nightly browser
   patch -Np1 -i ${_patches_dir}/allow-JXL-in-non-nightly-browser.patch
 
   # change some hardcoded directory strings that could lead to unnecessarily
@@ -333,13 +342,13 @@ build() {
   # Do 3-tier PGO
   echo "Building instrumented browser..."
 
-  if [[ $CARCH == 'aarch64' ]]; then
+  if [[ $CARCH == 'aarch64' && $_build_profiled_aarch64 == true ]]; then
 
     cat >.mozconfig ../mozconfig - <<END
 ac_add_options --enable-profile-generate
 END
 
-    else
+  elif [[ $CARCH == 'x86_64' && $_build_profiled_x86_64 == true ]]; then
 
     cat >.mozconfig ../mozconfig - <<END
 ac_add_options --enable-profile-generate=cross
@@ -347,52 +356,54 @@ END
 
   fi
 
-  ./mach build
+  if [[ $CARCH == 'aarch64' && $_build_profiled_aarch64 == true || $CARCH == 'x86_64' && $_build_profiled_x86_64 == true ]]; then
 
-  echo "Profiling instrumented browser..."
+    ./mach build
 
-  ./mach package
+    echo "Profiling instrumented browser..."
 
-  LLVM_PROFDATA=llvm-profdata \
-    JARLOG_FILE="$PWD/jarlog" \
-    xvfb-run -s "-screen 0 1920x1080x24 -nolisten local" \
-    ./mach python build/pgo/profileserver.py
+    ./mach package
 
-  stat -c "Profile data found (%s bytes)" merged.profdata
-  test -s merged.profdata
+    LLVM_PROFDATA=llvm-profdata \
+      JARLOG_FILE="$PWD/jarlog" \
+      xvfb-run -s "-screen 0 1920x1080x24 -nolisten local" \
+      ./mach python build/pgo/profileserver.py
 
-  stat -c "Jar log found (%s bytes)" jarlog
-  test -s jarlog
+    stat -c "Profile data found (%s bytes)" merged.profdata
+    test -s merged.profdata
 
-  echo "Removing instrumented browser..."
-  ./mach clobber
+    stat -c "Jar log found (%s bytes)" jarlog
+    test -s jarlog
 
-  echo "Building optimized browser..."
+    echo "Removing instrumented browser..."
+    ./mach clobber
 
-  if [[ $CARCH == 'aarch64' ]]; then
+    echo "Building optimized browser..."
 
-    cat >.mozconfig ../mozconfig - <<END
+    if [[ $CARCH == 'aarch64' ]]; then
+
+      cat >.mozconfig ../mozconfig - <<END
 ac_add_options --enable-lto
 ac_add_options --enable-profile-use
 ac_add_options --with-pgo-profile-path=${PWD@Q}/merged.profdata
 ac_add_options --with-pgo-jarlog=${PWD@Q}/jarlog
 END
 
-  else
+    else
 
-    cat >.mozconfig ../mozconfig - <<END
+      cat >.mozconfig ../mozconfig - <<END
 ac_add_options --enable-lto=cross
 ac_add_options --enable-profile-use=cross
 ac_add_options --with-pgo-profile-path=${PWD@Q}/merged.profdata
 ac_add_options --with-pgo-jarlog=${PWD@Q}/jarlog
 END
 
+    fi
   fi
 
-  # cat >>.mozconfig <<END
-# ac_add_options --enable-linker=lld
-# ac_add_options --disable-bootstrap
-# END
+  if [[ $CARCH == 'aarch64' && $_build_profiled_aarch64 == false || $CARCH == 'x86_64' && $_build_profiled_x86_64 == false ]]; then
+    cat >.mozconfig ../mozconfig
+  fi
 
   ./mach build
 
