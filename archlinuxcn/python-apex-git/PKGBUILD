@@ -16,7 +16,6 @@ makedepends=(
   python-pip
   qt5-base
 )
-checkdepends=(python-pytest)
 provides=(python-apex=${pkgver})
 conflicts=(python-apex)
 source=("${pkgname}::git+https://github.com/NVIDIA/apex.git")
