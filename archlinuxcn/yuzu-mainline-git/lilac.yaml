@@ -6,6 +6,14 @@ maintainers:
 
 build_prefix: extra-x86_64
 
+repo_depends:
+  - dynarmic
+  - discord-rpc-git
+  - cubeb-git
+  - cpp-httplib
+  - cpp-jwt
+  - xbyak
+
 pre_build: vcs_update
 
 post_build: git_pkgbuild_commit
