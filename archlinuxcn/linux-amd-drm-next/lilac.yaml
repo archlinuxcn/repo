@@ -3,14 +3,12 @@
 maintainers:
   - github: heavysink
 
-time_limit_hours: 2
+time_limit_hours: 4
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['miffe'])
-
-post_build: aur_post_build
-
 update_on:
-  - source: aur
-    aur: linux-mainline
+  - source: vcs
+    vcs: git+https://gitlab.freedesktop.org/agd5f/linux.git
+    use_latest_tag: true
+    query: amd-drm-next-
