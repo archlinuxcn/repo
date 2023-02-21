@@ -2,7 +2,7 @@
 # Contributor: Alexey Yakovenko <waker@users.sourceforge.net>
 
 pkgname=deadbeef
-pkgver=1.9.4
+pkgver=1.9.5
 pkgrel=1
 pkgdesc='A GTK+ audio player for GNU/Linux.'
 arch=('x86_64')
@@ -11,7 +11,7 @@ license=('GPL2')
 depends=('alsa-lib' 'hicolor-icon-theme' 'desktop-file-utils' 'jansson' 'libdispatch')
 makedepends=('libvorbis' 'libmad' 'flac' 'curl' 'imlib2' 'wavpack' 'libsndfile' 'libcdio' 'libcddb'
              'libx11' 'faad2' 'zlib' 'intltool' 'pkgconfig' 'libpulse' 'libzip' 'libsamplerate'
-             'yasm' 'ffmpeg4.4' 'gtk2' 'gtk3' 'clang' 'opusfile' 'mpg123')
+             'yasm' 'ffmpeg' 'gtk2' 'gtk3' 'clang' 'opusfile' 'mpg123' 'git')
 optdepends=('gtk2: for the GTK2 interface'
             'gtk3: for the GTK3 interface'
             'libsamplerate: for Resampler plugin'
@@ -33,30 +33,24 @@ optdepends=('gtk2: for the GTK2 interface'
             'libzip: for vfs_zip plugin'
             'ffmpeg4.4: for ffmpeg plugin'
             'opusfile: for opus plugin')
-source=("https://github.com/DeaDBeeF-Player/${pkgname}/archive/${pkgver}.tar.gz"
-        apbuild.zip::"https://github.com/DeaDBeeF-Player/apbuild/archive/refs/heads/master.zip"
-        mp4p.zip::"https://github.com/DeaDBeeF-Player/mp4p/archive/refs/heads/master.zip")
-sha512sums=('7216b879182f24dd3daf1d7e5c6a7e18a16e3bd844ceeff6d058a74d2a2374b81a34c2861a5f8c1e0b3244d00b1d3331dab626d6bee072bba9822f280d14501e'
-            'bd40c513387ec2e24b4d0b4a8fb36955ef81ba81bc79fbe8c2e60f733103df61ebf230729bd1d4988306d8386415ed13932629d084238f1b8b22e9d18f2955d6'
-            '517ad6b340680861427f3661b72ecb7e187b850fe455dacbc924bac2af5ff8786cfec3ebe28581cb4e09c54f45801a218d60bb6e75e9c75bdeeb456b48e26f9a')
-export PKG_CONFIG_PATH='/usr/lib/ffmpeg4.4/pkgconfig'
+source=($pkgname::"git+https://github.com/DeaDBeeF-Player/${pkgname}.git#tag=$pkgver")
+md5sums=('SKIP')
 
 prepare() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
-	cp -R ${srcdir}/mp4p-master/* external/mp4p/
-	cp -R ${srcdir}/apbuild-master/* external/apbuild/
+	cd "${srcdir}/${pkgname}"
+    git submodule update --init --recursive
 
 	./autogen.sh 
 	CC=clang CXX=clang++ ./configure --prefix=/usr
 }
 
 build () {
-	cd "${srcdir}/${pkgname}-${pkgver}"
+	cd "${srcdir}/${pkgname}"
 	make
 }
 
 package() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
+	cd "${srcdir}/${pkgname}"
 	make DESTDIR="$pkgdir" install
   install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
 }
