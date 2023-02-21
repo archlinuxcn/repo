@@ -4,7 +4,7 @@
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
 pkgver=4.6.5
-pkgrel=1
+pkgrel=1.1
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
@@ -32,26 +32,20 @@ prepare() {
 }
 
 build() {
-    cd tdesktop-$pkgver-full
-
-    export PKG_CONFIG_PATH='/usr/lib/ffmpeg4.4/pkgconfig'
+    CXXFLAGS+=' -ffat-lto-objects'
     # Turns out we're allowed to use the official API key that telegram uses for their snap builds:
     # https://github.com/telegramdesktop/tdesktop/blob/8fab9167beb2407c1153930ed03a4badd0c2b59f/snap/snapcraft.yaml#L87-L88
     # Thanks @primeos!
-    cmake \
-        -B build \
-        -G Ninja \
+    cmake -B build -S tdesktop-$pkgver-full -G Ninja \
+        -DCMAKE_VERBOSE_MAKEFILE=ON \
         -DCMAKE_INSTALL_PREFIX="/usr" \
         -DCMAKE_BUILD_TYPE=Release \
         -DTDESKTOP_API_ID=611335 \
         -DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c \
         -DTDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME=ON
-    ninja -C build
+    cmake --build build
 }
 
 package() {
-    cd tdesktop-$pkgver-full
-    DESTDIR=$pkgdir ninja -C build install
-    # They botched the release and put a lot of stuff here.
-    rm -rf "$pkgdir/build"
+    DESTDIR="$pkgdir" cmake --install build
 }
