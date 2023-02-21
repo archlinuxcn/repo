@@ -1,7 +1,7 @@
 #Maintainer: heavysink (winstonwu91 at gmail)
 
 pkgname=supertuxkart-git
-pkgver=23148+18575
+pkgver=23169+18579
 pkgrel=1
 pkgdesc="A kart racing game featuring Tux and his friends - development version"
 url="http://supertuxkart.sourceforge.net/"
@@ -10,7 +10,7 @@ arch=('i686' 'x86_64')
 
 makedepends=("git" "subversion" "cmake")
 
-depends=("hicolor-icon-theme" "sqlite" "python" "libvorbis" "freealut" "mcpp" "glut" "glew" "libraqm" "libxkbcommon" "libopenglrecorder" "sdl2" "bluez-libs")
+depends=("hicolor-icon-theme" "sqlite" "python" "libvorbis" "freealut" "mcpp" "glut" "glew" "libraqm" "libxkbcommon" "libopenglrecorder" "sdl2" "bluez-libs" "shaderc")
 
 conflicts=("supertuxkart")
 replaces=("supertuxkart-cmakesvn" "supertuxkart-svn")
