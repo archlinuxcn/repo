@@ -1,27 +1,27 @@
-From fc0ebe128bf0c9612b87e4480b87db3d4ed9d108 Mon Sep 17 00:00:00 2001
+From 8e166a813b56165d7a147cf7ab92e1d1abcb085a Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 13 Jul 2022 09:08:18 -0400
 Subject: [PATCH] Do not force fusion style
 
 ---
- src/appshell/appshell.cpp         |  1 -
+ src/app/app.cpp                   |  1 -
  src/framework/ui/view/uitheme.cpp | 10 +++++++++-
  2 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/src/appshell/appshell.cpp b/src/appshell/appshell.cpp
-index 4bd0d1065e..d36e48dbc7 100644
---- a/src/appshell/appshell.cpp
-+++ b/src/appshell/appshell.cpp
-@@ -61,7 +61,6 @@ int AppShell::run(int argc, char** argv)
+diff --git a/src/app/app.cpp b/src/app/app.cpp
+index 397b46edea..f62f1abda3 100644
+--- a/src/app/app.cpp
++++ b/src/app/app.cpp
+@@ -63,7 +63,6 @@ int App::run(int argc, char** argv)
      // ====================================================
      // Setup global Qt application variables
      // ====================================================
 -    qputenv("QT_STYLE_OVERRIDE", "Fusion");
      qputenv("QML_DISABLE_DISK_CACHE", "true");
  
-     const char* appName;
+ #ifdef Q_OS_LINUX
 diff --git a/src/framework/ui/view/uitheme.cpp b/src/framework/ui/view/uitheme.cpp
-index cd42b1d878..652d0b262d 100644
+index 3d8f4cf455..b355ed6c33 100644
 --- a/src/framework/ui/view/uitheme.cpp
 +++ b/src/framework/ui/view/uitheme.cpp
 @@ -89,8 +89,16 @@ struct FontConfig
@@ -43,5 +43,5 @@ index cd42b1d878..652d0b262d 100644
      setObjectName("UiTheme");
  }
 -- 
-2.37.0
+2.39.2
 
