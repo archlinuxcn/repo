@@ -32,7 +32,7 @@ depends=(
         'ffmpeg' 'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so' 'libavutil.so' 'libswresample.so' 'libswscale.so'
         'libplacebo-git' 'libplacebo.so'
         'shaderc' 'libshaderc_shared.so'
-        'pipewire'
+        'libpipewire'
 )
 makedepends=('git' 'python-docutils' 'vulkan-headers' 'wayland-protocols'
              'ffnvcodec-headers' 'meson' 'pulseaudio' 'openal'
@@ -41,6 +41,7 @@ optdepends=('youtube-dl: for video-sharing websites playback'
             'yt-dlp: for video-sharing websites playback'
             'openal: OpenAL audio output'
             'pulseaudio: PulseAudio audio output'
+            'pipewire: PipeWire audio output'
             'smbclient: Samba support'
             'nvidia-utils: for hardware accelerated video decoding with CUDA')
 provides=('mpv' 'libmpv.so')
