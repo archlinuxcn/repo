@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=python-onnx
-pkgver=1.13.0
+pkgver=1.13.1
 pkgrel=1
 epoch=1
 pkgdesc='Open Neural Network Exchange'
