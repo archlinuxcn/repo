@@ -1,7 +1,7 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 _pkgname=xemu
 pkgname=$_pkgname-git
-pkgver=0.7.71.r0.g22db3304a4
+pkgver=0.7.84.r0.gd8fa50e524
 pkgrel=1
 pkgdesc="Original Xbox emulator (fork of XQEMU)"
 arch=('x86_64')
@@ -28,7 +28,7 @@ provides=("$_pkgname")
 conflicts=("$_pkgname")
 install=$_pkgname.install
 source=(
-	"$_pkgname::git+https://github.com/mborgerson/xemu.git"
+	"$_pkgname::git+https://github.com/xemu-project/xemu.git"
 	'berkeley-softfloat-3::git+https://gitlab.com/qemu-project/berkeley-softfloat-3.git'
 	'berkeley-testfloat-3::git+https://gitlab.com/qemu-project/berkeley-testfloat-3.git'
 	'genconfig::git+https://github.com/mborgerson/genconfig.git'
@@ -62,6 +62,7 @@ prepare() {
 	git config submodule.ui/keycodemapdb.url ../keycodemapdb
 	git config submodule.ui/thirdparty/imgui.url ../imgui
 	git config submodule.ui/thirdparty/implot.url ../implot
+    git -c protocol.file.allow=always submodule update
 	git submodule update
 	mkdir ../build tomlplusplus/include
 	python scripts/gen-license.py > XEMU_LICENSE
