@@ -1,40 +1,32 @@
 # Maintainer: nissen22
-# Contributor: heavysink
-
 _pkgname=joycond-cemuhook
 pkgname=${_pkgname}-git
-pkgver=105.f4050bc
+pkgver=r116.d488022
 pkgrel=1
 pkgdesc="Support for cemuhook's UDP protocol for joycond devices"
 arch=("any")
 url="https://github.com/joaorb64/joycond-cemuhook"
 license=("unknown")
 
-depends=("joycond-git" "python" "python-termcolor" "python-evdev" "python-dbus-common" "python-argparse")
-makedepends=("git")
+depends=("joycond-git" "python-termcolor" "python-evdev" "python-dbus-common" "python-argparse" "python-pyudev" "upower" "systemd-libs")
+makedepends=("git" "python-build" "python-installer" "python-wheel" "python-setuptools" "python-setuptools-git-versioning-git")
 conflicts=("${_pkgname}")
-optdepends=('nintendo-udev: Udev rules for switch controllers'
-            'hid-nintendo-dkms: Necessary for kernel without hid-nintendo (< 5.10)')
+optdepends=('nintendo-udev: Udev rules for switch controllers', 'hid-nintendo-dkms: Kernel module with switch controller support.')
 
-source=("${_pkgname}::git+https://github.com/joaorb64/${_pkgname}.git" "run.sh")
-sha512sums=('SKIP' '492b633a637764f52e8750e1d9e3a32c7dd39f36db379f22392dfa21a9618b254f165771a03307886dbd69287bd353e249b9d53a738f805dd117aaf436b9c0cc')
+source=("${_pkgname}::git+https://github.com/joaorb64/${_pkgname}.git")
+sha512sums=('SKIP') 
 
 
 pkgver() {
   cd "${_pkgname}"
-  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
+build() {
+    cd "${_pkgname}"
+    python -m build --wheel --no-isolation
+}
 package() {
-    install -Dm755 "${srcdir}/run.sh" "${pkgdir}/usr/bin/${_pkgname}"
-
-    install -Dm644 "${srcdir}/${_pkgname}/joycond-cemuhook.py" "${pkgdir}/usr/lib/${pkgname}/${pkgname}.py"
-
-    install -Dm644 "${srcdir}/${_pkgname}/profiles/Nintendo Switch Combined Joy-Cons.json" "${pkgdir}/usr/lib/${pkgname}/profiles/Nintendo Switch Combined Joy-Cons.json"
-    install -Dm644 "${srcdir}/${_pkgname}/profiles/Nintendo Switch Left Joy-Con.json" "${pkgdir}/usr/lib/${pkgname}/profiles/Nintendo Switch Left Joy-Con.json"
-    install -Dm644 "${srcdir}/${_pkgname}/profiles/Nintendo Switch Pro Controller.json" "${pkgdir}/usr/lib/${pkgname}/profiles/Nintendo Switch Pro Controller.json"
-    install -Dm644 "${srcdir}/${_pkgname}/profiles/Nintendo Switch Right Joy-Con.json" "${pkgdir}/usr/lib/${pkgname}/profiles/Nintendo Switch Right Joy-Con.json"    
-    
-    # Probably dont need the readme
-    #install -Dm644 "${srcdir}/${_pkgname}/README.rst" "${pkgdir}/usr/share/doc/${_pkgname}/README.md"
+  cd "${_pkgname}"
+  python -m installer --destdir="$pkgdir" dist/*.whl
 }
