@@ -127,23 +127,14 @@ diff --git a/src/libs/xpcom18a4/Config.kmk b/src/libs/xpcom18a4/Config.kmk
 index 3b0831e5..a83a080b 100644
 --- a/src/libs/xpcom18a4/Config.kmk
 +++ b/src/libs/xpcom18a4/Config.kmk
-@@ -243,8 +243,8 @@ TEMPLATE_XPCOMEXE_LDFLAGS.darwin   = -bind_at_load $(filter-out -current_version
+@@ -243,8 +243,8 @@ TEMPLATE_XPComExe_LDFLAGS.darwin   = -bi
  #
- TEMPLATE_XPCOMTSTEXE               = XPCOM executable files (testcases)
- TEMPLATE_XPCOMTSTEXE_EXTENDS       = XPCOMEXE
--TEMPLATE_XPCOMTSTEXE_CXXFLAGS      = $(TEMPLATE_XPCOMEXE_CXXFLAGS) -Wno-format
--TEMPLATE_XPCOMTSTEXE_CFLAGS        = $(TEMPLATE_XPCOMEXE_CFLAGS)   -Wno-format
-+TEMPLATE_XPCOMTSTEXE_CXXFLAGS      = $(TEMPLATE_XPCOMEXE_CXXFLAGS)
-+TEMPLATE_XPCOMTSTEXE_CFLAGS        = $(TEMPLATE_XPCOMEXE_CFLAGS)  
- TEMPLATE_XPCOMTSTEXE_INST          = $(INST_TESTCASE)
+ TEMPLATE_XPComTstExe               = XPCOM executable files (testcases)
+ TEMPLATE_XPComTstExe_EXTENDS       = XPComExe
+-TEMPLATE_XPComTstExe_CXXFLAGS      = $(TEMPLATE_XPComExe_CXXFLAGS) -Wno-format
+-TEMPLATE_XPComTstExe_CFLAGS        = $(TEMPLATE_XPComExe_CFLAGS)   -Wno-format
++TEMPLATE_XPComTstExe_CXXFLAGS      = $(TEMPLATE_XPComExe_CXXFLAGS)
++TEMPLATE_XPComTstExe_CFLAGS        = $(TEMPLATE_XPComExe_CFLAGS)
+ TEMPLATE_XPComTstExe_INST          = $(INST_TESTCASE)
  ifdef VBOX_WITH_RUNPATH
-  TEMPLATE_XPCOMTSTEXE_LDFLAGS = '$(VBOX_GCC_RPATH_OPT)$(VBOX_WITH_RUNPATH)' $(TEMPLATE_XPCOMEXE_LDFLAGS)
-@@ -277,7 +277,7 @@ TEMPLATE_XPCOMBLDPROG_INCS                = \
- 	$(VBOX_PATH_SDK)/bindings/xpcom/include/string \
- 	$(VBOX_PATH_SDK)/bindings/xpcom/include/xpcom \
- 	$(VBOX_PATH_SDK)/bindings/xpcom/include/ipcd
--TEMPLATE_XPCOMBLDPROG_CFLAGS             = $(filter-out -pedantic -Wshadow, $(TEMPLATE_VBOX_BLDPROG_CFLAGS)) $(VBOX_GCC_Wno-int-to-pointer-cast) $(VBOX_GCC_Wno-pointer-to-int-cast) -Wno-format
-+TEMPLATE_XPCOMBLDPROG_CFLAGS             = $(filter-out -pedantic -Wshadow, $(TEMPLATE_VBOX_BLDPROG_CFLAGS)) $(VBOX_GCC_Wno-int-to-pointer-cast) $(VBOX_GCC_Wno-pointer-to-int-cast)
- TEMPLATE_XPCOMBLDPROG_CXXFLAGS.darwin    = $(TEMPLATE_VBoxBldProg_CXXFLAGS.darwin)     -fpascal-strings -fshort-wchar -fno-common -fno-rtti
- TEMPLATE_XPCOMBLDPROG_CXXFLAGS.solaris   = $(TEMPLATE_VBoxBldProg_CXXFLAGS.solaris)    -fno-omit-frame-pointer # for now anyway.
- TEMPLATE_XPCOMBLDPROG_LDFLAGS.darwin     = $(TEMPLATE_VBoxBldProg_LDFLAGS.darwin)      -fpascal-strings -fshort-wchar -fno-rtti -fno-exceptions
+  TEMPLATE_XPComTstExe_LDFLAGS = '$(VBOX_GCC_RPATH_OPT)$(VBOX_WITH_RUNPATH)' $(TEMPLATE_XPComExe_LDFLAGS)
