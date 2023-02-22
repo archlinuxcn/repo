@@ -4,8 +4,8 @@
 # from: git
 
 pkgname=anbox-git
-pkgver=1364.7a0bee7
-pkgrel=3
+pkgver=r1366.ddf4c57
+pkgrel=1
 epoch=1
 arch=('x86_64')
 url="http://anbox.io/"
@@ -56,7 +56,7 @@ pkgver() {
   cd "${pkgname%*-git}"
   ( set -o pipefail
     git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
-    printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
   )
 }
 
@@ -75,11 +75,13 @@ prepare() {
     | while read -r patch;do
         if patch --dry-run -Np1 -Rsf < "$srcdir/$patch.patch" &> /dev/null; then
           warning "Patch already applied, please remove $patch.patch from source[]!"
+          read -t5 -p 'press enter to continue...' || true
         else
           msg "Applying patch: $patch"
           patch -Np1 < "$srcdir/$patch.patch"
         fi
       done
+  sed -i 's/-std=c++11/-std=c++14/g' external/android-emugl/CMakeLists.txt
 }
 
 build() {
