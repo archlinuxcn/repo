@@ -36,6 +36,11 @@ conflicts=(python-lvis)
 source=("${_pkgname}::git+https://github.com/lvis-dataset/lvis-api.git")
 sha512sums=('SKIP')
 
+prepare() {
+  # fix https://github.com/lvis-dataset/lvis-api/issues/37
+  sed -i "s,np.float,float,g" "${_pkgname}/lvis/eval.py"
+}
+
 pkgver() {
   cd "${_pkgname}"
   printf "%s.r%s.%s" "${_pkgver}" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
