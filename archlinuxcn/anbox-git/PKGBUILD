@@ -4,7 +4,7 @@
 # from: git
 
 pkgname=anbox-git
-pkgver=r1366.ddf4c57
+pkgver=1366.ddf4c57
 pkgrel=1
 epoch=1
 arch=('x86_64')
@@ -56,7 +56,7 @@ pkgver() {
   cd "${pkgname%*-git}"
   ( set -o pipefail
     git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
   )
 }
 
