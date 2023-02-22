@@ -1,7 +1,7 @@
 # Maintainer: nissen22
 _pkgname=joycond-cemuhook
 pkgname=${_pkgname}-git
-pkgver=r116.d488022
+pkgver=116.d488022
 pkgrel=1
 pkgdesc="Support for cemuhook's UDP protocol for joycond devices"
 arch=("any")
@@ -19,7 +19,7 @@ sha512sums=('SKIP')
 
 pkgver() {
   cd "${_pkgname}"
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build() {
