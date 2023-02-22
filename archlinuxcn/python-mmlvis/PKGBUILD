@@ -20,21 +20,37 @@ depends=(
   python-six
 )
 makedepends=(
-  python-pip
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
 )
 provides=(python-lvis)
 conflicts=(python-lvis)
 replaces=(python-lvis-openmm-git)
 
-source=("https://files.pythonhosted.org/packages/py3/${_pkgname::1}/${_pkgname}/${_pkgname/-/_}-${pkgver}-py3-none-any.whl"
+source=("https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"
         "https://github.com/open-mmlab/cocoapi/raw/master/license.txt"
+        "https://github.com/open-mmlab/cocoapi/raw/master/lvis/requirements.txt"
 )
-sha512sums=('02c86f7b002d6e47ae4e497c0b78dc8e3496e04c8cfd3c7cf605d7c72da455e04051d5e8cad0cdd7fa23fc55535420731cabaaf33c584335a8b6ff20c0a2a52e'
-            'b0dc48c4d0fa9eaa101bf94dd75df4b23a9281ba714b0c1f01204d2d48c6f1de14cbe093590b16ef614168621146c9f708f6af2543561a56c76c81b66113c435')
+sha512sums=('5ca9510db867dc85f34a68e5361f955259980ba75653d6076aa3013d67d3941702536d8fc62829503a1e5895ab03bc8d7a2d3fed794d7e742eafe9183eb30bf2'
+            'b0dc48c4d0fa9eaa101bf94dd75df4b23a9281ba714b0c1f01204d2d48c6f1de14cbe093590b16ef614168621146c9f708f6af2543561a56c76c81b66113c435'
+            '76e376c790990a4a5c1a5eb2dac93de5aa7665f5ceaf22243a73a572db6cc4e2bd2ba6d0f611103b63133c9a5b7d0f434e3c4cba5014473fbc2fa062d708ae39')
 
+prepare() {
+  # fix https://github.com/open-mmlab/cocoapi/issues/29
+  sed -i "s,np.float,float,g" "${_pkgname}-${pkgver}/lvis/eval.py"
+  # add missing requirements.txt
+  cp -v "requirements.txt" "${_pkgname}-${pkgver}"
+}
+
+build() {
+  cd ${_pkgname}-${pkgver}
+  python -m build --wheel --no-isolation
+}
 package() {
-  PIP_CONFIG_FILE=/dev/null pip install --isolated --root="${pkgdir}" --ignore-installed --no-deps *.whl
-  python -O -m compileall "${pkgdir}"
+  cd ${_pkgname}-${pkgver}
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 "${srcdir}/license.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
