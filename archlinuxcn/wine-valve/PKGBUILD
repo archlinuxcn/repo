@@ -7,8 +7,8 @@
 # Contributor: heavysink <winstonwu91 at gmail>
 pkgname=wine-valve
 epoch=4
-pkgver=7.0.6b
-_pkgver='7.0-6b'
+pkgver=7.0.6e
+_pkgver='7.0-6e'
 pkgrel=1
 pkgdesc='A compatibility layer for running Windows programs (Valve version)'
 arch=('i686' 'x86_64')
@@ -82,7 +82,7 @@ optdepends=(
     'samba'
     'dosbox'
 )
-options=('staticlibs' '!lto')
+options=('staticlibs' '!lto' '!debug' 'strip')
 install="$pkgname.install"
 source=("https://github.com/ValveSoftware/wine/archive/proton-wine-${_pkgver}.tar.gz"
         '30-win32-aliases.conf'
@@ -213,7 +213,7 @@ package() {
     done
 }
 
-sha256sums=('73850c64a134debb3603ab1f4375d922ee0504c3ab9d1c7915acd32fbff9280b'
+sha256sums=('51a028c216f0be4c7bafa853a3c2a2ef6abf379ea1ea99fb0dd8635dc0d28512'
             '9901a5ee619f24662b241672a7358364617227937d5f6d3126f70528ee5111e7'
             '6dfdefec305024ca11f35ad7536565f5551f09119dda2028f194aee8f77077a4'
             '7c73a0fd35d8905d5d0fc33f5cf1558f77b4d70e544c92034ffe41a9d50d8c40'
