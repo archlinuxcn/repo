@@ -88,7 +88,9 @@ build() {
     -DBUILD_UNIT_TESTS=Off \
     -DBUILD_CRASHPAD_CLIENT=Off \
     -DMUSESCORE_BUILD_CONFIG=release \
-    -DUSE_SYSTEM_FREETYPE=On
+    -DUSE_SYSTEM_FREETYPE=On \
+    -DMUSESCORE_BUILD_MODE=release \
+    -DMUE_BUILD_UNIT_TESTS=Off
   make lrelease -j1
   make manpages -j1
   make mscore_alias -j1
