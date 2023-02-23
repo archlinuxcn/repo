@@ -6,7 +6,7 @@
 pkgbase=qxmpp
 pkgname=('qxmpp' 'qxmpp-doc')
 pkgver=1.4.0
-pkgrel=3
+pkgrel=4
 pkgdesc='Cross-platform C++ XMPP client and server library'
 arch=('i686' 'x86_64')
 url='https://github.com/qxmpp-project/qxmpp'
@@ -38,7 +38,7 @@ build() {
 package_qxmpp() {
 	cd "$srcdir"
 	DESTDIR="$pkgdir" cmake --install build
-	rm -rf "$pkgdir/usr/share/doc"
+	rm -rf "$pkgdir/usr/share"
 }
 
 package_qxmpp-doc(){
