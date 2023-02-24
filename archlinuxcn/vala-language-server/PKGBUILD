@@ -1,21 +1,21 @@
 # Maintainer: benwaffle <vala@iofel.me>
 # Maintainer: Prince781 <princetonferro@gmail.com>
 pkgname=vala-language-server
-_pkgver=0.48.4
+_pkgver=0.48.7
 pkgver=${_pkgver/-/+}
 pkgrel=1
 pkgdesc='Language Server for Vala'
 arch=('x86_64')
-url="https://github.com/prince781/vala-language-server"
+url="https://github.com/vala-lang/vala-language-server"
 license=('LGPL-2.1')
 depends=('libgee' 'jsonrpc-glib' 'vala' 'meson')
 makedepends=('scdoc')
-source=("https://github.com/prince781/vala-language-server/archive/$_pkgver.tar.gz")
-sha256sums=('9de5d476a3d3b5d4f22f50af6c2417abd44066ab4231cbc00628e9fdab735100')
+source=("https://github.com/vala-lang/vala-language-server/releases/download/$_pkgver/vala-language-server-$_pkgver.tar.xz")
+sha256sums=('a93e09497738144792466d0c5ccb1347583d84a9987b65b08f6aa5d5a1e3f431')
  
-#prepare() {
-#	cd "$pkgname"
-#}
+prepare() {
+    cd "$pkgname-$_pkgver"
+}
  
 build() {
     cd "$pkgname-$_pkgver"
