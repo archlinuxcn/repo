@@ -55,6 +55,7 @@ package() {
 
     # create destination folder and copy files
     mkdir -p "${pkgdir}/opt/${pkgname}"
+    chmod 0755 "${pkgdir}/opt/${pkgname}"
     cp -a -r -u --verbose ./ "${pkgdir}/opt/${pkgname}"
 
     # create a soft link to the executable
