@@ -5,14 +5,12 @@ maintainers:
     email: Shengyu Zhang <la@archlinuxcn.org>
 
 build_prefix: extra-x86_64
-
-pre_build_script: aur_pre_build(maintainers=['rafaelff', 'edg-l'])
-
-post_build: aur_post_build
+# pre_build_script: aur_pre_build(maintainers=['rafaelff', 'edg-l'])
+# post_build: aur_post_build
 
 update_on:
-  - source: aur
-    aur: ddnet
+  # - source: aur
+  #   aur: ddnet
   - alias: libssl
   - alias: libcrypto
 
