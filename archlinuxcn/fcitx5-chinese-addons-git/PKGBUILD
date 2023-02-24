@@ -4,14 +4,14 @@
 
 _pkgname=fcitx5-chinese-addons
 pkgname=${_pkgname}-git
-pkgver=5.0.16.r0.gba0ad5b
+pkgver=5.0.16.r20.g3d0b578
 pkgrel=1
 pkgdesc="Addons related to Chinese, including IME previous bundled inside fcitx4"
 arch=('i686' 'x86_64')
 url="https://github.com/fcitx/fcitx5-chinese-addons"
 license=('GPL')
-depends=('curl' 'libime-git' 'qt5-webkit' 'fcitx5-qt5-git' 'opencc')
-makedepends=('boost' 'extra-cmake-modules' 'git' 'fcitx5-lua-git')
+depends=('curl' 'libime-git' 'qt5-webengine' 'fcitx5-qt5-git' 'opencc')
+makedepends=('boost' 'extra-cmake-modules' 'git' 'fcitx5-lua-git' 'ninja')
 optdepends=('fcitx5-lua-git: Lua and imeapi support from pinyin')
 provides=(${_pkgname})
 conflicts=(${_pkgname})
@@ -26,11 +26,11 @@ pkgver() {
 build(){
   cd fcitx5-chinese-addons
 
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=/usr/lib .
-  make
+  cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=/usr/lib -DUSE_WEBKIT=off .
+  ninja
 }
 
 package() {
   cd fcitx5-chinese-addons
-  make DESTDIR="$pkgdir" install
+  DESTDIR="$pkgdir" ninja install
 }
