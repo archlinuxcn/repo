@@ -1,6 +1,6 @@
 # Maintainer: amesgen <amesgen AT amesgen DOT de>
 pkgname=ghcup-hs-bin
-pkgver=0.1.19.1
+pkgver=0.1.19.2
 pkgrel=1
 pkgdesc="an installer for the general purpose language Haskell"
 arch=('x86_64' 'aarch64' 'armv7h' 'i686')
@@ -15,10 +15,10 @@ source_x86_64=(ghcup-$pkgver-$pkgrel-x86_64::https://downloads.haskell.org/~ghcu
 source_aarch64=(ghcup-$pkgver-$pkgrel-aarch64::https://downloads.haskell.org/~ghcup/$pkgver/aarch64-linux-ghcup-$pkgver)
 source_armv7h=(ghcup-$pkgver-$pkgrel-armv7h::https://downloads.haskell.org/~ghcup/$pkgver/armv7-linux-ghcup-$pkgver)
 source_i686=(ghcup-$pkgver-$pkgrel-i686::https://downloads.haskell.org/~ghcup/$pkgver/i386-linux-ghcup-$pkgver)
-sha256sums_x86_64=('d1e7e7edaf8fb336c783fe0aac937e25178e6d9043ecbc9984d14b37f963a305')
-sha256sums_aarch64=('f6931479132040039a23cff244c04defe51b701a29590b35b739a5505f43d678')
-sha256sums_armv7h=('fc3215d6b38819e1f5b33c0b9986401360047c34e5d66c0d304d6b12ae4940e5')
-sha256sums_i686=('0a5032140d54904dccaa2c7a47b0b2b4cece56b47b24525ee6ebed13ccd22912')
+sha256sums_x86_64=('25b7fc417c1a811dd7ff439b67ea647a59cf5b8d71b274f97e917d50b2150d5b')
+sha256sums_aarch64=('7ab3606f3de49c363444dd5879edde27a3e7df0adbd981a8c12a153861fde271')
+sha256sums_armv7h=('a18b6723ef0ee143f69c8d6657e1b749ac61938f81a7413656349c9fda3c7021')
+sha256sums_i686=('c8132b996150714f0013c5a66ffc6899d8bbb7740021873898969a4e384068fe')
 install="$pkgname.install"
 
 package() {
