@@ -2,7 +2,7 @@
 # Mainainer: taotieren <admin@taotieren.com>
 
 pkgname=kicad-library-git
-pkgver=7.0.0.rc2.r16.gcc47a9b25
+pkgver=7.0.0.r16.gefc1e4107
 pkgrel=1
 pkgdesc="KiCad symbol, footprint and template libraries"
 arch=('any')
@@ -21,7 +21,7 @@ sha256sums=('SKIP'
 
 pkgver() {
   cd kicad-footprints
-  git describe --long | sed 's/-rc/rc/;s/\([^-]*-g\)/r\1/;s/-/./g'
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
             
 build() {
