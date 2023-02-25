@@ -1,0 +1,41 @@
+# Maintainer: eolianoe <eolianoe [at] gmail [DoT] com>
+# Contributor: Aaron Lindsay <aaron@aclindsay.com>
+# Contributor: Edvinas Valatka <edacval@gmail.com>
+# Contributor: Adrian Hühn <adrian.huehn@web.de>
+
+pkgname=ccnet-server
+pkgver=7.1.5
+pkgrel=1
+pkgdesc="Internal communication framework and user/group management for seafile server"
+arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
+url="https://github.com/haiwen/$pkgname"
+license=('GPL2')
+depends=('libevent' 'libsearpc' 'libldap' 'mariadb-libs' 'postgresql-libs' 'python'
+         libcrypto.so)
+makedepends=('vala')
+conflicts=('ccnet')
+provides=('ccnet')
+source=("$pkgname-v$pkgver-server.tar.gz::$url/archive/v$pkgver-server.tar.gz")
+sha256sums=('11e5281c239474756ed606bffe8f24c1089a3a9eb2502cfac7815d25ebc4585a')
+
+prepare() {
+  cd "$srcdir/$pkgname-$pkgver-server"
+  sed -i "s|(DESTDIR)@prefix@|@prefix@|" "./libccnet.pc.in"
+}
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver-server"
+  ./autogen.sh
+  ./configure \
+    --enable-ldap \
+    --enable-python \
+    --enable-console \
+    --prefix=/usr \
+    PYTHON='/usr/bin/python'
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver-server"
+  make DESTDIR="$pkgdir" install
+}
