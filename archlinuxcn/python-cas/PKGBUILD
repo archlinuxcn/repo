@@ -1,0 +1,30 @@
+# Maintainer: Luis Martinez <luis dot martinez at disroot dot org>
+# Contributor: Joffrey <j-off@live.fr>
+
+pkgname=python-cas
+pkgver=1.6.0
+pkgrel=1
+pkgdesc='Python utilities to implement Central Authentication Service protocol'
+arch=('any')
+url='https://github.com/python-cas/python-cas'
+license=('MIT')
+depends=('python-lxml' 'python-requests' 'python-six')
+makedepends=('python-build' 'python-installer' 'python-setuptools'
+             'python-sphinx' 'python-wheel')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+sha256sums=('c30918c147e8b2ee43ec13c942391f868ed81d197353db49a160187afcbd2fda')
+
+build() {
+  cd "$pkgname-$pkgver"
+  python -m build --wheel --no-isolation
+  make -C docs man
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  PYTHONHASHSEED=0 python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm644 "docs/_build/man/djangocasng.1" -t "$pkgdir/usr/share/man/man1/"
+  local _site="$(python -c 'import site; print(site.getsitepackages()[0])')"
+  install -d "$pkgdir/usr/share/licenses/$pkgname/"
+  ln -s "$_site/${pkgname/-/_}-$pkgver.dist-info/LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
