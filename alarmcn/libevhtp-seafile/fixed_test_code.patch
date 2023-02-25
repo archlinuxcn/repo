@@ -1,0 +1,21 @@
+From 18c649203f009ef1d77d6f8301eba09af3777adf Mon Sep 17 00:00:00 2001
+From: lins05 <linshuai2012@gmail.com>
+Date: Tue, 19 Aug 2014 11:11:34 +0800
+Subject: [PATCH] fixed test code
+
+---
+ test_proxy.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/test_proxy.c b/test_proxy.c
+index 2b391613..4e3719d6 100644
+--- a/test_proxy.c
++++ b/test_proxy.c
+@@ -4,6 +4,7 @@
+ #include <stdint.h>
+ #include <errno.h>
+ #include <evhtp.h>
++#include <signal.h>
+ 
+ 
+ int
