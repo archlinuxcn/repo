@@ -1,0 +1,58 @@
+From 6f9086a6fcf4123f0d7a71b5b71daec1802102c8 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 26 Feb 2023 14:11:02 -0500
+Subject: [PATCH 2/3] Migrate old pids directory
+
+---
+ scripts/upgrade/minor-upgrade.sh | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/scripts/upgrade/minor-upgrade.sh b/scripts/upgrade/minor-upgrade.sh
+index 1b514a682..c6c724c5e 100755
+--- a/scripts/upgrade/minor-upgrade.sh
++++ b/scripts/upgrade/minor-upgrade.sh
+@@ -46,6 +46,33 @@ function migrate_avatars() {
+     echo
+ }
+ 
++function move_pids() {
++    echo
++    echo "------------------------------"
++    echo "Moving PID directories ..."
++    echo
++    # move "" directory outside
++    if [[ -d "${TOPDIR}/pids" ]]; then
++        echo "pid directory at correct location"
++    elif [[ -d "${TOPDIR}/seafile-data/pids" ]]; then
++        mv -iv "${TOPDIR}/seafile-data/pids" "${TOPDIR}/pids"
++    else
++        mkdir -v "${TOPDIR}/pids"
++    fi
++    if [[ -f "${default_conf_dir}/gunicorn.conf.py" ]]; then
++        if grep "'seafile-data', 'pids', " \
++                "${default_conf_dir}/gunicorn.conf.py" &> /dev/null; then
++            sed -i.bak "s/'seafile-data', 'pids', /'pids', /" "${default_conf_dir}/gunicorn.conf.py"
++            echo "PID file setting updated in conf/gunicorn.conf.py updated."
++            echo "Please verify and delete the backup file at conf/gunicorn.conf.py.bak"
++        fi
++    fi
++    echo
++    echo "DONE"
++    echo "------------------------------"
++    echo
++}
++
+ function make_media_custom_symlink() {
+     media_symlink=${INSTALLPATH}/seahub/media/custom
+     if [[ -L "${media_symlink}" ]]; then
+@@ -144,6 +171,7 @@ function rename_gunicorn_config() {
+ validate_seafile_data_dir;
+ rename_gunicorn_config;
+ migrate_avatars;
++move_pids;
+ 
+ move_old_customdir_outside;
+ make_media_custom_symlink;
+-- 
+2.39.2
+

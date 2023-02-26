@@ -1,8 +1,8 @@
 # Maintainer: Klemens Schölhorn <klemens@schoelhorn.eu>
 
 pkgname=python-seafdav
-pkgver=8.0.1
-pkgrel=3
+pkgver=10.0.0
+pkgrel=1
 pkgdesc="Seafile webdav server"
 arch=('any')
 url="https://github.com/haiwen/seafdav"
@@ -20,7 +20,7 @@ depends=(python
 makedepends=('python-setuptools')
 source=("https://github.com/haiwen/seafdav/archive/v${pkgver}-server.tar.gz"
         0001-Log-gunicorn-output.patch)
-sha256sums=('55cd923ce0d3f60d834d7447f56453b8e7b2b9f17f5fde657e9bf06f2c1c48e8'
+sha256sums=('127d5a8aff3e2dfc97c00c7bce7823f6596d6b8404f434e0eb2e1cde188b2543'
             'e6fea78d591265fda8997d5c22a8c6b6341479fd254f9f6fac7b49abf7eea730')
 
 prepare() {

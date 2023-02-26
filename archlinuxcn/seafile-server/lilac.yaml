@@ -3,17 +3,18 @@
 maintainers:
   - github: yuyichao
 
-build_prefix: extra-x86_64
-
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v').rstrip('-server'))
 post_build: git_pkgbuild_commit
 
 update_on:
-  - source: manual
-    manual: 8.0.1
+  - source: github
+    github: haiwen/seafile-server
+    use_max_tag: true
+    include_regex: 'v(\d+.\d+.\d+)-server'
   - alias: python
   - alias: libcrypto
   - source: manual
-    manual: 3
+    manual: 1
 
 repo_depends:
   - ccnet-server

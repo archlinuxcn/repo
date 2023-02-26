@@ -1,14 +1,14 @@
-From 645196a62a729f35fd919811b94f2104f073ab15 Mon Sep 17 00:00:00 2001
+From 5baa0198daa19ff4776aafe6a86db3656319f796 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
-Date: Sun, 29 Mar 2020 18:28:17 -0400
-Subject: [PATCH 2/3] Fix gunicorn binary path
+Date: Sun, 26 Feb 2023 14:11:52 -0500
+Subject: [PATCH 3/3] Fix gunicorn binary path
 
 ---
  scripts/seahub.sh | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/scripts/seahub.sh b/scripts/seahub.sh
-index 1dafd85..e0cad03 100755
+index 84045e086..b1f59d974 100755
 --- a/scripts/seahub.sh
 +++ b/scripts/seahub.sh
 @@ -25,7 +25,7 @@ gunicorn_conf=${TOPDIR}/conf/gunicorn.conf.py
@@ -17,9 +17,9 @@ index 1dafd85..e0cad03 100755
  accesslog=${TOPDIR}/logs/gunicorn_access.log
 -gunicorn_exe=${INSTALLPATH}/seahub/thirdpart/bin/gunicorn
 +gunicorn_exe=/usr/bin/gunicorn
- 
- script_name=$0
- function usage () {
+ pro_pylibs_dir=${INSTALLPATH}/pro/python
+ seafesdir=$pro_pylibs_dir/seafes
+ seahubdir=${INSTALLPATH}/seahub
 -- 
-2.25.1
+2.39.2
 

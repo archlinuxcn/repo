@@ -4,8 +4,8 @@
 # Contributor: Aaron Lindsay <aaron@aclindsay.com>
 
 pkgname=seafile-server
-pkgver=8.0.1
-pkgrel=6
+pkgver=10.0.0
+pkgrel=1
 pkgdesc='Seafile server core'
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url='https://github.com/haiwen/seafile-server'
@@ -15,6 +15,7 @@ depends=(
   'fuse2'
   'libevhtp-seafile'
   'libarchive'
+  libjwt.so
   libcrypto.so)
 # libevhtp-seafile uses oniguruma headers
 makedepends=('vala' 'oniguruma')
@@ -22,26 +23,23 @@ conflicts=('seafile')
 source=(
   "$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver-server.tar.gz"
   0001-Fix-controller-path-and-migrate-old-pids-directory.patch
-  0002-Fix-gunicorn-binary-path.patch
-  0003-Fix-seafile-admin.patch
+  0002-Fix-seafile-admin.patch
   'seafile-server@.service'
 )
-sha256sums=('916d222ea3d1419dc5e282123de8f606fec429b60d163a068b31606f211c3af8'
-            '53eebc9233c1de818f7315b3d25ca9dfece85f0a5e719ed7003becbef6b01329'
-            'b20993bbb57f13105d1b53c99a7ce48a17dc40b3433640af0825061f5fe60065'
-            'abb1105d9850d6f1808a295f18b787a269a45c1e170c5dc1f8e9980abcd75fc4'
+sha256sums=('6dd748a3ca30b22ad3c7a8dd2533a1e756550534d9de6c564ac2ef9edba380d4'
+            'f76e0187670c67a48e6aebae1e193d7829a9ab7d942a07607fb4714bd416c9d1'
+            'f9f863fef90aee48b6a03103b94d6718cb45f44fab74ca65e499c847935ec447'
             '347982254a025ce86cd53fbb6bf505320638bf69736d65a96d17f74551139072')
 
 prepare() {
   cd "$srcdir/$pkgname-$pkgver-server"
   # Remove scripts for tests and others OS
-  rm -rf "./scripts/"{build,upgrade/win32,*.bat,*.md} "./integration-tests"
+  rm -rf "./integration-tests"
 
   # Apply patchs
   sed -i "s|(DESTDIR)@prefix@|@prefix@|" "./lib/libseafile.pc.in"
   patch -Np1 --no-backup-if-mismatch < ../0001-Fix-controller-path-and-migrate-old-pids-directory.patch
-  patch -Np1 --no-backup-if-mismatch < ../0002-Fix-gunicorn-binary-path.patch
-  patch -Np1 --no-backup-if-mismatch < ../0003-Fix-seafile-admin.patch
+  patch -Np1 --no-backup-if-mismatch < ../0002-Fix-seafile-admin.patch
   2to3 -nw --no-diffs tools/seafile-admin
 }
 
@@ -66,7 +64,6 @@ package() {
   cp -p doc/*.doc "$pkgdir/usr/share/seafile-server/seafile/docs"
   # The scripts needs this bin directory.
   ln -s /usr/bin/ "$pkgdir/usr/share/seafile-server/seafile/bin"
-  cp -r -p "./scripts"/* "$pkgdir/usr/share/seafile-server/"
 
   install -Dm644 \
           "$srcdir/seafile-server@.service" \

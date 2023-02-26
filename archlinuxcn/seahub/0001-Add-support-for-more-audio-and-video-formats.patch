@@ -1,18 +1,18 @@
-From 703acd86750275dea73d28200ac8959f4aa72589 Mon Sep 17 00:00:00 2001
+From b82e2a99577cdc94f57ecdf4c76034150088566d Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
-Date: Sun, 17 May 2020 00:29:21 -0400
-Subject: [PATCH] Add support for more audio and video formats
+Date: Sat, 25 Feb 2023 20:31:18 -0500
+Subject: [PATCH 1/3] Add support for more audio and video formats
 
 ---
- seahub/base/templatetags/seahub_tags.py | 7 +++++++
+ seahub/base/templatetags/seahub_tags.py | 8 ++++++++
  seahub/utils/__init__.py                | 4 ++--
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/seahub/base/templatetags/seahub_tags.py b/seahub/base/templatetags/seahub_tags.py
-index 12e6b3d..aa5e531 100644
+index a9de49bac..77dc39c92 100644
 --- a/seahub/base/templatetags/seahub_tags.py
 +++ b/seahub/base/templatetags/seahub_tags.py
-@@ -73,20 +73,27 @@ FILEEXT_ICON_MAP = {
+@@ -75,20 +75,27 @@ FILEEXT_ICON_MAP = {
  
      # video
      'mp4': 'video.png',
@@ -40,7 +40,7 @@ index 12e6b3d..aa5e531 100644
      'wma': 'music.png',
  
      # image file
-@@ -97,6 +103,7 @@ FILEEXT_ICON_MAP = {
+@@ -99,6 +106,7 @@ FILEEXT_ICON_MAP = {
      'gif': 'pic.png',
      'bmp': 'pic.png',
      'ico': 'pic.png',
@@ -49,20 +49,20 @@ index 12e6b3d..aa5e531 100644
      # default
      'default': 'file.png',
 diff --git a/seahub/utils/__init__.py b/seahub/utils/__init__.py
-index 0ec17b5..13ef60b 100644
+index 32ff3ad9c..fcc4d9046 100644
 --- a/seahub/utils/__init__.py
 +++ b/seahub/utils/__init__.py
-@@ -129,8 +129,8 @@ PREVIEW_FILEEXT = {
+@@ -123,8 +123,8 @@ PREVIEW_FILEEXT = {
      SVG: ('svg',),
      PDF: ('pdf', 'ai'),
      MARKDOWN: ('markdown', 'md'),
 -    VIDEO: ('mp4', 'ogv', 'webm', 'mov'),
--    AUDIO: ('mp3', 'oga', 'ogg'),
+-    AUDIO: ('mp3', 'oga', 'ogg', 'wav'),
 +    VIDEO: ('m4v', 'mkv', 'mov', 'mp4', 'ogv', 'opus', 'webm'),
 +    AUDIO: ('aac', 'flac', 'caf', 'm4a', 'mp3', 'oga', 'ogg', 'wav'),
      #'3D': ('stl', 'obj'),
      XMIND: ('xmind',),
-     CDOC: ('cdoc',),
+ }
 -- 
-2.26.2
+2.39.2
 

@@ -4,8 +4,8 @@
 # Contributor: Aaron Lindsay <aaron@aclindsay.com>
 
 pkgname=seahub
-pkgver=8.0.1
-pkgrel=6
+pkgver=10.0.0
+pkgrel=1
 pkgdesc='The web frontend for seafile server'
 arch=('any')
 url='https://github.com/haiwen/seahub'
@@ -13,37 +13,37 @@ license=('Apache')
 depends=('python-pytz' 'python-json5')
 makedepends=('python-setuptools')
 source=("$pkgname-$pkgver-server.tar.gz::$url/archive/v$pkgver-server.tar.gz"
-        "https://files.pythonhosted.org/packages/78/46/a3af6eb3037044eaad9518082eff5ed473ad343dee165eb14b1f1a4a3d87/Django-2.2.14.tar.gz"
-        "https://files.pythonhosted.org/packages/e2/a5/ee2af425b62b1566e6628a9c172481dd197b13ad0fbf34cf869a308747c1/django-post_office-3.3.0.tar.gz"
-        "https://files.pythonhosted.org/packages/df/48/3c8a333b11312d73fb93dce589ae5a979e5334a5f5ee9918e580b88ddd96/django-picklefield-2.1.1.tar.gz"
-        "https://files.pythonhosted.org/packages/a7/9d/5eea11456889eaaf20b6cdb47fefe12915e99448559356fc42d7e02297a8/djangorestframework-3.11.1.tar.gz"
-        "https://files.pythonhosted.org/packages/9a/86/6e5296375cbe76f741d3dc1bc996c19eadf7ade54dd2e90432cdf2ad4da5/django-webpack-loader-0.7.0.tar.gz"
-        0001-Add-support-for-more-audio-and-video-formats.patch)
-sha256sums=('9d6127403537c254a623441e755e0d5c3bc76a5f12c3d219154e8e38664a6f83'
-            'edf0ecf6657713b0435b6757e6069466925cae70d634a3283c96b80c01e06191'
-            'b06514da601c22e955bd93a4ac6dd6b2218c571ca67c193e62bd1f22cec7536f'
-            '67a5e156343e3b032cac2f65565f0faa81635a99c7da74b0f07a0f5db467b646'
-            '6dd02d5a4bd2516fb93f80360673bf540c3b6641fec8766b1da2870a5aa00b32'
-            '7a3c88201aa54481f9399465615cbe7b9aece8081496a6d0287b7cb8e232f447'
-            'fd9f7c40fea3e60661861735f7741064ae8c35e838dbaa0c5ab251ee67e35534')
+        "https://files.pythonhosted.org/packages/f1/d7/8ddb9d8fbbffd33329cf6dfc33e8367a8969c05cf91bc63138ca116301ba/Django-3.2.16.tar.gz"
+        "https://files.pythonhosted.org/packages/c8/6a/3782eaae262b0effeb34f47344c08fdadc2a4cfe7ed2d8892035b07ad2a7/django-webpack-loader-1.7.0.tar.gz"
+        "https://files.pythonhosted.org/packages/c2/5d/d5d45a38163ede3342d6ac1ca01b5d387329daadf534a25718f9a9ba818c/bleach-5.0.1.tar.gz"
+        0001-Add-support-for-more-audio-and-video-formats.patch
+        0002-Migrate-old-pids-directory.patch
+        0003-Fix-gunicorn-binary-path.patch)
+sha256sums=('51a998822e6929848942c8b41f49ba68385be918b43bbf4e3085ef9bf079304a'
+            '3adc285124244724a394fa9b9839cc8cd116faf7d159554c43ecdaa8cdf0b94d'
+            '6a065382573771baf400754c4d39c0913b0a29a453a941dfb9122eebed21572f'
+            '0d03255c47eb9bd2f26aa9bb7f2107732e7e8fe195ca2f64709fcf3b0a4a085c'
+            '158a0a8eaa559ddc066f142fa2f61bb5e6dbe35a027eff303251937656b9711a'
+            '1373057404b678796fa82819de234019b86616d7a5c75e3aa11534fa94ba8f8f'
+            '79bc89b00ddec90835ce69d1e12d6fe5a3f261d997241d953372ca83bc9d1e94')
 options=('!strip')
 
-_patch_js() {
-  local orig="$1"
-  local new="$2"
-  local dir="$3"
+# _patch_js() {
+#   local orig="$1"
+#   local new="$2"
+#   local dir="$3"
 
-  # make sure there is a match
-  grep -q "$orig" "$dir"/*.js
-  sed -i "s|$orig|$new|g" "$dir"/*.js
-}
+#   # make sure there is a match
+#   grep -q "$orig" "$dir"/*.js
+#   sed -i "s|$orig|$new|g" "$dir"/*.js
+# }
 
 prepare() {
   cd "$srcdir/$pkgname-$pkgver-server"
-  _patch_js 'mp4:"video.png",ogv:"video.png",webm:"video.png",mov:"video.png",flv:"video.png",wmv:"video.png",rmvb:"video.png",mp3:"music.png",oga:"music.png",ogg:"music.png",flac:"music.png",aac:"music.png",ac3:"music.png",wma:"music.png",jpg:"pic.png",jpeg:"pic.png",png:"pic.png",svg:"pic.png",gif:"pic.png",bmp:"pic.png",ico:"pic.png"' 'mp4:"video.png",m4v:"video.png",mkv:"video.png",opus:"video.png",ogv:"video.png",webm:"video.png",mov:"video.png",flv:"video.png",wmv:"video.png",rmvb:"video.png",rm:"video.png",m4a:"music.png",mp3:"music.png",oga:"music.png",ogg:"music.png",flac:"music.png",aac:"music.png",ac3:"music.png",caf:"music.png",wav:"music.png",wma:"music.png",jpg:"pic.png",jpeg:"pic.png",png:"pic.png",svg:"pic.png",gif:"pic.png",bmp:"pic.png",ico:"pic.png"' media/assets/frontend/static/js/
-  _patch_js 'opus:"video/ogg",ogv:"video/ogg",mp4:"video/mp4",mov:"video/mp4",m4v:"video/mp4",mkv:"video/x-matroska",mp3:"audio/mpeg",aac:"audio/aac",oga:"audio/ogg",m3u8:"application/x-mpegURL"' 'opus:"video/ogg",ogv:"video/ogg",mp4:"video/mp4",mov:"video/mp4",m4v:"video/mp4",mkv:"video/x-matroska",m4a:"audio/mp4",mp3:"audio/mpeg",caf:"audio/x-caf",aac:"audio/aac",oga:"audio/ogg",m3u8:"application/x-mpegURL",flac:"audio/flac",jpg:"image/jpeg",jpeg:"image/jpeg",gif:"image/gif",png:"image/png",svg:"image/svg+xml",wav:"audio/wav",webp:"image/webp"' media/assets/frontend/static/js/
-
   patch -Np1 --no-backup-if-mismatch < ../0001-Add-support-for-more-audio-and-video-formats.patch
+  patch -Np1 --no-backup-if-mismatch < ../0002-Migrate-old-pids-directory.patch
+  patch -Np1 --no-backup-if-mismatch < ../0003-Fix-gunicorn-binary-path.patch
+
   # Remove useless files and directories
   rm -rf \
      './'{CONTRIBUTORS,HACKING,Makefile} \
@@ -58,44 +58,44 @@ build() {
     msgfmt -vo "${locale%.po}.mo" "$locale"
   done
 
-  # cd "$srcdir/Django-2.2.14"
+  # cd "$srcdir/Django-3.2.16"
   # python setup.py build
-  # cd "$srcdir/django-post_office-3.3.0"
+  # cd "$srcdir/django-webpack-loader-1.7.0"
   # python setup.py build
-  # cd "$srcdir/django-picklefield-2.1.1"
-  # python setup.py build
-  # cd "$srcdir/djangorestframework-3.11.1"
-  # python setup.py build
-  # cd "$srcdir/django-webpack-loader-0.7.0"
+  # cd "$srcdir/bleach-5.0.1"
   # python setup.py build
 }
 
 package() {
   depends+=(
     "seafile-server>=$pkgver"
-    'python-django-jsonfield' # dependency of post-office which we bundle
     # The following list is from seahub/requirements.txt
-    # python-django # 2.2.14
-    'python-future'
-    # 'python-captcha' # This one seems to conflict with django-simple-captcha
+    # python-django # 3.2.16
     'python-django-statici18n'
-    # 'python-django-post-office' # 3.3.0
-    # 'python-django-webpack-loader' # 0.7.0
-    'gunicorn'
-    'python-pymysql'
-    # 'python-django-picklefield' # 2.1.1
-    'python-openpyxl'
-    'python-qrcode'
+    # 'python-django-webpack-loader' # 1.7.*
+    'python-django-picklefield'
     'python-django-formtools'
     'python-django-simple-captcha'
-    # 'python-django-rest-framework' # 3.11.1
+    'python-django-saml2'
+    'python-django-rest-framework'
     'python-dateutil'
-    'python-requests'
-    'python-pillow'
     'python-pyjwt'
     'python-pycryptodome'
+    'python-cas'
+    'python-pysaml2'
+    'python-requests'
     'python-requests-oauthlib'
-    'python-django-ranged-response'
+    'python-future'
+    'gunicorn'
+    'python-mysqlclient'
+    'python-qrcode'
+    'python-pillow'
+    'python-chardet'
+    'python-cffi'
+    # 'python-captcha' # This one seems to conflict with django-simple-captcha
+    'python-openpyxl'
+    'python-markdown'
+    # 'python-bleach' # 5.0.*
   )
   optdepends=(
     'python-seafdav: For WebDAV support'
@@ -105,23 +105,22 @@ package() {
   cd "$srcdir/seahub-$pkgver-server/"
   install -dm755 "$pkgdir/usr/share/seafile-server/seahub"
   cp -r -p "./"* "$pkgdir/usr/share/seafile-server/seahub/"
+  mv "$pkgdir/usr/share/seafile-server/seahub/scripts/"* \
+        "$pkgdir/usr/share/seafile-server"
+  rmdir "$pkgdir/usr/share/seafile-server/seahub/scripts/"
 
   export PYTHONPATH="$pkgdir/usr/share/seafile-server/seahub/thirdpart"
-  cd "$srcdir/Django-2.2.14"
+  cd "$srcdir/Django-3.2.16"
   python setup.py install --root="$pkgdir" --optimize=1 \
          --install-lib "usr/share/seafile-server/seahub/thirdpart"
-  cd "$srcdir/django-post_office-3.3.0"
+  cd "$srcdir/django-webpack-loader-1.7.0"
   python setup.py install --root="$pkgdir" --optimize=1 \
          --install-lib "usr/share/seafile-server/seahub/thirdpart"
-  cd "$srcdir/django-picklefield-2.1.1"
+  cd "$srcdir/bleach-5.0.1"
   python setup.py install --root="$pkgdir" --optimize=1 \
          --install-lib "usr/share/seafile-server/seahub/thirdpart"
-  cd "$srcdir/djangorestframework-3.11.1"
-  python setup.py install --root="$pkgdir" --optimize=1 \
-         --install-lib "usr/share/seafile-server/seahub/thirdpart"
-  cd "$srcdir/django-webpack-loader-0.7.0"
-  python setup.py install --root="$pkgdir" --optimize=1 \
-         --install-lib "usr/share/seafile-server/seahub/thirdpart"
+
+  cd "$srcdir"
   rm -rf "$pkgdir"/usr/{bin,share/seafile-server/seahub/thirdpart/*.egg-info}
 
   python -m compileall "$pkgdir/usr/share/seafile-server/seahub/"
