@@ -2,7 +2,7 @@
 
 pkgname=python-missingno
 _pkgname=missingno
-pkgver=0.5.1
+pkgver=0.5.2
 pkgrel=1
 pkgdesc='Missing data visualization module for Python'
 arch=('any')
@@ -16,7 +16,7 @@ depends=(
 )
 makedepends=(python-setuptools)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ResidentMario/missingno/archive/${pkgver}.tar.gz")
-sha512sums=('bd5742deeefb90b1a0da9bf7de2801e50d6c7f288334dc972465483a137155d08b5f866ada5f30fc02fa3b314116716fb1121a3a0613e93ab67eb6df9c695501')
+sha512sums=('e6d72638ec76b03e639cc8c2a74f23412253d27e6d31c9efd4c7452b83c1d39b5223b956f1f1cf592fc8b16a8a10b78a0412861e76524114d76dd5df55f3e573')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
