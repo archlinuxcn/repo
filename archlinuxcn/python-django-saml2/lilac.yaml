@@ -1,0 +1,11 @@
+maintainers:
+  - github: yuyichao
+
+post_build: pypi_post_build
+
+update_on:
+  - source: pypi
+    pypi: djangosaml2
+  - alias: python
+  - source: manual
+    manual: 1
