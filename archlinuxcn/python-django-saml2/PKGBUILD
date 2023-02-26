@@ -1,14 +1,14 @@
 _name=djangosaml2
 pkgname=python-django-saml2
 pkgver=1.5.5
-pkgrel=1
+pkgrel=2
 pkgdesc="pysaml2 integration for Django"
 arch=(any)
 url="https://github.com/IdentityPython/djangosaml2"
-license=('BSD')
+license=('Apache 2.0')
 depends=('python-django' 'python-defusedxml' 'python-pysaml2')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/2f/8d/4f8a72d0fda0fd7b50f4577097c7b1d92bf747cbf6f5f420de5f8536d6ee/djangosaml2-1.5.5.tar.gz")
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/djangosaml2-1.5.5.tar.gz")
 sha256sums=('adadd3675558d4db4c0f309eef67918eaed52edc704165b23ae142bb6e00fbbe')
 
 build() {
