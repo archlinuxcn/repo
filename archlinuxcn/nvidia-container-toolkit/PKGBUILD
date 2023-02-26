@@ -4,7 +4,7 @@
 pkgname=nvidia-container-toolkit
 
 pkgver=1.12.0
-pkgrel=1
+pkgrel=2
 
 pkgdesc='NVIDIA container runtime toolkit'
 arch=('x86_64')
@@ -29,6 +29,7 @@ build() {
 
   mkdir bin
 
+  GO_LDFLAGS="-Wl,-z,lazy,${LDFLAGS}" \
   GO111MODULE=auto \
   GOPATH="${srcdir}/gopath" \
   go build -v \
@@ -36,7 +37,7 @@ build() {
     -buildmode=pie \
     -gcflags "all=-trimpath=${PWD}" \
     -asmflags "all=-trimpath=${PWD}" \
-    -ldflags "-s -w -extldflags ${LDFLAGS}" \
+    -ldflags "-s -w -extldflags=${GO_LDFLAGS/%,/}" \
     -o bin \
     "./..."
     # -trimpath \  # only go > 1.13
