@@ -3254,7 +3254,7 @@
 +                          nullptr, 0, loadGroup, this, nullptr, nullptr,
 +                          nsIRequest::LOAD_NORMAL, nullptr,
 +                          nsIContentPolicy::TYPE_IMAGE, EmptyString(),
-+                          false, false, getter_AddRefs(mImageRequest));
++                          false, false, 0, getter_AddRefs(mImageRequest));
 +    }
 +}
 +
@@ -5099,13 +5099,13 @@
 --- a/xpcom/ds/StaticAtoms.py
 +++ b/xpcom/ds/StaticAtoms.py
 @@ -7,6 +7,7 @@
- from Atom import Atom, InheritingAnonBoxAtom, NonInheritingAnonBoxAtom
- from Atom import PseudoElementAtom
+     PseudoElementAtom,
+ )
  from HTMLAtoms import HTML_PARSER_ATOMS
 +from NativeMenuAtoms import NATIVE_MENU_ATOMS
- import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
+ #
 @@ -2529,7 +2530,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),

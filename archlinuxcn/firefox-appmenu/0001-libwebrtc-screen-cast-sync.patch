@@ -21,7 +21,7 @@ Fixes: https://bugzilla.mozilla.org/show_bug.cgi?id=1790496
  third_party/gbm/gbm/gbm.h                     |  452 ++++++
  .../libpipewire => gbm/libgbm}/moz.build      |    4 +-
  third_party/gbm/libgbm/mozgbm.cpp             |   66 +
- .../desktop_capture_generic_gn/moz.build      |   45 +-
+ .../desktop_capture_gn/moz.build              |   48 +-
  .../desktop_capture_options.cc                |    4 +-
  .../desktop_capture/desktop_capture_options.h |    6 +-
  .../linux/wayland/base_capturer_pipewire.cc   |    2 +-
@@ -29,7 +29,7 @@ Fixes: https://bugzilla.mozilla.org/show_bug.cgi?id=1790496
  .../desktop_capture/window_capturer_linux.cc  |    8 -
  third_party/moz.build                         |    6 +
  .../pipewire/libpipewire/mozpipewire.cpp      |   49 +-
- 20 files changed, 5450 insertions(+), 33 deletions(-)
+ 20 files changed, 5453 insertions(+), 33 deletions(-)
  create mode 100644 third_party/drm/README
  create mode 100644 third_party/drm/drm/drm.h
  create mode 100644 third_party/drm/drm/drm_fourcc.h
@@ -43,7 +43,7 @@ Fixes: https://bugzilla.mozilla.org/show_bug.cgi?id=1790496
  create mode 100644 third_party/gbm/libgbm/mozgbm.cpp
 
 diff --git a/dom/media/webrtc/moz.build b/dom/media/webrtc/moz.build
-index ddf9321b58ea..af0f7ab64cc3 100644
+index b6e09dbb5c9a..ada0fcb4a5d9 100644
 --- a/dom/media/webrtc/moz.build
 +++ b/dom/media/webrtc/moz.build
 @@ -84,6 +84,8 @@ if CONFIG["MOZ_WEBRTC_SIGNALING"]:
@@ -5498,10 +5498,10 @@ index 000000000000..bc024a11c0b7
 +  }
 +  return gbm_device_destroy_fn(gbm);
 +}
-diff --git a/third_party/libwebrtc/modules/desktop_capture/desktop_capture_generic_gn/moz.build b/third_party/libwebrtc/modules/desktop_capture/desktop_capture_generic_gn/moz.build
-index 809899a92847..8869fae89703 100644
---- a/third_party/libwebrtc/modules/desktop_capture/desktop_capture_generic_gn/moz.build
-+++ b/third_party/libwebrtc/modules/desktop_capture/desktop_capture_generic_gn/moz.build
+diff --git a/third_party/libwebrtc/modules/desktop_capture/desktop_capture_gn/moz.build b/third_party/libwebrtc/modules/desktop_capture/desktop_capture_gn/moz.build
+index 8631744ab1bf..366ea67aa9ab 100644
+--- a/third_party/libwebrtc/modules/desktop_capture/desktop_capture_gn/moz.build
++++ b/third_party/libwebrtc/modules/desktop_capture/desktop_capture_gn/moz.build
 @@ -8,25 +8,28 @@
  if CONFIG["MOZ_WIDGET_TOOLKIT"] == "gtk":
      CXXFLAGS += CONFIG["MOZ_GTK3_CFLAGS"]
@@ -5532,14 +5532,15 @@ index 809899a92847..8869fae89703 100644
      "/third_party/libwebrtc/",
      "/third_party/libwebrtc/third_party/abseil-cpp/",
      "/third_party/pipewire/",
-@@ -240,7 +243,15 @@ if CONFIG["CPU_ARCH"] == "arm":
+@@ -242,7 +245,16 @@ if CONFIG["CPU_ARCH"] == "arm":
      DEFINES["_GNU_SOURCE"] = True
  
-     UNIFIED_SOURCES += [
+     SOURCES += [
 -        "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/moz_base_capturer_pipewire.cc"
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/base_capturer_pipewire.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/egl_dmabuf.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/mouse_cursor_monitor_pipewire.cc",
++      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/restore_token_manager.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/scoped_glib.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/screen_capture_portal_interface.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/screencast_portal.cc",
@@ -5549,15 +5550,15 @@ index 809899a92847..8869fae89703 100644
      ]
  
  if CONFIG["CPU_ARCH"] == "ppc64":
-@@ -295,27 +306,51 @@ if CONFIG["CPU_ARCH"] == "aarch64" and CONFIG["OS_TARGET"] == "Linux":
+@@ -297,27 +309,53 @@ if CONFIG["CPU_ARCH"] == "aarch64" and CONFIG["OS_TARGET"] == "Linux":
      DEFINES["_GNU_SOURCE"] = True
  
-     UNIFIED_SOURCES += [
+     SOURCES += [
 -        "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/moz_base_capturer_pipewire.cc"
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/base_capturer_pipewire.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/egl_dmabuf.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/mouse_cursor_monitor_pipewire.cc",
-+      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/scoped_glib.cc",
++      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/restore_token_manager.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/screen_capture_portal_interface.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/screencast_portal.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/screencast_stream_utils.cc",
@@ -5571,11 +5572,12 @@ index 809899a92847..8869fae89703 100644
      DEFINES["WEBRTC_USE_PIPEWIRE"] = True
      DEFINES["_GNU_SOURCE"] = True
  
-     UNIFIED_SOURCES += [
+     SOURCES += [
 -        "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/moz_base_capturer_pipewire.cc"
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/base_capturer_pipewire.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/egl_dmabuf.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/mouse_cursor_monitor_pipewire.cc",
++      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/restore_token_manager.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/scoped_glib.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/screen_capture_portal_interface.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/screencast_portal.cc",
@@ -5590,11 +5592,12 @@ index 809899a92847..8869fae89703 100644
      DEFINES["WEBRTC_USE_PIPEWIRE"] = True
      DEFINES["_GNU_SOURCE"] = True
  
-     UNIFIED_SOURCES += [
+     SOURCES += [
 -        "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/moz_base_capturer_pipewire.cc"
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/base_capturer_pipewire.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/egl_dmabuf.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/mouse_cursor_monitor_pipewire.cc",
++      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/restore_token_manager.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/scoped_glib.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/screen_capture_portal_interface.cc",
 +      "/third_party/libwebrtc/modules/desktop_capture/linux/wayland/screencast_portal.cc",
@@ -5605,10 +5608,10 @@ index 809899a92847..8869fae89703 100644
  
  if CONFIG["CPU_ARCH"] == "aarch64" and CONFIG["MOZ_X11"] == "1" and CONFIG["OS_TARGET"] == "Linux":
 diff --git a/third_party/libwebrtc/modules/desktop_capture/desktop_capture_options.cc b/third_party/libwebrtc/modules/desktop_capture/desktop_capture_options.cc
-index 8bdc83b76218..ab7932195c85 100644
+index 767dbfefa543..22c59ef4cccd 100644
 --- a/third_party/libwebrtc/modules/desktop_capture/desktop_capture_options.cc
 +++ b/third_party/libwebrtc/modules/desktop_capture/desktop_capture_options.cc
-@@ -14,33 +14,33 @@
+@@ -17,31 +17,31 @@
  #elif defined(WEBRTC_WIN)
  #include "modules/desktop_capture/win/full_screen_win_application_handler.h"
  #endif
@@ -5616,8 +5619,6 @@ index 8bdc83b76218..ab7932195c85 100644
 +#if defined(WEBRTC_USE_PIPEWIRE)
  #include "modules/desktop_capture/linux/wayland/shared_screencast_stream.h"
  #endif
- 
- #include "rtc_base/ref_counted_object.h"
  
  namespace webrtc {
  
@@ -5645,7 +5646,7 @@ index 8bdc83b76218..ab7932195c85 100644
  #endif
  #if defined(WEBRTC_MAC) && !defined(WEBRTC_IOS)
 diff --git a/third_party/libwebrtc/modules/desktop_capture/desktop_capture_options.h b/third_party/libwebrtc/modules/desktop_capture/desktop_capture_options.h
-index 1605d30f82d1..eb5b8a2a8777 100644
+index c11efdb615d0..4ee5259bb41a 100644
 --- a/third_party/libwebrtc/modules/desktop_capture/desktop_capture_options.h
 +++ b/third_party/libwebrtc/modules/desktop_capture/desktop_capture_options.h
 @@ -17,7 +17,7 @@
@@ -5657,7 +5658,7 @@ index 1605d30f82d1..eb5b8a2a8777 100644
  #include "modules/desktop_capture/linux/wayland/shared_screencast_stream.h"
  #endif
  
-@@ -181,22 +181,20 @@ class RTC_EXPORT DesktopCaptureOptions {
+@@ -181,28 +181,26 @@ class RTC_EXPORT DesktopCaptureOptions {
    bool allow_pipewire() const { return allow_pipewire_; }
    void set_allow_pipewire(bool allow) { allow_pipewire_ = allow; }
  
@@ -5669,6 +5670,12 @@ index 1605d30f82d1..eb5b8a2a8777 100644
        rtc::scoped_refptr<SharedScreenCastStream> stream) {
      screencast_stream_ = stream;
    }
+ 
+   void set_width(uint32_t width) { width_ = width; }
+   uint32_t get_width() const { return width_; }
+ 
+   void set_height(uint32_t height) { height_ = height; }
+   uint32_t get_height() const { return height_; }
 -#endif
  #endif
  
@@ -5682,14 +5689,14 @@ index 1605d30f82d1..eb5b8a2a8777 100644
    // BaseCapturerPipeWire and MouseCursorMonitorPipeWire as cursor information
    // is sent together with screen content.
 diff --git a/third_party/libwebrtc/modules/desktop_capture/linux/wayland/base_capturer_pipewire.cc b/third_party/libwebrtc/modules/desktop_capture/linux/wayland/base_capturer_pipewire.cc
-index 75659a9eb9e2..32578411059b 100644
+index e9158bf0cccf..655ec50ce9d7 100644
 --- a/third_party/libwebrtc/modules/desktop_capture/linux/wayland/base_capturer_pipewire.cc
 +++ b/third_party/libwebrtc/modules/desktop_capture/linux/wayland/base_capturer_pipewire.cc
-@@ -105,7 +105,7 @@ bool BaseCapturerPipeWire::GetSourceList(SourceList* sources) {
+@@ -136,7 +136,7 @@ bool BaseCapturerPipeWire::GetSourceList(SourceList* sources) {
    // is often treated as a null/placeholder id, so we shouldn't use that.
    // TODO(https://crbug.com/1297671): Reconsider type of ID when plumbing
    // token that will enable stream re-use.
--  sources->push_back({1});
+-  sources->push_back({source_id_});
 +  sources->push_back({PIPEWIRE_ID, 0, PIPEWIRE_NAME});
    return true;
  }
