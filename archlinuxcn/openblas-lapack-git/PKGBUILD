@@ -5,7 +5,7 @@
 
 pkgbase=openblas-git
 pkgname=(openblas-git openblas-lapack-git)
-pkgver=0.3.21.1dev.0.569.gfdc1cdb10
+pkgver=0.3.21.1dev.0.591.g039e27545
 pkgrel=1
 pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -74,9 +74,9 @@ build() {
   # The OpenBLAS build system doesn't handle update very well.
   git clean -fdx
   {
-    make "${_config[@]}" libs &&
-      make "${_config[@]}" netlib &&
-      make "${_config[@]}" shared
+    make "${_config[@]}" libs -j1 &&
+      make "${_config[@]}" netlib -j1 &&
+      make "${_config[@]}" shared -j1
   } 2> error.log || {
     cat error.log
     return 1
