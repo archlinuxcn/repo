@@ -3,7 +3,7 @@
 
 pkgname=mpv-git
 _gitname=mpv
-pkgver=0.35.0_263_gd941564d48
+pkgver=0.35.0_266_ga194ddaa43
 pkgrel=1
 pkgdesc='A free, open source, and cross-platform media player (with all possible libs)'
 arch=('x86_64')
@@ -63,6 +63,7 @@ prepare() {
 build() {
     local _opt_extra_flags=(
         '-Dgpl=true'
+        '-Dtests=true'
         '-Dcdda=enabled'
         '-Dlua=enabled' '-Dlua=luajit'
         '-Ddvbin=enabled'
@@ -122,4 +123,9 @@ package() {
     
     install -D -m644 DOCS/{encoding.rst,tech-overview.txt} "${pkgdir}/usr/share/doc/mpv"
     install -D -m644 TOOLS/lua/* -t "${pkgdir}/usr/share/mpv/script"
+}
+
+check() {
+    cd "$srcdir/mpv"
+    meson test -C build
 }
