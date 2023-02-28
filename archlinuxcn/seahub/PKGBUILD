@@ -69,6 +69,7 @@ build() {
 package() {
   depends+=(
     "seafile-server>=$pkgver"
+    'python-webencodings' # dependency of bleach
     # The following list is from seahub/requirements.txt
     # python-django # 3.2.16
     'python-django-statici18n'
