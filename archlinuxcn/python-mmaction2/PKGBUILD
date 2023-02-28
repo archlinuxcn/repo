@@ -18,8 +18,10 @@ depends=(
   python-torchvision
 )
 makedepends=(
-  python-pip
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 optdepends=(
   python-av
@@ -33,19 +35,16 @@ optdepends=(
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmaction2/archive/v${pkgver}.tar.gz")
 sha512sums=('9fb4d2ed742aebc722186cd9ffdd4417de630fcdeae9434b797f7113569c80741f5c31c145fac94ea09e62cc02f83ef316e7453ae118be4440e0e391a76e1ced')
 
-prepare() {
-  cd "${_pkgname}-${pkgver}"
-  # uncomment this line to relax mmcv version requirement
-  sed -i '10,14d' "mmaction/__init__.py"
-}
-
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  # delete unused .mim dir
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rfv "${pkgdir}${site_packages}/mmaction/.mim"
 }
 # vim:set ts=2 sw=2 et:
