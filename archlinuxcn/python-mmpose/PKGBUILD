@@ -22,8 +22,10 @@ depends=(
   python-xcocotools
 )
 makedepends=(
-  python-pip
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 optdepends=(
   python-albumentations
@@ -37,13 +39,15 @@ sha512sums=('587cd6f181df62b7e6ee6775709ef47f626d91c0dd936912a087a8ac0d5c807e520
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  # delete unused .mim and tests dir
+  rm -rfv "${pkgdir}${site_packages}/mmpose/.mim"
   rm -rfv ${pkgdir}${site_packages}/tests
 }
 # vim:set ts=2 sw=2 et:
