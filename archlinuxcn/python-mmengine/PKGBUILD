@@ -17,18 +17,21 @@ depends=(
   yapf
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmengine/archive/refs/tags/v${pkgver}.tar.gz")
 sha512sums=('2068e2685b90bb8dc1e382ed151a5345d49c8b79c57643f6c57120597f18de024c5ca1cd96e1fe1ca0b50ecfed8c6d840f71f215847765f6b1640c1e0b589d30')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
 }
 # vim:set ts=2 sw=2 et:
