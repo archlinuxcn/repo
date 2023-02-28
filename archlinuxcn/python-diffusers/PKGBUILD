@@ -1,0 +1,32 @@
+# Maintainer: Alexander F. Rødseth <xyproto@archlinux.org>
+
+pkgname=python-diffusers
+pkgver=0.13.1
+pkgrel=1
+pkgdesc='Pretrained diffusion models'
+arch=(x86_64)
+url='https://github.com/huggingface/diffusers'
+license=('Apache License 2.0')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/huggingface/diffusers/archive/refs/tags/v$pkgver.tar.gz")
+sha512sums=('07273fb7fabab8c72247d81e57135957cf72d605c301b1c33719e128a18c2cf0f19d849462bdfa9f14d04551b35f8b2a6f05917e7c47e0283a4924e5fd53144b')
+depends=(
+    'python-pillow'
+    'python-requests'
+    'python-regex'
+    'python-numpy'
+    'python-huggingface-hub'
+    'python-filelock'
+    'python-importlib-metadata'
+)
+
+makedepends=('python-setuptools')
+
+build() {
+    cd diffusers-$pkgver
+    python setup.py build
+}
+
+package() {
+    cd diffusers-$pkgver
+    python setup.py install --root="$pkgdir" --optimize=1
+}
