@@ -109,7 +109,7 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
  if (ENABLE_FFMPEG)
      if (CITRA_USE_BUNDLED_FFMPEG)
          if ((MSVC_VERSION GREATER_EQUAL 1920 AND MSVC_VERSION LESS 1940) AND "x86_64" IN_LIST ARCHITECTURE)
-@@ -376,6 +408,21 @@ if (NOT USE_SYSTEM_BOOST)
+@@ -376,14 +408,24 @@ if (NOT USE_SYSTEM_BOOST)
      add_definitions( -DBOOST_ALL_NO_LIB )
  endif()
  
@@ -131,7 +131,15 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
  enable_testing()
  add_subdirectory(externals)
  
-@@ -388,7 +435,7 @@ else()
+-# See externals/CMakeLists.txt
+-foreach(def ${CRYPTOPP_COMPILE_DEFINITIONS})
+-    add_definitions(-D${def})
+-endforeach()
+-
+ # Boost
+ if (USE_SYSTEM_BOOST)
+     find_package(Boost 1.70.0 COMPONENTS serialization REQUIRED)
+@@ -393,7 +435,7 @@ else()
  endif()
  
  # SDL2
@@ -140,18 +148,10 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
      find_package(SDL2 REQUIRED)
      add_library(SDL2 INTERFACE)
      target_link_libraries(SDL2 INTERFACE "${SDL2_LIBRARY}")
-@@ -399,7 +446,6 @@ endif()
- add_subdirectory(src)
- add_subdirectory(dist/installer)
- 
--
- # Set citra-qt project or citra project as default StartUp Project in Visual Studio depending on whether QT is enabled or not
- if(ENABLE_QT)
-     set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT citra-qt)
 diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
 --- citra/externals/CMakeLists.txt	2023-01-20 00:44:13.712264461 +0800
 +++ citra/externals/CMakeLists.txt	2023-01-20 04:34:47.512808459 +0800
-@@ -10,30 +10,38 @@ include(DownloadExternals)
+@@ -10,36 +10,38 @@ include(DownloadExternals)
  include(ExternalProject)
  
  # Boost
@@ -198,6 +198,12 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
 -set(CRYPTOPP_INSTALL OFF)
 -set(CRYPTOPP_SOURCES "${CMAKE_SOURCE_DIR}/externals/cryptopp")
 -add_subdirectory(cryptopp-cmake)
+-
+-# HACK: Mismatch between compilation of CryptoPP and headers used in Citra can cause runtime issues.
+-# Pull out the compile definitions from CryptoPP and apply them to Citra as well to fix this.
+-# See: https://github.com/weidai11/cryptopp/issues/1191
+-get_source_file_property(CRYPTOPP_COMPILE_DEFINITIONS ${CRYPTOPP_SOURCES}/cryptlib.cpp TARGET_DIRECTORY cryptopp COMPILE_DEFINITIONS)
+-set(CRYPTOPP_COMPILE_DEFINITIONS ${CRYPTOPP_COMPILE_DEFINITIONS} PARENT_SCOPE)
 +if (NOT TARGET cryptopp::cryptopp)
 +    message(STATUS "Using bundled cryptopp")
 +    add_subdirectory(cryptopp)
@@ -206,7 +212,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
  
  # HACK: The logic to set up the base include directory for CryptoPP does not work with Android SDK CMake 3.22.1.
  # Until there is a fixed version available, this code will detect and add in the proper include if it does not exist.
-@@ -51,19 +59,21 @@ endif()
+@@ -57,19 +59,21 @@ endif()
  
  # fmt and Xbyak need to be added before dynarmic
  # libfmt
@@ -234,7 +240,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
  endif()
  
  # getopt
-@@ -75,7 +85,10 @@ endif()
+@@ -81,7 +85,10 @@ endif()
  add_subdirectory(glad)
  
  # inih
@@ -246,7 +252,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
  
  # MicroProfile
  add_library(microprofile INTERFACE)
-@@ -96,39 +109,59 @@ target_include_directories(SoundTouch IN
+@@ -102,39 +109,59 @@ target_include_directories(SoundTouch IN
  # Teakra
  add_subdirectory(teakra EXCLUDE_FROM_ALL)
  
@@ -320,7 +326,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
          # LibreSSL
          set(LIBRESSL_SKIP_INSTALL ON CACHE BOOL "")
          set(OPENSSLDIR "/etc/ssl/")
-@@ -139,24 +172,39 @@ if (ENABLE_WEB_SERVICE)
+@@ -145,24 +172,39 @@ if (ENABLE_WEB_SERVICE)
              DIRECTORY libressl
              DEFINITION OPENSSL_LIBS)
      endif()
