@@ -15,7 +15,10 @@ depends=(
   python-pytorch
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 optdepends=(
   python-albumentations
@@ -28,11 +31,14 @@ sha512sums=('6900ed1c8b08b3e1afba907bc5f78a2529021ef2b7de47d8ffba188103a8e823bd5
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  # delete unused .mim dir
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rfv "${pkgdir}${site_packages}/mmcls/.mim"
 }
 # vim:set ts=2 sw=2 et:
