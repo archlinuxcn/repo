@@ -2,7 +2,7 @@
 
 pkgname=python-dicomweb-client
 _pkgname=dicomweb-client
-pkgver=0.59.0
+pkgver=0.59.1
 pkgrel=1
 pkgdesc='Python client for DICOMweb RESTful services'
 arch=(any)
@@ -21,7 +21,7 @@ makedepends=(
 )
 
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/MGHComputationalPathology/dicomweb-client/archive/v${pkgver}.tar.gz")
-sha512sums=('179fde72796f43221b02fdaabeec550854d35cd0b1eecb227c3413535fd8e2179e5a56a62d97773bd0f60f9a3e73db0c3edd7125c3311c70fe44449ffc2ebb85')
+sha512sums=('4a8d5449887a8989b408fc8d10da791f5143cf69316fae0a06672210447e3c44ade7f10153879cebe2ba6961c50196e6e3823f425fd31953fecf7f3d8c1d0c96')
 
 build() {
   cd "${_pkgname}-${pkgver}"
