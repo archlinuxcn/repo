@@ -14,14 +14,16 @@ depends=(
 )
 makedepends=(
   cython
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 provides=(python-pycocotools)
 conflicts=(python-pycocotools)
 replaces=(python-pycocotools-openmm-git)
 
-source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz
-"
+source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"
         "https://github.com/open-mmlab/cocoapi/raw/master/license.txt"
 )
 sha512sums=('8eb699757531edbb689f28895d0613d1f7bea88a6a6fadb4d4d30021ba7af8bd9e72f307c635746388b67817a6149b14fd82d1b03a84ca77adade4c4bfa77281'
@@ -34,12 +36,12 @@ prepare() {
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 "${srcdir}/license.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
