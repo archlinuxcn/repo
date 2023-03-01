@@ -7,7 +7,7 @@
 
 pkgname=firefox-appmenu
 _pkgname=firefox
-pkgver=110.0
+pkgver=110.0.1
 pkgrel=1
 pkgdesc="Firefox from extra with appmenu patch"
 arch=(x86_64)
@@ -34,7 +34,7 @@ source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-
         fix-wayland-build.patch
         unity-menubar.patch
         fix_csd_window_buttons.patch)
-sha256sums=('d3882492190e4fdcfa142772cf35de5403effb011d24357b315d643ed9168a39'
+sha256sums=('f19bb74d684b992625abca68f5776198974cd2785eb5d02d51ba007fc998491f'
             'SKIP'
             '43c83101b7ad7dba6f5fffeb89b70a661a547d506a031ea2beada42ccf04eec7'
             '34514a657d6907a159594c51e674eeb81297c431ec26a736417c2fdb995c2c0c'
