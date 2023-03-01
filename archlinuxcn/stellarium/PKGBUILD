@@ -8,7 +8,7 @@ pkgdesc="A stellarium with great graphics and a nice database of sky-objects"
 arch=('x86_64')
 url="https://stellarium.org/"
 license=('GPL2')
-depends=('libpng' 'libgl' 'freetype2' 'openssl' 'gpsd' "libgps.so"
+depends=('libpng' 'libgl' 'freetype2' 'openssl' 'gpsd'
          'qt6-serialport' 'qt6-multimedia' 'qt6-location' 'qt6-charts' 'calcmysky-qt6')
 makedepends=('cmake' 'mesa' 'qt6-tools')
 source=(https://github.com/Stellarium/stellarium/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz{,.asc}
