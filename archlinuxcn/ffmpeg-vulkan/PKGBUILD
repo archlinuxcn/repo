@@ -6,7 +6,7 @@
 
 pkgname=ffmpeg-vulkan
 pkgver=5.1.2
-pkgrel=1
+pkgrel=2
 epoch=2
 pkgdesc='Complete solution to record, convert and stream audio and video'
 arch=(x86_64)
@@ -121,6 +121,7 @@ validpgpkeys=(DD1EC9E8DE085C629B3E1846B18E8928B3948D64) # Michael Niedermayer <m
 prepare() {
   cd ffmpeg
   patch -Np1 -i ../add-av_stream_get_first_dts-for-chromium.patch # https://crbug.com/1251779
+  git cherry-pick -n eb0455d64690eed0068e5cb202f72ecdf899837c # https://github.com/FFmpeg/FFmpeg/commit/eb0455d64690eed0068e5cb202f72ecdf899837c
 }
 
 pkgver() {
