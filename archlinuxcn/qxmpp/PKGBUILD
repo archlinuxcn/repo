@@ -5,8 +5,8 @@
 
 pkgbase=qxmpp
 pkgname=('qxmpp' 'qxmpp-doc')
-pkgver=1.4.0
-pkgrel=4
+pkgver=1.5.2
+pkgrel=1
 pkgdesc='Cross-platform C++ XMPP client and server library'
 arch=('i686' 'x86_64')
 url='https://github.com/qxmpp-project/qxmpp'
@@ -14,7 +14,7 @@ license=('LGPL2.1')
 depends=('qt5-base' 'gstreamer')
 makedepends=('cmake' 'doxygen')
 source=("${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('2148162138eaf4b431a6ee94104f87877b85a589da803dff9433c698b4cf4f19')
+sha256sums=('cc26345428d816bb33e63f92290c52b9a417d9a836bf9fabf295e3477f71e66c')
 
 prepare() {
 	cd "$srcdir/$pkgname-$pkgver"
