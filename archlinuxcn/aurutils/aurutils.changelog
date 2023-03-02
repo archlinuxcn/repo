@@ -1,3 +1,84 @@
+## 11
+
+* `aur-build`
+  + add `aur-build--sync` helper for local repository upgrades
+    - `pacman -Syu --config` is replaced by `pacsync <repo>` and `pacman -S <repo>/<pkg>`
+    - local repository upgrades are now unaffected by `--pacman-conf`
+  + add `exist:` to `--results` output
+    - remove `--dry-run`
+  + fallback to `/etc/aurutils/pacman-<machine>.conf` if `pacman-<database>.conf` does not exist
+  + rename `MAKEPKG` environment variable to `AUR_MAKEPKG`
+  + replace experimental `AUR_ASROOT` functionality (#1023)
+    - add `examples/sync-asroot`
+    - add `--user` to `aur-build--pkglist`
+    - add `AUR_GPG`, `AUR_REPO_ADD`, `AUR_MAKEPKG` environment variables
+
+* `aur-chroot`
+  + remove `--packagelist` (deprecated in v8)
+  + run `sudo --preserve-env` when `AUR_PACMAN_AUTH` is empty or `sudo`
+
+* `aur-depends`
+  + perl rewrite
+  + add `--json`, `--reverse`
+  + take provides on the command-line into account (#837)
+    - add `--no-provides`
+  + default output changed to `--graph --pkgbase`
+    - ordered output with `aur-depends --reverse | tsort`
+
+* `aur-fetch`
+  + add `aur-fetch--mirror` helper for `aur.git` mirrors
+    - defaults to `github.com/archlinux/aur`
+    - enable with `AUR_FETCH_USE_MIRROR=1`
+  + run flock(1) when modifying existing repositories
+  + run git-checkout(1) when using `--sync=rebase` with `--discard` (#1006)
+
+* `aur-graph`
+  + selectively disable/enable depends with `aur graph -v <TYPE>=[0|1]`
+    - supported types: `DEPENDS`, `MAKEDEPENDS`, `CHECKDEPENDS`, `OPTDEPENDS`
+    - forwarded by `aur-sync` (`--optdepends`, `--no-check`)
+
+* `aur-repo`
+  + add `--json`, `--jsonl`
+
+* `aur-query`
+  + perl rewrite
+  + remove support for parallel (`AUR_QUERY_PARALLEL`) and `GET` requests
+  + set operations (union, intersection) are moved to `aur-search`
+    - remove `--any`, `--exit-if-empty`
+    - `--raw` is noop
+  + remove `--dump-curl-config`
+    - print command-lines with `AUR_DEBUG=1`
+  + `-t` / `--type` is now a required parameter
+
+* `aur-search`
+  + perl rewrite
+  + add `--reverse`
+    - `-r` is now an alias to `--reverse`
+  + add `--submitter`, `--provides`, `--conflicts`, `--replaces`, 
+    `--keywords`, `--comaintainers`
+  + exit 4 on AUR response errors such as `query too small` (was: exit 2)
+
+* `aur-sync`
+  + add diagnostic for missing packages with `--continue`
+  + save `ninja.build` files in `XDG_STATE_HOME/aurutils/sync`
+  + add `--columns`
+
+* `aur-view`
+  + add `--exclude`, `--prefix`
+
+* `aur-format`
+  + new helper
+
+* `aur-repo-parse`
+  + new helper
+
+* `completion`
+  + support extending `zsh` completion for third party commands (#1016)
+
+* `examples`
+  + add `view-delta` (requires: `bat`, `git-delta`)
+  + add `sync-asroot`
+
 ## 10
 
 * `aur`
