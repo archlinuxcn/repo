@@ -1,0 +1,11 @@
+--- a/qt/aqt/update.py
++++ b/qt/aqt/update.py
+@@ -34,6 +34,8 @@
+         }
+
+     def run(self) -> None:
++        return
++
+         if not self.config["updates"]:
+             return
+         d = self._data()
