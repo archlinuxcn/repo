@@ -20,6 +20,7 @@ depends=(
   libgobject-2.0.so
   libglib-2.0.so
   libsearpc.so
+  libwebsockets.so
   jansson
   zlib
   sqlite
@@ -33,7 +34,7 @@ source=(
   "seafile-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
   "seaf-cli@.service"
 )
-sha256sums=('2263e649bc08ff58b928ea47ad77f0ae61df24488e178aa62bf52040020a5c8d'
+sha256sums=('c8ac56a0b9dcd99b2bf7f39b1520af4a4ca46b80f2675261f35a92f5e945d742'
             'c37510109c1de64c774896df39aece240c056b54414d2119fca01860211156ba')
 provides=(seafile-client-cli libseafile.so)
 
