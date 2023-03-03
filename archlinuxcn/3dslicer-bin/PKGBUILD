@@ -3,7 +3,7 @@
 pkgname=3dslicer-bin
 _pkgname=3dslicer
 pkgver=5.2.2
-pkgrel=1
+pkgrel=2
 pkgdesc='A free, open source and multi-platform software package widely used for medical, biomedical, and related imaging research'
 arch=('x86_64')
 url='https://www.slicer.org'
@@ -17,7 +17,7 @@ source=(
     "${_pkgname}-${pkgver}.tar.gz::http://download.slicer.org/download?os=linux&stability=release"
     "${_pkgname}.svg::https://www.slicer.org/assets/img/3D-Slicer-Mark.svg"
 )
-sha512sums=('dc8f7d5bd8ef4ffd8f7233433634e9aa8e67f6db07eeffea2b9082afa7fe2b40e9352625000a931a58112fae604402ad961cdd650c1f38d4c8a773bfbace80d0'
+sha512sums=('aed98e0b800054d69ca5636e13c39e11a1c633b15e3b6faafade505c04867ed5e285446f4be210073fec6a9e501089ec76f3fe82edbb57d40d72b38c2796b67b'
             '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014')
 
 prepare() {
