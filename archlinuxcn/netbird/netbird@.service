@@ -12,11 +12,9 @@ Restart = on-failure
 RestartSec = 5
 TimeoutStopSec = 10
 
-DevicePolicy = closed
 LockPersonality = yes
 MemoryDenyWriteExecute = yes
 NoNewPrivileges = yes
-PrivateDevices = yes
 PrivateMounts = yes
 PrivateTmp = yes
 ProtectClock = yes
@@ -28,12 +26,9 @@ ProtectKernelModules = no
 ProtectKernelTunables = no
 ProtectSystem = yes
 RemoveIPC = yes
-RestrictAddressFamilies = AF_UNIX AF_NETLINK AF_INET AF_INET6
 RestrictNamespaces = yes
 RestrictRealtime = yes
 RestrictSUIDSGID = yes
-SystemCallArchitectures = native
-SystemCallFilter = ~@clock @cpu-emulation @privileged @module @raw-io @reboot @mount @obsolete @debug @swap
 
 [Install]
 WantedBy = multi-user.target
