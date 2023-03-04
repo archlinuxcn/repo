@@ -3,13 +3,13 @@
 
 pkgname="rust-fleet-git"
 _pkgname="fleet"
-pkgver=0.0.8.147.ga9d561f
-pkgrel=1
+pkgver=0.0.8.148.gd13ba9e
+pkgrel=2
 pkgdesc="The blazing fast build tool for Rust."
 arch=("x86_64")
 url="https://github.com/dimensionhq/fleet"
 license=("MIT")
-depends=('rust-nightly' 'cargo-nightly' 'lld' 'clang' 'sccache' 'openssl')
+depends=('cargo' 'lld' 'clang' 'sccache' 'openssl')
 optdepends=()
 makedepends=("git")
 provides=("rust-fleet")
@@ -19,21 +19,22 @@ source=("$_pkgname::git+https://github.com/dimensionhq/fleet.git")
 sha256sums=("SKIP")
 
 pkgver() {
-    cd "$_pkgname"
-    echo "$(grep '^version =' Cargo.toml | head -n1 | cut -d\" -f2).$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+	cd "$_pkgname"
+	echo "$(grep '^version =' Cargo.toml | head -n1 | cut -d\" -f2).$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
 }
 
 build() {
-    cd $_pkgname
-    cargo build --release
+	cd $_pkgname
+	export RUSTUP_TOOLCHAIN=stable
+	cargo build --release
 }
 
 check() {
-    cd $_pkgname
-    cargo test --release
+	cd $_pkgname
+	cargo test --release
 }
 
 package() {
-    cd "$srcdir/$_pkgname"
-    install -Dm755 target/release/$_pkgname "$pkgdir/usr/bin/$_pkgname"
+	cd "$srcdir/$_pkgname"
+	install -Dm755 target/release/$_pkgname "$pkgdir/usr/bin/$_pkgname"
 }
