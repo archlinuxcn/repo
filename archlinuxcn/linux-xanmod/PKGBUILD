@@ -23,12 +23,13 @@ if [ -z ${use_numa+x} ]; then
   use_numa=y
 fi
 
-## For performance you can disable FUNCTION_TRACER/GRAPH_TRACER. Limits debugging and analyzing of the kernel.
-## Stock Archlinux and Xanmod have this enabled. 
-## Set variable "use_tracers" to: n to disable (possibly increase performance)
-##                                y to enable  (stock default)
+## Since upstream disabled CONFIG_STACK_TRACER (limits debugging and analyzing of the kernel)
+## you can enable them setting this option. Caution, because they have an impact in performance.
+## Stock Archlinux has this enabled. 
+## Set variable "use_tracers" to: n to disable (possibly increase performance, XanMod default)
+##                                y to enable  (Archlinux default)
 if [ -z ${use_tracers+x} ]; then
-  use_tracers=y
+  use_tracers=n
 fi
 
 # Unique compiler supported upstream is GCC
@@ -72,7 +73,7 @@ fi
 
 pkgbase=linux-xanmod
 _major=6.2
-pkgver=${_major}.1
+pkgver=${_major}.2
 _branch=6.x
 xanmod=1
 pkgrel=1
@@ -109,7 +110,7 @@ done
 
 sha256sums=('74862fa8ab40edae85bb3385c0b71fe103288bce518526d63197800b3cbdecb1'
             'SKIP'
-            '8fd0f1e69f53e779fcbaddfa616bf5b7d651a3cec80c952217718bca474481d2'
+            '688a5ce5406c24c04122e3652a8b6b2983feb55355aef13f8fd65444586cd38a'
             '5c84bfe7c1971354cff3f6b3f52bf33e7bbeec22f85d5e7bfde383b54c679d30')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
@@ -153,11 +154,12 @@ prepare() {
                  --enable CONFIG_IKCONFIG_PROC
 
   # User set. See at the top of this file
-  if [ "$use_tracers" = "n" ]; then
-    msg2 "Disabling FUNCTION_TRACER/GRAPH_TRACER only if we are not compiling with clang..."
+  if [ "$use_tracers" = "y" ]; then
+    msg2 "Enabling CONFIG_FTRACE only if we are not compiling with clang..."
     if [ "${_compiler}" = "gcc" ]; then
-      scripts/config --disable CONFIG_FUNCTION_TRACER \
-                     --disable CONFIG_STACK_TRACER
+      scripts/config --enable CONFIG_FTRACE \
+                     --enable CONFIG_FUNCTION_TRACER \
+                     --enable CONFIG_STACK_TRACER
     fi
   fi
 
