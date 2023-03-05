@@ -1,0 +1,26 @@
+# Maintainer: Hao Long <aur@esd.cc>
+
+pkgname=bgpq4
+pkgver=1.8
+pkgrel=0
+pkgdesc="BGP Filter generator"
+arch=("x86_64" "i686")
+url="https://github.com/bgp/bgpq4"
+license=('BSD')
+depends=('glibc')
+source=("${url}/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz")
+b2sums=('2aea8eddc33881b2e5734a805e290ed8e0a24aa41dfc65d6cd0d4221b4ff95f9477d80754eb3ae92e71843e4539653143748eca61f8f0a561932c5fff28a799e')
+
+build() {
+  cd "$pkgname-$pkgver"
+  autoreconf --install .
+  ./configure --prefix=$pkgdir/usr
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  make install
+  install -Dm644 COPYRIGHT "$pkgdir"/usr/share/licenses/$pkgname/COPYRIGHT
+  install -Dm644 README.md "$pkgdir"/usr/share/doc/$pkgname/README.md
+}
