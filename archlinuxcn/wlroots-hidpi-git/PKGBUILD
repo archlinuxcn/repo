@@ -3,7 +3,7 @@
 # Contributor: Adrian Perez de Castro <aperez@igalia.com>
 pkgname=wlroots-hidpi-git
 pkgver=0.17.0.r6152.bec94cc04
-pkgrel=2
+pkgrel=2.1
 license=(custom:MIT)
 pkgdesc='Modular Wayland compositor library, with XWayland HiDPI (git version)'
 url=https://gitlab.freedesktop.org/wlroots/wlroots.git
@@ -24,7 +24,8 @@ depends=(
 	xcb-util-wm
 	seatd
 	vulkan-icd-loader
-	xorg-xwayland)
+	xorg-xwayland
+	libdisplay-info-git)
 makedepends=(
 	git
 	meson
