@@ -2,7 +2,7 @@
 # Maintainer: Adrien Smith <adrien@panissupraomnia.dev>
 
 pkgname=overmind
-pkgver=2.3.0
+pkgver=2.4.0
 pkgrel=1
 pkgdesc="Process manager for Procfile-based applications and tmux"
 arch=("x86_64")
@@ -12,8 +12,8 @@ depends=('tmux')
 makedepends=("go")
 conflicts=("$pkgname-bin" "$pkgname-git")
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha512sums=('ea0b200ac4954846739b9bc771783d62a5b0018ef133b9898c0156d346656163ae41bc7e8f4d8d4ccf9e01aa79e5e8a9e47cda64ea66faf554141b3dfad9a3e1')
-b2sums=('4d088231210d534a5bab8fbb597c788efe75b2d5995fd439ebb8509994f715fa129ed23a0215e0c6495219b05c318f2a10c5cdcdaea8f19da6c531781e56f09e')
+sha256sums=('6936349e4a2d5fdae97ba35f4e0f92f3e466fd439b217ef3e84cf469e7a18816')
+b2sums=('c102283677b39e18152081830df69aa89ff12d27d10be6ce8355ed50cc1eadf22eef7e756f22f8b29a69a447b2633c3ebf834f5634c6b3808f15029644961da6')
 
 build() {
   cd "$pkgname-$pkgver"
