@@ -311,6 +311,7 @@ prepare() {
     popd
 
     patch -p1 -i "$srcdir"/0001-AUR-PKGBUILD-changes.patch
+    sed 's/cargo update --offline --verbose/cargo update --locked --offline --verbose --workspace/g' -i make/rules-cargo.mk
 }
 
 build() {
