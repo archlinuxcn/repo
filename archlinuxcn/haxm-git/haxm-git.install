@@ -1,9 +1,0 @@
-post_install() {
-  groupadd -f haxm
-}
-
-pre_remove() {
-  if [ $(getent group haxm) ]; then
-    groupdel haxm
-  fi
-}
