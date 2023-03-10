@@ -5,7 +5,7 @@
 pkgbase=snes9x-git
 _pkgbase=snes9x
 pkgname=(snes9x-git snes9x-gtk-git)
-pkgver=1.61.r52.g36857427
+pkgver=1.61.r155.gcd57135d
 pkgrel=1
 pkgdesc="Port of the Snes9x emulator (git version)"
 arch=('x86_64')
@@ -14,7 +14,7 @@ license=('custom')
 makedepends=(alsa-lib cairo gdk-pixbuf2 git glib2
   gtk3 intltool libepoxy libpng libpulse libx11 libxext libxml2
   libxrandr libxv meson minizip nasm portaudio sdl2 zlib gtkmm3
-  cmake
+  cmake libyuv
 )
 source=(
   git+https://github.com/snes9xgit/snes9x.git
@@ -39,18 +39,21 @@ build() {
 
   ./configure \
     --prefix='/usr' \
-    --enable-netplay
+    --enable-netplay \
+    --enable-libyuv \
+    --enable-sse41 \
+    --enable-avx2
   make
 
-  cd "${srcdir}"
-  arch-meson snes9x/gtk build
+  cd "${srcdir}/${_pkgbase}/gtk"
+  cmake -G Ninja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -S . -B build
   ninja -C build
 }
 
 package_snes9x-git() {
 
   pkgdesc="portable Emulator for the Super Nintendo Entertainment System"
-  depends=(libpng libxinerama libxv minizip)
+  depends=(libpng libxinerama libxv minizip libyuv alsa-lib)
 
   conflicts=('snes9x')
   provides=('snesx')
@@ -72,9 +75,10 @@ package_snes9x-gtk-git() {
   conflicts=('snes9x-gtk')
   provides=('snes9x-gtk')
 
+  cd ${srcdir}/${_pkgbase}/gtk
   DESTDIR="${pkgdir}" ninja -C build install
 
-  cd "${_pkgbase}"
+  cd "${srcdir}/${_pkgbase}"
 
   install -d "${pkgdir}/usr/share/doc/${pkgname}"
   install -Dm644 {unix/snes9x.conf.default,docs/{control-inputs,controls,snapshots}.txt} \
@@ -83,13 +87,13 @@ package_snes9x-gtk-git() {
     "${pkgdir}/usr/share/licenses/${pkgname}"
 
    # Remove glslang files
-   rm "${pkgdir}/usr/bin/glslangValidator"
-   rm "${pkgdir}/usr/lib/libHLSL.a"
-   rm "${pkgdir}/usr/lib/libOGLCompiler.a"
-   rm "${pkgdir}/usr/lib/libOSDependent.a"
-   rm "${pkgdir}/usr/lib/libSPIRV.a"
-   rm "${pkgdir}/usr/lib/libSPVRemapper.a"
-   rm "${pkgdir}/usr/lib/libglslang.a"
+   #rm "${pkgdir}/usr/bin/glslangValidator"
+   #rm "${pkgdir}/usr/lib/libHLSL.a"
+   #rm "${pkgdir}/usr/lib/libOGLCompiler.a"
+   #rm "${pkgdir}/usr/lib/libOSDependent.a"
+   #rm "${pkgdir}/usr/lib/libSPIRV.a"
+   #rm "${pkgdir}/usr/lib/libSPVRemapper.a"
+   #rm "${pkgdir}/usr/lib/libglslang.a"
 
 
 }
