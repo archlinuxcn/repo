@@ -127,6 +127,5 @@ package() {
 
 check() {
     cd "$srcdir/mpv"
-    meson test -C build --no-suite ffmpeg
-    meson test -C build --print-errorlogs
+    meson test -C build --print-errorlogs --no-suite ffmpeg
 }
