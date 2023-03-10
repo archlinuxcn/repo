@@ -3,7 +3,7 @@
 pkgname=virtualbox-ext-oracle
 pkgver=7.0.6
 _filever="${pkgver}a-155176"
-pkgrel=2
+pkgrel=3
 pkgdesc='Oracle VM VirtualBox Extension Pack'
 arch=('any')
 url='https://www.virtualbox.org/'
@@ -26,7 +26,7 @@ prepare() {
 
 package() {
   install -Dm 644 shrunk.vbox-extpack \
-    "$pkgdir/usr/share/virtualbox/extensions/Oracle_VM_VirtualBox_Extension_Pack-${_filever}.vbox-extpack"
+    "$pkgdir/usr/share/virtualbox/extensions/Oracle_VM_VirtualBox_Extension_Pack-${pkgver}.vbox-extpack"
   install -Dm 644 shrunk/ExtPack-license.txt \
     "$pkgdir/usr/share/licenses/${pkgname}/PUEL"
 }
