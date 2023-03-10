@@ -3,7 +3,7 @@ maintainers:
 repo_depends:
   - libeb
   - qt5-webkit
-pre_build: vcs_update
+pre_build_script: aur_pre_build(maintainers=['aksr', 'MarsSeed'])
 post_build: git_pkgbuild_commit
 update_on:
   - source: github
@@ -13,5 +13,8 @@ update_on:
   - source: alpm
     alpm: libtiff
     provided: libtiff.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavutil.so
   - source: manual
-    manual: 1
+    manual: 2
