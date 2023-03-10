@@ -9,10 +9,10 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=110.0.5481.177
+pkgver=111.0.5563.64
 pkgrel=1
 _launcher_ver=8
-_gcc_patchset=4
+_gcc_patchset=2
 _manual_clone=0
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
@@ -32,17 +32,15 @@ options=('!lto') # Chromium adds its own flags for ThinLTO
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
         https://github.com/stha09/chromium-patches/releases/download/chromium-${pkgver%%.*}-patchset-$_gcc_patchset/chromium-${pkgver%%.*}-patchset-$_gcc_patchset.tar.xz
-        fix-the-way-to-handle-codecs-in-the-system-icu.patch
-        v8-move-the-Stack-object-from-ThreadLocalTop.patch
+        sql-relax-constraints-on-VirtualCursor-layout.patch
         REVERT-roll-src-third_party-ffmpeg-m102.patch
         REVERT-roll-src-third_party-ffmpeg-m106.patch
         disable-GlobalMediaControlsCastStartStop.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('7b2f454d1195270a39f94a9ff6d8d68126be315e0da4e31c20f4ba9183a1c9b7'
+sha256sums=('7d5ca0e2bdb22a97713e6bfce74c651006d71aa883056c8e2c2a148039fe4074'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
-            '8c7f93037cc236024cc8be815b2c2bd84f6dc9e32685299e31d4c6c42efde8b7'
-            'a5d5c532b0b059895bc13aaaa600d21770eab2afa726421b78cb597a78a3c7e3'
-            '49c3e599366909ddac6a50fa6f9420e01a7c0ffd029a20567a41d741a15ec9f7'
+            'a016588340f1559198e4ce61c6e91c48cf863600f415cb5c46322de7e1f77909'
+            'e66be069d932fe18811e789c57b96249b7250257ff91a3d82d15e2a7283891b7'
             '30df59a9e2d95dcb720357ec4a83d9be51e59cc5551365da4c0073e68ccdec44'
             '4c12d31d020799d31355faa7d1fe2a5a807f7458e7f0c374adf55edb37032152'
             '7f3b1b22d6a271431c1f9fc92b6eb49c6d80b8b3f868bdee07a6a1a16630a302'
@@ -63,7 +61,7 @@ source=(${source[@]}
         vaapi-add-av1-support.patch
         remove-main-main10-profile-limit.patch)
 sha256sums=(${sha256sums[@]}
-            '602c2bd0f93e5618f3a32a71a11d48a0c8aa881ac3e4dc0ba7d64fd97896c4a7'
+            '2ad44997d95ae66b36125bf62bf1308006ec62da26ba04f8b5480d7271675079'
             'e9e8d3a82da818f0a67d4a09be4ecff5680b0534d7f0198befb3654e9fab5b69'
             'e742cc5227b6ad6c3e0c2026edd561c6d3151e7bf0afb618578ede181451b307'
             'fc810e3c495c77ac60b383a27e48cf6a38b4a95b65dd2984baa297c5df83133c')
@@ -131,12 +129,7 @@ prepare() {
   patch -Np1 -i ../use-oauth2-client-switches-as-default.patch
 
   # Upstream fixes
-  patch -Np1 -i ../fix-the-way-to-handle-codecs-in-the-system-icu.patch
-
-  # https://crbug.com/v8/13630
-  # https://crrev.com/c/4200636
-  # https://github.com/nodejs/node/pull/46125#issuecomment-1407721276
-  patch -Np1 -d v8 <../v8-move-the-Stack-object-from-ThreadLocalTop.patch
+  patch -Np1 -i ../sql-relax-constraints-on-VirtualCursor-layout.patch
 
   # Revert ffmpeg roll requiring new channel layout API support
   # https://crbug.com/1325301
@@ -149,10 +142,6 @@ prepare() {
   patch -Np1 -i ../disable-GlobalMediaControlsCastStartStop.patch
 
   # Fixes for building with libstdc++ instead of libc++
-  patch -Np1 -i ../patches/chromium-103-VirtualCursor-std-layout.patch
-  patch -Np1 -i ../patches/chromium-110-NativeThemeBase-fabs.patch
-  patch -Np1 -i ../patches/chromium-110-CredentialUIEntry-const.patch
-  patch -Np1 -i ../patches/chromium-110-DarkModeLABColorSpace-pow.patch
 
   # Custom Patches
   patch -Np1 -i ../ozone-add-va-api-support-to-wayland.patch
@@ -209,7 +198,7 @@ build() {
     'clang_use_chrome_plugins=false'
     'is_official_build=true' # implies is_cfi=true on x86_64
     'symbol_level=0' # sufficient for backtraces on x86(_64)
-    #'chrome_pgo_phase=0' # needs newer clang to read the bundled PGO profile
+    'chrome_pgo_phase=0' # needs newer clang to read the bundled PGO profile
     'treat_warnings_as_errors=false'
     'disable_fieldtrial_testing_config=true'
     'blink_enable_generated_code_formatting=false'
