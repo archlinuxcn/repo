@@ -1,4 +1,4 @@
-From 6f8b40bcb638ed66b59cd3bc75da08c94e5571dd Mon Sep 17 00:00:00 2001
+From 8577b9aad1d51d94d3d6587b708b239e624c48b6 Mon Sep 17 00:00:00 2001
 From: Peter Cai <peter@typeblog.net>
 Date: Sun, 14 Aug 2022 10:38:32 -0400
 Subject: [PATCH 3/3] Revert "compositor: send WL_SURFACE_ERROR_INVALID_SIZE
@@ -12,7 +12,7 @@ XWayland scaling triggers the same case as libwayland-cursor.
  1 file changed, 5 insertions(+), 14 deletions(-)
 
 diff --git a/types/wlr_compositor.c b/types/wlr_compositor.c
-index 996a046d..b96514c5 100644
+index f43641a2..e2434a80 100644
 --- a/types/wlr_compositor.c
 +++ b/types/wlr_compositor.c
 @@ -197,21 +197,12 @@ static void surface_finalize_pending(struct wlr_surface *surface) {
@@ -43,5 +43,5 @@ index 996a046d..b96514c5 100644
  
  	if (pending->viewport.has_dst) {
 -- 
-2.38.1
+2.39.2
 
