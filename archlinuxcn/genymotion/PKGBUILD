@@ -6,8 +6,8 @@
 #Contributor: Andrea Cattaneo <andrea.cattaneo.dev@gmail.com>
 
 pkgname=genymotion
-pkgver=3.3.2
-pkgrel=3
+pkgver=3.3.3
+pkgrel=1
 pkgdesc="Complete set of tools that provides a virtual environment for Android."
 arch=('x86_64')
 url="http://www.genymotion.com/"
@@ -21,7 +21,7 @@ DLAGENTS=("https::/usr/bin/wget -U "Mozilla" %u")
 source=("genymotion.desktop"
         "https://dl.genymotion.com/releases/genymotion-$pkgver/$pkgname-${pkgver}-linux_$_ARCH.bin")
 sha512sums=('42f629d6413e4e481ef68d019ec3071515b45d01fdb004a545c8b977a9bf2439581ca8a67ad7dead9a12a0d24e8e46ba02c5dc47abd76597451b09847cf5d78b'
-            'ae3bfd2c4eefceb04cd67256b291e3c7bee3c3d0e212add92086709e5fd60bee4789d2ea80732bacbcad880be472e507470afd635cb766903664ea0815ed0205')
+            '10f053b3587bb892c3e781f9ccc78dd8a2dc361259c7e235f2c6bef6a3d5c8fa4b671ac28a614552dcc33f981394a978361799e4918242fe0830d88ec34f1e79')
 
 package(){
   cd $srcdir
