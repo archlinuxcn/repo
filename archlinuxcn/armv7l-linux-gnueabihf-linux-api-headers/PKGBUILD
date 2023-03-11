@@ -7,7 +7,7 @@
 _target_arch=arm
 _target=armv7l-linux-gnueabihf
 pkgname=${_target}-linux-api-headers
-pkgver=6.2.3
+pkgver=6.2.4
 pkgrel=1
 pkgdesc="Kernel headers sanitized for use in userspace (${_target})"
 arch=(any)
@@ -15,7 +15,7 @@ url='https://www.gnu.org/software/libc'
 license=(GPL2)
 makedepends=(rsync)
 source=(https://www.kernel.org/pub/linux/kernel/v${pkgver:0:1}.x/linux-${pkgver}.tar.xz)
-b2sums=('a6c740faf8349ae2f92ffe133afb40a763aaf178c1f3a4457572956d2fda7e09e3354dae48d594aca9cbab42d4d8d7be41036adef630275520d732902b7da812')
+b2sums=('f09f57b62298208f3f866bd322eea65d7b4e2f9a3fa13f8d9d346200758a3224924186e8c411bd98586087acd9a8b26048ccbc53f68b51a1a92cce2040537233')
 
 build() {
   cd linux-$pkgver
