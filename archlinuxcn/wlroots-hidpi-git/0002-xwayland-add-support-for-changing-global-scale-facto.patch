@@ -1,4 +1,4 @@
-From 9e0e0872f42972bf569dc87eb36ace04093f6e1f Mon Sep 17 00:00:00 2001
+From 69c32e601c154adbc5ce0edd425cdbd7c9d5bddd Mon Sep 17 00:00:00 2001
 From: Dario Nieuwenhuis <dirbaio@dirbaio.net>
 Date: Tue, 10 Mar 2020 23:21:11 +0100
 Subject: [PATCH 2/3] xwayland: add support for changing global scale factor on
@@ -13,8 +13,8 @@ Content-Transfer-Encoding: 8bit
 ---
  include/xwayland/xwm.h |  3 +++
  xwayland/xwayland.c    |  3 +++
- xwayland/xwm.c         | 39 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 45 insertions(+)
+ xwayland/xwm.c         | 43 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 49 insertions(+)
 
 diff --git a/include/xwayland/xwm.h b/include/xwayland/xwm.h
 index 3d540522..a97e0476 100644
@@ -50,7 +50,7 @@ index 8545ffda..983b6ca0 100644
  
  void wlr_xwayland_set_cursor(struct wlr_xwayland *xwayland,
 diff --git a/xwayland/xwm.c b/xwayland/xwm.c
-index 0a63cf58..3e7a40be 100644
+index cfc2917c..d71af10c 100644
 --- a/xwayland/xwm.c
 +++ b/xwayland/xwm.c
 @@ -17,6 +17,7 @@
@@ -60,8 +60,19 @@ index 0a63cf58..3e7a40be 100644
 +#include <xcb/xcbext.h>
  #include "xwayland/xwm.h"
  
+ static int32_t scale(struct wlr_xwm *xwm, int32_t val) {
+@@ -27,6 +28,10 @@ static int32_t unscale(struct wlr_xwm *xwm, int32_t val) {
+ 	return (val + xwm->xwayland->server->scale/2) / xwm->xwayland->server->scale;
+ }
+ 
++static xcb_extension_t xwayland_ext_id = {
++	.name = "XWAYLAND",
++};
++
  static const char *const atom_map[ATOM_LAST] = {
-@@ -1899,6 +1900,7 @@ static void xwm_get_resources(struct wlr_xwm *xwm) {
+ 	[WL_SURFACE_ID] = "WL_SURFACE_ID",
+ 	[WL_SURFACE_SERIAL] = "WL_SURFACE_SERIAL",
+@@ -1907,6 +1912,7 @@ static void xwm_get_resources(struct wlr_xwm *xwm) {
  	xcb_prefetch_extension_data(xwm->xcb_conn, &xcb_xfixes_id);
  	xcb_prefetch_extension_data(xwm->xcb_conn, &xcb_composite_id);
  	xcb_prefetch_extension_data(xwm->xcb_conn, &xcb_res_id);
@@ -69,7 +80,7 @@ index 0a63cf58..3e7a40be 100644
  
  	size_t i;
  	xcb_intern_atom_cookie_t cookies[ATOM_LAST];
-@@ -1930,6 +1932,8 @@ static void xwm_get_resources(struct wlr_xwm *xwm) {
+@@ -1938,6 +1944,8 @@ static void xwm_get_resources(struct wlr_xwm *xwm) {
  		wlr_log(WLR_DEBUG, "xfixes not available");
  	}
  
@@ -78,7 +89,7 @@ index 0a63cf58..3e7a40be 100644
  	xcb_xfixes_query_version_cookie_t xfixes_cookie;
  	xcb_xfixes_query_version_reply_t *xfixes_reply;
  	xfixes_cookie =
-@@ -2333,3 +2337,38 @@ enum wlr_xwayland_icccm_input_model wlr_xwayland_icccm_input_model(
+@@ -2341,3 +2349,38 @@ enum wlr_xwayland_icccm_input_model wlr_xwayland_icccm_input_model(
  	}
  	return WLR_ICCCM_INPUT_MODEL_NONE;
  }
