@@ -4,10 +4,10 @@
 # Contributor: Chris Morgan <me@chrismorgan.info>
 
 pkgname=prince-bin
-pkgver=15
+pkgver=15.1
 pkgrel=1
 pkgdesc="Convert HTML documents to PDF with CSS"
-arch=(x86_64 i686)
+arch=(x86_64 aarch64)
 url='https://www.princexml.com/'
 license=('custom')
 depends=('ca-certificates-utils' 'fontconfig' 'libidn' 'libxml2')
@@ -17,10 +17,10 @@ replaces=('princexml')
 backup=("etc/${pkgname%-bin}/license.dat")
 source=('prince.sh')
 source_x86_64=("https://www.princexml.com/download/${pkgname%-bin}-$pkgver-linux-generic-x86_64.tar.gz")
-source_i686=("https://www.princexml.com/download/${pkgname%-bin}-$pkgver-linux-generic-i686.tar.gz")
+source_aarch64=("https://www.princexml.com/download/${pkgname%-bin}-$pkgver-linux-generic-aarch64.tar.gz")
 sha256sums=('a02a6159dd0ae8b2a2440c21ed370fd5057148cc6633214f8bc48228d23138fb')
-sha256sums_x86_64=('17798dc47025d3bf410fa192ff33f1050a0cce6434ca5d8aa16c51250db286f5')
-sha256sums_i686=('db81e60ff653a87131a9771bcab8059a647c4f6147720b4ce871d6aebc331cdd')
+sha256sums_x86_64=('ae6d0678a3daf220d70615b9d8635c8dad3d41bf9a614b6f15ac595051c4393c')
+sha256sums_aarch64=('2b76b4f2231a2501fd5fff9c1b80ea75103d1fc2a2012ed27d0fc59cd898f7c9')
 
 prepare() {
     cd "${pkgname%-bin}-$pkgver-linux-generic-$CARCH"
