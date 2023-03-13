@@ -55,7 +55,7 @@ package_python-mmcv() {
 
 package_python-mmcv-full() {
   pkgdesc+=" (full version, with full features, include cuda ops)"
-  depends+=(cuda python-pytorch-cuda)
+  depends+=(cuda python-pytorch-cuda libcudart.so)
   provides=(python-mmcv=${pkgver})
   conflicts=(python-mmcv)
 
