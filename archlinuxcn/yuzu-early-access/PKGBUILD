@@ -2,7 +2,7 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=3451
+pkgver=3453
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
@@ -16,9 +16,9 @@ conflicts=('yuzu')
 source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz"
 "https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml"
 "https://github.com/pineappleEA/pineapple-src/releases/download/EA-${pkgver}/Windows-Yuzu-EA-${pkgver}.zip")
-sha256sums=('7abc37db7ca4dd257cd4a9bcdaf4bedbc6796bb5b2127ebbd3c2143d9d664d91'
+sha256sums=('b940c126c6130a609e6432a06e84f05b54c501651721ecd51586c577b07d2f6e'
             'e76ab2b3566d8135930e570ede5bed3da8f131270b60db818e453d248880bdf2'
-            '84725c072ae6aa1dbeb4037634759efb4657d0b721401a9c221faa9ddd57cc30')
+            '773e6615e1a5242899121f83c055d387513ee2c830dbe3c1a5e4b9528675fb0f')
 
 prepare() {
   cd "$srcdir/yuzu-windows-msvc-early-access"
