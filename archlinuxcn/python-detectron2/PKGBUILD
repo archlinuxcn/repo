@@ -65,6 +65,7 @@ package_python-detectron2-cuda() {
   pkgdesc="${pkgdesc} (with CUDA)"
   depends+=(
     cuda
+    libcudart.so
     python-pytorch-cuda
   )
   provides=(python-detectron2=${pkgver})
