@@ -30,14 +30,19 @@ optdepends=(
   python-tensorflow
 )
 options=(!emptydirs !lto)
-source=("${pkgname}::git+https://github.com/NVIDIA/DALI.git#tag=v${pkgver}")
-sha512sums=('SKIP')
+source=("${pkgname}::git+https://github.com/NVIDIA/DALI.git#tag=v${pkgver}"
+        "https://github.com/NVIDIA/DALI/pull/4692.patch"
+)
+sha512sums=('SKIP'
+            'b7d515e059406dcddf302e534b6040ea223dcfc1399f248d9af0b40e68013c346f67a7bc1d36f7fc6ea10d81437dc8e70c03454f47f7c2b62916ef0616ac5708')
 
 prepare() {
   cd "${srcdir}/${pkgname}"
   git submodule update --init --recursive
   # quick fix for https://github.com/archlinuxcn/repo/issues/2877
   export CXXFLAGS=${CXXFLAGS/-Wp,-D_GLIBCXX_ASSERTIONS}
+  # fix constexpr issue
+  patch -p1 -i "${srcdir}/4692.patch"
 }
 
 build() {
