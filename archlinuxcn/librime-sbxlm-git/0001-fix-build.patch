@@ -4,24 +4,10 @@ Date: Thu, 26 Jan 2023 21:23:09 +0800
 Subject: [PATCH] fix: fix build on archlinux
 
 ---
- CMakeLists.txt                     | 2 +-
  src/rime/gear/script_translator.cc | 1 +
  src/rime/gear/table_translator.cc  | 1 +
  3 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 96e0ef9d..2bf81898 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -159,7 +159,7 @@ if(MSVC)
- endif()
- 
- if(UNIX)
--  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
- endif()
- 
- if(NOT DEFINED LIB_INSTALL_DIR)
 diff --git a/src/rime/gear/script_translator.cc b/src/rime/gear/script_translator.cc
 index f243335e..31c666a7 100644
 --- a/src/rime/gear/script_translator.cc
