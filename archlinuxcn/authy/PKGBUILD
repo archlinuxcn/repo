@@ -1,7 +1,7 @@
 # Maintainer: Tonkku <contact@tonkku.me>
 
 pkgname=authy
-pkgver=2.2.2
+pkgver=2.2.3
 pkgrel=1
 pkgdesc="Two factor authentication desktop application"
 arch=('x86_64')
@@ -13,9 +13,9 @@ license=('unknown')
 depends=('nss' 'gtk3')
 makedepends=('squashfs-tools')
 _snapid="H8ZpNgIoPyvmkgxOWw5MSzsXK1wRZiHn"
-_snaprev="12"
+_snaprev="18"
 source=("https://api.snapcraft.io/api/v1/snaps/download/${_snapid}_${_snaprev}.snap")
-sha256sums=('bd26ea4f6b3994b114d52483682fac4baaade38ea248a61480ab9d3b958c3aee')
+sha256sums=('b4f7dcb26e51c9551ed88b88a066eedd906848465288eedd6369983dfd1139bc')
 
 prepare() {
     echo "Extracting snap file..."
