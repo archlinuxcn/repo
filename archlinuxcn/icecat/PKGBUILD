@@ -5,9 +5,9 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=102.8.0
+pkgver=102.9.0
 pkgrel=1
-_commit=03d9e3db5affe21db077c410ec08c313d6aa280e
+_commit=f55ede39713d1533734f37e39927cbb78abe1604
 pkgdesc="GNU version of the Firefox browser."
 arch=(x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
@@ -31,7 +31,7 @@ source=(https://git.savannah.gnu.org/cgit/gnuzilla.git/snapshot/gnuzilla-${_comm
         #'arc4random.patch::https://hg.mozilla.org/mozilla-central/raw-rev/970ebbe54477'
         #'arc4random_buf.patch::https://hg.mozilla.org/mozilla-central/raw-rev/a61813bd9f0a')
 
-sha256sums=('334ef1791bde0caf84e9b81495356efeaf6611b8cc1a1fdf08471fdc4e3b0412'
+sha256sums=('863a6a187fdd85c54904b9d8c4ae4d3f96bcc6b0207f5f8f88f6f4610b350637'
             'e00dbf01803cdd36fd9e1c0c018c19bb6f97e43016ea87062e6134bdc172bc7d'
             '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208')
 
@@ -106,7 +106,7 @@ ac_add_options --enable-jack
 ac_add_options --disable-crashreporter
 ac_add_options --disable-updater
 ac_add_options --disable-tests
-#ac_add_options --disable-eme
+ac_add_options --disable-eme
 
 ac_add_options --with-app-basename=icecat
 ac_add_options --with-app-name=icecat
