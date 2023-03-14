@@ -19,12 +19,12 @@ index e2e537f1..de640194 100644
 --- a/src/VBox/Devices/EFI/Firmware/Config.kmk
 +++ b/src/VBox/Devices/EFI/Firmware/Config.kmk
 @@ -155,7 +155,7 @@ TEMPLATE_VBoxEfiBldProg_LIBS = \
- ifn1of ($(KBUILD_HOST),win) # This stuff isn't up to our standard at all! :/
+ ifn1of ($(KBUILD_HOST), win) # This stuff isn't up to our standard at all! :/
   TEMPLATE_VBoxEfiBldProg_CFLAGS = $(filter-out -pedantic,$(TEMPLATE_VBoxBldProg_CFLAGS)) \
   	-Wno-sign-compare -Wno-missing-prototypes -Wno-strict-prototypes \
--	-Wno-implicit-function-declaration -Wno-missing-declarations -Wno-shadow -Wno-format \
-+	-Wno-implicit-function-declaration -Wno-missing-declarations -Wno-shadow \
- 	-Wno-empty-body -Wno-unused-parameter -Wno-unused-variable -Wno-unused-label
+- 	-Wno-implicit-function-declaration -Wno-missing-declarations -Wno-shadow -Wno-format \
++ 	-Wno-implicit-function-declaration -Wno-missing-declarations -Wno-shadow \
+  	-Wno-empty-body -Wno-unused-parameter -Wno-unused-variable -Wno-unused-label
   TEMPLATE_VBoxEfiBldProg_CXXFLAGS = $(filter-out -pedantic,$(TEMPLATE_VBoxBldProg_CXXFLAGS)) \
   	-Wno-all -Wno-shadow -Wno-empty-body -Wno-unused-parameter -Wno-unused-variable \
 diff --git a/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLib.inf b/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLib.inf
@@ -93,20 +93,20 @@ diff --git a/src/VBox/ExtPacks/VBoxDTrace/Makefile.kmk b/src/VBox/ExtPacks/VBoxD
 index b2bd260b..133e7398 100644
 --- a/src/VBox/ExtPacks/VBoxDTrace/Makefile.kmk
 +++ b/src/VBox/ExtPacks/VBoxDTrace/Makefile.kmk
-@@ -118,7 +118,7 @@ if defined(VBOX_WITH_EXTPACK_VBOXDTRACE) && defined(VBOX_WITH_EXTPACK)
-  VBoxDTraceCmd_DEFS.win = YY_USE_PROTOS=1 YYENABLE_NLS=0 YYLTYPE_IS_TRIVIAL=0
-  VBoxDTraceCmd_SDKS = VBOX_ZLIB
-  ifn1of ($(KBUILD_TARGET), win)
--  VBoxDTraceCmd_CFLAGS = -Wno-format $(VBOX_GCC_Wno-overlength-strings) -Wno-sign-compare -Wno-strict-prototypes -Wno-missing-prototypes -Wno-missing-declarations -Wno-shadow
-+  VBoxDTraceCmd_CFLAGS = $(VBOX_GCC_Wno-overlength-strings) -Wno-sign-compare -Wno-strict-prototypes -Wno-missing-prototypes -Wno-missing-declarations -Wno-shadow
-  endif
-  VBoxDTraceCmd_INCS = \
-  	include \
+@@ -118,7 +118,7 @@ if defined(VBOX_WITH_EXTPACK_VBOXDTRACE)
+   VBoxDTraceCmd_DEFS.win = YY_USE_PROTOS=1 YYENABLE_NLS=0 YYLTYPE_IS_TRIVIAL=0
+   VBoxDTraceCmd_SDKS = VBoxZlib
+   ifn1of ($(KBUILD_TARGET), win)
+-   VBoxDTraceCmd_CFLAGS = -Wno-format $(VBOX_GCC_Wno-overlength-strings) -Wno-sign-compare -Wno-strict-prototypes -Wno-missing-prototypes -Wno-missing-declarations -Wno-shadow
++   VBoxDTraceCmd_CFLAGS = $(VBOX_GCC_Wno-overlength-strings) -Wno-sign-compare -Wno-strict-prototypes -Wno-missing-prototypes -Wno-missing-declarations -Wno-shadow
+   endif
+   VBoxDTraceCmd_INCS = \
+   	include \
 diff --git a/src/VBox/Main/webservice/Makefile.kmk b/src/VBox/Main/webservice/Makefile.kmk
 index 072d066e..d2feea75 100644
 --- a/src/VBox/Main/webservice/Makefile.kmk
 +++ b/src/VBox/Main/webservice/Makefile.kmk
-@@ -260,7 +260,7 @@ ifdef VBOX_GSOAP_INSTALLED
+@@ -264,7 +264,7 @@ ifdef VBOX_GSOAP_INSTALLED
    ifn1of ($(KBUILD_TARGET), win)
     vboxsoap_CXXFLAGS += -Wno-shadow -Wno-parentheses $(VBOX_GCC_Wno-literal-suffix) \
     	$(VBOX_GCC_Wno-stringop-overflow) $(VBOX_GCC_Wno-stringop-truncation) \
@@ -115,13 +115,13 @@ index 072d066e..d2feea75 100644
     ifn1of ($(KBUILD_TYPE), debug) # Save time+memory by using -O0 instead of -O2.
      vboxsoap_CXXFLAGS += -O0 ## @todo this could be interesting for g++ (not clang++): -fcprop-registers
     endif
-@@ -331,7 +331,6 @@ ifdef VBOX_GSOAP_INSTALLED
+@@ -335,7 +335,6 @@ ifdef VBOX_GSOAP_INSTALLED
    	$(VBOXWEB_OUT_DIR)/gsoap_copy_all_ts
    ifn1of ($(KBUILD_TARGET), win)
     $(VBOX_GSOAP_CXX_SOURCES)_CXXFLAGS = \
--	-Wno-format \
- 	$(VBOX_GCC_Wno-int-in-bool-context) \
- 	$(VBOX_GCC_Wno-logical-op)
+-   	-Wno-format \
+    	$(VBOX_GCC_Wno-int-in-bool-context) \
+    	$(VBOX_GCC_Wno-logical-op)
     # currently necessary when compiling against OpenSSL 1.0 due to a missing
 diff --git a/src/libs/xpcom18a4/Config.kmk b/src/libs/xpcom18a4/Config.kmk
 index 3b0831e5..a83a080b 100644
