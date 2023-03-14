@@ -1,0 +1,36 @@
+diff -pNaru5 a/scripts/dkms.mkconf b/scripts/dkms.mkconf
+--- a/scripts/dkms.mkconf	2022-02-27 22:34:12.217602790 -0500
++++ b/scripts/dkms.mkconf	2022-02-27 22:35:26.478116353 -0500
+@@ -26,18 +26,11 @@ PACKAGE_VERSION="${pkgver}"
+ PACKAGE_CONFIG="${pkgcfg}"
+ NO_WEAK_MODULES="yes"
+ PRE_BUILD="configure
+   --prefix=/usr
+   --with-config=kernel
+-  --with-linux=\$(
+-    if [ -e "\${kernel_source_dir/%build/source}" ]
+-    then
+-      echo "\${kernel_source_dir/%build/source}"
+-    else
+-      echo "\${kernel_source_dir}"
+-    fi
+-  )
++  --with-linux=\${kernel_source_dir}
+   --with-linux-obj="\${kernel_source_dir}"
+   \$(
+     [[ -n \"\${ICP_ROOT}\" ]] && \\
+     {
+       echo --with-qat=\"\${ICP_ROOT}\"
+@@ -66,11 +59,11 @@ POST_BUILD="scripts/dkms.postbuild
+   -a \${arch}
+   -k \${kernelver}
+   -t \${dkms_tree}
+ "
+ AUTOINSTALL="yes"
+-MAKE[0]="make"
++MAKE[0]="make -C module/"
+ STRIP[0]="\$(
+   [[ -r \${PACKAGE_CONFIG} ]] \\
+   && source \${PACKAGE_CONFIG} \\
+   && shopt -q -s extglob \\
+   && [[ \${ZFS_DKMS_DISABLE_STRIP,,} == @(y|yes) ]] \\

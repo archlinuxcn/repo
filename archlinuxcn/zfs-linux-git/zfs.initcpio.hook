@@ -1,0 +1,119 @@
+#
+# WARNING: This script is parsed by ash in busybox at boot time, not bash!
+# http://linux.die.net/man/1/ash
+# https://wiki.ubuntu.com/DashAsBinSh
+# http://www.jpsdomain.org/public/2008-JP_bash_vs_dash.pdf
+#
+ZPOOL_FORCE=""
+ZPOOL_IMPORT_FLAGS=""
+
+zfs_get_bootfs () {
+    for zfs_dataset in $(zpool list -H -o bootfs); do
+        case ${zfs_dataset} in
+            "" | "-")
+                # skip this line/dataset
+                ;;
+            "no pools available")
+                return 1
+                ;;
+            *)
+                ZFS_DATASET=${zfs_dataset}
+                return 0
+                ;;
+        esac
+    done
+    return 1
+}
+
+zfs_mount_handler () {
+    if [ "${ZFS_DATASET}" = "bootfs" ] ; then
+        if ! zfs_get_bootfs ; then
+            # Lets import everything and try again
+            zpool import ${ZPOOL_IMPORT_FLAGS} -N -a ${ZPOOL_FORCE}
+            if ! zfs_get_bootfs ; then
+                die "ZFS: Cannot find bootfs."
+            fi
+        fi
+    fi
+
+    local pool="${ZFS_DATASET%%/*}"
+    local rwopt_exp="${rwopt:-ro}"
+
+    if ! zpool list -H "${pool}" >/dev/null 2>&1; then
+        if [ ! "${rwopt_exp}" = "rw" ]; then
+            msg "ZFS: Importing pool ${pool} readonly."
+            ZPOOL_IMPORT_FLAGS="${ZPOOL_IMPORT_FLAGS} -o readonly=on"
+        else
+            msg "ZFS: Importing pool ${pool}."
+        fi
+
+        if ! zpool import ${ZPOOL_IMPORT_FLAGS} -N "${pool}" ${ZPOOL_FORCE} ; then
+            die "ZFS: Unable to import pool ${pool}."
+        fi
+    fi
+
+    local node="$1"
+    local tab_file="${node}/etc/fstab"
+    local zfs_datasets="$(zfs list -H -o name -t filesystem -r ${ZFS_DATASET})"
+
+    # Mount the root, and any child datasets
+    for dataset in ${zfs_datasets}; do
+        mountpoint=$(zfs get -H -o value mountpoint "${dataset}")
+        case ${mountpoint} in
+            "none")
+                # skip this line/dataset.
+                ;;
+            "legacy")
+                if [ -f "${tab_file}" ]; then
+                    if findmnt -snero source -F "${tab_file}" -S "${dataset}" > /dev/null 2>&1; then
+                        opt=$(findmnt -snero options -F "${tab_file}" -S "${dataset}")
+                        mnt=$(findmnt -snero target -F "${tab_file}" -S "${dataset}")
+                        mount -t zfs -o "${opt}" "${dataset}" "${node}${mnt}"
+                    fi
+                fi
+                ;;
+            *)
+                mount -t zfs -o "zfsutil,${rwopt_exp}" "${dataset}" "${node}${mountpoint}"
+                ;;
+        esac
+    done
+}
+
+run_hook() {
+    # Force import the pools, useful if the pool has not properly been exported using 'zpool export <pool>'
+    [ ! "${zfs_force}" = "" ] && ZPOOL_FORCE="-f"
+
+    # Add import directory to import command flags
+    [ ! "${zfs_import_dir}" = "" ] && ZPOOL_IMPORT_FLAGS="${ZPOOL_IMPORT_FLAGS} -d ${zfs_import_dir}"
+
+    # Wait 15 seconds for ZFS devices to show up
+    [ "${zfs_wait}" = "" ] && ZFS_WAIT="15" || ZFS_WAIT="${zfs_wait}"
+
+    [ "${root}" = "zfs" ] && mount_handler="zfs_mount_handler"
+
+    case ${zfs} in
+        "")
+            # skip this line/dataset
+            ;;
+        auto|bootfs)
+            ZFS_DATASET="bootfs"
+            mount_handler="zfs_mount_handler"
+            ;;
+        *)
+            ZFS_DATASET="${zfs}"
+            mount_handler="zfs_mount_handler"
+            ;;
+    esac
+
+    # Allow up to n seconds for zfs device to show up
+    for i in $(seq 1 ${ZFS_WAIT}); do
+        [ -c "/dev/zfs" ] && break
+        sleep 1
+    done
+}
+
+run_latehook () {
+    zpool import -N -a ${ZPOOL_FORCE}
+}
+
+# vim:set ts=4 sw=4 ft=sh et:
