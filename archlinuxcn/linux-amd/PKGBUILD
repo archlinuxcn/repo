@@ -6,7 +6,7 @@ gitver=v6.2.6
 patchver=20230105
 patchname=more-uarches-for-kernel-5.17+.patch
 pkgver=6.2.v.6
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
@@ -77,10 +77,8 @@ prepare() {
 build() {
   cd "${_srcname}"
 
-  #Force zenv2 architecture optimisation.
-  export CFLAGS="-march=znver3 -mtune=znver3 -O2 -pipe -fstack-protector-strong"
-  export CXXFLAGS="${CFLAGS}"
-  make ${MAKEFLAGS} LOCALVERSION= bzImage modules
+  #Force zenv3 architecture optimisation and other optimisations.
+  make ${MAKEFLAGS} LOCALVERSION= bzImage modules KCFLAGS='-march=znver3 -mtune=znver3 -O2 -pipe -fstack-protector-strong'
 }
 
 _package() {
