@@ -5,6 +5,9 @@ maintainers:
 pre_build_script: aur_pre_build(maintainers=['evorster'])
 post_build: aur_post_build
 
+repo_depends:
+  - qt5-webkit
+
 update_on:
   - source: github
     github: KDE/kdenlive
