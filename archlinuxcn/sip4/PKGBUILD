@@ -28,7 +28,6 @@ build() {
 package_sip4() {
   pkgdesc="A tool that makes it easy to create Python bindings for C and C++ libraries"
   depends=(glibc)
-  replaces=('sip<5')
 
   cd build
   make DESTDIR="$pkgdir" install -C sipgen
