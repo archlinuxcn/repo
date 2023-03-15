@@ -7,8 +7,12 @@ update_on:
     aur: moonlight-qt
   - alias: libssl
   - alias: libcrypto
+  - source: alpm
+    alpm: ffmpeg
+    strip_release: true
+    provided: libavcodec.so
   - source: manual
-    manual: 1.0.0
+    manual: 1.0.1
 
 maintainers:
   - github: dctxmei
