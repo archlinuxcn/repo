@@ -9,3 +9,5 @@ def pre_build():
             print('_subarch=38') # Generic-x86-64-v3
         elif line.strip().startwith('_localmodcfg'):
             print('_localmodcfg=y')
+        else:
+            print(line)
