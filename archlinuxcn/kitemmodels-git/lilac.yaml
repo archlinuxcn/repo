@@ -5,6 +5,10 @@ maintainers:
 pre_build_script: aur_pre_build(maintainers=['IslandC0der'])
 post_build: aur_post_build
 
+repo_depends:
+  - extra-cmake-modules-git
+  - sip4
+
 update_on:
   - source: github
     github: KDE/kitemmodels
