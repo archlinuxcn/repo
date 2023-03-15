@@ -4,20 +4,30 @@
 
 pkgname=extra-cmake-modules-git
 pkgver=5.240.0.r3561.bc92a861
-pkgrel=1
+pkgrel=2
 pkgdesc='Extra modules and scripts for CMake. (GIT version)'
 arch=('any')
 url='https://projects.kde.org/projects/kdesupport/extra-cmake-modules'
 license=('LGPL')
-depends=('cmake')
+depends=('cmake'
+          )
 makedepends=('git'
              'python-sphinx'
              'python-requests'
-             'qt5-tools'
+             'qt6-tools'
+             'qt6-base'
+             'qt6-declarative'
              )
 checkdepends=('reuse')
 conflicts=('extra-cmake-modules')
 provides=('extra-cmake-modules')
+optdepends=(
+            'python-pyxdg: to generate fastlane metadata for Android apps'
+            'python-requests: - to generate fastlane metadata for Android apps'
+            'python-yaml: to generate fastlane metadata for Android apps'
+            'clang: for clang support'
+           )
+
 source=('git+https://invent.kde.org/frameworks/extra-cmake-modules.git')
 sha256sums=('SKIP')
 
@@ -36,7 +46,8 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DBUILD_QTHELP_DOCS=ON \
-    -DBUILD_TESTING=ON
+    -DBUILD_TESTING=ON \
+    -DQT_MAJOR_VERSION=6
 
   cmake --build build
 }
