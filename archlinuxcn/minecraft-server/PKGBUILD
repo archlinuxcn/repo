@@ -3,7 +3,7 @@
 # Contributer: sowieso <sowieso@dukun.de>
 
 pkgname=minecraft-server
-pkgver=1.19.3
+pkgver=1.19.4
 _nonce=c9df48efed58511cdd0213c56b9013a7b5c9ac1f
 pkgrel=1
 _mng_ver=1.0.2
