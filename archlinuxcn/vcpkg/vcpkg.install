@@ -1,0 +1,21 @@
+post_install() {
+  export VCPKG_ROOT=/opt/vcpkg
+  export VCPKG_DOWNLOADS=/var/cache/vcpkg
+
+  cat << _EOF
+
+  ==> vcpkg user note:
+  ------------------------------------------------------------------------------
+    "VCPKG_ROOT" is set to "$VCPKG_ROOT"
+    "VCPKG_DOWNLOADS" is set to "$VCPKG_DOWNLOADS"
+    To cooperate with CMake, add "-DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
+
+    Please add the intended users to the group 'vcpkg':
+    # gpasswd -a <user> vcpkg
+
+_EOF
+}
+
+post_upgrade() {
+  post_install
+}
