@@ -1,7 +1,7 @@
 # Maintainer: Xeonacid <h.dwwwwww at gmail dot com>
 
 pkgname=devtools-riscv64
-pkgver=1.5.0
+pkgver=1.5.1
 pkgrel=1
 pkgdesc='Tools for Arch Linux RISC-V package maintainers'
 arch=('x86_64' 'riscv64')
@@ -14,7 +14,7 @@ source=(makepkg-riscv64.patch
         sogrep-riscv64)
 source_x86_64=('z-archriscv-qemu-riscv64.conf')
 sha256sums=('2abae300509c2fbae0246f195fb7ffa17c4ad240052f1e60b0bc504de6149685'
-            '1c79f2817f81e18060a37b237bd1ec619af5447d0884d525aa87aa2165df16b2'
+            'c7ecb5434e1594fdd0a95cac9132d3bf37e865d22e2efd9056874cdb3501a414'
             '3721d7ca08eae58ef2a9de6d8f9ccf2fae1f330949bbf5f566db4c2efbd06105')
 sha256sums_x86_64=('c59273c423e815e4c27e8486632d80a768adddd172119035d48f7c2fac98a87a')
 

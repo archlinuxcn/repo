@@ -1,5 +1,14 @@
---- /usr/share/devtools/pacman-extra.conf	2023-01-06 03:00:58.000000000 +0800
-+++ pacman-extra-riscv64.conf	2023-01-24 22:31:14.871571646 +0800
+--- /usr/share/devtools/pacman-extra.conf	2023-03-08 01:56:48.000000000 +0200
++++ pacman-extra-riscv64.conf	2023-03-15 07:59:42.601735222 +0200
+@@ -19,7 +19,7 @@
+ #XferCommand = /usr/bin/curl -L -C - -f -o %o %u
+ #XferCommand = /usr/bin/wget --passive-ftp -c -O %o %u
+ #CleanMethod = KeepInstalled
+-Architecture = auto
++Architecture = riscv64
+ 
+ # Pacman won't upgrade packages listed in IgnorePkg and members of IgnoreGroup
+ #IgnorePkg   =
 @@ -71,19 +71,19 @@
  # after the header, and they will be used before the default mirrors.
  
