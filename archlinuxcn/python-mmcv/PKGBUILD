@@ -21,10 +21,13 @@ depends=(
 makedepends=(
   cuda
   cython
+  python-build
+  python-installer
   python-pip
   python-pytorch-cuda
   python-setuptools
   python-sympy
+  python-wheel
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmcv/archive/v${pkgver}.tar.gz"
 )
@@ -37,13 +40,13 @@ prepare() {
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
   MMCV_WITH_OPS=1 \
-  python setup.py build
+  python -m build --wheel --no-isolation
   
   cd "${srcdir}/${_pkgname}-full-${pkgver}"
   FORCE_CUDA=1 \
   MMCV_WITH_OPS=1 \
   TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package_python-mmcv() {
@@ -51,7 +54,7 @@ package_python-mmcv() {
   depends+=(python-pytorch)
 
   cd "${_pkgname}-${pkgver}"
-  MMCV_WITH_OPS=1 python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="$pkgdir" dist/*.whl
 }
 
 package_python-mmcv-full() {
@@ -61,9 +64,6 @@ package_python-mmcv-full() {
   conflicts=(python-mmcv)
 
   cd "${_pkgname}-full-${pkgver}"
-  FORCE_CUDA=1 \
-  MMCV_WITH_OPS=1 \
-  TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="$pkgdir" dist/*.whl
 }
 # vim:set ts=2 sw=2 et:
