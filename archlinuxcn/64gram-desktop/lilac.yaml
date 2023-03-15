@@ -10,8 +10,12 @@ update_on:
     aur: 64gram-desktop
   - alias: libssl
   - alias: libcrypto
+  - source: alpm
+    alpm: ffmpeg
+    strip_release: true
+    provided: libavcodec.so
   - source: manual
-    manual: 1.0.1
+    manual: 1.0.2
 
 maintainers:
   - github: wuyudi
