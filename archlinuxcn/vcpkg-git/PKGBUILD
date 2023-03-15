@@ -1,0 +1,64 @@
+# Contributor: Honghao Li <hh.li99@outlook.com>
+# Contributor: Michael Yang <ohmyarchlinux@pm.me>
+# Maintainer: Kuan-Yen Chou <kuanyenchou at gmail dot com>
+
+pkgname=vcpkg-git
+pkgver=2023.01.09.r416.g31a159c1ca
+pkgrel=1
+pkgdesc='C++ library manager for Windows, Linux, and MacOS'
+depends=('curl' 'zip' 'unzip')
+makedepends=('git' 'cmake>=3.3.0' 'ninja')
+optdepends=()
+arch=('x86_64')
+url='https://github.com/microsoft/vcpkg'
+license=('MIT')
+provides=('vcpkg')
+conflicts=('vcpkg')
+source=("$pkgname"::'git+https://github.com/microsoft/vcpkg'
+        'vcpkg.sh'
+        'vcpkg.conf')
+sha256sums=('SKIP'
+            'a26b2b4472e3e7c3372617ada9ca2d4c33094c5c5004880e0f3b32bcf5086a25'
+            '02a6d2bca471adedfc7acc9ba57860d976ec5115b282cb1a96341850e1c7b221')
+install=$pkgname.install
+
+pkgver() {
+    cd "$srcdir/$pkgname"
+    if git describe --long --tags >/dev/null 2>&1; then
+        git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+    else
+        printf 'r%s.%s' "$(git rev-list --count HEAD)" "$(git describe --always)"
+    fi
+}
+
+build() {
+    "$srcdir/$pkgname/bootstrap-vcpkg.sh" -disableMetrics
+}
+
+package() {
+    export VCPKG_ROOT=/opt/vcpkg
+    export VCPKG_DOWNLOADS=/var/cache/vcpkg
+
+    # executable entry point
+    install -Dm755 "$srcdir/vcpkg.sh" "$pkgdir/usr/bin/vcpkg"
+
+    # vcpkg root
+    install -Dm755 "$srcdir/$pkgname/vcpkg" "$pkgdir/$VCPKG_ROOT/vcpkg"
+    cp --preserve=mode -r \
+        "$srcdir/$pkgname"/{ports,scripts,triplets,.vcpkg-root} \
+        "$pkgdir/$VCPKG_ROOT/"
+
+    # default downloads root directory
+    install -dm1777 "$pkgdir/$VCPKG_DOWNLOADS"
+
+    # reset ownerships and permissions
+    chmod -R g+w "$pkgdir/$VCPKG_ROOT"
+    chgrp -hR 499 "$pkgdir/$VCPKG_ROOT" "$pkgdir/$VCPKG_DOWNLOADS"
+
+    # license
+    install -Dm644 "$srcdir/$pkgname/LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    # systemd-sysusers.service
+    install -Dm644 "$srcdir/vcpkg.conf" "$pkgdir/usr/lib/sysusers.d/vcpkg.conf"
+}
+
+# vim: set sw=4 ts=4 et:
