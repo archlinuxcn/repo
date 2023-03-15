@@ -5,6 +5,11 @@ maintainers:
 pre_build_script: aur_pre_build(maintainers=['benklett'])
 post_build: aur_post_build
 
+repo_depends:
+  - libajantv2
+  - librist
+  - cef-minimal-obs-bin
+
 update_on:
   - source: github
     github: obsproject/obs-studio
