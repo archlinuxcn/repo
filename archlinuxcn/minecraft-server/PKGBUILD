@@ -4,8 +4,8 @@
 
 pkgname=minecraft-server
 pkgver=1.19.4
-_nonce=c9df48efed58511cdd0213c56b9013a7b5c9ac1f
-pkgrel=1
+_nonce=8f3112a1049751cc472ec13e397eade5336ca7ae
+pkgrel=2
 _mng_ver=1.0.2
 pkgdesc="Minecraft server unit files, script, and jar"
 arch=('any')
@@ -18,10 +18,10 @@ conflicts=('minecraft-server-systemd' 'minecraft-canary')
 backup=('etc/conf.d/minecraft')
 install="${pkgname}.install"
 # See https://launchermeta.mojang.com/mc/game/version_manifest.json for a list of all releases
-source=("minecraft_server.${pkgver}.jar"::"https://launcher.mojang.com/v1/objects/${_nonce}/server.jar"
+source=("minecraft_server.${pkgver}n${_nonce:0:8}.jar"::"https://launcher.mojang.com/v1/objects/${_nonce}/server.jar"
 	"minecraft-server-${_mng_ver}.tar.gz"::"https://github.com/Edenhofer/minecraft-server/archive/refs/tags/v${_mng_ver}.tar.gz")
 noextract=("minecraft_server.${pkgver}.jar")
-sha512sums=('1a3b9930df515cb8b8be9a212c2b3b6bb4612968aca5f5bb00a15eb70bff126bf96f51aa5c6661fae0b16eef629843103c6ae73cf6f2c8030314b82d2a03a189'
+sha512sums=('a4233e35aca4ade4b2d7b8047c990d40ef81e832ef693b583a08b963ad9358c0abe3ccca656848ba649aaeded2a37ac585099bee24036a8abb1e7541eb91e96e'
             '11d708d511b63e5541bcc1dbcaf29abbf7cb9583b1d313028770a39b26b41d48dcba023f7e1d6fe30f3c093d20e10a43363011edd432e5785a4580e5c5f852a6')
 
 _game="minecraft"
@@ -48,7 +48,7 @@ package() {
 		INAME=${_game}d \
 		install
 
-	install -Dm644 ${_game}_server.${pkgver}.jar "${pkgdir}${_server_root}/${_game}_server.${pkgver}.jar"
+	install -Dm644 ${_game}_server.${pkgver}n${_nonce:0:8}.jar "${pkgdir}${_server_root}/${_game}_server.${pkgver}.jar"
 	ln -s "${_game}_server.${pkgver}.jar" "${pkgdir}${_server_root}/${_game}_server.jar"
 
 	# Link the log files
