@@ -5,7 +5,7 @@
 pkgbase="ptpython"
 pkgname="ptpython"
 pkgver="3.0.23"
-pkgrel="1"
+pkgrel="2"
 pkgdesc="Python REPL build on top of prompt_toolkit"
 arch=("any")
 url="https://github.com/prompt-toolkit/ptpython"
@@ -17,6 +17,7 @@ depends=(
     "python-prompt_toolkit>=3.0.3"
     "python-pygments"
     "python-black"
+    "python-appdirs"
 )
 optdepends=(
     "ipython: ptipython (ptpython + ipython)"
