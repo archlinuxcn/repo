@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+from lilaclib import *
+
 def pre_build():
     aur_pre_build(maintainers=['evorster'])
 
