@@ -1,6 +1,6 @@
 _name=httpcore
 pkgname=python-httpcore-latest
-pkgver=0.16.3
+pkgver=0.17.0
 pkgrel=1
 pkgdesc="A minimal low-level HTTP client."
 arch=(any)
@@ -11,16 +11,16 @@ makedepends=('python-setuptools')
 optdepends=('python-h2: HTTP/2 support')
 conflicts=('python-httpcore')
 provides=('python-httpcore')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/httpcore-0.16.3.tar.gz")
-sha256sums=('c5d6f04e2fc530f39e0c077e6a30caa53f1451096120f1f38b954afd0b17c0cb')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/httpcore-0.17.0.tar.gz")
+sha256sums=('cc045a3241afbf60ce056202301b4d8b6af08845e3294055eb26b09913ef903c')
 
 build() {
-  cd "$srcdir/httpcore-0.16.3"
+  cd "$srcdir/httpcore-0.17.0"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/httpcore-0.16.3"
+  cd "$srcdir/httpcore-0.17.0"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install any world-writable or root-readable-only files
