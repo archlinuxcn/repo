@@ -20,7 +20,7 @@ depends=(
   libavif
   libdeflate
   libheif
-  libjpeg
+#  libjpeg
   libjxl
   libmng
   libpng
@@ -42,6 +42,9 @@ sha256sums=('1c8cad4df4fb0cacd291a9a263257fb8b2900686255049af6e94bbf407c74bbd')
 
 build() {
   cd "${srcdir}/${_name}-${pkgver}"
+  # python-imagecodecs >= 2023.3.16 depends on libjpeg-turbo >= 2.1.91
+  # disable it until libjpeg-turbo 2.1.91 is in official repos
+  sed -i '/jpeg8/d' setup.py
   python setup.py build
 }
 
