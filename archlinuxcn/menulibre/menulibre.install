@@ -1,0 +1,15 @@
+post_upgrade() {
+  xdg-icon-resource forceupdate --theme hicolor &> /dev/null
+}
+
+post_remove() {
+  xdg-icon-resource forceupdate --theme hicolor &> /dev/null
+}
+
+post_install() {
+  xdg-icon-resource forceupdate --theme hicolor &> /dev/null
+  echo ""
+  echo "If the program crashes, try renaming your menu folder:"
+  echo "mv ~/.config/menus ~/.config/menus.old"
+  echo ""
+}
