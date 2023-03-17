@@ -1,0 +1,13 @@
+diff --git a/drivers/gpu/drm/i2c/tda998x_pin.c b/drivers/gpu/drm/i2c/tda998x_pin.c
+index 995efc8e55ed..48a616a7e851 100644
+--- a/drivers/gpu/drm/i2c/tda998x_pin.c
++++ b/drivers/gpu/drm/i2c/tda998x_pin.c
+@@ -30,7 +30,7 @@ static const struct of_device_id tda998x_rgb_dt_ids[] = {
+ 	{ .compatible = "starfive,tda998x_rgb_pin", },
+ 	{ /* sentinel */ },
+ };
+-MODULE_DEVICE_TABLE(of, starfive_drm_dt_ids);
++MODULE_DEVICE_TABLE(of, tda998x_rgb_dt_ids);
+ 
+ static struct platform_driver starfive_drm_platform_driver = {
+ 	.probe = starfive_drm_platform_probe,

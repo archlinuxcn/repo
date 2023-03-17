@@ -1,0 +1,13 @@
+diff --git a/security/keys/dh.c b/security/keys/dh.c
+index 4573fc15617dc8..b339760a31dd31 100644
+--- a/security/keys/dh.c
++++ b/security/keys/dh.c
+@@ -15,7 +15,7 @@
+ #include <keys/user-type.h>
+ #include "internal.h"
+ 
+-static ssize_t dh_data_from_key(key_serial_t keyid, void **data)
++static ssize_t dh_data_from_key(key_serial_t keyid, const void **data)
+ {
+ 	struct key *key;
+ 	key_ref_t key_ref;
