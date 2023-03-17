@@ -1,0 +1,29 @@
+--- a/meson.build	2022-11-01 19:25:51.209738128 +0100
++++ b/meson.build	2022-11-01 19:26:48.767739772 +0100
+@@ -117,7 +117,7 @@
+ gtk_layer_shell = dependency('gtk-layer-shell-0',
+         required: get_option('gtk-layer-shell'),
+         fallback : ['gtk-layer-shell', 'gtk_layer_shell_dep'])
+-systemd = dependency('systemd', required: get_option('systemd'))
++
+ tz_dep = dependency('date',
+     required: false,
+     default_options : [ 'use_system_tzdb=true' ],
+@@ -131,17 +131,6 @@
+ 
+ add_project_arguments('-DSYSCONFDIR="/@0@"'.format(join_paths(prefix, sysconfdir)), language : 'cpp')
+ 
+-if systemd.found()
+-  user_units_dir = systemd.get_pkgconfig_variable('systemduserunitdir')
+-
+-  configure_file(
+-    configuration: conf_data,
+-    input: './resources/waybar.service.in',
+-    output: '@BASENAME@',
+-    install_dir: user_units_dir
+-  )
+-endif
+-
+ src_files = files(
+     'src/factory.cpp',
+     'src/AModule.cpp',
