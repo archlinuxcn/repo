@@ -8,6 +8,8 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if line.strip().startswith(': "${_subarch:=""}"'):
             print('_subarch=38') # Generic-x86-64-v3
+        elif line.strip().startswith(': "${_localmodcfg:=""}"'):
+            print('_localmodcfg=n')
         elif line.strip().startswith('pkgbase='):
             print('pkgbase=linux-clear-x64-v3')
         else:
