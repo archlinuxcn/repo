@@ -1,0 +1,16 @@
+# mkinitcpio preset file for the 'linux-amd' package
+
+ALL_config="/etc/mkinitcpio.conf"
+ALL_kver="/boot/vmlinuz-linux-amd"
+
+export COMPRESSION="lzop"
+
+PRESETS=('default' 'fallback')
+
+#default_config="/etc/mkinitcpio.conf"
+default_image="/boot/initramfs-linux-amd.img"
+#default_options=""
+
+#fallback_config="/etc/mkinitcpio.conf"
+fallback_image="/boot/initramfs-linux-amd-fallback.img"
+fallback_options="-S autodetect"
