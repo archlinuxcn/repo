@@ -3,7 +3,7 @@
 
 _pkgname="hyprland"
 pkgname="${_pkgname}-nvidia-hidpi-git"
-pkgver=r2551.c4440993
+pkgver=r2608.91a565c7
 pkgrel=1
 pkgdesc="A dynamic tiling Wayland compositor based on wlroots that doesn't sacrifice on its looks. (NVIDIA + HiDPI patch)"
 arch=(any)
@@ -37,7 +37,7 @@ depends=(
     seatd
     vulkan-icd-loader
     vulkan-validation-layers
-    xorg-xwayland-hidpi-xprop
+    xorg-xwayland-lily
     libdisplay-info)
 makedepends=(
     git
