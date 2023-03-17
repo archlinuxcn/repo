@@ -1,0 +1,7 @@
+post_install() {
+  echo 'The zenpower kernel module will be available on reboot. To load it now, run "modprobe -r k10temp && modprobe zenpower" as root'
+}
+
+post_remove() {
+  echo 'The zenpower kernel module will be removed on reboot. To remove it now, run "modprobe -r zenpower && modprobe k10temp" as root'
+}
