@@ -11,7 +11,7 @@
 # Contributor: hack.augusto <hack.augusto@gmail.com>
 
 pkgname=depot-tools-git
-pkgver=r9304.b7d8efd8b
+pkgver=r9433.3f3e2f789
 pkgrel=1
 pkgdesc='Tools for working with Chromium development'
 arch=(x86_64)
@@ -35,7 +35,7 @@ package() {
 	rm -rf "$pkgdir/opt/depot_tools/.git/"
 
 	# Make Windows files non-executable
-	chmod a-x "$pkgdir/opt/depot_tools/"*.{bat,exe}
+	chmod a-x "$pkgdir/opt/depot_tools/"*.bat
 
 	# TODO: Consider removing unneeded files, for example:
 	# .git{ignore,attributes}
@@ -44,7 +44,7 @@ package() {
 	# bootstrap/
 	# infra/
 	# ninja-{mac,linux32}
-	# *.{bat,exe}
+	# *.bat
 	# testing_support/
 	# tests/
 	# win32imports.py
