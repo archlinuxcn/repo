@@ -4,14 +4,14 @@
 pkgname=waybar-hyprland-no-systemd
 _pkgname=Waybar
 pkgver=0.9.17
-pkgrel=0
+pkgrel=1
 pkgdesc='Highly customizable Wayland bar for Sway and Wlroots based compositors, with workspaces support for Hyprland, without systemd dependency'
 arch=('any')
 url='https://github.com/Alexays/Waybar/'
 license=('MIT')
 provides=('waybar')
 conflicts=('waybar')
-depends=(
+depends=("playerctl"
     'gtkmm3'
     'libjsoncpp.so'
     'libsigc++'
