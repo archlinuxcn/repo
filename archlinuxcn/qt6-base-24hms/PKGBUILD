@@ -3,9 +3,9 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=qt6-base-24hms
-_qtver=6.4.2
+_qtver=6.4.3
 pkgver=${_qtver/-/}
-pkgrel=21
+pkgrel=22
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -26,7 +26,6 @@ optdepends=('qt6-wayland: to run Qt6 applications in a Wayland session'
 
 provides=("qt6-base=$pkgver")
 conflicts=(qt6-base "qt6-3d>$pkgver" "qt6-5compat>$pkgver" "qt6-base>$pkgver" "qt6-charts>$pkgver" "qt6-connectivity>$pkgver" "qt6-datavis3d>$pkgver" "qt6-declarative>$pkgver" "qt6-doc>$pkgver" "qt6-examples>$pkgver" "qt6-imageformats>$pkgver" "qt6-lottie>$pkgver" "qt6-multimedia>$pkgver" "qt6-networkauth>$pkgver" "qt6-positioning>$pkgver" "qt6-quick3d>$pkgver" "qt6-quicktimeline>$pkgver" "qt6-remoteobjects>$pkgver" "qt6-scxml>$pkgver" "qt6-sensors>$pkgver" "qt6-serialbus>$pkgver" "qt6-serialport>$pkgver" "qt6-shadertools>$pkgver" "qt6-svg>$pkgver" "qt6-tools>$pkgver" "qt6-translations>$pkgver" "qt6-virtualkeyboard>$pkgver" "qt6-wayland>$pkgver" "qt6-webchannel>$pkgver" "qt6-webengine>$pkgver" "qt6-websockets>$pkgver" "qt6-webview>$pkgver" )
-options=(debug)
 _pkgfn=qtbase-everywhere-src-$_qtver
 source=(
       oldherl-24hms.patch
@@ -39,7 +38,7 @@ sha256sums=(
       '9c62800980e97b1614e4fc85ecad3b032606d0e620295e791fc3f34629bb0a44'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
-      'a88bc6cedbb34878a49a622baa79cace78cfbad4f95fdbd3656ddb21c705525d'
+      '5087c9e5b0165e7bc3c1a4ab176b35d0cd8f52636aea903fa377bdba00891a60'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
             '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
 
