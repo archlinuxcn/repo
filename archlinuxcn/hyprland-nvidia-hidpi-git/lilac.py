@@ -7,5 +7,5 @@ def pre_build():
 
     for line in edit_file('PKGBUILD'):
         line = line.replace('libdisplay-info', 'libdisplay-info-git')
-        line = line.replace('xorg-xwayland-hidpi-xprop', 'xorg-xwayland-lily'))
+        line = line.replace('xorg-xwayland-hidpi-xprop', 'xorg-xwayland-lily')
         print (line)
