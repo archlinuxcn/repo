@@ -1,7 +1,7 @@
 # Maintainer: Chih-Hsuan Yen <yan12125@archlinux.org>
 
 pkgname=netron-cli
-pkgver=6.7.5
+pkgver=6.7.6
 pkgrel=1
 pkgdesc='Visualizer for neural network, deep learning, and machine learning models (CLI only)'
 url='https://netron.app/'
@@ -14,7 +14,7 @@ optdepends=(
   'python-pytorch: serializing PyTorch models'
 )
 source=(https://github.com/lutzroeder/netron/archive/v$pkgver/netron-$pkgver.tar.gz)
-sha256sums=('3d89bcefeb61783bd33b620bc8c7249e8155f61cdab45bd3e78cb0fbefdf240f')
+sha256sums=('f2870332597a3e418e3044aa2a7df612a37a6c1fe2bb644ca68bff7aefb5f479')
 
 build() {
   cd netron-$pkgver
