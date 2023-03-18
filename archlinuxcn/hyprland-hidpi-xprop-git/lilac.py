@@ -3,7 +3,9 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build(maintainers=['Aleksana','q234rty'])
+    aur_pre_build(maintainers=['Aleksana', 'q234rty'])
 
     for line in edit_file('PKGBUILD'):
-        print (line.replace('xorg-xwayland-hidpi-xprop','xorg-xwayland-lily'))
+        line = line.replace('libdisplay-info', 'libdisplay-info-git')
+        line = line.replace('xorg-xwayland-hidpi-xprop', 'xorg-xwayland-lily'))
+        print (line)
