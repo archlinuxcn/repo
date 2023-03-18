@@ -88,7 +88,7 @@ _clr=${_major}.6-1290
 _gcc_more_v='20230105'
 pkgbase=linux-clear-x64-v3
 pkgver=${_major}.${_minor}
-pkgrel=3
+pkgrel=4
 pkgdesc='Clear Linux'
 arch=('x86_64')
 url="https://github.com/clearlinux-pkgs/linux"
@@ -153,6 +153,9 @@ prepare() {
     # Power management and ACPI options
     scripts/config -e ACPI_REV_OVERRIDE_POSSIBLE \
                    -e ACPI_TABLE_UPGRADE
+
+    # Virtualization
+    scripts/config -e KVM_SMM
 
     # General architecture-dependent options
     scripts/config -e KPROBES
