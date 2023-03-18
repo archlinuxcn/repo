@@ -1,6 +1,6 @@
 # Maintainer: Y7n05h < echo WTduMDVoQHk3bjA1aC5kZXY= | base64 -d >
 pkgname=pwru
-pkgver=0.0.8
+pkgver=0.0.9
 pkgrel=1
 pkgdesc="Packet, where are you? -- eBPF-based Linux kernel networking debugger"
 arch=("x86_64" "aarch64")
@@ -11,7 +11,7 @@ depends=("glibc")
 makedepends=("clang" "llvm" "go")
 optdepends=()
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('4a639465707a284c735399ad3d72cb9215450e093285fcce16e41345d70f530e')
+sha256sums=('46f92e5b8eeea8fb60518acc172489701c64ef135d438b979dfddfab13b73957')
 _arch=""
 prepare() {
 	if [ $CARCH = "x86_64" ]; then
