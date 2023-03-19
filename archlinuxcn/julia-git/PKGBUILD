@@ -62,8 +62,7 @@ source=('git+https://github.com/JuliaLang/julia'
         julia-precompile.hook
         julia-clear-precompile.hook
         arch-source-translate.cpp
-        sysp7z.diff
-        0001-Support-suitesparse-version-7.0.patch)
+        sysp7z.diff)
 sha512sums=('SKIP'
             '03bd10ac654386ced221023ae28fb109a8ecf299a73922cc3a763890c104bbe263c1f9a67b7709a02734bae76ca2f063e73152781a96745d6351abe2537a2e14'
             '8fcd8faa5da5b49a6e25aaace4e1f7d085a808345718f5a80c1f397dda580c5321ac22e841499e814b21b85ccdf49c7db6556f29fe8b38e2e025e674aca66ca8'
@@ -77,8 +76,7 @@ sha512sums=('SKIP'
             '36df234b634926bc88084e683ee9f495ef0ce4c26d6d6b9f55294098bdcb86f5eaaf6c671afe1a5c4371c428bd7bf3dd617ec1f15a7ff35376d67df22140454c'
             'adf0fef964e8bdee9926f1127177bc0ddea0d2dbb1090ab94555c3599b87cf03b489dfe92fda3453bf68385f4b69556f396b1ecfb8a9525c23a3ed808e2eb370'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
-            '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849'
-            'de100e2627aaf3fb5bc7ded225dc3cbc3f384a7485f74599470f8aa3645a71f31cb256738aee2a94c725bb2ace03b967f43b4e920e71925e629e5c01aa35cc2e')
+            '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849')
 
 pkgver() {
   cd julia
@@ -169,7 +167,6 @@ _patch_suitesparse() {
   for d in usr/share/julia/stdlib/v*/SparseArrays; do
     (
       cd "$d"
-      patch -Np1 < "$srcdir/0001-Support-suitesparse-version-7.0.patch"
       # Patch the code to assume newer cholmod version. This is generally unsafe
       # but should be fine for 3->4 according to the suitesparse changelog.
       for f in src/solvers/lib/*.jl; do
