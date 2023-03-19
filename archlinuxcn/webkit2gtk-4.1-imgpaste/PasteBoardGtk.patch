@@ -1,0 +1,49 @@
+--- Source/WebCore/platform/gtk/PasteboardGtk.cpp
++++ Source/WebCore/platform/gtk/PasteboardGtk.cpp
+@@ -318,15 +318,44 @@
+ 
+ void Pasteboard::read(PasteboardFileReader& reader, std::optional<size_t>)
+ {
++    WTFLogAlways("xxoo Pasteboard::read PasteboardFileReader");
+     if (m_selectionData) {
+-        for (const auto& filePath : m_selectionData->filenames())
++        WTFLogAlways("xxoo Pasteboard::read m_selectionData");
++        for (const auto& filePath : m_selectionData->filenames()) {
++            WTFLogAlways("xxoo Pasteboard::read m_selectionData reader.readFilename filePath=%s", filePath.utf8().data());
+             reader.readFilename(filePath);
++        }
+         return;
+     }
+ 
++    
++    WTFLogAlways("xxoo Pasteboard::read readFilePathsFromClipboard pasteboardName=%s", m_name.utf8().data());
+     auto filePaths = platformStrategies()->pasteboardStrategy()->readFilePathsFromClipboard(m_name);
+-    for (const auto& filePath : filePaths)
++    for (const auto& filePath : filePaths) {
++        WTFLogAlways("xxoo Pasteboard::read readFilePathsFromClipboard reader.readFilename filePath=%s", filePath.utf8().data());
+         reader.readFilename(filePath);
++    }
++
++    if (filePaths.isEmpty()) {
++        WTFLogAlways("xxoo Pasteboard::read readFilePathsFromClipboard got no filePaths, try readBufferFromClipboard pasteboardName=%s", m_name.utf8().data());
++
++        auto types = platformStrategies()->pasteboardStrategy()->types(m_name);
++        static const ASCIILiteral imageTypes[] = { "image/png"_s, "image/jpeg"_s, "image/gif"_s, "image/bmp"_s, "image/vnd.microsoft.icon"_s, "image/x-icon"_s };
++        static const ASCIILiteral imageNames[] = { "image.png"_s, "image.jpeg"_s, "image.gif"_s, "image.bmp"_s, "image.ico"_s, "image.ico"_s };
++        for (int i = 0;i < 6;i++) {
++            if (types.contains(imageTypes[i])) {
++                WTFLogAlways("xxoo Pasteboard::read readBufferFromClipboard types contains imageType");
++                auto buffer = platformStrategies()->pasteboardStrategy()->readBufferFromClipboard(m_name, imageTypes[i]);
++                // readBuffer(const String&, const String& type, Ref<SharedBuffer>&&)
++                // readImage(Ref<SharedBuffer>&&, const String&, PresentationSize = { }) 
++                if (!buffer->isEmpty()) {
++                    reader.readBuffer(imageNames[i], imageTypes[i], buffer.releaseNonNull());
++                    WTFLogAlways("xxoo Pasteboard::read reader.readBuffer success");
++                    return;
++                }
++            }
++        }
++    }
+ }
+ 
+ bool Pasteboard::hasData()
