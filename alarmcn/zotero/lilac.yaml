@@ -13,5 +13,9 @@ update_on:
   - source: alpm
     alpm: fontconfig
     provided: libfontconfig.so
+  - source: alpm
+    from_pattern: ^(\d+)\..*
+    to_pattern: \1
+    alpm: libpaper
   - source: manual
     manual: 1
