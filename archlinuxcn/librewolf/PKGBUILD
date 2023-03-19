@@ -2,8 +2,8 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=110.0.1
-pkgrel=1
+pkgver=111.0
+pkgrel=3
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
 arch=(x86_64 aarch64)
@@ -70,46 +70,38 @@ options=(
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
 _arch_git_blob=https://raw.githubusercontent.com/archlinux/svntogit-packages
 # _source_tag="${pkgver}-${pkgrel%.*}"
-_source_tag="${pkgver}-${pkgrel}"
-# _source_commit='19d2fe15c83e448e0b11e0530a576875e408ceeb'
+# _source_tag="${pkgver}-${pkgrel}"
+_source_commit='5a211f7bad8dcf188a96b408cc143082df8d30a8'
 # _settings_tag='7.4'
-_settings_commit='ebec9c7db23ec1d1407da547b05207f49ff9c575'
+_settings_commit='e97fcae43f34885485b5c5d5cadd9129943a5fdf'
 
 install='librewolf.install'
 source=(
   https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
   $pkgname.desktop
-  "git+https://gitlab.com/${pkgname}-community/browser/source.git#tag=${_source_tag}"
+  "git+https://gitlab.com/${pkgname}-community/browser/source.git#commit=${_source_commit}"
   "git+https://gitlab.com/${pkgname}-community/settings.git#commit=${_settings_commit}"
   "default192x192.png"
   "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
-  "${_arch_git_blob}/15a316eae92227054a924561172c8271bee7fc9c/trunk/0001-libwebrtc-screen-cast-sync.patch"
-  "${_arch_git_blob}/dd7a5fb35df6e31ee9591ab204fa2fe54e716155/trunk/0002-Bug-1819374-Squashed-ffmpeg-6.0-update.patch"
-  "${_arch_git_blob}/5605b5d61b53ca4efc69132483a50c7b4d349dc9/trunk/0003-Bug-1820416-Use-correct-FFVPX-headers-from-ffmpeg-6..patch"
-  "${_arch_git_blob}/db42b54647606c5209acc94d94d95ae6cdeeef5d/trunk/0004-Bug-1821359-Disable-TLS-Key-Pinning-for-Twitter-Doma.patch"
+  "${_arch_git_blob}/f72ed84a7907d387296811794d75da515525500e/trunk/0001-Bug-1819374-Squashed-ffmpeg-6.0-update.patch"
+  "${_arch_git_blob}/f72ed84a7907d387296811794d75da515525500e/trunk/0002-Bug-1820416-Use-correct-FFVPX-headers-from-ffmpeg-6..patch"
 )
 
-source_aarch64=("0001-libwebrtc-screen-cast-sync_additional_aarch64.patch") # include scoped_glib.cc for aarch64 as well; breaks x86_64 build though?
-
-sha256sums=('f19bb74d684b992625abca68f5776198974cd2785eb5d02d51ba007fc998491f'
+sha256sums=('e1006c0872aa7eb30fb5a689413957f1e5fc8d2048b1637bf6f6fafdbd4ea55f'
             'SKIP'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
             'SKIP'
             'SKIP'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1'
             '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d'
-            '43c83101b7ad7dba6f5fffeb89b70a661a547d506a031ea2beada42ccf04eec7'
-            '9347e45cfe3e915b2293f7467fd61c216ec10823e91c70e5aeb9ca08cc5fcfcf'
-            'be9ba079a931d5e881ce38430d418cc834e8c6b157af6c79ea267998caece806'
-            'e4193f0a31a11ec6f5e16ac8d25c866867742d2c6917f34a87d73fa35eb55c55')
-sha256sums_aarch64=('358655062957b12255977714f3d04123857e562679cd35efb2b67b2e182a464a')
+            '802f9271a5f7c0ab581baae8c46fd5b29598025ee93bb2dac6b456f8e0ae6acc'
+            'be9ba079a931d5e881ce38430d418cc834e8c6b157af6c79ea267998caece806')
 
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
 
-# change this to true if you do want to run a PGO build for aarch64 or x86_64
-# seems to be broken since 109.somethingsomething, so disabled by default in the AUR PKGBUILD for now
-_build_profiled_aarch64=false
-_build_profiled_x86_64=false
+# change this to false if you do not want to run a PGO build for aarch64 or x86_64
+_build_profiled_aarch64=true
+_build_profiled_x86_64=true
 
 prepare() {
   mkdir -p mozbuild
@@ -212,16 +204,6 @@ fi
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
   # patch -Np1 -i ${srcdir}/0001-Use-remoting-name-for-GDK-application-names.patch
 
-  # https://bugs.archlinux.org/task/76231
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1790496
-  # https://src.fedoraproject.org/rpms/firefox/blob/rawhide/f/libwebrtc-screen-cast-sync.patch
-  patch -Np1 -i ../0001-libwebrtc-screen-cast-sync.patch
-
-  if [[ $CARCH == 'aarch64' ]]; then
-    # separate patch to also allow aarch64 to build without breaking x86_64 builds
-    patch -Np1 -i ../0001-libwebrtc-screen-cast-sync_additional_aarch64.patch
-  fi
-
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1819374
   # sooooo this will get a bit ugly, but I don't even want to find out if
   # things would break on Manjaro until they update ffmpeg as well, so let's just
@@ -230,16 +212,12 @@ fi
   _ffmpeg_ver="${_ffmpeg_ver#*:}"
   _ffmpeg_ver="${_ffmpeg_ver%.*}"
   if [ "${_ffmpeg_ver}" -gt 5 ]; then
-    patch -Np1 -i ../0002-Bug-1819374-Squashed-ffmpeg-6.0-update.patch
+    patch -Np1 -i ../0001-Bug-1819374-Squashed-ffmpeg-6.0-update.patch
 
     # https://bugs.archlinux.org/task/77796
     # https://bugzilla.mozilla.org/show_bug.cgi?id=1820416
-    patch -Np1 -i ../0003-Bug-1820416-Use-correct-FFVPX-headers-from-ffmpeg-6..patch
+    patch -Np1 -i ../0002-Bug-1820416-Use-correct-FFVPX-headers-from-ffmpeg-6..patch
   fi
-
-  # https://bugs.archlinux.org/task/77805
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1821359
-  patch -Np1 -i ../0004-Bug-1821359-Disable-TLS-Key-Pinning-for-Twitter-Doma.patch
 
   # upstream patches from gentoo
 
@@ -274,7 +252,6 @@ fi
   # Assorted patches
   patch -Np1 -i ${_patches_dir}/context-menu.patch
   patch -Np1 -i ${_patches_dir}/urlbarprovider-interventions.patch
-  patch -Np1 -i ${_patches_dir}/rfp-performance-api.patch
   patch -Np1 -i ${_patches_dir}/unified-extensions-dont-show-recommendations.patch
 
   # allow enabling JPEG XL in non-nightly browser
@@ -302,9 +279,6 @@ fi
   # remove references to firefox from the settings UI, change text in some of the links,
   # explain that we force en-US and suggest enabling history near the session restore checkbox.
   patch -Np1 -i ${_patches_dir}/ui-patches/pref-naming.patch
-
-  #
-  patch -Np1 -i ${_patches_dir}/ui-patches/remap-links.patch
 
   #
   patch -Np1 -i ${_patches_dir}/ui-patches/hide-default-browser.patch
