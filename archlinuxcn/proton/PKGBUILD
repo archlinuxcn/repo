@@ -6,7 +6,7 @@ _commit=
 pkgver=7.0.6.5  # pkgver=${_srctag//-/.}
 _geckover=2.47.3
 _monover=7.4.0
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 url="https://github.com/ValveSoftware/Proton"
@@ -129,7 +129,11 @@ source=(
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     0001-wldap32-25946b48148784e8275c1685f6498ab88f553ca3.patch
-    0001-AUR-pkgbuild-changes.patch
+    0001-AUR-Pkgbuild-changes.patch
+    0002-AUR-Do-not-update-cargo-crates.patch
+)
+# Optional patches
+source+=(
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -245,7 +249,6 @@ pip install --no-cache-dir afdko
     pushd $submodule
         export RUSTUP_TOOLCHAIN=stable
         export CARGO_HOME="${SRCDEST}"/proton-cargo
-        cargo update
         cargo fetch --locked --target "i686-unknown-linux-gnu"
         cargo fetch --locked --target "x86_64-unknown-linux-gnu"
     popd
@@ -260,7 +263,8 @@ pip install --no-cache-dir afdko
         patch -p1 -i "$srcdir"/0001-wldap32-25946b48148784e8275c1685f6498ab88f553ca3.patch
     popd
 
-    patch -p1 -i "$srcdir"/0001-AUR-pkgbuild-changes.patch
+    patch -p1 -i "$srcdir"/0001-AUR-Pkgbuild-changes.patch
+    patch -p1 -i "$srcdir"/0002-AUR-Do-not-update-cargo-crates.patch
 
     # Remove repos from srcdir to save space
     for submodule in "${_submodules[@]}"; do
@@ -376,4 +380,9 @@ sha256sums=('SKIP'
             '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
             '9249ece664bcf2fecb1308ea1d2542c72923df9fe3df891986f137b2266a9ba3'
             '11aa65bb6b8da1814557edf18a3cdada80135b021634236feabf93d2a194838b'
-            '4ef6d327b35eb3e91b2060c78971fae1b1c3d25b06cf436724646213fac5bc49')
+            '6aca033616cc556d7d3c3708ccbe3438ad563c490e15e257efe6d38389dd5f91'
+            '9c107461440cb8cd7d54f994b235dc0be6a11370e0a60578523633c07024c976')
+# Optional patches
+sha256sums+=(
+)
+
