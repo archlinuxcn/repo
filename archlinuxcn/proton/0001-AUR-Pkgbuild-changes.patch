@@ -1,7 +1,7 @@
-From b452adc335f4542523ec151e670d4a215e68e997 Mon Sep 17 00:00:00 2001
+From fdff8b47e80a2226b989fd4b6a6892ca78b4ebf2 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
-Date: Mon, 18 Oct 2021 21:31:31 +0300
-Subject: [PATCH] AUR pkgbuild changes
+Date: Tue, 7 Feb 2023 21:58:22 +0200
+Subject: [PATCH 1/2] AUR Pkgbuild changes
 
 ---
  Makefile.in                    | 69 ++++++++++++++++++++++++++++------
@@ -18,7 +18,7 @@ Subject: [PATCH] AUR pkgbuild changes
  11 files changed, 86 insertions(+), 32 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 546cac8..f281d6e 100644
+index b2dad5d9..afcd655c 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -63,7 +63,6 @@ ifeq ($(ENABLE_CCACHE),1)
@@ -224,7 +224,7 @@ index 546cac8..f281d6e 100644
  $(micross.ttf): $(noto_sans.ttf) $(noto_sans_arabic.ttf) $(noto_sans_armenian.ttf) $(noto_sans_bengali.ttf) $(noto_sans_coptic.ttf) \
  		$(noto_sans_georgian.ttf) $(noto_sans_gujarati.ttf) $(noto_sans_hebrew.ttf) $(noto_sans_khmer.ttf) $(noto_sans_tamil.ttf) \
 diff --git a/compatibilitytool.vdf.template b/compatibilitytool.vdf.template
-index 5ac60e8..e580cd2 100644
+index 5ac60e8b..e580cd20 100644
 --- a/compatibilitytool.vdf.template
 +++ b/compatibilitytool.vdf.template
 @@ -14,7 +14,7 @@
@@ -237,7 +237,7 @@ index 5ac60e8..e580cd2 100644
        "from_oslist"  "windows"
        "to_oslist"    "linux"
 diff --git a/configure.sh b/configure.sh
-index d743876..90b7aae 100755
+index 34e5bb0f..66bfbb1f 100755
 --- a/configure.sh
 +++ b/configure.sh
 @@ -126,6 +126,7 @@ function configure() {
@@ -257,7 +257,7 @@ index d743876..90b7aae 100755
    stat "Using $arg_container_engine."
  
 diff --git a/make/rules-autoconf.mk b/make/rules-autoconf.mk
-index 0827caa..4e6d19f 100644
+index 0827caa9..4e6d19f2 100644
 --- a/make/rules-autoconf.mk
 +++ b/make/rules-autoconf.mk
 @@ -31,9 +31,9 @@ $$(OBJ)/.$(1)-configure$(3): $$(OBJ)/.$(1)-pre-configure
@@ -273,14 +273,14 @@ index 0827caa..4e6d19f 100644
  endif
  endef
 diff --git a/make/rules-cargo.mk b/make/rules-cargo.mk
-index b2af34c..c132fff 100644
+index b2af34ca..5ebcf009 100644
 --- a/make/rules-cargo.mk
 +++ b/make/rules-cargo.mk
 @@ -14,8 +14,10 @@ $$(OBJ)/.$(1)-configure$(3):
  $$(OBJ)/.$(1)-build$(3):
  	@echo ":: building $(3)bit $(1)..." >&2
  	cd $$($(2)_SRC) && env $$($(2)_ENV$(3)) \
-+	cargo update --offline --verbose
++	cargo update --locked --offline --verbose --workspace
 +	cd $$($(2)_SRC) && env $$($(2)_ENV$(3)) \
  	cargo build \
 -	      $$(filter -j%,$$(MAKEFLAGS)) \
@@ -289,7 +289,7 @@ index b2af34c..c132fff 100644
  	      --target-dir $$($(2)_OBJ$(3)) \
  	      $$(CARGO_BUILD_ARG) \
 diff --git a/make/rules-cmake.mk b/make/rules-cmake.mk
-index c70751a..1096dc1 100644
+index c70751a2..1096dc19 100644
 --- a/make/rules-cmake.mk
 +++ b/make/rules-cmake.mk
 @@ -28,9 +28,9 @@ $$(OBJ)/.$(1)-configure$(3): $$($(2)_SRC)/CMakeLists.txt
@@ -305,7 +305,7 @@ index c70751a..1096dc1 100644
  endif
  endef
 diff --git a/make/rules-common.mk b/make/rules-common.mk
-index 115c2b0..c6bf0ef 100644
+index 115c2b03..c6bf0ef6 100644
 --- a/make/rules-common.mk
 +++ b/make/rules-common.mk
 @@ -113,7 +113,11 @@ $(2)_LIBFLAGS$(3) = $$(foreach d,$$($(2)_DEPS$(3)),-L$$($$(d)_LIBDIR$(3))) \
@@ -359,7 +359,7 @@ index 115c2b0..c6bf0ef 100644
  
  LIBDIR_WINE_32 := wine/i386-unix
 diff --git a/make/rules-configure.mk b/make/rules-configure.mk
-index d04a3c5..18ac684 100644
+index d04a3c53..18ac684e 100644
 --- a/make/rules-configure.mk
 +++ b/make/rules-configure.mk
 @@ -26,9 +26,9 @@ $$(OBJ)/.$(1)-configure$(3):
@@ -375,7 +375,7 @@ index d04a3c5..18ac684 100644
  endif
  endef
 diff --git a/make/rules-meson.mk b/make/rules-meson.mk
-index d603bfd..3fd3d47 100644
+index d603bfde..3fd3d47f 100644
 --- a/make/rules-meson.mk
 +++ b/make/rules-meson.mk
 @@ -47,6 +47,7 @@ $$(OBJ)/.$(1)-configure$(3): $$($(2)_SRC)/meson.build
@@ -396,7 +396,7 @@ index d603bfd..3fd3d47 100644
  endif
  endef
 diff --git a/make/rules-winemaker.mk b/make/rules-winemaker.mk
-index 69688a0..1c0d1d3 100644
+index 69688a03..1c0d1d3b 100644
 --- a/make/rules-winemaker.mk
 +++ b/make/rules-winemaker.mk
 @@ -29,7 +29,7 @@ $$(OBJ)/.$(1)-build$(3):
@@ -409,10 +409,10 @@ index 69688a0..1c0d1d3 100644
  	winebuild --$(lastword $(subst ., ,$(4))) --fake-module -E "$(basename $(4)).spec" -o "$(4).fake"
  	mkdir -p $$($(2)_LIBDIR$(3))/$(LIBDIR_WINE_$(3))
 diff --git a/proton b/proton
-index 719f8e3..92662ea 100755
+index 37dbecd0..89f24228 100755
 --- a/proton
 +++ b/proton
-@@ -417,7 +417,6 @@ class Proton:
+@@ -423,7 +423,6 @@ class Proton:
          self.wine_bin = self.bin_dir + "wine"
          self.wine64_bin = self.bin_dir + "wine64"
          self.wineserver_bin = self.bin_dir + "wineserver"
@@ -420,7 +420,7 @@ index 719f8e3..92662ea 100755
  
      def path(self, d):
          return self.base_dir + d
-@@ -1506,8 +1505,6 @@ if __name__ == "__main__":
+@@ -1518,8 +1517,6 @@ if __name__ == "__main__":
  
      g_proton = Proton(os.path.dirname(sys.argv[0]))
  
@@ -429,7 +429,7 @@ index 719f8e3..92662ea 100755
  
      g_compatdata = CompatData(os.environ["STEAM_COMPAT_DATA_PATH"])
  
-@@ -1516,7 +1513,8 @@ if __name__ == "__main__":
+@@ -1528,7 +1525,8 @@ if __name__ == "__main__":
      g_session.init_wine()
  
      if g_proton.missing_default_prefix():
@@ -440,5 +440,5 @@ index 719f8e3..92662ea 100755
      g_session.init_session(sys.argv[1] != "runinprefix")
  
 -- 
-2.38.1
+2.40.0
 

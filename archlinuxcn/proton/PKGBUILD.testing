@@ -6,7 +6,7 @@ _commit=
 pkgver=7.0.6.5  # pkgver=${_srctag//-/.}
 _geckover=2.47.3
 _monover=7.4.0
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 url="https://github.com/ValveSoftware/Proton"
@@ -129,7 +129,8 @@ source=(
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     0001-wldap32-25946b48148784e8275c1685f6498ab88f553ca3.patch
-    0001-AUR-pkgbuild-changes.patch
+    0001-AUR-Pkgbuild-changes.patch
+    0002-AUR-Do-not-update-cargo-crates.patch
 )
 # Optional patches
 source+=(
@@ -240,7 +241,6 @@ prepare() {
     pushd $submodule
         export RUSTUP_TOOLCHAIN=stable
         export CARGO_HOME="${SRCDEST}"/proton-cargo
-        cargo update
         cargo fetch --locked --target "i686-unknown-linux-gnu"
         cargo fetch --locked --target "x86_64-unknown-linux-gnu"
     popd
@@ -255,7 +255,8 @@ prepare() {
         patch -p1 -i "$srcdir"/0001-wldap32-25946b48148784e8275c1685f6498ab88f553ca3.patch
     popd
 
-    patch -p1 -i "$srcdir"/0001-AUR-pkgbuild-changes.patch
+    patch -p1 -i "$srcdir"/0001-AUR-Pkgbuild-changes.patch
+    patch -p1 -i "$srcdir"/0002-AUR-Do-not-update-cargo-crates.patch
 
     # Remove repos from srcdir to save space
     for submodule in "${_submodules[@]}"; do
@@ -282,9 +283,9 @@ build() {
     # This overrides FLAGS from makepkg.conf, if you comment these you are on your own
     # If you want the "best" possible optimizations for your system you can use
     # `-march=native` and remove the `-mtune=core-avx2` option.
-    export CFLAGS="-O2 -march=haswell -mtune=haswell -pipe -fno-semantic-interposition"
-    export CXXFLAGS="-O2 -march=haswell -mtune=haswell -pipe -fno-semantic-interposition"
-    export RUSTFLAGS="-C opt-level=2 -C target-cpu=haswell"
+    export CFLAGS="-O3 -march=haswell -mtune=haswell -pipe -fno-semantic-interposition"
+    export CXXFLAGS="-O3 -march=haswell -mtune=haswell -pipe -fno-semantic-interposition"
+    export RUSTFLAGS="-C opt-level=3 -C target-cpu=haswell"
     export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
 
     # If using -march=native and the CPU supports AVX, launching a d3d9
@@ -374,6 +375,9 @@ sha256sums=('SKIP'
             '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
             '9249ece664bcf2fecb1308ea1d2542c72923df9fe3df891986f137b2266a9ba3'
             '11aa65bb6b8da1814557edf18a3cdada80135b021634236feabf93d2a194838b'
+            'SKIP'
             'SKIP')
+# Optional patches
 sha256sums+=(
 )
+
