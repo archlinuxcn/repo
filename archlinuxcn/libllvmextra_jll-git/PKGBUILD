@@ -9,10 +9,8 @@ url='https://github.com/maleadt/LLVM'
 license=('MIT')
 depends=(llvm-julia)
 makedepends=(git cmake)
-source=('git+https://github.com/maleadt/LLVM.jl'
-        0001-Temporary-fix-for-LLVM-15.patch)
-sha1sums=('SKIP'
-          '9a7b6bce927a947c9597962193d71608125fb06e')
+source=('git+https://github.com/maleadt/LLVM.jl')
+sha1sums=('SKIP')
 provides=('libllvmextra_jll')
 conflicts=('libllvmextra_jll')
 options=('debug')
@@ -25,8 +23,6 @@ pkgver() {
 
 prepare() {
   cd LLVM.jl
-
-  patch -Np1 < ../0001-Temporary-fix-for-LLVM-15.patch
 }
 
 build() {
