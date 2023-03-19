@@ -1,0 +1,11 @@
+--- Source/bmalloc/libpas/src/chaos/Chaos.cpp	2022-06-20 11:45:15.214571540 +0800
++++ Source/bmalloc/libpas/src/chaos/Chaos.cpp	2022-06-20 11:45:55.425599612 +0800
+@@ -51,7 +51,7 @@
+     macro(uintptr_t,     seed,                           666,             "%lu") \
+     macro(uintptr_t,     seedAdvance,                    1,               "%lu") \
+     macro(uintptr_t,     maxSmallObjectSize,             1000,            "%lu") \
+-    macro(uintptr_t,     maxObjectSize,                  65536,           "%lu") \
++    macro(uintptr_t,     maxObjectSize,                  16777216,        "%lu") \
+     macro(double,        smallObjectProbability,         .95,             "%lf") \
+     macro(double,        memalignProbability,            .05,             "%lf") \
+     macro(uintptr_t,     maxMemalignShift,               14,              "%lu") \
