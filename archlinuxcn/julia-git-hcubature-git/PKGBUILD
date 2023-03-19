@@ -1,0 +1,24 @@
+pkgname=julia-git-hcubature-git
+pkgver=1.5.1.0.2.ga86ec60
+pkgrel=1
+pkgdesc="HCubature.jl"
+url="https://github.com/JuliaMath/HCubature.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+provides=(julia-git-hcubature)
+source=(git+https://github.com/JuliaMath/HCubature.jl)
+md5sums=('SKIP')
+
+pkgver() {
+  cd HCubature.jl
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+package() {
+  cd HCubature.jl
+
+  . /usr/lib/julia/julia-install-pkg.sh HCubature "${pkgdir}" "${pkgname}" julia-git
+}
