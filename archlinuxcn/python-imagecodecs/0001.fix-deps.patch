@@ -1,0 +1,19 @@
+diff --color -crB imagecodecs-2023.3.16/setup.py imagecodecs-2023.3.16.new/setup.py
+*** imagecodecs-2023.3.16/setup.py	2023-03-17 11:10:01.000000000 +0800
+--- imagecodecs-2023.3.16.new/setup.py	2023-03-20 15:52:03.370271993 +0800
+***************
+*** 207,219 ****
+      import platform
+  
+      del EXTENSIONS['apng']  # apng patch not commonly available
+-     del EXTENSIONS['avif']  # libavif library not commonly available
+      del EXTENSIONS['blosc2']  # c-blosc2 library not commonly available
+      # del EXTENSIONS['heif']  # LGPL/GPL
+      del EXTENSIONS['jetraw']  # commercial
+-     del EXTENSIONS['lerc']  # LERC library not commonly available
+      del EXTENSIONS['lz4f']  # requires static linking
+-     del EXTENSIONS['lzfse']  # lzfse not commonly available
+      del EXTENSIONS['lzham']  # lzham not commonly available
+      del EXTENSIONS['mozjpeg']  # Win32 only
+      del EXTENSIONS['zlibng']  # zlib-ng library not commonly available
+--- 207,216 ----
