@@ -37,7 +37,10 @@ depends=(
 )
 makedepends=(
   cython
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 source=("${_name}-${pkgver}.tar.gz::https://github.com/cgohlke/imagecodecs/archive/v${pkgver}.tar.gz"
         "0001.fix-deps.patch"
@@ -55,12 +58,12 @@ build() {
   # python-imagecodecs >= 2023.3.16 depends on libjpeg-turbo >= 2.1.91
   # disable it until libjpeg-turbo 2.1.91 is in official repos
   sed -i '/jpeg8/d' setup.py
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${srcdir}/${_name}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:ts=2:sw=2:et:
