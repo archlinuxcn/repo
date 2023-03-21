@@ -5045,7 +5045,7 @@
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
 @@ -7060,6 +7060,10 @@ void nsWindow::HideWindowChrome(bool aSh
-   SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
+   SetWindowDecoration(aShouldHide ? BorderStyle::None : mBorderStyle);
  }
  
 +void nsWindow::SetMenuBar(UniquePtr<nsMenuBar> aMenuBar) {
