@@ -1,0 +1,24 @@
+From 319e6e3a3aeb84f1ea6dc55be72b24558c705528 Mon Sep 17 00:00:00 2001
+From: James Turner <zakalawe@mac.com>
+Date: Fri, 3 Feb 2023 11:24:47 +0000
+Subject: [PATCH] Fix a new Clang compile failure with current XCode
+
+---
+ simgear/scene/viewer/Compositor.hxx | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/simgear/scene/viewer/Compositor.hxx b/simgear/scene/viewer/Compositor.hxx
+index 8b087cb2..26ac6304 100644
+--- a/simgear/scene/viewer/Compositor.hxx
++++ b/simgear/scene/viewer/Compositor.hxx
+@@ -19,6 +19,7 @@
+ 
+ #include <unordered_map>
+ #include <vector>
++#include <array>
+ 
+ // For osgUtil::LineSegmentIntersector::Intersections, which is a typedef.
+ #include <osgUtil/LineSegmentIntersector>
+-- 
+2.39.2
+

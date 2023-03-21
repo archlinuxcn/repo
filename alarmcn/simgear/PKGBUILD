@@ -15,8 +15,10 @@ provides=(libSimGearCore.so libSimGearScene.so)
 license=("GPL")
 url="http://www.flightgear.org/"
 options=('makeflags' 'staticlibs')
-source=("https://downloads.sourceforge.net/project/flightgear/release-${_pkgver}/${pkgname}-${pkgver}.tar.bz2")
-sha256sums=('4c5e9cd0dcff1bd311c2460aa601230bd80abdbaec751b559c1d7147749f377c')
+source=("https://downloads.sourceforge.net/project/flightgear/release-${_pkgver}/${pkgname}-${pkgver}.tar.bz2"
+        0001-Fix-a-new-Clang-compile-failure-with-current-XCode.patch)
+sha256sums=('4c5e9cd0dcff1bd311c2460aa601230bd80abdbaec751b559c1d7147749f377c'
+            '1cb7dce940b980334b111e495f44fd2f184d1e7f239e0bf7e4cd35eebfece741')
 
 prepare() {
   cd "$srcdir"/simgear-$pkgver
@@ -24,6 +26,8 @@ prepare() {
 
   rm -rf build
   mkdir -p build/
+
+  patch -Np1 < ../0001-Fix-a-new-Clang-compile-failure-with-current-XCode.patch
 }
 
 build() {
