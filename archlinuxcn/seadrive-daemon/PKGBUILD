@@ -10,7 +10,7 @@ arch=('aarch64' 'armv7h' 'x86_64')
 url="https://github.com/haiwen/seadrive-fuse"
 license=('GPL3')
 _daemon_depends=(openssl libuuid.so sqlite libevent zlib libcurl.so fuse2 libsearpc
-                 libgobject-2.0.so libglib-2.0.so jansson)
+                 libgobject-2.0.so libglib-2.0.so jansson libwebsockets.so)
 makedepends=(git intltool python "${_daemon_depends[@]}")
 source=("git+https://github.com/haiwen/seadrive-fuse#tag=v${pkgver}")
 sha256sums=('SKIP')
