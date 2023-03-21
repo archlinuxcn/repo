@@ -2,8 +2,8 @@
 
 _pkgname=lazy_loader
 pkgname=python-lazy-loader
-pkgver=0.1
-pkgrel=2
+pkgver=0.2
+pkgrel=1
 pkgdesc='Populate library namespace without incurring immediate import costs'
 arch=('any')
 url='https://github.com/scientific-python/lazy_loader'
@@ -21,7 +21,7 @@ checkdepends=(
   python-pytest
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/scientific-python/lazy_loader/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('d3469d7d07ebb3459d599b8346f4fd91ab8ea98c6c5a62c2f3159a7beebbb7e7c8b033b9c442d93de923d847a7f3f5bf2c5db3419da961589cee8bed5c6ab0f3')
+sha512sums=('db3ce32393c0e44201765833c2eee9be27d5473b885fdf5d885d3490b7a577cf0356a8a469c1db7ffc0020a21381366bf6d62f01bf24c3e566461c273d29666d')
 
 build() {
   cd "${_pkgname}-${pkgver}"
