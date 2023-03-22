@@ -2,7 +2,7 @@
 
 pkgname=xorg-xwayland-lily
 pkgver=22.1.8
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 license=('custom')
 url="https://xorg.freedesktop.org"
@@ -19,7 +19,7 @@ makedepends=('meson' 'xorgproto' 'xtrans' 'libxkbfile' 'dbus'
 source=(https://xorg.freedesktop.org/archive/individual/xserver/xwayland-$pkgver.tar.xz{,.sig} hidpi.patch)
 sha512sums=('f52c6f99d8ef7605bc1c651d5ee5e306c12af30649a2d712b1c4c3cf4c7c80246ae24bd9ac39461d47aafc78f5d659446a459cd6259e05ef3128b204981d114a'
             'SKIP'
-            7132c44d9bbf1c5f93906ef301a6e946f0909da0b9273f397281e681ad0da77d62b960a9dd0a640c7209548192fefba9bde03c493f3a89d08cd73a12844bb518)
+            2e16d1e3222b02d27a544c8df5132cf22c7fd0601c3a967a603cf2e14b7154ac1d3d6e4ea66e0bf4086f9f18fe0bc2428653ecbd8b23a0e90c3f0a9b1ecf36d9)
 provides=('xorg-server-xwayland' 'xorg-xwayland')
 conflicts=('xorg-server-xwayland' 'xorg-xwayland')
 replaces=('xorg-server-xwayland')
