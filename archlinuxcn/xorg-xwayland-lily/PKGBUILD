@@ -2,7 +2,7 @@
 
 pkgname=xorg-xwayland-lily
 pkgver=22.1.8
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 license=('custom')
 url="https://xorg.freedesktop.org"
@@ -20,7 +20,7 @@ source=(https://xorg.freedesktop.org/archive/individual/xserver/xwayland-$pkgver
 sha512sums=('f52c6f99d8ef7605bc1c651d5ee5e306c12af30649a2d712b1c4c3cf4c7c80246ae24bd9ac39461d47aafc78f5d659446a459cd6259e05ef3128b204981d114a'
             'SKIP'
             2e16d1e3222b02d27a544c8df5132cf22c7fd0601c3a967a603cf2e14b7154ac1d3d6e4ea66e0bf4086f9f18fe0bc2428653ecbd8b23a0e90c3f0a9b1ecf36d9)
-provides=('xorg-server-xwayland' 'xorg-xwayland')
+provides=('xorg-server-xwayland' 'xorg-xwayland' 'xorg-xwayland-hidpi-xprop')
 conflicts=('xorg-server-xwayland' 'xorg-xwayland')
 replaces=('xorg-server-xwayland')
 #validpgpkeys=('B09FAF35BE914521980951145A81AF8E6ADBB200') # "Michel Daenzer <michel@daenzer.net>"
