@@ -1,14 +1,10 @@
 [Desktop Entry]
 Name=Logseq
-Exec=/usr/bin/logseq
+Exec=/usr/bin/logseq %u
 Terminal=false
 Type=Application
 Icon=logseq
 StartupWMClass=logseq
 Comment=Open Source platform for knowledge sharing and management
+MimeType=x-scheme-handler/logseq
 Categories=Office
-Actions=Wayland;
-
-[Desktop Action Wayland]
-Name=Wayland Backend
-Exec=/usr/bin/logseq --enable-features=UseOzonePlatform --ozone-platform=wayland
