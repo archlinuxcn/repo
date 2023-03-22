@@ -3,8 +3,8 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=webkit2gtk-4.1-imgpaste
-pkgver=2.38.5
-pkgrel=2
+pkgver=2.40.0
+pkgrel=1
 pkgdesc="Web content engine for GTK (with patches for pasting images from clipboard)"
 url="https://webkitgtk.org"
 arch=(x86_64)
@@ -18,6 +18,7 @@ depends=(
   fontconfig
   freetype2
   glib2
+  gst-plugins-bad-libs
   gst-plugins-base-libs
   gstreamer
   gtk3
@@ -26,7 +27,9 @@ depends=(
   hyphen
   icu
   libavif
+  libdrm
   libegl
+  libepoxy
   libgcrypt
   libgl
   libgles
@@ -43,10 +46,12 @@ depends=(
   libwebp
   libwpe
   libx11
+  libxcomposite
   libxext
   libxml2
   libxslt
   libxt
+  mesa
   openjpeg2
   sqlite
   wayland
@@ -65,53 +70,69 @@ makedepends=(
   python
   ruby
   systemd
+  unifdef
   wayland-protocols
 )
 provides=(webkit2gtk-4.1)
 conflicts=(webkit2gtk-4.1)
-source=($url/releases/webkitgtk-$pkgver.tar.xz{,.asc}
-        EnlargeObjectSize.patch
-        PasteBoardGtk.patch)
-sha256sums=('40c20c43022274df5893f22b1054fa894c3eea057389bb08aee08c5b0bb0c1a7'
+source=(
+  $url/releases/webkitgtk-$pkgver.tar.xz{,.asc}
+  EnlargeObjectSize.patch
+  PasteBoardGtk.patch
+)
+sha256sums=('a4607ea1bf89669e89b1cb2c63faaec513f93de09b6ae60cc71d6a8aab7ab393'
             'SKIP'
-            'a5d2149d55190a15bc806bfddd85f43b6c714722b04ce0c1e476f9cb58985bac'
-            '909eb44783d093c89400494a8b57eee3a5b926e1a5b5f1e922e1dff1a6dc3c7b')
-validpgpkeys=('D7FCF61CF9A2DEAB31D81BD3F3D322D0EC4582C3'  # Carlos Garcia Campos <cgarcia@igalia.com>
-              '5AA3BC334FD7E3369E7C77B291C559DBE4C9123B') # Adrián Pérez de Castro <aperez@igalia.com>
+            '71b8a59c78d549fed0cd895207f49c7b3be40b236e96f4d7b9907a26521499bf'
+            '20ebac2caf15fa546e6da00cb0fa90d5d37fcf7bfa883014d7d15eb4963d12d2')
+validpgpkeys=(
+  'D7FCF61CF9A2DEAB31D81BD3F3D322D0EC4582C3'  # Carlos Garcia Campos <cgarcia@igalia.com>
+  '5AA3BC334FD7E3369E7C77B291C559DBE4C9123B'  # Adrián Pérez de Castro <aperez@igalia.com>
+)
 
 prepare() {
   cd webkitgtk-$pkgver
-  patch -Np0 -i ../PasteBoardGtk.patch
-  patch -Np0 -i ../EnlargeObjectSize.patch
+  patch -Np1 -i ../PasteBoardGtk.patch
+  patch -Np1 -i ../EnlargeObjectSize.patch
 }
 
 build() {
+  local cmake_options=(
+    -DPORT=GTK
+    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_INSTALL_LIBDIR=lib
+    -DCMAKE_INSTALL_LIBEXECDIR=lib
+    -DCMAKE_SKIP_RPATH=ON
+    -DUSE_AVIF=ON
+    -DUSE_SOUP2=OFF
+    -DENABLE_DOCUMENTATION=ON
+    -DENABLE_MINIBROWSER=ON
+  )
+
   # Produce minimal debug info: 4.3 GB of debug data makes the
   # build too slow and is too much to package for debuginfod
   CFLAGS+=' -g1'
   CXXFLAGS+=' -g1'
-  
-  cmake -S webkitgtk-$pkgver -B build -G Ninja \
-    -DPORT=GTK \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=lib \
-    -DCMAKE_INSTALL_LIBEXECDIR=lib \
-    -DCMAKE_SKIP_RPATH=ON \
-    -DUSE_AVIF=ON \
-    -DUSE_SOUP2=OFF \
-    -DENABLE_DOCUMENTATION=ON \
-    -DENABLE_MINIBROWSER=ON
+
+  cmake -S webkitgtk-$pkgver -B build -G Ninja "${cmake_options[@]}"
   cmake --build build
 }
 
 package() {
-  depends+=(libwpe-1.0.so libWPEBackend-fdo-1.0.so)
-  provides+=(libjavascriptcoregtk-4.1.so libwebkit2gtk-4.1.so)
-  optdepends=('geoclue: Geolocation support'
-              'gst-plugins-good: media decoding'
-              'gst-plugins-bad: media decoding'
-              'gst-libav: nonfree media decoding')
+  depends+=(
+    libWPEBackend-fdo-1.0.so
+    libwpe-1.0.so
+  )
+  provides+=(
+    libjavascriptcoregtk-4.1.so
+    libwebkit2gtk-4.1.so
+  )
+  optdepends=(
+    'geoclue: Geolocation support'
+    'gst-libav: nonfree media decoding'
+    'gst-plugins-bad: media decoding'
+    'gst-plugins-good: media decoding'
+  )
 
   DESTDIR="$pkgdir" cmake --install build
 
