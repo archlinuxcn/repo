@@ -5,7 +5,7 @@
 # match! rc[0-9]*$
 
 pkgname=lua-resty-core
-pkgver=0.1.25
+pkgver=0.1.26
 pkgrel=1
 
 pkgdesc='Lua script engine for nginx lua module'
@@ -16,7 +16,7 @@ license=('BSD')
 
 source=("$pkgname-$pkgver.tar.gz::https://github.com/openresty/$pkgname/archive/v$pkgver.tar.gz")
 
-sha256sums=('c7e099e4cccc0445958393a5fa5283381fe1f6019814a2ed6d130c6872ab5206')
+sha256sums=('08050d4e145b386e09f6003a1ece21a0ec64504438bf17ae6b65ce4bf8bd0aed')
 
 build() {
 	cd "$pkgname-$pkgver"
