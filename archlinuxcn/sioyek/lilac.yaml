@@ -4,7 +4,8 @@ maintainers:
 
 build_prefix: extra-x86_64
 
+pre_build_script: aur_pre_build(maintainers=['aexl'])
+
 update_on:
-  - source: github
-    github: ahrm/sioyek
-    use_max_tag: true
+  - source: aur
+    github: sioyek
