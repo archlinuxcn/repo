@@ -3,7 +3,7 @@
 _pkgname=citra
 pkgname=$_pkgname-canary-git
 epoch=2
-pkgver=2424.r0.g37dcc2c8d
+pkgver=2427.r0.g97b5cb539
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger"
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ conflicts=('citra')
 source=("$_pkgname::git+https://github.com/citra-emu/citra-canary"
 ext-lib.patch)
 md5sums=('SKIP'
-         'b73160ee2d0b24c794c346c0d22bc311')
+         'f1cdcde57cd7af288f6b09132899d374')
 
 pkgver() {
 	cd "$srcdir/$_pkgname"
@@ -27,6 +27,8 @@ prepare() {
 	cd "$srcdir/$_pkgname"
     patch -p1 -i ../ext-lib.patch
 	mkdir -p build
+    sed -i 's/OUTVAR ${BUILD_TAG}/OUTVAR "${BUILD_TAG}"/g' CMakeModules/GenerateSCMRev.cmake
+    sed -i 's/OUTVAR ${BUILD_REPOSITORY}/OUTVAR "${BUILD_REPOSITORY}"/g' CMakeModules/GenerateSCMRev.cmake
 
     git submodule update --init --remote externals/lodepng
     git submodule update --init --remote externals/nihstro
@@ -52,7 +54,6 @@ build() {
       -DCITRA_ENABLE_COMPATIBILITY_REPORTING=ON \
       -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
       -DUSE_DISCORD_PRESENCE=ON \
-      -DENABLE_SCRIPTING=ON \
       -DENABLE_FFMPEG_VIDEO_DUMPER=ON \
       -DENABLE_FFMPEG_AUDIO_DECODER=ON \
       -DUSE_SYSTEM_BOOST=ON \
