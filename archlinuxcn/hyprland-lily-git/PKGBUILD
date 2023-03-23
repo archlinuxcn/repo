@@ -11,7 +11,7 @@ url="https://github.com/hyprwm/Hyprland"
 license=('BSD')
 # mesa is for wlroots-lily-git to select the [community] one for opengl-driver
 depends=(cairo pango seatd wlroots-lily-git mesa)
-makedepends=(git cmake ninja wayland-protocols)
+makedepends=(git cmake ninja wayland-protocols python)
 optdepends=('xorg-xwayland-lily: non-blurry HiDPI support for xwayland')
 source=("${_pkgname}::git+https://github.com/hyprwm/Hyprland.git"
         git+https://github.com/hyprwm/hyprland-protocols.git
