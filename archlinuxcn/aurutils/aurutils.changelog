@@ -1,8 +1,64 @@
+## 13
+
+* `aur-build`
+  + add `--null` (`-z`)
+  + add `AUR_BUILD_PKGLIST` environment variable
+
+* `aur-build--pkglist`
+  + remove `--user` (`-U`)
+  + only run as root with `AUR_ASROOT` set
+
+* `aur-depends`
+  + add `--assume-installed`
+
+* `aur-srcver`
+  + accept arbitrary source directories as arguments
+  + add `--arg-file` (`-a`), `--null` (`-z`), `--margs`
+  + add `AUR_MAKEPKG` environment variable
+  + only run as root with `AUR_ASROOT` set
+  + exit 1 if any `makepkg` job failed
+
+* `aur-sync`
+  + `--ignore` now removes dependencies of ignored targets
+
+* `examples`
+  + update `sync-asroot` to use `AUR_BUILD_PKGLIST`
+
+## 12.1
+
+* `AUR.pm`
+  + call `urlencode()` when retrieving URIs with `AUR::Query` (#1053)
+
+* `aur-depends`
+  + documentation updates
+
+## 12
+
+* `aur-build`
+  + merge helper `aur-build--sync` back to `aur-build`
+  + avoid errors with PKGBUILDs that fail to source with `set -e`
+
+* `aur-repo-filter`
+  + `unbuffer` is now optional (#1052)
+
+* `aur-view`
+  + use null seperated lists as input to vifm(1)
+
+* `examples`
+  + add `sync-rebuild`
+
+* `lib`
+  + unset `CDPATH` where needed
+  + use `getopt` instead of `parseopts.sh` from libmakepkg
+
+* `man1`
+  + documentation updates
+
 ## 11
 
 * `aur-build`
   + add `aur-build--sync` helper for local repository upgrades
-    - `pacman -Syu --config` is replaced by `pacsync <repo>` and `pacman -S <repo>/<pkg>`
+    - `sudo pacman -Syu --config` is replaced by `sudo pacsync <repo>` and `sudo pacman -S <repo>/<pkg>`
     - local repository upgrades are now unaffected by `--pacman-conf`
   + add `exist:` to `--results` output
     - remove `--dry-run`
