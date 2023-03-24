@@ -3,9 +3,9 @@
 
 pkgbase=jdk
 pkgname=('jre' 'jdk' 'jdk-doc')
-pkgver=19.0.2
-_build=7
-_hash=fdb695a9d9064ad6b064dc6df578380c
+pkgver=20
+_build=36
+_hash=bdc68b4b9cbc4ebcb30745c85038d91d
 _majver="${pkgver%%.*}"
 pkgrel=1
 pkgdesc='Oracle Java'
@@ -23,12 +23,12 @@ source=("https://download.oracle.com/java/${_majver}/archive/jdk-${pkgver}_linux
         'java_48.png'
         'LICENSE')
 noextract=("jdk-${pkgver}_doc-all.zip")
-sha256sums=('59f26ace2727d0e9b24fc09d5a48393c9dbaffe04c932a02938e8d6d582058c6'
-            'f7f978225836e96cb0729f1341a26a55e33801b5091eee44f7a11080256f56ae'
-            '9e601ec00778d4ca3a604298802f1bc8f5dfe274f0ecda397fbb9d641bdc7dcc'
+sha256sums=('1157bba2126efd115b5133cc078e6bcc52b15583657e980a5197f34a7505222e'
+            '39ac14b6caea4552777b92baf11b4afbeb05192ca2aebc8b752ff21f52b43e64'
+            'b5703ac13aa6ff7c8323b090a2996adc262895b6fcba6264262db3ac4789aec9'
             '572c5542bb6debfde01388197e429844679f1e6be7c7a39fd129a8f8cad2c562'
             '8b1699882c1a28b841bfc60fa958ddd5db80c56987d9da8735d31209a145f92f'
-            '37053c3ba8bf933fb76e27b9c686019f00a260c9401e279a575584e633911ff7'
+            'b51dda29ac5b8a0d3386354010ccaae1de628c462d1f6bde3cfc28729b24ae0c'
             'd27fec1d74f7a3081c3d175ed184d15383666dc7f02cc0f7126f11549879c6ed'
             '7cf8ca096e6d6e425b3434446b0835537d0fc7fe64b3ccba7a55f7bd86c7e176'
             '20becfcac0bdeaa29a76e6966d727f8cc79381354cbd5d530cdec823954df19f')
@@ -97,7 +97,7 @@ package_jre() {
     install -D -m644 release -t "${pkgdir}/${_jvmdir}"
     
     # link JKS keystore from ca-certificates-utils
-    rm "${pkgdir}${_jvmdir}/lib/security/cacerts"
+    rm "${pkgdir}/${_jvmdir}/lib/security/cacerts"
     ln -s /etc/ssl/certs/java/cacerts "${pkgdir}${_jvmdir}/lib/security/cacerts"
     
     # legal/licenses
