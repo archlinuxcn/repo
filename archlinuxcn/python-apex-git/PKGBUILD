@@ -12,8 +12,9 @@ license=('BSD')
 depends=(python-pytorch-cuda)
 makedepends=(
   git
-  python-setuptools
   python-pip
+  python-setuptools
+  python-sympy
   qt5-base
 )
 provides=(python-apex=${pkgver})
@@ -36,6 +37,6 @@ build() {
 package() {
   cd "${srcdir}/${pkgname}"
   python setup.py --cuda_ext --cpp_ext install --root="${pkgdir}" --optimize=1 --skip-build
-   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
