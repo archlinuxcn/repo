@@ -9,7 +9,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=111.0.5563.64
+pkgver=111.0.5563.110
 pkgrel=1
 _launcher_ver=8
 _gcc_patchset=2
@@ -33,16 +33,12 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
         https://github.com/stha09/chromium-patches/releases/download/chromium-${pkgver%%.*}-patchset-$_gcc_patchset/chromium-${pkgver%%.*}-patchset-$_gcc_patchset.tar.xz
         sql-relax-constraints-on-VirtualCursor-layout.patch
-        REVERT-roll-src-third_party-ffmpeg-m102.patch
-        REVERT-roll-src-third_party-ffmpeg-m106.patch
         disable-GlobalMediaControlsCastStartStop.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('7d5ca0e2bdb22a97713e6bfce74c651006d71aa883056c8e2c2a148039fe4074'
+sha256sums=('49dd6c73b170a2dcf6edbb516cd9f77b550cc3d968f2097927c637015487a765'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'a016588340f1559198e4ce61c6e91c48cf863600f415cb5c46322de7e1f77909'
             'e66be069d932fe18811e789c57b96249b7250257ff91a3d82d15e2a7283891b7'
-            '30df59a9e2d95dcb720357ec4a83d9be51e59cc5551365da4c0073e68ccdec44'
-            '4c12d31d020799d31355faa7d1fe2a5a807f7458e7f0c374adf55edb37032152'
             '7f3b1b22d6a271431c1f9fc92b6eb49c6d80b8b3f868bdee07a6a1a16630a302'
             'e393174d7695d0bafed69e868c5fbfecf07aa6969f3b64596d0bae8b067e1711')
 
@@ -61,7 +57,7 @@ source=(${source[@]}
         vaapi-add-av1-support.patch
         remove-main-main10-profile-limit.patch)
 sha256sums=(${sha256sums[@]}
-            '2ad44997d95ae66b36125bf62bf1308006ec62da26ba04f8b5480d7271675079'
+            '4593a09ba3222b82aeb95fd84b3346f86fab63b03cc8068501b336625b481d0e'
             'e9e8d3a82da818f0a67d4a09be4ecff5680b0534d7f0198befb3654e9fab5b69'
             'e742cc5227b6ad6c3e0c2026edd561c6d3151e7bf0afb618578ede181451b307'
             'fc810e3c495c77ac60b383a27e48cf6a38b4a95b65dd2984baa297c5df83133c')
@@ -130,12 +126,6 @@ prepare() {
 
   # Upstream fixes
   patch -Np1 -i ../sql-relax-constraints-on-VirtualCursor-layout.patch
-
-  # Revert ffmpeg roll requiring new channel layout API support
-  # https://crbug.com/1325301
-  patch -Rp1 -i ../REVERT-roll-src-third_party-ffmpeg-m102.patch
-  # Revert switch from AVFrame::pkt_duration to AVFrame::duration
-  patch -Rp1 -i ../REVERT-roll-src-third_party-ffmpeg-m106.patch
 
   # Disable kGlobalMediaControlsCastStartStop by default
   # https://crbug.com/1314342
