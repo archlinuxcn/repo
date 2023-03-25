@@ -151,7 +151,7 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
 diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
 --- citra/externals/CMakeLists.txt	2023-01-20 00:44:13.712264461 +0800
 +++ citra/externals/CMakeLists.txt	2023-01-20 04:34:47.512808459 +0800
-@@ -10,36 +10,38 @@ include(DownloadExternals)
+@@ -10,45 +10,44 @@ include(DownloadExternals)
  include(ExternalProject)
  
  # Boost
@@ -160,25 +160,43 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
 -set(Boost_NO_SYSTEM_PATHS ON)
 -add_library(boost INTERFACE)
 -target_include_directories(boost SYSTEM INTERFACE ${Boost_INCLUDE_DIR})
+-
+-# Boost::serialization
+-file(GLOB boost_serialization_SRC "${CMAKE_SOURCE_DIR}/externals/boost/libs/serialization/src/*.cpp")
+-add_library(boost_serialization STATIC ${boost_serialization_SRC})
+-target_link_libraries(boost_serialization PUBLIC boost)
+-
+-# Boost::iostreams
+-add_library(
+-    boost_iostreams
+-    STATIC
+-    ${CMAKE_SOURCE_DIR}/externals/boost/libs/iostreams/src/file_descriptor.cpp
+-    ${CMAKE_SOURCE_DIR}/externals/boost/libs/iostreams/src/mapped_file.cpp
+-)
+-target_link_libraries(boost_iostreams PUBLIC boost)
+-
 +if (NOT USE_SYSTEM_BOOST)
 +    set(BOOST_ROOT "${CMAKE_SOURCE_DIR}/externals/boost")
 +    set(Boost_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/boost")
 +    set(Boost_NO_SYSTEM_PATHS ON)
 +    add_library(boost INTERFACE)
 +    target_include_directories(boost SYSTEM INTERFACE ${Boost_INCLUDE_DIR})
-+endif()
- 
- # Boost::serialization
--file(GLOB boost_serialization_SRC "${CMAKE_SOURCE_DIR}/externals/boost/libs/serialization/src/*.cpp")
--add_library(boost_serialization STATIC ${boost_serialization_SRC})
--target_link_libraries(boost_serialization PUBLIC boost)
-+if (NOT USE_SYSTEM_BOOST)
++
++    # Boost::serialization
 +    file(GLOB boost_serialization_SRC "${CMAKE_SOURCE_DIR}/externals/boost/libs/serialization/src/*.cpp")
 +    add_library(boost_serialization STATIC ${boost_serialization_SRC})
 +    target_link_libraries(boost_serialization PUBLIC boost)
-+endif()
- 
++
++    # Boost::iostreams
++    add_library(
++        boost_iostreams
++        STATIC
++        ${CMAKE_SOURCE_DIR}/externals/boost/libs/iostreams/src/file_descriptor.cpp
++        ${CMAKE_SOURCE_DIR}/externals/boost/libs/iostreams/src/mapped_file.cpp
++    )
++    target_link_libraries(boost_iostreams PUBLIC boost)
  # Add additional boost libs here; remember to ALIAS them in the root CMakeLists!
++endif()
  
  # Catch2
 -set(CATCH_INSTALL_DOCS OFF)
@@ -212,7 +230,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
  
  # HACK: The logic to set up the base include directory for CryptoPP does not work with Android SDK CMake 3.22.1.
  # Until there is a fixed version available, this code will detect and add in the proper include if it does not exist.
-@@ -57,19 +59,21 @@ endif()
+@@ -66,19 +65,21 @@ endif()
  
  # fmt and Xbyak need to be added before dynarmic
  # libfmt
@@ -240,7 +258,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
  endif()
  
  # getopt
-@@ -81,7 +85,10 @@ endif()
+@@ -90,7 +91,10 @@ endif()
  add_subdirectory(glad)
  
  # inih
@@ -252,7 +270,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
  
  # MicroProfile
  add_library(microprofile INTERFACE)
-@@ -102,39 +109,59 @@ target_include_directories(SoundTouch IN
+@@ -111,39 +115,59 @@ target_include_directories(SoundTouch IN
  # Teakra
  add_subdirectory(teakra EXCLUDE_FROM_ALL)
  
@@ -326,7 +344,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
          # LibreSSL
          set(LIBRESSL_SKIP_INSTALL ON CACHE BOOL "")
          set(OPENSSLDIR "/etc/ssl/")
-@@ -145,24 +172,39 @@ if (ENABLE_WEB_SERVICE)
+@@ -154,24 +178,39 @@ if (ENABLE_WEB_SERVICE)
              DIRECTORY libressl
              DEFINITION OPENSSL_LIBS)
      endif()
@@ -677,10 +695,10 @@ diff --color -rupN citra/src/CMakeLists.txt citra/src/CMakeLists.txt
 diff --color -rupN citra/src/common/CMakeLists.txt citra/src/common/CMakeLists.txt
 --- citra/src/common/CMakeLists.txt	2023-01-20 00:44:13.822264687 +0800
 +++ citra/src/common/CMakeLists.txt	2023-01-20 00:42:58.732110108 +0800
-@@ -137,11 +137,11 @@ add_library(common STATIC
+@@ -140,11 +140,11 @@ add_library(common STATIC
  create_target_directory_groups(common)
  
- target_link_libraries(common PUBLIC fmt::fmt microprofile Boost::boost Boost::serialization)
+ target_link_libraries(common PUBLIC fmt::fmt microprofile Boost::boost Boost::serialization Boost::iostreams)
 -target_link_libraries(common PRIVATE libzstd_static)
 +target_link_libraries(common PRIVATE zstd::zstd)
  set_target_properties(common PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${ENABLE_LTO})
@@ -698,8 +716,8 @@ diff --color -rupN citra/src/core/CMakeLists.txt citra/src/core/CMakeLists.txt
  create_target_directory_groups(core)
  
  target_link_libraries(core PUBLIC common PRIVATE audio_core network video_core)
--target_link_libraries(core PUBLIC Boost::boost PRIVATE cryptopp fmt::fmt open_source_archives Boost::serialization)
-+target_link_libraries(core PUBLIC Boost::boost Boost::serialization)
+-target_link_libraries(core PUBLIC Boost::boost PRIVATE cryptopp fmt::fmt open_source_archives Boost::serialization Boost::iostreams)
++target_link_libraries(core PUBLIC Boost::boost Boost::serialization Boost::iostreams)
 +target_link_libraries(core PRIVATE cryptopp::cryptopp fmt::fmt open_source_archives)
  set_target_properties(core PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${ENABLE_LTO})
  
