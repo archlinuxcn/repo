@@ -1,0 +1,46 @@
+# Maintainer: Rosalie Wanders <rosalie@mailbox.org>
+_pkgname=rmg
+pkgname=${_pkgname}-git
+pkgver=0.3.8.8.g6353be1
+pkgrel=1
+pkgdesc="Rosalie's Mupen GUI"
+arch=('x86_64')
+url="https://github.com/Rosalie241/${_pkgname}"
+license=('GPL3')
+
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+
+depends=("hidapi" "libsamplerate" "speexdsp" "minizip" "sdl2" "zlib" "freetype2" "qt6-base" "qt6-svg" "xdg-user-dirs")
+makedepends=("git" "pkg-config" "nasm" "cmake" "cargo" "ninja")
+
+source=("git+https://github.com/Rosalie241/${_pkgname}.git")
+sha256sums=('SKIP')
+
+pkgver()
+{
+    cd "$_pkgname"
+
+    git describe --tags --always | sed -e 's|^v||;s|-|.|g'
+}
+
+prepare()
+{
+    mkdir -p "$srcdir/${_pkgname}/build"
+}
+
+build()
+{
+    cmake -S "$srcdir/${_pkgname}" -B "$srcdir/${_pkgname}/build" \
+                -DCMAKE_BUILD_TYPE="Release" \
+                -DPORTABLE_INSTALL="OFF" \
+                -DCMAKE_INSTALL_PREFIX="/usr" \
+                -G "Ninja"
+
+    cmake --build "$srcdir/${_pkgname}/build"
+}
+
+package()
+{
+    cmake --install "$srcdir/${_pkgname}/build" --prefix="$pkgdir/usr"
+}
