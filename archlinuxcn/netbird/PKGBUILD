@@ -1,7 +1,7 @@
 # Maintainer: tarball <bootctl@gmail.com>
 
 pkgname=netbird
-pkgver=0.14.4
+pkgver=0.14.5
 pkgrel=1
 pkgdesc='A WireGuard-based mesh network that connects your devices into a single private network'
 url='https://netbird.io'
@@ -22,7 +22,7 @@ source=(
   'environment'
   'netbird@.service'
 )
-sha256sums=('7cfad70cd0fecc2d0f7bf68a03efe05e5f6e1a3627998169dc07b7c9f8e3b8d2'
+sha256sums=('2ea6be9c50a5ac241fbae35934c9c710697de39e8a0393f8e1800285a7904d0d'
             '128e36e1f814a12886f3122a1809a404be17f81481275b6624e66937941f5269'
             '3bd6d2692dc6d08cfabce1ba2514c02f4463294ebbdb63828baca5d9e4c9daa9')
 
@@ -37,7 +37,7 @@ build() {
   cd "$srcdir/$pkgname-$pkgver"
 
   go build \
-    -ldflags "-s -w -linkmode=external -X $_package/client/system.version=$pkgver -extldflags \"$LDFLAGS\"" \
+    -ldflags "-s -w -linkmode=external -X $_package/version.version=$pkgver -extldflags \"$LDFLAGS\"" \
     -o build/"$pkgname" \
     client/main.go
 
