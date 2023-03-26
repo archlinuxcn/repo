@@ -3,7 +3,7 @@
 
 pkgbase=linux-lts515
 pkgver=5.15.104
-pkgrel=1
+pkgrel=2
 pkgdesc='LTS Linux 5.15.x'
 url="https://www.kernel.org/"
 arch=(x86_64 pentium4 i686 i486)
@@ -211,15 +211,9 @@ done
 
 # vim:set ts=8 sts=2 sw=2 et:
 
-eval "$(
-  declare -f package_linux-lts515-headers | \
-    sed '
-      \,/tools/objtool" ,d
-      \,arch/x86/Makefile,a install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile_32.cpu
-    '
-)"
-
 if [ "${CARCH}" = "i486" -o  "${CARCH}" = "i686" -o "${CARCH}" = "pentium4" ]; then
+
+  # use 32-bit configuration files per subarchitecture instead of main config file
   source_pentium4=('config.pentium4')
   source_i686=('config.i686')
   source_i486=('config.i486')
