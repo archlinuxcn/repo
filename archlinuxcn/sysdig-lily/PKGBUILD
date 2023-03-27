@@ -4,30 +4,35 @@
 # Contribuitor: Christian Babeux <christian.babeux@0x80.ca>
 
 pkgname=sysdig-lily
-pkgver=0.30.2
-pkgrel=6
+pkgver=0.31.4
+pkgrel=1
 
 # from src/sysdig-*/cmake/modules/falcosecurity-libs.cmake
-_falcover=0.9.1
+_falcover=0.10.5
 
 pkgdesc="Open source system-level exploration and troubleshooting tool"
 arch=('x86_64')
 url="https://www.sysdig.com/"
 license=('GPL2' 'Apache' 'MIT')
-depends=('jsoncpp' 'libjsoncpp.so' 'luajit' 'curl' 'libcurl.so' 'jq' 'libb64' 'intel-tbb' 'grpc' "linux-lily=6.1.10-1" 'libgrpc++_unsecure.so' 'yaml-cpp')
+depends=('jsoncpp' 'libjsoncpp.so' 'luajit' 'curl' 'libcurl.so' 'jq' 'libb64' 'intel-tbb' 'grpc' 'libgrpc++.so' "linux-lily=6.1.19-1" 'yaml-cpp' 'zstd')
 makedepends=('cmake' 'llvm' 'clang' 'gtest' 'linux-lily-headers')
 source=("https://github.com/draios/sysdig/archive/$pkgver/sysdig-$pkgver.tar.gz"
         "falcosecurity-libs-$_falcover.tar.gz::https://github.com/falcosecurity/libs/archive/$_falcover.tar.gz"
         "bashcomp-location.patch"
-        "falcosecurity-libs-nodownload.patch")
-sha256sums=('44207898c875d1a51bbc6d512b069ff690c08293056f184977b7d0984b0958b0'
-            'b1591cdf4604312a876efebf0f133f1b34bbb1e9951075d8bab8de2f91f2dff8'
+        "falcosecurity-libs-nodownload.patch"
+        "libsinsp-zstd.patch")
+sha256sums=('b8f43326506f85e99a3455f51b75ee79bf4db9dc12908ef43af672166274a795'
+            '2a4b37c08bec4ba81326314831f341385aff267062e8d4483437958689662936'
             '3b659326176c314eee9115adac39a249dc4b9530511b344ea6a2b23236bb8386'
-            'b8cedef6766c691a8a92810eb459593d80070f0cf5dfc32cae2a80ec00639429')
+            'b8cedef6766c691a8a92810eb459593d80070f0cf5dfc32cae2a80ec00639429'
+            'bb29a1dd7a854019e2408b98fd954e73263a47f6da637556a83885175a729034')
 conflicts=(sysdig)
 provides=(sysdig=$pkgver)
 
 prepare() {
+  cd "$srcdir/libs-$_falcover"
+  patch -p1 -i "$srcdir"/libsinsp-zstd.patch
+
   cd "$srcdir/sysdig-$pkgver"
   patch -p1 -i "$srcdir"/bashcomp-location.patch
   patch -p1 -i "$srcdir"/falcosecurity-libs-nodownload.patch
@@ -47,6 +52,8 @@ build() {
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_CXX_FLAGS="${CXXFLAGS} ${CPPFLAGS} -Wno-deprecated-declarations" \
         -DCMAKE_C_FLAGS="${CFLAGS} ${CPPFLAGS} -Wno-deprecated-declarations" \
+        -DCMAKE_CXX_STANDARD=17 \
+        -DCMAKE_CXX_EXTENSIONS=OFF \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DSYSDIG_VERSION=$pkgver \
         -DUSE_BUNDLED_DEPS=OFF \
@@ -78,7 +85,7 @@ package() {
 
   rm -r "$pkgdir"/usr/share/zsh/vendor-completions/
 
-  rm -r "$pkgdir"/usr/src/
+  rm -rf "$pkgdir"/usr/src "$pkgdir"/sysdig
   mkdir -p "$pkgdir"/usr/src/sysdig-${pkgver}/bpf/
   install -Dm644 "$srcdir"/sysdig-$pkgver/build/driver/bpf/probe.o "$pkgdir"/usr/src/sysdig-${pkgver}/bpf/
   sed -i '/probe\.o/s/\<mv\>/cp --reflink=auto/' "$pkgdir"/usr/bin/scap-driver-loader

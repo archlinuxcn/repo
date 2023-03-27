@@ -1,0 +1,27 @@
+diff --git a/userspace/libsinsp/CMakeLists.txt b/userspace/libsinsp/CMakeLists.txt
+index ea3967d..0e55152 100644
+--- a/userspace/libsinsp/CMakeLists.txt
++++ b/userspace/libsinsp/CMakeLists.txt
+@@ -38,6 +38,7 @@ include(ExternalProject)
+ 
+ if(NOT WIN32 AND NOT APPLE)
+ 	include(b64)
++	find_library(ZSTD_LIB NAMES zstd)
+ endif()
+ 
+ include(jsoncpp)
+@@ -249,7 +250,8 @@ if(NOT WIN32)
+ 				"${PROTOBUF_LIB}"
+ 				"${CARES_LIB}"
+ 				"${JQ_LIB}"
+-				"${B64_LIB}")
++				"${B64_LIB}"
++				"${ZSTD_LIB}")
+ 
+ 			if(NOT MUSL_OPTIMIZED_BUILD)
+ 				list(APPEND SINSP_LIBRARIES
+@@ -314,4 +316,3 @@ option(BUILD_LIBSINSP_EXAMPLES "Build libsinsp examples" ON)
+ if (BUILD_LIBSINSP_EXAMPLES)
+ 	add_subdirectory(examples)
+ endif()
+-
