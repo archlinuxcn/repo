@@ -8,7 +8,7 @@ _cefbranch="5060"
 _chromiumver="103.0.${_cefbranch}.134"
 _rebuild="1" # The tarball sometime can get rebuild by OBS Project
 pkgver="${_version}+g${_commit}+chromium_${_chromiumver}_${_rebuild}"
-pkgrel=5
+pkgrel=6
 pkgdesc="Chromium Embedded Framework minimal release needed by OBS Studio release in /opt/cef-obs"
 arch=("x86_64" "aarch64")
 url="https://github.com/obsproject/cef/tree/5060-shared-textures"
@@ -26,7 +26,7 @@ sha256sums_x86_64=("bf4aa9388bab7e94fa945cc3bba16b6da63b6a30f9c0342d42235468b39d
 sha256sums_aarch64=("68d915c9ba2639cba762a54cd3430fce2527aa6355d831d3cfcb6157664206b0")
 
 prepare() {
-  cd "${srcdir}/cef_binary_${_cefbranch}_linux_${arch}"
+  cd "${srcdir}/cef_binary_${_cefbranch}_linux_${CARCH}"
 
   # Fix folder permissions
   chmod 755 Release
@@ -57,11 +57,11 @@ prepare() {
 }
 
 build() {
-  cd "${srcdir}/cef_binary_${_cefbranch}_linux_${arch}"
+  cd "${srcdir}/cef_binary_${_cefbranch}_linux_${CARCH}"
 
   cmake \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -DPROJECT_ARCH=$arch .
+    -DPROJECT_ARCH=$CARCH .
 
   make libcef_dll_wrapper
 
@@ -76,8 +76,8 @@ build() {
 
 package() {
     mkdir -p "$pkgdir"/opt/cef-obs/
-    cp -a "${srcdir}/cef_binary_${_cefbranch}_linux_${arch}"/* "$pkgdir"/opt/cef-obs
+    cp -a "${srcdir}/cef_binary_${_cefbranch}_linux_${CARCH}"/* "$pkgdir"/opt/cef-obs
     rm -f "$pkgdir"/opt/cef-obs/LICENSE.txt
     rm -rf "$pkgdir"/opt/cef-obs/cmake
-    install -Dm644 "${srcdir}/cef_binary_${_cefbranch}_linux_${arch}/LICENSE.txt" "$pkgdir"/usr/share/licenses/${pkgname}/LICENSE
+    install -Dm644 "${srcdir}/cef_binary_${_cefbranch}_linux_${CARCH}/LICENSE.txt" "$pkgdir"/usr/share/licenses/${pkgname}/LICENSE
 }
