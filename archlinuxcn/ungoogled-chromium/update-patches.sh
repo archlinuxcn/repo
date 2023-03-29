@@ -1,7 +1,7 @@
 #!/bin/bash
 
 mkdir tmp
-mv ozone-add-va-api-support-to-wayland.patch remove-main-main10-profile-limit.patch tmp
+mv ozone-add-va-api-support-to-wayland.patch remove-main-main10-profile-limit.patch skia-gamma.patch vaapi-add-av1-support.patch tmp
 
 rm *.patch
 git clone https://github.com/archlinux/svntogit-packages.git --branch packages/chromium --single-branch chr

@@ -9,7 +9,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=111.0.5563.110
+pkgver=111.0.5563.146
 pkgrel=1
 _launcher_ver=8
 _gcc_patchset=2
@@ -35,7 +35,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         sql-relax-constraints-on-VirtualCursor-layout.patch
         disable-GlobalMediaControlsCastStartStop.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('49dd6c73b170a2dcf6edbb516cd9f77b550cc3d968f2097927c637015487a765'
+sha256sums=('1e701fa31b55fa0633c307af8537b4dbf67e02d8cad1080c57d845ed8c48b5fe'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'a016588340f1559198e4ce61c6e91c48cf863600f415cb5c46322de7e1f77909'
             'e66be069d932fe18811e789c57b96249b7250257ff91a3d82d15e2a7283891b7'
@@ -57,7 +57,7 @@ source=(${source[@]}
         vaapi-add-av1-support.patch
         remove-main-main10-profile-limit.patch)
 sha256sums=(${sha256sums[@]}
-            '4593a09ba3222b82aeb95fd84b3346f86fab63b03cc8068501b336625b481d0e'
+            'df09f3adeb27ac6c619522ea524be0450cfe5324599eb2d5462f1c63e661a2f8'
             'e9e8d3a82da818f0a67d4a09be4ecff5680b0534d7f0198befb3654e9fab5b69'
             'e742cc5227b6ad6c3e0c2026edd561c6d3151e7bf0afb618578ede181451b307'
             'fc810e3c495c77ac60b383a27e48cf6a38b4a95b65dd2984baa297c5df83133c')
