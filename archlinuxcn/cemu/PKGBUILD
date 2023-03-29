@@ -1,7 +1,7 @@
 # Maintainer: Jeremy Kescher <jeremy@kescher.at>
 
 pkgname=cemu
-pkgver=2.0.306
+pkgver=2.0.320
 pkgrel=1
 pkgdesc='Software to emulate Wii U games and applications on PC'
 arch=(x86_64)
@@ -19,7 +19,7 @@ makedepends=(
 	# unbundled vcpkg
 	'boost>=1.79' 'glslang>=11.8' 'glm>=0.9.9.8' rapidjson
 	# direct cemu dependencies
-	nasm 'vulkan-headers>=1.3.225'
+	nasm 'vulkan-headers>=1.3.240'
 	# wxwidgets
 	glu
 	# cubeb optional
@@ -31,7 +31,7 @@ optdepends=(
 )
 install=cemu.install
 source=(
-	git+https://github.com/cemu-project/Cemu#tag=v2.0-29
+	git+https://github.com/cemu-project/Cemu#tag=v2.0-30
 	# submodules
 	git+https://github.com/mozilla/cubeb#commit=dc511c6b3597b6384d28949285b9289e009830ea
 	git+https://github.com/ocornut/imgui#commit=8a44c31c95c8e0217f6e1fc814cbbbcca4981f14
@@ -39,13 +39,16 @@ source=(
 	# cubeb submodules
 	git+https://github.com/arsenm/sanitizers-cmake#commit=aab6948fa863bc1cbe5d0850bc46b9ef02ed4c1a
 	git+https://github.com/google/googletest#commit=800f5422ac9d9e0ad59cd860a2ef3a679588acb4
+	# patches
+	fullscreen-f11.patch
 )
 sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'SKIP')
+            'SKIP'
+            'e55fee30ddb5d3d0363228feda5537607d5ae4a712590a8bb0c7ab0f1f42a347')
 
 pkgver() {
 	cd Cemu
@@ -86,6 +89,8 @@ prepare() {
 
 	# gamelist column width improvement
 	sed -i '/InsertColumn/s/kListIconWidth/&+8/;/SetColumnWidth/s/last_col_width/&-1/' src/gui/components/wxGameList.cpp
+
+	git apply "$srcdir/fullscreen-f11.patch"
 }
 
 build() {
