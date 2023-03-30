@@ -1,36 +1,28 @@
 # Maintainer: cubercsl <2014cais01 at gmail dot com>
 pkgbase=dae
 _pkgname=dae
-_header_commit=378c3c576e0f4c785a3d5e71400b552725527f30
 pkgname=(
     $_pkgname
     $_pkgname-geoip-v2raycompat
     $_pkgname-geosite-v2raycompat
 )
 pkgver=0.1.5
-pkgrel=1
+pkgrel=2
 pkgdesc="A Linux lightweight and high-performance transparent proxy solution based on eBPF."
 arch=(x86_64)
 url="https://github.com/daeuniverse/dae"
 license=('AGPL')
 makedepends=(clang llvm go)
 source=(
-    "https://github.com/daeuniverse/dae/archive/refs/tags/v$pkgver.tar.gz"
-    "https://github.com/daeuniverse/dae_bpf_headers/archive/$_header_commit.tar.gz"
+    "https://github.com/daeuniverse/dae/releases/download/v$pkgver/dae-full-src.zip"
 )
-sha256sums=('d5c56d00106e26abdaff1e4ede0aa464717d02a5552647caf3645e6dfdfd6684'
-            '475387ddff6e281ee21a39948d1d90bf728e5bcb16ea678e9038ed6a350b7016')
-
-prepare() {
-    rm -rf "$srcdir/$_pkgname-$pkgver/control/kern/headers"
-    ln -sf "$srcdir/dae_bpf_headers-$_header_commit" "$srcdir/$_pkgname-$pkgver/control/kern/headers"
-}
+sha256sums=('226aa5a8538ebcc009391fbeb7cad56ec60207a64bb43c8cbd89a60412c79b1a')
 
 build() {
     export GOFLAGS="-buildmode=pie -trimpath -modcacherw"
     export CFLAGS=""
 
-    cd "$srcdir/$_pkgname-$pkgver"
+    cd "$srcdir"
     make VERSION="$pkgver"
 }
 
@@ -44,7 +36,7 @@ package_dae() {
     )
     backup=("etc/dae/config.dae")
 
-    cd "$srcdir/$_pkgname-$pkgver"
+    cd "$srcdir"
     install -Dm755 "dae" "$pkgdir/usr/bin/dae"
     install -Dm644 "install/dae.service" "$pkgdir/usr/lib/systemd/system/dae.service"
     install -Dm640 "install/empty.dae" "$pkgdir/etc/dae/config.dae"
