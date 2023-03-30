@@ -8,15 +8,30 @@ pkgdesc='Image augmentation library in Python for machine learning'
 arch=(any)
 url=https://github.com/mdbloice/Augmentor
 license=(MIT)
-depends=(python-future python-numpy python-pillow python-tqdm)
-makedepends=(python-setuptools)
+depends=(
+  python-numpy
+  python-pandas
+  python-pillow
+  python-tqdm
+)
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
 checkdepends=(python-pytest)
 source=("${_pkgname}-${pkgver}.tar.gz"::"https://github.com/mdbloice/Augmentor/archive/${pkgver}.tar.gz")
 sha512sums=('27a37d52cbf51dcb2bb8c7c5d74efbe2d2cb066b9ed958b3a84456d524fff82dd19e9da1ab23064490171d078ebd764e900fc39d8fb4e4bd1e23b13e0589cb85')
 
+prepare() {
+  # fix https://github.com/mdbloice/Augmentor/issues/218
+  sed -i "s,cat_col_series.get_values,cat_col_series.to_numpy," "${_pkgname}-${pkgver}/Augmentor/ImageUtilities.py"
+}
+
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 check() {
@@ -26,7 +41,7 @@ check() {
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
