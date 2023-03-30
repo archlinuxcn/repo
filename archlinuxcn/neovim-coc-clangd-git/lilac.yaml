@@ -5,8 +5,7 @@ maintainers:
 build_prefix: extra-x86_64
 
 repo_depends:
-    # neovim-coc seems broken with the latest neovim
-    - neovim-coc-git
+    - neovim-coc
 
 pre_build_script: |
     aur_pre_build(maintainers='sainnhe')
@@ -19,3 +18,5 @@ update_on:
     github: clangd/coc-clangd
   - source: aur
     aur: neovim-coc-clangd-git
+  - source: manual
+    manual: 1
