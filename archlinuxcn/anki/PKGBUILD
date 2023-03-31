@@ -7,35 +7,37 @@
 # Contributor: Dave Pretty <david dot pretty at gmail dot com>
 
 pkgname=anki
-pkgver=2.1.60
+pkgver=2.1.61
 pkgrel=1
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
 license=('AGPL3')
 arch=('x86_64')
-conflicts=('anki-bin' 'anki-git' 'anki-official-binary-bundle' 'anki-qt5')
+provides=(anki-debug)
+conflicts=('anki-bin' 'anki-git' 'anki-official-binary-bundle' 'anki-qt5' anki-qt5-debug)
 options=('!lto')
 depends=(
     # anki & aqt
+    'python>=3.9'
     'python-beautifulsoup4'
-    'python-waitress'
+    'python-waitress>=2.0.0'
+    'python-requests'
 
     # anki
     'python-decorator'
     'python-markdown'
     'python-orjson'
-    'python-protobuf'
+    'python-protobuf>=4.21'
     'python-pysocks'
     'python-distro'
 
     #aqt
     'python-flask-cors' # python-flask required for anki & aqt but a dependency of -cors
     'python-jsonschema'
-    'python-requests'
     'python-send2trash'
     'python-certifi'
     'qt6-multimedia'	# recording voice
-    'python-pyqt6-webengine'
+    'python-pyqt6-webengine>=6.2'
     'qt6-svg'
 )
 makedepends=(
