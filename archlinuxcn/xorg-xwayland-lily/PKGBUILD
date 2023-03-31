@@ -2,7 +2,7 @@
 
 pkgname=xorg-xwayland-lily
 pkgver=23.1.1
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 license=('custom')
 url="https://xorg.freedesktop.org"
@@ -19,14 +19,12 @@ makedepends=('meson' 'xorgproto' 'xtrans' 'libxkbfile' 'dbus'
 source=(https://xorg.freedesktop.org/archive/individual/xserver/xwayland-$pkgver.tar.xz{,.sig} hidpi.patch)
 sha512sums=('21c386847135c5cb4ac884926b0fbeb6ad21c9ee54752e0cdc8418e31a72872d81032159c1d91b8afb915aaaf65e80454342461d676996b2f3c535a37b0147f0'
             'SKIP'
-            '5224eb07bb5bcf04e1ec18f61f0aeea98aa6eb9c70bf607d2f3200852cb8747e8c3b8319deb88749059a9ec75bbce4743f458e39c1c18ebcce533dfdd881260c')
+            5224eb07bb5bcf04e1ec18f61f0aeea98aa6eb9c70bf607d2f3200852cb8747e8c3b8319deb88749059a9ec75bbce4743f458e39c1c18ebcce533dfdd881260c)
 provides=('xorg-server-xwayland' 'xorg-xwayland' 'xorg-xwayland-hidpi-xprop')
 conflicts=('xorg-server-xwayland' 'xorg-xwayland')
 replaces=('xorg-server-xwayland')
 #validpgpkeys=('B09FAF35BE914521980951145A81AF8E6ADBB200') # "Michel Daenzer <michel@daenzer.net>"
 validpgpkeys=('67DC86F2623FC5FD4BB5225D14706DBE1E4B4540') # "Olivier Fourdan <fourdan@xfce.org>"
-options=('debug' 'strip')
-
 prepare() {
   cd "${srcdir}/xwayland-$pkgver"
   patch -Np1 < ../hidpi.patch
@@ -53,10 +51,11 @@ build() {
 
 package() {
 
-  # bin + manpage + .pc file
-  install -m755 -Dt "${pkgdir}"/usr/bin build/hw/xwayland/Xwayland
-  install -m644 -Dt "${pkgdir}"/usr/share/man/man1 build/hw/xwayland/Xwayland.1
-  install -m644 -Dt "${pkgdir}"/usr/lib/pkgconfig build/hw/xwayland/xwayland.pc
+  DESTDIR="${pkgdir}" ninja -C build install
+  # xorg-server-common file /usr/lib/xorg/protocol.txt
+  rm "${pkgdir}"/usr/lib/xorg/protocol.txt
+  rmdir "${pkgdir}"/usr/lib/xorg
+  rm "${pkgdir}"/usr/share/man/man1/Xserver.1
 
   # license
   install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" xwayland-$pkgver/COPYING
