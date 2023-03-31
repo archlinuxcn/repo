@@ -4,9 +4,9 @@
 # Contributor: Alexandre Demers <alexandre.f.demers@gmail.com>
 
 pkgname=lib32-spirv-tools
-pkgver=2023.1
+pkgver=2023.2
 pkgrel=1
-_headers_version=sdk-1.3.239.0
+_headers_version=sdk-1.3.243.0
 pkgdesc="API and commands for processing SPIR-V modules"
 arch=('i686' 'x86_64')
 url='https://github.com/KhronosGroup/SPIRV-Tools'
