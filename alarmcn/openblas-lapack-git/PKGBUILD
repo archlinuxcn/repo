@@ -20,25 +20,25 @@ _config=(
   'SMP=1'
   'USE_OPENMP=1'
   'USE_THREAD=1'
-  'NUM_THREADS=8'
+  'NUM_THREADS=64'
   'MAJOR_VERSION=3'
   'NO_LAPACK=0'
-  'GEMM_MULTITHREADING_THRESHOLD=50'
+  'GEMM_MULTITHREAD_THRESHOLD=50'
   'NO_AFFINITY=1'
 )
 
 case "$CARCH" in
   x86_64)
-    _config=("${_config[@]}" 'DYNAMIC_ARCH=1' 'NUM_THREAD=64')
+    _config=("${_config[@]}" 'DYNAMIC_ARCH=1')
     ;;
   i686)
-    _config=("${_config[@]}" 'DYNAMIC_ARCH=1' 'NUM_THREAD=64')
+    _config=("${_config[@]}" 'DYNAMIC_ARCH=1')
     ;;
   armv7h)
-    _config=("${_config[@]}" 'TARGET=CORTEXA9' 'NUM_THREAD=64')
+    _config=("${_config[@]}" 'TARGET=CORTEXA9')
     ;;
   aarch64)
-    _config=("${_config[@]}" 'DYNAMIC_ARCH=1' 'NUM_THREAD=64')
+    _config=("${_config[@]}" 'DYNAMIC_ARCH=1')
     ;;
   *)
     echo "Unknown CARCH: ${CARCH}"
