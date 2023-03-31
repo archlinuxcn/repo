@@ -18,8 +18,6 @@ def pre_build():
       line = "conflicts=('xorg-server-xwayland' 'xorg-xwayland')"
     elif line.startswith('validpgpkeys='):
       line += '''
-options=('debug' 'strip')
-
 prepare() {
   cd "${srcdir}/xwayland-$pkgver"
   patch -Np1 < ../hidpi.patch
