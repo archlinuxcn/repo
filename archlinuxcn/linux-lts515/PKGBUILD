@@ -2,8 +2,8 @@
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=linux-lts515
-pkgver=5.15.104
-pkgrel=2
+pkgver=5.15.105
+pkgrel=3
 pkgdesc='LTS Linux 5.15.x'
 url="https://www.kernel.org/"
 arch=(x86_64 pentium4 i686 i486)
@@ -28,9 +28,9 @@ validpgpkeys=(
   '647F28654894E3BD457199BE38DBBDC86092693E'  # Greg Kroah-Hartman
 )
 # https://www.kernel.org/pub/linux/kernel/v5.x/sha256sums.asc
-sha256sums=('71c532ce09992e470f3259ffeb38d2b5bba990c243a559e4726a57412bd36b54'
+sha256sums=('01b537650332d2852722a626169cf7e5e798d11f9b578171b477868555f5e44f'
             'SKIP'
-            'f2a1e621d8a0138c5aaf88a5bfd91580133d319fcdc2ac9192f290a78305d185'
+            '7b80ea3c8cd2cd4bbb079b565770eaac31c13c64fe3ce519c3ed2aa6c85af547'
             '3b5cfc9ca9cf778ea2c4b619b933cda26519969df2d764b5a687f63cf59974cd'
             'c175fbb141c3cec013c799f694d88310375ac5456042f6a4a1adc7667836d786'
             '8357f000b2b622e73dcfd41c2bad42b5e99fffe8f7ee64f774aa771f86cef43c'
@@ -219,10 +219,10 @@ if [ "${CARCH}" = "i486" -o  "${CARCH}" = "i686" -o "${CARCH}" = "pentium4" ]; t
   source_i486=('config.i486')
   # fail if upstream's .config changes
   for ((i=0; i<${#sha256sums[@]}; i++)); do
-    if [ "${sha256sums[${i}]}" = 'f2a1e621d8a0138c5aaf88a5bfd91580133d319fcdc2ac9192f290a78305d185' ]; then
-      sha256sums_pentium4=('bac1aa5920045297701bab46d67c95403e48c0bc5df98532d6f43505aae8f146')
-      sha256sums_i686=('d8d650922c6ca3f9c8dfe9c4734710e8a089aa85bafa6e1af23de8bf3d4b6c03')
-      sha256sums_i486=('9b307b53fea4ce3e1824b5eee3497762bfd7dd38c2c8fee810e1f105063087a1')
+    if [ "${sha256sums[${i}]}" = '7b80ea3c8cd2cd4bbb079b565770eaac31c13c64fe3ce519c3ed2aa6c85af547' ]; then
+      sha256sums_pentium4=('8c63d82cc603d1eff603cdf6eb36f89264eaad7f47591d0b4cdccd1de28270d6')
+      sha256sums_i686=('2206fb7e6e9e55d0c52eefd1b848c3705e7853e9df29d7f33811eac46b567385')
+      sha256sums_i486=('b67fc270607fb3e0349818afc15e7a8a456da27fb49366b91cf2f78607863228')
     fi
   done
 
@@ -236,7 +236,7 @@ if [ "${CARCH}" = "i486" -o  "${CARCH}" = "i686" -o "${CARCH}" = "pentium4" ]; t
 
   # patch architecture when copying the kernel Makefile
   eval "$(
-    declare -f package_linux515-headers | \
+    declare -f package_linux-lts515-headers | \
       sed '
         \,/tools/objtool" ,d
         \,arch/x86/Makefile, {
