@@ -1,0 +1,58 @@
+c573b65a Fix linking with LZMA when auto update is disabled
+diff --git a/Telegram/CMakeLists.txt b/Telegram/CMakeLists.txt
+index 24c5909e..cb3ba61c 100644
+--- a/Telegram/CMakeLists.txt
++++ b/Telegram/CMakeLists.txt
+@@ -85,6 +85,7 @@ PRIVATE
+     desktop-app::external_qr_code_generator
+     desktop-app::external_crash_reports
+     desktop-app::external_auto_updates
++    desktop-app::external_lzma
+     desktop-app::external_openssl
+     desktop-app::external_openal
+     desktop-app::external_xxhash
+@@ -1710,6 +1711,7 @@ if ((NOT DESKTOP_APP_DISABLE_AUTOUPDATE OR APPLE) AND NOT build_macstore AND NOT
+             desktop-app::external_qt
+             desktop-app::external_zlib
+             desktop-app::external_auto_updates
++            desktop-app::external_lzma
+             desktop-app::external_openssl
+         )
+ 
+diff --git a/cmake/external/CMakeLists.txt b/cmake/external/CMakeLists.txt
+index 9be0e5a2..ed0b9aed 100644
+--- a/cmake/external/CMakeLists.txt
++++ b/cmake/external/CMakeLists.txt
+@@ -47,6 +47,7 @@ add_checked_subdirectory(jpeg)
+ add_checked_subdirectory(kcoreaddons)
+ add_checked_subdirectory(kimageformats)
+ add_checked_subdirectory(lz4)
++add_checked_subdirectory(lzma)
+ add_checked_subdirectory(minizip)
+ if (LINUX)
+     add_checked_subdirectory(nimf_qt5)
+diff --git a/cmake/external/lzma/CMakeLists.txt b/cmake/external/lzma/CMakeLists.txt
+new file mode 100644
+index 00000000..8e75394d
+--- /dev/null
++++ b/cmake/external/lzma/CMakeLists.txt
+@@ -0,0 +1,19 @@
++# This file is inspired by Desktop App Toolkit,
++# a set of libraries for developing nice desktop applications.
++#
++# For license and copyright information please follow this link:
++# https://github.com/desktop-app/legal/blob/master/LEGAL
++
++if (DESKTOP_APP_USE_PACKAGED)
++    if (DESKTOP_APP_DISABLE_AUTOUPDATE)
++        add_library(external_lzma INTERFACE IMPORTED GLOBAL)
++        add_library(desktop-app::external_lzma ALIAS external_lzma)
++        find_package(PkgConfig REQUIRED)
++        pkg_check_modules(LZMA REQUIRED IMPORTED_TARGET liblzma)
++        target_link_libraries(external_lzma INTERFACE PkgConfig::LZMA)
++        return()
++    else()
++        # See auto_update directory contents
++    endif()
++    message(FATAL_ERROR "DEKSTOP_APP_USE_PACKAGED expected to be TRUE")
++endif()
