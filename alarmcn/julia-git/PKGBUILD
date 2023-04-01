@@ -40,7 +40,7 @@ url="http://julialang.org"
 license=('GPL')
 _soname_deps=(libcurl.so libgit2.so libopenlibm.so libssh2.so
               libmbedcrypto.so libmbedtls.so libmbedx509.so)
-depends_libs=(arpack fftw gmp libgit2-julia libunwind mpfr pcre2 suitesparse
+depends_libs=(arpack fftw gmp libunwind mpfr pcre2 suitesparse
               openspecfun openblas-lapack libutf8proc-git
               mbedtls zlib p7zip libnghttp2 ca-certificates-utils lld)
 makedepends=("${depends_libs[@]}" llvm-julia gcc-fortran git patchelf python proot

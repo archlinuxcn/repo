@@ -12,7 +12,6 @@ repo_depends:
   - openlibm-git
   - llvm-julia
   - llvm-julia: llvm-libs-julia
-  - libgit2-julia
   - proot-git
 
 update_on_build:
@@ -24,8 +23,8 @@ update_on:
   - source: alpm
     alpm: curl
     provided: libcurl.so
-  - source: alpm-lilac
-    alpm: libgit2-julia
+  - source: alpm
+    alpm: libgit2
     provided: libgit2.so
   - source: alpm-lilac
     alpm: openlibm-git
