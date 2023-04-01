@@ -13,8 +13,8 @@
 _pkgname=thunderbird
 pkgbase=thunderbird-appmenu
 pkgname=thunderbird-appmenu
-pkgver=102.5.1
-pkgrel=13
+pkgver=102.9.0
+pkgrel=5
 pkgdesc="Thunderbird from extra with appmenu patch"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -51,19 +51,20 @@ _google_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM
 # more information.
 _mozilla_api_key=e05d56db0a694edc8b5aaebda3f2db6a
 
+ppatch() {
+  msg2 "Patching from file: $1"
+  patch -Np1 -i $1
+}
+
 prepare() {
   mkdir -p mozbuild
   cd thunderbird-$pkgver
 
   echo "${noextract[@]}"
 
-  # Unbreak build with cbindgen 0.24.0
-  patch -Np1 -i ../cbindgen-0.24.0.diff
 
   # Fix arc4random
-  patch -Np1 -i ../arc4random.diff
-
-  patch -Np1 -i ../unity-menubar.patch
+  ppatch ../unity-menubar.patch
 
   echo -n "$_google_api_key" >google-api-key
   echo -n "$_mozilla_api_key" >mozilla-api-key
@@ -157,8 +158,6 @@ END
 #END
   ./mach build
 
-#  echo "Building symbol archive..."
-#  ./mach buildsymbols
 }
 
 package() {
@@ -235,7 +234,7 @@ END
 }
 
 # vim:set sw=2 et:
-md5sums=('SKIP'
+md5sums=('6186b778e2a884a1d39add9596db4fe1'
          'SKIP'
          'bb20e95b9d65d59ba39f2f7f1c853c27'
          '6fcf81de61fa98bccedf1f7b8656d83a'
