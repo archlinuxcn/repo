@@ -3,7 +3,7 @@
 # Contributor: Dave Reisner <d@falconindy.com>
 
 pkgname=libgit2-julia
-pkgver=1.5.1
+pkgver=1.6.3
 pkgrel=1
 epoch=1
 pkgdesc="A linkable library for Git"
@@ -17,21 +17,15 @@ conflicts=(libgit2)
 options=(debug !strip)
 source=(
   libgit2-$pkgver.tar.gz::https://github.com/libgit2/libgit2/archive/v${pkgver}.tar.gz
-  libgit2-agent-nonfatal.patch
-  libgit2-1.5.0-remove_http-parse_incompatible_tests.patch)
-sha512sums=('04cf389e30cd9fb787704e3c8997acaaeea5c13e1e2f9eaf9f5598d35c2e85f3cf04b47312cae9e7278236ecb089c2d33addd852e38d3c7d2daa87929b077f39'
-            '98cef8eadbb0b3497d005d8b5dfbb9ce8443e57c8388fb1ef7f8ec7bfeaacad701ce2be6a0f927b659cd5a77a51da75b85133a07b0810aacdc19b2c141351b49'
-            'f9bb9ad7eb0f43003f5f72c81575ef5751b893fdf257d888b56818ee2c136b496b7cf72627a53dbd01319e33d0dd373e9d6df887360f7bec367419ef0c7ab711')
-b2sums=('4df80216523f4065e46c1ce99fd0747d2f8516571691c8c2b5638e32c805f5ce08d3add769e6d5ce29ac69b35419db82ce56c6b3019e70573c4ad63aca2e440d'
-        'f6efe5aa17a595be0d9871c3aad994229aae3481c7999f5e18a000d2ee3753446df619b121194babb012c5a47862bb14bf282b6069f0e4f3edb9bc32c0eec4ab'
-        'b3c2386ba84664318573e5c24797d28db914d60782397d8b39a21b54b4fb19502945fa8fcc0d8bbe8949349b5ec705d3e1345b0cbbb51b7d9631fec922f3ac41')
+  libgit2-agent-nonfatal.patch)
+sha512sums=('5a390030395d5e00217ca3229ff1374f064b41c7c14c332618778af7067c378bca5ffee5c072ad144a71126f7e8cfcd770746b6af8eccf086c8a8b8afa1733f1'
+            '98cef8eadbb0b3497d005d8b5dfbb9ce8443e57c8388fb1ef7f8ec7bfeaacad701ce2be6a0f927b659cd5a77a51da75b85133a07b0810aacdc19b2c141351b49')
+b2sums=('c0a588e962c182c09b91e257760484bc0ebf2ab07fdd89b7b90db1dd6749d7fb65b8e3fcd20e8a46a6381038aeac8759161dc409be36eadc776a55d74290e59c'
+        'f6efe5aa17a595be0d9871c3aad994229aae3481c7999f5e18a000d2ee3753446df619b121194babb012c5a47862bb14bf282b6069f0e4f3edb9bc32c0eec4ab')
 
 prepare() {
   cd "libgit2-$pkgver"
   mkdir -p build
-  # remove tests that are only compatible with the (modified) vendored version
-  # of http-parser, but not with upstream http-parser
-  patch -Np1 -i "../libgit2-1.5.0-remove_http-parse_incompatible_tests.patch"
   patch -p1 < ../libgit2-agent-nonfatal.patch
 }
 
