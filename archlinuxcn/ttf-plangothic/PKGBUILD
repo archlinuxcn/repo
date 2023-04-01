@@ -11,7 +11,7 @@ license=('OFL')
 replaces=('ttf-plangothic-mob')
 source=($pkgname-$pkgver-PlangothicP1-Regular.ttf::https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/releases/download/V$pkgver/PlangothicP1-Regular.fallback.ttf
         $pkgname-$pkgver-PlangothicP2-Regular.ttf::https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/releases/download/V$pkgver/PlangothicP2-Regular.ttf
-        $pkgname-$pkgver-LICENSE.txt::https://raw.githubusercontent.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/V$pkgver/LICENSE.txt
+        $pkgname-$pkgver-LICENSE.txt::https://raw.githubusercontent.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/V$pkgver/LICENSE
         )
 b2sums=('6fca24e5f030e176a8992b77443c1e0720d4fae53885cbfaa1c39114cd09a08f35ea662652cc683520590964e553741bce1bebaedf0c7eb6cbe19afbfd5ac301'
         '424c0cd09fbf74bf4f5b2c26e50ebbfcf3d4a14b690afc34941aeac05655080a8d8a07f2522bd346e74fe7d208bc2d594d42b08bcb7b66a878430adbb1906684'
@@ -21,5 +21,5 @@ package_ttf-plangothic() {
     install -Dm755 -d "$pkgdir/usr/share/fonts/TTF/Plangothic"
     install -Dm644 "$pkgname-$pkgver-PlangothicP1-Regular.ttf" "$pkgdir/usr/share/fonts/TTF/Plangothic/PlangothicP1-Regular.ttf"
     install -Dm644 "$pkgname-$pkgver-PlangothicP2-Regular.ttf" "$pkgdir/usr/share/fonts/TTF/Plangothic/PlangothicP2-Regular.ttf"
-    install -Dm644 "$pkgname-$pkgver-LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE.txt"
+    install -Dm644 "$pkgname-$pkgver-LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
