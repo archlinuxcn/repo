@@ -1,7 +1,7 @@
 # Maintainer: Luca Weiss <luca (at) z3ntu (dot) xyz>
 
 pkgname=isoimagewriter
-pkgver=0.9
+pkgver=0.9.1
 pkgrel=1
 pkgdesc="Tool to write a .iso file to a USB disk"
 arch=("x86_64" "i686")
@@ -10,7 +10,7 @@ license=('GPL3')
 depends=('qgpgme' 'kiconthemes' 'kcrash' 'solid')
 makedepends=('cmake' 'extra-cmake-modules' 'python')
 source=("https://download.kde.org/unstable/isoimagewriter/${pkgver}/isoimagewriter-${pkgver}.tar.xz"{,.sig})
-sha512sums=('94a05da44b22ae932a79f6bb91c6806047f94e9b0fb4fe5530eb6094664877c47a0581f0858ff4458daca8924a7803a979e74d6538ec8da642403c4ede58688d'
+sha512sums=('f989c4bd164e2a34d5b2305eac67f34e2a47056993e30c9d9041679b49eb004b40cdae956d49a0b11a12feff280915f5bcd45e12c8a1f8975d95eb99f36c4b2d'
             'SKIP')
 validpgpkeys=('E0A3EB202F8E57528E13E72FD7574483BB57B18D') # Jonathan Esk-Riddell
 
