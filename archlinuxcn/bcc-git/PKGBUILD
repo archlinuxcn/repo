@@ -11,7 +11,7 @@ url="https://github.com/iovisor/bcc"
 license=('Apache')
 conflicts=('bcc')
 makedepends=('cmake' 'clang>=3.7.0' 'llvm>=3.7.0' 'flex' 'bison' 'python'
-             'git' 'libelf' 'zlib' 'ncurses' 'gcc-libs')
+             'python-setuptools' 'git' 'libelf' 'zlib' 'ncurses' 'gcc-libs')
 source=('bcc-git::git+https://github.com/iovisor/bcc'
         'libbpf::git+https://github.com/libbpf/libbpf'
         'bcc'
