@@ -54,7 +54,6 @@ _install_client() {
   # Ref. https://github.com/MisterTea/EternalTerminal/issues/316
   ln -sf ../../bin/ett "${pkgdir}/usr/local/bin/et"
   install -D -m 0755 et "${pkgdir}/usr/bin/ett"
-  install -D -m 0755 htm "${pkgdir}/usr/bin/htm"
 }
 
 _install_htm() {
