@@ -1,4 +1,4 @@
-From ae4a5109e57a494fb686a0a834aca11500e926d2 Mon Sep 17 00:00:00 2001
+From d5623a8bb42f0ebbadcad47708ab69b684ac6db7 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 18 Jun 2022 18:06:37 -0400
 Subject: [PATCH 5/7] Fix LLVM 13 support
@@ -8,10 +8,10 @@ Subject: [PATCH 5/7] Fix LLVM 13 support
  1 file changed, 4 insertions(+)
 
 diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
-index 7cdd4983d3..261e3045d8 100644
+index f028c41760..8d8e11c48c 100644
 --- a/src/aotcompile.cpp
 +++ b/src/aotcompile.cpp
-@@ -760,11 +760,15 @@ void addOptimizationPasses(legacy::PassManagerBase *PM, int opt_level,
+@@ -1708,11 +1708,15 @@ void addOptimizationPasses(legacy::PassManagerBase *PM, int opt_level,
      //       since AllocOpt does not handle PhiNodes.
      //       Enable this instruction hoisting because of this and Union benchmarks.
      auto basicSimplifyCFGOptions = SimplifyCFGOptions()
