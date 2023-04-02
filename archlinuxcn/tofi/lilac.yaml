@@ -1,0 +1,9 @@
+maintainers:
+  - github: colorsakura
+    email: iflygo@outlook.com
+
+pre_build_script: aur_pre_build(maintainers=['Philip Jones'])
+post_build: aur_post_build
+
+update_on:
+  - source: aur
