@@ -4,7 +4,7 @@
 # Contributor: ledti <antergist at gmail dot com>
 pkgname=obs-studio-git
 pkgver=29.1.0.beta1
-pkgrel=5
+pkgrel=6
 pkgdesc="Free and open source software for video recording and live streaming."
 arch=("i686" "x86_64")
 url="https://github.com/obsproject/obs-studio"
@@ -13,8 +13,8 @@ depends=("ffmpeg" "jansson" "libxinerama" "libxkbcommon-x11" "mbedtls"
          "qt6-svg" "curl" "jack" "gtk-update-icon-cache"
          "speexdsp" "pciutils" "libajantv2" "librist")
 makedepends=("asio" "cmake" "git" "libfdk-aac" "libxcomposite" "nlohmann-json" "websocketpp" "x264"
-             "vlc" "swig" "luajit" "python" "cef-minimal-obs-bin" "wayland"
-             "qt6-wayland" "pipewire" "xdg-desktop-portal")
+             "vlc" "swig" "luajit" "nlohmann-json" "python" "cef-minimal-obs-bin" "wayland"
+             "websocketpp" "qt6-wayland" "pipewire" "xdg-desktop-portal")
 optdepends=("libfdk-aac: FDK AAC codec support"
             "libxcomposite: XComposite capture support"
             "libva-intel-driver: hardware encoding"
@@ -31,14 +31,10 @@ conflicts=("obs-studio")
 source=("$pkgname::git+https://github.com/obsproject/obs-studio.git#branch=master"
         "git+https://github.com/Mixer/ftl-sdk.git"
         "git+https://github.com/obsproject/obs-browser.git"
-        "git+https://github.com/obsproject/obs-vst.git"
         "git+https://github.com/obsproject/obs-websocket.git"
-        "git+https://github.com/chriskohlhoff/asio.git"
-        "git+https://github.com/nlohmann/json.git"
         "git+https://github.com/nayuki/QR-Code-generator.git"
-        "git+https://github.com/zaphoyd/websocketpp.git"
         "fix_python_binary_loading.patch")
-md5sums=("SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
+md5sums=("SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
          "051b90f05e26bff99236b8fb1ad377d1")
 
 pkgver() {
@@ -53,15 +49,11 @@ prepare() {
   patch -Np1 < "$srcdir"/fix_python_binary_loading.patch
   git config submodule.plugins/obs-outputs/ftl-sdk.url $srcdir/ftl-sdk
   git config submodule.plugins/obs-browser.url $srcdir/obs-browser
-  git config submodule.plugins/obs-vst.url $srcdir/obs-vst
   git config submodule.plugins/obs-websocket.url $srcdir/obs-websocket
   git -c $gitconf submodule update
 
   cd plugins/obs-websocket
-  git config submodule.deps/asio.url $srcdir/asio
-  git config submodule.deps/json.url $srcdir/json
   git config submodule.deps/qr.url $srcdir/QR-Code-generator
-  git config submodule.deps/websocketpp.url $srcdir/websocketpp
   git -c $gitconf submodule update
 }
 
