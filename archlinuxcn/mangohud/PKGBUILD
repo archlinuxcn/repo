@@ -2,7 +2,7 @@
 # Co-Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
 pkgname=('mangohud' 'mangoapp' 'mangohud-common')
 pkgbase=mangohud
-pkgver=0.6.8+134+g80d394c
+pkgver=0.6.8+140+g1b3f8b2
 pkgrel=1
 _imgui_ver=1.81
 _vulkan_ver=1.2.158
@@ -12,7 +12,7 @@ url="https://github.com/flightlessmango/MangoHud"
 license=('MIT')
 makedepends=('appstream' 'cmocka' 'dbus' 'git' 'glew' 'glfw-x11' 'glslang' 'libglvnd'
              'libxnvctrl' 'meson' 'nlohmann-json' 'python-mako' 'spdlog')
-_commit=80d394c0cdb8d7c808aa2b7855e2a2f60e8d9a64  # master
+_commit=1b3f8b29bc434c2f52fcbf371c893cf0e99f8f5c  # master
 source=("git+https://github.com/flightlessmango/MangoHud.git#commit=${_commit}"
         'git+https://github.com/flightlessmango/minhook.git'
         "https://github.com/ocornut/imgui/archive/refs/tags/v${_imgui_ver}/imgui-${_imgui_ver}.tar.gz"
