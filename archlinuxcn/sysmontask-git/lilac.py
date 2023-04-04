@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build(name='sysmontask-git', maintainers=['yochananmarqos','camel-neeraj'])
+    aur_pre_build(name='sysmontask', maintainers=['yochananmarqos','camel-neeraj'])
 
     for line in edit_file('PKGBUILD'):
         if line.startswith('pkgname='):
