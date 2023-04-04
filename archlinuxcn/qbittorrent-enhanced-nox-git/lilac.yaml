@@ -1,0 +1,21 @@
+pre_build_script: |
+  aur_pre_build(maintainers=['c0re100'])
+  add_makedepends(['qconf', 'qt5-tools'])
+  add_depends(['gcc-libs', 'glibc', 'openssl', 'qt5-base', 'qt5-svg', 'zlib'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: github
+    github: c0re100/qBittorrent-Enhanced-Edition
+  - source: aur
+    aur: qbittorrent-enhanced-nox-git
+  - source: alpm
+    alpm: openssl
+    strip_release: true
+    provided: libcrypto.so
+  - source: manual
+    manual: 1.0.0
+
+maintainers:
+  - github: dctxmei
