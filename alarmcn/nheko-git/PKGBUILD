@@ -13,7 +13,8 @@ license=("GPL3")
 depends=(
   lmdb qt5-base qt5-svg qt5-multimedia qt5-declarative qt5-quickcontrols2 qtkeychain-qt5
   openssl libmatrix_client.so libolm.so libspdlog.so libfmt.so
-  cmark gst-plugins-base-libs gst-plugins-bad-libs libxcb xcb-util-wm hicolor-icon-theme
+  cmark gst-plugins-base-libs gst-plugins-bad-libs
+  gst-plugin-pipewire libxcb xcb-util-wm hicolor-icon-theme
 )
 
 makedepends=(git cmake qt5-tools nlohmann-json fontconfig lmdbxx pkg-config asciidoc mtxclient-git)
