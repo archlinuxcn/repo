@@ -1,0 +1,21 @@
+diff --unified --recursive --text SysMonTask-1.x.x-a/setup.py SysMonTask-1.x.x-b/setup.py
+--- SysMonTask-1.x.x-a/setup.py	2021-09-14 06:40:21.000000000 -0600
++++ SysMonTask-1.x.x-b/setup.py	2021-09-14 08:22:59.714235578 -0600
+@@ -8,7 +8,8 @@
+     data_files = [('/usr/share/sysmontask/glade_files', ['glade_files/disk.glade','glade_files/diskSidepane.glade','glade_files/gpu.glade',
+     'glade_files/gpuSidepane.glade','glade_files/net.glade','glade_files/netSidepane.glade','glade_files/sysmontask.glade','glade_files/filter_dialog.glade']),
+     ('/usr/share/sysmontask/icons',['icons/SysMonTask.png','icons/choose_color.png','icons/hide.png','icons/reset-color.png','icons/show.png']),
+-    ('/usr/share/doc/sysmontask',['AUTHORS', 'README.md','LICENSE']),
++    ('/usr/share/doc/sysmontask',['AUTHORS', 'README.md']),
++    ('/usr/share/licenses/sysmontask',['LICENSE']),
+     ('/usr/share/applications',['SysMonTask.desktop']),
+     ('/usr/share/glib-2.0/schemas',['com.github.camelneeraj.sysmontask.gschema.xml'])
+     ]
+@@ -43,6 +44,3 @@
+             'sysmontask.set_dark=sysmontask.theme_setter:set_theme_dark']
+     )
+ )
+-
+-os.system("sudo glib-compile-schemas /usr/share/glib-2.0/schemas")
+-print("gschema Compiled")
+\ No newline at end of file
