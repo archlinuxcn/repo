@@ -1,4 +1,4 @@
-From 950808724d20d8daa1e26d7a0ae322eda14cd1cc Mon Sep 17 00:00:00 2001
+From 2fbf42a76ebf3959fb95a6c0ea66a6f04b032070 Mon Sep 17 00:00:00 2001
 From: q234rty <q23456yuiop@gmail.com>
 Date: Tue, 21 Feb 2023 23:56:26 +0800
 Subject: [PATCH 2/2] Fix configure_notify event
@@ -8,10 +8,10 @@ Subject: [PATCH 2/2] Fix configure_notify event
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/xwayland/xwm.c b/xwayland/xwm.c
-index 8449977e..2cce8a26 100644
+index 4f03b07c..f5ceedb1 100644
 --- a/xwayland/xwm.c
 +++ b/xwayland/xwm.c
-@@ -1809,10 +1809,10 @@ void wlr_xwayland_surface_configure(struct wlr_xwayland_surface *xsurface,
+@@ -1806,10 +1806,10 @@ void wlr_xwayland_surface_configure(struct wlr_xwayland_surface *xsurface,
  			.response_type = XCB_CONFIGURE_NOTIFY,
  			.event = xsurface->window_id,
  			.window = xsurface->window_id,

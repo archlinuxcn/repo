@@ -5,7 +5,7 @@
 
 _pkgname="hyprland"
 pkgname="${_pkgname}-hidpi-xprop-git"
-pkgver=r2686.882be776
+pkgver=r2689.6519c030
 pkgrel=1
 pkgdesc="A dynamic tiling Wayland compositor based on wlroots that doesn't sacrifice on its looks."
 arch=(any)
@@ -61,8 +61,8 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            '304aaf12cbd7dc198bf7e418d729b297ea61186d27c035e4a63a337399fcec76'
-            'e7cf16e39db2bde4dbc9d7ec3b4753f7643b1bf198a3179e6802a9c603437fe9')
+            'e3e3dab89f6cadeb330e03921c0485b2802be6a1267747237e702cbe6d02d65f'
+            '97105bee80596fd4aa21dde35d23847604a5b0e36c04b1679f7a2b9213774561')
 options=(debug)
 
 pkgver() {
