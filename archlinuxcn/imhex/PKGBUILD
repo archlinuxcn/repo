@@ -3,14 +3,14 @@
 
 _pkgname=ImHex
 pkgname=${_pkgname,,}
-pkgver=1.27.1
+pkgver=1.28.0
 pkgrel=1
 pkgdesc='A Hex Editor for Reverse Engineers, Programmers and people that value their eye sight when working at 3 AM'
 url='https://imhex.werwolv.net'
 license=('GPL2')
 arch=('x86_64')
-depends=('glfw' 'mbedtls' 'libssh2' 'curl' 'dbus'
-         'freetype2' 'file' 'hicolor-icon-theme' 'xdg-desktop-portal'
+depends=('glfw' 'mbedtls' 'curl' 'dbus'
+         'freetype2' 'hicolor-icon-theme' 'xdg-desktop-portal'
          'fmt' 'yara')
 makedepends=('git' 'cmake' 'ninja' 'llvm' 'nlohmann-json' 'librsvg' 'python')
 optdepends=(
@@ -20,10 +20,12 @@ source=("$pkgname::git+https://github.com/WerWolv/ImHex.git#tag=v$pkgver"
         "nativefiledialog::git+https://github.com/btzy/nativefiledialog-extended.git"
         "xdgpp::git+https://git.sr.ht/~danyspin97/xdgpp"
         "libromfs::git+https://github.com/WerWolv/libromfs"
-        "capstone::git+https://github.com/capstone-engine/capstone#branch=next"
-        "pattern_language::git+https://github.com/WerWolv/PatternLanguage#tag=ImHex-v$pkgver"
+        "capstone::git+https://github.com/capstone-engine/capstone"
+        "pattern_language::git+https://github.com/WerWolv/PatternLanguage"
+        "libwolv::git+https://github.com/WerWolv/libwolv"
         )
 sha256sums=('SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -34,20 +36,25 @@ b2sums=('SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
+        'SKIP'
         'SKIP')
-options=(!lto)
 
 prepare() {
   cd "$srcdir/$pkgname"
 
   git submodule init
-  for name in nativefiledialog xdgpp libromfs capstone pattern_language; do
+  for name in nativefiledialog xdgpp libromfs capstone pattern_language libwolv; do
     git submodule set-url lib/external/$name "$srcdir/$name"
+    git -c protocol.file.allow=always submodule update lib/external/$name
   done
+  pushd lib/external/pattern_language
+    git submodule init
+    git submodule set-url external/libwolv "$srcdir"/libwolv
+    git -c protocol.file.allow=always submodule update external/libwolv
+  popd
   for name in fmt curl yara/yara; do
     git config --remove-section submodule.lib/external/$name
   done
-  git -c protocol.file.allow=always submodule update
 
   sed -E -e 's/-Werror //g' -i "$srcdir/$pkgname"/**/*.cmake "$srcdir/$pkgname"/**/CMakeLists.txt
 }
@@ -55,6 +62,7 @@ prepare() {
 build() {
   cd "$srcdir"
   cmake -B build -S "$pkgname" \
+    -G Ninja \
     -Wno-dev \
     -D CMAKE_BUILD_TYPE=None \
     -D CMAKE_INSTALL_PREFIX=/usr \
@@ -71,17 +79,12 @@ build() {
     -D LIBPL_ENABLE_CLI=OFF \
     -D IMHEX_VERSION="$pkgver"
 
-  # use Makefile to workaround
-  # ninja: warning: phony target 'imhex' names itself as an input; ignoring [-w phonycycle=warn]
-  # https://github.com/apiaryio/drafter/issues/774
-  #ninja -C build
   cmake --build build --parallel
 }
 
 package() {
   cd "$srcdir"
-  #DESTDIR="${pkgdir}" ninja -C build install
-  make -C build DESTDIR="$pkgdir" install
+  DESTDIR="${pkgdir}" cmake --install build
   
   install -Dm0644 "$pkgname/resources/icon.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/imhex.svg"
   for size in 32 48 64 128 256; do
