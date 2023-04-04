@@ -5,8 +5,9 @@ maintainers:
 repo_depends:
   - libdisplay-info-git
 
-pre_build_script: aur_pre_build(maintainers=['Vaxry'])
 post_build: aur_post_build
 
 update_on:
-  - source: aur
+  - source: github
+    github: hyprwm/Hyprland
+    use_latest_release: true
