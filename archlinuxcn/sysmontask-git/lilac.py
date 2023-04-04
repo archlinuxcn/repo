@@ -9,4 +9,4 @@ def pre_build():
         if line.startswith('pkgname='):
             print ('pkgname=sysmontask-git')
         else:
-            print (line)
+            print (line.replace('$pkgname','sysmontask'))
