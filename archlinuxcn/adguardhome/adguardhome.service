@@ -6,10 +6,9 @@ After=syslog.target network-online.target
 DynamicUser=true
 StateDirectory=adguardhome
 WorkingDirectory=/var/lib/adguardhome
-EnvironmentFile=/etc/default/adguardhome
 AmbientCapabilities=CAP_NET_BIND_SERVICE CAP_NET_RAW
 CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_NET_RAW
-ExecStart=/usr/bin/adguardhome -w /var/lib/adguardhome -h $HOST -p $PORT $ARGS
+ExecStart=/usr/bin/adguardhome -w /var/lib/adguardhome -l syslog
 
 [Install]
 WantedBy=multi-user.target

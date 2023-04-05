@@ -3,7 +3,7 @@
 
 pkgname=adguardhome
 _pkgname=AdGuardHome
-pkgver=0.107.26
+pkgver=0.107.27
 pkgrel=1
 epoch=1
 pkgdesc="Network-wide ads and trackers blocking DNS server"
@@ -12,14 +12,14 @@ url="https://github.com/AdguardTeam/AdGuardHome"
 license=('GPL')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/AdguardTeam/AdGuardHome/archive/v$pkgver.tar.gz"
         "$pkgname.service"
-        "$pkgname.defaults"
+        "$pkgname.install"
 )
 makedepends=(go nodejs-lts-gallium npm git)
 depends=(glibc)
-backup=('etc/default/adguardhome')
-b2sums=('e69c4547c92e697b1fd3bc2c949607290a59756102dbde692012de4ae563356b94f669a893529e31950d8b46a2bd6e298e7e34114c6e925bd62b42917932a84b'
-        'd55d1667916e291b201dde5bd0a5d2d6dd16c654ecec4ea47c4a3a54b898e7008ba0538c9d5a4c7572cc304cc625b39accd69692766c1618890efff88e96e5a0'
-        'ec3a3cd8debae4dcb4a723ef2ba31960aa1f897e2f8c857fcf9861bc7959072b22fed3091c0d07084c280be0755d03bf6ca4fef5f2d08ae20397378e13cf9c9b')
+install="$pkgname.install"
+b2sums=('c97771af6ea419ac33184efb086f1406a50b95c63dfa338b1545c6a070854e3774b2293a8a1e33c5df826c7a4c4752f4a340e2f9759cca32c54487e0a83b8130'
+        'd74c0d6c8118a876fddfa045980ab002a6177efda49c3046cee22c6635c5f5caa1c520d8d4c07687dbaf52f7639da7172c25f027b8a499dc76c125940d431a98'
+        'b22ae447e0288e64332bcb41cc73f61e9adb58d402ef3ccfb896aa1ecbec4d4ff66bfc1464ca9d0bc99f1a5b4d32bdc5765f42a1b72b0fb3786ecefcf94a7265')
 
 prepare() {
   cd "$_pkgname-$pkgver"
@@ -44,5 +44,6 @@ build() {
 package() {
   install -Dm755 "$_pkgname-$pkgver/$pkgname" "$pkgdir/usr/bin/$pkgname"
   install -Dm644 "$pkgname.service" "$pkgdir/usr/lib/systemd/system/$pkgname.service"
-  install -Dm644 "$srcdir"/$pkgname.defaults "$pkgdir/etc/default/$pkgname"
+  mkdir "$pkgdir/etc"
+  ln -s "/var/lib/$pkgname/$_pkgname.yaml" "$pkgdir/etc/$pkgname.yaml"
 }

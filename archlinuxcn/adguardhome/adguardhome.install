@@ -1,0 +1,10 @@
+#!/bin/sh
+
+post_upgrade() {
+  # show config hint for upgrading from <= 1:0.107.26-1
+  if [ $(vercmp "${2}" "1:0.107.27-1") -eq -1 ]; then
+    echo ":: AdGuardHome is now configured in /etc/adguardhome.yaml"
+    echo "   The old configuration file /etc/default/adguardhome does not work anymore."
+    echo "   Please check your setup if you used a different config file location or method."
+  fi
+}
