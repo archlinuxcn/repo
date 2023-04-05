@@ -2,7 +2,7 @@
 # Contributor: Adrian Perez de Castro <aperez@igalia.com>
 # Contributor: Antonin Décimo <antonin dot decimo at gmail dot com>
 pkgname=wlroots-lily-git
-pkgver=0.17.0.20230117.072114
+pkgver=0.17.0.20230405.053640
 pkgrel=1
 license=(MIT)
 pkgdesc='Modular Wayland compositor library (git version, with patches)'
@@ -19,6 +19,7 @@ depends=(
 	xcb-util-errors
 	xcb-util-renderutil
 	xcb-util-wm
+        libdisplay-info
 
         'libpixman-1.so'
         'libseat.so'
