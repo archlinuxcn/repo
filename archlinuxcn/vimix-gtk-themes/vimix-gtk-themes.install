@@ -1,7 +1,10 @@
 post_install() {
-  echo "Link installed Vimix gtk-4.0 theme to config folder (replace vimix-dark-beryl with chosen theme variant):"
   echo ""
-  echo "mkdir -p ~/.config/gtk-4.0"
+  echo "To force Libadwaita appliations to use the gtk-4.0 theme,"
+  echo "symlink the gtk-4.0 theme to config folder"
+  echo "(replace vimix-dark-beryl with chosen theme variant):"
+  echo ""
+  echo "mkdir -p ~/.config/gtk-4.0/"
   echo "ln -sf /usr/share/themes/vimix-dark-beryl/gtk-4.0/{assets,gtk.css,gtk-dark.css} ~/.config/gtk-4.0/"
   echo ""
 }
