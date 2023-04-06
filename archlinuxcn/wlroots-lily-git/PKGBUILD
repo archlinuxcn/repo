@@ -3,7 +3,7 @@
 # Contributor: Antonin Décimo <antonin dot decimo at gmail dot com>
 pkgname=wlroots-lily-git
 pkgver=0.17.0.20230405.053640
-pkgrel=2
+pkgrel=5
 license=(MIT)
 pkgdesc='Modular Wayland compositor library (git version, with patches)'
 url=https://gitlab.freedesktop.org/wlroots/wlroots
@@ -20,6 +20,7 @@ depends=(
 	xcb-util-renderutil
 	xcb-util-wm
         libdisplay-info
+        libliftoff
 
         'libpixman-1.so'
         'libseat.so'
@@ -29,6 +30,7 @@ depends=(
         'libwayland-server.so'
         'libxkbcommon.so'
         'libdisplay-info.so'
+        'libliftoff.so'
 
 	xorg-xwayland)
 optdepends=('xorg-xwayland-lily: HiDPI support, see https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/733')
