@@ -18,21 +18,25 @@ depends=(
   python-six
 )
 makedepends=(
-  python-pip
+  python-build
+  python-installer
   python-setuptools
+  python-setuptools-scm
+  python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/wookayin/${_pkgname}/archive/v${pkgver}.tar.gz")
 sha256sums=('c3eceff760474b0e3feb74c4e1d034167283d62d6f1e0b3813f51a1511be7bde')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  SETUPTOOLS_SCM_PRETEND_VERSION=${pkgver} \
+  python -m build --wheel --no-isolation
 }
 
 
 package(){
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 
