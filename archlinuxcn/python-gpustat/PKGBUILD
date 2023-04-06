@@ -3,9 +3,9 @@
 
 pkgname=python-gpustat
 _pkgname=gpustat
-pkgver=1.0
+pkgver=1.1
 epoch=1
-pkgrel=2
+pkgrel=1
 pkgdesc='A simple command-line utility for querying and monitoring GPU status'
 arch=('any')
 url='https://github.com/wookayin/gpustat'
@@ -25,7 +25,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/wookayin/${_pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('c3eceff760474b0e3feb74c4e1d034167283d62d6f1e0b3813f51a1511be7bde')
+sha256sums=('848d76f1c1fa15c84d2f7e59c6fc4cd7a38f3a52e99390a7e966e8f2a020ecac')
 
 build() {
   cd "${_pkgname}-${pkgver}"
