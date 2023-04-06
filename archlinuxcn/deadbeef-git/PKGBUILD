@@ -45,8 +45,9 @@ optdepends=('gtk2: for the GTK2 interface'
             'mpg123: for MP1/MP2/MP3 playback'
             'pipewire: for pipewire support')
 options=('!libtool')
-conflicts=('deadbeef')
-provides=('deadbeef')
+conflicts=('deadbeef' 'deadbeef-pipewire-plugin-git' 'deadbeef-pipewire-plugin')
+replaces=('deadbeef-pipewire-plugin-git')
+provides=('deadbeef' 'deadbeef-pipewire-plugin-git')
 source=('git+https://github.com/DeaDBeeF-Player/deadbeef.git')
 md5sums=('SKIP')
 
