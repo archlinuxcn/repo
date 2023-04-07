@@ -1,14 +1,14 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 # Contributor: Solomon Choina <shlomochoina@gmail.com0
 pkgname=wayfire-lily-git
-pkgver=0.8.0.20230405.052841.g5f860044
+pkgver=0.8.0.20230407.031510.g2f0a4c8f
 pkgrel=1
 pkgdesc="3D wayland compositor (lilydjwg's version)"
 arch=('x86_64')
 url="https://github.com/lilydjwg/wayfire"
 license=('MIT')
 depends=('wlroots-lily-git' 'cairo' 'pango' 'glm' 'libjpeg' 'wf-config-git' 'seatd')
-makedepends=('git' 'meson' 'ninja' 'wayland-protocols' 'doctest' 'cmake')
+makedepends=('git' 'meson' 'ninja' 'wayland-protocols' 'doctest')
 optdepends=('wf-shell-git: GTK3-based panel for the Wayfire compositor'
             'wf-sound-control-git: Small utility for the Wayfire compositor to control sound volume')
 provides=(wayfire wayfire-git)
