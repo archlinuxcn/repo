@@ -1,0 +1,16 @@
+repo_depends:
+  - nvm
+
+maintainers:
+  - github: zhullyb
+
+pre_build_script: aur_pre_build(maintainers=['zhullyb', 'sukanka', 'Clansty'])
+
+post_build: update_aur_repo
+
+update_on:
+  - source: github
+    github: balena-io/etcher
+    use_latest_tag: true
+  - source: aur
+    aur: balena-etcher
