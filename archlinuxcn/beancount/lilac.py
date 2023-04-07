@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+from lilac2.api import *
+
 def pre_build():
   aur_pre_build()
   for l in edit_file('PKGBUILD'):
