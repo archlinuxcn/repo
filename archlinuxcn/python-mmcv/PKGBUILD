@@ -12,6 +12,7 @@ url='https://github.com/open-mmlab/mmcv'
 license=('Apache')
 depends=(
   python-addict
+  python-mmengine
   python-numpy
   python-opencv
   python-pillow
@@ -23,11 +24,11 @@ makedepends=(
   cython
   python-build
   python-installer
-  python-pip
   python-pytorch-cuda
   python-setuptools
   python-sympy
   python-wheel
+  numactl
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmcv/archive/v${pkgver}.tar.gz"
 )
