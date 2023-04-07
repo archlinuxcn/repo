@@ -1,7 +1,7 @@
 # Maintainer: Piotr Miller <nwg.piotr@gmail.com>
 # Project: nwg-shell for sway, https://github.com/nwg-piotr/nwg-shell
 pkgname=('nwg-bar')
-pkgver=0.1.1
+pkgver=0.1.2
 pkgrel=1
 pkgdesc="GTK3-based button bar for sway and other wlroots-based compositors"
 arch=('x86_64')
@@ -13,7 +13,7 @@ makedepends=('go')
 depends=('gtk3' 'gtk-layer-shell')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/nwg-piotr/nwg-bar/archive/v"$pkgver".tar.gz")
 
-md5sums=('ddcc1eaefbc4c827456f12a377fb97f6')
+md5sums=('7a9d3ebd9bb48459a03212a7fab1b01d')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -24,7 +24,7 @@ build() {
   export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw -ldflags=-linkmode=external"
   export GOPATH="${srcdir}"/go
   export PATH=$PATH:$GOPATH/bin
-  go build -o bin/"$pkgname" *.go
+  go build -v -o bin/"$pkgname" *.go
 }
 
 package() {
