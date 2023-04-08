@@ -3,8 +3,8 @@
 # Contributor: Molyuu <zhangjtroger at gmail dot com>
 
 pkgname=nekoray-bin
-pkgver=2.21
-_releasedate=2023-04-03
+pkgver=2.22
+_releasedate=2023-04-08
 pkgrel=1
 pkgdesc="Qt based cross-platform GUI proxy configuration manager (backend: v2ray / sing-box)"
 arch=('x86_64')
@@ -19,8 +19,6 @@ optdepends=(
     'v2ray-geoip: geoip data for NekoRay'
 )
 
-install=notice.install
-
 source=(
 	"${pkgname}-${pkgver}.zip::${url}/releases/download/${pkgver}/nekoray-${pkgver}-${_releasedate}-linux64.zip"
 	"nekoray.desktop"
@@ -28,7 +26,7 @@ source=(
 )
 
 sha256sums=(
-	'aabd2336ed389db1c63e0f9bf9d3a7e11a0aaed7950540f8a9608661a99b43fe'
+	'0c951f66a8d319dcbdcf0a6c640dfdbe3bad876f6406352cf8ba06f5c664e0cd'
 	'86f1332c81be2c346a4cdc80a3550f6484ef89e4ee8d4f23afada0c2d0a184e2'
 	'5a7cbb61608137924fb1ba3ecb057adb7973f5775f64758736b447041fa15377'
 )
