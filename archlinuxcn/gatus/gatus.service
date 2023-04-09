@@ -8,12 +8,13 @@ Type=simple
 User=gatus
 Group=gatus
 ExecStart=/usr/bin/gatus
-Environment=GATUS_CONFIG_FILE=/etc/gatus.yaml
+Environment=GATUS_CONFIG_PATH=/etc/gatus.yaml
 Restart=on-failure
 NoNewPrivileges=yes
 PrivateTmp=yes
 PrivateDevices=yes
 DevicePolicy=closed
+ReadWritePaths=/var/lib/gatus
 ProtectSystem=strict
 ProtectHome=read-only
 ProtectControlGroups=yes
