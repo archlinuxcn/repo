@@ -2,8 +2,8 @@
 
 _pkgname=schedule
 pkgname=python-schedule
-pkgver=1.1.0
-pkgrel=3
+pkgver=1.2.0
+pkgrel=1
 pkgdesc='Python job scheduling for humans'
 arch=('any')
 url='https://github.com/dbader/schedule'
@@ -15,7 +15,7 @@ makedepends=(
   python-setuptools
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/dbader/schedule/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('3fe06e334ed532f013aeb806b7beacd9418c4dbbcb80d4b27090c08178f1874694ecfced24eeddc8450e99a80831d68b34a4a3b2638a870f30f53f570650795c')
+sha512sums=('a2a451a8e677ca5d9bfb556587e31c1b784860ca952e54f0a7f91ca090d09338a7cc57ef1b940e0a46d04db257330024396b71f72ad3ed5e47c594a204198278')
 
 build() {
   cd "${_pkgname}-${pkgver}"
