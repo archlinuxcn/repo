@@ -56,40 +56,34 @@ depends=(
   uvicorn
 )
 makedepends=(
-  python-pip
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 optdepends=(
   gdown
-  python-lmdb
   python-mlflow
   python-pandas
   python-parameterized
-  python-pillow
-  python-psutil
   python-transformers
-  tensorboard
 )
-install="${pkgname}.install"
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Project-MONAI/MONAILabel/archive/refs/tags/${pkgver}.tar.gz")
 sha512sums=('c2a4d0795aa9dadff59d483029cd6e27d9bafead81dc250b5a49a3149ee1e7c0c9c6c88e4122dbded7062f36c42c761303afc79e843febd59d2010a679cd38b0')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  BUILD_OHIF=OFF \
-  python setup.py build
+  BUILD_OHIF=OFF python -m build --wheel --no-isolation --skip-dependency-check
 }
 
 package() {
-  cd "${_pkgname}-${pkgver}"
-  BUILD_OHIF=OFF \
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
-  rm -rfv "${pkgdir}/usr/logconfig"
-  rm -vf "${pkgdir}/usr/bin/monailabel.bat"
-  install -dm755 "${pkgdir}/usr/share/docs"
-  mv "${pkgdir}/usr/${pkgname}" "${pkgdir}/usr/share/docs"
-  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
   local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  cd "${_pkgname}-${pkgver}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  rm -rfv "${pkgdir}/usr/logconfig"
   rm -rfv ${pkgdir}${site_packages}/tests
+  rm -rfv ${pkgdir}/usr/${pkgname}/plugins
+  rm -vf "${pkgdir}/usr/bin/monailabel.bat"
 }
 # vim:set ts=2 sw=2 et:
