@@ -1,18 +1,62 @@
-From 0ecaa4e36098f8d7bd1694b31373ad4236771137 Mon Sep 17 00:00:00 2001
-From: ZeekoZhu <vaezt@outlook.com>
-Date: Thu, 26 Jan 2023 21:23:09 +0800
-Subject: [PATCH] fix: fix build on archlinux
-
+Subject: [PATCH] fix build error
 ---
- src/rime/gear/script_translator.cc | 1 +
- src/rime/gear/table_translator.cc  | 1 +
- 3 files changed, 3 insertions(+), 1 deletion(-)
-
+Index: src/rime/gear/editor.cc
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/rime/gear/editor.cc b/src/rime/gear/editor.cc
+--- a/src/rime/gear/editor.cc	(revision 48d4b00f4694b2303d707bcbe4c2c2874dba58a1)
++++ b/src/rime/gear/editor.cc	(date 1681090505535)
+@@ -125,7 +125,7 @@
+ 	return true;
+ }
+ 
+-void Editor::CommitRawInput2(Context* ctx) {
++bool Editor::CommitRawInput2(Context* ctx) {
+ 	string schema = engine_->schema()->schema_id();
+ 	if (boost::regex_match(schema, boost::regex("^sbpy|sbjm|sbsp|sbf[mx]$"))) {
+ 		ctx->ClearNonConfirmedComposition();
+@@ -135,13 +135,13 @@
+ 			ctx->set_input(s);
+ 		}
+ 		engine_->sink()(s);
+-	} else 
++	} else
+ 		engine_->sink()(ctx->GetScriptText());
+ 	ctx->Clear();
+ 	return true;
+ }
+ 
+-void Editor::CommitRawInput3(Context* ctx) {
++bool Editor::CommitRawInput3(Context* ctx) {
+ 	string schema = engine_->schema()->schema_id();
+ 	if (boost::regex_match(schema, boost::regex("^sbpy|sbjm|sbsp|sbf[mx]$"))) {
+ 		ctx->ClearNonConfirmedComposition();
+@@ -215,11 +215,11 @@
+ 	if (boost::regex_match(schema, boost::regex("^sbjm|sbsp|sbf[mx]$"))) {
+ 		size_t len = ctx->input().length();
+ 		if (len >= 1 && string("aeuio").find(ctx->input()[comfirmed_pos + 0]) != string::npos)
+-			return true; 
+-		if (len <= 2) 
++			return true;
++		if (len <= 2)
+ 			return true;
+ 		if (len >= 2 && string("aeuio").find(ctx->input()[comfirmed_pos + 1]) != string::npos
+-			&& boost::regex_match(schema, boost::regex("^sbjm$"))) 
++			&& boost::regex_match(schema, boost::regex("^sbjm$")))
+ 			return true;
+ 		if (len >= 3 && string("aeuio").find(ctx->input()[comfirmed_pos + 2]) != string::npos
+ 			&& boost::regex_match(schema, boost::regex("^sbsp|sbf[mx]$")))
+Index: src/rime/gear/script_translator.cc
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
 diff --git a/src/rime/gear/script_translator.cc b/src/rime/gear/script_translator.cc
-index f243335e..31c666a7 100644
---- a/src/rime/gear/script_translator.cc
-+++ b/src/rime/gear/script_translator.cc
-@@ -23,6 +23,7 @@
+--- a/src/rime/gear/script_translator.cc	(revision 48d4b00f4694b2303d707bcbe4c2c2874dba58a1)
++++ b/src/rime/gear/script_translator.cc	(date 1681090214992)
+@@ -25,6 +25,7 @@
  #include <rime/gear/poet.h>
  #include <rime/gear/script_translator.h>
  #include <rime/gear/translator_commons.h>
@@ -20,11 +64,15 @@ index f243335e..31c666a7 100644
  
  
  //static const char* quote_left = "\xef\xbc\x88";
+Index: src/rime/gear/table_translator.cc
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
 diff --git a/src/rime/gear/table_translator.cc b/src/rime/gear/table_translator.cc
-index 6d6d529f..b8fbcd8e 100644
---- a/src/rime/gear/table_translator.cc
-+++ b/src/rime/gear/table_translator.cc
-@@ -22,6 +22,7 @@
+--- a/src/rime/gear/table_translator.cc	(revision 48d4b00f4694b2303d707bcbe4c2c2874dba58a1)
++++ b/src/rime/gear/table_translator.cc	(date 1681090214996)
+@@ -23,6 +23,7 @@
  #include <rime/gear/table_translator.h>
  #include <rime/gear/translator_commons.h>
  #include <rime/gear/unity_table_encoder.h>
@@ -32,6 +80,3 @@ index 6d6d529f..b8fbcd8e 100644
  
  namespace rime {
    
--- 
-2.39.1
-
