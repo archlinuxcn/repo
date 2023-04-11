@@ -3,8 +3,8 @@
 # Contributor: Simon Perry <aur [at] sanxion [dot] net>
 
 pkgname=python-diskcache
-pkgver=5.4.0
-pkgrel=2
+pkgver=5.5.1
+pkgrel=1
 pkgdesc='Python disk and file backed cache library'
 arch=('any')
 license=('Apache')
@@ -16,7 +16,7 @@ makedepends=(
   python-setuptools
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/grantjenks/python-diskcache/archive/v${pkgver}.tar.gz")
-sha256sums=('5cdfcb16c9773584e8dca21c23c622e3c787721b1b09635a25e4f00c28073b2a')
+sha256sums=('f5acad22147af6908f0063bfc589746fbf0e41e4c9e2ba3233906df0de347d9f')
 
 build() {
   cd "${pkgname}-${pkgver}"
