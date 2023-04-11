@@ -3,14 +3,14 @@
 _pkgname="hyprpaper"
 pkgname="${_pkgname}-git"
 pkgver=r94.4bcedde
-pkgrel=1
+pkgrel=2
 pkgdesc="A blazing fast wayland wallpaper utility with IPC controls."
 arch=(any)
 url="https://github.com/hyprwm/hyprpaper"
 license=('BSD')
 depends=(
 	wayland
-	livglvnd
+	libglvnd
 	pango
 	libjpeg
 	libpng
