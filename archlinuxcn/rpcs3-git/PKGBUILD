@@ -2,7 +2,7 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.27.14860.d35fecbeea
+pkgver=0.0.27.14863.7bce99d77b
 pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator'
 arch=(x86_64)
@@ -37,6 +37,7 @@ depends=(
   xxhash
   libusb
   faudio
+  llvm-libs
 )
 makedepends=(
   cmake
@@ -46,6 +47,7 @@ makedepends=(
   vulkan-validation-layers
   flatbuffers
   glslang
+  llvm
 )
 provides=(rpcs3)
 conflicts=(rpcs3)
@@ -75,7 +77,7 @@ prepare() {
   git config submodule.3rdparty/glslang.url ../glslang
   
   SUBMODULES=($(git config --file .gitmodules --get-regexp path | \
-    awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/glslang/ && !/pugixml/ && !/xxHash/ && !/libusb/ && !/SDL/ && !/flatbuffers/ && !/FAudio/'))
+    awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/glslang/ && !/pugixml/ && !/xxHash/ && !/libusb/ && !/SDL/ && !/flatbuffers/ && !/FAudio/ && !/llvm/'))
 
   # We need to convert from a relative folder path to a https://github.com path
   for ((i=0;i<${#SUBMODULES[@]};i+=2))
@@ -94,6 +96,7 @@ prepare() {
   done
 
   git submodule--helper update 3rdparty/glslang/glslang
+  sed -i 's/16.0/15.0/g' 3rdparty/llvm.cmake
 }
 
 build() {
@@ -115,7 +118,7 @@ build() {
     -DUSE_SYSTEM_CURL=ON \
     -DUSE_SYSTEM_XXHASH=ON \
     -DUSE_SYSTEM_LIBUSB=ON \
-    -DBUILD_LLVM=ON \
+    -DBUILD_LLVM=OFF \
     -DUSE_SYSTEM_FAUDIO=ON \
     -DUSE_SYSTEM_SDL=ON \
     -DDISABLE_LTO=ON
