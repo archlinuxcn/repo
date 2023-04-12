@@ -14,3 +14,8 @@ update_on:
   - source: alpm
     alpm: ffmpeg
     provided: libavcodec.so
+  - source: alpm
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+    alpm: qt6-base
+    repo: extra
