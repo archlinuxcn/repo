@@ -5,9 +5,9 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=102.9.0
+pkgver=102.10.0
 pkgrel=1
-_commit=f55ede39713d1533734f37e39927cbb78abe1604
+_commit=15c6c2229a053cdcc064eda89cee07f18efac35d
 pkgdesc="GNU version of the Firefox browser."
 arch=(x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
@@ -31,7 +31,7 @@ source=(https://git.savannah.gnu.org/cgit/gnuzilla.git/snapshot/gnuzilla-${_comm
         #'arc4random.patch::https://hg.mozilla.org/mozilla-central/raw-rev/970ebbe54477'
         #'arc4random_buf.patch::https://hg.mozilla.org/mozilla-central/raw-rev/a61813bd9f0a')
 
-sha256sums=('863a6a187fdd85c54904b9d8c4ae4d3f96bcc6b0207f5f8f88f6f4610b350637'
+sha256sums=('49e1d42095d0e3f95cbd8e7356035828bed71222f26846631bfacf4be34f01e3'
             'e00dbf01803cdd36fd9e1c0c018c19bb6f97e43016ea87062e6134bdc172bc7d'
             '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208')
 
