@@ -1,0 +1,9 @@
+post_install() {
+  echo "QuPath extension jar file is available in: /usr/share/java/qupath-extention-monailabel"
+  echo "You could copy it to QuPath's extension directory"
+}
+
+post_upgrade() {
+  post_install
+}
+
