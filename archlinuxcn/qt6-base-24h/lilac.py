@@ -47,7 +47,7 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       checks = checks + '6'
     elif line.startswith('sha256sums=('):
       line = line.replace('=(', '''=(
-      '901a764c896559bb472d5ecee4af9ee006b235f73e56959de9ded477a10e5fc6'
+      '6ab571d50f0c17d31ed33bb2ebf6eadf41c18cbf2dd8cb5260b939915a139a28'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
       ''')
