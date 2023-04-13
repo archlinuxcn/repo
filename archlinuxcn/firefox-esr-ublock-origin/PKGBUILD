@@ -3,7 +3,7 @@
 
 pkgname=firefox-esr-ublock-origin
 _pkgname=uBlock
-pkgver=1.48.4
+pkgver=1.48.8
 pkgrel=1
 pkgdesc='Efficient blocker add-on for various browsers. Fast, potent, and lean'
 arch=('any')
