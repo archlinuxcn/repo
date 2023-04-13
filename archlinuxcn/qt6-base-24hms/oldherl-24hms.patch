@@ -11,3 +11,15 @@ diff -Naur qtbase-everywhere-src-5.15.0/util/locale_database/qlocalexml.py qtbas
  
          for k in cls.__astxt + tuple(cls.propsMonthDay('days')):
              data[k] = lookup(k)
+diff -Naur qtbase-everywhere-src-6.5.0/util/locale_database/localetools.py qtbase-everywhere-src-6.5.0_oldherl/util/locale_database/localetools.py
+--- qtbase-everywhere-src-6.5.0/util/locale_database/localetools.py	2023-04-13 11:25:19.548970629 +0800
++++ qtbase-everywhere-src-6.5.0_oldherl/util/locale_database/localetools.py	2023-04-13 11:25:04.568831028 +0800
+@@ -17,7 +17,7 @@
+ from tempfile import NamedTemporaryFile
+ 
+ qtbase_root = Path(__file__).parents[2]
+-assert qtbase_root.name == 'qtbase'
++assert qtbase_root.name.startswith('qtbase')
+ 
+ class Error (Exception):
+     def __init__(self, msg, *args):
