@@ -2,7 +2,7 @@
 # Co-Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
 pkgname=('mangohud' 'mangoapp' 'mangohud-common')
 pkgbase=mangohud
-pkgver=0.6.8+140+g1b3f8b2
+pkgver=0.6.9
 pkgrel=1
 _imgui_ver=1.81
 _vulkan_ver=1.2.158
@@ -12,7 +12,7 @@ url="https://github.com/flightlessmango/MangoHud"
 license=('MIT')
 makedepends=('appstream' 'cmocka' 'dbus' 'git' 'glew' 'glfw-x11' 'glslang' 'libglvnd'
              'libxnvctrl' 'meson' 'nlohmann-json' 'python-mako' 'spdlog')
-_commit=1b3f8b29bc434c2f52fcbf371c893cf0e99f8f5c  # master
+_commit=5fa7087f78e39e92ee4306fdf48fd710960c53dc  # tags/v0.6.9^0
 source=("git+https://github.com/flightlessmango/MangoHud.git#commit=${_commit}"
         'git+https://github.com/flightlessmango/minhook.git'
         "https://github.com/ocornut/imgui/archive/refs/tags/v${_imgui_ver}/imgui-${_imgui_ver}.tar.gz"
@@ -34,18 +34,17 @@ pkgver() {
 prepare() {
   cd "$srcdir/MangoHud"
   git submodule init modules/minhook
-  git config submodule.minhook.url "$srcdir/minhook"
+  git config submodule.subprojects/minhook.url "$srcdir/minhook"
   git -c protocol.file.allow=always submodule update
 
   ln -sfv \
     "$srcdir/imgui-${_imgui_ver}" \
     "$srcdir/Vulkan-Headers-${_vulkan_ver}" \
-      subprojects
+      subprojects/
 
   # Use system cmocka instead of subproject
   sed -i "s/  cmocka = subproject('cmocka')//g" meson.build
   sed -i "s/cmocka_dep = cmocka.get_variable('cmocka_dep')/cmocka_dep = dependency('cmocka')/g" meson.build
-
 }
 
 build() {
@@ -66,7 +65,7 @@ check() {
 }
 
 package_mangohud() {
-  depends=('mangohud-common' 'dbus' 'fmt' 'gcc-libs' 'libx11' 'spdlog' 'vulkan-icd-loader')
+  depends=('mangohud-common' 'dbus' 'fmt' 'gcc-libs' 'spdlog' 'vulkan-icd-loader')
   optdepends=('libxnvctrl: NVIDIA GPU stats by XNVCtrl'
               'mangoapp')
   provides=('libMangoHud.so' 'libMangoHud_dlsym.so')
@@ -77,7 +76,7 @@ package_mangohud() {
 
 package_mangoapp() {
   pkgdesc="A transparent background OpenGL application with a built-in MangoHud designed to be run inside a gamescope instance"
-  depends=('glew' 'glfw-x11' 'mangohud')
+  depends=('glfw-x11' 'libglvnd' 'libx11' 'mangohud')
   optdepends=('gamescope')
   provides=('libMangoApp.so')
 
