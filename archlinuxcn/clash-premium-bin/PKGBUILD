@@ -1,7 +1,7 @@
 # Maintainer: yangon99 <yangon99_all@outlook.com>
 
 pkgname=clash-premium-bin
-pkgver=2023.03.18
+pkgver=2023.04.13
 pkgrel=1
 pkgdesc="Close-sourced pre-built Clash binary with TUN support"
 provides=("clash")
@@ -15,12 +15,12 @@ source=("clash@.service"
         "clash_user.service")
 sha512sums=('3d4b599a972caab7238f405d57e8ec74f9d0f51bc2b51f6656305f3a46aecd4d1d5c10a16415c3c158df1e0248f0aad327ddefc168d480c2674cec29602a31a0'
             'c08d9f25b8c7656b72da975c2ab580adfc8834a61c2dfec8296f19b6964460d12cad2100becadb7478cbccffa7c4805dbed80847c2a30075fc9fb31dee60ebe2')
-sha512sums_i686=('f9250e3c8d14e38e407b40ae4320508abd8d1e3181e606596c7e611e85d311cc8226065b57ac37e426a19a8f1be832129b4983ff63b39892d7e02d3d6d1d8bd3')
-sha512sums_x86_64=('fc19828984c703ec2f4c1cba2b5a99d53c1c21f44dab5f933c64b8fba2c51b2add8d499d3a4794b3653fc8ef65f0d946e06be8a8daa54813748a5e587b6d5586')
-sha512sums_arm=('21ae7df93972b80ef02832252dd8d8b0f40709ee4a958f9d795a0a2081a380804aa1964e94515b80ded6c815820913191615fc12e532c4138fba1ab0fb13c914')
-sha512sums_armv6h=('c3550ea0bf9794e0027f914b0125e911277614501c95295fae87781df10d0ad12f3031281be127757b98642cdcbfdb6039bcb478999dc3c5e70c8846f500b6fe')
-sha512sums_armv7h=('80cea75e7725c9024036916ddb900dd1e1bac4923522d68034641321c0d363673b8984e300b9b692eee20e12baba7b934de79fe35822eab0cbd2855652ef9f3a')
-sha512sums_aarch64=('4a453e0244dac6fc18e698e1d2c9bac2f7fe88afe51ac3b69669669190c5cc298373365c28f909758b03840d9367f3db38f157b4134761d13afe9d7f9e906636')
+sha512sums_i686=('a9315f112cf34ae44ad14dc46a92a65cafdb81c34da5bf3c56161f994b5d42817b93692ddc1742bb1bcdf23b4330815edfc77945c261d0d96ca2646103717d23')
+sha512sums_x86_64=('b178b5dde9f14ae987ce263a054e8b2e85a005422d0a881b6b7fd529dfa3adbb7335e9c9b1bc532dd01e0f88f7c5970b76aefab50d58566ecfa2ad9d1f3da26b')
+sha512sums_arm=('d79edd592946bb960f84b3d581817cc435bd47c5dc384135d6dd789a1ba1941735703f16797693be98696a8b51c79130342709886e73d561db23d0d25e33e85f')
+sha512sums_armv6h=('40dbfdb864e30fc63d06b63edae0a95bc5fbec3a48b80d834c2bfe3706a31f056a8f90dca242c15cc834a0719781f0e396bd90b126b358e2768a45aa9e17bceb')
+sha512sums_armv7h=('e5c5488c0248f9f753833564e42c8847280a9b240cc269151abaf2876190f8eab814a0bfcea199051715cf1fb06d299d478640aa0e18bc40d1282e271eb67459')
+sha512sums_aarch64=('8227b858abf3cfdd951dae8b1014bd88318d13425fe90b1ee516117f805232258357162f357276aec038dd73a9d1e6a6aa3bb30cbe50de06fea46afa61696215')
 source_i686=("${pkgname}-i686-${pkgver}.gz::https://github.com/Dreamacro/clash/releases/download/premium/clash-linux-386-${pkgver}.gz")
 source_x86_64=("${pkgname}-x86_64-${pkgver}.gz::https://github.com/Dreamacro/clash/releases/download/premium/clash-linux-amd64-${pkgver}.gz")
 source_arm=("${pkgname}-arm-${pkgver}.gz::https://github.com/Dreamacro/clash/releases/download/premium/clash-linux-armv5-${pkgver}.gz")
