@@ -12,7 +12,11 @@ update_on:
     use_latest_release: true
     prefix: v
   - source: manual
-    manual: 5
+    manual: 6
   - source: archfiles
     pkgpart: community/x86_64/gpsd
     filename: 'libgps.so.\d+'
+  - source: alpm
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+    alpm: qt6-base
