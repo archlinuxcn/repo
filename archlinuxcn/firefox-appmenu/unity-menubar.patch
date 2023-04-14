@@ -105,8 +105,8 @@
 +pref("ui.use_unity_menubar", true);
 +#endif
  
- pref("browser.display.force_inline_alttext", false); // true = force ALT text for missing images to be layed out inline
- // 0 = no external leading,
+ // min font device pixel size at which to turn on high quality
+ pref("browser.display.auto_quality_min_font_size", 20);
 --- a/toolkit/content/xul.css
 +++ b/toolkit/content/xul.css
 @@ -229,6 +229,13 @@ toolbox {
@@ -3006,7 +3006,7 @@
 +#endif /* __nsMenuItem_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenuObject.cpp
-@@ -0,0 +1,664 @@
+@@ -0,0 +1,653 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -3091,7 +3091,6 @@
 +    nsMenuObject *mOwner;
 +    RefPtr<imgRequestProxy> mImageRequest;
 +    nsCOMPtr<nsIURI> mURI;
-+    nsIntRect mImageRect;
 +};
 +
 +NS_IMPL_ISUPPORTS(nsMenuObjectIconLoader, imgINotificationObserver)
@@ -3145,10 +3144,6 @@
 +        return;
 +    }
 +
-+    if (!mImageRect.IsEmpty()) {
-+        img = ImageOps::Clip(img, mImageRect);
-+    }
-+
 +    int32_t width, height;
 +    img->GetWidth(&width);
 +    img->GetHeight(&height);
@@ -3183,7 +3178,6 @@
 +    dom::Document *doc = mOwner->ContentNode()->OwnerDoc();
 +
 +    nsCOMPtr<nsIURI> uri;
-+    nsIntRect imageRect;
 +    imgRequestProxy *imageRequest = nullptr;
 +
 +    nsAutoString uriString;
@@ -3206,9 +3200,6 @@
 +        imageRequest = list->mListStyleImage.GetImageRequest();
 +        if (imageRequest) {
 +            imageRequest->GetURI(getter_AddRefs(uri));
-+            auto& rect = list->mImageRegion.AsRect();
-+            imageRect = rect.ToLayoutRect().ToNearestPixels(
-+                            pc->AppUnitsPerDevPixel());
 +        }
 +    }
 +
@@ -3226,7 +3217,7 @@
 +
 +    bool same;
 +    if (mURI && NS_SUCCEEDED(mURI->Equals(uri, &same)) && same &&
-+        (!imageRequest || imageRect == mImageRect)) {
++        !imageRequest) {
 +        return;
 +    }
 +
@@ -3238,10 +3229,8 @@
 +    mURI = uri;
 +
 +    if (imageRequest) {
-+        mImageRect = imageRect;
 +        imageRequest->Clone(this, nullptr, getter_AddRefs(mImageRequest));
 +    } else {
-+        mImageRect.SetEmpty();
 +        nsCOMPtr<nsILoadGroup> loadGroup = doc->GetDocumentLoadGroup();
 +        RefPtr<imgLoader> loader =
 +            nsContentUtils::GetImgLoaderForDocument(doc);
