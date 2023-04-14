@@ -77,7 +77,7 @@ prepare() {
   git config submodule.3rdparty/glslang.url ../glslang
   
   SUBMODULES=($(git config --file .gitmodules --get-regexp path | \
-    awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/glslang/ && !/pugixml/ && !/xxHash/ && !/libusb/ && !/SDL/ && !/flatbuffers/ && !/FAudio/ && !/llvm/'))
+    awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/glslang/ && !/pugixml/ && !/xxHash/ && !/libusb/ && !/SDL/ && !/flatbuffers/ && !/FAudio/'))
 
   # We need to convert from a relative folder path to a https://github.com path
   for ((i=0;i<${#SUBMODULES[@]};i+=2))
@@ -96,7 +96,6 @@ prepare() {
   done
 
   git submodule--helper update 3rdparty/glslang/glslang
-  sed -i 's/16.0/15.0/g' 3rdparty/llvm.cmake
 }
 
 build() {
@@ -118,7 +117,7 @@ build() {
     -DUSE_SYSTEM_CURL=ON \
     -DUSE_SYSTEM_XXHASH=ON \
     -DUSE_SYSTEM_LIBUSB=ON \
-    -DBUILD_LLVM=OFF \
+    -DBUILD_LLVM=ON \
     -DUSE_SYSTEM_FAUDIO=ON \
     -DUSE_SYSTEM_SDL=ON \
     -DDISABLE_LTO=ON
