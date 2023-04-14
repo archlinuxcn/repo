@@ -57,7 +57,7 @@ depends=(
 )
 makedepends=(
   gradle
-  java-environment=11
+  java-environment=17
   python-build
   python-installer
   python-setuptools
@@ -78,8 +78,8 @@ build() {
   cd "${_pkgname}-${pkgver}"
   BUILD_OHIF=OFF python -m build --wheel --no-isolation --skip-dependency-check
   cd "plugins/qupath"
-  # if you would like to build with jdk17, uncomment the next line, and change java-environment=11 to java-environment=17
-  # sed -i "s,version = 11,version = 17," build.gradle
+  # build with jdk17
+  sed -i "s,version = 11,version = 17," build.gradle
   gradle clean build -Porg.gradle.java.home=/usr/lib/jvm/default
 }
 
@@ -93,6 +93,6 @@ package() {
   rm -rfv ${pkgdir}/usr/${pkgname}/plugins
   rm -vf "${pkgdir}/usr/bin/monailabel.bat"
   install -dm755 "${pkgdir}/usr/share/java/qupath-extention-monailabel"
-  install -Dm644 "plugins/qupath/build/libs"/*.jar "${pkgdir}/usr/share/java/qupath-extention-monailabel/qupath-extension-monailabel-0.3.1.jar"
+  find "plugins/qupath/build/libs" -type f -name "*.jar" -exec install -Dm644 {} "${pkgdir}/usr/share/java/qupath-extention-monailabel" \;
 }
 # vim:set ts=2 sw=2 et:
