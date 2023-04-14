@@ -16,16 +16,16 @@ source=("https://invent.kde.org/graphics/${pkgname}/-/archive/v${pkgver}/${pkgna
 sha256sums=('e1b4eea1969d1dc90f9c91714c36c4e73ffa46c4b32e8144d85abdc2679632c8')
 
 prepare() {
-  mkdir build/
+  mkdir -p ${pkgname}-v${pkgver}/build/
 }
 
 build() {
-  cd build/
+  cd ${pkgname}-v${pkgver}/build/
   cmake -B build/ -S ../${_pkgname} -DBUILD_TESTING=OFF
   cmake --build build/
 }
 
 package() {
-  cd build/
+  cd ${pkgname}-v${pkgver}/build/
   DESTDIR="${pkgdir}" cmake --install build/
 }
