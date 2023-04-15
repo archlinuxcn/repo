@@ -3,7 +3,7 @@
 
 _pkgname=skypeforlinux
 pkgname="$_pkgname-stable-bin"
-pkgver=8.96.0.207
+pkgver=8.96.0.408
 pkgrel=1
 pkgdesc="Skype for Linux - Stable/Release Version"
 arch=("x86_64")
@@ -16,19 +16,18 @@ optdepends=("org.freedesktop.secrets: keyring/password support"
 conflicts=("$_pkgname" "$_pkgname-bin" "$_pkgname-preview-bin"
            "$_pkgname-beta-bin" "skype")
 provides=("$_pkgname" "skype")
-install=install.sh
+install="$pkgname-install"
 source=(
-"https://repo.skype.com/rpm/stable/${_pkgname}_${pkgver}-1.x86_64.rpm"
+"https://repo.skype.com/deb/pool/main/s/$_pkgname/${_pkgname}_${pkgver}_amd64.deb"
 )
-sha256sums=('7667a7a5572615a68cb5172e1cd3f87ebdefd46a8416117c4043215256c11d58')
+sha256sums=('02200ad8eba840f1b25006a547835cea290fc42e4bb8017b6e259b116642b584')
 
 package() {
-  cd $pkgdir
-  bsdtar -xf $srcdir/${_pkgname}_${pkgver}-1.x86_64.rpm
-  rm -rf "$pkgdir/usr/lib/.build-id"
+  tar --no-same-owner -xC "$pkgdir" -f data.tar.gz
   install -d "$pkgdir/usr/share/licenses/$pkgname"
   mv "$pkgdir/usr/share/$_pkgname/LICENSES.chromium.html" \
-     "$pkgdir/usr/share/licenses/$pkgname/"
+    "$pkgdir/usr/share/licenses/$pkgname/"
+  rm -rf "$pkgdir/opt"
 }
 
 # vim:set ts=2 sw=2 et:
