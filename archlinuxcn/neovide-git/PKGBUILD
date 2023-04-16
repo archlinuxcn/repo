@@ -3,7 +3,7 @@
 # Maintainer: peeweep <peeweep at 0x0 dot ee>
 
 pkgname=neovide-git
-pkgver=0.10.4.r1.g873f04a
+pkgver=0.10.4.r2.gdaf5307
 pkgrel=1
 pkgdesc='No Nonsense Neovim Client in Rust'
 arch=('x86_64')
@@ -37,6 +37,10 @@ package() {
   install -Dm644 ${srcdir}/${pkgname}/LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
   install -Dm755 ${srcdir}/${pkgname}/target/release/neovide ${pkgdir}/usr/bin/neovide
   install -Dm644 ${srcdir}/${pkgname}/assets/neovide.desktop ${pkgdir}/usr/share/applications/neovide.desktop
+  for px in 16 32 48 256; do
+    install -Dm644 "${srcdir}/${pkgname}/assets/neovide-${px}x${px}.png" \
+      "${pkgdir}/usr/share/icons/hicolor/${px}x${px}/apps/neovide.png"
+  done
 }
 
 # vim: ts=2 sw=2 et:
