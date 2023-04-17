@@ -1,30 +1,28 @@
 post_install() {
-	cat << 'EOF'
-+-Cemu-------------------------------------------------------------------------+
-| This software is still experimental! Some features are missing (e.g. Online) |
-| but performance is already great. If you rely on a specific feature you can  |
-| still run the Windows version through Wine (AUR: cemu-wine) although doing   |
-| that is no longer recommended.                                               |
-|                                                                              |
-| This package follows the XDG Base Directory Specification:                   |
-| - Config files (e.g. settings.txt) are found in $XDG_CONFIG_HOME.            |
-|   Default: ~/.config/cemu                                                    |
-| - Data files (e.g. mlc01, keys.txt, log.txt) are found in $XDG_DATA_HOME.    |
-|   Default: ~/.local/share/cemu                                               |
-| - Cache files (e.g. shaderCache) are found in $XDG_CACHE_HOME.               |
-|   Default: ~/.cache/cemu                                                     |
-|                                                                              |
-| Report Linux issues here: https://github.com/cemu-project/Cemu/issues        |
-| Report Arch issues here:  https://aur.archlinux.org/packages/cemu            |
-+------------------------------------------------------------------------------+
+	cat << EOF
+This software is still experimental! Some features are missing (e.g. Online)
+but performance is already great. If you rely on a specific feature you can
+still run the Windows version through Wine (AUR: cemu-wine) although doing
+that is no longer recommended.
+
+This package follows the XDG Base Directory Specification:
+- Config files (e.g. settings.txt) are found in "$XDG_CONFIG_HOME/cemu".
+  Default: ~/.config/cemu
+- Data files (e.g. mlc01, keys.txt, log.txt) are found in "$XDG_DATA_HOME/cemu".
+  Default: ~/.local/share/cemu
+- Cache files (e.g. shaderCache) are found in "$XDG_CACHE_HOME/cemu".
+  Default: ~/.cache/cemu
+
+Report Linux issues here: https://github.com/cemu-project/Cemu/issues
+Report Arch issues here:  https://aur.archlinux.org/packages/cemu
 EOF
 }
 
 post_upgrade() {
-	cat << 'EOF'
-+-Cemu-------------------------------------------------------------------------+
-| The location of the keys file recently changed from $XDG_CONFIG_HOME to      |
-| $XDG_DATA_HOME (defaults to ~/.local/share/cemu/keys.txt).                   |
-+------------------------------------------------------------------------------+
+	if [ $(vercmp $2 2.0.182-1) -lt 0 ]; then cat << EOF
+The location of the keys file recently changed from
+$XDG_CONFIG_HOME (defaults to ~/.config/cemu/keys.txt) to
+$XDG_DATA_HOME (defaults to ~/.local/share/cemu/keys.txt).
 EOF
+fi
 }
