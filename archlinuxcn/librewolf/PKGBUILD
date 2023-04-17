@@ -2,7 +2,7 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=111.0.1
+pkgver=112.0
 pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
@@ -28,7 +28,6 @@ makedepends=(
   clang
   diffutils
   dump_syms
-  gawk
   git
   imake
   inetutils
@@ -69,35 +68,21 @@ options=(
 )
 _arch_git=https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/firefox/trunk
 _arch_git_blob=https://raw.githubusercontent.com/archlinux/svntogit-packages
-# _source_tag="${pkgver}-${pkgrel%.*}"
-_source_tag="${pkgver}-${pkgrel}"
-# _source_commit='5a211f7bad8dcf188a96b408cc143082df8d30a8'
-# _settings_tag='7.4'
-_settings_commit='1829a6629590e88d5f07eda9fd059ba66b726f25'
 
 install='librewolf.install'
 source=(
-  https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
+  https://gitlab.com/api/v4/projects/32320088/packages/generic/librewolf-source/${pkgver}-${pkgrel}/librewolf-${pkgver}-${pkgrel}.source.tar.gz # {,.sig} sig files are currently broken, it seems
   $pkgname.desktop
-  "git+https://gitlab.com/${pkgname}-community/browser/source.git#tag=${_source_tag}"
-  "git+https://gitlab.com/${pkgname}-community/settings.git#commit=${_settings_commit}"
   "default192x192.png"
   "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
-  "${_arch_git_blob}/f72ed84a7907d387296811794d75da515525500e/trunk/0001-Bug-1819374-Squashed-ffmpeg-6.0-update.patch"
-  "${_arch_git_blob}/f72ed84a7907d387296811794d75da515525500e/trunk/0002-Bug-1820416-Use-correct-FFVPX-headers-from-ffmpeg-6..patch"
 )
 
-sha256sums=('84a4f3aba62df6e0451cdd28f8f1e59840d77c4062311947b0e59325c2ebdce8'
-            'SKIP'
+sha256sums=('7a8de1ae8e4960d81a1fd935797a0302330e6d8e1f5670c13320292fa2f9a752'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
-            'SKIP'
-            'SKIP'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1'
-            '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d'
-            '802f9271a5f7c0ab581baae8c46fd5b29598025ee93bb2dac6b456f8e0ae6acc'
-            'be9ba079a931d5e881ce38430d418cc834e8c6b157af6c79ea267998caece806')
+            '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d')
 
-validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla Software Releases <release@mozilla.com>
+validpgpkeys=('034F7776EF5E0C613D2F7934D29FBD5F93C0CFC3') # maltej(?)
 
 # change this to false if you do not want to run a PGO build for aarch64 or x86_64
 _build_profiled_aarch64=true
@@ -105,58 +90,40 @@ _build_profiled_x86_64=true
 
 prepare() {
   mkdir -p mozbuild
-  cd firefox-$pkgver
+  cd librewolf-$pkgver-$pkgrel
 
-  local _patches_dir="${srcdir}/source/patches"
+  mv mozconfig ../mozconfig
 
-  cat >../mozconfig <<END
-ac_add_options --enable-application=browser
-mk_add_options MOZ_OBJDIR=${PWD@Q}/obj
+  cat >>../mozconfig <<END
 
-# This supposedly speeds up compilation (We test through dogfooding anyway)
-ac_add_options --disable-tests
-ac_add_options --disable-debug
-
-# TODO: use source/assets/moczonfig in the future
-# NOTE: let us use it for one last build, otherwise, there might be some conflicts
-mk_add_options MOZ_CRASHREPORTER=0
-mk_add_options MOZ_DATA_REPORTING=0
-mk_add_options MOZ_SERVICES_HEALTHREPORT=0
-mk_add_options MOZ_TELEMETRY_REPORTING=0
+# TODO: check things here one after another if (still) required
+ac_add_options --enable-linker=lld
 
 ac_add_options --prefix=/usr
-ac_add_options --enable-release
-ac_add_options --enable-hardening
-ac_add_options --enable-rust-simd
-ac_add_options --enable-linker=lld
+
 ac_add_options --disable-bootstrap
 
 export CC='clang'
 export CXX='clang++'
 
 # Branding
-ac_add_options --enable-update-channel=release
 ac_add_options --with-app-name=${pkgname}
-
+# is this one required? upstream lw doesn't use it
+ac_add_options --enable-update-channel=release
+# unlear?
 # ac_add_options --with-app-basename=${_pkgname}
 
-ac_add_options --with-branding=browser/branding/${pkgname}
-# ac_add_options --with-distribution-id=io.gitlab.${pkgname}-community
-ac_add_options --with-unsigned-addon-scopes=app,system
-ac_add_options --allow-addon-sideload
-export MOZ_REQUIRE_SIGNING=
+# needed?
 export MOZ_APP_REMOTINGNAME=${_pkgname}
-# export MOZ_APP_REMOTINGNAME=${pkgname}
 
 # System libraries
 ac_add_options --with-system-nspr
 ac_add_options --with-system-nss
 
 # Features
+# keep alsa option in here until merged upstream
 ac_add_options --enable-alsa
 ac_add_options --enable-jack
-ac_add_options --disable-crashreporter
-ac_add_options --disable-updater
 
 # options for ci / weaker build systems
 # mk_add_options MOZ_MAKE_FLAGS="-j4"
@@ -164,9 +131,6 @@ ac_add_options --disable-updater
 
 # wasi
 ac_add_options --with-wasi-sysroot=/usr/share/wasi-sysroot
-
-# experimental JXL support
-ac_add_options --enable-jxl
 END
 
 if [[ $CARCH == 'aarch64' ]]; then
@@ -183,15 +147,9 @@ END
   # we should have more than enough RAM on the CI spot instances.
   # ...or maybe not?
   export LDFLAGS+=" -Wl,--no-keep-memory"
-  # patch -Np1 -i ${_patches_dir}/arm.patch # not required anymore?
-  # patch -Np1 -i ../${pkgver}-${pkgrel}_build-arm-libopus.patch
-
 else
 
   cat >>../mozconfig <<END
-# probably not needed, enabled by default?
-ac_add_options --enable-optimize
-
 # Arch upstream has it in their PKGBUILD, ALARM does not for aarch64:
 ac_add_options --disable-elf-hack
 
@@ -204,135 +162,19 @@ fi
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
   # patch -Np1 -i ${srcdir}/0001-Use-remoting-name-for-GDK-application-names.patch
 
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1819374
-  # sooooo this will get a bit ugly, but I don't even want to find out if
-  # things would break on Manjaro until they update ffmpeg as well, so let's just
-  # not think tooooo much about it:
-  _ffmpeg_ver=$(pacman -Qi ffmpeg | gawk '/Version/{print $3}')
-  _ffmpeg_ver="${_ffmpeg_ver#*:}"
-  _ffmpeg_ver="${_ffmpeg_ver%.*}"
-  if [ "${_ffmpeg_ver}" -gt 5 ]; then
-    patch -Np1 -i ../0001-Bug-1819374-Squashed-ffmpeg-6.0-update.patch
-
-    # https://bugs.archlinux.org/task/77796
-    # https://bugzilla.mozilla.org/show_bug.cgi?id=1820416
-    patch -Np1 -i ../0002-Bug-1820416-Use-correct-FFVPX-headers-from-ffmpeg-6..patch
-  fi
-
   # upstream patches from gentoo
 
   # pgo improvements
+  # TODO: test if still required
   patch -Np1 -i ../0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch
-
-  # pip issues seem to be fixed upstream?
-
-  # LibreWolf
-
-  # Remove some pre-installed addons that might be questionable
-  patch -Np1 -i ${_patches_dir}/remove_addons.patch
-
-  # KDE menu and unity menubar
-  patch -Np1 -i ${_patches_dir}/unity_kde/mozilla-kde.patch
-  patch -Np1 -i ${_patches_dir}/unity_kde/firefox-kde.patch
-  patch -Np1 -i ${_patches_dir}/unity_kde/unity-menubar.patch
-
-  # Disabling Pocket
-  patch -Np1 -i ${_patches_dir}/sed-patches/disable-pocket.patch
-
-  # allow SearchEngines option in non-ESR builds
-  patch -Np1 -i ${_patches_dir}/sed-patches/allow-searchengines-non-esr.patch
-
-  # remove search extensions (experimental)
-  # patch -Np1 -i ${_patches_dir}/search-config.patch
-  cp "${srcdir}/source/assets/search-config.json" services/settings/dumps/main/search-config.json
-
-  # stop some undesired requests (https://gitlab.com/librewolf-community/browser/common/-/issues/10)
-  patch -Np1 -i ${_patches_dir}/sed-patches/stop-undesired-requests.patch
-
-  # Assorted patches
-  patch -Np1 -i ${_patches_dir}/context-menu.patch
-  patch -Np1 -i ${_patches_dir}/urlbarprovider-interventions.patch
-  patch -Np1 -i ${_patches_dir}/unified-extensions-dont-show-recommendations.patch
-
-  # allow enabling JPEG XL in non-nightly browser
-  patch -Np1 -i ${_patches_dir}/allow-JXL-in-non-nightly-browser.patch
-
-  # change some hardcoded directory strings that could lead to unnecessarily
-  # created directories
-  patch -Np1 -i ${_patches_dir}/mozilla_dirs.patch
-
-  # somewhat experimental patch to fix bus/dbus/remoting names to io.gitlab.librewolf
-  # should not break things, buuuuuuuuuut we'll see.
-  patch -Np1 -i ${_patches_dir}/dbus_name.patch
-
-  # allow uBlockOrigin to run in private mode by default, without user intervention.
-  patch -Np1 -i ${_patches_dir}/allow-ubo-private-mode.patch
-
-  # add custom uBO assets (on first launch only)
-  patch -Np1 -i ${_patches_dir}/custom-ubo-assets-bootstrap-location.patch
-
-  #
-  patch -Np1 -i ${_patches_dir}/faster-package-multi-locale.patch
-
-  # ui patches
-
-  # remove references to firefox from the settings UI, change text in some of the links,
-  # explain that we force en-US and suggest enabling history near the session restore checkbox.
-  patch -Np1 -i ${_patches_dir}/ui-patches/pref-naming.patch
-
-  #
-  patch -Np1 -i ${_patches_dir}/ui-patches/hide-default-browser.patch
-
-  # Add LibreWolf logo to Debugging Page
-  patch -Np1 -i ${_patches_dir}/ui-patches/lw-logo-devtools.patch
-
-  #
-  patch -Np1 -i ${_patches_dir}/ui-patches/privacy-preferences.patch
-
-  # remove firefox references in the urlbar, when suggesting opened tabs.
-  patch -Np1 -i ${_patches_dir}/ui-patches/remove-branding-urlbar.patch
-
-  # remove cfr UI elements, as they are disabled and locked already.
-  patch -Np1 -i ${_patches_dir}/ui-patches/remove-cfrprefs.patch
-
-  # do not display your browser is being managed by your organization in the settings.
-  patch -Np1 -i ${_patches_dir}/ui-patches/remove-organization-policy-banner.patch
-
-  # hide "snippets" section from the home page settings, as it was already locked.
-  patch -Np1 -i ${_patches_dir}/ui-patches/remove-snippets-from-home.patch
-
-  # add patch to hide website appearance settings
-  patch -Np1 -i ${_patches_dir}/ui-patches/website-appearance-ui-rfp.patch
-
-  #
-  patch -Np1 -i ${_patches_dir}/ui-patches/handlers.patch
-
-  # pref pane
-  patch -Np1 -i ${_patches_dir}/librewolf-pref-pane.patch
-
-  # firefox view
-  patch -Np1 -i ${_patches_dir}/ui-patches/firefox-view.patch
-
-  # new prefs (view, ubo)
-  patch -Np1 -i ${_patches_dir}/librewolf-prefs.patch
-
-  # fix telemetry removal, see https://gitlab.com/librewolf-community/browser/linux/-/merge_requests/17, for example
-  patch -Np1 -i ${_patches_dir}/disable-data-reporting-at-compile-time.patch
-
-  # allows hiding the password manager (from the lw pref pane) / via a pref
-  patch -Np1 -i ${_patches_dir}/hide-passwordmgr.patch
-
-  rm -f ${srcdir}/source/mozconfig # what was this for? TODO
-  cp -r ${srcdir}/source/themes/browser ./
 }
 
 
 build() {
-  cd firefox-$pkgver
+  cd librewolf-$pkgver-$pkgrel
 
   export MOZ_NOSPAM=1
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
-  # export MOZ_ENABLE_FULL_SYMBOLS=1
   export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=pip
   # export PIP_NETWORK_INSTALL_RESTRICTED_VIRTUALENVS=mach # let us hope this is a working _new_ workaround for the pip env issues?
 
@@ -412,8 +254,12 @@ END
 }
 
 package() {
-  cd firefox-$pkgver
+  cd librewolf-$pkgver-$pkgrel
   DESTDIR="$pkgdir" ./mach install
+
+  # mv ${pkgdir}/usr/local/lib ${pkgdir}/usr/lib/
+  # mv ${pkgdir}/usr/local/bin ${pkgdir}/usr/bin/
+  # rm -r ${pkgdir}/usr/local
 
   local vendorjs="$pkgdir/usr/lib/$pkgname/browser/defaults/preferences/vendor.js"
 
@@ -425,11 +271,6 @@ pref("spellchecker.dictionary_path", "/usr/share/hunspell");
 // done in librewolf.cfg
 // pref("extensions.autoDisableScopes", 11);
 END
-
-  # cd ${srcdir}/settings
-  # git checkout ${_settings_commit}
-  cd ${srcdir}/firefox-$pkgver
-  cp -r ${srcdir}/settings/* ${pkgdir}/usr/lib/${pkgname}/
 
   local distini="$pkgdir/usr/lib/$pkgname/distribution/distribution.ini"
   install -Dvm644 /dev/stdin "$distini" <<END
