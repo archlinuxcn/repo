@@ -1,4 +1,4 @@
-From d5623a8bb42f0ebbadcad47708ab69b684ac6db7 Mon Sep 17 00:00:00 2001
+From 1e4fdf2a5140c22b04db738fba9e20fb7af1f609 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 18 Jun 2022 18:06:37 -0400
 Subject: [PATCH 5/7] Fix LLVM 13 support
@@ -8,7 +8,7 @@ Subject: [PATCH 5/7] Fix LLVM 13 support
  1 file changed, 4 insertions(+)
 
 diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
-index f028c41760..8d8e11c48c 100644
+index fff54d2ce0..26c722461a 100644
 --- a/src/aotcompile.cpp
 +++ b/src/aotcompile.cpp
 @@ -1708,11 +1708,15 @@ void addOptimizationPasses(legacy::PassManagerBase *PM, int opt_level,
@@ -28,5 +28,5 @@ index f028c41760..8d8e11c48c 100644
          .forwardSwitchCondToPhi(true)
          //These mess with loop rotation, so only do them after that
 -- 
-2.39.2
+2.40.0
 

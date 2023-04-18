@@ -1,4 +1,4 @@
-From eb6a331cd65d1f8602e5570737d83759f6e4c439 Mon Sep 17 00:00:00 2001
+From e961f2bb2a244e6c42ff20c06f39e0033427c708 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 2 Apr 2023 08:34:35 -0400
 Subject: [PATCH 7/7] LLVM 15 fixes (Based on #48700)
@@ -7,7 +7,7 @@ Subject: [PATCH 7/7] LLVM 15 fixes (Based on #48700)
  src/aotcompile.cpp              | 47 +++++++++++---------
  src/codegen.cpp                 | 78 ++++++++++++++++++++++++++++-----
  src/jitlayers.cpp               |  3 +-
- src/jitlayers.h                 |  4 ++
+ src/jitlayers.h                 |  8 ++--
  src/llvm-alloc-opt.cpp          |  3 ++
  src/llvm-late-gc-lowering.cpp   |  1 +
  src/llvm-lower-handlers.cpp     |  1 +
@@ -15,14 +15,13 @@ Subject: [PATCH 7/7] LLVM 15 fixes (Based on #48700)
  src/llvm-ptls.cpp               |  2 +
  src/llvm-remove-addrspaces.cpp  |  4 +-
  src/llvm-version.h              | 10 +++++
- src/pipeline.cpp                |  1 -
  stdlib/LLD_jll/Project.toml     |  4 +-
  stdlib/libLLVM_jll/Project.toml |  2 +-
  test/clangsa/MissingRoots.c     |  3 ++
- 15 files changed, 128 insertions(+), 37 deletions(-)
+ 14 files changed, 127 insertions(+), 41 deletions(-)
 
 diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
-index 8d8e11c48c..f04a84e10d 100644
+index 26c722461a..15b1d7c72e 100644
 --- a/src/aotcompile.cpp
 +++ b/src/aotcompile.cpp
 @@ -493,6 +493,7 @@ static void reportWriterError(const ErrorInfoBase &E)
@@ -124,7 +123,7 @@ index 8d8e11c48c..f04a84e10d 100644
  
  // An LLVM module pass that just runs all julia passes in order. Useful for
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 1695482564..7d36b4d837 100644
+index c78aedf0d9..f6c47994e1 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -921,15 +921,20 @@ static const auto jl_alloc_obj_func = new JuliaFunction<TypeFnContextAndSizeT>{
@@ -164,7 +163,7 @@ index 1695482564..7d36b4d837 100644
      }
      if (jl_fpo_disabled(TT))
          attr.addAttribute("frame-pointer", "all");
-@@ -5808,6 +5813,7 @@ static void emit_cfunc_invalidate(
+@@ -5809,6 +5814,7 @@ static void emit_cfunc_invalidate(
          prepare_call_in(gf_thunk->getParent(), jlapplygeneric_func));
  }
  
@@ -172,7 +171,7 @@ index 1695482564..7d36b4d837 100644
  static Function* gen_cfun_wrapper(
      Module *into, jl_codegen_params_t &params,
      const function_sig_t &sig, jl_value_t *ff, const char *aliasname,
-@@ -6311,8 +6317,6 @@ static Function* gen_cfun_wrapper(
+@@ -6312,8 +6318,6 @@ static Function* gen_cfun_wrapper(
      }
      else if (!type_is_ghost(sig.lrt)) {
          Type *prt = sig.prt;
@@ -181,7 +180,7 @@ index 1695482564..7d36b4d837 100644
          bool issigned = jl_signed_type && jl_subtype(declrt, (jl_value_t*)jl_signed_type);
          Value *v = emit_unbox(ctx, sig.lrt, retval, retval.typ);
          r = llvm_type_rewrite(ctx, v, prt, issigned);
-@@ -8680,6 +8684,57 @@ static JuliaVariable *julia_const_gv(jl_value_t *val)
+@@ -8683,6 +8687,57 @@ static JuliaVariable *julia_const_gv(jl_value_t *val)
      }
      return nullptr;
  }
@@ -239,7 +238,7 @@ index 1695482564..7d36b4d837 100644
  
  static void init_jit_functions(void)
  {
-@@ -8910,6 +8965,9 @@ extern "C" JL_DLLEXPORT void jl_init_codegen_impl(void)
+@@ -8922,6 +8977,9 @@ extern "C" JL_DLLEXPORT void jl_init_codegen_impl(void)
      jl_init_llvm();
      // Now that the execution engine exists, initialize all modules
      init_jit_functions();
@@ -250,10 +249,10 @@ index 1695482564..7d36b4d837 100644
  
  extern "C" JL_DLLEXPORT void jl_teardown_codegen_impl() JL_NOTSAFEPOINT
 diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
-index c7e202b98e..f0ac4775c3 100644
+index 0f75789077..2dd5ae6dd2 100644
 --- a/src/jitlayers.cpp
 +++ b/src/jitlayers.cpp
-@@ -1362,7 +1362,7 @@ JuliaOJIT::JuliaOJIT()
+@@ -1382,7 +1382,7 @@ JuliaOJIT::JuliaOJIT()
      }
  
      JD.addToLinkOrder(GlobalJD, orc::JITDylibLookupFlags::MatchExportedSymbolsOnly);
@@ -262,7 +261,7 @@ index c7e202b98e..f0ac4775c3 100644
      orc::SymbolAliasMap jl_crt = {
          { mangle("__gnu_h2f_ieee"), { mangle("julia__gnu_h2f_ieee"), JITSymbolFlags::Exported } },
          { mangle("__extendhfsf2"),  { mangle("julia__gnu_h2f_ieee"), JITSymbolFlags::Exported } },
-@@ -1371,6 +1371,7 @@ JuliaOJIT::JuliaOJIT()
+@@ -1391,6 +1391,7 @@ JuliaOJIT::JuliaOJIT()
          { mangle("__truncdfhf2"),   { mangle("julia__truncdfhf2"),   JITSymbolFlags::Exported } }
      };
      cantFail(GlobalJD.define(orc::symbolAliases(jl_crt)));
@@ -271,20 +270,24 @@ index c7e202b98e..f0ac4775c3 100644
  #ifdef MSAN_EMUTLS_WORKAROUND
      orc::SymbolMap msan_crt;
 diff --git a/src/jitlayers.h b/src/jitlayers.h
-index 1b62c87910..6b01ef9e5c 100644
+index 7f07034586..894da17f37 100644
 --- a/src/jitlayers.h
 +++ b/src/jitlayers.h
-@@ -91,6 +91,10 @@ struct OptimizationOptions {
+@@ -89,11 +89,9 @@ struct OptimizationOptions {
      }
  };
  
+-// LLVM's new pass manager is scheduled to replace the legacy pass manager
+-// for middle-end IR optimizations. However, we have not qualified the new
+-// pass manager on our optimization pipeline yet, so this remains an optional
+-// define
+-// #define JL_USE_NEW_PM
 +#if defined(_COMPILER_ASAN_ENABLED_) || defined(_COMPILER_TSAN_ENABLED_) || defined(_COMPILER_MSAN_ENABLED_)
 +#define JL_USE_NEW_PM
 +#endif
-+
+ 
  struct NewPM {
      std::unique_ptr<TargetMachine> TM;
-     StandardInstrumentations SI;
 diff --git a/src/llvm-alloc-opt.cpp b/src/llvm-alloc-opt.cpp
 index b044e2351f..6f2b6c539d 100644
 --- a/src/llvm-alloc-opt.cpp
@@ -414,18 +417,6 @@ index 4e15e787b7..a3f3774b6d 100644
  #ifdef __cplusplus
  #if defined(__GNUC__) && (__GNUC__ >= 9)
  // Added in GCC 9, this warning is annoying
-diff --git a/src/pipeline.cpp b/src/pipeline.cpp
-index ae2b1c3202..94be399f74 100644
---- a/src/pipeline.cpp
-+++ b/src/pipeline.cpp
-@@ -146,7 +146,6 @@ namespace {
-             // Opts.Recover = CodeGenOpts.SanitizeRecover.has(Mask);
-             // Opts.UseAfterScope = CodeGenOpts.SanitizeAddressUseAfterScope;
-             // Opts.UseAfterReturn = CodeGenOpts.getSanitizeAddressUseAfterReturn();
--            MPM.addPass(RequireAnalysisPass<ASanGlobalsMetadataAnalysis, Module>());
-             // MPM.addPass(ModuleAddressSanitizerPass(
-             //     Opts, UseGlobalGC, UseOdrIndicator, DestructorKind));
-             //Let's assume the defaults are actually fine for our purposes
 diff --git a/stdlib/LLD_jll/Project.toml b/stdlib/LLD_jll/Project.toml
 index 52d4b67de3..de73f5430f 100644
 --- a/stdlib/LLD_jll/Project.toml
@@ -448,13 +439,13 @@ index 52d4b67de3..de73f5430f 100644
  [extras]
  Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 diff --git a/stdlib/libLLVM_jll/Project.toml b/stdlib/libLLVM_jll/Project.toml
-index 119eb87554..5de022033d 100644
+index be34e53f94..5de022033d 100644
 --- a/stdlib/libLLVM_jll/Project.toml
 +++ b/stdlib/libLLVM_jll/Project.toml
 @@ -1,6 +1,6 @@
  name = "libLLVM_jll"
  uuid = "8f36deef-c2a5-5394-99ed-8e07531fb29a"
--version = "14.0.6+2"
+-version = "14.0.6+3"
 +version = "15.0.7+3"
  
  [deps]
@@ -474,5 +465,5 @@ index f0b32c54bc..0ff5e63362 100644
      jl_typemap_level_t *cache = jl_new_typemap_level();
      JL_GC_PUSH1(&cache);
 -- 
-2.39.2
+2.40.0
 
