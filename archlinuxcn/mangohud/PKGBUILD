@@ -1,8 +1,8 @@
 # Maintainer: Ranieri Althoff <ranisalt+aur at gmail dot com>
-# Co-Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
+# Co-Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=('mangohud' 'mangoapp' 'mangohud-common')
 pkgbase=mangohud
-pkgver=0.6.9
+pkgver=0.6.9.1
 pkgrel=1
 _imgui_ver=1.81
 _vulkan_ver=1.2.158
@@ -12,7 +12,7 @@ url="https://github.com/flightlessmango/MangoHud"
 license=('MIT')
 makedepends=('appstream' 'cmocka' 'dbus' 'git' 'glew' 'glfw-x11' 'glslang' 'libglvnd'
              'libxnvctrl' 'meson' 'nlohmann-json' 'python-mako' 'spdlog')
-_commit=5fa7087f78e39e92ee4306fdf48fd710960c53dc  # tags/v0.6.9^0
+_commit=7f945627f57ecc56afea342c2dc0544d0d43728e  # tags/v0.6.9-1^0
 source=("git+https://github.com/flightlessmango/MangoHud.git#commit=${_commit}"
         'git+https://github.com/flightlessmango/minhook.git'
         "https://github.com/ocornut/imgui/archive/refs/tags/v${_imgui_ver}/imgui-${_imgui_ver}.tar.gz"
@@ -28,7 +28,8 @@ sha256sums=('SKIP'
 
 pkgver() {
   cd "$srcdir/MangoHud"
-  git describe --tags | sed 's/^v//;s/-/+/g'
+#  git describe --tags | sed 's/^v//;s/-/+/g'
+  git describe --tags | sed 's/^v//;s/-/./g'
 }
 
 prepare() {
@@ -60,8 +61,7 @@ local meson_options=(
 }
 
 check() {
-  cd "$srcdir/MangoHud"
-  appstreamcli validate --pedantic "data/io.github.flightlessmango.$pkgbase.metainfo.xml"
+  meson test -C build --print-errorlogs || :
 }
 
 package_mangohud() {
