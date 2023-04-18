@@ -5,7 +5,7 @@ def pre_build():
 
   for line in edit_file('PKGBUILD'):
       if line.startswith('_tag'):
-          line = "_pkgver='amd-drm-next-" + newver + "'"
+          line = "_tag='amd-drm-next-" + newver + "'"
       print(line)
   newver2 = newver.replace("-",".")
   update_pkgver_and_pkgrel(newver2)
