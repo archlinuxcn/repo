@@ -1,0 +1,32 @@
+# Maintainer: zjuyk <ownbyzjuyk@gmail.com>
+
+pkgname=mpv-osc-thumbfast-git
+_gitname=thumbfast
+pkgver=1856_9.rc1.178.g05ef18d_2023.04.01
+pkgrel=1
+pkgdesc="High-performance on-the-fly thumbnailer for mpv."
+arch=('x86_64')
+url="https://github.com/po5/${_gitname}"
+license=()
+depends=('mpv')
+makedepends=('git')
+provides=(mpv-osc-thumbfast)
+conflicts=('mpv-osc-thumbfast' 'mpv-thumbfast-git')
+backup=("etc/mpv/script-opts/thumbfast.conf")
+source=(
+  "git+https://github.com/po5/thumbfast.git"
+)
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/$_gitname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+  cd "${srcdir}/${_gitname}"
+  mkdir -p "${pkgdir}/etc/mpv/scripts"
+  install -D -m644 "thumbfast.lua" -t "${pkgdir}/etc/mpv/scripts/"
+  mkdir -p "${pkgdir}/etc/mpv/script-opts"
+  install -D -m644 "thumbfast.conf" -t "${pkgdir}/etc/mpv/script-opts/"
+}
