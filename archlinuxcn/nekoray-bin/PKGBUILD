@@ -3,8 +3,8 @@
 # Contributor: Molyuu <zhangjtroger at gmail dot com>
 
 pkgname=nekoray-bin
-pkgver=2.25
-_releasedate=2023-04-12
+pkgver=2.26
+_releasedate=2023-04-18
 pkgrel=1
 pkgdesc="Qt based cross-platform GUI proxy configuration manager (backend: v2ray / sing-box)"
 arch=('x86_64')
@@ -26,7 +26,7 @@ source=(
 )
 
 sha256sums=(
-	'07bd686c5aeb02c8ac1d8f16f054e3a5f43c1400e3f3745f0f520ddd2bdcb0da'
+	'ef58336a9c10a1cb318c369467e14b25f787385b8a5caf1710ac953c9e994271'
 	'86f1332c81be2c346a4cdc80a3550f6484ef89e4ee8d4f23afada0c2d0a184e2'
 	'5a7cbb61608137924fb1ba3ecb057adb7973f5775f64758736b447041fa15377'
 )
