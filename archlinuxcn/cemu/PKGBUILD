@@ -1,7 +1,7 @@
 # Maintainer: Jeremy Kescher <jeremy@kescher.at>
 
 pkgname=cemu
-pkgver=2.0.339
+pkgver=2.0.345
 pkgrel=1
 pkgdesc='Software to emulate Wii U games and applications on PC'
 arch=(x86_64)
@@ -31,7 +31,7 @@ optdepends=(
 )
 install=cemu.install
 source=(
-	git+https://github.com/cemu-project/Cemu#tag=v2.0-33
+	git+https://github.com/cemu-project/Cemu#tag=v2.0-34
 	# submodules
 	git+https://github.com/mozilla/cubeb#commit=dc511c6b3597b6384d28949285b9289e009830ea
 	git+https://github.com/ocornut/imgui#commit=8a44c31c95c8e0217f6e1fc814cbbbcca4981f14
