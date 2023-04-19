@@ -2,7 +2,7 @@
 
 pkgbase=ttf-maple
 pkgname=('ttf-maple' 'otf-maple' 'woff2-maple' 'ttf-maple-nerd' 'ttf-maple-sc-nerd')
-pkgver=6.2
+pkgver=6.3
 pkgrel=1
 pkgdesc='Open source monospace / Nerd-Font font with round corner and ligatures for IDE and command line.'
 url='https://github.com/subframe7536/Maple-font/'
@@ -15,11 +15,11 @@ source=($pkgname-$pkgver-MapleMono.zip::https://github.com/subframe7536/Maple-fo
         $pkgname-$pkgver-MapleMono-SC-NF.zip::https://github.com/subframe7536/Maple-font/releases/download/v$pkgver/MapleMono-SC-NF.zip
         $pkgname-$pkgver-OFL.txt::https://raw.githubusercontent.com/subframe7536/Maple-font/v6.1/OFL.txt
         )
-b2sums=('e32df9fabb79c99cb48f5622fc141d87b543190297fa5700eea8ce876bf9bd82c2f64aa1fb2fe0c55b9841c2c3d1817a5d7055d3b37694d99da5a25bfdf2f865'
-        'c7ace0010564d646768541538ee4401ec21b49ded3bd28a04a61162ade219198b41d1589444383c8fa264d9f1072cd077db3aa7dc93112403b86fde3f9da2e39'
-        'aa44a02da28dc88a7b130e9d9a5e312da46021ad89184d55192bef7a2e38ca92d84abb67f4b0ab9276e206963e0773e8d2317d5e503d4a36f63ec5bc8466249f'
-        '7d8d722e28f3c4c43cdb41b6cc0795859aa8963bb4b59620e28c6967fe424318d1457c45d72c63b08b2e158c6f25b0469258e71153b0087a3b5149005a1cfa78'
-        '12a05e29dd0f69899ff50f66a3c295974eee3e689c5e521ce9382b7391afafd028ea55b475280aa4261542139db6b6775a8cf92ad304e56bbaead7e042a7a324'
+b2sums=('a302c51a4b483d852b5497464cd50c06279481580ba11b1514e6acdfefbc904c179bbe1ee5e35393c9669f138c3b469af9dc8b38edef2264eb22904c55317475'
+        '0f364f24074ad8ab00f05af9d40ce9e4007657e377fdd96e70c62d76a4798387741dac914044e91b98d7d42f1c053c6a04b9a204fe09a074b6230f1127aca7ce'
+        '47f2766b9642d814c6532ac6608e448cad6d999059d319828ef1ec82e63a16c6f7c93a3acb24d248866ac61921062f83c3700f17abecd8794066880aedcb7c73'
+        '59ab719092fab7dfbb1235a275f0cd01cc902e4b58cf71899c0d426480d7925c744395f7c9898f44c3c5d19f037a9ae84139986e17e51d0fa18fdd3b6b4a48d1'
+        '15ff73a1ce440675613afe9a2ce6b7d0ba8b06d56494414a0a45ec0cc4fc6286315f1716e88b39c1a16e1bae26df4dac962ef47c2385ce29c25996069174f2b9'
         '4c0d42227fd7722ef0a517a74c51cbee7ac4a0a9dce006de27f49195d22ced78f816e26f3623cfd0ef6214881f095a6977518d012cea41be41b6434dc4ec0825')
 
 prepare() {
