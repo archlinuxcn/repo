@@ -1,0 +1,32 @@
+# Maintainer: Michael Koloberdin <michael@koloberdin.com>
+pkgname=catch2v3
+pkgver=3.3.2
+pkgrel=1
+pkgdesc="Modern, C++-native, header-only, test framework for unit-tests, TDD and BDD (v3)"
+arch=('x86_64')
+url="https://github.com/catchorg/Catch2/"
+license=('Boost')
+makedepends=('git' 'cmake')
+provides=("catch2=$pkgver")
+conflicts=(catch2)
+source=(${pkgname}::"git+https://github.com/catchorg/Catch2#tag=v$pkgver")
+sha512sums=('SKIP')
+
+build() {
+  cd ${pkgname}
+  export CFLAGS+=" ${CPPFLAGS}"
+  export CXXFLAGS+=" ${CPPFLAGS}"
+  cmake -B build \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCATCH_BUILD_EXAMPLES=OFF \
+    -DCATCH_ENABLE_COVERAGE=OFF \
+    -DCATCH_ENABLE_WERROR=OFF \
+    -DBUILD_TESTING=ON
+  cmake --build build
+}
+
+package() {
+  cd ${pkgname}
+  DESTDIR="$pkgdir" cmake --install build
+}
