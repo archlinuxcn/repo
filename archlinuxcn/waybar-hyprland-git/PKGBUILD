@@ -2,7 +2,7 @@
 
 pkgname=waybar-hyprland-git
 pkgver=0.9.17.r159.ga9a22234
-pkgrel=1
+pkgrel=2
 pkgdesc='Highly customizable Wayland bar for Sway and Wlroots based compositors, with workspaces support for Hyprland (git version)'
 arch=('x86_64' 'aarch64')
 url='https://github.com/Alexays/Waybar/'
@@ -51,11 +51,9 @@ optdepends=(
     'cava: Cava plugin support'
 )
 source=("${pkgname}::git+https://github.com/Alexays/Waybar"
-        hyprctl.patch
-        cava.patch)
+        hyprctl.patch)
 sha256sums=('SKIP'
-          'b4819ed456b27c355f24c460bcf3ff2fec6dade8c210263b64361c6744a9147c'
-          '51fbf6cf8767cebf66e26b8f393e696859ef02c70ad7c88fe55025534e2515ab')
+          'b4819ed456b27c355f24c460bcf3ff2fec6dade8c210263b64361c6744a9147c')
 
 pkgver() {
     cd "${srcdir}/${pkgname}"
@@ -64,14 +62,7 @@ pkgver() {
 
 prepare() {
     cd "${srcdir}/${pkgname}"
-
     git apply ../hyprctl.patch # use hyprctl to switch workspaces
-    git apply ../cava.patch # fix cava dependency not found
-
-    mkdir "subprojects/packagecache"
-    filename=$(grep source_filename subprojects/cava.wrap | rev | cut -d' ' -f1 | rev)
-    url=$(grep source_url subprojects/cava.wrap | rev | cut -d' ' -f1 | rev)
-    curl -Lo "subprojects/packagecache/${filename}" "$url" # pre=download cava dependency
 }
 
 build() {
@@ -83,6 +74,7 @@ build() {
           --auto-features=enabled \
           --wrap-mode=nodownload \
           -Dexperimental=true \
+          -Dcava=disabled \
           "${srcdir}/build"
     ninja -C "${srcdir}/build"
 }
