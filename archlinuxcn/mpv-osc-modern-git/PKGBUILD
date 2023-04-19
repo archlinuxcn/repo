@@ -1,0 +1,35 @@
+# Maintainer: zjuyk <ownbyzjuyk@gmail.com>
+
+pkgname=mpv-osc-modern-git
+_gitname=mpv-osc-modern
+pkgver=1856_9.rc1.178.g05ef18d_2023.04.01
+pkgrel=1
+pkgdesc="Another mpv osc script with thumbfast."
+arch=('x86_64')
+url="https://github.com/maoiscat/${_gitname}"
+license=('GPL')
+depends=('mpv' 'ttf-material-design-iconic-font' 'mpv-osc-thumbfast-git')
+makedepends=('git')
+provides=(mpv-osc-modern)
+conflicts=(mpv-osc-modern)
+backup=("etc/mpv/script-opts/modern.conf")
+install=modern.install
+source=(
+  "git+https://github.com/maoiscat/${_gitname}.git#branch=with.thumbfast"
+  "modern.conf"
+)
+md5sums=('45413197ba2fe6e452ac32d4c1dda880'
+         'd99a59147524ce7e0a49f561ff3aaeee')
+
+pkgver() {
+  cd "$srcdir/$_gitname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+  cd "${srcdir}/${_gitname}"
+  mkdir -p "${pkgdir}/etc/mpv/scripts"
+  install -D -m644 "modern.lua" -t "${pkgdir}/etc/mpv/scripts/"
+  mkdir -p "${pkgdir}/etc/mpv/script-opts"
+  install -D -m644 "modern.conf" -t "${pkgdir}/etc/mpv/script-opts/"
+}

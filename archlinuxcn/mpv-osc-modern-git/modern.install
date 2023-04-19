@@ -1,0 +1,20 @@
+#!/bin/bash
+
+function whisperer(){
+    echo "-----------------------------------------------------------------------"
+    echo "Please add config to mpv.conf"
+    echo "osc=no
+
+    	  [Idle]
+          profile-cond=p["idle-active"]
+          profile-restore=copy-equal
+          title=' '
+          keepaspect=no
+          background=1"
+    echo "-----------------------------------------------------------------------"
+}
+
+post_install()
+{
+    whisperer
+}
