@@ -31,5 +31,5 @@ package() {
   mkdir -p "${pkgdir}/etc/mpv/scripts"
   install -D -m644 "modern.lua" -t "${pkgdir}/etc/mpv/scripts/"
   mkdir -p "${pkgdir}/etc/mpv/script-opts"
-  install -D -m644 "modern.conf" -t "${pkgdir}/etc/mpv/script-opts/"
+  install -D -m644 "${srcdir}/modern.conf" -t "${pkgdir}/etc/mpv/script-opts/"
 }
