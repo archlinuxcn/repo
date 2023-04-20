@@ -1,6 +1,6 @@
 # Maintainer:ston<2424284164@qq.com>
 pkgname=go-musicfox
-pkgver=4.0.3
+pkgver=4.0.4
 pkgrel=1
 pkgdesc='Command-line Netease Cloud Music written in Go.'
 url='https://github.com/go-musicfox/go-musicfox'
@@ -11,7 +11,7 @@ conflicts=('go-musicfox-bin' 'musicfox' 'go-musicfox-git')
 depends=('flac' 'alsa-lib')
 makedepends=('gcc-objc' 'go')
 source=(go-musicfox-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz)
-sha256sums=('514df2dff4267d2e6744451dc5f5f6dc63c4a76b14ca2938cbb8790b4ff71a34')
+sha256sums=('af18ddc3f0a2402274e409f7e548e59cea7b376ade8297e906cd91a214f9de59')
 
 build(){
 	cd go-musicfox-${pkgver}
