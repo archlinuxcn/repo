@@ -4,8 +4,8 @@
 # Contributor: Damir Perisa <damir.perisa@bluewin.ch>
 
 pkgname=celestia
-pkgver=1.6.2.2
-pkgrel=3
+pkgver=1.6.3
+pkgrel=1
 pkgdesc="Real-time space simulation"
 arch=(x86_64)
 license=(GPL)
@@ -13,7 +13,7 @@ url="https://celestia.space"
 depends=('gtk2' 'libtheora' 'lua53' 'gtkglext' 'glut' 'libxmu' 'glu' 'libjpeg' 'mesa')
 options=('!makeflags')
 source=("https://github.com/CelestiaProject/Celestia/archive/$pkgver/$pkgname-$pkgver.tar.gz")
-sha512sums=('a67cc296a3f176bbe74e9c0bf8d83f6a78cc045edb23fbb870ff42dfd0b53a87af83b57ec35d378338f5dc321ead0d719a350a36036cdc3a2817f9c4b0d89ad2')
+sha512sums=('bec5b34e6452e9930dc174ff2214311935c12ab9a006b01137d3fc0f5ca803a514ef8e702a824d6e4eb49a2bfb2b6f42c7f6f383eca193d15876f88964bb858c')
 
 prepare() {
   cd Celestia-${pkgver}
