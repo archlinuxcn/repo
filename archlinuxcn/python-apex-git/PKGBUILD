@@ -12,6 +12,8 @@ license=('BSD')
 depends=(python-pytorch-cuda)
 makedepends=(
   git
+  gcc10
+  numactl
   python-pip
   python-setuptools
   python-sympy
@@ -30,6 +32,8 @@ pkgver() {
 
 build() {
   export TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST}
+  export CC=gcc-10
+  export CXX=g++-10
   cd "${srcdir}/${pkgname}"
   python setup.py --cuda_ext --cpp_ext build
 }
