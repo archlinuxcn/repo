@@ -2,8 +2,8 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=112.0
-pkgrel=1
+pkgver=112.0.1
+pkgrel=2
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
 arch=(x86_64 aarch64)
@@ -77,7 +77,7 @@ source=(
   "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
 )
 
-sha256sums=('7a8de1ae8e4960d81a1fd935797a0302330e6d8e1f5670c13320292fa2f9a752'
+sha256sums=('40cf7ee4aa7c5c73a1398794b9f009d2fe8ab17ee58d4db59053022f3050379a'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1'
             '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d')
@@ -113,7 +113,7 @@ ac_add_options --enable-update-channel=release
 # unlear?
 # ac_add_options --with-app-basename=${_pkgname}
 
-# needed?
+# needed? yep.
 export MOZ_APP_REMOTINGNAME=${_pkgname}
 
 # System libraries
