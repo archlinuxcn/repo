@@ -13,3 +13,21 @@ update_on:
   - source: github
     github: WerWolv/ImHex
     use_latest_release: true
+  - source: alpm
+    alpm: yara
+    provided: libyara.so
+  - source: alpm
+    alpm: fmt
+    provided: libfmt.so
+  - source: alpm
+    alpm: mbedtls
+    provided: libmbedtls.so
+  - source: alpm
+    alpm: mbedtls
+    provided: libmbedcrypto.so
+  - source: alpm
+    alpm: mbedtls
+    provided: libmbedx509.so
+  - source: alpm
+    alpm: freetype2
+    provided: libfreetype.so
