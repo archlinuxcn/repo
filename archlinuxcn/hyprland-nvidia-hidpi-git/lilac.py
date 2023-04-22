@@ -7,7 +7,11 @@ def pre_build():
     vcs_update()
 
     for line in edit_file('PKGBUILD'):
-        print (line.replace('xorg-xwayland-hidpi-xprop', 'xorg-xwayland-lily'))
+        if line.strip().startswith('build()'):
+            print (line)
+            print ('export CFLAGS+=-w')
+        else:
+            print (line.replace('xorg-xwayland-hidpi-xprop', 'xorg-xwayland-lily'))
 
 def post_build():
     git_pkgbuild_commit()
