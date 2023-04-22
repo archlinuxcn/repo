@@ -9,5 +9,5 @@ def pre_build():
         if line.strip().startswith('build()'):
             print (line)
             print ('export CFLAGS+=w')
-        else
+        else:
             print (line.replace('libdisplay-info', 'libdisplay-info-git'))
