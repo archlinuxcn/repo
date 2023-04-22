@@ -8,6 +8,6 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if line.strip().startswith('build()'):
             print (line)
-            print ('export CFLAGS+=w')
+            print ('export CFLAGS+=-w')
         else:
             print (line.replace('libdisplay-info', 'libdisplay-info-git'))
