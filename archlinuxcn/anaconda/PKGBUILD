@@ -4,8 +4,8 @@
 # Contributor: Ismaël Bouya <ismael.bouya@normalesup.org>
 # Contributor: Martin Wimpress <code@flexion.org>
 pkgname=anaconda
-pkgver=2022.10
-pkgrel=1
+pkgver=2023.03
+pkgrel=2
 pkgdesc="Simplifies package management and deployment of Anaconda"
 arch=(x86_64)
 url="https://${pkgname}.com"
@@ -23,10 +23,13 @@ optdepends=('libxau: for Anaconda Navigator support'
 	'libxrender: for Anaconda Navigator support'
 	'mesa-libgl: for Anaconda Navigator support'
 	'alsa-lib: for Anaconda Navigator support'
-	'libglvnd: for Anaconda Navigator support')
-source=(https://repo.${pkgname}.com/archive/Anaconda3-${pkgver}-Linux-x86_64.sh)
+	'libglvnd: for Anaconda Navigator support'
+	'xdg-utils: for ')
+source=(https://repo.${pkgname}.com/archive/Anaconda3-${pkgver}-Linux-x86_64.sh
+	${pkgname}-navigator.desktop)
 options=(!strip libtool staticlibs)
-sha512sums=('a0f17c8bbdcb05397da831af513a027738033844e7f9cdeb6e8b192d9c8f917109e72326e449f74bf3ee2a0da3789e0864c3d51ef2bdc816c62cc85f3395d226')
+sha512sums=('27a44d1da6a6d0bce646e735510c3a16f30a74a310f86c6da09a6364d440717750bad96316ae978f66ed1801310e7d4cf0b5a410808a7c51522a484e636eb4ad'
+	'16a4d08590c082dc6042a68783f5c6bfa03af6aa6e07baf489f7d698695d1e2659b0add6c123693da6516ebc031009f97368830f028e2c7af45db33f883aa26a')
 install="${pkgname}.install"
 
 package() {
@@ -45,5 +48,8 @@ package() {
 	sed -e "s|${pkgdir}||g" -i $(grep "${pkgdir}" . -rIl 2>/dev/null)
 
 	# Installing license
-	install -D -m644 LICENSE.txt "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
+	install -Dm 644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}"
+
+	# Installing .desktop for anaconda navigator
+	install -Dm 644 "${srcdir}/${pkgname}-navigator.desktop" -t "${pkgdir}"/usr/share/applications/
 }
