@@ -642,12 +642,12 @@ diff --color -rupN citra/src/audio_core/CMakeLists.txt citra/src/audio_core/CMak
 diff --color -rupN citra/src/citra/CMakeLists.txt citra/src/citra/CMakeLists.txt
 --- citra/src/citra/CMakeLists.txt	2023-01-20 00:44:13.805597987 +0800
 +++ citra/src/citra/CMakeLists.txt	2023-01-20 00:41:12.745249061 +0800
-@@ -17,7 +17,7 @@ add_executable(citra
+@@ -19,7 +19,7 @@ add_executable(citra
  create_target_directory_groups(citra)
  
  target_link_libraries(citra PRIVATE common core input_common network)
--target_link_libraries(citra PRIVATE inih glad lodepng)
-+target_link_libraries(citra PRIVATE inih::INIReader glad lodepng)
+-target_link_libraries(citra PRIVATE inih glad)
++target_link_libraries(citra PRIVATE inih::INIReader glad)
  if (MSVC)
      target_link_libraries(citra PRIVATE getopt)
  endif()
@@ -710,23 +710,17 @@ diff --color -rupN citra/src/common/CMakeLists.txt citra/src/common/CMakeLists.t
 diff --color -rupN citra/src/core/CMakeLists.txt citra/src/core/CMakeLists.txt
 --- citra/src/core/CMakeLists.txt	2023-01-20 00:44:13.828931368 +0800
 +++ citra/src/core/CMakeLists.txt	2023-01-20 00:41:12.788582447 +0800
-@@ -477,12 +477,13 @@ endif()
+@@ -486,7 +486,8 @@ endif()
  create_target_directory_groups(core)
  
  target_link_libraries(core PUBLIC common PRIVATE audio_core network video_core)
--target_link_libraries(core PUBLIC Boost::boost PRIVATE cryptopp fmt::fmt open_source_archives Boost::serialization Boost::iostreams)
+-target_link_libraries(core PRIVATE Boost::boost PRIVATE cryptopp fmt::fmt lodepng open_source_archives Boost::serialization Boost::iostreams)
 +target_link_libraries(core PUBLIC Boost::boost Boost::serialization Boost::iostreams)
-+target_link_libraries(core PRIVATE cryptopp::cryptopp fmt::fmt open_source_archives)
++target_link_libraries(core PRIVATE cryptopp::cryptopp fmt::fmt lodepng open_source_archives)
  set_target_properties(core PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${ENABLE_LTO})
  
  if (ENABLE_WEB_SERVICE)
-     target_compile_definitions(core PRIVATE -DENABLE_WEB_SERVICE -DCPPHTTPLIB_OPENSSL_SUPPORT)
--    target_link_libraries(core PRIVATE web_service ${OPENSSL_LIBS} httplib)
-+    target_link_libraries(core PRIVATE web_service ${OPENSSL_LIBS} httplib::httplib)
-     if (ANDROID)
-         target_link_libraries(core PRIVATE ifaddrs)
-     endif()
-@@ -499,7 +500,7 @@ if ("x86_64" IN_LIST ARCHITECTURE OR "ar
+@@ -508,7 +509,7 @@ if ("x86_64" IN_LIST ARCHITECTURE OR "ar
          arm/dynarmic/arm_tick_counts.cpp
          arm/dynarmic/arm_tick_counts.h
      )
