@@ -2,7 +2,7 @@
 
 _pkgname=pypdf
 pkgname=python-pypdf
-pkgver=3.8.0
+pkgver=3.8.1
 pkgrel=1
 pkgdesc='A utility to read and write PDFs with Python (v3+)'
 arch=('any')
@@ -22,7 +22,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/py-pdf/pypdf/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('a4f33c8f940303958221a48ffbf088c363d7cf9360d5c9d27829b5703735216c32af63262313a25598c3479c4584999a23ac6bf77daa701042ef65314194dab3')
+sha512sums=('8b78ccc210b8f34b9556cf69cac8f2af207de9a42840a0b4c822c0ab2c0b2d468c5c20a14704d3f54c6b57bcc451c3f0b7ff54b8149616b539cb07be57482e58')
 
 build() {
   cd "${_pkgname}-${pkgver}"
