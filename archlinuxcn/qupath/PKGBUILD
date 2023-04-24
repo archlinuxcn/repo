@@ -21,6 +21,7 @@ depends=(
 )
 makedepends=(
   'gendesk'
+  'gradle'
   'java-environment=17'
 )
 optdepends=(
@@ -41,7 +42,9 @@ prepare() {
 
 build() {
   cd "${pkgname}-${pkgver}"
-  ./gradlew clean jpackage
+  # you could also build it with gradle wrapper
+  # ./gradlew clean jpackage
+  gradle clean jpackage -Porg.gradle.java.home=/usr/lib/jvm/default
 }
 
 package() {
