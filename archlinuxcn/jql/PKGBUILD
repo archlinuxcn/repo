@@ -2,7 +2,7 @@
 # Contributor: Vlad Frolov <frolvlad@gmail.com>
 
 pkgname=jql
-pkgver=5.2.0
+pkgver=6.0.6
 pkgrel=1
 pkgdesc="A JSON Query Language CLI tool"
 url="https://github.com/yamafaktory/jql"
@@ -10,21 +10,21 @@ depends=('gcc-libs')
 makedepends=('cargo')
 arch=('i686' 'x86_64')
 license=('MIT')
-source=(${pkgname}-${pkgver}.tar.gz::https://github.com/yamafaktory/jql/archive/v${pkgver}.tar.gz)
-sha512sums=('21ef583aeb652e078b494b9f925720391957cc964b19727f301becd7cdba7494990c08cf7ab297fe8ddce03e23dd019ec89cadbda5e75c0ac618f9026a3bd1ca')
+source=(${pkgname}-${pkgver}.tar.gz::https://github.com/yamafaktory/jql/archive/jql-v${pkgver}.tar.gz)
+sha512sums=('a07ffb435ffe72b4b43aaa229ad06ef9feb22b1cbcf8c0725780ef9841df395729cba65a3ee080255c668cf0ec0453d089cc1095485612ba813aafc49daada92')
 
 build() {
-  cd "${pkgname}-${pkgver}"
+  cd "${pkgname}-${pkgname}-v${pkgver}"
   cargo build --release --locked
 }
 
 check() {
-  cd "${pkgname}-${pkgver}"
+  cd "${pkgname}-${pkgname}-v${pkgver}"
   cargo test --release --locked
 }
 
 package() {
-  cd "${pkgname}-${pkgver}"
+  cd "${pkgname}-${pkgname}-v${pkgver}"
   install -Dm755 \
     "target/release/jql" \
     -t "${pkgdir}/usr/bin"
