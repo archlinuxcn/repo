@@ -1,13 +1,13 @@
 # Maintainer: Giuseppe Calà <gcala at mailbox dot org>
 
 pkgname=audiotube-git
-pkgver=23.01.0.r180.g9300279
+pkgver=23.01.0.r181.g887573f
 pkgrel=1
 pkgdesc="Client for YouTube Music"
 arch=('x86_64' 'aarch64')
 url="https://invent.kde.org/plasma-mobile/audiotube"
 license=(GPL3)
-depends=('ki18n' 'kirigami2' 'python-ytmusicapi' 'yt-dlp' 'gst-plugins-good' 'qt5-imageformats' 'kcrash' 'purpose')
+depends=("futuresql-git" "gst-plugins-good" "kcrash" "ki18n" "kirigami2" "purpose" "python-ytmusicapi" "qt5-imageformats" "yt-dlp")
 makedepends=(  'git' 'extra-cmake-modules' 'pybind11' 'qt5-svg' 'python-ytmusicapi' 'kirigami-addons')
 provides=('audiotube')
 conflicts=('audiotube')
