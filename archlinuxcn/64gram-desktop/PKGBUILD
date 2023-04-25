@@ -4,8 +4,8 @@
 # Contributor: Daniil Kovalev <daniil@kovalev.website>
 pkgname=64gram-desktop
 _pkgname=64Gram
-pkgver=1.0.82
-pkgrel=2
+pkgver=1.0.83
+pkgrel=1
 epoch=1
 pkgdesc='Unofficial desktop version of Telegram messaging app'
 arch=('x86_64')
@@ -25,7 +25,7 @@ source=("https://github.com/TDesktop-x64/tdesktop/releases/download/v${pkgver}/$
         "block-sponsored_messages.patch"
         "fix-lzma-link.patch")
 noextract=("${_pkgname}-${pkgver}-full.tar.gz")
-sha512sums=('80f12b4833e6f6bb2b4ba758d78e78a27a0a95b188d9a4a5c3665121298b6d7a6d2c606627d0f47222cd3ffc2520d3039fc80b792a02da4c79b7658ba8dc0887'
+sha512sums=('06be7ce0876e53754f2cb6ecb76668b0236262ac2fe4246ddc81c1d085a9c4c3b5f74a1e4ab92e605061a81b347176157037c4439ece727c64dee2ab6a6b0a12'
             'c662524ca4f4a8df021ee94696d84896ed9a271df321933942806dda4544ea25f51a650ec8b4fc72f9a2219ea54cbfaf37b9604124f7263c86f74f1d647587ae'
             'd813a5ac6ff2208b693ecf494d7bf036087e223662f9f34aaaeafea0afe0fe798e867b9610f7221ea80319865502c20b61310d5a31634b888793873d63322463')
 prepare() {
