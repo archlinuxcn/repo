@@ -8,7 +8,7 @@
 # Contributor: Jon Gjengset <jon@tsp.io>
 _pkgname=elan
 pkgname=${_pkgname}-lean
-pkgver=1.4.4
+pkgver=1.4.5
 pkgrel=1
 pkgdesc="A Lean version manager"
 arch=('x86_64' 'aarch64')
@@ -21,7 +21,7 @@ conflicts=('lean-bin' 'lean-git' 'lean4' 'lean-community' )
 install='post.install'
 source=("elan-${pkgver}.tar.gz::https://github.com/leanprover/elan/archive/v${pkgver}.tar.gz")
 _binlinks=('lean' 'leanpkg' 'leanchecker' 'leanc' 'leanmake' 'lake')
-sha512sums=('7deb387225a7156f9fff52169c93f053b4372dc25505c56a82b6d80a648edd9db9ea99648885001c097c6d3c3a4d530da32196ee15eaa57ce3cbdfdd6e475e88')
+sha512sums=('8d45355337fcc88795c757563ea6718414091a73b4de2eb3b975ebc36b581ee75f31cc5bda1aa11e89770da46c3ab81cb290b74de6f62ecf188385f876b6baab')
 options=(!lto)
 
 build() {
