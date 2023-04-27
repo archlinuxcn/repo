@@ -1,11 +1,12 @@
-repo_depends:
-  - aria2-fast
-  - nvm
-
-update_on:
-  - source: github
-    github: agalwood/Motrix
-    use_latest_release: true
-
 maintainers:
   - github: zhullyb
+
+pre_build_script: aur_pre_build(maintainers=['zhullyb'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: motrix
+  - source: manual
+    manual: 1
