@@ -36,7 +36,6 @@ build() {
   CXXFLAGS+=' -ggdb1 -O3 -fasynchronous-unwind-tables'
   LDFLAGS+=' -O3 -fasynchronous-unwind-tables'
 
-
   local cmake_args=(
     -G Ninja
     -DCMAKE_BUILD_TYPE=Release
@@ -59,7 +58,7 @@ build() {
     -DSPHINX_WARNINGS_AS_ERRORS=OFF
   )
   cmake .. "${cmake_args[@]}"
-  ninja
+  LANG=en_US.UTF-8 ninja
 }
 
 package_llvm-julia() {
