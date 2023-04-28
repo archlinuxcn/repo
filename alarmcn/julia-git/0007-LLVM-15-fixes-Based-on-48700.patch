@@ -1,186 +1,25 @@
-From e961f2bb2a244e6c42ff20c06f39e0033427c708 Mon Sep 17 00:00:00 2001
+From 44a25d8527e64d4aa9580f26f164416e2fe43a68 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 2 Apr 2023 08:34:35 -0400
 Subject: [PATCH 7/7] LLVM 15 fixes (Based on #48700)
 
 ---
- src/aotcompile.cpp              | 47 +++++++++++---------
- src/codegen.cpp                 | 78 ++++++++++++++++++++++++++++-----
- src/jitlayers.cpp               |  3 +-
- src/jitlayers.h                 |  8 ++--
+ src/codegen.cpp                 | 51 +++++++++++++++++++++++++++++++++
  src/llvm-alloc-opt.cpp          |  3 ++
  src/llvm-late-gc-lowering.cpp   |  1 +
  src/llvm-lower-handlers.cpp     |  1 +
- src/llvm-multiversioning.cpp    |  2 +
- src/llvm-ptls.cpp               |  2 +
- src/llvm-remove-addrspaces.cpp  |  4 +-
- src/llvm-version.h              | 10 +++++
- stdlib/LLD_jll/Project.toml     |  4 +-
+ src/llvm-multiversioning.cpp    |  2 ++
+ src/llvm-ptls.cpp               |  2 ++
+ stdlib/LLD_jll/Project.toml     |  4 +--
  stdlib/libLLVM_jll/Project.toml |  2 +-
  test/clangsa/MissingRoots.c     |  3 ++
- 14 files changed, 127 insertions(+), 41 deletions(-)
+ 9 files changed, 66 insertions(+), 3 deletions(-)
 
-diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
-index 26c722461a..15b1d7c72e 100644
---- a/src/aotcompile.cpp
-+++ b/src/aotcompile.cpp
-@@ -493,6 +493,7 @@ static void reportWriterError(const ErrorInfoBase &E)
-     jl_safe_printf("ERROR: failed to emit output file %s\n", err.c_str());
- }
- 
-+#if JULIA_FLOAT16_ABI == 1
- static void injectCRTAlias(Module &M, StringRef name, StringRef alias, FunctionType *FT)
- {
-     Function *target = M.getFunction(alias);
-@@ -509,7 +510,7 @@ static void injectCRTAlias(Module &M, StringRef name, StringRef alias, FunctionT
-     auto val = builder.CreateCall(target, CallArgs);
-     builder.CreateRet(val);
- }
--
-+#endif
- void multiversioning_preannotate(Module &M);
- 
- // See src/processor.h for documentation about this table. Corresponds to jl_image_shard_t.
-@@ -942,6 +943,8 @@ struct ShardTimers {
-     }
- };
- 
-+void emitFloat16Wrappers(Module &M, bool external);
-+
- // Perform the actual optimization and emission of the output files
- static void add_output_impl(Module &M, TargetMachine &SourceTM, std::string *outputs, const std::string *names,
-                     NewArchiveMember *unopt, NewArchiveMember *opt, NewArchiveMember *obj, NewArchiveMember *asm_,
-@@ -1002,7 +1005,9 @@ static void add_output_impl(Module &M, TargetMachine &SourceTM, std::string *out
-         }
-     }
-     // no need to inject aliases if we have no functions
-+
-     if (inject_aliases) {
-+#if JULIA_FLOAT16_ABI == 1
-         // We would like to emit an alias or an weakref alias to redirect these symbols
-         // but LLVM doesn't let us emit a GlobalAlias to a declaration...
-         // So for now we inject a definition of these functions that calls our runtime
-@@ -1017,8 +1022,10 @@ static void add_output_impl(Module &M, TargetMachine &SourceTM, std::string *out
-                 FunctionType::get(Type::getHalfTy(M.getContext()), { Type::getFloatTy(M.getContext()) }, false));
-         injectCRTAlias(M, "__truncdfhf2", "julia__truncdfhf2",
-                 FunctionType::get(Type::getHalfTy(M.getContext()), { Type::getDoubleTy(M.getContext()) }, false));
-+#else
-+        emitFloat16Wrappers(M, false);
-+#endif
-     }
--
-     timers.optimize.stopTimer();
- 
-     if (opt) {
-@@ -1771,15 +1778,15 @@ void addOptimizationPasses(legacy::PassManagerBase *PM, int opt_level,
-                 PM->add(createCFGSimplificationPass(basicSimplifyCFGOptions));
-             }
-         }
--#if defined(_COMPILER_ASAN_ENABLED_)
--        PM->add(createAddressSanitizerFunctionPass());
--#endif
--#if defined(_COMPILER_MSAN_ENABLED_)
--        PM->add(createMemorySanitizerLegacyPassPass());
--#endif
--#if defined(_COMPILER_TSAN_ENABLED_)
--        PM->add(createThreadSanitizerLegacyPassPass());
--#endif
-+// #if defined(_COMPILER_ASAN_ENABLED_)
-+//         PM->add(createAddressSanitizerFunctionPass());
-+// #endif
-+// #if defined(_COMPILER_MSAN_ENABLED_)
-+//         PM->add(createMemorySanitizerLegacyPassPass());
-+// #endif
-+// #if defined(_COMPILER_TSAN_ENABLED_)
-+//         PM->add(createThreadSanitizerLegacyPassPass());
-+// #endif
-         return;
-     }
-     PM->add(createPropagateJuliaAddrspaces());
-@@ -1928,15 +1935,15 @@ void addOptimizationPasses(legacy::PassManagerBase *PM, int opt_level,
-     }
-     PM->add(createCombineMulAddPass());
-     PM->add(createDivRemPairsPass());
--#if defined(_COMPILER_ASAN_ENABLED_)
--    PM->add(createAddressSanitizerFunctionPass());
--#endif
--#if defined(_COMPILER_MSAN_ENABLED_)
--    PM->add(createMemorySanitizerLegacyPassPass());
--#endif
--#if defined(_COMPILER_TSAN_ENABLED_)
--    PM->add(createThreadSanitizerLegacyPassPass());
--#endif
-+// #if defined(_COMPILER_ASAN_ENABLED_)
-+//     PM->add(createAddressSanitizerFunctionPass());
-+// #endif
-+// #if defined(_COMPILER_MSAN_ENABLED_)
-+//     PM->add(createMemorySanitizerLegacyPassPass());
-+// #endif
-+// #if defined(_COMPILER_TSAN_ENABLED_)
-+//     PM->add(createThreadSanitizerLegacyPassPass());
-+// #endif
- }
- 
- // An LLVM module pass that just runs all julia passes in order. Useful for
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index c78aedf0d9..f6c47994e1 100644
+index e5869b8069..3346a23605 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -921,15 +921,20 @@ static const auto jl_alloc_obj_func = new JuliaFunction<TypeFnContextAndSizeT>{
-         return FunctionType::get(T_prjlvalue,
-                 {T_ppjlvalue, T_size, T_prjlvalue}, false);
-     },
--    [](LLVMContext &C) { return AttributeList::get(C,
--            AttributeSet::get(C, makeArrayRef({Attribute::getWithAllocSizeArgs(C, 1, None)})), // returns %1 bytes
--
--            Attributes(C, {Attribute::NoAlias, Attribute::NonNull,
-+    [](LLVMContext &C) {
-+        auto FnAttrs = AttrBuilder(C);
-+        FnAttrs.addAllocSizeAttr(1, None); // returns %1 bytes
- #if JL_LLVM_VERSION >= 150000
--            Attribute::get(C, Attribute::AllocKind, AllocFnKind::Alloc | AllocFnKind::Uninitialized | AllocFnKind::Aligned),
-+        FnAttrs.addAllocKindAttr(AllocFnKind::Alloc | AllocFnKind::Uninitialized | AllocFnKind::Aligned);
- #endif
--            }),
--            None); },
-+        auto RetAttrs = AttrBuilder(C);
-+        RetAttrs.addAttribute(Attribute::NoAlias);
-+        RetAttrs.addAttribute(Attribute::NonNull);
-+        return AttributeList::get(C,
-+            AttributeSet::get(C, FnAttrs),
-+            AttributeSet::get(C, RetAttrs),
-+            None);
-+    },
- };
- static const auto jl_newbits_func = new JuliaFunction<>{
-     XSTR(jl_new_bits),
-@@ -2349,7 +2354,7 @@ static void jl_init_function(Function *F, const Triple &TT)
-         attr.addStackAlignmentAttr(16);
-     }
-     if (TT.isOSWindows() && TT.getArch() == Triple::x86_64) {
--        attr.addAttribute(Attribute::UWTable); // force NeedsWinEH
-+        attr.addUWTableAttr(llvm::UWTableKind::Default); // force NeedsWinEH
-     }
-     if (jl_fpo_disabled(TT))
-         attr.addAttribute("frame-pointer", "all");
-@@ -5809,6 +5814,7 @@ static void emit_cfunc_invalidate(
-         prepare_call_in(gf_thunk->getParent(), jlapplygeneric_func));
- }
- 
-+#include <iostream>
- static Function* gen_cfun_wrapper(
-     Module *into, jl_codegen_params_t &params,
-     const function_sig_t &sig, jl_value_t *ff, const char *aliasname,
-@@ -6312,8 +6318,6 @@ static Function* gen_cfun_wrapper(
-     }
-     else if (!type_is_ghost(sig.lrt)) {
-         Type *prt = sig.prt;
--        if (sig.sret)
--            prt = sig.fargt_sig[0]->getContainedType(0); // sret is a PointerType
-         bool issigned = jl_signed_type && jl_subtype(declrt, (jl_value_t*)jl_signed_type);
-         Value *v = emit_unbox(ctx, sig.lrt, retval, retval.typ);
-         r = llvm_type_rewrite(ctx, v, prt, issigned);
-@@ -8683,6 +8687,57 @@ static JuliaVariable *julia_const_gv(jl_value_t *val)
+@@ -8704,6 +8704,57 @@ static JuliaVariable *julia_const_gv(jl_value_t *val)
      }
      return nullptr;
  }
@@ -236,58 +75,8 @@ index c78aedf0d9..f6c47994e1 100644
 +}
 +#endif
  
- static void init_jit_functions(void)
- {
-@@ -8922,6 +8977,9 @@ extern "C" JL_DLLEXPORT void jl_init_codegen_impl(void)
-     jl_init_llvm();
-     // Now that the execution engine exists, initialize all modules
-     init_jit_functions();
-+#if JULIA_FLOAT16_ABI == 2
-+    init_f16_funcs();
-+#endif
- }
- 
- extern "C" JL_DLLEXPORT void jl_teardown_codegen_impl() JL_NOTSAFEPOINT
-diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
-index 0f75789077..2dd5ae6dd2 100644
---- a/src/jitlayers.cpp
-+++ b/src/jitlayers.cpp
-@@ -1382,7 +1382,7 @@ JuliaOJIT::JuliaOJIT()
-     }
- 
-     JD.addToLinkOrder(GlobalJD, orc::JITDylibLookupFlags::MatchExportedSymbolsOnly);
--
-+#if JULIA_FLOAT16_ABI == 1
-     orc::SymbolAliasMap jl_crt = {
-         { mangle("__gnu_h2f_ieee"), { mangle("julia__gnu_h2f_ieee"), JITSymbolFlags::Exported } },
-         { mangle("__extendhfsf2"),  { mangle("julia__gnu_h2f_ieee"), JITSymbolFlags::Exported } },
-@@ -1391,6 +1391,7 @@ JuliaOJIT::JuliaOJIT()
-         { mangle("__truncdfhf2"),   { mangle("julia__truncdfhf2"),   JITSymbolFlags::Exported } }
-     };
-     cantFail(GlobalJD.define(orc::symbolAliases(jl_crt)));
-+#endif
- 
- #ifdef MSAN_EMUTLS_WORKAROUND
-     orc::SymbolMap msan_crt;
-diff --git a/src/jitlayers.h b/src/jitlayers.h
-index 7f07034586..894da17f37 100644
---- a/src/jitlayers.h
-+++ b/src/jitlayers.h
-@@ -89,11 +89,9 @@ struct OptimizationOptions {
-     }
- };
- 
--// LLVM's new pass manager is scheduled to replace the legacy pass manager
--// for middle-end IR optimizations. However, we have not qualified the new
--// pass manager on our optimization pipeline yet, so this remains an optional
--// define
--// #define JL_USE_NEW_PM
-+#if defined(_COMPILER_ASAN_ENABLED_) || defined(_COMPILER_TSAN_ENABLED_) || defined(_COMPILER_MSAN_ENABLED_)
-+#define JL_USE_NEW_PM
-+#endif
- 
- struct NewPM {
-     std::unique_ptr<TargetMachine> TM;
+ // Handle FLOAT16 ABI v2
+ #if JULIA_FLOAT16_ABI == 2
 diff --git a/src/llvm-alloc-opt.cpp b/src/llvm-alloc-opt.cpp
 index b044e2351f..6f2b6c539d 100644
 --- a/src/llvm-alloc-opt.cpp
@@ -367,56 +156,6 @@ index 8174832b3c..a628710916 100644
          auto cmp = new ICmpInst(phi, CmpInst::ICMP_NE, pgcstack, Constant::getNullValue(pgcstack->getType()));
          SplitBlockAndInsertIfThenElse(cmp, phi, &fastTerm, &slowTerm,
                                        MDB.createBranchWeights(Weights));
-diff --git a/src/llvm-remove-addrspaces.cpp b/src/llvm-remove-addrspaces.cpp
-index e263467ba6..a005d3cfaa 100644
---- a/src/llvm-remove-addrspaces.cpp
-+++ b/src/llvm-remove-addrspaces.cpp
-@@ -51,7 +51,7 @@ public:
-             else {
-                 //Remove once opaque pointer transition is complete
-                 DstTy = PointerType::get(
--                        remapType(Ty->getPointerElementType()),
-+                        remapType(Ty->getNonOpaquePointerElementType()),
-                         ASRemapper(Ty->getAddressSpace()));
-             }
-         }
-@@ -161,7 +161,7 @@ public:
-                     auto ptrty = cast<PointerType>(Src->getType()->getScalarType());
-                     //Remove once opaque pointer transition is complete
-                     if (!ptrty->isOpaque()) {
--                        Type *SrcTy = remapType(ptrty->getPointerElementType());
-+                        Type *SrcTy = remapType(ptrty->getNonOpaquePointerElementType());
-                         DstV = CE->getWithOperands(Ops, Ty, false, SrcTy);
-                     }
-                 }
-diff --git a/src/llvm-version.h b/src/llvm-version.h
-index 4e15e787b7..a3f3774b6d 100644
---- a/src/llvm-version.h
-+++ b/src/llvm-version.h
-@@ -2,6 +2,7 @@
- 
- #include <llvm/Config/llvm-config.h>
- #include "julia_assert.h"
-+#include "platform.h"
- 
- // The LLVM version used, JL_LLVM_VERSION, is represented as a 5-digit integer
- // of the form ABBCC, where A is the major version, B is minor, and C is patch.
-@@ -17,6 +18,15 @@
- #define JL_LLVM_OPAQUE_POINTERS 1
- #endif
- 
-+// Pre GCC 12 libgcc defined the ABI for Float16->Float32
-+// to take an i16. GCC 12 silently changed the ABI to now pass
-+// Float16 in Float32 registers.
-+#if JL_LLVM_VERSION < 150000 || defined(_CPU_PPC64_) || defined(_CPU_PPC_)
-+#define JULIA_FLOAT16_ABI 1
-+#else
-+#define JULIA_FLOAT16_ABI 2
-+#endif
-+
- #ifdef __cplusplus
- #if defined(__GNUC__) && (__GNUC__ >= 9)
- // Added in GCC 9, this warning is annoying
 diff --git a/stdlib/LLD_jll/Project.toml b/stdlib/LLD_jll/Project.toml
 index 52d4b67de3..de73f5430f 100644
 --- a/stdlib/LLD_jll/Project.toml
