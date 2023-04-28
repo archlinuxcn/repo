@@ -8,7 +8,6 @@ post_build: git_pkgbuild_commit
 
 repo_depends:
   - xorgproto-git
-  - libdisplay-info-git
 
 update_on:
   - source: gitlab
@@ -16,5 +15,3 @@ update_on:
     host: gitlab.freedesktop.org
   - alias: alpm-lilac
     alpm: xorgproto-git
-  - alias: alpm-lilac
-    alpm: libdisplay-info-git
