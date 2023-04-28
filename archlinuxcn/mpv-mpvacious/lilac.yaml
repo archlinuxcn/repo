@@ -1,0 +1,9 @@
+maintainers:
+  - github: masakichi
+pre_build_script: aur_pre_build(maintainers=['tatsumoto'])
+post_build: git_pkgbuild_commit
+update_on:
+  - source: aur
+    aur: mpv-mpvacious
+  - source: manual
+    manual: 1

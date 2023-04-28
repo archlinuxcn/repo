@@ -35,9 +35,10 @@ optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cu
 conflicts=("${_pkgname}")
 provides=("${_pkgname}=${pkgver}")
 source=("https://download.gimp.org/pub/gimp/v${pkgver%.*}/${_pkgname}-${pkgver}-autotools.tar.bz2"
-        'babl-0.1-name-change-autotools.patch::https://gitlab.gnome.org/GNOME/gimp/-/commit/09ece8f6f99756ed84ded47d9da6e2f5cbda5375.patch'
+        'babl-0.1-name-change-autotools.patch'
         'linux.gpl')
-sha256sums=('028bb8f825c492037d09720694c3a3096f1af5d6347eaa84970b43c476713ee7'
+sha256sums=('810761c432224157f45c5104ded58245acb95d2070a538caa516327c5b0e0f58'
+            'e92f88fbfb31514b1be47d303f69a5020c9fffdd6f4557fceeaab36b7881eb78'
             '1003bbf5fc292d0d63be44562f46506f7b2ca5729770da9d38d3bb2e8a2f36b3')
 
 prepare() {

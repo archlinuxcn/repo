@@ -5,7 +5,7 @@
 # This PKGBUILD is base on the AUR repo waydroid, by Danct12 <danct12@disroot.org> and Bart Ribbers <bribbers@disroot.org>
 
 pkgname='waydroid'
-pkgver=1.4.0
+pkgver=1.4.1
 pkgrel=1
 pkgdesc='A container-based approach to boot a full Android system on a regular Linux system'
 arch=('any')
@@ -15,7 +15,7 @@ depends=('dnsmasq' 'lxc' 'nftables' 'python' 'python-gbinder' 'python-gobject' '
 optdepends=('waydroid-image: Android image for use with waydroid'
             'python-pyclip: share clipboard with container')
 source=("${pkgname}-${pkgver}.tar.gz"::"${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('2f1e4c112dbe68ad15d69441a37ba631d148c95810f0ca1e6e1c45461089d5f5e0990a58c2324449b69199b6b24d32c110063c4dfaf89b537779915ec3f3b69d')
+sha512sums=('c5050c03543623a14a0f1a7a0b320e2786d95c208945767cddff7c3b46486cc19406eba798fce2224a383b3fe587e2e1b1f91ebb75c1da08cb50d33e724b6fef')
 
 package() {
   make -C "${srcdir}/${pkgname}-${pkgver}/" install DESTDIR="${pkgdir}" USE_NFTABLES=1

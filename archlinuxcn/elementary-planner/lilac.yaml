@@ -4,7 +4,16 @@ update_on:
   - source: aur
     aur: elementary-planner
   - source: alpm
+    alpm: evolution-data-server
+    repo: extra
+    strip_release: true
+    provided: libecal-2.0.so
+  - source: alpm
     alpm: granite
     repo: community
+    strip_release: true
+    provided: libgranite.so
+  - source: manual
+    manual: 1.0.0
 maintainers:
   - github: dctxmei

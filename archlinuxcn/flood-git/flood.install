@@ -1,7 +1,0 @@
-post_upgrade() {
-  if [[ $(vercmp 4.0.0 "$2") -gt 0 ]]; then
-    echo "Flood now uses command-line arguments for configuration."
-    echo "https://github.com/jesec/flood/wiki/Configuration"
-    echo "Arguments for the systemd service are configured in /etc/conf.d/flood"
-  fi
-}

@@ -1,0 +1,11 @@
+maintainers:
+  - github: masakichi
+repo_depends:
+  - libeb
+pre_build_script: aur_pre_build(maintainers=['Ben_Kerman', 'MarsSeed'])
+post_build: git_pkgbuild_commit
+update_on:
+  - source: aur
+    aur: qolibri
+  - source: manual
+    manual: 1

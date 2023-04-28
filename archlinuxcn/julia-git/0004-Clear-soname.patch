@@ -1,7 +1,7 @@
-From 8b690d68dda29f62eaff6c7e4814c3cde9a26bee Mon Sep 17 00:00:00 2001
+From 0b898c3ddd101ca23f1e447ccc3d5fd5f0d46d21 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
-Subject: [PATCH 4/7] Clear soname
+Subject: [PATCH 4/6] Clear soname
 
 ---
  stdlib/LibGit2_jll/src/LibGit2_jll.jl   | 2 +-
@@ -11,7 +11,7 @@ Subject: [PATCH 4/7] Clear soname
  4 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/stdlib/LibGit2_jll/src/LibGit2_jll.jl b/stdlib/LibGit2_jll/src/LibGit2_jll.jl
-index 29d12fc534..9770160acc 100644
+index f8e814f1f7..ab7970d689 100644
 --- a/stdlib/LibGit2_jll/src/LibGit2_jll.jl
 +++ b/stdlib/LibGit2_jll/src/LibGit2_jll.jl
 @@ -23,7 +23,7 @@ if Sys.iswindows()
@@ -24,7 +24,7 @@ index 29d12fc534..9770160acc 100644
  
  function __init__()
 diff --git a/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl b/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl
-index 66987b30d0..985a33f8b8 100644
+index a809f7a912..724369cc39 100644
 --- a/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl
 +++ b/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl
 @@ -23,7 +23,7 @@ if Sys.iswindows()
@@ -37,7 +37,7 @@ index 66987b30d0..985a33f8b8 100644
  
  function __init__()
 diff --git a/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl b/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl
-index 338bec9503..871051ea95 100644
+index e46da42a9a..360fe2956b 100644
 --- a/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl
 +++ b/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl
 @@ -31,9 +31,9 @@ elseif Sys.isapple()
@@ -54,7 +54,7 @@ index 338bec9503..871051ea95 100644
  
  function __init__()
 diff --git a/stdlib/OpenLibm_jll/src/OpenLibm_jll.jl b/stdlib/OpenLibm_jll/src/OpenLibm_jll.jl
-index e3536021ad..cb375a2c25 100644
+index f2dee45a27..dfac42fd48 100644
 --- a/stdlib/OpenLibm_jll/src/OpenLibm_jll.jl
 +++ b/stdlib/OpenLibm_jll/src/OpenLibm_jll.jl
 @@ -22,7 +22,7 @@ if Sys.iswindows()
@@ -67,5 +67,5 @@ index e3536021ad..cb375a2c25 100644
  
  function __init__()
 -- 
-2.39.2
+2.40.0
 

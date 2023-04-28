@@ -4,7 +4,7 @@
 # Contributor: Stefan Tatschner <stefan.tatschner@gmail.com>
 
 pkgname=git-extras
-pkgver=6.5.0
+pkgver=7.0.0
 pkgrel=1
 pkgdesc="GIT utilities -- repo summary, commit counting, repl, changelog population and more"
 arch=('any')
@@ -13,7 +13,7 @@ license=('MIT')
 depends=('git')
 install=$pkgname.install
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-b2sums=('44331744399f55f9c6bba26bd0eef95e87a5b8ed0a216f3a4a71397fd2ac7aad4325ef787e1970f54c5b8732d0d291c20d6103c8549f3a1eb315bd7fe884337e')
+b2sums=('8b6ae331b761729d5f92cd350bf21f4f5ebb5098092e224f49db9fe5ef2cbdcd3fc2783af2fb74a8d22008d35675d9a753e753d5fa60e586dbbde919dab7ff80')
 
 package() {
     cd "${srcdir}/${pkgname}-${pkgver}"

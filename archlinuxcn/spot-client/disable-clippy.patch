@@ -1,0 +1,19 @@
+diff --git a/src/meson.build b/src/meson.build
+index 755d870..fac1b77 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -208,14 +208,3 @@ test('Unit tests',
+   ],
+   timeout: 180
+ )
+-
+-cargo_clippy = find_program(meson.source_root() / 'build-aux/clippy.sh')
+-test('Clippy',
+-  cargo_clippy,
+-  args: [
+-    meson.source_root(),
+-    meson.build_root(),
+-    get_option('offline') ? 'true' : 'false'
+-  ],
+-  timeout: 180
+-)

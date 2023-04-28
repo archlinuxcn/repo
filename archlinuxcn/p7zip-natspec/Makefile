@@ -4,7 +4,7 @@ CI_IMAGE=buzztaiki/pkgbuild-p7zip-natspec-buildenv
 
 .PHONY: all clean test check_upstream _test lint ci_test
 
-all: $(PKGINFO) test .SRCINFO
+all: lint $(PKGINFO) test .SRCINFO
 
 .SRCINFO: PKGBUILD
 	makepkg --printsrcinfo > .SRCINFO

@@ -1,0 +1,31 @@
+From 09ece8f6f99756ed84ded47d9da6e2f5cbda5375 Mon Sep 17 00:00:00 2001
+From: Jehan <jehan@girinstud.io>
+Date: Fri, 9 Dec 2022 16:34:11 +0100
+Subject: [PATCH] Issue #8948: Autotools build does not support the new
+ babl-0.1 naming.
+
+---
+ configure.ac | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index cd4b2a53a11..7d35d558dba 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -707,8 +707,11 @@ AC_SUBST(ISO_CODES_LOCALEDIR)
+ # Checks for required libraries
+ ###############################
+ 
+-PKG_CHECK_MODULES(BABL, [babl >= babl_required_version],,
+-                  [add_deps_error([babl >= babl_required_version])])
++PKG_CHECK_MODULES(BABL, [babl-0.1 >= babl_required_version],,
++                  [
++                   PKG_CHECK_MODULES(BABL, [babl >= babl_required_version],,
++                   [add_deps_error([babl-0.1 >= babl_required_version])])
++                  ])
+ PKG_CHECK_MODULES(GEGL, gegl-gegl_major_minor_version >= gegl_required_version,,
+                   [add_deps_error([gegl-gegl_major_minor_version >= gegl_required_version])])
+ PKG_CHECK_MODULES(ATK, atk >= atk_required_version,,
+-- 
+GitLab
+

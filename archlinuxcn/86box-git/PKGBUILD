@@ -1,25 +1,23 @@
 # Maintainer: oscareczek <oscareczek at gmail dot com>
 pkgname=86box-git
-pkgver=3.11.r524.g201503e6d
+pkgver=3.11.r640.g78a897f07
 pkgrel=1
 pkgdesc='Emulator of x86-based machines based on PCem.'
 arch=('pentium4' 'x86_64' 'arm7h' 'aarch64')
 url='https://86box.net/'
 license=('GPL2')
 depends=('alsa-lib' 'freetype2' 'libpng' 'libslirp' 'openal' 'qt6-base' 'rtmidi' 'sdl2' 'faudio')
-makedepends=('git' 'cmake>=3.16' 'qt6-tools')
+makedepends=('git' 'cmake>=3.16' 'qt6-tools' 'extra-cmake-modules' 'ninja')
 optdepends=('86box-roms-git: ROM files')
 source=(
     "${pkgname}::git+https://github.com/86Box/86Box.git"
-    '86box'
-    '86Box.desktop'
 )
 sha256sums=(
     'SKIP'
-    'c76882ed325072ff88953c6deaa398df05b46732c5b99bd58023d7f9e3c65435'
-    '67f2aacd0e39f0fda19412fa5b9b64fab347a68ed2f4e5e7bb437833f311a5a0'
 )
 provides=('86box')
+conflicts=('86box')
+options=('!buildflags')
 
 pkgver() {
   cd ${pkgname}
@@ -27,18 +25,21 @@ pkgver() {
 }
 
 build() {
-    if [ "$CARCH" == arm7h ] || [ "$CARCH" == aarch64 ]; then
-        NDR=on
-    else
-        NDR=off
-    fi
-    cmake -S"${pkgname}" -Bbuild -DCMAKE_INSTALL_PREFIX=/usr -DRELEASE=on -DDEV_BRANCH=on -DUSE_QT6=on -DSLIRP_EXTERNAL=on -DNEW_DYNAREC=$NDR
+    case "$CARCH" in
+        pentium4) _NDR=off; _TOOLCHAIN=cmake/flags-gcc-i686.cmake ;;
+        x86_64)   _NDR=off; _TOOLCHAIN=cmake/flags-gcc-x86_64.cmake ;;
+        arm7h)    _NDR=on;  _TOOLCHAIN=cmake/flags-gcc-armv7.cmake ;;
+        aarch64)  _NDR=on;  _TOOLCHAIN=cmake/flags-gcc-aarch64.cmake ;;
+    esac
+    LDFLAGS='-z now' cmake -S"${pkgname}" -Bbuild --preset regular --toolchain "$_TOOLCHAIN" -DCMAKE_INSTALL_PREFIX=/usr -DUSE_QT6=on -DNEW_DYNAREC="$_NDR" -DSLIRP_EXTERNAL=on
     cmake --build build
 }
 
 package() {
     DESTDIR="${pkgdir}" cmake --build "${srcdir}/build" --target install
-    install -Dm755 86box "$pkgdir/usr/bin"
-    install -Dm644 86Box.desktop -t "$pkgdir/usr/share/applications"
-    install -Dm644 "$srcdir/$pkgname/src/win/assets/86Box-green.png" "$pkgdir/usr/share/pixmaps/86Box.png"
+    for i in 48x48 64x64 72x72 96x96 128x128 192x192 256x256 512x512; do
+        install -Dm644 "$srcdir/$pkgname/src/unix/assets/$i/net.86box.86Box.png" -t "$pkgdir/usr/share/icons/hicolor/$i/apps"
+    done
+    mkdir "$pkgdir/usr/share/applications"
+    sed 's/^Exec.*/Exec=86Box -P .local\/share\/86Box/' "$srcdir/$pkgname/src/unix/assets/net.86box.86Box.desktop" > "$pkgdir/usr/share/applications/net.86box.86Box.desktop"
 }

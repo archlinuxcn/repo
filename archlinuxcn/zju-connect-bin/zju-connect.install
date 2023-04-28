@@ -1,0 +1,29 @@
+#!/bin/bash
+
+function whisperer(){
+    echo "-----------------------------------------------------------------------"
+    echo "For more info and more troubleshooting visit:"
+    echo "CC98: https://cc98.org"
+    echo "Github: https://github.com/Mythologyli/zju-connect"
+    echo "-----------------------------------------------------------------------"
+    echo ""
+    echo "-----------------------------------------------------------------------"
+    echo "Quick Guide"
+    echo ""
+    echo "1. How to run directly?"
+    echo "    /usr/bin/zju-connect -username <account> -password <password>"
+    echo ""
+    echo "2. What's the default port?"
+    echo "    Socks5: 1080, HTTP: 1081"
+    echo ""
+    echo "3. How to run it as a systemd service?"
+    echo "    a. edit /etc/zju-connect/config.toml"
+    echo "    b. sudo systemctl enable zju-connect"
+    echo "    c. sudo systemctl start zju-connect"
+    echo "-----------------------------------------------------------------------"
+}
+
+post_install()
+{
+    whisperer
+}

@@ -2,8 +2,8 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.27.14845.7081b89e97
-pkgrel=2
+pkgver=0.0.27.14935.711afeb688
+pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator'
 arch=(x86_64)
 url=https://github.com/RPCS3/rpcs3
@@ -34,6 +34,9 @@ depends=(
   zlib
   curl
   pugixml
+  xxhash
+  libusb
+  faudio
 )
 makedepends=(
   cmake
@@ -41,17 +44,17 @@ makedepends=(
   libglvnd
   python
   vulkan-validation-layers
+  flatbuffers
+  glslang
 )
 provides=(rpcs3)
 conflicts=(rpcs3)
-options=(!emptydirs)
+options=(!emptydirs !lto)
 source=(
   git+https://github.com/RPCS3/rpcs3.git
-  rpcs3-llvm::git+https://github.com/RPCS3/llvm-mirror.git
   git+https://github.com/KhronosGroup/glslang.git
 )
 sha256sums=(
-  SKIP
   SKIP
   SKIP
 )
@@ -68,12 +71,11 @@ pkgver() {
 prepare() {
   cd rpcs3
   
-  git submodule init 3rdparty/glslang/glslang llvm
+  git submodule init 3rdparty/glslang/glslang
   git config submodule.3rdparty/glslang.url ../glslang
-  git config submodule.llvm.url ../rpcs3-llvm
   
   SUBMODULES=($(git config --file .gitmodules --get-regexp path | \
-    awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/llvm/ && !/glslang/ && !/pugixml/'))
+    awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/glslang/ && !/pugixml/ && !/xxHash/ && !/libusb/ && !/SDL/ && !/flatbuffers/ && !/FAudio/'))
 
   # We need to convert from a relative folder path to a https://github.com path
   for ((i=0;i<${#SUBMODULES[@]};i+=2))
@@ -91,7 +93,7 @@ prepare() {
     git submodule--helper update --init --depth=1 $path
   done
 
-  git submodule--helper update 3rdparty/glslang/glslang llvm
+  git submodule--helper update 3rdparty/glslang/glslang
 }
 
 build() {
@@ -107,9 +109,16 @@ build() {
     -DUSE_SYSTEM_LIBPNG=ON \
     -DUSE_SYSTEM_ZLIB=ON \
     -DUSE_SYSTEM_CURL=ON \
-    -DUSE_SYSTEM_FLATBUFFERS=OFF \
+    -DUSE_SYSTEM_FLATBUFFERS=ON \
     -DUSE_SYSTEM_PUGIXML=ON \
-    -DDISABLE_LTO=TRUE
+    -DUSE_SYSTEM_WOLFSSL=OFF \
+    -DUSE_SYSTEM_CURL=ON \
+    -DUSE_SYSTEM_XXHASH=ON \
+    -DUSE_SYSTEM_LIBUSB=ON \
+    -DBUILD_LLVM=ON \
+    -DUSE_SYSTEM_FAUDIO=ON \
+    -DUSE_SYSTEM_SDL=ON \
+    -DDISABLE_LTO=ON
   make -C build
 }
 

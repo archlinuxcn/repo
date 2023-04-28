@@ -18,8 +18,8 @@ pkgname=(rust-nightly
          rust-std-nightly-aarch64-linux-android
          rust-std-nightly-x86_64-unknown-linux-musl
         )
-pkgver=1.70.0_20230403
-pkgrel=1
+pkgver=1.71.0_20230421
+pkgrel=4
 epoch=4
 pkgdesc="A safe, concurrent, practical language from Mozilla (nightly version)"
 arch=('i686' 'x86_64')
@@ -28,31 +28,31 @@ license=('MIT' 'Apache')
 validpgpkeys=('108F66205EAEB0AAA8DD5E1C85AB96E6FA1BE5FE')
 makedepends=('git')
 source=(
-        'https://static.rust-lang.org/dist/2023-04-03/rust-nightly-x86_64-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-src-nightly.tar.xz'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-src-nightly.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2023-04-03/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2023-04-03/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-nightly-x86_64-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-src-nightly.tar.xz'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-src-nightly.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2023-04-21/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2023-04-21/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
 
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.xz'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-i686-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-i686-unknown-linux-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-i686-pc-windows-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-i686-pc-windows-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-x86_64-pc-windows-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-x86_64-pc-windows-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-wasm32-unknown-unknown.tar.xz'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-wasm32-unknown-unknown.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-aarch64-linux-android.tar.xz'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-aarch64-linux-android.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-x86_64-unknown-linux-musl.tar.xz'
-        'https://static.rust-lang.org/dist/2023-04-03/rust-std-nightly-x86_64-unknown-linux-musl.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.xz'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-i686-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-i686-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-i686-pc-windows-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-i686-pc-windows-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-x86_64-pc-windows-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-x86_64-pc-windows-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-wasm32-unknown-unknown.tar.xz'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-wasm32-unknown-unknown.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-aarch64-linux-android.tar.xz'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-aarch64-linux-android.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-x86_64-unknown-linux-musl.tar.xz'
+        'https://static.rust-lang.org/dist/2023-04-21/rust-std-nightly-x86_64-unknown-linux-musl.tar.xz.asc'
         'git+https://github.com/rust-lang/zsh-config')
 sha512sums=(
             'SKIP'
@@ -123,9 +123,9 @@ package_rust-nightly() {
               'rust-std-nightly-aarch64-linux-android: cross compile for aarch64-linux-android'
               'rust-std-nightly-x86_64-unknown-linux-musl: cross compile for x86_64-unknown-linux-musl'
               'cargo-nightly: Rust package manager')
-  provides=(rust=1.70.0)
+  provides=(rust=1.71.0)
   conflicts=(rust)
-  options=(staticlibs)
+  options=(!strip)
 
   install -Dm644 "$srcdir"/zsh-config/_rust "$pkgdir/usr/share/zsh/site-functions/_rust"
 
@@ -152,9 +152,9 @@ package_rust-nightly() {
 package_rust-docs-nightly() {
   pkgdesc="A safe, concurrent, practical language from Mozilla. (Language and API documentation, for nightly version)"
   arch=('any')
-  options+=('!strip')
+  options=('!strip')
   optdepends=('rust-nightly: to compile and run the programs you can write using this documentation')
-  provides=('rust-doc=1.70.0')
+  provides=('rust-doc=1.71.0')
   conflicts=('rust-doc')
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/rust-docs
@@ -215,9 +215,9 @@ package_cargo-nightly() {
 package_rust-src-nightly() {
   pkgdesc="A safe, concurrent, practical language from Mozilla. (Source code, for nightly version)"
   arch=('any')
-  options+=('!strip')
+  options=('!strip')
   optdepends=('rust-nightly')
-  provides=('rust-src=1.70.0')
+  provides=('rust-src=1.71.0')
   conflicts=('rust-src')
 
   cd rust-src-nightly/rust-src
@@ -230,7 +230,7 @@ package_rust-src-nightly() {
 package_rust-std-nightly-arm-unknown-linux-gnueabihf(){
   pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on arm-unknown-linux-gnueabihf)"
   arch=('any')
-  options+=('!strip')
+  options=('!strip' 'staticlibs')
 
 
   cd rust-std-nightly-arm-unknown-linux-gnueabihf
@@ -249,7 +249,7 @@ package_rust-std-nightly-arm-unknown-linux-gnueabihf(){
 package_rust-std-nightly-armv7-unknown-linux-gnueabihf(){
   pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on armv7-unknown-linux-gnueabihf)"
   arch=('any')
-  options+=('!strip')
+  options=('!strip' 'staticlibs')
 
 
   cd rust-std-nightly-armv7-unknown-linux-gnueabihf
@@ -268,7 +268,7 @@ package_rust-std-nightly-armv7-unknown-linux-gnueabihf(){
 package_rust-std-nightly-x86_64-unknown-linux-gnu(){
   pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on x86_64-unknown-linux-gnu)"
   arch=('any')
-  options+=('!strip')
+  options=('!strip' 'staticlibs')
 
 
   cd rust-std-nightly-x86_64-unknown-linux-gnu
@@ -287,7 +287,7 @@ package_rust-std-nightly-x86_64-unknown-linux-gnu(){
 package_rust-std-nightly-i686-unknown-linux-gnu(){
   pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on i686-unknown-linux-gnu)"
   arch=('any')
-  options+=('!strip')
+  options=('!strip' 'staticlibs')
 
 
   cd rust-std-nightly-i686-unknown-linux-gnu
@@ -306,7 +306,7 @@ package_rust-std-nightly-i686-unknown-linux-gnu(){
 package_rust-std-nightly-i686-pc-windows-gnu(){
   pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on i686-pc-windows-gnu)"
   arch=('any')
-  options+=('!strip')
+  options=('!strip' 'staticlibs')
 
   optdepends=('mingw-w64-gcc')
 
@@ -326,7 +326,7 @@ package_rust-std-nightly-i686-pc-windows-gnu(){
 package_rust-std-nightly-x86_64-pc-windows-gnu(){
   pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on x86_64-pc-windows-gnu)"
   arch=('any')
-  options+=('!strip')
+  options=('!strip' 'staticlibs')
 
   optdepends=('mingw-w64-gcc')
 
@@ -346,7 +346,7 @@ package_rust-std-nightly-x86_64-pc-windows-gnu(){
 package_rust-std-nightly-wasm32-unknown-unknown(){
   pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on wasm32-unknown-unknown)"
   arch=('any')
-  options+=('!strip')
+  options=('!strip' 'staticlibs')
 
 
   cd rust-std-nightly-wasm32-unknown-unknown
@@ -365,7 +365,7 @@ package_rust-std-nightly-wasm32-unknown-unknown(){
 package_rust-std-nightly-aarch64-linux-android(){
   pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on aarch64-linux-android)"
   arch=('any')
-  options+=('!strip')
+  options=('!strip' 'staticlibs')
 
   optdepends=('android-ndk')
 
@@ -385,7 +385,7 @@ package_rust-std-nightly-aarch64-linux-android(){
 package_rust-std-nightly-x86_64-unknown-linux-musl(){
   pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on x86_64-unknown-linux-musl)"
   arch=('any')
-  options+=('!strip')
+  options=('!strip' 'staticlibs')
 
 
   cd rust-std-nightly-x86_64-unknown-linux-musl

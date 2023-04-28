@@ -3,7 +3,7 @@
 
 _basename=numactl
 pkgname=lib32-libnuma
-pkgver=2.0.15
+pkgver=2.0.16
 pkgrel=1
 pkgdesc='Simple NUMA policy support 32-bit version. Libraries only'
 arch=('x86_64')
@@ -13,7 +13,7 @@ depends=('perl' 'numactl' 'lib32-gcc-libs')
 conflicts=('lib32-numactl')
 provides=("lib32-numactl=${pkgver}" "libnuma.so")
 source=("$_basename-${pkgver}.tar.gz::$url/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('1508bb02f56f1b9376243980ba96291856ba083e7a3480fdcb0fbf11ff01d6fa')
+sha256sums=('a35c3bdb3efab5c65927e0de5703227760b1101f5e27ab741d8f32b3d5f0a44c')
 
 prepare() {
   cd "${_basename}-${pkgver}"

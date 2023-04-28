@@ -1,13 +1,13 @@
 # Maintainer: Dobroslaw Kijowski [dobo] <dobo90_at_gmail.com>
 
 pkgname=lief
-pkgver=0.12.3
-pkgrel=1
+pkgver=0.13.0
+pkgrel=2
 pkgdesc='Library to instrument executable formats'
 arch=(armv7h aarch64 x86_64)
 url='https://lief.quarkslab.com/'
 license=(apache)
-makedepends=(git cmake python python-setuptools)
+makedepends=(git cmake ninja python python-setuptools)
 source=("git+https://github.com/lief-project/LIEF#tag=${pkgver}")
 md5sums=('SKIP')
 
@@ -32,21 +32,25 @@ build() {
   # The python command below will run cmake configure again
   # but it should remember the flags we set here.
   cmake . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1 \
-        -DCMAKE_SKIP_BUILD_RPATH=On
+        -DCMAKE_SKIP_BUILD_RPATH=On -DLIEF_EXAMPLES=Off -G Ninja
   # The python command invokes `make` with a manually set `-j` flag so it won't
   # respect the one in `MAKEFLAGS`. Manually parse and supply the `-j` flag to setup.py.
   _build_arg=
   if [[ " ${MAKEFLAGS} " =~ [[:space:]]-j[[:space:]]*([0-9]*)[[:space:]] ]]; then
     _build_arg=-j${BASH_REMATCH[1]}
   fi
-  python setup.py build --build-temp=build $_build_arg
+  build_temp=$PWD/build
+  (cd api/python/
+   python setup.py build --build-temp=$build_temp $_build_arg)
 }
 
 package() {
   cd LIEF
 
-  make -C build DESTDIR="${pkgdir}" install
-  python setup.py install --optimize=1 --root="${pkgdir}" --skip-build
+  (cd build
+   DESTDIR="${pkgdir}" ninja install)
+  (cd api/python/
+   python setup.py install --optimize=1 --root="${pkgdir}" --skip-build)
 
   pymin_ver=$(python -c 'import sys; print(sys.version_info.minor)')
   ((pynext_min=pymin_ver + 1))

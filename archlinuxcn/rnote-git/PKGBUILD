@@ -1,15 +1,16 @@
-# Maintainer: Igor Dyatlov <dyatlov.igor@protonmail.com>
+# Maintainer: Jingu <xiuluo dot android at gmail dot com>
+
+# Contributor: Igor Dyatlov <dyatlov.igor@protonmail.com>
 
 pkgname=rnote-git
-pkgver=0.5.18.r20.gb5dc55f6
+pkgver=0.6.0.r4.g13a5c565
 pkgrel=2
 pkgdesc="A simple drawing application to create handwritten notes"
 arch=('x86_64')
 url="https://github.com/flxzt/rnote"
 license=('GPL3')
-depends=('libadwaita' 'poppler-glib' 'gstreamer' 'alsa-lib')
-makedepends=('git' 'meson' 'cargo' 'cmake' 'clang')
-checkdepends=('appstream-glib')
+depends=('gtk4' 'glib2' 'libadwaita' 'poppler-glib' 'gstreamer' 'alsa-lib')
+makedepends=('meson' 'cargo' 'cmake' 'clang' 'git')
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
 source=("${pkgname%-git}::git+$url.git")

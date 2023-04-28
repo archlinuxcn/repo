@@ -1,8 +1,0 @@
-post_install() {
-  echo "CONFIG_DEBUG_INFO is disabled on default. You need to recompile"
-  echo "the kernel with CONFIG_DEBUG_INFO enabled."
-}
-
-post_upgrade() {
-  post_install $1
-}

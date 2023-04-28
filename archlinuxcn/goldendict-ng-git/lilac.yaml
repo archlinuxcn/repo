@@ -1,0 +1,16 @@
+maintainers:
+  - github: masakichi
+repo_depends:
+  - libeb
+pre_build_script: aur_pre_build(maintainers=['slbtty'])
+post_build: git_pkgbuild_commit
+update_on:
+  - source: github
+    github: xiaoyifang/goldendict-ng
+  - source: aur
+    aur: goldendict-ng-git
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavutil.so
+  - source: manual
+    manual: 1

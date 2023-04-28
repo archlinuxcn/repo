@@ -7,9 +7,9 @@
 # Contributor: heavysink <winstonwu91 at gmail>
 pkgname=wine-valve
 epoch=4
-pkgver=7.0.6e
-_pkgver='7.0-6e'
-pkgrel=2
+pkgver=8.0.1d
+_pkgver='8.0-1d'
+pkgrel=1
 pkgdesc='A compatibility layer for running Windows programs (Valve version)'
 arch=('i686' 'x86_64')
 url='https://github.com/ValveSoftware/wine.git'
@@ -34,8 +34,7 @@ _depends=(
     'faudio'                'lib32-faudio'
     'vkd3d'                 'lib32-vkd3d'
 )
-makedepends=('autoconf' 'ncurses' 'bison' 'perl' 'fontforge' 'flex'
-    'gcc>=4.5.0-2'
+makedepends=('autoconf' 'ncurses' 'bison' 'perl' 'fontforge' 'flex' 'mingw-w64-gcc'
     'giflib'                'lib32-giflib'
     'libpng'                'lib32-libpng'
     'gnutls'                'lib32-gnutls'
@@ -82,13 +81,12 @@ optdepends=(
     'samba'
     'dosbox'
 )
-options=('staticlibs' '!lto' '!debug' 'strip')
+options=('staticlibs' '!lto' '!debug' '!buildflags')
 install="$pkgname.install"
 source=("https://github.com/ValveSoftware/wine/archive/proton-wine-${_pkgver}.tar.gz"
         '30-win32-aliases.conf'
         'wine-binfmt.conf'
-        'futex.patch'
-        'libldap.patch')
+        'futex.patch')
 
 if [ "$CARCH" = 'i686' ] 
 then
@@ -112,64 +110,48 @@ prepare() {
     # fix path of opencl headers
     sed 's|OpenCL/opencl.h|CL/opencl.h|g' -i configure*
     patch -p1 < ../futex.patch
-    patch -p1 < ../libldap.patch
     ./dlls/winevulkan/make_vulkan
+
+    # Doesn't compile without remove these flags as of 4.10
+    export CFLAGS="${CFLAGS/-fno-plt/} -ffat-lto-objects"
+    export LDFLAGS="${LDFLAGS/,-z,now/}"
+
+    # Get rid of old build dirs
+    rm -rf $srcdir/$pkgname-{32,64}-build
+    mkdir $srcdir/$pkgname-32-build
+
+    autoreconf -f
+    ./tools/make_requests
 }
 
 build() {
-    # delete old build dirs (from previous builds) and make new ones
-    rm    -rf "$pkgname"-{32,64}-build
-    mkdir -p  "$pkgname"-32-build
-    
-    # workaround for FS#55128
-    # https://bugs.archlinux.org/task/55128
-    # https://bugs.winehq.org/show_bug.cgi?id=43530
-    export CFLAGS="${CFLAGS/-fno-plt/}"
-    export LDFLAGS="${LDFLAGS/,-z,now/}"
-    
-    # build wine 64-bit
-    # (according to the wine wiki, this 64-bit/32-bit building order is mandatory)
-    cd "wine-proton-wine-${_pkgver}"
-    autoreconf -f
-    ./tools/make_requests
-    cd ..
+  cd "$srcdir"
 
-    if [ "$CARCH" = 'x86_64' ] 
-    then
-        msg2 'Building Wine-64...'
-        
-        mkdir "$pkgname"-64-build
-        cd    "$pkgname"-64-build
-        
-         ../"wine-proton-wine-${_pkgver}"/configure \
-                          --prefix='/usr' \
-                          --libdir='/usr/lib' \
-                          --with-x \
-                          --with-gstreamer \
-                          --enable-win64 \
-			  --disable-tests
-        make
-        
-        local _wine32opts=(
-                    '--libdir=/usr/lib32'
-                    "--with-wine64=${srcdir}/${pkgname}-64-build"
-        )
-        
-        export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
-    fi
-    
-    # build wine 32-bit
-    msg2 'Building Wine-32...'
-    
-    cd "${srcdir}/${pkgname}"-32-build
-    
-     ../"wine-proton-wine-${_pkgver}"/configure \
-                      --prefix='/usr' \
-                      --with-x \
-                      --with-gstreamer \
-		      --disable-tests \
-                      ${_wine32opts[@]}
-    make
+  msg2 "Building Wine-64..."
+
+  mkdir $pkgname-64-build
+  cd "$srcdir/$pkgname-64-build"
+  ../wine-proton-wine-${_pkgver}/configure \
+    --prefix=/usr \
+    --libdir=/usr/lib \
+    --with-x \
+    --with-gstreamer \
+    --enable-win64
+
+  make
+
+  export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+
+  msg2 "Building Wine-32..."
+  cd "$srcdir/$pkgname-32-build"
+  ../wine-proton-wine-${_pkgver}/configure \
+    --prefix=/usr \
+    --with-x \
+    --with-gstreamer \
+    --libdir=/usr/lib32 \
+    --with-wine64=$srcdir/$pkgname-64-build
+
+  make
 }
 
 package() {
@@ -181,24 +163,18 @@ package() {
     
     cd "$pkgname"-32-build
     
-    if [ "$CARCH" = 'i686' ] 
-    then
-        make prefix="$pkgdir/usr" install
-    else
-        make prefix="$pkgdir/usr" \
-             libdir="$pkgdir/usr/lib32" \
-             dlldir="$pkgdir/usr/lib32/wine" install
+    make prefix="$pkgdir/usr" \
+         libdir="$pkgdir/usr/lib32" \
+         dlldir="$pkgdir/usr/lib32/wine" install
     
         # package wine 64-bit
-        msg2 'Packaging Wine-64...'
+    msg2 'Packaging Wine-64...'
         
-        cd "${srcdir}/${pkgname}"-64-build
+    cd "${srcdir}/${pkgname}"-64-build
         
-        make prefix="$pkgdir/usr" \
-             libdir="$pkgdir/usr/lib" \
-             dlldir="$pkgdir/usr/lib/wine" install
-    fi
-    
+    make prefix="$pkgdir/usr" \
+         libdir="$pkgdir/usr/lib" \
+         dlldir="$pkgdir/usr/lib/wine" install
     # font aliasing settings for Win32 applications
     install -d "$pkgdir"/etc/fonts/conf.{avail,d}
     install -m644 "${srcdir}/30-win32-aliases.conf" "${pkgdir}/etc/fonts/conf.avail"
@@ -211,10 +187,12 @@ package() {
     for file in ${srcdir}/wine-proton-wine-${_pkgver}/include/wine/*.h; do
         cp -n $file "${pkgdir}/usr/include/wine/"
     done
+
+  i686-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib32/wine/i386-windows/*.dll
+  x86_64-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.dll
 }
 
-sha256sums=('51a028c216f0be4c7bafa853a3c2a2ef6abf379ea1ea99fb0dd8635dc0d28512'
+sha256sums=('cbbba486d1c313a4c549ebd926075968540ea6c03bc1a495ffcc4851d21ccb22'
             '9901a5ee619f24662b241672a7358364617227937d5f6d3126f70528ee5111e7'
             '6dfdefec305024ca11f35ad7536565f5551f09119dda2028f194aee8f77077a4'
-            '7c73a0fd35d8905d5d0fc33f5cf1558f77b4d70e544c92034ffe41a9d50d8c40'
-            'ade8e214eb0486698423d8eb213859b458383cde2afd4d45fd60bdbcca652a72')
+            '7c73a0fd35d8905d5d0fc33f5cf1558f77b4d70e544c92034ffe41a9d50d8c40')

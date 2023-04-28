@@ -11,7 +11,7 @@ pkgname=(rust-nightly
          {{ x.name }}{% end %}
         )
 pkgver={{version + '_' + version_date}}
-pkgrel=1
+pkgrel=4
 epoch=4
 pkgdesc="A safe, concurrent, practical language from Mozilla (nightly version)"
 arch=('i686' 'x86_64')
@@ -69,7 +69,7 @@ package_rust-nightly() {
               'cargo-nightly: Rust package manager')
   provides=(rust={{version}})
   conflicts=(rust)
-  options=(staticlibs)
+  options=(!strip)
 
   install -Dm644 "$srcdir"/zsh-config/_rust "$pkgdir/usr/share/zsh/site-functions/_rust"
 
@@ -96,7 +96,7 @@ package_rust-nightly() {
 package_rust-docs-nightly() {
   pkgdesc="A safe, concurrent, practical language from Mozilla. (Language and API documentation, for nightly version)"
   arch=('any')
-  options+=('!strip')
+  options=('!strip')
   optdepends=('rust-nightly: to compile and run the programs you can write using this documentation')
   provides=('rust-doc={{version}}')
   conflicts=('rust-doc')
@@ -159,7 +159,7 @@ package_cargo-nightly() {
 package_rust-src-nightly() {
   pkgdesc="A safe, concurrent, practical language from Mozilla. (Source code, for nightly version)"
   arch=('any')
-  options+=('!strip')
+  options=('!strip')
   optdepends=('rust-nightly')
   provides=('rust-src={{version}}')
   conflicts=('rust-src')
@@ -174,7 +174,7 @@ package_rust-src-nightly() {
 package_{{x.name}}(){
   pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on {{x.target}})"
   arch=('any')
-  options+=('!strip')
+  options=('!strip' 'staticlibs')
 {% if x.optdepends %}
   optdepends=({{' '.join("'%s'" % y for y in x.optdepends)}}){% end %}
 

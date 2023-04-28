@@ -1,7 +1,7 @@
-From a6a9e7a23284a7628a2108369abb2dc3786a729a Mon Sep 17 00:00:00 2001
+From 80aceb63d965ddade930669165b753626bf86244 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 19 Jul 2020 09:40:32 -0400
-Subject: [PATCH 2/7] Fix source file paths
+Subject: [PATCH 2/6] Fix source file paths
 
 ---
  base/sysimg.jl          |  7 +++++++
@@ -11,10 +11,10 @@ Subject: [PATCH 2/7] Fix source file paths
  4 files changed, 26 insertions(+), 2 deletions(-)
 
 diff --git a/base/sysimg.jl b/base/sysimg.jl
-index 6f7219afda..dcbddc090a 100644
+index b0eeffa575..c2f6a831e2 100644
 --- a/base/sysimg.jl
 +++ b/base/sysimg.jl
-@@ -106,6 +106,13 @@ let
+@@ -99,6 +99,13 @@ let
  
          print_time("Stdlibs total", tot_time_stdlib)
      end
@@ -29,7 +29,7 @@ index 6f7219afda..dcbddc090a 100644
      # Clear global state
      empty!(Core.ARGS)
 diff --git a/base/sysinfo.jl b/base/sysinfo.jl
-index b885d88a5f..d20d90558b 100644
+index 2c96208848..f6f78c43a9 100644
 --- a/base/sysinfo.jl
 +++ b/base/sysinfo.jl
 @@ -52,7 +52,7 @@ A string containing the full path to the directory containing the `stdlib` packa
@@ -59,7 +59,7 @@ index a81908b96a..4c463db143 100644
          write(io, filename)
          write(io, UInt64(sizeof(src)))
 diff --git a/src/ast.c b/src/ast.c
-index 3f3d6176d3..2cab2412d7 100644
+index 08c493c75b..ddaf662f4e 100644
 --- a/src/ast.c
 +++ b/src/ast.c
 @@ -777,6 +777,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v, int check_vali
@@ -81,7 +81,7 @@ index 3f3d6176d3..2cab2412d7 100644
  // Parse `text` starting at 0-based `offset` and attributing the content to
  // `filename`. Return an svec of (parsed_expr, final_offset)
  JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
-@@ -801,6 +813,7 @@ JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
+@@ -802,6 +814,7 @@ JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
      fl_context_t *fl_ctx = &ctx->fl;
      value_t fl_text = cvalue_static_cstrn(fl_ctx, text, text_len);
      fl_gc_handle(fl_ctx, &fl_text);
@@ -90,5 +90,5 @@ index 3f3d6176d3..2cab2412d7 100644
                                                jl_string_len(filename));
      fl_gc_handle(fl_ctx, &fl_filename);
 -- 
-2.39.2
+2.40.0
 

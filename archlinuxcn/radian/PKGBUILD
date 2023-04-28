@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=radian
-pkgver=0.6.4
+pkgver=0.6.5
 pkgrel=1
 pkgdesc='A 21 century R console'
 arch=('any')
@@ -17,7 +17,7 @@ makedepends=(
 )
 
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/randy3k/radian/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('9ec87d26020514c8276badaf12e9a9007d1a887d09a78dc7cf33e03451dfd509f5562892b70ff242572e4df899c04a9c386e0f140361582797b6dd2530fdbe36')
+sha512sums=('4c15d5f88aeb7c897affb098f8323c42d0a30edc4cef72b88350b99458fecab915c50cedc1d124706ac04091a9b6245aa7adc81c509730fbaa1dd08cfb8f329b')
 
 build() {
   cd "${pkgname}-${pkgver}"

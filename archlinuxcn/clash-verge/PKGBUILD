@@ -1,6 +1,6 @@
 # Maintainer: sukanka<su975853527 AT gmail dot com>
 pkgname=clash-verge
-pkgver=1.3.0
+pkgver=1.3.1
 pkgrel=3
 pkgdesc="A Clash GUI based on tauri."
 arch=('x86_64' 'aarch64')
@@ -8,23 +8,17 @@ url="https://github.com/zzzgydi/clash-verge"
 license=('GPL3')
 depends=('webkit2gtk' 'clash-geoip' 'libayatana-appindicator')
 makedepends=('yarn' 'cargo-tauri' 'clash-premium-bin' 'clash-meta'  'jq' 'moreutils' 'rust' 'quickjs')
-optdepends=('clash-premium-bin>=2022.04.01: clash-core'
+optdepends=('clash-premium-bin: clash-core'
 'clash-meta: clash-core')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
 "${pkgname}.desktop"
-"001-appimage.patch::https://github.com/zzzgydi/clash-verge/commit/2b6acedae1fa29646e10cee4483105fa3479a2d6.patch"
-"002-grant-permission-for-linux.patch::https://github.com/zzzgydi/clash-verge/commit/52658886e75cd2f06fb125fcb74da5a3452275e5.patch"
 )
 
-sha512sums=('2bcbbc242056bbc889e29c0afb2b2b409838f6ee4ffdec3da976f44ff687659f2a15e71b5a65d41d59e18666fc3fda7ebe7478cbd91abb37d9beebb80570b8e0'
-            '2066dacf2e5e0135e6403cbfb825efcdf08bbcdc781407e6bb1fbb85143817b2b1abef641d20390ff7e5b3e91a509933e9eb17a64f9de7671445ac6d5363a44a'
-            '9a81ba8de8410fda1c7f892bc2dfb0dec8214ea6f86a605bb5ea36f4f55fa1092697a96d4de6c649e1b90c332ed67275255690d25b0f2a711fbf6f2cd4c3729e'
-            'fb946048c578e4258595599fe85093c1f768683f6fa46e353c4ca93e882b086216243f353d49b4346265cc53f57ed6cdabfeea73245611f0992a63b5e3426375')
+sha512sums=('8f44f7888617d1ae0d371da2c66d43dfc9dd79ec883b900d984f3a8a3c3385a4eb4ec31c2a48e016c05653bbd11d148f0b144c41a8e0841f3b90d5e08f909cf2'
+            '2066dacf2e5e0135e6403cbfb825efcdf08bbcdc781407e6bb1fbb85143817b2b1abef641d20390ff7e5b3e91a509933e9eb17a64f9de7671445ac6d5363a44a')
 
 prepare(){
 	cd $srcdir/${pkgname}-${pkgver}
-	patch -p1 < $srcdir/001-*.patch
-	patch -p1 < $srcdir/002-*.patch
 
 	install -d src-tauri/sidecar
 	ln -sf /usr/bin/clash src-tauri/sidecar/clash-${CARCH}-unknown-linux-gnu

@@ -141,15 +141,16 @@ diff --git a/es-core/src/InputConfig.cpp b/es-core/src/InputConfig.cpp
 index eb5e59c..3b557d0 100644
 --- a/es-core/src/InputConfig.cpp
 +++ b/es-core/src/InputConfig.cpp
-@@ -1,7 +1,7 @@
- #include "InputConfig.h"
+@@ -2,7 +2,7 @@
  
  #include "Log.h"
+ #include "utils/StringUtil.h"
 -#include <pugixml/src/pugixml.hpp>
 +#include <pugixml.hpp>
  
  //some util functions
  std::string inputTypeToString(InputType type)
+
 diff --git a/es-core/src/InputManager.cpp b/es-core/src/InputManager.cpp
 index 57c64b4..75c6889 100644
 --- a/es-core/src/InputManager.cpp

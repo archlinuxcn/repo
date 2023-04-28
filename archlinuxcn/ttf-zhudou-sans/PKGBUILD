@@ -1,27 +1,43 @@
 # Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
 
 pkgbase=ttf-zhudou-sans
-pkgname=('ttf-zhudou-sans' 'ttf-zhudou-sans-vf')
-pkgver=1.000
+pkgname=('ttf-zhudou-sans' 'ttf-zhudou-sans-vf' 'otf-zhudou-sans' 'woff-zhudou-sans' 'woff2-zhudou-sans')
+pkgver=2.000
 pkgrel=2
 pkgdesc='A font family for CJK symbols and punctuation, derived from Noto Sans.'
 url='https://github.com/Buernia/Zhudou-Sans'
 arch=('any')
 license=('OFL')
-source=($pkgbase-$pkgver.tar.gz::https://github.com/Buernia/Zhudou-Sans/archive/refs/tags/v$pkgver.tar.gz)
-b2sums=('bb96330012084f9dd72e03fcfbde8f5a492a7707fe1bddbdce67edbafcec4a48090087821c21fe25a30e500b5779c7f448701472e33549265c1c70ee15bb82cc')
+source=($pkgbase-$pkgver.zip::https://github.com/Buernia/Zhudou-Sans/releases/download/v$pkgver/Zhudou.Sans.zip
+        $pkgbase-$pkgver-README.md::https://raw.githubusercontent.com/Buernia/Zhudou-Sans/v$pkgver/README.md
+        $pkgbase-$pkgver-LICENSE::https://raw.githubusercontent.com/Buernia/Zhudou-Sans/v$pkgver/LICENSE
+        )
+b2sums=('3e82a302d2a5fb25f1e1bfcbde6c0afdc3dbbcfac2370bdb2139045baf798b0105904df7d1ebee135392d842facb2f1167e100d8acc8693ba7f6eedee0514966'
+        '781a6ef06211509c2d95248fdf955473a457c2310bcb222dac1c45609b552255554bba3f01f737684d023f7b71a2d86898708c8ea3a0921ad59ddc308b3baa4b'
+        '1d6c9e2d80aa08f9550edbe83aa869bcdb1fc1f3b8567a6fb978b46d22684d87df24a0ebcc86a0f00107b0c02d1b7fffde2fedf24d509608d0b114bb5f305633')
 
 package_ttf-zhudou-sans() {
-    cd "Zhudou-Sans-$pkgver"
-    rename --all ' ' '-' fonts/ttf/*.ttf
-    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF" fonts/ttf/*.ttf
-    install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" README.md
-    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF" ttf/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" $pkgbase-$pkgver-README.md
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" $pkgbase-$pkgver-LICENSE
+}
+package_otf-zhudou-sans() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF" otf/*.otf
+    install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" $pkgbase-$pkgver-README.md
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" $pkgbase-$pkgver-LICENSE
+}
+package_woff-zhudou-sans() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/WOFF" webfont/*.woff
+    install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" $pkgbase-$pkgver-README.md
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" $pkgbase-$pkgver-LICENSE
+}
+package_woff2-zhudou-sans() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/WOFF2" webfont/*.woff2
+    install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" $pkgbase-$pkgver-README.md
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" $pkgbase-$pkgver-LICENSE
 }
 package_ttf-zhudou-sans-vf() {
-    cd "Zhudou-Sans-$pkgver"
-    rename --all ' ' '-' fonts/variable\ ttf/*.ttf
-    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF" fonts/variable\ ttf/*.ttf
-    install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" README.md
-    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF" variable/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" $pkgbase-$pkgver-README.md
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" $pkgbase-$pkgver-LICENSE
 }
