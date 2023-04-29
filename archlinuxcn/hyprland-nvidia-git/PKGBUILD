@@ -2,13 +2,13 @@
 
 _pkgname="hyprland"
 pkgname="${_pkgname}-nvidia-git"
-pkgver=r2836.f23455e5
+pkgver=r2839.fbb938fc
 pkgrel=1
 pkgdesc="A dynamic tiling Wayland compositor based on wlroots that doesn't sacrifice on its looks. (NVIDIA patch)"
 arch=(any)
 url="https://github.com/hyprwm/Hyprland"
 license=('BSD')
-depends=(
+depends=("libdisplay-info.so"
 	libxcb
 	xcb-proto
 	xcb-util
@@ -38,7 +38,7 @@ depends=(
 	vulkan-validation-layers
 	xorg-xwayland
 	libliftoff
-	libdisplay-info-git)
+	libdisplay-info)
 makedepends=(
 	git
 	cmake
@@ -66,7 +66,6 @@ pkgver() {
 }
 
 build() {
-export CFLAGS+=-w
 	cd "${srcdir}/${_pkgname}"
 	git submodule update --init
 	make fixwlr
