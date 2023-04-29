@@ -70,11 +70,11 @@ package_llvm-julia() {
 
   cd llvm-project-julia-$pkgver-$_julia_rel/llvm/build
 
-  DESTDIR="$pkgdir" ninja install
+  LANG=en_US.UTF-8 DESTDIR="$pkgdir" ninja install
 
   # Include lit for running lit-based tests in other projects
   pushd ../utils/lit
-  python3 setup.py install --root="$pkgdir" -O1
+  LANG=en_US.UTF-8 python3 setup.py install --root="$pkgdir" -O1
   popd
 
   # The runtime libraries go into llvm-libs
