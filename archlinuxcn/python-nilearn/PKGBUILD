@@ -2,7 +2,7 @@
 
 pkgname=python-nilearn
 _pkgname=nilearn
-pkgver=0.10.1rc1
+pkgver=0.10.1
 pkgrel=1
 pkgdesc='Machine learning for NeuroImaging in Python'
 arch=('any')
@@ -26,24 +26,23 @@ checkdepends=(
 )
 makedepends=(
   'cython'
-  'python-setuptools'
+  python-build
+  python-installer
+  python-wheel
+  python-hatchling
+  python-hatch-vcs
 )
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/nilearn/nilearn/archive/${pkgver}.tar.gz")
-sha512sums=('f5ba8de84b8d8af1c188028ab4bd392880bd35b3c9e3aaf697fb895ea7baf2ad27f4a85f2db3c841a0df5d0a2437e919b24b20bc10f837243c9b99b9e9f89603')
+source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+sha512sums=('04a598ac58e16060622f14ae84467829ecf693f3f362d94333e24083c3434b58800a6199c5a1de5dcd29fa34c28e34f04228b6882291d1f0d7ea08ba00729d1a')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  python setup.py build
-}
-
-check() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
-  pytest -v
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
