@@ -3,7 +3,7 @@
 
 pkgbase=openrazer
 pkgname=('python-openrazer' 'openrazer-daemon' 'openrazer-driver-dkms' 'openrazer-meta')
-pkgver=3.5.1
+pkgver=3.6.0
 pkgrel=1
 pkgdesc="An entirely open source driver and user-space daemon that allows you to manage your Razer peripherals on GNU/Linux."
 arch=('any')
@@ -11,7 +11,7 @@ url="https://github.com/openrazer/openrazer"
 license=('GPL2')
 makedepends=('python-setuptools')
 source=("https://github.com/openrazer/openrazer/releases/download/v$pkgver/openrazer-$pkgver.tar.xz")
-sha256sums=('0dd242fe95a804e437359f1730be8bbb1ffc19b9d60bc3f23d481e541eb25bec')
+sha256sums=('ad900fd721a64ef3e7432bceb127fc97894a3e1eb3bf2b050da17b46585b2d87')
 
 prepare() {
   # Do a sanity check in the environment of the builder so the build process doesn't place files into a wrong directory.
