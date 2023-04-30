@@ -1,0 +1,41 @@
+# Maintainer: Joshua Rubin <me at jawa dot dev>
+
+pkgname=jtdxhamlib-static
+_pkgname=jtdxhamlib
+pkgver=159
+pkgrel=1
+pkgdesc='Modified hamlib for jtdx'
+arch=('x86_64')
+url='https://github.com/jtdx-project/jtdxhamlib'
+license=('GPL2')
+depends=('libusb' 'readline')
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/jtdx-project/${_pkgname}/archive/${pkgver}.tar.gz")
+sha256sums=('a5678cb3ede7d75371b9baee046a3ae43ce94af647dcfe07142dc2e4e5f147d4')
+sha512sums=('8eb5a01e299e90b0e95ac782e7ee7e121f85157c990e812226165758e57a595a287ac1391a04f08d2258f6b6e568833e25009d182fc80249764edcc6590bb3fe')
+b2sums=('6d0abcf977ff33e6d28997533cbfeec8236142178fdf5d9cc63d3ed3c0c9871897df787b6e7e4b852e8cde1c9cf6fa0122134017c66c40ddfe9002186b8b24b7')
+options=(staticlibs)
+
+prepare() {
+  cd "${_pkgname}-${pkgver}"
+  autoreconf -fiv
+}
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  mkdir -p build
+  cd build
+  CFLAGS+=" -ffat-lto-objects"
+  CXXFLAGS+=" -ffat-lto-objects"
+  ../configure \
+    "--prefix=/opt/${_pkgname}" \
+    --disable-shared \
+    --enable-static \
+    --without-cxx-binding \
+    --disable-winradio
+  make
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}/build"
+  make DESTDIR="${pkgdir}/" install
+}

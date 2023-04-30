@@ -1,0 +1,17 @@
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: jtdxhamlib
+    use_latest_tag: true
+  - source: alpm
+    alpm: libusb
+    provided: libusb-1.0.so
+  - source: alpm
+    alpm: readline
+    provided: libreadline.so
+
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com

@@ -1,0 +1,24 @@
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - jtdxhamlib-static
+update_on_build:
+  - pkgbase: jtdxhamlib-static
+
+update_on:
+  - source: github
+    github: jtdx-project/jtdx
+    use_latest_tag: true
+  - source: alpm-lilac
+    alpm: hamlib-static
+  - source: alpm
+    alpm: fftw
+    provided: libfftw3f.so
+  - source: alpm
+    alpm: fftw
+    provided: libfftw3f_threads.so
+
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com

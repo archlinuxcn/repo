@@ -1,0 +1,33 @@
+# Maintainer: Joshua Rubin <me at jawa dot dev>
+
+pkgname=jtdx
+pkgver=159
+_pkgver=$pkgver
+pkgrel=1
+pkgdesc='For amateur radio communication using very weak signals. Forked from WSJT-X.'
+arch=('x86_64')
+url='https://github.com/jtdx-project/jtdx'
+license=('GPL3')
+depends=( 'fftw' 'libfftw3f.so' 'libfftw3f_threads.so'
+          'libusb' 'libusb-1.0.so' 'readline' 'libreadline.so' # For executable files from hamlib
+          'qt5-serialport' 'qt5-multimedia' 'qt5-websockets'
+          )
+makedepends=('cmake' 'ninja' 'asciidoc' 'asciidoctor' 'jtdxhamlib-static' 'gcc' 'gcc-fortran' 'boost' 'qt5-tools')
+source=("${pkgname}-${_pkgver}.tar.gz::https://github.com/jtdx-project/${pkgname}/archive/${_pkgver}.tar.gz")
+sha256sums=('85b02fbe7f1d53e29dd592fc78e32a458a2facf6ae08bbd24ec2b1fe16155dcc')
+sha512sums=('53fbaf805aef04544e952a8ca77b6780f475c458407b39631e48001b17c4fa813c9bfb24e06c7eba039f9d4f445c6e66bb7e945bc1b74319de179d0476f617ad')
+b2sums=('1648990bff232e5e754fb8afd0fa20478befe35d2e38df7a513fb5cf8e32327b426fab91234a7a484e03f970fdd63f0517309f4f56f7bf5ae296204dd0ce4954')
+
+build() {
+  cd "${pkgname}-${_pkgver}"
+  cmake -S . -B build \
+    -D CMAKE_PREFIX_PATH=/opt/jtdxhamlib \
+    -D CMAKE_INSTALL_PREFIX=/usr \
+    -G Ninja
+  ninja -C build
+}
+
+package() {
+  cd "${pkgname}-${_pkgver}"
+  DESTDIR="${pkgdir}/" ninja -C build install
+}
