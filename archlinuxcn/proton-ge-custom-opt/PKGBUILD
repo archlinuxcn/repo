@@ -4,10 +4,10 @@
 
 pkgname=proton-ge-custom-opt
 _pkgname=proton-ge-custom
-pkgver=GE.Proton7.55
+pkgver=GE.Proton8.1
 _srctag=${pkgver//./-} # _srctag=GE-Proton7-32
 _geckover=2.47.3
-_monover=7.4.0
+_monover=7.4.1
 pkgrel=1
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, GloriousEggroll's custom build"
@@ -311,7 +311,6 @@ prepare() {
     popd
 
     patch -p1 -i "$srcdir"/0001-AUR-PKGBUILD-changes.patch
-    sed 's/cargo update --offline --verbose/cargo update --locked --offline --verbose --workspace/g' -i make/rules-cargo.mk
 }
 
 build() {
@@ -321,9 +320,6 @@ build() {
     ROOTLESS_CONTAINER="" \
     ../proton-ge-custom/configure.sh \
         --container-engine="none" \
-        --proton-sdk-image="" \
-        --steam-runtime=native \
-        --no-proton-sdk \
         --build-name="${_pkgname}"
 
     # Filter known bad flags before applying optimizations
@@ -374,11 +370,7 @@ build() {
     export LDFLAGS="${LDFLAGS//,-z,now/}"
     export LDFLAGS="${LDFLAGS//,-z,relro/}"
 
-    export WINEESYNC=0
-    export WINEFSYNC=0
-    export DISPLAY=
-    SUBJOBS=$([[ "$MAKEFLAGS" =~ -j\ *([1-9][0-9]*) ]] && echo "${BASH_REMATCH[1]}" || echo "$(nproc)") \
-        make USE_LTO=1 -j1 dist
+    make SUBJOBS="$(nproc)" USE_LTO=1 CONTAINER=1 -j1 dist
 }
 
 package() {
@@ -458,7 +450,7 @@ sha256sums=('SKIP'
             'SKIP'
             '08d318f3dd6440a8a777cf044ccab039b0d9c8809991d2180eb3c9f903135db3'
             '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
-            '9249ece664bcf2fecb1308ea1d2542c72923df9fe3df891986f137b2266a9ba3'
-            '9a5a393b867bddd66cef0f487691a27d5e3e3bba729fe20b6eeabf9112846455'
+            '1286afc67b0a329f5e2d98d9e803ca5906a841ad5486e9b3b1fefa1124b15622'
+            '3024f86e54615e668055d3f9fb8f51dd43cefe52eb3d56e0e58d2c4fb30a2690'
             '85d41eb3879cd69cbc711923611c3a9703f8ef946df526956b484d0c560c4b5f')
 
