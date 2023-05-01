@@ -5,7 +5,7 @@
 
 _pkgname="hyprland"
 pkgname="${_pkgname}-hidpi-xprop-git"
-pkgver=r2852.11b7ce14
+pkgver=r2856.45b1e6dc
 pkgrel=1
 pkgdesc="A dynamic tiling Wayland compositor based on wlroots that doesn't sacrifice on its looks."
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
@@ -95,7 +95,7 @@ build() {
 	cd "./subprojects/wlroots/" && meson setup build/ --prefix="${srcdir}/tmpwlr" --buildtype=plain && ninja -C build/ && mkdir -p "${srcdir}/tmpwlr" && ninja -C build/ install && cd ../..
 	cd "./subprojects/udis86/" && cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=None -H./ -B./build -G Ninja && cmake --build ./build --target all && cd ../..
 	mkdir -p build && cd build
-	cmake -G Ninja -DCMAKE_BUILD_TYPE=None -DCMAKE_SKIP_RPATH=ON -DCMAKE_INSTALL_PREFIX=/usr/include/hyprland ..
+	cmake -G Ninja -DCMAKE_BUILD_TYPE=None -DCMAKE_SKIP_RPATH=ON -DCMAKE_INSTALL_PREFIX=/usr ..
 	ninja
 	cd "${srcdir}/${_pkgname}"
 	cd ./hyprctl && make all && cd ..
@@ -113,10 +113,11 @@ package() {
 	install -Dm644 subprojects/udis86/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-udis86"
 	install -Dm644 docs/*.1 -t "${pkgdir}/usr/share/man/man1"
 	install -Dm755 ../tmpwlr/lib/libwlroots.so.* -t "${pkgdir}/usr/lib"
-	install -d "${pkgdir}/usr/include/hyprland/include/hyprland/protocols"
-	cp -R src ${pkgdir}/usr/include/hyprland/include/hyprland/
-	cp -R ../tmpwlr/include/* ${pkgdir}/usr/include/hyprland/include/
+	install -d "${pkgdir}/usr/include/hyprland/protocols"
+	install -d "${pkgdir}/usr/include/hyprland/wlroots"
+	cp -R src ${pkgdir}/usr/include/hyprland/
+	cp -R ../tmpwlr/include/* ${pkgdir}/usr/include/hyprland/wlroots/
 	find ${pkgdir}/usr/include/hyprland/ -type f ! -name '*.h*' -delete
-	cp protocols/*-protocol.h  ${pkgdir}/usr/include/hyprland/include/hyprland/protocols
+	cp protocols/*-protocol.h  ${pkgdir}/usr/include/hyprland/protocols
 	install -Dm644 build/hyprland.pc -t "${pkgdir}/usr/share/pkgconfig"
 }
