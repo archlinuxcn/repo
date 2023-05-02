@@ -2,14 +2,14 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=3537
+pkgver=3540
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
 url="https://yuzu-emu.org/"
 license=('GPL2')
 depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'openssl' 'zstd' 'cubeb' 'dynarmic' 'enet' 'libinih' 'discord-rpc' 'cpp-httplib')
-makedepends=('llvm' 'git' 'glslang' 'cmake' 'ninja' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'xbyak' 'vulkan-headers' 'spirv-headers' 'dos2unix')
+makedepends=('llvm' 'git' 'glslang' 'cmake' 'ninja' 'graphviz' 'doxygen' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'xbyak' 'vulkan-headers' 'spirv-headers' 'dos2unix')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
@@ -17,9 +17,9 @@ source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.g
 "https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml"
 "https://github.com/pineappleEA/pineapple-src/releases/download/EA-${pkgver}/Windows-Yuzu-EA-${pkgver}.zip")
 options=('!buildflags') #[heavysink] Disable _FORTIFY_SOURCE for temporary fix for Bayonetta 3
-sha256sums=('308eeea93b8847345920a0dabd8ad8bf8106ff6c5a05b1c78cbd410739e9e38c'
+sha256sums=('0f6a887725ad0db3eb3311b85237a671d81c1f07be390f60ffacd2f0a56f7e8b'
             'e76ab2b3566d8135930e570ede5bed3da8f131270b60db818e453d248880bdf2'
-            '6c715960512f911ccb3801b18e0765f7e1c21296e1cf73af9a93d32e0ae7775d')
+            '92d400095504866c13c8b50bc87aa373fbc8959edd0fc648f42cb702d48ce3d5')
 
 prepare() {
   cd "$srcdir/yuzu-windows-msvc-early-access"
@@ -55,10 +55,6 @@ build() {
   cd "$srcdir/pineapple-src-EA-${pkgver}"
 	mkdir -p build && cd build
   cmake .. -GNinja \
-    -DCMAKE_CXX_COMPILER=clang++ \
-    -DCMAKE_C_COMPILER=clang \
-    -DCMAKE_C_FLAGS="$CFLAGS -flto=thin" \
-    -DCMAKE_CXX_FLAGS="$CXXFLAGS -flto=thin" \
     -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
     -DTITLE_BAR_FORMAT_IDLE="yuzu Early Access $pkgver" \
     -DTITLE_BAR_FORMAT_RUNNING="yuzu Early Access $pkgver | {3}" \
