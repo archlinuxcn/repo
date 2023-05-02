@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# inspired by https://aur.archlinux.org/cgit/aur.git/tree/hmcl-launch-script?h=hmcl
+
+WORKDIR=${XDG_CONFIG_HOME:-$HOME/.config}/waylyrics
+mkdir -p $WORKDIR
+cd $WORKDIR
+[ -f "config.toml" ] || cp /usr/share/waylyrics/config.toml .
+[ -f "style.css" ] || cp /usr/share/waylyrics/style.css .
+
+exec /usr/bin/waylyrics
