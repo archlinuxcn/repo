@@ -1,0 +1,41 @@
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com
+build_prefix: extra-x86_64
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: KJ7LNW/xnec2c
+    use_latest_tag: true
+  - source: alpm
+    alpm: pango
+    provided: libpango-1.0.so
+  - source: alpm
+    alpm: pango
+    provided: libpangocairo-1.0.so
+  - source: alpm
+    alpm: cairo
+    provided: libcairo.so
+  - source: alpm
+    alpm: gdk-pixbuf2
+    provided: libgdk_pixbuf-2.0.so
+  - source: alpm
+    alpm: glib2
+    provided: libgio-2.0.so
+  - source: alpm
+    alpm: glib2
+    provided: libgobject-2.0.so
+  - source: alpm
+    alpm: glib2
+    provided: libglib-2.0.so
+  - source: alpm
+    alpm: glib2
+    provided: libgmodule-2.0.so
+  - source: alpm
+    alpm: gtk3
+    provided: libgtk-3.so
+  - source: alpm
+    alpm: gtk3
+    provided: libgtk-3.so

@@ -1,0 +1,46 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: Kyle Keen <keenerd@gmail.com>
+# Contributor: Vitaliy Berdinskikh ur6lad[at]i.ua
+
+pkgname=xnec2c
+pkgver=4.4.12
+pkgrel=1
+pkgdesc="GTK+ Antenna EM Modeling Client"
+arch=('i686' 'x86_64')
+url="https://www.xnec2c.org/"
+license=('GPL')
+depends=('gtk3' 'libgtk-3.so' 'libgtk-3.so'
+         'glib2' 'libgio-2.0.so' 'libgobject-2.0.so' 'libglib-2.0.so' 'libgmodule-2.0.so'
+         'pango' 'libpango-1.0.so' 'libpangocairo-1.0.so' 
+         'cairo' 'libcairo.so'
+         'gdk-pixbuf2' 'libgdk_pixbuf-2.0.so'
+         'hicolor-icon-theme' 'glibc'
+         )
+makedepends=('openblas' 'intel-oneapi-mkl')
+optdepends=('gnuplot: to use plotted output/data files'
+            'cblas: to use OpenBLAS'
+            'lapacke: to use OpenBLAS'
+            'intel-oneapi-mkl: to use Intel MKL'
+            'hamradio-menus: desktop entry categories'
+            )
+source=("$pkgname-$pkgver.tgz::https://github.com/KJ7LNW/xnec2c/archive/refs/tags/v$pkgver.tar.gz")
+b2sums=('710a13e534da3faeabe8c62771cd7c45d121d6ef28869647f5aac45f499f71854880383e2f6b053c6c5b2b60446fc9add6e74a5b4d705a51a33c99bdc71739e7')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+    sed -i 's/Categories=/Categories=HamRadio;/' files/xnec2c.desktop
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./autogen.sh
+    ./configure --prefix=/usr
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+
+    make DESTDIR="$pkgdir" install
+}
+
