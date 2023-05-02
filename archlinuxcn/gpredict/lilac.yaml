@@ -1,0 +1,45 @@
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com
+
+pre_build_script: aur_pre_build(maintainers=['not_anonymous'])
+post_build: aur_post_build
+
+repo_depends:
+  - goocanvas2
+update_on_build:
+  - pkgbase: goocanvas2
+
+update_on:
+  - source: aur
+    aur: gpredict
+  - source: alpm
+    alpm: pango
+    provided: libpango-1.0.so
+  - source: alpm
+    alpm: pango
+    provided: libpangocairo-1.0.so
+  - source: alpm
+    alpm: cairo
+    provided: libcairo.so
+  - source: alpm
+    alpm: gdk-pixbuf2
+    provided: libgdk_pixbuf-2.0.so
+  - source: alpm
+    alpm: glib2
+    provided: libgio-2.0.so
+  - source: alpm
+    alpm: glib2
+    provided: libgobject-2.0.so
+  - source: alpm
+    alpm: glib2
+    provided: libglib-2.0.so
+  - source: alpm
+    alpm: glib2
+    provided: libgmodule-2.0.so
+  - source: alpm
+    alpm: gtk3
+    provided: libgtk-3.so
+  - source: alpm
+    alpm: gtk3
+    provided: libgtk-3.so
