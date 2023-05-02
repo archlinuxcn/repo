@@ -1,0 +1,7 @@
+post_install() {
+  # serial port permissions
+  # (https://chirp.danplanet.com/projects/chirp/wiki/Running_Under_Linux#serial-port-permissions)
+  echo "==> You may need to add your user to the 'uucp' group to access serial ports and devices."
+  echo -e "==> This can be accomplished with: '\e[32msudo usermod -aG uucp \$USER\e[0m'"
+  echo "==> Then you will need to log out and back in for it to take effect."
+}

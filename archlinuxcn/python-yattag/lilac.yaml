@@ -1,0 +1,11 @@
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com
+
+pre_build_script: aur_pre_build(maintainers=['2bluesc'])
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: python-yattag
+  - alias: python
