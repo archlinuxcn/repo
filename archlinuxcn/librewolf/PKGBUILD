@@ -2,8 +2,8 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=112.0.1
-pkgrel=2
+pkgver=112.0.2
+pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
 arch=(x86_64 aarch64)
@@ -75,12 +75,14 @@ source=(
   $pkgname.desktop
   "default192x192.png"
   "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
+  "${_arch_git_blob}/ab757a79f364d7b0a4269ae401210664e3a069a1/trunk/0001-Bug-1803016-Wayland-Don-t-commit-wl_buffer-if-buffer.patch"
 )
 
-sha256sums=('40cf7ee4aa7c5c73a1398794b9f009d2fe8ab17ee58d4db59053022f3050379a'
+sha256sums=('39dce2a1704f287d5163bf070aa18e1c02e7d84f1253373f544cb283dd231c9f'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1'
-            '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d')
+            '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d'
+            'bfe15651a99ac6d0037867c9db00a0d4340353cdc0ac4a39e43ad61cc2589ed6')
 
 validpgpkeys=('034F7776EF5E0C613D2F7934D29FBD5F93C0CFC3') # maltej(?)
 
@@ -161,6 +163,9 @@ fi
   # upstream Arch fixes
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
   # patch -Np1 -i ${srcdir}/0001-Use-remoting-name-for-GDK-application-names.patch
+
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1803016
+  patch -Np1 -i ../0001-Bug-1803016-Wayland-Don-t-commit-wl_buffer-if-buffer.patch
 
   # upstream patches from gentoo
 
