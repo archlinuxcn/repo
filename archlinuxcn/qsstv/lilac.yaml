@@ -1,0 +1,21 @@
+pre_build_script: aur_pre_build(maintainers=['ur5wkm'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: qsstv
+  - source: alpm
+    alpm: hamlib
+    from_pattern: ^(\d+).*
+    to_pattern: \1
+  - source: alpm
+    alpm: fftw
+    provided: libfftw3f.so
+  - source: alpm
+    alpm: fftw
+    provided: libfftw3.so
+
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com
