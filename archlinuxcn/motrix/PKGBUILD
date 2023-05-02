@@ -2,7 +2,7 @@
 # Contributor: weearc <q19981121 [at] 163 dot com>
 pkgname=motrix
 _pkgname=Motrix
-pkgver=1.8.15
+pkgver=1.8.17
 pkgrel=1
 epoch=
 pkgdesc="A full-featured download manager (release version)"
@@ -27,7 +27,7 @@ source=("motrix.desktop"
 noextract=()
 sha256sums=('af5092a2a599bd23c13303ad1e7b745992a7af141278d13abe4297ca50a77bd8'
             '52a8f1ae5916a91aa1c9f1749e06777b4457bd9f5a03749c9fcd97e7d0801a71'
-            '212d624dcfbb74228009437646d17d0238eeda5de6ecbbd658a7af73c02b70e0')
+            'b08fb6809a0b169bccb28a220fde6e6f3143305eeada4ea00a7ebffecc9ce364')
 validpgpkeys=()
 
 #_ensure_local_nvm() {
