@@ -81,7 +81,7 @@ optdepends=(
     'samba'
     'dosbox'
 )
-options=('staticlibs' '!lto' '!debug' '!buildflags')
+options=('staticlibs' '!lto' '!debug')
 install="$pkgname.install"
 source=("https://github.com/ValveSoftware/wine/archive/proton-wine-${_pkgver}.tar.gz"
         '30-win32-aliases.conf'
@@ -144,7 +144,7 @@ build() {
 
   msg2 "Building Wine-32..."
   cd "$srcdir/$pkgname-32-build"
-  ../wine-proton-wine-${_pkgver}/configure \
+  CPPFLAGS="-I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sysprof-4 -I/usr/lib/gstreamer-1.0/include -I/usr/include/orc-0.4 -I/usr/include/gudev-1.0 -I/usr/include/libdrm -pthread" ../wine-proton-wine-${_pkgver}/configure \
     --prefix=/usr \
     --with-x \
     --with-gstreamer \
@@ -166,7 +166,7 @@ package() {
     make prefix="$pkgdir/usr" \
          libdir="$pkgdir/usr/lib32" \
          dlldir="$pkgdir/usr/lib32/wine" install
-    
+
         # package wine 64-bit
     msg2 'Packaging Wine-64...'
         
@@ -182,11 +182,6 @@ package() {
     
     # wine binfmt
     install -D -m644 "${srcdir}/wine-binfmt.conf"   "${pkgdir}/usr/lib/binfmt.d/wine.conf"
-
-    #wine list.h
-    for file in ${srcdir}/wine-proton-wine-${_pkgver}/include/wine/*.h; do
-        cp -n $file "${pkgdir}/usr/include/wine/"
-    done
 
   i686-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib32/wine/i386-windows/*.dll
   x86_64-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.dll
