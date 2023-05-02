@@ -8,7 +8,7 @@
 
 pkgname=wine-ge-custom-opt
 _pkgname=wine-ge-custom
-pkgver=GE.Proton7.43
+pkgver=GE.Proton8.1
 _srctag=${pkgver//./-} # _srctag=GE-Proton7-28
 pkgrel=1
 
@@ -215,6 +215,13 @@ build() {
   export CROSSCFLAGS="$CFLAGS"
   export CROSSCXXFLAGS="$CXXFLAGS"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+
+  # Workaround proton wine 8.0 gstreamer detect problem
+  # https://github.com/Frogging-Family/wine-tkg-git/commit/a24a407563a11a40680ffe694088b52a202fa5ab
+  # https://github.com/Frogging-Family/wine-tkg-git/issues/992
+  CFLAGS+=" -I/usr/lib32/glib-2.0/include -I/usr/include/glib-2.0 -I/usr/include/gstreamer-1.0 -I/usr/lib32/gstreamer-1.0/include"
+  CROSSCFLAGS+=" -I/usr/lib32/glib-2.0/include -I/usr/include/glib-2.0 -I/usr/include/gstreamer-1.0 -I/usr/lib32/gstreamer-1.0/include"
+
   cd "$srcdir/$_pkgname-32-build"
   ../$_pkgname/proton-wine/configure \
     --prefix=/usr \
