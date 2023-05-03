@@ -1,13 +1,13 @@
 _name=statsd
 pkgname=python-statsd
 pkgver=4.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A simple statsd client."
 arch=(any)
-url=""
+url="https://github.com/jsocol/pystatsd"
 license=('MIT')
 depends=('python')
-makedepends=('python-setuptools' 'python-setuptools' 'python-build' 'python-installer' 'python-wheel')
+makedepends=('python-setuptools' 'python-build' 'python-installer' 'python-wheel')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/statsd-4.0.1.tar.gz")
 sha256sums=('99763da81bfea8daf6b3d22d11aaccb01a8d0f52ea521daab37e758a4ca7d128')
 
