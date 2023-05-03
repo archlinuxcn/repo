@@ -1,3 +1,20 @@
+pre_install() {
+	if [ -d "/opt/ryujinx/Logs" ];
+	then
+		rm -rf /opt/ryujinx/Logs
+	fi
+}
+
+pre_upgrade() {
+	if [ -d "/opt/ryujinx/Logs" ];
+	then
+		rm -rf /opt/ryujinx/Logs
+	fi
+}
+
 pre_remove() {
-	 rm /opt/ryujinx/Logs/*
+	if [ -d "/opt/ryujinx/Logs" ];
+	then
+		rm -rf /opt/ryujinx/Logs
+	fi
 }
