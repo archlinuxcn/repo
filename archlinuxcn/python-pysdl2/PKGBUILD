@@ -4,7 +4,7 @@
 
 pkgname=python-pysdl2
 pkgver=0.9.15
-pkgrel=1
+pkgrel=2
 pkgdesc="Python ctypes wrapper around SDL2"
 arch=("any")
 url="https://github.com/marcusva/${pkgname/python-py/py-}"
