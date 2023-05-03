@@ -3,7 +3,7 @@ pkgname=waylyrics-git
 _pkgname=waylyrics
 __pkgname=Waylyrics
 _appname="io.poly000.${_pkgname}"
-pkgver=0.1.0_r53.gb6ed6ec
+pkgver=0.1.0_r56.gc87e0fa
 pkgrel=1
 pkgdesc="On screen lyrics for wayland with netease cloud music source"
 url="https://github.com/poly000/waylyrics"
@@ -23,7 +23,7 @@ source=("git+https://github.com/poly000/${_pkgname}.git"
 )
 
 sha256sums=('SKIP'
-            'd5291658ee62ce73605b4efbe78e4f8ded359d2766cfd2cb5f7e309ca540dedf'
+            '0726301af6d2a57ac2130319a000e32ec70f94c01fdedc78910fd0525e16a68c'
             '28abb9904837437faafb12c3f71f7dcd8529936309d6a797ad46915aca63d613')
 
 pkgver() {
@@ -47,15 +47,23 @@ build() {
 }
 
 package() {
-   cd "$srcdir/$_pkgname"
-   install -Dm644 config.toml.example "${pkgdir}/usr/share/${_pkgname}/config.toml"
-   install -Dm644 style.css.example "${pkgdir}/usr/share/${_pkgname}/style.css"
-   install -Dm755 target/release/${_pkgname} "${pkgdir}/usr/bin/${_pkgname}"
-   install -Dm644 ${_appname}.gschema.xml "${pkgdir}/usr/share/glib-2.0/schemas/${_appname}.gschema.xml"
+    cd "$srcdir/$_pkgname"
+    install -Dm644 config.toml.example "${pkgdir}/usr/share/${_pkgname}/config.toml"
+    install -Dm755 target/release/${_pkgname} "${pkgdir}/usr/bin/${_pkgname}"
+    install -Dm644 ${_appname}.gschema.xml "${pkgdir}/usr/share/glib-2.0/schemas/${_appname}.gschema.xml"
 
-   # fixed path by Integral-Tech
-   cd -
-   install -Dm755 ${_pkgname}-launch "${pkgdir}/usr/bin/${_pkgname}-launch"
-   install -Dm755 ${__pkgname}.desktop "${pkgdir}/usr/share/applications/${__pkgname}.desktop"
+    install -dm755 "${pkgdir}/usr/share/${_pkgname}/themes"
+
+
+    IFS=$'\n'
+    for style in `find themes -type f`
+    do
+        install -Dm644 "${style}" -t "${pkgdir}/usr/share/${_pkgname}/themes"
+    done
+
+    # fixed path by Integral-Tech
+    cd -
+    install -Dm755 ${_pkgname}-launch "${pkgdir}/usr/bin/${_pkgname}-launch"
+    install -Dm755 ${__pkgname}.desktop "${pkgdir}/usr/share/applications/${__pkgname}.desktop"
 }
 
