@@ -1,0 +1,13 @@
+maintainers:
+  - github: Integral-Tech
+    email: integral@murena.io
+
+pre_build_script: aur_pre_build(maintainers=['Kimiblock'])
+post_build: aur_post_build
+
+update_on:
+  - source: github
+    github: hypengw/Qcm
+      
+  - source: aur
+    aur: qcm-git
