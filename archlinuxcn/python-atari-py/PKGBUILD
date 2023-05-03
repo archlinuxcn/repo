@@ -4,7 +4,7 @@
 pkgname=python-atari-py
 _pkgname=atari-py
 pkgver=0.2.9
-pkgrel=2
+pkgrel=3
 pkgdesc='A python interface for the Arcade Learning Environment (Modified by OpenAI)'
 arch=('any')
 url='https://github.com/openai/atari-py'
@@ -21,7 +21,7 @@ checkdepends=(
   python-nose
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/openai/atari-py/archive/${pkgver}.tar.gz")
-sha256sums=('fcc49f7a6e45728f04c3e962fab913ddecfecf7f94909db03d9bd2fe4a213f34')
+sha256sums=('0b9940e6685b704f7fa1bee91745fd9bc6fa1fa0d6844f6c42a8fe8a2d6144b3')
 
 build() {
   cd "${_pkgname}-${pkgver}"
