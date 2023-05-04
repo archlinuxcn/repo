@@ -3,61 +3,44 @@
 # Contributor: GordonGR <ntheo1979@gmail.com>
 
 _name=raptor2
-_basename=raptor
 pkgname=lib32-raptor
-pkgver=2.0.15
-pkgrel=17
+pkgver=2.0.16
+pkgrel=1
 pkgdesc="A C library that parses RDF/XML/N-Triples into RDF triples (32 bit)"
 arch=(x86_64)
 url="https://librdf.org/raptor"
 license=(Apache GPL2 LGPL2.1)
 depends=("lib32-glibc" "lib32-libxml2" "lib32-libxslt" "lib32-xz" "lib32-zlib" "libicudata.so" "libicui18n.so" "libicuuc.so" "raptor")
 makedepends=(gcc-multilib gtk-doc lib32-curl lib32-icu)
-source=(https://librdf.org/dist/source/$_name-$pkgver.tar.gz{,.asc}
-        $_basename-2.0.15-CVE-2017-18926.patch::https://github.com/dajobe/raptor/commit/590681e546cd9aa18d57dc2ea1858cb734a3863f.patch
-        $_basename-2.0.15-out_of_bounds.patch
-        $_basename-2.0.15-disable_broken_test_suites.patch)
-sha512sums=('563dd01869eb4df8524ec12e2c0a541653874dcd834bd1eb265bc2943bb616968f624121d4688579cdce11b4f00a8ab53b7099f1a0850e256bb0a2c16ba048ee'
-            'SKIP'
-            '82f2f7ea4b72aa2bf444013a81db3cb17fcce2ae650bdb22eaab00d6d5cf7f950f7a550ffff49348db878f90f2753b407e6026d08d543cd0757c1687c6dad159'
-            '140f90d74fad8cdc6ef7fa14fa655e425552947d57068021362f8ae9efdded8ed31295e9bdd495fe70e646967062e28fa3ecd5831f9902134da5fe0a82607735'
-            'bfa5e2c10e33bab9ba85541ca78e903dbcbe07e2fbb654687e0b65fe46531bf385d7b3de36619b9919b7b4db3b803624d294cb8bfd63a89b96fc85cd2fda278e')
-b2sums=('0a39c7b5705bfbf2daa0ca633f79693953b4dfe24c144008d1646a9840a36d4d7ce153b527450647127ec2522047dbd0a6e71f307ee5656951f7e4b610adfd22'
-        'SKIP'
-        '5e86b3bb1e80662363cbefa889b36810a4472c23ddb0a96960c13586124ac13031c6759e4abb3381e17a8f3b7cc941eaa3f97f3bc7c562f165db37efc47a39f8'
-        'ab11eeb648bf2cf8ac4ef4bbff4cdb77d1b713ad086268b656c7249363bf5752b535763f9a9fd34be4d72b3ff420cd87ee6970d3da6e24e5e2b067b9dbb9c29e'
-        '5f623afff5566d47d132c24e32b6b683b7eff15a9a819387b1764b1c222ae47f6e1948892b2a93af77375a3616f9276b00e6686108720da1005b47232b3f6b5f')
+source=(https://librdf.org/dist/source/$_name-$pkgver.tar.gz{,.asc})
+sha512sums=('9bd5cff36390e1e0ef15ac56e5413ecfceb4018cb531a4da8850d3623615f12a93690a78be61f9d9ae7a24e16f6446e356bc2b7f34051ddc077761d85a9b7c44'
+            'SKIP')
+b2sums=('1e5e5742ba4cdaacb98a9ba77a9352589df0da60869e7721ee140c81ed4886bf909b37b247bd925c82a4ac44b3c11a909c913f0851d49a1d9d91c9293189266d'
+        'SKIP')
 validpgpkeys=('F879F0DEDA780198DD08DC6443EC92504F71955A') # Dave Beckett <dave@dajobe.org>
 
 prepare() {
-    # fix CVE-2017-18926:
-    # https://bugs.archlinux.org/task/68613
-    patch -d $_name-$pkgver -Np1 -i ../$_basename-2.0.15-CVE-2017-18926.patch
-
-    # fix out-of-bounds read:
-    # https://bugs.librdf.org/mantis/view.php?id=650
-    patch -d $_name-$pkgver -Np1 -i ../$_basename-2.0.15-out_of_bounds.patch
-    # remove broken test suites: https://github.com/dajobe/raptor/issues/49
-    patch -d $_name-$pkgver -Np1 -i ../$_basename-2.0.15-disable_broken_test_suites.patch
-
     cd $_name-$pkgver
 
     autoreconf -fiv
 }
 
 build() {
-    cd $_name-$pkgver
+    local configure_options=(
+        --build=i686-pc-linux-gnu
+        --prefix=/usr
+        --libdir=/usr/lib32
+        --disable-static
+        --with-icu-config=/usr/bin/icu-config-32
+    )
 
     export CC='gcc -m32'
     export CXX='g++ -m32'
     export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
 
-    ./configure \
-        --build=i686-pc-linux-gnu \
-        --prefix=/usr \
-        --libdir=/usr/lib32 \
-        --disable-static \
-        --with-icu-config=/usr/bin/icu-config-32
+    cd $_name-$pkgver
+
+    ./configure "${configure_options[@]}"
 
     # prevent excessive overlinking due to libtool
     sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
@@ -66,7 +49,8 @@ build() {
 }
 
 check() {
-    make check -C $_name-$pkgver
+    # run with one job as tests are otherwise flaky: https://github.com/dajobe/raptor/issues/49
+    make check -C $_name-$pkgver -j1
 }
 
 package() {
