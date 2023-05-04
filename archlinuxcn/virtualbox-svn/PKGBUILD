@@ -68,13 +68,12 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         'vboxreload'
         '001-disable-update.patch'
         '004-drop-Wno-format.patch'
-        '005-gsoap-build.patch'
         '008-no-vboxvideo.patch'
         '009-properly-handle-i3wm.patch'
         '012-vbglR3GuestCtrlDetectPeekGetCancelSupport.patch'
         '013-support-building-from-dkms.patch'
         '018-upate-xclient-script.patch'
-        '019-fix-liblzf-linkage.patch')
+        '020-python-3-11.patch')
 
 pkgver() {
   cd "VirtualBox"
@@ -354,11 +353,10 @@ sha256sums=('SKIP'
             'e6e875ef186578b53106d7f6af48e426cdaf1b4e86834f01696b8ef1c685787f'
             '4001b5927348fe669a541e80526d4f9ea91b883805f102f7d571edbb482a9b9d'
             '9ee947c9b5ec5b25f52d3e72340fc3a57ca6e65a604e15b669ac582a3fb0dc1b'
-            'e80f042ac123e77a1ebd17b4e50e9e0bdf894cb316baa2a9f38666dc2b15a963'
-            '9b2863373ad5cb3aa7bcd5984538e2d5d4b0c1f07e3a9cbca2c919cb9661511f'
+            '7675f87d31ad3137f057dc3ee3d4a2c5b2cfe8cd362adba130ddbf7a65069516'
             '053bfeee8863f3ffdf2f0e3f9f0d77dc61dd32764700a97a7635fd8611e20491'
             '92df121e1c8a1a967b4928a4d5c6f7ba8c91e43902ecd6d8f5fecc9df4184413'
             '81900e13d36630488accd8c0bfd2ceb69563fb2c4f0f171caba1cca59d438024'
             '00f68b86d32a1fada900c2da8dad2ab4215106cd58004f049bded99727cda2ff'
             '87dddfd9047480e4c2b73367facf5dd3702148418c2efcd606af17c07da90fe0'
-            'dcc4de2fa042c8f897cb743b2265be3b9b954389a6135fee9a9e5d9a178c23d8')
+            '713fa594e8cb52946741839f8b73ffafedcd2e4ab03df169dd0c2c74ba9a18b4')

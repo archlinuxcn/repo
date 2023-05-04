@@ -1,21 +1,18 @@
-From 9736107f45a17f04e4a0f9ab14fe913660cde3ad Mon Sep 17 00:00:00 2001
+From 6fed8ce04e50522c690ffa4bb100c1dd00ee4d36 Mon Sep 17 00:00:00 2001
 From: Christian Hesse <mail@eworm.de>
-Date: Mon, 17 Oct 2022 15:07:30 +0200
-Subject: [PATCH] drop -Wno-format
+Date: Tue, 18 Apr 2023 22:59:50 +0200
+Subject: [PATCH 1/1] drop -Wno-format
 
 ---
- src/VBox/Devices/EFI/Firmware/Config.kmk                    | 2 +-
- .../Firmware/CryptoPkg/Library/OpensslLib/OpensslLib.inf    | 6 +++---
- .../CryptoPkg/Library/OpensslLib/OpensslLibCrypto.inf       | 6 +++---
- src/VBox/Devices/Makefile.kmk                               | 2 +-
- src/VBox/Devices/PC/ipxe/Makefile.kmk                       | 2 +-
- src/VBox/ExtPacks/VBoxDTrace/Makefile.kmk                   | 2 +-
- src/VBox/Main/webservice/Makefile.kmk                       | 3 +--
- src/libs/xpcom18a4/Config.kmk                               | 6 +++---
- 8 files changed, 14 insertions(+), 15 deletions(-)
+ src/VBox/Devices/EFI/Firmware/Config.kmk  |  2 +-
+ src/VBox/Devices/Makefile.kmk             |  2 +-
+ src/VBox/Devices/PC/ipxe/Makefile.kmk     |  2 +-
+ src/VBox/ExtPacks/VBoxDTrace/Makefile.kmk |  2 +-
+ src/VBox/Main/webservice/Makefile.kmk     |  3 +--
+ 5 files changed
 
 diff --git a/src/VBox/Devices/EFI/Firmware/Config.kmk b/src/VBox/Devices/EFI/Firmware/Config.kmk
-index e2e537f1..de640194 100644
+index ddd1fc1e..0614d90c 100644
 --- a/src/VBox/Devices/EFI/Firmware/Config.kmk
 +++ b/src/VBox/Devices/EFI/Firmware/Config.kmk
 @@ -155,7 +155,7 @@ TEMPLATE_VBoxEfiBldProg_LIBS = \
@@ -27,47 +24,11 @@ index e2e537f1..de640194 100644
   	-Wno-empty-body -Wno-unused-parameter -Wno-unused-variable -Wno-unused-label
   TEMPLATE_VBoxEfiBldProg_CXXFLAGS = $(filter-out -pedantic,$(TEMPLATE_VBoxBldProg_CXXFLAGS)) \
   	-Wno-all -Wno-shadow -Wno-empty-body -Wno-unused-parameter -Wno-unused-variable \
-diff --git a/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLib.inf b/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLib.inf
-index 5300ea32..e9485765 100644
---- a/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLib.inf
-+++ b/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLib.inf
-@@ -618,10 +618,10 @@
-   #   -Werror=unused-but-set-variable: Warn whenever a local variable is assigned to, but otherwise unused (aside from its declaration).
-   #
-   GCC:*_*_IA32_CC_FLAGS    = -U_WIN32 -U_WIN64 $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-variable
--  GCC:*_*_X64_CC_FLAGS     = -U_WIN32 -U_WIN64 $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -DNO_MSABI_VA_FUNCS
-+  GCC:*_*_X64_CC_FLAGS     = -U_WIN32 -U_WIN64 $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=format -Wno-error=unused-but-set-variable -DNO_MSABI_VA_FUNCS
-   GCC:*_*_ARM_CC_FLAGS     = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-variable
--  GCC:*_*_AARCH64_CC_FLAGS = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-format -Wno-error=unused-but-set-variable
--  GCC:*_*_RISCV64_CC_FLAGS = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-format -Wno-error=unused-but-set-variable
-+  GCC:*_*_AARCH64_CC_FLAGS = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-variable
-+  GCC:*_*_RISCV64_CC_FLAGS = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-variable
-   GCC:*_CLANG35_*_CC_FLAGS = -std=c99 -Wno-error=uninitialized
-   GCC:*_CLANG38_*_CC_FLAGS = -std=c99 -Wno-error=uninitialized
-   GCC:*_CLANGPDB_*_CC_FLAGS = -std=c99 -Wno-error=uninitialized -Wno-error=incompatible-pointer-types -Wno-error=pointer-sign -Wno-error=implicit-function-declaration -Wno-error=ignored-pragma-optimize
-diff --git a/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLibCrypto.inf b/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLibCrypto.inf
-index 1b1d46b0..df9998a5 100644
---- a/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLibCrypto.inf
-+++ b/src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/OpensslLibCrypto.inf
-@@ -567,10 +567,10 @@
-   #   -Werror=unused-but-set-variable: Warn whenever a local variable is assigned to, but otherwise unused (aside from its declaration).
-   #
-   GCC:*_*_IA32_CC_FLAGS    = -U_WIN32 -U_WIN64 $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-variable
--  GCC:*_*_X64_CC_FLAGS     = -U_WIN32 -U_WIN64 $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -DNO_MSABI_VA_FUNCS
-+  GCC:*_*_X64_CC_FLAGS     = -U_WIN32 -U_WIN64 $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=format -Wno-error=unused-but-set-variable -DNO_MSABI_VA_FUNCS
-   GCC:*_*_ARM_CC_FLAGS     = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-variable
--  GCC:*_*_AARCH64_CC_FLAGS = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-format -Wno-error=unused-but-set-variable
--  GCC:*_*_RISCV64_CC_FLAGS = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-format -Wno-error=unused-but-set-variable
-+  GCC:*_*_AARCH64_CC_FLAGS = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-variable
-+  GCC:*_*_RISCV64_CC_FLAGS = $(OPENSSL_FLAGS) -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-variable
-   GCC:*_CLANG35_*_CC_FLAGS = -std=c99 -Wno-error=uninitialized
-   GCC:*_CLANG38_*_CC_FLAGS = -std=c99 -Wno-error=uninitialized
-   GCC:*_CLANGPDB_*_CC_FLAGS = -std=c99 -Wno-error=uninitialized -Wno-error=incompatible-pointer-types -Wno-error=pointer-sign -Wno-error=implicit-function-declaration -Wno-error=ignored-pragma-optimize
 diff --git a/src/VBox/Devices/Makefile.kmk b/src/VBox/Devices/Makefile.kmk
-index 02da1255..c2cbbc1c 100644
+index a17e655f..fe905681 100644
 --- a/src/VBox/Devices/Makefile.kmk
 +++ b/src/VBox/Devices/Makefile.kmk
-@@ -836,7 +836,7 @@ VBOX_WITH_VMSVGA3D_DYNAMIC_LOAD = 1
+@@ -837,7 +837,7 @@ if !defined(VBOX_ONLY_EXTPACKS) && "$(intersects $(KBUILD_TARGET_ARCH),$(VBOX_SU
    ifeq ($(KBUILD_TARGET),win)
     $(file)_CFLAGS = -wd4018
    else
@@ -77,23 +38,23 @@ index 02da1255..c2cbbc1c 100644
   endef
  
 diff --git a/src/VBox/Devices/PC/ipxe/Makefile.kmk b/src/VBox/Devices/PC/ipxe/Makefile.kmk
-index 8a611f6d..c57f0454 100644
+index 7f5b4c5a..33705fe7 100644
 --- a/src/VBox/Devices/PC/ipxe/Makefile.kmk
 +++ b/src/VBox/Devices/PC/ipxe/Makefile.kmk
-@@ -401,7 +401,7 @@ endif
+@@ -396,7 +396,7 @@ endif
   #
   BLDPROGS += ipxezbin
   ipxezbin_TEMPLATE = VBoxBldProg
 - ipxezbin_CFLAGS   = -Wno-format -Wno-unused-function -Wno-pointer-arith
 + ipxezbin_CFLAGS   = -Wno-unused-function -Wno-pointer-arith
   ipxezbin_SOURCES  = src/util/zbin.c
-  ipxezbin_LIBS     = lzma # @todo Can't assume liblzma on the build system
- 
+  ifdef VBOX_WITH_LIBLZMA
+   ipxezbin_INCS     = $(SDK_VBoxLibLzma_INCS) # Can't use the proper SDK here as link order matters and liblzma depends on our runtime.
 diff --git a/src/VBox/ExtPacks/VBoxDTrace/Makefile.kmk b/src/VBox/ExtPacks/VBoxDTrace/Makefile.kmk
-index b2bd260b..133e7398 100644
+index 081f02b0..75fe411b 100644
 --- a/src/VBox/ExtPacks/VBoxDTrace/Makefile.kmk
 +++ b/src/VBox/ExtPacks/VBoxDTrace/Makefile.kmk
-@@ -118,7 +118,7 @@ if defined(VBOX_WITH_EXTPACK_VBOXDTRACE)
+@@ -118,7 +118,7 @@ if defined(VBOX_WITH_EXTPACK_VBOXDTRACE) && defined(VBOX_WITH_EXTPACK)
    VBoxDTraceCmd_DEFS.win = YY_USE_PROTOS=1 YYENABLE_NLS=0 YYLTYPE_IS_TRIVIAL=0
    VBoxDTraceCmd_SDKS = VBoxZlib
    ifn1of ($(KBUILD_TARGET), win)
@@ -103,7 +64,7 @@ index b2bd260b..133e7398 100644
    VBoxDTraceCmd_INCS = \
    	include \
 diff --git a/src/VBox/Main/webservice/Makefile.kmk b/src/VBox/Main/webservice/Makefile.kmk
-index 072d066e..d2feea75 100644
+index dbccdf4f..c6093ed4 100644
 --- a/src/VBox/Main/webservice/Makefile.kmk
 +++ b/src/VBox/Main/webservice/Makefile.kmk
 @@ -264,7 +264,7 @@ ifdef VBOX_GSOAP_INSTALLED
@@ -123,18 +84,3 @@ index 072d066e..d2feea75 100644
     	$(VBOX_GCC_Wno-int-in-bool-context) \
     	$(VBOX_GCC_Wno-logical-op)
     # currently necessary when compiling against OpenSSL 1.0 due to a missing
-diff --git a/src/libs/xpcom18a4/Config.kmk b/src/libs/xpcom18a4/Config.kmk
-index 3b0831e5..a83a080b 100644
---- a/src/libs/xpcom18a4/Config.kmk
-+++ b/src/libs/xpcom18a4/Config.kmk
-@@ -243,8 +243,8 @@ TEMPLATE_XPComExe_LDFLAGS.darwin   = -bi
- #
- TEMPLATE_XPComTstExe               = XPCOM executable files (testcases)
- TEMPLATE_XPComTstExe_EXTENDS       = XPComExe
--TEMPLATE_XPComTstExe_CXXFLAGS      = $(TEMPLATE_XPComExe_CXXFLAGS) -Wno-format
--TEMPLATE_XPComTstExe_CFLAGS        = $(TEMPLATE_XPComExe_CFLAGS)   -Wno-format
-+TEMPLATE_XPComTstExe_CXXFLAGS      = $(TEMPLATE_XPComExe_CXXFLAGS)
-+TEMPLATE_XPComTstExe_CFLAGS        = $(TEMPLATE_XPComExe_CFLAGS)
- TEMPLATE_XPComTstExe_INST          = $(INST_TESTCASE)
- ifdef VBOX_WITH_RUNPATH
-  TEMPLATE_XPComTstExe_LDFLAGS = '$(VBOX_GCC_RPATH_OPT)$(VBOX_WITH_RUNPATH)' $(TEMPLATE_XPComExe_LDFLAGS)
