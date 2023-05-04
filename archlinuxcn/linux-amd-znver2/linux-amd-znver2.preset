@@ -1,16 +1,16 @@
-# mkinitcpio preset file for the 'linux-amd' package
+# mkinitcpio preset file for the 'linux-amd-znver2' package
 
 ALL_config="/etc/mkinitcpio.conf"
-ALL_kver="/boot/vmlinuz-linux-amd"
+ALL_kver="/boot/vmlinuz-linux-amd-znver2"
 
 export COMPRESSION="lzop"
 
 PRESETS=('default' 'fallback')
 
 #default_config="/etc/mkinitcpio.conf"
-default_image="/boot/initramfs-linux-amd.img"
+default_image="/boot/initramfs-linux-amd-znver2.img"
 #default_options=""
 
 #fallback_config="/etc/mkinitcpio.conf"
-fallback_image="/boot/initramfs-linux-amd-fallback.img"
+fallback_image="/boot/initramfs-linux-amd-znver2-fallback.img"
 fallback_options="-S autodetect"
