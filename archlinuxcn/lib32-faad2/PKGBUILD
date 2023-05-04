@@ -5,27 +5,25 @@
 
 _basename=faad2
 pkgname=lib32-faad2
-pkgver=2.10.0
+pkgver=2.10.1
 pkgrel=1
-pkgdesc="ISO AAC audio decoder (32 bit)"
+pkgdesc="Freeware Advanced Audio (AAC) Decoder"
 arch=('x86_64')
 url="https://github.com/knik0/faad2"
 license=('GPL2')
 depends=('lib32-glibc' 'faad2')
-source=($_basename-$pkgver.tar.gz::https://github.com/knik0/faad2/archive/${pkgver//./_}.tar.gz)
-sha512sums=('92c8b5e79f85b7a7caac9e7954959c26d74ef148a658dcb37e2c1b303fc2fcc5a0d12f21e7bd476870498109bdd03916a56c13f578186a69d6eceb103222e771')
-b2sums=('73ecbcbb3fce93e8ceb88f6f7669bb681d2329935018cc2a23929cf6672959a0678b47c830cfdcf8e716709ce5252a02178737a7af09de373f7c8b54f38f3d9d')
+source=($_basename-$pkgver.tar.gz::https://github.com/knik0/faad2/archive/$pkgver.tar.gz)
+sha512sums=('8df69278350c68dd770c4bc482e42bc95eb04cd784eeea3f3fc58d615833c8b07dc3c72029bb7e5bfed612b7c1b8daefc9cb57be9789befb587120ef115e55b3')
+b2sums=('f25bf9242675250b910bd5540487cf708d6e195e1ddca0b27588678e5fbf2bedf9d41e6bc607aa34bb2dbff95a8a4071e74e2f9bd9493ccb7ef040ce9bf81b4c')
 
 prepare() {
-    mv -v "${_basename}-${pkgver//./_}" "${_basename}-${pkgver}"
-
-    cd "${_basename}-${pkgver}"
+    cd $_basename-$pkgver
 
     autoreconf -vfi
 }
 
 build() {
-    cd "${_basename}-${pkgver}"
+    cd $_basename-$pkgver
 
     export CC='gcc -m32'
     export CXX='g++ -m32'
@@ -39,11 +37,17 @@ build() {
     make
 }
 
-package() {
-    cd "${_basename}-${pkgver}"
+check() {
+    make -k check -C $_basename-$pkgver
+}
 
-    make DESTDIR="${pkgdir}" install
+package() {
+    cd $_basename-$pkgver
+
+    make DESTDIR="$pkgdir" install
 
     rm -rf "${pkgdir}/usr"/{bin,include,share}
+
+    install -vDm 644 {AUTHORS,ChangeLog,NEWS,README*,TODO} -t "$pkgdir/usr/share/doc/$pkgname/"
 }
 provides=("libfaad.so" "libfaad_drm.so")
