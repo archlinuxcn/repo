@@ -11,7 +11,7 @@
 pkgname=keepassxc-git
 _gitname=keepassxc
 pkgver=2.7.1.r175.gcf819e0a3
-pkgrel=1
+pkgrel=2
 pkgdesc="Cross-platform community-driven port of KeePass Password Safe"
 arch=('i686' 'x86_64')
 url="https://github.com/keepassxreboot/keepassxc"
@@ -19,7 +19,7 @@ license=('GPL2')
 depends=('qt5-base' 'qt5-x11extras' 'qt5-translations' 'qt5-imageformats'
          'libxtst' 'shared-mime-info' 'hicolor-icon-theme' 'desktop-file-utils'
          'libusb' 'pcsclite' 'qt5-svg' 'qrencode' 'minizip'
-         'zlib' 'botan')
+         'zlib' 'botan2')
 makedepends=('git' 'intltool' 'cmake' 'qt5-tools' 'asciidoctor')
 checkdepends=('xorg-server-xvfb' 'xclip')
 provides=('org.freedesktop.secrets' "keepassxc=$pkgver")
@@ -36,6 +36,8 @@ pkgver() {
 
 build() {
     cd "${_gitname}"
+    # Building with botan 3 fails even with -DKPXC_DEV_BOTAN3=ON
+    # https://github.com/keepassxreboot/keepassxc/issues/9322
     cmake -B build \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_BINDIR=/usr/bin \
