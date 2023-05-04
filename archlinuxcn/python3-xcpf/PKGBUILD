@@ -1,7 +1,7 @@
 #Maintainer: Xyne <gro xunilhcra enyx, backwards>
 pkgname=python3-xcpf
 pkgver=2021.12
-pkgrel=1
+pkgrel=3
 pkgdesc='Xyne'"'"'s common Pacman functions, for internal use.'
 arch=(any)
 license=(GPL)
@@ -14,13 +14,13 @@ source=(
 )
 sha512sums=(
   adbc0d3174a7ed9371266a9b6a5f979ae3b1fff48954077418b89f7b4da11c9b30179715ce6b7e3aa070db2779cc96620d07476ace53e9858bf95aa8e9fd61e9
-  d2fa3e8ef6fcb182190997dc5bffc901aba876c3412e0248a58a9e07dc2b11d175c3ac025e165ffeb1154e4549a3549075b55621f82d3403f53db4c11dc4d084
+  0e8f0a2b64c6ad6326ecadb8e4c30420fd8d22ffe149ed0548cb6ceec8619acaf9f15b5cb485fc2e96e436eee29b45775b8187e9c7828157ffae967b9e9040bf
 )
 md5sums=(
   9aa0bec60b5706d9e3c2bd45dd69091f
-  67a251236244f3f26375b4d3539aa33c
+  4fe01a5258f5bc39058f8803a7a918c3
 )
-validpgpkeys=('EC3CBE7F607D11E663149E811D1F0DC78F173680')
+validpgpkeys=('D89FAAEB4CECAFD199A2F5E612C6F735F7A9A519')
 
 package ()
 {
