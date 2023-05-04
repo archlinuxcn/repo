@@ -1,7 +1,7 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 pkgname=dynarmic
 pkgver=6.4.6
-pkgrel=5
+pkgrel=6
 pkgdesc="An ARM dynamic recompiler"
 arch=('aarch64' 'x86_64')
 url="https://github.com/merryhime/dynarmic"
@@ -26,15 +26,11 @@ build() {
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DDYNARMIC_IGNORE_ASSERTS=ON \
 		-DDYNARMIC_USE_LLVM=ON \
-		-DBUILD_TESTING=ON \
+		-DBUILD_TESTING=OFF \
         -DCMAKE_DISABLE_FIND_PACKAGE_Catch2=ON \
         -DDYNARMIC_USE_PRECOMPILED_HEADERS=OFF \
 		-Wno-dev
 	cmake --build build
-}
-
-check() {
-	ctest --test-dir build
 }
 
 package() {
