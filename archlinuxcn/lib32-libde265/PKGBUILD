@@ -2,15 +2,15 @@
 
 _basename=libde265
 pkgname=lib32-libde265
-pkgver=1.0.8
+pkgver=1.0.11
 pkgrel=1
-pkgdesc="Open h.265 video codec implementation (32-bit)"
+pkgdesc='Open h.265 video codec implementation (32-bit)'
 arch=(x86_64)
-url="https://github.com/strukturag/libde265"
+url='https://github.com/strukturag/libde265'
 license=(LGPL3)
 depends=(lib32-gcc-libs libde265)
 source=(https://github.com/strukturag/libde265/releases/download/v$pkgver/$_basename-$pkgver.tar.gz)
-sha256sums=('24c791dd334fa521762320ff54f0febfd3c09fc978880a8c5fbc40a88f21d905')
+sha256sums=('2f8f12cabbdb15e53532b7c1eb964d4e15d444db1be802505e6ac97a25035bab')
 
 build() {
     cd $_basename-$pkgver
