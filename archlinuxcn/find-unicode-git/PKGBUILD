@@ -3,30 +3,23 @@
 
 pkgname=find-unicode-git
 _pkgname=fu
-pkgver=0.4.0.r42.g3afc33a.20230313
-pkgrel=2
+pkgver=0.4.0.r42.g3afc33a.20230504
+pkgrel=3
 pkgdesc='Find unicode characters from the comfort of your shell'
 arch=('x86_64')
 url='https://github.com/pierrechevalier83/find_unicode'
 license=('MIT')
-makedepends=('git' 'cargo')
+makedepends=('git' 'cargo' 'curl')
 provides=("$_pkgname" "find-unicode")
 conflicts=("$_pkgname" "find-unicode")
-source=(
-	"$_pkgname::git+$url"
-	"UnicodeData.txt::https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
-	"NerdFontsData.css::https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/css/nerd-fonts-generated.css"
-)
-sha256sums=(
-	'SKIP'
-	'806e9aed65037197f1ec85e12be6e8cd870fc5608b4de0fffd990f689f376a73'
-	'f351cb637f0161b85442ae01eb478671c3281795a6a500be2cb5bfb6f728f596'
-)
+source=( "$_pkgname::git+$url" )
+sha256sums=('SKIP')
 prepare() {
 
-	cp NerdFontsData.css $_pkgname/src
-	cp UnicodeData.txt $_pkgname/src
-	cd $_pkgname
+	cd $_pkgname/src
+	curl https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt --output UnicodeData.txt
+	curl https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/css/nerd-fonts-generated.css --output NerdFontsData.css
+	cd ..
 
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
