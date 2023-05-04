@@ -47,7 +47,7 @@ build() {
   cd "${srcdir}/${_pkgname}"
   sed -i 's/\S\+\.12032/wlroots/' CMakeLists.txt
   mkdir -p build && cd build
-  cmake -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
+  cmake -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/usr ..
   ninja
 
   cd "${srcdir}/${_pkgname}"
