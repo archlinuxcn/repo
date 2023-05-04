@@ -4,7 +4,7 @@
 _pkgname="hyprland"
 pkgname="${_pkgname}-lily-git"
 pkgver=0.23.0beta.r22.g6e697160
-pkgrel=1
+pkgrel=2
 pkgdesc="A dynamic tiling Wayland compositor based on wlroots that doesn't sacrifice on its looks."
 arch=(x86_64)
 url="https://github.com/hyprwm/Hyprland"
@@ -66,6 +66,14 @@ package() {
   install -Dm644 example/hyprland.desktop -t "${pkgdir}/usr/share/wayland-sessions"
   install -Dm644 example/hyprland.conf -t "${pkgdir}/usr/share/hyprland"
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}"
+
+  # plugin headers
+  install -d "${pkgdir}/usr/include/hyprland/protocols"
+  cp -R src "${pkgdir}/usr/include/hyprland/"
+  find "${pkgdir}/usr/include/hyprland/" -type f ! -name '*.h*' -delete
+  cp protocols/*-protocol.h  "${pkgdir}/usr/include/hyprland/protocols"
+  install -Dm644 build/hyprland.pc -t "${pkgdir}/usr/share/pkgconfig"
+
   # deps hidden from devtools to avoid it trying to install conflicting packages
   _deps=(cairo pango seatd wlroots-lily-git libwlroots.so)
   depends=("${_deps[@]}")
