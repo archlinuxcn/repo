@@ -2,7 +2,7 @@
 _srcname=pacroller
 pkgname=pacroller
 pkgver=0.1.7
-pkgrel=2
+pkgrel=3
 pkgdesc="Unattended upgrade for archlinux"
 arch=('any')
 url="https://github.com/isjerryxiao/pacroller"
