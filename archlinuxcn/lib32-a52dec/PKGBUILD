@@ -5,30 +5,15 @@
 
 _basename=a52dec
 pkgname=lib32-a52dec
-pkgver=0.7.4
-pkgrel=11
+pkgver=0.8.0
+pkgrel=1
 pkgdesc="A free library for decoding ATSC A/52 streams (32-bit)"
-url="https://liba52.sourceforge.io/"
+url="https://git.adelielinux.org/community/a52dec/"
 arch=('x86_64')
 license=('GPL2')
 depends=('lib32-glibc' a52dec)
-source=("http://liba52.sourceforge.net/files/${_basename}-${pkgver}.tar.gz"
-        'a52dec-0.7.4-build.patch'
-        'stderr.patch')
-md5sums=('caa9f5bc44232dc8aeea773fea56be80'
-         'fa16f224a7dceb7613824380abef0052'
-         '52f57e003259a24516eaab08b64ae703')
-
-prepare() {
-    cd "${_basename}-${pkgver}"
-
-    patch -Np1 -i ../a52dec-0.7.4-build.patch
-    patch -Np1 -i ../stderr.patch
-    sed -i 's/AM_CONFIG_HEADER/AC_CONFIG_HEADERS/' configure.in
-    mv configure.in configure.ac
-
-    ./bootstrap
-}
+source=(https://distfiles.adelielinux.org/source/$_basename/$_basename-$pkgver.tar.gz)
+sha256sums=('03c181ce9c3fe0d2f5130de18dab9bd8bc63c354071515aa56983c74a9cffcc9')
 
 build() {
      cd ${_basename}-${pkgver}
