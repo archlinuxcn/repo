@@ -13,13 +13,20 @@ depends=('dkms')
 makedepends=('git')
 conflicts=('xone-dkms')
 provides=('xone-dkms')
-source=("git+https://github.com/medusalix/xone.git")
-sha256sums=('SKIP')
+source=("git+https://github.com/medusalix/xone.git"
+        "Fix-build-on-6.3.patch::https://github.com/medusalix/xone/pull/21.patch")
+sha256sums=('SKIP'
+            '33ecc09ba6696e889ba9b20821b42adbb63bb70f8007c65ddb00aaa69bed63d0')
 install=xone-dkms.install
 
 pkgver() {
   cd "$srcdir/$_pkgname"
   git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd "${srcdir}/${_pkgname}"
+  patch -Np1 -i ../Fix-build-on-6.3.patch
 }
 
 package() {
