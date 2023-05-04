@@ -13,10 +13,8 @@ depends=('dkms')
 makedepends=('git')
 conflicts=('xone-dkms')
 provides=('xone-dkms')
-source=("git+https://github.com/medusalix/xone.git"
-        "Fix-build-on-6.3.patch::https://github.com/medusalix/xone/pull/21.patch")
-sha256sums=('SKIP'
-            '33ecc09ba6696e889ba9b20821b42adbb63bb70f8007c65ddb00aaa69bed63d0')
+source=("git+https://github.com/medusalix/xone.git")
+sha256sums=('SKIP')
 install=xone-dkms.install
 
 pkgver() {
@@ -26,7 +24,8 @@ pkgver() {
 
 prepare() {
   cd "${srcdir}/${_pkgname}"
-  patch -Np1 -i ../Fix-build-on-6.3.patch
+  # https://github.com/medusalix/xone/pull/21
+  git cherry-pick -n 6b745b72e4259b19d7548a2ce440bcfddbf6f506
 }
 
 package() {
