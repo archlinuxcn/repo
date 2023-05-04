@@ -2,7 +2,7 @@
 
 _basename=aom
 pkgname=lib32-aom
-pkgver=3.4.0
+pkgver=3.6.0
 pkgrel=1
 pkgdesc="Alliance for Open Media video codec (32-bit)"
 url="https://aomedia.org/"
@@ -11,7 +11,7 @@ license=(BSD custom:PATENTS)
 depends=(lib32-glibc aom)
 makedepends=(cmake ninja yasm)
 source=(https://storage.googleapis.com/aom-releases/libaom-$pkgver.tar.gz{,.asc})
-b2sums=('7a38cc1a1871f044018a8ebf5022810b753b099ad61e0c6e2625a0480946e8b5e066fd1e1abc5523e817025c8a59d6f1092c12d632c5b602cf3a80f6ef8daa0e'
+b2sums=('bf97c74f3e59e3cc2431e7b7e3494beffde1b659d1a8f8775b4b47da0c7314b8bf5b9bdf14a9d1d47a8378271f49c9e26676e73509f9e910f1d5a01e79b575bc'
         'SKIP')
 validpgpkeys=(B002F08B74A148DAA01F7123A48E86DB0B830498) # AOMedia release signing key <av1-discuss@aomedia.org>
 
@@ -20,6 +20,10 @@ prepare() {
 }
 
 build() {
+    # Upstream would like -O3
+    CFLAGS="${CFLAGS/-O2/-O3}"
+    CXXFLAGS="${CXXFLAGS/-O2/-O3}"
+
     export CC='gcc -m32'
     export CXX='g++ -m32'
     export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
@@ -27,6 +31,7 @@ build() {
     cmake -S libaom-$pkgver -B build -G Ninja \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=lib32 \
+        -DCMAKE_BUILD_TYPE=None \
         -DBUILD_SHARED_LIBS=1 \
         -DENABLE_TESTS=0 \
         -DENABLE_DOCS=0
