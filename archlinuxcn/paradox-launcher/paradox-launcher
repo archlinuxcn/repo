@@ -1,0 +1,11 @@
+#!/bin/sh
+
+DIR="${HOME}/.paradox-launcher"
+if [ ! -d "$DIR" ]; then
+    mkdir -p "$DIR"
+    cp /opt/paradox-launcher/* "$DIR" -R
+    chmod +x "$DIR"/data/bootstrapper/bootstrapper.sh
+fi
+
+cd "$DIR"
+"$DIR"/data/bootstrapper/bootstrapper.sh
