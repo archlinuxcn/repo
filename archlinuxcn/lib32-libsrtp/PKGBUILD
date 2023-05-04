@@ -3,7 +3,7 @@
 
 _basename=libsrtp
 pkgname=lib32-libsrtp
-pkgver=2.4.2
+pkgver=2.5.0
 pkgrel=1
 epoch=1
 pkgdesc="Library for SRTP (Secure Realtime Transport Protocol) (32-bit)"
@@ -13,14 +13,14 @@ license=(BSD)
 depends=('lib32-glibc' 'lib32-nss' 'libsrtp')
 makedepends=('git' 'lib32-libpcap' 'meson')
 checkdepends=('procps-ng')
-_commit=90d05bf8980d16e4ac3f16c19b77e296c4bc207b # tags/v2.4.2
+_commit=a566a9cfcd619e8327784aa7cff4a1276dc1e895 # tags/v2
 source=("git+https://github.com/cisco/libsrtp#commit=$_commit")
 sha256sums=('SKIP')
 
 _pkgver() {
     cd $_basename
 
-    git describe --tags | sed 's/^v//;s/-/+/g'
+    git describe --tags | sed 's/^v//;s/[^-]*-g/r&/;s/-/+/g'
 }
 
 prepare() {
@@ -36,12 +36,16 @@ build() {
     export CXX='g++ -m32'
     export PKG_CONFIG='/usr/bin/i686-pc-linux-gnu-pkg-config'
 
-    arch-meson $_basename build \
+    local meson_options=(
         --libdir=lib32 \
         --buildtype release \
         -D crypto-library=nss \
         -D crypto-library-kdf=disabled \
         -D doc=disabled
+    )
+
+    arch-meson libsrtp build "${meson_options[@]}"
+
     meson compile -C build
 }
 
