@@ -43,15 +43,18 @@ makedepends=(${optdepends[@]%:*})
 depends=('libltdl' 'iptables' 'libnsl')
 
 source=("https://storage.googleapis.com/collectd-tarballs/${pkgname}-${pkgver}.tar.bz2"
-        'service')
+        'service'
+        'https://github.com/collectd/collectd/commit/623e95394e0e62e7f9ced2104b786d21e9c0bf53.patch')
 sha256sums=('5bae043042c19c31f77eb8464e56a01a5454e0b39fa07cf7ad0f1bfc9c3a09d6'
-            '83957b0b2cc7fa05a4d5f22e6c913ae2b0a4d7821f7b4e2d2e763054cc8c6c21')
+            '83957b0b2cc7fa05a4d5f22e6c913ae2b0a4d7821f7b4e2d2e763054cc8c6c21'
+            '777544cbf803af4d08ea228b29619f8f6e7a4777a85e0fb30693d8240db7246b')
 
 backup=('etc/collectd.conf')
 
 prepare() {
 	cd ${pkgname}-${pkgver}
 	sed -i '/sys\/mount.h/d' src/utils/mount/mount.h
+        patch -Np1 < ../623e95394e0e62e7f9ced2104b786d21e9c0bf53.patch
 }
 
 build() {
@@ -62,7 +65,6 @@ build() {
 		--localstatedir=/var \
 		--sbindir=/usr/bin \
 		--disable-werror \
-		--with-python=/usr/bin/python \
 		--with-perl-bindings='INSTALLDIRS=vendor' \
 
 	make all
