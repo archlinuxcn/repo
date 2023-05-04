@@ -3,13 +3,13 @@
 
 pkgname=stellarium
 pkgver=23.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A stellarium with great graphics and a nice database of sky-objects"
 arch=('x86_64')
 url="https://stellarium.org/"
 license=('GPL2')
 depends=('libpng' 'libgl' 'freetype2' 'openssl' 'gpsd'
-         'qt6-serialport' 'qt6-multimedia' 'qt6-location' 'qt6-charts' 'calcmysky-qt6')
+         'qt6-serialport' 'qt6-multimedia' 'qt6-positioning' 'qt6-charts' 'calcmysky-qt6')
 makedepends=('cmake' 'mesa' 'qt6-tools')
 source=(https://github.com/Stellarium/stellarium/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz{,.asc}
 )
@@ -19,8 +19,8 @@ sha256sums=('c0d519ef44e78c0609b576c068e1ef2ad09e635d4ff73de7d41bb8c7323bad27'
 
 build() {
   cd ${pkgname}-${pkgver}
-
-  cmake . -DCMAKE_INSTALL_PREFIX=/usr
+  # Have to use vendor indilib because it does not support indi>2.0 yet
+  cmake . -DCMAKE_INSTALL_PREFIX=/usr -DPREFER_SYSTEM_INDILIB=No
   make
 }
 
