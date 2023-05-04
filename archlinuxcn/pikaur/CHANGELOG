@@ -2029,3 +2029,36 @@ Tue Jan 3 17:22:26 2023 +0100
      2022-12-26 7c5d8b7 actionless fix(config, main): create .cache dir when needed (fixes #697)
      2022-12-22 375f044 actionless fix(pacman: get_pacman_test_output): results were not cached 🙀
      2022-12-22 40fe015 actionless fix(core: InteractiveSpawn): dont print some cmds twice with --print-commands enabled
+
+
+Thu May 4 13:33:56 2023 +0200
+-------------------------------------------------
+1.15            Release 1.15
+    
+    Notable changes:
+    *  2023-05-04 98d158f actionless fix(args: parse, reconstruct_pacman, main: cli_entry_point): read stdin when `-` supplied only for pikaur-specific commands (fixes #712)
+    *  2023-05-04 ab2c637 actionless fix(args: PikaurArgs: from_namespace): print warning about extra args only in the debug mode (fixes #709)
+    *  2023-05-01 99fa454 actionless feat(config; main: cli_entry_point): add more universal config option `DynamicUsers` instead of `AlwaysUseDynamicUsers`
+    *  2023-02-09 2a9f139 actionless fix(build: set_built_pkg_path): handle the case when package was built during this pikaur session, but build sequence was restarted (for example, due to dep-change in PKGBUILD)
+    *  2023-01-29 91e9dc3 actionless fix(TTYRestore): restore also stdout and stderr, not only stdin
+    *  2023-01-29 925b178 actionless fix(prompt): use FileLock, as threading.Lock acting weird with multithreaded TTYs
+    *  2023-01-29 aa9cf8c actionless fix(filelock): wait for lock to be available instead of raising exc, also improve logging
+    *  2023-01-29 967d3ef actionless fix(install_cli: edit_file): save/restore TTY state in case if TUI editor (like VIM) would garble the TTYs
+    *  2023-01-29 0cc77ba actionless fix(core: interactive_spawn): don't lock the logging output, as it's starting to race with input prompt lock
+    *  2023-01-28 b05e9e5 actionless feat(args, build): add --skip-aur-pull and rename --clone-concurrency to --aur-clone-concurrency
+    *  2023-01-28 e160bf8 actionless feat(install_cli: clone_repos): add new recovery option
+    *  2023-01-28 28c6dc6 actionless fix(build: clone_aur_repos): raise exception after checking all the results
+    *  2023-01-28 f0a26df actionless feat(build: clone_aur_repos): don't clone same repo twice during same pikaur session
+    *  2023-01-26 bdc01cc actionless fix(build: _set_built_package_path): regression when comparing path to str
+    *  2023-01-16 735a14a actionless fix(pkgbuild): update version regex
+    *  2023-01-12 d5b5eb8 Bundy01 chore(locale): regenerate and translate es.po, fr.po (#700)
+
+
+Thu May 4 14:59:51 2023 +0200
+-------------------------------------------------
+1.15.1          Hotfix release 1.15.1
+    
+    Notable changes:
+    *  2023-05-04 dfa09ea actionless doc(pkg: bin: pikaur): add link to installation instructions
+    *  2023-05-04 fbfdb60 actionless fix(args): --nodeps could be used more than once
+    *  2023-05-04 79f454d actionless style: lint packaging/usr/bin/pikaur

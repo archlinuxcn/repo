@@ -2,8 +2,8 @@
 # shellcheck disable=SC2034,SC2154
 
 pkgname=pikaur
-pkgver=1.14.7
-pkgrel=2
+pkgver=1.15.1
+pkgrel=1
 pkgdesc="AUR helper which asks all questions before installing/building. Inspired by pacaur, yaourt and yay."
 arch=('any')
 url="https://github.com/actionless/pikaur"
@@ -11,7 +11,7 @@ license=('GPL3')
 source=(
 	"$pkgname-$pkgver.tar.gz"::https://github.com/actionless/pikaur/archive/"$pkgver".tar.gz
 )
-b2sums=('fcf055ad56e3016d576c8f2b3b24db60606a2f8cfec37a1d39bddd2573dcc80e922f9f75d7ccc2c01fd22888e112f7037b3c472d4d63179332a23dc61dff2d85')
+b2sums=('5c51b865c2a262b913ee0e0de2e670adfabca55fc405044d2af58a82c879bd6d577dbde396d50a5a0a54d0936596566b3495d4df969a45bdd4e40735e1053386')
 depends=(
 	'pyalpm'
 	'git'
@@ -33,7 +33,7 @@ provides=('pikaur')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}" || exit 2
-	sed -i -e "s/VERSION.*=.*/VERSION = '${pkgver}'/g" pikaur/config.py
+	sed -i -e "s/^VERSION.*=.*/VERSION = '${pkgver}'/g" pikaur/config.py
 	if test -d ./dist ; then
 		rm -r ./dist
 	fi
