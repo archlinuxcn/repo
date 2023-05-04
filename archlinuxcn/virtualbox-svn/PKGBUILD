@@ -11,7 +11,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-ext-vnc-svn')
 pkgver=98942
 _tarver=${pkgver}
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 url='http://virtualbox.org'
 license=('GPL' 'custom:CDDL')
@@ -19,7 +19,6 @@ makedepends=('subversion'
              'alsa-lib'
              'cdrkit'
              'curl'
-             'dev86'
              'device-mapper'
              'git'
              'glu'
@@ -37,6 +36,8 @@ makedepends=('subversion'
              'libxml2'
              'libxmu'
              'libxrandr'
+             'liblzf'
+             'libtpms'
              'libxslt'
              'libxtst'
              'linux-headers'
@@ -92,7 +93,8 @@ prepare() {
             patch -p1 -N -i "$srcdir/${filename##*/}"
         fi
     done
-    
+
+    sed -i '1 a #include<cstdint>' src/libs/dxvk-native-1.9.2a/src/util/util_bit.h
     echo 'Applying local config'
     cp "$srcdir/LocalConfig.kmk" .
     
