@@ -10,6 +10,9 @@ pre_build_script: aur_pre_build(maintainers=['LaughingMan'])
 
 post_build: aur_post_build
 
+repo_depends:
+  - python2
+
 update_on:
   - source: aur
     aur: python-sip-pyqt4
