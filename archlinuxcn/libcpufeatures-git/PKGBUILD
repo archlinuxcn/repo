@@ -5,8 +5,8 @@
 
 _pkgname=libcpufeatures
 pkgname="${_pkgname}-git"
-epoch=1
-pkgver=0.8.0+.r331.d20230427.936b9ab
+epoch=2
+pkgver=v0.8.0.r1.g41e206e
 pkgrel=1
 pkgdesc="A cross-platform C library to retrieve CPU features (such as available instructions) at runtime. By google."
 url="https://github.com/google/cpu_features"
@@ -50,16 +50,7 @@ prepare() {
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
-  _ver="$(git describe --tags | sed 's|^v||' | awk -F'-' '{print $1}')"
-  _subver="$(git describe --tags | awk -F'-' '{print $2}')"
-  _rev="$(git rev-list --count HEAD)"
-  _hash="$(git rev-parse --short HEAD)"
-  _date="$(git log -n 1 --no-show-signature --format=tformat:%ci | awk '{print $1}' | tr -d '-')"
-  if [ -z ${_ver} ]; then
-    error "Error in ${FUNCNAME[0]}: Version information could not determined."
-    return 1
-  fi
-  printf '%s' "${_ver}+${_subver}.r${_rev}.d${_date}.${_hash}"
+  git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
