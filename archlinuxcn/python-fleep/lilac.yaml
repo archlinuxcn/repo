@@ -10,6 +10,10 @@ pre_build_script: aur_pre_build(maintainers=['k0ste'])
 
 post_build: aur_post_build
 
+repo_depends:
+  - python2
+  - python2-setuptools
+
 update_on:
   - source: aur
     aur:
