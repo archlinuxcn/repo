@@ -17,7 +17,7 @@ makedepends=(
   git
   python-setuptools
 )
-source=("${pkgname}::git+https://github.com/pydicom/pylibjpeg-openjpeg.git#tag=v1.0.1")
+source=("${pkgname}::git+https://github.com/pydicom/pylibjpeg-openjpeg.git#tag=v${pkgver}")
 sha512sums=('SKIP')
 
 prepare() {
