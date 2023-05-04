@@ -4,7 +4,7 @@
 
 pkgname=menulibre
 pkgver=2.2.3
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="An advanced menu editor that provides modern features in a clean, easy-to-use interface"
 arch=("any")
