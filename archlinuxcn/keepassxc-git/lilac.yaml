@@ -6,11 +6,10 @@ maintainers:
 build_prefix: extra-x86_64
 
 pre_build_script: |
-    vcs_update()
+    aur_pre_build(maintainers="yan12125")
 
 post_build_script: |
-    git_pkgbuild_commit()
-    update_aur_repo()
+    aur_post_build()
 
 update_on:
   - source: github
@@ -20,3 +19,5 @@ update_on:
     to_pattern: \1
     alpm: botan
     repo: extra
+  - source: aur
+    aur: keepassxc-git
