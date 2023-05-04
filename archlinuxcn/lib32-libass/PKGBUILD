@@ -5,7 +5,7 @@
 # Contributor: Adam <adam900710@gmail.com>
 
 pkgname=lib32-libass
-pkgver=0.16.0
+pkgver=0.17.1
 pkgrel=1
 pkgdesc='A portable library for SSA/ASS subtitles rendering (32 bit)'
 arch=(x86_64)
@@ -13,21 +13,22 @@ url=https://github.com/libass/libass/
 license=(BSD)
 depends=("lib32-fontconfig" "lib32-freetype2" "lib32-fribidi" "lib32-glib2" "lib32-glibc" "lib32-harfbuzz" "libass" "libfontconfig.so" "libfreetype.so" "libfribidi.so" "libharfbuzz.so")
 makedepends=(git nasm)
-_tag=1af6240c5d1e499326146e0b88c987e626b13c23
-source=(git+https://github.com/libass/libass.git#tag=${_tag})
-validpgpkeys=(5458C3100671F252B0F4C7708079D18C21AAAAFF) # Oleg Oshmyan (Chortos-2) <chortos@inbox.lv>
+_tag=915599d88e951e34079383cf926d2731bb45cea1
+source=(git+https://github.com/libass/libass.git?signed#tag=${_tag})
+validpgpkeys=(5458C3100671F252B0F4C7708079D18C21AAAAFF  # Oleg Oshmyan (Chortos-2) <chortos@inbox.lv>
+              5EE63F2A71BF132CFE3567E1DFFE615F2824C720) # Oneric <oneric@oneric.de>
 b2sums=(SKIP)
-
-pkgver() {
-    cd libass
-
-    git describe --tags
-}
 
 prepare() {
     cd libass
 
     ./autogen.sh
+}
+
+pkgver() {
+    cd libass
+
+    git describe --tags
 }
 
 build() {
@@ -46,9 +47,11 @@ build() {
 }
 
 package() {
-    make DESTDIR="${pkgdir}" -C libass install
+    cd libass
 
-    install -Dm 644 libass/COPYING -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+    make DESTDIR="${pkgdir}" install
+
+    install -Dm 644 COPYING -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 
     rm -rf "${pkgdir}"/usr/include
 }
