@@ -6,7 +6,7 @@ gitver=v6.3.1
 patchver=20230105
 patchname=more-uarches-for-kernel-5.17+.patch
 pkgver=6.3.v.1
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
@@ -25,7 +25,7 @@ source=("git+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git#ta
 )
 sha256sums=('SKIP'
             #config.x86_64
-            '5e50d68ab6dca48ce3af0e05b7e47904498d45d7cf1a7da8740dc3490e4a95ac'
+            '1af372b6d6b7437176e664641a16c214640e700f9b74519b213d75aa19c40922'
             #.preset file
             '60c6ba602443e94a9eba3aeee9d194027d69bffaa428c6d055348ebf03681b5c'
             #linux install file
@@ -78,11 +78,11 @@ build() {
   cd "${_srcname}"
 
   #Force zenv3 architecture optimisation and other optimisations.
-  make ${MAKEFLAGS} LOCALVERSION= bzImage modules KCFLAGS='-march=znver3 -mtune=znver3 -O2 -pipe -fstack-protector-strong'
+  make ${MAKEFLAGS} LOCALVERSION= bzImage modules KCFLAGS='-march=znver4 -mtune=znver4 -O2 -pipe -fstack-protector-strong'
 }
 
 _package() {
-  pkgdesc="Linux kernel aimed at the ZNVER3/MZEN3 AMD Ryzen CPU based hardware"
+  pkgdesc="Linux kernel aimed at the ZNVER4/MZEN4 AMD Ryzen CPU based hardware"
   depends=('coreutils' 'linux-firmware' 'kmod' 'lzop')
   optdepends=('crda: to set the correct wireless channels of your country')
   backup=("etc/mkinitcpio.d/${pkgbase}.preset")
@@ -147,7 +147,7 @@ _package() {
 }
 
 _package-headers() {
-  pkgdesc="Header files and scripts for building modules for Linux kernel aimed at the ZNVER3/MZEN3 AMD CPU based hardware"
+  pkgdesc="Header files and scripts for building modules for Linux kernel aimed at the ZNVER4/MZEN4 AMD CPU based hardware"
 
   install -dm755 "${pkgdir}/usr/lib/modules/${_kernver}"
 
