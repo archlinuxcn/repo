@@ -4,7 +4,7 @@
 
 _pkgbase='citra'
 pkgname="$_pkgbase-git"
-pkgver=r9496.cdb157f58
+pkgver=r9544.34de77d42
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger (Master branch)"
 arch=('i686' 'x86_64')
@@ -17,7 +17,7 @@ conflicts=('citra')
 source=("$_pkgbase::git+https://github.com/citra-emu/citra"
 ext-lib.patch)
 md5sums=('SKIP'
-         'a5c110629e2d590e5b356b1abda2da07')
+         '91cd68b90e9f7410415dbd857ec5debc')
 
 pkgver() {
 	cd "$srcdir/$_pkgbase"
@@ -33,16 +33,13 @@ prepare() {
     git submodule update --init --remote externals/nihstro
     git submodule update --init --remote externals/soundtouch
     git submodule update --init --remote externals/teakra
+    git submodule update --init --remote externals/dds-ktx
 }
 
 build() {
 	# Trick the compiler into thinking we're building from a continuous
 	# integration tool so the build number is correctly shown in the title
 	cd "$srcdir/$_pkgbase"
-	export CI=true
-	export TRAVIS=true
-	export TRAVIS_REPO_SLUG=citra-emu/citra
-	export TRAVIS_TAG=$(git rev-list --count HEAD)
 
     CXXFLAGS+=" -I/usr/include/libusb-1.0"
 	mkdir -p build && cd build
@@ -57,10 +54,13 @@ build() {
       -DENABLE_FFMPEG_VIDEO_DUMPER=ON \
       -DENABLE_FFMPEG_AUDIO_DECODER=ON \
       -DUSE_SYSTEM_BOOST=ON \
-      -DCITRA_USE_SYSTEM_SDL2=ON \
+      -DUSE_SYSTEM_SDL2=ON \
       -DENABLE_MF=OFF \
       -DCITRA_TESTS=OFF \
       -DCITRA_CHECK_SUBMODULES=OFF
+
+    sed -i 's/ -lxbyak//g' src/citra_qt/CMakeFiles/citra-qt.dir/link.txt
+    sed -i 's/ -lxbyak//g' src/citra/CMakeFiles/citra.dir/link.txt
 	make
 }
 
