@@ -11,12 +11,12 @@ pkgdesc='A container-based approach to boot a full Android system on a regular L
 arch=('any')
 url='https://github.com/waydroid/waydroid'
 license=('GPL3')
-depends=('dnsmasq' 'lxc' 'nftables' 'python' 'python-gbinder' 'python-gobject' 'which')
+depends=('dbus-python' 'dnsmasq' 'hicolor-icon-theme' 'lxc' 'nftables' 'python-gbinder' 'python-gobject' 'which')
 optdepends=('waydroid-image: Android image for use with waydroid'
             'python-pyclip: share clipboard with container')
 source=("${pkgname}-${pkgver}.tar.gz"::"${url}/archive/refs/tags/${pkgver}.tar.gz")
 sha512sums=('c5050c03543623a14a0f1a7a0b320e2786d95c208945767cddff7c3b46486cc19406eba798fce2224a383b3fe587e2e1b1f91ebb75c1da08cb50d33e724b6fef')
 
 package() {
-  make -C "${srcdir}/${pkgname}-${pkgver}/" install DESTDIR="${pkgdir}" USE_NFTABLES=1
+  make -C "${srcdir}/${pkgname}-${pkgver}" DESTDIR="${pkgdir}" USE_NFTABLES=1 install
 }
