@@ -1,0 +1,22 @@
+--- a/third_party/vulkan-deps/vulkan-validation-layers/src/layers/external/vma/vk_mem_alloc.h	2023-05-01 16:27:24.571426478 +0200
++++ b/third_party/vulkan-deps/vulkan-validation-layers/src/layers/external/vma/vk_mem_alloc.h	2023-05-01 16:30:07.095704670 +0200
+@@ -2610,6 +2610,9 @@
+ #pragma GCC diagnostic ignored "-Wunused-private-field"
+ #endif
+ #endif
++#if VMA_STATS_STRING_ENABLED
++    #include <cstdio> // For snprintf
++#endif
+ 
+ 
+ /*******************************************************************************
+--- a/third_party/vulkan-deps/vulkan-validation-layers/src/layers/stateless/parameter_name.h	2023-05-01 16:31:04.658413452 +0200
++++ b/third_party/vulkan-deps/vulkan-validation-layers/src/layers/stateless/parameter_name.h	2023-05-01 16:31:54.107411574 +0200
+@@ -21,6 +21,7 @@
+ #include <sstream>
+ #include <string>
+ #include <vector>
++#include <cstdint>
+ 
+ /**
+  * Parameter name string supporting deferred formatting for array subscripts.
