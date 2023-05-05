@@ -10,4 +10,4 @@ post_build: git_pkgbuild_commit
 
 update_on:
   - source: cmd
-    cmd: curl "https://gitlab.freedesktop.org/api/v4/projects/agd5f%2Flinux/repository/tags" | jq -r '.[]|select(.name | startswith("amd-drm-next")).name' | head -n 1 
+    cmd: curl "https://gitlab.freedesktop.org/api/v4/projects/agd5f%2Flinux/repository/tags" | jq -r '.[]|select(.name | startswith("amd-drm-fixes")).name' | head -n 1 
