@@ -11,7 +11,7 @@ license=('custom')
 depends=("libxi" "xdg-utils" "freetype2" "libgl" "gconf")
 _source=https://launcher.paradoxinteractive.com/v2/paradox-launcher-installer-linux
 source=(${pkgname}-${pkgver}.deb::${_source})
-sha256sums=('4a669e42a5f7e04536bce8377335ce3fab77d5262f161978ca7c3cfda98c88f4')
+sha256sums=('be54c8c92eaf8de004792da6b002614779211942adc8b5959db6229cc760fd52')
 
 pkgver() {
   ADDR=$(curl -ILs -o /dev/null -w %{url_effective} ${_source});
