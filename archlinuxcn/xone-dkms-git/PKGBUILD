@@ -22,6 +22,12 @@ pkgver() {
   git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
+prepare() {
+  cd "${srcdir}/${_pkgname}"
+  # https://github.com/medusalix/xone/pull/21
+  git cherry-pick -n 6b745b72e4259b19d7548a2ce440bcfddbf6f506
+}
+
 package() {
   cd "${srcdir}/${_pkgname}"
 
