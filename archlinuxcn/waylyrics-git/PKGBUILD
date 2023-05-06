@@ -3,7 +3,7 @@ pkgname=waylyrics-git
 _pkgname=waylyrics
 __pkgname=Waylyrics
 _appname="io.poly000.${_pkgname}"
-pkgver=0.1.0_r64.g845eac6
+pkgver=0.1.0_r67.g58e1ea0
 pkgrel=1
 pkgdesc="On screen lyrics for wayland with netease cloud music source"
 url="https://github.com/poly000/waylyrics"
@@ -24,7 +24,7 @@ source=("git+https://github.com/poly000/${_pkgname}.git"
 
 sha256sums=('SKIP'
             '0726301af6d2a57ac2130319a000e32ec70f94c01fdedc78910fd0525e16a68c'
-            'e81aaaf511e1312ed0b1b5bdcb44f62ff877723bb036c71ef82289441fb64f93')
+            'b3cfeddd0d08aae8f4de3891b0fe94899ac2749887ebc2c42c8b960f08b7971f')
 
 pkgver() {
     cd "$srcdir/$_pkgname"
@@ -60,6 +60,8 @@ package() {
     do
         install -Dm644 "${style}" -t "${pkgdir}/usr/share/${_pkgname}/themes"
     done
+
+    cp -r res/* "${pkgdir}/usr/share/"
 
     # fixed path by Integral-Tech
     cd -
