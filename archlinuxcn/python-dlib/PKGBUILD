@@ -1,0 +1,55 @@
+# Maintainer: Jingbei Li <i@jingbei.li>
+# Contributor: Lev Velykoivanenko <velykoivanenko dot lev at gmail dot com>
+# Contributor: Flávio Zavan <flavio dot zavan at gmail dot com>
+# Contributor: pingplug
+# Contributor: perlawk
+# Contributor: xsmile
+
+pkgbase=python-dlib
+pkgname=('python-dlib')
+##pkgname+=('python-dlib-cuda')
+_pkgname=dlib
+pkgver=19.24.1
+pkgrel=1
+pkgdesc="Dlib is a general purpose cross-platform C++ library designed using contract programming and modern C++ techniques."
+arch=('x86_64')
+url="http://www.dlib.net/"
+license=('Boost')
+depends=('cblas' 'giflib' 'lapack' 'libjpeg-turbo' 'libpng' 'libx11')
+optdepends=('sqlite')
+##optdepends+=('cuda' 'cudnn' 'ccache-ext')
+makedepends=(${optdepends[@]} 'cmake' 'boost' 'python-setuptools')
+#source=("$url/files/${_pkgname}-${pkgver}.tar.bz2")
+source=("https://pypi.io/packages/source/${_pkgname:0:1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+sha256sums=('e8d3ca047d525eeb36cc47bce45ed0562dab40b0b8f5fa171600dde2fec509c0')
+##options=(!lto)
+
+##prepare() {
+##	cd "$srcdir/"
+##	cp -a "${_pkgname}-${pkgver}" "${_pkgname}-${pkgver}-cuda"
+##}
+
+build(){
+	cd "${srcdir}/${_pkgname}-${pkgver}"
+	python setup.py build --no DLIB_USE_CUDA
+
+##	cuda_flags='--set CUDA_HOST_COMPILER=/opt/cuda/bin/gcc --set CUDA_NVCC_EXECUTABLE=/usr/lib/ccache/bin/nvcc-ccache --set CUDA_HOST_COMPILER=/opt/cuda/bin/gcc'
+
+##	cd "${srcdir}/${_pkgname}-${pkgver}-cuda"
+##	python setup.py build $cuda_flags
+}
+
+
+package_python-dlib(){
+	depends+=('python')
+	cd "${srcdir}/${_pkgname}-${pkgver}"
+	python setup.py install --skip-build --prefix=/usr --root="$pkgdir" --optimize=1
+}
+
+package_python-dlib-cuda(){
+	depends+=('cuda' 'cudnn' 'python')
+	provides=('python-dlib')
+	conflicts=('python-dlib')
+	cd "${srcdir}/${_pkgname}-${pkgver}-cuda"
+	python setup.py install --skip-build --prefix=/usr --root="$pkgdir" --optimize=1
+}
