@@ -3,7 +3,7 @@
 
 pkgname=python39
 pkgver=3.9.16
-pkgrel=2
+pkgrel=3
 _pybasever=3.9
 _pymajver=3
 pkgdesc="Major release 3.9 of the Python high-level programming language"
