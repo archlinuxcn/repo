@@ -64,8 +64,6 @@ makedepends=(
   libxcomposite         lib32-libxcomposite
   libxmu                lib32-libxmu
   libxxf86vm            lib32-libxxf86vm
-  libldap               lib32-libldap
-  openal                lib32-openal
   mpg123                lib32-mpg123
   openal                lib32-openal
   v4l-utils             lib32-v4l-utils
@@ -81,7 +79,6 @@ makedepends=(
   gst-plugins-base-libs lib32-gst-plugins-base-libs
   vulkan-icd-loader     lib32-vulkan-icd-loader
   sdl2                  lib32-sdl2
-  vkd3d                 lib32-vkd3d
   libgphoto2
   gsm
   ffmpeg vulkan-headers opencl-headers
@@ -91,10 +88,8 @@ makedepends=(
 optdepends=(
   giflib                lib32-giflib
   libpng                lib32-libpng
-  libldap               lib32-libldap
   gnutls                lib32-gnutls
   mpg123                lib32-mpg123
-  openal                lib32-openal
   v4l-utils             lib32-v4l-utils
   libpulse              lib32-libpulse
   alsa-plugins          lib32-alsa-plugins
@@ -109,14 +104,13 @@ optdepends=(
   gst-plugins-base-libs lib32-gst-plugins-base-libs
   vulkan-icd-loader     lib32-vulkan-icd-loader
   sdl2                  lib32-sdl2
-  vkd3d                 lib32-vkd3d
   libgphoto2
   gsm
   ffmpeg
   dosbox
 )
 
-provides=("wine=7.0" "wine-wow64=7.0")
+provides=("wine=8.0" "wine-wow64=8.0")
 conflicts=('wine' 'wine-wow64')
 install=wine.install
 
@@ -128,19 +122,11 @@ prepare() {
     pushd proton-wine
       patch -p1 -i "$srcdir"/wine-wmclass.patch
       patch -p1 -i "$srcdir"/wine-isolate_home.patch
-      git config user.email "makepkg@aur.not"
-      git config user.name "makepkg aur"
-      git tag wine-ge-7.0 --annotate -m "$pkgver"
       dlls/winevulkan/make_vulkan
       tools/make_requests
       autoreconf -f
     popd
   popd
-
-  sed 's|OpenCL/opencl.h|CL/opencl.h|g' -i $_pkgname/proton-wine/configure*
-
-  # Fix openldap 2.5+ detection
-  sed 's/-lldap_r/-lldap/' -i $_pkgname/proton-wine/configure
 
   # Get rid of old build dirs
   rm -rf $_pkgname-{32,64}-build
@@ -179,8 +165,8 @@ build() {
   export CFLAGS+=" -floop-interchange -ftree-loop-distribution"
   export CXXFLAGS+=" -floop-interchange -ftree-loop-distribution"
 
-  export CFLAGS+=" -mno-avx2 -mfpmath=sse -fwrapv -fno-strict-aliasing -gdwarf-2 -gstrict-dwarf"
-  export CXXFLAGS+=" -mno-avx2 -mfpmath=sse -fwrapv -fno-strict-aliasing -gdwarf-2 -gstrict-dwarf -std=c++17"
+  export CFLAGS+=" -mno-avx2 -mfpmath=sse -fwrapv -fno-strict-aliasing -ggdb -ffunction-sections -fdata-sections -fno-omit-frame-pointer"
+  export CXXFLAGS+=" -mno-avx2 -mfpmath=sse -fwrapv -fno-strict-aliasing -ggdb -ffunction-sections -fdata-sections -fno-omit-frame-pointer -std=c++17"
   
   export LDFLAGS="${LDFLAGS//,-z,now/}"
   export LDFLAGS="${LDFLAGS//,-z,relro/}"
@@ -205,7 +191,7 @@ build() {
     --enable-win64 \
     --with-xattr
 
-  make -j$(nproc)
+  make
 
   msg2 "Building Wine-32..."
 
@@ -236,7 +222,7 @@ build() {
     --libdir=/usr/lib32 \
     --with-wine64="$srcdir/$_pkgname-64-build"
 
-  make -j$(nproc)
+  make
 }
 
 package() {
