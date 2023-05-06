@@ -7,7 +7,7 @@
 
 _pkgname=prismlauncher
 pkgname=${_pkgname}-git
-pkgver=6.0.r457.g64ba5e4e
+pkgver=6.0.r463.gce5bb29c
 pkgrel=1
 pkgdesc="Minecraft launcher with ability to manage multiple instances."
 arch=('i686' 'x86_64' 'aarch64')
@@ -49,7 +49,8 @@ prepare() {
 }
 
 build() {
-
+  # Using JDK 17 because prismlauncher does not support JDK 20 yet
+  export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
   cmake -DCMAKE_BUILD_TYPE= \
     -DCMAKE_INSTALL_PREFIX="/usr" \
     -DLauncher_APP_BINARY_NAME="${_pkgname}" \
