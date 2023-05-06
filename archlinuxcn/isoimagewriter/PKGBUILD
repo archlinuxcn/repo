@@ -1,0 +1,26 @@
+# Maintainer: Rocket Aaron <i at rocka dot me>
+# Contributor: Luca Weiss <luca (at) z3ntu (dot) xyz>
+
+pkgname=isoimagewriter
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Program to write hybrid ISO files onto USB disks"
+arch=("x86_64")
+url="https://community.kde.org/ISOImageWriter"
+license=('GPL3')
+depends=('qgpgme' 'ki18n' 'karchive' 'kcoreaddons' 'kiconthemes' 'kwidgetsaddons' 'kcrash' 'solid')
+makedepends=('cmake' 'extra-cmake-modules')
+source=("https://download.kde.org/stable/isoimagewriter/${pkgver}/isoimagewriter-${pkgver}.tar.xz"{,.sig})
+sha512sums=('d50e8146cfde12d940ccfc1ed8ad71a69d203054e470d52e274589aa38d6fbdb018a79db4b63725c7b37acfedfa36b211cc79437e3f12668b8499d9ece3ee562'
+            'SKIP')
+validpgpkeys=('E0A3EB202F8E57528E13E72FD7574483BB57B18D') # Jonathan Esk-Riddell
+
+build() {
+  cmake -B build -S $pkgname-$pkgver \
+    -DCMAKE_BUILD_TYPE=Release
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir/" cmake --install build
+}
