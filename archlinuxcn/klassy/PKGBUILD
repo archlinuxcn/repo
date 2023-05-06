@@ -2,8 +2,8 @@
 # Contributor: Art Dev <artdevjs at gmail dot com>
 
 pkgname=klassy
-pkgver=4.0.breeze5.25.80
-pkgrel=2
+pkgver=4.1.breeze5.25.80
+pkgrel=1
 pkgdesc='Klassy is a highly customizable binary Window Decoration and Application Style plugin for recent versions of the KDE Plasma desktop. It provides the Klassy, Kite, Oxygen/Breeze, and Redmond icon styles.'
 arch=(x86_64)
 url="https://github.com/paulmcauley/klassy"
@@ -15,7 +15,7 @@ optdepends=('kcmutils: for klassy-settings')
 provides=()
 conflicts=()
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('3b2b93333beda0c6354a4528767ba2262e0bf9fba01841307ca10dff30465249')
+sha256sums=('cdf55b4ebbe9502c107845a64abb4dbd7d44a5e11aaff97d5df8cafd16bf71b2')
 
 build() {
   cd "${pkgname}-${pkgver}"
