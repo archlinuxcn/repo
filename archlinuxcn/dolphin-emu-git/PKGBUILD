@@ -3,20 +3,20 @@
 
 pkgbase=dolphin-emu-git
 pkgname=('dolphin-emu-git' 'dolphin-emu-nogui-git')
-pkgver=5.0.r19349.0b9b09ad328
+pkgver=5.0.r19353.2319210d85
 pkgrel=1
 pkgdesc='A GameCube / Wii / Triforce emulator'
 arch=('x86_64' 'aarch64')
 url='http://www.dolphin-emu.org/'
 license=('GPL')
 depends=(
-  'alsa-lib' 'bluez-libs' 'cubeb' 'enet' 'hidapi' 'libevdev' 'libgl' 'libpng'
-  'libpulse' 'libx11' 'libxi' 'libxrandr' 'lzo' 'mbedtls' 'pugixml' 'qt6-base'
-  'sfml' 'zlib' 'minizip-ng'
-  'libcurl.so' 'ffmpeg'
+  'alsa-lib' 'bluez-libs' 'cubeb' 'enet' 'hidapi' 'libevdev' 'libgl' 'libmgba'
+  'libpulse' 'libspng' 'libx11' 'libxi' 'libxrandr' 'lzo' 'mbedtls' 'pugixml' 'qt6-base'
+  'sfml' 'zlib' 'minizip-ng' 'sdl2' 'bzip2' 'xz' 'zstd' 'libspng'
+  'libcurl.so' 'ffmpeg' 'fmt' 'sfml' 'miniupnpc' 'curl' 'libiconv' 
   'libminiupnpc.so' 'libudev.so' 'libusb-1.0.so' 'libxxhash.so'
 )
-makedepends=('cmake' 'git' 'libglvnd' 'python' 'ninja')
+makedepends=('cmake' 'git' 'libglvnd' 'python' 'ninja' 'gtest')
 optdepends=('pulseaudio: PulseAudio backend')
 options=('!emptydirs')
 source=('dolphin-emu::git+https://github.com/dolphin-emu/dolphin.git')
@@ -31,6 +31,10 @@ pkgver() {
 prepare() {
   cd dolphin-emu
   git submodule update --init --recursive
+
+  sed -i '1 i #include<cstdio>' Externals/VulkanMemoryAllocator/include/vk_mem_alloc.h
+  sed -i 's/minizip>=3.0.0/minizip-ng>=3.0.0/g' CMakeLists.txt
+  sed -i 's/currentVideoSize/desiredVideoDimensions/g' Source/Core/Core/HW/GBACore.cpp
 }
 
 build() {
@@ -43,6 +47,8 @@ build() {
     -DENABLE_QT='TRUE' \
     -DUSE_SHARED_ENET='TRUE' \
     -DXXHASH_FOUND='TRUE'\
+    -DUSE_DISCORD_RPC_PRESENCE='TRUE' \
+    -DUSE_RETRO_ACHIEVEMENTS='TRUE' \
     -DDISTRIBUTOR='archlinuxcn.org'
   cmake --build build/
 }
