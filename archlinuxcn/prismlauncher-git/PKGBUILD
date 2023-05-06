@@ -51,6 +51,7 @@ prepare() {
 build() {
   # Using JDK 17 because prismlauncher does not support JDK 20 yet
   export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+  export JAVA_COMPILER=/usr/lib/jvm/java-17-openjdk/bin/javac
   cmake -DCMAKE_BUILD_TYPE= \
     -DCMAKE_INSTALL_PREFIX="/usr" \
     -DLauncher_APP_BINARY_NAME="${_pkgname}" \
