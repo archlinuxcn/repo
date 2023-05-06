@@ -4,8 +4,11 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-  #post_build: aur_post_build
+pre_build_script: aur_pre_build(maintainers=['Oops'])
+post_build: aur_post_build
 
 update_on:
   - source: aur
     aur: graphite-cursor-theme-git
+  - source: github
+    github: vinceliuice/Graphite-cursors
