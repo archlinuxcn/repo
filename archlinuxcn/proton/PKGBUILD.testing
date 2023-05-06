@@ -6,7 +6,7 @@ _commit=
 pkgver=8.0.2.3  # pkgver=${_srctag//-/.}
 _geckover=2.47.3
 _monover=7.4.1
-pkgrel=3
+pkgrel=6
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 url="https://github.com/ValveSoftware/Proton"
@@ -112,6 +112,7 @@ source=(
 )
 # Optional patches
 source+=(
+    fix_hwnd_changes_meaning.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -235,6 +236,8 @@ prepare() {
     patch -p1 -i "$srcdir"/0001-AUR-Pkgbuild-changes.patch
     patch -p1 -i "$srcdir"/0002-AUR-Do-not-update-cargo-crates.patch
 
+    patch -p1 -i "$srcdir"/fix_hwnd_changes_meaning.patch
+
     # Remove repos from srcdir to save space
     for submodule in "${_submodules[@]}"; do
         rm -rf "$srcdir"/"${submodule%::*}"
@@ -356,5 +359,6 @@ sha256sums=('SKIP'
             'SKIP')
 # Optional patches
 sha256sums+=(
+            '20824bb565fefcad4aa978c54e0f8b9d9d17b7b52fb03fc87943150de148f06f'
 )
 
