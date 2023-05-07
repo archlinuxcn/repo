@@ -1,0 +1,23 @@
+From 6fbf326871683dabfcb3b33448482c5b303d4bef Mon Sep 17 00:00:00 2001
+Date: Fri, 7 Apr 2023 14:36:35 +0200
+Subject: [PATCH] layer patch
+
+---
+ alvr/vulkan_layer/layer/layer.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/alvr/vulkan_layer/layer/layer.h b/alvr/vulkan_layer/layer/layer.h
+index b17f8e58..8676ec53 100644
+--- a/alvr/vulkan_layer/layer/layer.h
++++ b/alvr/vulkan_layer/layer/layer.h
+@@ -2,6 +2,7 @@
+ 
+ #include <vulkan/vk_layer.h>
+ 
++#define VK_LAYER_EXPORT __attribute__((visibility("default")))
+ extern "C" const char *g_sessionPath;
+ 
+ extern "C" VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL wsi_layer_vkGetDeviceProcAddr(VkDevice device, const char *funcName);
+-- 
+2.40.0
+

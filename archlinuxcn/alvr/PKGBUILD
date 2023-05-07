@@ -1,38 +1,48 @@
 # Maintainer: Łukasz Mariański <lmarianski at protonmail dot com>
 
+function _nvidia_check {
+    pacman -Qi nvidia &>/dev/null
+}
+
 pkgname=alvr
-pkgver=19.1.0
-pkgrel=2
+pkgver=19.1.1
+pkgrel=1
 pkgdesc="Experimental Linux version of ALVR. Stream VR games from your PC to your headset via Wi-Fi."
 arch=('x86_64')
 url="https://github.com/alvr-org/ALVR"
 license=('MIT')
 groups=()
-depends=('vulkan-driver' 'libunwind' 'ffmpeg')
-makedepends=('git' 'clang' 'imagemagick' 'vulkan-headers' 'jack' 'libxrandr' 'nasm' 'rustup')
+depends=('vulkan-driver' 'libunwind' 'libdrm')
+makedepends=('git' 'cargo' 'clang' 'imagemagick' 'vulkan-headers' 'jack' 'libxrandr' 'nasm' 'unzip' 'ffnvcodec-headers' 'nvidia' 'cuda')
+provides=("${pkgname}")
+conflicts=("${pkgname}")
 options=('!lto')
-source=('alvr'::"git+https://github.com/alvr-org/ALVR.git#tag=v$pkgver" "${pkgname}-nvidia.patch")
+source=('alvr'::"git+https://github.com/alvr-org/ALVR.git#tag=v$pkgver" alvr.patch)
 md5sums=('SKIP'
-         'e03757b1ef3c152a340c08f23c7fe38b')
+         '0c993ac5242387137a9852fa5918ea43')
 
 prepare() {
 	cd "$srcdir/${pkgname}"
 
+	patch -p1 -i "$srcdir/alvr.patch"
+
 	sed -i 's:../../../lib64/libalvr_vulkan_layer.so:libalvr_vulkan_layer.so:' alvr/vulkan_layer/layer/alvr_x86_64.json
 
-	echo "[profile.release]
+	echo "
+[profile.release]
 lto=true" >> Cargo.toml
 
-    patch -p1 -i "$srcdir/$pkgname-nvidia.patch"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
 
-    rustup default nightly
-    rustup update
-	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+    sed -i '1 a #include <cstdint>' alvr/vulkan_layer/layer/settings.h
+
+    cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
 
 build() {
 	cd "$srcdir/${pkgname}"
-	export RUSTUP_TOOLCHAIN=nightly
+	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
 
 	export ALVR_ROOT_DIR=/usr
@@ -41,6 +51,12 @@ build() {
 
 	export ALVR_OPENVR_DRIVER_ROOT_DIR="$ALVR_LIBRARIES_DIR/steamvr/alvr/"
 	export ALVR_VRCOMPOSITOR_WRAPPER_DIR="$ALVR_LIBRARIES_DIR/alvr/"
+
+    if _nvidia_check; then
+        cargo run --release --frozen -p alvr_xtask -- prepare-deps --platform linux 
+    else
+        cargo run --release --frozen -p alvr_xtask -- prepare-deps --platform linux --no-nvidia 
+    fi
 
 	cargo build \
 		--frozen \
