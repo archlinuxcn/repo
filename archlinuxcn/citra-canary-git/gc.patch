@@ -1,0 +1,12 @@
+diff --color -rupN citra/src/input_common/gcadapter/gc_adapter.cpp citra/src/input_common/gcadapter/gc_adapter.cpp
+--- citra/src/input_common/gcadapter/gc_adapter.cpp	2023-05-07 09:12:32.214536603 +0800
++++ citra/src/input_common/gcadapter/gc_adapter.cpp	2023-05-07 09:13:10.504588299 +0800
+@@ -25,7 +25,7 @@ Adapter::Adapter() {
+     if (usb_adapter_handle != nullptr) {
+         return;
+     }
+-    const int init_res = libusb_init_context(&libusb_ctx, nullptr, 0);
++    const int init_res = libusb_init(&libusb_ctx);
+     if (init_res == LIBUSB_SUCCESS) {
+         adapter_scan_thread = std::thread(&Adapter::AdapterScanThread, this);
+     } else {

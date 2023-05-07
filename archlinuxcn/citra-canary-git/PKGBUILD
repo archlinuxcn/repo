@@ -3,8 +3,8 @@
 _pkgname=citra
 pkgname=$_pkgname-canary-git
 epoch=2
-pkgver=2473.r0.g1be12ac6c
-pkgrel=2
+pkgver=2475.r0.g3ee62c4f6
+pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra-canary/tree/master"
@@ -14,9 +14,11 @@ makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt6-tool
 provides=('citra')
 conflicts=('citra')
 source=("$_pkgname::git+https://github.com/citra-emu/citra-canary"
-ext-lib.patch)
+ext-lib.patch
+gc.patch)
 md5sums=('SKIP'
-         '6bf270e9a0d1faf150048648382c46dc')
+         '6bf270e9a0d1faf150048648382c46dc'
+         'f151510cd1fc233992710405cbf44323')
 
 pkgver() {
 	cd "$srcdir/$_pkgname"
@@ -26,6 +28,7 @@ pkgver() {
 prepare() {
 	cd "$srcdir/$_pkgname"
     patch -p1 -i ../ext-lib.patch
+    patch -p1 -i ../gc.patch
 	mkdir -p build
     sed -i 's/OUTVAR ${BUILD_TAG}/OUTVAR "${BUILD_TAG}"/g' CMakeModules/GenerateSCMRev.cmake
     sed -i 's/OUTVAR ${BUILD_REPOSITORY}/OUTVAR "${BUILD_REPOSITORY}"/g' CMakeModules/GenerateSCMRev.cmake
