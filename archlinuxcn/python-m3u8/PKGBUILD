@@ -5,19 +5,19 @@ _base=m3u8
 pkgname=python-${_base}
 pkgdesc="Python m3u8 parser"
 pkgver=3.4.0
-pkgrel=1
+pkgrel=2
 arch=(any)
 url="https://github.com/globocom/${_base}"
 license=(MIT)
 depends=(python-iso8601)
-makedepends=(python-setuptools)
+makedepends=(python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest python-bottle)
 source=(${_base}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz)
 sha512sums=('6c8d1eb0e352b21844dab539cde5337bb6c048b10b9e412ec9e984cdc9465f24972002c1d75e024d0f3b19d4eb24298ddfa6dd86a43d57284281420b4aa2c120')
 
 build() {
   cd ${_base}-${pkgver}
-  python setup.py build
+  python -m build --wheel --skip-dependency-check --no-isolation
 }
 
 check() {
@@ -27,6 +27,6 @@ check() {
 
 package() {
   cd ${_base}-${pkgver}
-  python setup.py install --prefix=/usr --root="${pkgdir}" --optimize=1 --skip-build
+  PYTHONPYCACHEPREFIX="${PWD}/.cache/cpython/" python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm 644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
