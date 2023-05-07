@@ -4,20 +4,20 @@
 
 _pkgbase='citra'
 pkgname="$_pkgbase-git"
-pkgver=r9547.70335a7f4
+pkgver=r9553.b4db9aebf
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger (Master branch)"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra/"
 license=('GPL2')
-depends=('boost-libs' 'shared-mime-info' 'ffmpeg' 'libusb' 'sdl2' 'qt6-multimedia' 'libxkbcommon-x11' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'fmt' 'dynarmic' 'crypto++')
-makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt5-tools' 'xbyak' 'cpp-jwt' 'nlohmann-json' 'cpp-httplib' 'qt6-wayland' 'desktop-file-utils')
+depends=('boost-libs' 'shared-mime-info' 'ffmpeg' 'libusb' 'sdl2' 'qt6-multimedia' 'libxkbcommon-x11' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'fmt' 'dynarmic' 'crypto++' 'openal')
+makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt6-tools' 'xbyak' 'cpp-jwt' 'nlohmann-json' 'cpp-httplib' 'qt6-wayland' 'desktop-file-utils' 'robin-map')
 provides=('citra')
 conflicts=('citra')
 source=("$_pkgbase::git+https://github.com/citra-emu/citra"
 ext-lib.patch)
 md5sums=('SKIP'
-         '91cd68b90e9f7410415dbd857ec5debc')
+         '6bf270e9a0d1faf150048648382c46dc')
 
 pkgver() {
 	cd "$srcdir/$_pkgbase"
@@ -50,7 +50,6 @@ build() {
       -DCITRA_ENABLE_COMPATIBILITY_REPORTING=ON \
       -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
       -DUSE_DISCORD_PRESENCE=ON \
-      -DENABLE_SCRIPTING=ON \
       -DENABLE_FFMPEG_VIDEO_DUMPER=ON \
       -DENABLE_FFMPEG_AUDIO_DECODER=ON \
       -DUSE_SYSTEM_BOOST=ON \
@@ -58,7 +57,7 @@ build() {
       -DENABLE_MF=OFF \
       -DCITRA_TESTS=OFF \
       -DCITRA_CHECK_SUBMODULES=OFF
-
+    
     sed -i 's/ -lxbyak//g' src/citra_qt/CMakeFiles/citra-qt.dir/link.txt
     sed -i 's/ -lxbyak//g' src/citra/CMakeFiles/citra.dir/link.txt
 	make
