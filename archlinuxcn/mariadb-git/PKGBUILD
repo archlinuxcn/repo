@@ -113,9 +113,6 @@ package_mariadb-libs-git() {
 
   ln -s build/mariadb_config "$pkgdir"/usr/bin/mariadb-config
   ln -s build/mariadb_config "$pkgdir"/usr/bin/mysql_config
-  install -D -m0644 $pkgbase/man/mariadb_config.1 "$pkgdir"/usr/share/man/man1/mariadb_config.1
-  ln -s mariadb_config.1 "$pkgdir"/usr/share/man/man1/mysql_config.1
-  ln -s mariadb_config.1 "$pkgdir"/usr/share/man/man1/mariadb-config.1
 
   install -D -m0644 build/support-files/mariadb.pc "$pkgdir"/usr/share/pkgconfig/mariadb.pc
   install -D -m0644 $pkgbase/support-files/mysql.m4 "$pkgdir"/usr/share/aclocal/mysql.m4
