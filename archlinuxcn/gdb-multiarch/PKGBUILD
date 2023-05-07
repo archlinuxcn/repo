@@ -2,7 +2,7 @@
 
 pkgname=gdb-multiarch
 pkgver=13.1
-pkgrel=1
+pkgrel=2
 pkgdesc='The GNU Debugger for all gdb supported architectures (i386/arm/mips...)'
 arch=(i686 x86_64)
 url='http://www.gnu.org/software/gdb/'
@@ -31,6 +31,7 @@ build() {
     --enable-interwork \
     --with-system-readline \
     --disable-nls \
+    --disable-sim \
     --with-python=/usr/bin/python \
     --with-system-gdbinit=/etc/gdb/gdbinit
 
