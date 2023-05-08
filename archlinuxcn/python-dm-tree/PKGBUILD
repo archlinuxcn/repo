@@ -23,6 +23,8 @@ sha256sums=('5139f26b0995514978fc214d20c8302d95c35ce58e5e1adc3278b159d39f6a52')
 
 build() {
   cd "${_pkgname}-${pkgver}"
+  # quick fix, using new version of abseil-cpp
+  sed -i "s,ABSEIL_VER 20210324.2,ABSEIL_VER 20230125.1," tree/CMakeLists.txt
   python setup.py build
 }
 
