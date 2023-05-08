@@ -1,9 +1,8 @@
 # Maintainer: poly000 <1348292515@qq.com>
 pkgname=waylyrics-git
 _pkgname=waylyrics
-__pkgname=Waylyrics
 _appname="io.poly000.${_pkgname}"
-pkgver=0.1.0_r68.g72f1d41
+pkgver=0.1.0_r69.gf9de900
 pkgrel=1
 pkgdesc="On screen lyrics for wayland with netease cloud music source"
 url="https://github.com/poly000/waylyrics"
@@ -19,12 +18,12 @@ makedepends=('cargo' 'git' 'jq')
 
 source=("git+https://github.com/poly000/${_pkgname}.git"
 "${_pkgname}-launch"
-"${__pkgname}.desktop"
+"${_appname}.desktop"
 )
 
 sha256sums=('SKIP'
             '0726301af6d2a57ac2130319a000e32ec70f94c01fdedc78910fd0525e16a68c'
-            'b3cfeddd0d08aae8f4de3891b0fe94899ac2749887ebc2c42c8b960f08b7971f')
+            '5d46c3ef8a3c587f8a267ccb41463707cc3ed7bfb3beb6052d6e8ecd0f7fb652')
 
 pkgver() {
     cd "$srcdir/$_pkgname"
@@ -66,6 +65,6 @@ package() {
     # fixed path by Integral-Tech
     cd -
     install -Dm755 ${_pkgname}-launch "${pkgdir}/usr/bin/${_pkgname}-launch"
-    install -Dm755 ${__pkgname}.desktop "${pkgdir}/usr/share/applications/${__pkgname}.desktop"
+    install -Dm755 ${_appname}.desktop "${pkgdir}/usr/share/applications/${_appname}.desktop"
 }
 
