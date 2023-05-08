@@ -1,0 +1,78 @@
+# Maintainer: Michael Breedlove <me@michaelbreedlove.net>
+
+pkgname=goestools-git
+pkgver=r400.865e5c7
+pkgrel=1
+pkgdesc="Tools to work with signals and files from GOES satellites"
+arch=('x86_64')
+url="https://github.com/pietern/goestools"
+license=('BSD')
+makedepends=(
+  'cmake'
+  'git'
+  'ninja'
+  'nlohmann-json'
+)
+depends=(
+  'nanomsg'
+  'airspy'
+  'opencv'
+  'rtl-sdr'
+  'zlib'
+  'glibc'
+  'gcc-libs'
+)
+provides=('goestools-git')
+conflicts=('goestools-git')
+source=(git+${url}.git
+        git+https://gitlab.dkrz.de/k202009/libaec.git
+        git+https://github.com/pietern/libcorrect.git
+        git+https://github.com/arsenm/sanitizers-cmake.git
+        git+https://github.com/mayah/tinytoml.git
+        )
+b2sums=('SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP')
+
+pkgver() {
+  cd ${pkgname%-git}
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd ${pkgname%-git}
+  _submodules=(
+    libaec
+    libcorrect
+    sanitizers-cmake
+    tinytoml
+  )
+  for submodule in "${_submodules[@]}"; do
+    git submodule init vendor/"${submodule#*::}"
+    git submodule set-url vendor/"${submodule#*::}" "$srcdir"/"${submodule%::*}"
+    git -c protocol.file.allow=always submodule update vendor/"${submodule#*::}"
+  done
+
+  git cherry-pick -n 4568f1fa79146566de4d6f93a3c5fabfb43263f1 # nanomsg
+  git cherry-pick -n 6109d5e060208a77d0a163bec0c15c2b1506f5c9 # nlohmann_json
+
+  sed -i '1 a #include <cstdint>' src/assembler/vcdu.h src/dcs/dcs.h
+}
+
+build() {
+  cd ${pkgname%-git}
+  cmake -S . -B build \
+    -GNinja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=None
+  ninja -C build
+}
+
+package() {
+  cd "${pkgname%-git}"
+  DESTDIR="$pkgdir" ninja -C build install
+  install -d "${pkgdir}/usr/share/licenses/goestools-git/"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/goestools-git/"
+}
