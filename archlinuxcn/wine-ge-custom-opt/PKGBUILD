@@ -122,6 +122,9 @@ prepare() {
     pushd proton-wine
       patch -p1 -i "$srcdir"/wine-wmclass.patch
       patch -p1 -i "$srcdir"/wine-isolate_home.patch
+      git config user.email "makepkg@user"
+      git config user.name "makepkg user"
+      git tag wine-ge-8.0 --annotate -m "$pkgver"
       dlls/winevulkan/make_vulkan
       tools/make_requests
       autoreconf -f
