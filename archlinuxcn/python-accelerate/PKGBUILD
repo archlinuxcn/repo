@@ -1,8 +1,8 @@
 # Maintainer: jzbor <zborof at posteo dot de>
 pkgname=python-accelerate
 _name=${pkgname#python-}
-pkgver=0.18.0
-pkgrel=2
+pkgver=0.19.0
+pkgrel=1
 pkgdesc="Train and use PyTorch models with multi-GPU, TPU, mixed-precision"
 arch=(any)
 url="https://github.com/huggingface/$_name"
@@ -28,7 +28,7 @@ backup=()
 options=()
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
 noextract=()
-sha512sums=('828769be89aa7c474c6b622bb2a1d77d5723226081e1dbab811970930112d64fbd623b000319c6c29d36cc937cb38a2b4cd639945502815570bd01a448f0f98c')
+sha512sums=('5fb669e28af8c950fc15c60f23e7e2be8f212a6ed5f30116e362dda315ee3cbfc9201b442b69765d07183c774443e9113e99551449ab00be749847527c520e8e')
 validpgpkeys=()
 
 build() {
