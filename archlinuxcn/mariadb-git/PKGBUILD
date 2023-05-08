@@ -9,7 +9,8 @@ pkgrel=2
 arch=($CARCH)
 license=(GPL)
 url='https://mariadb.org/'
-makedepends=(git boost bzip2 cmake jemalloc libaio libxcrypt libxml2 lz4 lzo openssl systemd zlib zstd curl krb5 cracklib)
+makedepends=('boost' 'bzip2' 'cmake' 'cracklib' 'curl' 'jemalloc' 'judy' 'krb5' 'liburing'
+             'libxcrypt' 'libxml2' 'lz4' 'openssl' 'systemd' 'zlib' 'zstd' 'xz' 'git')
 conflicts=(${pkgbase%-git})
 provides=(${pkgbase%-git})
 source=("$pkgbase::git+https://github.com/MariaDB/server.git"
@@ -95,27 +96,43 @@ build() {
     -DWITH_ZLIB=system
   )
 
-  cmake -B build -S $pkgbase "${_cmake_options[@]}"
 
-  cmake --build build
+  mkdir build
+  cd build
+
+  cmake ../"$pkgbase" "${_cmake_options[@]}"
+
+  make
 }
 
 package_mariadb-libs-git() {
   pkgdesc='MariaDB libraries (GIT version)'
-  depends=(bzip2 libaio libxcrypt libcrypt.so lz4 lzo openssl xz zlib)
+  depends=('liburing' 'libxcrypt' 'libcrypt.so' 'openssl' 'zlib' 'zstd')
   optdepends=('krb5: for gssapi authentication')
   conflicts=(mariadb-libs libmysqlclient{,-git} libmariadbclient{,-git} mariadb-connector-c{,-git})
   provides=(mariadb-libs libmariadbclient{,-git} mariadb-connector-c{,-git} libmariadb.so libmariadbd.so)
   replaces=(libmariadbclient-git)
+  
+  cd build
+
   for dir in libmariadb libmysqld libservices include; do
-    DESTDIR="$pkgdir" cmake --install "build/$dir"
+    make -C "$dir" DESTDIR="$pkgdir" install
   done
 
-  ln -s build/mariadb_config "$pkgdir"/usr/bin/mariadb-config
-  ln -s build/mariadb_config "$pkgdir"/usr/bin/mysql_config
+    # remove static libraries
+  rm "${pkgdir}"/usr/lib/*.a
 
-  install -D -m0644 build/support-files/mariadb.pc "$pkgdir"/usr/share/pkgconfig/mariadb.pc
-  install -D -m0644 $pkgbase/support-files/mysql.m4 "$pkgdir"/usr/share/aclocal/mysql.m4
+  # remove man pages
+  rm -r "${pkgdir}"/usr/share/man
+  
+  ln -s mariadb_config "$pkgdir"/usr/bin/mariadb-config
+  ln -s mariadb_config "$pkgdir"/usr/bin/mysql_config
+  install -D -m0644 "$srcdir"/"$pkgbase"/man/mariadb_config.1 "$pkgdir"/usr/share/man/man1/mysql_config.1
+  ln -s mysql_config.1 "$pkgdir"/usr/share/man/man1/mariadb_config.1
+  ln -s mysql_config.1 "$pkgdir"/usr/share/man/man1/mariadb-config.1
+
+  install -D -m0644 support-files/mariadb.pc "$pkgdir"/usr/share/pkgconfig/mariadb.pc
+  install -D -m0644 "$srcdir"/"$pkgbase"/support-files/mysql.m4 "$pkgdir"/usr/share/aclocal/mysql.m4
 }
 
 package_mariadb-clients-git() {
@@ -123,7 +140,7 @@ package_mariadb-clients-git() {
   depends=(mariadb-libs-git=$pkgver jemalloc ncurses)
   conflicts=(mysql-clients{,-git})
   provides=(mysql-clients=$pkgver)
- 
+
   make -C build/client DESTDIR="${pkgdir}" install
 
   # install man pages
@@ -160,7 +177,9 @@ package_mariadb-git() {
   provides=(mysql=$pkgver)
   options=(emptydirs)
 
-  DESTDIR="$pkgdir" cmake --install build
+ cd build
+
+  make DESTDIR="$pkgdir" install
 
   cd "$pkgdir"
 
@@ -188,14 +207,14 @@ package_mariadb-git() {
   # provided by mariadb-libs
   rm usr/bin/{mariadb{_,-},mysql_}config
   rm -r usr/include/
-  rm usr/share/man/man1/mysql_config.1
+  rm usr/share/man/man1/{mariadb,mysql}_config.1
   rm -r usr/share/aclocal
   rm usr/lib/lib*
   rm -r usr/lib/pkgconfig
   rm usr/lib/mysql/plugin/{auth_gssapi_client,caching_sha2_password,client_ed25519,dialog,mysql_clear_password,sha256_password,zstd}.so
 
   # provided by mariadb-clients
-  for bin in $(find "${pkgdir}"/../mariadb-clients-git/usr/bin/ ! -type d); do
+  for bin in $(find "${pkgdir}"/../mariadb-clients/usr/bin/ ! -type d); do
     rm "${pkgdir}"/usr/bin/"$(basename "${bin}")" "${pkgdir}"/usr/share/man/man1/"$(basename "${bin}")".1
   done
 
@@ -203,7 +222,7 @@ package_mariadb-git() {
   rm usr/bin/mytop
 
   # not needed
-  rm -r usr/{mariadb-test,sql-bench}
+  rm -rf usr/{mariadb-test,sql-bench}
   rm usr/share/man/man1/mysql-test-run.pl.1
 }
 
