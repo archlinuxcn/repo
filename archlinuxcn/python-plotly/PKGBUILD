@@ -24,7 +24,10 @@ makedepends=(
   jupyter-notebook
   jupyterlab
   npm
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 license=('MIT')
 arch=('any')
@@ -35,12 +38,14 @@ build() {
   # https://github.com/webpack/webpack/issues/14532
   export NODE_OPTIONS=--openssl-legacy-provider
   cd ${_pkgname}-${pkgver}/packages/python/plotly
-  python setup.py build
+  # use_2to3 is deprecated
+  sed -i "/use_2to3/d" setup.py
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd ${_pkgname}-${pkgver}/packages/python/plotly
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
   mv -vf "${pkgdir}/usr/etc" "${pkgdir}"
 }
