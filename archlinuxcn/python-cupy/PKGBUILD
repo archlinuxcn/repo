@@ -18,6 +18,7 @@ depends=(
 makedepends=(
   cudnn
   cython
+  gcc12
   git
   nccl
   python-setuptools
@@ -33,6 +34,9 @@ sha256sums=('SKIP')
 prepare() {
   cd "${_pkgname}-${pkgver}"
   git submodule update --init --recursive
+  # build with gcc 12
+  export CC=gcc-12
+  export CXX=g++-12
 }
 
 build() {
