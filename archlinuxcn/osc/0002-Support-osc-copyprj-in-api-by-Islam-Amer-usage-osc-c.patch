@@ -1,0 +1,116 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Marko Lemmetty <marko.lemmetty@jollamobile.com>
+Date: Fri, 15 May 2020 14:20:54 +0300
+Subject: [PATCH] Support 'osc copyprj' in api by Islam Amer usage: osc copyprj
+ SOURCEPRJ DESTPRJ
+
+    A way to copy a project and all packages in it
+    It can not yet be done across buildservice instances
+    The user must be able to create DESTPRJ
+---
+ osc/commandline.py | 52 ++++++++++++++++++++++++++++++++++++++++++++++
+ osc/core.py        | 28 +++++++++++++++++++++++++
+ 2 files changed, 80 insertions(+)
+
+diff --git a/osc/commandline.py b/osc/commandline.py
+index 522c26eadd0ffab5b7858f2dd9fe211b7d1de9b1..d7a6cc5d776b739a68f4c62fb15604795afba7f4 100644
+--- a/osc/commandline.py
++++ b/osc/commandline.py
+@@ -3898,6 +3898,58 @@ Please submit there instead, or use --nodevelproject to force direct submission.
+             delayed=not opts.no_delay,
+             print_to="stdout",
+         )
++    @cmdln.option('-b', '--with-binaries', action='store_true',
++                        help='copy the built binaries over to avoid a rebuild')
++    @cmdln.option('-x', '--with-history', action='store_true',
++                        help='replicate the history of each package.')
++    @cmdln.option('-o', '--make-older', action='store_true',
++                        help='No idea')
++    @cmdln.option('-r', '--re-sign', action='store_true',
++                        help='re-sign the binaries')
++    @cmdln.option('-m', '--message', metavar='TEXT',
++                  help='specify message TEXT')
++    def do_copyprj(self, subcmd, opts, *args):
++        """${cmd_name}: Copy a project
++
++        A way to copy a project and all packages in it
++
++        It can not yet be done across buildservice instances
++
++        The user must be able to create DESTPRJ
++
++        usage:
++            osc copyprj SOURCEPRJ DESTPRJ
++        ${cmd_option_list}
++        """
++
++        args = slash_split(args)
++
++        if not args or len(args) != 2:
++            raise oscerr.WrongArgs('Incorrect number of arguments.')
++
++        src_project = args[0]
++        dst_project = args[1]
++
++        src_apiurl = conf.config['apiurl']
++
++        if opts.message:
++            comment = opts.message
++        else:
++            comment = 'osc copyprj from project:%s' % ( src_project )
++
++        if src_project == dst_project:
++            raise oscerr.WrongArgs('Source and destination are the same.')
++
++        print("calling cp")
++        r = copy_prj(src_apiurl, src_project, dst_project,
++                     withbinaries = opts.with_binaries,
++                     withhistory = opts.with_history,
++                     makeolder = opts.make_older,
++                     resign = opts.re_sign,
++                     comment = comment)
++        print("done cp")
++        print(r)
++
+ 
+     @cmdln.option('-m', '--message', metavar='TEXT',
+                   help='specify message TEXT')
+diff --git a/osc/core.py b/osc/core.py
+index 78cdb66d20d3b1bbfc3c4b2527465c2920dcf279..1eb1262150c0bb1e37814148eeae2436aa7e2484 100644
+--- a/osc/core.py
++++ b/osc/core.py
+@@ -6179,6 +6179,34 @@ def copy_pac(
+             raise oscerr.APIError('failed to copy: %s' % ', '.join(todo))
+         return 'Done.'
+ 
++def copy_prj(src_apiurl, src_project, dst_project,
++             withbinaries = False,
++             withhistory = False,
++             makeolder = False,
++             resign = False,
++             comment = None):
++    """
++    Create a copy of a project.
++
++    Copying can only be done on the server, in a single api call.
++    """
++
++    print('Copying project...')
++    query = {'cmd': 'copy', 'oproject': src_project }
++    if withbinaries:
++        query['withbinaries'] = '1'
++    if withhistory:
++        query['withhistory'] = '1'
++    if makeolder:
++        query['makeolder'] = '1'
++    if resign:
++        query['resign'] = '1'
++    if comment:
++        query['comment'] = comment
++    u = makeurl(src_apiurl, ['source', dst_project], query=query)
++    print("copyprj ", u, file=sys.stderr)
++    f = http_POST(u)
++    return f.read()
+ 
+ def lock(apiurl: str, project: str, package: str, msg: str = None):
+     url_path = ["source", project]

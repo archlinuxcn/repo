@@ -1,0 +1,55 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Marko Lemmetty <marko.lemmetty@jollamobile.com>
+Date: Fri, 15 May 2020 14:47:19 +0300
+Subject: [PATCH] Add -p to copyprj to enable copying of prjconf
+
+---
+ osc/commandline.py | 4 +++-
+ osc/core.py        | 5 +++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/osc/commandline.py b/osc/commandline.py
+index b43852914273326748a772b48402480952e28eab..81ca666b6a59fb69a872ecf5c00eabd6d545fd79 100644
+--- a/osc/commandline.py
++++ b/osc/commandline.py
+@@ -3906,6 +3906,8 @@ Please submit there instead, or use --nodevelproject to force direct submission.
+                         help='replicate the history of each package.')
+     @cmdln.option('-o', '--make-older', action='store_true',
+                         help='No idea')
++    @cmdln.option('-p', '--prjconf', action='store_true',
++                        help='copy the prjconf also')
+     @cmdln.option('-r', '--re-sign', action='store_true',
+                         help='re-sign the binaries')
+     @cmdln.option('-m', '--message', metavar='TEXT',
+@@ -3950,7 +3952,7 @@ Please submit there instead, or use --nodevelproject to force direct submission.
+                      withhistory = opts.with_history,
+                      makeolder = opts.make_older,
+                      resign = opts.re_sign,
+-                     now = opts.now,
++                     now = opts.now, prjconf = opts.prjconf,
+                      comment = comment)
+         print("done cp")
+         print(r)
+diff --git a/osc/core.py b/osc/core.py
+index 72ffb62b06670c2f27cd87f80f783c47e993537e..52a59a51bd35625d4d64ab8581d41448c8604273 100644
+--- a/osc/core.py
++++ b/osc/core.py
+@@ -6184,6 +6184,8 @@ def copy_prj(src_apiurl, src_project, dst_project,
+              withhistory = False,
+              makeolder = False,
+              resign = False,
++             now = False,
++             prjconf = False,
+              comment = None):
+     """
+     Create a copy of a project.
+@@ -6205,6 +6207,9 @@ def copy_prj(src_apiurl, src_project, dst_project,
+         query['comment'] = comment
+     if now:
+         query['nodelay'] = '1'
++    if prjconf:
++        query['prjconf'] = '1'
++
+     u = makeurl(src_apiurl, ['source', dst_project], query=query)
+     print("copyprj ", u, file=sys.stderr)
+     f = http_POST(u)
