@@ -22,6 +22,7 @@ makedepends=(
   cfitsio
   clang
   cmake
+  gcc12
   git
   python-setuptools
 )
@@ -39,6 +40,9 @@ prepare() {
   git submodule update --init --recursive
   # quick fix for https://github.com/archlinuxcn/repo/issues/2877
   export CXXFLAGS=${CXXFLAGS/-Wp,-D_GLIBCXX_ASSERTIONS}
+  # build with gcc 12
+  export CC=gcc-12
+  export CXX=g++-12
 }
 
 build() {
