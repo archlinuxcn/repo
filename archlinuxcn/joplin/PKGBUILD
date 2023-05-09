@@ -1,8 +1,8 @@
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
-pkgver=2.9.17
+pkgver=2.10.17
 groups=('joplin')
-pkgrel=3
+pkgrel=1
 _electronVersion=19
 depends=("electron${_electronVersion}" "nodejs")
 optdepends=('libappindicator-gtk3: for tray icon')
@@ -14,11 +14,13 @@ source=(
     "joplin-desktop.sh"
     "joplin-desktop.desktop"
     "joplin-${pkgver}.tar.gz::https://github.com/laurent22/joplin/archive/v${pkgver}.tar.gz"
+    "00-fix-test.patch::https://github.com/laurent22/joplin/commit/35037e2dc9e033f44163fde7e0b12356cb1d0503.patch"
 )
 sha256sums=(
     'SKIP'
     'SKIP'
-    '5a1d205bd52b86182b281f7c83b8a7b463941f5043729b4408490b249dfa0af8'
+    '6d3d89510967ef4e822482541e9438f32b5c375162db64a337b4c7e49dc0087c'
+    '774aac406eed0c5307572935bf14f5641fa2b5cbdbff9b69b75c85c1f2bb08fc'
 )
 
 _setup_env() {
@@ -29,7 +31,10 @@ _setup_env() {
 prepare() {
     cd "${srcdir}/joplin-${pkgver}"
 
-    # Disable useless dependencies
+    # Fix test cases (which was committed after the release)
+    patch -Np1 < ../00-fix-test.patch
+
+    # Disable unused dependencies
     sed -i '/"7zip-bin-.*": ".*"/d' package.json packages/*/package.json
     sed -i '/"husky": ".*"/d' package.json packages/*/package.json
 
@@ -45,19 +50,26 @@ build() {
 
     # Fix "Error: Cannot find module '../../vendor/...'" error
     sed -i '/^\/vendor\/$/d' .gitignore
-    # Fix https://github.com/laurent22/joplin/issues/7770
-    sed -i "1s/^.*$/const BaseCommand = require('.\/base-command').default;/" packages/app-cli/app/command-done.js
 
     # Pack local packages
     cd "packages"
 
     for package in fork-htmlparser2 fork-sax fork-uslug htmlpack renderer turndown turndown-plugin-gfm lib; do
         ( cd "${package}" && npm pack )
-        npm_pack_path=$(realpath "${package}/"*.tgz)
+        mv "${package}/"*.tgz "${package}.tgz"
 
         # Replace dependencies with local packages
-        sed -i 's_\("@joplin/'${package}'": \)".*"_\1 "file://'${npm_pack_path}'"_' */package.json
+        sed -i 's_\("@joplin/'${package}'": \)".*"_\1 "file://'${PWD}/${package}.tgz'"_' */package.json
     done
+}
+
+check() {
+    _setup_env
+
+    cd "${srcdir}/joplin-${pkgver}"
+    env ELECTRON_OVERRIDE_DIST_PATH=/usr/lib/electron${_electronVersion}/ \
+        TZ=UTC \
+        yarn test
 }
 
 package_joplin() {
@@ -91,14 +103,14 @@ package_joplin-desktop() {
     electronRoot=/usr/lib/electron${_electronVersion}/
     electronVersion="$(<${electronRoot}/version)"
 
+    # Build the electron package
     npx electron-builder \
       --linux --x64 --dir=dist/ \
       -c.electronDist="${electronRoot}" \
       -c.electronVersion="${electronVersion}"
 
-    install -vDm644 dist/linux-unpacked/resources/app.asar -t "${pkgdir}/usr/lib/${pkgname}"
-    cp -vr build -t "${pkgdir}/usr/lib/${pkgname}"
-    cp -vr dist/linux-unpacked/resources/app.asar.unpacked -t "${pkgdir}/usr/lib/${pkgname}"
+    mkdir -p "${pkgdir}/usr/lib"
+    cp -vr dist/linux-unpacked/resources "${pkgdir}/usr/lib/${pkgname}"
 
     # Install icons
     while read -r size; do
