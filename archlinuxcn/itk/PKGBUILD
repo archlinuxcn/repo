@@ -24,6 +24,7 @@ depends=(
 makedepends=(
   castxml
   cmake
+  gcc12
   git
   gtest
   subversion
@@ -45,6 +46,8 @@ build() {
     -DBUILD_SHARED_LIBS=ON
     -DBUILD_TESTING=OFF
     -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_CXX_COMPILER=g++-12
+    -DCMAKE_C_COMPILER=gcc-12
     -DCMAKE_INSTALL_PREFIX=/usr
     -DCMAKE_SKIP_INSTALL_RPATH=ON
     -DCMAKE_SKIP_RPATH=ON
@@ -60,7 +63,6 @@ build() {
     -DITK_USE_SYSTEM_GOOGLETEST=ON
     -DITK_USE_SYSTEM_HDF5=ON
     -DITK_USE_SYSTEM_JPEG=ON
-    -DITK_USE_SYSTEM_KWIML=ON
     -DITK_USE_SYSTEM_MINC=OFF
     -DITK_USE_SYSTEM_PNG=ON
     -DITK_USE_SYSTEM_SWIG=ON
