@@ -1,6 +1,6 @@
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
-pkgver=2.10.17
+pkgver=2.10.18
 groups=('joplin')
 pkgrel=1
 _electronVersion=19
@@ -19,54 +19,50 @@ source=(
 sha256sums=(
     'SKIP'
     'SKIP'
-    '6d3d89510967ef4e822482541e9438f32b5c375162db64a337b4c7e49dc0087c'
+    'd3f0d39596110926a7e557bd06783f5b4d24fff25ef2f14ee51afffaa4984a96'
     '774aac406eed0c5307572935bf14f5641fa2b5cbdbff9b69b75c85c1f2bb08fc'
 )
 
 _setup_env() {
+    export YARN_CACHE_FOLDER="${srcdir}/yarn-cache"
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
     export npm_config_build_from_source=true
 }
 
 prepare() {
+    _setup_env
+
+    # Create the yarn cache folder
+    mkdir "${YARN_CACHE_FOLDER}"
+
     cd "${srcdir}/joplin-${pkgver}"
 
     # Fix test cases (which was committed after the release)
     patch -Np1 < ../00-fix-test.patch
 
-    # Disable unused dependencies
-    sed -i '/"7zip-bin-.*": ".*"/d' package.json packages/*/package.json
-    sed -i '/"husky": ".*"/d' package.json packages/*/package.json
-
     # Delete unused components
     rm -r "packages/app-mobile" "packages/app-clipper" "packages/server"
+
+    # Disable optional dependencies
+    sed -i 's_"optionalDependencies":_"UNUSED":_' package.json packages/*/package.json
 }
 
 build() {
     _setup_env
 
     cd "${srcdir}/joplin-${pkgver}"
-    yarn install
 
     # Fix "Error: Cannot find module '../../vendor/...'" error
     sed -i '/^\/vendor\/$/d' .gitignore
 
-    # Pack local packages
-    cd "packages"
-
-    for package in fork-htmlparser2 fork-sax fork-uslug htmlpack renderer turndown turndown-plugin-gfm lib; do
-        ( cd "${package}" && npm pack )
-        mv "${package}/"*.tgz "${package}.tgz"
-
-        # Replace dependencies with local packages
-        sed -i 's_\("@joplin/'${package}'": \)".*"_\1 "file://'${PWD}/${package}.tgz'"_' */package.json
-    done
+    yarn install
 }
 
 check() {
     _setup_env
 
     cd "${srcdir}/joplin-${pkgver}"
+
     env ELECTRON_OVERRIDE_DIST_PATH=/usr/lib/electron${_electronVersion}/ \
         TZ=UTC \
         yarn test
