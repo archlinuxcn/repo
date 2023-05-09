@@ -1,0 +1,51 @@
+--- a/gfx/2d/Rect.h
++++ b/gfx/2d/Rect.h
+@@ -10,16 +10,17 @@
+ #include "BaseRect.h"
+ #include "BaseMargin.h"
+ #include "NumericTools.h"
+ #include "Point.h"
+ #include "Tools.h"
+ #include "mozilla/Maybe.h"
+ 
+ #include <cmath>
++#include <cstdint>
+ 
+ namespace mozilla {
+ 
+ template <typename>
+ struct IsPixel;
+ 
+ namespace gfx {
+ 
+
+--- a/toolkit/components/telemetry/pingsender/pingsender.cpp
++++ b/toolkit/components/telemetry/pingsender/pingsender.cpp
+@@ -1,14 +1,15 @@
+ /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+ /* This Source Code Form is subject to the terms of the Mozilla Public
+  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+ #include <cstdlib>
++#include <cstdint>
+ #include <cstring>
+ #include <ctime>
+ #include <fstream>
+ #include <iomanip>
+ #include <string>
+ #include <vector>
+ 
+ #include <zlib.h>
+
+
+--- a/dom/media/webrtc/sdp/RsdparsaSdpGlue.h
+--- b/dom/media/webrtc/sdp/RsdparsaSdpGlue.h
+@@ -6,6 +6,7 @@
+ #ifndef _RUSTSDPGLUE_H_
+ #define _RUSTSDPGLUE_H_
+ 
++#include <cstdint>
+ #include <string>
+ #include <vector>
+ #include <utility>
