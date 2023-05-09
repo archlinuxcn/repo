@@ -1,7 +1,7 @@
 # Maintainer: heavysink <winstonwu91@gmail.com>
 _pkgname=eka2l1
 pkgname="${_pkgname}-git"
-pkgver=5782.89ca48c85
+pkgver=5787.19007c623
 pkgrel=1
 pkgdesc="Experimental Symbian OS emulator (GIT version)"
 arch=('x86_64')
@@ -20,15 +20,10 @@ makedepends=(
     'clang'
 )
 depends=(
-	'boost-libs'
   'qt6-base'
   'qt6-svg'
-  'qt6-declarative'
-    'freetype2'
-    'pango'
-	'vulkan-icd-loader'
-  'gtk3'
   'sdl2'
+  'vulkan-icd-loader'
 )
 install="eka2l1-git.install"
 provides=('eka2l1')
@@ -49,7 +44,19 @@ prepare() {
 	cd "${srcdir}/${_pkgname}-git"
 	git submodule update --recursive --init
     sed -i 's/-Werror//g' src/external/mbedtls/CMakeLists.txt
-    #sed -i 's/constexpr size_t signal_stack_size = std::max(SIGSTKSZ/const size_t signal_stack_size = std::max<size_t>(SIGSTKSZ/g' src/external/dynarmic/src/backend/x64/exception_handler_posix.cpp 
+    sed -i '1 i #include <cstdint>' src/external/RectangleBinPack/MaxRectsBinPack.cpp
+    sed -i '1 i #include <cstdint>' src/external/lunasvg/source/property.h
+    sed -i '1 i #include <cstdint>' src/external/lunasvg/include/lunasvg.h
+    sed -i '1 i #include <cstdint>' src/emu/common/include/common/types.h
+    sed -i '1 i #include <cstdint>' src/emu/common/include/common/watcher.h
+    sed -i '1 i #include <cstdint>' src/emu/common/include/common/path.h
+    sed -i '1 i #include <cstdint>' src/emu/utils/include/utils/uchar.h 
+    sed -i '1 i #include <cstdint>' src/emu/scripting/include/scripting/server.h 
+    sed -i '1 i #include <cstdint>' src/emu/scripting/include/scripting/session.h 
+    sed -i '1 i #include <cstdint>' src/emu/scripting/include/scripting/thread.h 
+    sed -i '1 i #include <cstdint>' src/emu/scripting/include/scripting/process.h 
+    sed -i '1 i #include <cstdint>' src/emu/services/include/services/bluetooth/btmidman.h 
+    sed -i '1 i #include <cstdint>' src/emu/j2me/include/j2me/applist.h 
 }
 
 build() {
