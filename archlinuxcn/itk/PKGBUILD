@@ -28,7 +28,7 @@ makedepends=(
   git
   gtest
   subversion
-  swig
+#   swig
 )
 options=(!emptydirs !lto)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/InsightSoftwareConsortium/ITK/archive/refs/tags/v${pkgver}.tar.gz"
@@ -65,7 +65,7 @@ build() {
     -DITK_USE_SYSTEM_JPEG=ON
     -DITK_USE_SYSTEM_MINC=OFF
     -DITK_USE_SYSTEM_PNG=ON
-    -DITK_USE_SYSTEM_SWIG=ON
+    -DITK_USE_SYSTEM_SWIG=OFF
     -DITK_USE_SYSTEM_TIFF=ON
     -DITK_USE_SYSTEM_VXL=ON
     -DITK_USE_SYSTEM_ZLIB=ON
