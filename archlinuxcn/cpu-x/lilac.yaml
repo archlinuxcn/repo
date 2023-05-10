@@ -2,6 +2,9 @@ pre_build_script: aur_pre_build(maintainers=['UnicornDarkness'])
 
 post_build: aur_post_build
 
+repo_depends:
+  - mawk
+
 update_on:
   - source: aur
     aur: cpu-x
@@ -9,7 +12,7 @@ update_on:
     archpkg: glibc
     strip_release: true
   - source: manual
-    manual: 1.0.1
+    manual: 1.0.2
 
 maintainers:
   - github: dctxmei
