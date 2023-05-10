@@ -1,0 +1,45 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=python-terminaltables
+_pkgname=terminaltables
+pkgver=3.1.10
+pkgrel=1
+pkgdesc='Generate simple tables in terminals from a nested list of strings'
+arch=(any)
+url='https://pypi.org/project/terminaltables'
+license=(MIT)
+depends=(
+  python
+)
+makedepends=(
+  python-build
+  python-installer
+  python-platformdirs
+  python-poetry
+  python-poetry-core
+  python-poetry-plugin-export
+  python-wheel
+)
+
+source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"
+        python-3.8.patch
+)
+sha512sums=('a5bd30116cb0eb05c859860f40590c05a5ee8067436e09724f4f08e6b7e2f91c7b704f84128f48a6c54037d6546ec8a108ed8d463f3e1a39c001d4f3382cedc4'
+            '9a33ef51cbd2854bf9acc247e2d966332229446158e7dae9cad25e03335eb9689d50b0a22234285aa56c707e6e93c12f950299efcfbe7e42ed527216090592f2')
+
+prepare() {
+  cd "${_pkgname}-${pkgver}"
+  patch -p1 -i "${srcdir}/python-3.8.patch"
+}
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python -m build --wheel --no-isolation -x
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

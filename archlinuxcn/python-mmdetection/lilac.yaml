@@ -6,8 +6,11 @@ repo_depends:
   - python-av
   - python-mmcv
   - python-mmpycocotools
+  - python-terminaltables
 update_on:
   - source: github
     github: open-mmlab/mmdetection
     use_latest_release: true
+  - source: manual
+    manual: 1
   - alias: python
