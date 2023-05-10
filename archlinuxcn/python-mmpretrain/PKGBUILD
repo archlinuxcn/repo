@@ -9,9 +9,12 @@ arch=('any')
 url='https://github.com/open-mmlab/mmpretrain'
 license=('Apache')
 depends=(
+  python-einops
   python-matplotlib
   python-mmcv
+  python-model-index
   python-numpy
+  python-rich
   python-pytorch
 )
 makedepends=(
@@ -22,9 +25,9 @@ makedepends=(
 )
 optdepends=(
   python-albumentations
-  python-colorama
+  python-scikit-learn
+  python-grad-cam
   python-requests
-  python-rich
 )
 provides=(
   python-mmclassification

@@ -7,13 +7,15 @@ repo_depends:
   - python-addict
   - python-albumentations
   - python-av
+  - python-einops
   - python-mmcv
+  - python-model-index
 
 update_on:
   - source: github
     github: open-mmlab/mmpretrain
     use_max_tag: true
   - source: manual
-    manual: 4
+    manual: 5
   - alias: python
 # vim:set ts=2 sw=2 et:

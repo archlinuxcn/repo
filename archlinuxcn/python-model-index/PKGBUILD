@@ -1,0 +1,49 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=python-model-index
+_pkgname=model-index
+pkgver=0.1.11
+pkgrel=1
+pkgdesc='Create a source of truth for ML model results and browse it on Papers with Code'
+arch=(any)
+url='https://github.com/paperswithcode/model-index'
+license=(MIT)
+depends=(
+  python-click
+  python-markdown
+  python-ordered-set
+  python-yaml
+)
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
+
+source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"
+        "https://github.com/paperswithcode/model-index/raw/main/requirements.txt"
+        "https://raw.githubusercontent.com/paperswithcode/model-index/main/LICENSE"
+)
+sha512sums=('f27994d65b3731c43dd5e226630ac79ea7f7c32824749192618e433de38ffd91f5274aedec3a7747ea012dd037d5daca938617889fa59cb1b3b7be6634cbf22c'
+            '6df00974bfcc98e415d09f61a974c5b344684ee1d220ef54c035fe77f0d23318a95310dec3800f53b3b67223816e2dd2112250b7c21c934b637e151f612d4696'
+            '294ad36311f614c2e1a5f59ea6409744511d9e0b559ccdedb1b758811b0b842234d714bbef5368bb6242acd9745da27f9d2cddce8d472ffdef7d65c705b3e973')
+
+prepare() {
+  cp -vf "${srcdir}/LICENSE" "${srcdir}/${_pkgname}-${pkgver}"
+  cp -vf "${srcdir}/requirements.txt" "${srcdir}/${_pkgname}-${pkgver}"
+}
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rfv "${pkgdir}${site_packages}/tests"
+}
+# vim:set ts=2 sw=2 et:
