@@ -4,8 +4,9 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-  - source: pypi
-    pypi: sqlacodegen
+  - source: github
+    github: agronholm/sqlacodegen
+    use_max_tag: true
   - alias: python
 # vim:set ts=2 sw=2 et:
 

@@ -2,7 +2,7 @@
 
 pkgname=sqlacodegen
 _name=sqlacodegen
-pkgver=2.3.0.post1
+pkgver=3.0.0rc2
 pkgrel=1
 pkgdesc='Automatic model code generator for SQLAlchemy'
 arch=(any)
@@ -13,32 +13,24 @@ depends=(
   python-sqlalchemy
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
-  python-pip
-)
-checkdepends=(
-  python-mysql-connector
-  python-psycopg2
-  python-pytest
-  python-pytest-cov
+  python-setuptools-scm
+  python-wheel
 )
 
-source=("${pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha512sums=('6a888f57b584da1b318212582879bf0d03b9770432b4bc97a6eeb7a8671f1e365a55c4ca3b509c568ac44064201c8033a5e13ebcb8bb5d853c37001276d0b419')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/agronholm/sqlacodegen/archive/refs/tags/${pkgver}.tar.gz")
+sha512sums=('90fb2da3f7ebffadb51798e1121e714e8239b949700e295ca9ce6a6b61503b356af0ae39002c59a2ab073eeaec42cba877752b5249ec19601421419602aeb2f7')
 
 build() {
   cd "${_name}-${pkgver}"
-  python setup.py build
-}
-
-check() {
-  cd "${_name}-${pkgver}"
-  PYTHONPATH="${PWD}/build/lib" pytest -v .
+  SETUPTOOLS_SCM_PRETEND_VERSION=${pkgver} python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_name}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
