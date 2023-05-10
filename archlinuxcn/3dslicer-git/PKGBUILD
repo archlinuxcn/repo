@@ -2,7 +2,7 @@
 
 _pkgname=3dslicer
 pkgname=3dslicer-git
-_pkgver=5.2.1
+_pkgver=5.2.2
 pkgver=5.2.1.r28493.378a8d04c2
 pkgrel=1
 pkgdesc='A free, open source and multi-platform software package widely used for medical, biomedical, and related imaging research'
@@ -31,6 +31,7 @@ depends=(
 )
 makedepends=(
   cmake
+  gcc12
   gendesk
   git
   subversion
@@ -65,6 +66,8 @@ build() {
   cmake -B build -S "${srcdir}/${_pkgname}" \
     -DBUILD_TESTING=OFF \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_COMPILER=g++-12 \
+    -DCMAKE_C_COMPILER=gcc-12 \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DSlicer_BUILD_DOCUMENTATION=OFF \
     -DSlicer_BUILD_I18N_SUPPORT=ON \
