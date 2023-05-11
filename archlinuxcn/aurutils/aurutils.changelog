@@ -1,3 +1,66 @@
+## 14
+
+* `aur-depends`
+  + add `Self` dependency for every target (#1065)
+
+* `aur-sync`
+  + `--rebuild-tree` now implies `--no-provides` (#1068)
+  + add `--no-sync` (`aur-build --no-sync`) (#1064)
+
+## 13.8
+
+* `aur-depends`
+  + add `--show-all` (alias for `--all`)
+  + prune virtual targets with `--all`
+
+## 13.7
+
+* `aur-depends`
+  + fix regression in 13.6
+
+## 13.6
+
+* `aur-depends`
+  + fix output when non-AUR targets are specified on the command-line (#1062)
+
+## 13.5
+
+* `aur-build`
+  + use /etc/aurutils/pacman-<db_name>.conf only with `--database` or `AUR_REPO` set
+
+## 13.4
+
+* `aur-fetch`
+  + exit 0 on empty stdin (`-`, `/dev/stdin`)
+
+* `aur-depends`
+  + exit 0 on empty stdin (`-`, `/dev/stdin`)
+
+* `aur-query`
+  + exit 0 on empty stdin (`-`, `/dev/stdin`)
+
+* `aur-view`
+  + evaluate `AUR_CONFIRM_PAGER`
+
+## 13.3
+
+* `Makefile`
+  + correctly install to `AUR_LIB_DIR`
+
+* `aur-build`
+  + get local repository state before `--chroot` configuration
+
+* `aur-graph`
+  + add `PRINTALL`
+
+* `aur.1`
+  + fixes for `aur-format`
+
+## 13.2
+
+* `build--pkglist`
+  + set `pkgname` as fallback for `pkgbase` (#1058)
+
 ## 13.1
 
 * `aur-fetch`
