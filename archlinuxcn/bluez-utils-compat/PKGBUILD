@@ -7,7 +7,7 @@
 pkgname='bluez-utils-compat'
 _pkgbase='bluez'
 pkgver=5.66
-pkgrel=1
+pkgrel=2
 url="http://www.bluez.org/"
 arch=('i686' 'x86_64' 'mips64el' 'armv6h' 'armv7h' 'arm' 'aarch64')
 license=('GPL2')
@@ -15,8 +15,8 @@ pkgdesc="Development and debugging utilities for the bluetooth protocol stack. I
 depends=("dbus" "glib2" "libdbus-1.so" "libglib-2.0.so" "libjson-c.so" "libreadline.so" "libudev.so" "systemd")
 makedepends=('dbus' 'libical' 'systemd' 'alsa-lib' 'json-c' 'ell' 'python-docutils')
 optdepends=('ell: for btpclient')
-conflicts=('bluez-hcidump' 'bluez-utils' 'bluez-hcitool')
-provides=('bluez-hcidump' "bluez-utils=${pkgver}" 'bluez-hcitool')
+conflicts=('bluez-hcidump' 'bluez-utils' 'bluez-hcitool' 'bluez-rfcomm')
+provides=('bluez-hcidump' "bluez-utils=${pkgver}" 'bluez-hcitool' 'bluez-rfcomm')
 backup=('etc/bluetooth/mesh-main.conf')
 source=(https://www.kernel.org/pub/linux/bluetooth/"${_pkgbase}-${pkgver}".tar.xz) #{xz,sign})
 # see https://www.kernel.org/pub/linux/bluetooth/sha256sums.asc
