@@ -2,7 +2,7 @@
 # Contributor: Philip Goto <philip.goto@gmail.com>, WithTheBraid <the-one@with-the-braid.cf>
 
 pkgname=flutter
-pkgver=3.7.12
+pkgver=3.10.0
 pkgrel=1
 pkgdesc="A new mobile app SDK to help developers and designers build modern mobile apps for iOS and Android."
 arch=("x86_64" "aarch64")
@@ -19,14 +19,14 @@ source=(
   "${pkgname}.sh"
   "${pkgname}.csh"
 )
-sha256sums=('898f7f34dcf19353060dfa33ef20e9d674c2c04dc8cc5ddae9d5ff16042dbc2e'
+sha256sums=('0d77550249a407c8099224f6a8555f21554757f6aa47a8473b3f660a4891c644'
             '1dea1952d386c43948b9970382c2da5b65b7870684b8ad2ad89124e873aa485a'
             '7ef10d753cfaac52d243549764a793f44f8284a1f4b11715ccd2fa915b026a6f')
 
 build() {
   rm -rf "${srcdir}/${pkgname}/bin/cache" "${srcdir}/${pkgname}/.pub-cache"
   "${srcdir}/${pkgname}/bin/internal/update_dart_sdk.sh"
-  "${srcdir}/${pkgname}/bin/flutter" precache
+  "${srcdir}/${pkgname}/bin/flutter" --no-version-check precache
 }
 
 package() {
@@ -36,9 +36,16 @@ package() {
   install -dm755 "${pkgdir}/opt/${pkgname}"
   install -dm755 "${pkgdir}/usr/bin"
   cp -ra "${srcdir}/${pkgname}" "${pkgdir}/opt/"
+
+  # version overriding, something broken; not my fault *grumble*
+  echo "${pkgver}" > "${pkgdir}/opt/${pkgname}/version" 
   find "${pkgdir}/opt/${pkgname}" -type d -exec chmod a+rx {} +
   find "${pkgdir}/opt/${pkgname}" -type f -exec chmod a+r {} +
+
   # those files *must* be read-write for end-users; not my fault *grumble*
-  chmod a+rw "${pkgdir}/opt/${pkgname}/version" "${pkgdir}/opt/${pkgname}/bin/cache/lockfile" "${pkgdir}/opt/${pkgname}/bin/cache/usbmuxd.stamp" "${pkgdir}/opt/${pkgname}/bin/cache/libimobiledevice.stamp"
+  chmod a+rw "${pkgdir}/opt/${pkgname}" "${pkgdir}/opt/${pkgname}/.pub-preload-cache"
+  chmod -R a+rw "${pkgdir}/opt/${pkgname}/version" "${pkgdir}/opt/${pkgname}/bin/cache" "${pkgdir}/opt/${pkgname}/.git"  
+  find "${pkgdir}/opt/${pkgname}" -name "pubspec.lock" -exec chmod a+r+ {} +
+
   ln -s "/opt/${pkgname}/bin/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
 }

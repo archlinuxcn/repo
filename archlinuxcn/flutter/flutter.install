@@ -1,40 +1,21 @@
-post_install() {
-  groupadd -f flutterusers
-  chgrp -R flutterusers /opt/flutter
-  chmod -R g+w /opt/flutter
-  tput setaf 0 2>/dev/null
-  if [[ "$?" == "0" ]]; then
-    tput sgr0
-    printf "$(tput setaf 4)Flutter was installed on $(tput setaf 2)/opt/flutter$(tput sgr0)\n"
-    printf "$(tput setaf 4)$(tput sgr0)\n"
-    printf "$(tput setaf 4)In case you encounter problems using Flutter as regular user, add your user into the group flutterusers:$(tput sgr0)\n"
-    printf "$(tput setaf 2)gpasswd -a \${USER} flutterusers$(tput sgr0)\n"
-    printf "$(tput setaf 4)$(tput sgr0)\n"
-    printf "$(tput setaf 4)Re-login your terminal in to the group flutterusers:$(tput sgr0)\n"
-    printf "$(tput setaf 2)newgrp flutterusers$(tput sgr0)\n"
-    printf "$(tput setaf 4)$(tput sgr0)\n"
-    printf "$(tput setaf 4)Run the following command to see if there are any dependencies you need to install to complete the setup (for verbose output, add the -v flag):$(tput sgr0)\n"
-    printf "$(tput setaf 2)flutter doctor$(tput sgr0)\n"
-  else
-    printf "Flutter was installed on /opt/flutter\n"
-    printf "\n"
-    printf "In case you encounter problems using Flutter as regular user, add your user into the group flutterusers:\n"
-    printf "gpasswd -a \${USER} flutterusers\n"
-    printf "\n"
-    printf "Re-login your terminal in to the group flutterusers:\n"
-    printf "newgrp flutterusers\n"
-    printf "\n"
-    printf "Run the following command to see if there are any dependencies you need to install to complete the setup (for verbose output, add the -v flag):\n"
-    printf "flutter doctor\n"
+pre_upgrade() {
+  NEW=$1
+  OLD=$2
+
+  if [[ "$OLD" == "3.7"* || "$OLD" == "3.6"* ]]; then
+    echo "Cleaning up previous flutter installation."
+    rm -rf "/opt/flutter"
   fi
 }
 
 post_upgrade() {
-  post_install
-}
+  NEW=$1
+  OLD=$2
 
-post_remove() {
-  groupdel flutterusers
-  printf "$(tput setaf 4)If you had added/modified files or permissions in folder /opt/flutter is possible you need to delete it manually.$(tput sgr0)\n"
-  printf "$(tput setaf 2)rm -rf /opt/flutter$(tput sgr0)\n"
+  if [[ "$OLD" == "3.7"* || "$OLD" == "3.6"* ]]; then
+    if grep -q "flutterusers" /etc/group; then
+      echo "Removing group flutterusers as no longer needed."
+      groupdel "flutterusers"
+    fi
+  fi
 }
