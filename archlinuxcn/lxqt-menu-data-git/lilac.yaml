@@ -1,0 +1,20 @@
+maintainers:
+  - github: yan12125
+    email: f2q9sf79f9owdg2o@chyen.cc
+
+repo_depends:
+  - lxqt-build-tools-git
+
+build_prefix: extra-x86_64
+
+pre_build_script: |
+    aur_pre_build(maintainers="yan12125")
+
+post_build_script: |
+    aur_post_build()
+
+update_on:
+  - source: github
+    github: lxqt/lxqt-menu-data
+  - source: aur
+    aur: lxqt-menu-data-git
