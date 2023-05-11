@@ -11,17 +11,20 @@ license=('GPL')
 depends=(
   boost
   gcc-libs
+  glibc
   libjpeg
   libtiff.so
   opencv
+  openjpeg2
   openslide
   pugixml
   python
+  python-numpy
   qt5-base
   qt5-tools
-  swig
 )
 makedepends=(
+  swig
   clang
   cmake
   gendesk
@@ -52,12 +55,15 @@ build() {
     -DBUILD_ASAP=ON \
     -DBUILD_EXECUTABLES=ON \
     -DBUILD_IMAGEPROCESSING=ON \
+    -DBUILD_MULTIRESOLUTIONIMAGEINTERFACE_DICOM_SUPPORT=OFF \
+    -DBUILD_MULTIRESOLUTIONIMAGEINTERFACE_VSI_SUPPORT=OFF \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_INSTALL_RPATH=ON \
     -DOPENSLIDE_INCLUDE_DIR=/usr/include/openslide \
     -DPugiXML_INCLUDE_DIR=${srcdir}/pugixml/src \
+    -DWRAP_MULTIRESOLUTIONIMAGEINTERFACE_PYTHON=ON \
     -DWRAP_WHOLESLIDEFILTERS_PYTHON=ON \
     -S "${srcdir}/${_pkgname}-${pkgver}"
   make -C build
@@ -71,7 +77,10 @@ package() {
     "${pkgdir}/usr/cmake" \
     "${pkgdir}/usr/lib/cmake/${pkgname}" \
     "${pkgdir}${site_packages}"
+  # move python-related files to site-packages dir
+  mv -vf "${pkgdir}/usr/bin/_multiresolutionimageinterface.so" "${pkgdir}${site_packages}"
   mv -vf "${pkgdir}/usr/bin/_wholeslidefilters.so" "${pkgdir}${site_packages}"
+  mv -vf "${pkgdir}/usr/bin/multiresolutionimageinterface.py" "${pkgdir}${site_packages}"
   mv -vf "${pkgdir}/usr/cmake" "${pkgdir}/usr/lib/cmake/${pkgname}"
   install -Dm644 "${srcdir}/${pkgname}.desktop" -t "${pkgdir}/usr/share/applications"
   install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/ASAP/resources/application.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
