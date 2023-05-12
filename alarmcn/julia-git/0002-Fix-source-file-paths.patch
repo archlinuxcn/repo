@@ -1,7 +1,7 @@
-From 80aceb63d965ddade930669165b753626bf86244 Mon Sep 17 00:00:00 2001
+From f61bb3023956d2d00628125e07d9d9a0586228f5 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 19 Jul 2020 09:40:32 -0400
-Subject: [PATCH 2/6] Fix source file paths
+Subject: [PATCH 2/5] Fix source file paths
 
 ---
  base/sysimg.jl          |  7 +++++++
@@ -59,7 +59,7 @@ index a81908b96a..4c463db143 100644
          write(io, filename)
          write(io, UInt64(sizeof(src)))
 diff --git a/src/ast.c b/src/ast.c
-index 08c493c75b..ddaf662f4e 100644
+index 97bbc6e822..89b0d83efb 100644
 --- a/src/ast.c
 +++ b/src/ast.c
 @@ -777,6 +777,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v, int check_vali
