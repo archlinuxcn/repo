@@ -6,7 +6,7 @@ _pkgname=MONAI
 pkgver=1.1.0
 pkgrel=2
 pkgdesc='AI Toolkit for Healthcare Imaging'
-arch=('x86_64')
+arch=('any')
 url='https://monai.io'
 license=('Apache')
 depends=(
@@ -40,7 +40,8 @@ source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Project-MONAI/MONAI/arc
 sha512sums=('df6e19b43e9f39052eca3107bbb39f67fa9559c4ad5c2e838423a6d035a580b92a48c7d98bbb926a8cf742fdf5c03e7c105be0cc76f4a2c8debf97fba80ecf4b')
 
 prepare() {
-  export BUILD_MONAI=1
+  # disable building MONAI extension due to nvcc issue
+  export BUILD_MONAI=0
   export FORCE_CUDA=1
   export TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST}
   export CC=/opt/cuda/bin/gcc
