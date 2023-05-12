@@ -3,21 +3,21 @@
 _pkgname=citra
 pkgname=$_pkgname-canary-git
 epoch=2
-pkgver=2479.r0.gbfd715cf8
+pkgver=2480.r0.g851bcfdab
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra-canary/tree/master"
 license=('GPL2')
 depends=('boost-libs' 'shared-mime-info' 'ffmpeg' 'libusb' 'sdl2' 'qt6-multimedia' 'libxkbcommon-x11' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'fmt' 'dynarmic' 'crypto++' 'openal' 'cpp-httplib')
-makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt6-tools' 'xbyak' 'cpp-jwt' 'qt6-wayland' 'desktop-file-utils' 'robin-map')
+makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt6-tools' 'xbyak' 'cpp-jwt' 'qt6-wayland' 'desktop-file-utils' 'robin-map' 'glslang' 'spirv-headers')
 provides=('citra')
 conflicts=('citra')
 source=("$_pkgname::git+https://github.com/citra-emu/citra-canary"
 ext-lib.patch
 gc.patch)
 md5sums=('SKIP'
-         '6bf270e9a0d1faf150048648382c46dc'
+         'bb9db6b693d88493c219c1d9c0a2114c'
          'f151510cd1fc233992710405cbf44323')
 
 pkgver() {
@@ -36,8 +36,10 @@ prepare() {
     git submodule update --init --remote externals/lodepng
     git submodule update --init --remote externals/nihstro
     git submodule update --init --remote externals/soundtouch
+    git submodule update --init --remote externals/sirit
     git submodule update --init --remote externals/teakra
     git submodule update --init --remote externals/dds-ktx
+    git submodule update --init --remote externals/vma
 }
 
 build() {
@@ -64,7 +66,8 @@ build() {
       -DUSE_SYSTEM_SDL2=ON \
       -DENABLE_MF=OFF \
       -DCITRA_TESTS=OFF \
-      -DCITRA_CHECK_SUBMODULES=OFF
+      -DCITRA_CHECK_SUBMODULES=OFF \
+      -DSIRIT_USE_SYSTEM_SPIRV_HEADERS=ON
 	make
 }
 

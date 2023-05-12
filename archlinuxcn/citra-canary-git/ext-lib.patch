@@ -15,7 +15,7 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
  include(DownloadExternals)
  include(CMakeDependentOption)
  
-@@ -79,6 +83,12 @@ if (CITRA_USE_PRECOMPILED_HEADERS)
+@@ -85,6 +89,12 @@ if (CITRA_USE_PRECOMPILED_HEADERS)
      set(CMAKE_PCH_INSTANTIATE_TEMPLATES ON)
  endif()
  
@@ -28,7 +28,7 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
  if(NOT EXISTS ${PROJECT_SOURCE_DIR}/.git/hooks/pre-commit)
      message(STATUS "Copying pre-commit hook")
      file(COPY hooks/pre-commit
-@@ -123,7 +133,10 @@ function(check_submodules_present)
+@@ -129,7 +139,10 @@ function(check_submodules_present)
          endif()
      endforeach()
  endfunction()
@@ -40,7 +40,7 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
  
  configure_file(${PROJECT_SOURCE_DIR}/dist/compatibility_list/compatibility_list.qrc
                 ${PROJECT_BINARY_DIR}/dist/compatibility_list/compatibility_list.qrc
-@@ -200,6 +213,41 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
+@@ -206,6 +219,42 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
  
@@ -52,6 +52,7 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
 +find_package(zstd 1.4)
 +find_package(nlohmann_json)
 +find_package(tsl-robin-map)
++find_package(glslang)
 +
 +if (ARCHITECTURE_x86 OR ARCHITECTURE_x86_64)
 +    find_package(xbyak 6)
@@ -82,7 +83,7 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
  if (ENABLE_QT)
      if (CITRA_USE_BUNDLED_QT)
          download_qt_external(6.5.0 QT_PREFIX)
-@@ -224,19 +271,6 @@ if (ENABLE_QT)
+@@ -230,19 +279,6 @@ if (ENABLE_QT)
      endif()
  endif()
  
@@ -102,7 +103,7 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
  if (ENABLE_FFMPEG)
      if (CITRA_USE_BUNDLED_FFMPEG)
          if ((MSVC_VERSION GREATER_EQUAL 1920 AND MSVC_VERSION LESS 1940) AND "x86_64" IN_LIST ARCHITECTURE)
-@@ -386,14 +420,24 @@ if (NOT USE_SYSTEM_BOOST)
+@@ -400,14 +436,24 @@ if (NOT USE_SYSTEM_BOOST)
      add_definitions( -DBOOST_ALL_NO_LIB )
  endif()
  
@@ -240,8 +241,23 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
  endif()
  
  # getopt
-@@ -94,7 +95,10 @@ endif()
+@@ -94,14 +95,20 @@ endif()
  add_subdirectory(glad)
+ 
+ # glslang
+-set(SKIP_GLSLANG_INSTALL ON)
+-set(ENABLE_GLSLANG_BINARIES OFF)
+-set(ENABLE_SPVREMAPPER OFF)
+-set(ENABLE_CTEST OFF)
+-add_subdirectory(glslang)
++if (NOT TARGET glslang::glslang)
++    message(STATUS "Using bundled glslang")
++    set(SKIP_GLSLANG_INSTALL ON)
++    set(ENABLE_GLSLANG_BINARIES OFF)
++    set(ENABLE_SPVREMAPPER OFF)
++    set(ENABLE_CTEST OFF)
++    add_subdirectory(glslang)
++endif()
  
  # inih
 -add_subdirectory(inih)
@@ -252,13 +268,16 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
  
  # MicroProfile
  add_library(microprofile INTERFACE)
-@@ -114,48 +118,71 @@ add_subdirectory(open_source_archives)
+@@ -121,7 +127,7 @@ add_subdirectory(open_source_archives)
  set(INTEGER_SAMPLES ON CACHE BOOL "")
  set(SOUNDSTRETCH OFF CACHE BOOL "")
  set(SOUNDTOUCH_DLL OFF CACHE BOOL "")
 -add_subdirectory(soundtouch)
 +add_subdirectory(soundtouch EXCLUDE_FROM_ALL)
-
+ 
+ # sirit
+ add_subdirectory(sirit EXCLUDE_FROM_ALL)
+@@ -129,43 +135,66 @@ add_subdirectory(sirit EXCLUDE_FROM_ALL)
  # Teakra
  add_subdirectory(teakra EXCLUDE_FROM_ALL)
  
@@ -340,7 +359,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
          # LibreSSL
          set(LIBRESSL_SKIP_INSTALL ON CACHE BOOL "")
          set(OPENSSLDIR "/etc/ssl/")
-@@ -167,17 +196,22 @@ if (ENABLE_WEB_SERVICE)
+@@ -177,17 +206,22 @@ if (ENABLE_WEB_SERVICE)
              DEFINITION OPENSSL_LIBS)
      endif()
  
@@ -371,7 +390,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
      add_library(cpp-jwt INTERFACE)
      target_include_directories(cpp-jwt INTERFACE ./cpp-jwt/include)
      target_compile_definitions(cpp-jwt INTERFACE CPP_JWT_USE_VENDORED_NLOHMANN_JSON)
-@@ -194,7 +228,8 @@ if(ANDROID)
+@@ -204,7 +238,8 @@ if(ANDROID)
  endif()
  
  # OpenAL Soft
@@ -898,15 +917,29 @@ diff --color -rupN citra/src/tests/video_core/shader/shader_jit_x64_compiler.cpp
      }
  }
  
+diff --color -rupN citra/src/video_core/renderer_vulkan/vk_shader_util.cpp citra/src/video_core/renderer_vulkan/vk_shader_util.cpp
+--- citra/src/video_core/renderer_vulkan/vk_shader_util.cpp	2023-01-20 00:44:13.878931471 +0800
++++ citra/src/video_core/renderer_vulkan/vk_shader_util.cpp	2023-01-20 00:41:12.791915785 +0800
+@@ -2,7 +2,7 @@
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+
+-#include <SPIRV/GlslangToSpv.h>
++#include <glslang/SPIRV/GlslangToSpv.h>
+ #include <glslang/Include/ResourceLimits.h>
+ #include <glslang/Public/ShaderLang.h>
+ #include "common/assert.h"
 diff --color -rupN citra/src/video_core/CMakeLists.txt citra/src/video_core/CMakeLists.txt
 --- citra/src/video_core/CMakeLists.txt	2023-01-20 00:44:13.878931471 +0800
 +++ citra/src/video_core/CMakeLists.txt	2023-01-20 00:43:41.148864090 +0800
-@@ -128,11 +128,11 @@ target_include_directories(video_core PR
+@@ -167,12 +167,12 @@ target_include_directories(video_core PR
  create_target_directory_groups(video_core)
  
  target_link_libraries(video_core PUBLIC citra_common citra_core)
--target_link_libraries(video_core PRIVATE Boost::serialization dds-ktx glad json-headers nihstro-headers tsl::robin_map)
-+target_link_libraries(video_core PRIVATE Boost::serialization dds-ktx glad nlohmann_json::nlohmann_json nihstro-headers tsl::robin_map)
+-target_link_libraries(video_core PRIVATE Boost::serialization dds-ktx json-headers nihstro-headers tsl::robin_map)
++target_link_libraries(video_core PRIVATE Boost::serialization dds-ktx nlohmann_json::nlohmann_json nihstro-headers tsl::robin_map)
+-target_link_libraries(video_core PRIVATE vulkan-headers vma sirit SPIRV glslang glad)
++target_link_libraries(video_core PRIVATE vulkan-headers vma sirit SPIRV glslang::glslang glad)
  set_target_properties(video_core PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${ENABLE_LTO})
  
  if ("x86_64" IN_LIST ARCHITECTURE)
