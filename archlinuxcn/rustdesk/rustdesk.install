@@ -1,0 +1,24 @@
+# arg 1:  the new package version
+post_install() {
+	# Update information
+	systemctl daemon-reload
+	update-desktop-database
+}
+
+pre_upgrade() {
+    systemctl stop rustdesk || true
+}
+
+post_upgrade() {
+	systemctl daemon-reload
+	update-desktop-database
+}
+
+pre_remove() {
+	systemctl stop rustdesk || true
+	systemctl disable rustdesk || true
+}
+
+post_remove() {
+	update-desktop-database
+}
