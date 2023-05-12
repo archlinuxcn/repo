@@ -1,34 +1,34 @@
-From 9284f5a37708ddf0108898a48eca5db0e5316a43 Mon Sep 17 00:00:00 2001
+From b9e64417e4c33e2c17e060aa482519c2c8c7d416 Mon Sep 17 00:00:00 2001
 From: Christian Hesse <mail@eworm.de>
-Date: Mon, 17 Oct 2022 16:35:53 +0200
+Date: Tue, 17 Jan 2023 22:04:08 +0100
 Subject: [PATCH] properly handle i3wm
 
 ---
- .../VirtualBox/src/globals/UIDesktopWidgetWatchdog.cpp        | 4 ++--
- .../Frontends/VirtualBox/src/platform/x11/VBoxUtils-x11.cpp   | 3 +++
- .../Frontends/VirtualBox/src/platform/x11/VBoxUtils-x11.h     | 3 ++-
+ .../VirtualBox/src/globals/UIDesktopWidgetWatchdog.cpp        | 3 ++-
+ .../Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.cpp   | 3 +++
+ .../Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.h     | 3 ++-
  src/VBox/Frontends/VirtualBox/src/widgets/UIMiniToolBar.cpp   | 4 ++++
- 4 files changed, 11 insertions(+), 3 deletions(-)
+ 4 files changed, 11 insertions(+), 2 deletions(-)
 
 diff --git a/src/VBox/Frontends/VirtualBox/src/globals/UIDesktopWidgetWatchdog.cpp b/src/VBox/Frontends/VirtualBox/src/globals/UIDesktopWidgetWatchdog.cpp
-index 9c5faa42..5439e2a7 100644
+index c27ff6f6..066a80e0 100644
 --- a/src/VBox/Frontends/VirtualBox/src/globals/UIDesktopWidgetWatchdog.cpp
 +++ b/src/VBox/Frontends/VirtualBox/src/globals/UIDesktopWidgetWatchdog.cpp
-@@ -385,7 +385,7 @@ QRect UIDesktopWidgetWatchdog::available
+@@ -385,7 +385,8 @@ QRect UIDesktopWidgetWatchdog::availableGeometry(QScreen *pScreen) const
      /* Get cached available-geometry: */
      const QRect availableGeometry = m_availableGeometryData.value(screenToIndex(pScreen));
      /* Return cached available-geometry if it's valid or screen-geometry otherwise: */
 -    return availableGeometry.isValid() ? availableGeometry : screenGeometry(pScreen);
-+    return availableGeometry.isValid() && NativeWindowSubsystem::X11WindowManagerType() != X11WMType_i3 ? availableGeometry : screenGeometry(pScreen);
++    return availableGeometry.isValid() && NativeWindowSubsystem::X11WindowManagerType() != X11WMType_i3 ?
++           availableGeometry : screenGeometry(pScreen);
  # endif /* !VBOX_GUI_WITH_CUSTOMIZATIONS1 */
  #else /* !VBOX_WS_X11 */
      /* Just return screen available-geometry: */
-
-diff --git a/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-x11.cpp b/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-x11.cpp
-index 53927559..ea648da7 100644
---- a/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-x11.cpp
-+++ b/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-x11.cpp
-@@ -117,6 +117,9 @@ X11WMType NativeWindowSubsystem::X11WindowManagerType()
+diff --git a/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.cpp b/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.cpp
+index 2443af89..6cfcff74 100644
+--- a/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.cpp
++++ b/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.cpp
+@@ -141,6 +141,9 @@ X11WMType NativeWindowSubsystem::X11Wind
                  else
                  if (QString((const char*)pcData).contains("Xfwm4", Qt::CaseInsensitive))
                      wmType = X11WMType_Xfwm4;
@@ -38,11 +38,11 @@ index 53927559..ea648da7 100644
                  if (pcData)
                      XFree(pcData);
              }
-diff --git a/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-x11.h b/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-x11.h
-index bad78665..f2a0b462 100644
---- a/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-x11.h
-+++ b/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-x11.h
-@@ -49,6 +49,7 @@ enum X11WMType
+diff --git a/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.h b/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.h
+index 66504c71..f83b5c85 100644
+--- a/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.h
++++ b/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.h
+@@ -51,6 +51,7 @@ enum X11WMType
      X11WMType_Metacity,
      X11WMType_Mutter,
      X11WMType_Xfwm4,
@@ -50,20 +50,26 @@ index bad78665..f2a0b462 100644
  };
  
  /** X11: Screen-saver inhibit methods. */
-@@ -95,7 +96,7 @@
-     /** X11: Determines and returns whether the compositing manager is running. */
-     bool X11IsCompositingManagerRunning();
+@@ -102,11 +103,11 @@ namespace NativeWindowSubsystem
+     bool WaylandIsCompositingManagerRunning();
+ 
+     /** Wrapper for window manager type functions. */
+-    X11WMType windowManagerType(bool fIsXServerAvailable);
++    SHARED_LIBRARY_STUFF X11WMType windowManagerType(bool fIsXServerAvailable);
      /** X11: Determines and returns current Window Manager type. */
 -    X11WMType X11WindowManagerType();
 +    SHARED_LIBRARY_STUFF X11WMType X11WindowManagerType();
+     /** Wayland: Determines and returns current Window Manager type. */
+-    X11WMType WaylandWindowManagerType();
++    SHARED_LIBRARY_STUFF X11WMType WaylandWindowManagerType();
  
- #if 0 // unused for now?
-     /** X11: Inits the screen saver save/restore mechanism. */
+     /** Wrapper for X11CheckExtension and WaylandCheckExtension functions. */
+     bool checkExtension(bool fIsXServerAvailable, const char *extensionName);
 diff --git a/src/VBox/Frontends/VirtualBox/src/widgets/UIMiniToolBar.cpp b/src/VBox/Frontends/VirtualBox/src/widgets/UIMiniToolBar.cpp
-index 815db408..8cddb431 100644
+index 7b37d46b..b838ad07 100644
 --- a/src/VBox/Frontends/VirtualBox/src/widgets/UIMiniToolBar.cpp
 +++ b/src/VBox/Frontends/VirtualBox/src/widgets/UIMiniToolBar.cpp
-@@ -888,6 +888,10 @@ void UIMiniToolBar::prepare()
+@@ -1076,6 +1076,10 @@ void UIMiniToolBar::prepare()
      /* Enable translucency through Qt API if supported: */
      if (uiCommon().isCompositingManagerRunning())
          setAttribute(Qt::WA_TranslucentBackground);

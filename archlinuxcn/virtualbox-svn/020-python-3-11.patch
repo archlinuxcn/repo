@@ -1,16 +1,3 @@
-diff --git a/configure b/configure
-index 0872ec4c..037680e0 100755
---- a/configure
-+++ b/configure
-@@ -2132,7 +2132,7 @@ extern "C" int main(void)
- }
- EOF
-   found=
--  SUPPYTHONLIBS="python2.7 python2.6 python3.1 python3.2 python3.3 python3.4 python3.4m python3.5 python3.5m python3.6 python3.6m python3.7 python3.7m python3.8 python3.8m python3.9 python3.9m python3.10 python3.10m"
-+  SUPPYTHONLIBS="python2.7 python2.6 python3.1 python3.2 python3.3 python3.4 python3.4m python3.5 python3.5m python3.6 python3.6m python3.7 python3.7m python3.8 python3.8m python3.9 python3.9m python3.10 python3.10m python3.11 python3.11m"
-   for p in $PYTHONDIR; do
-     for d in $SUPPYTHONLIBS; do
-       for b in lib/x86_64-linux-gnu lib/i386-linux-gnu lib64 lib/64 lib; do
 diff --git a/src/VBox/Installer/linux/routines.sh b/src/VBox/Installer/linux/routines.sh
 index 08e06358..44eba726 100644
 --- a/src/VBox/Installer/linux/routines.sh
