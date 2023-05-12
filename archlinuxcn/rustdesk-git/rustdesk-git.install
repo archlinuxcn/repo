@@ -1,0 +1,7 @@
+# arg 1:  the new package version
+# arg 2:  the old package version
+post_upgrade() {
+  if systemctl -q is-active 'rustdesk.service'; then
+    systemctl restart 'rustdesk.service'
+  fi
+}
