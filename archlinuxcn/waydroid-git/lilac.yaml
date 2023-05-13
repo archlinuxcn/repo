@@ -5,6 +5,9 @@ maintainers:
 pre_build_script: aur_pre_build(maintainers=['sickcodes'])
 post_build: aur_post_build
 
+repo_depends:
+  - python-gbinder
+
 update_on:
   - source: github
     github: waydroid/waydroid
