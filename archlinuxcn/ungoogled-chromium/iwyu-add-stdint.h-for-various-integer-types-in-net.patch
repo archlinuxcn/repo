@@ -1,5 +1,3 @@
-https://chromium-review.googlesource.com/c/chromium/src/+/4394856
-
 From 78e8aa30665d0344a64a98c092612ea6064dbe60 Mon Sep 17 00:00:00 2001
 From: Stephan Hartmann <stha09@googlemail.com>
 Date: Wed, 12 Apr 2023 08:42:20 +0000
@@ -12,6 +10,13 @@ Commit-Queue: Stephan Hartmann <stha09@googlemail.com>
 Reviewed-by: Steven Bingler <bingler@chromium.org>
 Reviewed-by: Matt Mueller <mattm@chromium.org>
 Cr-Commit-Position: refs/heads/main@{#1129139}
+---
+ net/cert/pki/string_util.h            | 2 ++
+ net/cookies/cookie_inclusion_status.h | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/net/cert/pki/string_util.h b/net/cert/pki/string_util.h
+index 1687b088606..b18f716f4b2 100644
 --- a/net/cert/pki/string_util.h
 +++ b/net/cert/pki/string_util.h
 @@ -7,6 +7,8 @@
@@ -23,6 +28,8 @@ Cr-Commit-Position: refs/heads/main@{#1129139}
  #include <string_view>
  #include <vector>
  
+diff --git a/net/cookies/cookie_inclusion_status.h b/net/cookies/cookie_inclusion_status.h
+index e8dd6d8d9fa..129b13ab7ba 100644
 --- a/net/cookies/cookie_inclusion_status.h
 +++ b/net/cookies/cookie_inclusion_status.h
 @@ -5,6 +5,8 @@
@@ -34,4 +41,3 @@ Cr-Commit-Position: refs/heads/main@{#1129139}
  #include <bitset>
  #include <cstdint>
  #include <ostream>
-

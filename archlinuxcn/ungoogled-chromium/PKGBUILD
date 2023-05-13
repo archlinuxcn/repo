@@ -9,7 +9,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=113.0.5672.63
+pkgver=113.0.5672.92
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
@@ -31,15 +31,49 @@ options=('!lto') # Chromium adds its own flags for ThinLTO
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
         add-cstring-for-std-strlen-in-web_view_impl.cc.patch
+        swiftshader-add-cstdint-for-uint64_t.patch
+        dawn-iwyu-add-cstdint-for-uint8_t.patch
+        iwyu-add-stdint.h-for-various-int-types-in-base.patch
+        iwyu-add-cstdint-for-uintptr_t-in-device.patch
+        iwyu-add-stdint.h-for-uint32_t-in-chrome_pdf.patch
+        iwyu-add-stdint.h-for-uint64_t-in-EncounteredSurface.patch
+        iwyu-add-stdint.h-for-integer-types-in-ui.patch
+        openscreen-iwyu-add-stdint.h.patch
+        pdfium-iwyu-add-stdint.h-for-uint32_t.patch
+        unbundle-do-not-use-ZipAnalyzer-traits-header.patch
+        iwyu-add-stdint.h-for-uint32_t-in-cc.patch
+        add-missing-includes-causing-build-errors.patch
+        iwyu-add-stdint.h-for-int-types-in-gpu_feature_info.patch
+        iwyu-add-stdint.h-for-various-int-types-in-comp.patch
+        iwyu-add-stdint.h-for-various-integer-types-in-net.patch
+        iwyu-add-cstdint-for-int-types-in-s2cellid.patch
         download-bubble-typename.patch
         webauthn-variant.patch
+        random-fixes-for-gcc13.patch
         disable-GlobalMediaControlsCastStartStop.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('76cec11dc13abe6703305b0300e1fe24c8f547c1ff313f7be09db0e23d12ee1e'
+sha256sums=('a4520b53c824d75bcbc80bcf5da0c3d6f213038c8e31904b8a3bfbe415893ba5'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '5f868cba9e4d387499711738adc6fd87ab9f1ef61f464016bc682660ae59206a'
+            '208f2ebcef5c690207e6e798ffbf9e92214e9d35f415c2f6b93efebad831b7e2'
+            '94baaaa6fbec0af6ec2e967f0b7440b4261a927e853e212d84f0aeaf56ae53f0'
+            '0003e737072f4f1b22ff932221595e85dd9bf65720ccac36f840cccb8000e3e1'
+            'ffe499d63c9c1074cbc3995c188c89b748388dbb9dccf975ce28a434c723acf7'
+            '7af466e4b5985cc9f0b33df2f3cd2e458c7cbfd7190505d105aad4401c9d072b'
+            '727588a1b42f6cfe54acf4759a0c3ad3778590d5a5cefcdcb54b579ba16b09c8'
+            '0914be53b2205b34e4da96f5a94505ac2a01e3639ff433535a23be2d0d581fa7'
+            '8c9662bed23bfd66ae76d044541f316624386ca4b3baef57a47289feb3db58a9'
+            '890b6836cea4c31513166db720b210da20d20bcd97a713545268cceffd707af5'
+            'ffa23c6233b47e0b4d688e30a44a2550e1236bbd0dc57b996d33dc42266530af'
+            'f6a0e149ef5195883c56a875ae366ed92d9960652f2657bfb65b5408badafc65'
+            '3255477d02d49ef86d47c727b9369f46dc787319bb648bf267a68f37e2041e50'
+            '94995b4e37671dcd27968bd5a2ebcf50e67bd22659a4bb4a5d0a4f81ff54f471'
+            '88320e0f08cc7b53807961d0735e7c1bd455a6faf9d8a5d056b7ba7809e37355'
+            '5dfbfd073f78c887bbffca2b644116571cc9b1196867e44e8fc0cbb40afcf1bc'
+            'd97dc00f66fa5868584e4b6d5ef817911eab2dc8022a37c75a00d063f4dac483'
             'd464eed4be4e9bf6187b4c40a759c523b7befefa25ba34ad6401b2a07649ca2a'
             '590fabbb26270947cb477378b53a9dcd17855739076b4af9983e1e54dfcab6d7'
+            '6359d8f891f860d2ae49e1dc3d2ae972e251c24ffb19ff2f8e64523b2d8234c4'
             '7f3b1b22d6a271431c1f9fc92b6eb49c6d80b8b3f868bdee07a6a1a16630a302'
             'e393174d7695d0bafed69e868c5fbfecf07aa6969f3b64596d0bae8b067e1711')
 
@@ -56,54 +90,12 @@ source=(${source[@]}
         $pkgname-$_uc_ver.tar.gz::https://github.com/$_uc_usr/ungoogled-chromium/archive/$_uc_ver.tar.gz
         ozone-add-va-api-support-to-wayland.patch
         vaapi-add-av1-support.patch
-        remove-main-main10-profile-limit.patch
-        chromium-112-gcc-13-0001-openscreen.patch
-        chromium-112-gcc-13-0003-ruy.patch
-        chromium-112-gcc-13-0004-swiftshader.patch
-        chromium-112-gcc-13-0005-tensorflow-tflite.patch
-        chromium-112-gcc-13-0006-vulkanmemoryallocator.patch
-        chromium-112-gcc-13-0007-misc.patch
-        chromium-112-gcc-13-0008-dawn.patch
-        chromium-112-gcc-13-0009-base.patch
-        chromium-112-gcc-13-0010-components.patch
-        chromium-112-gcc-13-0011-s2cellid.patch
-        chromium-112-gcc-13-0014-maldoca.patch
-        chromium-112-gcc-13-0015-net.patch
-        chromium-112-gcc-13-0016-cc-targetproperty.patch
-        chromium-112-gcc-13-0017-gpu_feature_info.patch
-        chromium-112-gcc-13-0018-encounteredsurfacetracker.patch
-        chromium-112-gcc-13-0019-documentattachmentinfo.patch
-        chromium-112-gcc-13-0020-pdfium.patch
-        chromium-112-gcc-13-0021-gcc-copy-list-init-net-HostCache.patch
-        chromium-112-gcc-13-0022-gcc-ambiguous-ViewTransitionElementId-type.patch
-        chromium-112-gcc-13-0023-gcc-incomplete-type-v8-subtype.patch
-        chromium-113-gcc-13-vulkan-build-fixes.patch)
+        remove-main-main10-profile-limit.patch)
 sha256sums=(${sha256sums[@]}
-            'ad7a3169d95f182df748940349e2c25868a201949486257829fdb42c69a83a51'
+            'b36ecce88a380b760c468592c1bb69be4b5dbae20b084ae0aba01236720b3690'
             'e9e8d3a82da818f0a67d4a09be4ecff5680b0534d7f0198befb3654e9fab5b69'
             'e742cc5227b6ad6c3e0c2026edd561c6d3151e7bf0afb618578ede181451b307'
-            'be8d3475427553feb5bd46665ead3086301ed93c9a41cf6cc2644811c5bda51c'
-            'd0e037f134842db091f7f88afa5e999531850d92a5399a1663783853fc14d3fe'
-            '4c90e796fe2eaa5f07cfd01cf4527c0a42ed21c98777fe4bd7e7720f4c34efc9'
-            'dc3135570e6f625178e5390aa77f7b9b79533fd13d50ea21cccb18b3cafb546b'
-            'ef6b52377a7e7590d1fe7e4029eccafbd44c0531abe78b12c05e9c2a08be8eb9'
-            '3c719fff7777af4c43e752a747be42894d074dd8fd58199a4b105721d380ee6d'
-            'e9eb4684da654c03e2ff5cda1069b6f5b344de333d6800730cec8f4d15000a08'
-            'dfae1b997efb6e6af1c9a8e986c82c16d19b6401c3d91a3dd67803f9ccb4fea2'
-            'bf39f1e3adc9126db89fd4215a2d6632fda03ab93606b526776ff999350e2488'
-            '351b8548712a8d5edc009165cfbe104bc65e214c7c79d22d97b6d8eb3d7d731f'
-            'fb52f89b7017da19f3be7daa6743786456f67ad9455a9c423736051d3f7a0058'
-            '7a68c0ea1e4e6edc823e330070c8182b50eaaab64d7630ffe1578658d188170a'
-            '59c6623042f2be866da818516caf0c26098b018bb749050ae15b471e6abf047a'
-            '7bf7676ec9fcbf288919a372b3623826d272ece536b3b5e4f6c6bf3643bfe67e'
-            '7cf5f81d45c31e4b8f73840ac360a3cb412ca72a33435d842af5446fd742cf80'
-            'e49f2b58b6ea45ea1eccd4699e772bef52c8f2171b5e8e3714490e20e7791c3e'
-            '15b0ad5feed40930861e6b463ee20f4d84029eec4c803a0d346aa91200c17bca'
-            '850b20191a9d894bdf99806f7838b8e231474561405b2cc2ee51d6fb0d099e43'
-            '804888df05e86517a0d894e716c20f438bb109c344e4be29f4d01dec754115a7'
-            '8381b911b69cef40a52285cf87949ab534f2485df8d3980be73c5aae5c693e32'
-            '42ca609763db35363bf756bf3fa4f119e84fe58d3dfe0fc32151afe89aabf85a'
-            'e7f84823c43f494eb481f0a83f5d13ab9ed8eb0f179dba1a4b715ba91d788390')
+            'be8d3475427553feb5bd46665ead3086301ed93c9a41cf6cc2644811c5bda51c')
  
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -130,7 +122,7 @@ declare -gA _system_libs=(
   [re2]=re2
   [snappy]=snappy
   [woff2]=woff2
-  #[zlib]=minizip    # broken include from chrome/common/safe_browsing/zip_analyzer.h
+  [zlib]=minizip
 )
 _unwanted_bundled_libs=(
   $(printf "%s\n" ${!_system_libs[@]} | sed 's/^libjpeg$/&_turbo/')
@@ -169,6 +161,22 @@ prepare() {
 
   # Upstream fixes
   patch -Np1 -i ../add-cstring-for-std-strlen-in-web_view_impl.cc.patch
+  patch -Np1 -d third_party/swiftshader <../swiftshader-add-cstdint-for-uint64_t.patch
+  patch -Np1 -d third_party/dawn <../dawn-iwyu-add-cstdint-for-uint8_t.patch
+  patch -Np1 -i ../iwyu-add-stdint.h-for-various-int-types-in-base.patch
+  patch -Np1 -i ../iwyu-add-cstdint-for-uintptr_t-in-device.patch
+  patch -Np1 -i ../iwyu-add-stdint.h-for-uint32_t-in-chrome_pdf.patch
+  patch -Np1 -i ../iwyu-add-stdint.h-for-uint64_t-in-EncounteredSurface.patch
+  patch -Np1 -i ../iwyu-add-stdint.h-for-integer-types-in-ui.patch
+  patch -Np1 -d third_party/openscreen/src <../openscreen-iwyu-add-stdint.h.patch
+  patch -Np1 -d third_party/pdfium <../pdfium-iwyu-add-stdint.h-for-uint32_t.patch
+  patch -Np1 -i ../unbundle-do-not-use-ZipAnalyzer-traits-header.patch
+  patch -Np1 -i ../iwyu-add-stdint.h-for-uint32_t-in-cc.patch
+  patch -Np1 -i ../add-missing-includes-causing-build-errors.patch
+  patch -Np1 -i ../iwyu-add-stdint.h-for-int-types-in-gpu_feature_info.patch
+  patch -Np1 -i ../iwyu-add-stdint.h-for-various-int-types-in-comp.patch
+  patch -Np1 -i ../iwyu-add-stdint.h-for-various-integer-types-in-net.patch
+  patch -Np1 -i ../iwyu-add-cstdint-for-int-types-in-s2cellid.patch
 
   # Disable kGlobalMediaControlsCastStartStop by default
   # https://crbug.com/1314342
@@ -177,30 +185,9 @@ prepare() {
   # Build fixes
   patch -Np1 -i ../download-bubble-typename.patch
   patch -Np1 -i ../webauthn-variant.patch
-
-  # gcc 13 patches
-  patch -Np1 -i ../chromium-112-gcc-13-0001-openscreen.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0003-ruy.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0004-swiftshader.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0005-tensorflow-tflite.patch
   dos2unix third_party/vulkan_memory_allocator/include/vk_mem_alloc.h
-  patch -Np1 -i ../chromium-112-gcc-13-0006-vulkanmemoryallocator.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0007-misc.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0008-dawn.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0009-base.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0010-components.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0011-s2cellid.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0014-maldoca.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0015-net.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0016-cc-targetproperty.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0017-gpu_feature_info.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0018-encounteredsurfacetracker.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0019-documentattachmentinfo.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0020-pdfium.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0021-gcc-copy-list-init-net-HostCache.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0022-gcc-ambiguous-ViewTransitionElementId-type.patch
-  patch -Np1 -i ../chromium-112-gcc-13-0023-gcc-incomplete-type-v8-subtype.patch
-  patch -Np1 -i ../chromium-113-gcc-13-vulkan-build-fixes.patch
+  patch -Np1 -i ../random-fixes-for-gcc13.patch
+
 
   # Custom Patches
   patch -Np1 -i ../ozone-add-va-api-support-to-wayland.patch

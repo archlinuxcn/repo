@@ -1,5 +1,3 @@
-https://chromium-review.googlesource.com/c/chromium/src/+/4418467
-
 From dbb0a49610aa491c5eaa1461342485721c37354c Mon Sep 17 00:00:00 2001
 From: Stephan Hartmann <stha09@googlemail.com>
 Date: Fri, 14 Apr 2023 05:29:45 +0000
@@ -11,6 +9,25 @@ Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/4418467
 Commit-Queue: Stephan Hartmann <stha09@googlemail.com>
 Reviewed-by: Andrew Moylan <amoylan@chromium.org>
 Cr-Commit-Position: refs/heads/main@{#1130286}
+---
+ third_party/s2cellid/README.chromium           | 1 +
+ third_party/s2cellid/src/s2/util/math/vector.h | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/third_party/s2cellid/README.chromium b/third_party/s2cellid/README.chromium
+index 53c42f7342d..25044e85135 100644
+--- a/third_party/s2cellid/README.chromium
++++ b/third_party/s2cellid/README.chromium
+@@ -18,6 +18,7 @@ Local Modifications:
+    - mathutil.h mathutil.cc
+    - vector.h
+      - Change comparison operator implementations to be C++20-compliant
++     - add missing cstdint include
+  - _fpcontractoff.h
+  - r1interval.h
+  - r2.h
+diff --git a/third_party/s2cellid/src/s2/util/math/vector.h b/third_party/s2cellid/src/s2/util/math/vector.h
+index ded669c1d71..487edc3f93b 100644
 --- a/third_party/s2cellid/src/s2/util/math/vector.h
 +++ b/third_party/s2cellid/src/s2/util/math/vector.h
 @@ -22,6 +22,7 @@
@@ -21,4 +38,3 @@ Cr-Commit-Position: refs/heads/main@{#1130286}
  #include <cstdlib>
  #include <iosfwd>
  #include <iostream>  // NOLINT(readability/streams)
-

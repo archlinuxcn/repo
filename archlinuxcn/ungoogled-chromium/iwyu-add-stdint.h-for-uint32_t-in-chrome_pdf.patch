@@ -1,9 +1,8 @@
-https://chromium-review.googlesource.com/c/chromium/src/+/4395997
-
 From 5ec376a5f7170cbd30727f21bb8185ec915a9893 Mon Sep 17 00:00:00 2001
 From: Stephan Hartmann <stha09@googlemail.com>
-Date: Tue, 04 Apr 2023 17:30:49 +0000
-Subject: [PATCH] IWYU: add stdint.h for uint32_t in chrome_pdf::DocumentAttachmentInfo
+Date: Tue, 4 Apr 2023 17:30:49 +0000
+Subject: [PATCH] IWYU: add stdint.h for uint32_t in
+ chrome_pdf::DocumentAttachmentInfo
 
 Bug: 957519
 Change-Id: I8efc538b2ae901c7d5076fdf692a31250c16cbbe
@@ -12,9 +11,11 @@ Reviewed-by: Lei Zhang <thestig@chromium.org>
 Commit-Queue: Lei Zhang <thestig@chromium.org>
 Cr-Commit-Position: refs/heads/main@{#1126091}
 ---
+ pdf/document_attachment_info.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/pdf/document_attachment_info.h b/pdf/document_attachment_info.h
-index e0fffc2ca..ad106fdf 100644
+index e0fffc2ca4e..ad106fdf5e0 100644
 --- a/pdf/document_attachment_info.h
 +++ b/pdf/document_attachment_info.h
 @@ -5,6 +5,8 @@

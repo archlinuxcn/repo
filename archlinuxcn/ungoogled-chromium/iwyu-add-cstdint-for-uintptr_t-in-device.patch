@@ -1,0 +1,28 @@
+From 83de2fa6806fc337e61fef0bd156dc2602542db3 Mon Sep 17 00:00:00 2001
+From: Stephan Hartmann <stha09@googlemail.com>
+Date: Tue, 4 Apr 2023 16:10:03 +0000
+Subject: [PATCH] IWYU: add cstdint for uintptr_t in device::OneWriterSeqLock
+
+Bug: 957519
+Change-Id: I283f5b0cc34a268bea5dcb03c34726cbec905ea7
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/4394541
+Reviewed-by: Ken Rockot <rockot@google.com>
+Commit-Queue: Ken Rockot <rockot@google.com>
+Commit-Queue: Stephan Hartmann <stha09@googlemail.com>
+Cr-Commit-Position: refs/heads/main@{#1126023}
+---
+ device/base/synchronization/one_writer_seqlock.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/device/base/synchronization/one_writer_seqlock.h b/device/base/synchronization/one_writer_seqlock.h
+index 528b6683ca2..e37a16b81be 100644
+--- a/device/base/synchronization/one_writer_seqlock.h
++++ b/device/base/synchronization/one_writer_seqlock.h
+@@ -6,6 +6,7 @@
+ #define DEVICE_BASE_SYNCHRONIZATION_ONE_WRITER_SEQLOCK_H_
+ 
+ #include <atomic>
++#include <cstdint>
+ #include <type_traits>
+ 
+ #include "base/atomicops.h"

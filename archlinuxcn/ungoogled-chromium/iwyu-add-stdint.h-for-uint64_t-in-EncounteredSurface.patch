@@ -1,6 +1,6 @@
 From e920736d83fe9138c72569985fce37d9e0543c91 Mon Sep 17 00:00:00 2001
 From: Stephan Hartmann <stha09@googlemail.com>
-Date: Tue, 04 Apr 2023 14:51:19 +0000
+Date: Tue, 4 Apr 2023 14:51:19 +0000
 Subject: [PATCH] IWYU: add stdint.h for uint64_t in EncounteredSurfaceTracker
 
 Bug: 957519
@@ -10,9 +10,11 @@ Commit-Queue: Stephan Hartmann <stha09@googlemail.com>
 Reviewed-by: Antonio Sartori <antoniosartori@chromium.org>
 Cr-Commit-Position: refs/heads/main@{#1125978}
 ---
+ chrome/browser/privacy_budget/encountered_surface_tracker.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/chrome/browser/privacy_budget/encountered_surface_tracker.h b/chrome/browser/privacy_budget/encountered_surface_tracker.h
-index 012ca2c..32d0ac6 100644
+index 012ca2c5952..32d0ac6629e 100644
 --- a/chrome/browser/privacy_budget/encountered_surface_tracker.h
 +++ b/chrome/browser/privacy_budget/encountered_surface_tracker.h
 @@ -5,6 +5,8 @@

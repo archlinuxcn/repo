@@ -1,8 +1,6 @@
-https://pdfium-review.googlesource.com/c/pdfium/+/105890
-
 From 5d9acaac1abbbe45558f2bd6cbd3b3e9efde4414 Mon Sep 17 00:00:00 2001
 From: Stephan Hartmann <stha09@googlemail.com>
-Date: Wed, 05 Apr 2023 16:10:25 +0000
+Date: Wed, 5 Apr 2023 16:10:25 +0000
 Subject: [PATCH] IWYU: add stdint.h for uint32_t pdfium::annotation_flags
 
 Bug: chromium:957519
@@ -11,11 +9,13 @@ Reviewed-on: https://pdfium-review.googlesource.com/c/pdfium/+/105890
 Reviewed-by: Lei Zhang <thestig@chromium.org>
 Commit-Queue: Lei Zhang <thestig@chromium.org>
 ---
+ constants/annotation_flags.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/constants/annotation_flags.h b/constants/annotation_flags.h
-index 2ac244e..d44a0c1 100644
---- a/third_party/pdfium/constants/annotation_flags.h
-+++ b/third_party/pdfium/constants/annotation_flags.h
+index 2ac244e06..d44a0c13c 100644
+--- a/constants/annotation_flags.h
++++ b/constants/annotation_flags.h
 @@ -5,6 +5,8 @@
  #ifndef CONSTANTS_ANNOTATION_FLAGS_H_
  #define CONSTANTS_ANNOTATION_FLAGS_H_
@@ -25,4 +25,3 @@ index 2ac244e..d44a0c1 100644
  namespace pdfium {
  namespace annotation_flags {
  
-
