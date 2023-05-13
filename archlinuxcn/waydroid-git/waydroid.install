@@ -1,0 +1,27 @@
+post_install() {
+  echo " ● Enabling Waydroid Container..."
+  systemctl enable waydroid-container.service
+  post_upgrade
+}
+
+pre_upgrade() {
+  echo " ● Stoping Waydroid Container..."
+  systemctl stop waydroid-container.service
+}
+
+post_upgrade() {
+  echo " ● Starting Waydroid Container..."
+  systemctl daemon-reload
+  systemctl start waydroid-container.service
+}
+
+pre_remove() {
+  pre_upgrade
+  echo " ● Disabling Waydroid Container..."
+  systemctl disable waydroid-container.service
+}
+
+post_remove() {
+  echo " ● Optionally remove Waydroid images and data:"
+  echo "    sudo rm -rf /var/lib/waydroid/ ~/.local/share/{waydroid,applications/{W,w}aydroid*.desktop}"
+}

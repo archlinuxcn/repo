@@ -1,0 +1,34 @@
+# Maintainer: Sick Codes <info at sick dot codes>
+# Maintainer: Wachid Adi Nugroho <wachidadinugroho.maya@gmail.com>
+# Contributor: Danct12 <danct12@disroot.org>
+# Contributor: Bart Ribbers <bribbers@disroot.org>
+
+_pkgname=waydroid
+pkgname=$_pkgname-git
+pkgver=1.3.4.r43.gf4506ff
+pkgrel=1
+pkgdesc="A container-based approach to boot a full Android system on a regular Linux system"
+arch=('any')
+url="https://github.com/waydroid/waydroid"
+license=('GPL3')
+depends=('lxc' 'python-gbinder' 'python-gobject' 'nftables' 'dnsmasq' 'gtk3' 'dbus-python')
+makedepends=('git')
+optdepends=('waydroid-image: Android image for use with waydroid'
+            'python-pyclip: share clipboard with container')
+install="$_pkgname.install"
+source=("git+$url.git")
+sha256sums=('SKIP')
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+
+pkgver() {
+  cd "$_pkgname"
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+package() {
+  cd "$_pkgname"
+  make DESTDIR="$pkgdir/" install
+
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+}
