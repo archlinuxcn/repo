@@ -24,7 +24,7 @@ source=("https://github.com/draios/sysdig/archive/$pkgver/sysdig-$pkgver.tar.gz"
 sha256sums=('9af98cae7c38273f7429ba0df628c9745bd92c949f444e180b9dd800af14c6dd'
             '2a4b37c08bec4ba81326314831f341385aff267062e8d4483437958689662936'
             '3b659326176c314eee9115adac39a249dc4b9530511b344ea6a2b23236bb8386'
-            'b8cedef6766c691a8a92810eb459593d80070f0cf5dfc32cae2a80ec00639429'
+            '3392204c265ef46c2a1378fc2acbb74b2b440585de4c9127a007f97ce10f0cfa'
             'bb29a1dd7a854019e2408b98fd954e73263a47f6da637556a83885175a729034')
 conflicts=(sysdig)
 provides=(sysdig=$pkgver)
@@ -38,6 +38,8 @@ prepare() {
   patch -p1 -i "$srcdir"/falcosecurity-libs-nodownload.patch
 
   sed s/USE_BUNDLED_DEPS/USE_BUNDLED_NJSON/ -i cmake/modules/nlohmann-json.cmake
+# Fix build with abseil-cpp 2023
+  sed -e 's|-std=c++0x||' -i CMakeLists.txt -i ../libs-${_falcover}/cmake/modules/CompilerFlags.cmake
 }
 
 build() {
@@ -73,9 +75,6 @@ build() {
 package() {
   cd "$srcdir"/sysdig-$pkgver
 
-  install -dm755 "$pkgdir"/usr/share/licenses/$pkgname
-  install -m644 NOTICES COPYING "$pkgdir"/usr/share/licenses/$pkgname
-
   cd build
   make install DESTDIR="$pkgdir"
 
@@ -89,4 +88,7 @@ package() {
   mkdir -p "$pkgdir"/usr/src/sysdig-${pkgver}/bpf/
   install -Dm644 "$srcdir"/sysdig-$pkgver/build/driver/bpf/probe.o "$pkgdir"/usr/src/sysdig-${pkgver}/bpf/
   sed -i '/probe\.o/s/\<mv\>/cp --reflink=auto/' "$pkgdir"/usr/bin/scap-driver-loader
+
+  install -dm755 "$pkgdir"/usr/share/licenses/$pkgname
+  install -m644 "$srcdir"/sysdig-$pkgver/{NOTICES,COPYING} "$pkgdir"/usr/share/licenses/$pkgname
 }
