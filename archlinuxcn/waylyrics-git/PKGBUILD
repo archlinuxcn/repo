@@ -2,7 +2,7 @@
 pkgname=waylyrics-git
 _pkgname=waylyrics
 _appname="io.poly000.${_pkgname}"
-pkgver=0.1.0_r92.ga4c1a52
+pkgver=0.1.0_r96.gbec759a
 pkgrel=1
 pkgdesc="On screen lyrics for wayland with netease cloud music source"
 url="https://github.com/poly000/waylyrics"
@@ -45,11 +45,11 @@ build() {
     fi
 
     cargo build --locked --release --target-dir target
+    ./target/release/gen_config_example
 }
 
 package() {
     cd "$srcdir/$_pkgname"
-    cargo run --bin gen_config_example
     install -Dm644 config.toml "${pkgdir}/usr/share/${_pkgname}/config.toml"
     install -Dm755 target/release/${_pkgname} "${pkgdir}/usr/bin/${_pkgname}"
     install -Dm644 ${_appname}.gschema.xml "${pkgdir}/usr/share/glib-2.0/schemas/${_appname}.gschema.xml"
