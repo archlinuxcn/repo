@@ -1,17 +1,38 @@
+# Maintainer: Kimiblock Zhou <pn3535 at icloud dot com>
 pkgname=qcm-git
-pkgver=r46.c085302
+pkgver=r55.f39f015
 pkgrel=1
 pkgdesc="Qt client for netease cloud music "
 arch=('x86_64')
 url="https://github.com/hypengw/Qcm"
-License=('GPL2.0')
+license=('GPL2')
 depends=(
     'qt6-base'
     'hicolor-icon-theme'
     'curl'
     'openssl'
     'qt6-tools'
-    'qt6-multimedia')
+    'qt6-multimedia'
+    'qt6-declarative'
+    'gcc-libs'
+    'glibc'
+    'dbus'
+    'libnghttp2'
+    'libidn2'
+    'krb5'
+    'zstd'
+    'zlib'
+    'qt6-wayland'
+    'libx11'
+    'libxkbcommon'
+    'libpng'
+    'freetype2'
+    'icu'
+    'pcre2'
+    'gnutls'
+    'graphite'
+    'lz4'
+    'libgpg-error')
 makedepends=(
     'git'
     'cmake'
@@ -48,8 +69,6 @@ function package(){
 }
 
 function _info() {
-	export TERMINFO=/usr/lib/terminfo
-
 	if [ -f /usr/bin/pamac ]; then
 		echo "  ==> [Info]: $@"
 	else
