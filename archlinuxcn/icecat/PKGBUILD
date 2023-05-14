@@ -5,9 +5,9 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=102.10.0
+pkgver=102.11.0
 pkgrel=1
-_commit=15c6c2229a053cdcc064eda89cee07f18efac35d
+_commit=5a1894fc966840dc242110ec0459471c637a4675
 pkgdesc="GNU version of the Firefox browser."
 arch=(x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
@@ -26,14 +26,15 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
 options=(!emptydirs !makeflags !strip)
 
 source=(https://git.savannah.gnu.org/cgit/gnuzilla.git/snapshot/gnuzilla-${_commit}.tar.gz
-        icecat.desktop icecat-safe.desktop)
-        #'https://raw.githubusercontent.com/canonical/firefox-snap/5622734942524846fb0eb7108918c8cd8557fde3/patches/fix-ftbfs-newer-cbindgen.patch'
-        #'arc4random.patch::https://hg.mozilla.org/mozilla-central/raw-rev/970ebbe54477'
-        #'arc4random_buf.patch::https://hg.mozilla.org/mozilla-central/raw-rev/a61813bd9f0a')
+        icecat.desktop icecat-safe.desktop
+        missing_cstdint.patch::https://hg.mozilla.org/mozilla-central/raw-rev/61f052c26dd1
+        RsdparsaSdpGlue.patch)
 
-sha256sums=('49e1d42095d0e3f95cbd8e7356035828bed71222f26846631bfacf4be34f01e3'
+sha256sums=('8ea296e4237f3b1565cd9171abb4415c5be6a47622986645eaa5f6859c479497'
             'e00dbf01803cdd36fd9e1c0c018c19bb6f97e43016ea87062e6134bdc172bc7d'
-            '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208')
+            '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208'
+            'ca3cedc5edce26040d3caf735afa8744fe08f3a1695eb2cda3796f4f336632d3'
+            '2a12b187a8803b0c3a4385d4567e1debf8bfa3e17c4c8cefdf39fb7434d3d932')
 
 prepare() {
   cd gnuzilla-${_commit}
@@ -64,12 +65,9 @@ prepare() {
   bash makeicecat
   cd output/icecat-${pkgver}
 
-  # https://hg.mozilla.org/mozilla-central/rev/a61813bd9f0a
-  #patch -Np1 -i ../../../arc4random.patch
-  #patch -Np1 -i ../../../arc4random_buf.patch
-
-  # cbindgen
-  #patch -Np1 -i ../../../fix-ftbfs-newer-cbindgen.patch
+  # https://hg.mozilla.org/mozilla-central/rev/61f052c26dd1
+  patch -Np1 -i ../../../missing_cstdint.patch
+  patch -Np1 -i ../../../RsdparsaSdpGlue.patch
 
   # Patch to move files directly to /usr/lib/icecat. No more symlinks.
   sed -e 's;$(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME);g' -i config/baseconfig.mk
