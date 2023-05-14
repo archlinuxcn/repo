@@ -2,7 +2,7 @@
 
 _pkgname=olive
 pkgname=$_pkgname-git
-pkgver=continuous.r2593.ge9c97407a
+pkgver=continuous.r2600.g8ca167236
 pkgrel=1
 arch=('x86_64')
 pkgdesc="Free non-linear video editor"
@@ -20,7 +20,7 @@ makedepends=('cmake' 'git' 'ninja' 'qt5-svg' 'qt5-tools')
 provides=('olive')
 conflicts=('olive')
 source=('git+https://github.com/olive-editor/olive.git'
-        'git+https://github.com/KDAB/KDDockWidgets.git'
+        'git+https://github.com/olive-editor/KDDockWidgets.git'
         'git+https://github.com/olive-editor/core.git')
 sha512sums=('SKIP'
             'SKIP'
