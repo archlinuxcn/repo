@@ -48,6 +48,8 @@ function package(){
 }
 
 function _info() {
+	export TERMINFO=/usr/lib/terminfo
+
 	if [ -f /usr/bin/pamac ]; then
 		echo "  ==> [Info]: $@"
 	else
