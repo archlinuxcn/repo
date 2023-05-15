@@ -3,7 +3,7 @@
 
 pkgname=libuvc
 pkgver=0.0.7
-pkgrel=1
+pkgrel=2
 pkgdesc="a cross-platform library for USB video devices"
 arch=('i686' 'x86_64' 'aarch64')
 url="https://int80k.com/libuvc/"
@@ -12,6 +12,8 @@ depends=('glibc' 'libusb' 'libjpeg')
 makedepends=('cmake')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/ktossell/libuvc/archive/v$pkgver.tar.gz")
 sha256sums=('7c6ba79723ad5d0ccdfbe6cadcfbd03f9f75b701d7ba96631eb1fd929a86ee72')
+
+options=(staticlibs)
 
 prepare() {
 	rm -rf "$srcdir/build"
