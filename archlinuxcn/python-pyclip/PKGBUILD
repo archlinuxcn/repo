@@ -4,11 +4,12 @@
 _pkgname=pyclip
 pkgname=python-${_pkgname}
 pkgver=0.7.0
-pkgrel=3
+pkgrel=4
 pkgdesc='Cross-platform clipboard utilities supporting both binary and text data'
 arch=(any)
 url="https://pypi.org/project/${_pkgname}/"
 license=(Apache)
+depends=(python)
 makedepends=(python-setuptools)
 optdepends=('xclip: Support for X11'
 			'wl-clipboard: Support for Wayland')
