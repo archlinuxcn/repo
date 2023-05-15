@@ -4,7 +4,7 @@
 
 pkgname=proton-ge-custom-opt
 _pkgname=proton-ge-custom
-pkgver=GE.Proton8.1
+pkgver=GE.Proton8.3
 _srctag=${pkgver//./-} # _srctag=GE-Proton7-32
 _geckover=2.47.3
 _monover=7.4.1
@@ -68,7 +68,6 @@ makedepends=(
              libpng                lib32-libpng
              gnutls                lib32-gnutls
              libxcb                lib32-libxcb
-             libldap               lib32-libldap
              mpg123                lib32-mpg123
              v4l-utils             lib32-v4l-utils
              mesa                  lib32-mesa
@@ -113,7 +112,6 @@ optdepends=(
 
             giflib                lib32-giflib
             libpng                lib32-libpng
-            libldap               lib32-libldap
             gnutls                lib32-gnutls
             mpg123                lib32-mpg123
             v4l-utils             lib32-v4l-utils
@@ -160,6 +158,7 @@ source=(
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     0001-AUR-PKGBUILD-changes.patch
+    fix_hwnd_changes_meaning.patch
     launcher.sh
 )
 noextract=(
@@ -212,14 +211,12 @@ prepare() {
     rm -rf wrappers && mkdir wrappers
     _make_wrappers
 
-    [ ! -d gecko ] && mkdir gecko
-    mv wine-gecko-${_geckover}-x86{,_64}.tar.xz gecko/
-
-    [ ! -d mono ] && mkdir mono
-    mv wine-mono-${_monover}-x86.tar.xz mono/
-
     [ ! -d build ] && mkdir build
     cd proton-ge-custom
+
+    [ ! -d contrib ] && mkdir -p contrib
+    mv "$srcdir"/wine-gecko-${_geckover}-x86{,_64}.tar.xz contrib/
+    mv "$srcdir"/wine-mono-${_monover}-x86.tar.xz contrib/
 
     _submodules=(
         wine-valve::wine
@@ -300,17 +297,10 @@ prepare() {
     popd
     done
 
-    ./patches/protonprep-valve-staging.sh || true # workarround retrun 1 problem
-
-    pushd wine
-        autoreconf -fiv
-        # From Arch Wine
-        sed 's|OpenCL/opencl.h|CL/opencl.h|g' -i configure*
-        # Fix openldap 2.5+ detection
-        sed 's/-lldap_r/-lldap/' -i configure
-    popd
+    ./patches/protonprep-valve-staging.sh || true # workaround applied patch
 
     patch -p1 -i "$srcdir"/0001-AUR-PKGBUILD-changes.patch
+    patch -p1 -i "$srcdir"/fix_hwnd_changes_meaning.patch
 }
 
 build() {
@@ -451,6 +441,7 @@ sha256sums=('SKIP'
             '08d318f3dd6440a8a777cf044ccab039b0d9c8809991d2180eb3c9f903135db3'
             '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
             '1286afc67b0a329f5e2d98d9e803ca5906a841ad5486e9b3b1fefa1124b15622'
-            '3024f86e54615e668055d3f9fb8f51dd43cefe52eb3d56e0e58d2c4fb30a2690'
+            '22cd3769e7469c6a2412f9ddc2399ffd6b17d330462f9f2c4d5b8f74ad654c50'
+            '20824bb565fefcad4aa978c54e0f8b9d9d17b7b52fb03fc87943150de148f06f'
             '85d41eb3879cd69cbc711923611c3a9703f8ef946df526956b484d0c560c4b5f')
 

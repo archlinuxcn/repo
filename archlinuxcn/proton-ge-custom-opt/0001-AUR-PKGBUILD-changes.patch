@@ -1,11 +1,11 @@
-From fb763fd79b4166bd3f434cbbaebd6d8a688c3d33 Mon Sep 17 00:00:00 2001
+From 5238fb7a02b5be6c8b6e5258ddf7b4d7cf0ea8a8 Mon Sep 17 00:00:00 2001
 From: Coelacanthus <CoelacanthusHex@gmail.com>
 Date: Mon, 1 May 2023 16:08:34 +0800
 Subject: [PATCH] AUR PKGBUILD changes
 
 Signed-off-by: Coelacanthus <CoelacanthusHex@gmail.com>
 ---
- Makefile.in             | 39 ++++++++++++++++++++++++++++++---------
+ Makefile.in             | 41 +++++++++++++++++++++++++++++++----------
  configure.sh            |  2 ++
  make/rules-autoconf.mk  |  4 ++--
  make/rules-cargo.mk     |  2 +-
@@ -15,10 +15,10 @@ Signed-off-by: Coelacanthus <CoelacanthusHex@gmail.com>
  make/rules-meson.mk     |  4 +++-
  make/rules-winemaker.mk |  2 +-
  proton                  |  7 ++-----
- 10 files changed, 56 insertions(+), 30 deletions(-)
+ 10 files changed, 57 insertions(+), 31 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 7ee81fe9..21585d24 100644
+index 7ee81fe9..8dc48413 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -50,7 +50,8 @@ else
@@ -52,6 +52,15 @@ index 7ee81fe9..21585d24 100644
  $(DST_DIR):
  	mkdir -p $@
  
+@@ -68,7 +83,7 @@ all: all-dist | $(DST_DIR)
+ all-dist: | $(DST_DIR)
+ dist: all
+ 
+-J = $(patsubst -j%,%,$(filter -j%,$(MAKEFLAGS)))
++J = $(patsubst -j%,%,$(SUBJOBS))
+ 
+ include $(SRC)/make/utility.mk
+ include $(SRC)/make/rules-source.mk
 @@ -265,6 +280,7 @@ $(eval $(call rules-meson,gst_good,64))
  ##
  
@@ -307,7 +316,7 @@ index 5c3b59a3..ed6589e0 100644
  	winebuild --$(lastword $(subst ., ,$(4))) --fake-module -E "$(basename $(4)).spec" -o "$(4).fake"
  	mkdir -p $$($(2)_LIBDIR$(3))/$(LIBDIR_WINE_$(3))
 diff --git a/proton b/proton
-index 9b4a92b0..20d5fbf0 100755
+index 23d27c91..91285d9d 100755
 --- a/proton
 +++ b/proton
 @@ -423,7 +423,6 @@ class Proton:
@@ -318,7 +327,7 @@ index 9b4a92b0..20d5fbf0 100755
  
      def path(self, d):
          return self.base_dir + d
-@@ -1798,9 +1797,6 @@ if __name__ == "__main__":
+@@ -1818,9 +1817,6 @@ if __name__ == "__main__":
  
      g_proton = Proton(os.path.dirname(sys.argv[0]))
  
@@ -328,7 +337,7 @@ index 9b4a92b0..20d5fbf0 100755
      g_compatdata = CompatData(os.environ["STEAM_COMPAT_DATA_PATH"])
  
      g_session = Session()
-@@ -1808,7 +1804,8 @@ if __name__ == "__main__":
+@@ -1828,7 +1824,8 @@ if __name__ == "__main__":
      g_session.init_wine()
  
      if g_proton.missing_default_prefix():
