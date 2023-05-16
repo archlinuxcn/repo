@@ -2,8 +2,8 @@
 # Contributor: Benjamin Klettbach <b.klettbach@gmail.com>
 
 pkgname=obs-studio
-pkgver=29.0.2
-pkgrel=5
+pkgver=29.1.1
+pkgrel=1
 pkgdesc="Free, open source software for live streaming and recording"
 arch=(aarch64 x86_64)
 url="https://obsproject.com"
@@ -20,18 +20,15 @@ optdepends=('libfdk-aac: FDK AAC codec support'
             'v4l2loopback-dkms: virtual camera support')
 source=($pkgname-$pkgver.tar.gz::https://github.com/jp9000/obs-studio/archive/$pkgver.tar.gz
         fix_python_binary_loading.patch
-        ignore_unused_submodules.patch
-        https://github.com/obsproject/obs-studio/commit/2e79d4c9.patch)
-sha256sums=('0e6260800b80c3fc9f67c4c3fb12ffae740ab1dd188e526a55e0fc8949168db2'
+        ignore_unused_submodules.patch)
+sha256sums=('9a37148449d715b3c7cc3e622c291aba9fa45bd354a39453b3e922eb558cf21e'
             'bdfbd062f080bc925588aec1989bb1df34bf779cc2fc08ac27236679cf612abd'
-            '60b0ee1f78df632e1a8c13cb0a7a5772b2a4b092c4a2a78f23464a7d239557c3'
-            '96ea913149377b324d132aa56964a72e5263e06a8b8d2103c1708b04752f3b9d')
+            '60b0ee1f78df632e1a8c13cb0a7a5772b2a4b092c4a2a78f23464a7d239557c3')
 
 prepare() {
   cd $pkgname-$pkgver
   patch -Np1 < "$srcdir"/fix_python_binary_loading.patch
   patch -Np1 < "$srcdir"/ignore_unused_submodules.patch
-  patch -Np1 < "$srcdir"/2e79d4c9.patch # Fix build with FFmpeg 6
 }
 
 build() {
