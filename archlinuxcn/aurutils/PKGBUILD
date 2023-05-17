@@ -1,8 +1,8 @@
 # Maintainer: Alad Wenter <https://github.com/AladW>
 # Co-Maintainer: Cedric Girard <cgirard [dot] archlinux [at] valinor [dot] fr>
 pkgname=aurutils
-pkgver=14
-pkgrel=2
+pkgver=14.1
+pkgrel=1
 pkgdesc='helper tools for the arch user repository'
 url='https://github.com/AladW/aurutils'
 arch=('any')
@@ -10,7 +10,7 @@ license=('custom:ISC')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
 changelog=aurutils.changelog
 install=aurutils.install
-sha256sums=('22cee3d4f158ee0c4bd7a7bf7893a9ce4b48dd5466b8769762f72397abf7ea76')
+sha256sums=('41f7b0ccfeaf387430d9df8e28f383e964ebb2a849e3e42eabfb24afb4d24bbd')
 depends=('git' 'pacutils' 'curl' 'perl')
 optdepends=('bash-completion: bash completion'
             'zsh: zsh completion'
