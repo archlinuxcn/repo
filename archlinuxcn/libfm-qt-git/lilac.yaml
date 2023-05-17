@@ -1,15 +1,19 @@
 maintainers:
   - github: yan12125
     email: f2q9sf79f9owdg2o@chyen.cc
+
 build_prefix: extra-x86_64
+
 repo_depends:
   - lxqt-build-tools-git
+  - lxqt-menu-data-git
 
 pre_build_script: |
-    vcs_update()
+    aur_pre_build(maintainers="yan12125")
+
 post_build_script: |
-    git_pkgbuild_commit()
-    update_aur_repo()
+    aur_post_build()
+
 update_on:
   - source: github
     github: lxqt/libfm-qt
