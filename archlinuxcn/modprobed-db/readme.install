@@ -1,0 +1,9 @@
+# $1: The new package version
+# $2: The old package version
+
+post_upgrade() {
+	if [ $(vercmp $2 2.33) -lt 0 ]; then
+		echo '--> The system service and timer have been deprecated in favor of user flavors.'
+		echo '--> See the manpage of modprobed for details.'
+	fi
+}
