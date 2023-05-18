@@ -1,9 +1,9 @@
-# Maintainer: lsf <lsf at pfho dot net>
+# Maintainer: ohfp/lsf <lsf at pfho dot net>
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=112.0.2
-pkgrel=1
+pkgver=113.0
+pkgrel=3
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
 arch=(x86_64 aarch64)
@@ -75,14 +75,14 @@ source=(
   $pkgname.desktop
   "default192x192.png"
   "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
-  "${_arch_git_blob}/ab757a79f364d7b0a4269ae401210664e3a069a1/trunk/0001-Bug-1803016-Wayland-Don-t-commit-wl_buffer-if-buffer.patch"
+  "${_arch_git_blob}/f6612579b7bf2096a560335715daaaab3e701369/trunk/0001-Bug-1831691-Use-the-vendored-glean_parser-for-all-of.patch"
 )
 
-sha256sums=('39dce2a1704f287d5163bf070aa18e1c02e7d84f1253373f544cb283dd231c9f'
+sha256sums=('7d0aefffb2540de0772fddf3faa9d54794781f59053cfc152be51dc2e6898c0b'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1'
             '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d'
-            'bfe15651a99ac6d0037867c9db00a0d4340353cdc0ac4a39e43ad61cc2589ed6')
+            '1976c0c5e98b0f67e83de778a4fd7729de9b140efa47b77b5879ea2e907987e9')
 
 validpgpkeys=('034F7776EF5E0C613D2F7934D29FBD5F93C0CFC3') # maltej(?)
 
@@ -161,13 +161,9 @@ END
 fi
 
   # upstream Arch fixes
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
-  # patch -Np1 -i ${srcdir}/0001-Use-remoting-name-for-GDK-application-names.patch
 
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1803016
-  patch -Np1 -i ../0001-Bug-1803016-Wayland-Don-t-commit-wl_buffer-if-buffer.patch
-
-  # upstream patches from gentoo
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1831691
+  patch -Np1 -i ../0001-Bug-1831691-Use-the-vendored-glean_parser-for-all-of.patch
 
   # pgo improvements
   # TODO: test if still required
