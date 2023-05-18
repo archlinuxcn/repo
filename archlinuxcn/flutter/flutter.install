@@ -6,6 +6,8 @@ pre_upgrade() {
     echo "Cleaning up previous flutter installation."
     rm -rf "/opt/flutter"
   fi
+
+  rm -rf "/opt/flutter/.git"
 }
 
 post_upgrade() {
@@ -18,4 +20,6 @@ post_upgrade() {
       groupdel "flutterusers"
     fi
   fi
+
+  mv "/opt/flutter/.git-refs" "/opt/flutter/.git"
 }
