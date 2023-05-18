@@ -1,0 +1,21 @@
+post_install() {
+  echo ""
+  echo "Start the hotspot service on startup (using your saved configuration) with:"
+  echo "systemctl enable --now create_ap"
+  echo ""
+}
+
+post_upgrade() {
+
+  # Remove old file from previous versions if existing
+  if [ -f /etc/sudoers.d/create_ap ]; then
+    rm /etc/sudoers.d/create_ap
+  fi
+}
+
+post_remove() {
+  echo ""
+  echo "Optionally remove config file:"
+  echo "sudo rm /etc/wh.config"
+  echo ""
+}
