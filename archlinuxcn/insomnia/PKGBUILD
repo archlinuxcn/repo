@@ -4,7 +4,7 @@
 # Contributor: vscncls <lucaslou4@protonmail.com>
 
 pkgname=insomnia
-pkgver=2023.2.1
+pkgver=2023.2.2
 pkgrel=1
 _nodeversion=12.18.3
 pkgdesc="Cross-platform HTTP and GraphQL Client"
@@ -17,7 +17,7 @@ source=(
   "https://github.com/Kong/insomnia/archive/refs/tags/core@${pkgver}.tar.gz"
   "insomnia.desktop"
 )
-b2sums=('f62571a33cc91936279f39b91769b8038e084f18346b1deb4d8c9a9e0ecaf99b8b221b70055743f7e381803458020c2a37506eb99964c81a941ecd384e96196f'
+b2sums=('3143878c1dee7344cc25e45c32f997417154b527cfc0c3e6c2cc84c7001e93c16ee691c087a8a4f0c23fecc3fc1709ab424d5572bc8ce389ad47f39bfc96f543'
         '38c2edd681b012931e25498a4a65007cc2a2152c9bbc5505dbb7cf03e1143a7365c41e9ad7eb2318c8ea894dccad0e0b6601cf76f680ea4085d12b5059e61a6e')
 
 _ensure_local_nvm() {
