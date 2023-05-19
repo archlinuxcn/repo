@@ -22,7 +22,7 @@ def pre_build():
     elif line.startswith('sha512sums=('):
       sums = True
     elif sums and line.endswith("')"):
-      line = line.replace(')', "\n            '58670e99749e9f6157171ec186c195f8e21824d49c8ef97613b4c50a2853849297d553458567893fc6792159de2c4b0dede9a0abfc606e4c22249b8b4a84643d')")
+      line = line.replace(')', "\n            '646dfd6ec62fb9ddbfb27aac0ac80d87926fbc3360bb53cca942622e95d1ec380f0b5efdfd45bbe1cdce72661b7b36b15ffb7874b1b4269e3bd56a14ec0d2166')")
       sums = False
     elif line.startswith('install='):
       line += '\nprovides=(wine=$pkgver)\nconflicts=(wine)'
