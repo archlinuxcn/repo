@@ -1,6 +1,6 @@
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
-pkgver=2.10.18
+pkgver=2.10.19
 groups=('joplin')
 pkgrel=1
 _electronVersion=19
@@ -15,12 +15,14 @@ source=(
     "joplin-desktop.desktop"
     "joplin-${pkgver}.tar.gz::https://github.com/laurent22/joplin/archive/v${pkgver}.tar.gz"
     "00-fix-test.patch::https://github.com/laurent22/joplin/commit/35037e2dc9e033f44163fde7e0b12356cb1d0503.patch"
+    "01-fix-test.patch::https://github.com/laurent22/joplin/commit/b99ba85acd02213ed0c8d30d3d2468f2ff9b4ee9.patch"
 )
 sha256sums=(
     'SKIP'
     'SKIP'
-    'd3f0d39596110926a7e557bd06783f5b4d24fff25ef2f14ee51afffaa4984a96'
+    'c347e038c75292d9aebca779d8f6444699fb46dbb56edd09c8cba76773ef7119'
     '774aac406eed0c5307572935bf14f5641fa2b5cbdbff9b69b75c85c1f2bb08fc'
+    'ca87e580ff2be74493a17527dae460eb5b79639ae43cdfe7ab691287144be46a'
 )
 
 _setup_env() {
@@ -39,6 +41,7 @@ prepare() {
 
     # Fix test cases (which was committed after the release)
     patch -Np1 < ../00-fix-test.patch
+    patch -Np1 < ../01-fix-test.patch
 
     # Delete unused components
     rm -r "packages/app-mobile" "packages/app-clipper" "packages/server"
