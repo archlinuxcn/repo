@@ -1,19 +1,10 @@
 # For DEV9 netplay support
 post_install()
 {
-  setcap 'CAP_NET_RAW+eip CAP_NET_ADMIN+eip' /usr/bin/pcsx2-qt
-
-  cd /usr/share/PCSX2/resources
-  sudo curl -O -L https://github.com/PCSX2/pcsx2_patches/releases/download/latest/cheats_ni.zip
-  sudo curl -O -L https://github.com/PCSX2/pcsx2_patches/releases/download/latest/cheats_ws.zip
+  setcap 'CAP_NET_RAW+eip CAP_NET_ADMIN+eip' /opt/pcsx2/pcsx2-qt
 }
 
 post_upgrade()
 {
-  setcap 'CAP_NET_RAW+eip CAP_NET_ADMIN+eip' /usr/bin/pcsx2-qt
-  cd /usr/share/PCSX2/resources
-  sudo rm cheats_ws.zip
-  sudo rm cheats_ni.zip
-  sudo curl -O -L https://github.com/PCSX2/pcsx2_patches/releases/download/latest/cheats_ni.zip
-  sudo curl -O -L https://github.com/PCSX2/pcsx2_patches/releases/download/latest/cheats_ws.zip
+  setcap 'CAP_NET_RAW+eip CAP_NET_ADMIN+eip' /opt/pcsx2/pcsx2-qt
 }

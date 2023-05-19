@@ -3,7 +3,7 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.4498.r0.gb34606c9ce
+pkgver=1.7.4519.r0.g8de0eb3c0
 pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
@@ -21,43 +21,46 @@ OPTIONS+=(
   epoch = 1
 )
 
-depends=('rapidyaml>=0.4')
 
 depends=(
-  libaio
-  libjpeg-turbo
-  libpcap
-  libzip
-  libgl # For Steam Deck
-  xorg-xrandr # For Steam Deck
-  libxrender # For Steam Deck
-  linux-api-headers # For Steam Deck
-  libpulse
-  portaudio
-  libsamplerate
-  sdl2
-  rapidyaml
-  qt6-base
-  qt6-wayland
-  qt6-tools
-  qt6-svg
-  soundtouch
-  wayland
-  zstd
-  ffmpeg
-  fmt
+    libaio
+    libpcap
+    libglvnd
+    libxrandr
+    alsa-lib
+    ffmpeg
+    sdl2
+    qt6-base
+    qt6-svg
+    soundtouch
+    wayland
+    libpng
+    hicolor-icon-theme
+    xcb-util-cursor
+    fmt
+    libzip
+    rapidyaml
+    libbacktrace-git
+    openssl
 )
+
 makedepends=(
-  cmake
-  clang
-  lld
-  llvm
-  git
-  xorgproto
-  ninja
-  swig
-  python
-  vulkan-headers
+    cmake
+    clang
+    lld
+    llvm
+    git
+    ninja
+    libpulse
+    p7zip
+    qt6-wayland
+    qt6-tools
+    python
+)
+
+optdepends=(
+    'qt6-wayland: Wayland support'
+    'libpulse: Pulseaudio support'
 )
 
 provides=(pcsx2-qt)
@@ -66,16 +69,21 @@ conflicts=(pcsx2)
 
 source=(
 git+https://github.com/PCSX2/pcsx2.git
-0001-Fix-resources-Fix-CMake.patch
+git+https://github.com/PCSX2/pcsx2_patches.git
+pcsx2-qt.sh
 )
 
-sha256sums=('SKIP'
-            'b69b3369e62bee6b6063b49621144343bb9ba81fd51f38e5e9bee4efbc731230')
+install=post.install
+
+options=(debug !strip !lto)
+
+b2sums=('SKIP'
+        'SKIP'
+        '3f353f4f8e9ad778dbb972522f08766bfd7d4bc9cad57cd2154f9c8a91e07b28124491f6026534145491ca1df75060dfcff2005c8aa42d25289e3292a91dc0dd')
 prepare()
 {
   cd $srcdir/pcsx2
   git submodule update --init --recursive
-  git apply -3 "${srcdir}/0001-Fix-resources-Fix-CMake.patch"
 }
 
 pkgver()
@@ -86,33 +94,40 @@ pkgver()
 
 build()
 {
-  mkdir -p build
-  cd build
-
-  cmake ../pcsx2 \
+  cmake -S pcsx2 -B build\
+    -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
     -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
     -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+    -DUSE_VULKAN=ON \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+    -DX11_API=ON \
     -DWAYLAND_API=ON \
     -DQT_BUILD=ON \
     -DUSE_VULKAN=ON \
+    -DUSE_SYSTEM_LIBS=ON \
     -DDISABLE_ADVANCE_SIMD=ON \
-    -GNinja \
     -DPACKAGE_MODE=ON
-  ninja -j$(nproc)
+  ninja -j$(nproc) -C build -v
 
-  cd ..
-  cp -r pcsx2/.github/workflows/scripts/linux/pcsx2-qt.desktop build/bin/PCSX2.desktop
+  7z a -r cheats_ni.zip pcsx2_patches/cheats_ni/*
+  7z a -r cheats_ws.zip pcsx2_patches/cheats_ws/*
 }
 
-package()
-{
-    DESTDIR="${pkgdir}" cmake --install build
+package() {
+    install -dm755  "${pkgdir}"/opt/
+    cp -r build/bin "${pkgdir}"/opt/"${pkgname%-git}"
+    install -Dm755 pcsx2-qt.sh "$pkgdir"/usr/bin/pcsx2-qt
+    install -Dm644 pcsx2/.github/workflows/scripts/linux/pcsx2-qt.desktop \
+    "${pkgdir}"/usr/share/applications/PCSX2.desktop
+    install -Dm644 pcsx2/pcsx2/Resources/AppIcon64.png \
+    "${pkgdir}"/usr/share/icons/hicolor/64x64/apps/PCSX2.png
+    install -Dm644 -t "${pkgdir}"/opt/"${pkgname%-git}"/resources/ cheats_ni.zip
+    install -Dm644 -t "${pkgdir}"/opt/"${pkgname%-git}"/resources/ cheats_ws.zip
 }
-
 # vim: ts=2 sw=2 et:
 
