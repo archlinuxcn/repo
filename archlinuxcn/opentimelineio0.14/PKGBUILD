@@ -1,9 +1,11 @@
 # Maintainer: Tércio Martins <echo dGVyY2lvd2VuZGVsQGdtYWlsLmNvbQo= | base64 -d
 # Contributor: Antonio Rojas <arojas@archlinux.org>
 
+_rapidjson_commit=00dbcf2c6e03c47d6c399338b6de060c71356464
+
 pkgname=opentimelineio0.14
 pkgver=0.14.1
-pkgrel=4
+pkgrel=5
 pkgdesc='Open Source API and interchange format for editorial timeline information'
 url='http://opentimeline.io/'
 license=(Apache)
@@ -11,17 +13,19 @@ arch=(x86_64)
 provides=(opentimelineio)
 conflicts=(opentimelineio)
 depends=(python-aaf2)
-makedepends=(cmake python-pip python-setuptools pybind11 git)
+makedepends=(cmake python-pip python-setuptools pybind11)
 source=(https://github.com/PixarAnimationStudios/OpenTimelineIO/archive/v$pkgver/$pkgname-$pkgver.tar.gz
-        git+https://github.com/Tencent/rapidjson#commit=66eb606
+        rapidjson-$_rapidjson_commit.tar.gz::https://github.com/Tencent/rapidjson/archive/$_rapidjson_commit.tar.gz
         opentimelineio-c++17.patch)
 sha256sums=('04c0a5c2f0639a0a1e9745d40cdb9e86f966c85f19880e8ca614699175a93554'
             'SKIP'
             '36650ae9ab93af5ea9006e3e074a5f33106378dc353ec18345615c1c5f5c0fdc')
 
 prepare() {
-  mv rapidjson OpenTimelineIO-$pkgver/src/deps
-  sed -e '/deps/d' -i OpenTimelineIO-$pkgver/CMakeLists.txt # Unbundle pybind11
+  tar -xzf "rapidjson-${_rapidjson_commit}.tar.gz" --strip 1 \
+      -C   "OpenTimelineIO-$pkgver/src/deps/rapidjson"
+  # Unbundle pybind11
+  sed -e '/deps/d' -i OpenTimelineIO-$pkgver/CMakeLists.txt
   sed -e '1 i\find_package(pybind11)' -i OpenTimelineIO-$pkgver/src/py-opentimelineio/opentime-bindings/CMakeLists.txt \
                                       -i OpenTimelineIO-$pkgver/src/py-opentimelineio/opentimelineio-bindings/CMakeLists.txt
 
@@ -45,6 +49,6 @@ package() {
   DESTDIR="$pkgdir" cmake --install build
 
   cd OpenTimelineIO-$pkgver
-  DESTDIR="$pkgdir" python setup.py install --root="$pkgdir" --optimize=1
+  python setup.py install --root="$pkgdir" --optimize=1
   rm -fr "$pkgdir"/build
 }
