@@ -22,7 +22,8 @@ pkgver() {
 prepare() {
   cd NodeJS.jl
 
-  cp -n ../nodejs.jl src/NodeJS.jl
+  rm -v src/NodeJS.jl
+  cp -nv ../nodejs.jl src/NodeJS.jl
   rm Artifacts.toml
 }
 
