@@ -4,7 +4,7 @@
      cs.lpszClass      = className;
      cs.dwExStyle      = exStyle;
  
-+    if (exStyle == 0x080800a0) // WeChat/WxWork shadow hwnd
++    if (exStyle == 0x080800a0 && style != 0x80000000 ) // WeChat/WxWork shadow hwnd ; fix can not open chat info
 +    {
 +        FIXME("hack %x\n", cs.dwExStyle);
 +        return NULL;
