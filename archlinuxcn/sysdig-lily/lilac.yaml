@@ -5,7 +5,6 @@ update_on:
 - source: alpm
   strip_release: true
   alpm: sysdig
-  repo: community
 - source: cmd
   cmd: LANG=C pacman --dbpath ~/.lilac/pacmandb -Si linux-lily | awk '$1 == "Version"
     { print $3 }'
