@@ -1,0 +1,16 @@
+post_upgrade() {
+    echo "If you haven't already, please manually add 'bcachefs' to mkinitcpio.conf variables 'MODULES=()', 'BINARIES=()', and 'HOOKS=()'"
+    echo "and then run 'mkinitcpio -p linux-bcachefs-git'"
+}
+
+post_install() {
+    echo "Please manually add 'bcachefs' to mkinitcpio.conf variables 'MODULES=()', 'BINARIES=()', and 'HOOKS=()'"
+    echo "and then run 'mkinitcpio -p linux-bcachefs-git'"
+}
+
+post_remove() {
+    echo "Please manually remove 'bcachefs' to mkinitcpio.conf variables 'MODULES=()', 'BINARIES=()', and 'HOOKS=()'"
+    echo "and then run 'mkinitcpio -p linux-bcachefs-git'"
+}
+
+# vim:set ft=sh ts=8 sts=2 sw=2 et:
