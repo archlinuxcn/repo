@@ -1,0 +1,53 @@
+From 02d72bb447df72f35a0bf5557d527914614d4a73 Mon Sep 17 00:00:00 2001
+From: Artem Polishchuk <ego.cordatus@gmail.com>
+Date: Wed, 15 Mar 2023 21:49:39 +0200
+Subject: [PATCH] Fix building with GCC 13
+
+https://gcc.gnu.org/gcc-13/porting_to.html
+
+fix: #3225
+---
+ .../ENESMBusInterface/ENESMBusInterface_SpectrixS40G.cpp         | 1 +
+ Controllers/SteelSeriesController/SteelSeriesMouseController.h   | 1 +
+ Controllers/SteelSeriesController/SteelSeriesRivalController.cpp | 1 +
+ 3 files changed, 3 insertions(+)
+
+diff --git a/Controllers/ENESMBusController/ENESMBusInterface/ENESMBusInterface_SpectrixS40G.cpp b/Controllers/ENESMBusController/ENESMBusInterface/ENESMBusInterface_SpectrixS40G.cpp
+index 2bdc37ad6..17080edb8 100644
+--- a/Controllers/ENESMBusController/ENESMBusInterface/ENESMBusInterface_SpectrixS40G.cpp
++++ b/Controllers/ENESMBusController/ENESMBusInterface/ENESMBusInterface_SpectrixS40G.cpp
+@@ -10,6 +10,7 @@
+ #include "ENESMBusInterface_SpectrixS40G.h"
+ #include <sys/ioctl.h>
+ #include <cstring>
++#include <cstdint>
+ 
+ /*---------------------------------------------------------------------*\
+ | Functions for submitting NVME admin passthrough command taken from    |
+diff --git a/Controllers/SteelSeriesController/SteelSeriesMouseController.h b/Controllers/SteelSeriesController/SteelSeriesMouseController.h
+index 64df7a1cc..a4e561a35 100644
+--- a/Controllers/SteelSeriesController/SteelSeriesMouseController.h
++++ b/Controllers/SteelSeriesController/SteelSeriesMouseController.h
+@@ -10,6 +10,7 @@
+ #include <hidapi/hidapi.h>
+ #include <vector>
+ #include "SteelSeriesGeneric.h"
++#include <cstdint>
+ 
+ #pragma once
+ 
+diff --git a/Controllers/SteelSeriesController/SteelSeriesRivalController.cpp b/Controllers/SteelSeriesController/SteelSeriesRivalController.cpp
+index 8f0cd4cdb..367e9175b 100644
+--- a/Controllers/SteelSeriesController/SteelSeriesRivalController.cpp
++++ b/Controllers/SteelSeriesController/SteelSeriesRivalController.cpp
+@@ -11,6 +11,7 @@
+ #include <cstring>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <cstdint>
+ 
+ static void send_usb_msg(hid_device* dev, char * data_pkt, unsigned int size)
+ {
+-- 
+GitLab
+
