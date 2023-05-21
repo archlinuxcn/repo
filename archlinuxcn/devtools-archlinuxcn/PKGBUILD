@@ -1,19 +1,43 @@
 # Maintainer: Levente Polyak <anthraxx[at]archlinux[dot]org>
+# Contributor: Pierre Schmitz <pierre@archlinux.de>
 
 _pkgname=devtools
 pkgname=devtools-archlinuxcn
-pkgver=20230307
-pkgrel=2
+epoch=1
+pkgver=1.0.0
+pkgrel=1
 # curl https://api.github.com/repos/archlinuxcn/devtools/git/ref/tags/$pkgver-archlinuxcn1 | jq -r .object.sha
-_tag=d54651181bc857b1839f8cbab446389c936be459
+_tag=ce9bc2df9a69efff87581b6deaa308fdba28cc36
 _upstream_pkgrel=1
 pkgdesc='Tools for Arch Linux package maintainers, archlinuxcn fork'
 arch=('any')
 license=('GPL')
 url='https://gitlab.archlinux.org/archlinux/devtools'
-depends=('bash' 'openssh' 'subversion' 'rsync' 'arch-install-scripts'
-         'git' 'bzr' 'mercurial' 'diffutils' 'util-linux' 'awk')
-makedepends=('asciidoc')
+depends=(
+  arch-install-scripts
+  awk
+  bash
+  binutils
+  coreutils
+  diffutils
+  findutils
+  grep
+  jq
+  openssh
+  parallel
+  rsync
+  sed
+  util-linux
+
+  bzr
+  git
+  mercurial
+  subversion
+)
+makedepends=(
+  asciidoc
+  shellcheck
+)
 optdepends=('btrfs-progs: btrfs support')
 provides=("devtools=$pkgver-$pkgrel")
 conflicts=("devtools")
@@ -30,7 +54,7 @@ pkgver() {
 
 build() {
   cd ${pkgname}
-  make BUILDTOOLVER="${pkgver}-${_upstream_pkgrel}-${arch}" PREFIX=/usr
+  make BUILDTOOLVER="${epoch}:${pkgver}-${_upstream_pkgrel}-${arch}" PREFIX=/usr
 }
 
 package() {
