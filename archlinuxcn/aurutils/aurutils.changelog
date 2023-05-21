@@ -1,3 +1,23 @@
+## 15
+
+* `aur-repo`
+  + add `--format` (`-f`), `--delim`
+
+* `aur-format`
+  + support `aur-repo-parse --jsonl` input (`AUR::Json.pm`)
+
+* `aur-pkglist`
+  + remove deprecated options (`-J` (`--json`), `-I`, `-S`)
+  + update documentation
+
+* `examples`
+  + `sync-rebuild` now respects package `epoch`
+
+## 14.1
+
+* `aur-sync`
+  + fix exit codes for `tsort`, `aur-repo-parse`
+
 ## 14
 
 * `aur-depends`
