@@ -1,5 +1,5 @@
---- /usr/share/devtools/pacman-extra.conf	2023-03-08 01:56:48.000000000 +0200
-+++ pacman-extra-riscv64.conf	2023-03-15 07:59:42.601735222 +0200
+--- /usr/share/devtools/pacman.conf.d/extra.conf	2023-05-21 18:50:42.000000000 +0800
++++ extra-riscv64.conf	2023-05-22 10:32:48.462290337 +0800
 @@ -19,7 +19,7 @@
  #XferCommand = /usr/bin/curl -L -C - -f -o %o %u
  #XferCommand = /usr/bin/wget --passive-ftp -c -O %o %u
@@ -9,10 +9,10 @@
  
  # Pacman won't upgrade packages listed in IgnorePkg and members of IgnoreGroup
  #IgnorePkg   =
-@@ -71,19 +71,19 @@
+@@ -71,16 +71,16 @@
  # after the header, and they will be used before the default mirrors.
  
- #[testing]
+ #[core-testing]
 -#Include = /etc/pacman.d/mirrorlist
 +#Server = https://archriscv.felixc.at/repo/$repo
  
@@ -20,15 +20,11 @@
 -Include = /etc/pacman.d/mirrorlist
 +Server = https://archriscv.felixc.at/repo/$repo
  
- [extra]
--Include = /etc/pacman.d/mirrorlist
-+Server = https://archriscv.felixc.at/repo/$repo
- 
- #[community-testing]
+ #[extra-testing]
 -#Include = /etc/pacman.d/mirrorlist
 +#Server = https://archriscv.felixc.at/repo/$repo
  
- [community]
+ [extra]
 -Include = /etc/pacman.d/mirrorlist
 +Server = https://archriscv.felixc.at/repo/$repo
  
