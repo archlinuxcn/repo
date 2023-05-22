@@ -5,6 +5,9 @@ maintainers:
 pre_build_script: aur_pre_build(maintainers=['QuartzDragon'])
 post_build: aur_post_build
 
+repo_depends:
+  - libscrypt
+
 update_on:
   - source: github
     github: koverstreet/bcachefs-tools
