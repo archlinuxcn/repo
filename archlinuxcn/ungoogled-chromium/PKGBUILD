@@ -9,7 +9,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=113.0.5672.92
+pkgver=113.0.5672.126
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
@@ -52,7 +52,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         random-fixes-for-gcc13.patch
         disable-GlobalMediaControlsCastStartStop.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('a4520b53c824d75bcbc80bcf5da0c3d6f213038c8e31904b8a3bfbe415893ba5'
+sha256sums=('0def7cd594304d7675821d42a4207377af98e321a78a91ee5200aea55adc2d93'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '5f868cba9e4d387499711738adc6fd87ab9f1ef61f464016bc682660ae59206a'
             '208f2ebcef5c690207e6e798ffbf9e92214e9d35f415c2f6b93efebad831b7e2'
@@ -92,7 +92,7 @@ source=(${source[@]}
         vaapi-add-av1-support.patch
         remove-main-main10-profile-limit.patch)
 sha256sums=(${sha256sums[@]}
-            'b36ecce88a380b760c468592c1bb69be4b5dbae20b084ae0aba01236720b3690'
+            '1025329c38041b3b8b200fe3405d4b873345e87cba6333e036b83ad2f0000d3e'
             'e9e8d3a82da818f0a67d4a09be4ecff5680b0534d7f0198befb3654e9fab5b69'
             'e742cc5227b6ad6c3e0c2026edd561c6d3151e7bf0afb618578ede181451b307'
             'be8d3475427553feb5bd46665ead3086301ed93c9a41cf6cc2644811c5bda51c')
