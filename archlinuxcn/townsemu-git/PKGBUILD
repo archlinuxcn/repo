@@ -1,7 +1,7 @@
 # Maintainer: heavysink <winstonwu91@gmail.com>
 
 pkgname=townsemu-git
-pkgver=2631.c4fde67
+pkgver=2676.9ee05f22
 pkgrel=1
 pkgdesc="An emulator of legendary Fujitsu FM TOWNS computer"
 arch=('i686' 'x86_64')
@@ -29,6 +29,11 @@ prepare() {
   cd ..
   sed -i '1i #include <cstdio>' src/cmdutil/wav2snd.cpp
   sed -i '1i #include <cstdlib>' src/cmdutil/wav2snd.cpp
+  sed -i '1i #include <cstdint>' src/ym2612/ym2612.h 
+  sed -i '1i #include <cstdint>' src/externals/d77/d77.cpp 
+  sed -i '1i #include <cstdint>' src/osdependent/filesys/filesys.h
+  sed -i '1i #include <cstdint>' src/device/device.h
+  sed -i '1i #include <cstdint>' src/rf5c68/rf5c68.h
   sed -i '1i #include <cstdio>' gui/src/public/src/yssimplesound/sample_fssimplewindow/main.cpp
   sed -i '1i #include <cstdlib>' gui/src/public/src/yssimplesound/sample_fssimplewindow/main.cpp
   sed -i '1i #include <cstdio>' gui/src/public/src/yssimplesound/sample/main.cpp
