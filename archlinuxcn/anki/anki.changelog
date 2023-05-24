@@ -1,0 +1,34 @@
+# 2.1.64-1
+Functional changes:
+
+  * The Windows installer no longer requires admin access (thanks to Martin). The first time you update, you'll need to run the installer again after uninstall completes.
+  * Allow the user to configure answer keys in the preferences, fixing conflicts (thanks to Ren).
+  * Preload embedded fonts to prevent flicker, and tweak wait time for image preloading (thanks to Hikaru).
+  * Add the ability to search for FSRS scheduling properties, eg. prop:cdn:d>0.5 to search for the difficulty > 0.5.
+  * Window positions, state and browser headers are now reset each time the Qt version changes, which should fix a number of crashes that users were reporting.
+  * Add-on shortcuts will now override Anki defaults (thanks to Ren).
+
+Fixes:
+
+  * Fix media files being imported incorrectly when importing an .apkg file exported without support for older Anki versions.
+  * Increase the number of supported fields in the editor (thanks to Hikaru).
+  * Attempt to work around intermittent color setting failures in Qt6.5 on macOS.
+  * Fix ugly text rendering on Wayland when using fractional scaling.
+  * Fix inability to import csv when path contains single quote.
+  * Show an error pop-up when csv import screen fails to load.
+  * Don't disable animations on card templates when reduce motion is on.
+  * Fix an error in the console when resizing windows (thanks to Austin)
+  * Fix a panic when user sets a huge learning step.
+  * Fix page scrolling when input box loses focus (thanks to Hikaru).
+  * Fix failure to start on Windows when path contains non-Latin text.
+  * Fix due/ivl prop queries not working in filtered decks.
+  * Make some collection methods public in the Rust API (thanks to Joel).
+
+PKGBUILD changes:
+  * major overhaul. All fetching is now done in prepare() the latest. build() can be run offline
+  * moved back to tarballs, patching .git folder manually
+  * all typecheck/formatting dependencies are stripped out as this is only required for development
+  * pip-sync is masked during build as we provide dependencies ourselves
+  * we use the most recent stable rust toolchain in the build
+  * yarn and cargo store their cache in $srcdir, a `yay/paru -Sc` will now more reliably reset the build environment
+  * added this changelog

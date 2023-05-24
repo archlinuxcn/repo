@@ -7,9 +7,8 @@
 # Contributor: Dave Pretty <david dot pretty at gmail dot com>
 
 pkgname=anki
-pkgver=2.1.63
-_tag=064ea0ee08715edae868b84e48b29bd7e15d7b49 #git rev-parse $pkgver
-pkgrel=2
+pkgver=2.1.64
+pkgrel=1
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
 license=('AGPL3')
@@ -44,7 +43,8 @@ makedepends=(
     'ninja'
     'git'
     'cargo'
-    'python-installer'
+    'python-installer' # TODO: could use either wheel or installer, both are not needed afaik
+    'python-wheel'
     'libxcrypt-compat'
     'nodejs'
     'yarn'
@@ -56,57 +56,96 @@ optdepends=(
     'mplayer: play sound'
     'texlive-most: render LaTex in cards'
 )
-# using the tag tarballs does not work with the new (>= 2.1.55) build process.
-# the '.git' folder is not included in those but is required for a sucessful build
-source=("$pkgname::git+https://github.com/ankitects/anki#tag=${_tag}?signed"
-"no-update.patch"
-"optimize_more.patch"
+changelog="$pkgname.changelog"
+# (adjust in respective functions as well)
+# anki -> git rev-parse $pkgver --short=8
+# ftl -> git submodule
+_tag_ftl_core="150aac792e07cfeeea50202b50c226c0fa4b32e2"
+_tag_ftl_desktop="e2d2a9ebfaa83ff648063bd95140546179e7471b"
+source=("$pkgname-$pkgver.tar.gz::https://github.com/ankitects/anki/archive/refs/tags/${pkgver}.tar.gz"
+        "anki-core-i18n-${_tag_ftl_core}.tar.gz::https://github.com/ankitects/anki-core-i18n/archive/${_tag_ftl_core}.tar.gz"
+        "anki-desktop-ftl-${_tag_ftl_desktop}.tar.gz::https://github.com/ankitects/anki-desktop-ftl/archive/${_tag_ftl_desktop}.tar.gz"
+        "disable-git-checks.patch"
+        "no-update.patch"
+        "strip-formatter-deps.patch"
+        "strip-type-checking-deps.patch"
 )
-sha256sums=('SKIP'
-'f934553a5ce9e046a0b8253e10da16e661b27375e2b54d6bb915267f32aff807'
-'213a7c6ab75dc332e79f089364f10bc7fe0c0bb6860a549a42b7e3d75970bc7d'
+sha256sums=('5ff8c17e599b593af38beed35e18a8ac68da0c012d79e11a0b3105151c3ea21a'
+            '8f1b83b7097fc7e28227da1758b5fabddc6c2d9ce6b53e24a16499f9c51aafb1'
+            'fc87b61397ad4c5e2bf155d9f2c5bc8d122f68996f4872d0f0cff803f84d9586'
+            '89f1d00764e0f151600f6a21d7ced4289b3ce3f900ded40fe5da95e658fc9db4'
+            'f934553a5ce9e046a0b8253e10da16e661b27375e2b54d6bb915267f32aff807'
+            '9858fefa254812980d252b29fc6f32bd19bb83ee7e5a96d72c707626ed5193a7'
+            '0df3992e007564433c1f4995959d0023b8ed238a36d4dc345d7626cca1c515e1'
 )
 
-validpgpkeys=(
-   814EA4E90C34AF39A712DE703F5566A2D16899FB # Anki Signatures <gpg@ankiweb.net>
-)
-
-prepare(){
-    cd "$pkgname"
-    # pro-actively prevent "module not found" error (TODO: verify whether still required)
-    [ -d ts/node_modules ] && rm -r ts/node_modules
+prepare() {
+    _yc="$srcdir/yarn-cache"
+    _ch="$srcdir/cargo-cache"
+    _tag_anki="041e098c"
+    _tag_ftl_core="150aac792e07cfeeea50202b50c226c0fa4b32e2"
+    _tag_ftl_desktop="e2d2a9ebfaa83ff648063bd95140546179e7471b"
+    cd "$pkgname-$pkgver"
 
     patch -p1 < "$srcdir/no-update.patch"
-    patch -p1 < "$srcdir/optimize_more.patch"
+    patch -p1 < "$srcdir/strip-formatter-deps.patch"
+    patch -p1 < "$srcdir/strip-type-checking-deps.patch"
+    patch -p1 < "$srcdir/disable-git-checks.patch"
+    sed -i 's/opt-level = 1$/opt-level= 3/' Cargo.toml	# optimize more
+    sed -i 's/channel = "[0-9\.]*"$/channel = "stable"/' rust-toolchain.toml # use most recent stable rust toolchain
+    # Build process wants .git/HEAD to be present. Workaround to be able to use tarballs
+    # (together with disable-git-checks.patch)
+    mkdir -p .git
+    touch .git/HEAD
+    sed "s/MY_REV/${_tag_anki}/" -i build/runner/src/build.rs
+
+    # place translations in build dir
+    rm -r "$srcdir/$pkgname-$pkgver/ftl/core-repo" "$srcdir/$pkgname-$pkgver/ftl/qt-repo"
+    ln -sT "${srcdir}"/anki-core-i18n-${_tag_ftl_core} "$srcdir/$pkgname-$pkgver/ftl/core-repo"
+    ln -sT "${srcdir}"/anki-desktop-ftl-${_tag_ftl_desktop} "$srcdir/$pkgname-$pkgver/ftl/qt-repo"
+
+    # fetch rust packages
+    export CARGO_HOME="$_ch"       # do not litter in ~
     cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+
+    # fetch node packages already in prepare()
+    export YARN_CACHE_FOLDER="$_yc" # do not litter in ~
+    yarn install --immutable --modules-folder out/node_modules --ignore-scripts
+    ln -sf out/node_modules ./
+
 }
 
 build() {
-    cd "$pkgname"
+    _yc="$srcdir/yarn-cache"
+    _ch="$srcdir/cargo-cache"
+    cd "$pkgname-$pkgver"
+
+    export YARN_CACHE_FOLDER="$_yc" # do not litter in ~
+    yarn run --offline postinstall
+
+    # mask pip-sync as we provide dependencies ourselves
+    local venv="$srcdir/$pkgname-$pkgver/out/pyenv"
+    python -m venv --system-site-packages --without-pip "$venv"
+    printf '#!/bin/bash\nexit 0' > "$venv/bin/pip-sync"
+    chmod +x "$venv/bin/pip-sync"
+
     #use local binaries instead of downloading them
     export PYTHON_BINARY=$(which python)
     export PROTOC_BINARY=$(which protoc)
     export NODE_BINARY=$(which node)
     export YARN_BINARY=$(which yarn)
 
-    export RELEASE=1
-    mold -run ./ninja wheels # use mold as linker to allow for LTO
-}
-
-pkgver(){
-	cd "$pkgname"
-	git describe
+    export CARGO_HOME="$_ch"    # do not litter in ~
+    export RELEASE=1	        # anki-internal variable for optimization
+    mold -run ./ninja wheels -v # use mold as linker to allow for LTO
 }
 
 package() {
-    cd "$pkgname"
+    cd "$pkgname-$pkgver"
     for file in out/wheels/*.whl; do
     	python -m installer --destdir="$pkgdir" $file
     done
 
     install -Dm644 qt/bundle/lin/anki.desktop "$pkgdir"/usr/share/applications/anki.desktop
     install -Dm644 qt/bundle/lin/anki.png "$pkgdir"/usr/share/pixmaps/anki.png
-    # TODO: verify whether still required
-    find $pkgdir -iname __pycache__ | xargs -r rm -rf
-    find $pkgdir -iname direct_url.json | xargs -r rm -rf
 }
