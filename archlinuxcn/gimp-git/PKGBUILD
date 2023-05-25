@@ -8,7 +8,7 @@
 pkgname=gimp-git
 _pkgname=${pkgname%-git}
 epoch=2
-pkgver=49979.514042d57d
+pkgver=50010.097e683b07
 pkgrel=1
 pkgdesc="GNU Image Manipulation Program (non-conflicting git version)"
 arch=('i686' 'x86_64')
@@ -59,6 +59,8 @@ optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cu
             )
 source=('git+https://gitlab.gnome.org/GNOME/gimp.git'
         'linux.gpl')
+provides=('gimp')
+conflicts=('gimp')
 sha512sums=('SKIP'
             '6f33d57f242fa8ce04b65e06a712bd54677306a45b22cb853fbe348089cd4673bd4ed91073074fe067166fe8951c370f8bbbc386783e3ed5170d52e9062666fe')
 
@@ -84,21 +86,5 @@ build() {
 package() {
   DESTDIR="${pkgdir}" ninja -C "${srcdir}/build" install
   install -Dm 644 "${srcdir}/linux.gpl" "${pkgdir}/usr/share/gimp/2.99/palettes/Linux.gpl"
-  
-  #fix gimp.desktop
-  mv ${pkgdir}/usr/share/applications/gimp.desktop ${pkgdir}/usr/share/applications/gimp-2.99.desktop
-  sed -i 's/Icon=gimp/&-2.99/' ${pkgdir}/usr/share/applications/gimp-2.99.desktop
-
-  #fix icons
-  for icon in $(find ${pkgdir}/usr/share/icons -type f); do
-    mv ${icon} ${icon%.png}-2.99.png
-  done
-
-  #fix man
-  rm ${pkgdir}/usr/share/man/man1/gimp{,tool,-console}.1
-  rm ${pkgdir}/usr/share/man/man5/gimprc.5
-
-  #fix metainfo
-  rm -rf ${pkgdir}/usr/share/metainfo
 }
 
