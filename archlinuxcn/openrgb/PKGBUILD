@@ -2,12 +2,12 @@
 # Contributor: Paul Davis <paul@dangersalad.com>
 pkgname=openrgb
 pkgver=0.8
-pkgrel=2
+pkgrel=3
 pkgdesc="Open source RGB lighting control that doesn't depend on manufacturer software."
 arch=("x86_64")
 url="https://gitlab.com/CalcProgrammer1/OpenRGB"
 license=('GPL2')
-depends=('qt5-base' 'libusb' 'hidapi' 'mbedtls')
+depends=('qt5-base' 'libusb' 'hidapi' 'mbedtls2')
 makedepends=('pkgconf' 'qt5-tools') # now need lrelease in qt5-tools for successful build >=v0.8
 optdepends=('i2c-tools: Motherboard & RAM access')
 
