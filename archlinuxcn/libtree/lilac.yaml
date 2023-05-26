@@ -1,0 +1,16 @@
+maintainers:
+  - github: zjuyk
+    email: zjuyk@archlinuxcn.org
+
+build_prefix: extra-x86_64
+
+pre_build_script: aur_pre_build(maintainers=['otreblan'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: libtree
+  - source: manual
+    manual: 1
+# vim:set ts=2 sw=2 et:

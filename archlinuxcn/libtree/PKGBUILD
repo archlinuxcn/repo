@@ -1,0 +1,35 @@
+# Maintainer: Otreblan <otreblain@gmail.com>
+# Contributor: Teodor Nikolov <teodor.nikolov22@gmail.com>
+
+pkgname=libtree
+pkgver=3.1.1
+pkgrel=1
+pkgdesc="ldd as a tree"
+arch=('x86_64')
+url="https://github.com/haampie/libtree"
+license=('MIT')
+depends=('gcc-libs')
+makedepends=()
+optdepends=()
+checkdepends=()
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+sha256sums=('6148436f54296945d22420254dd78e1829d60124bb2f5b9881320a6550f73f5c')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make
+}
+
+check() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make check
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make PREFIX="$pkgdir/usr/" install
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
