@@ -1,0 +1,19 @@
+pkgname=libtree-bin
+pkgver=3.1.1
+pkgrel=1
+pkgdesc="ldd as a tree"
+arch=('aarch64')
+url="https://github.com/haampie/libtree"
+license=('MIT')
+depends=('gcc-libs')
+conflicts=('libtree' 'libtree-git')
+provides=('libtree')
+source=("libtree::${url}/releases/download/v${pkgver}/libtree_aarch64")
+sha256sums=('c5d4fbcd4e3fb46f02c028532f60fcf1c92f7c6aad5b07a991c67550c2554862')
+noextract=('libtree')
+
+package() {
+  cd "$srcdir"
+
+  install -Dm755 libtree "${pkgdir}"/usr/bin/libtree
+}
