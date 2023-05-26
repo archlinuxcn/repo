@@ -2,7 +2,7 @@
 # shellcheck disable=SC2034,SC2154
 
 pkgname=pikaur
-pkgver=1.15.2
+pkgver=1.15.3
 pkgrel=1
 pkgdesc="AUR helper which asks all questions before installing/building. Inspired by pacaur, yaourt and yay."
 arch=('any')
@@ -11,13 +11,14 @@ license=('GPL3')
 source=(
 	"$pkgname-$pkgver.tar.gz"::https://github.com/actionless/pikaur/archive/"$pkgver".tar.gz
 )
-b2sums=('66eb7f42b0f51696f8629ea4994e6160326b2defce0899737d9915f26138a27160c38a5499c6145d904a094d9120830ffadde5631a33239b4a9730b9affee2f4')
+b2sums=('c8779c2bac120cd619853f7961824f96fe593bbccf020629e8e7babcbb67b1e35a9e18bbc55c14d4b9eb33bbcab491329e0f0391c7a066c0e79cca59456acac1')
 depends=(
 	'pyalpm'
 	'git'
 )
 makedepends=(
 	'python-wheel'
+	'python-hatchling'
 	'python-build'
 	'python-installer'
 	'python-setuptools'  # i think it normally should be required by python-pep517 which required by python-build/installer
