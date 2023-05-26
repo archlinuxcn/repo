@@ -1,0 +1,47 @@
+# Maintainer: edward-p <edward@edward-p.xyz>
+# Contributor: not_anonymous <nmlibertarian@gmail.com>
+
+pkgname=cqrlog-source
+_pkgname=cqrlog
+pkgver=2.5.2
+pkgrel=3
+pkgdesc="An advanced ham radio logger using MariaDB - SOURCE version."
+arch=('x86_64')
+url="http://www.cqrlog.com"
+license=('GPL')
+depends=('xdg-utils' 'gtk2' 'mariadb' 'hamlib' 'hamradio-menus')
+makedepends=('lazarus')
+optdepends=('winkeydaemon: usb cw xmit'
+	    'cwdaemon: transmitting cw'
+	    'fldigi: RTTY and Digital modes'
+	    'masterscp: supercheckpartial files'
+	    'cty: country files'
+	    'bigcty: contest version country files'
+	    'trustedqsl: upload logs'
+	    'xplanet: gui location'
+	    'glabels: print qsl labels')
+provides=('cqrlog')
+conflicts=('cqrlog' 'cqrlog-git' 'cqrlog-bin')
+source=(https://github.com/ok2cqr/${_pkgname}/archive/v${pkgver}.tar.gz)
+sha256sums=('82837455dc9f44f43dc7658d330c71cf09c38d794addacab1da936fdcdbefdca')
+
+prepare() {
+	cd "$srcdir/${_pkgname}-$pkgver"
+
+#	sed -i 's/--ws=gtk2 src/--lazarusdir=\/usr\/lib\/lazarus --ws=gtk2 src/g' Makefile
+	sed -i 's/--ws=gtk2 --pcp=$(tmpdir)\/.lazarus src/--lazarusdir=\/usr\/lib\/lazarus --ws=gtk2 --pcp=$(tmpdir)\/.lazarus src/g' Makefile
+	sed -i "s:cqrlog.png:/usr/share/pixmaps/cqrlog/cqrlog.png:" tools/cqrlog.desktop
+}
+
+build() {
+	cd "$srcdir/${_pkgname}-$pkgver"
+
+	make
+}
+
+package() {
+	cd "$srcdir/${_pkgname}-$pkgver"
+
+	make DESTDIR="$pkgdir/" install
+}
+
