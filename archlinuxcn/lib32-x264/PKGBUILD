@@ -8,7 +8,7 @@
 
 _pkgbasename=x264
 pkgname=lib32-x264
-pkgver=0.164.r3081.19856cc
+pkgver=0.164.r3095.baee400
 pkgrel=1
 epoch=3
 pkgdesc='Open Source H264/AVC video encoder (32 bit)'
@@ -19,12 +19,12 @@ depends=("liblsmash.so"
 #    "x264"
     "x264>=${epoch}:${pkgver}" 
     "lib32-glibc" 
+    'lib32-gcc-libs'
     "lib32-l-smash"
     )
 makedepends=(
     'git' 
     'nasm' 
-    'lib32-gcc-libs'
     )
 provides=(
     'lib32-libx264' 
@@ -40,7 +40,7 @@ replaces=(
     'lib32-libx264-10bit' 
     'lib32-libx264-all'
     )
-_commit='19856cc41ad11e434549fb3cc6a019e645ce1efe'
+_commit=baee400fa9ced6f5481a728138fed6e867b0ff7f  # master
 source=("git+https://git.videolan.org/git/x264.git#commit=${_commit}")
 sha256sums=('SKIP')
 
@@ -77,7 +77,7 @@ build() {
 }
 
 package() {
-    make -C build DESTDIR="${pkgdir}" install-cli install-lib-shared
+    make -C build DESTDIR="${pkgdir}" BASHCOMPLETIONSDIR="/usr/share/bash-completion/completions" install-cli install-lib-shared install-bashcompletion
 
     # Keep files in bin since this is not a library only package. 
     # Use the same naming scheme as proposed in Arch's wiki:  https://wiki.archlinux.org/index.php/32-bit_package_guidelines
@@ -87,4 +87,5 @@ package() {
     done
 
     rm -rf "${pkgdir}"/usr/include
+    rm -rf "${pkgdir}"/usr/share/bash-completion/
 }
