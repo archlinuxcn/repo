@@ -9,9 +9,9 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=99764
+pkgver=99981
 _tarver=${pkgver}
-pkgrel=2
+pkgrel=1
 arch=('x86_64')
 url='http://virtualbox.org'
 license=('GPL' 'custom:CDDL')
@@ -148,7 +148,7 @@ package_virtualbox-svn() {
     ## setuid root binaries
     install -m4755 VirtualBoxVM VBoxHeadless VBoxNetAdpCtl VBoxNetDHCP VBoxNetNAT -t "${pkgdir}/usr/lib/virtualbox"
     ## other binaries
-    install -m0755 VirtualBox VBoxManage VBoxSVC VBoxExtPackHelperApp VBoxXPCOMIPCD VBoxTestOGL VBoxBalloonCtrl vboximg-mount vboxwebsrv webtest -t "${pkgdir}/usr/lib/virtualbox"
+    install -m0755 VirtualBox VBoxManage VBoxSVC VBoxExtPackHelperApp VBoxXPCOMIPCD VBoxBalloonCtrl vboximg-mount vboxwebsrv webtest -t "${pkgdir}/usr/lib/virtualbox"
 
     # binaries (in /usr/bin)
     install -d -m0755 "${pkgdir}/usr/bin"
@@ -357,7 +357,7 @@ sha256sums=('SKIP'
             '9ee947c9b5ec5b25f52d3e72340fc3a57ca6e65a604e15b669ac582a3fb0dc1b'
             '7675f87d31ad3137f057dc3ee3d4a2c5b2cfe8cd362adba130ddbf7a65069516'
             '053bfeee8863f3ffdf2f0e3f9f0d77dc61dd32764700a97a7635fd8611e20491'
-            '010c89d6000633fffbdf9f9d93b1f3db7a9b92263e78c66251e6aa27a7919c04'
+            '73528f20c3272cc42c6a7869e3ff876a8b366e288175652865a11967cfa0bfc2'
             '81900e13d36630488accd8c0bfd2ceb69563fb2c4f0f171caba1cca59d438024'
             '00f68b86d32a1fada900c2da8dad2ab4215106cd58004f049bded99727cda2ff'
             '87dddfd9047480e4c2b73367facf5dd3702148418c2efcd606af17c07da90fe0'

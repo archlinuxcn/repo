@@ -5,8 +5,8 @@ Subject: [PATCH] properly handle i3wm
 
 ---
  .../VirtualBox/src/globals/UIDesktopWidgetWatchdog.cpp        | 3 ++-
- .../Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.cpp   | 3 +++
- .../Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.h     | 3 ++-
+ .../Frontends/VirtualBox/src/platform/nix/VBoxUtils-nix.cpp   | 3 +++
+ .../Frontends/VirtualBox/src/platform/nix/VBoxUtils-nix.h     | 3 ++-
  src/VBox/Frontends/VirtualBox/src/widgets/UIMiniToolBar.cpp   | 4 ++++
  4 files changed, 11 insertions(+), 2 deletions(-)
 
@@ -24,10 +24,10 @@ index c27ff6f6..066a80e0 100644
  # endif /* !VBOX_GUI_WITH_CUSTOMIZATIONS1 */
  #else /* !VBOX_WS_X11 */
      /* Just return screen available-geometry: */
-diff --git a/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.cpp b/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.cpp
+diff --git a/src/VBox/Frontends/VirtualBox/src/platform/nix/VBoxUtils-nix.cpp b/src/VBox/Frontends/VirtualBox/src/platform/nix/VBoxUtils-nix.cpp
 index 2443af89..6cfcff74 100644
---- a/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.cpp
-+++ b/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.cpp
+--- a/src/VBox/Frontends/VirtualBox/src/platform/nix/VBoxUtils-nix.cpp
++++ b/src/VBox/Frontends/VirtualBox/src/platform/nix/VBoxUtils-nix.cpp
 @@ -141,6 +141,9 @@ X11WMType NativeWindowSubsystem::X11Wind
                  else
                  if (QString((const char*)pcData).contains("Xfwm4", Qt::CaseInsensitive))
@@ -38,10 +38,10 @@ index 2443af89..6cfcff74 100644
                  if (pcData)
                      XFree(pcData);
              }
-diff --git a/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.h b/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.h
+diff --git a/src/VBox/Frontends/VirtualBox/src/platform/nix/VBoxUtils-nix.h b/src/VBox/Frontends/VirtualBox/src/platform/nix/VBoxUtils-nix.h
 index 66504c71..f83b5c85 100644
---- a/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.h
-+++ b/src/VBox/Frontends/VirtualBox/src/platform/x11/VBoxUtils-nix.h
+--- a/src/VBox/Frontends/VirtualBox/src/platform/nix/VBoxUtils-nix.h
++++ b/src/VBox/Frontends/VirtualBox/src/platform/nix/VBoxUtils-nix.h
 @@ -51,6 +51,7 @@ enum X11WMType
      X11WMType_Metacity,
      X11WMType_Mutter,
