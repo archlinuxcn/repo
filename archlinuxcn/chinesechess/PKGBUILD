@@ -1,0 +1,32 @@
+pkgname=chinesechess
+_pkgname=ChineseChess
+pkgver=6.1
+pkgrel=1
+pkgdesc="Cross-platform and online battle platform game based on Qt: Chinese Chess."
+arch=('x86_64')
+url="https://github.com/XMuli/ChineseChess"
+license=('GPL3')
+conflicts=('chinesechess-bin' 'chinesechess-git')
+depends=('qt5-multimedia' 'hicolor-icon-theme' 'glibc' 'qt5-base' 'gcc-libs' )
+makedepends=('cmake' 'qt5-svg')
+source=("${pkgname}-${pkgver}.zip::${url}/archive/refs/tags/v${pkgver}.zip"
+        "${pkgname}.svg::${url}/raw/master/images/chess.svg"
+        "chinesechess.desktop")
+sha256sums=('77974743b958040109638708f537a3a72efe78a8567a70fb673eeab29946fd99'
+            '416d818b788cdd93fc33d50aa796d1e092ec8fda1fc3ff8c42e50d945627fb97'
+            '85393bf66fd4219877d6d8a7c1703f581c917fcf7d365e27f27c4b405663e5e8')
+
+build() {
+    cd "$srcdir/${_pkgname}-$pkgver"
+
+    mkdir build && cd build
+    cmake ..
+    make
+}
+
+package() {
+    cd "$srcdir/${_pkgname}-$pkgver"/build
+    install -Dm755 ./bin/ChineseChess "${pkgdir}"/usr/bin/ChineseChess
+    install -Dm644 "${srcdir}/${pkgname}.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
+    install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+}
