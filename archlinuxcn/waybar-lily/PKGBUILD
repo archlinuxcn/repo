@@ -49,6 +49,7 @@ build() {
           --buildtype=plain \
           --wrap-mode=nodownload \
           -Dtests=disabled \
+          -Dexperimental=true \
           build
     ninja -C build
 }
