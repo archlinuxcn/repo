@@ -2,8 +2,8 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=113.0
-pkgrel=3
+pkgver=113.0.1
+pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
 arch=(x86_64 aarch64)
@@ -75,14 +75,12 @@ source=(
   $pkgname.desktop
   "default192x192.png"
   "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
-  "${_arch_git_blob}/f6612579b7bf2096a560335715daaaab3e701369/trunk/0001-Bug-1831691-Use-the-vendored-glean_parser-for-all-of.patch"
 )
 
-sha256sums=('7d0aefffb2540de0772fddf3faa9d54794781f59053cfc152be51dc2e6898c0b'
+sha256sums=('b5866c0ef3356566abd4861e58f07c5bbc1e5b77fc322e3151114f97abec3104'
             '21054a5f41f38a017f3e1050ccc433d8e59304864021bef6b99f0d0642ccbe93'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1'
-            '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d'
-            '1976c0c5e98b0f67e83de778a4fd7729de9b140efa47b77b5879ea2e907987e9')
+            '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d')
 
 validpgpkeys=('034F7776EF5E0C613D2F7934D29FBD5F93C0CFC3') # maltej(?)
 
@@ -161,9 +159,6 @@ END
 fi
 
   # upstream Arch fixes
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1831691
-  patch -Np1 -i ../0001-Bug-1831691-Use-the-vendored-glean_parser-for-all-of.patch
 
   # pgo improvements
   # TODO: test if still required
