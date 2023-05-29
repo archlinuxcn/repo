@@ -4,7 +4,7 @@
 # This PKGBUILD is base on the AUR repo libglibutil, by Danct12 <danct12@disroot.org>
 
 pkgname='libglibutil'
-pkgver=1.0.69
+pkgver=1.0.70
 pkgrel=1
 pkgdesc='Library of glib utilities'
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -12,7 +12,7 @@ url='https://github.com/sailfishos/libglibutil'
 license=('BSD')
 depends=('glib2')
 source=("${pkgname}-${pkgver}.tar.gz"::"${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('310b9749fd01615ca8b79bc6f6dfccbd0dbe3e78208c4e33ede32c1ff931c189decac382197df9900f7e72233ac315c8e01ad18c95f07f7f4bff12912cc1ea18')
+sha512sums=('87388bdeee86119fe23883dd42e6798ce9c092691b47275c3c75c6d088aa61e5234f98e0bf4de86128a87977d177be982d63ba3d26c8b9d28f3f4b0f5900ed54')
 
 build() {
   make -C "${srcdir}/${pkgname}-${pkgver}/" KEEP_SYMBOLS=1 release pkgconfig
