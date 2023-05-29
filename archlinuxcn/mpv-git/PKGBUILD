@@ -69,6 +69,7 @@ build() {
         '-Ddvbin=enabled'
         '-Dsdl2=enabled'
         '-Dspirv-cross=disabled'
+        '-Dvulkan-interop=disabled' # FIXME: disable for libavutil 58.11.100
     )
     
     local _other_os_flags=(
