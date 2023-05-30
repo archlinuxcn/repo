@@ -18,7 +18,7 @@ depends=(
   libjwt.so
   libcrypto.so)
 # libevhtp-seafile uses oniguruma headers
-makedepends=('vala' 'oniguruma')
+makedepends=('vala' 'go' 'oniguruma')
 conflicts=('seafile')
 source=(
   "$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver-server.tar.gz"
@@ -52,6 +52,27 @@ build() {
     --prefix=/usr \
     PYTHON='/usr/bin/python'
   make
+
+  # Build Go packages
+  export GOPATH="$srcdir"
+  export CGO_CPPFLAGS="$CPPFLAGS"
+  export CGO_CFLAGS="$CFLAGS"
+  export CGO_CXXFLAGS="$CXXFLAGS"
+  export CGO_LDFLAGS="$LDFLAGS"
+  export CGO_ENABLED=1
+
+  GOFLAGS='-buildmode=pie'
+  GOFLAGS+=' -trimpath'
+  GOFLAGS+=' -ldflags=-linkmode=external'
+  GOFLAGS+=' -mod=readonly'
+  GOFLAGS+=' -modcacherw'
+  export GOFLAGS
+
+  for pkg in fileserver notification-server; do
+    pushd "$pkg"
+    go build .
+    popd
+  done
 }
 
 package() {
@@ -64,6 +85,11 @@ package() {
   cp -p doc/*.doc "$pkgdir/usr/share/seafile-server/seafile/docs"
   # The scripts needs this bin directory.
   ln -s /usr/bin/ "$pkgdir/usr/share/seafile-server/seafile/bin"
+
+  # Install Go binaries
+  for bin in fileserver notification-server; do
+    install -Dm755 "$bin/$bin" "$pkgdir/usr/bin/$bin"
+  done
 
   install -Dm644 \
           "$srcdir/seafile-server@.service" \
