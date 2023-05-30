@@ -7,20 +7,21 @@
 
 pkgname=retext-git
 _pkgname=retext
-pkgver=7.2.1.r40.g36cb918
+pkgver=8.0.0.r22.g506ac61
 pkgrel=1
 pkgdesc="A simple editor for Markdown and ReStructuredText markup languages"
 arch=('any')
 url="https://github.com/retext-project/retext"
 license=('GPL3')
+provides=("$_pkgname")
+conflicts=("$_pkgname")
 # for desktop integration: 'shared-mime-info' 'xdg-utils' 'desktop-file-utils'
 # for toolbar icons (see http://sourceforge.net/p/retext/tickets/44/): 'gconf'
-depends=('python-pyqt5' 'python-markups>=2.0.0' 'shared-mime-info' 'xdg-utils' 'python-docutils'
+depends=('python-pyqt6' 'python-markups>=2.0.0' 'shared-mime-info' 'xdg-utils' 'python-docutils'
          'desktop-file-utils' 'hicolor-icon-theme' 'python-markdown' 'python-pygments' 'python-chardet')
-makedepends=('imagemagick' 'qt5-tools' 'python-setuptools' 'git')
+makedepends=('imagemagick' 'qt6-tools' 'python-setuptools' 'git')
 checkdepends=('xorg-server-xvfb' 'python-chardet' 'python-docutils')
-optdepends=('qt5-webkit: for WebKit preview'
-            'python-pyqtwebengine: for WebEngine preview'
+optdepends=('python-pyqt6-webengine: for WebEngine preview'
             'python-pyenchant: for spell checking support')
 source=(
         "retext::git+https://github.com/retext-project/retext.git"
