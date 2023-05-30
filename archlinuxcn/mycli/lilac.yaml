@@ -5,6 +5,9 @@ build_prefix: extra-x86_64
 
 pre_build_script: aur_pre_build(maintainers=['loonies'])
 
+repo_depends:
+  - python-sqlglot
+
 update_on:
   - source: aur
     aur: mycli
