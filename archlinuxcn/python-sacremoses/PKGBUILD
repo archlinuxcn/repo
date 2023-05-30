@@ -3,8 +3,8 @@
 
 _pkgname=sacremoses
 pkgname=python-sacremoses
-pkgver=0.0.35
-pkgrel=4
+pkgver=0.0.53
+pkgrel=1
 pkgdesc='Python port of Moses tokenizer, truecaser and normalizer'
 arch=('any')
 url='https://github.com/alvations/sacremoses'
@@ -17,29 +17,22 @@ depends=(
   python-tqdm
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
-checkdepends=(
-  python-pytest
-)
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/alvations/sacremoses/archive/${pkgver}.tar.gz"
-        "LICENSE::https://raw.githubusercontent.com/alvations/sacremoses/master/LICENSE")
-sha512sums=('403331bb455aefc5adcebacf8030442ee75422ea5f6f0bd7b583b0ee3c45c948d0488e7779a08542b4a48c256494d1ca4dc8442e23f1d69440a3d4d471b819a8'
-            '4569780a565b1d4408aecee79bb0ebd5fb18008707e47e66e524806b7ed35ce342f4be8636d2fe0bc0f1ceee0eac2a0ec518c7c0a7199b1ec0e1f6326bc38fda')
+source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+sha512sums=('ba2be544dce53b208f925f1f5e9af1efa3fbbfbcc7989130c3abcc6b446c64385421325a5fdbf428100f47661493b126c79d5d153ceb0dd0defbc4ed3dccc8d7')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
-}
-
-check() {
-  cd "${_pkgname}-${pkgver}"
-  PYTHONPATH=build/lib pytest -v
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
-  install -Dm644 "${srcdir}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
