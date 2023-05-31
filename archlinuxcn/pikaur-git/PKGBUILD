@@ -11,9 +11,7 @@ license=('GPL3')
 source=(
 	"$pkgname::git+https://github.com/actionless/pikaur.git#branch=master"
 )
-b2sums=(
-	"SKIP"
-)
+b2sums=('SKIP')
 depends=(
 	'pyalpm'
 	'git'
@@ -22,6 +20,7 @@ makedepends=(
 	'python-wheel'
 	'python-build'
 	'python-installer'
+    'python-hatchling'
 	'python-setuptools'  # i think it normally should be required by python-pep517 which required by python-build/installer
 	'python-markdown-it-py'
 )
