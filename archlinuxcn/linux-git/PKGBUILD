@@ -6,7 +6,7 @@
 # will be on config.extra file.
 
 pkgbase=linux-git
-pkgver=v6.4.rc3.r291.4e893b5aa4ac
+pkgver=v6.4.rc4.r51.48b1320a674e
 pkgrel=1
 pkgdesc="Linus Torvalds' Mainline Linux"
 url="https://www.kernel.org"
@@ -20,7 +20,7 @@ backup=(
 "${_userremote##/}"
 "${_userpatches##/}"
 )
-makedepends=(
+makedepends=("python"
   bc
   cpio
   gettext
