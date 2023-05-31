@@ -9,7 +9,7 @@ pkgdesc='Latte is a dock based on plasma frameworks that provides an elegant and
 arch=('i686' 'x86_64')
 url='https://invent.kde.org/plasma/latte-dock'
 license=('GPL')
-depends=('plasma-framework>=5.38.0' 'knewstuff' 'hicolor-icon-theme' )
+depends=('plasma-workspace' 'plasma-framework>=5.38.0' 'knewstuff' 'hicolor-icon-theme' )
 makedepends=('git' 'cmake' 'extra-cmake-modules' 'appstream' 'plasma-wayland-protocols')
 optdepends=('libunity: quicklists, counters, and progress bars for apps using libunity')
 conflicts=('latte-dock')
