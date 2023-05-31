@@ -1,0 +1,89 @@
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index ba439ad92f4c..883da0abf779 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1542,7 +1542,6 @@ config AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT
+ # Common NUMA Features
+ config NUMA
+ 	bool "NUMA Memory Allocation and Scheduler Support"
+-	depends on !CACHY_SCHED
+ 	depends on SMP
+ 	depends on X86_64 || (X86_32 && HIGHMEM64G && X86_BIGSMP)
+ 	default y if X86_BIGSMP
+diff --git a/init/Kconfig b/init/Kconfig
+index 053626d9ab94..ab23e72841f7 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -922,7 +922,6 @@ config CGROUP_WRITEBACK
+ 
+ menuconfig CGROUP_SCHED
+ 	bool "CPU controller"
+-	depends on !CACHY_SCHED
+ 	default n
+ 	help
+ 	  This feature lets CPU scheduler recognize task groups and control CPU
+@@ -1185,7 +1184,9 @@ config CHECKPOINT_RESTORE
+ 
+ config SCHED_AUTOGROUP
+ 	bool "Automatic process group scheduling"
+-	depends on FAIR_GROUP_SCHED && !CACHY_SCHED
++	select CGROUPS
++	select CGROUP_SCHED
++	select FAIR_GROUP_SCHED
+ 	help
+ 	  This option optimizes the scheduler for common desktop workloads by
+ 	  automatically creating and populating task groups.  This separation
+diff --git a/kernel/sched/cachy.c b/kernel/sched/cachy.c
+index 477aebe000f0..d1800bda879f 100644
+--- a/kernel/sched/cachy.c
++++ b/kernel/sched/cachy.c
+@@ -4170,6 +4170,8 @@ dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+ 	update_cfs_group(se);
+ }
+ 
++static struct sched_entity *pick_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *curr);
++
+ /*
+  * Preempt the current task with a newly woken task if needed:
+  */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index bbf09ce73d6f..b41410694c72 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2923,7 +2923,12 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
+ 	/*
+ 	 * Make sure we do not leak PI boosting priority to the child.
+ 	 */
++#ifdef CONFIG_CACHY_SCHED
++	p->prio = current->original_prio;
++	p->original_prio = current->original_prio;
++#else
+ 	p->prio = current->normal_prio;
++#endif
+ 
+ 	uclamp_fork(p);
+ 
+@@ -3020,6 +3025,14 @@ void wake_up_new_task(struct task_struct *p)
+ 
+ 	raw_spin_lock_irqsave(&p->pi_lock, rf.flags);
+ 	p->state = TASK_RUNNING;
++
++#ifdef CONFIG_CACHY_SCHED
++	if (p->pid > 1 && p->original_prio >= 120) {
++		p->prio = p->static_prio = p->normal_prio = 139;
++		set_load_weight(p, true);
++	}
++#endif
++
+ #ifdef CONFIG_SMP
+ 	/*
+ 	 * Fork balancing, do it here and not earlier because:
+@@ -3695,7 +3708,7 @@ void scheduler_tick(void)
+ 
+ 	perf_event_task_tick();
+ 
+-#if CONFIG_SMP
++#ifdef CONFIG_SMP
+ 	rq->idle_balance = idle_cpu(cpu);
+ 	trigger_load_balance(rq);
+ #endif
