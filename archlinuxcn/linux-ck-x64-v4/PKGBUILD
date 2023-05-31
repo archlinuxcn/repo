@@ -22,7 +22,7 @@ _clangbuild=
 # Optionally select a sub architecture by number or leave blank which will
 # require user interaction during the build. Note that the generic (default)
 # option is 39.
-_subarch=
+_subarch=42
 
 #  1. AMD Opteron/Athlon64/Hammer/K8 (MK8)
 #  2. AMD Opteron/Athlon64/Hammer/K8 with SSE3 (MK8SSE3) (NEW)
@@ -70,9 +70,9 @@ _subarch=
 #  44. AMD-Native optimizations autodetected by the compiler (MNATIVE_AMD) (NEW)
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
-pkgbase=linux-ck
+pkgbase=linux-ck-x64-v4
 pkgver=6.3.4
-pkgrel=2
+pkgrel=3
 arch=(x86_64)
 url="https://wiki.archlinux.org/index.php/Linux-ck"
 license=(GPL2)
