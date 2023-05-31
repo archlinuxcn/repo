@@ -5,7 +5,7 @@ pkgname=bypy-git
 _pkgname=bypy
 pkgver=1.8.2.r1.gc61eb58
 epoch=1
-pkgrel=2
+pkgrel=3
 pkgdesc="Python client for Baidu Cloud Storage (百度网盘)"
 arch=("any")
 url="https://github.com/houtianze/bypy"
@@ -38,5 +38,5 @@ package() {
 
     # Ensure auth.json
     # https://github.com/houtianze/bypy/issues/606
-    [ -f "${pkgdir}/usr/lib/python3.10/site-packages/bypy/res/auth.json" ] || install -Dm644 bypy/res/auth.json "${pkgdir}/usr/lib/python3.10/site-packages/bypy/res/auth.json"
+    [ -f "${pkgdir}/usr/lib/python3.11/site-packages/bypy/res/auth.json" ] || install -Dm644 bypy/res/auth.json "${pkgdir}/usr/lib/python3.11/site-packages/bypy/res/auth.json"
 }
