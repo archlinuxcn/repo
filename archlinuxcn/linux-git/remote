@@ -1,0 +1,14 @@
+# Here you can customize the remote and commit in case you don't want Linus
+# Torvalds' mainline.
+# For security reasons, the remote's prefix is hardcoded and you can only
+# select among the git.kernel.org's official development trees (although this
+# package uses a faster mirror):
+# https://kernel.googlesource.com/pub/scm/linux/kernel/git/${REMOTE}
+
+# These are the default values if none is selected:
+# REMOTE="torvalds/linux"
+# COMMIT="master"
+
+# This is an example if v5.17.7 stable is to be used
+# REMOTE="stable/linux"
+# COMMIT="v5.17.7"

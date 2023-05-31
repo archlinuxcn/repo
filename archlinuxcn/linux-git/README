@@ -1,0 +1,24 @@
+These are the instructions to customize the linux-git package compilation in
+case using the current Linux mainline is not desired:
+
+* How to customize the git remote / branch:
+  If a previous linux-git installation exists, please consult and edit the file
+  /etc/linux-git/remote, otherwise use the file ./remote included in this AUR
+  package.
+
+* How to add user-customized config options:
+  If a previous linux-git installation exists, please consult and edit the file
+  /etc/linux-git/config, otherwise use the file ./config.user included in this
+  AUR package.
+
+* How to add extra patches on top of the selected remote / branch:
+  If a previous linux-git installation exists, please consult and edit the file
+  /etc/linux-git/patches/patches. If not, you can add the patches
+  directly to the src/linux-torvalds/ git source. After compilation and
+  installation, you can copy the patches to the directory
+  /etc/linux-git/patches and follow the instructions included on
+  /etc/linux-git/patches/patches file.
+
+Set env variable IGNORE_USER_CUSTOM to build package ignoring current
+customizations in place:
+$ IGNORE_USER_CUSTOM=1 makepkg

@@ -1,0 +1,31 @@
+README="$(cat << EOF
+
+===============================================================================
+
+This package can be customized to use other than vanilla mainline if it's
+locally compiled by the user.
+These are the instructions to apply the customization to the next linux-git
+package compilation:
+
+* How to customize the git remote / branch:
+  Please consult and edit the file /etc/linux-git/remote
+
+* How to add user-customized config options:
+  Please consult and edit the file /etc/linux-git/config
+
+* How to add extra patches on top of the selected remote / branch:
+  Please consult and edit the file /etc/linux-git/patches/patches
+
+===============================================================================
+ 
+EOF
+)"
+
+post_install() {
+	echo "${README}"
+}
+
+post_upgrade() {
+	echo "${README}"
+}
+
