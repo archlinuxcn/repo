@@ -1,0 +1,12 @@
+setcap_netdata_go_plugins() {
+    # https://learn.netdata.cloud/docs/agent/collectors/go.d.plugin/modules/ping#requirements
+    setcap cap_net_raw=ep /usr/lib/netdata/plugins.d/go.d.plugin
+}
+
+post_install() {
+    setcap_netdata_go_plugins
+}
+
+post_upgrade() {
+    setcap_netdata_go_plugins
+}
