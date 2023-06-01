@@ -1,7 +1,7 @@
 # Maintainer: Sebastian Baberowski <sebastian@baberowski.com>
 
 pkgname=libasi
-pkgver=2.0.1
+pkgver=2.0.2
 pkgrel=1
 pkgdesc="libasi used by INDI ASI drivers. Please note that for sake of simplicity package version is the version of libindi not a version of used ASI SDKs from ZWO. This package contains ASI Camera SDK, ASI EFW SDK, ASI EAF SDK and USBST4 SDK."
 url="http://www.indilib.org/index.php?title=Main_Page"
@@ -10,7 +10,7 @@ arch=(x86_64)
 depends=(libindi=${pkgver})
 makedepends=(cmake)
 source=("https://github.com/indilib/indi-3rdparty/archive/v${pkgver}.tar.gz")
-sha256sums=('be98a84ab6166321fe5aa74fca132cd866ae4e6910ef3b97e3502a44c59d277d')
+sha256sums=('364124711130b134480954d97c3a7ef3d9d754c3b7eed2bbb840c960a2afef7f')
 
 prepare() {
   mkdir -p build
