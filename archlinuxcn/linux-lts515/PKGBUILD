@@ -2,7 +2,7 @@
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=linux-lts515
-pkgver=5.15.113
+pkgver=5.15.114
 pkgrel=1
 pkgdesc='LTS Linux 5.15.x'
 url="https://www.kernel.org/"
@@ -28,9 +28,9 @@ validpgpkeys=(
   '647F28654894E3BD457199BE38DBBDC86092693E'  # Greg Kroah-Hartman
 )
 # https://www.kernel.org/pub/linux/kernel/v5.x/sha256sums.asc
-sha256sums=('4a4e98d21149d781867a6d44855f708b02f03cfe233d8026a0af9c9841b3b9ca'
+sha256sums=('e981ea5d219f77735bf5a3f7e84a8af578df8ac3e1c4ff1b0649e2b0795277d2'
             'SKIP'
-            '5cb9b38f75110b92f28e85b97fcf711ff71179d06d468b046d6335baa897eb18'
+            '8d16400874a880badfd710323f5f158e7b312ce6e044dcafbc6d0049b9ef9692'
             '3b5cfc9ca9cf778ea2c4b619b933cda26519969df2d764b5a687f63cf59974cd'
             'c175fbb141c3cec013c799f694d88310375ac5456042f6a4a1adc7667836d786'
             '8357f000b2b622e73dcfd41c2bad42b5e99fffe8f7ee64f774aa771f86cef43c'
@@ -219,10 +219,10 @@ if [ "${CARCH}" = "i486" -o  "${CARCH}" = "i686" -o "${CARCH}" = "pentium4" ]; t
   source_i486=('config.i486')
   # fail if upstream's .config changes
   for ((i=0; i<${#sha256sums[@]}; i++)); do
-    if [ "${sha256sums[${i}]}" = '5cb9b38f75110b92f28e85b97fcf711ff71179d06d468b046d6335baa897eb18' ]; then
-      sha256sums_pentium4=('a78354d49db267668ffaa0945d05b6680712fd89f089454003dd4994020db54d')
-      sha256sums_i686=('02be16aa48ace6eefa26975a1bd6fe52a527e9f6bc64cce315c0ce269508dadb')
-      sha256sums_i486=('9866bd689d7c82da513956c48f2f27ab1a7752818c05ebb587b1db0b73e07292')
+    if [ "${sha256sums[${i}]}" = '8d16400874a880badfd710323f5f158e7b312ce6e044dcafbc6d0049b9ef9692' ]; then
+      sha256sums_pentium4=('85a20b6144c10ba6462f3dba0faf130a2e20a955da4c4bebda04f017f977607a')
+      sha256sums_i686=('7a75f701b50b841ad6e190ce898dd4c0146842c1e583bba78d5c359440a61cec')
+      sha256sums_i486=('6405b971bcf29b89922c783f96eefb52c68cbc92bf26abd5a6cf6b537f0136ec')
     fi
   done
 
