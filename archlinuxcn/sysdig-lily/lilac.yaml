@@ -14,6 +14,7 @@ update_on:
   alpm: grpc
   provided: libgrpc++_unsecure.so
 - alias: libssl
-- source: archfiles
-  pkgpart: extra/x86_64/re2
+- source: alpmfiles
+  pkgname: re2
+  strip_dir: true
   filename: 'libre2.so.\d+'
