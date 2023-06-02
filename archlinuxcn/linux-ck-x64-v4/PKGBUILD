@@ -71,8 +71,8 @@ _subarch=42
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 pkgbase=linux-ck-x64-v4
-pkgver=6.3.4
-pkgrel=3
+pkgver=6.3.5
+pkgrel=1
 arch=(x86_64)
 url="https://wiki.archlinux.org/index.php/Linux-ck"
 license=(GPL2)
@@ -103,23 +103,17 @@ source=(
   "more-uarches-$_gcc_more_v.tar.gz::https://github.com/graysky2/kernel_compiler_patch/archive/$_gcc_more_v.tar.gz"
   "ck-hrtimer-$_commit.tar.gz::https://github.com/graysky2/linux-patches/archive/$_commit.tar.gz"
   0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
-  0002-drm-amd-display-Have-Payload-Properly-Created-After-.patch
-  0003-xfs-fix-livelock-in-delayed-allocation-at-ENOSPC.patch
-  0004-x86-topology-Fix-erroneous-smp_num_siblings-on-Intel.patch
 )
 validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
-sha256sums=('d8627528ed6b3ae607d00b1ef5a46e0e7051ae40b285fd4e82f4ff0bb72b68e8'
+sha256sums=('f5cd478c3d8b908ab606afd1e95a4f8f77e7186b4a82829251d6e6aaafff825e'
             'SKIP'
             '21b9a9e542f853cdc695648d6ab6219bd2e881a4954277f241e104723c373d42'
             'f1d586e111932890ad5e0df15d092fb9b3f87bae4ea17812aae9b0ec98fe2db0'
             'f781da5ba492d8912c7d4cddac02f21c1799532182e23374c80c19ff0c617373'
-            '927ea3b7f4fc525a50352464e9623ca9d99044344f30a80b91eb8adf6deb21d2'
-            '4b4f53c1a75375707cbea83b2d55aecb89ae4e2f7810a899cd615902bbfc9023'
-            '764b58e754a3ea29d75e811afb796c38588a7977457a75c6eb762a94754560ee'
-            '719c90170133b35fb70fbfe0e9606ad8856f16b2081c7dafb35d7b0ebcff0aad')
+            '927ea3b7f4fc525a50352464e9623ca9d99044344f30a80b91eb8adf6deb21d2')
 _make() {
   test -s version
   make KERNELRELEASE="$(<version)" "$@"
