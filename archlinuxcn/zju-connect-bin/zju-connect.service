@@ -2,7 +2,7 @@
 Description=ZJU Connect
 After=network.target
 [Service]
-Restart=always
+Restart=on-failure
 ExecStart=/usr/bin/zju-connect -config /etc/zju-connect/config.toml
 [Install]
 WantedBy=multi-user.target
