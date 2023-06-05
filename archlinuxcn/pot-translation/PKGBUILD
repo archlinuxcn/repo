@@ -2,7 +2,7 @@
 
 pkgname=pot-translation
 reponame=pot-desktop
-pkgver=0.5.0
+pkgver=0.5.1
 pkgrel=1
 pkgdesc="一个跨平台的划词翻译软件"
 arch=('x86_64')
@@ -11,11 +11,11 @@ license=('GPL3')
 provides=("$pkgname")
 conflicts=("$pkgname-bin" "$pkgname-git")
 depends=('libappindicator-gtk3' 'webkit2gtk' 'gtk3' 'libayatana-appindicator' 'xdotool')
-makedepends=("git" "nodejs" "pnpm" "rust")
+makedepends=('nodejs' 'pnpm' 'rust' 'git')
 
 source=("${reponame}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
 
-sha512sums=('de6c846c8f235a6deacb5aa3e5375dc6f7ad2c21d2aa7b3ff4e907807e80bcb237fdca894341770dee3926be4149fa0d6c0042c2661a6cc5d3dca419e8e036b1')
+sha512sums=('3e17d5b4b741ddade6efd1f4f1b86fd4bf79e053f1e7d71cc31610288f53639566c5acfc8c33669e0ae394d3b6c995f1dc449ae2c9456cff47f217656ab445c8')
 
 build(){
     cd $srcdir/${reponame}-${pkgver}
