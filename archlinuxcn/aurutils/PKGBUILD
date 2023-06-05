@@ -1,7 +1,7 @@
 # Maintainer: Alad Wenter <https://github.com/AladW>
 # Co-Maintainer: Cedric Girard <cgirard [dot] archlinux [at] valinor [dot] fr>
 pkgname=aurutils
-pkgver=15.3
+pkgver=15.4
 pkgrel=1
 pkgdesc='helper tools for the arch user repository'
 url='https://github.com/AladW/aurutils'
@@ -10,7 +10,7 @@ license=('custom:ISC')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
 changelog=aurutils.changelog
 install=aurutils.install
-sha256sums=('d9a1c8ac1c1773592e3197f8b352f808aec8d5b9fbde330ae7a675a1149a93fa')
+sha256sums=('4c1e6cd3c4ee52e81ad46ee4e4a14af7c6dcae450602c68c305b748855e162ac')
 depends=('git' 'pacutils' 'curl' 'perl')
 optdepends=('bash-completion: bash completion'
             'zsh: zsh completion'
@@ -20,7 +20,8 @@ optdepends=('bash-completion: bash completion'
             'ninja: aur-sync ninja support'
             'bat: view-delta example script'
             'git-delta: view-delta example script'
-            'setconf: sync-rebuild example script')
+            'python-srcinfo: sync-rebuild example script'
+            'python-pyxdg: sync-rebuild example script')
 
 build() {
     cd "$pkgname-$pkgver"
