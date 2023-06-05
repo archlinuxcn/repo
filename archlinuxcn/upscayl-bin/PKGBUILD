@@ -1,0 +1,27 @@
+_pkgname=upscayl
+pkgname=upscayl-bin
+pkgver=2.5.5
+pkgrel=1
+pkgdesc='Free and Open Source AI Image Upscaler'
+url='https://github.com/upscayl/upscayl'
+license=('AGPL3')
+arch=('x86_64')
+depends=('gtk3' 'nss' 'libnotify' 'libxss' 'libxtst' 'xdg-utils' 'python-atspi' 'util-linux-libs' 'libsecret' 'libappindicator-gtk3')
+makedepends=()
+provides=(${_pkgname})
+conflicts=('${_pkgname}-git' '${_pkgname}')
+source=("${_pkgname}-${pkgver}.deb::${url}/releases/download/v${pkgver}/upscayl-${pkgver}-linux.deb")
+sha512sums=()
+
+prepare() {
+	cd ${srcdir}
+        tar -Jxvf data.tar.xz -C "${srcdir}"
+}
+
+package() {
+	cd ${srcdir}
+
+	mv opt/Upscayl ${pkgdir}/opt/
+	install -Dm644 ${srcdir}/usr/share/applications/${_pkgname}.desktop -t ${pkgdir}/usr/share/applications/
+	install -Dm644 ${srcdir}/usr/share/icons/hicolor/0x0/apps/${_pkgname}.png ${pkgdir}/usr/share/icons/hicolor/0x0/apps/${_pkgname}.png
+}
