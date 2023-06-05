@@ -6,7 +6,7 @@ pkgname=(
     $_pkgname-geoip-v2raycompat
     $_pkgname-geosite-v2raycompat
 )
-pkgver=0.1.10
+pkgver=0.1.10.p1
 pkgrel=1
 pkgdesc="A Linux lightweight and high-performance transparent proxy solution based on eBPF."
 arch=(x86_64)
@@ -16,7 +16,7 @@ makedepends=(clang llvm go)
 source=(
     "$_pkgname-$pkgver.zip::https://github.com/daeuniverse/dae/releases/download/v$pkgver/dae-full-src.zip"
 )
-sha256sums=('dbaa2eea00612da81361f6a59a1a9167673df1a0004d595552d42662d0482c18')
+sha256sums=('870d597d5b7278b644ab9f3c5ccc31dd0ec7f6d90aca22a21c19005724070a72')
 
 build() {
     export GOFLAGS="-buildmode=pie -trimpath -modcacherw"
