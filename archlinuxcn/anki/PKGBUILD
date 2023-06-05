@@ -7,7 +7,7 @@
 # Contributor: Dave Pretty <david dot pretty at gmail dot com>
 
 pkgname=anki
-pkgver=2.1.64
+pkgver=2.1.65
 pkgrel=1
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
@@ -60,8 +60,8 @@ changelog="$pkgname.changelog"
 # (adjust in respective functions as well)
 # anki -> git rev-parse $pkgver --short=8
 # ftl -> git submodule
-_tag_ftl_core="150aac792e07cfeeea50202b50c226c0fa4b32e2"
-_tag_ftl_desktop="e2d2a9ebfaa83ff648063bd95140546179e7471b"
+_tag_ftl_core="25c97e48acf6626f0b8bc9daede14e21a83cdaf2"
+_tag_ftl_desktop="1fbf87bb8a7d441482e79b3b8c2e06479e9fa978"
 source=("$pkgname-$pkgver.tar.gz::https://github.com/ankitects/anki/archive/refs/tags/${pkgver}.tar.gz"
         "anki-core-i18n-${_tag_ftl_core}.tar.gz::https://github.com/ankitects/anki-core-i18n/archive/${_tag_ftl_core}.tar.gz"
         "anki-desktop-ftl-${_tag_ftl_desktop}.tar.gz::https://github.com/ankitects/anki-desktop-ftl/archive/${_tag_ftl_desktop}.tar.gz"
@@ -70,9 +70,9 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/ankitects/anki/archive/refs
         "strip-formatter-deps.patch"
         "strip-type-checking-deps.patch"
 )
-sha256sums=('5ff8c17e599b593af38beed35e18a8ac68da0c012d79e11a0b3105151c3ea21a'
-            '8f1b83b7097fc7e28227da1758b5fabddc6c2d9ce6b53e24a16499f9c51aafb1'
-            'fc87b61397ad4c5e2bf155d9f2c5bc8d122f68996f4872d0f0cff803f84d9586'
+sha256sums=('ca1c37e8e32bec02f09421bd29ac67253e4039e705bf9fba919918c4559b48e8'
+            '9fe9d498d89d25db3a5b0938c58dc3a584c97e09ccd83a622574df8bb0935841'
+            '85c6f4570b66cac1a021eb3efb7e69868d8c9b130b5c6171d459dd5bfbde321a'
             '89f1d00764e0f151600f6a21d7ced4289b3ce3f900ded40fe5da95e658fc9db4'
             'f934553a5ce9e046a0b8253e10da16e661b27375e2b54d6bb915267f32aff807'
             '9858fefa254812980d252b29fc6f32bd19bb83ee7e5a96d72c707626ed5193a7'
@@ -82,9 +82,9 @@ sha256sums=('5ff8c17e599b593af38beed35e18a8ac68da0c012d79e11a0b3105151c3ea21a'
 prepare() {
     _yc="$srcdir/yarn-cache"
     _ch="$srcdir/cargo-cache"
-    _tag_anki="041e098c"
-    _tag_ftl_core="150aac792e07cfeeea50202b50c226c0fa4b32e2"
-    _tag_ftl_desktop="e2d2a9ebfaa83ff648063bd95140546179e7471b"
+    _tag_anki="141bc18b"
+    _tag_ftl_core="25c97e48acf6626f0b8bc9daede14e21a83cdaf2"
+    _tag_ftl_desktop="1fbf87bb8a7d441482e79b3b8c2e06479e9fa978"
     cd "$pkgname-$pkgver"
 
     patch -p1 < "$srcdir/no-update.patch"
@@ -97,13 +97,15 @@ prepare() {
     # (together with disable-git-checks.patch)
     mkdir -p .git
     touch .git/HEAD
-    sed "s/MY_REV/${_tag_anki}/" -i build/runner/src/build.rs
+    sed -i "s/MY_REV/${_tag_anki}/" build/runner/src/build.rs
 
     # place translations in build dir
-    rm -r "$srcdir/$pkgname-$pkgver/ftl/core-repo" "$srcdir/$pkgname-$pkgver/ftl/qt-repo"
-    ln -sT "${srcdir}"/anki-core-i18n-${_tag_ftl_core} "$srcdir/$pkgname-$pkgver/ftl/core-repo"
-    ln -sT "${srcdir}"/anki-desktop-ftl-${_tag_ftl_desktop} "$srcdir/$pkgname-$pkgver/ftl/qt-repo"
+    rm -r ftl/core-repo ftl/qt-repo
+    ln -sT "${srcdir}"/anki-core-i18n-${_tag_ftl_core} ftl/core-repo
+    ln -sT "${srcdir}"/anki-desktop-ftl-${_tag_ftl_desktop} ftl/qt-repo
 
+    #force update for 'rustup' package users (not necesarry for 'cargo' package user)
+    pacman -Qo $(which cargo) | grep -q rustup && rustup update
     # fetch rust packages
     export CARGO_HOME="$_ch"       # do not litter in ~
     cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
@@ -113,6 +115,11 @@ prepare() {
     yarn install --immutable --modules-folder out/node_modules --ignore-scripts
     ln -sf out/node_modules ./
 
+    # mask pip-sync as we provide dependencies ourselves
+    local venv="out/pyenv"
+    python -m venv --system-site-packages --without-pip "$venv"
+    printf '#!/bin/bash\nexit 0' > "$venv/bin/pip-sync"
+    chmod +x "$venv/bin/pip-sync"
 }
 
 build() {
@@ -122,12 +129,6 @@ build() {
 
     export YARN_CACHE_FOLDER="$_yc" # do not litter in ~
     yarn run --offline postinstall
-
-    # mask pip-sync as we provide dependencies ourselves
-    local venv="$srcdir/$pkgname-$pkgver/out/pyenv"
-    python -m venv --system-site-packages --without-pip "$venv"
-    printf '#!/bin/bash\nexit 0' > "$venv/bin/pip-sync"
-    chmod +x "$venv/bin/pip-sync"
 
     #use local binaries instead of downloading them
     export PYTHON_BINARY=$(which python)

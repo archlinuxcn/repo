@@ -1,3 +1,18 @@
+# 2.1.65-1
+  * Default to current deck in csv import if settings allow it.
+  * Disable Toggle Bury when nothing is selected (thanks to Abdo).
+  * Fix broken window styling when installation path includes certain Latin1 chars on Windows.
+  * Fix illegible tooltips when system in dark mode on some Linux installs.
+  * Fix incorrect font sizes on X11 when fractional scaling in use.
+  * If the old Anki uninstaller fails, allow installation to proceed.
+  * Improve phrasing in dialog that asks which deck's options should be shown (thanks to
+  chrissy0).
+  * Fix some add-on installation errors not being reported (thanks to Abdo)
+  * Add add-on installation hooks (thanks to Abdo).
+
+PKGBUILD:
+  * When using rustup as the system cargo provider, force an update before compilation to use most recent stable branch. This way, builds using rust or rustup should be more easily recreatable
+
 # 2.1.64-1
 Functional changes:
 
