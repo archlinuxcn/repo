@@ -2,18 +2,8 @@
 
 post_install() {
   set -e
-  source /usr/share/asahi-scripts/functions.sh
-  esp="/run/.system-efi"
-  mount_sys_esp "$esp"
-  if [ ! -e "$esp/asahi/all_firmware.tar.gz" ]; then
-    printf '==> No /asahi/all_firmware.tar.gz in the ESP, skipping firmware extraction'
-    return 0
-  fi
   printf '==> Upgrading vendor firmware package...\n'
-  mkdir -p /run/.vendorfw-tmp
-  python -m asahi_firmware.update "$esp/asahi" /run/.vendorfw-tmp
-  mv -f "/run/.vendorfw-tmp"/* "$esp/vendorfw/"
-  printf '    Firmware upgraded.\n'
+  asahi-fwupdate
 }
 
 post_upgrade() {
