@@ -5,14 +5,12 @@ maintainers:
 build_prefix: extra-x86_64
 
 pre_build_script: |
-    update_pkgver_and_pkgrel(_G.newver)
-
+    aur_pre_build(maintainers="yan12125")
 
 post_build_script: |
-    git_pkgbuild_commit()
-    update_aur_repo()
+    aur_post_build()
 
 update_on:
-  - source: pypi
-    pypi: logcat-color3
+  - source: aur
+    aur: logcat-color3
   - alias: python
