@@ -7,11 +7,10 @@ url='https://github.com/upscayl/upscayl'
 license=('AGPL3')
 arch=('x86_64')
 depends=('gtk3' 'nss' 'libnotify' 'libxss' 'libxtst' 'xdg-utils' 'python-atspi' 'util-linux-libs' 'libsecret' 'libappindicator-gtk3')
-makedepends=()
 provides=('upscayl')
 conflicts=('upscayl-git' 'upscayl')
 source=("${_pkgname}-${pkgver}.deb::${url}/releases/download/v${pkgver}/upscayl-${pkgver}-linux.deb")
-sha512sums=()
+sha256sums=('82c560a3af4e116d437777d893a57c91e49a67a9fc1ce0e655f36a71662bd5ae')
 
 prepare() {
 	cd ${srcdir}
