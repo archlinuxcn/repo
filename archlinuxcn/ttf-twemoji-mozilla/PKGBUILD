@@ -17,7 +17,7 @@ build() {
   cd "$srcdir/twemoji-colr-$pkgver"
   sed -i 's/resolutions/overrides/g' package.json
   npm install
-  make
+  make -j1
 }
 
 package() {
