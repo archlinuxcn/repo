@@ -9,7 +9,7 @@ arch=('x86_64')
 depends=('gtk3' 'nss' 'libnotify' 'libxss' 'libxtst' 'xdg-utils' 'python-atspi' 'util-linux-libs' 'libsecret' 'libappindicator-gtk3')
 makedepends=()
 provides=('upscayl')
-conflicts=('${_pkgname}-git' '${_pkgname}')
+conflicts=('upscayl-git' 'upscayl')
 source=("${_pkgname}-${pkgver}.deb::${url}/releases/download/v${pkgver}/upscayl-${pkgver}-linux.deb")
 sha512sums=()
 
