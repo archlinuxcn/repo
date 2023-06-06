@@ -2,21 +2,28 @@
 
 pkgname=ttf-twemoji-mozilla
 pkgver=0.7.0
-pkgrel=2
+pkgrel=2.1
 pkgdesc="Twitter Emoji with COLRv1 with Mozilla."
 url="https://github.com/mozilla/twemoji-colr"
 arch=(any)
 license=('CCPL' 'MIT' 'Apache')
+makedepends=('npm' 'nodejs' 'python-fonttools' 'fontforge')
 provides=('emoji-font')
-source=("Twemoji.ttf::https://github.com/mozilla/twemoji-colr/releases/download/v$pkgver/Twemoji.Mozilla.ttf"
-        "https://github.com/mozilla/twemoji-colr/raw/v$pkgver/LICENSE.md"
+source=("twemoji-colr-v$pkgver.tar.gz::https://github.com/mozilla/twemoji-colr/archive/refs/tags/v$pkgver.tar.gz"
         )
-b2sums=('b84275666dd6684ac8c033176784f65596186c914be72f4d3d124478176278b77ed3eb7d54df793313bdce1c4f9e34080daa9dc86819879011082b97d3d0e88e'
-        '271937ee19713568ee98b7dbfe21f61aaa7a3c13647ffc4e8dc5a8e0f9125c532ea6ce6322bbef16a9b24c9d0ef003d8b17919058ccd9a04b6c3e0a32a41f2f8')
+b2sums=('8acf3756bbf0244c73ffeeb8a9c34916dac1c446e8aee1c1cf39dd5f8a09e22bf881a67d678803800ed756a35b4e080ad190be75265944a282bf3539dd834061')
+
+build() {
+  cd "$srcdir/twemoji-colr-$pkgver"
+  sed -i 's/resolutions/overrides/g' package.json
+  npm install
+  make
+}
 
 package() {
-    install -Dm644 Twemoji.ttf \
-      "${pkgdir}/usr/share/fonts/TwemojiMozilla.ttf"
-    install -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" \
-      LICENSE.md
+  cd "$srcdir/twemoji-colr-$pkgver"
+  install -Dm644 "build/Twemoji Mozilla.ttf" \
+    "${pkgdir}/usr/share/fonts/TwemojiMozilla.ttf"
+  install -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" \
+    LICENSE.md
 }
