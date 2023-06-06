@@ -3,12 +3,12 @@
 
 buildarch=8
 
-_rcver=6.2
+_rcver=6.3
 #_rcrel=3
-_asahirel=11
-pkgrel=12
+_asahirel=6
+pkgrel=13
 
-_m1n1_version=1.2.6
+_m1n1_version=1.2.8
 
 pkgbase=linux-asahi
 #_commit_id=asahi-${_nextver}-${_asahirel}
@@ -30,11 +30,11 @@ source=(
   config         # the main kernel config file
   config.edge    # overrides for linux-asahi-edge
 )
-sha256sums=('b37696174977045d275356637dd66777bba28381c23279b7f06cfac2afacb26f'
-            '0e75f391471d07aa01d4c4ad41f5f26506995ba133018afa45b5bb6d08461ab9'
+sha256sums=('d96dfe1a34a246329984ba0a5e954e894dd18412ba0a1c8c36a6e74d51f9a256'
+            '143388d60d811a59a8ba4045f5d43f14632815ec9aa2e76d7254e1d4b6dba505'
             '7ee519afc074b11ea4f38bc4bd8562e9235b65b8f6da0a82d44e8536f78a56f8')
-b2sums=('55821dbd915aed1224a173735d970a0c7282cf456abe8967d9988aacf3bca607d47fd633ffd64453d9d30bb01d673c76d4fbd4a546eb40d0de25c70c2ca44f9c'
-        'afec99aeded07caa330a2f17b4d26d4ba725c423b0394bc9154415de0bdaaef5d862040936c6db6c211c357649b6b7f01f01f3b7299220e057026d986b419b21'
+b2sums=('d7f176e22edfdcae3420e7de36159caac7daaff522cdc819b936bda7f03e47b0e5b24fcd94f9c08a708761ddfc3bf22a31b8a55782a07545d5851a257905f0b0'
+        '1666a3c3afba9ea28d76ee21a2645c1ca1cb2fa391ec3388339c7642d0b85797a00825408fd5fb5dd660dc4a0c38df2a626dc2e2dfa7ca84bfcd99320bf640c1'
         '9b54b169beb22f537aeeb65264dc06ec5132c0979c8347f990a52d4661d7a51193000573a6e68da679adeb5b601ea206e96963b9c2404532d4a2d3cfa45fc11a')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -58,6 +58,7 @@ prepare() {
   # Fix for newer bindgen versions
   sed -i -e s/blacklist/blocklist/ \
     -e s/whitelist/allowlist/ \
+    -e s/--size_t-is-usize// \
     rust/Makefile
 
   echo "Creating build directories..."
@@ -221,6 +222,14 @@ _package-headers() {
   echo "Adding symlink..."
   mkdir -p "$pkgdir/usr/src"
   ln -sr "$builddir" "$pkgdir/usr/src/$pkgbase"
+
+  O=build/edge
+  local builddir2="$pkgdir/usr/lib/modules/$(<${O}/version)/build"
+  mkdir -p $builddir2
+  cp -rl $builddir/* $builddir2
+  cp --remove-destination $O/{.config,System.map,version,Module.symvers,vmlinux} $builddir2
+  rm -rf $builddir2/include/config
+  cp -r $O/include/config $builddir2/include/config
 }
 
 pkgname=("$pkgbase" "$pkgbase-headers" "$pkgbase-edge")
