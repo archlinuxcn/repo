@@ -1,8 +1,12 @@
 [Unit]
 Description=ZJU Connect
-After=network.target
+After=network-online.target
+Wants=network-online.target
+
 [Service]
 Restart=on-failure
+RestartSec=5s
 ExecStart=/usr/bin/zju-connect -config /etc/zju-connect/config.toml
+
 [Install]
 WantedBy=multi-user.target

@@ -16,7 +16,7 @@ source=("$pkgname-$pkgver-amd64.zip::https://github.com/Mythologyli/${_pkgname}/
         "${_pkgname}.service"
 	"config.toml::https://raw.githubusercontent.com/Mythologyli/zju-connect/main/config.toml.example")
 sha256sums=('5a04f66178b9ac0f035a4354bb4425c5953006038204b185ea0ee4fca0c8b817'
-            '025dc2c1f0edfe9cf33461c8d6f95a37ba2a50d88256f3d210b2c54acedee63b'
+            '96f9145b783e770d6c448d9db7e43796b79c19f984f2b1387333a64c1874a74a'
             '02d294350d41ab9cc9e979a9447cb4429f4577fc6d85ee3e6685464e65511c2c')
 
 package() {
