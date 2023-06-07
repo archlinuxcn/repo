@@ -4,10 +4,10 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['grtcdr'])
+  #pre_build_script: aur_pre_build(maintainers=['grtcdr'])
 
-post_build: aur_post_build
+  #post_build: aur_post_build
 
 update_on:
-  - source: aur
-    aur: macchina
+  - source: manual
+    manual: 1
