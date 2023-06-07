@@ -1,0 +1,10 @@
+--- Makefile.old	2019-02-09 12:50:41.000000000 +0100
++++ Makefile	2019-11-07 00:00:24.487953923 +0100
+@@ -47,7 +47,6 @@
+ 	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
+ 	sed "s/VERSION/$(VERSION)/g" < st.1 > $(DESTDIR)$(MANPREFIX)/man1/st.1
+ 	chmod 644 $(DESTDIR)$(MANPREFIX)/man1/st.1
+-	tic -sx st.info
+ 	@echo Please see the README file regarding the terminfo entry of st.
+ 
+ uninstall:
