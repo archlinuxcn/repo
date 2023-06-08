@@ -20,7 +20,8 @@ prepare() {
 package() {
 	cd ${srcdir}
 
-	mv opt/Upscayl ${pkgdir}/opt/
+	mkdir -p ${pkgdir}/opt/Upscayl
+	mv ${srcdir}/opt/Upscayl/* ${pkgdir}/opt/Upscayl
 	install -Dm644 ${srcdir}/usr/share/applications/${_pkgname}.desktop -t ${pkgdir}/usr/share/applications/
-	install -Dm644 ${srcdir}/usr/share/icons/hicolor/0x0/apps/${_pkgname}.png ${pkgdir}/usr/share/icons/hicolor/0x0/apps/${_pkgname}.png
+	install -Dm644 ${srcdir}/usr/share/icons/hicolor/0x0/apps/${_pkgname}.png ${pkgdir}/usr/share/icons/hicolor/256x256/apps/${_pkgname}.png
 }
