@@ -3,8 +3,8 @@
 _CUDA_ARCH_LIST="6.0;6.1;6.2;7.0;7.2;7.5;8.0;8.6;8.6;8.9;9.0;9.0+PTX"
 pkgname=python-monai
 _pkgname=MONAI
-pkgver=1.1.0
-pkgrel=4
+pkgver=1.2.0
+pkgrel=1
 pkgdesc='AI Toolkit for Healthcare Imaging'
 arch=('x86_64')
 url='https://monai.io'
@@ -38,7 +38,7 @@ optdepends=(
   tensorboard
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Project-MONAI/MONAI/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('df6e19b43e9f39052eca3107bbb39f67fa9559c4ad5c2e838423a6d035a580b92a48c7d98bbb926a8cf742fdf5c03e7c105be0cc76f4a2c8debf97fba80ecf4b')
+sha512sums=('d7fec96248933dd73f992eb6acd37b95acea261cb352e1e6af8fbe0975c59284e40fb59dda2a7c764504c97367e77aae027574a73437e3d0a91f531520db9694')
 
 prepare() {
   # disable building MONAI extension due to nvcc issue
