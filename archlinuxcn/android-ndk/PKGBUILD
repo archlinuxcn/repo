@@ -5,7 +5,7 @@
 
 pkgname=android-ndk
 pkgver=r25.c
-pkgrel=1
+pkgrel=2
 pkgdesc='Android C/C++ developer kit'
 arch=('x86_64')
 url='https://developer.android.com/ndk/'
@@ -14,11 +14,17 @@ options=('!strip' 'staticlibs')
 backup=("etc/profile.d/$pkgname.sh")
 install="$pkgname.install"
 replaces=('android-ndk64')
-depends=('glibc')
+depends=('bash' 'glibc' 'gcc-libs' 'zlib')
+# makedepends are just for making namcap happy. AUR packages are not added to
+# avoid unneeded efforts
+makedepends=('bzip2' 'libxcrypt-compat' 'python' 'perl' 'libc++')
 optdepends=(
-  'ncurses5-compat-libs: for using gdb'
-  'python2: various helper scripts'
+  'ncurses5-compat-libs: for curses module in bundled Python'
+  'bzip2: for bz2 module in bundled Python'
+  'libxcrypt-compat: for crypt module in bundled Python'
   'python: various helper scripts'
+  'perl: various helper scripts'
+  'libc++: for some LLVM components'
 )
 source=("$pkgname.sh")
 source_x86_64=("https://dl.google.com/android/repository/$pkgname-${pkgver/./}-linux.zip")
