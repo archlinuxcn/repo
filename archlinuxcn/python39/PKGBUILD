@@ -3,7 +3,7 @@
 
 pkgname=python39
 pkgver=3.9.16
-pkgrel=4
+pkgrel=5
 _pybasever=3.9
 _pymajver=3
 pkgdesc="Major release 3.9 of the Python high-level programming language"
@@ -11,7 +11,7 @@ arch=('i686' 'x86_64')
 license=('custom')
 url="https://www.python.org/"
 depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl' 'zlib')
-makedepends=('bluez-libs' 'mpdecimal' 'gdb')
+makedepends=('bluez-libs' 'mpdecimal' 'gdb' 'tk')
 optdepends=('sqlite' 'mpdecimal: for decimal' 'xz: for lzma' 'tk: for tkinter')
 source=(
     https://www.python.org/ftp/python/${pkgver}/Python-${pkgver}.tar.xz
