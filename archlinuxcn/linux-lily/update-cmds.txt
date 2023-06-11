@@ -22,12 +22,14 @@ git co -b lily-6.1 v6.1.10-arch1
 # git add .
 # git commit -m 'apply uksm patch'
 
-patch -p1 < ~/cjktty-6.0.patch
+patch -p1 < ~/cjktty-6.3.patch
 git add .
 git commit -m 'apply cjktty patch'
 patch -p1 < ~/cjktty-add-cjk32x32-font-data.patch
 git add .
 git commit -m 'apply cjktty 32x32 font data'
+
+git merge pf-kernel/ksm-6.3
 
 cp ../../config .config
 patch .config ~/archgitrepo/archlinuxcn/linux-lily/config.diff.6.0.9
