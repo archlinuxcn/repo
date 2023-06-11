@@ -36,7 +36,20 @@ properties:
     description: Time limit in hours. The build will be aborted if it doesn't finish in time. Default is one hour.
     type: number
   repo_depends:
-    description: Packages in the repo to be built and installed before building the current package.
+    description: Packages in the repo that are direct dependencies of the current package.
+    type: array
+    items:
+      anyOf:
+        - type: string
+          description: Package (directory) name
+        - type: object
+          description: Package base (directory) as key and package name as value
+          minProperties: 1
+          maxProperties: 1
+          additionalProperties:
+            type: string
+  repo_makedepends:
+    description: Packages in the repo that are in makedepends or checkdepends of the current package.
     type: array
     items:
       anyOf:
