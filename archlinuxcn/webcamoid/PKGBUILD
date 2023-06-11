@@ -1,8 +1,8 @@
 # Maintainer: Gonzalo Exequiel Pedone <hipersayan DOT x AT gmail DOT com>
 
 pkgname=webcamoid
-pkgver=9.0.0
-pkgrel=3
+pkgver=9.1.0
+pkgrel=1
 pkgdesc="Webcamoid is a full featured webcam capture application."
 url='https://webcamoid.github.io/'
 license=('GPL')
@@ -22,7 +22,10 @@ optdepends=('v4l-utils: Extra formats support for webcams'
             'libpulse: Audio playback (Recommended)'
             'alsa-lib: Audio playback'
             'jack: Audio playback'
+            'portaudio: Audio playback'
+            'sdl2: Audio playback'
             'libuvc: Camera capture'
+            'qt5-multimedia: Camera capture'
             'polkit: Root privileges for virtual camera module (Recommended)')
 makedepends=('alsa-lib'
              'cmake'
@@ -33,14 +36,17 @@ makedepends=('alsa-lib'
              'libpulse'
              'libuvc'
              'pipewire'
+             'portaudio'
+             'qt5-multimedia'
              'qt5-tools'
+             'sdl2'
              'v4l-utils'
              'vlc')
 provides=('webcamoid')
 conflicts=('webcamoid')
 install="${pkgname}.install"
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/${pkgname}/${pkgname}/archive/${pkgver}.tar.gz")
-md5sums=('e6371867cdc87baf0b50bcd962e656d2')
+md5sums=('75b2c4336861abfb02e743b3f5b77afa')
 
 build() {
     cd "$srcdir/${pkgname}-${pkgver}"
