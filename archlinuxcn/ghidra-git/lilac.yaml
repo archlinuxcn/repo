@@ -1,0 +1,13 @@
+maintainers:
+  - github: Integral-Tech
+    email: integral@murena.io
+
+pre_build_script: aur_pre_build(maintainers=['encounter','class101','nullableVoidPtr'])
+post_build: aur_post_build
+
+update_on:
+  - source: github
+    github: NationalSecurityAgency/ghidra
+      
+  - source: aur
+    aur: ghidra-git
