@@ -1,7 +1,7 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 
 pkgname=wine-wechat-setup
-pkgver=1.2
+pkgver=1.3
 pkgrel=1
 pkgdesc='Setup and run WeChat Windows version with Wine (Chinese version)'
 url='https://weixin.qq.com/'
@@ -11,11 +11,9 @@ replaces=(wine-wechat)
 conflicts=(wine-wechat)
 provides=(wine-wechat)
 depends=('libarchive' 'zstd' 'python' 'winetricks' 'zenity'
-        'wine' 'lib32-libldap' 'wine_gecko' 'lib32-libpulse')
+        'wine' 'libldap' 'wine_gecko' 'libpulse')
 optdepends=('wine-for-wechat: get rid of those border shades'
-            'lib32-v4l-utils: for video chat'
-            # https://github.com/archlinuxcn/repo/issues/2584
-            'lib32-nvidia-utils: x11 on nvidia card needs this')
+            'v4l-utils: for video chat')
 source=("wine-wechat.desktop"
         "wine-wechat-cfg.desktop"
         "wine-wechat-dir.desktop"
@@ -36,4 +34,4 @@ sha1sums=('fd20b287ada368afb0ec620635999fbb206814da'
           'c791d6514125400c424b610188c4d105832eda80'
           '48a3fcc818d0db6c4a4f2a200d62300e9648bd80'
           'a6a9c232ab8f1188b7b583a9b81e98371af95ae9'
-          '1250a86d8337638fc384fc2005daf446eca5898f')
+          'e7bbe4b2d8f5cde967ee33c07139f258c9ef9cc2')

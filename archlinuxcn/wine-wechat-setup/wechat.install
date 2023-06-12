@@ -9,6 +9,14 @@ post_install () {
 EOF
 }
 
+post_upgrade () {
+  cat <<EOF
+
+==> WeChat is now x86-64 program, you need to recreate the Wine prefix when upgrading!
+
+EOF
+}
+
 post_remove () {
   echo
   echo "==> You may want to remove the ~/.local/lib/wine-wechat directory."
