@@ -2,7 +2,7 @@
 
 _pkgbase=hysteria
 pkgname=$_pkgbase
-pkgver=1.3.4
+pkgver=1.3.5
 pkgrel=1
 pkgdesc='A feature-packed network utility optimized for networks of poor quality'
 arch=('x86_64')
@@ -38,6 +38,7 @@ build() {
   export CGO_CXXFLAGS="${CXXFLAGS}"
   export CGO_LDFLAGS="${LDFLAGS}"
   local _goldflags="-w -s -linkmode=external"
+  local _goldflags="$_goldflags -buildid="
   local _goldflags="$_goldflags -X 'main.appVersion=$(git describe --tags --always --match 'v*')'"
   local _goldflags="$_goldflags -X 'main.appCommit=$(git rev-parse HEAD)'"
   local _goldflags="$_goldflags -X 'main.appDate=$(date -u '+%F %T')'"
