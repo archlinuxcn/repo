@@ -1,0 +1,26 @@
+# Maintainer: GI_Jack <GI_Jack@hackermail.com>
+
+pkgname=python-avalon_framework
+_pkgname=avalon_framework
+pkgver=1.8.2
+pkgrel=3
+pkgdesc="Avalon Framework is a library that can make python printing in Linux much easier."
+arch=('any')
+url="https://github.com/K4YT3X/AVALON"
+license=('LGPLv3')
+depends=('python')
+makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+sha256sums=('8648849cea09de4823f8432113c5c2d05d1e0f4ad99b67cbaf9a3f2ba3de41ae')
+
+_pyver=$(pacman -Q python | cut -f 2 -d " " |cut -d "." -f 1,2)
+
+build() {
+    cd "${_pkgname}-${pkgver}"
+    python -m build --wheel --no-isolation
+}
+
+package() {
+    cd "${_pkgname}-${pkgver}"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+}
