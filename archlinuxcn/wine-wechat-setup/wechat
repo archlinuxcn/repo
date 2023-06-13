@@ -59,7 +59,7 @@ def install(env, prefix, file):
 
   prefix.mkdir(parents=True, exist_ok=True)
   subprocess.check_call([
-    'winetricks', 'sandbox', 'riched20',
+    'winetricks', 'sandbox', 'riched20', 'vcrun2015',
   ], env=env)
 
   regfile = prefix / 'drive_c' / 'wechat.reg'
