@@ -14,6 +14,7 @@ pkgdesc='Mini version of Anaconda Python distribution'
 arch=('x86_64')
 url='https://conda.io/en/latest/miniconda.html'
 license=("custom")
+depends=(ca-certificates-utils)
 source=("${pkgname}-${pkgver}.sh::https://repo.continuum.io/miniconda/${_pkgname}-${_pyver}_${pkgver}-0-Linux-x86_64.sh"
         "${pkgname}.install")
 options=(!strip libtool staticlibs)
@@ -35,4 +36,6 @@ package() {
   sed "s|${pkgdir}||g" -i $(grep "$pkgdir" . -rIl)
   echo "Installing license"
   install -D -m644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  # use system /etc/ssl/certs/ca-certificates.crt
+  find "${pkgdir}" -type f -name "cacert.pem" -exec ln -sf "/etc/ssl/certs/ca-certificates.crt" {} \;
 }
