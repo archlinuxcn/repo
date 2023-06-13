@@ -5,5 +5,9 @@ maintainers:
 pre_build_script: aur_pre_build(maintainers=['aviallon'])
 post_build: aur_post_build
 
+repo_depends:
+  - patool
+  - python-avalon_framework
+
 update_on:
   - source: aur
