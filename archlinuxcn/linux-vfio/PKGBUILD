@@ -5,15 +5,30 @@
 # Upstream: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-vfio
-pkgver=6.2.13.arch1
-pkgrel=10
+pkgver=6.3.7.arch1
+pkgrel=1
 pkgdesc='Linux'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/archlinux/linux/commits/$_srctag"
 arch=(x86_64)
 license=(GPL2)
-makedepends=(bc libelf pahole cpio perl tar xz xmlto python-sphinx graphviz
-imagemagick texlive-latexextra git)
+makedepends=(
+  bc
+  cpio
+  gettext
+  git
+  libelf
+  pahole
+  perl
+  tar
+  xz
+
+  # htmldocs
+  graphviz
+  imagemagick
+  python-sphinx
+  texlive-latexextra
+)
 options=('!strip')
 _srcname=archlinux-linux
 source=(
@@ -23,27 +38,34 @@ source=(
   0002-i915-vga-arbiter.patch  # updated from https://lkml.org/lkml/2014/5/9/517
 )
 validpgpkeys=(
-  'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds
-  '647F28654894E3BD457199BE38DBBDC86092693E'  # Greg Kroah-Hartman
-  'A2FF3A36AAA56654109064AB19802F8B0D70FC30'  # Jan Alexander Steffens (heftig)
-  'C7E7849466FE2358343588377258734B41C31549'  # David Runge <dvzrv@archlinux.org>
+  ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
+  647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
+  A2FF3A36AAA56654109064AB19802F8B0D70FC30  # Jan Alexander Steffens (heftig)
+  C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
-sha256sums=('SKIP'
-            'de96ef80c3d883d03bce280ea1aebb1691aeebfcab82bf14a63d4ab5d9dca4b1'
-            'bdd2a5a56e01e91723907afb40d28bed77b7d5107aba92c85adb3ce6967e713a'
-            '9a698eaf1a0bd740981e909b6ad9bd41300488a2a771843bf30b9bdc94aa3c3b')
+b2sums=('SKIP'
+        'c2d1c69265adc041dc0364e448f6e86dc4c9ca1207c84071abc1675dd820534a8ab5a230e579e68bfb1bf2b861f23ad34e090f8ceaef5e265ea95e2bc6946013'
+        'b1bb6028bead89c277f0e98b308574e47feee2ece5b7f0a2422d40d5b2532216550f99153fbb451c2bee2df398a1a2d596f776281243cf55d4e94c1d5d854ef2'
+        '7c99c5d965bda71f1d08e72fadc529b594d95648950aab49212daee8b34af525404bd98737d2bd715d81959fb71ed143416cb21d88075d833f931f9d0d313ab5')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
 
+_make() {
+  test -s version
+  make KERNELRELEASE="$(<version)" "$@"
+}
+
 prepare() {
   cd $_srcname
 
   echo "Setting version..."
-  scripts/setlocalversion --save-scmversion
   echo "-$pkgrel" > localversion.10-pkgrel
   echo "${pkgbase#linux}" > localversion.20-pkgname
+  make defconfig
+  make -s kernelrelease > version
+  make mrproper
 
   local src
   for src in "${source[@]}"; do
@@ -56,39 +78,47 @@ prepare() {
 
   echo "Setting config..."
   cp ../config .config
-  make olddefconfig
+  _make olddefconfig
   diff -u ../config .config || :
 
-  make -s kernelrelease > version
   echo "Prepared $pkgbase version $(<version)"
 }
 
 build() {
   cd $_srcname
-  make htmldocs all
+  _make htmldocs all
 }
 
 _package() {
   pkgdesc="The $pkgdesc kernel and modules (ACS override and i915 VGA arbiter patches)"
-  depends=(coreutils kmod initramfs)
-  optdepends=('wireless-regdb: to set the correct wireless channels of your country'
-              'linux-firmware: firmware images needed for some devices')
-  provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
+  depends=(
+    coreutils
+    initramfs
+    kmod
+  )
+  optdepends=(
+    'wireless-regdb: to set the correct wireless channels of your country'
+    'linux-firmware: firmware images needed for some devices'
+  )
+  provides=(
+    KSMBD-MODULE
+    VIRTUALBOX-GUEST-MODULES
+    WIREGUARD-MODULE
+  )
 
   cd $_srcname
-  local kernver="$(<version)"
-  local modulesdir="$pkgdir/usr/lib/modules/$kernver"
+  local modulesdir="$pkgdir/usr/lib/modules/$(<version)"
 
   echo "Installing boot image..."
   # systemd expects to find the kernel here to allow hibernation
   # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab8128dcf99161d2344
-  install -Dm644 "$(make -s image_name)" "$modulesdir/vmlinuz"
+  install -Dm644 "$(_make -s image_name)" "$modulesdir/vmlinuz"
 
   # Used by mkinitcpio to name the kernel
   echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
   echo "Installing modules..."
-  make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
+  _make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
     DEPMOD=/doesnt/exist modules_install  # Suppress depmod
 
   # remove build and source links
@@ -196,7 +226,11 @@ _package-docs() {
   ln -sr "$builddir/Documentation" "$pkgdir/usr/share/doc/$pkgbase"
 }
 
-pkgname=("$pkgbase" "$pkgbase-headers" "$pkgbase-docs")
+pkgname=(
+  "$pkgbase"
+  "$pkgbase-headers"
+  "$pkgbase-docs"
+)
 for _p in "${pkgname[@]}"; do
   eval "package_$_p() {
     $(declare -f "_package${_p#$pkgbase}")
