@@ -8,4 +8,4 @@ if [[ -f $XDG_CONFIG_HOME/codium-flags.conf ]]; then
 fi
 
 # Launch
-exec /opt/vscodium-bin/bin/codium "$@" "$CODE_USER_FLAGS"
+exec /opt/vscodium-bin/bin/codium "$@" $CODE_USER_FLAGS
