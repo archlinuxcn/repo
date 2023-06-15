@@ -183,7 +183,7 @@ else
     pkgbase=linux-$pkgsuffix
 fi
 _major=6.3
-_minor=6
+_minor=8
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
@@ -193,7 +193,7 @@ _stable=${_major}.${_minor}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
 pkgdesc='Linux BORE scheduler Kernel by CachyOS with other patches and improvements'
-pkgrel=2
+pkgrel=1
 _kernver=$pkgver-$pkgrel
 arch=('x86_64' 'x86_64_v3')
 url="https://github.com/CachyOS/linux-cachyos"
@@ -220,7 +220,7 @@ source=(
 # ZFS support
 if [ -n "$_build_zfs" ]; then
     makedepends+=(git)
-    source+=("git+https://github.com/cachyos/zfs.git#commit=2582dbec90ac8639dcecaf5ffc95040e759a67d1")
+    source+=("git+https://github.com/cachyos/zfs.git#commit=893549d6259a6904b7c1ee58080eb72acc4ff7aa")
 fi
 
 case "$_cpusched" in
@@ -825,9 +825,9 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('73afc625bbdce52a288724f17a42603b45c9e107a8055172d218369d16885ab9e3ecc1358be5bc839c53ae40c9005b673de6f08bb2cbf36873a19b3ebdb69218'
-        '39157008becff43ca5ba415b23c7b399cb27e2d811a0f59264d54008103206ba04c5cc9e775c21f579dace2b334992d09907a1a7a242f85edd0bead5320ac6ba'
+b2sums=('07b1156f9f5a2673ea53308cd1e67eed34b6354b61b1bf4d8fa020da1976824bdf971239c24d28745964798db9d786e65868391431cd26c713e92128f568d47a'
+        'ef911bd8cae1803e7c23f481e14870c02ede699659ae09ae7af26dcb5a9e6919f28e13e2f5775af008383a1771f64812f601f910679ee0388385f7442184bc54'
         '11d2003b7d71258c4ca71d71c6b388f00fe9a2ddddc0270e304148396dadfd787a6cac1363934f37d0bfb098c7f5851a02ecb770e9663ffe57ff60746d532bd0'
-        '18f71f8174ba35180fd0e71eba8ceb355aab90e25e26521e7fe058a004e91272c297d05081281f01502e3cde32e325b40e24d2220161339fede9737d8d9ef68e'
+        '420457f82f603c48d783651fed45c93b538c1f516fe529d310c0df5e9ae22327376f479112b9be83fb57423c51956e659403f56ba0d04d5439e5af3ea63ec7fa'
         'd3a9449a407f04f3e0759642ad474958ebb4d1283d826987156f6421b94ca46b872c6f4bb43014e8bd5b9cbe61e7b3a07e65f84557f4ae4bd47244d2ba5495ab'
-        '89b83262a482ca30d63b31199a969e0b20131bf545a11c2637fa2e77751dfee68c65911e8b57237320c6d4b08633923ac8430c824fbaa15f7108a6bbc0138f00')
+        '3dd7c4b95830e4e456bf02657d2cbf170f17f6cacf08f934b5790d9e11d6d68c3a25015399c70cd7cfc7bdb02b4e0e076eb32e209e6c5e8d7a1a81c5dc5f23ab')
