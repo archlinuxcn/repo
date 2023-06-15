@@ -10,7 +10,7 @@
 
 pkgname=ungoogled-chromium
 pkgver=114.0.5735.106
-pkgrel=1
+pkgrel=2
 _launcher_ver=8
 _manual_clone=0
 pkgdesc="A lightweight approach to removing Google web service dependency"
@@ -55,14 +55,14 @@ fi
 provides=("chromium=${pkgver}" "chromedriver=${pkgver}")
 conflicts=('chromium' 'chromedriver')
 _uc_usr=ungoogled-software
-_uc_ver=114.0.5735.90-1
+_uc_ver=$pkgver-1
 source=(${source[@]}
         $pkgname-$_uc_ver.tar.gz::https://github.com/$_uc_usr/ungoogled-chromium/archive/$_uc_ver.tar.gz
         ozone-add-va-api-support-to-wayland.patch
         vaapi-add-av1-support.patch
         remove-main-main10-profile-limit.patch)
 sha256sums=(${sha256sums[@]}
-            'a96154372365e63444b4a3ee069636b53f59b74513e6d1a4e217713eb059db67'
+            '6271a6aa90339fdabc8d795556a1df72644fb2e2cd7b8fac635991ef4a23baaf'
             'e9e8d3a82da818f0a67d4a09be4ecff5680b0534d7f0198befb3654e9fab5b69'
             'e742cc5227b6ad6c3e0c2026edd561c6d3151e7bf0afb618578ede181451b307'
             'be8d3475427553feb5bd46665ead3086301ed93c9a41cf6cc2644811c5bda51c')
