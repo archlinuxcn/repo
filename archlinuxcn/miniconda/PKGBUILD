@@ -32,6 +32,7 @@ package() {
   cd "${prefix}"
   echo "Correcting permissions"
   chmod a+r -R pkgs
+  find ${pkgdir}/opt/miniconda ! -type l -perm /o+w -exec chmod o-w {} \;
   echo "Stripping \$pkgdir"
   sed "s|${pkgdir}||g" -i $(grep "$pkgdir" . -rIl)
   echo "Installing license"
