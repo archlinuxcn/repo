@@ -2,7 +2,7 @@
 # Contributor: Caleb Maclennan <caleb@alerque.com>
 
 pkgname=resvg
-pkgver=0.31.1
+pkgver=0.34.1
 pkgrel=1
 pkgdesc='SVG rendering library and CLI'
 arch=(i686 x86_64)
@@ -16,11 +16,13 @@ optdepends=(
 )
 makedepends=(cargo clang qt5-base qt5-tools kio cairo pango cmake extra-cmake-modules)
 source=("$url/archive/v$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('a2f09d00e4e0d689c72924dac46aa21371e89c751344051ead08397e2cf644c8')
+sha256sums=('8f84ba56c66f1f247b154bd9618ea33ffc628a09b7b1a95abb37b0e4187d2419')
 
 prepare() {
 	cd "$pkgname-$pkgver"
 	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	# https://github.com/RazrFalcon/resvg/issues/636
+	sed -i -e '/#include <QDebug>/i #include <cmath>' crates/c-api/ResvgQt.h -e 's/ ceil(/ std::ceil(/' crates/c-api/ResvgQt.h
 	mkdir -p tools/kde-dolphin-thumbnailer/build
 }
 
@@ -62,7 +64,7 @@ package() {
 	install -Dm755 -t "$pkgdir/usr/bin/" target/release/{resvg,usvg} tools/viewsvg/viewsvg
 	make -C tools/kde-dolphin-thumbnailer/build install
 	install -Dm755 -t "$pkgdir/usr/lib/" target/release/libresvg.so
-	install -Dm644 -t "$pkgdir/usr/include/" c-api/*.h
+	install -Dm644 -t "$pkgdir/usr/include/" crates/c-api/*.h
 	install -d "$pkgdir/usr/share/doc/resvg"
 	cp -r target/doc/* "$pkgdir/usr/share/doc/resvg"
 }
