@@ -6,5 +6,9 @@ update_on:
   use_max_tag: true
   prefix: v
   exclude_regex: '.*rc.*'
+- source: alpm
+  alpm: nginx
+  from_pattern: ^(\d+\.\d+).*
+  to_pattern: \1
 repo_depends:
 - lua-resty-core
