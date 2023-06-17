@@ -16,7 +16,7 @@ pkgname=(
   qemu-guest-agent-git
 )
 pkgdesc="A generic and open source machine emulator and virtualizer. Git version."
-pkgver=8.0.0.r1789.gfdd0df5340
+pkgver=8.0.0.r1893.ge3660cc1e3
 pkgrel=1
 epoch=19
 arch=(i686 x86_64)
@@ -86,10 +86,12 @@ makedepends=(
 )
 source=(git+https://gitlab.com/qemu-project/qemu.git
         qemu-guest-agent.service
-        65-kvm.rules)
+        65-kvm.rules
+        keymap.patch)
 sha256sums=('SKIP'
             'c39bcde4a09165e64419fd2033b3532378bba84d509d39e2d51694d44c1f8d88'
-            'a66f0e791b16b03b91049aac61a25950d93e962e1b2ba64a38c6ad7f609b532c')
+            'a66f0e791b16b03b91049aac61a25950d93e962e1b2ba64a38c6ad7f609b532c'
+            '590bffe4ee16f0c83f26e3f72bbd3bc6a98973c9574f08b4705b4273e4e498a4')
 
 case $CARCH in
   i?86) _corearch=i386 ;;
@@ -105,6 +107,8 @@ prepare() {
   cd "${srcdir}/${_gitname}"
   mkdir build-{full,headless}
   mkdir -p extra-arch-{full,headless}/usr/{bin,share/qemu}
+  # Workaround for bug https://gitlab.com/qemu-project/qemu/-/issues/1709
+  patch -Np2 -i ../keymap.patch
 }
 
 build() {
@@ -127,9 +131,10 @@ build() {
 }
 
 _build() (
+  
   cd ${srcdir}/${_gitname}/build-$1
 
-  ../configure \
+    ../configure \
     --prefix=/usr \
     --sysconfdir=/etc \
     --localstatedir=/var \
