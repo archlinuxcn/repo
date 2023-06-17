@@ -1,0 +1,49 @@
+--- a/ext/enchant/config.m4
++++ b/ext/enchant/config.m4
+@@ -4,7 +4,7 @@
+     [Include Enchant support])])
+ 
+ if test "$PHP_ENCHANT" != "no"; then
+-  PKG_CHECK_MODULES([ENCHANT], [enchant])
++  PKG_CHECK_MODULES([ENCHANT], [enchant-2])
+ 
+   PHP_EVAL_INCLINE($ENCHANT_CFLAGS)
+   PHP_EVAL_LIBLINE($ENCHANT_LIBS, ENCHANT_SHARED_LIBADD)
+--- a/ext/enchant/enchant.c
++++ b/ext/enchant/enchant.c
+@@ -738,7 +738,7 @@
+ 			for (i = 0; i < n_sugg; i++) {
+ 				add_next_index_string(sugg, suggs[i]);
+ 			}
+-			enchant_dict_free_suggestions(pdict->pdict, suggs);
++			enchant_dict_free_string_list(pdict->pdict, suggs);
+ 		}
+ 
+ 
+@@ -793,7 +793,7 @@
+ 			add_next_index_string(return_value, suggs[i]);
+ 		}
+ 
+-		enchant_dict_free_suggestions(pdict->pdict, suggs);
++		enchant_dict_free_string_list(pdict->pdict, suggs);
+ 	}
+ }
+ /* }}} */
+@@ -813,7 +813,7 @@
+ 
+ 	PHP_ENCHANT_GET_DICT;
+ 
+-	enchant_dict_add_to_personal(pdict->pdict, word, wordlen);
++	enchant_dict_add(pdict->pdict, word, wordlen);
+ }
+ /* }}} */
+ 
+@@ -851,7 +851,7 @@
+ 
+ 	PHP_ENCHANT_GET_DICT;
+ 
+-	RETURN_BOOL(enchant_dict_is_in_session(pdict->pdict, word, wordlen));
++	RETURN_BOOL(enchant_dict_is_added(pdict->pdict, word, wordlen));
+ }
+ /* }}} */
+ 

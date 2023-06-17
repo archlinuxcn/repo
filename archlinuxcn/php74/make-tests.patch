@@ -1,0 +1,11 @@
+--- a/Makefile
++++ b/Makefile
+@@ -213,7 +213,7 @@
+ 		fi; \
+ 		TEST_PHP_EXECUTABLE=$(PHP_EXECUTABLE) \
+ 		TEST_PHP_SRCDIR=$(top_srcdir) \
+-		CC="$(CC)" \
++		REPORT_EXIT_STATUS=1 NO_INTERACTION=1 SKIP_ONLINE_TESTS=1 SKIP_SLOW_TESTS=1 CC="$(CC)" \
+ 			$(PHP_EXECUTABLE) -n -c $(top_builddir)/tmp-php.ini $(PHP_TEST_SETTINGS) $(top_srcdir)/run-tests.php -n -c $(top_builddir)/tmp-php.ini -d extension_dir=$(top_builddir)/modules/ $(PHP_TEST_SHARED_EXTENSIONS) $(TESTS); \
+ 		TEST_RESULT_EXIT_CODE=$$?; \
+ 		rm $(top_builddir)/tmp-php.ini; \

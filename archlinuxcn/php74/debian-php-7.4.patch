@@ -1,0 +1,274 @@
+
+diff --git a/ext/standard/proc_open.c b/ext/standard/proc_open.c
+index 25a5f7f..93c47af 100644
+--- a/ext/standard/proc_open.c
++++ b/ext/standard/proc_open.c
+@@ -55,7 +55,7 @@
+  * */
+ #ifdef PHP_CAN_SUPPORT_PROC_OPEN
+ 
+-#if 0 && HAVE_PTSNAME && HAVE_GRANTPT && HAVE_UNLOCKPT && HAVE_SYS_IOCTL_H && HAVE_TERMIOS_H
++#if HAVE_PTSNAME && HAVE_GRANTPT && HAVE_UNLOCKPT && HAVE_SYS_IOCTL_H && HAVE_TERMIOS_H
+ # include <sys/ioctl.h>
+ # include <termios.h>
+ # define PHP_CAN_DO_PTS	1
+diff --git a/php.ini-development b/php.ini-development
+index 23a35a2..0292501 100644
+--- a/php.ini-development
++++ b/php.ini-development
+@@ -304,6 +304,12 @@
+ ; or per-virtualhost web server configuration file.
+ ; Note: disables the realpath cache
+ ; http://php.net/open-basedir
++
++; NOTE: this is considered a "broken" security measure.
++;       Applications relying on this feature will not receive full
++;       support by the security team.  For more information please
++;       see /usr/share/doc/php-common/README.Debian.security
++;
+ ;open_basedir =
+ 
+ ; This directive allows you to disable certain functions.
+diff --git a/ext/dba/dba.c b/ext/dba/dba.c
+index 9581a57..21d3f11 100644
+--- a/ext/dba/dba.c
++++ b/ext/dba/dba.c
+@@ -51,6 +51,10 @@
+ #include "php_tcadb.h"
+ #include "php_lmdb.h"
+ 
++#ifdef DB4_INCLUDE_FILE
++#include DB4_INCLUDE_FILE
++#endif
++
+ /* {{{ arginfo */
+ ZEND_BEGIN_ARG_INFO_EX(arginfo_dba_popen, 0, 0, 2)
+ 	ZEND_ARG_INFO(0, path)
+@@ -558,6 +562,10 @@
+ 
+ 	php_info_print_table_start();
+  	php_info_print_table_row(2, "DBA support", "enabled");
++#ifdef DB_VERSION_STRING
++ 	php_info_print_table_row(2, "libdb header version", DB_VERSION_STRING);
++ 	php_info_print_table_row(2, "libdb library version", db_version(NULL, NULL, NULL));
++#endif
+ 	if (handlers.s) {
+ 		smart_str_0(&handlers);
+ 		php_info_print_table_row(2, "Supported handlers", ZSTR_VAL(handlers.s));
+--- /dev/null
++++ b/tests/func/null-new_val.phpt
+@@ -0,0 +1,10 @@
++--TEST--
++ini_restore strcmp NULL new_val
++--FILE--
++<?php
++
++ini_set('error_log','ini_set_works');
++ini_restore('error_log');
++
++?>
++--EXPECT--
+diff --git a/ext/dba/config.m4 b/ext/dba/config.m4
+index 51bdd84..79136d5 100644
+diff --git a/sapi/fpm/php-fpm.8.in b/sapi/fpm/php-fpm.8.in
+index 972c242..002c44b 100644
+--- a/sapi/fpm/php-fpm.8.in
++++ b/sapi/fpm/php-fpm.8.in
+@@ -139,22 +139,8 @@
+ .TP
+ .B php.ini
+ The standard php configuration file.
+-.SH EXAMPLES
+-For any unix systems which use init.d for their main process manager, you should use the init script provided to start and stop the php-fpm daemon.
+-.P
+-.PD 1
+-.RS
+-sudo /etc/init.d/php-fpm start
+-.RE
+-.TP
+-For any unix systems which use systemd for their main process manager, you should use the unit file provided to start and stop the php-fpm daemon.
+-.P
+-.PD 1
+-.RS
+-sudo systemctl start php-fpm.service
+-.RE
+-.TP
+-If your installation has no appropriate init script, launch php-fpm with no arguments. It will launch as a daemon (background process) by default. The file @php_fpm_localstatedir@/run/php-fpm.pid determines whether php-fpm is already up and running. Once started, php-fpm then responds to several POSIX signals:
++.SH SIGNAL
++Once started, php-fpm then responds to several POSIX signals:
+ .P
+ .PD 0
+ .RS
+@@ -168,10 +154,6 @@
+ .RE
+ .PD 1
+ .P
+-.SH TIPS
+-The PHP-FPM CGI daemon will work well with most popular webservers, including Apache2, lighttpd and nginx.
+-.PD 1
+-.P
+ .SH SEE ALSO
+ The PHP-FPM website:
+ .PD 0
+diff --git a/main/streams/plain_wrapper.c b/main/streams/plain_wrapper.c
+index 4d10e68..f74a936 100644
+--- a/main/streams/plain_wrapper.c
++++ b/main/streams/plain_wrapper.c
+@@ -713,7 +713,13 @@
+ 
+ 				switch (value) {
+ 					case PHP_STREAM_MMAP_SUPPORTED:
+-						return fd == -1 ? PHP_STREAM_OPTION_RETURN_ERR : PHP_STREAM_OPTION_RETURN_OK;
++						if (fd == -1)
++							return PHP_STREAM_OPTION_RETURN_ERR;
++						/* Don't mmap large files */
++						do_fstat(data, 1);
++						if (data->sb.st_size > 4 * 1024 * 1024)
++							return PHP_STREAM_OPTION_RETURN_ERR;
++						return PHP_STREAM_OPTION_RETURN_OK;
+ 
+ 					case PHP_STREAM_MMAP_MAP_RANGE:
+ 						if (do_fstat(data, 1) != 0) {
+diff --git a/ext/dba/dba.c b/ext/dba/dba.c
+index 21d3f11..ac2d212 100644
+--- a/ext/dba/dba.c
++++ b/ext/dba/dba.c
+@@ -999,7 +999,7 @@
+ 		}
+ 	}
+ 
+-	if (error || hptr->open(info, &error) != SUCCESS) {
++	if (error || (hptr->open)(info, &error) != SUCCESS) {
+ 		dba_close(info);
+ 		php_error_docref2(NULL, Z_STRVAL(args[0]), Z_STRVAL(args[1]), E_WARNING, "Driver initialization failed for handler: %s%s%s", hptr->name, error?": ":"", error?error:"");
+ 		FREENOW;
+diff --git a/ext/dba/dba_db3.c b/ext/dba/dba_db3.c
+index bc0fdac..1b1b5c9 100644
+--- a/ext/dba/dba_db3.c
++++ b/ext/dba/dba_db3.c
+@@ -93,9 +93,9 @@
+ 	    dbp->set_errcall(dbp, php_dba_db3_errcall_fcn);
+ 		if(
+ #if (DB_VERSION_MAJOR > 4 || (DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR >= 1))
+-			(err=dbp->open(dbp, 0, info->path, NULL, type, gmode, filemode)) == 0) {
++			(err=(dbp->open)(dbp, 0, info->path, NULL, type, gmode, filemode)) == 0) {
+ #else
+-			(err=dbp->open(dbp, info->path, NULL, type, gmode, filemode)) == 0) {
++			(err=(dbp->open)(dbp, info->path, NULL, type, gmode, filemode)) == 0) {
+ #endif
+ 			dba_db3_data *data;
+ 
+diff --git a/ext/dba/dba_db4.c b/ext/dba/dba_db4.c
+index ee296b9..22ca32d 100644
+--- a/ext/dba/dba_db4.c
++++ b/ext/dba/dba_db4.c
+@@ -122,9 +122,9 @@
+ 	    dbp->set_errcall(dbp, php_dba_db4_errcall_fcn);
+ 	    if (
+ #if (DB_VERSION_MAJOR > 4 || (DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR >= 1))
+-			(err=dbp->open(dbp, 0, info->path, NULL, type, gmode, filemode)) == 0) {
++			(err=(dbp->open)(dbp, 0, info->path, NULL, type, gmode, filemode)) == 0) {
+ #else
+-			(err=dbp->open(dbp, info->path, NULL, type, gmode, filemode)) == 0) {
++			(err=(dbp->open)(dbp, info->path, NULL, type, gmode, filemode)) == 0) {
+ #endif
+ 			dba_db4_data *data;
+ 
+diff --git a/ext/zlib/zlib.c b/ext/zlib/zlib.c
+index 9060dcb..2678751 100644
+--- a/ext/zlib/zlib.c
++++ b/ext/zlib/zlib.c
+@@ -47,6 +47,18 @@
+ int le_deflate;
+ int le_inflate;
+ 
++/*
++ * zlib include files can define the following preprocessor defines which rename
++ * the corresponding PHP functions to gzopen64, gzseek64 and gztell64 and thereby
++ * breaking some software, most notably PEAR's Archive_Tar, which halts execution
++ * without error message on gzip compressed archivesa.
++ *
++ * This only seems to happen on 32bit systems with large file support.
++ */
++#undef gzopen
++#undef gzseek
++#undef gztell
++
+ ZEND_DECLARE_MODULE_GLOBALS(zlib);
+ 
+ /* {{{ Memory management wrappers */
+diff --git a/ext/standard/tests/strings/setlocale_variation2.phpt b/ext/standard/tests/strings/setlocale_variation2.phpt
+index 6fd6f4d..9be9dc6 100644
+--- a/ext/standard/tests/strings/setlocale_variation2.phpt
++++ b/ext/standard/tests/strings/setlocale_variation2.phpt
+@@ -59,6 +59,7 @@
+ //try different locale names
+ $failure_locale = array();
+ $success_count = 0;
++$expected = 0;
+ 
+ echo "-- Test setlocale() with all available locale in the system --\n";
+ // gather all locales installed in the system(stored $all_system_locales),
+@@ -68,6 +69,10 @@
+   if(setlocale(LC_ALL,$value )){
+    $success_count++;
+   }
++  else if ($value == 'no_NO.ISO-8859-1') {
++    // ignore this one, see rhbz #971416
++   $expected++;
++  }
+   else{
+    //failure values are put in to an array $failure_locale
+    $failure_locale[] = $value;
+@@ -76,11 +81,11 @@
+ 
+ echo "No of locales found on the machine = ".count($all_system_locales)."\n";
+ echo "No of setlocale() success = ".$success_count."\n";
+-echo "Expected no of failures = 0\n";
++echo "Expected no of failures = $expected\n";
+ echo "Test ";
+ // check if there were any failure of setlocale() function earlier, if any
+ // failure then dump the list of failing locales
+-if($success_count != count($all_system_locales)){
++if(($success_count + $expected) != count($all_system_locales)){
+   echo "FAILED\n";
+   echo "Names of locale() for which setlocale() failed ...\n";
+   var_dump($failure_locale);
+@@ -96,6 +101,6 @@
+ -- Test setlocale() with all available locale in the system --
+ No of locales found on the machine = %d
+ No of setlocale() success = %d
+-Expected no of failures = 0
++Expected no of failures = %d
+ Test PASSED
+ Done
+diff --git a/ext/pcre/tests/grep2.phpt b/ext/pcre/tests/grep2.phpt
+index 4c6f9b1..a6247cc 100644
+--- a/ext/pcre/tests/grep2.phpt
++++ b/ext/pcre/tests/grep2.phpt
+@@ -44,12 +44,6 @@
+   string(1) "1"
+ }
+ bool(true)
+-array(3) {
+-  [5]=>
+-  string(1) "a"
+-  ["xyz"]=>
+-  string(2) "q6"
+-  [6]=>
+-  string(3) "h20"
++array(0) {
+ }
+-bool(false)
++bool(true)
+diff --git a/ext/pcre/tests/match_flags3.phpt b/ext/pcre/tests/match_flags3.phpt
+index 6511c71..05c62a0 100644
+--- a/ext/pcre/tests/match_flags3.phpt
++++ b/ext/pcre/tests/match_flags3.phpt
+@@ -41,5 +41,5 @@
+   }
+ }
+ 
+-Warning: preg_match(): Compilation failed: %s name must start with a non-digit at offset %d in %smatch_flags3.php on line %d
++Warning: preg_match(): Numeric named subpatterns are not allowed in %smatch_flags3.php on line %d
+ bool(false)

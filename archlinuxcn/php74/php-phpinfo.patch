@@ -1,0 +1,22 @@
+--- a/ext/standard/info.c
++++ b/ext/standard/info.c
+@@ -810,9 +810,6 @@ PHPAPI ZEND_COLD void php_print_info(int flag)
+ #ifdef ARCHITECTURE
+ 		php_info_print_table_row(2, "Architecture", ARCHITECTURE);
+ #endif
+-#ifdef CONFIGURE_COMMAND
+-		php_info_print_table_row(2, "Configure Command", CONFIGURE_COMMAND );
+-#endif
+ 
+ 		if (sapi_module.pretty_name) {
+ 			php_info_print_table_row(2, "Server API", sapi_module.pretty_name );
+--- a/ext/standard/tests/general_functions/phpinfo.phpt
++++ b/ext/standard/tests/general_functions/phpinfo.phpt
+@@ -20,7 +20,6 @@ PHP Version => %s
+ 
+ System => %s
+ Build Date => %s%a
+-Configure Command => %s
+ Server API => Command Line Interface
+ Virtual Directory Support => %s
+ Configuration File (php.ini) Path => %s

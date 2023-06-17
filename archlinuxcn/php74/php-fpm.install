@@ -1,0 +1,31 @@
+pre_install() {
+    echo "php-fpm pre_install hook"
+    echo "1=$1"
+}
+
+post_install() {
+    echo "php-fpm post_install hook"
+    echo "1=$1"
+}
+
+pre_upgrade() {
+    echo "php-fpm pre_upgrade hook"
+    echo "1=$1"
+    echo "2=$2"
+}
+
+post_upgrade() {
+    echo "php-fpm post_upgrade hook"
+    echo "1=$1"
+    echo "2=$2"
+}
+
+pre_remove() {
+    echo "php-fpm pre_remove hook"
+    echo "1=$1"
+}
+
+post_remove() {
+    echo "php-fpm post_remove hook"
+    echo "1=$1"
+}
