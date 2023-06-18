@@ -1,14 +1,14 @@
 pkgname='alacritty-git'
 _pkgname="alacritty"
-pkgver=0.13.0.2116.g32ea98de
-pkgrel=2
+pkgver=0.13.0.2130.gee938243
+pkgrel=1
 epoch=1
 arch=('x86_64' 'i686')
 url="https://github.com/jwilm/alacritty"
 pkgdesc="A cross-platform, GPU-accelerated terminal emulator"
 license=('Apache')
 depends=('freetype2' 'fontconfig' 'libxi' 'libxcursor' 'libxrandr' 'libxkbcommon')
-makedepends=('rust' 'cargo' 'cmake' 'fontconfig' 'ncurses' 'desktop-file-utils' 'gdb' 'libxcb' 'git')
+makedepends=('rust' 'cargo' 'cmake' 'fontconfig' 'ncurses' 'desktop-file-utils' 'gdb' 'libxcb' 'git' 'scdoc' 'gzip')
 checkdepends=('ttf-dejavu') # for monospace fontconfig test
 provides=('alacritty')
 conflicts=('alacritty')
@@ -31,10 +31,12 @@ package_alacritty-git() {
 
 	desktop-file-install -m 644 --dir "$pkgdir/usr/share/applications/" "$srcdir/$_pkgname/extra/linux/Alacritty.desktop"
 
+	mkdir -p "$pkgdir/usr/share/man/man1"
+	scdoc < extra/man/alacritty.1.scd | gzip -c | tee "$pkgdir/usr/share/man/man1/alacritty.1.gz" > /dev/null
+	scdoc < extra/man/alacritty-msg.1.scd | gzip -c | tee "$pkgdir/usr/share/man/man1/alacritty-msg.1.gz" > /dev/null
+
 	install -D -m755 "target/release/alacritty" "$pkgdir/usr/bin/alacritty"
-	install -D -m644 "extra/alacritty.man" "$pkgdir/usr/share/man/man1/alacritty.1"
 	install -D -m644 "extra/linux/org.alacritty.Alacritty.appdata.xml" "$pkgdir/usr/share/appdata/org.alacritty.Alacritty.appdata.xml"
-	install -D -m644 "alacritty.yml" "$pkgdir/usr/share/doc/alacritty/example/alacritty.yml"
 	install -D -m644 "extra/completions/alacritty.bash" "$pkgdir/usr/share/bash-completion/completions/alacritty"
 	install -D -m644 "extra/completions/_alacritty" "$pkgdir/usr/share/zsh/site-functions/_alacritty"
 	install -D -m644 "extra/completions/alacritty.fish" "$pkgdir/usr/share/fish/vendor_completions.d/alacritty.fish"
