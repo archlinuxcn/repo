@@ -1,7 +1,7 @@
 # Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
 pkgname=apostrophe
 pkgver=2.6.3
-pkgrel=6
+pkgrel=7
 pkgdesc="A distraction free Markdown editor for GNU/Linux made with GTK+"
 arch=('any')
 url="https://world.pages.gitlab.gnome.org/apostrophe"
@@ -10,7 +10,7 @@ depends=('gspell' 'libhandy' 'otf-fira-mono' 'otf-fira-sans' 'python-cairo'
          'python-chardet' 'python-gobject' 'python-levenshtein' 'python-pyenchant'
          'python-pypandoc' 'python-regex' 'python-setuptools' 'webkit2gtk-4.1')
 makedepends=('meson' 'gobject-introspection' 'sassc')
-optdepends=('texlive-latexextra: for the pdftex module'
+optdepends=('texlive-bin: for the pdftex module'
             'mathjax: for formula preview')
 checkdepends=('appstream-glib')
 source=("https://gitlab.gnome.org/World/apostrophe/-/archive/v$pkgver/$pkgname-v$pkgver.tar.gz"
