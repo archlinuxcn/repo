@@ -2,42 +2,46 @@
 
 _pkgname=tensorboardX
 pkgname=python-tensorboardx
-pkgver=2.5.1
-pkgrel=2
+pkgver=2.6.1
+pkgrel=1
 pkgdesc='Tensorboard for pytorch (and chainer, mxnet, numpy, ...)'
 arch=('any')
 url=https://github.com/lanpa/tensorboardX
 license=(MIT)
 depends=(python-numpy python-protobuf python-six)
-makedepends=(python-setuptools)
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-setuptools-scm
+  python-wheel
+)
 checkdepends=(flake8 python-future python-matplotlib python-pytest python-pytorch python-torchvision)
 source=("${_pkgname}-${pkgver}.tar.gz"::"https://github.com/lanpa/tensorboardX/archive/v${pkgver}.tar.gz")
-sha512sums=('ebbf7d4c2eaa7d526a4e5088e618a118cdad4f3c23e64844fcd62423910ab67fcc6e1e878e79fa2f7e23b8137f90d829a4245eecae9f4a925b14828f356c873d')
+sha512sums=('96563df5f6fbd96c9d35c55bb997886693c30a1b0cf6eeae09a57058ce7c152371454167c56600acd74f67c639655a91077ca46b8d351c96b5582fe697c5d4e4')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
   _ver=$(protoc --version|cut -d ' ' -f 2)
   # using protobuf from official repo
   sed -i "s/DESIRED_PROTO_VERSION=.*/DESIRED_PROTO_VERSION=${_ver}/" compile.sh
-  # fix version
-  sed -i "/^sha/s/^/#/" setup.py
-  sed -i "/^version_git/c\version_git='${pkgver}'" setup.py
+  # fix Deprecated config in `setup.cfg`
+  sed -i "s/license_file /license_files /" setup.cfg
+  # dirty hack to skip pip install command
+  sed -i "s/pip install/echo/" setup.py
 }
 
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  SETUPTOOLS_SCM_PRETEND_VERSION=${pkgver} \
+  python -m build --wheel --no-isolation
 }
-
-#check() {
-#  cd "${_pkgname}-${pkgver}"
-#  pytest -v
-#}
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  SETUPTOOLS_SCM_PRETEND_VERSION=${pkgver} \
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
