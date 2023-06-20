@@ -3,13 +3,12 @@
 # Contributor: Jan de Groot <jgc@archlinux.org>
 pkgname=python2-cairo
 pkgver=1.19.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Python bindings for the cairo graphics library"
 arch=('x86_64')
 url="https://pycairo.readthedocs.io/en/latest/"
 license=('LGPL2.1' 'MPL')
 depends=(cairo python2)
-makedepends=(git)
 _github='https://github.com/pygobject/pycairo'
 source=("$_github/releases/download/v$pkgver/pycairo-$pkgver.tar.gz")
 sha256sums=('2c143183280feb67f5beb4e543fd49990c28e7df427301ede04fc550d3562e84')
