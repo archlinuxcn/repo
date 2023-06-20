@@ -61,6 +61,10 @@ _use_current=${_use_current-}
 ### Enable KBUILD_CFLAGS -O3
 _cc_harder=${_cc_harder-y}
 
+### Enable KBUILD_CFLAGS -Os
+## DO NOT SET, THIS IS FOR INTERNAL CI USE ONLY.
+_cc_size=${_cc_size-}
+
 ### Set this to your number of threads you have in your machine otherwise it will default to 128
 _nr_cpus=${_nr_cpus-}
 
@@ -188,7 +192,7 @@ fi
 _major=6.4
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc5
+_rcver=rc7
 pkgver=${_major}.${_rcver}
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -196,7 +200,7 @@ _stable=${_major}-${_rcver}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
 pkgdesc='Linux EEVDF scheduler Kernel by CachyOS and with some other patches and other improvements'
-pkgrel=3
+pkgrel=1
 _kernver=$pkgver-$pkgrel
 arch=('x86_64' 'x86_64_v3')
 url="https://github.com/CachyOS/linux-cachyos"
@@ -223,7 +227,7 @@ source=(
 # ZFS support
 if [ -n "$_build_zfs" ]; then
     makedepends+=(git)
-    source+=("git+https://github.com/cachyos/zfs.git#commit=2582dbec90ac8639dcecaf5ffc95040e759a67d1")
+    source+=("git+https://github.com/cachyos/zfs.git#commit=893549d6259a6904b7c1ee58080eb72acc4ff7aa")
 fi
 
 case "$_cpusched" in
@@ -440,10 +444,17 @@ prepare() {
     echo "Selecting '$_preempt' preempt type..."
 
     ### Enable O3
-    if [ -n "$_cc_harder" ]; then
+    if [ -n "$_cc_harder" ] && [ -z "$_cc_size" ]; then
         echo "Enabling KBUILD_CFLAGS -O3..."
         scripts/config -d CC_OPTIMIZE_FOR_PERFORMANCE \
             -e CC_OPTIMIZE_FOR_PERFORMANCE_O3
+    fi
+
+    ### Enable Os
+    if [ -n "$_cc_size" ] && [ -z "$_cc_harder" ]; then
+        echo "Enabling KBUILD_CFLAGS -Os..."
+        scripts/config -d CC_OPTIMIZE_FOR_PERFORMANCE \
+            -e CONFIG_CC_OPTIMIZE_FOR_SIZE
     fi
 
     ### Enable bbr2
@@ -823,7 +834,7 @@ _package-zfs(){
 
     cd ${srcdir}/"zfs"
     install -dm755 "$pkgdir/usr/lib/modules/${_kernver}-${pkgsuffix}"
-    install -m644 module/*.ko "$pkgdir/usr/lib/modules/${_kernver}-${pkgsuffix}"
+    install -m644 module/*/*.ko "$pkgdir/usr/lib/modules/${_kernver}-${pkgsuffix}"
     find "$pkgdir" -name '*.ko' -exec zstd --rm -10 {} +
     #  sed -i -e "s/EXTRAMODULES='.*'/EXTRAMODULES='${pkgver}-${pkgbase}'/" "$startdir/zfs.install"
 }
@@ -839,9 +850,9 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('fbfd40b0e214400614d3336f0d668c964eaae328b29559a6d45e47392c5832eea67875b4967b612cd0132ab122d56f6a1bf58a2d83775a878b07502c5da7af61'
-        '1f7aab113f0dd8826c0cb611b5aad9ef7a350c023a1cab27fa6a24d473e4279fb42a06ac2fa6fffcf13a223ab41de1d02c9f0ea337fcb8be9dffbf2f5f7f23f4'
+b2sums=('a576bc0ecee89b1db1070eb9013eacd02b8fc94fa4a2c08aca5354c1f21db1b191542e5866dc4c4ad259dfc7305b65d4c4eac79522450c6f859be32cfb577643'
+        'd45ec733fd7f6e71725d6a71eb0cf616b125ccab84df2aad425bcd9f1a2fe7979e1757b825883940118e33948e9236072e8fc9c0e435ffcb396d1d584048f87a'
         '11d2003b7d71258c4ca71d71c6b388f00fe9a2ddddc0270e304148396dadfd787a6cac1363934f37d0bfb098c7f5851a02ecb770e9663ffe57ff60746d532bd0'
-        'f7d852a53e1ee3f6613cd2ee33000bb5762ceb3afab2444104e5d3699d9728382d88c81ce1b0056c1e015af88818a20f84fac0769c92fec6199b490ab2c6d2b4'
+        '41e4c95d447fc896878d3a73b4d481f6f99e108c07c2303127de3733f3dc0ff6dc129dc787e61267ff4a3dc7b1d531857fa79c48e75765ea3cdc26c1ca6935cb'
         '1d9844923224c45dbf1c428592dfa607997284c9421dd6906166caeb37d6cc109cfc445a0f544578ccd77803ec5a616a106eb89cd5f95eba15273a6af72c1680'
-        '038f278c3eb5960933a4963c0f8786f80d767782e1afd431570f4d1d49352529c0b041d673a517c21fd07e103a767d869da313120feb44da07068b17b3f74187')
+        'ce9cf211bf76c09bbea0f824fbbba37c4dcd19d3679220286e5d03a080b2ef255dccfb5158206985586cb95303b15b3014c4a4b7bde95b1e8b08f38f6e861491')
