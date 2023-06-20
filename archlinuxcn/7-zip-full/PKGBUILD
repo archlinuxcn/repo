@@ -1,21 +1,14 @@
-# To build without ASM (uasm), set NO_ASM variable. For example:
-# NO_ASM=1 makepkg -si
-
 _name=7-zip
 pkgname=${_name}-full
-pkgver=22.01
-pkgrel=7
+pkgver=23.01
+pkgrel=1
 pkgdesc="File archiver with a high compression ratio (full package to replace p7zip)"
 url="https://7-zip.org/"
 license=('LGPL')
-arch=('x86_64' 'i686' 'aarch64')
+arch=('x86_64' 'i686' 'aarch64' 'armv7h')
 provides=("${_name}" 'p7zip')
 conflicts=("${provides[@]}")
-makedepends=()
-
-if [ ! "${NO_ASM}" ]; then
-    makedepends+=('uasm')
-fi
+makedepends=('uasm')
 
 source=(
     "${url}a/7z${pkgver//./}-src.tar.xz"
@@ -23,8 +16,8 @@ source=(
 )
 
 sha256sums=(
-    '393098730c70042392af808917e765945dc2437dee7aae3cfcc4966eb920fbc5'
-    'e79922f6c7d686a941011dc27472ce66c872f2f706251f060225d1bd2da40c6a'
+    '356071007360e5a1824d9904993e8b2480b51b570e8c9faf7c0f58ebe4bf9f74'
+    '4db1d0e9bd0f156be35f264182c56724e36648510283e9e9187f334d7a1e6c06'
 )
 
 prepare() {
@@ -34,7 +27,7 @@ prepare() {
 
 build() {
     local targets=("Alone" "Alone2" "Alone7z" "Format7zF")
-    local -A platforms=(['x86_64']='x64' ['i686']='x86' ['aarch64']='arm64')
+    local -A platforms=(['x86_64']='x64' ['i686']='x86' ['aarch64']='arm64' ['armv7h']='arm')
     mkdir -p "build"
 
     (
@@ -45,7 +38,7 @@ build() {
         IS_X86=$([ "${CARCH}" = 'i686' ] && echo '1' || echo '')
         IS_ARM64=$([ "${CARCH}" = 'aarch64' ] && echo '1' || echo '')
         MY_ARCH=
-        USE_ASM=$([ ! "${NO_ASM}" ] && echo '1' || echo '')
+        USE_ASM=1
         CFLAGS_WARN='-Wno-error'
         CFLAGS_ADD="${CFLAGS}"
         LDFLAGS_ADD="${LDFLAGS}"
