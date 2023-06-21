@@ -4,7 +4,7 @@ project(
     'c',
     'cpp',
   ],
-  version: '22.01',
+  version: '23.01',
   default_options: [
     'warning_level=2',
     'werror=true',
@@ -72,6 +72,7 @@ c_files = [
   'C/Sha1.c',
   'C/Sha256.c',
   'C/Sort.c',
+  'C/SwapBytes.c',
   'C/Threads.c',
   'C/Xz.c',
   'C/XzCrc64.c',
@@ -199,6 +200,7 @@ cpp_files = [
   'CPP/7zip/Common/MemBlocks.cpp',
   'CPP/7zip/Common/MethodId.cpp',
   'CPP/7zip/Common/MethodProps.cpp',
+  'CPP/7zip/Common/MultiOutStream.cpp',
   'CPP/7zip/Common/OffsetStream.cpp',
   'CPP/7zip/Common/OutBuffer.cpp',
   'CPP/7zip/Common/OutMemStream.cpp',
@@ -353,11 +355,13 @@ project_dependencies = [
   dl_dep,
 ]
 
+
+
 add_project_arguments(
   [
-    '-D_LZMA_DEC_OPT',
-    '-DPROG_VARIANT_Z',
-    '-D_7ZIP_ASM',
+    '-DZ7_7ZIP_ASM',
+    '-DZ7_LZMA_DEC_OPT',
+    '-DZ7_PROG_VARIANT_Z',
     '-Waddress',
     '-Waddress-of-packed-member',
     '-Wattributes',
@@ -370,6 +374,7 @@ add_project_arguments(
     '-Winit-self',
     '-Wint-in-bool-context',
     '-Wint-to-pointer-cast',
+    '-Wmisleading-indentation',
     '-Wunused',
     '-Wunused-macros',
   ],
@@ -389,6 +394,8 @@ if cpp.get_id() == 'gcc'
       '-Wduplicated-cond',
       '-Wformat-contains-nul',
       '-Wimplicit-fallthrough=5',
+      '-Wmaybe-uninitialized',
+      '-Wmissing-attributes',
     ],
     language: [
       'c',
@@ -398,7 +405,6 @@ if cpp.get_id() == 'gcc'
 elif cpp.get_id() == 'clang'
   add_project_arguments(
     [
-      '-Wno-sign-conversion',
       '-Wno-unused-but-set-variable',
     ],
     language: [
@@ -407,15 +413,6 @@ elif cpp.get_id() == 'clang'
     ],
   )
 endif
-
-add_project_arguments(
-  [
-    '-Wno-non-virtual-dtor',
-  ],
-  language: [
-    'cpp',
-  ],
-)
 
 project_target = executable('7zz',
   [
