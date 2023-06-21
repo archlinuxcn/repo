@@ -1,18 +1,12 @@
 # Maintainer: cubercsl <2014cais01 at gmail dot com>
-pkgbase=dae
-_pkgname=dae
-pkgname=(
-    $_pkgname
-    $_pkgname-geoip-v2raycompat
-    $_pkgname-geosite-v2raycompat
-)
+pkgname=dae
 pkgver=0.1.10.p1
-pkgrel=1
+pkgrel=2
 pkgdesc="A Linux lightweight and high-performance transparent proxy solution based on eBPF."
 arch=(x86_64)
 url="https://github.com/daeuniverse/dae"
 license=('AGPL')
-makedepends=(clang llvm go)
+makedepends=(clang go)
 source=(
     "$_pkgname-$pkgver.zip::https://github.com/daeuniverse/dae/releases/download/v$pkgver/dae-full-src.zip"
 )
@@ -20,19 +14,16 @@ sha256sums=('870d597d5b7278b644ab9f3c5ccc31dd0ec7f6d90aca22a21c19005724070a72')
 
 build() {
     export GOFLAGS="-buildmode=pie -trimpath -modcacherw"
-    export CFLAGS=""
-
+    export CFLAGS="-fno-stack-protector"
     cd "$srcdir"
     make VERSION="$pkgver"
 }
 
-package_dae() {
-    provides=($_pkgname)
-    conflicts=($_pkgname)
+package() {
     depends=(
         glibc
-        dae-geoip
-        dae-geosite
+        v2ray-geoip
+        v2ray-domain-list-community
     )
     backup=("etc/dae/config.dae")
 
@@ -41,24 +32,8 @@ package_dae() {
     install -Dm644 "install/dae.service" "$pkgdir/usr/lib/systemd/system/dae.service"
     install -Dm640 "install/empty.dae" "$pkgdir/etc/dae/config.dae"
     install -Dm644 "example.dae" "$pkgdir/etc/dae/config.dae.example"
-}
 
-package_dae-geoip-v2raycompat() {
-    arch=(any)
-    pkgdesc="v2ray geoip compat for dae"
-    depends=(v2ray-geoip)
-    provides=($_pkgname-geoip)
-
-    install -dm755 "$pkgdir/usr/share/dae"
-    ln -s /usr/share/v2ray/geoip.dat "$pkgdir/usr/share/dae/geoip.dat"
-}
-
-package_dae-geosite-v2raycompat() {
-    arch=(any)
-    pkgdesc="v2ray geosite compat for dae"
-    depends=(v2ray-domain-list-community)
-    provides=($_pkgname-geosite)
-
-    install -dm755 "$pkgdir/usr/share/dae"
-    ln -s /usr/share/v2ray/geosite.dat "$pkgdir/usr/share/dae/geosite.dat"
+    mkdir -p "$pkgdir/usr/share/dae"
+    ln -vs /usr/share/v2ray/geoip.dat $pkgdir/usr/share/dae/geoip.dat
+    ln -vs /usr/share/v2ray/geosite.dat $pkgdir/usr/share/dae/geosite.dat 
 }
