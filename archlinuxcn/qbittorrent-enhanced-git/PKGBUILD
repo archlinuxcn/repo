@@ -2,13 +2,13 @@
 
 pkgname=qbittorrent-enhanced-git
 pkgver=4.5.4.10.r0.g416904b36
-pkgrel=1
+pkgrel=2
 pkgdesc="A bittorrent client powered by C++, Qt6 and the good libtorrent library (Enhanced Edition)"
 arch=('arm' 'armv6h' 'armv7h' 'aarch64' 'i686' 'x86_64')
 url="https://github.com/c0re100/qBittorrent-Enhanced-Edition"
 license=('custom' 'GPL')
 depends=("libtorrent-rasterbar" "qt5-base" "qt5-svg" "qt6-base" "qt6-svg")
-makedepends=("boost" "git" "qt5-tools" "qt6-tools")
+makedepends=("boost" "cmake" "git" "qt5-tools" "qt6-tools")
 optdepends=('python: needed for torrent search tab')
 conflicts=('qbittorrent')
 provides=('qbittorrent')
@@ -27,16 +27,15 @@ pkgver() {
 build() {
   cd ${pkgname%-*}
 
-  # tell qmake not to break makepkg's debug/!strip options
-  export QBT_ADD_CONFIG='nostrip'
-
-  ./configure --prefix=/usr CXXFLAGS="-std=c++17"
-  make
+  cmake -B build -S . \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DQT6=ON
+  cmake --build build
 }
 
 package() {
   cd ${pkgname%-*}
 
-  make INSTALL_ROOT="$pkgdir/" install
+  DESTDIR="$pkgdir" cmake --install build
   install -Dm644 COPYING "$pkgdir"/usr/share/licenses/$pkgname/COPYING
 }
