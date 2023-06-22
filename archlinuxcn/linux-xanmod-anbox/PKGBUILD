@@ -73,7 +73,7 @@ fi
 
 pkgbase=linux-xanmod-anbox
 _major=6.3
-pkgver=${_major}.8
+pkgver=${_major}.9
 _branch=6.x
 xanmod=1
 _revision=
@@ -111,7 +111,7 @@ done
 
 sha256sums=('ba3491f5ed6bd270a370c440434e3d69085fcdd528922fa01e73d7657db73b1e'
             'SKIP'
-            '1b01d2ce3c322c9907e2e0add2fea18abb89de0d6efde85050feb068ba08184b'
+            'f6010d895c549ba8fc7e4728208c04de988486de0c30a1cdf50e04855d37675d'
             '5c84bfe7c1971354cff3f6b3f52bf33e7bbeec22f85d5e7bfde383b54c679d30')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
