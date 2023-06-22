@@ -2,7 +2,7 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=3684
+pkgver=3701
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
@@ -17,16 +17,16 @@ source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.g
 "https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml"
 "https://github.com/pineappleEA/pineapple-src/releases/download/EA-${pkgver}/Windows-Yuzu-EA-${pkgver}.zip")
 options=('!buildflags') #[heavysink] Disable _FORTIFY_SOURCE for temporary fix for Bayonetta 3
-sha256sums=('ede5ffa3b635640a1691299c6aa47217bb361858bbd37fd51b2d0064935dc21e'
+sha256sums=('60138dc6e9fe2ae84be4d6fd89b370e4413e9dfb71c56598a43bfb03997d01fa'
             'e76ab2b3566d8135930e570ede5bed3da8f131270b60db818e453d248880bdf2'
-            '5045267df681c7512e26c4223ad97c0a79e7ee5fab57175943b7c9b1a5c66014')
+            'b55694ecc3e8edc8b22800cf55083a750b0f25243e307e2c27e8a6ae4710d885')
 
 prepare() {
   cd "$srcdir/yuzu-windows-msvc-early-access"
   tar -xvf *.tar.xz
   cd $(ls *.tar.xz | sed -e 's/.tar.xz//')
   cp -R .git* $srcdir/pineapple-src-EA-${pkgver}/
-  
+
   cd $srcdir/pineapple-src-EA-${pkgver}
   for i in $(git config --file .gitmodules --get-regexp path | awk '{ print $2 }') ; do
       rm -rf "$i"
@@ -34,13 +34,12 @@ prepare() {
 
   git submodule update --init --remote externals/sirit
   git submodule update --init --remote externals/mbedtls
+  git submodule update --init --remote externals/vma
 
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror$/-W/g' {} +
   #find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*)$/ )/g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/-Werror/-W/g' {} +
-  sed -i -e 's/0.11 //g' CMakeLists.txt
-  sed -i -e 's/1.3.238/1.3.233/g' CMakeLists.txt
   sed -i -e '/#define VK_NO_PROTOTYPES/a #define VK_ENABLE_BETA_EXTENSIONS' src/video_core/vulkan_common/vulkan_wrapper.h
   sed -i -e 's/--quiet //g' src/video_core/host_shaders/CMakeLists.txt
   sed -i -e 's#${SPIRV_HEADER_FILE} ${SOURCE_FILE}#${SPIRV_HEADER_FILE} ${SOURCE_FILE} 2>/dev/null#g' src/video_core/host_shaders/CMakeLists.txt
@@ -49,6 +48,8 @@ prepare() {
   sed -i -e '/yuzu %f/a StartupWMClass=yuzu' dist/yuzu.desktop
   sed -i -e 's_^MimeType=.*_&application/x-nx-nsp;application/x-nx-xci;_' dist/yuzu.desktop
   sed -i -e 's| (%2)||' src/yuzu/aboutdialog.ui
+
+  sed -i -e '32i set(NX_TZDB_DIR "${CMAKE_CURRENT_BINARY_DIR}/nx_tzdb")' externals/nx_tzdb/CMakeLists.txt
 
   cp -f  $srcdir/yuzu.xml dist/yuzu.xml
 }
@@ -74,8 +75,9 @@ build() {
     -DYUZU_USE_EXTERNAL_VULKAN_HEADERS=OFF \
     -DYUZU_USE_FASTER_LD=OFF \
     -DYUZU_USE_PRECOMPILED_HEADERS=OFF \
-	-DYUZU_USE_QT_MULTIMEDIA=ON \
-    -DYUZU_TESTS=OFF
+    -DYUZU_USE_QT_MULTIMEDIA=ON \
+    -DYUZU_TESTS=OFF \
+    -DYUZU_DOWNLOAD_TIME_ZONE_DATA=ON
   ninja
 }
 
@@ -83,5 +85,5 @@ package() {
 	cd "$srcdir/pineapple-src-EA-${pkgver}/build"
 	DESTDIR="$pkgdir" ninja install
 
-    rm -rf $pkgdir/usr/lib $pkgdir/usr/include 
+    rm -rf $pkgdir/usr/lib $pkgdir/usr/include
 }
