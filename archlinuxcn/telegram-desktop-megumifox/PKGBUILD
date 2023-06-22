@@ -3,18 +3,19 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
-pkgver=4.8.1
+pkgver=4.8.4
 pkgrel=3
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL3')
 depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
-         'qt6-imageformats' 'qt6-svg' 'qt6-wayland' 'qt6-5compat' 'xxhash' 'glibmm-2.68'
+         'qt6-imageformats' 'qt6-svg' 'qt6-wayland' 'xxhash' 'glibmm-2.68'
          'rnnoise' 'pipewire' 'libxtst' 'libxrandr' 'jemalloc' 'abseil-cpp' 'libdispatch'
          'openssl' 'protobuf')
 makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'microsoft-gsl' 'meson'
-             'extra-cmake-modules' 'wayland-protocols' 'plasma-wayland-protocols' 'libtg_owt')
+             'extra-cmake-modules' 'wayland-protocols' 'plasma-wayland-protocols' 'libtg_owt'
+             'gobject-introspection' 'glib2' 'boost' 'fmt')
 optdepends=('webkit2gtk: embedded browser features'
             'xdg-desktop-portal: desktop integration')
 provides=('telegram-desktop')
@@ -22,7 +23,7 @@ conflicts=('telegram-desktop')
 source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
         "0001-Use-font-from-environment-variables.patch"
         "0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch")
-sha512sums=('4dc495e4502bdba634c4468af4f1321aef1152d619c811f004489f8616504a465069508239eae41a08a83e190a61d26881733ebc38dd88160f81dce070bb0567'
+sha512sums=('7988d047cb72888e303f9902f04bd2168f67fb18a4451e5122ce80b0aef726173f0ee10f83b8bb713a46e02c9ec4150ad6128e4288be432ed3d590011f80e4dd'
             'cc48d9116a918df5479c4508e9b98536772cafd9bc736ca40fdbedc3ea8ee0188eb0434046177ef49e0a124668e8c707433af90b11879ef0cf43911ab67a56cb'
             '31d7a4c091abae49631598f2f41c8382550312e080fca784ed5a19cbaef0c6cdf2a2a4ffeffd78cd41f32dd49fb60ead2c12b3febce7cdf9a9ede6ea3c938a2b')
 

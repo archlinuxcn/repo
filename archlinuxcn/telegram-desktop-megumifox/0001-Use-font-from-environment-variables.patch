@@ -1,21 +1,35 @@
+From e8b0eeda4dff1482d1e7520c44fcec7a87266e0a Mon Sep 17 00:00:00 2001
+From: Megumi_fox <i@megumifox.com>
+Date: Thu, 22 Jun 2023 18:31:34 +0800
+Subject: [PATCH] Use font from environment variables
+
+Signed-off-by: Megumi_fox <i@megumifox.com>
+---
+ ui/style/style_core_custom_font.cpp | 47 +++++++++--------------------
+ 1 file changed, 14 insertions(+), 33 deletions(-)
+
 diff --git a/ui/style/style_core_custom_font.cpp b/ui/style/style_core_custom_font.cpp
-index 825726f1af..8525c701c0 100644
+index 8f42baf..cf3f47f 100644
 --- a/ui/style/style_core_custom_font.cpp
 +++ b/ui/style/style_core_custom_font.cpp
-@@ -30,40 +30,23 @@ QFont ResolveFont(uint32 flags, int size) {
- 	static auto Database = QFontDatabase();
+@@ -31,44 +31,25 @@ QFont ResolveFont(const QString &familyOverride, uint32 flags, int size) {
  
  	const auto bold = ((flags & FontBold) || (flags & FontSemibold));
--	const auto italic = (flags & FontItalic);
+ 	const auto italic = (flags & FontItalic);
 -	const auto &custom = bold ? BoldFont : RegularFont;
 -	const auto useCustom = !custom.family.isEmpty();
-+   const QString FontFamilyName = qEnvironmentVariable("TELEGRAM_DESKTOP_UI_FONT");
-+   const QString FontFamilyNameMono = qEnvironmentVariable("TELEGRAM_DESKTOP_UI_FONT_MONO");
-+   const QString FontFamilyBoldStyle = qEnvironmentVariable("TELEGRAM_DESKTOP_UI_FONT_BOLD_STYLE");
++	const QString FontFamilyName = qEnvironmentVariable("TELEGRAM_DESKTOP_UI_FONT");
++	const QString FontFamilyNameMono = qEnvironmentVariable("TELEGRAM_DESKTOP_UI_FONT_MONO");
++	const QString FontFamilyBoldStyle = qEnvironmentVariable("TELEGRAM_DESKTOP_UI_FONT_BOLD_STYLE");
++	auto result = QFont(FontFamilyName.isEmpty() ? QGuiApplication::font().family() : FontFamilyName);
  
 -	auto result = QFont(QGuiApplication::font().family());
-+	auto result = QFont(FontFamilyName.isEmpty() ? QGuiApplication::font().family() : FontFamilyName);
- 	if (flags & FontMonospace) {
+-	if (!familyOverride.isEmpty()) {
+-		result.setFamily(familyOverride);
+-		if (bold) {
+-			result.setBold(true);
+-		}
+-	} else if (flags & FontMonospace) {
 -		result.setFamily(MonospaceFont());
 -	} else if (useCustom) {
 -		const auto sizes = Database.smoothSizes(custom.family, custom.style);
@@ -32,26 +46,31 @@ index 825726f1af..8525c701c0 100644
 -#else // DESKTOP_APP_USE_PACKAGED_FONTS
 -			result.setBold(true);
 -#endif // !DESKTOP_APP_USE_PACKAGED_FONTS
--
+ 
 -			if (flags & FontItalic) {
 -				result.setStyleName("Semibold Italic");
 -			} else {
 -				result.setStyleName("Semibold");
 -			}
 -		}
-+       result.setFamily(FontFamilyNameMono.isEmpty() ? MonospaceFont() : FontFamilyNameMono);
++	if (flags & FontMonospace){
++		result.setFamily(FontFamilyNameMono.isEmpty() ? MonospaceFont() : FontFamilyNameMono);
  	}
 -	if (italic) {
 -		result.setItalic(true);
++
 +	if (bold) {
-+           if (FontFamilyBoldStyle.isEmpty()){
-+               result.setWeight(QFont::Medium);
-+           }else{
-+               result.setStyleName(FontFamilyBoldStyle);
-+           }
++		if (FontFamilyBoldStyle.isEmpty()){
++			result.setWeight(QFont::Medium);
++		} else {
++			result.setStyleName(FontFamilyBoldStyle);
++		}
  	}
  
 +	result.setItalic(flags & FontItalic);
  	result.setUnderline(flags & FontUnderline);
  	result.setStrikeOut(flags & FontStrikeOut);
  	result.setPixelSize(size);
+-- 
+2.41.0
+
