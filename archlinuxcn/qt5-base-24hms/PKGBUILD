@@ -6,7 +6,7 @@ _origpkgname=qt5-base
 pkgname=(qt5-base-24hms)
 _basever=5.15.10
 pkgver=5.15.10+kde+r129
-pkgrel=1.13
+pkgrel=4.13
 _commit=e8d9e68d25f4bf305f8b3ca5d678594ee4681baa
 arch=('x86_64')
 url='https://www.qt.io'
@@ -80,6 +80,7 @@ build() {
     -dbus-linked \
     -system-harfbuzz \
     -journald \
+    -libproxy \
     -no-mimetype-database \
     -no-use-gold-linker \
     -no-reduce-relocations \
