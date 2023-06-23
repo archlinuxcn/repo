@@ -1,0 +1,10 @@
+post_upgrade() {
+    if [[ $(vercmp 1.18 "$2") -gt 0 ]]; then
+        grep -ls '^.include ' /etc/systemd/system/netctl@*.service | \
+          while read -r unit; do
+            profile=$(systemd-escape --unescape "${unit:27:-8}")
+            echo ":: The unit for profile '$profile' uses deprecated features."
+            echo "   Consider running: netctl reenable $(printf '%q' "$profile")"
+        done
+    fi
+}

@@ -1,0 +1,43 @@
+# Maintainer: edward-p <edward at edward-p dot xyz>
+
+pkgname=netctl-lily-git
+pkgver=1.28.r6.g993627a
+pkgrel=1
+pkgdesc="Profile based systemd network management. lilydjwg's fork"
+url='https://github.com/lilydjwg/netctl-lily'
+license=('GPL')
+depends=('coreutils' 'iproute2' 'resolvconf' 'systemd>=233')
+# The source tarball includes pre-built (using asciidoc) documentation.
+makedepends=('pkg-config' 'git' 'asciidoc')
+provides=('netctl')
+conflicts=('netctl')
+optdepends=('dialog: for the menu based wifi assistant'
+            'dhclient: for DHCP support (or dhcpcd)'
+            'dhcpcd: for DHCP support (or dhclient)'
+            'wpa_supplicant: for wireless networking support'
+            'ifplugd: for automatic wired connections through netctl-ifplugd'
+            'ppp: for PPP connections'
+            'openvswitch: for Open vSwitch connections'
+            'wireguard-tools: for WireGuard connections'
+           )
+install=netctl.install
+source=("git+https://github.com/lilydjwg/netctl-lily.git")
+arch=('any')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${srcdir}/netctl-lily"
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+package() {
+  cd "$srcdir/netctl-lily"
+  make DESTDIR="$pkgdir" install
+
+  # Shell Completion
+  install -D -m644 contrib/bash-completion "$pkgdir/usr/share/bash-completion/completions/netctl"
+  ln -s netctl "$pkgdir/usr/share/bash-completion/completions/netctl-auto"
+  ln -s netctl "$pkgdir/usr/share/bash-completion/completions/wifi-menu"
+  install -D -m644 contrib/zsh-completion "$pkgdir/usr/share/zsh/site-functions/_netctl"
+}
+
