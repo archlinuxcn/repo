@@ -4,24 +4,22 @@
 ENABLE_FAKE_GNOME_SOFTWARE=0
 
 pkgname=pamac-aur
-pkgver=10.5.1
-pkgrel=2
+pkgver=11.0.1
+pkgrel=1
 _pkgfixver=$pkgver
 
-_commit='0c2902700972404ea0578d0491fee8420ee11ec4'
-sha256sums=('e60a08d5e91693e4191e5e60a7579bcda31881bbd178216dd5a4384475cf89b1')
+_commit='69d08b62a5217dbc98ffdea41718bf6e3a292dd6'
+sha256sums=('057c6936b2059fd58a4dac143cefb82b9ea0607c25555a42b1d7414d80af53cf')
 
 pkgdesc="A Gtk3 frontend, Package Manager based on libalpm with AUR and Appstream support"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://gitlab.manjaro.org/applications/pamac"
 license=('GPL3')
-depends=('glib2>=2.42' 'json-glib' 'dbus-glib' 'polkit' 'vte3>=0.38' 'gtk3>=3.24'
-         'libnotify' 'desktop-file-utils' 'libpamac-aur>=11.5' 'gnutls>=3.4'
-         'appstream-glib>=0.7.18-1' 'archlinux-appstream-data' 'libhandy' 'git')
+depends=('libnotify' 'libpamac-aur' 'libhandy' 'libadwaita' 'gtk4' 'desktop-file-utils' 'libpamac-aur>=11.5' 'gnutls>=3.4' 'git')
 
 optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
             'lxsession: needed for authentification in Xfce, LXDE etc.')
-makedepends=('gettext' 'itstool' 'vala>=0.46' 'gtk3>=3.24' 'asciidoc' 'meson' 'ninja' 'gobject-introspection' 'libappindicator-gtk3' 'xorgproto')
+makedepends=('gettext' 'itstool' 'vala' 'meson' 'ninja' 'gobject-introspection' 'xorgproto' 'asciidoc' 'git')
 conflicts=('pamac' 'pamac-tray-appindicator')
 provides=("pamac=$pkgver-$pkgrel")
 options=(!emptydirs !strip)
