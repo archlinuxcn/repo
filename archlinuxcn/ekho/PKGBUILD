@@ -1,45 +1,28 @@
-# Maintainer: 0b100100 <0b100100 at protonmail dot ch>
+# Maintainer: guoyizhang <myname at malacology dot net>
+# Contributor: 0b100100 <0b100100 at protonmail dot ch>
 # Contributor: Denis Kasak <dkasak|AT|termina.org.uk>
 
 pkgname=ekho
-pkgver=8.6
-pkgrel=3
+pkgver=8.9.3
+pkgrel=1
 pkgdesc="Multilingual text-to-speech (TTS) software for Cantonese, Mandarin, Toisanese, Zhaoan Hakka, Tibetan, Ngangien, Korean and English"
 arch=('i686' 'x86_64')
 url="https://www.eguidedog.net/ekho.php"
 license=('GPL')
-depends=('espeak-ng' 'lame' 'festival')
-source=("https://downloads.sourceforge.net/e-guidedog/ekho-$pkgver.tar.xz")
-sha512sums=('cca7b95efe04fa377bec557c792bf6c7788caf5c0275c00979c20fd8c8acd20193c9968499ab3c1f3ee4bb29b0b43eabafd154d7a76ee87971430c1ea890ea39')
-
-prepare() {
-  cd "$pkgname-$pkgver"
-
-  CXXFLAGS="$CXXFLAGS -fopenmp"
-  if [ "$CARCH" == "x86_64" ]; then
-    CXXFLAGS="$CXXFLAGS -D_x86_64"
-  fi
-
-  # fix undefined references to tget* functions
-  sed -ie \
-    's/^\(\s*LIB_FESTIVAL=.*\)-lncurses\(.*\)/\1-Wl,--push-state,--no-as-needed,-lncurses,--pop-state\2/' \
-    configure
-
-  CXXFLAGS="$CXXFLAGS" \
-  LDFLAGS="$LDFLAGS" \
-  ./configure --prefix=/usr --with-mp3lame --enable-festival
-}
+depends=('espeak-ng' 'lame')
+makedepends=('git' 'autoconf' 'make' 'utf8cpp')
+source=("git+https://github.com/hgneng/ekho.git#tag=v${pkgver}")
+sha512sums=('SKIP')
 
 build() {
-  cd "$pkgname-$pkgver"
-
+  cd "$pkgname"
+  autoreconf --install
+  CXXFLAGS="$CXXFLAGS -I/usr/include/utf8cpp/" \
+  ./configure --prefix=/usr --with-mp3lame
   make
 }
 
 package() {
-  cd "$pkgname-$pkgver"
-
+  cd "$pkgname"
   make DESTDIR="$pkgdir/" install
 }
-
-# vim:set ts=2 sw=2 et:
