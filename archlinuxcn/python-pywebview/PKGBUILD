@@ -13,7 +13,11 @@ depends=(
   python-proxy_tools
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
+  python-setuptools-scm
+  python-wheel
 )
 optdepends=(
   'python-gobject: use with GTK'
@@ -27,12 +31,13 @@ sha256sums=('b024bf65627f8d01f6cbfa8b12dbc4d691d1286f20ae5ec079b12bb7bc7e877a')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  SETUPTOOLS_SCM_PRETEND_VERSION=${pkgver} \
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}/" --optimize=1 --skip-build
-  install -Dm 644 "LICENSE.md" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  install -Dm 644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 # vim:set ts=2 sw=2 et:
