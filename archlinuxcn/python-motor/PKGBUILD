@@ -12,18 +12,21 @@ depends=(
   python-pymongo
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/mongodb/motor/archive/refs/tags/${pkgver}.tar.gz")
 sha512sums=('2a652914cd1d3f886f4527dafcc7c1d4aa9edf586c3ac1d8a6aed829c6a9c666ed85744a7b7e033cd6ffc6fccb222b30f2336ae499e74367637a516d4e6e51ca')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
 }
 # vim:set ts=2 sw=2 et:
