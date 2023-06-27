@@ -6,4 +6,9 @@ pre_build_script: aur_pre_build(maintainers=['zhullyb','zhaose'])
 post_build: aur_post_build
 
 update_on:
+  - source: github
+    github: MatsuriDayo/nekoray
+    use_latest_release: true
+
   - source: aur
+    aur: nekoray
