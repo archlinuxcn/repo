@@ -1,7 +1,7 @@
 #Maintainer: Xyne <gro xunilhcra enyx, backwards>
 pkgname=python3-aur
 pkgver=2021.11.20.1
-pkgrel=4
+pkgrel=14
 pkgdesc='AUR-related modules and helper utilities (aurploader, aurquery, aurtomatic).'
 arch=(any)
 license=(GPL)
