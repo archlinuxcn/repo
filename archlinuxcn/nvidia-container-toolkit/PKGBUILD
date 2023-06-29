@@ -4,7 +4,7 @@
 pkgname=nvidia-container-toolkit
 
 pkgver=1.13.1
-pkgrel=1
+pkgrel=2
 
 pkgdesc='NVIDIA container runtime toolkit'
 arch=('x86_64')
@@ -37,7 +37,7 @@ build() {
     -buildmode=pie \
     -gcflags "all=-trimpath=${PWD}" \
     -asmflags "all=-trimpath=${PWD}" \
-    -ldflags "-s -w -extldflags=${GO_LDFLAGS/%,/}" \
+    -ldflags "-s -w -X github.com/NVIDIA/nvidia-container-toolkit/internal/info.version=${pkgver} -extldflags=${GO_LDFLAGS/%,/}" \
     -o bin \
     "./..."
     # -trimpath \  # only go > 1.13
