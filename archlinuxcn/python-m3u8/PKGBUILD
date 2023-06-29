@@ -4,8 +4,8 @@
 _base=m3u8
 pkgname=python-${_base}
 pkgdesc="Python m3u8 parser"
-pkgver=3.4.0
-pkgrel=2
+pkgver=3.5.0
+pkgrel=1
 arch=(any)
 url="https://github.com/globocom/${_base}"
 license=(MIT)
@@ -13,7 +13,7 @@ depends=(python-iso8601)
 makedepends=(python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest python-bottle)
 source=(${_base}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz)
-sha512sums=('6c8d1eb0e352b21844dab539cde5337bb6c048b10b9e412ec9e984cdc9465f24972002c1d75e024d0f3b19d4eb24298ddfa6dd86a43d57284281420b4aa2c120')
+sha512sums=('ecc80f48311205f37213c0163ffa2c0989de4400fe39473b86267225cc7accff6aa016b1fc6dfc2e25d0479c332dcfb6244f9729798c3d1a302399913a062197')
 
 build() {
   cd ${_base}-${pkgver}
