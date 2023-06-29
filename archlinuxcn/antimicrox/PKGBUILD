@@ -5,12 +5,12 @@
 
 pkgname=antimicrox
 pkgver=3.3.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Graphical program used to map keyboard buttons and mouse controls to a gamepad"
 arch=("aarch64" "arm" "armv6h" "armv7h" "i686" "x86_64")
 url="https://github.com/AntiMicroX/${pkgname/x}X"
 license=("GPL3")
-depends=("desktop-file-utils" "hicolor-icon-theme" "libxtst" "qt5-x11extras" "sdl2")
+depends=("hicolor-icon-theme" "libxtst" "qt5-base" "sdl2")
 makedepends=("cmake" "extra-cmake-modules" "gettext" "itstool" "qt5-tools")
 provides=("${pkgname/x}")
 conflicts=("${pkgname/x}")
