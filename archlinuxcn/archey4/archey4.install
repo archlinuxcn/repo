@@ -1,0 +1,16 @@
+
+post_install() {
+	# Creates a symbolic link providing `archey4` command alias.
+	ln -s -f /usr/bin/archey /usr/bin/archey4
+}
+
+post_upgrade() {
+	post_install
+}
+
+pre_remove() {
+	# Removes symbolic link created by `post_install`.
+	if [ -L /usr/bin/archey4 ]; then
+		rm /usr/bin/archey4
+	fi
+}
