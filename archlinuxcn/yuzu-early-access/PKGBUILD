@@ -2,7 +2,7 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=3684
+pkgver=3727
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
@@ -17,9 +17,9 @@ source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.g
 "https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml"
 "https://github.com/pineappleEA/pineapple-src/releases/download/EA-${pkgver}/Windows-Yuzu-EA-${pkgver}.zip")
 options=('!buildflags') #[heavysink] Disable _FORTIFY_SOURCE for temporary fix for Bayonetta 3
-sha256sums=('ede5ffa3b635640a1691299c6aa47217bb361858bbd37fd51b2d0064935dc21e'
+sha256sums=('7a15b6f0037d92687b7821d809d00927a4179b4c3420c83eecc8d5f18d726e11'
             'e76ab2b3566d8135930e570ede5bed3da8f131270b60db818e453d248880bdf2'
-            '5045267df681c7512e26c4223ad97c0a79e7ee5fab57175943b7c9b1a5c66014')
+            '443e74c43ec04fc17fafbcbab6c94eff7ba8a1c6ac105641cdad5095e270fa53')
 
 prepare() {
   cd "$srcdir/yuzu-windows-msvc-early-access"
@@ -34,14 +34,15 @@ prepare() {
 
   git submodule update --init --remote externals/sirit
   git submodule update --init --remote externals/mbedtls
+  git submodule update --init --remote externals/libadrenotools
+  git submodule update --init --remote --recursive externals/nx_tzdb
+  git submodule update --init --remote externals/vma/VulkanMemoryAllocator
 
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror$/-W/g' {} +
-  #find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*)$/ )/g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/-Werror/-W/g' {} +
   sed -i -e 's/0.11 //g' CMakeLists.txt
   sed -i -e 's/1.3.238/1.3.233/g' CMakeLists.txt
-  sed -i -e '/#define VK_NO_PROTOTYPES/a #define VK_ENABLE_BETA_EXTENSIONS' src/video_core/vulkan_common/vulkan_wrapper.h
   sed -i -e 's/--quiet //g' src/video_core/host_shaders/CMakeLists.txt
   sed -i -e 's#${SPIRV_HEADER_FILE} ${SOURCE_FILE}#${SPIRV_HEADER_FILE} ${SOURCE_FILE} 2>/dev/null#g' src/video_core/host_shaders/CMakeLists.txt
   sed -i -e '1i #include <cstring>' src/video_core/textures/bcn.cpp
