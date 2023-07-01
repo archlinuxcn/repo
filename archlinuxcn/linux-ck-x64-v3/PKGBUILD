@@ -71,7 +71,7 @@ _subarch=41
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 pkgbase=linux-ck-x64-v3
-pkgver=6.3.9
+pkgver=6.4
 pkgrel=1
 arch=(x86_64)
 url="https://wiki.archlinux.org/index.php/Linux-ck"
@@ -93,8 +93,8 @@ options=('!strip')
 
 # https://ck-hack.blogspot.com/2021/08/514-and-future-of-muqss-and-ck-once.html
 # acknowledgment to xanmod for initially keeping the hrtimer patches up to date
-_ckhrtimer=linux-6.3.y
-_commit=d09271d382ae852c98e17bd7426fc8021e7b465e
+_ckhrtimer=linux-6.4.y
+_commit=2870d6ac146aa658af60bb18a9c7503efe5992d4
 
 _gcc_more_v=20221217
 source=(
@@ -108,11 +108,11 @@ validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
-sha256sums=('41ecf21399b17ab85163750ba22347d09b54fa099b80b63d0e2ef0066129b13e'
+sha256sums=('8fa0588f0c2ceca44cac77a0e39ba48c9f00a6b9dc69761c02a5d3efac8da7f3'
             'SKIP'
-            '6508516de94ed941ae755d89807610dc51fe1229dbfecdf8a82604a8d33242ce'
+            'ab8e459ac900f4f2b2677d9692177afdfb215e75b8315259ef8bdd0a1ea032e1'
             'f1d586e111932890ad5e0df15d092fb9b3f87bae4ea17812aae9b0ec98fe2db0'
-            'f781da5ba492d8912c7d4cddac02f21c1799532182e23374c80c19ff0c617373'
+            'ed0b8773d66079198edd1ecdbe0564d6ad33c641e82d85375e50a2d9e0275144'
             '927ea3b7f4fc525a50352464e9623ca9d99044344f30a80b91eb8adf6deb21d2')
 _make() {
   test -s version
