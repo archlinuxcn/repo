@@ -2,8 +2,8 @@
 # Contributor: Simon Conseil <contact+aur at saimon dot org>
 
 pkgname=pip-tools
-pkgver=6.13.0
-pkgrel=2
+pkgver=6.14.0
+pkgrel=1
 pkgdesc='A set of tools to keep your pinned Python dependencies fresh'
 arch=(any)
 url='https://github.com/jazzband/pip-tools/'
@@ -14,7 +14,7 @@ source=("https://files.pythonhosted.org/packages/source/${pkgname::1}/$pkgname/$
         'pip-tools-bash-completion.sh'
         'pip-tools-zsh-completion.zsh'
         'pip-tools-fish-completion.fish')
-sha256sums=('61d46bd2eb8016ed4a924e196e6e5b0a268cd3babd79e593048720db23522bb1'
+sha256sums=('06366be0e08d86b416407333e998b4d305d5bd925151b08942ed149380ba3e47'
             '12d90c4aab717d58a435610a3cdc94aa925b4f89f9f9f700a05c8cfa058f7960'
             '63f8d032a742ae33903040477c777922ec06241383d165c93803f1b41316ff51'
             '9c60407e485e71ded1d695455378fa4f09e76ecb8556d21c31f8610cb47cf525')
@@ -35,7 +35,7 @@ package() {
   # license
   install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname
   # documentation
-  install -Dm644 CHANGELOG.md CONTRIBUTING.md README.rst \
+  install -Dm644 CHANGELOG.md CONTRIBUTING.md README.md \
     -t "$pkgdir/usr/share/doc/$pkgname"
   install -Dm644 img/*.svg -t "$pkgdir"/usr/share/doc/$pkgname/img
   install -Dm644 examples/* -t "$pkgdir"/usr/share/doc/$pkgname/examples
