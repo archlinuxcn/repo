@@ -1,0 +1,23 @@
+diff --git a/ebpf_prog/Makefile b/ebpf_prog/Makefile
+index d987814..5f7bc10 100644
+--- a/ebpf_prog/Makefile
++++ b/ebpf_prog/Makefile
+@@ -29,6 +29,7 @@ endif
+ 
+ BIN := opensnitch.o opensnitch-procs.o opensnitch-dns.o
+ CLANG_FLAGS = -I. \
++	-I$(KERNEL_HEADERS)/arch/$(ARCH)/include/ \
+ 	-I$(KERNEL_HEADERS)/arch/$(ARCH)/include/generated/ \
+ 	-I$(KERNEL_HEADERS)/include \
+ 	-include $(KERNEL_DIR)/include/linux/kconfig.h \
+@@ -45,7 +46,9 @@ CLANG_FLAGS = -I. \
+ 	$(EXTRA_FLAGS) \
+ 	-Wno-gnu-variable-sized-type-not-at-end \
+ 	-Wno-address-of-packed-member -Wno-tautological-compare \
+-	-Wno-unknown-warning-option  \
++	-Wno-unknown-warning-option \
++	-fcf-protection \
++	-fno-stack-protector \
+ 	-g -O2 -emit-llvm
+ 
+ all: $(BIN)
