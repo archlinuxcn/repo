@@ -2,7 +2,7 @@
 
 pkgname=bcachefs-tools-git
 pkgver=1071
-pkgrel=2
+pkgrel=3
 pkgdesc="BCacheFS filesystem utilities"
 url="https://github.com/koverstreet/bcachefs-tools"
 arch=("x86_64")
@@ -20,7 +20,7 @@ _reponame="bcachefs-tools"
 _repo_url="https://github.com/koverstreet/$_reponame"
 
 source=(
-    "git+$_repo_url"
+    "git+$_repo_url#commit=84cb7bffe5e80ef9036213bbfbaf358d478536be"
     "add-mkinitcpio-hook-for-Arch.patch"
 )
 sha512sums=('SKIP'
