@@ -73,9 +73,9 @@ fi
 
 pkgbase=linux-xanmod-anbox
 _major=6.4
-pkgver=${_major}.0
+pkgver=${_major}.1
 _branch=6.x
-xanmod=2
+xanmod=1
 _revision=
 pkgrel=${xanmod}
 pkgdesc='Linux Xanmod with ashmem and binder enabled for Anbox - Current Stable (CURRENT)'
@@ -111,7 +111,7 @@ done
 
 sha256sums=('8fa0588f0c2ceca44cac77a0e39ba48c9f00a6b9dc69761c02a5d3efac8da7f3'
             'SKIP'
-            'c3ed02baf2b503ab53ff86363ee21643408e1d14e4b4046a09acbca1788e0201'
+            'a91550fc14f7f747b00c8dcf5a9ef74365d6d01ced230b5c84fddd354258dd3d'
             '5c84bfe7c1971354cff3f6b3f52bf33e7bbeec22f85d5e7bfde383b54c679d30')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
