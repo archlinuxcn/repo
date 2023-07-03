@@ -1,5 +1,5 @@
 pkgname=teamviewer
-pkgver=15.42.4
+pkgver=15.43.6
 pkgrel=1
 pkgdesc='All-In-One Software for Remote Support and Online Meetings'
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -32,10 +32,10 @@ source_x86_64=("https://dl.teamviewer.com/download/linux/version_${pkgver%%.*}x/
 source_i686=("https://dl.teamviewer.com/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver}_i386.deb")
 source_armv7h=("https://dl.teamviewer.com/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver}_armhf.deb")
 source_aarch64=("https://dl.teamviewer.com/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver}_arm64.deb")
-sha256sums_i686=('71bf9c3d92a8dd1e9ab3aa74306af0c53faac5051f606924352c83ba426c2f6e')
-sha256sums_x86_64=('80371bdb37c2f872aac8192bb0c3a5d7f4ad1a17ea4f007f448f8000bb3ad764')
-sha256sums_armv7h=('09bdfa704a287332ed8aff097b872965239b63d5932e712284bf2903f3627dfe')
-sha256sums_aarch64=('21bac7b4dd6411c3b20f7224ee50b9d988608440004a237fd068f4e008ec9297')
+sha256sums_i686=('5f9554a677e8b456818543152171526bc94c8de02e50c3e032440bc8b6cca8e3')
+sha256sums_x86_64=('ccfefcacbdebffb33af9c64db9786ebeaddbde1b90a26cb6c1638c77054d449c')
+sha256sums_armv7h=('3fb200483f965e79bc82083c45110a72aa9b78145303a590369b029bac565cba')
+sha256sums_aarch64=('54fc96aa3f9b520bf70c1a505e26cc5d4af478600f1ba0b5011be0a6df3740fa')
 
 prepare() {
 	warning "If the install fails, you need to uninstall previous major version of Teamviewer"
