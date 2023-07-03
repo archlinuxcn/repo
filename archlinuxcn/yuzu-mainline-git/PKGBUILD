@@ -2,14 +2,14 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-mainline-git
-pkgver=1472.r0.ga4d82a6e6
+pkgver=1485.r0.g95ceae40e
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (mainline GIT version)"
 arch=('i686' 'x86_64')
 url="https://github.com/yuzu-emu/yuzu-mainline"
 license=('GPL2')
 depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'openssl' 'zstd' 'cubeb' 'dynarmic' 'enet' 'libinih' 'discord-rpc' 'cpp-httplib')
-makedepends=('llvm' 'git' 'glslang' 'cmake' 'ninja' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'xbyak' 'vulkan-headers' 'spirv-headers' 'dos2unix')
+makedepends=('llvm' 'git' 'glslang' 'cmake' 'ninja' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'xbyak' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'python')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
@@ -27,6 +27,9 @@ prepare() {
 
     git submodule update --init --remote externals/sirit
     git submodule update --init --remote externals/mbedtls
+    git submodule update --init --remote externals/libadrenotools
+    git submodule update --init --remote --recursive externals/nx_tzdb
+    git submodule update --init --remote externals/vma/VulkanMemoryAllocator
   
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/-Werror/-W/g' {} +
@@ -52,10 +55,6 @@ build() {
 
 	mkdir -p build && cd build
   cmake .. -GNinja \
-    -DCMAKE_CXX_COMPILER=clang++ \
-    -DCMAKE_C_COMPILER=clang \
-    -DCMAKE_C_FLAGS="$CFLAGS -flto=thin" \
-    -DCMAKE_CXX_FLAGS="$CXXFLAGS -flto=thin" \
     -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
     -DTITLE_BAR_FORMAT_IDLE="yuzu Mainline $pkgver" \
     -DTITLE_BAR_FORMAT_RUNNING="yuzu Mainline $pkgver | {3}" \
@@ -76,7 +75,6 @@ build() {
     -DYUZU_USE_PRECOMPILED_HEADERS=OFF \
 	-DYUZU_USE_QT_MULTIMEDIA=ON \
     -DYUZU_TESTS=OFF
- 
  ninja
 }
 
