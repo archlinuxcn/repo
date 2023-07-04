@@ -22,17 +22,19 @@ sha256sums=('aef279d6baea7f67940f16aad17ebe5f6aac97487c7c03466ff01f4819e5a651'
             '02ed5095b7bd9670f749465d9cac1478deab44ebdf8616848ae4bd9371150abf')
 install="${pkgname}.install"
 
-
 package() {
   prefix="${pkgdir}/opt/${pkgname}"
   LD_PRELOAD="/usr/lib/libfakeroot/libfakeroot.so"
   echo "Packaging ${pkgname} for installation to /opt/${pkgname}"
   bash "${srcdir}/${pkgname}-${pkgver}.sh" -b -p ${prefix} -f
-  [ "${BREAK_EARLY}" = 1 ] && exit 1
-  cd "${prefix}"
   echo "Correcting permissions"
-  chmod a+r -R pkgs
-  find ${pkgdir}/opt/miniconda ! -type l -perm /o+w -exec chmod o-w {} \;
+  cd ${prefix}
+  find ${pkgdir}/opt/miniconda -type f -exec chmod 644 {} \;
+  find ${pkgdir}/opt/miniconda -type d -exec chmod 755 {} \;
+  find ${pkgdir}/opt/miniconda/bin -type f -exec chmod 755 {} \;
+  find ${pkgdir}/opt/miniconda/condabin -type f -exec chmod 755 {} \;
+  find ${pkgdir}/opt/miniconda/lib -type f -exec chmod 755 {} \;
+  find ${pkgdir}/opt/miniconda/lib -type f -name "*.a" -exec chmod 644 {} \;
   echo "Stripping \$pkgdir"
   sed "s|${pkgdir}||g" -i $(grep "$pkgdir" . -rIl)
   echo "Installing license"
@@ -40,3 +42,4 @@ package() {
   # use system /etc/ssl/certs/ca-certificates.crt
   find "${pkgdir}" -type f -name "cacert.pem" -exec ln -sf "/etc/ssl/certs/ca-certificates.crt" {} \;
 }
+# vim:set ts=2 sw=2 et:
