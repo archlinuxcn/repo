@@ -27,6 +27,7 @@ prepare() {
 
 build() {
   cd "$srcdir/mosh"
+  export CPPFLAGS=-std=c++17
   ./autogen.sh
   ./configure --enable-ufw --prefix=/usr --sysconfdir=/etc
   make
