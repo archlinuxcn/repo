@@ -1,7 +1,7 @@
 From 50c597f3cc8dc4de0f0b6153a0ff1bd0b2dc6f56 Mon Sep 17 00:00:00 2001
 From: Pablo Neira Ayuso <pablo@netfilter.org>
 Date: Mon, 26 Jun 2023 00:42:18 +0200
-Subject: [PATCH 2/3] netfilter: nf_tables: unbind non-anonymous set if rule
+Subject: [PATCH 2/4] netfilter: nf_tables: unbind non-anonymous set if rule
  construction fails
 
 Otherwise a dangling reference to a rule object that is gone remains
