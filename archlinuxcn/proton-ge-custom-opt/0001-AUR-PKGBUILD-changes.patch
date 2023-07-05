@@ -1,4 +1,4 @@
-From 5238fb7a02b5be6c8b6e5258ddf7b4d7cf0ea8a8 Mon Sep 17 00:00:00 2001
+From bcc9591e423bd9afbce15748829126ec8f09d377 Mon Sep 17 00:00:00 2001
 From: Coelacanthus <CoelacanthusHex@gmail.com>
 Date: Mon, 1 May 2023 16:08:34 +0800
 Subject: [PATCH] AUR PKGBUILD changes
@@ -18,7 +18,7 @@ Signed-off-by: Coelacanthus <CoelacanthusHex@gmail.com>
  10 files changed, 57 insertions(+), 31 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 7ee81fe9..8dc48413 100644
+index 9726d2f1..f6e21636 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -50,7 +50,8 @@ else
@@ -88,7 +88,7 @@ index 7ee81fe9..8dc48413 100644
  	-Dfbdev=disabled \
  	-Ddecklink=disabled \
  	-Dcurl=disabled \
-@@ -947,14 +968,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
+@@ -1031,14 +1052,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
  	mkdir -p $(FONTS_OBJ)/source-han
  	# Do not immediately create the target file, so that make is interrupted
  	# it will restart again
@@ -106,7 +106,7 @@ index 7ee81fe9..8dc48413 100644
  	mv $@.tmp $@
  
  $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
-@@ -964,12 +985,12 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
+@@ -1048,12 +1069,12 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
  	ttx -o $@ -m $($(notdir $@)_FONT) $(FONTS_OBJ)/ume-gothic/$(notdir $(basename $($(notdir $@)_NAMETABLE_PATCH))).ttx
  
  $(simsun.ttc): $(simsun.ttf) $(nsimsun.ttf)
@@ -122,7 +122,7 @@ index 7ee81fe9..8dc48413 100644
  
  $(micross.ttf): $(FONTS)/scripts/merge.py $(noto_sans.ttf) $(noto_sans_arabic.ttf) $(noto_sans_armenian.ttf) $(noto_sans_bengali.ttf) $(noto_sans_coptic.ttf) \
  		$(noto_sans_georgian.ttf) $(noto_sans_gujarati.ttf) $(noto_sans_hebrew.ttf) $(noto_sans_khmer.ttf) $(noto_sans_tamil.ttf) \
-@@ -1095,8 +1116,8 @@ all-dist: $(DIST_OVR32) $(DIST_OVR64)
+@@ -1179,8 +1200,8 @@ all-dist: $(DIST_OVR32) $(DIST_OVR64)
  ##
  
  default_pfx: wine gst_good gst_libav gst_plugins_rs lsteamclient steamexe vrclient wineopenxr dxvk dxvk-nvapi vkd3d-proton
@@ -316,7 +316,7 @@ index 5c3b59a3..ed6589e0 100644
  	winebuild --$(lastword $(subst ., ,$(4))) --fake-module -E "$(basename $(4)).spec" -o "$(4).fake"
  	mkdir -p $$($(2)_LIBDIR$(3))/$(LIBDIR_WINE_$(3))
 diff --git a/proton b/proton
-index 23d27c91..91285d9d 100755
+index 35b0d144..215c0e51 100755
 --- a/proton
 +++ b/proton
 @@ -423,7 +423,6 @@ class Proton:
@@ -327,7 +327,7 @@ index 23d27c91..91285d9d 100755
  
      def path(self, d):
          return self.base_dir + d
-@@ -1818,9 +1817,6 @@ if __name__ == "__main__":
+@@ -1827,9 +1826,6 @@ if __name__ == "__main__":
  
      g_proton = Proton(os.path.dirname(sys.argv[0]))
  
@@ -337,7 +337,7 @@ index 23d27c91..91285d9d 100755
      g_compatdata = CompatData(os.environ["STEAM_COMPAT_DATA_PATH"])
  
      g_session = Session()
-@@ -1828,7 +1824,8 @@ if __name__ == "__main__":
+@@ -1837,7 +1833,8 @@ if __name__ == "__main__":
      g_session.init_wine()
  
      if g_proton.missing_default_prefix():
@@ -348,5 +348,5 @@ index 23d27c91..91285d9d 100755
      g_session.init_session(sys.argv[1] != "runinprefix")
  
 -- 
-2.40.1
+2.41.0
 

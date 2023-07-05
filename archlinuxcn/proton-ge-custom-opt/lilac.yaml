@@ -19,12 +19,17 @@ update_on:
 repo_depends:
   - lib32-lzo
   - lib32-gsm
+  - lib32-lapack: lib32-blas
+  - lib32-lapack: lib32-lapack
   - mingw-w64-tools
 update_on_build:
   - pkgbase: lib32-lzo
     from_pattern: ^(\d+)\..*
     to_pattern: \1
   - pkgbase: lib32-gsm
+    from_pattern: ^(\d+)\..*
+    to_pattern: \1
+  - pkgbase: lib32-lapack
     from_pattern: ^(\d+)\..*
     to_pattern: \1
   - pkgbase: mingw-w64-tools
