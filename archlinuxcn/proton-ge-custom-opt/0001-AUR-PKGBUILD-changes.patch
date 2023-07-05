@@ -1,24 +1,24 @@
-From bcc9591e423bd9afbce15748829126ec8f09d377 Mon Sep 17 00:00:00 2001
+From 41e82d198203490db1d0722cfe18ad092a345628 Mon Sep 17 00:00:00 2001
 From: Coelacanthus <CoelacanthusHex@gmail.com>
 Date: Mon, 1 May 2023 16:08:34 +0800
 Subject: [PATCH] AUR PKGBUILD changes
 
 Signed-off-by: Coelacanthus <CoelacanthusHex@gmail.com>
 ---
- Makefile.in             | 41 +++++++++++++++++++++++++++++++----------
+ Makefile.in             | 44 +++++++++++++++++++++++++++++++----------
  configure.sh            |  2 ++
  make/rules-autoconf.mk  |  4 ++--
  make/rules-cargo.mk     |  2 +-
  make/rules-cmake.mk     |  5 +++--
- make/rules-common.mk    | 17 ++++++++++-------
+ make/rules-common.mk    | 17 +++++++++-------
  make/rules-configure.mk |  4 ++--
  make/rules-meson.mk     |  4 +++-
  make/rules-winemaker.mk |  2 +-
  proton                  |  7 ++-----
- 10 files changed, 57 insertions(+), 31 deletions(-)
+ 10 files changed, 60 insertions(+), 31 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 9726d2f1..f6e21636 100644
+index 9726d2f1..5c26d98c 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -50,7 +50,8 @@ else
@@ -88,7 +88,17 @@ index 9726d2f1..f6e21636 100644
  	-Dfbdev=disabled \
  	-Ddecklink=disabled \
  	-Dcurl=disabled \
-@@ -1031,14 +1052,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
+@@ -545,6 +566,9 @@ OPENFST_CONFIGURE_ARGS = \
+   --with-pic \
+   --disable-bin \
+ 
++OPENFST_CFLAGS = -mno-bmi2
++OPENFST_CXXFLAGS = -mno-bmi2
++
+ $(eval $(call rules-source,openfst,$(SRCDIR)/openfst))
+ $(eval $(call rules-autoconf,openfst,32))
+ $(eval $(call rules-autoconf,openfst,64))
+@@ -1031,14 +1055,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
  	mkdir -p $(FONTS_OBJ)/source-han
  	# Do not immediately create the target file, so that make is interrupted
  	# it will restart again
@@ -106,7 +116,7 @@ index 9726d2f1..f6e21636 100644
  	mv $@.tmp $@
  
  $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
-@@ -1048,12 +1069,12 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
+@@ -1048,12 +1072,12 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
  	ttx -o $@ -m $($(notdir $@)_FONT) $(FONTS_OBJ)/ume-gothic/$(notdir $(basename $($(notdir $@)_NAMETABLE_PATCH))).ttx
  
  $(simsun.ttc): $(simsun.ttf) $(nsimsun.ttf)
@@ -122,7 +132,7 @@ index 9726d2f1..f6e21636 100644
  
  $(micross.ttf): $(FONTS)/scripts/merge.py $(noto_sans.ttf) $(noto_sans_arabic.ttf) $(noto_sans_armenian.ttf) $(noto_sans_bengali.ttf) $(noto_sans_coptic.ttf) \
  		$(noto_sans_georgian.ttf) $(noto_sans_gujarati.ttf) $(noto_sans_hebrew.ttf) $(noto_sans_khmer.ttf) $(noto_sans_tamil.ttf) \
-@@ -1179,8 +1200,8 @@ all-dist: $(DIST_OVR32) $(DIST_OVR64)
+@@ -1179,8 +1203,8 @@ all-dist: $(DIST_OVR32) $(DIST_OVR64)
  ##
  
  default_pfx: wine gst_good gst_libav gst_plugins_rs lsteamclient steamexe vrclient wineopenxr dxvk dxvk-nvapi vkd3d-proton
