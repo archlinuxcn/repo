@@ -28,6 +28,7 @@ makedepends=(
   fcgi
   freeglut
   freetype2
+  gcc12
   giflib
   gl2ps
   glew
@@ -59,6 +60,8 @@ source=("${pkgname}-${pkgver}.tar.gz::https://ftp.ncbi.nlm.nih.gov/blast/executa
 sha256sums=('bf477f1b0c3b82f0b7a7094bf003a9a83e37e3b0716c1df799060c4feab17500')
 
 build() {
+  export CC=gcc-12
+  export CXX=g++-12
   cd "${srcdir}/ncbi-blast-${pkgver}+-src/c++"
   ./configure \
     --prefix=/usr \
