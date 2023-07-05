@@ -1,5 +1,5 @@
 diff --git a/userspace/libsinsp/CMakeLists.txt b/userspace/libsinsp/CMakeLists.txt
-index ea3967d..0e55152 100644
+index 18e59b1..b23e890 100644
 --- a/userspace/libsinsp/CMakeLists.txt
 +++ b/userspace/libsinsp/CMakeLists.txt
 @@ -38,6 +38,7 @@ include(ExternalProject)
@@ -10,7 +10,7 @@ index ea3967d..0e55152 100644
  endif()
  
  include(jsoncpp)
-@@ -249,7 +250,8 @@ if(NOT WIN32)
+@@ -246,7 +247,8 @@ if(NOT WIN32)
  				"${PROTOBUF_LIB}"
  				"${CARES_LIB}"
  				"${JQ_LIB}"
@@ -20,8 +20,3 @@ index ea3967d..0e55152 100644
  
  			if(NOT MUSL_OPTIMIZED_BUILD)
  				list(APPEND SINSP_LIBRARIES
-@@ -314,4 +316,3 @@ option(BUILD_LIBSINSP_EXAMPLES "Build libsinsp examples" ON)
- if (BUILD_LIBSINSP_EXAMPLES)
- 	add_subdirectory(examples)
- endif()
--
