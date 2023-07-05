@@ -1,46 +1,59 @@
 # Maintainer: j4qfrost <j4qfrost at gmail dot com>
 # Maintainer: ptolemy753 <dsconce at protonmail dot com>
 # Maintainer: peeweep <peeweep at 0x0 dot ee>
+# Contributor: Caleb Maclennan <caleb@alerque.com>
 
 pkgname=neovide-git
-pkgver=0.10.4.r6.g4b3c234
-pkgrel=1
+_pkgname=${pkgname%-git}
+pkgver=0.10.4.r17.gf412399
+pkgrel=2
 pkgdesc='No Nonsense Neovim Client in Rust'
-arch=('x86_64')
-url='https://github.com/Kethku/neovide'
-license=('MIT')
-depends=('neovim' 'fontconfig' 'freetype2' 'libglvnd' 'sndio')
-makedepends=('git' 'cargo' 'gtk3' 'cmake' 'sdl2' 'make' 'python')
-provides=("neovide")
-conflicts=("neovide")
-source=("${pkgname}::git+${url}")
-sha1sums=('SKIP')
-
-pkgver() {
-  cd "${srcdir}/${pkgname}"
-  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
-}
+arch=(x86_64)
+url="https://github.com/$_pkgname/$_pkgname"
+license=(MIT)
+depends=(fontconfig
+         freetype2
+         libglvnd
+         neovim
+         sndio)
+makedepends=(cargo
+             cmake
+             git
+             gtk3
+             python
+             sdl2)
+optdepends=('vulkan-intel: vulkan support for intel')
+provides=("$_pkgname=$pkgver")
+conflicts=("$_pkgname")
+source=("$_pkgname::git+$url.git")
+sha256sums=('SKIP')
 
 prepare() {
-  cd "${srcdir}/${pkgname}"
-  sed -i -e '/^incremental/a opt-level = 3' Cargo.toml
+	cd "$_pkgname"
+	sed -i -e '/^incremental/a opt-level = 3' Cargo.toml
+	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+pkgver() {
+	cd "$_pkgname"
+	git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
-  cd "${srcdir}/${pkgname}"
-  export CARGO_HOME="${srcdir}/${pkgname}/CARGO"
-  CFLAGS+=' -ffat-lto-objects'
-  cargo build --release --all-features
+	cd "$_pkgname"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	CFLAGS+=' -ffat-lto-objects'
+	cargo build --frozen --release --features embed-fonts
 }
 
 package() {
-  install -Dm644 ${srcdir}/${pkgname}/LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-  install -Dm755 ${srcdir}/${pkgname}/target/release/neovide ${pkgdir}/usr/bin/neovide
-  install -Dm644 ${srcdir}/${pkgname}/assets/neovide.desktop ${pkgdir}/usr/share/applications/neovide.desktop
-  for px in 16 32 48 256; do
-    install -Dm644 "${srcdir}/${pkgname}/assets/neovide-${px}x${px}.png" \
-      "${pkgdir}/usr/share/icons/hicolor/${px}x${px}/apps/neovide.png"
-  done
+	cd "$_pkgname"
+	install -Dm0755 -t "$pkgdir/usr/bin/" "target/release/$_pkgname"
+	install -Dm0644 -t "$pkgdir/usr/share/applications/" "assets/$_pkgname.desktop"
+	for px in 16 32 48 256; do
+		install -Dm0644 "assets/$_pkgname-${px}x${px}.png" \
+			"$pkgdir/usr/share/icons/hicolor/${px}x${px}/apps/$_pkgname.png"
+	done
+	install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE
 }
-
-# vim: ts=2 sw=2 et:
