@@ -21,10 +21,11 @@ pkgver() {
 
 build() {
   cd "$srcdir/$_reponame"
+  sed -i 's/c++11/c++17/' setup.py
   python setup.py build
 }
 
 package() {
   cd "$srcdir/$_reponame"
-  python setup.py install --root=$pkgdir --optimize=1
+  python setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
