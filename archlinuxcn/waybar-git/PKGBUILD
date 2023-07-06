@@ -1,7 +1,7 @@
 # Maintainer: Alexis Rouillard <contact@arouillard.fr>
 
 pkgname=waybar-git
-pkgver=r2659.fc632f50
+pkgver=r2672.e4900db9
 pkgrel=1
 pkgdesc='Highly customizable Wayland bar for Sway and Wlroots based compositors (GIT)'
 arch=('x86_64')
@@ -65,10 +65,17 @@ prepare() {
 build() {
     cd "${srcdir}/${pkgname}"
     rm -rf "${srcdir}/build"
-    meson --prefix=/usr "${srcdir}/build"
+    meson --prefix=/usr \
+          --buildtype=plain \
+          --auto-features=enabled \
+          -Dexperimental=true \
+          -Dcava=disabled \
+          -Dtests=disabled \
+          "${srcdir}/build"
     ninja -C "${srcdir}/build"
 }
 
 package() {
     DESTDIR="$pkgdir" ninja -C "${srcdir}/build" install
+    install -Dm644 "${srcdir}/${pkgname}/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
 }
