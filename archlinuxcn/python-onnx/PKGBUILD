@@ -18,6 +18,7 @@ depends=(
 makedepends=(
   cmake
   git
+  pybind11
   python-setuptools
   python-pip
 )
@@ -29,6 +30,8 @@ prepare() {
   git submodule update --init --recursive
   # Partial backpart from https://github.com/onnx/onnx/pull/3674
   sed -i 's#collections.Iterable#collections.abc.Iterable#g' onnx/helper.py
+  # bump CMAKE_CXX_STANDARD to 17, see also https://github.com/onnx/onnx/pull/5119
+  sed -i 's#CMAKE_CXX_STANDARD 11#CMAKE_CXX_STANDARD 17#' CMakeLists.txt
 }
 
 build() {
