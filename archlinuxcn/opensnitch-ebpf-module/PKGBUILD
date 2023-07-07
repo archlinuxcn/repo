@@ -3,14 +3,15 @@
 pkgname=opensnitch-ebpf-module
 _pkgname=opensnitch
 pkgver=1.6.0
-pkgrel=2
+pkgrel=3
 pkgdesc="eBPF process monitor module for opensnitch"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/evilsocket/opensnitch"
 license=('GPL3')
 makedepends=('bc' 'clang' 'libelf' 'linux-headers' 'llvm')
+checkdepends=('llvm')
 depends=('opensnitch')
-source=("${url}/archive/v${pkgver}.tar.gz")
+source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 sha256sums=('d468599f84f6dfde1afc0cad79ef0d511b7f5d5aafc14acbbf730ab0ae317342')
 options=('!strip') # we're stripping with llvm-strip
 
@@ -22,6 +23,24 @@ build() {
   # this is fine - bpf programs do not use stack protectors
   CLANG="clang -fno-stack-protector" ARCH="$CARCH" KERNEL_DIR="$KDIR" KERNEL_HEADERS="$KDIR" make
   llvm-strip -g opensnitch*.o
+}
+
+check() {
+  REQUIRED_SECTIONS=(
+    kprobe/{tcp_v{4,6}_connect,udp{,v6}_sendmsg,iptunnel_xmit}
+    maps/{{tcp,udp}{,v6}Map,tcp{,v6}sock,bytes,debug}
+  )
+
+  SECTIONS=$(llvm-readelf \
+    "${srcdir}/${_pkgname}-${pkgver}/ebpf_prog/opensnitch.o" \
+    --section-headers)
+
+  for section in "${REQUIRED_SECTIONS[@]}"; do
+    grep -q " ${section}" <<< "$SECTIONS" || {
+      echo "Failed to build opensnitch.o properly, section ${section} missing!"
+      return 1
+    }
+  done
 }
 
 package() {
