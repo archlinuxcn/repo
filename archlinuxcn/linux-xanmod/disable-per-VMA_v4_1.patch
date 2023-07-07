@@ -1,0 +1,118 @@
+From mboxrd@z Thu Jan  1 00:00:00 1970
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2403EB64DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 01:14:14 +0000 (UTC)
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S232489AbjGFBON (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 5 Jul 2023 21:14:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232282AbjGFBOL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jul 2023 21:14:11 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA7219AD
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Jul 2023 18:14:09 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-bb0d11a56abso104585276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jul 2023 18:14:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1688606049; x=1691198049;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BMMaNFIuSTODACKQNg6XDNNsjL1Pfx6pMDgwoYH4Ut0=;
+        b=Yn5aRyUWACvrhkw4W9c/RrQ1vZVkQ3aETLIOHYDXUyaoQSnxwBiG3WfF5wRFwIFEvw
+         weJQdiFsuoHFg7+9Knuii4aazDz880sQWUsYnqjniz/RcD+lsmIUy0RtMfI3EZOdknvG
+         lfux25ysmzhfKTDzbuUftCdRHhS3/CZtHh7uU502n9ZsPETUnBcunocCrRCWmY4NthQM
+         NYWKscTrHCCVV2l9q6DYpMlOWBsc7125yZXvQvDPOkzqa2jEVxhh++SxzCEucUU7Sj9Y
+         PqugueozRZVh1tS8qAnhcSciZ/GC8dmxTaNU5U27m8aw8+rjObbB60wx6Je9TqxLz6zX
+         mKCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688606049; x=1691198049;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BMMaNFIuSTODACKQNg6XDNNsjL1Pfx6pMDgwoYH4Ut0=;
+        b=gNTKDQRLYtT59SsSRj64wrCj7CcrLwfU/UCrBJ2k1+U7gDfP108Ue/sUa++jGjNiQT
+         sXK7ZiBpvA8F41LSwxayYpymwC6pCAdrhPNw0Gm2FR2GAYFaxqKCDVOuRx6R1+FoRj6L
+         LBRA0KKVRldVWpiS0sRE2XWuDrzv+eK+gbyyfXdkhZghk2gvFGw4nMlbgggWGuy5n8Vj
+         uZxXPygKqnDglvyPWiuL6+O61l8NBLnzgyoSC/txVS6WbzaeF/T5m9xgBIPqUUs4pEwb
+         +ZfLfxsY2n9sTNR2J7tVeJBQkzBpAfeHAVgjUpBpondUzwdGjy+ZjlcSMQUTpvmJshag
+         vB1w==
+X-Gm-Message-State: ABy/qLY0hYMSeqI1aJGaKO7qUST7eAFCAkN0O5qMf32amw8IodaghgVH
+        cODpwOJWQWRlps20ccRqM/Gi1GURPnc=
+X-Google-Smtp-Source: APBJJlHam+3Kw1wwiprnqdWZZWRe4i9qQ9FP0XUelvhsWWC81rNfZCgy8OD9hwPRpPw8+Oh35ka/px6hTPY=
+X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:201:946c:be30:90d9:9093])
+ (user=surenb job=sendgmr) by 2002:a25:c6:0:b0:c4d:c7cb:5a4e with SMTP id
+ 189-20020a2500c6000000b00c4dc7cb5a4emr2822yba.3.1688606048773; Wed, 05 Jul
+ 2023 18:14:08 -0700 (PDT)
+Date:   Wed,  5 Jul 2023 18:14:00 -0700
+In-Reply-To: <20230706011400.2949242-1-surenb@google.com>
+Mime-Version: 1.0
+References: <20230706011400.2949242-1-surenb@google.com>
+X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
+Message-ID: <20230706011400.2949242-3-surenb@google.com>
+Subject: [PATCH v4 2/2] mm: disable CONFIG_PER_VMA_LOCK until its fixed
+From:   Suren Baghdasaryan <surenb@google.com>
+To:     akpm@linux-foundation.org
+Cc:     jirislaby@kernel.org, jacobly.alt@gmail.com,
+        holger@applied-asynchrony.com, hdegoede@redhat.com,
+        michel@lespinasse.org, jglisse@google.com, mhocko@suse.com,
+        vbabka@suse.cz, hannes@cmpxchg.org, mgorman@techsingularity.net,
+        dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com,
+        peterz@infradead.org, ldufour@linux.ibm.com, paulmck@kernel.org,
+        mingo@redhat.com, will@kernel.org, luto@kernel.org,
+        songliubraving@fb.com, peterx@redhat.com, david@redhat.com,
+        dhowells@redhat.com, hughd@google.com, bigeasy@linutronix.de,
+        kent.overstreet@linux.dev, punit.agrawal@bytedance.com,
+        lstoakes@gmail.com, peterjung1337@gmail.com, rientjes@google.com,
+        chriscli@google.com, axelrasmussen@google.com, joelaf@google.com,
+        minchan@google.com, rppt@kernel.org, jannh@google.com,
+        shakeelb@google.com, tatashin@google.com, edumazet@google.com,
+        gthelen@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Suren Baghdasaryan <surenb@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+
+A memory corruption was reported in [1] with bisection pointing to the
+patch [2] enabling per-VMA locks for x86.
+Disable per-VMA locks config to prevent this issue until the fix is
+confirmed. This is expected to be a temporary measure.
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=217624
+[2] https://lore.kernel.org/all/20230227173632.3292573-30-surenb@google.com
+
+Reported-by: Jiri Slaby <jirislaby@kernel.org>
+Closes: https://lore.kernel.org/all/dbdef34c-3a07-5951-e1ae-e9c6e3cdf51b@kernel.org/
+Reported-by: Jacob Young <jacobly.alt@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217624
+Fixes: 0bff0aaea03e ("x86/mm: try VMA lock-based page fault handling first")
+Cc: stable@vger.kernel.org
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+---
+ mm/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 09130434e30d..0abc6c71dd89 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -1224,8 +1224,9 @@ config ARCH_SUPPORTS_PER_VMA_LOCK
+        def_bool n
+ 
+ config PER_VMA_LOCK
+-	def_bool y
++	bool "Enable per-vma locking during page fault handling."
+ 	depends on ARCH_SUPPORTS_PER_VMA_LOCK && MMU && SMP
++	depends on BROKEN
+ 	help
+ 	  Allow per-vma locking during page fault handling.
+ 
+-- 
+2.41.0.255.g8b1d071c50-goog
+
+
