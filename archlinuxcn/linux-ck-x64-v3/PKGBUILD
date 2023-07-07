@@ -71,8 +71,8 @@ _subarch=41
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 pkgbase=linux-ck-x64-v3
-pkgver=6.4.1
-pkgrel=2
+pkgver=6.4.2
+pkgrel=1
 arch=(x86_64)
 url="https://wiki.archlinux.org/index.php/Linux-ck"
 license=(GPL2)
@@ -110,13 +110,13 @@ validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
-sha256sums=('0d9daa9f1c176fb13b9447f6e3d80e82b49043f0d344c247bbf09b4e625beef3'
+sha256sums=('a326ab224176c5b17c73c9ccad85f32e49b6e4e764861d57595727b7ef10062c'
             'SKIP'
-            '23c9cd83010036f8c5f0a4f0a627bb93118c4dcfb4dcbc5bfd2177088d4a51ea'
+            'e8d4bbd63808eeec78680c7de4383333b76ab9d58214042bd4b01d784bbc8ec8'
             'f1d586e111932890ad5e0df15d092fb9b3f87bae4ea17812aae9b0ec98fe2db0'
             'ed0b8773d66079198edd1ecdbe0564d6ad33c641e82d85375e50a2d9e0275144'
-            'd32903944a4dec99dc81c8e53b125639c72755eb7df299e864d1cbee2c6610fa'
-            '8b46076d107c34ac4aa66dc35b1de9553877e19129bde511c4a14d18bbda091d'
+            '4cb280177bbd41d26226417ad9e363708e12e7b8b1b4bbc45d1112bd63492b19'
+            '6197fdd3e6d615f63bae43237c5c8292b8c52ac17d798061f7c3be2806cf0378'
             '36a7a3b002e25c7f01f1ca09c29e010e7ee78887c61354201d67c35345050873')
 _make() {
   test -s version
