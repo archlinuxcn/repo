@@ -44,7 +44,7 @@ fi
 # This will be overwritten by selecting any option in microarchitecture script
 # Source files: https://github.com/xanmod/linux/tree/5.17/CONFIGS/xanmod/gcc
 if [ -z ${_config+x} ]; then
-  _config=config_x86-64-v1
+  _config=config_x86-64-v2
 fi
 
 # Compress modules with ZSTD (to save disk space)
@@ -73,7 +73,7 @@ fi
 
 pkgbase=linux-xanmod-anbox
 _major=6.4
-pkgver=${_major}.1
+pkgver=${_major}.2
 _branch=6.x
 xanmod=1
 _revision=
@@ -94,7 +94,8 @@ _srcname="linux-${pkgver}-xanmod${xanmod}"
 
 source=("https://cdn.kernel.org/pub/linux/kernel/v${_branch}/linux-${_major}.tar."{xz,sign}
         "patch-${pkgver}-xanmod${xanmod}${_revision}.xz::https://github.com/xanmod/linux/releases/download/${pkgver}-xanmod${xanmod}${_revision}/patch-${pkgver}-xanmod${xanmod}.xz"
-        choose-gcc-optimization.sh)
+        choose-gcc-optimization.sh
+        "disable-per-VMA.patch::https://lore.kernel.org/linux-mm/20230703182150.2193578-1-surenb@google.com/raw")
         #"patch-${pkgver}-xanmod${xanmod}.xz::https://sourceforge.net/projects/xanmod/files/releases/stable/${pkgver}-xanmod${xanmod}/patch-${pkgver}-xanmod${xanmod}.xz/download"
 validpgpkeys=(
     'ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linux Torvalds
@@ -111,8 +112,9 @@ done
 
 sha256sums=('8fa0588f0c2ceca44cac77a0e39ba48c9f00a6b9dc69761c02a5d3efac8da7f3'
             'SKIP'
-            'a91550fc14f7f747b00c8dcf5a9ef74365d6d01ced230b5c84fddd354258dd3d'
-            'a8b38eb482eb685944757182c4886404abc12703e5e56ec39c7d61298d17d71f')
+            'f30ce7cf11e4819e90966c6e1fdd42d906168ffd38be1234ff0b2696d1740e9c'
+            'a8b38eb482eb685944757182c4886404abc12703e5e56ec39c7d61298d17d71f'
+            'b77accaf21974dea15f2ac7c8bf8f51ce1682ff0b9359d059292983e91ec5c75')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
 export KBUILD_BUILD_USER=${KBUILD_BUILD_USER:-makepkg}
