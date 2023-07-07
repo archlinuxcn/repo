@@ -1,0 +1,26 @@
+From d1ede67eef06f1f064cf61e519881528359e37c7 Mon Sep 17 00:00:00 2001
+From: egnappahz <egnappah@gmail.com>
+Date: Fri, 7 Jul 2023 15:52:26 +0200
+Subject: [PATCH] disable CONFIG_PER_VMA_LOCK by default until its fixed
+
+Signed-off-by: egnappahz <egnappah@gmail.com>
+---
+ mm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/Kconfig b/mm/Kconfig
+index e3454087fd31..3507251a5528 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -1198,7 +1198,7 @@ config ARCH_SUPPORTS_PER_VMA_LOCK
+        def_bool n
+ 
+ config PER_VMA_LOCK
+-	def_bool y
++        bool "Enable per-vma locking during page fault handling."
+ 	depends on ARCH_SUPPORTS_PER_VMA_LOCK && MMU && SMP
+ 	help
+ 	  Allow per-vma locking during page fault handling.
+-- 
+2.41.0
+
