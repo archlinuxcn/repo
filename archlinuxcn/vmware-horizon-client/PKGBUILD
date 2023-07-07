@@ -19,10 +19,10 @@ _unused_components=(
   'vmware-horizon-scannerclient'
   'vmware-horizon-serialportclient'
   'vmware-horizon-url-redirection')
-pkgver=2303
-_build1=8.9.0
-_build2=21435420
-_cart="CART24FQ1_LIN64_${pkgver}"
+pkgver=2306
+_build1=8.10.0
+_build2=21964631
+_cart="CART24FQ2_LIN64_${pkgver}"
 pkgrel=1
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
@@ -34,7 +34,7 @@ source=("${pkgbase}-${pkgver}-${_build1}-${_build2}-x86_64.bundle::https://downl
         'vmware-horizon-usb'
         'vmware-horizon-usb.service'
         'vmware-horizon.svg')
-sha256sums=('1e10c0d0c005c9981ea1d42d4edd1453b1569b9acc7a63cbf5808efdd3b086fd'
+sha256sums=('cd189b2eb4e1ea9efce25eda7033f64f3366b8e0a589953f6638125bc183cda7'
             'd6863e92b891fc506fc8e81714a47ca3f9f74b7fe68bdf48be058d5e0d433033'
             '008b60ebf45f7d1e033c8ad8ce1688d5e1c59fc0668493067fb89b563b1dc00f'
             'a897c1b9e8928fc222880ebbfc7bb6aff940bff4acf4e4e0cd4002fff81c7226'
@@ -76,24 +76,24 @@ build() {
 	done
 
 	# remove rpath to fix dynamic linking...
-	for LIB in ${srcdir}/extract/vmware-horizon-pcoip/lib/vmware/lib*.so*; do
+	for LIB in ${srcdir}/extract/vmware-horizon-pcoip/usr/lib/vmware/lib*.so*; do
 		patchelf --remove-rpath "${LIB}"
 	done
 
 	# remove keymap files, depend on vmware-keymaps instead
-	rm -rf "${srcdir}"/extract/vmware-horizon-pcoip/lib/vmware/xkeymap/
+	rm -rf "${srcdir}"/extract/vmware-horizon-pcoip/usr/lib/vmware/xkeymap/
 
 	# remove png icon, we install svg and rendered pngs
 	sed -i -e '/Name=/a Comment=Connect to VMware Horizon View virtual machines' -e '/^Icon=/c Icon=vmware-horizon' \
-		"${srcdir}"/extract/vmware-horizon-client/share/applications/vmware-view.desktop
-	rm -r "${srcdir}"/extract/vmware-horizon-client/share/{icons,pixmaps}/
+		"${srcdir}"/extract/vmware-horizon-client/usr/share/applications/vmware-view.desktop
+	rm -r "${srcdir}"/extract/vmware-horizon-client/usr/share/{icons,pixmaps}/
 }
 
 package_vmware-horizon-client() {
 	conflicts=('vmware-view-open-client' 'vmware-view-open-client-beta' 'vmware-view-client'
 		'vmware-horizon-pcoip' 'vmware-horizon-teams-optimization')
 	replaces=('vmware-horizon-pcoip' 'vmware-horizon-teams-optimization')
-	depends=('binutils' 'expat' 'ffmpeg4.4' 'glib2' 'gtk3' 'libudev0-shim' 'libxml2' 'libxss'
+	depends=('binutils' 'expat' 'glib2' 'gtk3' 'libudev0-shim' 'libxml2' 'libxss'
 		'libxtst' 'openssl' 'vmware-keymaps')
 	optdepends=('alsa-lib: audio support via alsa'
 		'freerdp: RDP remote desktop connections'
@@ -109,29 +109,18 @@ package_vmware-horizon-client() {
 	install=vmware-horizon-client.install
 
 	cd "${srcdir}/extract/vmware-horizon-client/"
-
-	mkdir -p "${pkgdir}/usr/"
-	cp -a 'bin/' "${pkgdir}/usr/"
-	cp -a 'lib/' "${pkgdir}/usr/"
-	cp -a 'share/' "${pkgdir}/usr/"
-
-	mkdir -p "${pkgdir}/usr/share/doc/"
-	cp -a 'doc/' "${pkgdir}/usr/share/doc/vmware-horizon-client"
+	cp -a 'usr/' "${pkgdir}/"
 
 	cd "${srcdir}/extract/vmware-horizon-pcoip/"
-
-	mkdir -p "${pkgdir}/usr/"
-	cp -a 'lib/' "${pkgdir}/usr/"
+	cp -a 'usr/' "${pkgdir}/"
 
 	cd "${srcdir}/extract/vmware-horizon-hosted-apps/"
+	cp -a 'usr/' "${pkgdir}/"
 
-	mkdir -p "${pkgdir}/usr/"
-	cp -a 'lib/' "${pkgdir}/usr/"
-
-	for LIB in 'libavcodec.so.58' 'libavutil.so.56'; do
-		for I in $(find "${pkgdir}/usr/lib/vmware/view/" -name "${LIB}") "${pkgdir}/usr/lib/vmware/view/${LIB}"; do
-			ln --symbolic --force --relative "/usr/lib/${LIB}" "${I}"
-		done
+	# drop duplicate libraries
+	for LIB in 'vaapi2' 'vaapi2.7' 'vdpau'; do
+		rm -rf "${pkgdir}/usr/lib/vmware/view/${LIB}"
+		ln -s software "${pkgdir}/usr/lib/vmware/view/${LIB}"
 	done
 
 	install -D -m0644 "${srcdir}/vmware-horizon.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/vmware-horizon.svg"
