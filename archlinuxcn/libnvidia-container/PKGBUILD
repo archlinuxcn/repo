@@ -4,7 +4,7 @@
 pkgbase=libnvidia-container
 pkgname=(libnvidia-container libnvidia-container-tools)
 
-pkgver=1.13.1
+pkgver=1.13.3
 pkgrel=1
 _elfver=0.7.1
 _nvmpver=495.44
@@ -25,14 +25,14 @@ options=(!makeflags !lto)
 # See:
 # https://github.com/NVIDIA/libnvidia-container/blob/c8f267be0bac1c654d59ad4ea5df907141149977/mk/elftoolchain.mk
 # https://github.com/NVIDIA/libnvidia-container/blob/c8f267be0bac1c654d59ad4ea5df907141149977/mk/nvidia-modprobe.mk
-source=("https://github.com/NVIDIA/${pkgbase}/archive/v${pkgver}.tar.gz"
-        "https://sourceforge.net/projects/elftoolchain/files/Sources/elftoolchain-${_elfver}/elftoolchain-${_elfver}.tar.bz2"
-        "https://github.com/NVIDIA/nvidia-modprobe/archive/${_nvmpver}.tar.gz"
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/NVIDIA/${pkgbase}/archive/v${pkgver}.tar.gz"
+        "${pkgname}-${pkgver}-elftoolchain-${_elfver}.tar.bz2::https://sourceforge.net/projects/elftoolchain/files/Sources/elftoolchain-${_elfver}/elftoolchain-${_elfver}.tar.bz2"
+        "${pkgname}-${pkgver}-nvidia-modprobe-${nvmpver}.tar.gz::https://github.com/NVIDIA/nvidia-modprobe/archive/${_nvmpver}.tar.gz"
         fix_rpc_flags.patch
         fix_git_rev_unavail.patch
         fix_libelf_so_name.patch
         fix_elftoolchain.patch)
-sha256sums=('4fce0df5484983f1fac8949d5f6065d73108503785e31baa0639f6db97728b47'
+sha256sums=('264550626fad399e1ea2b75733b633510794fe087ec48bde3c5f6a6fbd0b9643'
             '44f14591fcf21294387215dd7562f3fb4bec2f42f476cf32420a6bbabb2bd2b5'
             'ae6e9c7e6b43368945c28f6b8b6d0d7cc36ee7e1be8955a009a1cb189e46de92'
             '6738c0f8738cb272ee5c723e77008f5f512be842bad26abc2e8f78911131165a'
@@ -50,24 +50,16 @@ prepare(){
   patch -Np1 -i "${srcdir}/fix_libelf_so_name.patch"
 
   deps_dir="deps/src/"
+  mkdir -p "${deps_dir}"
   # mimic behavior from:
   # https://github.com/NVIDIA/libnvidia-container/blob/56704b8dd297bf4daf82a2da4b270dc7f14e0008/mk/libtirpc.mk
-  for dep in "elftoolchain-${_elfver}.tar.bz2" "${_nvmpver}.tar.gz"; do
-    dep_dir="${deps_dir}/${dep%.tar*}"
-    mkdir -p ${dep_dir}
-    # untar the download into the deps dir
-    tar -xf "${srcdir}/${dep}" -C "${dep_dir}" --strip-components=1
-    # tell make to ignore this target, it's already done
-    touch "${dep_dir}/.download_stamp"
+  for dep in "elftoolchain-${_elfver}" "nvidia-modprobe-${_nvmpver}"; do
+    mv "${srcdir}/${dep}" "${deps_dir}"
+    touch "${deps_dir}/${dep}/.download_stamp"
   done
 
   patch -Np1 -i "${srcdir}/fix_elftoolchain.patch"
-
-  # the tar isn't named correctly, so the dir needs moving
-  if [ ! -d "${deps_dir}/nvidia-modprobe-${_nvmpver}" ]; then
-    mv "${deps_dir}/${_nvmpver}" "${deps_dir}/nvidia-modprobe-${_nvmpver}"
-    patch -d "${deps_dir}/nvidia-modprobe-${_nvmpver}" -p1 < "mk/nvidia-modprobe.patch"
-  fi
+  patch -d "${deps_dir}/nvidia-modprobe-${_nvmpver}" -p1 < "mk/nvidia-modprobe.patch"
 }
 
 build(){
