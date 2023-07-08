@@ -1,0 +1,47 @@
+all_off="$(tput sgr0)"
+bold="${all_off}$(tput bold)"
+red="${bold}$(tput setaf 1)"
+green="${bold}$(tput setaf 2)"
+yellow="${bold}$(tput setaf 3)"
+blue="${bold}$(tput setaf 4)"
+magenta="${bold}$(tput setaf 5)"
+
+# Colored makepkg-like functions
+note() {
+    printf "${blue}==>${yellow} NOTE:${all_off} ${1}\n"
+}
+
+plain() {
+    printf "${1}\n"
+}
+
+green() {
+    printf "${green}${1}${all_off}\n"
+}
+
+yello() {
+    printf "${yellow}${1}${all_off}\n"
+}
+
+blue() {
+    printf "${blue}${1}${all_off}\n"
+}
+
+magen() {
+    printf "${magenta}${1}${all_off}\n"
+}
+
+post_install() {
+    yello "xlayoutdisplay 1.4.0"
+    blue  "New argument: -w"
+	green "  -w [ --wait ] arg      wait seconds before running"
+    blue  "New feature: udev rule"
+	plain "  https://github.com/alex-courtis/xlayoutdisplay#automatically-detect-new-display"
+	plain "  /usr/share/doc/xlayoutdisplay/99-xlayoutdisplay.rules"
+    plain ""
+}
+
+post_upgrade() {
+    post_install
+}
+
