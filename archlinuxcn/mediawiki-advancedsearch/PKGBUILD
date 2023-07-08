@@ -1,14 +1,14 @@
 _name=AdvancedSearch
 pkgname=mediawiki-advancedsearch
-pkgver=20221206
+pkgver=20230708
 pkgrel=1
 pkgdesc="MediaWiki extension that creating an improved advanced search interface for MediaWiki and aiming for a user friendly integration of search keywords"
 arch=(any)
 url="https://www.mediawiki.org/wiki/Extension:AdvancedSearch"
 license=('GPL2')
-depends=('mediawiki>=1.39' 'mediawiki<1.40')
-source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/AdvancedSearch-REL1_39-718bb61.tar.gz")
-sha256sums=('47d5762d3aee1e78a9413210c86ea7065e76933923c2eb5de614c9828cf45ec0')
+depends=('mediawiki>=1.40' 'mediawiki<1.41')
+source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/AdvancedSearch-REL1_40-e46917f.tar.gz")
+sha256sums=('a650b8c356fc96fc8b0cd20eafeace0e9f88990a250a2a23f37d66b6a56efdec')
 
 build() {
   true
