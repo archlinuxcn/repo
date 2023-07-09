@@ -5,9 +5,9 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=102.11.0
-pkgrel=1
-_commit=5a1894fc966840dc242110ec0459471c637a4675
+pkgver=102.13.0
+pkgrel=2
+_commit=8c8a8ecc9322b0954e3d51f661866dbde1e6b1c3
 pkgdesc="GNU version of the Firefox browser."
 arch=(x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
@@ -30,7 +30,7 @@ source=(https://git.savannah.gnu.org/cgit/gnuzilla.git/snapshot/gnuzilla-${_comm
         missing_cstdint.patch::https://hg.mozilla.org/mozilla-central/raw-rev/61f052c26dd1
         RsdparsaSdpGlue.patch)
 
-sha256sums=('8ea296e4237f3b1565cd9171abb4415c5be6a47622986645eaa5f6859c479497'
+sha256sums=('9648c2b137ff7b3bf56dbb633bb9097427cbbe5f4b21c293eb0b00e4fea2daa1'
             'e00dbf01803cdd36fd9e1c0c018c19bb6f97e43016ea87062e6134bdc172bc7d'
             '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208'
             'ca3cedc5edce26040d3caf735afa8744fe08f3a1695eb2cda3796f4f336632d3'
@@ -60,6 +60,9 @@ prepare() {
     [ -z "$_LOCALE" ] || sed -e "s/es-ES/$_LOCALE/g" -i makeicecat && echo "$_LOCALE" > custom-shipped-locales
     rm -rf data/files-to-append/l10n/*
   fi
+
+  # Thanks to cysp74 to report this bug
+  sed -e 's;find l10n -wholename '\''\*/brand.dtd'\'' | xargs;find l10n -wholename '\''\*/brand.dtd'\'' | xargs -r;g' -i makeicecat
 
   # Produce IceCat sources
   bash makeicecat
