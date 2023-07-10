@@ -2,30 +2,21 @@
 # Contributor: codestation <codestation404 at gmail dot com>
 
 pkgname=wxmedit
-pkgver=3.1_FIX1
-pkgrel=5
+pkgver=3.2
+pkgrel=1
 pkgdesc="Cross-platform Text/Hex Editor, a fork of MadEdit with bug fixes and improvements"
 arch=("i686" "x86_64")
 url="https://wxmedit.github.io/"
 license=('GPL')
-depends=('curl' 'wxgtk2')
+depends=('curl' 'gcc-libs' 'glib2' 'glibc' 'gtk3' 'hicolor-icon-theme' 'icu' 'wxwidgets-common' 'wxwidgets-gtk3')
 makedepends=('boost')
-source=("https://github.com/hltj/wxMEdit/archive/$pkgver.tar.gz")
-sha256sums=('51dd81ddd44c83017d2e54f8b0a11a50e56075e8edc01d738865478fdddd8017')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/hltj/wxMEdit/archive/$pkgver.tar.gz")
+sha256sums=('d2bdf266125c6df724ec78cb99ef5f043fca28e8e873eac4b49db7b5986c7579')
 
 build() {
   cd "$srcdir/wxMEdit-$pkgver"
-
-  sed 's|boost/tr1/unordered_set.hpp|boost/unordered_set.hpp|g' -i `grep 'boost/tr1/unordered_set.hpp' . -rIl`
-  sed 's|boost/tr1/unordered_map.hpp|boost/unordered_map.hpp|g' -i `grep 'boost/tr1/unordered_map.hpp' . -rIl`
-  sed 's/std::tr1/boost/g' -i `grep 'std::tr1::' . -rIl`
-  sed 's/UnicodeString/icu::UnicodeString/g' -i `grep 'UnicodeString' . -rIl`
-  sed 's/BreakIterator/icu::BreakIterator/g' -i `grep 'BreakIterator' . -rIl`
-  sed 's/LocalUCharsetDetectorPointer/icu::LocalUCharsetDetectorPointer/g' -i `grep 'LocalUCharsetDetectorPointer' . -rIl`
-  sed 's/Locale/icu::Locale/g' -i src/wxmedit/wxm_lines.cpp src/wxmedit/wxmedit.cpp
-
   ./configure --prefix=/usr --with-wx-config=/usr/bin/wx-config
-  make CXXFLAGS="-DU_DEFINE_FALSE_AND_TRUE=1 -I/usr/include/wx-3.0 -I/usr/lib/wx/include/gtk2-unicode-3.0"
+  make
 }
 
 package() {
