@@ -3,8 +3,8 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.4545.r0.gec35330593
-pkgrel=2
+pkgver=1.7.4714.r0.gc994e4828
+pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
 url=https://www.pcsx2.net
@@ -56,6 +56,7 @@ makedepends=(
     qt6-wayland
     qt6-tools
     python
+    extra-cmake-modules
 )
 
 optdepends=(
@@ -75,7 +76,7 @@ pcsx2-qt.sh
 
 install=post.install
 
-options=(debug !strip !lto)
+options=(!lto)
 
 b2sums=('SKIP'
         'SKIP'
@@ -113,9 +114,9 @@ build()
     -DDISABLE_ADVANCE_SIMD=ON \
     -DPACKAGE_MODE=ON
   ninja -j$(nproc) -C build -v
-
-  7z a -r cheats_ni.zip pcsx2_patches/cheats_ni/*
-  7z a -r cheats_ws.zip pcsx2_patches/cheats_ws/*
+  
+  cd pcsx2_patches
+    7z a -r ../patches.zip patches/.
 }
 
 package() {
@@ -124,10 +125,9 @@ package() {
     install -Dm755 pcsx2-qt.sh "$pkgdir"/usr/bin/pcsx2-qt
     install -Dm644 pcsx2/.github/workflows/scripts/linux/pcsx2-qt.desktop \
     "${pkgdir}"/usr/share/applications/PCSX2.desktop
-    install -Dm644 pcsx2/pcsx2/Resources/AppIcon64.png \
+    install -Dm644 pcsx2/pcsx2/Resources/AppIconLarge.png \
     "${pkgdir}"/usr/share/icons/hicolor/64x64/apps/PCSX2.png
-    install -Dm644 -t "${pkgdir}"/opt/"${pkgname%-git}"/resources/ cheats_ni.zip
-    install -Dm644 -t "${pkgdir}"/opt/"${pkgname%-git}"/resources/ cheats_ws.zip
+    install -Dm644 -t "${pkgdir}"/opt/"${pkgname%-git}"/resources/ patches.zip
 }
 # vim: ts=2 sw=2 et:
 
