@@ -3,5 +3,5 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build(maintainers=['That1Calculator'])
+    aur_pre_build(maintainers=['FabioLolix','eclairevoyant'])
     add_depends(['libdisplay-info.so'])
