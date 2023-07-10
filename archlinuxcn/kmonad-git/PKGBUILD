@@ -2,7 +2,7 @@
 # Contributor: Matteo Bonora <bonora.matteo@gmail.com>
 
 pkgname=kmonad-git
-pkgver=0.4.1.r345.ga22e0ba
+pkgver=0.4.1.r358.g19cccbf
 pkgrel=1
 pkgdesc="An advanced keyboard manager"
 arch=('any')
@@ -15,6 +15,7 @@ provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
 source=("git+https://github.com/kmonad/kmonad")
 md5sums=('SKIP')
+install="${pkgname}.install"
 
 pkgver() {
 	cd "$srcdir/${pkgname%-git}"
@@ -30,7 +31,7 @@ build() {
 package() {
 	cd "$srcdir/${pkgname%-git}"
 	stack install --local-bin-path="$pkgdir/usr/bin"
-	install -Dm644 "startup/${pkgname%-git}.service" -t "$pkgdir/usr/lib/systemd/system"
+	install -Dm644 "startup/${pkgname%-git}@.service" -t "$pkgdir/usr/lib/systemd/system"
 	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
 	install -Dm644 "doc/faq.md" "$pkgdir/usr/share/doc/$pkgname/faq.md"
@@ -42,3 +43,4 @@ package() {
 	  install -Dm755 "$file" -t "$pkgdir/usr/share/doc/$pkgname/keymap/template"
 	done
 }
+
