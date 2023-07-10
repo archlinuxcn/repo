@@ -1,0 +1,11 @@
+#!/bin/sh
+
+post_install() {
+  echo ":: Restarting systemd-binfmt"
+  systemctl restart systemd-binfmt  
+}
+
+post_upgrade() {
+  echo ":: Restarting systemd-binfmt"
+  systemctl restart systemd-binfmt  
+}
