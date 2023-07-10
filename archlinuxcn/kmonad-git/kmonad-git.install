@@ -1,0 +1,8 @@
+# arg 1:  the new package version
+# arg 2:  the old package version
+post_upgrade() {
+  # echo in yellow bold style
+  echo -e "\e[1;33m" \
+    "/usr/lib/systemd/system/kmonad.service has been replaced by /usr/lib/systemd/system/kmonad@.service.\n" \
+    "\e[0m"
+}

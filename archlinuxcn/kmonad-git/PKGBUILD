@@ -15,6 +15,7 @@ provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
 source=("git+https://github.com/kmonad/kmonad")
 md5sums=('SKIP')
+install="${pkgname}.install"
 
 pkgver() {
 	cd "$srcdir/${pkgname%-git}"
