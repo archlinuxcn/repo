@@ -8,13 +8,11 @@ fi
 
 if ! git remote|grep -q arch; then
 	echo "Adding 'arch' remote"
-	git remote add arch git://projects.archlinux.org/svntogit/packages.git
-	git remote set-branches arch  packages/linux
+	git remote add arch https://gitlab.archlinux.org/archlinux/packaging/packages/linux.git
 fi
 
 git fetch arch
-git checkout -b merge --no-track arch/packages/linux
-FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --subdirectory-filter trunk/
+git checkout -b merge --no-track arch/main
 grep ^pkgver PKGBUILD
 grep ^pkgrel PKGBUILD
 git checkout master
