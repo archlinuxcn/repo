@@ -1,8 +1,8 @@
 # Maintainer: Bo Davidson <bo.davidson@go.tarleton.edu> 
 # Contributor: Paul Davis <paul@dangersalad.com>
 pkgname=openrgb
-pkgver=0.8
-pkgrel=3
+pkgver=0.9
+pkgrel=1
 pkgdesc="Open source RGB lighting control that doesn't depend on manufacturer software."
 arch=("x86_64")
 url="https://gitlab.com/CalcProgrammer1/OpenRGB"
@@ -21,12 +21,10 @@ source=(
    "https://gitlab.com/CalcProgrammer1/OpenRGB/-/archive/release_$pkgver/OpenRGB-release_$pkgver.tar.gz"
    openrgb.conf
    openrgb.service
-   1743.patch  # https://gitlab.com/CalcProgrammer1/OpenRGB/-/merge_requests/1743.patch
 )
-sha256sums=('0d803753873ca1ec2bd78632b4ac605669394e7eeba2d2efe305c7f9c9d7df0c'
+sha256sums=('2e62799339b72b6d3afc4792e6ff39487583210bb5ddde93e2daa38ae35381c2'
             'b5a53d747422f8b594e3e9615e238457d696732efce94050cdd72182a8645ef2'
-            '272dc43a77d0e48d29f32da753c7e05fd635883b173c21047f4eefa8bfc77938'
-            '2f7fe2fa62731884f16ebf5d4bb22bb2366e300d292bc3a113a8689d1cc14109')
+            '272dc43a77d0e48d29f32da753c7e05fd635883b173c21047f4eefa8bfc77938')
 
 prepare() {
    # Searches and applies any .patch file included this git repo 
