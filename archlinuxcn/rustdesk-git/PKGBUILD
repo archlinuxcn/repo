@@ -89,12 +89,9 @@ pkgver() {
   set -u
   cd "${srcdir}/${_pkgname}"
   local _ver
-  _ver="$(sed -E -n -e 's/^version = "([^"]+)"$/\1/p' 'Cargo.toml')" # '
-  #_ver="$(sed -E -n -e 's/^  VERSION: "([^"]+)"$/\1/p' '.github/workflows/flutter-nightly.yml')" # '
-  local _ver2
-  _ver2="$(git describe --long --tags | sed -e 's/\([^-]*-g\)/r\1/' -e 's/-/./g')"
-  _ver2="${_ver2#nightly.}"
-  printf '%s.%s\n' "${_ver}" "${_ver2}"
+  _ver="$(git describe --long --tags | sed -e 's/\([^-]*-g\)/r\1/' -e 's/-/./g')"
+  _ver="${_ver#nightly.}"
+  echo "${_ver}"
   set +u
 }
 
