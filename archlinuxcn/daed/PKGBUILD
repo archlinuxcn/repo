@@ -2,24 +2,24 @@
 # Maintainer: cubercsl <2014cais01 at gmail dot com>
 
 pkgname=daed
-pkgver=0.1.0
+pkgver=0.1.1
 pkgrel=1
 pkgdesc="A modern dashboard for dae, bundled with dae-wing (backend API server) and dae (core)."
 arch=('x86_64')
 url="https://github.com/daeuniverse/daed"
 license=('AGPL' 'MIT')
-makedepends=('pnpm' 'clang' 'go')
+makedepends=('git' 'pnpm' 'clang' 'go')
 provides=('daed')
 conflicts=('daed')
 source=("${pkgname}-${pkgver}.zip::https://github.com/daeuniverse/${pkgname}/releases/download/v${pkgver}/${pkgname}-full-src.zip")
-sha256sums=('8e22425eb581e180fc134d191c4b50f40ab3954b990350b07aef57467a3caf3c')
+sha512sums=('8563a5c67a76157ef74d8783f46bb1e056f0d3496df990b0341e1644d98b805f8efe8886ff6b0e837287ea8f1a1189efaef30cc612731321b4f4974e3b01cebe')
 options=(!debug)
 
 build() {
 	export GOFLAGS="-buildmode=pie -trimpath -modcacherw"
 	export CFLAGS="-fno-stack-protector"
 	cd "${srcdir}"
-	sed -i '/git submodule update/d' wing/Makefile # temporary fix
+	sed -i 's/git rev-parse --short HEAD/echo/' vite.config.ts
 	make VERSION="${pkgver}"
 }
 
