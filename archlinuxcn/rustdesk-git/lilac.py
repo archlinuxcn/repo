@@ -7,7 +7,7 @@ def pre_build():
     
     in_pkgver = false
     for line in edit_file('PKGBUILD'):
-        if not in_pkgver
+        if in_pkgver == false
             print(line)
         else
             if line.strip().startswith('}'):
