@@ -5,18 +5,18 @@ from lilaclib import *
 def pre_build():
     aur_pre_build(maintainers=['taotieren','Ataraxy','severach'])
     
-    is_pkgver = false
+    in_pkgver = false
     for line in edit_file('PKGBUILD'):
-        if not is_pkgver
+        if not in_pkgver
             print(line)
         else
             if line.strip().startswith('}'):
-                is_pkgver = true 
+                in_pkgver = true 
             else
                 continue
 
         if line.strip().startswith('pkgver()'):
-            is_pkgver = true
+            in_pkgver = true
             print("set -u")
             print("cd \"${srcdir}/${_pkgname}\"")
             print("local _ver")
