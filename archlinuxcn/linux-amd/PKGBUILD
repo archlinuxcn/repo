@@ -2,11 +2,11 @@
 
 pkgbase=linux-amd
 _srcname=linux
-gitver=v6.4.2
+gitver=v6.4.3
 patchver=20230105
 patchname=more-uarches-for-kernel-5.17+.patch
-pkgver=6.4.v.2
-pkgrel=3
+pkgver=6.4.v.3
+pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
@@ -22,20 +22,16 @@ source=("git+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git#ta
         'linux.install'
 	# patch from our graysky archlinux colleague
 	"https://raw.githubusercontent.com/graysky2/kernel_compiler_patch/$patchver/$patchname"
-        # disable CONFIG_PER_VMA_LOCK patch
-        'disable-CONFIG_PER_VMA_LOCK.patch'
 )
 sha256sums=('SKIP'
             #config.x86_64
-            '0b96aeb601093ec93fd2699e26fb77deefa08926b392afd34473d2891da34aab'
+            '2b0a2b9f3e5354ff6e6915e5a206780c02e6e1f2634d6221a2dcf5c658efef54'
             #.preset file
             '60c6ba602443e94a9eba3aeee9d194027d69bffaa428c6d055348ebf03681b5c'
             #linux install file
             'd590e751ab4cf424b78fd0d57e53d187f07401a68c8b468d17a5f39a337dacf0'
             #grayskypatch
             '81ad663925a0aa5b5332a69bae7227393664bb81ee2e57a283e7f16e9ff75efe'
-            #CONFIG_PER_VMA_LOCK.patch
-            'c0faece79d42dc4453141333c3cd70094fa9f9c5a403aa275458426ecd3af342'
 )
 
 _kernelname=${pkgbase#linux}
