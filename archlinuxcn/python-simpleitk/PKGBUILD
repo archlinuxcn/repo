@@ -15,9 +15,11 @@ makedepends=(
   doxygen
   gcc12
   git
+  python-build
+  python-installer
   python-scikit-build
   python-setuptools
-  python-pip
+  python-wheel
 )
 source=("${pkgname}-${pkgver}::git+https://github.com/SimpleITK/SimpleITKPythonPackage.git"
         "git+https://github.com/SimpleITK/SimpleITK.git#tag=v${pkgver}")
@@ -36,12 +38,11 @@ prepare() {
 
 build() {
   cd "${pkgname}-${pkgver}"
-  python setup.py bdist_wheel
+  python -m build --wheel --no-isolation -x
 }
 
 package() {
   cd "${pkgname}-${pkgver}"
-  PIP_CONFIG_FILE=/dev/null pip install --isolated --root="${pkgdir}" --ignore-installed --no-deps dist/*.whl
-  python -O -m compileall "${pkgdir}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
 }
 # vim:set ts=2 sw=2 et:
