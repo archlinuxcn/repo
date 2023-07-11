@@ -71,7 +71,7 @@ _subarch=42
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 pkgbase=linux-ck-x64-v4
-pkgver=6.4.2
+pkgver=6.4.3
 pkgrel=1
 arch=(x86_64)
 url="https://wiki.archlinux.org/index.php/Linux-ck"
@@ -104,20 +104,18 @@ source=(
   "ck-hrtimer-$_commit.tar.gz::https://github.com/graysky2/linux-patches/archive/$_commit.tar.gz"
   0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
   0002-netfilter-nf_tables-unbind-non-anonymous-set-if-rule.patch
-  0003-mm-disable-CONFIG_PER_VMA_LOCK-by-default-until-its-.patch
 )
 validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
-sha256sums=('a326ab224176c5b17c73c9ccad85f32e49b6e4e764861d57595727b7ef10062c'
+sha256sums=('7134ed29360df6f37a26410630283f0592c91a6d2178a9648226d30ddf8c88a1'
             'SKIP'
-            'e8d4bbd63808eeec78680c7de4383333b76ab9d58214042bd4b01d784bbc8ec8'
+            '392acc67300ea585c739e16a596d790daa2ee048f248832a400bc57dc226aa6d'
             'f1d586e111932890ad5e0df15d092fb9b3f87bae4ea17812aae9b0ec98fe2db0'
             'ed0b8773d66079198edd1ecdbe0564d6ad33c641e82d85375e50a2d9e0275144'
             '4cb280177bbd41d26226417ad9e363708e12e7b8b1b4bbc45d1112bd63492b19'
-            '6197fdd3e6d615f63bae43237c5c8292b8c52ac17d798061f7c3be2806cf0378'
-            '36a7a3b002e25c7f01f1ca09c29e010e7ee78887c61354201d67c35345050873')
+            '6197fdd3e6d615f63bae43237c5c8292b8c52ac17d798061f7c3be2806cf0378')
 _make() {
   test -s version
   make KERNELRELEASE="$(<version)" "$@"
