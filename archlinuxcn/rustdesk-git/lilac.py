@@ -9,10 +9,10 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if in_pkgver == false:
             print(line)
-        else
+        else:
             if line.strip().startswith('}'):
                 in_pkgver = true 
-            else
+            else:
                 continue
 
         if line.strip().startswith('pkgver()'):
