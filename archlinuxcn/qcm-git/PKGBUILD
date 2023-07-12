@@ -48,6 +48,8 @@ function pkgver(){
 }
 
 function build(){
+    export TERM=xterm
+
     if [ -d "${srcdir}"/Qcm/build ]; then
         _info "Deleting ${srcdir}/Qcm/build"
         rm -r "${srcdir}"/Qcm/build
