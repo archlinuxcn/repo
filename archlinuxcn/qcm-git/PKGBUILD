@@ -1,6 +1,6 @@
 # Maintainer: Kimiblock Zhou <pn3535 at icloud dot com>
 pkgname=qcm-git
-pkgver=r55.f39f015
+pkgver=r60.78ae22c
 pkgrel=1
 pkgdesc="Qt client for netease cloud music "
 arch=('x86_64')
@@ -48,8 +48,7 @@ function pkgver(){
 }
 
 function build(){
-    export TERM=xterm
-
+export TERM=xterm
     if [ -d "${srcdir}"/Qcm/build ]; then
         _info "Deleting ${srcdir}/Qcm/build"
         rm -r "${srcdir}"/Qcm/build
