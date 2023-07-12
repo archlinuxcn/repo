@@ -12,6 +12,7 @@ def pre_build():
         else:
             if line.strip().startswith('}'):
                 in_pkgver = True
+                print(line)
             else:
                 continue
 
