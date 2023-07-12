@@ -7,6 +7,9 @@ def pre_build():
 
     in_pkgver = False
     for line in edit_file('PKGBUILD'):
+        if line.strip().startswith('pkgrel='):
+            print('epoch=1')
+
         if in_pkgver == False:
             print(line)
         else:
