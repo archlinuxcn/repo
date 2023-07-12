@@ -11,10 +11,9 @@ def pre_build():
             print(line)
         else:
             if line.strip().startswith('}'):
-                in_pkgver = True
+                in_pkgver = False
                 print(line)
-            else:
-                continue
+            continue
 
         if line.strip().startswith('pkgver()'):
             in_pkgver = True
