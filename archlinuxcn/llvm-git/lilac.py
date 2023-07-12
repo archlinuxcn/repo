@@ -2,4 +2,4 @@
 
 import os.path
 
-build_args = ['-r', os.path.expanduser('chroots')]
+build_args = ['-r', os.path.expanduser('~/chroots')]
