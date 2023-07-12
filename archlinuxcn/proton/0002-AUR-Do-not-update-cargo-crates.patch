@@ -1,17 +1,17 @@
-From 6ec4db701be89b95218be1f64a04892ed6b906bd Mon Sep 17 00:00:00 2001
+From e803f1659dc3f2c42cb30b1389c66d427725d678 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Sun, 19 Mar 2023 10:56:59 +0200
-Subject: [PATCH 2/2] AUR Do not update cargo crates
+Subject: [PATCH 2/3] AUR Do not update cargo crates
 
 ---
  make/rules-cargo.mk | 2 --
  1 file changed, 2 deletions(-)
 
 diff --git a/make/rules-cargo.mk b/make/rules-cargo.mk
-index 5ebcf009..4f5c3162 100644
+index 45bd7381..11e36c1d 100644
 --- a/make/rules-cargo.mk
 +++ b/make/rules-cargo.mk
-@@ -14,8 +14,6 @@ $$(OBJ)/.$(1)-configure$(3):
+@@ -13,8 +13,6 @@ $$(OBJ)/.$(1)-configure$(3):
  $$(OBJ)/.$(1)-build$(3):
  	@echo ":: building $(3)bit $(1)..." >&2
  	cd $$($(2)_SRC) && env $$($(2)_ENV$(3)) \
@@ -21,5 +21,5 @@ index 5ebcf009..4f5c3162 100644
  	      -j$$(SUBJOBS) --locked --offline --verbose \
  	      --target "$$(CARGO_TARGET_$(3))" \
 -- 
-2.40.0
+2.41.0
 
