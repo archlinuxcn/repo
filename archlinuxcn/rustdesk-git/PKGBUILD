@@ -20,9 +20,9 @@ _opt_FLUTTER=1
 set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}-git"
-pkgver=1.2.1.1.2.1.r1.gcfcfd127
-pkgrel=1
+pkgver=1.2.1.r4.gcdc412af
 epoch=1
+pkgrel=1
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
 arch=('x86_64')
 url='https://github.com/rustdesk/rustdesk'
@@ -87,13 +87,13 @@ _vcs=("${_vcs[@]##*/}")
 noextract=("${_vcs[@]}")
 
 pkgver() {
-  set -u
-  cd "${srcdir}/${_pkgname}"
-  local _ver
-  _ver="$(git describe --long --tags | sed -e 's/\([^-]*-g\)/r\1/' -e 's/-/./g')"
-  _ver="${_ver#nightly.}"
-  echo "${_ver}"
-  set +u
+set -u
+cd "${srcdir}/${_pkgname}"
+local _ver
+_ver="$(git describe --long --tags | sed -e 's/\([^-]*-g\)/r\1/' -e 's/-/./g')"
+_ver="${_ver#nightly.}"
+echo "${_ver}"
+set +u
 }
 
 _vcpkg=(libvpx libyuv opus aom)
