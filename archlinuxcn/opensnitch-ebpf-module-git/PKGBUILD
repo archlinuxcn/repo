@@ -2,7 +2,7 @@
 
 pkgname=opensnitch-ebpf-module-git
 _pkgname=opensnitch
-pkgver=1.6.0.r44.1a063d1
+pkgver=1.6.0.r58.eaec4a8
 pkgrel=1
 pkgdesc="eBPF process monitor module for opensnitch"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
@@ -31,9 +31,10 @@ prepare() {
 }
 
 build() {
+KERNEL_VER=$(pacman -Si linux-headers | grep Version | awk '{print $3}' | sed 's/.arch/-arch/')
   cd "${srcdir}/${_pkgname}/ebpf_prog"
 
-  KERNEL_DIR="/usr/lib/modules/$(uname -r)/build" KERNEL_HEADERS="${KERNEL_DIR}" ARCH="${arch}" make all
+  KERNEL_DIR="/usr/lib/modules/${KERNEL_VER}/build" KERNEL_HEADERS="${KERNEL_DIR}" ARCH="${arch}" make all
 }
 
 package() {
