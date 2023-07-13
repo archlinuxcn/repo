@@ -4,7 +4,7 @@ maintainers:
 
 pre_build_script: |
   aur_pre_build(maintainers=['orhun'])
-  update_pkgver_and_pkgrel()
+  update_pkgver_and_pkgrel(_G.newver)
 
 post_build: aur_post_build
 
