@@ -6,7 +6,7 @@
 # Contributor : Jingbei Li <i@jingbei.li>
 
 _pkgname=Miniconda3
-_pyver=py310
+_pyver=py311
 pkgname=miniconda
 pkgver=23.5.2
 pkgrel=1
@@ -18,7 +18,7 @@ depends=(ca-certificates-utils)
 source=("${pkgname}-${pkgver}.sh::https://repo.continuum.io/miniconda/${_pkgname}-${_pyver}_${pkgver}-0-Linux-x86_64.sh"
         "${pkgname}.install")
 options=(!strip libtool staticlibs)
-sha256sums=('ea5e6e8a3d5a0247b9df85382d27220fac8e59b5778fd313c5913879cd9baafc'
+sha256sums=('634d76df5e489c44ade4085552b97bebc786d49245ed1a830022b0b406de5817'
             '02ed5095b7bd9670f749465d9cac1478deab44ebdf8616848ae4bd9371150abf')
 install="${pkgname}.install"
 
