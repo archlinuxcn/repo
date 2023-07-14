@@ -5,59 +5,60 @@
 pkgname=balena-etcher
 _pkgname=etcher
 pkgver=1.18.11
-pkgrel=1
+_electron=electron19
+pkgrel=2
 epoch=2
 pkgdesc='Flash OS images to SD cards & USB drives, safely and easily'
 arch=('x86_64' 'i686' 'armv7h' 'aarch64')
 _github_url='https://github.com/balena-io/etcher'
 url='https://balena.io/etcher'
 license=(Apache)
-depends=("electron19" "gtk3" "libxtst" "libxss" "nss" "alsa-lib" "glib2" "polkit" "libusb")
-makedepends=("git" "python" "nvm")
+depends=("${_electron}" "gtk3" "libxtst" "libxss" "nss" "alsa-lib" "glib2" "polkit" "libusb")
+makedepends=("npm" "jq" "patch" "nodejs-lts-hydrogen" 'moreutils' 'node-gyp' )
 optdepends=("libnotify: for notifications")
 conflicts=("${_pkgname}"
   "${_pkgname}-git"
   "${_pkgname}-bin"
 )
-options=('!strip')
-source=("etcher::git+https://github.com/balena-io/${_pkgname}.git#tag=v${pkgver}"
+# options=('!strip')
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/balena-io/etcher/archive/refs/tags/v${pkgver}.tar.gz"
         "${pkgname}-electron.sh"
         "${pkgname}-electron.desktop"
+        "resin-${pkgver}.tar.gz::https://github.com/product-os/scripts/archive/refs/tags/v1.26.6.tar.gz"
         )
-sha256sums=('SKIP'
-            'f6b04145e6173965c52c3cdb7ca13741f1c296d01fe9f5b787e3cb91c3259a6c'
-            'c950d9578f9cf60998c920bb60c6617559963f06a4918e7072fdc706b0ef5754')
-
-_ensure_local_nvm() {
-    # let's be sure we are starting clean
-    which nvm >/dev/null 2>&1 && nvm deactivate && nvm unload
-    export NVM_DIR="${srcdir}/.nvm"
-
-    # The init script returns 3 if version specified
-    # in ./.nvrc is not (yet) installed in $NVM_DIR
-    # but nvm itself still gets loaded ok
-    source /usr/share/nvm/init-nvm.sh || [[ $? != 1 ]]
-}
+sha256sums=('4d24d601df47702d78cb122b75bf13f2cea681bf73965efa72fd741362662bed'
+            '71d3ca348f879c585aee8724fd565ce22ca5767833829ddce15ada81a5dceaf8'
+            'c950d9578f9cf60998c920bb60c6617559963f06a4918e7072fdc706b0ef5754'
+            '805acaa946df051059a4d16cd6d5adc93b753d0b2783deecfe72bf651500573d')
 
 prepare() {
-  cd "${_pkgname}"
-  git submodule init
-  git submodule update || cd "${srcdir}/${_pkgname}/scripts/resin" && git checkout --
-  _ensure_local_nvm
-  nvm install 16
+  cd "${_pkgname}-${pkgver}"
+  sed -i "s|_ELECTRON_|${_electron}|g" ${srcdir}/balena-etcher-electron.sh
+  cp -rf ${srcdir}/scripts-*/* "${srcdir}/${_pkgname}-${pkgver}/scripts/resin"
+
+  # patch electron version
+  local electronDist="/usr/lib/${_electron}"
+	local electronVersion="$(< $electronDist/version)"
+  electronVersion="^${electronVersion%.*}"
+	jq ".devDependencies.electron = \"$electronVersion\"" package.json | sponge package.json
+	jq ".build.electronDist = \"$electronDist\"" package.json | sponge package.json
+	jq ".build.electronVersion = \"$electronVersion\"" package.json | sponge package.json
+
+  rm -rf package-lock.json
 }
 
 build() {
-  unset MAKEFLAGS       # unset MAKEFLAGS to avoid some error
-  _ensure_local_nvm
-  cd "${_pkgname}"
-  npm ci --openssl_fips=""
+  cd "${_pkgname}-${pkgver}"
+  export HOME=${srcdir}
+  unset MAKEFLAGS
+  npm install
+
   npm run webpack
   npm prune --production
 }
 
 package() {
-  cd "${_pkgname}"
+  cd "${_pkgname}-${pkgver}"
 
   _appdir="${pkgdir}/usr/lib/${pkgname}"
   install -d "${_appdir}"
