@@ -2,7 +2,7 @@
 
 pkgname=libpdfium-nojs
 pkgver=5735.r3.9505810f66
-pkgrel=2
+pkgrel=3
 pkgdesc="Open-source PDF rendering engine."
 arch=('x86_64')
 url="https://pdfium.googlesource.com/pdfium/"
@@ -106,7 +106,6 @@ build() {
       'pdf_is_standalone = true'
       'use_system_libopenjpeg2 = true'
       'is_component_build = true'
-      'use_gold = false' 
       'pdf_use_partition_alloc = false'
   )
   
