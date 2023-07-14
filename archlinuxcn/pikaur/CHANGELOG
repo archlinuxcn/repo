@@ -2083,3 +2083,14 @@ Fri May 26 04:41:58 2023 +0200
     *  2023-05-26 4620ade actionless fix(getpkgbuild_cli): --unprivileged was renamed to --protocol=https in `devtools`
     *  2023-05-26 810efe4 actionless fix(pkgbuild): add python-hatchling
     *  2023-05-23 2faea6e Curtis Lee Bolin chore(packaging): copy metadata from `setup.py` to `pyproject.toml` (#716)
+
+
+Fri Jul 14 05:03:49 2023 +0200
+-------------------------------------------------
+1.16            Release 1.16
+    
+    Notable changes:
+    *  2023-07-14 971206b actionless fix/refactor(pikspect): use pty.spawn() as a base instead of subprocess.Popen() - to fix working with latest `sudo` `use_pty` default set to `true`
+    *  2023-07-13 e3b5d5e actionless fix(install_cli: init: refresh): don't break terminal with the new `sudo` use_pty defaults to `true`
+    *  2023-06-27 5a9a2f3 actionless feat(getpkgbuild, args): add -o/--output flag for -G operation, update AUR repo if already cloned (fixes #723)
+    *  2023-06-20 a174539 actionless fix(pacman: find_sysupgrade_pkgs): when computing deps take into account pkgs which gon be installed manually (fixes #727)
