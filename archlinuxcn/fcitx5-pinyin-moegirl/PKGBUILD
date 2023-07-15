@@ -2,7 +2,7 @@
 
 pkgbase=fcitx5-pinyin-moegirl
 pkgname=('fcitx5-pinyin-moegirl' 'fcitx5-pinyin-moegirl-rime')
-pkgver=20230617
+pkgver=20230714
 pkgrel=1
 pkgdesc="Fcitx 5 Pinyin Dictionary from zh.moegirl.org.cn"
 arch=('any')
@@ -10,8 +10,8 @@ url="https://github.com/outloudvi/mw2fcitx"
 license=('CCPL:by-nc-sa-3.0')
 source=("${url}/releases/download/${pkgver}/moegirl.dict"
         "${url}/releases/download/${pkgver}/moegirl.dict.yaml")
-sha256sums=('7949ffd986077916f583639bcb072498dc7ef00075237e276214d83e964c45fa'
-            '859e503d9f49c7f5377ba125c45df158cfa2804c6a537bf1e16888915027d90d')
+sha256sums=('13c2b6e6e448c1910df225fca3b4b2f653419bc59fa896184ace7445e7a23059'
+            '4ba143c84ff10ad062d8909ccdcba1e7a9130b3904c9ed2e0457bfde3d49dce5')
 
 package_fcitx5-pinyin-moegirl() {
   install -Dm644 moegirl.dict -t ${pkgdir}/usr/share/fcitx5/pinyin/dictionaries/
