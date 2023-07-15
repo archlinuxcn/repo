@@ -5,7 +5,7 @@ def pre_build():
     'CodeMirror',
     _G.newver,
     'Provides syntax highlighting in wikitext editor',
-    'GPL2',
+    'GPL',
   )
 
 def post_build():

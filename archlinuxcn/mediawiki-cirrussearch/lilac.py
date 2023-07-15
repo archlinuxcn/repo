@@ -5,7 +5,7 @@ def pre_build():
     'CirrusSearch',
     _G.newver,
     'Implements searching for MediaWiki using Elasticsearch',
-    'GPL2',
+    'GPL',
   )
 
 def post_build():

@@ -5,7 +5,7 @@ def pre_build():
     'RevisionSlider',
     _G.newver,
     'Adds a slider interface to the diff view allowing to easily move between revisions',
-    'GPL2',
+    'GPL',
   )
 
 def post_build():

@@ -5,7 +5,7 @@ def pre_build():
     'CodeEditor',
     _G.newver,
     'Provides a syntax-highlighting code editor for site & user JS, CSS and Lua pages, integrating with advanced edit toolbar',
-    ['GPL2', 'BSD-3-Clause'],
+    ['GPL', 'BSD-3-Clause'],
   )
 
 def post_build():

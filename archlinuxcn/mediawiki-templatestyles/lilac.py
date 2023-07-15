@@ -5,7 +5,7 @@ def pre_build():
     'TemplateStyles',
     _G.newver,
     'Allows for loading sanitized CSS stylesheets from a template',
-    'GPL2',
+    'GPL',
   )
 
 def post_build():

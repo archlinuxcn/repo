@@ -5,7 +5,7 @@ def pre_build():
     'Elastica',
     _G.newver,
     'Provides base elasticsearch functionality',
-    'GPL2',
+    'GPL',
   )
 
 def post_build():

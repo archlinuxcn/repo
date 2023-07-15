@@ -5,7 +5,7 @@ def pre_build():
     'MobileFrontend',
     _G.newver,
     'Provides a mobile-friendly view',
-    'GPL2',
+    'GPL',
   )
 
 def post_build():
