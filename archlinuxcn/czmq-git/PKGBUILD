@@ -15,8 +15,8 @@ url="https://github.com/zeromq/${_pkgname}"
 license=('MPL')
 source=("git+${url}.git")
 sha256sums=('SKIP')
-provides=('${_pkgname}')
-conflicts=('${_pkgname}')
+provides=(${_pkgname})
+conflicts=(${_pkgname})
 
 pkgver() {
   cd "${_pkgname}/"
