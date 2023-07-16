@@ -2101,3 +2101,13 @@ Fri Jul 14 10:23:03 2023 +0200
 1.16.1          Hotfix release 1.16.1
     
     2023-07-14 b16c2fa actionless fix(pikspect): `is None` and handle stdin without timeout (fixes #729)
+
+
+Sun Jul 16 21:50:14 2023 +0200
+-------------------------------------------------
+1.17            Release 1.17
+    
+    Notable changes:
+    *  2023-07-15 453ec40 actionless feat: return also previous behavior, where only `pacman` command is escalating (re: #729) - PrivilegeEscalationTarget config option
+    *  2023-07-15 76575d6 actionless feat: implement new logic for privilege delegation instead of old sudo loop (fixes #729) - also add UserId config option
+    *  2023-07-15 524f6df actionless refactor: completely remove old SudoLoop (re: #729) - remove SudoLoopInterval config option
