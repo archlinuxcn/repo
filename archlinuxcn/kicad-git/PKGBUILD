@@ -51,6 +51,7 @@ build() {
     -DKICAD_BUILD_I18N=ON \
     -DKICAD_I18N_UNIX_STRICT_PATH=ON \
     -DKICAD_BUILD_QA_TESTS=OFF \
+    -DFMT_INSTALL=OFF \
     -Wno-dev
 ninja
 }
