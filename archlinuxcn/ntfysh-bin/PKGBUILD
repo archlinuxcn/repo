@@ -2,7 +2,7 @@
 
 _pkgname=ntfy
 pkgname=${_pkgname}sh-bin
-pkgver=2.5.0
+pkgver=2.6.2
 pkgrel=1
 pkgdesc="Send push notifications to your phone or desktop using PUT/POST"
 arch=('x86_64' 'aarch64' 'armv7h')
@@ -14,24 +14,24 @@ provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 backup=('etc/ntfy/server.yml' 'etc/ntfy/client.yml')
 
-source_x86_64=("${url}/releases/download/v${pkgver}/${_pkgname}_${pkgver}_linux_x86_64.tar.gz"
+source_x86_64=("${url}/releases/download/v${pkgver}/${_pkgname}_${pkgver}_linux_amd64.tar.gz"
                "${_pkgname}.sysusers")
 source_aarch64=("${url}/releases/download/v${pkgver}/${_pkgname}_${pkgver}_linux_arm64.tar.gz"
                "${_pkgname}.sysusers")
 source_armv7h=("${url}/releases/download/v${pkgver}/${_pkgname}_${pkgver}_linux_armv7.tar.gz"
                "${_pkgname}.sysusers")
 
-sha256sums_x86_64=('1d78246b30bd4af793528fc7e439aad081d53fb855c513b3439789904e6e044c'
+sha256sums_x86_64=('c8a23c5ecb4fd58549bb18524fd3990f032f17e5adef97dcea0633b40d700816'
                    '0799a140256072b350b56c1b2db5fc21c94c6992277d6d1364c28ddf7058cc8f')
-sha256sums_aarch64=('cad0afc286d42b4dffb17d261779aad72c6d2fdd6914f50f0d7f15d578471454'
+sha256sums_aarch64=('fc5b20d587798567a419934196ede635ccdac04fbac94d6de06ffc0efb1d5a59'
                    '0799a140256072b350b56c1b2db5fc21c94c6992277d6d1364c28ddf7058cc8f')
-sha256sums_armv7h=('7166e660e92211c94bc3b376642d027dd05ece2996798ef603a3e96cfe40e115'
+sha256sums_armv7h=('72f2477de6e325bd91ed18edf8e4229bfa68ded2d6089d7b0202c3ea0a67d815'
                    '0799a140256072b350b56c1b2db5fc21c94c6992277d6d1364c28ddf7058cc8f')
 
 package() {
     case "${CARCH}" in
         "x86_64")
-            cd "${srcdir}/${_pkgname}_${pkgver}_linux_x86_64/"
+            cd "${srcdir}/${_pkgname}_${pkgver}_linux_amd64/"
             ;;
         "aarch64")
             cd "${srcdir}/${_pkgname}_${pkgver}_linux_arm64/"
