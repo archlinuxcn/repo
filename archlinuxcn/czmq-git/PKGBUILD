@@ -3,26 +3,37 @@
 # Contributor: Brian Knox <taotetek at gmail.com>
 
 pkgname=czmq-git
-pkgver=20230713
-pkgrel=6
+_pkgname=${pkgname%-git}
+pkgver=4.2.1.r110.g904c1718
+pkgrel=1
+epoch=1
 pkgdesc="High-level C binding for ZeroMQ"
 arch=('i686' 'x86_64')
 depends=('gcc-libs' 'zeromq')
-makedepends=('autoconf' 'automake' 'gcc' 'git' 'libtool' 'make' 'pkg-config')
-url="https://github.com/zeromq/czmq"
+makedepends=('git' 'pkg-config')
+url="https://github.com/zeromq/${_pkgname}"
 license=('MPL')
-source=(git+https://github.com/zeromq/czmq)
+source=("git+${url}.git")
 sha256sums=('SKIP')
-provides=('czmq')
-conflicts=('czmq')
+provides=('${_pkgname}')
+conflicts=('${_pkgname}')
 
 pkgver() {
-  cd ${pkgname%-git}
-  git log -1 --format="%cd" --date=short --no-show-signature | sed "s|-||g"
+  cd "${_pkgname}/"
+
+  # Generate git tag based version. Count only proper (v)#.#* [#=number] tags.
+  local _gitversion=$(git describe --long --match '[v0-9][0-9.][0-9.]*' | sed -e 's|^v||' | tr '[:upper:]' '[:lower:]')
+
+  # Format git tag based version for pkgver
+  # Expected format: e.g. 1.5.0rc2.r521.g99982a1c
+  echo "${_gitversion}" | sed \
+      -e 's|^\([0-9][0-9.]*\)-\([a-zA-Z]\+\)|\1\2|' \
+      -e 's|\([0-9]\+-g\)|r\1|' \
+      -e 's|-|.|g'
 }
 
 build() {
-  cd ${pkgname%-git}
+  cd "${_pkgname}/"
 
   msg2 'Building...'
   ./autogen.sh
@@ -40,20 +51,20 @@ build() {
 }
 
 package() {
-  cd ${pkgname%-git}
+  cd "${_pkgname}/"
 
   msg2 'Installing license...'
-  install -Dm 644 LICENSE -t "$pkgdir/usr/share/licenses/czmq"
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/czmq"
 
   msg2 'Installing...'
-  make DESTDIR="$pkgdir" install
+  make DESTDIR="${pkgdir}" install
 
   msg2 'Renaming binaries...'
-  for _bin in $(find "$pkgdir/usr/bin" -type f -printf '%f\n'); do
-    mv "$pkgdir/usr/bin/$_bin" "$pkgdir/usr/bin/czmq_$_bin"
+  for _bin in $(find "${pkgdir}/usr/bin" -type f -printf '%f\n'); do
+    mv "${pkgdir}/usr/bin/${_bin}" "${pkgdir}/usr/bin/${_pkgname}_${_bin}"
   done
 
   msg2 'Cleaning up pkgdir...'
-  find "$pkgdir" -type d -name .git -exec rm -r '{}' +
-  find "$pkgdir" -type f -name .gitignore -exec rm -r '{}' +
+  find "${pkgdir}" -type d -name .git -exec rm -r '{}' +
+  find "${pkgdir}" -type f -name .gitignore -exec rm -r '{}' +
 }
