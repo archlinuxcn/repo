@@ -1,0 +1,15 @@
+maintainers:
+  - github: zjuyk
+    email: zjuyk@archlinuxcn.org
+
+build_prefix: extra-x86_64
+
+pre_build_script: aur_pre_build(maintainers=['DinckelMan'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: github
+    github: catppuccin/konsole
+  - source: aur
+    aur: catppuccin-konsole-theme-git
