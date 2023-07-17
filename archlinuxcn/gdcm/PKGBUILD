@@ -43,7 +43,6 @@ sha512sums=('f4fd81db731b60eebd7d67b8a7f2aa67f44d788f4c0a3f2cef9490fd4f0f1ae9cae
 
 # disable vtk, see also https://sourceforge.net/p/gdcm/bugs/509/
 build() {
-  export CXXFLAGS+=" ${CPPFLAGS} -fpermissive"
   cmake \
     -B build \
     -S "${_pkgname}-${pkgver}" \
