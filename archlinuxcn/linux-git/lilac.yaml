@@ -2,10 +2,6 @@ maintainers:
   - github: Integral-Tech
     email: integral@murena.io
 
-pre_build_script: |
-    aur_pre_build(maintainers=['osimarr'])
-    add_makedepends(['python'])
-
 post_build: aur_post_build
 
 time_limit_hours: 2
