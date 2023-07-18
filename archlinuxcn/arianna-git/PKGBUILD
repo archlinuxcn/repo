@@ -24,11 +24,12 @@ pkgver() {
 
 prepare() {
 	mkdir build/
+	sed -i 's/0.10//g' "${_pkgname}/CMakeLists.txt"
 }
 
 build() {
 	cd build/
-	cmake -B build/ -S ../${_pkgname} -DBUILD_TESTING=OFF
+	cmake -B build/ -S "../${_pkgname}" -DBUILD_TESTING=OFF
 	cmake --build build/
 }
 
