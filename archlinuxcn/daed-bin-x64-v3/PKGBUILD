@@ -9,8 +9,8 @@ url="https://daeuniverse.github.io/daed"
 arch=('x86_64')
 license=('AGPL' 'MIT')
 provides=('daed')
-conflicts=('daed-git')
-source=("https://github.com/daeuniverse/${_pkgname}/releases/download/v${pkgver}/${_pkgname}-linux-x86_64_v3_avx2.zip")
+conflicts=('daed' 'daed-git')
+source=("${pkgname}-${pkgver}.zip::https://github.com/daeuniverse/${_pkgname}/releases/download/v${pkgver}/${_pkgname}-linux-x86_64_v3_avx2.zip")
 sha512sums=('bdfdb87ee872c03a01e18f7b9908c1e6739c505f9b3da8fc60892d8eaaa7299fc8bcaa3d9bd97180aa132d02d381c50c3212d591c8a096a4da1f6f6669a531ee')
 
 prepare() {
