@@ -6,7 +6,7 @@
 # will be on config.extra file.
 
 pkgbase=linux-git
-pkgver=v6.5.rc2.r0.fdf0eaf11452
+pkgver=6.5.rc2.r19.74f1456c4a5f
 pkgrel=1
 pkgdesc="Linus Torvalds' Mainline Linux"
 url="https://www.kernel.org"
@@ -67,9 +67,9 @@ pkgver() {
   cd "$srcdir/$_srcname"
   if [[ -n "$REMOTE_URL" ]]; then
     # if $REMOTE_URL was created, it's safe to use $REMOTE
-    printf "%s" "$(git describe --dirty=-patched --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g').${REMOTE/\//.}"
+    printf "%s" "$(git describe --dirty=-patched --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g;s/v//').${REMOTE/\//.}"
   else
-    printf "%s" "$(git describe --dirty=-patched --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
+    printf "%s" "$(git describe --dirty=-patched --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g;s/v//')"
   fi
 }
 
