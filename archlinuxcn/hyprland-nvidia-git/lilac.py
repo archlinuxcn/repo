@@ -3,5 +3,5 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build(maintainers=['tohmais'])
-    add_depends(['libdisplay-info.so'])
+    update_pkgrel()
+    vcs_update()

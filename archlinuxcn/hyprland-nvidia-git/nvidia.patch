@@ -9,31 +9,3 @@ diff --unified --recursive --text hyprland-test/src/hyprland/subprojects/wlroots
 +		glFinish();
  		glBindFramebuffer(GL_FRAMEBUFFER, 0);
  		pop_gles2_debug(renderer);
- 
-diff --unified --recursive --text hyprland-test/src/hyprland/subprojects/wlroots/types/output/render.c hyprland-git/src/hyprland/subprojects/wlroots/types/output/render.c
---- types/output/render.c	2022-10-23 11:18:56.598893482 +1000
-+++ types/output/render.c	2022-10-23 11:15:15.110308366 +1000
-@@ -325,22 +325,7 @@
- }
- 
- uint32_t wlr_output_preferred_read_format(struct wlr_output *output) {
--	struct wlr_renderer *renderer = output->renderer;
--	assert(renderer != NULL);
--
--	if (!renderer->impl->preferred_read_format || !renderer->impl->read_pixels) {
--		return DRM_FORMAT_INVALID;
--	}
--
--	if (!output_attach_back_buffer(output, &output->pending, NULL)) {
--		return false;
--	}
--
--	uint32_t fmt = renderer->impl->preferred_read_format(renderer);
--
--	output_clear_back_buffer(output);
--
--	return fmt;
-+	return DRM_FORMAT_XRGB8888;
- }
- 
- bool output_is_direct_scanout(struct wlr_output *output,

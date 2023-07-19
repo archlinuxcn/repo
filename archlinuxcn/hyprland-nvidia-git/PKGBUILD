@@ -38,7 +38,8 @@ depends=("libdisplay-info.so"
 	vulkan-validation-layers
 	xorg-xwayland
 	libliftoff
-	libdisplay-info)
+	libdisplay-info
+	libdisplay-info.so)
 makedepends=(
 	git
 	cmake
@@ -54,7 +55,7 @@ source=("${_pkgname}::git+https://github.com/hyprwm/Hyprland.git"
 conflicts=("${_pkgname}")
 provides=(hyprland)
 sha256sums=('SKIP'
-            'b412eb6040cf7406d20fe9941e8a08f2a314ec4d4ec305fca9f12ac2b0280737')
+            'c200d341641ee20a13b1893e27a9d823e9ef5ac2378e3cdecd0efc55a713db1c')
 options=(!makeflags !buildflags !strip)
 
 pkgver() {
