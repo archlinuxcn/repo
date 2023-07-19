@@ -2,8 +2,8 @@
 
 _pkgname=box64
 pkgname=${_pkgname}-git
-pkgver=v0.2.2.r728.g27d8911d
-pkgrel=2
+pkgver=0.2.2.r730.g8f968e4c
+pkgrel=1
 pkgdesc='Linux Userspace x86_64 Emulator with a twist'
 arch=('x86_64' 'aarch64' 'riscv64')
 url='https://github.com/ptitSeb/box64'
@@ -21,7 +21,7 @@ sha256sums=('SKIP'
 
 pkgver() {
     cd ${_pkgname}
-    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 build() {
