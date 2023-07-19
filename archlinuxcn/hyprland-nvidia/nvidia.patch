@@ -1,7 +1,9 @@
-diff --unified --recursive --text hyprland-test/src/hyprland/subprojects/wlroots/render/gles2/renderer.c hyprland-git/src/hyprland/subprojects/wlroots/render/gles2/renderer.c
---- render/gles2/renderer.c	2022-10-23 11:18:56.598893482 +1000
-+++ render/gles2/renderer.c	2022-10-23 11:16:25.923036282 +1000
-@@ -159,7 +159,7 @@
+Submodule subprojects/wlroots contains modified content
+diff --git a/subprojects/wlroots/render/gles2/renderer.c b/subprojects/wlroots/render/gles2/renderer.c
+index 9fe934f7..9662d4ee 100644
+--- render/gles2/renderer.c
++++ render/gles2/renderer.c
+@@ -176,7 +176,7 @@ static bool gles2_bind_buffer(struct wlr_renderer *wlr_renderer,
  		assert(wlr_egl_is_current(renderer->egl));
  
  		push_gles2_debug(renderer);
@@ -10,10 +12,11 @@ diff --unified --recursive --text hyprland-test/src/hyprland/subprojects/wlroots
  		glBindFramebuffer(GL_FRAMEBUFFER, 0);
  		pop_gles2_debug(renderer);
  
-diff --unified --recursive --text hyprland-test/src/hyprland/subprojects/wlroots/types/output/render.c hyprland-git/src/hyprland/subprojects/wlroots/types/output/render.c
---- types/output/render.c	2022-10-23 11:18:56.598893482 +1000
-+++ types/output/render.c	2022-10-23 11:15:15.110308366 +1000
-@@ -325,22 +325,7 @@
+diff --git a/subprojects/wlroots/types/output/render.c b/subprojects/wlroots/types/output/render.c
+index a185d844..01df6ffc 100644
+--- types/output/render.c
++++ types/output/render.c
+@@ -240,22 +240,7 @@ bool output_pick_format(struct wlr_output *output,
  }
  
  uint32_t wlr_output_preferred_read_format(struct wlr_output *output) {
@@ -24,7 +27,7 @@ diff --unified --recursive --text hyprland-test/src/hyprland/subprojects/wlroots
 -		return DRM_FORMAT_INVALID;
 -	}
 -
--	if (!output_attach_back_buffer(output, &output->pending, NULL)) {
+-	if (!wlr_output_attach_render(output, NULL)) {
 -		return false;
 -	}
 -
@@ -36,4 +39,4 @@ diff --unified --recursive --text hyprland-test/src/hyprland/subprojects/wlroots
 +	return DRM_FORMAT_XRGB8888;
  }
  
- bool output_is_direct_scanout(struct wlr_output *output,
+ struct wlr_render_pass *wlr_output_begin_render_pass(struct wlr_output *output,
