@@ -1,0 +1,105 @@
+diff --git a/chrome/browser/download/bubble/download_bubble_update_service.cc b/chrome/browser/download/bubble/download_bubble_update_service.cc
+index 41b647f7b44..8940c6bb7fc 100644
+--- a/chrome/browser/download/bubble/download_bubble_update_service.cc
++++ b/chrome/browser/download/bubble/download_bubble_update_service.cc
+@@ -91,7 +91,7 @@ ItemSortKey GetSortKey(const Item& item) {
+ // Helper to get an iterator to the last element in the cache. The cache
+ // must not be empty.
+ template <typename Item>
+-SortedItems<Item>::const_iterator GetLastIter(const SortedItems<Item>& cache) {
++typename SortedItems<Item>::const_iterator GetLastIter(const SortedItems<Item>& cache) {
+   CHECK(!cache.empty());
+   auto it = cache.end();
+   return std::prev(it);
+@@ -967,9 +967,9 @@ bool DownloadBubbleUpdateService::CacheManager::RemoveItemFromCacheImpl(
+ }
+ 
+ template <typename Id, typename Item>
+-SortedItems<Item>::iterator
++typename SortedItems<Item>::iterator
+ DownloadBubbleUpdateService::CacheManager::RemoveItemFromCacheByIter(
+-    SortedItems<Item>::iterator iter,
++    typename SortedItems<Item>::iterator iter,
+     SortedItems<Item>& cache,
+     IterMap<Id, Item>& iter_map) {
+   CHECK(iter != cache.end());
+diff --git a/chrome/browser/signin/bound_session_credentials/bound_session_refresh_cookie_fetcher_impl.cc b/chrome/browser/signin/bound_session_credentials/bound_session_refresh_cookie_fetcher_impl.cc
+index 46be6f06b14..f21d445d43a 100644
+--- a/chrome/browser/signin/bound_session_credentials/bound_session_refresh_cookie_fetcher_impl.cc
++++ b/chrome/browser/signin/bound_session_credentials/bound_session_refresh_cookie_fetcher_impl.cc
+@@ -103,6 +103,6 @@ void BoundSessionRefreshCookieFetcherImpl::OnURLLoaderComplete(
+   net::Error net_error = static_cast<net::Error>(url_loader_->NetError());
+ 
+   std::move(callback_).Run(
+-      Result(net_error, headers ? absl::optional<int>(headers->response_code())
+-                                : absl::nullopt));
++      Result({net_error, headers ? absl::optional<int>(headers->response_code())
++                                : absl::nullopt}));
+ }
+diff --git a/chrome/test/chromedriver/capabilities.cc b/chrome/test/chromedriver/capabilities.cc
+index c0708681ebd..98b8494d170 100644
+--- a/chrome/test/chromedriver/capabilities.cc
++++ b/chrome/test/chromedriver/capabilities.cc
+@@ -355,7 +355,7 @@ Status ParseMobileEmulation(const base::Value& option,
+                         "'version' field of type string");
+         }
+ 
+-        brands.emplace_back(*brand, *version);
++        brands.emplace_back(BrandVersion{*brand, *version});
+       }
+ 
+       client_hints.brands = std::move(brands);
+@@ -392,7 +392,7 @@ Status ParseMobileEmulation(const base::Value& option,
+                         "a 'version' field of type string");
+         }
+ 
+-        full_version_list.emplace_back(*brand, *version);
++        full_version_list.emplace_back(BrandVersion{*brand, *version});
+       }
+ 
+       client_hints.full_version_list = std::move(full_version_list);
+diff --git a/components/optimization_guide/core/tflite_model_executor.h b/components/optimization_guide/core/tflite_model_executor.h
+index c4f750f4684..b5635f4108b 100644
+--- a/components/optimization_guide/core/tflite_model_executor.h
++++ b/components/optimization_guide/core/tflite_model_executor.h
+@@ -189,7 +189,7 @@ class TFLiteModelExecutor : public ModelExecutor<OutputType, InputType> {
+   void SendForBatchExecution(
+       BatchExecutionCallback callback_on_complete,
+       base::TimeTicks start_time,
+-      ModelExecutor<OutputType, InputType>::ConstRefInputVector inputs)
++      typename ModelExecutor<OutputType, InputType>::ConstRefInputVector inputs)
+       override {
+     DCHECK(execution_task_runner_->RunsTasksInCurrentSequence());
+     DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
+diff --git a/third_party/blink/renderer/core/html/parser/html_document_parser_fastpath.cc b/third_party/blink/renderer/core/html/parser/html_document_parser_fastpath.cc
+index 2dc0b304092..a82f255090b 100644
+--- a/third_party/blink/renderer/core/html/parser/html_document_parser_fastpath.cc
++++ b/third_party/blink/renderer/core/html/parser/html_document_parser_fastpath.cc
+@@ -169,7 +169,7 @@ class HTMLFastPathParser {
+   using Span = base::span<const Char>;
+   using USpan = base::span<const UChar>;
+   // 32 matches that used by HTMLToken::Attribute.
+-  typedef std::conditional<std::is_same_v<Char, UChar>,
++  typedef typename std::conditional<std::is_same_v<Char, UChar>,
+                            UCharLiteralBuffer<32>,
+                            LCharLiteralBuffer<32>>::type LiteralBufferType;
+   typedef UCharLiteralBuffer<32> UCharLiteralBufferType;
+diff --git a/third_party/blink/renderer/modules/canvas/canvas2d/canvas_style.cc b/third_party/blink/renderer/modules/canvas/canvas2d/canvas_style.cc
+index f0b49139147..a308fb67982 100644
+--- a/third_party/blink/renderer/modules/canvas/canvas2d/canvas_style.cc
++++ b/third_party/blink/renderer/modules/canvas/canvas2d/canvas_style.cc
+@@ -91,12 +91,12 @@ void CanvasStyle::ApplyToFlags(cc::PaintFlags& flags,
+     case kGradient:
+       GetCanvasGradient()->GetGradient()->ApplyToFlags(flags, SkMatrix::I(),
+                                                        ImageDrawOptions());
+-      flags.setColor(SkColor4f(0.0f, 0.0f, 0.0f, global_alpha));
++      flags.setColor(SkColor4f{0.0f, 0.0f, 0.0f, global_alpha});
+       break;
+     case kImagePattern:
+       GetCanvasPattern()->GetPattern()->ApplyToFlags(
+           flags, AffineTransformToSkMatrix(GetCanvasPattern()->GetTransform()));
+-      flags.setColor(SkColor4f(0.0f, 0.0f, 0.0f, global_alpha));
++      flags.setColor(SkColor4f{0.0f, 0.0f, 0.0f, global_alpha});
+       break;
+     default:
+       NOTREACHED();

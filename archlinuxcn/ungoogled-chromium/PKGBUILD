@@ -9,9 +9,10 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=114.0.5735.198
+pkgver=115.0.5790.98
 pkgrel=1
 _launcher_ver=8
+_gcc_patchset=2
 _manual_clone=0
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
@@ -30,21 +31,15 @@ optdepends=('pipewire: WebRTC desktop sharing under Wayland'
 options=('!lto') # Chromium adds its own flags for ThinLTO
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
-        add-some-typename-s-that-are-required-in-C-17.patch
+        https://github.com/stha09/chromium-patches/releases/download/chromium-${pkgver%%.*}-patchset-$_gcc_patchset/chromium-${pkgver%%.*}-patchset-$_gcc_patchset.tar.xz
         REVERT-disable-autoupgrading-debug-info.patch
-        download-bubble-typename.patch
-        webauthn-variant.patch
-        random-fixes-for-gcc13.patch
-        disable-GlobalMediaControlsCastStartStop.patch
+        random-build-fixes.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('a9f3440feeab51f56b199797b83b458ca545bf67e114c62b21470fadd5a41dea'
+sha256sums=('ffbe630ecf8fc8a250be05fdbec6c94d5881b5fcbbc5fb2b93e54ddc78d56af1'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
-            '621ed210d75d0e846192c1571bb30db988721224a41572c27769c0288d361c11'
+            '4f91bd10a8ae2aa7b040a8b27e01f38910ad33cbe179e39a1ae550c9c1523384'
             '1b782b0f6d4f645e4e0daa8a4852d63f0c972aa0473319216ff04613a0592a69'
-            'd464eed4be4e9bf6187b4c40a759c523b7befefa25ba34ad6401b2a07649ca2a'
-            '590fabbb26270947cb477378b53a9dcd17855739076b4af9983e1e54dfcab6d7'
-            '6359d8f891f860d2ae49e1dc3d2ae972e251c24ffb19ff2f8e64523b2d8234c4'
-            '7f3b1b22d6a271431c1f9fc92b6eb49c6d80b8b3f868bdee07a6a1a16630a302'
+            'fd472e8c2a68b2d13ce6cab1db99818d7043e49cecf807bf0c5fc931f0c036a3'
             'e393174d7695d0bafed69e868c5fbfecf07aa6969f3b64596d0bae8b067e1711')
 
 if (( _manual_clone )); then
@@ -62,7 +57,7 @@ source=(${source[@]}
         vaapi-add-av1-support.patch
         remove-main-main10-profile-limit.patch)
 sha256sums=(${sha256sums[@]}
-            '3b22dcd4caebea5f1c72ea4437e67784d6b740a4624b15002078a6daf05235a1'
+            'e6647876747b083a491710393af0f8058284e465d06b41225eb708b30fb08072'
             'e9e8d3a82da818f0a67d4a09be4ecff5680b0534d7f0198befb3654e9fab5b69'
             'e742cc5227b6ad6c3e0c2026edd561c6d3151e7bf0afb618578ede181451b307'
             'be8d3475427553feb5bd46665ead3086301ed93c9a41cf6cc2644811c5bda51c')
@@ -130,21 +125,20 @@ prepare() {
   patch -Np1 -i ../use-oauth2-client-switches-as-default.patch
 
   # Upstream fixes
-  patch -Np1 -i ../add-some-typename-s-that-are-required-in-C-17.patch
 
   # Revert addition of compiler flag that needs newer clang
   patch -Rp1 -i ../REVERT-disable-autoupgrading-debug-info.patch
 
-  # Disable kGlobalMediaControlsCastStartStop by default
-  # https://crbug.com/1314342
-  patch -Np1 -i ../disable-GlobalMediaControlsCastStartStop.patch
-
   # Build fixes
-  patch -Np1 -i ../download-bubble-typename.patch
-  patch -Np1 -i ../webauthn-variant.patch
-  dos2unix third_party/vulkan_memory_allocator/include/vk_mem_alloc.h
-  patch -Np1 -i ../random-fixes-for-gcc13.patch
+  patch -Np1 -i ../random-build-fixes.patch
 
+  # Fixes for building with libstdc++ instead of libc++
+  patch -Np1 -i ../patches/chromium-114-ruy-include.patch
+  patch -Np1 -i ../patches/chromium-114-tflite-include.patch
+  patch -Np1 -i ../patches/chromium-114-vk_mem_alloc-include.patch
+  patch -Np1 -i ../patches/chromium-115-skia-include.patch
+  patch -Np1 -i ../patches/chromium-114-maldoca-include.patch
+  patch -Np1 -i ../patches/chromium-115-verify_name_match-include.patch
 
   # Custom Patches
   patch -Np1 -i ../ozone-add-va-api-support-to-wayland.patch
@@ -217,6 +211,7 @@ build() {
     'enable_hangout_services_extension=true'
     'enable_widevine=true'
     'enable_nacl=false'
+    'enable_rust=false'
     "google_api_key=\"$_google_api_key\""
   )
 
