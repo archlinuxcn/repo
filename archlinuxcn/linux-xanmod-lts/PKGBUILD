@@ -73,7 +73,7 @@ fi
 
 pkgbase=linux-xanmod-lts
 _major=6.1
-pkgver=${_major}.38
+pkgver=${_major}.39
 _branch=6.x
 xanmod=1
 pkgrel=${xanmod}
@@ -109,7 +109,7 @@ done
 
 sha256sums=('2ca1f17051a430f6fed1196e4952717507171acfd97d96577212502703b25deb'
             'SKIP'
-            '23d21d4df77a6e8f9d706c8b676e75eee2255f402c33380c0481fb9a731a1951'
+            'f0d2abf706bbaf327d3d240bfae8eaefed7132140dfcd7e36e90bdfb04cdb63d'
             'a8b38eb482eb685944757182c4886404abc12703e5e56ec39c7d61298d17d71f')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
@@ -151,6 +151,10 @@ prepare() {
   # Enable IKCONFIG following Arch's philosophy
   scripts/config --enable CONFIG_IKCONFIG \
                  --enable CONFIG_IKCONFIG_PROC
+
+  # Requested by Alexandre Frade to fix issues in python-gbinder
+  scripts/config --enable CONFIG_ANDROID_BINDERFS
+  scripts/config --enable CONFIG_ANDROID_BINDER_IPC
 
   # User set. See at the top of this file
   if [ "$use_tracers" = "y" ]; then
