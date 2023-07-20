@@ -1,0 +1,32 @@
+From 069e524939a815a637e923d4063e4b0e0f52ea13 Mon Sep 17 00:00:00 2001
+From: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Date: Wed, 17 May 2023 15:29:31 +0300
+Subject: [PATCH 2/7] tpm: tpm_tis: Disable interrupts *only* for AEON UPX-i11
+
+Further restrict with DMI_PRODUCT_VERSION.
+
+Cc: stable@vger.kernel.org # v6.4+
+Link: https://lore.kernel.org/linux-integrity/20230517122931.22385-1-peter.ujfalusi@linux.intel.com/
+Fixes: 95a9359ee22f ("tpm: tpm_tis: Disable interrupts for AEON UPX-i11")
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+---
+ drivers/char/tpm/tpm_tis.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
+index 7db3593941ea..9cb4e81fc548 100644
+--- a/drivers/char/tpm/tpm_tis.c
++++ b/drivers/char/tpm/tpm_tis.c
+@@ -143,6 +143,7 @@ static const struct dmi_system_id tpm_tis_dmi_table[] = {
+ 		.ident = "UPX-TGL",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "AAEON"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "UPX-TGL"),
+ 		},
+ 	},
+ 	{}
+-- 
+2.41.0
+

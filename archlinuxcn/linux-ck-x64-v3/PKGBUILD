@@ -71,7 +71,7 @@ _subarch=41
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 pkgbase=linux-ck-x64-v3
-pkgver=6.4.3
+pkgver=6.4.4
 pkgrel=1
 arch=(x86_64)
 url="https://wiki.archlinux.org/index.php/Linux-ck"
@@ -103,19 +103,27 @@ source=(
   "more-uarches-$_gcc_more_v.tar.gz::https://github.com/graysky2/kernel_compiler_patch/archive/$_gcc_more_v.tar.gz"
   "ck-hrtimer-$_commit.tar.gz::https://github.com/graysky2/linux-patches/archive/$_commit.tar.gz"
   0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
-  0002-netfilter-nf_tables-unbind-non-anonymous-set-if-rule.patch
+  0002-tpm-tpm_tis-Disable-interrupts-only-for-AEON-UPX-i11.patch
+  0003-tpm-tpm_tis-Disable-interrupts-for-Framework-Laptop-.patch
+  0004-tpm-tpm_tis-Disable-interrupts-for-Framework-Laptop-.patch
+  0005-tpm-tpm_tis-Disable-interrupts-for-Lenovo-L590-devic.patch
+  0006-Bluetooth-btusb-Fix-bluetooth-on-Intel-Macbook-2014.patch
 )
 validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
-sha256sums=('7134ed29360df6f37a26410630283f0592c91a6d2178a9648226d30ddf8c88a1'
+sha256sums=('9cbc4a2be714a4d154e1312c9f33ded91174907c8b15ee936ad27002ac75ff2a'
             'SKIP'
-            '392acc67300ea585c739e16a596d790daa2ee048f248832a400bc57dc226aa6d'
+            'f9b4320b074f279d666e86870f950bcea68f9f1912093626036410b8b3152a6d'
             'f1d586e111932890ad5e0df15d092fb9b3f87bae4ea17812aae9b0ec98fe2db0'
             'ed0b8773d66079198edd1ecdbe0564d6ad33c641e82d85375e50a2d9e0275144'
-            '4cb280177bbd41d26226417ad9e363708e12e7b8b1b4bbc45d1112bd63492b19'
-            '6197fdd3e6d615f63bae43237c5c8292b8c52ac17d798061f7c3be2806cf0378')
+            '7aa21d16b39bb23ba5164687245dd3cd3c32cebba5eeaa1efc7a03b82ec8f1f7'
+            '69c1e30697c6dc9a5dcb7f3340ef388404df31b888300c6bfea3ac167f2e4ddf'
+            '30197c03b689b91cacce6e798fd53a3882f0dd4d1610a0e174f667b19e211385'
+            '0530d1d5dedd7870eadf54512ccd0564cd078183d019c04d69b269767205352a'
+            'f9af45420254db5f8aac3c399b3a59e34c94625fbf3b3a29330c04a5ce9d837b'
+            '6fc3a4f7ce5b049da9f13b85cd00070a83e0ec036c8a43304c1b1e1882567e8c')
 _make() {
   test -s version
   make KERNELRELEASE="$(<version)" "$@"
