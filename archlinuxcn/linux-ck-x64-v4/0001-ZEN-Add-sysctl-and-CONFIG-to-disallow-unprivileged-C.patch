@@ -1,7 +1,7 @@
-From 08fe90ab87115393074127f17be88ff9bfcf304a Mon Sep 17 00:00:00 2001
+From 63373079bd756247f2ea9e3b22baef0b67cfb7dd Mon Sep 17 00:00:00 2001
 From: "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
 Date: Mon, 16 Sep 2019 04:53:20 +0200
-Subject: [PATCH 1/4] ZEN: Add sysctl and CONFIG to disallow unprivileged
+Subject: [PATCH 1/7] ZEN: Add sysctl and CONFIG to disallow unprivileged
  CLONE_NEWUSER
 
 Our default behavior continues to match the vanilla kernel.
@@ -63,7 +63,7 @@ index 32c24950c4ce..f17ef1360063 100644
  	bool "PID Namespaces"
  	default y
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 41c964104b58..915ad6dae416 100644
+index 8103ffd217e9..f405763e06ae 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -100,6 +100,10 @@
@@ -77,7 +77,7 @@ index 41c964104b58..915ad6dae416 100644
  #include <asm/pgalloc.h>
  #include <linux/uaccess.h>
  #include <asm/mmu_context.h>
-@@ -2266,6 +2270,10 @@ __latent_entropy struct task_struct *copy_process(
+@@ -2267,6 +2271,10 @@ __latent_entropy struct task_struct *copy_process(
  	if ((clone_flags & (CLONE_NEWUSER|CLONE_FS)) == (CLONE_NEWUSER|CLONE_FS))
  		return ERR_PTR(-EINVAL);
  
@@ -88,7 +88,7 @@ index 41c964104b58..915ad6dae416 100644
  	/*
  	 * Thread groups must share signals as well, and detached threads
  	 * can only be started up within the thread group.
-@@ -3419,6 +3427,12 @@ int ksys_unshare(unsigned long unshare_flags)
+@@ -3420,6 +3428,12 @@ int ksys_unshare(unsigned long unshare_flags)
  	if (unshare_flags & CLONE_NEWNS)
  		unshare_flags |= CLONE_FS;
  

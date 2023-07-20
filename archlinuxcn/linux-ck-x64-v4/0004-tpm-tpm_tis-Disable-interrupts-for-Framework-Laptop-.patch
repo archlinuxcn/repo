@@ -1,0 +1,42 @@
+From 07c0bd0d251db0ac13064f46534a22e070a9379f Mon Sep 17 00:00:00 2001
+From: Christian Hesse <mail@eworm.de>
+Date: Mon, 10 Jul 2023 23:16:10 +0200
+Subject: [PATCH 4/7] tpm/tpm_tis: Disable interrupts for Framework Laptop
+ Intel 13th gen
+
+This device suffer an irq storm, so add it in tpm_tis_dmi_table to
+force polling.
+
+Cc: stable@vger.kernel.org # v6.4+
+Link: https://community.frame.work/t/boot-and-shutdown-hangs-with-arch-linux-kernel-6-4-1-mainline-and-arch/33118
+Fixes: e644b2f498d2 ("tpm, tpm_tis: Enable interrupt test")
+Reported-by: <roubro1991@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217631
+Signed-off-by: Christian Hesse <mail@eworm.de>
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+---
+ drivers/char/tpm/tpm_tis.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
+index 5dd391ed3320..4e4426965cd0 100644
+--- a/drivers/char/tpm/tpm_tis.c
++++ b/drivers/char/tpm/tpm_tis.c
+@@ -122,6 +122,14 @@ static const struct dmi_system_id tpm_tis_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Laptop (12th Gen Intel Core)"),
+ 		},
+ 	},
++	{
++		.callback = tpm_tis_disable_irq,
++		.ident = "Framework Laptop (13th Gen Intel Core)",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Framework"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Laptop (13th Gen Intel Core)"),
++		},
++	},
+ 	{
+ 		.callback = tpm_tis_disable_irq,
+ 		.ident = "ThinkPad T490s",
+-- 
+2.41.0
+

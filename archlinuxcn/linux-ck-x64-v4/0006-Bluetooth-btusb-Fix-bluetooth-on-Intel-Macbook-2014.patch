@@ -1,0 +1,43 @@
+From 5718acc67b7101c5c5d834b4699b58710f619171 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Tomasz=20Mo=C5=84?= <tomasz.mon@nordicsemi.no>
+Date: Thu, 13 Jul 2023 12:25:14 +0200
+Subject: [PATCH 6/7] Bluetooth: btusb: Fix bluetooth on Intel Macbook 2014
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Commit c13380a55522 ("Bluetooth: btusb: Do not require hardcoded
+interface numbers") inadvertedly broke bluetooth on Intel Macbook 2014.
+The intention was to keep behavior intact when BTUSB_IFNUM_2 is set and
+otherwise allow any interface numbers. The problem is that the new logic
+condition omits the case where bInterfaceNumber is 0.
+
+Fix BTUSB_IFNUM_2 handling by allowing both interface number 0 and 2
+when the flag is set.
+
+Fixes: c13380a55522 ("Bluetooth: btusb: Do not require hardcoded interface numbers")
+Reported-by: John Holland <johnbholland@icloud.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217651
+Signed-off-by: Tomasz Moń <tomasz.mon@nordicsemi.no>
+Tested-by: John Holland<johnbholland@icloud.com>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Cherry-picked-for: https://bugs.archlinux.org/task/78980
+---
+ drivers/bluetooth/btusb.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 2a8e2bb038f5..50e23762ec5e 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -4099,6 +4099,7 @@ static int btusb_probe(struct usb_interface *intf,
+ 	BT_DBG("intf %p id %p", intf, id);
+ 
+ 	if ((id->driver_info & BTUSB_IFNUM_2) &&
++	    (intf->cur_altsetting->desc.bInterfaceNumber != 0) &&
+ 	    (intf->cur_altsetting->desc.bInterfaceNumber != 2))
+ 		return -ENODEV;
+ 
+-- 
+2.41.0
+

@@ -1,0 +1,42 @@
+From 4abd126fb6e7ed77ee5a286132a5afc133dd24bc Mon Sep 17 00:00:00 2001
+From: Florian Bezdeka <florian@bezdeka.de>
+Date: Tue, 20 Jun 2023 13:11:01 +0200
+Subject: [PATCH 5/7] tpm/tpm_tis: Disable interrupts for Lenovo L590 devices
+
+The Lenovo L590 suffers from an irq storm issue like the T490, T490s
+and P360 Tiny, so add an entry for it to tpm_tis_dmi_table and force
+polling.
+
+Cc: stable@vger.kernel.org # v6.4+
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=2214069#c0
+Fixes: e644b2f498d2 ("tpm, tpm_tis: Enable interrupt test")
+Signed-off-by: Florian Bezdeka <florian@bezdeka.de>
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+---
+ drivers/char/tpm/tpm_tis.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
+index 4e4426965cd0..cc42cf3de960 100644
+--- a/drivers/char/tpm/tpm_tis.c
++++ b/drivers/char/tpm/tpm_tis.c
+@@ -154,6 +154,14 @@ static const struct dmi_system_id tpm_tis_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad L490"),
+ 		},
+ 	},
++	{
++		.callback = tpm_tis_disable_irq,
++		.ident = "ThinkPad L590",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad L590"),
++		},
++	},
+ 	{
+ 		.callback = tpm_tis_disable_irq,
+ 		.ident = "UPX-TGL",
+-- 
+2.41.0
+
