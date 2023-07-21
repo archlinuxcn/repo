@@ -3,9 +3,9 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=qt6-base-24h
-_qtver=6.5.1
+_qtver=6.5.2
 pkgver=${_qtver/-/}
-pkgrel=8
+pkgrel=1.1
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -32,22 +32,19 @@ source=(
       'https://build.archlinuxcn.org/~oldherl/files/cldr/36/core.zip'
       'https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab'
       https://download.qt.io/official_releases/qt/${pkgver%.*}/$_qtver/submodules/$_pkgfn.tar.xz
-        qtbug-114204.patch::https://code.qt.io/cgit/qt/qtbase.git/patch/?id=9177dbd8
         qt6-base-cflags.patch
         qt6-base-nostrip.patch)
 sha256sums=(
       '6ab571d50f0c17d31ed33bb2ebf6eadf41c18cbf2dd8cb5260b939915a139a28'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
-      'db56fa1f4303a1189fe33418d25d1924931c7aef237f89eea9de58e858eebfed'
-            '1730b675ede24d80c2e73a2f662cc73718f3060c0b8a707784d188bb11297c4e'
+      '3db4c729b4d80a9d8fda8dd77128406353baff4755ca619177eda4cddae71269'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
             '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
 
 prepare() {
   patch -d $_pkgfn -p1 < qt6-base-cflags.patch # Use system CFLAGS
   patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
-  patch -d $_pkgfn -p1 < qtbug-114204.patch # Fix vertical tabbar regression
 
   cd $_pkgfn
   patch -p1 -i ../oldherl-24h.patch
