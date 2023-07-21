@@ -48,8 +48,9 @@ build() {
     meson setup --prefix=/usr \
           --buildtype=plain \
           --wrap-mode=nodownload \
-          -Dtests=disabled \
           -Dexperimental=true \
+          -Dcava=disabled \
+          -Dtests=disabled \
           build
     ninja -C build
 }
