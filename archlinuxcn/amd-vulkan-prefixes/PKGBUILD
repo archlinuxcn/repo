@@ -1,7 +1,7 @@
 # Maintainer: Andrew Shark <ashark on linuxcomp.ru>
 pkgname=amd-vulkan-prefixes
 pkgver=1
-pkgrel=1
+pkgrel=2
 pkgdesc="Select needed vulkan implementation with vk_radv, vk_amdvlk or vk_pro prefix"
 arch=('any')
 license=('GPL')
@@ -16,7 +16,7 @@ package() {
     install -Dm755 "${srcdir}"/amd_vulkan_prefixes.sh "${pkgdir}"/usr/bin/vk_radv
     install -Dm755 "${srcdir}"/amd_vulkan_prefixes.sh "${pkgdir}"/usr/bin/vk_amdvlk
     install -Dm755 "${srcdir}"/amd_vulkan_prefixes.sh "${pkgdir}"/usr/bin/vk_pro
-
+    
     install -Dm755 "${srcdir}"/amd_vulkan_prefixes.bash-completion "${pkgdir}"/usr/share/bash-completion/completions/vk_radv
     install -Dm755 "${srcdir}"/amd_vulkan_prefixes.bash-completion "${pkgdir}"/usr/share/bash-completion/completions/vk_amdvlk
     install -Dm755 "${srcdir}"/amd_vulkan_prefixes.bash-completion "${pkgdir}"/usr/share/bash-completion/completions/vk_pro
