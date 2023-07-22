@@ -11,7 +11,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-ext-vnc-svn')
 pkgver=100067
 _tarver=${pkgver}
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 url='http://virtualbox.org'
 license=('GPL' 'custom:CDDL')
@@ -276,7 +276,7 @@ package_virtualbox-guest-utils-svn() {
     pkgdesc='VirtualBox Guest userspace utilities'
     depends=('glibc' 'pam' 'libx11' 'libxcomposite'
              'libxdamage' 'libxext' 'libxfixes' 'libxmu' 'libxt' 'xorg-xrandr'
-             'xf86-video-vmware' 'VIRTUALBOX-GUEST-MODULES-SVN')
+             'xf86-video-vmware' 'VIRTUALBOX-GUEST-MODULES')
     replaces=('virtualbox-archlinux-additions' 'virtualbox-guest-additions' 'virtualbox-guest-dkms-svn')
     provides=('virtualbox-guest-utils')
     conflicts=('virtualbox-archlinux-additions' 'virtualbox-guest-additions' 'virtualbox-guest-utils-nox' 'virtualbox-guest-utils' 'virtualbox-guest-dkms')
@@ -304,7 +304,7 @@ package_virtualbox-guest-utils-svn() {
 
 package_virtualbox-guest-utils-nox-svn() {
     pkgdesc='VirtualBox Guest userspace utilities without X support'
-    depends=('glibc' 'pam' 'VIRTUALBOX-GUEST-MODULES-SVN')
+    depends=('glibc' 'pam' 'VIRTUALBOX-GUEST-MODULES')
     replaces=('virtualbox-guest-dkms-svn')
     provides=('virtualbox-guest-utils-nox')
     conflicts=('virtualbox-guest-utils' 'virtualbox-guest-utils-nox' 'virtualbox-guest-dkms')
