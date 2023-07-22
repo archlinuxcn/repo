@@ -2,7 +2,7 @@
 
 pkgname=python-pydicom
 _pkgname=pydicom
-pkgver=2.4.1
+pkgver=2.4.2
 pkgrel=1
 pkgdesc='Read, modify and write DICOM files with python code'
 arch=(any)
@@ -23,7 +23,7 @@ makedepends=(
   python-setuptools
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/pydicom/pydicom/archive/v${pkgver}.tar.gz")
-sha512sums=('241c5b38be8d0747c0bafc58fa69df4b738e5e4da9a78210882afdba1d0025e0ee3b813983e858281fd4e7cdf1083517f844b8883310a55ae39681803583cd2b')
+sha512sums=('dfe1e4a1d674708d008182eb41dd3bdce128ab9789cdef09f4ce02e17a38e788af676dea581c08dba424f92ffc09376a50bc10e94e35ad348a34aefa6abecfb0')
 
 build() {
   cd "${_pkgname}-${pkgver}"
