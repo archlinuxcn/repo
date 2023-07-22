@@ -15,7 +15,7 @@ _setFullLibdir="${_setPrefix}/${_setLibdir}"
 _pkgbasename=glslang
 
 pkgname=lib32-$_pkgbasename
-pkgver=12.1.0
+pkgver=12.2.0
 pkgrel=1
 pkgdesc='OpenGL and OpenGL ES shader front end and validator (32bit)'
 arch=('x86_64')
@@ -36,7 +36,7 @@ makedepends=(
         )
 options=('staticlibs')
 source=(${pkgname}-${pkgver}.tar.gz::https://github.com/KhronosGroup/glslang/archive/${pkgver}.tar.gz)
-sha256sums=('1515e840881d1128fb6d831308433f731808f818f2103881162f3ffd47b15cd5')
+sha256sums=('870d17030fda7308c1521fb2e01a9e93cbe4b130bc8274e90d00e127432ab6f6')
 
 prepare() {
   echo "Patching if needed"
