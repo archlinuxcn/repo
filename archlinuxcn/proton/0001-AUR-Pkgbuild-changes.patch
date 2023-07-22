@@ -1,4 +1,4 @@
-From 76edbeb0192b761d6c299073b4826e8a7ccf2147 Mon Sep 17 00:00:00 2001
+From 30e1791d50391930e871ba17acb44d47a6d7bd83 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Tue, 7 Feb 2023 21:58:22 +0200
 Subject: [PATCH 1/3] AUR Pkgbuild changes
@@ -19,7 +19,7 @@ Subject: [PATCH 1/3] AUR Pkgbuild changes
  12 files changed, 83 insertions(+), 39 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index fc46bafc..3f015828 100644
+index 29142391..1fc3af27 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -50,14 +50,23 @@ else
@@ -145,33 +145,33 @@ index fc46bafc..3f015828 100644
  DXVK_MESON_ARGS64 = --bindir=$(DXVK_DST64)/lib64/wine/dxvk
  DXVK_DEPENDS = glslang
  
-+DXVK_CPPFLAGS= -msse -msse2
-+DXVK_LDFLAGS= -static -static-libgcc -static-libstdc++
++DXVK_CPPFLAGS = -msse -msse2
++DXVK_LDFLAGS = -static -static-libgcc -static-libstdc++
 +
  $(eval $(call rules-source,dxvk,$(SRCDIR)/dxvk))
  $(eval $(call rules-meson,dxvk,32,CROSS))
  $(eval $(call rules-meson,dxvk,64,CROSS))
-@@ -488,6 +526,9 @@ $(OBJ)/.dxvk-post-build32:
+@@ -493,6 +531,9 @@ $(OBJ)/.dxvk-post-build32:
  DXVK_NVAPI_MESON_ARGS32 = --bindir=$(DXVK_NVAPI_DST32)/lib/wine/nvapi
  DXVK_NVAPI_MESON_ARGS64 = --bindir=$(DXVK_NVAPI_DST64)/lib64/wine/nvapi
  
-+DXVK_NVAPI_CPPFLAGS= -msse -msse2
-+DXVK_NVAPI_LDFLAGS= -static -static-libgcc -static-libstdc++
++DXVK_NVAPI_CPPFLAGS = -msse -msse2
++DXVK_NVAPI_LDFLAGS = -static -static-libgcc -static-libstdc++
 +
  $(eval $(call rules-source,dxvk-nvapi,$(SRCDIR)/dxvk-nvapi))
  $(eval $(call rules-meson,dxvk-nvapi,32,CROSS))
  $(eval $(call rules-meson,dxvk-nvapi,64,CROSS))
-@@ -558,6 +599,9 @@ VKD3D_PROTON_MESON_ARGS32 = --bindir=$(VKD3D_PROTON_DST32)/lib/wine/vkd3d-proton
+@@ -563,6 +604,9 @@ VKD3D_PROTON_MESON_ARGS32 = --bindir=$(VKD3D_PROTON_DST32)/lib/wine/vkd3d-proton
  VKD3D_PROTON_MESON_ARGS64 = --bindir=$(VKD3D_PROTON_DST64)/lib64/wine/vkd3d-proton
  VKD3D_PROTON_DEPENDS = glslang
  
-+VKD3D_PROTON_CPPFLAGS= -msse -msse2
-+VKD3D_PROTON_LDFLAGS= -static -static-libgcc -static-libstdc++
++VKD3D_PROTON_CPPFLAGS = -msse -msse2
++VKD3D_PROTON_LDFLAGS = -static -static-libgcc -static-libstdc++
 +
  $(eval $(call rules-source,vkd3d-proton,$(SRCDIR)/vkd3d-proton))
  $(eval $(call rules-meson,vkd3d-proton,32,CROSS))
  $(eval $(call rules-meson,vkd3d-proton,64,CROSS))
-@@ -813,14 +857,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
+@@ -822,14 +866,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
  	mkdir -p $(FONTS_OBJ)/source-han
  	# Do not immediately create the target file, so that make is interrupted
  	# it will restart again
@@ -189,7 +189,7 @@ index fc46bafc..3f015828 100644
  	mv $@.tmp $@
  
  $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
-@@ -830,12 +874,12 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
+@@ -839,12 +883,12 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
  	ttx -o $@ -m $($(notdir $@)_FONT) $(FONTS_OBJ)/ume-gothic/$(notdir $(basename $($(notdir $@)_NAMETABLE_PATCH))).ttx
  
  $(simsun.ttc): $(simsun.ttf) $(nsimsun.ttf)
@@ -205,7 +205,7 @@ index fc46bafc..3f015828 100644
  
  $(micross.ttf): $(FONTS)/scripts/merge.py $(noto_sans.ttf) $(noto_sans_arabic.ttf) $(noto_sans_armenian.ttf) $(noto_sans_bengali.ttf) $(noto_sans_coptic.ttf) \
  		$(noto_sans_georgian.ttf) $(noto_sans_gujarati.ttf) $(noto_sans_hebrew.ttf) $(noto_sans_khmer.ttf) $(noto_sans_tamil.ttf) \
-@@ -961,8 +1005,8 @@ all-dist: $(DIST_OVR32) $(DIST_OVR64)
+@@ -970,8 +1014,8 @@ all-dist: $(DIST_OVR32) $(DIST_OVR64)
  ##
  
  default_pfx: wine gst_good gst_libav gst_plugins_rs lsteamclient steamexe vrclient wineopenxr dxvk dxvk-nvapi vkd3d-proton
@@ -248,10 +248,10 @@ index 5ac60e8b..e580cd20 100644
        "from_oslist"  "windows"
        "to_oslist"    "linux"
 diff --git a/configure.sh b/configure.sh
-index f7b70544..98ca6ca7 100755
+index bc3ccc65..faa4d6e3 100755
 --- a/configure.sh
 +++ b/configure.sh
-@@ -123,6 +123,7 @@ function configure() {
+@@ -128,6 +128,7 @@ function configure() {
      CONTAINER_MOUNT_OPTS=:Z
    fi
  
@@ -259,7 +259,7 @@ index f7b70544..98ca6ca7 100755
    if [[ -n "$arg_container_engine" ]]; then
      check_container_engine "$arg_container_engine" "$steamrt_image" || die "Specified container engine \"$arg_container_engine\" doesn't work"
    else
-@@ -135,6 +136,7 @@ function configure() {
+@@ -140,6 +141,7 @@ function configure() {
          die "${arg_container_engine:-Container engine discovery} has failed. Please fix your setup."
      fi
    fi
@@ -420,7 +420,7 @@ index 5c3b59a3..ed6589e0 100644
  	winebuild --$(lastword $(subst ., ,$(4))) --fake-module -E "$(basename $(4)).spec" -o "$(4).fake"
  	mkdir -p $$($(2)_LIBDIR$(3))/$(LIBDIR_WINE_$(3))
 diff --git a/proton b/proton
-index 7b8fed6c..f337e57c 100755
+index 11e5bab8..e288a61d 100755
 --- a/proton
 +++ b/proton
 @@ -423,7 +423,6 @@ class Proton:
@@ -431,7 +431,7 @@ index 7b8fed6c..f337e57c 100755
  
      def path(self, d):
          return self.base_dir + d
-@@ -1621,8 +1620,6 @@ if __name__ == "__main__":
+@@ -1643,8 +1642,6 @@ if __name__ == "__main__":
  
      g_proton = Proton(os.path.dirname(sys.argv[0]))
  
@@ -440,7 +440,7 @@ index 7b8fed6c..f337e57c 100755
  
      g_compatdata = CompatData(os.environ["STEAM_COMPAT_DATA_PATH"])
  
-@@ -1631,7 +1628,8 @@ if __name__ == "__main__":
+@@ -1653,7 +1650,8 @@ if __name__ == "__main__":
      g_session.init_wine()
  
      if g_proton.missing_default_prefix():
