@@ -1,7 +1,7 @@
 # Maintainer: Gonzalo Exequiel Pedone <hipersayan DOT x AT gmail DOT com>
 
 pkgname=webcamoid
-pkgver=9.1.0
+pkgver=9.1.1
 pkgrel=1
 pkgdesc="Webcamoid is a full featured webcam capture application."
 url='https://webcamoid.github.io/'
@@ -46,7 +46,7 @@ provides=('webcamoid')
 conflicts=('webcamoid')
 install="${pkgname}.install"
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/${pkgname}/${pkgname}/archive/${pkgver}.tar.gz")
-md5sums=('75b2c4336861abfb02e743b3f5b77afa')
+md5sums=('39ca28c17a9c1c6380c59e41989ebb0e')
 
 build() {
     cd "$srcdir/${pkgname}-${pkgver}"
