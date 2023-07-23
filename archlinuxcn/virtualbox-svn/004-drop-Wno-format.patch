@@ -26,17 +26,15 @@ index ddd1fc1e..0614d90c 100644
   	-Wno-all -Wno-shadow -Wno-empty-body -Wno-unused-parameter -Wno-unused-variable \
 diff --git a/src/VBox/Devices/Makefile.kmk b/src/VBox/Devices/Makefile.kmk
 index a17e655f..fe905681 100644
---- a/src/VBox/Devices/Makefile.kmk
-+++ b/src/VBox/Devices/Makefile.kmk
-@@ -837,7 +837,7 @@ if !defined(VBOX_ONLY_EXTPACKS) && "$(intersects $(KBUILD_TARGET_ARCH),$(VBOX_SU
-   ifeq ($(KBUILD_TARGET),win)
-    $(file)_CFLAGS = -wd4018
-   else
--   $(file)_CFLAGS += -Wno-sign-compare -Wno-format -Wno-bad-function-cast
-+   $(file)_CFLAGS += -Wno-sign-compare -Wno-bad-function-cast
-   endif
-  endef
- 
+@@ -853,7 +853,7 @@ if !defined(VBOX_ONLY_EXTPACKS) && "$(in
+    ifeq ($(KBUILD_TARGET),win)
+     $(file)_CFLAGS = -wd4018
+    else
+-    $(file)_CFLAGS += -Wno-sign-compare -Wno-format -Wno-bad-function-cast
++    $(file)_CFLAGS += -Wno-sign-compare -Wno-bad-function-cast
+    endif
+   endef
+  
 diff --git a/src/VBox/Devices/PC/ipxe/Makefile.kmk b/src/VBox/Devices/PC/ipxe/Makefile.kmk
 index 7f5b4c5a..33705fe7 100644
 --- a/src/VBox/Devices/PC/ipxe/Makefile.kmk
