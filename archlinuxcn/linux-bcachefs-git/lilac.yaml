@@ -1,0 +1,12 @@
+maintainers:
+  - github: wszqkzqk
+    email: wszqkzqk@qq.com
+
+pre_build_script: aur_pre_build(maintainers=['QuartzDragon'])
+
+post_build: aur_post_build
+
+time_limit_hours: 2
+
+update_on:
+  - source: aur
