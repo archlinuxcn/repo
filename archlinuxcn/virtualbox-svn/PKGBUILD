@@ -11,7 +11,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-ext-vnc-svn')
 pkgver=100670
 _tarver=${pkgver}
-pkgrel=1
+pkgrel=3
 arch=('x86_64')
 url='http://virtualbox.org'
 license=('GPL' 'custom:CDDL')
@@ -279,7 +279,7 @@ package_virtualbox-guest-utils-svn() {
              'xf86-video-vmware' 'VIRTUALBOX-GUEST-MODULES')
     replaces=('virtualbox-archlinux-additions' 'virtualbox-guest-additions' 'virtualbox-guest-dkms-svn')
     provides=('virtualbox-guest-utils')
-    conflicts=('virtualbox-archlinux-additions' 'virtualbox-guest-additions' 'virtualbox-guest-utils-nox' 'virtualbox-guest-utils' 'virtualbox-guest-dkms')
+    conflicts=('virtualbox-archlinux-additions' 'virtualbox-guest-additions' 'virtualbox-guest-utils-nox' 'virtualbox-guest-utils' 'virtualbox-guest-dkms' 'virtualbox-guest-dkms-svn')
 
     source "VirtualBox/env.sh"
     pushd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin/additions"
@@ -307,7 +307,7 @@ package_virtualbox-guest-utils-nox-svn() {
     depends=('glibc' 'pam' 'VIRTUALBOX-GUEST-MODULES')
     replaces=('virtualbox-guest-dkms-svn')
     provides=('virtualbox-guest-utils-nox')
-    conflicts=('virtualbox-guest-utils' 'virtualbox-guest-utils-nox' 'virtualbox-guest-dkms')
+    conflicts=('virtualbox-guest-utils' 'virtualbox-guest-utils-nox' 'virtualbox-guest-dkms' 'virtualbox-guest-dkms-svn')
 
     source "VirtualBox/env.sh"
     pushd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin/additions"
