@@ -2,8 +2,8 @@
 # Maintainer: heavysink <winstonwu91@gmail.com>
 
 pkgbase=linux-amd-drm-next              
-_tag='amd-drm-fixes-6.4-2023-05-31'
-pkgver=6.4.2023.05.31
+_tag='amd-drm-fixes-6.5-2023-07-20'
+pkgver=6.5.2023.07.20
 pkgrel=1
 pkgdesc="Linux kernel next with bleeding edge AMD DRM drivers"
 arch=(x86_64)
