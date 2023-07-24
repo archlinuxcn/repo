@@ -2,8 +2,8 @@
 
 _pkgname=scenedetect
 pkgname=python-scenedetect
-pkgver=0.6.1
-pkgrel=2
+pkgver=0.6.2
+pkgrel=1
 pkgdesc='Python and OpenCV-based scene cut/transition detection program & library'
 arch=('any')
 url='http://scenedetect.com'
@@ -25,7 +25,7 @@ optdepends=(
   "mkvtoolnix-cli: required to split video files in stream copy mode"
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha512sums=('745f3ad57ed788ecc737122e880343c6efb33640285431a43a0bf682eb56eeb6e69e544ab28f5b350b175184ab16c6f9da4fe0d12812b83aa4ebfbeb0836ebb3')
+sha512sums=('59a73593a3aa2fb62a444610db467809d61699a99edc1b4d570573c556d90996640320f0c5c0e4ae80cd0ca2ec3f4384c50655b03164f2563887b0f82d2bfe8a')
 
 build() {
   cd "${_pkgname}-${pkgver}"
