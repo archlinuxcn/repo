@@ -4,9 +4,9 @@
 # Maintainer: slbtty <shenlebantongying@gmail.com>
 
 pkgname=goldendict-ng-git
-pkgver=23.06.02.96723685
-pkgrel=2
-pkgdesc="The Next Generation GoldenDict."
+pkgver=23.07.25.r4891.d3e60184
+pkgrel=1
+pkgdesc="The next generation GoldenDict (Supports Qt WebEngine & Qt6)."
 arch=('i686' 'x86_64' 'aarch64')
 url="https://github.com/xiaoyifang/goldendict-ng"
 license=('GPL3')
@@ -21,7 +21,7 @@ md5sums=('SKIP')
 
 pkgver() {
 	cd "$srcdir/$pkgname"
-	printf "%s.%s" "$(git describe | cut -c 2-9)" "$(git rev-parse --short HEAD)"
+	printf "%s.r%s.%s" "$(git describe | cut -c 2-9)" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
