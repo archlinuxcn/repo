@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-lily
-pkgver=6.1.10
+pkgver=6.4.6
 pkgrel=1
 pkgdesc='Linux-lily'
 url="https://www.kernel.org/"
@@ -37,7 +37,6 @@ prepare() {
   cd $_srcname
 
   echo "Setting version..."
-  # scripts/setlocalversion --save-scmversion
   echo "-$pkgrel" > localversion.10-pkgrel
   echo "${pkgbase#linux}" > localversion.20-pkgname
 
@@ -67,7 +66,7 @@ build() {
 
 _package() {
   options=('strip' 'debug')
-  pkgdesc="The $pkgdesc kernel and modules (cjktty, android binder, default bbr)"
+  pkgdesc="The $pkgdesc kernel and modules (cjktty, android binder, default bbr, pmadv_ksm)"
   depends=(coreutils kmod initramfs)
   optdepends=('wireless-regdb: to set the correct wireless channels of your country'
               'linux-firmware: firmware images needed for some devices')
