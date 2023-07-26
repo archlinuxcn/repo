@@ -1,18 +1,38 @@
-# Contributor: VirtualTam <virtualtam@flibidi.net>
-# Contributor: Eugene Yudin aka Infy <Eugene dot Yudin at gmail dot com>
-# Contributor: aksr <aksr at t-com dot me>
 # Maintainer: slbtty <shenlebantongying@gmail.com>
 
 pkgname=goldendict-ng-git
-pkgver=23.07.25.r4892.17cd4456
+pkgver=23.07.25.r4896.2187849e
 pkgrel=1
 pkgdesc="The next generation GoldenDict (Supports Qt WebEngine & Qt6)."
 arch=('i686' 'x86_64' 'aarch64')
 url="https://github.com/xiaoyifang/goldendict-ng"
 license=('GPL3')
-depends=('ffmpeg' 'hunspell' 'libvorbis' 'libxtst' 'lzo' 'libzim' 'zlib' 'xz' 'libeb' 'opencc' 'xapian-core'
-	 'qt6-svg' 'qt6-tools' 'qt6-multimedia' 'qt6-webengine' 'qt6-speech' 'qt6-5compat')
-makedepends=('git')
+depends=(
+	ffmpeg
+	hunspell
+	libvorbis
+	libxtst
+	lzo
+	zlib
+	xz
+	libeb
+	tomlplusplus
+	fmt
+	opencc
+	xapian-core
+	libzim
+	qt6-svg
+	qt6-multimedia
+	qt6-webengine
+	qt6-speech
+	qt6-5compat
+	)
+makedepends=(
+	git
+	cmake
+	ninja
+	qt6-tools
+)
 conflicts=('goldendict' 'goldendict-git' 'goldendict-svn' 'goldendict-git-opt')
 provides=('goldendict')
 replaces=('goldendict-svn' 'goldendict-git-opt' 'goldendict-webengine-git')
@@ -25,20 +45,19 @@ pkgver() {
 }
 
 prepare() {
-	cd "$srcdir/$pkgname"
-
-	# remove the default flag U_GLIBCXX_ASSERTIONS
-	echo "QMAKE_CXXFLAGS += -U_GLIBCXX_ASSERTIONS" >> goldendict.pro
-
+	# This flag leads to crashs around Oct 2022, remove this in future.
+	export CXXFLAGS+=" -Wp,-U_GLIBCXX_ASSERTIONS"
 }
 
 build(){
-	cd "$srcdir/$pkgname"
-	qmake6 "CONFIG+=release" "CONFIG+=use_xapian" "CONFIG+=zim_support" "CONFIG+=chinese_conversion_support" PREFIX="/usr" goldendict.pro
-	make
+	cmake -B build_dir -S "$pkgname" -G Ninja \
+		-DCMAKE_INSTALL_PREFIX='/usr' \
+		-DUSE_SYSTEM_FMT=ON \
+		-DUSE_SYSTEM_TOML=ON \
+		-Wno-dev
+	cmake --build build_dir
 }
 
 package() {
-	cd "$srcdir/$pkgname"
-	make INSTALL_ROOT="$pkgdir" install
+	DESTDIR="$pkgdir" cmake --install ./build_dir/
 }
