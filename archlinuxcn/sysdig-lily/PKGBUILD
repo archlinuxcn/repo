@@ -4,8 +4,8 @@
 # Contribuitor: Christian Babeux <christian.babeux@0x80.ca>
 
 pkgname=sysdig-lily
-pkgver=0.32.0
-pkgrel=2
+pkgver=0.32.1
+pkgrel=1
 
 # from src/sysdig-*/cmake/modules/falcosecurity-libs.cmake
 _falcover=0.11.3
@@ -14,14 +14,14 @@ pkgdesc="Open source system-level exploration and troubleshooting tool"
 arch=('x86_64')
 url="https://www.sysdig.com/"
 license=('GPL2' 'Apache' 'MIT')
-depends=('jsoncpp' 'libjsoncpp.so' 'luajit' 'curl' 'libcurl.so' 'jq' 'libb64' 'intel-tbb' 'grpc' 'libgrpc++.so' "linux-lily=6.3.11-1" 'yaml-cpp' 'zstd')
+depends=('jsoncpp' 'libjsoncpp.so' 'luajit' 'curl' 'libcurl.so' 'jq' 'libb64' 'intel-tbb' 'grpc' 'libgrpc++.so' "linux-lily=6.4.6-1" 'yaml-cpp' 'zstd')
 makedepends=('cmake' 'llvm' 'clang' 'gtest' 'linux-lily-headers')
 source=("https://github.com/draios/sysdig/archive/$pkgver/sysdig-$pkgver.tar.gz"
         "falcosecurity-libs-$_falcover.tar.gz::https://github.com/falcosecurity/libs/archive/$_falcover.tar.gz"
         "bashcomp-location.patch"
         "falcosecurity-libs-nodownload.patch"
         "libsinsp-zstd.patch")
-sha256sums=('478c5667b0936af827b87357a785069350514fd503e3eea55e9092be7bd22853'
+sha256sums=('463ea62f3bc870b4dfaa5143abd6b790efb2219f86e8799792768d06de4169f9'
             'b4f9dc8c1612f4b14207d107bce323a0684dce0dbf018e5b846177992569367b'
             '3b659326176c314eee9115adac39a249dc4b9530511b344ea6a2b23236bb8386'
             '3392204c265ef46c2a1378fc2acbb74b2b440585de4c9127a007f97ce10f0cfa'
