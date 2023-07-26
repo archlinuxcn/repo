@@ -1,7 +1,7 @@
 # Maintainer: Tomislav Ivek <tomislav.ivek@gmail.com>
 
 pkgname=('conan')
-pkgver=2.0.6
+pkgver=2.0.9
 pkgrel=1
 pkgdesc="A distributed, open source, C/C++ package manager."
 arch=('any')
@@ -11,7 +11,7 @@ makedepends=('python-setuptools' 'patch')
 depends=('python-requests>=2.25'
          'python-urllib3>=1.26.6'
          'python-colorama>=0.4.3'
-         'python-yaml>=5.1'
+         'python-yaml>=6.0'
          'python-patch-ng>=1.17.4'
          'python-fasteners>=0.15'
          'python-distro>=1.4.0'
@@ -42,5 +42,5 @@ package() {
   install -m755 -d "${pkgdir}/usr/share/doc/conan"
   install -m644 contributors.txt "${pkgdir}/usr/share/doc/conan/"
 }
-md5sums=('305ab44ff7cd78e86bf08644aede3a2f'
-         '89be6e10c435e90196fac182fc87a791')
+md5sums=('c49e88f5770c8a34f6d6d2f18c357543'
+         'f84f46c6c4d9ca41956e2a3c5d05f16e')
