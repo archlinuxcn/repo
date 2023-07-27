@@ -1,6 +1,6 @@
 pkgname=rime-sbxlm
 pkgver=20230722
-pkgrel=1
+pkgrel=2
 pkgdesc='声笔系列码配置'
 arch=(any)
 source=('fetch-release.sh' 'sbxlm-init')
@@ -17,6 +17,10 @@ prepare () {
   curl -L $(./fetch-release.sh url $pkgver) -o assets.zip
   unzip -uo ./assets.zip -d ./assets
   cd $srcdir/assets/sbxlm
+  rm zrzdy*
+  rm xhzdy*
+  rm build/zrzdy*
+  rm build/xhzdy*
   chmod 755 $srcdir/assets/sbxlm
   mv symbols.yaml sbxlm-symbols.yaml
   sed -i 's/import_preset: symbols/import_preset: sbxlm-symbols/g' *.schema.yaml
