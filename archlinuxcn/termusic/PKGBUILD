@@ -3,7 +3,7 @@
 
 pkgname=termusic
 pkgver=0.7.11
-pkgrel=3
+pkgrel=4
 pkgdesc="Music Player TUI written in Rust"
 arch=('x86_64')
 url="https://github.com/tramhao/termusic"
@@ -23,14 +23,12 @@ prepare() {
 
 build() {
   cd "$pkgname-$pkgver"
-  cargo build --bin termusic --features cover --release --frozen
-  cargo build --bin termusic-server --features cover --release --frozen
+  cargo build --features cover --release --frozen
 }
 
 check() {
   cd "$pkgname-$pkgver"
-  cargo test --bin termusic --frozen
-  cargo test --bin termusic-server --frozen
+  cargo test --frozen
 }
 
 package() {
