@@ -27,7 +27,6 @@ sha512sums=('e02c570f14afc56f6c865eef33318d0e2307529bb3bc019155f4845527998339f2a
 
 prepare() {
   cd "$srcdir/${_pkgname}-${pkgver}"
-  # patch -p1 < ../0001-fix-build.patch
   cd plugins
   ln -sf "$srcdir"/librime-octagram-$_octagramcommit librime-octagram
   ln -sf "$srcdir"/librime-lua-$_luacommit librime-lua
