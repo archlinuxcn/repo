@@ -15,5 +15,7 @@ post_upgrade()  {
   if pacman -Qq | grep -q "^rime-sbxlm-sbzr"; then
     echo -e "  \033[1;33m提示：声笔自然(sbzr)方案更名为声笔双拼(sbsp)，需要手动更新相关配置文件\033[0m"
   fi
-  echo
+  echo -e "  \033[1;33m提示：声笔双拼方案又更名回声笔自然(sbzr)，需要手动更新相关配置文件\033[0m"
+  echo -e "  \033[1;33m提示：声笔自然和声笔小鹤的自定义词典（zrzdy.dict, xhzdy.dict）功能因为存在引起 fcitx5 崩溃的问题，暂时被移除了\033[0m"
+
 }
