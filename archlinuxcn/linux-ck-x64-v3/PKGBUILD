@@ -71,7 +71,7 @@ _subarch=41
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 pkgbase=linux-ck-x64-v3
-pkgver=6.4.6
+pkgver=6.4.7
 pkgrel=1
 arch=(x86_64)
 url="https://wiki.archlinux.org/index.php/Linux-ck"
@@ -103,19 +103,17 @@ source=(
   "more-uarches-$_gcc_more_v.tar.gz::https://github.com/graysky2/kernel_compiler_patch/archive/$_gcc_more_v.tar.gz"
   "ck-hrtimer-$_commit.tar.gz::https://github.com/graysky2/linux-patches/archive/$_commit.tar.gz"
   0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
-  0002-Bluetooth-btusb-Fix-bluetooth-on-Intel-Macbook-2014.patch
 )
 validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
-sha256sums=('e1ecc496efc48aaf25a6607a4b8e52d574d6f67a2b0aa1664087d301d3515ea4'
+sha256sums=('de143cb61dcaa756c05f56ff35144316d810615819518a33e34754f064c4a7d8'
             'SKIP'
             'f9b4320b074f279d666e86870f950bcea68f9f1912093626036410b8b3152a6d'
             'f1d586e111932890ad5e0df15d092fb9b3f87bae4ea17812aae9b0ec98fe2db0'
             'ed0b8773d66079198edd1ecdbe0564d6ad33c641e82d85375e50a2d9e0275144'
-            '123e9bdc5e28f9cac322c271cf0edd010036d2b2b1fdaba8adecf1be7ed1eb72'
-            '924d022fb47781873312494674c571d30a64d810590e9cbef6f32fc60eaba4c6')
+            '123e9bdc5e28f9cac322c271cf0edd010036d2b2b1fdaba8adecf1be7ed1eb72')
 _make() {
   test -s version
   make KERNELRELEASE="$(<version)" "$@"
