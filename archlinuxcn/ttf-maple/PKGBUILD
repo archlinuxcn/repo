@@ -2,32 +2,44 @@
 
 pkgbase=ttf-maple
 pkgname=('ttf-maple' 'otf-maple' 'woff2-maple' 'ttf-maple-nerd' 'ttf-maple-sc-nerd')
-pkgver=6.3
+pkgver=6.4
 pkgrel=1
 pkgdesc='Open source monospace / Nerd-Font font with round corner and ligatures for IDE and command line.'
 url='https://github.com/subframe7536/Maple-font/'
 arch=('any')
 license=('OFL')
-source=($pkgname-$pkgver-MapleMono.zip::https://github.com/subframe7536/Maple-font/releases/download/v$pkgver/MapleMono.zip
+makedepends=(unzip tree)
+source=($pkgname-$pkgver-MapleMono-ttf.zip::https://github.com/subframe7536/Maple-font/releases/download/v$pkgver/MapleMono-ttf.zip
+        $pkgname-$pkgver-MapleMono-ttf-autohint.zip::https://github.com/subframe7536/Maple-font/releases/download/v$pkgver/MapleMono-ttf-autohint.zip
         $pkgname-$pkgver-MapleMono-woff2.zip::https://github.com/subframe7536/Maple-font/releases/download/v$pkgver/MapleMono-woff2.zip
         $pkgname-$pkgver-MapleMono-otf.zip::https://github.com/subframe7536/Maple-font/releases/download/v$pkgver/MapleMono-otf.zip
         $pkgname-$pkgver-MapleMono-NF.zip::https://github.com/subframe7536/Maple-font/releases/download/v$pkgver/MapleMono-NF.zip
         $pkgname-$pkgver-MapleMono-SC-NF.zip::https://github.com/subframe7536/Maple-font/releases/download/v$pkgver/MapleMono-SC-NF.zip
         $pkgname-$pkgver-OFL.txt::https://raw.githubusercontent.com/subframe7536/Maple-font/v6.1/OFL.txt
         )
-b2sums=('a302c51a4b483d852b5497464cd50c06279481580ba11b1514e6acdfefbc904c179bbe1ee5e35393c9669f138c3b469af9dc8b38edef2264eb22904c55317475'
-        '0f364f24074ad8ab00f05af9d40ce9e4007657e377fdd96e70c62d76a4798387741dac914044e91b98d7d42f1c053c6a04b9a204fe09a074b6230f1127aca7ce'
-        '47f2766b9642d814c6532ac6608e448cad6d999059d319828ef1ec82e63a16c6f7c93a3acb24d248866ac61921062f83c3700f17abecd8794066880aedcb7c73'
-        '59ab719092fab7dfbb1235a275f0cd01cc902e4b58cf71899c0d426480d7925c744395f7c9898f44c3c5d19f037a9ae84139986e17e51d0fa18fdd3b6b4a48d1'
-        '15ff73a1ce440675613afe9a2ce6b7d0ba8b06d56494414a0a45ec0cc4fc6286315f1716e88b39c1a16e1bae26df4dac962ef47c2385ce29c25996069174f2b9'
+noextract=($pkgname-$pkgver-MapleMono-{ttf,ttf-autohint,woff2,otf,NF,SC-NF}.zip)
+b2sums=('9d18a28fb9f693fe09996a1338468f6102361011ed3724c55fba01f20000ba6ee84aaad7eab88b9c986735d184c89553b060a5b97970012cdb83c2bef47a5d94'
+        '23dabfa0b29bb91e82243e3595111e37db87673ed265170d220a283bf9253102fc4d4e45d0dc45b650e090123a18e75eeb973a2703fce0bd280e26d4dccdf353'
+        '6217a9f8f02533d1e9647b67f1e9a7df5b2a2360c8d13211e564e376caf5f25f8c39707eb5feac029b457e2bbf200107509910704cf91bced3f225f7b3188738'
+        'b4c4f20e04b73fb624a8bcc164394af7741cbbc9dc449a08bd666d446b4c25ffaad50989c4f36302f8b185ab527e52d98f208fdf1eb7e68c41d0f18b9b1f96bd'
+        'cab20aba0a318e07487b55445ff1f44dc0d137d9fe214420825d1e23623d4d7f64734afb3763a18d00ef63281cbaa4d7e9bcc40332ddf6d09460456c3e4488e5'
+        '27110e87264e119217c206e3dc8421c9e6d4eb07a9ef113341056b6b24241ae00afaa7f387b89dce9a70ca906f0ec56514d5b80f7be26deee5bf8441846981d8'
         '4c0d42227fd7722ef0a517a74c51cbee7ac4a0a9dce006de27f49195d22ced78f816e26f3623cfd0ef6214881f095a6977518d012cea41be41b6434dc4ec0825')
 
 prepare() {
     mv $pkgname-$pkgver-OFL.txt OFL.txt
+    for i in ${noextract[@]%.zip}; do
+        unzip $i.zip -d ${i#*-MapleMono-}
+    done
+    tree
 }
 
 package_ttf-maple() {
     install -Dm644 -t "$pkgdir/usr/share/fonts/TTF" ttf/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" OFL.txt
+}
+package_ttf-maple-autohint() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF" ttf-autohint/*.ttf
     install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" OFL.txt
 }
 package_otf-maple() {
