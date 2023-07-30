@@ -4,14 +4,15 @@
 # Contributor: ledti <antergist at gmail dot com>
 pkgname=obs-studio-git
 pkgver=29.1.0.459
-pkgrel=1
+pkgrel=2
 pkgdesc="Free and open source software for video recording and live streaming."
 arch=("i686" "x86_64")
 url="https://github.com/obsproject/obs-studio"
 license=("GPL2")
 depends=("ffmpeg" "jansson" "libxinerama" "libxkbcommon-x11" "mbedtls"
          "qt6-svg" "curl" "jack" "gtk-update-icon-cache"
-         "speexdsp" "pciutils" "libajantv2" "librist")
+         "speexdsp" "pciutils" "libajantv2" "librist" "onevpl"
+         "libdatachannel")
 makedepends=("asio" "cmake" "git" "libdatachannel" "libfdk-aac" "libxcomposite" "nlohmann-json" "onevpl" "websocketpp" "x264"
              "vlc" "swig" "luajit" "nlohmann-json" "python" "cef-minimal-obs-bin" "wayland"
              "websocketpp" "qt6-wayland" "pipewire" "xdg-desktop-portal")
