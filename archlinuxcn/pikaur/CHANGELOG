@@ -2111,3 +2111,19 @@ Sun Jul 16 21:50:14 2023 +0200
     *  2023-07-15 453ec40 actionless feat: return also previous behavior, where only `pacman` command is escalating (re: #729) - PrivilegeEscalationTarget config option
     *  2023-07-15 76575d6 actionless feat: implement new logic for privilege delegation instead of old sudo loop (fixes #729) - also add UserId config option
     *  2023-07-15 524f6df actionless refactor: completely remove old SudoLoop (re: #729) - remove SudoLoopInterval config option
+
+
+Sun Jul 30 19:55:06 2023 +0200
+-------------------------------------------------
+1.18            Release 1.18
+    
+    Notable changes:
+    *  2023-07-30 96d877a actionless fix(build: clone_all_aur_repos): restore TTY after multi-threaded clone
+    *  2023-07-29 e8ea2d5 actionless fix(install_cli: manual_package_selection): chown temp file if needed
+    *  2023-07-29 1f2952b actionless feat(build, install_cli: git-recovery-prompt): add `git diff` option
+    *  2023-07-29 075e7eb actionless fix(prompt: get_editor): isolate editor command if pikaur elevated privilege from the normal user
+    *  2023-07-29 f457b7e actionless fix(privileges, main): bypass home-dir and other XDG env vars via cli flags instead of using --preserve-env (fixes #735)
+    *  2023-07-29 5bd7a77 Oskar Roesler fix(install_info_fetcher): Don't attempt to delete dict entry in aur_updates_install_info_by_name{} twice. (#736)
+    *  2023-07-22 bc29c12 actionless feat(pacman: get_not_found_repo_packages): improve caching when running the same pacman commands internally
+    *  2023-07-22 46a8046 actionless feat(build: get_latest_dev_sources): add recovery prompt when updating sources of -git repo
+    *  2023-07-20 a9f8758 actionless feat(core: sudo; privilege: isolate_root): improve `doas` support (re: #725)
