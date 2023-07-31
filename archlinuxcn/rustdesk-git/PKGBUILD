@@ -1,6 +1,8 @@
 # Maintainer: taotieren <admin@taotieren.com>
 # Maintainer: Ataraxy
 # Maintainer:  Chris Severance aur.severach aATt spamgourmet dott com
+# Contributor: Rojikku <RojikkuNoKami at gmail dot com>
+# Contributor: Tech <technetium1337 at gmail dot com>
 
 # 0 for PKGBUILD commands which may go out of date
 # 1 for build.py which should stay current
@@ -17,15 +19,21 @@ _opt_VCPKG_COMMIT_ID='#commit=14e7bb4ae24616ec54ff6b2f6ef4e8659434ea44'
 # Flutter has more advanced UI
 _opt_FLUTTER=1
 
+# 0 for package flutter, version checked
+# 1 for system flutter, version warned
+_opt_SYS_FLUTTER=1
+
 set -u
 _pkgname='rustdesk'
-pkgname="${_pkgname}-git"
-pkgver=1.2.1.r165.g3c4852a2
+pkgname="${_pkgname}"
+pkgname+="-git"
+pkgver=1.2.1.r204.g5555cf8f
 epoch=1
 pkgrel=1
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
 arch=('x86_64')
-url='https://github.com/rustdesk/rustdesk'
+url='https://rustdesk.com/'
+_giturl='https://github.com/rustdesk/rustdesk'
 license=('GPL3')
 _dpr=('gtk3' 'xdotool' 'libxcb' 'libxfixes' 'alsa-lib' 'libva' 'libvdpau' 'libappindicator-gtk3' 'pam' 'gst-plugins-base' 'gst-plugin-pipewire') # from res/PKGBUILD/depends
 depends=("${_dpr[@]}" 'pulseaudio' 'gst-plugins-base-libs')
@@ -38,7 +46,10 @@ provides=("${_pkgname}=${pkgver%.r*}")
 conflicts=("${_pkgname}")
 options=('!strip' '!makeflags' '!lto')
 install="${pkgname}.install"
-source=("git+${url}.git")
+_srcdir="${_pkgname}"
+source=(
+  "git+${_giturl}.git"
+)
 _vcs=(
   'https://cmake.org/files/v3.18/cmake-3.18.4-Linux-x86_64.tar.gz'
   'ninja-linux-1.10.1.zip::https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-linux.zip'
@@ -57,14 +68,22 @@ source+=("${_vcs[@]}")
 if [ "${_opt_FLUTTER}" -eq 0 ]; then
   source+=("https://raw.github.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so")
 else
-  _FLUVER='3.10.5'
-  _FRBVER='1.75.0'
-  source+=(
-    "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${_FLUVER}-stable.tar.xz"
-    "flutter_rust_bridge-${_FRBVER}.tar.gz::https://github.com/fzyzcjy/flutter_rust_bridge/archive/refs/tags/v${_FRBVER}.tar.gz"
-    #"flutter_rust_bridge-${_FRBVER}.tar.gz::https://pub.dev/packages/flutter_rust_bridge/versions/${_FRBVER}.tar.gz" # bad packaging
-    #"git+https://github.com/SoLongAndThanksForAllThePizza/flutter_rust_bridge.git"
-  )
+  if [ "${_opt_SYS_FLUTTER}" -eq 0 ]; then
+    _FLUVER='3.10.5'
+    source+=(
+      "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${_FLUVER}-stable.tar.xz"
+      #"flutter_rust_bridge-${_FRBVER}.tar.gz::https://pub.dev/packages/flutter_rust_bridge/versions/${_FRBVER}.tar.gz" # bad packaging
+      #"git+https://github.com/SoLongAndThanksForAllThePizza/flutter_rust_bridge.git"
+    )
+  else
+    makedepends+=('flutter')
+  fi
+  if :; then
+    _FRBVER='1.75.0'
+    source+=(
+      "flutter_rust_bridge-${_FRBVER}.tar.gz::https://github.com/fzyzcjy/flutter_rust_bridge/archive/refs/tags/v${_FRBVER}.tar.gz"
+    )
+  fi
 fi
 md5sums=('SKIP'
          'f03d67965c0b747d230df09695447c14'
@@ -72,7 +91,6 @@ md5sums=('SKIP'
          '82e5e527336b41281a582204db1f3457'
          '357dc26a802c34387512a42697846d16'
          '10cf85debdd07be719a35ca3bfb8ea64'
-         'dcc299e7786f083cc1939a88f6f5601e'
          '9cb4a6717db959e082db75200e75d3e1')
 sha256sums=('SKIP'
             '149e0cee002e59e0bb84543cf3cb099f108c08390392605e944daeb6594cbc29'
@@ -80,7 +98,6 @@ sha256sums=('SKIP'
             '965e51c91ad9851e2337aebcc0f517440c637c506f3a03948062e3d5ea129a83'
             'a78b05c0d8427a90eb5b4eb08af25309770c8379592bb0b8a863373128e6143f'
             'f1acc15d0fd0cb431f4bf6eac32d5e932e40ea1186fe78e074254d6d003957bb'
-            '86643cbfe8acf766a226a6cd4625bb8301c2601ea9bb825448318c8669b72a13'
             '6efb71ac8086699da74dad6736c32ddb20db5dcabe167c49a8c3a650675eb84b')
 _vcs=("${_vcs[@]%%::*}")
 _vcs=("${_vcs[@]##*/}")
@@ -99,8 +116,8 @@ set +u
 _vcpkg=(libvpx libyuv opus aom)
 
 _prepare_vc() {
+  msg '_prepare_vc'
   set -u
-  # rm -rf '/home/chris/.cache/vcpkg/archives'
   if [ "${_opt_SYS_VCPKG}" -ne 0 ] && [ ! -d 'vcpkg' ]; then
     set +u; msg2 'Copy /opt/vcpkg'; set -u
     cp -pr '/opt/vcpkg' .
@@ -131,8 +148,9 @@ _prepare_vc() {
 
 # Same elements in same order
 _dpr_check() {
+  msg '_dpr_check'
   set -u
-  pushd "${_pkgname}" > /dev/null
+  pushd "${_srcdir}" > /dev/null
   (
     source 'res/PKGBUILD'
     if [ "${#_dpr[@]}" -ne "${#depends[@]}" ]; then
@@ -149,18 +167,8 @@ _dpr_check() {
   set +u
 }
 
-prepare() {
-  _dpr_check
-  _prepare_vc
-  set -u
-  if [ "${_opt_FLUTTER}" -ne 0 ]; then
-    if [ ! -d 'flutter_rust_bridge' ]; then
-      ln -s "flutter_rust_bridge-${_FRBVER}" 'flutter_rust_bridge'
-      test -d 'flutter_rust_bridge'
-    fi
-  fi
-  cd "${_pkgname}"
-
+_flutter_check() {
+  set +u; msg '_flutter_check'; set -u
   if [ "${_opt_FLUTTER}" -ne 0 ]; then
     local _FLUTTER_VERSION
     local _pyfv="
@@ -172,10 +180,21 @@ with open('.github/workflows/flutter-build.yml', 'r') as stream:
 print(data_loaded.get('env').get('FLUTTER_VERSION'))
 "
     _FLUTTER_VERSION="$(python -c "${_pyfv}")"
+    if [ "${_opt_SYS_FLUTTER}" -ne 0 ]; then
+      local _FLUVER
+      _FLUVER="$(pacman -Q flutter)"
+      _FLUVER="${_FLUVER##* }"
+      _FLUVER="${_FLUVER%%-*}"
+    fi
     if [ "${_FLUTTER_VERSION}" != "${_FLUVER}" ]; then
-      printf 'Flutter version has changed to %s\n' "${_FLUTTER_VERSION}"
-      set +u
-      false
+      if [ "${_opt_SYS_FLUTTER}" -ne 0 ]; then
+        set +u; msg2 "Warning: expected Flutter version is ${_FLUTTER_VERSION}"; set -u
+        _FLUTTER_VERSION="${_FLUVER}"
+      else
+        printf 'Flutter version has changed to %s\n' "${_FLUTTER_VERSION}"
+        set +u
+        false
+      fi
     fi
     set +u; msg2 "FLUTTER_VERSION=${_FLUTTER_VERSION}"; set -u
     local _flutter_rust_bridge
@@ -193,13 +212,15 @@ print(new_toml_string.get('dependencies').get('flutter_rust_bridge').get('versio
     fi
     set +u; msg2 "flutter_rust_bridge=${_flutter_rust_bridge}"; set -u
   fi
+}
 
+_mod_py() {
   if [ "$(grep -c -F -e 'os.system' 'build.py')" -gt 1 ]; then
     local _lf=$'\n'
     local _nc='
 def systemecho(cmd):
     print(cmd)
-    os.system(cmd)
+    return os.system(cmd)
 
 '
     _nc="${_nc//${_lf}/\\n}"
@@ -207,9 +228,34 @@ def systemecho(cmd):
         -e 's:os.system:systemecho:g' \
         -e "s/^def get_version/${_nc}&/g" \
         -e '# Disable makepkg' \
-        -e '/makepkg/ s:^:#:g' \
+        -e 's:makepkg:true &:g' \
+        -e '/pkg.tar.zst/ s:mv:true &:g' \
         -i 'build.py'
   fi
+  if [ "${source[0]#git}" = "${source[0]}" ]; then
+    sed -e 's:git checkout:true &:g' -i 'build.py'
+  fi
+}
+
+prepare() {
+  _dpr_check
+  #rm -rf ~/'.cache/vcpkg/archives' ~/'.vcpkg'
+  _prepare_vc
+  set -u
+  if [ "${_opt_FLUTTER}" -ne 0 ]; then
+    if [ "${_opt_SYS_FLUTTER}" -ne 0 ]; then
+      set +u; msg2 'Copy /opt/flutter'; set -u
+      rm -rf 'flutter'
+      cp -pr '/opt/flutter' .
+    fi
+    if [ ! -d 'flutter_rust_bridge' ]; then
+      ln -s "flutter_rust_bridge-${_FRBVER}" 'flutter_rust_bridge'
+      test -d 'flutter_rust_bridge'
+    fi
+  fi
+  cd "${_srcdir}"
+  _flutter_check
+  _mod_py
   set +u
 }
 
@@ -219,10 +265,10 @@ build() {
   if [ ! -x vcpkg/vcpkg ]; then
     vcpkg/bootstrap-vcpkg.sh
   fi
-  nice vcpkg/vcpkg install "${_vcpkg[@]}"
   export VCPKG_ROOT="${PWD}/vcpkg"
+  nice vcpkg/vcpkg install "${_vcpkg[@]}"
 
-  cd "${_pkgname}"
+  cd "${_srcdir}"
   if [ "${_opt_FLUTTER}" -eq 0 ]; then
     set +u; msg2 'Build rustdesk Sciter'; set -u
     if [ "${_opt_BUILD_PY}" -ne 0 ]; then
@@ -263,13 +309,13 @@ build() {
 
 # This rebuilds the entire package
 check_disabled() {
-  cd "${_pkgname}"
+  cd "${_srcdir}"
   nice cargo test --release
 }
 
 package() {
   set -u
-  cd "${_pkgname}"
+  cd "${_srcdir}"
 
   if [ "${_opt_FLUTTER}" -eq 0 ]; then
     # install rustdesk
@@ -292,28 +338,12 @@ EOF
     fi
   fi
 
+  install -Dm0644 "res/${_pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
+
   install -Dm0644 'res/32x32.png' "${pkgdir}/usr/share/icons/hicolor/32x32/apps/${_pkgname}.png"
   install -Dm0644 'res/128x128.png' "${pkgdir}/usr/share/icons/hicolor/128x128/apps/${_pkgname}.png"
   install -Dm0644 'res/128x128@2x.png' "${pkgdir}/usr/share/icons/hicolor/256x256/apps/${_pkgname}.png"
 
-  install -Dm0644 /dev/stdin "${pkgdir}/usr/lib/systemd/system/${_pkgname}.service" << EOF
-[Unit]
-Description=RustDesk
-Requires=network.target
-After=systemd-user-sessions.service
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/${_pkgname} --service
-PIDFile=/var/run/${_pkgname}.pid
-KillMode=mixed
-TimeoutStopSec=30
-User=root
-LimitNOFILE=100000
-
-[Install]
-WantedBy=multi-user.target
-EOF
   install -Dm0644 /dev/stdin "${pkgdir}/usr/share/applications/${_pkgname}.desktop" << EOF
 [Desktop Entry]
 Version=${pkgver%.r*}
@@ -337,6 +367,7 @@ X-Desktop-File-Install-Version=0.23
 [Desktop Action new-window]
 Name=Open a New Window
 EOF
+  install -Dm644 'LICENCE' -t "${pkgdir}/usr/share/licenses/${_pkgname}"
   set +u
 }
 set +u
