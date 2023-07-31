@@ -17,7 +17,7 @@ makedepends=(
   python-wheel
 )
 checkdepends=(flake8 python-future python-matplotlib python-pytest python-pytorch python-torchvision)
-source=("${_pkgname}-${pkgver}.tar.gz"::"https://github.com/lanpa/tensorboardX/archive/v${pkgver}.tar.gz")
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/lanpa/tensorboardX/archive/refs/tags/v${pkgver}.tar.gz")
 sha512sums=('96563df5f6fbd96c9d35c55bb997886693c30a1b0cf6eeae09a57058ce7c152371454167c56600acd74f67c639655a91077ca46b8d351c96b5582fe697c5d4e4')
 
 prepare() {
