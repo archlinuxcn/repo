@@ -2127,3 +2127,12 @@ Sun Jul 30 19:55:06 2023 +0200
     *  2023-07-22 bc29c12 actionless feat(pacman: get_not_found_repo_packages): improve caching when running the same pacman commands internally
     *  2023-07-22 46a8046 actionless feat(build: get_latest_dev_sources): add recovery prompt when updating sources of -git repo
     *  2023-07-20 a9f8758 actionless feat(core: sudo; privilege: isolate_root): improve `doas` support (re: #725)
+
+
+Mon Jul 31 01:14:07 2023 +0200
+-------------------------------------------------
+1.18.1          Hotfix release 1.18.1
+    
+    Notable changes:
+    *  2023-07-31 ae7d00d actionless fix(install_cli, build: clone recovery prompt): [s]kip option wasn't working in --needed or --devel modes
+    *  2023-07-31 a1e4c2d actionless fix(install_cli, build: clone dev pkgs): reset tty on each line - because spawning pty-s from threads breaks terminal output (fixes #739)
