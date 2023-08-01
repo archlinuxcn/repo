@@ -3,7 +3,7 @@ maintainers:
     email: integral@murena.io
 
 pre_build_script: |
-  update_pkgerl()
+  update_pkgrel()
   vcs_update()
   
 post_build_script: git_pkgbuild_commit()
