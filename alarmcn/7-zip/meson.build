@@ -15,13 +15,8 @@ project(
 uasm = find_program('uasm', required: true)
 
 uasm_src = [
-  'Asm/x86/7zCrcOpt.asm',
-  'Asm/x86/AesOpt.asm',
-  'Asm/x86/LzFindOpt.asm',
-  'Asm/x86/LzmaDecOpt.asm',
-  'Asm/x86/Sha1Opt.asm',
-  'Asm/x86/Sha256Opt.asm',
-  'Asm/x86/XzCrc64Opt.asm',
+  'Asm/arm64/7zAsm.S',
+  'Asm/arm64/LzmaDecOpt.S',
 ]
 
 uasm_gen = generator(uasm,
