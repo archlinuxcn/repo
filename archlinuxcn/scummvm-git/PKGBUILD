@@ -3,13 +3,13 @@
 
 pkgname=scummvm-git
 _pkgname=scummvm
-pkgver=r142463.24c4d91789a
+pkgver=r143501.e2c08477200
 pkgrel=1
 pkgdesc="A 'virtual machine' for several classic graphical point-and-click adventure games. - git version"
 arch=('i686' 'x86_64')
 url="http://www.scummvm.org"
 license=('GPL')
-depends=('libtheora' 'sdl2_net' 'fluidsynth' 'flac' 'faad2' 'libmad' 'libjpeg-turbo' 'libmpeg2' 'curl' 'a52dec' 'gtk3' 'glew' 'libspeechd' 'giflib')
+depends=('libpng' 'libtheora' 'sdl2_net' 'fluidsynth' 'flac' 'faad2' 'libvorbis' 'libmad' 'libjpeg-turbo' 'libmpeg2' 'curl' 'a52dec' 'gtk3' 'glew' 'libspeechd' 'giflib' 'freetype2' 'libgl' 'glu' 'libvpx' 'libmikmod' 'readline')
 makedepends=('git' 'mesa')
 conflicts=('scummvm')
 provides=('scummvm')
@@ -27,7 +27,8 @@ build() {
  
   ./configure  --enable-release \
               --prefix=/usr \
-              --enable-all-engines
+              --enable-all-engines \
+              --enable-text-console
 
   make
 }
@@ -36,8 +37,6 @@ package() {
   cd "$srcdir/$_pkgname"
  
   make DESTDIR="$pkgdir" install
-
-  install -D -m 644 dists/scummvm.desktop "$pkgdir/usr/share/applications/scummvm.desktop"
 }
 
 # vim:set ts=2 sw=2 et:
