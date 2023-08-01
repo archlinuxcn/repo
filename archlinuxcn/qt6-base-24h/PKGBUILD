@@ -83,6 +83,7 @@ package() {
   DESTDIR="$pkgdir" cmake --install build
 
   install -Dm644 $_pkgfn/LICENSES/* -t "$pkgdir"/usr/share/licenses/$pkgbase
+  ln -s /usr/share/licenses/$pkgbase "$pkgdir"/usr/share/licenses/qt6-base
 
 # Install symlinks for user-facing tools
   cd "$pkgdir"
