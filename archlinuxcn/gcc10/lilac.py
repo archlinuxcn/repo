@@ -1,7 +1,7 @@
 from lilaclib import aur_pre_build, edit_file
 
 def pre_build():
-    aur_pre_build('gcc10',maintainers=['jonathon'])
+    aur_pre_build('gcc10',maintainers=['severach'])
 
     for line in edit_file('PKGBUILD'):
         if 'sed -i' in line and 'gcc/configure' in line:
