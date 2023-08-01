@@ -1,0 +1,43 @@
+From 00ff63ea9cdf92539b36bde81b7df3e70eb05480 Mon Sep 17 00:00:00 2001
+From: Yurii Kolesnykov <root@yurikoles.com>
+Date: Fri, 27 May 2022 04:04:02 +0300
+Subject: [PATCH] only build the module in dkms.conf
+
+Signed-off-by: Yurii Kolesnykov <root@yurikoles.com>
+Co-authored-by: Eli Schwartz <eschwartz@archlinux.org>
+---
+ scripts/dkms.mkconf | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
+
+diff --git a/scripts/dkms.mkconf b/scripts/dkms.mkconf
+index 0bd3834204..e33f637260 100755
+--- a/scripts/dkms.mkconf
++++ b/scripts/dkms.mkconf
+@@ -28,14 +28,7 @@ NO_WEAK_MODULES="yes"
+ PRE_BUILD="configure
+   --prefix=/usr
+   --with-config=kernel
+-  --with-linux=\$(
+-    if [ -e "\${kernel_source_dir/%build/source}" ]
+-    then
+-      echo "\${kernel_source_dir/%build/source}"
+-    else
+-      echo "\${kernel_source_dir}"
+-    fi
+-  )
++  --with-linux=\${kernel_source_dir}
+   --with-linux-obj="\${kernel_source_dir}"
+   \$(
+     [[ -n \"\${ICP_ROOT}\" ]] && \\
+@@ -68,7 +61,7 @@ POST_BUILD="scripts/dkms.postbuild
+   -t \${dkms_tree}
+ "
+ AUTOINSTALL="yes"
+-MAKE[0]="make"
++MAKE[0]="make -C module/"
+ STRIP[0]="\$(
+   [[ -r \${PACKAGE_CONFIG} ]] \\
+   && source \${PACKAGE_CONFIG} \\
+-- 
+2.36.1
+
