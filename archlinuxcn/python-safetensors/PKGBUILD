@@ -1,0 +1,39 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=safetensors
+pkgname=python-safetensors
+pkgver=0.3.1
+pkgrel=1
+pkgdesc='Simple, safe way to store and distribute tensors'
+arch=('x86_64')
+url='https://github.com/huggingface/safetensors'
+license=('Apache')
+depends=(
+  python-pymongo
+)
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-setuptools-rust
+  python-wheel
+)
+optdepends=(
+  python-numpy
+  python-pytorch
+  python-tensorflow
+  python-huggingface-hub
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/huggingface/safetensors/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('483f90f8a1377dbdcd0ac9488014474da2ff197a981cf41602758b002d87ce75fa68b221b94374501f108820ee59eeb70a53811b012150bcf224e880c6749b98')
+
+build() {
+  cd "${_pkgname}-${pkgver}/bindings/python"
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}/bindings/python"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+}
+# vim:set ts=2 sw=2 et:
