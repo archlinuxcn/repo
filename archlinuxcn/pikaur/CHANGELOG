@@ -2136,3 +2136,12 @@ Mon Jul 31 01:14:07 2023 +0200
     Notable changes:
     *  2023-07-31 ae7d00d actionless fix(install_cli, build: clone recovery prompt): [s]kip option wasn't working in --needed or --devel modes
     *  2023-07-31 a1e4c2d actionless fix(install_cli, build: clone dev pkgs): reset tty on each line - because spawning pty-s from threads breaks terminal output (fixes #739)
+
+
+Wed Aug 2 00:28:19 2023 +0200
+-------------------------------------------------
+1.18.2          Hotfix release 1.18.2
+    
+    Notable changes:
+    *  2023-08-02 96abf25 actionless fix(core: mkdir): even if dir exists, chown it just in case (if pikaur was previouly started as root and created that dir)
+    *  2023-08-02 8355904 actionless fix(core: chown_to_current): check type of user_id only when --user-id actually supplied
