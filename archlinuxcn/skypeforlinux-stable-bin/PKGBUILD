@@ -4,7 +4,7 @@
 _pkgname=skypeforlinux
 pkgname="$_pkgname-stable-bin"
 pkgver=8.100.0.203
-pkgrel=1
+pkgrel=2
 pkgdesc="Skype for Linux - Stable/Release Version"
 arch=("x86_64")
 url="http://www.skype.com"
@@ -17,10 +17,13 @@ conflicts=("$_pkgname" "$_pkgname-bin" "$_pkgname-preview-bin"
            "$_pkgname-beta-bin" "skype")
 provides=("$_pkgname" "skype")
 install="$pkgname-install"
+# We embed the pkgrel in the download file name because skype devs
+# sometimes use the same version number for an update and any previously
+# cached file will otherwise fail against the new checksum.
 source=(
-"https://repo.skype.com/deb/pool/main/s/$_pkgname/${_pkgname}_${pkgver}_amd64.deb"
+"${_pkgname}_${pkgver}_${pkgrel}_amd64.deb::https://repo.skype.com/deb/pool/main/s/$_pkgname/${_pkgname}_${pkgver}_amd64.deb"
 )
-sha256sums=('f6349089c2650b38a66d134d9ca383b79f39c5209f98ea93a09f6f92a2e64d3f')
+sha256sums=('74dfabbc23cda0d52ffbd893ced693e30e15e6b420e5cb4cede7b50d787dbcde')
 
 package() {
   tar --no-same-owner -xC "$pkgdir" -f data.tar.gz
