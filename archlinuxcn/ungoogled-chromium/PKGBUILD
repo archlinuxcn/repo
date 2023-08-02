@@ -9,7 +9,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=115.0.5790.98
+pkgver=115.0.5790.110
 pkgrel=1
 _launcher_ver=8
 _gcc_patchset=2
@@ -22,7 +22,7 @@ depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-liberation' 'systemd' 'dbus' 'libpulse' 'pciutils' 'libva'
          'libffi' 'desktop-file-utils' 'hicolor-icon-theme')
 makedepends=('python' 'gn' 'ninja' 'clang' 'lld' 'gperf' 'nodejs' 'pipewire'
-             'qt5-base' 'java-runtime-headless' 'git' 'dos2unix')
+             'qt5-base' 'java-runtime-headless' 'git')
 optdepends=('pipewire: WebRTC desktop sharing under Wayland'
             'kdialog: support for native dialogs in Plasma'
             'qt5-base: enable Qt5 with --enable-features=AllowQt'
@@ -35,7 +35,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         REVERT-disable-autoupgrading-debug-info.patch
         random-build-fixes.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('ffbe630ecf8fc8a250be05fdbec6c94d5881b5fcbbc5fb2b93e54ddc78d56af1'
+sha256sums=('e9d4bcae7bc812afc430188b48cdc86ab31c4a6d161c34a770b8d56d3121f771'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '4f91bd10a8ae2aa7b040a8b27e01f38910ad33cbe179e39a1ae550c9c1523384'
             '1b782b0f6d4f645e4e0daa8a4852d63f0c972aa0473319216ff04613a0592a69'
@@ -57,7 +57,7 @@ source=(${source[@]}
         vaapi-add-av1-support.patch
         remove-main-main10-profile-limit.patch)
 sha256sums=(${sha256sums[@]}
-            'e6647876747b083a491710393af0f8058284e465d06b41225eb708b30fb08072'
+            '39a8e3bb0cb4e3b40c0c657afa7baf4bef717b363b057a59cc379dcacc5ec142'
             'e9e8d3a82da818f0a67d4a09be4ecff5680b0534d7f0198befb3654e9fab5b69'
             'e742cc5227b6ad6c3e0c2026edd561c6d3151e7bf0afb618578ede181451b307'
             'be8d3475427553feb5bd46665ead3086301ed93c9a41cf6cc2644811c5bda51c')
