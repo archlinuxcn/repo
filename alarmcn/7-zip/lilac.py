@@ -19,3 +19,6 @@ def pre_build():
             print("\'Asm/arm64/7zAsm.S\',")
             print("\'Asm/arm64/LzmaDecOpt.S\',")
             print(']')
+
+    for line in edit_file('PKGBUILD'):
+        print (line.replace('211a57a476943e654de7408145b8d626a4dc242e74a3dcb8fc3afd0620792a03','SKIP'))
