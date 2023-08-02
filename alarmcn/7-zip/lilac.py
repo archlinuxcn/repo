@@ -6,7 +6,7 @@ def pre_build():
     aur_pre_build(maintainers=['post-factum'])
     add_arch(['aarch64'])
 
-    bool in_uasm_src = False
+    in_uasm_src = False
 
     for line in edit_file('meson.build'):
         if not in_uasm_src:
