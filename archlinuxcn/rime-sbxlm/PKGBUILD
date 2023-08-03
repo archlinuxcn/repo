@@ -1,6 +1,6 @@
 pkgname=rime-sbxlm
-pkgver=20230722
-pkgrel=3
+pkgver=20230803
+pkgrel=1
 pkgdesc='声笔系列码配置'
 arch=(any)
 source=('fetch-release.sh' 'sbxlm-init')
