@@ -1,4 +1,4 @@
-From 41e82d198203490db1d0722cfe18ad092a345628 Mon Sep 17 00:00:00 2001
+From 49106d83aa4815d81e4512a57eeea740925eac21 Mon Sep 17 00:00:00 2001
 From: Coelacanthus <CoelacanthusHex@gmail.com>
 Date: Mon, 1 May 2023 16:08:34 +0800
 Subject: [PATCH] AUR PKGBUILD changes
@@ -12,13 +12,13 @@ Signed-off-by: Coelacanthus <CoelacanthusHex@gmail.com>
  make/rules-cmake.mk     |  5 +++--
  make/rules-common.mk    | 17 +++++++++-------
  make/rules-configure.mk |  4 ++--
- make/rules-meson.mk     |  4 +++-
+ make/rules-meson.mk     |  2 ++
  make/rules-winemaker.mk |  2 +-
  proton                  |  7 ++-----
- 10 files changed, 60 insertions(+), 31 deletions(-)
+ 10 files changed, 59 insertions(+), 30 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 9726d2f1..5c26d98c 100644
+index 0ecce1fb..3640880a 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -50,7 +50,8 @@ else
@@ -31,9 +31,9 @@ index 9726d2f1..5c26d98c 100644
  SANITY_FLAGS   := -fwrapv -fno-strict-aliasing
  DEBUG_FLAGS    := -ggdb -ffunction-sections -fdata-sections -fno-omit-frame-pointer
  COMMON_FLAGS    = $(DEBUG_FLAGS) $(OPTIMIZE_FLAGS) $(SANITY_FLAGS) -ffile-prefix-map=$(CCACHE_BASEDIR)=.
-@@ -58,6 +59,20 @@ COMMON_FLAGS32 := -mstackrealign
- COMMON_FLAGS64 := -mcmodel=small
- CARGO_BUILD_ARG := --release
+@@ -62,6 +63,20 @@ ifneq ($(SUPPRESS_WARNINGS),)
+ 	COMMON_FLAGS += -w
+ endif
  
 +ifneq ($(USE_LTO), 1)
 +    MESON_LTO :=
@@ -52,7 +52,7 @@ index 9726d2f1..5c26d98c 100644
  $(DST_DIR):
  	mkdir -p $@
  
-@@ -68,7 +83,7 @@ all: all-dist | $(DST_DIR)
+@@ -72,7 +87,7 @@ all: all-dist | $(DST_DIR)
  all-dist: | $(DST_DIR)
  dist: all
  
@@ -61,7 +61,7 @@ index 9726d2f1..5c26d98c 100644
  
  include $(SRC)/make/utility.mk
  include $(SRC)/make/rules-source.mk
-@@ -265,6 +280,7 @@ $(eval $(call rules-meson,gst_good,64))
+@@ -269,6 +284,7 @@ $(eval $(call rules-meson,gst_good,64))
  ##
  
  FFMPEG_CONFIGURE_ARGS := \
@@ -69,7 +69,7 @@ index 9726d2f1..5c26d98c 100644
  	--enable-shared \
  	--disable-static \
  	--disable-everything \
-@@ -289,6 +305,9 @@ FFMPEG_CONFIGURE_ARGS := \
+@@ -293,6 +309,9 @@ FFMPEG_CONFIGURE_ARGS := \
  	--enable-decoder=aac \
  	--enable-demuxer=xwma
  
@@ -79,7 +79,7 @@ index 9726d2f1..5c26d98c 100644
  $(eval $(call rules-source,ffmpeg,$(SRCDIR)/FFmpeg))
  $(eval $(call rules-configure,ffmpeg,32))
  $(eval $(call rules-configure,ffmpeg,64))
-@@ -333,6 +352,8 @@ $(OBJ)/.gst_plugins_rs-post-build32:
+@@ -337,6 +356,8 @@ $(OBJ)/.gst_plugins_rs-post-build32:
  ##
  
  GST_BAD_MESON_ARGS := \
@@ -88,7 +88,7 @@ index 9726d2f1..5c26d98c 100644
  	-Dfbdev=disabled \
  	-Ddecklink=disabled \
  	-Dcurl=disabled \
-@@ -545,6 +566,9 @@ OPENFST_CONFIGURE_ARGS = \
+@@ -549,6 +570,9 @@ OPENFST_CONFIGURE_ARGS = \
    --with-pic \
    --disable-bin \
  
@@ -98,7 +98,7 @@ index 9726d2f1..5c26d98c 100644
  $(eval $(call rules-source,openfst,$(SRCDIR)/openfst))
  $(eval $(call rules-autoconf,openfst,32))
  $(eval $(call rules-autoconf,openfst,64))
-@@ -1031,14 +1055,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
+@@ -1062,14 +1086,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
  	mkdir -p $(FONTS_OBJ)/source-han
  	# Do not immediately create the target file, so that make is interrupted
  	# it will restart again
@@ -116,7 +116,7 @@ index 9726d2f1..5c26d98c 100644
  	mv $@.tmp $@
  
  $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
-@@ -1048,12 +1072,12 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
+@@ -1079,12 +1103,12 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
  	ttx -o $@ -m $($(notdir $@)_FONT) $(FONTS_OBJ)/ume-gothic/$(notdir $(basename $($(notdir $@)_NAMETABLE_PATCH))).ttx
  
  $(simsun.ttc): $(simsun.ttf) $(nsimsun.ttf)
@@ -132,7 +132,7 @@ index 9726d2f1..5c26d98c 100644
  
  $(micross.ttf): $(FONTS)/scripts/merge.py $(noto_sans.ttf) $(noto_sans_arabic.ttf) $(noto_sans_armenian.ttf) $(noto_sans_bengali.ttf) $(noto_sans_coptic.ttf) \
  		$(noto_sans_georgian.ttf) $(noto_sans_gujarati.ttf) $(noto_sans_hebrew.ttf) $(noto_sans_khmer.ttf) $(noto_sans_tamil.ttf) \
-@@ -1179,8 +1203,8 @@ all-dist: $(DIST_OVR32) $(DIST_OVR64)
+@@ -1210,8 +1234,8 @@ all-dist: $(DIST_OVR32) $(DIST_OVR64)
  ##
  
  default_pfx: wine gst_good gst_libav gst_plugins_rs lsteamclient steamexe vrclient wineopenxr dxvk dxvk-nvapi vkd3d-proton
@@ -180,7 +180,7 @@ index ad04eeb8..53eda5bc 100644
  endef
  
 diff --git a/make/rules-cargo.mk b/make/rules-cargo.mk
-index ea76678b..e689a71e 100644
+index ff7f4e03..a2af13bd 100644
 --- a/make/rules-cargo.mk
 +++ b/make/rules-cargo.mk
 @@ -14,7 +14,7 @@ $$(OBJ)/.$(1)-build$(3):
@@ -191,7 +191,7 @@ index ea76678b..e689a71e 100644
 +	      -j$$(SUBJOBS) \
  	      --target "$$(CARGO_TARGET_$(3))" \
  	      --target-dir $$($(2)_OBJ$(3)) \
- 	      $$(CARGO_BUILD_ARG) \
+ 	      $$(CARGO_BUILD_ARGS) \
 diff --git a/make/rules-cmake.mk b/make/rules-cmake.mk
 index 520d88ac..40fa898e 100644
 --- a/make/rules-cmake.mk
@@ -285,7 +285,7 @@ index 29eee132..642c6d70 100644
  endef
  
 diff --git a/make/rules-meson.mk b/make/rules-meson.mk
-index 2bf2db8c..2eef8b91 100644
+index 985f2085..b872cddf 100644
 --- a/make/rules-meson.mk
 +++ b/make/rules-meson.mk
 @@ -48,12 +48,14 @@ $$(OBJ)/.$(1)-configure$(3): $$($(2)_SRC)/meson.build
@@ -303,15 +303,6 @@ index 2bf2db8c..2eef8b91 100644
  	      $$(MESON_STRIP_ARG)
  
  	touch $$@
-@@ -61,7 +63,7 @@ $$(OBJ)/.$(1)-configure$(3): $$($(2)_SRC)/meson.build
- $$(OBJ)/.$(1)-build$(3):
- 	@echo ":: building $(3)bit $(1)..." >&2
- 	env $$($(2)_ENV$(3)) \
--	ninja $$(filter -j%,$$(MAKEFLAGS)) -C "$$($(2)_OBJ$(3))" install $(-v?)
-+	ninja -j$$(SUBJOBS) -C "$$($(2)_OBJ$(3))" install $(-v?)
- 	touch $$@
- endef
- 
 diff --git a/make/rules-winemaker.mk b/make/rules-winemaker.mk
 index 5c3b59a3..ed6589e0 100644
 --- a/make/rules-winemaker.mk
@@ -326,7 +317,7 @@ index 5c3b59a3..ed6589e0 100644
  	winebuild --$(lastword $(subst ., ,$(4))) --fake-module -E "$(basename $(4)).spec" -o "$(4).fake"
  	mkdir -p $$($(2)_LIBDIR$(3))/$(LIBDIR_WINE_$(3))
 diff --git a/proton b/proton
-index 35b0d144..215c0e51 100755
+index 5fcaf27b..dcdbd10c 100755
 --- a/proton
 +++ b/proton
 @@ -423,7 +423,6 @@ class Proton:
@@ -337,7 +328,7 @@ index 35b0d144..215c0e51 100755
  
      def path(self, d):
          return self.base_dir + d
-@@ -1827,9 +1826,6 @@ if __name__ == "__main__":
+@@ -1861,9 +1860,6 @@ if __name__ == "__main__":
  
      g_proton = Proton(os.path.dirname(sys.argv[0]))
  
@@ -347,7 +338,7 @@ index 35b0d144..215c0e51 100755
      g_compatdata = CompatData(os.environ["STEAM_COMPAT_DATA_PATH"])
  
      g_session = Session()
-@@ -1837,7 +1833,8 @@ if __name__ == "__main__":
+@@ -1871,7 +1867,8 @@ if __name__ == "__main__":
      g_session.init_wine()
  
      if g_proton.missing_default_prefix():
