@@ -2,11 +2,11 @@
 
 pkgbase=linux-amd
 _srcname=linux
-gitver=v6.4.7
+gitver=v6.4.8
 patchver=20230105
 patchname=more-uarches-for-kernel-5.17+.patch
-pkgver=6.4.v.7
-pkgrel=2
+pkgver=6.4.v.8
+pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
@@ -22,20 +22,16 @@ source=("git+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git#ta
         'linux.install'
 	# patch from our graysky archlinux colleague
 	"https://raw.githubusercontent.com/graysky2/kernel_compiler_patch/$patchver/$patchname"
-        # enable STIBP
-        'enable_STIBP.patch'
 )
 sha256sums=('SKIP'
             #config.x86_64
-            '574aa8776a62692a244226dbb327237008534d7b5fc95b05dbac4802bc138c36'
+            '436a336885d4799fa85dca65d1debdebece9375d49ef5ece6b8210c62da4543b'
             #.preset file
             '60c6ba602443e94a9eba3aeee9d194027d69bffaa428c6d055348ebf03681b5c'
             #linux install file
             'd590e751ab4cf424b78fd0d57e53d187f07401a68c8b468d17a5f39a337dacf0'
             #grayskypatch
             '81ad663925a0aa5b5332a69bae7227393664bb81ee2e57a283e7f16e9ff75efe'
-            #enable STIBP
-            'bb19d2d06fb3b0e6858e59fd9b1a38d203294baeed8729bb3b1c6011b2328801'
 )
 
 _kernelname=${pkgbase#linux}
