@@ -1,13 +1,16 @@
 [Unit]
 Description=Jellyfin Media Server
-After=network.target
+After=network-online.target
 
 [Service]
-User=jellyfin
+Type=simple
 EnvironmentFile=/etc/conf.d/jellyfin
+User=jellyfin
+WorkingDirectory=/var/lib/jellyfin
 ExecStart=/usr/bin/dotnet /usr/lib/jellyfin/jellyfin.dll --datadir ${JELLYFIN_DATA_DIRECTORY} --cachedir ${JELLYFIN_CACHE_DIRECTORY} ${JELLYFIN_ADD_OPTS}
-Restart=on-abort
-TimeoutSec=20
+Restart=on-failure
+TimeoutSec=15
+SuccessExitStatus=0 143
 
 [Install]
 WantedBy=multi-user.target
