@@ -4,21 +4,24 @@
 
 pkgname=zfs-utils
 pkgver=2.1.12
-pkgrel=1
+pkgrel=2
 pkgdesc="Userspace utilities for the Zettabyte File System."
 arch=("i686" "x86_64" "aarch64")
 url="https://zfsonlinux.org/"
 license=('CDDL')
 optdepends=('python: for arcstat/arc_summary/dbufstat')
 source=("https://github.com/zfsonlinux/zfs/releases/download/zfs-${pkgver}/zfs-${pkgver}.tar.gz"{,.asc}
+		"zfs-node-permission.conf"
         "zfs.initcpio.install"
         "zfs.initcpio.hook")
 sha256sums=('64daa26aed3e12c931f6f4413d7527c4ebdb8da35416b356152b5f9fdd4c6e6d'
             'SKIP'
+            '7ad45fd291aa582639725f14d88d7da5bd3d427012b25bddbe917ca6d1a07c1a'
             '2f09c742287f4738c7c09a9669f8055cd63d3b9474cd1f6d9447152d11a1b913'
             '15b5acea44225b4364ec6472a08d3d48666d241fe84c142e1171cd3b78a5584f')
 b2sums=('652780e6bf7b63f45909110726d53795fada034f6044c8393fa3980e30217ada6931e3c2bb57210719e3c78c16f973f69287b7e2b475601f4ce12d701d9d96ae'
         'SKIP'
+        '7eb3408b1354a4dd504000739101afc7ec0aed1afcdfa029552bf6989e9a8cd4a95b3d3563b3fb7902afa30a80fb01a3f5a2d5af82f9c734c48b5cc23aac25ca'
         'cb774227f157573f960bdb345e5b014c043a573c987d37a1db027b852d77a5eda1ee699612e1d8f4a2770897624889f1a3808116a171cc4c796a95e3caa43012'
         '779c864611249c3f21d1864508d60cfe5e0f5541d74fb3093c6bdfa56be2c76f386ac1690d363beaee491c5132f5f6dbc01553aa408cda579ebca74b0e0fd1d0')
 validpgpkeys=('4F3BA9AB6D1F8D683DC2DFB56AD860EED4598027'  # Tony Hutter (GPG key for signing ZFS releases) <hutter2@llnl.gov>
@@ -63,6 +66,11 @@ package() {
 
     make DESTDIR="${pkgdir}" install
     install -D -m644 contrib/bash_completion.d/zfs "${pkgdir}"/usr/share/bash-completion/completions/zfs
+
+	# Fix for permissions being overwritten on /dev/zfs. Related issues:
+	# https://github.com/openzfs/zfs/issues/15146
+	# https://github.com/systemd/systemd/issues/28653
+    install -D -m644 "${srcdir}"/zfs-node-permission.conf "${pkgdir}"/usr/lib/tmpfiles.d/zfs-node-permission.conf
 
     # Remove uneeded files
     rm -r "${pkgdir}"/etc/init.d
