@@ -1,0 +1,9 @@
+post_upgrade() {
+  if (( $(vercmp "$2" '5.1.0-2') < 0 )); then
+    printf "NOTE: The qemu-ga.service has been renamed to qemu-guest-agent.service\n"
+  fi
+  if systemctl is-enabled -q qemu-ga.service; then
+    systemctl disable qemu-ga.service
+    systemctl enable qemu-guest-agent.service
+  fi
+}

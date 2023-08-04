@@ -1,0 +1,9 @@
+[Unit]
+Description=QEMU Guest Agent
+ConditionPathExists=/dev/virtio-ports/org.qemu.guest_agent.0
+
+[Service]
+ExecStart=/usr/bin/qemu-ga
+
+[Install]
+WantedBy=multi-user.target

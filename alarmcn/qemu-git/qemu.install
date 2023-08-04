@@ -1,0 +1,8 @@
+# Arg 1:  the new package version
+post_install() {
+  # trigger events on modules files when already loaded
+  for _f in /sys/devices/virtual/misc/vhost-net; do
+    [[ -e "$_f" ]] &&  udevadm trigger "$_f"
+  done
+  :
+}
