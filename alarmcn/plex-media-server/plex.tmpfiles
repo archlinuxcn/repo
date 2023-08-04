@@ -1,0 +1,3 @@
+# Override this file with a modified version in /etc/tmpfiles.d/
+d /var/lib/plex 0755 plex plex
+L /var/log/plex - - - - /var/lib/plex/Plex Media Server/Logs
