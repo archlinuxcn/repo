@@ -1,22 +1,22 @@
-From 3a75861c4215633bdcc322f2b3d9aa26a05c0663 Mon Sep 17 00:00:00 2001
+From 5e2c8a39e746b9661e2042146e0a39364ff1919a Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Michael=20La=C3=9F?= <bevan@bi-co.net>
 Date: Thu, 26 Jan 2023 19:18:56 +0100
 Subject: [PATCH] Quick & Dirty patch to allow finding quazip-qt5 on Arch Linux
 
 ---
- pri/quazipdetect.pri | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+ pri/quazipdetect.pri | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
 
 diff --git a/pri/quazipdetect.pri b/pri/quazipdetect.pri
-index d08322cd..532c1459 100644
+index 9f480ec6..c503af88 100644
 --- a/pri/quazipdetect.pri
 +++ b/pri/quazipdetect.pri
 @@ -5,20 +5,10 @@ message("Using fritzing quazip detect script.")
  SOURCES += \
      src/zlibdummy.c \
  
--exists($$absolute_path($$PWD/../../quazip_qt5)) {
--        QUAZIPPATH = $$absolute_path($$PWD/../../quazip_qt5)
+-exists($$absolute_path($$PWD/../../quazip_qt$$QT_MAJOR_VERSION)) {
+-        QUAZIPPATH = $$absolute_path($$PWD/../../quazip_qt$$QT_MAJOR_VERSION)
 -        message("found quazip in $${QUAZIPPATH}")
 -    } else {
 -        error("quazip could not be found.")
@@ -27,20 +27,22 @@ index d08322cd..532c1459 100644
  unix:!macx {
      message("including quazip library on linux")
 -    INCLUDEPATH += $$absolute_path($${QUAZIPPATH}/include/quazip)
--    LIBS += -L$$absolute_path($${QUAZIPPATH}/lib) -lquazip1-qt5
+-    LIBS += -L$$absolute_path($${QUAZIPPATH}/lib) -lquazip1-qt$$QT_MAJOR_VERSION
 -    QMAKE_RPATHDIR += $$absolute_path($${QUAZIPPATH}/lib)
 +    INCLUDEPATH += /usr/include/QuaZip-Qt5-1.4/quazip/
 +    LIBS += -lquazip1-qt5
  }
  
  macx {
-@@ -56,4 +46,4 @@ win32 {
+@@ -55,5 +45,5 @@ win32 {
+         error("quazip library not found in $$QUAZIPLIB")
      }
  
-     LIBS += -L$$QUAZIPLIB -lquazip1-qt5
+-    LIBS += -L$$QUAZIPLIB -lquazip1-qt$$QT_MAJOR_VERSION
 -}
 \ No newline at end of file
++    LIBS += -L$$QUAZIPLIB -lquazip1-qt5
 +}
 -- 
-2.39.1
+2.41.0
 

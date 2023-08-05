@@ -10,8 +10,8 @@ pkgname=fritzing
 # We drop the "b" at the end of the version number. It probably means beta
 # while there is also "d" for development versions. This would not be correctly
 # parsed by `pkgver` anyway (d > b), so let's leave out the b suffix entirely.
-pkgver=0.9.10
-pkgrel=5
+pkgver=1.0.0
+pkgrel=1
 
 # Tag version can be obtained from github release page. Sometimes this is the
 # version number itself, sometimes some CD-magicnumber thing. There can be
@@ -19,8 +19,8 @@ pkgrel=5
 # guess what corresponds to the latest official release.
 #_tagver=0.9.8
 
-# This is probably closest to what has been released as 0.9.10.
-_gitrev=29c2cede3a0475ed770db1ee502fdebf6bf3a23d
+# This is probably closest to what has been released as 1.0.0.
+_gitrev=fe6d2f9c8b58d981a0e119ca251da54dc5959c24
 
 # Parts come from a different respository and are not versioned anymore since
 # 2016. Sometimes we can get the revision by downloading the release build,
@@ -28,7 +28,7 @@ _gitrev=29c2cede3a0475ed770db1ee502fdebf6bf3a23d
 # release build seems to be hidden behind a paywall. Then we need to guess
 # based on the master branch of the fritzing-parts repository and the date when
 # the release archive was created.
-_partsrev=4713511c894cb2894eae505b9307c6555afcc32c
+_partsrev=9597553a1adc09019b4a42fe7929196abff18133
 
 pkgdesc='PCB layout prototyping application'
 arch=('aarch64' 'i686' 'x86_64')
@@ -42,7 +42,7 @@ source=("git+https://github.com/fritzing/fritzing-app.git#commit=${_gitrev}"
         0001-Quick-Dirty-patch-to-allow-finding-quazip-qt5-on-Arc.patch)
 sha256sums=('SKIP'
             'SKIP'
-            '65e0818e959f07209928907ddeb76c3e73229fdc0a049c433c842621d59e6e32')
+            '6e4200a5d53f8241052c0f61c7a49e71ae4a36051fd29f3e750b1a39ec9c149d')
 
 prepare() {
   cd "${srcdir}"/fritzing-app
