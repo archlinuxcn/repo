@@ -8,6 +8,9 @@ pre_build_script: |
 
 post_build: aur_post_build
 
+repo_depends:
+  - dotnet-sdk-6.0
+
 update_on:
   - source: aur
     aur: jellyfin
