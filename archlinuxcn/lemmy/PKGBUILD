@@ -2,7 +2,7 @@
 
 pkgname=lemmy
 pkgver=0.18.3
-pkgrel=1
+pkgrel=2
 pkgdesc='A link aggregator for the fediverse'
 arch=('x86_64')
 url='https://join-lemmy.org'
@@ -16,7 +16,10 @@ depends=(
   'perl-image-exiftool'
 )
 makedepends=('git' 'rust' 'protobuf')
-optdepends=('lemmy-ui: for the web app')
+optdepends=(
+  'lemmy-ui: for the web app'
+  'pict-rs: for image hosting backend'
+)
 options=('!lto')
 _commit='9ef4da19fc12c9d6963e1d1746dad44bdb40407c'
 source=(
