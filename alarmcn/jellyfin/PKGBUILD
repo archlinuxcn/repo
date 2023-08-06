@@ -7,10 +7,10 @@ pkgname=(jellyfin jellyfin-web jellyfin-server)
 pkgver=10.8.10
 pkgrel=5
 pkgdesc='The Free Software Media System'
-arch=('i686' 'x86_64' 'armv6h')
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url='https://github.com/jellyfin/jellyfin'
 license=('GPL2')
-makedepends=('dotnet-sdk-6.0' 'nodejs' 'npm' 'git')
+makedepends=('dotnet-sdk-6.0-bin' 'nodejs' 'npm' 'git')
 source=("jellyfin-$pkgver.tar.gz::https://github.com/jellyfin/jellyfin/archive/v$pkgver.tar.gz"
         "jellyfin-web-$pkgver.tar.gz::https://github.com/jellyfin/jellyfin-web/archive/v$pkgver.tar.gz"
         'jellyfin.conf'
