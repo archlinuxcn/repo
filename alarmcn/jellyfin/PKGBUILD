@@ -57,7 +57,7 @@ package_jellyfin() {
 
 package_jellyfin-server() {
   pkgdesc="Jellyfin server component"
-  depends=('dotnet-runtime-6.0' 'aspnet-runtime-6.0' 'ffmpeg' 'sqlite')
+  depends=('dotnet-runtime-6.0-bin' 'aspnet-runtime-6.0-bin' 'ffmpeg' 'sqlite')
   backup=('etc/conf.d/jellyfin')
 
   mkdir -p "$pkgdir"/usr/lib
