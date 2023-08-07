@@ -13,12 +13,12 @@ _pkgver_images_vendor_arm="18.1-20230805"
 _pkgver_images_vendor_arm64="18.1-20230805"
 pkgname=waydroid-image
 pkgver="${_pkgver_images_system//-/_}"
-pkgrel=1
+pkgrel=2
 pkgdesc="LineageOS-based Android images for Waydroid"
-arch=('x86_64' 'i686' 'armv7h' 'aarch64')
+arch=(x86_64 i686 armv7h aarch64)
 url='https://waydro.id'
-license=('Apache')
-depends=('waydroid')
+license=(Apache)
+optdepends=(waydroid)
 _srcprefix="https://sourceforge.net/projects/waydroid/files/images"
 source_x86_64=("$_srcprefix/system/lineage/waydroid_x86_64/lineage-$_pkgver_images_system-VANILLA-waydroid_x86_64-system.zip"
                "$_srcprefix/vendor/waydroid_x86_64/lineage-$_pkgver_images_vendor-MAINLINE-waydroid_x86_64-vendor.zip")
