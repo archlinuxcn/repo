@@ -27,7 +27,7 @@ sha512sums_x86_64=('ee97aa5258e05aecadc66e844fa8eef97d51e5035492999b974cc8272e4d
 package_dotnet-runtime-6.0-bin() {
   pkgdesc='The .NET Core runtime (binary)'
   depends=(
-  	"dotnet-host>=${_runtimever}"
+  	"dotnet-host-bin>=${_runtimever}"
     'gcc-libs'
     'glibc'
     'icu'
