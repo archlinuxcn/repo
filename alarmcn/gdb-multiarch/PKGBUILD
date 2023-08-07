@@ -16,6 +16,7 @@ source=(https://ftp.gnu.org/gnu/gdb/gdb-13.2.tar.xz{,.sig})
 sha256sums=('fd5bebb7be1833abdb6e023c2f498a354498281df9d05523d8915babeb893f0a'
             'SKIP')
 validpgpkeys=('F40ADB902B24264AA42E50BF92EDB04BFF325CF3') # Joel Brobecker <brobecker@adacore.com>
+options=(!lto)
 
 prepare() {
   cd gdb-$pkgver
