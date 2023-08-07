@@ -4,21 +4,21 @@
 ENABLE_FAKE_GNOME_SOFTWARE=0
 
 pkgname=pamac-aur
-pkgver=11.0.1
-pkgrel=2
+pkgver=11.6.0
+pkgrel=1
 _pkgfixver=$pkgver
-_pkgfixvercli=11.0.0
+_pkgfixvercli=11.6.0
 
-_commit='69d08b62a5217dbc98ffdea41718bf6e3a292dd6'
-_commitcli='67b7eaa139af25530b4b10788b7b3b4884b9c2ed'
-sha256sums=('057c6936b2059fd58a4dac143cefb82b9ea0607c25555a42b1d7414d80af53cf'
-            '3addc587fd1605b41b942a073db086624e528009a981d265f5282d0c2a43c076')
+_commit='9220b38c6dd16bd9c9edb48d9480945c225cb806'
+_commitcli='4a68ef57feb6d27c70a101999bcaba795d4d8588'
+sha256sums=('7331c5569759494bf9ffa64622857c6428513d65ed9bfa157906f5224ca74367'
+            '845573e577a5ba1e7fc6d6b778893b139e102c14918e4264161c5c8bc2b035f6')
 
 pkgdesc="A Gtk3 frontend, Package Manager based on libalpm with AUR and Appstream support"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://gitlab.manjaro.org/applications/pamac"
 license=('GPL3')
-depends=('libnotify' 'libpamac-aur' 'libhandy' 'libadwaita' 'gtk4' 'desktop-file-utils' 'libpamac-aur>=11.5' 'gnutls>=3.4' 'git')
+depends=('libnotify' 'libhandy' 'libadwaita' 'gtk4' 'desktop-file-utils' 'libpamac-aur>=11.6' 'gnutls>=3.4' 'git')
 
 optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
             'lxsession: needed for authentification in Xfce, LXDE etc.')
