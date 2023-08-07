@@ -4,11 +4,14 @@ maintainers:
 
 post_build: aur_post_build
 
+
 repo_depends:
   - libajantv2
   - librist
-  - cef-minimal-obs-bin
   - libdatachannel
+
+repo_makedepends:
+  - cef-minimal-obs-bin
 
 update_on:
   - source: github
