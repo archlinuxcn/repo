@@ -1,0 +1,34 @@
+# Maintainer: Hao Long <imlonghao@archlinuxcn.org>
+
+pkgname=pndpd
+pkgver=1.2.12
+pkgrel=0
+pkgdesc="NDP Proxy / Responder daemon (IPv6)"
+arch=("x86_64" "i686")
+url="https://github.com/Kioubit/pndpd"
+license=('GPL3')
+provides=('pndpd')
+conflicts=('pndpd')
+depends=('glibc')
+makedepends=('go')
+backup=("etc/pndpd.conf")
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
+b2sums=('94250c9061db61dac050eb9c80b9e6d2a347452bb9bdcc379aed6035bb4e163c8fda26d9fceeda29ccbcb857bac4828df0971d38231a911d5d2f6378b0f7ccec')
+
+build() {
+  cd ${pkgname}-${pkgver}
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+  go build .
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+  install -Dm755 pndpd -t "$pkgdir/usr/bin/"
+  install -Dm644 pndpd.conf -t "$pkgdir/etc/"
+  sed -i "s|/usr/local|/usr|" pndpd.service
+  install -Dm644 pndpd.service -t "$pkgdir/usr/lib/systemd/system/"
+}
