@@ -1,6 +1,6 @@
 _name=django-post-office
 pkgname=python-django-post-office
-pkgver=3.7.0
+pkgver=3.7.1
 pkgrel=1
 pkgdesc="A Django app to monitor and send mail asynchronously, complete with template support."
 arch=(any)
@@ -8,16 +8,16 @@ url="https://github.com/ui/django-post_office"
 license=('MIT')
 depends=('python-django-jsonfield')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/django-post_office-3.7.0.tar.gz")
-sha256sums=('753409698d65f5b24de9799ed14e7591e1b641f1ec1733a3d446affaa2d3af83')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/django-post_office-3.7.1.tar.gz")
+sha256sums=('b34402b2fba61125f17c6d0ce479e6dede6585ce7cd6bbb5b85e320384e63c49')
 
 build() {
-  cd "$srcdir/django-post_office-3.7.0"
+  cd "$srcdir/django-post_office-3.7.1"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/django-post_office-3.7.0"
+  cd "$srcdir/django-post_office-3.7.1"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install any world-writable or root-readable-only files
