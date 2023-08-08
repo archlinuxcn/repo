@@ -1,0 +1,19 @@
+[Unit]
+Description=Lemmy - A link aggregator for the fediverse
+After=network.target
+
+[Service]
+User=lemmy
+ExecStart=/usr/bin/lemmy_server
+Environment=LEMMY_CONFIG_LOCATION=/etc/lemmy/lemmy.hjson
+Environment=RUST_LOG=info
+Restart=on-failure
+
+# Hardening
+ProtectSystem=yes
+PrivateTmp=true
+MemoryDenyWriteExecute=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
