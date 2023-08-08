@@ -6,6 +6,9 @@ update_on:
   lilac_throttle: 3d
 - alias: python
 - alias: ruby
-- alias: perl
+# doesn't build with perl 5.38
+# - alias: perl
+- source: manual
+  manual: 5.36
 - source: manual
   manual: 6

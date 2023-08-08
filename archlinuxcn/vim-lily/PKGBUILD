@@ -8,7 +8,7 @@ pkgrel=1
 arch=('i686' 'x86_64')
 license=('custom:vim')
 url="http://www.vim.org"
-makedepends=('gpm' 'gtk3' 'perl' 'python' 'ruby' 'gettext'
+makedepends=('gpm' 'gtk3' 'python' 'ruby' 'gettext'
              'pkg-config' 'sed' 'luajit' 'git' 'tar' 'desktop-file-utils' 'libxt')
 source=('vimdoc.hook'
         "vim-repo::git://localhost/vim")
@@ -48,7 +48,6 @@ build() {
       --enable-cscope \
       --enable-luainterp=dynamic \
       --enable-multibyte \
-      --enable-perlinterp=dynamic \
       --enable-python3interp=dynamic \
       --enable-rubyinterp=dynamic \
       --enable-terminal \
@@ -75,7 +74,7 @@ build() {
 package_vim-lily() {
   pkgdesc='Vi Improved, a highly configurable, improved version of the vi text editor with additional scripting support'
   depends=('gpm' 'vim-runtime-lily' 'acl')
-  optdepends=('luajit' 'ruby' 'python' 'perl')
+  optdepends=('luajit' 'ruby' 'python')
   conflicts=('vim' 'gvim' 'vim-minimal')
   provides=("vim=${pkgver}-${pkgrel}" xxd vim-minimal vim-plugin-runtime)
 
@@ -105,7 +104,7 @@ package_vim-lily() {
 package_gvim-lily() {
   pkgdesc='Vi Improved, a highly configurable, improved version of the vi text editor (with advanced features, such as a GUI) with additional scripting support'
   depends=('gpm' 'gtk3' 'vim-runtime-lily' 'desktop-file-utils' 'libxt')
-  optdepends=('luajit' 'ruby' 'python' 'perl')
+  optdepends=('luajit' 'ruby' 'python')
   conflicts=('vim' 'gvim' 'vim-minimal')
   provides=("vim=${pkgver}-${pkgrel}" "gvim=${pkgver}-${pkgrel}" xxd vim-plugin-runtime)
 
