@@ -5,6 +5,10 @@ maintainers:
 pre_build_script: aur_pre_build(maintainers=['Gr3q'])
 post_build: aur_post_build
 
+repo_depends:
+  - dotnet-core-bin: dotnet-host-bin
+  - dotnet-core-bin: netstandard-targeting-pack-bin
+
 update_on:
   - source: aur
     aur: dotnet-runtime-6.0-bin
