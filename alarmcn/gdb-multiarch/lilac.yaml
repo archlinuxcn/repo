@@ -8,5 +8,4 @@ post_build_script: git_pkgbuild_commit()
 update_on:
   - source: archpkg
     archpkg: gdb
-
-  - source: manual
+    strip_release: true
