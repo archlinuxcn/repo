@@ -2,7 +2,7 @@
 pkgname=waylyrics-git
 _pkgname=waylyrics
 _appname="io.poly000.${_pkgname}"
-pkgver=0.1.0_r224.g8f8c28c
+pkgver=0.1.0_r240.g4ccb65f
 pkgrel=1
 pkgdesc="On screen lyrics for wayland with netease cloud music source"
 url="https://github.com/waylyrics/waylyrics"
