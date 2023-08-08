@@ -4,7 +4,7 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=audacity-git
-pkgver=3.3.1.r110.g49cca5668
+pkgver=3.3.3.r639.g121dd14aa
 pkgrel=1
 pkgdesc="A program that lets you manipulate digital audio waveforms"
 arch=('i686' 'x86_64')
@@ -15,8 +15,9 @@ depends=(
 	'alsa-lib'
 	'expat'
 	'flac'
+	'glib2'
 	'gtk3'
-	'gst-plugins-bad-libs'
+	'hicolor-icon-theme'
 	'jack'
 	'lame'
 	'libid3tag'
@@ -28,7 +29,6 @@ depends=(
 	'libvorbis'
 	'libx11'
 	'lilv'
-	'lv2'
 	'mpg123'
 	'portaudio'
 	'portmidi'
@@ -37,13 +37,12 @@ depends=(
 	'sqlite'
 	'suil'
 	'twolame'
+	'util-linux-libs'
 	'vamp-plugin-sdk'
-	'vst3sdk'
 	'wavpack'
 	'wxwidgets-gtk3'
-	'zlib'
 )
-makedepends=('cmake' 'gcc' 'git' 'nasm')
+makedepends=('cmake' 'git' 'nasm' 'rapidjson' 'vst3sdk' 'xcb-util' 'xcb-util-cursor' 'xcb-util-keysyms' 'gtkmm3' 'libxkbcommon-x11')
 optdepends=('ffmpeg: additional import/export capabilities')
 provides=('audacity')
 conflicts=('audacity')
@@ -57,7 +56,7 @@ pkgver() {
 
 build() {
   export CC=gcc
-  export VST3_SDK_DIR='/usr/share/vst3sdk'
+  export VST3_SDK_DIR="/usr/src/vst3sdk"
 
   cmake_args=(
     -D CMAKE_BUILD_TYPE=Release
