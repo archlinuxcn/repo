@@ -1,0 +1,59 @@
+pkgname=sunshine
+pkgver=0.20.0
+pkgrel=2
+pkgdesc="A self-hosted GameStream host for Moonlight."
+arch=('x86_64' 'aarch64')
+url=https://app.lizardbyte.dev
+license=('GPL3')
+install=sunshine.install
+
+depends=('avahi' 'boost-libs' 'curl' 'libappindicator-gtk3' 'libevdev' 'libmfx' 'libpulse' 'libva' 'libvdpau' 'libx11' 'libxcb' 'libxfixes' 'libxrandr' 'libxtst' 'numactl' 'openssl' 'opus' 'udev')
+makedepends=('boost' 'cmake' 'git' 'make' 'nodejs' 'npm')
+optdepends=('cuda: NvFBC capture support'
+            'libcap'
+            'libdrm')
+
+provides=()
+conflicts=()
+
+source=("$pkgname::git+https://github.com/LizardByte/Sunshine.git#tag=v${pkgver}")
+sha256sums=('SKIP')
+
+prepare() {
+    cd "$pkgname"
+    # Skip submodules that we don't want
+    git rm -f third-party/ffmpeg-windows-x86_64
+    git rm -f third-party/ffmpeg-macos-x86_64
+    git rm -f third-party/ffmpeg-macos-aarch64
+    git rm -f third-party/ViGEmClient
+
+    if [[ $CARCH == "x86_64" ]]; then
+        git rm -f third-party/ffmpeg-linux-aarch64
+    elif [[ $CARCH == "aarch64" ]]; then
+        git rm -f third-party/ffmpeg-linux-x86_64
+    fi
+    git submodule update --recursive --init
+}
+
+build() {
+    pushd "$pkgname"
+    npm install
+    popd
+
+    export CFLAGS="${CFLAGS/-Werror=format-security/}"
+    export CXXFLAGS="${CXXFLAGS/-Werror=format-security/}"
+
+    cmake \
+        -S "$pkgname" \
+        -B build \
+        -Wno-dev \
+        -D CMAKE_INSTALL_PREFIX=/usr \
+        -D SUNSHINE_EXECUTABLE_PATH=/usr/bin/sunshine \
+        -D SUNSHINE_ASSETS_DIR="share/sunshine"
+
+    make -C build
+}
+
+package() {
+    make -C build install DESTDIR="$pkgdir"
+}
