@@ -2,7 +2,7 @@
 
 pkgname=python-pyreadr
 _pkgname=pyreadr
-pkgver=0.4.8
+pkgver=0.4.9
 pkgrel=1
 pkgdesc='Read and write R RData and Rds files into/from pandas dataframes'
 arch=('x86_64')
@@ -25,7 +25,7 @@ optdepends=(
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ofajardo/pyreadr/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha512sums=('2fbebb97be654ef102ac5c78a661bfa2a7f7cdc5500c55893ce2f7a4695fc6b33423e5e61e2cdf42b9ba8df5500b04bc3ff76f215112b16ba704ca387886e5b0')
+sha512sums=('af60a72317b69b73aeffed981cf4145014c0a01c05d12adbc075b52d1692f5a4154ad199ad083fb549ecfbdb33566003e1817f17d7ff1599770948124e2f5970')
 
 build() {
   cd "${_pkgname}-${pkgver}"
