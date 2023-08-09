@@ -1,0 +1,11 @@
+maintainers:
+  - github: aimixsaka
+    email: aimixsaka@gmail.com
+
+pre_build_script: aur_pre_build(maintainers=['LizardByte', 'KuleRucket'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: sunshine
