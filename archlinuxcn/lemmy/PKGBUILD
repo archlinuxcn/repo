@@ -1,8 +1,8 @@
 # Maintainer: George Rawlinson <grawlinson@archlinux.org>
 
 pkgname=lemmy
-pkgver=0.18.3
-pkgrel=3
+pkgver=0.18.4
+pkgrel=1
 pkgdesc='A link aggregator for the fediverse'
 arch=('x86_64')
 url='https://join-lemmy.org'
@@ -22,7 +22,7 @@ optdepends=(
 )
 backup=('etc/lemmy/lemmy.hjson')
 options=('!lto')
-_commit='9ef4da19fc12c9d6963e1d1746dad44bdb40407c'
+_commit='3dd4f74cb6b9e790f1756dba9c0bf72b2911e55b'
 source=(
   "$pkgname::git+https://github.com/LemmyNet/lemmy.git#commit=$_commit"
   'git+https://github.com/LemmyNet/lemmy-translations.git'
