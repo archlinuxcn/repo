@@ -2,7 +2,7 @@
 
 _pkgname="hyprland"
 pkgname="${_pkgname}-nvidia"
-pkgver="0.27.2"
+pkgver="0.28.0"
 pkgrel=1
 pkgdesc="A dynamic tiling Wayland compositor based on wlroots that doesn't sacrifice on its looks. (NVIDIA patch)"
 arch=(any)
@@ -53,7 +53,7 @@ source=("${pkgname}-${pkgver}.tar.gz::https://github.com/hyprwm/Hyprland/release
         "nvidia.patch")
 conflicts=("${_pkgname}")
 provides=(hyprland)
-sha256sums=('1cb1b345fd98e80cb04ba60c7bb42ead6b6ad79898f84b468f3ba87459d99f1f'
+sha256sums=('baf355cb4e301b27de59fa5fc503b7338eed1bc921fcf76b73629504a00ffefd'
             '10223a97a622ea7e641b4305a9a4f7bf0cb0526dacfbfa5970171558b3a63488')
 options=(!makeflags !buildflags !strip)
 
