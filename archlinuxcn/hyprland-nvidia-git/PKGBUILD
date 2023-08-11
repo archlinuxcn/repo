@@ -8,7 +8,7 @@ pkgdesc="A dynamic tiling Wayland compositor based on wlroots that doesn't sacri
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/hyprwm/Hyprland"
 license=('BSD')
-depends=("libdisplay-info.so"
+depends=(
 	libxcb
 	xcb-proto
 	xcb-util
@@ -51,19 +51,20 @@ makedepends=(
 	wayland-protocols
 	xorgproto)
 source=("${_pkgname}::git+https://github.com/hyprwm/Hyprland.git"
-        "nvidia.patch")
+	"nvidia.patch")
 conflicts=("${_pkgname}")
 provides=(hyprland)
 sha256sums=('SKIP'
-            'c200d341641ee20a13b1893e27a9d823e9ef5ac2378e3cdecd0efc55a713db1c')
+	'c200d341641ee20a13b1893e27a9d823e9ef5ac2378e3cdecd0efc55a713db1c')
 options=(!makeflags !buildflags !strip)
 
 pkgver() {
-  cd "$_pkgname"
-  ( set -o pipefail
-    git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-  )
+	cd "$_pkgname"
+	(
+		set -o pipefail
+		git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+			printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+	)
 }
 
 build() {
@@ -73,9 +74,9 @@ build() {
 	patch --directory="$srcdir/$_pkgname/subprojects/wlroots/" --forward --strip=0 \
 		--input="${srcdir}/nvidia.patch"
 	cd "./subprojects/wlroots/" && meson build/ --prefix="${srcdir}/tmpwlr" --buildtype=release && ninja -C build/ && mkdir -p "${srcdir}/tmpwlr" && ninja -C build/ install && cd ../
-    cd udis86 && cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -H./ -B./build -G Ninja && cmake --build ./build --config Release --target all -j$(shell nproc) && cd ../..
+	cd udis86 && cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -H./ -B./build -G Ninja && cmake --build ./build --config Release --target all -j$(shell nproc) && cd ../..
 	make protocols
-    make release
+	make release
 	cd ./hyprctl && make all && cd ..
 }
 
