@@ -1,6 +1,6 @@
 pkgname=apache-tools
 pkgver=2.4.57
-pkgrel=1
+pkgrel=2
 pkgdesc="Useful Apache tools - htdigest, htpasswd, ab (Apache Benchmark), htdbm"
 arch=("i686" "x86_64" "armv6h" "armv7h" "aarch64")
 url="http://httpd.apache.org/"
@@ -27,5 +27,6 @@ build() {
 package() {
     make -C httpd-$pkgver/support DESTDIR="$pkgdir" install
     make -C httpd-$pkgver DESTDIR="$pkgdir" install-man
-
+    mkdir "$pkgdir/usr/share"
+    mv "$pkgdir/usr/man" "$pkgdir/usr/share/man"
 }
