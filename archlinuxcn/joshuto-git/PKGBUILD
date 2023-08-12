@@ -1,0 +1,41 @@
+# Maintainer: seth <getchoo at tuta dot io>
+
+pkgname=joshuto-git
+_pkgname=joshuto
+pkgver=0.9.5.r25.gfc2fdf3
+pkgrel=1
+pkgdesc="ranger-like terminal file manager written in Rust"
+arch=('x86_64' 'aarch64')
+url="https://github.com/kamiyaa/joshuto"
+license=('LGPL3')
+makedepends=('git' 'cargo')
+optdepends=(
+	'fzf: for better file searching'
+	'xclip: for clipboard support on X11'
+	'xsel: for clipboard support on X11'
+	'wl-clipboard: for clipboard support on Wayland'
+)
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+prepare() {
+	cd "${_pkgname}"
+	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+	cd "${_pkgname}"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	cargo build --frozen --release --all-features
+}
+
+package() {
+	cd "${_pkgname}"
+	install -Dm0755 -t "${pkgdir}/usr/bin/" "target/release/${_pkgname}"
+}
