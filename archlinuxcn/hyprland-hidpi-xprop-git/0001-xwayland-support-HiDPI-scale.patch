@@ -1,7 +1,7 @@
-From 5d04dc68d7a952c2b98cab7af60bba93bee2dec7 Mon Sep 17 00:00:00 2001
+From 179258208d98fe3755b414749e9776e96d3b1dad Mon Sep 17 00:00:00 2001
 From: lilydjwg <lilydjwg@gmail.com>
 Date: Wed, 17 Nov 2021 19:34:58 +0800
-Subject: [PATCH 1/2] xwayland: support HiDPI scale
+Subject: [PATCH 1/3] xwayland: support HiDPI scale
 
 This supports the xorg-xwayland patch at https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/733
 ---
@@ -30,7 +30,7 @@ index 3d540522..33ff1478 100644
  	xcb_atom_t atoms[ATOM_LAST];
  	xcb_connection_t *xcb_conn;
 diff --git a/xwayland/xwm.c b/xwayland/xwm.c
-index 5f857f24..4f03b07c 100644
+index 0c30d8f6..59e9ce06 100644
 --- a/xwayland/xwm.c
 +++ b/xwayland/xwm.c
 @@ -19,6 +19,14 @@
@@ -56,7 +56,7 @@ index 5f857f24..4f03b07c 100644
  };
  
  #define STARTUP_INFO_REMOVE_PREFIX "remove: ID="
-@@ -965,8 +974,8 @@ static void xwm_handle_create_notify(struct wlr_xwm *xwm,
+@@ -962,8 +971,8 @@ static void xwm_handle_create_notify(struct wlr_xwm *xwm,
  		return;
  	}
  
@@ -67,7 +67,7 @@ index 5f857f24..4f03b07c 100644
  }
  
  static void xwm_handle_destroy_notify(struct wlr_xwm *xwm,
-@@ -997,10 +1006,10 @@ static void xwm_handle_configure_request(struct wlr_xwm *xwm,
+@@ -994,10 +1003,10 @@ static void xwm_handle_configure_request(struct wlr_xwm *xwm,
  
  	struct wlr_xwayland_surface_configure_event wlr_event = {
  		.surface = surface,
@@ -82,7 +82,7 @@ index 5f857f24..4f03b07c 100644
  		.mask = mask,
  	};
  
-@@ -1015,14 +1024,14 @@ static void xwm_handle_configure_notify(struct wlr_xwm *xwm,
+@@ -1012,14 +1021,14 @@ static void xwm_handle_configure_notify(struct wlr_xwm *xwm,
  	}
  
  	bool geometry_changed =
@@ -103,7 +103,7 @@ index 5f857f24..4f03b07c 100644
  	}
  
  	if (xsurface->override_redirect != ev->override_redirect) {
-@@ -1132,7 +1141,22 @@ static void xwm_handle_unmap_notify(struct wlr_xwm *xwm,
+@@ -1136,7 +1145,22 @@ static void xwm_handle_unmap_notify(struct wlr_xwm *xwm,
  static void xwm_handle_property_notify(struct wlr_xwm *xwm,
  		xcb_property_notify_event_t *ev) {
  	struct wlr_xwayland_surface *xsurface = lookup_surface(xwm, ev->window);
@@ -126,7 +126,7 @@ index 5f857f24..4f03b07c 100644
  		return;
  	}
  
-@@ -1769,7 +1793,7 @@ void wlr_xwayland_surface_configure(struct wlr_xwayland_surface *xsurface,
+@@ -1770,7 +1794,7 @@ void wlr_xwayland_surface_configure(struct wlr_xwayland_surface *xsurface,
  	uint32_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y |
  		XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT |
  		XCB_CONFIG_WINDOW_BORDER_WIDTH;
@@ -135,7 +135,7 @@ index 5f857f24..4f03b07c 100644
  	xcb_configure_window(xwm->xcb_conn, xsurface->window_id, mask, values);
  
  	// If the window size did not change, then we cannot rely on
-@@ -2122,6 +2146,7 @@ struct wlr_xwm *xwm_create(struct wlr_xwayland *xwayland, int wm_fd) {
+@@ -2123,6 +2147,7 @@ struct wlr_xwm *xwm_create(struct wlr_xwayland *xwayland, int wm_fd) {
  	wl_list_init(&xwm->pending_startup_ids);
  	xwm->ping_timeout = 10000;
  
@@ -144,5 +144,5 @@ index 5f857f24..4f03b07c 100644
  
  	int rc = xcb_connection_has_error(xwm->xcb_conn);
 -- 
-2.39.2
+2.41.0
 

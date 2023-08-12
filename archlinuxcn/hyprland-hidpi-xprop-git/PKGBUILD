@@ -5,7 +5,7 @@
 
 _pkgname="hyprland"
 pkgname="${_pkgname}-hidpi-xprop-git"
-pkgver=r3198.3f7f4207
+pkgver=0.28.0.r34.3f7f4207
 pkgrel=1
 pkgdesc="A dynamic tiling Wayland compositor based on wlroots that doesn't sacrifice on its looks."
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
@@ -54,23 +54,21 @@ source=("${_pkgname}::git+https://github.com/hyprwm/Hyprland.git"
         "git+https://github.com/hyprwm/hyprland-protocols.git"
         "git+https://github.com/canihavesomecoffee/udis86.git"
         "0001-xwayland-support-HiDPI-scale.patch"
-        "0002-Fix-configure_notify-event.patch")
+        "0002-Fix-configure_notify-event.patch"
+        "0003-Fix-size-hints-under-Xwayland-scaling.patch")
 conflicts=("${_pkgname}")
 provides=(hyprland)
 sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'e3e3dab89f6cadeb330e03921c0485b2802be6a1267747237e702cbe6d02d65f'
-            '97105bee80596fd4aa21dde35d23847604a5b0e36c04b1679f7a2b9213774561')
+            '2fd861a76fb7a6b0bba12e7d307ad655e40ec93a84c88dfc00571aac6e119e85'
+            '1314d0ee63a4249698791d86cce5e6cdb4f005b81bbb1c6a747578d2a9223795'
+            'c08dd62a1786eeb7506f1839bfcbba791502360392c929e620244f70c8ca5b61')
 options=(debug)
 
 pkgver() {
-  cd "$_pkgname"
-  ( set -o pipefail
-    git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-  )
+	git -C "${_pkgname}" describe --long --tags | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g'
 }
 
 prepare() {
@@ -87,11 +85,13 @@ prepare() {
 	git revert -n 18595000f3a21502fd60bf213122859cc348f9af
 	patch -Np1 -i "${srcdir}"/0001-xwayland-support-HiDPI-scale.patch
 	patch -Np1 -i "${srcdir}"/0002-Fix-configure_notify-event.patch
+	patch -Np1 -i "${srcdir}"/0003-Fix-size-hints-under-Xwayland-scaling.patch
+	cd "${srcdir}/${_pkgname}"
+	make fixwlr
 }
 
 build() {
 	cd "${srcdir}/${_pkgname}"
-	make fixwlr
 	cd "./subprojects/wlroots/" && meson setup build/ --prefix="${srcdir}/tmpwlr" --buildtype=plain && ninja -C build/ && mkdir -p "${srcdir}/tmpwlr" && ninja -C build/ install && cd ../..
 	cd "./subprojects/udis86/" && cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=None -H./ -B./build -G Ninja && cmake --build ./build --target all && cd ../..
 	mkdir -p build && cd build
