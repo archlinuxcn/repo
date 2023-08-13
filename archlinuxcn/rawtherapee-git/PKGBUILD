@@ -3,14 +3,14 @@
 
 pkgname=rawtherapee-git
 pkgver=5.9.r258.gbd94fbd6b
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="A powerful cross-platform raw image processing program"
 arch=(x86_64 i686 pentium4 arm armv6h armv7h aarch64)
 url="https://www.rawtherapee.com/"
 license=(GPL3)
 depends=(fftw gtk3 glibmm gtkmm3 lcms2 lensfun libcanberra
-         libiptcdata desktop-file-utils hicolor-icon-theme)
+         libiptcdata desktop-file-utils hicolor-icon-theme exiv2)
 makedepends=(cmake git)
 provides=(rawtherapee)
 conflicts=(rawtherapee)
