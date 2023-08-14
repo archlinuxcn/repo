@@ -1,0 +1,364 @@
+diff --color -rupN citra/src/audio_core/hle/source.cpp citra/src/audio_core/hle/source.cpp
+--- citra/src/audio_core/hle/source.cpp	2023-08-14 11:32:21.000000000 +0800
++++ citra/src/audio_core/hle/source.cpp	2023-08-14 11:33:50.262141657 +0800
+@@ -248,7 +248,7 @@ void Source::ParseConfig(SourceConfigura
+             LOG_ERROR(Audio_DSP,
+                       "Skipping embedded buffer sample! Game passed in improper value for length. "
+                       "addr {:X} length {:X}",
+-                      config.physical_address, config.length);
++                      static_cast<int>(config.physical_address), static_cast<int>(config.length));
+         } else {
+             state.input_queue.emplace(Buffer{
+                 config.physical_address,
+@@ -285,7 +285,7 @@ void Source::ParseConfig(SourceConfigura
+                     LOG_ERROR(Audio_DSP,
+                               "Skipping buffer queue sample! Game passed in improper value for "
+                               "length. addr {:X} length {:X}",
+-                              b.physical_address, b.length);
++                              static_cast<int>(b.physical_address), static_cast<int>(b.length));
+                 } else {
+                     state.input_queue.emplace(Buffer{
+                         b.physical_address,
+diff --color -rupN citra/src/core/hw/gpu.h citra/src/core/hw/gpu.h
+--- citra/src/core/hw/gpu.h	2023-08-14 12:23:59.311762525 +0800
++++ citra/src/core/hw/gpu.h	2023-08-14 12:23:59.311762525 +0800
+@@ -186,7 +186,7 @@ struct Regs {
+             return fmt::format("from {:#x} to {:#x} with {} scaling and stride {}, width {}",
+                                GetPhysicalInputAddress(), GetPhysicalOutputAddress(),
+                                scaling == NoScale ? "no" : (scaling == ScaleX ? "X" : "XY"),
+-                               input_width, output_width);
++                               (int)input_width, (int)output_width);
+         }
+ 
+         union {
+diff --color -rupN citra/src/video_core/renderer_vulkan/vk_shader_gen.cpp citra/src/video_core/renderer_vulkan/vk_shader_gen.cpp 
+--- citra/src/video_core/renderer_vulkan/vk_shader_gen.cpp	2023-08-14 12:37:35.737658821 +0800
++++ citra/src/video_core/renderer_vulkan/vk_shader_gen.cpp	2023-08-14 12:37:35.737658821 +0800
+@@ -619,7 +619,7 @@ static void WriteLighting(std::string& o
+ 
+     // Compute fragment normals and tangents
+     const auto perturbation = [&] {
+-        return fmt::format("2.0 * (sampleTexUnit{}()).rgb - 1.0", lighting.bump_selector);
++        return fmt::format("2.0 * (sampleTexUnit{}()).rgb - 1.0", int(lighting.bump_selector));
+     };
+ 
+     switch (lighting.bump_mode) {
+@@ -663,7 +663,7 @@ static void WriteLighting(std::string& o
+            "vec3 tangent = quaternion_rotate(normalized_normquat, surface_tangent);\n";
+ 
+     if (lighting.enable_shadow) {
+-        std::string shadow_texture = fmt::format("sampleTexUnit{}()", lighting.shadow_selector);
++        std::string shadow_texture = fmt::format("sampleTexUnit{}()", int(lighting.shadow_selector));
+         if (lighting.shadow_invert) {
+             out += fmt::format("vec4 shadow = vec4(1.0) - {};\n", shadow_texture);
+         } else {
+@@ -738,7 +738,7 @@ static void WriteLighting(std::string& o
+     // Write the code to emulate each enabled light
+     for (unsigned light_index = 0; light_index < lighting.src_num; ++light_index) {
+         const auto& light_config = lighting.light[light_index];
+-        const std::string light_src = fmt::format("light_src[{}]", light_config.num);
++        const std::string light_src = fmt::format("light_src[{}]", int(light_config.num));
+ 
+         // Compute light vector (directional or positional)
+         if (light_config.directional) {
+@@ -1088,7 +1088,7 @@ float ProcTexNoiseCoef(vec2 x) {
+ 
+     out += "vec4 ProcTex() {\n";
+     if (config.state.proctex.coord < 3) {
+-        out += fmt::format("vec2 uv = abs(texcoord{});\n", config.state.proctex.coord);
++        out += fmt::format("vec2 uv = abs(texcoord{});\n", int(config.state.proctex.coord));
+     } else {
+         LOG_CRITICAL(Render_OpenGL, "Unexpected proctex.coord >= 3");
+         out += "vec2 uv = abs(texcoord0);\n";
+@@ -1432,7 +1432,7 @@ vec4 shadowTextureCube(vec2 uv, float w)
+                 out += "return shadowTextureCube(texcoord0, texcoord0_w);";
+                 break;
+             default:
+-                LOG_CRITICAL(HW_GPU, "Unhandled texture type {:x}", state.texture0_type);
++                LOG_CRITICAL(HW_GPU, "Unhandled texture type {:x}", static_cast<int>(state.texture0_type));
+                 UNIMPLEMENTED();
+                 out += "return texture(tex0, texcoord0);";
+                 break;
+diff --color -rupN citra/src/video_core/renderer_vulkan/vk_shader_gen_spv.cpp citra/src/video_core/renderer_vulkan/vk_shader_gen_spv.cpp 
+--- citra/src/video_core/renderer_vulkan/vk_shader_gen_spv.cpp	2023-08-14 12:37:35.737658821 +0800
++++ citra/src/video_core/renderer_vulkan/vk_shader_gen_spv.cpp	2023-08-14 12:37:35.737658821 +0800
+@@ -976,7 +976,7 @@ void FragmentModule::DefineTexSampler(u3
+             // return "shadowTextureCube(texcoord0, texcoord0_w)";
+             break;
+         default:
+-            LOG_CRITICAL(Render_Vulkan, "Unhandled texture type {:x}", state.texture0_type);
++            LOG_CRITICAL(Render_Vulkan, "Unhandled texture type {:x}", static_cast<int>(state.texture0_type));
+             UNIMPLEMENTED();
+             ret_val = zero_vec;
+             break;
+diff --color -rupN citra/src/core/hle/service/cecd/cecd.cpp	citra/src/core/hle/service/cecd/cecd.cpp 
+--- citra/src/core/hle/service/cecd/cecd.cpp	2023-08-14 12:37:35.737658821 +0800
++++ citra/src/core/hle/service/cecd/cecd.cpp	2023-08-14 12:37:35.737658821 +0800
+@@ -124,8 +124,8 @@ void Module::Interface::Open(Kernel::HLE
+     LOG_DEBUG(Service_CECD,
+               "called, ncch_program_id={:#010x}, path_type={:#04x}, path={}, "
+               "open_mode: raw={:#x}, unknown={}, read={}, write={}, create={}, check={}",
+-              ncch_program_id, path_type, path.AsString(), open_mode.raw, open_mode.unknown,
+-              open_mode.read, open_mode.write, open_mode.create, open_mode.check);
++              ncch_program_id, path_type, path.AsString(), open_mode.raw, static_cast<int>(open_mode.unknown),
++              static_cast<int>(open_mode.read), static_cast<int>(open_mode.write), static_cast<int>(open_mode.create), static_cast<int>(open_mode.check));
+ }
+
+ void Module::Interface::Read(Kernel::HLERequestContext& ctx) {
+@@ -139,9 +139,9 @@ void Module::Interface::Read(Kernel::HLE
+               "path={}, open_mode: raw={:#x}, unknown={}, read={}, write={}, create={}, check={}",
+               session_data->ncch_program_id, session_data->data_path_type,
+               session_data->path.AsString(), session_data->open_mode.raw,
+-              session_data->open_mode.unknown, session_data->open_mode.read,
+-              session_data->open_mode.write, session_data->open_mode.create,
+-              session_data->open_mode.check);
++              static_cast<int>(session_data->open_mode.unknown), static_cast<int>(session_data->open_mode.read),
++              static_cast<int>(session_data->open_mode.write), static_cast<int>(session_data->open_mode.create),
++              static_cast<int>(session_data->open_mode.check));
+
+     IPC::RequestBuilder rb = rp.MakeBuilder(2, 2);
+     switch (session_data->data_path_type) {
+@@ -344,9 +344,9 @@ void Module::Interface::Write(Kernel::HL
+               "path={}, open_mode: raw={:#x}, unknown={}, read={}, write={}, create={}, check={}",
+               session_data->ncch_program_id, session_data->data_path_type,
+               session_data->path.AsString(), session_data->open_mode.raw,
+-              session_data->open_mode.unknown, session_data->open_mode.read,
+-              session_data->open_mode.write, session_data->open_mode.create,
+-              session_data->open_mode.check);
++              static_cast<int>(session_data->open_mode.unknown), static_cast<int>(session_data->open_mode.read),
++              static_cast<int>(session_data->open_mode.write), static_cast<int>(session_data->open_mode.create),
++              static_cast<int>(session_data->open_mode.check));
+
+     IPC::RequestBuilder rb = rp.MakeBuilder(1, 2);
+     switch (session_data->data_path_type) {
+@@ -688,8 +688,8 @@ void Module::Interface::GetCecInfoBuffer
+     rb.Push(RESULT_SUCCESS);
+     rb.PushMappedBuffer(buffer);
+
+-    LOG_DEBUG(Service_CECD, "called, buffer_size={}, possible_info_type={}", buffer_size,
+-              possible_info_type);
++    LOG_DEBUG(Service_CECD, "called, buffer_size={}, possible_info_type={}", static_cast<u32>(buffer_size),
++              static_cast<u32>(possible_info_type));
+ }
+
+ void Module::Interface::GetCecdState(Kernel::HLERequestContext& ctx) {
+@@ -778,8 +778,8 @@ void Module::Interface::OpenAndWrite(Ker
+               "called, ncch_program_id={:#010x}, path_type={:#04x}, path={}, buffer_size={:#x} "
+               "open_mode: raw={:#x}, unknown={}, read={}, write={}, create={}, check={}",
+               ncch_program_id, path_type, path.AsString(), buffer_size, open_mode.raw,
+-              open_mode.unknown, open_mode.read, open_mode.write, open_mode.create,
+-              open_mode.check);
++              static_cast<int>(open_mode.unknown), static_cast<int>(open_mode.read), static_cast<int>(open_mode.write), static_cast<int>(open_mode.create),
++              static_cast<int>(open_mode.check));
+ }
+
+ void Module::Interface::OpenAndRead(Kernel::HLERequestContext& ctx) {
+@@ -831,8 +831,8 @@ void Module::Interface::OpenAndRead(Kern
+               "called, ncch_program_id={:#010x}, path_type={:#04x}, path={}, buffer_size={:#x} "
+               "open_mode: raw={:#x}, unknown={}, read={}, write={}, create={}, check={}",
+               ncch_program_id, path_type, path.AsString(), buffer_size, open_mode.raw,
+-              open_mode.unknown, open_mode.read, open_mode.write, open_mode.create,
+-              open_mode.check);
++              static_cast<int>(open_mode.unknown), static_cast<int>(open_mode.read), static_cast<int>(open_mode.write), static_cast<int>(open_mode.create),
++              static_cast<int>(open_mode.check));
+ }
+
+ std::string Module::EncodeBase64(std::span<const u8> in) const {
+@@ -955,7 +955,7 @@ void Module::CheckAndUpdateFile(const Ce
+                   mbox_list_header.magic, mbox_list_header.version, mbox_list_header.num_boxes);
+
+         if (file_size != sizeof(CecMBoxListHeader)) { // 0x18C
+-            LOG_DEBUG(Service_CECD, "CecMBoxListHeader size is incorrect: {}", file_size);
++            LOG_DEBUG(Service_CECD, "CecMBoxListHeader size is incorrect: {}", static_cast<u32>(file_size));
+         }
+
+         if (mbox_list_header.magic != 0x6868) { // 'hh'
+@@ -963,7 +963,7 @@ void Module::CheckAndUpdateFile(const Ce
+                 LOG_DEBUG(Service_CECD, "CecMBoxListHeader magic number is not set");
+             } else {
+                 LOG_DEBUG(Service_CECD, "CecMBoxListHeader magic number is incorrect: {}",
+-                          mbox_list_header.magic);
++                          static_cast<int>(mbox_list_header.magic));
+             }
+             std::memset(&mbox_list_header, 0, sizeof(CecMBoxListHeader));
+             mbox_list_header.magic = 0x6868;
+@@ -974,13 +974,13 @@ void Module::CheckAndUpdateFile(const Ce
+                 LOG_DEBUG(Service_CECD, "CecMBoxListHeader version is not set");
+             else
+                 LOG_DEBUG(Service_CECD, "CecMBoxListHeader version is incorrect: {}",
+-                          mbox_list_header.version);
++                          static_cast<int>(mbox_list_header.version));
+             mbox_list_header.version = 0x01;
+         }
+
+         if (mbox_list_header.num_boxes > 24) {
+             LOG_DEBUG(Service_CECD, "CecMBoxListHeader number of boxes is too large: {}",
+-                      mbox_list_header.num_boxes);
++                      static_cast<int>(mbox_list_header.num_boxes));
+         } else {
+             std::vector<u8> name_buffer(name_size);
+             std::memset(name_buffer.data(), 0, name_size);
+@@ -1021,7 +1021,7 @@ void Module::CheckAndUpdateFile(const Ce
+                 const u32 entry_count = root_dir->Read(max_num_boxes + 1, entries.data());
+                 root_dir->Close();
+
+-                LOG_DEBUG(Service_CECD, "Number of entries found in /CEC: {}", entry_count);
++                LOG_DEBUG(Service_CECD, "Number of entries found in /CEC: {}", static_cast<u32>(entry_count));
+
+                 std::string mbox_list_name("MBoxList____");
+                 std::string file_name;
+@@ -1054,7 +1054,7 @@ void Module::CheckAndUpdateFile(const Ce
+                   mbox_info_header.flag, mbox_info_header.flag2);
+
+         if (file_size != sizeof(CecMBoxInfoHeader)) { // 0x60
+-            LOG_DEBUG(Service_CECD, "CecMBoxInfoHeader size is incorrect: {}", file_size);
++            LOG_DEBUG(Service_CECD, "CecMBoxInfoHeader size is incorrect: {}", static_cast<int>(file_size));
+         }
+
+         if (mbox_info_header.magic != 0x6363) { // 'cc'
+@@ -1062,7 +1062,7 @@ void Module::CheckAndUpdateFile(const Ce
+                 LOG_DEBUG(Service_CECD, "CecMBoxInfoHeader magic number is not set");
+             else
+                 LOG_DEBUG(Service_CECD, "CecMBoxInfoHeader magic number is incorrect: {}",
+-                          mbox_info_header.magic);
++                          static_cast<int>(mbox_info_header.magic));
+             mbox_info_header.magic = 0x6363;
+         }
+
+@@ -1071,7 +1071,7 @@ void Module::CheckAndUpdateFile(const Ce
+                 LOG_DEBUG(Service_CECD, "CecMBoxInfoHeader program id is not set");
+             else
+                 LOG_DEBUG(Service_CECD, "CecMBoxInfoHeader program id doesn't match current id: {}",
+-                          mbox_info_header.program_id);
++                          static_cast<int>(mbox_info_header.program_id));
+         }
+
+         std::memcpy(file_buffer.data(), &mbox_info_header, sizeof(CecMBoxInfoHeader));
+@@ -1096,7 +1096,7 @@ void Module::CheckAndUpdateFile(const Ce
+                 LOG_DEBUG(Service_CECD, "CecInBoxInfoHeader magic number is not set");
+             else
+                 LOG_DEBUG(Service_CECD, "CecInBoxInfoHeader magic number is incorrect: {}",
+-                          inbox_info_header.magic);
++                          static_cast<int>(inbox_info_header.magic));
+             inbox_info_header.magic = 0x6262;
+         }
+
+@@ -1104,8 +1104,8 @@ void Module::CheckAndUpdateFile(const Ce
+             if (inbox_info_header.box_info_size == 0)
+                 LOG_DEBUG(Service_CECD, "CecInBoxInfoHeader box info size is not set");
+             else
+-                LOG_DEBUG(Service_CECD, "CecInBoxInfoHeader box info size is incorrect:",
+-                          inbox_info_header.box_info_size);
++                LOG_DEBUG(Service_CECD, "CecInBoxInfoHeader box info size is incorrect: {}",
++                          static_cast<int>(inbox_info_header.box_info_size));
+             inbox_info_header.box_info_size = sizeof(CecBoxInfoHeader);
+         }
+
+@@ -1113,14 +1113,14 @@ void Module::CheckAndUpdateFile(const Ce
+             LOG_DEBUG(Service_CECD, "CecInBoxInfoHeader max box size is not set");
+         } else if (inbox_info_header.max_box_size > 0x100000) {
+             LOG_DEBUG(Service_CECD, "CecInBoxInfoHeader max box size is too large: {}",
+-                      inbox_info_header.max_box_size);
++                      static_cast<int>(inbox_info_header.max_box_size));
+         }
+
+         if (inbox_info_header.max_message_num == 0) {
+             LOG_DEBUG(Service_CECD, "CecInBoxInfoHeader max message number is not set");
+         } else if (inbox_info_header.max_message_num > 99) {
+             LOG_DEBUG(Service_CECD, "CecInBoxInfoHeader max message number is too large: {}",
+-                      inbox_info_header.max_message_num);
++                      static_cast<int>(inbox_info_header.max_message_num));
+         }
+
+         if (inbox_info_header.max_message_size == 0) {
+@@ -1158,7 +1158,7 @@ void Module::CheckAndUpdateFile(const Ce
+                 LOG_DEBUG(Service_CECD, "CecOutBoxInfoHeader magic number is not set");
+             else
+                 LOG_DEBUG(Service_CECD, "CecOutBoxInfoHeader magic number is incorrect: {}",
+-                          outbox_info_header.magic);
++                          static_cast<int>(outbox_info_header.magic));
+             outbox_info_header.magic = 0x6262;
+         }
+
+@@ -1166,8 +1166,8 @@ void Module::CheckAndUpdateFile(const Ce
+             if (outbox_info_header.box_info_size == 0)
+                 LOG_DEBUG(Service_CECD, "CecOutBoxInfoHeader box info size is not set");
+             else
+-                LOG_DEBUG(Service_CECD, "CecOutBoxInfoHeader box info size is incorrect:",
+-                          outbox_info_header.box_info_size);
++                LOG_DEBUG(Service_CECD, "CecOutBoxInfoHeader box info size is incorrect: {}",
++                          static_cast<int>(outbox_info_header.box_info_size));
+             outbox_info_header.box_info_size = sizeof(CecBoxInfoHeader);
+             outbox_info_header.message_num = 0;
+         }
+@@ -1211,7 +1211,7 @@ void Module::CheckAndUpdateFile(const Ce
+             outbox_dir->Read(outbox_info_header.max_message_num + 2, entries.data());
+         outbox_dir->Close();
+
+-        LOG_DEBUG(Service_CECD, "Number of entries found in /OutBox: {}", entry_count);
++        LOG_DEBUG(Service_CECD, "Number of entries found in /OutBox: {}", static_cast<int>(entry_count));
+         std::array<CecMessageHeader, 8> message_headers;
+
+         std::string boxinfo_name("BoxInfo_____");
+@@ -1267,7 +1267,7 @@ void Module::CheckAndUpdateFile(const Ce
+         std::memcpy(&obindex_header, file_buffer.data(), sizeof(CecOBIndexHeader));
+
+         if (file_size < sizeof(CecOBIndexHeader)) { // 0x08, minimum size
+-            LOG_DEBUG(Service_CECD, "CecOBIndexHeader size is too small: {}", file_size);
++            LOG_DEBUG(Service_CECD, "CecOBIndexHeader size is too small: {}", static_cast<int>(file_size));
+         }
+
+         if (obindex_header.magic != 0x6767) { // 'gg'
+@@ -1275,7 +1275,7 @@ void Module::CheckAndUpdateFile(const Ce
+                 LOG_DEBUG(Service_CECD, "CecOBIndexHeader magic number is not set");
+             else
+                 LOG_DEBUG(Service_CECD, "CecOBIndexHeader magic number is incorrect: {}",
+-                          obindex_header.magic);
++                          static_cast<int>(obindex_header.magic));
+             obindex_header.magic = 0x6767;
+         }
+
+@@ -1286,7 +1286,7 @@ void Module::CheckAndUpdateFile(const Ce
+             }
+         } else if (obindex_header.message_num != (file_size % 8) - 1) {
+             LOG_DEBUG(Service_CECD, "CecOBIndexHeader message number is incorrect: {}",
+-                      obindex_header.message_num);
++                      static_cast<int>(obindex_header.message_num));
+             obindex_header.message_num = 0;
+         }
+
+@@ -1303,7 +1303,7 @@ void Module::CheckAndUpdateFile(const Ce
+         const u32 entry_count = outbox_dir->Read(8, entries.data());
+         outbox_dir->Close();
+
+-        LOG_DEBUG(Service_CECD, "Number of entries found in /OutBox: {}", entry_count);
++        LOG_DEBUG(Service_CECD, "Number of entries found in /OutBox: {}", static_cast<int>(entry_count));
+         std::array<std::array<u8, 8>, 8> message_ids;
+
+         std::string boxinfo_name("BoxInfo_____");
+diff --color -rupN citra/src/core/hle/service/service.cpp citra/src/core/hle/service/service.cpp
+--- citra/src/core/hle/service/service.cpp	2023-08-14 12:37:35.737658821 +0800
++++ citra/src/core/hle/service/service.cpp	2023-08-14 12:37:35.737658821 +0800
+@@ -118,7 +118,7 @@ const std::array<ServiceModuleInfo, 41>
+ 
+     std::string function_string = fmt::format("function '{}': port={}", name, port_name);
+     for (int i = 1; i <= num_params; ++i) {
+-        function_string += fmt::format(", cmd_buff[{}]={:#X}", i, cmd_buff[i]);
++        function_string += fmt::format(", cmd_buff[{}]={:#X}", int(i), cmd_buff[i]);
+     }
+     return function_string;
+ }
+@@ -155,10 +155,10 @@ void ServiceFrameworkBase::ReportUnimple
+ 
+     std::string result =
+         fmt::format("function '{}': port='{}' cmd_buf={{[0]={:#x} (0x{:04X}, {}, {})",
+-                    function_name, service_name, header.raw, header.command_id,
+-                    header.normal_params_size, header.translate_params_size);
++                    function_name, service_name, header.raw, int(header.command_id),
++                    int(header.normal_params_size), int(header.translate_params_size));
+     for (int i = 1; i <= num_params; ++i) {
+-        result += fmt::format(", [{}]={:#x}", i, cmd_buf[i]);
++        result += fmt::format(", [{}]={:#x}", int(i), cmd_buf[i]);
+     }
+ 
+     result.push_back('}');

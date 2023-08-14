@@ -3,22 +3,24 @@
 _pkgname=citra
 pkgname=$_pkgname-canary-git
 epoch=2
-pkgver=2496.r0.g399ed10f3
+pkgver=2586.r0.gfdb53cfc0
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra-canary/tree/master"
 license=('GPL2')
-depends=('boost-libs' 'shared-mime-info' 'ffmpeg' 'libusb' 'sdl2' 'qt6-multimedia' 'libxkbcommon-x11' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'fmt' 'dynarmic' 'crypto++' 'openal' 'cpp-httplib')
-makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt6-tools' 'xbyak' 'cpp-jwt' 'qt6-wayland' 'desktop-file-utils' 'robin-map' 'glslang' 'spirv-headers')
+depends=('boost-libs' 'shared-mime-info' 'ffmpeg' 'libusb' 'sdl2' 'qt6-multimedia' 'libxkbcommon-x11' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'fmt' 'dynarmic' 'openal' 'cpp-httplib' 'libfdk-aac' 'crypto++')
+makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt6-tools' 'xbyak' 'cpp-jwt' 'qt6-wayland' 'desktop-file-utils' 'robin-map' 'glslang' 'spirv-headers' 'vulkan-memory-allocator')
 provides=('citra')
 conflicts=('citra')
 source=("$_pkgname::git+https://github.com/citra-emu/citra-canary"
 ext-lib.patch
-gc.patch)
+gc.patch
+fmt.patch)
 md5sums=('SKIP'
-         'bb9db6b693d88493c219c1d9c0a2114c'
-         'f151510cd1fc233992710405cbf44323')
+         '540b51f1a0dbb77a62b16f2e1c3bf9bc'
+         'f151510cd1fc233992710405cbf44323'
+         'ed1cd1d3513e4961c9d1d8646f982b0e')
 
 pkgver() {
 	cd "$srcdir/$_pkgname"
@@ -29,9 +31,12 @@ prepare() {
 	cd "$srcdir/$_pkgname"
     patch -p1 -i ../ext-lib.patch
     patch -p1 -i ../gc.patch
+    patch -p1 -i ../fmt.patch
 	mkdir -p build
     sed -i 's/OUTVAR ${BUILD_TAG}/OUTVAR "${BUILD_TAG}"/g' CMakeModules/GenerateSCMRev.cmake
-    sed -i 's/OUTVAR ${BUILD_REPOSITORY}/OUTVAR "${BUILD_REPOSITORY}"/g' CMakeModules/GenerateSCMRev.cmake
+    sed -i 's/OUTVAR ${BUILD_REPOSITORY}/OUTVAR "${BUILD_REPOSITORY}"/g' CMakeModules/GenerateBuildInfo.cmake
+    sed -i 's|<json.hpp>|<nlohmann/json.hpp>|g' src/web_service/verify_login.cpp
+    sed -i '1 i\#define CPPHTTPLIB_OPENSSL_SUPPORT' src/core/hle/service/http/http_c.h
 
     git submodule update --init --remote externals/lodepng
     git submodule update --init --remote externals/nihstro
@@ -39,7 +44,7 @@ prepare() {
     git submodule update --init --remote externals/sirit
     git submodule update --init --remote externals/teakra
     git submodule update --init --remote externals/dds-ktx
-    git submodule update --init --remote externals/vma
+    #git submodule update --init --remote externals/cryptopp-cmake
 }
 
 build() {
@@ -64,8 +69,10 @@ build() {
       -DENABLE_FFMPEG_AUDIO_DECODER=ON \
       -DUSE_SYSTEM_BOOST=ON \
       -DUSE_SYSTEM_SDL2=ON \
+      -DUSE_SYSTEM_OPENSSL=ON \
+      -DUSE_SYSTEM_LIBUSB=ON \
       -DENABLE_MF=OFF \
-      -DCITRA_TESTS=OFF \
+      -DENABLE_TESTS=OFF \
       -DCITRA_CHECK_SUBMODULES=OFF \
       -DSIRIT_USE_SYSTEM_SPIRV_HEADERS=ON
 	make
