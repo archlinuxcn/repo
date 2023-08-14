@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ed6c64a2fa..1ba0c73567 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -678,7 +678,7 @@ dolphin_find_optional_system_library_pkgconfig(ZSTD libzstd>=1.4.0 zstd::zstd Ex
+ 
+ add_subdirectory(Externals/zlib-ng)
+ 
+-dolphin_find_optional_system_library_pkgconfig(MINIZIP minizip>=3.0.0 minizip::minizip Externals/minizip)
++dolphin_find_optional_system_library_pkgconfig(MINIZIP minizip-ng>=3.0.0 minizip::minizip Externals/minizip)
+ 
+ dolphin_find_optional_system_library(LZO Externals/LZO)
+ 
