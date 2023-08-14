@@ -1,5 +1,0 @@
-#!/bin/bash
-if grep -q timeshift /proc/cmdline; then
-notify-send -u critical -i timeshift 'Detected!' 'Booted into Timeshift Snapshot, please restore the snapshot.'
-timeshift-launcher  
-fi 
