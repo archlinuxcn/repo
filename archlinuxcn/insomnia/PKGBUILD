@@ -4,7 +4,7 @@
 # Contributor: vscncls <lucaslou4@protonmail.com>
 
 pkgname=insomnia
-pkgver=2023.4.0
+pkgver=2023.5.0
 pkgrel=1
 _nodeversion=12.18.3
 pkgdesc="Cross-platform HTTP and GraphQL Client"
@@ -17,7 +17,7 @@ source=(
   "https://github.com/Kong/insomnia/archive/refs/tags/core@${pkgver}.tar.gz"
   "insomnia.desktop"
 )
-b2sums=('5bbe7117a7e23bf4d972a322e411a2a3e5751b1dde7613e8325f74bf27b7624d9b5dcf88121f95e96878c7deeb8da058334ebd623b4de03fe47863071d2eb4e5'
+b2sums=('eed2db592b6b5d94b34e4fa3b633342607dbda377ab7ce2d3086457595bd15affadaccd63ea04ac2fa84fd6b89b64117010484ed48672e87b986bccf0ba07819'
         '38c2edd681b012931e25498a4a65007cc2a2152c9bbc5505dbb7cf03e1143a7365c41e9ad7eb2318c8ea894dccad0e0b6601cf76f680ea4085d12b5059e61a6e')
 
 _ensure_local_nvm() {
@@ -34,13 +34,13 @@ _ensure_local_nvm() {
 prepare() {
   _ensure_local_nvm
   cd ${pkgname}-core-${pkgver}
-  nvm install 
+  nvm install
 }
 
 build() {
   _ensure_local_nvm
   cd ${pkgname}-core-${pkgver}
-  npm run bootstrap  
+  npm install
   GIT_TAG="core@${pkgver}" NODE_OPTIONS="--max-old-space-size=4096" BUILD_TARGETS="tar.gz" npm run app-package
 }
 
