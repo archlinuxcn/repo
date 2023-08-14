@@ -14,7 +14,9 @@ url="https://github.com/openSUSE/osc"
 license=('GPL2')
 depends=('python'
          'python-m2crypto'
-         'python-distro')
+         'python-distro'
+         'python-cryptography'
+         'python-urllib3')
 makedepends=('python-setuptools')
 optdepends=('obs-build: required to run local builds'
             'obs-service-format_spec_file: for running the format_spec_file source service'
@@ -24,7 +26,7 @@ optdepends=('obs-build: required to run local builds'
             )
 conflicts=('osc-git' 'osc-bash-completion' 'zsh-completion-osc')
 replaces=('osc-bash-completion' 'zsh-completion-osc')
-source=("https://github.com/openSUSE/${pkgname}/archive/${pkgver}.tar.gz"
+source=("${pkgname}-${pkgver}::https://github.com/openSUSE/${pkgname}/archive/${pkgver}.tar.gz"
         "_osc"
         0001-Add-sb2install-support-to-osc.patch
         0002-Support-osc-copyprj-in-api-by-Islam-Amer-usage-osc-c.patch
