@@ -6,11 +6,11 @@
 # Based on aur/zfs-dkms by Kevin Stolp <kevinstolp@gmail.com>
 # Based on archzfs/zfs-dkms-git by Jan Houben <jan@nexttrex.de>
 #
-# PRs are welcome: https://github.com/yurikoles-aur/zfs-dkms-git
+# Pull Requests are welcome: https://github.com/yurikoles-aur/zfs-dkms-git
 #
 
 pkgname=zfs-dkms-git
-pkgver=2.2.99.r63.g8e20e0ff39
+pkgver=2.2.99.r64.gcae502c175
 pkgrel=1
 epoch=2
 pkgdesc='Kernel modules for the Zettabyte File System.'
@@ -55,15 +55,19 @@ build() {
 
     ./scripts/dkms.mkconf -n zfs -v ${pkgver} -f dkms.conf
     # update metadata
-    ./scripts/make_gitrev.sh
+    ./scripts/make_gitrev.sh include/zfs_gitrev.h
     _meta_release=${pkgver#*.r}
     sed -i -e "s/Release:[[:print:]]*/Release:      ${_meta_release/./_}/" META
 }
 
 package() {
-    depends=("zfs-utils-git=${epoch}:${pkgver}" 'dkms' 'libcrypto.so=1.1')
+    depends=("zfs-utils-git=${epoch}:${pkgver}" 'dkms')
+
+    cd zfs
+
     dkmsdir="${pkgdir}/usr/src/zfs-${pkgver}"
-    install -d "${dkmsdir}"
-    cp -a zfs/. "${dkmsdir}"
-    rm -rf "${dkmsdir}"/{.git*,man}
+    install -d "${dkmsdir}"/{config,scripts}
+    cp -a configure dkms.conf Makefile.in META zfs_config.h.in zfs.release.in include/ module/ "${dkmsdir}"/
+    cp config/compile config/config.* config/missing config/*sh "${dkmsdir}"/config/
+    cp scripts/enum-extract.pl scripts/dkms.postbuild "${dkmsdir}"/scripts/
 }
