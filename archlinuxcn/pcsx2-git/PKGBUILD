@@ -3,7 +3,7 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.4781.r0.g1c6be3f400
+pkgver=1.7.4919.r0.g80fe81311
 pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
@@ -39,7 +39,6 @@ depends=(
     xcb-util-cursor
     fmt
     libzip
-    rapidyaml
     libbacktrace-git
     openssl
 )
@@ -106,6 +105,7 @@ build()
     -DUSE_VULKAN=ON \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+    -DUSE_SYSTEM_RYML=OFF \
     -DX11_API=ON \
     -DWAYLAND_API=ON \
     -DQT_BUILD=ON \
