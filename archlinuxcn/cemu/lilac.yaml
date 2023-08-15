@@ -6,6 +6,9 @@ maintainers:
 
 build_prefix: extra-x86_64
 
+repo_depends:
+  - fmt9
+
 pre_build_script: aur_pre_build(maintainers=['kescherAUR'])
 
 post_build: aur_post_build
