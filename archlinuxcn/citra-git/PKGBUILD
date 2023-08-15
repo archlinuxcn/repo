@@ -4,20 +4,24 @@
 
 _pkgbase='citra'
 pkgname="$_pkgbase-git"
-pkgver=r9589.c67c648c1
+pkgver=r9737.66404a669
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger (Master branch)"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra/"
 license=('GPL2')
-depends=('boost-libs' 'shared-mime-info' 'ffmpeg' 'libusb' 'sdl2' 'qt6-multimedia' 'libxkbcommon-x11' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'fmt' 'dynarmic' 'crypto++' 'openal')
-makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt6-tools' 'xbyak' 'cpp-jwt' 'nlohmann-json' 'cpp-httplib' 'qt6-wayland' 'desktop-file-utils' 'robin-map')
+depends=('boost-libs' 'shared-mime-info' 'ffmpeg' 'libusb' 'sdl2' 'qt6-multimedia' 'libxkbcommon-x11' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'fmt' 'dynarmic' 'openal' 'cpp-httplib' 'libfdk-aac' 'crypto++')
+makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt6-tools' 'xbyak' 'cpp-jwt' 'qt6-wayland' 'desktop-file-utils' 'robin-map' 'glslang' 'spirv-headers' 'vulkan-memory-allocator')
 provides=('citra')
 conflicts=('citra')
-source=("$_pkgbase::git+https://github.com/citra-emu/citra"
-ext-lib.patch)
+source=("git+https://github.com/citra-emu/citra.git"
+ext-lib.patch
+gc.patch
+fmt.patch)
 md5sums=('SKIP'
-         '6bf270e9a0d1faf150048648382c46dc')
+         'ae871c25a1e593218a358b4366f19ae7'
+         'f151510cd1fc233992710405cbf44323'
+         '36f7493df88038f15a811930a924c31e')
 
 pkgver() {
 	cd "$srcdir/$_pkgbase"
@@ -27,11 +31,18 @@ pkgver() {
 prepare() {
 	cd "$srcdir/$_pkgbase"
     patch -p1 -i ../ext-lib.patch
+    patch -p1 -i ../gc.patch
+    patch -p1 -i ../fmt.patch
 	mkdir -p build
+    sed -i 's/OUTVAR ${BUILD_TAG}/OUTVAR "${BUILD_TAG}"/g' CMakeModules/GenerateSCMRev.cmake
+    sed -i 's/OUTVAR ${BUILD_REPOSITORY}/OUTVAR "${BUILD_REPOSITORY}"/g' CMakeModules/GenerateBuildInfo.cmake
+    sed -i 's|<json.hpp>|<nlohmann/json.hpp>|g' src/web_service/verify_login.cpp
+    sed -i '1 i\#define CPPHTTPLIB_OPENSSL_SUPPORT' src/core/hle/service/http/http_c.h
 
     git submodule update --init --remote externals/lodepng
     git submodule update --init --remote externals/nihstro
     git submodule update --init --remote externals/soundtouch
+    git submodule update --init --remote externals/sirit
     git submodule update --init --remote externals/teakra
     git submodule update --init --remote externals/dds-ktx
 }
@@ -40,6 +51,10 @@ build() {
 	# Trick the compiler into thinking we're building from a continuous
 	# integration tool so the build number is correctly shown in the title
 	cd "$srcdir/$_pkgbase"
+	export CI=true
+	export TRAVIS=true
+	export TRAVIS_REPO_SLUG=citra-emu/citra
+	export TRAVIS_TAG=$(git describe --tags)
 
     CXXFLAGS+=" -I/usr/include/libusb-1.0"
 	mkdir -p build && cd build
@@ -54,9 +69,12 @@ build() {
       -DENABLE_FFMPEG_AUDIO_DECODER=ON \
       -DUSE_SYSTEM_BOOST=ON \
       -DUSE_SYSTEM_SDL2=ON \
+      -DUSE_SYSTEM_OPENSSL=ON \
+      -DUSE_SYSTEM_LIBUSB=ON \
       -DENABLE_MF=OFF \
-      -DCITRA_TESTS=OFF \
-      -DCITRA_CHECK_SUBMODULES=OFF
+      -DENABLE_TESTS=OFF \
+      -DCITRA_CHECK_SUBMODULES=OFF \
+      -DSIRIT_USE_SYSTEM_SPIRV_HEADERS=ON
     
     sed -i 's/ -lxbyak//g' src/citra_qt/CMakeFiles/citra-qt.dir/link.txt
     sed -i 's/ -lxbyak//g' src/citra/CMakeFiles/citra.dir/link.txt
