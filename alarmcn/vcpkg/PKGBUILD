@@ -30,6 +30,7 @@ sha256sums=(
 install=${pkgname}.install
 
 build() {
+    export VCPKG_FORCE_SYSTEM_BINARIES=1
     "${srcdir}/${pkgname}-${pkgver}/bootstrap-vcpkg.sh" -disableMetrics
 }
 
