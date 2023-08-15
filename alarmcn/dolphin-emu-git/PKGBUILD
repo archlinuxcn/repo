@@ -1,74 +1,124 @@
-# Maintainer: Maxime Gauduin <alucryd@archlinux.org>
+# Maintainer: Daniel Peukert <daniel@peukert.cc>
+# Contributor: Maxime Gauduin <alucryd@archlinux.org>
 # Contributor: Lightning <sgsdxzy@gmail.com>
-
-pkgbase=dolphin-emu-git
-pkgname=('dolphin-emu-git' 'dolphin-emu-nogui-git')
-pkgver=5.0.r19433.34527cadcc
+# Contributor: Andrew Phelps <andrewphelpsj@gmail.com>
+_projectname='dolphin'
+_mainpkgname="$_projectname-emu"
+_noguipkgname="$_projectname-emu-nogui"
+pkgbase="$_mainpkgname-git"
+pkgname=("$pkgbase" "$_noguipkgname-git")
+pkgver=5.0.r19903.g2537f4db91
 pkgrel=1
-pkgdesc='A GameCube / Wii / Triforce emulator'
+pkgdesc='A Gamecube / Wii emulator'
+_pkgdescappend=' - git version'
 arch=('x86_64' 'aarch64')
-url='http://www.dolphin-emu.org/'
-license=('GPL')
+url="https://$_mainpkgname.org"
+license=('GPL2')
 depends=(
-  'alsa-lib' 'bluez-libs' 'cubeb' 'enet' 'hidapi' 'libevdev' 'libgl' 'libpng'
-  'libpulse' 'libx11' 'libxi' 'libxrandr' 'lzo' 'mbedtls' 'pugixml' 'qt6-base'
-  'sfml' 'zlib' 'minizip-ng'
-  'libcurl.so' 'ffmpeg'
-  'libminiupnpc.so' 'libudev.so' 'libusb-1.0.so' 'libxxhash.so'
+	'alsa-lib' 'bluez-libs' 'cubeb' 'enet' 'hidapi' 'libevdev' 'libgl' 'libpulse'
+	'libspng' 'libx11' 'libxi' 'libxrandr' 'lzo' 'mbedtls2' 'minizip-ng' 'pugixml'
+	'qt6-base' 'qt6-svg' 'sfml' 'zlib-ng'
+	'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libcurl.so' 'libfmt.so'
+	'libminiupnpc.so' 'libsfml-network.so' 'libsfml-system.so' 'libswscale.so'
+	'libudev.so' 'libusb-1.0.so' 'libspng'
 )
-makedepends=('cmake' 'git' 'libglvnd' 'python' 'ninja')
+makedepends=('cmake' 'git' 'ninja' 'python')
 optdepends=('pulseaudio: PulseAudio backend')
-options=('!emptydirs')
-source=('dolphin-emu::git+https://github.com/dolphin-emu/dolphin.git')
-sha256sums=('SKIP')
+options=('!lto')
+source=(
+	"$pkgname::git+https://github.com/$_mainpkgname/$_projectname"
+	"$pkgname-implot::git+https://github.com/epezent/implot.git"
+	"$pkgname-mgba::git+https://github.com/mgba-emu/mgba.git"
+	"$pkgname-rcheevos::git+https://github.com/RetroAchievements/rcheevos.git"
+	"$pkgname-vma::git+https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git"
+	'minizip-ng.diff'
+	'fmt-10.diff'
+)
+sha512sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            '568ca7db64149e9ac9409947689a8390783b891e6cff7b096690771512db3e19f9d8551a8739921d8a9f6ec4a9de747811a2efc8cdd4791d715677772db7fa8e'
+            'cecad3c5dfe6246f809580ff9fa6d6fb595019cc61248917358a0aacd1e9206d754b91b0d9d49fc22ca0a669f91f298ca5010885e656201d1ade0535add96363')
 
-pkgver() {
-  cd dolphin-emu
-
-  git describe | sed 's/-/.r/; s/-g/./'
-}
+_sourcedirectory="$pkgname"
 
 prepare() {
-  cd dolphin-emu
-  git submodule update --init --recursive
+	cd "$srcdir/$_sourcedirectory/"
+	if [ -d 'build/' ]; then rm -rf 'build/'; fi
+	mkdir 'build/'
+
+	# Fix minizip-ng name for Arch
+	patch --forward -p1 < "$srcdir/minizip-ng.diff"
+
+	# Fix build with fmt 10
+	patch --forward -p1 < "$srcdir/fmt-10.diff"
+
+	# Provide submodules
+	declare -A _submodules=(
+		[implot]='implot/implot'
+		[mgba]='mGBA/mgba'
+		[rcheevos]='rcheevos/rcheevos'
+		[vma]='VulkanMemoryAllocator'
+	)
+
+	for _submod in "${!_submodules[@]}"; do
+		_path="Externals/${_submodules[$_submod]}"
+		git submodule init "$_path"
+		git config "submodule.$_path.url" "$srcdir/$pkgname-$_submod/"
+		git -c protocol.file.allow=always submodule update "$_path"
+	done
+}
+
+pkgver() {
+	cd "$srcdir/$_sourcedirectory/"
+	git describe --long --tags | sed -e 's/-\([^-]*-g[^-]*\)$/-r\1/' -e 's/-/./g'
 }
 
 build() {
-  cd dolphin-emu
-
-  cmake -S . -B build -G Ninja \
-    -DCMAKE_BUILD_TYPE=None \
-    -DCMAKE_INSTALL_PREFIX='/usr' \
-    -DCMAKE_INSTALL_LIBDIR='/usr/lib' \
-    -DENABLE_QT='TRUE' \
-    -DUSE_SHARED_ENET='TRUE' \
-    -DXXHASH_FOUND='TRUE'\
-    -DDISTRIBUTOR='archlinuxcn.org'
-  cmake --build build/
+	# CMAKE_BUILD_TYPE - the dolphin-emu package in the repos uses 'None' for some reason, so we use it as well
+	# USE_SYSTEM_LIBS - we want to use system libs where possible
+	# USE_SYSTEM_LIBMGBA - the current version of mgba in the repos is not compatible with Dolphin
+	cd "$srcdir/$_sourcedirectory/"
+	cmake -S '.' -B 'build/' -G Ninja \
+		-DCMAKE_BUILD_TYPE=None \
+		-DCMAKE_INSTALL_PREFIX='/usr' \
+		-DDISTRIBUTOR='aur.archlinux.org/packages/dolphin-emu-git' \
+		-DENABLE_TESTS=OFF \
+		-DENABLE_AUTOUPDATE=OFF \
+		-DUSE_SYSTEM_LIBS=ON \
+		-DUSE_SYSTEM_LIBMGBA=OFF \
+		-Wno-dev
+	cmake --build 'build/'
 }
 
-package_dolphin-emu-git() {
-  provides=('dolphin-emu')
-  conflicts=('dolphin-emu')
+# TODO: check for tests
 
-  cd dolphin-emu
-  DESTDIR="$pkgdir" cmake --install 'build/'
-  rm "${pkgdir}"/usr/bin/dolphin-emu-nogui
-  rm -rf "${pkgdir}"/usr/{include,lib/libdiscord-rpc.a}
-  rm -rf "$pkgdir/usr/share/man/man6/dolphin-emu-nogui.6"
-  install -Dm 644 Data/51-usb-device.rules -t "${pkgdir}"/usr/lib/udev/rules.d/
+package_dolphin-emu-git() {
+	pkgdesc="$pkgdesc$_pkgdescappend"
+	provides=("$_mainpkgname")
+	conflicts=("$_mainpkgname")
+
+	cd "$srcdir/$_sourcedirectory/"
+	DESTDIR="$pkgdir" cmake --install 'build/'
+	install -Dm644 'Data/51-usb-device.rules' "$pkgdir/usr/lib/udev/rules.d/51-usb-device.rules"
+
+	rm -rf "$pkgdir/usr/bin/$_noguipkgname"
+	rm -rf "$pkgdir/usr/include"
+	rm -rf "$pkgdir/usr/lib/libdiscord-rpc.a"
+	rm -rf "$pkgdir/usr/share/man/man6/$_noguipkgname.6"
 }
 
 package_dolphin-emu-nogui-git() {
-  depends=('dolphin-emu-git')
-  provides=("dolphin-emu-nogui" "dolphin-emu-cli")
-  conflicts=("dolphin-emu-nogui" "dolphin-emu-cli")
+	pkgdesc="$pkgdesc - no GUI$_pkgdescappend"
+	depends=("$pkgbase")
+	optdepends=()
+	provides=("$_noguipkgname" "$_mainpkgname-cli")
+	conflicts=("$_noguipkgname" "$_mainpkgname-cli")
 
-  cd dolphin-emu
-  install -dm 755 "${pkgdir}"/usr/bin
-  install -m 755 build/Binaries/dolphin-emu-nogui "${pkgdir}"/usr/bin/dolphin-emu-nogui
-  ln -sf /usr/bin/dolphin-emu-nogui "${pkgdir}"/usr/bin/dolphin-emu-cli
-  install -Dm644 "Data/dolphin-emu-nogui.6" "$pkgdir/usr/share/man/man6/dolphin-emu-nogui.6"
+	cd "$srcdir/$_sourcedirectory/"
+	install -Dm755 "$srcdir/$_sourcedirectory/build/Binaries/$_noguipkgname" "$pkgdir/usr/bin/$_noguipkgname"
+	ln -sf "/usr/bin/$_noguipkgname" "$pkgdir/usr/bin/$_mainpkgname-cli"
+	install -Dm644 "Data/$_noguipkgname.6" "$pkgdir/usr/share/man/man6/$_noguipkgname.6"
 }
-
-# vim: ts=2 sw=2 et:
