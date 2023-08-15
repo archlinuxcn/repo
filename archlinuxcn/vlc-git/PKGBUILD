@@ -9,7 +9,7 @@
 # Contributor: MacWolf <macwolf at archlinux dot de>
 
 pkgname=vlc-git
-pkgver=4.0.0.r24360.g5df262a47dd
+pkgver=4.0.0.r25098.g923c50352e
 pkgrel=1
 pkgdesc="A multi-platform MPEG, VCD/DVD, and DivX player (GIT Version)"
 url='https://www.videolan.org/vlc/'
@@ -21,7 +21,7 @@ depends=('a52dec' 'libdvbpsi' 'libxpm' 'libdca' 'libproxy' 'lua'
          'libarchive' 'qt5-base' 'qt5-x11extras' 'qt5-svg' 'freetype2'
          'fribidi' 'harfbuzz' 'fontconfig' 'libxml2' 'gnutls' 'wayland-protocols'
          'libidn' 'aribb24' 'qt5-quickcontrols2' 'qt5-graphicaleffects' 'libmicrodns>=0.1.2'
-         'libplacebo' 'libixml.so')
+         'libplacebo' 'libixml.so' 'qt5-wayland')
 makedepends=('gst-plugins-base-libs' 'live-media' 'libnotify' 'libbluray'
              'flac' 'libdc1394' 'libavc1394' 'libcaca' 'gtk3'
              'librsvg' 'libgme' 'xosd' 'twolame' 'aalib' 'avahi' 'systemd-libs'
@@ -33,7 +33,8 @@ makedepends=('gst-plugins-base-libs' 'live-media' 'libnotify' 'libbluray'
              'sdl_image' 'libpulse' 'alsa-lib' 'jack' 'libsamplerate' 'libsoxr'
              'lirc' 'libgoom2' 'projectm' 'git' 'aom' 'srt' 'chromaprint'
              'vulkan-icd-loader' 'vulkan-headers' 'dav1d' 'flex' 'bison' 'aribb25' 'pcsclite'
-             'libebur128' 'fluidsynth' 'samba' 'freerdp' 'libsidplayfp' 'rnnoise' 'aribb24')
+             'libebur128' 'fluidsynth' 'samba' 'freerdp' 'libsidplayfp' 'rnnoise' 'aribb24' 'libcddb'
+             'libvncserver')
 optdepends=('avahi: service discovery using bonjour protocol'
             'gst-plugins-base-libs: for libgst plugins'
             'libdvdcss: decoding encrypted DVDs'
@@ -100,17 +101,21 @@ optdepends=('avahi: service discovery using bonjour protocol'
 _name=vlc
 conflicts=("${_name}" 'vlc-dev' 'vlc-plugin' 'vlc-stable-git')
 provides=("${_name}=${pkgver}")
-options=(debug !emptydirs)
+options=(!emptydirs)
 source=('git+https://code.videolan.org/videolan/vlc.git'
         'lua53_compat.patch'
         'vlc-live-media-2021.patch'
         'update-vlc-plugin-cache.hook'
-        'typeof.patch')
+        'typeof.patch'
+        '2419.patch'
+        '2419a.patch')
 sha512sums=('SKIP'
             '33cda373aa1fb3ee19a78748e2687f2b93c8662c9fda62ecd122a2e649df8edaceb54dda3991bc38c80737945a143a9e65baa2743a483bb737bb94cd590dc25f'
             '322461cb5e89e4828483dd0a5c6595f99e767885ae9a1aa2e4d0514ac7354f2ee93b3e5c80993dcff7cd218d7af210374724337b3fc8bc196d35ef5e2b41695d'
             '2f1015af384559bf4868bb989c06a7d281a8e32afb175ef397dbf1671bae3540a3a6b073a74ed77ed82e79a81f964a5a58a98c2a3f1b5e5cd5e9ea60d58c737f'
-            'ef97e1b9e4c38b051e3e99e0ec1376e0805ba93a1d7066ea20aee486400235a74e93a74ccc3ab5b701e81c69161f23deb9791ff8b13458f233a1ab9185b4b0b5')
+            'ef97e1b9e4c38b051e3e99e0ec1376e0805ba93a1d7066ea20aee486400235a74e93a74ccc3ab5b701e81c69161f23deb9791ff8b13458f233a1ab9185b4b0b5'
+            '58ad1d025d313ffdf9301838f73fc6a79ea15c4264e75820e70f6a1592fd5b0ccbe6c3a33bd1bd652b7f143e653d83520fbe3b35b2531d2a9da0701e251335f2'
+            'bc9bd02cab5fae2b140409bad092940e943acd9167cfb365b137f28d74d20d17e149aaf2132e9c0fbf8f225f1426c5cb9af8591ee3027b9773e3bd9db63f84b8')
 
 pkgver() {
   cd "${srcdir}/${_name}"
@@ -129,6 +134,9 @@ prepare() {
   patch -Np1 < "${srcdir}"/lua53_compat.patch
   patch -Np1 < "${srcdir}"/vlc-live-media-2021.patch
   patch -Np1 < "${srcdir}"/typeof.patch
+  patch -Np1 < "${srcdir}"/2419.patch
+  patch -Np1 < "${srcdir}"/2419a.patch
+
   sed 's|whoami|echo builduser|g' -i configure
   sed 's|hostname -f|echo arch|g' -i configure
   autoreconf -vf
@@ -139,7 +147,7 @@ build() {
 
   export CFLAGS+=" -I/usr/include/samba-4.0 -ffat-lto-objects"
   export CPPFLAGS+=" -I/usr/include/samba-4.0"
-  export CXXFLAGS+=" -std=c++11"
+  export CXXFLAGS+=" -std=c++17"
   export LUAC=/usr/bin/luac
   export LUA_LIBS="$(pkg-config --libs lua)"
   export RCC=/usr/bin/rcc-qt5
