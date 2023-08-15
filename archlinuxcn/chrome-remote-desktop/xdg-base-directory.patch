@@ -1,0 +1,22 @@
+diff --git a/opt/google/chrome-remote-desktop/chrome-remote-desktop b/opt/google/chrome-remote-desktop/chrome-remote-desktop
+index 685c912..58b61b0 100755
+--- a/opt/google/chrome-remote-desktop/chrome-remote-desktop
++++ b/opt/google/chrome-remote-desktop/chrome-remote-desktop
+@@ -43,7 +43,7 @@ import time
+ import uuid
+ 
+ import psutil
+-import xdg
++import xdg, xdg.BaseDirectory
+ from packaging import version
+ 
+ # If this env var is defined, extra host params will be loaded from this env var
+@@ -1444,7 +1444,7 @@ class XDesktop(Desktop):
+     self.randr_add_sizes = True
+     self.xorg_conf = config_file.name
+ 
+-    xorg_binary = "/usr/lib/xorg/Xorg";
++    xorg_binary = "/usr/lib/Xorg";
+     if not os.access(xorg_binary, os.X_OK):
+       xorg_binary = "Xorg";
+ 
