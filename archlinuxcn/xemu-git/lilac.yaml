@@ -8,6 +8,9 @@ pre_build: vcs_update
 
 post_build: git_pkgbuild_commit
 
+repo_depends:
+  - cpp-httplib
+
 update_on:
   - source: github
     github: xemu-project/xemu

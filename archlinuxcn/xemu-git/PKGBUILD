@@ -1,23 +1,26 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 _pkgname=xemu
 pkgname=$_pkgname-git
-pkgver=0.7.98.r0.g7bfb7c8537
+pkgver=0.7.111.r0.gedecb41b97
 pkgrel=1
 pkgdesc="Original Xbox emulator (fork of XQEMU)"
 arch=('x86_64')
 url="https://xemu.app/"
 license=('GPL2')
-depends=('sdl2')
+depends=('dtc' 'gcc-libs' 'glibc' 'hicolor-icon-theme' 'sdl2' 'zlib' 'cpp-httplib')
 makedepends=(
+	'cmake'
 	'git'
 	'glib2'
 	'glu'
 	'gtk3'
+	'keyutils'
 	'libepoxy'
 	'libpcap'
 	'libsamplerate'
 	'libslirp'
 	'meson'
+	'nlohmann-json'
 	'openssl'
 	'pixman'
 	'python-yaml'
@@ -29,13 +32,14 @@ conflicts=("$_pkgname")
 install=$_pkgname.install
 source=(
 	"$_pkgname::git+https://github.com/xemu-project/xemu.git"
+	"$_pkgname-imgui::git+https://github.com/xemu-project/imgui.git"
 	'berkeley-softfloat-3::git+https://gitlab.com/qemu-project/berkeley-softfloat-3.git'
 	'berkeley-testfloat-3::git+https://gitlab.com/qemu-project/berkeley-testfloat-3.git'
 	'genconfig::git+https://github.com/mborgerson/genconfig.git'
-	'imgui::git+https://github.com/ocornut/imgui.git'
 	'implot::git+https://github.com/epezent/implot.git'
 	'keycodemapdb::git+https://gitlab.com/qemu-project/keycodemapdb.git'
 	'nv2a_vsh_cpu::git+https://github.com/abaire/nv2a_vsh_cpu.git'
+	'use-system-libs.patch'
 )
 b2sums=(
 	'SKIP'
@@ -46,6 +50,7 @@ b2sums=(
 	'SKIP'
 	'SKIP'
 	'SKIP'
+	'66713ea21508daea5940a1dc0d761ecf449d31a825f2e24090d296ea4c127df80f961d13fe8d179bdad265441bad7174344c53db4202a23b910e9e0ca6c04e21'
 )
 
 pkgver() {
@@ -60,11 +65,11 @@ prepare() {
 	git config submodule.tests/fp/berkeley-softfloat-3.url ../berkeley-softfloat-3
 	git config submodule.tests/fp/berkeley-testfloat-3.url ../berkeley-testfloat-3
 	git config submodule.ui/keycodemapdb.url ../keycodemapdb
-	git config submodule.ui/thirdparty/imgui.url ../imgui
+	git config submodule.ui/thirdparty/imgui.url ../$_pkgname-imgui
 	git config submodule.ui/thirdparty/implot.url ../implot
-    git -c protocol.file.allow=always submodule update
-	git submodule update
-	mkdir ../build tomlplusplus/include
+	git -c protocol.file.allow=always submodule update
+	mkdir -p ../build
+	patch -Np1 < ../use-system-libs.patch
 	python scripts/gen-license.py > XEMU_LICENSE
 }
 
@@ -73,10 +78,9 @@ build() {
 	../$_pkgname/configure \
 		--audio-drv-list="sdl" \
 		--disable-debug-info \
-		--enable-slirp=system \
 		--extra-cflags="-DXBOX=1" \
 		--ninja="$NINJA" \
-		--target-list=i386-softmmu \
+		--target-list="i386-softmmu" \
 		--with-git-submodules=ignore
 	make qemu-system-i386
 }
@@ -88,10 +92,13 @@ package() {
 		'libglib-2.0.so'
 		'libgobject-2.0.so'
 		'libgtk-3.so'
+		'libhttplib.so'
+		'libkeyutils.so'
 		'libpcap.so'
 		'libpixman-1.so'
 		'libsamplerate.so'
 		'libslirp.so'
+		'libtomlplusplus.so'
 	)
 	cd $_pkgname
 	# shellcheck disable=SC2154

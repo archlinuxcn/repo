@@ -1,0 +1,64 @@
+diff --git a/configure b/configure
+index 761cd5e431..e8cca19248 100755
+--- a/configure
++++ b/configure
+@@ -574,7 +574,7 @@ case "$cpu" in
+     # ??? Only extremely old AMD cpus do not have cmpxchg16b.
+     # If we truly care, we should simply detect this case at
+     # runtime and generate the fallback to serial emulation.
+-    CPU_CFLAGS="-m64 -mcx16" ;;
++    CPU_CFLAGS="" ;;
+ 
+   mips*)
+     cpu="mips" ;;
+@@ -664,7 +664,7 @@ meson_option_build_array() {
+ 
+ . "$source_path/scripts/meson-buildoptions.sh"
+ 
+-meson_options=
++meson_options="--buildtype=plain"
+ meson_option_add() {
+   meson_options="$meson_options $(quote_sh "$1")"
+ }
+diff --git a/meson.build b/meson.build
+index 0ae9c6f8a1..debb80c61d 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1180,11 +1180,7 @@ if (have_system or have_tools) and (virgl.found() or opengl.found())
+ endif
+ have_vhost_user_gpu = have_vhost_user_gpu and virgl.found() and opengl.found() and gbm.found()
+ 
+-tomllib = static_library('tomlpp', sources: files('toml.cpp'),
+-                         include_directories: 'tomlplusplus/include')
+-toml = declare_dependency(compile_args: ['-DTOML_HEADER_ONLY=0'],
+-                          include_directories: 'tomlplusplus/include',
+-                          link_with: tomllib)
++toml = dependency('tomlplusplus')
+ 
+ genconfig = declare_dependency(include_directories: 'genconfig')
+ 
+diff --git a/ui/thirdparty/meson.build b/ui/thirdparty/meson.build
+index 6b11d3a9c1..c2e80c99b7 100644
+--- a/ui/thirdparty/meson.build
++++ b/ui/thirdparty/meson.build
+@@ -60,5 +60,5 @@ endif
+ libfpng = static_library('fpng', sources: 'fpng/fpng.cpp', cpp_args: libfpng_cpp_args)
+ fpng = declare_dependency(include_directories: 'fpng', link_with: libfpng)
+ 
+-json = declare_dependency(include_directories: 'json')
+-httplib = declare_dependency(include_directories: 'httplib')
++json = dependency('nlohmann_json')
++httplib = dependency('httplib')
+diff --git a/ui/xui/reporting.cc b/ui/xui/reporting.cc
+index 992d5da0a7..b9a538e07a 100644
+--- a/ui/xui/reporting.cc
++++ b/ui/xui/reporting.cc
+@@ -24,7 +24,7 @@
+ #include "reporting.hh"
+ #define CPPHTTPLIB_OPENSSL_SUPPORT 1
+ #include <httplib.h>
+-#include <json.hpp>
++#include <nlohmann/json.hpp>
+ using json = nlohmann::json;
+ 
+ #define DEBUG_COMPAT_SERVICE 0
