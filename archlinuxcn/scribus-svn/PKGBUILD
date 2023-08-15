@@ -3,13 +3,13 @@
 # Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=scribus-svn
-pkgver=25509
+pkgver=25600
 pkgrel=1
 pkgdesc="A desktop publishing program - Version from SVN"
 arch=('i686' 'x86_64')
 license=('GPL' 'LGPL')
 url="http://www.scribus.net"
-depends=('hunspell' 'podofo' 'libcups' 'graphicsmagick' 'poppler'
+depends=('hunspell' 'podofo-0.9' 'libcups' 'graphicsmagick' 'poppler'
 	 'libcdr' 'libvisio' 'libpagemaker' 'harfbuzz-icu' 'python'
 	 'qt6-declarative' 'libmspub' 'libqxp' 'hicolor-icon-theme'
 	 'libzmf' 'libfreehand' 'qt6-base' 'qt6-5compat' 'qt6-svg')
@@ -17,17 +17,19 @@ makedepends=('subversion' 'cmake' 'qt6-tools')
 optdepends=('lib2geom: for mesh distortion')
 conflicts=('scribus')
 provides=('scribus')
-source=('scribus::svn://scribus.net/trunk/Scribus')
+source=('scribus::svn://scribus.net/trunk')
 sha256sums=('SKIP')
+_svnmod='scribus'
 
 pkgver() {
-  cd scribus
+  LANG=C
+  cd ${_svnmod}
   local ver="$(svnversion)"
   printf "%s" "${ver//[[:alpha:]]}"
 }
 
 build() {
-  cd scribus
+  cd ${_svnmod}/Scribus
   cmake . -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 	-DWANT_GRAPHICSMAGICK:BOOL=YES \
 	-DCMAKE_LIBRARY_PATH:PATH=/usr/lib/qt6 \
@@ -35,13 +37,17 @@ build() {
 	-DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=FALSE \
 	-DQT_PREFIX:PATH="/usr" \
 	-DWANT_SVNVERSION:BOOL=YES \
-	-DWANT_CPP17:BOOL=YES 
-	
+	-DWANT_CPP17:BOOL=YES \
+	-DWANT_CPP17=ON \
+	-DWANT_HUNSPELL=ON \
+	-DWITH_PODOFO=ON \
+	-DLIBPODOFO_INCLUDE_DIR=/usr/include/podofo-0.9 \
+	-DLIBPODOFO_LIBRARY=/usr/lib/podofo-0.9/libpodofo.so \
   make
 }
 
 package () {
-  cd scribus
+  cd $_svnmod/Scribus
   make DESTDIR="$pkgdir" install
   install -Dm644 COPYING "$pkgdir"/usr/share/licenses/$pkgname/COPYING
   install -Dm644 scribus.desktop "$pkgdir"/usr/share/applications/scribus.desktop
