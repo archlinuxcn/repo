@@ -6,13 +6,13 @@
 
 pkgname=ocrmypdf
 pkgver=14.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A tool to add an OCR text layer to scanned PDF files, allowing them to be searched"
 url="https://github.com/jbarlow83/OCRmyPDF"
 arch=('any')
 license=(MPL2)
 # NOTICE: The number of dependencies we rely on is *very high*. If the program does not run after an upgrade, make sure all your deps are upgraded, especially AUR deps!
-depends=('python' 'img2pdf' 'python-pillow>=7.0.0' 'tesseract' 'ghostscript' 'unpaper' 'pngquant' 'python-pikepdf' 'python-reportlab' 'python-pdfminer' 'python-tqdm' 'python-pluggy' 'python-coloredlogs' 'python-importlib_resources' 'python-packaging')
+depends=('python' 'img2pdf' 'python-pillow>=7.0.0' 'tesseract' 'ghostscript' 'unpaper' 'pngquant' 'python-pikepdf' 'python-reportlab' 'python-pdfminer' 'python-tqdm' 'python-pluggy' 'python-rich' 'python-importlib_resources' 'python-packaging')
 
 makedepends=('python-setuptools-scm>=7.0.5' 'python-build' 'python-installer' 'python-wheel')
 optdepends=('jbig2enc: Better compression algorithm; results in smaller PDF files')
