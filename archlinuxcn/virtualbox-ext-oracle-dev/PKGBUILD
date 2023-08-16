@@ -1,8 +1,8 @@
 # Maintainer: heavysink
 
 pkgname=virtualbox-ext-oracle-dev
-_pkgver=7.0.97-158683
-pkgver=7.0.97.158683
+_pkgver=7.0.97-158812
+pkgver=7.0.97.158812
 pkgrel=1
 pkgdesc='Oracle VM VirtualBox Extension Pack for virtualbox dev version'
 arch=('any')
@@ -16,7 +16,7 @@ source=("https://www.virtualbox.org/download/testcase/Oracle_VM_VirtualBox_Exten
 provides=('virtualbox-ext-oracle')
 conflicts=('virtualbox-ext-oracle')
 noextract=("Oracle_VM_VirtualBox_Extension_Pack-$_pkgver.vbox-extpack")
-sha256sums=('b895b0b83d728298bbec9280e6c7110aab030137d90876be2332293939b9989b')
+sha256sums=('bb46c52bb666b0d6f648e5a87c065a76139af6427e01416166cee62969a2d34d')
 
 prepare() {
   # shrink uneeded cpuarch
