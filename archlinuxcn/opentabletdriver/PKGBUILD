@@ -4,32 +4,34 @@ pkgname=opentabletdriver
 _pkgname=OpenTabletDriver
 _lpkgname=opentabletdriver
 _spkgname=otd
-pkgver=0.6.0.4
-pkgrel=4
+pkgver=0.6.2.0
+pkgrel=1
 pkgdesc="A cross-platform open source tablet driver"
 arch=('x86_64')
-url="https://github.com/OpenTabletDriver/OpenTabletDriver"
+url="https://opentabletdriver.net"
 license=('LGPL3')
 depends=('dotnet-runtime-6.0' 'dotnet-host>=6.0' 'gtk3' 'libevdev')
 optdepends=('libxrandr: x11 display querying support' 'libx11')
 makedepends=('dotnet-sdk>=6.0')
 install="notes.install"
+# unified binary dotnet releases break when stripped see https://github.com/dotnet/runtime/issues/54947
+options=('!strip')
 source=("OpenTabletDriver-$pkgver.tar.gz::https://github.com/OpenTabletDriver/OpenTabletDriver/archive/v$pkgver.tar.gz"
-        "$_spkgname"
-        "$_spkgname-gui"
-        "$_lpkgname.service"
-        "$_pkgname.desktop"
+        "$_lpkgname.desktop"
         "notes.install"
         )
 
-sha256sums=('ae0cf2364d64ee5c006269485e8c667455abba1b6d3bc6dfda52b55746a167a4'
-            'a3e5a2e4b8e7b17776bfa3fc33cb33f13bc26d6756ba5ada8200ca708f33e293'
-            '20aac1584a8e08b5a9add1d02ce38e60ddfede615227df6f25c7422217df82b0'
-            '88f7d9ae1e9402cfbf9266ddf0de642195b64de13a3d5ce6f93460ba035cf7f2'
+sha256sums=('56fd77cbe04d667a05162f01e5bf0e3b246c102465ef8c05560795e6b2d06c20'
             '4399359bf6107b612d10aaa06abb197db540b00a973cfec64c2b40d1fbbb2834'
-            'c18e36c7287db4dc16df687693f7ffe548620b26c03b2a98b0b44f4fdedfd442')
+            'c6f4cab31f62c8b4e34fff74961cd37a68bc486d14b1400638335ee59b0ebc83')
 
 _srcdir="OpenTabletDriver-$pkgver"
+
+# TODO: use eng/lib.sh
+#prepare() {
+#    cd "$srcdir"
+#    source eng/lib.sh
+#}
 
 build() {
     export DOTNET_CLI_TELEMETRY_OPTOUT=1
@@ -41,32 +43,31 @@ build() {
         EXTRA_OPTIONS="/p:DebugType=None /p:DebugSymbols=false"
     fi
 
-    ./build.sh linux-x64 \
-        $EXTRA_OPTIONS
+    ./eng/linux/package.sh -- $EXTRA_OPTIONS
 
     ./generate-rules.sh
 }
 
 package() {
-    cd "$srcdir/$_srcdir"
-
-    install -do root "$pkgdir/usr/share/$_pkgname"
-
-    shopt -s nullglob
-    cd bin
-    for binary in *.dll *.json *.pdb; do
-        install -Dm 755 -o root "$binary" -t "$pkgdir/usr/share/$_pkgname"
-    done
-
     cd "$srcdir"
-    sed -i "s/OTD_VERSION/$pkgver/" "$_pkgname.desktop"
+
+    sed -i "s/OTD_VERSION/$pkgver/" "$_lpkgname.desktop"
 
     install -Dm 644 -o root "$_srcdir/bin/99-$_lpkgname.rules" -t "$pkgdir/usr/lib/udev/rules.d"
     install -Dm 644 -o root "$_srcdir/$_pkgname.UX/Assets/$_spkgname.png" -t "$pkgdir/usr/share/pixmaps"
 
-    install -Dm 755 -o root "$_spkgname" -t "$pkgdir/usr/bin"
-    install -Dm 755 -o root "$_spkgname-gui" -t "$pkgdir/usr/bin"
-    install -Dm 644 -o root "$_lpkgname.service" -t "$pkgdir/usr/lib/systemd/user"
-    install -Dm 644 -o root "$_pkgname.desktop" -t "$pkgdir/usr/share/applications"
+    install -Dm 755 -o root -t "$pkgdir/usr/bin" \
+                    "$_srcdir/eng/linux/Generic/usr/bin/$_spkgname" \
+                    "$_srcdir/eng/linux/Generic/usr/bin/$_spkgname-daemon" \
+                    "$_srcdir/eng/linux/Generic/usr/bin/$_spkgname-gui"
+
+    install -Dm 755 -o root -t "$pkgdir/usr/lib/$_lpkgname" \
+                    "$_srcdir/dist/$_pkgname.Console" \
+                    "$_srcdir/dist/$_pkgname.Daemon" \
+                    "$_srcdir/dist/$_pkgname.UX.Gtk"
+
+    install -Dm 644 -o root "$_srcdir/eng/linux/Generic/usr/lib/systemd/user/$_lpkgname.service" -t "$pkgdir/usr/lib/systemd/user"
+    install -Dm 644 -o root "$_srcdir/eng/linux/Generic/usr/lib/modprobe.d/99-$_lpkgname.conf" -t "$pkgdir/usr/lib/modprobe.d"
+    install -Dm 644 -o root "$_lpkgname.desktop" -t "$pkgdir/usr/share/applications"
     install -Dm 644 -o root "$_srcdir/docs/manpages/$_lpkgname.8" -t "$pkgdir/usr/share/man/man8"
 }

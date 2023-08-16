@@ -11,22 +11,21 @@ msg_starting() {
 	echo "The daemon can be started with:"
 	echo -e "  $ ${GREEN}otd${RESET}"
 	echo "You can fork it to the background and use output redirection to a log file if desired."
-	echo "A systemd user service is also provided and can be used instead:"
+	echo "A systemd user service is also provided and can be used instead, assuming you have a correct systemd user graphical-session.target set up:"
 	echo -e "  $ ${GREEN}systemctl --user enable --now opentabletdriver.service${RESET}"
 	echo
 }
 
 msg_modules() {
-	echo "You will have to manually disable built-in kernel modules in order for this driver to work properly."
-	echo -e "This can be done by blacklisting the kernel module by creating a file in ${GREEN}/etc/modprobe.d/blacklist.conf${RESET} with a single line:"
-	echo -e "    ${GREEN}blacklist <module>${RESET}"
-	echo "Where <module> is 'wacom' if you own a wacom tablet, and 'hid_uclogic' otherwise."
+	echo "You will have to manually unload built-in kernel modules (or reboot) in order for this driver to work properly."
 	echo "To unload the module immediately, run:"
 	echo -e "  # ${GREEN}rmmod <module>${RESET}"
+	echo "Where <module> is 'wacom' if you own a wacom tablet, and 'hid_uclogic' otherwise."
 	echo
 }
 
 msg_faq() {
+  echo -e "As of version 0.6.2.0, having the package installed will ${BOLD}block${RESET} any modules related to drawing tablets"
 	echo -e "In the case that you still have issues after following these instructions, the FAQ at ${GREEN}https://opentabletdriver.net/Wiki/FAQ/Linux${RESET} may help."
 	echo
 }
@@ -51,4 +50,5 @@ post_upgrade() {
     echo -e "You may want to clear the contents of the ${GREEN}Plugins/${RESET} and ${GREEN}Configurations/${RESET} folder in ${GREEN}~/.config/OpenTabletDriver/${RESET}"
     echo
   fi
+  msg_faq
 }
