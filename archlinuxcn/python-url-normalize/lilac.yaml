@@ -3,8 +3,13 @@ maintainers:
 
 build_prefix: extra-x86_64
 
+pre_build_script: aur_pre_build(maintainers=['carlosal1015', 'JWCook', 'AutoUpdateBot'])
+
+post_build: aur_post_build
+
 update_on:
-- source: github
-  github: niksite/url-normalize
-  use_latest_release: true
+- source: aur
+  aur: python-url-normalize
+- source: manual
+  manual: 1
 - alias: python
