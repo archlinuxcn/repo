@@ -5,5 +5,8 @@ maintainers:
 pre_build_script: aur_pre_build(maintainers=['twa022'])
 post_build: aur_post_build
 
+repo_depends:
+  - qoi-git: qoi-headers-git
+
 update_on:
   - source: aur
