@@ -3,30 +3,30 @@
 # Contributor: Evgeny Kurnevsky <kurnevsky@gmail.com>
 
 pkgname=libnatspec
-pkgver=0.3.0
-pkgrel=2.1
-pkgdesc="A collection of functions for request various charsets and locales for host system and for other 
-system."
+pkgver=0.3.3
+_altver="$pkgver-alt1"
+pkgrel=1
+pkgdesc="A collection of functions for request various charsets and locales for host system and for other system."
 arch=('i686' 'x86_64' 'armv7h' 'armv6h')
-url="http://sourceforge.net/projects/natspec/"
+url="https://github.com/Etersoft/libnatspec"
 license=('LGPL')
 makedepends=('popt')
 optdepends=('popt: natspec tool')
 source=(
-"http://sourceforge.net/projects/natspec/files/natspec/${pkgver}/libnatspec-${pkgver}.tar.bz2"
+"https://github.com/Etersoft/libnatspec/archive/refs/tags/${_altver}.tar.gz"
 )
 sha512sums=(
-'5c04358d20be5b6ffc7038bddd4514c4b5b4e9940fb6247070b832da9d059b31fd1306cf29f54e4a1b8be1d909176bd72e6ffa98e4b750840764f9b2c250d31c'
+'8313fffe93b54f7613937216bd46065f545d36c4d93ecd1cfa66dd6de027eb6dbd0eae734f449e0fc66421a783f3a82d16631c10bd233bb94dcbea048aeacfb6'
 )
 
 build() {
- cd ${srcdir}/${pkgname}-${pkgver}
+ cd ${srcdir}/${pkgname}-${_altver}
  autoreconf -fiv
  ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var
  make
 }
 
 package() {
- cd ${srcdir}/${pkgname}-${pkgver}
+ cd ${srcdir}/${pkgname}-${_altver}
  make DESTDIR="${pkgdir}" install
 }
