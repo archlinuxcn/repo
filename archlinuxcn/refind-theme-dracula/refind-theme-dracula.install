@@ -5,11 +5,11 @@ post_install() {
 
   echo "Setup refind-theme-dracula-$1"
   echo "Executing ${install_dir}/setup.sh..."
-
+  
   if ! bash setup.sh; then
     echo "###########################################################"
-    echo "A problem occurred when running 'setup.sh', run it manually"
-    echo "###########################################################"
+    echo "A problem occurred when running 'setup.sh', run it manually" 
+    echo "###########################################################"    
   fi
 }
 
