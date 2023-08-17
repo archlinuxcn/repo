@@ -3,7 +3,7 @@
 _pkgname=gimp
 pkgname=${_pkgname}-devel
 pkgver=2.99.16
-pkgrel=1
+pkgrel=2
 pkgdesc="GNU Image Manipulation Program (Development version)"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="https://www.gimp.org/"
@@ -15,7 +15,7 @@ makedepends=('appstream' 'intltool' 'libxslt' 'glib-networking'
              'alsa-lib' 'curl' 'ghostscript' 'libxpm'
              'libheif' 'libwebp' 'libmng' 'iso-codes' 'aalib' 'zlib' 'libjxl'
              'gjs'  'luajit' 'meson' 'gobject-introspection'
-             'gi-docgen' 'xorg-server-xvfb' 'vala' 'highway' 'meson') #'yelp-tools')
+             'gi-docgen' 'xorg-server-xvfb' 'vala' 'highway' 'meson' 'qoi-headers') #yelp-tools')
 checkdepends=('xorg-server-xvfb')
 optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cups print support'
             'alsa-lib: for MIDI event controller module'
@@ -26,6 +26,7 @@ optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cu
             'libjxl: JPEG XL support'
             'libwebp: WebP support'
             'libmng: MNG support'
+            'qoi-headers: QOI image support'
             'iso-codes: Language support'
             'aalib: ASCII art support'
             'zlib: Compression routines'
