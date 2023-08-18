@@ -1,0 +1,28 @@
+--- "aaa/src/main/java/org/jackhuang/hmcl/setting/Accounts.java"	2023-08-18 14:47:23.384283417 +0800
++++ "bbb/src/main/java/org/jackhuang/hmcl/setting/Accounts.java"	2023-08-18 14:51:08.958922621 +0800
+@@ -287,7 +287,6 @@
+         }
+         if (factory == Accounts.FACTORY_MICROSOFT) {
+             VBox vbox = new VBox(8);
+-            if (!Accounts.OAUTH_CALLBACK.getClientId().isEmpty()) {
+                 HintPane hintPane = new HintPane(MessageDialogPane.MessageType.INFO);
+                 FXUtils.onChangeAndOperate(deviceCode, deviceCode -> {
+                     if (deviceCode != null) {
+@@ -332,16 +331,7 @@
+                 vbox.getChildren().addAll(hintPane, box);
+ 
+                 btnAccept.setDisable(false);
+-            } else {
+-                HintPane hintPane = new HintPane(MessageDialogPane.MessageType.WARNING);
+-                hintPane.setSegment(i18n("account.methods.microsoft.snapshot"));
+-
+-                JFXHyperlink officialWebsite = new JFXHyperlink(i18n("account.methods.microsoft.snapshot.website"));
+-                officialWebsite.setExternalLink("https://hmcl.huangyuhui.net");
+-
+-                vbox.getChildren().setAll(hintPane, officialWebsite);
+-                btnAccept.setDisable(true);
+-            }
++
+ 
+             detailsPane = vbox;
+         } else if (factory == Accounts.FACTORY_MOJANG) {
