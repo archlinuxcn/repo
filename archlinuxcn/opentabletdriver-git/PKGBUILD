@@ -1,0 +1,64 @@
+# Maintainer: Sebastian 'gonX' Jensen <gonx@gonx.dk>
+# Contibutor: MoeLava <me@lava.moe>
+# Contibutor: InfinityGhost <infinityghostgit@gmail.com>
+pkgname=opentabletdriver-git
+_pkgname=OpenTabletDriver
+_lpkgname=opentabletdriver
+_spkgname=otd
+pkgver=v0.7.0.0pre.r554.gdbb0a1a5
+pkgrel=2
+pkgdesc="A cross-platform open source tablet driver"
+arch=('x86_64')
+url="https://opentabletdriver.net"
+license=('LGPL3')
+depends=('dotnet-runtime>=7.0' 'gtk3' 'libevdev')
+optdepends=('libxrandr: x11 display querying support' 'libx11')
+makedepends=('git' 'dotnet-sdk>=7.0')
+provides=("opentabletdriver")
+conflicts=("opentabletdriver")
+install="notes.install"
+# unified binary dotnet releases break when stripped see https://github.com/dotnet/runtime/issues/54947
+options=('!strip')
+source=('git+https://github.com/OpenTabletDriver/OpenTabletDriver'
+        "notes.install"
+        )
+
+sha256sums=('SKIP'
+            '5b9db850e29b66a218a165f2d109375e15416069d2c759cac79cc6af6b04688a')
+
+pkgver() {
+    cd "$srcdir/$_pkgname"
+    # check for the DI rewrite commit that makes plugins incompatible
+    if git merge-base --is-ancestor 10a3c07206028f7df5befbdeca6aadb30efe4cb3 HEAD >/dev/null; then
+        printf "%s.r%s.g%s\n" \
+        "v0.7.0.0pre" \
+        $(git log --oneline 10a3c072.. | wc -l) \
+        $(git describe --long --tags | sed 's/.*-g\(.*\)/\1/')
+    else
+        git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+    fi
+}
+
+build() {
+    export DOTNET_CLI_TELEMETRY_OPTOUT=1
+    export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
+
+    cd "$srcdir/$_pkgname"
+    # check for the DI rewrite commit that makes plugins incompatible
+    if git merge-base --is-ancestor 10a3c07206028f7df5befbdeca6aadb30efe4cb3 HEAD >/dev/null; then
+        PREFIX="0.7.0.0-pre"
+    else
+        PREFIX=$(git describe --long --tags | sed 's/-.*//;s/v//')
+    fi
+
+    if check_option "strip" y; then
+        EXTRA_OPTIONS="/p:DebugType=None /p:DebugSymbols=false"
+    fi
+
+    ./eng/linux/package.sh --dog-food "false" --package Generic -- /p:VersionPrefix="$PREFIX" $EXTRA_OPTIONS
+}
+
+package() {
+    cd "${srcdir}/${_pkgname}"
+    cp -r ./dist/files/* "${pkgdir}/"
+}
