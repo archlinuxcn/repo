@@ -3,7 +3,7 @@
 # Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=scribus-svn
-pkgver=25602
+pkgver=25604
 pkgrel=1
 pkgdesc="A desktop publishing program - Version from SVN"
 arch=('i686' 'x86_64')
@@ -17,19 +17,18 @@ makedepends=('subversion' 'cmake' 'qt6-tools')
 optdepends=('lib2geom: for mesh distortion')
 conflicts=('scribus')
 provides=('scribus')
-source=('scribus::svn://scribus.net/trunk')
+source=('svn://scribus.net/trunk/Scribus')
 sha256sums=('SKIP')
-_svnmod='scribus'
 
 pkgver() {
   LANG=C
-  cd ${_svnmod}
+  cd Scribus
   local ver="$(svnversion)"
   printf "%s" "${ver//[[:alpha:]]}"
 }
 
 build() {
-  cd ${_svnmod}/Scribus
+  cd Scribus
   cmake . -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 	-DWANT_GRAPHICSMAGICK:BOOL=YES \
 	-DCMAKE_LIBRARY_PATH:PATH=/usr/lib/qt6 \
@@ -47,7 +46,7 @@ build() {
 }
 
 package () {
-  cd $_svnmod/Scribus
+  cd Scribus
   make DESTDIR="$pkgdir" install
   install -Dm644 COPYING "$pkgdir"/usr/share/licenses/$pkgname/COPYING
   install -Dm644 scribus.desktop "$pkgdir"/usr/share/applications/scribus.desktop
