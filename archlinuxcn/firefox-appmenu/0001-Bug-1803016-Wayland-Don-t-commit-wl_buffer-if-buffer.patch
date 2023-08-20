@@ -1,0 +1,81 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: stransky <stransky@redhat.com>
+Date: Thu, 30 Mar 2023 11:49:53 +0000
+Subject: [PATCH] Bug 1803016 [Wayland] Don't commit wl_buffer if buffer scale
+ doesn't match its size r=emilio
+
+Differential Revision: https://phabricator.services.mozilla.com/D173814
+---
+ widget/gtk/MozContainerWayland.cpp             |  7 +++++++
+ widget/gtk/MozContainerWayland.h               |  3 +++
+ widget/gtk/WindowSurfaceWaylandMultiBuffer.cpp | 17 ++++++++++++++---
+ 3 files changed, 24 insertions(+), 3 deletions(-)
+
+diff --git a/widget/gtk/MozContainerWayland.cpp b/widget/gtk/MozContainerWayland.cpp
+index 2a4a492077c3..0d9aacc954b7 100644
+--- a/widget/gtk/MozContainerWayland.cpp
++++ b/widget/gtk/MozContainerWayland.cpp
+@@ -597,6 +597,13 @@ void moz_container_wayland_set_scale_factor(MozContainer* container) {
+   }
+ }
+ 
++bool moz_container_wayland_size_matches_scale_factor_locked(
++    const MutexAutoLock& aProofOfLock, MozContainer* container, int aWidth,
++    int aHeight) {
++  return aWidth % container->wl_container.buffer_scale == 0 &&
++         aHeight % container->wl_container.buffer_scale == 0;
++}
++
+ static bool moz_container_wayland_surface_create_locked(
+     const MutexAutoLock& aProofOfLock, MozContainer* container) {
+   MozContainerWayland* wl_container = &container->wl_container;
+diff --git a/widget/gtk/MozContainerWayland.h b/widget/gtk/MozContainerWayland.h
+index d3c49baae8ac..369d40a55250 100644
+--- a/widget/gtk/MozContainerWayland.h
++++ b/widget/gtk/MozContainerWayland.h
+@@ -85,6 +85,9 @@ bool moz_container_wayland_egl_window_needs_size_update(MozContainer* container,
+ void moz_container_wayland_set_scale_factor(MozContainer* container);
+ void moz_container_wayland_set_scale_factor_locked(
+     const mozilla::MutexAutoLock& aProofOfLock, MozContainer* container);
++bool moz_container_wayland_size_matches_scale_factor_locked(
++    const mozilla::MutexAutoLock& aProofOfLock, MozContainer* container,
++    int aWidth, int aHeight);
+ 
+ void moz_container_wayland_add_initial_draw_callback_locked(
+     MozContainer* container, const std::function<void(void)>& initial_draw_cb);
+diff --git a/widget/gtk/WindowSurfaceWaylandMultiBuffer.cpp b/widget/gtk/WindowSurfaceWaylandMultiBuffer.cpp
+index 85ab1942d9e6..31091f4b9848 100644
+--- a/widget/gtk/WindowSurfaceWaylandMultiBuffer.cpp
++++ b/widget/gtk/WindowSurfaceWaylandMultiBuffer.cpp
+@@ -285,8 +285,8 @@ void WindowSurfaceWaylandMB::Commit(
+   mFrameInProcess = false;
+ 
+   MozContainer* container = mWindow->GetMozContainer();
+-  MozContainerSurfaceLock lock(container);
+-  struct wl_surface* waylandSurface = lock.GetSurface();
++  MozContainerSurfaceLock MozContainerLock(container);
++  struct wl_surface* waylandSurface = MozContainerLock.GetSurface();
+   if (!waylandSurface) {
+     LOGWAYLAND(
+         "WindowSurfaceWaylandMB::Commit [%p] frame queued: can't lock "
+@@ -319,8 +319,19 @@ void WindowSurfaceWaylandMB::Commit(
+     }
+   }
+ 
++  // aProofOfLock is a kind of substitution of MozContainerSurfaceLock.
++  // MozContainer is locked but MozContainerSurfaceLock doen't convert to
++  // MutexAutoLock& so we use aProofOfLock here.
+   moz_container_wayland_set_scale_factor_locked(aProofOfLock, container);
+-  mInProgressBuffer->AttachAndCommit(waylandSurface);
++
++  // It's possible that scale factor changed between Lock() and Commit()
++  // but window size is the same.
++  // Don't attach such buffer as it may have incorrect size,
++  // we'll paint new content soon.
++  if (moz_container_wayland_size_matches_scale_factor_locked(
++          aProofOfLock, container, mWindowSize.width, mWindowSize.height)) {
++    mInProgressBuffer->AttachAndCommit(waylandSurface);
++  }
+ 
+   mInProgressBuffer->ResetBufferAge();
+   mFrontBuffer = mInProgressBuffer;

@@ -7,8 +7,8 @@
 
 pkgname=firefox-appmenu
 _pkgname=firefox
-pkgver=112.0.1
-pkgrel=20
+pkgver=112.0.2
+pkgrel=2
 pkgdesc="Firefox from extra with appmenu patch"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -30,13 +30,15 @@ options=(!emptydirs !makeflags !strip !lto !debug)
 source=(https://archive.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         $_pkgname.desktop
         identity-icons-brand.svg
+        0001-Bug-1803016-Wayland-Don-t-commit-wl_buffer-if-buffer.patch
         fix-wayland-build.patch
         unity-menubar.patch
         fix_csd_window_buttons.patch)
-sha256sums=('5d2b2886812fe1bc62b7801495d375e3de94ca160a676057d1df92de87efb649'
+sha256sums=('e6a4819a3b82b1ca6c45296e50e6c9ab653306eeb540e50ba8683e339565992e'
             'SKIP'
             '34514a657d6907a159594c51e674eeb81297c431ec26a736417c2fdb995c2c0c'
             'a9b8b4a0a1f4a7b4af77d5fc70c2686d624038909263c795ecc81e0aec7711e9'
+            'bfe15651a99ac6d0037867c9db00a0d4340353cdc0ac4a39e43ad61cc2589ed6'
             '46724a625f51c358abaee488a7ce75673078e96ba009459339120b8dd11dec25'
             '74440d292e76426ac5cba9058a6f86763c37a9aa61b7afc47771140f1f53870b'
             'e08d0bc5b7e562f5de6998060e993eddada96d93105384960207f7bdf2e1ed6e')
@@ -57,6 +59,9 @@ _mozilla_api_key=e05d56db0a694edc8b5aaebda3f2db6a
 prepare() {
   mkdir mozbuild
   cd firefox-$pkgver
+
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1803016
+  patch -Np1 -i ../0001-Bug-1803016-Wayland-Don-t-commit-wl_buffer-if-buffer.patch
 
   #https://aur.archlinux.org/packages/firefox-appmenu nicman32 comment 2021-08-16
   patch -Np1 -i ../fix-wayland-build.patch
