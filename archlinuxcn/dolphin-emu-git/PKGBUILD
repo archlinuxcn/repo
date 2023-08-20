@@ -8,7 +8,7 @@ _noguipkgname="$_projectname-emu-nogui"
 pkgbase="$_mainpkgname-git"
 pkgname=("$pkgbase" "$_noguipkgname-git")
 pkgver=5.0.r19903.g2537f4db91
-pkgrel=1
+pkgrel=2
 pkgdesc='A Gamecube / Wii emulator'
 _pkgdescappend=' - git version'
 arch=('x86_64' 'aarch64')
@@ -18,7 +18,7 @@ depends=(
 	'alsa-lib' 'bluez-libs' 'cubeb' 'enet' 'hidapi' 'libevdev' 'libgl' 'libpulse'
 	'libspng' 'libx11' 'libxi' 'libxrandr' 'lzo' 'mbedtls2' 'minizip-ng' 'pugixml'
 	'qt6-base' 'qt6-svg' 'sfml' 'zlib-ng'
-	'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libcurl.so' 'fmt9' 'libmgba'
+	'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libcurl.so' 'fmt9' 
 	'libminiupnpc.so' 'libsfml-network.so' 'libsfml-system.so' 'libswscale.so'
 	'libudev.so' 'libusb-1.0.so' 'libspng' 'vulkan-memory-allocator'
 )
@@ -28,10 +28,12 @@ options=('!lto')
 source=(
 	"$pkgname::git+https://github.com/$_mainpkgname/$_projectname"
 	"$pkgname-implot::git+https://github.com/epezent/implot.git"
+    "$pkgname-mgba::git+https://github.com/mgba-emu/mgba.git"
 	"$pkgname-rcheevos::git+https://github.com/RetroAchievements/rcheevos.git"
 	'minizip-ng.diff'
 )
 sha512sums=('SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             '568ca7db64149e9ac9409947689a8390783b891e6cff7b096690771512db3e19f9d8551a8739921d8a9f6ec4a9de747811a2efc8cdd4791d715677772db7fa8e')
@@ -46,13 +48,11 @@ prepare() {
 	# Fix minizip-ng name for Arch
 	patch --forward -p1 < "$srcdir/minizip-ng.diff"
 
-	# Fix build with fmt 10
-	#patch --forward -p1 < "$srcdir/fmt-10.diff"
-
 	# Provide submodules
 	declare -A _submodules=(
 		[implot]='implot/implot'
 		[rcheevos]='rcheevos/rcheevos'
+        [mgba]='mGBA/mgba'
 	)
 
 	for _submod in "${!_submodules[@]}"; do
@@ -80,7 +80,7 @@ build() {
 		-DENABLE_TESTS=OFF \
 		-DENABLE_AUTOUPDATE=OFF \
 		-DUSE_SYSTEM_LIBS=ON \
-		-DUSE_SYSTEM_LIBMGBA=ON \
+		-DUSE_SYSTEM_LIBMGBA=OFF \
 		-Wno-dev
 	cmake --build 'build/'
 }
