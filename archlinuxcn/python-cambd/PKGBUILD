@@ -1,0 +1,31 @@
+# Maintainer: Molyuu <mi@molyuu.cyou>
+pkgname=python-cambd
+_name=${pkgname#python-}
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Cambridge dictionary cli app"
+arch=('any')
+url="https://github.com/rocktimsaikia/cambd"
+license=('MIT')
+groups=()
+depends=('python' 'python-beautifulsoup4' 'python-html5lib' 'python-click' 'python-halo' 'python-requests' 'python-rich' 'python-simple-term-menu')
+makedepends=('python-setuptools' 'python-pip')
+provides=()
+conflicts=()
+replaces=()
+backup=()
+options=(!emptydirs)
+install=
+source=("https://github.com/rocktimsaikia/cambd/archive/refs/tags/${pkgver}.zip")
+sha256sums=('a6205514b237cdb773bf2892d3a71a7a57236011761f7a2c491b878060386b5c')
+
+build() {
+    cd "$_name-$pkgver"
+    python setup.py build
+}
+
+package() {
+    cd "$_name-$pkgver"
+    python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE.txt"
+}
