@@ -5,13 +5,13 @@
 
 _pkgname="hyprland"
 pkgname="${_pkgname}-hidpi-xprop-git"
-pkgver=0.28.0.r72.b79dfcce
+pkgver=0.28.0.r34.3f7f4207
 pkgrel=1
 pkgdesc="A dynamic tiling Wayland compositor based on wlroots that doesn't sacrifice on its looks."
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
 url="https://github.com/hyprwm/Hyprland"
 license=('BSD')
-depends=("libdisplay-info.so"
+depends=(
 	libxcb
 	xcb-proto
 	xcb-util
@@ -39,7 +39,7 @@ depends=("libdisplay-info.so"
 	xcb-util-wm
 	seatd
 	vulkan-icd-loader
-	xorg-xwayland-lily)
+	xorg-xwayland-hidpi-xprop)
 makedepends=(
 	git
 	cmake
@@ -50,21 +50,21 @@ makedepends=(
 	wayland-protocols
 	xorgproto)
 source=("${_pkgname}::git+https://github.com/hyprwm/Hyprland.git"
-        "git+https://gitlab.freedesktop.org/wlroots/wlroots.git"
-        "git+https://github.com/hyprwm/hyprland-protocols.git"
-        "git+https://github.com/canihavesomecoffee/udis86.git"
-        "0001-xwayland-support-HiDPI-scale.patch"
-        "0002-Fix-configure_notify-event.patch"
-        "0003-Fix-size-hints-under-Xwayland-scaling.patch")
+	"git+https://gitlab.freedesktop.org/wlroots/wlroots.git"
+	"git+https://github.com/hyprwm/hyprland-protocols.git"
+	"git+https://github.com/canihavesomecoffee/udis86.git"
+	"0001-xwayland-support-HiDPI-scale.patch"
+	"0002-Fix-configure_notify-event.patch"
+	"0003-Fix-size-hints-under-Xwayland-scaling.patch")
 conflicts=("${_pkgname}")
 provides=(hyprland)
 sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            '2fd861a76fb7a6b0bba12e7d307ad655e40ec93a84c88dfc00571aac6e119e85'
-            '1314d0ee63a4249698791d86cce5e6cdb4f005b81bbb1c6a747578d2a9223795'
-            'c08dd62a1786eeb7506f1839bfcbba791502360392c929e620244f70c8ca5b61')
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'2fd861a76fb7a6b0bba12e7d307ad655e40ec93a84c88dfc00571aac6e119e85'
+	'1314d0ee63a4249698791d86cce5e6cdb4f005b81bbb1c6a747578d2a9223795'
+	'c08dd62a1786eeb7506f1839bfcbba791502360392c929e620244f70c8ca5b61')
 options=(debug)
 
 pkgver() {
@@ -118,6 +118,6 @@ package() {
 	cp -R src ${pkgdir}/usr/include/hyprland/
 	cp -R ../tmpwlr/include/* ${pkgdir}/usr/include/hyprland/wlroots/
 	find ${pkgdir}/usr/include/hyprland/ -type f ! -name '*.h*' -delete
-	cp protocols/*-protocol.h  ${pkgdir}/usr/include/hyprland/protocols
+	cp protocols/*-protocol.h ${pkgdir}/usr/include/hyprland/protocols
 	install -Dm644 build/hyprland.pc -t "${pkgdir}/usr/share/pkgconfig"
 }
