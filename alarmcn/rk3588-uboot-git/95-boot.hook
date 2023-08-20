@@ -1,0 +1,11 @@
+[Trigger]
+Type = File
+Operation = Install
+Operation = Upgrade
+Target = boot/dtbs/*.dtb
+Target = boot/dtbs/*/*.dtb
+
+[Action]
+Description = Updating dtbos...
+When = PostTransaction
+Exec = /usr/bin/rockchip-write-dtbos

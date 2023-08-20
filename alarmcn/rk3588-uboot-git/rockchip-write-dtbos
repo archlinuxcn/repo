@@ -1,0 +1,62 @@
+#!/bin/bash
+
+rootdev=$(lsblk -pilno pkname,type,mountpoint | grep -G 'part /$' |  head -n1 | cut -d " " -f1)
+partlabeluboot=$(lsblk -plno partlabel $rootdev | grep -G '\-uboot$' )
+[ ! -n "$partlabeluboot" ] && exit
+rkdev=${partlabeluboot#*-}
+target=${partlabeluboot%"-$rkdev"}
+rkdev=${rkdev/"-uboot"/""}
+if [[ "$rkdev" =~ "@" ]]; then
+  atfdevice=${rkdev#*@}
+  rkdev=${rkdev%"@$atfdevice"}
+fi
+
+file="/boot/uboot/u-boot-with-spl-${target}-${rkdev}.bin.xz"
+
+if [[ $@ =~ "--uboot@root" ]]; then
+  [ ! -f "$file" ] && return
+  ubootdev="/dev/disk/by-partlabel/${partlabeluboot}"
+  [ ! -L "$ubootdev" ] && return
+  echo "Writing ${file} to $(realpath ${ubootdev})"
+  dd bs=64k of="${ubootdev}" if="/dev/zero" 2>/dev/null
+  xz -dcv "$file" | dd bs=64k of="${ubootdev}"
+  sync
+fi
+
+if [[ $@ =~ "--uboot@spi" ]]; then
+  [ ! -f "$file" ] && return
+  echo "Writing U-Boot to SPI. This may take a while..."
+  ubootdev="/dev/mtdblock0"
+  xz -dcv "$file" | dd of="${ubootdev}" bs=512 seek=64    count=1024 # Write SPL max 512 KiB
+  xz -dcv "$file" | dd of="${ubootdev}" bs=512 seek=16384 skip=$((16384-64)) # Write U-Boot
+  sync
+  exit
+fi
+
+if [ -d "/boot/dtbs/rockchip" ]; then
+  cp -vf "/boot/dtbs/rockchip/${target}-${rkdev}.dtb" "/boot/dtbs/${target}-tojoin.dtb"
+else
+  cp -vf "/boot/dtbs/${target}-${rkdev}.dtb" "/boot/dtbs/${target}-tojoin.dtb"
+fi
+
+for bp in $(shopt -s nullglob; echo /boot/dtbos/*.dts); do
+  echo Creating overlay from $bp
+  dtc -q -I dts -O dtb -o ${bp/".dts"/".dtbo"} $bp
+  cat $bp | grep "//fdtput" | while read -r line ; do
+    echo fdtput "/boot/dtbs/${target}-tojoin.dtb" ${line/"//fdtput"/""}
+         fdtput "/boot/dtbs/${target}-tojoin.dtb" ${line/"//fdtput"/""}
+  done
+done
+
+dtbos="$(shopt -s nullglob; echo /boot/dtbos/${target}-all-*.dtbo /boot/dtbos/${target}-${rkdev}-*.dtbo)"
+if test -n "$dtbos"; then
+  fdtoverlay -vi "/boot/dtbs/${target}-tojoin.dtb" \
+              -o "/boot/dtbs/${target}-joined.dtb" \
+              $dtbos
+else
+  echo "No overlay applied!"
+  cp -vf "/boot/dtbs/${target}-tojoin.dtb" \
+         "/boot/dtbs/${target}-joined.dtb"
+fi
+
+exit 0
