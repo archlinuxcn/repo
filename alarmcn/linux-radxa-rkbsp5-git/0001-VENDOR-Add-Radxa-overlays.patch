@@ -1,0 +1,110 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Yuntian Zhang <yt@radxa.com>
+Date: Mon, 23 May 2022 15:36:50 +0800
+Subject: [PATCH] VENDOR: Add Radxa overlays
+
+Signed-off-by: Yuntian Zhang <yt@radxa.com>
+---
+ arch/arm64/boot/dts/amlogic/Makefile  |  5 +++++
+ arch/arm64/boot/dts/rockchip/Makefile | 18 +++++++++++++++--
+ scripts/Makefile.dtbinst 			   | 11 +++++++----
+ scripts/Makefile.lib                  |  6 ++++++
+ 4 files changed, 34 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+index f231280cd8..f9e467edff 100644
+--- a/arch/arm64/boot/dts/amlogic/Makefile
++++ b/arch/arm64/boot/dts/amlogic/Makefile
+@@ -1,4 +1,9 @@
++DTC_FLAGS_meson-g12a-radxa-zero := -@
++DTC_FLAGS_meson-g12b-radxa-zero2 := -@
++
++subdir-y += overlays
++
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_ARCH_MESON) += meson-axg-s400.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-g12a-sei510.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-g12a-sei510-android.dtb
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index 7cccbd7c6e..69399d2d41 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -1,4 +1,20 @@
++DTC_FLAGS_rk3328-rock-pi-e := -@
++DTC_FLAGS_rk3399-rock-4se := -@
++DTC_FLAGS_rk3399-rock-pi-4a-plus := -@
++DTC_FLAGS_rk3399-rock-pi-4b-plus := -@
++DTC_FLAGS_rk3399-rock-4c-plus := -@
++DTC_FLAGS_rk3399-rock-pi-4a := -@
++DTC_FLAGS_rk3399-rock-pi-4b := -@
++DTC_FLAGS_rk3399-rock-pi-4c := -@
++DTC_FLAGS_rk3399pro-rock-pi-n10 := -@
++DTC_FLAGS_rk3568-rock-3a := -@
++DTC_FLAGS_rk3588-rock-5b := -@
++DTC_FLAGS_rk3588-rock-5b-v11 := -@
++DTC_FLAGS_rk3588s-rock-5a := -@
++
++subdir-y += overlays
++
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb-ddr3-v10.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb-ddr3-v10-avb.dtb
+@@ -178,5 +178,3 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5a.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-tablet-rk806-single-v10.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-tablet-v10.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-tablet-v11.dtb
+-
+-subdir-y := $(dts-dirs) overlay
+\ No newline at end of file
+diff --git a/scripts/Makefile.dtbinst b/scripts/Makefile.dtbinst
+index 7b68939815d0..46f4739a2458 100644
+--- a/scripts/Makefile.dtbinst
++++ b/scripts/Makefile.dtbinst
+@@ -18,11 +18,11 @@ include scripts/Kbuild.include
+ include $(src)/Makefile
+ 
+ dtbs    := $(addprefix $(dst)/, $(dtb-y) $(if $(CONFIG_OF_ALL_DTBS),$(dtb-)))
+-dtbos   := $(addprefix $(dst)/, $(dtbo-y))
+-readmes := $(addprefix $(dst)/, $(dtbotxt-y))
++scrs    := $(addprefix $(dst)/, $(scr-y))
++dtbotxts:= $(addprefix $(dst)/, $(dtbotxt-y))
+ subdirs := $(addprefix $(obj)/, $(subdir-y) $(subdir-m))
+ 
+-__dtbs_install: $(dtbs) $(dtbos) $(readmes) $(subdirs)
++__dtbs_install: $(dtbs) $(scrs) $(dtbotxts) $(subdirs)
+ 	@:
+ 
+ quiet_cmd_dtb_install = INSTALL $@
+@@ -34,7 +34,10 @@ $(dst)/%.dtb: $(obj)/%.dtb
+ $(dst)/%.dtbo: $(obj)/%.dtbo
+ 	$(call cmd,dtb_install)
+ 
+-$(dst)/README.rockchip-overlays: $(src)/README.rockchip-overlays
++$(dst)/%.scr: $(obj)/%.scr
++	$(call cmd,dtb_install)
++
++$(dst)/README.overlays: $(src)/README.overlays
+ 	$(call cmd,dtb_install)
+ 
+ PHONY += $(subdirs)
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index d142577866..f48d411b65 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -460,6 +460,12 @@ quiet_cmd_uimage = UIMAGE  $@
+ 			-a $(UIMAGE_LOADADDR) -e $(UIMAGE_ENTRYADDR) \
+ 			-n $(UIMAGE_NAME) -d $< $@
+ 
++quiet_cmd_scr = MKIMAGE $@
++	  cmd_scr = mkimage -C none -A $(ARCH) -T script -d $< $@
++
++$(obj)/%.scr: $(src)/%.cmd FORCE
++	$(call if_changed,scr)
++
+ # XZ
+ # ---------------------------------------------------------------------------
+ # Use xzkern to compress the kernel image and xzmisc to compress other things.
+-- 
+2.36.1
+

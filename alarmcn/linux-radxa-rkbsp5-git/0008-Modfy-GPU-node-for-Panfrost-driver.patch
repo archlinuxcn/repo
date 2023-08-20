@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ZHANG Yuntan <yt@radxa.com>
+Date: Mon, 5 Dec 2022 17:35:53 +0800
+Subject: [PATCH] Modfy GPU node for Panfrost driver
+
+This change is necessary for panfrost to detect GPU in RK3399 SoC.
+
+This partially reverts eca1fb47441368e146603effffc59902dc7d2d76.
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 64b2d7f2fee5..d8a975ab85a5 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -2200,7 +2200,8 @@ gpu: gpu@ff9a0000 {
+ 		compatible = "arm,malit860",
+ 			     "arm,malit86x",
+ 			     "arm,malit8xx",
+-			     "arm,mali-midgard";
++			     "arm,mali-midgard",
++			     "rockchip,rk3399-mali", "arm,mali-t860";
+ 		reg = <0x0 0xff9a0000 0x0 0x10000>;
+ 		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH 0>,
+ 			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH 0>,
+-- 
+2.38.1
+

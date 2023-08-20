@@ -1,0 +1,13 @@
+--- kernel-linux-5.10-gen-rkr3.4/Makefile	2023-01-19 18:19:05.876849374 +0100
++++ kernel-linux-5.10-gen-rkr3.4/Makefile.new	2023-01-19 18:19:29.209457186 +0100
+@@ -1028,6 +1028,10 @@
+ KBUILD_CFLAGS += $(call cc-disable-warning, address)
+ KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
+ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncatio)
++KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overread)
++KBUILD_CFLAGS += $(call cc-disable-warning, implicit-fallthrough)
++KBUILD_CFLAGS += $(call cc-disable-warning, tautological-compare)
++KBUILD_CFLAGS += $(call cc-disable-warning, int-in-bool-context)
+ 
+ # include additional Makefiles when needed
+ include-y			:= scripts/Makefile.extrawarn

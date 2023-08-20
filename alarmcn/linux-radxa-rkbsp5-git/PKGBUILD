@@ -1,0 +1,282 @@
+# AArch64 multi-platform
+# Maintainer: Mahmut Dikcizgi <boogiepop a~t gmx com>
+# Contributor: Kevin Mihelich <kevin@archlinuxarm.org>
+
+buildarch=8
+_pkgver=5.10
+_user="radxa"
+_kernel=linux-radxa-rkbsp5
+pkgbase=$_kernel-git
+pkgname=("${pkgbase}-headers" $pkgbase)
+pkgver=5.10.1080499.5fa580a5149c.624ad59
+blobcommit="9869c5a8aa0c103efac5a5d5eefe03468a6b8396"
+fwcommit="488f49467f5b4adb8ae944221698e9a4f9acb0ed"
+pkgrel=2
+arch=('aarch64')
+license=('GPL2')
+url="https://github.com/${_user}"
+_kernelrepo="kernel"
+_overlayrepo="overlays"
+_kernelbranch=linux-5.10-gen-rkr4.1
+_overlaybranch=main
+pkgdesc="Latest git Linux kernel package based on 5.10.x BSP kernel published by RADXA targetting rk3399 based rock4 and rk3588 based rock5 boards" 
+makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools' 'vboot-utils' 'dtc')
+options=('!strip')
+
+# Patch1-10 comes from Radxa: https://github.com/radxa-repo/bsp/tree/main/linux/rockchip
+# Patch11: Warning Supressions for buildsystem not to quit including DistCC builds
+# Patch12: Force Enabling AV1 decoder in 3588. This may be implemented in radxa git as well soon
+source=(git+https://github.com/$_user/$_kernelrepo.git#branch=$_kernelbranch
+        git+https://github.com/$_user/$_overlayrepo.git#branch=$_overlaybranch
+		'linux.preset'
+		'extlinux.arch.template'
+		'0001-VENDOR-Add-Radxa-overlays.patch'
+		'0002-Fix-dangling-pointer-compiler-bug.patch'
+		'0003-Disable-tristate-for-non-modules.patch'
+		'0004-Disable-tristate-for-modules-that-uses-unexported-sy.patch'
+		'0005-Disable-tristate-for-builtin-dependencies.patch'
+		'0006-Revert-dma-buf-sw_sync-build-sw-sync-as-module-for-g.patch'
+		'0007-Disable-tristate-for-essential-boot-services.patch'
+		'0008-Modfy-GPU-node-for-Panfrost-driver.patch'
+		'0009-VENDOR-Version-tagging-linux-libc-dev-as-well.patch'
+		'0010-Add-ROCK-4-Core-IO-Board-Fuhai.patch'
+		'0011-gcc-ignore-stringop-overread-warnings.patch'
+		'0012-Enable_AV1_decoder_on_3588.patch'
+		'0020-dma-buf-add-dma_resv_get_singleton-v2.patch'
+		'0021-dma-buf-Add-an-API-for-exporting-sync-files-v14.patch'
+		'0022-dma-buf-Add-an-API-for-importing-sync-files-v10.patch'
+		"libmali_g610_wayland.so::https://github.com/JeffyCN/mirrors/raw/${blobcommit}/lib/aarch64-linux-gnu/libmali-valhall-g610-g13p0-wayland-gbm.so"
+        "libmali_g610_x.so::https://github.com/JeffyCN/mirrors/raw/${blobcommit}/lib/aarch64-linux-gnu/libmali-valhall-g610-g13p0-x11-gbm.so"
+        "mali_csffw.bin::https://github.com/JeffyCN/mirrors/raw/${fwcommit}/firmware/g610/mali_csffw.bin"
+        "libmali"
+        "libmaliw"
+		)
+
+b2sums=('SKIP'
+        'SKIP'
+        'bd296f775df973c6dcb6bd8311ce4d3af9a8d4a67905f17c450cae776aab0229987d473334d38fd102a34ed483a121f67ac58a48fd9e6fab2c714c7079e06613'
+        'd8208257c8f2e23a9dbcf2a1bbd11b5a638679cd49dd03d4ea190d1ecd94e2760cccb2cd1cda890816a9c338ce2f38c859961f4ab3a22fca458a453ca0d5f2fc'
+        '4908b5a94c02a4eb0fe8bb9983289f1b8acbb1b8ebb541643c7ec4ac5de87be949efbdec839d34603b045500b13033f836385bdbf3e935fcd8d221f71028d604'
+        'e612cf028aaf8f99c2735a6e1640170af51e62aa86a8cc795694ac089b2f31be93e67c6ee394cd22d290a787cd9f064861b0bb173033069710881280432ad45f'
+        'bde631de66dde60339c7fa306b06a9100ac41adaeb16788c800157324a288a97629c41dda5076698c1ef71b8b7f44b5eba619b6aac92d0d5c59e796fb2aa407a'
+        'bc56e29a4b54bc20cda18023667c115a5819bb1fff9ac9fbe6296d5b89897f82d65fa99e9d013bf25fc0a17e22be219cfef7eb55ceaa6a228da92db8b2a20406'
+        '16b725f25bc150675888dcc03125cd285f2c73f7955d90d521af9a139d717836afab07a995f7018e19cdad41964061800503e40e32656ee54bf69c22e8c8a53f'
+        '8a6c96251c48048ff653285646347853d5df5264d1bf0bf798a48d3636480263125f92c5cb21f7d4b4988b6d831636d34de1b882c0209110178117e3ea1a0630'
+        'f5ab48ee96b6df65ec20742e5bb2badffa7ed926f5020d64bdcfe1fe924fff9cafdb70c7983084f4294ab5663c5b56eeb51e96df176253175e9bde52121c3164'
+        'd7c4496318bd3fc5294af88bcdeafa49b04683d1e1fe7312b0317872fdecb929ef8e62b86332e87eddd49c1f5e7ddb9a59372dcbf0514158f7d75947e81f7d8d'
+        '7dc970eebf837940c67ae61f809f9e0cc6ae9e2a033ca7975b2c4055190b23ddd190170e75949834d54818f08016743d66c6ede5175f6cf988bec2e6aa4f008d'
+        'b3b9b04b0f73d07c1927c0def7e5cc991144a7e65a01dab4ec1b2dd01f092e001da3fc07e852ebefb1530509e25a99730217a9208b6a26b0333c288ca1151935'
+        '86010c037ed11f25de26f0e1a35109488b00af3ec11cceff979694c6730d6501cffa292798042ae6a60d839b438f6abf90b6ecc08ab0a4fa597d564493ab9c9b'
+        '7c61be00b97a8acb759c35f23969cdfb4e739a8c88fd147d2af4594fa14100a2da90b160e04b8632c3dca703ff2c1973138d7f765c5b9a7039c6aae7f0078d9a'
+        'c3487e98544c2d36e60f3c3f2fabff94b3d4b157f2858c67c526dd8fdac8685dae3c2c7c07d4398b898943257f16ddc469dc633619862fe5b8da76fd317bca42'
+        'b9eb4d0856adc68350dba4d7a8076cddddf97061244cd9aea422c549f2dd2f1f951087835ee957ce0117bf468f0d3068d7f52ce5f486ce00263101af4ab2ba68'
+        'eccbf9cf7efd9f5e4f0d12fc59b7f86e1a212ef35e99250f9bc836efe675b1abd81c8997994c8986aa5ec1886e6908abd13473e57523846a15a355fa13beeec7'
+        '7ef307add1d4f2d17ece5a057b106616b5e32378c529783b6dcf68621d34ff02285bc94cf6b76729dde2626a38f0afb57e0100c83ce269b854fd3216c548a051'
+        '7262a58ba3342e8889290330b771be7f1f995170003e6c2f14048ec0020f0aa2ed8e12d1e8a7058476e1e33ae03ba36dcbad8d097f7711603e06a69fe883d7e7'
+        '8df273b81667f27c8490ae05ed38a22084171710f0178ae07d29e842389da4dc013612510a84694aa6ded908acea3892c7e486459ee32291e3872f1272c75210'
+        '75606e8ac064597091850b4d8192ab248bf15127756ca454f07d33390903ab0306d7727345dd9cf37015666ee4c4c915f2c996647fa833c420a72e4a5dff97a6'
+        '4915c805a1ad4f98c4975c4dfa358f16a0fbf1e8096f11189ff019e6d9fa4bb6b5b6e70b8fd5b527fd65a14cb6eb9734afcc05a079b9980ff5d5195d757ac5b4')
+
+pkgver(){
+	#gets the commit count of both repos + _pkgrel and sums them to calculate the revision number
+	cd overlays
+	local _ocommits="$(git rev-list --count HEAD)"
+	local _ocommit="$(git rev-parse --short HEAD)"
+	cd ../kernel
+	local _kcommits="$(git rev-list --count HEAD)"
+	local _kcommit="$(git rev-parse --short HEAD)"
+	
+	local _revnum=$(($_kcommits + $_ocommits + $pkgrel))
+	local _version="${_pkgver}.${_revnum}.${_kcommit}.${_ocommit}"
+	echo $_version > pkgver
+	printf $_version
+}
+
+prepare() {
+  cd kernel
+  cp -rf ../overlays/arch .
+  # patch with radxa patches and dont care if they fail
+  for p in ../*.patch; do
+    echo "Patching with ${p}"
+    patch -p1 -N -i $p || true
+  done
+
+  # this is only for local builds so there is no need to integrity check
+  for p in ../../custom/*.patch; do
+    echo "Custom Patching with ${p}"
+    patch -p1 -N -i $p || true
+  done
+
+  if [ -f ../../custom/config ]; then
+    echo "Using User Specific Config"
+    cp -f ../../custom/config ./.config
+  else 
+    cp -f arch/arm64/configs/rockchip_linux_defconfig ./.config
+  fi
+
+  # fix distcc build which does not support gcc plugins
+  sed -i 's/CONFIG_GCC_PLUGINS=y/CONFIG_GCC_PLUGINS=n/g' .config
+  
+  # enable faster DMA transfer provided through patches 21-25
+  echo "\nCONFIG_SYNC_FILE=y" >> .config
+}
+
+build() {
+  cd kernel
+
+  local _version="$(<pkgver)"
+  _version="${_version/"$_pkgver"/}"
+  _version="${_version//\./-}"
+  sed  -i "5s/.*/EXTRAVERSION = ${_version}/" Makefile
+  echo "-radxa-rkbsp" > .scmversion
+  # should result in kernelmaj.kernelmin.patchver-totalcommitnum-hashofkernel-hashofoverlays-radxa-rkbsp
+ 
+  make olddefconfig prepare
+  make -s kernelrelease > version
+  unset LDFLAGS
+  make ${MAKEFLAGS} Image modules
+  make ${MAKEFLAGS} DTC_FLAGS="-@" dtbs
+}
+
+_package-git() {
+  pkgdesc="Latest Git Linux kernel based on 5.10.x BSP published by RADXA targetting rk3399 based rock4 and rk3588 based rock5 boards"
+  depends=('coreutils' 'kmod' 'mkinitcpio>=0.7')
+  optdepends=('wireless-regdb: to set the correct wireless channels of your country')
+  provides=("linux=${pkgver}" "linux-rkbsp")
+  conflicts=('linux' 'libmali')
+  backup=("etc/mkinitcpio.d/${_kernel}.preset")
+
+  cd kernel
+  
+  local _version="$(<version)"
+  
+  # install dtbs
+  make INSTALL_DTBS_PATH="${pkgdir}/boot/dtbs/$_kernel" dtbs_install
+
+  # install extlinux template
+  install -Dm644 ../extlinux.arch.template "$pkgdir/boot/extlinux/extlinux.arch.template"
+  
+  # install modules
+  make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 modules_install
+
+  # copy kernel
+  install -Dm644 arch/arm64/boot/Image "$pkgdir/usr/lib/modules/$_version/vmlinuz"
+
+  # remove build and source links
+  rm "$pkgdir/usr/lib/modules/$_version"/{source,build}
+
+  # sed expression for following substitutions
+  local _subst="
+    s|%PKGBASE%|${_kernel}|g
+    s|%KERNVER%|${_version}|g
+  "
+
+  # used by mkinitcpio to name the kernel
+  echo "$_kernel" | install -Dm644 /dev/stdin "$pkgdir/usr/lib/modules/$_version/pkgbase"
+
+  # install mkinitcpio preset file
+  sed "$_subst" ../linux.preset |
+    install -Dm644 /dev/stdin "$pkgdir/etc/mkinitcpio.d/$_kernel.preset"
+  
+  cd ../
+  # install the firmware
+  install -Dm755 mali_csffw.bin $pkgdir/usr/lib/firmware/mali_csffw.bin
+
+  # install blob drivers
+  for d in x wayland; do
+    install -Dm755 libmali_g610_$d.so $pkgdir/usr/lib/libmali/libmali_g610_$d.so
+    install -dm755 $pkgdir/usr/lib/libmali/$d
+    for l in libEGL.so libEGL.so.1 libgbm.so.1 libGLESv2.so libGLESv2.so.2 libGLESv2_CM.so libOpenCL.so.1; do
+      ln -s ../libmali_g610_$d.so $pkgdir/usr/lib/libmali/$d/$l;
+    done
+  done
+
+  # install the helper scripts
+  install -Dm755 libmali $pkgdir/usr/bin/libmali
+  install -Dm755 libmaliw $pkgdir/usr/bin/libmaliw
+}
+
+_package-git-headers() {
+  pkgdesc="Latest Git Linux kernel headers based on 5.10.x BSP published by RADXA targetting rk3399 based rock4 and rk3588 based rock5 boards"
+  provides=("linux-headers=${pkgver}" "linux-rkbsp-headers")
+  conflicts=('linux-headers')
+
+  cd kernel
+  local _version="$(<version)"
+  local builddir="$pkgdir/usr/lib/modules/$_version/build"
+
+  echo "Installing build files..."
+  install -Dt "$builddir" -m644 .config Makefile Module.symvers System.map version
+  install -Dt "$builddir/kernel" -m644 kernel/Makefile
+  install -Dt "$builddir/arch/arm64" -m644 arch/arm64/Makefile
+  cp -t "$builddir" -a scripts
+
+  # add xfs and shmem for aufs building
+  mkdir -p "$builddir"/{fs/xfs,mm}
+
+  echo "Installing headers..."
+  cp -t "$builddir" -a include
+  cp -t "$builddir/arch/arm64" -a arch/arm64/include
+  install -Dt "$builddir/arch/arm64/kernel" -m644 arch/arm64/kernel/asm-offsets.s
+  mkdir -p "$builddir/arch/arm"
+  cp -t "$builddir/arch/arm" -a arch/arm/include
+
+  install -Dt "$builddir/drivers/md" -m644 drivers/md/*.h
+  install -Dt "$builddir/net/mac80211" -m644 net/mac80211/*.h
+
+  # https://bugs.archlinux.org/task/13146
+  install -Dt "$builddir/drivers/media/i2c" -m644 drivers/media/i2c/msp3400-driver.h
+
+  # https://bugs.archlinux.org/task/20402
+  install -Dt "$builddir/drivers/media/usb/dvb-usb" -m644 drivers/media/usb/dvb-usb/*.h
+  install -Dt "$builddir/drivers/media/dvb-frontends" -m644 drivers/media/dvb-frontends/*.h
+  install -Dt "$builddir/drivers/media/tuners" -m644 drivers/media/tuners/*.h
+
+  # https://bugs.archlinux.org/task/71392
+  install -Dt "$builddir/drivers/iio/common/hid-sensors" -m644 drivers/iio/common/hid-sensors/*.h
+
+  echo "Installing KConfig files..."
+  find . -name 'Kconfig*' -exec install -Dm644 {} "$builddir/{}" \;
+
+  echo "Removing unneeded architectures..."
+  local arch
+  for arch in "$builddir"/arch/*/; do
+    [[ $arch = */arm64/ || $arch == */arm/ ]] && continue
+    echo "Removing $(basename "$arch")"
+    rm -r "$arch"
+  done
+
+  echo "Removing documentation..."
+  rm -r "$builddir/Documentation"
+
+  echo "Removing broken symlinks..."
+  find -L "$builddir" -type l -printf 'Removing %P\n' -delete
+
+  echo "Removing loose objects..."
+  find "$builddir" -type f -name '*.o' -printf 'Removing %P\n' -delete
+
+  echo "Stripping build tools..."
+  local file
+  while read -rd '' file; do
+    case "$(file -bi "$file")" in
+      application/x-sharedlib\;*)      # Libraries (.so)
+        strip -v $STRIP_SHARED "$file" ;;
+      application/x-archive\;*)        # Libraries (.a)
+        strip -v $STRIP_STATIC "$file" ;;
+      application/x-executable\;*)     # Binaries
+        strip -v $STRIP_BINARIES "$file" ;;
+      application/x-pie-executable\;*) # Relocatable binaries
+        strip -v $STRIP_SHARED "$file" ;;
+    esac
+  done < <(find "$builddir" -type f -perm -u+x ! -name -print0)
+
+  echo "Adding symlink..."
+  mkdir -p "$pkgdir/usr/src"
+  ln -sr "$builddir" "$pkgdir/usr/src/$_kernel"
+}
+
+for _p in ${pkgname[@]}; do
+  eval "package_${_p}() {
+    _package${_p#${_kernel}}
+  }"
+done

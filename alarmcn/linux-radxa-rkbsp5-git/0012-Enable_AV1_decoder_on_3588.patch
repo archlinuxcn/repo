@@ -1,0 +1,20 @@
+--- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi	2023-01-13 10:37:34.000000000 +0100
++++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi.new	2023-01-19 23:52:47.348912968 +0100
+@@ -3449,7 +3449,7 @@
+ 		rockchip,srv = <&mpp_srv>;
+ 		rockchip,taskqueue-node = <11>;
+ 		power-domains = <&power RK3588_PD_AV1>;
+-		status = "disabled";
++		status = "okay";
+ 	};
+ 
+ 	av1d_mmu: iommu@fdca0000 {
+@@ -3461,7 +3461,7 @@
+ 		clock-names = "aclk", "iface";
+ 		#iommu-cells = <0>;
+ 		power-domains = <&power RK3588_PD_AV1>;
+-		status = "disabled";
++		status = "okay";
+ 	};
+ 
+ 	rkisp_unite: rkisp-unite@fdcb0000 {

@@ -1,0 +1,9 @@
+#timeout 10
+#menu title select kernel
+
+label Archlinux
+    kernel /vmlinuz-linux-radxa-rkbsp5
+    initrd /initramfs-linux-radxa-rkbsp5.img
+    devicetreedir /dtbs/linux-radxa-rkbsp5
+    fdtoverlays  /dtbs/linux-radxa-rkbsp5/rockchip/overlays/rk3588-uart7-m2.dtbo
+    append   root=UUID=CHANGEME earlycon=uart8250,mmio32,0xfeb50000 console=ttyFIQ0 console=tty1 consoleblank=0 loglevel=0 panic=10 rootwait rw init=/sbin/init rootfstype=ext4 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory swapaccount=1 irqchip.gicv3_pseudo_nmi=0 switolb=1 coherent_pool=2M

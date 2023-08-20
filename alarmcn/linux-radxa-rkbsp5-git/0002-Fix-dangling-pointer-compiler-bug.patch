@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Yuntian Zhang <yt@radxa.com>
+Date: Mon, 16 May 2022 19:16:48 +0800
+Subject: [PATCH] Fix dangling-pointer compiler bug
+
+https://bugzilla.kernel.org/show_bug.cgi?id=215851
+
+Signed-off-by: Yuntian Zhang <yt@radxa.com>
+---
+ Makefile | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Makefile b/Makefile
+index 35533e1411..380f5613a0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1020,6 +1020,13 @@ KBUILD_CFLAGS   += $(call cc-option,-Werror=designated-init)
+ # change __FILE__ to the relative path from the srctree
+ KBUILD_CPPFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+ 
++# Workaround the latest gcc bug
++# https://bugzilla.kernel.org/show_bug.cgi?id=215851
++KBUILD_CFLAGS += $(call cc-disable-warning, dangling-pointer)
++KBUILD_CFLAGS += $(call cc-disable-warning, address)
++KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
++KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncatio)
++
+ # include additional Makefiles when needed
+ include-y			:= scripts/Makefile.extrawarn
+ include-$(CONFIG_KASAN)		+= scripts/Makefile.kasan
+-- 
+2.37.0
+
