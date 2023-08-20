@@ -2,7 +2,7 @@
 
 _pkgname=tensorboardX
 pkgname=python-tensorboardx
-pkgver=2.6.2.1
+pkgver=2.6.2.2
 pkgrel=1
 pkgdesc='Tensorboard for pytorch (and chainer, mxnet, numpy, ...)'
 arch=('any')
@@ -18,7 +18,7 @@ makedepends=(
 )
 checkdepends=(flake8 python-future python-matplotlib python-pytest python-pytorch python-torchvision)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/lanpa/tensorboardX/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('1d733129d3693648f63e3085195ce8044fa2a53fa8dc2cf6977af1f709c2a5aca84aed807218073ee55e5f5f68ba9f80e9cbae1455482bd64e25732275b8e4eb')
+sha512sums=('219b7129fbe7bb6a6c53947a71b0d4bd3dc88739f9a9679c831b53c8d7c68875d39e6e036f8adf5632986ce6b8eb05671a43847cf86224068040a65c556f76ab')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
