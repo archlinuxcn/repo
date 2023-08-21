@@ -2,10 +2,9 @@
 
 pkgname=duckstation-git
 _pkgname=duckstation
-epoch=1
-pkgver=6121.39e62ae9
+pkgver=r6155.e3d9ba4c
 pkgdesc='A Sony PlayStation (PSX) emulator, focusing on playability, speed, and long-term maintainability (git version)'
-pkgrel=2
+pkgrel=1
 arch=(x86_64 aarch64)
 url=https://github.com/stenzek/duckstation
 license=(GPL3)
@@ -44,13 +43,14 @@ conflicts=('duckstation')
 source=(git+"$url".git
     duckstation-qt.desktop
     duckstation-qt.sh)
+options=(!debug)
 sha256sums=('SKIP'
             'ec2d7358f81598390a8ceca2d1974be3e5f7c45602b550c89a1e9323ab45474b'
             'fdfc77b028faa8be25ea66c8f47c41750ba6eb98f41a4802b44398fc5994b86a')
 
 pkgver() {
     cd "$srcdir/$_pkgname"
-    printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build() {
@@ -67,7 +67,7 @@ build() {
         -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
         -G Ninja \
         -Wno-dev
-    ninja -C build
+    ninja -j 1 -C build
 }
 
 package() {
