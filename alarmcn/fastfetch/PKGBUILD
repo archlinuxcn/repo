@@ -1,19 +1,20 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=fastfetch
-pkgver=1.12.2
-pkgrel=2
+pkgver=2.0.1
+pkgrel=1
 pkgdesc="Like Neofetch, but much faster because written in C"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/fastfetch-cli/fastfetch"
 license=('MIT')
 depends=('gcc-libs')
-makedepends=('chafa' 'cmake' 'dbus' 'dconf' 'imagemagick' 'libnm' 'libpulse'
+makedepends=('chafa' 'cmake' 'dbus' 'dconf' 'ddcutil' 'imagemagick' 'libnm' 'libpulse'
              'libxcb' 'libxrandr' 'mesa' 'ocl-icd' 'opencl-headers' 'pciutils'
              'vulkan-headers' 'vulkan-icd-loader' 'wayland' 'xfconf' 'zlib')
 optdepends=(
   'chafa: Image output as ascii art'
   'dbus: Bluetooth, Player & Media detection'
   'dconf: Needed for values that are only stored in DConf + Fallback for GSettings'
+  'ddcutil: Brightness detection of external displays'
   'glib2: Output for values that are only stored in GSettings'
   'imagemagick: Image output using sixel or kitty graphics protocol'
   'libnm: Used for Wifi detection'
@@ -26,9 +27,8 @@ optdepends=(
   'xfconf: Needed for XFWM theme and XFCE Terminal font'
   'zlib: Faster image output when using kitty graphics protocol'
 )
-backup=("etc/$pkgname/config.conf")
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
-sha256sums=('e3d7384de0aa306effdcbe1b7e8095b40649773086b838d925fbfc2ec5027ab0')
+sha256sums=('b42ed1d08c3caeb14610094f45492b293bb886893b85cbb7fe25e370dffdd9b9')
 
 build() {
   cmake -B build -S "$pkgname-$pkgver" \
@@ -38,7 +38,7 @@ build() {
     -DENABLE_SQLITE3='OFF' \
     -DENABLE_RPM='OFF' \
     -DENABLE_IMAGEMAGICK6='OFF' \
-    -DENABLE_LIBCJSON='OFF' \
+    -DENABLE_DDCUTIL='ON' \
     -Wno-dev
   cmake --build build
 }
