@@ -57,7 +57,7 @@ EOT
     ARCH=aarch64 make rk3588_my_defconfig
     export KCFLAGS='-Wno-error=address'
     ARCH=aarch64 make BL31="${srcdir}/rk3588_bl31.elf" spl/u-boot-spl.bin u-boot.dtb u-boot.itb
-    tools/mkimage -n rk3588 -T rksd -d ../rk3588_ddr.bin:spl/u-boot-spl.bin idbloader.img
+    tools/mkimage -n rk3588 -T rksd -d ${srcdir}/src/rk3588_ddr.bin:spl/u-boot-spl.bin idbloader.img
     _out="u-boot-with-spl-rk3588-$rkdev.bin"
     dd if=idbloader.img of=$_out
     dd if=u-boot.itb    of=$_out seek=$((16384 - 64))
