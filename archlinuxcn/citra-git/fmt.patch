@@ -34,15 +34,24 @@ diff --color -rupN citra/src/core/hw/gpu.h citra/src/core/hw/gpu.h
 diff --color -rupN citra/src/video_core/renderer_vulkan/vk_shader_gen.cpp citra/src/video_core/renderer_vulkan/vk_shader_gen.cpp 
 --- citra/src/video_core/renderer_vulkan/vk_shader_gen.cpp	2023-08-14 12:37:35.737658821 +0800
 +++ citra/src/video_core/renderer_vulkan/vk_shader_gen.cpp	2023-08-14 12:37:35.737658821 +0800
-@@ -305,7 +305,7 @@ static std::string SampleTexture(const P
-         case TexturingRegs::TextureConfig::Disabled:
-             return "vec4(0.0)";
-         default:
--            LOG_CRITICAL(HW_GPU, "Unhandled texture type {:x}", state.texture0_type);
-+            LOG_CRITICAL(HW_GPU, "Unhandled texture type {:x}", static_cast<int>(state.texture0_type));
-             UNIMPLEMENTED();
-             return "texture(tex0, texcoord0)";
-         }
+@@ -619,7 +619,7 @@ static void WriteLighting(std::string& o
+ 
+     // Compute fragment normals and tangents
+     const auto perturbation = [&] {
+-        return fmt::format("2.0 * (sampleTexUnit{}()).rgb - 1.0", lighting.bump_selector);
++        return fmt::format("2.0 * (sampleTexUnit{}()).rgb - 1.0", int(lighting.bump_selector));
+     };
+ 
+     switch (lighting.bump_mode) {
+@@ -663,7 +663,7 @@ static void WriteLighting(std::string& o
+            "vec3 tangent = quaternion_rotate(normalized_normquat, surface_tangent);\n";
+ 
+     if (lighting.enable_shadow) {
+-        std::string shadow_texture = fmt::format("sampleTexUnit{}()", lighting.shadow_selector);
++        std::string shadow_texture = fmt::format("sampleTexUnit{}()", int(lighting.shadow_selector));
+         if (lighting.shadow_invert) {
+             out += fmt::format("vec4 shadow = vec4(1.0) - {};\n", shadow_texture);
+         } else {
 @@ -738,7 +738,7 @@ static void WriteLighting(std::string& o
      // Write the code to emulate each enabled light
      for (unsigned light_index = 0; light_index < lighting.src_num; ++light_index) {
@@ -61,6 +70,15 @@ diff --color -rupN citra/src/video_core/renderer_vulkan/vk_shader_gen.cpp citra/
      } else {
          LOG_CRITICAL(Render_OpenGL, "Unexpected proctex.coord >= 3");
          out += "vec2 uv = abs(texcoord0);\n";
+@@ -1432,7 +1432,7 @@ vec4 shadowTextureCube(vec2 uv, float w)
+                 out += "return shadowTextureCube(texcoord0, texcoord0_w);";
+                 break;
+             default:
+-                LOG_CRITICAL(HW_GPU, "Unhandled texture type {:x}", state.texture0_type);
++                LOG_CRITICAL(HW_GPU, "Unhandled texture type {:x}", static_cast<int>(state.texture0_type));
+                 UNIMPLEMENTED();
+                 out += "return texture(tex0, texcoord0);";
+                 break;
 diff --color -rupN citra/src/video_core/renderer_vulkan/vk_shader_gen_spv.cpp citra/src/video_core/renderer_vulkan/vk_shader_gen_spv.cpp 
 --- citra/src/video_core/renderer_vulkan/vk_shader_gen_spv.cpp	2023-08-14 12:37:35.737658821 +0800
 +++ citra/src/video_core/renderer_vulkan/vk_shader_gen_spv.cpp	2023-08-14 12:37:35.737658821 +0800
