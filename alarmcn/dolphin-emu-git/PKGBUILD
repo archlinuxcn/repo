@@ -7,7 +7,7 @@ _mainpkgname="$_projectname-emu"
 _noguipkgname="$_projectname-emu-nogui"
 pkgbase="$_mainpkgname-git"
 pkgname=("$pkgbase" "$_noguipkgname-git")
-pkgver=5.0.r19912.ga10d768c63
+pkgver=5.0.r19958.gf19651e49b
 pkgrel=1
 pkgdesc='A Gamecube / Wii emulator'
 _pkgdescappend=' - git version'
@@ -18,9 +18,9 @@ depends=(
 	'alsa-lib' 'bluez-libs' 'cubeb' 'enet' 'hidapi' 'libevdev' 'libgl' 'libpulse'
 	'libspng' 'libx11' 'libxi' 'libxrandr' 'lzo' 'mbedtls2' 'minizip-ng' 'pugixml'
 	'qt6-base' 'qt6-svg' 'sfml' 'zlib-ng'
-	'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libcurl.so' 'libfmt.so'
+	'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libcurl.so' 'fmt9' 
 	'libminiupnpc.so' 'libsfml-network.so' 'libsfml-system.so' 'libswscale.so'
-	'libudev.so' 'libusb-1.0.so' 'libspng'
+	'libudev.so' 'libusb-1.0.so' 'libspng' 'vulkan-memory-allocator'
 )
 makedepends=('cmake' 'git' 'ninja' 'python')
 optdepends=('pulseaudio: PulseAudio backend')
@@ -28,19 +28,15 @@ options=('!lto')
 source=(
 	"$pkgname::git+https://github.com/$_mainpkgname/$_projectname"
 	"$pkgname-implot::git+https://github.com/epezent/implot.git"
-	"$pkgname-mgba::git+https://github.com/mgba-emu/mgba.git"
+    "$pkgname-mgba::git+https://github.com/mgba-emu/mgba.git"
 	"$pkgname-rcheevos::git+https://github.com/RetroAchievements/rcheevos.git"
-	"$pkgname-vma::git+https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git"
 	'minizip-ng.diff'
-	'fmt-10.diff'
 )
 sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'SKIP'
-            '568ca7db64149e9ac9409947689a8390783b891e6cff7b096690771512db3e19f9d8551a8739921d8a9f6ec4a9de747811a2efc8cdd4791d715677772db7fa8e'
-            'cecad3c5dfe6246f809580ff9fa6d6fb595019cc61248917358a0aacd1e9206d754b91b0d9d49fc22ca0a669f91f298ca5010885e656201d1ade0535add96363')
+            '568ca7db64149e9ac9409947689a8390783b891e6cff7b096690771512db3e19f9d8551a8739921d8a9f6ec4a9de747811a2efc8cdd4791d715677772db7fa8e')
 
 _sourcedirectory="$pkgname"
 
@@ -52,15 +48,11 @@ prepare() {
 	# Fix minizip-ng name for Arch
 	patch --forward -p1 < "$srcdir/minizip-ng.diff"
 
-	# Fix build with fmt 10
-	patch --forward -p1 < "$srcdir/fmt-10.diff"
-
 	# Provide submodules
 	declare -A _submodules=(
 		[implot]='implot/implot'
-		[mgba]='mGBA/mgba'
 		[rcheevos]='rcheevos/rcheevos'
-		[vma]='VulkanMemoryAllocator'
+        [mgba]='mGBA/mgba'
 	)
 
 	for _submod in "${!_submodules[@]}"; do
