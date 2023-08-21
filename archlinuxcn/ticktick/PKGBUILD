@@ -2,7 +2,7 @@
 
 pkgname=ticktick
 pkgver=1.0.80
-pkgrel=2
+pkgrel=3
 pkgdesc='Official desktop application for Linux'
 arch=('x86_64' 'aarch64')
 url='https://ticktick.com/about/download'
@@ -18,6 +18,11 @@ sha256sums_aarch64=('f1b30675fb745a33b56c70eb30941979513c46222bc084a8329cad2a1f9
 
 package() {
   tar -xf data.tar.xz -C "${pkgdir}"
+
+  # Replace default path to system symlink
+  mkdir -p "${pkgdir}/usr/bin"
+  ln -srf "${pkgdir}/opt/TickTick/ticktick" "${pkgdir}/usr/bin/ticktick"
+  sed -i 's/^Exec=.*/Exec=ticktick %U/' "${pkgdir}/usr/share/applications/ticktick.desktop"
 
   # Install license from https://ticktick.com/about/tos
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
