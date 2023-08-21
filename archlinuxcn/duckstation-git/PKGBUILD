@@ -2,7 +2,8 @@
 
 pkgname=duckstation-git
 _pkgname=duckstation
-pkgver=r6155.e3d9ba4c
+epoch=2
+pkgver=r6161.f75bf851
 pkgdesc='A Sony PlayStation (PSX) emulator, focusing on playability, speed, and long-term maintainability (git version)'
 pkgrel=1
 arch=(x86_64 aarch64)
@@ -14,14 +15,15 @@ depends=(
     libxrandr
     libglvnd
     libx11
-    libdrm
     dbus
     curl
-    mesa
     hicolor-icon-theme)
 makedepends=(
     git
     cmake
+    clang
+    lld
+    llvm
     extra-cmake-modules
     qt6-tools
     qt6-wayland
@@ -43,7 +45,6 @@ conflicts=('duckstation')
 source=(git+"$url".git
     duckstation-qt.desktop
     duckstation-qt.sh)
-options=(!debug)
 sha256sums=('SKIP'
             'ec2d7358f81598390a8ceca2d1974be3e5f7c45602b550c89a1e9323ab45474b'
             'fdfc77b028faa8be25ea66c8f47c41750ba6eb98f41a4802b44398fc5994b86a')
@@ -56,18 +57,24 @@ pkgver() {
 build() {
     cmake -B build -S duckstation \
         -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_C_COMPILER=clang \
+        -DCMAKE_CXX_COMPILER=clang++ \
+        -DCMAKE_C_FLAGS="$CFLAGS -Wno-error=format-security" \
         -DCMAKE_CXX_FLAGS="$CXXFLAGS -Wno-error=format-security" \
+        -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+        -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+        -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
         -DBUILD_NOGUI_FRONTEND=OFF \
         -DBUILD_QT_FRONTEND=ON \
-        -DUSE_DRMKMS=ON \
+        -DUSE_DRMKMS=OFF \
         -DUSE_EGL=ON \
         -DUSE_SDL2=ON \
         -DUSE_WAYLAND=ON \
         -DUSE_X11=ON \
-        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
         -G Ninja \
         -Wno-dev
-    ninja -j 1 -C build
+    ninja -C build -v
 }
 
 package() {
