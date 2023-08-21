@@ -6,7 +6,7 @@
 # Contributor:  Timofey Titovets <nefelim4ag@gmail.com>
 
 pkgbase=linux-next-git
-pkgver=20230816.r0.gef66bf8aeb91
+pkgver=20230821.r0.g47d9bb711707
 _srcname=linux-next
 pkgrel=1
 pkgdesc='Linux NEXT'
@@ -15,9 +15,16 @@ url="http://www.kernel.org/"
 license=('GPL2')
 options=('!strip' '!debug')
 makedepends=(
-  bc libelf pahole cpio perl tar xz gettext
-  xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick texlive-latexextra
+  bc
+  cpio
+  gettext
   git
+  libelf
+  pahole
+  python
+  perl
+  tar
+  xz
 )
 source=("git://git.kernel.org/pub/scm/linux/kernel/git/next/${_srcname}.git"
         # the main kernel config files
@@ -26,6 +33,11 @@ source=("git://git.kernel.org/pub/scm/linux/kernel/git/next/${_srcname}.git"
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
+
+_make() {
+  test -s version
+  make KERNELRELEASE="$(<version)" "$@"
+}
 
 pkgver() {
   cd $_srcname
@@ -39,6 +51,9 @@ prepare() {
         echo "Setting version..."
         echo "-$pkgrel" > localversion.10-pkgrel
         echo "${pkgbase#linux}" > localversion.20-pkgname
+        make defconfig
+        make -s kernelrelease > version
+        make mrproper
 
     ### Patching sources
         local src
@@ -50,7 +65,7 @@ prepare() {
             patch -Np1 < "../$src"
         done
     ### heavysink: Disable Kernel IBT to circumvent btf__dedup error
-        sed -i 's/CONFIG_X86_KERNEL_IBT=y/CONFIG_X86_KERNEL_IBT=n/g' ../config
+        #sed -i 's/CONFIG_X86_KERNEL_IBT=y/CONFIG_X86_KERNEL_IBT=n/g' ../config
 
     ### Setting config
         echo "Setting config..."
@@ -59,8 +74,6 @@ prepare() {
         diff -u ../config .config || :
 
     ### Prepared version
-        make include/config/kernel.release
-        make -s kernelrelease > version
         echo "Prepared $pkgbase version $(<version)"
     
     ### Disable debug
@@ -79,39 +92,24 @@ prepare() {
                         -d SCHED_DEBUG \
                         -d LATENCYTOP \
                         -d DEBUG_PREEMP
-
-    ### Running make nconfig
-	[[ -z "$_makenconfig" ]] ||  make nconfig
-
-    ### Running make menuconfig
-	[[ -z "$_makemenuconfig" ]] || make menuconfig
-
-    ### Running make xconfig
-	[[ -z "$_makexconfig" ]] || make xconfig
-
-    ### Running make gconfig
-	[[ -z "$_makegconfig" ]] || make gconfig
-
-    ### Save configuration for later reuse
-	cat .config > "${startdir}/config.last"
 }
 
 build() {
   cd $_srcname
-  make all
-  make htmldocs
+  _make all
 }
 
 _package() {
     pkgdesc="The $pkgdesc kernel and modules"
     depends=('coreutils' 'kmod' 'initramfs')
-    optdepends=('crda: to set the correct wireless channels of your country'
-                'linux-firmware: firmware images needed for some devices')
-    provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
+    optdepends=(
+    'wireless-regdb: to set the correct wireless channels of your country'
+    'linux-firmware: firmware images needed for some devices'
+    )
+    provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE)
 
   cd $_srcname
-  local kernver="$(<version)"
-  local modulesdir="$pkgdir/usr/lib/modules/$kernver"
+  local modulesdir="$pkgdir/usr/lib/modules/$(<version)"
 
   echo "Installing boot image..."
   # systemd expects to find the kernel here to allow hibernation
@@ -122,7 +120,8 @@ _package() {
   echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
   echo "Installing modules..."
-  make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 modules_install
+  ZSTD_CLEVEL=19 _make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
+    DEPMOD=/doesnt/exist modules_install  # Suppress depmod
 
   # remove build and source links
   rm "$modulesdir"/{source,build}
