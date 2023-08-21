@@ -6,7 +6,7 @@
 
 pkgname=kubectl-bin
 pkgdesc="Kubernetes.io kubectl binary"
-pkgver=1.27.3
+pkgver=1.28.0
 pkgrel=1
 arch=('x86_64' 'armv7l' 'armv7h' 'aarch64')
 url="http://kubernetes.io"
@@ -19,13 +19,13 @@ b2sums=()
 
 case "$CARCH" in
   x86_64) _pkgarch="amd64"
-    b2sums+=('f3cb667688d79ee22491b96258e09e97b0a6e707eb8640fc3a3304a62605e5a83d017b91f67e1d028e838d268b312b9f7eade3f57a5134499c0e8eeaf298cba0')
+    b2sums+=('becf49747002fa77c005d7660e2c104edd6048c1bf486cf6c1a01b13412d7c0ed1b66c18bf9d9f970883de79a858d8558c66b170903abb904dffd8c5be06d9fb')
     ;;
   arm*) _pkgarch="arm"
-    b2sums+=('c55eeda6b2e6e8f9aff1ccbabaf346fcc5ae020a1c55d8139ed84475cb7e2020695b4e236b14469d2b827887f94507f87fdc69d1463172a3b044c2214b0c5e43')
+    b2sums+=('770587fa146e0b8f8605772b808e9507239fa240b798d7d843c4ddcaefb9fc8d3e7fb9f66c7f6bf91bf7b51e3a604cc5d626d770689ff15e96aef1d834a23be0')
     ;;
   aarch64) _pkgarch="arm64"
-    b2sums+=('c43bdb34d8d765e9d463baadc477e80f29a92ec9c94eee9ac3a0466dc5c0ca5c127da9ae3b80b8655cb1b8de8cd72d61654d276e64f8fef2103934deca74ce1f')
+    b2sums+=('40dfc55d0487ce3180bd19962763e7af04718f3f57f245f70d2e85707d71b9b7c01d6fc675077b63bd0505555b7ea1692613b75982315cb2ee2887aee4570788')
     ;;
 esac
 
