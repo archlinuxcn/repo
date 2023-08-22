@@ -57,7 +57,7 @@ source=("${_pkgname}::git+https://github.com/hyprwm/Hyprland.git"
         "0002-Fix-configure_notify-event.patch"
         "0003-Fix-size-hints-under-Xwayland-scaling.patch")
 conflicts=("${_pkgname}")
-provides=(hyprland)
+provides=("${_pkgname}")
 sha256sums=('SKIP'
             'SKIP'
             'SKIP'
