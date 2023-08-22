@@ -18,6 +18,8 @@ optdepends=(
 	'fzf: for directory jumping'
 	'zoxide: for directory jumping')
 makedepends=("git" "cargo")
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
 source=("git+${url}.git")
 sha256sums=('SKIP')
 options=('!lto')
