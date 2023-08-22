@@ -10,6 +10,8 @@ arch=('x86_64' 'aarch64')
 license=('MIT')
 depends=('openssl' 'freetype2' 'hicolor-icon-theme')
 makedepends=('git' 'cargo')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
 source=("git+${url}.git")
 sha512sums=('SKIP')
 
