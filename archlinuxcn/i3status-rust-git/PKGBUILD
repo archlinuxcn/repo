@@ -21,6 +21,8 @@ optdepends=('alsa-utils: for the volume block'
 	'speedtest-cli: for the speedtest block'
 	'ttf-font-awesome: for the awesome icons'
 	'upower: for the battery block')
+conflicts=('i3status-rust')
+provides=('i3status-rust')
 source=("git+${url}.git")
 sha256sums=('SKIP')
 
