@@ -2,11 +2,7 @@ maintainers:
   - github: Integral-Tech
     email: integral@murena.io
 
-pre_build_script: |
-  update_pkgrel()
-  vcs_update()
-
-post_build_script: git_pkgbuild_commit()
+post_build: aur_post_build
 
 repo_depends:
   - xorg-xwayland-lily
@@ -14,3 +10,6 @@ repo_depends:
 update_on:
   - source: github
     github: hyprwm/Hyprland
+      
+  - source: aur
+    aur: hyprland-hidpi-xprop-git
