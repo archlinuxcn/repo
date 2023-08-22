@@ -33,6 +33,8 @@ optdepends=(
 	'yaml-language-server: for YAML language support'
 	'zls: for Zig language support'
 )
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
 install="${_pkgname}.install"
 source=("git+https://github.com/helix-editor/helix.git")
 sha256sums=('SKIP')
