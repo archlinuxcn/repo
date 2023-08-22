@@ -3,65 +3,68 @@
 
 _pkgname=OpenTimelineIO
 pkgname=${_pkgname,,}-git
-pkgver=last_pure_python.r432.geaf8569c
+pkgver=0.15.r67.geaf8569c
 pkgrel=1
-pkgdesc='Open Source API and interchange format for editorial timeline information'
-url='http://opentimeline.io/'
-license=(Apache)
-arch=(x86_64)
-depends=(python-aaf2 python-setuptools)
-makedepends=(cmake git imath python-pip pybind11)
+pkgdesc="Open Source API and interchange format for editorial timeline information"
+url="http://opentimeline.io/"
+license=('Apache')
+arch=('x86_64')
+depends=('python-aaf2' 'python-setuptools')
+makedepends=('cmake' 'git' 'imath' 'python-pip' 'pybind11')
 optdepends=('pyside2: Required to run otioview')
-source=($_pkgname::git+https://github.com/AcademySoftwareFoundation/$_pkgname
-        any::git+https://github.com/thelink2012/any
-        optional-lite::git+https://github.com/martinmoene/optional-lite
-	rapidjson::git+https://github.com/Tencent/rapidjson)
+source=("${_pkgname}::git+https://github.com/AcademySoftwareFoundation/${_pkgname}"
+	"any::git+https://github.com/thelink2012/any"
+	"optional-lite::git+https://github.com/martinmoene/optional-lite"
+	"rapidjson::git+https://github.com/Tencent/rapidjson")
 sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
-	    'SKIP')
+	'SKIP'
+	'SKIP'
+	'SKIP')
 
 pkgver() {
-  cd $_pkgname
-  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 prepare() {
-  cd $_pkgname
-  git submodule init
-  for dependency in Imath pybind11; do
-    git rm src/deps/$dependency
-  done
-  for dependency in any optional-lite rapidjson; do
-    git config submodule.src/deps/$dependency.url $srcdir/$dependency
-  done
-  git -c protocol.file.allow=always submodule update
+	cd "${_pkgname}/"
+	git submodule init
 
-  # Unbundle pybind11
-  sed -e 's/pybind11 //' -i src/deps/CMakeLists.txt
-  sed -e '1 i\find_package(pybind11)' -i src/py-opentimelineio/opentime-bindings/CMakeLists.txt \
-                                      -i src/py-opentimelineio/opentimelineio-bindings/CMakeLists.txt
+	for dependency in Imath pybind11; do
+		git rm "src/deps/${dependency}"
+	done
 
-  # Unbundle Imath
-  sed -e '/add_subdirectory/ d' -i src/deps/CMakeLists.txt
+	for dependency in any optional-lite rapidjson; do
+		git config "submodule.src/deps/${dependency}.url" "${srcdir}/${dependency}"
+	done
+
+	git -c protocol.file.allow=always submodule update
+
+	# Unbundle pybind11
+	sed -e 's/pybind11 //' -i src/deps/CMakeLists.txt
+	sed -e '1 i\find_package(pybind11)' -i src/py-opentimelineio/opentime-bindings/CMakeLists.txt \
+		-i src/py-opentimelineio/opentimelineio-bindings/CMakeLists.txt
+
+	# Unbundle Imath
+	sed -e '/add_subdirectory/ d' -i src/deps/CMakeLists.txt
 }
 
 build() {
-  cmake -B build -S OpenTimelineIO \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DOTIO_FIND_IMATH=ON
-  cmake --build build
+	cmake -B build -S OpenTimelineIO \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DOTIO_FIND_IMATH=ON
+	cmake --build build
 
-  # Workaround messy build system
-  export CXXFLAGS+=" -I/usr/include/Imath"
-  cd OpenTimelineIO
-  python setup.py build
+	# Workaround messy build system
+	export CXXFLAGS+=" -I/usr/include/Imath"
+	cd "OpenTimelineIO/"
+	python setup.py build
 }
 
 package() {
-  DESTDIR="$pkgdir" cmake --install build
+	DESTDIR="${pkgdir}/" cmake --install build
 
-  cd OpenTimelineIO
-  DESTDIR="$pkgdir" python setup.py install --root="$pkgdir" --optimize=1
-  rm -fr "$pkgdir"/build
+	cd "OpenTimelineIO/"
+	DESTDIR="${pkgdir}/" python setup.py install --root="${pkgdir}/" --optimize=1
+	rm -rf "${pkgdir}/build"
 }
