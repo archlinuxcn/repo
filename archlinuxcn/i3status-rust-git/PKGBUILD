@@ -1,0 +1,61 @@
+# Maintainer: Frederik Schwan <freswa at archlinux dot org>
+# Contributor: Daniel M. Capella <polyzen@archlinux.org>
+# Contributor: Josip Ponjavic <josipponjavic at gmail dot com>
+
+pkgname=i3status-rust-git
+_pkgname=i3status-rust
+pkgver=0.31.9.r4.g1370e6b
+pkgrel=1
+pkgdesc='Resourcefriendly and feature-rich replacement for i3status, written in pure Rust'
+arch=('x86_64' 'aarch64' 'riscv64')
+url='https://github.com/greshake/i3status-rust'
+license=('GPL3')
+depends=('libpulse' 'lm_sensors')
+makedepends=('git' 'rust' 'pandoc')
+optdepends=('alsa-utils: for the volume block'
+	'bluez: for the bluetooth block'
+	'fakeroot: for the pacman block to show pending updates'
+	'kdeconnect: for the kdeconnect block'
+	'powerline-fonts: for all themes using the Powerline arrow char'
+	'pulseaudio: for the volume block'
+	'speedtest-cli: for the speedtest block'
+	'ttf-font-awesome: for the awesome icons'
+	'upower: for the battery block')
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+	cd "${_pkgname}/"
+	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+	cd "${_pkgname}/"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	cargo build --release --locked --features 'pulseaudio maildir'
+	cargo xtask generate-manpage
+}
+
+package() {
+	cd "${_pkgname}/"
+	install -Dm755 -t "${pkgdir}"/usr/bin target/release/i3status-rs
+	install -Dm644 -t "${pkgdir}"/usr/share/man/man1 man/i3status-rs.1
+
+	for icon in files/icons/*.toml; do
+		install -Dm644 -t "${pkgdir}"/usr/share/${_pkgname}/icons "${icon}"
+	done
+
+	for theme in files/themes/*.toml; do
+		install -Dm644 -t "${pkgdir}"/usr/share/${_pkgname}/themes "${theme}"
+	done
+
+	for example in examples/*.toml; do
+		install -Dm644 -t "${pkgdir}"/usr/share/doc/${_pkgname}/examples/ ${example}
+	done
+}
