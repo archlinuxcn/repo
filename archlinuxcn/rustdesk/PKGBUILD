@@ -8,12 +8,12 @@ _opt_BUILD_PY=1
 
 # 0 for package flutter, version checked
 # 1 for system flutter, version warned
-_opt_SYS_FLUTTER=1
+_opt_SYS_FLUTTER=0
 
 set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}"
-pkgver='1.2.1'
+pkgver='1.2.2'
 pkgrel=1
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
 arch=('x86_64')
@@ -35,7 +35,7 @@ source=(
 )
   makedepends+=('vcpkg')
   if [ "${_opt_SYS_FLUTTER}" -eq 0 ]; then
-    _FLUVER='3.10.5'
+    _FLUVER='3.10.6'
     source+=(
       "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${_FLUVER}-stable.tar.xz"
     )
@@ -52,9 +52,11 @@ if ! :; then
   _srcdir="${_pkgname}"
   source[0]="git+${_giturl}#tag=${pkgver}"
 fi
-md5sums=('a768dfc315c735d9f137e89a17604a7a'
+md5sums=('6cef8a5aaa5c1feb42899a662a8e4aa9'
+         '97115fa5fc6d8d63bdf13dc57fc20861'
          '9cb4a6717db959e082db75200e75d3e1')
-sha256sums=('6f53d046cdff83dcb304c866cf0b90076fc4a379ba9d5e14cf70f2a47e71e1bc'
+sha256sums=('6dca487f7d05eb3a698138470ab171742b213b617adbdbee4f476afb2526c80f'
+            '7048e51a89c99a5b6cac6d8ae416121264effa76da34dba5c0e7cf85519c8e98'
             '6efb71ac8086699da74dad6736c32ddb20db5dcabe167c49a8c3a650675eb84b')
 
 _vcpkg=(libvpx libyuv opus aom)
