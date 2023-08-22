@@ -53,7 +53,7 @@ makedepends=(
 source=("${_pkgname}::git+https://github.com/hyprwm/Hyprland.git"
 	"nvidia.patch")
 conflicts=("${_pkgname}")
-provides=(hyprland)
+provides=("${_pkgname}")
 sha256sums=('SKIP'
 	'c200d341641ee20a13b1893e27a9d823e9ef5ac2378e3cdecd0efc55a713db1c')
 options=(!makeflags !buildflags !strip)
