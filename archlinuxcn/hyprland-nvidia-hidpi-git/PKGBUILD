@@ -60,7 +60,7 @@ source=("${_pkgname}::git+https://github.com/hyprwm/Hyprland.git"
 	"0003-Fix-size-hints-under-Xwayland-scaling.patch"
 	"nvidia.patch")
 conflicts=("${_pkgname}")
-provides=(hyprland)
+provides=("${_pkgname}")
 sha256sums=('SKIP'
 	'SKIP'
 	'SKIP'
