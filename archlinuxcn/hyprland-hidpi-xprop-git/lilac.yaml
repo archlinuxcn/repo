@@ -2,6 +2,10 @@ maintainers:
   - github: Integral-Tech
     email: integral@murena.io
 
+pre_build_script: |
+  aur_pre_build(maintainers=['Aleksana', 'q234rty'])
+  add_depends(['libdisplay-info.so'])
+
 post_build: aur_post_build
 
 repo_depends:
