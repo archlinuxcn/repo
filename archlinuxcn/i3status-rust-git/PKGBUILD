@@ -8,7 +8,7 @@ pkgver=0.31.9.r4.g1370e6b
 pkgrel=1
 pkgdesc='Resourcefriendly and feature-rich replacement for i3status, written in pure Rust'
 arch=('x86_64' 'aarch64' 'riscv64')
-url='https://github.com/greshake/i3status-rust'
+url="https://github.com/greshake/${_pkgname}"
 license=('GPL3')
 depends=('libpulse' 'lm_sensors')
 makedepends=('git' 'rust' 'pandoc')
@@ -21,8 +21,8 @@ optdepends=('alsa-utils: for the volume block'
 	'speedtest-cli: for the speedtest block'
 	'ttf-font-awesome: for the awesome icons'
 	'upower: for the battery block')
-conflicts=('i3status-rust')
-provides=('i3status-rust')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
 source=("git+${url}.git")
 sha256sums=('SKIP')
 
