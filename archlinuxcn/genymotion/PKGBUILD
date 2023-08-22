@@ -7,11 +7,10 @@
 
 pkgname=genymotion
 pkgver=3.5.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Complete set of tools that provides a virtual environment for Android."
 arch=('x86_64')
 url="http://www.genymotion.com/"
-depends=(qt5-websockets openssl-1.1 qt5-svg ffmpeg4.4 qt5-multimedia gtk3 qt5-quickcontrols2 qt5-location)
 optdepends=(virtualbox)
 makedepends=(wget)
 install=$pkgname.install
