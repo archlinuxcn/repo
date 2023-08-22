@@ -1,0 +1,46 @@
+# Maintainer: Caleb Maclennan <caleb@alerque.com>
+# Contributor: George Rawlinson <grawlinson@archlinux.org>
+
+pkgname=lapce-git
+_pkgname=${pkgname%-git}
+pkgver=0.2.8.r289.gd4fe89f
+pkgrel=1
+pkgdesc='Lightning-fast and Powerful Code Editor'
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://lapce.dev"
+_url="https://github.com/${_pkgname}/${_pkgname}"
+license=('Apache')
+depends=('expat' 'fontconfig' 'freetype2' 'gtk3' 'libxcb' 'libxkbcommon' 'libxkbcommon-x11')
+makedepends=('git' 'cargo' 'python' 'cmake' 'clang')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+options=('!lto')
+source=("git+${_url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 --match 'v[0-9]*' |
+		sed -e 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+	cd "${_pkgname}/"
+	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+	cd "${_pkgname}/"
+	# See https://github.com/lapce/lapce/pull/2374 and https://bugs.archlinux.org/task/78922
+	export RELEASE_TAG_NAME="v${pkgver}"
+	cargo build --frozen --profile release-lto --all-features
+}
+
+package() {
+	cd "${_pkgname}/"
+	install -Dm0755 -t "${pkgdir}/usr/bin/" "target/release-lto/${_pkgname}"{,-proxy}
+	local lname=dev.lapce.lapce
+	install -Dm0644 -t "${pkgdir}/usr/share/applications/" "extra/linux/${lname}.desktop"
+	install -Dm0644 -t "${pkgdir}/usr/share/metainfo/" "extra/linux/${lname}.metainfo.xml"
+	install -Dm0644 "extra/images/logo.png" "${pkgdir}/usr/share/pixmaps/${lname}.png"
+}
