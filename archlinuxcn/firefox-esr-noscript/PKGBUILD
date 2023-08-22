@@ -3,8 +3,8 @@
 # Maintainer: Eli schwartz <eschwartz@archlinux.org>
 
 pkgname=firefox-esr-noscript
-pkgver=11.4.1
-pkgrel=2
+pkgver=11.4.26
+pkgrel=1
 #_file=3910951
 pkgdesc="Extension for firefox which disables javascript"
 arch=('any')
@@ -15,8 +15,8 @@ makedepends=('unzip' 'jq')
 #source=("noscript-${pkgver}.xpi::https://addons.mozilla.org/firefox/downloads/file/${_file}/")
 source=("noscript-${pkgver}.xpi::https://secure.informaction.com/download/releases/noscript-$pkgver.xpi")
 noextract=("noscript-${pkgver}.xpi")
-sha256sums=('68bdf014e3c102b3b3fbb86b7c07a9ecb7ee8e6a1da253cd6aea31d4c86a04d7')
-b2sums=('74b18f2b864496571e857553361b409fca273635f8fb4a23db161f018dd79ccdc04c6a8d698477f537bb37a62c24e568e1d2a67652b696698d94f0b4345b3582')
+sha256sums=('283db0eaebbd2888c1a852f5acabaa8e0225ff1eb1a97a25bceaedfd14d9f44c')
+b2sums=('cfc57113579e8c86126966747710c3f46a82215367e259f73f2e9529e3a002ab157dc8f6faed614b34b7db9f483fdf52d87ca6e3fc0b1404bf1bdc1c89d94ca5')
 
 check() {
   unzip noscript-$pkgver.xpi manifest.json
