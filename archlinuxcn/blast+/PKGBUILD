@@ -3,8 +3,8 @@
 # Contributor: Christian Krause ("wookietreiber") <kizkizzbangbang@googlemail.com>
 
 pkgname=blast+
-pkgver=2.14.0
-pkgrel=3
+pkgver=2.14.1
+pkgrel=1
 pkgdesc='BLAST tool suite from NCBI (blastn, blastp, blastx, psiblast, etc)'
 arch=('x86_64')
 url='http://blast.ncbi.nlm.nih.gov'
@@ -57,7 +57,7 @@ makedepends=(
   protobuf
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://ftp.ncbi.nlm.nih.gov/blast/executables/LATEST/ncbi-blast-${pkgver}+-src.tar.gz")
-sha256sums=('bf477f1b0c3b82f0b7a7094bf003a9a83e37e3b0716c1df799060c4feab17500')
+sha256sums=('712c2dbdf0fb13cc1c2d4f4ef5dd1ce4b06c3b57e96dfea8f23e6e99f5b1650e')
 
 build() {
   export CC=gcc-12
