@@ -1,6 +1,7 @@
 # Maintainer: Zhanibek Adilbekov <zhanibek.adilbekov@pm.me>
+# shellcheck disable=SC2034,2164,2154
 pkgname=auto-cpufreq
-pkgver=1.9.8
+pkgver=1.9.9
 pkgrel=1
 pkgdesc="Automatic CPU speed & power optimizer"
 arch=('any')
@@ -15,7 +16,7 @@ optdepends=(
 makedepends=('python-pip' 'python-wheel')
 install="$pkgname.install"
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz" "$pkgname.service")
-b2sums=('dc4097cfe4117851a488f07b6393fd9f543ed7ce854cc214c7f67472e577bf7b618ac0cfdc5eeabe63b8488eb6575bad79248f1748cc85804ce833f3fb62522a'
+b2sums=('d82550a5dd553da52b784a91b7201da9fc72202de70b012712cd99c11b24284bc3586f0611004f7d8bf44b314baf96fa8d8a8a862f11dcb4561734f57b339776'
         '90d9a6e0a86d01803527462e0ed0ce93d04d245c2c99ab773f31e1eb46dd86b209f98af50967bbdb6627563b0aae0ca4bbc861c812576a243b07c40a483c37db')
 
 prepare() {
