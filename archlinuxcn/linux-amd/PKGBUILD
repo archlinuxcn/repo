@@ -2,10 +2,10 @@
 
 pkgbase=linux-amd
 _srcname=linux
-gitver=v6.4.11
+gitver=v6.4.12
 patchver=20230105
 patchname=more-uarches-for-kernel-5.17+.patch
-pkgver=6.4.v.11
+pkgver=6.4.v.12
 pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
@@ -25,7 +25,7 @@ source=("git+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git#ta
 )
 sha256sums=('SKIP'
             #config.x86_64
-            '49d213e9e5a8652b0a81921991809d454257545fd1d7ba3a7b806a755f00ed13'
+            'bea4ddcb375e3e00bcbc490ad2a5e8aa26f34188e38d6b64f4252a70bb6c09d9'
             #.preset file
             '60c6ba602443e94a9eba3aeee9d194027d69bffaa428c6d055348ebf03681b5c'
             #linux install file
@@ -77,7 +77,7 @@ prepare() {
 build() {
   cd "${_srcname}"
 
-  #Force zenv3 architecture optimisation and other optimisations.
+  #Force zenv4 architecture optimisation and other optimisations.
   make ${MAKEFLAGS} LOCALVERSION= bzImage modules KCFLAGS='-march=znver4 -mtune=znver4 -O2 -pipe -fstack-protector-strong'
 }
 
