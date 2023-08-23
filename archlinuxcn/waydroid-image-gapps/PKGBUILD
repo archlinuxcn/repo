@@ -3,21 +3,21 @@
 # Contributer: Danct12 <danct12@disroot.org>
 # Contributor: Bart Ribbers <bribbers@disroot.org>
 
-_pkgver_images_system="18.1-20230422"
-_pkgver_images_vendor="18.1-20230422"
+_pkgver_images_system="18.1-20230819"
+_pkgver_images_vendor="18.1-20230819"
 
-_pkgver_images_system_x86="18.1-20230422"
-_pkgver_images_vendor_x86="18.1-20230422"
+_pkgver_images_system_x86="18.1-20230819"
+_pkgver_images_vendor_x86="18.1-20230819"
 
-_pkgver_images_system_arm64="18.1-20230422"
-_pkgver_images_vendor_arm64="18.1-20230422"
+_pkgver_images_system_arm64="18.1-20230819"
+_pkgver_images_vendor_arm64="18.1-20230819"
 
-_pkgver_images_system_arm="18.1-20230422"
-_pkgver_images_vendor_arm="18.1-20230422"
+_pkgver_images_system_arm="18.1-20230819"
+_pkgver_images_vendor_arm="18.1-20230819"
 
 pkgname=waydroid-image-gapps
 pkgver="${_pkgver_images_system//-/_}"
-pkgrel=8
+pkgrel=1
 pkgdesc="A container-based approach to boot a full Android system on a regular Linux system (Android image, GAPPS)."
 arch=('x86_64' 'i686' 'armv7h' 'aarch64')
 license=('Apache')
@@ -47,11 +47,11 @@ package() {
   mv "$srcdir/vendor.img" "$pkgdir/usr/share/waydroid-extra/images"
 }
 
-sha256sums_x86_64=('0943fa2507ac9dc66b4fa3bd10e6dfbee6de8a8aa1e0701e839c67955c2a8281'
-                   'c97fd8f569baf1a5a4a91ca0d2db2d21b911daf0c29b8966f7640d37aa130de8')
-sha256sums_i686=('7a4ee359bda91e7ef7ecce829c45d4879de2ec24933fbc6fdcfcf20d387e08fb'
-                 '98d535317deaf9ab8dff8a81a85b1e5caf124694aabb57764f107719930aba08')
-sha256sums_armv7h=('55c02b626e30a523a847aa62073cc6faf92fd0d3d74a433f8d8ecdc4d355ec89'
-                   '570a98e70a085fd13e9950791b1b6c704ddc075a55d29397a01c7dac72dc9503')
-sha256sums_aarch64=('8847cbf2e83579be2a1fdc9abe66db0483752e228fd9bc6bc41216a7f436de44'
-                    '9a1982b5d789f482635a3ed181e403ab3b2fe87576d492b1baaf02cd096a22de')
+sha256sums_x86_64=('0c7d0ec93dd994c8e16225633641f13bf629d12785ae88ea406a95b35eae08b4'
+                   '64cc997c23f7cdd52bab359047aedde3d7218430e2dc8c85d28f0896bcd39525')
+sha256sums_i686=('5b3897ba00c74897e14dd87fe6d1a4f1493a34878da797de519d9c64c7ac9e44'
+                 'c9da0eed3cdeb6ec01f4a56f1857950b97d1a5fe526d91f406a109bf20d6e172')
+sha256sums_armv7h=('9842504ccded3412fb9f2e50e928ecb9128af1adfc817ab211bd8cd5da2912fc'
+                   '8e9a32a65918295fbae5729da18c4a115069c18bd042e8086eec2f1d924beb76')
+sha256sums_aarch64=('d4594c48e4de8ba0656500e7debc2cab457a1bdce62f38170aba5f45f773cb72'
+                    '8d69c092521d23303b9401330ac99ce83b7c7ab3c1edd5e41a895eaadf113d9b')
