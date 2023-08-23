@@ -6,7 +6,7 @@ _commit=
 pkgver=8.0.3.3  # pkgver=${_srctag//-/.}
 _geckover=2.47.3
 _monover=7.4.1
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 url="https://github.com/ValveSoftware/Proton"
@@ -85,7 +85,8 @@ source=(
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     0001-AUR-Pkgbuild-changes.patch
     0002-AUR-Do-not-update-cargo-crates.patch
-    0004-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
+    0003-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
+    0004-AUR-Strip-binaries-early.patch
     fix_hwnd_changes_meaning.patch
 )
 # Optional patches
@@ -164,7 +165,8 @@ pip install --no-cache-dir afdko
 
     patch -p1 -i "$srcdir"/0001-AUR-Pkgbuild-changes.patch
     patch -p1 -i "$srcdir"/0002-AUR-Do-not-update-cargo-crates.patch
-    patch -p1 -i "$srcdir"/0004-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
+    patch -p1 -i "$srcdir"/0003-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
+    patch -p1 -i "$srcdir"/0004-AUR-Strip-binaries-early.patch
     patch -p1 -i "$srcdir"/fix_hwnd_changes_meaning.patch
 }
 
@@ -262,9 +264,10 @@ sha256sums=('SKIP'
             '08d318f3dd6440a8a777cf044ccab039b0d9c8809991d2180eb3c9f903135db3'
             '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
             '1286afc67b0a329f5e2d98d9e803ca5906a841ad5486e9b3b1fefa1124b15622'
-            'e8f649ad4a7010fce360561b12de69cc37d6a2a6f4484fc990426cc68958d1b5'
-            '96f1f6891a12dae0c8da9ba2407f5a69cac239e5f1a75b814d5053b86892127b'
-            '48fa081f39997e3f8eb876dba94d77045a6e4df92739556f9ebb1a8ad6c4281d'
+            '05ed7c49f0f6b9ddff5d4a8891c1b5e7ac8e0e7c9694c1571811eb20bf6eed85'
+            '8c1b487777983958841f4f113f505d6d03d40c4d74868c7553e53b7f133b6c52'
+            'b507bae0ea4400d49e64ab31128cba14108598dd14fa097328fa967ee88fef4a'
+            'ae2c2eb53cd6a29463cf55cdf464084003ea5a1a9164e67bee0f544c2416233c'
             '20824bb565fefcad4aa978c54e0f8b9d9d17b7b52fb03fc87943150de148f06f')
 # Optional patches
 sha256sums+=(
