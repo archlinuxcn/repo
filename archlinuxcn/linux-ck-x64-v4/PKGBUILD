@@ -71,7 +71,7 @@ _subarch=42
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 pkgbase=linux-ck-x64-v4
-pkgver=6.4.11
+pkgver=6.4.12
 pkgrel=1
 arch=(x86_64)
 url="https://wiki.archlinux.org/index.php/Linux-ck"
@@ -104,18 +104,22 @@ source=(
   "ck-hrtimer-$_commit.tar.gz::https://github.com/graysky2/linux-patches/archive/$_commit.tar.gz"
   0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
   0002-drivers-firmware-skip-simpledrm-if-nvidia-drm.modese.patch
+  0003-tpm-Don-t-make-vendor-check-required-for-probe.patch
+  0004-sphinx-kfigure.py-Convert-outdir-to-str-before-using.patch
 )
 validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
-sha256sums=('546b68b5097d3c0d74722de62aae217729d98e45fbb6bd458b490ac21ea40918'
+sha256sums=('cca91be956fe081f8f6da72034cded96fe35a50be4bfb7e103e354aa2159a674'
             'SKIP'
             'dad89a5db7c4e19ae29c60861000f3669e86c2e957d445a675596c1e85a57464'
             'f1d586e111932890ad5e0df15d092fb9b3f87bae4ea17812aae9b0ec98fe2db0'
             'ed0b8773d66079198edd1ecdbe0564d6ad33c641e82d85375e50a2d9e0275144'
-            '58d09bed6204c41bdc2220740a90e974b999e779da9b8f2dd5a049247f193327'
-            '63ba7146381b0117bc3b5813c6df6374e68307e089dd81aad769993e5af95983')
+            '26932226873903df3e4c330581b0112e4817ecb55c60bebc969f8aeba440a7f7'
+            'ca8e9ae6b10b394f71314dcbc381832d5c2ab654aa1c4bd24a25a0ba3588c3a3'
+            '83dec929306e9dc54d8f786866a478ee530912ba722479d6dbfb099d5023a7cb'
+            '65b6e434abc21c29a33a4d73dee40d33679f04ee740ded8fe88c320d1248055c')
 _make() {
   test -s version
   make KERNELRELEASE="$(<version)" "$@"

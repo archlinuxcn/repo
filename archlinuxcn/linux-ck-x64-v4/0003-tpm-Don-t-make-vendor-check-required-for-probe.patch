@@ -1,0 +1,39 @@
+From e5f6f3e36b5e3a3bae8d890f70d3508edc4049be Mon Sep 17 00:00:00 2001
+From: Mario Limonciello <mario.limonciello@amd.com>
+Date: Fri, 18 Aug 2023 13:15:16 -0500
+Subject: [PATCH 3/5] tpm: Don't make vendor check required for probe
+
+The vendor check introduced by commit 554b841d4703 ("tpm: Disable RNG for
+all AMD fTPMs") doesn't work properly on Intel fTPM.  The TPM doesn't reply
+at bootup and returns back the command code.
+
+As this isn't crucial for anything but AMD fTPM and AMD fTPM works, throw
+away the error code to let Intel fTPM continue to work.
+
+Cc: stable@vger.kernel.org
+Fixes: 554b841d4703 ("tpm: Disable RNG for all AMD fTPMs")
+Reported-by: Todd Brandt <todd.e.brandt@intel.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217804
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Cherry-picked-for: https://bugs.archlinux.org/task/79366
+---
+ drivers/char/tpm/tpm_crb.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+index 9eb1a1859012..b0e9931fe436 100644
+--- a/drivers/char/tpm/tpm_crb.c
++++ b/drivers/char/tpm/tpm_crb.c
+@@ -472,8 +472,7 @@ static int crb_check_flags(struct tpm_chip *chip)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = tpm2_get_tpm_pt(chip, TPM2_PT_MANUFACTURER, &val, NULL);
+-	if (ret)
++	if (tpm2_get_tpm_pt(chip, TPM2_PT_MANUFACTURER, &val, NULL))
+ 		goto release;
+ 
+ 	if (val == 0x414D4400U /* AMD */)
+-- 
+2.42.0
+
