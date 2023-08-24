@@ -13,30 +13,30 @@ source=("${pkgname}-${pkgver}::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('1708c599640deb6f7fb4d790808ceabb2f67078e4085b5a20732e101751473a9')
 
 prepare() {
-    cd "${pkgname}-${pkgver}/"
-    mkdir -p build
+	cd "${pkgname}-${pkgver}/"
+	mkdir -p build
 }
 
 build() {
-    cd "${pkgname}-${pkgver}/"
+	cd "${pkgname}-${pkgver}/"
 
-    export CGO_CPPFLAGS="${CPPFLAGS}"
-    export CGO_CFLAGS="${CFLAGS}"
-    export CGO_CXXFLAGS="${CXXFLAGS}"
-    export CGO_LDFLAGS="${LDFLAGS}"
-    export GOPATH="${srcdir}/go"
-    export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
-    go build -o build
+	export CGO_CPPFLAGS="${CPPFLAGS}"
+	export CGO_CFLAGS="${CFLAGS}"
+	export CGO_CXXFLAGS="${CXXFLAGS}"
+	export CGO_LDFLAGS="${LDFLAGS}"
+	export GOPATH="${srcdir}/go"
+	export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+	go build -o build
 }
 
 package() {
-    cd "${pkgname}-${pkgver}/build/"
+	cd "${pkgname}-${pkgver}/build/"
 
-    install -Dm755 "${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
-    install -Dm644 "${srcdir}/${pkgname}/LICENSE.md" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-    sed -i "s/Chat;/Chat;InstantMessaging;/" "${srcdir}/${pkgname}/nix/xyz.diamondb.gtkcord4.desktop"
-    install -Dm644 "${srcdir}/${pkgname}/nix/xyz.diamondb.gtkcord4.desktop" "${pkgdir}/usr/share/applications/gtkcord4.desktop"
-    install -Dm644 "${srcdir}/${pkgname}/xyz.diamondb.gtkcord4.metainfo.xml" "${pkgdir}/usr/share/metainfo/gtkcord4.metainfo.xml"
-    install -Dm644 "${srcdir}/${pkgname}/internal/icons/png/logo.png" "${pkgdir}/usr/share/icons/hicolor/256x256/apps/gtkcord4.png"
-    install -Dm644 "${srcdir}/${pkgname}/internal/icons/svg/logo.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/gtkcord4.png"
+	install -Dm755 "${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+	install -Dm644 "${srcdir}/${pkgname}/LICENSE.md" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+	sed -i "s/Chat;/Chat;InstantMessaging;/" "${srcdir}/${pkgname}/nix/xyz.diamondb.gtkcord4.desktop"
+	install -Dm644 "${srcdir}/${pkgname}/nix/xyz.diamondb.gtkcord4.desktop" "${pkgdir}/usr/share/applications/gtkcord4.desktop"
+	install -Dm644 "${srcdir}/${pkgname}/xyz.diamondb.gtkcord4.metainfo.xml" "${pkgdir}/usr/share/metainfo/gtkcord4.metainfo.xml"
+	install -Dm644 "${srcdir}/${pkgname}/internal/icons/png/logo.png" "${pkgdir}/usr/share/icons/hicolor/256x256/apps/gtkcord4.png"
+	install -Dm644 "${srcdir}/${pkgname}/internal/icons/svg/logo.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/gtkcord4.png"
 }
