@@ -2,15 +2,14 @@
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=linux-lts515
-pkgver=5.15.126
+pkgver=5.15.127
 pkgrel=1
 pkgdesc='LTS Linux 5.15.x'
 url="https://www.kernel.org/"
 arch=(x86_64 pentium4 i686 i486)
 license=(GPL2)
 makedepends=(
-  bc libelf pahole cpio perl tar xz
-  xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick texlive-latexextra
+  bc libelf pahole cpio perl tar xz python
 )
 options=('!strip')
 _srcname=linux-$pkgver
@@ -28,9 +27,9 @@ validpgpkeys=(
   '647F28654894E3BD457199BE38DBBDC86092693E'  # Greg Kroah-Hartman
 )
 # https://www.kernel.org/pub/linux/kernel/v5.x/sha256sums.asc
-sha256sums=('adf4aab9840f89ee151b837defbe16e9f388e8eef20df7ee94bf63be33b3ed6f'
+sha256sums=('add0a575341b263a06e93599fc220a5dd34cb4ca5b9d05097a5db2a061928f26'
             'SKIP'
-            '0eb953a7c153e7677dd5b18287b922f9da61ed48f69a223d391de84c7a29083c'
+            '9dd6d986f4eca2eb6e291221436954df6c850506696d843b903fdee087d07e56'
             '3b5cfc9ca9cf778ea2c4b619b933cda26519969df2d764b5a687f63cf59974cd'
             'c175fbb141c3cec013c799f694d88310375ac5456042f6a4a1adc7667836d786'
             '8357f000b2b622e73dcfd41c2bad42b5e99fffe8f7ee64f774aa771f86cef43c'
@@ -69,7 +68,8 @@ prepare() {
 
 build() {
   cd $_srcname
-  make htmldocs all
+# breaks brilliantly, disabled htmldocs
+  make all
 }
 
 _package() {
@@ -211,6 +211,14 @@ done
 
 # vim:set ts=8 sts=2 sw=2 et:
 
+# disabled documentation due to sphinx
+pkgname=(
+  $(
+    printf '%s\n' "${pkgname[@]}" | \
+      grep -v '^\$pkgbase-docs'
+  )
+)
+
 if [ "${CARCH}" = "i486" -o  "${CARCH}" = "i686" -o "${CARCH}" = "pentium4" ]; then
 
   # use 32-bit configuration files per subarchitecture instead of main config file
@@ -219,11 +227,10 @@ if [ "${CARCH}" = "i486" -o  "${CARCH}" = "i686" -o "${CARCH}" = "pentium4" ]; t
   source_i486=('config.i486')
   # fail if upstream's .config changes
   for ((i=0; i<${#sha256sums[@]}; i++)); do
-    if [ "${sha256sums[${i}]}" = '0eb953a7c153e7677dd5b18287b922f9da61ed48f69a223d391de84c7a29083c
-' ]; then
-      sha256sums_pentium4=('34610b1ddc1cca02effa4c322906135a028e04f068ac5613fe2a8004793e0431')
-      sha256sums_i686=('f8069dc75bf70dbf8c7520e3928e3314e2030d56850ce68754b338b3d13c6bd1')
-      sha256sums_i486=('f8069dc75bf70dbf8c7520e3928e3314e2030d56850ce68754b338b3d13c6bd1')
+    if [ "${sha256sums[${i}]}" = '9dd6d986f4eca2eb6e291221436954df6c850506696d843b903fdee087d07e56' ]; then
+      sha256sums_pentium4=('f508746082c1845adac9935b8dac265b474fa10c38a670e12efdc893d08f8277')
+      sha256sums_i686=('7a05dd739ae023f822f83b75e7713679d458b1cc9fa5a579a5fa591c754521a3')
+      sha256sums_i486=('a73b0475d5503913acdc1bfee1131f699b198d427c3dbb781ff5635fd9d4d799')
     fi
   done
 
@@ -252,13 +259,6 @@ if [ "${CARCH}" = "i486" -o  "${CARCH}" = "i686" -o "${CARCH}" = "pentium4" ]; t
   sha256sums+=('3997ce6033fdf950a9960f1db720b38c47b1a2e06ab75fc6712c154f596e7c47')
   # upstream prepare() does already do the *.patch patching
 
-  # temporarily disabled documentation due to sphinx_rtd_theme (FS32#163)
-  pkgname=(
-    $(
-      printf '%s\n' "${pkgname[@]}" | \
-        grep -v '^\$pkgbase-docs'
-    )
-  )
   eval "$(
     declare -f build | \
       sed '
