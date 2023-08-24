@@ -2,7 +2,7 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-git
-pkgver=r25073.bc4ad5e62d
+pkgver=r25076.ccd163ab2
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (master GIT version)"
 arch=('i686' 'x86_64')
@@ -33,7 +33,7 @@ prepare() {
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/-Werror/-W/g' {} +
   sed -i -e 's/0.11 //g' CMakeLists.txt
-  sed -i -e 's/httplib 0.12/httplib 0.13/g' CMakeLists.txt
+  sed -i -e 's/httplib 0.12/httplib/g' CMakeLists.txt
   sed -i -e 's/1.3.238/1.3.233/g' CMakeLists.txt
   sed -i -e '/#define VK_NO_PROTOTYPES/a #define VK_ENABLE_BETA_EXTENSIONS' src/video_core/vulkan_common/vulkan_wrapper.h
   sed -i -e 's/--quiet //g' src/video_core/host_shaders/CMakeLists.txt
