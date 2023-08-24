@@ -2,7 +2,7 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=3829
+pkgver=3830
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
@@ -17,9 +17,9 @@ source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.g
 "https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml"
 "https://github.com/pineappleEA/pineapple-src/releases/download/EA-${pkgver}/Windows-Yuzu-EA-${pkgver}.zip")
 options=('!buildflags') #[heavysink] Disable _FORTIFY_SOURCE for temporary fix for Bayonetta 3
-sha256sums=('e320875d71f9ccd2312d9d2172d9bb4da0b156f77f18c1dc80aec0bbbde61015'
+sha256sums=('c7f0873adca5f8f6abc2fe4d57ca96d94da3247f1adb0ced636e07bd8b4727b3'
             'e76ab2b3566d8135930e570ede5bed3da8f131270b60db818e453d248880bdf2'
-            '1445bf9d4aafb5ad5db4585cf6bf22016c53183d7c31e2a96ffa0de400280fbb')
+            '92f3a681e517c24ed8b40fb735d4f066b41fdaf6fa13f4204d40471973df0194')
 
 prepare() {
   cd "$srcdir/yuzu-windows-msvc-early-access"
@@ -41,8 +41,8 @@ prepare() {
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/-Werror/-W/g' {} +
   sed -i -e 's/0.11 //g' CMakeLists.txt
-  sed -i -e 's/httplib 0.12/httplib 0.13/g' CMakeLists.txt
   sed -i -e 's/1.3.238/1.3.233/g' CMakeLists.txt
+  sed -i -e 's/httplib 0.12/httplib/g' CMakeLists.txt
   sed -i -e 's/--quiet //g' src/video_core/host_shaders/CMakeLists.txt
   sed -i -e 's#${SPIRV_HEADER_FILE} ${SOURCE_FILE}#${SPIRV_HEADER_FILE} ${SOURCE_FILE} 2>/dev/null#g' src/video_core/host_shaders/CMakeLists.txt
   sed -i -e '1i #include <cstring>' src/video_core/textures/bcn.cpp
