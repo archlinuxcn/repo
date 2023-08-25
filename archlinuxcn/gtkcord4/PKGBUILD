@@ -33,7 +33,7 @@ package() {
 	cd "${pkgname}-${_pkgver}/build/"
 	install -Dm755 "${pkgname}" -t "${pkgdir}/usr/bin/"
 
-	cd "${srcdir}/${pkgname}/"
+	cd ..
 	install -Dm644 "LICENSE.md" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 	sed -i "s/Chat;/Chat;InstantMessaging;/" "nix/xyz.diamondb.${pkgname}.desktop"
 	install -Dm644 "nix/xyz.diamondb.${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
