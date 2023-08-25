@@ -1,7 +1,7 @@
 # Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=auctex-git
-pkgver=13.1.r322.g21893998
+pkgver=13.2.r48.g66941e5a
 pkgrel=1
 epoch=1
 pkgdesc="TeX/LaTeX writing environment for Emacs - git checkout"
@@ -9,7 +9,7 @@ arch=('any')
 url="http://savannah.gnu.org/projects/auctex"
 license=('GPL3')
 depends=('texlive-core' 'emacs')
-makedepends=('git' 'texinfo' 'perl')
+makedepends=('git' 'texinfo' 'perl' 'texlive-latex' 'texlive-latexextra')
 optdepends=('texlive-latexextra: for preview-latex')
 provides=('auctex')
 conflicts=('auctex')
