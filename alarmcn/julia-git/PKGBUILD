@@ -176,7 +176,7 @@ _patch_suitesparse() {
   done
 
   sed -i -e 's/libspqr\.so\.4/libspqr.so.3/' \
-      usr/share/julia/stdlib/v1.11/SuiteSparse_jll/src/SuiteSparse_jll.jl
+      usr/share/julia/stdlib/v*/SuiteSparse_jll/src/SuiteSparse_jll.jl
 }
 
 prepare() {
