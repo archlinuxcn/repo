@@ -1,5 +1,5 @@
 pkgname=julia-git-hdf5-git
-pkgver=0.16.15.0.2.gcfba7062
+pkgver=0.16.15.0.12.gf3c942cf
 pkgrel=1
 epoch=1
 pkgdesc="HDF5.jl"
@@ -16,12 +16,6 @@ pkgver() {
   cd HDF5.jl
 
   git describe --tags --match 'v*' | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
-}
-
-build() {
-  cd HDF5.jl
-
-  julia --startup-file=no deps/build.jl
 }
 
 package() {
