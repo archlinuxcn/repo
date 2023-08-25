@@ -14,14 +14,8 @@ repo_depends:
   - libutf8proc-git
   - openlibm-git
   - llvm-julia: llvm-libs-julia
+  - libgit2-julia
   - julia-pkg-scripts
-  - julia-git-conda-git
-  - julia-git-json-git
-  - julia-git-parsers-git
-  - julia-git-precompiletools-git
-  - julia-git-preferences-git
-  - julia-git-versionparsing-git
-  - julia-git-snoopcompile-git: julia-git-snoopprecompile-git
 
 update_on:
   - source: vcs
@@ -29,4 +23,4 @@ update_on:
     alpm: julia-git
     provided: julia
   - source: manual
-    manual: 3
+    manual: 1
