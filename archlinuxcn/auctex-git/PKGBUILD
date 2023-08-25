@@ -32,7 +32,7 @@ build() {
 
 package() {
   cd auctex
-  make DESTDIR="$pkgdir" install
+  make -j1 DESTDIR="$pkgdir" install
   rm -rf "$pkgdir"/var/auctex
   # provided by texlive-latexextra
   rm -rf "$pkgdir"/usr/share/texmf-dist
