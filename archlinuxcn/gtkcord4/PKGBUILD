@@ -2,6 +2,7 @@
 
 pkgname=gtkcord4
 pkgver=0.0.11
+_pkgver=$(sed 's/\./-/3' <<<${pkgver})
 pkgrel=1
 pkgdesc="Discord client written in go and gtk4"
 arch=('x86_64' 'aarch64')
@@ -9,16 +10,16 @@ url="https://github.com/diamondburned/gtkcord4"
 license=('GPL3')
 depends=('gtk4>=4.10.3' 'gobject-introspection' 'libadwaita>=1.3.2')
 makedepends=('git' 'go>=1.20.3')
-source=("${pkgname}-${pkgver}::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${_pkgver}.tar.gz")
 sha256sums=('1708c599640deb6f7fb4d790808ceabb2f67078e4085b5a20732e101751473a9')
 
 prepare() {
-	cd "${pkgname}-${pkgver}/"
+	cd "${pkgname}-${_pkgver}/"
 	mkdir -p build
 }
 
 build() {
-	cd "${pkgname}-${pkgver}/"
+	cd "${pkgname}-${_pkgver}/"
 
 	export CGO_CPPFLAGS="${CPPFLAGS}"
 	export CGO_CFLAGS="${CFLAGS}"
@@ -30,7 +31,7 @@ build() {
 }
 
 package() {
-	cd "${pkgname}-${pkgver}/build/"
+	cd "${pkgname}-${_pkgver}/build/"
 
 	install -Dm755 "${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
 	install -Dm644 "${srcdir}/${pkgname}/LICENSE.md" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
