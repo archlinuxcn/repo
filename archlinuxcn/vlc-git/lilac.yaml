@@ -10,6 +10,9 @@ pre_build: vcs_update
 
 post_build: git_pkgbuild_commit
 
+repo_depends:
+  - shine
+
 update_on:
   - source: vcs
     vcs: git+https://code.videolan.org/videolan/vlc.git

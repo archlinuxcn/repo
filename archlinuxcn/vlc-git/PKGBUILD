@@ -9,8 +9,8 @@
 # Contributor: MacWolf <macwolf at archlinux dot de>
 
 pkgname=vlc-git
-pkgver=4.0.0.r25169.ge3ee564576d
-pkgrel=2
+pkgver=4.0.0.r25244.g9d6ad2ea38
+pkgrel=1
 pkgdesc="A multi-platform MPEG, VCD/DVD, and DivX player (GIT Version)"
 url='https://www.videolan.org/vlc/'
 arch=('i686' 'x86_64')
@@ -34,7 +34,7 @@ makedepends=('gst-plugins-base-libs' 'live-media' 'libnotify' 'libbluray'
              'lirc' 'libgoom2' 'projectm' 'git' 'aom' 'srt' 'chromaprint'
              'vulkan-icd-loader' 'vulkan-headers' 'dav1d' 'flex' 'bison' 'aribb25' 'pcsclite'
              'libebur128' 'fluidsynth' 'samba' 'freerdp' 'libsidplayfp' 'rnnoise' 'aribb24' 'libcddb'
-             'libvncserver')
+             'libvncserver' 'shine')
 optdepends=('avahi: service discovery using bonjour protocol'
             'gst-plugins-base-libs: for libgst plugins'
             'libdvdcss: decoding encrypted DVDs'
@@ -139,6 +139,8 @@ prepare() {
 
   sed 's|whoami|echo builduser|g' -i configure
   sed 's|hostname -f|echo arch|g' -i configure
+  sed -i 's/p_gdi->height, 1, 1)/p_gdi->height, 1, 1);/' modules/access/rdp.c
+  sed -i 's/p_gdi->height, 1, 1);;/p_gdi->height, 1, 1);/' modules/access/rdp.c
   autoreconf -vf
 }
 
