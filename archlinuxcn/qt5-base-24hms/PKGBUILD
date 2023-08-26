@@ -5,9 +5,9 @@ pkgbase=qt5-base-24hms
 _origpkgname=qt5-base
 pkgname=(qt5-base-24hms)
 _basever=5.15.10
-pkgver=5.15.10+kde+r147
+pkgver=5.15.10+kde+r152
 pkgrel=1.13
-_commit=e24dc54b2b4054413650904288aa7a363eee23a7
+_commit=f959f5879597d48e3d3b46d7d395717fe94c78bc
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -35,12 +35,14 @@ source=(
       oldherl-24hms.patch
       'https://build.archlinuxcn.org/~oldherl/files/cldr/36/core.zip'
       git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit
+        work-around-pyside2-brokenness.patch
         qmake-cflags.patch
         qmake-config.patch)
 sha256sums=(
       '9c62800980e97b1614e4fc85ecad3b032606d0e620295e791fc3f34629bb0a44'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       'SKIP'
+            '6a4ec2bfcf4e7cff73346762b252cc28be5ca0ed79fde5e69350efe229b43adc'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
             '4abc22150fa3e06b2fdcec32146abc9be4e316692aa4d5bd5aa53b4b726783fa')
 
@@ -51,6 +53,7 @@ pkgver() {
 
 prepare() {
   cd ${_pkgfqn}
+  patch -p1 < ../work-around-pyside2-brokenness.patch
   patch -p1 < ../qmake-cflags.patch # Use system CFLAGS in qmake
   patch -p1 < ../qmake-config.patch # Don't strip binaries with qmake and use -ltcg, cf. QTBUG-73834
 
