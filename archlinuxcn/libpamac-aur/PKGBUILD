@@ -5,12 +5,12 @@ ENABLE_FLATPAK=0
 ENABLE_SNAPD=0
 
 pkgname=libpamac-aur
-pkgver=11.6.0
-pkgrel=2
+pkgver=11.6.1
+pkgrel=0
 _pkgfixver=$pkgver
 
-_commit='88fd49cbf6c8769ea92ca119e96c36cb21781748'
-sha256sums=('621a1d8075ad5c79f4000d22c168c79b45508ebd809ec6049b1f0a3d0905c48c'
+_commit='c3b0150981d4a1d9138c8a569c3fc78c93a53fcc'
+sha256sums=('f7dd903b9934c72f99104b712c81695e110a89a9de8ca046d0f62ef6b54bd3ba'
             '6e0c25f0fcb0076ce78845b037e32925fcc3f1cd1670062c48ed35f564a10244'
             'c2b943318a01ba1f3dabbf32e48e6a6f4b4b774e167ab86c6bfee31aa4a3424c')
 
@@ -63,6 +63,7 @@ build() {
   mkdir -p builddir
   cd builddir
   meson setup --buildtype=release \
+        -Denable-aur=true -Denable-appstream=true \
         --prefix=/usr \
         --sysconfdir=/etc $define_meson
   # build
