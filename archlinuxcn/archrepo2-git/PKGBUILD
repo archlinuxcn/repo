@@ -3,12 +3,12 @@
 pkgname=archrepo2-git
 epoch=2
 pkgver=0.5.r22.gfa4f743
-pkgrel=1
+pkgrel=2
 pkgdesc="Arch Linux repository manager"
 arch=('any')
 url="https://github.com/lilydjwg/archrepo2"
 license=('MIT')
-depends=('python' 'python-setuptools' 'python-tornado' 'python-pyinotify' 'pacman')
+depends=('python' 'python-setuptools' 'python-tornado' 'python-pyinotify' 'pacman' 'pyalpm')
 makedepends=('git')
 source=('git+https://github.com/lilydjwg/archrepo2.git')
 md5sums=('SKIP')
