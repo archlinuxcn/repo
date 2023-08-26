@@ -1,8 +1,8 @@
 # Maintainer: Jingu <xiuluo dot android at gmail dot com>
-
 # Contributor: Igor Dyatlov <dyatlov.igor@protonmail.com>
 
 pkgname=rnote-git
+_pkgname=${pkgname%-git}
 pkgver=0.8.1.r1.g26aff790
 pkgrel=1
 pkgdesc="A simple drawing application to create handwritten notes"
@@ -11,33 +11,33 @@ url="https://github.com/flxzt/rnote"
 license=('GPL3')
 depends=('gtk4' 'glib2' 'libadwaita' 'poppler-glib' 'gstreamer' 'alsa-lib')
 makedepends=('meson' 'cargo' 'cmake' 'clang' 'git')
-provides=("${pkgname%-git}")
-conflicts=("${pkgname%-git}")
-source=("${pkgname%-git}::git+$url.git")
-b2sums=('SKIP')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
 options=('!lto')
 
 prepare() {
-  cd "${pkgname%-git}"
-  export RUSTUP_TOOLCHAIN=stable
-  cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	cd "${_pkgname}/"
+	export RUSTUP_TOOLCHAIN=stable
+	cargo fetch --target "$CARCH-unknown-linux-gnu"
 }
 
 pkgver() {
-  cd "${pkgname%-git}"
-  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+	cd "${_pkgname}/"
+	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
-  export RUSTUP_TOOLCHAIN=stable
-  arch-meson "${pkgname%-git}" build
-  meson compile -C build
+	export RUSTUP_TOOLCHAIN=stable
+	arch-meson "${_pkgname}" build
+	meson compile -C build
 }
 
 check() {
-  meson test -C build --print-errorlogs || :
+	meson test -C build --print-errorlogs || :
 }
 
 package() {
-  meson install -C build --destdir "$pkgdir"
+	meson install -C build --destdir "${pkgdir}"
 }
