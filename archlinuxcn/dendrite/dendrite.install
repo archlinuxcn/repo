@@ -47,7 +47,7 @@ Dendrite has been updated, you should now update its configuration file by runni
     cd "/var/lib/dendrite"
     dendrite-generate-config --normalise "/etc/dendrite/config.yaml" | tee "/etc/dendrite/config.yaml.new"
     mv "/etc/dendrite/config.yaml" "/etc/dendrite/config.yaml.bkp"
-    mv "/etc/dendrite/config.new" "/etc/dendrite/config.yaml"
+    mv "/etc/dendrite/config.yaml.new" "/etc/dendrite/config.yaml"
     exit
     sudo systemctl restart dendrite
 

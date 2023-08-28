@@ -2,19 +2,20 @@
 # Maintainer: Stefan Tatschner <stefan@rumpelsepp.org>
 
 pkgname="dendrite"
-pkgver=0.13.1
-pkgrel=1
+pkgver=0.13.2
+pkgrel=3
 pkgdesc="A second-generation Matrix homeserver written in Go"
 url="https://matrix-org.github.io/dendrite/"
 license=("Apache")
 arch=("x86_64" "i686" "armv6h" "armv7h" "aarch64")
-makedepends=("go>=1.18")
+# https://github.com/quic-go/quic-go/wiki/quic-go-and-Go-versions
+makedepends=("go")
 optdepends=("postgresql: recommended database for large instances")
 source=("$pkgname-$pkgver.tar.gz::https://github.com/matrix-org/dendrite/archive/v$pkgver/$pkgname-v$pkgver.tar.gz"
         "$pkgname.sysusers"
         "$pkgname.tmpfiles"
         "$pkgname.service")
-sha256sums=('d3217759c5abef155c4e3f9cbbfb3361725cf2e17457b4478c9a4c84ff6881ea'
+sha256sums=('d98e7d3ca596155b9799feff741a7d39b9712497c516126936202484daea3640'
             'aba328d7a7244e82f866f9d0ead0a53e79e1590b9c449ad6d18ff2659cb5e035'
             '620b634419e94cb09423d39ecd7edf859bf458e9d72c35be30610b37acc1e8bf'
             '2ce2e6fd819087bc47f4b369205afeaf0070dacf3305efcfbec5365bd11af6e7')
