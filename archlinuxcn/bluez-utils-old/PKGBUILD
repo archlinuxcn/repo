@@ -1,7 +1,7 @@
 # Maintainer: Sergej Pupykin <arch+pub@sergej.pp.ru>
 
 pkgname=bluez-utils-old
-pkgver=5.68
+pkgver=5.69
 pkgrel=1
 pkgdesc="deprecated tools from bluez"
 url="http://www.bluez.org/"
@@ -15,7 +15,7 @@ makedepends=('dbus' 'libical' 'glib2' 'systemd' 'alsa-lib' 'json-c' 'ell' 'pytho
 conflicts=('bluez-hciattach' 'bluez-hciconfig' 'bluez-hcitool' 'bluez-rfcomm' 'bluez-sdptool' 'bluez-ciptool' 'bluez-gatttool') # bluz-utils provides bluez-hcidump?
 provides=('bluez-hciattach' 'bluez-hciconfig' 'bluez-hcitool' 'bluez-rfcomm' 'bluez-sdptool' 'bluez-ciptool' 'bluez-gatttool')
 source=(https://www.kernel.org/pub/linux/bluetooth/bluez-${pkgver}.tar.{xz,sign})
-b2sums=('3beca78fadef4d66df6f237b7460f6ac4bf001d80c856b599faa2cc1232c4342c7945eace5a6667009b9d19f2368f9841e608f07bc826b30ce9112c43dd7e316'
+b2sums=('3b85c6418bf5f8fea989d9435d90f704da707248034006d12863465b9acee2b549f6d2950fdde64e74a1cbded4c711c54db747a82abdaa67ec965aab1c817d85'
         'SKIP')
 validpgpkeys=('E932D120BC2AEC444E558F0106CA9F5D1DCF2659') # Marcel Holtmann <marcel@holtmann.org>
 
