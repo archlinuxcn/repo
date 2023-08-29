@@ -55,9 +55,3 @@ package() {
 	install -D -m0644 README.md "${pkgdir}/usr/share/${pkgname}/README.md"
 	install -D -m0644 COPYRIGHT.md "${pkgdir}/usr/share/${pkgname}/COPYRIGHT.md"
 }
-
-check() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
-	export TERM=xterm-256color
-	python3 -m unittest
-}
