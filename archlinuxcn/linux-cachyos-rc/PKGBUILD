@@ -170,7 +170,7 @@ fi
 _major=6.5
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc6
+_rcver=rc7
 pkgver=${_major}.${_rcver}
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -187,7 +187,7 @@ options=('!strip')
 makedepends=('bc' 'libelf' 'pahole' 'cpio' 'perl' 'tar' 'xz' 'zstd' 'gcc' 'gcc-libs' 'glibc' 'binutils' 'make' 'patch' 'python')
 # LLVM makedepends
 if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] || [ -n "$_use_kcfi" ]; then
-    makedepends+=(clang llvm lld python)
+    makedepends+=(clang llvm lld)
     BUILD_FLAGS=(
         CC=clang
         LD=ld.lld
@@ -205,7 +205,7 @@ source=(
 # ZFS support
 if [ -n "$_build_zfs" ]; then
     makedepends+=(git)
-    source+=("git+https://github.com/cachyos/zfs.git#commit=8e20e0ff39f0492cdc477f15d9d8c1b2f092d562")
+    source+=("git+https://github.com/cachyos/zfs.git#commit=8ce2eba9e6a384feef93d77c397f37d17dc588ce")
 fi
 
 case "$_cpusched" in
@@ -803,9 +803,9 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('8623a7cc34057d514f8782ba8da8fbaf514c1978975595272521abdcaeca321aca2c0cab2337f699bf884c78145fde70aab62919b7619369721032087d2b2cd9'
-        'd01cf326f583f294dfb78ce0591c3758573c67b07363d41f52a11acf76e06b9c314b2c6e4ddf3aeb199f987173817c90908433bb65f3641e7483f97c99d227bf'
+b2sums=('764c0953ffea3bf728be007132346faba1dd348b1d4685bef523b57dd3d0cd4fb293e6174415d3fe7299e5a1ff722221508182b69bd69191234025e563e468de'
+        '89c1f1d8a700a71d38ee0bf8b2635abfa884b82abd88c5ded96683cd151bde4a5e4c8f13f4e34f26cb1582335303ab33c9d0095a80b17e8a68e845bac7abade8'
         '11d2003b7d71258c4ca71d71c6b388f00fe9a2ddddc0270e304148396dadfd787a6cac1363934f37d0bfb098c7f5851a02ecb770e9663ffe57ff60746d532bd0'
-        'f85cf380f612c8bde12bc9fa11fb5f0f09c8baf787564f3b1c3846b845d618881bc3e5b2d4cab6d790569f91faa833d9cca7441ec2ec92337c3c295841f6bff5'
-        'c6256278570b586d8b2a58b4fc6fe255f5acdc5760c5178b7105672f2c12587fcfe8ae9b9e7e44999fe83d210a779019f563fa06af0e3ba327ed06f73af99cef'
-        'eb919edb6a3a82c14264baa6a9347bdd89f864a648b57d1d9652694bbc43dab62922c36170ee07cfb7b44df08a0235ceec8e32e39d393ffc686e346ddfef7fbd')
+        '276bf7623ce37cc29c8831db6036d28892d5822f9a0a384aa180dbc166c12846db533c9e88295aa2710a16796abc51cdbc287bc879e772ad888ddee2d133f507'
+        'db78ba180ea95c77f04d3d3dc99d07c35c0e9efcfd2baf997e485b721adefb5684bf62185436353f7faceba1d2271b5c1c430fcad9a441657bfabdf74d36917b'
+        '21bd89028133e9a25878e5841808194c1aa742afe0700e669bc5a024091e04b87b23566e96b451bbad235a33d828f5853e75dab0ec677ad9a16c6406c2ced850')
