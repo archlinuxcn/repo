@@ -1,8 +1,8 @@
 # Maintainer: Klemens Schölhorn <klemens@schoelhorn.eu>
 
 pkgname=python-seafobj
-pkgver=10.0.1
-pkgrel=2
+pkgver=11.0.0
+pkgrel=1
 pkgdesc="Python library for accessing seafile data model"
 arch=('any')
 url="https://github.com/haiwen/seafobj"
@@ -11,7 +11,7 @@ depends=('python')
 makedepends=('python-setuptools')
 source=("https://github.com/haiwen/seafobj/archive/v${pkgver}-server.tar.gz"
         setup.py.in)
-sha256sums=('c50864ecf475299b04cbf55dc8572d60eb3a436bc4ab7d27edbcc97a1eaad02a'
+sha256sums=('b6c320ea0dbc7af396b0ab8ded9799ab3065ff6dd83256663820cbe924ae3d94'
             '7c51925d62f762cd022679f9c02aae3b2cdd6a76f89db6c48d9b250f148441eb')
 
 package() {
