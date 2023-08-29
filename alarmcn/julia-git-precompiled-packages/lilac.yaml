@@ -1,0 +1,26 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+# We'll need to pull most of the packages from x86 repo
+build_prefix: archlinuxcn-aarch64
+
+repo_depends:
+  - julia-git
+  - openspecfun-git
+  - openblas-lapack-git: openblas-git
+  - openblas-lapack-git
+  - libutf8proc-git
+  - openlibm-git
+  - llvm-julia: llvm-libs-julia
+  - julia-pkg-scripts
+
+update_on_build:
+  - pkgbase: julia-git
+
+update_on:
+  - alias: alpm-lilac
+    alpm: julia-git-compat-src
+  - source: manual
+    manual: 1
