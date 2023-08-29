@@ -1,0 +1,15 @@
+diff -rauN a/scripts/Makefile.lib b/scripts/Makefile.lib
+--- a/scripts/Makefile.lib	2020-11-11 06:45:51.375133819 +0100
++++ b/scripts/Makefile.lib	2020-11-11 06:46:12.058448322 +0100
+@@ -499,9 +499,9 @@
+       cmd_zstd = cat $(real-prereqs) | $(ZSTD) -19 > $@
+ 
+ quiet_cmd_zstd22 = ZSTD22  $@
+-      cmd_zstd22 = cat $(real-prereqs) | $(ZSTD) -22 --ultra > $@
++      cmd_zstd22 = cat $(real-prereqs) | $(ZSTD) -19 > $@
+ 
+ quiet_cmd_zstd22_with_size = ZSTD22  $@
+-      cmd_zstd22_with_size = { cat $(real-prereqs) | $(ZSTD) -22 --ultra; $(size_append); } > $@
++      cmd_zstd22_with_size = { cat $(real-prereqs) | $(ZSTD) -19; $(size_append); } > $@
+ 
+ # ASM offsets

@@ -1,0 +1,50 @@
+From 2fd9916a465e3b62452ac4346def013c3d8698a4 Mon Sep 17 00:00:00 2001
+From: Fangzhi Zuo <jerry.zuo@amd.com>
+Date: Wed, 17 May 2023 19:37:13 +0800
+Subject: [PATCH 2/2] drm/amd/display: Have Payload Properly Created After
+ Resume
+
+At drm suspend sequence, MST dc_sink is removed. When commit cached
+MST stream back in drm resume sequence, the MST stream payload is not
+properly created and added into the payload table. After resume, topology
+change is reprobed by removing existing streams first. That leads to
+no payload is found in the existing payload table as below error
+"[drm] ERROR No payload for [MST PORT:] found in mst state"
+
+1. In encoder .atomic_check routine, remove check existance of dc_sink
+2. Bypass MST by checking existence of MST root port. dc_link_type cannot
+differentiate MST port before topology is rediscovered.
+
+Reviewed-by: Wayne Lin <wayne.lin@amd.com>
+Acked-by: Tom Chung <chiahsuan.chung@amd.com>
+Signed-off-by: Fangzhi Zuo <jerry.zuo@amd.com>
+(cherry picked from https://patchwork.freedesktop.org/patch/537553/)
+---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index f54d670ab3ab..0695c7c3d489 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -2813,7 +2813,7 @@ static int dm_resume(void *handle)
+ 		 * this is the case when traversing through already created
+ 		 * MST connectors, should be skipped
+ 		 */
+-		if (aconnector->dc_link->type == dc_connection_mst_branch)
++		if (aconnector && aconnector->mst_root)
+ 			continue;
+ 
+ 		mutex_lock(&aconnector->hpd_lock);
+@@ -6717,7 +6717,7 @@ static int dm_encoder_helper_atomic_check(struct drm_encoder *encoder,
+ 	int clock, bpp = 0;
+ 	bool is_y420 = false;
+ 
+-	if (!aconnector->mst_output_port || !aconnector->dc_sink)
++	if (!aconnector->mst_output_port)
+ 		return 0;
+ 
+ 	mst_port = aconnector->mst_output_port;
+-- 
+2.40.1
+

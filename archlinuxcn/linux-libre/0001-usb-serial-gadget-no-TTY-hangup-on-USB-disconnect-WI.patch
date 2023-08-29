@@ -1,0 +1,39 @@
+From 716120e8010a7f400c6bed7384000e95e1465c94 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ky=C3=B6sti=20M=C3=A4lkki?= <kyosti.malkki@gmail.com>
+Date: Mon, 26 Aug 2013 19:19:44 +0300
+Subject: [PATCH 1/2] usb serial gadget: no TTY hangup on USB disconnect [WIP]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+We may want to maintain the TTY over USB disconnects.
+
+This is useful when we have a terminal console to a host which
+power-cycles or for other reasons resets the USB host controller.
+
+Signed-off-by: Kyösti Mälkki <kyosti.malkki@gmail.com>
+---
+ drivers/usb/gadget/function/u_serial.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
+index b369292..d156a28 100644
+--- a/drivers/usb/gadget/function/u_serial.c
++++ b/drivers/usb/gadget/function/u_serial.c
+@@ -1258,8 +1258,13 @@ void gserial_disconnect(struct gserial *gser)
+ 	gser->ioport = NULL;
+ 	if (port->port.count > 0 || port->openclose) {
+ 		wake_up_interruptible(&port->drain_wait);
++#if 0
+ 		if (port->port.tty)
+ 			tty_hangup(port->port.tty);
++#else
++		if (port->port.tty)
++			stop_tty(port->port.tty);
++#endif
+ 	}
+ 	spin_unlock_irqrestore(&port->port_lock, flags);
+ 
+-- 
+1.8.1.1
+

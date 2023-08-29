@@ -1,0 +1,217 @@
+/dts-v1/;
+
+/ {
+    description = "Chrome OS kernel image with one or more FDT blobs";
+    #address-cells = <1>;
+    images {
+        kernel {
+            description = "kernel";
+            data = /incbin/("arch/arm/boot/zImage");
+            type = "kernel_noload";
+            arch = "arm";
+            os = "linux";
+            compression = "none";
+            load = <0>;
+            entry = <0>;
+        };
+        fdt-snow {
+            description = "exynos5250-snow.dtb";
+            data = /incbin/("arch/arm/boot/dts/exynos5250-snow.dtb");
+            type = "flat_dt";
+            arch = "arm";
+            compression = "none";
+            hash {
+                algo = "sha1";
+            };
+        };
+        fdt-snow-rev5 {
+            description = "exynos5250-snow-rev5.dtb";
+            data = /incbin/("arch/arm/boot/dts/exynos5250-snow-rev5.dtb");
+            type = "flat_dt";
+            arch = "arm";
+            compression = "none";
+            hash {
+                algo = "sha1";
+            };
+        };
+        fdt-spring {
+            description = "exynos5250-spring.dtb";
+            data = /incbin/("arch/arm/boot/dts/exynos5250-spring.dtb");
+            type = "flat_dt";
+            arch = "arm";
+            compression = "none";
+            hash {
+                algo = "sha1";
+            };
+        };
+        fdt-peach-pi {
+            description = "exynos5800-peach-pi.dtb";
+            data = /incbin/("arch/arm/boot/dts/exynos5800-peach-pi.dtb");
+            type = "flat_dt";
+            arch = "arm";
+            compression = "none";
+            hash {
+                algo = "sha1";
+            };
+        };
+        fdt-peach-pit {
+            description = "exynos5420-peach-pit.dtb";
+            data = /incbin/("arch/arm/boot/dts/exynos5420-peach-pit.dtb");
+            type = "flat_dt";
+            arch = "arm";
+            compression = "none";
+            hash {
+                algo = "sha1";
+            };
+        };
+        fdt-veyron-brain {
+            description = "rk3288-veyron-brain.dtb";
+            data = /incbin/("arch/arm/boot/dts/rk3288-veyron-brain.dtb");
+            type = "flat_dt";
+            arch = "arm";
+            compression = "none";
+            hash {
+                algo = "sha1";
+            };
+        };
+        fdt-veyron-jaq {
+            description = "rk3288-veyron-jaq.dtb";
+            data = /incbin/("arch/arm/boot/dts/rk3288-veyron-jaq.dtb");
+            type = "flat_dt";
+            arch = "arm";
+            compression = "none";
+            hash {
+                algo = "sha1";
+            };
+        };
+        fdt-veyron-jerry {
+            description = "rk3288-veyron-jerry.dtb";
+            data = /incbin/("arch/arm/boot/dts/rk3288-veyron-jerry.dtb");
+            type = "flat_dt";
+            arch = "arm";
+            compression = "none";
+            hash {
+                algo = "sha1";
+            };
+        };
+        fdt-veyron-mickey {
+            description = "rk3288-veyron-mickey.dtb";
+            data = /incbin/("arch/arm/boot/dts/rk3288-veyron-mickey.dtb");
+            type = "flat_dt";
+            arch = "arm";
+            compression = "none";
+            hash {
+                algo = "sha1";
+            };
+        };
+        fdt-veyron-minnie {
+            description = "rk3288-veyron-minnie.dtb";
+            data = /incbin/("arch/arm/boot/dts/rk3288-veyron-minnie.dtb");
+            type = "flat_dt";
+            arch = "arm";
+            compression = "none";
+            hash {
+                algo = "sha1";
+            };
+        };
+        fdt-veyron-pinky {
+            description = "rk3288-veyron-pinky.dtb";
+            data = /incbin/("arch/arm/boot/dts/rk3288-veyron-pinky.dtb");
+            type = "flat_dt";
+            arch = "arm";
+            compression = "none";
+            hash {
+                algo = "sha1";
+            };
+        };
+        fdt-veyron-speedy {
+            description = "rk3288-veyron-speedy.dtb";
+            data = /incbin/("arch/arm/boot/dts/rk3288-veyron-speedy.dtb");
+            type = "flat_dt";
+            arch = "arm";
+            compression = "none";
+            hash {
+                algo = "sha1";
+            };
+        };
+        fdt-nyan-big {
+            description = "tegra124-nyan-big.dtb";
+            data = /incbin/("arch/arm/boot/dts/tegra124-nyan-big.dtb");
+            type = "flat_dt";
+            arch = "arm";
+            compression = "none";
+            hash {
+                algo = "sha1";
+            };
+        };
+        fdt-nyan-blaze {
+            description = "tegra124-nyan-blaze.dtb";
+            data = /incbin/("arch/arm/boot/dts/tegra124-nyan-blaze.dtb");
+            type = "flat_dt";
+            arch = "arm";
+            compression = "none";
+            hash {
+                algo = "sha1";
+            };
+        };
+    };
+    configurations {
+        default = "conf-snow";
+        conf-snow {
+            kernel = "kernel";
+            fdt = "fdt-snow";
+        };
+        conf-snow-rev5 {
+            kernel = "kernel";
+            fdt = "fdt-snow-rev5";
+        };
+        conf-spring {
+            kernel = "kernel";
+            fdt = "fdt-spring";
+        };
+        conf-peach-pi {
+            kernel = "kernel";
+            fdt = "fdt-peach-pi";
+        };
+        conf-peach-pit {
+            kernel = "kernel";
+            fdt = "fdt-peach-pit";
+        };
+        conf-veyron-brain {
+            kernel = "kernel";
+            fdt = "fdt-veyron-brain";
+        };
+        conf-veyron-jaq {
+            kernel = "kernel";
+            fdt = "fdt-veyron-jaq";
+        };
+        conf-veyron-jerry {
+            kernel = "kernel";
+            fdt = "fdt-veryon-jerry";
+        };
+        conf-veyron-mickey {
+            kernel = "kernel";
+            fdt = "fdt-veyron-mickey";
+        };
+        conf-veyron-minnie {
+            kernel = "kernel";
+            fdt = "fdt-veyron-minnie";
+        };
+        conf-veyron-pinky {
+            kernel = "kernel";
+            fdt = "fdt-veyron-pinky";
+        };
+        conf-veyron-speedy {
+            kernel = "kernel";
+            fdt = "fdt-veyron-speedy";
+        };
+        conf-nyan-big {
+            kernel = "kernel";
+            fdt = "fdt-nyan-big";
+        };
+        conf-nyan-blaze {
+            kernel = "kernel";
+            fdt = "fdt-nyan-blaze";
+        };
+    };
+};

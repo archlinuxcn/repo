@@ -1,0 +1,561 @@
+From 23e406e404f935be33c917ca7772466dd52582c3 Mon Sep 17 00:00:00 2001
+From: Kevin Mihelich <kevin@archlinuxarm.org>
+Date: Sun, 11 Aug 2019 12:34:17 -0600
+Subject: [PATCH 7/7] USB Armory MkII support
+
+---
+ arch/arm/boot/dts/Makefile              |   2 +
+ arch/arm/boot/dts/imx6ul-usbarmory.dts  | 256 +++++++++++++++++++++++
+ arch/arm/boot/dts/imx6ull-usbarmory.dts | 257 ++++++++++++++++++++++++
+ 3 files changed, 515 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6ul-usbarmory.dts
+ create mode 100644 arch/arm/boot/dts/imx6ull-usbarmory.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 05d8aef6e5d2..c6c76fa5047f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -722,6 +722,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
+ 	imx6ul-tx6ul-0010.dtb \
+ 	imx6ul-tx6ul-0011.dtb \
+ 	imx6ul-tx6ul-mainboard.dtb \
++	imx6ul-usbarmory.dtb \
+ 	imx6ull-14x14-evk.dtb \
+ 	imx6ull-colibri-aster.dtb \
+ 	imx6ull-colibri-emmc-aster.dtb \
+@@ -745,6 +746,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
+ 	imx6ull-phytec-tauri-nand.dtb \
+ 	imx6ull-tqma6ull2-mba6ulx.dtb \
+ 	imx6ull-tqma6ull2l-mba6ulx.dtb \
++	imx6ull-usbarmory.dtb \
+ 	imx6ulz-14x14-evk.dtb \
+ 	imx6ulz-bsh-smm-m2.dtb
+ dtb-$(CONFIG_SOC_IMX7D) += \
+diff --git a/arch/arm/boot/dts/imx6ul-usbarmory.dts b/arch/arm/boot/dts/imx6ul-usbarmory.dts
+new file mode 100644
+index 000000000000..1fdcd6f611d5
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6ul-usbarmory.dts
+@@ -0,0 +1,256 @@
++/*
++ * USB armory Mk II device tree file
++ * https://github.com/inversepath/usbarmory
++ *
++ * Copyright (C) 2019, F-Secure Corporation
++ * Andrej Rosano <andrej.rosano@f-secure.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "imx6ul.dtsi"
++
++/ {
++	model = "F-Secure USB armory Mk II";
++	compatible = "inversepath,imx6ul-usbarmory-mkII", "fsl,imx6ul";
++
++	chosen {
++		stdout-path = &uart2;
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x80000000 0x20000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_led>;
++
++		led-white {
++			label = "LED_WHITE";
++			gpios = <&gpio4 21 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "heartbeat";
++		};
++
++		led-blue {
++			label = "LED_BLUE";
++			gpios = <&gpio4 22 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg_sd1_vmmc: sd1_regulator {
++			compatible = "regulator-fixed";
++			regulator-name = "VSD_3V3";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++		};
++	};
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_bluetooth>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	no-1-8-v;
++	keep-power-in-suspend;
++	wakeup-source;
++	status = "okay";
++};
++
++&usdhc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc2>;
++	non-removable;
++	status = "okay";
++};
++
++&i2c1 {
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX6UL_PAD_UART2_TX_DATA__UART2_DCE_TX	0x1b0b1
++			MX6UL_PAD_UART2_RX_DATA__UART2_DCE_RX	0x1b0b1
++		>;
++	};
++
++	pinctrl_bluetooth: uart1grp {
++		fsl,pins = <
++			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b0 /* BT_UART_TX  */
++			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b0 /* BT_UART_RX  */
++			MX6UL_PAD_UART1_CTS_B__UART1_DCE_CTS	0x1b0b0 /* BT_UART_CTS */
++			MX6UL_PAD_GPIO1_IO07__UART1_DCE_RTS	0x130b0 /* BT_UART_RTS */
++			MX6UL_PAD_UART3_TX_DATA__GPIO1_IO24	0x1f020 /* BT_UART_DSR */
++			MX6UL_PAD_UART3_RX_DATA__GPIO1_IO25	0x10020 /* BT_UART_DTR */
++			MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0x1f020 /* BT_SWDCLK   */
++			MX6UL_PAD_GPIO1_IO05__GPIO1_IO05	0x1f020 /* BT_SWDIO    */
++			MX6UL_PAD_GPIO1_IO09__GPIO1_IO09	0x1f020 /* BT_RESET    */
++			MX6UL_PAD_UART3_RTS_B__GPIO1_IO27	0x1f020 /* BT_SWITCH_1 */
++			MX6UL_PAD_UART3_CTS_B__GPIO1_IO26	0x1f020 /* BT_SWITCH_2 */
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX6UL_PAD_GPIO1_IO02__I2C1_SCL	0x4001b8b0
++			MX6UL_PAD_GPIO1_IO03__I2C1_SDA	0x4001b8b0
++		>;
++	};
++
++	pinctrl_led: ledgrp {
++		fsl,pins = <
++			MX6UL_PAD_CSI_DATA06__GPIO4_IO27	0x1f020
++			MX6UL_PAD_CSI_DATA07__GPIO4_IO28	0x1f020
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x1f019
++			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x1f019
++			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x1f019
++			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x1f019
++			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x1f019
++			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x1f019
++		>;
++	};
++
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x10071
++			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x17059
++			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x17059
++			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x17059
++			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x17059
++			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x17059
++			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x17059
++			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x17059
++			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x17059
++			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x17059
++		>;
++	};
++};
++
++&aips2 {
++	crypto: crypto@2140000 {
++		compatible = "fsl,imx6ul-caam", "fsl,sec-v4.0";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0x2140000 0x3c000>;
++		ranges = <0 0x2140000 0x3c000>;
++		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clks IMX6UL_CLK_CAAM_IPG>, <&clks IMX6UL_CLK_CAAM_ACLK>,
++			 <&clks IMX6UL_CLK_CAAM_MEM>;
++		clock-names = "ipg", "aclk", "mem";
++
++		sec_jr0: jr@1000 {
++			compatible = "fsl,sec-v4.0-job-ring";
++			reg = <0x1000 0x1000>;
++			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		sec_jr1: jr@2000 {
++			compatible = "fsl,sec-v4.0-job-ring";
++			reg = <0x2000 0x1000>;
++			interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
++		};
++		sec_jr2: jr@3000 {
++			compatible = "fsl,sec-v4.0-job-ring";
++			reg = <0x3000 0x1000>;
++			interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
++		};
++	};
++};
++
++/ {
++	soc {
++		caam_sm: caam-sm@00100000 {
++			 compatible = "fsl,imx7d-caam-sm", "fsl,imx6q-caam-sm";
++			 reg = <0x00100000 0x3fff>;
++		};
++
++		irq_sec_vio: caam_secvio {
++			     compatible = "fsl,imx7d-caam-secvio", "fsl,imx6q-caam-secvio";
++			     interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++		};
++	};
++
++	caam_keyblob: caam-keyblob {
++		compatible = "fsl,sec-v4.0-keyblob";
++		status = "okay";
++	};
++};
++
++&usbotg1 {
++	dr_mode = "peripheral";
++	disable-over-current;
++	tpl-support;
++	status = "okay";
++};
++
++&usbotg2 {
++	dr_mode = "host";
++	disable-over-current;
++	tpl-support;
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/imx6ull-usbarmory.dts b/arch/arm/boot/dts/imx6ull-usbarmory.dts
+new file mode 100644
+index 000000000000..f74d0296d5f6
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6ull-usbarmory.dts
+@@ -0,0 +1,257 @@
++/*
++ * USB armory Mk II device tree file
++ * https://github.com/inversepath/usbarmory
++ *
++ * Copyright (C) 2019, F-Secure Corporation
++ * Andrej Rosano <andrej.rosano@f-secure.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "imx6ul.dtsi"
++
++/ {
++	model = "F-Secure USB armory Mk II";
++	compatible = "inversepath,imx6ull-usbarmory-mkII", "fsl,imx6ull";
++
++	chosen {
++		stdout-path = &uart2;
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x80000000 0x20000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_led>;
++
++		led-white {
++			label = "LED_WHITE";
++			gpios = <&gpio4 21 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "heartbeat";
++		};
++
++		led-blue {
++			label = "LED_BLUE";
++			gpios = <&gpio4 22 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg_sd1_vmmc: sd1_regulator {
++			compatible = "regulator-fixed";
++			regulator-name = "VSD_3V3";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++		};
++	};
++};
++
++/* Delete CAAM node in AIPS-2 (i.MX6UL specific) */
++/delete-node/ &crypto;
++
++&cpu0 {
++	operating-points = <
++		/* kHz	uV */
++		900000	1275000
++		792000	1225000
++		528000	1175000
++		396000	1025000
++		198000	950000
++	>;
++	fsl,soc-operating-points = <
++		/* KHz	uV */
++		900000	1250000
++		792000	1175000
++		528000	1175000
++		396000	1175000
++		198000	1175000
++	>;
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_bluetooth>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	no-1-8-v;
++	keep-power-in-suspend;
++	wakeup-source;
++	status = "okay";
++};
++
++&usdhc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc2>;
++	non-removable;
++	status = "okay";
++};
++
++&i2c1 {
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX6UL_PAD_UART2_TX_DATA__UART2_DCE_TX	0x1b0b1
++			MX6UL_PAD_UART2_RX_DATA__UART2_DCE_RX	0x1b0b1
++		>;
++	};
++
++	pinctrl_bluetooth: uart1grp {
++		fsl,pins = <
++			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b0 /* BT_UART_TX  */
++			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b0 /* BT_UART_RX  */
++			MX6UL_PAD_UART1_CTS_B__UART1_DCE_CTS	0x1b0b0 /* BT_UART_CTS */
++			MX6UL_PAD_GPIO1_IO07__UART1_DCE_RTS	0x130b0 /* BT_UART_RTS */
++			MX6UL_PAD_UART3_TX_DATA__GPIO1_IO24	0x1f020 /* BT_UART_DSR */
++			MX6UL_PAD_UART3_RX_DATA__GPIO1_IO25	0x10020 /* BT_UART_DTR */
++			MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0x1f020 /* BT_SWDCLK   */
++			MX6UL_PAD_GPIO1_IO05__GPIO1_IO05	0x1f020 /* BT_SWDIO    */
++			MX6UL_PAD_GPIO1_IO09__GPIO1_IO09	0x1f020 /* BT_RESET    */
++			MX6UL_PAD_UART3_RTS_B__GPIO1_IO27	0x1f020 /* BT_SWITCH_1 */
++			MX6UL_PAD_UART3_CTS_B__GPIO1_IO26	0x1f020 /* BT_SWITCH_2 */
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX6UL_PAD_GPIO1_IO02__I2C1_SCL	0x4001b8b0
++			MX6UL_PAD_GPIO1_IO03__I2C1_SDA	0x4001b8b0
++		>;
++	};
++
++	pinctrl_led: ledgrp {
++		fsl,pins = <
++			MX6UL_PAD_CSI_DATA06__GPIO4_IO27	0x1f020
++			MX6UL_PAD_CSI_DATA07__GPIO4_IO28	0x1f020
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x1f019
++			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x1f019
++			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x1f019
++			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x1f019
++			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x1f019
++			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x1f019
++		>;
++	};
++
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x10071
++			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x17059
++			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x17059
++			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x17059
++			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x17059
++			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x17059
++			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x17059
++			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x17059
++			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x17059
++			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x17059
++		>;
++	};
++};
++
++/ {
++	soc {
++		aips3: aips-bus@02200000 {
++			compatible = "fsl,aips-bus", "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0x02200000 0x100000>;
++			ranges;
++
++			dcp: dcp@02280000 {
++				compatible = "fsl,imx6ull-dcp", "fsl,imx6sl-dcp", "fsl,imx28-dcp";
++				reg = <0x02280000 0x4000>;
++				interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks IMX6ULL_CLK_DCP_CLK>;
++				clock-names = "dcp";
++			};
++
++			rngb: rngb@02284000 {
++				compatible = "fsl,imx6sl-rng", "fsl,imx25-rngb", "fsl,imx-rng", "imx-rng";
++				reg = <0x02284000 0x4000>;
++				interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks IMX6UL_CLK_DUMMY>;
++			};
++		};
++	};
++};
++
++&usbotg1 {
++	dr_mode = "peripheral";
++	disable-over-current;
++	tpl-support;
++	status = "okay";
++};
++
++&usbotg2 {
++	dr_mode = "host";
++	disable-over-current;
++	tpl-support;
++	status = "okay";
++};
+-- 
+2.37.0
+

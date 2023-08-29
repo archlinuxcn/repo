@@ -1,0 +1,37 @@
+From ab8cc1b2dc1b716d5c08f72dacbe1eded269f304 Mon Sep 17 00:00:00 2001
+From: André Silva <emulatorman@parabola.nu>
+Date: Tue, 22 Mar 2016 17:58:59 -0300
+Subject: [PATCH 2/2] fix Atmel maXTouch touchscreen support
+
+The Atmel maXTouch touchscreen works with Linux-libre 3.13-gnu,
+but not with the current longterm and mainline kernels in
+Parabola.
+
+Now it needs to load nonfree firmware in mxt_initialize(),
+which is in drivers/input/touchscreen/atmel_mxt_ts.c, and the
+atmel_mxt_ts driver fails to work.
+
+This driver works if changing reject_firmware_nowait to
+request_firmware_nowait in atmel_mxt_ts.c. This line is
+requesting the file named MXT_CFG_NAME, and it's a config file,
+not the firmware blob.
+
+Signed-off-by: André Silva <emulatorman@parabola.nu>
+Signed-off-by: mytbk <mytbk920423@gmail.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index 726a83e..d818834 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -1989,7 +1989,7 @@ static int mxt_initialize(struct mxt_data *data)
+ 	if (error)
+ 		goto err_free_object_table;
+ 
+-	error = reject_firmware_nowait(THIS_MODULE, true, MXT_CFG_NAME,
++	error = request_firmware_nowait(THIS_MODULE, true, MXT_CFG_NAME,
+ 					&client->dev, GFP_KERNEL, data,
+ 					mxt_config_cb);
+ 	if (error) {
