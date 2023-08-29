@@ -37,21 +37,14 @@ backup=(
 optdepends=(
     'otf-font-awesome: Icons in the default configuration'
 )
-source=("$pkgname-$pkgver.tar.gz::https://github.com/Alexays/Waybar/archive/$pkgver.tar.gz"
-         https://github.com/Alexays/Waybar/commit/e9b29613.patch)
-sha256sums=('e300183defece4799b6dfb7aea72400492ec6e330217c22158a334f35532d014'
-            'b5dc01bb96ad7cbe1f9e0683e3276e3fee0aebb2d824aa97e7a36d765aa3f1e4')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/Alexays/Waybar/archive/$pkgver.tar.gz")
+sha256sums=('e300183defece4799b6dfb7aea72400492ec6e330217c22158a334f35532d014')
 provides=(waybar=$pkgver)
 conflicts=(waybar)
-prepare() {
-    cd Waybar-$pkgver
-    patch -p1 -i ../e9b29613.patch # Fix build with fmt 10
-}
 
 build() {
     cd "Waybar-$pkgver"
     # TODO tests depend on catch2 v3
-    CXXFLAGS+=" -std=c++20" \
     meson setup --prefix=/usr \
           --buildtype=plain \
           --wrap-mode=nodownload \
