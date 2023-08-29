@@ -1,14 +1,14 @@
-# Maintainer: NicoHood <archlinux {cat} nicohood {dog} de>
 # Maintainer: Christian Heusel <christian@heusel.eu>
-# PGP ID: 97312D5EB9D7AE7D0BD4307351DAE9B7C1AE9161
+# Maintainer: Robin Candau <antiz@archlinux.org>
+# Contributor: NicoHood <archlinux {cat} nicohood {dog} de>
 # Contributor: TobFromme < TobFromme {hat} pm {dont} me >
 # Contributor: Ashley Whetter <(firstname) @ awhetter.co.uk>
 # Contributor: Eothred <yngve.levinsen@gmail.com>
 
 pkgname=spotify
-pkgver='1.2.13.661'
+pkgver='1.2.18.999'
 epoch=1
-_commit=ga588f749
+_commit=g9b38fc27
 pkgrel=1
 pkgdesc='A proprietary music streaming service'
 arch=('x86_64')
@@ -35,7 +35,7 @@ source=('spotify.protocol'
         "${pkgname}-${pkgver}-${pkgrel}-x86_64-Packages::http://repository.spotify.com/dists/testing/non-free/binary-amd64/Packages")
 sha512sums=('999abe46766a4101e27477f5c9f69394a4bb5c097e2e048ec2c6cb93dfa1743eb436bde3768af6ba1b90eaac78ea8589d82e621f9cbe7d9ab3f41acee6e8ca20'
             '2e16f7c7b09e9ecefaa11ab38eb7a792c62ae6f33d95ab1ff46d68995316324d8c5287b0d9ce142d1cf15158e61f594e930260abb8155467af8bc25779960615'
-            '5ccac37274ca587414a9f4c5c427fd5d4b93bbde0b39efb94ccf79a1b5947df4a00a79e00686e59a4ccd097eca0bad88e6f030f2e236d86a82c37d8e011217e9'
+            '39a57cfa059f4f61fc6a400c22b8ec3bbd87cfd6b014e1048e98c158412aa4db3e5a1fa339f2ecc3355f3ca082ee1cacba7dd3b8ffff7300f9220c90f5465459'
             'SKIP'
             'SKIP'
             'SKIP')
