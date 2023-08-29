@@ -1,0 +1,59 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+
+pkgbase=julia-git-precompiled-packages
+_jlpackages=(Compat)
+pkgname=()
+makedepends=(git)
+pkgver=1.10.0.DEV.1622.gecca2c5a2f0
+pkgrel=1
+pkgdesc="Precompiled packages for julia-git"
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+url="http://julialang.org"
+license=('GPL')
+depends=(julia-git)
+options=('debug' '!strip')
+source=()
+sha512sums=()
+
+pkgver() {
+  # Use the julia version
+  pacman -Q julia-git | sed -e 's/^.* \(\|[^ ]*:\)\([^ ]*\)-[^- ]*$/\2/'
+}
+
+_package-jlpackage() {
+  jlpkg=$1
+  srcpkg="julia-git-${jlpkg,,}-src"
+
+  ver_short=$(julia --startup-file=no \
+                    -e 'print(VERSION.major, ".", VERSION.minor)')
+  compile_dir="/usr/share/julia/compiled/v$ver_short"
+  mkdir -p "${pkgdir}/${compile_dir}"
+
+  # This is a bit cheating as we are simply copying the version from the package hook
+  cp -a "${compile_dir}/${jlpkg}" "${pkgdir}/${compile_dir}"
+  touch "${pkgdir}/${compile_dir}/${jlpkg}/.archpkg"
+  # The ji file records the exact time stamps so we need to fix those in post_install
+  (
+    echo "_fix_timestamps() {"
+    cd /
+    find "usr/share/julia/stdlib/v$ver_short/$jlpkg" -type f -exec \
+         sh -c 'echo "  touch -c -d \"$(stat -c %y "{}")\" \"{}\""' \;
+    echo "}"
+
+    echo "post_install() {"
+    echo "  _fix_timestamps"
+    echo "}"
+
+    echo "post_upgrade() {"
+    echo "  _fix_timestamps"
+    echo "}"
+  ) > "${startdir}/pkg-${jlpkg,,}.install"
+  true && install=pkg-${jlpkg,,}.install
+}
+
+for jlpkg in "${_jlpackages[@]}"; do
+  _pkg="julia-git-${jlpkg,,}"
+  pkgname=("${pkgname[@]}" "${_pkg}")
+  makedepends=("${makedepends[@]}" "${_pkg}-src")
+  eval "package_${_pkg}() { _package-jlpackage ${jlpkg}; }"
+done
