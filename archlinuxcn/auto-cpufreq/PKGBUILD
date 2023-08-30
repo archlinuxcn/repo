@@ -2,12 +2,12 @@
 # shellcheck disable=SC2034,2164,2154
 pkgname=auto-cpufreq
 pkgver=1.9.9
-pkgrel=1
+pkgrel=2
 pkgdesc="Automatic CPU speed & power optimizer"
 arch=('any')
 url="https://github.com/AdnanHodzic/auto-cpufreq"
 license=('LGPL3')
-depends=('python-setuptools' 'python-distro' 'python-psutil' 'python-click' 'dmidecode')
+depends=('python-setuptools' 'python-distro' 'python-psutil' 'python-click' 'dmidecode' 'python-requests')
 optdepends=(
 	'cpufreqctl: CPU Power Manager'
 	'gnome-shell-extension-cpufreq: CPU Power Manager for GNOME Shell'
