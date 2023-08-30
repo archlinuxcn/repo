@@ -143,7 +143,7 @@ esac
 
 _apply_patch() {
   echo "Applying $1"
-  patch -Np1 < "../$1"
+  patch -Np1 --no-backup-if-mismatch < "../$1"
 }
 
 _patch_suitesparse() {
@@ -203,7 +203,7 @@ EOF
   make "${julia_opts[@]}" julia-stdlib
   (
     cd usr/share/julia/stdlib/v*/Pkg
-    patch -Np0 < "$srcdir/sysp7z.diff"
+    patch -Np0 --no-backup-if-mismatch < "$srcdir/sysp7z.diff"
   )
   for f in usr/share/julia/stdlib/v*/*/*Artifacts.toml; do
     echo "Clearing $f"
