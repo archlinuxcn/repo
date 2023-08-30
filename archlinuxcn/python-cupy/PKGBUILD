@@ -17,10 +17,11 @@ depends=(
   )
 makedepends=(
   cudnn
-  cython
+  # cython
   gcc12
   git
   nccl
+  python-pip
   python-setuptools
 )
 optdepends=(
@@ -37,6 +38,8 @@ prepare() {
   # build with gcc 12
   export CC=gcc-12
   export CXX=g++-12
+  # quick fix, build with cython < 3.0
+  pip install --user cython==0.29.36
 }
 
 build() {
