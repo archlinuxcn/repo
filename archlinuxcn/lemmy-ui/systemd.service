@@ -1,0 +1,20 @@
+[Unit]
+Description=Lemmy UI - Web frontend for Lemmy
+After=lemmy.service
+Before=nginx.service
+
+[Service]
+User=lemmy
+Group=lemmy
+WorkingDirectory=/usr/share/lemmy-ui
+ExecStart=/usr/bin/node dist/js/server.js
+EnvironmentFile=-/etc/lemmy/lemmy-ui.env
+Restart=on-failure
+
+# Hardening
+ProtectSystem=full
+PrivateTmp=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
