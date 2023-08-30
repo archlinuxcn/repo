@@ -1,7 +1,7 @@
 From c249e95b554926cc564a5265b5781451bd2f7ae9 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 31 Aug 2020 12:44:58 -0400
-Subject: [PATCH 3/5] Enable basic AA in O2
+Subject: [PATCH 3/6] Enable basic AA in O2
 
 ---
  src/aotcompile.cpp | 4 +---
@@ -23,5 +23,5 @@ index cf6378b4f9..ab29828ba6 100644
      PM->add(createCFGSimplificationPass(basicSimplifyCFGOptions));
      PM->add(createDeadCodeEliminationPass());
 -- 
-2.40.0
+2.42.0
 

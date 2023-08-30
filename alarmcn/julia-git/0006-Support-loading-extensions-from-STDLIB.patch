@@ -1,0 +1,52 @@
+From 9c5f0486823f769a03c1d60862087a36155dbe37 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 30 Aug 2023 09:28:03 -0400
+Subject: [PATCH 6/6] Support loading extensions from STDLIB
+
+---
+ base/loading.jl | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/base/loading.jl b/base/loading.jl
+index cf23fdb887..5405e59883 100644
+--- a/base/loading.jl
++++ b/base/loading.jl
+@@ -1146,6 +1146,25 @@ const EXT_PRIMED = Dict{PkgId, PkgId}() # Extension -> Parent
+ const EXT_DORMITORY = Dict{PkgId,Vector{ExtensionId}}() # Trigger -> Extensions that can be triggered by it
+ const EXT_DORMITORY_FAILED = ExtensionId[]
+ 
++function _insert_extension_triggers_stdlib(pkg::PkgId)
++    local entry
++    try
++        entry = parsed_toml(joinpath(Sys.STDLIB, pkg.name, "Project.toml"))
++    catch
++        errs = current_exceptions()
++        @error "Error during stdlib extension trigger" exception=errs
++        return false
++    end
++    weakdeps = get(entry, "weakdeps", nothing)::Union{Nothing, Vector{String}, Dict{String,Any}}
++    extensions = get(entry, "extensions", nothing)::Union{Nothing, Dict{String, Any}}
++    if weakdeps isa Dict{String, Any} && extensions !== nothing
++        _insert_extension_triggers(pkg, extensions, weakdeps)
++        return true
++    end
++    # Require STDLIB weakdeps to include the UUIDs
++    return false
++end
++
+ function insert_extension_triggers(pkg::PkgId)
+     pkg.uuid === nothing && return
+     path_env_loc = locate_package_env(pkg)
+@@ -1154,6 +1173,9 @@ function insert_extension_triggers(pkg::PkgId)
+     if path === nothing || env_loc === nothing
+         return
+     end
++    if env_loc == Sys.STDLIB && _insert_extension_triggers_stdlib(pkg)
++        return
++    end
+     insert_extension_triggers(env_loc, pkg)
+ end
+ 
+-- 
+2.42.0
+
