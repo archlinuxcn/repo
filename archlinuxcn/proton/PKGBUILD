@@ -6,12 +6,12 @@ _commit=
 pkgver=8.0.3.3  # pkgver=${_srctag//-/.}
 _geckover=2.47.3
 _monover=7.4.1
-pkgrel=3
+pkgrel=7
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 url="https://github.com/ValveSoftware/Proton"
 arch=(x86_64 x86_64_v3)
-options=(!staticlibs !lto emptydirs)
+options=(!staticlibs !lto !debug emptydirs)
 license=('custom')
 
 depends=(
@@ -152,19 +152,25 @@ pip install --no-cache-dir afdko
 
     # Explicitly set origin URL for submodules using relative paths
     git remote set-url origin https://github.com/ValveSoftware/Proton.git
-    git -c protocol.file.allow=always submodule update --init --filter=tree:0 --recursive
+    git submodule update --init --filter=tree:0 --recursive
+
+    # Fix bindgen issue with llvm 16 by pulling in newer versions
+    pushd dav1d; git checkout 1.2.1; popd
+    pushd gst-plugins-rs; git checkout 0.11.0; popd
+    sed 's/libgstrsdav1d.so/libgstdav1d.so/g' -i Makefile.in
 
     for rustlib in gst-plugins-rs media-converter; do
     pushd $rustlib
         export RUSTUP_TOOLCHAIN=stable
         export CARGO_HOME="${SRCDEST}"/proton-cargo
+        cargo update
         cargo fetch --locked --target "i686-unknown-linux-gnu"
         cargo fetch --locked --target "x86_64-unknown-linux-gnu"
     popd
     done
 
     patch -p1 -i "$srcdir"/0001-AUR-Pkgbuild-changes.patch
-    patch -p1 -i "$srcdir"/0002-AUR-Do-not-update-cargo-crates.patch
+    #patch -p1 -i "$srcdir"/0002-AUR-Do-not-update-cargo-crates.patch
     patch -p1 -i "$srcdir"/0003-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
     patch -p1 -i "$srcdir"/0004-AUR-Strip-binaries-early.patch
     patch -p1 -i "$srcdir"/fix_hwnd_changes_meaning.patch
