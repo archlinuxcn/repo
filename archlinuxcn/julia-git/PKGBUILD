@@ -32,8 +32,8 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.11.0.DEV.586.ge9d633f70a1
-pkgrel=1
+pkgver=1.10.0.DEV.1265.g21d4c2f1b09
+pkgrel=2
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -53,7 +53,7 @@ _patches=(
   0004-Use-libc-for-libssp.patch
   0005-Support-loading-extensions-from-STDLIB.patch
 )
-source=('git+https://github.com/JuliaLang/julia'
+source=('git+https://github.com/JuliaLang/julia#commit=21d4c2f'
         "${_patches[@]}"
         julia-compile-pkgs.sh
         julia-compile-pkgs.jl
