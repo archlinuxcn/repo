@@ -3,29 +3,31 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-megumifox
 _pkgname=telegram-desktop
-pkgver=4.8.4
-pkgrel=10
+pkgver=4.9.3
+pkgrel=1
 pkgdesc='Official Telegram Desktop client with megumifox patch'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL3')
 depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
-         'qt6-imageformats' 'qt6-svg' 'qt6-wayland' 'xxhash' 'glibmm-2.68'
+         'qt6-imageformats' 'qt6-svg' 'qt6-wayland' 'xxhash'
          'rnnoise' 'pipewire' 'libxtst' 'libxrandr' 'jemalloc' 'abseil-cpp' 'libdispatch'
-         'openssl' 'protobuf')
+         'openssl' 'protobuf' 'libsigc++-3.0')
 makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'microsoft-gsl' 'meson'
              'extra-cmake-modules' 'wayland-protocols' 'plasma-wayland-protocols' 'libtg_owt'
-             'gobject-introspection' 'glib2' 'boost' 'fmt')
+             'gobject-introspection' 'boost' 'fmt' 'mm-common' 'perl-xml-parser' 'libsigc++-3.0')
 optdepends=('webkit2gtk: embedded browser features'
             'xdg-desktop-portal: desktop integration')
 provides=('telegram-desktop')
 conflicts=('telegram-desktop')
 source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
         "0001-Use-font-from-environment-variables.patch"
-        "0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch")
-sha512sums=('7988d047cb72888e303f9902f04bd2168f67fb18a4451e5122ce80b0aef726173f0ee10f83b8bb713a46e02c9ec4150ad6128e4288be432ed3d590011f80e4dd'
+        "0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch"
+        "https://download.gnome.org/sources/glibmm/2.77/glibmm-2.77.0.tar.xz")
+sha512sums=('c0ffd0e56d8c835d85c27326e447adf1ba2dfbf72ff7ebccb39bec03c5ea39c80c66d0dd871ba98e8f0131ef82f0ef6a72c61d69e93afc93bb871ca0269d7ee3'
             '13b1b0f34b0937a98aa61fed776318717c659358794c0ffa8b1af00c5c80fe195a11816db9183eee8e8e02f76c72f10c723093a24a9c0de249af18dcf2755126'
-            '31d7a4c091abae49631598f2f41c8382550312e080fca784ed5a19cbaef0c6cdf2a2a4ffeffd78cd41f32dd49fb60ead2c12b3febce7cdf9a9ede6ea3c938a2b')
+            '31d7a4c091abae49631598f2f41c8382550312e080fca784ed5a19cbaef0c6cdf2a2a4ffeffd78cd41f32dd49fb60ead2c12b3febce7cdf9a9ede6ea3c938a2b'
+            '6650e822de2529582d93291025500afb6a182a0c5a564f656f164d79d8765bb4ca9c9d16227148431cc71c2677923b9364e81bbd4ca4f07f68e36bb380fb9574')
 
 prepare() {
     patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-Use-font-from-environment-variables.patch
@@ -34,12 +36,21 @@ prepare() {
 
 build() {
     CXXFLAGS+=' -ffat-lto-objects'
+
+    # Telegram currently needs unstable glibmm so we bundle it in as static libs.
+    # This isn't great but what can you do.
+    meson setup -D maintainer-mode=true --default-library static --prefix "$srcdir/glibmm" glibmm-2.77.0 glibmm-build
+    meson compile -C glibmm-build
+    meson install -C glibmm-build
+
     # Turns out we're allowed to use the official API key that telegram uses for their snap builds:
     # https://github.com/telegramdesktop/tdesktop/blob/8fab9167beb2407c1153930ed03a4badd0c2b59f/snap/snapcraft.yaml#L87-L88
     # Thanks @primeos!
+    export PKG_CONFIG_PATH="$srcdir"/glibmm/usr/local/lib/pkgconfig
     cmake -B build -S tdesktop-$pkgver-full -G Ninja \
         -DCMAKE_VERBOSE_MAKEFILE=ON \
         -DCMAKE_INSTALL_PREFIX="/usr" \
+        -DCMAKE_PREFIX_PATH="$srcdir/glibmm" \
         -DCMAKE_BUILD_TYPE=Release \
         -DTDESKTOP_API_ID=611335 \
         -DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c \
