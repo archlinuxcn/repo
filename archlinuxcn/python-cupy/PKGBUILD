@@ -39,7 +39,7 @@ prepare() {
   export CC=gcc-12
   export CXX=g++-12
   # quick fix, build with cython < 3.0
-  pip install --user cython==0.29.36
+  pip install --user --break-system-packages cython==0.29.36
 }
 
 build() {
