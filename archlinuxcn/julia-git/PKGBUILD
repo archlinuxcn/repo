@@ -6,7 +6,7 @@
 BUILD_DOC=1
 
 pkgbase=julia-git
-pkgname=(julia-git)
+pkgname=(julia-git julia-git-package-env)
 
 if [[ $CARCH != x86_64 ]]; then
   BUILD_DOC=0
@@ -55,6 +55,7 @@ _patches=(
 )
 source=('git+https://github.com/JuliaLang/julia'
         "${_patches[@]}"
+        julia-compile-pkgs.sh
         julia-compile-pkgs.jl
         julia-clear-precompile.sh
         julia-precompile.hook
@@ -67,9 +68,10 @@ sha512sums=('SKIP'
             '24861de1708be4a1ae695192d1519c17f6350df729a1d50380f5dd528349d54734bfb689a1658c018e3da38709dc45388abbfc716816025947fca4102d13388d'
             'acfcf8bac53a4796ed8d4109ebcf25bad7fb8e5978d00eece909e95d3bbd28cf94890fec91cb3955527ec1d52da2206480980d67731a63d7d7e7fc3ac21847b4'
             'b66cabbfde1152615d0464ebeb2b0682ada4771c066c7b185d7c5430f3248fc4e350d5c651fef8b683e5465e311a7ca7bb0193b711c0d3f268792286c47ab982'
-            '2bf050afb5afcd21b23667beb6129e73dc2fb8143366921c8859d7011ed06187db9f4aedae99c0fe31e0bcb7b0896180b006ee542d4b4d592369e9f4f1bd77ec'
+            '6fe4311c3e8fc38d35e76e3fd8169dc60eb67ae02e2bc7e4560cf659a07a974c9d2d62e8140107b708153bd7b7d663ab66e31f38f2a12d15eabe045b6d95b44d'
+            '12fcbd17c156aaaf48dd51fe1a522b9f05a22855e12a194fa645750eb71eef7184f6742f8794b62ce3d19fc1ba4fcc01c3fd5b5e50d6eea0fa15b55ad662a9fe'
             'ce03e2995a45d942f480d25d1ce7cddacb98f2e11eeed19b5564e36d817987f548c313b0d6b139402ba8c203c8ba9a059e1732695517d7b78b7fa88f08429295'
-            '36df234b634926bc88084e683ee9f495ef0ce4c26d6d6b9f55294098bdcb86f5eaaf6c671afe1a5c4371c428bd7bf3dd617ec1f15a7ff35376d67df22140454c'
+            'f4ce40ff437c20e9d5c71bbd3102f3054cfd46429a014a174a89591aacafea2f191aa52c5d6ff93c21b8410bb0be092f8e5c36fbcfce64d96798aa12c5067b53'
             'adf0fef964e8bdee9926f1127177bc0ddea0d2dbb1090ab94555c3599b87cf03b489dfe92fda3453bf68385f4b69556f396b1ecfb8a9525c23a3ed808e2eb370'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849')
@@ -134,18 +136,23 @@ _aa64_target='generic;armv8.2-a;apple-m1,clone_all'
 
 case "$CARCH" in
   x86_64)
-    julia_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET="${_x86_target}")
+    _cpu_target="${_x86_target}"
+    julia_opts=("${julia_opts[@]}" MARCH=x86-64)
     ;;
   i686)
-    julia_opts=("${julia_opts[@]}" MARCH=pentium4 JULIA_CPU_TARGET="${_x86_target}")
+    _cpu_target="${_x86_target}"
+    julia_opts=("${julia_opts[@]}" MARCH=pentium4)
     ;;
   aarch64)
-    julia_opts=("${julia_opts[@]}" MARCH=armv8-a JULIA_CPU_TARGET="${_aa64_target}")
+    _cpu_target="${_aa64_target}"
+    julia_opts=("${julia_opts[@]}" MARCH=armv8-a)
     ;;
   armv7h)
-    julia_opts=("${julia_opts[@]}" MARCH=armv7-a JULIA_CPU_TARGET="${_arm_target}")
+    _cpu_target="${_arm_target}"
+    julia_opts=("${julia_opts[@]}" MARCH=armv7-a)
     ;;
 esac
+julia_opts=("${julia_opts[@]}" JULIA_CPU_TARGET="${_cpu_target}")
 
 _apply_patch() {
   echo "Applying $1"
@@ -347,10 +354,11 @@ package-julia-in() {
   replaces=("${builtin_pkgs[@]}")
 
   install -Dm644 ../julia-compile-pkgs.jl "${pkgdir}/usr/lib/julia/"
+  install -Dm755 ../julia-compile-pkgs.sh "${pkgdir}/usr/lib/julia/"
   install -Dm644 ../julia-clear-precompile.sh "${pkgdir}/usr/lib/julia/"
-  sed "s|@VER@|$ver_short|" ../julia-precompile.hook |
+  sed -e "s|@VER@|$ver_short|" ../julia-precompile.hook |
     install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-precompile.hook"
-  sed "s|@VER@|$ver_short|" ../julia-clear-precompile.hook |
+  sed -e "s|@VER@|$ver_short|" ../julia-clear-precompile.hook |
     install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-clear-precompile.hook"
   mkdir -p "${pkgdir}/usr/share/julia/compiled/v$ver_short"
 
@@ -402,6 +410,7 @@ package-julia-in() {
   )
 
   env JULIA_PRECOMPILE_STDLIB_DIR="/usr/share/julia/stdlib/v$ver_short" \
+      JULIA_CPU_TARGET="${_cpu_target}" \
       proot -b "${pkgdir}/usr/share/julia/:/usr/share/julia/" \
       "${pkgdir}/usr/bin/julia" --startup-file=no "${srcdir}/julia-compile-pkgs.jl" \
       /usr/share/julia
@@ -461,6 +470,17 @@ package_julia-git() {
   if [[ "$CARCH" = x86_64 ]]; then
     replaces=(julia-git-avx2)
   fi
+}
+
+package_julia-git-package-env() {
+  arch=('any')
+  backup=(usr/lib/julia/.package-precompile-env)
+  pkgdesc+=" (Package precompilation environment)"
+
+  mkdir -p "${pkgdir}/usr/lib/julia/"
+  cat > "${pkgdir}/usr/lib/julia/.package-precompile-env" <<EOF
+export JULIA_CPU_TARGET="${_cpu_target}"
+EOF
 }
 
 package_julia-git-docs() {
