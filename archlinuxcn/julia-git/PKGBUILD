@@ -132,7 +132,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
 
 _x86_target='generic,opt_size;haswell,clone_all,-rdrnd;skylake,base(1),-rdrnd,-rdseed,-rtm;cannonlake,base(1),-rdrnd,-rdseed,-rtm'
 _arm_target='armv7-a;armv7-a,neon;armv7-a,neon,vfp4'
-_aa64_target='generic;armv8.2-a;apple-m1,clone_all'
+_aa64_target='apple-m1'
 
 case "$CARCH" in
   x86_64)
@@ -261,14 +261,14 @@ build_in() {
     make "${opts[@]}" release debug
   else
     make "${opts[@]}" release
-    make "${opts[@]}" debug
+    # make "${opts[@]}" debug
   fi
   # TODO docless build
   JL_MAKEPKG_SRCDIR= make "${opts[@]}" docs
 
   # Check to detect issues like JuliaLang/julia#13820
   LD_PRELOAD= JL_MAKEPKG_SRCDIR= usr/bin/julia -e '0'
-  LD_PRELOAD= JL_MAKEPKG_SRCDIR= usr/bin/julia-debug -e '0'
+  # LD_PRELOAD= JL_MAKEPKG_SRCDIR= usr/bin/julia-debug -e '0'
 }
 
 build() {
@@ -316,8 +316,8 @@ package-julia-in() {
 
   # Delete precompiled environment since it seems to be picking up the one compiled
   # for the wrong julia build during document generation.
-  rm -rf doc/deps/compiled
-  make install DESTDIR="$pkgdir" "${opts[@]}" JULIA_BUILD_MODE=debug
+  # rm -rf doc/deps/compiled
+  # make install DESTDIR="$pkgdir" "${opts[@]}" JULIA_BUILD_MODE=debug
   rm -rf doc/deps/compiled
   make install DESTDIR="$pkgdir" "${opts[@]}" JULIA_BUILD_MODE=release
   # else
@@ -372,10 +372,8 @@ package-julia-in() {
 
   # Without stripping, makepkg doesn't copy the source for us...
   dbgsrcdir="${DBGSRCDIR:-/usr/src/debug}"
-  for binary in usr/bin/julia usr/bin/julia-debug \
-                              usr/lib/libjulia.so usr/lib/libjulia-debug.so \
-                              usr/lib/julia/libjulia-internal.so \
-                              usr/lib/julia/libjulia-internal-debug.so; do
+  for binary in usr/bin/julia usr/lib/libjulia.so \
+                              usr/lib/julia/libjulia-internal.so; do
     binary="${pkgdir}/${binary}"
     ls "$binary"
     # copy source files to debug directory
