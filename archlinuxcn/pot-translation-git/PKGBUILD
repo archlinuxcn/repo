@@ -1,0 +1,39 @@
+# Maintainer: Pylogmon <pylogmon@outlook.com>
+
+pkgname=pot-translation-git
+_pkgname=pot-desktop
+pkgver=1.14.0.r60.g2f84c69
+pkgrel=1
+pkgdesc="一个跨平台的划词翻译软件 | A cross-platform software for text translation."
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/pot-app/pot-desktop"
+license=('GPL3')
+depends=('webkit2gtk' 'gtk3' 'libayatana-appindicator' 'xdotool' 'libxcb' 'libxrandr' 'tesseract' 'tessdata')
+makedepends=('git' 'nodejs' 'pnpm' 'rust' 'dbus')
+source=("git+${url}.git")
+sha512sums=('SKIP')
+options=('!lto')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+	cd "${_pkgname}/"
+
+	# Modify versions in configuration files
+	_pkgver=$(sed 's/.\(r[0-9]\)/\-\1/' <<<${pkgver})
+	sed -i "s/\"version\":.*/\"version\": \"${_pkgver}\",/g" package.json
+	sed -i "s/\"version\":.*/\"version\": \"${_pkgver}\"/g" src-tauri/tauri.conf.json
+	sed -i "s/\"version = \"0.0.0\"/version = \"${_pkgver}\"/g" src-tauri/Cargo.toml
+
+	pnpm install && pnpm tauri build -b deb
+}
+
+package() {
+	cd "${_pkgname}/"
+	_pkgver=$(sed 's/.\(r[0-9]\)/\-\1/' <<<${pkgver})
+	tar -xpf "src-tauri/target/release/bundle/deb/pot_${_pkgver}_amd64/data.tar.gz" -C ${pkgdir}
+	chown -R root:root ${pkgdir}
+}
