@@ -5,6 +5,7 @@ post_build: git_pkgbuild_commit
 
 repo_depends:
   - julia-git
+  - julia-git: julia-git-package-env
   - openspecfun-git
   - openblas-lapack-git: openblas-git
   - openblas-lapack-git
@@ -13,11 +14,21 @@ repo_depends:
   - llvm-julia: llvm-libs-julia
   - julia-pkg-scripts
 
+  - julia-git-adapt-src
+  - julia-git-arrayinterface-src
   - julia-git-compat-src
+  - julia-git-requires-src
+  - julia-git-staticarrays-src
+  - julia-git-staticarrayscore-src
 
 update_on_build:
   - pkgbase: julia-git
+  - pkgbase: julia-git-adapt-src
+  - pkgbase: julia-git-arrayinterface-src
   - pkgbase: julia-git-compat-src
+  - pkgbase: julia-git-requires-src
+  - pkgbase: julia-git-staticarrays-src
+  - pkgbase: julia-git-staticarrayscore-src
 
 update_on:
   - source: manual
