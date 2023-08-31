@@ -4,7 +4,7 @@
 # Contributor: Tuur Vanhoutte <vanhouttetuur at gmail dot com>
 pkgname=notes
 pkgver=2.2.0
-pkgrel=4
+pkgrel=5
 pkgdesc='Note taking application, write down your thoughts'
 arch=('x86_64')
 url='https://www.get-notes.com/'
@@ -17,26 +17,26 @@ source=("git+https://github.com/nuttyartist/notes.git#commit=$_commit"
 	'git+https://github.com/pbek/qmarkdowntextedit.git'
 	'git+https://github.com/alex-spataru/QSimpleUpdater.git')
 sha256sums=('SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP')
+            'SKIP'
+            'SKIP'
+            'SKIP')
 
 pkgver() {
-	cd $pkgname
+	cd ${pkgname}
 	git describe --tags | sed 's/^v//;s/-/+/g'
 }
 
 prepare() {
-	cd $pkgname
+	cd ${pkgname}
 	git submodule init
-	git submodule set-url 3rdParty/qautostart "$srcdir/qautostart"
-	git submodule set-url 3rdParty/qmarkdowntextedit "$srcdir/qmarkdowntextedit"
-	git submodule set-url 3rdParty/QSimpleUpdater "$srcdir/QSimpleUpdater"
+	git submodule set-url 3rdParty/qautostart "${srcdir}/qautostart"
+	git submodule set-url 3rdParty/qmarkdowntextedit "${srcdir}/qmarkdowntextedit"
+	git submodule set-url 3rdParty/QSimpleUpdater "${srcdir}/QSimpleUpdater"
 	git -c protocol.file.allow=always submodule update
 }
 
 build() {
-	cd $pkgname
+	cd ${pkgname}
 	cmake -B build \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX=/usr \
@@ -47,6 +47,6 @@ build() {
 }
 
 package() {
-	cd $pkgname
-	DESTDIR="$pkgdir" cmake --install build
+	cd ${pkgname}
+	DESTDIR="${pkgdir}" cmake --install build
 }
