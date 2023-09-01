@@ -1,7 +1,7 @@
 # Maintainer: Jack Chen <redchenjs@live.com>
 
 pkgname=utools
-pkgver=4.0.0
+pkgver=4.0.1
 pkgrel=1
 pkgdesc="uTools Utilities"
 arch=('x86_64')
@@ -9,7 +9,7 @@ url="https://u.tools/"
 license=('custom')
 depends=('gtk3' 'nss' 'alsa-lib' 'openssl-1.1')
 source=("https://publish.u-tools.cn/version2/utools_${pkgver}_amd64.deb")
-sha512sums=('8b848cc4ec79d74a289843f5fba53b5cd5ab6724ed530f5d083a505743f68ef0288c5f11b1ec895eebba0976a984138180d2dc57a5a4ce2a31bb7c15ef723781')
+sha512sums=('fad4390b72e928efe43bf99e8998a8c1791956221136e555984ccc6ad1c167413eb0d313be1bf2014e17985f60ae473eb20fdbf58d204a0666fe508795ddf5c3')
 
 package() {
   tar -xf "$srcdir/data.tar.xz" -C "$pkgdir/"
