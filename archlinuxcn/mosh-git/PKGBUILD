@@ -1,7 +1,7 @@
 pkgname=mosh-git
 epoch=1
 pkgver=1.4.0.r19.g1105d48
-pkgrel=3
+pkgrel=4
 pkgdesc='Mobile shell, surviving disconnects with local echo and line editing. Git version'
 arch=(x86_64 aarch64)
 url='https://mosh.org/'
@@ -12,9 +12,9 @@ conflicts=(mosh)
 provides=(mosh)
 options=(!emptydirs)
 source=("git+https://github.com/mobile-shell/mosh"
-        1167.patch)
+        https://github.com/mobile-shell/mosh/pull/1292.patch)
 sha512sums=('SKIP'
-            'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e')
+            '8378b9c38fcc395aa8d68b0efd756769bcd6e0ffa2e3a41caa4f8dacd72cd95bf7daba8c4bbade7812ad003a2f8cf20152825f4ebb619f7d333802a15e523a64')
 
 pkgver() {
   cd "$srcdir/mosh"
@@ -23,7 +23,7 @@ pkgver() {
 
 prepare() {
   cd "$srcdir/mosh"
-  patch -Np1 < ../1167.patch
+  patch -Np1 < ../1292.patch
 }
 
 build() {
