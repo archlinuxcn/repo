@@ -13,14 +13,14 @@ pkgname=(
   "${pkgbase}-headers"
 )
 pkgver="${_pkgver_main}"
-pkgrel=5
+pkgrel=6
 arch=('aarch64')
 url="https://github.com/orangepi-xunlong/${_orangepi_repo}"
 license=('GPL2')
 makedepends=( # Since we don't build the doc, most of the makedeps for other linux packages are not needed here
   'kmod' 'bc' 'dtc' 'uboot-tools'
 )
-options=(!strip)
+options=(!strip !distcc)
 source=(
   "${_srcname}.tar.gz::${url}/archive/${_orangepi_commit}.tar.gz"
   'gcc12-fixups.patch::https://github.com/7Ji/linux-orangepi/releases/download/orange-pi-5.10-rk3588-gcc-12-patch-frozen/gcc12-fixups.patch'
@@ -58,7 +58,7 @@ build() {
 
   # Host LDFLAGS or other LDFLAGS set by makepkg/user is not helpful for building kernel: it should links nothing outside of itself
   unset LDFLAGS
-  # Only need normal Image, as most Amlogic devices does not need/support Image.gz
+  # Only need normal Image, as most Rockchip devices does not need/support Image.gz
   # Image and modules are built in the same run to make sure they're compatible with each other
   # -@ enables symbols in dtbs, so overlay is possible
   make ${MAKEFLAGS} DTC_FLAGS="-@" Image modules dtbs
