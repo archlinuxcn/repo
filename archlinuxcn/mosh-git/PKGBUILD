@@ -12,7 +12,7 @@ conflicts=(mosh)
 provides=(mosh)
 options=(!emptydirs)
 source=("git+https://github.com/mobile-shell/mosh"
-        https://github.com/mobile-shell/mosh/pull/1292.patch)
+        https://github.com/mobile-shell/mosh/pull/1292.diff)
 sha512sums=('SKIP'
             '8378b9c38fcc395aa8d68b0efd756769bcd6e0ffa2e3a41caa4f8dacd72cd95bf7daba8c4bbade7812ad003a2f8cf20152825f4ebb619f7d333802a15e523a64')
 
@@ -23,7 +23,7 @@ pkgver() {
 
 prepare() {
   cd "$srcdir/mosh"
-  patch -Np1 < ../1292.patch
+  patch -Np1 < ../1292.diff
 }
 
 build() {
