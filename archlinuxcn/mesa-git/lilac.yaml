@@ -8,12 +8,7 @@ build_prefix: multilib
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
 repo_depends:
-  - llvm-git: polly-git
-  - libclc-git
-  - llvm-git: compiler-rt-git
-  - llvm-git: clang-git
-  - llvm-git: llvm-libs-git
-  - llvm-git: llvm-git
+
 update_on:
   - source: cmd # Update every other day
     cmd: python -c "import time; print(int(time.time()) // (2 * 24 * 60 * 60))"
