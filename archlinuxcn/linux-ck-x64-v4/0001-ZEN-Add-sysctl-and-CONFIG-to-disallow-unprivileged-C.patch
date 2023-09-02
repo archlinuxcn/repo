@@ -1,7 +1,7 @@
-From 093ed5b87ed2e51249857480db29b82d5e067dfd Mon Sep 17 00:00:00 2001
+From 8659d263820b50c42036dd38fff16e0f6852575d Mon Sep 17 00:00:00 2001
 From: "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
 Date: Mon, 16 Sep 2019 04:53:20 +0200
-Subject: [PATCH 1/5] ZEN: Add sysctl and CONFIG to disallow unprivileged
+Subject: [PATCH 1/6] ZEN: Add sysctl and CONFIG to disallow unprivileged
  CLONE_NEWUSER
 
 Our default behavior continues to match the vanilla kernel.
@@ -36,7 +36,7 @@ index 45f09bec02c4..87b20e2ee274 100644
  {
  	return &init_user_ns;
 diff --git a/init/Kconfig b/init/Kconfig
-index 32c24950c4ce..f17ef1360063 100644
+index f7f65af4ee12..c2ecb3bb3392 100644
 --- a/init/Kconfig
 +++ b/init/Kconfig
 @@ -1225,6 +1225,22 @@ config USER_NS
@@ -63,7 +63,7 @@ index 32c24950c4ce..f17ef1360063 100644
  	bool "PID Namespaces"
  	default y
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 8103ffd217e9..f405763e06ae 100644
+index d2e12b6d2b18..95ca80492a37 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -100,6 +100,10 @@
@@ -77,7 +77,7 @@ index 8103ffd217e9..f405763e06ae 100644
  #include <asm/pgalloc.h>
  #include <linux/uaccess.h>
  #include <asm/mmu_context.h>
-@@ -2267,6 +2271,10 @@ __latent_entropy struct task_struct *copy_process(
+@@ -2263,6 +2267,10 @@ __latent_entropy struct task_struct *copy_process(
  	if ((clone_flags & (CLONE_NEWUSER|CLONE_FS)) == (CLONE_NEWUSER|CLONE_FS))
  		return ERR_PTR(-EINVAL);
  
@@ -88,7 +88,7 @@ index 8103ffd217e9..f405763e06ae 100644
  	/*
  	 * Thread groups must share signals as well, and detached threads
  	 * can only be started up within the thread group.
-@@ -3420,6 +3428,12 @@ int ksys_unshare(unsigned long unshare_flags)
+@@ -3416,6 +3424,12 @@ int ksys_unshare(unsigned long unshare_flags)
  	if (unshare_flags & CLONE_NEWNS)
  		unshare_flags |= CLONE_FS;
  
@@ -102,7 +102,7 @@ index 8103ffd217e9..f405763e06ae 100644
  	if (err)
  		goto bad_unshare_out;
 diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index bfe53e835524..c64fa2b70a78 100644
+index 354a2d294f52..5bc5605e7cdb 100644
 --- a/kernel/sysctl.c
 +++ b/kernel/sysctl.c
 @@ -80,6 +80,9 @@
