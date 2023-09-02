@@ -1,6 +1,6 @@
 # Maintainer: cubercsl <2014cais01 at gmail dot com>
 pkgname=dae
-pkgver=0.2.4
+pkgver=0.3.0
 pkgrel=1
 pkgdesc="A Linux lightweight and high-performance transparent proxy solution based on eBPF."
 arch=(x86_64 aarch64)
@@ -10,7 +10,7 @@ makedepends=(clang go)
 source=(
     "$_pkgname-$pkgver.zip::https://github.com/daeuniverse/dae/releases/download/v$pkgver/dae-full-src.zip"
 )
-sha256sums=('54ca53b0a0b1253934fbe98e7c1d18e74fc0033be4a664ab5ccc9f3748187dac')
+sha256sums=('843a9cb8a647ba3464e30d531a2f9ede38ffc25dbcfbf55d0ea2ecdce6d34558')
 
 build() {
     export GOFLAGS="-buildmode=pie -trimpath -modcacherw"
