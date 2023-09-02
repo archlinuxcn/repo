@@ -3,7 +3,7 @@
 # Contributor: pavanjadhaw <pavanjadhaw96@gmail.com>
 
 pkgname=betterlockscreen
-pkgver=4.1.0
+pkgver=4.2.0
 pkgrel=1
 pkgdesc="A simple, minimal lockscreen"
 arch=('any')
@@ -13,7 +13,7 @@ depends=('bc' 'feh' 'i3lock-color' 'imagemagick' 'xorg-xdpyinfo' 'xorg-xrandr')
 conflicts=('betterlockscreen-git')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "betterlockscreen@.service")
-sha256sums=('2618ca60e028681be9fc476c9501e95a5bcc2d302c7ee770f8433fa96bad0d24'
+sha256sums=('f55ae57c25da8d3e2a0d4ff0043c3876f257b98c1a393e94401330d888b7d22d'
             '342c92fcbc685349d843811ea336983307205f680f43362bef7dc3cfaed31d4d')
 
 package() {
