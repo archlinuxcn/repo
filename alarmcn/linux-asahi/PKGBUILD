@@ -5,7 +5,7 @@ buildarch=8
 
 _rcver=6.4
 #_rcrel=3
-_asahirel=8
+_asahirel=10
 pkgrel=1
 
 _m1n1_version=1.2.8
@@ -30,10 +30,10 @@ source=(
   config         # the main kernel config file
   config.edge    # overrides for linux-asahi-edge
 )
-sha256sums=('b2da094484812cfc1ab2f26212666cf50846e2d01ed3a4c2a2a33985e28cae7b'
+sha256sums=('4913b6bb7f0197983b5e1ab53689166f70cd5bbce8c0ee5925325172b5687666'
             '8d72b8f6d9fcaeb5f61ae8a0f808c6c1d9bcd5870411655ba289f72eb8444fcf'
             '5cbdda1262f989a5247f4ef70690b569f9be8212bf8f576242bf6ac69036bddf')
-b2sums=('16679e2dc660e8131e0b58123b7375eccd20a66019e42b1f0749c37be9c9c0bae0cb9563121a84aaa080562ff669f24697ca81bf79e98a7a69c3044dfb5f7a70'
+b2sums=('ca6e9ca9dca3f402b57643ed2f90d48a000716b7661f3e1f28e55547ec85102a0610b9afd2ed40cd775121fdd79273522a94473c338a6cd5eab7617f7b7bde8a'
         '05ca3e30b041e8a60b304f5ee1ed9d2c2882b9de7e8d8e95b192e06dab09f4a4d219b1d67838380048e9a806edbcf5538a8db6cb900e4657a6ff4f2028a2661d'
         '01a8b3b7e3c7bd528f6d07d2b581b8a56688305d42fdd0b1555fd26319c4369e2357bcaa8434a1a5e3123aa9fdc6f1a24de4813b819397af89ba8d0c5e896228')
 export KBUILD_BUILD_HOST=archlinux
