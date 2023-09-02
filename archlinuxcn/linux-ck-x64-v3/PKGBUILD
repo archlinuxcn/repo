@@ -71,7 +71,7 @@ _subarch=41
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 pkgbase=linux-ck-x64-v3
-pkgver=6.5
+pkgver=6.5.1
 pkgrel=1
 arch=(x86_64)
 url="https://wiki.archlinux.org/index.php/Linux-ck"
@@ -104,22 +104,24 @@ source=(
   "ck-hrtimer-$_commit.tar.gz::https://github.com/graysky2/linux-patches/archive/$_commit.tar.gz"
   0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
   0002-drivers-firmware-skip-simpledrm-if-nvidia-drm.modese.patch
-  0003-tpm-Don-t-make-vendor-check-required-for-probe.patch
+  0003-tpm-Enable-hwrng-only-for-Pluton-on-AMD-CPUs.patch
   0004-sphinx-kfigure.py-Convert-outdir-to-str-before-using.patch
+  0005-Revert-ASoC-Intel-soc-acpi-add-tables-for-Dell-SKU-0.patch
 )
 validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
-sha256sums=('7a574bbc20802ea76b52ca7faf07267f72045e861b18915c5272a98c27abf884'
+sha256sums=('23765dd44425462cd92adbee52670608fd7f3fd183a83b25ba7a7b4883d0451b'
             'SKIP'
-            '0c5c9a23df4af4c7da897f92f297c54a35056e75b47a3b76e7605c568ed60694'
+            'b36c2945633d49b5f85600b58989a58f5ac61e31ca2c02f2046ce15b1462ea4b'
             'f1d586e111932890ad5e0df15d092fb9b3f87bae4ea17812aae9b0ec98fe2db0'
             'a86a59d089ddd4f31565ff6a27ba74f4697ffa0ab0f57dc839e1da6ab83d77a4'
-            '26932226873903df3e4c330581b0112e4817ecb55c60bebc969f8aeba440a7f7'
-            'ca8e9ae6b10b394f71314dcbc381832d5c2ab654aa1c4bd24a25a0ba3588c3a3'
-            '83dec929306e9dc54d8f786866a478ee530912ba722479d6dbfb099d5023a7cb'
-            '65b6e434abc21c29a33a4d73dee40d33679f04ee740ded8fe88c320d1248055c')
+            '227cc673c7978c5d353cc19ffc9725d684b91de779adc6eef1e59cbc7fdce8bb'
+            '5c5a5e75113a4d8cfcd2e5628f6c86efbd412313cfb3a2c9220da5a70045639a'
+            '9279683f5517af465e98244bc35cfb734e26ff9c9d6e466432963dd71eb28042'
+            '3521e575ea05c2f2a9bd77c4affbb7a76ab5b84aac6a5abf3d9d30660baecfa7'
+            '44e1ebe817f1708b49b7473e640cd814bc5bdb983d71758893c5c9003034183c')
 _make() {
   test -s version
   make KERNELRELEASE="$(<version)" "$@"

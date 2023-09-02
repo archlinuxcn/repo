@@ -1,7 +1,7 @@
-From 879f0f7fc0f9130075d722c213014d0cff9d40a1 Mon Sep 17 00:00:00 2001
+From 555b718e90b662cb924b562227e4c4e3cd60cd76 Mon Sep 17 00:00:00 2001
 From: "Jan Alexander Steffens (heftig)" <heftig@archlinux.org>
 Date: Thu, 24 Aug 2023 01:28:17 +0200
-Subject: [PATCH 4/5] sphinx: kfigure.py: Convert outdir to str before using
+Subject: [PATCH 4/6] sphinx: kfigure.py: Convert outdir to str before using
  len
 
 Sphinx 7.2 replaced several uses of str with pathlib Paths, causing the
@@ -9,8 +9,8 @@ build to fail with a TypeError when attempting to use len on one.
 
 Patch by @loqs; thanks.
 
-Signed-off-by: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 Fixes: https://bugs.archlinux.org/task/79446
+Signed-off-by: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 ---
  Documentation/sphinx/kfigure.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
