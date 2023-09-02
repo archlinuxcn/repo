@@ -9,7 +9,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=116.0.5845.96
+pkgver=116.0.5845.140
 pkgrel=1
 _launcher_ver=8
 _gcc_patchset=116-patchset-2
@@ -33,13 +33,11 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
         https://github.com/stha09/chromium-patches/releases/download/chromium-$_gcc_patchset/chromium-$_gcc_patchset.tar.xz
         REVERT-disable-autoupgrading-debug-info.patch
-        random-build-fixes.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('1ec1052a959abced9642b36482549bc2ebefa428ed136289d8e0c54b4ccd1c81'
+sha256sums=('f89677b9da05baa569fd143a3456cb5cbce8bde9ea7d10b4f3907dcd1132716c'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '25ad7c1a5e0b7332f80ed15ccf07d7e871d8ffb4af64df7c8fef325a527859b0'
             '1b782b0f6d4f645e4e0daa8a4852d63f0c972aa0473319216ff04613a0592a69'
-            'e938c6ee7087eed8f0de83ffb0ca89e328575808fafa4fe3950aeb1bc58b9411'
             'e393174d7695d0bafed69e868c5fbfecf07aa6969f3b64596d0bae8b067e1711')
 
 if (( _manual_clone )); then
@@ -57,7 +55,7 @@ source=(${source[@]}
         vaapi-add-av1-support.patch
         remove-main-main10-profile-limit.patch)
 sha256sums=(${sha256sums[@]}
-            '262ffd7551b76c7d527c95a1c3e11e0431ef8627ebcb1d5c2f0d60fb902b82d8'
+            '773743829f782fabe33d84cb7f719bd8296875e270e37f954d1561a27ace8cc4'
             'e9e8d3a82da818f0a67d4a09be4ecff5680b0534d7f0198befb3654e9fab5b69'
             'e742cc5227b6ad6c3e0c2026edd561c6d3151e7bf0afb618578ede181451b307'
             'be8d3475427553feb5bd46665ead3086301ed93c9a41cf6cc2644811c5bda51c')
@@ -128,9 +126,6 @@ prepare() {
 
   # Revert addition of compiler flag that needs newer clang
   patch -Rp1 -i ../REVERT-disable-autoupgrading-debug-info.patch
-
-  # Build fixes
-  patch -Np1 -i ../random-build-fixes.patch
 
   # Fixes for building with libstdc++ instead of libc++
   patch -Np1 -i ../patches/chromium-114-maldoca-include.patch
