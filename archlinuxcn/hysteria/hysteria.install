@@ -1,12 +1,40 @@
 _hysteria_user="hysteria"
 _hysteria_homedir="/var/lib/hysteria"
 
+has_command() {
+  local _command=$1
+  type -P "$_command" > /dev/null 2>&1
+}
+tput() {
+  if has_command tput; then
+    command tput "$@"
+  fi
+}
 all_off="$(tput sgr0)"
 bold="${all_off}$(tput bold)"
+red="${bold}$(tput setaf 1)"
 blue="${bold}$(tput setaf 4)"
 yellow="${bold}$(tput setaf 3)"
 note() {
     printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
+}
+warn() {
+    printf "${blue}==>${red} WARN:${bold} $1${all_off}\n"
+}
+
+has_prefix() {
+    local _s="$1"
+    local _prefix="$2"
+
+    if [[ -z "$_prefix" ]]; then
+        return 0
+    fi
+
+    if [[ -z "$_s" ]]; then
+        return 1
+    fi
+
+    [[ "x$_s" != "x${_s#"$_prefix"}" ]]
 }
 
 _hysteria_ensure_usermod() {
@@ -19,10 +47,24 @@ _hysteria_ensure_usermod() {
   fi
 }
 
+_hysteria_incompatible_upgrade_warning() {
+  note "Hysteria is upgraded to the Hysteria 2."
+  warn "Hysteria 2 uses a completely redesigned protocol & config, which is NOT compatible with the version 1.x.x in any way."
+  warn "If you do not intend to migrate to Hysteria 2, please downgrade this package to version 1.3.5."
+  warn "Alternatively, there is also a \"hysteria${red}1${bold}\" and \"hysteria${red}1${bold}-bin\" package in the AUR, which provides the final version of Hysteria v1 and can be installed side by side with this package."
+}
+
 post_install() {
   _hysteria_ensure_usermod
 }
 
 post_upgrade() {
+  local _new_version="$1"
+  local _old_version="$2"
+
   post_install
+
+  if has_prefix "$_new_version" "2." && has_prefix "$_old_version" "1."; then
+    _hysteria_incompatible_upgrade_warning
+  fi
 }

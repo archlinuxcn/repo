@@ -5,7 +5,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/hysteria server --config %i.json --no-check
+ExecStart=/usr/bin/hysteria server --config %i.yaml --disable-update-check
 WorkingDirectory=/etc/hysteria
 User=hysteria
 Group=hysteria
