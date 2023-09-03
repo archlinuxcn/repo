@@ -34,7 +34,6 @@ exec java -showversion --module-path="${prefix}/lib" \
     -Dapple.laf.useScreenMenuBar=true \
     -Djava.net.preferIPv4Stack=true \
     -Djava.net.useSystemProxies=true \
-    -Dsun.java2d.uiScale=1 \
     --module=org.igv/org.broad.igv.ui.Main "$@"
 EOF
 
