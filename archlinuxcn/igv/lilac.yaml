@@ -1,0 +1,14 @@
+build_prefix: extra-x86_64
+maintainers:
+- github: kiri2002
+  email: kiri@vern.cc
+pre_build_script: |
+  update_pkgver_and_pkgrel(_G.newver)
+  run_cmd(['updpkgsums'])
+post_build_script: |
+  git_pkgbuild_commit()
+update_on:
+  - source: github
+    github: igvteam/igv
+    use_latest_tag: true
+    prefix: 'v'
