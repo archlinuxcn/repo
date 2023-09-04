@@ -2,8 +2,11 @@ maintainers:
   - github: Integral-Tech
     email: integral@murena.io
 
-pre_build_script: aur_pre_build(maintainers=['QuartzDragon'])
-post_build: aur_post_build
+pre_build_script: |
+  update_pkgrel()
+  vcs_update()
+
+post_build_script: git_pkgbuild_commit()
 
 repo_depends:
   - libscrypt
@@ -11,6 +14,3 @@ repo_depends:
 update_on:
   - source: github
     github: koverstreet/bcachefs-tools
-      
-  - source: aur
-    aur: bcachefs-tools-git
