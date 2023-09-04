@@ -17,12 +17,6 @@ source=("git+${url}.git")
 sha256sums=('SKIP')
 options=('!lto')
 
-prepare() {
-	cd "${_pkgname}/"
-	export RUSTUP_TOOLCHAIN=stable
-	cargo fetch --target "$CARCH-unknown-linux-gnu"
-}
-
 pkgver() {
 	cd "${_pkgname}/"
 	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
