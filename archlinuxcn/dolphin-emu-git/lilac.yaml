@@ -3,17 +3,12 @@
 maintainers:
   - github: heavysink
     email: winstonwu91@gmail.com
-
 build_prefix: extra-x86_64
-
 pre_build: vcs_update
-
 post_build: git_pkgbuild_commit
-
 repo_depends:
   - cubeb-git
   - libspng
-  - zlib-ng
   - vulkan-memory-allocator-git
   - fmt9
 
