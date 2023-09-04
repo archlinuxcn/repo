@@ -11,8 +11,8 @@ license=("GPL2")
 install="${pkgname}.install"
 provides=("bcachefs-tools")
 _dependsarray="attr cargo clang fuse3 git keyutils libaio libscrypt libsodium liburcu libutil-linux pkgconf python-docutils systemd valgrind zlib"
-makedepends=("${dependsarray}")
-depends=("${dependsarray}")
+makedepends=(${_dependsarray})
+depends=(${_dependsarray})
 options=('!strip')
 source=(
 	"git+${url}.git"
