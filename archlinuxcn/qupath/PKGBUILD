@@ -16,13 +16,12 @@ depends=(
   lcms2
   libjpeg-turbo
   libpng
-  libtiff
   libxml2
 )
 makedepends=(
   'gendesk'
   'gradle'
-  'java-environment=17'
+  'java-environment'
 )
 optdepends=(
   'ttf-droid: font for CJK characters'
@@ -53,7 +52,7 @@ package() {
   install -d "${pkgdir}/usr/bin"
   ln -sf "/opt/${_pkgname}/bin/${_pkgname}" "${pkgdir}/usr/bin/${pkgname}"
   install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
-  # create libtiff.so.5 softlink to /usr/lib/libtiff.so
-  ln -sf "/usr/lib/libtiff.so" "${pkgdir}/opt/QuPath/lib/app/libtiff.so.5"
+  # create libtiff.so.5 softlink to libtiff.so.5.2.5
+  ln -sf "/opt/QuPath/lib/app/libtiff.so.5.2.5" "${pkgdir}/opt/QuPath/lib/app/libtiff.so.5"
 }
 # vim:set ts=2 sw=2 et:
