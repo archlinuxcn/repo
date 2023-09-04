@@ -6,7 +6,7 @@ After=network.target
 [Service]
 Type=simple
 ExecStart=/usr/bin/hysteria server --config %i.yaml --disable-update-check
-WorkingDirectory=/etc/hysteria
+WorkingDirectory=/var/lib/hysteria
 User=hysteria
 Group=hysteria
 Environment=HYSTERIA_LOG_LEVEL=info
