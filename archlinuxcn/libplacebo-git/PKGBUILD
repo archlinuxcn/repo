@@ -4,7 +4,7 @@
 pkgname=libplacebo-git
 _pkgname=libplacebo
 epoch=1
-pkgver=6.292.0.r269.g7737933d
+pkgver=6.292.0.r288.ge448dc6d
 pkgrel=1
 pkgdesc='Reusable library for GPU-accelerated video/image rendering primitives'
 url='https://github.com/haasn/libplacebo'
@@ -31,8 +31,12 @@ conflicts=('libplacebo')
 source=(
         'git+https://code.videolan.org/videolan/libplacebo.git'
         'git+https://github.com/Immediate-Mode-UI/Nuklear.git'
+        'git+https://github.com/KhronosGroup/Vulkan-Headers.git'
+        'git+https://github.com/fastfloat/fast_float.git'
         )
 b2sums=('SKIP'
+        'SKIP'
+        'SKIP'
         'SKIP')
 options=('debug' 'strip')
 
@@ -46,6 +50,12 @@ prepare() {
     git submodule set-url demos/3rdparty/nuklear "${srcdir}/Nuklear"
     git -c protocol.file.allow=always submodule update --init \
         demos/3rdparty/nuklear
+    git submodule set-url 3rdparty/Vulkan-Headers "${srcdir}/Vulkan-Headers"
+    git -c protocol.file.allow=always submodule update --init \
+        3rdparty/Vulkan-Headers
+    git submodule set-url 3rdparty/fast_float "${srcdir}/fast_float"
+    git -c protocol.file.allow=always submodule update --init \
+        3rdparty/fast_float
 }
 
 build() {
