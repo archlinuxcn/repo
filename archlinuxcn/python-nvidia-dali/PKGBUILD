@@ -38,6 +38,7 @@ sha512sums=('SKIP')
 
 prepare() {
   cd "${srcdir}/${pkgname}"
+  git lfs install
   git submodule update --init --recursive
   # quick fix for https://github.com/archlinuxcn/repo/issues/2877
   export CXXFLAGS=${CXXFLAGS/-Wp,-D_GLIBCXX_ASSERTIONS}
