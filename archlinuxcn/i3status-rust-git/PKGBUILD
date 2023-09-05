@@ -31,11 +31,6 @@ pkgver() {
 	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
-prepare() {
-	cd "${_pkgname}/"
-	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
-}
-
 build() {
 	cd "${_pkgname}/"
 	export RUSTUP_TOOLCHAIN=stable
