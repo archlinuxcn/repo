@@ -10,6 +10,7 @@ url='https://github.com/cgohlke/imagecodecs'
 license=('BSD')
 depends=(
   blosc
+  blosc2
   brotli
   brunsli
   cfitsio
@@ -33,6 +34,7 @@ depends=(
   python-numpy
   snappy
   zfp
+  zlib-ng
   zopfli
 )
 makedepends=(
@@ -46,7 +48,7 @@ source=("${_name}-${pkgver}.tar.gz::https://github.com/cgohlke/imagecodecs/archi
         "0001.fix-deps.patch"
 )
 sha256sums=('b8b4e1b1691123aa9b5e8e4686a0805e1215eae3da5949697b7fc925ad2e90e0'
-            '4bc2af7f9d7894c71fdb9507af30a633db83901b85a24838c4d1a09c6bedb606')
+            '53fbec4857eb1bfc306cafd4835934ac7371e17a82b5e66daf21b2668d3b0b29')
 
 prepare() {
   cd "${_name}-${pkgver}"
