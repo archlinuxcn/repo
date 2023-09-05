@@ -1,14 +1,15 @@
 # Maintainer: Tomislav Ivek <tomislav.ivek@gmail.com>
 
 pkgname=('conan')
-pkgver=2.0.9
+pkgver=2.0.10
 pkgrel=1
 pkgdesc="A distributed, open source, C/C++ package manager."
 arch=('any')
 url="https://conan.io"
 license=('MIT')
 makedepends=('python-setuptools' 'patch')
-depends=('python-requests>=2.25'
+depends=('sqlite'
+         'python-requests>=2.25'
          'python-urllib3>=1.26.6'
          'python-colorama>=0.4.3'
          'python-yaml>=6.0'
@@ -22,11 +23,14 @@ depends=('python-requests>=2.25'
          'python-pyjwt>=2.4.0')
 conflicts=('conan1')
 
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/conan-io/conan/archive/${pkgver}.tar.gz" "arch-reqs.patch")
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/conan-io/conan/archive/${pkgver}.tar.gz")
 
 prepare() {
   cd $pkgname-$pkgver
-  patch -Np1 -i "${srcdir}/arch-reqs.patch"
+  # Remove maximum version constraints
+  sed -i -r 's|(.*),.*|\1|g' conans/requirements.txt
+  sed -i -r 's|(.*),.*|\1|g' conans/requirements_server.txt
+  sed -i -r 's|(.*),.*|\1|g' conans/requirements_dev.txt  
  }
 
 build() {
@@ -42,5 +46,4 @@ package() {
   install -m755 -d "${pkgdir}/usr/share/doc/conan"
   install -m644 contributors.txt "${pkgdir}/usr/share/doc/conan/"
 }
-md5sums=('c49e88f5770c8a34f6d6d2f18c357543'
-         'f84f46c6c4d9ca41956e2a3c5d05f16e')
+md5sums=('f67ee06c2834ecdfbb77a7d3db69d8c2')
