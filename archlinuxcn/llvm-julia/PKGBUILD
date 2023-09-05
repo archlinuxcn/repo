@@ -2,9 +2,10 @@
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 
 pkgname=(llvm-julia llvm-libs-julia)
-pkgver=15.0.7
-_julia_rel=7
-pkgrel=6
+pkgver=16.0.0
+pkgrel=1
+_julia_rel=
+_julia_commit=5f05685e0fa26391f16ce90cfaf34953fc9d9575
 arch=(i686 x86_64 armv7h aarch64)
 url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
@@ -14,8 +15,14 @@ makedepends=('cmake' 'ninja' 'zlib' 'zstd' 'libffi' 'libedit' 'ncurses'
 # Disable LTO for now since there seems to be some issue at least on aarch64
 # https://github.com/llvm/llvm-project/issues/57740
 options=('staticlibs' '!strip' '!lto')
-source=(https://github.com/JuliaLang/llvm-project/archive/refs/tags/julia-$pkgver-$_julia_rel.tar.gz)
-sha256sums=('5c52b7f146e662f9dcd0b44f5bdc71cd30527aec0d165d9f172d18fa58f416fa')
+if [[ -z $_julia_rel ]]; then
+  source=(https://github.com/JuliaLang/llvm-project/archive/${_julia_commit}.tar.gz)
+  repodir=llvm-project-${_julia_commit}
+else
+  source=(https://github.com/JuliaLang/llvm-project/archive/refs/tags/julia-$pkgver-$_julia_rel.tar.gz)
+  repodir=llvm-project-julia-$pkgver-$_julia_rel
+fi
+sha256sums=('61d36eabc2632682aeb3bde83e38871ff1f22479c9a0fd06872ff39acb955299')
 
 # Utilizing LLVM_DISTRIBUTION_COMPONENTS to avoid
 # installing static libraries; inspired by Gentoo
@@ -46,7 +53,7 @@ _get_distribution_components() {
 }
 
 prepare() {
-  cd "$srcdir/llvm-project-julia-$pkgver-$_julia_rel/llvm"
+  cd ${repodir}/llvm
   mkdir build
 
   # Arch patches
@@ -54,7 +61,7 @@ prepare() {
 }
 
 build() {
-  cd llvm-project-julia-$pkgver-$_julia_rel/llvm/build
+  cd ${repodir}/llvm/build
 
   export PATH="${srcdir}/bin:${PATH}"
   CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
@@ -101,7 +108,7 @@ package_llvm-julia() {
   conflicts=(llvm)
   provides=("llvm=$pkgver-$pkgrel")
 
-  cd llvm-project-julia-$pkgver-$_julia_rel/llvm/build
+  cd ${repodir}/llvm/build
 
   DESTDIR="$pkgdir" ninja install
 
@@ -137,6 +144,6 @@ package_llvm-libs-julia() {
   install -d "$pkgdir/usr/lib/bfd-plugins"
   ln -s ../LLVMgold.so "$pkgdir/usr/lib/bfd-plugins/LLVMgold.so"
 
-  install -Dm644 "$srcdir/llvm-project-julia-$pkgver-$_julia_rel/llvm/LICENSE.TXT" \
+  install -Dm644 "$srcdir/${repodir}/llvm/LICENSE.TXT" \
           "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
