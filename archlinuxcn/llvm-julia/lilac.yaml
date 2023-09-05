@@ -14,7 +14,7 @@ update_on:
     # This is the expected major version.
     # we'll check in pre_build if this matches since manual update
     # may be necessary when a major version update happens.
-    manual: 15
+    manual: 16
   - source: github
     # This may cause spurious update if julia releases a new version that isn't
     # the major version we want. This shouldn't happen that often though
@@ -22,6 +22,10 @@ update_on:
     github: JuliaLang/llvm-project
     use_latest_tag: true
     include_regex: 'julia-[0-9.]+-\d+'
+  - source: manual
+    # The JuliaLang/llvm-project commit to use
+    # Empty if we are using a release
+    manual: 16.0.0-5f05685e0fa26391f16ce90cfaf34953fc9d9575
   - source: manual
     manual: 2
   - alias: python
