@@ -2,7 +2,7 @@
 
 pkgname=yacd-meta
 _pkgname=Yacd-meta
-pkgver=0.3.6
+pkgver=0.3.7
 pkgrel=1
 pkgdesc="Yet Another Clash Dashboard"
 arch=('any')
@@ -12,7 +12,7 @@ depends=('clash-meta')
 makedepends=('yarn')
 conflicts=('yacd-meta-git')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('1585fbf7c546cf15a5465044135c32af3804c38cf1577295ee06d7416c3b0555')
+sha256sums=('098ed76836c41778ecb9707bf9a5c77f77eaa1d6c63300d5edeac34339cb5f87')
 
 build() {
     cd "${srcdir}"/"${_pkgname}-${pkgver}"/
