@@ -11,6 +11,7 @@ license=('MIT')
 url="https://github.com/Macchina-CLI/macchina"
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('e827f640b55fe47a6127dd0c276e76b597e3cb83916be37351cdd6a81d75311e')
+options=('!lto')
 
 build() {
     cd "${pkgname}-${pkgver}/"
