@@ -3,7 +3,7 @@
 _pkgbase=hysteria
 pkgname=$_pkgbase
 pkgver=2.0.0
-pkgrel=2
+pkgrel=3
 pkgdesc='A feature-packed network utility optimized for networks of poor quality'
 arch=('x86_64')
 url="https://hysteria.network/"
@@ -18,8 +18,8 @@ source=("$_pkgbase-git"::"git+https://github.com/apernet/hysteria.git#tag=app/v$
         tmpfiles.conf
         )
 sha256sums=('SKIP'
-            '9add177737c2d5acc1d4ed0efc67fc0a23fcc78eaaf2dc29721260586e8f3757'
-            'a880372470ef11bc5ba594cb5047f78fda22d80cf22292570d3c328e091036a0'
+            'dc7f7dcdac24c06857e2fe5c4ad7e0a0bc3d63c0c1d18b555f59cc7447f02281'
+            '13f817ae46e448b8b22917486f7ba61bf9d55e8442242e5651ba93e457e6db7e'
             '44f1cb2fedfc94dc396ceb215e62237dbc8c74c035c45a3430c1f3748d266dd9'
             '1e93d9f2b312eaf02ac00229106cd796e0cd54a9a468a0a8d3ae843399c1c310')
 
