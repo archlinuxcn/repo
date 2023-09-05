@@ -8,7 +8,7 @@ _user="radxa"
 _kernel=linux-radxa-rkbsp5
 pkgbase=$_kernel-git
 pkgname=("${pkgbase}-headers" $pkgbase)
-pkgver=5.10.1080728.211237fc8a9b.58a0781
+pkgver=5.10.1080961.211237fc8a9b
 blobcommit="9869c5a8aa0c103efac5a5d5eefe03468a6b8396"
 fwcommit="488f49467f5b4adb8ae944221698e9a4f9acb0ed"
 pkgrel=1
@@ -17,8 +17,10 @@ license=('GPL2')
 url="https://github.com/${_user}"
 _kernelrepo="kernel"
 _overlayrepo="overlays"
+_bsprepo="bsp"
 _kernelbranch=linux-5.10-gen-rkr4.1
 _overlaybranch=main
+_bspbranch="main"
 pkgdesc="Latest git Linux kernel package based on 5.10.x BSP kernel published by RADXA targetting rk3399 based rock4 and rk3588 based rock5 boards" 
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools' 'vboot-utils' 'dtc')
 options=('!strip')
@@ -28,31 +30,29 @@ options=('!strip')
 # Patch12: Force Enabling AV1 decoder in 3588. This may be implemented in radxa git as well soon
 source=(git+https://github.com/$_user/$_kernelrepo.git#branch=$_kernelbranch
         git+https://github.com/$_user/$_overlayrepo.git#branch=$_overlaybranch
-		'linux.preset'
-		'extlinux.arch.template'
-		'0001-VENDOR-Add-Radxa-overlays.patch'
-		'0002-Fix-dangling-pointer-compiler-bug.patch'
-		'0003-Disable-tristate-for-non-modules.patch'
-		'0004-Disable-tristate-for-modules-that-uses-unexported-sy.patch'
-		'0005-Disable-tristate-for-builtin-dependencies.patch'
-		'0006-Revert-dma-buf-sw_sync-build-sw-sync-as-module-for-g.patch'
-		'0007-Disable-tristate-for-essential-boot-services.patch'
-		'0008-Modfy-GPU-node-for-Panfrost-driver.patch'
-		'0009-VENDOR-Version-tagging-linux-libc-dev-as-well.patch'
-		'0010-Add-ROCK-4-Core-IO-Board-Fuhai.patch'
-		'0011-gcc-ignore-stringop-overread-warnings.patch'
-		'0012-Enable_AV1_decoder_on_3588.patch'
-		'0020-dma-buf-add-dma_resv_get_singleton-v2.patch'
-		'0021-dma-buf-Add-an-API-for-exporting-sync-files-v14.patch'
-		'0022-dma-buf-Add-an-API-for-importing-sync-files-v10.patch'
-		"libmali_g610_wayland.so::https://github.com/JeffyCN/mirrors/raw/${blobcommit}/lib/aarch64-linux-gnu/libmali-valhall-g610-g13p0-wayland-gbm.so"
-        "libmali_g610_x.so::https://github.com/JeffyCN/mirrors/raw/${blobcommit}/lib/aarch64-linux-gnu/libmali-valhall-g610-g13p0-x11-gbm.so"
-        "mali_csffw.bin::https://github.com/JeffyCN/mirrors/raw/${fwcommit}/firmware/g610/mali_csffw.bin"
-        "libmali"
-        "libmaliw"
-		)
+        git+https://github.com/$_user-repo/$_bsprepo.git#branch=$_bspbranch
+        'linux.preset'
+        'extlinux.arch.template'
+        '0001-VENDOR-Add-Radxa-overlays.patch'
+        '0002-Fix-dangling-pointer-compiler-bug.patch'
+        '0003-Disable-tristate-for-non-modules.patch'
+        '0004-Disable-tristate-for-modules-that-uses-unexported-sy.patch'
+        '0005-Disable-tristate-for-builtin-dependencies.patch'
+        '0006-Revert-dma-buf-sw_sync-build-sw-sync-as-module-for-g.patch'
+        '0007-Disable-tristate-for-essential-boot-services.patch'
+        '0008-Modfy-GPU-node-for-Panfrost-driver.patch'
+        '0009-VENDOR-Version-tagging-linux-libc-dev-as-well.patch'
+        '0010-Add-ROCK-4-Core-IO-Board-Fuhai.patch'
+        '0011-gcc-ignore-stringop-overread-warnings.patch'
+        '0012-Enable_AV1_decoder_on_3588.patch'
+        '0020-dma-buf-add-dma_resv_get_singleton-v2.patch'
+        '0021-dma-buf-Add-an-API-for-exporting-sync-files-v14.patch'
+        '0022-dma-buf-Add-an-API-for-importing-sync-files-v10.patch'
+        '0023-make-4-4-silence.patch'
+        )
 
 b2sums=('SKIP'
+        'SKIP'
         'SKIP'
         'bd296f775df973c6dcb6bd8311ce4d3af9a8d4a67905f17c450cae776aab0229987d473334d38fd102a34ed483a121f67ac58a48fd9e6fab2c714c7079e06613'
         'd8208257c8f2e23a9dbcf2a1bbd11b5a638679cd49dd03d4ea190d1ecd94e2760cccb2cd1cda890816a9c338ce2f38c859961f4ab3a22fca458a453ca0d5f2fc'
@@ -71,25 +71,22 @@ b2sums=('SKIP'
         'c3487e98544c2d36e60f3c3f2fabff94b3d4b157f2858c67c526dd8fdac8685dae3c2c7c07d4398b898943257f16ddc469dc633619862fe5b8da76fd317bca42'
         'b9eb4d0856adc68350dba4d7a8076cddddf97061244cd9aea422c549f2dd2f1f951087835ee957ce0117bf468f0d3068d7f52ce5f486ce00263101af4ab2ba68'
         'eccbf9cf7efd9f5e4f0d12fc59b7f86e1a212ef35e99250f9bc836efe675b1abd81c8997994c8986aa5ec1886e6908abd13473e57523846a15a355fa13beeec7'
-        '7ef307add1d4f2d17ece5a057b106616b5e32378c529783b6dcf68621d34ff02285bc94cf6b76729dde2626a38f0afb57e0100c83ce269b854fd3216c548a051'
-        '7262a58ba3342e8889290330b771be7f1f995170003e6c2f14048ec0020f0aa2ed8e12d1e8a7058476e1e33ae03ba36dcbad8d097f7711603e06a69fe883d7e7'
-        '8df273b81667f27c8490ae05ed38a22084171710f0178ae07d29e842389da4dc013612510a84694aa6ded908acea3892c7e486459ee32291e3872f1272c75210'
-        '75606e8ac064597091850b4d8192ab248bf15127756ca454f07d33390903ab0306d7727345dd9cf37015666ee4c4c915f2c996647fa833c420a72e4a5dff97a6'
-        '4915c805a1ad4f98c4975c4dfa358f16a0fbf1e8096f11189ff019e6d9fa4bb6b5b6e70b8fd5b527fd65a14cb6eb9734afcc05a079b9980ff5d5195d757ac5b4')
+        '786a02f742015903c6c6fd852552d272912f4740e15847618a86e217f71f5419d25e1031afee585313896444934eb04b903a685b1448b755d56f701afe9be2ce')
 
 pkgver(){
-	#gets the commit count of both repos + _pkgrel and sums them to calculate the revision number
-	cd overlays
-	local _ocommits="$(git rev-list --count HEAD)"
-	local _ocommit="$(git rev-parse --short HEAD)"
-	cd ../kernel
-	local _kcommits="$(git rev-list --count HEAD)"
-	local _kcommit="$(git rev-parse --short HEAD)"
-	
-	local _revnum=$(($_kcommits + $_ocommits + $pkgrel))
-	local _version="${_pkgver}.${_revnum}.${_kcommit}.${_ocommit}"
-	echo $_version > pkgver
-	printf $_version
+  #gets the commit count of both repos + _pkgrel and sums them to calculate the revision number
+  cd overlays
+  local _ocommits="$(git rev-list --count HEAD arch/arm64/boot/dts/rockchip)"
+  cd ../bsp
+  local _bcommits="$(git rev-list --count HEAD linux)"
+  cd ../kernel
+  local _kcommits="$(git rev-list --count HEAD)"
+  local _kcommit="$(git rev-parse --short HEAD)"
+
+  local _revnum=$(($_kcommits + $_ocommits + $_bcommits + $_fcommits + $pkgrel))
+  local _version="${_pkgver}.${_revnum}.${_kcommit}"
+  echo $_version > pkgver
+  printf $_version
 }
 
 prepare() {
@@ -112,13 +109,17 @@ prepare() {
     cp -f ../../custom/config ./.config
   else 
     cp -f arch/arm64/configs/rockchip_linux_defconfig ./.config
+    for kconfig in $(find -L ../bsp/linux/rockchip/*/* | grep -i kconfig.conf$ | sort)
+    do
+      scripts/kconfig/merge_config.sh -m .config ../bsp/$kconfig    
+    done
+    scripts/kconfig/merge_config.sh -m .config ../bsp/linux/rockchip/kconfig.conf
+    
   fi
 
   # fix distcc build which does not support gcc plugins
   sed -i 's/CONFIG_GCC_PLUGINS=y/CONFIG_GCC_PLUGINS=n/g' .config
   
-  # enable faster DMA transfer provided through patches 21-25
-  echo "\nCONFIG_SYNC_FILE=y" >> .config
 }
 
 build() {
@@ -129,7 +130,7 @@ build() {
   _version="${_version//\./-}"
   sed  -i "5s/.*/EXTRAVERSION = ${_version}/" Makefile
   echo "-radxa-rkbsp" > .scmversion
-  # should result in kernelmaj.kernelmin.patchver-totalcommitnum-hashofkernel-hashofoverlays-radxa-rkbsp
+  # should result in kernelmaj.kernelmin.patchver-totalcommitnum-hashofkernel-radxa-rkbsp
  
   make olddefconfig prepare
   make -s kernelrelease > version
@@ -140,10 +141,10 @@ build() {
 
 _package-git() {
   pkgdesc="Latest Git Linux kernel based on 5.10.x BSP published by RADXA targetting rk3399 based rock4 and rk3588 based rock5 boards"
-  depends=('coreutils' 'kmod' 'mkinitcpio>=0.7')
+  depends=('coreutils' 'kmod' 'mkinitcpio>=0.7' 'mali-valhall-g610-firmware')
   optdepends=('wireless-regdb: to set the correct wireless channels of your country')
   provides=("linux=${pkgver}" "linux-rkbsp")
-  conflicts=('linux' 'libmali')
+  conflicts=('linux')
   backup=("etc/mkinitcpio.d/${_kernel}.preset")
 
   cd kernel
@@ -177,27 +178,11 @@ _package-git() {
   # install mkinitcpio preset file
   sed "$_subst" ../linux.preset |
     install -Dm644 /dev/stdin "$pkgdir/etc/mkinitcpio.d/$_kernel.preset"
-  
-  cd ../
-  # install the firmware
-  install -Dm755 mali_csffw.bin $pkgdir/usr/lib/firmware/mali_csffw.bin
-
-  # install blob drivers
-  for d in x wayland; do
-    install -Dm755 libmali_g610_$d.so $pkgdir/usr/lib/libmali/libmali_g610_$d.so
-    install -dm755 $pkgdir/usr/lib/libmali/$d
-    for l in libEGL.so libEGL.so.1 libgbm.so.1 libGLESv2.so libGLESv2.so.2 libGLESv2_CM.so libOpenCL.so.1; do
-      ln -s ../libmali_g610_$d.so $pkgdir/usr/lib/libmali/$d/$l;
-    done
-  done
-
-  # install the helper scripts
-  install -Dm755 libmali $pkgdir/usr/bin/libmali
-  install -Dm755 libmaliw $pkgdir/usr/bin/libmaliw
 }
 
 _package-git-headers() {
   pkgdesc="Latest Git Linux kernel headers based on 5.10.x BSP published by RADXA targetting rk3399 based rock4 and rk3588 based rock5 boards"
+  depends=("python")
   provides=("linux-headers=${pkgver}" "linux-rkbsp-headers")
   conflicts=('linux-headers')
 
