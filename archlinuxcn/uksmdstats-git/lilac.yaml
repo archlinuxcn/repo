@@ -1,0 +1,12 @@
+maintainers:
+  - github: CoelacanthusHex
+
+update_on:
+  - source: aur
+    aur: uksmdstats-git
+  - source: github
+    github: CachyOS/uksmd
+
+pre_build_script: aur_pre_build(maintainers=['dreieck'])
+
+post_build: aur_post_build
