@@ -3,8 +3,8 @@
 _pkgbase=hysteria
 pkgname=$_pkgbase
 pkgver=2.0.0
-pkgrel=3
-pkgdesc='A feature-packed network utility optimized for networks of poor quality'
+pkgrel=4
+pkgdesc='A powerful, lightning fast and censorship resistant proxy'
 arch=('x86_64')
 url="https://hysteria.network/"
 license=('MIT')
