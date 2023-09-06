@@ -48,7 +48,7 @@ prepare() {
 	cd "${pkgname}/"
 	gitconf="protocol.file.allow=always"
 
-	patch -Np1 <fix_python_binary_loading.patch
+	patch -Np1 <"${srcdir}/fix_python_binary_loading.patch"
 	git config "submodule.plugins/obs-outputs/ftl-sdk.url" "${srcdir}/ftl-sdk"
 	git config "submodule.plugins/obs-browser.url" "${srcdir}/obs-browser"
 	git config "submodule.plugins/obs-websocket.url" "${srcdir}/obs-websocket"
