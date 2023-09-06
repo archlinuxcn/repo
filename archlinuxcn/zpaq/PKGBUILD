@@ -1,4 +1,4 @@
-# Maintainer: Marco Schulze <aur@ereski.org>
+# Maintainer: Carol Schulze <aur@ereski.org>
 # Contributor: TuxSpirit<tuxpsiritATarchlinuxDOTfr>
 # Contributor: Jan Stępień <jstepien@users.sourceforge.net>
 
@@ -7,7 +7,7 @@ pkgname=zpaq
 pkgdesc='Programmable file compressor, library and utilities. Based on the PAQ compression algorithm'
 url='http://mattmahoney.net/dc/zpaq.html'
 pkgver=7.15
-pkgrel=2
+pkgrel=3
 
 _zpaq_ver=715
 
@@ -22,10 +22,6 @@ build()
 {
 	cd "$srcdir"
 
-	if [ -z "$CC" ]
-	then
-		CC=gcc
-	fi
 	if [ -z "$CXX" ]
 	then
 		CXX=g++
@@ -35,7 +31,7 @@ build()
 	$CXX $CXXFLAGS $LDFLAGS -fPIC -shared -Dunix -DNDEBUG libzpaq.cpp -o libzpaq.so
 
 	msg 'Building zpaq'
-	$CXX ${CXXFLAGS/-flto} ${LDFLAGS/-flto} -pthread -Dunix -DNDEBUG zpaq.cpp -L. -lzpaq -o zpaq
+	$CXX $CXXFLAGS $LDFLAGS -pthread -Dunix -DNDEBUG zpaq.cpp -L. -lzpaq -o zpaq
 
 	msg 'Building man page'
 	pod2man zpaq.pod zpaq.1
