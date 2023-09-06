@@ -3,17 +3,18 @@
 # Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=scribus-svn
-pkgver=25623
+pkgver=25627
 pkgrel=1
 pkgdesc="A desktop publishing program - Version from SVN"
 arch=('i686' 'x86_64')
 license=('GPL' 'LGPL')
 url="http://www.scribus.net"
-depends=('hunspell' 'podofo-0.9' 'libcups' 'graphicsmagick' 'poppler'
+depends=('hunspell' 'podofo' 'libcups' 'graphicsmagick' 'poppler'
 	 'libcdr' 'libvisio' 'libpagemaker' 'harfbuzz-icu' 'python'
 	 'qt6-declarative' 'libmspub' 'libqxp' 'hicolor-icon-theme'
-	 'libzmf' 'libfreehand' 'qt6-base' 'qt6-5compat' 'qt6-svg')
-makedepends=('subversion' 'cmake' 'qt6-tools')
+	  'libzmf' 'libfreehand' 'qt6-base' 'qt6-5compat' 'qt6-svg'
+      'boost-libs')
+makedepends=('subversion' 'cmake' 'qt6-tools' 'boost')
 optdepends=('lib2geom: for mesh distortion')
 conflicts=('scribus')
 provides=('scribus')
@@ -40,8 +41,7 @@ build() {
 	-DWANT_CPP17=ON \
 	-DWANT_HUNSPELL=ON \
 	-DWITH_PODOFO=ON \
-	-DLIBPODOFO_INCLUDE_DIR=/usr/include/podofo-0.9 \
-	-DLIBPODOFO_LIBRARY=/usr/lib/podofo-0.9/libpodofo.so \
+    -DWANT_GRAPHICSMAGICK=ON
   make
 }
 
