@@ -3,7 +3,7 @@
 
 pkgname=deadbeef
 pkgver=1.9.5
-pkgrel=15
+pkgrel=16
 pkgdesc='A GTK+ audio player for GNU/Linux.'
 arch=('x86_64')
 url='http://deadbeef.sourceforge.net'
@@ -42,6 +42,7 @@ md5sums=('SKIP')
 prepare() {
 	cd "${srcdir}/${pkgname}"
     git submodule update --init --recursive
+    sed -i 's/adplug_la_CXXFLAGS = $(CXXFLAGS)/adplug_la_CXXFLAGS = $(CXXFLAGS) -std=c++11/g' plugins/adplug/Makefile.am
 
 	./autogen.sh 
 	CC=clang CXX=clang++ ./configure --prefix=/usr
