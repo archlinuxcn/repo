@@ -2,9 +2,10 @@
 # Contributor: Jonathan Steel <jsteel at archlinux.org>
 # Contributor: ArcticVanguard <LideEmily at gmail dot com>
 # Contributor: ledti <antergist at gmail dot com>
+
 pkgname=obs-studio-git
 pkgver=30.0.0.beta2
-pkgrel=17
+pkgrel=1
 pkgdesc="Free and open source software for video recording and live streaming."
 arch=("i686" "x86_64")
 url="https://github.com/obsproject/obs-studio"
@@ -29,7 +30,7 @@ optdepends=("libfdk-aac: FDK AAC codec support"
 	"xdg-desktop-portal: Pipewire capture")
 provides=("obs-studio=$pkgver")
 conflicts=("obs-studio")
-source=("$pkgname::git+https://github.com/obsproject/obs-studio.git#branch=master"
+source=("${pkgname}::git+https://github.com/obsproject/obs-studio.git#branch=master"
 	"git+https://github.com/Mixer/ftl-sdk.git"
 	"git+https://github.com/obsproject/obs-browser.git"
 	"git+https://github.com/obsproject/obs-websocket.git"
@@ -44,25 +45,23 @@ pkgver() {
 }
 
 prepare() {
-	cd $pkgname
+	cd "${pkgname}/"
 	gitconf="protocol.file.allow=always"
 
-	patch -Np1 <"$srcdir"/fix_python_binary_loading.patch
-	git config submodule.plugins/obs-outputs/ftl-sdk.url $srcdir/ftl-sdk
-	git config submodule.plugins/obs-browser.url $srcdir/obs-browser
-	git config submodule.plugins/obs-websocket.url $srcdir/obs-websocket
-	git -c $gitconf submodule update
+	patch -Np1 <fix_python_binary_loading.patch
+	git config "submodule.plugins/obs-outputs/ftl-sdk.url" "${srcdir}/ftl-sdk"
+	git config "submodule.plugins/obs-browser.url" "${srcdir}/obs-browser"
+	git config "submodule.plugins/obs-websocket.url" "${srcdir}/obs-websocket"
+	git -c ${gitconf} submodule update
 
-	cd plugins/obs-websocket
-	git config submodule.deps/qr.url $srcdir/QR-Code-generator
-	git -c $gitconf submodule update
+	cd "plugins/obs-websocket/"
+	git config "submodule.deps/qr.url" "${srcdir}/QR-Code-generator"
+	git -c ${gitconf} submodule update
 }
 
 build() {
-	cd $pkgname
-
-	mkdir -p build
-	cd build
+	cd "${pkgname}/"
+	mkdir -p build && cd build
 
 	cmake \
 		-DCMAKE_INSTALL_PREFIX=/usr \
@@ -75,9 +74,8 @@ build() {
 }
 
 package() {
-	cd $pkgname/build
-
-	make install DESTDIR="$pkgdir"
+	cd "${pkgname}/build/"
+	make install DESTDIR="${pkgdir}"
 }
 
 # vim: ts=2:sw=2:expandtab
