@@ -13,7 +13,7 @@ pkgname=(
   "${pkgbase}-headers"
 )
 pkgver="${_pkgver_main}"
-pkgrel=6
+pkgrel=7
 arch=('aarch64')
 url="https://github.com/orangepi-xunlong/${_orangepi_repo}"
 license=('GPL2')
@@ -111,6 +111,12 @@ _package() {
 
 _package-headers() {
   pkgdesc="Header files and scripts for building modules for linux kernel - ${_desc}"
+  # Compiling modules against the tree needs gcc-wrapper.py clang-wrapper.py,
+  # which both need Python.
+  # Discussed in https://github.com/7Ji/archrepo/issues/5
+  # About why depends instead of optdepends, this is a similar decision to
+  # https://bugs.archlinux.org/task/69654
+  depends=('python')
   
   # Mostly copied from alarm's linux-aarch64 and modified
   cd "${_srcname}"
