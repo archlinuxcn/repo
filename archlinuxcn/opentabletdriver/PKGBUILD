@@ -4,13 +4,13 @@ pkgname=opentabletdriver
 _pkgname=OpenTabletDriver
 _lpkgname=opentabletdriver
 _spkgname=otd
-pkgver=0.6.2.0
-pkgrel=1
+pkgver=0.6.3.0
+pkgrel=2
 pkgdesc="A cross-platform open source tablet driver"
 arch=('x86_64')
 url="https://opentabletdriver.net"
 license=('LGPL3')
-depends=('dotnet-runtime-6.0' 'dotnet-host>=6.0' 'gtk3' 'libevdev')
+depends=('dotnet-runtime-6.0' 'gtk3' 'libevdev')
 optdepends=('libxrandr: x11 display querying support' 'libx11')
 makedepends=('dotnet-sdk>=6.0')
 install="notes.install"
@@ -21,9 +21,9 @@ source=("OpenTabletDriver-$pkgver.tar.gz::https://github.com/OpenTabletDriver/Op
         "notes.install"
         )
 
-sha256sums=('56fd77cbe04d667a05162f01e5bf0e3b246c102465ef8c05560795e6b2d06c20'
+sha256sums=('7c38d92bb8176eead8f58d84532abd49e915254208c568a5618c92c093c1fdd0'
             '4399359bf6107b612d10aaa06abb197db540b00a973cfec64c2b40d1fbbb2834'
-            'c6f4cab31f62c8b4e34fff74961cd37a68bc486d14b1400638335ee59b0ebc83')
+            '35f48af6cb7ce0d53fb4efd1a932937f806d55f520e73ac99292e49d7d7e33fd')
 
 _srcdir="OpenTabletDriver-$pkgver"
 
@@ -45,7 +45,7 @@ build() {
 
     ./eng/linux/package.sh -- $EXTRA_OPTIONS
 
-    ./generate-rules.sh
+    ./generate-rules.sh > 70-$_lpkgname.rules
 }
 
 package() {
@@ -53,7 +53,7 @@ package() {
 
     sed -i "s/OTD_VERSION/$pkgver/" "$_lpkgname.desktop"
 
-    install -Dm 644 -o root "$_srcdir/bin/99-$_lpkgname.rules" -t "$pkgdir/usr/lib/udev/rules.d"
+    install -Dm 644 -o root "$_srcdir/70-$_lpkgname.rules" -t "$pkgdir/usr/lib/udev/rules.d"
     install -Dm 644 -o root "$_srcdir/$_pkgname.UX/Assets/$_spkgname.png" -t "$pkgdir/usr/share/pixmaps"
 
     install -Dm 755 -o root -t "$pkgdir/usr/bin" \
@@ -68,6 +68,7 @@ package() {
 
     install -Dm 644 -o root "$_srcdir/eng/linux/Generic/usr/lib/systemd/user/$_lpkgname.service" -t "$pkgdir/usr/lib/systemd/user"
     install -Dm 644 -o root "$_srcdir/eng/linux/Generic/usr/lib/modprobe.d/99-$_lpkgname.conf" -t "$pkgdir/usr/lib/modprobe.d"
+    install -Dm 644 -o root "$_srcdir/eng/linux/Generic/usr/lib/modules-load.d/$_lpkgname.conf" -t "$pkgdir/usr/lib/modules-load.d"
     install -Dm 644 -o root "$_lpkgname.desktop" -t "$pkgdir/usr/share/applications"
     install -Dm 644 -o root "$_srcdir/docs/manpages/$_lpkgname.8" -t "$pkgdir/usr/share/man/man8"
 }
