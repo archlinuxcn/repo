@@ -2,12 +2,12 @@ maintainers:
   - github: Integral-Tech
     email: integral@murena.io
 
-pre_build_script: aur_pre_build(maintainers=['Vaxry','That1Calculator'])
-post_build: aur_post_build
+pre_build_script: |
+  update_pkgrel()
+  vcs_update()
+
+post_build_script: git_pkgbuild_commit()
 
 update_on:
   - source: github
     github: hyprwm/xdg-desktop-portal-hyprland
-      
-  - source: aur
-    aur: xdg-desktop-portal-hyprland-git
