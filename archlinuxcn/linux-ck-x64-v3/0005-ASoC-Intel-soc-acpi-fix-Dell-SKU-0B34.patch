@@ -1,0 +1,51 @@
+From 4df5bd76b68674cc51777ffff0835dea0effb89b Mon Sep 17 00:00:00 2001
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Date: Tue, 5 Sep 2023 11:16:16 -0400
+Subject: [PATCH 5/6] ASoC: Intel: soc-acpi: fix Dell SKU 0B34
+
+The rule for the SoundWire tables is that the platforms with more
+devices need to be added first. We broke that rule with the Dell SKU
+0B34, and caused the second amplifier for SKU 0AF3 to be ignored.
+
+The fix is simple, we need to move the single-amplifier entry after
+the two-amplifier one.
+
+Fixes: b62a1a839b48 ("ASoC: Intel: soc-acpi: add tables for Dell SKU 0B34")
+Closes: https://github.com/thesofproject/linux/issues/4559
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+---
+ sound/soc/intel/common/soc-acpi-intel-adl-match.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/sound/soc/intel/common/soc-acpi-intel-adl-match.c b/sound/soc/intel/common/soc-acpi-intel-adl-match.c
+index bcd66e0094b4..c4b57cca6b22 100644
+--- a/sound/soc/intel/common/soc-acpi-intel-adl-match.c
++++ b/sound/soc/intel/common/soc-acpi-intel-adl-match.c
+@@ -648,18 +648,18 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_adl_sdw_machines[] = {
+ 		.drv_name = "sof_sdw",
+ 		.sof_tplg_filename = "sof-adl-rt1316-l2-mono-rt714-l3.tplg",
+ 	},
+-	{
+-		.link_mask = 0x3, /* rt1316 on link1 & rt714 on link0 */
+-		.links = adl_sdw_rt1316_link1_rt714_link0,
+-		.drv_name = "sof_sdw",
+-		.sof_tplg_filename = "sof-adl-rt1316-l1-mono-rt714-l0.tplg",
+-	},
+ 	{
+ 		.link_mask = 0x7, /* rt714 on link0 & two rt1316s on link1 and link2 */
+ 		.links = adl_sdw_rt1316_link12_rt714_link0,
+ 		.drv_name = "sof_sdw",
+ 		.sof_tplg_filename = "sof-adl-rt1316-l12-rt714-l0.tplg",
+ 	},
++	{
++		.link_mask = 0x3, /* rt1316 on link1 & rt714 on link0 */
++		.links = adl_sdw_rt1316_link1_rt714_link0,
++		.drv_name = "sof_sdw",
++		.sof_tplg_filename = "sof-adl-rt1316-l1-mono-rt714-l0.tplg",
++	},
+ 	{
+ 		.link_mask = 0x5, /* 2 active links required */
+ 		.links = adl_sdw_rt1316_link2_rt714_link0,
+-- 
+2.42.0
+
