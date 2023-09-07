@@ -12,6 +12,7 @@ arch=('i686' 'x86_64')
 url="https://taisei-project.org/"
 license=('MIT')
 depends=('opengl-driver' 'cglm' 'sdl2_mixer' 'freetype2' 'libpng' 'libwebp' 'libzip' 'hicolor-icon-theme')
+optdepends=('spirv-cross: for OpenGL ES backends')
 makedepends=('git' 'meson' 'python-docutils')
 source=("https://github.com/taisei-project/${_pkgname}.git")
 sha256sums=('SKIP')
