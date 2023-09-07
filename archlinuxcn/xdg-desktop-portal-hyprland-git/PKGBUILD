@@ -12,7 +12,7 @@ arch=('x86_64')
 license=('MIT')
 provides=("${_pkgname}" "xdg-desktop-portal-impl" "xdg-desktop-portal-wlr")
 conflicts=("${_pkgname}" "xdg-desktop-portal-wlr")
-depends=('xdg-desktop-portal' 'pipewire' 'libinih' 'qt6-base' 'qt6-wayland')
+depends=('xdg-desktop-portal' 'pipewire' 'libinih' 'qt6-base' 'qt6-wayland' 'pango')
 makedepends=('git' 'meson' 'wayland-protocols' 'wayland' 'scdoc' 'cmake' 'sdbus-cpp')
 optdepends=(
 	"grim: required for the screenshot portal to function"
