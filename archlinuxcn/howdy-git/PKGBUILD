@@ -48,7 +48,7 @@ pkgver() {
 package() {
 	cd "${_pkgname}/"
 
-	# Install the license files and the rest of howdy 
+	# Install the license files and the rest of howdy
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}"
 
 	install -d "${pkgdir}/usr/lib/security/${_pkgname}/"
@@ -57,10 +57,11 @@ package() {
 	install -d "${pkgdir}/usr/lib/${_pkgname}-gtk"
 	cp -rv ${_pkgname}-gtk/src/* "${pkgdir}/usr/lib/howdy-gtk"
 
-	install -Dm644 "${srcdir}/{dlib_face_recognition_resnet_model_v1.dat, \
-                        mmod_human_face_detector.dat, \
-                        shape_predictor_5_face_landmarks.dat}" \
-		-t "${pkgdir}/usr/lib/security/${_pkgname}/dlib-data/"
+	pushd "${pkgdir}/usr/lib/security/${_pkgname}/dlib-data/"
+	install -Dm644 "${srcdir}/dlib_face_recognition_resnet_model_v1.dat" -t .
+	install -Dm644 "${srcdir}/mmod_human_face_detector.dat" -t .
+	install -Dm644 "${srcdir}/shape_predictor_5_face_landmarks.dat" -t .
+	popd
 
 	install -d "${pkgdir}/usr/bin/"
 	ln -s "/lib/security/${_pkgname}/cli.py" "${pkgdir}/usr/bin/${_pkgname}"
