@@ -16,8 +16,9 @@ sha512sums=('edaf0d1d0f6dab717676160616286730a466f222e05b6b44106ca95457a09edfa34
 options=('!lto')
 
 build() {
+	fnm install 20.5.0
 	eval "$(fnm env --use-on-cd --shell=bash)"
-	fnm install 20.5.0 && fnm use 20.5.0
+	fnm use 20.5.0
 
 	cd "${_pkgname}-${_pkgver}/"
 	sed -i "s/\"version\".*/\"version\": \"${_pkgver}\"/g" "src-tauri/tauri.conf.json"
