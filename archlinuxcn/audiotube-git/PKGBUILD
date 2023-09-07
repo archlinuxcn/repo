@@ -1,6 +1,7 @@
 # Maintainer: Giuseppe Calà <gcala at mailbox dot org>
 
 pkgname=audiotube-git
+_pkgname="${pkgname%-git}"
 pkgver=23.01.0.r281.g7b1d0c9
 pkgrel=1
 pkgdesc="Client for YouTube Music"
@@ -15,21 +16,17 @@ source=("git+${url}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-	cd "${pkgname%-git}"
-	(
-		set -o pipefail
-		git describe --long 2>/dev/null | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' ||
-			printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-	)
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 build() {
-	cd "${pkgname%-git}"
+	cd "${_pkgname}/"
 	cmake -DCMAKE_INSTALL_PREFIX=/usr -B build
 	make -C build
 }
 
 package() {
-	cd "${pkgname%-git}"
+	cd "${_pkgname}/"
 	make -C build DESTDIR="${pkgdir}" PREFIX=/usr install
 }
