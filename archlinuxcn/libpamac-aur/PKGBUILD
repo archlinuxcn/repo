@@ -5,14 +5,14 @@ ENABLE_FLATPAK=0
 ENABLE_SNAPD=0
 
 pkgname=libpamac-aur
-pkgver=11.6.1
+pkgver=11.6.2
 pkgrel=0
 _pkgfixver=$pkgver
 
-_commit='c3b0150981d4a1d9138c8a569c3fc78c93a53fcc'
-sha256sums=('f7dd903b9934c72f99104b712c81695e110a89a9de8ca046d0f62ef6b54bd3ba'
+_commit='52f2eb3a09a98ac7dde02651c9c84d31066bf6a6'
+sha256sums=('08e4bad423794c09e66c19e483374ae068e9f66c43b229f9e5b04eb64600dee1'
             '6e0c25f0fcb0076ce78845b037e32925fcc3f1cd1670062c48ed35f564a10244'
-            'c2b943318a01ba1f3dabbf32e48e6a6f4b4b774e167ab86c6bfee31aa4a3424c')
+            'b5236af02c25cd7de4b2c9c2d0f064dac3c2f54da5cc72bf72fc6236a34bd9c4')
 
 pkgdesc="Pamac package manager library based on libalpm"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
