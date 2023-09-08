@@ -14,6 +14,8 @@ license=('MIT')
 depends=('opengl-driver' 'cglm' 'sdl2_mixer' 'freetype2' 'libpng' 'libwebp' 'libzip' 'hicolor-icon-theme')
 optdepends=('spirv-cross: for OpenGL ES backends')
 makedepends=('git' 'meson' 'python-docutils' 'python-zstandard')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
 source=("git+https://github.com/taisei-project/${_pkgname}.git")
 sha256sums=('SKIP')
 
