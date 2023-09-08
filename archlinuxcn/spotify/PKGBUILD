@@ -6,15 +6,15 @@
 # Contributor: Eothred <yngve.levinsen@gmail.com>
 
 pkgname=spotify
-pkgver='1.2.18.999'
+pkgver='1.2.20.1210'
 epoch=1
-_commit=g9b38fc27
+_commit=g2a8a8a57
 pkgrel=1
 pkgdesc='A proprietary music streaming service'
 arch=('x86_64')
 license=('custom')
 url='https://www.spotify.com'
-depends=('alsa-lib>=1.0.14' 'gtk3' 'libxss' 'desktop-file-utils' 'openssl' 'nss' 'at-spi2-atk' 'libcurl-gnutls' 'libsm')
+depends=('alsa-lib>=1.0.14' 'gtk3' 'libxss' 'desktop-file-utils' 'openssl' 'nss' 'at-spi2-atk' 'libcurl-gnutls' 'libsm' 'libayatana-appindicator')
 optdepends=('ffmpeg4.4: Adds support for playback of local files'
             'zenity: Adds support for importing local files'
             'libnotify: Desktop notifications')
@@ -35,7 +35,7 @@ source=('spotify.protocol'
         "${pkgname}-${pkgver}-${pkgrel}-x86_64-Packages::http://repository.spotify.com/dists/testing/non-free/binary-amd64/Packages")
 sha512sums=('999abe46766a4101e27477f5c9f69394a4bb5c097e2e048ec2c6cb93dfa1743eb436bde3768af6ba1b90eaac78ea8589d82e621f9cbe7d9ab3f41acee6e8ca20'
             '2e16f7c7b09e9ecefaa11ab38eb7a792c62ae6f33d95ab1ff46d68995316324d8c5287b0d9ce142d1cf15158e61f594e930260abb8155467af8bc25779960615'
-            '39a57cfa059f4f61fc6a400c22b8ec3bbd87cfd6b014e1048e98c158412aa4db3e5a1fa339f2ecc3355f3ca082ee1cacba7dd3b8ffff7300f9220c90f5465459'
+            'a527d6fecec9fa925d8c60e0ba8764ec8f53d3f5268d0b968d3bdeca7d367081f7faa0bcd1fe016491f15e37a1238ad40dbca1fc93b2533e0238e7a7a07f352b'
             'SKIP'
             'SKIP'
             'SKIP')
