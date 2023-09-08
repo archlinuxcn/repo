@@ -16,26 +16,22 @@ cd ../linux/src/archlinux-linux
 git clean -xdf
 git fetch --all
 git fetch --tags archlinux
-git co -b lily-6.1 v6.1.10-arch1
+git co -b lily-6.5 v6.5.2-arch1
 
-# patch -p1 < ~/uksm-5.17.patch
-# git add .
-# git commit -m 'apply uksm patch'
-
-patch -p1 < ~/cjktty-6.3.patch
+patch -p1 < ~/cjktty-6.5.patch
 git add .
 git commit -m 'apply cjktty patch'
 patch -p1 < ~/cjktty-add-cjk32x32-font-data.patch
 git add .
 git commit -m 'apply cjktty 32x32 font data'
 
-git merge pf-kernel/ksm-6.3
+git merge pf-kernel/ksm-6.5
 
 cp ../../config .config
-patch .config ~/archgitrepo/archlinuxcn/linux-lily/config.diff.6.0.9
+patch .config ~/archgitrepo/archlinuxcn/linux-lily/config.diff.6.4.6
 make clean oldconfig
-diff -Naur ../../config .config > ~/archgitrepo/archlinuxcn/linux-lily/config.diff.6.1.10
-vim ~/archgitrepo/archlinuxcn/linux-lily/config.diff.6.1.10
+diff -Naur ../../config .config > ~/archgitrepo/archlinuxcn/linux-lily/config.diff.6.5.2
+vim ~/archgitrepo/archlinuxcn/linux-lily/config.diff.6.5.2
 
 cd ../..
 # 升级 gcc

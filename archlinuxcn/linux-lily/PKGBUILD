@@ -1,31 +1,45 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-lily
-pkgver=6.4.6
-pkgrel=1
+pkgver=6.5.2
+pkgrel=2
 pkgdesc='Linux-lily'
 url="https://www.kernel.org/"
 arch=(x86_64)
 license=(GPL2)
 makedepends=(
-  bc libelf pahole cpio perl tar xz gettext
-  # xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick texlive-latexextra
-  parallel git
+  bc
+  cpio
+  gettext
+  git
+  libelf
+  pahole
+  perl
+  python
+  tar
+  xz
+  parallel
+
+  # htmldocs
+  # graphviz
+  # imagemagick
+  # python-sphinx
+  # texlive-latexextra
 )
 options=('strip' 'debug')
 STRIP_BINARIES=-S
 _srcname=archlinux-linux
 source=(
   # "$_srcname::git+https://github.com/archlinux/linux?signed#tag=$_srctag"
-  # config         # the main kernel config file
+  # config  # the main kernel config file
 )
 validpgpkeys=(
-  'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds
-  '647F28654894E3BD457199BE38DBBDC86092693E'  # Greg Kroah-Hartman
-  'A2FF3A36AAA56654109064AB19802F8B0D70FC30'  # Jan Alexander Steffens (heftig)
-  'C7E7849466FE2358343588377258734B41C31549'  # David Runge <dvzrv@archlinux.org>
+  ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
+  647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
+  A2FF3A36AAA56654109064AB19802F8B0D70FC30  # Jan Alexander Steffens (heftig)
+  C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
-sha256sums=()
+b2sums=()
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -33,12 +47,20 @@ export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EP
 # to remove the plus sign
 export LOCALVERSION= 
 
+_make() {
+  test -s version
+  make KERNELRELEASE="$(<version)" "$@"
+}
+
 prepare() {
   cd $_srcname
 
   echo "Setting version..."
   echo "-$pkgrel" > localversion.10-pkgrel
   echo "${pkgbase#linux}" > localversion.20-pkgname
+  # make defconfig
+  make -s kernelrelease > version
+  # make mrproper
 
   local src
   for src in "${source[@]}"; do
@@ -51,27 +73,39 @@ prepare() {
 
   echo "Setting config..."
   # cp ../config .config
-  make olddefconfig
+  _make olddefconfig
   # diff -u ../config .config || :
 
-  make -s kernelrelease > version
   echo "Prepared $pkgbase version $(<version)"
 }
 
 build() {
   cd $_srcname
-  make all
-  # make htmldocs
+  _make all
+  # _make htmldocs
 }
 
 _package() {
   options=('strip' 'debug')
   pkgdesc="The $pkgdesc kernel and modules (cjktty, android binder, default bbr, pmadv_ksm)"
-  depends=(coreutils kmod initramfs)
-  optdepends=('wireless-regdb: to set the correct wireless channels of your country'
-              'linux-firmware: firmware images needed for some devices')
-  provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE)
-  replaces=(virtualbox-guest-modules-lily wireguard-lily)
+  depends=(
+    coreutils
+    initramfs
+    kmod
+  )
+  optdepends=(
+    'wireless-regdb: to set the correct wireless channels of your country'
+    'linux-firmware: firmware images needed for some devices'
+  )
+  provides=(
+    KSMBD-MODULE
+    VIRTUALBOX-GUEST-MODULES
+    WIREGUARD-MODULE
+  )
+  replaces=(
+    virtualbox-guest-modules-lily
+    wireguard-lily
+  )
 
   cd $_srcname
   local kernver="$(<version)"
@@ -80,7 +114,7 @@ _package() {
   echo "Installing boot image..."
   # systemd expects to find the kernel here to allow hibernation
   # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab8128dcf99161d2344
-  install -Dm644 "$(make -s image_name)" "$modulesdir/vmlinuz"
+  install -Dm644 "$(_make -s image_name)" "$modulesdir/vmlinuz"
 
   # Used by mkinitcpio to name the kernel
   echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
@@ -213,7 +247,11 @@ _package-docs() {
   ln -sr "$builddir/Documentation" "$pkgdir/usr/share/doc/$pkgbase"
 }
 
-pkgname=("$pkgbase" "$pkgbase-headers") # "$pkgbase-docs")
+pkgname=(
+  "$pkgbase"
+  "$pkgbase-headers"
+  # "$pkgbase-docs"
+)
 for _p in "${pkgname[@]}"; do
   eval "package_$_p() {
     $(declare -f "_package${_p#$pkgbase}")
