@@ -8,7 +8,6 @@ pkgrel=1
 pkgdesc="A control daemon, tools, and a collection of crates for interacting with ASUS ROG laptops"
 arch=('x86_64')
 url="https://gitlab.com/asus-linux/asusctl"
-url="https://gitlab.com/asus-linux/asusctl"
 license=('MPL2')
 makedepends=('cmake' 'git' 'rust' 'gtk3' 'clang'
              'hicolor-icon-theme' 'libusb' 'fontconfig' 'systemd' 'power-profiles-daemon')
@@ -40,7 +39,6 @@ _pick() {
 package_asusctl-git() {
   pkgdesc="${pkgdesc/tools/CLI tools}"
   depends=('libusb' 'systemd' 'power-profiles-daemon' 'hicolor-icon-theme')
-  install='asusctl.install'
   optdepends=('acpi_call: fan control'
             'supergfxctl: hybrid GPU control'
             'asusctltray: tray profile switcher'
