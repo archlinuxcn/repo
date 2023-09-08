@@ -51,7 +51,6 @@ package() {
 	install -Dm644 ${srcdir}/{dlib_face_recognition_resnet_model_v1.dat,mmod_human_face_detector.dat,shape_predictor_5_face_landmarks.dat} \
 		-t "${pkgdir}/usr/lib/security/${pkgname}/dlib-data/"
 
-	chmod 600 -R "${pkgdir}/usr/lib/security/${pkgname}/"
 	install -d "${pkgdir}/usr/bin/"
 	ln -s "/lib/security/${pkgname}/cli.py" "${pkgdir}/usr/bin/${pkgname}"
 	chmod +x "${pkgdir}/usr/lib/security/${pkgname}/cli.py"
