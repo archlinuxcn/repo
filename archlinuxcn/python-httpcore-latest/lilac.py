@@ -9,9 +9,11 @@ def pre_build():
     provides = ['python-httpcore'],
     conflicts = ['python-httpcore'],
     depends = [f'python-{x}' for x in deps],
-    depends_setuptools = False,
+    pep517 = True,
     optdepends = [
       'python-h2: HTTP/2 support',
+      'python-socksio: for SOCKS support',
+      'python-trio: for trio backend',
     ],
   )
 
