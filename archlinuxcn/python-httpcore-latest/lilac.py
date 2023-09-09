@@ -10,6 +10,7 @@ def pre_build():
     conflicts = ['python-httpcore'],
     depends = [f'python-{x}' for x in deps],
     pep517 = True,
+    makedepends = ['python-hatchling', 'python-hatch-fancy-pypi-readme'],
     optdepends = [
       'python-h2: HTTP/2 support',
       'python-socksio: for SOCKS support',
