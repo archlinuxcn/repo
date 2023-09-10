@@ -17,22 +17,30 @@ restore_conf() {
 }
 
 post_install() {
+  # remove file (#28, #29)
+  [[ -e /var/tmp/pamac/dbs/sync/refresh_timestamp ]] && rm -f /var/tmp/pamac/dbs/sync/refresh_timestamp
      # enable flatpak repo
   if [ -f /usr/bin/flatpak ]; then
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-  fi   
+  fi
   # enable systemd timers
   mkdir -p /etc/systemd/system/timers.target.wants
   ln -sf /usr/lib/systemd/system/pamac-cleancache.timer /etc/systemd/system/timers.target.wants/pamac-cleancache.timer
+  # ln -sf /usr/lib/systemd/system/pamac-mirrorlist.timer /etc/systemd/system/timers.target.wants/pamac-mirrorlist.timer
+  # polkit agent
+  printf '==> An authentication agent is required\n'
+  printf '    Cinnamon, Deepin, GNOME, GNOME Flashback, KDE, LXDE, LXQt, MATE and Xfce\n'
+  printf '    have an authentication agent already.\n'
+  printf '    See https://wiki.archlinux.org/index.php/Polkit#Authentication_agents\n'
+  printf '    for other desktop environments.\n'
   # restore old conf
   restore_conf
 }
 
 post_upgrade() {
-   # enable flatpak repo
-  if [ -f /usr/bin/flatpak ]; then
-    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-  fi   
+  # remove file (#28, #29)
+  [[ -e /var/tmp/pamac/dbs/sync/refresh_timestamp ]] && rm -f /var/tmp/pamac/dbs/sync/refresh_timestamp
+
   # restore old conf
   if [ "$(vercmp $2 7.3.5-3)" -lt 0 ]; then
      restore_conf
