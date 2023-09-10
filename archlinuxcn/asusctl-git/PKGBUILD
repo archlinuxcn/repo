@@ -40,7 +40,6 @@ _pick() {
 package_asusctl-git() {
   pkgdesc="${pkgdesc/tools/CLI tools}"
   depends=('libusb' 'systemd' 'power-profiles-daemon' 'hicolor-icon-theme')
-  install='asusctl.install'
   optdepends=('acpi_call: fan control'
             'supergfxctl: hybrid GPU control'
             'asusctltray: tray profile switcher'
