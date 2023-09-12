@@ -2,8 +2,8 @@
 
 _pkgbase=hysteria
 pkgname=$_pkgbase
-pkgver=2.0.0
-pkgrel=4
+pkgver=2.0.1
+pkgrel=1
 pkgdesc='A powerful, lightning fast and censorship resistant proxy'
 arch=('x86_64')
 url="https://hysteria.network/"
@@ -18,8 +18,8 @@ source=("$_pkgbase-git"::"git+https://github.com/apernet/hysteria.git#tag=app/v$
         tmpfiles.conf
         )
 sha256sums=('SKIP'
-            'dc7f7dcdac24c06857e2fe5c4ad7e0a0bc3d63c0c1d18b555f59cc7447f02281'
-            '13f817ae46e448b8b22917486f7ba61bf9d55e8442242e5651ba93e457e6db7e'
+            '732b77b467f92e15d6ce8df6a61056479e3191903c3422d370c48d60a3643985'
+            '01530b18e61e115f48a4aa16fe2139c98b8c41011270d9b6f72dc3249d6890eb'
             '44f1cb2fedfc94dc396ceb215e62237dbc8c74c035c45a3430c1f3748d266dd9'
             '1e93d9f2b312eaf02ac00229106cd796e0cd54a9a468a0a8d3ae843399c1c310')
 
