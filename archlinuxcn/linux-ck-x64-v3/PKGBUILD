@@ -71,7 +71,7 @@ _subarch=41
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 pkgbase=linux-ck-x64-v3
-pkgver=6.5.2
+pkgver=6.5.3
 pkgrel=1
 arch=(x86_64)
 url="https://wiki.archlinux.org/index.php/Linux-ck"
@@ -104,24 +104,30 @@ source=(
   "ck-hrtimer-$_commit.tar.gz::https://github.com/graysky2/linux-patches/archive/$_commit.tar.gz"
   0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
   0002-drivers-firmware-skip-simpledrm-if-nvidia-drm.modese.patch
-  0003-tpm-Enable-hwrng-only-for-Pluton-on-AMD-CPUs.patch
-  0004-sphinx-kfigure.py-Convert-outdir-to-str-before-using.patch
-  0005-ASoC-Intel-soc-acpi-fix-Dell-SKU-0B34.patch
+0003-sphinx-kfigure.py-Convert-outdir-to-str-before-using.patch
+0004-ASoC-Intel-soc-acpi-fix-Dell-SKU-0B34.patch
+0005-btrfs-wait-on-uncached-block-groups-on-every-allocat.patch
+0006-btrfs-set-last-dir-index-to-the-current-last-index-w.patch
+0007-btrfs-refresh-dir-last-index-during-a-rewinddir-3-ca.patch
+0008-btrfs-fix-race-between-reading-a-directory-and-addin.patch
 )
 validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
-sha256sums=('2027e14057d568ad3ddc100dadf4c8853a49b031270478a61d88f6011572650f'
+sha256sums=('4cac13f7b17bd8dcf9032ad68f9123ab5313d698c9f59416043165150763eb4f'
             'SKIP'
-            'b36c2945633d49b5f85600b58989a58f5ac61e31ca2c02f2046ce15b1462ea4b'
+            '46451dbc3305d4c2e726a2f1943bddf697c5bb6815d93e5baed80bca82e53fdc'
             'f1d586e111932890ad5e0df15d092fb9b3f87bae4ea17812aae9b0ec98fe2db0'
             'a86a59d089ddd4f31565ff6a27ba74f4697ffa0ab0f57dc839e1da6ab83d77a4'
-            '806801da9c5c251a9087a562bb1c203324c484cab60080f62452212e3e02eb77'
-            '8c0d18bf189b0dcbe319a850bfa21dba8baab091251ec01ef52019478bc3a82a'
-            '92292c9743f496c064c33046bad21670732762e6261227b8ceecb8be874723b8'
-            'cd70f794589c5481ec542d508fd23ca35fe42df5bfdbe3454a8443fae191e5eb'
-            'f9f00f18529c7f15cc476dbe0344636a3e76537476fffe9c37fea16a157e17ce')
+            'ef5f18993d8705818934cb6c0ec0bc26371360698e008d536ec1fa7499d8a919'
+            'c8f800f080fc93c805fd4c3888f1249b2700fe37f5de93984f5f0caaac97b36f'
+            '781fd295ca439c2632f1a453239bb58b1cb30df3b84154ce70109678a1b0df53'
+            '302df4d170c81f722879bc624f4d4aee3da1a65c59b2ed873a0e91f0feb2fc5a'
+            '2abf9a149f215bcdb2e76344e67a2f1c5c46e9962953dd073ed7090e85d988c5'
+            'fd1c1c1dfbc741a03e2e91cb97cc0d4403a0722451dfae06d26faf66c0d3b6e8'
+            '053d903bfe7979be075d3ece4a4f03034af7a9e994c78c381648a13aa0d07b00'
+            '4862ae2813434b949c500a6fef982a9132623e88dc6634ce802b388d166a61fc')
 _make() {
   test -s version
   make KERNELRELEASE="$(<version)" "$@"

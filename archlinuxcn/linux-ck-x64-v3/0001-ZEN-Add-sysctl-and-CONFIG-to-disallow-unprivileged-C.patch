@@ -1,7 +1,7 @@
-From e1fcd2107a9f8d938e51f5315cbc43c5e8a8c0b4 Mon Sep 17 00:00:00 2001
+From 92b8cd4f582347e53163d544db15d20f563d1c17 Mon Sep 17 00:00:00 2001
 From: "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
 Date: Mon, 16 Sep 2019 04:53:20 +0200
-Subject: [PATCH 1/6] ZEN: Add sysctl and CONFIG to disallow unprivileged
+Subject: [PATCH 1/9] ZEN: Add sysctl and CONFIG to disallow unprivileged
  CLONE_NEWUSER
 
 Our default behavior continues to match the vanilla kernel.
@@ -36,10 +36,10 @@ index 45f09bec02c4..87b20e2ee274 100644
  {
  	return &init_user_ns;
 diff --git a/init/Kconfig b/init/Kconfig
-index f7f65af4ee12..c2ecb3bb3392 100644
+index 5e7d4885d1bf..13ad93775237 100644
 --- a/init/Kconfig
 +++ b/init/Kconfig
-@@ -1225,6 +1225,22 @@ config USER_NS
+@@ -1226,6 +1226,22 @@ config USER_NS
  
  	  If unsure, say N.
  
