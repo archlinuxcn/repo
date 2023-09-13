@@ -1,16 +1,16 @@
-# Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
+# Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=python-clickgen
 _name=${pkgname#python-}
-pkgver=2.1.3
-pkgrel=2
+pkgver=2.1.7
+pkgrel=1
 pkgdesc="X11 & Windows cursor building API"
 arch=('any')
 url="https://github.com/ful1e5/clickgen"
 license=('MIT')
-depends=('python-attrs' 'python-numpy' 'python-pillow' 'python-toml')
+depends=('python-attrs' 'python-numpy' 'python-pillow' 'python-toml' 'python-yaml')
 makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel')
 source=("$_name-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('a8b2b758b883cf0c83189dfd5802bbe2dbbe94208e8f8ea5aabf6c4e3d139014')
+sha256sums=('f335d1ab2267c047aa2fb608b64419e70c3b81e1a6715c32b0170bc30cd52699')
 
 build() {
   cd "$_name-$pkgver"
