@@ -13,6 +13,7 @@ url="https://github.com/XTLS/Xray-core"
 license=('MPL2')
 depends=('glibc' 'xray-domain-list-community' 'xray-geoip')
 makedepends=('go')
+provides=('v2ray')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "xray.sysusers"
         "xray.tmpfiles"
