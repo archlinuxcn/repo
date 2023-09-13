@@ -76,6 +76,8 @@ sha512sums=('SKIP'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849')
 
+_versioned_llvm=15
+
 pkgver() {
   cd julia
 
@@ -89,6 +91,11 @@ pkgver() {
   printf "%s.%s.g%s" "$(git show HEAD:VERSION | sed 's/-/./g')" \
          "$build_number" "$commit_short"
 }
+
+_LLVM_CONFIG=llvm-config
+if [[ -n $_versioned_llvm ]]; then
+  _LLVM_CONFIG=llvm-config-${_versioned_llvm}
+fi
 
 julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_LIBWHICH=0
@@ -120,7 +127,8 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             LIBBLASNAME=libopenblas
             LIBBLAS=-lopenblas
             LIBLAPACKNAME=libopenblas
-            LIBLAPACK=-lopenblas)
+            LIBLAPACK=-lopenblas
+            LLVM_CONFIG=${_LLVM_CONFIG})
 
 _x86_target='generic,opt_size;haswell,clone_all,-rdrnd;skylake,base(1),-rdrnd,-rdseed,-rtm;cannonlake,base(1),-rdrnd,-rdseed,-rtm'
 _arm_target='armv7-a;armv7-a,neon;armv7-a,neon,vfp4'
@@ -274,7 +282,7 @@ _source_files() {
 }
 
 package-julia-in() {
-  _llvm_ver=$(llvm-config --version)
+  _llvm_ver=$(${_LLVM_CONFIG} --version)
   [[ $_llvm_ver =~ ^([0-9]*).* ]]
   llvm_maj_ver=${BASH_REMATCH[1]}
   ((next_llvm_maj=llvm_maj_ver + 1))
