@@ -5,7 +5,7 @@
 
 pkgname=insomnia
 pkgver=2023.5.8
-pkgrel=1
+pkgrel=2
 _nodeversion=12.18.3
 pkgdesc="Cross-platform HTTP and GraphQL Client"
 url="https://github.com/Kong/insomnia"
@@ -41,15 +41,21 @@ build() {
   _ensure_local_nvm
   cd ${pkgname}-core-${pkgver}
   npm install
-  GIT_TAG="core@${pkgver}" NODE_OPTIONS="--max-old-space-size=4096" BUILD_TARGETS="tar.gz" npm run app-package
+
+  export GIT_TAG="core@${pkgver}"
+  export NODE_OPTIONS="--max-old-space-size=4096"
+
+  npm run package --workspace=packages/insomnia -- --linux dir
 }
 
 package() {
-  install -Dm644 ${pkgname}.desktop -t "${pkgdir}/usr/share/applications"
   cd ${pkgname}-core-${pkgver}
-  install -d "${pkgdir}/opt/insomnia"
-  cp -r packages/insomnia/dist/linux-*unpacked/. "$pkgdir/opt/insomnia"
+
+  install -dm755 "${pkgdir}/opt/insomnia"
+
+  cp -r packages/insomnia/dist/linux-*unpacked/. "${pkgdir}/opt/insomnia"
+
+  install -Dm644 "${srcdir}/${pkgname}.desktop" -t "${pkgdir}/usr/share/applications"
   install -Dm644 packages/insomnia/src/ui/images/insomnia-logo.svg "${pkgdir}/usr/share/pixmaps/insomnia.svg"
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
-
