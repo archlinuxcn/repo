@@ -20,8 +20,15 @@ def _get_new_version(major):
 def pre_build():
   if _G.newver != _G.newvers[1]:
     raise ValueError('Upstream LLVM version mismatch, manual update required.')
-  julia_ver_commit = _G.newvers[3]
-  julia_ver = _get_new_version(_G.newver)
+  julia_ver_commit = _G.newvers[4]
+  if _G.newvers[1] != _G.newvers[2]:
+    julia_ver = _get_new_version(_G.newvers[1])
+    if julia_ver:
+      raise ValueError('New tagged release available.')
+    versioned_llvm = _G.newvers[2]
+  else:
+    versioned_llvm = ''
+  julia_ver = _get_new_version(_G.newvers[2])
   if julia_ver_commit:
     if julia_ver:
       raise ValueError('New tagged release available.')
@@ -31,6 +38,8 @@ def pre_build():
         line = f'_julia_rel='
       if line.startswith('_julia_commit='):
         line = f'_julia_commit={julia_commit}'
+      if line.startswith('_versioned_llvm='):
+        line = f'_versioned_llvm={versioned_llvm}'
       print(line)
   else:
     if not julia_ver:
@@ -41,5 +50,7 @@ def pre_build():
         line = f'_julia_rel={julia_rel}'
       if line.startswith('_julia_commit='):
         line = f'_julia_commit='
+      if line.startswith('_versioned_llvm='):
+        line = f'_versioned_llvm={versioned_llvm}'
       print(line)
   update_pkgver_and_pkgrel(pkgver)
