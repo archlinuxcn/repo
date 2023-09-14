@@ -132,7 +132,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
 
 _x86_target='generic,opt_size;haswell,clone_all,-rdrnd;skylake,base(1),-rdrnd,-rdseed,-rtm;cannonlake,base(1),-rdrnd,-rdseed,-rtm'
 _arm_target='armv7-a;armv7-a,neon;armv7-a,neon,vfp4'
-_aa64_target='generic;cortex-a57;apple-m1,clone_all'
+_aa64_target='generic;armv8.2-a;apple-m1,clone_all'
 
 case "$CARCH" in
   x86_64)
