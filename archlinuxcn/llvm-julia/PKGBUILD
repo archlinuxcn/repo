@@ -160,6 +160,13 @@ package_llvm-libs-julia() {
      "$srcdir"/LLVMgold.so \
      "$pkgdir/${_llvm_prefix}/lib/"
 
+  if [[ -n $_versioned_llvm ]]; then
+    ln -s "$pkgdir/${_llvm_prefix}/lib/libLLVM-15.so" \
+       "$pkgdir/usr/lib/libLLVM-15.so"
+    ln -s "$pkgdir/${_llvm_prefix}/lib/libLLVM-15.so" \
+       "$pkgdir/usr/lib/libLLVM-$pkgver.so"
+  fi
+
   install -Dm644 "$srcdir/${repodir}/llvm/LICENSE.TXT" \
           "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
