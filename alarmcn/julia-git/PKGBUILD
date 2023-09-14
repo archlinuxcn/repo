@@ -354,6 +354,8 @@ package-julia-in() {
   # From ca-certificates-utils, needed by Download stdlib
   ln -sf /etc/ssl/cert.pem "${pkgdir}/usr/share/julia/cert.pem"
 
+  rm "$pkgdir"/usr/lib/julia/libccalltest.so.debug # Remove debug testing library
+
   # Without stripping, makepkg doesn't copy the source for us...
   dbgsrcdir="${DBGSRCDIR:-/usr/src/debug}"
   for binary in usr/bin/julia usr/bin/julia-debug \
