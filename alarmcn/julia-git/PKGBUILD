@@ -49,10 +49,9 @@ options=('debug' '!strip' '!buildflags')
 _patches=(
   0001-Force-enable-GDB-debug-info-registration.patch
   0002-Fix-source-file-paths.patch
-  0003-Enable-basic-AA-in-O2.patch
-  0004-Clear-soname.patch
-  0005-Use-libc-for-libssp.patch
-  0006-Support-loading-extensions-from-STDLIB.patch
+  0003-Clear-soname.patch
+  0004-Use-libc-for-libssp.patch
+  0005-Support-loading-extensions-from-STDLIB.patch
 )
 source=('git+https://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -63,12 +62,11 @@ source=('git+https://github.com/JuliaLang/julia'
         arch-source-translate.cpp
         sysp7z.diff)
 sha512sums=('SKIP'
-            '487b844e7b51a2338ffb83fa1ddb57695dff413fa1dc51ee5283e774a79f948718a65b8f1bc47ed27113c6c823635aa7f96fbeff8221a2752e140fc6443e10c0'
-            'e6f769c15819db18e91c42e00a40c66353d7bf420f221df2dcf2d8ff807499666ee75a7d5b89df278a690f86116e044dd8784045359baad2d39cf2a21226c32a'
-            'da28aec0dc653380e6480b41ee46ec2dccac5891cd9c711ee121defcd00bc42047750ed59808b7ea9f0b4e1366809eac5d06ccfe8c0906dbf3d6dd92d2b5378d'
-            '12c61c13e627796773675d68c5522013d5c44d32ce713c377c9c8bde89b910825c7704439a3d3487b0babc2942a3d9e9172426b751de6b4e1b801859d8306905'
-            '01e93d5c4e2f79c99cf20962d45540811862a0ad2542d62adada8890babc08323fb428f92168af88f539c92376f3fea9712435051772055eb90c35fc506080ef'
-            '5f064b13a67d4158b7510d866ce933e8e5863a2b0f9d5a20ae2730511fa84ab07dfa7ea9fabe0ac64bb6802c41edfb77b683804f5e8f156f97fb56f19ffc4b51'
+            '9163d1f514e01e32ac598cd0196781c7ea62282c12b5ec71a684c03fde74e4391cccebe57bfe704d128e803a9965615f1338f9083db57cda71b4549fb0c6ec8e'
+            'a5419dc2404a110edd4ff58686457d2989154a1345ad4a67966382a1db1d8ecd93bebe6b3d70b7c7b1ca33f614daa0bd95f663074697b1e7d69bdc83589a6619'
+            '24861de1708be4a1ae695192d1519c17f6350df729a1d50380f5dd528349d54734bfb689a1658c018e3da38709dc45388abbfc716816025947fca4102d13388d'
+            'acfcf8bac53a4796ed8d4109ebcf25bad7fb8e5978d00eece909e95d3bbd28cf94890fec91cb3955527ec1d52da2206480980d67731a63d7d7e7fc3ac21847b4'
+            'b66cabbfde1152615d0464ebeb2b0682ada4771c066c7b185d7c5430f3248fc4e350d5c651fef8b683e5465e311a7ca7bb0193b711c0d3f268792286c47ab982'
             '2bf050afb5afcd21b23667beb6129e73dc2fb8143366921c8859d7011ed06187db9f4aedae99c0fe31e0bcb7b0896180b006ee542d4b4d592369e9f4f1bd77ec'
             'ce03e2995a45d942f480d25d1ce7cddacb98f2e11eeed19b5564e36d817987f548c313b0d6b139402ba8c203c8ba9a059e1732695517d7b78b7fa88f08429295'
             '36df234b634926bc88084e683ee9f495ef0ce4c26d6d6b9f55294098bdcb86f5eaaf6c671afe1a5c4371c428bd7bf3dd617ec1f15a7ff35376d67df22140454c'
