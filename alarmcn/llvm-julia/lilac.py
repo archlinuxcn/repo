@@ -29,7 +29,7 @@ def pre_build():
   else:
     versioned_llvm = ''
   julia_ver = _get_new_version(_G.newvers[2])
-  if julia_ver_commit:
+  if julia_ver_commit == '0':
     if julia_ver:
       raise ValueError('New tagged release available.')
     pkgver, julia_commit = julia_ver_commit.split('-', 2)

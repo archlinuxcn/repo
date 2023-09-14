@@ -29,8 +29,8 @@ update_on:
     include_regex: 'julia-[0-9.]+-\d+'
   - source: manual
     # The JuliaLang/llvm-project commit to use
-    # Empty if we are using a release
-    manual: ''
+    # '0' if we are using a release
+    manual: 0
   - source: manual
     manual: 2
   - alias: python
