@@ -143,6 +143,8 @@ package_llvm-julia() {
     done
   fi
 
+  rm -rf "$pkgdir/usr/lib/python"*
+
   install -Dm644 ../LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
