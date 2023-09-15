@@ -22,7 +22,7 @@ depends=(
   vxl
 )
 makedepends=(
-  castxml
+#  castxml
   cmake
   gcc12
   git
@@ -53,7 +53,7 @@ build() {
     -DCMAKE_SKIP_RPATH=ON
     -DITK_BUILD_DEFAULT_MODULES=ON
     -DITK_USE_MKL=ON
-    -DITK_USE_SYSTEM_CASTXML=ON
+    -DITK_USE_SYSTEM_CASTXML=OFF
     -DITK_USE_SYSTEM_DCMTK=ON
     -DITK_USE_SYSTEM_DOUBLECONVERSION=ON
     -DITK_USE_SYSTEM_EIGEN=ON
