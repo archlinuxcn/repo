@@ -15,6 +15,8 @@ provides=('libllvmextra_jll')
 conflicts=('libllvmextra_jll')
 options=('debug')
 
+_versioned_llvm=15
+
 pkgver() {
   cd LLVM.jl
 
@@ -30,6 +32,9 @@ build() {
 
   mkdir -p build
   cd build
+  if [[ -n $_versioned_llvm ]]; then
+    export CMAKE_MODULE_PATH=/usr/lib/llvm15/lib/cmake/
+  fi
   cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/usr
   make
