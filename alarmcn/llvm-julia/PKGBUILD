@@ -142,9 +142,8 @@ package_llvm-julia() {
     ln -s ../lib/llvm${_versioned_llvm}/bin/$_basename \
        "$pkgdir/usr/bin/$_basename-${_versioned_llvm}"
     done
+    rm -rf "$pkgdir/usr/lib/python"*
   fi
-
-  rm -rf "$pkgdir/usr/lib/python"*
 
   install -Dm644 ../LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
