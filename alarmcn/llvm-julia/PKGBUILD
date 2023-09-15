@@ -76,7 +76,7 @@ build() {
   CFLAGS+=' -ggdb1 -O3 -fasynchronous-unwind-tables'
   CXXFLAGS+=' -ggdb1 -O3 -fasynchronous-unwind-tables'
   LDFLAGS+=' -O3 -fasynchronous-unwind-tables'
-
+  export LANG=en_US.UTF-8
 
   local cmake_args=(
     -G Ninja
@@ -115,6 +115,7 @@ package_llvm-julia() {
   optdepends=('python-setuptools: for using lit (LLVM Integrated Tester)')
   conflicts=("llvm${_versioned_llvm}")
   provides=("llvm${_versioned_llvm}=$pkgver-$pkgrel")
+  export LANG=en_US.UTF-8
 
   cd ${repodir}/llvm/build
 
@@ -153,6 +154,7 @@ package_llvm-libs-julia() {
   depends=(gcc-libs zlib libzstd.so libffi.so libedit libncursesw.so libxml2)
   conflicts=("llvm${_versioned_llvm}-libs")
   provides=("llvm${_versioned_llvm}-libs=$pkgver-$pkgrel")
+  export LANG=en_US.UTF-8
 
   install -d "$pkgdir/${_llvm_prefix}/lib"
   cp -P \
