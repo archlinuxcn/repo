@@ -4,7 +4,7 @@
 # Contributor: Daniil Kovalev <daniil@kovalev.website>
 pkgname=64gram-desktop
 _pkgname=64Gram
-pkgver=1.0.92
+pkgver=1.0.93
 pkgrel=1
 epoch=1
 pkgdesc='Unofficial desktop version of Telegram messaging app'
@@ -27,7 +27,7 @@ source=("https://github.com/TDesktop-x64/tdesktop/releases/download/v${pkgver}/$
         "fix-lzma-link.patch"
         "https://download.gnome.org/sources/glibmm/2.77/glibmm-2.77.0.tar.xz")
 noextract=("${_pkgname}-${pkgver}-full.tar.gz")
-sha512sums=('60dc87fae1f2af4a8073a1d297f308da17ebea33711ac44bdb2696bead90a37c600144317ab486b7c9b4f62bf912d4955652e1ef19bf1504b44e4b33d59d8e61'
+sha512sums=('15ec8a67d1f11989b2fd44b1601feac1217e81e23c6079d2988e80a979c542c3292f1d062de0c405bd09c090538475641580eb2a93297996a3bc9e6d8639a84e'
             'c662524ca4f4a8df021ee94696d84896ed9a271df321933942806dda4544ea25f51a650ec8b4fc72f9a2219ea54cbfaf37b9604124f7263c86f74f1d647587ae'
             'd813a5ac6ff2208b693ecf494d7bf036087e223662f9f34aaaeafea0afe0fe798e867b9610f7221ea80319865502c20b61310d5a31634b888793873d63322463'
             '6650e822de2529582d93291025500afb6a182a0c5a564f656f164d79d8765bb4ca9c9d16227148431cc71c2677923b9364e81bbd4ca4f07f68e36bb380fb9574')
