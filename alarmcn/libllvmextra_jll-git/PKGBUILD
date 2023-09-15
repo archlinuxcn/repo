@@ -33,7 +33,7 @@ build() {
   mkdir -p build
   cd build
   if [[ -n $_versioned_llvm ]]; then
-    export CMAKE_MODULE_PATH=/usr/lib/llvm15/lib/cmake/
+    export CMAKE_PREFIX_PATH=/usr/lib/llvm15/
   fi
   cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/usr
@@ -41,7 +41,11 @@ build() {
 }
 
 package() {
-  _llvm_ver=$(llvm-config --version)
+  if [[ -n $_versioned_llvm ]]; then
+    _llvm_ver=$(llvm-config-${_versioned_llvm} --version)
+  else
+    _llvm_ver=$(llvm-config --version)
+  fi
   [[ $_llvm_ver =~ ^([0-9]*).* ]]
   llvm_maj_ver=${BASH_REMATCH[1]}
   ((next_llvm_maj=llvm_maj_ver + 1))
