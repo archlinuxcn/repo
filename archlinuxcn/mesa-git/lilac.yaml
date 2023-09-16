@@ -3,7 +3,7 @@ maintainers:
 # extra-x86_64 also compiles successfully but it seems that mesa
 # autodetects lib32 libraries
 # and compiles additionalt targets with these libraries installed.
-build_prefix: multilib
+build_prefix: extra-x86_64
 
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
@@ -13,6 +13,7 @@ repo_depends:
   - llvm-git: compiler-rt-git
   - llvm-git: clang-git
   - llvm-git: llvm-libs-git
+  - llvm-git: spirv-llvm-translator-git
   - llvm-git: llvm-git
 update_on:
   - source: cmd # Update every other day
