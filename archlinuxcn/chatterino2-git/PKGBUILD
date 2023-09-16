@@ -1,7 +1,7 @@
 # Maintainer: Ckat <ckat@teknik.io>
 pkgname=chatterino2-git
 _pkgname=chatterino2
-pkgver=v2.4.5.r24.g2d5f07830
+pkgver=v2.4.5.r25.g8fe3af352
 pkgrel=1
 pkgdesc='Second installment of the Twitch chat client series "Chatterino", dev/git version'
 arch=('any')
@@ -67,10 +67,15 @@ build() {
     cd "$srcdir/chatterino2"
     mkdir -p build
     cd build
+    declare -a flags
+    if [[ $CXXFLAGS == *"-flto"* ]]; then
+        flags+=("-DCHATTERINO_LTO=ON")
+    fi
     cmake \
         -DCMAKE_BUILD_TYPE=Release \
         -DUSE_SYSTEM_QTKEYCHAIN=ON \
         -DUSE_PRECOMPILED_HEADERS=OFF \
+        "${flags[@]}" \
         ..
     cmake --build .
 }
