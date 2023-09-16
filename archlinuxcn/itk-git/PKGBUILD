@@ -97,6 +97,7 @@ build() {
     -DITK_WRAP_unsigned_short=ON
     -DITK_WRAP_vector_double=ON
     -DModule_MorphologicalContourInterpolation=ON
+    -DPY_SITE_PACKAGES_PATH=/usr/lib/python$(get_pyver)/site-packages
 )
 
   cmake -B "build" -S "${srcdir}/${_pkgname}" \
