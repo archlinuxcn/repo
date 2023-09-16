@@ -12,4 +12,7 @@ update_on:
   - source: github
     github: MatsuriDayo/nekoray
 
-  - source: manual
+  - source: archpkg
+    archpkg: yaml-cpp
+    provided: libyaml-cpp.so
+    strip_release: true
