@@ -1,15 +1,19 @@
 maintainers:
   - github: auxiliarypower
 
-update_on:
-  - source: aur
-    aur: python-glyphslib
-  - source: manual
-    manual: 1
-  - alias: python
+pre_build: aur_pre_build
+
+post_build: aur_post_build
 
 repo_depends:
   - python-openstep-plist
   - python-ufo2ft
   - python-ufonormalizer
   - python-xmldiff
+
+update_on:
+  - source: aur
+    aur: python-glyphslib
+  - source: manual
+    manual: 1
+  - alias: python
