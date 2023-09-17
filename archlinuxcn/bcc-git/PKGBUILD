@@ -43,6 +43,7 @@ build() {
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+    -DPYTHON_PREFIX=/usr \
     -DENABLE_EXAMPLES=off \
     -DENABLE_TESTS=off \
     -DENABLE_LLVM_SHARED=on
