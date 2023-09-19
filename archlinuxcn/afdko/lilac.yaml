@@ -1,13 +1,17 @@
 maintainers:
   - github: auxiliarypower
 
+pre_build: aur_pre_build
+
+post_build: aur_post_build
+
+repo_depends:
+  - psautohint
+  - python-ufonormalizer
+
 update_on:
   - source: aur
     aur: afdko
   - source: manual
     manual: 1
   - alias: python
-
-repo_depends:
-  - psautohint
-  - python-ufonormalizer
