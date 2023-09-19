@@ -194,6 +194,7 @@ _patch_suitesparse() {
       usr/share/julia/stdlib/v*/SuiteSparse_jll/src/SuiteSparse_jll.jl
 
   sed -i -e 's/^[[:blank:]]*\$(eval.*libcholmod_cuda/# &/' base/Makefile
+  sed -i -e 's/^[[:blank:]]*\$(eval.*libspqr_cuda/# &/' base/Makefile
 }
 
 prepare() {
