@@ -9,9 +9,6 @@ post_build: aur_post_build
 update_on:
   - source: aur
     aur: sunshine
-  - source: alpm
-    alpm: boost-libs
-    repo: extra
-    strip_release: true
+  - alias: boost
   - source: manual
     manual: 1
