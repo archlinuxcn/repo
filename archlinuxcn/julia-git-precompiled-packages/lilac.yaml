@@ -14,14 +14,17 @@ repo_depends:
   - llvm-julia: llvm-libs-julia
   - julia-pkg-scripts
 
+###=== JLPKG_DEPEND_LIST {{
   - julia-git-adapt-src
   - julia-git-arrayinterface-src
   - julia-git-compat-src
   - julia-git-requires-src
   - julia-git-staticarrays-src
   - julia-git-staticarrayscore-src
+###=== }} JLPKG_DEPEND_LIST
 
 update_on_build:
+###=== JLPKG_UPDATE_ON_BUILD_LIST {{
   - pkgbase: julia-git
   - pkgbase: julia-git-adapt-src
   - pkgbase: julia-git-arrayinterface-src
@@ -29,6 +32,7 @@ update_on_build:
   - pkgbase: julia-git-requires-src
   - pkgbase: julia-git-staticarrays-src
   - pkgbase: julia-git-staticarrayscore-src
+###=== }} JLPKG_UPDATE_ON_BUILD_LIST
 
 update_on:
   - source: manual

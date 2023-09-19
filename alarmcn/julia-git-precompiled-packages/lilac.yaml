@@ -20,6 +20,7 @@ update_on_build:
   - pkgbase: julia-git
 
 update_on:
+###=== JLPKG_UPDATE_ON_LIST {{
   - alias: alpm-lilac
     alpm: julia-git-adapt-src
   - alias: alpm-lilac
@@ -32,5 +33,6 @@ update_on:
     alpm: julia-git-staticarrays-src
   - alias: alpm-lilac
     alpm: julia-git-staticarrayscore-src
+###=== }} JLPKG_UPDATE_ON_LIST
   - source: manual
     manual: 1
