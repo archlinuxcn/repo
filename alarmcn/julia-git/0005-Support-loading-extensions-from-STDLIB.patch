@@ -1,4 +1,4 @@
-From d7af9213781adc2336012cdffb7ca7909cc7ca45 Mon Sep 17 00:00:00 2001
+From a3fbfc9402d8415eebce431be90366c900f3f12f Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 30 Aug 2023 09:28:03 -0400
 Subject: [PATCH 5/5] Support loading extensions from STDLIB
@@ -8,10 +8,10 @@ Subject: [PATCH 5/5] Support loading extensions from STDLIB
  1 file changed, 62 insertions(+)
 
 diff --git a/base/loading.jl b/base/loading.jl
-index 1cfb33fe6a..df8b61dec0 100644
+index c45d3e2d1a..2837d7935b 100644
 --- a/base/loading.jl
 +++ b/base/loading.jl
-@@ -966,6 +966,14 @@ end
+@@ -970,6 +970,14 @@ end
  # if there's a project file, look up `name` in its deps and return that
  # otherwise return `nothing` to indicate the caller should keep searching
  function implicit_manifest_deps_get(dir::String, where::PkgId, name::String)::Union{Nothing,PkgId}
@@ -26,7 +26,7 @@ index 1cfb33fe6a..df8b61dec0 100644
      @assert where.uuid !== nothing
      project_file = entry_point_and_project_file(dir, where.name)[2]
      project_file === nothing && return nothing # a project file is mandatory for a package with a uuid
-@@ -976,8 +984,42 @@ function implicit_manifest_deps_get(dir::String, where::PkgId, name::String)::Un
+@@ -980,8 +988,42 @@ function implicit_manifest_deps_get(dir::String, where::PkgId, name::String)::Un
      return PkgId(pkg_uuid, name)
  end
  
@@ -69,7 +69,7 @@ index 1cfb33fe6a..df8b61dec0 100644
      path, project_file = entry_point_and_project_file(dir, pkg.name)
      if project_file === nothing
          pkg.uuid === nothing || return nothing
-@@ -1187,6 +1229,23 @@ const EXT_PRIMED = Dict{PkgId, PkgId}() # Extension -> Parent
+@@ -1191,6 +1233,23 @@ const EXT_PRIMED = Dict{PkgId, PkgId}() # Extension -> Parent
  const EXT_DORMITORY = Dict{PkgId,Vector{ExtensionId}}() # Trigger -> Extensions that can be triggered by it
  const EXT_DORMITORY_FAILED = ExtensionId[]
  
@@ -93,7 +93,7 @@ index 1cfb33fe6a..df8b61dec0 100644
  function insert_extension_triggers(pkg::PkgId)
      pkg.uuid === nothing && return
      path_env_loc = locate_package_env(pkg)
-@@ -1195,6 +1254,9 @@ function insert_extension_triggers(pkg::PkgId)
+@@ -1199,6 +1258,9 @@ function insert_extension_triggers(pkg::PkgId)
      if path === nothing || env_loc === nothing
          return
      end
