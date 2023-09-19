@@ -2,8 +2,8 @@
 
 _name=imagecodecs
 pkgname=python-imagecodecs
-pkgver=2023.9.4
-pkgrel=2
+pkgver=2023.9.18
+pkgrel=1
 pkgdesc='Image transformation, compression, and decompression codecs'
 arch=('x86_64')
 url='https://github.com/cgohlke/imagecodecs'
@@ -47,7 +47,7 @@ makedepends=(
 source=("${_name}-${pkgver}.tar.gz::https://github.com/cgohlke/imagecodecs/archive/v${pkgver}.tar.gz"
         "0001.fix-deps.patch"
 )
-sha256sums=('b8b4e1b1691123aa9b5e8e4686a0805e1215eae3da5949697b7fc925ad2e90e0'
+sha256sums=('f2bd9f9e04a3e98fc785b206cb86ec5aaca659a200f5f2c7c62b3e9e08fc7946'
             '53fbec4857eb1bfc306cafd4835934ac7371e17a82b5e66daf21b2668d3b0b29')
 
 prepare() {
