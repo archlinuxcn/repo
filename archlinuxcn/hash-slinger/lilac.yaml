@@ -1,14 +1,14 @@
-pre_build_script: aur_pre_build(maintainers=['HLFH'])
+pre_build_script: |
+    update_pkgver_and_pkgrel(_G.newver)
 
-post_build: aur_post_build
+post_build_script: |
+    git_pkgbuild_commit()
 
 update_on:
-  - source: aur
-    aur: hash-slinger
+  - source: github
+    github: hash-slinger
+    use_latest_release: true
   - alias: python
-
-repo_depends:
-  - python-ipaddress
 
 maintainers:
   - github: CoelacanthusHex
