@@ -3,8 +3,8 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=webkit2gtk-imgpaste
-pkgver=2.40.5
-pkgrel=2
+pkgver=2.42.0
+pkgrel=1
 pkgdesc="Web content engine for GTK (with patches for pasting images from clipboard)"
 url="https://webkitgtk.org"
 arch=(x86_64)
@@ -34,6 +34,7 @@ depends=(
   libgl
   libgles
   libjpeg
+  libjxl
   libmanette
   libpng
   libseccomp
@@ -58,11 +59,13 @@ depends=(
   zlib
 )
 makedepends=(
+  clang
   cmake
   gi-docgen
   gobject-introspection
   gperf
   gst-plugins-bad
+  lld
   ninja
   python
   ruby
@@ -77,7 +80,7 @@ source=(
   EnlargeObjectSize.patch
   PasteBoardGtk.patch
 )
-sha256sums=('7de051a263668621d91a61a5eb1c3771d1a7cec900043d4afef06c326c16037f'
+sha256sums=('828f95935861fae583fb8f2ae58cf64c63c178ae2b7c2d6f73070813ad64ed1b'
             'SKIP'
             '71b8a59c78d549fed0cd895207f49c7b3be40b236e96f4d7b9907a26521499bf'
             '20ebac2caf15fa546e6da00cb0fa90d5d37fcf7bfa883014d7d15eb4963d12d2')
@@ -105,6 +108,15 @@ build() {
     -DENABLE_DOCUMENTATION=ON
     -DENABLE_MINIBROWSER=ON
   )
+
+  # GCC with LTO fails to link libjavascriptcoregtk
+  #     /usr/bin/ld: /tmp/ccXxyWZV.ltrans0.ltrans.o: in function `ipint_table_size_validate':
+  #     <artificial>:(.text+0x49f0f): undefined reference to `ipint_extern_table_size'
+  #     /usr/bin/ld: /tmp/ccXxyWZV.ltrans0.ltrans.o: in function `ipint_table_fill_validate':
+  #     <artificial>:(.text+0x4a019): undefined reference to `ipint_extern_table_fill'
+  #     collect2: error: ld returned 1 exit status
+  export CC=clang CXX=clang++
+  LDFLAGS+=" -fuse-ld=lld"
 
   # Produce minimal debug info: 4.3 GB of debug data makes the
   # build too slow and is too much to package for debuginfod
