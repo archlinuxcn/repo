@@ -1,7 +1,7 @@
-From 5c640491ba9cea8c0a01144db26b2c8892506717 Mon Sep 17 00:00:00 2001
+From 47c0fdda664600f0568addd32f954a5cb6257fa1 Mon Sep 17 00:00:00 2001
 From: Filipe Manana <fdmanana@suse.com>
 Date: Tue, 12 Sep 2023 11:45:39 +0100
-Subject: [PATCH 8/9] btrfs: fix race between reading a directory and adding
+Subject: [PATCH 7/8] btrfs: fix race between reading a directory and adding
  entries to it
 
 When opening a directory (opendir(3)) or rewinding it (rewinddir(3)), we
@@ -106,10 +106,10 @@ Cherry-picked-for: https://bugs.archlinux.org/task/79673
  1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index a50cbcafca03..0d4196cede7d 100644
+index f498c1c4068c..d5c112f6091b 100644
 --- a/fs/btrfs/inode.c
 +++ b/fs/btrfs/inode.c
-@@ -5924,21 +5924,24 @@ static int btrfs_set_inode_index_count(struct btrfs_inode *inode)
+@@ -5931,21 +5931,24 @@ static int btrfs_set_inode_index_count(struct btrfs_inode *inode)
  
  static int btrfs_get_dir_last_index(struct btrfs_inode *dir, u64 *index)
  {

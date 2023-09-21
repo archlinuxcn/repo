@@ -1,7 +1,7 @@
-From f2e0f18c8bd9c6d61575a2311d488e21831e1163 Mon Sep 17 00:00:00 2001
+From cd0498ab46920777435bd0b8e108e0f999320ac2 Mon Sep 17 00:00:00 2001
 From: Filipe Manana <fdmanana@suse.com>
 Date: Sat, 9 Sep 2023 12:12:14 +0100
-Subject: [PATCH 7/9] btrfs: refresh dir last index during a rewinddir(3) call
+Subject: [PATCH 6/8] btrfs: refresh dir last index during a rewinddir(3) call
 
 When opening a directory we find what's the index of its last entry and
 then store it in the directory's file handle private data (struct
@@ -65,10 +65,10 @@ Signed-off-by: Filipe Manana <fdmanana@suse.com>
  1 file changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index e3a52438f4f1..a50cbcafca03 100644
+index 7db2efd65774..f498c1c4068c 100644
 --- a/fs/btrfs/inode.c
 +++ b/fs/btrfs/inode.c
-@@ -5973,6 +5973,19 @@ static int btrfs_opendir(struct inode *inode, struct file *file)
+@@ -5980,6 +5980,19 @@ static int btrfs_opendir(struct inode *inode, struct file *file)
  	return 0;
  }
  
@@ -88,7 +88,7 @@ index e3a52438f4f1..a50cbcafca03 100644
  struct dir_entry {
  	u64 ino;
  	u64 offset;
-@@ -11053,7 +11066,7 @@ static const struct inode_operations btrfs_dir_inode_operations = {
+@@ -11060,7 +11073,7 @@ static const struct inode_operations btrfs_dir_inode_operations = {
  };
  
  static const struct file_operations btrfs_dir_file_operations = {

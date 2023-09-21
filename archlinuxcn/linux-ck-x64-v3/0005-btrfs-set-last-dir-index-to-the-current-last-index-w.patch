@@ -1,7 +1,7 @@
-From c8026dde1f99ec4f682765aaac7993a964184a15 Mon Sep 17 00:00:00 2001
+From 930c05e80d31e87982e9f64accb8ffbc6a135687 Mon Sep 17 00:00:00 2001
 From: Filipe Manana <fdmanana@suse.com>
 Date: Sat, 9 Sep 2023 11:34:40 +0100
-Subject: [PATCH 6/9] btrfs: set last dir index to the current last index when
+Subject: [PATCH 5/8] btrfs: set last dir index to the current last index when
  opening dir
 
 When opening a directory for reading it, we set the last index where we
@@ -68,10 +68,10 @@ Signed-off-by: Filipe Manana <fdmanana@suse.com>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index aa090b0b5d29..e3a52438f4f1 100644
+index db2b33a822fc..7db2efd65774 100644
 --- a/fs/btrfs/inode.c
 +++ b/fs/btrfs/inode.c
-@@ -5935,7 +5935,8 @@ static int btrfs_get_dir_last_index(struct btrfs_inode *dir, u64 *index)
+@@ -5942,7 +5942,8 @@ static int btrfs_get_dir_last_index(struct btrfs_inode *dir, u64 *index)
  		}
  	}
  
