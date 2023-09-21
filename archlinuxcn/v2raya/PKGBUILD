@@ -39,7 +39,7 @@ build() {
 }
 
 package() {
-    depends+=('v2ray>=5.0.0')
+    depends+=('v2ray')
 
     cd "${srcdir}"/"${_pkgname}-${pkgver}"/
     install -Dm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/v2raya/
