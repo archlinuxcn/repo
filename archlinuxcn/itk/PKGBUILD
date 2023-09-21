@@ -3,7 +3,7 @@
 _pkgname=ITK
 pkgname=(itk python-itk)
 pkgver=5.3.0
-pkgrel=3
+pkgrel=4
 pkgdesc='An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis'
 arch=('x86_64')
 url='https://www.itk.org'
@@ -22,7 +22,7 @@ depends=(
   vxl
 )
 makedepends=(
-  castxml
+#  castxml
   cmake
   gcc12
   git
@@ -52,8 +52,9 @@ build() {
     -DCMAKE_SKIP_INSTALL_RPATH=ON
     -DCMAKE_SKIP_RPATH=ON
     -DITK_BUILD_DEFAULT_MODULES=ON
+    -DITK_LEGACY_REMOVE=ON
     -DITK_USE_MKL=ON
-    -DITK_USE_SYSTEM_CASTXML=ON
+    -DITK_USE_SYSTEM_CASTXML=OFF
     -DITK_USE_SYSTEM_DCMTK=ON
     -DITK_USE_SYSTEM_DOUBLECONVERSION=ON
     -DITK_USE_SYSTEM_EIGEN=ON
@@ -72,12 +73,21 @@ build() {
     -DITK_WRAP_IMAGE_DIMS="2;3;4"
     -DITK_WRAP_PYTHON=ON
     -DITK_WRAP_complex_double=ON
+    -DITK_WRAP_complex_float=ON
     -DITK_WRAP_covariant_vector_double=ON
+    -DITK_WRAP_covariant_vector_float=ON
     -DITK_WRAP_double=ON
+    -DITK_WRAP_float=ON
+    -DITK_WRAP_rgb_unsigned_char=ON
     -DITK_WRAP_rgb_unsigned_short=ON
+    -DITK_WRAP_rgb_unsigned_short=ON
+    -DITK_WRAP_rgba_unsigned_char=ON
+    -DITK_WRAP_rgba_unsigned_short=ON
     -DITK_WRAP_rgba_unsigned_short=ON
     -DITK_WRAP_signed_char=ON
     -DITK_WRAP_signed_long_long=ON
+    -DITK_WRAP_signed_short=ON
+    -DITK_WRAP_unsigned_char=ON
     -DITK_WRAP_unsigned_long_long=ON
     -DITK_WRAP_unsigned_short=ON
     -DITK_WRAP_vector_double=ON

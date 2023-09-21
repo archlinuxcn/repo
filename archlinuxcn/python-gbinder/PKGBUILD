@@ -4,8 +4,8 @@
 # This PKGBUILD is base on the AUR repo python-gbinder, by Danct12 <danct12@disroot.org>
 
 pkgname='python-gbinder'
-pkgver=1.1.1
-pkgrel=3
+pkgver=1.1.2
+pkgrel=1
 pkgdesc='Python bindings for libgbinder'
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url='https://github.com/erfanoabdi/gbinder-python'
@@ -14,7 +14,7 @@ license=('GPL3')
 depends=('libgbinder')
 makedepends=('cython' 'python' 'python-setuptools')
 source=("${_reponame}-${pkgver}.tar.gz"::"${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('1910d6e904ac46da519064e9dc57e4059e1ea7072f2cf4b7ca0888a73701a590ff565fe9e9ca67acf94dba2a69f3138457d8b9533c2360befdd508b983f32a03')
+sha512sums=('6f076a5cb265eed193d2ac2623921e76ced923230ca2131460efea941182f26b770d657f5155f6a29fa54a314f6dc62a8d5b96d14ee90a359389e60318a38b71')
 
 build() {
   cd "${srcdir}/${_reponame}-${pkgver}/"

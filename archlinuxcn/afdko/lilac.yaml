@@ -1,12 +1,18 @@
 maintainers:
   - github: auxiliarypower
+    email: auxiliarypower@archlinuxcn.org
+
+pre_build: aur_pre_build(maintainers=['alerque'])
+
+post_build: aur_post_build
+
+repo_depends:
+  - psautohint
+  - python-ufonormalizer
 
 update_on:
   - source: aur
     aur: afdko
   - source: manual
-    manual: 1
+    manual: 3
   - alias: python
-repo_depends:
-  - psautohint
-  - python-ufonormalizer

@@ -8,19 +8,31 @@ build_prefix: archlinuxcn-aarch64
 
 repo_depends:
   - julia-git
+  - julia-git: julia-git-package-env
   - openspecfun-git
   - openblas-lapack-git: openblas-git
   - openblas-lapack-git
   - libutf8proc-git
   - openlibm-git
   - llvm-julia: llvm-libs-julia
-  - julia-pkg-scripts
 
 update_on_build:
   - pkgbase: julia-git
 
 update_on:
+###=== JLPKG_UPDATE_ON_LIST {{
+  - alias: alpm-lilac
+    alpm: julia-git-adapt-src
+  - alias: alpm-lilac
+    alpm: julia-git-arrayinterface-src
   - alias: alpm-lilac
     alpm: julia-git-compat-src
+  - alias: alpm-lilac
+    alpm: julia-git-requires-src
+  - alias: alpm-lilac
+    alpm: julia-git-staticarrays-src
+  - alias: alpm-lilac
+    alpm: julia-git-staticarrayscore-src
+###=== }} JLPKG_UPDATE_ON_LIST
   - source: manual
     manual: 1

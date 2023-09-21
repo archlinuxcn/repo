@@ -1,0 +1,22 @@
+maintainers:
+  - github: auxiliarypower
+    email: auxiliarypower@archlinuxcn.org
+
+pre_build: aur_pre_build(maintainers=['alerque'])
+
+post_build: aur_post_build
+
+repo_depends:
+  - python-glyphslib
+  - python-ttfautohint-py
+  - python-ufo2ft
+  - python-skia-pathops
+
+repo_makedepends:
+  - python-compreffor
+  - python-skia-pathops
+
+update_on:
+  - source: aur
+    aur: python-fontmake
+  - alias: python

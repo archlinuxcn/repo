@@ -11,3 +11,8 @@ post_build_script: git_pkgbuild_commit()
 update_on:
   - source: github
     github: MatsuriDayo/nekoray
+
+  - source: archpkg
+    archpkg: yaml-cpp
+    provided: libyaml-cpp.so
+    strip_release: true

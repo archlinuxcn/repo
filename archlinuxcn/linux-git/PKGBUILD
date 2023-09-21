@@ -6,8 +6,8 @@
 # will be on config.extra file.
 
 pkgbase=linux-git
-pkgver=6.5.rc7.r185.28f20a19294d
-pkgrel=1
+pkgver=6.6.rc2.r18.2cf0f7156238
+pkgrel=2
 pkgdesc="Linus Torvalds' Mainline Linux"
 url="https://www.kernel.org"
 arch=(x86_64)
@@ -186,8 +186,8 @@ _package() {
   _make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
     DEPMOD=/doesnt/exist modules_install  # Suppress depmod
 
-  # remove build and source links
-  rm "$modulesdir"/{source,build}
+  # remove build links
+  rm "${modulesdir}/build"
 
   # install config files
   install -Dm644 $srcdir/config.user "${pkgdir}${_userconfig}"

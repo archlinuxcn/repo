@@ -1,0 +1,21 @@
+maintainers:
+  - github: auxiliarypower
+    email: auxiliarypower@archlinuxcn.org
+
+pre_build: aur_pre_build(maintainers=['alerque'])
+
+post_build: aur_post_build
+
+repo_depends:
+  - python-openstep-plist
+  - python-ufonormalizer
+
+repo_makedepends:
+  - python-ufo2ft
+  - python-ufonormalizer
+  - python-xmldiff
+
+update_on:
+  - source: aur
+    aur: python-glyphslib
+  - alias: python

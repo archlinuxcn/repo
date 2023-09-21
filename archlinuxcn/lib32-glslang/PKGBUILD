@@ -9,46 +9,44 @@
 # resulting in us having to ship both. Instead, I recommend just waiting until
 # upstream releases a compatible version of spirv-tools, then updating the
 # spriv-tools system package and only then building glslang against that.
+
 _setPrefix="/usr"
 _setLibdir="lib32"
 _setFullLibdir="${_setPrefix}/${_setLibdir}"
 _pkgbasename=glslang
 
 pkgname=lib32-$_pkgbasename
-pkgver=12.3.1
+pkgver=13.0.0
 pkgrel=1
 pkgdesc='OpenGL and OpenGL ES shader front end and validator (32bit)'
 arch=('x86_64')
 url='https://github.com/KhronosGroup/glslang'
 license=('BSD')
 depends=(
-        "$_pkgbasename>=$pkgver"
-        'lib32-glibc'
-        'lib32-gcc-libs'
-        'python'
-        )
+  "$_pkgbasename>=$pkgver"
+  'lib32-glibc'
+  'lib32-gcc-libs'
+  'python'
+)
 makedepends=(
-        'cmake'
-        'ninja'
-        'git'
-        'lib32-spirv-tools'
-        'spirv-headers'
-        )
+  'cmake'
+  'ninja'
+  'git'
+  'lib32-spirv-tools'
+  'spirv-headers'
+)
 options=('staticlibs')
 source=(
   ${pkgname}-${pkgver}.tar.gz::https://github.com/KhronosGroup/glslang/archive/${pkgver}.tar.gz
-  https://patch-diff.githubusercontent.com/raw/KhronosGroup/glslang/pull/3283.patch
 )
 sha256sums=(
-    'a57836a583b3044087ac51bb0d5d2d803ff84591d55f89087fc29ace42a8b9a8'
-    '267b65a5205315e980f077f5fa401223003fdb5a38162e6ae697d38f68115137'
-  )
+  'bcda732434f829aa74414ea0e06d329ec8ac28637c38a0de45e17c8fd25a4715'
+)
 
 prepare() {
   echo "Patching if needed"
   cd ${_pkgbasename}-${pkgver}
 
-  patch -Np1 -i "$srcdir"/3283.patch
 }
 
 build() {

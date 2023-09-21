@@ -6,7 +6,7 @@
 BUILD_DOC=1
 
 pkgbase=julia-git
-pkgname=(julia-git)
+pkgname=(julia-git julia-git-package-env)
 
 if [[ $CARCH != x86_64 ]]; then
   BUILD_DOC=0
@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.11.0.DEV.357.gb4052a5fa5a
+pkgver=1.11.0.DEV.524.g5fc55561736
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -49,13 +49,13 @@ options=('debug' '!strip' '!buildflags')
 _patches=(
   0001-Force-enable-GDB-debug-info-registration.patch
   0002-Fix-source-file-paths.patch
-  0003-Enable-basic-AA-in-O2.patch
-  0004-Clear-soname.patch
-  0005-Use-libc-for-libssp.patch
-  0006-Support-loading-extensions-from-STDLIB.patch
+  0003-Clear-soname.patch
+  0004-Use-libc-for-libssp.patch
+  0005-Support-loading-extensions-from-STDLIB.patch
 )
 source=('git+https://github.com/JuliaLang/julia'
         "${_patches[@]}"
+        julia-compile-pkgs.sh
         julia-compile-pkgs.jl
         julia-clear-precompile.sh
         julia-precompile.hook
@@ -63,18 +63,20 @@ source=('git+https://github.com/JuliaLang/julia'
         arch-source-translate.cpp
         sysp7z.diff)
 sha512sums=('SKIP'
-            '487b844e7b51a2338ffb83fa1ddb57695dff413fa1dc51ee5283e774a79f948718a65b8f1bc47ed27113c6c823635aa7f96fbeff8221a2752e140fc6443e10c0'
-            'e6f769c15819db18e91c42e00a40c66353d7bf420f221df2dcf2d8ff807499666ee75a7d5b89df278a690f86116e044dd8784045359baad2d39cf2a21226c32a'
-            'da28aec0dc653380e6480b41ee46ec2dccac5891cd9c711ee121defcd00bc42047750ed59808b7ea9f0b4e1366809eac5d06ccfe8c0906dbf3d6dd92d2b5378d'
-            '12c61c13e627796773675d68c5522013d5c44d32ce713c377c9c8bde89b910825c7704439a3d3487b0babc2942a3d9e9172426b751de6b4e1b801859d8306905'
-            '01e93d5c4e2f79c99cf20962d45540811862a0ad2542d62adada8890babc08323fb428f92168af88f539c92376f3fea9712435051772055eb90c35fc506080ef'
-            '5f064b13a67d4158b7510d866ce933e8e5863a2b0f9d5a20ae2730511fa84ab07dfa7ea9fabe0ac64bb6802c41edfb77b683804f5e8f156f97fb56f19ffc4b51'
-            '2bf050afb5afcd21b23667beb6129e73dc2fb8143366921c8859d7011ed06187db9f4aedae99c0fe31e0bcb7b0896180b006ee542d4b4d592369e9f4f1bd77ec'
+            'fcaa37259b035ff2421c1ab5f01d1c54a56ef0b74f7c12591cbff91981c4a907268f8d37b2b9293a8457c97992b2683affde5cc727929ddb14c8c5335cedb0cb'
+            '184e6bed763fe958eea0489094e8fe11c13a80186df4cb00480b3b638673214301ea541b39a67e463470e55d111c2c206c3a0fa01068634bf52b5a3650d08ba1'
+            '5744853c327c97dcc2a6946706e6cba2879d06c60e6f5b3065852fdb1b8926c257ae19f617b6aec0be56efaa60a47d5ec48c74bc034f4aa0744fe5399e7f15ab'
+            'f4903cfa4047d2ee047f6b4b68949919634a762aa35817550d15ace90afc845136fab3ef6dac096922a6f081a1adfcf1127d090b27d03a6aea744fb7ae48ad5d'
+            'ca2bbca372d8ed867787aaf07b380c9f265161e9c2fc4d7197a3c495add2e8f92e3259f4eeaaef7f49bdf33b941d658e8d4ce66f1732f9d30081874e9e4bb5b2'
+            '6fe4311c3e8fc38d35e76e3fd8169dc60eb67ae02e2bc7e4560cf659a07a974c9d2d62e8140107b708153bd7b7d663ab66e31f38f2a12d15eabe045b6d95b44d'
+            '12fcbd17c156aaaf48dd51fe1a522b9f05a22855e12a194fa645750eb71eef7184f6742f8794b62ce3d19fc1ba4fcc01c3fd5b5e50d6eea0fa15b55ad662a9fe'
             'ce03e2995a45d942f480d25d1ce7cddacb98f2e11eeed19b5564e36d817987f548c313b0d6b139402ba8c203c8ba9a059e1732695517d7b78b7fa88f08429295'
-            '36df234b634926bc88084e683ee9f495ef0ce4c26d6d6b9f55294098bdcb86f5eaaf6c671afe1a5c4371c428bd7bf3dd617ec1f15a7ff35376d67df22140454c'
+            'f4ce40ff437c20e9d5c71bbd3102f3054cfd46429a014a174a89591aacafea2f191aa52c5d6ff93c21b8410bb0be092f8e5c36fbcfce64d96798aa12c5067b53'
             'adf0fef964e8bdee9926f1127177bc0ddea0d2dbb1090ab94555c3599b87cf03b489dfe92fda3453bf68385f4b69556f396b1ecfb8a9525c23a3ed808e2eb370'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849')
+
+_versioned_llvm=15
 
 pkgver() {
   cd julia
@@ -89,6 +91,11 @@ pkgver() {
   printf "%s.%s.g%s" "$(git show HEAD:VERSION | sed 's/-/./g')" \
          "$build_number" "$commit_short"
 }
+
+_LLVM_CONFIG=llvm-config
+if [[ -n $_versioned_llvm ]]; then
+  _LLVM_CONFIG=llvm-config-${_versioned_llvm}
+fi
 
 julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_LIBWHICH=0
@@ -120,26 +127,32 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             LIBBLASNAME=libopenblas
             LIBBLAS=-lopenblas
             LIBLAPACKNAME=libopenblas
-            LIBLAPACK=-lopenblas)
+            LIBLAPACK=-lopenblas
+            LLVM_CONFIG=${_LLVM_CONFIG})
 
 _x86_target='generic,opt_size;haswell,clone_all,-rdrnd;skylake,base(1),-rdrnd,-rdseed,-rtm;cannonlake,base(1),-rdrnd,-rdseed,-rtm'
 _arm_target='armv7-a;armv7-a,neon;armv7-a,neon,vfp4'
-_aa64_target='generic;cortex-a57;apple-m1,clone_all'
+_aa64_target='generic;armv8.2-a;apple-m1,clone_all'
 
 case "$CARCH" in
   x86_64)
-    julia_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET="${_x86_target}")
+    _cpu_target="${_x86_target}"
+    julia_opts=("${julia_opts[@]}" MARCH=x86-64)
     ;;
   i686)
-    julia_opts=("${julia_opts[@]}" MARCH=pentium4 JULIA_CPU_TARGET="${_x86_target}")
+    _cpu_target="${_x86_target}"
+    julia_opts=("${julia_opts[@]}" MARCH=pentium4)
     ;;
   aarch64)
-    julia_opts=("${julia_opts[@]}" MARCH=armv8-a JULIA_CPU_TARGET="${_aa64_target}")
+    _cpu_target="${_aa64_target}"
+    julia_opts=("${julia_opts[@]}" MARCH=armv8-a)
     ;;
   armv7h)
-    julia_opts=("${julia_opts[@]}" MARCH=armv7-a JULIA_CPU_TARGET="${_arm_target}")
+    _cpu_target="${_arm_target}"
+    julia_opts=("${julia_opts[@]}" MARCH=armv7-a)
     ;;
 esac
+julia_opts=("${julia_opts[@]}" JULIA_CPU_TARGET="${_cpu_target}")
 
 _apply_patch() {
   echo "Applying $1"
@@ -177,8 +190,8 @@ _patch_suitesparse() {
     )
   done
 
-  sed -i -e 's/libspqr\.so\.4/libspqr.so.3/' \
-      usr/share/julia/stdlib/v*/SuiteSparse_jll/src/SuiteSparse_jll.jl
+  sed -i -e 's/^[[:blank:]]*\$(eval.*libcholmod_cuda/# &/' base/Makefile
+  sed -i -e 's/^[[:blank:]]*\$(eval.*libspqr_cuda/# &/' base/Makefile
 }
 
 prepare() {
@@ -242,7 +255,14 @@ build_in() {
   # so I'm just going to create this missing symlink
   ln -sf /usr/lib/libgcc_s.so.1 usr/lib/julia/
   ln -sf /usr/lib/libstdc++.so.6 usr/lib/
-  make "${opts[@]}" release debug
+  if [[ "$CARCH" = x86_64 ]]; then
+    # Currently only the x86 build machine
+    # has enough memory to compile release and debug build in parallel...
+    make "${opts[@]}" release debug
+  else
+    make "${opts[@]}" release
+    make "${opts[@]}" debug
+  fi
   # TODO docless build
   JL_MAKEPKG_SRCDIR= make "${opts[@]}" docs
 
@@ -273,7 +293,7 @@ _source_files() {
 }
 
 package-julia-in() {
-  _llvm_ver=$(llvm-config --version)
+  _llvm_ver=$(${_LLVM_CONFIG} --version)
   [[ $_llvm_ver =~ ^([0-9]*).* ]]
   llvm_maj_ver=${BASH_REMATCH[1]}
   ((next_llvm_maj=llvm_maj_ver + 1))
@@ -334,10 +354,11 @@ package-julia-in() {
   replaces=("${builtin_pkgs[@]}")
 
   install -Dm644 ../julia-compile-pkgs.jl "${pkgdir}/usr/lib/julia/"
+  install -Dm755 ../julia-compile-pkgs.sh "${pkgdir}/usr/lib/julia/"
   install -Dm644 ../julia-clear-precompile.sh "${pkgdir}/usr/lib/julia/"
-  sed "s|@VER@|$ver_short|" ../julia-precompile.hook |
+  sed -e "s|@VER@|$ver_short|" ../julia-precompile.hook |
     install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-precompile.hook"
-  sed "s|@VER@|$ver_short|" ../julia-clear-precompile.hook |
+  sed -e "s|@VER@|$ver_short|" ../julia-clear-precompile.hook |
     install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-clear-precompile.hook"
   mkdir -p "${pkgdir}/usr/share/julia/compiled/v$ver_short"
 
@@ -346,6 +367,8 @@ package-julia-in() {
 
   # From ca-certificates-utils, needed by Download stdlib
   ln -sf /etc/ssl/cert.pem "${pkgdir}/usr/share/julia/cert.pem"
+
+  rm "$pkgdir"/usr/lib/julia/libccalltest.so.debug # Remove debug testing library
 
   # Without stripping, makepkg doesn't copy the source for us...
   dbgsrcdir="${DBGSRCDIR:-/usr/src/debug}"
@@ -387,6 +410,7 @@ package-julia-in() {
   )
 
   env JULIA_PRECOMPILE_STDLIB_DIR="/usr/share/julia/stdlib/v$ver_short" \
+      JULIA_CPU_TARGET="${_cpu_target}" \
       proot -b "${pkgdir}/usr/share/julia/:/usr/share/julia/" \
       "${pkgdir}/usr/bin/julia" --startup-file=no "${srcdir}/julia-compile-pkgs.jl" \
       /usr/share/julia
@@ -446,6 +470,17 @@ package_julia-git() {
   if [[ "$CARCH" = x86_64 ]]; then
     replaces=(julia-git-avx2)
   fi
+}
+
+package_julia-git-package-env() {
+  arch=('any')
+  backup=(usr/lib/julia/.package-precompile-env)
+  pkgdesc+=" (Package precompilation environment)"
+
+  mkdir -p "${pkgdir}/usr/lib/julia/"
+  cat > "${pkgdir}/usr/lib/julia/.package-precompile-env" <<EOF
+export JULIA_CPU_TARGET="${_cpu_target}"
+EOF
 }
 
 package_julia-git-docs() {

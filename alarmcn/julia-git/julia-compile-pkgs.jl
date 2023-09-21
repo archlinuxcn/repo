@@ -4,76 +4,137 @@ using Pkg
 
 const stdlib_dir = get(ENV, "JULIA_PRECOMPILE_STDLIB_DIR", Sys.STDLIB)
 
-function get_deps(pkg)
-    try
-        projfile = joinpath(stdlib_dir, pkg, "Project.toml")
-        isfile(projfile) &&
-            return String[dep for (dep, id) in Pkg.Types.read_project(projfile).deps]
-    catch
+struct PkgInfo
+    id::Base.PkgId
+    src::String
+    deps::Vector{String}
+    exts::Dict{String,PkgInfo}
+    parent::Union{Base.PkgId,Nothing}
+end
+
+function ext_pkg_info(stdlib_dir, parent_id, package, depends)
+    if !(depends isa String || depends isa Vector{String})
+        return
     end
-    try
-        reqfile = joinpath(stdlib_dir, pkg, "REQUIRE")
-        if isfile(reqfile)
-            res = String[]
-            for line in readlines(reqfile)
-                line = strip(line)
-                if isempty(line) || startswith(line, '#')
-                    continue
-                end
-                pkg = split(split(line)[1], "#")[1]
-                if !isempty(pkg) && pkg != "julia"
-                    push!(res, pkg)
-                end
+    id = Base.uuid5(parent_id.uuid, package)
+    src = joinpath(stdlib_dir, parent_id.name, "ext", "$package.jl")
+    isfile(src) || return
+    depends = [depends; parent_id.name]
+    return PkgInfo(Base.PkgId(id, package), src,
+                   depends, Dict{String,PkgInfo}(), parent_id)
+end
+
+function pkg_info(stdlib_dir, pkg, d)
+    uuid = get(d, "uuid", nothing)
+    if uuid === nothing
+        return
+    end
+    id = Base.PkgId(Base.UUID(uuid), pkg)
+    src = joinpath(stdlib_dir, "$pkg.jl")
+    if !isfile(src)
+        src = joinpath(stdlib_dir, pkg, "src", "$pkg.jl")
+        isfile(src) || return
+    end
+    deps = get(d, "deps", nothing)
+    if deps isa Dict{String, Any}
+        deps = collect(keys(deps))
+    elseif !(deps isa Vector{String})
+        deps = String[]
+    end
+    exts = Dict{String,PkgInfo}()
+    extensions = get(d, "extensions", nothing)
+    if extensions isa Dict{String,Any}
+        for (k, v) in extensions
+            ext_info = ext_pkg_info(stdlib_dir, id, k, v)
+            if ext_info !== nothing
+                exts[k] = ext_info
             end
-            return res
         end
-    catch
     end
-    return String[]
+    return PkgInfo(id, src, deps, exts, nothing)
 end
 
-function add_compile_pkg(pkgs, pkg)
-    pkg in pkgs && return
-    for dep in get_deps(pkg)
-        add_compile_pkg(pkgs, dep)
-    end
-    push!(pkgs, pkg)
-end
-
-if isdefined(Base, :TOMLCache) && !isdefined(Base, :CachedTOMLDict)
-    project_deps_get(pkg) = Base.project_deps_get(stdlib_dir, pkg, Base.TOMLCache())
-else
-    project_deps_get(pkg) = Base.project_deps_get(stdlib_dir, pkg)
-end
-
-function get_compile_list()
-    # Get a topologically sorted list of packages to compile
-    pkgs = String[]
+function load_pkg_info(stdlib_dir)
+    packages = Dict{String,PkgInfo}()
     for pkg in readdir(stdlib_dir)
-        id = project_deps_get(pkg)
-        id === nothing && continue
-        Base.root_module_exists(id) && continue # Already loaded, this is a stdlib library.
-        add_compile_pkg(pkgs, pkg)
+        pkgdir = joinpath(stdlib_dir, pkg)
+        for p in ("JuliaProject.toml", "Project.toml")
+            projfile = joinpath(pkgdir, p)
+            isfile(projfile) || continue
+            d = Base.parsed_toml(projfile)
+            info = pkg_info(stdlib_dir, pkg, d)
+            if info === nothing
+                continue
+            end
+            packages[pkg] = info
+            break
+        end
     end
-    return pkgs
+    return packages
 end
 
-function find_src(name)
-    path = joinpath(stdlib_dir, "$name.jl")
-    isfile(path) && return path
-    path = joinpath(stdlib_dir, name, "src", "$name.jl")
-    isfile(path) && return path
-    return nothing
-end
-
-function check_src(name)
-    path = find_src(name)
-    path === nothing && return
+function check_src(src)
     # Use a heuristic similar to `Pkg.jl` for now.
     # If it is really an issue we could put a tag file in the package that doesn't
     # want precompilation or even patch the affected package in PKGBUILD.
-    occursin(r"\b__precompile__\(\s*false\s*\)", read(path, String)) && return
-    return path
+    return !occursin(r"\b__precompile__\(\s*false\s*\)", read(src, String))
+end
+
+mutable struct WorkItem
+    const id::Base.PkgId
+    const src::String
+    ndepends::Int
+    const dependents::Vector{WorkItem}
+end
+
+struct WorkQueue
+    blocked::Set{WorkItem}
+    free::Set{WorkItem}
+    done::Set{WorkItem}
+    function WorkQueue(pkg_infos)
+        item_map = Dict{PkgInfo,WorkItem}()
+        function get_work_item(info)
+            # Already loaded, this is a builtin library.
+            Base.root_module_exists(info.id) && return true
+            check_src(info.src) || return false
+            if info in keys(item_map)
+                return item_map[info]
+            end
+            work = WorkItem(info.id, info.src, 0, WorkItem[])
+            for dep in info.deps
+                # As of now, extensions are never in the dependencies
+                # so we should be able to find everything
+                # in the top-level infos dict.
+                dep_info = get(pkg_infos, dep, nothing)
+                if dep_info === nothing
+                    return false
+                end
+                dep_work = get_work_item(dep_info)
+                if dep_work === false
+                    return false
+                end
+                if dep_work === true
+                    continue
+                end
+                work.ndepends += 1
+                push!(dep_work.dependents, work)
+            end
+            item_map[info] = work
+            return work
+        end
+        for (name, info) in pkg_infos
+            get_work_item(info)
+            for (ext_name, ext_info) in info.exts
+                get_work_item(ext_info)
+            end
+        end
+        blocked = Set{WorkItem}()
+        free = Set{WorkItem}()
+        for (info, work) in item_map
+            push!(work.ndepends == 0 ? free : blocked, work)
+        end
+        return new(blocked, free, Set{WorkItem}())
+    end
 end
 
 function check_already_compiled(binpath, name)
@@ -85,47 +146,55 @@ function check_already_compiled(binpath, name)
     return isdir(path)
 end
 
-function add_precompile_deps(compiled, pkg)
-    caches = Base.find_all_in_cache_path(pkg)
-    if isempty(caches)
-        println(stderr, "Warning: Unable to find cache file for $(pkg.name).")
-        return
-    end
-    for (dep, build) in Base.parse_cache_header(caches[1])[3]
-        Base.root_module_exists(dep) && continue # Already loaded, this is a stdlib library.
-        if !(dep.name in compiled)
-            println(stderr, "$(dep.name) compiled as dependency.")
-            push!(compiled, dep.name)
-            add_precompile_deps(compiled, dep)
+function compile_one(work_queue, binpath)
+    work = pop!(work_queue.free)
+    do_log = true
+    if !check_already_compiled(binpath, work.id.name)
+        try
+            Base.compilecache(work.id, work.src)
+        catch e
+            @show e
         end
+    elseif isfile(joinpath(binpath, "compiled", "v$(VERSION.major).$(VERSION.minor)",
+                           work.id.name, ".archpkg"))
+        do_log = false
+    else
+        @info "Not touching compiled cache for $(work.id)"
+    end
+    push!(work_queue.done, work)
+    for dep_work in work.dependents
+        dep_work.ndepends -= 1
+        if dep_work.ndepends == 0
+            delete!(work_queue.blocked, dep_work)
+            push!(work_queue.free, dep_work)
+        end
+    end
+    if do_log
+        @info "Finished: $(length(work_queue.done)); Pending: $(length(work_queue.blocked) + length(work_queue.free))"
     end
 end
 
-function precompile(binpath)
+function compile_available(work_queue, binpath)
+    while !isempty(work_queue.free)
+        compile_one(work_queue, binpath)
+    end
+end
+
+const work_queue = WorkQueue(load_pkg_info(stdlib_dir))
+
+function precompile(work_queue, binpath)
+    @info "Pending packages: $(length(work_queue.blocked) + length(work_queue.free))"
     compiled = Set{String}()
     insert!(Base.DEPOT_PATH, 1, binpath)
     resize!(Base.DEPOT_PATH, 1)
     Core.eval(Base, :(is_interactive = true))
-    for pkg in get_compile_list()
-        pkg in compiled && continue
-        if check_already_compiled(binpath, pkg)
-            push!(compiled, pkg)
-            continue
-        end
-        path = check_src(pkg)
-        path === nothing && continue
-        id = project_deps_get(pkg)
-        id === nothing && continue
-        Base.root_module_exists(id) && continue # Already loaded, this is a stdlib library.
-        push!(compiled, pkg)
-        try
-            Base.compilecache(id, path)
-            add_precompile_deps(compiled, id)
-        catch e
-            @show e
-        end
+    compile_available(work_queue, binpath)
+    @assert isempty(work_queue.free)
+    if !isempty(work_queue.blocked)
+        @warn "Dependency tracking failed for $([work.id for work in work_queue.blocked])"
     end
     Core.eval(Base, :(is_interactive = false))
+    @info "Done package precompilation"
 end
 
-precompile(ARGS[1])
+precompile(work_queue, ARGS[1])

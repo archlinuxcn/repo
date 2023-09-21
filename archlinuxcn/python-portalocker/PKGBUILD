@@ -1,27 +1,32 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 # Maintainer: Ashley Bone <ashley DOT bone AT pm DOT me>
 
-pkgbase=python-portalocker
 pkgname=python-portalocker
 _pkgname=portalocker
-pkgver=2.7.0
-pkgrel=2
+pkgver=2.8.2
+pkgrel=1
 pkgdesc='An extended version of portalocker to lock files in Python using the with statement'
 arch=('any')
 url='https://github.com/WoLpH/portalocker'
 license=('PSF')
-makedepends=('python-setuptools')
-source=("${_pkgname}-${pkgver}.tar.gz::https://pypi.python.org/packages/source/p/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha256sums=('032e81d534a88ec1736d03f780ba073f047a06c478b06e2937486f334e955c51')
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-setuptools-scm
+  python-wheel
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/wolph/portalocker/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('c22ff8dc5abf608a8433b6022f5487985bc0efcba1a0e44b1ca1559586248359')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:

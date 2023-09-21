@@ -6,13 +6,14 @@
 
 pkgname=xray
 pkgver=1.8.4
-pkgrel=1
+pkgrel=2
 pkgdesc="The best v2ray-core, with XTLS support"
 arch=('x86_64')
 url="https://github.com/XTLS/Xray-core"
 license=('MPL2')
 depends=('glibc' 'xray-domain-list-community' 'xray-geoip')
 makedepends=('go')
+provides=('v2ray')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "xray.sysusers"
         "xray.tmpfiles"

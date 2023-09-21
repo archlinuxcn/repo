@@ -4,7 +4,7 @@
 
 pkgname=helix-git
 _pkgname=helix
-pkgver=23.05.r397.g14401ff
+pkgver=23.05.r435.g1c88432
 pkgrel=1
 pkgdesc="A post-modern modal text editor"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -53,12 +53,12 @@ prepare() {
 
 build() {
 	cd "${_pkgname}/"
-	cargo build --frozen --release
+	cargo build --release
 }
 
 check() {
 	cd "${_pkgname}/"
-	cargo test --frozen --all-features
+	cargo test --all-features
 }
 
 package() {
@@ -69,18 +69,17 @@ package() {
 	install -Dm 644 "README.md" -t "${pkgdir}/usr/share/doc/${_pkgname}"
 
 	local runtime_dir="${pkgdir}/usr/lib/${_pkgname}/runtime"
-	mkdir -p "${runtime_dir}/grammars"
-	cp -r "runtime/queries" "${runtime_dir}"
-	cp -r "runtime/themes" "${runtime_dir}"
+	install -d "${runtime_dir}/grammars/"
+	cp -r runtime/{queries,themes} "${runtime_dir}/"
 	find "runtime/grammars" -type f -name '*.so' -exec \
 		install -Dm 755 {} -t "${runtime_dir}/grammars" \;
-	install -Dm 644 runtime/tutor -t "${runtime_dir}"
+	install -Dm 644 runtime/tutor -t "${runtime_dir}/"
 
 	install -Dm 644 "contrib/completion/hx.bash" "${pkgdir}/usr/share/bash-completion/completions/${_pkgname}"
 	install -Dm 644 "contrib/completion/hx.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/${_pkgname}.fish"
 	install -Dm 644 "contrib/completion/hx.zsh" "${pkgdir}/usr/share/zsh/site-functions/_${_pkgname}"
 	install -Dm 644 "contrib/Helix.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
-	install -Dm 644 "contrib/${_pkgname}.png" -t "${pkgdir}/usr/share/icons/hicolor/256x256/apps"
+	install -Dm 644 "contrib/${_pkgname}.png" -t "${pkgdir}/usr/share/icons/hicolor/256x256/apps/"
 }
 
 # vim: ts=2 sw=2 et:

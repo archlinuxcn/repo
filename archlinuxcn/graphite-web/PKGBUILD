@@ -3,11 +3,11 @@
 
 pkgname=graphite-web
 pkgver=1.1.10
-pkgrel=7
+pkgrel=9
 pkgdesc="a Django-based web application that renders graphs and dashboards"
 url="https://github.com/graphite-project/graphite-web"
 license=('Apache')
-depends=('python-pytz' 'python-six' 'python-cairocffi' 'python-pyparsing' 'python-django' 'python-django-tagging' 'gunicorn')
+depends=('python-pytz' 'python-six' 'python-cairo' 'python-pyparsing' 'python-django' 'python-django-tagging' 'gunicorn')
 makedepends=('python-setuptools')
 optdepends=('python-flask-cache: for caching'
             'python-raven: for sentry support'

@@ -1,7 +1,7 @@
 # Maintainer: Kaiyang Wu <origincode@aosc.io>
 pkgname=ciel
 _pkgname=${pkgname}-rs
-pkgver=3.1.3
+pkgver=3.2.0
 pkgrel=1
 pkgdesc="A tool for controlling multi-layer file systems and containers."
 arch=('i686' 'x86_64')
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('systemd' 'dbus' 'openssl' 'libssh2' 'libgit2' 'xz')
 makedepends=('rust' 'make' 'gcc')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AOSC-Dev/${_pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('21ec079aadca7fbcfd6932fadc5ad70d315aa6f18448c4f98bfbace53b53e6ed')
+sha256sums=('c2a631a7822f9cc0ec787c7af4de10d5971abaa04ba9f69b9f4a34d6dda6b529')
 conflicts=('ciel-git')
 
 build() {

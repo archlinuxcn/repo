@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 6.5.2 Kernel Configuration
+# Linux/x86 6.5.4 Kernel Configuration
 #
 CONFIG_CC_VERSION_TEXT="gcc (GCC) 13.2.1 20230801"
 CONFIG_CC_IS_GCC=y
@@ -5672,10 +5672,7 @@ CONFIG_MEDIA_ATTACH=y
 # IR I2C driver auto-selected by 'Autoselect ancillary drivers'
 #
 CONFIG_VIDEO_IR_I2C=m
-
-#
-# Camera sensor devices
-#
+CONFIG_VIDEO_CAMERA_SENSOR=y
 # CONFIG_VIDEO_AR0521 is not set
 # CONFIG_VIDEO_HI556 is not set
 # CONFIG_VIDEO_HI846 is not set
@@ -5735,7 +5732,6 @@ CONFIG_VIDEO_OV7640=m
 # CONFIG_VIDEO_S5K6A3 is not set
 # CONFIG_VIDEO_CCS is not set
 # CONFIG_VIDEO_ET8EK8 is not set
-# end of Camera sensor devices
 
 #
 # Lens drivers

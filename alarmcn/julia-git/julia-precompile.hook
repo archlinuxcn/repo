@@ -16,4 +16,4 @@ Target = usr/share/julia/compiled/v@VER@/*
 Description = Precompiling julia packages...
 When = PostTransaction
 Depends = julia-git
-Exec = /usr/bin/julia --startup-file=no /usr/lib/julia/julia-compile-pkgs.jl /usr/share/julia
+Exec = /usr/lib/julia/julia-compile-pkgs.sh

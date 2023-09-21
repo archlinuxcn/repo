@@ -1,3 +1,43 @@
+## 18.2
+
+* `aur-repo`
+  + do not require `file://` path for specified repository (#1113)
+
+* `aur-depends`
+  + fix regression introduced in v18 (#1112)
+
+* `aur-build`
+  + fix `--temp` (#1111)
+
+## 18.1
+
+* `aur-chroot`
+  + remove `/usr/share/devtools/pacman.conf.d/aurutils.conf` path introduced in v18
+
+## 18
+
+* `aur-build`
+  + add `--dbext`
+  + shell escape file paths in diagnostics
+
+* `aur-chroot`
+  + take file paths in `/etc/aurutils` into account
+  + add `--build` options (`-A`, `--nocheck`, `--namcap`, `--checkpkg`, `--temp`, `--user`)
+  + add `--status`
+    + `--path` is now deprecated
+  + `--suffix` no longer defaults to `extra`
+
+* `aur-depends`
+  + `RequiredBy` is now a flat dictionary (`--json`, `--jsonl`)
+
+* `aur-fetch`
+  + only run git-rebase/merge on new upstream commits
+
+* `aur-repo`
+  + shell escape printed file paths
+  + add `--dbext`
+  + require a configured pacman repository (`--database`)
+
 ## 17.3
 
 * `aur-build`

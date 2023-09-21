@@ -1,7 +1,6 @@
 maintainers:
   - github: yuyichao
 
-# pre_build: # TODO
 post_build: git_pkgbuild_commit
 
 repo_depends:
@@ -15,10 +14,11 @@ repo_depends:
   - julia-pkg-scripts
 
 update_on:
-  - source: manual
-    manual: 4.9.0
+  - source: regex
+    url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Compat/version
+    regex: 'version: *([^ ]*@[^ ]*)'
   - alias: alpm-lilac
     alpm: julia-git
     provided: julia
   - source: manual
-    manual: 1
+    manual: 2

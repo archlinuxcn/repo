@@ -1,0 +1,15 @@
+maintainers:
+  - github: auxiliarypower
+    email: auxiliarypower@archlinuxcn.org
+
+pre_build: aur_pre_build(maintainers=['alerque'])
+
+post_build: aur_post_build
+
+repo_makedepends:
+  - python-setuptools-git-ls-files
+
+update_on:
+  - source: aur
+    aur: python-compreffor
+  - alias: python

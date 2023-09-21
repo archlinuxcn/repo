@@ -9,7 +9,12 @@ srcinfo:
 	makepkg --printsrcinfo > .SRCINFO
 
 clean:
-	rm -rf pkg src chatterino2/ chatterino2-*.pkg.tar.xz \
+	rm -rf \
+		pkg \
+		src \
+		chatterino2 \
+		chatterino2-*.pkg.tar.xz \
+		chatterino2-*.pkg.tar.zst \
 		libcommuni \
 		humanize \
 		crashpad \

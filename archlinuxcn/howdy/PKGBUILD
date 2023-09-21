@@ -5,7 +5,7 @@
 
 pkgname=howdy
 pkgver=2.6.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Windows Hello for Linux"
 arch=('x86_64')
 url="https://github.com/boltgolt/${pkgname}"
@@ -35,9 +35,9 @@ source=(
 	"https://github.com/davisking/dlib-models/raw/master/shape_predictor_5_face_landmarks.dat.bz2"
 )
 sha256sums=('f3f48599f78fd82b049539fcfc34de25c9435cad732697bdda94e85352964794'
-	'abb1f61041e434465855ce81c2bd546e830d28bcbed8d27ffbe5bb408b11553a'
-	'db9e9e40f092c118d5eb3e643935b216838170793559515541c56a2b50d9fc84'
-	'6e787bbebf5c9efdb793f6cd1f023230c4413306605f24f299f12869f95aa472')
+            'abb1f61041e434465855ce81c2bd546e830d28bcbed8d27ffbe5bb408b11553a'
+            'db9e9e40f092c118d5eb3e643935b216838170793559515541c56a2b50d9fc84'
+            '6e787bbebf5c9efdb793f6cd1f023230c4413306605f24f299f12869f95aa472')
 
 package() {
 	cd "${pkgname}-${pkgver}/"

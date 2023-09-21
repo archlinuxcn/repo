@@ -1,10 +1,16 @@
 # Maintainer: Yichao Yu <yyc1992@gmail.com>
 
 pkgbase=julia-git-precompiled-packages
-_jlpackages=(Compat)
+_jlpackages=(
+  Adapt
+  ArrayInterface
+  Compat
+  Requires
+  StaticArrays
+  StaticArraysCore)
 pkgname=()
-makedepends=(git)
-pkgver=1.10.0.DEV.1622.gecca2c5a2f0
+makedepends=(git julia-git-package-env)
+pkgver=20230921.052616
 pkgrel=1
 pkgdesc="Precompiled packages for julia-git"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -16,39 +22,46 @@ source=()
 sha512sums=()
 
 pkgver() {
-  # Use the julia version
-  pacman -Q julia-git | sed -e 's/^.* \(\|[^ ]*:\)\([^ ]*\)-[^- ]*$/\2/'
+  date -u +%Y%m%d.%H%M%S
 }
 
 _package-jlpackage() {
+  # Don't depend on the exact julia version to make it easier to install
+  # a new julia version that without updating all the precompiled packages
+  # In such a case the precompiled binaries won't be used but the packages
+  # should still work.
+  # depends+=("julia-git=$(pacman -Q julia-git | sed -e 's/^.* \([^ ]*\)$/\1/')")
+
   jlpkg=$1
   srcpkg="julia-git-${jlpkg,,}-src"
+
+  depends+=("$srcpkg")
+  conflicts+=("julia-git-${jlpkg,,}-git") # Temporary
 
   ver_short=$(julia --startup-file=no \
                     -e 'print(VERSION.major, ".", VERSION.minor)')
   compile_dir="/usr/share/julia/compiled/v$ver_short"
+  stdlib_dir="/usr/share/julia/stdlib/v$ver_short"
   mkdir -p "${pkgdir}/${compile_dir}"
 
-  # This is a bit cheating as we are simply copying the version from the package hook
-  cp -a "${compile_dir}/${jlpkg}" "${pkgdir}/${compile_dir}"
-  touch "${pkgdir}/${compile_dir}/${jlpkg}/.archpkg"
-  # The ji file records the exact time stamps so we need to fix those in post_install
-  (
-    echo "_fix_timestamps() {"
-    cd /
-    find "usr/share/julia/stdlib/v$ver_short/$jlpkg" -type f -exec \
-         sh -c 'echo "  touch -c -d \"$(stat -c %y "{}")\" \"{}\""' \;
-    echo "}"
+  _jlpkgs=($jlpkg)
 
-    echo "post_install() {"
-    echo "  _fix_timestamps"
-    echo "}"
+  for p in "$stdlib_dir/$jlpkg/Project.toml" "$stdlib_dir/$jlpkg/JuliaProject.toml"; do
+    if [[ -f "$p" ]]; then
+      _jlpkgs=("${_jlpkgs[@]}"
+               $(julia -e 'd = get(Base.parsed_toml(ARGS[1]), "extensions", nothing); if d !== nothing; println(join(keys(d), " ")) end' "$p"))
+      break
+    fi
+  done
 
-    echo "post_upgrade() {"
-    echo "  _fix_timestamps"
-    echo "}"
-  ) > "${startdir}/pkg-${jlpkg,,}.install"
-  true && install=pkg-${jlpkg,,}.install
+  for _jlpkg in "${_jlpkgs[@]}"; do
+    if [[ -d "${compile_dir}/${_jlpkg}" ]]; then
+      # This is a bit cheating as we are simply copying the version
+      # from the package hook
+      cp -a "${compile_dir}/${_jlpkg}" "${pkgdir}/${compile_dir}"
+      touch "${pkgdir}/${compile_dir}/${_jlpkg}/.archpkg"
+    fi
+  done
 }
 
 for jlpkg in "${_jlpackages[@]}"; do
