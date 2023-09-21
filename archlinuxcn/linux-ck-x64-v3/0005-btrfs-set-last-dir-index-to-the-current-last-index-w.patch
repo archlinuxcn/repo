@@ -1,8 +1,8 @@
 From 930c05e80d31e87982e9f64accb8ffbc6a135687 Mon Sep 17 00:00:00 2001
 From: Filipe Manana <fdmanana@suse.com>
 Date: Sat, 9 Sep 2023 11:34:40 +0100
-Subject: [PATCH 5/8] btrfs: set last dir index to the current last index when
- opening dir
+Subject: [PATCH 05/12] btrfs: set last dir index to the current last index
+ when opening dir
 
 When opening a directory for reading it, we set the last index where we
 stop iteration to the value in struct btrfs_inode::index_cnt. That value
