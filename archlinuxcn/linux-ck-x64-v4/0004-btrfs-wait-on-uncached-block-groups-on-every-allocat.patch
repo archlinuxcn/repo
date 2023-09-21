@@ -1,8 +1,8 @@
 From 07d424465a582144b433c37b4b7921f2d35f5507 Mon Sep 17 00:00:00 2001
 From: Josef Bacik <josef@toxicpanda.com>
 Date: Mon, 31 Jul 2023 16:28:43 -0400
-Subject: [PATCH 4/8] btrfs: wait on uncached block groups on every allocation
- loop
+Subject: [PATCH 04/12] btrfs: wait on uncached block groups on every
+ allocation loop
 
 My initial fix for the generic/475 hangs was related to metadata, but
 our CI testing uncovered another case where we hang for similar reasons.

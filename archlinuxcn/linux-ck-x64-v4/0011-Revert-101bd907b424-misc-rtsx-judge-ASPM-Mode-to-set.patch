@@ -1,0 +1,193 @@
+From 595d88a664dc1e7aa175768b8812046265c6de4a Mon Sep 17 00:00:00 2001
+From: Michal Suchanek <msuchanek@suse.de>
+Date: Wed, 23 Aug 2023 11:02:33 +0200
+Subject: [PATCH 11/12] Revert 101bd907b424 ("misc: rtsx: judge ASPM Mode to
+ set PETXCFG Reg")
+
+References: boo#1214428 boo#1214397
+Patch-mainline: Not yet, fix under discussion
+
+Causes inability to access Samsung NVMe drives.
+
+Source: https://bugzilla.kernel.org/show_bug.cgi?id=217802#c18
+Cherry-picked-for: https://bugs.archlinux.org/task/79439
+---
+ drivers/misc/cardreader/rts5227.c  |  2 +-
+ drivers/misc/cardreader/rts5228.c  | 18 ++++++++++++++++++
+ drivers/misc/cardreader/rts5249.c  |  3 ++-
+ drivers/misc/cardreader/rts5260.c  | 18 ++++++++++++++++++
+ drivers/misc/cardreader/rts5261.c  | 18 ++++++++++++++++++
+ drivers/misc/cardreader/rtsx_pcr.c |  5 +----
+ 6 files changed, 58 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/misc/cardreader/rts5227.c b/drivers/misc/cardreader/rts5227.c
+index 3dae5e3a1697..d676cf63a966 100644
+--- a/drivers/misc/cardreader/rts5227.c
++++ b/drivers/misc/cardreader/rts5227.c
+@@ -195,7 +195,7 @@ static int rts5227_extra_init_hw(struct rtsx_pcr *pcr)
+ 		}
+ 	}
+ 
+-	if (option->force_clkreq_0 && pcr->aspm_mode == ASPM_MODE_CFG)
++	if (option->force_clkreq_0)
+ 		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG,
+ 				FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_LOW);
+ 	else
+diff --git a/drivers/misc/cardreader/rts5228.c b/drivers/misc/cardreader/rts5228.c
+index f4ab09439da7..cfebad51d1d8 100644
+--- a/drivers/misc/cardreader/rts5228.c
++++ b/drivers/misc/cardreader/rts5228.c
+@@ -435,10 +435,17 @@ static void rts5228_init_from_cfg(struct rtsx_pcr *pcr)
+ 			option->ltr_enabled = false;
+ 		}
+ 	}
++
++	if (rtsx_check_dev_flag(pcr, ASPM_L1_1_EN | ASPM_L1_2_EN
++				| PM_L1_1_EN | PM_L1_2_EN))
++		option->force_clkreq_0 = false;
++	else
++		option->force_clkreq_0 = true;
+ }
+ 
+ static int rts5228_extra_init_hw(struct rtsx_pcr *pcr)
+ {
++	struct rtsx_cr_option *option = &pcr->option;
+ 
+ 	rtsx_pci_write_register(pcr, RTS5228_AUTOLOAD_CFG1,
+ 			CD_RESUME_EN_MASK, CD_RESUME_EN_MASK);
+@@ -469,6 +476,17 @@ static int rts5228_extra_init_hw(struct rtsx_pcr *pcr)
+ 	else
+ 		rtsx_pci_write_register(pcr, PETXCFG, 0x30, 0x00);
+ 
++	/*
++	 * If u_force_clkreq_0 is enabled, CLKREQ# PIN will be forced
++	 * to drive low, and we forcibly request clock.
++	 */
++	if (option->force_clkreq_0)
++		rtsx_pci_write_register(pcr, PETXCFG,
++				 FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_LOW);
++	else
++		rtsx_pci_write_register(pcr, PETXCFG,
++				 FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_HIGH);
++
+ 	rtsx_pci_write_register(pcr, PWD_SUSPEND_EN, 0xFF, 0xFB);
+ 
+ 	if (pcr->rtd3_en) {
+diff --git a/drivers/misc/cardreader/rts5249.c b/drivers/misc/cardreader/rts5249.c
+index 47ab72a43256..91d240dd68fa 100644
+--- a/drivers/misc/cardreader/rts5249.c
++++ b/drivers/misc/cardreader/rts5249.c
+@@ -327,11 +327,12 @@ static int rts5249_extra_init_hw(struct rtsx_pcr *pcr)
+ 		}
+ 	}
+ 
++
+ 	/*
+ 	 * If u_force_clkreq_0 is enabled, CLKREQ# PIN will be forced
+ 	 * to drive low, and we forcibly request clock.
+ 	 */
+-	if (option->force_clkreq_0 && pcr->aspm_mode == ASPM_MODE_CFG)
++	if (option->force_clkreq_0)
+ 		rtsx_pci_write_register(pcr, PETXCFG,
+ 			FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_LOW);
+ 	else
+diff --git a/drivers/misc/cardreader/rts5260.c b/drivers/misc/cardreader/rts5260.c
+index 79b18f6f73a8..9b42b20a3e5a 100644
+--- a/drivers/misc/cardreader/rts5260.c
++++ b/drivers/misc/cardreader/rts5260.c
+@@ -517,10 +517,17 @@ static void rts5260_init_from_cfg(struct rtsx_pcr *pcr)
+ 			option->ltr_enabled = false;
+ 		}
+ 	}
++
++	if (rtsx_check_dev_flag(pcr, ASPM_L1_1_EN | ASPM_L1_2_EN
++				| PM_L1_1_EN | PM_L1_2_EN))
++		option->force_clkreq_0 = false;
++	else
++		option->force_clkreq_0 = true;
+ }
+ 
+ static int rts5260_extra_init_hw(struct rtsx_pcr *pcr)
+ {
++	struct rtsx_cr_option *option = &pcr->option;
+ 
+ 	/* Set mcu_cnt to 7 to ensure data can be sampled properly */
+ 	rtsx_pci_write_register(pcr, 0xFC03, 0x7F, 0x07);
+@@ -539,6 +546,17 @@ static int rts5260_extra_init_hw(struct rtsx_pcr *pcr)
+ 
+ 	rts5260_init_hw(pcr);
+ 
++	/*
++	 * If u_force_clkreq_0 is enabled, CLKREQ# PIN will be forced
++	 * to drive low, and we forcibly request clock.
++	 */
++	if (option->force_clkreq_0)
++		rtsx_pci_write_register(pcr, PETXCFG,
++				 FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_LOW);
++	else
++		rtsx_pci_write_register(pcr, PETXCFG,
++				 FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_HIGH);
++
+ 	rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3, 0x10, 0x00);
+ 
+ 	return 0;
+diff --git a/drivers/misc/cardreader/rts5261.c b/drivers/misc/cardreader/rts5261.c
+index 94af6bf8a25a..b1e76030cafd 100644
+--- a/drivers/misc/cardreader/rts5261.c
++++ b/drivers/misc/cardreader/rts5261.c
+@@ -498,10 +498,17 @@ static void rts5261_init_from_cfg(struct rtsx_pcr *pcr)
+ 			option->ltr_enabled = false;
+ 		}
+ 	}
++
++	if (rtsx_check_dev_flag(pcr, ASPM_L1_1_EN | ASPM_L1_2_EN
++				| PM_L1_1_EN | PM_L1_2_EN))
++		option->force_clkreq_0 = false;
++	else
++		option->force_clkreq_0 = true;
+ }
+ 
+ static int rts5261_extra_init_hw(struct rtsx_pcr *pcr)
+ {
++	struct rtsx_cr_option *option = &pcr->option;
+ 	u32 val;
+ 
+ 	rtsx_pci_write_register(pcr, RTS5261_AUTOLOAD_CFG1,
+@@ -547,6 +554,17 @@ static int rts5261_extra_init_hw(struct rtsx_pcr *pcr)
+ 	else
+ 		rtsx_pci_write_register(pcr, PETXCFG, 0x30, 0x00);
+ 
++	/*
++	 * If u_force_clkreq_0 is enabled, CLKREQ# PIN will be forced
++	 * to drive low, and we forcibly request clock.
++	 */
++	if (option->force_clkreq_0)
++		rtsx_pci_write_register(pcr, PETXCFG,
++				 FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_LOW);
++	else
++		rtsx_pci_write_register(pcr, PETXCFG,
++				 FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_HIGH);
++
+ 	rtsx_pci_write_register(pcr, PWD_SUSPEND_EN, 0xFF, 0xFB);
+ 
+ 	if (pcr->rtd3_en) {
+diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
+index a3f4b52bb159..32b7783e9d4f 100644
+--- a/drivers/misc/cardreader/rtsx_pcr.c
++++ b/drivers/misc/cardreader/rtsx_pcr.c
+@@ -1326,11 +1326,8 @@ static int rtsx_pci_init_hw(struct rtsx_pcr *pcr)
+ 			return err;
+ 	}
+ 
+-	if (pcr->aspm_mode == ASPM_MODE_REG) {
++	if (pcr->aspm_mode == ASPM_MODE_REG)
+ 		rtsx_pci_write_register(pcr, ASPM_FORCE_CTL, 0x30, 0x30);
+-		rtsx_pci_write_register(pcr, PETXCFG,
+-				FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_HIGH);
+-	}
+ 
+ 	/* No CD interrupt if probing driver with card inserted.
+ 	 * So we need to initialize pcr->card_exist here.
+-- 
+2.42.0
+
