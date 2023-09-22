@@ -45,10 +45,10 @@ build() {
     mkdir -p build
     cd build
     cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release  ..
-    ninja
+    cmake --build .
 }
 
 package() {
     cd $srcdir/Revda/build
-    DESTDIR="$pkgdir" ninja install
+    DESTDIR="$pkgdir" cmake --install .
 }
