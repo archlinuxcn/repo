@@ -1,7 +1,7 @@
-From c670ecb2eab00d8724859056268835798a78f233 Mon Sep 17 00:00:00 2001
+From 31fa804a07c542fae71aa53f1afd2925485b1bb4 Mon Sep 17 00:00:00 2001
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 Date: Tue, 19 Sep 2023 20:48:55 +0100
-Subject: [PATCH 08/12] i915: Limit the length of an sg list to the requested
+Subject: [PATCH 08/11] i915: Limit the length of an sg list to the requested
  length
 
 The folio conversion changed the behaviour of shmem_sg_alloc_table() to
