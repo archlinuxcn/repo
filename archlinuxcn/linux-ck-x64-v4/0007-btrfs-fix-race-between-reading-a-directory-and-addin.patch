@@ -1,7 +1,7 @@
-From 47c0fdda664600f0568addd32f954a5cb6257fa1 Mon Sep 17 00:00:00 2001
+From ea94fae18504d4c62f97aa0b70bc8b30e4cd6847 Mon Sep 17 00:00:00 2001
 From: Filipe Manana <fdmanana@suse.com>
 Date: Tue, 12 Sep 2023 11:45:39 +0100
-Subject: [PATCH 07/12] btrfs: fix race between reading a directory and adding
+Subject: [PATCH 07/11] btrfs: fix race between reading a directory and adding
  entries to it
 
 When opening a directory (opendir(3)) or rewinding it (rewinddir(3)), we
