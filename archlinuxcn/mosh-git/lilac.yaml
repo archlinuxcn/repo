@@ -10,7 +10,9 @@ update_on:
 # mosh directly links to them:
 - source: alpmfiles
   pkgname: abseil-cpp
-  filename: .*/libabsl_log_internal_check_op\.so\.(.*)
+  strip_dir: true
+  filename: libabsl_log_internal_check_op\.so\.(.*)
 - source: alpmfiles
   pkgname: abseil-cpp
-  filename: .*/libabsl_log_internal_message\.so\.(.*)
+  strip_dir: true
+  filename: libabsl_log_internal_message\.so\.(.*)
