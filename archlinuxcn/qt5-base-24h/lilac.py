@@ -88,7 +88,7 @@ ln -s /usr/share/licenses/${pkgname} "$pkgdir"/usr/share/licenses/qt5-base
       logger.info('removed: %s', line)
     elif line.startswith('depends=('):
       # let it conflict with incompatable icu versions, @q234rty
-      line = line.replace('=(', '=(libicudata.so ')
+      line = line.replace('=(', '=(libicui18n.so ')
       checks = checks + 'c'
     print(line)
   if len(checks) != 13:

@@ -70,8 +70,12 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       # other split packages. do not build them.
       line = 'no' + line
       logger.info('removed: %s', line)
+    elif line.startswith('depends=('):
+      # let it conflict with incompatable icu versions, @q234rty
+      line = line.replace('=(', '=(libicui18n.so ')
+      checks = checks + 'c'
     print(line)
-  if len(checks) != 9:
+  if len(checks) != 10:
     raise ValueError('PKGBUILD editing not completed. checks=' + checks)
 
 def post_build():
