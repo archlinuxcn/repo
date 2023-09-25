@@ -230,8 +230,6 @@ prepare() {
         openvr
         liberation-fonts::fonts/liberation-fonts
         gstreamer
-        gst-plugins-base
-        gst-plugins-good
         gst-orc
         vkd3d-proton
         OpenXR-SDK
@@ -246,8 +244,6 @@ prepare() {
         gst-plugins-rs
         wine-staging
         protonfixes-gloriouseggroll::protonfixes
-        gst-plugins-bad
-        gst-plugins-ugly
         graphene
         glslang
         openfst
@@ -296,6 +292,14 @@ prepare() {
         git submodule init subprojects/libdisplay-info
         git submodule set-url subprojects/libdisplay-info "$srcdir"/libdisplay-info
         git -c protocol.file.allow=always submodule update subprojects/libdisplay-info
+    popd
+
+    pushd gstreamer
+        for submodule in gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly; do
+        git submodule init subprojects/$submodule
+        git submodule set-url subprojects/$submodule "$srcdir"/$submodule
+        git -c protocol.file.allow=always submodule update subprojects/$submodule
+        done
     popd
 
     for submodule in gst-plugins-rs media-converter; do
