@@ -2,8 +2,8 @@
 # Submitter: Schala Zeal <schalaalexiazeal@gmail.com>
 
 pkgname=spigot
-_pkgver=1.20.1
-_build=157
+_pkgver=1.20.2
+_build=162
 pkgver="${_pkgver}+b${_build}"
 pkgrel=1
 _mng_ver=1.0.2
@@ -21,7 +21,7 @@ backup=("etc/conf.d/${pkgname}")
 install="${pkgname}.install"
 source=("BuildTools-${_pkgver}+b${_build}.jar::https://hub.spigotmc.org/jenkins/job/BuildTools/${_build}/artifact/target/BuildTools.jar"
 	"minecraft-server-${_mng_ver}.tar.gz"::"https://github.com/Edenhofer/minecraft-server/archive/refs/tags/v${_mng_ver}.tar.gz")
-sha512sums=('043b30830ae3a4329cc4efe2fc364fff643188e8037e6783b65b8d5bb52669734e7f88b1bfaa666917c5d78d971ba717d4d034fd1e885ef19cef9f4bdb309689'
+sha512sums=('a4f711b8ff5faa9eefc2b3deacbb6ea3901e0650347f7ffa2ab90f93a15ff62c3cbfdcc2bb9b968b2d6468aee5b94a76616dc79e2d2f9dfb70aa93aa20826a48'
             '11d708d511b63e5541bcc1dbcaf29abbf7cb9583b1d313028770a39b26b41d48dcba023f7e1d6fe30f3c093d20e10a43363011edd432e5785a4580e5c5f852a6')
 
 _game="spigot"
