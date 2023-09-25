@@ -71,7 +71,7 @@ _subarch=41
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 pkgbase=linux-ck-x64-v3
-pkgver=6.5.4
+pkgver=6.5.5
 pkgrel=1
 arch=(x86_64)
 url="https://wiki.archlinux.org/index.php/Linux-ck"
@@ -80,7 +80,6 @@ makedepends=(
   bc
   cpio
   gettext
-  git
   libelf
   pahole
   python
@@ -109,27 +108,29 @@ source=(
   0005-btrfs-set-last-dir-index-to-the-current-last-index-w.patch
   0006-btrfs-refresh-dir-last-index-during-a-rewinddir-3-ca.patch
   0007-btrfs-fix-race-between-reading-a-directory-and-addin.patch
+  0008-i915-Limit-the-length-of-an-sg-list-to-the-requested.patch
+  0009-net-wwan-t7xx-Add-AP-CLDMA.patch
+  0010-Revert-101bd907b424-misc-rtsx-judge-ASPM-Mode-to-set.patch
 )
 validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
-sha256sums=('bdf76c15229b241e578046b8486106f09534d754ea4cbf105e0660e551fb1669'
+sha256sums=('8cf10379f7df8ea731e09bff3d0827414e4b643dd41dc99d0af339669646ef95'
             'SKIP'
             '46451dbc3305d4c2e726a2f1943bddf697c5bb6815d93e5baed80bca82e53fdc'
             'f1d586e111932890ad5e0df15d092fb9b3f87bae4ea17812aae9b0ec98fe2db0'
             'a86a59d089ddd4f31565ff6a27ba74f4697ffa0ab0f57dc839e1da6ab83d77a4'
-            'bbf2c993e10c1a59b48a7d05075b9593ebffc4196fd7f748d12e6823de3a94a9'
-            'c9ed33e551bc45617ce9331da43535bc3af3ff20553561d5b8a5d3f4265a65c1'
-            '5627f3cf0e65f9d269d30d3e2380582fdaa74b0b5322e14389988a5ce8328ab5'
-            'a3633a05054e68196ebf7654692cc30554198e88e2f54c3440cb7f64600cb0d5'
-            '97da17e086d39aff622c7b17dfc169ddd50c62691274d15b4505c8b79238c829'
-            '5caecd368e426c8429107f3db84cd39e4f3b2d2cfa2ae665234704367f5190c0'
-            '1e8c0474375e798ef538efc3cb3e5f6a72b820d98f4f0b620008fda60b8a18d6')
-_make() {
-  test -s version
-  make KERNELRELEASE="$(<version)" "$@"
-}
+            '9277f8bd1f8450edaf36ca124d5019520cf9c6f28513dc1dab1f7159be03dfb5'
+            '5ed15d63106e050c6aa92874fcb33b1f827702d42d4281a4b0366e2387f01a07'
+            '882313cbb296e62dec0d1780aad2c3086fc0fbba86438dd5cef0a1b9519a4224'
+            'fa3b984d08e4d764cb6df48d9cafe19284cce059e7856b0e860bce332e92890b'
+            '3dfd78e809b04a8f1374687f5be667a6275625b08f068a44470c3f2a8a37d4a1'
+            'c623b7ac173cdd19a537d0767b7b82b13f166a9705cad16896556e8b9f7d3c87'
+            'b6682cec5ea11cc06c27be8c3f0dc25f0168f28308e64c84d4c53f012d02f282'
+            '6bf774b0294488c01fc9392c69c355859d3fa7ea62127c3cb2f11cedf860e848'
+            '6c4dfefacd42c571bf53ddaf031566e44832ce87480c63553ddf149620e00e4e'
+            '242b8868d2a1c8a403e05c0da85f0dc48192ff22adad97e552b4213a19839676')
 
 prepare() {
   cd linux-${pkgver}
@@ -137,14 +138,12 @@ prepare() {
   msg2 "Setting version..."
   echo "-$pkgrel" > localversion.10-pkgrel
   echo "${pkgbase#linux}" > localversion.20-pkgname
-  make defconfig
-  make -s kernelrelease > version
-  make mrproper
 
   local src
   for src in "${source[@]}"; do
     src="${src%%::*}"
     src="${src##*/}"
+    src="${src%.zst}"
     [[ $src = 0*.patch ]] || continue
     echo "Applying patch $src..."
     patch -Np1 < "../$src"
@@ -210,6 +209,7 @@ prepare() {
       fi
     fi
 
+  make -s kernelrelease > version
   echo "Prepared $pkgbase version $(<version)"
 
   [[ -z "$_makenconfig" ]] || make LLVM=$_LLVM LLVM_IAS=$_LLVM nconfig
@@ -264,7 +264,7 @@ _package() {
   echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
   echo "Installing modules..."
-  ZSTD_CLEVEL=19 _make LLVM=$_LLVM LLVM_IAS=$_LLVM INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
+  ZSTD_CLEVEL=19 make LLVM=$_LLVM LLVM_IAS=$_LLVM INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
     DEPMOD=/doesnt/exist modules_install  # Suppress depmod
 
   # remove build and source links

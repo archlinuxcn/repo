@@ -12,7 +12,11 @@ update_on:
     github: MatsuriDayo/nekoray
     use_latest_tag: true
 
-  - source: archpkg
-    archpkg: yaml-cpp
+  - source: alpm
+    alpm: yaml-cpp
     provided: libyaml-cpp.so
+    strip_release: true
+
+  - source: alpm
+    alpm: abseil-cpp
     strip_release: true

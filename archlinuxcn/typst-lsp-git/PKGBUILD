@@ -2,7 +2,7 @@
 
 pkgname=typst-lsp-git
 _pkgname=${pkgname%-git}
-pkgver=0.10.0.r0.gebed688
+pkgver=0.10.1.r0.g82cfb64
 pkgrel=1
 pkgdesc="Language server for Typst"
 arch=('i686' 'x86_64')
@@ -10,6 +10,8 @@ url="https://github.com/nvarner/typst-lsp"
 license=('Apache' 'MIT')
 depends=('openssl')
 makedepends=('git' 'rust')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
 source=("git+${url}.git")
 sha256sums=('SKIP')
 options=('!lto')
