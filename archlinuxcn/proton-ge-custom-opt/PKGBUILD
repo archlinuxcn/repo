@@ -238,7 +238,6 @@ prepare() {
         Vulkan-Headers
         SPIRV-Headers
         Vulkan-Loader
-        gst-libav
         ffmpeg::FFmpeg
         dav1d
         gst-plugins-rs
@@ -295,7 +294,7 @@ prepare() {
     popd
 
     pushd gstreamer
-        for submodule in gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly; do
+        for submodule in gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav; do
         git submodule init subprojects/$submodule
         git submodule set-url subprojects/$submodule "$srcdir"/$submodule
         git -c protocol.file.allow=always submodule update subprojects/$submodule
