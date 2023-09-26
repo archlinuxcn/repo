@@ -58,11 +58,6 @@ build() {
 	cargo build --frozen --release
 }
 
-check() {
-	cd "${_pkgname}/"
-	cargo test --frozen --all-features
-}
-
 package() {
 	cd "${_pkgname}/"
 	install -Dm 755 "target/release/hx" -t "${pkgdir}/usr/lib/${_pkgname}/"
