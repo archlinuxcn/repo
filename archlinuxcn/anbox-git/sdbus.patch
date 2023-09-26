@@ -1,0 +1,46 @@
+Upstream: no. I've tried to write a proper (upstreamable) fix, but it's not ready yet.
+
+--- a/external/CMakeLists.txt
++++ b/external/CMakeLists.txt
+@@ -6,12 +6,3 @@ add_subdirectory(backward-cpp)
+ set(BUILD_TESTING OFF)
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error")
+ add_subdirectory(cpu_features EXCLUDE_FROM_ALL)
+-include(ExternalProject)
+-ExternalProject_Add(sdbus-cpp
+-  PREFIX sdbus-cpp
+-  SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/sdbus-cpp"
+-  INSTALL_COMMAND ""
+-  CMAKE_CACHE_ARGS
+-        -DBUILD_CODE_GEN:BOOL=ON
+-        -DBUILD_SHARED_LIBS:BOOL=OFF
+-)
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -26,7 +26,6 @@ include_directories(
+   ${CMAKE_SOURCE_DIR}/external/android-emugl/host/libs/renderControl_dec
+   ${CMAKE_BINARY_DIR}/external/android-emugl/host/libs/renderControl_dec
+   ${CMAKE_SOURCE_DIR}/external/cpu_features/include
+-  ${CMAKE_SOURCE_DIR}/external/sdbus-cpp/include
+ )
+ 
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBINDERFS_PATH=\"\\\"${BINDERFS_PATH}\\\"\"")
+@@ -59,7 +59,7 @@ add_library(anbox-protobuf
+ target_link_libraries(anbox-protobuf
+     ${PROTOBUF_LITE_LIBRARIES})
+ 
+-set(XML2CPP ${CMAKE_BINARY_DIR}/external/sdbus-cpp/src/sdbus-cpp-build/tools/sdbus-c++-xml2cpp)
++set(XML2CPP sdbus-c++-xml2cpp)
+ 
+ macro(DBusServer BaseName)
+     add_custom_command(
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -59,6 +59,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
+ find_package(Boost COMPONENTS filesystem log serialization system thread program_options)
+ find_package(PkgConfig)
+ find_package(Threads)
++find_package(SDBus-C++ REQUIRED)
+ find_package(EGL REQUIRED)
+ find_package(GLESv2 REQUIRED)
+ find_package(Protobuf REQUIRED)
