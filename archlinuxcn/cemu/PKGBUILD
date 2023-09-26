@@ -1,7 +1,7 @@
 # Maintainer: Jeremy Kescher <jeremy@kescher.at>
 
 pkgname=cemu
-pkgver=2.0.404
+pkgver=2.0.418
 pkgrel=1
 pkgdesc='Software to emulate Wii U games and applications on PC'
 arch=(x86_64)
@@ -31,7 +31,7 @@ optdepends=(
 )
 install=cemu.install
 source=(
-	git+https://github.com/cemu-project/Cemu#tag=v2.0-48
+	git+https://github.com/cemu-project/Cemu#tag=v2.0-51
 	# submodules
 	git+https://github.com/mozilla/cubeb#commit=dc511c6b3597b6384d28949285b9289e009830ea
 	git+https://github.com/ocornut/imgui#commit=8a44c31c95c8e0217f6e1fc814cbbbcca4981f14
@@ -39,13 +39,16 @@ source=(
 	# cubeb submodules
 	git+https://github.com/arsenm/sanitizers-cmake#commit=aab6948fa863bc1cbe5d0850bc46b9ef02ed4c1a
 	git+https://github.com/google/googletest#commit=800f5422ac9d9e0ad59cd860a2ef3a679588acb4
+	# commit 62889adfde94710f280868c1b7dc4be4cc8cc229 causes crashes
+	fiber.diff
 )
 sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'SKIP')
+            'SKIP'
+            'e8c9f4a658474befb699407d9f40a0420b6a529b8c4f07493a91f3a3d11e2034')
 
 pkgver() {
 	cd Cemu
