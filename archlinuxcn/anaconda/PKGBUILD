@@ -4,9 +4,9 @@
 # Contributor: Ismaël Bouya <ismael.bouya@normalesup.org>
 # Contributor: Martin Wimpress <code@flexion.org>
 pkgname=anaconda
-pkgver=2023.07.1
+pkgver=2023.07.2
 _pkgver=${pkgver%.*}-${pkgver##*.}
-pkgrel=2
+pkgrel=1
 pkgdesc="Simplifies package management and deployment of Anaconda"
 arch=(x86_64)
 url="https://${pkgname}.com"
@@ -29,8 +29,8 @@ optdepends=('libxau: for Anaconda Navigator support'
 source=(https://repo.${pkgname}.com/archive/Anaconda3-${_pkgver}-Linux-x86_64.sh
   ${pkgname}-navigator.desktop)
 options=(!strip libtool staticlibs)
-sha512sums=('0c5d33edc79c376969788a6da2466c24f1de42239e9b4bcf3fe4f90431166340515d4316c033e6402fe6cc4cbaeb8c9e4be3cc70ea3c7ebf4d4a30db40541b76'
-  '5822dd55b1668b166134ec6dc414b3ad13f34c4271e9dba8d2d4adb34440c8b664ce5b6f2b6bb9752f5ec115d8671015fca035f2f94c92d5ce8aba2a1782a9d5')
+sha512sums=('2d9250848f92ac38acb7a4b4699bd01252eefaeeb17a5ca489bb06d06a89e02681fe3944ccf17cb92e07261e96d6b96cb9530d27a2d8d5cab37df44734aef492'
+            '5822dd55b1668b166134ec6dc414b3ad13f34c4271e9dba8d2d4adb34440c8b664ce5b6f2b6bb9752f5ec115d8671015fca035f2f94c92d5ce8aba2a1782a9d5')
 install="${pkgname}.install"
 
 package() {
