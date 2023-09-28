@@ -3,7 +3,7 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=webkit2gtk-4.1-imgpaste
-pkgver=2.42.0
+pkgver=2.42.1
 pkgrel=1
 pkgdesc="Web content engine for GTK (with patches for pasting images from clipboard)"
 url="https://webkitgtk.org"
@@ -77,11 +77,13 @@ provides=(webkit2gtk-4.1)
 conflicts=(webkit2gtk-4.1)
 source=(
   $url/releases/webkitgtk-$pkgver.tar.xz{,.asc}
+  webkitgtk-MiniBrowser-fullscreen.patch::https://github.com/WebKit/WebKit/commit/e07345343415dd2496edc721daa61a3b42703131.patch
   EnlargeObjectSize.patch
   PasteBoardGtk.patch
 )
-sha256sums=('828f95935861fae583fb8f2ae58cf64c63c178ae2b7c2d6f73070813ad64ed1b'
+sha256sums=('6f41fac9989d3ee51c08c48de1d439cdeddecbc757e34b6180987d99b16d2499'
             'SKIP'
+            'a921d6be1303e9f23474971f381886fd291ec5bb1a7ff1e85acede8cfb88bef2'
             '71b8a59c78d549fed0cd895207f49c7b3be40b236e96f4d7b9907a26521499bf'
             '20ebac2caf15fa546e6da00cb0fa90d5d37fcf7bfa883014d7d15eb4963d12d2')
 validpgpkeys=(
@@ -91,6 +93,8 @@ validpgpkeys=(
 
 prepare() {
   cd webkitgtk-$pkgver
+
+  patch -Np1 -i ../webkitgtk-MiniBrowser-fullscreen.patch
   patch -Np1 -i ../PasteBoardGtk.patch
   patch -Np1 -i ../EnlargeObjectSize.patch
 }
