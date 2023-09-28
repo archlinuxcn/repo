@@ -1,0 +1,13 @@
+diff --git a/src/common/Credentials.cpp b/src/common/Credentials.cpp
+index d3bb5ebbd..680f290c5 100644
+--- a/src/common/Credentials.cpp
++++ b/src/common/Credentials.cpp
+@@ -11,7 +11,7 @@
+ 
+ #ifndef NO_QTKEYCHAIN
+ #    ifdef CMAKE_BUILD
+-#        include "qt5keychain/keychain.h"
++#        include "qt6keychain/keychain.h"
+ #    else
+ #        include "keychain.h"
+ #    endif
