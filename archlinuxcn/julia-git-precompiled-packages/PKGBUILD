@@ -2,12 +2,15 @@
 
 pkgbase=julia-git-precompiled-packages
 _jlpackages=(
+###=== JLPKG_JLNAME_LIST {{
   Adapt
   ArrayInterface
   Compat
   Requires
   StaticArrays
-  StaticArraysCore)
+  StaticArraysCore
+###=== }} JLPKG_JLNAME_LIST
+)
 pkgname=()
 makedepends=(git julia-git-package-env)
 pkgver=20230928.102355
