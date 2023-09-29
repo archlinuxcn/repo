@@ -5,9 +5,9 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=102.15.0
+pkgver=115.3.0
 pkgrel=1
-_commit=400fbfdbc0c1ac9c68c9f52fd2ab6899bc8e8bd0
+_commit=3486a3e29280093102e11411d4f05987133ba789
 pkgdesc="GNU version of the Firefox browser."
 arch=(x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
@@ -26,15 +26,11 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
 options=(!emptydirs !makeflags !strip)
 
 source=(https://git.savannah.gnu.org/cgit/gnuzilla.git/snapshot/gnuzilla-${_commit}.tar.gz
-        icecat.desktop icecat-safe.desktop
-        missing_cstdint.patch::https://hg.mozilla.org/mozilla-central/raw-rev/61f052c26dd1
-        RsdparsaSdpGlue.patch)
+        icecat.desktop icecat-safe.desktop)
 
-sha256sums=('993a651df4bcd520705a424b21cd9b99f9b6a774e82b75d21bcf1b8bf10c0220'
+sha256sums=('9e043f50adc48724a609e6a5d6829c3a0e292ff4f12073ef82902e444cd9065c'
             'e00dbf01803cdd36fd9e1c0c018c19bb6f97e43016ea87062e6134bdc172bc7d'
-            '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208'
-            'ca3cedc5edce26040d3caf735afa8744fe08f3a1695eb2cda3796f4f336632d3'
-            '2a12b187a8803b0c3a4385d4567e1debf8bfa3e17c4c8cefdf39fb7434d3d932')
+            '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208')
 
 prepare() {
   cd gnuzilla-${_commit}
@@ -67,10 +63,6 @@ prepare() {
   # Produce IceCat sources
   bash makeicecat
   cd output/icecat-${pkgver}
-
-  # https://hg.mozilla.org/mozilla-central/rev/61f052c26dd1
-  patch -Np1 -i ../../../missing_cstdint.patch
-  patch -Np1 -i ../../../RsdparsaSdpGlue.patch
 
   # Patch to move files directly to /usr/lib/icecat. No more symlinks.
   sed -e 's;$(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME);g' -i config/baseconfig.mk
