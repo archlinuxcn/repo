@@ -2,7 +2,7 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=117.0.1
+pkgver=118.0.1
 pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
@@ -78,7 +78,7 @@ source=(
   "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
 )
 
-sha256sums=('90824812e1d8fae5b7b58a49ba662921f7f6a955b596a8a705e6073a228b7e3c'
+sha256sums=('d972169a6b9d2e1df6a74fcf6d2e048c29e85bec3fba98cbe272e0d508fb2392'
             '7d01d317b7db7416783febc18ee1237ade2ec86c1567e2c2dd628a94cbf2f25d'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1'
             '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d')
