@@ -1,0 +1,35 @@
+Source: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3113
+Author: Brendan William <brendan.william@outlook.com>
+Editor: Mingi Sung <fiestalake@disroot.org>
+Commit: 0035c0ca1c388b404b1b5789f537c60be14caf01
+Last Updated: 8/8/23 (Mutter 44.3)
+Date: Fri, 7 Jul 2023 23:01:44 -0700
+Subject: [PATCH] core: Only force placement of windows that should be mapped
+---
+
+window_has_buffer always returns as TRUE in the X11 session; windows
+can be force-placed too early as a result. Instead, check whether the
+window should be mapped, as described in the comments above this code.
+This addresses https://gitlab.gnome.org/GNOME/mutter/-/issues/2579 for forced placement in the X11 session, without
+reintroducing https://gitlab.gnome.org/GNOME/mutter/-/issues/2611.
+
+---
+ src/core/window.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/core/window.c b/src/core/window.c
+index ec9f73e4e1b..e90db417513 100644
+--- a/src/core/window.c
++++ b/src/core/window.c
+@@ -1732,7 +1732,7 @@ implement_showing (MetaWindow *window,
+        * Force placing windows only when they should be already mapped,
+        * see #751887
+        */
+-      if (!window->placed && window_has_buffer (window))
++      if (!window->placed && client_window_should_be_mapped (window))
+         meta_window_force_placement (window, FALSE);
+ 
+       meta_window_hide (window);
+-- 
+GitLab
+
