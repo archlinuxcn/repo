@@ -8,7 +8,7 @@ arch=('x86_64')
 url="https://github.com/fcitx/libime-jyutping"
 license=('LGPL' 'GPL3')
 depends=('fcitx5-chinese-addons')
-makedepends=('boost' 'extra-cmake-modules' 'ninja' 'python')
+makedepends=('boost' 'extra-cmake-modules' 'fmt' 'ninja' 'python')
 source=("https://download.fcitx-im.org/fcitx5/$pkgname/$pkgname-${pkgver}_dict.tar.xz"{,.sig})
 sha512sums=('edf20ae0f4d068111cdce04976fcf0d1c030ce43c4bc596f11b7631f8c4699ce52d5123cbeea8c795f48cdb91417686341e051592b465275fdc1436b989de4b5'
             'SKIP')
