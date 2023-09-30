@@ -1,0 +1,18 @@
+pkgname=julia-git-codecbzip2-src
+pkgver=0.8.0
+_commit=08dc91fcdcb203627fb1e82a2edd182994e7762c
+pkgrel=1
+pkgdesc="CodecBzip2.jl"
+url="https://github.com/JuliaIO/CodecBzip2.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/CodecBzip2.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd CodecBzip2.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh CodecBzip2 "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,35 @@
+pkgbase=julia-git-mpi-src
+_subpkgs=(MPIPreferences)
+pkgname=(julia-git-mpi-src)
+pkgver=0.20.16
+_commit=6e58be2eba0cfbe1e0eab0c28ba7525001e17712
+pkgrel=1
+pkgdesc="MPI.jl"
+url="https://github.com/JuliaParallel/MPI.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaParallel/MPI.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package_julia-git-mpi-src() {
+  cd MPI.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MPI "${pkgdir}" "${pkgname}" julia-git
+
+  rm -rf "${dest_dir}"/lib
+}
+
+_subpackage() {
+  local _subpkg=$1
+  provides=(julia-git-${_subpkg,,}-src)
+  cd MPI.jl/lib/${_subpkg}
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ${_subpkg} "${pkgdir}" "${pkgname}" julia-git
+}
+
+for _subpkg in "${_subpkgs[@]}"; do
+  pkgname=("${pkgname[@]}" julia-git-${_subpkg,,}-src)
+  eval "package_julia-git-${_subpkg,,}-src() { _subpackage ${_subpkg}; }"
+done

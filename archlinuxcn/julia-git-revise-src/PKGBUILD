@@ -1,0 +1,18 @@
+pkgname=julia-git-revise-src
+pkgver=3.5.6
+_commit=7c8a4bab83e1850fafa01025941464f3c9bc1d1c
+pkgrel=1
+pkgdesc="Revise.jl"
+url="https://github.com/timholy/Revise.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/timholy/Revise.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Revise.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Revise "${pkgdir}" "${pkgname}" julia-git
+}

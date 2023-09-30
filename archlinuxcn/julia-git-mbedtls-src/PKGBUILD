@@ -1,0 +1,18 @@
+pkgname=julia-git-mbedtls-src
+pkgver=1.1.7
+_commit=fc1d4320b327df033d4aa741410170d93cef544c
+pkgrel=1
+pkgdesc="MbedTLS.jl"
+url="https://github.com/JuliaLang/MbedTLS.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaLang/MbedTLS.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd MbedTLS.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MbedTLS "${pkgdir}" "${pkgname}" julia-git
+}

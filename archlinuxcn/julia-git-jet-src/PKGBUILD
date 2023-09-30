@@ -1,0 +1,18 @@
+pkgname=julia-git-jet-src
+pkgver=0.8.14
+_commit=68a0e39a3bcb713c34a61d7f008b21e17bcc33c0
+pkgrel=1
+pkgdesc="JET.jl"
+url="https://github.com/aviatesk/JET.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/aviatesk/JET.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd JET.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh JET "${pkgdir}" "${pkgname}" julia-git
+}

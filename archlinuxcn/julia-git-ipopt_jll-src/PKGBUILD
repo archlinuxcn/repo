@@ -1,0 +1,26 @@
+pkgname=julia-git-ipopt_jll-src
+pkgver=300.1400.1302+0
+_commit=f57b63c7a6ba8ef9c6378837578b28caa2709ff6
+pkgrel=1
+pkgdesc="Ipopt_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Ipopt_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git coin-or-ipopt)
+source=("git+https://github.com/JuliaBinaryWrappers/Ipopt_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'e10aa4bc590d30d86beb5534c7ba2481d07673d2aba11ed050ebba0598b0cb3b')
+
+build() {
+  cd Ipopt_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Ipopt_jll ../jll.toml
+}
+
+package() {
+  cd Ipopt_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Ipopt_jll "${pkgdir}" "${pkgname}" julia-git
+}

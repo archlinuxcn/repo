@@ -1,0 +1,18 @@
+pkgname=julia-git-juliasyntax-src
+pkgver=0.4.6
+_commit=045d156c44dbb87769c7416d049a7c08908539d4
+pkgrel=1
+pkgdesc="JuliaSyntax.jl"
+url="https://github.com/JuliaLang/JuliaSyntax.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaLang/JuliaSyntax.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd JuliaSyntax.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh JuliaSyntax "${pkgdir}" "${pkgname}" julia-git
+}

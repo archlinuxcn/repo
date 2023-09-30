@@ -1,0 +1,18 @@
+pkgname=julia-git-latexstrings-src
+pkgver=1.3.0
+_commit=b374f75f0127c1b640afdde6170dd3f832072660
+pkgrel=1
+pkgdesc="LaTeXStrings.jl"
+url="https://github.com/stevengj/LaTeXStrings.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/stevengj/LaTeXStrings.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LaTeXStrings.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LaTeXStrings "${pkgdir}" "${pkgname}" julia-git
+}

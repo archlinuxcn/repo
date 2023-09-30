@@ -1,0 +1,26 @@
+pkgname=julia-git-gsl_jll-src
+pkgver=2.7.2+0
+_commit=83dc0093e007b4e7246fe07836c014efe86aef3f
+pkgrel=1
+pkgdesc="GSL_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/GSL_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git gsl)
+source=("git+https://github.com/JuliaBinaryWrappers/GSL_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '01ce585eb4c5d6b14fce531c965792d3f2b6c54fef9bec84395a8a96acdc15c2')
+
+build() {
+  cd GSL_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl GSL_jll ../jll.toml
+}
+
+package() {
+  cd GSL_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh GSL_jll "${pkgdir}" "${pkgname}" julia-git
+}

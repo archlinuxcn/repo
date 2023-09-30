@@ -1,0 +1,18 @@
+pkgname=julia-git-tables-src
+pkgver=1.11.0
+_commit=a69583674e697a3fc329d2ec405d8ffdf29d6c00
+pkgrel=1
+pkgdesc="Tables.jl"
+url="https://github.com/JuliaData/Tables.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaData/Tables.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Tables.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Tables "${pkgdir}" "${pkgname}" julia-git
+}
