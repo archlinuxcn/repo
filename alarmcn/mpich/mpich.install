@@ -1,0 +1,13 @@
+# arg 1:  the new package version
+post_install() {
+  echo " *** Documentation installed at /opt/mpich/share/doc/mpich/install.pdf"
+  echo " *** /opt/mpich/bin is appended to PATH, see /etc/profile.d/mpich.sh"
+  echo " *** Some binary names match those of OpenMPI located in /usr (if installed)"
+  /bin/true
+}
+
+# arg 1:  the new package version
+# arg 2:  the old package version
+post_upgrade() {
+  post_install $1
+}
