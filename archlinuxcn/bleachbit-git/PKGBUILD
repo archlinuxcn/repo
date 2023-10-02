@@ -16,11 +16,11 @@ source=("git+https://github.com/${_pkgname}/${_pkgname}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-    cd "${_pkgname}/"
-    git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 package() {
-    cd "${_pkgname}/"
+	cd "${_pkgname}/"
 	make prefix=/usr DESTDIR="${pkgdir}/" install
 }
