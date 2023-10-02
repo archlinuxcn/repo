@@ -1,3 +1,14 @@
+## 18.3
+
+* `aur-build--pkglist`
+  + do not source `PKGBUILD` in `$PATH` (#1115)
+
+* `aur-repo`
+  + use pacman `DBPath` as `root` (`--sync`)
+
+* `aur-depends`
+  + skip lines with equal `pkgbase` (`--pkgbase`)
+
 ## 18.2
 
 * `aur-repo`
