@@ -8,7 +8,7 @@ url="https://github.com/eschnett/MPItrampoline"
 arch=(aarch64 armv7h x86_64)
 license=("custom:MIT")
 depends=('mpich')
-makedepends=('cmake')
+makedepends=('cmake' 'python')
 source=("MPItrampoline-${pkgver}.tar.gz::https://github.com/eschnett/MPItrampoline/archive/refs/tags/v${pkgver}.tar.gz"
         "MPIconstants-${_mpiconstants_ver}.tar.gz::https://github.com/eschnett/MPIconstants/archive/refs/tags/v${_mpiconstants_ver}.tar.gz"
         "MPIwrapper-${_mpiwrapper_ver}.tar.gz::https://github.com/eschnett/MPIwrapper/archive/refs/tags/v${_mpiwrapper_ver}.tar.gz"
