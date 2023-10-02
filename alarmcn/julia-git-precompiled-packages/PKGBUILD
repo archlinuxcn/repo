@@ -159,6 +159,7 @@ _package-jlpackage() {
 
   depends+=("$srcpkg")
   conflicts+=("julia-git-${jlpkg,,}-git") # Temporary
+  replaces+=("julia-git-${jlpkg,,}-git") # Temporary
 
   ver_short=$(julia --startup-file=no \
                     -e 'print(VERSION.major, ".", VERSION.minor)')
