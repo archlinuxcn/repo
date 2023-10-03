@@ -356,9 +356,9 @@ package-julia-in() {
   install -Dm644 ../julia-compile-pkgs.jl "${pkgdir}/usr/lib/julia/"
   install -Dm644 ../julia-preinstall.sh "${pkgdir}/usr/lib/julia/"
   install -Dm755 ../julia-postinstall.sh "${pkgdir}/usr/lib/julia/"
-  sed -e "s|@VER@|$ver_short|" ../julia-preinstall.hook |
+  sed -e "s|@VER@|$ver_short|g" ../julia-preinstall.hook |
     install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-preinstall.hook"
-  sed -e "s|@VER@|$ver_short|" ../julia-postinstall.hook |
+  sed -e "s|@VER@|$ver_short|g" ../julia-postinstall.hook |
     install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-postinstall.hook"
   mkdir -p "${pkgdir}/usr/share/julia/compiled/v$ver_short"
 
