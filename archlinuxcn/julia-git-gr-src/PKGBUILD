@@ -1,0 +1,18 @@
+pkgname=julia-git-gr-src
+pkgver=0.72.10
+_commit=73442aad385d9de9540679a85a0b94c70d1e1217
+pkgrel=1
+pkgdesc="GR.jl"
+url="https://github.com/jheinen/GR.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/jheinen/GR.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd GR.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh GR "${pkgdir}" "${pkgname}" julia-git
+}

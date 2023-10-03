@@ -1,0 +1,18 @@
+pkgname=julia-git-layoutpointers-src
+pkgver=0.1.14
+_commit=525c537ec59cee305c30cd69d0943a66f4c7d8d4
+pkgrel=1
+pkgdesc="LayoutPointers.jl"
+url="https://github.com/JuliaSIMD/LayoutPointers.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSIMD/LayoutPointers.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LayoutPointers.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LayoutPointers "${pkgdir}" "${pkgname}" julia-git
+}
