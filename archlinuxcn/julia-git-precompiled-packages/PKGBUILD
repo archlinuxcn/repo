@@ -167,6 +167,10 @@ _package-jlpackage() {
   stdlib_dir="/usr/share/julia/stdlib/v$ver_short"
   mkdir -p "${pkgdir}/${compile_dir}"
 
+  for deps in $(julia "/usr/lib/julia/julia-list-deps.jl" "$stdlib_dir/$jlpkg"); do
+    depends+=("julia-git-${deps,,}")
+  done
+
   _jlpkgs=($jlpkg)
 
   for p in "$stdlib_dir/$jlpkg/Project.toml" "$stdlib_dir/$jlpkg/JuliaProject.toml"; do
