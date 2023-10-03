@@ -1,0 +1,18 @@
+pkgname=julia-git-relocatablefolders-src
+pkgver=1.0.0
+_commit=37b5f82e60a84946b04adbbc8200790801c87870
+pkgrel=1
+pkgdesc="RelocatableFolders.jl"
+url="https://github.com/JuliaPackaging/RelocatableFolders.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaPackaging/RelocatableFolders.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd RelocatableFolders.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh RelocatableFolders "${pkgdir}" "${pkgname}" julia-git
+}

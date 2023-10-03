@@ -1,0 +1,18 @@
+pkgname=julia-git-roots-src
+pkgver=2.0.20
+_commit=2e7c255e859a88238e5f858f180c8623babe2921
+pkgrel=1
+pkgdesc="Roots.jl"
+url="https://github.com/JuliaMath/Roots.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaMath/Roots.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Roots.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Roots "${pkgdir}" "${pkgname}" julia-git
+}

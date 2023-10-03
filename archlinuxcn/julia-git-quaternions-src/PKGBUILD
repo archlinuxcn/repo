@@ -1,0 +1,18 @@
+pkgname=julia-git-quaternions-src
+pkgver=0.7.4
+_commit=dc7f5a1f8e8e107af3706b1af75f98d8ae68e956
+pkgrel=1
+pkgdesc="Quaternions.jl"
+url="https://github.com/JuliaGeometry/Quaternions.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGeometry/Quaternions.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Quaternions.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Quaternions "${pkgdir}" "${pkgname}" julia-git
+}
