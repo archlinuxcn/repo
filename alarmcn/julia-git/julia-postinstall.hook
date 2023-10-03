@@ -11,9 +11,10 @@ Operation = Upgrade
 Operation = Remove
 Target = usr/share/julia/stdlib/v@VER@/*
 Target = usr/share/julia/compiled/v@VER@/*
+Target = usr/share/julia/arch-site/*
 
 [Action]
 Description = Precompiling julia packages...
 When = PostTransaction
 Depends = julia-git
-Exec = /usr/lib/julia/julia-compile-pkgs.sh
+Exec = /usr/lib/julia/julia-postinstall.sh /usr/share/julia/stdlib/v@VER@/ /usr/share/julia/arch-site/

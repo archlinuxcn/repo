@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.11.0.DEV.583.gca862df7bfc
+pkgver=1.11.0.DEV.586.ge9d633f70a1
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -55,11 +55,11 @@ _patches=(
 )
 source=('git+https://github.com/JuliaLang/julia'
         "${_patches[@]}"
-        julia-compile-pkgs.sh
         julia-compile-pkgs.jl
-        julia-clear-precompile.sh
-        julia-precompile.hook
-        julia-clear-precompile.hook
+        julia-preinstall.sh
+        julia-postinstall.sh
+        julia-preinstall.hook
+        julia-postinstall.hook
         arch-source-translate.cpp
         sysp7z.diff)
 sha512sums=('SKIP'
@@ -68,11 +68,11 @@ sha512sums=('SKIP'
             '5744853c327c97dcc2a6946706e6cba2879d06c60e6f5b3065852fdb1b8926c257ae19f617b6aec0be56efaa60a47d5ec48c74bc034f4aa0744fe5399e7f15ab'
             'f4903cfa4047d2ee047f6b4b68949919634a762aa35817550d15ace90afc845136fab3ef6dac096922a6f081a1adfcf1127d090b27d03a6aea744fb7ae48ad5d'
             'ca2bbca372d8ed867787aaf07b380c9f265161e9c2fc4d7197a3c495add2e8f92e3259f4eeaaef7f49bdf33b941d658e8d4ce66f1732f9d30081874e9e4bb5b2'
-            '6fe4311c3e8fc38d35e76e3fd8169dc60eb67ae02e2bc7e4560cf659a07a974c9d2d62e8140107b708153bd7b7d663ab66e31f38f2a12d15eabe045b6d95b44d'
             '12fcbd17c156aaaf48dd51fe1a522b9f05a22855e12a194fa645750eb71eef7184f6742f8794b62ce3d19fc1ba4fcc01c3fd5b5e50d6eea0fa15b55ad662a9fe'
-            'ce03e2995a45d942f480d25d1ce7cddacb98f2e11eeed19b5564e36d817987f548c313b0d6b139402ba8c203c8ba9a059e1732695517d7b78b7fa88f08429295'
-            'f4ce40ff437c20e9d5c71bbd3102f3054cfd46429a014a174a89591aacafea2f191aa52c5d6ff93c21b8410bb0be092f8e5c36fbcfce64d96798aa12c5067b53'
-            'adf0fef964e8bdee9926f1127177bc0ddea0d2dbb1090ab94555c3599b87cf03b489dfe92fda3453bf68385f4b69556f396b1ecfb8a9525c23a3ed808e2eb370'
+            'b1f4aa204477986f3880b60658b159121e1b36d8b7551b20c1cd984f563950c6cee51ef13cb25328fbbe959e23d83a932fe64329f78326ef47b9e411684b8c90'
+            'da2cb5be1b05ceb9b9d0eda69dc82123543a4ed4cb8adc8fc88a0bcea29b5d872ac2d4b4f6b9b58b3c970b8e4a4b6e5b08e78f31f51a47bb4a0936ed8cda709d'
+            '32a087e9700cd233d56c7804fd341c40ba07e13e6bd917d4da4a5fe29c11033046b3998a7023be55c3cf860a294dc0c8b9ae209cd4dd80bed7573ae86825c201'
+            '02a9bda415eb685369b512044931f53ed4ed9a8803607ebb69672eed23c422888960bb7a5a4097739a845c3dc0e812069d825704f81145b33172743af35c767a'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849')
 
@@ -354,12 +354,12 @@ package-julia-in() {
   replaces=("${builtin_pkgs[@]}")
 
   install -Dm644 ../julia-compile-pkgs.jl "${pkgdir}/usr/lib/julia/"
-  install -Dm755 ../julia-compile-pkgs.sh "${pkgdir}/usr/lib/julia/"
-  install -Dm644 ../julia-clear-precompile.sh "${pkgdir}/usr/lib/julia/"
-  sed -e "s|@VER@|$ver_short|" ../julia-precompile.hook |
-    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-precompile.hook"
-  sed -e "s|@VER@|$ver_short|" ../julia-clear-precompile.hook |
-    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-clear-precompile.hook"
+  install -Dm644 ../julia-preinstall.sh "${pkgdir}/usr/lib/julia/"
+  install -Dm755 ../julia-postinstall.sh "${pkgdir}/usr/lib/julia/"
+  sed -e "s|@VER@|$ver_short|" ../julia-preinstall.hook |
+    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-preinstall.hook"
+  sed -e "s|@VER@|$ver_short|" ../julia-postinstall.hook |
+    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-postinstall.hook"
   mkdir -p "${pkgdir}/usr/share/julia/compiled/v$ver_short"
 
   mkdir -p "${pkgdir}/usr/share/julia/contrib"
