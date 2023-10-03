@@ -17,10 +17,6 @@ update_on:
   - source: regex
     url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/OpenSpecFun_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
-  - alias: alpm-lilac
-    alpm: julia-git
-    provided: julia
-  - alias: alpm-lilac
     alpm: openspecfun-git
     provided: libopenspecfun.so
   - source: manual

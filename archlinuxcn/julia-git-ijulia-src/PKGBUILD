@@ -37,7 +37,9 @@ build() {
 package() {
   cd IJulia.jl
 
-  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh IJulia "${pkgdir}" "${pkgname}" julia-git
+  JULIA_INSTALL_FORCE_VERSION_DEP=1 \
+    JULIA_INSTALL_SRCPKG=1 \
+    . /usr/lib/julia/julia-install-pkg.sh IJulia "${pkgdir}" "${pkgname}" julia-git
 
   # Install Jupyter kernel
 
