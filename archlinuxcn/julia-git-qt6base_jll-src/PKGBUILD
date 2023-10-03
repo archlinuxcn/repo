@@ -1,0 +1,26 @@
+pkgname=julia-git-qt6base_jll-src
+pkgver=6.5.2+2
+_commit=bca05f3c76e527967505be486369f94df106e11b
+pkgrel=1
+pkgdesc="Qt6Base_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Qt6Base_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git qt6-base)
+source=("git+https://github.com/JuliaBinaryWrappers/Qt6Base_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '59cc6dc10dc66782e81e4fefef9d9b2998d6436ae3457ff0733429ffa4a93534')
+
+build() {
+  cd Qt6Base_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Qt6Base_jll ../jll.toml
+}
+
+package() {
+  cd Qt6Base_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Qt6Base_jll "${pkgdir}" "${pkgname}" julia-git
+}
