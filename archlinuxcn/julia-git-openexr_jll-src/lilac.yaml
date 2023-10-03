@@ -17,5 +17,9 @@ update_on:
   - source: regex
     url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/OpenEXR_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpm
+    alpm: openexr
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
   - source: manual
     manual: 1
