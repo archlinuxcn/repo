@@ -24,6 +24,7 @@ clean:
 		chatterino2 \
 		chatterino2-*.pkg.tar.xz \
 		chatterino2-*.pkg.tar.zst \
+		chatterino2-*.log \
 		libcommuni \
 		humanize \
 		crashpad \
