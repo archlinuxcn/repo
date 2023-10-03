@@ -1,7 +1,5 @@
 #!/usr/bin/julia
 
-using Pkg
-
 const stdlib_dir = get(ENV, "JULIA_PRECOMPILE_STDLIB_DIR", Sys.STDLIB)
 
 struct PkgInfo
