@@ -1,0 +1,37 @@
+From acc82345612ff6e16f08c4717785871eded5068d Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 4 Oct 2023 10:53:09 -0400
+Subject: [PATCH] Add explicit REPL dependency
+
+---
+ MakieCore/Project.toml     | 1 +
+ MakieCore/src/MakieCore.jl | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/MakieCore/Project.toml b/MakieCore/Project.toml
+index 35bff241..45b95b36 100644
+--- a/MakieCore/Project.toml
++++ b/MakieCore/Project.toml
+@@ -5,6 +5,7 @@ version = "0.6.7"
+ 
+ [deps]
+ Observables = "510215fc-4207-5dde-b226-833fc4488ee2"
++REPL = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
+ 
+ [compat]
+ Observables = "0.5.1"
+diff --git a/MakieCore/src/MakieCore.jl b/MakieCore/src/MakieCore.jl
+index 30940b26..6cb2671f 100644
+--- a/MakieCore/src/MakieCore.jl
++++ b/MakieCore/src/MakieCore.jl
+@@ -8,6 +8,7 @@ end
+ using Observables
+ using Observables: to_value
+ using Base: RefValue
++import REPL # For Base.doc
+ 
+ 
+ include("types.jl")
+-- 
+2.42.0
+
