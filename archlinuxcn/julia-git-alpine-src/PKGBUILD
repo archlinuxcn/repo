@@ -1,0 +1,18 @@
+pkgname=julia-git-alpine-src
+pkgver=0.5.5
+_commit=d1b5f7244f5b987df7284b2df0aa94cd13c2f37a
+pkgrel=1
+pkgdesc="Alpine.jl"
+url="https://github.com/lanl-ansi/Alpine.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/lanl-ansi/Alpine.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Alpine.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Alpine "${pkgdir}" "${pkgname}" julia-git
+}

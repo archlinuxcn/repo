@@ -1,0 +1,18 @@
+pkgname=julia-git-ldlfactorizations-src
+pkgver=0.10.0
+_commit=537373daf7371a14bd2276a146b43be2e0d01eda
+pkgrel=1
+pkgdesc="LDLFactorizations.jl"
+url="https://github.com/JuliaSmoothOptimizers/LDLFactorizations.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSmoothOptimizers/LDLFactorizations.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LDLFactorizations.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LDLFactorizations "${pkgdir}" "${pkgname}" julia-git
+}

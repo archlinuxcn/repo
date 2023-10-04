@@ -1,0 +1,18 @@
+pkgname=julia-git-amd-src
+pkgver=0.5.2
+_commit=d727337b2d38a35945b813d090ceac42083e3c44
+pkgrel=1
+pkgdesc="AMD.jl"
+url="https://github.com/JuliaSmoothOptimizers/AMD.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSmoothOptimizers/AMD.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd AMD.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh AMD "${pkgdir}" "${pkgname}" julia-git
+}
