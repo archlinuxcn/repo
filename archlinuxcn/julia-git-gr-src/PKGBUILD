@@ -16,7 +16,7 @@ sha256sums=('SKIP'
 prepare() {
   cd GR.jl
 
-  patch -Np1 < ../0001-Get-rid-of-problematic-path-dance.patch
+  patch --no-backup-if-mismatch -Np1 < ../0001-Get-rid-of-problematic-path-dance.patch
 }
 
 package() {
