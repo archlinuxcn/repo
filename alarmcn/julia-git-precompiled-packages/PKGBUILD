@@ -401,7 +401,6 @@ _jlpackages=(
 ###=== }} JLPKG_JLNAME_LIST
 )
 pkgname=()
-makedepends=(git julia-git-package-env glfw-x11)
 pkgver=20231004.070406
 pkgrel=1
 pkgdesc="Precompiled packages for julia-git"
@@ -409,7 +408,7 @@ arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
 depends=(julia-git)
-makedepends=(julia-pkg-scripts)
+makedepends=(git julia-git-package-env julia-pkg-scripts glfw-x11)
 options=('debug' '!strip')
 source=()
 sha512sums=()
@@ -465,6 +464,6 @@ _package-jlpackage() {
 for jlpkg in "${_jlpackages[@]}"; do
   _pkg="julia-git-${jlpkg,,}"
   pkgname=("${pkgname[@]}" "${_pkg}")
-  makedepends=("${makedepends[@]}" "${_pkg}-src")
+  makedepends+=("${_pkg}-src")
   eval "package_${_pkg}() { _package-jlpackage ${jlpkg}; }"
 done
