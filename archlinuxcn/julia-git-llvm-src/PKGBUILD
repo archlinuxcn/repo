@@ -1,0 +1,20 @@
+pkgname=julia-git-llvm-src
+pkgver=6.3.0
+_commit=a91af7c10397cf4df8bba695e80c916294ff59b8
+pkgrel=1
+pkgdesc="LLVM.jl"
+url="https://github.com/maleadt/LLVM.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/maleadt/LLVM.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LLVM.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LLVM "${pkgdir}" "${pkgname}" julia-git
+
+  rm -rf "${dest_dir}"/deps
+}
