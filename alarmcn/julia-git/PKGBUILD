@@ -411,6 +411,8 @@ package-julia-in() {
     done
   )
 
+  # The ones that julia build system build does not seem to work at the moment.
+  rm -rf "${pkgdir}/usr/share/julia/compiled/v$ver_short/"*
   env JULIA_PRECOMPILE_STDLIB_DIR="/usr/share/julia/stdlib/v$ver_short" \
       JULIA_CPU_TARGET="${_cpu_target}" \
       proot -b "${pkgdir}/usr/share/julia/:/usr/share/julia/" \
