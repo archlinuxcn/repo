@@ -1,8 +1,8 @@
 # Maintainer: Jay Ta'ala <jay@jaytaala.com>
 # Contributor: Claudio d'Angelis <claudiodangelis at gmail dot com>
 pkgname=postman-bin
-pkgver=10.18.7
-pkgrel=2
+pkgver=10.18.10
+pkgrel=1
 pkgdesc="Build, test, and document your APIs faster"
 provides=('postman')
 conflicts=('postman')
@@ -19,9 +19,9 @@ source_aarch64=(
 	"postman.desktop"
 )
 depends=(libxss nss gtk3)
-sha256sums_x86_64=('b08c02e0c32c6f53f796cc8ed77d58c06bbc93f9e3addb979023fa6ad098eaac'
+sha256sums_x86_64=('08063d6f63bed6f44e5047c64517997b1f5287995bdec202e1313154744be95a'
                    'd87542ac18455ff341da7c5efd01db96a01f659b1bf546840aa4ac8bd085802d')
-sha256sums_aarch64=('26b93d128ddca19537260738c284bcbc46a2111c21fcffbca1b169675441b076'
+sha256sums_aarch64=('1c6e1d87ecba36002a8607d9f9c874c69f18d487f6e5a30b1ddb8a6267074bc6'
                     'd87542ac18455ff341da7c5efd01db96a01f659b1bf546840aa4ac8bd085802d')
 
 package() {
