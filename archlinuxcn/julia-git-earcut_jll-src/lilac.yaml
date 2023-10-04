@@ -12,10 +12,11 @@ repo_depends:
   - openlibm-git
   - llvm-julia: llvm-libs-julia
   - julia-pkg-scripts
+  - libearcut_jll-git
 
 update_on:
   - source: regex
     url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/EarCut_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
   - source: manual
-    manual: 1
+    manual: 2
