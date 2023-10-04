@@ -11,7 +11,7 @@ depends=(julia-git fftw)
 source=("git+https://github.com/JuliaBinaryWrappers/FFTW_jll.jl.git#commit=$_commit"
         jll.toml)
 sha256sums=('SKIP'
-            'a310ab8debc4b3805605dd8fd5717fee63bf4965d8c965e75ab5e60b8adf5d56')
+            '15aa9a88e67646badd9e893f73f5901dc8833caf751876bad8ebcc552d794bdb')
 
 build() {
   cd FFTW_jll.jl

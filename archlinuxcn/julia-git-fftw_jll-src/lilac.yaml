@@ -19,9 +19,9 @@ update_on:
     regex: 'version: *([^ ]*@[^ ]*)'
   - source: alpm
     alpm: fftw
-    provided: libfftw3.so
+    provided: libfftw3_threads.so
   - source: alpm
     alpm: fftw
-    provided: libfftw3f.so
+    provided: libfftw3f_threads.so
   - source: manual
-    manual: 1
+    manual: 2
