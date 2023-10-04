@@ -1,0 +1,31 @@
+From 1193b148f1e15e7152408ef5a224a8839b0d081a Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 28 Dec 2022 11:07:17 -0500
+Subject: [PATCH] Get rid of problematic path dance
+
+---
+ src/preferences.jl | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/src/preferences.jl b/src/preferences.jl
+index e1d427f..de4ea45 100644
+--- a/src/preferences.jl
++++ b/src/preferences.jl
+@@ -59,14 +59,6 @@ module GRPreferences
+             libGRM[]  = GR_jll.libGRM
+             libGKS[]  = GR_jll.libGKS
+ 
+-            # Because GR_jll does not dlopen as of 0.69.1+1, we need to append
+-            # the LIBPATH_list similar to JLLWrappers.@init_library_product
+-            push!(GR_jll.LIBPATH_list, dirname(GR_jll.libGR))
+-            # Recompute LIBPATH similar to JLLWrappers.@generate_init_footer
+-            unique!(GR_jll.LIBPATH_list)
+-            pathsep = GR_jll.JLLWrappers.pathsep
+-            GR_jll.LIBPATH[] = join(vcat(GR_jll.LIBPATH_list, Base.invokelatest(GR_jll.JLLWrappers.get_julia_libpaths))::Vector{String}, pathsep)
+-
+             libpath[] = GR_jll.LIBPATH[]
+             ENV["GRDIR"] = grdir[]
+         elseif binary == "system"
+-- 
+2.39.0
+
