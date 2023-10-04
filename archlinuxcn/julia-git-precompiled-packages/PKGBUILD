@@ -408,7 +408,8 @@ arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
 depends=(julia-git)
-makedepends=(git julia-git-package-env julia-pkg-scripts glfw-x11)
+makedepends=(git julia-git-package-env julia-pkg-scripts glfw-x11
+             julia-git-packages-meta)
 options=('debug' '!strip')
 source=()
 sha512sums=()
@@ -464,6 +465,5 @@ _package-jlpackage() {
 for jlpkg in "${_jlpackages[@]}"; do
   _pkg="julia-git-${jlpkg,,}"
   pkgname=("${pkgname[@]}" "${_pkg}")
-  makedepends+=("${_pkg}-src")
   eval "package_${_pkg}() { _package-jlpackage ${jlpkg}; }"
 done
