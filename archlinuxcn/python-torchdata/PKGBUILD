@@ -3,8 +3,8 @@
 _pkgname=torchdata
 _py=cp311
 pkgname=python-torchdata
-pkgver=0.6.1
-pkgrel=2
+pkgver=0.7.0
+pkgrel=1
 pkgdesc='A PyTorch repo for data loading and utilities to be shared by the PyTorch domain libraries'
 arch=('x86_64')
 url='https://github.com/pytorch/data'
@@ -21,7 +21,7 @@ makedepends=(
 source=("https://files.pythonhosted.org/packages/${_py}/${_pkgname::1}/${_pkgname}/${_pkgname//-/_}-${pkgver}-${_py}-${_py}-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
         "https://github.com/pytorch/data/raw/main/LICENSE"
 )
-sha512sums=('4155fe43e83eb55845d6ae47810d4d74843ca69bda84977b49f46b25cf6acb6ed58f4536fbf18e4fdb03c6d3b7ea2d1e2cd1c7ecb85a53722f8094b51b7649ad'
+sha512sums=('faa6199c221664e4565610c872faaf1f5e9f16f0f4f7e5798e70f3b1c48d6aedfd0c3d5fcc9d5d7d13adacd0c83655259b68c35a0e4797273dc93c9cc281ef71'
             '2d437cc8226bf32ddcf8e12f2583c5777afd3d9932b6b97a65f8fcf3d115a64749ebf37737fa9a69cea01e59649ba49b011ab219d1636ad970e79613a406f837')
 
 package() {
