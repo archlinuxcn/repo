@@ -1,0 +1,18 @@
+pkgname=julia-git-sundials-src
+pkgver=4.20.0
+_commit=ca8ac7cd0c0c9d096abcbaf904f88b16b9bc6356
+pkgrel=1
+pkgdesc="Sundials.jl"
+url="https://github.com/SciML/Sundials.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/Sundials.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Sundials.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Sundials "${pkgdir}" "${pkgname}" julia-git
+}
