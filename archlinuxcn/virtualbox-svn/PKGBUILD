@@ -9,7 +9,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=100800
+pkgver=101318
 _tarver=${pkgver}
 pkgrel=1
 arch=('x86_64')
@@ -46,9 +46,10 @@ makedepends=('subversion'
              'opus'
              'python'
              'python-packaging'
-             'qt5-base'
-             'qt5-x11extras'
-             'qt5-tools'
+             'qt6-base'
+             'qt6-5compat'
+             'qt6-scxml'
+             'qt6-tools'
              'sdl'
              'sdl_ttf'
              'vde2'
@@ -129,7 +130,7 @@ package_virtualbox-svn() {
     pkgdesc='Powerful x86 virtualization for enterprise as well as home use'
     depends=('curl' 'gcc-libs' 'glibc' 'liblzf' 'libpng' 'libtpms' 'libvpx' 'libx11' 'libxcursor'
              'libxext' 'libxinerama' 'libxml2' 'libxmu' 'libxt' 'openssl' 'procps-ng' 'python'
-             'qt5-base' 'qt5-tools' 'qt5-x11extras' 'sdl' 'shared-mime-info' 'zlib'
+             'qt6-base' 'qt6-tools' 'qt6-5compat' 'sdl' 'shared-mime-info' 'zlib' 'qt6-scxml'
              'VIRTUALBOX-HOST-MODULES-SVN')
     optdepends=('vde2: Virtual Distributed Ethernet support'
                 'virtualbox-guest-iso: Guest Additions CD image'
