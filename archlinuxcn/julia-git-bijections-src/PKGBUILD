@@ -1,0 +1,18 @@
+pkgname=julia-git-bijections-src
+pkgver=0.1.5
+_commit=4812a10a5452a7e140d8012dabc80fe81203f142
+pkgrel=1
+pkgdesc="Bijections.jl"
+url="https://github.com/scheinerman/Bijections.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/scheinerman/Bijections.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Bijections.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Bijections "${pkgdir}" "${pkgname}" julia-git
+}

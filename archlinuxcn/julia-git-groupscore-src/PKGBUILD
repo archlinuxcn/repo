@@ -1,0 +1,18 @@
+pkgname=julia-git-groupscore-src
+pkgver=0.4.0
+_commit=d06395299a26e26d7de75548dd7b7946ffc47f52
+pkgrel=1
+pkgdesc="GroupsCore.jl"
+url="https://github.com/kalmarek/GroupsCore.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/kalmarek/GroupsCore.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd GroupsCore.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh GroupsCore "${pkgdir}" "${pkgname}" julia-git
+}
