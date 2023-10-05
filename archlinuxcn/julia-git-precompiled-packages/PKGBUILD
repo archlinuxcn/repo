@@ -12,7 +12,10 @@ _jlpackages=(
   Adapt
   Alpine
   AmplNLWriter
+  AndorSIF
   ArnoldiMethod
+  Arpack
+  Arpack_jll
   ArrayInterface
   ArrayInterfaceCore
   Attr_jll
@@ -24,6 +27,7 @@ _jlpackages=(
   BitTwiddlingConvenienceFunctions
   Blosc
   Blosc_jll
+  BoundaryValueDiffEq
   BufferedStreams
   Bzip2_jll
   CDDLib
@@ -37,6 +41,7 @@ _jlpackages=(
   Cbc
   Cbc_jll
   Cgl_jll
+  ChainRules
   ChainRulesCore
   ChangesOfVariables
   CloseOpenIntervals
@@ -61,9 +66,11 @@ _jlpackages=(
   Compat
   CompositeTypes
   ComputationalResources
+  ConcreteStructs
   ConcurrentUtilities
   Conda
   ConjugateGradients
+  ConsoleProgressMonitor
   ConstructionBase
   Contour
   CoordinateTransformations
@@ -77,11 +84,16 @@ _jlpackages=(
   DataFrames
   DataStructures
   DataValueInterfaces
+  DelayDiffEq
   DensityInterface
   Dierckx
   Dierckx_jll
+  DiffEqBase
+  DiffEqCallbacks
+  DiffEqNoiseProcess
   DiffResults
   DiffRules
+  DifferentialEquations
   Distances
   Distributions
   DocStringExtensions
@@ -90,9 +102,11 @@ _jlpackages=(
   DynamicPolynomials
   EarCut_jll
   EnumX
+  EnzymeCore
   EpollShim_jll
   ExceptionUnwrapping
   Expat_jll
+  ExponentialUtilities
   ExprTools
   Extents
   EzXML
@@ -102,7 +116,11 @@ _jlpackages=(
   FFTW
   FFTW_jll
   FameSVD
+  FastBroadcast
   FastClosures
+  FastExpm
+  FastGaussQuadrature
+  FastLapackInterface
   FileIO
   FilePathsBase
   FillArrays
@@ -118,6 +136,7 @@ _jlpackages=(
   FriBidi_jll
   FunctionWrappers
   FunctionWrappersWrappers
+  Functors
   GLFW_jll
   GLPK
   GLPK_jll
@@ -128,6 +147,7 @@ _jlpackages=(
   GSL
   GSL_jll
   GenericLinearAlgebra
+  GenericSchur
   GeoInterface
   GeometryBasics
   Gettext_jll
@@ -150,6 +170,7 @@ _jlpackages=(
   HDF5
   HDF5_jll
   HTTP
+  HalfIntegers
   HarfBuzz_jll
   HiGHS
   HiGHS_jll
@@ -158,6 +179,7 @@ _jlpackages=(
   Hwloc_jll
   HypergeometricFunctions
   IJulia
+  IRTools
   IfElse
   ImageAxes
   ImageBase
@@ -193,6 +215,7 @@ _jlpackages=(
   Ipopt_jll
   IrrationalConstants
   IterTools
+  IterativeSolvers
   IteratorInterfaceExtensions
   JET
   JLD2
@@ -203,14 +226,18 @@ _jlpackages=(
   JuMP
   JuliaInterpreter
   JuliaSyntax
+  JumpProcesses
   Juniper
+  KLU
   Krylov
+  KrylovKit
   LAME_jll
   LDLFactorizations
   LERC_jll
   LLVM
   LLVMExtra_jll
   LLVMOpenMP_jll
+  LRUCache
   LZO_jll
   LaTeXStrings
   LabelledArrays
@@ -220,6 +247,7 @@ _jlpackages=(
   Lazy
   LazyModules
   LeftChildRightSiblingTrees
+  LevyArea
   LibArchive_jll
   Libffi_jll
   Libgcrypt_jll
@@ -230,7 +258,9 @@ _jlpackages=(
   Libtiff_jll
   Libuuid_jll
   LineSearches
+  LinearMaps
   LinearOperators
+  LinearSolve
   LittleCMS_jll
   LogExpFunctions
   LoggingExtras
@@ -260,6 +290,7 @@ _jlpackages=(
   Missings
   Mocking
   MosaicViews
+  MuladdMacro
   MultivariatePolynomials
   Mustache
   MutableArithmetics
@@ -272,6 +303,8 @@ _jlpackages=(
   NamedArrays
   NearestNeighbors
   Netpbm
+  NonlinearSolve
+  ODE
   Observables
   OffsetArrays
   Ogg_jll
@@ -287,11 +320,14 @@ _jlpackages=(
   OpenSpecFun_jll
   Optim
   OptimBase
+  Optimization
   Opus_jll
   OrderedCollections
+  OrdinaryDiffEq
   Osi_jll
   PDMats
   PNGFiles
+  PackageExtensionCompat
   PaddedViews
   Pajarito
   Parameters
@@ -303,6 +339,8 @@ _jlpackages=(
   PlotThemes
   PlotUtils
   Plots
+  PoissonRandom
+  Polyester
   PolyesterWeave
   Polyhedra
   Polynomials
@@ -313,6 +351,7 @@ _jlpackages=(
   Preferences
   PrettyTables
   Primes
+  ProgressLogging
   ProgressMeter
   PyCall
   PyPlot
@@ -320,18 +359,27 @@ _jlpackages=(
   QPSReader
   Qt6Base_jll
   QuadGK
+  QuantumInterface
+  QuantumOptics
+  QuantumOpticsBase
   Quaternions
+  Random123
   RandomExtensions
+  RandomMatrices
+  RandomNumbers
   RangeArrays
+  RationalRoots
   Ratios
   RealDot
   RecipesBase
   RecipesPipeline
   RecursiveArrayTools
+  RecursiveFactorization
   Reexport
   RegionTrees
   RelocatableFolders
   Requires
+  ResettableStacks
   Revise
   Rmath
   Rmath_jll
@@ -344,13 +392,16 @@ _jlpackages=(
   SLEEFPirates
   SPRAL_jll
   SciMLBase
+  SciMLNLSolve
   SciMLOperators
   Scratch
   SentinelArrays
   Setfield
   Showoff
   SimpleBufferStream
+  SimpleNonlinearSolve
   SimpleTraits
+  SimpleUnPack
   SimpleWeightedGraphs
   Sixel
   SnoopCompile
@@ -360,6 +411,9 @@ _jlpackages=(
   SoftGlobalScope
   SolverCore
   SortingAlgorithms
+  SparseDiffTools
+  SparseInverseSubset
+  Sparspak
   SpecialFunctions
   StackViews
   Static
@@ -369,9 +423,15 @@ _jlpackages=(
   StatsAPI
   StatsBase
   StatsFuns
+  SteadyStateDiffEq
+  StochasticDiffEq
+  StrideArraysCore
+  Strided
   StringEncodings
   StringManipulation
   StructArrays
+  Sundials
+  Sundials_jll
   SymbolicIndexingInterface
   SymbolicUtils
   Symbolics
@@ -379,6 +439,7 @@ _jlpackages=(
   TableTraits
   Tables
   TensorCore
+  TerminalLoggers
   ThreadingUtilities
   TiffImages
   TiledIteration
@@ -386,9 +447,11 @@ _jlpackages=(
   TimerOutputs
   TranscodingStreams
   TreeViews
+  TriangularSolve
   Tricks
   TruncatedStacktraces
   Tulip
+  TupleTools
   TypedSyntax
   URIs
   UnPack
@@ -396,14 +459,17 @@ _jlpackages=(
   Unitful
   UnitfulLatexify
   Unityper
+  UnsafeArrays
   Unzip
   VectorizationBase
   VersionParsing
+  VertexSafeGraphs
   Vulkan_Loader_jll
   Wayland_jll
   Wayland_protocols_jll
   WeakRefStrings
   WidthLimitedIO
+  WignerSymbols
   WoodburyMatrices
   WorkerUtilities
   XML2_jll
@@ -437,6 +503,7 @@ _jlpackages=(
   ZMQ
   ZeroMQ_jll
   Zstd_jll
+  Zygote
   ZygoteRules
   acl_jll
   bitshuffle_jll
