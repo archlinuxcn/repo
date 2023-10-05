@@ -8,16 +8,8 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/MakieOrg/Makie.jl.git#commit=$_commit"
-        0001-Add-explicit-REPL-dependency.patch)
-sha256sums=('SKIP'
-            'b40c7ff795aad24ed1e45d8801066e7c26c40579dc7df651a76f8eaaee897578')
-
-prepare() {
-  cd Makie.jl
-
-  patch --no-backup-if-mismatch -Np1 < ../0001-Add-explicit-REPL-dependency.patch
-}
+source=("git+https://github.com/MakieOrg/Makie.jl.git#commit=$_commit")
+sha256sums=('SKIP')
 
 package() {
   cd Makie.jl/MakieCore
