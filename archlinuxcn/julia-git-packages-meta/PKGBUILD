@@ -2,15 +2,18 @@
 
 pkgname=julia-git-packages-meta
 _jlpackages=(
-  ###=== JLPKG_JLNAME_LIST {{
+###=== JLPKG_JLNAME_LIST {{
+  AMD
   ASL_jll
   AbstractFFTs
   AbstractTrees
   Adapt
+  Alpine
   AmplNLWriter
   ArnoldiMethod
   ArrayInterface
   ArrayInterfaceCore
+  Attr_jll
   AxisAlgorithms
   AxisArrays
   BenchmarkTools
@@ -20,6 +23,7 @@ _jlpackages=(
   Blosc_jll
   BufferedStreams
   Bzip2_jll
+  CDDLib
   CEnum
   CPUSummary
   CSV
@@ -55,6 +59,7 @@ _jlpackages=(
   ComputationalResources
   ConcurrentUtilities
   Conda
+  ConjugateGradients
   ConstructionBase
   Contour
   CoordinateTransformations
@@ -77,16 +82,20 @@ _jlpackages=(
   Distributions
   DocStringExtensions
   DualNumbers
+  EarCut_jll
   EpollShim_jll
   ExceptionUnwrapping
   Expat_jll
   ExprTools
+  Extents
   EzXML
   FFMPEG
   FFMPEG_jll
   FFTViews
   FFTW
   FFTW_jll
+  FameSVD
+  FastClosures
   FileIO
   FilePathsBase
   FillArrays
@@ -110,6 +119,9 @@ _jlpackages=(
   GR_jll
   GSL
   GSL_jll
+  GenericLinearAlgebra
+  GeoInterface
+  GeometryBasics
   Gettext_jll
   Ghostscript_jll
   GitHub
@@ -129,6 +141,8 @@ _jlpackages=(
   HDF5_jll
   HTTP
   HarfBuzz_jll
+  HiGHS
+  HiGHS_jll
   HistogramThresholding
   HostCPUFeatures
   Hwloc_jll
@@ -179,7 +193,9 @@ _jlpackages=(
   JuliaInterpreter
   JuliaSyntax
   Juniper
+  Krylov
   LAME_jll
+  LDLFactorizations
   LERC_jll
   LLVM
   LLVMExtra_jll
@@ -190,6 +206,7 @@ _jlpackages=(
   LayoutPointers
   LazyModules
   LeftChildRightSiblingTrees
+  LibArchive_jll
   Libffi_jll
   Libgcrypt_jll
   Libglvnd_jll
@@ -199,10 +216,12 @@ _jlpackages=(
   Libtiff_jll
   Libuuid_jll
   LineSearches
+  LinearOperators
   LittleCMS_jll
   LogExpFunctions
   LoggingExtras
   LoopVectorization
+  Loraine
   LoweredCodeUtils
   LsqFit
   Lz4_jll
@@ -215,6 +234,7 @@ _jlpackages=(
   MPItrampoline_jll
   MUMPS_seq_jll
   MacroTools
+  MadNLP
   MakieCore
   ManualMemory
   MappedArrays
@@ -228,6 +248,7 @@ _jlpackages=(
   MosaicViews
   Mustache
   MutableArithmetics
+  NLPModels
   NLSolversBase
   NLopt
   NLopt_jll
@@ -257,8 +278,10 @@ _jlpackages=(
   PDMats
   PNGFiles
   PaddedViews
+  Pajarito
   Parameters
   Parsers
+  Pavito
   Pipe
   Pixman_jll
   PkgVersion
@@ -266,6 +289,7 @@ _jlpackages=(
   PlotUtils
   Plots
   PolyesterWeave
+  Polyhedra
   Polynomials
   PooledArrays
   PositiveFactorizations
@@ -276,6 +300,7 @@ _jlpackages=(
   PyCall
   PyPlot
   QOI
+  QPSReader
   Qt6Base_jll
   QuadGK
   Quaternions
@@ -294,6 +319,7 @@ _jlpackages=(
   Roots
   Rotations
   SIMD
+  SIMDDualNumbers
   SIMDTypes
   SLEEFPirates
   SPRAL_jll
@@ -310,6 +336,7 @@ _jlpackages=(
   SnoopPrecompile
   SodiumSeal
   SoftGlobalScope
+  SolverCore
   SortingAlgorithms
   SpecialFunctions
   StackViews
@@ -331,7 +358,10 @@ _jlpackages=(
   TiffImages
   TiledIteration
   TimeZones
+  TimerOutputs
   TranscodingStreams
+  TreeViews
+  Tulip
   TypedSyntax
   URIs
   UnPack
@@ -380,7 +410,9 @@ _jlpackages=(
   ZeroMQ_jll
   Zstd_jll
   ZygoteRules
+  acl_jll
   bitshuffle_jll
+  cddlib_jll
   eudev_jll
   fzf_jll
   gperf_jll
@@ -398,7 +430,7 @@ _jlpackages=(
   x264_jll
   x265_jll
   xkbcommon_jll
-  ###=== }} JLPKG_JLNAME_LIST
+###=== }} JLPKG_JLNAME_LIST
 )
 pkgver=20231005.134452
 pkgrel=1
