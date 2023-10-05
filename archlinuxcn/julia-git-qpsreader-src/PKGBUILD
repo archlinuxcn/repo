@@ -11,8 +11,6 @@ depends=(julia-git)
 source=("git+https://github.com/JuliaSmoothOptimizers/QPSReader.jl.git#commit=$_commit")
 sha256sums=('SKIP')
 
-# TODO: handle artifacts
-
 package() {
   cd QPSReader.jl
 
