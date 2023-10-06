@@ -29,7 +29,7 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
      # only check submodules when source is obtained via Git
      check_submodules_present()
  endif()
-@@ -217,6 +224,44 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
+@@ -233,6 +238,38 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
  
@@ -39,7 +39,6 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
 +find_package(PkgConfig REQUIRED)
 +pkg_check_modules(Crypto++ REQUIRED IMPORTED_TARGET libcryptopp)
 +find_package(zstd 1.4)
-+find_package(nlohmann_json)
 +find_package(tsl-robin-map)
 +find_package(glslang)
 +find_package(VulkanMemoryAllocator)
@@ -58,11 +57,6 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
 +    find_package(DiscordRPC)
 +endif()
 +
-+if (ENABLE_WEB_SERVICE)
-+    find_package(cpp-jwt 1.4)
-+    find_package(httplib)
-+endif()
-+
 +if (ENABLE_TESTS)
 +    find_package(Catch2 2)
 +endif()
@@ -73,8 +67,8 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
 +
  if (ENABLE_QT)
      if (NOT USE_SYSTEM_QT)
-         download_qt(6.5.0)
-@@ -359,6 +401,21 @@ if (NOT USE_SYSTEM_BOOST)
+         download_qt(6.5.1)
+@@ -375,6 +412,21 @@ if (NOT USE_SYSTEM_BOOST)
      add_definitions( -DBOOST_ALL_NO_LIB )
  endif()
  
@@ -186,7 +180,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
  
  # MicroProfile
  add_library(microprofile INTERFACE)
-@@ -146,33 +159,46 @@ if (ENABLE_LIBUSB AND NOT USE_SYSTEM_LIB
+@@ -149,26 +162,35 @@ if (ENABLE_LIBUSB AND NOT USE_SYSTEM_LIB
  endif()
  
  # Zstandard
@@ -210,7 +204,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
 -target_include_directories(enet INTERFACE ./enet/include)
 +if (NOT TARGET enet::enet)
 +    message(STATUS "Using bundled enet")
-+    add_subdirectory(enet EXCLUDE_FROM_ALL)
++    add_subdirectory(enet)
 +    target_include_directories(enet INTERFACE ./enet/include)
 +    add_library(enet::enet ALIAS enet)
 +endif()
@@ -231,53 +225,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
      add_subdirectory(discord-rpc EXCLUDE_FROM_ALL)
      target_include_directories(discord-rpc INTERFACE ./discord-rpc/include)
  endif()
- 
- # JSON
--add_library(json-headers INTERFACE)
--target_include_directories(json-headers INTERFACE ./json)
-+if (ENABLE_WEB_SERVICE AND NOT TARGET nlohmann_json::nlohmann_json)
-+    message(STATUS "Using bundled json")
-+    add_library(nlohmann_json INTERFACE)
-+    target_include_directories(nlohmann_json INTERFACE ./json)
-+    add_library(nlohmann_json::nlohmann_json ALIAS nlohmann_json)
-+endif()
- 
- # OpenSSL
- if (USE_SYSTEM_OPENSSL)
-@@ -195,10 +221,14 @@ if (NOT OPENSSL_FOUND)
- endif()
- 
- # httplib
--add_library(httplib INTERFACE)
--target_include_directories(httplib INTERFACE ./httplib)
--target_compile_options(httplib INTERFACE -DCPPHTTPLIB_OPENSSL_SUPPORT)
--target_link_libraries(httplib INTERFACE ${OPENSSL_LIBRARIES})
-+if (NOT TARGET httplib::httplib)
-+    message(STATUS "Using bundled httplib")
-+    add_library(httplib INTERFACE)
-+    target_include_directories(httplib INTERFACE ./httplib)
-+    target_compile_options(httplib INTERFACE -DCPPHTTPLIB_OPENSSL_SUPPORT)
-+    target_link_libraries(httplib INTERFACE ${OPENSSL_LIBRARIES})
-+    add_library(httplib::httplib ALIAS httplib)
-+endif()
- 
- if(ANDROID)
-     add_subdirectory(android-ifaddrs)
-@@ -206,10 +236,12 @@ if(ANDROID)
- endif()
- 
- # cpp-jwt
--if (ENABLE_WEB_SERVICE)
-+if (ENABLE_WEB_SERVICE AND NOT TARGET cpp-jwt::cpp-jwt)
-+    message(STATUS "Using bundled cpp-jwt")
-     add_library(cpp-jwt INTERFACE)
-     target_include_directories(cpp-jwt INTERFACE ./cpp-jwt/include)
-     target_compile_definitions(cpp-jwt INTERFACE CPP_JWT_USE_VENDORED_NLOHMANN_JSON)
-+    add_library(cpp-jwt::cpp-jwt ALIAS cpp-jwt)
- endif()
- 
- # lodepng
-@@ -223,7 +255,8 @@ if(ANDROID)
+@@ -246,7 +268,8 @@ if(ANDROID)
  endif()
  
  # OpenAL Soft
@@ -287,7 +235,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
      set(ALSOFT_EMBED_HRTF_DATA OFF CACHE BOOL "")
      set(ALSOFT_EXAMPLES OFF CACHE BOOL "")
      set(ALSOFT_INSTALL OFF CACHE BOOL "")
-@@ -236,8 +269,10 @@ if (ENABLE_OPENAL)
+@@ -259,8 +282,10 @@ if (ENABLE_OPENAL)
  endif()
  
  # VMA
@@ -753,66 +701,16 @@ diff --color -rupN citra/src/video_core/renderer_vulkan/vk_shader_util.cpp citra
 diff --color -rupN citra/src/video_core/CMakeLists.txt citra/src/video_core/CMakeLists.txt
 --- citra/src/video_core/CMakeLists.txt	2023-01-20 00:44:13.878931471 +0800
 +++ citra/src/video_core/CMakeLists.txt	2023-01-20 00:43:41.148864090 +0800
-@@ -170,11 +170,11 @@ target_include_directories(video_core PR
- create_target_directory_groups(video_core)
- 
+@@ -171,10 +171,10 @@ create_target_directory_groups(video_cor
+
  target_link_libraries(video_core PUBLIC citra_common citra_core)
--target_link_libraries(video_core PRIVATE Boost::serialization dds-ktx json-headers nihstro-headers tsl::robin_map)
+ target_link_libraries(video_core PRIVATE Boost::serialization dds-ktx json-headers nihstro-headers tsl::robin_map)
 -target_link_libraries(video_core PRIVATE vulkan-headers vma glad sirit SPIRV glslang)
-+target_link_libraries(video_core PRIVATE Boost::serialization dds-ktx nlohmann_json::nlohmann_json nihstro-headers tsl::robin_map)
 +target_link_libraries(video_core PRIVATE vulkan-headers GPUOpen::VulkanMemoryAllocator glad sirit SPIRV glslang::glslang)
- 
+
  if ("x86_64" IN_LIST ARCHITECTURE)
 -    target_link_libraries(video_core PUBLIC xbyak)
 +    target_link_libraries(video_core PUBLIC xbyak::xbyak)
  endif()
- 
+
  if (CITRA_USE_PRECOMPILED_HEADERS)
-diff --color -rupN citra/src/video_core/CMakeLists.txt citra/src/video_core/custom_textures/custom_tex_manager.cpp
---- citra/src/video_core/custom_textures/custom_tex_manager.cpp	2023-01-20 00:44:13.878931471 +0800
-+++ citra/src/video_core/custom_textures/custom_tex_manager.cpp	2023-01-20 00:43:41.148864090 +0800
-@@ -2,7 +2,7 @@
- // Licensed under GPLv2 or any later version
- // Refer to the license.txt file included.
-
--#include <json.hpp>
-+#include <nlohmann/json.hpp>
- #include "common/file_util.h"
- #include "common/memory_detect.h"
- #include "common/microprofile.h"
-diff --color -rupN citra/src/web_service/announce_room_json.cpp citra/src/web_service/announce_room_json.cpp
---- citra/src/web_service/announce_room_json.cpp	2023-01-20 00:44:13.892264831 +0800
-+++ citra/src/web_service/announce_room_json.cpp	2023-01-20 00:41:12.801915797 +0800
-@@ -3,7 +3,7 @@
- // Refer to the license.txt file included.
- 
- #include <future>
--#include <json.hpp>
-+#include <nlohmann/json.hpp>
- #include "common/detached_tasks.h"
- #include "common/logging/log.h"
- #include "web_service/announce_room_json.h"
-diff --color -rupN citra/src/web_service/CMakeLists.txt citra/src/web_service/CMakeLists.txt
---- citra/src/web_service/CMakeLists.txt	2023-01-20 00:44:13.892264831 +0800
-+++ citra/src/web_service/CMakeLists.txt	2023-01-20 00:41:12.801915797 +0800
-@@ -17,7 +17,7 @@ add_library(web_service STATIC
- create_target_directory_groups(web_service)
- 
- target_compile_definitions(web_service PUBLIC -DENABLE_WEB_SERVICE)
--target_link_libraries(web_service PRIVATE citra_common network json-headers httplib cpp-jwt)
-+target_link_libraries(web_service PRIVATE citra_common network nlohmann_json::nlohmann_json httplib::httplib cpp-jwt::cpp-jwt)
- target_link_libraries(web_service PUBLIC ${OPENSSL_LIBS})
- set_target_properties(web_service PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${ENABLE_LTO})
- if (ANDROID)
-diff --color -rupN citra/src/web_service/telemetry_json.cpp citra/src/web_service/telemetry_json.cpp
---- citra/src/web_service/telemetry_json.cpp	2023-01-20 00:44:13.892264831 +0800
-+++ citra/src/web_service/telemetry_json.cpp	2023-01-20 00:41:12.801915797 +0800
-@@ -2,7 +2,7 @@
- // Licensed under GPLv2 or any later version
- // Refer to the license.txt file included.
-
--#include <json.hpp>
-+#include <nlohmann/json.hpp>
- #include "common/detached_tasks.h"
- #include "common/web_result.h"
- #include "web_service/telemetry_json.h"
