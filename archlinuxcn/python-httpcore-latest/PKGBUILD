@@ -1,6 +1,6 @@
 _name=httpcore
 pkgname=python-httpcore-latest
-pkgver=0.18.0
+pkgver=1.0.0
 pkgrel=1
 pkgdesc="A minimal low-level HTTP client."
 arch=(any)
@@ -11,16 +11,16 @@ makedepends=('python-hatchling' 'python-hatch-fancy-pypi-readme' 'python-build' 
 optdepends=('python-h2: HTTP/2 support' 'python-socksio: for SOCKS support' 'python-trio: for trio backend')
 conflicts=('python-httpcore')
 provides=('python-httpcore')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/httpcore-0.18.0.tar.gz")
-sha256sums=('13b5e5cd1dca1a6636a6aaea212b19f4f85cd88c366a2b82304181b769aab3c9')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/httpcore-1.0.0.tar.gz")
+sha256sums=('b8c3a34536aa434297a5e4c8b7057496823cb9a417f7ee859ec0320e60f06337')
 
 build() {
-  cd "$srcdir/httpcore-0.18.0"
+  cd "$srcdir/httpcore-1.0.0"
   python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "$srcdir/httpcore-0.18.0"
+  cd "$srcdir/httpcore-1.0.0"
   python -m installer --destdir="$pkgdir" dist/*.whl
 
   # make sure we don't install any world-writable or root-readable-only files
