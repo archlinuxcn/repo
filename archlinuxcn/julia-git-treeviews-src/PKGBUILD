@@ -8,11 +8,15 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/pfitzseb/TreeViews.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+source=("git+https://github.com/pfitzseb/TreeViews.jl.git#commit=$_commit"
+        Project.toml)
+sha256sums=('SKIP'
+            '6fe0f83ffd207a9e71f98952b4fd57ada149ec30015768b60e47501c167e132e')
 
 package() {
   cd TreeViews.jl
+
+  cp -n ../Project.toml .
 
   JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh TreeViews "${pkgdir}" "${pkgname}" julia-git
 }
