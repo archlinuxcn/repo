@@ -1,0 +1,18 @@
+pkgname=julia-git-stochasticdiffeq-src
+pkgver=6.63.0
+_commit=90250e7a77a4a6b586d1b8d8ac4b9c58e789fd85
+pkgrel=1
+pkgdesc="StochasticDiffEq.jl"
+url="https://github.com/SciML/StochasticDiffEq.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/StochasticDiffEq.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd StochasticDiffEq.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh StochasticDiffEq "${pkgdir}" "${pkgname}" julia-git
+}
