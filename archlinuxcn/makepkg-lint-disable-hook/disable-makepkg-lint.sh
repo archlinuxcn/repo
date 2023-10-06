@@ -1,5 +1,3 @@
 #!/bin/sh
 
-for f in /usr/share/makepkg/lint_pkgbuild/*; do
-    echo > "$f"
-done
+sed -i -e 's/\([[:blank:]]*\)lint_[_a-zA-Z0-9]*\(.*\)/\1true\2/' /usr/bin/makepkg
