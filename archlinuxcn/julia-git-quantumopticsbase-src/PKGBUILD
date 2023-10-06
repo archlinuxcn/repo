@@ -1,0 +1,18 @@
+pkgname=julia-git-quantumopticsbase-src
+pkgver=0.3.7
+_commit=24881e4da4904ef1f03b3692cf99a0ed1f75af60
+pkgrel=1
+pkgdesc="QuantumOpticsBase.jl"
+url="https://github.com/qojulia/QuantumOpticsBase.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/qojulia/QuantumOpticsBase.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd QuantumOpticsBase.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh QuantumOpticsBase "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-linearmaps-src
+pkgver=3.11.0
+_commit=65eb42238b3435d553d6cedf4a2fbb312b8bf4fc
+pkgrel=1
+pkgdesc="LinearMaps.jl"
+url="https://github.com/JuliaLinearAlgebra/LinearMaps.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaLinearAlgebra/LinearMaps.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LinearMaps.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LinearMaps "${pkgdir}" "${pkgname}" julia-git
+}
