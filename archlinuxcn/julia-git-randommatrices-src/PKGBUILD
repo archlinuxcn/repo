@@ -1,0 +1,18 @@
+pkgname=julia-git-randommatrices-src
+pkgver=0.5.2
+_commit=b774ac2f76dba1c7edccec30dafe498ae5dfb99f
+pkgrel=1
+pkgdesc="RandomMatrices.jl"
+url="https://github.com/JuliaMath/RandomMatrices.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaMath/RandomMatrices.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd RandomMatrices.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh RandomMatrices "${pkgdir}" "${pkgname}" julia-git
+}

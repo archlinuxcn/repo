@@ -1,0 +1,18 @@
+pkgname=julia-git-fastgaussquadrature-src
+pkgver=0.5.1
+_commit=a5932947c43186d1e13730015da705b5052012f5
+pkgrel=1
+pkgdesc="FastGaussQuadrature.jl"
+url="https://github.com/JuliaApproximation/FastGaussQuadrature.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaApproximation/FastGaussQuadrature.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd FastGaussQuadrature.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh FastGaussQuadrature "${pkgdir}" "${pkgname}" julia-git
+}
