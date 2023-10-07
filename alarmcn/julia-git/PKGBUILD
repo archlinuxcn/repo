@@ -41,8 +41,22 @@ license=('GPL')
 _soname_deps=(libcurl.so libgit2.so libopenlibm.so libssh2.so
               libmbedcrypto.so libmbedtls.so libmbedx509.so)
 depends_libs=(arpack fftw gmp libunwind mpfr pcre2 suitesparse
-              openspecfun openblas-lapack libutf8proc-git
+              openspecfun libutf8proc-git
               mbedtls zlib p7zip libnghttp2 ca-certificates-utils lld)
+case "$CARCH" in
+  x86_64)
+    depends_libs=("${depends_libs[@]}" openblas64)
+    ;;
+  aarch64)
+    depends_libs=("${depends_libs[@]}" openblas64)
+    ;;
+  i686)
+    depends_libs=("${depends_libs[@]}" openblas)
+    ;;
+  armv7h)
+    depends_libs=("${depends_libs[@]}" openblas)
+    ;;
+esac
 makedepends=("${depends_libs[@]}" llvm-julia gcc-fortran git patchelf python proot
              "${_soname_deps[@]}")
 options=('debug' '!strip' '!buildflags')
@@ -124,12 +138,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_INTEL_JITEVENTS=0
             USE_LLVM_SHLIB=1
             USE_BINARYBUILDER=0
-            USE_BLAS64=0 # Julia assumes system blas64 on aarch64
             LLVM_USE_CMAKE=0 # Workaround LLVM linking with system LLVM
-            LIBBLASNAME=libopenblas
-            LIBBLAS=-lopenblas
-            LIBLAPACKNAME=libopenblas
-            LIBLAPACK=-lopenblas
             LLVM_CONFIG=${_LLVM_CONFIG})
 
 _x86_target='generic,opt_size;haswell,clone_all,-rdrnd;skylake,base(1),-rdrnd,-rdseed,-rtm;cannonlake,base(1),-rdrnd,-rdseed,-rtm'
@@ -139,19 +148,39 @@ _aa64_target='generic;armv8.2-a;apple-m1,clone_all'
 case "$CARCH" in
   x86_64)
     _cpu_target="${_x86_target}"
-    julia_opts=("${julia_opts[@]}" MARCH=x86-64)
+    julia_opts=("${julia_opts[@]}" MARCH=x86-64
+                USE_BLAS64=1
+                LIBBLASNAME=libopenblas64
+                LIBBLAS=-lopenblas64
+                LIBLAPACKNAME=libopenblas64
+                LIBLAPACK=-lopenblas64)
     ;;
   i686)
     _cpu_target="${_x86_target}"
-    julia_opts=("${julia_opts[@]}" MARCH=pentium4)
+    julia_opts=("${julia_opts[@]}" MARCH=pentium4
+                USE_BLAS64=0
+                LIBBLASNAME=libopenblas
+                LIBBLAS=-lopenblas
+                LIBLAPACKNAME=libopenblas
+                LIBLAPACK=-lopenblas)
     ;;
   aarch64)
     _cpu_target="${_aa64_target}"
-    julia_opts=("${julia_opts[@]}" MARCH=armv8-a)
+    julia_opts=("${julia_opts[@]}" MARCH=armv8-a
+                USE_BLAS64=1
+                LIBBLASNAME=libopenblas64
+                LIBBLAS=-lopenblas64
+                LIBLAPACKNAME=libopenblas64
+                LIBLAPACK=-lopenblas64)
     ;;
   armv7h)
     _cpu_target="${_arm_target}"
-    julia_opts=("${julia_opts[@]}" MARCH=armv7-a)
+    julia_opts=("${julia_opts[@]}" MARCH=armv7-a
+                USE_BLAS64=0
+                LIBBLASNAME=libopenblas
+                LIBBLAS=-lopenblas
+                LIBLAPACKNAME=libopenblas
+                LIBLAPACK=-lopenblas)
     ;;
 esac
 julia_opts=("${julia_opts[@]}" JULIA_CPU_TARGET="${_cpu_target}")
