@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Remove
+Type = Path
+Target = usr/lib/modules/*/vmlinuz
+
+[Action]
+Description = Restoring Linux kernel modules...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/linux-modules-restore
+NeedsTargets
