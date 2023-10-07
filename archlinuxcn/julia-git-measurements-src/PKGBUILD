@@ -1,0 +1,18 @@
+pkgname=julia-git-measurements-src
+pkgver=2.10.0
+_commit=21cf93c7dc25b7a1b14d5b877bc8f4884599ff5e
+pkgrel=1
+pkgdesc="Measurements.jl"
+url="https://github.com/JuliaPhysics/Measurements.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaPhysics/Measurements.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Measurements.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Measurements "${pkgdir}" "${pkgname}" julia-git
+}
