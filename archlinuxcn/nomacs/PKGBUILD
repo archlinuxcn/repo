@@ -5,11 +5,11 @@
 _plugins_pkgver=3.16
 pkgname=nomacs
 pkgver=3.17.2285
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="A Qt image viewer"
 arch=(x86_64)
-url="https://nomacs.org/"
+url="https://github.com/nomacs/nomacs"
 license=(GPL3)
 depends=(exiv2 gcc-libs glibc libraw libtiff opencv qt5-base qt5-svg quazip-qt5)
 makedepends=(cmake git git-lfs qt5-tools python)
