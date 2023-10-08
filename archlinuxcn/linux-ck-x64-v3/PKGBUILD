@@ -71,8 +71,9 @@ _subarch=41
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 pkgbase=linux-ck-x64-v3
-pkgver=6.5.5
+pkgver=6.5.6
 pkgrel=1
+_upstream=arch2
 arch=(x86_64)
 url="https://wiki.archlinux.org/index.php/Linux-ck"
 license=(GPL2)
@@ -99,38 +100,20 @@ _gcc_more_v=20221217
 source=(
   "https://www.kernel.org/pub/linux/kernel/v6.x/linux-$pkgver.tar".{xz,sign}
   config  # the main kernel config file
+  "https://github.com/archlinux/linux/releases/download/v$pkgver-$_upstream/linux-v$pkgver-$_upstream.patch.zst"
   "more-uarches-$_gcc_more_v.tar.gz::https://github.com/graysky2/kernel_compiler_patch/archive/$_gcc_more_v.tar.gz"
   "ck-hrtimer-$_commit.tar.gz::https://github.com/graysky2/linux-patches/archive/$_commit.tar.gz"
-  0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
-  0002-drivers-firmware-skip-simpledrm-if-nvidia-drm.modese.patch
-  0003-ASoC-Intel-soc-acpi-fix-Dell-SKU-0B34.patch
-  0004-btrfs-wait-on-uncached-block-groups-on-every-allocat.patch
-  0005-btrfs-set-last-dir-index-to-the-current-last-index-w.patch
-  0006-btrfs-refresh-dir-last-index-during-a-rewinddir-3-ca.patch
-  0007-btrfs-fix-race-between-reading-a-directory-and-addin.patch
-  0008-i915-Limit-the-length-of-an-sg-list-to-the-requested.patch
-  0009-net-wwan-t7xx-Add-AP-CLDMA.patch
-  0010-Revert-101bd907b424-misc-rtsx-judge-ASPM-Mode-to-set.patch
 )
 validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
-sha256sums=('8cf10379f7df8ea731e09bff3d0827414e4b643dd41dc99d0af339669646ef95'
+sha256sums=('78e36d4214547051c24df2140f4ce09428d6c515ad9a71b38b28e8094a95d2f6'
             'SKIP'
             '46451dbc3305d4c2e726a2f1943bddf697c5bb6815d93e5baed80bca82e53fdc'
+            '90fbe7cd6c6b3e469e0f929e6ab17f7ea07c8127b91eed813004fb9aaa03a6d7'
             'f1d586e111932890ad5e0df15d092fb9b3f87bae4ea17812aae9b0ec98fe2db0'
-            'a86a59d089ddd4f31565ff6a27ba74f4697ffa0ab0f57dc839e1da6ab83d77a4'
-            '9277f8bd1f8450edaf36ca124d5019520cf9c6f28513dc1dab1f7159be03dfb5'
-            '5ed15d63106e050c6aa92874fcb33b1f827702d42d4281a4b0366e2387f01a07'
-            '882313cbb296e62dec0d1780aad2c3086fc0fbba86438dd5cef0a1b9519a4224'
-            'fa3b984d08e4d764cb6df48d9cafe19284cce059e7856b0e860bce332e92890b'
-            '3dfd78e809b04a8f1374687f5be667a6275625b08f068a44470c3f2a8a37d4a1'
-            'c623b7ac173cdd19a537d0767b7b82b13f166a9705cad16896556e8b9f7d3c87'
-            'b6682cec5ea11cc06c27be8c3f0dc25f0168f28308e64c84d4c53f012d02f282'
-            '6bf774b0294488c01fc9392c69c355859d3fa7ea62127c3cb2f11cedf860e848'
-            '6c4dfefacd42c571bf53ddaf031566e44832ce87480c63553ddf149620e00e4e'
-            '242b8868d2a1c8a403e05c0da85f0dc48192ff22adad97e552b4213a19839676')
+            'a86a59d089ddd4f31565ff6a27ba74f4697ffa0ab0f57dc839e1da6ab83d77a4')
 
 prepare() {
   cd linux-${pkgver}
@@ -139,15 +122,11 @@ prepare() {
   echo "-$pkgrel" > localversion.10-pkgrel
   echo "${pkgbase#linux}" > localversion.20-pkgname
 
-  local src
-  for src in "${source[@]}"; do
-    src="${src%%::*}"
-    src="${src##*/}"
-    src="${src%.zst}"
-    [[ $src = 0*.patch ]] || continue
-    echo "Applying patch $src..."
-    patch -Np1 < "../$src"
-  done
+  msg2 "Applying Arch Linux $_upstream patch set"
+  patch -p1 -i ../linux-v$pkgver-$_upstream.patch || exit 1
+
+  # remove the -archx suffix
+  sed -i s'/^EXTRAVERSION =.*/EXTRAVERSION =/' Makefile
 
   echo "Setting config..."
   cp ../config .config
@@ -186,7 +165,7 @@ prepare() {
 
   # https://github.com/graysky2/kernel_gcc_patch
   # make sure to apply after olddefconfig to allow the next section
-  echo "Patching to enable GCC optimization for other uarchs..."
+  msg2 "Patching to enable GCC optimization for other uarchs..."
   patch -Np1 -i "$srcdir/kernel_compiler_patch-$_gcc_more_v/more-uarches-for-kernel-5.17+.patch"
 
   if [ -n "$_subarch" ]; then
@@ -210,7 +189,7 @@ prepare() {
     fi
 
   make -s kernelrelease > version
-  echo "Prepared $pkgbase version $(<version)"
+  msg2 "Prepared $pkgbase version $(<version)"
 
   [[ -z "$_makenconfig" ]] || make LLVM=$_LLVM LLVM_IAS=$_LLVM nconfig
 
