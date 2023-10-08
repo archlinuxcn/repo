@@ -150,10 +150,10 @@ case "$CARCH" in
     _cpu_target="${_x86_target}"
     julia_opts=("${julia_opts[@]}" MARCH=x86-64
                 USE_BLAS64=1
-                LIBBLASNAME=libopenblas64
-                LIBBLAS=-lopenblas64
-                LIBLAPACKNAME=libopenblas64
-                LIBLAPACK=-lopenblas64)
+                LIBBLASNAME=libopenblas64_
+                LIBBLAS=-lopenblas64_
+                LIBLAPACKNAME=libopenblas64_
+                LIBLAPACK=-lopenblas64_)
     ;;
   i686)
     _cpu_target="${_x86_target}"
@@ -168,10 +168,10 @@ case "$CARCH" in
     _cpu_target="${_aa64_target}"
     julia_opts=("${julia_opts[@]}" MARCH=armv8-a
                 USE_BLAS64=1
-                LIBBLASNAME=libopenblas64
-                LIBBLAS=-lopenblas64
-                LIBLAPACKNAME=libopenblas64
-                LIBLAPACK=-lopenblas64)
+                LIBBLASNAME=libopenblas64_
+                LIBBLAS=-lopenblas64_
+                LIBLAPACKNAME=libopenblas64_
+                LIBLAPACK=-lopenblas64_)
     ;;
   armv7h)
     _cpu_target="${_arm_target}"
