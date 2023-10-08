@@ -112,7 +112,7 @@ build() {
 package_llvm-julia() {
   pkgdesc="Compiler infrastructure (with patch for julia)"
   depends=("llvm-libs-julia=$pkgver-$pkgrel" perl)
-  optdepends=('python-setuptools: for using lit (LLVM Integrated Tester)')
+  optdepends=()
   conflicts=("llvm${_versioned_llvm}")
   provides=("llvm${_versioned_llvm}=$pkgver-$pkgrel")
   export LANG=en_US.UTF-8
@@ -121,10 +121,13 @@ package_llvm-julia() {
 
   DESTDIR="$pkgdir" ninja install
 
-  # Include lit for running lit-based tests in other projects
-  pushd ../utils/lit
-  python3 setup.py install --root="$pkgdir" -O1
-  popd
+  if [[ -z $_versioned_llvm ]]; then
+    optdepends+=('python-setuptools: for using lit (LLVM Integrated Tester)')
+    # Include lit for running lit-based tests in other projects
+    pushd ../utils/lit
+    python3 setup.py install --root="$pkgdir" -O1
+    popd
+  fi
 
   # The runtime libraries go into llvm-libs
   mv -f "$pkgdir"/${_llvm_prefix}/lib/lib{LLVM,LTO,Remarks}*.so* "$srcdir"
@@ -142,7 +145,6 @@ package_llvm-julia() {
     ln -s ../lib/llvm${_versioned_llvm}/bin/$_basename \
        "$pkgdir/usr/bin/$_basename-${_versioned_llvm}"
     done
-    rm -rf "$pkgdir/usr/lib/python"*
   fi
 
   install -Dm644 ../LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
