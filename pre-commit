@@ -237,7 +237,7 @@ def dump_groups():
         import pycman
         # now that we are running on archlinux so dump from pacman's syncdb
         handle = pycman.config.init_with_config('/etc/pacman.conf')
-        OFFICIAL = ['core', 'extra', 'community']
+        OFFICIAL = ['core', 'extra']
         syncdbs = [db for db in handle.get_syncdbs() if db.name in OFFICIAL]
         for db in syncdbs:
             for pkg in db.pkgcache:

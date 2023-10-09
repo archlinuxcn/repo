@@ -15,6 +15,6 @@ jobs:
       with:
         python-version: '3.11'
     - name: Install dependencies
-      run: pip install PyYAML jsonschema pyalpm
+      run: pip install jsonschema pyyaml
     - name: Run test
       run: ./pre-commit --all
