@@ -135,28 +135,68 @@ struct WorkQueue
     end
 end
 
-function check_already_compiled(binpath, name)
-    # This assume the precompiled file to exist as long as the directory exists
-    # and also assumes there isn't any name conflicts between packages.
-    # Ideally we would also check the time stamp and the `.archpkg` file.
-    # Should be good enough for now
-    path = joinpath(binpath, "compiled", "v$(VERSION.major).$(VERSION.minor)", name)
-    return isdir(path)
+function check_already_compiled(pkgid)
+    entrypath, entryfile = Base.cache_file_entry(pkg)
+    path = joinpath(Base.DEPOT_PATH[1], entrypath)
+    if !isdir(path)
+        return false, true
+    end
+    for file in readdir(path, sort = false) # no sort given we sort later
+        if !((pkg.uuid === nothing && file == entryfile * ".ji") ||
+            (pkg.uuid !== nothing && startswith(file, entryfile * "_") &&
+            endswith(file, ".ji")))
+            continue
+        end
+        filepath = joinpath(path, file)
+        if !isaccessiblefile(filepath)
+            continue
+        end
+        if Base.isprecompiled(pkgid, ignore_loaded=true,
+                              cachepaths=[filepath])
+            if pkg.uuid === nothing
+                return true, true
+            end
+            try
+                cachedir = dirname(filepath)
+                if isfile(joinpath(cachedir, ".archpkg"))
+                    return true, false
+                end
+                cachefile = basename(filepath)
+                for file in readdir(cachedir)
+                    if !startswith(file, ".archpkg") || file == ".archpkg"
+                        continue
+                    end
+                    archpkg_path = joinpath(cachedir, file)
+                    if !isaccessiblefile(archpkg_path)
+                        continue
+                    end
+                    for line in eachline(archpkg_path)
+                        if line == cachefile
+                            return true, false
+                        end
+                    end
+                end
+            catch e
+                @warn "Error checking compiled cache for $(pkgid): $(e)"
+                return true, true
+            end
+            return true, true
+        end
+    end
+    return false, true
 end
 
-function compile_one(work_queue, binpath)
+function compile_one(work_queue)
     work = pop!(work_queue.free)
+    compiled, do_log = check_already_compiled(work.id)
     do_log = true
-    if !check_already_compiled(binpath, work.id.name)
+    if !compiled
         try
             Base.compilecache(work.id, work.src)
         catch e
             @show e
         end
-    elseif isfile(joinpath(binpath, "compiled", "v$(VERSION.major).$(VERSION.minor)",
-                           work.id.name, ".archpkg"))
-        do_log = false
-    else
+    elseif do_log
         @info "Not touching compiled cache for $(work.id)"
     end
     push!(work_queue.done, work)
@@ -172,9 +212,9 @@ function compile_one(work_queue, binpath)
     end
 end
 
-function compile_available(work_queue, binpath)
+function compile_available(work_queue)
     while !isempty(work_queue.free)
-        compile_one(work_queue, binpath)
+        compile_one(work_queue)
     end
 end
 
@@ -186,7 +226,7 @@ function precompile(work_queue, binpath)
     insert!(Base.DEPOT_PATH, 1, binpath)
     resize!(Base.DEPOT_PATH, 1)
     Core.eval(Base, :(is_interactive = true))
-    compile_available(work_queue, binpath)
+    compile_available(work_queue)
     @assert isempty(work_queue.free)
     if !isempty(work_queue.blocked)
         @warn "Dependency tracking failed for $([work.id for work in work_queue.blocked])"
