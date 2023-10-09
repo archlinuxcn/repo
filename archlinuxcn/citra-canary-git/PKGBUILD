@@ -3,7 +3,7 @@
 _pkgname=citra
 pkgname=$_pkgname-canary-git
 epoch=2
-pkgver=2642.r0.g318c8444d
+pkgver=2646.r0.ga434dc336
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger"
 arch=('i686' 'x86_64')
@@ -17,7 +17,7 @@ source=("$_pkgname::git+https://github.com/citra-emu/citra-canary"
 ext-lib.patch
 gc.patch)
 md5sums=('SKIP'
-         '15c05813556ce7b42a9fa6c2b3dbcdbe'
+         '584485ee4758c623bee7744c2946b3da'
          'f151510cd1fc233992710405cbf44323')
 
 pkgver() {
@@ -69,6 +69,8 @@ build() {
       -DUSE_SYSTEM_CPP_JWT=ON \
       -DUSE_SYSTEM_JSON=ON \
       -DUSE_SYSTEM_SOUNDTOUCH=ON \
+      -DUSE_SYSTEM_FMT=ON \
+      -DUSE_SYSTEM_DYNARMIC=ON \
       -DENABLE_MF=OFF \
       -DENABLE_TESTS=OFF \
       -DCITRA_CHECK_SUBMODULES=OFF \
