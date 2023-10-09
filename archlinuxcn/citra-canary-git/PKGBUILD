@@ -35,6 +35,7 @@ prepare() {
     sed -i 's/OUTVAR ${BUILD_REPOSITORY}/OUTVAR "${BUILD_REPOSITORY}"/g' CMakeModules/GenerateBuildInfo.cmake
     sed -i 's/cpp-httplib::cpp-httplib/httplib::httplib/g' externals/CMakeLists.txt
     sed -i 's/CppHttp/httplib/g' externals/CMakeLists.txt
+    sed -i 's/0.14.1/0.14.0/g' externals/CMakeLists.txt
 
     git submodule update --init --remote externals/lodepng
     git submodule update --init --remote externals/nihstro
