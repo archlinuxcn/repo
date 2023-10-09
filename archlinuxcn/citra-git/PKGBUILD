@@ -4,8 +4,8 @@
 
 _pkgbase='citra'
 pkgname="$_pkgbase-git"
-pkgver=r9802.7931aac3b
-pkgrel=2
+pkgver=r9805.f5b888868
+pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger (Master branch)"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra/"
@@ -18,7 +18,7 @@ source=("git+https://github.com/citra-emu/citra.git"
 ext-lib.patch
 gc.patch)
 md5sums=('SKIP'
-         '15c05813556ce7b42a9fa6c2b3dbcdbe'
+         '584485ee4758c623bee7744c2946b3da'
          'f151510cd1fc233992710405cbf44323')
 
 pkgver() {
@@ -35,6 +35,7 @@ prepare() {
     sed -i 's/OUTVAR ${BUILD_REPOSITORY}/OUTVAR "${BUILD_REPOSITORY}"/g' CMakeModules/GenerateBuildInfo.cmake
     sed -i 's/cpp-httplib::cpp-httplib/httplib::httplib/g' externals/CMakeLists.txt
     sed -i 's/CppHttp/httplib/g' externals/CMakeLists.txt
+    sed -i 's/0.14.1/0.14.0/g' externals/CMakeLists.txt
 
     git submodule update --init --remote externals/lodepng
     git submodule update --init --remote externals/nihstro
@@ -69,6 +70,8 @@ build() {
       -DUSE_SYSTEM_CPP_JWT=ON \
       -DUSE_SYSTEM_JSON=ON \
       -DUSE_SYSTEM_SOUNDTOUCH=ON \
+      -DUSE_SYSTEM_FMT=ON \
+      -DUSE_SYSTEM_DYNARMIC=ON \
       -DENABLE_MF=OFF \
       -DENABLE_TESTS=OFF \
       -DCITRA_CHECK_SUBMODULES=OFF \

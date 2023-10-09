@@ -29,12 +29,11 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
      # only check submodules when source is obtained via Git
      check_submodules_present()
  endif()
-@@ -233,6 +238,38 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
+@@ -240,6 +245,36 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
  
 +find_package(enet 1.3)
-+find_package(fmt 8.1.1 CONFIG)
 +find_package(inih)
 +find_package(PkgConfig REQUIRED)
 +pkg_check_modules(Crypto++ REQUIRED IMPORTED_TARGET libcryptopp)
@@ -46,7 +45,6 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
 +
 +if (ARCHITECTURE_x86 OR ARCHITECTURE_x86_64)
 +    find_package(xbyak 6)
-+    find_package(dynarmic 6.4.0)
 +endif()
 +
 +if (ENABLE_CUBEB)
@@ -124,15 +122,8 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
  
  # HACK: The logic to set up the base include directory for CryptoPP does not work with Android SDK CMake 3.22.1.
  # Until there is a fixed version available, this code will detect and add in the proper include if it does not exist.
-@@ -68,19 +74,21 @@ target_include_directories(dds-ktx INTER
+@@ -79,7 +85,7 @@ endif()
  
- # fmt and Xbyak need to be added before dynarmic
- # libfmt
--option(FMT_INSTALL "" ON)
--add_subdirectory(fmt EXCLUDE_FROM_ALL)
-+if (NOT TARGET fmt::fmt)
-+    add_subdirectory(fmt EXCLUDE_FROM_ALL)
-+endif()
  
  # Xbyak
 -if ("x86_64" IN_LIST ARCHITECTURE)
@@ -140,17 +131,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
      add_subdirectory(xbyak EXCLUDE_FROM_ALL)
  endif()
  
- # Dynarmic
--if ("x86_64" IN_LIST ARCHITECTURE OR "arm64" IN_LIST ARCHITECTURE)
-+if (("x86_64" IN_LIST ARCHITECTURE OR "arm64" IN_LIST ARCHITECTURE) AND NOT TARGET dynarmic::dynarmic)
-     set(DYNARMIC_TESTS OFF CACHE BOOL "")
-     set(DYNARMIC_FRONTENDS "A32" CACHE STRING "")
-     add_subdirectory(dynarmic EXCLUDE_FROM_ALL)
-+    add_library(dynarmic::dynarmic ALIAS dynarmic)
- endif()
- 
- # getopt
-@@ -92,16 +100,21 @@ endif()
+@@ -111,16 +117,21 @@ endif()
  add_subdirectory(glad)
  
  # glslang
@@ -180,7 +161,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
  
  # MicroProfile
  add_library(microprofile INTERFACE)
-@@ -149,26 +162,35 @@ if (ENABLE_LIBUSB AND NOT USE_SYSTEM_LIB
+@@ -168,26 +179,35 @@ if (ENABLE_LIBUSB AND NOT USE_SYSTEM_LIB
  endif()
  
  # Zstandard
@@ -225,7 +206,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
      add_subdirectory(discord-rpc EXCLUDE_FROM_ALL)
      target_include_directories(discord-rpc INTERFACE ./discord-rpc/include)
  endif()
-@@ -246,7 +268,8 @@ if(ANDROID)
+@@ -270,7 +290,8 @@ if(ANDROID)
  endif()
  
  # OpenAL Soft
@@ -235,7 +216,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
      set(ALSOFT_EMBED_HRTF_DATA OFF CACHE BOOL "")
      set(ALSOFT_EXAMPLES OFF CACHE BOOL "")
      set(ALSOFT_INSTALL OFF CACHE BOOL "")
-@@ -259,8 +282,10 @@ if (ENABLE_OPENAL)
+@@ -283,8 +304,10 @@ if (ENABLE_OPENAL)
  endif()
  
  # VMA
@@ -461,7 +442,7 @@ diff --color -rupN citra/src/common/CMakeLists.txt citra/src/common/CMakeLists.t
 @@ -166,10 +166,10 @@ endif()
  create_target_directory_groups(citra_common)
  
- target_link_libraries(citra_common PUBLIC fmt::fmt library-headers microprofile Boost::boost Boost::serialization Boost::iostreams)
+ target_link_libraries(citra_common PUBLIC fmt library-headers microprofile Boost::boost Boost::serialization Boost::iostreams)
 -target_link_libraries(citra_common PRIVATE libzstd_static)
 +target_link_libraries(citra_common PRIVATE zstd::zstd)
  
@@ -478,20 +459,11 @@ diff --color -rupN citra/src/core/CMakeLists.txt citra/src/core/CMakeLists.txt
  
  target_link_libraries(citra_core PUBLIC citra_common PRIVATE audio_core network video_core)
  target_link_libraries(citra_core PRIVATE Boost::boost Boost::serialization Boost::iostreams httplib)
--target_link_libraries(citra_core PUBLIC dds-ktx PRIVATE cryptopp fmt::fmt lodepng open_source_archives)
-+target_link_libraries(citra_core PUBLIC dds-ktx PRIVATE PkgConfig::Crypto++ fmt::fmt lodepng open_source_archives)
+-target_link_libraries(citra_core PUBLIC dds-ktx PRIVATE cryptopp fmt lodepng open_source_archives)
++target_link_libraries(citra_core PUBLIC dds-ktx PRIVATE PkgConfig::Crypto++ fmt lodepng open_source_archives)
  
  if (ENABLE_WEB_SERVICE)
      target_link_libraries(citra_core PRIVATE web_service)
-@@ -508,7 +508,7 @@ if ("x86_64" IN_LIST ARCHITECTURE OR "ar
-         arm/dynarmic/arm_tick_counts.cpp
-         arm/dynarmic/arm_tick_counts.h
-     )
--    target_link_libraries(citra_core PRIVATE dynarmic)
-+    target_link_libraries(citra_core PRIVATE dynarmic::dynarmic)
- endif()
- 
- if (CITRA_USE_PRECOMPILED_HEADERS)
 diff --color -rupN citra/src/input_common/CMakeLists.txt citra/src/input_common/CMakeLists.txt
 --- citra/src/input_common/CMakeLists.txt	2023-01-20 00:44:13.872264790 +0800
 +++ citra/src/input_common/CMakeLists.txt	2023-01-20 00:41:12.788582447 +0800
