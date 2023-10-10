@@ -456,6 +456,8 @@ package-julia-in() {
   mv "${pkgdir}/usr/share/julia/compiled/v$ver_short/"* \
      "${pkgdir}/usr/lib/julia/arch-compiled/julia/"
 
+  chmod -R go-w "${pkgdir}/usr/lib/julia/arch-compiled/julia/"
+
   # The ji file records the exact time stamps so we need to fix those in post_install
   (
     echo "_fix_timestamps() {"
