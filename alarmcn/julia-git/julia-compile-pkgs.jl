@@ -148,7 +148,7 @@ function check_already_compiled(pkg)
             continue
         end
         filepath = joinpath(path, file)
-        if !isaccessiblefile(filepath)
+        if !isfile(filepath)
             continue
         end
         if Base.isprecompiled(pkg, ignore_loaded=true, cachepaths=[filepath])
