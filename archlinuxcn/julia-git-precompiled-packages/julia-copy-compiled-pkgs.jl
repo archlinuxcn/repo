@@ -66,5 +66,5 @@ const tgt_dir = ARGS[3]
 const pkgnames = ARGS[4:end]
 
 for name in pkgnames
-    copy_pkg_cache(get_pkginfo(joinpath(stdlib_dir), name), compiled_dir, tgt_dir)
+    copy_pkg_cache(get_pkginfo(joinpath(stdlib_dir, name)), compiled_dir, tgt_dir)
 end
