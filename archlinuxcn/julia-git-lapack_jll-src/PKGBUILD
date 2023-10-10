@@ -11,7 +11,7 @@ depends=(julia-git lapack64)
 source=("git+https://github.com/JuliaBinaryWrappers/LAPACK_jll.jl.git#commit=$_commit"
         jll.toml)
 sha256sums=('SKIP'
-            'aba0b3d75de5fae0f55ac01b66589bccb8c5f5dc76d66ed908df289ad6ec8347')
+            '65fd3c86d5a6f28db678185ada4c843f8f7926939534258c26ce57f6e191679a')
 
 build() {
   cd LAPACK_jll.jl

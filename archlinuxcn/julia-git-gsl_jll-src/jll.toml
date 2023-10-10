@@ -6,6 +6,8 @@ dlopen_global = true
 
 [[library]]
 name = "libgslcblas"
+file = "libcblas.so.3"
+use_soname = false
 
 [[binary]]
 name = "gsl_histogram"
