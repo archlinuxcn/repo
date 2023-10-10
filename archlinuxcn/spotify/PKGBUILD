@@ -6,9 +6,9 @@
 # Contributor: Eothred <yngve.levinsen@gmail.com>
 
 pkgname=spotify
-pkgver='1.2.20.1210'
+pkgver='1.2.22.982'
 epoch=1
-_commit=g2a8a8a57
+_commit=g794acc0a
 pkgrel=3
 pkgdesc='A proprietary music streaming service'
 arch=('x86_64')
@@ -34,7 +34,7 @@ source=("${pkgname}-${pkgver}-${_commit}-x86_64.deb::http://repository.spotify.c
         "${pkgname}-${pkgver}-${pkgrel}-Release::http://repository.spotify.com/dists/testing/Release"
         "${pkgname}-${pkgver}-${pkgrel}-Release.sig::http://repository.spotify.com/dists/testing/Release.gpg"
         "${pkgname}-${pkgver}-${pkgrel}-x86_64-Packages::http://repository.spotify.com/dists/testing/non-free/binary-amd64/Packages")
-sha512sums=('a527d6fecec9fa925d8c60e0ba8764ec8f53d3f5268d0b968d3bdeca7d367081f7faa0bcd1fe016491f15e37a1238ad40dbca1fc93b2533e0238e7a7a07f352b'
+sha512sums=('fa30eb268fb52a2b5a697b39c4e93e4b625ecef596beb93cdf3509fb798ec16722b5f1aa2592041d7f7209df1e6262891aa451f79f9807d3a89725ba31b79140'
             'da48b628a4ea925dd8521133ebf364b261b11aed252d264dde6605d915cdb631919ffe672c58534bcdb60869e5d87a49a60a8198780b99517123f0031e83fdb1'
             '999abe46766a4101e27477f5c9f69394a4bb5c097e2e048ec2c6cb93dfa1743eb436bde3768af6ba1b90eaac78ea8589d82e621f9cbe7d9ab3f41acee6e8ca20'
             '2e16f7c7b09e9ecefaa11ab38eb7a792c62ae6f33d95ab1ff46d68995316324d8c5287b0d9ce142d1cf15158e61f594e930260abb8155467af8bc25779960615'
