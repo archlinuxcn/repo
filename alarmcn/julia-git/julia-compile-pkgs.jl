@@ -135,7 +135,7 @@ struct WorkQueue
     end
 end
 
-function check_already_compiled(pkgid)
+function check_already_compiled(pkg)
     entrypath, entryfile = Base.cache_file_entry(pkg)
     path = joinpath(Base.DEPOT_PATH[1], entrypath)
     if !isdir(path)
@@ -151,8 +151,7 @@ function check_already_compiled(pkgid)
         if !isaccessiblefile(filepath)
             continue
         end
-        if Base.isprecompiled(pkgid, ignore_loaded=true,
-                              cachepaths=[filepath])
+        if Base.isprecompiled(pkg, ignore_loaded=true, cachepaths=[filepath])
             if pkg.uuid === nothing
                 return true, true
             end
@@ -165,7 +164,7 @@ function check_already_compiled(pkgid)
                     return true, false
                 end
             catch e
-                @warn "Error checking compiled cache for $(pkgid): $(e)"
+                @warn "Error checking compiled cache for $(pkg): $(e)"
                 return true, true
             end
             return true, true
