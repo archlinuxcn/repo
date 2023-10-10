@@ -1,0 +1,67 @@
+From 42d57d016f5fb6d2a1a354743b9be911c1be87e8 Mon Sep 17 00:00:00 2001
+From: Jianhui Dai <jianhui.j.dai@intel.com>
+Date: Fri, 22 Sep 2023 21:30:04 +0000
+Subject: [PATCH] [GL] Free the X11 pixmap in the NativePixmapEGLX11Binding
+ destructor
+
+This CL frees the X11 pixmap in the NativePixmapEGLX11Binding destructor
+to prevent a memory leak in the X server.
+
+Bug: 1467689
+Change-Id: Id4cba30825417db52176f9165db34d7234a05a05
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/4886249
+Reviewed-by: Ted (Chromium) Meyer <tmathmeyer@chromium.org>
+Commit-Queue: Ted (Chromium) Meyer <tmathmeyer@chromium.org>
+Reviewed-by: Maksim Sisov <msisov@igalia.com>
+Cr-Commit-Position: refs/heads/main@{#1200486}
+---
+ .../platform/x11/native_pixmap_egl_x11_binding.cc    | 12 +++++++++---
+ .../platform/x11/native_pixmap_egl_x11_binding.h     |  2 ++
+ 2 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/ui/ozone/platform/x11/native_pixmap_egl_x11_binding.cc b/ui/ozone/platform/x11/native_pixmap_egl_x11_binding.cc
+index 46a2d3274b9..b46eb67b9de 100644
+--- a/ui/ozone/platform/x11/native_pixmap_egl_x11_binding.cc
++++ b/ui/ozone/platform/x11/native_pixmap_egl_x11_binding.cc
+@@ -147,9 +147,17 @@ NativePixmapEGLX11Binding::~NativePixmapEGLX11Binding() {
+   if (surface_) {
+     eglDestroySurface(display_, surface_);
+   }
++
++  if (pixmap_ != x11::Pixmap::None) {
++    auto* connection = x11::Connection::Get();
++    connection->FreePixmap({pixmap_});
++  }
+ }
+ 
+ bool NativePixmapEGLX11Binding::Initialize(x11::Pixmap pixmap) {
++  CHECK_NE(pixmap, x11::Pixmap::None);
++  pixmap_ = pixmap;
++
+   if (eglInitialize(display_, nullptr, nullptr) != EGL_TRUE) {
+     return false;
+   }
+@@ -223,9 +231,7 @@ std::unique_ptr<NativePixmapGLBinding> NativePixmapEGLX11Binding::Create(
+     return nullptr;
+   }
+ 
+-  // TODO(https://crbug.com/1411749): if we early out below, should we call
+-  // FreePixmap()?
+-
++  // Transfer the ownership of `pixmap` to `NativePixmapEGLX11Binding`.
+   if (!binding->Initialize(std::move(pixmap))) {
+     VLOG(1) << "Unable to initialize binding from pixmap";
+     return nullptr;
+diff --git a/ui/ozone/platform/x11/native_pixmap_egl_x11_binding.h b/ui/ozone/platform/x11/native_pixmap_egl_x11_binding.h
+index 013df3f776a..99b262b82ce 100644
+--- a/ui/ozone/platform/x11/native_pixmap_egl_x11_binding.h
++++ b/ui/ozone/platform/x11/native_pixmap_egl_x11_binding.h
+@@ -47,6 +47,8 @@ class NativePixmapEGLX11Binding : public NativePixmapGLBinding {
+   EGLSurface surface_ = nullptr;
+   EGLDisplay display_;
+   gfx::BufferFormat format_;
++
++  x11::Pixmap pixmap_ = x11::Pixmap::None;
+ };
+ 
+ }  // namespace ui
