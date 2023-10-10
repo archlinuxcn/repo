@@ -176,7 +176,6 @@ end
 function compile_one(work_queue)
     work = pop!(work_queue.free)
     compiled, do_log = check_already_compiled(work.id)
-    do_log = true
     if !compiled
         try
             Base.compilecache(work.id, work.src)
@@ -213,10 +212,14 @@ function precompile(work_queue, binpath)
     insert!(Base.DEPOT_PATH, 1, binpath)
     resize!(Base.DEPOT_PATH, 1)
     Core.eval(Base, :(is_interactive = true))
-    compile_available(work_queue)
-    @assert isempty(work_queue.free)
-    if !isempty(work_queue.blocked)
-        @warn "Dependency tracking failed for $([work.id for work in work_queue.blocked])"
+    try
+        compile_available(work_queue)
+        @assert isempty(work_queue.free)
+        if !isempty(work_queue.blocked)
+            @warn "Dependency tracking failed for $([work.id for work in work_queue.blocked])"
+        end
+    catch e
+        @warn "Error during precompilation: $e"
     end
     Core.eval(Base, :(is_interactive = false))
     @info "Done package precompilation"
