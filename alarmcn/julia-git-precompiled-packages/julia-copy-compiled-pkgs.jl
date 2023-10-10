@@ -12,15 +12,16 @@ function pkg_info(srcdir, pkg, d)
     extensions = get(d, "extensions", nothing)
     if extensions isa Dict{String,Any}
         for (k, v) in extensions
-            extsrc = joinpath(srcdir, "ext", "$(v).jl")
+            extsrc = joinpath(srcdir, "ext", "$(k).jl")
             isfile(extsrc) || continue
-            sources[v] = extsrc
+            sources[k] = extsrc
         end
     end
     return PkgInfo(pkg, sources)
 end
 
-function get_pkginfo(srcdir)
+function get_pkginfo(stdlib_dir, pkg)
+    srcdir = joinpath(stdlib_dir, pkg)
     for p in ("JuliaProject.toml", "Project.toml")
         projfile = joinpath(srcdir, p)
         isfile(projfile) || continue
@@ -43,11 +44,11 @@ function copy_pkg_cache_for_src(name, src, compiled_dir, pkg_tgt_dir)
             continue
         end
         mkpath(joinpath(pkg_tgt_dir, name))
-        cp(cachepath, joinpath(pkg_tgt_dir, name, file))
+        cp(cachepath, joinpath(pkg_tgt_dir, name, file), force=true)
         sofile = file[1:end-2] * "so"
-        if isfile(sofile)
-            cp(joinpath(pkgcache_dir, sofile),
-               joinpath(pkg_tgt_dir, name, sofile))
+        sopath = joinpath(pkgcache_dir, sofile)
+        if isfile(sopath)
+            cp(sopath, joinpath(pkg_tgt_dir, name, sofile), force=true)
         end
     end
 end
@@ -66,5 +67,5 @@ const tgt_dir = ARGS[3]
 const pkgnames = ARGS[4:end]
 
 for name in pkgnames
-    copy_pkg_cache(get_pkginfo(joinpath(stdlib_dir, name)), compiled_dir, tgt_dir)
+    copy_pkg_cache(get_pkginfo(stdlib_dir, name), compiled_dir, tgt_dir)
 end
