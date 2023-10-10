@@ -13,7 +13,7 @@ _opt_SYS_FLUTTER=0
 set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}"
-pkgver='1.2.2'
+pkgver='1.2.3'
 pkgrel=1
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
 arch=('x86_64')
@@ -52,10 +52,10 @@ if ! :; then
   _srcdir="${_pkgname}"
   source[0]="git+${_giturl}#tag=${pkgver}"
 fi
-md5sums=('6cef8a5aaa5c1feb42899a662a8e4aa9'
+md5sums=('801dab597be686334779f8fa7e4f1353'
          '97115fa5fc6d8d63bdf13dc57fc20861'
          '9cb4a6717db959e082db75200e75d3e1')
-sha256sums=('6dca487f7d05eb3a698138470ab171742b213b617adbdbee4f476afb2526c80f'
+sha256sums=('49d562e56cffea9f8e6f9facd6e6f0c5d51114dd6d154e23c8a441311fb8ac18'
             '7048e51a89c99a5b6cac6d8ae416121264effa76da34dba5c0e7cf85519c8e98'
             '6efb71ac8086699da74dad6736c32ddb20db5dcabe167c49a8c3a650675eb84b')
 
@@ -198,7 +198,8 @@ build() {
     dart pub global activate ffigen --version 5.0.1
     pushd "${srcdir}/flutter_rust_bridge/frb_codegen"; nice cargo install --path . ; popd
     pushd flutter ; flutter clean; flutter pub get ; popd
-    ~/.cargo/bin/flutter_rust_bridge_codegen --rust-input ./src/flutter_ffi.rs --dart-output ./flutter/lib/generated_bridge.dart
+    local _CGdefault=~/.cargo
+    "${CARGO_HOME:-${_CGdefault}}"/bin/flutter_rust_bridge_codegen --rust-input ./src/flutter_ffi.rs --dart-output ./flutter/lib/generated_bridge.dart
     if [ "${_opt_BUILD_PY}" -ne 0 ]; then
       nice ./build.py --hwcodec --flutter
     else
