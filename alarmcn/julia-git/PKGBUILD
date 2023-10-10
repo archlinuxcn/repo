@@ -84,11 +84,11 @@ sha512sums=('SKIP'
             '237b007ca945c0a67298a2418100872c768c093661cb3c2422400e512f56dfb8e34efe64a198c622895285567ede9ac0f26684b0dd50136127d20e57f2c91e62'
             '5fb97fff003c781079ea891a406ad0f10109f9e3cb1ec06380a29a6165b9a27f910a8cbe043a852da871765df4426415cff58bfb38a48e93267578e03148c89f'
             '73f18a587dbaa64837c1c86497e6aee1e5af531aac4365931d48907accf84469bc1948d0080d04cdd982c46575059a3794b59b833383faeaf7c01191a1b26c74'
-            '34409c7dfee59765b6b0288cc605883eb9666773ff47df4a0b1a5bc2d5edab26b34226bf4d29693ef857289754da51e2f8b52586d8b414e2e7218f5beacc01f3'
-            'b1f4aa204477986f3880b60658b159121e1b36d8b7551b20c1cd984f563950c6cee51ef13cb25328fbbe959e23d83a932fe64329f78326ef47b9e411684b8c90'
-            'da2cb5be1b05ceb9b9d0eda69dc82123543a4ed4cb8adc8fc88a0bcea29b5d872ac2d4b4f6b9b58b3c970b8e4a4b6e5b08e78f31f51a47bb4a0936ed8cda709d'
-            '32a087e9700cd233d56c7804fd341c40ba07e13e6bd917d4da4a5fe29c11033046b3998a7023be55c3cf860a294dc0c8b9ae209cd4dd80bed7573ae86825c201'
-            '02a9bda415eb685369b512044931f53ed4ed9a8803607ebb69672eed23c422888960bb7a5a4097739a845c3dc0e812069d825704f81145b33172743af35c767a'
+            'a324ae348a05565c6c19ba096d4662713637c3aeabd31a44ad745c1bb4713e939d703ccccc9567d109078bd9a178b98c11eb0cb9781ad7c19104c6c1864c760e'
+            '62b29656f41f06cd36be4e38c5a8369e961e41d4be7327fe0dfd1baa4a5e61937754b64b6481ec6efa66ef86e9f67d2f96d31b3cec422ed3780a2eee256f08a9'
+            'c9510621d3bde76f1051ba9271857b194109d4c20f52f0e04f8acddac7be1cc17d8acb4fb062273ff9ce350ed102619b706122b999dd8f31c8bc17534b8faaa6'
+            'f1bb24e46c565a4142585e8e9a0b61f5cef4decaf8a5dc37dc7f5436f13a558c29dbd9cab4091da36858e08752b9900836fd2817de695273c0b0d30c7efb4047'
+            'a668a9bd01cec8f53f457d9124107a230260c79fd57cbce4c4bf80e3451758d8e67263faa3f9d8b3da0c10bffbe29e4032106881ebe682c7f66414d8989638be'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849')
 
@@ -445,11 +445,16 @@ package-julia-in() {
   env JULIA_PRECOMPILE_STDLIB_DIR="/usr/share/julia/stdlib/v$ver_short" \
       JULIA_CPU_TARGET="${_cpu_target}" \
       proot -b "${pkgdir}/usr/share/julia/:/usr/share/julia/" \
-      "${pkgdir}/usr/bin/julia" --startup-file=no "${srcdir}/julia-compile-pkgs.jl" \
-      /usr/share/julia
-  for f in "${pkgdir}/usr/share/julia/compiled/v$ver_short/"*; do
-    touch "$f/.archpkg"
-  done
+      "${pkgdir}/usr/bin/julia" --startup-file=no \
+      "${srcdir}/julia-compile-pkgs.jl" /usr/share/julia
+  env JULIA_PRECOMPILE_STDLIB_DIR="/usr/share/julia/stdlib/v$ver_short" \
+      JULIA_CPU_TARGET="${_cpu_target}" \
+      proot -b "${pkgdir}/usr/share/julia/:/usr/share/julia/" \
+      "${pkgdir}/usr/bin/julia-debug" --startup-file=no \
+      "${srcdir}/julia-compile-pkgs.jl" /usr/share/julia
+  mkdir -p "${pkgdir}/usr/lib/julia/arch-compiled/julia/"
+  mv "${pkgdir}/usr/share/julia/compiled/v$ver_short/"* \
+     "${pkgdir}/usr/lib/julia/arch-compiled/julia/"
 
   # The ji file records the exact time stamps so we need to fix those in post_install
   (

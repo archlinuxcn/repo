@@ -9,7 +9,7 @@ for d in "$1"/*; do
     rm -rf "$d" &> /dev/null
 done
 
-arch_site=$(realpath "$3")
+arch_site=/usr/share/julia/arch-site
 
 # Clear symlink from arch-site
 for d in "$2"/*; do

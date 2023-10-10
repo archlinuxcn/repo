@@ -157,24 +157,12 @@ function check_already_compiled(pkgid)
                 return true, true
             end
             try
+                if islink(filepath) && contains(readlink(filepath), "/arch-compiled/")
+                    return true, false
+                end
                 cachedir = dirname(filepath)
                 if isfile(joinpath(cachedir, ".archpkg"))
                     return true, false
-                end
-                cachefile = basename(filepath)
-                for file in readdir(cachedir)
-                    if !startswith(file, ".archpkg") || file == ".archpkg"
-                        continue
-                    end
-                    archpkg_path = joinpath(cachedir, file)
-                    if !isaccessiblefile(archpkg_path)
-                        continue
-                    end
-                    for line in eachline(archpkg_path)
-                        if line == cachefile
-                            return true, false
-                        end
-                    end
                 end
             catch e
                 @warn "Error checking compiled cache for $(pkgid): $(e)"
