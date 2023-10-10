@@ -2,7 +2,7 @@
 
 _pkgname=mmengine
 pkgname=python-mmengine
-pkgver=0.8.5
+pkgver=0.9.0
 pkgrel=1
 pkgdesc='OpenMMLab Foundational Library for Training Deep Learning Models'
 arch=('any')
@@ -23,7 +23,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmengine/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('03a79df72678572c4d46856b758e6a0b26e1c1a36d36b53b7fccf7e46398f237a81fb72c3a160be73dd90cda789d67e2a51357b9029686ec4a38ce5619f6bbd5')
+sha512sums=('d297766df605983e54229a62c3a9750ea0eeeebf721704e0597d64ea49897ed2c08521525ec79ceffd606bc1d31a1897ff0e3f4cc8fc23b87643a21ae7f4cb37')
 
 build() {
   cd "${_pkgname}-${pkgver}"
