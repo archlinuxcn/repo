@@ -2,7 +2,7 @@
 
 pkgname=python-ydata-profiling
 _pkgname=ydata-profiling
-pkgver=4.5.1
+pkgver=4.6.0
 pkgrel=1
 pkgdesc='Create HTML profiling reports from pandas DataFrame objects'
 arch=('any')
@@ -35,7 +35,7 @@ replaces=(python-pandas-profiling)
 makedepends=(python-setuptools)
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ydataai/ydata-profiling/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('da3ba729cde7fad7a06233463bbb9ec84403e202b2fd6f89d54222847a04c3f40062666ccf67c81b61ee9b5c53db5b2a5310e73a7c15c5bd1f2901f77b56a38e')
+sha512sums=('48811bd811332bd06ad64b87f0e884c3fe5e0703b46df4e7a10bd2d9870d66c540d344b472c08b8bf05d6e4e896a259f210b0635726c917c858df590cc2f470b')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
