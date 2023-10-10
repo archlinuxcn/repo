@@ -37,6 +37,9 @@ end
 
 function copy_pkg_cache_for_src(name, src, compiled_dir, pkg_tgt_dir)
     pkgcache_dir = joinpath(compiled_dir, name)
+    if !isdir(pkgcache_dir)
+        return
+    end
     for file in readdir(pkgcache_dir)
         endswith(file, ".ji") || continue
         cachepath = joinpath(pkgcache_dir, file)
