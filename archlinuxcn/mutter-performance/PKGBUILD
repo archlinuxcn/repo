@@ -11,8 +11,8 @@
 
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441' '3113')
-_merge_requests_to_use=('1441' '3113')
+# Merge Requests List: ('579' '1441')
+_merge_requests_to_use=('1441')
 
 ## Disable building the DOCS package (Enabled if not set)
 # Remember to unset this variable when producing .SRCINFO
@@ -31,8 +31,8 @@ else
   pkgname=(mutter-performance mutter-performance-docs)
 fi
 epoch=1
-pkgver=44.5
-pkgrel=2
+pkgver=45.0
+pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -47,6 +47,8 @@ depends=(
   iio-sensor-proxy
   lcms2
   libcanberra
+  libdisplay-info
+  libei
   libgudev
   libinput
   libsm
@@ -70,15 +72,13 @@ makedepends=(
   xorg-server-xvfb
 )
 if [ -n "$_enable_check" ]; then
-  checkdepends=(xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
+  checkdepends=(gnome-session xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
 fi
-_commit=1511e6e1cdc8fa1a84f6fbbb169777ac26ba7f44  # tags/44.5^0
+_commit=4f6c91847088d7d6476b88575b3a6601b819b443  # tags/45.0^0
 source=("$pkgname::git+https://gitlab.gnome.org/GNOME/mutter.git#commit=$_commit"
-        'mr1441.patch'
-        'mr3113.patch')
+        'mr1441.patch')
 sha256sums=('SKIP'
-            'a6e07de13e44a721f235f557882ca7ef050324dcd3532fb278d677aba71abd80'
-            '1edb49dfb19bd30208c823eca87fb1f930c4d3dbc559e3c1a5707a824646f399')
+            'ac0806cb296e9690c084e23b74694c1fe0441342d35f10f31bf1451962b5f4a7')
 
 pkgver() {
   cd $pkgname
@@ -118,11 +118,6 @@ prepare() {
   git reset --hard
   git cherry-pick --abort || true
   git clean -fd
-
-  # Unbreak tests with Mesa 23.1
-  # https://gitlab.gnome.org/GNOME/mutter/-/issues/2848
-  # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3047
-  git cherry-pick -n '5a83e8ef8250526a40e8e69c^..d65883e0d7d70987e3888b86'
 
   #git remote add vanvugt https://gitlab.gnome.org/vanvugt/mutter.git || true
   #git remote add verdre https://gitlab.gnome.org/verdre/mutter.git || true
@@ -166,15 +161,6 @@ prepare() {
   #          If you use stenography software or play hardcore rhythm games like Lunatic Rave 2/osumania, use it.
   pick_mr '579' ce86f90efbaa51522ba14c5b4cad933c2106de42 'revert'
 
-  # Title: core: Only force placement of windows that should be mapped
-  # Author: Brendan William <brendan.william@outlook.com>
-  # URL: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3113
-  # Type: 3
-  # Status: 2
-  # Comment: This addresses #2579 for forced placement in the X11 session, without
-  #          reintroducing #2611.
-  pick_mr '3113' 'mr3113.patch' 'patch'
-
   # Title: Draft: Dynamic triple/double buffering (v4)
   # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
   # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
@@ -201,28 +187,20 @@ build() {
   meson compile -C build
 }
 
-_check() (
-  mkdir -p -m 700 "${XDG_RUNTIME_DIR:=$PWD/runtime-dir}"
-  glib-compile-schemas "${GSETTINGS_SCHEMA_DIR:=$PWD/build/data}"
-  export XDG_RUNTIME_DIR GSETTINGS_SCHEMA_DIR
-  local _pipewire_session_manager=$(pacman -Qq pipewire-session-manager)
-
-  pipewire &
-  _p1=$!
-
-  $_pipewire_session_manager &
-  _p2=$!
-
-  trap "kill $_p1 $_p2; wait" EXIT
-
-  meson test -C build --print-errorlogs -t 3
-)
 
 if [ -n "$_enable_check" ]; then
   check() {
+    mkdir -p -m 700 "${XDG_RUNTIME_DIR:=$PWD/runtime-dir}"
+    glib-compile-schemas "${GSETTINGS_SCHEMA_DIR:=$PWD/build/data}"
+    export XDG_RUNTIME_DIR GSETTINGS_SCHEMA_DIR
+    export NO_AT_BRIDGE=1 GTK_A11Y=none
+    export MUTTER_DEBUG_DUMMY_MODE_SPECS="800x600@10.0"
+    local _pipewire_session_manager=$(pacman -Qq pipewire-session-manager)
+
     echo "Tests may be broken with certain setups. Use with caution!"
-    dbus-run-session xvfb-run -s '-nolisten local +iglx -noreset' \
-      bash -c "$(declare -f _check); _check"
+    xvfb-run -s '-nolisten local +iglx -noreset' \
+      ${pkgbase}/src/tests/meta-dbus-runner.py --launch=pipewire --launch=${_pipewire_session_manager} \
+      meson test -C build --print-errorlogs -t 5 --setup plain
   }
 fi
 
@@ -237,7 +215,7 @@ _pick() {
 }
 
 package_mutter-performance() {
-  provides=(mutter libmutter-12.so)
+  provides=(mutter libmutter-13.so)
   conflicts=(mutter)
   
 
