@@ -2,7 +2,7 @@
 # Contributor: Sven Lechner <sven[dot]lechner[at]rwth-aachen[dot]de>
 
 pkgname=act
-pkgver=0.2.51
+pkgver=0.2.52
 pkgrel=1
 pkgdesc="Run your GitHub Actions locally"
 arch=('i686' 'x86_64')
@@ -11,7 +11,7 @@ license=('MIT')
 depends=('docker')
 makedepends=('go')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('5b8d557ab72e9e5ee78663eadc7b9dfd0b9a68b7b381edeee527d77f60541773')
+sha256sums=('f0be3a2cf93361a9b012e87962b5e4f99e6b7900957ddb726a360d2527fcc7d0')
 
 build() {
     cd $pkgname-$pkgver
