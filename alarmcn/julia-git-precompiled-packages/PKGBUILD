@@ -565,6 +565,8 @@ _package-jlpackage() {
   # should still work.
   # depends+=("julia-git=$(pacman -Q julia-git | sed -e 's/^.* \([^ ]*\)$/\1/')")
 
+  stdlib_dir="/usr/share/julia/stdlib/v$ver_short"
+
   jlpkg=$1
   srcpkg="julia-git-${jlpkg,,}-src"
 
