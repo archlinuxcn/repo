@@ -2,9 +2,9 @@
 # Maintainer: heavysink <winstonwu91@gmail.com>
 
 pkgbase=linux-amd-drm-fixes              
-_tag='amd-drm-fixes-6.6-2023-10-04'
-pkgver=6.6.2023.10.04
-pkgrel=2
+_tag='amd-drm-fixes-6.6-2023-10-11'
+pkgver=6.6.2023.10.11
+pkgrel=1
 pkgdesc="Linux kernel fixes with bleeding edge AMD DRM drivers"
 arch=(x86_64)
 url="https://kernel.org/"
