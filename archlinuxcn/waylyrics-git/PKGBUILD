@@ -12,7 +12,7 @@ provides=('waylyrics')
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
 license=('MIT')
 depends=('gtk4')
-makedepends=('cargo' 'git' 'jq')
+makedepends=('cargo' 'git' 'jq' 'mimalloc')
 optdepends=(
 	'feeluown-qqmusic: QQMusic player'
 	'feeluown-netease: NetEase Cloud Music player'
@@ -26,7 +26,9 @@ source=("git+${url}.git"
 )
 
 sha256sums=('SKIP'
-            'a2aad514ea170f2552818798d012e20790cdf66b31f16d01fbbf20ce9e72c76c')
+	'a2aad514ea170f2552818798d012e20790cdf66b31f16d01fbbf20ce9e72c76c')
+
+options=('!lto')
 
 pkgver() {
 	cd "${_pkgname}"
@@ -43,10 +45,6 @@ build() {
 
 	# template files
 	export WAYLYRICS_THEME_PRESETS_DIR="/usr/share/${_pkgname}/themes"
-
-	if [[ $CARCH != x86_64 ]]; then
-		export CARGO_PROFILE_RELEASE_LTO=off
-	fi
 
 	cargo build --locked --release --target-dir target
 }
