@@ -3,13 +3,15 @@ maintainers:
 
 post_build: git_pkgbuild_commit
 
+# For julia-pkg-scripts
+build_prefix: archlinuxcn-aarch64
+
 repo_depends:
   - julia-git
   - openspecfun-git
   - libutf8proc-git
   - openlibm-git
   - llvm-julia: llvm-libs-julia
-  - julia-pkg-scripts
 
 update_on:
   - source: regex
