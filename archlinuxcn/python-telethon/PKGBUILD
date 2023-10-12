@@ -1,6 +1,6 @@
 _name=Telethon
 pkgname=python-telethon
-pkgver=1.30.3
+pkgver=1.31.0
 pkgrel=1
 pkgdesc="Full-featured Telegram client library for Python 3"
 arch=(any)
@@ -8,16 +8,16 @@ url="https://github.com/LonamiWebs/Telethon"
 license=('MIT')
 depends=('python-pyaes' 'python-rsa')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/Telethon-1.30.3.tar.gz")
-sha256sums=('313e40fa06667b19ced13b379d9988167a8319bc0eb90bf39347cff46919a351')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/Telethon-1.31.0.tar.gz")
+sha256sums=('8c2a2e0398e329323bd6d2a6c1d3964f85e882d557144b77edb8ff969916ff5b')
 
 build() {
-  cd "$srcdir/Telethon-1.30.3"
+  cd "$srcdir/Telethon-1.31.0"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/Telethon-1.30.3"
+  cd "$srcdir/Telethon-1.31.0"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install any world-writable or root-readable-only files
