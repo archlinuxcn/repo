@@ -38,9 +38,7 @@ check() {
 
 packaging() {
 	install -Dm755 ${srcdir}/${pkgbase}-${pkgver}/bin/${1} ${pkgdir}/usr/bin/${1}
-
 	install -Dm644 ${srcdir}/${pkgbase}-${pkgver}/conf/${1}.toml ${pkgdir}/etc/frp/${1}.toml
-	install -Dm644 ${srcdir}/${pkgbase}-${pkgver}/conf/${1}_full.toml ${pkgdir}/etc/frp/${1}_full.toml
 
 	install -Dm644 ${srcdir}/${1}.service ${pkgdir}/usr/lib/systemd/system/${1}.service
 	install -Dm644 ${srcdir}/${1}@.service ${pkgdir}/usr/lib/systemd/system/${1}@.service
