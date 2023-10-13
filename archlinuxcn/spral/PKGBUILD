@@ -6,7 +6,7 @@ arch=('aarch64' 'x86_64')
 url="https://github.com/ralna/spral"
 license=('BSD')
 makedepends=(gcc-fortran)
-depends=('metis' 'lapack64' 'hwloc')
+depends=('metis' 'lapack' 'hwloc')
 source=("https://github.com/ralna/spral/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('dbf74191e95c284fb0036886ec9d5047e96f111daaa4c80945c840565b84ef9e')
 
@@ -20,12 +20,12 @@ build() {
   export CFLAGS CPPFLAGS CXXFLAGS FFLAGS FCFLAGS
   ./autogen.sh
   ./configure --prefix=/usr \
-              --with-blas="-lblas64" \
-              --with-lapack="-llapack64"
+              --with-blas="-lblas" \
+              --with-lapack="-llapack"
 
   make -j1 # Buggy build system
   gfortran -fPIC -shared -Wl,--whole-archive libspral.a -Wl,--no-whole-archive \
-           -lgomp -llapack64 -lhwloc -lmetis -lstdc++ -o libspral.so
+           -lgomp -llapack -lhwloc -lmetis -lstdc++ -o libspral.so
 }
 
 package () {

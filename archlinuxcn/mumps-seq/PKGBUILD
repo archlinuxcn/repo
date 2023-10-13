@@ -12,7 +12,7 @@ url="http://mumps-solver.org"
 license=('custom')
 # The build system only links to blas but uses lapack function
 # Just use openblas for now but this could probably be fixed fairly easily...
-depends=('gcc-libs' 'lapack64' 'metis')
+depends=('gcc-libs' 'lapack' 'metis')
 makedepends=(gcc-fortran)
 arch=('aarch64' 'x86_64')
 source=("http://mumps-solver.org/${_PKGNAME}_${pkgver}.tar.gz")
@@ -46,8 +46,8 @@ build() {
              FC="gfortran -fPIC ${FFLAGS}"
              FL="gfortran -fPIC"
              RANLIB="ranlib"
-             LIBBLAS="-lblas64"
-             LAPACK="-llapack64")
+             LIBBLAS="-lblas"
+             LAPACK="-llapack")
 
   make allshared "${make_args[@]}"
 }

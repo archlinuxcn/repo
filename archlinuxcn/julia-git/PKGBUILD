@@ -41,7 +41,7 @@ license=('GPL')
 _soname_deps=(libcurl.so libgit2.so libopenlibm.so libssh2.so
               libmbedcrypto.so libmbedtls.so libmbedx509.so)
 depends_libs=(arpack fftw gmp libunwind mpfr pcre2 suitesparse
-              openspecfun libutf8proc-git
+              openspecfun libutf8proc-git libblastrampoline
               mbedtls zlib p7zip libnghttp2 ca-certificates-utils lld)
 case "$CARCH" in
   x86_64)
@@ -125,6 +125,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_GMP=1
             USE_SYSTEM_MPFR=1
             USE_SYSTEM_LIBSUITESPARSE=1
+            USE_SYSTEM_LIBBLASTRAMPOLINE=1
             USE_SYSTEM_UTF8PROC=1
             USE_SYSTEM_MBEDTLS=1
             USE_SYSTEM_LIBSSH2=1

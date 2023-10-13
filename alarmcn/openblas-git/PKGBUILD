@@ -64,7 +64,7 @@ build() {
   cmake -B build -S $_pkgname "${_cmake_opts[@]}"
   cmake --build build
 
-  cmake -B build64 -S $_pkgname "${_cmake_opts[@]}" -DINTERFACE64=1
+  cmake -B build64 -S $_pkgname "${_cmake_opts[@]}" -DINTERFACE64=1 -DSYMBOLSUFFIX=64_
   cmake --build build64
 }
 
