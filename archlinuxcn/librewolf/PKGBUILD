@@ -2,7 +2,7 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=118.0.1
+pkgver=118.0.2
 pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
@@ -75,13 +75,13 @@ source=(
   https://gitlab.com/api/v4/projects/32320088/packages/generic/librewolf-source/${pkgver}-${pkgrel}/librewolf-${pkgver}-${pkgrel}.source.tar.gz # {,.sig} sig files are currently broken, it seems
   $pkgname.desktop
   "default192x192.png"
-  "0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch"
+  https://gitlab.archlinux.org/archlinux/packaging/packages/firefox/-/raw/f021e2ed225da9cc3b667e7ef9a60163607b407f/0001-Bug-1849874-Update-from-packed_simd_2-to-packed_simd.patch
 )
 
-sha256sums=('d972169a6b9d2e1df6a74fcf6d2e048c29e85bec3fba98cbe272e0d508fb2392'
+sha256sums=('daf30073d360f8024d8ebbe5532e829bec11177239538f482221a4c5ded52d60'
             '7d01d317b7db7416783febc18ee1237ade2ec86c1567e2c2dd628a94cbf2f25d'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1'
-            '1d713370fe5a8788aa1723ca291ae2f96635b92bc3cb80aea85d21847c59ed6d')
+            '2406c4c2e18d535c0c7900fe7b176137ae130a75806a19516854894555b69e72')
 
 validpgpkeys=('034F7776EF5E0C613D2F7934D29FBD5F93C0CFC3') # maltej(?)
 
@@ -92,6 +92,10 @@ _build_profiled_x86_64=true
 prepare() {
   mkdir -p mozbuild
   cd librewolf-$pkgver-$pkgrel
+
+  # Unbreak build with Rust 1.73.0
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1849874
+  patch -Np1 -i ../0001-Bug-1849874-Update-from-packed_simd_2-to-packed_simd.patch
 
   mv mozconfig ../mozconfig
 
@@ -161,9 +165,6 @@ fi
 
   # upstream Arch fixes
 
-  # pgo improvements
-  # TODO: test if still required
-  # patch -Np1 -i ../0018-bmo-1516081-Disable-watchdog-during-PGO-builds.patch
 }
 
 
