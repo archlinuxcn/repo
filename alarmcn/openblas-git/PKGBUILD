@@ -104,7 +104,8 @@ package_openblas-git() {
   cd OpenBLAS
   make "${_make_opts[@]}" DESTDIR="${pkgdir}" PREFIX="/usr" install
   install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
-  rm "${pkgdir}/usr/include/"{lapack,cblas,f77blas}*
+  mkdir "${pkgdir}/usr/include/openblas"
+  mv "${pkgdir}/usr/include/"*.* "${pkgdir}/usr/include/openblas"
 }
 
 package_openblas64-git() {
@@ -126,5 +127,6 @@ package_openblas64-git() {
   ln -s libopenblas64_.so libopenblas_64.so
   ln -s libopenblas64_.so libopenblas_64.so.${_majver}
   ln -s libopenblas64_.so libopenblas_64.so.${_majver}.${_minver}
-  rm "${pkgdir}/usr/include/"{lapack,cblas,f77blas}*
+  mkdir "${pkgdir}/usr/include/openblas64"
+  mv "${pkgdir}/usr/include/"*.* "${pkgdir}/usr/include/openblas64"
 }
