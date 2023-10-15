@@ -4,7 +4,7 @@
 
 _pkgbase='citra'
 pkgname="$_pkgbase-git"
-pkgver=r9813.40ba5226c
+pkgver=r9815.07839fb3c
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger (Master branch)"
 arch=('i686' 'x86_64')
@@ -18,7 +18,7 @@ source=("git+https://github.com/citra-emu/citra.git"
 ext-lib.patch
 gc.patch)
 md5sums=('SKIP'
-         '584485ee4758c623bee7744c2946b3da'
+         '2d4fb68e97b496a3cf63247e811308a9'
          'f151510cd1fc233992710405cbf44323')
 
 pkgver() {
@@ -71,6 +71,7 @@ build() {
       -DUSE_SYSTEM_JSON=ON \
       -DUSE_SYSTEM_SOUNDTOUCH=ON \
       -DUSE_SYSTEM_FMT=ON \
+      -DUSE_SYSTEM_XBYAK=ON \
       -DUSE_SYSTEM_DYNARMIC=ON \
       -DENABLE_MF=OFF \
       -DENABLE_TESTS=OFF \
