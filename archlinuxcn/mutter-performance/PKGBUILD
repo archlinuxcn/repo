@@ -31,7 +31,7 @@ else
   pkgname=(mutter-performance mutter-performance-docs)
 fi
 epoch=1
-pkgver=45.0
+pkgver=45.0+r49+g8d3d8b86e
 pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
@@ -74,7 +74,7 @@ makedepends=(
 if [ -n "$_enable_check" ]; then
   checkdepends=(gnome-session xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
 fi
-_commit=4f6c91847088d7d6476b88575b3a6601b819b443  # tags/45.0^0
+_commit=8d3d8b86e517c97accf11eb243078faf31dd72bb  # tags/45.0^49
 source=("$pkgname::git+https://gitlab.gnome.org/GNOME/mutter.git#commit=$_commit"
         'mr1441.patch')
 sha256sums=('SKIP'
@@ -176,6 +176,7 @@ build() {
     -D egl_device=true
     -D wayland_eglstream=true
     -D installed_tests=false
+    -D libdisplay_info=true
     -D docs=$(if ! [ -n "$_disable_docs" ]; then echo "true"; else echo "false"; fi)
     -D tests=$(if [ -n "$_enable_check" ]; then echo "true"; else echo "false"; fi)
   )
