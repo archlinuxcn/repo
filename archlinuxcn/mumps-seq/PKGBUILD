@@ -24,7 +24,6 @@ prepare() {
 
   sed -e 's/-lpord/-lpord_seq/g' -e 's/-lmpiseq/-lmpiseq_seq/g' \
       Make.inc/Makefile.G95.SEQ > Makefile.inc
-  sed -ie 's/libpord\$(LIBEXT_SHARED)/libpord$(PLAT)$(LIBEXT_SHARED)/g' Makefile
 }
 
 build() {
