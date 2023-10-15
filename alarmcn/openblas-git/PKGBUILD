@@ -13,7 +13,7 @@ arch=('aarch64' 'x86_64')
 url="https://www.openblas.net/"
 license=('BSD')
 makedepends=('git' 'cmake' 'perl' 'gcc-fortran')
-options=(!emptydirs debug strip)
+options=(!emptydirs debug strip '!lto')
 source=("git+https://github.com/xianyi/OpenBLAS")
 md5sums=('SKIP')
 
