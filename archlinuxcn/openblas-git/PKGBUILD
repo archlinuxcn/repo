@@ -27,53 +27,84 @@ pkgver() {
   # Change the .dev into .1dev so that it is treated as a newer version
   # after adding the .0.* suffix
   _ver=$(sed -ne 's/^VERSION\s*=\s*\([^[:space:]]*\).*/\1/p' Makefile.rule |
-      sed -e 's/\.dev/.1dev/')
+           sed -e 's/\.dev/.1dev/')
 
   printf "%s.0.%s.g%s" "$_ver" "$_build_number" "$_commit_short"
 }
 
 prepare() {
-  cd OpenBLAS
+  (
+    cd OpenBLAS
+    # patch -Np1 < ../.patch
+  )
 
-  # patch -Np1 < ../.patch
+  rm -rf OpenBLAS-64
+  cp -a OpenBLAS OpenBLAS-64
 }
+
+_make_opts=(
+  USE_THREAD=1
+  GEMM_MULTITHREADING_THRESHOLD=400
+  NO_AFFINITY=1
+  NO_STATIC=1
+  USE_OPENMP=1
+  NUM_THREADS=64
+  DYNAMIC_ARCH=1
+  NO_WARMUP=1
+)
+
+if [[ $CARCH = x86_64 ]]; then
+  _make_opts=("${_make_opts[@]}" TARGET=CORE2)
+fi
+
+# _cmake_opts=(
+#   -DCMAKE_INSTALL_PREFIX=/usr
+#   -DGEMM_MULTITHREAD_THRESHOLD=400
+#   -DBUILD_SHARED_LIBS=ON
+#   -DBUILD_TESTING=OFF
+#   -DNO_AFFINITY=ON
+#   -DUSE_OPENMP=1
+#   -DUSE_THREAD=1
+#   -DNUM_THREADS=64
+#   -DDYNAMIC_ARCH=ON
+#   -DNO_WARMUP=1
+# )
+
+# if [[ $CARCH = x86_64 ]]; then
+#   _cmake_opts=("${_cmake_opts[@]}" -DCORE=CORE2)
+# fi
 
 build() {
   # Setting FC manually to avoid picking up f95 and breaking the cmake build
   # https://github.com/xianyi/OpenBLAS/issues/4072#issuecomment-1576388332
-
-  _cmake_opts=(
-    -DCMAKE_INSTALL_PREFIX=/usr
-    -DGEMM_MULTITHREAD_THRESHOLD=50
-    -DBUILD_SHARED_LIBS=ON
-    -DBUILD_TESTING=OFF
-    -DNO_AFFINITY=ON
-    -DUSE_OPENMP=1
-    -DUSE_THREAD=1
-    -DNUM_THREADS=64
-    -DDYNAMIC_ARCH=ON
-    -DNO_WARMUP=1
-  )
   export FC=gfortran
   export FFLAGS="-g -O3 -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
 
-  if [[ $CARCH = x86_64 ]]; then
-    _cmake_opts=("${_cmake_opts[@]}" -DCORE=CORE2)
-  fi
+  # cmake -B build -S $_pkgname "${_cmake_opts[@]}"
+  # cmake --build build
 
-  cmake -B build -S $_pkgname "${_cmake_opts[@]}"
-  cmake --build build
+  # cmake -B build64 -S $_pkgname "${_cmake_opts[@]}" -DINTERFACE64=1 -DSYMBOLSUFFIX=64_
+  # cmake --build build64
 
-  cmake -B build64 -S $_pkgname "${_cmake_opts[@]}" -DINTERFACE64=1 -DSYMBOLSUFFIX=64_
-  cmake --build build64
+  (
+    cd OpenBLAS
+    make "${_make_opts[@]}"
+  )
+
+  (
+    cd OpenBLAS-64
+    make "${_make_opts[@]}" INTERFACE64=1 SYMBOLSUFFIX=64_
+  )
 }
 
 package_openblas-git() {
   provides=("openblas=$pkgver")
   conflicts=('openblas')
 
-  DESTDIR="$pkgdir" cmake --install build
-  install -Dm644 $_pkgname/LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+  cd OpenBLAS
+  make "${_make_opts[@]}" DESTDIR="${pkgdir}" PREFIX="/usr" install
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+  rm "${pkgdir}/usr/include/"{lapack,cblas,f77blas}*
 }
 
 package_openblas64-git() {
@@ -81,9 +112,19 @@ package_openblas64-git() {
   conflicts=('openblas64')
 
   pkgdesc+=" (64-bit integers)"
-  DESTDIR="$pkgdir" cmake --install build64
-  install -Dm644 $_pkgname/LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+
+  cd OpenBLAS-64
+  make "${_make_opts[@]}" INTERFACE64=1 SYMBOLSUFFIX=64_ \
+       DESTDIR="${pkgdir}" PREFIX="/usr" install
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+
+  [[ $pkgver =~ ^([0-9]*)\.([0-9]*) ]]
+  _majver=${BASH_REMATCH[1]}
+  _minver=${BASH_REMATCH[1]}
 
   cd "$pkgdir"/usr/lib/
-  ln -s libopenblas_64.so.${pkgver%%.*} libopenblas64_.so # Needed by julia
+  ln -s libopenblas64_.so libopenblas_64.so
+  ln -s libopenblas64_.so libopenblas_64.so.${_majver}
+  ln -s libopenblas64_.so libopenblas_64.so.${_majver}.${_minver}
+  rm "${pkgdir}/usr/include/"{lapack,cblas,f77blas}*
 }
