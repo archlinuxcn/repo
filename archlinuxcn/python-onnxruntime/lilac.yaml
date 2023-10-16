@@ -4,14 +4,18 @@ maintainers:
 build_prefix: extra-x86_64
 
 repo_depends:
-  - python-onnxruntime
-  - python-imgviz
+  - nsync
+  - python-coloredlogs
 
 update_on:
   - source: github
-    github: wkentaro/labelme
+    github: microsoft/onnxruntime
     use_latest_release: true
-  - source: manual
-    manual: 4
+    prefix: v
+  - alias: protobuf
   - alias: python
+  - source: alpm
+    strip_release: true
+    alpm: re2
+    repo: extra
 # vim:set ts=2 sw=2 et:
