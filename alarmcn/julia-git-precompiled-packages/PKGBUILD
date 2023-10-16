@@ -535,7 +535,8 @@ arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
 depends=(julia-git)
-makedepends=(git julia-git-package-env julia-pkg-scripts makepkg-lint-disable-hook)
+makedepends=(git julia-git-package-env julia-pkg-scripts makepkg-lint-disable-hook
+             blas-openblas blas64-openblas)
 options=('debug' '!strip')
 source=(julia-copy-compiled-pkgs.jl)
 sha512sums=('189eb37ff1d56def7e71b71c0ed925a3d95ed6fbe9f4013a74dc5b140793a52e91fe7f4dcb05e560ea692b69b42fc3eae398d20dadefe49e32eefc69bc856980')
