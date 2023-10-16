@@ -84,13 +84,14 @@ prepare() {
 	cd "${_pkgname}/"
 	rm -rf subprojects/wlroots subprojects/hyprland-protocols
 	git submodule init
+	pick_mr 3571
+
 	git config submodule.wlroots.url "${srcdir}/wlroots"
 	git config submodule.subprojects/hyprland-protocols.url "${srcdir}/hyprland-protocols"
 	git config submodule.subprojects/udis86.url "${srcdir}/udis86"
 	git -c protocol.file.allow=always submodule update subprojects/wlroots
 	git -c protocol.file.allow=always submodule update subprojects/hyprland-protocols
 	git -c protocol.file.allow=always submodule update subprojects/udis86
-	pick_mr 3571
 
 	cd subprojects/wlroots
 	git revert -n 18595000f3a21502fd60bf213122859cc348f9af
