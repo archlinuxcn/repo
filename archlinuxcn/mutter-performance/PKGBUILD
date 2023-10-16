@@ -32,7 +32,7 @@ else
 fi
 epoch=1
 pkgver=45.0+r49+g8d3d8b86e
-pkgrel=1
+pkgrel=2
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -76,9 +76,11 @@ if [ -n "$_enable_check" ]; then
 fi
 _commit=8d3d8b86e517c97accf11eb243078faf31dd72bb  # tags/45.0^49
 source=("$pkgname::git+https://gitlab.gnome.org/GNOME/mutter.git#commit=$_commit"
-        'mr1441.patch')
+        'mr1441.patch'
+        'mr3327.patch')
 sha256sums=('SKIP'
-            'ac0806cb296e9690c084e23b74694c1fe0441342d35f10f31bf1451962b5f4a7')
+            'ac0806cb296e9690c084e23b74694c1fe0441342d35f10f31bf1451962b5f4a7'
+            '2bf8e12fe60a35469352510cc14a76603722441c1cb47ae9548a79712a01a762')
 
 pkgver() {
   cd $pkgname
@@ -160,6 +162,15 @@ prepare() {
   # Comment: Was reverted: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/833
   #          If you use stenography software or play hardcore rhythm games like Lunatic Rave 2/osumania, use it.
   pick_mr '579' ce86f90efbaa51522ba14c5b4cad933c2106de42 'revert'
+
+  # Title: backends/native: Fix the issue where KMS thread fails to acquire realtime on boot
+  # Author: Agustín Dall'Alba <gnome@dallalba.com.ar>
+  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3327
+  # Type: 3
+  # Status: 2
+  # Comment: Remove G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START to fix the issue where KMS thread
+  #          fails to acquire realtime priority on boot when the shell starts before the rtkit daemon
+  pick_mr '3327' 'mr3327.patch' 'patch'
 
   # Title: Draft: Dynamic triple/double buffering (v4)
   # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
