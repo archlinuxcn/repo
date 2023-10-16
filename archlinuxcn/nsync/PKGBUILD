@@ -3,7 +3,7 @@
 
 pkgname=nsync
 pkgver=1.26.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A C library that exports various synchronization primitives, such as mutexes'
 arch=(x86_64)
 url='https://github.com/google/nsync'
@@ -14,10 +14,8 @@ source=(
   "https://github.com/google/nsync/archive/$pkgver/$pkgname-$pkgver.tar.gz"
   "0001-nsync-export.patch"
 )
-sha256sums=(
-  '80fc1e605bb3cf5f272811ece39c4fb6761ffcb9b30563301845cc9ff381eb8b'
-  '7733d2979d9ec4ec7a9e7af8814544bdd68b5482ebaea1f00011ac8e1ea44258'
-)
+sha256sums=('80fc1e605bb3cf5f272811ece39c4fb6761ffcb9b30563301845cc9ff381eb8b'
+            '7733d2979d9ec4ec7a9e7af8814544bdd68b5482ebaea1f00011ac8e1ea44258')
 
 prepare() {
   cd $pkgname-$pkgver
