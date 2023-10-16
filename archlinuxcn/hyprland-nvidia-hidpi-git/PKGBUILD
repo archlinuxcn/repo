@@ -82,6 +82,7 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
+	git config pull.rebase true
 	pick_mr 3571
 	rm -rf subprojects/wlroots subprojects/hyprland-protocols
 	git submodule init
