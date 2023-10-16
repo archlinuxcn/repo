@@ -68,8 +68,9 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
-	pick_mr 3571
+	git config pull.rebase true
 	git submodule update --init
+	pick_mr 3571
 
 	pushd subprojects/wlroots
 	patch -p1 <../packagefiles/wlroots-meson-build.patch
