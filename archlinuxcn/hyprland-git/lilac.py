@@ -8,5 +8,5 @@ def pre_build():
 
     for line in edit_file('PKGBUILD'):
         print(line)
-        if line.strip().startswith('popd'):
+        if line.strip().startswith('git submodule init'):
             print('pick_mr 3571')
