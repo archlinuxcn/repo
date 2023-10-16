@@ -213,7 +213,7 @@ _patch_suitesparse() {
       cd "$d"
       # Patch the code to assume newer cholmod version. This is generally unsafe
       # but should be fine for 3->4 according to the suitesparse changelog.
-      for f in src/solvers/lib/*.jl; do
+      for f in src/solvers/wrappers.jl; do
         echo "Updating $d/$f"
         sed -i -e "s/\(CHOLMOD_MAIN_VERSION *= *\)[0-9]*/\1${cholmod_maj_ver}/" "$f"
         sed -i -e "s/\(CHOLMOD_SUB_VERSION *= *\)[0-9]*/\1${cholmod_min_ver}/" "$f"
