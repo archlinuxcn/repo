@@ -69,6 +69,7 @@ pkgver() {
 prepare() {
 	cd "${_pkgname}/"
 	git submodule update --init
+	pick_mr 3571
 
 	pushd subprojects/wlroots
 	patch -p1 <../packagefiles/wlroots-meson-build.patch
@@ -76,8 +77,6 @@ prepare() {
 
 	patch --directory="${srcdir}/${_pkgname}/subprojects/wlroots/" --forward --strip=0 \
 		--input="${srcdir}/nvidia.patch"
-
-	pick_mr 3571
 }
 
 build() {
