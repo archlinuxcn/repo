@@ -104,6 +104,14 @@ package_openblas-git() {
   cd OpenBLAS
   make "${_make_opts[@]}" DESTDIR="${pkgdir}" PREFIX="/usr" install
   install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+
+  [[ $pkgver =~ ^([0-9]*)\.([0-9]*) ]]
+  _majver=${BASH_REMATCH[1]}
+  _minver=${BASH_REMATCH[2]}
+
+  _libname=$(readlink "$pkgdir"/usr/lib/libopenblas.so)
+  ln -s "$_libname" "$pkgdir"/usr/lib/libopenblas.so.${_majver}.${_minver}
+
   mkdir "${pkgdir}/usr/include/openblas"
   mv "${pkgdir}/usr/include/"*.* "${pkgdir}/usr/include/openblas"
 
@@ -125,12 +133,14 @@ package_openblas64-git() {
 
   [[ $pkgver =~ ^([0-9]*)\.([0-9]*) ]]
   _majver=${BASH_REMATCH[1]}
-  _minver=${BASH_REMATCH[1]}
+  _minver=${BASH_REMATCH[2]}
 
-  cd "$pkgdir"/usr/lib/
-  ln -s libopenblas64_.so libopenblas_64.so
-  ln -s libopenblas64_.so libopenblas_64.so.${_majver}
-  ln -s libopenblas64_.so libopenblas_64.so.${_majver}.${_minver}
+  _libname=$(readlink "$pkgdir"/usr/lib/libopenblas64_.so)
+  ln -s "$_libname" "$pkgdir"/usr/lib/libopenblas64_.so.${_majver}.${_minver}
+  ln -s "$_libname" "$pkgdir"/usr/lib/libopenblas_64.so
+  ln -s "$_libname" "$pkgdir"/usr/lib/libopenblas_64.so.${_majver}
+  ln -s "$_libname" "$pkgdir"/usr/lib/libopenblas_64.so.${_majver}.${_minver}
+
   mkdir "${pkgdir}/usr/include/openblas64"
   mv "${pkgdir}/usr/include/"*.* "${pkgdir}/usr/include/openblas64"
 
