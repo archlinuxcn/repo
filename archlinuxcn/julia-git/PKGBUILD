@@ -45,16 +45,16 @@ depends_libs=(arpack fftw gmp libunwind mpfr pcre2 suitesparse
               mbedtls zlib p7zip libnghttp2 ca-certificates-utils lld)
 case "$CARCH" in
   x86_64)
-    depends_libs=("${depends_libs[@]}" openblas64)
+    depends_libs=("${depends_libs[@]}" openblas64-git)
     ;;
   aarch64)
-    depends_libs=("${depends_libs[@]}" openblas64)
+    depends_libs=("${depends_libs[@]}" openblas64-git)
     ;;
   i686)
-    depends_libs=("${depends_libs[@]}" openblas)
+    depends_libs=("${depends_libs[@]}" openblas-git)
     ;;
   armv7h)
-    depends_libs=("${depends_libs[@]}" openblas)
+    depends_libs=("${depends_libs[@]}" openblas-git)
     ;;
 esac
 makedepends=("${depends_libs[@]}" llvm-julia gcc-fortran git patchelf python proot
