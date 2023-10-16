@@ -82,9 +82,9 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
+	pick_mr 3571
 	rm -rf subprojects/wlroots subprojects/hyprland-protocols
 	git submodule init
-	pick_mr 3571
 
 	git config submodule.wlroots.url "${srcdir}/wlroots"
 	git config submodule.subprojects/hyprland-protocols.url "${srcdir}/hyprland-protocols"
