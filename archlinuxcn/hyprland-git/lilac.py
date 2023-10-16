@@ -9,4 +9,5 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         print(line)
         if line.strip().startswith('cd Hyprland'):
+            print('git config pull.rebase true')
             print('pick_mr 3571')
