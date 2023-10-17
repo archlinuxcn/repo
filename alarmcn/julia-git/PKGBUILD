@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.11.0.DEV.660.g6ec149f3b19
+pkgver=1.11.0.DEV.661.gd5cde522e22
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -42,13 +42,14 @@ _soname_deps=(libcurl.so libgit2.so libopenlibm.so libssh2.so
               libmbedcrypto.so libmbedtls.so libmbedx509.so)
 depends_libs=(arpack fftw gmp libunwind mpfr pcre2 suitesparse
               openspecfun libutf8proc-git libblastrampoline
-              mbedtls zlib p7zip libnghttp2 ca-certificates-utils lld)
+              mbedtls zlib p7zip libnghttp2 ca-certificates-utils lld
+              blas-openblas)
 case "$CARCH" in
   x86_64)
-    depends_libs=("${depends_libs[@]}" openblas64-git)
+    depends_libs=("${depends_libs[@]}" openblas64-git blas64-openblas)
     ;;
   aarch64)
-    depends_libs=("${depends_libs[@]}" openblas64-git)
+    depends_libs=("${depends_libs[@]}" openblas64-git blas64-openblas)
     ;;
   i686)
     depends_libs=("${depends_libs[@]}" openblas-git)

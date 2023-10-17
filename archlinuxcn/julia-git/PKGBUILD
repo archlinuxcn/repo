@@ -42,13 +42,14 @@ _soname_deps=(libcurl.so libgit2.so libopenlibm.so libssh2.so
               libmbedcrypto.so libmbedtls.so libmbedx509.so)
 depends_libs=(arpack fftw gmp libunwind mpfr pcre2 suitesparse
               openspecfun libutf8proc-git libblastrampoline
-              mbedtls zlib p7zip libnghttp2 ca-certificates-utils lld)
+              mbedtls zlib p7zip libnghttp2 ca-certificates-utils lld
+              blas-openblas)
 case "$CARCH" in
   x86_64)
-    depends_libs=("${depends_libs[@]}" openblas64-git)
+    depends_libs=("${depends_libs[@]}" openblas64-git blas64-openblas)
     ;;
   aarch64)
-    depends_libs=("${depends_libs[@]}" openblas64-git)
+    depends_libs=("${depends_libs[@]}" openblas64-git blas64-openblas)
     ;;
   i686)
     depends_libs=("${depends_libs[@]}" openblas-git)
