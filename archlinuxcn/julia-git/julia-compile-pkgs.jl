@@ -2,50 +2,72 @@
 
 const stdlib_dir = get(ENV, "JULIA_PRECOMPILE_STDLIB_DIR", Sys.STDLIB)
 
+const PkgId = Base.PkgId
+
 struct PkgInfo
-    id::Base.PkgId
+    id::PkgId
     src::String
-    deps::Vector{String}
-    exts::Dict{String,PkgInfo}
-    parent::Union{Base.PkgId,Nothing}
+    deps::Vector{PkgId}
+    exts::Vector{PkgInfo}
+    parent::Union{PkgId,Nothing}
 end
 
-function ext_pkg_info(stdlib_dir, parent_id, package, depends)
-    if !(depends isa String || depends isa Vector{String})
-        return
-    end
-    id = Base.uuid5(parent_id.uuid, package)
-    src = joinpath(stdlib_dir, parent_id.name, "ext", "$package.jl")
+function ext_pkg_info(stdlib_dir, parent_pkgid, name, depends)
+    id = Base.uuid5(parent_pkgid.uuid, name)
+    src = joinpath(stdlib_dir, parent_pkgid.name, "ext", "$name.jl")
     isfile(src) || return
-    depends = [depends; parent_id.name]
-    return PkgInfo(Base.PkgId(id, package), src,
-                   depends, Dict{String,PkgInfo}(), parent_id)
+    depends = [depends; parent_pkgid]
+    return PkgInfo(PkgId(id, name), src, depends, PkgInfo[], parent_pkgid)
 end
 
-function pkg_info(stdlib_dir, pkg, d)
+function try_add_to_uuid_map!(uuid_map, d)
+    if d isa Dict{String, Any}
+        for (name, uuid) in d
+            try
+                uuid_map[name] = Base.UUID(uuid)
+            catch
+            end
+        end
+    end
+end
+
+function name_to_uuid_map(d)
+    uuid_map = Dict{String,Base.UUID}()
+    try_add_to_uuid_map!(uuid_map, get(d, "deps", nothing))
+    try_add_to_uuid_map!(uuid_map, get(d, "extras", nothing))
+    try_add_to_uuid_map!(uuid_map, get(d, "weakdeps", nothing))
+    return uuid_map
+end
+
+function pkg_info(stdlib_dir, name, d)
     uuid = get(d, "uuid", nothing)
     if uuid === nothing
         return
     end
-    id = Base.PkgId(Base.UUID(uuid), pkg)
-    src = joinpath(stdlib_dir, "$pkg.jl")
+    id = PkgId(Base.UUID(uuid), name)
+    src = joinpath(stdlib_dir, "$name.jl")
     if !isfile(src)
-        src = joinpath(stdlib_dir, pkg, "src", "$pkg.jl")
+        src = joinpath(stdlib_dir, name, "src", "$name.jl")
         isfile(src) || return
     end
+    uuid_map = name_to_uuid_map(d)
     deps = get(d, "deps", nothing)
     if deps isa Dict{String, Any}
-        deps = collect(keys(deps))
-    elseif !(deps isa Vector{String})
-        deps = String[]
+        deps = [PkgId(Base.UUID(uuid), name) for (name, uuid) in deps]
+    elseif deps isa Vector{String}
+        deps = [PkgId(uuid_map[name], name) for name in deps]
+    else
+        deps = PkgId[]
     end
-    exts = Dict{String,PkgInfo}()
+    exts = PkgInfo[]
     extensions = get(d, "extensions", nothing)
     if extensions isa Dict{String,Any}
         for (k, v) in extensions
-            ext_info = ext_pkg_info(stdlib_dir, id, k, v)
+            ext_info = ext_pkg_info(stdlib_dir, id, k,
+                                    isa(v, AbstractString) ? PkgId(uuid_map[v], v) :
+                                        [PkgId(uuid_map[name], name) for name in v])
             if ext_info !== nothing
-                exts[k] = ext_info
+                push!(exts, ext_info)
             end
         end
     end
@@ -53,7 +75,8 @@ function pkg_info(stdlib_dir, pkg, d)
 end
 
 function load_pkg_info(stdlib_dir)
-    packages = Dict{String,PkgInfo}()
+    @info "Loading package info from $stdlib_dir"
+    packages = Dict{PkgId,PkgInfo}()
     for pkg in readdir(stdlib_dir)
         pkgdir = joinpath(stdlib_dir, pkg)
         for p in ("JuliaProject.toml", "Project.toml")
@@ -64,7 +87,7 @@ function load_pkg_info(stdlib_dir)
             if info === nothing
                 continue
             end
-            packages[pkg] = info
+            packages[info.id] = info
             break
         end
     end
@@ -79,16 +102,17 @@ function check_src(src)
 end
 
 mutable struct WorkItem
-    const id::Base.PkgId
+    const id::PkgId
     const src::String
     ndepends::Int
     const dependents::Vector{WorkItem}
 end
 
-struct WorkQueue
-    blocked::Set{WorkItem}
-    free::Set{WorkItem}
-    done::Set{WorkItem}
+mutable struct WorkQueue
+    const blocked::Set{WorkItem}
+    const free::Set{WorkItem}
+    const done::Set{WorkItem}
+    skipped::Int
     function WorkQueue(pkg_infos)
         item_map = Dict{PkgInfo,WorkItem}()
         function get_work_item(info)
@@ -120,9 +144,9 @@ struct WorkQueue
             item_map[info] = work
             return work
         end
-        for (name, info) in pkg_infos
+        for (pkgid, info) in pkg_infos
             get_work_item(info)
-            for (ext_name, ext_info) in info.exts
+            for ext_info in info.exts
                 get_work_item(ext_info)
             end
         end
@@ -131,7 +155,7 @@ struct WorkQueue
         for (info, work) in item_map
             push!(work.ndepends == 0 ? free : blocked, work)
         end
-        return new(blocked, free, Set{WorkItem}())
+        return new(blocked, free, Set{WorkItem}(), 0)
     end
 end
 
@@ -182,8 +206,11 @@ function compile_one(work_queue)
         catch e
             @show e
         end
-    elseif do_log
-        @info "Not touching compiled cache for $(work.id)"
+    else
+        work_queue.skipped += 1
+        if do_log
+            @info "Not touching compiled cache for $(work.id)"
+        end
     end
     push!(work_queue.done, work)
     for dep_work in work.dependents
@@ -194,7 +221,7 @@ function compile_one(work_queue)
         end
     end
     if do_log
-        @info "Finished: $(length(work_queue.done)); Pending: $(length(work_queue.blocked) + length(work_queue.free))"
+        @info "Finished: $(length(work_queue.done)); Pending: $(length(work_queue.blocked) + length(work_queue.free)); Skipped: $(work_queue.skipped)"
     end
 end
 
