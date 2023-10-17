@@ -15,5 +15,8 @@ update_on:
   - source: regex
     url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/libsodium_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpm
+    alpm: libsodium
+    provided: libsodium.so
   - source: manual
     manual: 1
