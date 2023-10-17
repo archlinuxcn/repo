@@ -62,43 +62,43 @@ pkgver() {
 }
 
 prepare() {
-        cd "${_pkgname}/"
-        git submodule update --init
-        sed -E -i -e 's/(soversion = 12)([^032]|$$)/soversion = 12032/g' ./subprojects/wlroots/meson.build
-        rm -rf ./subprojects/wlroots/build
-        patch --directory="${srcdir}/${_pkgname}/subprojects/wlroots/" --forward --strip=0 \
-                --input="${srcdir}/nvidia.patch"
+	cd "${_pkgname}/"
+	git submodule update --init
+	sed -E -i -e 's/(soversion = 12)([^032]|$$)/soversion = 12032/g' ./subprojects/wlroots/meson.build
+	rm -rf ./subprojects/wlroots/build
+	patch --directory="${srcdir}/${_pkgname}/subprojects/wlroots/" --forward --strip=0 \
+		--input="${srcdir}/nvidia.patch"
 }
 
 build() {
-        cd "${_pkgname}/subprojects/wlroots/"
-        meson build/ --prefix="${srcdir}/tmpwlr/" --buildtype=release
-        ninja -C build/
-        install -d "${srcdir}/tmpwlr/"
-        ninja -C build/ install
+	cd "${_pkgname}/subprojects/wlroots/"
+	meson build/ --prefix="${srcdir}/tmpwlr/" --buildtype=release
+	ninja -C build/
+	install -d "${srcdir}/tmpwlr/"
+	ninja -C build/ install
 
-        cd ../udis86/
-        cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -H. -B build/ -G Ninja
-        cmake --build build/ --config Release --target all -j$(shell nproc)
-        cd ../../
+	cd ../udis86/
+	cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -H. -B build/ -G Ninja
+	cmake --build build/ --config Release --target all -j$(shell nproc)
+	cd ../../
 
-        make protocols
-        make release
+	make protocols
+	make release
 
-        cd hyprctl/
-        make all
+	cd hyprctl/
+	make all
 }
 
 package() {
-        cd "${_pkgname}/"
+	cd "${_pkgname}/"
 
-        install -Dm755 build/Hyprland -t "${pkgdir}/usr/bin/"
-        install -Dm755 hyprctl/hyprctl -t "${pkgdir}/usr/bin/"
+	install -Dm755 build/Hyprland -t "${pkgdir}/usr/bin/"
+	install -Dm755 hyprctl/hyprctl -t "${pkgdir}/usr/bin/"
 
-        install -Dm644 assets/*.png -t "${pkgdir}/usr/share/hyprland/"
-        install -Dm644 example/hyprland.desktop -t "${pkgdir}/usr/share/wayland-sessions/"
-        install -Dm644 example/hyprland.conf -t "${pkgdir}/usr/share/hyprland/"
+	install -Dm644 assets/*.png -t "${pkgdir}/usr/share/hyprland/"
+	install -Dm644 example/hyprland.desktop -t "${pkgdir}/usr/share/wayland-sessions/"
+	install -Dm644 example/hyprland.conf -t "${pkgdir}/usr/share/hyprland/"
 
-        install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
-        install -Dm755 ../tmpwlr/lib/libwlroots.so.12032 -t "${pkgdir}/usr/lib/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
+	install -Dm755 ../tmpwlr/lib/libwlroots.so.12032 -t "${pkgdir}/usr/lib/"
 }
