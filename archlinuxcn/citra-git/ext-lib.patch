@@ -29,7 +29,7 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
      # only check submodules when source is obtained via Git
      check_submodules_present()
  endif()
-@@ -240,6 +245,36 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
+@@ -241,6 +246,32 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
  
@@ -42,10 +42,6 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
 +find_package(glslang)
 +find_package(VulkanMemoryAllocator)
 +find_package(libusb)
-+
-+if (ARCHITECTURE_x86 OR ARCHITECTURE_x86_64)
-+    find_package(xbyak 6)
-+endif()
 +
 +if (ENABLE_CUBEB)
 +    find_package(cubeb)
@@ -122,16 +118,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
  
  # HACK: The logic to set up the base include directory for CryptoPP does not work with Android SDK CMake 3.22.1.
  # Until there is a fixed version available, this code will detect and add in the proper include if it does not exist.
-@@ -79,7 +85,7 @@ endif()
- 
- 
- # Xbyak
--if ("x86_64" IN_LIST ARCHITECTURE)
-+if ("x86_64" IN_LIST ARCHITECTURE AND NOT TARGET xbyak::xbyak)
-     add_subdirectory(xbyak EXCLUDE_FROM_ALL)
- endif()
- 
-@@ -111,16 +117,21 @@ endif()
+@@ -117,16 +123,21 @@ endif()
  add_subdirectory(glad)
  
  # glslang
@@ -439,7 +426,7 @@ diff --color -rupN citra/src/citra_qt/CMakeLists.txt citra/src/citra_qt/CMakeLis
 diff --color -rupN citra/src/common/CMakeLists.txt citra/src/common/CMakeLists.txt
 --- citra/src/common/CMakeLists.txt	2023-01-20 00:44:13.822264687 +0800
 +++ citra/src/common/CMakeLists.txt	2023-01-20 00:42:58.732110108 +0800
-@@ -166,10 +166,10 @@ endif()
+@@ -176,7 +176,7 @@ endif()
  create_target_directory_groups(citra_common)
  
  target_link_libraries(citra_common PUBLIC fmt library-headers microprofile Boost::boost Boost::serialization Boost::iostreams)
@@ -447,11 +434,7 @@ diff --color -rupN citra/src/common/CMakeLists.txt citra/src/common/CMakeLists.t
 +target_link_libraries(citra_common PRIVATE zstd::zstd)
  
  if ("x86_64" IN_LIST ARCHITECTURE)
--    target_link_libraries(citra_common PRIVATE xbyak)
-+    target_link_libraries(citra_common PRIVATE xbyak::xbyak)
- endif()
- 
- if (CITRA_USE_PRECOMPILED_HEADERS)
+    target_link_libraries(citra_common PRIVATE xbyak)
 diff --color -rupN citra/src/core/CMakeLists.txt citra/src/core/CMakeLists.txt
 --- citra/src/core/CMakeLists.txt	2023-01-20 00:44:13.828931368 +0800
 +++ citra/src/core/CMakeLists.txt	2023-01-20 00:41:12.788582447 +0800
@@ -673,7 +656,7 @@ diff --color -rupN citra/src/video_core/renderer_vulkan/vk_shader_util.cpp citra
 diff --color -rupN citra/src/video_core/CMakeLists.txt citra/src/video_core/CMakeLists.txt
 --- citra/src/video_core/CMakeLists.txt	2023-01-20 00:44:13.878931471 +0800
 +++ citra/src/video_core/CMakeLists.txt	2023-01-20 00:43:41.148864090 +0800
-@@ -171,10 +171,10 @@ create_target_directory_groups(video_cor
+@@ -171,7 +171,7 @@ create_target_directory_groups(video_cor
 
  target_link_libraries(video_core PUBLIC citra_common citra_core)
  target_link_libraries(video_core PRIVATE Boost::serialization dds-ktx json-headers nihstro-headers tsl::robin_map)
@@ -681,8 +664,4 @@ diff --color -rupN citra/src/video_core/CMakeLists.txt citra/src/video_core/CMak
 +target_link_libraries(video_core PRIVATE vulkan-headers GPUOpen::VulkanMemoryAllocator glad sirit SPIRV glslang::glslang)
 
  if ("x86_64" IN_LIST ARCHITECTURE)
--    target_link_libraries(video_core PUBLIC xbyak)
-+    target_link_libraries(video_core PUBLIC xbyak::xbyak)
- endif()
-
- if (CITRA_USE_PRECOMPILED_HEADERS)
+    target_link_libraries(video_core PUBLIC xbyak)

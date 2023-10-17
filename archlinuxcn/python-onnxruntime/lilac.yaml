@@ -1,0 +1,23 @@
+maintainers:
+  - github: hubutui
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - nsync
+  - python-coloredlogs
+
+update_on:
+  - source: github
+    github: microsoft/onnxruntime
+    use_latest_release: true
+    prefix: v
+  - alias: protobuf
+  - alias: python
+  - source: alpm
+    strip_release: true
+    alpm: re2
+    repo: extra
+  - source: manual
+    manual: 1
+# vim:set ts=2 sw=2 et:

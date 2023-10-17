@@ -11,10 +11,9 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
  
 pkgname=ungoogled-chromium
-pkgver=117.0.5938.149
+pkgver=118.0.5993.70
 pkgrel=1
 _launcher_ver=8
-_gcc_patchset=116-patchset-2
 _manual_clone=0
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
@@ -33,21 +32,15 @@ optdepends=('pipewire: WebRTC desktop sharing under Wayland'
 options=('!lto') # Chromium adds its own flags for ThinLTO
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
-        https://github.com/stha09/chromium-patches/releases/download/chromium-$_gcc_patchset/chromium-$_gcc_patchset.tar.xz
-        add-memory-for-std-unique_ptr-in-third_party-ip.patch
-        roll-src-third_party-libavif-src-b33d9ebfc.676aded35.patch
+        https://gitlab.com/Matt.Jolly/chromium-patches/-/archive/${pkgver%%.*}/chromium-patches-${pkgver%%.*}.tar.bz2
         free-the-X11-pixmap-in-the-NativePixmapEGLX11Bind.patch
         REVERT-disable-autoupgrading-debug-info.patch
-        material-color-utilities-cmath.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('ddd7c852bd191c0917ab800655da341e7583c2377ca220ae077fc5de7fc7d9df'
+sha256sums=('49ee00a734de3dae7c421eb3c974e8d451b4de6f5b4e34b603fd6435eab6993d'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
-            '25ad7c1a5e0b7332f80ed15ccf07d7e871d8ffb4af64df7c8fef325a527859b0'
-            '7b9708f0dbfd697be7043d3cfe52da991185aa0ee29a3b8263506cd3ae4d41a9'
-            '30841fbe0785f8df584eeaa86584fe75f89da26e71df80cf536887557ddef0b6'
+            '0d1eb054965711a2d4ed6b4cb7f06cbda5b374a48e1b99c8c38ebf6375a781a9'
             'ab1eb107ec1c915065dc59cf4832da27e17d60eb29038e2aec633daeb946cc6a'
             '1b782b0f6d4f645e4e0daa8a4852d63f0c972aa0473319216ff04613a0592a69'
-            '55e6097d347be40cffebf3ce13ba84ea92d940f60865f1bd7c9af1ef2a2ef8e1'
             'e393174d7695d0bafed69e868c5fbfecf07aa6969f3b64596d0bae8b067e1711')
 
 if (( _manual_clone )); then
@@ -65,7 +58,7 @@ source=(${source[@]}
         vaapi-add-av1-support.patch
         remove-main-main10-profile-limit.patch)
 sha256sums=(${sha256sums[@]}
-            '0afcc1fef6e18c612e7a25c65f08b98d0db3e621c80ff855cbfd5a791b6ad03a'
+            'd95a02dc7bad01302ed42c9f50daee53c998149f14ba6a4023198e7b1c6f5a36'
             'e9e8d3a82da818f0a67d4a09be4ecff5680b0534d7f0198befb3654e9fab5b69'
             'e742cc5227b6ad6c3e0c2026edd561c6d3151e7bf0afb618578ede181451b307'
             'be8d3475427553feb5bd46665ead3086301ed93c9a41cf6cc2644811c5bda51c')
@@ -133,20 +126,19 @@ prepare() {
   patch -Np1 -i ../use-oauth2-client-switches-as-default.patch
 
   # Upstream fixes
-  patch -Np1 -i ../add-memory-for-std-unique_ptr-in-third_party-ip.patch
-  patch -Np1 -i ../roll-src-third_party-libavif-src-b33d9ebfc.676aded35.patch
   patch -Np1 -i ../free-the-X11-pixmap-in-the-NativePixmapEGLX11Bind.patch
 
   # Revert addition of compiler flag that needs newer clang
   patch -Rp1 -i ../REVERT-disable-autoupgrading-debug-info.patch
 
-  # Build fixes
-  patch -Np0 -i ../material-color-utilities-cmath.patch
-
   # Fixes for building with libstdc++ instead of libc++
-  patch -Np1 -i ../patches/chromium-114-maldoca-include.patch
-  patch -Np1 -i ../patches/chromium-114-ruy-include.patch
-  patch -Np1 -i ../patches/chromium-114-vk_mem_alloc-include.patch
+  patch -Np1 -i ../chromium-patches-*/chromium-114-maldoca-include.patch
+  patch -Np1 -i ../chromium-patches-*/chromium-114-ruy-include.patch
+  patch -Np1 -i ../chromium-patches-*/chromium-114-vk_mem_alloc-include.patch
+  patch -Np1 -i ../chromium-patches-*/chromium-117-material-color-include.patch
+  patch -Np1 -i ../chromium-patches-*/chromium-118-SensorReadingField-include.patch
+  patch -Np1 -i ../chromium-patches-*/chromium-118-LightweightDetector-include.patch
+  patch -Np1 -i ../chromium-patches-*/chromium-118-system-freetype.patch
 
   # Custom Patches
   #patch -Np1 -i ../ozone-add-va-api-support-to-wayland.patch
