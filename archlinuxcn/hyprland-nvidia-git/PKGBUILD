@@ -61,14 +61,17 @@ pkgver() {
 	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
-build() {
+prepare() {
 	cd "${_pkgname}/"
 	git submodule update --init
-	make fixwlr
+	sed -E -i -e 's/(soversion = 12)([^032]|$$)/soversion = 12032/g' ./subprojects/wlroots/meson.build
+	rm -rf ./subprojects/wlroots/build
 	patch --directory="${srcdir}/${_pkgname}/subprojects/wlroots/" --forward --strip=0 \
 		--input="${srcdir}/nvidia.patch"
+}
 
-	cd subprojects/wlroots/
+build() {
+	cd "${_pkgname}/subprojects/wlroots/"
 	meson build/ --prefix="${srcdir}/tmpwlr/" --buildtype=release
 	ninja -C build/
 	install -d "${srcdir}/tmpwlr/"
