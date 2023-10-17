@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.11.0.DEV.643.g8a847d520c2
+pkgver=1.11.0.DEV.660.g6ec149f3b19
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -45,16 +45,16 @@ depends_libs=(arpack fftw gmp libunwind mpfr pcre2 suitesparse
               mbedtls zlib p7zip libnghttp2 ca-certificates-utils lld)
 case "$CARCH" in
   x86_64)
-    depends_libs=("${depends_libs[@]}" openblas64)
+    depends_libs=("${depends_libs[@]}" openblas64-git)
     ;;
   aarch64)
-    depends_libs=("${depends_libs[@]}" openblas64)
+    depends_libs=("${depends_libs[@]}" openblas64-git)
     ;;
   i686)
-    depends_libs=("${depends_libs[@]}" openblas)
+    depends_libs=("${depends_libs[@]}" openblas-git)
     ;;
   armv7h)
-    depends_libs=("${depends_libs[@]}" openblas)
+    depends_libs=("${depends_libs[@]}" openblas-git)
     ;;
 esac
 makedepends=("${depends_libs[@]}" llvm-julia gcc-fortran git patchelf python proot
@@ -213,7 +213,7 @@ _patch_suitesparse() {
       cd "$d"
       # Patch the code to assume newer cholmod version. This is generally unsafe
       # but should be fine for 3->4 according to the suitesparse changelog.
-      for f in src/solvers/lib/*.jl; do
+      for f in src/solvers/wrappers.jl; do
         echo "Updating $d/$f"
         sed -i -e "s/\(CHOLMOD_MAIN_VERSION *= *\)[0-9]*/\1${cholmod_maj_ver}/" "$f"
         sed -i -e "s/\(CHOLMOD_SUB_VERSION *= *\)[0-9]*/\1${cholmod_min_ver}/" "$f"

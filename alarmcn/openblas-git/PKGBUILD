@@ -7,7 +7,7 @@ pkgbase=openblas-git
 pkgname=(openblas-git openblas64-git)
 _pkgname=OpenBLAS
 pkgver=0.3.24.1dev.0.81.g66c2c41e9
-pkgrel=1
+pkgrel=4
 pkgdesc="An optimized BLAS library based on GotoBLAS2 1.13 BSD"
 arch=('aarch64' 'x86_64')
 url="https://www.openblas.net/"
@@ -104,7 +104,20 @@ package_openblas-git() {
   cd OpenBLAS
   make "${_make_opts[@]}" DESTDIR="${pkgdir}" PREFIX="/usr" install
   install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
-  rm "${pkgdir}/usr/include/"{lapack,cblas,f77blas}*
+
+  [[ $pkgver =~ ^([0-9]*)\.([0-9]*) ]]
+  _majver=${BASH_REMATCH[1]}
+  _minver=${BASH_REMATCH[2]}
+
+  _libname=$(readlink "$pkgdir"/usr/lib/libopenblas.so)
+  ln -s "$_libname" "$pkgdir"/usr/lib/libopenblas.so.${_majver}.${_minver}
+
+  mkdir "${pkgdir}/usr/include/openblas"
+  mv "${pkgdir}/usr/include/"*.* "${pkgdir}/usr/include/openblas"
+
+  mv "${pkgdir}/usr/lib/cmake/openblas" "${pkgdir}/usr/lib/cmake/OpenBLAS"
+  sed -i -e 's|/usr/include|/usr/include/openblas|g' \
+      "${pkgdir}/usr/lib/cmake/OpenBLAS/OpenBLASConfig.cmake"
 }
 
 package_openblas64-git() {
@@ -120,11 +133,23 @@ package_openblas64-git() {
 
   [[ $pkgver =~ ^([0-9]*)\.([0-9]*) ]]
   _majver=${BASH_REMATCH[1]}
-  _minver=${BASH_REMATCH[1]}
+  _minver=${BASH_REMATCH[2]}
 
-  cd "$pkgdir"/usr/lib/
-  ln -s libopenblas64_.so libopenblas_64.so
-  ln -s libopenblas64_.so libopenblas_64.so.${_majver}
-  ln -s libopenblas64_.so libopenblas_64.so.${_majver}.${_minver}
-  rm "${pkgdir}/usr/include/"{lapack,cblas,f77blas}*
+  _libname=$(readlink "$pkgdir"/usr/lib/libopenblas64_.so)
+  ln -s "$_libname" "$pkgdir"/usr/lib/libopenblas64_.so.${_majver}.${_minver}
+  ln -s "$_libname" "$pkgdir"/usr/lib/libopenblas_64.so
+  ln -s "$_libname" "$pkgdir"/usr/lib/libopenblas_64.so.${_majver}
+  ln -s "$_libname" "$pkgdir"/usr/lib/libopenblas_64.so.${_majver}.${_minver}
+
+  mkdir "${pkgdir}/usr/include/openblas64"
+  mv "${pkgdir}/usr/include/"*.* "${pkgdir}/usr/include/openblas64"
+
+  mv "${pkgdir}/usr/lib/cmake/openblas"  "${pkgdir}/usr/lib/cmake/OpenBLAS64"
+  sed -i -e 's|/usr/include|/usr/include/openblas|g' \
+      -e 's|OpenBLAS|OpenBLAS64|g' \
+      "${pkgdir}/usr/lib/cmake/OpenBLAS64/OpenBLASConfig.cmake"
+  mv "${pkgdir}/usr/lib/cmake/OpenBLAS64/OpenBLASConfig.cmake" \
+     "${pkgdir}/usr/lib/cmake/OpenBLAS64/OpenBLAS64Config.cmake"
+  mv "${pkgdir}/usr/lib/cmake/OpenBLAS64/OpenBLASConfigVersion.cmake" \
+     "${pkgdir}/usr/lib/cmake/OpenBLAS64/OpenBLAS64ConfigVersion.cmake"
 }
