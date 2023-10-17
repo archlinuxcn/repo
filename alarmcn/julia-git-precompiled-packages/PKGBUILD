@@ -549,11 +549,13 @@ build() {
   rm -rf arch-compiled
   mkdir -p arch-compiled
 
-  ver_short=$(julia --startup-file=no \
-                    -e 'print(VERSION.major, ".", VERSION.minor)')
+  _ver_short=$(julia --startup-file=no \
+                     -e 'print(VERSION.major, ".", VERSION.minor)')
 
-  compile_dir="/usr/share/julia/compiled/v$ver_short"
-  stdlib_dir="/usr/share/julia/stdlib/v$ver_short"
+  echo "_ver_short=${_ver_short}" > build_vars
+
+  compile_dir="/usr/share/julia/compiled/v$_ver_short"
+  stdlib_dir="/usr/share/julia/stdlib/v$_ver_short"
   tgt_dir="${srcdir}/arch-compiled"
   julia julia-copy-compiled-pkgs.jl \
         "$stdlib_dir" "$compile_dir" "$tgt_dir" "${_jlpackages[@]}"
@@ -566,7 +568,9 @@ _package-jlpackage() {
   # should still work.
   # depends+=("julia-git=$(pacman -Q julia-git | sed -e 's/^.* \([^ ]*\)$/\1/')")
 
-  stdlib_dir="/usr/share/julia/stdlib/v$ver_short"
+  . ./build_vars
+
+  stdlib_dir="/usr/share/julia/stdlib/v$_ver_short"
 
   jlpkg=$1
   srcpkg="julia-git-${jlpkg,,}-src"
@@ -579,7 +583,6 @@ _package-jlpackage() {
   mkdir -p "$arch_compile_dir"
 
   echo "Scanning $stdlib_dir/$jlpkg for dependencies"
-  ls "$stdlib_dir/$jlpkg" || true
   _pkg_deps=$(julia "/usr/lib/julia/julia-list-deps.jl" "$stdlib_dir/$jlpkg")
   echo "Deps: $_pkg_deps"
 
