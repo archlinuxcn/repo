@@ -534,7 +534,7 @@ pkgdesc="Precompiled packages for julia-git"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
-depends=(julia-git)
+depends=(openblas-git openblas64-git blas-openblas blas64-openblas julia-git)
 makedepends=(git julia-git-package-env julia-pkg-scripts makepkg-lint-disable-hook
              blas-openblas blas64-openblas)
 options=('debug' '!strip')
