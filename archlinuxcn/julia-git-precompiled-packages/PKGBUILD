@@ -601,3 +601,5 @@ for jlpkg in "${_jlpackages[@]}"; do
   makedepends+=("${_pkg}-src")
   eval "package_${_pkg}() { _package-jlpackage ${jlpkg}; }"
 done
+
+pkgname=(julia-git-jump)
