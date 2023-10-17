@@ -578,9 +578,16 @@ _package-jlpackage() {
   arch_compile_dir="${pkgdir}/usr/lib/julia/arch-compiled/"
   mkdir -p "$arch_compile_dir"
 
-  for deps in $(julia "/usr/lib/julia/julia-list-deps.jl" "$stdlib_dir/$jlpkg"); do
-    depends+=("julia-git-${deps,,}")
+  echo "Scanning $stdlib_dir/$jlpkg for dependencies"
+  ls "$stdlib_dir/$jlpkg" || true
+  _pkg_deps=$(julia "/usr/lib/julia/julia-list-deps.jl" "$stdlib_dir/$jlpkg")
+  echo "Deps: $_pkg_deps"
+
+  for _dep in $_pkg_deps; do
+    depends+=("julia-git-${_dep,,}")
   done
+
+  echo "Final dependencies: ${depends[*]}"
 
   cp -r "${srcdir}/arch-compiled/$jlpkg" "${pkgdir}/usr/lib/julia/arch-compiled/$jlpkg"
 }
