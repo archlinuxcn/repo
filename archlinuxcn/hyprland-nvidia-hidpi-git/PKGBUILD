@@ -92,7 +92,8 @@ prepare() {
 	patch -Np1 -i "${srcdir}"/0003-Fix-size-hints-under-Xwayland-scaling.patch
 	patch --forward --strip=0 --input="${srcdir}"/nvidia.patch
 	cd "${srcdir}/${_pkgname}"
-	make fixwlr
+	sed -E -i -e 's/(soversion = 12)([^032]|$$)/soversion = 12032/g' ./subprojects/wlroots/meson.build
+	rm -rf ./subprojects/wlroots/build
 }
 
 build() {
