@@ -48,35 +48,54 @@ makedepends=(
 	meson
 	vulkan-headers
 	wayland-protocols
-	xorgproto)
+	xorgproto
+	jq)
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/hyprwm/Hyprland/releases/download/v${pkgver}/source-v${pkgver}.tar.gz"
 	"nvidia.patch")
 conflicts=("${_pkgname}")
 provides=(hyprland)
 sha256sums=('863bf5ba1051f223a30efeb0160846784e9b68266d95c7a1c8bac36b19122536'
-            '10223a97a622ea7e641b4305a9a4f7bf0cb0526dacfbfa5970171558b3a63488')
-options=(!makeflags !buildflags !strip)
+	'10223a97a622ea7e641b4305a9a4f7bf0cb0526dacfbfa5970171558b3a63488')
+
+prepare() {
+	cd hyprland-source/subprojects/wlroots/
+	patch -p1 <../packagefiles/wlroots-meson-build.patch
+	patch --directory=. --forward --strip=0 --input="${srcdir}/nvidia.patch"
+}
 
 build() {
-	cd "$srcdir/hyprland-source"
-	patch --directory="$srcdir/hyprland-source/subprojects/wlroots/" --forward --strip=0 \
-		--input="${srcdir}/nvidia.patch"
-	cd "./subprojects/wlroots/" && meson build/ --prefix="${srcdir}/tmpwlr" --buildtype=release && ninja -C build/ && mkdir -p "${srcdir}/tmpwlr" && ninja -C build/ install && cd ../
-	cd udis86 && cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -H./ -B./build -G Ninja && cmake --build ./build --config Release --target all -j$(shell nproc) && cd ../..
-	make protocols
-	make release
-	cd ./hyprctl && make all && cd ..
+	cd hyprland-source/
+
+	meson setup build \
+		--prefix /usr \
+		--libexecdir lib \
+		--sbindir bin \
+		--buildtype plain \
+		--wrap-mode nodownload \
+		-D b_lto=true \
+		-D b_pie=true \
+		-D default_library=shared \
+		-D xwayland=enabled
+
+	ln -sf wlroots build/subprojects/wlroots/include/wlr
+	meson compile -C build
 }
 
 package() {
-	cd "$srcdir"
-	mkdir -p "${pkgdir}/usr/share/wayland-sessions"
-	mkdir -p "${pkgdir}/usr/share/hyprland"
-	install -Dm755 hyprland-source/build/Hyprland -t "${pkgdir}/usr/bin"
-	install -Dm755 hyprland-source/hyprctl/hyprctl -t "${pkgdir}/usr/bin"
-	install -Dm644 hyprland-source/assets/*.png -t "${pkgdir}/usr/share/hyprland"
-	install -Dm644 hyprland-source/example/hyprland.desktop -t "${pkgdir}/usr/share/wayland-sessions"
-	install -Dm644 hyprland-source/example/hyprland.conf -t "${pkgdir}/usr/share/hyprland"
-	install -Dm644 hyprland-source/LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}"
-	mv "${srcdir}/tmpwlr/lib/libwlroots.so.12" "${srcdir}/tmpwlr/lib/libwlroots.so.12032"
+	cd hyprland-source/
+	meson install -C build --destdir "${pkgdir}"
+
+	rm -rf "${pkgdir}/usr/include/hyprland/wlroots/wlr/"
+	ln -sf . "${pkgdir}/usr/include/hyprland/wlroots/wlr"
+
+	# resolve conflicts with system wlr
+	rm -f "${pkgdir}/usr/lib/libwlroots.so"
+	rm -f "${pkgdir}/usr/lib/pkgconfig/wlroots.pc"
+
+	# resolve conflicts with xdg-desktop-portal-hyprland from repo
+	rm -rf "${pkgdir}/usr/share/xdg-desktop-portal/"
+
+	# FIXME: meson.build shall install version.h
+	install -Dm644 src/version.h -t "${pkgdir}/usr/include/hyprland/src/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 }
