@@ -4,7 +4,7 @@
 
 pkgname=hyprland-git
 pkgver=0.31.0.r7.a0b675ec
-pkgrel=1
+pkgrel=2
 pkgdesc="A dynamic tiling Wayland compositor based on wlroots that doesn't sacrifice on its looks."
 arch=(x86_64 aarch64)
 url="https://github.com/hyprwm/Hyprland"
@@ -103,8 +103,20 @@ package() {
 
 	meson install -C build --destdir "${pkgdir}"
 
+<<<<<<< HEAD
 	rm -rf "${pkgdir}/usr/include/hyprland/wlroots/wlr/"
 	ln -sf . "${pkgdir}/usr/include/hyprland/wlroots/wlr"
+=======
+  rm -rf "$pkgdir/usr/include/hyprland/wlroots/wlr"
+  ln -sf . "$pkgdir/usr/include/hyprland/wlroots/wlr"
+  # resolve conflicts with system wlr
+  rm -f "$pkgdir/usr/lib/libwlroots.so"
+  rm -f "$pkgdir/usr/lib/pkgconfig/wlroots.pc"
+  # resolve conflicts with xdg-desktop-portal-hyprland from repo
+  rm -rf "$pkgdir/usr/share/xdg-desktop-portal"
+  # FIXME: meson.build shall install version.h
+  install -Dm0644 -t "$pkgdir/usr/include/hyprland/src" src/version.h
+>>>>>>> 5a99881a9c5 (hyprland-git: auto updated to 0.31.0.r7.a0b675ec-2)
 
 	# resolve conflicts with system wlr
 	rm -f "${pkgdir}/usr/lib/libwlroots.so"
