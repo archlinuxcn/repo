@@ -10,122 +10,114 @@ arch=(x86_64 aarch64)
 url="https://github.com/hyprwm/Hyprland"
 license=(BSD)
 depends=(cairo
-         gcc-libs
-         glib2
-         glibc
-         glslang
-         libdisplay-info
-         libdrm
-         libglvnd
-         libinput
-         libliftoff
-         libx11
-         libxcb
-         libxcomposite
-         libxfixes
-         libxkbcommon
-         libxrender
-         opengl-driver
-         pango
-         pixman
-         polkit
-         seatd
-         systemd-libs
-         vulkan-icd-loader
-         vulkan-validation-layers
-         wayland
-         wayland-protocols
-         xcb-proto
-         xcb-util
-         xcb-util-errors
-         xcb-util-keysyms
-         xcb-util-renderutil
-         xcb-util-wm
-         xorg-xinput
-         xorg-xwayland)
-depends+=(libdisplay-info.so)
-makedepends=("cmake" "jq"
-             gdb
-             git
-             meson
-             ninja
-             pkgconf
-             vulkan-headers
-             xorgproto)
+	glib2
+	glslang
+	libdisplay-info
+	libdrm
+	libglvnd
+	libinput
+	libliftoff
+	libx11
+	libxcb
+	libxcomposite
+	libxfixes
+	libxkbcommon
+	libxrender
+	opengl-driver
+	pango
+	pixman
+	polkit
+	seatd
+	systemd-libs
+	vulkan-icd-loader
+	vulkan-validation-layers
+	wayland
+	wayland-protocols
+	xcb-proto
+	xcb-util
+	xcb-util-errors
+	xcb-util-keysyms
+	xcb-util-renderutil
+	xcb-util-wm
+	xorg-xinput
+	xorg-xwayland
+	libdisplay-info.so)
+makedepends=(cmake
+	jq
+	git
+	meson
+	ninja
+	pkgconf
+	vulkan-headers
+	xorgproto)
 provides=("hyprland=${pkgver%%.r*}")
 conflicts=(hyprland)
 source=("git+https://github.com/hyprwm/Hyprland.git"
-        "git+https://gitlab.freedesktop.org/wlroots/wlroots.git"
-        "git+https://github.com/hyprwm/hyprland-protocols.git"
-        "git+https://github.com/canihavesomecoffee/udis86.git"
-        "git+https://github.com/wolfpld/tracy.git")
-b2sums=('SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP')
-
-pick_mr() {
-  git pull origin pull/$1/head --no-edit
-}
+	"git+https://gitlab.freedesktop.org/wlroots/wlroots.git"
+	"git+https://github.com/hyprwm/hyprland-protocols.git"
+	"git+https://github.com/canihavesomecoffee/udis86.git"
+	"git+https://github.com/wolfpld/tracy.git")
+sha256sums=('SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP')
 
 prepare() {
-  cd Hyprland
-  git submodule init
-  git config submodule.wlroots.url                        "$srcdir/wlroots"
-  git config submodule.subprojects/hyprland-protocols.url "$srcdir/hyprland-protocols"
-  git config submodule.subprojects/udis86.url             "$srcdir/udis86"
-  git config submodule.subprojects/tracy.url              "$srcdir/tracy"
-  git -c protocol.file.allow=always submodule update
+	cd Hyprland
+	git submodule init
+	git config submodule.wlroots.url "${srcdir}/wlroots"
+	git config submodule.subprojects/hyprland-protocols.url "${srcdir}/hyprland-protocols"
+	git config submodule.subprojects/udis86.url "${srcdir}/udis86"
+	git config submodule.subprojects/tracy.url "${srcdir}/tracy"
+	git -c protocol.file.allow=always submodule update
 
-  if [[ -z "$(git config --get user.name)" ]]; then
-    git config user.name local && git config user.email '<>' && git config commit.gpgsign false
-  fi
-  # Pick pull requests from github using `pick_mr <pull request number>`.
-
-  pushd subprojects/wlroots
-  patch -p1 < ../packagefiles/wlroots-meson-build.patch
-  popd
+	cd subprojects/wlroots
+	patch -p1 <../packagefiles/wlroots-meson-build.patch
 }
 
 pkgver() {
-  git -C Hyprland describe --long --tags | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g'
+	git -C Hyprland describe --long --tags | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g'
 }
 
 build() {
-  cd Hyprland
+	cd Hyprland
 
-  meson setup build \
-    --prefix     /usr \
-    --libexecdir lib \
-    --sbindir    bin \
-    --buildtype  release \
-    --wrap-mode  nodownload \
-    -D           b_lto=true \
-    -D           b_pie=true \
-    -D           default_library=shared \
-    -D           xwayland=enabled
+	meson setup build \
+		--prefix /usr \
+		--libexecdir lib \
+		--sbindir bin \
+		--buildtype plain \
+		--wrap-mode nodownload \
+		-D b_lto=true \
+		-D b_pie=true \
+		-D default_library=shared \
+		-D xwayland=enabled
 
-  ln -sf wlroots build/subprojects/wlroots/include/wlr
-  meson compile -C build
+	ln -sf wlroots build/subprojects/wlroots/include/wlr
+	meson compile -C build
 }
 
 package() {
-  cd Hyprland
+	cd Hyprland
 
-  meson install -C build --destdir "$pkgdir"
+	meson install -C build --destdir "${pkgdir}"
 
-  rm -rf "$pkgdir/usr/include/hyprland/wlroots/wlr"
-  ln -sf . "$pkgdir/usr/include/hyprland/wlroots/wlr"
-  # resolve conflicts with system wlr
-  rm -f "$pkgdir/usr/lib/libwlroots.so"
-  rm -f "$pkgdir/usr/lib/pkgconfig/wlroots.pc"
-  # resolve conflicts with xdg-desktop-portal-hyprland from repo
-  rm -rf "$pkgdir/usr/share/xdg-desktop-portal"
-  # FIXME: meson.build shall install version.h
-  install -Dm0644 -t "$pkgdir/usr/include/hyprland/src" src/version.h 
+	rm -rf "${pkgdir}/usr/include/hyprland/wlroots/wlr/"
+	ln -sf . "${pkgdir}/usr/include/hyprland/wlroots/wlr"
 
-  # license
-  install -Dm0644 -t "$pkgdir/usr/share/licenses/${pkgname}" LICENSE
+	# resolve conflicts with system wlr
+	rm -f "${pkgdir}/usr/lib/libwlroots.so"
+	rm -f "${pkgdir}/usr/lib/pkgconfig/wlroots.pc"
+
+	# resolve conflicts with xdg-desktop-portal-hyprland from repo
+	rm -rf "${pkgdir}/usr/share/xdg-desktop-portal/"
+	rm -rf "${pkgdir}/usr/share/hyprland-protocols/"
+	rm -f "${pkgdir}/usr/share/pkgconfig/hyprland-protocols.pc"
+
+	# FIXME: meson.build shall install version.h
+	install -Dm644 src/version.h -t "${pkgdir}/usr/include/hyprland/src/"
+
+	# license
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
-# vi: et ts=2 sw=2
