@@ -21,7 +21,10 @@ depends=(
   python-yaml
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 optdepends=(
   "pyside2: use PySide2"
@@ -35,12 +38,12 @@ sha512sums=('895b8b9cea60074c27c8e41133a370dfe126bb191b6e6f5300e9d5b744c00a1e684
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 "labelme/icons/icon.png" "${pkgdir}/usr/share/pixmaps/labelme.png"
   install -Dm644 "labelme.desktop" -t "${pkgdir}/usr/share/applications"
 }
