@@ -129,6 +129,8 @@ package() {
 
 	# resolve conflicts with xdg-desktop-portal-hyprland from repo
 	rm -rf "${pkgdir}/usr/share/xdg-desktop-portal/"
+	rm -rf "${pkgdir}/usr/share/hyprland-protocols/"
+	rm -rf "${pkgdir}/usr/share/pkgconfig/hyprland-protocols.pc"
 
 	# FIXME: meson.build shall install version.h
 	install -Dm644 src/version.h -t "${pkgdir}/usr/include/hyprland/src/"
