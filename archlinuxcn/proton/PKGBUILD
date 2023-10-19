@@ -1,9 +1,9 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton
-_srctag=8.0-4b
+_srctag=8.0-4c
 _commit=
-pkgver=8.0.4.2  # pkgver=${_srctag//-/.}
+pkgver=8.0.4.3  # pkgver=${_srctag//-/.}
 _geckover=2.47.3
 _monover=8.0.1
 pkgrel=1
