@@ -7,9 +7,9 @@
 # Contributor: heavysink <winstonwu91 at gmail>
 pkgname=wine-valve
 epoch=5
-pkgver=8.0.4b
-_pkgver='8.0-4b'
-pkgrel=2
+pkgver=8.0.4c
+_pkgver='8.0-4c'
+pkgrel=1
 pkgdesc='A compatibility layer for running Windows programs (Valve version)'
 arch=('i686' 'x86_64')
 url='https://github.com/ValveSoftware/wine.git'
@@ -189,7 +189,7 @@ package() {
   x86_64-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.dll
 }
 
-sha256sums=('0f302d226ce4a52d101d9dafadca58b2a645f65cdbf1721ca07fe633747f031e'
+sha256sums=('c6480c6997de62800768a86c8b42f5fbb5cf00f087f8e3f72a239f5970b85fbc'
             '9901a5ee619f24662b241672a7358364617227937d5f6d3126f70528ee5111e7'
             '6dfdefec305024ca11f35ad7536565f5551f09119dda2028f194aee8f77077a4'
             '7c73a0fd35d8905d5d0fc33f5cf1558f77b4d70e544c92034ffe41a9d50d8c40')
