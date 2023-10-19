@@ -5,10 +5,10 @@ pkgdesc='An open source visual route tracking CLI tool'
 arch=('x86_64')
 url="https://github.com/nxtrace/Ntrace-V1"
 license=('GPL')
+depends=('glibc')
 makedepends=('go' 'git')
 source=("git+https://github.com/nxtrace/Ntrace-V1.git#tag=v$pkgver")
 sha256sums=('SKIP')
-install=nexttrace.install
 
 build() {
   cd "Ntrace-V1"
@@ -25,5 +25,6 @@ build() {
 
 package() {
   cd "Ntrace-V1"
-  install -Dm755 $pkgname "$pkgdir"/usr/bin/$pkgname
+  install -Dm755 NTrace-core "$pkgdir"/usr/bin/nexttrace
+  setcap cap_net_raw,cap_net_admin+eip "$pkgdir"/usr/bin/nexttrace
 }
