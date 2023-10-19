@@ -9,7 +9,7 @@
 pkgbase=lib32-nvidia-utils-beta
 pkgname=('lib32-nvidia-utils-beta' 'lib32-opencl-nvidia-beta')
 pkgver=545.23.06
-pkgrel=1
+pkgrel=2
 pkgdesc='NVIDIA drivers utilities (32-bit, beta version)'
 arch=('x86_64')
 url='https://www.nvidia.com/'
@@ -87,6 +87,7 @@ package_lib32-nvidia-utils-beta() {
     install -D -m755 "libnvidia-ml.so.${pkgver}"        -t "${pkgdir}/usr/lib32"
     install -D -m755 "libnvidia-glvkspirv.so.${pkgver}" -t "${pkgdir}/usr/lib32"
     install -D -m755 "libnvidia-gpucomp.so.${pkgver}"   -t "${pkgdir}/usr/lib32"
+    install -D -m755 "libnvidia-allocator.so.${pkgver}" -t "${pkgdir}/usr/lib32"
     
     # VDPAU
     install -D -m755 "libvdpau_nvidia.so.${pkgver}" -t "${pkgdir}/usr/lib32/vdpau"
