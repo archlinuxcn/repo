@@ -2,8 +2,8 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=3932
-pkgrel=2
+pkgver=3938
+pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
 url="https://yuzu-emu.org/"
@@ -17,9 +17,9 @@ source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.g
 "https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml"
 "https://github.com/pineappleEA/pineapple-src/releases/download/EA-${pkgver}/Windows-Yuzu-EA-${pkgver}.zip")
 options=('!buildflags') #[heavysink] Disable _FORTIFY_SOURCE for temporary fix for Bayonetta 3
-sha256sums=('ab9dc031d8d715bf2a5e6c6946ed01e4c184c06fa8fa44432d5ed5027e14d39a'
+sha256sums=('4080c30d90eb78270d0a1fd833e687f0577e1facbb88570086c6796e033da7e3'
             'e76ab2b3566d8135930e570ede5bed3da8f131270b60db818e453d248880bdf2'
-            '6bdcde0f7b808abf7cf1d34cbaf6fc2cfe3975f71326e46e524696f2c9acf453')
+            '6322f3568eee87da5f0c1425484d940d03bf3fd73c308013d646710dbde6d0c2')
 
 prepare() {
   cd "$srcdir/yuzu-windows-msvc-early-access"
