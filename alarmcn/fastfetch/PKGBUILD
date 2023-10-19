@@ -1,24 +1,44 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=fastfetch
 pkgver=2.1.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Like Neofetch, but much faster because written in C"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/fastfetch-cli/fastfetch"
 license=('MIT')
 depends=('gcc-libs')
-makedepends=('chafa' 'cmake' 'dbus' 'dconf' 'ddcutil' 'imagemagick' 'libnm' 'libpulse'
-             'libxcb' 'libxrandr' 'mesa' 'ocl-icd' 'opencl-headers' 'pciutils'
-             'vulkan-headers' 'vulkan-icd-loader' 'wayland' 'xfconf' 'zlib')
+makedepends=(
+  'chafa'
+  'cmake'
+  'dbus'
+  'dconf'
+  'ddcutil'
+  'directx-headers'
+  'imagemagick'
+  'libnm'
+  'libpulse'
+  'libxcb'
+  'libxrandr'
+  'mesa'
+  'ocl-icd'
+  'opencl-headers'
+  'pciutils'
+  'vulkan-headers'
+  'vulkan-icd-loader'
+  'wayland'
+  'xfconf'
+  'zlib'
+)
 optdepends=(
   'chafa: Image output as ascii art'
   'dbus: Bluetooth, Player & Media detection'
   'dconf: Needed for values that are only stored in DConf + Fallback for GSettings'
   'ddcutil: Brightness detection of external displays'
+  'directx-headers: GPU detection in WSL'
   'glib2: Output for values that are only stored in GSettings'
   'imagemagick: Image output using sixel or kitty graphics protocol'
-  'libnm: Used for Wifi detection'
-  'libpulse: Used for Sound detection'
+  'libnm: Wifi detection'
+  'libpulse: Sound detection'
   'mesa: Needed by the OpenGL module for gl context creation.'
   'libxrandr: Multi monitor support'
   'ocl-icd: OpenCL module'
@@ -39,7 +59,6 @@ build() {
     -DENABLE_RPM='OFF' \
     -DENABLE_IMAGEMAGICK6='OFF' \
     -DENABLE_DDCUTIL='ON' \
-    -DENABLE_DIRECTX_HEADERS='OFF' \
     -Wno-dev
   cmake --build build
 }
