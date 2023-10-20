@@ -4,7 +4,7 @@
 
 pkgname=webkit2gtk-imgpaste
 pkgver=2.42.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Web content engine for GTK (with patches for pasting images from clipboard)"
 url="https://webkitgtk.org"
 arch=(x86_64)
@@ -77,15 +77,17 @@ provides=(webkit2gtk)
 conflicts=(webkit2gtk)
 source=(
   $url/releases/webkitgtk-$pkgver.tar.xz{,.asc}
-  webkitgtk-MiniBrowser-fullscreen.patch::https://github.com/WebKit/WebKit/commit/e07345343415dd2496edc721daa61a3b42703131.patch
   EnlargeObjectSize.patch
   PasteBoardGtk.patch
+  GTK-MiniBrowser-should-hide-the-toolbar-when-using-full-screen.patch
+  GTK-Disable-DMABuf-renderer-for-NVIDIA-proprietary-drivers.patch
 )
 sha256sums=('6f41fac9989d3ee51c08c48de1d439cdeddecbc757e34b6180987d99b16d2499'
             'SKIP'
-            'a921d6be1303e9f23474971f381886fd291ec5bb1a7ff1e85acede8cfb88bef2'
             '71b8a59c78d549fed0cd895207f49c7b3be40b236e96f4d7b9907a26521499bf'
-            '20ebac2caf15fa546e6da00cb0fa90d5d37fcf7bfa883014d7d15eb4963d12d2')
+            '20ebac2caf15fa546e6da00cb0fa90d5d37fcf7bfa883014d7d15eb4963d12d2'
+            'a921d6be1303e9f23474971f381886fd291ec5bb1a7ff1e85acede8cfb88bef2'
+            '655f3b2c96355ac83c4fa1fc6048e3256bbfdbfb9727e1e18c5af12613536206')
 validpgpkeys=(
   'D7FCF61CF9A2DEAB31D81BD3F3D322D0EC4582C3'  # Carlos Garcia Campos <cgarcia@igalia.com>
   '5AA3BC334FD7E3369E7C77B291C559DBE4C9123B'  # Adrián Pérez de Castro <aperez@igalia.com>
@@ -94,9 +96,15 @@ validpgpkeys=(
 prepare() {
   cd webkitgtk-$pkgver
 
-  patch -Np1 -i ../webkitgtk-MiniBrowser-fullscreen.patch
   patch -Np1 -i ../PasteBoardGtk.patch
   patch -Np1 -i ../EnlargeObjectSize.patch
+  # Requested by eworm
+  # https://github.com/WebKit/WebKit/pull/17909
+  patch -Np1 -i ../GTK-MiniBrowser-should-hide-the-toolbar-when-using-full-screen.patch
+
+  # https://bugs.archlinux.org/task/79783
+  # https://github.com/WebKit/WebKit/pull/18614
+  patch -Np1 -i ../GTK-Disable-DMABuf-renderer-for-NVIDIA-proprietary-drivers.patch
 }
 
 build() {
