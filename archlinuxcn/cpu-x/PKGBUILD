@@ -2,7 +2,7 @@
 
 _realname=CPU-X
 pkgname=cpu-x
-pkgver=5.0.0
+pkgver=5.0.1
 pkgrel=1
 pkgdesc="A Free software that gathers information on CPU, motherboard and more"
 arch=('i686' 'x86_64')
@@ -13,7 +13,7 @@ makedepends=('cmake' 'ninja' 'nasm' 'vulkan-headers')
 optdepends=('opengl-driver: packaged openGL driver'
             'vulkan-driver: packaged Vulkan driver')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/TheTumultuousUnicornOfDarkness/CPU-X/archive/v$pkgver.tar.gz")
-sha512sums=('c4fd7247c83987ab1c84586317a95327809510ed1289cd32cc16cd4d46c8d6af58f8496342e9172ad06cb8189d3e4c82a4826e9c8054fa2dc8cdd166ac29436d')
+sha512sums=('3ded9098c840fa62061ec6b87e1f4a602a97e428f6eaa4bf63de3d6a2e29a9a9ceea199b323546a3f163fcc8a0185815a9dd68623ce46e0b13bee59c33a671c2')
 
 build() {
 	cmake -S "$_realname-$pkgver" -B build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBEXECDIR="lib/cpu-x"
