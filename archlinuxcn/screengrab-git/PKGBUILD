@@ -4,12 +4,12 @@
 _pkgname=screengrab
 pkgname=$_pkgname-git
 pkgver=2.6.0.15.g896ccd7
-pkgrel=1
+pkgrel=2
 pkgdesc="Crossplatform tool for grabbing screenshots of your desktop."
 arch=("i686" "x86_64")
 url="https://github.com/lxqt/screengrab"
 license=("GPL2")
-depends=("qt5-base" "qt5-x11extras" "kwindowsystem" "libqtxdg-git" "libx11" "libxcb" "hicolor-icon-theme")
+depends=("qt5-base" "qt5-x11extras" "kwindowsystem5" "libqtxdg-git" "libx11" "libxcb" "hicolor-icon-theme")
 makedepends=("git" "cmake" "qt5-tools")
 provides=("$_pkgname=$pkgver")
 conflicts=("$_pkgname")
