@@ -29,19 +29,15 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
      # only check submodules when source is obtained via Git
      check_submodules_present()
  endif()
-@@ -241,6 +246,32 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
+@@ -241,6 +246,28 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
  
 +find_package(enet 1.3)
-+find_package(inih)
 +find_package(PkgConfig REQUIRED)
 +pkg_check_modules(Crypto++ REQUIRED IMPORTED_TARGET libcryptopp)
-+find_package(zstd 1.4)
 +find_package(tsl-robin-map)
-+find_package(glslang)
 +find_package(VulkanMemoryAllocator)
-+find_package(libusb)
 +
 +if (ENABLE_CUBEB)
 +    find_package(cubeb)
@@ -87,7 +83,7 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
 diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
 --- citra/externals/CMakeLists.txt	2023-01-20 00:44:13.712264461 +0800
 +++ citra/externals/CMakeLists.txt	2023-01-20 04:34:47.512808459 +0800
-@@ -37,16 +37,22 @@ if (NOT USE_SYSTEM_BOOST)
+@@ -41,16 +41,22 @@ else()
  endif()
  
  # Catch2
@@ -116,56 +112,10 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
 +    add_subdirectory(cryptopp-cmake)
 +endif()
  
- # HACK: The logic to set up the base include directory for CryptoPP does not work with Android SDK CMake 3.22.1.
- # Until there is a fixed version available, this code will detect and add in the proper include if it does not exist.
-@@ -117,16 +123,21 @@ endif()
- add_subdirectory(glad)
- 
- # glslang
--set(SKIP_GLSLANG_INSTALL ON CACHE BOOL "")
--set(ENABLE_GLSLANG_BINARIES OFF CACHE BOOL "")
--set(ENABLE_SPVREMAPPER OFF CACHE BOOL "")
--set(ENABLE_CTEST OFF CACHE BOOL "")
--set(ENABLE_HLSL OFF CACHE BOOL "")
--set(BUILD_EXTERNAL OFF CACHE BOOL "")
--add_subdirectory(glslang)
-+if (NOT TARGET glslang::glslang)
-+    message(STATUS "Using bundled glslang")
-+    set(SKIP_GLSLANG_INSTALL ON CACHE BOOL "")
-+    set(ENABLE_GLSLANG_BINARIES OFF CACHE BOOL "")
-+    set(ENABLE_SPVREMAPPER OFF CACHE BOOL "")
-+    set(ENABLE_CTEST OFF CACHE BOOL "")
-+    set(ENABLE_HLSL OFF CACHE BOOL "")
-+    add_subdirectory(glslang)
-+endif()
- 
- # inih
--add_subdirectory(inih)
-+if (NOT TARGET inih::INIReader)
-+    message(STATUS "Using bundled inih")
-+    add_subdirectory(inih)
-+endif()
- 
- # MicroProfile
- add_library(microprofile INTERFACE)
-@@ -168,26 +179,35 @@ if (ENABLE_LIBUSB AND NOT USE_SYSTEM_LIB
+ # dds-ktx
+ add_library(dds-ktx INTERFACE)
+@@ -228,19 +234,24 @@ else()
  endif()
- 
- # Zstandard
--set(ZSTD_LEGACY_SUPPORT OFF)
--set(ZSTD_BUILD_PROGRAMS OFF)
--set(ZSTD_BUILD_SHARED OFF)
--add_subdirectory(zstd/build/cmake EXCLUDE_FROM_ALL)
--target_include_directories(libzstd_static INTERFACE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/externals/zstd/lib>)
-+if (NOT TARGET zstd::zstd)
-+    message(STATUS "Using bundled zstd")
-+    set(ZSTD_LEGACY_SUPPORT OFF)
-+    set(ZSTD_BUILD_PROGRAMS OFF)
-+    set(ZSTD_BUILD_SHARED OFF)
-+    add_subdirectory(zstd/build/cmake EXCLUDE_FROM_ALL)
-+    target_include_directories(libzstd_static INTERFACE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/externals/zstd/lib>)
-+    add_library(zstd::zstd ALIAS libzstd_static)
-+endif()
  
  # ENet
 -add_subdirectory(enet)
@@ -193,7 +143,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
      add_subdirectory(discord-rpc EXCLUDE_FROM_ALL)
      target_include_directories(discord-rpc INTERFACE ./discord-rpc/include)
  endif()
-@@ -270,7 +290,8 @@ if(ANDROID)
+@@ -323,7 +334,8 @@ if(ANDROID)
  endif()
  
  # OpenAL Soft
@@ -203,7 +153,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
      set(ALSOFT_EMBED_HRTF_DATA OFF CACHE BOOL "")
      set(ALSOFT_EXAMPLES OFF CACHE BOOL "")
      set(ALSOFT_INSTALL OFF CACHE BOOL "")
-@@ -283,8 +304,10 @@ if (ENABLE_OPENAL)
+@@ -336,8 +348,10 @@ if (ENABLE_OPENAL)
  endif()
  
  # VMA
@@ -270,105 +220,6 @@ diff --color -rupN citra/externals/find-modules/Findenet.cmake citra/externals/f
 +    VERSION_VAR ENET_VERSION
 +)
 \ No newline at end of file
-diff --color -rupN citra/externals/find-modules/Findinih.cmake citra/externals/find-modules/Findinih.cmake
---- citra/externals/find-modules/Findinih.cmake	1970-01-01 08:00:00.000000000 +0800
-+++ citra/externals/find-modules/Findinih.cmake	2023-01-20 00:41:12.715249024 +0800
-@@ -0,0 +1,17 @@
-+# SPDX-FileCopyrightText: 2022 Alexandre Bouvier <contact@amb.tf>
-+#
-+# SPDX-License-Identifier: GPL-3.0-or-later
-+
-+find_package(PkgConfig QUIET)
-+if (PKG_CONFIG_FOUND)
-+    pkg_search_module(INIREADER QUIET IMPORTED_TARGET GLOBAL INIReader)
-+    if (INIREADER_FOUND)
-+        add_library(inih::INIReader ALIAS PkgConfig::INIREADER)
-+    endif()
-+endif()
-+
-+include(FindPackageHandleStandardArgs)
-+find_package_handle_standard_args(inih
-+    REQUIRED_VARS INIREADER_LINK_LIBRARIES
-+    VERSION_VAR INIREADER_VERSION
-+)
-\ No newline at end of file
-diff --color -rupN citra/externals/find-modules/Findlibusb.cmake citra/externals/find-modules/Findlibusb.cmake
---- citra/externals/find-modules/Findlibusb.cmake	1970-01-01 08:00:00.000000000 +0800
-+++ citra/externals/find-modules/Findlibusb.cmake	2023-01-20 00:41:12.715249024 +0800
-@@ -0,0 +1,18 @@
-+# SPDX-FileCopyrightText: 2022 Alexandre Bouvier <contact@amb.tf>
-+#
-+# SPDX-License-Identifier: GPL-3.0-or-later
-+
-+find_package(PkgConfig QUIET)
-+if (PKG_CONFIG_FOUND)
-+    pkg_search_module(LIBUSB QUIET IMPORTED_TARGET libusb-1.0)
-+endif()
-+
-+include(FindPackageHandleStandardArgs)
-+find_package_handle_standard_args(libusb
-+    REQUIRED_VARS LIBUSB_LINK_LIBRARIES
-+    VERSION_VAR LIBUSB_VERSION
-+)
-+
-+if (libusb_FOUND AND NOT TARGET libusb::usb)
-+    add_library(libusb::usb ALIAS PkgConfig::LIBUSB)
-+endif()
-\ No newline at end of file
-diff --color -rupN citra/externals/find-modules/Findzstd.cmake citra/externals/find-modules/Findzstd.cmake
---- citra/externals/find-modules/Findzstd.cmake	1970-01-01 08:00:00.000000000 +0800
-+++ citra/externals/find-modules/Findzstd.cmake	2023-01-20 00:41:12.715249024 +0800
-@@ -0,0 +1,30 @@
-+# SPDX-FileCopyrightText: 2022 yuzu Emulator Project
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+
-+include(FindPackageHandleStandardArgs)
-+
-+find_package(zstd QUIET CONFIG)
-+if (zstd_FOUND)
-+    find_package_handle_standard_args(zstd CONFIG_MODE)
-+    if (NOT TARGET zstd::zstd)
-+        if (TARGET zstd::libzstd_shared)
-+            set_target_properties(zstd::libzstd_shared PROPERTIES IMPORTED_GLOBAL TRUE)
-+            add_library(zstd::zstd ALIAS zstd::libzstd_shared)
-+        else()
-+            set_target_properties(zstd::libzstd_static PROPERTIES IMPORTED_GLOBAL TRUE)
-+            add_library(zstd::zstd ALIAS zstd::libzstd_static)
-+        endif()
-+    endif()
-+else()
-+    find_package(PkgConfig QUIET)
-+    if (PKG_CONFIG_FOUND)
-+        pkg_search_module(libzstd QUIET IMPORTED_TARGET GLOBAL libzstd)
-+        if (libzstd_FOUND)
-+            add_library(zstd::zstd ALIAS PkgConfig::libzstd)
-+        endif()
-+    endif()
-+    find_package_handle_standard_args(zstd
-+        REQUIRED_VARS libzstd_LINK_LIBRARIES
-+        VERSION_VAR libzstd_VERSION
-+    )
-+endif()
-\ No newline at end of file
-diff --color -rupN citra/externals/inih/CMakeLists.txt citra/externals/inih/CMakeLists.txt
---- citra/externals/inih/CMakeLists.txt	2023-01-20 00:44:13.722264481 +0800
-+++ citra/externals/inih/CMakeLists.txt	2023-01-20 00:41:12.705249011 +0800
-@@ -6,4 +6,5 @@ add_library(inih
- )
- 
- create_target_directory_groups(inih)
--target_include_directories(inih INTERFACE .)
-+target_include_directories(inih INTERFACE inih/cpp)
-+add_library(inih::INIReader ALIAS inih)
-diff --color -rupN citra/externals/libusb/CMakeLists.txt citra/externals/libusb/CMakeLists.txt
---- citra/externals/libusb/CMakeLists.txt	2023-01-20 00:44:13.725597822 +0800
-+++ citra/externals/libusb/CMakeLists.txt	2023-01-20 00:41:12.708582349 +0800
-@@ -150,3 +150,4 @@ check_include_files(sys/timerfd.h USBI_T
- 
- 
- configure_file(config.h.in config.h)
-+add_library(libusb::usb ALIAS usb)
-\ No newline at end of file
 diff --color -rupN citra/src/audio_core/CMakeLists.txt citra/src/audio_core/CMakeLists.txt
 --- citra/src/audio_core/CMakeLists.txt	2023-01-20 00:44:13.802264646 +0800
 +++ citra/src/audio_core/CMakeLists.txt	2023-01-20 00:41:12.745249061 +0800
@@ -387,30 +238,6 @@ diff --color -rupN citra/src/audio_core/CMakeLists.txt citra/src/audio_core/CMak
      target_compile_definitions(audio_core PUBLIC HAVE_OPENAL)
      add_definitions(-DAL_LIBTYPE_STATIC)
  endif()
-diff --color -rupN citra/src/citra/CMakeLists.txt citra/src/citra/CMakeLists.txt
---- citra/src/citra/CMakeLists.txt	2023-01-20 00:44:13.805597987 +0800
-+++ citra/src/citra/CMakeLists.txt	2023-01-20 00:41:12.745249061 +0800
-@@ -19,7 +19,7 @@ add_executable(citra
- create_target_directory_groups(citra)
- 
- target_link_libraries(citra PRIVATE citra_common citra_core input_common network)
--target_link_libraries(citra PRIVATE inih glad)
-+target_link_libraries(citra PRIVATE inih::INIReader glad)
- if (MSVC)
-     target_link_libraries(citra PRIVATE getopt)
- endif()
-diff --color -rupN citra/src/citra/config.cpp citra/src/citra/config.cpp
---- citra/src/citra/config.cpp	2023-01-20 00:44:13.805597987 +0800
-+++ citra/src/citra/config.cpp	2023-01-20 00:41:12.745249061 +0800
-@@ -7,7 +7,7 @@
- #include <sstream>
- #include <unordered_map>
- #include <SDL.h>
--#include <inih/cpp/INIReader.h>
-+#include <INIReader.h>
- #include "citra/config.h"
- #include "citra/default_ini.h"
- #include "common/file_util.h"
 diff --color -rupN citra/src/citra_qt/CMakeLists.txt citra/src/citra_qt/CMakeLists.txt
 --- citra/src/citra_qt/CMakeLists.txt	2023-01-20 00:44:13.805597987 +0800
 +++ citra/src/citra_qt/CMakeLists.txt	2023-01-20 00:41:12.755249073 +0800
@@ -423,18 +250,6 @@ diff --color -rupN citra/src/citra_qt/CMakeLists.txt citra/src/citra_qt/CMakeLis
      target_compile_definitions(citra-qt PRIVATE -DUSE_DISCORD_PRESENCE)
  endif()
  
-diff --color -rupN citra/src/common/CMakeLists.txt citra/src/common/CMakeLists.txt
---- citra/src/common/CMakeLists.txt	2023-01-20 00:44:13.822264687 +0800
-+++ citra/src/common/CMakeLists.txt	2023-01-20 00:42:58.732110108 +0800
-@@ -176,7 +176,7 @@ endif()
- create_target_directory_groups(citra_common)
- 
- target_link_libraries(citra_common PUBLIC fmt library-headers microprofile Boost::boost Boost::serialization Boost::iostreams)
--target_link_libraries(citra_common PRIVATE libzstd_static)
-+target_link_libraries(citra_common PRIVATE zstd::zstd)
- 
- if ("x86_64" IN_LIST ARCHITECTURE)
-    target_link_libraries(citra_common PRIVATE xbyak)
 diff --color -rupN citra/src/core/CMakeLists.txt citra/src/core/CMakeLists.txt
 --- citra/src/core/CMakeLists.txt	2023-01-20 00:44:13.828931368 +0800
 +++ citra/src/core/CMakeLists.txt	2023-01-20 00:41:12.788582447 +0800
@@ -447,19 +262,6 @@ diff --color -rupN citra/src/core/CMakeLists.txt citra/src/core/CMakeLists.txt
  
  if (ENABLE_WEB_SERVICE)
      target_link_libraries(citra_core PRIVATE web_service)
-diff --color -rupN citra/src/input_common/CMakeLists.txt citra/src/input_common/CMakeLists.txt
---- citra/src/input_common/CMakeLists.txt	2023-01-20 00:44:13.872264790 +0800
-+++ citra/src/input_common/CMakeLists.txt	2023-01-20 00:41:12.788582447 +0800
-@@ -36,8 +36,7 @@ if(ENABLE_LIBUSB)
-         gcadapter/gc_poller.cpp
-         gcadapter/gc_poller.h
-     )
--    target_include_directories(input_common PRIVATE ${LIBUSB_INCLUDE_DIR})
--    target_link_libraries(input_common PRIVATE ${LIBUSB_LIBRARIES})
-+    target_link_libraries(input_common PRIVATE libusb::usb)
-     add_definitions(-DENABLE_GCADAPTER)
- endif()
- 
 diff --color -rupN citra/src/network/CMakeLists.txt citra/src/network/CMakeLists.txt
 --- citra/src/network/CMakeLists.txt	2023-01-20 00:44:13.872264790 +0800
 +++ citra/src/network/CMakeLists.txt	2023-01-20 00:41:12.791915785 +0800
@@ -641,18 +443,6 @@ diff --color -rupN citra/src/tests/video_core/shader/shader_jit_x64_compiler.cpp
      }
  }
 
-diff --color -rupN citra/src/video_core/renderer_vulkan/vk_shader_util.cpp citra/src/video_core/renderer_vulkan/vk_shader_util.cpp
---- citra/src/video_core/renderer_vulkan/vk_shader_util.cpp	2023-01-20 00:44:13.878931471 +0800
-+++ citra/src/video_core/renderer_vulkan/vk_shader_util.cpp	2023-01-20 00:41:12.791915785 +0800
-@@ -2,7 +2,7 @@
- // Licensed under GPLv2 or any later version
- // Refer to the license.txt file included.
-
--#include <SPIRV/GlslangToSpv.h>
-+#include <glslang/SPIRV/GlslangToSpv.h>
- #include <glslang/Include/ResourceLimits.h>
- #include <glslang/Public/ShaderLang.h>
- #include "common/assert.h"
 diff --color -rupN citra/src/video_core/CMakeLists.txt citra/src/video_core/CMakeLists.txt
 --- citra/src/video_core/CMakeLists.txt	2023-01-20 00:44:13.878931471 +0800
 +++ citra/src/video_core/CMakeLists.txt	2023-01-20 00:43:41.148864090 +0800
@@ -661,7 +451,7 @@ diff --color -rupN citra/src/video_core/CMakeLists.txt citra/src/video_core/CMak
  target_link_libraries(video_core PUBLIC citra_common citra_core)
  target_link_libraries(video_core PRIVATE Boost::serialization dds-ktx json-headers nihstro-headers tsl::robin_map)
 -target_link_libraries(video_core PRIVATE vulkan-headers vma glad sirit SPIRV glslang)
-+target_link_libraries(video_core PRIVATE vulkan-headers GPUOpen::VulkanMemoryAllocator glad sirit SPIRV glslang::glslang)
++target_link_libraries(video_core PRIVATE vulkan-headers GPUOpen::VulkanMemoryAllocator glad sirit SPIRV glslang)
 
  if ("x86_64" IN_LIST ARCHITECTURE)
     target_link_libraries(video_core PUBLIC xbyak)
