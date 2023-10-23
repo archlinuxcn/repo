@@ -3,8 +3,8 @@
 
 _pkgname=ImHex
 pkgname=${_pkgname,,}
-pkgver=1.30.1
-pkgrel=2
+pkgver=1.31.0
+pkgrel=1
 pkgdesc='A Hex Editor for Reverse Engineers, Programmers and people that value their eye sight when working at 3 AM'
 url='https://imhex.werwolv.net'
 license=('GPL2')
@@ -18,9 +18,10 @@ depends=( 'glfw'
           'fmt' 'libfmt.so'
           'yara' 'libyara.so'
           )
-makedepends=('git' 'cmake' 'ninja' 'llvm' 'nlohmann-json' 'librsvg' 'python')
+makedepends=('git' 'cmake' 'ninja' 'llvm' 'nlohmann-json' 'librsvg' 'python' 'dotnet-runtime')
 optdepends=(
   'imhex-patterns-git: ImHex base patterns'
+  'dotnet-runtime'
 )
 source=("$pkgname::git+https://github.com/WerWolv/ImHex.git#tag=v$pkgver"
         "nativefiledialog::git+https://github.com/btzy/nativefiledialog-extended.git"
@@ -29,6 +30,7 @@ source=("$pkgname::git+https://github.com/WerWolv/ImHex.git#tag=v$pkgver"
         "capstone::git+https://github.com/capstone-engine/capstone"
         "pattern_language::git+https://github.com/WerWolv/PatternLanguage"
         "libwolv::git+https://github.com/WerWolv/libwolv"
+        "cli11::git+https://github.com/CLIUtils/CLI11"
         )
 sha256sums=('SKIP'
             'SKIP'
@@ -36,8 +38,10 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
+            'SKIP'
             'SKIP')
 b2sums=('SKIP'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -57,12 +61,13 @@ prepare() {
     git submodule init
     git submodule set-url external/libwolv "$srcdir"/libwolv
     git -c protocol.file.allow=always submodule update external/libwolv
+    git submodule set-url external/cli11 "$srcdir"/cli11
+    git -c protocol.file.allow=always submodule update external/cli11
   popd
-  for name in fmt curl yara/yara; do
+  for name in fmt yara/yara; do
     git config --remove-section submodule.lib/external/$name
   done
 
-  sed -E -e 's/-Werror //g' -i "$srcdir/$pkgname"/**/*.cmake "$srcdir/$pkgname"/**/CMakeLists.txt
 }
 
 build() {
@@ -76,13 +81,17 @@ build() {
     -D IMHEX_OFFLINE_BUILD=ON \
     -D IMHEX_IGNORE_BAD_CLONE=ON \
     -D IMHEX_STRIP_RELEASE=OFF \
+    -D IMHEX_USE_GTK_FILE_PICKER=OFF \
+    -D IMHEX_STRICT_WARNINGS=OFF \
+    -D IMHEX_BUNDLE_DOTNET=OFF \
     -D USE_SYSTEM_LLVM=ON \
     -D USE_SYSTEM_YARA=ON \
     -D USE_SYSTEM_FMT=ON \
     -D USE_SYSTEM_CURL=ON \
     -D USE_SYSTEM_NLOHMANN_JSON=ON \
     -D USE_SYSTEM_CAPSTONE=OFF \
-    -D LIBPL_ENABLE_CLI=OFF \
+    -D LIBPL_ENABLE_CLI=ON \
+    -D LIBPL_BUILD_CLI_AS_EXECUTABLE=OFF \
     -D IMHEX_VERSION="$pkgver"
 
   cmake --build build --parallel
