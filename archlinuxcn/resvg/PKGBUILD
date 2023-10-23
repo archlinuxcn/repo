@@ -2,7 +2,7 @@
 # Contributor: Caleb Maclennan <caleb@alerque.com>
 
 pkgname=resvg
-pkgver=0.35.0
+pkgver=0.36.0
 pkgrel=1
 pkgdesc='SVG rendering library and CLI'
 arch=(i686 x86_64)
@@ -12,17 +12,15 @@ depends=(gdk-pixbuf2)
 optdepends=(
 	'qt5-base: For the Qt backend'
 	'cairo: For the cairo backend'
-	'kio: For the dolphin thumbnailer'
+	'kio5: For the dolphin thumbnailer'
 )
-makedepends=(cargo clang qt5-base qt5-tools kio cairo pango cmake extra-cmake-modules)
+makedepends=(cargo clang qt5-base qt5-tools kio5 cairo pango cmake extra-cmake-modules)
 source=("$url/archive/v$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('a42b8db69bf3d792bb5c46320e9e1eb77155fce257092797996d3663850c7599')
+sha256sums=('193cb27744c223579eee5f227549be8c53c3e31270d2c85522987dbf3bec3869')
 
 prepare() {
 	cd "$pkgname-$pkgver"
 	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
-	# https://github.com/RazrFalcon/resvg/issues/636
-	sed -i -e '/#include <QDebug>/i #include <cmath>' crates/c-api/ResvgQt.h -e 's/ ceil(/ std::ceil(/' crates/c-api/ResvgQt.h
 	mkdir -p tools/kde-dolphin-thumbnailer/build
 }
 
