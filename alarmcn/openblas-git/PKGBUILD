@@ -12,7 +12,7 @@ pkgdesc="An optimized BLAS library based on GotoBLAS2 1.13 BSD"
 arch=('aarch64' 'x86_64')
 url="https://www.openblas.net/"
 license=('BSD')
-makedepends=('git' 'cmake' 'perl' 'gcc-fortran')
+makedepends=('git' 'perl' 'gcc-fortran')
 options=(!emptydirs debug strip '!lto')
 source=("git+https://github.com/xianyi/OpenBLAS")
 md5sums=('SKIP')
@@ -44,7 +44,7 @@ prepare() {
 
 _make_opts=(
   USE_THREAD=1
-  GEMM_MULTITHREADING_THRESHOLD=400
+  GEMM_MULTITHREAD_THRESHOLD=400
   NO_AFFINITY=1
   NO_STATIC=1
   USE_OPENMP=1
