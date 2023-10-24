@@ -5,9 +5,9 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=115.3.1
+pkgver=115.4.0
 pkgrel=1
-_commit=1b0f0ba84716023657dd7dff72cb408e35380a60
+_commit=5b2ce0c4cefc73f996f260edfac368ecc3d86b24
 pkgdesc="GNU version of the Firefox browser."
 arch=(x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
@@ -28,7 +28,7 @@ options=(!emptydirs !makeflags !strip)
 source=(https://git.savannah.gnu.org/cgit/gnuzilla.git/snapshot/gnuzilla-${_commit}.tar.gz
         icecat.desktop icecat-safe.desktop)
 
-sha256sums=('53d8e203355ba48d527b2c58e42186f79a6812ba2067483a3aa29ff198bcb574'
+sha256sums=('995fd8e1d23f88e15dafa410d35f79e9071b224ab0fc1811f96fefe8f7860d68'
             'e00dbf01803cdd36fd9e1c0c018c19bb6f97e43016ea87062e6134bdc172bc7d'
             '33dd309eeb99ec730c97ba844bf6ce6c7840f7d27da19c82389cdefee8c20208')
 
