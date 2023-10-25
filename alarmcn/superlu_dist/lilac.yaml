@@ -4,6 +4,10 @@ maintainers:
 pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
 post_build: git_pkgbuild_commit
 
+repo_depends:
+  - metis
+  - parmetis
+
 update_on:
   - source: github
     github: xiaoyeli/superlu_dist
