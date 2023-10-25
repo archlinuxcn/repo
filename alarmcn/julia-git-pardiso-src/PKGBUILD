@@ -12,6 +12,14 @@ depends_x86_64=(intel-mkl)
 source=("git+https://github.com/JuliaSparse/Pardiso.jl.git#commit=$_commit")
 sha256sums=('SKIP')
 
+prepare() {
+  cd Pardiso.jl
+
+  if [[ $CARCH != x86_64 ]]; then
+    sed -i -e '/function  *__init__()/a\ \ \ \ return' src/Pardiso.jl
+  fi
+}
+
 build() {
   cd Pardiso.jl/deps
 
