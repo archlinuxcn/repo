@@ -6,9 +6,8 @@ pkgdesc="HYPRE_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/HYPRE_jll.jl.git"
 arch=('any')
 license=('MIT')
-# TODO: Add dependency on the libraries
 makedepends=(git julia-pkg-scripts)
-depends=(julia-git)
+depends=(julia-git hypre)
 source=("git+https://github.com/JuliaBinaryWrappers/HYPRE_jll.jl.git#commit=$_commit"
         jll.toml)
 sha256sums=('SKIP'
