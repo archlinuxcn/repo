@@ -43,5 +43,9 @@ update_on:
     from_pattern: ^(\d+)\..*
     to_pattern: \1
     alpm: suitesparse
+  - source: alpmfiles
+    pkgname: libutf8proc
+    strip_dir: true
+    filename: 'libutf8proc.so.\d+'
   - source: manual
-    manual: 2
+    manual: 1
