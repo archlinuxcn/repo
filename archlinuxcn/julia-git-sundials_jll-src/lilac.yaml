@@ -15,5 +15,97 @@ update_on:
   - source: regex
     url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Sundials_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_arkode.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_cvode.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_cvodes.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_ida.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_idas.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_kinsol.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_nvecmanyvector.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_nvecserial.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_sunlinsolband.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_sunlinsoldense.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_sunlinsolklu.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_sunlinsollapackband.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_sunlinsollapackdense.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_sunlinsolpcg.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_sunlinsolspbcgs.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_sunlinsolspfgmr.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_sunlinsolspgmr.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_sunlinsolsptfqmr.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_sunmatrixband.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_sunmatrixdense.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_sunmatrixsparse.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_sunnonlinsolfixedpoint.so.\d+'
+  - source: alpmfiles
+    pkgname: sundials-lapack
+    strip_dir: true
+    filename: 'libsundials_sunnonlinsolnewton.so.\d+'
   - source: manual
     manual: 1

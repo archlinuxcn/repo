@@ -14,5 +14,9 @@ update_on:
   - source: regex
     url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/CoinUtils_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpmfiles
+    pkgname: coin-or-coinutils
+    strip_dir: true
+    filename: 'libCoinUtils.so.\d+'
   - source: manual
     manual: 1
