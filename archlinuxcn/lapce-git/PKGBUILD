@@ -26,7 +26,7 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
-	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	cargo fetch --target "$CARCH-unknown-linux-gnu"
 }
 
 build() {
