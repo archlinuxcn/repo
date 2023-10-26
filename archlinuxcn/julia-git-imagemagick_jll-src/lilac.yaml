@@ -14,5 +14,9 @@ update_on:
   - source: regex
     url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/ImageMagick_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpmfiles
+    pkgname: imagemagick
+    strip_dir: true
+    filename: 'libMagickWand-7.Q16HDRI.so.\d+'
   - source: manual
     manual: 1

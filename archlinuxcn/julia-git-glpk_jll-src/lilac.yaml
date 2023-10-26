@@ -14,5 +14,9 @@ update_on:
   - source: regex
     url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/GLPK_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpmfiles
+    pkgname: glpk
+    strip_dir: true
+    filename: 'libglpk.so.\d+'
   - source: manual
     manual: 1

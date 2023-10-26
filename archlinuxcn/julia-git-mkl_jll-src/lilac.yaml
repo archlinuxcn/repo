@@ -14,5 +14,13 @@ update_on:
   - source: regex
     url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/MKL_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpmfiles
+    pkgname: intel-oneapi-mkl
+    strip_dir: true
+    filename: 'libmkl_core.so.\d+'
+  - source: alpmfiles
+    pkgname: intel-oneapi-mkl
+    strip_dir: true
+    filename: 'libmkl_rt.so.\d+'
   - source: manual
     manual: 1
