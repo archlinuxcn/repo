@@ -20,7 +20,7 @@ build() {
   mkdir -p build
   cd build
   if [[ -n $_versioned_llvm ]]; then
-    export CMAKE_PREFIX_PATH=/usr/lib/llvm15/
+    export CMAKE_PREFIX_PATH=/usr/lib/llvm$_versioned_llvm/
   fi
   cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/usr
