@@ -14,5 +14,9 @@ update_on:
   - source: regex
     url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Xorg_libXinerama_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpmfiles
+    pkgname: libxinerama
+    strip_dir: true
+    filename: 'libXinerama.so.\d+'
   - source: manual
     manual: 1

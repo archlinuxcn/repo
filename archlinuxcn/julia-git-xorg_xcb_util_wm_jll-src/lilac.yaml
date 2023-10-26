@@ -14,5 +14,13 @@ update_on:
   - source: regex
     url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Xorg_xcb_util_wm_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpmfiles
+    pkgname: xcb-util-wm
+    strip_dir: true
+    filename: 'libxcb-ewmh.so.\d+'
+  - source: alpmfiles
+    pkgname: xcb-util-wm
+    strip_dir: true
+    filename: 'libxcb-icccm.so.\d+'
   - source: manual
     manual: 1

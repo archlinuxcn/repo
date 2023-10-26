@@ -14,5 +14,9 @@ update_on:
   - source: regex
     url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Xorg_libXext_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpmfiles
+    pkgname: libxext
+    strip_dir: true
+    filename: 'libXext.so.\d+'
   - source: manual
     manual: 1
