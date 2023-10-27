@@ -2,13 +2,13 @@
 
 pkgname=plasma5-applets-window-appmenu
 pkgver=0.8.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Plasma 5 applet in order to show the window appmenu"
 arch=(x86_64 aarch64)
 url="https://github.com/psifidotos/applet-window-appmenu"
 license=(GPL)
 depends=(qt5-base qt5-declarative plasma-workspace libxcb)
-makedepends=(extra-cmake-modules plasma-framework kwindowsystem)
+makedepends=(extra-cmake-modules plasma-framework5 kwindowsystem5)
 optdepends=(
   'libdbusmenu-gtk3: gtk3 appmenu support'
   'libdbusmenu-gtk2: gtk2 appmenu support'
