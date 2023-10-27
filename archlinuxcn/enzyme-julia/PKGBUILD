@@ -21,10 +21,16 @@ sha256sums=('723cf72edcd4e7d60219ecadcb9a2fb90837298aaa79bee121b2c6d989892357')
 
 build() {
   if [[ -n $_versioned_llvm ]]; then
-    export CMAKE_PREFIX_PATH=/usr/lib/llvm$_versioned_llvm/
+    _llvm_dir=/usr/lib/llvm$_versioned_llvm/lib/cmake/llvm
+    _clang_dir=/usr/lib/llvm$_versioned_llvm/lib/cmake/clang
+  else
+    _llvm_dir=/usr/lib/cmake/llvm
+    _clang_dir=/usr/liblib/cmake/clang
   fi
   cmake -B build -S "Enzyme-$pkgver/enzyme" \
         -DCMAKE_BUILD_TYPE='RelWithDebInfo' \
+        -DLLVM_DIR=$_llvm_dir \
+        -DClang_DIR=$_clang_dir \
         -DCMAKE_INSTALL_PREFIX='/usr' \
         -DENZYME_CLANG=On \
         -DENZYME_EXTERNAL_SHARED_LIB=On \
