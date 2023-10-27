@@ -1,0 +1,26 @@
+--- a/reproc++/include/reproc++/reproc.hpp	2023-08-28 20:48:34.592494191 -0600
++++ b/reproc++/include/reproc++/reproc.hpp	2023-08-28 20:49:05.695674776 -0600
+@@ -88,18 +88,18 @@
+
+ struct options {
+   struct {
+-    env::type behavior;
++    reproc::env::type behavior;
+     /*! Implicitly converts from any STL container of string pairs to the
+     environment format expected by `reproc_start`. */
+-    class env extra;
++    reproc::env extra;
+   } env = {};
+
+   const char *working_directory = nullptr;
+
+   struct {
+-    redirect in;
+-    redirect out;
+-    redirect err;
++    reproc::redirect in;
++    reproc::redirect out;
++    reproc::redirect err;
+     bool parent;
+     bool discard;
+     FILE *file;
