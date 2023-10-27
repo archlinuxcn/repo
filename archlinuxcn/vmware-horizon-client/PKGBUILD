@@ -19,10 +19,10 @@ _unused_components=(
   'vmware-horizon-scannerclient'
   'vmware-horizon-serialportclient'
   'vmware-horizon-url-redirection')
-pkgver=2306
-_build1=8.10.0
-_build2=21964631
-_cart="CART24FQ2_LIN64_${pkgver}"
+pkgver=2309
+_build1=8.11.0
+_build2=22660930
+_cart="CART24FQ3_LIN64_${pkgver}"
 pkgrel=1
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
@@ -34,7 +34,7 @@ source=("${pkgbase}-${pkgver}-${_build1}-${_build2}-x86_64.bundle::https://downl
         'vmware-horizon-usb'
         'vmware-horizon-usb.service'
         'vmware-horizon.svg')
-sha256sums=('cd189b2eb4e1ea9efce25eda7033f64f3366b8e0a589953f6638125bc183cda7'
+sha256sums=('ebd618369a70c4c3cbd3885a27015446bfd50b509ba52ee5fe1d7a37b9a36a95'
             'd6863e92b891fc506fc8e81714a47ca3f9f74b7fe68bdf48be058d5e0d433033'
             '008b60ebf45f7d1e033c8ad8ce1688d5e1c59fc0668493067fb89b563b1dc00f'
             'a897c1b9e8928fc222880ebbfc7bb6aff940bff4acf4e4e0cd4002fff81c7226'
@@ -138,7 +138,7 @@ package_vmware-horizon-html5mmr() {
 	cd "${srcdir}/extract/vmware-horizon-html5mmr/"
 
 	mkdir -p "${pkgdir}/usr/"
-	cp -a 'lib/' "${pkgdir}/usr/"
+	cp -a 'usr/' "${pkgdir}/"
 }
 
 package_vmware-horizon-integrated-printing() {
@@ -150,7 +150,7 @@ package_vmware-horizon-integrated-printing() {
 	cd "${srcdir}/extract/vmware-horizon-integrated-printing/"
 
 	mkdir -p "${pkgdir}/usr/"
-	cp -a 'lib/' "${pkgdir}/usr/"
+	cp -a 'usr/' "${pkgdir}/"
 }
 
 package_vmware-horizon-mmr() {
@@ -162,7 +162,7 @@ package_vmware-horizon-mmr() {
 	cd "${srcdir}/extract/vmware-horizon-mmr/"
 
 	mkdir -p "${pkgdir}/usr/"
-	cp -a 'lib/' "${pkgdir}/usr/"
+	cp -a 'usr/' "${pkgdir}/"
 }
 
 package_vmware-horizon-rtav() {
@@ -172,7 +172,7 @@ package_vmware-horizon-rtav() {
 	cd "${srcdir}/extract/vmware-horizon-rtav/"
 
 	mkdir -p "${pkgdir}/usr/"
-	cp -a 'lib/' "${pkgdir}/usr/"
+	cp -a 'usr/' "${pkgdir}/"
 }
 
 package_vmware-horizon-smartcard() {
@@ -182,7 +182,7 @@ package_vmware-horizon-smartcard() {
 	cd "${srcdir}/extract/vmware-horizon-smartcard/"
 
 	mkdir -p "${pkgdir}/usr/"
-	cp -a 'lib/' "${pkgdir}/usr/"
+	cp -a 'usr/' "${pkgdir}/"
 }
 
 package_vmware-horizon-tsdr() {
@@ -192,7 +192,7 @@ package_vmware-horizon-tsdr() {
 	cd "${srcdir}/extract/vmware-horizon-tsdr/"
 
 	mkdir -p "${pkgdir}/usr/"
-	cp -a 'lib/' "${pkgdir}/usr/"
+	cp -a 'usr/' "${pkgdir}/"
 }
 
 package_vmware-horizon-usb() {
@@ -203,8 +203,7 @@ package_vmware-horizon-usb() {
 	cd "${srcdir}/extract/vmware-horizon-usb/"
 
 	mkdir -p "${pkgdir}/usr/lib/vmware/view/"
-	cp -a 'bin/' "${pkgdir}/usr/lib/vmware/view/usb"
-	cp -a 'lib/' "${pkgdir}/usr/"
+	cp -a 'usr/' "${pkgdir}/"
 
 	install -D -m0755 "${srcdir}/vmware-horizon-usb" "${pkgdir}/usr/lib/systemd/scripts/vmware-horizon-usb"
 	install -D -m0644 "${srcdir}/vmware-horizon-usb.service" "${pkgdir}/usr/lib/systemd/system/vmware-horizon-usb.service"
