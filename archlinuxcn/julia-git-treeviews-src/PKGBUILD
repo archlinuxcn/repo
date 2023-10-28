@@ -13,10 +13,15 @@ source=("git+https://github.com/pfitzseb/TreeViews.jl.git#commit=$_commit"
 sha256sums=('SKIP'
             '6fe0f83ffd207a9e71f98952b4fd57ada149ec30015768b60e47501c167e132e')
 
-package() {
+prepare() {
   cd TreeViews.jl
 
   cp -n ../Project.toml .
+  rm REQUIRE
+}
+
+package() {
+  cd TreeViews.jl
 
   JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh TreeViews "${pkgdir}" "${pkgname}" julia-git
 }
