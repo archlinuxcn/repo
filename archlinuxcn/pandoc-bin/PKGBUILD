@@ -1,5 +1,5 @@
 pkgname=pandoc-bin
-pkgver=3.1.8
+pkgver=3.1.9
 pkgrel=1
 pkgdesc="Pandoc - executable only, without 750MB Haskell depends/makedepends"
 url="https://pandoc.org"
@@ -14,9 +14,9 @@ source=("$pkgname-source-$pkgver.tar.gz::https://github.com/jgm/pandoc/archive/$
 source_x86_64=("$pkgname-bin-$pkgver.tar.gz::https://github.com/jgm/pandoc/releases/download/${pkgver}/pandoc-${pkgver}-linux-amd64.tar.gz")
 source_aarch64=("$pkgname-bin-$pkgver.tar.gz::https://github.com/jgm/pandoc/releases/download/${pkgver}/pandoc-${pkgver}-linux-arm64.tar.gz")
 
-sha256sums=('c0bfd5973e9b335372c7e1a594499f2acc2e30e1035cc2c21bd3dc76904385a5')
-sha256sums_x86_64=('c07923a65321b4246658635edce517ae6578abb65396bff914feef37bc48784b')
-sha256sums_aarch64=('c07923a65321b4246658635edce517ae6578abb65396bff914feef37bc48784b')
+sha256sums=('cf41392889f1cee2a593b52fd9abfcb6996a70bd7640db3c10ad915ce716c2a3')
+sha256sums_x86_64=('4d2ceae48a7fd49abb4e390988b0bb10999fbd47110f51af73755a35918d2c6c')
+sha256sums_aarch64=('4d2ceae48a7fd49abb4e390988b0bb10999fbd47110f51af73755a35918d2c6c')
 
 package() {
   cd "${srcdir}/pandoc-${pkgver}"
