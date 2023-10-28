@@ -7,28 +7,28 @@
 # Contributor: Hexchain Tong <i at hexchain dot org>
 
 pkgname=megasync
-pkgver=4.9.5.0
+pkgver=4.10.0.0
 pkgrel=1
 pkgdesc='Official MEGA desktop application for syncing with MEGA Cloud Drive'
 arch=('x86_64')
-url='https://github.com/meganz/MEGAsync'
+url='https://github.com/meganz/MEGAsync/'
 license=('custom')
 depends=('c-ares' 'crypto++' 'curl' 'ffmpeg' 'freeimage' 'icu' 'libmediainfo'
          'libpdfium' 'libsodium' 'libudev.so' 'libuv' 'libxcb' 'libzen' 'openssl'
          'qt5-base' 'qt5-svg' 'qt5-x11extras' 'sqlite' 'zlib'  'hicolor-icon-theme')
 makedepends=('git' 'doxygen' 'lsb-release' 'qt5-tools' 'swig')
-source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_Linux"
+source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_OSX"
         'meganz-sdk'::'git+https://github.com/meganz/sdk.git'
         '010-megasync-libpdfium.patch'
         '020-megasync-ffmpeg.patch')
 sha256sums=('SKIP'
             'SKIP'
-            'd42ce082425c4b730f6d75de1c4914b02af0ab8993cd9dd65bde389469dfe500'
+            'a6435d56b5f7493474ee74c735a880b1d72f802fb3bab8824c497642c784ac0e'
             '49690421d98e8f61a600ee1ec97adc3e4d1cbe2f736fcf56056da23d02db378b')
 
 prepare() {
     git -C MEGAsync submodule init
-    git -C MEGAsync config submodule.src/MEGASync/mega.url "${srcdir}/meganz-sdk"
+    git -C MEGAsync config --local submodule.src/MEGASync/mega.url "${srcdir}/meganz-sdk"
     git -C MEGAsync -c protocol.file.allow='always' submodule update
     
     patch -d MEGAsync/src/MEGASync/mega -Np1 -i "${srcdir}/010-megasync-libpdfium.patch"
