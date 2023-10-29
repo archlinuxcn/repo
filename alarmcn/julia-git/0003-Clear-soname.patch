@@ -1,14 +1,15 @@
-From ccdb50d5505e83f0e45dd20a5464cc6e13eee8f3 Mon Sep 17 00:00:00 2001
+From c2c74e03f2698426c43ffc8960a5ee8dc0ca75ec Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
 Subject: [PATCH 3/6] Clear soname
 
 ---
- stdlib/LibGit2_jll/src/LibGit2_jll.jl   | 2 +-
- stdlib/LibSSH2_jll/src/LibSSH2_jll.jl   | 2 +-
- stdlib/MbedTLS_jll/src/MbedTLS_jll.jl   | 6 +++---
- stdlib/OpenLibm_jll/src/OpenLibm_jll.jl | 2 +-
- 4 files changed, 6 insertions(+), 6 deletions(-)
+ stdlib/LibGit2_jll/src/LibGit2_jll.jl         |  2 +-
+ stdlib/LibSSH2_jll/src/LibSSH2_jll.jl         |  2 +-
+ stdlib/MbedTLS_jll/src/MbedTLS_jll.jl         |  6 ++---
+ stdlib/OpenLibm_jll/src/OpenLibm_jll.jl       |  2 +-
+ stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl | 24 +++++++++----------
+ 5 files changed, 18 insertions(+), 18 deletions(-)
 
 diff --git a/stdlib/LibGit2_jll/src/LibGit2_jll.jl b/stdlib/LibGit2_jll/src/LibGit2_jll.jl
 index ff625a6494..3a3a9a6643 100644
@@ -63,6 +64,41 @@ index f2dee45a27..dfac42fd48 100644
  else
 -    const libopenlibm = "libopenlibm.so.4"
 +    const libopenlibm = "libopenlibm.so"
+ end
+ 
+ function __init__()
+diff --git a/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl b/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
+index f245759aaf..e5a4502723 100644
+--- a/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
++++ b/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
+@@ -67,18 +67,18 @@ elseif Sys.isapple()
+     const libsuitesparseconfig = "@rpath/libsuitesparseconfig.7.dylib"
+     const libumfpack = "@rpath/libumfpack.6.dylib"
+ else
+-    const libamd = "libamd.so.3"
+-    const libbtf = "libbtf.so.2"
+-    const libcamd = "libcamd.so.3"
+-    const libccolamd = "libccolamd.so.3"
+-    const libcholmod = "libcholmod.so.4"
+-    const libcolamd = "libcolamd.so.3"
+-    const libklu = "libklu.so.2"
+-    const libldl = "libldl.so.3"
+-    const librbio = "librbio.so.4"
+-    const libspqr = "libspqr.so.4"
+-    const libsuitesparseconfig = "libsuitesparseconfig.so.7"
+-    const libumfpack = "libumfpack.so.6"
++    const libamd = "libamd.so"
++    const libbtf = "libbtf.so"
++    const libcamd = "libcamd.so"
++    const libccolamd = "libccolamd.so"
++    const libcholmod = "libcholmod.so"
++    const libcolamd = "libcolamd.so"
++    const libklu = "libklu.so"
++    const libldl = "libldl.so"
++    const librbio = "librbio.so"
++    const libspqr = "libspqr.so"
++    const libsuitesparseconfig = "libsuitesparseconfig.so"
++    const libumfpack = "libumfpack.so"
  end
  
  function __init__()
