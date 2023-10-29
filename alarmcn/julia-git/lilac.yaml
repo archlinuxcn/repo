@@ -41,10 +41,10 @@ update_on:
   - source: alpm
     alpm: mbedtls
     provided: libmbedx509.so
-  - source: alpm
-    from_pattern: ^(\d+)\..*
-    to_pattern: \1
-    alpm: suitesparse
+  - source: alpmfiles
+    pkgname: suitesparse
+    strip_dir: true
+    filename: 'libcholmod.so.\d+'
   - source: alpmfiles
     pkgname: libutf8proc
     strip_dir: true
