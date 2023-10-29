@@ -9,9 +9,9 @@
 # Contributor: Pierre Schmitz <pierre@archlinux.de>
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
- 
+
 pkgname=ungoogled-chromium
-pkgver=118.0.5993.70
+pkgver=118.0.5993.117
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
@@ -36,7 +36,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         free-the-X11-pixmap-in-the-NativePixmapEGLX11Bind.patch
         REVERT-disable-autoupgrading-debug-info.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('49ee00a734de3dae7c421eb3c974e8d451b4de6f5b4e34b603fd6435eab6993d'
+sha256sums=('7029d851e4a2e8d5a145a6f6ba76f18f5c3043f57b2c750b35d96e92f3453786'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '0d1eb054965711a2d4ed6b4cb7f06cbda5b374a48e1b99c8c38ebf6375a781a9'
             'ab1eb107ec1c915065dc59cf4832da27e17d60eb29038e2aec633daeb946cc6a'
@@ -58,7 +58,7 @@ source=(${source[@]}
         vaapi-add-av1-support.patch
         remove-main-main10-profile-limit.patch)
 sha256sums=(${sha256sums[@]}
-            'd95a02dc7bad01302ed42c9f50daee53c998149f14ba6a4023198e7b1c6f5a36'
+            '41afb5933668b67059d48613c136c4535ed7a5a3387361cd118aff38593ae4e3'
             'e9e8d3a82da818f0a67d4a09be4ecff5680b0534d7f0198befb3654e9fab5b69'
             'e742cc5227b6ad6c3e0c2026edd561c6d3151e7bf0afb618578ede181451b307'
             'be8d3475427553feb5bd46665ead3086301ed93c9a41cf6cc2644811c5bda51c')
