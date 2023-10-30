@@ -2,18 +2,18 @@
 # Contributor: Oliver Rümpelein <arch@pheerai.de>
 
 pkgname=mergerfs
-pkgver=2.37.1
+pkgver=2.38.0
 pkgrel=1
 pkgdesc='Featureful union filesystem'
-arch=('x86_64')
+arch=(x86_64)
 url=https://github.com/trapexit/mergerfs
-license=('custom:ISC')
+license=(custom:ISC)
 # Optional makedepend: 'pandoc: build man page'
 #optdepends=('fuse2: mount via fstab' 'mergerfs-tools: manage data in a pool')
 optdepends=('fuse2: mount via fstab' 'mergerfs-tools-git: manage data in a pool')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
 #source=("$pkgname-$pkgver.tar.gz::$url/releases/download/$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('d400c3c3243773e46683716bd1989fbb69c7702020b7f06b8787e39a3dc57b92')
+sha256sums=('cdb855c797da16ae668a2f71f76830151c377b38dee698c63db092ca1635d95e')
 
 prepare() {
   sed -i 's|^\(VERSION=\).*|\1"'$pkgver'"|' $pkgname-$pkgver/tools/update-version
