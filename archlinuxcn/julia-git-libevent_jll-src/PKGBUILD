@@ -1,0 +1,26 @@
+pkgname=julia-git-libevent_jll-src
+pkgver=2.1.13+0
+_commit=b09b08ea2c79d318287f7706bece3b0d89e656b8
+pkgrel=1
+pkgdesc="libevent_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/libevent_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libevent)
+source=("git+https://github.com/JuliaBinaryWrappers/libevent_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '852860f30325b81d7d4fce323d75431853bba558518ddd194a51a64c1bc5af04')
+
+build() {
+  cd libevent_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl libevent_jll ../jll.toml
+}
+
+package() {
+  cd libevent_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh libevent_jll "${pkgdir}" "${pkgname}" julia-git
+}
