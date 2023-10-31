@@ -10,16 +10,12 @@ arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/pot-app/pot-desktop"
 license=('GPL3')
 depends=('webkit2gtk' 'gtk3' 'libayatana-appindicator' 'xdotool' 'libxcb' 'libxrandr' 'tesseract' 'tessdata')
-makedepends=('nodejs' 'pnpm' 'rust' 'dbus' 'fnm')
+makedepends=('nodejs' 'pnpm' 'rust' 'dbus')
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${_pkgver}.tar.gz")
 sha512sums=('db98d83532f5e800fdbfd6b57e1dfa994d1ea1787d24c95b84b724e1e6d2eadb32c854ba83716fc1f8cb626a576f8f8ef2c7d6bb21158bfb79a1280615677435')
 options=('!lto')
 
 build() {
-	fnm install 20.5.0
-	eval "$(fnm env --use-on-cd --shell=bash)"
-	fnm use 20.5.0
-
 	cd "${_pkgname}-${_pkgver}/"
 	sed -i "s/\"version\".*/\"version\": \"${_pkgver}\"/g" "src-tauri/tauri.conf.json"
 	pnpm i
