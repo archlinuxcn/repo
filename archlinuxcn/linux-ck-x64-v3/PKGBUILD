@@ -71,9 +71,9 @@ _subarch=41
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 pkgbase=linux-ck-x64-v3
-pkgver=6.5.9
+pkgver=6.6
 _upstream=arch1
-pkgrel=1
+pkgrel=2
 arch=(x86_64)
 url="https://wiki.archlinux.org/index.php/Linux-ck"
 license=(GPL2)
@@ -93,8 +93,8 @@ options=('!strip')
 
 # https://ck-hack.blogspot.com/2021/08/514-and-future-of-muqss-and-ck-once.html
 # acknowledgment to xanmod for initially keeping the hrtimer patches up to date
-_ckhrtimer=linux-6.5.y
-_commit=6ef0e9ff5db0ed380f98cc8c7436ca9c44ea32c9
+_ckhrtimer=linux-6.6.y
+_commit=c83f27ce602a96d481678dca05fe6fd267b2ea44
 
 _gcc_more_v=20221217
 source=(
@@ -108,12 +108,12 @@ validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
-sha256sums=('c6662f64713f56bf30e009c32eac15536fad5fd1c02e8a3daf62a0dc2f058fd5'
+sha256sums=('d926a06c63dd8ac7df3f86ee1ffc2ce2a3b81a2d168484e76b5b389aba8e56d0'
             'SKIP'
-            '5aff0f8584e01165dc20cd107df338f57a13ce7f0da14e07f4c9097cd748469f'
-            '322d1bf97a450cfd70e47f05a307e167ea44da92247e0e6cfb11d49b6daf7ed6'
+            'd2060f5045a30832d70a7747c780f1358a9f4cfc1811c8ccaeaab9c027b59ee4'
+            'b64656c9e3e796b60b176e6213e2fbc92d92e3c63ea68b713bd14b6782e4ff9d'
             'f1d586e111932890ad5e0df15d092fb9b3f87bae4ea17812aae9b0ec98fe2db0'
-            'a86a59d089ddd4f31565ff6a27ba74f4697ffa0ab0f57dc839e1da6ab83d77a4')
+            'cc82cd1635a0613f6b5abd4a0095a4b64285d015a9d0738a16baf791f23eab57')
 
 prepare() {
   cd linux-${pkgver}
@@ -243,11 +243,12 @@ _package() {
   echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
   echo "Installing modules..."
-  ZSTD_CLEVEL=19 make LLVM=$_LLVM LLVM_IAS=$_LLVM INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
-    DEPMOD=/doesnt/exist modules_install  # Suppress depmod
+  #ZSTD_CLEVEL=19 make LLVM=$_LLVM LLVM_IAS=$_LLVM INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
+  #  DEPMOD=/doesnt/exist modules_install  # Suppress depmod
+  ZSTD_CLEVEL=19 make LLVM=$_LLVM LLVM_IAS=$_LLVM INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 modules_install
 
   # remove build and source links
-  rm "$modulesdir"/{source,build}
+  rm -f "$modulesdir"/{source,build}
 }
 
 _package-headers() {
