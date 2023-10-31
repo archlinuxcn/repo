@@ -9,7 +9,7 @@ arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/pot-app/pot-desktop"
 license=('GPL3')
 depends=('webkit2gtk' 'gtk3' 'libayatana-appindicator' 'xdotool' 'libxcb' 'libxrandr' 'tesseract' 'tessdata')
-makedepends=('git' 'nodejs' 'pnpm' 'rust' 'dbus' 'fnm')
+makedepends=('git' 'nodejs' 'pnpm' 'rust' 'dbus')
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
 source=("git+${url}.git")
@@ -30,9 +30,6 @@ build() {
 	sed -i "s/\"version\":.*/\"version\": \"${_pkgver}\"/g" src-tauri/tauri.conf.json
 	sed -i "s/\"version = \"0.0.0\"/version = \"${_pkgver}\"/g" src-tauri/Cargo.toml
 
-	fnm install 20.5.0
-	eval "$(fnm env --use-on-cd --shell=bash)"
-	fnm use 20.5.0
 	pnpm install && pnpm tauri build -b deb
 }
 
