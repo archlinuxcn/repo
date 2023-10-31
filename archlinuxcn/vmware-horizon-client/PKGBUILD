@@ -23,7 +23,7 @@ pkgver=2309
 _build1=8.11.0
 _build2=22660930
 _cart="CART24FQ3_LIN64_${pkgver}"
-pkgrel=1
+pkgrel=2
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
 url='https://www.vmware.com/go/viewclients'
@@ -60,6 +60,9 @@ prepare() {
 
 	# remove legacy stuff
 	find "${srcdir}/extract/" -name 'legacy' -print0 | xargs -0 rm -rf
+
+	# let's use our libstdc++ from gcc-libs...
+	rm -rf "${srcdir}/extract/vmware-horizon-pcoip/usr/lib/vmware/gcc"
 }
 
 build() {
@@ -93,7 +96,7 @@ package_vmware-horizon-client() {
 	conflicts=('vmware-view-open-client' 'vmware-view-open-client-beta' 'vmware-view-client'
 		'vmware-horizon-pcoip' 'vmware-horizon-teams-optimization')
 	replaces=('vmware-horizon-pcoip' 'vmware-horizon-teams-optimization')
-	depends=('binutils' 'expat' 'glib2' 'gtk3' 'libudev0-shim' 'libxml2' 'libxss'
+	depends=('binutils' 'expat' 'gcc-libs' 'glib2' 'gtk3' 'libudev0-shim' 'libxml2' 'libxss'
 		'libxtst' 'openssl' 'vmware-keymaps')
 	optdepends=('alsa-lib: audio support via alsa'
 		'freerdp: RDP remote desktop connections'
@@ -167,7 +170,7 @@ package_vmware-horizon-mmr() {
 
 package_vmware-horizon-rtav() {
 	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - Real-Time Audio-Video (webcam and audio-in)'
-	depends=('vmware-horizon-client' 'gcc-libs' 'libutil-linux' 'zlib' 'glib2')
+	depends=('vmware-horizon-client' 'libutil-linux' 'zlib' 'glib2')
 
 	cd "${srcdir}/extract/vmware-horizon-rtav/"
 
