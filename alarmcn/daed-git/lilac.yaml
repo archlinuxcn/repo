@@ -9,6 +9,9 @@ pre_build_script: |
 post_build_script: |
   git_pkgbuild_commit()
 
+repo_makedepends:
+  - pnpm-git
+
 update_on:
   - source: github
     github: daeuniverse/daed
