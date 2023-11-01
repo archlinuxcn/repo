@@ -5,7 +5,7 @@
 
 pkgbase=nvidia-utils-beta
 pkgname=('nvidia-utils-beta' 'opencl-nvidia-beta' 'nvidia-settings-beta')
-pkgver=545.23.06
+pkgver=545.29.02
 pkgrel=1
 pkgdesc='NVIDIA drivers utilities (beta version)'
 arch=('x86_64')
@@ -18,7 +18,7 @@ source=("https://us.download.nvidia.com/XFree86/Linux-${CARCH}/${pkgver}/${_pkg}
         'nvidia-utils.sysusers'
         'nvidia.rules'
         '120-nvidia-settings-change-desktop-paths.patch')
-sha256sums=('4139d328019f72f2af2878a4d018007a65773eb46a46533707d8e365eba9082f'
+sha256sums=('46770f95a4a386f0455023b359d5d21373c07d13c222b5805f224c74b3cab885'
             'be99ff3def641bb900c2486cce96530394c5dc60548fc4642f19d3a4c784134d'
             'd8d1caa5d72c71c6430c2a0d9ce1a674787e9272ccce28b9d5898ca24e60a167'
             '4fbfd461f939f18786e79f8dba5fdb48be9f00f2ff4b1bb2f184dbce42dd6fc3'
@@ -62,6 +62,7 @@ package_nvidia-settings-beta() {
     install -D -m644 nvidia-settings.png     -t "${pkgdir}/usr/share/icons/hicolor/128x128/apps"
     install -D -m644 nvidia-settings.desktop -t "${pkgdir}/usr/share/applications"
     install -D -m755 "libnvidia-gtk3.so.${pkgver}" -t "${pkgdir}/usr/lib"
+    install -D -m755 "libnvidia-wayland-client.so.${pkgver}" -t "${pkgdir}/usr/lib"
     
     # license
     install -D -m644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
@@ -132,8 +133,6 @@ package_nvidia-utils-beta() {
     install -D -m755 "libnvidia-ml.so.${pkgver}"        -t "${pkgdir}/usr/lib"
     install -D -m755 "libnvidia-glvkspirv.so.${pkgver}" -t "${pkgdir}/usr/lib"
     install -D -m755 "libnvidia-gpucomp.so.${pkgver}"   -t "${pkgdir}/usr/lib"
-    ln -s "libnvidia-vulkan-producer.so.${pkgver}" "${pkgdir}/usr/lib/libnvidia-vulkan-producer.so.1"
-    ln -s libnvidia-vulkan-producer.so.1 "${pkgdir}/usr/lib/libnvidia-vulkan-producer.so"
     
     # Vulkan ICD
     install -D -m644 nvidia_icd.json    -t "${pkgdir}/usr/share/vulkan/icd.d"
@@ -170,7 +169,7 @@ package_nvidia-utils-beta() {
     install -D -m755 nvidia-ngx-updater -t "${pkgdir}/usr/bin"
     install -D -m644 {,_}nvngx.dll -t "${pkgdir}/usr/lib/nvidia/wine"
     
-    # GBM
+    # Wayland/GBM
     install -D -m755 "libnvidia-allocator.so.${pkgver}" -t "${pkgdir}/usr/lib"
     install -D -m755 libnvidia-egl-gbm.so.1.1.0         -t "${pkgdir}/usr/lib"
     install -D -m644 15_nvidia_gbm.json -t "${pkgdir}/usr/share/egl/egl_external_platform.d"
