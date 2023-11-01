@@ -24,6 +24,9 @@ pkgver() {
 
 build() {
 	cd "${_pkgname}/"
+	pnpm setup
+	source /build/.bashrc
+	pnpm add -g pnpm
 	pnpm install --frozen-lockfile
 	pnpm run compile
 }
