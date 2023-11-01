@@ -1,3 +1,69 @@
+# 23.10-1
+Notable changes:
+   * Anki's version numbering scheme has changed to year.month(.patch).
+   * Quite a few add-ons will need updates to support the Qt 6 version of this release. Some porting notes are available.
+   * Support for FSRS (which improves upon the scheduling provided by SM-2) is now integrated into Anki. You can compute the model weights directly inside Anki, and no longer need to use custom scheduling. If you have previously used FSRS, please delete the text in the custom scheduling section before enabling FSRS, and ensure the helper add-on has been updated to the 23.10 version if you are using it. By @L-M-Sherlock with help from @dae and @asukaminato0721 in #2633, #2654 and https://github.com/open-spaced-repetition/fsrs-rs.
+   * Anki now has built-in support for creating image occlusions. Select the automatically-added "Image Occlusion" notetype in the add screen to use it. Glutanimate intends to update his add-on soon to work with the new system. By @krmanik, with help from @glutanimate, @hikaru-y, @abdnh and @dae in #2367, #2485, #2600, #2602, #2649, #2689, #2705 and more.
+   * .apkg imports are able to merge changed notetypes, and can exclude scheduling data. By @RumovZ in #2612
+   * Performance improvements to things like browser loading in the official builds.
+   * You can now customize the video driver in Qt6 in the preferences, which can help to work around graphical issues. @abdnh in #2643
+   * Add an option to stop the timer on answer by @abdnh in #2673
+   * Allow searching for missing custom data properties by @abdnh in #2626
+   * Support searching for custom data strings by @abdnh in #2634
+   * Support for the v2 scheduler has been dropped.
+   * .apkg exports now default to the new format.
+   * New cards can now be gathered by deck then random note.
+
+ Smaller tweaks/fixes:
+   * Add a backend method to add notes in bulk by @abdnh in #2659
+   * Add ability to tab to DuplicateLink by @SteelColossus in #2646
+   * Add profile name in profile deletion confirmation message by @chandraiyengar in #2722
+   * Add Sphinx documentation generation functionality by @gsingh93 in #2720
+   * added Translator by @platynowy in #2653
+   * Allow full screen mode on new Qt6 drivers by @abdnh in #2660
+   * Allow saving window position when window fullscreen on Qt 6
+   * Better error messages when csv file is in the wrong format
+   * Change “Delete Note” shortcut to cmd+backspace by @montyevans in #2614
+   * Check DB now fixes invalid UTF-8 in tags.
+   * Close import log page on error by @abdnh in #2639
+   * Display a more friendly message when one or more add-ons fail at startup
+   * Do not show [object Object] in import log by @abdnh in #2636
+   * Don't rely on the presence of revlogs to decide whether deck configs should be imported.
+   * Fix a11y issues with Badge component by @adeleke5140 in #2721
+   * Fix an error when repositioning tags (thanks to @abdnh)
+   * Fix an issue caused by adding a colon to the start or end of a deck name by @swektr in #2748
+   * Fix answer button tooltips not reflecting configured shortcuts by @abdnh in #2657
+   * Fix error when closing Find Duplicates screen early by @abdnh in #2669
+   * Fix intermittent browser error triggered by an early resize event by @abdnh in #2671
+   * Fix misleading warning when changing notetype from/to cloze by @abdnh in #2744
+   * Fix ModuleNotFoundError: No module named 'distutils' by @virinci in #2723
+   * Fix pasting from external programs not working after copying text inside the editor.
+   * Fix reversed float left/right icons
+   * Fix some issues with undo/redo in mask editor by @hikaru-y in #2649
+   * Fix typo: notetypeId → noteId by @glutanimate in #2615
+   * Fix unable to save field dialog if certain fields are deleted by @swektr in #2663
+   * Fix unescaped HTML in type-in-the-answer by @abdnh in #2658
+   * Implemented support to audio_did_seek_relative by @evandrocoan in #2632
+   * Reduce shaking of bottom bar by @abdnh in #2734
+   * Rework media syncing to make it a little faster, and avoid duplicate errors when your password has changed. #2647
+   * Skip template checks in Fields screen by @abdnh in #2670
+   * Support AVIF by @nihil-admirari in #2630
+   * Support Qt.TextFormat.MarkdownText in aqt.utils by @abdnh in #2675
+   * The "edit current card" window is now a main window, which fixes some shortcut keys on macOS. By @abdnh in #2732
+   * Tooltips for CSV import and import page refactoring by @RumovZ in #2655
+   * Tweak browser column labels to card type, note type by @Gustaf-C in #2751
+   * Change export notes' parent window in card browser by @kelciour in #2761
+   * Fix Linux install script CWD check by @virinci in #2775
+   * Make it possible to silent uninstall with WinGet by @kelciour in #2757
+   * Refresh reviewer as the day rolls over by @abdnh in #2756
+   * Update to Qt 6.5.3 on Windows/Mac
+   * Fix error on 'Previous Card Info' when deleting a note by @abdnh in #2790
+   * Fix HTML editor not displaying properly when expanding field by @hikaru-y in #2792
+
+# 2.1.66-2
+PKGBUILD:
+   * pin nodejs>=18
+   * use RELEASE=2 env var for better optimization. This significantly increase compile time, especially at the 'runner run' step
 # 2.1.66-1
    * Windows and Mac builds have been updated to the latest toolkit version, which will hopefully fix some crashes/bugs.
    * The v3 scheduler is now the default for new users.
