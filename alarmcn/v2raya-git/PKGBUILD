@@ -9,7 +9,7 @@ arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/v2rayA/v2rayA"
 license=('GPL3')
 depends=('glibc')
-makedepends=('git' 'go>=2:1.17.0-1' 'nodejs>=17' 'yarn')
+makedepends=('git' 'go>=2:1.17.0-1' 'nodejs>=17' 'yarn' 'fnm')
 provides=('v2raya')
 conflicts=('v2raya')
 backup=("etc/default/v2raya")
@@ -26,6 +26,10 @@ pkgver() {
 
 build() {
 	cd "${pkgname}/gui/"
+
+	fnm install 20.9.0
+	eval "$(fnm env --use-on-cd --shell=bash)"
+	fnm use 20.9.0
 
 	# https://github.com/webpack/webpack/issues/14532#issuecomment-947012063
 	export NODE_OPTIONS=--openssl-legacy-provider
