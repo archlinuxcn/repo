@@ -6,7 +6,7 @@ gitver=v6.6
 patchver=20230105
 patchname=more-uarches-for-kernel-5.17+.patch
 pkgver=6.6.v.0
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
@@ -22,6 +22,8 @@ source=("git+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git#ta
         'linux.install'
 	# patch from our graysky archlinux colleague
 	"https://raw.githubusercontent.com/graysky2/kernel_compiler_patch/$patchver/$patchname"
+        # nested KVM svm patch
+        "flushbyasid.patch"
 )
 sha256sums=('SKIP'
             #config.x86_64
@@ -32,6 +34,8 @@ sha256sums=('SKIP'
             'd590e751ab4cf424b78fd0d57e53d187f07401a68c8b468d17a5f39a337dacf0'
             #grayskypatch
             '81ad663925a0aa5b5332a69bae7227393664bb81ee2e57a283e7f16e9ff75efe'
+            #flushbyasid.patch
+            '0878a970035793ca761c6f7499fb37cf04e6d9892758ca3fb9b99f846febfaf0'
 )
 
 _kernelname=${pkgbase#linux}
