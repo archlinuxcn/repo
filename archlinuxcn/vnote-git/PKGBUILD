@@ -1,15 +1,16 @@
 # Maintainer: erk <v at erk dot io>
 pkgname=vnote-git
 pkgver=1827.15d14359
-epoch=1
-pkgrel=2
+epoch=2
+pkgrel=1
 pkgdesc="A Vim-inspired note-taking application, especially for Markdown."
 arch=('x86_64')
 url='https://tamlok.github.io/vnote/'
 license=('MIT')
 depends=(qt6-webengine qt6-svg qt6-5compat)
 makedepends=('git' 'qt6-tools')
-
+provides=('vnote')
+conflicts=('vnote')
 source=("git+https://github.com/vnotex/vnote.git")
 sha256sums=(SKIP)
 
