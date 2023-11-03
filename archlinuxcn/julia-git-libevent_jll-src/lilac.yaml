@@ -18,5 +18,13 @@ update_on:
     pkgname: libevent
     strip_dir: true
     filename: 'libevent-[0-9.]*.so.\d+'
+  - source: alpmfiles
+    pkgname: libevent
+    strip_dir: true
+    filename: 'libevent_core-[0-9.]*.so.\d+'
+  - source: alpmfiles
+    pkgname: libevent
+    strip_dir: true
+    filename: 'libevent_pthreads-[0-9.]*.so.\d+'
   - source: manual
     manual: 1
