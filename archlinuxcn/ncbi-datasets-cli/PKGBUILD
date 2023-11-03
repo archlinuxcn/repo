@@ -2,7 +2,7 @@
 
 _pkgname=datasets
 pkgname=ncbi-datasets-cli
-pkgver=15.27.0
+pkgver=15.27.1
 pkgrel=1
 pkgdesc='An experimental resource for finding and building datasets across NCBI databases'
 arch=('x86_64')
@@ -11,8 +11,8 @@ license=('custom')
 source=("${pkgname}-${pkgver}.zip::https://github.com/ncbi/datasets/releases/download/v${pkgver}/linux-amd64.cli.package.zip"
         "${pkgname}-${pkgver}.tar.gz::https://github.com/ncbi/datasets/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha512sums=('7489e03b3692f721811b3e239dcc5963d29f7f22cdea0cde58ca1e9781f2cad1a31cb16a2f67ded7e5655b4b3c1d46da350274131885ba4329636151bff2cce4'
-            'eec1c5e6791fec312617f48b6e1f649f0cc72b5c977159390899e3a832aab59268db5dcb6f7e04780d03355a7794f66980715fa5a2dc2c1adeacccd06b533a5b')
+sha512sums=('8b2ad8f572edb917e069e6218035efa09878995181a7d4707a46e32779e4ad873c70d8653c335ffaa38c6eb6baef2fa91556d7b1bcbc520d4eeb5bbd1a26d10b'
+            'd0e698dae6cbdde16b52bd446856d6c53ceec09569aee9cb6b3d9602351bd6c4003fa5428f05efb223334963d4e0e0cff1720494d048befa8e92137a7fec419b')
 
 package() {
   install -Dm755 "datasets" "${pkgdir}/usr/bin/ncbi-datasets"
