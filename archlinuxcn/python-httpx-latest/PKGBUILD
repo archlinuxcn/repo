@@ -1,6 +1,6 @@
 _name=httpx
 pkgname=python-httpx-latest
-pkgver=0.25.0
+pkgver=0.25.1
 pkgrel=1
 pkgdesc="The next generation HTTP client."
 arch=(any)
@@ -11,11 +11,11 @@ makedepends=('python-hatchling' 'python-hatch-fancy-pypi-readme' 'python-build' 
 optdepends=('python-h2: HTTP/2 support' 'python-brotli: decoding for "brotli" compressed responses' 'python-brotlicffi: decoding for "brotli" compressed responses' 'python-socksio: SOCKS proxy support' 'python-click: command line client support' 'python-rich: command line client support' 'python-pygments: command line client support' 'python-trio: alternative async library')
 conflicts=('python-httpx')
 provides=('python-httpx')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/httpx-0.25.0.tar.gz")
-sha256sums=('47ecda285389cb32bb2691cc6e069e3ab0205956f681c5b2ad2325719751d875')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/httpx-0.25.1.tar.gz")
+sha256sums=('ffd96d5cf901e63863d9f1b4b6807861dbea4d301613415d9e6e57ead15fc5d0')
 
 prepare() {
-  cd "$srcdir/httpx-0.25.0"
+  cd "$srcdir/httpx-0.25.1"
   sed -i '/certifi/d' pyproject.toml
   sed -e '/import certifi/d' \
       -e 's|certifi.where()|"/etc/ssl/certs/ca-certificates.crt"|' \
@@ -23,12 +23,12 @@ prepare() {
 }
 
 build() {
-  cd "$srcdir/httpx-0.25.0"
+  cd "$srcdir/httpx-0.25.1"
   python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "$srcdir/httpx-0.25.0"
+  cd "$srcdir/httpx-0.25.1"
   python -m installer --destdir="$pkgdir" dist/*.whl
 
   # make sure we don't install any world-writable or root-readable-only files
