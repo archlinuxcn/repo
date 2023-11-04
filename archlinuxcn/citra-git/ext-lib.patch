@@ -29,19 +29,13 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
      # only check submodules when source is obtained via Git
      check_submodules_present()
  endif()
-@@ -241,6 +246,28 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
+@@ -241,6 +246,22 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
  
-+find_package(enet 1.3)
 +find_package(PkgConfig REQUIRED)
-+pkg_check_modules(Crypto++ REQUIRED IMPORTED_TARGET libcryptopp)
 +find_package(tsl-robin-map)
 +find_package(VulkanMemoryAllocator)
-+
-+if (ENABLE_CUBEB)
-+    find_package(cubeb)
-+endif()
 +
 +if (USE_DISCORD_PRESENCE)
 +    find_package(DiscordRPC)
@@ -83,7 +77,7 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
 diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
 --- citra/externals/CMakeLists.txt	2023-01-20 00:44:13.712264461 +0800
 +++ citra/externals/CMakeLists.txt	2023-01-20 04:34:47.512808459 +0800
-@@ -41,16 +41,22 @@ else()
+@@ -41,15 +41,20 @@ else()
  endif()
  
  # Catch2
@@ -99,42 +93,17 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
 +endif()
  
  # Crypto++
--set(CRYPTOPP_BUILD_DOCUMENTATION OFF CACHE BOOL "")
--set(CRYPTOPP_BUILD_TESTING OFF CACHE BOOL "")
--set(CRYPTOPP_INSTALL OFF CACHE BOOL "")
--set(CRYPTOPP_SOURCES "${CMAKE_SOURCE_DIR}/externals/cryptopp" CACHE STRING "")
--add_subdirectory(cryptopp-cmake)
-+if (NOT TARGET PkgConfig::Crypto++)
-+    set(CRYPTOPP_BUILD_DOCUMENTATION OFF CACHE BOOL "")
-+    set(CRYPTOPP_BUILD_TESTING OFF CACHE BOOL "")
-+    set(CRYPTOPP_INSTALL OFF CACHE BOOL "")
-+    set(CRYPTOPP_SOURCES "${CMAKE_SOURCE_DIR}/externals/cryptopp" CACHE STRING "")
-+    add_subdirectory(cryptopp-cmake)
-+endif()
- 
- # dds-ktx
- add_library(dds-ktx INTERFACE)
-@@ -228,19 +234,24 @@ else()
- endif()
- 
- # ENet
--add_subdirectory(enet)
--target_include_directories(enet INTERFACE ./enet/include)
-+if (NOT TARGET enet::enet)
-+    message(STATUS "Using bundled enet")
-+    add_subdirectory(enet)
-+    target_include_directories(enet INTERFACE ./enet/include)
-+    add_library(enet::enet ALIAS enet)
-+endif()
- 
- # Cubeb
--if (ENABLE_CUBEB)
-+if (ENABLE_CUBEB AND NOT TARGET cubeb::cubeb)
-     set(BUILD_TESTS OFF CACHE BOOL "")
-     set(BUILD_TOOLS OFF CACHE BOOL "")
-     set(BUNDLE_SPEEX ON CACHE BOOL "")
-     add_subdirectory(cubeb EXCLUDE_FROM_ALL)
-+    add_library(cubeb::cubeb ALIAS cubeb)
+ if(USE_SYSTEM_CRYPTOPP)
+-    find_package(cryptopp REQUIRED)
++    find_package(PkgConfig REQUIRED)
++    pkg_check_modules(Crypto++ IMPORTED_TARGET libcryptopp)
+     add_library(cryptopp INTERFACE)
+-    target_link_libraries(cryptopp INTERFACE cryptopp::cryptopp)
++    target_link_libraries(cryptopp INTERFACE PkgConfig::Crypto++)
+ else()
+     set(CRYPTOPP_BUILD_DOCUMENTATION OFF CACHE BOOL "")
+     set(CRYPTOPP_BUILD_TESTING OFF CACHE BOOL "")
+@@ -261,7 +266,7 @@ if (ENABLE_CUBEB)
  endif()
  
  # DiscordRPC
@@ -143,7 +112,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
      add_subdirectory(discord-rpc EXCLUDE_FROM_ALL)
      target_include_directories(discord-rpc INTERFACE ./discord-rpc/include)
  endif()
-@@ -323,7 +334,8 @@ if(ANDROID)
+@@ -344,7 +349,8 @@ if(ANDROID)
  endif()
  
  # OpenAL Soft
@@ -153,7 +122,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
      set(ALSOFT_EMBED_HRTF_DATA OFF CACHE BOOL "")
      set(ALSOFT_EXAMPLES OFF CACHE BOOL "")
      set(ALSOFT_INSTALL OFF CACHE BOOL "")
-@@ -336,8 +348,10 @@ if (ENABLE_OPENAL)
+@@ -357,8 +363,10 @@ if (ENABLE_OPENAL)
  endif()
  
  # VMA
@@ -198,40 +167,12 @@ diff --color -rupN citra/externals/find-modules/FindDiscordRPC.cmake citra/exter
 +    DiscordRPC_LIBRARY
 +)
 \ No newline at end of file
-diff --color -rupN citra/externals/find-modules/Findenet.cmake citra/externals/find-modules/Findenet.cmake
---- citra/externals/find-modules/Findenet.cmake	1970-01-01 08:00:00.000000000 +0800
-+++ citra/externals/find-modules/Findenet.cmake	2023-01-20 00:41:12.715249024 +0800
-@@ -0,0 +1,17 @@
-+# SPDX-FileCopyrightText: 2022 Alexandre Bouvier <contact@amb.tf>
-+#
-+# SPDX-License-Identifier: GPL-3.0-or-later
-+
-+find_package(PkgConfig QUIET)
-+if (PKG_CONFIG_FOUND)
-+    pkg_search_module(ENET QUIET IMPORTED_TARGET GLOBAL libenet)
-+    if (ENET_FOUND)
-+        add_library(enet::enet ALIAS PkgConfig::ENET)
-+    endif()
-+endif()
-+
-+include(FindPackageHandleStandardArgs)
-+find_package_handle_standard_args(enet
-+    REQUIRED_VARS ENET_LINK_LIBRARIES
-+    VERSION_VAR ENET_VERSION
-+)
-\ No newline at end of file
 diff --color -rupN citra/src/audio_core/CMakeLists.txt citra/src/audio_core/CMakeLists.txt
 --- citra/src/audio_core/CMakeLists.txt	2023-01-20 00:44:13.802264646 +0800
 +++ citra/src/audio_core/CMakeLists.txt	2023-01-20 00:41:12.745249061 +0800
-@@ -95,12 +100,12 @@ if(ENABLE_SDL2)
+@@ -90,7 +90,7 @@ if(ENABLE_CUBEB)
  endif()
-
- if(ENABLE_CUBEB)
--    target_link_libraries(audio_core PRIVATE cubeb)
-+    target_link_libraries(audio_core PRIVATE cubeb::cubeb)
-     target_compile_definitions(audio_core PUBLIC HAVE_CUBEB)
- endif()
-
+ 
  if(ENABLE_OPENAL)
 -    target_link_libraries(audio_core PRIVATE OpenAL)
 +    target_link_libraries(audio_core PRIVATE OpenAL::OpenAL)
@@ -250,199 +191,6 @@ diff --color -rupN citra/src/citra_qt/CMakeLists.txt citra/src/citra_qt/CMakeLis
      target_compile_definitions(citra-qt PRIVATE -DUSE_DISCORD_PRESENCE)
  endif()
  
-diff --color -rupN citra/src/core/CMakeLists.txt citra/src/core/CMakeLists.txt
---- citra/src/core/CMakeLists.txt	2023-01-20 00:44:13.828931368 +0800
-+++ citra/src/core/CMakeLists.txt	2023-01-20 00:41:12.788582447 +0800
-@@ -477,7 +477,7 @@ create_target_directory_groups(citra_cor
- 
- target_link_libraries(citra_core PUBLIC citra_common PRIVATE audio_core network video_core)
- target_link_libraries(citra_core PRIVATE Boost::boost Boost::serialization Boost::iostreams httplib)
--target_link_libraries(citra_core PUBLIC dds-ktx PRIVATE cryptopp fmt lodepng open_source_archives)
-+target_link_libraries(citra_core PUBLIC dds-ktx PRIVATE PkgConfig::Crypto++ fmt lodepng open_source_archives)
- 
- if (ENABLE_WEB_SERVICE)
-     target_link_libraries(citra_core PRIVATE web_service)
-diff --color -rupN citra/src/network/CMakeLists.txt citra/src/network/CMakeLists.txt
---- citra/src/network/CMakeLists.txt	2023-01-20 00:44:13.872264790 +0800
-+++ citra/src/network/CMakeLists.txt	2023-01-20 00:41:12.791915785 +0800
-@@ -22,7 +22,7 @@ if (ENABLE_WEB_SERVICE)
-     target_link_libraries(network PRIVATE web_service)
- endif()
- 
--target_link_libraries(network PRIVATE citra_common enet Boost::serialization httplib)
-+target_link_libraries(network PRIVATE citra_common enet::enet Boost::serialization httplib)
- 
- if (CITRA_USE_PRECOMPILED_HEADERS)
-     target_precompile_headers(network PRIVATE precompiled_headers.h)
-diff --color -rupN citra/src/tests/audio_core/decoder_tests.cpp citra/src/tests/audio_core/decoder_tests.cpp
---- citra/src/tests/audio_core/decoder_tests.cpp	2023-01-20 00:44:13.875598130 +0800
-+++ citra/src/tests/audio_core/decoder_tests.cpp	2023-01-20 00:41:12.791915785 +0800
-@@ -3,7 +3,7 @@
- // Refer to the license.txt file included.
- #if defined(HAVE_MF) || defined(HAVE_FFMPEG)
- 
--#include <catch2/catch_test_macros.hpp>
-+#include <catch2/catch.hpp>
- #include "core/core.h"
- #include "core/core_timing.h"
- #include "core/hle/kernel/memory.h"
-diff --color -rupN citra/src/tests/common/bit_field.cpp citra/src/tests/common/bit_field.cpp
---- citra/src/tests/common/bit_field.cpp	2023-01-20 00:44:13.875598130 +0800
-+++ citra/src/tests/common/bit_field.cpp	2023-01-20 00:41:12.791915785 +0800
-@@ -5,7 +5,7 @@
- #include <array>
- #include <cstring>
- #include <type_traits>
--#include <catch2/catch_test_macros.hpp>
-+#include <catch2/catch.hpp>
- #include "common/bit_field.h"
- 
- TEST_CASE("BitField", "[common]") {
-diff --color -rupN citra/src/tests/common/param_package.cpp citra/src/tests/common/param_package.cpp
---- citra/src/tests/common/param_package.cpp	2023-01-20 00:44:13.875598130 +0800
-+++ citra/src/tests/common/param_package.cpp	2023-01-20 00:41:12.791915785 +0800
-@@ -3,7 +3,7 @@
- // Refer to the license.txt file included.
- 
- #include <cmath>
--#include <catch2/catch_test_macros.hpp>
-+#include <catch2/catch.hpp>
- #include "common/logging/backend.h"
- #include "common/param_package.h"
-
-diff --color -rupN citra/src/tests/core/arm/dyncom/arm_dyncom_vfp_tests.cpp citra/src/tests/core/arm/dyncom/arm_dyncom_vfp_tests.cpp
---- citra/src/tests/core/arm/dyncom/arm_dyncom_vfp_tests.cpp	2023-01-20 00:44:13.875598130 +0800
-+++ citra/src/tests/core/arm/dyncom/arm_dyncom_vfp_tests.cpp	2023-01-20 00:41:12.791915785 +0800
-@@ -2,7 +2,7 @@
- // Licensed under GPLv2 or any later version
- // Refer to the license.txt file included.
- 
--#include <catch2/catch_test_macros.hpp>
-+#include <catch2/catch.hpp>
- #include "core/arm/dyncom/arm_dyncom.h"
- #include "core/core.h"
- #include "core/core_timing.h"
-diff --color -rupN citra/src/tests/core/core_timing.cpp citra/src/tests/core/core_timing.cpp
---- citra/src/tests/core/core_timing.cpp	2023-01-20 00:44:13.878931471 +0800
-+++ citra/src/tests/core/core_timing.cpp	2023-01-20 00:41:12.791915785 +0800
-@@ -2,7 +2,7 @@
- // Licensed under GPLv2+
- // Refer to the license.txt file included.
- 
--#include <catch2/catch_test_macros.hpp>
-+#include <catch2/catch.hpp>
- 
- #include <array>
- #include <bitset>
-diff --color -rupN citra/src/tests/core/file_sys/path_parser.cpp citra/src/tests/core/file_sys/path_parser.cpp
---- citra/src/tests/core/file_sys/path_parser.cpp	2023-01-20 00:44:13.878931471 +0800
-+++ citra/src/tests/core/file_sys/path_parser.cpp	2023-01-20 00:41:12.791915785 +0800
-@@ -2,7 +2,7 @@
- // Licensed under GPLv2 or any later version
- // Refer to the license.txt file included.
- 
--#include <catch2/catch_test_macros.hpp>
-+#include <catch2/catch.hpp>
- #include "common/file_util.h"
- #include "core/file_sys/path_parser.h"
- 
-diff --color -rupN citra/src/tests/core/hle/kernel/hle_ipc.cpp citra/src/tests/core/hle/kernel/hle_ipc.cpp
---- citra/src/tests/core/hle/kernel/hle_ipc.cpp	2023-01-20 00:44:13.878931471 +0800
-+++ citra/src/tests/core/hle/kernel/hle_ipc.cpp	2023-01-20 00:41:12.791915785 +0800
-@@ -2,7 +2,7 @@
- // Licensed under GPLv2 or any later version
- // Refer to the license.txt file included.
- 
--#include <catch2/catch_test_macros.hpp>
-+#include <catch2/catch.hpp>
- #include "core/core.h"
- #include "core/core_timing.h"
- #include "core/hle/ipc.h"
-diff --color -rupN citra/src/tests/core/memory/memory.cpp citra/src/tests/core/memory/memory.cpp
---- citra/src/tests/core/memory/memory.cpp	2023-01-20 00:44:13.878931471 +0800
-+++ citra/src/tests/core/memory/memory.cpp	2023-01-20 00:41:12.791915785 +0800
-@@ -2,7 +2,7 @@
- // Licensed under GPLv2 or any later version
- // Refer to the license.txt file included.
- 
--#include <catch2/catch_test_macros.hpp>
-+#include <catch2/catch.hpp>
- #include "core/core.h"
- #include "core/core_timing.h"
- #include "core/hle/kernel/process.h"
-diff --color -rupN citra/src/tests/core/memory/vm_manager.cpp citra/src/tests/core/memory/vm_manager.cpp
---- citra/src/tests/core/memory/vm_manager.cpp	2023-01-20 00:44:13.878931471 +0800
-+++ citra/src/tests/core/memory/vm_manager.cpp	2023-01-20 00:41:12.791915785 +0800
-@@ -3,7 +3,7 @@
- // Refer to the license.txt file included.
- 
- #include <vector>
--#include <catch2/catch_test_macros.hpp>
-+#include <catch2/catch.hpp>
- #include "core/core.h"
- #include "core/core_timing.h"
- #include "core/hle/kernel/errors.h"
-diff --color -rupN citra/src/tests/video_core/shader/shader_jit_x64_compiler.cpp citra/src/tests/video_core/shader/shader_jit_x64_compiler.cpp
---- citra/src/tests/video_core/shader/shader_jit_x64_compiler.cpp	2023-01-20 00:44:13.878931471 +0800
-+++ citra/src/tests/video_core/shader/shader_jit_x64_compiler.cpp	2023-01-20 00:41:12.791915785 +0800
-@@ -9,8 +9,7 @@
- #include <cmath>
- #include <memory>
- #include <span>
--#include <catch2/catch_approx.hpp>
--#include <catch2/catch_test_macros.hpp>
-+#include <catch2/catch.hpp>
- #include <nihstro/inline_assembly.h>
- #include "video_core/shader/shader_interpreter.h"
- #include "video_core/shader/shader_jit_x64_compiler.h"
-@@ -195,9 +194,9 @@ TEST_CASE("LG2", "[video_core][shader][s
-     REQUIRE(std::isnan(shader.Run(NAN).x));
-     REQUIRE(std::isnan(shader.Run(-1.f).x));
-     REQUIRE(std::isinf(shader.Run(0.f).x));
--    REQUIRE(shader.Run(4.f).x == Catch::Approx(2.f));
--    REQUIRE(shader.Run(64.f).x == Catch::Approx(6.f));
--    REQUIRE(shader.Run(1.e24f).x == Catch::Approx(79.7262742773f));
-+    REQUIRE(shader.Run(4.f).x == Approx(2.f));
-+    REQUIRE(shader.Run(64.f).x == Approx(6.f));
-+    REQUIRE(shader.Run(1.e24f).x == Approx(79.7262742773f));
- }
- 
- TEST_CASE("EX2", "[video_core][shader][shader_jit]") {
-@@ -210,11 +209,11 @@ TEST_CASE("EX2", "[video_core][shader][s
-     });
- 
-     REQUIRE(std::isnan(shader.Run(NAN).x));
--    REQUIRE(shader.Run(-800.f).x == Catch::Approx(0.f));
--    REQUIRE(shader.Run(0.f).x == Catch::Approx(1.f));
--    REQUIRE(shader.Run(2.f).x == Catch::Approx(4.f));
--    REQUIRE(shader.Run(6.f).x == Catch::Approx(64.f));
--    REQUIRE(shader.Run(79.7262742773f).x == Catch::Approx(1.e24f));
-+    REQUIRE(shader.Run(-800.f).x == Approx(0.f));
-+    REQUIRE(shader.Run(0.f).x == Approx(1.f));
-+    REQUIRE(shader.Run(2.f).x == Approx(4.f));
-+    REQUIRE(shader.Run(6.f).x == Approx(64.f));
-+    REQUIRE(shader.Run(79.7262742773f).x == Approx(1.e24f));
-     REQUIRE(std::isinf(shader.Run(800.f).x));
- }
- 
-@@ -437,7 +436,7 @@ TEST_CASE("Nested Loop", "[video_core][s
-         shader_test.RunJit(shader_unit_jit, input);
- 
-         REQUIRE(shader_unit_jit.address_registers[2] == expected_aL);
--        REQUIRE(shader_unit_jit.registers.output[0].x.ToFloat32() == Catch::Approx(expected_out));
-+        REQUIRE(shader_unit_jit.registers.output[0].x.ToFloat32() == Approx(expected_out));
-     }
-     {
-         shader_test.shader_setup->uniforms.i[0] = {9, 0, 2, 0};
-@@ -454,7 +453,7 @@ TEST_CASE("Nested Loop", "[video_core][s
-         shader_test.RunJit(shader_unit_jit, input);
- 
-         REQUIRE(shader_unit_jit.address_registers[2] == expected_aL);
--        REQUIRE(shader_unit_jit.registers.output[0].x.ToFloat32() == Catch::Approx(expected_out));
-+        REQUIRE(shader_unit_jit.registers.output[0].x.ToFloat32() == Approx(expected_out));
-     }
- }
-
 diff --color -rupN citra/src/video_core/CMakeLists.txt citra/src/video_core/CMakeLists.txt
 --- citra/src/video_core/CMakeLists.txt	2023-01-20 00:44:13.878931471 +0800
 +++ citra/src/video_core/CMakeLists.txt	2023-01-20 00:43:41.148864090 +0800
