@@ -32,12 +32,9 @@ magen() {
 }
 
 post_install() {
-    yello "xlayoutdisplay 1.4.0"
-    blue  "New argument: -w"
-	green "  -w [ --wait ] arg      wait seconds before running"
-    blue  "New feature: udev rule"
-	plain "  https://github.com/alex-courtis/xlayoutdisplay#automatically-detect-new-display"
-	plain "  /usr/share/doc/xlayoutdisplay/99-xlayoutdisplay.rules"
+    yello "xlayoutdisplay 1.5.0"
+    green "Compatibility"
+    blue  "  #31${all_off} remove procps dependency"
     plain ""
 }
 
