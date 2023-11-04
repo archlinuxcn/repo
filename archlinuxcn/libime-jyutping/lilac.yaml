@@ -5,9 +5,10 @@ post_build_script: |
   update_aur_repo()
 
 update_on:
-  - source: github
-    github: fcitx/libime-jyutping
-    use_max_tag: true
+  - source: regex
+    url: https://download.fcitx-im.org/fcitx5/libime-jyutping/
+    encoding: utf-8
+    regex: libime-jyutping-(\d+\.\d+\.\d+)_dict\.tar\.xz\.sig
 
 maintainers:
   - github: rocka
