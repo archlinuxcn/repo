@@ -1,0 +1,25 @@
+From f54f9d64fbfe2e722d0ebbc11576f4b65ea13d6c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Michael=20La=C3=9F?= <bevan@bi-co.net>
+Date: Sat, 4 Nov 2023 12:58:28 +0100
+Subject: [PATCH 3/3] ParseResult::operator bool() in [explicit]
+
+---
+ src/model/modelbase.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/model/modelbase.cpp b/src/model/modelbase.cpp
+index b4333604..8826016d 100644
+--- a/src/model/modelbase.cpp
++++ b/src/model/modelbase.cpp
+@@ -854,7 +854,7 @@ ModelPart * ModelBase::createOldSchematicPartAux(ModelPart * modelPart, const QS
+ 		DebugDialog::debug(QString("Unable to open :%1").arg(modelPart->path()));
+ 	}
+ 	QDomDocument oldDoc;
+-	bool ok = oldDoc.setContent(&newFzp);
++	bool ok = static_cast<bool>(oldDoc.setContent(&newFzp));
+ 	if (!ok) {
+ 		// this shouldn't happen
+ 		return nullptr;
+-- 
+2.42.1
+
