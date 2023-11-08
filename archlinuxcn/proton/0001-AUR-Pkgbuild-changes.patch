@@ -1,4 +1,4 @@
-From 4d8a9f7fad342a14db10f53be8c03805a8e3165c Mon Sep 17 00:00:00 2001
+From 854da9533d94a9cce1e70e1092532584e1a1d547 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Tue, 7 Feb 2023 21:58:22 +0200
 Subject: [PATCH 1/5] AUR Pkgbuild changes
@@ -19,7 +19,7 @@ Subject: [PATCH 1/5] AUR Pkgbuild changes
  12 files changed, 83 insertions(+), 39 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 83fc995d..b6a97743 100644
+index 83fc995d..5d0206ab 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -50,11 +50,12 @@ else
@@ -69,21 +69,19 @@ index 83fc995d..b6a97743 100644
  	-Dorc-test=disabled
  
  $(eval $(call rules-source,gst_orc,$(SRCDIR)/gst-orc))
-@@ -115,9 +125,14 @@ $(eval $(call rules-meson,gst_orc,64))
+@@ -115,7 +125,12 @@ $(eval $(call rules-meson,gst_orc,64))
  ##
  
  GSTREAMER_MESON_ARGS := \
 +	$(GST_LTO) \
-+	-Ddoc=disabled \
  	-Dgst_parse=false \
- 	-Dbenchmarks=disabled \
- 	-Dtools=disabled \
 +	-Dptp-helper-permissions=capabilities \
 +	-Ddbghelp=disabled \
 +	-Dintrospection=disabled \
++	-Ddoc=disabled \
+ 	-Dbenchmarks=disabled \
+ 	-Dtools=disabled \
  	-Dbash-completion=disabled
- 
- GSTREAMER_DEPENDS = gst_orc
 @@ -131,6 +146,11 @@ $(eval $(call rules-meson,gstreamer,64))
  ## graphene
  ##
@@ -96,25 +94,27 @@ index 83fc995d..b6a97743 100644
  $(eval $(call rules-source,graphene,$(SRCDIR)/graphene))
  $(eval $(call rules-meson,graphene,32))
  $(eval $(call rules-meson,graphene,64))
-@@ -141,6 +161,9 @@ $(eval $(call rules-meson,graphene,64))
+@@ -141,7 +161,10 @@ $(eval $(call rules-meson,graphene,64))
  ##
  
  GST_BASE_MESON_ARGS := \
 +	$(GST_LTO) \
+ 	-Dauto_features=disabled \
 +	-Ddoc=disabled \
 +	-Dtools=disabled \
- 	-Dauto_features=disabled \
  	-Dadder=enabled \
  	-Dapp=enabled \
-@@ -173,6 +196,8 @@ $(eval $(call rules-meson,gst_base,64))
+ 	-Daudioconvert=enabled \
+@@ -173,7 +196,9 @@ $(eval $(call rules-meson,gst_base,64))
  ##
  
  GST_GOOD_MESON_ARGS := \
 +	$(GST_LTO) \
-+	-Ddoc=disabled \
  	-Dauto_features=disabled \
++	-Ddoc=disabled \
  	-Daudioparsers=enabled \
  	-Dautodetect=enabled \
+ 	-Davi=enabled \
 @@ -203,11 +228,17 @@ $(eval $(call rules-meson,gst_good,64))
  
  FFMPEG_CONFIGURE_ARGS := \
@@ -165,16 +165,16 @@ index 83fc995d..b6a97743 100644
  $(eval $(call rules-source,dxvk-nvapi,$(SRCDIR)/dxvk-nvapi))
  $(eval $(call rules-meson,dxvk-nvapi,32,CROSS))
  $(eval $(call rules-meson,dxvk-nvapi,64,CROSS))
-@@ -566,6 +607,9 @@ VKD3D_PROTON_MESON_ARGS32 = --bindir=$(VKD3D_PROTON_DST32)/lib/wine/vkd3d-proton
- VKD3D_PROTON_MESON_ARGS64 = --bindir=$(VKD3D_PROTON_DST64)/lib64/wine/vkd3d-proton
- VKD3D_PROTON_DEPENDS = glslang
+@@ -570,6 +611,9 @@ ifneq ($(UNSTRIPPED_BUILD),)
+ 	VKD3D_PROTON_MESON_ARGS = -Denable_trace=true
+ endif
  
 +VKD3D_PROTON_CPPFLAGS = -msse -msse2
 +VKD3D_PROTON_LDFLAGS = -static -static-libgcc -static-libstdc++
 +
- ifneq ($(UNSTRIPPED_BUILD),)
- 	VKD3D_PROTON_MESON_ARGS = -Denable_trace=true
- endif
+ $(eval $(call rules-source,vkd3d-proton,$(SRCDIR)/vkd3d-proton))
+ $(eval $(call rules-meson,vkd3d-proton,32,CROSS))
+ $(eval $(call rules-meson,vkd3d-proton,64,CROSS))
 @@ -866,14 +910,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
  	mkdir -p $(FONTS_OBJ)/source-han
  	# Do not immediately create the target file, so that make is interrupted
@@ -467,5 +467,5 @@ index beddcbbb..b6f36788 100644
 -  "compatmanager_layer_name" "proton"
  }
 -- 
-2.42.0
+2.42.1
 
