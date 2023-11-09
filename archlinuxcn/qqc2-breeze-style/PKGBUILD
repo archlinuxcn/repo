@@ -8,7 +8,7 @@ arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://invent.kde.org/plasma/qqc2-breeze-style"
 license=('GPL3')
 depends=('qt5-base' 'qt5-declarative' 'qt5-quickcontrols2' 'kirigami2' 'kiconthemes5')
-makedepends=('git' 'extra-cmake-modules' 'qt5-tools')
+makedepends=('git' 'extra-cmake-modules-git' 'qt5-tools')
 source=("git+${url}.git#tag=v${pkgver}")
 md5sums=('SKIP')
 
