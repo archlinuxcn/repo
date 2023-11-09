@@ -19,6 +19,7 @@ _cachy_config=${_cachy_config-y}
 # 'cachyos' - select 'EEVDF-BORE Variant Scheduler'
 # 'eevdf' - select 'EEVDF Scheduler'
 # 'rt' - select EEVDF, but includes a series of realtime patches
+# 'rt-bore' - select Burst-Oriented Response Enhancer, but includes a series of realtime patches
 # 'sched-ext' - select 'sched-ext' Scheduler, based on EEVDF
 _cpusched=${_cpusched-cachyos}
 
@@ -64,7 +65,7 @@ _cc_harder=${_cc_harder-y}
 ## DO NOT SET, THIS IS FOR INTERNAL CI USE ONLY.
 _cc_size=${_cc_size-}
 
-### Set this to your number of threads you have in your machine otherwise it will default to 128
+### Set this to your number of threads you have in your machine otherwise it will default to 320
 _nr_cpus=${_nr_cpus-}
 
 ### Set performance governor as default
@@ -169,17 +170,17 @@ else
     pkgbase=linux-$pkgsuffix
 fi
 _major=6.6
-_minor=0
+_minor=1
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
-#_stable=${_major}.${_minor}
-_stable=${_major}
+_stable=${_major}.${_minor}
+#_stable=${_major}
 #_stablerc=${_major}-${_rcver}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
 pkgdesc='Linux EEVDF-BORE scheduler Kernel by CachyOS with other patches and improvements'
-pkgrel=2
+pkgrel=1
 _kernver=$pkgver-$pkgrel
 arch=('x86_64' 'x86_64_v3')
 url="https://github.com/CachyOS/linux-cachyos"
@@ -209,6 +210,11 @@ source=(
     "auto-cpu-optimization.sh"
     "${_patchsource}/all/0001-cachyos-base-all.patch")
 
+# WARNING The ZFS module doesn't build with selected RT sched due to licensing issues.
+if [[ "$_cpusched" = "rt" || "$_cpusched" = "rt-bore" ]]; then
+    unset _build_zfs
+fi
+
 # ZFS support
 if [ -n "$_build_zfs" ]; then
     makedepends+=(git)
@@ -234,12 +240,16 @@ case "$_cpusched" in
     rt) ## EEVDF with RT patches
         source+=("${_patchsource}/misc/0001-rt.patch"
                  linux-cachyos-rt.install);;
+    rt-bore) ## RT with BORE Scheduler
+        source+=("${_patchsource}/misc/0001-rt.patch"
+                 "${_patchsource}/sched/0001-bore-cachy-rt.patch"
+                 linux-cachyos-rt.install);;
     hardened) ## Hardened Patches with BORE Scheduler
         source+=("${_patchsource}/sched/0001-bore-cachy.patch"
                  "${_patchsource}/misc/0001-hardened.patch");;
     sched-ext) ## Sched-ext with BORE
-        source+=("${_patchsource}/sched/0001-bore-cachy.patch"
-                 "${_patchsource}/sched/0001-sched-ext.patch");;
+        source+=("${_patchsource}/sched/0001-sched-ext.patch"
+                 "${_patchsource}/sched/0001-bore-cachy-ext.patch");;
 esac
 
 ## bcachefs Support
@@ -291,18 +301,6 @@ prepare() {
         "${srcdir}"/auto-cpu-optimization.sh
     fi
 
-    ### Prevent ZFS and bcachefs building at the same time
-    # More infos here: https://github.com/CachyOS/linux-cachyos/issues/152
-    if [[ -n "$_bcachefs" && -n "$_build_zfs"  ]]; then
-        _die "ZFS and bcachefs support cannot be built at the same time. "
-    fi
-
-    ### Prevent ZFS and LTO building at the same time
-    # More infos here: https://github.com/openzfs/zfs/issues/15384
-    if [[ "$_use_llvm_lto" != "none" && -n "$_build_zfs"  ]]; then
-        _die "ZFS and LTO support cannot be built at the same time. "
-    fi
-
     ### Selecting CachyOS config
     if [ -n "$_cachy_config" ]; then
         echo "Enabling CachyOS config..."
@@ -318,7 +316,8 @@ prepare() {
         tt)  scripts/config -e TT_SCHED -e TT_ACCOUNTING_STATS;;
         bore|hardened|cachyos) scripts/config -e SCHED_BORE;;
         eevdf) ;;
-        rt) scripts/config -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -e PREEMPT_AUTO -d PREEMPT_DYNAMIC -e HAVE_PREEMPT_AUTO -d PREEMPT_BUILD;;
+        rt) scripts/config -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -d PREEMPT_DYNAMIC -d PREEMPT_BUILD;;
+        rt-bore) scripts/config -e SCHED_BORE -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -d PREEMPT_DYNAMIC -d PREEMPT_BUILD;;
         sched-ext) scripts/config -e SCHED_BORE -e SCHED_CLASS_EXT;;
         *) _die "The value $_cpusched is invalid. Choose the correct one again.";;
     esac
@@ -409,7 +408,7 @@ prepare() {
     ### Select preempt type
 
     # We should not set up the PREEMPT for RT kernels
-    if [ "$_cpusched" != "rt" ]; then
+    if [[ "$_cpusched" != "rt" || "$_cpusched" != "rt-bore" ]]; then
         [ -z "$_preempt" ] && _die "The value is empty. Choose the correct one again."
 
         case "$_preempt" in
@@ -576,7 +575,9 @@ prepare() {
     fi
 
     ### Disable DEBUG
-    if [ -n "$_disable_debug" ]; then
+    # Doesn't work with sched-ext
+    # More infos here: https://github.com/CachyOS/linux-cachyos/issues/187
+    if [[ "$_cpusched" != "sched-ext" &&  -n "$_disable_debug" ]]; then
         scripts/config -d DEBUG_INFO \
             -d DEBUG_INFO_BTF \
             -d DEBUG_INFO_DWARF4 \
@@ -672,11 +673,14 @@ build() {
         make ${BUILD_FLAGS[*]} ${MODULE_FLAGS[*]} -j$(nproc) modules
     fi
 
-    if [[ "$_cpusched" != "rt" && -n "$_build_zfs"  ]]; then
+    if [ -n "$_build_zfs" ]; then
         cd ${srcdir}/"zfs"
 
         local CONFIGURE_FLAGS=()
         [ "$_use_llvm_lto" != "none" ] && CONFIGURE_FLAGS+=("KERNEL_LLVM=1")
+
+        export KCPPFLAGS+=' -Wno-error=uninitialized'
+        export KCFLAGS+=' -Wno-error=uninitialized'
 
         ./autogen.sh
         sed -i "s|\$(uname -r)|${pkgver}-${pkgsuffix}|g" configure
@@ -689,7 +693,7 @@ build() {
 
     if [ "$_cpusched" = "sched-ext" ]; then
         # Build the sched_ext schedulers
-        cd "$srcdir/sched_ext/tools/sched_ext"
+        cd "$srcdir/$_srcname/tools/sched_ext"
         unset CFLAGS
         unset CXXFLAGS
         make CC=clang LLVM=1 -j
@@ -838,7 +842,7 @@ _package-schedulers() {
    pkgdesc="Schedulers for $pkgdesc kernel"
    depends=('libbpf' 'bpf' 'clang')
 
-   cd "${srcdir}/sched_ext/tools/sched_ext/build/bin"
+   cd "$srcdir/$_srcname/tools/sched_ext/build/bin"
 
    install -Dm755 scx_central "$pkgdir"/usr/bin/scx_central
    install -Dm755 scx_flatcg "$pkgdir"/usr/bin/scx_flatcg
@@ -847,6 +851,7 @@ _package-schedulers() {
    install -Dm755 scx_rusty "$pkgdir"/usr/bin/scx_rusty
    install -Dm755 scx_simple "$pkgdir"/usr/bin/scx_simple
    install -Dm755 scx_userland "$pkgdir"/usr/bin/scx_userland
+   install -Dm755 scx_nest "$pkgdir"/usr/bin/scx_nest
 }
 
 pkgname=("$pkgbase" "$pkgbase-headers")
@@ -860,8 +865,8 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('5f02fd8696d42f7ec8c5fbadec8e7270bdcfcb1f9844a6c4db3e1fd461c93ce1ccda650ca72dceb4890ebcbbf768ba8fba0bce91efc49fbd2c307b04e95665f2'
-        'c3f5d4f7eaf8b95b6a7f371e985abb0d2a0981b855558a305048f5c9fa2e79dbbd9f1f0eca3707d9f9c73d3ac969839a2641727a7787470b1da6994d0ce377df'
+b2sums=('3bb35ba0386b00aa76dfd073e87b0d5a319d3116a80c39b11a3acd1219bc7d8b3809c1def24a3c4f52abc60f70c170a2f80d80c6b54459eec016c5ddc404c6fc'
+        '98efc768a2048843086a0a0ee495d992b615fcc0dc3003f71e9828a2595dde2be0302739d99d84fdae69531be4f0a3277328b06985f40e811593764e907257aa'
         '11d2003b7d71258c4ca71d71c6b388f00fe9a2ddddc0270e304148396dadfd787a6cac1363934f37d0bfb098c7f5851a02ecb770e9663ffe57ff60746d532bd0'
         'b99458e40605388759bfc3d07233acb5ae29c4c0ff3b10c2532f11a5a946a752ec1a654ba2a51670afc415e90ac2ce48a24c0977a92fe8acf691345171d95924'
         'caedeef9cf148961a2fc1a06f175682c401448276e57921221c54ffaf7b27135de9d6b8e22f12cdc14b31a042493ffc8970211d68819264d202b811cd7db0c36')
