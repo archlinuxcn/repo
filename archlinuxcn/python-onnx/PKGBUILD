@@ -19,8 +19,10 @@ makedepends=(
   cmake
   git
   pybind11
+  python-build
+  python-installer
   python-setuptools
-  python-pip
+  python-wheel
 )
 source=("${pkgname}::git+https://github.com/onnx/onnx.git#tag=v${pkgver}")
 sha512sums=('SKIP')
@@ -34,12 +36,12 @@ prepare() {
 
 build() {
   cd "${pkgname}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${pkgname}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
