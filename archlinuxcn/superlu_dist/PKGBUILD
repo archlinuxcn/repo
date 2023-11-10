@@ -10,16 +10,8 @@ url="https://github.com/xiaoyeli/superlu_dist"
 license=('custom')
 depends=(blas lapack parmetis libmpi.so)
 makedepends=(cmake)
-source=(superlu_dist-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz
-        get_metis_dist.patch::${url}/commit/b64fe36742f1468075670129ac460915eb7130fe.patch)
-sha512sums=('30dbd8dbf7a2d86c0b8fdadf6f476473514a8698b15fbdb63e1f2de0d47abd5e1de25f5757ed40c941b4165ae3c53d1132caa8b5a03eaaeea7a4868d13778bf3'
-            '4f99d5900917a428597ff788205bd536cb1b591fdf400ed4d9ba0bc05d19f6db7612bd2797d94cdf4572b213758b2e8e7c11919f88023114a4b61d7455d58d9f')
-
-prepare() {
-  cd superlu_dist-${pkgver}
-  # https://github.com/xiaoyeli/superlu_dist/issues/141#issuecomment-1519344163
-  patch -p1 -i ../get_metis_dist.patch
-}
+source=(superlu_dist-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
+sha512sums=('30dbd8dbf7a2d86c0b8fdadf6f476473514a8698b15fbdb63e1f2de0d47abd5e1de25f5757ed40c941b4165ae3c53d1132caa8b5a03eaaeea7a4868d13778bf3')
 
 build() {
   cmake \
