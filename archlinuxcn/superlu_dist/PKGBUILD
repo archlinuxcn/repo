@@ -2,8 +2,8 @@
 # Maintainer: Gianluca Pettinello <g_pet at hotmail dot com>
 # Contributor: Christian Pfeiffer <cpfeiffer at live dot de>
 pkgname=superlu_dist
-pkgver=8.1.2
-pkgrel=3
+pkgver=8.2.0
+pkgrel=1
 pkgdesc="Distributed memory, MPI based SuperLU"
 arch=(aarch64 x86_64)
 url="https://github.com/xiaoyeli/superlu_dist"
@@ -11,7 +11,7 @@ license=('custom')
 depends=(blas lapack parmetis libmpi.so)
 makedepends=(cmake)
 source=(superlu_dist-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('30dbd8dbf7a2d86c0b8fdadf6f476473514a8698b15fbdb63e1f2de0d47abd5e1de25f5757ed40c941b4165ae3c53d1132caa8b5a03eaaeea7a4868d13778bf3')
+sha512sums=('590cfe0682a21d8e4807a0c9f4bbd079216216885202c434848991acdaa00f7d4cf6eb7d86197cc8df3feace787770e9ff2f974b996da80c0762ebc97688fc12')
 
 build() {
   cmake \
