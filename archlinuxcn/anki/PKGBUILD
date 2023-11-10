@@ -9,9 +9,9 @@
 # anki -> git rev-parse $pkgver --short=8
 # ftl -> git submodule
 declare -gA _tags=(
- [ftl_core]="8dfb51ed11584ebd33c2b3996892640b72bd298f"
- [ftl_desktop]="82a545c307cd6872fc98c3b1db718090e1f2d87e"
- [anki]="51a10f0"
+ [ftl_core]="45c91b32dee9f52ae051fe5e1f3d574fa3b62d67"
+ [ftl_desktop]="c0e842b10586d2a72357db1aa9e366ea695ac266"
+ [anki]="fac9e0e"
 )
 declare -gA _caches=(
     [yarn]="yarn-cache"
@@ -19,7 +19,7 @@ declare -gA _caches=(
 )
 
 pkgname=anki
-pkgver=23.10
+pkgver=23.10.1
 pkgrel=1
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
@@ -77,10 +77,10 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/ankitects/anki/archive/refs
         "strip-formatter-deps.patch"
         "strip-type-checking-deps.patch"
 )
-sha256sums=('20d622d47c0cf70f3522b976be0dd9404ba0e4cac8d0b5363cbbbc404a9f5dad'
-            '685e15923c909ca99cec51f2b7c568738277fbd0f74e3a0f37f7d1034982495e'
-            'd2add0c54a7481da3d30d5c1f5a237591eceeb68dd5ab6599384b84badae3273'
-            '89f1d00764e0f151600f6a21d7ced4289b3ce3f900ded40fe5da95e658fc9db4'
+sha256sums=('561fc902f3ad35e51686938e706d5a267bbc9a905ca0e9cc5be59b1617f3a551'
+            '9fab0284a3110ec91cf5f346b18e9b9513ac566f25f262a61295dc538dc5ac6e'
+            '576d1a75236cb6817bc98410753c87a637efa29dc0d52cc2ab585c7ae531f35a'
+            '809037694be7c6926da74fb18955a11f2404c7558a07c444ebddbf94b37f7584'
             'cc546f4e5af642af89f82be0375800c2721dd904c0a212cf46f6459495b75bff'
             '9858fefa254812980d252b29fc6f32bd19bb83ee7e5a96d72c707626ed5193a7'
             '198bc2ec14439e3ba41a03c4823f07df4b0c559c1dcbdaf678416ed12a720c2e'
