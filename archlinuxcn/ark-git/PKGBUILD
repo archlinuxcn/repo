@@ -11,12 +11,14 @@ license=('GPL')
 depends=('kparts5' 'kpty5' 'libarchive' 'libzip' 'hicolor-icon-theme')
 makedepends=('git' 'extra-cmake-modules' 'kdoctools5')
 optdepends=('p7zip: 7Z format support'
-            'unrar: RAR decompression support'
-            'unarchiver: RAR format support'
-            'lzop: LZO format support'
-            'lrzip: LRZ format support'
-            'arj: ARJ format support')
+	'unrar: RAR decompression support'
+	'unarchiver: RAR format support'
+	'lzop: LZO format support'
+	'lrzip: LRZ format support'
+	'arj: ARJ format support')
 groups=('kde-applications-git' 'kde-utilities-git')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
 source=("git+https://invent.kde.org/utilities/${_pkgname}.git")
 sha256sums=('SKIP')
 
