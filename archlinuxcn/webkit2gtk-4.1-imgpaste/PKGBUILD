@@ -3,8 +3,8 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=webkit2gtk-4.1-imgpaste
-pkgver=2.42.1
-pkgrel=2
+pkgver=2.42.2
+pkgrel=1
 pkgdesc="Web content engine for GTK (with patches for pasting images from clipboard)"
 url="https://webkitgtk.org"
 arch=(x86_64)
@@ -82,7 +82,7 @@ source=(
   GTK-MiniBrowser-should-hide-the-toolbar-when-using-full-screen.patch
   GTK-Disable-DMABuf-renderer-for-NVIDIA-proprietary-drivers.patch
 )
-sha256sums=('6f41fac9989d3ee51c08c48de1d439cdeddecbc757e34b6180987d99b16d2499'
+sha256sums=('5720aa3e8627f1b9f63252187d4df0f8233ae71d697b1796ebfbe5ca750bd118'
             'SKIP'
             '71b8a59c78d549fed0cd895207f49c7b3be40b236e96f4d7b9907a26521499bf'
             '20ebac2caf15fa546e6da00cb0fa90d5d37fcf7bfa883014d7d15eb4963d12d2'
