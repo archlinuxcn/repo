@@ -8,7 +8,7 @@ arch=('any')
 url="https://github.com/mayswind/AriaNg"
 license=('MIT')
 depends=('xdg-utils')
-makedepends=('git' 'nvm')
+makedepends=('nodejs')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz"
         "${pkgname}.desktop"
         "${pkgname}.sh")
@@ -18,9 +18,7 @@ b2sums=('d230d59603af6853552fdc1a0523f041d1eb1cb37b1c99c60acc0854ca41c1c3a138a9a
 
 build() {
     cd "${srcdir}"/"AriaNg-${pkgver}"/
-    source /usr/share/nvm/init-nvm.sh
-    nvm install 8.17.0
-    npm install --devDependencies
+    node /usr/lib/node_modules/corepack/dist/pnpm.js install
     node_modules/gulp/bin/gulp.js clean build-bundle
 }
 
