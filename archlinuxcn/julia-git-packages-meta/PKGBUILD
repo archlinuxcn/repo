@@ -6,13 +6,17 @@ _jlpackages=(
   ADTypes
   AMD
   ASL_jll
+  AWS
+  AWSS3
   AbstractAlgebra
   AbstractFFTs
   AbstractTrees
+  Accessors
   Adapt
   Alpine
   AmplNLWriter
   AndorSIF
+  ArgCheck
   ArnoldiMethod
   Arpack
   Arpack_jll
@@ -26,17 +30,30 @@ _jlpackages=(
   AxisArrays
   BFloat16s
   BandedMatrices
+  BangBang
+  BaseType
+  Baselet
   BenchmarkTools
   Bijections
+  BitBasis
   BitFlags
   BitIntegers
   BitTwiddlingConvenienceFunctions
   BlockArrays
   BlockBandedMatrices
   BlockDiagonals
+  Bloqade
+  BloqadeExpr
+  BloqadeKrylov
+  BloqadeLattices
+  BloqadeMIS
+  BloqadeODE
+  BloqadeSchema
+  BloqadeWaveforms
   Blosc
   Blosc_jll
   BoundaryValueDiffEq
+  Braket
   BufferedStreams
   Bzip2_jll
   CDDLib
@@ -46,6 +63,8 @@ _jlpackages=(
   CRlibm_jll
   CSTParser
   CSV
+  CacheServers
+  Cairo
   Cairo_jll
   Calculus
   CatIndices
@@ -79,11 +98,13 @@ _jlpackages=(
   CommonSubexpressions
   Compat
   CompositeTypes
+  CompositionsBase
   ComputationalResources
   ConcreteStructs
   ConcurrentUtilities
   Conda
   CondaPkg
+  Configurations
   ConjugateGradients
   ConsoleProgressMonitor
   ConstructionBase
@@ -99,6 +120,10 @@ _jlpackages=(
   DataFrames
   DataStructures
   DataValueInterfaces
+  DecFP
+  DecFP_jll
+  DeepDiffs
+  DefineSingletons
   DelayDiffEq
   DensityInterface
   Dierckx
@@ -117,6 +142,7 @@ _jlpackages=(
   DualNumbers
   DynamicPolynomials
   EarCut_jll
+  EliminateGraphs
   EllipsisNotation
   EnumX
   Enzyme
@@ -128,6 +154,7 @@ _jlpackages=(
   Expat_jll
   ExponentialUtilities
   ExprTools
+  ExproniconLite
   Extents
   EzXML
   FFMPEG
@@ -170,6 +197,8 @@ _jlpackages=(
   GR_jll
   GSL
   GSL_jll
+  GarishPrint
+  GaussQuadrature
   GeneralizedGenerated
   GenericLinearAlgebra
   GenericSchur
@@ -233,6 +262,7 @@ _jlpackages=(
   IndirectArrays
   Inflate
   IniFile
+  InitialValues
   InlineStrings
   IntegerMathUtils
   IntegralArrays
@@ -241,6 +271,7 @@ _jlpackages=(
   IntervalArithmetic
   IntervalRootFinding
   IntervalSets
+  Intervals
   InverseFunctions
   InvertedIndices
   Ipopt
@@ -264,6 +295,7 @@ _jlpackages=(
   JuliaVariables
   JumpProcesses
   Juniper
+  Juno
   KLU
   KernelAbstractions
   Krylov
@@ -281,11 +313,13 @@ _jlpackages=(
   LabelledArrays
   LambertW
   Latexify
+  LatticeRules
   LayoutPointers
   Lazy
   LazyModules
   LeastSquaresOptim
   LeftChildRightSiblingTrees
+  LegibleLambdas
   LevyArea
   LibArchive_jll
   Libffi_jll
@@ -294,6 +328,7 @@ _jlpackages=(
   Libgpg_error_jll
   Libiconv_jll
   Libmount_jll
+  Librsvg_jll
   Libtiff_jll
   Libuuid_jll
   LineSearches
@@ -307,6 +342,9 @@ _jlpackages=(
   Loraine
   LoweredCodeUtils
   LsqFit
+  Luxor
+  LuxorGraphPlot
+  LuxurySparse
   Lz4_jll
   MAT
   METIS_jll
@@ -323,12 +361,15 @@ _jlpackages=(
   MakieCore
   ManualMemory
   MappedArrays
+  MarchingCubes
   MathOptInterface
   MatrixFactorizations
   MbedTLS
   Measurements
   Measures
+  Media
   MetaGraphs
+  MicroCollections
   MicroMamba
   MicrosoftMPI_jll
   Missings
@@ -349,6 +390,7 @@ _jlpackages=(
   NaNMath
   NameResolution
   NamedArrays
+  NamedTupleTools
   NearestNeighbors
   Netpbm
   NodeJS
@@ -385,6 +427,8 @@ _jlpackages=(
   PackageExtensionCompat
   PaddedViews
   Pajarito
+  Pango_jll
+  ParallelMergeCSR
   Parameters
   Pardiso
   Parsers
@@ -424,6 +468,7 @@ _jlpackages=(
   QuantumInterface
   QuantumOptics
   QuantumOpticsBase
+  QuasiMonteCarlo
   Quaternions
   Random123
   RandomExtensions
@@ -438,10 +483,12 @@ _jlpackages=(
   RecursiveArrayTools
   RecursiveFactorization
   Reexport
+  Referenceables
   RegionTrees
   RelocatableFolders
   Requires
   ResettableStacks
+  Retry
   ReverseDiff
   Revise
   Richardson
@@ -450,6 +497,7 @@ _jlpackages=(
   Roots
   Rotations
   RoundingEmulator
+  Rsvg
   RuntimeGeneratedFunctions
   SIMD
   SIMDDualNumbers
@@ -474,6 +522,7 @@ _jlpackages=(
   SnoopCompile
   SnoopCompileCore
   SnoopPrecompile
+  Sobol
   SodiumSeal
   SoftGlobalScope
   SolverCore
@@ -483,6 +532,7 @@ _jlpackages=(
   SparseMatricesCSR
   Sparspak
   SpecialFunctions
+  SplittablesBase
   StackViews
   Static
   StaticArrayInterface
@@ -505,6 +555,7 @@ _jlpackages=(
   StructTypes
   Sundials
   Sundials_jll
+  SymDict
   SymbolicIndexingInterface
   SymbolicUtils
   Symbolics
@@ -514,6 +565,7 @@ _jlpackages=(
   TensorCore
   TerminalLoggers
   ThreadingUtilities
+  ThreadsX
   TiffImages
   TiledIteration
   TimeZones
@@ -521,6 +573,7 @@ _jlpackages=(
   Tokenize
   Tracker
   TranscodingStreams
+  Transducers
   TreeViews
   TriangularSolve
   Tricks
@@ -531,6 +584,7 @@ _jlpackages=(
   URIs
   UnPack
   UnicodeFun
+  UnicodePlots
   Unitful
   UnitfulLatexify
   Unityper
@@ -551,6 +605,7 @@ _jlpackages=(
   WoodburyMatrices
   WorkerUtilities
   XML2_jll
+  XMLDict
   XSLT_jll
   XTermColors
   XZ_jll
@@ -579,6 +634,12 @@ _jlpackages=(
   Xorg_xkeyboard_config_jll
   Xorg_xtrans_jll
   YAML
+  Yao
+  YaoAPI
+  YaoArrayRegister
+  YaoBlocks
+  YaoSubspaceArrayReg
+  YaoSym
   ZMQ
   ZeroMQ_jll
   Zstd_jll
@@ -589,6 +650,7 @@ _jlpackages=(
   cddlib_jll
   eudev_jll
   fzf_jll
+  gdk_pixbuf_jll
   gperf_jll
   libaec_jll
   libaom_jll

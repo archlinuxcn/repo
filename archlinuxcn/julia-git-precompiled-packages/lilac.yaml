@@ -47,6 +47,7 @@ repo_depends:
 ###=== JLPKG_DEPEND_LIST {{
   - julia-git-abstractffts-src
   - julia-git-abstracttrees-src
+  - julia-git-accessors-src
   - julia-git-adapt-src
   - julia-git-adtypes-src
   - julia-git-abstractalgebra-src
@@ -64,23 +65,41 @@ repo_depends:
   - julia-git-asl_jll-src
   - julia-git-atomix-src
   - julia-git-attr_jll-src
+  - julia-git-aws-src
+  - julia-git-awss3-src
+  - julia-git-argcheck-src
   - julia-git-axisalgorithms-src
   - julia-git-axisarrays-src
   - julia-git-bandedmatrices-src
+  - julia-git-bangbang-src
+  - julia-git-basetype-src
+  - julia-git-baselet-src
   - julia-git-benchmarktools-src
   - julia-git-bfloat16s-src
   - julia-git-bijections-src
+  - julia-git-bitbasis-src
   - julia-git-bitflags-src
   - julia-git-bitintegers-src
   - julia-git-bittwiddlingconveniencefunctions-src
   - julia-git-blockarrays-src
   - julia-git-blockbandedmatrices-src
   - julia-git-blockdiagonals-src
+  - julia-git-bloqade-src
+  - julia-git-bloqadeexpr-src
+  - julia-git-bloqadekrylov-src
+  - julia-git-bloqadelattices-src
+  - julia-git-bloqademis-src
+  - julia-git-bloqadeode-src
+  - julia-git-bloqadeschema-src
+  - julia-git-bloqadewaveforms-src
   - julia-git-blosc-src
   - julia-git-blosc_jll-src
   - julia-git-boundaryvaluediffeq-src
+  - julia-git-braket-src
   - julia-git-bufferedstreams-src
   - julia-git-bzip2_jll-src
+  - julia-git-cacheservers-src
+  - julia-git-cairo-src
   - julia-git-categoricalarrays-src
   - julia-git-cddlib-src
   - julia-git-cenum-src
@@ -100,9 +119,11 @@ repo_depends:
   - julia-git-commonsubexpressions-src
   - julia-git-compat-src
   - julia-git-compositetypes-src
+  - julia-git-compositionsbase-src
   - julia-git-concretestructs-src
   - julia-git-conda-src
   - julia-git-condapkg-src
+  - julia-git-configurations-src
   - julia-git-conjugategradients-src
   - julia-git-consoleprogressmonitor-src
   - julia-git-cpusummary-src
@@ -141,6 +162,10 @@ repo_depends:
   - julia-git-dataframes-src
   - julia-git-datastructures-src
   - julia-git-datavalueinterfaces-src
+  - julia-git-decfp-src
+  - julia-git-decfp_jll-src
+  - julia-git-deepdiffs-src
+  - julia-git-definesingletons-src
   - julia-git-delaydiffeq-src
   - julia-git-densityinterface-src
   - julia-git-dierckx-src
@@ -159,6 +184,7 @@ repo_depends:
   - julia-git-dualnumbers-src
   - julia-git-dynamicpolynomials-src
   - julia-git-earcut_jll-src
+  - julia-git-eliminategraphs-src
   - julia-git-ellipsisnotation-src
   - julia-git-enumx-src
   - julia-git-enzyme-src
@@ -169,6 +195,7 @@ repo_depends:
   - julia-git-exceptionunwrapping-src
   - julia-git-expat_jll-src
   - julia-git-exponentialutilities-src
+  - julia-git-exproniconlite-src
   - julia-git-exprtools-src
   - julia-git-extents-src
   - julia-git-ezxml-src
@@ -202,6 +229,8 @@ repo_depends:
   - julia-git-functionwrappers-src
   - julia-git-functionwrapperswrappers-src
   - julia-git-functors-src
+  - julia-git-garishprint-src
+  - julia-git-gaussquadrature-src
   - julia-git-generalizedgenerated-src
   - julia-git-genericlinearalgebra-src
   - julia-git-genericschur-src
@@ -268,6 +297,7 @@ repo_depends:
   - julia-git-indirectarrays-src
   - julia-git-inflate-src
   - julia-git-inifile-src
+  - julia-git-initialvalues-src
   - julia-git-inlinestrings-src
   - julia-git-integermathutils-src
   - julia-git-integralarrays-src
@@ -275,6 +305,7 @@ repo_depends:
   - julia-git-interpolations-src
   - julia-git-intervalarithmetic-src
   - julia-git-intervalrootfinding-src
+  - julia-git-intervals-src
   - julia-git-intervalsets-src
   - julia-git-inversefunctions-src
   - julia-git-invertedindices-src
@@ -300,6 +331,7 @@ repo_depends:
   - julia-git-jump-src
   - julia-git-jumpprocesses-src
   - julia-git-juniper-src
+  - julia-git-juno-src
   - julia-git-kernelabstractions-src
   - julia-git-klu-src
   - julia-git-krylov-src
@@ -308,16 +340,19 @@ repo_depends:
   - julia-git-lambertw-src
   - julia-git-lame_jll-src
   - julia-git-lapack_jll-src
+  - julia-git-latticerules-src
   - julia-git-layoutpointers-src
   - julia-git-lazy-src
   - julia-git-lazymodules-src
   - julia-git-ldlfactorizations-src
   - julia-git-leastsquaresoptim-src
   - julia-git-leftchildrightsiblingtrees-src
+  - julia-git-legiblelambdas-src
   - julia-git-lerc_jll-src
   - julia-git-levyarea-src
   - julia-git-libarchive_jll-src
   - julia-git-libiconv_jll-src
+  - julia-git-librsvg_jll-src
   - julia-git-linearmaps-src
   - julia-git-linearoperators-src
   - julia-git-linearsolve-src
@@ -331,6 +366,9 @@ repo_depends:
   - julia-git-loraine-src
   - julia-git-loweredcodeutils-src
   - julia-git-lrucache-src
+  - julia-git-luxor-src
+  - julia-git-luxorgraphplot-src
+  - julia-git-luxurysparse-src
   - julia-git-lz4_jll-src
   - julia-git-lzo_jll-src
   - julia-git-latexify-src
@@ -348,10 +386,13 @@ repo_depends:
   - julia-git-makiecore-src
   - julia-git-manualmemory-src
   - julia-git-mappedarrays-src
+  - julia-git-marchingcubes-src
   - julia-git-mat-src
   - julia-git-matrixfactorizations-src
+  - julia-git-media-src
   - julia-git-metagraphs-src
   - julia-git-metis_jll-src
+  - julia-git-microcollections-src
   - julia-git-micromamba-src
   - julia-git-mkl-src
   - julia-git-mkl_jll-src
@@ -376,6 +417,7 @@ repo_depends:
   - julia-git-mustache-src
   - julia-git-mutablearithmetics-src
   - julia-git-namedarrays-src
+  - julia-git-namedtupletools-src
   - julia-git-nearestneighbors-src
   - julia-git-netpbm-src
   - julia-git-nlopt-src
@@ -415,6 +457,8 @@ repo_depends:
   - julia-git-osi_jll-src
   - julia-git-packageextensioncompat-src
   - julia-git-pajarito-src
+  - julia-git-pango_jll-src
+  - julia-git-parallelmergecsr-src
   - julia-git-pardiso-src
   - julia-git-parsers-src
   - julia-git-partialfunctions-src
@@ -462,6 +506,7 @@ repo_depends:
   - julia-git-quantuminterface-src
   - julia-git-quantumoptics-src
   - julia-git-quantumopticsbase-src
+  - julia-git-quasimontecarlo-src
   - julia-git-quaternions-src
   - julia-git-random123-src
   - julia-git-randomextensions-src
@@ -474,10 +519,12 @@ repo_depends:
   - julia-git-recursivearraytools-src
   - julia-git-recursivefactorization-src
   - julia-git-reexport-src
+  - julia-git-referenceables-src
   - julia-git-regiontrees-src
   - julia-git-relocatablefolders-src
   - julia-git-requires-src
   - julia-git-resettablestacks-src
+  - julia-git-retry-src
   - julia-git-reversediff-src
   - julia-git-revise-src
   - julia-git-richardson-src
@@ -486,6 +533,7 @@ repo_depends:
   - julia-git-roots-src
   - julia-git-rotations-src
   - julia-git-roundingemulator-src
+  - julia-git-rsvg-src
   - julia-git-runtimegeneratedfunctions-src
   - julia-git-scimlbase-src
   - julia-git-scimlnlsolve-src
@@ -507,12 +555,14 @@ repo_depends:
   - julia-git-simpleweightedgraphs-src
   - julia-git-sixel-src
   - julia-git-snoopcompile-src
+  - julia-git-sobol-src
   - julia-git-sodiumseal-src
   - julia-git-solvercore-src
   - julia-git-sparsedifftools-src
   - julia-git-sparseinversesubset-src
   - julia-git-sparsematricescsr-src
   - julia-git-sparspak-src
+  - julia-git-splittablesbase-src
   - julia-git-spral_jll-src
   - julia-git-sentinelarrays-src
   - julia-git-softglobalscope-src
@@ -543,17 +593,20 @@ repo_depends:
   - julia-git-symbolicindexinginterface-src
   - julia-git-symbolicutils-src
   - julia-git-symbolics-src
+  - julia-git-symdict-src
   - julia-git-tabletraits-src
   - julia-git-tables-src
   - julia-git-tensorcore-src
   - julia-git-terminalloggers-src
   - julia-git-threadingutilities-src
+  - julia-git-threadsx-src
   - julia-git-tiffimages-src
   - julia-git-tilediteration-src
   - julia-git-timeroutputs-src
   - julia-git-tokenize-src
   - julia-git-tracker-src
   - julia-git-transcodingstreams-src
+  - julia-git-transducers-src
   - julia-git-treeviews-src
   - julia-git-triangularsolve-src
   - julia-git-tricks-src
@@ -562,6 +615,7 @@ repo_depends:
   - julia-git-tupletools-src
   - julia-git-tzjdata-src
   - julia-git-timezones-src
+  - julia-git-unicodeplots-src
   - julia-git-unityper-src
   - julia-git-unsafearrays-src
   - julia-git-unsafeatomics-src
@@ -587,6 +641,7 @@ repo_depends:
   - julia-git-libsixel_jll-src
   - julia-git-workerutilities-src
   - julia-git-xml2_jll-src
+  - julia-git-xmldict-src
   - julia-git-xslt_jll-src
   - julia-git-xtermcolors-src
   - julia-git-xz_jll-src
@@ -629,6 +684,13 @@ repo_depends:
   - julia-git-x265_jll-src
   - julia-git-xkbcommon_jll-src
   - julia-git-yaml-src
+  - julia-git-yao-src
+  - julia-git-yaoapi-src
+  - julia-git-yaoarrayregister-src
+  - julia-git-yaoblocks-src
+  - julia-git-yaosubspacearrayreg-src
+  - julia-git-yaosym-src
+  - julia-git-gdk_pixbuf_jll-src
   - julia-git-zmq-src
   - julia-git-zeromq_jll-src
   - julia-git-libaec_jll-src
@@ -644,6 +706,7 @@ update_on_build:
 ###=== JLPKG_UPDATE_ON_BUILD_LIST {{
   - pkgbase: julia-git-abstractffts-src
   - pkgbase: julia-git-abstracttrees-src
+  - pkgbase: julia-git-accessors-src
   - pkgbase: julia-git-adapt-src
   - pkgbase: julia-git-adtypes-src
   - pkgbase: julia-git-abstractalgebra-src
@@ -661,23 +724,41 @@ update_on_build:
   - pkgbase: julia-git-asl_jll-src
   - pkgbase: julia-git-atomix-src
   - pkgbase: julia-git-attr_jll-src
+  - pkgbase: julia-git-aws-src
+  - pkgbase: julia-git-awss3-src
+  - pkgbase: julia-git-argcheck-src
   - pkgbase: julia-git-axisalgorithms-src
   - pkgbase: julia-git-axisarrays-src
   - pkgbase: julia-git-bandedmatrices-src
+  - pkgbase: julia-git-bangbang-src
+  - pkgbase: julia-git-basetype-src
+  - pkgbase: julia-git-baselet-src
   - pkgbase: julia-git-benchmarktools-src
   - pkgbase: julia-git-bfloat16s-src
   - pkgbase: julia-git-bijections-src
+  - pkgbase: julia-git-bitbasis-src
   - pkgbase: julia-git-bitflags-src
   - pkgbase: julia-git-bitintegers-src
   - pkgbase: julia-git-bittwiddlingconveniencefunctions-src
   - pkgbase: julia-git-blockarrays-src
   - pkgbase: julia-git-blockbandedmatrices-src
   - pkgbase: julia-git-blockdiagonals-src
+  - pkgbase: julia-git-bloqade-src
+  - pkgbase: julia-git-bloqadeexpr-src
+  - pkgbase: julia-git-bloqadekrylov-src
+  - pkgbase: julia-git-bloqadelattices-src
+  - pkgbase: julia-git-bloqademis-src
+  - pkgbase: julia-git-bloqadeode-src
+  - pkgbase: julia-git-bloqadeschema-src
+  - pkgbase: julia-git-bloqadewaveforms-src
   - pkgbase: julia-git-blosc-src
   - pkgbase: julia-git-blosc_jll-src
   - pkgbase: julia-git-boundaryvaluediffeq-src
+  - pkgbase: julia-git-braket-src
   - pkgbase: julia-git-bufferedstreams-src
   - pkgbase: julia-git-bzip2_jll-src
+  - pkgbase: julia-git-cacheservers-src
+  - pkgbase: julia-git-cairo-src
   - pkgbase: julia-git-categoricalarrays-src
   - pkgbase: julia-git-cddlib-src
   - pkgbase: julia-git-cenum-src
@@ -697,9 +778,11 @@ update_on_build:
   - pkgbase: julia-git-commonsubexpressions-src
   - pkgbase: julia-git-compat-src
   - pkgbase: julia-git-compositetypes-src
+  - pkgbase: julia-git-compositionsbase-src
   - pkgbase: julia-git-concretestructs-src
   - pkgbase: julia-git-conda-src
   - pkgbase: julia-git-condapkg-src
+  - pkgbase: julia-git-configurations-src
   - pkgbase: julia-git-conjugategradients-src
   - pkgbase: julia-git-consoleprogressmonitor-src
   - pkgbase: julia-git-cpusummary-src
@@ -738,6 +821,10 @@ update_on_build:
   - pkgbase: julia-git-dataframes-src
   - pkgbase: julia-git-datastructures-src
   - pkgbase: julia-git-datavalueinterfaces-src
+  - pkgbase: julia-git-decfp-src
+  - pkgbase: julia-git-decfp_jll-src
+  - pkgbase: julia-git-deepdiffs-src
+  - pkgbase: julia-git-definesingletons-src
   - pkgbase: julia-git-delaydiffeq-src
   - pkgbase: julia-git-densityinterface-src
   - pkgbase: julia-git-dierckx-src
@@ -756,6 +843,7 @@ update_on_build:
   - pkgbase: julia-git-dualnumbers-src
   - pkgbase: julia-git-dynamicpolynomials-src
   - pkgbase: julia-git-earcut_jll-src
+  - pkgbase: julia-git-eliminategraphs-src
   - pkgbase: julia-git-ellipsisnotation-src
   - pkgbase: julia-git-enumx-src
   - pkgbase: julia-git-enzyme-src
@@ -766,6 +854,7 @@ update_on_build:
   - pkgbase: julia-git-exceptionunwrapping-src
   - pkgbase: julia-git-expat_jll-src
   - pkgbase: julia-git-exponentialutilities-src
+  - pkgbase: julia-git-exproniconlite-src
   - pkgbase: julia-git-exprtools-src
   - pkgbase: julia-git-extents-src
   - pkgbase: julia-git-ezxml-src
@@ -799,6 +888,8 @@ update_on_build:
   - pkgbase: julia-git-functionwrappers-src
   - pkgbase: julia-git-functionwrapperswrappers-src
   - pkgbase: julia-git-functors-src
+  - pkgbase: julia-git-garishprint-src
+  - pkgbase: julia-git-gaussquadrature-src
   - pkgbase: julia-git-generalizedgenerated-src
   - pkgbase: julia-git-genericlinearalgebra-src
   - pkgbase: julia-git-genericschur-src
@@ -865,6 +956,7 @@ update_on_build:
   - pkgbase: julia-git-indirectarrays-src
   - pkgbase: julia-git-inflate-src
   - pkgbase: julia-git-inifile-src
+  - pkgbase: julia-git-initialvalues-src
   - pkgbase: julia-git-inlinestrings-src
   - pkgbase: julia-git-integermathutils-src
   - pkgbase: julia-git-integralarrays-src
@@ -872,6 +964,7 @@ update_on_build:
   - pkgbase: julia-git-interpolations-src
   - pkgbase: julia-git-intervalarithmetic-src
   - pkgbase: julia-git-intervalrootfinding-src
+  - pkgbase: julia-git-intervals-src
   - pkgbase: julia-git-intervalsets-src
   - pkgbase: julia-git-inversefunctions-src
   - pkgbase: julia-git-invertedindices-src
@@ -897,6 +990,7 @@ update_on_build:
   - pkgbase: julia-git-jump-src
   - pkgbase: julia-git-jumpprocesses-src
   - pkgbase: julia-git-juniper-src
+  - pkgbase: julia-git-juno-src
   - pkgbase: julia-git-kernelabstractions-src
   - pkgbase: julia-git-klu-src
   - pkgbase: julia-git-krylov-src
@@ -905,16 +999,19 @@ update_on_build:
   - pkgbase: julia-git-lambertw-src
   - pkgbase: julia-git-lame_jll-src
   - pkgbase: julia-git-lapack_jll-src
+  - pkgbase: julia-git-latticerules-src
   - pkgbase: julia-git-layoutpointers-src
   - pkgbase: julia-git-lazy-src
   - pkgbase: julia-git-lazymodules-src
   - pkgbase: julia-git-ldlfactorizations-src
   - pkgbase: julia-git-leastsquaresoptim-src
   - pkgbase: julia-git-leftchildrightsiblingtrees-src
+  - pkgbase: julia-git-legiblelambdas-src
   - pkgbase: julia-git-lerc_jll-src
   - pkgbase: julia-git-levyarea-src
   - pkgbase: julia-git-libarchive_jll-src
   - pkgbase: julia-git-libiconv_jll-src
+  - pkgbase: julia-git-librsvg_jll-src
   - pkgbase: julia-git-linearmaps-src
   - pkgbase: julia-git-linearoperators-src
   - pkgbase: julia-git-linearsolve-src
@@ -928,6 +1025,9 @@ update_on_build:
   - pkgbase: julia-git-loraine-src
   - pkgbase: julia-git-loweredcodeutils-src
   - pkgbase: julia-git-lrucache-src
+  - pkgbase: julia-git-luxor-src
+  - pkgbase: julia-git-luxorgraphplot-src
+  - pkgbase: julia-git-luxurysparse-src
   - pkgbase: julia-git-lz4_jll-src
   - pkgbase: julia-git-lzo_jll-src
   - pkgbase: julia-git-latexify-src
@@ -945,10 +1045,13 @@ update_on_build:
   - pkgbase: julia-git-makiecore-src
   - pkgbase: julia-git-manualmemory-src
   - pkgbase: julia-git-mappedarrays-src
+  - pkgbase: julia-git-marchingcubes-src
   - pkgbase: julia-git-mat-src
   - pkgbase: julia-git-matrixfactorizations-src
+  - pkgbase: julia-git-media-src
   - pkgbase: julia-git-metagraphs-src
   - pkgbase: julia-git-metis_jll-src
+  - pkgbase: julia-git-microcollections-src
   - pkgbase: julia-git-micromamba-src
   - pkgbase: julia-git-mkl-src
   - pkgbase: julia-git-mkl_jll-src
@@ -973,6 +1076,7 @@ update_on_build:
   - pkgbase: julia-git-mustache-src
   - pkgbase: julia-git-mutablearithmetics-src
   - pkgbase: julia-git-namedarrays-src
+  - pkgbase: julia-git-namedtupletools-src
   - pkgbase: julia-git-nearestneighbors-src
   - pkgbase: julia-git-netpbm-src
   - pkgbase: julia-git-nlopt-src
@@ -1012,6 +1116,8 @@ update_on_build:
   - pkgbase: julia-git-osi_jll-src
   - pkgbase: julia-git-packageextensioncompat-src
   - pkgbase: julia-git-pajarito-src
+  - pkgbase: julia-git-pango_jll-src
+  - pkgbase: julia-git-parallelmergecsr-src
   - pkgbase: julia-git-pardiso-src
   - pkgbase: julia-git-parsers-src
   - pkgbase: julia-git-partialfunctions-src
@@ -1059,6 +1165,7 @@ update_on_build:
   - pkgbase: julia-git-quantuminterface-src
   - pkgbase: julia-git-quantumoptics-src
   - pkgbase: julia-git-quantumopticsbase-src
+  - pkgbase: julia-git-quasimontecarlo-src
   - pkgbase: julia-git-quaternions-src
   - pkgbase: julia-git-random123-src
   - pkgbase: julia-git-randomextensions-src
@@ -1071,10 +1178,12 @@ update_on_build:
   - pkgbase: julia-git-recursivearraytools-src
   - pkgbase: julia-git-recursivefactorization-src
   - pkgbase: julia-git-reexport-src
+  - pkgbase: julia-git-referenceables-src
   - pkgbase: julia-git-regiontrees-src
   - pkgbase: julia-git-relocatablefolders-src
   - pkgbase: julia-git-requires-src
   - pkgbase: julia-git-resettablestacks-src
+  - pkgbase: julia-git-retry-src
   - pkgbase: julia-git-reversediff-src
   - pkgbase: julia-git-revise-src
   - pkgbase: julia-git-richardson-src
@@ -1083,6 +1192,7 @@ update_on_build:
   - pkgbase: julia-git-roots-src
   - pkgbase: julia-git-rotations-src
   - pkgbase: julia-git-roundingemulator-src
+  - pkgbase: julia-git-rsvg-src
   - pkgbase: julia-git-runtimegeneratedfunctions-src
   - pkgbase: julia-git-scimlbase-src
   - pkgbase: julia-git-scimlnlsolve-src
@@ -1104,12 +1214,14 @@ update_on_build:
   - pkgbase: julia-git-simpleweightedgraphs-src
   - pkgbase: julia-git-sixel-src
   - pkgbase: julia-git-snoopcompile-src
+  - pkgbase: julia-git-sobol-src
   - pkgbase: julia-git-sodiumseal-src
   - pkgbase: julia-git-solvercore-src
   - pkgbase: julia-git-sparsedifftools-src
   - pkgbase: julia-git-sparseinversesubset-src
   - pkgbase: julia-git-sparsematricescsr-src
   - pkgbase: julia-git-sparspak-src
+  - pkgbase: julia-git-splittablesbase-src
   - pkgbase: julia-git-spral_jll-src
   - pkgbase: julia-git-sentinelarrays-src
   - pkgbase: julia-git-softglobalscope-src
@@ -1140,17 +1252,20 @@ update_on_build:
   - pkgbase: julia-git-symbolicindexinginterface-src
   - pkgbase: julia-git-symbolicutils-src
   - pkgbase: julia-git-symbolics-src
+  - pkgbase: julia-git-symdict-src
   - pkgbase: julia-git-tabletraits-src
   - pkgbase: julia-git-tables-src
   - pkgbase: julia-git-tensorcore-src
   - pkgbase: julia-git-terminalloggers-src
   - pkgbase: julia-git-threadingutilities-src
+  - pkgbase: julia-git-threadsx-src
   - pkgbase: julia-git-tiffimages-src
   - pkgbase: julia-git-tilediteration-src
   - pkgbase: julia-git-timeroutputs-src
   - pkgbase: julia-git-tokenize-src
   - pkgbase: julia-git-tracker-src
   - pkgbase: julia-git-transcodingstreams-src
+  - pkgbase: julia-git-transducers-src
   - pkgbase: julia-git-treeviews-src
   - pkgbase: julia-git-triangularsolve-src
   - pkgbase: julia-git-tricks-src
@@ -1159,6 +1274,7 @@ update_on_build:
   - pkgbase: julia-git-tupletools-src
   - pkgbase: julia-git-tzjdata-src
   - pkgbase: julia-git-timezones-src
+  - pkgbase: julia-git-unicodeplots-src
   - pkgbase: julia-git-unityper-src
   - pkgbase: julia-git-unsafearrays-src
   - pkgbase: julia-git-unsafeatomics-src
@@ -1184,6 +1300,7 @@ update_on_build:
   - pkgbase: julia-git-libsixel_jll-src
   - pkgbase: julia-git-workerutilities-src
   - pkgbase: julia-git-xml2_jll-src
+  - pkgbase: julia-git-xmldict-src
   - pkgbase: julia-git-xslt_jll-src
   - pkgbase: julia-git-xtermcolors-src
   - pkgbase: julia-git-xz_jll-src
@@ -1226,6 +1343,13 @@ update_on_build:
   - pkgbase: julia-git-x265_jll-src
   - pkgbase: julia-git-xkbcommon_jll-src
   - pkgbase: julia-git-yaml-src
+  - pkgbase: julia-git-yao-src
+  - pkgbase: julia-git-yaoapi-src
+  - pkgbase: julia-git-yaoarrayregister-src
+  - pkgbase: julia-git-yaoblocks-src
+  - pkgbase: julia-git-yaosubspacearrayreg-src
+  - pkgbase: julia-git-yaosym-src
+  - pkgbase: julia-git-gdk_pixbuf_jll-src
   - pkgbase: julia-git-zmq-src
   - pkgbase: julia-git-zeromq_jll-src
   - pkgbase: julia-git-libaec_jll-src
