@@ -29,17 +29,12 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
      # only check submodules when source is obtained via Git
      check_submodules_present()
  endif()
-@@ -241,6 +246,26 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
+@@ -231,6 +236,17 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
  
 +find_package(PkgConfig REQUIRED)
 +find_package(tsl-robin-map)
-+find_package(VulkanMemoryAllocator)
-+
-+if (ENABLE_CUBEB)
-+    find_package(cubeb)
-+endif()
 +
 +if (USE_DISCORD_PRESENCE)
 +    find_package(DiscordRPC)
@@ -49,13 +44,9 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
 +    find_package(Catch2 2)
 +endif()
 +
-+if(ENABLE_OPENAL)
-+    find_package(OpenAL 1.23.0)
-+endif()
-+
  if (ENABLE_QT)
      if (NOT USE_SYSTEM_QT)
-         download_qt(6.5.1)
+         download_qt(6.6.0)
 @@ -375,6 +412,21 @@ if (NOT USE_SYSTEM_BOOST)
      add_definitions( -DBOOST_ALL_NO_LIB )
  endif()
@@ -132,52 +123,29 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
      add_subdirectory(discord-rpc EXCLUDE_FROM_ALL)
      target_include_directories(discord-rpc INTERFACE ./discord-rpc/include)
  endif()
-@@ -337,7 +349,8 @@ if(ANDROID)
- endif()
- 
- # OpenAL Soft
--if (ENABLE_OPENAL)
-+if (ENABLE_OPENAL AND NOT TARGET OpenAL::OpenAL)
-+    message(STATUS "Using bundled OpenAL")
-     set(ALSOFT_EMBED_HRTF_DATA OFF CACHE BOOL "")
-     set(ALSOFT_EXAMPLES OFF CACHE BOOL "")
-     set(ALSOFT_INSTALL OFF CACHE BOOL "")
-@@ -350,8 +363,10 @@ if (ENABLE_OPENAL)
- endif()
- 
- # VMA
--add_library(vma INTERFACE)
--target_include_directories(vma SYSTEM INTERFACE ./vma/include)
-+if (NOT TARGET GPUOpen::VulkanMemoryAllocator)
-+    add_library(vma INTERFACE)
-+    target_include_directories(vma SYSTEM INTERFACE ./vma/include)
-+endif()
- 
- # vulkan-headers
- add_library(vulkan-headers INTERFACE)
 diff --color -rupN citra/externals/cmake-modules/CitraHandleSystemLibs.cmake citra/externals/cmake-modules/CitraHandleSystemLibs.cmake
 --- citra/externals/cmake-modules/CitraHandleSystemLibs.cmake	2023-01-20 00:44:13.712264461 +0800
 +++ citra/externals/cmake-modules/CitraHandleSystemLibs.cmake	2023-01-20 04:34:47.512808459 +0800
-@@ -21,6 +21,7 @@ option(USE_SYSTEM_ZSTD "Use the system Z
- option(USE_SYSTEM_ENET "Use the system libenet (instead of the bundled one)" OFF)
- option(USE_SYSTEM_CRYPTOPP "Use the system cryptopp (instead of the bundled one)" OFF)
- option(USE_SYSTEM_CUBEB "Use the system cubeb (instead of the bundled one)" OFF)
+@@ -24,6 +24,7 @@ option(USE_SYSTEM_CUBEB "Use the system
+ option(USE_SYSTEM_LODEPNG "Use the system lodepng (instead of the bundled one)" OFF)
+ option(USE_SYSTEM_OPENAL "Use the system OpenAL (instead of the bundled one)" OFF)
+ option(USE_SYSTEM_VMA "Use the system VulkanMemoryAllocator (instead of the bundled one)" OFF)
 +option(USE_SYSTEM_FAAD2 "Use the system faad2 (instead of the bundled one)" OFF)
  
  # Qt and MoltenVK are handled separately
  CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_SDL2 "Disable system SDL2" OFF "USE_SYSTEM_LIBS" OFF)
-@@ -41,6 +42,7 @@ CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_ZS
- CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_ENET "Disable system libenet" OFF "USE_SYSTEM_LIBS" OFF)
- CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_CRYPTOPP "Disable system cryptopp" OFF "USE_SYSTEM_LIBS" OFF)
- CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_CUBEB "Disable system cubeb" OFF "USE_SYSTEM_LIBS" OFF)
+@@ -47,6 +48,7 @@ CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_CU
+ CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_LODEPNG "Disable system lodepng" OFF "USE_SYSTEM_LIBS" OFF)
+ CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_OPENAL "Disable system OpenAL" OFF "USE_SYSTEM_LIBS" OFF)
+ CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_VMA "Disable system VulkanMemoryAllocator" OFF "USE_SYSTEM_LIBS" OFF)
 +CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_FAAD2 "Disable system faad2" OFF "USE_SYSTEM_LIBS" OFF)
  
  set(LIB_VAR_LIST
      SDL2
-@@ -61,6 +63,7 @@ set(LIB_VAR_LIST
-     ENET
-     CRYPTOPP
-     CUBEB
+@@ -70,6 +72,7 @@ set(LIB_VAR_LIST
+     LODEPNG
+     OPENAL
+     VMA
 +    FAAD2
      )
  
@@ -214,24 +182,6 @@ diff --color -rupN citra/externals/find-modules/FindDiscordRPC.cmake citra/exter
 +    DiscordRPC_LIBRARY
 +)
 \ No newline at end of file
-diff --color -rupN citra/src/audio_core/CMakeLists.txt citra/src/audio_core/CMakeLists.txt
---- citra/src/audio_core/CMakeLists.txt	2023-01-20 00:44:13.802264646 +0800
-+++ citra/src/audio_core/CMakeLists.txt	2023-01-20 00:41:12.745249061 +0800
-@@ -95,12 +100,12 @@ if(ENABLE_SDL2)
- endif()
-
- if(ENABLE_CUBEB)
--    target_link_libraries(audio_core PRIVATE cubeb)
-+    target_link_libraries(audio_core PRIVATE cubeb::cubeb)
-     target_compile_definitions(audio_core PUBLIC HAVE_CUBEB)
- endif()
-
- if(ENABLE_OPENAL)
--    target_link_libraries(audio_core PRIVATE OpenAL)
-+    target_link_libraries(audio_core PRIVATE OpenAL::OpenAL)
-     target_compile_definitions(audio_core PUBLIC HAVE_OPENAL)
-     add_definitions(-DAL_LIBTYPE_STATIC)
- endif()
 diff --color -rupN citra/src/citra_qt/CMakeLists.txt citra/src/citra_qt/CMakeLists.txt
 --- citra/src/citra_qt/CMakeLists.txt	2023-01-20 00:44:13.805597987 +0800
 +++ citra/src/citra_qt/CMakeLists.txt	2023-01-20 00:41:12.755249073 +0800
@@ -244,15 +194,3 @@ diff --color -rupN citra/src/citra_qt/CMakeLists.txt citra/src/citra_qt/CMakeLis
      target_compile_definitions(citra-qt PRIVATE -DUSE_DISCORD_PRESENCE)
  endif()
  
-diff --color -rupN citra/src/video_core/CMakeLists.txt citra/src/video_core/CMakeLists.txt
---- citra/src/video_core/CMakeLists.txt	2023-01-20 00:44:13.878931471 +0800
-+++ citra/src/video_core/CMakeLists.txt	2023-01-20 00:43:41.148864090 +0800
-@@ -171,7 +171,7 @@ create_target_directory_groups(video_cor
-
- target_link_libraries(video_core PUBLIC citra_common citra_core)
- target_link_libraries(video_core PRIVATE Boost::serialization dds-ktx json-headers nihstro-headers tsl::robin_map)
--target_link_libraries(video_core PRIVATE vulkan-headers vma glad sirit SPIRV glslang)
-+target_link_libraries(video_core PRIVATE vulkan-headers GPUOpen::VulkanMemoryAllocator glad sirit SPIRV glslang)
-
- if ("x86_64" IN_LIST ARCHITECTURE)
-    target_link_libraries(video_core PUBLIC xbyak)
