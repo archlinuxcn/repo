@@ -4,7 +4,7 @@
 # This PKGBUILD is base on the AUR repo wiliwili-git, by yuioto <yuiotochan@outlook.com>
 
 pkgname=wiliwili
-pkgver=1.2.0
+pkgver=1.2.1
 pkgrel=1
 pkgdesc='专为手柄控制设计的第三方跨平台B站客户端'
 arch=('x86_64' 'aarch64')
