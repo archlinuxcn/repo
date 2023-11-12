@@ -28,7 +28,7 @@ source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver
 sha512sums=('d9e0191e62ecf2daa0b12562b526649360a98da790fcd1d9fe8da1cce7875949a41e7f744cfb2bda58872ccec212eee66d301ef63e520576a8649ea1fa16d2f2'
             '13b1b0f34b0937a98aa61fed776318717c659358794c0ffa8b1af00c5c80fe195a11816db9183eee8e8e02f76c72f10c723093a24a9c0de249af18dcf2755126'
             '31d7a4c091abae49631598f2f41c8382550312e080fca784ed5a19cbaef0c6cdf2a2a4ffeffd78cd41f32dd49fb60ead2c12b3febce7cdf9a9ede6ea3c938a2b'
-            'c80485fd68f6a5d736c7a7dec0b422d7a4f65f21bc4f4304afd48431fe35e8a83ef6a9fb36e5d684677f15873149a9a959827940d1b2967948e37c0f5a70ff93')
+            '89a12954a70451b195a9b565fc3306a03d5fb5d94d3c7cb8690dec8d6710db95f4ba5ac356e5d9a48235ab077c39bd73e76a55eb708f444d795b939507af415d')
 
 prepare() {
     patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-Use-font-from-environment-variables.patch
