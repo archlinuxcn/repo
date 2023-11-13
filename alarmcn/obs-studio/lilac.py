@@ -17,5 +17,5 @@ def pre_build():
     print(line)
 
 def post_build():
-  git_add_files(g.files)
+  git_add_files([f for f in g.files if not f.startswith(".")])
   git_commit()
