@@ -11,7 +11,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=119.0.6045.105
+pkgver=119.0.6045.123
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
@@ -36,7 +36,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://gitlab.com/Matt.Jolly/chromium-patches/-/archive/${pkgver%%.*}/chromium-patches-${pkgver%%.*}.tar.bz2
         REVERT-disable-autoupgrading-debug-info.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('73cb8c39e928f8c627d747d37a3b020f08913ef5508f893758d70bdbd545dbcf'
+sha256sums=('6b61b87d0a201113b9c4e3d0ce48df52ecf869179c207e34b71add957fb7b48f'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '09ecf142254525ddb9c2dbbb2c71775e68722412923a5a9bba5cc2e46af8d087'
             '1b782b0f6d4f645e4e0daa8a4852d63f0c972aa0473319216ff04613a0592a69'
@@ -53,14 +53,19 @@ _uc_usr=ungoogled-software
 _uc_ver=$pkgver-1
 source=(${source[@]}
         $pkgname-$_uc_ver.tar.gz::https://github.com/$_uc_usr/ungoogled-chromium/archive/$_uc_ver.tar.gz
-        ozone-add-va-api-support-to-wayland.patch
-        vaapi-add-av1-support.patch
-        remove-main-main10-profile-limit.patch)
+        0001-vaapi-flag-ozone-wayland.patch
+        0001-adjust-buffer-format-order.patch
+        0001-enable-linux-unstable-deb-target.patch
+        0001-ozone-wayland-implement-text_input_manager_v3.patch
+        0001-ozone-wayland-implement-text_input_manager-fixes.patch)
 sha256sums=(${sha256sums[@]}
-            'e5d74a46cd79b79a3f2f8f8fadce8329ad50f4a4facd76365d28e0761173aa26'
-            'e9e8d3a82da818f0a67d4a09be4ecff5680b0534d7f0198befb3654e9fab5b69'
-            'e742cc5227b6ad6c3e0c2026edd561c6d3151e7bf0afb618578ede181451b307'
-            'be8d3475427553feb5bd46665ead3086301ed93c9a41cf6cc2644811c5bda51c')
+            'e20df54944837fc5097369b3c52b6d6922c1a32a57f25769c5bbff8a4db8bebe'
+            '9a5594293616e1390462af1f50276ee29fd6075ffab0e3f944f6346cb2eb8aec'
+            '8ba5c67b7eb6cacd2dbbc29e6766169f0fca3bbb07779b1a0a76c913f17d343f'
+            '2a44756404e13c97d000cc0d859604d6848163998ea2f838b3b9bb2c840967e3'
+            'd9974ddb50777be428fd0fa1e01ffe4b587065ba6adefea33678e1b3e25d1285'
+            'a2da75d0c20529f2d635050e0662941c0820264ea9371eb900b9d90b5968fa6a')
+
  
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -138,10 +143,20 @@ prepare() {
   patch -Np1 -i ../chromium-patches-*/chromium-119-clang16.patch
 
   # Custom Patches
-  #patch -Np1 -i ../ozone-add-va-api-support-to-wayland.patch
-  #patch -Np1 -i ../vaapi-add-av1-support.patch
   sed -i '/^bool IsHevcProfileSupported(const VideoType& type) {$/{s++bool IsHevcProfileSupported(const VideoType\& type) { return true;+;h};${x;/./{x;q0};x;q1}' \
 			media/base/supported_types.cc
+
+  # Implement text_input_manager_v3
+  # https://chromium-review.googlesource.com/c/chromium/src/+/3750452
+  patch -Np1 -i ../0001-ozone-wayland-implement-text_input_manager_v3.patch
+  patch -Np1 -i ../0001-ozone-wayland-implement-text_input_manager-fixes.patch
+
+  # Enable VAAPI on Wayland
+  # https://discourse.ubuntu.com/t/chromium-hardware-accelerated-build-for-intel-based-platforms-available-for-beta-testing/35625
+  # https://git.launchpad.net/~chromium-team/chromium-browser/+git/snap-from-source/
+  # patch -Np1 -i ../0001-enable-linux-unstable-deb-target.patch
+  patch -Np1 -i ../0001-adjust-buffer-format-order.patch
+  patch -Np1 -i ../0001-vaapi-flag-ozone-wayland.patch
 
   # Ungoogled Chromium changes
   _ungoogled_repo="$srcdir/$pkgname-$_uc_ver"

@@ -1,0 +1,521 @@
+From dba362808a97ced4f43635cbd73de6b06d156527 Mon Sep 17 00:00:00 2001
+From: Moon Sungjoon <sumoon@seoulsaram.org>
+Date: Wed, 26 Apr 2023 03:25:44 +0900
+Subject: [PATCH] ui/ozone/platform/wayland: Implement text_input_manager_v3
+
+Based on the original work of Lukas Lihotzki <lukas@lihotzki.de> in https://crrev.com/c/3015331
+
+Bug: 1227719
+Change-Id: Ib883c9087377c9f1a0dfacc45a27e3e67ccf042e
+---
+
+diff --git a/AUTHORS b/AUTHORS
+index f275151..a43a528 100644
+--- a/AUTHORS
++++ b/AUTHORS
+@@ -942,6 +942,7 @@ Mohit Bhalla <bhallam@amazon.com>
+ Moiseanu Rares-Marian <moiseanurares@gmail.com>
+ Momoka Yamamoto <momoka.my6@gmail.com>
+ Momoko Hattori <momohatt10@gmail.com>
++Moon Sungjoon <sumoon@seoulsaram.org>
+ Mostafa Sedaghat joo <mostafa.sedaghat@gmail.com>
+ Mrunal Kapade <mrunal.kapade@intel.com>
+ Munira Tursunova <moonira@google.com>
+diff --git a/third_party/wayland-protocols/BUILD.gn b/third_party/wayland-protocols/BUILD.gn
+index c84ec11..dffa0aa 100644
+--- a/third_party/wayland-protocols/BUILD.gn
++++ b/third_party/wayland-protocols/BUILD.gn
+@@ -141,7 +141,10 @@ wayland_protocol("text_input_extension_protocol") {
+ }
+ 
+ wayland_protocol("text_input_protocol") {
+-  sources = [ "src/unstable/text-input/text-input-unstable-v1.xml" ]
++  sources = [
++    "src/unstable/text-input/text-input-unstable-v1.xml",
++    "src/unstable/text-input/text-input-unstable-v3.xml",
++  ]
+ }
+ 
+ wayland_protocol("touchpad_haptics_protocol") {
+diff --git a/ui/ozone/platform/wayland/BUILD.gn b/ui/ozone/platform/wayland/BUILD.gn
+index 31314f3..c22888c 100644
+--- a/ui/ozone/platform/wayland/BUILD.gn
++++ b/ui/ozone/platform/wayland/BUILD.gn
+@@ -221,6 +221,8 @@ source_set("wayland") {
+     "host/zwp_text_input_wrapper.h",
+     "host/zwp_text_input_wrapper_v1.cc",
+     "host/zwp_text_input_wrapper_v1.h",
++    "host/zwp_text_input_wrapper_v3.cc",
++    "host/zwp_text_input_wrapper_v3.h",
+     "ozone_platform_wayland.cc",
+     "ozone_platform_wayland.h",
+     "wayland_utils.cc",
+diff --git a/ui/ozone/platform/wayland/common/wayland_object.cc b/ui/ozone/platform/wayland/common/wayland_object.cc
+index bcc48aa..009667b 100644
+--- a/ui/ozone/platform/wayland/common/wayland_object.cc
++++ b/ui/ozone/platform/wayland/common/wayland_object.cc
+@@ -30,6 +30,7 @@
+ #include <surface-augmenter-client-protocol.h>
+ #include <text-input-extension-unstable-v1-client-protocol.h>
+ #include <text-input-unstable-v1-client-protocol.h>
++#include <text-input-unstable-v3-client-protocol.h>
+ #include <touchpad-haptics-unstable-v1-client-protocol.h>
+ #include <viewporter-client-protocol.h>
+ #include <wayland-client-core.h>
+@@ -287,6 +288,8 @@ IMPLEMENT_WAYLAND_OBJECT_TRAITS(zwp_relative_pointer_manager_v1)
+ IMPLEMENT_WAYLAND_OBJECT_TRAITS(zwp_relative_pointer_v1)
+ IMPLEMENT_WAYLAND_OBJECT_TRAITS(zwp_text_input_manager_v1)
+ IMPLEMENT_WAYLAND_OBJECT_TRAITS(zwp_text_input_v1)
++IMPLEMENT_WAYLAND_OBJECT_TRAITS(zwp_text_input_manager_v3)
++IMPLEMENT_WAYLAND_OBJECT_TRAITS(zwp_text_input_v3)
+ IMPLEMENT_WAYLAND_OBJECT_TRAITS(zxdg_decoration_manager_v1)
+ IMPLEMENT_WAYLAND_OBJECT_TRAITS(zxdg_exporter_v1)
+ IMPLEMENT_WAYLAND_OBJECT_TRAITS(zxdg_exported_v1)
+diff --git a/ui/ozone/platform/wayland/common/wayland_object.h b/ui/ozone/platform/wayland/common/wayland_object.h
+index c84c084..0817e78 100644
+--- a/ui/ozone/platform/wayland/common/wayland_object.h
++++ b/ui/ozone/platform/wayland/common/wayland_object.h
+@@ -202,6 +202,8 @@ DECLARE_WAYLAND_OBJECT_TRAITS(zwp_relative_pointer_manager_v1)
+ DECLARE_WAYLAND_OBJECT_TRAITS(zwp_relative_pointer_v1)
+ DECLARE_WAYLAND_OBJECT_TRAITS(zwp_text_input_manager_v1)
+ DECLARE_WAYLAND_OBJECT_TRAITS(zwp_text_input_v1)
++DECLARE_WAYLAND_OBJECT_TRAITS(zwp_text_input_manager_v3)
++DECLARE_WAYLAND_OBJECT_TRAITS(zwp_text_input_v3)
+ DECLARE_WAYLAND_OBJECT_TRAITS(zxdg_decoration_manager_v1)
+ DECLARE_WAYLAND_OBJECT_TRAITS(zxdg_exporter_v1)
+ DECLARE_WAYLAND_OBJECT_TRAITS(zxdg_exported_v1)
+diff --git a/ui/ozone/platform/wayland/host/wayland_connection.cc b/ui/ozone/platform/wayland/host/wayland_connection.cc
+index ad3bbd6..995b1e2 100644
+--- a/ui/ozone/platform/wayland/host/wayland_connection.cc
++++ b/ui/ozone/platform/wayland/host/wayland_connection.cc
+@@ -647,6 +647,14 @@ void WaylandConnection::HandleGlobal(wl_registry* registry,
+              strcmp(interface, "zcr_text_input_extension_v1") == 0) {
+     text_input_extension_v1_ = wl::Bind<zcr_text_input_extension_v1>(
+         registry, name, std::min(version, kMaxTextInputExtensionVersion));
++  } else if (!text_input_manager_v3_ &&
++             strcmp(interface, "zwp_text_input_manager_v3") == 0) {
++    text_input_manager_v3_ = wl::Bind<zwp_text_input_manager_v3>(
++        registry, name, std::min(version, kMaxTextInputManagerVersion));
++    if (!text_input_manager_v3_) {
++      LOG(ERROR) << "Failed to bind to zwp_text_input_manager_v3 global";
++      return;
++    }
+   } else if (!xdg_decoration_manager_ &&
+              strcmp(interface, "zxdg_decoration_manager_v1") == 0) {
+     xdg_decoration_manager_ = wl::Bind<zxdg_decoration_manager_v1>(
+diff --git a/ui/ozone/platform/wayland/host/wayland_connection.h b/ui/ozone/platform/wayland/host/wayland_connection.h
+index 6659bc5..f9739ea 100644
+--- a/ui/ozone/platform/wayland/host/wayland_connection.h
++++ b/ui/ozone/platform/wayland/host/wayland_connection.h
+@@ -149,6 +149,9 @@ class WaylandConnection {
+   zcr_text_input_extension_v1* text_input_extension_v1() const {
+     return text_input_extension_v1_.get();
+   }
++  zwp_text_input_manager_v3* text_input_manager_v3() const {
++    return text_input_manager_v3_.get();
++  }
+   zwp_linux_explicit_synchronization_v1* linux_explicit_synchronization_v1()
+       const {
+     return linux_explicit_synchronization_.get();
+@@ -447,6 +450,7 @@ class WaylandConnection {
+   wl::Object<zcr_stylus_v2> zcr_stylus_v2_;
+   wl::Object<zwp_text_input_manager_v1> text_input_manager_v1_;
+   wl::Object<zcr_text_input_extension_v1> text_input_extension_v1_;
++  wl::Object<zwp_text_input_manager_v3> text_input_manager_v3_;
+   wl::Object<zwp_linux_explicit_synchronization_v1>
+       linux_explicit_synchronization_;
+   wl::Object<zxdg_decoration_manager_v1> xdg_decoration_manager_;
+diff --git a/ui/ozone/platform/wayland/host/wayland_input_method_context.cc b/ui/ozone/platform/wayland/host/wayland_input_method_context.cc
+index caa5074..c2e1798 100644
+--- a/ui/ozone/platform/wayland/host/wayland_input_method_context.cc
++++ b/ui/ozone/platform/wayland/host/wayland_input_method_context.cc
+@@ -35,6 +35,7 @@
+ #include "ui/ozone/platform/wayland/host/wayland_seat.h"
+ #include "ui/ozone/platform/wayland/host/wayland_window.h"
+ #include "ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v1.h"
++#include "ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v3.h"
+ #include "ui/ozone/public/ozone_switches.h"
+ 
+ #if BUILDFLAG(USE_XKBCOMMON)
+@@ -285,11 +286,18 @@ void WaylandInputMethodContext::Init(bool initialize_for_testing) {
+   // If text input instance is not created then all ime context operations
+   // are noop. This option is because in some environments someone might not
+   // want to enable ime/virtual keyboard even if it's available.
+-  if (use_ozone_wayland_vkb && !text_input_ &&
+-      connection_->text_input_manager_v1()) {
++  if (!use_ozone_wayland_vkb || text_input_)
++    return;
++
++  // Prefer text_input_manager_v1 because it is more powerful.
++  // It supports preedit styling for example.
++  if (connection_->text_input_manager_v1()) {
+     text_input_ = std::make_unique<ZWPTextInputWrapperV1>(
+         connection_, this, connection_->text_input_manager_v1(),
+         connection_->text_input_extension_v1());
++  } else if (connection_->text_input_manager_v3()) {
++    text_input_ = std::make_unique<ZWPTextInputWrapperV3>(
++        connection_, this, connection_->text_input_manager_v3());
+   }
+ }
+ 
+@@ -657,6 +665,11 @@ void WaylandInputMethodContext::OnCursorPosition(int32_t index,
+ 
+ void WaylandInputMethodContext::OnDeleteSurroundingText(int32_t index,
+                                                         uint32_t length) {
++  // Never fail if length is 0.
++  if (length == 0) {
++    return;
++  }
++
+   const auto& [surrounding_text, utf16_offset, selection, unsused_composition] =
+       surrounding_text_tracker_.predicted_state();
+   DCHECK(selection.IsValid());
+diff --git a/ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v3.cc b/ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v3.cc
+new file mode 100644
+index 0000000..a3ce6e4
+--- /dev/null
++++ b/ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v3.cc
+@@ -0,0 +1,239 @@
++// Copyright 2023 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++#include "ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v3.h"
++
++#include <string>
++#include <utility>
++
++#include "base/logging.h"
++#include "base/memory/ptr_util.h"
++#include "ui/base/wayland/wayland_client_input_types.h"
++#include "ui/gfx/range/range.h"
++#include "ui/ozone/platform/wayland/host/wayland_connection.h"
++#include "ui/ozone/platform/wayland/host/wayland_seat.h"
++#include "ui/ozone/platform/wayland/host/wayland_window.h"
++
++namespace ui {
++
++// Converts Chrome's TextInputType into wayland's content_purpose.
++// Some of TextInputType values do not have clearly corresponding wayland value,
++// and they fallback to closer type.
++uint32_t InputTypeToContentPurpose(TextInputType input_type) {
++  switch (input_type) {
++    case TEXT_INPUT_TYPE_NONE:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_NORMAL;
++    case TEXT_INPUT_TYPE_TEXT:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_NORMAL;
++    case TEXT_INPUT_TYPE_PASSWORD:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_PASSWORD;
++    case TEXT_INPUT_TYPE_SEARCH:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_NORMAL;
++    case TEXT_INPUT_TYPE_EMAIL:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_EMAIL;
++    case TEXT_INPUT_TYPE_NUMBER:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_NUMBER;
++    case TEXT_INPUT_TYPE_TELEPHONE:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_PHONE;
++    case TEXT_INPUT_TYPE_URL:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_URL;
++    case TEXT_INPUT_TYPE_DATE:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_DATE;
++    case TEXT_INPUT_TYPE_DATE_TIME:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_DATETIME;
++    case TEXT_INPUT_TYPE_DATE_TIME_LOCAL:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_DATETIME;
++    case TEXT_INPUT_TYPE_MONTH:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_DATE;
++    case TEXT_INPUT_TYPE_TIME:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_TIME;
++    case TEXT_INPUT_TYPE_WEEK:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_DATE;
++    case TEXT_INPUT_TYPE_TEXT_AREA:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_NORMAL;
++    case TEXT_INPUT_TYPE_CONTENT_EDITABLE:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_NORMAL;
++    case TEXT_INPUT_TYPE_DATE_TIME_FIELD:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_DATETIME;
++    case TEXT_INPUT_TYPE_NULL:
++      return ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_NORMAL;
++  }
++}
++
++// Converts Chrome's TextInputType into wayland's content_hint.
++uint32_t InputFlagsToContentHint(int input_flags) {
++  uint32_t hint = 0;
++  if (input_flags & TEXT_INPUT_FLAG_AUTOCOMPLETE_ON)
++    hint |= ZWP_TEXT_INPUT_V3_CONTENT_HINT_COMPLETION;
++  if (input_flags & TEXT_INPUT_FLAG_SPELLCHECK_ON)
++    hint |= ZWP_TEXT_INPUT_V3_CONTENT_HINT_SPELLCHECK;
++  // No good match. Fallback to AUTO_CORRECTION.
++  if (input_flags & TEXT_INPUT_FLAG_AUTOCORRECT_ON)
++    hint |= ZWP_TEXT_INPUT_V3_CONTENT_HINT_SPELLCHECK;
++  if (input_flags & TEXT_INPUT_FLAG_AUTOCAPITALIZE_CHARACTERS)
++    hint |= ZWP_TEXT_INPUT_V3_CONTENT_HINT_AUTO_CAPITALIZATION;
++  if (input_flags & TEXT_INPUT_FLAG_AUTOCAPITALIZE_WORDS)
++    hint |= ZWP_TEXT_INPUT_V3_CONTENT_HINT_AUTO_CAPITALIZATION;
++  if (input_flags & TEXT_INPUT_FLAG_AUTOCAPITALIZE_SENTENCES)
++    hint |= ZWP_TEXT_INPUT_V3_CONTENT_HINT_AUTO_CAPITALIZATION;
++  if (input_flags & TEXT_INPUT_FLAG_HAS_BEEN_PASSWORD)
++    hint |= ZWP_TEXT_INPUT_V3_CONTENT_HINT_SENSITIVE_DATA;
++  return hint;
++}
++
++ZWPTextInputWrapperV3::ZWPTextInputWrapperV3(
++    WaylandConnection* connection,
++    ZWPTextInputWrapperClient* client,
++    zwp_text_input_manager_v3* text_input_manager)
++    : connection_(connection), client_(client) {
++  static const zwp_text_input_v3_listener text_input_listener = {
++      &OnEnter,                  // text_input_enter,
++      &OnLeave,                  // text_input_leave,
++      &OnPreeditString,          // text_input_preedit_string,
++      &OnCommitString,           // text_input_commit_string,
++      &OnDeleteSurroundingText,  // text_input_delete_surrounding_text,
++      &OnDone,                   // text_input_done,
++  };
++
++  DCHECK(text_input_manager);
++  auto* text_input = zwp_text_input_manager_v3_get_text_input(
++      text_input_manager, connection_->seat()->wl_object());
++  obj_ = wl::Object<zwp_text_input_v3>(text_input);
++
++  zwp_text_input_v3_add_listener(text_input, &text_input_listener, this);
++}
++
++ZWPTextInputWrapperV3::~ZWPTextInputWrapperV3() = default;
++
++void ZWPTextInputWrapperV3::Reset() {
++  NOTIMPLEMENTED_LOG_ONCE();
++}
++
++void ZWPTextInputWrapperV3::Activate(WaylandWindow* window,
++                                     TextInputClient::FocusReason reason) {
++  zwp_text_input_v3_enable(obj_.get());
++  zwp_text_input_v3_commit(obj_.get());
++}
++
++void ZWPTextInputWrapperV3::Deactivate() {
++  zwp_text_input_v3_disable(obj_.get());
++  zwp_text_input_v3_commit(obj_.get());
++}
++
++void ZWPTextInputWrapperV3::ShowInputPanel() {
++  // Not directly supported in zwp_text_input_v3
++  // Enable again to show the screen keyboard in GNOME:
++  // https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1543#note_1051704
++  zwp_text_input_v3_enable(obj_.get());
++  zwp_text_input_v3_commit(obj_.get());
++}
++
++void ZWPTextInputWrapperV3::HideInputPanel() {
++  // unsupported in zwp_text_input_v3
++}
++
++void ZWPTextInputWrapperV3::SetCursorRect(const gfx::Rect& rect) {
++  zwp_text_input_v3_set_cursor_rectangle(obj_.get(), rect.x(), rect.y(),
++                                         rect.width(), rect.height());
++  zwp_text_input_v3_commit(obj_.get());
++}
++
++void ZWPTextInputWrapperV3::SetSurroundingText(
++    const std::string& text,
++    const gfx::Range& selection_range) {
++  zwp_text_input_v3_set_surrounding_text(
++      obj_.get(), text.c_str(), selection_range.start(), selection_range.end());
++  zwp_text_input_v3_commit(obj_.get());
++}
++
++void ZWPTextInputWrapperV3::ResetPendingState() {
++  commit_string_.clear();
++  delete_surrounding_text_before_length_ = 0;
++  delete_surrounding_text_after_length_ = 0;
++  preedit_string_.clear();
++  preedit_string_cursor_begin_ = 0;
++  preedit_string_cursor_end_ = 0;
++}
++
++void ZWPTextInputWrapperV3::SetContentType(ui::TextInputType type,
++                                           ui::TextInputMode mode,
++                                           uint32_t flags,
++                                           bool should_do_learning,
++                                           bool can_compose_inline) {
++  // V3 doesn't have extension
++  uint32_t content_purpose = InputTypeToContentPurpose(type);
++  uint32_t content_hint = InputFlagsToContentHint(flags);
++  static_cast<void>(flags);
++  static_cast<void>(should_do_learning);
++  zwp_text_input_v3_set_content_type(obj_.get(), content_hint, content_purpose);
++}
++
++void ZWPTextInputWrapperV3::OnEnter(void* data,
++                                    struct zwp_text_input_v3* text_input,
++                                    struct wl_surface* surface) {
++  NOTIMPLEMENTED_LOG_ONCE();
++}
++
++void ZWPTextInputWrapperV3::OnLeave(void* data,
++                                    struct zwp_text_input_v3* text_input,
++                                    struct wl_surface* surface) {
++  NOTIMPLEMENTED_LOG_ONCE();
++}
++
++void ZWPTextInputWrapperV3::OnPreeditString(
++    void* data,
++    struct zwp_text_input_v3* text_input,
++    const char* text,
++    int32_t cursor_begin,
++    int32_t cursor_end) {
++  auto* wti = static_cast<ZWPTextInputWrapperV3*>(data);
++  wti->preedit_string_ = text ? text : "";
++  wti->preedit_string_cursor_begin_ = cursor_begin;
++  wti->preedit_string_cursor_end_ = cursor_end;
++}
++
++void ZWPTextInputWrapperV3::OnCommitString(void* data,
++                                           struct zwp_text_input_v3* text_input,
++                                           const char* text) {
++  auto* wti = static_cast<ZWPTextInputWrapperV3*>(data);
++  wti->commit_string_ = text ? text : "";
++}
++
++void ZWPTextInputWrapperV3::OnDeleteSurroundingText(
++    void* data,
++    struct zwp_text_input_v3* text_input,
++    uint32_t before_length,
++    uint32_t after_length) {
++  auto* wti = static_cast<ZWPTextInputWrapperV3*>(data);
++  wti->delete_surrounding_text_before_length_ = before_length;
++  wti->delete_surrounding_text_after_length_ = after_length;
++}
++
++void ZWPTextInputWrapperV3::OnDone(void* data,
++                                   struct zwp_text_input_v3* text_input,
++                                   uint32_t serial) {
++  auto* wti = static_cast<ZWPTextInputWrapperV3*>(data);
++  wti->client_->OnPreeditString("", {}, 0);
++  wti->client_->OnDeleteSurroundingText(
++      -int32_t(wti->delete_surrounding_text_before_length_),
++      int32_t(wti->delete_surrounding_text_before_length_) +
++          int32_t(wti->delete_surrounding_text_after_length_));
++  wti->client_->OnCommitString(wti->commit_string_.c_str());
++  wti->client_->OnPreeditString(wti->preedit_string_.c_str(), {},
++                                wti->preedit_string_cursor_begin_);
++  wti->ResetPendingState();
++}
++
++void ZWPTextInputWrapperV3::SetGrammarFragmentAtCursor(
++    const ui::GrammarFragment& fragment) {
++  NOTIMPLEMENTED_LOG_ONCE();
++}
++
++void ZWPTextInputWrapperV3::SetAutocorrectInfo(
++    const gfx::Range& autocorrect_range,
++    const gfx::Rect& autocorrect_bounds) {
++  NOTIMPLEMENTED_LOG_ONCE();
++}
++
++}  // namespace ui
+diff --git a/ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v3.h b/ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v3.h
+new file mode 100644
+index 0000000..204d7e3
+--- /dev/null
++++ b/ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v3.h
+@@ -0,0 +1,98 @@
++// Copyright 2023 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++#ifndef UI_OZONE_PLATFORM_WAYLAND_HOST_ZWP_TEXT_INPUT_WRAPPER_V3_H_
++#define UI_OZONE_PLATFORM_WAYLAND_HOST_ZWP_TEXT_INPUT_WRAPPER_V3_H_
++
++#include <cstdint>
++#include <string>
++
++#include <text-input-unstable-v3-client-protocol.h>
++
++#include "base/memory/raw_ptr.h"
++#include "ui/ozone/platform/wayland/common/wayland_object.h"
++#include "ui/ozone/platform/wayland/host/zwp_text_input_wrapper.h"
++
++namespace gfx {
++class Rect;
++}
++
++namespace ui {
++
++class WaylandConnection;
++class WaylandWindow;
++
++// Text input wrapper for text-input-unstable-v3
++class ZWPTextInputWrapperV3 : public ZWPTextInputWrapper {
++ public:
++  ZWPTextInputWrapperV3(WaylandConnection* connection,
++                        ZWPTextInputWrapperClient* client,
++                        zwp_text_input_manager_v3* text_input_manager);
++  ZWPTextInputWrapperV3(const ZWPTextInputWrapperV3&) = delete;
++  ZWPTextInputWrapperV3& operator=(const ZWPTextInputWrapperV3&) = delete;
++  ~ZWPTextInputWrapperV3() override;
++
++  void Reset() override;
++
++  void Activate(WaylandWindow* window,
++                ui::TextInputClient::FocusReason reason) override;
++  void Deactivate() override;
++
++  void ShowInputPanel() override;
++  void HideInputPanel() override;
++
++  void SetCursorRect(const gfx::Rect& rect) override;
++  void SetSurroundingText(const std::string& text,
++                          const gfx::Range& selection_range) override;
++  void SetContentType(TextInputType type,
++                      TextInputMode mode,
++                      uint32_t flags,
++                      bool should_do_learning,
++                      bool can_compose_inline) override;
++  void SetGrammarFragmentAtCursor(const ui::GrammarFragment& fragment) override;
++  void SetAutocorrectInfo(const gfx::Range& autocorrect_range,
++                          const gfx::Rect& autocorrect_bounds) override;
++
++ private:
++  void ResetPendingState();
++
++  // zwp_text_input_v3_listener
++  static void OnEnter(void* data,
++                      struct zwp_text_input_v3* text_input,
++                      struct wl_surface* surface);
++  static void OnLeave(void* data,
++                      struct zwp_text_input_v3* text_input,
++                      struct wl_surface* surface);
++  static void OnPreeditString(void* data,
++                              struct zwp_text_input_v3* text_input,
++                              const char* text,
++                              int32_t cursor_begin,
++                              int32_t cursor_end);
++  static void OnCommitString(void* data,
++                             struct zwp_text_input_v3* text_input,
++                             const char* text);
++  static void OnDeleteSurroundingText(void* data,
++                                      struct zwp_text_input_v3* text_input,
++                                      uint32_t before_length,
++                                      uint32_t after_length);
++  static void OnDone(void* data,
++                     struct zwp_text_input_v3* text_input,
++                     uint32_t serial);
++
++  const raw_ptr<WaylandConnection> connection_;
++  wl::Object<zwp_text_input_v3> obj_;
++  const raw_ptr<ZWPTextInputWrapperClient> client_;
++
++  // pending state until OnDone
++  std::string commit_string_;
++  uint32_t delete_surrounding_text_before_length_ = 0;
++  uint32_t delete_surrounding_text_after_length_ = 0;
++  std::string preedit_string_;  // preedit string of pending state
++  int32_t preedit_string_cursor_begin_ = 0;
++  int32_t preedit_string_cursor_end_ = 0;
++};
++
++}  // namespace ui
++
++#endif  // UI_OZONE_PLATFORM_WAYLAND_HOST_ZWP_TEXT_INPUT_WRAPPER_V3_H_
