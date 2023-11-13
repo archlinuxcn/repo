@@ -12,6 +12,8 @@ def pre_build():
   for line in edit_file('PKGBUILD'):
     if line.startswith('arch='):
       line = 'arch=(aarch64 x86_64)'
+    if line.lstrip().startswith('-DCMAKE_INSTALL_PREFIX'):
+      print('    -DENABLE_QSV11=OFF \\')
     print(line)
 
 def post_build():
