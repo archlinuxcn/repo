@@ -4,13 +4,13 @@
 
 _pkgbase='citra'
 pkgname="$_pkgbase-git"
-pkgver=r9840.b10f3d96f
-pkgrel=2
+pkgver=r9880.f9bbae81a
+pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger (Master branch)"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra/"
 license=('GPL2')
-depends=('boost-libs' 'shared-mime-info' 'ffmpeg' 'libusb' 'sdl2' 'qt6-multimedia' 'libxkbcommon-x11' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'fmt' 'dynarmic' 'openal' 'cpp-httplib' 'libfdk-aac' 'crypto++' 'soundtouch')
+depends=('boost-libs' 'shared-mime-info' 'ffmpeg' 'libusb' 'sdl2' 'qt6-multimedia' 'libxkbcommon-x11' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'fmt' 'dynarmic' 'openal' 'cpp-httplib' 'crypto++' 'soundtouch' 'faad2')
 makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt6-tools' 'xbyak' 'cpp-jwt' 'qt6-wayland' 'desktop-file-utils' 'robin-map' 'glslang' 'spirv-headers' 'vulkan-memory-allocator')
 provides=('citra')
 conflicts=('citra')
@@ -18,7 +18,7 @@ source=("git+https://github.com/citra-emu/citra.git"
 ext-lib.patch
 gc.patch)
 md5sums=('SKIP'
-         '4cc696c64866b3ba671d26363fe294aa'
+         '64da77bd83640899719e2b97acf82c19'
          'f151510cd1fc233992710405cbf44323')
 
 pkgver() {
@@ -37,7 +37,7 @@ prepare() {
     sed -i 's/CppHttp/httplib/g' externals/CMakeLists.txt
     sed -i 's/0.14.1/0.14.0/g' externals/CMakeLists.txt
 
-    git submodule update --init --remote externals/lodepng
+    git submodule update --init --remote externals/lodepng/lodepng
     git submodule update --init --remote externals/nihstro
     git submodule update --init --remote externals/sirit
     git submodule update --init --remote externals/teakra
@@ -63,13 +63,11 @@ build() {
       -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
       -DUSE_DISCORD_PRESENCE=ON \
       -DUSE_SYSTEM_LIBS=ON \
-      -DENABLE_MF=OFF \
       -DENABLE_TESTS=OFF \
       -DCITRA_CHECK_SUBMODULES=OFF \
-      -DSIRIT_USE_SYSTEM_SPIRV_HEADERS=ON
+      -DSIRIT_USE_SYSTEM_SPIRV_HEADERS=ON \
+      -DDISABLE_SYSTEM_LODEPNG=ON
     
-    #sed -i 's/ -lxbyak//g' src/citra_qt/CMakeFiles/citra-qt.dir/link.txt
-    #sed -i 's/ -lxbyak//g' src/citra/CMakeFiles/citra.dir/link.txt
 	make
 }
 
