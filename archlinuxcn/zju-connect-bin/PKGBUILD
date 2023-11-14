@@ -2,7 +2,7 @@
 
 pkgname=zju-connect-bin
 _pkgname=zju-connect
-pkgver=0.5.0
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="Go client for ZJU RVPN"
 arch=("x86_64")
@@ -15,9 +15,9 @@ provides=("zju-connect")
 source=("$pkgname-$pkgver-amd64.zip::https://github.com/Mythologyli/${_pkgname}/releases/download/v${pkgver}/${_pkgname}-linux-amd64.zip"
         "${_pkgname}.service"
 	"config.toml::https://raw.githubusercontent.com/Mythologyli/zju-connect/main/config.toml.example")
-sha256sums=('33ba2fe004689cf7e9e2de00f73e991f08025c0371882918959471ffed36bd6b'
+sha256sums=('799671bb96f91b056e26bc7f3965ead40e5831bc0e20cf8c0d20e1991981a6a6'
             '96f9145b783e770d6c448d9db7e43796b79c19f984f2b1387333a64c1874a74a'
-            '4cf5695e326ce753769f207c439d419d0eba74f1510a1f8c9ace532002f76ff3')
+            '26bd99c3c0cc6af10529aad0427089dac1c43bf31a470fbe3b1ba27d02fe3cae')
 
 package() {
 	cd ${srcdir}
