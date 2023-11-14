@@ -126,26 +126,26 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
 diff --color -rupN citra/externals/cmake-modules/CitraHandleSystemLibs.cmake citra/externals/cmake-modules/CitraHandleSystemLibs.cmake
 --- citra/externals/cmake-modules/CitraHandleSystemLibs.cmake	2023-01-20 00:44:13.712264461 +0800
 +++ citra/externals/cmake-modules/CitraHandleSystemLibs.cmake	2023-01-20 04:34:47.512808459 +0800
-@@ -24,6 +24,7 @@ option(USE_SYSTEM_CUBEB "Use the system
- option(USE_SYSTEM_LODEPNG "Use the system lodepng (instead of the bundled one)" OFF)
+@@ -25,6 +25,7 @@ option(USE_SYSTEM_LODEPNG "Use the syste
  option(USE_SYSTEM_OPENAL "Use the system OpenAL (instead of the bundled one)" OFF)
  option(USE_SYSTEM_VMA "Use the system VulkanMemoryAllocator (instead of the bundled one)" OFF)
+ option(USE_SYSTEM_VULKAN_HEADERS "Use the system Vulkan headers (instead of the bundled ones)" OFF)
 +option(USE_SYSTEM_FAAD2 "Use the system faad2 (instead of the bundled one)" OFF)
  
  # Qt and MoltenVK are handled separately
  CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_SDL2 "Disable system SDL2" OFF "USE_SYSTEM_LIBS" OFF)
-@@ -47,6 +48,7 @@ CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_CU
- CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_LODEPNG "Disable system lodepng" OFF "USE_SYSTEM_LIBS" OFF)
+@@ -49,6 +50,7 @@ CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_LO
  CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_OPENAL "Disable system OpenAL" OFF "USE_SYSTEM_LIBS" OFF)
  CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_VMA "Disable system VulkanMemoryAllocator" OFF "USE_SYSTEM_LIBS" OFF)
+ CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_VULKAN_HEADERS "Disable system Vulkan headers" OFF "USE_SYSTEM_LIBS" OFF)
 +CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_FAAD2 "Disable system faad2" OFF "USE_SYSTEM_LIBS" OFF)
  
  set(LIB_VAR_LIST
      SDL2
-@@ -70,6 +72,7 @@ set(LIB_VAR_LIST
-     LODEPNG
+@@ -73,6 +75,7 @@ set(LIB_VAR_LIST
      OPENAL
      VMA
+     VULKAN_HEADERS
 +    FAAD2
      )
  
