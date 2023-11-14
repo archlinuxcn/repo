@@ -1,10 +1,11 @@
-# Maintainer: Jaroslav Lichtblau <dragonlord@aur.archlinux.org>
+# Maintainer: kleintux <reg-archlinux AT klein DOT tuxli DOT ch> 
+# Contributor: Jaroslav Lichtblau <dragonlord@aur.archlinux.org>
 # Contributor: flu
 # Contributor: Kevin MacMartin <prurigro at gmail dot com>
 
 pkgname=vitetris
 pkgver=0.59.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Virtual terminal *tris clone"
 arch=('i686' 'x86_64')
 url="http://victornils.net/tetris"
@@ -25,6 +26,7 @@ prepare() {
 
 # Change configuration file to a standard one:
   sed -i 's|#define CONFIG_FILENAME ".vitetris"|#define CONFIG_FILENAME ".config/vitetris"|' src/config2.h
+  sed -i 's|ctime(&t)|"%s", &|' src/netw/gameserver.c
 }
 
 build() {
