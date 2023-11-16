@@ -1,4 +1,4 @@
-From 179258208d98fe3755b414749e9776e96d3b1dad Mon Sep 17 00:00:00 2001
+From 9f2755f083be057edd1f70f21b5c6e83758c5488 Mon Sep 17 00:00:00 2001
 From: lilydjwg <lilydjwg@gmail.com>
 Date: Wed, 17 Nov 2021 19:34:58 +0800
 Subject: [PATCH 1/3] xwayland: support HiDPI scale
@@ -6,22 +6,22 @@ Subject: [PATCH 1/3] xwayland: support HiDPI scale
 This supports the xorg-xwayland patch at https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/733
 ---
  include/xwayland/xwm.h |  2 ++
- xwayland/xwm.c         | 51 +++++++++++++++++++++++++++++++-----------
- 2 files changed, 40 insertions(+), 13 deletions(-)
+ xwayland/xwm.c         | 63 +++++++++++++++++++++++++++++-------------
+ 2 files changed, 46 insertions(+), 19 deletions(-)
 
 diff --git a/include/xwayland/xwm.h b/include/xwayland/xwm.h
-index 3d540522..33ff1478 100644
+index da3515da..b6ad4492 100644
 --- a/include/xwayland/xwm.h
 +++ b/include/xwayland/xwm.h
-@@ -88,6 +88,7 @@ enum atom_name {
- 	DND_ACTION_PRIVATE,
+@@ -89,6 +89,7 @@ enum atom_name {
  	NET_CLIENT_LIST,
  	NET_CLIENT_LIST_STACKING,
-+        XWAYLAND_GLOBAL_OUTPUT_SCALE,
+ 	NET_WORKAREA,
++    XWAYLAND_GLOBAL_OUTPUT_SCALE,
  	ATOM_LAST // keep last
  };
  
-@@ -96,6 +97,7 @@ struct wlr_xwm {
+@@ -97,6 +98,7 @@ struct wlr_xwm {
  	struct wl_event_source *event_source;
  	struct wlr_seat *seat;
  	uint32_t ping_timeout;
@@ -30,7 +30,7 @@ index 3d540522..33ff1478 100644
  	xcb_atom_t atoms[ATOM_LAST];
  	xcb_connection_t *xcb_conn;
 diff --git a/xwayland/xwm.c b/xwayland/xwm.c
-index 0c30d8f6..59e9ce06 100644
+index db4a8c0f..8167a2fc 100644
 --- a/xwayland/xwm.c
 +++ b/xwayland/xwm.c
 @@ -19,6 +19,14 @@
@@ -48,15 +48,15 @@ index 0c30d8f6..59e9ce06 100644
  static const char *const atom_map[ATOM_LAST] = {
  	[WL_SURFACE_ID] = "WL_SURFACE_ID",
  	[WL_SURFACE_SERIAL] = "WL_SURFACE_SERIAL",
-@@ -90,6 +98,7 @@ static const char *const atom_map[ATOM_LAST] = {
- 	[DND_ACTION_PRIVATE] = "XdndActionPrivate",
+@@ -91,6 +99,7 @@ static const char *const atom_map[ATOM_LAST] = {
  	[NET_CLIENT_LIST] = "_NET_CLIENT_LIST",
  	[NET_CLIENT_LIST_STACKING] = "_NET_CLIENT_LIST_STACKING",
+ 	[NET_WORKAREA] = "_NET_WORKAREA",
 +	[XWAYLAND_GLOBAL_OUTPUT_SCALE] = "_XWAYLAND_GLOBAL_OUTPUT_SCALE",
  };
  
  #define STARTUP_INFO_REMOVE_PREFIX "remove: ID="
-@@ -962,8 +971,8 @@ static void xwm_handle_create_notify(struct wlr_xwm *xwm,
+@@ -957,8 +966,8 @@ static void xwm_handle_create_notify(struct wlr_xwm *xwm,
  		return;
  	}
  
@@ -67,7 +67,7 @@ index 0c30d8f6..59e9ce06 100644
  }
  
  static void xwm_handle_destroy_notify(struct wlr_xwm *xwm,
-@@ -994,10 +1003,10 @@ static void xwm_handle_configure_request(struct wlr_xwm *xwm,
+@@ -989,10 +998,10 @@ static void xwm_handle_configure_request(struct wlr_xwm *xwm,
  
  	struct wlr_xwayland_surface_configure_event wlr_event = {
  		.surface = surface,
@@ -82,7 +82,7 @@ index 0c30d8f6..59e9ce06 100644
  		.mask = mask,
  	};
  
-@@ -1012,14 +1021,14 @@ static void xwm_handle_configure_notify(struct wlr_xwm *xwm,
+@@ -1007,14 +1016,14 @@ static void xwm_handle_configure_notify(struct wlr_xwm *xwm,
  	}
  
  	bool geometry_changed =
@@ -103,7 +103,7 @@ index 0c30d8f6..59e9ce06 100644
  	}
  
  	if (xsurface->override_redirect != ev->override_redirect) {
-@@ -1136,7 +1145,22 @@ static void xwm_handle_unmap_notify(struct wlr_xwm *xwm,
+@@ -1131,7 +1140,22 @@ static void xwm_handle_unmap_notify(struct wlr_xwm *xwm,
  static void xwm_handle_property_notify(struct wlr_xwm *xwm,
  		xcb_property_notify_event_t *ev) {
  	struct wlr_xwayland_surface *xsurface = lookup_surface(xwm, ev->window);
@@ -126,7 +126,7 @@ index 0c30d8f6..59e9ce06 100644
  		return;
  	}
  
-@@ -1770,7 +1794,7 @@ void wlr_xwayland_surface_configure(struct wlr_xwayland_surface *xsurface,
+@@ -1775,7 +1799,7 @@ void wlr_xwayland_surface_configure(struct wlr_xwayland_surface *xsurface,
  	uint32_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y |
  		XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT |
  		XCB_CONFIG_WINDOW_BORDER_WIDTH;
@@ -135,7 +135,7 @@ index 0c30d8f6..59e9ce06 100644
  	xcb_configure_window(xwm->xcb_conn, xsurface->window_id, mask, values);
  
  	// If the window size did not change, then we cannot rely on
-@@ -2123,6 +2147,7 @@ struct wlr_xwm *xwm_create(struct wlr_xwayland *xwayland, int wm_fd) {
+@@ -2128,6 +2152,7 @@ struct wlr_xwm *xwm_create(struct wlr_xwayland *xwayland, int wm_fd) {
  	wl_list_init(&xwm->pending_startup_ids);
  	xwm->ping_timeout = 10000;
  
@@ -143,6 +143,28 @@ index 0c30d8f6..59e9ce06 100644
  	xwm->xcb_conn = xcb_connect_to_fd(wm_fd, NULL);
  
  	int rc = xcb_connection_has_error(xwm->xcb_conn);
+@@ -2335,15 +2360,15 @@ void wlr_xwayland_set_workareas(struct wlr_xwayland *wlr_xwayland,
+ 	if (!data) {
+ 		return;
+ 	}
+-
++	struct wlr_xwm *xwm = wlr_xwayland->xwm;
++	
+ 	for (size_t i = 0; i < num_workareas; i++) {
+-		data[4 * i] = workareas[i].x;
+-		data[4 * i + 1] = workareas[i].y;
+-		data[4 * i + 2] = workareas[i].width;
+-		data[4 * i + 3] = workareas[i].height;
++		data[4 * i] = scale(xwm, workareas[i].x);
++		data[4 * i + 1] = scale(xwm, workareas[i].y);
++		data[4 * i + 2] = scale(xwm, workareas[i].width);
++		data[4 * i + 3] = scale(xwm, workareas[i].height);
+ 	}
+ 
+-	struct wlr_xwm *xwm = wlr_xwayland->xwm;
+ 	xcb_change_property(xwm->xcb_conn, XCB_PROP_MODE_REPLACE,
+ 			xwm->screen->root, xwm->atoms[NET_WORKAREA],
+ 			XCB_ATOM_CARDINAL, 32, 4 * num_workareas, data);
 -- 
-2.41.0
+2.42.0
 
