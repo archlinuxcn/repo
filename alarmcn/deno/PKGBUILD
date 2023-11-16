@@ -1,38 +1,45 @@
-# Contributor: Benoît Zugmeyer <bzugmeyer@gmail.com>
-# Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Metal A-wing <1 at 233 dot email>
 
 pkgname=deno
 pkgver=1.38.1
-pkgrel=2
+_commit=0e7ad0388be7413db6ded8b60d5ae5d7cc0ffda0
+pkgrel=3
 pkgdesc="A secure runtime for JavaScript and TypeScript"
-arch=('aarch64' 'armv7h' 'i686' 'x86_64')
+arch=(aarch64 x86_64)
 url="https://deno.land"
 license=('MIT')
-makedepends=('python' 'cargo' 'nodejs' 'cmake' 'protobuf')
-source=("https://github.com/denoland/deno/releases/download/v${pkgver}/deno_src.tar.gz")
-sha256sums=('6b698b1ad599057ae4acaa21214b98e3b8c6214ef88dedfa9d7eefe242d7a477')
-# The build system does not like LTO... (symbol not found error during linking)
 options=('!lto')
+depends=('gcc-libs')
+makedepends=('git' 'python' 'rust' 'nodejs' 'cmake' 'protobuf')
+source=("git+https://github.com/denoland/deno.git#commit=$_commit")
+sha512sums=('SKIP')
 
 build() {
-  cd deno
+  cd $pkgname
+
+  # this uses malloc_usable_size, which is incompatible with fortification level 3
+  export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+  export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+
   cargo build --release
 }
 
 check() {
-  cd deno
+  cd $pkgname
   ./target/release/deno run cli/tests/testdata/run/002_hello.ts
 }
 
 package() {
-  cd deno
-
+  cd $pkgname
   install -Dm755 target/release/deno "$pkgdir"/usr/bin/deno
+
   install -dm755 "$pkgdir"/usr/share/bash-completion/completions
   ./target/release/deno completions bash > "$pkgdir"/usr/share/bash-completion/completions/deno
   install -dm755 "$pkgdir"/usr/share/zsh/site-functions
   ./target/release/deno completions zsh > "$pkgdir"/usr/share/zsh/site-functions/_deno
   install -dm755 "$pkgdir"/usr/share/fish/vendor_functions.d
   ./target/release/deno completions fish > "$pkgdir"/usr/share/fish/vendor_functions.d/deno.fish
+
   install -Dm644 LICENSE.md -t "$pkgdir"/usr/share/licenses/$pkgname/
 }
