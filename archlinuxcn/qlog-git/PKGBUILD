@@ -3,7 +3,7 @@
 _pkgname=qlog
 pkgname="$_pkgname-git"
 pkgver=0.29.2.r0.ge44fc85
-pkgrel=1
+pkgrel=1.1
 pkgdesc="Amateur radio logbook software"
 arch=("x86_64")
 url="https://github.com/foldynl/QLog"
@@ -32,11 +32,9 @@ source=(
 
   # submodule
   "flags"::"git+https://github.com/foldynl/QLog-Flags"
-  "0001-fix-AppGuard-on-qt-6.6.patch"
 )
 sha256sums=('SKIP'
-            'SKIP'
-            '40c78073f5f4caa267c78565b90cd3f7e7098d3198c5de8fe0777c3dc4dcf9d9')
+            'SKIP')
 
 pkgver() {
   cd "$srcdir/$_pkgname"
@@ -55,8 +53,6 @@ prepare() {
     git submodule set-url ${submodule} "${srcdir}/${submodule##*/}"
     git -c protocol.file.allow=always submodule update ${submodule}
   done
-
-  patch -Np1 < ../0001-fix-AppGuard-on-qt-6.6.patch
 }
 
 build() {
