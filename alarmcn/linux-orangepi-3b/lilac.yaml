@@ -8,6 +8,6 @@ post_build_script: git_pkgbuild_commit()
 update_on:
   - source: github
     github: torvalds/linux
-    use_latest_tag: true
-    exclude_regex: "*rc*"
+    use_max_tag: true
     prefix: v
+    exclude_regex: "*rc*"
