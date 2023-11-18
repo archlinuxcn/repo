@@ -3,7 +3,7 @@
 
 pkgname=dida365
 _pkgname=dida
-pkgver=1.0.80
+pkgver=2.0.0
 pkgrel=1
 
 pkgdesc='Todo list, checklist and task manager app, Linux desktop application'
@@ -13,7 +13,7 @@ license=('custom')
 depends=('alsa-lib' 'gtk3' 'nss')
 source=("${_pkgname}-${pkgver}.deb::https://cdn.dida365.cn/download/linux/linux_deb_x64/${_pkgname}-${pkgver}-amd64.deb"
         "LICENSE")
-sha256sums=('3cae5c0c0f49190f3779527dae992c3f0a45a9f0acfedb22e23397652750e647'
+sha256sums=('66f544fccfd21bc28d100cf3314505cd798c8ff8cbf21c43c417f1fef4674715'
             'e409ffec880f4b6578f03d0bc9f6fd3207bb6777c27f3e9f77c6ad54ebb312a2')
 
 package() {
