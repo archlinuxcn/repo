@@ -2,7 +2,7 @@
 # Contributor: Anatoly V. Beregovoy <avberegovoy@gmail.com>
 
 pkgname=libpasastro
-pkgver=1.4.1
+pkgver=1.4.2
 pkgrel=1
 _pkgver="v$pkgver"
 pkgdesc="Provide Pascal interface for standard astronomy libraries"
