@@ -3,7 +3,7 @@
 # Contributor: Manuel Schneider  <manuelschneid3r at googles mail>
 
 pkgname=albert
-pkgver=0.22.15
+pkgver=0.22.16
 pkgrel=1
 pkgdesc="A sophisticated standalone keyboard launcher"
 arch=('x86_64')
@@ -20,36 +20,10 @@ optdepends=('ddgr: duckduckgo search plugin'
             'python-pylatexenc: TeX plugin'
             'python-urllib3: python web plugins'
             'python-virtualbox: virtualbox plugin')
-source=("mirrors/albert::git+https://github.com/albertlauncher/albert.git#tag=v${pkgver}"
-        "mirrors/plugins::git+https://github.com/albertlauncher/plugins.git"
-        "mirrors/python::git+https://github.com/albertlauncher/python.git"
-        "mirrors/qhotkey::git+https://github.com/Skycoder42/QHotkey.git#tag=1.5.0")
-sha512sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP')
-
-
-prepare() {
-  mkdir -p build
-
-  cd "$srcdir/albert"
-  git submodule init
-  
-  git config submodule.plugins.url "$srcdir/plugins"
-  git -c protocol.file.allow=always submodule update plugins
-  
-  git config submodule.lib/QHotkey.url "$srcdir/qhotkey"
-  git -c protocol.file.allow=always submodule update lib/QHotkey
-
-  cd "$srcdir/albert/plugins"
-  git submodule init
-  git config submodule.python/plugins.url "$srcdir/python"
-  git -c protocol.file.allow=always submodule update python/plugins
-}
-
+source=("https://github.com/albertlauncher/albert/releases/download/v${pkgver}/v${pkgver}.tar.gz")
 
 build() {
+  mkdir -p build
   cd build
 
   cmake ../$pkgname \
@@ -87,4 +61,4 @@ package() {
   make DESTDIR="$pkgdir/" install
 }
 
-# vim:set ts=2 sw=2 et:
+sha512sums=('25dba1482b6113dd08bb03b59a3687c2d18e604008f29f0e435633fe50564e388cb76008e42818155f9cdc7b340ace0a9ba00fc0a821bb6be233e07e4727a9e3')
