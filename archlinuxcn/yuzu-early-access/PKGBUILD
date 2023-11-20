@@ -2,7 +2,7 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=3969
+pkgver=3983
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
@@ -17,9 +17,9 @@ source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.g
 "https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml"
 "https://github.com/pineappleEA/pineapple-src/releases/download/EA-${pkgver}/Windows-Yuzu-EA-${pkgver}.zip")
 options=('!buildflags') #[heavysink] Disable _FORTIFY_SOURCE for temporary fix for Bayonetta 3
-sha256sums=('212d27a0f1aca12420b11c9bb944b6eb0e62fd593b956c14dc6a3179bab8a087'
+sha256sums=('4009a57b6a6a64a02dc568eeade12f5e4087383fb0ae0242d63b637b2b2c6460'
             'e76ab2b3566d8135930e570ede5bed3da8f131270b60db818e453d248880bdf2'
-            '46fb15d8189d72f1ae9560698f95c597b1ca2a02c1ee8153e54454b702e080de')
+            '20ebb2bd93cd867b0646f2e0ade92212c603cd62b57f7a05b773886313aa1b4f')
 
 prepare() {
   cd "$srcdir/yuzu-windows-msvc-early-access"
@@ -36,6 +36,9 @@ prepare() {
   git submodule update --init --remote externals/mbedtls
   git submodule update --init --remote externals/libadrenotools
   git submodule update --init --remote --recursive externals/nx_tzdb
+  git submodule update --init --remote externals/simpleini
+
+ # sed -i -e '/#elif defined(__linux__) || defined(__FreeBSD__)/,/^ return true;/d' src/yuzu/util/util.cpp
 
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror$/-W/g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
