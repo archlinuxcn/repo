@@ -170,7 +170,7 @@ else
     pkgbase=linux-$pkgsuffix
 fi
 _major=6.6
-_minor=1
+_minor=2
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
@@ -846,12 +846,13 @@ _package-schedulers() {
 
    install -Dm755 scx_central "$pkgdir"/usr/bin/scx_central
    install -Dm755 scx_flatcg "$pkgdir"/usr/bin/scx_flatcg
+   install -Dm755 scx_layered "$pkgdir"/usr/bin/scx_layered
+   install -Dm755 scx_nest "$pkgdir"/usr/bin/scx_nest
    install -Dm755 scx_pair "$pkgdir"/usr/bin/scx_pair
    install -Dm755 scx_qmap "$pkgdir"/usr/bin/scx_qmap
    install -Dm755 scx_rusty "$pkgdir"/usr/bin/scx_rusty
    install -Dm755 scx_simple "$pkgdir"/usr/bin/scx_simple
    install -Dm755 scx_userland "$pkgdir"/usr/bin/scx_userland
-   install -Dm755 scx_nest "$pkgdir"/usr/bin/scx_nest
 }
 
 pkgname=("$pkgbase" "$pkgbase-headers")
@@ -865,8 +866,8 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('3bb35ba0386b00aa76dfd073e87b0d5a319d3116a80c39b11a3acd1219bc7d8b3809c1def24a3c4f52abc60f70c170a2f80d80c6b54459eec016c5ddc404c6fc'
-        '98efc768a2048843086a0a0ee495d992b615fcc0dc3003f71e9828a2595dde2be0302739d99d84fdae69531be4f0a3277328b06985f40e811593764e907257aa'
+b2sums=('88fc55107834d4308d33547211a031674ffaa8e48e23d6612ba39430292b18073d49271bd3ce8c7be01d8c5668482cb1715071abfd9b1f75b06468a09f8f4eec'
+        '5ddb5dcdb79354268e69d01523f06d5071538ba53171adcef0dd455b286df7785611d64f13b3aae06ac298cc60d990ebfa7b11d75dec9ab4a256b431de549483'
         '11d2003b7d71258c4ca71d71c6b388f00fe9a2ddddc0270e304148396dadfd787a6cac1363934f37d0bfb098c7f5851a02ecb770e9663ffe57ff60746d532bd0'
-        'b99458e40605388759bfc3d07233acb5ae29c4c0ff3b10c2532f11a5a946a752ec1a654ba2a51670afc415e90ac2ce48a24c0977a92fe8acf691345171d95924'
-        '9f338dc2939661e6250ddc9a1ab2a8c02a96fea38534191aeda78c43a8cdf4a07596e08bdf8a749ccc87e5019782d6c92ed19b844a58ddfc73cff99120296454')
+        '1337c4884d270cd77ec0873c0e5fdeffc2ea174f88feb235ef661dbbcbf8f40bc298cc61aa2c44e9bf7d95b85958d20ae84a4b3613ea1a351e0741213affe41d'
+        'efe1e6d82534950f3e98e3c6a4b4c3c4a0dc927029a7625ffd60d2fe75a7c6210000d5f8485781f7330ecd2cd30a06c67e8853ec1fcb9f3f738bdf810d5cfe93')
