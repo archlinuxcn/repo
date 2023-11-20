@@ -6,7 +6,7 @@ _commit=
 pkgver=8.0.4.3  # pkgver=${_srctag//-/.}
 _geckover=2.47.3
 _monover=8.0.1
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 url="https://github.com/ValveSoftware/Proton"
@@ -154,11 +154,6 @@ pip install --no-cache-dir afdko
     git remote set-url origin https://github.com/ValveSoftware/Proton.git
     git submodule update --init --filter=tree:0 --recursive
 
-    # Fix bindgen issue with llvm 16 by pulling in newer versions
-    pushd dav1d; git checkout 1.2.1; popd
-    pushd gst-plugins-rs; git checkout 0.11.0; popd
-    sed 's/libgstrsdav1d.so/libgstdav1d.so/g' -i Makefile.in
-
     for rustlib in gst-plugins-rs media-converter; do
     pushd $rustlib
         export RUSTUP_TOOLCHAIN=stable
@@ -265,16 +260,15 @@ package() {
         "$_monodir"/lib/x86_64/*.dll \
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
-
 sha256sums=('SKIP'
             '08d318f3dd6440a8a777cf044ccab039b0d9c8809991d2180eb3c9f903135db3'
             '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
             '83f65c9292137a740c4b8ea730b61cee0dbbb82e4eb3607590ba2f4377827464'
-            '683462973f99826b1b52d788ce8d7225b07a007dcb4556c28b17662184b7304e'
-            'a7071f070d668351955759082cb0785ff94ead8a2631068ef14f0e1b6270c4b6'
-            'd9a4b281f629f9ff1ee450fa46e7017514b673e903da4b5a98c79dbb2f83b4fb'
-            '86bf4be7c90242ba652dff929447e24a95408758f5becc4abfab03dd339b6db7'
-            'f14e5b2f9159fe557a53f39e29e29fc41c00c52a422b47362c2665cf68c8d2de')
+            '063ec8db6a2a8f1ac159134c4b0d45e6714c8ff589cd5c97a197197290098380'
+            '15b8be7ce231b88483556759004731effd8a75120457db5c6dfa600477d7282e'
+            '3222a96a5168038fb050675397e7df65dedfdc39b1fffb67392b0e0f24d38b48'
+            'd008e6df5960ee49fd6449d7ffd73d723c01914bdf0709c8d693ac5a985dbab8'
+            '1c94dd4d3fe58271b362536d9c7181242209d6b26bcacea481685d0156aa0daa')
 # Optional patches
 sha256sums+=(
 )
