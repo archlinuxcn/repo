@@ -1,0 +1,11 @@
+pre_build_script: aur_pre_build(maintainers=['AsamK'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: sequoia-octopus-librnp
+
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com

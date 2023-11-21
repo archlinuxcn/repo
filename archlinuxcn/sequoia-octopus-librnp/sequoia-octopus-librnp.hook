@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Path
+Target = usr/lib/thunderbird/librnp.so
+
+[Action]
+Description = [sequoia-octopus-librnp] Replacing librnp.so…
+When = PostTransaction
+Exec = /bin/bash -c "if [ ! -L /usr/lib/thunderbird/librnp.so ]; then mv /usr/lib/thunderbird/{librnp.so,librnp.so.orig} ; ln -sf /usr/lib/libsequoia_octopus_librnp.so /usr/lib/thunderbird/librnp.so ; fi"
