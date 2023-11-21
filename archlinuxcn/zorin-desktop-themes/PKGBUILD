@@ -1,7 +1,7 @@
 # Maintainer: Jack Wu <self@origincode.me>
 
 pkgname=zorin-desktop-themes
-pkgver=4.0.8
+pkgver=4.0.9
 pkgrel=1
 pkgdesc="The Zorin OS desktop theme provided in a variety of color combinations."
 arch=('any')
@@ -14,7 +14,7 @@ conflicts=('zorin-desktop-themes-git')
 source=(
         "$pkgname-$pkgver.tar.gz::https://github.com/ZorinOS/$pkgname/archive/$pkgver.tar.gz"
 )
-sha512sums=('20359840de8bcebd7f66d46b56d66fc18d0ea5cf6892b6a949878cd2fe4f7ebdd512af515f84d7913a568e74b42e8d65fa0bcd2c2560df83dc9578ce9def869d')
+sha512sums=('0d525d7b078ceac2c7431e28697d9ed9b6a96d00f08615e6a2e6f74785a788354aa108bb620b7b76d266337e5ed4df4b7e3d812fd7ff7075e0a864a35255782b')
 
 package() {
     cd "$pkgname-$pkgver"
