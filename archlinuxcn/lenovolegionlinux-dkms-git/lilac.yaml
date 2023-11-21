@@ -1,0 +1,21 @@
+pre_build_script: aur_pre_build(maintainers=['MrDuartePT'])
+
+post_build: aur_post_build
+
+repo_depends:
+  - lenovolegionlinux-git
+update_on_build:
+  - pkgbase: lenovolegionlinux-git
+
+update_on:
+  - source: aur
+    aur: lenovolegionlinux-dkms-git
+  - source: github
+    github: johnfanv2/LenovoLegionLinux
+    branch: main
+  - alias: alpm-lilac
+    alpm: lenovolegionlinux-git
+
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com
