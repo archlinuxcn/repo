@@ -1,0 +1,35 @@
+function metals_jdk_info {
+    cat <<EOF
+
+The JDK which will be used to run metals will be the newest one which
+is supported by metals and installed on your system.
+
+If you would like to use a different JDK set the METALS_JDK_PATH to
+the /bin directory for the JDK install.
+
+For example, if you wanted to use JDK 18 (not currently supported by
+metals) then you would set
+METALS_JDK_PATH="/usr/lib/jvm/java-18-openjdk/bin" in the environment.
+
+As of 0.10.6-1 the default jvm options used to run metals have
+changed. They are now "-XX:MaxHeapFreeRatio=20 -XX:MinHeapFreeRatio=5
+-XX:MaxRAMPercentage=25.0". This is expected to give better memory
+usage characteristics to a typical usage of metals.
+
+You may override these settings by settings METALS_JAVA_OPTS in the
+environment, e.g. your .bashrc/.zshrc. For example, if you wanted to
+use the pre 0.9.0-4 options you could add this to your shell init
+file.
+
+export METALS_JAVA_OPTS='-XX:+UseG1GC -XX:+UseStringDeduplication -Xss4m -Xms100m'
+
+EOF
+}
+
+post_install() {
+    metals_jdk_info
+}
+
+post_upgrade() {
+    metals_jdk_info
+}
