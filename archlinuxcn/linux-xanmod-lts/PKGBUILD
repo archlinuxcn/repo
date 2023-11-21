@@ -73,7 +73,7 @@ fi
 
 pkgbase=linux-xanmod-lts
 _major=6.1
-pkgver=${_major}.62
+pkgver=${_major}.63
 _branch=6.x
 xanmod=1
 pkgrel=${xanmod}
@@ -109,7 +109,7 @@ done
 
 sha256sums=('2ca1f17051a430f6fed1196e4952717507171acfd97d96577212502703b25deb'
             'SKIP'
-            '227e3c8f24f59cf753d3e2ba5ee45a3b86f6b2b3c4f9c12089a9328581ebcb09'
+            '04ef05f8d0e76f0fac9119c85a35683a248049719f6f8b0588cddc74ca7c5818'
             'a8b38eb482eb685944757182c4886404abc12703e5e56ec39c7d61298d17d71f')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
@@ -159,7 +159,7 @@ prepare() {
   # User set. See at the top of this file
   if [ "$use_tracers" = "y" ]; then
     msg2 "Enabling CONFIG_FTRACE only if we are not compiling with clang..."
-    if [ "${_compiler}" = "gcc" ]; then
+    if [ "${_compiler}" = "gcc" ] || [ "${_compiler}q" = "q" ]; then
       scripts/config --enable CONFIG_FTRACE \
                      --enable CONFIG_FUNCTION_TRACER \
                      --enable CONFIG_STACK_TRACER
