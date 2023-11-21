@@ -1,7 +1,7 @@
 # Maintainer: Rasmus Moorats <xx@nns.ee>
 pkgname=opensc-p11-kit-module
 pkgver=1.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc='OpenSC module configuration for p11-kit'
 url='https://github.com/OpenSC/OpenSC'
 arch=('any')
