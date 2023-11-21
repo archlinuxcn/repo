@@ -1,0 +1,12 @@
+pre_build_script: aur_pre_build(maintainers=['Martchus'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: cmake-format
+  - alias: python
+
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com
