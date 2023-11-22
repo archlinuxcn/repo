@@ -20,7 +20,6 @@ backup=(etc/ethertypes etc/iptables/{ip,ip6}tables.rules)
 source=(https://www.netfilter.org/projects/iptables/files/$_pkgbase-$pkgver.tar.xz{,.sig}
         empty.rules simple_firewall.rules empty-{filter,mangle,nat,raw,security}.rules
         {arp,eb,ip,ip6}tables.service iptables-{legacy,nft}-flush
-        iptables-format-security-libxt_NAT.patch::https://git.netfilter.org/iptables/patch/?id=ed4082a7405a5838c205a34c1559e289949200cc
         iptables-apply-default-path.patch
         "libipt_FULLCONENAT.c::https://raw.githubusercontent.com/llccd/netfilter-full-cone-nat/dev/libipt_FULLCONENAT.c"
         "libip6t_FULLCONENAT.c::https://raw.githubusercontent.com/llccd/netfilter-full-cone-nat/dev/libip6t_FULLCONENAT.c")
@@ -55,7 +54,6 @@ prepare() {
   rm include/linux/types.h
 
   ln -rs libiptc/linux_list.h include/libiptc
-  patch -p1 -i ../iptables-format-security-libxt_NAT.patch # Fix build with -Werror=format-security
 
   # use Arch path
   patch -p0 -i ../iptables-apply-default-path.patch
