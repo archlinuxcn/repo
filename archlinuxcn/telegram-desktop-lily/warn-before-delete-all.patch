@@ -57,7 +57,7 @@ diff -Naur tdesktop-4.11.8-full_orig/Telegram/SourceFiles/boxes/delete_messages_
 +	auto total = _deleting_messages_total;
 +	Ui::show(
 +		Ui::MakeConfirmBox({
-+			.text = (total > 1) ? QString("Warning! You're deleting AT LEAST %1 messages in total!").arg(total)
++			.text = (total > 0) ? QString("Warning! You're deleting AT LEAST %1 messages in total!").arg(total)
 +								: QString("Warning! You're deleting an UNKNOWN NUMBER of messages in total!"),
 +			.confirmed = [this](Fn<void()> &&close){close();this->deleteAndClear();},
 +			.confirmText = QString("Yes. Delete those messages."),
