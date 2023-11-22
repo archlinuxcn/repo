@@ -1,13 +1,18 @@
-pre_build_script: aur_pre_build(maintainers=['gyara'])
+pre_build_script: |
+    update_pkgver_and_pkgrel(_G.newver)
 
-post_build: aur_post_build
+post_build_script: |
+    git_pkgbuild_commit()
+
+update_on:
+  - source: github
+    github: polarmutex/beancount-language-server
+    prefix: v
+    use_latest_release: true
+
 
 repo_depends:
   - beancount
-
-update_on:
-  - source: aur
-    aur: beancount-language-server
 
 maintainers:
   - github: CoelacanthusHex
