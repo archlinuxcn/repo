@@ -11,6 +11,8 @@ url="https://github.com/Inokinoki/${_srcname}"
 license=('GPL3')
 depends=('qt6-base' 'qt6-wayland' 'efivar' 'hicolor-icon-theme')
 makedepends=('git' 'cmake')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
 source=(
 	"git+${url}.git"
 	"git+https://github.com/Inokinoki/qefivar.git"
