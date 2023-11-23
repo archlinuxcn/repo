@@ -1,6 +1,6 @@
 # Maintainer: Cooper Pierce <cppierce@andrew.cmu.edu>
 pkgname=millet
-pkgver=0.12.6
+pkgver=0.13.5
 pkgrel=1
 pkgdesc="Language server implementation for Standard ML"
 url="https://github.com/azdavis/millet"
@@ -10,10 +10,18 @@ makedepends=('cargo')
 source=("$pkgname-$pkgver.tgz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 md5sums=('bab4f5c68f781eeaa7a94a4ce593501d')
 
+prepare() {
+    cd "$pkgname-$pkgver"
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+
 build() {
     cd "$pkgname-$pkgver"
-    # Doesn't use xtask to avoid building the VSCode extension
-    cargo build --release --locked
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo build --frozen --release --all-features
 }
 
 package() {
@@ -25,13 +33,8 @@ package() {
 check() {
     cd "$pkgname-$pkgver"
 
-    # Doesn't use xtask because some checks require we're in a git repo (rely
-    # on git grep), and this also requires the installer to have xtask
-    # installed.
-    cargo fmt -- --check
-    cargo clippy
     # Ignores tests starting with repo. These tests assume we're in a git repo
     # (we're not, here, since this is a source tarball), and test for things
     # like changelog entries existing.
-    cargo test --locked -- --skip repo
+    cargo test --frozen --all-features --workspace -- --skip repo
 }
