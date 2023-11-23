@@ -1,6 +1,6 @@
-diff -Naur tdesktop-4.11.8-full_orig/Telegram/SourceFiles/boxes/delete_messages_box.cpp tdesktop-4.11.8-full/Telegram/SourceFiles/boxes/delete_messages_box.cpp
+diff -aur tdesktop-4.11.8-full_orig/Telegram/SourceFiles/boxes/delete_messages_box.cpp tdesktop-4.11.8-full/Telegram/SourceFiles/boxes/delete_messages_box.cpp
 --- tdesktop-4.11.8-full_orig/Telegram/SourceFiles/boxes/delete_messages_box.cpp	2023-11-15 01:28:24.000000000 +0800
-+++ tdesktop-4.11.8-full/Telegram/SourceFiles/boxes/delete_messages_box.cpp	2023-11-22 14:55:09.425131958 +0800
++++ tdesktop-4.11.8-full/Telegram/SourceFiles/boxes/delete_messages_box.cpp	2023-11-23 18:03:26.179469603 +0800
 @@ -23,6 +23,8 @@
  #include "lang/lang_keys.h"
  #include "main/main_session.h"
@@ -14,7 +14,7 @@ diff -Naur tdesktop-4.11.8-full_orig/Telegram/SourceFiles/boxes/delete_messages_
  }
  
  void DeleteMessagesBox::prepare() {
-+	_deleting_messages_total = 1;
++	_deleting_messages_total = 0;
  	auto details = TextWithEntities();
  	const auto appendDetails = [&](TextWithEntities &&text) {
  		details.append(u"\n\n"_q).append(std::move(text));
@@ -37,13 +37,13 @@ diff -Naur tdesktop-4.11.8-full_orig/Telegram/SourceFiles/boxes/delete_messages_
  			*deleteStyle);
  		addButton(tr::lng_cancel(), [=] { closeBox(); });
  	} else {
-@@ -489,14 +493,28 @@
- void DeleteMessagesBox::keyPressEvent(QKeyEvent *e) {
+@@ -490,13 +494,30 @@
  	if (e->key() == Qt::Key_Enter || e->key() == Qt::Key_Return) {
  		// Don't make the clearing history so easy.
--		if (!_wipeHistoryPeer) {
+ 		if (!_wipeHistoryPeer) {
 -			deleteAndClear();
--		}
++			promptDeleteAndClear();
+ 		}
  	} else {
  		BoxContent::keyPressEvent(e);
  	}
@@ -69,7 +69,7 @@ diff -Naur tdesktop-4.11.8-full_orig/Telegram/SourceFiles/boxes/delete_messages_
  void DeleteMessagesBox::deleteAndClear() {
  	if (_revoke
  		&& _revokeRemember
-diff -Naur tdesktop-4.11.8-full_orig/Telegram/SourceFiles/boxes/delete_messages_box.h tdesktop-4.11.8-full/Telegram/SourceFiles/boxes/delete_messages_box.h
+diff -aur tdesktop-4.11.8-full_orig/Telegram/SourceFiles/boxes/delete_messages_box.h tdesktop-4.11.8-full/Telegram/SourceFiles/boxes/delete_messages_box.h
 --- tdesktop-4.11.8-full_orig/Telegram/SourceFiles/boxes/delete_messages_box.h	2023-11-15 01:28:24.000000000 +0800
 +++ tdesktop-4.11.8-full/Telegram/SourceFiles/boxes/delete_messages_box.h	2023-11-22 14:51:39.852864363 +0800
 @@ -53,6 +53,8 @@
