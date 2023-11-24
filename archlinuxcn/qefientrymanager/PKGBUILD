@@ -3,7 +3,7 @@
 pkgname=qefientrymanager
 _srcname=QEFIEntryManager
 pkgver=0.3.0
-pkgrel=2
+pkgrel=3
 pkgdesc="A userspace cross-platform EFI boot entry management GUI App based on Qt"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/Inokinoki/${_srcname}"
@@ -13,8 +13,11 @@ makedepends=('git' 'cmake')
 source=(
 	"git+${url}.git#tag=v.${pkgver}"
 	"git+https://github.com/Inokinoki/qefivar.git"
+	"${pkgname}-wayland.desktop"
 )
-sha256sums=('SKIP' 'SKIP')
+sha256sums=('SKIP'
+            'SKIP'
+            'c31daa87fe9e2b94cbcf3ff073b820e4a91c4b3da160b7a4f8af4c82ee236be2')
 
 prepare() {
 	cd "${_srcname}/"
@@ -36,11 +39,14 @@ package() {
 	# Binary file
 	install -Dm755 "build/${_srcname}" -t "${pkgdir}/usr/bin/"
 
-	# Desktop file
+	# Desktop file (Xorg)
 	sed -i '/Exec=/c\
 Exec=pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY QEFIEntryManager
 ' "${pkgname}.desktop"
 	install -Dm644 "${pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
+
+	# Desktop file (Wayland)
+	install -Dm644 "${srcdir}/${pkgname}-wayland.desktop" -t "${pkgdir}/usr/share/applications/"
 
 	# Icon
 	install -Dm644 cc.inoki.qefientrymanager.png -t "${pkgdir}/usr/share/icons/hicolor/96x96/apps/"
