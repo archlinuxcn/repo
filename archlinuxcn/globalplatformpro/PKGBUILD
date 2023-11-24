@@ -7,8 +7,8 @@ pkgdesc="Manage applets and keys on JavaCard-s like a pro"
 arch=('any')
 url="https://github.com/martinpaljak/GlobalPlatformPro"
 license=('LGPL3')
-depends=('java-runtime-headless=11' 'pcsclite')
-makedepends=('git' 'java-environment' 'maven' 'which')
+depends=('java-runtime-headless' 'pcsclite')
+makedepends=('git' 'java-environment=11' 'maven' 'which')
 source=(
   "$pkgname::git+https://github.com/martinpaljak/GlobalPlatformPro.git#tag=v${pkgver}"
   'gpp'
