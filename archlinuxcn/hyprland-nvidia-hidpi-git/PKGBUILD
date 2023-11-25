@@ -92,6 +92,7 @@ prepare() {
 	patch -Np1 -i "${srcdir}/0002-Fix-configure_notify-event.patch"
 	patch -Np1 -i "${srcdir}/0003-Fix-size-hints-under-Xwayland-scaling.patch"
 	patch --forward --strip=0 --input="${srcdir}/nvidia.patch"
+	sed -i 's/soversion = 12/soversion = 13/g' ../packagefiles/wlroots-meson-build.patch
 	patch -p1 <../packagefiles/wlroots-meson-build.patch
 
 	rm -rf build/
