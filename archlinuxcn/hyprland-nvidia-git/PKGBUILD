@@ -67,6 +67,7 @@ prepare() {
 
 	cd subprojects/wlroots/
 	rm -rf build/
+	sed -i 's/soversion = 12/soversion = 13/g' ../packagefiles/wlroots-meson-build.patch
 	patch -p1 <../packagefiles/wlroots-meson-build.patch
 	patch --directory=. --forward --strip=0 --input="${srcdir}/nvidia.patch"
 }
