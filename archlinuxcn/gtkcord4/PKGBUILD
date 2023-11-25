@@ -1,7 +1,7 @@
 # Maintainer: txtsd <aur.archlinux@ihavea.quest>
 
 pkgname=gtkcord4
-pkgver=0.0.15.1
+pkgver=0.0.16
 _pkgver=$(sed 's/\./-/3' <<<${pkgver})
 pkgrel=1
 pkgdesc="Discord client written in go and gtk4"
@@ -11,7 +11,7 @@ license=('GPL3')
 depends=('gtk4>=4.10.3' 'gobject-introspection' 'libadwaita>=1.3.2')
 makedepends=('git' 'go>=1.20.3')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${_pkgver}.tar.gz")
-sha256sums=('ed4ef09884488cfa9a0fd690fef7f1da9347dcf5c5c72b92c5813ab32c991caf')
+sha256sums=('d2abce0da31238f32ae4d2ed8a70a0b5b6bc7668da9b95c6b6761d8f1a519502')
 
 prepare() {
 	mkdir -p "${pkgname}-${_pkgver}/build/"
