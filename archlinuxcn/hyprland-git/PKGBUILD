@@ -73,6 +73,7 @@ prepare() {
 	git -c protocol.file.allow=always submodule update
 
 	cd subprojects/wlroots
+	sed -i 's/soversion = 12/soversion = 13/g' ../packagefiles/wlroots-meson-build.patch
 	patch -p1 <../packagefiles/wlroots-meson-build.patch
 }
 
