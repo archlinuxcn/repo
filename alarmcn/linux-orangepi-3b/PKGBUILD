@@ -1,6 +1,6 @@
 pkgbase=linux-orangepi-3b
 pkgver=6.6
-pkgrel=1
+pkgrel=2
 _newversion=false
 _stopbuild=false # Will also stop if ${_newversion} is true
 _srcname="linux-${pkgver/%.0/}"
@@ -19,12 +19,12 @@ source=("${_srcname}.tar.gz::https://cdn.kernel.org/pub/linux/kernel/v6.x/${_src
   '60-linux.hook'
   '90-linux.hook')
 md5sums=('85f2d2fc402a365ff4ad33339db42fb8'
-  'f62c153f970c1deb1c9ddbb00d38148f'
-  'a22be4d45b965ddb523052ce8415b868'
-  'e23d7394738cba7b6dcfea21edde0fe1'
-  '86d4a35722b5410e3b29fc92dae15d4b'
-  'ce6c81ad1ad1f8b333fd6077d47abdaf'
-  '3dc88030a8f2f5a5f97266d99b149f77')
+         '37adbbfa41043d95e7aa5f18ea786b70'
+         'ffafea1feb500a3364c2f53df320a943'
+         'e23d7394738cba7b6dcfea21edde0fe1'
+         '86d4a35722b5410e3b29fc92dae15d4b'
+         'ce6c81ad1ad1f8b333fd6077d47abdaf'
+         '3dc88030a8f2f5a5f97266d99b149f77')
 
 prepare() {
   apply_patches() {
