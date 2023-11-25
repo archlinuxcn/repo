@@ -1,8 +1,8 @@
 # Maintainer: Tom Yang <tomyangsh at icloud dot com>
 
 pkgname=cloudflarespeedtest
-pkgver=2.2.4
-pkgrel=2
+pkgver=2.2.5
+pkgrel=1
 license=('GPL3')
 pkgdesc="Cloudflare IP Batch Test Tool"
 makedepends=('go' 'git')
