@@ -118,8 +118,18 @@ _package() {
 
   mkdir -p "${pkgdir}"/{boot,usr/lib/modules}
   make INSTALL_MOD_PATH="${pkgdir}/usr" modules_install
-  make INSTALL_DTBS_PATH="${pkgdir}/boot/dtbs" dtbs_install
-  cp arch/$KARCH/boot/Image "${pkgdir}/boot"
+
+  # Install DTBs, not to target pkgdir, but in srcdir, so the later package() routine could use them
+  make INSTALL_DTBS_PATH="${srcdir}/dtbs" dtbs_install
+
+  # Install DTBs to target pkgdir
+  # Create separate directory for each kernel to avoid conflicts
+  install -d "${pkgdir}/boot/dtbs/${pkgbase}/"
+  install -Dm644 "${srcdir}/dtbs/rockchip/rk3566-orangepi-3b.dts" "${pkgdir}/boot/dtbs/${pkgbase}/"
+
+  # Install kernel image (vmlinuz)
+  local _dir_module="${pkgdir}/usr/lib/modules/$(<version)"
+  install -Dm644 "arch/$KARCH/boot/Image" "${_dir_module}/vmlinuz"
 
   # make room for external modules
   local _extramodules="extramodules-${_basekernel}${_kernelname}"
