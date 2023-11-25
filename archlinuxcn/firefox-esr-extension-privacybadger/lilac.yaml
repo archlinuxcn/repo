@@ -1,12 +1,8 @@
-repo_depends:
-  - firefox-esr
-
 update_on:
-  - source: github
-    github: EFForg/privacybadger
-    use_latest_release: true
+  - source: cmd
+    cmd: curl -sS 'https://addons.mozilla.org/api/v5/addons/addon/privacy-badger17/' | jq --raw-output '.current_version.version'
   - source: manual
-    manual: 1.0
+    manual: 1.0.1
 
 maintainers:
   - github: dctxmei
