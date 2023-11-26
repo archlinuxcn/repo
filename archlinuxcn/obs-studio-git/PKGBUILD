@@ -68,6 +68,7 @@ build() {
 		-DCMAKE_INSTALL_LIBDIR=lib \
 		-DBUILD_BROWSER=ON \
 		-DCEF_ROOT_DIR="/opt/cef-obs" \
+		-DCALM_DEPRECATION=ON \
 		..
 
 	make
