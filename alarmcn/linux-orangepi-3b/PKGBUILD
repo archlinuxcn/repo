@@ -15,9 +15,7 @@ source=("${_srcname}.tar.gz::https://cdn.kernel.org/pub/linux/kernel/v6.x/${_src
 	'1001-arm64-dts-rockchip-add-opi3b.patch'
 	'1002-net-wireless-uwe5622-driver.patch'
 	'config'
-	'linux.preset'
-	'60-linux.hook'
-	'90-linux.hook')
+	'linux.preset')
 md5sums=('85f2d2fc402a365ff4ad33339db42fb8'
 	'37adbbfa41043d95e7aa5f18ea786b70'
 	'ffafea1feb500a3364c2f53df320a943'
@@ -155,12 +153,6 @@ _package() {
 	# install mkinitcpio preset file
 	sed "${_subst}" ../linux.preset |
 		install -Dm644 /dev/stdin "${pkgdir}/etc/mkinitcpio.d/${pkgbase}.preset"
-
-	# install pacman hooks
-	sed "${_subst}" ../60-linux.hook |
-		install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/60-${pkgbase}.hook"
-	sed "${_subst}" ../90-linux.hook |
-		install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/90-${pkgbase}.hook"
 }
 
 _package-headers() {
