@@ -52,13 +52,13 @@ provides=("qt5-base=$pkgver")
     elif line.startswith('source=('):
       line = line.replace('=(', '''=(
       oldherl-24h.patch
-      'https://build.archlinuxcn.org/~oldherl/files/cldr/44/core.zip'
+      'https://build.archlinuxcn.org/~oldherl/files/cldr/42/core.zip'
       ''')
       checks = checks + '6'
     elif line.startswith('sha256sums=('):
       line = line.replace('=(', '''=(
       '901a764c896559bb472d5ecee4af9ee006b235f73e56959de9ded477a10e5fc6'
-      'bd7f70adfe8a999cfa0f5d96145bf0a095b1a099024e4f451fa1afccf6e4aee6'
+      '53cd4fd1ac2ee4d4cbcae362e7af5d02e98e5e39c826ce9d723d41ca836fc846'
       ''')
       checks = checks + '7'
     elif line.startswith('prepare('):
