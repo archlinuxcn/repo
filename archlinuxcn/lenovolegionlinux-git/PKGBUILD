@@ -6,7 +6,7 @@
 _pkgname=lenovolegionlinux
 pkgname=${_pkgname}-git
 pkgver=r652.81c036a
-pkgrel=1
+pkgrel=2
 pkgdesc="LenovoLegionLinux (LLL) brings additional drivers and tools for Lenovo Legion series laptops to Linux. PLEASE READ THE REPO BEFORE INSTALL THIS PACKAGE!!!"
 arch=("x86_64")
 url="https://github.com/johnfanv2/LenovoLegionLinux"
@@ -57,7 +57,7 @@ build() {
 }
 package() {
   mkdir -p ${pkgdir}/etc/systemd/system
-  mkdir -p ${pkgdir}/etc/acpi/{events,actions}
+  mkdir -p ${pkgdir}/usr/share/legion_linux/acpi/{events,actions}
 
   cd "${srcdir}/${_pkgname}/python/legion_linux"
   python -m installer --destdir="$pkgdir" dist/*.whl
@@ -68,6 +68,6 @@ package() {
 	install -Dm664 service/*.path "${pkgdir}/etc/systemd/system"
 	
 # ACPI service
-  install -Dm775 acpi/actions/battery-legion-quiet.sh "${pkgdir}/etc/acpi/actions/"
-  install -Dm664 acpi/events/ac_adapter_legion-fancurve "${pkgdir}/etc/acpi/events/"
+  install -Dm775 acpi/actions/battery-legion-quiet.sh "${pkgdir}/usr/share/legion_linux/acpi/actions"
+  install -Dm664 acpi/events/ac_adapter_legion-fancurve "${pkgdir}/usr/share/legion_linux/acpi/events/"
 }
