@@ -9,6 +9,7 @@ arch=('x86_64')
 url="https://github.com/alexdobin/STAR"
 license=('MIT')
 depends=('gcc-libs' 'zlib')
+makedepends=('vim')
 provides=('STAR')
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
 sha256sums=('0d1b71de6c5be1c5d90b32130d2abcd5785a4fc7c1e9bf19cc391947f2dc46e5')
