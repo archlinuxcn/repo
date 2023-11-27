@@ -3,7 +3,7 @@
 # Contributor: Manuel Schneider  <manuelschneid3r at googles mail>
 
 pkgname=albert
-pkgver=0.22.16
+pkgver=0.22.17
 pkgrel=1
 pkgdesc="A sophisticated standalone keyboard launcher"
 arch=('x86_64')
@@ -61,4 +61,4 @@ package() {
   make DESTDIR="$pkgdir/" install
 }
 
-sha512sums=('25dba1482b6113dd08bb03b59a3687c2d18e604008f29f0e435633fe50564e388cb76008e42818155f9cdc7b340ace0a9ba00fc0a821bb6be233e07e4727a9e3')
+sha512sums=('35b10c8f364099c975c5ab5fba42c22dde5d630cff42c54aeaed019f1762d201110c7d76b40e32a8a43b7a7db1af6ace7468d73d58d2e175ab561a67dd046448')
