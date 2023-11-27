@@ -2,7 +2,6 @@
 
 _pkgname=3dslicer
 pkgname=3dslicer-git
-_pkgver=5.6.0
 pkgver=5.2.2.r28870.5f2e83cf71
 pkgrel=1
 pkgdesc='A free, open source and multi-platform software package widely used for medical, biomedical, and related imaging research'
@@ -46,8 +45,7 @@ sha512sums=('SKIP'
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
-  ver=$(printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)")
-  echo "${_pkgver}.${ver}"
+  printf "%s" "$(git describe --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g' | sed 's/^v//')"
 }
 
 prepare() {
