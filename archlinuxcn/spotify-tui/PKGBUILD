@@ -7,7 +7,7 @@
 
 pkgname=spotify-tui
 pkgver=0.25.0
-pkgrel=4
+pkgrel=5
 pkgdesc="Spotify client for the terminal written in Rust"
 arch=('x86_64')
 url="https://github.com/Rigellute/spotify-tui"
@@ -33,6 +33,7 @@ prepare() {
   for patch in 'Cargo.toml.patch' 'Cargo.lock.patch'; do
     patch -p0 -i "$srcdir/$patch"
   done
+  export RUSTUP_TOOLCHAIN=stable
   cargo update
   cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
