@@ -52,6 +52,7 @@ makedepends=(cmake
 	xorgproto)
 provides=("hyprland=${pkgver%%.r*}")
 conflicts=(hyprland)
+replaces=(hyprland-nvidia-git)
 source=("git+https://github.com/hyprwm/Hyprland.git"
 	"git+https://gitlab.freedesktop.org/wlroots/wlroots.git"
 	"git+https://github.com/hyprwm/hyprland-protocols.git"
