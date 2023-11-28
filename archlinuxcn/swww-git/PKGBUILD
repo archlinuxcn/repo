@@ -16,6 +16,11 @@ source=("git+${url}.git")
 sha256sums=('SKIP')
 options=(!lto)
 
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
 prepare() {
 	# export RUSTUP_TOOLCHAIN=nightly
 	export RUSTUP_TOOLCHAIN=stable
