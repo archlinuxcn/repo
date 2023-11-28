@@ -4,7 +4,7 @@
 # Contributor: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=mawk
-pkgver=1.3.4_20231102
+pkgver=1.3.4_20231126
 pkgrel=3
 
 pkgdesc="An interpreter for the AWK Programming Language"
@@ -16,7 +16,7 @@ depends=('glibc')
 changelog="changelog.txt"
 
 source=("https://invisible-island.net/archives/$pkgname/$pkgname-${pkgver//_/-}.tgz")
-b2sums=('c423381900be429dcfb117df3ceb72dc942aec6e85ea94e59b2fef1b92445620cff3205fb55be1ddee2bfba9597a1c68ed2f41bb155a1cc6791df0f6de75b44b')
+b2sums=('e3907cf88ea3daaaf8a1d12eb9fe3cb726be8b8e8d3c8d9ea5b25b8127c5d054d8a0c600da90f7dabcc0fcee2c987628ade15b7225698e417fee63e49689a8a4')
 
 build() {
 	cd $pkgname-${pkgver/_/-}

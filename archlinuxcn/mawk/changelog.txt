@@ -1,4 +1,13 @@
--- $MawkId: CHANGES,v 1.366 2023/11/02 23:27:07 tom Exp $
+-- $MawkId: CHANGES,v 1.369 2023/11/26 23:51:54 tom Exp $
+
+20231126
+	+ fix a couple of problems reported by Coverity:
+	  + modify cell_destroy() to set the string pointer to NULL if zfree()
+	    might have freed it.
+	  + replace a couple of strcpy's with loop.
+	  + eliminate a fixed-size array in re_cmpl.c
+	+ change casts in strftime() and srand() to avoid truncation on 64-bit
+	  machines (report by John Naman).
 
 20231102
 	+ environment-fixes for building with Solaris 10.
