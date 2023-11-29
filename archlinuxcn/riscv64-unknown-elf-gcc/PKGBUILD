@@ -72,7 +72,6 @@ build() {
 		--disable-threads \
 		--disable-werror \
 		--enable-tls \
-		--with-arch=rv64gc_zifencei \
 		--with-gnu-as \
 		--with-gnu-ld \
 		--with-system-zlib \
@@ -84,7 +83,7 @@ build() {
 		--with-mpc \
 		--with-isl \
 		--with-libelf \
-		--with-arch=rv64imafdc \
+		--with-arch=rv64gc_zifencei \
 		--with-abi=lp64d
 
 	make INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0'
