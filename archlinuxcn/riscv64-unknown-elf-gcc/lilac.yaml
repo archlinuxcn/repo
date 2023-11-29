@@ -9,6 +9,8 @@ repo_depends:
   - riscv64-unknown-elf-binutils
 
 update_on:
-  - source: alpm
-    alpm: gcc
-    strip_release: true
+  - source: github
+    github: gcc-mirror/gcc
+    use_max_tag: true
+    include_regex: "releases/gcc-.*"
+    prefix: releases/gcc-

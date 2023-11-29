@@ -6,7 +6,6 @@ pkgname=${_target}-gcc
 pkgver=13.1.0
 _islver=0.26
 pkgrel=2
-#_snapshot=7-20170504
 pkgdesc='The GNU Compiler Collection - cross compiler for 32bit and 64bit RISC-V bare-metal'
 arch=('i686' 'x86_64')
 url='http://gcc.gnu.org/'
@@ -103,5 +102,3 @@ package() {
 	rm -r "${pkgdir}/usr/share/info"
 	rm "${pkgdir}/usr/lib/libcc1.*"
 }
-
-# vim: set ts=2 sw=2 et:
