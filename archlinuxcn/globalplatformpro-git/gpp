@@ -4,7 +4,7 @@ if [[ -x /usr/lib/jvm/java-21-openjdk/bin/java ]]; then
     _JAVA_EXE=/usr/lib/jvm/java-21-openjdk/bin/java
 elif [[ -x /usr/lib/jvm/java-17-openjdk/bin/java ]]; then
     _JAVA_EXE=/usr/lib/jvm/java-17-openjdk/bin/java
-elif [[ -x /usr/bin/java ]] && (( $(java --version 2>/dev/null | grep -Po '(?<=openjdk )[0-9]+') >= 17 )); then
+elif [[ -x /usr/bin/java ]] && (( $(/usr/bin/java --version 2>/dev/null | grep -Po '(?<=openjdk )[0-9]+') >= 17 )); then
     _JAVA_EXE=/usr/bin/java
 else
     echo "ERROR: OpenJDK (Version >= 17) NOT Found!"
