@@ -31,7 +31,6 @@ depends=(
         'vulkan-icd-loader' 'libvulkan.so'
         'ffmpeg' 'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so' 'libavutil.so' 'libswresample.so' 'libswscale.so'
         'libplacebo-git' 'libplacebo.so'
-        'shaderc' 'libshaderc_shared.so'
         'libpipewire'
 )
 makedepends=('git' 'python-docutils' 'vulkan-headers' 'wayland-protocols'
@@ -68,7 +67,6 @@ build() {
         '-Dlua=enabled' '-Dlua=luajit'
         '-Ddvbin=enabled'
         '-Dsdl2=enabled'
-        '-Dspirv-cross=disabled'
     )
     
     local _other_os_flags=(
@@ -98,6 +96,7 @@ build() {
         '-Dwin32-threads=disabled' # Windows
         '-Duwp=disabled' # Windows
         '-Dvaapi-win32=disabled' # Windows
+        '-Dspirv-cross=disabled' '-Dshaderc=disabled' # Windows, see https://github.com/mpv-player/mpv/commit/60a31a8a284e539043c47a33ff90f3d55aade6a8
         '-Dopensles=disabled' # Android
         '-Degl-android=disabled' # Android
         '-Dandroid-media-ndk=disabled' # Android
