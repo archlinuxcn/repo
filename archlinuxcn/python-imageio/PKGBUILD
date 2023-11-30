@@ -2,7 +2,7 @@
 
 pkgname="python-imageio"
 _pkgname="imageio"
-pkgver=2.32.0
+pkgver=2.33.0
 pkgrel=1
 pkgdesc="a Python library that provides an easy interface to read and write a wide range of image data"
 arch=('any')
@@ -14,7 +14,7 @@ depends=('python-numpy' 'python-pillow')
 optdepends=('avbin' 'python-imageio-ffmpeg' 'freeimage' 'python-astropy' 'python-simpleitk')
 makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/imageio/imageio/archive/v${pkgver}.tar.gz")
-sha256sums=('87b6eeac48bfa4042cd78a8efd0bf67cc32d338b3fe484045086f7389bee7b2b')
+sha256sums=('ca7f861a2d39b3719d031077ecd3be8fb07507c1c9747bbd721284ea4ee1cb7a')
 
 build() {
   msg "Building Python 3"
