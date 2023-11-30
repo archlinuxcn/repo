@@ -5,7 +5,7 @@
 
 _pkgname=librime
 pkgname=$_pkgname-sbxlm
-pkgver=9.5.17
+pkgver=9.5.18
 _octagramcommit=f92e083052b9983ee3cbddcda5ed60bb3c068e24
 _luacommit=d45a41af2f9d731e3c1516a191cc3160e3cb8377
 pkgrel=1
@@ -21,7 +21,7 @@ conflicts=("$_pkgname")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
         "https://github.com/lotem/librime-octagram/archive/$_octagramcommit/librime-octagram-$_octagramcommit.tar.gz"
         "https://github.com/hchunhui/librime-lua/archive/$_luacommit/librime-lua-$_luacommit.tar.gz")
-sha512sums=('7fdfd4e7d2ecf0cc7e06cbadf45c06e0a298fb4fc15259082454476d4dbe6b320891545fb656bb6da2f627937c4e1ba97c8b28107f0d374b4c512703efd45ae8'
+sha512sums=('eb78e4852e5dfff5df89967ee401c7fc82b96d81921280e61b1e2bad99f4dde7a4b6a0c0a92b378227a3a52b555b5ab53b876fdf667f59e2bee00a611e52b12c'
             '737d1c58982d2f79a6e8b2548eefa1dddc036dd6e6d5436e7d6b4f3adfa2e9d8e45b29a13c1b8207a93cb77f3b5dbd9d18436f44d4e8040eb95b962de582b386'
             '2a3d3b49d53066fe96dd008e8064718082225e6bf185574a25b8e98175d9936abcfa1fdc56e48f9c72a2deb46f8157d6132fd119ff8e0a3d52fbe9e2ea21386c')
 
