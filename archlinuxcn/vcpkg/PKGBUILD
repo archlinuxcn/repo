@@ -5,7 +5,7 @@
 
 pkgname=vcpkg
 pkgver=2023.11.20
-pkgrel=1
+pkgrel=2
 pkgdesc='C++ library manager for Windows, Linux, and MacOS'
 depends=('curl' 'zip' 'unzip')
 makedepends=('cmake>=3.3.0' 'ninja')
@@ -17,19 +17,34 @@ provides=('vcpkg')
 conflicts=('vcpkg')
 source=(
     "${pkgname}-${pkgver}.tar.gz::https://github.com/microsoft/vcpkg/archive/refs/tags/${pkgver}.tar.gz"
-    'vcpkg.csh'
-    'vcpkg.sh'
     'vcpkg.conf'
+)
+source_x86_64=(
+    'vcpkg-x86_64.csh'
+    'vcpkg-x86_64.sh'
+)
+source_aarch64=(
+    'vcpkg-aarch64.csh'
+    'vcpkg-aarch64.sh'
 )
 sha256sums=(
     'e890bc0ad94a8af55e39441fd501413584eedbcd0bffedff1552a64e9dce73ae'
+    '02a6d2bca471adedfc7acc9ba57860d976ec5115b282cb1a96341850e1c7b221'
+)
+sha256sums_x86_64=(
     '6afa87afff491f6090c4ade5a9249942f9d503708f81c4cfea5ca22f6b96adba'
     '851f32d41ce7ec0140b8fe4cf1acbb1e8bab18b0d899d12a202558a270d5a4bb'
-    '02a6d2bca471adedfc7acc9ba57860d976ec5115b282cb1a96341850e1c7b221'
+)
+sha256sums_aarch64=(
+    '0f26682199cf81c3f9f8c86d7bfbcd0992c9758028e404d4daa63fea8945a947'
+    '4c6a7ae3f537d2299ad6b3bbde568987d79bd899243460207736a2f1bc6829ea'
 )
 install=${pkgname}.install
 
 build() {
+    if [ ${CARCH} == "aarch64" ]; then
+        export VCPKG_FORCE_SYSTEM_BINARIES=1
+    fi
     "${srcdir}/${pkgname}-${pkgver}/bootstrap-vcpkg.sh" -disableMetrics
 }
 
@@ -57,8 +72,8 @@ package() {
     install -Dm644 "${srcdir}/vcpkg.conf" "${pkgdir}/usr/lib/sysusers.d/vcpkg.conf"
 
     # environment variables
-    install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/etc/profile.d/${pkgname}.sh"
-    install -Dm755 "${srcdir}/${pkgname}.csh" "${pkgdir}/etc/profile.d/${pkgname}.csh"
+    install -Dm755 "${srcdir}/${pkgname}-${CARCH}.sh" "${pkgdir}/etc/profile.d/${pkgname}.sh"
+    install -Dm755 "${srcdir}/${pkgname}-${CARCH}.csh" "${pkgdir}/etc/profile.d/${pkgname}.csh"
 
     # executable entry point
     install -dm755 "${pkgdir}/usr/bin"
