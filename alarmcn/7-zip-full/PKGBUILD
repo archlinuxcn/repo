@@ -1,7 +1,7 @@
 _name=7-zip
 pkgname=${_name}-full
 pkgver=23.01
-pkgrel=2
+pkgrel=3
 pkgdesc="File archiver with a high compression ratio (full package to replace p7zip)"
 url="https://7-zip.org/"
 license=('LGPL')
@@ -28,12 +28,10 @@ prepare() {
 build() {
     local targets=("Alone" "Alone2" "Alone7z" "Format7zF")
     local -A platforms=(['x86_64']='x64' ['i686']='x86' ['aarch64']='arm64' ['armv7h']='arm')
-    mkdir -p "build"
 
     (
         set -a
         PLATFORM="${platforms["${CARCH}"]}"
-        O="${srcdir}/build"
         IS_X64=$([ "${CARCH}" = 'x86_64' ] && echo '1' || echo '')
         IS_X86=$([ "${CARCH}" = 'i686' ] && echo '1' || echo '')
         IS_ARM64=$([ "${CARCH}" = 'aarch64' ] && echo '1' || echo '')
@@ -46,7 +44,9 @@ build() {
         set +a
 
         for target in "${targets[@]}"; do
-            make -C "CPP/7zip/Bundles/${target}" -f 'makefile.gcc'
+            cd "${srcdir}/CPP/7zip/Bundles/${target}"
+            mkdir -p '_o'
+            make -f 'makefile.gcc'
         done
     )
 }
@@ -55,10 +55,10 @@ package() {
     local bin="${pkgdir}/usr/bin"
 
     install -Dm755 -t "${bin}" \
-        "build/"{"7za","7zz","7zr"}
+        'CPP/7zip/Bundles/'{'Alone/_o/7za','Alone2/_o/7zz','Alone7z/_o/7zr'}
 
     install -Dm644 -t "${pkgdir}/usr/lib" \
-        "build/7z.so"
+        'CPP/7zip/Bundles/Format7zF/_o/7z.so'
 
     ln -sT "7zz" "${bin}/7z"
 
