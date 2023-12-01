@@ -1,5 +1,5 @@
 pkgname=nexttrace
-pkgver=1.2.6
+pkgver=1.2.7
 pkgrel=1
 pkgdesc='An open source visual route tracking CLI tool'
 arch=('x86_64')
