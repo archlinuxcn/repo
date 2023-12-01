@@ -8,8 +8,16 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/JuliaIO/JpegTurbo.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+source=("git+https://github.com/JuliaIO/JpegTurbo.jl.git#commit=$_commit"
+        LibJpeg.jl)
+sha256sums=('SKIP'
+            '2769c9cc1c5e82d42e14fdebfb1bd80c7244d3b3bb8441c27a5f123dc0cfec2a')
+
+prepare() {
+  cd JpegTurbo.jl
+
+  cp ../LibJpeg.jl lib/
+}
 
 package() {
   cd JpegTurbo.jl
