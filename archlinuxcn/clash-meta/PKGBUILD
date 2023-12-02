@@ -1,10 +1,10 @@
 # Maintainer: sukanka <su975853527 at gmail dot com>
 
 pkgname=clash-meta
-pkgver=1.16.0
-pkgrel=5
+pkgver=1.17.0
+pkgrel=1
 pkgdesc="Another Clash Kernel by MetaCubeX"
-arch=("x86_64" 'aarch64')
+arch=('x86_64' 'aarch64' 'riscv64' 'loong64')
 url="https://github.com/MetaCubeX/Clash.Meta"
 license=("GPL3")
 depends=('glibc' 'clash-geoip')
@@ -17,16 +17,23 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz
         "${pkgname}.sysusers"
         "${pkgname}.tmpfiles"
         "config.yaml")
-sha256sums=('037f926369ac9a0922801f1b0a8e2d79d454e67f6bc2a1e4ca7a52a0a8c641ea'
+sha256sums=('6d18813d3f0cd1f0e47a36b39fc1bcd9c3d872145591a5399bafabc0abba1af1'
             'b6b7ce11489a6f6322a41ce840b3f999b1ec88914f8bd6864c220269231bf759'
             'ec4de877464e595124a5f2752c3f4be157adc85ec5f7f8392c0331cb70fc906a'
             '655e8e2edcd82a6bdf2fd12430b7ab6f8e32db8dffce70e7342685a7cc65ebfb'
             '50737592c7bd743fe8f543924034718337477a203fa11ef4272cae496df3769c'
             '90f7fdacecd5928e37865b4f841517f925c8bedc769f16f7a7a1e89b923f1fb9')
 
+prepare(){
+    cd "${srcdir}"
+    mv mihomo-${pkgver} Clash.Meta-${pkgver}
+    cd Clash.Meta-${pkgver}
+    sed -i 's|^const.*|const Name = "clash"|g' constant/path.go
+}
 build(){
     cd "${srcdir}"/Clash.Meta-${pkgver}
     BUILDTIME=$(date -u)
+    NAME=clash-meta
     GOOS=linux CGO_ENABLED=0 go build \
     -trimpath \
     -buildmode=pie \
