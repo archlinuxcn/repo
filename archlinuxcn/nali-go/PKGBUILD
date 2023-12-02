@@ -1,39 +1,40 @@
 # Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: DCjanus <DCjanus@dcjanus.com>
 
 pkgname=nali-go
+_pkgname=nali
 pkgver=0.8.0
 pkgrel=1
 pkgdesc='An offline tool for querying IP geographic information and CDN provider.'
-arch=('x86_64')
+arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/zu1k/nali"
 license=('MIT')
-conflicts=('nali-cli')
-makedepends=('go')
+makedepends=("go>=1.18")
+provides=('nali')
+conflicts=('nali-cli' 'nali')
 source=("$pkgname-$pkgver::https://github.com/zu1k/nali/archive/refs/tags/v$pkgver.tar.gz")
 sha256sums=('837b096de0278ee2a539357a0cd1c56e827c1bbd53be5822df5404b007ce12f2')
 b2sums=('85c000c836e6c7b62cfd55372fa70db985765b3fbbc606b3edb412e14dea54e5f3a4ad6f7bf202deabc5f13a8e30f77c84a92dcab327fd0793d7a3cc27abfb82')
-# Golang no support
-options=(!lto)
 
 build() {
-    cd "$srcdir/nali-$pkgver"
-    go build \
-        -buildmode=pie \
-        -mod=readonly \
-        -modcacherw \
-        -ldflags "-compressdwarf=false -linkmode external -X \"github.com/zu1k/nali/constant.Version=$pkgver\" -extldflags $LDFLAGS" \
-        -o $pkgname .
+  cd "$srcdir/$_pkgname-$pkgver"
+  go build \
+    -trimpath \
+    -buildmode=pie \
+    -mod=readonly \
+    -modcacherw \
+    -ldflags "-compressdwarf=false -linkmode external -X \"github.com/zu1k/nali/internal/constant.Version=$pkgver\" -extldflags $LDFLAGS" \
+    -o $_pkgname .
 }
 
 package() {
-    cd "$srcdir/nali-$pkgver"
-    install -Dm755 $pkgname "$pkgdir"/usr/bin/$pkgname
-    ln -sf ./$pkgname "$pkgdir"/usr/bin/nali
-    mkdir -p "$pkgdir/usr/share/bash-completion/completions/"
-    ./$pkgname completion bash > "$pkgdir/usr/share/bash-completion/completions/nali"
-    mkdir -p "$pkgdir/usr/share/zsh/site-functions/"
-    ./$pkgname completion zsh > "$pkgdir/usr/share/zsh/site-functions/_nali"
-    mkdir -p "$pkgdir/usr/share/fish/completions/"
-    ./$pkgname completion fish > "$pkgdir/usr/share/fish/completions/nali.fish"
-    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  cd "$srcdir/$_pkgname-$pkgver"
+  install -Dm755 $_pkgname "$pkgdir"/usr/bin/$_pkgname
+  mkdir -p "$pkgdir/usr/share/bash-completion/completions/"
+  ./$_pkgname completion bash > "$pkgdir/usr/share/bash-completion/completions/nali"
+  mkdir -p "$pkgdir/usr/share/zsh/site-functions/"
+  ./$_pkgname completion zsh > "$pkgdir/usr/share/zsh/site-functions/_nali"
+  mkdir -p "$pkgdir/usr/share/fish/completions/"
+  ./$_pkgname completion fish > "$pkgdir/usr/share/fish/completions/nali.fish"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
 }
