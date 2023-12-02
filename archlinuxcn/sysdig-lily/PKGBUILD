@@ -64,9 +64,11 @@ build() {
         -DUSE_BUNDLED_RE2=OFF \
         -DUSE_BUNDLED_VALIJSON=ON \
         -DUSE_BUNDLED_NJSON=ON \
+        -DUSE_BUNDLED_TINYDIR=ON \
         -DBUILD_DRIVER=ON \
         -DBUILD_BPF=ON \
         -DENABLE_DKMS=OFF \
+        -DBUILD_LIBSINSP_EXAMPLES=OFF \
         -DBUILD_LIBSCAP_EXAMPLES=OFF
   make
 }
