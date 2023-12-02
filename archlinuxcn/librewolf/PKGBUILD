@@ -2,8 +2,8 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=120.0
-pkgrel=2
+pkgver=120.0.1
+pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
 arch=(x86_64 aarch64)
@@ -13,7 +13,7 @@ license=(
   MPL
 )
 depends=(
-  dbus-glib
+  dbus
   ffmpeg
   gtk3
   libpulse
@@ -77,7 +77,7 @@ source=(
   "default192x192.png"
 )
 
-sha256sums=('96c84da5fef980f61a0d3c53e78ea2f4be252596dda8321f16ee268a2fe1d19f'
+sha256sums=('2791183065eec985236eeda50c0e5d5d23bf4a4adcf106adde5dbc4d87830d70'
             '7d01d317b7db7416783febc18ee1237ade2ec86c1567e2c2dd628a94cbf2f25d'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1')
 
