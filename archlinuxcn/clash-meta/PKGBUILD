@@ -2,7 +2,7 @@
 
 pkgname=clash-meta
 pkgver=1.17.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Another Clash Kernel by MetaCubeX"
 arch=('x86_64' 'aarch64' 'riscv64' 'loong64')
 url="https://github.com/MetaCubeX/Clash.Meta"
@@ -17,7 +17,7 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz
         "${pkgname}.sysusers"
         "${pkgname}.tmpfiles"
         "config.yaml")
-sha256sums=('6d18813d3f0cd1f0e47a36b39fc1bcd9c3d872145591a5399bafabc0abba1af1'
+sha256sums=('0c6f2c073189211aaa5a6ce8019f1c3f421bc4cdc1e46217a0a76912c6a38927'
             'b6b7ce11489a6f6322a41ce840b3f999b1ec88914f8bd6864c220269231bf759'
             'ec4de877464e595124a5f2752c3f4be157adc85ec5f7f8392c0331cb70fc906a'
             '655e8e2edcd82a6bdf2fd12430b7ab6f8e32db8dffce70e7342685a7cc65ebfb'
