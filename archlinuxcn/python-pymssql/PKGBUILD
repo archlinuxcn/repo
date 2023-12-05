@@ -26,8 +26,17 @@ checkdepends=(
   python-pytest-timeout
   python-sqlalchemy
 )
-source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha512sums=('c49cd40ed2fbbc99b77610675f0696f1a0f695401d547957e6742e8229eb3abffbc4bf0630ec6d7028d8289428754502c069c935c59af9a3c46811813fe94fef')
+source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"
+        "0001.fix-setuptools-scm-version.patch"
+)
+sha512sums=('4d41280c356fee1b1215a081304d3d6ee6e8bef764968cc44634f274db0a771928f39626f718e300a6bbfea1e39b6174ddefcb084b2548ef44e4607c3b8c57aa'
+            '1d2c5cc733e8bd80884f6b3d0d5c4b2a1e4abdfbb3e25332ac556a1194e8c6e330af5b35fc16804950e9f215b6a766118146500d29b569f3b7c80547a724b494')
+
+prepare() {
+  # quick fix for https://github.com/pymssql/pymssql/issues/869
+  cd "${_pkgname}-${pkgver}"
+  patch -p1 -i "${srcdir}/0001.fix-setuptools-scm-version.patch"
+}
 
 build() {
   cd "${_pkgname}-${pkgver}"
