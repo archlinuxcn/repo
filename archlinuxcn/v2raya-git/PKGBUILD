@@ -1,7 +1,7 @@
 # Maintainer: mzz2017 <mzz@tuta.io>
 
 pkgname=v2raya-git
-pkgver=20231122.r1474.93bbed1a
+pkgver=20231205.r1481.7eb931de
 pkgrel=1
 install=.INSTALL
 pkgdesc="v2rayA nightly version"
@@ -13,7 +13,7 @@ makedepends=('git' 'go>=2:1.17.0-1' 'nodejs>=17' 'yarn')
 provides=('v2raya')
 conflicts=('v2raya')
 backup=("etc/default/v2raya")
-source=("$pkgname::git+$url.git")
+source=("$pkgname::git+$url")
 sha512sums=('SKIP')
 
 
