@@ -4,7 +4,7 @@
 
 pkgname=extra-cmake-modules-git
 pkgver=5.246.0.r3657.11dd72b0
-pkgrel=1
+pkgrel=2
 pkgdesc='Extra modules and scripts for CMake. (GIT version)'
 arch=('any')
 url='https://projects.kde.org/projects/kdesupport/extra-cmake-modules'
@@ -23,7 +23,7 @@ checkdepends=(
   'qt6-declarative'
 )
 conflicts=('extra-cmake-modules')
-provides=('extra-cmake-modules')
+provides=("extra-cmake-modules=${pkgver%%.r*}")
 optdepends=(
  'python-pyxdg: to generate fastlane metadata for Android apps'
  'python-requests: to generate fastlane metadata for Android apps'
