@@ -1,0 +1,11 @@
+post_install() {
+  cat <<EOF
+
+==> Please append the following lines to /etc/pacman.conf:
+    ```ini
+    [archlinuxcn]
+    Include = /etc/pacman.d/archlinuxcn-mirrorlist
+    ```
+
+EOF
+}
