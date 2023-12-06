@@ -8,7 +8,7 @@ For detailed information in Chinese, [visit here](https://www.archlinuxcn.org/ar
 
 ### Usage
 
-Append (adding to the end of the file) to /etc/pacman.conf:
+Please append the following lines to /etc/pacman.conf:
 
 ```
 [archlinuxcn]
