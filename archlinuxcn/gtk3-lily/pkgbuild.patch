@@ -1,0 +1,42 @@
+diff --git a/PKGBUILD b/PKGBUILD
+index d66017d..d4a8d57 100644
+--- a/PKGBUILD
++++ b/PKGBUILD
+@@ -4,5 +4,5 @@
+ pkgbase=gtk3
+ pkgname=(
+-  gtk3
+-  gtk3-demos
+-  gtk3-docs
++  gtk3-lily
++  # gtk3-demos
++  # gtk3-docs
+@@ -13,1 +13,1 @@
+-pkgdesc="GObject-based multi-platform GUI toolkit"
++pkgdesc="GObject-based multi-platform GUI toolkit, with lilydjwg's patches"
+@@ -63,5 +63,7 @@ makedepends=(
+ source=(
+   "git+https://gitlab.gnome.org/GNOME/gtk.git#commit=$_commit"
++  0001-wayland-im-notify-wayland-after-set_cursor_location.patch
+   gtk-query-immodules-3.0.hook
+ )
+ sha256sums=('SKIP'
++            '8fbf7de6fd423d4c891efa7fa29486cb7c6605813d95d5fea8cdde22c459a348'
+@@ -75,2 +77,3 @@
+ prepare() {
+   cd gtk
++  patch -Np1 < ../0001-wayland-im-notify-wayland-after-set_cursor_location.patch
+@@ -105,10 +108,11 @@
+-package_gtk3() {
++package_gtk3-lily() {
+   depends+=(gtk-update-icon-cache)
+   optdepends=('evince: Default print preview command')
+   provides=(
++    gtk3=$pkgver
+     gtk3-print-backends
+     libgailutil-3.so
+     libgdk-3.so
+     libgtk-3.so
+   )
+-  conflicts=(gtk3-print-backends)
++  conflicts=(gtk3-print-backends gtk3)
