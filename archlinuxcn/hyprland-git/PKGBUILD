@@ -42,7 +42,6 @@ depends=(cairo
 	xorg-xinput
 	xorg-xwayland
 	libdisplay-info.so
-	tomlplusplus)
 makedepends=(cmake
 	jq
 	git
@@ -50,7 +49,8 @@ makedepends=(cmake
 	ninja
 	pkgconf
 	vulkan-headers
-	xorgproto)
+	xorgproto
+	tomlplusplus)
 provides=("hyprland=${pkgver%%.r*}")
 conflicts=(hyprland)
 replaces=(hyprland-nvidia-git)
