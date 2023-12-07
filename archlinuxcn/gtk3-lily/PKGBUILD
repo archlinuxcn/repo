@@ -1,0 +1,160 @@
+# Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Contributor: Ionut Biru <ibiru@archlinux.org>
+
+pkgbase=gtk3
+pkgname=(
+  gtk3-lily
+  # gtk3-demos
+  # gtk3-docs
+)
+pkgver=3.24.38
+pkgrel=2
+epoch=1
+pkgdesc="GObject-based multi-platform GUI toolkit, with lilydjwg's patches"
+url="https://www.gtk.org/"
+arch=(x86_64)
+license=(LGPL)
+depends=(
+  adwaita-icon-theme
+  atk
+  cairo
+  cantarell-fonts
+  dconf
+  desktop-file-utils
+  fontconfig
+  fribidi
+  gdk-pixbuf2
+  glib2
+  harfbuzz
+  iso-codes
+  libcloudproviders
+  libcolord
+  libcups
+  libegl
+  libepoxy
+  libgl
+  librsvg
+  libxcomposite
+  libx11
+  libxcursor
+  libxdamage
+  libxext
+  libxfixes
+  libxi
+  libxinerama
+  libxkbcommon
+  libxrandr
+  libxrender
+  pango
+  shared-mime-info
+  tracker3
+  wayland
+)
+makedepends=(
+  git
+  glib2-docs
+  gobject-introspection
+  gtk-doc
+  meson
+  sassc
+  wayland-protocols
+)
+_commit=3e6fd55ee00d4209ce2f2af292829e4d6f674adc  # tags/3.24.38^0
+source=(
+  "git+https://gitlab.gnome.org/GNOME/gtk.git#commit=$_commit"
+  0001-wayland-im-notify-wayland-after-set_cursor_location.patch
+  gtk-query-immodules-3.0.hook
+)
+sha256sums=('SKIP'
+            '40a183cfaa569523bdd2a42a19b58ce20d2cafb0e82bec48246740c8dc0b369d'
+            'a0319b6795410f06d38de1e8695a9bf9636ff2169f40701671580e60a108e229')
+
+pkgver() {
+  cd gtk
+  git describe --tags | sed 's/[^-]*-g/r&/;s/-/+/g'
+}
+
+prepare() {
+  cd gtk
+  patch -Np1 < ../0001-wayland-im-notify-wayland-after-set_cursor_location.patch
+}
+
+build() {
+  local meson_options=(
+    -D broadway_backend=true
+    -D cloudproviders=true
+    -D colord=yes
+    -D gtk_doc=true
+    -D introspection=true
+    -D man=true
+    -D tracker3=true
+  )
+
+  CFLAGS+=" -DG_DISABLE_CAST_CHECKS"
+  arch-meson gtk build "${meson_options[@]}"
+  meson compile -C build
+}
+
+_pick() {
+  local p="$1" f d; shift
+  for f; do
+    d="$srcdir/$p/${f#$pkgdir/}"
+    mkdir -p "$(dirname "$d")"
+    mv "$f" "$d"
+    rmdir -p --ignore-fail-on-non-empty "$(dirname "$f")"
+  done
+}
+
+package_gtk3-lily() {
+  depends+=(gtk-update-icon-cache)
+  optdepends=('evince: Default print preview command')
+  provides=(
+    gtk3=$pkgver
+    gtk3-print-backends
+    libgailutil-3.so
+    libgdk-3.so
+    libgtk-3.so
+  )
+  conflicts=(gtk3-print-backends gtk3)
+  replaces=("gtk3-print-backends<=3.22.26-1")
+  install=gtk3.install
+
+  meson install -C build --destdir "$pkgdir"
+
+  install -Dm644 /dev/stdin "$pkgdir/usr/share/gtk-3.0/settings.ini" <<END
+[Settings]
+gtk-icon-theme-name = Adwaita
+gtk-theme-name = Adwaita
+gtk-font-name = Cantarell 11
+END
+
+  install -Dt "$pkgdir/usr/share/libalpm/hooks" -m644 gtk-query-immodules-3.0.hook
+
+  cd "$pkgdir"
+
+  _pick demo usr/bin/gtk3-{demo,demo-application,icon-browser,widget-factory}
+  _pick demo usr/share/applications/gtk3-{demo,icon-browser,widget-factory}.desktop
+  _pick demo usr/share/glib-2.0/schemas/org.gtk.{Demo,exampleapp}.gschema.xml
+  _pick demo usr/share/icons/hicolor/*/apps/gtk3-{demo,widget-factory}[-.]*
+  _pick demo usr/share/man/man1/gtk3-{demo,demo-application,icon-browser,widget-factory}.1
+
+  _pick docs usr/share/gtk-doc
+
+  # Built by GTK 4, shared with GTK 3
+  rm usr/bin/gtk-update-icon-cache
+  rm usr/share/man/man1/gtk-update-icon-cache.1
+}
+
+package_gtk3-demos() {
+  pkgdesc+=" (demo applications)"
+  depends=(gtk3)
+  mv demo/* "$pkgdir"
+}
+
+package_gtk3-docs() {
+  pkgdesc+=" (documentation)"
+  depends=()
+  mv docs/* "$pkgdir"
+}
+
+# vim:set sw=2 sts=-1 et:
