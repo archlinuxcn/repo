@@ -6,7 +6,7 @@
 
 _pkgname="hyprland"
 pkgname="${_pkgname}-hidpi-xprop-git"
-pkgver=0.33.1.r3.62a8d0be
+pkgver=0.33.1.r7.aa020a2a
 pkgrel=1
 pkgdesc="A dynamic tiling Wayland compositor based on wlroots that doesn't sacrifice on its looks."
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
@@ -49,6 +49,7 @@ makedepends=(
 	meson
 	wayland-protocols
 	xorgproto
+	tomlplusplus
 )
 source=("${_pkgname}::git+https://github.com/hyprwm/Hyprland.git"
         "git+https://gitlab.freedesktop.org/wlroots/wlroots.git"
@@ -101,6 +102,7 @@ package() {
 	meson install -C subprojects/wlroots/build --destdir "${pkgdir}/tmpwlr"
 	install -Dm755 build/Hyprland -t "${pkgdir}/usr/bin"
 	install -Dm755 build/hyprctl/hyprctl -t "${pkgdir}/usr/bin"
+	install -Dm755 build/hyprpm/hyprpm -t "${pkgdir}/usr/bin"
 	install -Dm644 assets/*.png -t "${pkgdir}/usr/share/hyprland"
 	install -Dm644 example/hyprland.desktop -t "${pkgdir}/usr/share/wayland-sessions"
 	install -Dm644 example/hyprland.conf -t "${pkgdir}/usr/share/hyprland"
