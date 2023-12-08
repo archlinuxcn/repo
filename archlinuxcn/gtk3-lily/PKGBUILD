@@ -145,16 +145,3 @@ END
   rm usr/share/man/man1/gtk-update-icon-cache.1
 }
 
-package_gtk3-demos() {
-  pkgdesc+=" (demo applications)"
-  depends=(gtk3)
-  mv demo/* "$pkgdir"
-}
-
-package_gtk3-docs() {
-  pkgdesc+=" (documentation)"
-  depends=()
-  mv docs/* "$pkgdir"
-}
-
-# vim:set sw=2 sts=-1 et:
