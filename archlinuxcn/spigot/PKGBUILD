@@ -2,11 +2,11 @@
 # Submitter: Schala Zeal <schalaalexiazeal@gmail.com>
 
 pkgname=spigot
-_pkgver=1.20.2
-_build=162
+_pkgver=1.20.4
+_build=163
 pkgver="${_pkgver}+b${_build}"
 pkgrel=1
-_mng_ver=1.0.2
+_mng_ver=1.0.3
 pkgdesc="High performance Minecraft server implementation"
 arch=('any')
 url="https://www.spigotmc.org/"
@@ -21,8 +21,8 @@ backup=("etc/conf.d/${pkgname}")
 install="${pkgname}.install"
 source=("BuildTools-${_pkgver}+b${_build}.jar::https://hub.spigotmc.org/jenkins/job/BuildTools/${_build}/artifact/target/BuildTools.jar"
 	"minecraft-server-${_mng_ver}.tar.gz"::"https://github.com/Edenhofer/minecraft-server/archive/refs/tags/v${_mng_ver}.tar.gz")
-sha512sums=('a4f711b8ff5faa9eefc2b3deacbb6ea3901e0650347f7ffa2ab90f93a15ff62c3cbfdcc2bb9b968b2d6468aee5b94a76616dc79e2d2f9dfb70aa93aa20826a48'
-            '11d708d511b63e5541bcc1dbcaf29abbf7cb9583b1d313028770a39b26b41d48dcba023f7e1d6fe30f3c093d20e10a43363011edd432e5785a4580e5c5f852a6')
+sha512sums=('e9d89d47183cbf7d3109564c68f53f7a902c962b8cd694665823cbf7d7f51d6cb58aa7d52f8ccc5df3b26d4705aa724b72a668352cc5a8c936ad9aa490fd5774'
+            '1cc15371d8fad39ef8812059463dd92b91628ff3887bd0eb462d919cd3b2a948c4c3535f701bf4912de3e9c84b2333738f4dd63202f235b1726e79ed178fe156')
 
 _game="spigot"
 _server_root="/srv/craftbukkit"
@@ -60,7 +60,7 @@ package() {
 	ln -s "${_server_root}/logs" "${pkgdir}/var/log/${_game}"
 
 	# Give the group write permissions and set user or group ID on execution
-	chmod g+ws "${pkgdir}${_server_root}"
+	chmod g+s "${pkgdir}${_server_root}"
 
 	# Make plugins folder ready for drag and drop
 	install -dm2775 "${pkgdir}/${_server_root}/plugins"
