@@ -16,10 +16,6 @@ depends=('vulkan-icd-loader' 'libvulkan.so'
          'shaderc' 'libshaderc_shared.so'
          'libunwind'
          'xxhash' 'libxxhash.so'
-         # for demos
-         'ffmpeg' 'libavcodec.so' 'libavutil.so' 'libavformat.so'
-         'glfw'
-         'sdl2' 'sdl2_image'
          'libdovi' 'libdovi.so'
          )
 makedepends=('git' 'meson' 'ninja' 'vulkan-headers' 'python' 'python-jinja' 'python-markupsafe' 'glad')
@@ -66,7 +62,7 @@ build() {
         --buildtype=debugoptimized \
         -D default_library=shared \
         -D tests=true \
-        -D demos=true  \
+        -D demos=false  \
         -D d3d11=disabled
     ninja -C build
 }

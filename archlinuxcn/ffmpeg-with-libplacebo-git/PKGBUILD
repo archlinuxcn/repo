@@ -1,0 +1,231 @@
+# Maintainer: Maxime Gauduin <alucryd@archlinux.org>
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Ionut Biru <ibiru@archlinux.org>
+# Contributor: Tom Newsom <Jeepster@gmx.co.uk>
+# Contributor: Paul Mattal <paul@archlinux.org>
+
+pkgname=ffmpeg-with-libplacebo-git
+pkgver=6.1
+pkgrel=2
+epoch=2
+pkgdesc='Complete solution to record, convert and stream audio and video'
+arch=(x86_64)
+url=https://ffmpeg.org/
+license=(GPL3)
+depends=(
+  alsa-lib
+  aom
+  bzip2
+  cairo
+  fontconfig
+  fribidi
+  glib2
+  glibc
+  gmp
+  gnutls
+  gsm
+  jack
+  lame
+  libass.so
+  libavc1394
+  libbluray.so
+  libbs2b.so
+  libdav1d.so
+  libdrm
+  libfreetype.so
+  libgl
+  libharfbuzz.so
+  libiec61883
+  libjxl.so
+  libmodplug
+  libopenmpt.so
+  libplacebo.so
+  libplacebo-git
+  libpulse
+  librav1e.so
+  libraw1394
+  librsvg-2.so
+  librubberband.so
+  libsoxr
+  libssh
+  libtheora
+  libva.so
+  libva-drm.so
+  libva-x11.so
+  libvdpau
+  libvidstab.so
+  libvorbisenc.so
+  libvorbis.so
+  libvpx.so
+  libwebp
+  libx11
+  libx264.so
+  libx265.so
+  libxcb
+  libxext
+  libxml2
+  libxv
+  libxvidcore.so
+  libzimg.so
+  ocl-icd
+  onevpl
+  opencore-amr
+  openjpeg2
+  opus
+  sdl2
+  snappy
+  speex
+  srt
+  svt-av1
+  v4l-utils
+  vmaf
+  vulkan-icd-loader
+  xz
+  zlib
+)
+makedepends=(
+  amf-headers
+  avisynthplus
+  clang
+  ffnvcodec-headers
+  frei0r-plugins
+  git
+  ladspa
+  mesa
+  nasm
+  opencl-headers
+  vulkan-headers
+)
+optdepends=(
+  'avisynthplus: AviSynthPlus support'
+  'frei0r-plugins: Frei0r video effects support'
+  'intel-media-sdk: Intel QuickSync support (legacy)'
+  'ladspa: LADSPA filters'
+  'nvidia-utils: Nvidia NVDEC/NVENC support'
+  'onevpl-intel-gpu: Intel QuickSync support'
+)
+provides=(
+  libavcodec.so
+  libavdevice.so
+  libavfilter.so
+  libavformat.so
+  libavutil.so
+  libpostproc.so
+  libswresample.so
+  libswscale.so
+  ffmpeg
+)
+options=(
+  debug
+)
+_tag=3cdfac27d3ea06f8719faed48b4ae2e75e94a463
+source=(
+  git+https://git.ffmpeg.org/ffmpeg.git?signed#tag=${_tag}
+  add-av_stream_get_first_dts-for-chromium.patch
+)
+b2sums=('SKIP'
+        '555274228e09a233d92beb365d413ff5c718a782008075552cafb2130a3783cf976b51dfe4513c15777fb6e8397a34122d475080f2c4483e8feea5c0d878e6de')
+validpgpkeys=(DD1EC9E8DE085C629B3E1846B18E8928B3948D64) # Michael Niedermayer <michael@niedermayer.cc>
+
+prepare() {
+  cd ffmpeg
+  # FS#79281: fix assembling with binutil as >= 2.41
+  git cherry-pick -n effadce6c756247ea8bae32dc13bb3e6f464f0eb
+  # FS#77813: fix playing ogg files with mplayer
+  git cherry-pick -n cbcc817353a019da4332ad43deb7bbc4e695d02a
+  patch -Np1 -i ../add-av_stream_get_first_dts-for-chromium.patch # https://crbug.com/1251779
+  # use non-deprecated nvenc GUID for conftest
+  git cherry-pick -n 03823ac0c6a38bd6ba972539e3203a592579792f
+  git cherry-pick -n d2b46c1ef768bc31ba9180f6d469d5b8be677500
+  # Fix VDPAU vo
+  git cherry-pick -n e9c93009fc34ca9dfcf0c6f2ed90ef1df298abf7
+  # Fix bug in av_fft_end
+  git cherry-pick -n a562cfee2e214252f8b3f516527272ae32ef9532
+  git cherry-pick -n 250471ea1745fc703eb346a2a662304536a311b1
+}
+
+pkgver() {
+  cd ffmpeg
+  git describe --tags | sed 's/^n//'
+}
+
+build() {
+  cd ffmpeg
+  ./configure \
+    --prefix=/usr \
+    --disable-debug \
+    --disable-static \
+    --disable-stripping \
+    --enable-amf \
+    --enable-avisynth \
+    --enable-cuda-llvm \
+    --enable-lto \
+    --enable-fontconfig \
+    --enable-frei0r \
+    --enable-gmp \
+    --enable-gnutls \
+    --enable-gpl \
+    --enable-ladspa \
+    --enable-libaom \
+    --enable-libass \
+    --enable-libbluray \
+    --enable-libbs2b \
+    --enable-libdav1d \
+    --enable-libdrm \
+    --enable-libfreetype \
+    --enable-libfribidi \
+    --enable-libgsm \
+    --enable-libharfbuzz \
+    --enable-libiec61883 \
+    --enable-libjack \
+    --enable-libjxl \
+    --enable-libmodplug \
+    --enable-libmp3lame \
+    --enable-libopencore_amrnb \
+    --enable-libopencore_amrwb \
+    --enable-libopenjpeg \
+    --enable-libopenmpt \
+    --enable-libopus \
+    --enable-libplacebo \
+    --enable-libpulse \
+    --enable-librav1e \
+    --enable-librsvg \
+    --enable-librubberband \
+    --enable-libsnappy \
+    --enable-libsoxr \
+    --enable-libspeex \
+    --enable-libsrt \
+    --enable-libssh \
+    --enable-libsvtav1 \
+    --enable-libtheora \
+    --enable-libv4l2 \
+    --enable-libvidstab \
+    --enable-libvmaf \
+    --enable-libvorbis \
+    --enable-libvpl \
+    --enable-libvpx \
+    --enable-libwebp \
+    --enable-libx264 \
+    --enable-libx265 \
+    --enable-libxcb \
+    --enable-libxml2 \
+    --enable-libxvid \
+    --enable-libzimg \
+    --enable-nvdec \
+    --enable-nvenc \
+    --enable-opencl \
+    --enable-opengl \
+    --enable-shared \
+    --enable-version3 \
+    --enable-vulkan
+  make
+  make tools/qt-faststart
+  make doc/ff{mpeg,play}.1
+}
+
+package() {
+  make DESTDIR="${pkgdir}" -C ffmpeg install install-man
+  install -Dm 755 ffmpeg/tools/qt-faststart "${pkgdir}"/usr/bin/
+}
+
+# vim: ts=2 sw=2 et:

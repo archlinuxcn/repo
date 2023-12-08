@@ -3,7 +3,7 @@
 
 pkgname=mpv-git
 _gitname=mpv
-pkgver=0.37.0_70_g562450f59e
+pkgver=0.37.0_76_gf886eb5678
 pkgrel=1
 pkgdesc='A free, open source, and cross-platform media player (with all possible libs)'
 arch=('x86_64')
@@ -29,7 +29,7 @@ depends=(
         'libass' 'libass.so'
         'lcms2' 'liblcms2.so'
         'vulkan-icd-loader' 'libvulkan.so'
-        'ffmpeg' 'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so' 'libavutil.so' 'libswresample.so' 'libswscale.so'
+        'ffmpeg-with-libplacebo-git' 'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so' 'libavutil.so' 'libswresample.so' 'libswscale.so'
         'libplacebo-git' 'libplacebo.so'
         'libpipewire'
 )

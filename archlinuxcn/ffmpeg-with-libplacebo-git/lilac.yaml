@@ -1,0 +1,15 @@
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com
+
+repo_depends:
+  - libplacebo-git
+update_on_build:
+  - pkgbase: libplacebo-git
+
+update_on:
+  - source: alpm
+    alpm: ffmpeg
+  - alias: alpm-lilac
+    alpm: libplacebo-git
+    provided: libplacebo.so
