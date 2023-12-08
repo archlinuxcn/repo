@@ -1,0 +1,18 @@
+pkgname=julia-git-maybeinplace-src
+pkgver=0.1.1
+_commit=7fd19e0740ea028e1680336e323ecfd964bf0d1f
+pkgrel=1
+pkgdesc="MaybeInplace.jl"
+url="https://github.com/avik-pal/MaybeInplace.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/avik-pal/MaybeInplace.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd MaybeInplace.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MaybeInplace "${pkgdir}" "${pkgname}" julia-git
+}
