@@ -3,10 +3,10 @@
 # Contributer: sowieso <sowieso@dukun.de>
 
 pkgname=minecraft-server
-pkgver=1.20.2
-_nonce=5b868151bd02b41319f54c8d4061b8cae84e665c
+pkgver=1.20.4
+_nonce=8dd1a28015f51b1803213892b50b7b4fc76e594d
 pkgrel=1
-_mng_ver=1.0.2
+_mng_ver=1.0.3
 pkgdesc="Minecraft server unit files, script, and jar"
 arch=('any')
 url="https://minecraft.net/"
@@ -21,8 +21,8 @@ install="${pkgname}.install"
 source=("minecraft_server.${pkgver}n${_nonce:0:8}.jar"::"https://launcher.mojang.com/v1/objects/${_nonce}/server.jar"
 	"minecraft-server-${_mng_ver}.tar.gz"::"https://github.com/Edenhofer/minecraft-server/archive/refs/tags/v${_mng_ver}.tar.gz")
 noextract=("minecraft_server.${pkgver}.jar")
-sha512sums=('b181ef7cfd1d3cf1d45cef617a800b2fa131262b0fd268dff5e5f27cff08bba95b6454df2a32748ee41b94ec96eb797e0cdf1bcc74d8d60f6f2142c89f21063f'
-            '11d708d511b63e5541bcc1dbcaf29abbf7cb9583b1d313028770a39b26b41d48dcba023f7e1d6fe30f3c093d20e10a43363011edd432e5785a4580e5c5f852a6')
+sha512sums=('19847c79eda930126ac99bdf151f45bc2f0313b2040d5258875606fd3e673eb257f3eed7c720db6864f07a4b6119861f39eaf66be0a552ce68e8962fa72aa95f'
+            '1cc15371d8fad39ef8812059463dd92b91628ff3887bd0eb462d919cd3b2a948c4c3535f701bf4912de3e9c84b2333738f4dd63202f235b1726e79ed178fe156')
 
 _game="minecraft"
 _server_root="/srv/minecraft"
@@ -57,5 +57,5 @@ package() {
 	ln -s "${_server_root}/logs" "${pkgdir}/var/log/${_game}"
 
 	# Give the group write permissions and set user or group ID on execution
-	chmod g+ws "${pkgdir}${_server_root}"
+	chmod g+s "${pkgdir}${_server_root}"
 }
