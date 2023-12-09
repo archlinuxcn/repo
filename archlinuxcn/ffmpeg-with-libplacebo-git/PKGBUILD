@@ -6,13 +6,13 @@
 
 pkgname=ffmpeg-with-libplacebo-git
 pkgver=6.1
-pkgrel=2
+pkgrel=3
 epoch=2
 pkgdesc='Complete solution to record, convert and stream audio and video'
 arch=(x86_64)
 url=https://ffmpeg.org/
 license=(GPL3)
-depends=(
+depends=("libplacebo-git"
   alsa-lib
   aom
   bzip2
@@ -40,7 +40,6 @@ depends=(
   libmodplug
   libopenmpt.so
   libplacebo.so
-  libplacebo-git
   libpulse
   librav1e.so
   libraw1394
@@ -104,7 +103,7 @@ optdepends=(
   'nvidia-utils: Nvidia NVDEC/NVENC support'
   'onevpl-intel-gpu: Intel QuickSync support'
 )
-provides=(
+provides=("ffmpeg"
   libavcodec.so
   libavdevice.so
   libavfilter.so
@@ -113,7 +112,6 @@ provides=(
   libpostproc.so
   libswresample.so
   libswscale.so
-  ffmpeg
 )
 options=(
   debug
@@ -229,3 +227,4 @@ package() {
 }
 
 # vim: ts=2 sw=2 et:
+conflicts=("ffmpeg")
