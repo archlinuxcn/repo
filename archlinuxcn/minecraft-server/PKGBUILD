@@ -5,8 +5,8 @@
 pkgname=minecraft-server
 pkgver=1.20.4
 _nonce=8dd1a28015f51b1803213892b50b7b4fc76e594d
-pkgrel=1
-_mng_ver=1.0.3
+pkgrel=2
+_mng_ver=1.0.4
 pkgdesc="Minecraft server unit files, script, and jar"
 arch=('any')
 url="https://minecraft.net/"
@@ -22,7 +22,7 @@ source=("minecraft_server.${pkgver}n${_nonce:0:8}.jar"::"https://launcher.mojang
 	"minecraft-server-${_mng_ver}.tar.gz"::"https://github.com/Edenhofer/minecraft-server/archive/refs/tags/v${_mng_ver}.tar.gz")
 noextract=("minecraft_server.${pkgver}.jar")
 sha512sums=('19847c79eda930126ac99bdf151f45bc2f0313b2040d5258875606fd3e673eb257f3eed7c720db6864f07a4b6119861f39eaf66be0a552ce68e8962fa72aa95f'
-            '1cc15371d8fad39ef8812059463dd92b91628ff3887bd0eb462d919cd3b2a948c4c3535f701bf4912de3e9c84b2333738f4dd63202f235b1726e79ed178fe156')
+            'dd4d68ca061c97a1e3cb5c0bb68439f7d8d45b15092344f3c4dbd4f7f39fef433d566670ad440970061007d93055183b570c7bf98f09c111ecdf8ab0f208f556')
 
 _game="minecraft"
 _server_root="/srv/minecraft"
