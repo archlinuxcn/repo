@@ -170,7 +170,7 @@ else
     pkgbase=linux-$pkgsuffix
 fi
 _major=6.6
-_minor=4
+_minor=5
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
@@ -196,9 +196,6 @@ if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] || [ -n "$_use_k
         LLVM=1
         LLVM_IAS=1
     )
-fi
-if [ "$_cpusched" = "sched-ext" ]; then
-    makedepends+=(clang llvm lld bpf libbpf rust)
 fi
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
@@ -443,14 +440,6 @@ prepare() {
             -e TCP_CONG_BBR \
             -e DEFAULT_BBR \
             --set-str DEFAULT_TCP_CONG bbr
-
-        # BBR3 doesn't work properly with FQ_CODEL
-        echo "Disabling fq_codel by default..."
-        scripts/config -m NET_SCH_FQ_CODEL \
-            -e NET_SCH_FQ \
-            -d DEFAULT_FQ_CODEL \
-            -e DEFAULT_FQ \
-            --set-str DEFAULT_NET_SCH fq
     fi
 
     ### Select LRU config
@@ -688,13 +677,6 @@ build() {
         make ${BUILD_FLAGS[*]}
     fi
 
-    if [ "$_cpusched" = "sched-ext" ]; then
-        # Build the sched_ext schedulers
-        cd "$srcdir/$_srcname/tools/sched_ext"
-        unset CFLAGS
-        unset CXXFLAGS
-        make CC=clang LLVM=1 -j
-    fi
 }
 
 _package() {
@@ -835,27 +817,9 @@ _package-nvidia(){
     find "$pkgdir" -name '*.ko' -exec zstd --rm -10 {} +
 }
 
-_package-schedulers() {
-   pkgdesc="Schedulers for $pkgdesc kernel"
-   depends=('libbpf' 'bpf' 'clang')
-
-   cd "$srcdir/$_srcname/tools/sched_ext/build/bin"
-
-   install -Dm755 scx_central "$pkgdir"/usr/bin/scx_central
-   install -Dm755 scx_flatcg "$pkgdir"/usr/bin/scx_flatcg
-   install -Dm755 scx_layered "$pkgdir"/usr/bin/scx_layered
-   install -Dm755 scx_nest "$pkgdir"/usr/bin/scx_nest
-   install -Dm755 scx_pair "$pkgdir"/usr/bin/scx_pair
-   install -Dm755 scx_qmap "$pkgdir"/usr/bin/scx_qmap
-   install -Dm755 scx_rusty "$pkgdir"/usr/bin/scx_rusty
-   install -Dm755 scx_simple "$pkgdir"/usr/bin/scx_simple
-   install -Dm755 scx_userland "$pkgdir"/usr/bin/scx_userland
-}
-
 pkgname=("$pkgbase" "$pkgbase-headers")
 [ -n "$_build_zfs" ] && pkgname+=("$pkgbase-zfs")
 [ -n "$_build_nvidia" ] && pkgname+=("$pkgbase-nvidia")
-[ "$_cpusched" = "sched-ext" ] && pkgname+=("$pkgbase-schedulers")
 for _p in "${pkgname[@]}"; do
     eval "package_$_p() {
     $(declare -f "_package${_p#$pkgbase}")
@@ -863,8 +827,8 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('75f20de7474f45966a32f7a1e5f9beadb2b4e111fe9c0ab769ccaa203e798f1a1b0ee05c3cb14de6bb609e2e9df1e238deeadfc21dbf08c6b407c9530bac11ef'
+b2sums=('9d66d720f2f037cfd480835ab38807fe5aabcff09bd210c5cb0dc80bd3e1182434df9f04a286df4e8cbc508ac984ecba12d2098a3296e3aac60afad94c085876'
         '5ddb5dcdb79354268e69d01523f06d5071538ba53171adcef0dd455b286df7785611d64f13b3aae06ac298cc60d990ebfa7b11d75dec9ab4a256b431de549483'
         '11d2003b7d71258c4ca71d71c6b388f00fe9a2ddddc0270e304148396dadfd787a6cac1363934f37d0bfb098c7f5851a02ecb770e9663ffe57ff60746d532bd0'
-        '0b81c9b2746171663a0570f240acbf40b9719f4f7b7bd4ea0e6a6da8901e24e2baba6e36f3422f319b199056184973bcf29321967c0b17745e65307f52a755e6'
-        'ced3e266cf35e3fb35650973fb01adb7523b3da39f516c56c8200476edbda5eee34c54a405eeef16dbe3acad24efc0c3569eba1fa77eeea3808a6a76ad06cfde')
+        '96ab8ee123335565195fcb5a5e3448d01cd15da64002b321ee88f71c0f826913a7c8bf17bc46a49aaa5eef526b39bf589769a4590dac229621044f58833e5d07'
+        '59a4ed2bd4f950944532b92ace4bb2c1a53b600d1ec1b195a2f0b8db6a7a53d87ef898e77deb7c4e74428afa8052842d880854a04193df44492f56eff478a048')
