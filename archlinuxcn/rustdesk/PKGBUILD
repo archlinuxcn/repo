@@ -232,36 +232,17 @@ package() {
       install -d "${pkgdir}/usr/bin/"
       ln -s -t "${pkgdir}/usr/bin/" "/usr/lib/${_pkgname}/${_pkgname}"
 
-  install -Dm0644 "res/${_pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
+  install -Dm644 "res/${_pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
 
-  install -Dm0644 'res/32x32.png' "${pkgdir}/usr/share/icons/hicolor/32x32/apps/${_pkgname}.png"
-  install -Dm0644 'res/128x128.png' "${pkgdir}/usr/share/icons/hicolor/128x128/apps/${_pkgname}.png"
-  install -Dm0644 'res/128x128@2x.png' "${pkgdir}/usr/share/icons/hicolor/256x256/apps/${_pkgname}.png"
+  for size in 32x32 64x64 128x128; do
+    install -Dm644 "res/${size}.png" "${pkgdir}/usr/share/icons/hicolor/${size}/apps/${_pkgname}.png"
+  done
 
-  install -Dm0644 /dev/stdin "${pkgdir}/usr/share/applications/${_pkgname}.desktop" << EOF
-[Desktop Entry]
-Version=${pkgver%.r*}
-Name=RustDesk
-GenericName=Remote Desktop
-GenericName[zh_CN]=远程桌面
-Comment=Remote Desktop
-Comment[zh_CN]=远程桌面
-Exec=${_pkgname} %u
-Icon=${_pkgname}.svg
-Terminal=false
-Type=Application
-MimeType=text/html;text/xml;application/xhtml+xml;application/vnd.mozilla.xul+xml;text/mml;x-scheme-handler/http;x-scheme-handler/https;
-StartupNotify=true
-Categories=Network;RemoteAccess;GTK;
-Keywords=internet;
-Actions=new-window;
+  install -Dm644 "res/128x128@2x.png" "${pkgdir}/usr/share/icons/hicolor/256x256/apps/${_pkgname}.png"
 
-X-Desktop-File-Install-Version=0.23
-
-[Desktop Action new-window]
-Name=Open a New Window
-EOF
-  install -Dm644 'LICENCE' -t "${pkgdir}/usr/share/licenses/${_pkgname}"
+  install -Dm644 res/${_pkgname}{,-link}.desktop -t "${pkgdir}/usr/share/applications/"
+  install -Dm644 LICENCE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
   set +u
 }
+
 set +u
