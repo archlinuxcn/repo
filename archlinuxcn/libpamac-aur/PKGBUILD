@@ -5,15 +5,14 @@ ENABLE_FLATPAK=0
 ENABLE_SNAPD=0
 
 pkgname=libpamac-aur
-pkgver=11.6.2
-pkgrel=2
+pkgver=11.6.3
+pkgrel=0
 _pkgfixver=$pkgver
 
-_commit='255a5977039eab908c9df7066753e347b2eab2d5'
-sha256sums=('57b8e1f52371c8049af0760f3428eb15901b9468b0c9c8a338b0a53c74419f31'
+_commit='dff0d861a492e0dcbfb03b134cf737e627315d52'
+sha256sums=('965ea2c39b3999bb0ac5ec75da150d43fdd35deb02c0c113deef84e96ee636de'
             '6e0c25f0fcb0076ce78845b037e32925fcc3f1cd1670062c48ed35f564a10244'
-            'b5236af02c25cd7de4b2c9c2d0f064dac3c2f54da5cc72bf72fc6236a34bd9c4'
-            '8baf2947ac7668c90720f98d998b345ef285d0355eff96a0289534ce6241923e')
+            'b5236af02c25cd7de4b2c9c2d0f064dac3c2f54da5cc72bf72fc6236a34bd9c4')
 
 pkgdesc="Pamac package manager library based on libalpm"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -30,7 +29,7 @@ provides=('libpamac')
 options=(!emptydirs !strip)
 install=pamac.install
 source=("libpamac-$pkgver-$pkgrel.tar.gz::$url/-/archive/$_commit/libpamac-$_commit.tar.gz"
-        fix-appstream-data.sh fix-appstream-data.hook libpamac.diff)
+        fix-appstream-data.sh fix-appstream-data.hook)
 
 define_meson=''
 if [ "${ENABLE_FLATPAK}" = 1 ]; then
@@ -55,7 +54,6 @@ create_links() {
 
 prepare() {
   cd "$srcdir/libpamac-$_commit"
-  patch -p1 -i ../libpamac.diff
   # adjust version string
   sed -i -e "s|\"$_pkgfixver\"|\"$pkgver-$pkgrel\"|g" src/version.vala
 }
