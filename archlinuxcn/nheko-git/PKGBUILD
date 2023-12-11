@@ -2,7 +2,7 @@
 # Maintainer: Joseph Donofry <joe at joedonofry dot com>
 
 pkgname=nheko-git
-pkgver=0.11.3.r583.g224d845a
+pkgver=0.11.3.r584.g791cb660
 pkgrel=1
 pkgdesc="Desktop client for the Matrix protocol"
 arch=(armv7h aarch64 i686 x86_64)
@@ -41,10 +41,11 @@ build() {
   cd $pkgname/build
 
   # build with more cores than the default
+  # https://wiki.archlinux.org/title/CMake_package_guidelines
   cmake .. -DHUNTER_ENABLED=OFF \
         -DCMAKE_INSTALL_LIBDIR=lib \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_BUILD_TYPE=None \ # https://wiki.archlinux.org/title/CMake_package_guidelines
+        -DCMAKE_BUILD_TYPE=None \
         -DCOMPILE_QML=On
   make
 }
