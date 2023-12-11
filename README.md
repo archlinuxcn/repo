@@ -1,4 +1,4 @@
-# Arch Linux Chinese Community Repository
+# Arch Linux CN Community Repository
 
 [![Packaging consistency check](https://github.com/archlinuxcn/repo/actions/workflows/test.yml/badge.svg)](https://github.com/archlinuxcn/repo/actions/workflows/test.yml)
 
@@ -16,10 +16,10 @@ Server = https://repo.archlinuxcn.org/$arch
 
 For mirrors (strongly recommended for users in China), [please visit here](https://github.com/archlinuxcn/mirrorlist-repo).
 
-To import PGP keys, run the following command:
+To import PGP keys, run the following command as a superuser:
 
 ```bash
-# pacman -Sy && pacman -S archlinuxcn-keyring
+pacman -Sy && pacman -S archlinuxcn-keyring
 ```
 
 ## Issues
