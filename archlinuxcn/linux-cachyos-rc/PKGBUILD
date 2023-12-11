@@ -10,9 +10,7 @@
 _cachy_config=${_cachy_config-y}
 
 ### Selecting the CPU scheduler
-# ATTENTION - one of six predefined values should be selected!
-# 'bmq' - select 'BitMap Queue CPU scheduler'
-# 'pds' - select 'Priority and Deadline based Skip list multiple queue CPU scheduler'
+# ATTENTION - only one of the following values can be selected:
 # 'bore' - select 'Burst-Oriented Response Enhancer'
 # 'tt' - select 'Task Type Scheduler by Hamad Marri'
 # 'hardened' - select 'BORE Scheduler hardened' ## kernel with hardened config and hardening patches with the bore scheduler
@@ -22,6 +20,7 @@ _cachy_config=${_cachy_config-y}
 # 'rt-bore' - select Burst-Oriented Response Enhancer, but includes a series of realtime patches
 # 'sched-ext' - select 'sched-ext' Scheduler, based on EEVDF
 _cpusched=${_cpusched-cachyos}
+
 
 ### Tweak kernel options prior to a build via nconfig
 _makenconfig=${_makenconfig-}
@@ -168,7 +167,7 @@ fi
 _major=6.7
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc4
+_rcver=rc5
 pkgver=${_major}.${_rcver}
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -176,7 +175,7 @@ _stable=${_major}-${_rcver}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
 pkgdesc='Linux EEVDF-BORE scheduler Kernel by CachyOS and with some other patches and other improvements'
-pkgrel=2
+pkgrel=1
 _kernver=$pkgver-$pkgrel
 arch=('x86_64' 'x86_64_v3')
 url="https://github.com/CachyOS/linux-cachyos"
@@ -193,8 +192,9 @@ if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] || [ -n "$_use_k
         LLVM_IAS=1
     )
 fi
+
 if [ "$_cpusched" = "sched-ext" ]; then
-    makedepends+=(clang llvm lld bpf libbpf rust)
+    depends+=(scx-scheds)
 fi
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
@@ -226,9 +226,6 @@ fi
 case "$_cpusched" in
     cachyos) # CachyOS Scheduler (EEVDF + BORE)
         source+=("${_patchsource}/sched/0001-bore-cachy.patch");;
-    pds|bmq) # BMQ/PDS scheduler
-        source+=("${_patchsource}/sched/0001-prjc-cachy.patch"
-                 linux-cachyos-prjc.install);;
     tt) ## TT Scheduler
         source+=("${_patchsource}/sched/0001-tt-cachy.patch");;
     bore) ## BORE Scheduler
@@ -303,8 +300,6 @@ prepare() {
     [ -z "$_cpusched" ] && _die "The value is empty. Choose the correct one again."
 
     case "$_cpusched" in
-        pds) scripts/config -e SCHED_ALT -d SCHED_BMQ -e SCHED_PDS -e PSI_DEFAULT_DISABLED;;
-        bmq) scripts/config -e SCHED_ALT -e SCHED_BMQ -d SCHED_PDS -e PSI_DEFAULT_DISABLED;;
         tt)  scripts/config -e TT_SCHED -e TT_ACCOUNTING_STATS;;
         bore|hardened|cachyos) scripts/config -e SCHED_BORE;;
         eevdf) ;;
@@ -672,13 +667,6 @@ build() {
         make ${BUILD_FLAGS[*]}
     fi
 
-    if [ "$_cpusched" = "sched-ext" ]; then
-        # Build the sched_ext schedulers
-        cd "$srcdir/$_srcname/tools/sched_ext"
-        unset CFLAGS
-        unset CXXFLAGS
-        make CC=clang LLVM=1 -j
-    fi
 }
 
 _package() {
@@ -822,27 +810,9 @@ _package-nvidia(){
     find "$pkgdir" -name '*.ko' -exec zstd --rm -10 {} +
 }
 
-_package-schedulers() {
-   pkgdesc="Schedulers for $pkgdesc kernel"
-   depends=('libbpf' 'bpf' 'clang')
-
-   cd "$srcdir/$_srcname/tools/sched_ext/build/bin"
-
-   install -Dm755 scx_central "$pkgdir"/usr/bin/scx_central
-   install -Dm755 scx_flatcg "$pkgdir"/usr/bin/scx_flatcg
-   install -Dm755 scx_layered "$pkgdir"/usr/bin/scx_layered
-   install -Dm755 scx_nest "$pkgdir"/usr/bin/scx_nest
-   install -Dm755 scx_pair "$pkgdir"/usr/bin/scx_pair
-   install -Dm755 scx_qmap "$pkgdir"/usr/bin/scx_qmap
-   install -Dm755 scx_rusty "$pkgdir"/usr/bin/scx_rusty
-   install -Dm755 scx_simple "$pkgdir"/usr/bin/scx_simple
-   install -Dm755 scx_userland "$pkgdir"/usr/bin/scx_userland
-}
-
 pkgname=("$pkgbase" "$pkgbase-headers")
 [ -n "$_build_zfs" ] && pkgname+=("$pkgbase-zfs")
 [ -n "$_build_nvidia" ] && pkgname+=("$pkgbase-nvidia")
-[ "$_cpusched" = "sched-ext" ] && pkgname+=("$pkgbase-schedulers")
 for _p in "${pkgname[@]}"; do
     eval "package_$_p() {
     $(declare -f "_package${_p#$pkgbase}")
@@ -850,8 +820,8 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('086aad9d17ba6e6e385004320e140e595b8a9a54dc8399e86262ef4609a971f222f476f66d6736453a5d95e0be9cb32ebb79f9be7b219c8dd2182a510fda40b1'
+b2sums=('40b76c9743f02ed6c4c05a29a445b3773dd6b40b8d0f38e7ddd05e2a8d81cca7d4925b6ea64dda72a7030812704df64366ab4db91856fc0531734119297ddef7'
         'ea62e7ebaa2e948be67bd5baf3a88aa1f8a60560e044ed88b1671353981739408d4046cf83745444630ab22eef69ded2822544efdd103aa9a5e772a740c07ea6'
         '11d2003b7d71258c4ca71d71c6b388f00fe9a2ddddc0270e304148396dadfd787a6cac1363934f37d0bfb098c7f5851a02ecb770e9663ffe57ff60746d532bd0'
         '6b817e2c2c3a07ca740bc9eb252bcf75118c1c13129e6447bde8cc5dbbe02fbbcf2ec5214ce5f6e5f8f221eaaa9ee7d9106fe49c1aac647e0287f7f10de29e37'
-        '4e3e96eaf34899a78b36fa1b79dc483c1312e6925f3b717a64beb98eb4360e6929b30d6343e07cbe3d2c6b82aef1ea49a6efba056c3b08c0da5d50be0b621be7')
+        '39013479cb0aa61a2a150beb69b5a83ad6b2a66984b052b9ab4076d755774b4b7a71d7b1e068d2e0fb0f9ac7a57b50578e1f91cb61d90057c4c0cb5535dd7a1c')
