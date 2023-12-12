@@ -3,7 +3,7 @@
 
 pkgname=adguardhome
 _pkgname=AdGuardHome
-pkgver=0.107.41
+pkgver=0.107.43
 pkgrel=1
 epoch=1
 pkgdesc="Network-wide ads and trackers blocking DNS server"
@@ -17,7 +17,7 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/AdguardTeam/AdGuardHome/arc
 makedepends=(go nodejs npm git)
 depends=(glibc)
 install="$pkgname.install"
-b2sums=('2d3fa53b11f12e8aaeba0f447caf815a4bedd62d2e7cfd980d45ce41e57f7bf244b5671d961428293b493e7429ef7f2de7f7a2e260f280db31b31f5a7bff8a20'
+b2sums=('a4811969b2e156a33d6267edeca4be3535e095e8133c6c8d761e132e5f95d21403df37f8ac5567d85994b89ff8912f1799f21f648d6a26a6bf7971d02bd11ffd'
         'd74c0d6c8118a876fddfa045980ab002a6177efda49c3046cee22c6635c5f5caa1c520d8d4c07687dbaf52f7639da7172c25f027b8a499dc76c125940d431a98'
         'b22ae447e0288e64332bcb41cc73f61e9adb58d402ef3ccfb896aa1ecbec4d4ff66bfc1464ca9d0bc99f1a5b4d32bdc5765f42a1b72b0fb3786ecefcf94a7265')
 
