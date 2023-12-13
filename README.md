@@ -16,7 +16,7 @@ Server = https://repo.archlinuxcn.org/$arch
 
 For mirrors (strongly recommended for users in China), [please visit here](https://github.com/archlinuxcn/mirrorlist-repo).
 
-To import PGP keys, run the following command as a superuser:
+To import PGP keys, run the following command as **root**:
 
 ```bash
 pacman -Sy && pacman -S archlinuxcn-keyring
