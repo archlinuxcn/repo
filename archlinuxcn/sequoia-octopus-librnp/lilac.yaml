@@ -1,10 +1,13 @@
-pre_build_script: aur_pre_build(maintainers=['AsamK'])
+pre_build_script: |
+    update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
 
-post_build: aur_post_build
+post_build_script: |
+    git_pkgbuild_commit()
 
 update_on:
-  - source: aur
-    aur: sequoia-octopus-librnp
+  - source: gitlab
+    gitlab: sequoia-octopus-librnp
+    use_max_tag: true
 
 maintainers:
   - github: CoelacanthusHex
