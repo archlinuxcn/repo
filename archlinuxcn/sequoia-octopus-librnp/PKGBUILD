@@ -22,7 +22,7 @@ prepare () {
 
 build () {
   cd "$srcdir/$pkgname-v$pkgver"
-  cargo build --frozen --release --all-features
+  cargo build --frozen --release
 }
 
 # Improve when https://bugzilla.mozilla.org/show_bug.cgi?id=1698540 is done
