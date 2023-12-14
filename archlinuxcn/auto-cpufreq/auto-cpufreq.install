@@ -2,34 +2,29 @@ post_install() {
     # This is needed on SELinux enabled systems (see also ConditionPathExists in .service)
     touch /var/log/auto-cpufreq.log
 
-    echo ''
-    echo 'Enable auto-cpufreq daemon service at boot:'
-    echo 'systemctl enable --now auto-cpufreq'
-    echo ''
-    echo 'To view live log, run:'
-    echo 'auto-cpufreq --stats'
-    echo ''
+    echo -e "\nauto-cpufreq $1 installed\n"
+
+    echo -e 'Important notice: the daemon installer provided does not work, instead run the following command:\n'
+    echo -e 'systemctl enable --now auto-cpufreq\n'
+
+    echo -e 'To view live log, run:\n'
+    echo -e 'auto-cpufreq --stats\n'
+
+    echo -e 'If the GNOME Power Profiles daemon is installed, it must be masked manually as it conflicts with auto-cpufreq.service:\n'
+    echo -e 'sudo systemctl mask power-profiles-daemon.service\n'
 }
 
-post_upgrade() {
-    echo ''
-    echo 'Reload systemd manager configuration:'
-    echo 'systemctl daemon-reload'
-    echo ''
-    echo 'Restart auto-cpufreq daemon service:'
-    echo 'systemctl restart auto-cpufreq'
-    echo ''
+post_upgrade() {	
+    echo -e "\nauto-cpufreq $1 installed\n"
+
+    echo -e 'Reload systemd manager configuration:\n'
+    echo -e 'systemctl daemon-reload\n'
+
+    echo -e 'Restart auto-cpufreq daemon service:\n'
+    echo -e 'systemctl restart auto-cpufreq\n'
 }
 
 post_remove() {
     # Remove auto-cpufreq log file
     rm /var/log/auto-cpufreq.log
-
-    # Remove auto-cpufreq's cpufreqctl binary
-    rm /usr/bin/cpufreqctl
-
-    # Restore original cpufreqctl binary if backup was made
-    if [ -f "/usr/bin/cpufreqctl.auto-cpufreq.bak" ]; then
-        mv /usr/bin/cpufreqctl.auto-cpufreq.bak /usr/bin/cpufreqctl
-    fi
 }

@@ -5,6 +5,8 @@ After=network.target network-online.target
 [Service]
 Type=simple
 User=root
-ExecStart=/usr/bin/auto-cpufreq --daemon
+ExecStart=auto-cpufreq --daemon
+Restart=on-failure
+
 [Install]
 WantedBy=multi-user.target
