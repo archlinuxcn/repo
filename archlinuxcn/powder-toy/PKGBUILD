@@ -14,7 +14,7 @@ _appexe="${pkgname}"
 _appid=uk.co.powdertoy.tpt
 _appvendor=powdertoy
 pkgver=97.0.352
-pkgrel=1
+pkgrel=2
 pkgdesc="Desktop version of the classic falling sand physics sandbox, simulates air pressure, velocity & heat!"
 arch=(x86_64 i686)
 depends=('glibc' 'libx11' 'sdl2' "$_lua" 'fftw' 'zlib' 'libpng' 'curl' 'jsoncpp' 'hicolor-icon-theme')
@@ -22,8 +22,15 @@ makedepends=('meson' 'ninja')
 url="https://powdertoy.co.uk/"
 license=('GPL3')
 install="${pkgname}.install"
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/The-Powder-Toy/The-Powder-Toy/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('3ab27e1b9a84db1da7342e61232ad5be981ca1ddf001c4924fd08b61cc8d287a')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/The-Powder-Toy/The-Powder-Toy/archive/refs/tags/v${pkgver}.tar.gz"
+        "${pkgname}-cstdint.patch::https://patch-diff.githubusercontent.com/raw/The-Powder-Toy/The-Powder-Toy/pull/898.diff")
+sha256sums=('3ab27e1b9a84db1da7342e61232ad5be981ca1ddf001c4924fd08b61cc8d287a'
+            '63aa2f2ac935a9efaca563aa5e66c737cdf9cf8093abcc23322412915b8d347e')
+
+prepare() {
+  cd "The-Powder-Toy-${pkgver}"
+  patch --forward --strip=1 --input="${srcdir}/${pkgname}-cstdint.patch"
+}
 
 build() {
   cd "The-Powder-Toy-${pkgver}"
