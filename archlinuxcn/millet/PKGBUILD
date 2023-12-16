@@ -1,6 +1,6 @@
 # Maintainer: Cooper Pierce <cppierce@andrew.cmu.edu>
 pkgname=millet
-pkgver=0.14.1
+pkgver=0.14.2
 pkgrel=1
 pkgdesc="Language server implementation for Standard ML"
 url="https://github.com/azdavis/millet"
@@ -8,7 +8,7 @@ arch=('x86_64')
 license=(APACHE MIT)
 makedepends=('cargo')
 source=("$pkgname-$pkgver.tgz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-md5sums=('3f6fb7bfb876f7558b79bbc9a04bb502')
+md5sums=('cbd63448db4be9ae1984def1c9224a1d')
 
 prepare() {
     cd "$pkgname-$pkgver"
