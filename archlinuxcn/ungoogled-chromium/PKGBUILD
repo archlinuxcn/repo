@@ -11,8 +11,8 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=120.0.6099.71
-pkgrel=1
+pkgver=120.0.6099.109
+pkgrel=2
 _launcher_ver=8
 _manual_clone=0
 pkgdesc="A lightweight approach to removing Google web service dependency"
@@ -35,12 +35,14 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
         https://gitlab.com/Matt.Jolly/chromium-patches/-/archive/${pkgver%%.*}/chromium-patches-${pkgver%%.*}.tar.bz2
         libxml2-2.12.patch
+        icu-74.patch
         drop-flags-unsupported-by-clang16.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('604755e5838ef0fd1bff4d6c5023cdda2d42ce982dda2c4be44cce487d3dd8d8'
+sha256sums=('87c00c525ee07c2233b78dbece1496b697f686244a67fac2c71e4a30bd96849b'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'ffee1082fbe3d0c9e79dacb8405d5a0e1aa94d6745089a30b093f647354894d2'
             '1808df5ba4d1e2f9efa07ac6b510bec866fa6d60e44505d82aea3f6072105a71'
+            'ff9ebd86b0010e1c604d47303ab209b1d76c3e888c423166779cefbc22de297f'
             '8d1cdf3ddd8ff98f302c90c13953f39cd804b3479b13b69b8ef138ac57c83556'
             'e393174d7695d0bafed69e868c5fbfecf07aa6969f3b64596d0bae8b067e1711')
 
@@ -53,6 +55,8 @@ provides=("chromium=${pkgver}" "chromedriver=${pkgver}")
 conflicts=('chromium' 'chromedriver')
 _uc_usr=ungoogled-software
 _uc_ver=$pkgver-1
+optdepends=("${optdepends[@]}"
+            'chromium-extension-web-store: Web Store Functionality')
 source=("${source[@]}"
         "$pkgname-$_uc_ver.tar.gz::https://github.com/$_uc_usr/ungoogled-chromium/archive/$_uc_ver.tar.gz"
         0001-vaapi-flag-ozone-wayland.patch
@@ -61,7 +65,7 @@ source=("${source[@]}"
         0001-ozone-wayland-implement-text_input_manager_v3.patch
         0001-ozone-wayland-implement-text_input_manager-fixes.patch)
 sha256sums=("${sha256sums[@]}"
-            'e914c320883a054b3ec7463d40b9f7af4d8d750d33676dd074df952fd951d724'
+            '8a54932b0f2098dcd334e79e4f680614f57dc192037bc495d2099e28dbc507c8'
             '9a5594293616e1390462af1f50276ee29fd6075ffab0e3f944f6346cb2eb8aec'
             '8ba5c67b7eb6cacd2dbbc29e6766169f0fca3bbb07779b1a0a76c913f17d343f'
             '2a44756404e13c97d000cc0d859604d6848163998ea2f838b3b9bb2c840967e3'
@@ -133,6 +137,9 @@ prepare() {
 
   # Upstream fixes
   patch -Np1 -i ../libxml2-2.12.patch
+
+  # Fix build with ICU 74
+  patch -Np1 -i ../icu-74.patch
 
   # Drop compiler flags that need newer clang
   patch -Np1 -i ../drop-flags-unsupported-by-clang16.patch
