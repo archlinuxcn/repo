@@ -4,14 +4,15 @@
 ENABLE_FAKE_GNOME_SOFTWARE=0
 
 pkgname=pamac-aur
-pkgver=11.7.0
-pkgrel=2
+pkgver=11.7.1
+pkgrel=1
 _pkgfixver=$pkgver
 _pkgfixvercli=11.6.0
+_pkgrelcli=3
 
-_commit='6f68f42bec96e38072ab71d838882e53c5ba520e'
+_commit='73cef1dc85695a0e5b498e86b40ff047c9a8048f'
 _commitcli='177fb231b1e2494a696db9eb0629364bb1dc6753'
-sha256sums=('8a2c649624e0482cd5224a63bdb3ab5a53615a629e6a9402ceaaa355da6299c6'
+sha256sums=('8ad0f52b088818a8d9401984ba3e30d5ecfdc49d89fe89b65af9491a3f9f6c69'
             'bd98a58276eaeee0c1671ab6c18a8947eeb23e9fb6ae6507f627f9714d3aee4e')
 
 pkgdesc="A Gtk3 frontend, Package Manager based on libalpm with AUR and Appstream support"
@@ -24,11 +25,11 @@ optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
             'lxsession: needed for authentification in Xfce, LXDE etc.')
 makedepends=('gettext' 'itstool' 'vala' 'meson' 'ninja' 'gobject-introspection' 'xorgproto' 'asciidoc' 'git')
 conflicts=('pamac' 'pamac-tray-appindicator' 'pamac-cli')
-provides=("pamac=$_pkgfixver-$pkgrel" "pamac-cli=$_pkgfixvercli-$pkgrel")
+provides=("pamac=$_pkgfixver-$pkgrel" "pamac-cli=$_pkgfixvercli-$_pkgrelcli")
 options=(!emptydirs !strip)
 install=pamac.install
 source=("pamac-$_pkgfixver-$pkgrel.tar.gz::$url/-/archive/$_commit/pamac-$_commit.tar.gz"
-        "pamac-cli-$_pkgfixvercli-$pkgrel.tar.gz::$url-cli/-/archive/$_commitcli/pamac-cli-$_commitcli.tar.gz")
+        "pamac-cli-$_pkgfixvercli-$_pkgrelcli.tar.gz::$url-cli/-/archive/$_commitcli/pamac-cli-$_commitcli.tar.gz")
 
 define_meson=''
 if [ "${ENABLE_FAKE_GNOME_SOFTWARE}" = 1 ]; then
@@ -45,7 +46,7 @@ prepare() {
   sed -i -e "s|\"$_pkgfixver\"|\"$pkgver-$pkgrel\"|g" src/version.vala
   cd "${srcdir}/${_srcdircli}"
   # adjust version string
-  sed -i -e "s|\"$_pkgfixvercli\"|\"$_pkgfixvercli-$pkgrel\"|g" src/version.vala
+  sed -i -e "s|\"$_pkgfixvercli\"|\"$_pkgfixvercli-$_pkgrelcli\"|g" src/version.vala
 }
 
 build() {
