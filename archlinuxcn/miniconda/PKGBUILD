@@ -8,7 +8,7 @@
 _pkgname=Miniconda3
 _pyver=py311
 pkgname=miniconda
-pkgver=23.10.0
+pkgver=23.11.0
 pkgrel=1
 pkgdesc='Mini version of Anaconda Python distribution'
 arch=('x86_64')
@@ -18,7 +18,7 @@ depends=(ca-certificates-utils)
 source=("${pkgname}-${pkgver}.sh::https://repo.continuum.io/miniconda/${_pkgname}-${_pyver}_${pkgver}-1-Linux-x86_64.sh"
         "${pkgname}.install")
 options=(!strip libtool staticlibs)
-sha256sums=('d0643508fa49105552c94a523529f4474f91730d3e0d1f168f1700c43ae67595'
+sha256sums=('5b3cefe534e23541f5f703f40d4818e361c3615dbf14651a0f29554c3fc3d0fd'
             '02ed5095b7bd9670f749465d9cac1478deab44ebdf8616848ae4bd9371150abf')
 install="${pkgname}.install"
 
