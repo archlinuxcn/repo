@@ -6,7 +6,7 @@
 
 pkgname=lib32-libass
 pkgver=0.17.1
-pkgrel=1
+pkgrel=2
 pkgdesc='A portable library for SSA/ASS subtitles rendering (32 bit)'
 arch=(x86_64)
 url=https://github.com/libass/libass/
@@ -42,7 +42,9 @@ build() {
         --libdir='/usr/lib32' \
         --host=i686-linux-gnu \
         --enable-harfbuzz \
-        --enable-fontconfig
+        --enable-fontconfig \
+        --disable-libunibreak
+
     make
 }
 
