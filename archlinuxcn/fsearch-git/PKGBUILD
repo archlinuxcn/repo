@@ -1,32 +1,34 @@
 # Maintainer: Christian Boxdörfer <christian.boxdoerfer@posteo.de>
+
 pkgname=fsearch-git
-_gitname=fsearch
+_pkgname=fsearch
 pkgver=0.2.r175.g20fb6dc
 pkgrel=1
 pkgdesc="A fast graphical file search utility. Development version."
 arch=('i686' 'x86_64')
-url="https://cboxdoerfer.github.io/fsearch"
+url="https://cboxdoerfer.github.io/${_pkgname}"
 license=('GPL2')
 depends=('gtk3' 'icu' 'pcre2')
 makedepends=('git' 'meson' 'itstool')
-conflicts=('fsearch')
-source=('git+https://github.com/cboxdoerfer/fsearch.git')
-md5sums=('SKIP')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("git+https://github.com/cboxdoerfer/${_pkgname}.git")
+sha256sums=('SKIP')
 
 pkgver() {
-    cd "$srcdir/${pkgname%-git}"
-    git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' 
+	cd "${_pkgname}/"
+	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
-    arch-meson $_gitname build -Dchannel=AUR-devel
-    meson compile -C build
+	arch-meson "${_pkgname}/" build -Dchannel=AUR-devel
+	meson compile -C build
 }
 
 check() {
-    meson test -C build
+	meson test -C build
 }
 
 package() {
-    DESTDIR="$pkgdir" meson install -C build
+	DESTDIR="${pkgdir}" meson install -C build
 }
