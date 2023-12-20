@@ -3,6 +3,8 @@ maintainers:
 
 pre_build_script: |
   aur_pre_build(maintainers=['c0re100'])
+  vcs_update()
+  update_pkgrel()
   add_makedepends(['qt5-tools'])
   add_depends(['qt5-base', 'qt5-svg'])
 
@@ -13,4 +15,4 @@ update_on:
     aur: qbittorrent-enhanced-git
   - source: github
     github: c0re100/qBittorrent-Enhanced-Edition
-    branch: v4_5_x
+    branch: v4_6_x
