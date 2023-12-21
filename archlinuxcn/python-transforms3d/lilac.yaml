@@ -3,14 +3,9 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-repo_depends:
-  - python-nibabel
-  - python-transforms3d
-
 update_on:
   - source: github
-    github: nipy/nipy
+    github: matthew-brett/transforms3d
     use_max_tag: true
-    include_regex: '[^rc]+'
   - alias: python
 # vim:set ts=2 sw=2 et:

@@ -1,0 +1,51 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_name=transforms3d
+pkgname=python-transforms3d
+pkgdesc='3 dimensional spatial transformations for Python'
+pkgver=0.4.1
+pkgrel=1
+url='https://github.com/matthew-brett/transforms3d'
+arch=('any')
+license=('BSD')
+depends=(
+  python-numpy
+)
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
+checkdepends=(
+  python-pytest
+  python-scipy
+  python-sympy
+)
+optdepends=(
+  'python-sympy: to run the algebraic derivations of some algorithms'
+)
+source=(
+  "${_name}-${pkgver}.tar.gz::https://github.com/matthew-brett/transforms3d/archive/refs/tags/${pkgver}.tar.gz"
+)
+sha256sums=(
+  '27ff96c6dcc12bebc6faddea15916c29727fb33be0f85dda7dc7d8b376c0deed'
+)
+
+build() {
+  cd "${_name}-${pkgver}"
+  python -m build --no-isolation --wheel
+}
+
+check() {
+  cd "${_name}-${pkgver}"
+  pytest -v
+}
+
+package() {
+  cd "${_name}-${pkgver}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rf "${pkgdir}${site_packages}/${_name}/tests"
+}
