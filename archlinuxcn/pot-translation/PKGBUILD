@@ -2,7 +2,7 @@
 
 pkgname=pot-translation
 _pkgname=pot-desktop
-pkgver=2.7.2
+pkgver=2.7.3
 _pkgver=$(sed 's/b/-beta/' <<<${pkgver})
 pkgrel=1
 pkgdesc="一个跨平台的划词翻译软件 | A cross-platform software for text translation."
@@ -12,7 +12,7 @@ license=('GPL3')
 depends=('webkit2gtk' 'gtk3' 'libayatana-appindicator' 'xdotool' 'libxcb' 'libxrandr' 'tesseract' 'tessdata')
 makedepends=('nodejs' 'pnpm' 'rust' 'dbus')
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${_pkgver}.tar.gz")
-sha512sums=('8223ea4f0a7cebc62c8718b818a89aaa04e982021c2fb2465309ceb1068eafd73a797db658f034f4224271d4b6459a42d6078ec26ad91e3ecf4fe63e9cdfd053')
+sha512sums=('f9ee20cf67853094f6a2d8215c51a67875343d12398034ad5a83244001104fb855d402b0a9fc6fcf344a2d8da7d5709cb7cfe5543368d093b068c7efe65f8a19')
 options=('!lto')
 
 build() {
