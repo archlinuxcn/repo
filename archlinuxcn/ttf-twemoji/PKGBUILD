@@ -1,22 +1,19 @@
 # Maintainer: Joe Baker < Joe at JoeBlakeB dot com >
 
 pkgname=ttf-twemoji
-pkgver=15.0.2
+pkgver=15.0.3
 pkgrel=1
-_build_date=2023-12-05_16-23
-_build_commit=2d23f3f22a191769b5bcc2757cacdf66fff85dca
 pkgdesc="Truetype builds of Twemoji; Twitter Color Emoji for everyone."
-url="https://git.sr.ht/~whynothugo/twemoji.ttf"
+url="https://github.com/jdecked/twemoji"
 arch=(any)
 license=('CCPL' 'Apache')
-provides=('emoji-font')
+provides=('emoji-font' 'twemoji-color-font')
 install="$pkgname.install"
-ttfFile="Twemoji-$pkgver.ttf"
-source=("https://artefacts.whynothugo.nl/twemoji.ttf/${_build_date}/$ttfFile"
+source=("https://github.com/JoeBlakeB/ttf-twemoji-aur/releases/download/${pkgver}/Twemoji-${pkgver}.ttf"
         "75-twemoji.conf"
         "https://raw.githubusercontent.com/jdecked/twemoji/v${pkgver}/LICENSE-GRAPHICS"
-        "LICENSE-BUILD::https://git.sr.ht/~whynothugo/twemoji.ttf/blob/${_build_commit}/LICENCE")
-sha256sums=('0a348feb7bceb00b584867bdfdef4dc7dcd1cddc60eba1d433a9c474600a0da0'
+        "LICENSE-BUILD::https://github.com/JoeBlakeB/ttf-twemoji-aur/blob/${pkgver}/LICENSE")
+sha256sums=('89dbdb4109ad94ced626305ea7758467e2aa26f26c4c943882fdbb8853245186'
             'a77a7775557efc1c17781c0fc35a0f7ec5ccd58f233573f8875032fb8575680e'
             'SKIP'
             'SKIP')
