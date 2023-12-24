@@ -27,7 +27,7 @@ clean:
 		chatterino2-*.log \
 		libcommuni \
 		humanize \
-		crashpad \
+		crash-handler \
 		settings \
 		signals \
 		serialize \

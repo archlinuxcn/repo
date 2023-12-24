@@ -1,7 +1,7 @@
 # Maintainer: Ckat <ckat@teknik.io>
 pkgname=chatterino2-git
 _pkgname=chatterino2
-pkgver=2.4.5.r151.g2cb965d
+pkgver=2.4.5.r152.g25add89
 pkgrel=1
 pkgdesc='Second installment of the Twitch chat client series "Chatterino", dev/git version'
 arch=('any')
@@ -17,14 +17,14 @@ install=$pkgname.install
 source=("git+https://github.com/Chatterino/chatterino2"
         "git+https://github.com/arsenm/sanitizers-cmake"
         "git+https://github.com/Chatterino/libcommuni#branch=chatterino-cmake"
-        "git+https://github.com/getsentry/crashpad"
         "git+https://github.com/pajlada/settings"
         "git+https://github.com/pajlada/signals"
         "git+https://github.com/pajlada/serialize"
         "git+https://github.com/Tencent/rapidjson"
         "git+https://github.com/zaphoyd/websocketpp"
         "git+https://github.com/Neargye/magic_enum"
-        "git+https://github.com/mackron/miniaudio")
+        "git+https://github.com/mackron/miniaudio"
+        "git+https://github.com/Chatterino/crash-handler")
 md5sums=('SKIP'
          'SKIP'
          'SKIP'
@@ -47,9 +47,6 @@ prepare () {
     git submodule init
     git config submodule.cmake/sanitizers-cmake.url "$srcdir/sanitizers-cmake"
     git config submodule.lib/libcommuni.url "$srcdir/libcommuni"
-    git config submodule.lib/crashpad.url "$srcdir/crashpad"
-    # TODO: crashpad contains its own submodules, this needs to be resolved
-    # crashpad is currently not used by this build
     git config submodule.lib/settings.url "$srcdir/settings"
     git config submodule.lib/signals.url "$srcdir/signals"
     git config submodule.lib/serialize.url "$srcdir/serialize"
@@ -57,6 +54,7 @@ prepare () {
     git config submodule.lib/websocketpp.url "$srcdir/websocketpp"
     git config submodule.lib/miniaudio.url "$srcdir/miniaudio"
     git config submodule.lib/magicenum.url "$srcdir/magicenum"
+    git config submodule.tools/crash-handler.url "$srcdir/crash-handler"
     git -c protocol.file.allow=always submodule update
 }
 
