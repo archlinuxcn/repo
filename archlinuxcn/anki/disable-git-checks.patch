@@ -1,5 +1,5 @@
 We provide source tarballs without git functionality.
-'MY_REV' gets replaced with the corresponding revision in src_prepare.
+'MY_REV' gets replaced with the corresponding revision in prepare().
 --- a/build/ninja_gen/src/git.rs
 +++ b/build/ninja_gen/src/git.rs
 @@ -13,7 +13,7 @@ pub struct SyncSubmodule {

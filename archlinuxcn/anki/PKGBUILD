@@ -6,12 +6,12 @@
 # Contributor: Michael 'manveru' Fellinger <m.fellinger@gmail.com>
 # Contributor: Dave Pretty <david dot pretty at gmail dot com>
 
-# anki -> git rev-parse $pkgver --short=8
+# anki -> git rev-parse --short=8 $pkgver
 # ftl -> git submodule
 declare -gA _tags=(
- [ftl_core]="45c91b32dee9f52ae051fe5e1f3d574fa3b62d67"
- [ftl_desktop]="c0e842b10586d2a72357db1aa9e366ea695ac266"
- [anki]="fac9e0e"
+ [ftl_core]="1f2bf39348c7ad278ad79c0af96624f9f8f3e475"
+ [ftl_desktop]="8c2191a7c797747cec767e3953bbbcc50acc5246"
+ [anki]="55ef11af"
 )
 declare -gA _caches=(
     [yarn]="yarn-cache"
@@ -19,13 +19,13 @@ declare -gA _caches=(
 )
 
 pkgname=anki
-pkgver=23.10.1
+pkgver=23.12
 pkgrel=1
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
 license=('AGPL3')
 arch=('x86_64')
-conflicts=('anki-bin' 'anki-git' 'anki-official-binary-bundle' 'anki-qt5')
+conflicts=('anki-bin' 'anki-git' 'anki-qt5')
 depends=(
     # anki & aqt
     'python>=3.9'
@@ -57,7 +57,6 @@ makedepends=(
     'cargo'
     'python-installer' # TODO: could use either wheel or installer, both are not needed afaik
     'python-wheel'
-    'libxcrypt-compat'
     'nodejs>=18'
     'yarn'
     'mold'
@@ -77,10 +76,10 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/ankitects/anki/archive/refs
         "strip-formatter-deps.patch"
         "strip-type-checking-deps.patch"
 )
-sha256sums=('561fc902f3ad35e51686938e706d5a267bbc9a905ca0e9cc5be59b1617f3a551'
-            '9fab0284a3110ec91cf5f346b18e9b9513ac566f25f262a61295dc538dc5ac6e'
-            '576d1a75236cb6817bc98410753c87a637efa29dc0d52cc2ab585c7ae531f35a'
-            '809037694be7c6926da74fb18955a11f2404c7558a07c444ebddbf94b37f7584'
+sha256sums=('c7c4a725cd1784a77ea558db9b48b94b8d6e4eafe8a0a2fae2aff9672b607540'
+            '3528b4c9d6e0157a08abe97e90b2e2b8b8fad4afea2fd6ecb84ca39c4da3a550'
+            'd07dfb1453a131943dde29d1683746432b0d4af04534deeda5daf9bceb31a87a'
+            '94d8b6d6541ce0c00ab1ddc88d2f384a6535e9849891f30a02bb07bd60178086'
             'cc546f4e5af642af89f82be0375800c2721dd904c0a212cf46f6459495b75bff'
             '9858fefa254812980d252b29fc6f32bd19bb83ee7e5a96d72c707626ed5193a7'
             '198bc2ec14439e3ba41a03c4823f07df4b0c559c1dcbdaf678416ed12a720c2e'
