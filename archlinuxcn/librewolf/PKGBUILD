@@ -2,7 +2,7 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=120.0.1
+pkgver=121.0
 pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
@@ -77,7 +77,7 @@ source=(
   "default192x192.png"
 )
 
-sha256sums=('2791183065eec985236eeda50c0e5d5d23bf4a4adcf106adde5dbc4d87830d70'
+sha256sums=('8e630a8a78a9fb2febb14fcc0d5b3991b8f21aca401362f6105100e495540339'
             '7d01d317b7db7416783febc18ee1237ade2ec86c1567e2c2dd628a94cbf2f25d'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1')
 
@@ -165,9 +165,11 @@ fi
 build() {
   cd librewolf-$pkgver-$pkgrel
 
-  export MOZ_NOSPAM=1
-  export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
   export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=pip
+  export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
+  export MOZ_BUILD_DATE="$(date -u${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH} +%Y%m%d%H%M%S)"
+  # export MOZ_ENABLE_FULL_SYMBOLS=1 # disabled - not needed if no debug build required?
+  export MOZ_NOSPAM=1
   # export PIP_NETWORK_INSTALL_RESTRICTED_VIRTUALENVS=mach # let us hope this is a working _new_ workaround for the pip env issues?
 
   # malloc_usable_size is used in various parts of the codebase
