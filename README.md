@@ -1,3 +1,5 @@
+<!-- GOOD REPO :) -->
+
 # Arch Linux CN Community Repository
 
 [![Packaging consistency check](https://github.com/archlinuxcn/repo/actions/workflows/test.yml/badge.svg)](https://github.com/archlinuxcn/repo/actions/workflows/test.yml)
