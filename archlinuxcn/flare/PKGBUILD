@@ -17,7 +17,7 @@ source=("https://gitlab.com/schmiddi-on-mobile/${pkgname}/-/archive/${pkgver}/${
 sha256sums=("88f64c4ad3e4ffeb49ac81dabd2d2badf8a006aaf4a4f08b4353b8711dacd614")
 options=(!lto)
 
-build() {
+prepare() {
 	cd "${pkgname}-${pkgver}/"
 	arch-meson . build/
 }
