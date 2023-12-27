@@ -2,14 +2,14 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=4001
+pkgver=4037
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
 url="https://yuzu-emu.org/"
 license=('GPL2')
 depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'openssl' 'zstd' 'cubeb' 'dynarmic' 'enet' 'libinih' 'discord-rpc' 'cpp-httplib')
-makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'ninja' 'graphviz' 'doxygen' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'xbyak' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'clang' 'python' 'renderdoc')
+makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'ninja' 'graphviz' 'doxygen' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'xbyak' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'clang' 'python' 'renderdoc' 'gamemode')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
@@ -17,9 +17,9 @@ source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.g
 "https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml"
 "https://github.com/pineappleEA/pineapple-src/releases/download/EA-${pkgver}/Windows-Yuzu-EA-${pkgver}.zip")
 options=('!buildflags') #[heavysink] Disable _FORTIFY_SOURCE for temporary fix for Bayonetta 3
-sha256sums=('47a2edf6248a97391b2a60f377ca7f1bf455f845613e8fbabd2c32d52aad2207'
+sha256sums=('a72052b8ef3360bb9000acd77cc7036fa01ee4d871116d29e03645c715d1c09d'
             'e76ab2b3566d8135930e570ede5bed3da8f131270b60db818e453d248880bdf2'
-            '533e236870953ff73a75677d688ca1fb7fa6c74255e60d35553697cb5824dc0e')
+            '756f007fd228f416d17a055a1251a136e20562d05fb8a81239fb168fccfd26c9')
 
 prepare() {
   cd "$srcdir/yuzu-windows-msvc-early-access"
@@ -45,6 +45,7 @@ prepare() {
   find . -name "CMakeLists.txt" -exec sed -i 's/-Werror/-W/g' {} +
   sed -i -e 's/0.11 //g' CMakeLists.txt
   sed -i -e 's/1.3.238/1.3.233/g' CMakeLists.txt
+  sed -i -e 's/xbyak 6/xbyak 7.0/g' CMakeLists.txt
   sed -i -e 's/httplib 0.12/httplib/g' CMakeLists.txt
   sed -i -e 's/--quiet //g' src/video_core/host_shaders/CMakeLists.txt
   sed -i -e 's#${SPIRV_HEADER_FILE} ${SOURCE_FILE}#${SPIRV_HEADER_FILE} ${SOURCE_FILE} 2>/dev/null#g' src/video_core/host_shaders/CMakeLists.txt
