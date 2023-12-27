@@ -1,12 +1,12 @@
 # Thanks to the maintainer(s) of chirp-daily
-# Maintainer: K5TRP <K5TRP@onlyhams.ca>
+# Maintainer: WT5A <K5TRP@onlyhams.ca>
 # Contributor: 0b100100 <0b100100 at protonmail dot ch>
 # Contributor: Ashley Roll (ash@digitalnemesis.com)
 # Contributor: Erez Raviv (erezraviv@gmail.com)
 
 pkgname=chirp-next
 pkgver=20231223
-pkgrel=1
+pkgrel=2
 pkgdesc="GUI tool for programming ham radios, built from daily build"
 arch=('any')
 url="https://chirp.danplanet.com"
@@ -21,13 +21,14 @@ install=$pkgname.install
 source=("${pkgname}-${pkgver}.tar.gz::https://trac.chirp.danplanet.com/chirp_next/next-${pkgver}/chirp-${pkgver}.tar.gz")
 # Checksums: https://trac.chirp.danplanet.com/chirp_next/next-$pkgver/SHA1SUM
 sha1sums=('31262bc8a7cd03bbbd01a08f33d0cfb75422f772')
-_site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+
 build() {
     cd "chirp-${pkgver}"
     python -m build --wheel --no-isolation
 }
 
 package() {
+  _site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   cd "chirp-$pkgver"
   python -m installer --destdir="${pkgdir}" dist/*.whl
   install -D -m644 "${srcdir}/chirp-${pkgver}/chirp/share/chirpw.1" "${pkgdir}/usr/share/man/man1/chirp.1"
