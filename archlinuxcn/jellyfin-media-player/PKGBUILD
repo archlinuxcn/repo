@@ -2,8 +2,8 @@
 
 pkgname=jellyfin-media-player
 pkgver=1.9.1
-_webver=10.8.10
-pkgrel=1
+_webver=10.8.13
+pkgrel=2
 pkgdesc='Jellyfin Desktop Client'
 arch=('i686' 'x86_64')
 license=('GPL')
@@ -13,7 +13,7 @@ makedepends=('cmake' 'git' 'python')
 source=("https://github.com/jellyfin/jellyfin-media-player/archive/refs/tags/v${pkgver}.tar.gz"
         "jellyfin-web_${_webver}.tar.gz::https://repo.jellyfin.org/releases/server/portable/versions/stable/web/${_webver}/jellyfin-web_${_webver}_portable.tar.gz")
 sha256sums=('8d119bb78e897ace3041cf332114a79c51be4d8e0cc8c68f5745fd588c2b9bde'
-            'd6145a247239fb9a9f2cc7e69549ca08b0c33878c0b249670fcc64d4dfb20552')
+            'cbd00c3c3a56d7d17d63dc6060b5cbc011820a83cde64b7f9c93690fbac174d6')
 
 build() {
     cd "${srcdir}/jellyfin-media-player-${pkgver}"
@@ -27,7 +27,7 @@ build() {
         -DLINUX_X11POWER=ON \
         -DQTROOT=./qt \
         ..
-    make
+    cmake build .
 }
 
 package() {
