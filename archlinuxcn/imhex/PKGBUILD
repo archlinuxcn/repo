@@ -3,8 +3,8 @@
 
 _pkgname=ImHex
 pkgname=${_pkgname,,}
-pkgver=1.31.0
-pkgrel=2
+pkgver=1.32.0
+pkgrel=1
 pkgdesc='A Hex Editor for Reverse Engineers, Programmers and people that value their eye sight when working at 3 AM'
 url='https://imhex.werwolv.net'
 license=('GPL2')
@@ -30,9 +30,13 @@ source=("$pkgname::git+https://github.com/WerWolv/ImHex.git#tag=v$pkgver"
         "capstone::git+https://github.com/capstone-engine/capstone"
         "pattern_language::git+https://github.com/WerWolv/PatternLanguage"
         "libwolv::git+https://github.com/WerWolv/libwolv"
+        "HashLibPlus::git+https://github.com/WerWolv/HashLibPlus"
+        "jthread::git+https://github.com/josuttis/jthread"
         "cli11::git+https://github.com/CLIUtils/CLI11"
         )
 sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -47,16 +51,24 @@ b2sums=('SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
+        'SKIP'
+        'SKIP'
         'SKIP')
 
 prepare() {
   cd "$srcdir/$pkgname"
 
   git submodule init
-  for name in nativefiledialog xdgpp libromfs capstone pattern_language libwolv; do
+  for name in libromfs pattern_language libwolv; do
     git submodule set-url lib/external/$name "$srcdir/$name"
     git -c protocol.file.allow=always submodule update lib/external/$name
   done
+  for name in nativefiledialog xdgpp capstone HashLibPlus; do
+    git submodule set-url lib/third_party/$name "$srcdir/$name"
+    git -c protocol.file.allow=always submodule update lib/third_party/$name
+  done
+  git submodule set-url lib/third_party/jthread/jthread "$srcdir/jthread"
+  git -c protocol.file.allow=always submodule update lib/third_party/jthread/jthread
   pushd lib/external/pattern_language
     git submodule init
     git submodule set-url external/libwolv "$srcdir"/libwolv
