@@ -1,3 +1,130 @@
+# 23.12.1-1
+  * Revert Qt to 6.5 on Mac to fix crashes some users were experiencing.
+  * Update FSRS to fix an overly aggressive outlier filter by @L-M-Sherlock in open-spaced-repetition/fsrs-rs#146
+  * Fix incorrect retention estimates in deck options by @L-M-Sherlock in #2911
+  * Improve description of stability in graphs by @user1823 in #2910
+  * Fix I/O shortcuts conflicting with editor on mobile by @krmanik in #2916
+  * Fix some bugs in notetype merging by @RumovZ in #2912
+
+# 23.12-1
+FSRS:
+
+  * Minor improvements to the algorithm (FSRS 4.5). While not essential, we recommend you re-optimize your FSRS parameters
+  after updating. By @L-M-Sherlock and @asukaminato0721 in open-spaced-repetition/fsrs-rs#111 and
+  open-spaced-repetition/fsrs-rs#119 and #2901.
+  * The deck options Save dropdown now lets you optimize all presets at once.
+  * Rewrite the optimal retention code. The new code will give different results. By @L-M-Sherlock and @asukaminato0721
+  in open-spaced-repetition/fsrs-rs#122 and open-spaced-repetition/fsrs-rs#124
+  * The search used for optimizing presets is now remembered. By @abdnh in #2827
+  * Exclude suspended cards from optimization by default.
+  * When using 'deck:*' in the search, reviews from deleted cards are included.
+  * The reschedule-on-parameters-change option is now shared between all presets, and will default to off each time.
+  * When cards are rescheduled multiple times without reviews, extra entries will not be added to the review log.
+  * Fix some bugs in sorting by FSRS retrievability.
+  * Clarify learning steps recommendation by @user1823 in #2832
+  * Ignore filtered revlog in time of last review by @L-M-Sherlock in #2845
+  * Fix FSRS scheduling when add-ons manually convert cards to learning by @L-M-Sherlock in #2849
+  * Better approximate average retention/ease/difficulty.
+  * Don't use SM2 memory state when cards are manually introduced.
+  * Fix incorrect search being used when evaluating parameters.
+  * Recompute FSRS memory state when cards moved into different deck.
+  * Correct the description of FSRS Difficulty in Stats by @user1823 in #2888
+  * FSRS ignores revlog entries with time = 0 when calculating time taken. By @L-M-Sherlock in #2870
+  * Keep two decimals for stability by @L-M-Sherlock in #2873
+  * Improve calculated difficulty for cards that skipped initial learning.
+  * Catch NaNs in FSRS parameters.
+
+Deck options screen:
+
+  * Added a new v3 option to limit child decks by their parent, when clicking on the child. By @RumovZ in #2824
+  * Added an auto-advance feature. Activate from More menu; configure via deck options. By @abdnh in #2765
+  * The deck options screen now opens faster.
+  * Change link to manual in help screen from icon to text by @Gustaf-C in #2886
+  * Make help button more obvious, and remove hover animations.
+  * Add a globe icon to global settings in the deck options.
+  * Fix some RTL issues in help modals by @abdnh in #2857
+  * Do not close web pages when Esc is pressed and a modal is open by @abdnh in #2894
+
+Other scheduling/review-related changes:
+
+  * When rescheduling is disabled in a filtered deck, you can now choose different delays for again, hard and good. Set to 0 to
+  have that button immediately remove the card.
+  * The 'preview new cards' option in custom study now uses note-added order.
+  * Don't restrict answer key shortcuts to alphanumeric characters and a few symbols.
+  * Include elapsed_secs in learning card state by @Gustaf-C in #2862
+  * Fix cards showing up due in the past in a filtered deck.
+  * Fix filtered deck ordering of intraday learning cards and reviews by @abdnh in #2828
+  * Support all MathJax modules in review screen by @abdnh in #2836
+  * Add hint for zero minutes in filtered deck by @Gustaf-C in #2887
+  * Fix relative overdueness order error in filtered deck.
+Image occlusion:
+
+  * Add keyboard shortcuts to Image Occlusion, and fix a number of issues. By @krmanik in #2809
+    and #2847
+  * Fix image occlusion not showing up in Qt5 by @hikaru-y in #2829
+  * Don't show an error when opening add screen when the existing I/O notetype is invalid.
+  * Fix overlapping I/O icons in some languages
+  * Fix changes to groups of I/O masks not saving by @abdnh in #2878
+  * Fix switching of add & history buttons when selecting IO notetype by @akashreddy03 in #2833
+  * Fix IO card count by @abdnh in #2884
+
+Import/export:
+
+  * Allow importing/exporting with/without deck configs by @RumovZ in #2804
+  * Fix CSV importer dropdowns not updating after changes by @RumovZ in #2885
+  * Fix inability to search for existing notes in CSV import screen by @RumovZ in #2898
+  * Fix broken HTML in CSV import screen.
+
+Editor:
+
+  * Fix image overlay not closing when clicking outside on Qt6.6 by @hikaru-y in #2861
+  * Clear editor's internal copied text on cut/copy by @abdnh in #2866
+  * Fix Mathjax can only be pasted once by @akashreddy03 in #2869
+  * Improve confirmation message in Add screen by @abdnh in #2903
+  * Fix macOS clipboard issues by @msisovic in #2900
+  * Improve visibility of clicked buttons in editor by @Gustaf-C in #2841
+
+Card info:
+
+  * Show due date of buried/suspended cards in card info by @abdnh in #2820
+  * Hide "position" in card info when card not new.
+  * Show actual due date of learning cards in Card Info screen by @abdnh in #2865
+  * Bring card info window to top if card info action used again by @akashreddy03 in #2896
+
+Browser:
+
+  * Ensure cloze numbers sort in order when sorting by card template.
+  * Fix sorting by due column in notes mode.
+  * When sorting by due, intraday and interday intervals are no longer separated. By @abdnh in #2840
+  * Calculate elapsed days for intraday learning cards in browse screen and relative overdueness sorting.
+
+Platform changes:
+
+  * Update to PyQt 6.6.1 on all platforms.
+  * Platform CSS has been reimplemented. Standard selectors like .win and .mobile should continue to work; more obscure ones
+  that weren't documented will not. By @abdnh in #2854
+  * Automatically disable sandbox on Qt5 PyPi/packaged builds on Linux, as is required on modern glibc versions.
+  * The Qt6 Apple Silicon build now correctly declares it requires macOS 12+ to run, instead of crashing on startup.
+  * Update licensing info of a few third-party modules by @antecrescent in #2850
+  * Mention environment variable YARN_BINARY in documentation by @antecrescent in #2851
+
+Other:
+
+  * Improve keyboard handling and accessibility of dropdown boxes by @grepgrok in #2811
+  * Resolve some accessibility issues for tag options buttons by @grepgrok in #2787
+  * Ensure deck browser fetches collection data in the background.
+  * Fix sync status check blocking collection access when network offline.
+  * Ensure correct endpoint is used when syncing from Rust. By @sartak in #2864
+  * Ignore rescheduled cards in old stats page by @user1823 in #2863
+  * Do not add a fallback field reference if front side contains conditionals by @abdnh in #2859
+  * Ensure progress windows get cleaned up.
+  * Fix mpv idle notification not using main thread.
+  * Fix mpv not working out of the box in win32 source build.
+  * Handle invalid install timestamps in add-ons.
+  * Offer to save changes when card layout screen is closed by @abdnh in #2899
+  * Make the error dialog shown when an error occurs more friendly.
+  * Refresh model list when legacy addon adds notetype by @kieranlblack in #2825
+
 # 23.10.1-1
 General:
   * Update all platforms to Qt 6.6. This change fixes Japanese input on macOS.
