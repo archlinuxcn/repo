@@ -29,7 +29,7 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
      # only check submodules when source is obtained via Git
      check_submodules_present()
  endif()
-@@ -231,6 +236,17 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
+@@ -231,6 +236,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PRO
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
  
@@ -38,10 +38,6 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
 +
 +if (USE_DISCORD_PRESENCE)
 +    find_package(DiscordRPC)
-+endif()
-+
-+if (ENABLE_TESTS)
-+    find_package(Catch2 2)
 +endif()
 +
  if (ENABLE_QT)
@@ -72,20 +68,7 @@ diff --color -rupN citra/CMakeLists.txt citra/CMakeLists.txt
 diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
 --- citra/externals/CMakeLists.txt	2023-01-20 00:44:13.712264461 +0800
 +++ citra/externals/CMakeLists.txt	2023-01-20 04:34:47.512808459 +0800
-@@ -41,15 +41,20 @@ else()
- endif()
- 
- # Catch2
--set(CATCH_INSTALL_DOCS OFF CACHE BOOL "")
--set(CATCH_INSTALL_EXTRAS OFF CACHE BOOL "")
--add_subdirectory(catch2)
-+if (ENABLE_TESTS AND NOT TARGET Catch2::Catch2)
-+    message(STATUS "Using bundled catch2")
-+    set(CATCH_INSTALL_DOCS OFF CACHE BOOL "")
-+    set(CATCH_INSTALL_EXTRAS OFF CACHE BOOL "")
-+    set(CATCH_BUILD_STATIC_LIBRARY ON)
-+    add_subdirectory(catch2 EXCLUDE_FROM_ALL)
-+endif()
+@@ -53,9 +53,10 @@ target_link_libraries(catch2 INTERFACE C
  
  # Crypto++
  if(USE_SYSTEM_CRYPTOPP)
@@ -98,7 +81,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
  else()
      set(CRYPTOPP_BUILD_DOCUMENTATION OFF CACHE BOOL "")
      set(CRYPTOPP_BUILD_TESTING OFF CACHE BOOL "")
-@@ -162,7 +167,14 @@ endif()
+@@ -168,7 +169,14 @@ endif()
  add_subdirectory(open_source_archives)
  
  # faad2
@@ -114,7 +97,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
  
  # Dynamic library headers
  add_library(library-headers INTERFACE)
-@@ -254,7 +266,7 @@ if (ENABLE_CUBEB)
+@@ -260,7 +268,7 @@ if (ENABLE_CUBEB)
  endif()
  
  # DiscordRPC
@@ -126,26 +109,26 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
 diff --color -rupN citra/externals/cmake-modules/CitraHandleSystemLibs.cmake citra/externals/cmake-modules/CitraHandleSystemLibs.cmake
 --- citra/externals/cmake-modules/CitraHandleSystemLibs.cmake	2023-01-20 00:44:13.712264461 +0800
 +++ citra/externals/cmake-modules/CitraHandleSystemLibs.cmake	2023-01-20 04:34:47.512808459 +0800
-@@ -25,6 +25,7 @@ option(USE_SYSTEM_LODEPNG "Use the syste
- option(USE_SYSTEM_OPENAL "Use the system OpenAL (instead of the bundled one)" OFF)
+@@ -26,6 +26,7 @@ option(USE_SYSTEM_OPENAL "Use the system
  option(USE_SYSTEM_VMA "Use the system VulkanMemoryAllocator (instead of the bundled one)" OFF)
  option(USE_SYSTEM_VULKAN_HEADERS "Use the system Vulkan headers (instead of the bundled ones)" OFF)
+ option(USE_SYSTEM_CATCH2 "Use the system Catch2 (instead of the bundled one)" OFF)
 +option(USE_SYSTEM_FAAD2 "Use the system faad2 (instead of the bundled one)" OFF)
  
  # Qt and MoltenVK are handled separately
  CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_SDL2 "Disable system SDL2" OFF "USE_SYSTEM_LIBS" OFF)
-@@ -49,6 +50,7 @@ CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_LO
- CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_OPENAL "Disable system OpenAL" OFF "USE_SYSTEM_LIBS" OFF)
+@@ -51,6 +52,7 @@ CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_OP
  CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_VMA "Disable system VulkanMemoryAllocator" OFF "USE_SYSTEM_LIBS" OFF)
  CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_VULKAN_HEADERS "Disable system Vulkan headers" OFF "USE_SYSTEM_LIBS" OFF)
+ CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_CATCH2 "Disable system Catch2" OFF "USE_SYSTEM_LIBS" OFF)
 +CMAKE_DEPENDENT_OPTION(DISABLE_SYSTEM_FAAD2 "Disable system faad2" OFF "USE_SYSTEM_LIBS" OFF)
  
  set(LIB_VAR_LIST
      SDL2
-@@ -73,6 +75,7 @@ set(LIB_VAR_LIST
-     OPENAL
+@@ -76,6 +78,7 @@ set(LIB_VAR_LIST
      VMA
      VULKAN_HEADERS
+     CATCH2
 +    FAAD2
      )
  
