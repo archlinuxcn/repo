@@ -1,0 +1,48 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: Zes4Null <rjw1248[at]hotmail[dot]com>
+# Contributor: Philip <philip1731 protonmail ch>
+
+pkgname=qucs-s
+pkgver=2.1.0
+pkgrel=1
+pkgdesc="A spin-off of Qucs that supports other free SPICE circuit simulators like ngspice with the same Qucs GUI"
+arch=('x86_64' 'i686')
+url="https://ra3xdh.github.io"
+license=('GPL')
+depends=('glibc'
+         'gcc-libs'
+         'sh'
+         'qt6-base'
+         'qt6-svg'
+         'ngspice'
+         'python-numpy'
+         'python-matplotlib'
+         'hicolor-icon-theme'
+         )
+makedepends=('cmake'
+             'qt6-tools'
+             'ninja'
+             )
+optdepends=('qucs: Qucsator simulation backend'
+            'xyce-serial: SPICE-compatible simulation backend'
+            'spiceopus: general purpose simulation backend for optimization loops'
+            'openvaf: compiler for Verilog-A devices support'
+            'octave: high-level language for post-simulation data processing'
+            )
+source=(https://github.com/ra3xdh/qucs_s/releases/download/$pkgver/$pkgname-$pkgver.tar.gz)
+b2sums=('2fb8528dc52d57ba88ad6fa6eedfada4ba90a6d3cb921157c9961f066e4640360f50c781d7d8a86ac72810046795c176e7ceca4fcee355f569ace35a590f55aa')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  mkdir -p build
+  cmake -S . -B build \
+    -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr
+	
+  ninja -C build
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  DESTDIR="$pkgdir" ninja -C build install
+}
