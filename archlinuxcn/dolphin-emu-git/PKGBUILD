@@ -5,8 +5,9 @@
 _projectname='dolphin'
 _mainpkgname="$_projectname-emu"
 _noguipkgname="$_projectname-emu-nogui"
+_toolpkgname="$_projectname-emu-tool"
 pkgbase="$_mainpkgname-git"
-pkgname=("$pkgbase" "$_noguipkgname-git")
+pkgname=("$pkgbase" "$_noguipkgname-git" "$_toolpkgname-git")
 pkgver=5.0.r20863.g2a89a1d27a
 pkgrel=1
 pkgdesc='A Gamecube / Wii emulator'
@@ -103,6 +104,7 @@ package_dolphin-emu-git() {
 	install -Dm644 'Data/51-usb-device.rules' "$pkgdir/usr/lib/udev/rules.d/51-usb-device.rules"
 
 	rm -rf "$pkgdir/usr/bin/$_noguipkgname"
+    rm -rf "$pkgdir/usr/bin/$_projectname-tool"
 	rm -rf "$pkgdir/usr/include"
 	rm -rf "$pkgdir/usr/lib/libdiscord-rpc.a"
 	rm -rf "$pkgdir/usr/share/man/man6/$_noguipkgname.6"
@@ -119,4 +121,13 @@ package_dolphin-emu-nogui-git() {
 	install -Dm755 "$srcdir/$_sourcedirectory/build/Binaries/$_noguipkgname" "$pkgdir/usr/bin/$_noguipkgname"
 	ln -sf "/usr/bin/$_noguipkgname" "$pkgdir/usr/bin/$_mainpkgname-cli"
 	install -Dm644 "Data/$_noguipkgname.6" "$pkgdir/usr/share/man/man6/$_noguipkgname.6"
+}
+
+package_dolphin-emu-tool-git() {
+	pkgdesc="$pkgdesc - CLI-based utility for functions such as managing disc images$_pkgdescappend"
+	provides=("$_toolpkgname")
+	conflicts=("$_toolpkgname")
+
+	cd "$srcdir/$_sourcedirectory/"
+	install -Dm755 "$srcdir/$_sourcedirectory/build/Binaries/$_projectname-tool" "$pkgdir/usr/bin/$_projectname-tool"
 }
