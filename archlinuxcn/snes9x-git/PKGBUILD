@@ -5,7 +5,7 @@
 pkgbase=snes9x-git
 _pkgbase=snes9x
 pkgname=(snes9x-git snes9x-gtk-git)
-pkgver=1.62.3.r143.g5c65edbb
+pkgver=1.62.3.r155.g4dddce8b
 pkgrel=1
 pkgdesc="Port of the Snes9x emulator (git version)"
 arch=('x86_64')
@@ -14,7 +14,7 @@ license=('custom')
 makedepends=(alsa-lib cairo gdk-pixbuf2 git glib2
   gtk3 intltool libepoxy libpng libpulse libx11 libxext libxml2
   libxrandr libxv meson minizip nasm portaudio sdl2 zlib gtkmm3
-  cmake libyuv
+  cmake
 )
 source=(
   git+https://github.com/snes9xgit/snes9x.git
@@ -39,21 +39,22 @@ build() {
 
   ./configure \
     --prefix='/usr' \
-    --enable-netplay \
-    --enable-libyuv \
-    --enable-sse41 \
-    --enable-avx2
+    --enable-netplay
   make
 
-  cd "${srcdir}/${_pkgbase}/gtk"
-  cmake -G Ninja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -S . -B build
-  ninja -C build
+
+  export CFLAGS="$CFLAGS -Wno-error=format-security"
+  export CXXFLAGS="$CXXFLAGS -Wno-error=format=security"
+  cd "${srcdir}" && mkdir -p build
+  cd "${srcdir}"/build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_C_FLAGS="-Wno-error=format-security" -DCMAKE_CXX_FLAGS="-Wno-error=format-security" ../snes9x/gtk
+  cmake --build .
 }
 
 package_snes9x-git() {
 
   pkgdesc="portable Emulator for the Super Nintendo Entertainment System"
-  depends=(libpng libxinerama libxv minizip libyuv alsa-lib)
+  depends=(libpng libxinerama libxv minizip)
 
   conflicts=('snes9x')
   provides=('snesx')
@@ -75,25 +76,15 @@ package_snes9x-gtk-git() {
   conflicts=('snes9x-gtk')
   provides=('snes9x-gtk')
 
-  cd ${srcdir}/${_pkgbase}/gtk
-  DESTDIR="${pkgdir}" ninja -C build install
+  cd "${srcdir}"/build
+  DESTDIR="${pkgdir}" cmake --install .  --prefix=/usr
 
   cd "${srcdir}/${_pkgbase}"
 
   install -d "${pkgdir}/usr/share/doc/${pkgname}"
   install -Dm644 {unix/snes9x.conf.default,docs/{control-inputs,controls,snapshots}.txt} \
     "${pkgdir}/usr/share/doc/${pkgname}/"
-  install -vDm644 LICENSE -t \
-    "${pkgdir}/usr/share/licenses/${pkgname}"
-
-   # Remove glslang files
-   #rm "${pkgdir}/usr/bin/glslangValidator"
-   #rm "${pkgdir}/usr/lib/libHLSL.a"
-   #rm "${pkgdir}/usr/lib/libOGLCompiler.a"
-   #rm "${pkgdir}/usr/lib/libOSDependent.a"
-   #rm "${pkgdir}/usr/lib/libSPIRV.a"
-   #rm "${pkgdir}/usr/lib/libSPVRemapper.a"
-   #rm "${pkgdir}/usr/lib/libglslang.a"
-
+  install -vDm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  #mv "${pkgdir}/usr/locale" "${pkgdir}/usr/share/locale"
 
 }
