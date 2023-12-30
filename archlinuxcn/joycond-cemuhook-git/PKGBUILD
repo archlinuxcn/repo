@@ -1,32 +1,33 @@
 # Maintainer: nissen22
 _pkgname=joycond-cemuhook
 pkgname=${_pkgname}-git
-pkgver=120.3c0e073
+pkgver=r126.afa7601
 pkgrel=1
 pkgdesc="Support for cemuhook's UDP protocol for joycond devices"
 arch=("any")
 url="https://github.com/joaorb64/joycond-cemuhook"
 license=("unknown")
 
-depends=("joycond-git" "python-termcolor" "python-evdev" "python-dbus-common" "python-argparse" "python-pyudev" "upower" "systemd-libs")
-makedepends=("git" "python-build" "python-installer" "python-wheel" "python-setuptools" "python-setuptools-git-versioning-git")
+depends=("joycond-git" "python" "python-termcolor" "python-evdev" "python-dbus-common" "python-pyudev" "upower" "systemd-libs")
+makedepends=("git" "python-build" "python-installer" "python-wheel" "python-setuptools")
 conflicts=("${_pkgname}")
 optdepends=('nintendo-udev: Udev rules for switch controllers', 'hid-nintendo-dkms: Kernel module with switch controller support.')
 
 source=("${_pkgname}::git+https://github.com/joaorb64/${_pkgname}.git")
-sha512sums=('SKIP') 
+sha512sums=('SKIP')
 
 
 pkgver() {
   cd "${_pkgname}"
-  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build() {
-    cd "${_pkgname}"
-    python -m build --wheel --no-isolation
+    cd "$srcdir/joycond-cemuhook"
+    python -m build --wheel --no-isolation --skip-dependency-check
 }
+
 package() {
-  cd "${_pkgname}"
-  python -m installer --destdir="$pkgdir" dist/*.whl
+    cd "$srcdir/joycond-cemuhook"
+    python -m installer --destdir="$pkgdir" dist/*.whl
 }
