@@ -106,7 +106,6 @@ source=('git+https://code.videolan.org/videolan/vlc.git'
         'lua53_compat.patch'
         'vlc-live-media-2021.patch'
         'update-vlc-plugin-cache.hook'
-        'typeof.patch'
         '2419.patch'
         '2419a.patch'
         '2419b.patch')
@@ -114,7 +113,6 @@ sha512sums=('SKIP'
             '33cda373aa1fb3ee19a78748e2687f2b93c8662c9fda62ecd122a2e649df8edaceb54dda3991bc38c80737945a143a9e65baa2743a483bb737bb94cd590dc25f'
             '322461cb5e89e4828483dd0a5c6595f99e767885ae9a1aa2e4d0514ac7354f2ee93b3e5c80993dcff7cd218d7af210374724337b3fc8bc196d35ef5e2b41695d'
             '2f1015af384559bf4868bb989c06a7d281a8e32afb175ef397dbf1671bae3540a3a6b073a74ed77ed82e79a81f964a5a58a98c2a3f1b5e5cd5e9ea60d58c737f'
-            'ef97e1b9e4c38b051e3e99e0ec1376e0805ba93a1d7066ea20aee486400235a74e93a74ccc3ab5b701e81c69161f23deb9791ff8b13458f233a1ab9185b4b0b5'
             '79c70a2849879ef59b62f229bef2c3ef45f2ef0901bc256bdcae5f8c6215810a1bd9ddcbfe866b4a5f184155136b7cd606af5733fae6e432a44fa6d7788be06c'
             'bc9bd02cab5fae2b140409bad092940e943acd9167cfb365b137f28d74d20d17e149aaf2132e9c0fbf8f225f1426c5cb9af8591ee3027b9773e3bd9db63f84b8'
             '41698571fba52d05448effcde59b5b93ff70577e264bd8d2d4053534b7dc30464483512a65a65f9eee067551b78f40859eaac0974acb61fda146d7eaef8d7936')
@@ -135,7 +133,6 @@ prepare() {
   sed -e 's|-Werror-implicit-function-declaration||g' -i configure
   patch -Np1 < "${srcdir}"/lua53_compat.patch
   patch -Np1 < "${srcdir}"/vlc-live-media-2021.patch
-  #patch -Np1 < "${srcdir}"/typeof.patch
   patch -Np1 < "${srcdir}"/2419.patch
   patch -Np1 < "${srcdir}"/2419a.patch
   patch -Np1 < "${srcdir}"/2419b.patch
