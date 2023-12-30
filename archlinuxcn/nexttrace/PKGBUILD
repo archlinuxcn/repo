@@ -14,12 +14,16 @@ build() {
   cd "Ntrace-V1"
   export BUILD_VERSION="$(git describe --tags --always)"
   export COMMIT_SHA1="$(git rev-parse --short HEAD)"
+  export BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
   go build \
     -trimpath \
     -buildmode=pie \
     -mod=readonly \
     -modcacherw \
-    -ldflags "-linkmode external -extldflags \"${LDFLAGS}\" -X 'github.com/xgadget-lab/nexttrace/config.Version=${BUILD_VERSION}' -X 'github.com/xgadget-lab/nexttrace/config.CommitID=${COMMIT_SHA1}' " \
+    -ldflags "-linkmode external -extldflags \"${LDFLAGS}\" \
+      -X 'github.com/nxtrace/NTrace-core/config.Version=${BUILD_VERSION}' \
+      -X 'github.com/nxtrace/NTrace-core/config.BuildDate=${BUILD_DATE}' \
+      -X 'github.com/nxtrace/NTrace-core/config.CommitID=${COMMIT_SHA1}' " \
     .
 }
 
