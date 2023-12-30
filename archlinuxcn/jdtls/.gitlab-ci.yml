@@ -4,6 +4,7 @@ build:
     name: countstarlight/makepkg:latest
     entrypoint: [""]
   before_script:
+    - sudo pacman -Sy --noconfirm archlinux-keyring
     - yay -Syu --noconfirm
   script:
     - |
