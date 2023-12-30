@@ -1,24 +1,24 @@
 post_install() {
-    getent group jdownloader &>/dev/null || groupadd -r jdownloader >/dev/null
-        getent passwd jdownloader &>/dev/null || useradd -r -g jdownloader -d /opt/JDownloader/ -s /bin/false -c jdownloader jdownloader >/dev/null
-    if [ -d "/opt/JDownloader/" ]; then
-        chown -R jdownloader:jdownloader /opt/JDownloader/
-        chmod -R 0775 /opt/JDownloader/
-        chmod g+s "/opt/JDownloader"
-        setfacl -d -m u::rwx,g::rwx,o::rx "/opt/JDownloader"
-    fi
-    xdg-icon-resource forceupdate --theme hicolor &>/dev/null
-    update-desktop-database -q
-        update-mime-database /usr/share/mime
-    echo "Don't forget: You have to run 'JDownloaderHeadless' multiple times manually until you've configured MyJdownloader settings"
+	getent group jdownloader &>/dev/null || groupadd -r jdownloader >/dev/null
+	getent passwd jdownloader &>/dev/null || useradd -r -g jdownloader -d /opt/JDownloader/ -s /bin/false -c jdownloader jdownloader >/dev/null
+	if [ -d "/opt/JDownloader/" ]; then
+		chown -R jdownloader:jdownloader /opt/JDownloader/
+		chmod -R 0775 /opt/JDownloader/
+		chmod g+s "/opt/JDownloader"
+		setfacl -d -m u::rwx,g::rwx,o::rx "/opt/JDownloader"
+	fi
+	xdg-icon-resource forceupdate --theme hicolor &>/dev/null
+	update-desktop-database -q
+	update-mime-database /usr/share/mime
+	echo "Don't forget: You have to run 'JDownloaderHeadless' multiple times manually until you've configured MyJdownloader settings"
 }
 
 post_upgrade() {
-    post_install
+	post_install
 }
 
 post_remove() {
-    getent passwd jdownloader &>/dev/null && userdel jdownloader >/dev/null
-        getent group jdownloader &>/dev/null && groupdel jdownloader >/dev/null
-        rm -Rf /opt/JDownloader
+	getent passwd jdownloader &>/dev/null && userdel jdownloader >/dev/null
+	getent group jdownloader &>/dev/null && groupdel jdownloader >/dev/null
+	rm -rf /opt/JDownloader
 }
