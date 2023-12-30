@@ -1,13 +1,21 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 _pkgname=xemu
 pkgname=$_pkgname-git
-pkgver=0.7.117.r1.g800eb468a4
-pkgrel=1
+pkgver=0.7.118.r0.g03f40b1d8e
+pkgrel=2
 pkgdesc="Original Xbox emulator (fork of XQEMU)"
 arch=('x86_64')
 url="https://xemu.app/"
 license=('GPL2')
-depends=('dtc' 'gcc-libs' 'glibc' 'hicolor-icon-theme' 'sdl2' 'zlib' 'cpp-httplib')
+depends=(
+	'dtc'
+	'gcc-libs'
+	'glibc'
+	'hicolor-icon-theme'
+	'libhttplib.so'
+	'sdl2'
+	'zlib'
+)
 makedepends=(
 	'cmake'
 	'git'
@@ -50,7 +58,7 @@ b2sums=(
 	'SKIP'
 	'SKIP'
 	'SKIP'
-	'66713ea21508daea5940a1dc0d761ecf449d31a825f2e24090d296ea4c127df80f961d13fe8d179bdad265441bad7174344c53db4202a23b910e9e0ca6c04e21'
+	'ab5636092dd543c38b9756914100f15a44222d5e4a3160360a1d739725a65f95ea8a5c48e11358397c0a07bbbc04ed604fc86295d979209481b1e56c5c7b4dcf'
 )
 
 pkgver() {
@@ -92,7 +100,6 @@ package() {
 		'libglib-2.0.so'
 		'libgobject-2.0.so'
 		'libgtk-3.so'
-		'libhttplib.so'
 		'libkeyutils.so'
 		'libpcap.so'
 		'libpixman-1.so'
