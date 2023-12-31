@@ -1,12 +1,12 @@
 # Maintainer: ThatOneCalculator <kainoa@t1c.dev>
 
-pkgname="hyprpaper-git"
+pkgname=hyprpaper-git
 _pkgname="${pkgname%-git}"
 pkgver=0.5.0.r8.gef0e051
 pkgrel=1
 pkgdesc="A blazing fast wayland wallpaper utility with IPC controls."
 arch=('x86_64' 'aarch64' 'riscv64')
-url="https://github.com/hyprwm/hyprpaper"
+url="https://github.com/hyprwm/${_pkgname}"
 license=('BSD')
 depends=(
 	wayland
@@ -25,7 +25,7 @@ makedepends=(
 	wayland-protocols
 	xorgproto
 )
-source=("${_pkgname}::git+https://github.com/hyprwm/hyprpaper.git")
+source=("git+${url}.git")
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 sha256sums=('SKIP')
@@ -43,6 +43,6 @@ build() {
 
 package() {
 	cd "${_pkgname}/"
-	install -Dm755 build/hyprpaper -t "${pkgdir}/usr/bin/"
+	install -Dm755 "build/${_pkgname}" -t "${pkgdir}/usr/bin/"
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 }
