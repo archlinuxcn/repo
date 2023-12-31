@@ -5,7 +5,7 @@
 pkgname=telegram-desktop-lily
 _pkgname=telegram-desktop
 pkgver=4.13.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Official Telegram Desktop client with megumifox & lily's patch"
 arch=('x86_64')
 url="https://desktop.telegram.org/"
@@ -25,18 +25,21 @@ source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver
         "0001-Use-font-from-environment-variables.patch"
         "0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch"
         "0001-make-blockquote-markup-less-distractive.patch"
-        "warn-before-delete-all-2.patch")
+        "warn-before-delete-all-2.patch"
+        0001-Drop-usage-of-Qt-6.5-colorScheme-API-on-Linux.patch)
 sha512sums=('4cbbfaf6e5ecc90b429fc2207a106988ab839aa42d0d225841069d20bf2152fada489c28e6816eefa143724f5b8ea4db6995a0612f0df195d8dbd5f40d8a63a3'
             '13b1b0f34b0937a98aa61fed776318717c659358794c0ffa8b1af00c5c80fe195a11816db9183eee8e8e02f76c72f10c723093a24a9c0de249af18dcf2755126'
             '31d7a4c091abae49631598f2f41c8382550312e080fca784ed5a19cbaef0c6cdf2a2a4ffeffd78cd41f32dd49fb60ead2c12b3febce7cdf9a9ede6ea3c938a2b'
             '89a12954a70451b195a9b565fc3306a03d5fb5d94d3c7cb8690dec8d6710db95f4ba5ac356e5d9a48235ab077c39bd73e76a55eb708f444d795b939507af415d'
-            '891a58e7d1a4d4a27a17a2b56bd614d87d22322f2f6e1247665b2b873c5c6d78336de04bc7a11feceb7cd8f1a2f79a858ad2520352644e808634e2989a17357d')
+            '891a58e7d1a4d4a27a17a2b56bd614d87d22322f2f6e1247665b2b873c5c6d78336de04bc7a11feceb7cd8f1a2f79a858ad2520352644e808634e2989a17357d'
+            'af73d95bbb806a5d5c791872e7083e33e83f21b18396687f6e7d8b1ca60da41faaab45b291006e4c471f847e260a28ac5e196f1422f209f9c64540b11a7374c6')
 
 prepare() {
     patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-Use-font-from-environment-variables.patch
     patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch
     patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0001-make-blockquote-markup-less-distractive.patch
     patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/warn-before-delete-all-2.patch
+    patch -Np1 -d tdesktop-$pkgver-full < ${srcdir}/0001-Drop-usage-of-Qt-6.5-colorScheme-API-on-Linux.patch
 }
 
 build() {
