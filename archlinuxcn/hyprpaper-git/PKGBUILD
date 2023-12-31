@@ -15,6 +15,7 @@ depends=(
 	libjpeg
 	libpng
 	libwebp
+	hyprlang-git
 )
 makedepends=(
 	git
@@ -22,7 +23,8 @@ makedepends=(
 	ninja
 	meson
 	wayland-protocols
-	xorgproto)
+	xorgproto
+)
 source=("${_pkgname}::git+https://github.com/hyprwm/hyprpaper.git")
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")

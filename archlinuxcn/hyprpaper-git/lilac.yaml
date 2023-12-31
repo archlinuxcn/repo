@@ -7,6 +7,9 @@ pre_build_script: |
 
 post_build_script: git_pkgbuild_commit()
 
+repo_depends:
+  - hyprlang-git
+
 update_on:
   - source: github
     github: hyprwm/hyprpaper
