@@ -1,8 +1,8 @@
 diff --git a/setup.py b/setup.py
-index d78efa9..7eff236 100644
+index e527a75..1a371de 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -231,16 +231,11 @@ def customize_build_default(EXTENSIONS, OPTIONS):
+@@ -233,18 +233,14 @@ def customize_build_default(EXTENSIONS, OPTIONS):
      import platform
  
      del EXTENSIONS['apng']  # apng patch not commonly available
@@ -14,8 +14,11 @@ index d78efa9..7eff236 100644
      del EXTENSIONS['lz4f']  # requires static linking
 -    del EXTENSIONS['lzfse']  # lzfse not commonly available
      del EXTENSIONS['lzham']  # lzham not commonly available
+     del EXTENSIONS['lzo']  # lzokay not commonly available
      del EXTENSIONS['mozjpeg']  # Win32 only
+     del EXTENSIONS['sperr']  # sperr not commonly available
 -    del EXTENSIONS['zlibng']  # zlib-ng library not commonly available
++    del EXTENSIONS['jpegxl']
  
      if 'arch' not in platform.platform():
          del EXTENSIONS['jpegls']  # CharLS 2.1 library not commonly available
