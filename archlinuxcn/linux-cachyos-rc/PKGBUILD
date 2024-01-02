@@ -167,7 +167,7 @@ fi
 _major=6.7
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc6
+_rcver=rc8
 pkgver=${_major}.${_rcver}
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -175,7 +175,7 @@ _stable=${_major}-${_rcver}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
 pkgdesc='Linux EEVDF-BORE scheduler Kernel by CachyOS and with some other patches and other improvements'
-pkgrel=2
+pkgrel=1
 _kernver=$pkgver-$pkgrel
 arch=('x86_64' 'x86_64_v3')
 url="https://github.com/CachyOS/linux-cachyos"
@@ -219,7 +219,8 @@ fi
 
 # NVIDIA pre-build module support
 if [ -n "$_build_nvidia" ]; then
-    source+=("https://us.download.nvidia.com/XFree86/Linux-x86_64/${_nv_ver}/${_nv_pkg}.run")
+    source+=("https://us.download.nvidia.com/XFree86/Linux-x86_64/${_nv_ver}/${_nv_pkg}.run"
+             "$_patchsource/misc/nvidia/nvidia-drm-hotplug-workqueue.patch")
 fi
 
 ## ToDo: Adjust for new Scheduler Changes
@@ -269,6 +270,7 @@ prepare() {
         src="${src%%::*}"
         src="${src##*/}"
         src="${src%.zst}"
+        [[ $src = nvidia-drm-hotplug-workqueue.patch ]] && continue
         [[ $src = *.patch ]] || continue
         echo "Applying patch $src..."
         patch -Np1 < "../$src"
@@ -633,6 +635,10 @@ prepare() {
     if [ -n "$_build_nvidia" ]; then
         cd "${srcdir}"
         sh "${_nv_pkg}.run" --extract-only
+
+        # Temporary fix for fbdev=1
+        # https://forums.developer.nvidia.com/t/545-29-06-18-1-flip-event-timeout-error-on-startup-shutdown-and-sometimes-suspend-wayland-unusable/274788/21
+        patch -Np0 -i "${srcdir}/nvidia-drm-hotplug-workqueue.patch" -d "${srcdir}/${_nv_pkg}"
     fi
 }
 
@@ -784,7 +790,7 @@ _package-headers() {
 
 _package-zfs(){
     pkgdesc="zfs module for the $pkgdesc kernel"
-    depends=('pahole' linux-$pkgsuffix=$_kernver)
+    depends=('pahole' $pkgbase=$_kernver)
     provides=('ZFS-MODULE')
 
     local moduleprefix=${_major}.${_minor}-${_rcver}-${pkgrel}
@@ -798,7 +804,7 @@ _package-zfs(){
 
 _package-nvidia(){
     pkgdesc="nvidia module of ${_nv_ver} driver for the linux-$pkgsuffix kernel"
-    depends=("linux-$pkgsuffix=$_kernver" "nvidia-utils=${_nv_ver}" "libglvnd")
+    depends=("$pkgbase=$_kernver" "nvidia-utils=${_nv_ver}" "libglvnd")
     provides=('NVIDIA-MODULE')
     license=('custom')
 
@@ -820,8 +826,8 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('321f606bd30fe3929257371e2b480d67395b0939d996d190c54ec162f402504e591f54073fa0f4a3d5f078a7981606055566a45f7525870d971c2fe9a78fdba3'
-        '9f63bcb80c6f871bc32d08cffa272139a12affe068498beac5c705a56a185efff0af759260b0727e0b065231c7e54cb5957ce2dd434c3aa1a720140cdd852de5'
-        '11d2003b7d71258c4ca71d71c6b388f00fe9a2ddddc0270e304148396dadfd787a6cac1363934f37d0bfb098c7f5851a02ecb770e9663ffe57ff60746d532bd0'
-        '6ca1e2414ef95bb9c26dbd58e0b1f994115b776565b3e37c5bcfe0bde27a6cc0ae1af658a7b77e2c4caf48bf7f9c80f997cc8220e22a0c59334461e6d8224bb9'
+b2sums=('99d12bd62dd46076ac5fb1412e367480834cc104571588dd764ba96525b713a84f3938ef13eabec26ae8ef800fbf112af00f624c84edbfc057b1300d213077f4'
+        'c7c3eef86b0aefc7ce7c8cc48b4efbb0bfecffc675c63a9e684ed152adf8370e7cfcd9d7b7899d73a6a76c643cf9138472e73fbdd2ac0b453733fcad139a5954'
+        '43ef7a347878592740d9eb23b40a56083fa747f7700fa1e2c6d039d660c0b876d99bf1a3160e15d041fb13d45906cdb5defef034d4d0ae429911864239c94d8d'
+        'ca3e14dd0ab192e4b45408dd473902f76f53bf56ad87ebcd3d6d6127084fc7f2d951674eec31a0faea2a566312c030965edab417947e310aafce4ad77c0f7802'
         'c56c13dfd61da242d0c45df0ef6a59cb466e2c2cde1f8d5602aefc1b507d2e690463a41468efa47962c082d3476ff675fa5c481020616ae6d45871be47aab79f')
