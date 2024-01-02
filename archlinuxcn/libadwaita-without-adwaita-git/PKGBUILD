@@ -2,7 +2,7 @@
 
 pkgname=libadwaita-without-adwaita-git
 pkgver=1.4.2
-pkgrel=8
+pkgrel=9
 url="https://gnome.pages.gitlab.gnome.org/libadwaita"
 pkgdesc='libadwaita; Includes a patch to not overwrite the system theme'
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
