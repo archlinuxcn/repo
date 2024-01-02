@@ -1,7 +1,8 @@
 Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
 Source: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
-Commit: 0a85ac26710327b36151e30b893806fe83fd4295
-Last Updated: 11/19/23 (Mutter 45.1)
+Source: https://gitlab.gnome.org/Community/Ubuntu/mutter/-/tree/triple-buffering-v4-45
+Commit: 0b896518b2028d9c4d6ea44806d093fd33793689
+Last Updated: 12/08/23 (Mutter 45.2)
 ---
 
 Use triple buffering if and when the previous frame is running late.
@@ -16,7 +17,7 @@ there's no latency penalty when the system is able to maintain full frame rate.
 
 ---
 diff --git a/clutter/clutter/clutter-frame-clock.c b/clutter/clutter/clutter-frame-clock.c
-index ab493e0b0..24f211a77 100644
+index ab493e0b0..905d8c926 100644
 --- a/clutter/clutter/clutter-frame-clock.c
 +++ b/clutter/clutter/clutter-frame-clock.c
 @@ -35,6 +35,15 @@ enum
@@ -237,16 +238,18 @@ index ab493e0b0..24f211a77 100644
    return max_render_time_us;
  }
  
-@@ -453,7 +516,7 @@ calculate_next_update_time_us (ClutterFrameClock *frame_clock,
+@@ -453,8 +516,9 @@ calculate_next_update_time_us (ClutterFrameClock *frame_clock,
    int64_t refresh_interval_us;
    int64_t min_render_time_allowed_us;
    int64_t max_render_time_allowed_us;
 -  int64_t next_presentation_time_us;
 +  int64_t next_presentation_time_us = 0;
    int64_t next_update_time_us;
++  gboolean skipped_frames = FALSE;
  
    now_us = g_get_monotonic_time ();
-@@ -498,7 +561,24 @@ calculate_next_update_time_us (ClutterFrameClock *frame_clock,
+ 
+@@ -498,7 +562,24 @@ calculate_next_update_time_us (ClutterFrameClock *frame_clock,
     *
     */
    last_presentation_time_us = frame_clock->last_presentation_time_us;
@@ -272,7 +275,24 @@ index ab493e0b0..24f211a77 100644
  
    /*
     * However, the last presentation could have happened more than a frame ago.
-@@ -607,8 +687,12 @@ clutter_frame_clock_inhibit (ClutterFrameClock *frame_clock)
+@@ -534,6 +615,7 @@ calculate_next_update_time_us (ClutterFrameClock *frame_clock,
+ 
+       current_phase_us = (now_us - last_presentation_time_us) % refresh_interval_us;
+       next_presentation_time_us = now_us - current_phase_us + refresh_interval_us;
++      skipped_frames = TRUE;
+     }
+ 
+   if (frame_clock->is_next_presentation_time_valid)
+@@ -566,7 +648,7 @@ calculate_next_update_time_us (ClutterFrameClock *frame_clock,
+         }
+     }
+ 
+-  if (next_presentation_time_us != last_presentation_time_us + refresh_interval_us)
++  if (skipped_frames)
+     {
+       /* There was an idle period since the last presentation, so there seems
+        * be no constantly updating actor. In this case it's best to start
+@@ -607,8 +689,12 @@ clutter_frame_clock_inhibit (ClutterFrameClock *frame_clock)
            frame_clock->pending_reschedule = TRUE;
            frame_clock->state = CLUTTER_FRAME_CLOCK_STATE_IDLE;
            break;
@@ -287,7 +307,7 @@ index ab493e0b0..24f211a77 100644
            break;
          }
  
-@@ -645,9 +729,15 @@ clutter_frame_clock_schedule_update_now (ClutterFrameClock *frame_clock)
+@@ -645,9 +731,15 @@ clutter_frame_clock_schedule_update_now (ClutterFrameClock *frame_clock)
      case CLUTTER_FRAME_CLOCK_STATE_IDLE:
      case CLUTTER_FRAME_CLOCK_STATE_SCHEDULED:
        next_update_time_us = g_get_monotonic_time ();
@@ -305,7 +325,7 @@ index ab493e0b0..24f211a77 100644
        frame_clock->pending_reschedule = TRUE;
        frame_clock->pending_reschedule_now = TRUE;
        return;
-@@ -657,7 +747,6 @@ clutter_frame_clock_schedule_update_now (ClutterFrameClock *frame_clock)
+@@ -657,7 +749,6 @@ clutter_frame_clock_schedule_update_now (ClutterFrameClock *frame_clock)
  
    frame_clock->next_update_time_us = next_update_time_us;
    g_source_set_ready_time (frame_clock->source, next_update_time_us);
@@ -313,7 +333,7 @@ index ab493e0b0..24f211a77 100644
    frame_clock->is_next_presentation_time_valid = FALSE;
  }
  
-@@ -665,6 +754,12 @@ void
+@@ -665,6 +756,12 @@ void
  clutter_frame_clock_schedule_update (ClutterFrameClock *frame_clock)
  {
    int64_t next_update_time_us = -1;
@@ -326,7 +346,7 @@ index ab493e0b0..24f211a77 100644
  
    if (frame_clock->inhibit_count > 0)
      {
-@@ -676,6 +771,7 @@ clutter_frame_clock_schedule_update (ClutterFrameClock *frame_clock)
+@@ -676,6 +773,7 @@ clutter_frame_clock_schedule_update (ClutterFrameClock *frame_clock)
      {
      case CLUTTER_FRAME_CLOCK_STATE_INIT:
        next_update_time_us = g_get_monotonic_time ();
@@ -334,7 +354,7 @@ index ab493e0b0..24f211a77 100644
        break;
      case CLUTTER_FRAME_CLOCK_STATE_IDLE:
        calculate_next_update_time_us (frame_clock,
-@@ -684,11 +780,37 @@ clutter_frame_clock_schedule_update (ClutterFrameClock *frame_clock)
+@@ -684,11 +782,37 @@ clutter_frame_clock_schedule_update (ClutterFrameClock *frame_clock)
                                       &frame_clock->min_render_time_allowed_us);
        frame_clock->is_next_presentation_time_valid =
          (frame_clock->next_presentation_time_us != 0);
@@ -374,7 +394,7 @@ index ab493e0b0..24f211a77 100644
        frame_clock->pending_reschedule = TRUE;
        return;
      }
-@@ -697,7 +819,6 @@ clutter_frame_clock_schedule_update (ClutterFrameClock *frame_clock)
+@@ -697,7 +821,6 @@ clutter_frame_clock_schedule_update (ClutterFrameClock *frame_clock)
  
    frame_clock->next_update_time_us = next_update_time_us;
    g_source_set_ready_time (frame_clock->source, next_update_time_us);
@@ -382,7 +402,7 @@ index ab493e0b0..24f211a77 100644
  }
  
  static void
-@@ -728,7 +849,7 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
+@@ -728,7 +851,7 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
                               frame_clock->refresh_interval_us;
  
    lateness_us = time_us - ideal_dispatch_time_us;
@@ -391,7 +411,7 @@ index ab493e0b0..24f211a77 100644
      frame_clock->last_dispatch_lateness_us = 0;
    else
      frame_clock->last_dispatch_lateness_us = lateness_us;
-@@ -749,10 +870,25 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
+@@ -749,10 +872,25 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
      }
  #endif
  
@@ -418,7 +438,7 @@ index ab493e0b0..24f211a77 100644
  
    frame_count = frame_clock->frame_count++;
  
-@@ -781,25 +917,31 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
+@@ -781,25 +919,31 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
    result = iface->frame (frame_clock, frame, frame_clock->listener.user_data);
    COGL_TRACE_END (ClutterFrameClockFrame);
  
@@ -462,7 +482,7 @@ index ab493e0b0..24f211a77 100644
          }
        break;
      }
-@@ -832,10 +974,13 @@ frame_clock_source_dispatch (GSource     *source,
+@@ -832,10 +976,13 @@ frame_clock_source_dispatch (GSource     *source,
  }
  
  void
@@ -478,7 +498,7 @@ index ab493e0b0..24f211a77 100644
  }
  
  GString *
-@@ -929,8 +1074,6 @@ clutter_frame_clock_dispose (GObject *object)
+@@ -929,8 +1076,6 @@ clutter_frame_clock_dispose (GObject *object)
  {
    ClutterFrameClock *frame_clock = CLUTTER_FRAME_CLOCK (object);
  
@@ -487,7 +507,7 @@ index ab493e0b0..24f211a77 100644
    if (frame_clock->source)
      {
        g_signal_emit (frame_clock, signals[DESTROY], 0);
-@@ -951,6 +1094,15 @@ static void
+@@ -951,6 +1096,15 @@ static void
  clutter_frame_clock_class_init (ClutterFrameClockClass *klass)
  {
    GObjectClass *object_class = G_OBJECT_CLASS (klass);
