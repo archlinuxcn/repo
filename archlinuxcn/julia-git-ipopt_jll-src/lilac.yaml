@@ -1,27 +1,25 @@
 maintainers:
   - github: yuyichao
-
 post_build: git_pkgbuild_commit
-
 repo_depends:
   - julia-git
   - openspecfun-git
   - openlibm-git
-  - llvm-julia: llvm-libs-julia
   - julia-pkg-scripts
   - coin-or-ipopt
 
 update_on:
   - source: regex
-    url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Ipopt_jll/version
+    url: 
+        https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Ipopt_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
   - source: alpmfiles
     pkgname: coin-or-ipopt
     strip_dir: true
-    filename: 'libipopt.so.\d+'
+    filename: libipopt.so.\d+
   - source: alpmfiles
     pkgname: coin-or-ipopt
     strip_dir: true
-    filename: 'libipoptamplinterface.so.\d+'
+    filename: libipoptamplinterface.so.\d+
   - source: manual
     manual: 1

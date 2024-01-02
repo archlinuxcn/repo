@@ -1,9 +1,7 @@
 maintainers:
   - github: yuyichao
-
 post_build: git_pkgbuild_commit
 time_limit_hours: 2
-
 repo_depends:
   - julia-git
   - julia-git: julia-git-package-env
@@ -11,7 +9,6 @@ repo_depends:
   - openblas-git: openblas64-git
   - openspecfun-git
   - openlibm-git
-  - llvm-julia: llvm-libs-julia
   - julia-pkg-scripts
   - makepkg-lint-disable-hook
 
@@ -27,8 +24,6 @@ repo_depends:
   - julia-git-plots-src: julia-git-recipespipeline-src
   - julia-git-snoopcompile-src: julia-git-snoopcompilecore-src
   - julia-git-snoopcompile-src: julia-git-snoopprecompile-src
-
-
   - coin-or-ipopt
   - cubature-git
   - gr-framework-git
@@ -704,7 +699,6 @@ repo_depends:
 
 update_on_build:
   - pkgbase: julia-git
-###=== JLPKG_UPDATE_ON_BUILD_LIST {{
   - pkgbase: julia-git-abstractffts-src
   - pkgbase: julia-git-abstracttrees-src
   - pkgbase: julia-git-accessors-src
@@ -1360,8 +1354,6 @@ update_on_build:
   - pkgbase: julia-git-bitshuffle_jll-src
   - pkgbase: julia-git-zygote-src
   - pkgbase: julia-git-zygoterules-src
-###=== }} JLPKG_UPDATE_ON_BUILD_LIST
-
 update_on:
   - source: manual
     manual: 1

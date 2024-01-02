@@ -1,22 +1,20 @@
 maintainers:
   - github: yuyichao
-
 post_build: git_pkgbuild_commit
-
 repo_depends:
   - julia-git
   - openspecfun-git
   - openlibm-git
-  - llvm-julia: llvm-libs-julia
   - julia-pkg-scripts
 
 update_on:
   - source: regex
-    url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Imath_jll/version
+    url: 
+        https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Imath_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
   - source: alpmfiles
     pkgname: imath
     strip_dir: true
-    filename: 'libImath-[0-9_]+.so.\d+'
+    filename: libImath-[0-9_]+.so.\d+
   - source: manual
     manual: 1

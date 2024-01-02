@@ -1,26 +1,24 @@
 maintainers:
   - github: yuyichao
-
 post_build: git_pkgbuild_commit
-
 repo_depends:
   - julia-git
   - openspecfun-git
   - openlibm-git
-  - llvm-julia: llvm-libs-julia
   - julia-pkg-scripts
 
 update_on:
   - source: regex
-    url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Xorg_xcb_util_wm_jll/version
+    url: 
+        https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Xorg_xcb_util_wm_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
   - source: alpmfiles
     pkgname: xcb-util-wm
     strip_dir: true
-    filename: 'libxcb-ewmh.so.\d+'
+    filename: libxcb-ewmh.so.\d+
   - source: alpmfiles
     pkgname: xcb-util-wm
     strip_dir: true
-    filename: 'libxcb-icccm.so.\d+'
+    filename: libxcb-icccm.so.\d+
   - source: manual
     manual: 1

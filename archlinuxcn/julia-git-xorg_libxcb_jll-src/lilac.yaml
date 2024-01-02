@@ -1,114 +1,112 @@
 maintainers:
   - github: yuyichao
-
 post_build: git_pkgbuild_commit
-
 repo_depends:
   - julia-git
   - openspecfun-git
   - openlibm-git
-  - llvm-julia: llvm-libs-julia
   - julia-pkg-scripts
 
 update_on:
   - source: regex
-    url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Xorg_libxcb_jll/version
+    url: 
+        https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Xorg_libxcb_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb.so.\d+'
+    filename: libxcb.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-composite.so.\d+'
+    filename: libxcb-composite.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-damage.so.\d+'
+    filename: libxcb-damage.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-dpms.so.\d+'
+    filename: libxcb-dpms.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-dri2.so.\d+'
+    filename: libxcb-dri2.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-dri3.so.\d+'
+    filename: libxcb-dri3.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-glx.so.\d+'
+    filename: libxcb-glx.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-present.so.\d+'
+    filename: libxcb-present.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-randr.so.\d+'
+    filename: libxcb-randr.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-record.so.\d+'
+    filename: libxcb-record.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-render.so.\d+'
+    filename: libxcb-render.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-res.so.\d+'
+    filename: libxcb-res.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-screensaver.so.\d+'
+    filename: libxcb-screensaver.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-shape.so.\d+'
+    filename: libxcb-shape.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-shm.so.\d+'
+    filename: libxcb-shm.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-sync.so.\d+'
+    filename: libxcb-sync.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-xf86dri.so.\d+'
+    filename: libxcb-xf86dri.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-xfixes.so.\d+'
+    filename: libxcb-xfixes.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-xinerama.so.\d+'
+    filename: libxcb-xinerama.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-xinput.so.\d+'
+    filename: libxcb-xinput.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-xkb.so.\d+'
+    filename: libxcb-xkb.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-xtest.so.\d+'
+    filename: libxcb-xtest.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-xv.so.\d+'
+    filename: libxcb-xv.so.\d+
   - source: alpmfiles
     pkgname: libxcb
     strip_dir: true
-    filename: 'libxcb-xvmc.so.\d+'
+    filename: libxcb-xvmc.so.\d+
   - source: manual
     manual: 1

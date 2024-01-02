@@ -1,26 +1,24 @@
 maintainers:
   - github: yuyichao
-
 post_build: git_pkgbuild_commit
-
 repo_depends:
   - julia-git
   - openspecfun-git
   - openlibm-git
-  - llvm-julia: llvm-libs-julia
   - julia-pkg-scripts
 
 update_on:
   - source: regex
-    url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/HDF5_jll/version
+    url: 
+        https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/HDF5_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
   - source: alpmfiles
     pkgname: hdf5
     strip_dir: true
-    filename: 'libhdf5.so.\d+'
+    filename: libhdf5.so.\d+
   - source: alpmfiles
     pkgname: hdf5
     strip_dir: true
-    filename: 'libhdf5_hl.so.\d+'
+    filename: libhdf5_hl.so.\d+
   - source: manual
     manual: 1
