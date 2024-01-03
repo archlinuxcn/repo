@@ -7,12 +7,12 @@ pkgver=1.2.6.r1.g54a3025
 pkgrel=1
 epoch=1
 pkgdesc="xdg-desktop-portal backend for hyprland"
-url="https://github.com/hyprwm/xdg-desktop-portal-hyprland"
+url="https://github.com/hyprwm/${_pkgname}"
 arch=('x86_64')
 license=('MIT')
 provides=("${_pkgname}" "xdg-desktop-portal-impl" "xdg-desktop-portal-wlr")
 conflicts=("${_pkgname}" "xdg-desktop-portal-wlr")
-depends=('xdg-desktop-portal' 'pipewire' 'libinih' 'qt6-base' 'qt6-wayland' 'pango')
+depends=('xdg-desktop-portal' 'pipewire' 'libinih' 'qt6-base' 'qt6-wayland' 'pango' 'hyprlang')
 makedepends=('git' 'meson' 'wayland-protocols' 'wayland' 'scdoc' 'cmake' 'sdbus-cpp')
 optdepends=(
 	"grim: required for the screenshot portal to function"
@@ -33,9 +33,9 @@ pkgver() {
 build() {
 	cd "${_pkgname}/"
 	git submodule update --init
-	meson build --prefix=/usr --libexecdir lib
+	arch-meson build
 	ninja -C build
-	cd hyprland-share-picker && make all && cd ..
+	make -C hyprland-share-picker all
 }
 
 package() {
