@@ -2,7 +2,7 @@
 
 _pkgname=mmpretrain
 pkgname=python-mmpretrain
-pkgver=1.1.1
+pkgver=1.2.0
 pkgrel=1
 pkgdesc='OpenMMLab Pre-training Toolbox and Benchmark'
 arch=('any')
@@ -36,7 +36,7 @@ replaces=(
   python-mmclassification
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmpretrain/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('0a43478e370c2b764299c584bdf54072b54d84f8c9af11ad579da7a66c3bccec85cc8a468d37ff318bac63f02494476ae75ac078ecb9e3aff851b35f630eff7b')
+sha512sums=('47c76769657219e7baf3d2d1d645489691b5172b1a67b1cb82cc000c1fd34277381f6ea406fc1bf2164ed2edbca28cc6d65a69a94f4293d86c5e6fa2eafffe8a')
 
 build() {
   cd "${_pkgname}-${pkgver}"
