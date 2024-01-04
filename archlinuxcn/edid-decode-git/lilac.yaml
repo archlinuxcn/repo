@@ -1,0 +1,13 @@
+pre_build_script: |
+  vcs_update()
+
+post_build_script: |
+  git_pkgbuild_commit()
+
+update_on:
+  - source: git
+    git: https://git.linuxtv.org/edid-decode.git
+    use_commit: true
+
+maintainers:
+  - github: rocka
