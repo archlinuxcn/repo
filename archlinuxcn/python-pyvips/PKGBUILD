@@ -2,8 +2,8 @@
 
 pkgname=python-pyvips
 _pkgname=pyvips
-pkgver=2.2.1
-pkgrel=2
+pkgver=2.2.2
+pkgrel=1
 pkgdesc='Python binding for libvips using cffi'
 arch=(any)
 url='https://github.com/libvips/pyvips'
@@ -21,7 +21,7 @@ makedepends=(
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/libvips/pyvips/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha512sums=('1656f13bf3f8a3f0975367c40c5478ffaf3f23712a46f1c8a293cfac8e4ce20afe2b967c9ffd00fb37a648410eaa5186ef2f48d922bd8eac8a6abbe77ace82fa')
+sha512sums=('d2a63f615ee135e8bf0481911776d28140a97a459c69d8b125ab61c4583d937a8208214b21a691d4aa0259287baf8a8922fd37168c8bed9d0ac33ccc0c28e777')
 
 build() {
   cd "${_pkgname}-${pkgver}"
