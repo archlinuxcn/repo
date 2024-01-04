@@ -2,8 +2,8 @@
 # Maintainer: heavysink <winstonwu91@gmail.com>
 
 pkgbase=linux-amd-drm-fixes              
-_tag='amd-drm-fixes-6.7-2023-12-20'
-pkgver=6.7.2023.12.20
+_tag='amd-drm-fixes-6.7-2024-01-04'
+pkgver=6.7.2024.01.04
 pkgrel=1
 pkgdesc="Linux kernel fixes with bleeding edge AMD DRM drivers"
 arch=(x86_64)
