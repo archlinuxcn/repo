@@ -45,7 +45,12 @@ sha512sums=('SKIP'
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
-  printf "%s" "$(git describe --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g' | sed 's/^v//')"
+  _max_tag=$(git tag --sort=-v:refname | head -n1)
+  _commit_count=$(git rev-list --count "${_max_tag}"..HEAD)
+  _commit_hash=$(git rev-parse --short HEAD)
+  _max_tag=$(echo "$_max_tag" | sed 's/^v//')
+  _full_version="${_max_tag}.r${_commit_count}.${_commit_hash}"
+  printf "%s" "${_full_version}"
 }
 
 prepare() {
