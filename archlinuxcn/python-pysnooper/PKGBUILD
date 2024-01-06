@@ -10,14 +10,19 @@ url='https://github.com/cool-RR/PySnooper'
 license=('MIT')
 arch=('any')
 depends=(python)
-makedepends=(python-setuptools)
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
 checkdepends=(python-pytest)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/cool-RR/PySnooper/archive/${pkgver}.tar.gz")
 sha512sums=('53b8fda3995331409c6f3f74e43346b75419d619230d2c6f473b025aee0f81b3d74a8bd5e1bf052e8cb5b81ea907aed2cf8dff727b924123f8494547915b73e8')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 check() {
@@ -27,7 +32,7 @@ check() {
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 # vim:set ts=2 sw=2 et:
