@@ -1,8 +1,8 @@
 # Maintainer: Otreblan <otreblain@gmail.com>
 
 pkgname=cmake-language-server
-pkgver=0.1.8
-pkgrel=4
+pkgver=0.1.9
+pkgrel=1
 pkgdesc="Python based cmake language server"
 arch=('any')
 url="https://github.com/regen100/cmake-language-server"
@@ -20,7 +20,7 @@ install=
 changelog=
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
 noextract=()
-sha256sums=('799a1d69e14a8f9ce4a9f26470fd5cb8c61b6305c4f7d3dd97b9974744a32ebd')
+sha256sums=('8db5472db8cb2c2aadfe21b6c7e66fb0e6dcd421ab5a0f569a2971c7e3fec33f')
 
 build() {
 	cd "$srcdir/$pkgname-$pkgver"
