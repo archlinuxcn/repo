@@ -5,15 +5,17 @@
 _plugins_ver=3.16
 pkgname=nomacs
 pkgver=3.17.2287
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="A Qt image viewer"
 arch=(x86_64)
 url="https://github.com/nomacs/nomacs"
 license=(GPL3)
 depends=(exiv2 gcc-libs glibc libraw libtiff opencv qt5-base qt5-svg quazip-qt5)
+#depends+=(libopencv_imgproc.so)
 makedepends=(cmake git git-lfs qt5-tools python)
-optdepends=('qt5-imageformats: support additional image formats')
+optdepends=('qt5-imageformats: support additional image formats'
+            'kimageformats: support QOI (Quite OK Image Format)')
 source=("git+https://github.com/nomacs/nomacs.git#tag=${pkgver}"
         "nomacs-plugins-${_plugins_ver}.tar.gz::https://github.com/nomacs/nomacs-plugins/archive/${_plugins_ver}.tar.gz")
 b2sums=('SKIP'
