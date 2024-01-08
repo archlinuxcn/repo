@@ -45,8 +45,7 @@ build() {
   cmake .. -DHUNTER_ENABLED=OFF \
         -DCMAKE_INSTALL_LIBDIR=lib \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_BUILD_TYPE=None \
-        -DCOMPILE_QML=On
+        -DCMAKE_BUILD_TYPE=None
   make
 }
 
