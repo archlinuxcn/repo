@@ -5,8 +5,8 @@
 # Contributor: Paul Mattal <paul@archlinux.org>
 
 pkgname=ffmpeg-with-libplacebo-git
-pkgver=6.1
-pkgrel=4
+pkgver=6.1.1
+pkgrel=1
 epoch=2
 pkgdesc='Complete solution to record, convert and stream audio and video'
 arch=(x86_64)
@@ -116,7 +116,7 @@ provides=("ffmpeg"
 options=(
   debug
 )
-_tag=3cdfac27d3ea06f8719faed48b4ae2e75e94a463
+_tag=6f4048827982a8f48f71f551a6e1ed2362816eec
 source=(
   git+https://git.ffmpeg.org/ffmpeg.git?signed#tag=${_tag}
   add-av_stream_get_first_dts-for-chromium.patch
