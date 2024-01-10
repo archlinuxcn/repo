@@ -1,0 +1,26 @@
+pkgname=julia-git-coinutils_jll-src
+pkgver=200.1100.600+0
+_commit=3bd30a116b2dc63c7f3408f5b1390a78d9dbca3c
+pkgrel=3
+pkgdesc="CoinUtils_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/CoinUtils_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git coin-or-coinutils)
+source=("git+https://github.com/JuliaBinaryWrappers/CoinUtils_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'ad7a021a57f5497594cd3a2e3e69ea511efcf604e4ca6e29ee7e8d379f305320')
+
+build() {
+  cd CoinUtils_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl CoinUtils_jll ../jll.toml
+}
+
+package() {
+  cd CoinUtils_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh CoinUtils_jll "${pkgdir}" "${pkgname}" julia-git
+}

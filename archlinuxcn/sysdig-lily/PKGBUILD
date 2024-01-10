@@ -4,41 +4,39 @@
 # Contribuitor: Christian Babeux <christian.babeux@0x80.ca>
 
 pkgname=sysdig-lily
-pkgver=0.32.1
-pkgrel=3
+pkgver=0.34.1
+pkgrel=1
 
 # from src/sysdig-*/cmake/modules/falcosecurity-libs.cmake
-_falcover=0.11.3
+_falcover=0.13.1
 
 pkgdesc="Open source system-level exploration and troubleshooting tool"
 arch=('x86_64')
 url="https://www.sysdig.com/"
 license=('GPL2' 'Apache' 'MIT')
-depends=('jsoncpp' 'libjsoncpp.so' 'luajit' 'curl' 'libcurl.so' 'jq' 'libb64' 'intel-tbb' 'grpc' 'libgrpc++.so' "linux-lily=6.4.6-1" 'yaml-cpp' 'zstd')
+depends=('jsoncpp' 'libjsoncpp.so' 'luajit' 'curl' 'libcurl.so' 'jq' 'libb64' 'intel-tbb' 'grpc' 'libgrpc++.so' "linux-lily=6.5.2-2" 'yaml-cpp' 'zstd')
 makedepends=('cmake' 'llvm' 'clang' 'gtest' 'linux-lily-headers')
 source=("https://github.com/draios/sysdig/archive/$pkgver/sysdig-$pkgver.tar.gz"
         "falcosecurity-libs-$_falcover.tar.gz::https://github.com/falcosecurity/libs/archive/$_falcover.tar.gz"
         "bashcomp-location.patch"
-        "falcosecurity-libs-nodownload.patch"
-        "libsinsp-zstd.patch")
-sha256sums=('463ea62f3bc870b4dfaa5143abd6b790efb2219f86e8799792768d06de4169f9'
-            'b4f9dc8c1612f4b14207d107bce323a0684dce0dbf018e5b846177992569367b'
+        "falcosecurity-libs-nodownload.patch")
+sha256sums=('840a9099b66984c6ba71bb750b9440fb51c508d06e97e20d152c4f9a5e50d757'
+            '2be42a27be3ffe6bd7e53eaa5d8358cab05a0dca821819c6e9059e51b9786219'
             '3b659326176c314eee9115adac39a249dc4b9530511b344ea6a2b23236bb8386'
-            '3392204c265ef46c2a1378fc2acbb74b2b440585de4c9127a007f97ce10f0cfa'
-            'b966998a576310ced927628c2b9e860ca7ab31cac7061b1d5339c2fa0398e236')
+            '3392204c265ef46c2a1378fc2acbb74b2b440585de4c9127a007f97ce10f0cfa')
 conflicts=(sysdig)
 provides=(sysdig=$pkgver)
 
 prepare() {
   cd "$srcdir/libs-$_falcover"
-  patch -p1 -i "$srcdir"/libsinsp-zstd.patch
+  echo 'target_link_libraries(sinsp INTERFACE zstd)' >> userspace/libsinsp/CMakeLists.txt
 
   cd "$srcdir/sysdig-$pkgver"
   patch -p1 -i "$srcdir"/bashcomp-location.patch
   patch -p1 -i "$srcdir"/falcosecurity-libs-nodownload.patch
 
   sed s/USE_BUNDLED_DEPS/USE_BUNDLED_NJSON/ -i cmake/modules/nlohmann-json.cmake
-# Fix build with abseil-cpp 2023
+  # Fix build with abseil-cpp 2023
   sed -e 's|-std=c++0x||' -i CMakeLists.txt -i ../libs-${_falcover}/cmake/modules/CompilerFlags.cmake
 }
 
@@ -66,9 +64,11 @@ build() {
         -DUSE_BUNDLED_RE2=OFF \
         -DUSE_BUNDLED_VALIJSON=ON \
         -DUSE_BUNDLED_NJSON=ON \
+        -DUSE_BUNDLED_TINYDIR=ON \
         -DBUILD_DRIVER=ON \
         -DBUILD_BPF=ON \
         -DENABLE_DKMS=OFF \
+        -DBUILD_LIBSINSP_EXAMPLES=OFF \
         -DBUILD_LIBSCAP_EXAMPLES=OFF
   make
 }

@@ -1,0 +1,18 @@
+pkgname=julia-git-fastlevenbergmarquardt-src
+pkgver=0.1.0
+_commit=2556594cd84f82674db61fad271abf2f391d9634
+pkgrel=2
+pkgdesc="FastLevenbergMarquardt.jl"
+url="https://github.com/kamesy/FastLevenbergMarquardt.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/kamesy/FastLevenbergMarquardt.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd FastLevenbergMarquardt.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh FastLevenbergMarquardt "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,26 @@
+pkgname=julia-git-wayland_jll-src
+pkgver=1.21.0+1
+_commit=3f61b6046748dc6a94b706498a8dea48a34daeca
+pkgrel=2
+pkgdesc="Wayland_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Wayland_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git wayland)
+source=("git+https://github.com/JuliaBinaryWrappers/Wayland_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '55230c3c1d3be43862d6a8b3dee2b81cb2138087d5ef8908365ee23ea30dcf08')
+
+build() {
+  cd Wayland_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Wayland_jll ../jll.toml
+}
+
+package() {
+  cd Wayland_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Wayland_jll "${pkgdir}" "${pkgname}" julia-git
+}

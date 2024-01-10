@@ -1,0 +1,46 @@
+maintainers:
+  - github: yuyichao
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('micromamba-'))
+post_build: git_pkgbuild_commit
+
+# For termcolor
+build_prefix: archlinuxcn-aarch64
+
+repo_depends:
+  - reproc
+
+update_on:
+  - source: github
+    github: mamba-org/mamba
+    use_max_tag: true
+    include_regex: 'micromamba-\d+\.\d+\.\d+'
+  - source: alpm
+    alpm: libarchive
+    provided: libarchive.so
+  - source: alpm
+    alpm: curl
+    provided: libcurl.so
+  - source: alpmfiles
+    pkgname: libsolv
+    strip_dir: true
+    filename: 'libsolv.so.\d+'
+  - source: alpmfiles
+    pkgname: libsolv
+    strip_dir: true
+    filename: 'libsolvext.so.\d+'
+  - source: alpm
+    alpm: spdlog
+    provided: libspdlog.so
+  - source: alpm
+    alpm: yaml-cpp
+    provided: libyaml-cpp.so
+  - alias: alpm-lilac
+    alpm: reproc
+    provided: libreproc.so
+  - alias: alpm-lilac
+    alpm: reproc
+    provided: libreproc++.so
+  - alias: python
+  - source: manual
+    manual: 1

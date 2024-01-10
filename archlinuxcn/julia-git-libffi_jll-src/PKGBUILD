@@ -1,0 +1,26 @@
+pkgname=julia-git-libffi_jll-src
+pkgver=3.4.4+0
+_commit=a2a2cd392aeedb9d2d7ab23b53ca119c476cef1b
+pkgrel=2
+pkgdesc="Libffi_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Libffi_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libffi)
+source=("git+https://github.com/JuliaBinaryWrappers/Libffi_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '3d8313c423d42b3db6878765065dc5b4c41630d85401b54bd3c9a23ed5e26435')
+
+build() {
+  cd Libffi_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Libffi_jll ../jll.toml
+}
+
+package() {
+  cd Libffi_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Libffi_jll "${pkgdir}" "${pkgname}" julia-git
+}

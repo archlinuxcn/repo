@@ -1,0 +1,18 @@
+pkgname=julia-git-solvercore-src
+pkgver=0.3.7
+_commit=1d10536e19a0b07fb6939db284ea6dfde004946b
+pkgrel=2
+pkgdesc="SolverCore.jl"
+url="https://github.com/JuliaSmoothOptimizers/SolverCore.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSmoothOptimizers/SolverCore.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SolverCore.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SolverCore "${pkgdir}" "${pkgname}" julia-git
+}

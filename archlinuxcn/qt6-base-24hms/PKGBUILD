@@ -3,42 +3,95 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=qt6-base-24hms
-_qtver=6.5.2
+_qtver=6.6.1
 pkgver=${_qtver/-/}
-pkgrel=1.1
+pkgrel=3.2
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
 pkgdesc='A cross-platform application and UI framework. This package uses 24-hour notation HH:mm:ss in all locales.'
-depends=(libjpeg-turbo xcb-util-keysyms xcb-util-cursor libgl fontconfig xdg-utils
-         shared-mime-info xcb-util-wm libxrender libxi sqlite mesa vulkan-headers
-         tslib libinput libxkbcommon-x11 libproxy libcups double-conversion brotli libb2 md4c)
-makedepends=(python 'zstd>=1.5.2-7' cmake ninja libfbclient mariadb-libs unixodbc postgresql alsa-lib gst-plugins-base-libs
-             gtk3 libpulse cups freetds xmlstarlet)
-optdepends=('qt6-wayland: to run Qt6 applications in a Wayland session'
-            'postgresql-libs: PostgreSQL driver'
-            'mariadb-libs: MariaDB driver'
-            'unixodbc: ODBC driver'
-            'libfbclient: Firebird/iBase driver'
-            'freetds: MS SQL driver'
+depends=(libicui18n.so brotli
+         dbus
+         double-conversion
+         fontconfig
+         freetype2
+         gcc-libs
+         glib2
+         glibc
+         harfbuzz
+         icu
+         krb5
+         libb2
+         libcups
+         libdrm
+         libgl
+         libice
+         libinput
+         libjpeg-turbo
+         libpng
+         libproxy
+         libsm
+         libx11
+         libxcb
+         libxkbcommon
+         libxkbcommon-x11
+         md4c
+         mesa
+         mtdev
+         openssl
+         pcre2
+         shared-mime-info
+         sqlite
+         systemd-libs
+         tslib
+         vulkan-headers
+         xcb-util-cursor
+         xcb-util-image
+         xcb-util-keysyms
+         xcb-util-renderutil
+         xcb-util-wm
+         xdg-utils
+         zlib
+         zstd)
+makedepends=(python 'zstd>=1.5.2-7' alsa-lib
+             cmake
+             cups
+             freetds
+             gst-plugins-base-libs
+             gtk3
+             libfbclient
+             libpulse
+             mariadb-libs
+             ninja
+             postgresql
+             unixodbc
+             xmlstarlet)
+optdepends=('freetds: MS SQL driver'
+            'gdk-pixbuf2: GTK platform plugin'
             'gtk3: GTK platform plugin'
-            'perl: for syncqt')
+            'libfbclient: Firebird/iBase driver'
+            'mariadb-libs: MariaDB driver'
+            'pango: GTK platform plugin'
+            'perl: for syncqt'
+            'postgresql-libs: PostgreSQL driver'
+            'qt6-wayland: to run Qt6 applications in a Wayland session'
+            'unixodbc: ODBC driver')
 
 provides=("qt6-base=$pkgver")
 conflicts=(qt6-base "qt6-3d>$pkgver" "qt6-5compat>$pkgver" "qt6-base>$pkgver" "qt6-charts>$pkgver" "qt6-connectivity>$pkgver" "qt6-datavis3d>$pkgver" "qt6-declarative>$pkgver" "qt6-doc>$pkgver" "qt6-examples>$pkgver" "qt6-imageformats>$pkgver" "qt6-lottie>$pkgver" "qt6-multimedia>$pkgver" "qt6-networkauth>$pkgver" "qt6-positioning>$pkgver" "qt6-quick3d>$pkgver" "qt6-quicktimeline>$pkgver" "qt6-remoteobjects>$pkgver" "qt6-scxml>$pkgver" "qt6-sensors>$pkgver" "qt6-serialbus>$pkgver" "qt6-serialport>$pkgver" "qt6-shadertools>$pkgver" "qt6-svg>$pkgver" "qt6-tools>$pkgver" "qt6-translations>$pkgver" "qt6-virtualkeyboard>$pkgver" "qt6-wayland>$pkgver" "qt6-webchannel>$pkgver" "qt6-webengine>$pkgver" "qt6-websockets>$pkgver" "qt6-webview>$pkgver" )
 _pkgfn=qtbase-everywhere-src-$_qtver
 source=(
       oldherl-24hms.patch
-      'https://build.archlinuxcn.org/~oldherl/files/cldr/36/core.zip'
+      'https://build.archlinuxcn.org/~oldherl/files/cldr/44/core.zip'
       'https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab'
       https://download.qt.io/official_releases/qt/${pkgver%.*}/$_qtver/submodules/$_pkgfn.tar.xz
         qt6-base-cflags.patch
         qt6-base-nostrip.patch)
 sha256sums=(
       '97ab390edb9b8f452f42138f9dfb2184e5a2bf0a2dddd02c3b6afbc448bd6997'
-      '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
+      'bd7f70adfe8a999cfa0f5d96145bf0a095b1a099024e4f451fa1afccf6e4aee6'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
-      '3db4c729b4d80a9d8fda8dd77128406353baff4755ca619177eda4cddae71269'
+      '450c5b4677b2fe40ed07954d7f0f40690068e80a94c9df86c2c905ccd59d02f7'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
             '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
 

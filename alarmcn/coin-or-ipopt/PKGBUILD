@@ -1,5 +1,5 @@
 pkgname=coin-or-ipopt
-pkgver=3.14.12
+pkgver=3.14.13
 pkgrel=1
 pkgdesc="Interior Point OPTimizer"
 arch=('aarch64' 'armv7h' 'x86_64')
@@ -7,23 +7,31 @@ url="https://github.com/coin-or/Ipopt"
 license=('EPL')
 depends=('lapack' 'coin-or-asl' 'mumps-seq')
 source=("https://github.com/coin-or/Ipopt/archive/refs/tags/releases/${pkgver}.tar.gz")
-sha256sums=('6b06cd6280d5ca52fc97ca95adaaddd43529e6e8637c274e21ee1072c3b4577f')
+sha256sums=('2afcb057e7cf8ed7e07f50ee0a4a06d2e4d39e0f964777e9dd55fe56199a5e0a')
 
 build() {
   cd "$srcdir"
   mkdir -p build && cd build
 
   ../Ipopt-releases-$pkgver/configure \
+    CFLAGS="$CFLAGS -O3 -DNDEBUG" \
+    CXXFLAGS="$CXXFLAGS -O3 -DNDEBUG" \
+    FFLAGS="$FFLAGS -O3" \
+    FCFLAGS="$FCFLAGS -O3" \
     --prefix=/usr \
     --enable-shared \
     --enable-static \
     --with-pic \
     --disable-dependency-tracking \
     lt_cv_deplibs_check_method=pass_all \
+    --with-lapack-lflags="-llapack" \
     --with-mumps-cflags="-I/usr/include/mumps-seq -I/usr/include/mpiseq" \
-    --with-mumps-lflags="-ldmumps -lzmumps -lcmumps -lsmumps -lmumps_common -lmpiseq -lpord -lmetis -llapack -lgfortran -lpthread" \
+    --with-mumps-lflags="-ldmumps_seq -lzmumps_seq -lcmumps_seq -lsmumps_seq -lmumps_common_seq -lmpiseq -lpord_seq -lmetis -llapack -lgfortran -lpthread" \
     --with-asl-cflags="-I/usr/include/coin-or/asl" \
     --with-asl-lflags="-lcoinasl -lrt"
+  # Disable spral for now since I got much lower performance
+  # (and no threading from OpenBLAS) with this enabled.
+  # --with-spral-lflags="-lspral"
 
   make -j1
 }

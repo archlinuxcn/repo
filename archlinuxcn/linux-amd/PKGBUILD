@@ -2,10 +2,10 @@
 
 pkgbase=linux-amd
 _srcname=linux
-gitver=v6.5.1
+gitver=v6.7
 patchver=20230105
 patchname=more-uarches-for-kernel-5.17+.patch
-pkgver=6.5.v.1
+pkgver=6.7.v.0
 pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
@@ -18,20 +18,20 @@ source=("git+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git#ta
         'config.x86_64'
         # standard config files for mkinitcpio ramdisk
         "${pkgbase}.preset"
-        # linux package install directives for pacman
-        'linux.install'
 	# patch from our graysky archlinux colleague
 	"https://raw.githubusercontent.com/graysky2/kernel_compiler_patch/$patchver/$patchname"
+	# nested KVM svm patch
+	"flushbyasid.patch"
 )
 sha256sums=('SKIP'
             #config.x86_64
-            'c1614b7b07c76dd387782c6ef8bc1345d90df0b219b7ed885b415d2e14168030'
+            'a4c60a567b9d9946afb58cf530cbef3f7893ba94f3e2a5f3ae3cc24a81aa845e'
             #.preset file
             '60c6ba602443e94a9eba3aeee9d194027d69bffaa428c6d055348ebf03681b5c'
-            #linux install file
-            'd590e751ab4cf424b78fd0d57e53d187f07401a68c8b468d17a5f39a337dacf0'
             #grayskypatch
             '81ad663925a0aa5b5332a69bae7227393664bb81ee2e57a283e7f16e9ff75efe'
+            #flushbyasid.patch
+            '0878a970035793ca761c6f7499fb37cf04e6d9892758ca3fb9b99f846febfaf0'
 )
 
 _kernelname=${pkgbase#linux}
@@ -48,9 +48,6 @@ prepare() {
     echo "Sorry, non x86_64 arch not supported."
       exit 2
   fi
-
-  # don't run depmod on 'make install'. We'll do this ourselves in packaging
-  sed -i '2iexit 0' scripts/depmod.sh
 
   # Implement all packaged patches and reverts.
   msg2 "Implementing custom kernel patches/reverts"
@@ -86,7 +83,6 @@ _package() {
   depends=('coreutils' 'linux-firmware' 'kmod' 'lzop')
   optdepends=('crda: to set the correct wireless channels of your country')
   backup=("etc/mkinitcpio.d/${pkgbase}.preset")
-  install=linux.install
 
   cd "${_srcname}"
 
@@ -99,15 +95,6 @@ _package() {
 
   mkdir -p "${pkgdir}"/{lib/modules,lib/firmware,boot}
   make LOCALVERSION= INSTALL_MOD_PATH="${pkgdir}" modules_install
-  cp arch/$KARCH/boot/bzImage "${pkgdir}/boot/vmlinuz-${pkgbase}"
-
-  # set correct depmod command for install
-  cp -f "${startdir}/${install}" "${startdir}/${install}.pkg"
-  true && install=${install}.pkg
-  sed \
-    -e  "s/KERNEL_NAME=.*/KERNEL_NAME=${_kernelname}/" \
-    -e  "s/KERNEL_VERSION=.*/KERNEL_VERSION=${_kernver}/" \
-    -i "${startdir}/${install}"
 
   # install mkinitcpio preset file for kernel
   install -D -m644 "${srcdir}/${pkgbase}.preset" "${pkgdir}/etc/mkinitcpio.d/${pkgbase}.preset"
@@ -118,18 +105,10 @@ _package() {
     -e "s|fallback_image=.*|fallback_image=\"/boot/initramfs-${pkgbase}-fallback.img\"|" \
     -i "${pkgdir}/etc/mkinitcpio.d/${pkgbase}.preset"
 
-  # remove build and source links
-  rm -f "${pkgdir}"/lib/modules/${_kernver}/{source,build}
+  # remove build link
+  rm -f "${pkgdir}"/lib/modules/${_kernver}/build
   # remove the firmware
   rm -rf "${pkgdir}/lib/firmware"
-  # make room for external modules
-  ln -s "../extramodules-${_basekernel}${_kernelname:--ARCH}" "${pkgdir}/lib/modules/${_kernver}/extramodules"
-  # add real version for building modules and running depmod from post_install/upgrade
-  mkdir -p "${pkgdir}/lib/modules/extramodules-${_basekernel}${_kernelname:--ARCH}"
-  echo "${_kernver}" > "${pkgdir}/lib/modules/extramodules-${_basekernel}${_kernelname:--ARCH}/version"
-
-  # Now we call depmod...
-  depmod -b "${pkgdir}" -F System.map "${_kernver}"
 
   # move module tree /lib -> /usr/lib
   mkdir -p "${pkgdir}/usr"
@@ -229,22 +208,7 @@ _package-headers() {
 
 }
 
-_package-docs() {
-  pkgdesc="Kernel hackers manual - HTML documentation that comes with the Linux kernel"
-
-  cd "${_srcname}"
-
-  mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build"
-  cp -al Documentation "${pkgdir}/usr/lib/modules/${_kernver}/build"
-  find "${pkgdir}" -type f -exec chmod 444 {} \;
-  find "${pkgdir}" -type d -exec chmod 755 {} \;
-
-  # remove a file already in linux package
-  rm -f "${pkgdir}/usr/lib/modules/${_kernver}/build/Documentation/DocBook/Makefile"
-
-}
-
-pkgname=("${pkgbase}" "${pkgbase}-headers" "${pkgbase}-docs")
+pkgname=("${pkgbase}" "${pkgbase}-headers")
 for _p in ${pkgname[@]}; do
   eval "package_${_p}() {
     $(declare -f "_package${_p#${pkgbase}}")

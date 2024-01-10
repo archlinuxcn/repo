@@ -5,78 +5,76 @@
 pkgname=mumps-seq
 _pkgname=mumps
 _PKGNAME=MUMPS
-pkgver=5.6.1
-pkgrel=1
+pkgver=5.6.2
+pkgrel=2
 pkgdesc="Sparse solver library using Gaussian elimination (sequential version)"
 url="http://mumps-solver.org"
 license=('custom')
 # The build system only links to blas but uses lapack function
 # Just use openblas for now but this could probably be fixed fairly easily...
-depends=('gcc-libs' 'openblas-lapack' 'metis')
+depends=('gcc-libs' 'lapack' 'metis')
 makedepends=(gcc-fortran)
-arch=('aarch64' 'armv7h' 'i686' 'x86_64')
-source=("http://mumps-solver.org/${_PKGNAME}_${pkgver}.tar.gz"
-        "Makefile.seq.inc")
-sha256sums=('1920426d543e34d377604070fde93b8d102aa38ebdf53300cbce9e15f92e2896'
-            '42625aa6749cedbbd9b19f527a002b0dec36b521f6a55dec20798ac399a768bf')
+arch=('aarch64' 'x86_64')
+source=("http://mumps-solver.org/${_PKGNAME}_${pkgver}.tar.gz")
+sha256sums=('13a2c1aff2bd1aa92fe84b7b35d88f43434019963ca09ef7e8c90821a8f1d59a')
 options=(staticlibs '!lto')
 
-prepare(){
+prepare() {
   cd ${_PKGNAME}_${pkgver}
 
-  ln -sf "${srcdir}/Makefile.seq.inc" Makefile.inc
+  sed -e 's/-lpord/-lpord_seq/g' -e 's/-lmpiseq/-lmpiseq_seq/g' \
+      Make.inc/Makefile.G95.SEQ > Makefile.inc
 }
 
 build() {
   cd ${_PKGNAME}_${pkgver}
 
-  make -j1 all
+  FFLAGS+=' -fallow-argument-mismatch'
+  export FFLAGS
 
-  # Convert static libs to shared libs
-  # for mumps libs
-  cd lib
-  _libs=$(find . -maxdepth 1 -regex ".*\.a" | xargs | sed "s|\.a||g")
-  for _FILE in ${_libs}; do
-    ld -Bshareable -o ${_FILE}_seq.so -x -soname ${_FILE}_seq.so --whole-archive ${_FILE}.a
-  done
-  # for mpiseq libs
-  cd "${srcdir}/${_PKGNAME}_${pkgver}/libseq"
-  ld -Bshareable -o libmpiseq.so -x -soname libmpiseq.so --whole-archive libmpiseq.a
+  make_args=(OPTF=-O3
+             OPTL=-O3
+             OPTC=-O3
+             CDEFS=-DAdd_
+             LMETIS="-lmetis"
+             ORDERINGSF="-Dpord -Dmetis"
+             LIBEXT_SHARED=".so"
+             SONAME="-soname"
+             PLAT="_seq"
+             CC="gcc -fPIC ${CFLAGS}"
+             FC="gfortran -fPIC ${FFLAGS}"
+             FL="gfortran -fPIC"
+             RANLIB="ranlib"
+             LIBBLAS="-lblas"
+             LAPACK="-llapack")
+
+  make allshared "${make_args[@]}"
 }
 
 package(){
+  cd ${_PKGNAME}_${pkgver}
+
   # Install all headers
-  cd "${srcdir}/${_PKGNAME}_${pkgver}/include"
-  install -m 755 -d "${pkgdir}/usr/include/${pkgname}"
-  install -D -m644 -- *.h "${pkgdir}/usr/include/${pkgname}"
+  install -dm755 "${pkgdir}/usr/include/mumps-seq"
+  install -Dm644 -- include/*.h "${pkgdir}/usr/include/mumps-seq"
 
   # Install all libraries
-  cd "${srcdir}/${_PKGNAME}_${pkgver}/lib"
-  install -m 755 -d "${pkgdir}/usr/lib"
-  _libs=$(find . -maxdepth 1 -regex ".*\.a" | xargs | sed "s|\.a||g")
-  for _FILE in ${_libs}; do
-    install -m 755 ${_FILE}_seq.so "${pkgdir}/usr/lib"
-    install -m 644 ${_FILE}.a "${pkgdir}/usr/lib"
-  done
+  install -dm755 "${pkgdir}/usr/lib"
+  install -Dm644 -- lib/*.so "${pkgdir}/usr/lib"
 
   # Install mpiseq headers
-  cd "${srcdir}/${_PKGNAME}_${pkgver}/libseq"
-  install -m 755 -d "${pkgdir}/usr/include/mpiseq"
-  install -D -m644 -- *.h "${pkgdir}/usr/include/mpiseq"
+  install -dm755 "${pkgdir}/usr/include/mpiseq"
+  install -Dm644 -- libseq/*.h "${pkgdir}/usr/include/mpiseq"
+
   # Install mpiseq libraries
-  install -m 755 libmpiseq.so "${pkgdir}/usr/lib"
-  install -m 644 libmpiseq.a "${pkgdir}/usr/lib"
+  install -m755 libseq/libmpiseq_seq.so "${pkgdir}/usr/lib"
+  ln -sf libmpiseq_seq.so "${pkgdir}/usr/lib/libmpiseq.so"
 
   # Install license
-  install -D -m644 "${srcdir}/${_PKGNAME}_${pkgver}/LICENSE"\
-          "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
   # Install examples
-  install -m 755 -d "${pkgdir}/usr/share/doc/${pkgname}/examples"
-  cd "${srcdir}/${_PKGNAME}_${pkgver}/examples"
-  install -m 644 * "${pkgdir}/usr/share/doc/${pkgname}/examples"
-  for _FILE in ssimpletest dsimpletest csimpletest zsimpletest c_example; do
-    chmod 0755 "${pkgdir}/usr/share/doc/${pkgname}/examples/${_FILE}"
-  done
-  rm -- "${pkgdir}/usr/share/doc/${pkgname}/examples/"*.o
+  install -dm755 "${pkgdir}/usr/share/doc/mumps-seq/examples"
+  cp -r examples/* "${pkgdir}/usr/share/doc/mumps-seq/examples"
+  rm -- "${pkgdir}/usr/share/doc/mumps-seq/examples/"*.o
 }

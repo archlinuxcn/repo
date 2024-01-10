@@ -1,0 +1,26 @@
+pkgname=julia-git-xorg_libxfixes_jll-src
+pkgver=5.0.3+4
+_commit=f31dffebcf47362ae0d1e1ceefe46527a1a03b59
+pkgrel=3
+pkgdesc="Xorg_libXfixes_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Xorg_libXfixes_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libxfixes)
+source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libXfixes_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '2ffd9714fb0e29e20b17c793abede605bf3fec72eeaaf1d28d61c0718be0fc96')
+
+build() {
+  cd Xorg_libXfixes_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Xorg_libXfixes_jll ../jll.toml
+}
+
+package() {
+  cd Xorg_libXfixes_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Xorg_libXfixes_jll "${pkgdir}" "${pkgname}" julia-git
+}

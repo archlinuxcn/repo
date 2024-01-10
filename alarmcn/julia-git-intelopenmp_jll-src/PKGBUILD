@@ -1,0 +1,35 @@
+pkgname=julia-git-intelopenmp_jll-src
+pkgver=2023.2.0+0
+_commit=43c4859438d520b0cb83b098a0caecd1211b6e11
+pkgrel=3
+pkgdesc="IntelOpenMP_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/IntelOpenMP_jll.jl.git"
+arch=(aarch64 armv7h i686 x86_64)
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+if [[ $CARCH = x86_64 ]]; then
+  depends+=(intel-oneapi-openmp)
+fi
+source=("git+https://github.com/JuliaBinaryWrappers/IntelOpenMP_jll.jl.git#commit=$_commit"
+        jll.toml
+        jll_x86_64.toml)
+sha256sums=('SKIP'
+            'e1c9c4d4e3ea147638ce2c17c6ff95bbf09ee894c24b43db3ea7bfa85e92acd6'
+            'f285fcfa9c368cf64177ec72174b6b1e24b65cd56057538f773de56ee9facc40')
+
+build() {
+  cd IntelOpenMP_jll.jl
+
+  if [[ $CARCH = x86_64 ]]; then
+    julia /usr/lib/julia/julia-gen-jll.jl IntelOpenMP_jll ../jll_x86_64.toml
+  else
+    julia /usr/lib/julia/julia-gen-jll.jl IntelOpenMP_jll ../jll.toml
+  fi
+}
+
+package() {
+  cd IntelOpenMP_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh IntelOpenMP_jll "${pkgdir}" "${pkgname}" julia-git
+}

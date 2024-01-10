@@ -1,0 +1,18 @@
+pkgname=julia-git-simdtypes-src
+pkgver=0.1.0
+_commit=bc0f5bd599d5281bed6e1fb32f8b980cce1d77d0
+pkgrel=2
+pkgdesc="SIMDTypes.jl"
+url="https://github.com/JuliaSIMD/SIMDTypes.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSIMD/SIMDTypes.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SIMDTypes.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SIMDTypes "${pkgdir}" "${pkgname}" julia-git
+}

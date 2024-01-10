@@ -1,0 +1,124 @@
+diff -ru IntelRDFPMathLib20U2.orig/LIBRARY/makefile.iml_head IntelRDFPMathLib20U2/LIBRARY/makefile.iml_head
+--- IntelRDFPMathLib20U2.orig/LIBRARY/makefile.iml_head	2018-06-07 19:09:37.000000000 -0400
++++ IntelRDFPMathLib20U2/LIBRARY/makefile.iml_head	2019-05-21 15:27:04.000000000 -0400
+@@ -491,9 +491,9 @@
+ FLS        := $(call CselOs,FLS,       $(_OS_CHOICE),       :,           ;)
+ RM         := $(call CselOs, RM,       $(_OS_CHOICE),   rm -f, del        )
+ AR_CMD     := $(call CselOsName,AR_CMD,$(_OS_CHOICE),   ar rv, ar rv, libtool, lib -nologo)
+-AR_OUT     := $(call CselOsName,AR_OUT,$(_OS_CHOICE),        ,      ,      -o, /out:)$($(IML_TARGET_OS)__space)
++AR_OUT     := $(call CselOsName,AR_OUT,$(_OS_CHOICE),        ,      ,      -o, )$($(IML_TARGET_OS)__space)
+ LD_CMD     := $(call CselOsName,LD_CMD,$(_OS_CHOICE),icc,icc,libtool,link /nologo)
+-LD_OUT     := $(call CselOs, LD_OUT,   $(_OS_CHOICE),      -o,       /out:)$($(IML_TARGET_OS)__space)
++LD_OUT     := $(call CselOs, LD_OUT,   $(_OS_CHOICE),      -o,       )$($(IML_TARGET_OS)__space)
+ LD_FLAGS   := $(call CselOs, LD_FLAGS, $(_OS_CHOICE),   -shared -nostdlib,)
+ RC         := $(call CselOs, RC,       $(_OS_CHOICE), RC_not_to_be_used_with_linux,rc)
+ RC_FLAGS   := $(call CselOs, RC_FLAGS, $(_OS_CHOICE), RC_FLAGS_not_to_be_used_with_linux,)
+diff -ru IntelRDFPMathLib20U2.orig/LIBRARY/makefile.mak IntelRDFPMathLib20U2/LIBRARY/makefile.mak
+--- IntelRDFPMathLib20U2.orig/LIBRARY/makefile.mak	2018-06-07 19:09:12.000000000 -0400
++++ IntelRDFPMathLib20U2/LIBRARY/makefile.mak	2019-05-21 15:27:04.000000000 -0400
+@@ -225,12 +225,12 @@
+ 
+ !IF ("$(_USE_NATIVE_128b)"=="FALSE")
+ $(BID_LIB): $(BID_OBJS) $(FLOAT128_OBJS) $(FLOAT53_OBJS)
+-   $(AR) $(AOPT) /out:$(BID_LIB) $(BID_OBJS) $(FLOAT128_OBJS) $(FLOAT53_OBJS)
++   $(AR) $(AOPT) $(BID_LIB) $(BID_OBJS) $(FLOAT128_OBJS) $(FLOAT53_OBJS)
+ 
+ !ELSE
+ #Use native 128b data types
+ $(BID_LIB): $(BID_OBJS)
+-   $(AR) $(AOPT) /out:$(BID_LIB) $(BID_OBJS) 
++   $(AR) $(AOPT) $(BID_LIB) $(BID_OBJS) 
+ 
+ !ENDIF
+ 
+diff -ru IntelRDFPMathLib20U2.orig/LIBRARY/src/bid_functions.h IntelRDFPMathLib20U2/LIBRARY/src/bid_functions.h
+--- IntelRDFPMathLib20U2.orig/LIBRARY/src/bid_functions.h	2018-06-07 21:10:52.000000000 -0400
++++ IntelRDFPMathLib20U2/LIBRARY/src/bid_functions.h	2019-05-21 15:27:04.000000000 -0400
+@@ -52,7 +52,7 @@
+ // we will use gcc types defined in bid_gcc_intrinsics.h.
+ #include "bid_gcc_intrinsics.h"
+ 
+-#define BID_ALIGN(n) __attribute__ ((aligned(n)))
++#define BID_ALIGN(n) // Julia does not support user specified alignment of structs so make this a NOP
+ #else
+ typedef char BID_SINT8;
+ typedef unsigned char BID_UINT8;
+@@ -77,11 +77,11 @@
+ #if defined _M_IX86 && !defined __INTEL_COMPILER        // Win IA-32, MS compiler
+ #define BID_ALIGN(n)
+ #else
+-#define BID_ALIGN(n) __declspec(align(n))
++#define BID_ALIGN(n) // Julia does not support user specified alignment of structs so make this a NOP
+ #endif
+ #else
+ #if !defined HPUX_OS
+-#define BID_ALIGN(n) __attribute__ ((aligned(n)))
++#define BID_ALIGN(n) // Julia does not support user specified alignment of structs so make this a NOP
+ #else
+ #define BID_ALIGN(n)
+ #endif
+@@ -98,7 +98,7 @@
+ typedef BID_UINT128 _Quad;
+ #endif
+ 
+-#if !defined _MSC_VER || defined __INTEL_COMPILER
++#if !defined __ENABLE_BINARY80__ && (!defined _MSC_VER || defined __INTEL_COMPILER)
+ #define __ENABLE_BINARY80__  1
+ #endif
+ 
+diff -ru IntelRDFPMathLib20U2.orig/TESTS/makefile IntelRDFPMathLib20U2/TESTS/makefile
+--- IntelRDFPMathLib20U2.orig/TESTS/makefile	2018-06-07 18:54:52.000000000 -0400
++++ IntelRDFPMathLib20U2/TESTS/makefile	2019-05-21 15:27:04.000000000 -0400
+@@ -90,7 +90,7 @@
+ LMOPT = -lm 
+ 
+ else
+-CC = icl
++CC =
+ ifeq ($(CC),icl)
+ COPT = -D_CRT_SECURE_NO_DEPRECATE -Qlong_double -Qoption,cpp,--extended_float_types -Qpc80
+ LMOPT = 
+@@ -103,7 +103,7 @@
+ LMOPT = 
+ endif
+ endif
+-CFLAGS = -Od -I./ -D__intptr_t_defined -DWINDOWS /nologo $(COPT) $(COPT1) $(COPT2) $(COPT3) $(COPT4) $(COPT6) $(COPT_ADD) $(DEFINES)
++CFLAGS = -O0 -DWINDOWS $(COPT) $(COPT1) $(COPT2) $(COPT3) $(COPT4) $(COPT6) $(COPT_ADD) $(DEFINES)
+ EXE = .exe
+ OBJ = .obj
+ LIBEXT = .lib
+diff -ru IntelRDFPMathLib20U2.orig/TESTS/test_bid_functions.h IntelRDFPMathLib20U2/TESTS/test_bid_functions.h
+--- IntelRDFPMathLib20U2.orig/TESTS/test_bid_functions.h	2018-06-07 18:57:28.000000000 -0400
++++ IntelRDFPMathLib20U2/TESTS/test_bid_functions.h	2019-05-21 15:27:04.000000000 -0400
+@@ -52,7 +52,7 @@
+ // we will use gcc types defined in bid_gcc_intrinsics.h.
+ #include "bid_gcc_intrinsics.h"
+ 
+-#define BID_ALIGN(n) __attribute__ ((aligned(n)))
++#define BID_ALIGN(n) // Julia does not support user specified alignment of structs so make this a NOP
+ #else
+ typedef char BID_SINT8;
+ typedef unsigned char BID_UINT8;
+@@ -77,11 +77,11 @@
+ #if defined _M_IX86 && !defined __INTEL_COMPILER        // Win IA-32, MS compiler
+ #define BID_ALIGN(n)
+ #else
+-#define BID_ALIGN(n) __declspec(align(n))
++#define BID_ALIGN(n) // Julia does not support user specified alignment of structs so make this a NOP
+ #endif
+ #else
+ #if !defined HPUX_OS
+-#define BID_ALIGN(n) __attribute__ ((aligned(n)))
++#define BID_ALIGN(n) // Julia does not support user specified alignment of structs so make this a NOP
+ #else
+ #define BID_ALIGN(n)
+ #endif
+@@ -98,7 +98,7 @@
+ typedef BID_UINT128 _Quad;
+ #endif
+ 
+-#if !defined _MSC_VER || defined __INTEL_COMPILER
++#if !defined __ENABLE_BINARY80__ && (!defined _MSC_VER || defined __INTEL_COMPILER)
+ #define __ENABLE_BINARY80__  1
+ #endif
+ 

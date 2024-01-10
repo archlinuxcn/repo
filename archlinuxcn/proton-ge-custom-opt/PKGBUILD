@@ -4,7 +4,7 @@
 
 pkgname=proton-ge-custom-opt
 _pkgname=proton-ge-custom
-pkgver=GE.Proton8.11
+pkgver=GE.Proton8.16
 _srctag=${pkgver//./-} # _srctag=GE-Proton7-32
 _geckover=2.47.3
 _monover=8.0.0
@@ -163,6 +163,7 @@ source=(
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     0001-AUR-PKGBUILD-changes.patch
+    0004-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
     fix_hwnd_changes_meaning.patch
     launcher.sh
 )
@@ -229,8 +230,6 @@ prepare() {
         openvr
         liberation-fonts::fonts/liberation-fonts
         gstreamer
-        gst-plugins-base
-        gst-plugins-good
         gst-orc
         vkd3d-proton
         OpenXR-SDK
@@ -239,14 +238,11 @@ prepare() {
         Vulkan-Headers
         SPIRV-Headers
         Vulkan-Loader
-        gst-libav
         ffmpeg::FFmpeg
         dav1d
         gst-plugins-rs
         wine-staging
         protonfixes-gloriouseggroll::protonfixes
-        gst-plugins-bad
-        gst-plugins-ugly
         graphene
         glslang
         openfst
@@ -297,6 +293,14 @@ prepare() {
         git -c protocol.file.allow=always submodule update subprojects/libdisplay-info
     popd
 
+    pushd gstreamer
+        for submodule in gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav; do
+        git submodule init subprojects/$submodule
+        git submodule set-url subprojects/$submodule "$srcdir"/$submodule
+        git -c protocol.file.allow=always submodule update subprojects/$submodule
+        done
+    popd
+
     for submodule in gst-plugins-rs media-converter; do
     pushd $submodule
         cargo update --locked --workspace
@@ -308,6 +312,7 @@ prepare() {
     ./patches/protonprep-valve-staging.sh || true # workaround applied patch
 
     patch -p1 -i "$srcdir"/0001-AUR-PKGBUILD-changes.patch
+    patch -p1 -i "$srcdir"/0004-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
     patch -p1 -i "$srcdir"/fix_hwnd_changes_meaning.patch
     pushd FFmpeg
         # Fixes assembling with binutil as >= 2.41
@@ -456,7 +461,8 @@ sha256sums=('SKIP'
             '08d318f3dd6440a8a777cf044ccab039b0d9c8809991d2180eb3c9f903135db3'
             '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
             '14c7d76780b79dc62d8ed9d1759e7adcfa332bb2406e2e694dee7b2128cc7a77'
-            '5328f11fa467b6c33f516277683e43c1e4708a537ae34045322133aa915d0eb5'
+            '3fe67f8507305c673d18d4fc10937abaea863a1a35e0ba7517d4a3524f5d3285'
+            '7a34054ced0cfd29a08d45b6008fb59c379d0703f7639fd1c7004b2ea1e1ea1e'
             '20824bb565fefcad4aa978c54e0f8b9d9d17b7b52fb03fc87943150de148f06f'
             '85d41eb3879cd69cbc711923611c3a9703f8ef946df526956b484d0c560c4b5f')
 

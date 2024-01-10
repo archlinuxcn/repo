@@ -1,0 +1,38 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Maintainer: Hoàng Văn Khải <hvksmr1996@gmail.com>
+
+pkgname=parallel-disk-usage-git
+_pkgname=${pkgname%-git}
+pkgver=0.9.0.r32.g589e43f
+pkgrel=1
+pkgdesc="Summarize disk usage of the set of files, recursively for directories."
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/KSXGitHub/${_pkgname}"
+license=('Apache')
+makedepends=('git' 'cargo')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=("SKIP")
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+	cd "${_pkgname}/"
+	cargo build --bin pdu --release
+}
+
+package() {
+	cd "${_pkgname}/"
+
+	install -Dm755 "target/release/pdu" -t "${pkgdir}/usr/bin/"
+	install -Dm644 "README.md" -t "${pkgdir}/usr/share/doc/${pkgname}/"
+	install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+
+	install -Dm644 "exports/completion.bash" "${pkgdir}/usr/share/bash-completion/completions/pdu"
+	install -Dm644 "exports/completion.fish" "${pkgdir}/usr/share/fish/completions/pdu.fish"
+	install -Dm644 "exports/completion.zsh" "${pkgdir}/usr/share/zsh/site-functions/_pdu"
+}

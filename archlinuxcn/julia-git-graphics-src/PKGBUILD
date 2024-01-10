@@ -1,0 +1,18 @@
+pkgname=julia-git-graphics-src
+pkgver=1.1.2
+_commit=79057259348148db687cffed7272a57d3810ab64
+pkgrel=2
+pkgdesc="Graphics.jl"
+url="https://github.com/JuliaGraphics/Graphics.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGraphics/Graphics.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Graphics.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Graphics "${pkgdir}" "${pkgname}" julia-git
+}

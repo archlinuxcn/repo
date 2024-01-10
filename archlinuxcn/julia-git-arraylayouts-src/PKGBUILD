@@ -1,0 +1,18 @@
+pkgname=julia-git-arraylayouts-src
+pkgver=1.4.3
+_commit=d44e944e3621153f558e919fdeccf6d7c0604266
+pkgrel=1
+pkgdesc="ArrayLayouts.jl"
+url="https://github.com/JuliaLinearAlgebra/ArrayLayouts.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaLinearAlgebra/ArrayLayouts.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ArrayLayouts.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ArrayLayouts "${pkgdir}" "${pkgname}" julia-git
+}

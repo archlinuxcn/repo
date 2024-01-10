@@ -6,8 +6,11 @@ update_on:
   - alias: clang
   - alias: protobuf
   - alias: grpc
+  - source: alpm
+    alpm: spdlog
+    provided: libspdlog.so
   - source: manual
-    manual: 1.0
+    manual: 2.0.1
 
 maintainers:
   - github: dctxmei

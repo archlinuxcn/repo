@@ -11,10 +11,13 @@ update_on:
   - source: alpm
     alpm: flac
     provided: libFLAC.so
+  - source: alpm
+    alpm: dav1d
+    provided: libdav1d.so
   - source: cmd
     cmd: curl -sS https://archlinux.org/packages/extra/x86_64/re2/files/json/ | jq | rg 'usr/lib/libre2.so.\d+' | awk -F '"' '{print $2}'
   - source: manual
-    manual: 1.0.2
+    manual: 1.0.3
 
 maintainers:
   - github: dctxmei

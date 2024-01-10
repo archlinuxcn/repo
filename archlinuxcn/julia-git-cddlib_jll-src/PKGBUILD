@@ -1,0 +1,26 @@
+pkgname=julia-git-cddlib_jll-src
+pkgver=0.94.13+0
+_commit=cf0a489eba478b97d039587ef61a407ea2d25393
+pkgrel=3
+pkgdesc="cddlib_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/cddlib_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git cddlib)
+source=("git+https://github.com/JuliaBinaryWrappers/cddlib_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'f10d03ada76020ea42fd6239f3edf19e57cdb6fd313cce0b6132a0cfca7a6203')
+
+build() {
+  cd cddlib_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl cddlib_jll ../jll.toml
+}
+
+package() {
+  cd cddlib_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh cddlib_jll "${pkgdir}" "${pkgname}" julia-git
+}

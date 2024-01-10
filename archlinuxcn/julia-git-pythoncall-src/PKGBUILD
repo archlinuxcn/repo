@@ -1,0 +1,26 @@
+pkgname=julia-git-pythoncall-src
+pkgver=0.9.15
+_commit=1497b3a6cec5920c49392c23382e45da0c58fbe0
+pkgrel=2
+pkgdesc="PythonCall.jl"
+url="https://github.com/JuliaPy/PythonCall.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaPy/PythonCall.jl.git#commit=$_commit"
+        0001-Patch-for-ArchLinux-package.patch)
+sha256sums=('SKIP'
+            'f1b4b45716e732db9eee8ef615b3f15fb78e4822a7a481ed3b672e729c49c1c9')
+
+prepare() {
+  cd PythonCall.jl
+
+  patch -Np1 --no-backup-if-mismatch < "../0001-Patch-for-ArchLinux-package.patch"
+}
+
+package() {
+  cd PythonCall.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh PythonCall "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,29 +1,34 @@
 pkgname=nexttrace
-pkgver=1.1.7
+pkgver=1.2.8
 pkgrel=2
 pkgdesc='An open source visual route tracking CLI tool'
 arch=('x86_64')
-url="https://github.com/sjlleo/nexttrace-core"
+url="https://github.com/nxtrace/Ntrace-V1"
 license=('GPL')
+depends=('glibc')
 makedepends=('go' 'git')
-source=("git+https://github.com/sjlleo/nexttrace-core.git#tag=v$pkgver")
+source=("git+https://github.com/nxtrace/Ntrace-V1.git#tag=v$pkgver")
 sha256sums=('SKIP')
-install=nexttrace.install
 
 build() {
-  cd "nexttrace-core"
+  cd "Ntrace-V1"
   export BUILD_VERSION="$(git describe --tags --always)"
   export COMMIT_SHA1="$(git rev-parse --short HEAD)"
+  export BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
   go build \
     -trimpath \
     -buildmode=pie \
     -mod=readonly \
     -modcacherw \
-    -ldflags "-linkmode external -extldflags \"${LDFLAGS}\" -X 'github.com/xgadget-lab/nexttrace/config.Version=${BUILD_VERSION}' -X 'github.com/xgadget-lab/nexttrace/config.CommitID=${COMMIT_SHA1}' " \
+    -ldflags "-linkmode external -extldflags \"${LDFLAGS}\" \
+      -X 'github.com/nxtrace/NTrace-core/config.Version=${BUILD_VERSION}' \
+      -X 'github.com/nxtrace/NTrace-core/config.BuildDate=${BUILD_DATE}' \
+      -X 'github.com/nxtrace/NTrace-core/config.CommitID=${COMMIT_SHA1}' " \
     .
 }
 
 package() {
-  cd "nexttrace-core"
-  install -Dm755 $pkgname "$pkgdir"/usr/bin/$pkgname
+  cd "Ntrace-V1"
+  install -Dm755 NTrace-core "$pkgdir"/usr/bin/nexttrace
+  setcap cap_net_raw,cap_net_admin+eip "$pkgdir"/usr/bin/nexttrace
 }

@@ -1,0 +1,18 @@
+pkgname=julia-git-zygoterules-src
+pkgver=0.2.4
+_commit=d8aba5fd67c519731aff406b465ef7ca44c80f9a
+pkgrel=1
+pkgdesc="ZygoteRules.jl"
+url="https://github.com/FluxML/ZygoteRules.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/FluxML/ZygoteRules.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ZygoteRules.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ZygoteRules "${pkgdir}" "${pkgname}" julia-git
+}

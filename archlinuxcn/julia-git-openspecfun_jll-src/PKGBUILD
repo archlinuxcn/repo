@@ -1,0 +1,26 @@
+pkgname=julia-git-openspecfun_jll-src
+pkgver=0.5.5+0
+_commit=dc7e309b6ae0f0937a44c20eac8dea7a10ed88f1
+pkgrel=5
+pkgdesc="OpenSpecFun_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/OpenSpecFun_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libopenspecfun.so)
+source=("git+https://github.com/JuliaBinaryWrappers/OpenSpecFun_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'a828c1a9ee0c2c4f653115a108343b4b1b4223be785a7b9711ebb2360b1e9b88')
+
+build() {
+  cd OpenSpecFun_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl OpenSpecFun_jll ../jll.toml
+}
+
+package() {
+  cd OpenSpecFun_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh OpenSpecFun_jll "${pkgdir}" "${pkgname}" julia-git
+}

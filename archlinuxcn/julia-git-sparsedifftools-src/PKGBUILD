@@ -1,0 +1,18 @@
+pkgname=julia-git-sparsedifftools-src
+pkgver=2.14.0
+_commit=7a8170fe3956f7f502c625b5896c1028fc383679
+pkgrel=1
+pkgdesc="SparseDiffTools.jl"
+url="https://github.com/JuliaDiff/SparseDiffTools.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaDiff/SparseDiffTools.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SparseDiffTools.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SparseDiffTools "${pkgdir}" "${pkgname}" julia-git
+}

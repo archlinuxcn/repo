@@ -1,0 +1,18 @@
+pkgname=julia-git-crlibm-src
+pkgver=1.0.1
+_commit=6a091d8fd25fb205faf4b3785dfa32505602021d
+pkgrel=2
+pkgdesc="CRlibm.jl"
+url="https://github.com/JuliaIntervals/CRlibm.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIntervals/CRlibm.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd CRlibm.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh CRlibm "${pkgdir}" "${pkgname}" julia-git
+}

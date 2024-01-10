@@ -1,0 +1,44 @@
+# Maintainer: Chocobo1 <chocobo1 AT archlinux DOT net>
+
+pkgname=typst-lsp-git
+_pkgname=${pkgname%-git}
+pkgver=0.12.1.r2.g0d5b933
+pkgrel=1
+pkgdesc="Language server for Typst"
+arch=('i686' 'x86_64')
+url="https://github.com/nvarner/typst-lsp"
+license=('Apache' 'MIT')
+depends=('openssl')
+makedepends=('git' 'rust')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+options=('!lto')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+prepare() {
+	cd "${_pkgname}/"
+
+	if [ ! -f "Cargo.lock" ]; then
+		cargo update
+	fi
+
+	cargo fetch
+}
+
+package() {
+	cd "${_pkgname}/"
+
+	cargo install \
+		--locked \
+		--no-track \
+		--root "${pkgdir}/usr" \
+		--path .
+
+	install -Dm644 "LICENSE-MIT.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}

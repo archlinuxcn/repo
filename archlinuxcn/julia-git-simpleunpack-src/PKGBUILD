@@ -1,0 +1,18 @@
+pkgname=julia-git-simpleunpack-src
+pkgver=1.1.0
+_commit=fbd2b43380f1953f50bb1419fae359e36e99b542
+pkgrel=2
+pkgdesc="SimpleUnPack.jl"
+url="https://github.com/devmotion/SimpleUnPack.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/devmotion/SimpleUnPack.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SimpleUnPack.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SimpleUnPack "${pkgdir}" "${pkgname}" julia-git
+}

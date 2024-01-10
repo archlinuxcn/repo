@@ -1,0 +1,26 @@
+pkgname=julia-git-pango_jll-src
+pkgver=1.50.14+0
+_commit=76814a42ed10cd35c69f68e3b54d387e5ebd547c
+pkgrel=3
+pkgdesc="Pango_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Pango_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git pango)
+source=("git+https://github.com/JuliaBinaryWrappers/Pango_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '4c0564a71dc94ae436254265d39d67aef982bac71c9af56b97fed4d4414b20c6')
+
+build() {
+  cd Pango_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Pango_jll ../jll.toml
+}
+
+package() {
+  cd Pango_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Pango_jll "${pkgdir}" "${pkgname}" julia-git
+}

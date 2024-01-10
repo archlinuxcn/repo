@@ -1,0 +1,27 @@
+pkgname=julia-git-symdict-src
+pkgver=0.3.0
+_commit=c09e661df3fc58c22015b05be7ae657c8429054b
+pkgrel=2
+pkgdesc="SymDict.jl"
+url="https://github.com/samoconnor/SymDict.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/samoconnor/SymDict.jl.git#commit=$_commit"
+        Project.toml)
+sha256sums=('SKIP'
+            'b0c513856cc4072aad2a8431f14aabb9734d9920db3963ed04774e39acb059c0')
+
+prepare() {
+  cd SymDict.jl
+
+  cp -n ../Project.toml .
+  rm REQUIRE
+}
+
+package() {
+  cd SymDict.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SymDict "${pkgdir}" "${pkgname}" julia-git
+}

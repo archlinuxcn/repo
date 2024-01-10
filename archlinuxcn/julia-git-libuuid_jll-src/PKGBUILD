@@ -1,0 +1,26 @@
+pkgname=julia-git-libuuid_jll-src
+pkgver=2.36.0+0
+_commit=58d0bbb25f66b27432515085fdf7aaa391a6dfca
+pkgrel=2
+pkgdesc="Libuuid_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Libuuid_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git util-linux-libs)
+source=("git+https://github.com/JuliaBinaryWrappers/Libuuid_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'c71c9f1ccdc7ff0580e45b9831f2ab88195f66f2df89e59363621a79c4fa2137')
+
+build() {
+  cd Libuuid_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Libuuid_jll ../jll.toml
+}
+
+package() {
+  cd Libuuid_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Libuuid_jll "${pkgdir}" "${pkgname}" julia-git
+}

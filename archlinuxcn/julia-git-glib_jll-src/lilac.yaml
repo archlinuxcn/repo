@@ -1,0 +1,31 @@
+maintainers:
+  - github: yuyichao
+post_build: git_pkgbuild_commit
+repo_depends:
+  - julia-git
+  - openspecfun-git
+  - openlibm-git
+  - julia-pkg-scripts
+
+update_on:
+  - source: regex
+    url: 
+        https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Glib_jll/version
+    regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpm
+    alpm: glib2
+    provided: libgio-2.0.so
+  - source: alpm
+    alpm: glib2
+    provided: libglib-2.0.so
+  - source: alpm
+    alpm: glib2
+    provided: libgmodule-2.0.so
+  - source: alpm
+    alpm: glib2
+    provided: libgobject-2.0.so
+  - source: alpm
+    alpm: glib2
+    provided: libgthread-2.0.so
+  - source: manual
+    manual: 1

@@ -1,59 +1,748 @@
 # Maintainer: Yichao Yu <yyc1992@gmail.com>
 
 pkgbase=julia-git-precompiled-packages
-_jlpackages=(Compat)
+_jlpackages=(
+###=== JLPKG_JLNAME_LIST {{
+  ADTypes
+  AMD
+  ASL_jll
+  AWS
+  AWSS3
+  AbstractAlgebra
+  AbstractFFTs
+  AbstractTrees
+  Accessors
+  Adapt
+  Alpine
+  AmplNLWriter
+  AndorSIF
+  ArgCheck
+  ArnoldiMethod
+  Arpack
+  Arpack_jll
+  ArrayInterface
+  ArrayLayouts
+  Arrow
+  ArrowTypes
+  Atomix
+  Attr_jll
+  AxisAlgorithms
+  AxisArrays
+  BFloat16s
+  BandedMatrices
+  BangBang
+  BaseType
+  Baselet
+  BenchmarkTools
+  Bijections
+  BitBasis
+  BitFlags
+  BitIntegers
+  BitTwiddlingConvenienceFunctions
+  BlockArrays
+  BlockBandedMatrices
+  BlockDiagonals
+  Bloqade
+  BloqadeExpr
+  BloqadeKrylov
+  BloqadeLattices
+  BloqadeMIS
+  BloqadeODE
+  BloqadeSchema
+  BloqadeWaveforms
+  Blosc
+  Blosc_jll
+  BoundaryValueDiffEq
+  Braket
+  BufferedStreams
+  Bzip2_jll
+  CDDLib
+  CEnum
+  CPUSummary
+  CRlibm
+  CRlibm_jll
+  CSTParser
+  CSV
+  CacheServers
+  Cairo
+  Cairo_jll
+  Calculus
+  CatIndices
+  CategoricalArrays
+  Cbc
+  Cbc_jll
+  Cgl_jll
+  ChainRules
+  ChainRulesCore
+  ChangesOfVariables
+  CircularArrays
+  CloseOpenIntervals
+  Clp
+  Clp_jll
+  Clustering
+  CodeTracking
+  CodecBase
+  CodecBzip2
+  CodecLz4
+  CodecXz
+  CodecZlib
+  CodecZstd
+  CoinUtils_jll
+  ColorSchemes
+  ColorTypes
+  ColorVectorSpace
+  Colors
+  Combinatorics
+  CommonMark
+  CommonSolve
+  CommonSubexpressions
+  Compat
+  CompositeTypes
+  CompositionsBase
+  ComputationalResources
+  ConcreteStructs
+  ConcurrentUtilities
+  Conda
+  CondaPkg
+  Configurations
+  ConjugateGradients
+  ConsoleProgressMonitor
+  ConstructionBase
+  Contour
+  CoordinateTransformations
+  CpuId
+  Crayons
+  Cthulhu
+  Cubature
+  Cubature_jll
+  CustomUnitRanges
+  DataAPI
+  DataFrames
+  DataStructures
+  DataValueInterfaces
+  DecFP
+  DecFP_jll
+  DeepDiffs
+  DefineSingletons
+  DelayDiffEq
+  DensityInterface
+  Dierckx
+  Dierckx_jll
+  DiffEqBase
+  DiffEqCallbacks
+  DiffEqNoiseProcess
+  DiffResults
+  DiffRules
+  DifferentialEquations
+  DimensionalData
+  Distances
+  Distributions
+  DocStringExtensions
+  DomainSets
+  DualNumbers
+  DynamicPolynomials
+  EarCut_jll
+  EliminateGraphs
+  EllipsisNotation
+  EnumX
+  Enzyme
+  EnzymeCore
+  Enzyme_jll
+  EpollShim_jll
+  ErrorfreeArithmetic
+  ExceptionUnwrapping
+  Expat_jll
+  ExponentialUtilities
+  ExprTools
+  ExproniconLite
+  Extents
+  EzXML
+  FFMPEG
+  FFMPEG_jll
+  FFTViews
+  FFTW
+  FFTW_jll
+  FameSVD
+  FastBroadcast
+  FastClosures
+  FastExpm
+  FastGaussQuadrature
+  FastLapackInterface
+  FastLevenbergMarquardt
+  FastRounding
+  FileIO
+  FilePathsBase
+  FillArrays
+  FiniteDiff
+  FiniteDifferences
+  FixedPointNumbers
+  FlameGraphs
+  FoldingTrees
+  Fontconfig_jll
+  Formatting
+  ForwardDiff
+  FreeType2_jll
+  FreqTables
+  FriBidi_jll
+  FunctionWrappers
+  FunctionWrappersWrappers
+  Functors
+  GLFW_jll
+  GLPK
+  GLPK_jll
+  GPUArrays
+  GPUArraysCore
+  GPUCompiler
+  GR
+  GR_jll
+  GSL
+  GSL_jll
+  GarishPrint
+  GaussQuadrature
+  GeneralizedGenerated
+  GenericLinearAlgebra
+  GenericSchur
+  GeoInterface
+  GeometryBasics
+  Gettext_jll
+  Ghostscript_jll
+  GitHub
+  GitHubActions
+  Glib_jll
+  Glob
+  Graphics
+  Graphite2_jll
+  Graphs
+  Grisu
+  Groebner
+  GroupsCore
+  H5Zbitshuffle
+  H5Zblosc
+  H5Zbzip2
+  H5Zlz4
+  H5Zzstd
+  HCubature
+  HDF5
+  HDF5_jll
+  HTTP
+  HYPRE
+  HYPRE_jll
+  HalfIntegers
+  HarfBuzz_jll
+  HiGHS
+  HiGHS_jll
+  HistogramThresholding
+  HostCPUFeatures
+  Hwloc_jll
+  HypergeometricFunctions
+  HypothesisTests
+  IJulia
+  IRTools
+  IfElse
+  ImageAxes
+  ImageBase
+  ImageBinarization
+  ImageContrastAdjustment
+  ImageCore
+  ImageCorners
+  ImageDistances
+  ImageFiltering
+  ImageIO
+  ImageInTerminal
+  ImageMagick
+  ImageMagick_jll
+  ImageMetadata
+  ImageMorphology
+  ImageQualityIndexes
+  ImageSegmentation
+  ImageShow
+  ImageTransformations
+  Images
+  Imath_jll
+  IndirectArrays
+  Inflate
+  IniFile
+  InitialValues
+  InlineStrings
+  IntegerMathUtils
+  IntegralArrays
+  IntelOpenMP_jll
+  Interpolations
+  IntervalArithmetic
+  IntervalRootFinding
+  IntervalSets
+  Intervals
+  InverseFunctions
+  InvertedIndices
+  Ipopt
+  Ipopt_jll
+  IrrationalConstants
+  IterTools
+  IterativeSolvers
+  IteratorInterfaceExtensions
+  JET
+  JLD
+  JLD2
+  JLFzf
+  JSON
+  JSON3
+  JpegTurbo
+  JpegTurbo_jll
+  JuMP
+  JuliaFormatter
+  JuliaInterpreter
+  JuliaSyntax
+  JuliaVariables
+  JumpProcesses
+  Juniper
+  Juno
+  KLU
+  KernelAbstractions
+  Krylov
+  KrylovKit
+  LAME_jll
+  LAPACK_jll
+  LDLFactorizations
+  LERC_jll
+  LLVM
+  LLVMExtra_jll
+  LLVMOpenMP_jll
+  LRUCache
+  LZO_jll
+  LaTeXStrings
+  LabelledArrays
+  LambertW
+  Latexify
+  LatticeRules
+  LayoutPointers
+  Lazy
+  LazyModules
+  LeastSquaresOptim
+  LeftChildRightSiblingTrees
+  LegibleLambdas
+  LevyArea
+  LibArchive_jll
+  Libffi_jll
+  Libgcrypt_jll
+  Libglvnd_jll
+  Libgpg_error_jll
+  Libiconv_jll
+  Libmount_jll
+  Librsvg_jll
+  Libtiff_jll
+  Libuuid_jll
+  LineSearches
+  LinearMaps
+  LinearOperators
+  LinearSolve
+  LittleCMS_jll
+  LogExpFunctions
+  LoggingExtras
+  LoopVectorization
+  Loraine
+  LoweredCodeUtils
+  LsqFit
+  Luxor
+  LuxorGraphPlot
+  LuxurySparse
+  Lz4_jll
+  MAT
+  METIS_jll
+  MKL
+  MKL_jll
+  MLStyle
+  MPI
+  MPICH_jll
+  MPIPreferences
+  MPItrampoline_jll
+  MUMPS_seq_jll
+  MacroTools
+  MadNLP
+  MakieCore
+  ManualMemory
+  MappedArrays
+  MarchingCubes
+  MathOptInterface
+  MatrixFactorizations
+  MaybeInplace
+  MbedTLS
+  Measurements
+  Measures
+  Media
+  MetaGraphs
+  MicroCollections
+  MicroMamba
+  MicrosoftMPI_jll
+  Missings
+  Mocking
+  ModelingToolkit
+  MonteCarloMeasurements
+  MosaicViews
+  MuladdMacro
+  MultivariatePolynomials
+  Mustache
+  MutableArithmetics
+  NLPModels
+  NLSolversBase
+  NLopt
+  NLopt_jll
+  NLsolve
+  NNlib
+  NaNMath
+  NameResolution
+  NamedArrays
+  NamedTupleTools
+  NearestNeighbors
+  Netpbm
+  NodeJS
+  NonlinearSolve
+  ODE
+  ODEInterface
+  ODEInterface_jll
+  ObjectFile
+  Observables
+  OffsetArrays
+  Ogg_jll
+  OpenBLAS32_jll
+  OpenCL
+  OpenCL_jll
+  OpenEXR
+  OpenEXR_jll
+  OpenJpeg_jll
+  OpenMPI_jll
+  OpenSSL
+  OpenSSL_jll
+  OpenSpecFun_jll
+  Optim
+  OptimBase
+  Optimisers
+  Optimization
+  Opus_jll
+  OrderedCollections
+  OrdinaryDiffEq
+  Osi_jll
+  PCRE_jll
+  PDMats
+  PMIx_jll
+  PNGFiles
+  PackageExtensionCompat
+  PaddedViews
+  Pajarito
+  Pango_jll
+  ParallelMergeCSR
+  Parameters
+  Pardiso
+  Parsers
+  PartialFunctions
+  PartitionedArrays
+  Pavito
+  Pidfile
+  Pipe
+  Pixman_jll
+  PkgVersion
+  PlotThemes
+  PlotUtils
+  Plots
+  PoissonRandom
+  Polyester
+  PolyesterWeave
+  Polyhedra
+  Polynomials
+  PooledArrays
+  PositiveFactorizations
+  PreallocationTools
+  PrecompileTools
+  Preferences
+  PrettyPrint
+  PrettyTables
+  Primes
+  ProgressLogging
+  ProgressMeter
+  PyCall
+  PyPlot
+  PythonCall
+  QOI
+  QPSReader
+  Qt5Base_jll
+  Qt6Base_jll
+  QuadGK
+  QuantumInterface
+  QuantumOptics
+  QuantumOpticsBase
+  QuasiMonteCarlo
+  Quaternions
+  Random123
+  RandomExtensions
+  RandomMatrices
+  RandomNumbers
+  RangeArrays
+  RationalRoots
+  Ratios
+  RealDot
+  RecipesBase
+  RecipesPipeline
+  RecursiveArrayTools
+  RecursiveFactorization
+  Reexport
+  Referenceables
+  RegionTrees
+  RelocatableFolders
+  Requires
+  ResettableStacks
+  Retry
+  ReverseDiff
+  Revise
+  Richardson
+  Rmath
+  Rmath_jll
+  Roots
+  Rotations
+  RoundingEmulator
+  Rsvg
+  RuntimeGeneratedFunctions
+  SIMD
+  SIMDDualNumbers
+  SIMDTypes
+  SLEEFPirates
+  SPRAL_jll
+  SciMLBase
+  SciMLNLSolve
+  SciMLOperators
+  Scratch
+  SentinelArrays
+  SetRounding
+  Setfield
+  ShiftedArrays
+  Showoff
+  SimpleBufferStream
+  SimpleNonlinearSolve
+  SimpleTraits
+  SimpleUnPack
+  SimpleWeightedGraphs
+  Sixel
+  SnoopCompile
+  SnoopCompileCore
+  SnoopPrecompile
+  Sobol
+  SodiumSeal
+  SoftGlobalScope
+  SolverCore
+  SortingAlgorithms
+  SparseDiffTools
+  SparseInverseSubset
+  SparseMatricesCSR
+  Sparspak
+  SpecialFunctions
+  SplittablesBase
+  StackViews
+  Static
+  StaticArrayInterface
+  StaticArrays
+  StaticArraysCore
+  StatsAPI
+  StatsBase
+  StatsFuns
+  StatsModels
+  SteadyStateDiffEq
+  StochasticDiffEq
+  StrideArraysCore
+  Strided
+  StridedViews
+  StringDistances
+  StringEncodings
+  StringManipulation
+  StructArrays
+  StructIO
+  StructTypes
+  Sundials
+  Sundials_jll
+  SymDict
+  SymbolicIndexingInterface
+  SymbolicUtils
+  Symbolics
+  TZJData
+  TableTraits
+  Tables
+  TensorCore
+  TerminalLoggers
+  ThreadingUtilities
+  ThreadsX
+  TiffImages
+  TiledIteration
+  TimeZones
+  TimerOutputs
+  Tokenize
+  Tracker
+  TranscodingStreams
+  Transducers
+  TreeViews
+  TriangularSolve
+  Tricks
+  TruncatedStacktraces
+  Tulip
+  TupleTools
+  TypedSyntax
+  URIs
+  UnPack
+  UnicodeFun
+  UnicodePlots
+  Unitful
+  UnitfulLatexify
+  Unityper
+  UnsafeArrays
+  UnsafeAtomics
+  UnsafeAtomicsLLVM
+  UnsafePointers
+  Unzip
+  VectorizationBase
+  VersionParsing
+  VertexSafeGraphs
+  Vulkan_Loader_jll
+  Wayland_jll
+  Wayland_protocols_jll
+  WeakRefStrings
+  WidthLimitedIO
+  WignerSymbols
+  WoodburyMatrices
+  WorkerUtilities
+  XML2_jll
+  XMLDict
+  XSLT_jll
+  XTermColors
+  XZ_jll
+  Xorg_libICE_jll
+  Xorg_libSM_jll
+  Xorg_libX11_jll
+  Xorg_libXau_jll
+  Xorg_libXcursor_jll
+  Xorg_libXdmcp_jll
+  Xorg_libXext_jll
+  Xorg_libXfixes_jll
+  Xorg_libXi_jll
+  Xorg_libXinerama_jll
+  Xorg_libXrandr_jll
+  Xorg_libXrender_jll
+  Xorg_libpthread_stubs_jll
+  Xorg_libxcb_jll
+  Xorg_libxkbfile_jll
+  Xorg_xcb_util_cursor_jll
+  Xorg_xcb_util_image_jll
+  Xorg_xcb_util_jll
+  Xorg_xcb_util_keysyms_jll
+  Xorg_xcb_util_renderutil_jll
+  Xorg_xcb_util_wm_jll
+  Xorg_xkbcomp_jll
+  Xorg_xkeyboard_config_jll
+  Xorg_xtrans_jll
+  YAML
+  Yao
+  YaoAPI
+  YaoArrayRegister
+  YaoBlocks
+  YaoSubspaceArrayReg
+  YaoSym
+  ZMQ
+  ZeroMQ_jll
+  Zstd_jll
+  Zygote
+  ZygoteRules
+  acl_jll
+  bitshuffle_jll
+  cddlib_jll
+  eudev_jll
+  fzf_jll
+  gdk_pixbuf_jll
+  gperf_jll
+  libaec_jll
+  libaom_jll
+  libass_jll
+  libevdev_jll
+  libevent_jll
+  libfdk_aac_jll
+  libinput_jll
+  libpng_jll
+  libsixel_jll
+  libsodium_jll
+  libvorbis_jll
+  micromamba_jll
+  mtdev_jll
+  prrte_jll
+  x264_jll
+  x265_jll
+  xkbcommon_jll
+###=== }} JLPKG_JLNAME_LIST
+)
 pkgname=()
-makedepends=(git)
-pkgver=1.10.0.DEV.1622.gecca2c5a2f0
+pkgver=20231207.073252
 pkgrel=1
 pkgdesc="Precompiled packages for julia-git"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
 depends=(julia-git)
+makedepends=(git julia-git-package-env julia-pkg-scripts makepkg-lint-disable-hook
+             blas-openblas blas64-openblas)
 options=('debug' '!strip')
-source=()
-sha512sums=()
+source=(julia-copy-compiled-pkgs.jl)
+sha512sums=('189eb37ff1d56def7e71b71c0ed925a3d95ed6fbe9f4013a74dc5b140793a52e91fe7f4dcb05e560ea692b69b42fc3eae398d20dadefe49e32eefc69bc856980')
 
 pkgver() {
-  # Use the julia version
-  pacman -Q julia-git | sed -e 's/^.* \(\|[^ ]*:\)\([^ ]*\)-[^- ]*$/\2/'
+  date -u +%Y%m%d.%H%M%S
+}
+
+build() {
+  rm -rf arch-compiled
+  mkdir -p arch-compiled
+
+  _ver_short=$(julia --startup-file=no \
+                     -e 'print(VERSION.major, ".", VERSION.minor)')
+
+  echo "_ver_short=${_ver_short}" > build_vars
+
+  compile_dir="/usr/share/julia/compiled/v$_ver_short"
+  stdlib_dir="/usr/share/julia/stdlib/v$_ver_short"
+  tgt_dir="${srcdir}/arch-compiled"
+  julia julia-copy-compiled-pkgs.jl \
+        "$stdlib_dir" "$compile_dir" "$tgt_dir" "${_jlpackages[@]}"
 }
 
 _package-jlpackage() {
+  # Don't depend on the exact julia version to make it easier to install
+  # a new julia version that without updating all the precompiled packages
+  # In such a case the precompiled binaries won't be used but the packages
+  # should still work.
+  # depends+=("julia-git=$(pacman -Q julia-git | sed -e 's/^.* \([^ ]*\)$/\1/')")
+
+  . ./build_vars
+
+  stdlib_dir="/usr/share/julia/stdlib/v$_ver_short"
+
   jlpkg=$1
   srcpkg="julia-git-${jlpkg,,}-src"
 
-  ver_short=$(julia --startup-file=no \
-                    -e 'print(VERSION.major, ".", VERSION.minor)')
-  compile_dir="/usr/share/julia/compiled/v$ver_short"
-  mkdir -p "${pkgdir}/${compile_dir}"
+  depends+=("$srcpkg")
+  conflicts+=("julia-git-${jlpkg,,}-git") # Temporary
+  replaces+=("julia-git-${jlpkg,,}-git") # Temporary
 
-  # This is a bit cheating as we are simply copying the version from the package hook
-  cp -a "${compile_dir}/${jlpkg}" "${pkgdir}/${compile_dir}"
-  touch "${pkgdir}/${compile_dir}/${jlpkg}/.archpkg"
-  # The ji file records the exact time stamps so we need to fix those in post_install
-  (
-    echo "_fix_timestamps() {"
-    cd /
-    find "usr/share/julia/stdlib/v$ver_short/$jlpkg" -type f -exec \
-         sh -c 'echo "  touch -c -d \"$(stat -c %y "{}")\" \"{}\""' \;
-    echo "}"
+  arch_compile_dir="${pkgdir}/usr/lib/julia/arch-compiled/"
+  mkdir -p "$arch_compile_dir"
 
-    echo "post_install() {"
-    echo "  _fix_timestamps"
-    echo "}"
+  echo "Scanning $stdlib_dir/$jlpkg for dependencies"
+  _pkg_deps=$(julia "/usr/lib/julia/julia-list-deps.jl" "$stdlib_dir/$jlpkg")
+  echo "Deps: $_pkg_deps"
 
-    echo "post_upgrade() {"
-    echo "  _fix_timestamps"
-    echo "}"
-  ) > "${startdir}/pkg-${jlpkg,,}.install"
-  true && install=pkg-${jlpkg,,}.install
+  for _dep in $_pkg_deps; do
+    depends+=("julia-git-${_dep,,}")
+  done
+
+  echo "Final dependencies: ${depends[*]}"
+
+  cp -r "${srcdir}/arch-compiled/$jlpkg" "${pkgdir}/usr/lib/julia/arch-compiled/$jlpkg"
 }
 
 for jlpkg in "${_jlpackages[@]}"; do
   _pkg="julia-git-${jlpkg,,}"
   pkgname=("${pkgname[@]}" "${_pkg}")
-  makedepends=("${makedepends[@]}" "${_pkg}-src")
+  makedepends+=("${_pkg}-src")
   eval "package_${_pkg}() { _package-jlpackage ${jlpkg}; }"
 done

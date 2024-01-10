@@ -1,0 +1,47 @@
+# Maintainer: Bogdan Burlacu <bogdan.burlacu@pm.me>
+pkgname=crlibm-git
+pkgver=r708.eb30637
+pkgrel=2
+pkgdesc="A portable, efficient, correctly rounded mathematical library."
+arch=('aarch64' 'armv7h' 'x86_64')
+url="https://github.com/taschini/crlibm"
+license=('GPL')
+makedepends=('git')
+provides=(crlibm)
+conflicts=(crlibm)
+source=('git+https://github.com/taschini/crlibm.git')
+md5sums=('SKIP')
+
+pkgver() {
+  cd crlibm
+  # Git, no tags available
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd crlibm
+
+  CFLAGS+=' -fPIC -flto -O3'
+  LDFLAGS+=' -fPIC -flto -O3'
+  export CFLAGS
+  ./prepare --prefix=/usr
+  make
+  g++ -shared scs_lib/*.o -o libscs.so
+  g++ -shared *.o -o libcrlibm.so -L. -lscs
+}
+
+check() {
+  cd crlibm
+  make -k check
+}
+
+package() {
+  cd crlibm
+  make DESTDIR="$pkgdir/" install
+
+  rm "${pkgdir}/usr/lib/"*.a
+  rm -rf "${pkgdir}/usr/bin/"
+
+  install -Dm755 libscs.so "${pkgdir}/usr/lib/"
+  install -Dm755 libcrlibm.so "${pkgdir}/usr/lib/"
+}

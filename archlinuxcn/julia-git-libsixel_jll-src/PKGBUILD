@@ -1,0 +1,26 @@
+pkgname=julia-git-libsixel_jll-src
+pkgver=1.10.3+0
+_commit=dada6a746f9fde8a6d3b1e1bf9b203979130a4f1
+pkgrel=3
+pkgdesc="libsixel_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/libsixel_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libsixel)
+source=("git+https://github.com/JuliaBinaryWrappers/libsixel_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'ed910a86e66b800e3f0942f0dd7b1619078a3663e43e342409b174642557852b')
+
+build() {
+  cd libsixel_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl libsixel_jll ../jll.toml
+}
+
+package() {
+  cd libsixel_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh libsixel_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-prettytables-src
+pkgver=2.3.1
+_commit=73fa073e9ae2742d25820d2d009fa1001000f202
+pkgrel=1
+pkgdesc="PrettyTables.jl"
+url="https://github.com/ronisbr/PrettyTables.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/ronisbr/PrettyTables.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd PrettyTables.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh PrettyTables "${pkgdir}" "${pkgname}" julia-git
+}

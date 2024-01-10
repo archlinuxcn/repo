@@ -1,0 +1,18 @@
+pkgname=julia-git-dimensionaldata-src
+pkgver=0.25.7
+_commit=f25fb78db42adc9886166b77e6769692ea564d8f
+pkgrel=1
+pkgdesc="DimensionalData.jl"
+url="https://github.com/rafaqz/DimensionalData.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/rafaqz/DimensionalData.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd DimensionalData.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh DimensionalData "${pkgdir}" "${pkgname}" julia-git
+}

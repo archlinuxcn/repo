@@ -1,0 +1,18 @@
+pkgname=julia-git-bloqadelattices-src
+pkgver=0.1.8
+_commit=3ebda6287f3512af34823994bb891a9d4069d930
+pkgrel=2
+pkgdesc="BloqadeLattices.jl"
+url="https://github.com/QuEraComputing/Bloqade.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/QuEraComputing/Bloqade.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Bloqade.jl/lib/BloqadeLattices
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh BloqadeLattices "${pkgdir}" "${pkgname}" julia-git
+}

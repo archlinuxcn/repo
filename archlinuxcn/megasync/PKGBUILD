@@ -1,4 +1,5 @@
-# Maintainer: Rafał Kozdrój <kozeid2+aur@gmail.com>
+# Maintainer : Daniel Bermond <dbermond@archlinux.org>
+# Contributor: Rafał Kozdrój <kozeid2+aur@gmail.com>
 # Contributor: kikadf <kikadf.01@gmail.com>
 # Contributor: Daniel Henry <d at hackr dot pl>
 # Contributor: Miguel Revilla <yo at  miguelrevilla dot com>
@@ -6,43 +7,42 @@
 # Contributor: Hexchain Tong <i at hexchain dot org>
 
 pkgname=megasync
-pkgver=4.9.0.0
+pkgver=4.11.0.0
 pkgrel=2
-pkgdesc="Easy automated syncing between your computers and your MEGA cloud drive"
-arch=('i686' 'x86_64')
-url="https://github.com/meganz/MEGAsync"
-license=('custom:MEGA LIMITED CODE REVIEW LICENCE')
-depends=('c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'libuv'
-         'qt5-svg' 'qt5-x11extras' 'libmediainfo' 'libraw' 'qt5-base'
-         'ffmpeg' 'libpdfium' 'freeimage' 'libudev.so')
-makedepends=('qt5-tools' 'swig' 'doxygen' 'lsb-release' 'git')
-_extname="_Linux"
-source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}${_extname}"
-        "meganz-sdk::git+https://github.com/meganz/sdk.git"
-        "pdfium.patch"
-        "ffmpeg.patch")
+pkgdesc='Official MEGA desktop application for syncing with MEGA Cloud Drive'
+arch=('x86_64')
+url='https://github.com/meganz/MEGAsync/'
+license=('custom')
+depends=('c-ares' 'crypto++' 'curl' 'ffmpeg' 'freeimage' 'icu' 'libmediainfo'
+         'libpdfium' 'libsodium' 'libudev.so' 'libuv' 'libxcb' 'libzen' 'openssl'
+         'qt5-base' 'qt5-svg' 'qt5-x11extras' 'sqlite' 'zlib'  'hicolor-icon-theme')
+makedepends=('git' 'doxygen' 'lsb-release' 'qt5-tools' 'swig')
+source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_OSX"
+        'meganz-sdk'::'git+https://github.com/meganz/sdk.git'
+        '010-megasync-libpdfium.patch'
+        '020-megasync-ffmpeg.patch')
 sha256sums=('SKIP'
             'SKIP'
-            'bdad237f67d772789bf6e6835108827201296fc5cf793d28d94af8a1b04e56c9'
-            'd5fcd4018a665e7a591ab796569777cf0a74fadc7c953f6879f37c949f82e7ae')
+            'a6435d56b5f7493474ee74c735a880b1d72f802fb3bab8824c497642c784ac0e'
+            '49690421d98e8f61a600ee1ec97adc3e4d1cbe2f736fcf56056da23d02db378b')
 
 prepare() {
-    cd "MEGAsync"
-    git submodule init
-    git config submodule.src/MEGASync/mega.url "../meganz-sdk"
-    git -c protocol.file.allow=always submodule update
-
-    cd "src/MEGASync/mega"
-    patch -Np1 -i "$srcdir/pdfium.patch"
-    patch -Np1 -i "$srcdir/ffmpeg.patch"
+    git -C MEGAsync submodule init
+    git -C MEGAsync config --local submodule.src/MEGASync/mega.url "${srcdir}/meganz-sdk"
+    git -C MEGAsync -c protocol.file.allow='always' submodule update
+    
+    patch -d MEGAsync/src/MEGASync/mega -Np1 -i "${srcdir}/010-megasync-libpdfium.patch"
+    patch -d MEGAsync/src/MEGASync/mega -Np1 -i "${srcdir}/020-megasync-ffmpeg.patch"
+    
+    cd MEGAsync/src/MEGASync/mega
+    ./autogen.sh
 }
 
 build() {
-    # build sdk
-    cd "MEGAsync/src/MEGASync/mega"
-
-    ./autogen.sh
+    # sdk
+    cd MEGAsync/src/MEGASync/mega
     ./configure \
+        --prefix="${srcdir}/MEGAsync/src/MEGASync/mega/bindings/qt/3rdparty" \
         --disable-shared \
         --enable-static \
         --disable-silent-rules \
@@ -61,27 +61,20 @@ build() {
         --with-libzen \
         --with-libmediainfo \
         --with-ffmpeg \
-        --enable-drive-notifications \
-        --prefix="${srcdir}/MEGAsync/src/MEGASync/mega/bindings/qt/3rdparty"
-
-    # build megasync
-    cd "../.."
-    qmake-qt5 \
-        "CONFIG += FULLREQUIREMENTS" \
-        MEGA.pro
+        --enable-drive-notifications
+    
+    # megasync
+    cd "${srcdir}/MEGAsync/src"
+    qmake-qt5 'CONFIG += FULLREQUIREMENTS' MEGA.pro
     lrelease-qt5 MEGASync/MEGASync.pro
     make
 }
 
 package () {
-    cd "MEGAsync"
-    install -Dm 644 LICENCE.md "${pkgdir}/usr/share/licenses/megasync/LICENCE"
-    install -Dm 644 installer/terms.txt "${pkgdir}/usr/share/licenses/megasync/terms.txt"
-    install -Dm 644 src/MEGASync/mega/LICENSE "${pkgdir}/usr/share/licenses/megasync/SDK-LICENCE"
-
-    cd "src"
-    mkdir -pm 755 "${pkgdir}/usr/bin"
-    make INSTALL_ROOT="${pkgdir}" TARGET="${pkgdir}/usr/bin/megasync" install
-
-    install -Dm 755 "MEGASync/megasync" "${pkgdir}/usr/bin/megasync"
+    make -C MEGAsync/src INSTALL_ROOT="$pkgdir" TARGET="${pkgdir}/usr/bin/megasync" install
+    install -D -m755 MEGAsync/src/MEGASync/megasync -t "${pkgdir}/usr/bin"
+    install -D -m644 MEGAsync/LICENCE.md -t "${pkgdir}/usr/share/licenses/megasync"
+    install -D -m644 MEGAsync/installer/terms.txt -t "${pkgdir}/usr/share/licenses/megasync"
+    install -D -m644 MEGAsync/src/MEGASync/mega/LICENSE "${pkgdir}/usr/share/licenses/megasync/SDK-LICENCE"
+    rm -r "${pkgdir}/usr/share/icons/ubuntu-mono-dark"
 }

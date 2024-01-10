@@ -1,0 +1,26 @@
+pkgname=julia-git-xorg_libxi_jll-src
+pkgver=1.7.10+4
+_commit=083fe1fa320a34af7a5a7c8b0512cd098f8d4b14
+pkgrel=3
+pkgdesc="Xorg_libXi_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Xorg_libXi_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libxi)
+source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libXi_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '9e8b8269864cc93e095e9d526b308ad048dbdf68c6f3248f86dcac1ba881295c')
+
+build() {
+  cd Xorg_libXi_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Xorg_libXi_jll ../jll.toml
+}
+
+package() {
+  cd Xorg_libXi_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Xorg_libXi_jll "${pkgdir}" "${pkgname}" julia-git
+}

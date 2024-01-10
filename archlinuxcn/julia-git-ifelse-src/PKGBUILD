@@ -1,0 +1,18 @@
+pkgname=julia-git-ifelse-src
+pkgver=0.1.1
+_commit=44604bf115755bc201200cedb0291e2241b400dd
+pkgrel=2
+pkgdesc="IfElse.jl"
+url="https://github.com/SciML/IfElse.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/IfElse.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd IfElse.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh IfElse "${pkgdir}" "${pkgname}" julia-git
+}

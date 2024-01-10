@@ -1,0 +1,18 @@
+pkgname=julia-git-recursivearraytools-src
+pkgver=2.39.0
+_commit=7eb5df979d0207531c7eb683e237046d953759df
+pkgrel=1
+pkgdesc="RecursiveArrayTools.jl"
+url="https://github.com/SciML/RecursiveArrayTools.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/RecursiveArrayTools.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd RecursiveArrayTools.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh RecursiveArrayTools "${pkgdir}" "${pkgname}" julia-git
+}

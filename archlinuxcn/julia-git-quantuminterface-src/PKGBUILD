@@ -1,0 +1,18 @@
+pkgname=julia-git-quantuminterface-src
+pkgver=0.3.3
+_commit=35e721bfc5d54b2fc158e22101fdf20f9b364178
+pkgrel=2
+pkgdesc="QuantumInterface.jl"
+url="https://github.com/qojulia/QuantumInterface.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/qojulia/QuantumInterface.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd QuantumInterface.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh QuantumInterface "${pkgdir}" "${pkgname}" julia-git
+}

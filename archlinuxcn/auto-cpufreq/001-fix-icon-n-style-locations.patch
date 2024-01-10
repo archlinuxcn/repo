@@ -1,0 +1,13 @@
+diff '--color=auto' --unified --recursive --text src/auto-cpufreq-2.0.0/auto_cpufreq/gui/app.py src.new/auto-cpufreq-2.0.0/auto_cpufreq/gui/app.py
+--- src/auto-cpufreq-2.0.0/auto_cpufreq/gui/app.py	2023-09-23 17:15:29.000000000 +0600
++++ src.new/auto-cpufreq-2.0.0/auto_cpufreq/gui/app.py	2023-10-08 22:17:49.178622543 +0600
+@@ -16,8 +16,8 @@
+     ICON_FILE = "/snap/auto-cpufreq/current/icon.png"
+     CSS_FILE = "/snap/auto-cpufreq/current/style.css"
+ else:
+-    ICON_FILE = "/usr/local/share/auto-cpufreq/images/icon.png"
+-    CSS_FILE = "/usr/local/share/auto-cpufreq/scripts/style.css"
++    ICON_FILE = "/usr/share/pixmaps/auto-cpufreq.png"
++    CSS_FILE = "/usr/share/auto-cpufreq/scripts/style.css"
+
+ HBOX_PADDING = 20

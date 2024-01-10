@@ -1,0 +1,18 @@
+pkgname=julia-git-rationalroots-src
+pkgver=0.2.0
+_commit=ee588d2a907b2d203a8cb581dd184cc8e227cc63
+pkgrel=2
+pkgdesc="RationalRoots.jl"
+url="https://github.com/Jutho/RationalRoots.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/Jutho/RationalRoots.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd RationalRoots.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh RationalRoots "${pkgdir}" "${pkgname}" julia-git
+}

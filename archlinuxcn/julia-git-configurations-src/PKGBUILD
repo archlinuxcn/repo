@@ -1,0 +1,18 @@
+pkgname=julia-git-configurations-src
+pkgver=0.17.6
+_commit=87d031214b0bd22fe8542a319031fce7ea209984
+pkgrel=2
+pkgdesc="Configurations.jl"
+url="https://github.com/Roger-luo/Configurations.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/Roger-luo/Configurations.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Configurations.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Configurations "${pkgdir}" "${pkgname}" julia-git
+}

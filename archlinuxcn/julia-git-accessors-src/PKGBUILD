@@ -1,0 +1,18 @@
+pkgname=julia-git-accessors-src
+pkgver=0.1.33
+_commit=4653cccaf5e7983f79bbfbc33a4671f27666d4ab
+pkgrel=2
+pkgdesc="Accessors.jl"
+url="https://github.com/JuliaObjects/Accessors.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaObjects/Accessors.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Accessors.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Accessors "${pkgdir}" "${pkgname}" julia-git
+}

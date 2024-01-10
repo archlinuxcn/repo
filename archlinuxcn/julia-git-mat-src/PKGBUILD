@@ -1,0 +1,18 @@
+pkgname=julia-git-mat-src
+pkgver=0.10.6
+_commit=04e3d04a8309c3a0666514f93c0a2d4577fe302d
+pkgrel=3
+pkgdesc="MAT.jl"
+url="https://github.com/JuliaIO/MAT.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/MAT.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd MAT.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MAT "${pkgdir}" "${pkgname}" julia-git
+}

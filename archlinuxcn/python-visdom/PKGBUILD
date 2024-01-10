@@ -3,7 +3,7 @@
 pkgname=python-visdom
 _name=visdom
 pkgver=0.2.4
-pkgrel=3
+pkgrel=4
 pkgdesc='A flexible tool for creating, organizing, and sharing visualizations of live, rich data. Supports Torch and Numpy.'
 arch=(any)
 url='https://github.com/facebookresearch/visdom'
@@ -16,6 +16,7 @@ depends=(
   python-requests
   python-scipy 
   python-six
+  python-tornado
   python-tqdm
   python-websocket-client
 )
@@ -38,5 +39,8 @@ build() {
 package() {
   cd "${_name}-${pkgver}"
   python -m installer --destdir="${pkgdir}" dist/*.whl
+  # pre-download scripts
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  PYTHONPATH="${pkgdir}${site_packages}" python -c 'from visdom.server.build import download_scripts; download_scripts()'
 }
 # vim:set ts=2 sw=2 et:

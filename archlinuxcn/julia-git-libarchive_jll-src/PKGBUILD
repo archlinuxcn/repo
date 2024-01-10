@@ -1,0 +1,26 @@
+pkgname=julia-git-libarchive_jll-src
+pkgver=3.5.2+0
+_commit=5b3fcbd3e65751c63bca7087546e76aeec661f94
+pkgrel=2
+pkgdesc="LibArchive_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/LibArchive_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libarchive)
+source=("git+https://github.com/JuliaBinaryWrappers/LibArchive_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'ab9c457cb6cb918d1439f14a47ad41878687a52b421a718ca99e85d01341eb97')
+
+build() {
+  cd LibArchive_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl LibArchive_jll ../jll.toml
+}
+
+package() {
+  cd LibArchive_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LibArchive_jll "${pkgdir}" "${pkgname}" julia-git
+}

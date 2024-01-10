@@ -1,0 +1,18 @@
+pkgname=julia-git-symbolics-src
+pkgver=5.11.0
+_commit=4b3081eaca48965d1ad31e8de1f9e16e967c8f29
+pkgrel=1
+pkgdesc="Symbolics.jl"
+url="https://github.com/JuliaSymbolics/Symbolics.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSymbolics/Symbolics.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Symbolics.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Symbolics "${pkgdir}" "${pkgname}" julia-git
+}

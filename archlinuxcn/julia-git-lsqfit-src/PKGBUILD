@@ -1,0 +1,18 @@
+pkgname=julia-git-lsqfit-src
+pkgver=0.15.0
+_commit=8f8c18a08abfe4d182bb13ac612a68a205513b3b
+pkgrel=1
+pkgdesc="LsqFit.jl"
+url="https://github.com/JuliaNLSolvers/LsqFit.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaNLSolvers/LsqFit.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LsqFit.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LsqFit "${pkgdir}" "${pkgname}" julia-git
+}

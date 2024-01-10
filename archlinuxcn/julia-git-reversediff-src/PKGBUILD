@@ -1,0 +1,18 @@
+pkgname=julia-git-reversediff-src
+pkgver=1.15.1
+_commit=6c7b9cfbb06cc1e91d36be12746aaeb55e433ff4
+pkgrel=2
+pkgdesc="ReverseDiff.jl"
+url="https://github.com/JuliaDiff/ReverseDiff.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaDiff/ReverseDiff.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ReverseDiff.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ReverseDiff "${pkgdir}" "${pkgname}" julia-git
+}

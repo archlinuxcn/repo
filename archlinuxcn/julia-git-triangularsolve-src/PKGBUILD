@@ -1,0 +1,18 @@
+pkgname=julia-git-triangularsolve-src
+pkgver=0.1.20
+_commit=b6258af5e21ecf27b1d37ef6f7a3e27eed0544a1
+pkgrel=1
+pkgdesc="TriangularSolve.jl"
+url="https://github.com/JuliaSIMD/TriangularSolve.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSIMD/TriangularSolve.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd TriangularSolve.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh TriangularSolve "${pkgdir}" "${pkgname}" julia-git
+}

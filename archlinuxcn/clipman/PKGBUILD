@@ -3,16 +3,16 @@
 
 pkgname=clipman
 pkgver=1.6.2
-pkgrel=1
+pkgrel=2
 pkgdesc="A simple clipboard manager for Wayland"
-url="https://github.com/yory8/clipman"
+url="https://github.com/y7n05h/clipman"
 depends=("wl-clipboard>=2.0")
 makedepends=("go")
 optdepends=("libnotify" "wofi" "dmenu" "rofi")
 provides=()
 license=("GPL3")
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
-md5sums=('aff3a17199d06ca77e815023b66a825d')
+md5sums=('7a0e3feccd6ffc931bb8643ce2500739')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
 
 build() {

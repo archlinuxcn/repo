@@ -1,0 +1,18 @@
+pkgname=julia-git-tracker-src
+pkgver=0.2.30
+_commit=1bb2364521ff48850c138b0ba7880f31309176bc
+pkgrel=1
+pkgdesc="Tracker.jl"
+url="https://github.com/FluxML/Tracker.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/FluxML/Tracker.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Tracker.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Tracker "${pkgdir}" "${pkgname}" julia-git
+}

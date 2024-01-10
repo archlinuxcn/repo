@@ -1,0 +1,18 @@
+pkgname=julia-git-sobol-src
+pkgver=1.5.0
+_commit=d52842736c9416cef1860f6238e86546fcac85c2
+pkgrel=2
+pkgdesc="Sobol.jl"
+url="https://github.com/stevengj/Sobol.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/stevengj/Sobol.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Sobol.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Sobol "${pkgdir}" "${pkgname}" julia-git
+}

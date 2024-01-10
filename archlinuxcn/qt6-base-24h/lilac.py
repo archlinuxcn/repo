@@ -20,7 +20,7 @@ def pre_build():
   checks = ''
   for line in edit_file('PKGBUILD'):
     if line.startswith('pkgrel='):
-      line = line + '.1'
+      line = line + '.2'
     elif line.startswith('pkgname='):
       line = 'pkgname=qt6-base-24h'
       checks = checks + '1'
@@ -41,14 +41,14 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
     elif line.startswith('source=('):
       line = line.replace('=(', '''=(
       oldherl-24h.patch
-      'https://build.archlinuxcn.org/~oldherl/files/cldr/36/core.zip'
+      'https://build.archlinuxcn.org/~oldherl/files/cldr/44/core.zip'
       'https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab'
       ''')
       checks = checks + '6'
     elif line.startswith('sha256sums=('):
       line = line.replace('=(', '''=(
       '6ab571d50f0c17d31ed33bb2ebf6eadf41c18cbf2dd8cb5260b939915a139a28'
-      '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
+      'bd7f70adfe8a999cfa0f5d96145bf0a095b1a099024e4f451fa1afccf6e4aee6'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
       ''')
       checks = checks + '7'
@@ -70,8 +70,12 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       # other split packages. do not build them.
       line = 'no' + line
       logger.info('removed: %s', line)
+    elif line.startswith('depends=('):
+      # let it conflict with incompatable icu versions, @q234rty
+      line = line.replace('=(', '=(libicui18n.so ')
+      checks = checks + 'c'
     print(line)
-  if len(checks) != 9:
+  if len(checks) != 10:
     raise ValueError('PKGBUILD editing not completed. checks=' + checks)
 
 def post_build():

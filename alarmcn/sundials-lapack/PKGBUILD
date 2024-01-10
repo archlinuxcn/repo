@@ -1,0 +1,36 @@
+# Maintainer: Antonio Rojas <arojas@archlinux.org>
+# Contributor: Elmar Klausmeier <Elmar.Klausmeier@gmail.com>
+
+pkgname=sundials-lapack
+epoch=1
+pkgver=5.8.0
+pkgrel=1
+pkgdesc='Suite of nonlinear differential/algebraic equation solvers'
+arch=(armv7h aarch64 x86_64)
+url='https://computing.llnl.gov/projects/sundials'
+license=(BSD)
+depends=(openmpi suitesparse lapack)
+makedepends=(cmake gcc-fortran python)
+provides=("sundials=$pkgver")
+source=(https://github.com/LLNL/sundials/archive/v$pkgver/sundials-$pkgver.tar.gz)
+sha256sums=('e8ebc2004aae8c642791fdf51aac8a7774b21fc9baf41f26b18e76ec38adfa3e')
+
+build() {
+  cmake -B build -S sundials-$pkgver \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_STATIC_LIBS=OFF \
+    -DENABLE_MPI=ON \
+    -DENABLE_PTHREAD=ON	\
+    -DENABLE_OPENMP=ON \
+    -DENABLE_KLU=ON \
+    -DKLU_LIBRARY_DIR=/usr/lib \
+    -DENABLE_LAPACK=ON \
+    -DEXAMPLES_INSTALL_PATH=/usr/share/sundials/examples
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+
+  install -Dm644 sundials-$pkgver/LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname
+}

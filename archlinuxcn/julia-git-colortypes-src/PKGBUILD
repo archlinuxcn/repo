@@ -1,0 +1,18 @@
+pkgname=julia-git-colortypes-src
+pkgver=0.11.4
+_commit=1ceb1ae1108e76b972a0ecb2782e8f7d3db8539c
+pkgrel=3
+pkgdesc="ColorTypes.jl"
+url="https://github.com/JuliaGraphics/ColorTypes.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGraphics/ColorTypes.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ColorTypes.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ColorTypes "${pkgdir}" "${pkgname}" julia-git
+}

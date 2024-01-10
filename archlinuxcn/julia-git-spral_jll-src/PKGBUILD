@@ -1,0 +1,26 @@
+pkgname=julia-git-spral_jll-src
+pkgver=2023.11.15+0
+_commit=d019c8dc8eadce658eecd514d1caceb5611ba27e
+pkgrel=1
+pkgdesc="SPRAL_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/SPRAL_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git spral)
+source=("git+https://github.com/JuliaBinaryWrappers/SPRAL_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '8da059b87ceb69bdb656d5edccea61e38dfaf78bf0881b00ba2d79ecaca2c1f4')
+
+build() {
+  cd SPRAL_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl SPRAL_jll ../jll.toml
+}
+
+package() {
+  cd SPRAL_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SPRAL_jll "${pkgdir}" "${pkgname}" julia-git
+}

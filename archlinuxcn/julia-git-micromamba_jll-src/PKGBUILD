@@ -1,0 +1,26 @@
+pkgname=julia-git-micromamba_jll-src
+pkgver=1.4.9+0
+_commit=9a8a2d343641e9079755dea48c966e8546225800
+pkgrel=2
+pkgdesc="micromamba_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/micromamba_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git micromamba)
+source=("git+https://github.com/JuliaBinaryWrappers/micromamba_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '20dbacda0dfb44cc3e7ff9420e069d78849b1905e27098cda9d38083b30c672d')
+
+build() {
+  cd micromamba_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl micromamba_jll ../jll.toml
+}
+
+package() {
+  cd micromamba_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh micromamba_jll "${pkgdir}" "${pkgname}" julia-git
+}

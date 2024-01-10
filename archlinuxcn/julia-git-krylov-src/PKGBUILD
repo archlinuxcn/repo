@@ -1,0 +1,18 @@
+pkgname=julia-git-krylov-src
+pkgver=0.9.4
+_commit=d304a34aa9794fbcaaa2758800885b52100c598d
+pkgrel=2
+pkgdesc="Krylov.jl"
+url="https://github.com/JuliaSmoothOptimizers/Krylov.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSmoothOptimizers/Krylov.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Krylov.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Krylov "${pkgdir}" "${pkgname}" julia-git
+}

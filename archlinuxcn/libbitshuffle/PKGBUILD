@@ -1,0 +1,26 @@
+pkgname=libbitshuffle
+pkgver=0.5.1
+pkgrel=2
+pkgdesc="Filter for improving compression of typed binary data"
+arch=('aarch64' 'armv7h' 'x86_64')
+url="https://github.com/kiyo-masui/bitshuffle"
+license=('custom:MIT')
+depends=('libzstd.so' 'lz4')
+source=("https://github.com/kiyo-masui/bitshuffle/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('2631aaa5d4c24e51415c7b1827d4f9dcf505ad8db03738210da9ce6dab8f5870')
+
+build() {
+  cd bitshuffle-${pkgver}
+  gcc ${CFLAGS} ${LDFLAGS} -g -O3 -DZSTD_SUPPORT -Isrc -fPIC \
+      --shared -o libbitshuffle.so \
+      src/bitshuffle.c src/iochain.c src/bitshuffle_core.c -lzstd -llz4
+}
+
+package() {
+  cd bitshuffle-${pkgver}
+
+  install -dm755 "$pkgdir/usr/include/bitshuffle"
+  cp src/*.h "$pkgdir/usr/include/bitshuffle"
+  install -Dm755 libbitshuffle.so "$pkgdir/usr/lib/libbitshuffle.so"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

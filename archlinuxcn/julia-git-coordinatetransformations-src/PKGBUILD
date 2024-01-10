@@ -1,0 +1,18 @@
+pkgname=julia-git-coordinatetransformations-src
+pkgver=0.6.3
+_commit=b97c74a35c6835f6b015440cb4af6298824dbe1d
+pkgrel=2
+pkgdesc="CoordinateTransformations.jl"
+url="https://github.com/JuliaGeometry/CoordinateTransformations.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGeometry/CoordinateTransformations.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd CoordinateTransformations.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh CoordinateTransformations "${pkgdir}" "${pkgname}" julia-git
+}

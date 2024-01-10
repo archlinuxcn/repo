@@ -1,0 +1,18 @@
+pkgname=julia-git-plotthemes-src
+pkgver=3.1.0
+_commit=f605892656cf91218d228dd0dad3c917fde70d62
+pkgrel=2
+pkgdesc="PlotThemes.jl"
+url="https://github.com/JuliaPlots/PlotThemes.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaPlots/PlotThemes.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd PlotThemes.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh PlotThemes "${pkgdir}" "${pkgname}" julia-git
+}

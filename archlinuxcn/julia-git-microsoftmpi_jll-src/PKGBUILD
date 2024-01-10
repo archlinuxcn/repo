@@ -1,0 +1,26 @@
+pkgname=julia-git-microsoftmpi_jll-src
+pkgver=10.1.4+1
+_commit=8f4a5755f4df148391f2bedb298db56dc666ee47
+pkgrel=1
+pkgdesc="MicrosoftMPI_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/MicrosoftMPI_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaBinaryWrappers/MicrosoftMPI_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')
+
+build() {
+  cd MicrosoftMPI_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl MicrosoftMPI_jll ../jll.toml
+}
+
+package() {
+  cd MicrosoftMPI_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MicrosoftMPI_jll "${pkgdir}" "${pkgname}" julia-git
+}

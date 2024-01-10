@@ -1,0 +1,26 @@
+pkgname=julia-git-libmount_jll-src
+pkgver=2.35.0+0
+_commit=4ff19e0627c49ad5af7fad16613cff104ce24ba3
+pkgrel=2
+pkgdesc="Libmount_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Libmount_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git util-linux-libs)
+source=("git+https://github.com/JuliaBinaryWrappers/Libmount_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '31ffe8db146717b820b8d1442864efc65bdf23d829c2d14d6f870aee6e0c3dfd')
+
+build() {
+  cd Libmount_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Libmount_jll ../jll.toml
+}
+
+package() {
+  cd Libmount_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Libmount_jll "${pkgdir}" "${pkgname}" julia-git
+}

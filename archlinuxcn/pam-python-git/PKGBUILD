@@ -1,0 +1,38 @@
+# Maintainer: Guillaume Hayot <ghayot@postblue.info>
+
+pkgname=pam-python-git
+_pkgname="${pkgname%-git}"
+pkgver=r31.9641aa5
+pkgrel=3
+pkgdesc='Python for PAM (py3 fork)'
+arch=('x86_64')
+url='https://github.com/castlabs/pam-python'
+license=('AGPL3')
+depends=('pam' 'python')
+makedepends=('git' 'make' 'python-sphinx')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+	cd "${_pkgname}/"
+	sed -i'' 's|LIBDIR ?= /lib/security|LIBDIR ?= /usr/lib/security|g' src/Makefile
+	sed -n '/^License/,/^--$/p' README.txt | grep -v -e '^License' -e '^-\+' >LICENSE
+}
+
+build() {
+	cd "${_pkgname}/"
+	PREFIX=/usr make lib
+}
+
+package() {
+	cd "${_pkgname}/"
+	PREFIX=/usr make DESTDIR="${pkgdir}" install-lib
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}

@@ -1,0 +1,13 @@
+Anbox tend not to leave enough time for Android to start.
+This patch gives more breathing room.
+--- a/src/anbox/cmds/launch.cpp
++++ b/src/anbox/cmds/launch.cpp
+@@ -34,7 +34,7 @@
+ namespace fs = boost::filesystem;
+ 
+ namespace {
+-constexpr unsigned int max_session_mgr_wait_attempts{10};
++constexpr unsigned int max_session_mgr_wait_attempts{100};
+ const std::chrono::seconds session_mgr_wait_interval{5};
+ constexpr unsigned int max_dbus_service_wait_attempts{10};
+ const std::chrono::seconds dbus_service_wait_interval{5};

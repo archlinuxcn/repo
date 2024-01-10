@@ -1,0 +1,18 @@
+pkgname=julia-git-vectorizationbase-src
+pkgver=0.21.65
+_commit=96945b1a1ef0be8842f231d08cb820f081d63234
+pkgrel=1
+pkgdesc="VectorizationBase.jl"
+url="https://github.com/JuliaSIMD/VectorizationBase.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSIMD/VectorizationBase.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd VectorizationBase.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh VectorizationBase "${pkgdir}" "${pkgname}" julia-git
+}

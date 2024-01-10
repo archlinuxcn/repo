@@ -8,7 +8,7 @@
 pkgname=metis
 pkgver=5.1.0.p11
 _pkgver=5.1.0-p11
-pkgrel=1
+pkgrel=3
 arch=(aarch64 x86_64)
 pkgdesc="A set of serial programs for partitioning graphs, partitioning finite element meshes, and producing fill reducing orderings for sparse matrices"
 url="http://glaros.dtc.umn.edu/gkhome/metis/metis/overview"
@@ -21,17 +21,48 @@ sha256sums=('c2d5eb5a731335a2d7168eedcf2b683b990492b5ffceab1eedc2acbb7a422ff0')
 
 prepare() {
   mv petsc-pkg-metis-* $pkgname-$_pkgver
+  sed -i -e 's!add_library(metis.*!& \nset_target_properties(metis PROPERTIES OUTPUT_NAME "${BINARY_NAME}")!g' $pkgname-$_pkgver/libmetis/CMakeLists.txt
+}
+
+_build_prefix() {
+  local libname=$1
+  local iwidth=$2
+  local rwidth=$3
+  local prefix=${4:-/usr/lib/$libname}
+
+  cmake -B build-$libname -S $pkgname-$_pkgver \
+        -DCMAKE_INSTALL_PREFIX=${prefix} \
+        -DSHARED=ON \
+        -DMATH_LIB=m \
+        -DCMAKE_C_FLAGS="-DIDXTYPEWIDTH=${iwidth} -DREALTYPEWIDTH=${rwidth}" \
+        -DBINARY_NAME="${libname}"
+  cmake --build build-$libname
 }
 
 build() {
-  cmake -B build -S $pkgname-$_pkgver \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DSHARED=ON \
-        -DMATH_LIB=m
-  cmake --build build
+  _build_prefix metis 32 32 /usr
+  _build_prefix metis_Int32_Real64 32 64
+  _build_prefix metis_Int64_Real32 64 32
+  _build_prefix metis_Int64_Real64 64 64
 }
 
 package() {
-  DESTDIR="$pkgdir" cmake --install build
-  install -m644 -D $pkgname-$_pkgver/LICENSE.txt "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+  DESTDIR="$pkgdir" cmake --install build-metis
+  DESTDIR="$pkgdir" cmake --install build-metis_Int32_Real64
+  DESTDIR="$pkgdir" cmake --install build-metis_Int64_Real32
+  DESTDIR="$pkgdir" cmake --install build-metis_Int64_Real64
+
+  [[ -f "$pkgdir"/usr/lib/metis_Int32_Real64/lib/libmetis_Int32_Real64.so ]]
+  [[ -f "$pkgdir"/usr/lib/metis_Int64_Real32/lib/libmetis_Int64_Real32.so ]]
+  [[ -f "$pkgdir"/usr/lib/metis_Int64_Real64/lib/libmetis_Int64_Real64.so ]]
+
+  ln -sr "$pkgdir"/usr/lib/metis_Int32_Real64/lib/libmetis_Int32_Real64.so* \
+     "$pkgdir"/usr/lib
+  ln -sr "$pkgdir"/usr/lib/metis_Int64_Real32/lib/libmetis_Int64_Real32.so* \
+     "$pkgdir"/usr/lib
+  ln -sr "$pkgdir"/usr/lib/metis_Int64_Real64/lib/libmetis_Int64_Real64.so* \
+     "$pkgdir"/usr/lib
+
+  install -m644 -D $pkgname-$_pkgver/LICENSE.txt \
+          "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 }

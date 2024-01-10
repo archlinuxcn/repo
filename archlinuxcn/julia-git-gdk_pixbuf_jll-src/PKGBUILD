@@ -1,0 +1,26 @@
+pkgname=julia-git-gdk_pixbuf_jll-src
+pkgver=2.42.8+0
+_commit=2604f9c33272449f3f7cff7a666b735fb771452c
+pkgrel=2
+pkgdesc="gdk_pixbuf_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/gdk_pixbuf_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git gdk-pixbuf2)
+source=("git+https://github.com/JuliaBinaryWrappers/gdk_pixbuf_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '4c1bdd237762b46c288b003afb6b044d03c2953fcc4061fd23c9cc665cc7255d')
+
+build() {
+  cd gdk_pixbuf_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl gdk_pixbuf_jll ../jll.toml
+}
+
+package() {
+  cd gdk_pixbuf_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh gdk_pixbuf_jll "${pkgdir}" "${pkgname}" julia-git
+}

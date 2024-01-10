@@ -1,0 +1,18 @@
+pkgname=julia-git-rsvg-src
+pkgver=1.0.0
+_commit=beb77d1bda01af3f56741961aed3db885ec3919b
+pkgrel=2
+pkgdesc="Rsvg.jl"
+url="https://github.com/lobingera/Rsvg.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/lobingera/Rsvg.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Rsvg.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Rsvg "${pkgdir}" "${pkgname}" julia-git
+}

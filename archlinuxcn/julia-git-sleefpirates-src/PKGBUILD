@@ -1,0 +1,18 @@
+pkgname=julia-git-sleefpirates-src
+pkgver=0.6.42
+_commit=b69a4b3810cce91d2977559122b3e3dcc4862caa
+pkgrel=1
+pkgdesc="SLEEFPirates.jl"
+url="https://github.com/JuliaSIMD/SLEEFPirates.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSIMD/SLEEFPirates.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SLEEFPirates.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SLEEFPirates "${pkgdir}" "${pkgname}" julia-git
+}

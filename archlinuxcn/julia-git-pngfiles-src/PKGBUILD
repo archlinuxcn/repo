@@ -1,0 +1,18 @@
+pkgname=julia-git-pngfiles-src
+pkgver=0.4.3
+_commit=d5777956077b408bb02c9e787791589a927233c4
+pkgrel=1
+pkgdesc="PNGFiles.jl"
+url="https://github.com/JuliaIO/PNGFiles.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/PNGFiles.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd PNGFiles.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh PNGFiles "${pkgdir}" "${pkgname}" julia-git
+}

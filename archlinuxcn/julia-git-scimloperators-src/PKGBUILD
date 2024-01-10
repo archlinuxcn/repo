@@ -1,0 +1,18 @@
+pkgname=julia-git-scimloperators-src
+pkgver=0.3.7
+_commit=ffbed52450ecda2f9ad3aa2308333a8e41543227
+pkgrel=1
+pkgdesc="SciMLOperators.jl"
+url="https://github.com/SciML/SciMLOperators.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/SciMLOperators.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SciMLOperators.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SciMLOperators "${pkgdir}" "${pkgname}" julia-git
+}

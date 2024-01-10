@@ -1,0 +1,18 @@
+pkgname=julia-git-latexify-src
+pkgver=0.16.1
+_commit=390c57810fd6e9ba996dd2a9d17ee08b7ca645ba
+pkgrel=2
+pkgdesc="Latexify.jl"
+url="https://github.com/korsbo/Latexify.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/korsbo/Latexify.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Latexify.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Latexify "${pkgdir}" "${pkgname}" julia-git
+}

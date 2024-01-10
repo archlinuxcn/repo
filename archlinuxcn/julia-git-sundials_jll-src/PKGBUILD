@@ -1,0 +1,26 @@
+pkgname=julia-git-sundials_jll-src
+pkgver=6.6.0+0
+_commit=a314c2317421aae1ec03f95296d84a866a461a22
+pkgrel=4
+pkgdesc="Sundials_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Sundials_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git sundials-lapack)
+source=("git+https://github.com/JuliaBinaryWrappers/Sundials_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '8c7182f9163b34102f58a324cb41f967d351a53e1b4133f0d1a9ecddbc09a412')
+
+build() {
+  cd Sundials_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Sundials_jll ../jll.toml
+}
+
+package() {
+  cd Sundials_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Sundials_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-fftw-src
+pkgver=1.7.1
+_commit=008bc5b0b80be127c304d5cf8943d3a657e1e4f7
+pkgrel=2
+pkgdesc="FFTW.jl"
+url="https://github.com/JuliaMath/FFTW.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaMath/FFTW.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd FFTW.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh FFTW "${pkgdir}" "${pkgname}" julia-git
+}

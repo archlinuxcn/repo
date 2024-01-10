@@ -2,7 +2,7 @@
 
 pkgname=nekoray-git
 _pkgname=${pkgname%-git}
-pkgver=3.19.r2.g0fd9ea2
+pkgver=3.26.r3.g7655f0e
 pkgrel=1
 pkgdesc="Qt based cross-platform GUI proxy configuration manager (backend: v2ray / sing-box)"
 arch=('x86_64')
@@ -22,6 +22,8 @@ optdepends=(
 	'sing-geosite: geosite data for NekoBox'
 )
 
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
 source=(
 	"git+https://github.com/MatsuriDayo/nekoray.git"
 	'nekoray.desktop'

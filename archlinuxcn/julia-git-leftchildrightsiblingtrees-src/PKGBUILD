@@ -1,0 +1,18 @@
+pkgname=julia-git-leftchildrightsiblingtrees-src
+pkgver=0.2.0
+_commit=2238a55392e4f50e7c7440c633df85a425c66f92
+pkgrel=3
+pkgdesc="LeftChildRightSiblingTrees.jl"
+url="https://github.com/JuliaCollections/LeftChildRightSiblingTrees.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaCollections/LeftChildRightSiblingTrees.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LeftChildRightSiblingTrees.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LeftChildRightSiblingTrees "${pkgdir}" "${pkgname}" julia-git
+}

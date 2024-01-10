@@ -1,8 +1,8 @@
 # Maintainer: AndyRTR <andyrtr@archlinux.org>
 
 pkgname=xorg-xwayland-lily
-pkgver=23.2.0
-pkgrel=1
+pkgver=23.2.3
+pkgrel=2
 arch=('x86_64')
 license=('custom')
 url="https://xorg.freedesktop.org"
@@ -15,9 +15,9 @@ makedepends=('meson' 'xorgproto' 'xtrans' 'libxkbfile' 'dbus'
              'xorg-font-util' 'wayland-protocols' 'mesa-libgl'
              'systemd' 'egl-wayland')
 source=(https://xorg.freedesktop.org/archive/individual/xserver/xwayland-$pkgver.tar.xz{,.sig} hidpi.patch)
-sha512sums=('3b490839026da4d34136d50050397d87e205d4fdb9c3cc9896eb2980bf90f3c951e7ce5271d7f7379c56a376d36f9e1fe1242211b64e680b715dd065ea58532d'
+sha512sums=('37198aa2f06313a0cb2add51cc78f81b26a42f2c9d55a0d3eecf958777107ea5560961c128f2d0af055f7460ba10fadb1b9050251c2c50f2251b40ab517e79cd'
             'SKIP'
-            2f5dd500ea88795e678497bd25af3cc33aae7c79bac685819d91a34f5571633b609a8eca47f5c1a5f0baca17b7cb2204efa713621e5cd1f5d7705346d18b88b7)
+            16ccf43bdde029c21d9733cb65809f242a6d95111d03d72a7263e0aca2810a12507ed95b83320c5ed7a2b96bdde044aa57f218e20731a4e2e96f888a087271fd)
 provides=('xorg-server-xwayland' 'xorg-xwayland' 'xorg-xwayland-hidpi-xprop')
 conflicts=('xorg-server-xwayland' 'xorg-xwayland')
 replaces=('xorg-server-xwayland')
@@ -27,7 +27,7 @@ prepare() {
   cd "${srcdir}/xwayland-$pkgver"
   patch -Np1 < ../hidpi.patch
 }
-#validpgpkeys=('3C2C43D9447D5938EF4551EBE23B7E70B467F0BF') # Peter Hutterer (Who-T) <office@who-t.net>
+validpgpkeys+=('3C2C43D9447D5938EF4551EBE23B7E70B467F0BF') # Peter Hutterer (Who-T) <office@who-t.net>
 
 
 build() {

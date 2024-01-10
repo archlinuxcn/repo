@@ -1,0 +1,20 @@
+pkgname=julia-git-arrow-src
+pkgver=2.6.2
+_commit=9f1d51a2c975bd83cbaf70c5f640762c6a0bccaf
+pkgrel=2
+pkgdesc="Arrow.jl"
+url="https://github.com/apache/arrow-julia.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/apache/arrow-julia.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd arrow-julia
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Arrow "${pkgdir}" "${pkgname}" julia-git
+  rm -rf "${dest_dir}"/dev
+  rm -rf "${dest_dir}"/src/ArrowTypes
+}

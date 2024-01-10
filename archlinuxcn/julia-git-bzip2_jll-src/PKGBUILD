@@ -1,0 +1,26 @@
+pkgname=julia-git-bzip2_jll-src
+pkgver=1.0.8+0
+_commit=aa035c3ca2c963f5dfd387f56c0846b3f84ada0f
+pkgrel=3
+pkgdesc="Bzip2_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Bzip2_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git bzip2)
+source=("git+https://github.com/JuliaBinaryWrappers/Bzip2_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '121100faf7eb962f3633d012c503f000b9b3c8db26a8778ddda1a0cdbdf2153f')
+
+build() {
+  cd Bzip2_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Bzip2_jll ../jll.toml
+}
+
+package() {
+  cd Bzip2_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Bzip2_jll "${pkgdir}" "${pkgname}" julia-git
+}

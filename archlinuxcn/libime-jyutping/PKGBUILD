@@ -1,16 +1,16 @@
 # Maintainer: Rocket Aaron <i at rocka dot me>
 
 pkgname=libime-jyutping
-pkgver=1.0.6
+pkgver=1.0.9
 pkgrel=1
 pkgdesc="A library make use of libime to implement jyutping (粵拼) input method, also includes engine for fcitx 5."
 arch=('x86_64')
 url="https://github.com/fcitx/libime-jyutping"
 license=('LGPL' 'GPL3')
 depends=('fcitx5-chinese-addons')
-makedepends=('boost' 'extra-cmake-modules' 'ninja' 'python')
+makedepends=('boost' 'extra-cmake-modules' 'fmt' 'ninja')
 source=("https://download.fcitx-im.org/fcitx5/$pkgname/$pkgname-${pkgver}_dict.tar.xz"{,.sig})
-sha512sums=('edf20ae0f4d068111cdce04976fcf0d1c030ce43c4bc596f11b7631f8c4699ce52d5123cbeea8c795f48cdb91417686341e051592b465275fdc1436b989de4b5'
+sha512sums=('54f2e4a42b2fbfd8e8314911b405eeb6df4805bc34fe143faa77d9a9bb679256d756175f6240e52174735fc75f5beb3ed0a905600f0fdc089e68a75c949c1334'
             'SKIP')
 validpgpkeys=('2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9') # Weng Xuetian <wengxt@gmail.com>
 

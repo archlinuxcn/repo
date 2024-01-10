@@ -1,15 +1,16 @@
 # Maintainer: erk <v at erk dot io>
 pkgname=vnote-git
-pkgver=1822.4ab2033a
-epoch=1
+pkgver=1828.30712745
+epoch=2
 pkgrel=1
 pkgdesc="A Vim-inspired note-taking application, especially for Markdown."
 arch=('x86_64')
 url='https://tamlok.github.io/vnote/'
 license=('MIT')
-depends=(qt5-webengine qt5-svg qt5-x11extras)
-makedepends=('git')
-
+depends=(qt6-webengine qt6-svg qt6-5compat)
+makedepends=('git' 'qt6-tools')
+provides=('vnote')
+conflicts=('vnote')
 source=("git+https://github.com/vnotex/vnote.git")
 sha256sums=(SKIP)
 
@@ -28,7 +29,7 @@ build () {
     cd "$srcdir/$gitname"
     mkdir build
     cd build
-    qmake-qt5 ../vnote.pro
+    qmake6 ../vnote.pro
     make
 }
 package() {

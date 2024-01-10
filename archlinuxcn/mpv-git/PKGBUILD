@@ -3,8 +3,8 @@
 
 pkgname=mpv-git
 _gitname=mpv
-pkgver=0.36.0_247_ga1c8bb2257
-pkgrel=1
+pkgver=0.37.0_150_g4b69164147
+pkgrel=2
 pkgdesc='A free, open source, and cross-platform media player (with all possible libs)'
 arch=('x86_64')
 license=('GPL3')
@@ -29,9 +29,8 @@ depends=(
         'libass' 'libass.so'
         'lcms2' 'liblcms2.so'
         'vulkan-icd-loader' 'libvulkan.so'
-        'ffmpeg' 'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so' 'libavutil.so' 'libswresample.so' 'libswscale.so'
+        'ffmpeg-with-libplacebo-git' 'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so' 'libavutil.so' 'libswresample.so' 'libswscale.so'
         'libplacebo-git' 'libplacebo.so'
-        'shaderc' 'libshaderc_shared.so'
         'libpipewire'
 )
 makedepends=('git' 'python-docutils' 'vulkan-headers' 'wayland-protocols'
@@ -68,14 +67,9 @@ build() {
         '-Dlua=enabled' '-Dlua=luajit'
         '-Ddvbin=enabled'
         '-Dsdl2=enabled'
-        '-Dspirv-cross=disabled'
-        '-Dvulkan-interop=disabled' # FIXME: disable for libavutil 58.11.100
     )
     
     local _other_os_flags=(
-        '-Dmacos-10-11-features=disabled' # macOS
-        '-Dmacos-10-12-2-features=disabled' # macOS
-        '-Dmacos-10-14-features=disabled' # macOS
         '-Dmacos-cocoa-cb=disabled' # macOS
         '-Dmacos-media-player=disabled' # macOS
         '-Dmacos-touchbar=disabled' # macOS
@@ -85,6 +79,7 @@ build() {
         '-Dcocoa=disabled' # macOS
         '-Daudiounit=disabled' # macOS
         '-Dvideotoolbox-gl=disabled' # macOS and iOS
+        '-Dvideotoolbox-pl=disabled' # macOS and iOS
         '-Dcoreaudio=disabled' # iOS
         '-Dios-gl=disabled' # iOS
         '-Dgl-dxinterop=disabled' # Windows
@@ -98,8 +93,10 @@ build() {
         '-Ddirect3d=disabled' # Windows
         '-Dd3d11=disabled' # Windows
         '-Dwasapi=disabled' # Windows
-        '-Dwin32-internal-pthreads=disabled' # Windows
+        '-Dwin32-threads=disabled' # Windows
         '-Duwp=disabled' # Windows
+        '-Dvaapi-win32=disabled' # Windows
+        '-Dspirv-cross=disabled' '-Dshaderc=disabled' # Windows, see https://github.com/mpv-player/mpv/commit/60a31a8a284e539043c47a33ff90f3d55aade6a8
         '-Dopensles=disabled' # Android
         '-Degl-android=disabled' # Android
         '-Dandroid-media-ndk=disabled' # Android

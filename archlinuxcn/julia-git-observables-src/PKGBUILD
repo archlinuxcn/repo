@@ -1,0 +1,18 @@
+pkgname=julia-git-observables-src
+pkgver=0.5.5
+_commit=4e78ca2f7c251cde6ceb900baec1e38a424cd9db
+pkgrel=1
+pkgdesc="Observables.jl"
+url="https://github.com/JuliaGizmos/Observables.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGizmos/Observables.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Observables.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Observables "${pkgdir}" "${pkgname}" julia-git
+}

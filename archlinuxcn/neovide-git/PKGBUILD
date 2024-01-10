@@ -5,14 +5,17 @@
 
 pkgname=neovide-git
 _pkgname=${pkgname%-git}
-pkgver=0.11.1.r11.g598f777
+pkgver=0.12.1.r4.gbbb26e84
 pkgrel=1
 pkgdesc='No Nonsense Neovim Client in Rust'
 arch=(x86_64)
 url="https://github.com/$_pkgname/$_pkgname"
 license=(MIT)
-depends=(fontconfig
-         freetype2
+depends=(gcc-libs
+         glibc
+         fontconfig libfontconfig.so
+         freetype2 libfreetype.so
+         hicolor-icon-theme
          libglvnd
          neovim
          sndio)
@@ -43,7 +46,12 @@ build() {
 	cd "$_pkgname"
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
+	# this uses malloc_usable_size, which is incompatible with fortification level 3
+	# upstream tracking issue https://github.com/neovide/neovide/issues/2040
+	export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+	export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 	CFLAGS+=' -ffat-lto-objects'
+	export SKIA_USE_SYSTEM_LIBRARIES=true
 	cargo build --frozen --release --features embed-fonts
 }
 

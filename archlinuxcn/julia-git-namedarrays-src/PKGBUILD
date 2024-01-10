@@ -1,0 +1,18 @@
+pkgname=julia-git-namedarrays-src
+pkgver=0.10.0
+_commit=975335c83308fbf23644f0e97f4a3a5b87200bc8
+pkgrel=2
+pkgdesc="NamedArrays.jl"
+url="https://github.com/davidavdav/NamedArrays.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/davidavdav/NamedArrays.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd NamedArrays.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh NamedArrays "${pkgdir}" "${pkgname}" julia-git
+}

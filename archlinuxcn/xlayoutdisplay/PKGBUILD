@@ -1,15 +1,15 @@
 # Maintainer: Alexander Courtis <alex@courtis.org>
 pkgname=xlayoutdisplay
-pkgver=1.4.0
-pkgrel=2
+pkgver=1.5.0
+pkgrel=1
 pkgdesc="Detects and arranges linux display outputs, using XRandR for detection and xrandr for arrangement."
 arch=('x86_64')
 url="https://github.com/alex-courtis/xlayoutdisplay"
 license=('Apache')
-depends=('xorg-xrandr' 'xorg-xrdb' 'libxcursor' 'libprocps')
+depends=('xorg-xrandr' 'xorg-xrdb' 'libxcursor')
 makedepends=('git' 'make' 'boost')
 source=("https://github.com/alex-courtis/xlayoutdisplay/archive/v$pkgver.tar.gz")
-sha256sums=('f369c6c47134079a0c2ef3c42775816a732b1ec52fe97c015f807bcf1a7d1775')
+sha256sums=('40b832e2845689dfc2bb5b8b53e9f5300f22fbbb0698830d8ff73562d47a6b84')
 install=install
 
 build() {

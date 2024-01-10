@@ -1,7 +1,7 @@
 pkgname=ydcv-rs-git
 _pkgname="ydcv-rs"
 pkgdesc="A Rust version of ydcv."
-pkgver=0.4.7.157
+pkgver=0.6.3.213
 pkgrel=1
 arch=('i686' 'x86_64')
 conflicts=("ydcv")
@@ -13,6 +13,9 @@ optdepends=()
 makedepends=('git' 'cargo' 'python')
 source=('git+https://github.com/farseerfc/ydcv-rs.git')
 sha256sums=('SKIP')
+
+#disable lto for https://github.com/briansmith/ring/issues/1444
+options=('!lto')
 
 pkgver() {
 	cd $_pkgname

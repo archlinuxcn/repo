@@ -1,0 +1,34 @@
+# Maintainer: AsamK <asamk@gmx.de>
+pkgname=sequoia-octopus-librnp
+pkgver=1.6.1
+pkgrel=1
+pkgdesc='A Sequoia-based OpenPGP Backend for Thunderbird'
+url="https://gitlab.com/sequoia-pgp/${pkgname}"
+source=("$pkgname-$pkgver.tar.gz::https://gitlab.com/sequoia-pgp/${pkgname}/-/archive/v$pkgver/${pkgname}-v$pkgver.tar.gz"
+        "${pkgname}.hook")
+arch=('i686' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64' 'riscv64')
+license=('GPL2')
+makedepends=('cargo' 'clang')
+install="${pkgname}.install"
+depends=('thunderbird')
+options=(!lto)
+sha256sums=('90ccaa1e53ec47d57ff2b65abe565ea57812675d8c58ca1d849cc6fc9f5a21e0'
+            'aa2bda370a1e9b4a880e275291caac486db65095c34d013561d6127777589709')
+
+prepare () {
+  cd "$srcdir/$pkgname-v$pkgver"
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build () {
+  cd "$srcdir/$pkgname-v$pkgver"
+  cargo build --frozen --release
+}
+
+# Improve when https://bugzilla.mozilla.org/show_bug.cgi?id=1698540 is done
+package() {
+  cd "$srcdir/$pkgname-v$pkgver"
+
+  install -Dm755 target/release/libsequoia_octopus_librnp.so "${pkgdir}/usr/lib/libsequoia_octopus_librnp.so"
+  install -Dm644 "${srcdir}/${pkgname}.hook" "${pkgdir}/usr/share/libalpm/hooks/${pkgname}.hook"
+}

@@ -3,9 +3,9 @@
 # Contributor: Pieter Goetschalckx <3.14.e.ter <at> gmail <dot> com>
 
 pkgname=franz
-_pkgver=5.9.2 # -beta.0
+_pkgver=5.10.0 # -beta.0
 pkgver=${_pkgver//-/} # Leaving it here for possible dev/beta package :)
-pkgrel=4
+pkgrel=2
 # Due to the previous "_beta" naming
 epoch=1
 pkgdesc='Free messaging app for services like WhatsApp, Slack, Messenger and many more.'
@@ -16,9 +16,9 @@ license=(Apache)
 # Expected one is 'electron19' (Electron 19). May change soon.
 # This is automatically replaced in `franz.sh` with the package name, as
 # the executable matches the package name (as of 2020-11-15).
-_electron='electron19'
+_electron='electron22'
 depends=($_electron bash)
-makedepends=(git python python2 nodejs-lts-gallium npm)
+makedepends=(git python nodejs-lts-hydrogen npm nvm expac)
 source=("git+https://github.com/meetfranz/$pkgname#branch=chore/electron-19"
         franz.desktop
         franz.sh.in
@@ -29,6 +29,15 @@ sha512sums=('SKIP'
             '8f59b911eccd4f8c965f60ae4ba111195f48a76326e1c63391b1ab61b74d74dcb021fdb835da07037b28823cac1c3fd3b01f5ace501b6b6b7fe6db5e2aef8068')
 
 _env_setup() {
+  which nvm >/dev/null 2>&1 && nvm deactivate && nvm unload
+  export NVM_DIR="$srcdir/.nvm"
+
+  # The init script returns 3 if version specified
+  # in ./.nvrc is not (yet) installed in $NVM_DIR
+  # but nvm itself still gets loaded ok
+  source /usr/share/nvm/init-nvm.sh || [[ $? != 1 ]]
+
+  # Personal extras
   # Avoid installing Electron as we use the system one
   export ELECTRON_SKIP_BINARY_DOWNLOAD=1
   # For safety, define the NPM cache in $srcdir
@@ -52,13 +61,23 @@ prepare() {
 
   _env_setup
 
-  echo "--> Install modules dependencies with lerna"
+  echo "--> Install toolchain with nvm"
+  nvm install
+
+  echo "--> Install updated node-gyp"
+  npm install node-gyp@9
+
+  echo "--> Install modules dependencies"
   # The author still uses old dependencies resolution.
   # Luckily it is "documented" in the Appveyor CI file.
+  # Also in the Github CI:
+  # https://github.com/meetfranz/franz/blob/master/.github/workflows/build.yml#L56
   # About the double double escape, that is because the first '--' is for
   # npm exec, while the second is for lerna.
   # See: https://github.com/lerna/lerna/issues/2921
-  npm exec --yes -- lerna bootstrap -- --legacy-peer-deps
+  # npm exec --package="lerna@3.8" --yes -- lerna bootstrap
+  # However, after the installation above, all works fine ;)
+  npm install
 }
 
 build() {

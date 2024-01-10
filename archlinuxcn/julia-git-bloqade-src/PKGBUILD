@@ -1,0 +1,24 @@
+pkgname=julia-git-bloqade-src
+pkgver=0.1.24
+_commit=05b26bebbc95835bc39a32063b0360c6c75e3dd9
+pkgrel=2
+pkgdesc="Bloqade.jl"
+url="https://github.com/QuEraComputing/Bloqade.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/QuEraComputing/Bloqade.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+prepare() {
+  cd Bloqade.jl
+
+  rm -rf lib
+}
+
+package() {
+  cd Bloqade.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Bloqade "${pkgdir}" "${pkgname}" julia-git
+}

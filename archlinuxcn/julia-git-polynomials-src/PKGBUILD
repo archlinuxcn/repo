@@ -1,0 +1,18 @@
+pkgname=julia-git-polynomials-src
+pkgver=3.2.13
+_commit=db498d9e316abb43f27e63cb61e447847c3abc06
+pkgrel=2
+pkgdesc="Polynomials.jl"
+url="https://github.com/JuliaMath/Polynomials.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaMath/Polynomials.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Polynomials.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Polynomials "${pkgdir}" "${pkgname}" julia-git
+}

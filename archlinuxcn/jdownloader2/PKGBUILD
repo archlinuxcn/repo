@@ -1,14 +1,15 @@
-# Maintainer: Derson5
+# Maintainer: Martin Rys <rys.pw/contact>
+# Previous maintainer: Derson5
 pkgname=jdownloader2
 pkgver=latest
-pkgrel=17
-pkgdesc='Download manager, written in Java, for one-click hosting sites like Rapidshare and Megaupload. Uses its own updater.'
+pkgrel=19
+pkgdesc='Download manager, written in Java, for one-click hosting sites like Rapidshare and MEGA. Uses its own updater.'
 arch=('any')
-conflicts=('jdownloader')
-replaces=('jdownloader')
+conflicts=()
+replaces=()
 url='https://jdownloader.org/'
 license=('GPL')
-depends=('java-runtime' 'wget' 'libarchive')
+depends=('java-runtime' 'libarchive' 'hicolor-icon-theme')
 optdepends=('phantomjs: needed for some remote capture solving')
 install='jdownloader.install'
 source=('JDownloader'
@@ -35,9 +36,8 @@ source=('JDownloader'
 sha256sums=('cab5904f226028fdc9384f407ceca34b4305885176fad29b08a2e8b83653a345'
             'd555c78d8110e536aee67de765ee5134d872fbb48354050f7b2f14ff5499120a'
             'dca392fad29c70eff609ec25abaefd33343c8a6c98088e0719c6746759ed0aa5'
-            '70f4a5cd95532c70ae20a357e655d01ac23fe92bb71feac45973e2b53d024cff'
+            'ddea1dc41023cfdae4db91a23a86ebf8a6be294ee8ba59307f68f97c839d5f31'
             '1c9949bfeaf3595783eec9501e600cb8c4443e04f72d57c095560fb66dcd53d1'
-            
             'c4301592694b3273ed44814debcc03bf1e4fc85882954f5c03e55508c53c4491'
             '44a499df472328f9034f9972aad02df0fc27a45ef1bb3e9314576d2fa9fdfcbe'
             '92cfbe543ee1f9e094347dbd9c0c6a59bd52974145f00dbece8ed0da9a828bfa'
@@ -61,8 +61,7 @@ package() {
   install -D -m755 "$srcdir/JDownloaderHeadlessCtl" "$pkgdir/opt/JDownloaderScripts/JDownloaderHeadlessCtl"
   install -D -m755 "$srcdir/functions.sh" "$pkgdir/opt/JDownloaderScripts/functions.sh"
 	install -D -m755 "$srcdir/JDownloaderHeadlessCleanLogin" "$pkgdir/opt/JDownloaderScripts/JDownloaderHeadlessCleanLogin"
-	
-  
+
   install -D -m644 "$srcdir/jdownloader.xml" "$pkgdir/usr/share/mime/packages/jdownloader.xml"
 	install -D -m644 "$srcdir/jdownloader.desktop" "$pkgdir/usr/share/applications/jdownloader.desktop"
 	install -D -m644 "$srcdir/jd-containers.desktop" "$pkgdir/usr/share/applications/jd-containers.desktop"
@@ -80,11 +79,11 @@ package() {
 	install -D -m644 "$srcdir/jdownloader256.png" "$pkgdir/usr/share/icons/hicolor/256x256/apps/jdownloader.png"
 	install -D -m644 "$srcdir/jdownloader.service" "$pkgdir/usr/lib/systemd/system/jdownloader.service"
 	install -d -m2775 "$pkgdir/opt/JDownloader"
-  mkdir -p "$pkgdir/usr/bin"
-  
-  ln -s "/opt/JDownloaderScripts/JDownloader"  "${pkgdir}/usr/bin/JDownloader"
+	mkdir -p "$pkgdir/usr/bin"
+
+	ln -s "/opt/JDownloaderScripts/JDownloader"  "${pkgdir}/usr/bin/JDownloader"
 	ln -s "/opt/JDownloaderScripts/JDownloader" "${pkgdir}/usr/bin/jdownloader"
-  ln -s "/opt/JDownloaderScripts/JDownloaderHeadless" "${pkgdir}/usr/bin/JDownloaderHeadless" 
-  ln -s "/opt/JDownloaderScripts/JDownloaderHeadlessCtl" "${pkgdir}/usr/bin/JDownloaderHeadlessCtl"
-  ln -s "/opt/JDownloaderScripts/JDownloaderHeadlessCleanLogin" "${pkgdir}/usr/bin/JDownloaderHeadlessCleanLogin" 
+	ln -s "/opt/JDownloaderScripts/JDownloaderHeadless" "${pkgdir}/usr/bin/JDownloaderHeadless"
+	ln -s "/opt/JDownloaderScripts/JDownloaderHeadlessCtl" "${pkgdir}/usr/bin/JDownloaderHeadlessCtl"
+	ln -s "/opt/JDownloaderScripts/JDownloaderHeadlessCleanLogin" "${pkgdir}/usr/bin/JDownloaderHeadlessCleanLogin"
 }

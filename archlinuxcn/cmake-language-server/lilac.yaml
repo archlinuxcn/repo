@@ -1,0 +1,19 @@
+pre_build_script: aur_pre_build(maintainers=['otreblan'])
+
+post_build: aur_post_build
+
+repo_depends:
+  - cmake-format
+update_on_build:
+  - pkgbase: cmake-format
+
+update_on:
+  - source: aur
+    aur: cmake-language-server
+  - alias: python
+  - alias: alpm-lilac
+    alpm: cmake-format
+
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com

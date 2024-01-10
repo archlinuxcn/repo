@@ -1,0 +1,26 @@
+pkgname=julia-git-cubature_jll-src
+pkgver=1.0.5+0
+_commit=b8ebd00e185c66d6f20613dbb30ad469f8d144e7
+pkgrel=2
+pkgdesc="Cubature_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Cubature_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git cubature)
+source=("git+https://github.com/JuliaBinaryWrappers/Cubature_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '98270b63c0b780d8bac889cceff6a60e5eb591cde295af787464ddd105823bf7')
+
+build() {
+  cd Cubature_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Cubature_jll ../jll.toml
+}
+
+package() {
+  cd Cubature_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Cubature_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -2,8 +2,8 @@
 
 _pkgname=pylibsrtp
 pkgname=python-pylibsrtp
-pkgver=0.8.0
-pkgrel=2
+pkgver=0.9.1
+pkgrel=1
 pkgdesc='Python bindings for libsrtp'
 arch=('x86_64')
 url='https://github.com/aiortc/pylibsrtp'
@@ -13,20 +13,23 @@ depends=(
   python-cffi
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/aiortc/pylibsrtp/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('faaeeaec3d4934a3fb9a771ed9ef6a758f2145a50d38129f62403f0ec95f02350c0111f990b39b0a518af864a153614cbeb9d921d764b16fcae3d9f78dd0d4f4')
+sha512sums=('1e21b6276e8e208c4696dd5f87be9e27870f6a048856cfe3cb7bc6b8e76bb1875c64ce8d7033c216261951890869d82dd916bb41a5a549bf78b874023808a5ae')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:

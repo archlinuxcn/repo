@@ -1,0 +1,26 @@
+pkgname=julia-git-x264_jll-src
+pkgver=2021.5.5+0
+_commit=a7ba0419794606a373fa1ac2ef3e7368e75fc493
+pkgrel=2
+pkgdesc="x264_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/x264_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git x264)
+source=("git+https://github.com/JuliaBinaryWrappers/x264_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '9d7290418a9752a3682a0d7ffba45a0519ec9e8d25b15cf6387bfbbff8b8481a')
+
+build() {
+  cd x264_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl x264_jll ../jll.toml
+}
+
+package() {
+  cd x264_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh x264_jll "${pkgdir}" "${pkgname}" julia-git
+}

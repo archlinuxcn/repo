@@ -3,21 +3,26 @@
 
 _pkgname=PySnooper
 pkgname=python-pysnooper
-pkgver=1.1.1
-pkgrel=2
+pkgver=1.2.0
+pkgrel=1
 pkgdesc='PySnooper - Never use print for debugging again'
 url='https://github.com/cool-RR/PySnooper'
 license=('MIT')
 arch=('any')
 depends=(python)
-makedepends=(python-setuptools)
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
 checkdepends=(python-pytest)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/cool-RR/PySnooper/archive/${pkgver}.tar.gz")
-sha512sums=('53b8fda3995331409c6f3f74e43346b75419d619230d2c6f473b025aee0f81b3d74a8bd5e1bf052e8cb5b81ea907aed2cf8dff727b924123f8494547915b73e8')
+sha512sums=('befa88eb16b3ec0dbb0f51f7d2722cf9bf06336dadb86741f53fbf6ca03a4eeaa2793fd24ad95b6b7bc9a5f9401161fcac71d6b109c57714de53b08dc11846c1')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 check() {
@@ -27,7 +32,7 @@ check() {
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 # vim:set ts=2 sw=2 et:

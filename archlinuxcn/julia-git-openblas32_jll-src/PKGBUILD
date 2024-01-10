@@ -1,0 +1,26 @@
+pkgname=julia-git-openblas32_jll-src
+pkgver=0.3.25+0
+_commit=0c274a40c9590dd30afe83e95185abee2faf65f7
+pkgrel=1
+pkgdesc="OpenBLAS32_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/OpenBLAS32_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git openblas)
+source=("git+https://github.com/JuliaBinaryWrappers/OpenBLAS32_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'd3589066d900fb9a24e34e3ded79f464ad01eae3dc5d359171ddffe1a49c1ed3')
+
+build() {
+  cd OpenBLAS32_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl OpenBLAS32_jll ../jll.toml
+}
+
+package() {
+  cd OpenBLAS32_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh OpenBLAS32_jll "${pkgdir}" "${pkgname}" julia-git
+}

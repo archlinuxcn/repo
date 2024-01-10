@@ -9,12 +9,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.8'
+        python-version: '3.11'
     - name: Install dependencies
-      run: pip install PyYAML jsonschema
+      run: pip install jsonschema pyyaml
     - name: Run test
       run: ./pre-commit --all

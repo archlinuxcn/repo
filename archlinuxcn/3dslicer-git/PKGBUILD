@@ -2,8 +2,7 @@
 
 _pkgname=3dslicer
 pkgname=3dslicer-git
-_pkgver=5.2.2
-pkgver=5.2.2.r28716.e761acf7a6
+pkgver=5.6.0.r82.9f4b50f95a
 pkgrel=1
 pkgdesc='A free, open source and multi-platform software package widely used for medical, biomedical, and related imaging research'
 arch=('x86_64')
@@ -31,7 +30,6 @@ depends=(
 )
 makedepends=(
   cmake
-  gcc12
   gendesk
   git
   subversion
@@ -47,8 +45,12 @@ sha512sums=('SKIP'
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
-  ver=$(printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)")
-  echo "${_pkgver}.${ver}"
+  _max_tag=$(git tag --sort=-v:refname | head -n1)
+  _commit_count=$(git rev-list --count "${_max_tag}"..HEAD)
+  _commit_hash=$(git rev-parse --short HEAD)
+  _max_tag=$(echo "$_max_tag" | sed 's/^v//')
+  _full_version="${_max_tag}.r${_commit_count}.${_commit_hash}"
+  printf "%s" "${_full_version}"
 }
 
 prepare() {
@@ -66,9 +68,8 @@ build() {
   cmake -B build -S "${srcdir}/${_pkgname}" \
     -DBUILD_TESTING=OFF \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_CXX_COMPILER=g++-12 \
-    -DCMAKE_C_COMPILER=gcc-12 \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DEXTERNAL_PROJECT_OPTIONAL_CMAKE_ARGS="-DSQLite3_INCLUDE_DIRS=/usr/include;-DSQLite3_LIBRARIES=/usr/lib/libsqlite3.so" \
     -DSlicer_BUILD_DOCUMENTATION=OFF \
     -DSlicer_BUILD_I18N_SUPPORT=ON \
     -DSlicer_STORE_SETTINGS_IN_APPLICATION_HOME_DIR=OFF \

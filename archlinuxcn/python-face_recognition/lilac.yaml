@@ -1,0 +1,12 @@
+maintainers:
+  - github: Integral-Tech
+
+pre_build_script: aur_pre_build(maintainers=['rkcf'])
+post_build: aur_post_build
+
+repo_depends:
+  - python-dlib
+  - python-face_recognition_models
+
+update_on:
+  - source: aur

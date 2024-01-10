@@ -1,0 +1,18 @@
+pkgname=julia-git-ordinarydiffeq-src
+pkgver=6.59.3
+_commit=dabe7084efc912538b0489b375be859545e4f649
+pkgrel=1
+pkgdesc="OrdinaryDiffEq.jl"
+url="https://github.com/SciML/OrdinaryDiffEq.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/OrdinaryDiffEq.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd OrdinaryDiffEq.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh OrdinaryDiffEq "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,26 @@
+pkgname=julia-git-xslt_jll-src
+pkgver=1.1.34+0
+_commit=7b2e4500852f31c5bca5c72f0a36310283340f8e
+pkgrel=4
+pkgdesc="XSLT_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/XSLT_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libxslt)
+source=("git+https://github.com/JuliaBinaryWrappers/XSLT_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '37a9b43e67473f136071e0e1af10683811b10d0049648f6129c3387106d00931')
+
+build() {
+  cd XSLT_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl XSLT_jll ../jll.toml
+}
+
+package() {
+  cd XSLT_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh XSLT_jll "${pkgdir}" "${pkgname}" julia-git
+}

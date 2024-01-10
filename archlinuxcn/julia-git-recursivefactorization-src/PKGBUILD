@@ -1,0 +1,18 @@
+pkgname=julia-git-recursivefactorization-src
+pkgver=0.2.21
+_commit=518200896214420bf3bf584a55af9cd1d04d57c6
+pkgrel=1
+pkgdesc="RecursiveFactorization.jl"
+url="https://github.com/JuliaLinearAlgebra/RecursiveFactorization.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaLinearAlgebra/RecursiveFactorization.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd RecursiveFactorization.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh RecursiveFactorization "${pkgdir}" "${pkgname}" julia-git
+}

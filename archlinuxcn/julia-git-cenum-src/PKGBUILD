@@ -1,0 +1,18 @@
+pkgname=julia-git-cenum-src
+pkgver=0.4.2
+_commit=788d89e825b1301059512e019ea5a701b17e80d6
+pkgrel=3
+pkgdesc="CEnum.jl"
+url="https://github.com/JuliaInterop/CEnum.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaInterop/CEnum.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd CEnum.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh CEnum "${pkgdir}" "${pkgname}" julia-git
+}

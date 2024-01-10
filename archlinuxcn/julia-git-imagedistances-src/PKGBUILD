@@ -1,0 +1,18 @@
+pkgname=julia-git-imagedistances-src
+pkgver=0.2.17
+_commit=bf3e83f24e62ef2efd4c0d19fabcfb0ec7c4aea3
+pkgrel=2
+pkgdesc="ImageDistances.jl"
+url="https://github.com/JuliaImages/ImageDistances.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaImages/ImageDistances.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ImageDistances.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ImageDistances "${pkgdir}" "${pkgname}" julia-git
+}

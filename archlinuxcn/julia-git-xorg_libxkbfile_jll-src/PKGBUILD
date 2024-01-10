@@ -1,0 +1,26 @@
+pkgname=julia-git-xorg_libxkbfile_jll-src
+pkgver=1.1.2+0
+_commit=3d93abf33a6a72e49efcd71b7b1c3adade881733
+pkgrel=3
+pkgdesc="Xorg_libxkbfile_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Xorg_libxkbfile_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libxkbfile)
+source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libxkbfile_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '0ca62d069468883862526582059b8350799de2aed1c70486775142023e7cc51c')
+
+build() {
+  cd Xorg_libxkbfile_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Xorg_libxkbfile_jll ../jll.toml
+}
+
+package() {
+  cd Xorg_libxkbfile_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Xorg_libxkbfile_jll "${pkgdir}" "${pkgname}" julia-git
+}

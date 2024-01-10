@@ -1,0 +1,18 @@
+pkgname=julia-git-randomnumbers-src
+pkgver=1.5.3
+_commit=20992caa581473dc805f9236760c35d96fbc4f29
+pkgrel=2
+pkgdesc="RandomNumbers.jl"
+url="https://github.com/JuliaRandom/RandomNumbers.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaRandom/RandomNumbers.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd RandomNumbers.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh RandomNumbers "${pkgdir}" "${pkgname}" julia-git
+}

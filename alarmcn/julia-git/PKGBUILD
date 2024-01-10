@@ -6,7 +6,7 @@
 BUILD_DOC=1
 
 pkgbase=julia-git
-pkgname=(julia-git)
+pkgname=(julia-git julia-git-package-env)
 
 if [[ $CARCH != x86_64 ]]; then
   BUILD_DOC=0
@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.11.0.DEV.398.g6c1168a4052
+pkgver=1.11.0.DEV.1002.gbac3ba5697c
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -41,40 +41,59 @@ license=('GPL')
 _soname_deps=(libcurl.so libgit2.so libopenlibm.so libssh2.so
               libmbedcrypto.so libmbedtls.so libmbedx509.so)
 depends_libs=(arpack fftw gmp libunwind mpfr pcre2 suitesparse
-              openspecfun openblas-lapack libutf8proc-git
-              mbedtls zlib p7zip libnghttp2 ca-certificates-utils lld)
+              openspecfun libutf8proc libblastrampoline
+              mbedtls zlib p7zip libnghttp2 ca-certificates-utils lld
+              blas-openblas)
+case "$CARCH" in
+  x86_64)
+    depends_libs=("${depends_libs[@]}" openblas64-git blas64-openblas)
+    ;;
+  aarch64)
+    depends_libs=("${depends_libs[@]}" openblas64-git blas64-openblas)
+    ;;
+  i686)
+    depends_libs=("${depends_libs[@]}" openblas-git)
+    ;;
+  armv7h)
+    depends_libs=("${depends_libs[@]}" openblas-git)
+    ;;
+esac
 makedepends=("${depends_libs[@]}" llvm-julia gcc-fortran git patchelf python proot
              "${_soname_deps[@]}")
 options=('debug' '!strip' '!buildflags')
 _patches=(
   0001-Force-enable-GDB-debug-info-registration.patch
   0002-Fix-source-file-paths.patch
-  0003-Enable-basic-AA-in-O2.patch
-  0004-Clear-soname.patch
-  0005-Use-libc-for-libssp.patch
-  0006-Support-loading-extensions-from-STDLIB.patch
+  0003-Clear-soname.patch
+  0004-Use-libc-for-libssp.patch
+  0005-Support-loading-extensions-from-STDLIB.patch
+  0006-julia-git-add-a-safeguard-for-bad-unwinding.patch
 )
 source=('git+https://github.com/JuliaLang/julia'
         "${_patches[@]}"
         julia-compile-pkgs.jl
-        julia-clear-precompile.sh
-        julia-precompile.hook
-        julia-clear-precompile.hook
+        julia-preinstall.sh
+        julia-postinstall.sh
+        julia-preinstall.hook
+        julia-postinstall.hook
         arch-source-translate.cpp
         sysp7z.diff)
 sha512sums=('SKIP'
-            '487b844e7b51a2338ffb83fa1ddb57695dff413fa1dc51ee5283e774a79f948718a65b8f1bc47ed27113c6c823635aa7f96fbeff8221a2752e140fc6443e10c0'
-            'e6f769c15819db18e91c42e00a40c66353d7bf420f221df2dcf2d8ff807499666ee75a7d5b89df278a690f86116e044dd8784045359baad2d39cf2a21226c32a'
-            'da28aec0dc653380e6480b41ee46ec2dccac5891cd9c711ee121defcd00bc42047750ed59808b7ea9f0b4e1366809eac5d06ccfe8c0906dbf3d6dd92d2b5378d'
-            '12c61c13e627796773675d68c5522013d5c44d32ce713c377c9c8bde89b910825c7704439a3d3487b0babc2942a3d9e9172426b751de6b4e1b801859d8306905'
-            '01e93d5c4e2f79c99cf20962d45540811862a0ad2542d62adada8890babc08323fb428f92168af88f539c92376f3fea9712435051772055eb90c35fc506080ef'
-            '5f064b13a67d4158b7510d866ce933e8e5863a2b0f9d5a20ae2730511fa84ab07dfa7ea9fabe0ac64bb6802c41edfb77b683804f5e8f156f97fb56f19ffc4b51'
-            '2bf050afb5afcd21b23667beb6129e73dc2fb8143366921c8859d7011ed06187db9f4aedae99c0fe31e0bcb7b0896180b006ee542d4b4d592369e9f4f1bd77ec'
-            'ce03e2995a45d942f480d25d1ce7cddacb98f2e11eeed19b5564e36d817987f548c313b0d6b139402ba8c203c8ba9a059e1732695517d7b78b7fa88f08429295'
-            '36df234b634926bc88084e683ee9f495ef0ce4c26d6d6b9f55294098bdcb86f5eaaf6c671afe1a5c4371c428bd7bf3dd617ec1f15a7ff35376d67df22140454c'
-            'adf0fef964e8bdee9926f1127177bc0ddea0d2dbb1090ab94555c3599b87cf03b489dfe92fda3453bf68385f4b69556f396b1ecfb8a9525c23a3ed808e2eb370'
+            '6c9c4245f1e24d2a86fedcd6180b95a39b3f3e924cac39c711734a9e48ac7af16d6800f81f45ddfaa793e7cfff9a68fb68c20aaac9b575f52c260c58d3895845'
+            'a0d9b9e742901962d534dce5dde134cf5730d529252201c0915802074c26605f3189e92a847e0c2548ecc21431d49baccf8e10fa26e9441a1cc01710196bc7d9'
+            '3348061db5de15644ec80b950159bf27f6fd8cd8a241ded7e3a9c31870bdbf7120d5e2d2ed352c6fa58e640774b596d2f46a97f841992c5e17db6d0262f6e9f4'
+            '7cfb24ba0a0495d1150b7577c6d0b6a2285362e4edafd991beb06b783c7ebe7e5541caa16ee52c9628a6454435597538d3874b4a085e766be0882744f26f4af5'
+            '45a8a318dab9ad7846122a291dfc2f219dc017f2ee8d51fc29e2cac79a5dc6bd0690aacc37ccc6bbf655e93684a0a3b062eacab99e4de8bb956d2c4d575d2be0'
+            'd2b58f480bdf1af16d71eeb85dd7108f8536a1eadfed6d8ce55b99654dec33a17c2ba559ba9b2c6e7f109f38f144ac17e663113040009de11eda98a999d325ae'
+            '98d17280eabac8ebfb5d3aa7073e9c5df534d1ead834bbe821b11b9da3dc7135b69d98f8b488f429a2bcb5c764e6a96b6dc785d6ca3f47704a9d5304263a8a2e'
+            '62b29656f41f06cd36be4e38c5a8369e961e41d4be7327fe0dfd1baa4a5e61937754b64b6481ec6efa66ef86e9f67d2f96d31b3cec422ed3780a2eee256f08a9'
+            'c9510621d3bde76f1051ba9271857b194109d4c20f52f0e04f8acddac7be1cc17d8acb4fb062273ff9ce350ed102619b706122b999dd8f31c8bc17534b8faaa6'
+            'f1bb24e46c565a4142585e8e9a0b61f5cef4decaf8a5dc37dc7f5436f13a558c29dbd9cab4091da36858e08752b9900836fd2817de695273c0b0d30c7efb4047'
+            'a668a9bd01cec8f53f457d9124107a230260c79fd57cbce4c4bf80e3451758d8e67263faa3f9d8b3da0c10bffbe29e4032106881ebe682c7f66414d8989638be'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849')
+
+_versioned_llvm=15
 
 pkgver() {
   cd julia
@@ -90,6 +109,11 @@ pkgver() {
          "$build_number" "$commit_short"
 }
 
+_LLVM_CONFIG=llvm-config
+if [[ -n $_versioned_llvm ]]; then
+  _LLVM_CONFIG=llvm-config-${_versioned_llvm}
+fi
+
 julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_LIBWHICH=0
             USE_SYSTEM_CSL=1
@@ -102,6 +126,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_GMP=1
             USE_SYSTEM_MPFR=1
             USE_SYSTEM_LIBSUITESPARSE=1
+            USE_SYSTEM_LIBBLASTRAMPOLINE=1
             USE_SYSTEM_UTF8PROC=1
             USE_SYSTEM_MBEDTLS=1
             USE_SYSTEM_LIBSSH2=1
@@ -115,31 +140,52 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_INTEL_JITEVENTS=0
             USE_LLVM_SHLIB=1
             USE_BINARYBUILDER=0
-            USE_BLAS64=0 # Julia assumes system blas64 on aarch64
             LLVM_USE_CMAKE=0 # Workaround LLVM linking with system LLVM
-            LIBBLASNAME=libopenblas
-            LIBBLAS=-lopenblas
-            LIBLAPACKNAME=libopenblas
-            LIBLAPACK=-lopenblas)
+            LLVM_CONFIG=${_LLVM_CONFIG})
 
 _x86_target='generic,opt_size;haswell,clone_all,-rdrnd;skylake,base(1),-rdrnd,-rdseed,-rtm;cannonlake,base(1),-rdrnd,-rdseed,-rtm'
 _arm_target='armv7-a;armv7-a,neon;armv7-a,neon,vfp4'
-_aa64_target='generic;cortex-a57;apple-m1,clone_all'
+_aa64_target='generic;armv8.2-a;apple-m1,clone_all'
 
 case "$CARCH" in
   x86_64)
-    julia_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET="${_x86_target}")
+    _cpu_target="${_x86_target}"
+    julia_opts=("${julia_opts[@]}" MARCH=x86-64
+                USE_BLAS64=1
+                LIBBLASNAME=libopenblas64_
+                LIBBLAS=-lopenblas64_
+                LIBLAPACKNAME=libopenblas64_
+                LIBLAPACK=-lopenblas64_)
     ;;
   i686)
-    julia_opts=("${julia_opts[@]}" MARCH=pentium4 JULIA_CPU_TARGET="${_x86_target}")
+    _cpu_target="${_x86_target}"
+    julia_opts=("${julia_opts[@]}" MARCH=pentium4
+                USE_BLAS64=0
+                LIBBLASNAME=libopenblas
+                LIBBLAS=-lopenblas
+                LIBLAPACKNAME=libopenblas
+                LIBLAPACK=-lopenblas)
     ;;
   aarch64)
-    julia_opts=("${julia_opts[@]}" MARCH=armv8-a JULIA_CPU_TARGET="${_aa64_target}")
+    _cpu_target="${_aa64_target}"
+    julia_opts=("${julia_opts[@]}" MARCH=armv8-a
+                USE_BLAS64=1
+                LIBBLASNAME=libopenblas64_
+                LIBBLAS=-lopenblas64_
+                LIBLAPACKNAME=libopenblas64_
+                LIBLAPACK=-lopenblas64_)
     ;;
   armv7h)
-    julia_opts=("${julia_opts[@]}" MARCH=armv7-a JULIA_CPU_TARGET="${_arm_target}")
+    _cpu_target="${_arm_target}"
+    julia_opts=("${julia_opts[@]}" MARCH=armv7-a
+                USE_BLAS64=0
+                LIBBLASNAME=libopenblas
+                LIBBLAS=-lopenblas
+                LIBLAPACKNAME=libopenblas
+                LIBLAPACK=-lopenblas)
     ;;
 esac
+julia_opts=("${julia_opts[@]}" JULIA_CPU_TARGET="${_cpu_target}")
 
 _apply_patch() {
   echo "Applying $1"
@@ -168,7 +214,7 @@ _patch_suitesparse() {
       cd "$d"
       # Patch the code to assume newer cholmod version. This is generally unsafe
       # but should be fine for 3->4 according to the suitesparse changelog.
-      for f in src/solvers/lib/*.jl; do
+      for f in src/solvers/wrappers.jl; do
         echo "Updating $d/$f"
         sed -i -e "s/\(CHOLMOD_MAIN_VERSION *= *\)[0-9]*/\1${cholmod_maj_ver}/" "$f"
         sed -i -e "s/\(CHOLMOD_SUB_VERSION *= *\)[0-9]*/\1${cholmod_min_ver}/" "$f"
@@ -177,8 +223,8 @@ _patch_suitesparse() {
     )
   done
 
-  sed -i -e 's/libspqr\.so\.4/libspqr.so.3/' \
-      usr/share/julia/stdlib/v*/SuiteSparse_jll/src/SuiteSparse_jll.jl
+  sed -i -e 's/^[[:blank:]]*\$(eval.*libcholmod_cuda/# &/' base/Makefile
+  sed -i -e 's/^[[:blank:]]*\$(eval.*libspqr_cuda/# &/' base/Makefile
 }
 
 prepare() {
@@ -242,8 +288,14 @@ build_in() {
   # so I'm just going to create this missing symlink
   ln -sf /usr/lib/libgcc_s.so.1 usr/lib/julia/
   ln -sf /usr/lib/libstdc++.so.6 usr/lib/
-  make "${opts[@]}" release
-  make "${opts[@]}" debug
+  if [[ "$CARCH" = x86_64 ]]; then
+    # Currently only the x86 build machine
+    # has enough memory to compile release and debug build in parallel...
+    make "${opts[@]}" release debug
+  else
+    make "${opts[@]}" release
+    make "${opts[@]}" debug
+  fi
   # TODO docless build
   JL_MAKEPKG_SRCDIR= make "${opts[@]}" docs
 
@@ -274,7 +326,7 @@ _source_files() {
 }
 
 package-julia-in() {
-  _llvm_ver=$(llvm-config --version)
+  _llvm_ver=$(${_LLVM_CONFIG} --version)
   [[ $_llvm_ver =~ ^([0-9]*).* ]]
   llvm_maj_ver=${BASH_REMATCH[1]}
   ((next_llvm_maj=llvm_maj_ver + 1))
@@ -335,11 +387,12 @@ package-julia-in() {
   replaces=("${builtin_pkgs[@]}")
 
   install -Dm644 ../julia-compile-pkgs.jl "${pkgdir}/usr/lib/julia/"
-  install -Dm644 ../julia-clear-precompile.sh "${pkgdir}/usr/lib/julia/"
-  sed "s|@VER@|$ver_short|" ../julia-precompile.hook |
-    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-precompile.hook"
-  sed "s|@VER@|$ver_short|" ../julia-clear-precompile.hook |
-    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-clear-precompile.hook"
+  install -Dm644 ../julia-preinstall.sh "${pkgdir}/usr/lib/julia/"
+  install -Dm755 ../julia-postinstall.sh "${pkgdir}/usr/lib/julia/"
+  sed -e "s|@VER@|$ver_short|g" ../julia-preinstall.hook |
+    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-preinstall.hook"
+  sed -e "s|@VER@|$ver_short|g" ../julia-postinstall.hook |
+    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-postinstall.hook"
   mkdir -p "${pkgdir}/usr/share/julia/compiled/v$ver_short"
 
   mkdir -p "${pkgdir}/usr/share/julia/contrib"
@@ -347,6 +400,8 @@ package-julia-in() {
 
   # From ca-certificates-utils, needed by Download stdlib
   ln -sf /etc/ssl/cert.pem "${pkgdir}/usr/share/julia/cert.pem"
+
+  rm "$pkgdir"/usr/lib/julia/libccalltest.so.debug # Remove debug testing library
 
   # Without stripping, makepkg doesn't copy the source for us...
   dbgsrcdir="${DBGSRCDIR:-/usr/src/debug}"
@@ -387,13 +442,23 @@ package-julia-in() {
     done
   )
 
+  # The ones that julia build system build does not seem to work at the moment.
+  rm -rf "${pkgdir}/usr/share/julia/compiled/v$ver_short/"*
   env JULIA_PRECOMPILE_STDLIB_DIR="/usr/share/julia/stdlib/v$ver_short" \
+      JULIA_CPU_TARGET="${_cpu_target}" \
       proot -b "${pkgdir}/usr/share/julia/:/usr/share/julia/" \
-      "${pkgdir}/usr/bin/julia" --startup-file=no "${srcdir}/julia-compile-pkgs.jl" \
-      /usr/share/julia
-  for f in "${pkgdir}/usr/share/julia/compiled/v$ver_short/"*; do
-    touch "$f/.archpkg"
-  done
+      "${pkgdir}/usr/bin/julia" --startup-file=no \
+      "${srcdir}/julia-compile-pkgs.jl" /usr/share/julia
+  env JULIA_PRECOMPILE_STDLIB_DIR="/usr/share/julia/stdlib/v$ver_short" \
+      JULIA_CPU_TARGET="${_cpu_target}" \
+      proot -b "${pkgdir}/usr/share/julia/:/usr/share/julia/" \
+      "${pkgdir}/usr/bin/julia-debug" --startup-file=no \
+      "${srcdir}/julia-compile-pkgs.jl" /usr/share/julia
+  mkdir -p "${pkgdir}/usr/lib/julia/arch-compiled/julia/"
+  mv "${pkgdir}/usr/share/julia/compiled/v$ver_short/"* \
+     "${pkgdir}/usr/lib/julia/arch-compiled/julia/"
+
+  chmod -R go-w "${pkgdir}/usr/lib/julia/arch-compiled/julia/"
 
   # The ji file records the exact time stamps so we need to fix those in post_install
   (
@@ -447,6 +512,16 @@ package_julia-git() {
   if [[ "$CARCH" = x86_64 ]]; then
     replaces=(julia-git-avx2)
   fi
+}
+
+package_julia-git-package-env() {
+  backup=(usr/lib/julia/.package-precompile-env)
+  pkgdesc+=" (Package precompilation environment)"
+
+  mkdir -p "${pkgdir}/usr/lib/julia/"
+  cat > "${pkgdir}/usr/lib/julia/.package-precompile-env" <<EOF
+export JULIA_CPU_TARGET="${_cpu_target}"
+EOF
 }
 
 package_julia-git-docs() {

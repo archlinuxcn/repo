@@ -1,0 +1,18 @@
+pkgname=julia-git-imagetransformations-src
+pkgver=0.10.0
+_commit=570ea3f569faf3b599253dd19606131642149a83
+pkgrel=2
+pkgdesc="ImageTransformations.jl"
+url="https://github.com/JuliaImages/ImageTransformations.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaImages/ImageTransformations.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ImageTransformations.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ImageTransformations "${pkgdir}" "${pkgname}" julia-git
+}

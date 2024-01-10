@@ -1,0 +1,18 @@
+pkgname=julia-git-concretestructs-src
+pkgver=0.2.3
+_commit=dd869e0e8a52dc744726dab0be876a511e4756af
+pkgrel=2
+pkgdesc="ConcreteStructs.jl"
+url="https://github.com/jonniedie/ConcreteStructs.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/jonniedie/ConcreteStructs.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ConcreteStructs.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ConcreteStructs "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-calculus-src
+pkgver=0.5.1
+_commit=e6a833ab64069b75dde93b16857308b84cc9a312
+pkgrel=2
+pkgdesc="Calculus.jl"
+url="https://github.com/JuliaMath/Calculus.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaMath/Calculus.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Calculus.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Calculus "${pkgdir}" "${pkgname}" julia-git
+}

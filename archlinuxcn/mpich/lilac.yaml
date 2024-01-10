@@ -1,0 +1,10 @@
+maintainers:
+  - github: yuyichao
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: regex
+    regex: '/mpich-(\d+\.\d+[.0-9]*\d)\.tar'
+    url: https://www.mpich.org/downloads/

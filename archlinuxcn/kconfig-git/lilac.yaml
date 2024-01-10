@@ -1,0 +1,15 @@
+maintainers:
+  - github: Integral-Tech
+
+pre_build_script: aur_pre_build(maintainers=['IslandC0der','chaotic-aur'])
+post_build: aur_post_build
+
+repo_makedepends:
+  - extra-cmake-modules-git
+
+update_on:
+  - source: github
+    github: KDE/kconfig
+      
+  - source: aur
+    aur: kconfig-git

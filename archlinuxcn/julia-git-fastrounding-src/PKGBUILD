@@ -1,0 +1,18 @@
+pkgname=julia-git-fastrounding-src
+pkgver=0.3.1
+_commit=f91cc2fb06b6d75aa27d4d0f1781decb4cd57905
+pkgrel=2
+pkgdesc="FastRounding.jl"
+url="https://github.com/JeffreySarnoff/FastRounding.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JeffreySarnoff/FastRounding.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd FastRounding.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh FastRounding "${pkgdir}" "${pkgname}" julia-git
+}

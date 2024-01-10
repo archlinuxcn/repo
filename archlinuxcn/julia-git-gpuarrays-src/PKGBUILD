@@ -1,0 +1,35 @@
+pkgbase=julia-git-gpuarrays-src
+_subpkgs=(GPUArraysCore
+          JLArrays)
+pkgname=(julia-git-gpuarrays-src)
+pkgver=9.1.0
+_commit=145891681ebfa772d9d2f0cd8964d448425ff2de
+pkgrel=1
+pkgdesc="GPUArrays.jl"
+url="https://github.com/JuliaGPU/GPUArrays.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGPU/GPUArrays.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package_julia-git-gpuarrays-src() {
+  cd GPUArrays.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh GPUArrays "${pkgdir}" "${pkgname}" julia-git
+
+  rm -rf "${dest_dir}"/lib
+}
+
+_subpackage() {
+  local _subpkg=$1
+  cd GPUArrays.jl/lib/${_subpkg}
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ${_subpkg} "${pkgdir}" "${pkgname}" julia-git
+}
+
+for _subpkg in "${_subpkgs[@]}"; do
+  pkgname=("${pkgname[@]}" julia-git-${_subpkg,,}-src)
+  eval "package_julia-git-${_subpkg,,}-src() { _subpackage ${_subpkg}; }"
+done

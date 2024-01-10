@@ -1,0 +1,18 @@
+pkgname=julia-git-linearoperators-src
+pkgver=2.5.2
+_commit=7a5456fb5d9c39c3ce29bc212e5f3c18943e6172
+pkgrel=2
+pkgdesc="LinearOperators.jl"
+url="https://github.com/JuliaSmoothOptimizers/LinearOperators.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSmoothOptimizers/LinearOperators.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LinearOperators.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LinearOperators "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,22 @@
+pkgname=julia-git-loopvectorization-src
+pkgver=0.12.166
+_commit=d2f749dbf95c161c803f8733e0b4376c441c3a4a
+pkgrel=1
+pkgdesc="LoopVectorization.jl"
+url="https://github.com/JuliaSIMD/LoopVectorization.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSIMD/LoopVectorization.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+# prepare() {
+#   cd LoopVectorization.jl
+# }
+
+package() {
+  cd LoopVectorization.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LoopVectorization "${pkgdir}" "${pkgname}" julia-git
+}

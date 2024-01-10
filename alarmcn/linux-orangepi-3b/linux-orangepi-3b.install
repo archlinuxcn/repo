@@ -1,0 +1,10 @@
+post_upgrade() {
+  if findmnt --fstab -uno SOURCE /boot &>/dev/null && ! mountpoint -q /boot; then
+    echo "WARNING: /boot appears to be a separate partition but is not mounted."
+  fi
+}
+
+post_remove() {
+  rm -f boot/initramfs-linux.img
+  rm -f boot/initramfs-linux-fallback.img
+}

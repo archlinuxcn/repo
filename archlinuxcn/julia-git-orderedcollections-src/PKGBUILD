@@ -1,0 +1,18 @@
+pkgname=julia-git-orderedcollections-src
+pkgver=1.6.2
+_commit=0d2eeea5f9a75a6a82656e76f4eac29b52b405b1
+pkgrel=3
+pkgdesc="OrderedCollections.jl"
+url="https://github.com/JuliaCollections/OrderedCollections.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaCollections/OrderedCollections.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd OrderedCollections.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh OrderedCollections "${pkgdir}" "${pkgname}" julia-git
+}

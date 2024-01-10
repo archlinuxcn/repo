@@ -1,0 +1,18 @@
+pkgname=julia-git-arpack-src
+pkgver=0.5.4
+_commit=ab2100fb561b6eac1743c3d30a0852b6ae9e9e55
+pkgrel=2
+pkgdesc="Arpack.jl"
+url="https://github.com/JuliaLinearAlgebra/Arpack.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaLinearAlgebra/Arpack.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Arpack.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Arpack "${pkgdir}" "${pkgname}" julia-git
+}

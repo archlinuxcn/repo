@@ -4,7 +4,7 @@
 pkgname=libplacebo-git
 _pkgname=libplacebo
 epoch=1
-pkgver=6.292.0.r261.gd6f1db18
+pkgver=6.338.0.r64.g34e019bf
 pkgrel=1
 pkgdesc='Reusable library for GPU-accelerated video/image rendering primitives'
 url='https://github.com/haasn/libplacebo'
@@ -15,11 +15,8 @@ depends=('vulkan-icd-loader' 'libvulkan.so'
          'lcms2' 'liblcms2.so'
          'shaderc' 'libshaderc_shared.so'
          'libunwind'
-         # for demos
-         'ffmpeg' 'libavcodec.so' 'libavutil.so' 'libavformat.so'
-         'glfw'
-         'sdl2' 'sdl2_image'
-         'libdovi'
+         'xxhash' 'libxxhash.so'
+         'libdovi' 'libdovi.so'
          )
 makedepends=('git' 'meson' 'ninja' 'vulkan-headers' 'python' 'python-jinja' 'python-markupsafe' 'glad')
 checkdepends=(
@@ -31,8 +28,12 @@ conflicts=('libplacebo')
 source=(
         'git+https://code.videolan.org/videolan/libplacebo.git'
         'git+https://github.com/Immediate-Mode-UI/Nuklear.git'
+        'git+https://github.com/KhronosGroup/Vulkan-Headers.git'
+        'git+https://github.com/fastfloat/fast_float.git'
         )
 b2sums=('SKIP'
+        'SKIP'
+        'SKIP'
         'SKIP')
 options=('debug' 'strip')
 
@@ -46,6 +47,12 @@ prepare() {
     git submodule set-url demos/3rdparty/nuklear "${srcdir}/Nuklear"
     git -c protocol.file.allow=always submodule update --init \
         demos/3rdparty/nuklear
+    git submodule set-url 3rdparty/Vulkan-Headers "${srcdir}/Vulkan-Headers"
+    git -c protocol.file.allow=always submodule update --init \
+        3rdparty/Vulkan-Headers
+    git submodule set-url 3rdparty/fast_float "${srcdir}/fast_float"
+    git -c protocol.file.allow=always submodule update --init \
+        3rdparty/fast_float
 }
 
 build() {
@@ -55,7 +62,7 @@ build() {
         --buildtype=debugoptimized \
         -D default_library=shared \
         -D tests=true \
-        -D demos=true  \
+        -D demos=false  \
         -D d3d11=disabled
     ninja -C build
 }

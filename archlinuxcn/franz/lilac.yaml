@@ -6,14 +6,14 @@ maintainers:
 post_build: git_pkgbuild_commit
 
 repo_depends:
-  - python2
+  - nvm
 
 update_on:
   - source: manual
-    manual: 5.9.2
+    manual: 5.10.0
   - source: alpm
     from_pattern: ^(\d+\.\d+.\d+).*
     to_pattern: \1
-    alpm: electron19
+    alpm: electron22
   - source: manual
-    manual: 2
+    manual: 1

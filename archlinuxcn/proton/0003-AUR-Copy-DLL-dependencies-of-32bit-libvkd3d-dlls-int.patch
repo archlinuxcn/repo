@@ -1,7 +1,7 @@
-From 6ec0e7d263b1026f2703cb19c5444fd7eb22663b Mon Sep 17 00:00:00 2001
+From 469f21d4b32c6e1d35a48c2b377d0a0c6207c504 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Wed, 12 Jul 2023 03:16:34 +0300
-Subject: [PATCH 3/4] AUR Copy DLL dependencies of 32bit libvkd3d dlls into the
+Subject: [PATCH 3/5] AUR Copy DLL dependencies of 32bit libvkd3d dlls into the
  correct location in the prefix
 
 For some unknown to me reason, 32bit vkd3d (not vkd3d-proton) always links
@@ -20,10 +20,10 @@ a runtime dependency.
  1 file changed, 9 insertions(+)
 
 diff --git a/proton b/proton
-index e288a61d..01d414c2 100755
+index b2aad366..09c05510 100755
 --- a/proton
 +++ b/proton
-@@ -911,6 +911,15 @@ class CompatData:
+@@ -912,6 +912,15 @@ class CompatData:
                          prefix=self.prefix_dir, track_file=tracked_files, link_debug=True)
                  try_copy(g_proton.lib_dir + "vkd3d/libvkd3d-shader-1.dll", "drive_c/windows/syswow64",
                          prefix=self.prefix_dir, track_file=tracked_files, link_debug=True)
@@ -40,5 +40,5 @@ index e288a61d..01d414c2 100755
                  if use_wined3d:
                      dxvkfiles = []
 -- 
-2.41.0
+2.42.1
 

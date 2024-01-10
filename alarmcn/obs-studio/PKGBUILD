@@ -2,7 +2,7 @@
 # Contributor: Benjamin Klettbach <b.klettbach@gmail.com>
 
 pkgname=obs-studio
-pkgver=29.1.3
+pkgver=30.0.2
 pkgrel=1
 pkgdesc="Free, open source software for live streaming and recording"
 arch=(aarch64 x86_64)
@@ -18,10 +18,10 @@ optdepends=('libfdk-aac: FDK AAC codec support'
             'python: scripting support'
             'sndio: Sndio input client'
             'v4l2loopback-dkms: virtual camera support')
-source=($pkgname-$pkgver.tar.gz::https://github.com/jp9000/obs-studio/archive/$pkgver.tar.gz
+source=($pkgname-$pkgver.tar.gz::https://github.com/obsproject/obs-studio/archive/$pkgver.tar.gz
         fix_python_binary_loading.patch
         ignore_unused_submodules.patch)
-sha256sums=('9d9cfbdbdd255f48a23feeefb60089769a65f52bbca24fa31d74125f3bbb0e90'
+sha256sums=('be12c3ad0a85713750d8325e4b1db75086223402d7080d0e3c2833d7c5e83c27'
             'bdfbd062f080bc925588aec1989bb1df34bf779cc2fc08ac27236679cf612abd'
             '60b0ee1f78df632e1a8c13cb0a7a5772b2a4b092c4a2a78f23464a7d239557c3')
 
@@ -33,6 +33,7 @@ prepare() {
 
 build() {
   cmake -B build -S $pkgname-$pkgver \
+    -DENABLE_QSV11=OFF \
     -DCMAKE_INSTALL_PREFIX="/usr" \
     -DENABLE_BROWSER=OFF \
     -DENABLE_VST=ON \
@@ -41,7 +42,9 @@ build() {
     -DENABLE_AJA=OFF \
     -DENABLE_JACK=ON \
     -DENABLE_LIBFDK=ON \
+    -DENABLE_WEBRTC=OFF \
     -DOBS_VERSION_OVERRIDE="$pkgver-$pkgrel" \
+    -DCALM_DEPRECATION=ON \
     -Wno-dev
   cmake --build build
 }

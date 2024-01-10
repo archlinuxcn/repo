@@ -1,0 +1,26 @@
+pkgname=julia-git-xorg_xcb_util_keysyms_jll-src
+pkgver=0.4.0+1
+_commit=78d349c3208c0e56b40fd0fbf523730c7f080df8
+pkgrel=3
+pkgdesc="Xorg_xcb_util_keysyms_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Xorg_xcb_util_keysyms_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git xcb-util-keysyms)
+source=("git+https://github.com/JuliaBinaryWrappers/Xorg_xcb_util_keysyms_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '988111af7686790c31ba54eaf0c684ef5e367a7c4fd7e14e97e55f7c4509c9f3')
+
+build() {
+  cd Xorg_xcb_util_keysyms_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Xorg_xcb_util_keysyms_jll ../jll.toml
+}
+
+package() {
+  cd Xorg_xcb_util_keysyms_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Xorg_xcb_util_keysyms_jll "${pkgdir}" "${pkgname}" julia-git
+}

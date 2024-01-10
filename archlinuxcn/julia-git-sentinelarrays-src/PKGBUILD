@@ -1,0 +1,18 @@
+pkgname=julia-git-sentinelarrays-src
+pkgver=1.4.1
+_commit=fa840f994ae821d921a9973fbd5e244d35102b1c
+pkgrel=1
+pkgdesc="SentinelArrays.jl"
+url="https://github.com/JuliaData/SentinelArrays.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaData/SentinelArrays.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SentinelArrays.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SentinelArrays "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,4 +1,4 @@
-# Maintainer: Integral-Tech <integral@murena.io>
+# Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=roundedsbe
 _pkgname=RoundedSBE
@@ -8,8 +8,8 @@ pkgdesc="A fork of SierraBreezeEnhanced with integrated corner rounding effect C
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/a-parhom/RoundedSBE/"
 license=('GPL3')
-makedepends=('cmake' 'extra-cmake-modules' 'kglobalaccel' 'kde-dev-utils' 'knotifications' 'kinit' 'kwin' 'qt5-declarative')
-depends=('kcoreaddons' 'libxcb' 'kwindowsystem' 'kdecoration' 'kiconthemes')
+makedepends=('cmake' 'extra-cmake-modules' 'kglobalaccel5' 'kde-dev-utils' 'knotifications5' 'kinit' 'kwin' 'qt5-declarative')
+depends=('kcoreaddons5' 'libxcb' 'kwindowsystem5' 'kdecoration' 'kiconthemes5')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/a-parhom/${_pkgname}/archive/refs/tags/V${pkgver}.tar.gz")
 sha256sums=('f5214c65b49f14587ebdbcdbe2d358e37f41dd9f152559f157f9fa69775ff04a')
 

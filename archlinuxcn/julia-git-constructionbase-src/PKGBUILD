@@ -1,0 +1,18 @@
+pkgname=julia-git-constructionbase-src
+pkgver=1.5.4
+_commit=6988051c466de3b9de26e7256cca5cf5ceffda3d
+pkgrel=2
+pkgdesc="ConstructionBase.jl"
+url="https://github.com/JuliaObjects/ConstructionBase.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaObjects/ConstructionBase.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ConstructionBase.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ConstructionBase "${pkgdir}" "${pkgname}" julia-git
+}

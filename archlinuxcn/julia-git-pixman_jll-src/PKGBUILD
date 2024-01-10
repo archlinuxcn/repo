@@ -1,0 +1,26 @@
+pkgname=julia-git-pixman_jll-src
+pkgver=0.42.2+0
+_commit=56299c7b1a77fca2bd5bf979fdefbfe3f74cf3fc
+pkgrel=3
+pkgdesc="Pixman_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Pixman_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git pixman)
+source=("git+https://github.com/JuliaBinaryWrappers/Pixman_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'bfe0a7dcea4572d0a6c4b5902a113a25620cb3b348defcd0481f75f0697b683a')
+
+build() {
+  cd Pixman_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Pixman_jll ../jll.toml
+}
+
+package() {
+  cd Pixman_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Pixman_jll "${pkgdir}" "${pkgname}" julia-git
+}

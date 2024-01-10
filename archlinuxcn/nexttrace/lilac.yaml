@@ -1,11 +1,17 @@
-pre_build_script: aur_pre_build(maintainers=['huyz'])
-
-post_build: aur_post_build
-
-update_on:
-  - source: aur
-    aur: nexttrace
-
 maintainers:
   - github: CoelacanthusHex
     email: CoelacanthusHex@gmail.com
+
+pre_build_script: |
+    update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: |
+    git_pkgbuild_commit()
+
+update_on:
+  - source: github
+    github: nxtrace/Ntrace-V1
+    use_latest_release: true
+    prefix: v
+  - source: manual
+    manual: 1

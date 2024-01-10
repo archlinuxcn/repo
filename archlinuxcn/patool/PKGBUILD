@@ -1,30 +1,38 @@
 # Maintainer: Lex Black <autumn-wind at web dot de>
+# Contributor: patlefort <northon_patrick3 at yahoo dot ca>
 # Contributor: Daniel Larsson <znixen@live.se>
 
 pkgbase=patool
 pkgname='patool'
-pkgver=1.12
-pkgrel=6
+pkgver=2.0.0
+pkgrel=2
 pkgdesc="portable command line archive file manager"
 arch=('any')
 url="https://wummel.github.io/patool/"
 license=('GPL')
 depends=('python')
-makedepends=('python-setuptools')
-optdepends=("tar: extracting TAR files"
+makedepends=(python-build python-installer python-wheel python-setuptools python-argcomplete)
+optdepends=("lz4: extracting LZ4 archives"
+    "p7zip: extracting ZIP and 7z files"
+    "unarchiver: extracting various formats"
     "unrar: extracting RAR files"
-    "p7zip: extracting ZIP and 7z files")
+    "zstd: extracting ZSTANDARD files")
 #source=("https://pypi.python.org/packages/source/p/$pkgbase/$pkgbase-$pkgver.tar.gz")
 source=("$pkgbase-$pkgver.tar.gz::https://github.com/wummel/patool/archive/upstream/${pkgver}.tar.gz")
-sha256sums=('582fd4b87c263325958c1550400504799018c88bc3444f249bba304ae1747f1f')
+sha256sums=('0e71f28da032878eb871201dd59e43b8008fb731c665ca481cd4b20135764603')
 
 
 build() {
   cd "${pkgbase}-upstream-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${pkgbase}-upstream-${pkgver}"
-  python setup.py install --root=$pkgdir --prefix=/usr --optimize=1 --skip-build
+  python -m installer --destdir="$pkgdir" dist/*.whl
+
+  install -dm755 "${pkgdir}/usr/share/bash-completion/completions"
+  register-python-argcomplete patool > "${pkgdir}/usr/share/bash-completion/completions/patool"
+
+  install -Dm644 'doc/patool.1' -t "${pkgdir}/usr/share/man/man1"
 }

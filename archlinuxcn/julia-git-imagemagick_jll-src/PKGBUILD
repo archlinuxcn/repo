@@ -1,0 +1,26 @@
+pkgname=julia-git-imagemagick_jll-src
+pkgver=7.1.1+0
+_commit=866f7ec7b205061e69eb67f57398c526184c19fa
+pkgrel=3
+pkgdesc="ImageMagick_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/ImageMagick_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git imagemagick)
+source=("git+https://github.com/JuliaBinaryWrappers/ImageMagick_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'e89b4d26d0ebce537ae53477d9bd332a1280f8b17a12ee46160e248a43471f0e')
+
+build() {
+  cd ImageMagick_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl ImageMagick_jll ../jll.toml
+}
+
+package() {
+  cd ImageMagick_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ImageMagick_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-colors-src
+pkgver=0.12.10
+_commit=da0045a1de1b2bdf559ed3aa6bf91293f0563736
+pkgrel=3
+pkgdesc="Colors.jl"
+url="https://github.com/JuliaGraphics/Colors.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGraphics/Colors.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Colors.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Colors "${pkgdir}" "${pkgname}" julia-git
+}

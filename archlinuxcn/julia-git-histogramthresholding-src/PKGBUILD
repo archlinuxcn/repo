@@ -1,0 +1,18 @@
+pkgname=julia-git-histogramthresholding-src
+pkgver=0.3.1
+_commit=152a08a54e59dfc626446ed8ccf0b1f4a3e6c6c6
+pkgrel=2
+pkgdesc="HistogramThresholding.jl"
+url="https://github.com/JuliaImages/HistogramThresholding.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaImages/HistogramThresholding.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd HistogramThresholding.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh HistogramThresholding "${pkgdir}" "${pkgname}" julia-git
+}

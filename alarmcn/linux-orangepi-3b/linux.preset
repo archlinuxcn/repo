@@ -1,0 +1,10 @@
+# mkinitcpio preset file for the '%PKGBASE%' package
+
+ALL_config="/etc/mkinitcpio.conf"
+ALL_kver="%KERNVER%"
+
+PRESETS=('default')
+
+#default_config="/etc/mkinitcpio.conf"
+default_image="/boot/initramfs-linux.img"
+#default_options=""

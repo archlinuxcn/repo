@@ -1,39 +1,68 @@
+# Maintainer: Julia Abdel-Monem <juliaviolet.dev>
+# Maintainer: Parmjot Singh <parmjotsinghrobot at gmail dot com>
 # Maintainer: Zhanibek Adilbekov <zhanibek.adilbekov@pm.me>
 # shellcheck disable=SC2034,2164,2154
 pkgname=auto-cpufreq
-pkgver=1.9.9
-pkgrel=2
+pkgver=2.1.0
+pkgrel=4
 pkgdesc="Automatic CPU speed & power optimizer"
 arch=('any')
 url="https://github.com/AdnanHodzic/auto-cpufreq"
 license=('LGPL3')
-depends=('python-setuptools' 'python-distro' 'python-psutil' 'python-click' 'dmidecode' 'python-requests')
-optdepends=(
-	'cpufreqctl: CPU Power Manager'
-	'gnome-shell-extension-cpufreq: CPU Power Manager for GNOME Shell'
-	'thermald: recommended to have running alongside by upstream'
-)
-makedepends=('python-pip' 'python-wheel')
+depends=('python' 'python-setuptools' 'python-psutil' 'python-click' 'python-distro' 'python-requests' 'python-gobject' 'dmidecode' 'gobject-introspection' 'gtk3')
+makedepends=('python-build' 'python-installer' 'python-wheel' 'python-poetry-core' 'python-poetry-dynamic-versioning' )
+
 install="$pkgname.install"
-source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz" "$pkgname.service")
-b2sums=('d82550a5dd553da52b784a91b7201da9fc72202de70b012712cd99c11b24284bc3586f0611004f7d8bf44b314baf96fa8d8a8a862f11dcb4561734f57b339776'
-        '90d9a6e0a86d01803527462e0ed0ce93d04d245c2c99ab773f31e1eb46dd86b209f98af50967bbdb6627563b0aae0ca4bbc861c812576a243b07c40a483c37db')
+
+source=(
+	"$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
+	"$pkgname.service"
+	"001-fix-icon-n-style-locations.patch"
+	"002-fix-other-icon-path.patch"
+)
 
 prepare() {
 	cd "$srcdir/$pkgname-$pkgver"
 	sed -i 's|usr/local|usr|g' "scripts/${pkgname}.service" auto_cpufreq/core.py
+	patch --strip=2 --input=../001-fix-icon-n-style-locations.patch
+	patch --strip=2 --input=../002-fix-other-icon-path.patch
+
 }
+
+sha256sums=('77a5ce9dc8044c5e5bf5770a6c3e16a252f8cef8c80ecc6eed9fefddc6ec825b'
+            'b9233e3ae649cd1a0f91cb2d1f3ddc8eb48e475882a0d3ff5ab51295f0a30d56'
+            'afe7e64dbde2ea599b319e8632d72a3c237b5c4275dd31d0f40e39719193a67b'
+            'c89514e12efcb161d678e6c0c978e08faf41a08625bd4a83b893c1e05cd8429e')
+
+
+
 
 build() {
 	cd "$srcdir/$pkgname-$pkgver"
-	python setup.py build
+
+	POETRY_DYNAMIC_VERSIONING_BYPASS=1 python -m build --wheel --no-isolation
 }
 
 package() {
-	cd "$srcdir/$pkgname-$pkgver"
-	python setup.py install --root="$pkgdir" --optimize=1 --skip-build
-	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-	install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README"
-	install -Dm755 scripts/cpufreqctl.sh -t "$pkgdir/usr/share/$pkgname/scripts"
-	install -Dm644 "$srcdir/$pkgname.service" -t "$pkgdir/usr/lib/systemd/system"
+	cd "$srcdir"
+	cd $pkgname-$pkgver
+
+	python -m installer --destdir="$pkgdir" dist/*.whl
+
+	# install -Dm755 scripts/auto-cpufreq-venv-wrapper "$pkgdir/usr/bin/auto-cpufreq"
+	# install -Dm755 scripts/start_app "$pkgdir/usr/bin/auto-cpufreq-gtk"
+	install -Dm644 scripts/org.auto-cpufreq.pkexec.policy -t "$pkgdir/usr/share/polkit-1/actions/"
+	install -Dm644 images/icon.png "$pkgdir/usr/share/pixmaps/auto-cpufreq.png"
+	install -Dm644 images/icon.png -t "$pkgdir/usr/share/$pkgname/"
+	
+	mkdir -p $pkgdir/usr/share/$pkgname/scripts/
+	mkdir -p $pkgdir/opt/auto-cpufreq/
+	
+	install -Dm755 scripts/auto-cpufreq-install.sh "$pkgdir/usr/share/$pkgname/scripts/"
+	install -Dm755 scripts/auto-cpufreq-remove.sh "$pkgdir/usr/share/$pkgname/scripts/"
+	install -Dm644 $srcdir/auto-cpufreq.service "$pkgdir/etc/systemd/system/$pkgname.service"
+	install -Dm755 scripts/cpufreqctl.sh "$pkgdir/usr/share/$pkgname/scripts/"
+	install -Dm644 scripts/style.css "$pkgdir/usr/share/$pkgname/scripts/"
+	install -Dm644 scripts/auto-cpufreq-gtk.desktop -t "$pkgdir/usr/share/applications/"
+
 }

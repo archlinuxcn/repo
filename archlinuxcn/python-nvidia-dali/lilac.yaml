@@ -3,6 +3,9 @@ maintainers:
 
 build_prefix: extra-x86_64
 
+repo_depends:
+  - python-dm-tree
+
 time_limit_hours: 4
 
 update_on:
@@ -10,7 +13,7 @@ update_on:
     github: NVIDIA/DALI
     use_latest_release: true
   - source: manual
-    manual: 6
+    manual: 7
   - alias: python
 # vim:set ts=2 sw=2 et:
 

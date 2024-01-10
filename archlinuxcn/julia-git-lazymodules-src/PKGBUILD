@@ -1,0 +1,18 @@
+pkgname=julia-git-lazymodules-src
+pkgver=0.3.1
+_commit=942c339998e58d2b8b29cc984207c433009daff9
+pkgrel=2
+pkgdesc="LazyModules.jl"
+url="https://github.com/johnnychen94/LazyModules.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/johnnychen94/LazyModules.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LazyModules.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LazyModules "${pkgdir}" "${pkgname}" julia-git
+}

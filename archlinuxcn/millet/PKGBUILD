@@ -1,0 +1,40 @@
+# Maintainer: Cooper Pierce <cppierce@andrew.cmu.edu>
+pkgname=millet
+pkgver=0.14.2
+pkgrel=1
+pkgdesc="Language server implementation for Standard ML"
+url="https://github.com/azdavis/millet"
+arch=('x86_64')
+license=(APACHE MIT)
+makedepends=('cargo')
+source=("$pkgname-$pkgver.tgz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+md5sums=('cbd63448db4be9ae1984def1c9224a1d')
+
+prepare() {
+    cd "$pkgname-$pkgver"
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+
+build() {
+    cd "$pkgname-$pkgver"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo build --frozen --release --all-features
+}
+
+package() {
+    cd "$pkgname-$pkgver"
+    install -Dm755 "target/release/millet-ls" "$pkgdir/usr/bin/millet"
+    install -Dm644 "LICENSE-MIT.md" "$pkgdir/usr/share/licenses/${pkgname}/LICENSE-MIT"
+}
+
+check() {
+    cd "$pkgname-$pkgver"
+
+    # Ignores tests starting with repo. These tests assume we're in a git repo
+    # (we're not, here, since this is a source tarball), and test for things
+    # like changelog entries existing.
+    cargo test --frozen --all-features --workspace -- --skip repo
+}

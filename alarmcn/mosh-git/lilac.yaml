@@ -4,3 +4,15 @@ update_on:
 - source: github
   github: mobile-shell/mosh
 - alias: protobuf
+- source: manual
+  manual: 1
+- alias: libcrypto
+# mosh directly links to them:
+- source: alpmfiles
+  pkgname: abseil-cpp
+  strip_dir: true
+  filename: libabsl_log_internal_check_op\.so\.(.*)
+- source: alpmfiles
+  pkgname: abseil-cpp
+  strip_dir: true
+  filename: libabsl_log_internal_message\.so\.(.*)

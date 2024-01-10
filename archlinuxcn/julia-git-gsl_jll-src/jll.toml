@@ -1,0 +1,18 @@
+[[library]]
+# dlopen cblas before libgsl since the ArchLinux GSL is compiled with no-plt
+# and isn't linked to cblas so the symbol must be available when libgsl is loaded.
+name = "libgsl"
+dlopen_global = true
+
+[[library]]
+name = "libgslcblas"
+file = "libcblas.so.3"
+use_soname = false
+
+[[binary]]
+name = "gsl_histogram"
+file = "gsl-histogram"
+
+[[binary]]
+name = "gsl_randist"
+file = "gsl-randist"

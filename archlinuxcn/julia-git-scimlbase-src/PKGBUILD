@@ -1,0 +1,18 @@
+pkgname=julia-git-scimlbase-src
+pkgver=2.9.1
+_commit=5cbf598993a9d9d27783a637392f10be87de6b52
+pkgrel=1
+pkgdesc="SciMLBase.jl"
+url="https://github.com/SciML/SciMLBase.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/SciMLBase.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SciMLBase.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SciMLBase "${pkgdir}" "${pkgname}" julia-git
+}

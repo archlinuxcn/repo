@@ -1,0 +1,33 @@
+pkgname=julia-git-pardiso-src
+pkgver=0.5.4
+_commit=f98c043547b42dbd077a10892ca9429e075fc7bb
+pkgrel=3
+pkgdesc="Pardiso.jl"
+url="https://github.com/JuliaSparse/Pardiso.jl.git"
+arch=(aarch64 armv7h i686 x86_64)
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+depends_x86_64=(intel-mkl)
+source=("git+https://github.com/JuliaSparse/Pardiso.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+prepare() {
+  cd Pardiso.jl
+
+  if [[ $CARCH != x86_64 ]]; then
+    sed -i -e '/function  *__init__()/a\ \ \ \ return' src/Pardiso.jl
+  fi
+}
+
+build() {
+  cd Pardiso.jl/deps
+
+  JULIA_DEPOT_PATH="${srcdir}/.julia" julia --startup-file=no build.jl
+}
+
+package() {
+  cd Pardiso.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Pardiso "${pkgdir}" "${pkgname}" julia-git
+}

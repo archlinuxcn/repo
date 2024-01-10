@@ -1,0 +1,18 @@
+pkgname=julia-git-richardson-src
+pkgver=1.4.2
+_commit=49c5e794241db47dbf4e6ed6fe02cc0984c1f093
+pkgrel=2
+pkgdesc="Richardson.jl"
+url="https://github.com/JuliaMath/Richardson.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaMath/Richardson.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Richardson.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Richardson "${pkgdir}" "${pkgname}" julia-git
+}

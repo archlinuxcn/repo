@@ -1,0 +1,58 @@
+# Maintainer: Grzegorz Koperwas <admin@grzegorzkoperwas.site>
+
+pkgname=swww-git
+_pkgname=${pkgname%-git}
+pkgver=0.8.1.r33.g0908f36
+pkgrel=1
+pkgdesc="Efficient animated wallpaper daemon for wayland, controlled at runtime."
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/Horus645/${_pkgname}"
+license=('GPL')
+depends=('gcc-libs' 'lz4' 'libxkbcommon')
+makedepends=('git' 'cargo' 'scdoc')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+options=(!lto)
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+prepare() {
+	# export RUSTUP_TOOLCHAIN=nightly
+	export RUSTUP_TOOLCHAIN=stable
+	cd "${_pkgname}/"
+	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+	cd "${_pkgname}/"
+	export RUSTUP_TOOLCHAIN=stable
+	cargo build --release
+
+	# manpages
+	./doc/gen.sh
+	for page in $(ls ./doc/generated/*.1); do
+		gzip -f "${page}"
+	done
+}
+
+package() {
+	cd "${_pkgname}/"
+
+	install -Dm755 target/release/{swww,swww-daemon} -t "${pkgdir}/usr/bin/"
+	install -Dm644 "completions/swww.bash" "${pkgdir}/usr/share/bash-completion/completions/swww"
+	install -Dm644 "completions/swww.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d/"
+	install -Dm644 "completions/_swww" -t "${pkgdir}/usr/share/zsh/site-functions/"
+	install -Dm644 "README.md" -t "${pkgdir}/usr/share/doc/${_pkgname}/"
+	install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
+
+	# manpages
+	cd ./doc/generated
+	for page in $(ls *.1.gz); do
+		install -Dm644 "${page}" "${pkgdir}/usr/share/man/man1/${page}"
+	done
+}

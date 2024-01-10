@@ -1,0 +1,18 @@
+pkgname=julia-git-woodburymatrices-src
+pkgver=0.5.6
+_commit=bd09cfa2dd58b8e5fbfc73c29cc848241f293bbc
+pkgrel=1
+pkgdesc="WoodburyMatrices.jl"
+url="https://github.com/timholy/WoodburyMatrices.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/timholy/WoodburyMatrices.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd WoodburyMatrices.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh WoodburyMatrices "${pkgdir}" "${pkgname}" julia-git
+}

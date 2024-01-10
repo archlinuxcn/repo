@@ -3,7 +3,7 @@
 
 pkgname=lib32-zvbi
 _basename=zvbi
-pkgver=0.2.41
+pkgver=0.2.42
 pkgrel=1
 pkgdesc="VBI capture and decoding library  (32-bit)"
 url="http://zapping.sourceforge.net/cgi-bin/view/ZVBI/WebHome"
@@ -11,7 +11,7 @@ arch=('x86_64')
 depends=('lib32-libpng' 'zvbi')
 makedepends=('git' 'lib32-libx11')
 license=('BSD' 'GPL2' 'LGPL2.1' 'MIT')
-_tag=74016b7aef2f52f44920a04f9bcfe52ed72905d1
+_tag=3785481f51f41a49e28f2b7f6fd5bd9187d24ae1
 source=(git+https://github.com/zapping-vbi/zvbi.git#tag=${_tag})
 b2sums=(SKIP)
 

@@ -4,8 +4,8 @@
 
 pkgname=dcmtk
 _pkgname=dcmtk-DCMTK
-pkgver=3.6.7
-pkgrel=7
+pkgver=3.6.8
+pkgrel=1
 pkgdesc="A collection of libraries and applications implementing large parts the DICOM standard"
 arch=("x86_64")
 url="http://dicom.offis.de/dcmtk"
@@ -20,17 +20,14 @@ depends=(
 )
 makedepends=(
   cmake
-  gcc12
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/DCMTK/dcmtk/archive/DCMTK-${pkgver}.tar.gz")
-sha512sums=('c348298377c26692932f22821b13f2ca422c4a4326dc3bb9aabaf7d993c48488f328d4a641acc58a01d2c48fe160494730405e30928f41e4d04067b2ec5add6f')
+sha512sums=('df78a7b8b2d602aec5428b9b27be1cd5993212f62eaf28c3a442838c56601a0628b3381aae5d076ec8a28b2aa1d0e751c2a7f41ad87a3c789220b312b9ac28a3')
 
 build() {
   cmake \
     -B "build" \
     -DBUILD_SHARED_LIBS:BOOL=ON \
-    -DCMAKE_CXX_COMPILER=g++-12 \
-    -DCMAKE_C_COMPILER=gcc-12 \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
     -DDCMTK_DEFAULT_DICT=builtin \
@@ -58,9 +55,6 @@ check() {
 package() {
   make -C "build" DESTDIR="${pkgdir}/" install
   install -D -m644 "${srcdir}/${_pkgname}-${pkgver}/COPYRIGHT" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-
-  # Move configuration files from /usr/etc to /etc
-  mv "${pkgdir}/usr/etc/" "${pkgdir}/"
 }
 # vim:set ts=2 sw=2 et:
 

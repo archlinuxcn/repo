@@ -11,4 +11,7 @@ def pre_build():
             line = '#' + line
         elif line.strip().startswith('export GOPROXY'):
             line = '#' + line
+        elif line.strip().startswith('depends+=(\'v2ray>=5.0.0\')'):
+            line = ('#' + line + '\n'
+                    "depends+=('v2ray')")
         print(line)

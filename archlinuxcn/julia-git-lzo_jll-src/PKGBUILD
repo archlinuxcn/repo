@@ -1,0 +1,26 @@
+pkgname=julia-git-lzo_jll-src
+pkgver=2.10.1+0
+_commit=a48304daff0103554e69a1ebc81adee63f5d1ad8
+pkgrel=2
+pkgdesc="LZO_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/LZO_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git lzo)
+source=("git+https://github.com/JuliaBinaryWrappers/LZO_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'e0de3ff41367ed2c2df4b8e7c1de70610a313f0a6b75ce216dd1238d236cd4ac')
+
+build() {
+  cd LZO_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl LZO_jll ../jll.toml
+}
+
+package() {
+  cd LZO_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LZO_jll "${pkgdir}" "${pkgname}" julia-git
+}

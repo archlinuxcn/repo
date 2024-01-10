@@ -5,8 +5,8 @@
 # Contributor: Luiz Ribeiro <luizribeiro@gmail.com>
 
 pkgname=mpdscribble
-pkgver=0.24
-pkgrel=2
+pkgver=0.25
+pkgrel=1
 pkgdesc='MPD client which submits track info to {Libre,Last}.fm'
 url='https://www.musicpd.org/clients/mpdscribble/'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
@@ -18,12 +18,11 @@ source=(
   "https://www.musicpd.org/download/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.xz"{,.sig}
   )
 validpgpkeys=('0392335A78083894A4301C43236E8A58C6DB4512') # Max Kellermann <max@musicpd.org>
-sha256sums=('f6b4cba748b3b87e705270b4923c8e23e94c2e00fedd50beb1468dbe2fb2a8e7'
+sha256sums=('20f89d945bf517c4d68bf77a77a359fdb13842ab1295e8d21eda79be2b5b35ce'
             'SKIP')
 
 prepare() {
   cd "${pkgname}"-"${pkgver}"
-  sed -i "27i #include <ctime>" src/Log.cxx
   DESTDIR="${pkgdir}" meson build \
      --prefix=/usr \
      --sysconfdir=/etc

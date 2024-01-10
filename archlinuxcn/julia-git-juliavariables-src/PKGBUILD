@@ -1,0 +1,18 @@
+pkgname=julia-git-juliavariables-src
+pkgver=0.2.4
+_commit=1f65b473f5d4307b2da49b9ce20fe7f6905010ec
+pkgrel=2
+pkgdesc="JuliaVariables.jl"
+url="https://github.com/JuliaStaging/JuliaVariables.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaStaging/JuliaVariables.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd JuliaVariables.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh JuliaVariables "${pkgdir}" "${pkgname}" julia-git
+}

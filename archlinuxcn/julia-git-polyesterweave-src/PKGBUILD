@@ -1,0 +1,18 @@
+pkgname=julia-git-polyesterweave-src
+pkgver=0.2.1
+_commit=4ee4934aa8f727b1769932106cd10f40336384da
+pkgrel=2
+pkgdesc="PolyesterWeave.jl"
+url="https://github.com/JuliaSIMD/PolyesterWeave.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSIMD/PolyesterWeave.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd PolyesterWeave.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh PolyesterWeave "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-parallelmergecsr-src
+pkgver=1.0.2
+_commit=1d6c81301aafc266be88ad14ec73358fff6fd27a
+pkgrel=2
+pkgdesc="ParallelMergeCSR.jl"
+url="https://github.com/QuEraComputing/ParallelMergeCSR.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/QuEraComputing/ParallelMergeCSR.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ParallelMergeCSR.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ParallelMergeCSR "${pkgdir}" "${pkgname}" julia-git
+}

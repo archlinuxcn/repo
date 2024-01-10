@@ -6,7 +6,7 @@
 
 pkgname=kubectl-bin
 pkgdesc="Kubernetes.io kubectl binary"
-pkgver=1.28.0
+pkgver=1.29.0 # renovate: datasource=github-tags depName=kubernetes/kubernetes
 pkgrel=1
 arch=('x86_64' 'armv7l' 'armv7h' 'aarch64')
 url="http://kubernetes.io"
@@ -15,17 +15,18 @@ depends=()
 conflicts=('kubectl')
 provides=('kubectl')
 source=()
-b2sums=()
+b2sums=('0b12d0ef2a3a3ee091b4775610628270b63dff90743d49d8c8e32bc3adf1dffacf88b4ffc2998310f547d57317936df030ef10856f072119b4eb0163b8cf93ee')
+
+# if CARCH is not set default to x86_64
+# https://stackoverflow.com/a/11362364/11164973
+: "${CARCH:=x86_64}"
 
 case "$CARCH" in
   x86_64) _pkgarch="amd64"
-    b2sums+=('becf49747002fa77c005d7660e2c104edd6048c1bf486cf6c1a01b13412d7c0ed1b66c18bf9d9f970883de79a858d8558c66b170903abb904dffd8c5be06d9fb')
     ;;
   arm*) _pkgarch="arm"
-    b2sums+=('770587fa146e0b8f8605772b808e9507239fa240b798d7d843c4ddcaefb9fc8d3e7fb9f66c7f6bf91bf7b51e3a604cc5d626d770689ff15e96aef1d834a23be0')
     ;;
   aarch64) _pkgarch="arm64"
-    b2sums+=('40dfc55d0487ce3180bd19962763e7af04718f3f57f245f70d2e85707d71b9b7c01d6fc675077b63bd0505555b7ea1692613b75982315cb2ee2887aee4570788')
     ;;
 esac
 

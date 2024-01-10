@@ -2,8 +2,8 @@
 
 _pkgname=3dslicer
 pkgname=3dslicer
-pkgver=5.4.0
-pkgrel=1
+pkgver=5.6.1
+pkgrel=3
 pkgdesc='A free, open source and multi-platform software package widely used for medical, biomedical, and related imaging research'
 arch=('x86_64')
 url='https://www.slicer.org'
@@ -30,7 +30,6 @@ depends=(
 )
 makedepends=(
   cmake
-  gcc12
   gendesk
   git
   subversion
@@ -57,9 +56,8 @@ build() {
   cmake -B build -S "${srcdir}/${_pkgname}" \
     -DBUILD_TESTING=OFF \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_CXX_COMPILER=g++-12 \
-    -DCMAKE_C_COMPILER=gcc-12 \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DEXTERNAL_PROJECT_OPTIONAL_CMAKE_ARGS="-DSQLite3_INCLUDE_DIRS=/usr/include;-DSQLite3_LIBRARIES=/usr/lib/libsqlite3.so" \
     -DSlicer_BUILD_DOCUMENTATION=OFF \
     -DSlicer_BUILD_I18N_SUPPORT=ON \
     -DSlicer_STORE_SETTINGS_IN_APPLICATION_HOME_DIR=OFF \
@@ -99,7 +97,7 @@ package() {
   make -C "${srcdir}/build/Slicer-build" package
   install -d "${pkgdir}/opt/${_pkgname}" "${pkgdir}/usr/bin"
   tar xvf "${srcdir}/build/Slicer-build/"*.tar.gz -C "${pkgdir}/opt/${_pkgname}" --strip-components 1
-  ln -s /opt/${_pkgname}/Slicer "${pkgdir}/usr/bin"
+  ln -s /opt/${_pkgname}/Slicer "${pkgdir}/usr/bin/Slicer"
   install -Dm644 "${srcdir}/${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
   install -Dm644 "${srcdir}/${_pkgname}.svg" "${pkgdir}/usr/share/pixmaps/${_pkgname}.svg"
 }

@@ -1,0 +1,26 @@
+pkgname=julia-git-nlopt_jll-src
+pkgver=2.7.1+0
+_commit=e0ef1060266aa3e5f035748efc52627e319b9e3a
+pkgrel=4
+pkgdesc="NLopt_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/NLopt_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git nlopt)
+source=("git+https://github.com/JuliaBinaryWrappers/NLopt_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '0c77da7ca0095eefef9f279adad5e4f5ec38d02ebfc830c062ea91169592bb9c')
+
+build() {
+  cd NLopt_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl NLopt_jll ../jll.toml
+}
+
+package() {
+  cd NLopt_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh NLopt_jll "${pkgdir}" "${pkgname}" julia-git
+}

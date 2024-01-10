@@ -1,0 +1,18 @@
+pkgname=julia-git-aws-src
+pkgver=1.90.3
+_commit=d10c5a4bb3e03356e552d40041a8a7effba78754
+pkgrel=2
+pkgdesc="AWS.jl"
+url="https://github.com/JuliaCloud/AWS.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaCloud/AWS.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd AWS.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh AWS "${pkgdir}" "${pkgname}" julia-git
+}

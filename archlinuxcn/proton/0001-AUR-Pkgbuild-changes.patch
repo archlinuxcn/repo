@@ -1,10 +1,10 @@
-From 30e1791d50391930e871ba17acb44d47a6d7bd83 Mon Sep 17 00:00:00 2001
+From a84106d4199bc906254a4c2545b4bbb9797054e8 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Tue, 7 Feb 2023 21:58:22 +0200
-Subject: [PATCH 1/4] AUR Pkgbuild changes
+Subject: [PATCH 1/5] AUR Pkgbuild changes
 
 ---
- Makefile.in                    | 70 ++++++++++++++++++++++++++--------
+ Makefile.in                    | 69 ++++++++++++++++++++++++++--------
  compatibilitytool.vdf.template |  2 +-
  configure.sh                   |  2 +
  make/rules-autoconf.mk         |  4 +-
@@ -16,13 +16,13 @@ Subject: [PATCH 1/4] AUR Pkgbuild changes
  make/rules-winemaker.mk        |  2 +-
  proton                         |  6 +--
  toolmanifest_runtime.vdf       |  3 --
- 12 files changed, 83 insertions(+), 39 deletions(-)
+ 12 files changed, 82 insertions(+), 39 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 29142391..1fc3af27 100644
+index 83fc995d..6a9c0774 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -50,14 +50,23 @@ else
+@@ -50,11 +50,12 @@ else
  endif
  
  CROSSLDFLAGS   += -Wl,--file-alignment,4096
@@ -35,20 +35,24 @@ index 29142391..1fc3af27 100644
 -COMMON_FLAGS32 := -mstackrealign
 +COMMON_FLAGS32 := -mstackrealign -mno-avx
  COMMON_FLAGS64 := -mcmodel=small
- CARGO_BUILD_ARG := --release
+ CARGO_BUILD_ARGS += --release
+ 
+@@ -62,6 +63,14 @@ ifneq ($(SUPPRESS_WARNINGS),)
+ 	COMMON_FLAGS += -w
+ endif
  
 +ifneq ($(USE_LTO), 1)
-+GST_LTO :=
-+FFMPEG_LTO :=
++	GST_LTO :=
++	FFMPEG_LTO :=
 +else
-+GST_LTO := -Db_lto=true
-+FFMPEG_LTO := --enable-lto
++	GST_LTO := -Db_lto=true
++	FFMPEG_LTO := --enable-lto
 +endif
 +
  $(DST_DIR):
  	mkdir -p $@
  
-@@ -68,7 +77,7 @@ all: all-dist | $(DST_DIR)
+@@ -72,7 +81,7 @@ all: all-dist | $(DST_DIR)
  all-dist: | $(DST_DIR)
  dist: all
  
@@ -57,7 +61,7 @@ index 29142391..1fc3af27 100644
  
  include $(SRC)/make/utility.mk
  include $(SRC)/make/rules-source.mk
-@@ -99,6 +108,7 @@ $(eval $(call rules-meson,dav1d,64))
+@@ -103,6 +112,7 @@ $(eval $(call rules-meson,dav1d,64))
  ##
  
  GST_ORC_MESON_ARGS := \
@@ -65,22 +69,20 @@ index 29142391..1fc3af27 100644
  	-Dorc-test=disabled
  
  $(eval $(call rules-source,gst_orc,$(SRCDIR)/gst-orc))
-@@ -111,9 +121,14 @@ $(eval $(call rules-meson,gst_orc,64))
+@@ -115,7 +125,12 @@ $(eval $(call rules-meson,gst_orc,64))
  ##
  
  GSTREAMER_MESON_ARGS := \
 +	$(GST_LTO) \
-+	-Ddoc=disabled \
  	-Dgst_parse=false \
- 	-Dbenchmarks=disabled \
- 	-Dtools=disabled \
 +	-Dptp-helper-permissions=capabilities \
 +	-Ddbghelp=disabled \
 +	-Dintrospection=disabled \
++	-Ddoc=disabled \
+ 	-Dbenchmarks=disabled \
+ 	-Dtools=disabled \
  	-Dbash-completion=disabled
- 
- GSTREAMER_DEPENDS = gst_orc
-@@ -127,6 +142,11 @@ $(eval $(call rules-meson,gstreamer,64))
+@@ -131,6 +146,11 @@ $(eval $(call rules-meson,gstreamer,64))
  ## graphene
  ##
  
@@ -92,26 +94,28 @@ index 29142391..1fc3af27 100644
  $(eval $(call rules-source,graphene,$(SRCDIR)/graphene))
  $(eval $(call rules-meson,graphene,32))
  $(eval $(call rules-meson,graphene,64))
-@@ -137,6 +157,9 @@ $(eval $(call rules-meson,graphene,64))
+@@ -141,7 +161,10 @@ $(eval $(call rules-meson,graphene,64))
  ##
  
  GST_BASE_MESON_ARGS := \
 +	$(GST_LTO) \
+ 	-Dauto_features=disabled \
 +	-Ddoc=disabled \
 +	-Dtools=disabled \
- 	-Dauto_features=disabled \
  	-Dadder=enabled \
  	-Dapp=enabled \
-@@ -170,6 +193,8 @@ $(eval $(call rules-meson,gst_base,64))
+ 	-Daudioconvert=enabled \
+@@ -173,7 +196,9 @@ $(eval $(call rules-meson,gst_base,64))
  ##
  
  GST_GOOD_MESON_ARGS := \
 +	$(GST_LTO) \
-+	-Ddoc=disabled \
  	-Dauto_features=disabled \
++	-Ddoc=disabled \
  	-Daudioparsers=enabled \
  	-Dautodetect=enabled \
-@@ -200,11 +225,17 @@ $(eval $(call rules-meson,gst_good,64))
+ 	-Davi=enabled \
+@@ -203,11 +228,17 @@ $(eval $(call rules-meson,gst_good,64))
  
  FFMPEG_CONFIGURE_ARGS := \
  	--enable-shared \
@@ -129,7 +133,7 @@ index 29142391..1fc3af27 100644
  $(eval $(call rules-source,ffmpeg,$(SRCDIR)/ffmpeg))
  $(eval $(call rules-configure,ffmpeg,32))
  $(eval $(call rules-configure,ffmpeg,64))
-@@ -396,7 +427,11 @@ WINE_SOURCE_ARGS = \
+@@ -399,7 +430,10 @@ WINE_SOURCE_ARGS = \
    --exclude dlls/winevulkan/winevulkan.spec
  
  WINE_CONFIGURE_ARGS = \
@@ -137,11 +141,10 @@ index 29142391..1fc3af27 100644
 +  --with-gstreamer \
    --with-mingw \
 +  --without-oss \
-+  --disable-win16 \
    --disable-tests
  
  WINE_CONFIGURE_ARGS32 = \
-@@ -466,6 +501,9 @@ DXVK_MESON_ARGS32 = --bindir=$(DXVK_DST32)/lib/wine/dxvk
+@@ -469,6 +503,9 @@ DXVK_MESON_ARGS32 = --bindir=$(DXVK_DST32)/lib/wine/dxvk
  DXVK_MESON_ARGS64 = --bindir=$(DXVK_DST64)/lib64/wine/dxvk
  DXVK_DEPENDS = glslang
  
@@ -151,7 +154,7 @@ index 29142391..1fc3af27 100644
  $(eval $(call rules-source,dxvk,$(SRCDIR)/dxvk))
  $(eval $(call rules-meson,dxvk,32,CROSS))
  $(eval $(call rules-meson,dxvk,64,CROSS))
-@@ -493,6 +531,9 @@ $(OBJ)/.dxvk-post-build32:
+@@ -496,6 +533,9 @@ $(OBJ)/.dxvk-post-build32:
  DXVK_NVAPI_MESON_ARGS32 = --bindir=$(DXVK_NVAPI_DST32)/lib/wine/nvapi
  DXVK_NVAPI_MESON_ARGS64 = --bindir=$(DXVK_NVAPI_DST64)/lib64/wine/nvapi
  
@@ -161,9 +164,9 @@ index 29142391..1fc3af27 100644
  $(eval $(call rules-source,dxvk-nvapi,$(SRCDIR)/dxvk-nvapi))
  $(eval $(call rules-meson,dxvk-nvapi,32,CROSS))
  $(eval $(call rules-meson,dxvk-nvapi,64,CROSS))
-@@ -563,6 +604,9 @@ VKD3D_PROTON_MESON_ARGS32 = --bindir=$(VKD3D_PROTON_DST32)/lib/wine/vkd3d-proton
- VKD3D_PROTON_MESON_ARGS64 = --bindir=$(VKD3D_PROTON_DST64)/lib64/wine/vkd3d-proton
- VKD3D_PROTON_DEPENDS = glslang
+@@ -570,6 +610,9 @@ ifneq ($(UNSTRIPPED_BUILD),)
+ 	VKD3D_PROTON_MESON_ARGS = -Denable_trace=true
+ endif
  
 +VKD3D_PROTON_CPPFLAGS = -msse -msse2
 +VKD3D_PROTON_LDFLAGS = -static -static-libgcc -static-libstdc++
@@ -171,7 +174,7 @@ index 29142391..1fc3af27 100644
  $(eval $(call rules-source,vkd3d-proton,$(SRCDIR)/vkd3d-proton))
  $(eval $(call rules-meson,vkd3d-proton,32,CROSS))
  $(eval $(call rules-meson,vkd3d-proton,64,CROSS))
-@@ -822,14 +866,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
+@@ -866,14 +909,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
  	mkdir -p $(FONTS_OBJ)/source-han
  	# Do not immediately create the target file, so that make is interrupted
  	# it will restart again
@@ -189,7 +192,7 @@ index 29142391..1fc3af27 100644
  	mv $@.tmp $@
  
  $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
-@@ -839,12 +883,12 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
+@@ -883,12 +926,12 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
  	ttx -o $@ -m $($(notdir $@)_FONT) $(FONTS_OBJ)/ume-gothic/$(notdir $(basename $($(notdir $@)_NAMETABLE_PATCH))).ttx
  
  $(simsun.ttc): $(simsun.ttf) $(nsimsun.ttf)
@@ -205,7 +208,7 @@ index 29142391..1fc3af27 100644
  
  $(micross.ttf): $(FONTS)/scripts/merge.py $(noto_sans.ttf) $(noto_sans_arabic.ttf) $(noto_sans_armenian.ttf) $(noto_sans_bengali.ttf) $(noto_sans_coptic.ttf) \
  		$(noto_sans_georgian.ttf) $(noto_sans_gujarati.ttf) $(noto_sans_hebrew.ttf) $(noto_sans_khmer.ttf) $(noto_sans_tamil.ttf) \
-@@ -970,8 +1014,8 @@ all-dist: $(DIST_OVR32) $(DIST_OVR64)
+@@ -1014,8 +1057,8 @@ all-dist: $(DIST_OVR32) $(DIST_OVR64)
  ##
  
  default_pfx: wine gst_good gst_libav gst_plugins_rs lsteamclient steamexe vrclient wineopenxr dxvk dxvk-nvapi vkd3d-proton
@@ -216,7 +219,7 @@ index 29142391..1fc3af27 100644
  	rm -rf $(abspath $(DIST_PREFIX))
  	python3 $(SRCDIR)/default_pfx.py $(abspath $(DIST_PREFIX)) $(abspath $(DST_DIR))
  
-@@ -1103,7 +1147,6 @@ ifeq ($(ENABLE_CCACHE),1)
+@@ -1147,7 +1190,6 @@ ifeq ($(ENABLE_CCACHE),1)
  	export CCACHE_DIR := $(if $(CCACHE_DIR),$(CCACHE_DIR),$(HOME)/.ccache)
  	override DOCKER_OPTS := -v $(CCACHE_DIR):$(CCACHE_DIR)$(CONTAINER_MOUNT_OPTS) $(CCACHE_ENV) -e CCACHE_DIR=$(CCACHE_DIR) $(DOCKER_OPTS)
  else
@@ -224,7 +227,7 @@ index 29142391..1fc3af27 100644
  	override DOCKER_OPTS := $(CCACHE_ENV) -e CCACHE_DISABLE=1 $(DOCKER_OPTS)
  endif
  
-@@ -1118,9 +1161,6 @@ ifeq ($(CONTAINER_ENGINE),)
+@@ -1162,9 +1204,6 @@ ifeq ($(CONTAINER_ENGINE),)
  	CONTAINER_ENGINE := docker
  endif
  
@@ -232,8 +235,8 @@ index 29142391..1fc3af27 100644
 -                -w $(OBJ) -e MAKEFLAGS \
 -                $(DOCKER_OPTS) $(STEAMRT_IMAGE)
  
- .PHONY: dist deploy redist
- .DEFAULT dist deploy redist:
+ .PHONY: dist deploy redist symstore-tarball
+ .DEFAULT dist deploy redist symstore-tarball:
 diff --git a/compatibilitytool.vdf.template b/compatibilitytool.vdf.template
 index 5ac60e8b..e580cd20 100644
 --- a/compatibilitytool.vdf.template
@@ -284,7 +287,7 @@ index ad04eeb8..53eda5bc 100644
  endef
  
 diff --git a/make/rules-cargo.mk b/make/rules-cargo.mk
-index ea76678b..45bd7381 100644
+index d80ff9ed..00fa99fc 100644
 --- a/make/rules-cargo.mk
 +++ b/make/rules-cargo.mk
 @@ -13,8 +13,10 @@ $$(OBJ)/.$(1)-configure$(3):
@@ -298,7 +301,7 @@ index ea76678b..45bd7381 100644
 +	      -j$$(SUBJOBS) --locked --offline --verbose \
  	      --target "$$(CARGO_TARGET_$(3))" \
  	      --target-dir $$($(2)_OBJ$(3)) \
- 	      $$(CARGO_BUILD_ARG) \
+ 	      $$(CARGO_BUILD_ARGS) \
 diff --git a/make/rules-cmake.mk b/make/rules-cmake.mk
 index 520d88ac..ab898810 100644
 --- a/make/rules-cmake.mk
@@ -386,7 +389,7 @@ index 29eee132..642c6d70 100644
  endef
  
 diff --git a/make/rules-meson.mk b/make/rules-meson.mk
-index 2bf2db8c..0fbf9912 100644
+index 985f2085..93860875 100644
 --- a/make/rules-meson.mk
 +++ b/make/rules-meson.mk
 @@ -48,6 +48,7 @@ $$(OBJ)/.$(1)-configure$(3): $$($(2)_SRC)/meson.build
@@ -400,8 +403,8 @@ index 2bf2db8c..0fbf9912 100644
 @@ -61,7 +62,7 @@ $$(OBJ)/.$(1)-configure$(3): $$($(2)_SRC)/meson.build
  $$(OBJ)/.$(1)-build$(3):
  	@echo ":: building $(3)bit $(1)..." >&2
- 	env $$($(2)_ENV$(3)) \
--	ninja $$(filter -j%,$$(MAKEFLAGS)) -C "$$($(2)_OBJ$(3))" install $(-v?)
+ 	+env $$($(2)_ENV$(3)) \
+-	ninja -C "$$($(2)_OBJ$(3))" install
 +	ninja -j$$(SUBJOBS) -C "$$($(2)_OBJ$(3))" install $(-v?)
  	touch $$@
  endef
@@ -420,7 +423,7 @@ index 5c3b59a3..ed6589e0 100644
  	winebuild --$(lastword $(subst ., ,$(4))) --fake-module -E "$(basename $(4)).spec" -o "$(4).fake"
  	mkdir -p $$($(2)_LIBDIR$(3))/$(LIBDIR_WINE_$(3))
 diff --git a/proton b/proton
-index 11e5bab8..e288a61d 100755
+index 43dd50c4..b2aad366 100755
 --- a/proton
 +++ b/proton
 @@ -423,7 +423,6 @@ class Proton:
@@ -431,7 +434,7 @@ index 11e5bab8..e288a61d 100755
  
      def path(self, d):
          return self.base_dir + d
-@@ -1643,8 +1642,6 @@ if __name__ == "__main__":
+@@ -1695,8 +1694,6 @@ if __name__ == "__main__":
  
      g_proton = Proton(os.path.dirname(sys.argv[0]))
  
@@ -440,7 +443,7 @@ index 11e5bab8..e288a61d 100755
  
      g_compatdata = CompatData(os.environ["STEAM_COMPAT_DATA_PATH"])
  
-@@ -1653,7 +1650,8 @@ if __name__ == "__main__":
+@@ -1705,7 +1702,8 @@ if __name__ == "__main__":
      g_session.init_wine()
  
      if g_proton.missing_default_prefix():
@@ -463,5 +466,5 @@ index beddcbbb..b6f36788 100644
 -  "compatmanager_layer_name" "proton"
  }
 -- 
-2.41.0
+2.42.1
 

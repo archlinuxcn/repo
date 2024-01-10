@@ -1,0 +1,18 @@
+pkgname=julia-git-colorvectorspace-src
+pkgver=0.10.0
+_commit=4d8eaaa1716dc38d54e6a2beecedfe205fd945a2
+pkgrel=2
+pkgdesc="ColorVectorSpace.jl"
+url="https://github.com/JuliaGraphics/ColorVectorSpace.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGraphics/ColorVectorSpace.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ColorVectorSpace.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ColorVectorSpace "${pkgdir}" "${pkgname}" julia-git
+}

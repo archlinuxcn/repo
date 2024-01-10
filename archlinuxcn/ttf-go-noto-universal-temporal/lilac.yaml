@@ -1,0 +1,15 @@
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+  - source: github
+    github: satbyy/go-noto-universal
+    use_max_tag: true
+    # v7.0
+    prefix: v
+
+maintainers:
+  - github: rocka

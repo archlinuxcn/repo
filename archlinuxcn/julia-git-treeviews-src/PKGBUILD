@@ -1,0 +1,27 @@
+pkgname=julia-git-treeviews-src
+pkgver=0.3.0
+_commit=0e37316ad8013ca113bf2d7dd109569978493a1f
+pkgrel=4
+pkgdesc="TreeViews.jl"
+url="https://github.com/pfitzseb/TreeViews.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/pfitzseb/TreeViews.jl.git#commit=$_commit"
+        Project.toml)
+sha256sums=('SKIP'
+            '6fe0f83ffd207a9e71f98952b4fd57ada149ec30015768b60e47501c167e132e')
+
+prepare() {
+  cd TreeViews.jl
+
+  cp -n ../Project.toml .
+  rm REQUIRE
+}
+
+package() {
+  cd TreeViews.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh TreeViews "${pkgdir}" "${pkgname}" julia-git
+}

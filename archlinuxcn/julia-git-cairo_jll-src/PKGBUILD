@@ -1,0 +1,26 @@
+pkgname=julia-git-cairo_jll-src
+pkgver=1.18.0+0
+_commit=0190b39254cfd430e0fdf5a8896a32392ce6d4a3
+pkgrel=1
+pkgdesc="Cairo_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Cairo_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git cairo)
+source=("git+https://github.com/JuliaBinaryWrappers/Cairo_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'd8406820b96d76ec0eeae2dbe3fc1965898e0af72919fd92d5172010326c1433')
+
+build() {
+  cd Cairo_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Cairo_jll ../jll.toml
+}
+
+package() {
+  cd Cairo_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Cairo_jll "${pkgdir}" "${pkgname}" julia-git
+}

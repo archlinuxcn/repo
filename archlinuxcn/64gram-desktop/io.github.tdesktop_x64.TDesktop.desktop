@@ -1,0 +1,21 @@
+[Desktop Entry]
+Name=64Gram Desktop
+Comment=Unofficial desktop version of Telegram messaging app
+TryExec=64gram-desktop
+Exec=64gram-desktop -- %u
+Icon=64gram
+Terminal=false
+StartupWMClass=64Gram
+Type=Application
+Categories=Chat;Network;InstantMessaging;Qt;
+MimeType=x-scheme-handler/tg;
+Keywords=tg;chat;im;messaging;messenger;sms;tdesktop;64gram;
+Actions=quit;
+SingleMainWindow=true
+X-GNOME-UsesNotifications=true
+X-GNOME-SingleWindow=true
+
+[Desktop Action quit]
+Exec=64gram-desktop -quit
+Name=Quit Telegram
+Icon=application-exit

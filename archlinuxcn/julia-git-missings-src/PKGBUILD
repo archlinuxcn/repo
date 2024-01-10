@@ -1,0 +1,18 @@
+pkgname=julia-git-missings-src
+pkgver=1.1.0
+_commit=d034f673cf8acc8125409370a286a9cde2fc7f98
+pkgrel=3
+pkgdesc="Missings.jl"
+url="https://github.com/JuliaData/Missings.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaData/Missings.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Missings.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Missings "${pkgdir}" "${pkgname}" julia-git
+}

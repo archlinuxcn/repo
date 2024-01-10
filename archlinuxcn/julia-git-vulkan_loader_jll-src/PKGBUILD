@@ -1,0 +1,26 @@
+pkgname=julia-git-vulkan_loader_jll-src
+pkgver=1.3.243+0
+_commit=cb048e8c3522b4d2db01c309bf5b5b2405c159a9
+pkgrel=2
+pkgdesc="Vulkan_Loader_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Vulkan_Loader_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git vulkan-icd-loader)
+source=("git+https://github.com/JuliaBinaryWrappers/Vulkan_Loader_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '0e2204954492a20ffd4b2e1290f907568dc21a0f9cd4b1440aedc59a7bdbbad6')
+
+build() {
+  cd Vulkan_Loader_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Vulkan_Loader_jll ../jll.toml
+}
+
+package() {
+  cd Vulkan_Loader_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Vulkan_Loader_jll "${pkgdir}" "${pkgname}" julia-git
+}

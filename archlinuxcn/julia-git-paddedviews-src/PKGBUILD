@@ -1,0 +1,18 @@
+pkgname=julia-git-paddedviews-src
+pkgver=0.5.12
+_commit=474a612d660cd8be3be2dee7b5b9d33abcb17a16
+pkgrel=2
+pkgdesc="PaddedViews.jl"
+url="https://github.com/JuliaArrays/PaddedViews.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaArrays/PaddedViews.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd PaddedViews.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh PaddedViews "${pkgdir}" "${pkgname}" julia-git
+}

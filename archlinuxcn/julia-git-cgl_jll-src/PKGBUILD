@@ -1,0 +1,26 @@
+pkgname=julia-git-cgl_jll-src
+pkgver=0.6000.600+0
+_commit=250c2f52129ff846f462f654ef5b5ad8708ee56e
+pkgrel=3
+pkgdesc="Cgl_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Cgl_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git coin-or-cgl)
+source=("git+https://github.com/JuliaBinaryWrappers/Cgl_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '7cb028a8ed9017417a980abf353fdea857903fdb2a45a02a6b97c62cf9a16d95')
+
+build() {
+  cd Cgl_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Cgl_jll ../jll.toml
+}
+
+package() {
+  cd Cgl_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Cgl_jll "${pkgdir}" "${pkgname}" julia-git
+}

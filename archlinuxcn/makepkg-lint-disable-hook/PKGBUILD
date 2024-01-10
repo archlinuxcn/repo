@@ -1,0 +1,19 @@
+#
+
+pkgname=makepkg-lint-disable-hook
+
+pkgver=1.0
+pkgrel=4
+pkgdesc="Hook to disable makepkg linting"
+arch=(aarch64 armv7h x86_64)
+url="https://archlinuxcn.org"
+license=('GPL')
+source=(disable-makepkg-lint.sh
+        disable-makepkg-lint.hook)
+sha512sums=('5fa7898269ef44d000b9e69c744511faf68c9a2b8342448b439bf71790682f0888f1214ec4e5213a661fb4472b48ee2f1edb6a937ba0e3a826078cff5bb09faa'
+            '4cdbb5558db7679e7312d10dcb5fcbc9625fdba0145d3ec40a52246bbb77c84a3641bf00385c65fcd3e4c2a2bc203012161e09292d3a0d10050b28117ad20469')
+
+package() {
+  install -Dm755 disable-makepkg-lint.sh "${pkgdir}/usr/share/libalpm/scripts/disable-makepkg-lint.sh"
+  install -Dm644 disable-makepkg-lint.hook "${pkgdir}/usr/share/libalpm/hooks/disable-makepkg-lint.hook"
+}

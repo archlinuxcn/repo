@@ -1,0 +1,18 @@
+pkgname=julia-git-abstracttrees-src
+pkgver=0.4.4
+_commit=8aff2ad267d4a186b0b472182b1b6e159ba2daa8
+pkgrel=3
+pkgdesc="AbstractTrees.jl"
+url="https://github.com/JuliaCollections/AbstractTrees.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaCollections/AbstractTrees.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd AbstractTrees.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh AbstractTrees "${pkgdir}" "${pkgname}" julia-git
+}

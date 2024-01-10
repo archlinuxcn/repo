@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+if [[ -x /usr/lib/jvm/java-21-openjdk/bin/java ]]; then
+    export PATH="/usr/lib/jvm/java-21-openjdk/bin/:$PATH"
+elif [[ -x /usr/lib/jvm/java-17-openjdk/bin/java ]]; then
+    export PATH="/usr/lib/jvm/java-17-openjdk/bin/:$PATH"
+elif [[ -x /usr/bin/java ]] && (( $(/usr/bin/java --version 2>/dev/null | grep -Po '(?<=openjdk )[0-9]+') >= 17 )); then
+    : # java is already in $PATH
+else
+    echo "ERROR: OpenJDK (Version >= 17) NOT Found!"
+fi
+
+exec java -jar '/usr/share/java/globalplatformpro/gp.jar' "$@"

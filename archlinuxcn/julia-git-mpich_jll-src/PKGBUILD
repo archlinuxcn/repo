@@ -1,0 +1,26 @@
+pkgname=julia-git-mpich_jll-src
+pkgver=4.1.2+0
+_commit=6e6259d6e2c2bbdf80d0376719e35b346beec9ef
+pkgrel=4
+pkgdesc="MPICH_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/MPICH_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git mpich)
+source=("git+https://github.com/JuliaBinaryWrappers/MPICH_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '8599c2836892967f70e7b4f07b8da4cb294808c11e83e1ef41573ad68c51eebf')
+
+build() {
+  cd MPICH_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl MPICH_jll ../jll.toml
+}
+
+package() {
+  cd MPICH_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MPICH_jll "${pkgdir}" "${pkgname}" julia-git
+}

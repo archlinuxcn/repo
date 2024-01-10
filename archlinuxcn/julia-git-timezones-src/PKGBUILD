@@ -1,0 +1,25 @@
+pkgname=julia-git-timezones-src
+pkgver=1.13.0
+_commit=f9d0dcfd03e0c5702667988b870026c55c504b96
+pkgrel=2
+pkgdesc="TimeZones.jl"
+url="https://github.com/JuliaTime/TimeZones.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaTime/TimeZones.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+build() {
+  cd TimeZones.jl
+
+  rm Artifacts.toml
+  rm -rf src/winzone
+}
+
+package() {
+  cd TimeZones.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh TimeZones "${pkgdir}" "${pkgname}" julia-git
+}

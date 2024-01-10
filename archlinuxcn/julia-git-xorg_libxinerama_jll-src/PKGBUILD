@@ -1,0 +1,26 @@
+pkgname=julia-git-xorg_libxinerama_jll-src
+pkgver=1.1.4+4
+_commit=81b7f1ac55739ac6ddaf452cfee4ebd9eeead199
+pkgrel=3
+pkgdesc="Xorg_libXinerama_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Xorg_libXinerama_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libxinerama)
+source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libXinerama_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'e916333dc22ab236f137cc3040465476f0c9d71da7d524f4b0b0fd978898834d')
+
+build() {
+  cd Xorg_libXinerama_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Xorg_libXinerama_jll ../jll.toml
+}
+
+package() {
+  cd Xorg_libXinerama_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Xorg_libXinerama_jll "${pkgdir}" "${pkgname}" julia-git
+}

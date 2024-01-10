@@ -1,0 +1,18 @@
+pkgname=julia-git-scimlnlsolve-src
+pkgver=0.1.9
+_commit=9881ab0c86ab52514f21cbbb362da530e9b2a15f
+pkgrel=2
+pkgdesc="SciMLNLSolve.jl"
+url="https://github.com/SciML/SciMLNLSolve.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/SciMLNLSolve.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SciMLNLSolve.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SciMLNLSolve "${pkgdir}" "${pkgname}" julia-git
+}

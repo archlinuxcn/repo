@@ -1,0 +1,26 @@
+pkgname=julia-git-pmix_jll-src
+pkgver=4.2.7+0
+_commit=95b9a714a0ccc21360ed95b72ae600d8d79c670a
+pkgrel=2
+pkgdesc="PMIx_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/PMIx_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git openpmix)
+source=("git+https://github.com/JuliaBinaryWrappers/PMIx_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '6d435a987ee9af5a886a3b755530a7d74eecc67547546b2b743a56cbb0b0ed71')
+
+build() {
+  cd PMIx_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl PMIx_jll ../jll.toml
+}
+
+package() {
+  cd PMIx_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh PMIx_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-namedtupletools-src
+pkgver=0.14.3
+_commit=cbaad8457f0a9e25e19d3a26d6389a7ddad888c1
+pkgrel=2
+pkgdesc="NamedTupleTools.jl"
+url="https://github.com/JeffreySarnoff/NamedTupleTools.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JeffreySarnoff/NamedTupleTools.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd NamedTupleTools.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh NamedTupleTools "${pkgdir}" "${pkgname}" julia-git
+}

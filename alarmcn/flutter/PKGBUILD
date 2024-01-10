@@ -1,16 +1,38 @@
 # Maintainer: Fredy García <frealgagu at gmail dot com>
-# Contributor: Philip Goto <philip.goto@gmail.com>, WithTheBraid <the-one@with-the-braid.cf>
+# Co-Maintainer: Polarian <polarian@polarian.dev>
+# Contributor: Philip Goto <philip.goto@gmail.com>, WithTheBraid <info@braid.business>
 
 pkgname=flutter
-pkgver=3.13.0
+pkgver=3.16.5
 pkgrel=1
 pkgdesc="A new mobile app SDK to help developers and designers build modern mobile apps for iOS and Android."
 arch=("x86_64" "aarch64")
 url="https://${pkgname}.dev"
 license=("custom" "BSD" "CCPL")
-depends=("git" "glu" "java-environment" "libglvnd" "unzip")
-optdepends=("android-sdk" "android-studio" "intellij-idea-community-edition" "intellij-idea-ultimate-edition" "ninja" "perl" "python")
-makedepends=("python")
+depends=( # commands first
+	 "bash"
+	 "curl"
+	 "file" # base-devel, but runtime dependency
+	 "git"
+	 "coreutils" # explicit dependency to mkdir, rm
+	 "unzip"
+	 "which" # base-devel, but runtime dependency
+	 "xz"
+	 "zip"
+	 # runtime shared libraries
+	 "glu" # libGLU.so.1 required for flutter test
+	 "libglvnd" # https://github.com/flutter/engine/pull/16924
+)
+optdepends=("android-sdk: develop for Android devices"
+	    "java-environment: develop for Android devices"
+            "android-studio"
+            "intellij-idea-community-edition"
+            "intellij-idea-ultimate-edition"
+	    "clang: clang++ is required for Linux development"
+	    "cmake: CMake is required for Linux development"
+            "ninja: ninja is required for Linux development"
+	    "pkgconf: pkg-config is required for Linux development" # base-devel, but runtime dependency
+	    "gtk3: GTK 3.0 development libraries are required for Linux development")
 backup=("opt/${pkgname}/packages/${pkgname}_test/pubspec.yaml" "opt/${pkgname}/packages/${pkgname}/pubspec.yaml")
 options=("!emptydirs")
 install="${pkgname}.install"
@@ -19,11 +41,9 @@ source=(
   "${pkgname}.sh"
   "${pkgname}.csh"
 )
-sha256sums=(
-  "a2fc218708b2eaa395ed108f43fa40242e4c12299730e3e745b966962ada95af"
-  "1dea1952d386c43948b9970382c2da5b65b7870684b8ad2ad89124e873aa485a"
-  "7ef10d753cfaac52d243549764a793f44f8284a1f4b11715ccd2fa915b026a6f"
-)
+sha256sums=('57e59fa3a31be7e87b3847cdf782f1323578bbf70a0cd35f3615f01ab429ac29'
+            '1dea1952d386c43948b9970382c2da5b65b7870684b8ad2ad89124e873aa485a'
+            '7ef10d753cfaac52d243549764a793f44f8284a1f4b11715ccd2fa915b026a6f')
 
 build() {
   rm -rf "${srcdir}/${pkgname}/bin/cache" "${srcdir}/${pkgname}/.pub-cache"
@@ -46,7 +66,7 @@ package() {
 
   # those files *must* be read-write for end-users; not my fault *grumble*
   chmod a+rw "${pkgdir}/opt/${pkgname}" "${pkgdir}/opt/${pkgname}/.pub-preload-cache"
-  chmod -R a+rw "${pkgdir}/opt/${pkgname}/version" "${pkgdir}/opt/${pkgname}/bin/cache" "${pkgdir}/opt/${pkgname}/.git"
+  chmod -R a+rw "${pkgdir}/opt/${pkgname}/version" "${pkgdir}/opt/${pkgname}/bin/cache" "${pkgdir}/opt/${pkgname}/.git" "${pkgdir}/opt/${pkgname}/packages/flutter_tools/gradle"
   find "${pkgdir}/opt/${pkgname}" -name "pubspec.lock" -exec chmod a+rw {} +
   find "${pkgdir}/opt/${pkgname}" -name "package_config.json" -exec chmod a+rw {} +
 

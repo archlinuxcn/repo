@@ -1,0 +1,18 @@
+pkgname=julia-git-metagraphs-src
+pkgver=0.7.2
+_commit=497c35824f1c0e521fcf8080b2c6d073d08cb247
+pkgrel=2
+pkgdesc="MetaGraphs.jl"
+url="https://github.com/JuliaGraphs/MetaGraphs.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGraphs/MetaGraphs.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd MetaGraphs.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MetaGraphs "${pkgdir}" "${pkgname}" julia-git
+}

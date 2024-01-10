@@ -4,7 +4,7 @@
 _pkgname=tree
 pkgname=python-dm-tree
 pkgver=0.1.8
-pkgrel=2
+pkgrel=3
 pkgdesc='A library for working with nested data structures'
 arch=('x86_64')
 url='https://github.com/deepmind/tree'
@@ -13,10 +13,12 @@ depends=(
   python
 )
 makedepends=(
-  bazel
   cmake
   git
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/deepmind/tree/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=('5139f26b0995514978fc214d20c8302d95c35ce58e5e1adc3278b159d39f6a52')
@@ -24,12 +26,14 @@ sha256sums=('5139f26b0995514978fc214d20c8302d95c35ce58e5e1adc3278b159d39f6a52')
 build() {
   cd "${_pkgname}-${pkgver}"
   # quick fix, using new version of abseil-cpp
-  sed -i "s,ABSEIL_VER 20210324.2,ABSEIL_VER 20230125.1," tree/CMakeLists.txt
-  python setup.py build
+  sed -i "s,ABSEIL_VER 20210324.2,ABSEIL_VER 20230802.1," tree/CMakeLists.txt
+  # update ABSEIL_LIBS to link
+  sed -i "s,ABSEIL_LIBS int128 raw_hash_set raw_logging_internal strings throw_delegate,ABSEIL_LIBS  base int128 log_severity raw_hash_set raw_logging_internal spinlock_wait strings string_view throw_delegate," tree/CMakeLists.txt
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1
+  python -m installer --destdir="${pkgdir}" dist/*.whl
 }
 # vim:set ts=2 sw=2 et:

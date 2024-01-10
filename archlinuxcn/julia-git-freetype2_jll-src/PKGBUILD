@@ -1,0 +1,26 @@
+pkgname=julia-git-freetype2_jll-src
+pkgver=2.13.1+0
+_commit=604e1a77e8c3d141f204d158772e3554e7bce8d5
+pkgrel=2
+pkgdesc="FreeType2_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/FreeType2_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git freetype2)
+source=("git+https://github.com/JuliaBinaryWrappers/FreeType2_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'bd75e0ff06636407cbfb8dfd0426437d45e22b38a3471d4a66a51711d01098e5')
+
+build() {
+  cd FreeType2_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl FreeType2_jll ../jll.toml
+}
+
+package() {
+  cd FreeType2_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh FreeType2_jll "${pkgdir}" "${pkgname}" julia-git
+}

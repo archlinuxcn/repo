@@ -1,0 +1,38 @@
+pkgbase=julia-git-hdf5-src
+_subpkgs=(H5Zbitshuffle
+          H5Zblosc
+          H5Zbzip2
+          H5Zlz4
+          H5Zzstd)
+pkgname=(julia-git-hdf5-src)
+pkgver=0.17.1
+_commit=5670e7b31687a24f78df03bfc63f139b3f4bf3da
+pkgrel=3
+pkgdesc="HDF5.jl"
+url="https://github.com/JuliaIO/HDF5.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/HDF5.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package_julia-git-hdf5-src() {
+  cd HDF5.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh HDF5 "${pkgdir}" "${pkgname}" julia-git
+
+  rm -rf "${dest_dir}"/filters
+}
+
+_subpackage() {
+  local _subpkg=$1
+  cd HDF5.jl/filters/${_subpkg}
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ${_subpkg} "${pkgdir}" "${pkgname}" julia-git
+}
+
+for _subpkg in "${_subpkgs[@]}"; do
+  pkgname=("${pkgname[@]}" julia-git-${_subpkg,,}-src)
+  eval "package_julia-git-${_subpkg,,}-src() { _subpackage ${_subpkg}; }"
+done

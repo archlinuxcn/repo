@@ -4,20 +4,19 @@ options=(!lto)
 _pkgname=ncspot
 options=(!lto)
 pkgname="${_pkgname}-git"
-pkgver=0.13.4.r5.c0c7ea8
+pkgver=1.0.0.r10.2a4178e
 pkgrel=1
 pkgdesc="Cross-platform ncurses Spotify client written in Rust, inspired by ncmpc and the likes."
 arch=('x86_64')
 url="https://github.com/hrkfdn/ncspot"
 license=('BSD')
 depends=(
-   'ncurses'
    'openssl'
    'libpulse'
 )
 optdepends=(
    'portaudio: PortAudio backend'
-   'ueberzug: cover drawing in terminal'
+   'ueberzugpp: display album art in terminal (X11)'
 )
 makedepends=(
    'rust'
@@ -38,19 +37,20 @@ pkgver() {
 
 prepare() {
   cd "${srcdir}/${_pkgname}"
-  cargo fetch --locked
+  cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
 
 build() {
   cd "${srcdir}/${_pkgname}"
-  cargo build --release --locked
-#  cargo build --release --features "cover" --locked
+  export CARGO_TARGET_DIR=target
+  cargo build --frozen --release
+#  cargo build --frozen --release --features "cover"
 }
 
 check() {
   cd "${srcdir}/${_pkgname}"
-  cargo test --release --locked
-#  cargo test --release --features "cover" --locked
+  cargo test --frozen --release
+#  cargo test --frozen --release --features "cover"
 }
 
 package() {

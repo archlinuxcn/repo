@@ -1,12 +1,13 @@
 # Maintainer: Linus Dierheimer <Linus@Dierheimer.de>
+
 pkgname=fastfetch-git
-pkgver=r2772.9500ca8f
+_pkgname=${pkgname%-git}
+pkgver=2.5.0.r66.ga8aaf60
 pkgrel=1
 pkgdesc="Like neofetch, but much faster because written in c"
-arch=('x86_64' 'aarch64')
-url="https://github.com/LinusDierheimer/fastfetch"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/${_pkgname}-cli/${_pkgname}"
 license=('MIT')
-depends=('glibc')
 makedepends=(
 	"git"
 	"cmake"
@@ -25,10 +26,6 @@ makedepends=(
 	"mesa"
 	"opencl-headers"
 	"ocl-icd"
-	# "libmagick6"
-	# "sqlite3"
-	# "rpm-tools"
-	# "libcjson"
 )
 optdepends=(
 	"pciutils: GPU output"
@@ -48,34 +45,32 @@ optdepends=(
 	"mesa: OpenGL module"
 	"ocl-icd: OpenCL module"
 	"nix: self contained nix package count"
-	# "libmagick6: ImageMagick 6 support"
-	# "sqlite3: rpm package count"
-	# "rpm-tools: slower rpm package count fallback"
-	# "libcjson: WSL Terminal font"
 )
 
-provides=('fastfetch')
-conflicts=("fastfetch")
-source=("git+https://github.com/LinusDierheimer/fastfetch.git")
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("git+${url}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-	cd "fastfetch/"
-	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
-	cmake -B "build" \
-		-S "${srcdir}/fastfetch" \
+	cmake -B build \
+		-S "${_pkgname}/" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DENABLE_SQLITE3=OFF \
 		-DENABLE_RPM=OFF \
 		-DENABLE_IMAGEMAGICK6=OFF \
 		-DENABLE_LIBCJSON=OFF \
 		-Wno-dev
-	cmake --build "build"
+
+	cmake --build build
 }
 
 package() {
-	DESTDIR="${pkgdir}" cmake --install "build"
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }

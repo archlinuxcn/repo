@@ -1,0 +1,29 @@
+pkgname=julia-git-pycall-src
+pkgver=1.96.3
+_commit=d407513e667d259881fe04667fd74a8bb098253d
+pkgrel=1
+pkgdesc="PyCall.jl"
+url="https://github.com/JuliaPy/PyCall.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts julia-git-conda-src julia-git-json-src
+             julia-git-parsers-src julia-git-versionparsing-src)
+depends=(julia-git python)
+source=("git+https://github.com/JuliaPy/PyCall.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+build() {
+  cd PyCall.jl/deps
+
+  JULIA_DEPOT_PATH="${srcdir}/.julia" julia --startup-file=no build.jl
+}
+
+package() {
+  cd PyCall.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh PyCall "${pkgdir}" "${pkgname}" julia-git
+
+  pymin_ver=$(python -c 'import sys; print(sys.version_info.minor)')
+  ((pynext_min=pymin_ver + 1))
+  depends+=("python>=3.${pymin_ver}.0" "python<3.${pynext_min}.0")
+}

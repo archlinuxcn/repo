@@ -1,25 +1,18 @@
 maintainers:
   - github: yuyichao
-
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
-
 repo_depends:
   - openspecfun-git
-  - openblas-lapack-git: openblas-git
-  - openblas-lapack-git
-  - libutf8proc-git
+  - openblas-git: openblas64-git
   - openlibm-git
-  - llvm-julia
-  - llvm-julia: llvm-libs-julia
   - proot-git
 
 update_on_build:
   - pkgbase: llvm-julia
-
 update_on:
   - source: vcs
-    lilac_throttle: 1d
+    lilac_throttle: 3d
   - source: alpm
     alpm: curl
     provided: libcurl.so
@@ -41,9 +34,13 @@ update_on:
   - source: alpm
     alpm: mbedtls
     provided: libmbedx509.so
-  - source: alpm
-    from_pattern: ^(\d+)\..*
-    to_pattern: \1
-    alpm: suitesparse
+  - source: alpmfiles
+    pkgname: suitesparse
+    strip_dir: true
+    filename: libcholmod.so.\d+
+  - source: alpmfiles
+    pkgname: libutf8proc
+    strip_dir: true
+    filename: libutf8proc.so.\d+
   - source: manual
-    manual: 4
+    manual: 1

@@ -1,0 +1,42 @@
+# Maintainer: Paul <pb.orzel@proton.me>
+
+pkgname=amdgpu_top-git
+_pkgname=${pkgname%-git}
+pkgver=0.4.0.r9.g5f6cf61
+pkgrel=1
+pkgdesc="Tool that shows AMD GPU utilization"
+arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
+url="https://github.com/Umio-Yasuno/${_pkgname}"
+license=("MIT")
+depends=("libdrm")
+makedepends=("git" "cargo")
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+prepare() {
+	cd "${_pkgname}/"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	cargo fetch --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+	cd "${_pkgname}/"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	cargo build --frozen --release
+}
+
+package() {
+	cd "${_pkgname}/"
+	install -Dm755 target/release/amdgpu_top -t "${pkgdir}/usr/bin/"
+	install -Dm644 assets/amdgpu_top.desktop -t "${pkgdir}/usr/share/applications/desktop/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}

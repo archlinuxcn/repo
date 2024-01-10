@@ -1,0 +1,18 @@
+pkgname=julia-git-imageio-src
+pkgver=0.6.7
+_commit=e947e647d8179d7c4f62f2691eec86002bdc439c
+pkgrel=2
+pkgdesc="ImageIO.jl"
+url="https://github.com/JuliaIO/ImageIO.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/ImageIO.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ImageIO.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ImageIO "${pkgdir}" "${pkgname}" julia-git
+}

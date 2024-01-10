@@ -1,0 +1,23 @@
+From 12724af6284195381377e074cc7f7c2fbc6cb05c Mon Sep 17 00:00:00 2001
+From: Yaowei Zhou <yaowei.zhou@intel.com>
+Date: Tue, 30 May 2023 12:45:27 +0800
+Subject: [PATCH] Enable VA-API flag on ozone wayland
+
+Bug: POC
+Change-Id: I4af3c2c4925958bbca86a25a4d9c66fd8922c806
+---
+
+diff --git a/ui/ozone/platform/wayland/ozone_platform_wayland.cc b/ui/ozone/platform/wayland/ozone_platform_wayland.cc
+index 1de5c418..9f2f1f5 100644
+--- a/ui/ozone/platform/wayland/ozone_platform_wayland.cc
++++ b/ui/ozone/platform/wayland/ozone_platform_wayland.cc
+@@ -311,6 +311,9 @@
+       // arbitrary position.
+       properties->supports_global_screen_coordinates =
+           kDefaultScreenCoordinateEnabled;
++
++      properties->supports_vaapi = true;
++
+       initialised = true;
+     }
+ 

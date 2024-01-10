@@ -3,8 +3,8 @@
 
 _pkgname=sacremoses
 pkgname=python-sacremoses
-pkgver=0.0.53
-pkgrel=2
+pkgver=0.1.1
+pkgrel=1
 pkgdesc='Python port of Moses tokenizer, truecaser and normalizer'
 arch=('any')
 url='https://github.com/alvations/sacremoses'
@@ -23,7 +23,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha512sums=('ba2be544dce53b208f925f1f5e9af1efa3fbbfbcc7989130c3abcc6b446c64385421325a5fdbf428100f47661493b126c79d5d153ceb0dd0defbc4ed3dccc8d7')
+sha512sums=('c000c8bed89c1417ee8004bd0750a6917f51a18e4b39f271ba467922f2bd2ce3460f6ad83c46f08de06997446fea3e380a5502801f0937b849939ad714d42a16')
 
 build() {
   cd "${_pkgname}-${pkgver}"

@@ -1,0 +1,18 @@
+pkgname=julia-git-cairo-src
+pkgver=1.0.5
+_commit=781dae0bb9783a7a5f51820d088d0b6554ffabe2
+pkgrel=2
+pkgdesc="Cairo.jl"
+url="https://github.com/JuliaGraphics/Cairo.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGraphics/Cairo.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Cairo.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Cairo "${pkgdir}" "${pkgname}" julia-git
+}

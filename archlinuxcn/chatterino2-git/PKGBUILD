@@ -1,14 +1,14 @@
 # Maintainer: Ckat <ckat@teknik.io>
 pkgname=chatterino2-git
 _pkgname=chatterino2
-pkgver=v2.4.5.r11.gba440e0cc
-pkgrel=2
+pkgver=2.4.5.r177.gfa5648f
+pkgrel=1
 pkgdesc='Second installment of the Twitch chat client series "Chatterino", dev/git version'
 arch=('any')
 url=https://chatterino.com
 license=('MIT')
-depends=('qt5-base' 'qt5-tools' 'boost-libs' 'openssl' 'qt5-imageformats' 'qtkeychain-qt5')
-makedepends=('git' 'qt5-svg' 'boost' 'cmake')
+depends=('qt6-base' 'qt6-tools' 'boost-libs' 'openssl' 'qt6-imageformats' 'qtkeychain-qt6' 'qt6-5compat' 'qt6-svg')
+makedepends=('git' 'boost' 'cmake')
 optdepends=('streamlink: For piping streams to video players'
             'pulseaudio: For audio output')
 provides=('chatterino')
@@ -17,14 +17,14 @@ install=$pkgname.install
 source=("git+https://github.com/Chatterino/chatterino2"
         "git+https://github.com/arsenm/sanitizers-cmake"
         "git+https://github.com/Chatterino/libcommuni#branch=chatterino-cmake"
-        "git+https://github.com/getsentry/crashpad"
         "git+https://github.com/pajlada/settings"
         "git+https://github.com/pajlada/signals"
         "git+https://github.com/pajlada/serialize"
         "git+https://github.com/Tencent/rapidjson"
         "git+https://github.com/zaphoyd/websocketpp"
         "git+https://github.com/Neargye/magic_enum"
-        "git+https://github.com/mackron/miniaudio")
+        "git+https://github.com/mackron/miniaudio"
+        "git+https://github.com/Chatterino/crash-handler")
 md5sums=('SKIP'
          'SKIP'
          'SKIP'
@@ -39,10 +39,7 @@ md5sums=('SKIP'
 
 pkgver() {
     cd "$srcdir/chatterino2"
-    ( set -o pipefail
-      git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
-      printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-    )
+    git describe --long --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare () {
@@ -50,9 +47,6 @@ prepare () {
     git submodule init
     git config submodule.cmake/sanitizers-cmake.url "$srcdir/sanitizers-cmake"
     git config submodule.lib/libcommuni.url "$srcdir/libcommuni"
-    git config submodule.lib/crashpad.url "$srcdir/crashpad"
-    # TODO: crashpad contains its own submodules, this needs to be resolved
-    # crashpad is currently not used by this build
     git config submodule.lib/settings.url "$srcdir/settings"
     git config submodule.lib/signals.url "$srcdir/signals"
     git config submodule.lib/serialize.url "$srcdir/serialize"
@@ -60,6 +54,7 @@ prepare () {
     git config submodule.lib/websocketpp.url "$srcdir/websocketpp"
     git config submodule.lib/miniaudio.url "$srcdir/miniaudio"
     git config submodule.lib/magicenum.url "$srcdir/magicenum"
+    git config submodule.tools/crash-handler.url "$srcdir/crash-handler"
     git -c protocol.file.allow=always submodule update
 }
 
@@ -67,10 +62,17 @@ build() {
     cd "$srcdir/chatterino2"
     mkdir -p build
     cd build
+    declare -a flags
+    if [[ $CXXFLAGS == *"-flto"* ]]; then
+        flags+=("-DCHATTERINO_LTO=ON")
+    fi
     cmake \
         -DCMAKE_BUILD_TYPE=Release \
         -DUSE_SYSTEM_QTKEYCHAIN=ON \
         -DUSE_PRECOMPILED_HEADERS=OFF \
+        -DBUILD_WITH_QT6=ON \
+        -DCHATTERINO_UPDATER=OFF \
+        "${flags[@]}" \
         ..
     cmake --build .
 }
@@ -87,5 +89,5 @@ package() {
         install -Dm755 "build/chatterino" "$pkgdir/usr/bin/chatterino"
     fi
     install -Dm644 "resources/com.chatterino.chatterino.desktop" "$pkgdir/usr/share/applications/com.chatterino.chatterino.desktop"
-    install -Dm644 "resources/icon.png" "$pkgdir/usr/share/pixmaps/chatterino.png"
+    install -Dm644 "resources/icon.png" "$pkgdir/usr/share/pixmaps/com.chatterino.chatterino.png"
 }

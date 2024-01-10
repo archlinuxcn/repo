@@ -1,0 +1,18 @@
+pkgname=julia-git-luxurysparse-src
+pkgver=0.7.4
+_commit=77ff1ed16ea89e422de660196a137ae082e34d3c
+pkgrel=2
+pkgdesc="LuxurySparse.jl"
+url="https://github.com/QuantumBFS/LuxurySparse.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/QuantumBFS/LuxurySparse.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LuxurySparse.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LuxurySparse "${pkgdir}" "${pkgname}" julia-git
+}

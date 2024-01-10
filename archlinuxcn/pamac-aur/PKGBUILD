@@ -4,15 +4,16 @@
 ENABLE_FAKE_GNOME_SOFTWARE=0
 
 pkgname=pamac-aur
-pkgver=11.6.0
-pkgrel=2
+pkgver=11.7.1
+pkgrel=1
 _pkgfixver=$pkgver
 _pkgfixvercli=11.6.0
+_pkgrelcli=3
 
-_commit='b6d4815b051d4048f00fa05a57959a5681a031b5'
-_commitcli='4a68ef57feb6d27c70a101999bcaba795d4d8588'
-sha256sums=('ae8b63e650eeba074f100c304b97f22096489f3d626574760735106eea2701a8'
-            '845573e577a5ba1e7fc6d6b778893b139e102c14918e4264161c5c8bc2b035f6')
+_commit='73cef1dc85695a0e5b498e86b40ff047c9a8048f'
+_commitcli='177fb231b1e2494a696db9eb0629364bb1dc6753'
+sha256sums=('8ad0f52b088818a8d9401984ba3e30d5ecfdc49d89fe89b65af9491a3f9f6c69'
+            'bd98a58276eaeee0c1671ab6c18a8947eeb23e9fb6ae6507f627f9714d3aee4e')
 
 pkgdesc="A Gtk3 frontend, Package Manager based on libalpm with AUR and Appstream support"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -24,11 +25,11 @@ optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
             'lxsession: needed for authentification in Xfce, LXDE etc.')
 makedepends=('gettext' 'itstool' 'vala' 'meson' 'ninja' 'gobject-introspection' 'xorgproto' 'asciidoc' 'git')
 conflicts=('pamac' 'pamac-tray-appindicator' 'pamac-cli')
-provides=("pamac=$_pkgfixver-$pkgrel" "pamac-cli=$_pkgfixvercli-$pkgrel")
+provides=("pamac=$_pkgfixver-$pkgrel" "pamac-cli=$_pkgfixvercli-$_pkgrelcli")
 options=(!emptydirs !strip)
 install=pamac.install
 source=("pamac-$_pkgfixver-$pkgrel.tar.gz::$url/-/archive/$_commit/pamac-$_commit.tar.gz"
-        "pamac-cli-$_pkgfixvercli-$pkgrel.tar.gz::$url-cli/-/archive/$_commitcli/pamac-cli-$_commitcli.tar.gz")
+        "pamac-cli-$_pkgfixvercli-$_pkgrelcli.tar.gz::$url-cli/-/archive/$_commitcli/pamac-cli-$_commitcli.tar.gz")
 
 define_meson=''
 if [ "${ENABLE_FAKE_GNOME_SOFTWARE}" = 1 ]; then
@@ -45,7 +46,7 @@ prepare() {
   sed -i -e "s|\"$_pkgfixver\"|\"$pkgver-$pkgrel\"|g" src/version.vala
   cd "${srcdir}/${_srcdircli}"
   # adjust version string
-  sed -i -e "s|\"$_pkgfixvercli\"|\"$_pkgfixvercli-$pkgrel\"|g" src/version.vala
+  sed -i -e "s|\"$_pkgfixvercli\"|\"$_pkgfixvercli-$_pkgrelcli\"|g" src/version.vala
 }
 
 build() {

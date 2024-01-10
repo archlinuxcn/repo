@@ -93,14 +93,14 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-git"
 fi
-pkgver=30.0.50.168605
+pkgver=30.0.50.170405
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
 url="http://www.gnu.org/software/emacs/"
 license=('GPL3')
 depends_nox=('gnutls' 'libxml2' 'jansson')
-depends=("${depends_nox[@]}" 'harfbuzz')
+depends=("${depends_nox[@]}" 'harfbuzz' 'libotf')
 makedepends=('git')
 provides=('emacs')
 conflicts=('emacs')
@@ -263,7 +263,6 @@ build() {
     --mandir=/usr/share/man
     --with-gameuser=:games
     --with-modules
-    --without-libotf
     --without-m17n-flt
 # Beware https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
 # dconf and gconf break font settings you set in ~/.emacs.

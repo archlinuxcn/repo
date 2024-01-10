@@ -1,0 +1,18 @@
+pkgname=julia-git-juliainterpreter-src
+pkgver=0.9.27
+_commit=6b1c476754ebaf581e0724cd6dea8f44fc1fba88
+pkgrel=1
+pkgdesc="JuliaInterpreter.jl"
+url="https://github.com/JuliaDebug/JuliaInterpreter.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaDebug/JuliaInterpreter.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd JuliaInterpreter.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh JuliaInterpreter "${pkgdir}" "${pkgname}" julia-git
+}

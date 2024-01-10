@@ -5,7 +5,7 @@
 
 _pkgname=cpdf-source
 pkgname=cpdf
-pkgver=2.6
+pkgver=2.6.2
 pkgrel=1
 pkgdesc='Powerful, free tools to manipulate PDF files including merge, encrypt, decrypt, scale, crop, rotate, bookmarks, stamp, logos, page numbers'
 arch=('x86_64')
@@ -20,7 +20,7 @@ makedepends=(
 )
 options=('!makeflags')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/johnwhitington/cpdf-source/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('6ad1d4a0c5d3d594cb7e8d6abada46082d1ab627bdf6d2e32c8c620daf76d4c1')
+sha256sums=('493bb1d739ff5863f02a95139244184d033e24459746f2f565f57c726a2417f6')
 
 _setvars() {
   OCAMLFIND_DESTDIR="${pkgdir}/$(ocamlfind printconf destdir)"

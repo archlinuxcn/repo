@@ -1,0 +1,18 @@
+pkgname=julia-git-extents-src
+pkgver=0.1.2
+_commit=ae784dd88cbadb6da19e176ff0b5931e359c0bf0
+pkgrel=1
+pkgdesc="Extents.jl"
+url="https://github.com/rafaqz/Extents.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/rafaqz/Extents.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Extents.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Extents "${pkgdir}" "${pkgname}" julia-git
+}

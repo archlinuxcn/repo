@@ -1,0 +1,18 @@
+pkgname=julia-git-imagebase-src
+pkgver=0.1.7
+_commit=55235aabc3f1b217190127f335eb11fed0550c41
+pkgrel=2
+pkgdesc="ImageBase.jl"
+url="https://github.com/JuliaImages/ImageBase.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaImages/ImageBase.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ImageBase.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ImageBase "${pkgdir}" "${pkgname}" julia-git
+}

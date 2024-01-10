@@ -1,0 +1,18 @@
+pkgname=julia-git-setrounding-src
+pkgver=0.2.1
+_commit=bdc80bcd8f7cf670d114ffe4991fb48c031a4fa4
+pkgrel=2
+pkgdesc="SetRounding.jl"
+url="https://github.com/JuliaIntervals/SetRounding.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIntervals/SetRounding.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SetRounding.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SetRounding "${pkgdir}" "${pkgname}" julia-git
+}

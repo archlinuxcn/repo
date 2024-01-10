@@ -1,0 +1,26 @@
+pkgname=julia-git-libvorbis_jll-src
+pkgver=1.3.7+1
+_commit=6d8beef6fc50e574aa657f69a14e9d52dd0af4a2
+pkgrel=2
+pkgdesc="libvorbis_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/libvorbis_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libvorbis)
+source=("git+https://github.com/JuliaBinaryWrappers/libvorbis_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'a340c6cb4e0b4b1d56e25c03f2352687b83309d64de20fe6d403dbf8fd52ff21')
+
+build() {
+  cd libvorbis_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl libvorbis_jll ../jll.toml
+}
+
+package() {
+  cd libvorbis_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh libvorbis_jll "${pkgdir}" "${pkgname}" julia-git
+}

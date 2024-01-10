@@ -1,0 +1,18 @@
+pkgname=julia-git-githubactions-src
+pkgver=0.1.7
+_commit=e988cc204e34bf1b12b28c3f1f00e5ae347af30f
+pkgrel=2
+pkgdesc="GitHubActions.jl"
+url="https://github.com/julia-actions/GitHubActions.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/julia-actions/GitHubActions.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd GitHubActions.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh GitHubActions "${pkgdir}" "${pkgname}" julia-git
+}

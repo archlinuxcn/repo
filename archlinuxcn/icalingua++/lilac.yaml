@@ -1,12 +1,11 @@
 maintainers:
-  - github: sihuan
+  - github: Integral-Tech
 
-build_prefix: extra-x86_64
-
-pre_build_script: aur_pre_build(maintainers=['sukanka','zzy-ac','Universebenzene','Kevin_Liu'])
-
-post_build: aur_post_build
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: git_pkgbuild_commit()
 
 update_on:
-  - source: aur
-    aur: icalingua++
+  - source: github
+    github: Icalingua-plus-plus/Icalingua-plus-plus
+    use_latest_release: true
+    prefix: v

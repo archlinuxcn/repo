@@ -4,10 +4,10 @@
 _pkgname=devtools
 pkgname=devtools-archlinuxcn
 epoch=1
-pkgver=1.0.3
+pkgver=1.0.4
 pkgrel=2
 # curl https://api.github.com/repos/archlinuxcn/devtools/git/ref/tags/$pkgver-archlinuxcn1 | jq -r .object.sha
-_tag=0589cd09d493bd8c80f4e2c20a80dd93a38791d5
+_tag=ac4d056aa8254c8487ed93834a6d7e7b1e63e153
 _upstream_pkgrel=1
 pkgdesc='Tools for Arch Linux package maintainers, archlinuxcn fork'
 arch=('any')
@@ -29,7 +29,7 @@ depends=(
   sed
   util-linux
 
-  bzr
+  breezy
   git
   mercurial
   subversion

@@ -1,4 +1,4 @@
-pre_build_script: aur_pre_build(maintainers=['Kr1ss'])
+pre_build_script: aur_pre_build(maintainers=['ido'])
 
 post_build: aur_post_build
 
@@ -6,6 +6,8 @@ update_on:
   - source: aur
     aur: getmail6
   - alias: python
+  - source: manual
+    manual: 1.0.0
 
 maintainers:
   - github: dctxmei

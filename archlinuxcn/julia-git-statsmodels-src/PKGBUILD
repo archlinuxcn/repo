@@ -1,0 +1,18 @@
+pkgname=julia-git-statsmodels-src
+pkgver=0.7.3
+_commit=2c73de38d5158ae2d478c1e783c89f66751814cc
+pkgrel=2
+pkgdesc="StatsModels.jl"
+url="https://github.com/JuliaStats/StatsModels.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaStats/StatsModels.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd StatsModels.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh StatsModels "${pkgdir}" "${pkgname}" julia-git
+}

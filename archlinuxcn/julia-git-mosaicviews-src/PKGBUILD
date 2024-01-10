@@ -1,0 +1,18 @@
+pkgname=julia-git-mosaicviews-src
+pkgver=0.3.4
+_commit=7bb84dfb82532d0322220dff84825a3626700ac5
+pkgrel=2
+pkgdesc="MosaicViews.jl"
+url="https://github.com/JuliaArrays/MosaicViews.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaArrays/MosaicViews.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd MosaicViews.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MosaicViews "${pkgdir}" "${pkgname}" julia-git
+}

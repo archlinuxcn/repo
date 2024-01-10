@@ -3,7 +3,7 @@
 
 pkgbase=bcc-git
 pkgname=('bcc-git' 'bcc-tools-git' 'python-bcc-git')
-pkgver=0.11.0.r1463.ec49363e2
+pkgver=0.11.0.r1561.d272c0b7e
 pkgrel=1
 pkgdesc="BPF Compiler Collection - latest git code"
 arch=('x86_64')
@@ -43,6 +43,7 @@ build() {
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+    -DPYTHON_PREFIX=/usr \
     -DENABLE_EXAMPLES=off \
     -DENABLE_TESTS=off \
     -DENABLE_LLVM_SHARED=on

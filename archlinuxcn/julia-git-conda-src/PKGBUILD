@@ -1,0 +1,30 @@
+pkgname=julia-git-conda-src
+pkgver=1.10.0
+_commit=047bb989807c19a40c3fe68de996edc86133e107
+pkgrel=1
+pkgdesc="Conda.jl"
+url="https://github.com/JuliaPy/Conda.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaPy/Conda.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+build() {
+  cd Conda.jl
+
+  # The build script captures the environment for the build user.
+  cat > deps/deps.jl <<EOF
+const ROOTENV = joinpath(dirname(@__FILE__), "usr")
+const MINICONDA_VERSION = "3"
+const CONDA_EXE = "/usr/bin/conda"
+EOF
+}
+
+package() {
+  cd Conda.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Conda "${pkgdir}" "${pkgname}" julia-git
+  mkdir -p "${dest_dir}/deps/usr"
+}

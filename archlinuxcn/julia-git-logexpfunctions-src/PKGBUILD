@@ -1,0 +1,18 @@
+pkgname=julia-git-logexpfunctions-src
+pkgver=0.3.26
+_commit=a1c4fda2b9cc4c59c184648c0cfc7f694c415bf3
+pkgrel=3
+pkgdesc="LogExpFunctions.jl"
+url="https://github.com/JuliaStats/LogExpFunctions.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaStats/LogExpFunctions.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LogExpFunctions.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LogExpFunctions "${pkgdir}" "${pkgname}" julia-git
+}

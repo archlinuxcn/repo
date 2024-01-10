@@ -1,0 +1,18 @@
+pkgname=julia-git-partialfunctions-src
+pkgver=1.2.0
+_commit=74ba57d9b58a882984b3a3a4374a2d61bead96a7
+pkgrel=2
+pkgdesc="PartialFunctions.jl"
+url="https://github.com/archermarx/PartialFunctions.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/archermarx/PartialFunctions.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd PartialFunctions.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh PartialFunctions "${pkgdir}" "${pkgname}" julia-git
+}

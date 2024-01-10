@@ -1,0 +1,26 @@
+pkgname=julia-git-mtdev_jll-src
+pkgver=1.1.6+0
+_commit=a19df607b625d6d9e67fc892cc9cc071dd504ec1
+pkgrel=3
+pkgdesc="mtdev_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/mtdev_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git mtdev)
+source=("git+https://github.com/JuliaBinaryWrappers/mtdev_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '23a81c9457aa89f1127a4f37da7d2795abe4fd953f4e17a0e6f23201325b56d7')
+
+build() {
+  cd mtdev_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl mtdev_jll ../jll.toml
+}
+
+package() {
+  cd mtdev_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh mtdev_jll "${pkgdir}" "${pkgname}" julia-git
+}

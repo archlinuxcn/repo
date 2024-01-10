@@ -1,0 +1,39 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 92503cf..71694f9 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,7 +1,7 @@
+ [build-system]
+ requires = [
+     "setuptools>=54.0", 
+-    "setuptools_scm[toml]>=5.0,<7.0", 
++    "setuptools_scm[toml]>=5.0,<9.0", 
+     "wheel>=0.36.2", 
+     "Cython>=0.29.32"
+     ]
+diff --git a/setup.cfg b/setup.cfg
+index dc94813..67dd8d1 100644
+--- a/setup.cfg
++++ b/setup.cfg
+@@ -2,7 +2,7 @@
+ setup_requires = 
+ 	cython>=0.29.22
+ 	setuptools>=54.0
+-	setuptools_scm[toml]>=5.0,<7.0
++	setuptools_scm[toml]>=5.0,<9.0
+ 	wheel>=0.36.2
+ 
+ [egg_info]
+diff --git a/setup.py b/setup.py
+index ffb903c..5c3798a 100644
+--- a/setup.py
++++ b/setup.py
+@@ -334,7 +334,7 @@ setup(
+       "Operating System :: Unix",
+     ],
+     zip_safe = False,
+-    setup_requires=['setuptools_scm[toml]>=5.0,<7.0', 'Cython>=0.29.22'],
++    setup_requires=['setuptools_scm[toml]>=5.0,<9.0', 'Cython>=0.29.22'],
+     tests_require=['psutil<5.9.5', 'pytest', 'pytest-timeout'],
+     ext_modules = ext_modules(),
+     packages = [ 'pymssql'],

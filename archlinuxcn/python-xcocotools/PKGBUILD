@@ -2,8 +2,8 @@
 
 _pkgname=xtcocoapi
 pkgname=python-xcocotools
-pkgver=1.14
-pkgrel=1
+pkgver=1.14.3
+pkgrel=2
 pkgdesc='Extended COCO-API'
 arch=('x86_64')
 url='https://github.com/jin-s13/xtcocoapi'
@@ -14,19 +14,22 @@ depends=(
 )
 makedepends=(
   cython
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/jin-s13/xtcocoapi/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('e2c5a18287759fc3dff94845b71142f834e9e5c2e8f9bd682e959b7365b438ed922bfe0b487fb1ac50a9fdce1f0a3dac326646c2dcdbcffb75f528a5a5405997')
+sha512sums=('99cd46eaee88ab4eaf7154a8fa0aca7c36aafa96e9cd49b836f338884f24206fdd819dbf23931cbd51fc1aeb8c60ffed28eef77d16cb5095e56f3819643b7b8d')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:

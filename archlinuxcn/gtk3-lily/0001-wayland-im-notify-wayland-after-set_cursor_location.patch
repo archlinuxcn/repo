@@ -1,0 +1,28 @@
+From eebb70ef4695aed950df28ce4cf8eab5453de49a Mon Sep 17 00:00:00 2001
+From: lilydjwg <lilydjwg@gmail.com>
+Date: Mon, 20 Nov 2023 16:46:48 +0800
+Subject: [PATCH] wayland im: notify wayland after set_cursor_location
+
+Or the location of input window lags behind.
+
+Fixes #5030.
+---
+ modules/input/imwayland.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/modules/input/imwayland.c b/modules/input/imwayland.c
+index 1fc7ab671d..7ac7e7df13 100644
+--- a/modules/input/imwayland.c
++++ b/modules/input/imwayland.c
+@@ -887,6 +887,8 @@ gtk_im_context_wayland_set_cursor_location (GtkIMContext *context,
+     gtk_event_controller_reset (GTK_EVENT_CONTROLLER (context_wayland->gesture));
+ 
+   context_wayland->cursor_rect = *rect;
++  notify_cursor_location (context_wayland);
++  commit_state (context_wayland);
+ }
+ 
+ static void
+-- 
+2.43.0
+

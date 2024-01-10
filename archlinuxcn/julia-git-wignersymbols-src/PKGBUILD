@@ -1,0 +1,18 @@
+pkgname=julia-git-wignersymbols-src
+pkgver=2.0.0
+_commit=c12478f6f051ac6fdb31bb8a208cfde9b208bcbc
+pkgrel=2
+pkgdesc="WignerSymbols.jl"
+url="https://github.com/Jutho/WignerSymbols.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/Jutho/WignerSymbols.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd WignerSymbols.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh WignerSymbols "${pkgdir}" "${pkgname}" julia-git
+}

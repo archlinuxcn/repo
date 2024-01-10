@@ -1,0 +1,26 @@
+pkgname=julia-git-decfp_jll-src
+pkgver=2.0.3+1
+_commit=6957198fd967776a1d437829ce14471949dd91df
+pkgrel=2
+pkgdesc="DecFP_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/DecFP_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git intel-libdfp)
+source=("git+https://github.com/JuliaBinaryWrappers/DecFP_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '3b76e1010f9f8e4029cc4004ff7815a9c367538e8dbef290ee554736ecf2e182')
+
+build() {
+  cd DecFP_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl DecFP_jll ../jll.toml
+}
+
+package() {
+  cd DecFP_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh DecFP_jll "${pkgdir}" "${pkgname}" julia-git
+}

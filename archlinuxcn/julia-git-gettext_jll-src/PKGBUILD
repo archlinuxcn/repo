@@ -1,0 +1,26 @@
+pkgname=julia-git-gettext_jll-src
+pkgver=0.21.0+0
+_commit=fc208fa027772a7529fa4d2a3fe3c024b6515eee
+pkgrel=5
+pkgdesc="Gettext_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Gettext_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git gettext)
+source=("git+https://github.com/JuliaBinaryWrappers/Gettext_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '9009ff327c034857f028e27b0a8f15d2eae9920d71f88872416a34c213d132cf')
+
+build() {
+  cd Gettext_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Gettext_jll ../jll.toml
+}
+
+package() {
+  cd Gettext_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Gettext_jll "${pkgdir}" "${pkgname}" julia-git
+}

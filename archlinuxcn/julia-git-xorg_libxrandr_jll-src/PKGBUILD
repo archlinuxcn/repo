@@ -1,0 +1,26 @@
+pkgname=julia-git-xorg_libxrandr_jll-src
+pkgver=1.5.2+4
+_commit=9eb77fee830697e8335e1a9a81492fab028c5c91
+pkgrel=3
+pkgdesc="Xorg_libXrandr_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Xorg_libXrandr_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libxrandr)
+source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libXrandr_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'ff4431c111a384e843ae19d2dfa6a62c32e433640736944df77adf88f2f1987b')
+
+build() {
+  cd Xorg_libXrandr_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Xorg_libXrandr_jll ../jll.toml
+}
+
+package() {
+  cd Xorg_libXrandr_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Xorg_libXrandr_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,26 @@
+pkgname=julia-git-xorg_libxrender_jll-src
+pkgver=0.9.10+4
+_commit=2b2846a5f147f58f77b2ea0a26692a0160d438e8
+pkgrel=3
+pkgdesc="Xorg_libXrender_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Xorg_libXrender_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libxrender)
+source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libXrender_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '8d7f637f105213fe648d70c8aa301fea8ad5612f5c093725c594830e48fecf91')
+
+build() {
+  cd Xorg_libXrender_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Xorg_libXrender_jll ../jll.toml
+}
+
+package() {
+  cd Xorg_libXrender_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Xorg_libXrender_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,34 @@
+From da870a559cf619e8b4791c3262d8eea79efc8652 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Michael=20La=C3=9F?= <bevan@bi-co.net>
+Date: Sat, 4 Nov 2023 12:30:04 +0100
+Subject: [PATCH 2/3] Quick & Dirty patch to allow finding ngspice on Arch
+ Linux
+
+---
+ pri/spicedetect.pri | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/pri/spicedetect.pri b/pri/spicedetect.pri
+index cfff340a..2e229ec5 100644
+--- a/pri/spicedetect.pri
++++ b/pri/spicedetect.pri
+@@ -14,13 +14,12 @@
+ # ********************************************************************/
+ 
+ 
+-message("Using fritzing ngspice detect script.")
+-NGSPICEPATH = ../../ngspice-40
+-NGSPICEPATH = $$absolute_path($${NGSPICEPATH})
++message("Using customized ngspice detect script.")
++NGSPICEPATH = "/usr/include/ngspice/"
+ 
+ exists($$NGSPICEPATH) {
+     message("using $${NGSPICEPATH}")
+-	INCLUDEPATH += $$NGSPICEPATH/include
++	INCLUDEPATH += $$NGSPICEPATH
+ } else {
+     error("ngspice not found in $${NGSPICEPATH}")
+ }
+-- 
+2.42.1
+

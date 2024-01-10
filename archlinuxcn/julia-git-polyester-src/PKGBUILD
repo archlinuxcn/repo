@@ -1,0 +1,18 @@
+pkgname=julia-git-polyester-src
+pkgver=0.7.9
+_commit=23816abcdf4cebbd5f2f2fb5a665d1fda75dba49
+pkgrel=1
+pkgdesc="Polyester.jl"
+url="https://github.com/JuliaSIMD/Polyester.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSIMD/Polyester.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Polyester.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Polyester "${pkgdir}" "${pkgname}" julia-git
+}

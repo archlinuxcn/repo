@@ -1,49 +1,58 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
-# Contributor: Adrian Perez de Castro <aperez@igalia.com>
-# Contributor: Antonin Décimo <antonin dot decimo at gmail dot com>
+# Contributor: Brett Cornwall <ainola@archlinux.org>
+# Contributor: Maxim Baz <$pkgname at maximbaz dot com>
+# Contributor: Omar Pakker
 pkgname=wlroots-lily-git
-pkgver=0.17.0.20230407.032123
+pkgver=0.17.0.20231207.070459
 pkgrel=1
-license=(MIT)
+license=('MIT')
 pkgdesc='Modular Wayland compositor library (git version, with patches)'
-url=https://gitlab.freedesktop.org/wlroots/wlroots
-arch=(x86_64)
-provides=("libwlroots.so" "wlroots=${pkgver%%.r*}")
-conflicts=(wlroots wlroots-git)
-options=(debug)
+url='https://gitlab.freedesktop.org/lilydjwg/wlroots'
+arch=('x86_64')
 depends=(
-	glslang
-	libinput
-	libxcb
-	opengl-driver
-	xcb-util-errors
-	xcb-util-renderutil
-	xcb-util-wm
-        libdisplay-info
-        libliftoff
+    'libdisplay-info.so'
+    'libliftoff.so'
+    'libglvnd'
+    'libinput'
+    'libpixman-1.so'
+    'libseat.so'
+    'libudev.so'
+    'libvulkan.so'
+    'libwayland-client.so'
+    'libwayland-server.so'
+    'libxcb'
+    'libxkbcommon.so'
+    'opengl-driver'
+    'xcb-util-errors'
+    'xcb-util-renderutil'
+    'xcb-util-wm'
 
-        'libpixman-1.so'
-        'libseat.so'
-        'libudev.so'
-        'libvulkan.so'
-        'libwayland-client.so'
-        'libwayland-server.so'
-        'libxkbcommon.so'
-        'libdisplay-info.so'
-        'libliftoff.so'
-
-	xorg-xwayland)
-optdepends=('xorg-xwayland-lily: HiDPI support, see https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/733')
+    'xorg-xwayland')
 makedepends=(
-	git
-	meson
-	vulkan-headers
-	wayland-protocols
-	xorgproto)
+    'git'
+    'glslang'
+    'meson'
+    'ninja'
+    'systemd'
+    'vulkan-headers'
+    'wayland-protocols'
+    'xorg-xwayland'
+)
+optdepends=(
+    'xorg-xwayland-lily: HiDPI support, see https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/733'
+)
+provides=(
+    'libwlroots.so'
+    "wlroots=${pkgver%%.r*}"
+)
+conflicts=(wlroots wlroots-git)
+options=(
+    'debug'
+)
 source=("${pkgname}::git+https://gitlab.freedesktop.org/lilydjwg/wlroots.git#branch=lilydjwg")
 sha512sums=('SKIP')
 
-pkgver () {
+pkgver() {
   cd "${pkgname}"
   (
      set -o pipefail
@@ -52,16 +61,15 @@ pkgver () {
   )
 }
 
-build () {
-  arch-meson \
-    --buildtype=debug \
-    -Dwerror=false \
-    -Dexamples=false \
-    "${pkgname}" build
-  meson compile -C build
+build() {
+    arch-meson \
+      -Dwerror=false \
+      -Dexamples=false \
+      "${pkgname}" build
+    ninja -C build
 }
 
-package () {
-  DESTDIR="${pkgdir}" meson install -C build
-  install -Dm644 "${pkgname}/"LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+package() {
+    DESTDIR="$pkgdir" ninja -C build install
+    install -Dm644 "${pkgname}/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
 }

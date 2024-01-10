@@ -1,52 +1,41 @@
-# Maintainer: Dct Mei <dctxmei@yandex.com>
+# Maintainer: Dct Mei <dctxmei at yandex dot com>
+# Co-Maintainer: RogueGirl <3a33oxx40 at mozmail dot com>
 
 pkgname=geph4-client
-pkgver=4.8.7
+pkgver=4.11.0
 pkgrel=1
-pkgdesc="A command-line Geph4 toolset"
+pkgdesc="The command-line Geph client"
 arch=('x86_64')
-url="https://github.com/geph-official/geph4"
+url="https://github.com/geph-official/geph4-client"
 license=('GPL3')
-groups=('geph4')
-depends=('gcc-libs')
-makedepends=('rust')
-conflicts=('geph4-client-git')
+depends=('gcc-libs' 'glibc')
+makedepends=('cargo')
 backup=('etc/default/geph4-client')
 options=('!lto')
-source=("geph4-client.default"
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
+        "geph4-client.default"
         "geph4-client.service")
-sha256sums=('4e6ac4d3e31d7bf0fd4cb4b9269bbb124501a07a4701ce9728e857751773e4dd'
-            'e3d7e3afb1b524e93e60a80a21773a16de17643865bdf6a1a1f2e17fc2cc8e2d'
-            '042e3cc12e4043635a923f0198a060691253bc66db1fe2714599768e9c0972ce')
+sha256sums=('b1ae2cb61b60014736855e2af35032deeed74fbf6375be4b862daeb0d98ccb24'
+            '214d884807236b9d4d82ba01d8cd468afc62071e9c352cca642037426b2da661'
+            '317191b59af3d7c674069268738f4734237f12da01b31814d871a9df669f4927')
 
-_prepare() {
-    if [[ "${pkgver}" =~ '.alpha' ]]; then
-        _pkgver="${pkgver%%.alpha*}"
-        _alpha="${pkgver#*.alpha}"
-        source+=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${_pkgver}-alpha${_alpha}.tar.gz")
-        _pkgver="${_pkgver}-alpha${_alpha}"
-    elif [[ "${pkgver}" =~ '.beta' ]]; then
-        _pkgver="${pkgver%%.beta*}"
-        _beta="${pkgver#*.beta}"
-        source+=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${_pkgver}-beta${_beta}.tar.gz")
-        _pkgver="${_pkgver}-beta${_beta}"
-    else
-        source+=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-        _pkgver="${pkgver}"
-    fi
+prepare() {
+    cd "${pkgname}-${pkgver}"
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
 
-_prepare
-
 build() {
-    cd "${srcdir}"/"${pkgname}-${_pkgver}"/
-    cargo build --release --manifest-path=Cargo.toml
+    cd "${pkgname}-${pkgver}"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo build --frozen --release
 }
 
 package() {
-    cd "${srcdir}"/"${pkgname}-${_pkgver}"/
-    install -Dm 644 LICENSE.md "${pkgdir}"/usr/share/licenses/geph4-client/LICENSE
-    install -Dm 755 target/release/geph4-client -t "${pkgdir}"/usr/bin/
-    install -Dm 644 "${srcdir}"/geph4-client.default "${pkgdir}"/etc/default/geph4-client
-    install -Dm 644 "${srcdir}"/geph4-client.service -t "${pkgdir}"/usr/lib/systemd/system/
+    cd "${pkgname}-${pkgver}"
+    install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+    install -Dm644 LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    install -Dm644 "${srcdir}/geph4-client.default" "${pkgdir}/etc/default/geph4-client"
+    install -Dm644 "${srcdir}/geph4-client.service" -t "${pkgdir}/usr/lib/systemd/system/"
 }

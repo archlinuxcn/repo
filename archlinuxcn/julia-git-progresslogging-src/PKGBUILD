@@ -1,0 +1,18 @@
+pkgname=julia-git-progresslogging-src
+pkgver=0.1.4
+_commit=9226556a1cb31d3045c6fcf40cb0235bf85c72f1
+pkgrel=2
+pkgdesc="ProgressLogging.jl"
+url="https://github.com/JuliaLogging/ProgressLogging.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaLogging/ProgressLogging.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ProgressLogging.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ProgressLogging "${pkgdir}" "${pkgname}" julia-git
+}

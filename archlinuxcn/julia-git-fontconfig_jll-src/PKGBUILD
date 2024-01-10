@@ -1,0 +1,26 @@
+pkgname=julia-git-fontconfig_jll-src
+pkgver=2.13.93+0
+_commit=4a774dc6b40531890eb0cc37b09976802ac1bbf1
+pkgrel=2
+pkgdesc="Fontconfig_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Fontconfig_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git fontconfig)
+source=("git+https://github.com/JuliaBinaryWrappers/Fontconfig_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'd8caa3f40a86710ea517b7b6192dc3d2c5f5538bdae1b02cab0595d6f6c52457')
+
+build() {
+  cd Fontconfig_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Fontconfig_jll ../jll.toml
+}
+
+package() {
+  cd Fontconfig_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Fontconfig_jll "${pkgdir}" "${pkgname}" julia-git
+}

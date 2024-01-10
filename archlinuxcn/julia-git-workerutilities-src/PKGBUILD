@@ -1,0 +1,18 @@
+pkgname=julia-git-workerutilities-src
+pkgver=1.6.1
+_commit=3068b00d4fc0209b1836381673f625d1a4dda7f2
+pkgrel=2
+pkgdesc="WorkerUtilities.jl"
+url="https://github.com/JuliaServices/WorkerUtilities.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaServices/WorkerUtilities.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd WorkerUtilities.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh WorkerUtilities "${pkgdir}" "${pkgname}" julia-git
+}

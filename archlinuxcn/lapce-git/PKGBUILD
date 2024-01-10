@@ -3,8 +3,8 @@
 
 pkgname=lapce-git
 _pkgname=${pkgname%-git}
-pkgver=0.2.8.r319.g8d7a1f1
-pkgrel=2
+pkgver=0.3.1.r21.g86981f1
+pkgrel=1
 pkgdesc='Lightning-fast and Powerful Code Editor'
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://lapce.dev"
@@ -26,7 +26,7 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
-	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	cargo fetch --target "$CARCH-unknown-linux-gnu"
 }
 
 build() {

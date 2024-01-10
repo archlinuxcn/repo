@@ -1,0 +1,18 @@
+pkgname=julia-git-sixel-src
+pkgver=0.1.3
+_commit=412b5ea97bb83d31b1e8ed340670a00b214b61b3
+pkgrel=2
+pkgdesc="Sixel.jl"
+url="https://github.com/JuliaIO/Sixel.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/Sixel.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Sixel.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Sixel "${pkgdir}" "${pkgname}" julia-git
+}

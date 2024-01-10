@@ -1,0 +1,34 @@
+pkg=julia-git-cthulhu-src
+_subpkgs=(TypedSyntax)
+pkgname=(julia-git-cthulhu-src)
+pkgver=2.10.0
+_commit=82f678d639d8a9e9278419c7401dac8b6edfa1a2
+pkgrel=1
+pkgdesc="Cthulhu.jl"
+url="https://github.com/JuliaDebug/Cthulhu.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaDebug/Cthulhu.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package_julia-git-cthulhu-src() {
+  cd Cthulhu.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Cthulhu "${pkgdir}" "${pkgname}" julia-git
+
+  rm -rf "${dest_dir}"/TypedSyntax
+}
+
+_subpackage() {
+  local _subpkg=$1
+  cd Cthulhu.jl/${_subpkg}
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ${_subpkg} "${pkgdir}" "${pkgname}" julia-git
+}
+
+for _subpkg in "${_subpkgs[@]}"; do
+  pkgname=("${pkgname[@]}" julia-git-${_subpkg,,}-src)
+  eval "package_julia-git-${_subpkg,,}-src() { _subpackage ${_subpkg}; }"
+done

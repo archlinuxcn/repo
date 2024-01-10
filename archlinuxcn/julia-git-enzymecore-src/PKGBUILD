@@ -1,0 +1,18 @@
+pkgname=julia-git-enzymecore-src
+pkgver=0.6.4
+_commit=18d9cdb2b903827db3e9a56850729632e1ab775c
+pkgrel=1
+pkgdesc="EnzymeCore.jl"
+url="https://github.com/EnzymeAD/Enzyme.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/EnzymeAD/Enzyme.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Enzyme.jl/lib/EnzymeCore
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh EnzymeCore "${pkgdir}" "${pkgname}" julia-git
+}

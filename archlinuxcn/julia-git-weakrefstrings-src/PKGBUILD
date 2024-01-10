@@ -1,0 +1,18 @@
+pkgname=julia-git-weakrefstrings-src
+pkgver=1.4.2
+_commit=4114b71a70fc66d4aeb5d7e6a874fa01e7502296
+pkgrel=2
+pkgdesc="WeakRefStrings.jl"
+url="https://github.com/JuliaData/WeakRefStrings.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaData/WeakRefStrings.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd WeakRefStrings.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh WeakRefStrings "${pkgdir}" "${pkgname}" julia-git
+}

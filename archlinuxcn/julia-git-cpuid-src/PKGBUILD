@@ -1,0 +1,18 @@
+pkgname=julia-git-cpuid-src
+pkgver=0.3.1
+_commit=df5fa0b9a02914b460b91b7d34434e527b67a41c
+pkgrel=2
+pkgdesc="CpuId.jl"
+url="https://github.com/m-j-w/CpuId.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/m-j-w/CpuId.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd CpuId.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh CpuId "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,45 @@
+# Maintainer: Will Handley <wh260@cam.ac.uk> (aur.archlinux.org/account/wjhandley)
+
+_versioned_llvm=15
+if [[ -n $_versioned_llvm ]]; then
+  _clang=clang$_versioned_llvm
+else
+  _clang=clang
+fi
+
+pkgname=enzyme-julia
+pkgver=0.0.98
+pkgrel=1
+pkgdesc="High-performance automatic differentiation of LLVM and MLIR."
+arch=(aarch64 x86_64)
+url="https://enzyme.mit.edu"
+license=('Apache')
+depends=(llvm-julia)
+makedepends=(cmake git $_clang)
+source=("https://github.com/EnzymeAD/Enzyme/archive/v${pkgver}.tar.gz")
+sha256sums=('03a604f9a6c3782490ae1c39714bb0205132c2122d692997b3511f185dd868aa')
+
+build() {
+  if [[ -n $_versioned_llvm ]]; then
+    _llvm_dir=/usr/lib/llvm$_versioned_llvm/lib/cmake/llvm
+    _clang_dir=/usr/lib/llvm$_versioned_llvm/lib/cmake/clang
+  else
+    _llvm_dir=/usr/lib/cmake/llvm
+    _clang_dir=/usr/liblib/cmake/clang
+  fi
+  cmake -B build -S "Enzyme-$pkgver/enzyme" \
+        -DCMAKE_BUILD_TYPE='RelWithDebInfo' \
+        -DLLVM_DIR=$_llvm_dir \
+        -DClang_DIR=$_clang_dir \
+        -DCMAKE_INSTALL_PREFIX='/usr' \
+        -DENZYME_CLANG=On \
+        -DENZYME_EXTERNAL_SHARED_LIB=On \
+        -DLLVM_LINK_LLVM_DYLIB=On \
+        -DBUILD_SHARED_LIBS=On \
+        -Wno-dev
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}

@@ -1,0 +1,40 @@
+# Maintainer: Gyara <laxect39@gmail.com>
+
+pkgname=beancount-language-server
+pkgver=1.3.3
+pkgrel=2
+pkgdesc="A Language Server Protocol (LSP) for beancount files"
+arch=('x86_64' 'aarch64')
+url="https://github.com/polarmutex/${pkgname}"
+license=('MIT')
+depends=('beancount')
+makedepends=('cargo')
+source=($pkgname-$pkgver.tar.gz::https://github.com/polarmutex/${pkgname}/archive/v${pkgver//_/-}.tar.gz)
+b2sums=('d893b320e93bd0796a3923c03a21597eb66e64b48bab278c89213a6bc08a75a9754d5e63745d96a3bfd7dfbb064c8539ac2e11ee26de47658f413e4c24e1d622')
+options=(!lto)
+
+prepare() {
+    cd "${pkgname}-${pkgver}"
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+    cd "${pkgname}-${pkgver}"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo build --frozen --release --all-features
+}
+
+check() {
+    cd "${pkgname}-${pkgver}"
+    export RUSTUP_TOOLCHAIN=stable
+    cargo test --frozen --all-features --workspace
+}
+
+
+package() {
+    cd "${pkgname}-${pkgver}"
+    install -Dm755 "target/release/$pkgname" "$pkgdir/usr/bin/$pkgname"
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

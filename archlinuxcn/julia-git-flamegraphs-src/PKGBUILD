@@ -1,0 +1,18 @@
+pkgname=julia-git-flamegraphs-src
+pkgver=1.0.0
+_commit=2f9656eb9afe4b5630a7eaa67bf9d9d9b0c8e68a
+pkgrel=3
+pkgdesc="FlameGraphs.jl"
+url="https://github.com/timholy/FlameGraphs.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/timholy/FlameGraphs.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd FlameGraphs.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh FlameGraphs "${pkgdir}" "${pkgname}" julia-git
+}

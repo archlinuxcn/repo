@@ -1,0 +1,76 @@
+From 745633e606ca70bf926545149beed35aab6450b7 Mon Sep 17 00:00:00 2001
+From: Carlos Garcia Campos <cgarcia@igalia.com>
+Date: Wed, 4 Oct 2023 10:19:28 +0200
+Subject: [PATCH] [GTK] Disable DMABuf renderer for NVIDIA proprietary drivers
+ https://bugs.webkit.org/show_bug.cgi?id=262607
+
+Reviewed by NOBODY (OOPS!).
+
+Some NVIDIA users are reporting nothing is rendered, so let's just
+disable the DMA-BUF renderer until we figure out how to make it work.
+
+* Source/WebKit/UIProcess/gtk/AcceleratedBackingStoreDMABuf.cpp:
+(WebKit::isNVIDIA):
+(WebKit::AcceleratedBackingStoreDMABuf::rendererBufferMode):
+---
+ .../gtk/AcceleratedBackingStoreDMABuf.cpp     | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/Source/WebKit/UIProcess/gtk/AcceleratedBackingStoreDMABuf.cpp b/Source/WebKit/UIProcess/gtk/AcceleratedBackingStoreDMABuf.cpp
+index 9c0f5efdfb0e3..a03842e15db0e 100644
+--- a/Source/WebKit/UIProcess/gtk/AcceleratedBackingStoreDMABuf.cpp
++++ b/Source/WebKit/UIProcess/gtk/AcceleratedBackingStoreDMABuf.cpp
+@@ -38,11 +38,13 @@
+ #include <WebCore/GLContext.h>
+ #include <WebCore/IntRect.h>
+ #include <WebCore/PlatformDisplay.h>
++#include <WebCore/PlatformDisplaySurfaceless.h>
+ #include <epoxy/egl.h>
+ #include <wtf/glib/GUniquePtr.h>
+ 
+ #if USE(GBM)
+ #include <WebCore/DMABufFormat.h>
++#include <WebCore/PlatformDisplayGBM.h>
+ #include <gbm.h>
+ static constexpr uint64_t s_dmabufInvalidModifier = uint64_t(WebCore::DMABufFormat::Modifier::Invalid);
+ #else
+@@ -55,6 +57,29 @@ static constexpr uint64_t s_dmabufInvalidModifier = ((1ULL << 56) - 1);
+ 
+ namespace WebKit {
+ 
++static bool isNVIDIA()
++{
++    const char* forceDMABuf = getenv("WEBKIT_FORCE_DMABUF_RENDERER");
++    if (forceDMABuf && strcmp(forceDMABuf, "0"))
++        return false;
++
++    std::unique_ptr<WebCore::PlatformDisplay> platformDisplay;
++#if USE(GBM)
++    const char* disableGBM = getenv("WEBKIT_DMABUF_RENDERER_DISABLE_GBM");
++    if (!disableGBM || !strcmp(disableGBM, "0")) {
++        if (auto* device = WebCore::PlatformDisplay::sharedDisplay().gbmDevice())
++            platformDisplay = WebCore::PlatformDisplayGBM::create(device);
++    }
++#endif
++    if (!platformDisplay)
++        platformDisplay = WebCore::PlatformDisplaySurfaceless::create();
++
++    WebCore::GLContext::ScopedGLContext glContext(WebCore::GLContext::createOffscreen(platformDisplay ? *platformDisplay : WebCore::PlatformDisplay::sharedDisplay()));
++    if (strstr(reinterpret_cast<const char*>(glGetString(GL_VENDOR)), "NVIDIA"))
++        return true;
++    return false;
++}
++
+ OptionSet<DMABufRendererBufferMode> AcceleratedBackingStoreDMABuf::rendererBufferMode()
+ {
+     static OptionSet<DMABufRendererBufferMode> mode;
+@@ -70,6 +95,9 @@ OptionSet<DMABufRendererBufferMode> AcceleratedBackingStoreDMABuf::rendererBuffe
+             return;
+         }
+ 
++        if (isNVIDIA())
++            return;
++
+         mode.add(DMABufRendererBufferMode::SharedMemory);
+ 
+         const auto& eglExtensions = WebCore::PlatformDisplay::sharedDisplay().eglExtensions();

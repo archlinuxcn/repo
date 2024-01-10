@@ -1,6 +1,6 @@
 # Maintainer: oscareczek <oscareczek at gmail dot com>
 pkgname=86box-roms-git
-pkgver=r528.b25784c
+pkgver=r552.266253a
 pkgrel=1
 pkgdesc='ROMs for the 86Box emulator.'
 arch=('any')
@@ -18,7 +18,7 @@ pkgver() {
 
 package() {
     cd "${srcdir}/${pkgname}"
-    mkdir -p "$pkgdir/usr/share/86box/roms"
-    cp -R floppy hdd machines network printer scsi sound video "$pkgdir/usr/share/86box/roms"
-    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname%-git}/LICENSE"
+    install -d "$pkgdir/usr/share/86Box/roms"
+    cp -R [a-z]* "$pkgdir/usr/share/86Box/roms"
+    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

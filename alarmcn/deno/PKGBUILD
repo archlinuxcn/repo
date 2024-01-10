@@ -1,0 +1,45 @@
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Metal A-wing <1 at 233 dot email>
+
+pkgname=deno
+pkgver=1.39.2
+_commit=6af25c0592af46781b63bd43cf12d39b8aa61d09
+pkgrel=1
+pkgdesc="A secure runtime for JavaScript and TypeScript"
+arch=(aarch64 x86_64)
+url="https://deno.land"
+license=('MIT')
+options=('!lto')
+depends=('gcc-libs')
+makedepends=('git' 'python' 'rust' 'nodejs' 'cmake' 'protobuf')
+source=("git+https://github.com/denoland/deno.git#commit=$_commit")
+sha512sums=('SKIP')
+
+build() {
+  cd $pkgname
+
+  # this uses malloc_usable_size, which is incompatible with fortification level 3
+  export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+  export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+
+  cargo build --release
+}
+
+check() {
+  cd $pkgname
+  ./target/release/deno run cli/tests/testdata/run/002_hello.ts
+}
+
+package() {
+  cd $pkgname
+  install -Dm755 target/release/deno "$pkgdir"/usr/bin/deno
+
+  install -dm755 "$pkgdir"/usr/share/bash-completion/completions
+  ./target/release/deno completions bash > "$pkgdir"/usr/share/bash-completion/completions/deno
+  install -dm755 "$pkgdir"/usr/share/zsh/site-functions
+  ./target/release/deno completions zsh > "$pkgdir"/usr/share/zsh/site-functions/_deno
+  install -dm755 "$pkgdir"/usr/share/fish/vendor_functions.d
+  ./target/release/deno completions fish > "$pkgdir"/usr/share/fish/vendor_functions.d/deno.fish
+
+  install -Dm644 LICENSE.md -t "$pkgdir"/usr/share/licenses/$pkgname/
+}

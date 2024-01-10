@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+kver=$(uname -r)
+while read -r line; do
+    # We only care about the running kernel
+    if [[ "$line" == usr/lib/modules/$kver/vmlinuz && -d /usr/lib/running-kernel-modules ]];then
+        systemd-mount --quiet --options=bind,ro --property=LazyUnmount=1 /usr/lib/running-kernel-modules /usr/lib/modules/$kver
+        # Mounting read-only since the only modification here should be unmounting
+        # when rebooting or reinstalling the running kernel
+        # LazyUnmount at shutdown in case udevd is blocking us
+    fi
+done

@@ -1,0 +1,33 @@
+# Maintainer: Rocket Aaron <i at rocka dot me>
+# Contributor: Jonathan Liu <net147@gmail.com>
+
+pkgname=edid-decode-git
+_gitname=edid-decode
+pkgver=r668.1e99fe8
+pkgrel=2
+pkgdesc="EDID decoder and conformance tester"
+url="https://git.linuxtv.org/edid-decode.git/"
+arch=('x86_64')
+license=('MIT')
+depends=('gcc-libs')
+makedepends=('git')
+provides=('edid-decode')
+source=('git+https://git.linuxtv.org/edid-decode.git')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$_gitname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "$_gitname"
+  make
+}
+
+package() {
+  cd "$_gitname"
+  make DESTDIR="$pkgdir" install
+  install -d -m 755 "$pkgdir/usr/share/licenses/$pkgname"
+  sed -n '1,/^$/p' edid-decode.cpp | head -n -2 | cut -c 4- > "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

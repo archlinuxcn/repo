@@ -1,0 +1,28 @@
+maintainers:
+  - github: yuyichao
+post_build: git_pkgbuild_commit
+repo_depends:
+  - julia-git
+  - openspecfun-git
+  - openlibm-git
+  - julia-pkg-scripts
+
+update_on:
+  - source: regex
+    url: 
+        https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/libevent_jll/version
+    regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpmfiles
+    pkgname: libevent
+    strip_dir: true
+    filename: libevent-[0-9.]*.so.\d+
+  - source: alpmfiles
+    pkgname: libevent
+    strip_dir: true
+    filename: libevent_core-[0-9.]*.so.\d+
+  - source: alpmfiles
+    pkgname: libevent
+    strip_dir: true
+    filename: libevent_pthreads-[0-9.]*.so.\d+
+  - source: manual
+    manual: 1

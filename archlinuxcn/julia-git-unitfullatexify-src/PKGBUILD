@@ -1,0 +1,18 @@
+pkgname=julia-git-unitfullatexify-src
+pkgver=1.6.3
+_commit=e4ab7841d4a5e089ca2c60bb4115664c15bbe203
+pkgrel=2
+pkgdesc="UnitfulLatexify.jl"
+url="https://github.com/gustaphe/UnitfulLatexify.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/gustaphe/UnitfulLatexify.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd UnitfulLatexify.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh UnitfulLatexify "${pkgdir}" "${pkgname}" julia-git
+}

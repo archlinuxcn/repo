@@ -1,0 +1,23 @@
+[Trigger]
+Type = Package
+Operation = Install
+Operation = Upgrade
+Target = pacman
+
+[Trigger]
+Type = Package
+Operation = Install
+Operation = Upgrade
+Target = makepkg-lint-disable-hook
+
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = /usr/bin/makepkg
+
+[Action]
+Description = Disabling makepkg lint...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/disable-makepkg-lint.sh

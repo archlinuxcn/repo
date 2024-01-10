@@ -1,0 +1,18 @@
+pkgname=julia-git-openssl-src
+pkgver=1.4.1
+_commit=3a20f1950d3e05712959dce85b2c5bf2a43bf21b
+pkgrel=2
+pkgdesc="OpenSSL.jl"
+url="https://github.com/JuliaWeb/OpenSSL.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaWeb/OpenSSL.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd OpenSSL.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh OpenSSL "${pkgdir}" "${pkgname}" julia-git
+}

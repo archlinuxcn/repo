@@ -1,8 +1,8 @@
 # Maintainer: Felix Kauselmann <licorn@gmail.com>
 
 pkgname=libpdfium-nojs
-pkgver=5845.r0.6c2c8ce87d
-pkgrel=2
+pkgver=6099.r0.a3895af47f
+pkgrel=1
 pkgdesc="Open-source PDF rendering engine."
 arch=('x86_64')
 url="https://pdfium.googlesource.com/pdfium/"
@@ -45,12 +45,14 @@ _prepare() {
   # Pdfium is developed alongside Chromium and does not provide releases
   # Upstream recommends using Chromium's dev channels instead
 
-  # Extract pdfium branch name used in stable channel from omahaproxy and do
+  # Extract pdfium branch name used in stable channel from chrome version history and do
   # a checkout
-  git checkout "chromium/$(curl https://omahaproxy.appspot.com/linux?channel=stable | cut -d'.' -f 3)"
+  
+  chrome_version="$(curl https://versionhistory.googleapis.com/v1/chrome/platforms/linux/channels/stable/versions/all/releases | grep 'version' | head -1 | cut -d'.' -f 3)"
+  # chrome_version="$(curl https://versionhistory.googleapis.com/v1/chrome/platforms/linux/channels/beta/versions/all/releases | grep 'version' | head -1 | cut -d'.' -f 3)"
+  # chrome_version="$(curl https://versionhistory.googleapis.com/v1/chrome/platforms/linux/channels/dev/versions/all/releases | grep 'version' | head -1 | cut -d'.' -f 3)"
 
-  # git checkout "chromium/$(curl https://omahaproxy.appspot.com/linux?channel=beta | cut -d'.' -f 3)"
-  # git checkout "chromium/$(curl https://omahaproxy.appspot.com/linux?channel=dev | cut -d'.' -f 3)"
+  git checkout "chromium/$chrome_version"
 
   # Extract build repo revision needed from DEPS file and do a checkout
   cd "$srcdir/pdfium/build"

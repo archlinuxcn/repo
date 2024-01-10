@@ -21,14 +21,13 @@ _opt_FLUTTER=1
 
 # 0 for package flutter, version checked
 # 1 for system flutter, version warned
-_opt_SYS_FLUTTER=1
+_opt_SYS_FLUTTER=0
 
 set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}"
 pkgname+="-git"
-pkgver=1.2.1.r509.g7fa1bcfd
-epoch=1
+pkgver=1.2.3.r130.g92916d98
 pkgrel=1
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
 arch=('x86_64')
@@ -69,7 +68,7 @@ if [ "${_opt_FLUTTER}" -eq 0 ]; then
   source+=("https://raw.github.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so")
 else
   if [ "${_opt_SYS_FLUTTER}" -eq 0 ]; then
-    _FLUVER='3.10.5'
+    _FLUVER='3.10.6'
     source+=(
       "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${_FLUVER}-stable.tar.xz"
       #"flutter_rust_bridge-${_FRBVER}.tar.gz::https://pub.dev/packages/flutter_rust_bridge/versions/${_FRBVER}.tar.gz" # bad packaging
@@ -91,6 +90,7 @@ md5sums=('SKIP'
          '82e5e527336b41281a582204db1f3457'
          '357dc26a802c34387512a42697846d16'
          '10cf85debdd07be719a35ca3bfb8ea64'
+         '97115fa5fc6d8d63bdf13dc57fc20861'
          '9cb4a6717db959e082db75200e75d3e1')
 sha256sums=('SKIP'
             '149e0cee002e59e0bb84543cf3cb099f108c08390392605e944daeb6594cbc29'
@@ -98,19 +98,28 @@ sha256sums=('SKIP'
             '965e51c91ad9851e2337aebcc0f517440c637c506f3a03948062e3d5ea129a83'
             'a78b05c0d8427a90eb5b4eb08af25309770c8379592bb0b8a863373128e6143f'
             'f1acc15d0fd0cb431f4bf6eac32d5e932e40ea1186fe78e074254d6d003957bb'
+            '7048e51a89c99a5b6cac6d8ae416121264effa76da34dba5c0e7cf85519c8e98'
             '6efb71ac8086699da74dad6736c32ddb20db5dcabe167c49a8c3a650675eb84b')
 _vcs=("${_vcs[@]%%::*}")
 _vcs=("${_vcs[@]##*/}")
 noextract=("${_vcs[@]}")
 
 pkgver() {
-set -u
-cd "${srcdir}/${_pkgname}"
-local _ver
-_ver="$(git describe --long --tags | sed -e 's/\([^-]*-g\)/r\1/' -e 's/-/./g')"
-_ver="${_ver#nightly.}"
-echo "${_ver}"
-set +u
+  set -u
+  cd "${_srcdir}"
+  local _ver
+  local _pyver="
+import toml
+new_toml_string = toml.load('Cargo.toml')
+#print(new_toml_string.keys())
+print(new_toml_string.get('package').get('version'))
+"
+  _ver="$(python -c "${_pyver}")"
+  #_ver="$(sed -E -n -e 's/^  VERSION: "([^"]+)"$/\1/p' '.github/workflows/flutter-nightly.yml')" # '
+  local _ver2
+  _ver2="$(git describe --long --tags | sed -E -e 's/([^-]*-g)/r&/' -e 's/^.+r/r/g' -e 's/-/./g')"
+  printf '%s.%s\n' "${_ver}" "${_ver2}" # Release version was added to tag.
+  set +u
 }
 
 _vcpkg=(libvpx libyuv opus aom)
@@ -128,7 +137,15 @@ _prepare_vc() {
   # Check commit ID
   if [ "${_opt_SYS_VCPKG}" -eq 0 ] && [ ! -z "${_opt_VCPKG_COMMIT_ID}" ]; then
     local _vcc
-    _vcc="$(sed -E -n -e 's/^.*VCPKG_COMMIT_ID: "([a-z0-9]+)"$/\1/p' 'rustdesk/.github/workflows/flutter-nightly.yml')" # '
+    local _pyvcc="
+import yaml
+import io
+with open('rustdesk/.github/workflows/flutter-build.yml', 'r') as stream:
+    data_loaded = yaml.safe_load(stream)
+#print(data_loaded.get('env').keys())
+print(data_loaded.get('env').get('VCPKG_COMMIT_ID'))
+"
+    _vcc="$(python -c "${_pyvcc}")"
     if [ "${_vcc}" != "${_opt_VCPKG_COMMIT_ID#*=}" ]; then
       echo "Flag package out of date: _opt_VCPKG_COMMIT_ID must be changed to ${_vcc}"
       set +u

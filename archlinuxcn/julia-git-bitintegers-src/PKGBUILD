@@ -1,0 +1,18 @@
+pkgname=julia-git-bitintegers-src
+pkgver=0.3.1
+_commit=deb17db47649cc59b49a3dfd29d74efa311590d7
+pkgrel=2
+pkgdesc="BitIntegers.jl"
+url="https://github.com/rfourquet/BitIntegers.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/rfourquet/BitIntegers.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd BitIntegers.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh BitIntegers "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,24 @@
+pkgname=julia-git-stridedviews-src
+pkgver=0.2.1
+_commit=587d682d159aa6436302afa4d391cc6ebc4e9332
+pkgrel=2
+pkgdesc="StridedViews.jl"
+url="https://github.com/Jutho/StridedViews.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/Jutho/StridedViews.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+prepare() {
+  cd StridedViews.jl
+
+  julia -e 'using TOML; d = TOML.parsefile("Project.toml"); delete!(d["deps"], "CUDA"); open(io->TOML.print(io, d), "Project.toml", "w")'
+}
+
+package() {
+  cd StridedViews.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh StridedViews "${pkgdir}" "${pkgname}" julia-git
+}

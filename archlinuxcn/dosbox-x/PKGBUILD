@@ -1,0 +1,51 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: Mike Cuche <cuche AT mailbox.org>
+
+pkgname=dosbox-x
+pkgver=2023.10.06
+pkgrel=1
+pkgdesc="x86 emulator with builtin DOS, with patches with more features"
+arch=(i686 x86_64 aarch64)
+url="http://dosbox-x.com"
+license=(GPL)
+depends=(physfs
+        'alsa-lib' 'libasound.so'
+        'libglvnd' 'libGL.so'
+        'libx11' 'libxrandr' 'libxkbfile'
+        'zlib' 'libz.so'
+        'freetype2' 'libfreetype.so'
+        'ffmpeg' 'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libswscale.so'
+        'sdl2' 'sdl2_net'
+        'libpng' 'libpng16.so'
+        'libpcap' 'libpcap.so'
+        'libslirp' 'libslirp.so'
+        'fluidsynth' 'libfluidsynth.so'
+        )
+makedepends=(glu nasm)
+conflicts=(dosbox-x-git)
+source=(https://github.com/joncampbell123/dosbox-x/archive/dosbox-x-v${pkgver}.tar.gz)
+
+sha256sums=('65f756e29f9c9b898fdbd22b0cb9b3b24c6e3becb5dcda588aa20a3fde9539a5')
+
+build() {
+  cd $srcdir/dosbox-x-dosbox-x-v${pkgver}
+
+  # Workaround bug https://github.com/joncampbell123/dosbox-x/issues/3039
+  export CFLAGS=${CFLAGS/-Werror=format-security/}
+  export CXXFLAGS=${CXXFLAGS/-Werror=format-security/}
+
+  autoreconf -fiv
+  ./configure \
+    --prefix=/usr \
+    --enable-sdl2 \
+    --enable-xbrz \
+    --enable-alsa-midi \
+    --enable-avcodec
+  make
+}
+
+package() {
+  cd $srcdir/dosbox-x-dosbox-x-v${pkgver}
+  make DESTDIR="${pkgdir}" install
+}
+

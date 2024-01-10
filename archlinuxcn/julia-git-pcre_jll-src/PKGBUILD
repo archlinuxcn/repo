@@ -1,0 +1,26 @@
+pkgname=julia-git-pcre_jll-src
+pkgver=8.44.0+0
+_commit=c232e29425687399e429af02804f9790d1363738
+pkgrel=2
+pkgdesc="PCRE_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/PCRE_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git pcre)
+source=("git+https://github.com/JuliaBinaryWrappers/PCRE_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'e42de539bcf55116c903c9f08ed33548d7d81d58179b0b8a86ad3c0a375b5936')
+
+build() {
+  cd PCRE_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl PCRE_jll ../jll.toml
+}
+
+package() {
+  cd PCRE_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh PCRE_jll "${pkgdir}" "${pkgname}" julia-git
+}

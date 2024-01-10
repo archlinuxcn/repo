@@ -1,0 +1,26 @@
+pkgname=julia-git-acl_jll-src
+pkgver=2.3.1+0
+_commit=53e7115c314976604c8414935c0f66492bb23daa
+pkgrel=2
+pkgdesc="acl_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/acl_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git acl)
+source=("git+https://github.com/JuliaBinaryWrappers/acl_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'd84d1abd8f1c2b730ea6096c6dcd5fd3bb5e9b1b257b62739ad02892b0be7e0a')
+
+build() {
+  cd acl_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl acl_jll ../jll.toml
+}
+
+package() {
+  cd acl_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh acl_jll "${pkgdir}" "${pkgname}" julia-git
+}

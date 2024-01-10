@@ -1,0 +1,18 @@
+pkgname=julia-git-compositetypes-src
+pkgver=0.1.3
+_commit=a4e0ab33e397268eec33461286270d5751f0c52e
+pkgrel=2
+pkgdesc="CompositeTypes.jl"
+url="https://github.com/JuliaApproximation/CompositeTypes.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaApproximation/CompositeTypes.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd CompositeTypes.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh CompositeTypes "${pkgdir}" "${pkgname}" julia-git
+}

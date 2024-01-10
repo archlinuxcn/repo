@@ -1,0 +1,20 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+# For julia-pkg-scripts
+build_prefix: archlinuxcn-aarch64
+
+repo_depends:
+  - julia-git
+  - openspecfun-git
+  - openlibm-git
+  - llvm-julia: llvm-libs-julia
+
+update_on:
+  - source: regex
+    url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/MKL_jll/version
+    regex: 'version: *([^ ]*@[^ ]*)'
+  - source: manual
+    manual: 2

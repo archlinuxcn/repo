@@ -1,0 +1,18 @@
+pkgname=julia-git-mkl-src
+pkgver=0.6.1
+_commit=8a7e9724301187dc7c8b6d8c9a0ab042fa61b022
+pkgrel=2
+pkgdesc="MKL.jl"
+url="https://github.com/JuliaLinearAlgebra/MKL.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaLinearAlgebra/MKL.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd MKL.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MKL "${pkgdir}" "${pkgname}" julia-git
+}

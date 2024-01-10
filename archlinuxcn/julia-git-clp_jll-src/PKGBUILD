@@ -1,0 +1,26 @@
+pkgname=julia-git-clp_jll-src
+pkgver=100.1700.700+1
+_commit=83ce71afd2057d4c83063daf669d42db8225c941
+pkgrel=3
+pkgdesc="Clp_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Clp_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git coin-or-clp)
+source=("git+https://github.com/JuliaBinaryWrappers/Clp_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '762b2eac54d2726a427497b7466b94c3e899dc51909ee03d2a6ec553d7e68982')
+
+build() {
+  cd Clp_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Clp_jll ../jll.toml
+}
+
+package() {
+  cd Clp_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Clp_jll "${pkgdir}" "${pkgname}" julia-git
+}

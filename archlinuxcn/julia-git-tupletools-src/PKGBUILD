@@ -1,0 +1,18 @@
+pkgname=julia-git-tupletools-src
+pkgver=1.4.3
+_commit=e3773b6192dc732acb3ee0376871bc3ef87a2931
+pkgrel=2
+pkgdesc="TupleTools.jl"
+url="https://github.com/Jutho/TupleTools.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/Jutho/TupleTools.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd TupleTools.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh TupleTools "${pkgdir}" "${pkgname}" julia-git
+}

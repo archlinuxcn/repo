@@ -6,12 +6,12 @@
 # Contributor: Michael 'manveru' Fellinger <m.fellinger@gmail.com>
 # Contributor: Dave Pretty <david dot pretty at gmail dot com>
 
-# anki -> git rev-parse $pkgver --short=8
+# anki -> git rev-parse --short=8 $pkgver
 # ftl -> git submodule
 declare -gA _tags=(
- [ftl_core]="bcc4822d4613b7310ed82da8b51029f5ea52c5c1"
- [ftl_desktop]="75af3ed4a3992bccae7eba3bc8ee9fa5c4645c0b"
- [anki]="cf16ce1d"
+ [ftl_core]="fb301cc62da3b7a83b4ea266d9a2e70cfc1a8418"
+ [ftl_desktop]="8c2191a7c797747cec767e3953bbbcc50acc5246"
+ [anki]="1a1d4d54"
 )
 declare -gA _caches=(
     [yarn]="yarn-cache"
@@ -19,13 +19,13 @@ declare -gA _caches=(
 )
 
 pkgname=anki
-pkgver=2.1.66
+pkgver=23.12.1
 pkgrel=1
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
 license=('AGPL3')
 arch=('x86_64')
-conflicts=('anki-bin' 'anki-git' 'anki-official-binary-bundle' 'anki-qt5')
+conflicts=('anki-bin' 'anki-git' 'anki-qt5')
 depends=(
     # anki & aqt
     'python>=3.9'
@@ -57,8 +57,7 @@ makedepends=(
     'cargo'
     'python-installer' # TODO: could use either wheel or installer, both are not needed afaik
     'python-wheel'
-    'libxcrypt-compat'
-    'nodejs'
+    'nodejs>=18'
     'yarn'
     'mold'
 )
@@ -77,11 +76,11 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/ankitects/anki/archive/refs
         "strip-formatter-deps.patch"
         "strip-type-checking-deps.patch"
 )
-sha256sums=('128a5eb82d3ef19c438716657ae709ff0b05750882b7724f3fb9efd119d222bb'
-            'd633c7c5498a0b9f237ea92782b57b8055b034bf25e90c0c3d29f04db6ad6ef4'
-            '7a74f90a22a8feff0ed911ba3eef80b799832ad87b9de9e0a56adc3aad13251f'
-            '89f1d00764e0f151600f6a21d7ced4289b3ce3f900ded40fe5da95e658fc9db4'
-            'f934553a5ce9e046a0b8253e10da16e661b27375e2b54d6bb915267f32aff807'
+sha256sums=('2da86351d03339f0baaa9371b3f2db80ac22d22b787086468f32a726b06a1552'
+            '3af5866ec4ec429465c63ac0484e3cacf6b0326ae30da07c715968d68c7e37d8'
+            'd07dfb1453a131943dde29d1683746432b0d4af04534deeda5daf9bceb31a87a'
+            '94d8b6d6541ce0c00ab1ddc88d2f384a6535e9849891f30a02bb07bd60178086'
+            'cc546f4e5af642af89f82be0375800c2721dd904c0a212cf46f6459495b75bff'
             '9858fefa254812980d252b29fc6f32bd19bb83ee7e5a96d72c707626ed5193a7'
             '198bc2ec14439e3ba41a03c4823f07df4b0c559c1dcbdaf678416ed12a720c2e'
 )
@@ -136,7 +135,8 @@ build() {
     export YARN_BINARY=$(which yarn)
 
     export CARGO_HOME="$srcdir/${_caches[cargo]}"    # do not litter in ~
-    export RELEASE=1	        # anki-internal variable for optimization
+    export RELEASE=2	        # anki-internal variable for optimization
+    				# set to "1" for faster but less optimized build
     mold -run ./ninja wheels -v # use mold as linker to allow for LTO
 }
 

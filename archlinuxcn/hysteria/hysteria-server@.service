@@ -1,15 +1,16 @@
 [Unit]
 Description=Hysteria Server Service
 Documentation=https://hysteria.network/
-After=network.target
+After=network.target nss-lookup.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/hysteria server --config %i.yaml --disable-update-check
-WorkingDirectory=/etc/hysteria
+ExecStart=/usr/bin/hysteria server --config /etc/hysteria/%i.yaml --disable-update-check
+WorkingDirectory=~
 User=hysteria
 Group=hysteria
 Environment=HYSTERIA_LOG_LEVEL=info
+Environment=HYSTERIA_ACME_DIR=/var/lib/hysteria/acme
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_NET_RAW
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_NET_RAW
 NoNewPrivileges=true

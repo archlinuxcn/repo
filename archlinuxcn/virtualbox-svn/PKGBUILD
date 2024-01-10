@@ -9,9 +9,9 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=100800
+pkgver=102693
 _tarver=${pkgver}
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='http://virtualbox.org'
 license=('GPL' 'custom:CDDL')
@@ -46,9 +46,10 @@ makedepends=('subversion'
              'opus'
              'python'
              'python-packaging'
-             'qt5-base'
-             'qt5-x11extras'
-             'qt5-tools'
+             'qt6-base'
+             'qt6-5compat'
+             'qt6-scxml'
+             'qt6-tools'
              'sdl'
              'sdl_ttf'
              'vde2'
@@ -75,8 +76,8 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         '009-properly-handle-i3wm.patch'
         '012-vbglR3GuestCtrlDetectPeekGetCancelSupport.patch'
         '013-support-building-from-dkms.patch'
-        '018-upate-xclient-script.patch'
-        '020-python-3-11.patch')
+        '018-upate-xclient-script.patch')
+        #'020-python-3-11.patch')
 
 pkgver() {
   cd "VirtualBox"
@@ -97,6 +98,9 @@ prepare() {
     done
 
     sed -i '1 a #include<cstdint>' src/libs/dxvk-native-1.9.2a/src/util/util_bit.h
+    sed -i 's/xmlErrorPtr aErr/const xmlError* aErr/g' src/VBox/Runtime/r3/xml.cpp
+    sed -i 's/xmlErrorPtr error/const _xmlError* error/g' src/VBox/Runtime/r3/xml.cpp
+    sed -i 's/xmlErrorPtr aErr/const xmlError* aErr/g' include/iprt/cpp/xml.h
     echo 'Applying local config'
     cp "$srcdir/LocalConfig.kmk" .
     
@@ -129,7 +133,7 @@ package_virtualbox-svn() {
     pkgdesc='Powerful x86 virtualization for enterprise as well as home use'
     depends=('curl' 'gcc-libs' 'glibc' 'liblzf' 'libpng' 'libtpms' 'libvpx' 'libx11' 'libxcursor'
              'libxext' 'libxinerama' 'libxml2' 'libxmu' 'libxt' 'openssl' 'procps-ng' 'python'
-             'qt5-base' 'qt5-tools' 'qt5-x11extras' 'sdl' 'shared-mime-info' 'zlib'
+             'qt6-base' 'qt6-tools' 'qt6-5compat' 'sdl' 'shared-mime-info' 'zlib' 'qt6-scxml'
              'VIRTUALBOX-HOST-MODULES-SVN')
     optdepends=('vde2: Virtual Distributed Ethernet support'
                 'virtualbox-guest-iso: Guest Additions CD image'
@@ -362,5 +366,4 @@ sha256sums=('SKIP'
             '5c4b237839a52a18b39d996b37de9d2f9d0ee621c162956cf4424122429094d3'
             '81900e13d36630488accd8c0bfd2ceb69563fb2c4f0f171caba1cca59d438024'
             '00f68b86d32a1fada900c2da8dad2ab4215106cd58004f049bded99727cda2ff'
-            '87dddfd9047480e4c2b73367facf5dd3702148418c2efcd606af17c07da90fe0'
-            'aede7737a19dcff6908d216a4490f7b6a5640fb3a2d3e9200d4875133e8f1e4b')
+            'b6193d22ee7c1726ea4d468b18640454b8e4f2784479073a0044e45dca4e516d')

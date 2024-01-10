@@ -8,7 +8,7 @@ fi
 
 pkgname=qtcurve-git
 _realver=1.8.18
-pkgver=1.9.0.rc1.156.g4fa964cf
+pkgver=1.9.0.rc1.191.gd7e0b4da
 pkgrel=1
 pkgdesc='A configurable set of widget styles for KDE and Gtk.'
 arch=(i686 x86_64 armv7h aarch64)
@@ -16,8 +16,9 @@ url="https://github.com/QtCurve/qtcurve"
 license=('GPL')
 # groups=(qtcurve)
 depends=(qt5-base qt5-svg libxcb qt5-x11extras
-         libx11 gcc-libs kinit karchive kconfig kconfigwidgets frameworkintegration ki18n
-         kguiaddons kio kiconthemes kwidgetsaddons kwindowsystem kxmlgui)
+         libx11 gcc-libs kinit karchive5 kconfig5 kconfigwidgets5
+         frameworkintegration5 ki18n5
+         kguiaddons5 kio5 kiconthemes5 kwidgetsaddons5 kwindowsystem5 kxmlgui5)
 optdepends=(gtk2)
 makedepends=(cmake git python mesa extra-cmake-modules gtk2)
 provides=(

@@ -1,0 +1,26 @@
+pkgname=julia-git-xorg_libice_jll-src
+pkgver=1.0.10+1
+_commit=2d0fa0480859395115dfb3a83eeac58ad052aee2
+pkgrel=3
+pkgdesc="Xorg_libICE_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Xorg_libICE_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libice)
+source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libICE_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'c2ad1d6dc09b6fb697efde82a01e3845c63b3d8347c7cc396027f5b50c8fbb54')
+
+build() {
+  cd Xorg_libICE_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Xorg_libICE_jll ../jll.toml
+}
+
+package() {
+  cd Xorg_libICE_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Xorg_libICE_jll "${pkgdir}" "${pkgname}" julia-git
+}

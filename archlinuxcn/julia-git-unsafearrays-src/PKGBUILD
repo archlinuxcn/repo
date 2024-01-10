@@ -1,0 +1,18 @@
+pkgname=julia-git-unsafearrays-src
+pkgver=1.0.5
+_commit=e851ba297667891526ac8987ba67f7ae30baef62
+pkgrel=2
+pkgdesc="UnsafeArrays.jl"
+url="https://github.com/JuliaArrays/UnsafeArrays.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaArrays/UnsafeArrays.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd UnsafeArrays.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh UnsafeArrays "${pkgdir}" "${pkgname}" julia-git
+}

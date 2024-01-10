@@ -1,0 +1,18 @@
+pkgname=julia-git-axisalgorithms-src
+pkgver=1.0.1
+_commit=f621274c61562022319d6383ca04d94636541680
+pkgrel=2
+pkgdesc="AxisAlgorithms.jl"
+url="https://github.com/timholy/AxisAlgorithms.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/timholy/AxisAlgorithms.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd AxisAlgorithms.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh AxisAlgorithms "${pkgdir}" "${pkgname}" julia-git
+}

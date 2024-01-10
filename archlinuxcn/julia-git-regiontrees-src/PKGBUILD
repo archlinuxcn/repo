@@ -1,0 +1,18 @@
+pkgname=julia-git-regiontrees-src
+pkgver=0.3.2
+_commit=d9942b175f05db6cd2aec01e506fc15604682e7d
+pkgrel=2
+pkgdesc="RegionTrees.jl"
+url="https://github.com/rdeits/RegionTrees.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/rdeits/RegionTrees.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd RegionTrees.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh RegionTrees "${pkgdir}" "${pkgname}" julia-git
+}

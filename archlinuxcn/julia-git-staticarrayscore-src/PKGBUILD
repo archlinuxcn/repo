@@ -1,0 +1,18 @@
+pkgname=julia-git-staticarrayscore-src
+pkgver=1.4.2
+_commit=7f4097a04347baae051e9f70f99ec092035f3f13
+pkgrel=3
+pkgdesc="StaticArraysCore.jl"
+url="https://github.com/JuliaArrays/StaticArraysCore.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaArrays/StaticArraysCore.jl#commit=$_commit")
+md5sums=('SKIP')
+
+package() {
+  cd StaticArraysCore.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh StaticArraysCore "${pkgdir}" "${pkgname}" julia-git
+}

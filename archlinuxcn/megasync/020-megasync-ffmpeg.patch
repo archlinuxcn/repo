@@ -1,0 +1,26 @@
+--- a/src/gfx/freeimage.cpp
++++ b/src/gfx/freeimage.cpp
+@@ -209,12 +209,6 @@ bool GfxProviderFreeImage::readbitmapFreeimage(FileSystemAccess*, const LocalPat
+ 
+ #ifdef HAVE_FFMPEG
+ 
+-#ifdef AV_CODEC_CAP_TRUNCATED
+-#define CAP_TRUNCATED AV_CODEC_CAP_TRUNCATED
+-#else
+-#define CAP_TRUNCATED CODEC_CAP_TRUNCATED
+-#endif
+-
+ const char *GfxProviderFreeImage::supportedformatsFfmpeg()
+ {
+     return  ".264.265.3g2.3gp.3gpa.3gpp.3gpp2.mp3"
+@@ -330,10 +324,6 @@ bool GfxProviderFreeImage::readbitmapFfmpeg(FileSystemAccess* fa, const LocalPat
+ 
+     // Force seeking to key frames
+     formatContext->seek2any = false;
+-    if (decoder->capabilities & CAP_TRUNCATED)
+-    {
+-        codecContext->flags |= CAP_TRUNCATED;
+-    }
+ 
+     AVPixelFormat sourcePixelFormat = static_cast<AVPixelFormat>(codecParm->format);
+     AVPixelFormat targetPixelFormat = AV_PIX_FMT_BGR24; //raw data expected by freeimage is in this format

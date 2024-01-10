@@ -1,0 +1,26 @@
+pkgname=julia-git-x265_jll-src
+pkgver=3.5.0+0
+_commit=34b3b74c518b8375b7a93f578ea3d707a71ee78d
+pkgrel=2
+pkgdesc="x265_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/x265_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git x265)
+source=("git+https://github.com/JuliaBinaryWrappers/x265_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '780e91f449b35a644e75756118fc40bbf42b09699ccd1b8a8600c79cf1a0aef7')
+
+build() {
+  cd x265_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl x265_jll ../jll.toml
+}
+
+package() {
+  cd x265_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh x265_jll "${pkgdir}" "${pkgname}" julia-git
+}

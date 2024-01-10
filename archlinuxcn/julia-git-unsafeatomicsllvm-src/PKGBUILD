@@ -1,0 +1,18 @@
+pkgname=julia-git-unsafeatomicsllvm-src
+pkgver=0.1.3
+_commit=4e45a087f960706d6eafae3b85ee1fdd57a1f9bf
+pkgrel=2
+pkgdesc="UnsafeAtomicsLLVM.jl"
+url="https://github.com/JuliaConcurrent/UnsafeAtomicsLLVM.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaConcurrent/UnsafeAtomicsLLVM.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd UnsafeAtomicsLLVM.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh UnsafeAtomicsLLVM "${pkgdir}" "${pkgname}" julia-git
+}

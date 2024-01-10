@@ -1,0 +1,18 @@
+pkgname=julia-git-muladdmacro-src
+pkgver=0.2.4
+_commit=c26875586167063461e623d1f197109959a50178
+pkgrel=2
+pkgdesc="MuladdMacro.jl"
+url="https://github.com/SciML/MuladdMacro.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/MuladdMacro.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd MuladdMacro.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MuladdMacro "${pkgdir}" "${pkgname}" julia-git
+}

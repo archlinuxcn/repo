@@ -1,7 +1,7 @@
 # Maintainer: Devin Lin <devin@kde.org>
 
 pkgname=plasma-mobile
-pkgver=5.27.7
+pkgver=5.27.9
 pkgrel=1
 pkgdesc="Plasma Mobile shell components."
 arch=('x86_64' 'i686' 'i486' 'pentium4' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -12,7 +12,7 @@ depends=(
 	plasma-nm
 	plasma-pa
 	powerdevil
-	modemmanager-qt
+	modemmanager-qt5
 	plasma-wayland-session
 	qqc2-breeze-style
 	qt5-feedback
@@ -29,7 +29,7 @@ optdepends=(
 )
 makedepends=('cmake' 'extra-cmake-modules')
 source=("https://download.kde.org/stable/plasma/${pkgver}/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('16d8c782efff20843f9150169411be9e7187bba8bc6a0edb4dc889b193ec6238')
+sha256sums=('e0d91eb27d70ca269c81c2db7160cdcea7e11c385a72ba049c37b21f9295ae24')
 
 prepare() {
 	mkdir -p build

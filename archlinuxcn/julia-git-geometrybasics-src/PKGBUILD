@@ -1,0 +1,18 @@
+pkgname=julia-git-geometrybasics-src
+pkgver=0.4.9
+_commit=89b857e33e8c33d1304d1630836b4d0b466869ef
+pkgrel=2
+pkgdesc="GeometryBasics.jl"
+url="https://github.com/JuliaGeometry/GeometryBasics.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGeometry/GeometryBasics.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd GeometryBasics.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh GeometryBasics "${pkgdir}" "${pkgname}" julia-git
+}

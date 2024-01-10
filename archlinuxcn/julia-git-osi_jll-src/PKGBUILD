@@ -1,0 +1,26 @@
+pkgname=julia-git-osi_jll-src
+pkgver=0.10800.700+0
+_commit=c5a32e17b03cf85820118d4424c86e5549e68d3a
+pkgrel=3
+pkgdesc="Osi_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Osi_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git coin-or-osi)
+source=("git+https://github.com/JuliaBinaryWrappers/Osi_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '708d85eeff169b55962e3c9af1a1b926840d4187bb780834c77a266f538a68dd')
+
+build() {
+  cd Osi_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Osi_jll ../jll.toml
+}
+
+package() {
+  cd Osi_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Osi_jll "${pkgdir}" "${pkgname}" julia-git
+}

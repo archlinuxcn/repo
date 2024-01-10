@@ -1,0 +1,18 @@
+pkgname=julia-git-fileio-src
+pkgver=1.16.1
+_commit=0345f1501a3ce4e3de47711182cefb115c114598
+pkgrel=3
+pkgdesc="FileIO.jl"
+url="https://github.com/JuliaIO/FileIO.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/FileIO.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd FileIO.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh FileIO "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,70 @@
+diff --git a/src/adw-style-manager.c b/src/adw-style-manager.c
+index d27ebda5..fbdef7f6 100644
+--- a/src/adw-style-manager.c
++++ b/src/adw-style-manager.c
+@@ -126,6 +126,24 @@ enable_animations_cb (AdwStyleManager *self)
+   self->animation_timeout_id = 0;
+ }
+ 
++static void
++adw_style_manager_theme_changed(GSettings *settings, const char *key, GdkDisplay *display)
++{
++  char* theme = g_settings_get_string(settings, "gtk-theme");
++  char* color_scheme = g_settings_get_string(settings, "color-scheme");
++
++  if(!theme) {
++    theme = "Adwaita-empty";
++  }
++
++  gboolean is_dark_variant = NULL != strstr(theme, "-dark") || NULL != strstr(theme, "-Dark") || 0 == strcmp(color_scheme, "prefer-dark");
++
++  g_object_set(gtk_settings_get_for_display(display),
++               "gtk-theme-name", theme,
++               "gtk-application-prefer-dark-theme", is_dark_variant, NULL);
++}
++
++
+ static void
+ update_stylesheet (AdwStyleManager *self)
+ {
+@@ -251,22 +269,6 @@ adw_style_manager_constructed (GObject *object)
+                              self,
+                              G_CONNECT_SWAPPED);
+ 
+-    if (!adw_is_granite_present () && !g_getenv ("GTK_THEME")) {
+-      g_object_set (gtk_settings_get_for_display (self->display),
+-                    "gtk-theme-name", "Adwaita-empty",
+-                    NULL);
+-
+-      self->provider = gtk_css_provider_new ();
+-      gtk_style_context_add_provider_for_display (self->display,
+-                                                  GTK_STYLE_PROVIDER (self->provider),
+-                                                  GTK_STYLE_PROVIDER_PRIORITY_THEME);
+-
+-      self->colors_provider = gtk_css_provider_new ();
+-      gtk_style_context_add_provider_for_display (self->display,
+-                                                  GTK_STYLE_PROVIDER (self->colors_provider),
+-                                                  GTK_STYLE_PROVIDER_PRIORITY_THEME);
+-    }
+-
+     self->animations_provider = gtk_css_provider_new ();
+     gtk_css_provider_load_from_string (self->animations_provider,
+                                        "* { transition: none; }");
+@@ -292,6 +294,17 @@ adw_style_manager_constructed (GObject *object)
+ 
+   update_dark (self);
+   update_stylesheet (self);
++
++  if (self->display && !adw_is_granite_present () && !g_getenv ("GTK_THEME")) {
++    GSettingsSchemaSource *schema_source =
++      g_settings_schema_source_get_default();
++    GSettingsSchema *schema = g_settings_schema_source_lookup(
++      schema_source, "org.gnome.desktop.interface", true);
++    GSettings *interface_settings = g_settings_new_full(schema, NULL, NULL);
++
++    adw_style_manager_theme_changed(interface_settings, "gtk-theme", self->display);
++    g_signal_connect (interface_settings, "changed", G_CALLBACK (adw_style_manager_theme_changed), self->display);
++  }
+ }
+ 
+ static void

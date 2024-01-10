@@ -1,0 +1,42 @@
+# Maintainer: Coleacanthus <CoelacanthusHex@gmail.com>
+
+_pkgname=globalplatformpro
+pkgname=${_pkgname}-git
+pkgver=21.12.31.r55.g52c3581
+pkgrel=2
+pkgdesc="Manage applets and keys on JavaCard-s like a pro"
+arch=('any')
+url="https://github.com/martinpaljak/GlobalPlatformPro"
+license=('LGPL3')
+depends=('java-runtime-headless>=17' 'pcsclite')
+makedepends=('git' 'java-environment=17' 'maven' 'which')
+conflicts=('globalplatformpro')
+provides=('globalplatformpro')
+source=(
+  "$_pkgname::git+https://github.com/martinpaljak/GlobalPlatformPro.git"
+  'gpp'
+)
+b2sums=('SKIP'
+        'a7ebe2cd9b22bf6824e6cadaeba991e90b441c010824ba6fc0566f2fcfc6b33fd00108ddfebad8b0e1763fc22bcc89d4d43a3d6a032277e7bd1b52fa95cd1cc8')
+
+pkgver() {
+  cd $_pkgname
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd $_pkgname
+}
+
+build() {
+  cd $_pkgname
+  ./mvnw package # Use maven wrapper because Arch Linux has too old maven in repo
+}
+
+package() {
+  install -d "$pkgdir"/usr/bin/
+  install -m 755 gpp "$pkgdir"/usr/bin/
+  cd $_pkgname
+  install -d "$pkgdir"/usr/share/java/globalplatformpro/
+  install -m 644 tool/target/gp.jar "$pkgdir"/usr/share/java/globalplatformpro/
+}

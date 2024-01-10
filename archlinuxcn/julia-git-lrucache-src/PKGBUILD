@@ -1,0 +1,18 @@
+pkgname=julia-git-lrucache-src
+pkgver=1.5.0
+_commit=ffc929ff9c6b9f98d0e7d9eee8949bd0115a00a6
+pkgrel=2
+pkgdesc="LRUCache.jl"
+url="https://github.com/JuliaCollections/LRUCache.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaCollections/LRUCache.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LRUCache.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LRUCache "${pkgdir}" "${pkgname}" julia-git
+}

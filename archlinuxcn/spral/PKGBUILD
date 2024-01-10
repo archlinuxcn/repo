@@ -1,0 +1,37 @@
+pkgname=spral
+pkgver=2023.11.15
+pkgrel=1
+pkgdesc="Sparse Parallel Robust Algorithms Library"
+arch=('aarch64' 'x86_64')
+url="https://github.com/ralna/spral"
+license=('BSD')
+makedepends=(gcc-fortran)
+depends=('metis' 'lapack' 'hwloc')
+source=("https://github.com/ralna/spral/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('3bf23ed89959be66959f26c0d4f3ac0e812ae45b51ad8f21bb2d746b6639c397')
+
+build() {
+  cd $pkgname-$pkgver
+  CFLAGS+=' -O3 -fPIC'
+  CPPFLAGS+=' -O3 -fPIC'
+  CXXFLAGS+=' -O3 -fPIC'
+  FFLAGS+=' -O3 -fPIC'
+  FCFLAGS+=' -O3 -fPIC'
+  export CFLAGS CPPFLAGS CXXFLAGS FFLAGS FCFLAGS
+  ./autogen.sh
+  ./configure --prefix=/usr \
+              --with-blas="-lblas" \
+              --with-lapack="-llapack"
+
+  make -j1 # Buggy build system
+  gfortran -fPIC -shared -Wl,--whole-archive libspral.a -Wl,--no-whole-archive \
+           -lgomp -llapack -lhwloc -lmetis -lstdc++ -o libspral.so
+}
+
+package () {
+  cd $pkgname-$pkgver
+
+  make DESTDIR="$pkgdir" install
+  rm "$pkgdir/usr/lib/libspral.a"
+  install -Dm755 libspral.so "$pkgdir/usr/lib/libspral.so"
+}

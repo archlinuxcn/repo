@@ -1,0 +1,14 @@
+pre_build_script: |
+    update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+
+post_build_script: |
+    git_pkgbuild_commit()
+
+update_on:
+  - source: gitlab
+    gitlab: sequoia-pgp/sequoia-octopus-librnp
+    use_max_tag: true
+
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com

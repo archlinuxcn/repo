@@ -1,0 +1,72 @@
+pkgname=mpitrampoline
+pkgver=5.3.1
+_mpiconstants_ver=1.5.0
+_mpiwrapper_ver=2.10.5
+pkgrel=3
+pkgdesc="A forwarding MPI implementation that can use any other MPI implementation via an MPI ABI"
+url="https://github.com/eschnett/MPItrampoline"
+arch=(aarch64 armv7h x86_64)
+license=("custom:MIT")
+depends=('mpich')
+makedepends=('cmake' 'python')
+source=("MPItrampoline-${pkgver}.tar.gz::https://github.com/eschnett/MPItrampoline/archive/refs/tags/v${pkgver}.tar.gz"
+        "MPIconstants-${_mpiconstants_ver}.tar.gz::https://github.com/eschnett/MPIconstants/archive/refs/tags/v${_mpiconstants_ver}.tar.gz"
+        "MPIwrapper-${_mpiwrapper_ver}.tar.gz::https://github.com/eschnett/MPIwrapper/archive/refs/tags/v${_mpiwrapper_ver}.tar.gz"
+        )
+sha256sums=('8671370750587f212f059138abc6dcaa5a1079d3dbd9189dc21bf353611159eb'
+            'eee6ae92bb746d3c50ea231aa58607fc5bac373680ff5c45c8ebc10e0b6496b4'
+            'ae5d8545ff073d841374cb7eeca0769f312ebe66573d638cc26b61a1274a2efe')
+
+build() {
+  (
+    mkdir -p MPItrampoline-${pkgver}/build
+    cd MPItrampoline-${pkgver}/build
+    cmake -DBUILD_SHARED_LIBS=ON \
+          -DCMAKE_INSTALL_PREFIX=/opt/mpitrampoline \
+          -DMPITRAMPOLINE_DEFAULT_LIB="/opt/mpitrampoline/lib/libmpiwrapper.so" \
+          -DMPITRAMPOLINE_DEFAULT_MPIEXEC="/opt/mpitrampoline/bin/mpiwrapperexec" \
+          ..
+    make
+  )
+
+  (
+    mkdir -p MPIconstants-${_mpiconstants_ver}/build
+    cd MPIconstants-${_mpiconstants_ver}/build
+    cmake -DBUILD_SHARED_LIBS=ON \
+          -DCMAKE_INSTALL_PREFIX=/opt/mpitrampoline \
+          ..
+    make
+  )
+
+  (
+    mkdir -p MPIwrapper-${_mpiwrapper_ver}/build
+    cd MPIwrapper-${_mpiwrapper_ver}/build
+    cmake -DBUILD_SHARED_LIBS=ON \
+        -DCMAKE_FIND_ROOT_PATH="/opt/mpich;/opt/mpitrampoline" \
+        -DCMAKE_INSTALL_PREFIX=/opt/mpitrampoline \
+        -DMPIEXEC_EXECUTABLE=/opt/mpich/bin/mpiexec \
+        ..
+    make
+  )
+}
+
+package() {
+  (
+    cd MPItrampoline-${pkgver}/build
+    make DESTDIR="${pkgdir}" install
+    install -D -m644 ../LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/license.md"
+  )
+
+  (
+    cd MPIconstants-${_mpiconstants_ver}/build
+    make DESTDIR="${pkgdir}" install
+  )
+
+  (
+    cd MPIwrapper-${_mpiwrapper_ver}/build
+    make DESTDIR="${pkgdir}" install
+  )
+
+  mkdir -p "${pkgdir}/etc/ld.so.conf.d"
+  echo /opt/mpitrampoline/lib > "${pkgdir}/etc/ld.so.conf.d/mpitrampoline.conf"
+}

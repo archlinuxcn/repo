@@ -1,0 +1,18 @@
+pkgname=julia-git-manualmemory-src
+pkgver=0.1.8
+_commit=797378af7c336f1eac05981e9c3864ca66d0ec78
+pkgrel=2
+pkgdesc="ManualMemory.jl"
+url="https://github.com/JuliaSIMD/ManualMemory.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSIMD/ManualMemory.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ManualMemory.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ManualMemory "${pkgdir}" "${pkgname}" julia-git
+}

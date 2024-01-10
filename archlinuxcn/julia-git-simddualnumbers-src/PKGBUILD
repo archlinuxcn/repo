@@ -1,0 +1,18 @@
+pkgname=julia-git-simddualnumbers-src
+pkgver=0.1.1
+_commit=d0ece12c2af74c0a3e9141ea333de2f405a2d324
+pkgrel=2
+pkgdesc="SIMDDualNumbers.jl"
+url="https://github.com/JuliaSIMD/SIMDDualNumbers.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSIMD/SIMDDualNumbers.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SIMDDualNumbers.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SIMDDualNumbers "${pkgdir}" "${pkgname}" julia-git
+}

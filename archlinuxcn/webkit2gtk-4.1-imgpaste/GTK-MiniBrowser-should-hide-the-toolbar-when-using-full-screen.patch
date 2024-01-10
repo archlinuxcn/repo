@@ -1,0 +1,100 @@
+From e07345343415dd2496edc721daa61a3b42703131 Mon Sep 17 00:00:00 2001
+From: Christian Hesse <mail@eworm.de>
+Date: Tue, 19 Sep 2023 12:16:39 -0700
+Subject: [PATCH] [GTK] MiniBrowser should hide the toolbar when using
+ --full-screen #17909 https://bugs.webkit.org/show_bug.cgi?id=261732
+
+Reviewed by Michael Catanzaro.
+
+Entering fullscreen mode with F11 works as expected.
+Starting with command line switch `--full-screen` does make the window
+fullscreen, but does not hide the toolbar. Let's change that.
+
+Instead of just making the window fullscreen with `gtk_window_fullscreen()`
+this introduces a new function `browser_window_fullscreen()` that hides
+the toolbar as well.
+
+Also introduce new function `browserWindowUnfullscreen()`, use both
+in `toggleFullScreen()`, and drop extra inversion.
+
+* Tools/MiniBrowser/gtk/BrowserWindow.c
+* Tools/MiniBrowser/gtk/BrowserWindow.h
+* Tools/MiniBrowser/gtk/main.c
+
+Canonical link: https://commits.webkit.org/268141@main
+---
+ Tools/MiniBrowser/gtk/BrowserWindow.c | 27 ++++++++++++++++++---------
+ Tools/MiniBrowser/gtk/BrowserWindow.h |  1 +
+ Tools/MiniBrowser/gtk/main.c          |  2 +-
+ 3 files changed, 20 insertions(+), 10 deletions(-)
+
+diff --git a/Tools/MiniBrowser/gtk/BrowserWindow.c b/Tools/MiniBrowser/gtk/BrowserWindow.c
+index 626ce2207e845..58eb5ae39e2e0 100644
+--- a/Tools/MiniBrowser/gtk/BrowserWindow.c
++++ b/Tools/MiniBrowser/gtk/BrowserWindow.c
+@@ -482,6 +482,20 @@ static GtkWidget *webViewCreate(WebKitWebView *webView, WebKitNavigationAction *
+     return GTK_WIDGET(newWebView);
+ }
+ 
++void browser_window_fullscreen(BrowserWindow *window)
++{
++    gtk_window_fullscreen(GTK_WINDOW(window));
++    gtk_widget_hide(window->toolbar);
++    window->fullScreenIsEnabled = TRUE;
++}
++
++static void browserWindowUnfullscreen(BrowserWindow *window)
++{
++    gtk_window_unfullscreen(GTK_WINDOW(window));
++    gtk_widget_show(window->toolbar);
++    window->fullScreenIsEnabled = FALSE;
++}
++
+ static gboolean webViewEnterFullScreen(WebKitWebView *webView, BrowserWindow *window)
+ {
+     gtk_widget_hide(window->toolbar);
+@@ -867,15 +881,10 @@ static void loadHomePage(GSimpleAction *action, GVariant *parameter, gpointer us
+ static void toggleFullScreen(GSimpleAction *action, GVariant *parameter, gpointer userData)
+ {
+     BrowserWindow *window = BROWSER_WINDOW(userData);
+-    if (!window->fullScreenIsEnabled) {
+-        gtk_window_fullscreen(GTK_WINDOW(window));
+-        gtk_widget_hide(window->toolbar);
+-        window->fullScreenIsEnabled = TRUE;
+-    } else {
+-        gtk_window_unfullscreen(GTK_WINDOW(window));
+-        gtk_widget_show(window->toolbar);
+-        window->fullScreenIsEnabled = FALSE;
+-    }
++    if (window->fullScreenIsEnabled)
++        browserWindowUnfullscreen(window);
++    else
++        browser_window_fullscreen(window);
+ }
+ 
+ static void webKitPrintOperationFailedCallback(WebKitPrintOperation *printOperation, GError *error)
+diff --git a/Tools/MiniBrowser/gtk/BrowserWindow.h b/Tools/MiniBrowser/gtk/BrowserWindow.h
+index c58ebc2beec7e..1fd07efb828b8 100644
+--- a/Tools/MiniBrowser/gtk/BrowserWindow.h
++++ b/Tools/MiniBrowser/gtk/BrowserWindow.h
+@@ -58,6 +58,7 @@ GtkWidget* browser_window_new(GtkWindow*, WebKitWebContext*);
+ #endif
+ WebKitWebContext* browser_window_get_web_context(BrowserWindow*);
+ void browser_window_append_view(BrowserWindow*, WebKitWebView*);
++void browser_window_fullscreen(BrowserWindow*);
+ void browser_window_load_uri(BrowserWindow*, const char *uri);
+ void browser_window_load_session(BrowserWindow *, const char *sessionFile);
+ void browser_window_set_background_color(BrowserWindow*, GdkRGBA*);
+diff --git a/Tools/MiniBrowser/gtk/main.c b/Tools/MiniBrowser/gtk/main.c
+index 8be643a541511..451e0333dd4e8 100644
+--- a/Tools/MiniBrowser/gtk/main.c
++++ b/Tools/MiniBrowser/gtk/main.c
+@@ -925,7 +925,7 @@ static void activate(GApplication *application, WebKitSettings *webkitSettings)
+     if (darkMode)
+         g_object_set(gtk_widget_get_settings(GTK_WIDGET(mainWindow)), "gtk-application-prefer-dark-theme", TRUE, NULL);
+     if (fullScreen)
+-        gtk_window_fullscreen(GTK_WINDOW(mainWindow));
++        browser_window_fullscreen(mainWindow);
+ 
+     if (backgroundColor)
+         browser_window_set_background_color(mainWindow, backgroundColor);

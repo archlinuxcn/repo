@@ -1,0 +1,39 @@
+pkgname=julia-git-tzjdata-src
+pkgver=1.0.0+2023c
+_commit=fb9583ceddba3b7841628c261e7f18a6f5b8ecf3
+pkgrel=2
+pkgdesc="TZJData.jl"
+url="https://github.com/JuliaTime/TZJData.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts wget)
+depends=(julia-git)
+source=("git+https://github.com/JuliaTime/TZJData.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+build() {
+  cd TZJData.jl
+
+  rm -rf gen
+
+  local url
+  url=$(sed -ne '/url *= *".*"/{s/ *url *= *"\(.*\)" */\1/p;q}' Artifacts.toml)
+
+  wget -O tzjfile-tzdata.tar.gz "$url"
+
+  (
+    rm -rf tzjdata/
+    mkdir tzjdata/
+    cd tzjdata/
+    tar xf ../tzjfile-tzdata.tar.gz
+    rm ../tzjfile-tzdata.tar.gz
+  )
+
+  sed -i -e 's|artifact"tzjdata"|joinpath(@__DIR__, "../tzjdata")|' src/TZJData.jl
+}
+
+package() {
+  cd TZJData.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh TZJData "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,26 @@
+pkgname=julia-git-xorg_libx11_jll-src
+pkgver=1.8.6+0
+_commit=58519193d51b1d23dc622d3c00cea00fdb30f752
+pkgrel=3
+pkgdesc="Xorg_libX11_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Xorg_libX11_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libx11)
+source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libX11_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '2dc2544b9d233b0be62cc086a9fb0084d538849bfe574c6dde6aec4987875b97')
+
+build() {
+  cd Xorg_libX11_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Xorg_libX11_jll ../jll.toml
+}
+
+package() {
+  cd Xorg_libX11_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Xorg_libX11_jll "${pkgdir}" "${pkgname}" julia-git
+}

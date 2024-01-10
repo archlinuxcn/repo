@@ -1,76 +1,82 @@
 # Maintainer: Kimiblock Zhou <pn3535 at icloud dot com>
+
 pkgname=qcm-git
-pkgver=r63.7048881
+_pkgname=${pkgname%-git}
+pkgver=r110.05061b0
 pkgrel=1
-pkgdesc="Qt client for netease cloud music "
+pkgdesc="Qt client for netease cloud music"
 arch=('x86_64')
 url="https://github.com/hypengw/Qcm"
 license=('GPL2')
 depends=(
-    'qt6-base'
-    'hicolor-icon-theme'
-    'curl'
-    'openssl'
-    'qt6-tools'
-    'qt6-multimedia'
-    'qt6-declarative'
-    'gcc-libs'
-    'glibc'
-    'dbus'
-    'libnghttp2'
-    'libidn2'
-    'krb5'
-    'zstd'
-    'zlib'
-    'qt6-wayland'
-    'libx11'
-    'libxkbcommon'
-    'libpng'
-    'freetype2'
-    'icu'
-    'pcre2'
-    'gnutls'
-    'graphite'
-    'lz4'
-    'libgpg-error'
-    'ffmpeg')
+	'qt6-base'
+	'hicolor-icon-theme'
+	'curl'
+	'openssl'
+	'qt6-tools'
+	'qt6-multimedia'
+	'qt6-declarative'
+	'qt6-shadertools'
+	'gcc-libs'
+	'glibc'
+	'dbus'
+	'libnghttp2'
+	'libidn2'
+	'krb5'
+	'zstd'
+	'zlib'
+	'qt6-wayland'
+	'libx11'
+	'libxkbcommon'
+	'libpng'
+	'freetype2'
+	'icu'
+	'pcre2'
+	'gnutls'
+	'graphite'
+	'lz4'
+	'libgpg-error'
+	'ffmpeg'
+	'qt6-5compat'
+	'glibmm')
 makedepends=(
-    'git'
-    'cmake'
-    'extra-cmake-modules'
-    'ninja')
-provides=("qcm")
-source=('git+https://github.com/hypengw/Qcm.git')
+	'git'
+	'cmake'
+	'extra-cmake-modules'
+	'ninja')
+provides=("${_pkgname}")
+source=("git+${url}.git")
 sha256sums=('SKIP')
 
-function pkgver(){
-    cd Qcm
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+pkgver() {
+	cd Qcm
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
-function build(){
-export TERM=xterm
-    if [ -d "${srcdir}"/Qcm/build ]; then
-        _info "Deleting ${srcdir}/Qcm/build"
-        rm -r "${srcdir}"/Qcm/build
-    fi
-    _info "Starting Build..."
-    cd Qcm
-    git submodule update --init
-    mkdir build
-    cd build
-    cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release
-    ninja
+build() {
+	export TERM=xterm
+	if [ -d "${srcdir}"/Qcm/build ]; then
+		_info "Deleting ${srcdir}/Qcm/build"
+		rm -r "${srcdir}"/Qcm/build
+	fi
+
+	_info "Starting Build..."
+	cd Qcm
+	git submodule update --init
+	mkdir build
+	cd build
+	cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release
+	ninja
 }
 
-function package(){
-    _info "Copying files"
-    install -Dm644 "${srcdir}/Qcm/app/assets/Qcm.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/io.github.hypengw.Qcm.svg"
-    install -Dm644 "${srcdir}/Qcm/app/assets/Qcm.desktop" "${pkgdir}/usr/share/applications/Qcm.desktop"
-    install -Dm755 "${srcdir}/Qcm/build/app/Qcm" "${pkgdir}/usr/bin/Qcm"
+package() {
+	_info "Copying files"
+	install -Dm644 "${srcdir}/Qcm/app/assets/Qcm.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/io.github.hypengw.Qcm.svg"
+	install -Dm644 "${srcdir}/Qcm/app/assets/Qcm.desktop" "${pkgdir}/usr/share/applications/Qcm.desktop"
+	install -Dm755 "${srcdir}/Qcm/build/app/Qcm" "${pkgdir}/usr/bin/Qcm"
 }
 
-function _info() {
+_info() {
 	if [ -f /usr/bin/pamac ]; then
 		echo "  ==> [Info]: $@"
 	else
@@ -79,5 +85,5 @@ function _info() {
 		blue="${bold}$(tput setaf 4)"
 		yellow="${bold}$(tput setaf 3)"
 		printf "${blue}==>${yellow} [Info]:${bold} $1${all_off}\n"
-    fi
+	fi
 }

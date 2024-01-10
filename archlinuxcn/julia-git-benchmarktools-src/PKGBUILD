@@ -1,0 +1,18 @@
+pkgname=julia-git-benchmarktools-src
+pkgver=1.4.0
+_commit=255854d004b55410f711bc07f8488ebf4597ad54
+pkgrel=1
+pkgdesc="BenchmarkTools.jl"
+url="https://github.com/JuliaCI/BenchmarkTools.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaCI/BenchmarkTools.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd BenchmarkTools.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh BenchmarkTools "${pkgdir}" "${pkgname}" julia-git
+}

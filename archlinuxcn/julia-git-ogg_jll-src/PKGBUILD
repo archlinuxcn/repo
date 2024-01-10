@@ -1,0 +1,26 @@
+pkgname=julia-git-ogg_jll-src
+pkgver=1.3.5+1
+_commit=afdc5109105b24e572d494ff9f542cae60ea57be
+pkgrel=2
+pkgdesc="Ogg_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Ogg_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libogg)
+source=("git+https://github.com/JuliaBinaryWrappers/Ogg_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '946746b0a709f75ebf5702ac4bde8215d8c9f5d04a2151989eb5fab2fb05258a')
+
+build() {
+  cd Ogg_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Ogg_jll ../jll.toml
+}
+
+package() {
+  cd Ogg_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Ogg_jll "${pkgdir}" "${pkgname}" julia-git
+}

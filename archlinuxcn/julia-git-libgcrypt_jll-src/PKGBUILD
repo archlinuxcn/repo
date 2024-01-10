@@ -1,0 +1,26 @@
+pkgname=julia-git-libgcrypt_jll-src
+pkgver=1.8.7+0
+_commit=c1bc427c4953c0f0b61fd5b0d89b28634d79daa0
+pkgrel=3
+pkgdesc="Libgcrypt_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Libgcrypt_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libgcrypt)
+source=("git+https://github.com/JuliaBinaryWrappers/Libgcrypt_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'f6ef5f20326be6a90f201f8c3472eaef3dbf8c8be2fc60fc55d5be6ba9fb9732')
+
+build() {
+  cd Libgcrypt_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Libgcrypt_jll ../jll.toml
+}
+
+package() {
+  cd Libgcrypt_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Libgcrypt_jll "${pkgdir}" "${pkgname}" julia-git
+}

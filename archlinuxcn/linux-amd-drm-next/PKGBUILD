@@ -2,14 +2,13 @@
 # Maintainer: heavysink <winstonwu91@gmail.com>
 
 pkgbase=linux-amd-drm-next              
-_tag='amd-drm-next-6.6-2023-08-18'
-pkgver=6.6.2023.08.18
-pkgrel=2
+_tag='amd-drm-next-6.8-2024-01-05'
+pkgver=6.8.2024.01.05
+pkgrel=1
 pkgdesc="Linux kernel next with bleeding edge AMD DRM drivers"
 arch=(x86_64)
 url="https://kernel.org/"
 license=(GPL2)
-options=('!strip' '!debug')
 makedepends=(
   bc
   cpio
@@ -17,11 +16,18 @@ makedepends=(
   git
   libelf
   pahole
-  python
   perl
+  python
   tar
   xz
+
+  # htmldocs
+  graphviz
+  imagemagick
+  python-sphinx
+  texlive-latexextra
 )
+options=('!strip' '!debug')
 _srcname=linux-amd-drm-next
 source=(
   "$_srcname::git+https://gitlab.freedesktop.org/agd5f/linux#tag=$_tag"
@@ -70,6 +76,7 @@ prepare() {
 build() {
   cd $_srcname
   _make all
+  _make htmldocs
 }
 
 _package() {
@@ -94,8 +101,8 @@ _package() {
   ZSTD_CLEVEL=19 _make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
     DEPMOD=/doesnt/exist modules_install  # Suppress depmod
 
-  # remove build and source links
-  rm "$modulesdir"/{source,build}
+  # remove build link
+  rm "$modulesdir"/build
 }
 
 _package-headers() {

@@ -1,0 +1,18 @@
+pkgname=julia-git-sparseinversesubset-src
+pkgver=0.1.1
+_commit=e0d6d485a8061254f246fc9a5a55acd4ff7d37ae
+pkgrel=2
+pkgdesc="SparseInverseSubset.jl"
+url="https://github.com/ElOceanografo/SparseInverseSubset.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/ElOceanografo/SparseInverseSubset.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SparseInverseSubset.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SparseInverseSubset "${pkgdir}" "${pkgname}" julia-git
+}

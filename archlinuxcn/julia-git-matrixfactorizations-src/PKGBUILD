@@ -1,0 +1,18 @@
+pkgname=julia-git-matrixfactorizations-src
+pkgver=2.1.0
+_commit=02f2d79887238d51bbd2dbe236a5f3eae4f6d759
+pkgrel=2
+pkgdesc="MatrixFactorizations.jl"
+url="https://github.com/JuliaLinearAlgebra/MatrixFactorizations.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaLinearAlgebra/MatrixFactorizations.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd MatrixFactorizations.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MatrixFactorizations "${pkgdir}" "${pkgname}" julia-git
+}

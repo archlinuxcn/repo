@@ -1,0 +1,44 @@
+# Maintainer: Guillaume Dolle  <dev at gdolle.com>
+pkgname=micromamba
+pkgver=1.5.6
+pkgrel=1
+pkgdesc="C++ tiny version of mamba, the fast conda package installer"
+arch=('aarch64' 'armv7h' 'i686' 'x86_64')
+url="https://github.com/mamba-org/mamba"
+license=('MIT')
+depends=('libarchive.so' 'libcurl.so' 'libsolv' 'libfmt.so'
+         'libspdlog.so' 'libyaml-cpp.so' 'libreproc.so' 'libreproc++.so'
+         'python')
+makedepends=('gtest' 'termcolor' 'cmake' 'cli11' 'nlohmann-json'
+             'ghc-filesystem' 'tl-expected')
+source=(micromamba-${pkgver}.tar.gz::https://github.com/mamba-org/mamba/archive/refs/tags/micromamba-${pkgver}.tar.gz )
+sha256sums=('aabff23746d634255681d4bb249740214e8405c12caee9682e0ee0c22e423e4a')
+provides=('micromamba')
+conflict=('micromamba' 'micromamba-bin')
+
+build() {
+  cd mamba-micromamba-${pkgver}
+
+  cmake -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+        -DBUILD_LIBMAMBA=ON \
+        -DBUILD_LIBMAMBAPY=OFF \
+        -DBUILD_LIBMAMBA_TESTS=OFF \
+        -DBUILD_MAMBA_PACKAGE=OFF \
+        -DBUILD_MICROMAMBA=ON \
+        -DBUILD_SHARED=ON \
+        -DBUILD_STATIC=OFF \
+        -B build
+  cmake --build build
+}
+
+check() {
+  cd mamba-micromamba-${pkgver}/build
+  ctest
+}
+
+package() {
+  cd mamba-micromamba-${pkgver}
+  DESTDIR="${pkgdir}" cmake --install build
+}

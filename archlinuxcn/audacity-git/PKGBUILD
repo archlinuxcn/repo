@@ -4,7 +4,7 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=audacity-git
-pkgver=3.3.3.r782.g169ef447b9
+pkgver=3.4.2.r196.g60d768e255
 pkgrel=1
 pkgdesc="A program that lets you manipulate digital audio waveforms"
 arch=('i686' 'x86_64')
@@ -42,7 +42,7 @@ depends=(
 	'wavpack'
 	'wxwidgets-gtk3'
 )
-makedepends=('cmake' 'git' 'nasm' 'rapidjson' 'vst3sdk' 'xcb-util' 'xcb-util-cursor' 'xcb-util-keysyms' 'gtkmm3' 'libxkbcommon-x11')
+makedepends=('cmake' 'git' 'nasm' 'rapidjson' 'vst3sdk' 'xcb-util' 'xcb-util-cursor' 'xcb-util-keysyms' 'gtkmm3' 'libxkbcommon-x11' 'opusfile')
 optdepends=('ffmpeg: additional import/export capabilities')
 provides=('audacity')
 conflicts=('audacity')
@@ -50,28 +50,28 @@ source=("git+https://github.com/audacity/audacity.git")
 sha256sums=('SKIP')
 
 pkgver() {
-  cd audacity
-  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g' | cut -d'.' -f2-
+	cd audacity
+	git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g' | cut -d'.' -f2-
 }
 
 build() {
-  export CC=gcc
-  export VST3_SDK_DIR="/usr/src/vst3sdk"
+	export CC=gcc
+	export VST3_SDK_DIR="/usr/src/vst3sdk"
 
-  cmake_args=(
-    -D CMAKE_BUILD_TYPE=Release
-    -D CMAKE_INSTALL_PREFIX=/usr
-    -D audacity_lib_preference=system
-    -D audacity_obey_system_dependencies=On
-    -D audacity_conan_enabled=Off
-    -D audacity_use_wxwidgets=system
-  )
+	cmake_args=(
+		-D CMAKE_BUILD_TYPE=Release
+		-D CMAKE_INSTALL_PREFIX=/usr
+		-D audacity_lib_preference=system
+		-D audacity_obey_system_dependencies=On
+		-D audacity_conan_enabled=Off
+		-D audacity_use_wxwidgets=system
+	)
 
-  cmake -S audacity -B build "${cmake_args[@]}"
-  cmake --build build
+	cmake -S audacity -B build "${cmake_args[@]}"
+	cmake --build build
 }
 
 package() {
-  cd build
-  make DESTDIR="${pkgdir}" install
+	cd build
+	make DESTDIR="${pkgdir}" install
 }

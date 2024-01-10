@@ -21,7 +21,7 @@ index 761cd5e431..e8cca19248 100755
    meson_options="$meson_options $(quote_sh "$1")"
  }
 diff --git a/meson.build b/meson.build
-index 0ae9c6f8a1..debb80c61d 100644
+index 38127c9809..b7fb0d9e16 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -1180,11 +1180,7 @@ if (have_system or have_tools) and (virgl.found() or opengl.found())
@@ -38,10 +38,10 @@ index 0ae9c6f8a1..debb80c61d 100644
  genconfig = declare_dependency(include_directories: 'genconfig')
  
 diff --git a/ui/thirdparty/meson.build b/ui/thirdparty/meson.build
-index 6b11d3a9c1..c2e80c99b7 100644
+index ad01b58932..deb07ce5d5 100644
 --- a/ui/thirdparty/meson.build
 +++ b/ui/thirdparty/meson.build
-@@ -60,5 +60,5 @@ endif
+@@ -60,8 +60,8 @@ endif
  libfpng = static_library('fpng', sources: 'fpng/fpng.cpp', cpp_args: libfpng_cpp_args)
  fpng = declare_dependency(include_directories: 'fpng', link_with: libfpng)
  
@@ -49,6 +49,10 @@ index 6b11d3a9c1..c2e80c99b7 100644
 -httplib = declare_dependency(include_directories: 'httplib')
 +json = dependency('nlohmann_json')
 +httplib = dependency('httplib')
+ 
+-libfatx = static_library('fatx', sources: 'fatx/fatx.c')
++libfatx = static_library('fatx', sources: files('fatx/fatx.c') + genh)
+ fatx = declare_dependency(include_directories: 'fatx', link_with: libfatx)
 diff --git a/ui/xui/reporting.cc b/ui/xui/reporting.cc
 index 992d5da0a7..b9a538e07a 100644
 --- a/ui/xui/reporting.cc

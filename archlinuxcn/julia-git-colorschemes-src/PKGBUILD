@@ -1,0 +1,18 @@
+pkgname=julia-git-colorschemes-src
+pkgver=3.24.0
+_commit=dff53f0eb78e0344ebbc6f0d78967aee5fcd83b5
+pkgrel=2
+pkgdesc="ColorSchemes.jl"
+url="https://github.com/JuliaGraphics/ColorSchemes.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGraphics/ColorSchemes.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ColorSchemes.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ColorSchemes "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,28 @@
+pkgname=julia-git-nodejs-src
+pkgver=2.0.0
+_commit=488537c9f54fea28b55693858e5d2b47cd971818
+pkgrel=2
+pkgdesc="NodeJS.jl"
+url="https://github.com/davidanthoff/NodeJS.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/davidanthoff/NodeJS.jl.git#commit=$_commit"
+        nodejs.jl)
+sha256sums=('SKIP'
+            '373ea1e5f6087d6fa743f452394cc0c8ecfe083db8ddfe6827850f2c60066746')
+
+prepare() {
+  cd NodeJS.jl
+
+  rm -v src/NodeJS.jl
+  cp -nv ../nodejs.jl src/NodeJS.jl
+  rm Artifacts.toml
+}
+
+package() {
+  cd NodeJS.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh NodeJS "${pkgdir}" "${pkgname}" julia-git
+}

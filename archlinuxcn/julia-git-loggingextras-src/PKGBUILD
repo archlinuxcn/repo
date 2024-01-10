@@ -1,0 +1,18 @@
+pkgname=julia-git-loggingextras-src
+pkgver=1.0.3
+_commit=d35e7c8cfc197853ee336ace17182e6ed36dca24
+pkgrel=1
+pkgdesc="LoggingExtras.jl"
+url="https://github.com/JuliaLogging/LoggingExtras.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaLogging/LoggingExtras.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LoggingExtras.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LoggingExtras "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-unzip-src
+pkgver=0.2.0
+_commit=c239114b4b7faf71dab924c1832a11eaa0312d22
+pkgrel=2
+pkgdesc="Unzip.jl"
+url="https://github.com/bramtayl/Unzip.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/bramtayl/Unzip.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Unzip.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Unzip "${pkgdir}" "${pkgname}" julia-git
+}

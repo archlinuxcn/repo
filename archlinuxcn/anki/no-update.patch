@@ -1,11 +1,13 @@
+diff --git a/qt/aqt/update.py b/qt/aqt/update.py
+index 212ddf93d..6f716cc04 100644
 --- a/qt/aqt/update.py
 +++ b/qt/aqt/update.py
-@@ -33,6 +33,8 @@
-         }
-
-     def run(self) -> None:
-+        return
+@@ -11,6 +11,8 @@ from aqt.utils import openLink, show_warning, showText, tr
+ 
+ 
+ def check_for_update() -> None:
++    return
 +
-         if not self.config["updates"]:
-             return
-         d = self._data()
+     from aqt import mw
+ 
+     def do_check(_col: Collection) -> CheckForUpdateResponse:

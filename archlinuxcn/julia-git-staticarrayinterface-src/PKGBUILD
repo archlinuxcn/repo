@@ -1,0 +1,18 @@
+pkgname=julia-git-staticarrayinterface-src
+pkgver=1.4.1
+_commit=d1008caf96efd2a679af6ff4dae5e66dc280a01c
+pkgrel=2
+pkgdesc="StaticArrayInterface.jl"
+url="https://github.com/JuliaArrays/StaticArrayInterface.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaArrays/StaticArrayInterface.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd StaticArrayInterface.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh StaticArrayInterface "${pkgdir}" "${pkgname}" julia-git
+}

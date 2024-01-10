@@ -1,0 +1,18 @@
+pkgname=julia-git-optim-src
+pkgver=1.7.8
+_commit=4f708bf85ec0b65304ae862d8068a5e06acd7235
+pkgrel=1
+pkgdesc="Optim.jl"
+url="https://github.com/JuliaNLSolvers/Optim.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaNLSolvers/Optim.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Optim.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Optim "${pkgdir}" "${pkgname}" julia-git
+}

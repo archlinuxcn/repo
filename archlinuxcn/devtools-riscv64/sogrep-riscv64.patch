@@ -1,0 +1,32 @@
+--- /usr/bin/sogrep	2023-09-12 04:44:52.000000000 +0800
++++ sogrep-riscv64	2023-09-30 17:14:57.463535397 +0800
+@@ -10,14 +10,14 @@
+ # shellcheck source=src/lib/common.sh
+ source "${_DEVTOOLS_LIBRARY_DIR}"/lib/common.sh
+ # shellcheck source=src/lib/valid-repos.sh
+-source "${_DEVTOOLS_LIBRARY_DIR}"/lib/valid-repos.sh
++source "${_DEVTOOLS_LIBRARY_DIR}"/lib/valid-repos-riscv64.sh
+ 
+ 
+ # globals
+-fallback_mirror='https://geo.mirror.pkgbuild.com'
++fallback_mirror='https://riscv.mirror.pkgbuild.com/repo'
+ : ${SOCACHE_DIR:="${XDG_CACHE_HOME:-${HOME}/.cache}/sogrep"}
+ 
+-arches=('x86_64')
++arches=('riscv64')
+ 
+ # options
+ REFRESH=0
+@@ -49,9 +49,9 @@
+             if [[ "$mirror" == *"/${repo}/os/${arch}" ]]; then
+                 linksdburl="${mirror}/${repo}.links.tar.gz"
+             else
+-                linksdburl="${mirror}/${repo}/os/${arch}/${repo}.links.tar.gz"
++                linksdburl="${mirror}/${repo}/${repo}.links.tar.gz"
+             fi
+-            fallback_linksdburl="${fallback_mirror}/${repo}/os/${arch}/${repo}.links.tar.gz"
++            fallback_linksdburl="${fallback_mirror}/${repo}/${repo}.links.tar.gz"
+ 
+             if curl -fLR "${verbosity}" -o "${dbpath}" -z "${dbpath}" "$linksdburl"; then
+                 :

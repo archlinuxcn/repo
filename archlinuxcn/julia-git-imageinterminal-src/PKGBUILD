@@ -1,0 +1,18 @@
+pkgname=julia-git-imageinterminal-src
+pkgver=0.5.2
+_commit=340ebebda60b59aa59246938f390c1bfd131958f
+pkgrel=2
+pkgdesc="ImageInTerminal.jl"
+url="https://github.com/JuliaImages/ImageInTerminal.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaImages/ImageInTerminal.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ImageInTerminal.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ImageInTerminal "${pkgdir}" "${pkgname}" julia-git
+}

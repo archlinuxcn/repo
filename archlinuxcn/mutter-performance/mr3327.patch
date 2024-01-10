@@ -1,0 +1,29 @@
+From b0713028790d7831381d9e9d6d6b49f240d79b8e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Agust=C3=ADn=20Dall=27Alba?= <gnome@dallalba.com.ar>
+Date: Sat, 14 Oct 2023 00:05:26 +0000
+Subject: [PATCH] backends/native: Remove DO_NOT_AUTO_START flag from rtkit
+ dbus proxy
+
+With this flag, the KMS Thread isn't made realtime at boot when the shell
+starts before the rtkit daemon
+---
+ src/backends/native/meta-thread.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/src/backends/native/meta-thread.c b/src/backends/native/meta-thread.c
+index 1ed30441de3..48a524a198d 100644
+--- a/src/backends/native/meta-thread.c
++++ b/src/backends/native/meta-thread.c
+@@ -218,8 +218,7 @@ ensure_realtime_kit_proxy (MetaThread  *thread,
+ 
+   rtkit_proxy =
+     meta_dbus_realtime_kit1_proxy_new_for_bus_sync (G_BUS_TYPE_SYSTEM,
+-                                                    G_DBUS_PROXY_FLAGS_DO_NOT_CONNECT_SIGNALS |
+-                                                    G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START,
++                                                    G_DBUS_PROXY_FLAGS_DO_NOT_CONNECT_SIGNALS,
+                                                     "org.freedesktop.RealtimeKit1",
+                                                     "/org/freedesktop/RealtimeKit1",
+                                                     NULL,
+-- 
+GitLab
+

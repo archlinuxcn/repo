@@ -2,7 +2,7 @@
 
 pkgname=opensnitch-ebpf-module
 _pkgname=opensnitch
-pkgver=1.6.3
+pkgver=1.6.4
 pkgrel=1
 pkgdesc="eBPF process monitor module for opensnitch"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
@@ -12,7 +12,7 @@ makedepends=('bc' 'clang' 'libelf' 'linux-headers' 'llvm')
 checkdepends=('llvm')
 depends=('opensnitch')
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('4ca735d953d99fe5c7a33cb1115e8f9a81768adcc69d47e1851c463b3cb27561')
+sha256sums=('ab929f702fd8046ee44dc66cb18d8037061ffde78d449e5df8b9454f9fe23adb')
 options=('!strip') # we're stripping with llvm-strip
 
 build() {

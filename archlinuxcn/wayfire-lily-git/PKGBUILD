@@ -1,19 +1,17 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 # Contributor: Solomon Choina <shlomochoina@gmail.com0
 pkgname=wayfire-lily-git
-pkgver=0.8.0.20230407.031510.g2f0a4c8f
+pkgver=0.9.0.20231207.065445.g3b3be365
 pkgrel=1
 pkgdesc="3D wayland compositor (lilydjwg's version)"
 arch=('x86_64')
 url="https://github.com/lilydjwg/wayfire"
 license=('MIT')
-depends=('wlroots-lily-git' 'cairo' 'pango' 'glm' 'libjpeg' 'wf-config-git' 'seatd')
+depends=('wlroots-lily-git' 'cairo' 'pango' 'glm' 'libjpeg')
 makedepends=('git' 'meson' 'ninja' 'wayland-protocols' 'doctest')
-optdepends=('wf-shell-git: GTK3-based panel for the Wayfire compositor'
-            'wf-sound-control-git: Small utility for the Wayfire compositor to control sound volume')
+optdepends=()
 provides=(wayfire wayfire-git)
 conflicts=(wayfire wayfire-git)
-replaces=()
 options=(debug)
 source=(wayfire::git+$url.git)
 sha256sums=(SKIP)
@@ -29,13 +27,12 @@ pkgver () {
 
 build() {
     cd "$srcdir/wayfire"
-    # debug_ipc doesn't compile with wlroots 0.16.0
     arch-meson \
         --buildtype=debug \
-        -Duse_system_wlroots=enabled \
-        -Duse_system_wfconfig=enabled \
         -Dtests=disabled \
-        -Ddebug_ipc=false \
+        -Duse_system_wfconfig=disabled \
+        -Duse_system_wlroots=enabled \
+        -Dprint_trace=false \
         . \
         build
     ninja -C build

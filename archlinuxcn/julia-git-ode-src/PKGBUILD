@@ -1,0 +1,18 @@
+pkgname=julia-git-ode-src
+pkgver=2.15.0
+_commit=c8d7b276b5d76a4f2b9cfc24d57a1ab5b20eb800
+pkgrel=2
+pkgdesc="ODE.jl"
+url="https://github.com/SciML/ODE.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/ODE.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ODE.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ODE "${pkgdir}" "${pkgname}" julia-git
+}

@@ -4,13 +4,17 @@ maintainers:
 build_prefix: extra-x86_64
 
 repo_depends:
+  - gdown
   - python-imgviz
+  - python-onnxruntime
+  - python-onnxruntime: onnxruntime
+  - python-scikit-image
 
 update_on:
   - source: github
     github: wkentaro/labelme
     use_latest_release: true
   - source: manual
-    manual: 3
+    manual: 4
   - alias: python
 # vim:set ts=2 sw=2 et:

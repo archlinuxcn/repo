@@ -1,0 +1,18 @@
+pkgname=julia-git-blockdiagonals-src
+pkgver=0.1.42
+_commit=67a360435ae72140a5900a131defa215739f480c
+pkgrel=2
+pkgdesc="BlockDiagonals.jl"
+url="https://github.com/JuliaArrays/BlockDiagonals.jl"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaArrays/BlockDiagonals.jl#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd BlockDiagonals.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh BlockDiagonals "${pkgdir}" "${pkgname}" julia-git
+}

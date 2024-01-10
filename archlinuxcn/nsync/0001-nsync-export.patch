@@ -1,0 +1,29 @@
+diff -urN -x '*.orig' nsync-1.20.2.orig/CMakeLists.txt nsync-1.20.2/CMakeLists.txt
+--- nsync-1.20.2.orig/CMakeLists.txt	2019-01-04 05:29:33.000000000 +0800
++++ nsync-1.20.2/CMakeLists.txt	2019-03-03 17:41:18.480996400 +0800
+@@ -398,11 +402,11 @@
+ 
+ set (CMAKE_SKIP_INSTALL_ALL_DEPENDENCY ON)
+ 
+-install (TARGETS nsync
++install (TARGETS nsync EXPORT nsync
+ 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT RuntimeLibraries
+ 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Development)
+ 
+-install (TARGETS nsync_cpp OPTIONAL
++install (TARGETS nsync_cpp EXPORT nsync_cpp OPTIONAL
+ 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT RuntimeLibraries
+ 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Development)
+ 
+@@ -427,3 +433,11 @@
+ 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+ 		COMPONENT Development)
+ endforeach ()
++
++install(EXPORT nsync
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/nsync
++        FILE        nsyncConfig.cmake)
++
++install(EXPORT nsync_cpp
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/nsync_cpp
++        FILE        nsync_cppConfig.cmake)

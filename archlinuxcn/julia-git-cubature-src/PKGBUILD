@@ -1,0 +1,18 @@
+pkgname=julia-git-cubature-src
+pkgver=1.5.1
+_commit=f3025eedcee531b68001362564077c3b99e4cda5
+pkgrel=2
+pkgdesc="Cubature.jl"
+url="https://github.com/JuliaMath/Cubature.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaMath/Cubature.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Cubature.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Cubature "${pkgdir}" "${pkgname}" julia-git
+}

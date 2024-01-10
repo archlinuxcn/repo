@@ -1,0 +1,18 @@
+pkgname=julia-git-jld2-src
+pkgver=0.4.38
+_commit=a0d0730c45637f4e982c145a4f353b41603f0f53
+pkgrel=1
+pkgdesc="JLD2.jl"
+url="https://github.com/JuliaIO/JLD2.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/JLD2.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd JLD2.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh JLD2 "${pkgdir}" "${pkgname}" julia-git
+}

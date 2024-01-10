@@ -1,0 +1,26 @@
+pkgname=julia-git-xorg_libxdmcp_jll-src
+pkgver=1.1.4+0
+_commit=20c81e01375068b8017b4333311c448d2725fd67
+pkgrel=3
+pkgdesc="Xorg_libXdmcp_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Xorg_libXdmcp_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libxdmcp)
+source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libXdmcp_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '673fe7229117ecbf2fbd3f821c81d5f837eda8d91b86c062f6d34a57ba4409b6')
+
+build() {
+  cd Xorg_libXdmcp_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Xorg_libXdmcp_jll ../jll.toml
+}
+
+package() {
+  cd Xorg_libXdmcp_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Xorg_libXdmcp_jll "${pkgdir}" "${pkgname}" julia-git
+}

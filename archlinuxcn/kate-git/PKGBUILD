@@ -4,7 +4,7 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=kate-git
-pkgver=23.11.70_r20936.gd6b793a88
+pkgver=23.11.70_r20959.g91066be0c
 pkgrel=1
 pkgdesc="Advanced Text Editor"
 groups=(kde-applications-git kde-utilities-git)
@@ -17,7 +17,7 @@ optdepends=('konsole-git: open a terminal in Kate'
             'rust: Rust LSP support')
 arch=(x86_64)
 license=(GPL LGPL FDL)
-makedepends=(extra-cmake-modules kdoctools plasma-framework knewstuff kitemmodels ktexteditor kactivities kuserfeedback git)
+makedepends=(extra-cmake-modules-git kdoctools plasma-framework knewstuff kitemmodels ktexteditor kactivities kuserfeedback git)
 provides=('kate')
 conflicts=('kate' 'kdesdk-kate' 'kdebase-kwrite')
 source=(git+https://invent.kde.org/utilities/kate.git)

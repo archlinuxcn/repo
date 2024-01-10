@@ -1,0 +1,38 @@
+From 70d0e5a0a7b35ddd5d2c52e4409f7505fddcc7f3 Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Thu, 28 Sep 2023 14:16:04 +0300
+Subject: [PATCH 5/5] AUR: Fix hwnd redefinition
+
+---
+ steam_helper/steam.cpp                       | 2 ++
+ vrclient_x64/vrclient_x64/json_converter.cpp | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/steam_helper/steam.cpp b/steam_helper/steam.cpp
+index 65b9c179..01e3b927 100644
+--- a/steam_helper/steam.cpp
++++ b/steam_helper/steam.cpp
+@@ -34,7 +34,9 @@
+ 
+ #include "ntstatus.h"
+ #define WIN32_NO_STATUS
++extern "C" {
+ #include <windows.h>
++}
+ #include <winternl.h>
+ #include <shlwapi.h>
+ #include <shlobj.h>
+diff --git a/vrclient_x64/vrclient_x64/json_converter.cpp b/vrclient_x64/vrclient_x64/json_converter.cpp
+index 83fd2ec0..64d209a2 100644
+--- a/vrclient_x64/vrclient_x64/json_converter.cpp
++++ b/vrclient_x64/vrclient_x64/json_converter.cpp
+@@ -1,4 +1,6 @@
++extern "C" {
+ #include <windows.h>
++}
+ #include <wine/debug.h>
+ 
+ WINE_DEFAULT_DEBUG_CHANNEL(vrclient);
+-- 
+2.42.1
+

@@ -1,0 +1,18 @@
+pkgname=julia-git-leastsquaresoptim-src
+pkgver=0.8.5
+_commit=2aea700a4703f122c5e4326e1c0ddc1c656e46c5
+pkgrel=2
+pkgdesc="LeastSquaresOptim.jl"
+url="https://github.com/matthieugomez/LeastSquaresOptim.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/matthieugomez/LeastSquaresOptim.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LeastSquaresOptim.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LeastSquaresOptim "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,35 @@
+pkgname=julia-git-mkl_jll-src
+pkgver=2024.0.0+0
+_commit=7082278d2720852c32ca36a7d9d3197043a33bf8
+pkgrel=1
+pkgdesc="MKL_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/MKL_jll.jl.git"
+arch=(aarch64 armv7h x86_64)
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+if [[ $CARCH = x86_64 ]]; then
+  depends+=(intel-mkl)
+fi
+source=("git+https://github.com/JuliaBinaryWrappers/MKL_jll.jl.git#commit=$_commit"
+        jll.toml
+        jll_x86_64.toml)
+sha256sums=('SKIP'
+            'e1c9c4d4e3ea147638ce2c17c6ff95bbf09ee894c24b43db3ea7bfa85e92acd6'
+            'ad180c03620f26458a6c671e249ff0d4806f41e221c8ec515505138ffe131b36')
+
+build() {
+  cd MKL_jll.jl
+
+  if [[ $CARCH = x86_64 ]]; then
+    julia /usr/lib/julia/julia-gen-jll.jl MKL_jll ../jll_x86_64.toml
+  else
+    julia /usr/lib/julia/julia-gen-jll.jl MKL_jll ../jll.toml
+  fi
+}
+
+package() {
+  cd MKL_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MKL_jll "${pkgdir}" "${pkgname}" julia-git
+}

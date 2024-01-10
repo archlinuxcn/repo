@@ -1,0 +1,18 @@
+pkgname=julia-git-integralarrays-src
+pkgver=0.1.5
+_commit=d6dfd994f2c0d4aef677d3bddd69b9142bf45008
+pkgrel=2
+pkgdesc="IntegralArrays.jl"
+url="https://github.com/JuliaImages/IntegralArrays.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaImages/IntegralArrays.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd IntegralArrays.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh IntegralArrays "${pkgdir}" "${pkgname}" julia-git
+}

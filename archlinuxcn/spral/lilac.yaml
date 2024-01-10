@@ -1,0 +1,16 @@
+maintainers:
+  - github: yuyichao
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - metis
+
+update_on:
+  - source: github
+    github: ralna/spral
+    use_latest_tag: true
+    include_regex: 'v\d+\.\d+\.\d+'
+  - source: manual
+    manual: 2

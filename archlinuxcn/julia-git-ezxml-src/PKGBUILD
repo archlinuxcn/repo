@@ -1,0 +1,18 @@
+pkgname=julia-git-ezxml-src
+pkgver=1.2.0
+_commit=57ffce2fa76776c8c8056a4cfacd3ca1dbbcf7bc
+pkgrel=1
+pkgdesc="EzXML.jl"
+url="https://github.com/JuliaIO/EzXML.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/EzXML.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd EzXML.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh EzXML "${pkgdir}" "${pkgname}" julia-git
+}

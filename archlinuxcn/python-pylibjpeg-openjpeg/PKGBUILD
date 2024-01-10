@@ -2,8 +2,8 @@
 
 _pkgname=pylibjpeg-openjpeg
 pkgname=python-pylibjpeg-openjpeg
-pkgver=1.3.2
-pkgrel=2
+pkgver=2.0.0
+pkgrel=1
 pkgdesc='A J2K and JP2 plugin for pylibjpeg'
 arch=('x86_64')
 url='https://github.com/pydicom/pylibjpeg-openjpeg'
@@ -13,9 +13,9 @@ depends=(
 )
 makedepends=(
   cmake
-  cython
   git
-  python-setuptools
+  poetry
+  python-installer
 )
 source=("${pkgname}::git+https://github.com/pydicom/pylibjpeg-openjpeg.git#tag=v${pkgver}")
 sha512sums=('SKIP')
@@ -27,14 +27,15 @@ prepare() {
 
 build() {
   cd "${pkgname}"
-  python setup.py build
+  poetry build --format wheel
 }
 
 package() {
   local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   cd "${pkgname}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
-  rm -rf "${pkgdir}${site_packages}/openjpeg/src"
+  # remove tests files
+  rm -rf "${pkgdir}${site_packages}/openjpeg/tests"
 }
 # vim:set ts=2 sw=2 et:

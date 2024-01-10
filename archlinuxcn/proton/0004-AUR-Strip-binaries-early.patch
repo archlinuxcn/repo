@@ -1,14 +1,14 @@
-From 34d79fa09479b0961c8fe89af0a1ee10e2ddcda1 Mon Sep 17 00:00:00 2001
+From 3f90fb8c65eaf7a3df73d11ef270bcec31bb977c Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Wed, 23 Aug 2023 19:31:35 +0300
-Subject: [PATCH 4/4] AUR Strip binaries early
+Subject: [PATCH 4/5] AUR Strip binaries early
 
 ---
  Makefile.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 1fc3af27..c061be3c 100644
+index 6a9c0774..e6c94872 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -54,7 +54,7 @@ CFLAGS         ?= -O2 -march=nocona -mtune=core-avx2
@@ -19,7 +19,7 @@ index 1fc3af27..c061be3c 100644
 +COMMON_FLAGS    = -s $(OPTIMIZE_FLAGS) $(SANITY_FLAGS) -ffile-prefix-map=$(CCACHE_BASEDIR)=.
  COMMON_FLAGS32 := -mstackrealign -mno-avx
  COMMON_FLAGS64 := -mcmodel=small
- CARGO_BUILD_ARG := --release
+ CARGO_BUILD_ARGS += --release
 -- 
-2.41.0
+2.42.1
 

@@ -3,8 +3,8 @@
 
 _gemname=websocket
 pkgname=ruby-$_gemname
-pkgver=1.2.9
-pkgrel=2
+pkgver=1.2.10
+pkgrel=1
 pkgdesc='Universal Ruby library to handle WebSocket protocol'
 arch=(any)
 url='http://github.com/imanel/websocket-ruby'
@@ -14,7 +14,7 @@ makedepends=(ruby-rdoc)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha512sums=('42044df313e1ca2525700decaac6f77b8bf9d4f1dd21723de408c636196e9f77c4b9d865abeb1de68575ad3b59ad48a9e7c30f0e16dbd15695958f8cf6ca3d57')
+sha512sums=('c06598a4988b1a4361ba55d807577c756d82295e5c5316fe9f0492a32776599b8ce878615c5c0d4ed2d70d37bfed5ec188398922dd140fd195b894262df63f57')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"

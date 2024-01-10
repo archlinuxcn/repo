@@ -1,0 +1,25 @@
+maintainers:
+  - github: yuyichao
+post_build: git_pkgbuild_commit
+repo_depends:
+  - julia-git
+  - openspecfun-git
+  - openlibm-git
+  - julia-pkg-scripts
+  - julia-git-conda-src
+  - julia-git-json-src
+  - julia-git-parsers-src
+  - julia-git-precompiletools-src
+  - julia-git-preferences-src
+  - julia-git-versionparsing-src
+  - julia-git-snoopcompile-src: julia-git-snoopprecompile-src
+update_on:
+  - source: regex
+    url: 
+        https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/IJulia/version
+    regex: 'version: *([^ ]*@[^ ]*)'
+  - alias: alpm-lilac
+    alpm: julia-git
+    provided: julia
+  - source: manual
+    manual: 2

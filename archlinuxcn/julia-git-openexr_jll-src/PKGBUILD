@@ -1,0 +1,26 @@
+pkgname=julia-git-openexr_jll-src
+pkgver=3.1.4+0
+_commit=e921596e6b62124a33021ed0217482349dfcc6e9
+pkgrel=2
+pkgdesc="OpenEXR_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/OpenEXR_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git openexr)
+source=("git+https://github.com/JuliaBinaryWrappers/OpenEXR_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '7620659eae19afa53023d1f99020c68041f03fd9f5d002a1de99fd848dfe400d')
+
+build() {
+  cd OpenEXR_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl OpenEXR_jll ../jll.toml
+}
+
+package() {
+  cd OpenEXR_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh OpenEXR_jll "${pkgdir}" "${pkgname}" julia-git
+}

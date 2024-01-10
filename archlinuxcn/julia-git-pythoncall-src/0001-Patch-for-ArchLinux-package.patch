@@ -1,0 +1,47 @@
+From c79cf93ae99919b549f08627f3558150663c953b Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Mon, 30 Oct 2023 17:17:47 -0400
+Subject: [PATCH] Patch for ArchLinux package
+
+---
+ src/cpython/context.jl | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/src/cpython/context.jl b/src/cpython/context.jl
+index 3028125..2bce3e3 100644
+--- a/src/cpython/context.jl
++++ b/src/cpython/context.jl
+@@ -50,7 +50,7 @@ function init_context()
+         end
+     else
+         # Find Python executable
+-        exe_path = get(ENV, "JULIA_PYTHONCALL_EXE", "")
++        exe_path = get(ENV, "JULIA_PYTHONCALL_EXE", "/usr/bin/python")
+         if exe_path == "" || exe_path == "@CondaPkg"
+             if CondaPkg.backend() == :Null
+                 exe_path = Sys.which("python")
+@@ -81,12 +81,6 @@ function init_context()
+             CTX.which = :unknown
+         end
+ 
+-        # Ensure Python is runnable
+-        try
+-            run(pipeline(`$exe_path --version`, stdout=devnull, stderr=devnull))
+-        catch
+-            error("Python executable $(repr(exe_path)) is not executable.")
+-        end
+         CTX.exe_path = exe_path
+ 
+         # For calling Python with UTF-8 IO
+@@ -100,7 +94,7 @@ function init_context()
+         # Find and open Python library
+         lib_path = something(
+             CTX.lib_path===missing ? nothing : CTX.lib_path,
+-            get(ENV, "JULIA_PYTHONCALL_LIB", nothing),
++            get(ENV, "JULIA_PYTHONCALL_LIB", "libpython3.so"),
+             Some(nothing)
+         )
+         if lib_path !== nothing
+-- 
+2.42.0
+

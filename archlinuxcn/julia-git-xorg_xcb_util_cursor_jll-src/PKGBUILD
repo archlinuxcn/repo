@@ -1,0 +1,26 @@
+pkgname=julia-git-xorg_xcb_util_cursor_jll-src
+pkgver=0.1.4+0
+_commit=4faf8da7e48bea603cf84e2993143bb44f937cb9
+pkgrel=3
+pkgdesc="Xorg_xcb_util_cursor_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Xorg_xcb_util_cursor_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git xcb-util-cursor)
+source=("git+https://github.com/JuliaBinaryWrappers/Xorg_xcb_util_cursor_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'ef2846da9d7d65dbb70059d0483f71655464de61e452a37d180c3333f50a449f')
+
+build() {
+  cd Xorg_xcb_util_cursor_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Xorg_xcb_util_cursor_jll ../jll.toml
+}
+
+package() {
+  cd Xorg_xcb_util_cursor_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Xorg_xcb_util_cursor_jll "${pkgdir}" "${pkgname}" julia-git
+}

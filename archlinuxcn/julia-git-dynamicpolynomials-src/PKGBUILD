@@ -1,0 +1,18 @@
+pkgname=julia-git-dynamicpolynomials-src
+pkgver=0.5.3
+_commit=4c591032c3b4252c9452761c474148e08ec6376f
+pkgrel=2
+pkgdesc="DynamicPolynomials.jl"
+url="https://github.com/JuliaAlgebra/DynamicPolynomials.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaAlgebra/DynamicPolynomials.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd DynamicPolynomials.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh DynamicPolynomials "${pkgdir}" "${pkgname}" julia-git
+}

@@ -3,8 +3,8 @@
 _pkgbase=iptables
 pkgbase=iptables-fullconenat
 pkgname=(iptables-fullconenat iptables-fullconenat-nft)
-pkgver=1.8.9
-pkgrel=2
+pkgver=1.8.10
+pkgrel=1
 epoch=1
 pkgdesc='Linux kernel packet control tool with FULLCONENAT support.'
 arch=(x86_64)
@@ -20,11 +20,10 @@ backup=(etc/ethertypes etc/iptables/{ip,ip6}tables.rules)
 source=(https://www.netfilter.org/projects/iptables/files/$_pkgbase-$pkgver.tar.xz{,.sig}
         empty.rules simple_firewall.rules empty-{filter,mangle,nat,raw,security}.rules
         {arp,eb,ip,ip6}tables.service iptables-{legacy,nft}-flush
-        iptables-format-security-libxt_NAT.patch::https://git.netfilter.org/iptables/patch/?id=ed4082a7405a5838c205a34c1559e289949200cc
         iptables-apply-default-path.patch
         "libipt_FULLCONENAT.c::https://raw.githubusercontent.com/llccd/netfilter-full-cone-nat/dev/libipt_FULLCONENAT.c"
         "libip6t_FULLCONENAT.c::https://raw.githubusercontent.com/llccd/netfilter-full-cone-nat/dev/libip6t_FULLCONENAT.c")
-sha1sums=('f47bc1026858d7078c8d0544bbb9bea5c08fd9ad'
+sha1sums=('ddbebf81eacbf900dc6dd4ed409353930397e0c2'
           'SKIP'
           '83b3363878e3660ce23b2ad325b53cbd6c796ecf'
           'f085a71f467e4d7cb2cf094d9369b0bcc4bab6ec'
@@ -39,7 +38,6 @@ sha1sums=('f47bc1026858d7078c8d0544bbb9bea5c08fd9ad'
           '9cec592787e32451f58fa608ea057870e07aa704'
           'd10af7780d1634778d898c709e2d950aa1561856'
           '15c1684f3e671f4d0ede639a7c9c08e1a841511c'
-          '24bd426b56c8fbc8df51a5666d2bff7db8314c6f'
           '454d0a6d3bca14b8702e7c5e2672f5bc0c832b85'
           '1d320a1193a754d5cb4afa7c4b8bb27316c7dd95'
           'abec6a9a953101c0345d60e5812393243cc7bb7b')
@@ -55,7 +53,6 @@ prepare() {
   rm include/linux/types.h
 
   ln -rs libiptc/linux_list.h include/libiptc
-  patch -p1 -i ../iptables-format-security-libxt_NAT.patch # Fix build with -Werror=format-security
 
   # use Arch path
   patch -p0 -i ../iptables-apply-default-path.patch

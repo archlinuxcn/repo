@@ -1,0 +1,11 @@
+pre_build_script: aur_pre_build(maintainers=['oscarcl'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: omnisharp-roslyn
+
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com

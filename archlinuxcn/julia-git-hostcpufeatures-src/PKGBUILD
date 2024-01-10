@@ -1,0 +1,18 @@
+pkgname=julia-git-hostcpufeatures-src
+pkgver=0.1.16
+_commit=dc268083e0c10e99c98b2164ea7982fe79920e2d
+pkgrel=2
+pkgdesc="HostCPUFeatures.jl"
+url="https://github.com/JuliaSIMD/HostCPUFeatures.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSIMD/HostCPUFeatures.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd HostCPUFeatures.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh HostCPUFeatures "${pkgdir}" "${pkgname}" julia-git
+}

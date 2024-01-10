@@ -1,0 +1,26 @@
+pkgname=julia-git-librsvg_jll-src
+pkgver=2.54.5+0
+_commit=b78b30293efcdeceeb2e662d81358553ac04e8e7
+pkgrel=2
+pkgdesc="Librsvg_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Librsvg_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git librsvg)
+source=("git+https://github.com/JuliaBinaryWrappers/Librsvg_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '4e50a1a419e7d7b65f1e312b7c8d11dfd1105c72c44f9d9fbe1833d2b143c0e2')
+
+build() {
+  cd Librsvg_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Librsvg_jll ../jll.toml
+}
+
+package() {
+  cd Librsvg_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Librsvg_jll "${pkgdir}" "${pkgname}" julia-git
+}

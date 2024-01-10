@@ -1,0 +1,18 @@
+pkgname=julia-git-rangearrays-src
+pkgver=0.3.2
+_commit=55a40fbc3d417068655b4b342e82403c42cc780b
+pkgrel=2
+pkgdesc="RangeArrays.jl"
+url="https://github.com/JuliaArrays/RangeArrays.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaArrays/RangeArrays.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd RangeArrays.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh RangeArrays "${pkgdir}" "${pkgname}" julia-git
+}

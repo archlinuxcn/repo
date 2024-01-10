@@ -1,0 +1,18 @@
+pkgname=julia-git-stringdistances-src
+pkgver=0.11.2
+_commit=dbcc9fe8d048c07dd276c9f5606e464d69301b53
+pkgrel=2
+pkgdesc="StringDistances.jl"
+url="https://github.com/matthieugomez/StringDistances.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/matthieugomez/StringDistances.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd StringDistances.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh StringDistances "${pkgdir}" "${pkgname}" julia-git
+}

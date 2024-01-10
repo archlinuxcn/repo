@@ -1,0 +1,18 @@
+pkgname=julia-git-mocking-src
+pkgver=0.7.7
+_commit=98de5007ce5475ad7f13c134bdda8d3053803d83
+pkgrel=2
+pkgdesc="Mocking.jl"
+url="https://github.com/JuliaTesting/Mocking.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaTesting/Mocking.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Mocking.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Mocking "${pkgdir}" "${pkgname}" julia-git
+}

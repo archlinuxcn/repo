@@ -1,0 +1,18 @@
+pkgname=julia-git-loweredcodeutils-src
+pkgver=2.3.2
+_commit=b576f6ac7754dca3d69fca9c2f3bf1e27d8394ed
+pkgrel=1
+pkgdesc="LoweredCodeUtils.jl"
+url="https://github.com/JuliaDebug/LoweredCodeUtils.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaDebug/LoweredCodeUtils.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LoweredCodeUtils.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LoweredCodeUtils "${pkgdir}" "${pkgname}" julia-git
+}

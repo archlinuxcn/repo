@@ -1,18 +1,17 @@
 # Maintainer: George Rawlinson <grawlinson@archlinux.org>
 
 pkgname=pict-rs
-_pkgver=0.3.1
+_pkgver=0.4.5
 pkgver="${_pkgver/-/.}"
-pkgrel=2
+pkgrel=1
 pkgdesc="A simple image hosting service"
 arch=('x86_64')
 url="https://git.asonix.dog/asonix/pict-rs"
 license=('AGPL3')
-depends=('gcc-libs' 'imagemagick' 'ffmpeg' 'perl-image-exiftool')
-makedepends=('rust')
+depends=('glibc' 'gcc-libs' 'imagemagick' 'ffmpeg' 'perl-image-exiftool')
+makedepends=('rust' 'protobuf')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$_pkgver.tar.gz")
-sha512sums=('038cb78cbfbfb19984b55042a92737c47e669e77957425f278150aa69765492eebc455e191a00589cb43380e0e61a6e85976d5e412de0d0cdaa421ea8771ecb1')
-b2sums=('7215343aaf384eb34ed304374097199d6ac3c4367782ffb78324d8eedc52cee7b475b457f6679cdd134c14640a0ec639bd4e5a80f0bcdc77efb6dbdc26e9ea91')
+b2sums=('340bf6239cf1bfe157614b0da66b4996665a642fccc3884d68ea1418e462122570497e535f97c11c0073ae2ef8f34f85e9de8a005c6f60d6ef62c5c22668a505')
 
 prepare() {
   cd "$pkgname"

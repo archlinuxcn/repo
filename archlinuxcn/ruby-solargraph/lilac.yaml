@@ -1,0 +1,34 @@
+pre_build_script: aur_pre_build(maintainers=['mnussbaum'])
+
+post_build: aur_post_build
+
+repo_depends:
+  - ruby-jaro_winkler
+  - ruby-reverse_markdown
+  - ruby-e2mmap
+  - ruby-backport
+  - ruby-rbs
+update_on_build:
+  - pkgbase: ruby-jaro_winkler
+  - pkgbase: ruby-reverse_markdown
+  - pkgbase: ruby-e2mmap
+  - pkgbase: ruby-backport
+  - pkgbase: ruby-rbs
+
+update_on:
+  - source: aur
+    aur: ruby-solargraph
+  - alias: alpm-lilac
+    alpm: ruby-jaro_winkler
+  - alias: alpm-lilac
+    alpm: ruby-reverse_markdown
+  - alias: alpm-lilac
+    alpm: ruby-e2mmap
+  - alias: alpm-lilac
+    alpm: ruby-backport
+  - alias: alpm-lilac
+    alpm: ruby-rbs
+
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com

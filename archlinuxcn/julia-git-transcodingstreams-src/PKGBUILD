@@ -1,0 +1,18 @@
+pkgname=julia-git-transcodingstreams-src
+pkgver=0.9.13
+_commit=43af210de3953812084b07a837a11c7b2eaf7936
+pkgrel=3
+pkgdesc="TranscodingStreams.jl"
+url="https://github.com/JuliaIO/TranscodingStreams.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/TranscodingStreams.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd TranscodingStreams.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh TranscodingStreams "${pkgdir}" "${pkgname}" julia-git
+}

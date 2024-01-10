@@ -1,0 +1,18 @@
+pkgname=julia-git-atomix-src
+pkgver=0.1.0
+_commit=3cef91e976203437f70f5d551c83e9a0a716e62d
+pkgrel=2
+pkgdesc="Atomix.jl"
+url="https://github.com/JuliaConcurrent/Atomix.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaConcurrent/Atomix.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Atomix.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Atomix "${pkgdir}" "${pkgname}" julia-git
+}

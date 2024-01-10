@@ -1,0 +1,18 @@
+pkgname=julia-git-kernelabstractions-src
+pkgver=0.9.14
+_commit=7edbbceb06143849d7b5169ca1907191909306f6
+pkgrel=1
+pkgdesc="KernelAbstractions.jl"
+url="https://github.com/JuliaGPU/KernelAbstractions.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGPU/KernelAbstractions.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd KernelAbstractions.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh KernelAbstractions "${pkgdir}" "${pkgname}" julia-git
+}

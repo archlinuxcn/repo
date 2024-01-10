@@ -1,0 +1,26 @@
+pkgname=julia-git-enzyme_jll-src
+pkgver=0.0.96+0
+_commit=7458d28419a0637f2908c7c76fec0f1daa5c2ce2
+pkgrel=1
+pkgdesc="Enzyme_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Enzyme_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git enzyme-julia)
+source=("git+https://github.com/JuliaBinaryWrappers/Enzyme_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '6ebc840d0d1c4d5edd4b35c6d5e3b131f58c2ab9e77c3c3e0689e35ddd3d333c')
+
+build() {
+  cd Enzyme_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Enzyme_jll ../jll.toml
+}
+
+package() {
+  cd Enzyme_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Enzyme_jll "${pkgdir}" "${pkgname}" julia-git
+}

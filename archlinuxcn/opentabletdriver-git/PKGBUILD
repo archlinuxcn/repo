@@ -5,17 +5,17 @@ pkgname=opentabletdriver-git
 _pkgname=OpenTabletDriver
 _lpkgname=opentabletdriver
 _spkgname=otd
-pkgver=v0.7.0.0pre.r596.gc26afe28
+pkgver=v0.7.0.0pre.r774.gecc88871
 pkgrel=1
 pkgdesc="A cross-platform open source tablet driver"
 arch=('x86_64')
 url="https://opentabletdriver.net"
 license=('LGPL3')
-depends=('dotnet-runtime>=7.0' 'gtk3' 'libevdev')
+depends=('dotnet-runtime-7.0' 'gtk3' 'libevdev')
 optdepends=('libxrandr: x11 display querying support' 'libx11')
-makedepends=('git' 'dotnet-sdk>=7.0')
+makedepends=('git' 'dotnet-sdk-7.0' 'jq')
 provides=("opentabletdriver")
-conflicts=("opentabletdriver")
+conflicts=('opentabletdriver' 'digimend-kernel-drivers-dkms-git' 'digimend-drivers-git-dkms' 'digimend-kernel-drivers-dkms' 'digimend-kernel-drivers')
 install="notes.install"
 # unified binary dotnet releases break when stripped see https://github.com/dotnet/runtime/issues/54947
 options=('!strip')

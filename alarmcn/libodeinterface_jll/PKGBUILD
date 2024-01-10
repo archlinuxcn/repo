@@ -1,0 +1,25 @@
+pkgname=libodeinterface_jll
+pkgver=0.5.0
+_commit=bcbbfed73809509c4f3823d6e3fcd5a01c14f3f1
+pkgrel=3
+pkgdesc="ODEInterface.jl"
+url="https://github.com/luchr/ODEInterface.jl.git"
+arch=('aarch64' 'armv7h' 'x86_64')
+license=('MIT')
+makedepends=(git gcc-fortran)
+depends=(julia-git)
+source=("git+https://github.com/luchr/ODEInterface.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+build() {
+  cd ODEInterface.jl
+
+  ODEINTERFACE_IGNORE_JLL=1 julia deps/build.jl
+}
+
+package() {
+  cd ODEInterface.jl
+
+  install -dm755 "${pkgdir}/usr/lib/julia/odeinterface/"
+  install -Dm755 src/*.so "${pkgdir}/usr/lib/julia/odeinterface/"
+}

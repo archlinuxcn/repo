@@ -1,0 +1,18 @@
+pkgname=julia-git-vertexsafegraphs-src
+pkgver=0.2.0
+_commit=36c0f0e8bd7f3e86236e0406149ff81be60a248b
+pkgrel=2
+pkgdesc="VertexSafeGraphs.jl"
+url="https://github.com/matbesancon/VertexSafeGraphs.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/matbesancon/VertexSafeGraphs.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd VertexSafeGraphs.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh VertexSafeGraphs "${pkgdir}" "${pkgname}" julia-git
+}

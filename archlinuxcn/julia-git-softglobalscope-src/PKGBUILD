@@ -1,0 +1,18 @@
+pkgname=julia-git-softglobalscope-src
+pkgver=1.1.0
+_commit=68195b7ed749832c1f54ccb3dcbfce0d317c8f66
+pkgrel=3
+pkgdesc="SoftGlobalScope.jl"
+url="https://github.com/stevengj/SoftGlobalScope.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/stevengj/SoftGlobalScope.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SoftGlobalScope.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SoftGlobalScope "${pkgdir}" "${pkgname}" julia-git
+}

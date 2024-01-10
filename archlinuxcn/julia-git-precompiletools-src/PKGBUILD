@@ -1,0 +1,18 @@
+pkgname=julia-git-precompiletools-src
+pkgver=1.2.0
+_commit=325b4699b6984ea7a16fd0fa4fdbf969954d36e8
+pkgrel=3
+pkgdesc="PrecompileTools.jl"
+url="https://github.com/JuliaLang/PrecompileTools.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaLang/PrecompileTools.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd PrecompileTools.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh PrecompileTools "${pkgdir}" "${pkgname}" julia-git
+}

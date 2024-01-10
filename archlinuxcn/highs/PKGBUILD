@@ -1,0 +1,31 @@
+# Maintainer: x2b <psaoj.10.Toranaga-San@spamgourmet.com>
+
+pkgname=highs
+pkgver=1.6.0
+pkgrel=2
+pkgdesc="Linear optimization software"
+arch=(aarch64 armv7h i686 x86_64)
+_pkgname=HiGHS
+url="https://github.com/ERGO-Code/HiGHS"
+license=('MIT')
+depends=('libz.so')
+makedepends=('cmake')
+provides=('libhighs.so')
+source=("https://github.com/ERGO-Code/HiGHS/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('71962981566477c72c51b8b722c5df053d857b05b4f0e6869f455f657b3aa193')
+
+build() {
+  mkdir -p ${_pkgname}-${pkgver}/build
+  cd ${_pkgname}-${pkgver}/build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    ..
+  make
+}
+
+package() {
+  cd ${_pkgname}-${pkgver}/build
+  make DESTDIR="$pkgdir/" install
+
+  install -Dm644 ../LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

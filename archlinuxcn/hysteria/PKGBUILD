@@ -2,13 +2,13 @@
 
 _pkgbase=hysteria
 pkgname=$_pkgbase
-pkgver=2.0.0
+pkgver=2.2.3
 pkgrel=1
-pkgdesc='A feature-packed network utility optimized for networks of poor quality'
+pkgdesc='A powerful, lightning fast and censorship resistant proxy'
 arch=('x86_64')
 url="https://hysteria.network/"
 license=('MIT')
-depends=('glibc' 'acl' 'shadow')
+depends=('glibc')
 makedepends=('go' 'git')
 install=$_pkgbase.install
 source=("$_pkgbase-git"::"git+https://github.com/apernet/hysteria.git#tag=app/v$pkgver"
@@ -18,8 +18,8 @@ source=("$_pkgbase-git"::"git+https://github.com/apernet/hysteria.git#tag=app/v$
         tmpfiles.conf
         )
 sha256sums=('SKIP'
-            '5d421ca1e73c69317261afd6405f3759c47fd2a3c69674cbbadf80bd433bd4db'
-            '98b7a3bcfe9278f196ff922b31d4b5363fd83d42e9dbd4a813e093a4d429511a'
+            '7f67a976138c60741ebc0dc7ba4e8ad6d284cf45f130a435a5c65aa836446d05'
+            '2142db7d6bfb7df5180357f5b4b25401cf3a788624c567e58fa3ecec00a58c75'
             '44f1cb2fedfc94dc396ceb215e62237dbc8c74c035c45a3430c1f3748d266dd9'
             '1e93d9f2b312eaf02ac00229106cd796e0cd54a9a468a0a8d3ae843399c1c310')
 
@@ -40,7 +40,7 @@ build() {
   local _app_src_cmd_pkg="github.com/apernet/hysteria/app/cmd"
   local _goldflags="-w -s -linkmode=external"
   local _goldflags="$_goldflags -buildid="
-  local _goldflags="$_goldflags -X '$_app_src_cmd_pkg.appVersion=$(git describe --tags --always --match 'app/v*')'"
+  local _goldflags="$_goldflags -X '$_app_src_cmd_pkg.appVersion=$(git describe --tags --always --match 'app/v*' | grep -o "v.*")'"
   local _goldflags="$_goldflags -X '$_app_src_cmd_pkg.appDate=$(date -u '+%Y-%m-%dT%H:%M:%SZ')'"
   local _goldflags="$_goldflags -X '$_app_src_cmd_pkg.appType=release'"
   local _goldflags="$_goldflags -X '$_app_src_cmd_pkg.appCommit=$(git rev-parse HEAD)'"

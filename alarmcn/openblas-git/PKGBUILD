@@ -1,0 +1,155 @@
+# Maintainer: all3fox <all3fox [at] gmail __DoT_ com>
+# Contributor: eolianoe <eolianoe [at] gmail [DoT] com>
+# Contributor: Jiaxi Hu <sftrytry _AT_ gmail _DOT_ com>
+# Contributor: Giuseppe Borzi <gborzi _AT_ ieee _DOT_ org>
+
+pkgbase=openblas-git
+pkgname=(openblas-git openblas64-git)
+_pkgname=OpenBLAS
+pkgver=0.3.26.1dev.0.15.g3599f2de8
+pkgrel=1
+pkgdesc="An optimized BLAS library based on GotoBLAS2 1.13 BSD"
+arch=('aarch64' 'x86_64')
+url="https://www.openblas.net/"
+license=('BSD')
+makedepends=('git' 'perl' 'gcc-fortran')
+options=(!emptydirs debug strip '!lto')
+source=("git+https://github.com/xianyi/OpenBLAS")
+md5sums=('SKIP')
+
+pkgver() {
+  cd OpenBLAS
+
+  _last_tag=$(git describe --tags --abbrev=0)
+  _commit_short=$(git rev-parse --short HEAD)
+  _build_number=$(git rev-list --count HEAD "^$_last_tag")
+  # openblas versions goes as 0.0.1 -> 0.0.1.dev -> 0.0.2
+  # Change the .dev into .1dev so that it is treated as a newer version
+  # after adding the .0.* suffix
+  _ver=$(sed -ne 's/^VERSION\s*=\s*\([^[:space:]]*\).*/\1/p' Makefile.rule |
+           sed -e 's/\.dev/.1dev/')
+
+  printf "%s.0.%s.g%s" "$_ver" "$_build_number" "$_commit_short"
+}
+
+prepare() {
+  (
+    cd OpenBLAS
+    # patch -Np1 < ../.patch
+  )
+
+  rm -rf OpenBLAS-64
+  cp -a OpenBLAS OpenBLAS-64
+}
+
+_make_opts=(
+  USE_THREAD=1
+  GEMM_MULTITHREAD_THRESHOLD=400
+  NO_AFFINITY=1
+  NO_STATIC=1
+  USE_OPENMP=1
+  NUM_THREADS=64
+  DYNAMIC_ARCH=1
+  NO_WARMUP=1
+)
+
+if [[ $CARCH = x86_64 ]]; then
+  _make_opts=("${_make_opts[@]}" TARGET=CORE2)
+fi
+
+# _cmake_opts=(
+#   -DCMAKE_INSTALL_PREFIX=/usr
+#   -DGEMM_MULTITHREAD_THRESHOLD=400
+#   -DBUILD_SHARED_LIBS=ON
+#   -DBUILD_TESTING=OFF
+#   -DNO_AFFINITY=ON
+#   -DUSE_OPENMP=1
+#   -DUSE_THREAD=1
+#   -DNUM_THREADS=64
+#   -DDYNAMIC_ARCH=ON
+#   -DNO_WARMUP=1
+# )
+
+# if [[ $CARCH = x86_64 ]]; then
+#   _cmake_opts=("${_cmake_opts[@]}" -DCORE=CORE2)
+# fi
+
+build() {
+  # Setting FC manually to avoid picking up f95 and breaking the cmake build
+  # https://github.com/xianyi/OpenBLAS/issues/4072#issuecomment-1576388332
+  export FC=gfortran
+  export FFLAGS="-g -O3 -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+
+  # cmake -B build -S $_pkgname "${_cmake_opts[@]}"
+  # cmake --build build
+
+  # cmake -B build64 -S $_pkgname "${_cmake_opts[@]}" -DINTERFACE64=1 -DSYMBOLSUFFIX=64_
+  # cmake --build build64
+
+  (
+    cd OpenBLAS
+    make "${_make_opts[@]}"
+  )
+
+  (
+    cd OpenBLAS-64
+    make "${_make_opts[@]}" INTERFACE64=1 SYMBOLSUFFIX=64_
+  )
+}
+
+package_openblas-git() {
+  provides=("openblas=$pkgver")
+  conflicts=('openblas')
+
+  cd OpenBLAS
+  make "${_make_opts[@]}" DESTDIR="${pkgdir}" PREFIX="/usr" install
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+
+  [[ $pkgver =~ ^([0-9]*)\.([0-9]*) ]]
+  _majver=${BASH_REMATCH[1]}
+  _minver=${BASH_REMATCH[2]}
+
+  _libname=$(readlink "$pkgdir"/usr/lib/libopenblas.so)
+  ln -s "$_libname" "$pkgdir"/usr/lib/libopenblas.so.${_majver}.${_minver}
+
+  mkdir "${pkgdir}/usr/include/openblas"
+  mv "${pkgdir}/usr/include/"*.* "${pkgdir}/usr/include/openblas"
+
+  mv "${pkgdir}/usr/lib/cmake/openblas" "${pkgdir}/usr/lib/cmake/OpenBLAS"
+  sed -i -e 's|/usr/include|/usr/include/openblas|g' \
+      "${pkgdir}/usr/lib/cmake/OpenBLAS/OpenBLASConfig.cmake"
+}
+
+package_openblas64-git() {
+  provides=("openblas64=$pkgver")
+  conflicts=('openblas64')
+
+  pkgdesc+=" (64-bit integers)"
+
+  cd OpenBLAS-64
+  make "${_make_opts[@]}" INTERFACE64=1 SYMBOLSUFFIX=64_ \
+       DESTDIR="${pkgdir}" PREFIX="/usr" install
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+
+  [[ $pkgver =~ ^([0-9]*)\.([0-9]*) ]]
+  _majver=${BASH_REMATCH[1]}
+  _minver=${BASH_REMATCH[2]}
+
+  _libname=$(readlink "$pkgdir"/usr/lib/libopenblas64_.so)
+  ln -s "$_libname" "$pkgdir"/usr/lib/libopenblas64_.so.${_majver}.${_minver}
+  ln -s "$_libname" "$pkgdir"/usr/lib/libopenblas_64.so
+  ln -s "$_libname" "$pkgdir"/usr/lib/libopenblas_64.so.${_majver}
+  ln -s "$_libname" "$pkgdir"/usr/lib/libopenblas_64.so.${_majver}.${_minver}
+
+  mkdir "${pkgdir}/usr/include/openblas64"
+  mv "${pkgdir}/usr/include/"*.* "${pkgdir}/usr/include/openblas64"
+
+  mv "${pkgdir}/usr/lib/cmake/openblas"  "${pkgdir}/usr/lib/cmake/OpenBLAS64"
+  sed -i -e 's|/usr/include|/usr/include/openblas|g' \
+      -e 's|OpenBLAS|OpenBLAS64|g' \
+      "${pkgdir}/usr/lib/cmake/OpenBLAS64/OpenBLASConfig.cmake"
+  mv "${pkgdir}/usr/lib/cmake/OpenBLAS64/OpenBLASConfig.cmake" \
+     "${pkgdir}/usr/lib/cmake/OpenBLAS64/OpenBLAS64Config.cmake"
+  mv "${pkgdir}/usr/lib/cmake/OpenBLAS64/OpenBLASConfigVersion.cmake" \
+     "${pkgdir}/usr/lib/cmake/OpenBLAS64/OpenBLAS64ConfigVersion.cmake"
+}

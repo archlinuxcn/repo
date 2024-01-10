@@ -1,0 +1,18 @@
+pkgname=julia-git-json-src
+pkgver=0.21.4
+_commit=0f0684ca79b4eef26af1485d40121e2a05559acb
+pkgrel=3
+pkgdesc="JSON.jl"
+url="https://github.com/JuliaIO/JSON.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/JSON.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd JSON.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh JSON "${pkgdir}" "${pkgname}" julia-git
+}

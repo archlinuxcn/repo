@@ -28,7 +28,7 @@ def pre_build():
       line = 'pkgbase=qt5-base-24hms' + '\n' + '_origpkgname=qt5-base'
       checks = checks + '0'
     elif line.startswith('pkgrel='):
-      line = line + '.13'
+      line = line + '.14'
     elif line.startswith('pkgname='):
       line = 'pkgname=(qt5-base-24hms)'
       checks = checks + '1'
@@ -52,13 +52,13 @@ provides=("qt5-base=$pkgver")
     elif line.startswith('source=('):
       line = line.replace('=(', '''=(
       oldherl-24hms.patch
-      'https://build.archlinuxcn.org/~oldherl/files/cldr/36/core.zip'
+      'https://build.archlinuxcn.org/~oldherl/files/cldr/42/core.zip'
       ''')
       checks = checks + '6'
     elif line.startswith('sha256sums=('):
       line = line.replace('=(', '''=(
       '9c62800980e97b1614e4fc85ecad3b032606d0e620295e791fc3f34629bb0a44'
-      '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
+      '53cd4fd1ac2ee4d4cbcae362e7af5d02e98e5e39c826ce9d723d41ca836fc846'
       ''')
       checks = checks + '7'
     elif line.startswith('prepare('):
@@ -88,7 +88,7 @@ ln -s /usr/share/licenses/${pkgname} "$pkgdir"/usr/share/licenses/qt5-base
       logger.info('removed: %s', line)
     elif line.startswith('depends=('):
       # let it conflict with incompatable icu versions, @q234rty
-      line = line.replace('=(', '=(libicudata.so ')
+      line = line.replace('=(', '=(libicui18n.so ')
       checks = checks + 'c'
     print(line)
   if len(checks) != 13:

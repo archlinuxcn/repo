@@ -1,8 +1,8 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 _pkgname=cemu
 pkgname=$_pkgname-git
-pkgver=2.0.47.r3.g2abf1c20
-pkgrel=1
+pkgver=2.0.61.r12.g44051163
+pkgrel=2
 pkgdesc="Nintendo Wii U emulator"
 arch=('x86_64')
 url="https://cemu.info/"
@@ -57,6 +57,9 @@ prepare() {
 	git -c protocol.file.allow=always submodule update
 	rm -r bin/shaderCache
 	sed -i '/CMAKE_INTERPROCEDURAL_OPTIMIZATION/d' CMakeLists.txt
+    sed -i '/find_package(glslang REQUIRED)/a find_package(SPIRV-Tools REQUIRED)' CMakeLists.txt
+    sed -i '/add_library(glslang::SPIRV ALIAS SPIRV)/a add_library(SPIRV-Tools)' CMakeLists.txt
+    sed -i '/glslang::SPIRV/a SPIRV-Tools' src/Cafe/CMakeLists.txt
 	sed -i '/discord-rpc/d' CMakeLists.txt
 	sed -i '/FMT_HEADER_ONLY/d' src/Common/precompiled.h
 	sed -i 's/glm::glm/glm/' src/{Common,input}/CMakeLists.txt

@@ -1,0 +1,26 @@
+pkgname=julia-git-libass_jll-src
+pkgver=0.15.1+0
+_commit=22590b2f0d8fa1b36219a275a75252067e53cc1f
+pkgrel=2
+pkgdesc="libass_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/libass_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libass)
+source=("git+https://github.com/JuliaBinaryWrappers/libass_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '1412e538eba69b592dee34b43506db84bf96169f860b326044df7aafd6645378')
+
+build() {
+  cd libass_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl libass_jll ../jll.toml
+}
+
+package() {
+  cd libass_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh libass_jll "${pkgdir}" "${pkgname}" julia-git
+}

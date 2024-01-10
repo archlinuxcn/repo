@@ -1,0 +1,26 @@
+pkgname=julia-git-highs_jll-src
+pkgver=1.6.0+0
+_commit=ed18476fa30588b2d4d9cffdcc67ce0e6b603f4a
+pkgrel=3
+pkgdesc="HiGHS_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/HiGHS_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git highs)
+source=("git+https://github.com/JuliaBinaryWrappers/HiGHS_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '195c0cdeed5e8e389b2de5d5bb8993fd871cbf89bb3d3eee00a575e1b34b3d16')
+
+build() {
+  cd HiGHS_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl HiGHS_jll ../jll.toml
+}
+
+package() {
+  cd HiGHS_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh HiGHS_jll "${pkgdir}" "${pkgname}" julia-git
+}

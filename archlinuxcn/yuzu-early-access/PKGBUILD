@@ -2,14 +2,14 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=3854
+pkgver=4057
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
 url="https://yuzu-emu.org/"
 license=('GPL2')
 depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'openssl' 'zstd' 'cubeb' 'dynarmic' 'enet' 'libinih' 'discord-rpc' 'cpp-httplib')
-makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'ninja' 'graphviz' 'doxygen' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'xbyak' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'clang' 'python')
+makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'ninja' 'graphviz' 'doxygen' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'xbyak' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'clang' 'python' 'renderdoc' 'gamemode')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
@@ -17,9 +17,9 @@ source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.g
 "https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml"
 "https://github.com/pineappleEA/pineapple-src/releases/download/EA-${pkgver}/Windows-Yuzu-EA-${pkgver}.zip")
 options=('!buildflags') #[heavysink] Disable _FORTIFY_SOURCE for temporary fix for Bayonetta 3
-sha256sums=('9a2255e92896dde3e96522ca610440a4a64c7ff4e37596cc461016ca38db426c'
+sha256sums=('42f14c1eea3eaa2c2e75f06c44c1dd0bc00ee073945fd939526bcfb81aa36449'
             'e76ab2b3566d8135930e570ede5bed3da8f131270b60db818e453d248880bdf2'
-            '96c64d42b91314aba7c214cfb42e2e7d46fbfe3b913e610c4f99542e71e4d09e')
+            'e40c2b28e2d09a0bc20d77100e4df85de461e473a8695bb2f29549be9006d938')
 
 prepare() {
   cd "$srcdir/yuzu-windows-msvc-early-access"
@@ -36,12 +36,16 @@ prepare() {
   git submodule update --init --remote externals/mbedtls
   git submodule update --init --remote externals/libadrenotools
   git submodule update --init --remote --recursive externals/nx_tzdb
+  git submodule update --init --remote externals/simpleini
+
+ # sed -i -e '/#elif defined(__linux__) || defined(__FreeBSD__)/,/^ return true;/d' src/yuzu/util/util.cpp
 
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror$/-W/g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/-Werror/-W/g' {} +
   sed -i -e 's/0.11 //g' CMakeLists.txt
   sed -i -e 's/1.3.238/1.3.233/g' CMakeLists.txt
+  sed -i -e 's/xbyak 6/xbyak 7.0/g' CMakeLists.txt
   sed -i -e 's/httplib 0.12/httplib/g' CMakeLists.txt
   sed -i -e 's/--quiet //g' src/video_core/host_shaders/CMakeLists.txt
   sed -i -e 's#${SPIRV_HEADER_FILE} ${SOURCE_FILE}#${SPIRV_HEADER_FILE} ${SOURCE_FILE} 2>/dev/null#g' src/video_core/host_shaders/CMakeLists.txt
@@ -76,6 +80,7 @@ build() {
     -DYUZU_USE_FASTER_LD=OFF \
     -DYUZU_USE_PRECOMPILED_HEADERS=OFF \
 	-DYUZU_USE_QT_MULTIMEDIA=ON \
+    -DYUZU_DOWNLOAD_TIME_ZONE_DATA=ON \
     -DYUZU_TESTS=OFF
   ninja
 }

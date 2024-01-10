@@ -1,0 +1,18 @@
+pkgname=julia-git-ellipsisnotation-src
+pkgver=1.8.0
+_commit=5cc85f81f46a15ab42544aa2ecace4b621f29b3a
+pkgrel=1
+pkgdesc="EllipsisNotation.jl"
+url="https://github.com/SciML/EllipsisNotation.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/EllipsisNotation.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd EllipsisNotation.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh EllipsisNotation "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-formatting-src
+pkgver=0.4.2
+_commit=6219892973e74f9b929e0fb6ac90be7b7bde6347
+pkgrel=2
+pkgdesc="Formatting.jl"
+url="https://github.com/JuliaIO/Formatting.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/Formatting.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Formatting.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Formatting "${pkgdir}" "${pkgname}" julia-git
+}

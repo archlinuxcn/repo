@@ -1,0 +1,18 @@
+pkgname=julia-git-pajarito-src
+pkgver=0.8.2
+_commit=7528c6d64538a8dcb7cc5e8411170df98d2e2707
+pkgrel=2
+pkgdesc="Pajarito.jl"
+url="https://github.com/jump-dev/Pajarito.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/jump-dev/Pajarito.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Pajarito.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Pajarito "${pkgdir}" "${pkgname}" julia-git
+}

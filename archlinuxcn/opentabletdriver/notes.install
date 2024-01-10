@@ -9,9 +9,9 @@ msg_replug() {
 
 msg_starting() {
 	echo "The daemon can be started with:"
-	echo -e "  $ ${GREEN}otd${RESET}"
+	echo -e "  $ ${GREEN}otd-daemon${RESET}"
 	echo "You can fork it to the background and use output redirection to a log file if desired."
-	echo "A systemd user service is also provided and can be used instead, assuming you have a correct systemd user graphical-session.target set up:"
+	echo -e "A systemd user service is also provided and can be used instead, assuming you have a correct systemd user ${GREEN}graphical-session.target${RESET} set up:"
 	echo -e "  $ ${GREEN}systemctl --user enable --now opentabletdriver.service${RESET}"
 	echo
 }
@@ -20,7 +20,7 @@ msg_modules() {
 	echo "You will have to manually unload built-in kernel modules (or reboot) in order for this driver to work properly."
 	echo "To unload the module immediately, run:"
 	echo -e "  # ${GREEN}rmmod <module>${RESET}"
-	echo "Where <module> is 'wacom' if you own a wacom tablet, and 'hid_uclogic' otherwise."
+	echo -e "Where <module> is ${GREEN}'wacom'${RESET} if you own a wacom tablet, and ${GREEN}'hid_uclogic'${RESET} otherwise."
 	echo
 }
 

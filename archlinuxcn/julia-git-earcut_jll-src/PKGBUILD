@@ -1,0 +1,26 @@
+pkgname=julia-git-earcut_jll-src
+pkgver=2.2.4+0
+_commit=a6025b6b8338a77be9c3c249604f7bcc2808e1f6
+pkgrel=2
+pkgdesc="EarCut_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/EarCut_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libearcut_jll)
+source=("git+https://github.com/JuliaBinaryWrappers/EarCut_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '5fda8e2b3f25b928995dc307da81da1801931e0a4473a9d89d54f511e3c4c35c')
+
+build() {
+  cd EarCut_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl EarCut_jll ../jll.toml
+}
+
+package() {
+  cd EarCut_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh EarCut_jll "${pkgdir}" "${pkgname}" julia-git
+}

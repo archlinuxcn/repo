@@ -6,7 +6,7 @@ _setFullLibdir="${_setPrefix}/${_setLibdir}"
 _pkgbasename=shaderc
 
 pkgname=lib32-$_pkgbasename
-pkgver=2023.3
+pkgver=2023.7
 pkgrel=2
 pkgdesc='Collection of tools, libraries and tests for shader compilation (32bit)'
 url='https://github.com/google/shaderc'
@@ -31,10 +31,10 @@ source=(
         "${_pkgbasename}-${pkgver}.tar.gz::https://github.com/google/shaderc/archive/v${pkgver}/${_pkgbasename}-${pkgver}.tar.gz"
         )
 sha512sums=(
-        'c6422383318b5d4d341e5b4215489ba03590aeff65fd03fb0b57aab8689c9002444f520a4017485645291777ee442979d22db52d843e66d4d672da2810b20e36'
+        'f3c1db574312e7e5ee22fb64f47f6609369754dd1648eb4e51c30b3c40aafd9994e54560e8334d01ac7d00011285a94d0543fa9ecd6977ec34c39a965fd72269'
         )
 b2sums=(
-        'a66de9fea6d2d48ead7e3cda2b4b03f437fa30f7efbbd2c0448baf93240703177e0bf537e5f8f856222a8c7767e69ba039b7d9929bcc66401cef6cc804c8b3dd'
+        'de5ee8cc35bc76ba1301e80217587cbf55885999297755d78a72fe0940431351d4070cdd0793fe8f43208d40c9ec343bbe888da2b8ded471bd241be067b1addf'
         )
 
 prepare() {
@@ -60,13 +60,13 @@ build() {
   cd ${_pkgbasename}-${pkgver}
   cmake \
       -B build \
+      -GNinja \
       -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_PREFIX="/usr" \
       -DCMAKE_INSTALL_LIBDIR="lib32" \
       -DCMAKE_CXX_FLAGS="$CXXFLAGS -ffat-lto-objects" \
       -DSHADERC_SKIP_TESTS=ON \
-      -Dglslang_SOURCE_DIR=/usr/include/glslang \
-      -G Ninja
+      -Dglslang_SOURCE_DIR=/usr/include/glslang
     ninja -C build
 
 #  cd glslc
@@ -89,4 +89,8 @@ package() {
 
   rm -r "${pkgdir}"/usr/include
 #  install -Dm 644 glslc/glslc.1 -t "${pkgdir}/usr/share/man/man1"
+
+  # Remove unused shaderc_static.pc
+  rm "${pkgdir}/usr/lib32/pkgconfig/shaderc_static.pc"
+
 }

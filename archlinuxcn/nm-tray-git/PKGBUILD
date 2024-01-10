@@ -2,13 +2,13 @@
 
 _pkgname=nm-tray
 pkgname=$_pkgname-git
-pkgver=r241.fa1e7a8
+pkgver=r244.6b6782f
 pkgrel=1
 pkgdesc='Pure Qt NetworkManager front-end residing in panels'
 arch=('i686' 'x86_64')
 url='https://github.com/palinek/nm-tray'
 license=('GPL')
-depends=('networkmanager-qt')
+depends=('networkmanager-qt5')
 makedepends=('git' 'cmake' 'qt5-tools')
 provides=("$_pkgname")
 conflicts=("$_pkgname")

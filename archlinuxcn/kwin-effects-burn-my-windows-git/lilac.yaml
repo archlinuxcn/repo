@@ -1,0 +1,14 @@
+pre_build_script: aur_pre_build(maintainers=['hekel'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: kwin-effects-burn-my-windows-git
+  - source: github
+    github: Schneegans/Burn-My-Windows
+    branch: main
+
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com

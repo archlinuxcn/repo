@@ -4,7 +4,7 @@ _pkgbase='herdtools7'
 pkgname=('herdtools7-git')
 provides=('herdtools7')
 conflicts=('herdtools7')
-pkgver=7.52.r2141.g0216f2ee
+pkgver=7.56+03.r505.ga955779be
 pkgrel=1
 pkgdesc="The Herd toolsuite to deal with .cat memory models"
 arch=(armv7h aarch64 i686 x86_64)
@@ -22,10 +22,13 @@ build() {
 
 pkgver() {
   cd $_pkgbase
-  ( set -o pipefail
-    git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
-      printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-  )
+
+  local _basever=$(cat VERSION.txt)
+  local _basecommit=$(git log -n 1 --pretty=format:%H -- VERSION.txt)
+  local _count=$(git rev-list --count ${_basecommit}..HEAD)
+  local _commit=$(git rev-parse --short HEAD)
+
+  printf "${_basever}.r${_count}.g${_commit}"
 }
 
 package() {

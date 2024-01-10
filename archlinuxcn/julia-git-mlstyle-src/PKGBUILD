@@ -1,0 +1,18 @@
+pkgname=julia-git-mlstyle-src
+pkgver=0.4.17
+_commit=c582f7151d04b60dd9525fd6dfbdc2091a70cfae
+pkgrel=2
+pkgdesc="MLStyle.jl"
+url="https://github.com/thautwarm/MLStyle.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/thautwarm/MLStyle.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd MLStyle.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MLStyle "${pkgdir}" "${pkgname}" julia-git
+}

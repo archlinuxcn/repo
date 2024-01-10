@@ -1,0 +1,18 @@
+pkgname=julia-git-http-src
+pkgver=1.10.0
+_commit=352bca2f0e9a9b02d9b2648ed02726cace64dbb8
+pkgrel=2
+pkgdesc="HTTP.jl"
+url="https://github.com/JuliaWeb/HTTP.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaWeb/HTTP.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd HTTP.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh HTTP "${pkgdir}" "${pkgname}" julia-git
+}

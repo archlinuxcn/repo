@@ -1,0 +1,18 @@
+pkgname=julia-git-json3-src
+pkgver=1.13.2
+_commit=717406d5da6c31cab398385a39941e7d511dda01
+pkgrel=2
+pkgdesc="JSON3.jl"
+url="https://github.com/quinnj/JSON3.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/quinnj/JSON3.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd JSON3.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh JSON3 "${pkgdir}" "${pkgname}" julia-git
+}

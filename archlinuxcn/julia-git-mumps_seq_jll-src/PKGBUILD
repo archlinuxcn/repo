@@ -1,0 +1,26 @@
+pkgname=julia-git-mumps_seq_jll-src
+pkgver=500.600.200+0
+_commit=7ed59d50bc45668134ce0ceb60cbb478a2832882
+pkgrel=1
+pkgdesc="MUMPS_seq_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/MUMPS_seq_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git mumps-seq)
+source=("git+https://github.com/JuliaBinaryWrappers/MUMPS_seq_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'b71e388b1841d377c371c54fbf1cfc2ad7a8327f8dffbc9eb2ae7f8b220ce471')
+
+build() {
+  cd MUMPS_seq_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl MUMPS_seq_jll ../jll.toml
+}
+
+package() {
+  cd MUMPS_seq_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MUMPS_seq_jll "${pkgdir}" "${pkgname}" julia-git
+}

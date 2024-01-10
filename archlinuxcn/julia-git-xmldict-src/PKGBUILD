@@ -1,0 +1,18 @@
+pkgname=julia-git-xmldict-src
+pkgver=0.4.1
+_commit=ee0ba497bcb3bf52ba95939f4551a5f56f776cf5
+pkgrel=2
+pkgdesc="XMLDict.jl"
+url="https://github.com/JuliaCloud/XMLDict.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaCloud/XMLDict.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd XMLDict.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh XMLDict "${pkgdir}" "${pkgname}" julia-git
+}

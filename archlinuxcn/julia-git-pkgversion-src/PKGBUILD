@@ -1,0 +1,18 @@
+pkgname=julia-git-pkgversion-src
+pkgver=0.3.3
+_commit=7f460f5796bbc5f5f08c5a6a52abdde01aedcb00
+pkgrel=3
+pkgdesc="PkgVersion.jl"
+url="https://github.com/KlausC/PkgVersion.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/KlausC/PkgVersion.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd PkgVersion.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh PkgVersion "${pkgdir}" "${pkgname}" julia-git
+}

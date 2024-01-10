@@ -1,0 +1,26 @@
+pkgname=julia-git-xorg_xcb_util_renderutil_jll-src
+pkgver=0.3.9+1
+_commit=61f5f4651eb5ecce194209442ac9e0ab60a0fc4e
+pkgrel=3
+pkgdesc="Xorg_xcb_util_renderutil_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Xorg_xcb_util_renderutil_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git xcb-util-renderutil)
+source=("git+https://github.com/JuliaBinaryWrappers/Xorg_xcb_util_renderutil_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '105a9a8f262d478b5ee927d7f3874853dd2acda30cd6a13debc73074071d62ea')
+
+build() {
+  cd Xorg_xcb_util_renderutil_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Xorg_xcb_util_renderutil_jll ../jll.toml
+}
+
+package() {
+  cd Xorg_xcb_util_renderutil_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Xorg_xcb_util_renderutil_jll "${pkgdir}" "${pkgname}" julia-git
+}

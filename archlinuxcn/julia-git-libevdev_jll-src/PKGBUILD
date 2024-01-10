@@ -1,0 +1,26 @@
+pkgname=julia-git-libevdev_jll-src
+pkgver=1.11.0+0
+_commit=ad5b73cee9dddd0ce6d3e26e14544a279e3a217d
+pkgrel=2
+pkgdesc="libevdev_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/libevdev_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libevdev)
+source=("git+https://github.com/JuliaBinaryWrappers/libevdev_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '240bacd6b7aafed38c2b2349ac9090f87e97dcdc4fe9e556603d1e5b412fd717')
+
+build() {
+  cd libevdev_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl libevdev_jll ../jll.toml
+}
+
+package() {
+  cd libevdev_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh libevdev_jll "${pkgdir}" "${pkgname}" julia-git
+}

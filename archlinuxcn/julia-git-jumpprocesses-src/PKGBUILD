@@ -1,0 +1,18 @@
+pkgname=julia-git-jumpprocesses-src
+pkgver=9.9.0
+_commit=6eda8446d992308fee7bf8f44efdaab1d30f1535
+pkgrel=1
+pkgdesc="JumpProcesses.jl"
+url="https://github.com/SciML/JumpProcesses.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/JumpProcesses.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd JumpProcesses.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh JumpProcesses "${pkgdir}" "${pkgname}" julia-git
+}

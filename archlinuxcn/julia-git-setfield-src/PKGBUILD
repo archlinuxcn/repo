@@ -1,0 +1,18 @@
+pkgname=julia-git-setfield-src
+pkgver=1.1.1
+_commit=434e7e029dc4491b726071e04267635912c8f764
+pkgrel=2
+pkgdesc="Setfield.jl"
+url="https://github.com/jw3126/Setfield.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/jw3126/Setfield.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Setfield.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Setfield "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,9 +1,9 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
-_CUDA_ARCH_LIST="52;53;60;61;62;70;72;75;80;86;89"
+_CUDA_ARCH_LIST="60;61;62;70;72;75;80;86;89;90"
 pkgname=python-nvidia-dali
 _pkgname=dali
-pkgver=1.28.0
+pkgver=1.33.0
 pkgrel=1
 pkgdesc='A library containing both highly optimized building blocks and an execution engine for data pre-processing in deep learning applications'
 arch=('x86_64')
@@ -16,16 +16,21 @@ depends=(
   libtar
   lmdb
   opencv
-  python
+  python-astunparse
+  python-dm-tree
+  python-gast
 )
 makedepends=(
+  python-build
+  python-installer
+  python-wheel
   cfitsio
   clang
   cmake
-  gcc12
   git
   git-lfs
   python-setuptools
+  python-black
 )
 optdepends=(
   python-pytorch
@@ -38,12 +43,14 @@ sha512sums=('SKIP')
 
 prepare() {
   cd "${srcdir}/${pkgname}"
+  git lfs install
   git submodule update --init --recursive
   # quick fix for https://github.com/archlinuxcn/repo/issues/2877
   export CXXFLAGS=${CXXFLAGS/-Wp,-D_GLIBCXX_ASSERTIONS}
-  # build with gcc 12
-  export CC=gcc-12
-  export CXX=g++-12
+  export CC=/opt/cuda/bin/gcc
+  export CXX=/opt/cuda/bin/g++
+  # fix lib not found error
+  export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${srcdir}/build/dali/python/nvidia/dali:${srcdir}/build/lib"
 }
 
 build() {
@@ -76,10 +83,10 @@ build() {
     -S "${srcdir}/${pkgname}"
   make -C "${srcdir}/build"
   cd "${srcdir}/build/dali/python"
-  python setup.py build
+  python -m build --wheel --no-isolation
   # built tf plugin
   cmake -B ${srcdir}/build-tf \
-    -DCUDA_VERSION=12.1 \
+    -DCUDA_VERSION=12.3 \
     -S ${srcdir}/${pkgname}/dali_tf_plugin
   make -C ${srcdir}/build-tf
 }
@@ -88,10 +95,11 @@ package() {
   local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   make -C "${srcdir}/build" DESTDIR="${pkgdir}" install
   cd "${srcdir}/build/dali/python"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   # create softlink to save space
   ln -sf "${site_packages}/nvidia/dali/libdali.so" "${pkgdir}/usr/lib/libdali.so"
   ln -sf "${site_packages}/nvidia/dali/libdali_core.so" "${pkgdir}/usr/lib/libdali_core.so"
+  ln -sf "${site_packages}/nvidia/dali/libdali_imgcodec.so" "${pkgdir}/usr/lib/libdali_imgcodec.so"
   ln -sf "${site_packages}/nvidia/dali/libdali_kernels.so" "${pkgdir}/usr/lib/libdali_kernels.so"
   ln -sf "${site_packages}/nvidia/dali/libdali_operators.so" "${pkgdir}/usr/lib/libdali_operators.so"
   # install tf plugin

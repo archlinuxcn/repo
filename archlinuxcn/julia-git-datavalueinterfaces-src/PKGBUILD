@@ -1,0 +1,18 @@
+pkgname=julia-git-datavalueinterfaces-src
+pkgver=1.0.0
+_commit=ff05c26814f1d03c4f6bfac94e347112038f3577
+pkgrel=3
+pkgdesc="DataValueInterfaces.jl"
+url="https://github.com/queryverse/DataValueInterfaces.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/queryverse/DataValueInterfaces.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd DataValueInterfaces.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh DataValueInterfaces "${pkgdir}" "${pkgname}" julia-git
+}

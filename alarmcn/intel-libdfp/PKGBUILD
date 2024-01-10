@@ -1,0 +1,58 @@
+#
+
+pkgname=intel-libdfp
+pkgver=20U2
+pkgrel=9
+pkgdesc='Intel(R) Decimal Floating-Point Math Library'
+arch=(aarch64 armv7h i686 x86_64)
+url='https://www.intel.com/content/www/us/en/developer/articles/tool/intel-decimal-floating-point-math-library.html'
+license=('custom')
+source=("https://www.netlib.org/misc/intel/IntelRDFPMathLib${pkgver}.tar.gz"
+        decfp.patch
+        string.patch)
+sha256sums=('93c0c78e0989df88f8540bf38d6743734804cef1e40706fd8fe5c6a03f79e173'
+            '7bb58fb2162d08db30efb802fb6867e0dd1f4d221d64fb2ae92c7aa40939a95f'
+            'cd5af8e5e42d52933c776705d81a03f8306c872067603a9c0b858994715ca99e')
+
+prepare() {
+  cd IntelRDFPMathLib${pkgver}
+
+  patch -Np1 --no-backup-if-mismatch < "../decfp.patch"
+  patch -Np1 --no-backup-if-mismatch < "../string.patch"
+}
+
+build() {
+  cd IntelRDFPMathLib${pkgver}/LIBRARY
+
+  CFLAGS+=' -fPIC -fsigned-char -D__ENABLE_BINARY80__=0'
+
+  # Fake one to make the build system happy
+  case "$CARCH" in
+    x86_64)
+      _host_arch=x86_64
+      ;;
+    i686)
+      _host_arch=x86
+      ;;
+    aarch64)
+      _host_arch=x86_64
+      ;;
+    armv7h)
+      _host_arch=x86
+      ;;
+  esac
+
+  make CC_NAME=cc CFLAGS_OPT="$CFLAGS" CFLAGS="$CFLAGS" \
+       _HOST_ARCH=$_host_arch AR_CMD="ar rv" CALL_BY_REF=0 GLOBAL_RND=0 \
+       GLOBAL_FLAGS=0 UNCHANGED_BINARY_FLAGS=0
+  cc $LDFLAGS -shared -o "libbid-intel.so" *.o
+}
+
+package() {
+  cd IntelRDFPMathLib${pkgver}
+
+  mkdir -p "${pkgdir}/usr/lib/"
+  install -Dm755 LIBRARY/libbid-intel.so "${pkgdir}/usr/lib/"
+
+  install -Dm644 eula.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

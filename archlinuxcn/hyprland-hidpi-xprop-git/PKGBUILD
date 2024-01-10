@@ -6,7 +6,7 @@
 
 _pkgname="hyprland"
 pkgname="${_pkgname}-hidpi-xprop-git"
-pkgver=0.29.1.r0.96d555e8
+pkgver=0.34.0.r37.b240704b
 pkgrel=1
 pkgdesc="A dynamic tiling Wayland compositor based on wlroots that doesn't sacrifice on its looks."
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
@@ -39,8 +39,8 @@ depends=("libdisplay-info.so"
 	xcb-util-renderutil
 	xcb-util-wm
 	seatd
-	vulkan-icd-loader
 	xorg-xwayland-hidpi-xprop
+	tomlplusplus
 )
 makedepends=(
 	git
@@ -48,7 +48,6 @@ makedepends=(
 	ninja
 	gcc
 	meson
-	vulkan-headers
 	wayland-protocols
 	xorgproto
 )
@@ -65,9 +64,9 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            '2fd861a76fb7a6b0bba12e7d307ad655e40ec93a84c88dfc00571aac6e119e85'
-            '1314d0ee63a4249698791d86cce5e6cdb4f005b81bbb1c6a747578d2a9223795'
-            'c08dd62a1786eeb7506f1839bfcbba791502360392c929e620244f70c8ca5b61')
+            'b717f2f61aeb3bf670fe60424a8cd638d51e73dc66bd84277fada289bf2330d8'
+            'acced048ce6359f4f9f894ee648e4c47fd5093db3fce285b60f73b9f80bb7ac9'
+            '4e6b32ea58ecfd6a2cce7e5ddf09160136714de8b58e41a9919b30e06e998178')
 options=(debug)
 
 pkgver() {
@@ -89,27 +88,21 @@ prepare() {
 	patch -Np1 -i "${srcdir}"/0001-xwayland-support-HiDPI-scale.patch
 	patch -Np1 -i "${srcdir}"/0002-Fix-configure_notify-event.patch
 	patch -Np1 -i "${srcdir}"/0003-Fix-size-hints-under-Xwayland-scaling.patch
-	cd "${srcdir}/${_pkgname}"
-	make fixwlr
-	# respect build flags to allow full RELRO
-	sed -i '/CXX/ s|)|) $(CXXFLAGS)|;/CXX/ s|$| $(LDFLAGS)|;' hyprctl/Makefile
 }
 
 build() {
 	cd "${srcdir}/${_pkgname}"
-	cd "./subprojects/wlroots/" && meson setup build/ --prefix="${srcdir}/tmpwlr" --buildtype=plain && ninja -C build/ && mkdir -p "${srcdir}/tmpwlr" && ninja -C build/ install && cd ../..
-	cd "./subprojects/udis86/" && cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=None -H./ -B./build -G Ninja && cmake --build ./build --target all && cd ../..
 	mkdir -p build && cd build
 	cmake -G Ninja -DCMAKE_BUILD_TYPE=None -DCMAKE_SKIP_RPATH=ON -DCMAKE_INSTALL_PREFIX=/usr ..
 	ninja
-	cd "${srcdir}/${_pkgname}"
-	cd ./hyprctl && make all && cd ..
 }
 
 package() {
 	cd "${srcdir}/${_pkgname}"
+	meson install -C subprojects/wlroots/build --destdir "${pkgdir}/tmpwlr"
 	install -Dm755 build/Hyprland -t "${pkgdir}/usr/bin"
-	install -Dm755 hyprctl/hyprctl -t "${pkgdir}/usr/bin"
+	install -Dm755 build/hyprctl/hyprctl -t "${pkgdir}/usr/bin"
+	install -Dm755 build/hyprpm/hyprpm -t "${pkgdir}/usr/bin"
 	install -Dm644 assets/*.png -t "${pkgdir}/usr/share/hyprland"
 	install -Dm644 example/hyprland.desktop -t "${pkgdir}/usr/share/wayland-sessions"
 	install -Dm644 example/hyprland.conf -t "${pkgdir}/usr/share/hyprland"
@@ -117,12 +110,14 @@ package() {
 	install -Dm644 subprojects/wlroots/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-wlroots"
 	install -Dm644 subprojects/udis86/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-udis86"
 	install -Dm644 docs/*.1 -t "${pkgdir}/usr/share/man/man1"
-	install -Dm755 ../tmpwlr/lib/libwlroots.so.* -t "${pkgdir}/usr/lib"
+	install -Dm755 ${pkgdir}/tmpwlr/usr/local/lib/libwlroots.so.* -t "${pkgdir}/usr/lib"
 	install -d "${pkgdir}/usr/include/hyprland/protocols"
 	install -d "${pkgdir}/usr/include/hyprland/wlroots"
 	cp -R src ${pkgdir}/usr/include/hyprland/
-	cp -R ../tmpwlr/include/* ${pkgdir}/usr/include/hyprland/wlroots/
+	cp -R ${pkgdir}/tmpwlr/usr/local/include/* ${pkgdir}/usr/include/hyprland/wlroots/
 	find ${pkgdir}/usr/include/hyprland/ -type f ! -name '*.h*' -delete
+	rm -rf ${pkgdir}/tmpwlr
 	cp protocols/*-protocol.h ${pkgdir}/usr/include/hyprland/protocols
 	install -Dm644 build/hyprland.pc -t "${pkgdir}/usr/share/pkgconfig"
 }
+replaces=("hyprland-nvidia-hidpi-git")

@@ -5,13 +5,10 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-  - source: manual
-    manual: 4.8.4
-  # 4.8.5 requires unstable glibmm 2.77
-  # - source: github
-  #   github: telegramdesktop/tdesktop
-  #   branch: dev
-  #   use_latest_release: true
+  - source: github
+    github: telegramdesktop/tdesktop
+    branch: dev
+    use_latest_release: true
   - source: manual
     manual: 7
   - source: alpm
@@ -23,3 +20,6 @@ update_on:
     alpm: qt6-base
     repo: extra
   - alias: protobuf
+  - source: alpm
+    alpm: abseil-cpp
+    strip_release: true

@@ -1,43 +1,36 @@
 # Maintainer: Chocobo1 <chocobo1 AT archlinux DOT net>
 
 pkgname=typst-lsp
-pkgver=0.9.5
+pkgver=0.12.1
 pkgrel=1
 pkgdesc="Language server for Typst"
 arch=('i686' 'x86_64')
 url="https://github.com/nvarner/typst-lsp"
 license=('Apache' 'MIT')
 depends=('openssl')
-makedepends=('rust')
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/nvarner/typst-lsp/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('f4d01289753db844ae4ee4d4eba80df8ab174917dfc0829c781a8b173caab7cc')
+makedepends=('git' 'rust')
+source=("git+${url}.git#tag=v${pkgver}")
+sha256sums=('SKIP')
 options=('!lto')
 
 prepare() {
-  cd "typst-lsp-${pkgver}"
+	cd "${pkgname}/"
 
-  if [ ! -f "Cargo.lock" ]; then
-    cargo update
-  fi
+	if [ ! -f "Cargo.lock" ]; then
+		cargo update
+	fi
 
-  cargo fetch
-}
-
-check() {
-  cd "typst-lsp-${pkgver}"
-
-  #cargo test \
-  #  --frozen
+	cargo fetch
 }
 
 package() {
-  cd "typst-lsp-${pkgver}"
+	cd "${pkgname}/"
 
-  cargo install \
-    --locked \
-    --no-track \
-    --root "$pkgdir/usr" \
-    --path .
+	cargo install \
+		--locked \
+		--no-track \
+		--root "${pkgdir}/usr" \
+		--path .
 
-  install -Dm644 "LICENSE-MIT.txt" -t "$pkgdir/usr/share/licenses/typst-lsp"
+	install -Dm644 "LICENSE-MIT.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }

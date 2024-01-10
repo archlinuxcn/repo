@@ -7,7 +7,7 @@ _mainpkgname="$_projectname-emu"
 _noguipkgname="$_projectname-emu-nogui"
 pkgbase="$_mainpkgname-git"
 pkgname=("$pkgbase" "$_noguipkgname-git")
-pkgver=5.0.r20071.gf063fb31b3
+pkgver=5.0.r20897.g5b2ea515ad
 pkgrel=1
 pkgdesc='A Gamecube / Wii emulator'
 _pkgdescappend=' - git version'
@@ -15,24 +15,26 @@ arch=('x86_64' 'aarch64')
 url="https://$_mainpkgname.org"
 license=('GPL2')
 depends=(
-	'alsa-lib' 'bluez-libs' 'cubeb' 'enet' 'hidapi' 'libevdev' 'libgl' 'libpulse'
-	'libspng' 'libx11' 'libxi' 'libxrandr' 'lzo' 'mbedtls2' 'minizip-ng' 'pugixml'
-	'qt6-base' 'qt6-svg' 'sfml' 'zlib-ng'
-	'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libcurl.so' 'fmt9' 
-	'libminiupnpc.so' 'libsfml-network.so' 'libsfml-system.so' 'libswscale.so'
-	'libudev.so' 'libusb-1.0.so' 'libspng' 'vulkan-memory-allocator'
-)
-makedepends=('cmake' 'git' 'ninja' 'python')
+	'alsa-lib' 'bluez-libs' 'bzip2' 'hidapi' 'libevdev' 'libgl' 'libpulse' 'libx11'
+	'libxi' 'libxrandr' 'lzo' 'mbedtls2' 'minizip-ng' 'pugixml'  'sfml' 'speexdsp' 
+    'xz' 'zstd' 'cubeb' 'zlib-ng'
+    'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libcurl.so' 'fmt' 
+	'libsfml-network.so' 'libsfml-system.so' 'libswscale.so'
+	'libudev.so' 'libusb-1.0.so' 'libxxhash.so' 'libspng' 'vulkan-memory-allocator'
+        )
+makedepends=('cmake' 'git' 'ninja' 'python' 'miniupnpc' 'qt6-base' 'qt6-svg')
 optdepends=('pulseaudio: PulseAudio backend')
 options=('!lto')
 source=(
 	"$pkgname::git+https://github.com/$_mainpkgname/$_projectname"
+    "$pkgname-enet::git+https://github.com/lsalzman/enet.git"
 	"$pkgname-implot::git+https://github.com/epezent/implot.git"
     "$pkgname-mgba::git+https://github.com/mgba-emu/mgba.git"
 	"$pkgname-rcheevos::git+https://github.com/RetroAchievements/rcheevos.git"
 	'minizip-ng.diff'
 )
 sha512sums=('SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -50,6 +52,7 @@ prepare() {
 
 	# Provide submodules
 	declare -A _submodules=(
+    	[enet]='enet/enet'
 		[implot]='implot/implot'
 		[rcheevos]='rcheevos/rcheevos'
         [mgba]='mGBA/mgba'
@@ -72,6 +75,7 @@ build() {
 	# CMAKE_BUILD_TYPE - the dolphin-emu package in the repos uses 'None' for some reason, so we use it as well
 	# USE_SYSTEM_LIBS - we want to use system libs where possible
 	# USE_SYSTEM_LIBMGBA - the current version of mgba in the repos is not compatible with Dolphin
+    export LDFLAGS="-Wl,--copy-dt-needed-entries"
 	cd "$srcdir/$_sourcedirectory/"
 	cmake -S '.' -B 'build/' -G Ninja \
 		-DCMAKE_BUILD_TYPE=None \
@@ -81,6 +85,7 @@ build() {
 		-DENABLE_AUTOUPDATE=OFF \
 		-DUSE_SYSTEM_LIBS=ON \
 		-DUSE_SYSTEM_LIBMGBA=OFF \
+        -DUSE_SYSTEM_ENET=OFF \
 		-Wno-dev
 	cmake --build 'build/'
 }
@@ -88,7 +93,8 @@ build() {
 # TODO: check for tests
 
 package_dolphin-emu-git() {
-	pkgdesc="$pkgdesc$_pkgdescappend"
+	pkgdesc="$pkgdesc$_pkgdescappend"i
+    depends+=('hicolor-icon-theme' 'libminiupnpc.so' 'qt6-base' 'qt6-svg')
 	provides=("$_mainpkgname")
 	conflicts=("$_mainpkgname")
 

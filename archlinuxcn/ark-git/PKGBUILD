@@ -1,0 +1,37 @@
+# Maintainer: Integral <integral@member.fsf.org>
+
+pkgname=ark-git
+_pkgname=${pkgname%-git}
+pkgver=24.01.80.r19.gb8445fa
+pkgrel=1
+pkgdesc="Archiving Tool"
+arch=('x86_64')
+url="https://apps.kde.org/ark/"
+license=('GPL')
+depends=('kparts5' 'kpty5' 'libarchive' 'libzip' 'hicolor-icon-theme')
+makedepends=('git' 'extra-cmake-modules' 'kdoctools5')
+optdepends=('p7zip: 7Z format support'
+	'unrar: RAR decompression support'
+	'unarchiver: RAR format support'
+	'lzop: LZO format support'
+	'lrzip: LRZ format support'
+	'arj: ARJ format support')
+groups=('kde-applications-git' 'kde-utilities-git')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+source=("git+https://invent.kde.org/utilities/${_pkgname}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+build() {
+	cmake -B build -S "${_pkgname}" -DBUILD_TESTING=OFF
+	cmake --build build
+}
+
+package() {
+	DESTDIR="${pkgdir}" cmake --install build
+}

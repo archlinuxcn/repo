@@ -1,0 +1,18 @@
+pkgname=julia-git-randomextensions-src
+pkgver=0.4.4
+_commit=6ade53f50c10b72faaf1aaf428f9dfab02728c69
+pkgrel=1
+pkgdesc="RandomExtensions.jl"
+url="https://github.com/JuliaRandom/RandomExtensions.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaRandom/RandomExtensions.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd RandomExtensions.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh RandomExtensions "${pkgdir}" "${pkgname}" julia-git
+}

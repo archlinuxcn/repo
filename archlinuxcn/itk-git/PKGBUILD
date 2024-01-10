@@ -2,8 +2,8 @@
 
 _pkgname=ITK
 pkgname=(itk-git python-itk-git)
-_pkgver=5.3
-pkgver=5.3.r54976.3335e69433
+_pkgver=5.4
+pkgver=5.4.r55310.72aa9a602b
 pkgrel=1
 pkgdesc='An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis'
 arch=('x86_64')
@@ -20,16 +20,15 @@ depends=(
   intel-oneapi-mkl
   libpng
   libtiff
-  vxl
 )
 makedepends=(
-  castxml
+#  castxml
   cmake
   gcc12
   git
   gtest
   subversion
-#  swig
+  swig
 )
 options=(!emptydirs)
 source=("${_pkgname}::git+https://github.com/InsightSoftwareConsortium/ITK.git")
@@ -59,7 +58,7 @@ build() {
     -DITK_BUILD_DEFAULT_MODULES=ON
     -DITK_LEGACY_REMOVE=ON
     -DITK_USE_MKL=ON
-    -DITK_USE_SYSTEM_CASTXML=ON
+    -DITK_USE_SYSTEM_CASTXML=OFF
     -DITK_USE_SYSTEM_DCMTK=ON
     -DITK_USE_SYSTEM_DOUBLECONVERSION=ON
     -DITK_USE_SYSTEM_EIGEN=ON
@@ -71,23 +70,33 @@ build() {
     -DITK_USE_SYSTEM_JPEG=ON
     -DITK_USE_SYSTEM_MINC=OFF
     -DITK_USE_SYSTEM_PNG=ON
-    -DITK_USE_SYSTEM_SWIG=OFF
+    -DITK_USE_SYSTEM_SWIG=ON
     -DITK_USE_SYSTEM_TIFF=ON
-    -DITK_USE_SYSTEM_VXL=ON
+    -DITK_USE_SYSTEM_VXL=OFF
     -DITK_USE_SYSTEM_ZLIB=ON
     -DITK_WRAP_IMAGE_DIMS="2;3;4"
     -DITK_WRAP_PYTHON=ON
     -DITK_WRAP_complex_double=ON
+    -DITK_WRAP_complex_float=ON
     -DITK_WRAP_covariant_vector_double=ON
+    -DITK_WRAP_covariant_vector_float=ON
     -DITK_WRAP_double=ON
+    -DITK_WRAP_float=ON
+    -DITK_WRAP_rgb_unsigned_char=ON
     -DITK_WRAP_rgb_unsigned_short=ON
+    -DITK_WRAP_rgb_unsigned_short=ON
+    -DITK_WRAP_rgba_unsigned_char=ON
+    -DITK_WRAP_rgba_unsigned_short=ON
     -DITK_WRAP_rgba_unsigned_short=ON
     -DITK_WRAP_signed_char=ON
     -DITK_WRAP_signed_long_long=ON
+    -DITK_WRAP_signed_short=ON
+    -DITK_WRAP_unsigned_char=ON
     -DITK_WRAP_unsigned_long_long=ON
     -DITK_WRAP_unsigned_short=ON
     -DITK_WRAP_vector_double=ON
     -DModule_MorphologicalContourInterpolation=ON
+    -DPY_SITE_PACKAGES_PATH=/usr/lib/python$(get_pyver)/site-packages
 )
 
   cmake -B "build" -S "${srcdir}/${_pkgname}" \

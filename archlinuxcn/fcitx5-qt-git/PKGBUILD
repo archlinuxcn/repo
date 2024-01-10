@@ -5,14 +5,14 @@
 _pkgname=fcitx5-qt
 pkgbase=$_pkgname-git
 pkgname=(fcitx5-qt5-git fcitx5-qt4-git fcitx5-qt6-git)
-pkgver=5.0.17.r16.g413747e
+pkgver=5.1.3.r17.g50d5612
 pkgrel=1
 pkgdesc="Fcitx Qt Library"
 arch=('x86_64')
 url="https://github.com/fcitx/fcitx5-qt"
 license=('GPL')
 depends=('fcitx5-git')
-makedepends=('extra-cmake-modules' 'git' 'qt4' 'qt5-base' 'qt6-base' 'ninja')
+makedepends=('extra-cmake-modules' 'git' 'qt4' 'qt5-base' 'qt6-base' 'qt6-wayland' 'ninja')
 source=("git+$url.git")
 sha512sums=('SKIP')
 
@@ -72,7 +72,7 @@ package_fcitx5-qt4-git(){
 
 
 package_fcitx5-qt6-git(){
-  depends=('fcitx5-git' 'qt6-base')
+  depends=('fcitx5-git' 'qt6-base' 'qt6-wayland')
   provides=('fcitx5-qt6')
   conflicts=('fcitx5-qt6')
   pkgdesc="Fcitx Qt Library, for Qt6"

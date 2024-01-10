@@ -1,0 +1,23 @@
+pkgname=julia-git-odeinterface-src
+pkgver=0.5.0
+_commit=bcbbfed73809509c4f3823d6e3fcd5a01c14f3f1
+pkgrel=2
+pkgdesc="ODEInterface.jl"
+url="https://github.com/luchr/ODEInterface.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/luchr/ODEInterface.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ODEInterface.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ODEInterface "${pkgdir}" "${pkgname}" julia-git
+
+  # Remove build script and source for libodeinterface_jll
+  rm -rf "${dest_dir}"/deps
+  rm "${dest_dir}"/src/*.f
+  rm "${dest_dir}"/src/*.f90
+}

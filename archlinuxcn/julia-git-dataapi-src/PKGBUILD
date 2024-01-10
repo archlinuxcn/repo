@@ -1,0 +1,18 @@
+pkgname=julia-git-dataapi-src
+pkgver=1.15.0
+_commit=b131356317cb3e5608d04a8bab7f98a1aa2701a7
+pkgrel=3
+pkgdesc="DataAPI.jl"
+url="https://github.com/JuliaData/DataAPI.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaData/DataAPI.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd DataAPI.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh DataAPI "${pkgdir}" "${pkgname}" julia-git
+}

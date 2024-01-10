@@ -1,0 +1,26 @@
+pkgname=julia-git-gr-src
+pkgver=0.72.10
+_commit=73442aad385d9de9540679a85a0b94c70d1e1217
+pkgrel=4
+pkgdesc="GR.jl"
+url="https://github.com/jheinen/GR.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/jheinen/GR.jl.git#commit=$_commit"
+        0001-Get-rid-of-problematic-path-dance.patch)
+sha256sums=('SKIP'
+            'aba1b40eaa494441a542c8e3bf324a38bab851606f57832c151f9a98f354da12')
+
+prepare() {
+  cd GR.jl
+
+  patch --no-backup-if-mismatch -Np1 < ../0001-Get-rid-of-problematic-path-dance.patch
+}
+
+package() {
+  cd GR.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh GR "${pkgdir}" "${pkgname}" julia-git
+}

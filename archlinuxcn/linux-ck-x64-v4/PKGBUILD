@@ -71,7 +71,8 @@ _subarch=42
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 pkgbase=linux-ck-x64-v4
-pkgver=6.5.1
+pkgver=6.7
+_upstream=arch1
 pkgrel=1
 arch=(x86_64)
 url="https://wiki.archlinux.org/index.php/Linux-ck"
@@ -80,11 +81,10 @@ makedepends=(
   bc
   cpio
   gettext
-  git
   libelf
   pahole
-  python
   perl
+  python
   tar
   xz
 )
@@ -93,39 +93,27 @@ options=('!strip')
 
 # https://ck-hack.blogspot.com/2021/08/514-and-future-of-muqss-and-ck-once.html
 # acknowledgment to xanmod for initially keeping the hrtimer patches up to date
-_ckhrtimer=linux-6.5.y
-_commit=6ef0e9ff5db0ed380f98cc8c7436ca9c44ea32c9
+_ckhrtimer=linux-6.7.y
+_commit=2545022ef4c3b71ad07031164c764d45b37af2a3
 
 _gcc_more_v=20221217
 source=(
   "https://www.kernel.org/pub/linux/kernel/v6.x/linux-$pkgver.tar".{xz,sign}
   config  # the main kernel config file
+  "https://github.com/archlinux/linux/releases/download/v$pkgver-$_upstream/linux-v$pkgver-$_upstream.patch.zst"
   "more-uarches-$_gcc_more_v.tar.gz::https://github.com/graysky2/kernel_compiler_patch/archive/$_gcc_more_v.tar.gz"
   "ck-hrtimer-$_commit.tar.gz::https://github.com/graysky2/linux-patches/archive/$_commit.tar.gz"
-  0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
-  0002-drivers-firmware-skip-simpledrm-if-nvidia-drm.modese.patch
-  0003-tpm-Enable-hwrng-only-for-Pluton-on-AMD-CPUs.patch
-  0004-sphinx-kfigure.py-Convert-outdir-to-str-before-using.patch
-  0005-Revert-ASoC-Intel-soc-acpi-add-tables-for-Dell-SKU-0.patch
 )
 validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
-sha256sums=('23765dd44425462cd92adbee52670608fd7f3fd183a83b25ba7a7b4883d0451b'
+sha256sums=('ef31144a2576d080d8c31698e83ec9f66bf97c677fa2aaf0d5bbb9f3345b1069'
             'SKIP'
-            'b36c2945633d49b5f85600b58989a58f5ac61e31ca2c02f2046ce15b1462ea4b'
+            '45a44ff0e957cd562d2ceb60c1c90fc19c19e808209cebb46bfacfccfb56ad96'
+            'b6abc3ca814e36b3d4126459b3125e2eb5af7f02ea76801e34e6b465767e11aa'
             'f1d586e111932890ad5e0df15d092fb9b3f87bae4ea17812aae9b0ec98fe2db0'
-            'a86a59d089ddd4f31565ff6a27ba74f4697ffa0ab0f57dc839e1da6ab83d77a4'
-            '227cc673c7978c5d353cc19ffc9725d684b91de779adc6eef1e59cbc7fdce8bb'
-            '5c5a5e75113a4d8cfcd2e5628f6c86efbd412313cfb3a2c9220da5a70045639a'
-            '9279683f5517af465e98244bc35cfb734e26ff9c9d6e466432963dd71eb28042'
-            '3521e575ea05c2f2a9bd77c4affbb7a76ab5b84aac6a5abf3d9d30660baecfa7'
-            '44e1ebe817f1708b49b7473e640cd814bc5bdb983d71758893c5c9003034183c')
-_make() {
-  test -s version
-  make KERNELRELEASE="$(<version)" "$@"
-}
+            '36981db4140b0c68c58855a9fefa336373501a0737005bbe824f6e7616808702')
 
 prepare() {
   cd linux-${pkgver}
@@ -133,18 +121,12 @@ prepare() {
   msg2 "Setting version..."
   echo "-$pkgrel" > localversion.10-pkgrel
   echo "${pkgbase#linux}" > localversion.20-pkgname
-  make defconfig
-  make -s kernelrelease > version
-  make mrproper
 
-  local src
-  for src in "${source[@]}"; do
-    src="${src%%::*}"
-    src="${src##*/}"
-    [[ $src = 0*.patch ]] || continue
-    echo "Applying patch $src..."
-    patch -Np1 < "../$src"
-  done
+  msg2 "Applying Arch Linux $_upstream patch set"
+  patch -p1 -i ../linux-v$pkgver-$_upstream.patch || exit 1
+
+  # remove the -archx suffix
+  sed -i s'/^EXTRAVERSION =.*/EXTRAVERSION =/' Makefile
 
   echo "Setting config..."
   cp ../config .config
@@ -183,7 +165,7 @@ prepare() {
 
   # https://github.com/graysky2/kernel_gcc_patch
   # make sure to apply after olddefconfig to allow the next section
-  echo "Patching to enable GCC optimization for other uarchs..."
+  msg2 "Patching to enable GCC optimization for other uarchs..."
   patch -Np1 -i "$srcdir/kernel_compiler_patch-$_gcc_more_v/more-uarches-for-kernel-5.17+.patch"
 
   if [ -n "$_subarch" ]; then
@@ -206,7 +188,8 @@ prepare() {
       fi
     fi
 
-  echo "Prepared $pkgbase version $(<version)"
+  make -s kernelrelease > version
+  msg2 "Prepared $pkgbase version $(<version)"
 
   [[ -z "$_makenconfig" ]] || make LLVM=$_LLVM LLVM_IAS=$_LLVM nconfig
 
@@ -260,11 +243,11 @@ _package() {
   echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
   echo "Installing modules..."
-  ZSTD_CLEVEL=19 _make LLVM=$_LLVM LLVM_IAS=$_LLVM INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
+  ZSTD_CLEVEL=19 make LLVM=$_LLVM LLVM_IAS=$_LLVM INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
     DEPMOD=/doesnt/exist modules_install  # Suppress depmod
 
-  # remove build and source links
-  rm "$modulesdir"/{source,build}
+  # remove build link
+  rm "$modulesdir"/build
 }
 
 _package-headers() {

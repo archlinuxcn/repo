@@ -1,0 +1,18 @@
+pkgname=julia-git-simplebufferstream-src
+pkgver=1.1.0
+_commit=f17a220a3e3c7e2ddb47b4f6e6249ba6dcd39984
+pkgrel=2
+pkgdesc="SimpleBufferStream.jl"
+url="https://github.com/staticfloat/SimpleBufferStream.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/staticfloat/SimpleBufferStream.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SimpleBufferStream.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SimpleBufferStream "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-irrationalconstants-src
+pkgver=0.2.2
+_commit=12da9534697cb5665c0ac305899b5c733a4b4bcb
+pkgrel=3
+pkgdesc="IrrationalConstants.jl"
+url="https://github.com/JuliaMath/IrrationalConstants.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaMath/IrrationalConstants.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd IrrationalConstants.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh IrrationalConstants "${pkgdir}" "${pkgname}" julia-git
+}

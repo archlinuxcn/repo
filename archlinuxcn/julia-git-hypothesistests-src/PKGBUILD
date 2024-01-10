@@ -1,0 +1,18 @@
+pkgname=julia-git-hypothesistests-src
+pkgver=0.11.0
+_commit=932eaac50386b911989c98360b2fb6ac9d91629c
+pkgrel=2
+pkgdesc="HypothesisTests.jl"
+url="https://github.com/JuliaStats/HypothesisTests.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaStats/HypothesisTests.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd HypothesisTests.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh HypothesisTests "${pkgdir}" "${pkgname}" julia-git
+}

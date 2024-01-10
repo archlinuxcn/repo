@@ -2,15 +2,18 @@
 
 _name=imread
 pkgname=python-imread
-pkgver=0.7.4
-pkgrel=2
+pkgver=0.7.5
+pkgrel=1
 pkgdesc='Read images to numpy arrays'
 arch=('x86_64')
 url='https://github.com/luispedro/imread'
 license=('MIT')
 makedepends=(
   cython
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 depends=(
   libjpeg
@@ -18,28 +21,23 @@ depends=(
   libwebp
   python-numpy
 )
-checkdepends=(
-  python-nose
+optdepends=(
+  "xcftools: for xcf support"
 )
 
 source=("${_name}-${pkgver}.tar.gz::https://github.com/luispedro/imread/archive/v${pkgver}.tar.gz")
-sha256sums=('baab7791f4a5e57caaca8432d5baf4112f57ef7e4e056db280c69ce84559a770')
+sha256sums=('e743cdac57d478a9c6efa00d69c43ea32bbe421497f3d70286608536093fcb28')
 
 build() {
   cd "${srcdir}/${_name}-${pkgver}"
-  python setup.py build_ext --inplace
-  python setup.py build
-}
-
-check() {
-  cd "${_name}-${pkgver}"
-  nosetests -v
+  python -m build --wheel --no-isolation
 }
 
 package() {
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   cd ${srcdir}/${_name}-${pkgver}
   install -D -m644 COPYING.MIT -t "${pkgdir}/usr/share/licenses/${pkgname}"
-  python setup.py install --root=${pkgdir} --prefix=/usr --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  rm -rfv "${pkgdir}/${site_packages}/imread/tests/"
 }
 # vim:set ts=2 sw=2 et:
-

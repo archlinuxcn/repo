@@ -1,0 +1,34 @@
+# Maintainer: Mattia Borda <mattiagiovanni.borda@icloud.com>
+# Contributor: Enes Hecan <nshecan@gmail.com>
+
+pkgname=whatsapp-for-linux-git
+_pkgname=${pkgname%-git}
+pkgver=1.6.4.r11.gab065bb
+pkgrel=1
+pkgdesc="An unofficial WhatsApp desktop application for linux"
+url="https://github.com/eneshecan/${_pkgname}"
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+license=('GPL3')
+depends=('gtkmm3' 'webkit2gtk' 'libayatana-appindicator' 'libcanberra' 'gst-plugins-base' 'gst-plugins-good' 'gst-plugins-bad' 'gst-libav')
+makedepends=('cmake' 'git')
+optdepends=('hunspell-en_us: spell-checking')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+build() {
+	cd "${_pkgname}/"
+	cmake -DCMAKE_BUILD_TYPE=None -DCMAKE_INSTALL_PREFIX=/usr .
+	make
+}
+
+package() {
+	cd "${_pkgname}/"
+	make DESTDIR="${pkgdir}/" install
+}

@@ -2,7 +2,7 @@
 
 _pkgname=QuPath
 pkgname=qupath
-pkgver=0.4.4
+pkgver=0.5.0
 pkgrel=1
 pkgdesc='Bioimage analysis & digital pathology'
 arch=('x86_64')
@@ -16,7 +16,6 @@ depends=(
   lcms2
   libjpeg-turbo
   libpng
-  libtiff
   libxml2
 )
 makedepends=(
@@ -29,7 +28,7 @@ optdepends=(
 )
 options=(!strip)
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/qupath/qupath/archive/v${pkgver}.tar.gz")
-sha512sums=('cb4cecb08932f16baf993fef385e9bf47c945e4fe676c989a69b6d371be0472a55b6e204c09f0cb83928e1ff3b8826d6b2559f031423adff1b9c1301154ee7d1')
+sha512sums=('825c4fee2ef2b067958f6330457831173891ef06aded24676c5d527d0a890e72c03b4b8fbe2de83c4b927a6c07b548767b86fdca1c9cdfc1da8326a701dd821e')
 
 prepare() {
   echo "Creating desktop file"
@@ -53,7 +52,7 @@ package() {
   install -d "${pkgdir}/usr/bin"
   ln -sf "/opt/${_pkgname}/bin/${_pkgname}" "${pkgdir}/usr/bin/${pkgname}"
   install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
-  # create libtiff.so.5 softlink to /usr/lib/libtiff.so
-  ln -sf "/usr/lib/libtiff.so" "${pkgdir}/opt/QuPath/lib/app/libtiff.so.5"
+  # create libtiff.so.5 softlink to libtiff.so.5.2.5
+  ln -sf "/opt/QuPath/lib/app/libtiff.so.5.2.5" "${pkgdir}/opt/QuPath/lib/app/libtiff.so.5"
 }
 # vim:set ts=2 sw=2 et:

@@ -1,0 +1,18 @@
+pkgname=julia-git-zmq-src
+pkgver=1.2.2
+_commit=fc00ab417cc0c1c88cecec28be37b80753f24e37
+pkgrel=3
+pkgdesc="ZMQ.jl"
+url="https://github.com/JuliaInterop/ZMQ.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaInterop/ZMQ.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ZMQ.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ZMQ "${pkgdir}" "${pkgname}" julia-git
+}

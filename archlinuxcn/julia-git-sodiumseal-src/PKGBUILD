@@ -1,0 +1,18 @@
+pkgname=julia-git-sodiumseal-src
+pkgver=0.1.1
+_commit=b42cfea76ddbb7788c797bfae2232fd3b2d98f65
+pkgrel=2
+pkgdesc="SodiumSeal.jl"
+url="https://github.com/christopher-dG/SodiumSeal.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/christopher-dG/SodiumSeal.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SodiumSeal.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SodiumSeal "${pkgdir}" "${pkgname}" julia-git
+}

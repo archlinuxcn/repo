@@ -1,0 +1,18 @@
+pkgname=julia-git-images-src
+pkgver=0.26.0
+_commit=ef6acdcfd9f4fefb4dd2aa884a43016322ed4715
+pkgrel=2
+pkgdesc="Images.jl"
+url="https://github.com/JuliaImages/Images.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaImages/Images.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Images.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Images "${pkgdir}" "${pkgname}" julia-git
+}

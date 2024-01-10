@@ -85,14 +85,14 @@ _subarch=39
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 
-_major=6.4
-_minor=14
+_major=6.6
+_minor=10
 _srcname=linux-${_major}
-_clr=${_major}.13-1351
+_clr=${_major}.10-1398
 _gcc_more_v='20230105'
 pkgbase=linux-clear-x64-v4
 pkgver=${_major}.${_minor}
-pkgrel=1
+pkgrel=2
 pkgdesc='Clear Linux'
 arch=('x86_64')
 url="https://github.com/clearlinux-pkgs/linux"
@@ -121,11 +121,6 @@ export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
 
-_make() {
-  test -s version
-  make KERNELRELEASE="$(<version)" "$@"
-}
-
 prepare() {
     cd ${_srcname}
 
@@ -138,13 +133,14 @@ prepare() {
     echo "-$pkgrel" > localversion.10-pkgrel
     echo "${pkgbase#linux}" > localversion.20-pkgname
 
-    make defconfig
-    make -s kernelrelease > version
-    make mrproper
-
     ### Add Clearlinux patches
     for i in $(grep '^Patch' ${srcdir}/$pkgbase/linux.spec |\
-     grep -Ev '^Patch0132|^Patch0118|^Patch0113|^Patch0138|^Patch0402' | sed -n 's/.*: //p'); do
+     grep -Ev '^Patch0132|^Patch0118|^Patch0113|^Patch0138|^Patch0139' | sed -n 's/.*: //p'); do
+        if [ -n "$_use_llvm_lto" ]; then
+            if [ "${i}" == "0162-extra-optmization-flags.patch" ] ; then
+                continue
+            fi
+        fi
         echo "Applying patch ${i}..."
         patch -Np1 -i "$srcdir/$pkgbase/${i}"
     done
@@ -242,7 +238,7 @@ prepare() {
                        -d DEBUG_INFO_BTF_MODULES
     fi
 
-    _make ${BUILD_FLAGS[*]} olddefconfig
+    make ${BUILD_FLAGS[*]} olddefconfig
     diff -u $srcdir/$pkgbase/config .config || :
 
     # https://github.com/graysky2/kernel_compiler_patch
@@ -285,6 +281,7 @@ prepare() {
         fi
     fi
 
+    make -s kernelrelease > version
     echo "Prepared $pkgbase version $(<version)"
 
     [[ -z "$_makenconfig" ]] || make ${BUILD_FLAGS[*]} nconfig
@@ -295,7 +292,7 @@ prepare() {
 
 build() {
     cd ${_srcname}
-    _make ${BUILD_FLAGS[*]} all
+    make ${BUILD_FLAGS[*]} all
 }
 
 _package() {
@@ -314,17 +311,17 @@ _package() {
     echo "Installing boot image..."
     # systemd expects to find the kernel here to allow hibernation
     # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab8128dcf99161d2344
-    install -Dm644 "$(_make -s image_name)" "$modulesdir/vmlinuz"
+    install -Dm644 "$(make -s image_name)" "$modulesdir/vmlinuz"
 
     # Used by mkinitcpio to name the kernel
     echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
     echo "Installing modules..."
-    ZSTD_CLEVEL=19 _make ${BUILD_FLAGS[*]} INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
+    ZSTD_CLEVEL=19 make ${BUILD_FLAGS[*]} INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
         DEPMOD=/doesnt/exist modules_install  # Suppress depmod
 
-    # remove build and source links
-    rm "$modulesdir"/{source,build}
+    # remove build link
+    rm "$modulesdir"/build
 }
 
 _package-headers() {
@@ -419,9 +416,9 @@ for _p in "${pkgname[@]}"; do
   }"
 done
 
-sha256sums=('8fa0588f0c2ceca44cac77a0e39ba48c9f00a6b9dc69761c02a5d3efac8da7f3'
+sha256sums=('d926a06c63dd8ac7df3f86ee1ffc2ce2a3b81a2d168484e76b5b389aba8e56d0'
             'SKIP'
-            '23a34c1042e4abf487b6b622e68f64774c2f770e93b2074c2715e5c187b14e2a'
+            'bf7391fe83848d324409838751de7649049454034fe1164cb608b59e951f631a'
             'SKIP'
             '802946f623c69ae1a636b63697c23ca48af31a099415ed837d2c1e168a272d23')
 

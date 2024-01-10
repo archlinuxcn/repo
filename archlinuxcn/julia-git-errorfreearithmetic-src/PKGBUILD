@@ -1,0 +1,18 @@
+pkgname=julia-git-errorfreearithmetic-src
+pkgver=0.5.2
+_commit=7223527807a8d3241e9381916f9f8ab297d19940
+pkgrel=2
+pkgdesc="ErrorfreeArithmetic.jl"
+url="https://github.com/JeffreySarnoff/ErrorfreeArithmetic.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JeffreySarnoff/ErrorfreeArithmetic.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ErrorfreeArithmetic.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ErrorfreeArithmetic "${pkgdir}" "${pkgname}" julia-git
+}

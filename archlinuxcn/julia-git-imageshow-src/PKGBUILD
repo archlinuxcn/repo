@@ -1,0 +1,18 @@
+pkgname=julia-git-imageshow-src
+pkgver=0.3.8
+_commit=05ec585f91673f96fdd5d5885a1fad719affb917
+pkgrel=2
+pkgdesc="ImageShow.jl"
+url="https://github.com/JuliaImages/ImageShow.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaImages/ImageShow.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ImageShow.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ImageShow "${pkgdir}" "${pkgname}" julia-git
+}

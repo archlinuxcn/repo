@@ -1,0 +1,26 @@
+pkgname=julia-git-openmpi_jll-src
+pkgver=5.0.0+0
+_commit=49d3aeb407209d937d61f3a5f261a1bdce1d7c28
+pkgrel=1
+pkgdesc="OpenMPI_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/OpenMPI_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git openmpi)
+source=("git+https://github.com/JuliaBinaryWrappers/OpenMPI_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '996f2935aa2a2d26461bbf93299ee10aa5c1fd71692d7aea122f1fca6bf0a52d')
+
+build() {
+  cd OpenMPI_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl OpenMPI_jll ../jll.toml
+}
+
+package() {
+  cd OpenMPI_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh OpenMPI_jll "${pkgdir}" "${pkgname}" julia-git
+}

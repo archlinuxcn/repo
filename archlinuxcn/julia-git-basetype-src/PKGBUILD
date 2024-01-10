@@ -1,0 +1,18 @@
+pkgname=julia-git-basetype-src
+pkgver=0.2.0
+_commit=b2f0966e7cca3fc3b876d4001c1192cd30da1324
+pkgrel=2
+pkgdesc="BaseType.jl"
+url="https://github.com/SymbolicML/BaseType.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SymbolicML/BaseType.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd BaseType.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh BaseType "${pkgdir}" "${pkgname}" julia-git
+}

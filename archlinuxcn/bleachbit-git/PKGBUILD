@@ -1,0 +1,26 @@
+# Maintainer: Integral <integral@member.fsf.org>
+
+pkgname=bleachbit-git
+_pkgname=${pkgname%-git}
+pkgver=4.6.0.r18.g3e7339e
+pkgrel=1
+pkgdesc='Deletes unneeded files to free disk space and maintain privacy'
+arch=('any')
+url='https://www.bleachbit.org/'
+license=('GPL3')
+depends=('python-gobject' 'gtk3')
+makedepends=('git')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+source=("git+https://github.com/${_pkgname}/${_pkgname}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+package() {
+	cd "${_pkgname}/"
+	make prefix=/usr DESTDIR="${pkgdir}/" install
+}

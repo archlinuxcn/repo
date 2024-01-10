@@ -1,0 +1,17 @@
+maintainers:
+  - github: yuyichao
+post_build: git_pkgbuild_commit
+repo_depends:
+  - julia-git
+  - openspecfun-git
+  - openlibm-git
+  - julia-pkg-scripts
+  - cubature-git
+
+update_on:
+  - source: regex
+    url: 
+        https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Cubature_jll/version
+    regex: 'version: *([^ ]*@[^ ]*)'
+  - source: manual
+    manual: 1

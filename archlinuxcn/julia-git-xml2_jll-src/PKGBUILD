@@ -1,0 +1,26 @@
+pkgname=julia-git-xml2_jll-src
+pkgver=2.12.2+0
+_commit=653419b65101bb1d1a87fba0ebb098b41b4b7630
+pkgrel=1
+pkgdesc="XML2_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/XML2_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libxml2)
+source=("git+https://github.com/JuliaBinaryWrappers/XML2_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '28549d3cd53f7f90d6974823d11e99548db90a0f4941e2fdbc8724847796143a')
+
+build() {
+  cd XML2_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl XML2_jll ../jll.toml
+}
+
+package() {
+  cd XML2_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh XML2_jll "${pkgdir}" "${pkgname}" julia-git
+}

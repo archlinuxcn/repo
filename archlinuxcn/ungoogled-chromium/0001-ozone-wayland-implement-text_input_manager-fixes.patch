@@ -1,0 +1,42 @@
+
+ui/ozone/platform/wayland/host/zwp_text_input_wrapper.h
+
+# https://github.com/chromium/chromium/commit/de30ba3f21f824be05443d5820b988d226780d68
+Support offset of surrounding text in Lacros wayland client.
+
+# https://github.com/chromium/chromium/commit/71bba2b7ae8117fdf053563a864d6cff018d7e94
+Support large size surrounding text in Lacros.
+
+---
+diff --git a/ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v3.cc b/ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v3.cc
+index a3ce6e4..83f2c58 100644
+--- a/ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v3.cc
++++ b/ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v3.cc
+@@ -147,6 +147,14 @@ void ZWPTextInputWrapperV3::SetSurroundingText(
+   zwp_text_input_v3_commit(obj_.get());
+ }
+ 
++bool ZWPTextInputWrapperV3::HasAdvancedSurroundingTextSupport() const {
++	return false;
++}
++
++void ZWPTextInputWrapperV3::SetSurroundingTextOffsetUtf16(
++    uint32_t offset_utf16) {
++}
++
+ void ZWPTextInputWrapperV3::ResetPendingState() {
+   commit_string_.clear();
+   delete_surrounding_text_before_length_ = 0;
+diff --git a/ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v3.h b/ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v3.h
+index 204d7e3..5d03a1d 100644
+--- a/ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v3.h
++++ b/ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v3.h
+@@ -45,6 +45,8 @@ class ZWPTextInputWrapperV3 : public ZWPTextInputWrapper {
+   void SetCursorRect(const gfx::Rect& rect) override;
+   void SetSurroundingText(const std::string& text,
+                           const gfx::Range& selection_range) override;
++  bool HasAdvancedSurroundingTextSupport() const override;
++  void SetSurroundingTextOffsetUtf16(uint32_t offset_utf16) override;
+   void SetContentType(TextInputType type,
+                       TextInputMode mode,
+                       uint32_t flags,

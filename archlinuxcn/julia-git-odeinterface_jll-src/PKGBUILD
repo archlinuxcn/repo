@@ -1,0 +1,26 @@
+pkgname=julia-git-odeinterface_jll-src
+pkgver=0.0.1+0
+_commit=55a159756598af1c69d9f32d1193aa54e065b520
+pkgrel=2
+pkgdesc="ODEInterface_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/ODEInterface_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libodeinterface_jll)
+source=("git+https://github.com/JuliaBinaryWrappers/ODEInterface_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'fc217c0e6c382706bab4475237c56abf33ce7e6ab43af45fb47f92366972c64e')
+
+build() {
+  cd ODEInterface_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl ODEInterface_jll ../jll.toml
+}
+
+package() {
+  cd ODEInterface_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ODEInterface_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-differentialequations-src
+pkgver=7.11.0
+_commit=49532bf65b6f2a9da4da69e27bb56ff5c8a5e584
+pkgrel=2
+pkgdesc="DifferentialEquations.jl"
+url="https://github.com/SciML/DifferentialEquations.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/DifferentialEquations.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd DifferentialEquations.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh DifferentialEquations "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-lambertw-src
+pkgver=0.4.6
+_commit=8545ed3fd1eb904245d5446bf74b8578d012363d
+pkgrel=2
+pkgdesc="LambertW.jl"
+url="https://github.com/jlapeyre/LambertW.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/jlapeyre/LambertW.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LambertW.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LambertW "${pkgdir}" "${pkgname}" julia-git
+}

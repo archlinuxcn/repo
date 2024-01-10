@@ -1,0 +1,18 @@
+pkgname=julia-git-ipopt-src
+pkgver=1.5.1
+_commit=c524b5b03a46bbb547fe2b5f35d0fd06ed7fdfc5
+pkgrel=1
+pkgdesc="Ipopt.jl"
+url="https://github.com/jump-dev/Ipopt.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/jump-dev/Ipopt.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Ipopt.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Ipopt "${pkgdir}" "${pkgname}" julia-git
+}

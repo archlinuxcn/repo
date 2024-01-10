@@ -1,0 +1,26 @@
+pkgname=julia-git-dierckx_jll-src
+pkgver=0.1.0+0
+_commit=cc449a7055bbf6a5acc6c872a6b9a00468060e8b
+pkgrel=2
+pkgdesc="Dierckx_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Dierckx_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libddierckx)
+source=("git+https://github.com/JuliaBinaryWrappers/Dierckx_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '076d76ed60a2e51442214e93fdb7dfa99b52b42537d297b75cbc9ef7530870b8')
+
+build() {
+  cd Dierckx_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Dierckx_jll ../jll.toml
+}
+
+package() {
+  cd Dierckx_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Dierckx_jll "${pkgdir}" "${pkgname}" julia-git
+}

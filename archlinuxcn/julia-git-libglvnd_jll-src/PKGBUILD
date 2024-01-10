@@ -1,0 +1,26 @@
+pkgname=julia-git-libglvnd_jll-src
+pkgver=1.6.0+0
+_commit=50414bb02ed7976704220a1beb9c1f3baf2bdf6b
+pkgrel=2
+pkgdesc="Libglvnd_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Libglvnd_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libglvnd)
+source=("git+https://github.com/JuliaBinaryWrappers/Libglvnd_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '1d44b68976881f2da13951ed196ee1c22af7a4d3bc762aecb13cd14a2779e82a')
+
+build() {
+  cd Libglvnd_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Libglvnd_jll ../jll.toml
+}
+
+package() {
+  cd Libglvnd_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Libglvnd_jll "${pkgdir}" "${pkgname}" julia-git
+}

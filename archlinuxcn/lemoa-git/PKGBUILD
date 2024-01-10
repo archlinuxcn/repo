@@ -1,36 +1,32 @@
-# Maintainer: Integral <integral@murena.io>
+# Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=lemoa-git
 _pkgname=${pkgname%-git}
-pkgver=r142.b66376b
+pkgver=0.5.1.r1.g8e00321
 pkgrel=1
 pkgdesc="Native Gtk client for Lemmy (alpha state)"
 arch=('x86_64')
 url="https://github.com/lemmy-gtk/lemoa"
 license=('GPL')
 makedepends=('git' 'rust' 'gtk4' 'libadwaita')
-depends=('openssl' 'cairo')
+depends=('gtk4' 'openssl' 'cairo')
 provides=('lemoa')
 conflicts=('lemoa')
 source=("git+${url}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-	cd "${_pkgname}"
-	(
-		set -o pipefail
-		git describe --long --abbrev=7 2>/dev/null | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' ||
-			printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
-	)
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 build() {
 	cd "${_pkgname}/"
-	cargo build --locked --release --target-dir target/
+	cargo build --release --target-dir target/
 }
 
 package() {
-	cd "${srcdir}/${_pkgname}"
+	cd "${_pkgname}/"
 	install -vDm755 "target/release/${_pkgname}" -t "${pkgdir}/usr/bin/"
 	install -vDm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }

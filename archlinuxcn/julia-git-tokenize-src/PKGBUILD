@@ -1,0 +1,18 @@
+pkgname=julia-git-tokenize-src
+pkgver=0.5.26
+_commit=038bf12c6e1a9fb4a084bcdd420107da930dbb2d
+pkgrel=1
+pkgdesc="Tokenize.jl"
+url="https://github.com/JuliaLang/Tokenize.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaLang/Tokenize.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Tokenize.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Tokenize "${pkgdir}" "${pkgname}" julia-git
+}

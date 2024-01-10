@@ -1,0 +1,26 @@
+pkgname=julia-git-glpk_jll-src
+pkgver=5.0.1+0
+_commit=f74660f0ced50ec816bb28b9966ce09c27115500
+pkgrel=3
+pkgdesc="GLPK_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/GLPK_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git glpk)
+source=("git+https://github.com/JuliaBinaryWrappers/GLPK_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '54aa94e8d10b1a19306353a5e838116e2efcdbfdc37dacbe01c4d71502b12396')
+
+build() {
+  cd GLPK_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl GLPK_jll ../jll.toml
+}
+
+package() {
+  cd GLPK_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh GLPK_jll "${pkgdir}" "${pkgname}" julia-git
+}

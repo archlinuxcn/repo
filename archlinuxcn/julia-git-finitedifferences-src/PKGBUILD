@@ -1,0 +1,18 @@
+pkgname=julia-git-finitedifferences-src
+pkgver=0.12.31
+_commit=99ad77f05bdf6c023b249025dbb8edc746d52b4f
+pkgrel=2
+pkgdesc="FiniteDifferences.jl"
+url="https://github.com/JuliaDiff/FiniteDifferences.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaDiff/FiniteDifferences.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd FiniteDifferences.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh FiniteDifferences "${pkgdir}" "${pkgname}" julia-git
+}

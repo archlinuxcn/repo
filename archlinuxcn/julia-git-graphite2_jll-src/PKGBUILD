@@ -1,0 +1,26 @@
+pkgname=julia-git-graphite2_jll-src
+pkgver=1.3.14+0
+_commit=3b08421c6201219f26c6bbe410a2b64dd7a92634
+pkgrel=2
+pkgdesc="Graphite2_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Graphite2_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git graphite)
+source=("git+https://github.com/JuliaBinaryWrappers/Graphite2_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'bd75a99f40fa9be4a825facd3ea615a2370162965ab504bf074ae586c7bb9931')
+
+build() {
+  cd Graphite2_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Graphite2_jll ../jll.toml
+}
+
+package() {
+  cd Graphite2_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Graphite2_jll "${pkgdir}" "${pkgname}" julia-git
+}

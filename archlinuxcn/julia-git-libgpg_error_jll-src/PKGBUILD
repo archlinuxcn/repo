@@ -1,0 +1,26 @@
+pkgname=julia-git-libgpg_error_jll-src
+pkgver=1.42.0+0
+_commit=bb5b32e983ee53a1b185798767c82da59e0323bf
+pkgrel=3
+pkgdesc="Libgpg_error_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Libgpg_error_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libgpg-error)
+source=("git+https://github.com/JuliaBinaryWrappers/Libgpg_error_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '9796bc91867ccdc32afcc0308e672932e1982a8060668e4dbcd753e6cab2ec1b')
+
+build() {
+  cd Libgpg_error_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Libgpg_error_jll ../jll.toml
+}
+
+package() {
+  cd Libgpg_error_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Libgpg_error_jll "${pkgdir}" "${pkgname}" julia-git
+}

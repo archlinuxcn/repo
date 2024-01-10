@@ -1,0 +1,18 @@
+pkgname=julia-git-interpolations-src
+pkgver=0.14.7
+_commit=e3325a2a23f22f61c012220ea62b52659b49cbec
+pkgrel=2
+pkgdesc="Interpolations.jl"
+url="https://github.com/JuliaMath/Interpolations.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaMath/Interpolations.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Interpolations.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Interpolations "${pkgdir}" "${pkgname}" julia-git
+}

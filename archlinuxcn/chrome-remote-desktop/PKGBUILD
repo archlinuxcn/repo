@@ -5,7 +5,7 @@
 # Contributor: Mateus Rodrigues Costa <charles [dot] costar [at] gmail [dot] com>
 
 pkgname=chrome-remote-desktop
-pkgver=116.0.5845.10
+pkgver=118.0.5993.9
 pkgrel=1
 pkgdesc="Access other computers or allow another user to access your computer securely over the Internet"
 arch=("x86_64")
@@ -20,11 +20,11 @@ source=(
   "crd"
   "xdg-base-directory.patch"
 )
-sha256sums=('84396947d787cbe90073e944c272856871086c2671d82ac59f6ee9f460476459'
+sha256sums=('f0471692d2f14d382259178a9d54abd53255dc528ce4ff22c50510035438cdec'
             'e5da5ae89b5bc599f72f415d1523341b25357931b0de46159fce50ab83615a4b'
             'fcc38269eb1cc902abff9688eda9377a22367e39b9f111f87c0dd8e77adb82e2'
             '021110f49d465294517eec92eeb24ebca41e264ef33cbdda78732add1f269d02'
-            '993cff7024be6c4e3b2c0f84287adb51711a30c7dd965bb5b8687980f496e1a5')
+            '90bcfab85a87cfa6d038a55c556206f74b22eb03644ea51f46732cfb27679963')
 
 # curl -qs https://dl.google.com/linux/chrome-remote-desktop/deb/dists/stable/main/binary-amd64/Packages | grep "^Version\|^SHA256" | awk '{print $2}'
 

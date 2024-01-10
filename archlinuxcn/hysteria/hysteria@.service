@@ -1,12 +1,12 @@
 [Unit]
 Description=Hysteria Client Service
 Documentation=https://hysteria.network/
-After=network.target
+After=network.target nss-lookup.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/hysteria client --config %i.yaml --disable-update-check
-WorkingDirectory=/etc/hysteria
+ExecStart=/usr/bin/hysteria client --config /etc/hysteria/%i.yaml --disable-update-check
+WorkingDirectory=~
 User=hysteria
 Group=hysteria
 Environment=HYSTERIA_LOG_LEVEL=info

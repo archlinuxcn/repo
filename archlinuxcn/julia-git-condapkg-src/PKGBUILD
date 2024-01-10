@@ -1,0 +1,18 @@
+pkgname=julia-git-condapkg-src
+pkgver=0.2.22
+_commit=76b3632e89e2cfe09b2817e50469536bd9ddf50a
+pkgrel=2
+pkgdesc="CondaPkg.jl"
+url="https://github.com/JuliaPy/CondaPkg.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaPy/CondaPkg.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd CondaPkg.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh CondaPkg "${pkgdir}" "${pkgname}" julia-git
+}

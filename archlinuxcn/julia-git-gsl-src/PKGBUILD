@@ -1,0 +1,18 @@
+pkgname=julia-git-gsl-src
+pkgver=1.0.1
+_commit=4c54d5c3f6ddb49ba55c99aaa63a7cef8e7173d1
+pkgrel=3
+pkgdesc="GSL.jl"
+url="https://github.com/JuliaMath/GSL.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaMath/GSL.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd GSL.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh GSL "${pkgdir}" "${pkgname}" julia-git
+}

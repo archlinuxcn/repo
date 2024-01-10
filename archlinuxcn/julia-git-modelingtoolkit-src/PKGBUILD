@@ -1,0 +1,18 @@
+pkgname=julia-git-modelingtoolkit-src
+pkgver=8.73.1
+_commit=244fc24e82f1cf1ad647ca332a2797e493c7d362
+pkgrel=1
+pkgdesc="ModelingToolkit.jl"
+url="https://github.com/SciML/ModelingToolkit.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/ModelingToolkit.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ModelingToolkit.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ModelingToolkit "${pkgdir}" "${pkgname}" julia-git
+}

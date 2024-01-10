@@ -6,8 +6,8 @@
 
 pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
-_tag=v6.5
-pkgver=6.5
+_tag=v6.7
+pkgver=6.7
 pkgrel=1
 pkgdesc="Linux Mainline"
 arch=(x86_64)
@@ -21,6 +21,7 @@ makedepends=(
   libelf
   pahole
   perl
+  python
   tar
   xz
 
@@ -42,7 +43,7 @@ validpgpkeys=(
   'A2FF3A36AAA56654109064AB19802F8B0D70FC30'  # Jan Alexander Steffens (heftig)
 )
 sha256sums=('SKIP'
-            'e8d4bbd63808eeec78680c7de4383333b76ab9d58214042bd4b01d784bbc8ec8')
+            '69c3575b2342891afc65d58b91b3ef2e0aa30e4663749e154404590ab1ce33cf')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -82,7 +83,8 @@ prepare() {
 
 build() {
   cd $_srcname
-  _make htmldocs all
+  _make all
+  _make htmldocs
 }
 
 _package() {
@@ -101,10 +103,6 @@ _package() {
     VIRTUALBOX-GUEST-MODULES
     WIREGUARD-MODULE
   )
-  replaces=(
-    virtualbox-guest-modules-arch
-    wireguard-arch
-  )
 
   cd $_srcname
   local modulesdir="$pkgdir/usr/lib/modules/$(<version)"
@@ -122,7 +120,7 @@ _package() {
     DEPMOD=/doesnt/exist modules_install  # Suppress depmod
 
   # remove build and source links
-  rm "$modulesdir"/{source,build}
+  rm -f "$modulesdir"/{source,build}
 }
 
 _package-headers() {

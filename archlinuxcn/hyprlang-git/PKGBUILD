@@ -1,0 +1,33 @@
+# Maintainer: Integral <integral@member.fsf.org>
+
+pkgname=hyprlang-git
+_pkgname="${pkgname%-git}"
+pkgver=0.2.1.r7.g25da080
+pkgrel=1
+pkgdesc="The official implementation library for the hypr config language"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/hyprwm/${_pkgname}"
+license=('GPL3')
+makedepends=('git' 'cmake')
+source=("git+${url}.git")
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+build() {
+	cd "${_pkgname}/"
+	cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
+	cmake --build ./build --config Release --target "${_pkgname}" -j$(nproc 2>/dev/null || getconf NPROCESSORS_CONF)
+}
+
+package() {
+	cd "${_pkgname}/"
+	DESTDIR="${pkgdir}" cmake --install ./build
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
+	install -Dm644 "${_pkgname}-docs" -t "${pkgdir}/usr/share/doc/${_pkgname}/"
+}

@@ -1,0 +1,9 @@
+post_install() {
+	mv /usr/lib/thunderbird/{librnp.so,librnp.so.orig}
+	ln -s /usr/lib/libsequoia_octopus_librnp.so /usr/lib/thunderbird/librnp.so
+}
+
+pre_remove() {
+	rm /usr/lib/thunderbird/librnp.so
+	mv /usr/lib/thunderbird/{librnp.so.orig,librnp.so}
+}

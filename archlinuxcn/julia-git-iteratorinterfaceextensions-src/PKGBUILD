@@ -1,0 +1,18 @@
+pkgname=julia-git-iteratorinterfaceextensions-src
+pkgver=1.0.0
+_commit=832737f467bdfe08ad80eb9a3cceee522e1c5533
+pkgrel=3
+pkgdesc="IteratorInterfaceExtensions.jl"
+url="https://github.com/queryverse/IteratorInterfaceExtensions.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/queryverse/IteratorInterfaceExtensions.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd IteratorInterfaceExtensions.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh IteratorInterfaceExtensions "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-unityper-src
+pkgver=0.1.5
+_commit=00a2faa85722b9eb5166359c76c8dc721fcb3fad
+pkgrel=2
+pkgdesc="Unityper.jl"
+url="https://github.com/YingboMa/Unityper.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/YingboMa/Unityper.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Unityper.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Unityper "${pkgdir}" "${pkgname}" julia-git
+}

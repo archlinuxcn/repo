@@ -1,0 +1,18 @@
+pkgname=julia-git-consoleprogressmonitor-src
+pkgver=0.1.2
+_commit=19244efda670f2be66cbbe3b9b7c6ea2eefa8459
+pkgrel=2
+pkgdesc="ConsoleProgressMonitor.jl"
+url="https://github.com/tkf/ConsoleProgressMonitor.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/tkf/ConsoleProgressMonitor.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ConsoleProgressMonitor.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ConsoleProgressMonitor "${pkgdir}" "${pkgname}" julia-git
+}

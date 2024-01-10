@@ -1,0 +1,26 @@
+pkgname=julia-git-libiconv_jll-src
+pkgver=1.17.0+0
+_commit=b2a1b4cc914d523285129b19708a6bea214bde4c
+pkgrel=4
+pkgdesc="Libiconv_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Libiconv_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libiconv)
+source=("git+https://github.com/JuliaBinaryWrappers/Libiconv_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '3c5424f408833b376ed0aa78599b9ca18a46a8fc0fcca70192fc567028ae4501')
+
+build() {
+  cd Libiconv_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Libiconv_jll ../jll.toml
+}
+
+package() {
+  cd Libiconv_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Libiconv_jll "${pkgdir}" "${pkgname}" julia-git
+}

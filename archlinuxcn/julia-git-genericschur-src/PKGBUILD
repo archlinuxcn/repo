@@ -1,0 +1,18 @@
+pkgname=julia-git-genericschur-src
+pkgver=0.5.3
+_commit=48bff3566cbbe923742ef7bb249ffd739117cd2e
+pkgrel=2
+pkgdesc="GenericSchur.jl"
+url="https://github.com/RalphAS/GenericSchur.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/RalphAS/GenericSchur.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd GenericSchur.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh GenericSchur "${pkgdir}" "${pkgname}" julia-git
+}

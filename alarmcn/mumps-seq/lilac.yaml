@@ -5,11 +5,11 @@ pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build: git_pkgbuild_commit
 
 repo_depends:
-  - openblas-lapack-git: openblas-git
-  - openblas-lapack-git
   - metis
 
 update_on:
   - source: regex
     regex: '> *(\d+\.\d+[.0-9]*) *<'
     url: http://mumps-solver.org/index.php
+  - source: manual
+    manual: 2

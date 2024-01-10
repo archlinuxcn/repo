@@ -1,0 +1,26 @@
+pkgname=julia-git-lame_jll-src
+pkgver=3.100.1+0
+_commit=188394f057ccb647fde57abd4eba52f9fba7faf2
+pkgrel=2
+pkgdesc="LAME_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/LAME_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git lame)
+source=("git+https://github.com/JuliaBinaryWrappers/LAME_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '6c81aa82adc9441dbc9f80da398309e827f57b6f85bfc7e3b3a687ce0c40bd01')
+
+build() {
+  cd LAME_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl LAME_jll ../jll.toml
+}
+
+package() {
+  cd LAME_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LAME_jll "${pkgdir}" "${pkgname}" julia-git
+}

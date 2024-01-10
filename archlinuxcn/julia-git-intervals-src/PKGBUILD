@@ -1,0 +1,18 @@
+pkgname=julia-git-intervals-src
+pkgver=1.10.0
+_commit=966f3e9ba600bb4f80711227bad392a9e4f0137d
+pkgrel=2
+pkgdesc="Intervals.jl"
+url="https://github.com/invenia/Intervals.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/invenia/Intervals.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Intervals.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Intervals "${pkgdir}" "${pkgname}" julia-git
+}

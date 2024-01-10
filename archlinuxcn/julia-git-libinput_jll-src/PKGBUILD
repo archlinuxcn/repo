@@ -1,0 +1,26 @@
+pkgname=julia-git-libinput_jll-src
+pkgver=1.18.0+0
+_commit=f1fcc9b2da16e5f2ae1721d864da139ce8f36723
+pkgrel=3
+pkgdesc="libinput_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/libinput_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libinput)
+source=("git+https://github.com/JuliaBinaryWrappers/libinput_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'af789ac699b2c0cd599713cc429ca4760cd24078c49b12bbfba458de2a4ef55c')
+
+build() {
+  cd libinput_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl libinput_jll ../jll.toml
+}
+
+package() {
+  cd libinput_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh libinput_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,26 @@
+pkgname=julia-git-xorg_libsm_jll-src
+pkgver=1.2.3+0
+_commit=95b09699f7e142d008388b688972b8cb0833469f
+pkgrel=3
+pkgdesc="Xorg_libSM_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Xorg_libSM_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libsm)
+source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libSM_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '49613562a118f20e8b77141bfa48a85a0e7da06e990c8dcb3d7a1486e8fbf4e1')
+
+build() {
+  cd Xorg_libSM_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Xorg_libSM_jll ../jll.toml
+}
+
+package() {
+  cd Xorg_libSM_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Xorg_libSM_jll "${pkgdir}" "${pkgname}" julia-git
+}

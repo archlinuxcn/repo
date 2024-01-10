@@ -1,0 +1,18 @@
+pkgname=julia-git-famesvd-src
+pkgver=0.1.0
+_commit=b6ef4723fc0e6baa3bd97024c279f79c3eff9b08
+pkgrel=2
+pkgdesc="FameSVD.jl"
+url="https://github.com/MxAR/FameSVD.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/MxAR/FameSVD.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd FameSVD.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh FameSVD "${pkgdir}" "${pkgname}" julia-git
+}

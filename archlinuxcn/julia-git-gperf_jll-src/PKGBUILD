@@ -1,0 +1,26 @@
+pkgname=julia-git-gperf_jll-src
+pkgver=3.1.1+0
+_commit=9359ff465788fc27facd9f1462fdbf54dc5effc7
+pkgrel=2
+pkgdesc="gperf_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/gperf_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git gperf)
+source=("git+https://github.com/JuliaBinaryWrappers/gperf_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'cabec567b27e44e1c3f892fbd3a9eaa2644452fb380dbd0150900d23d7565c22')
+
+build() {
+  cd gperf_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl gperf_jll ../jll.toml
+}
+
+package() {
+  cd gperf_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh gperf_jll "${pkgdir}" "${pkgname}" julia-git
+}

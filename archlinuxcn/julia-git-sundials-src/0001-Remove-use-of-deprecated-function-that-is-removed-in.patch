@@ -1,0 +1,61 @@
+From 6a83b1d2378e2f7fc0012cabc36dad4ba03c4de4 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 6 Oct 2023 15:28:37 -0400
+Subject: [PATCH] Remove use of deprecated function that is removed in sundials
+ 6
+
+---
+ lib/libsundials_api.jl | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/lib/libsundials_api.jl b/lib/libsundials_api.jl
+index 5b1473a..da7776e 100644
+--- a/lib/libsundials_api.jl
++++ b/lib/libsundials_api.jl
+@@ -284,15 +284,17 @@ function ARKStepSetDeltaGammaMax(arkode_mem, dgmax::realtype)
+         arkode_mem, dgmax)
+ end
+ 
+-function ARKStepSetMaxStepsBetweenLSet(arkode_mem, msbp::Cint)
+-    ccall((:ARKStepSetMaxStepsBetweenLSet, libsundials_arkode), Cint, (ARKStepMemPtr, Cint),
++function ARKStepSetLSetupFrequency(arkode_mem, msbp::Cint)
++    ccall((:ARKStepSetLSetupFrequency, libsundials_arkode), Cint, (ARKStepMemPtr, Cint),
+         arkode_mem, msbp)
+ end
+ 
+-function ARKStepSetMaxStepsBetweenLSet(arkode_mem, msbp)
+-    ARKStepSetMaxStepsBetweenLSet(arkode_mem, convert(Cint, msbp))
++function ARKStepSetLSetupFrequency(arkode_mem, msbp)
++    ARKStepSetLSetupFrequency(arkode_mem, convert(Cint, msbp))
+ end
+ 
++const ARKStepSetMaxStepsBetweenLSet = ARKStepSetLSetupFrequency
++
+ function ARKStepSetPredictorMethod(arkode_mem, method::Cint)
+     ccall((:ARKStepSetPredictorMethod, libsundials_arkode), Cint, (ARKStepMemPtr, Cint),
+         arkode_mem, method)
+@@ -456,15 +458,17 @@ function ARKStepSetMassFn(arkode_mem, mass::ARKLsMassFn)
+         arkode_mem, mass)
+ end
+ 
+-function ARKStepSetMaxStepsBetweenJac(arkode_mem, msbj::Clong)
+-    ccall((:ARKStepSetMaxStepsBetweenJac, libsundials_arkode), Cint, (ARKStepMemPtr, Clong),
++function ARKStepSetJacEvalFrequency(arkode_mem, msbj::Clong)
++    ccall((:ARKStepSetJacEvalFrequency, libsundials_arkode), Cint, (ARKStepMemPtr, Clong),
+         arkode_mem, msbj)
+ end
+ 
+-function ARKStepSetMaxStepsBetweenJac(arkode_mem, msbj)
+-    ARKStepSetMaxStepsBetweenJac(arkode_mem, convert(Clong, msbj))
++function ARKStepSetJacEvalFrequency(arkode_mem, msbj)
++    ARKStepSetJacEvalFrequency(arkode_mem, convert(Clong, msbj))
+ end
+ 
++const ARKStepSetMaxStepsBetweenJac = ARKStepSetJacEvalFrequency
++
+ function ARKStepSetLinearSolutionScaling(arkode_mem, onoff::Cint)
+     ccall((:ARKStepSetLinearSolutionScaling, libsundials_arkode), Cint,
+         (ARKStepMemPtr, Cint), arkode_mem, onoff)
+-- 
+2.42.0
+

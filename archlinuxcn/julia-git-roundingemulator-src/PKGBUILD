@@ -1,0 +1,18 @@
+pkgname=julia-git-roundingemulator-src
+pkgver=0.2.1
+_commit=1e8f5271894fa5360a7a8fe1b7cf9735c1673b77
+pkgrel=2
+pkgdesc="RoundingEmulator.jl"
+url="https://github.com/matsueushi/RoundingEmulator.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/matsueushi/RoundingEmulator.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd RoundingEmulator.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh RoundingEmulator "${pkgdir}" "${pkgname}" julia-git
+}

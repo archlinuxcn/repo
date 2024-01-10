@@ -1,0 +1,18 @@
+pkgname=julia-git-opencl-src
+pkgver=0.9.0
+_commit=ff1c25c156f63816c7e3299a7ea565296ccc02af
+pkgrel=2
+pkgdesc="OpenCL.jl"
+url="https://github.com/JuliaGPU/OpenCL.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGPU/OpenCL.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd OpenCL.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh OpenCL "${pkgdir}" "${pkgname}" julia-git
+}

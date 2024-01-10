@@ -1,7 +1,7 @@
 # Maintainer: mzz2017 <mzz@tuta.io>
 
 pkgname=v2raya-git
-pkgver=20230903.r1428.2f386c6
+pkgver=20231217.r1493.9775d892
 pkgrel=1
 install=.INSTALL
 pkgdesc="v2rayA nightly version"
@@ -13,7 +13,7 @@ makedepends=('git' 'go>=2:1.17.0-1' 'nodejs>=17' 'yarn')
 provides=('v2raya')
 conflicts=('v2raya')
 backup=("etc/default/v2raya")
-source=("$pkgname::git+$url#branch=feat_v5")
+source=("$pkgname::git+$url")
 sha512sums=('SKIP')
 
 
@@ -50,7 +50,8 @@ EOF
 }
 
 package() {
-    depends+=('v2ray>=5.0.0')
+#    depends+=('v2ray>=5.0.0')
+depends+=('v2ray')
 
     cd "${srcdir}"/"${pkgname}"/
     install -Dm 755 service/v2raya -t "${pkgdir}"/usr/bin/

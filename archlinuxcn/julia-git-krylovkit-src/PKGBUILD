@@ -1,0 +1,18 @@
+pkgname=julia-git-krylovkit-src
+pkgver=0.6.0
+_commit=5833922454e34ed09ce8d42a9cae46ceab3ea398
+pkgrel=2
+pkgdesc="KrylovKit.jl"
+url="https://github.com/Jutho/KrylovKit.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/Jutho/KrylovKit.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd KrylovKit.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh KrylovKit "${pkgdir}" "${pkgname}" julia-git
+}

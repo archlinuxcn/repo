@@ -1,0 +1,18 @@
+pkgname=julia-git-baselet-src
+pkgver=0.1.1
+_commit=276ecd3b25039d84b29a9f4cccee6d0ebfc9a0a4
+pkgrel=2
+pkgdesc="Baselet.jl"
+url="https://github.com/tkf/Baselet.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/tkf/Baselet.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Baselet.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Baselet "${pkgdir}" "${pkgname}" julia-git
+}

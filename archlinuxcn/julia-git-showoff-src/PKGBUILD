@@ -1,0 +1,18 @@
+pkgname=julia-git-showoff-src
+pkgver=1.0.3
+_commit=66105cbbb72a1da39764e2c029c12c3456df39cd
+pkgrel=2
+pkgdesc="Showoff.jl"
+url="https://github.com/JuliaGraphics/Showoff.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGraphics/Showoff.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Showoff.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Showoff "${pkgdir}" "${pkgname}" julia-git
+}

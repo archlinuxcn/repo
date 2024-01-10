@@ -1,0 +1,18 @@
+pkgname=julia-git-concurrentutilities-src
+pkgver=2.3.0
+_commit=6e06acfea2d5296f06d61d3f161326c6b0fb1bff
+pkgrel=1
+pkgdesc="ConcurrentUtilities.jl"
+url="https://github.com/JuliaServices/ConcurrentUtilities.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaServices/ConcurrentUtilities.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ConcurrentUtilities.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ConcurrentUtilities "${pkgdir}" "${pkgname}" julia-git
+}
