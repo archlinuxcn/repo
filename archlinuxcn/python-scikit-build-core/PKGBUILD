@@ -1,0 +1,43 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+_name=scikit-build-core
+pkgname=python-scikit-build-core
+pkgdesc='A next generation Python CMake adaptor and Python API for plugins'
+url='https://github.com/scikit-build/scikit-build-core'
+pkgver=0.7.1
+pkgrel=1
+arch=('any')
+license=('Apache')
+depends=(
+  cmake
+  python-cattrs
+  python-hatch-fancy-pypi-readme
+  python-numpy
+  python-packaging
+  python-pathspec
+  python-pyproject-metadata
+  python-rich
+  python-setuptools
+  python-setuptools-scm
+  python-tomli
+)
+makedepends=(
+  python-build
+  python-hatch-vcs
+  python-hatchling
+  python-installer
+)
+source=(
+  "${_name}-${pkgver}.tar.gz::https://github.com/scikit-build/scikit-build-core/archive/refs/tags/v${pkgver}.tar.gz"
+)
+sha512sums=('806b8d4f6658d1d0a01cacee7e5d2d61996d9919453a2d334a6839f987b77026ea72c324c413b13ffdf5d5775958acdd380865f4a3f7789e3f9f5caaecdf56be')
+
+build() {
+  cd "${_name}-${pkgver}"
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${_name}-${pkgver}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+}
