@@ -7,9 +7,9 @@ pkgdesc="A Clash GUI based on tauri, revived"
 arch=('x86_64' 'aarch64')
 url="https://github.com/clash-verge-rev/clash-verge-rev"
 license=('GPL3')
-depends=('webkit2gtk' 'clash-geoip' 'libayatana-appindicator')
+depends=('webkit2gtk' 'clash-geoip' 'libayatana-appindicator' 'clash-meta: Another Clash Kernel')
 makedepends=('pnpm' 'cargo-tauri' 'jq' 'moreutils' 'rust')
-optdepends=('clash-meta: clash-core')
+optdepends=()
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
 	"${pkgname}.desktop"
 	'001-disable-updater.patch'
