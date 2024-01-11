@@ -3,7 +3,7 @@
 pkgname=waylyrics-git
 _pkgname=waylyrics
 _appname="io.poly000.${_pkgname}"
-pkgver=0.1.0_r444.g5b05461a
+pkgver=0.1.0_r447.g8dea77e7
 pkgrel=1
 pkgdesc="general desktop lyrics with QQMusic/NetEase Cloud Music source"
 url="https://github.com/waylyrics/waylyrics"
@@ -11,15 +11,13 @@ conflicts=('waylyrics')
 provides=('waylyrics')
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
 license=('MIT')
-depends=('gtk4' 'openssl' 'hicolor-icon-theme')
-makedepends=('cargo' 'git' 'jq' 'mimalloc')
-optdepends=(
-	'feeluown-qqmusic: QQMusic player'
-	'feeluown-netease: NetEase Cloud Music player'
-	'electron-netease-cloud-music: NetEase Cloud Music player'
-	'yesplaymusic: NetEase Cloud Music player'
-	'qcm: NetEase Cloud Music player'
-)
+depends=('openssl' 'hicolor-icon-theme'
+	# base
+	'dbus' 'gcc-libs' 'glibc'
+	# gtk4
+	'glib2' 'cairo' 'dconf' 'gtk4')
+makedepends=('cargo' 'git' 'jq' 'mimalloc' 'base-devel')
+optdepends=()
 
 source=("git+${url}.git")
 
