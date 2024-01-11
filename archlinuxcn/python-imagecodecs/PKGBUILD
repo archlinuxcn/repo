@@ -15,6 +15,7 @@ depends=(
   brunsli
   cfitsio
   charls
+  giflib
   jxrlib
   lcms2
   lerc
@@ -30,7 +31,6 @@ depends=(
   libwebp
   lzfse
   openjpeg2
-  python-imread
   python-numpy
   snappy
   zfp
@@ -48,7 +48,7 @@ source=("${_name}-${pkgver}.tar.gz::https://github.com/cgohlke/imagecodecs/archi
         "0001.fix-deps.patch"
 )
 sha256sums=('6af69181a3fe828f9fea5fd440af1b88610fd05665665e6885c3a84c1055b648'
-            'bac18e10bc97a92b2d805fcfe4796a02bb81b746d25b984bf2502fc3cb7c80c4')
+            '3f698523d4f941bc83a2c58b1aa55bcac0484e284f5d6b1b00da2dcfc5caa14b')
 
 prepare() {
   cd "${_name}-${pkgver}"

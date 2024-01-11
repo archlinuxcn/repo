@@ -1,8 +1,8 @@
 diff --git a/setup.py b/setup.py
-index e527a75..1a371de 100644
+index e527a75..2156d26 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -233,18 +233,14 @@ def customize_build_default(EXTENSIONS, OPTIONS):
+@@ -233,24 +233,20 @@ def customize_build_default(EXTENSIONS, OPTIONS):
      import platform
  
      del EXTENSIONS['apng']  # apng patch not commonly available
@@ -20,5 +20,16 @@ index e527a75..1a371de 100644
 -    del EXTENSIONS['zlibng']  # zlib-ng library not commonly available
 +    del EXTENSIONS['jpegxl']
  
-     if 'arch' not in platform.platform():
-         del EXTENSIONS['jpegls']  # CharLS 2.1 library not commonly available
+-    if 'arch' not in platform.platform():
+-        del EXTENSIONS['jpegls']  # CharLS 2.1 library not commonly available
+-        del EXTENSIONS['jpegxl']  # jpeg-xl library not commonly available
+-        del EXTENSIONS['brunsli']  # Brunsli library not commonly available
+-        del EXTENSIONS['zfp']  # ZFP library not commonly available
++    # if 'arch' not in platform.platform():
++    #     del EXTENSIONS['jpegls']  # CharLS 2.1 library not commonly available
++    #     del EXTENSIONS['jpegxl']  # jpeg-xl library not commonly available
++    #     del EXTENSIONS['brunsli']  # Brunsli library not commonly available
++    #     del EXTENSIONS['zfp']  # ZFP library not commonly available
+ 
+     if sys.platform == 'win32':
+         EXTENSIONS['bz2']['libraries'] = ['libbz2']
