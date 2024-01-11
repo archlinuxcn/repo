@@ -6,7 +6,7 @@ gitver=v6.7
 patchver=20230105
 patchname=more-uarches-for-kernel-5.17+.patch
 pkgver=6.7.v.0
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
@@ -25,7 +25,7 @@ source=("git+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git#ta
 )
 sha256sums=('SKIP'
             #config.x86_64
-            '5cfad5539816ec82b28684d62bba7ed7b046aa25870a6fccd8277ead74f74833'
+            '2e790d12734842112bc651d5192e8f4d3aa87d22310f582aaee2eb6fe5fb0198'
             #.preset file
             '26828ab61a69fca7ecdbba4179311f7cc3c59e1f8c070bcc626c68065187222b'
             #grayskypatch
