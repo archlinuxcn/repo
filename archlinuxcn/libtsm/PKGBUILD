@@ -1,0 +1,37 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: Daniel Micay <danielmicay@gmail.com>
+# Contributor: David Herrmann <dh.herrmann@gmail.com>
+
+pkgname=libtsm
+pkgver=4.0.2
+pkgrel=1
+pkgdesc='Terminal-emulator State Machine'
+arch=('x86_64')
+url="https://www.freedesktop.org/wiki/Software/kmscon/$pkgname"
+license=('MIT')
+depends=('glibc')
+makedepends=('cmake' 'ninja'
+             'libxkbcommon'
+             )
+checkdepends=('check')
+provides=('libtsm.so')
+source=("https://github.com/Aetf/libtsm/archive/v$pkgver/$pkgname-$pkgver.tar.gz")
+b2sums=('4d81d5a19003ca1487e85bcea22604990e88770484a08a072105a2f193a0c7aa40832c9a81197c0fa26acc9c8d39d1ab796d4b92fa6af790f5ef803b8c68af05')
+
+build() {
+  cmake -B build -S $pkgname-$pkgver \
+    -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_TESTING=ON \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo # libtsm deny None build type.
+  ninja -C build
+}
+
+check() {
+  ctest -C RelWithDebInfo --test-dir build
+}
+
+package() {
+  DESTDIR="$pkgdir" ninja -C build install
+  install -Dm644 $pkgname-$pkgver/COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}

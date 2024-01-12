@@ -1,0 +1,48 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: Kyle Keen <keenerd@gmail.com>
+# Contributor: Chris Tam <lchris314 at gmail dot com>
+# Contributor: Daniel Micay <danielmicay at gmail dotcom>
+# Contributor: David Herrmann <dh.herrmann@googlemail dot com>
+
+pkgname=kmscon
+pkgver=9.0.0
+pkgrel=1
+pkgdesc='Terminal emulator based on Kernel Mode Setting (KMS)'
+arch=('x86_64')
+url='https://github.com/Aetf/kmscon/'
+license=('MIT')
+depends=('libdrm'
+         'glibc'
+         'glib2' 'libgobject-2.0.so'
+         'pixman' 'libpixman-1.so'
+         'sh'
+         'systemd-libs'
+         'mesa'
+         'libgl'
+         'pango' 'libpango-1.0.so' 'libpangoft2-1.0.so'
+         'libxkbcommon' 'libxkbcommon'
+         'libtsm' 'libtsm.so'
+         )
+makedepends=('libxslt' 'docbook-xsl' 'linux-api-headers' 'meson')
+source=("https://github.com/Aetf/kmscon/releases/download/v$pkgver/$pkgname-$pkgver.tar.xz")
+b2sums=('a44a4b3739b1ed4a597713ca2ef7adb33f1ab7130322a419ee88517addfbf0edf01ef59f06c5626e95a7bc1708cf4cebe49d5853558aa3fedb3aa9c7c28a7dd7')
+
+build() {
+  arch-meson build $pkgname-$pkgver \
+    -D werror=false
+  meson compile -C build
+}
+
+check() {
+  # FIXME: Disable tests for wrong unit tests
+  # https://github.com/Aetf/kmscon/issues/50
+  #meson test -C build
+  :
+}
+
+package() {
+  meson install -C build --destdir="$pkgdir"
+  install -Dm644 $pkgname-$pkgver/COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+#  install -d "$pkgdir/usr/lib/systemd/system"
+#  cp docs/kmscon{,vt@}.service "$pkgdir/usr/lib/systemd/system/"
+}
