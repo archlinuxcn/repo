@@ -3,20 +3,20 @@
 pkgname=waylyrics-git
 _pkgname=waylyrics
 _appname="io.poly000.${_pkgname}"
-pkgver=0.1.0_r449.g792366bb
+pkgver=0.1.0_r455.g0a7276ed
 pkgrel=1
 pkgdesc="general desktop lyrics with QQMusic/NetEase Cloud Music source"
 url="https://github.com/waylyrics/waylyrics"
 conflicts=('waylyrics')
 provides=('waylyrics')
-arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
+arch=('x86_64' 'armv7h' 'aarch64')
 license=('MIT')
 depends=('openssl' 'hicolor-icon-theme'
 	# base
 	'dbus' 'gcc-libs' 'glibc'
 	# gtk4
 	'glib2' 'cairo' 'dconf' 'gtk4')
-makedepends=('cargo' 'git' 'jq' 'mimalloc' 'base-devel')
+makedepends=('cargo-nightly' 'git' 'jq' 'mimalloc')
 optdepends=()
 
 source=("git+${url}.git")
@@ -31,21 +31,32 @@ pkgver() {
 	echo "${semver}_r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
 }
 
+prepare() {
+    cd "${_pkgname}"
+    export RUSTUP_TOOLCHAIN=nightly
+    cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
 build() {
 	cd "${_pkgname}"
 
-	# workarounds to allow enabling feature gates with stable rustc
-	# this should be ok since localkey is not in active development
-	export RUSTC_BOOTSTRAP=1
+	export RUSTUP_TOOLCHAIN=nightly
+    export CARGO_TARGET_DIR=target
 
 	# template files
 	export WAYLYRICS_THEME_PRESETS_DIR="/usr/share/${_pkgname}/themes"
 
-	cargo build --locked --release --target-dir target
+	cargo build --frozen --release
+}
+
+check() {
+    cd "${_pkgname}"
+    export RUSTUP_TOOLCHAIN=nightly
+    cargo test --frozen
 }
 
 package() {
-	cd "$srcdir/$_pkgname"
+	cd "${_pkgname}"
 
 	install -vDm644 "${_appname}.desktop" -t "${pkgdir}/usr/share/applications/"
 
