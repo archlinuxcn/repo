@@ -6,7 +6,7 @@
 
 pkgname=kmscon
 pkgver=9.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Terminal emulator based on Kernel Mode Setting (KMS)'
 arch=('x86_64')
 url='https://github.com/Aetf/kmscon/'
@@ -24,12 +24,21 @@ depends=('libdrm'
          'libtsm' 'libtsm.so'
          )
 makedepends=('libxslt' 'docbook-xsl' 'linux-api-headers' 'meson')
-source=("https://github.com/Aetf/kmscon/releases/download/v$pkgver/$pkgname-$pkgver.tar.xz")
-b2sums=('a44a4b3739b1ed4a597713ca2ef7adb33f1ab7130322a419ee88517addfbf0edf01ef59f06c5626e95a7bc1708cf4cebe49d5853558aa3fedb3aa9c7c28a7dd7')
+source=("https://github.com/Aetf/kmscon/releases/download/v$pkgver/$pkgname-$pkgver.tar.xz"
+        "fix-backspace.patch::https://github.com/Aetf/kmscon/commit/0310e62e0473d94d649a59e7a9d7622dfa6302e8.patch")
+b2sums=('a44a4b3739b1ed4a597713ca2ef7adb33f1ab7130322a419ee88517addfbf0edf01ef59f06c5626e95a7bc1708cf4cebe49d5853558aa3fedb3aa9c7c28a7dd7'
+        '35e7d5ffb7779b5bb1d82b484c634797b2240057753b1cd5439ac802602d082c3ec4acd0aae011e06f5deca5682a34e06d9179d91e96d879045418cbd03ee5e2')
+
+prepare() {
+  cd $pkgname-$pkgver
+  patch -Np1 -i ../fix-backspace.patch
+  sed 's/>=4.1.0/>=4.0.0/' -i meson.build
+}
 
 build() {
   arch-meson build $pkgname-$pkgver \
-    -D werror=false
+    -D werror=false \
+    -D backspace_sends_delete=true # https://github.com/Aetf/kmscon/issues/58
   meson compile -C build
 }
 

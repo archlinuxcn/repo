@@ -4,7 +4,7 @@
 
 pkgname=libtsm
 pkgver=4.0.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Terminal-emulator State Machine'
 arch=('x86_64')
 url="https://www.freedesktop.org/wiki/Software/kmscon/$pkgname"
@@ -15,8 +15,15 @@ makedepends=('cmake' 'ninja'
              )
 checkdepends=('check')
 provides=('libtsm.so')
-source=("https://github.com/Aetf/libtsm/archive/v$pkgver/$pkgname-$pkgver.tar.gz")
-b2sums=('4d81d5a19003ca1487e85bcea22604990e88770484a08a072105a2f193a0c7aa40832c9a81197c0fa26acc9c8d39d1ab796d4b92fa6af790f5ef803b8c68af05')
+source=("https://github.com/Aetf/libtsm/archive/v$pkgver/$pkgname-$pkgver.tar.gz"
+        "fix-backspace.patch::https://github.com/Aetf/libtsm/commit/96374808d926cda8fb764aded6729abdd38c9ce8.patch")
+b2sums=('4d81d5a19003ca1487e85bcea22604990e88770484a08a072105a2f193a0c7aa40832c9a81197c0fa26acc9c8d39d1ab796d4b92fa6af790f5ef803b8c68af05'
+        '5ebec6c2f2186dda1c7cc7c3c452ac70d3c45fa1e2a7b584e81a625917802467dfa129671759e422d9eee5b2b885671ba2341a2d358a705146dec2c324fd9e2e')
+
+prepare() {
+  cd $pkgname-$pkgver
+  patch -Np1 -i ../fix-backspace.patch
+}
 
 build() {
   cmake -B build -S $pkgname-$pkgver \
