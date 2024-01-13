@@ -1,14 +1,14 @@
 _name=NativeSvgHandler
 pkgname=mediawiki-nativesvghandler
-pkgver=20230715
+pkgver=20240113
 pkgrel=1
 pkgdesc="MediaWiki extension that serves SVG images directly to clients"
 arch=(any)
 url="https://www.mediawiki.org/wiki/Extension:NativeSvgHandler"
 license=(''GPL3'')
-depends=('mediawiki>=1.40' 'mediawiki<1.41')
-source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/NativeSvgHandler-REL1_40-34bda7e.tar.gz")
-sha256sums=('6cb4186ee252dd57083df6bab70217cf0438160f562435b26a292dcfce5d76d2')
+depends=('mediawiki>=1.41' 'mediawiki<1.42')
+source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/NativeSvgHandler-REL1_41-6b4fc99.tar.gz")
+sha256sums=('9ce4a7d1fb7638439918fbd176e36d365f50e18ad57fb240a1a275e0effa7603')
 
 build() {
   true
