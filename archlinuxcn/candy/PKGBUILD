@@ -2,7 +2,7 @@
 
 pkgname=candy
 pkgver=3.7
-pkgrel=2
+pkgrel=3
 pkgdesc="Another virtual private network that supports point-to-point connections"
 url="https://github.com/lanthora/candy"
 license=('MIT')
