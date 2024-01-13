@@ -19,10 +19,14 @@ depends=('gtk3'
          'dconf'
          'gdk-pixbuf2'
          'hicolor-icon-theme'
-         'webkitgtk-6.0'
-         'gobject-introspection'
-         'gobject-introspection-runtime')
-makedepends=('meson')
+         'glibc'
+         'glib2'
+         'gcc-libs'
+         'python')
+makedepends=('meson'
+             'gobject-introspection'
+             'gobject-introspection-runtime'
+             'webkitgtk-6.0')
 source=("$url/-/archive/$pkgver/$pkgname-$pkgver.tar.gz")
 sha512sums=('fc1257377e2e4e0fa00237e9dbd21edfcf828825f3543a20fac346c22e53ebc58900d8c975dc5b540957814f774283db561816f16b74f2e5668b6a1c326b9d49')
 
