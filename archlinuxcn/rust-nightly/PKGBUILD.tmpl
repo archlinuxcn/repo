@@ -148,6 +148,7 @@ package_rust-miri-nightly() {
 
 package_cargo-nightly() {
   pkgdesc="Rust package manager (nightly version)"
+  depends=('rust-nightly')
   provides=('cargo={{cargo_version}}')
   conflicts=('rustup')
 
