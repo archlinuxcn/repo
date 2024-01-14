@@ -1,10 +1,13 @@
-pre_build_script: aur_pre_build(maintainers=['post-factum'])
+pre_build_script: |
+    update_pkgver_and_pkgrel(_G.newver)
 
-post_build: aur_post_build
+post_build_script: |
+    git_pkgbuild_commit()
 
 update_on:
-  - source: aur
-    aur: uksmd
+  - source: git
+    git: https://codeberg.org/pf-kernel/uksmd
+    prefix: v
 
 maintainers:
   - github: CoelacanthusHex

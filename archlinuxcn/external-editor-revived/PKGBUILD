@@ -1,4 +1,5 @@
-# Maintainer: Frederick Zhang <frederick888@tsundere.moe>
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: Frederick Zhang <frederick888@tsundere.moe>
 
 pkgname=external-editor-revived
 pkgver=1.0.0
@@ -7,35 +8,46 @@ pkgdesc="External Editor Revived is a Thunderbird MailExtension which allows edi
 arch=('x86_64')
 url="https://github.com/Frederick888/external-editor-revived"
 license=('GPL3')
-depends=('thunderbird>=91')
-makedepends=('rust' 'zip')
+depends=('thunderbird>=91' 'gcc-libs' 'glibc')
+makedepends=('cargo' 'zip')
 source=(
-    "https://github.com/Frederick888/external-editor-revived/archive/refs/tags/v${pkgver}.tar.gz"
+    "$pkgname-$pkgver.tar.gz::https://github.com/Frederick888/external-editor-revived/archive/refs/tags/v$pkgver.tar.gz"
     "external_editor_revived.json"
 )
-md5sums=('94f71acfbddb16ea49e50de446064c6d'
-         '7e14ff6bb5cad780110f056e5c0d7d34')
-sha256sums=('c6882816ef2c405528935019eb49ac0caed868b731ff2fb834ea056882a04406'
-            'a4b61c37f16f392f8289002c0e9afc5a8570d7ed902be25c62c7dc0703a20e05')
+b2sums=('c3431963f70604678ada51bbd746c7d935a32049d59e8c763d53afb5a2ee70ea68a4a57529c6a362171d003289f9d54f9dc8ce54cde68d38712cafc7b4b2f820'
+        '5c3cda0e0cf5728fac3f025e4aa3a1b27838f4af2e9227b2e348a70ce6abeeef8da283f1f76a0e137d5c0b18a8e42ea834715af7f4a5f6abb8725a44c698f360')
+
+prepare() {
+    cd $pkgname-$pkgver
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
 
 build() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
-    cargo build --locked --release --target-dir ./target
-    cd "${srcdir}/${pkgname}-${pkgver}/extension"
-    zip -r -FS "${srcdir}/${pkgname}@tsundere.moe.xpi" *
+    cd "$pkgname-$pkgver"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo build --frozen --release --all-features
+    cd extension
+    zip -r -FS "$srcdir/$pkgname@tsundere.moe.xpi" *
+}
+
+check() {
+    cd $pkgname-$pkgver
+    export RUSTUP_TOOLCHAIN=stable
+    cargo test --frozen --all-features
 }
 
 package() {
-    cd "${srcdir}"
-    install -d "${pkgdir}/usr/lib/thunderbird/extensions"
-    install -Dm644 "${pkgname}@tsundere.moe.xpi" "${pkgdir}/usr/lib/thunderbird/extensions/${pkgname}@tsundere.moe.xpi"
+    install -d "$pkgdir/usr/lib/thunderbird/extensions"
+    install -Dm644 "$pkgname@tsundere.moe.xpi" "$pkgdir/usr/lib/thunderbird/extensions/$pkgname@tsundere.moe.xpi"
 
-    install -d "${pkgdir}/usr/lib/mozilla/native-messaging-hosts"
-    install -Dm644 "external_editor_revived.json" "${pkgdir}/usr/lib/mozilla/native-messaging-hosts/external_editor_revived.json"
+    install -d "$pkgdir/usr/lib/mozilla/native-messaging-hosts"
+    install -Dm644 "external_editor_revived.json" "$pkgdir/usr/lib/mozilla/native-messaging-hosts/external_editor_revived.json"
 
-    cd "${srcdir}/${pkgname}-${pkgver}"
-    install -Dm755 "target/release/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+    cd "$pkgname-$pkgver"
+    install -Dm755 "target/release/$pkgname" "$pkgdir/usr/bin/$pkgname"
 
-    install -d "${pkgdir}/usr/share/license/${pkgname}"
-    install -Dm644 "LICENSE" "${pkgdir}/usr/share/license/${pkgname}/LICENSE"
+    install -d "$pkgdir/usr/share/license/$pkgname"
+    install -Dm644 "LICENSE" "$pkgdir/usr/share/license/$pkgname/LICENSE"
 }

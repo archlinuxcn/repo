@@ -12,7 +12,7 @@ depends=(
          'systemd-libs' 'libudev.so'
          'glib2' 'libglib-2.0.so'
          )
-makedepends=('dbus' 'libical' 'glib2' 'systemd' 'alsa-lib' 'json-c' 'ell' 'python-docutils' 'zsh' 'bluez-libs' 'python-pygments')
+makedepends=('dbus' 'libical' 'systemd' 'alsa-lib' 'json-c' 'ell' 'python-docutils' 'zsh' 'bluez-libs' 'python-pygments')
 conflicts=('bluez-hciattach' 'bluez-hciconfig' 'bluez-hcitool' 'bluez-rfcomm' 'bluez-sdptool' 'bluez-ciptool' 'bluez-gatttool') # bluz-utils provides bluez-hcidump?
 provides=('bluez-hciattach' 'bluez-hciconfig' 'bluez-hcitool' 'bluez-rfcomm' 'bluez-sdptool' 'bluez-ciptool' 'bluez-gatttool')
 source=(https://www.kernel.org/pub/linux/bluetooth/bluez-${pkgver}.tar.{xz,sign})

@@ -1,5 +1,7 @@
-# Maintainer: oscarcl <oscar.cowderylack@gmail.com>
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: oscarcl <oscar.cowderylack@gmail.com>
 # Contributor: sixpindin <sixpindin@gmail.com>
+
 pkgname=omnisharp-roslyn
 pkgver=1.39.11
 pkgrel=1
@@ -8,8 +10,8 @@ arch=('x86_64')
 url="https://github.com/OmniSharp/omnisharp-roslyn"
 license=('MIT')
 depends=('dotnet-sdk')
-source=("https://github.com/OmniSharp/$pkgname/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('8d6f4fb32a290f633d3e9c0fd35e5ff3da4898588f5db047ff7cab79a8697c75')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/OmniSharp/$pkgname/archive/refs/tags/v$pkgver.tar.gz")
+b2sums=('a66c96de9bcd86793d1793e50272f2dac26f25e6e5f7acadfbdd0084800d21dc15f473b7db176b8305c286fe1b8ff757016cf8fc23927ea63261d46828e85da7')
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"
