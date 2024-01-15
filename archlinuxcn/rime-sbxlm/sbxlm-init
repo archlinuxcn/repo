@@ -8,3 +8,4 @@ mkdir -p $RIME_DIR
 for f in /usr/share/sbxlm/init-userdb/*.tar.gz;do
   tar xf $f --directory="$RIME_DIR"
 done
+cp /usr/share/rime-data/default.custom.yaml $RIME_DIR
