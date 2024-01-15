@@ -6,12 +6,12 @@
 
 _pkgname="hyprland"
 pkgname="${_pkgname}-hidpi-xprop-git"
-pkgver=0.34.0.r46.dcd7a92b
-pkgrel=1
+pkgver=0.34.0.r48.3c964a9f
+pkgrel=2
 pkgdesc="A dynamic tiling Wayland compositor based on wlroots that doesn't sacrifice on its looks."
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
 url="https://github.com/hyprwm/Hyprland"
-license=('BSD')
+license=('BSD-3-Clause')
 depends=("libdisplay-info.so"
 	libxcb
 	xcb-proto
@@ -101,6 +101,7 @@ package() {
 	cd "${srcdir}/${_pkgname}"
 	meson install -C subprojects/wlroots/build --destdir "${pkgdir}/tmpwlr"
 	install -Dm755 build/Hyprland -t "${pkgdir}/usr/bin"
+	pushd "${pkgdir}/usr/bin" && ln -sf Hyprland hyprland && popd
 	install -Dm755 build/hyprctl/hyprctl -t "${pkgdir}/usr/bin"
 	install -Dm755 build/hyprpm/hyprpm -t "${pkgdir}/usr/bin"
 	install -Dm644 assets/*.png -t "${pkgdir}/usr/share/hyprland"
