@@ -1,0 +1,414 @@
+Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
+Source: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3304
+Commit: c8b8ec099037d485dd6a0c931e95c5bf43136dd4
+Last Updated: 01/15/24 (Mutter 45.3)
+---
+
+This fixes three issues that were preventing GPU copies on the Nvidia proprietary driver:
+
+gbm_surface_create is not implemented. Nvidia only implements gbm_surface_create_with_modifiers.
+Missing call to glViewport in meta-renderer-native-gles3.c.
+Checking for GL_OES_EGL_image_external but then using GL_OES_EGL_image semantics which Nvidia does not support.
+
+Measurements from !3314:
+Driver     | Before          | After
+nvidia-drm | 32.5 FPS, 23 ms | 65.0 FPS, 11 ms
+nouveau    | 65.0 FPS, 9 ms  | 65.0 FPS, 9 ms
+amdgpu [1] | 60.0 FPS, 10 ms | 60.0 FPS, 10 ms
+amdgpu [2] | 30.0 FPS        | 30.0 FPS
+
+nvidia-drm and nouveau are the same NVIDIA GTX 1650 card plugged into 2.5K 130 Hz. Hence the decimation to 65 FPS and 32.5 FPS.
+amdgpu is a Radeon PRO WX 2100 card plugged into 4K 60 Hz.
+amdgpu [1] is CLUTTER_SHOW_FPS=1 COGL_DEBUG=sync-frame which seems to be a workaround for #3070.
+amdgpu [2] is CLUTTER_SHOW_FPS=1 and slower presumably due to #3070.
+
+Closes: gnome-shell#6221, #2247 (closed), #2551, https://launchpad.net/bugs/1970291
+Mutter 46 requires a fix for #3235 before this works. Mutter 45 has no such problem.
+
+---
+diff --git a/src/backends/meta-egl.c b/src/backends/meta-egl.c
+index ac19828c4cd7fb120a96902a1bf6934ac1d522ac..c468c6f970c784db301b10376b32a63c76289eed 100644
+--- a/src/backends/meta-egl.c
++++ b/src/backends/meta-egl.c
+@@ -238,6 +238,14 @@ meta_egl_has_extensions (MetaEgl      *egl,
+   return has_extensions;
+ }
+ 
++const char *
++meta_egl_query_string (MetaEgl    *egl,
++                       EGLDisplay  display,
++                       EGLint      name)
++{
++  return eglQueryString (display, name);
++}
++
+ gboolean
+ meta_egl_initialize (MetaEgl   *egl,
+                      EGLDisplay display,
+diff --git a/src/backends/meta-egl.h b/src/backends/meta-egl.h
+index 4ed54a5399727c2c8d53727089a6c34fc9a5d13f..55976bfdb156657085fc7df077e3ac6da398a090 100644
+--- a/src/backends/meta-egl.h
++++ b/src/backends/meta-egl.h
+@@ -47,6 +47,10 @@ gboolean meta_egl_has_extensions (MetaEgl      *egl,
+                                   const char   *first_extension,
+                                   ...);
+ 
++const char * meta_egl_query_string (MetaEgl    *egl,
++                                    EGLDisplay  display,
++                                    EGLint      name);
++
+ gboolean meta_egl_initialize (MetaEgl   *egl,
+                               EGLDisplay display,
+                               GError   **error);
+diff --git a/src/backends/native/meta-onscreen-native.c b/src/backends/native/meta-onscreen-native.c
+index e315a9b5f0370d544c9a90e7dc3d3eebadf09a0a..736157c818af7d7324110d4de0eec605378784e5 100644
+--- a/src/backends/native/meta-onscreen-native.c
++++ b/src/backends/native/meta-onscreen-native.c
+@@ -620,6 +620,9 @@ copy_shared_framebuffer_gpu (CoglOnscreen                        *onscreen,
+   COGL_TRACE_BEGIN_SCOPED (CopySharedFramebufferSecondaryGpu,
+                            "copy_shared_framebuffer_gpu()");
+ 
++  if (renderer_gpu_data->secondary.needs_explicit_sync)
++    cogl_framebuffer_finish (COGL_FRAMEBUFFER (onscreen));
++
+   render_device = renderer_gpu_data->render_device;
+   egl_display = meta_render_device_get_egl_display (render_device);
+ 
+@@ -726,8 +729,7 @@ copy_shared_framebuffer_primary_gpu (CoglOnscreen                        *onscre
+   COGL_TRACE_BEGIN_SCOPED (CopySharedFramebufferPrimaryGpu,
+                            "copy_shared_framebuffer_primary_gpu()");
+ 
+-  if (!secondary_gpu_state ||
+-      secondary_gpu_state->egl_surface == EGL_NO_SURFACE)
++  if (!secondary_gpu_state)
+     return NULL;
+ 
+   primary_gpu = meta_renderer_native_get_primary_gpu (renderer_native);
+@@ -2107,6 +2109,7 @@ init_secondary_gpu_state_gpu_copy_mode (MetaRendererNative         *renderer_nat
+   MetaOnscreenNativeSecondaryGpuState *secondary_gpu_state;
+   MetaGpuKms *gpu_kms;
+   uint32_t format;
++  const uint32_t flags = GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING;
+ 
+   render_device = renderer_gpu_data->render_device;
+   egl_display = meta_render_device_get_egl_display (render_device);
+@@ -2118,10 +2121,29 @@ init_secondary_gpu_state_gpu_copy_mode (MetaRendererNative         *renderer_nat
+ 
+   render_device_gbm = META_RENDER_DEVICE_GBM (render_device);
+   gbm_device = meta_render_device_gbm_get_gbm_device (render_device_gbm);
+-  gbm_surface = gbm_surface_create (gbm_device,
+-                                    width, height,
+-                                    format,
+-                                    GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
++
++  gbm_surface = gbm_surface_create_with_modifiers2 (gbm_device,
++                                                    width, height,
++                                                    format,
++                                                    NULL, 0,
++                                                    flags);
++
++  if (!gbm_surface)
++    {
++      gbm_surface = gbm_surface_create_with_modifiers (gbm_device,
++                                                       width, height,
++                                                       format,
++                                                       NULL, 0);
++    }
++
++  if (!gbm_surface)
++    {
++      gbm_surface = gbm_surface_create (gbm_device,
++                                        width, height,
++                                        format,
++                                        flags);
++    }
++
+   if (!gbm_surface)
+     {
+       g_set_error (error, G_IO_ERROR, G_IO_ERROR_FAILED,
+diff --git a/src/backends/native/meta-renderer-native-gles3.c b/src/backends/native/meta-renderer-native-gles3.c
+index cf27ba8d4617b75ec6614e44734b594312075b66..693db0ad8c85086310f9ddf2f851790e24d883ea 100644
+--- a/src/backends/native/meta-renderer-native-gles3.c
++++ b/src/backends/native/meta-renderer-native-gles3.c
+@@ -3,6 +3,7 @@
+ /*
+  * Copyright (C) 2017 Red Hat
+  * Copyright (c) 2018 DisplayLink (UK) Ltd.
++ * Copyright (c) 2023 Canonical Ltd.
+  *
+  * This program is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU General Public License as
+@@ -43,6 +44,127 @@
+ #error "Somehow included OpenGL headers when we shouldn't have"
+ #endif
+ 
++static GQuark
++get_quark_for_egl_context (EGLContext egl_context)
++{
++  char key[128];
++
++  g_snprintf (key, sizeof key, "EGLContext %p", egl_context);
++
++  return g_quark_from_string (key);
++}
++
++static GLuint
++load_shader (const char *src,
++             GLenum      type)
++{
++  GLuint shader = glCreateShader (type);
++
++  if (shader)
++    {
++      GLint compiled;
++
++      glShaderSource (shader, 1, &src, NULL);
++      glCompileShader (shader);
++      glGetShaderiv (shader, GL_COMPILE_STATUS, &compiled);
++      if (!compiled)
++        {
++          GLchar log[1024];
++
++          glGetShaderInfoLog (shader, sizeof (log) - 1, NULL, log);
++          log[sizeof (log) - 1] = '\0';
++          g_warning ("load_shader compile failed: %s", log);
++          glDeleteShader (shader);
++          shader = 0;
++        }
++    }
++
++  return shader;
++}
++
++static void
++ensure_shader_program (MetaGles3 *gles3)
++{
++  static const char vertex_shader_source[] =
++    "#version 100\n"
++    "attribute vec2 position;\n"
++    "attribute vec2 texcoord;\n"
++    "varying vec2 v_texcoord;\n"
++    "\n"
++    "void main()\n"
++    "{\n"
++    "  gl_Position = vec4(position, 0.0, 1.0);\n"
++    "  v_texcoord = texcoord;\n"
++    "}\n";
++
++  static const char fragment_shader_source[] =
++    "#version 100\n"
++    "#extension GL_OES_EGL_image_external : require\n"
++    "precision mediump float;\n"
++    "uniform samplerExternalOES s_texture;\n"
++    "varying vec2 v_texcoord;\n"
++    "\n"
++    " void main()\n"
++    "{\n"
++    "  gl_FragColor = texture2D(s_texture, v_texcoord);\n"
++    "}\n";
++
++  static const GLfloat box[] =
++  { /* position    texcoord */
++    -1.0f, +1.0f, 0.0f, 0.0f,
++    +1.0f, +1.0f, 1.0f, 0.0f,
++    +1.0f, -1.0f, 1.0f, 1.0f,
++    -1.0f, -1.0f, 0.0f, 1.0f,
++  };
++  GLint linked;
++  GLuint vertex_shader, fragment_shader;
++  GLint position_attrib, texcoord_attrib;
++  GQuark shader_program_quark;
++  GLuint shader_program;
++
++  shader_program_quark = get_quark_for_egl_context (eglGetCurrentContext ());
++  if (g_object_get_qdata (G_OBJECT (gles3), shader_program_quark))
++    return;
++
++  shader_program = glCreateProgram ();
++  g_return_if_fail (shader_program);
++  g_object_set_qdata_full (G_OBJECT (gles3),
++                           shader_program_quark,
++                           GUINT_TO_POINTER (shader_program),
++                           NULL);
++
++  vertex_shader = load_shader (vertex_shader_source, GL_VERTEX_SHADER);
++  g_return_if_fail (vertex_shader);
++  fragment_shader = load_shader (fragment_shader_source, GL_FRAGMENT_SHADER);
++  g_return_if_fail (fragment_shader);
++
++  GLBAS (gles3, glAttachShader, (shader_program, vertex_shader));
++  GLBAS (gles3, glAttachShader, (shader_program, fragment_shader));
++  GLBAS (gles3, glLinkProgram, (shader_program));
++  GLBAS (gles3, glGetProgramiv, (shader_program, GL_LINK_STATUS, &linked));
++  if (!linked)
++    {
++      GLchar log[1024];
++
++      glGetProgramInfoLog (shader_program, sizeof (log) - 1, NULL, log);
++      log[sizeof (log) - 1] = '\0';
++      g_warning ("Link failed: %s", log);
++      return;
++    }
++
++  GLBAS (gles3, glUseProgram, (shader_program));
++
++  position_attrib = glGetAttribLocation (shader_program, "position");
++  GLBAS (gles3, glEnableVertexAttribArray, (position_attrib));
++  GLBAS (gles3, glVertexAttribPointer,
++         (position_attrib, 2, GL_FLOAT, GL_FALSE, 4 * sizeof (GLfloat), box));
++
++  texcoord_attrib = glGetAttribLocation (shader_program, "texcoord");
++  GLBAS (gles3, glEnableVertexAttribArray, (texcoord_attrib));
++  GLBAS (gles3, glVertexAttribPointer,
++         (texcoord_attrib, 2, GL_FLOAT, GL_FALSE, 4 * sizeof (GLfloat), box + 2));
++}
++
+ static void
+ paint_egl_image (MetaGles3   *gles3,
+                  EGLImageKHR  egl_image,
+@@ -50,39 +172,33 @@ paint_egl_image (MetaGles3   *gles3,
+                  int          height)
+ {
+   GLuint texture;
+-  GLuint framebuffer;
+ 
+   meta_gles3_clear_error (gles3);
++  ensure_shader_program (gles3);
+ 
+-  GLBAS (gles3, glGenFramebuffers, (1, &framebuffer));
+-  GLBAS (gles3, glBindFramebuffer, (GL_READ_FRAMEBUFFER, framebuffer));
++  GLBAS (gles3, glViewport, (0, 0, width, height));
+ 
+   GLBAS (gles3, glActiveTexture, (GL_TEXTURE0));
+   GLBAS (gles3, glGenTextures, (1, &texture));
+-  GLBAS (gles3, glBindTexture, (GL_TEXTURE_2D, texture));
+-  GLEXT (gles3, glEGLImageTargetTexture2DOES, (GL_TEXTURE_2D, egl_image));
+-  GLBAS (gles3, glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
++  GLBAS (gles3, glBindTexture, (GL_TEXTURE_EXTERNAL_OES, texture));
++  GLEXT (gles3, glEGLImageTargetTexture2DOES, (GL_TEXTURE_EXTERNAL_OES,
++                                               egl_image));
++  GLBAS (gles3, glTexParameteri, (GL_TEXTURE_EXTERNAL_OES,
++                                  GL_TEXTURE_MAG_FILTER,
+                                   GL_NEAREST));
+-  GLBAS (gles3, glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
++  GLBAS (gles3, glTexParameteri, (GL_TEXTURE_EXTERNAL_OES,
++                                  GL_TEXTURE_MIN_FILTER,
+                                   GL_NEAREST));
+-  GLBAS (gles3, glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
++  GLBAS (gles3, glTexParameteri, (GL_TEXTURE_EXTERNAL_OES,
++                                  GL_TEXTURE_WRAP_S,
+                                   GL_CLAMP_TO_EDGE));
+-  GLBAS (gles3, glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
++  GLBAS (gles3, glTexParameteri, (GL_TEXTURE_EXTERNAL_OES,
++                                  GL_TEXTURE_WRAP_T,
+                                   GL_CLAMP_TO_EDGE));
+-  GLBAS (gles3, glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_WRAP_R_OES,
+-                                  GL_CLAMP_TO_EDGE));
+-
+-  GLBAS (gles3, glFramebufferTexture2D, (GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+-                                         GL_TEXTURE_2D, texture, 0));
+ 
+-  GLBAS (gles3, glBindFramebuffer, (GL_READ_FRAMEBUFFER, framebuffer));
+-  GLBAS (gles3, glBlitFramebuffer, (0, height, width, 0,
+-                                    0, 0, width, height,
+-                                    GL_COLOR_BUFFER_BIT,
+-                                    GL_NEAREST));
++  GLBAS (gles3, glDrawArrays, (GL_TRIANGLE_FAN, 0, 4));
+ 
+   GLBAS (gles3, glDeleteTextures, (1, &texture));
+-  GLBAS (gles3, glDeleteFramebuffers, (1, &framebuffer));
+ }
+ 
+ gboolean
+@@ -156,3 +272,12 @@ meta_renderer_native_gles3_blit_shared_bo (MetaEgl        *egl,
+ 
+   return TRUE;
+ }
++
++void
++meta_renderer_native_gles3_forget_context (MetaGles3  *gles3,
++                                           EGLContext  egl_context)
++{
++  GQuark shader_program_quark = get_quark_for_egl_context (egl_context);
++
++  g_object_set_qdata (G_OBJECT (gles3), shader_program_quark, NULL);
++}
+diff --git a/src/backends/native/meta-renderer-native-gles3.h b/src/backends/native/meta-renderer-native-gles3.h
+index 591ff82e1746e5c357e1bfe4b88a0af74d1d0a40..f5791a171fedc4489f106e911510059ea40c81d2 100644
+--- a/src/backends/native/meta-renderer-native-gles3.h
++++ b/src/backends/native/meta-renderer-native-gles3.h
+@@ -26,10 +26,13 @@
+ #include "backends/meta-egl.h"
+ #include "backends/meta-gles3.h"
+ 
+-gboolean meta_renderer_native_gles3_blit_shared_bo (MetaEgl       *egl,
+-                                                    MetaGles3     *gles3,
+-                                                    EGLDisplay     egl_display,
+-                                                    EGLContext     egl_context,
+-                                                    EGLSurface     egl_surface,
+-                                                    struct gbm_bo *shared_bo,
+-                                                    GError       **error);
++gboolean meta_renderer_native_gles3_blit_shared_bo (MetaEgl        *egl,
++                                                    MetaGles3      *gles3,
++                                                    EGLDisplay      egl_display,
++                                                    EGLContext      egl_context,
++                                                    EGLSurface      egl_surface,
++                                                    struct gbm_bo  *shared_bo,
++                                                    GError        **error);
++
++void meta_renderer_native_gles3_forget_context (MetaGles3  *gles3,
++                                                EGLContext  egl_context);
+diff --git a/src/backends/native/meta-renderer-native-private.h b/src/backends/native/meta-renderer-native-private.h
+index 66b987a5c0c4b0cf65ca57df3391b27a6feffab7..1a4ee2c8106ec677fc9226f430d894a0699e25ce 100644
+--- a/src/backends/native/meta-renderer-native-private.h
++++ b/src/backends/native/meta-renderer-native-private.h
+@@ -60,6 +60,7 @@ typedef struct _MetaRendererNativeGpuData
+   struct {
+     MetaSharedFramebufferCopyMode copy_mode;
+     gboolean has_EGL_EXT_image_dma_buf_import_modifiers;
++    gboolean needs_explicit_sync;
+ 
+     /* For GPU blit mode */
+     EGLContext egl_context;
+diff --git a/src/backends/native/meta-renderer-native.c b/src/backends/native/meta-renderer-native.c
+index 78bde68ff9aa3f85e01a759a51654caaafa79974..e33e885451f59502fff3b59f0e8ff69f038fb377 100644
+--- a/src/backends/native/meta-renderer-native.c
++++ b/src/backends/native/meta-renderer-native.c
+@@ -62,6 +62,7 @@
+ #include "backends/native/meta-output-kms.h"
+ #include "backends/native/meta-render-device-gbm.h"
+ #include "backends/native/meta-render-device-surfaceless.h"
++#include "backends/native/meta-renderer-native-gles3.h"
+ #include "backends/native/meta-renderer-native-private.h"
+ #include "backends/native/meta-renderer-view-native.h"
+ #include "cogl/cogl.h"
+@@ -135,6 +136,9 @@ meta_renderer_native_gpu_data_free (MetaRendererNativeGpuData *renderer_gpu_data
+       MetaRendererNative *renderer_native = renderer_gpu_data->renderer_native;
+       MetaEgl *egl = meta_renderer_native_get_egl (renderer_native);
+ 
++      meta_renderer_native_gles3_forget_context (renderer_native->gles3,
++                                                 renderer_gpu_data->secondary.egl_context);
++
+       meta_egl_destroy_context (egl,
+                                 egl_display,
+                                 renderer_gpu_data->secondary.egl_context,
+@@ -1759,6 +1763,7 @@ init_secondary_gpu_data_gpu (MetaRendererNativeGpuData *renderer_gpu_data,
+   CoglContext *cogl_context;
+   CoglDisplay *cogl_display;
+   const char **missing_gl_extensions;
++  const char *egl_vendor;
+ 
+   egl_display = meta_render_device_get_egl_display (render_device);
+   if (egl_display == EGL_NO_DISPLAY)
+@@ -1825,6 +1830,11 @@ init_secondary_gpu_data_gpu (MetaRendererNativeGpuData *renderer_gpu_data,
+     meta_egl_has_extensions (egl, egl_display, NULL,
+                              "EGL_EXT_image_dma_buf_import_modifiers",
+                              NULL);
++
++  egl_vendor = meta_egl_query_string (egl, egl_display, EGL_VENDOR);
++  if (!g_strcmp0 (egl_vendor, "NVIDIA"))
++    renderer_gpu_data->secondary.needs_explicit_sync = TRUE;
++
+   ret = TRUE;
+ out:
+   maybe_restore_cogl_egl_api (renderer_native);

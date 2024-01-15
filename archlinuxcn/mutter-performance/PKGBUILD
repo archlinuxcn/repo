@@ -11,8 +11,8 @@
 
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441')
-_merge_requests_to_use=('1441')
+# Merge Requests List: ('579' '1441' '3304' '3327')
+_merge_requests_to_use=('1441' '3304' '3327')
 
 ## Disable building the DOCS package (Enabled if not set)
 # Remember to unset this variable when producing .SRCINFO
@@ -32,7 +32,7 @@ else
 fi
 epoch=1
 pkgver=45.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -77,9 +77,11 @@ fi
 _commit=5012d22cb96ba22c4133e2e488ea1f5241fb50e2  # tags/45.3^0
 source=("$pkgname::git+https://gitlab.gnome.org/GNOME/mutter.git#commit=$_commit"
         'mr1441.patch'
+        'mr3304.patch'
         'mr3327.patch')
 sha256sums=('SKIP'
             '8d082a002e3506f67cf40c9ea03119e9e24f6c02238e633265a51992501e9799'
+            '1339a8235b54a218c109a1d5e0992b3dca0f7610beb98fab0c27f0d68e026e16'
             '2bf8e12fe60a35469352510cc14a76603722441c1cb47ae9548a79712a01a762')
 
 pkgver() {
@@ -162,6 +164,14 @@ prepare() {
   # Comment: Was reverted: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/833
   #          If you use stenography software or play hardcore rhythm games like Lunatic Rave 2/osumania, use it.
   pick_mr '579' ce86f90efbaa51522ba14c5b4cad933c2106de42 'revert'
+
+  # Title: Nvidia secondary GPU copy acceleration
+  # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
+  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3304
+  # Type: 3
+  # Status: 2
+  # Comment: This fixes three issues that were preventing GPU copies on the Nvidia proprietary driver.
+  pick_mr '3304' 'mr3304.patch' 'patch'
 
   # Title: backends/native: Fix the issue where KMS thread fails to acquire realtime on boot
   # Author: Agustín Dall'Alba <gnome@dallalba.com.ar>
