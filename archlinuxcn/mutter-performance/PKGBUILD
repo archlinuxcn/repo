@@ -11,8 +11,8 @@
 
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441' '3304' '3327')
-_merge_requests_to_use=('1441' '3304' '3327')
+# Merge Requests List: ('579' '1441' '3304' '3327' '3373')
+_merge_requests_to_use=('1441' '3304' '3327' '3373')
 
 ## Disable building the DOCS package (Enabled if not set)
 # Remember to unset this variable when producing .SRCINFO
@@ -32,7 +32,7 @@ else
 fi
 epoch=1
 pkgver=45.3
-pkgrel=2
+pkgrel=3
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -78,11 +78,13 @@ _commit=5012d22cb96ba22c4133e2e488ea1f5241fb50e2  # tags/45.3^0
 source=("$pkgname::git+https://gitlab.gnome.org/GNOME/mutter.git#commit=$_commit"
         'mr1441.patch'
         'mr3304.patch'
-        'mr3327.patch')
+        'mr3327.patch'
+        'mr3373.patch')
 sha256sums=('SKIP'
             '8d082a002e3506f67cf40c9ea03119e9e24f6c02238e633265a51992501e9799'
             '1339a8235b54a218c109a1d5e0992b3dca0f7610beb98fab0c27f0d68e026e16'
-            '2bf8e12fe60a35469352510cc14a76603722441c1cb47ae9548a79712a01a762')
+            '2bf8e12fe60a35469352510cc14a76603722441c1cb47ae9548a79712a01a762'
+            '3e1f07b696ad37b1c639a524c092cd9259444bc6156542901ccaec936bea240f')
 
 pkgver() {
   cd $pkgname
@@ -179,8 +181,16 @@ prepare() {
   # Type: 3
   # Status: 2
   # Comment: Remove G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START to fix the issue where KMS thread
-  #          fails to acquire realtime priority on boot when the shell starts before the rtkit daemon
+  #          fails to acquire realtime priority on boot when the shell starts before the rtkit daemon.
   pick_mr '3327' 'mr3327.patch' 'patch'
+
+  # Title: kms/crtc: Increase default deadline evasion to 1000 microseconds
+  # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
+  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3373
+  # Type: 3
+  # Status: 2
+  # Comment: This fix cursor stutter.
+  pick_mr '3373' 'mr3373.patch' 'patch'
 
   # Title: Draft: Dynamic triple/double buffering (v4)
   # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
