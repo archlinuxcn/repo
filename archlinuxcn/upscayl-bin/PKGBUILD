@@ -1,6 +1,6 @@
 _pkgname=upscayl
 pkgname=upscayl-bin
-pkgver=2.9.7
+pkgver=2.9.8
 pkgrel=1
 pkgdesc='Free and Open Source AI Image Upscaler'
 url='https://github.com/upscayl/upscayl'
@@ -10,7 +10,7 @@ depends=('gtk3' 'nss' 'libnotify' 'libxss' 'libxtst' 'xdg-utils' 'python-atspi' 
 provides=('upscayl')
 conflicts=('upscayl-git' 'upscayl')
 source=("${_pkgname}-${pkgver}.deb::${url}/releases/download/v${pkgver}/upscayl-${pkgver}-linux.deb")
-sha256sums=('8f6159427b79e90c5537a540944d7e568d46a9c02c184016796764dda44d7772')
+sha256sums=('2bfc8027f86f3b89afca7245fd178cadf846da704959330f26f99ec431c0e040')
 
 prepare() {
 	cd ${srcdir}
