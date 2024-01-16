@@ -1,0 +1,27 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Stephen Zhang <zsrkmyn at gmail dot com>
+
+pkgname=archlinuxcn-mirrorlist
+pkgver=20231201
+pkgver() {
+  date +%Y%m%d
+}
+pkgrel=1
+pkgdesc="Arch Linux CN Community Repository mirrorlist for use by pacman"
+arch=('any')
+url="https://github.com/archlinuxcn/mirrorlist-repo"
+license=('GPL')
+replaces=('archlinuxcn-mirrorlist-git')
+backup=(etc/pacman.d/archlinuxcn-mirrorlist)
+install=archlinuxcn-mirrorlist.install
+source=("$pkgname::https://raw.githubusercontent.com/archlinuxcn/mirrorlist-repo/master/$pkgname"
+        "https://raw.githubusercontent.com/archlinuxcn/mirrorlist-repo/master/b-archlinuxcn.urls")
+sha512sums=('0686270a0348871e5bfbacdf7bf9c03f02dfb394c0368c5cbd93fd35ee1ad7f4ae7e1c2cf7787de79ed6f99a2b5840f2fb809df9ba5ddda836c7a63397f09c79'
+            '31f1e88d5fe3b99a20396fb84d9415a786dcc6fa89589ccaaec9374e49e496858da75af7e545f3c84e12725d1d692c28d05faedaaee2d99b2b5aad9d015972eb')
+
+package() {
+  mkdir -p "$pkgdir/etc/pacman.d"
+  install -m644 "$srcdir/$pkgname" "$pkgdir/etc/pacman.d/"
+  mkdir -p "$pkgdir/etc/debuginfod"
+  install -m644 "$srcdir/b-archlinuxcn.urls" "$pkgdir/etc/debuginfod/"
+}
