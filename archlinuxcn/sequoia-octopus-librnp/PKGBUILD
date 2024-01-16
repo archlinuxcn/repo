@@ -7,7 +7,7 @@ url="https://gitlab.com/sequoia-pgp/${pkgname}"
 source=("$pkgname-$pkgver.tar.gz::https://gitlab.com/sequoia-pgp/${pkgname}/-/archive/v$pkgver/${pkgname}-v$pkgver.tar.gz"
         "${pkgname}.hook")
 arch=('i686' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64' 'riscv64')
-license=('GPL2')
+license=('LGPL-2.0-or-later')
 makedepends=('cargo' 'clang')
 install="${pkgname}.install"
 depends=('thunderbird')

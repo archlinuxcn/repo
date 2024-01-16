@@ -14,7 +14,7 @@ pkgdesc="Compatibility tool for Steam Play based on Wine and additional componen
 url="https://github.com/GloriousEggroll/proton-ge-custom"
 arch=(x86_64 x86_64_v3)
 options=(!staticlibs !lto emptydirs)
-license=('BSD' 'LGPL' 'zlib' 'MIT' 'MPL' 'custom')
+license=('BSD-3-Clause AND LGPL-2.1-or-later AND Zlib AND MIT AND MPL-2.0 AND OFL-3.0 AND LicenseRef-STEAMWORKS-SDK-license')
 provides=('proton' "proton-ge-custom=${pkgver}")
 conflicts=('proton-ge-custom')
 

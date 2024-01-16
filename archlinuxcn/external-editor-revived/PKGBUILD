@@ -7,7 +7,7 @@ pkgrel=2
 pkgdesc="External Editor Revived is a Thunderbird MailExtension which allows editing emails in programs such as Vim, Neovim, Emacs, etc."
 arch=('x86_64')
 url="https://github.com/Frederick888/external-editor-revived"
-license=('GPL3')
+license=('GPL-3.0-or-later')
 depends=('thunderbird>=91' 'gcc-libs' 'glibc')
 makedepends=('cargo' 'zip')
 source=(
@@ -47,7 +47,4 @@ package() {
 
     cd "$pkgname-$pkgver"
     install -Dm755 "target/release/$pkgname" "$pkgdir/usr/bin/$pkgname"
-
-    install -d "$pkgdir/usr/share/license/$pkgname"
-    install -Dm644 "LICENSE" "$pkgdir/usr/share/license/$pkgname/LICENSE"
 }
