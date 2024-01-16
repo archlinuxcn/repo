@@ -4,14 +4,14 @@
 pkgname=naiveproxy
 pkgdesc="A Proxy using Chrome's network stack to camouflage traffic with strong censorship resistence and low detectablility."
 pkgver=120.0.6099.43_1
-pkgrel=1
+pkgrel=2
 _pkgver=120.0.6099.43
 _pkgrel=1
 arch=('x86_64')
 url='https://github.com/klzgrad/naiveproxy'
-license=('BSD')
+license=('BSD-3-Clause')
 depends=("gcc-libs" "glibc")
-makedepends=("ninja" "gn" "ccache" "python" "unzip")
+makedepends=("ninja" "gn" "ccache" "python")
 checkdepends=("python" "openssl")
 
 _PGO_PATH='chrome-linux-6099-1701163313-b23d7b20bc0e6506140a32e766fa675f7dc261e2.profdata'
