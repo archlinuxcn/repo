@@ -1,0 +1,18 @@
+maintainers:
+  - github: taotieren
+
+build_prefix: extra-x86_64
+repo_depends:
+  - python-defcon
+  - python-openstep-plist
+  - python-ufo2ft
+  - python-ufonormalizer
+  - python-xmldiff
+
+post_build_script: |
+  git_pkgbuild_commit()
+
+update_on:
+  - source: pypi
+    pypi: glyphsLib
+  - alias: python

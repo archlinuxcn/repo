@@ -1,0 +1,46 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-skia-pathops
+_name=${pkgname#python-}
+pkgver=0.7.4
+pkgrel=1
+pkgdesc='Python bindings for the Skia librarys Path Ops'
+url='https://github.com/fonttools/skia-pathops'
+license=('BSD')
+arch=(any)
+depends=(cython
+         python)
+checkdepends=(python-pytest
+             python-coverage
+             python-pytest-xdist
+             python-pytest-randomly)
+makedepends=(python-{build,installer,pip}
+              python-setuptools-scm
+              python-setuptools-git-ls-files
+              python-wheel
+              git)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.zip)
+sha256sums=('0a2fdee87b7adb018cbfa6e95ef9e4299ed63b0080be27677a30ffefbca91350')
+
+prepare() {
+   cd "$_name-$pkgver"
+    git submodule update --init --recursive
+}
+
+build() {
+   cd "$_name-$pkgver"
+    python setup.py build_ext --inplace
+    python setup.py build
+}
+
+check() {
+   cd "$_name-$pkgver"
+    PYTHONPATH="$PWD/build/lib.linux-$CARCH-cpython-${python_version}" pytest -v
+}
+
+package() {
+   cd "$_name-$pkgver"
+    python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+

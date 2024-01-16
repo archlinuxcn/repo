@@ -1,0 +1,34 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-fontmath
+_name=fontMath
+pkgver=0.9.3
+pkgrel=1
+pkgdesc='A collection of objects that implement fast font, glyph, etc. math.'
+url='https://github.com/robotools/fontMath'
+license=('MIT')
+arch=(any)
+depends=(python-fonttools)
+checkdepends=(python-pytest)
+makedepends=(python-{build,installer}
+              python-setuptools-scm
+              python-wheel)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.zip)
+sha256sums=('6a5387cb7feb105958db2f5ceedc878513cc35bf3715e262090f0557be0c1b1c')
+
+build() {
+    cd "$_name-$pkgver"
+    python -m build -wn
+}
+
+check() {
+    cd "$_name-$pkgver"
+    pytest -v
+}
+
+package() {
+    cd "$_name-$pkgver"
+    python -m installer -d "$pkgdir" dist/*.whl
+    install -Dm644 License.txt "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+

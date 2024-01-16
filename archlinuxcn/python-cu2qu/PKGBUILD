@@ -1,0 +1,39 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-cu2qu
+_name=${pkgname#python-}
+pkgver=1.6.7.post2
+pkgrel=1
+pkgdesc='Cubic-to-quadratic bezier curve conversion'
+url='https://github.com/googlefonts/cu2qu'
+license=('Apache')
+arch=(any)
+_pydeps=(defcon
+         fonttools
+         fs)
+depends=(python
+         "${_pydeps[@]/#/python-}")
+makedepends=(cython
+             python-{build,installer,wheel}
+             python-setuptools-scm)
+checkdepends=(python-coverage
+              python-pytest-runner)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.zip)
+sha256sums=('1df562d99bd6059226088f443702bf51cfdd8cc63623f23137459a78d7bf5808')
+
+build() {
+    cd "$_name-$pkgver"
+    python -m build -wn
+}
+
+check() {
+    cd "$_name-$pkgver"
+    PYTHONPATH="$PWD/build/lib.linux-$CARCH-cpython-${python_version}" pytest -v
+}
+
+package() {
+    cd "$_name-$pkgver"
+    python -m installer -d "$pkgdir" dist/*.whl
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+

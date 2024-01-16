@@ -1,0 +1,29 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-setuptools-git-ls-files
+_name=${pkgname#python-}
+_name=${_name//-/_}
+pkgver=0.1.2
+pkgrel=1
+pkgdesc='setuptools plugin to list all files tracked by git, recursing into submodules'
+url='https://github.com/anthrotype/setuptools_git_ls_files'
+license=('MIT')
+arch=(any)
+depends=(python)
+makedepends=(python-{build,installer}
+              python-setuptools-scm
+              python-wheel)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz)
+sha256sums=('7d612087430dc912f0dca7a35c99bf791b2f86b7fa5a40c5a562192947c86efa')
+
+build() {
+   cd "$_name-$pkgver"
+    python -m build -wn
+}
+
+package() {
+   cd "$_name-$pkgver"
+    python -m installer -d "$pkgdir" dist/*.whl
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+

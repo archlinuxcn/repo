@@ -1,0 +1,35 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-ttfautohint-py
+_name=${pkgname#python-}
+pkgver=0.5.1
+pkgrel=1
+pkgdesc='Python wrapper for ttfautohint, a free auto-hinter for TrueType fonts'
+url='https://github.com/fonttools/ttfautohint-py'
+license=('MIT')
+arch=(any)
+depends=(python-fonttools
+        ttfautohint)
+checkdepends=(python-pytest)
+makedepends=(python-{build,installer}
+              python-setuptools-scm
+              python-wheel)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz)
+sha256sums=('d5e324e1437399ab3ed2ffeb68f8b3235d3ad151eefc8375a1c3a380f5fa94fa')
+
+build() {
+   cd "$_name-$pkgver"
+    python -m build -wn
+}
+
+check() {
+   cd "$_name-$pkgver"
+    PYTHONPATH="$PWD/build/lib" pytest -v
+}
+
+package() {
+   cd "$_name-$pkgver"
+    python -m installer -d "$pkgdir" dist/*.whl
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+

@@ -1,0 +1,28 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-ufonormalizer
+_name=${pkgname#python-}
+pkgver=0.6.1
+pkgrel=1
+pkgdesc='A tool that will normalize the XML and other data inside of a UFO.'
+url='https://github.com/unified-font-object/ufoNormalizer'
+license=('BSD')
+arch=(any)
+depends=(python)
+makedepends=(python-{build,installer}
+              python-setuptools-scm
+              python-wheel)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.zip)
+sha256sums=('e61110e75a500083f265385b1354b578610f9542e3bbbeedb98a2a6155e4aa6c')
+
+build() {
+   cd "$_name-$pkgver"
+    python -m build -wn
+}
+
+package() {
+   cd "$_name-$pkgver"
+    python -m installer -d "$pkgdir" dist/*.whl
+    install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+

@@ -1,0 +1,50 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-glyphslib
+_name=glyphsLib
+pkgver=6.1.0
+pkgrel=1
+pkgdesc='A bridge from Glyphs source files (.glyphs) to UFOs'
+url='https://github.com/googlefonts/glyphsLib'
+license=('Apache-2.0')
+arch=(any)
+_pydeps=(fonttools
+         fs # for fonttools[ufo]
+         openstep-plist
+         ufolib2
+         unicodedata2) # for fonttools[unicode]
+depends=(python
+         "${_pydeps[@]/#/python-}")
+makedepends=(python-{build,installer,wheel}
+             python-defcon
+             python-setuptools-scm)
+_pycheckdeps=(lxml # for fonttools[lxml]
+              pytest
+              ufo2ft
+              ufonormalizer
+              xmldiff)
+checkdepends=("${_pycheckdeps[@]/#/python-}")
+optdepends=(python-defcon
+            python-ufonormalizer)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz)
+sha256sums=('ed0f78639200de6e5e08edfbb241bd6209aefb3887dd5934a5c34e1984c6f38a')
+
+build() {
+   cd "$_name-$pkgver"
+    python -m build -wn
+}
+
+check() {
+   cd "$_name-$pkgver"
+    PYTHONPATH="${PWD}/build/lib" pytest tests \
+        --deselect tests/builder/interpolation_test.py \
+        --deselect tests/builder/designspace_gen_test.py \
+        --deselect tests/builder/builder_test.py
+}
+
+package() {
+   cd "$_name-$pkgver"
+    python -m installer -d "$pkgdir" dist/*.whl
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+

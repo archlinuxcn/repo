@@ -1,0 +1,35 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=python-fontpens
+_name=fontPens
+pkgver=0.2.4
+pkgrel=1
+pkgdesc='A collection of classes implementing the pen protocol for manipulating glyphs.'
+url='https://github.com/robotools/fontpens'
+license=('BSD')
+arch=(any)
+depends=(python
+         python-fonttools)
+checkdepends=(python-fontparts
+              python-pytest)
+makedepends=(python-setuptools-scm)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.zip)
+sha256sums=('a6d9a14573b3450f3313d69523f9006028c21fc7aef5d35333b87aab7f2b41fd')
+
+build() {
+    cd "$_name-$pkgver"
+    python setup.py build_ext --inplace
+    python setup.py build
+}
+
+check() {
+    cd "$_name-$pkgver"
+    PYTHONPATH="$PWD/build/lib" pytest -v
+}
+
+package() {
+    cd "$_name-$pkgver"
+    python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+    install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+
