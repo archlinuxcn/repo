@@ -11,7 +11,7 @@ pkgrel=1
 pkgdesc='Aria2 Download utility with little patch to maximize aria2 download speed'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url='http://aria2.sourceforge.net/'
-license=('GPL')
+license=('GPL-2.0-or-later AND (OpenSSL OR LicenseRef-SSLeay)')
 depends=('gnutls' 'libxml2' 'sqlite' 'c-ares' 'ca-certificates' 'libssh2')
 checkdepends=('cppunit')
 provides=("${_pkgname}")
@@ -44,4 +44,5 @@ package() {
 		"${pkgdir}/usr/share/bash-completion/completions"
 
 	rm -rf "${pkgdir}/usr/share/doc/${_pkgname}/bash_completion"
+	install -Dm644 {COPYING,LICENSE.OpenSSL} -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
