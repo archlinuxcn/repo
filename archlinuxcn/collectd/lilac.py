@@ -3,12 +3,12 @@ from lxml import html
 from lilaclib import *
 
 def pre_build():
-  page = s.get('https://collectd.org/download.shtml')
+  page = s.get('https://www.collectd.org/download.html')
   doc = html.fromstring(page.text)
   ul = doc.xpath('//h2[@id="source"]/following::ul[1]//ul')[0]
-  sha256sum = ul.xpath('.//div')[0].text_content().split()[-1]
+  sha256sum = ul.xpath('.//code')[0].text
 
-  update_pkgver_and_pkgrel(_G.newver)
+  update_pkgver_and_pkgrel(_G.newver, updpkgsums=False)
 
   for line in edit_file('PKGBUILD'):
     if line.startswith('sha256sums='):

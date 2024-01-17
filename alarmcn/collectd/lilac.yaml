@@ -6,9 +6,8 @@ update_on:
   url: https://www.collectd.org/download.html
   regex: "collectd-(\\S+?).tar.bz2"
 - alias: perl
-- source: manual
-  manual: 1
 - alias: python
+- alias: libssl
 
 repo_depends:
 - liboping
