@@ -5,22 +5,22 @@
 
 pkgname='libglibutil'
 pkgver=1.0.75
-pkgrel=1
+pkgrel=2
 pkgdesc='Library of glib utilities'
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url='https://github.com/sailfishos/libglibutil'
-license=('BSD')
+license=('BSD-3-Clause')
 depends=('glib2')
 source=("${pkgname}-${pkgver}.tar.gz"::"${url}/archive/refs/tags/${pkgver}.tar.gz")
 sha512sums=('2b66d0360c803b37c01e6db29f121dc1b4e5a50cec57f1d6943137782a192f49f7c1a4326ff7c20feca13478b13b63624200372e74bb938f570446bac6f674cc')
 
 build() {
-  make -C "${srcdir}/${pkgname}-${pkgver}/" KEEP_SYMBOLS=1 release pkgconfig
+  KEEP_SYMBOLS=1 make -C "${srcdir}/${pkgname}-${pkgver}" release pkgconfig
 }
 
 package() {
-  make -C "${srcdir}/${pkgname}-${pkgver}/" DESTDIR="${pkgdir}" install-dev
+  DESTDIR="${pkgdir}" make -C "${srcdir}/${pkgname}-${pkgver}" install-dev
 
   # license
-  install -Dm 644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

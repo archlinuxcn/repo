@@ -6,17 +6,18 @@
 
 pkgname='waydroid'
 pkgver=1.4.2
-pkgrel=1
+pkgrel=2
 pkgdesc='A container-based approach to boot a full Android system on a regular Linux system'
 arch=('any')
 url='https://github.com/waydroid/waydroid'
-license=('GPL3')
-depends=('dbus-python' 'dnsmasq' 'hicolor-icon-theme' 'lxc' 'nftables' 'python-gbinder' 'python-gobject' 'which')
-optdepends=('waydroid-image: Android image for use with waydroid'
-            'python-pyclip: share clipboard with container')
+license=('GPL-3.0-or-later')
+depends=('dbus-python' 'dnsmasq' 'lxc' 'nftables' 'python-gbinder' 'python-gobject' 'which')
+optdepends=('waydroid-image: Android images for use with waydroid'
+            'waydroid-image-gapps: Android images for use with waydroid, including gapps'
+            'python-pyclip: Share clipboard with container')
 source=("${pkgname}-${pkgver}.tar.gz"::"${url}/archive/refs/tags/${pkgver}.tar.gz")
 sha512sums=('0d3eba799895c853545b7087e3c07160d593d4a3166822039973669bc0ee93a8a6b9c394a7d982e57cfbbfbd8df1ba7991dd33b1b1517d79fcbe191d8a86890a')
 
 package() {
-  make -C "${srcdir}/${pkgname}-${pkgver}" DESTDIR="${pkgdir}" USE_NFTABLES=1 install
+  DESTDIR="${pkgdir}" USE_NFTABLES=1 make -C "${srcdir}/${pkgname}-${pkgver}" install
 }
