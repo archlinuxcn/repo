@@ -3,7 +3,7 @@
 # Contributor: Wouter Wijsman <wwijsman@live.nl>
 
 pkgname=dosbox-staging
-pkgver=0.80.0
+pkgver=0.80.1
 pkgrel=1
 pkgdesc="DOS/x86 emulator focusing on ease of use. Based on DOSBox"
 arch=('x86_64')
@@ -20,7 +20,7 @@ options=(debug)
 source=(
   "${pkgname}-${pkgver}.gz::https://github.com/dosbox-staging/${pkgname}/archive/v${pkgver}.tar.gz"
 )
-b2sums=('59cb6515f17b9a661f5e9d7787b01ecef4fe047dfd0ca4573cc12c73af1f9fe433f4c20a1c42e1fcd259c31af3922738c057aa64fc777a513a7881a86436a1fa')
+b2sums=('bfc260cb4d2ff01ac8538bbb2de65847ac32e81873dae42d2d4e84f1b9be5370be5d19bd2d209e7b1bc92f03f072ecd349df615869dcefde2f27074a6712874b')
 
 prepare() {
   cd "$srcdir/${pkgname}-${pkgver}"
