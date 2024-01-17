@@ -6,7 +6,7 @@ gitver=v6.7
 patchver=20230105
 patchname=more-uarches-for-kernel-5.17+.patch
 pkgver=6.7.v.0
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
@@ -55,6 +55,9 @@ prepare() {
    echo "Applying $patch"
    git apply $patch || exit 2
   done <<< $(ls ../*.patch)
+
+  # git revert faulty commit
+  git revert c09c4f31998bac -n
 
   # get kernel version
   msg2 "Preparing kernel"
