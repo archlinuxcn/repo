@@ -32,8 +32,7 @@ build() {
     --wrap-mode default \
     --buildtype=debugoptimized \
     -Ddefault_library=shared \
-    -Dtry_static_libs=iir \
-    -Dsystem_libraries=fluidsynth,glib,mt32emu,opusfile,png,sdl2,sdl2_net,sdl2_image,slirp,speexdsp,zlib
+    -Dtry_static_libs=iir
   meson compile -C build
 }
 
