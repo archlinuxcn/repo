@@ -6,18 +6,18 @@ pkgrel=1
 pkgdesc='A Free and Open Source tool for Linux users to reduce and prevent repetitive strain injury (RSI)'
 arch=('any')
 url='https://github.com/slgobinath/SafeEyes'
-license=('GPL3')
+license=('GPL-3.0-or-later')
 depends=('libappindicator-gtk3'
-         'python-babel'
-         'python-dbus'
-         'python-gobject'
-         'python-psutil'
-         'python-setuptools'
-         'python-xlib')
+  'python-babel'
+  'python-dbus'
+  'python-gobject'
+  'python-psutil'
+  'python-setuptools'
+  'python-xlib')
 makedepends=('git')
 optdepends=('alsa-utils: for audible alert plugin'
-            'xorg-xprop: for skip fullscreen plugin'
-            'xprintidle: for smart pause plugin')
+  'xorg-xprop: for skip fullscreen plugin'
+  'xprintidle: for smart pause plugin')
 provides=('safeeyes')
 conflicts=('safeeyes')
 source=("$pkgname::git+$url.git")
