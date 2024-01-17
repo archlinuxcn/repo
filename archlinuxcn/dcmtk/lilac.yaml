@@ -8,6 +8,7 @@ update_on:
   - source: github
     github: DCMTK/dcmtk
     use_max_tag: true
+    include_regex: 'DCMTK-(\d+.\d+.\d+)'
   - source: manual
     manual: 4
   - alias: icu
