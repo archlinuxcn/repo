@@ -9,7 +9,7 @@
 # Contributor (Parabola): Luke R. <g4jc@openmailbox.org>
 
 pkgbase=linux-libre
-pkgver=6.5.10
+pkgver=6.7
 pkgrel=1
 pkgdesc='Linux Libre'
 url='https://linux-libre.fsfla.org/'
@@ -36,8 +36,8 @@ options=('!strip')
 _srcname=linux-${pkgver}
 source=("https://linux-libre.fsfla.org/pub/linux-libre/releases/${pkgver}-gnu/linux-libre-${pkgver}-gnu.tar.xz"{,.sign}
         'https://repo.parabola.nu/other/linux-libre/logos/logo_linux_'{clut224.ppm,vga16.ppm,mono.pbm}{,.sig}
-        'config.x86_64')
-sha256sums=('75ad5ba72600d645b0d2d1bb88bacbb4f588a6e90e0bf8c4dadcd955913c3dc7'
+        'config')
+sha256sums=('eb43c7dfe646d607ce7f010fa77789260db46fad1086dcd5c7f8df0bee9c14b0'
             'SKIP'
             'bfd4a7f61febe63c880534dcb7c31c5b932dde6acf991810b41a939a93535494'
             'SKIP'
@@ -45,7 +45,7 @@ sha256sums=('75ad5ba72600d645b0d2d1bb88bacbb4f588a6e90e0bf8c4dadcd955913c3dc7'
             'SKIP'
             '13bd7a8d9ed6b6bc971e4cd162262c5a20448a83796af39ce394d827b0e5de74'
             'SKIP'
-            'afe3947fdaba851f9c884c4ae8a1d0f737a42fc16fa8efa84b8d57e95c8a81c2')
+            'a02b38edce5f39145bd69ae087e1ed01e2b4acd7bf00a48f6b57453565d13b3f')
 validpgpkeys=('474402C8C582DAFBE389C427BCB7CF877E7D47A7'  # Alexandre Oliva
               '6DB9C4B4F0D8C0DC432CF6E4227CA7C556B2BA78') # David P.
 
@@ -76,7 +76,6 @@ prepare() {
   done
 
   echo "Setting config..."
-  mv ../config{.$CARCH,} # minimize diff
   cp ../config .config
   make olddefconfig
   diff -u ../config .config || :
@@ -125,8 +124,8 @@ _package() {
   ZSTD_CLEVEL=19 make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
     DEPMOD=/doesnt/exist modules_install  # Suppress depmod
 
-  # remove build and source links
-  rm "$_modulesdir"/{source,build}
+  # remove build link
+  rm "$_modulesdir"/build
 }
 
 _package-headers() {
