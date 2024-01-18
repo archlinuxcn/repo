@@ -4,11 +4,11 @@
 pkgbase=lceda-pro
 pkgname=lceda-pro
 pkgver=2.1.44.1
-pkgrel=1
+pkgrel=2
 pkgdesc="免费、专业、强大的国产PCB设计工具"
 arch=('x86_64' 'aarch64' 'loong64')
 url="https://pro.lceda.cn/"
-license=('custom')
+license=('LicenseRef-LCEDA-Proprietary')
 depends=(gtk3 nss alsa-lib electron libappindicator-gtk3 libnotify)
 install=${pkgname}.install
 source=("LICENSE"
