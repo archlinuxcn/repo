@@ -1,82 +1,53 @@
-From c8435b91ff3ec17c09fbcef105e708631688bdca Mon Sep 17 00:00:00 2001
+From 13b9c9d691566eb50009b5e4bdac79a999fa576d Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Michael=20La=C3=9F?= <bevan@bi-co.net>
 Date: Thu, 26 Jan 2023 19:18:56 +0100
 Subject: [PATCH 1/3] Quick & Dirty patch to allow finding quazip-qt6 on Arch
  Linux
 
 ---
- pri/quazipdetect.pri | 57 ++++----------------------------------------
- 1 file changed, 4 insertions(+), 53 deletions(-)
+ pri/quazipdetect.pri | 31 ++++++-------------------------
+ 1 file changed, 6 insertions(+), 25 deletions(-)
 
 diff --git a/pri/quazipdetect.pri b/pri/quazipdetect.pri
-index 9f480ec6..2871e01d 100644
+index 07bd5621..1fe88bb5 100644
 --- a/pri/quazipdetect.pri
 +++ b/pri/quazipdetect.pri
-@@ -1,59 +1,10 @@
- # Copyright (c) 2021 Fritzing GmbH
+@@ -1,29 +1,10 @@
+-# Copyright (c) 2021,2023 Fritzing GmbH
++# Copyright (c) 2021 Fritzing GmbH
  
--message("Using fritzing quazip detect script.")
+-message("Using Fritzing quazip detect script.")
+-
+-QUAZIP_VERSION=1.4
+-QUAZIP_PATH=$$absolute_path($$PWD/../../quazip-$$QT_VERSION-$$QUAZIP_VERSION)
+-QUAZIP_INCLUDE_PATH=$$QUAZIP_PATH/include/QuaZip-Qt6-$$QUAZIP_VERSION
+-QUAZIP_LIB_PATH=$$QUAZIP_PATH/lib
 +message("Using custom quazip detect script.")
  
  SOURCES += \
-     src/zlibdummy.c \
+-	src/zlibdummy.c \
+-
+-exists($$QUAZIP_PATH) {
+-		message("found quazip in $${QUAZIP_PATH}")
+-	} else {
+-		error("quazip could not be found at $$QUAZIP_PATH")
+-	}
+-
+-INCLUDEPATH += $$QUAZIP_INCLUDE_PATH
+-LIBS += -L$$QUAZIP_LIB_PATH -lquazip1-qt$$QT_MAJOR_VERSION
+-
+-unix {
+-	message("set rpath for quazip")
+-	QMAKE_RPATHDIR += $$QUAZIP_LIB_PATH
+-}
++    src/zlibdummy.c \
  
--exists($$absolute_path($$PWD/../../quazip_qt$$QT_MAJOR_VERSION)) {
--        QUAZIPPATH = $$absolute_path($$PWD/../../quazip_qt$$QT_MAJOR_VERSION)
--        message("found quazip in $${QUAZIPPATH}")
--    } else {
--        error("quazip could not be found.")
--    }
--
--message("including $$absolute_path($${QUAZIPPATH}/include/quazip)")
--
--unix:!macx {
--    message("including quazip library on linux")
--    INCLUDEPATH += $$absolute_path($${QUAZIPPATH}/include/quazip)
--    LIBS += -L$$absolute_path($${QUAZIPPATH}/lib) -lquazip1-qt$$QT_MAJOR_VERSION
--    QMAKE_RPATHDIR += $$absolute_path($${QUAZIPPATH}/lib)
--}
--
 -macx {
--    message("including quazip library on mac os")
--    INCLUDEPATH += $$absolute_path($${QUAZIPPATH}/include/quazip)
--    LIBS += -L$$absolute_path($${QUAZIPPATH}/lib) -lquazip1-qt$$QT_MAJOR_VERSION
--    QMAKE_RPATHDIR += $$absolute_path($${QUAZIPPATH}/lib)
--    LIBS += -lz
+-	LIBS += -lz
 -}
--
--win32 {
--
--    message("including quazip library on windows")
--
--    QUAZIPINCLUDE = $$absolute_path($${QUAZIPPATH}/include/quazip)
--    exists($$QUAZIPINCLUDE/quazip.h) {
--        message("found quazip include path at $$QUAZIPINCLUDE")
--    } else {
--        message("Fritzing requires quazip")
--        error("quazip include path not found in $$QUAZIPINCLUDE")
--    }
--
--    INCLUDEPATH += $$QUAZIPINCLUDE
--
--    contains(QMAKE_TARGET.arch, x86_64) {
--        QUAZIPLIB = $$absolute_path($$QUAZIPPATH/build64/Release)
--    } else {
--        QUAZIPLIB = $$absolute_path($$QUAZIPPATH/build32/Release)
--    }
--
--    exists($$QUAZIPLIB/quazip1-qt*) {
--        message("found quazip library in $$QUAZIPLIB")
--    } else {
--        error("quazip library not found in $$QUAZIPLIB")
--    }
--
--    LIBS += -L$$QUAZIPLIB -lquazip1-qt$$QT_MAJOR_VERSION
--}
-\ No newline at end of file
 +message("including quazip library on linux")
-+INCLUDEPATH += /usr/include/QuaZip-Qt6-1.4/quazip/
++INCLUDEPATH += /usr/include/QuaZip-Qt6-1.4/
 +LIBS += -lquazip1-qt6
 -- 
-2.42.1
+2.43.0
 

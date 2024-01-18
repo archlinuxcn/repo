@@ -1,0 +1,50 @@
+From 9c98c9d0edd0902746f86ac14f2e6ee5d4d28a05 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Michael=20La=C3=9F?= <bevan@bi-co.net>
+Date: Wed, 17 Jan 2024 21:05:57 +0100
+Subject: [PATCH 3/3] Quick & Dirty patch to allow finding Clipper1 on Arch
+ Linux
+
+---
+ pri/clipper1detect.pri | 27 +++++----------------------
+ 1 file changed, 5 insertions(+), 22 deletions(-)
+
+diff --git a/pri/clipper1detect.pri b/pri/clipper1detect.pri
+index 924a6d5b..d9450bbf 100644
+--- a/pri/clipper1detect.pri
++++ b/pri/clipper1detect.pri
+@@ -1,27 +1,10 @@
+ # Copyright (c) 2023 Fritzing GmbH
+ 
+-message("Using fritzing Clipper 1 detect script.")
++message("Using custom Clipper 1 detect script.")
+ 
+-unix {
+-    message("including Clipper1 library on linux or mac")
++CLIPPER1 = /usr/include/polyclipping
+ 
+-    exists($$absolute_path($$PWD/../../Clipper1)) {
+-	            CLIPPER1 = $$absolute_path($$PWD/../../Clipper1/6.4.2)
+-				message("found Clipper1 in $${CLIPPER1}")
+-			}
+-}
++message("including $$absolute_path($${CLIPPER1})")
+ 
+-win32 {
+-    message("including Clipper1 library on windows")
+-
+-    exists($$absolute_path($$PWD/../../Clipper1)) {
+-	            CLIPPER1 = $$absolute_path($$PWD/../../clipper1/6.4.2)
+-				message("found Clipper1 in $${CLIPPER1}")
+-			}
+-}
+-
+-message("including $$absolute_path($${CLIPPER1}/include)")
+-INCLUDEPATH += $$absolute_path($${CLIPPER1}/include/polyclipping)
+-
+-LIBS += -L$$absolute_path($${CLIPPER1}/lib) -lpolyclipping
+-QMAKE_RPATHDIR += $$absolute_path($${CLIPPER1}/lib)
++INCLUDEPATH += $$absolute_path($${CLIPPER1})
++LIBS += -lpolyclipping
+-- 
+2.43.0
+
