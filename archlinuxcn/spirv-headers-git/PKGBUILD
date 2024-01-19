@@ -18,7 +18,7 @@ provides=("spirv-headers=1:$pkgver")
 
 pkgver() {
     cd "$_pkgname"
-	git describe --long --tags | sed 's/^sdk-//; s/\([^-]*-g\)/r\1/; s/-/./g'
+    git describe --long --tags | sed 's/^[^0-9]*//; s/\([^-]*-g\)/r\1/; s/-/./g'
 }
 
 build() {
