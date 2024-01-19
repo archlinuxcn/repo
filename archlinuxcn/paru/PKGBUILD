@@ -7,7 +7,7 @@ url='https://github.com/morganamilo/paru'
 source=("$pkgname-$pkgver.tar.gz::https://github.com/Morganamilo/paru/archive/v$pkgver.tar.gz")
 backup=("etc/paru.conf")
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
-license=('GPL3')
+license=('GPL-3.0-or-later')
 makedepends=('cargo')
 depends=('pacman>=6' 'git')
 optdepends=('asp: downloading repo pkgbuilds' 'bat: colored pkgbuild printing')
