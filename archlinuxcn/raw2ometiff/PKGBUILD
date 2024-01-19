@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=raw2ometiff
-pkgver=0.6.0
+pkgver=0.7.0
 pkgrel=1
 pkgdesc='Raw format to OME-TIFF converter'
 arch=('any')
@@ -18,7 +18,7 @@ makedepends=(
   java-environment
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/glencoesoftware/raw2ometiff/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('c90332bbdf6c79bbeebe3dc6cfa3b0a08613cc399f56d2a5f7f631922aa2421c77ddd51e34e12a2d841a663951dbccbdea0e1f00cf95feca3198b02533b64311')
+sha512sums=('797b2049ff266e82a2dea59e2fb8f76639a179851ca86aca811eb696e3a612cf62edda026c591051992f0abf2fafe328bd5b71ac8498777dd1bbbc405173cee4')
 
 package() {
   cd "${pkgname}-${pkgver}"
