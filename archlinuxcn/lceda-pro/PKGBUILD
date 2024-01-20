@@ -4,19 +4,19 @@
 pkgbase=lceda-pro
 pkgname=lceda-pro
 pkgver=2.1.44.1
-pkgrel=3
+pkgrel=4
 pkgdesc="免费、专业、强大的国产PCB设计工具"
 arch=('x86_64' 'aarch64' 'loong64')
 url="https://pro.lceda.cn/"
 license=('LicenseRef-LCEDA-Proprietary')
 depends=(gtk3 nss alsa-lib electron libappindicator-gtk3 libnotify)
 install=${pkgname}.install
-source=("LICENSE"
+source=("LICENSE-$pkgver.html::https://lceda.cn/page/legal"
         "${pkgname}.install")
 source_x86_64=("${pkgname}-x86_64-${pkgver}.zip::https://image.lceda.cn/files/lceda-pro-linux-x64-${pkgver}.zip")
 source_aarch64=("${pkgname}-aarch64-${pkgver}.zip::https://image.lceda.cn/files/lceda-pro-linux-arm64-${pkgver}.zip")
 source_loong64=("${pkgname}-loong64-${pkgver}.zip::https://image.lceda.cn/files/lceda-pro-linux-loong64-${pkgver}.zip")
-sha256sums=('df9110f0949b869a922449d87e32b975c84b13122967bc18cd1b2cd58a18ab83'
+sha256sums=('SKIP'
             'f8c3c7f65443801b8a70e40de7cdceade5dcd75974945695dd5a1bfb1f862e1a')
 sha256sums_x86_64=('3b5ea2ba2c450ec9fcaf035bb6c273694e399c3030ddb7f77eef85ed1cf617c4')
 sha256sums_aarch64=('8514fc3aead2221ee2a702bd2f88989b88617d55d999e5163d0b3bbac68e4fc5')
@@ -56,6 +56,5 @@ package() {
 exec electron /usr/lib/lceda-pro/resources/app/ "\$@"
 EOF
     # LICENSE
-    install -Dm0644 ${srcdir}/LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-    install -Dm0644 LCEDA-Distribution-License.txt ${pkgdir}/usr/share/licenses/${pkgname}/LCEDA-DLA.txt
+    install -Dm0644 ${srcdir}/LICENSE-$pkgver.html ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.html
 }
