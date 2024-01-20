@@ -1,16 +1,16 @@
 # Maintainer: Adrian Perez de Castro <aperez@igalia.com>
 pkgdesc='Small and embeddable JavaScript engine'
 pkgname=quickjs
-pkgver=2023.12.09
+pkgver=2024.01.13
 pkgrel=1
 url=https://bellard.org/quickjs
-depends=(gcc-libs)
+depends=(glibc)
 arch=(x86_64)
 options=(!strip)
-license=(custom:MIT)
+license=(MIT)
 _pv="${pkgname}-${pkgver//./-}"
 source=("${url}/${_pv}.tar.xz")
-sha512sums=('c63cbff2c2e19512845e4fa2c1306eefcf03316f3e0f29187d6176aaddf840d0423d88429ec73d690da0297c78114092acff76b7f089cb8561214628c1e733c8')
+sha512sums=('9f426404e4dc1e2a41fcc235b72e58708041aed24eadd5fb9e82f62435501003d3a6b04831f307b04852551d2fd265b94cd400b3293ec0810465f52de8a6c057')
 
 prepare () {
 	cat >> "${_pv}/Makefile" <<-EOF
@@ -20,11 +20,11 @@ prepare () {
 }
 
 build () {
-	make -C "${_pv}" prefix=/usr
+	make -C "${_pv}" PREFIX=/usr
 }
 
 package () {
-	make -C "${_pv}" prefix="${pkgdir}/usr" install
+	make -C "${_pv}" PREFIX=/usr DESTDIR="${pkgdir}" install
 
 	install -Dm644 -t "${pkgdir}/usr/share/doc/${pkgname}" "${_pv}"/doc/*.*
 
