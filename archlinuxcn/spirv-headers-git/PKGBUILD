@@ -9,7 +9,7 @@ pkgrel=1
 pkgdesc='SPIR-V header files Git version'
 arch=('any')
 url='https://www.khronos.org/registry/spir-v/'
-license=('custom')
+license=('MIT')
 source=("git+https://github.com/KhronosGroup/$_pkgname.git")
 sha1sums=('SKIP')
 makedepends=('git' 'cmake')
@@ -18,7 +18,7 @@ provides=("spirv-headers=1:$pkgver")
 
 pkgver() {
     cd "$_pkgname"
-	git describe --long --tags | sed 's/^sdk-//; s/\([^-]*-g\)/r\1/; s/-/./g'
+    git describe --long --tags | sed 's/^[^0-9]*//; s/\([^-]*-g\)/r\1/; s/-/./g'
 }
 
 build() {
