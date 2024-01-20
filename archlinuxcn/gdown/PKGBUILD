@@ -17,19 +17,26 @@ depends=(
   python-tqdm
 )
 makedepends=(
+  python-build
+  python-hatch-fancy-pypi-readme
+  python-hatch-vcs
+  python-hatchling
+  python-installer
   python-setuptools
+  python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/wkentaro/gdown/archive/refs/tags/v${pkgver}.tar.gz")
 sha512sums=('5becfea76fcab0ad1978f8e812df6400cda28b971a64fe934e1bde5e6de6831527827474a09568b028004762009d789cf722fbc34b259dc6ae2d0b49c1349c82')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  SETUPTOOLS_SCM_PRETEND_VERSION=${pkgver} \
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
