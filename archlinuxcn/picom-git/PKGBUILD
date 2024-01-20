@@ -4,19 +4,19 @@
 
 pkgname=picom-git
 _gitname=picom
-pkgver=2016_9.rc1.338.g4c34944d_2024.01.18
+pkgver=2017_11_2024.01.20
 pkgrel=1
 pkgdesc="X compositor (fork of compton) (git-version)"
 arch=(i686 x86_64)
 url="https://github.com/yshui/${_gitname}"
-license=('MIT' 'MPL2')
-depends=('libgl' 'libev' 'pcre' 'libx11' 'xcb-util-renderutil' 'libxcb' 'xcb-util-image' 'libxext'
-         'pixman' 'libconfig' 'libdbus' 'hicolor-icon-theme')
-makedepends=('git' 'mesa' 'meson' 'asciidoc' 'uthash' 'xorgproto')
+license=('MIT' 'MPL-2.0')
+depends=('libev' 'libgl' 'libx11' 'libxcb' 'libxext' 'pcre2' 'xcb-util' 'xcb-util-image'
+         'xcb-util-renderutil' 'pixman' 'libconfig' 'libdbus' 'hicolor-icon-theme')
+makedepends=('asciidoc' 'cmake' 'git' 'libglvnd' 'mesa' 'meson' 'uthash' 'xorgproto')
 optdepends=('dbus:          To control picom via D-Bus'
+            'python:        For picom-convgen.py'
             'xorg-xwininfo: For picom-trans'
-            'xorg-xprop:    For picom-trans'
-            'python:        For picom-convgen.py')
+            'xorg-xprop:    For picom-trans')
 provides=('compton' 'compton-git' 'picom')
 conflicts=('compton' 'compton-git' 'picom')
 replaces=('compton-git')
