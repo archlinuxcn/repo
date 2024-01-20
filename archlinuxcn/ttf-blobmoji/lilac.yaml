@@ -1,0 +1,20 @@
+pre_build_script: |
+  tag = _G.newver
+  for line in edit_file('PKGBUILD')
+    if line.startswith('_tagname=')
+      line = f"_tagname={tag}"
+  update_pkgver_and_pkgrel(tag.lstrip('v').replace('-', ''))
+
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+  - source: github
+    github: C1710/blobmoji
+    use_max_tag: true
+    # v15.0-alpha1 v15.0 v15.1-beta1
+    include_regex: ^v\d+\..*
+
+maintainers:
+  - github: rocka
