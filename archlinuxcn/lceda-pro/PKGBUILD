@@ -4,12 +4,21 @@
 pkgbase=lceda-pro
 pkgname=lceda-pro
 pkgver=2.1.44.1
-pkgrel=5
+pkgrel=6
 pkgdesc="免费、专业、强大的国产PCB设计工具"
 arch=('x86_64' 'aarch64' 'loong64')
 url="https://pro.lceda.cn/"
 license=('LicenseRef-LCEDA-Proprietary')
-depends=(gtk3 nss alsa-lib electron libappindicator-gtk3 libnotify)
+depends=(electron
+         gtk3
+         nss
+         alsa-lib
+         libpulse
+         bash
+         hicolor-icon-theme
+         gcc-libs
+         coreutils
+         glibc)
 install=${pkgname}.install
 source=("LICENSE-$pkgver.html::https://lceda.cn/page/legal"
         "${pkgname}.install")
@@ -23,8 +32,6 @@ sha256sums_aarch64=('8514fc3aead2221ee2a702bd2f88989b88617d55d999e5163d0b3bbac68
 sha256sums_loong64=('abf642c391649e06d5dfd6ce60d44e3f0bfdce16f63760cf26303b7f48a63dd6')
 
 package() {
-    export LC_CTYPE="zh_CN.UTF-8"
-
     # electron file
     install -dm0755 "${pkgdir}/usr/lib/${pkgname}/"
 
