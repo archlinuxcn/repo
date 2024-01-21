@@ -5,10 +5,10 @@ pkgbase=munt
 pkgname=(munt munt-qt munt-daemon munt-smf2wav)
 pkgdesc='Software synthesizer emulating pre-GM MIDI devices such as the Roland MT-32, CM-32L, CM-64 and LAPC-I'
 pkgver=2.7.0
-pkgrel=4
+pkgrel=5
 arch=(i686 x86_64)
 url=http://munt.sourceforge.net
-license=(GPL2)
+license=('GPL-2.0 OR LGPL-2.1')
 makedepends=(cmake qt6-multimedia portaudio)
 source=("$pkgbase-$pkgver.tar.gz::https://sourceforge.net/projects/$pkgbase/files/$pkgbase/$pkgver/$pkgbase-$pkgver.tar.gz/download"
         munt-daemon.service)
