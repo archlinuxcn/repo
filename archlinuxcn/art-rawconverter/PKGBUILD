@@ -20,7 +20,7 @@ build() {
 	mkdir build/
 	cd build/
 
-	cmake "../${_pkgname}_${pkgver}/" \
+	cmake "../${_pkgname}-${pkgver}/" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DPROC_TARGET_NUMBER="2" \
@@ -35,4 +35,8 @@ build() {
 package() {
 	cd build/
 	make DESTDIR="${pkgdir}" install
+
+	cd "../${_pkgname}-${pkgver}/"
+	install -Dm644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	cp -r licenses/* "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
