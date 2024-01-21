@@ -2,7 +2,8 @@ pre_build_script: |
   tag = _G.newver
   for line in edit_file('PKGBUILD'):
     if line.startswith('_tagname='):
-      line = f"_tagname={tag}"
+      line = f"_tagname='{tag}'"
+    print(line)
   update_pkgver_and_pkgrel(tag.lstrip('v').replace('-', ''))
 
 post_build_script: |
