@@ -1,0 +1,11 @@
+--- abcde-2.9.3/abcde	2019-02-05 11:19:03.000000000 +0100
++++ abcde-2.9.3/abcde.new	2021-05-07 10:27:29.273996818 +0200
+@@ -3773,7 +3773,7 @@
+ CDDBURL="http://freedb.freedb.org/~cddb/cddb.cgi"
+ CDDBSUBMIT=freedb-submit@freedb.org
+ CDDBPROTO=6
+-HELLOINFO="$(whoami)@$(hostname)"
++HELLOINFO="$(whoami)@$(uname -n)"
+ CDDBCOPYLOCAL="n"
+ CDDBLOCALPOLICY="always"
+ CDDBLOCALRECURSIVE="y"
