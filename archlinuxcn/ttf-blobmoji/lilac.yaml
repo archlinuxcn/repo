@@ -1,7 +1,7 @@
 pre_build_script: |
   tag = _G.newver
-  for line in edit_file('PKGBUILD')
-    if line.startswith('_tagname=')
+  for line in edit_file('PKGBUILD'):
+    if line.startswith('_tagname='):
       line = f"_tagname={tag}"
   update_pkgver_and_pkgrel(tag.lstrip('v').replace('-', ''))
 
