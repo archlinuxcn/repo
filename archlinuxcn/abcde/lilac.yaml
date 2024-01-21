@@ -1,0 +1,15 @@
+maintainers:
+  - github: MarvelousBlack
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - cd-discid
+
+pre_build: aur_pre_build
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: abcde
