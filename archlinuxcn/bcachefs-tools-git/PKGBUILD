@@ -11,9 +11,27 @@ arch=("x86_64")
 license=("GPL-2.0-only")
 install="${pkgname}.install"
 provides=("${_pkgname}")
-_dependsarray="attr cargo clang fuse3 git keyutils libaio libscrypt libsodium liburcu libutil-linux pkgconf python-docutils systemd valgrind zlib"
-makedepends=(${_dependsarray})
-depends=(${_dependsarray})
+depends=(
+	fuse3
+	libaio.so libaio
+	libblkid.so libuuid.so util-linux-libs
+	libkeyutils.so keyutils
+	libsodium.so libsodium
+	liburcu
+	libz.so zlib
+	libzstd.so zstd
+	lz4
+	libudev.so
+	udev
+)
+makedepends=(
+	git
+	cargo
+	clang
+	llvm
+	pkgconf
+	valgrind
+)
 options=('!strip')
 source=(
 	"git+${url}.git"
