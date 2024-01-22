@@ -21,7 +21,7 @@ pkgver() {
 }
 
 build() {
-	arch-meson "${_pkgname}/" build -Dchannel=AUR-devel
+	arch-meson "${_pkgname}/" build
 	meson compile -C build
 }
 
@@ -31,4 +31,5 @@ check() {
 
 package() {
 	DESTDIR="${pkgdir}" meson install -C build
+	install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 }
