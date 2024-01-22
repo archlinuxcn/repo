@@ -12,7 +12,7 @@ arch=('i686' 'x86_64' 'aarch64')
 depends=('zeromq' 'curl' 'lz4' 'systemd-libs' 'util-linux-libs')
 makedepends=('git' 'pkg-config')
 url="https://github.com/zeromq/${_pkgname}"
-license=('MPL')
+license=('MPL-2.0')
 source=("git+${url}")
 sha256sums=('SKIP')
 provides=("${_pkgname}=${pkgver%.r*}" libczmq.so)
