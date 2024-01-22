@@ -3,12 +3,10 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: |
-  update_pkgver_and_pkgrel(_G.newver)
+pre_build_script: aur_pre_build(maintainers=['supermario', 'alerque'])
 
-post_build: git_pkgbuild_commit
+post_build: aur_post_build
 
 update_on:
-  - source: regex
-    url: 'https://sourceforge.net/projects/freetype/rss?path=/ttfautohint'
-    regex: ttfautohint-([0-9.]+)\.tar
+  - source: aur
+    aur: ttfautohint
