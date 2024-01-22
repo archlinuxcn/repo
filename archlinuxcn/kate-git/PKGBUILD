@@ -17,7 +17,7 @@ optdepends=('konsole-git: open a terminal in Kate'
 	'texlab: LaTeX LSP support'
 	'rust: Rust LSP support')
 arch=(x86_64)
-license=(GPL LGPL FDL)
+license=('LGPL-2.1-or-later')
 makedepends=(extra-cmake-modules-git kdoctools plasma-framework knewstuff kitemmodels ktexteditor kactivities kuserfeedback git)
 provides=("${_pkgname}")
 conflicts=("${_pkgname}" "kdesdk-${_pkgname}" "kdebase-kwrite")
