@@ -1,0 +1,25 @@
+# Add support for OpenColorIO version 2.3
+# https://github.com/olive-editor/olive/pull/2294
+
+diff --unified --recursive --text olive.orig/app/render/renderer.cpp olive.new/app/render/renderer.cpp
+--- olive.orig/app/render/renderer.cpp	2024-01-21 19:28:15.695687760 -0300
++++ olive.new/app/render/renderer.cpp	2024-01-21 19:29:56.017642758 -0300
+@@ -240,9 +240,17 @@
+       const char* sampler_name = nullptr;
+       unsigned int width = 0, height = 0;
+       OCIO::GpuShaderDesc::TextureType channel = OCIO::GpuShaderDesc::TEXTURE_RGB_CHANNEL;
++#if OCIO_VERSION_HEX >= 0x02030000
++      OCIO::GpuShaderDesc::TextureDimensions dimensions = OCIO::GpuShaderDesc::TEXTURE_2D;
++#endif
+       OCIO::Interpolation interpolation = OCIO::INTERP_LINEAR;
+ 
+-      shader_desc->getTexture(i, tex_name, sampler_name, width, height, channel, interpolation);
++      shader_desc->getTexture(i, tex_name, sampler_name, width, height, channel,
++#if OCIO_VERSION_HEX >= 0x02030000
++                              // OCIO::GpuShaderDesc::TextureDimensions
++                              dimensions,
++#endif
++                              interpolation);
+ 
+       if (!tex_name || !*tex_name
+           || !sampler_name || !*sampler_name
