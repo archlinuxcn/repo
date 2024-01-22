@@ -20,7 +20,8 @@ build() {
 }
 
 package() {
-	install -Dm755 "${pkgname}-${pkgver}/target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+	cd "${pkgname}-${pkgver}/"
+	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
 
 	mkdir -p \
 		"${pkgdir}/usr/share/bash-completion/completions" \
@@ -30,4 +31,8 @@ package() {
 	"${pkgdir}/usr/bin/${pkgname}" completions --shell bash >"${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
 	"${pkgdir}/usr/bin/${pkgname}" completions --shell fish >"${pkgdir}/usr/share/fish/vendor_completions.d/${pkgname}.fish"
 	"${pkgdir}/usr/bin/${pkgname}" completions --shell zsh >"${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
+
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -d "${pkgdir}/usr/share/doc/${pkgname}/"
+	cp docs/* "${pkgdir}/usr/share/doc/${pkgname}/"
 }
