@@ -13,10 +13,7 @@ source=("${pkgname}-${pkgver}.tar.gz::https://github.com/cboxdoerfer/${pkgname}/
 sha256sums=('b3c576bf1230da7c374d00bb32d72686b940b4dee80d941495acfdd5437bf117')
 
 build() {
-	arch-meson "${pkgname}-${pkgver}/" build \
-		--buildtype release \
-		-Dchannel=AUR-stable
-
+	arch-meson "${pkgname}-${pkgver}/" build --buildtype release
 	meson compile -C build
 }
 
@@ -26,4 +23,5 @@ check() {
 
 package() {
 	DESTDIR="${pkgdir}" meson install -C build
+	install -Dm644 "${pkgname}-${pkgver}/License" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
