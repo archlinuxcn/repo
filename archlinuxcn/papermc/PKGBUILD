@@ -57,7 +57,7 @@ package() {
 	ln -s "${_server_root}/logs" "${pkgdir}/var/log/${_game}"
 
 	# Give the group write permissions and set user or group ID on execution
-	chmod g+ws "${pkgdir}${_server_root}"
+	chmod g+s "${pkgdir}${_server_root}"
 
 	install -D ./LICENSE_${pkgver}.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
