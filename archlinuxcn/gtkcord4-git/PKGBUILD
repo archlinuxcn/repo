@@ -6,11 +6,11 @@ pkgver=0.0.17.r7.gbfacf43
 pkgrel=1
 pkgdesc="Discord client written in go and gtk4"
 arch=('x86_64' 'aarch64')
-url="https://github.com/diamondburned/gtkcord4"
+url="https://github.com/diamondburned/${_pkgname}"
 license=('GPL3')
 depends=('gtk4' 'gobject-introspection' 'libadwaita')
-provides=('gtkcord4')
-conflicts=('gtkcord4')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
 makedepends=('git' 'go')
 source=("git+${url}.git")
 sha256sums=('SKIP')
@@ -43,7 +43,7 @@ package() {
 
 	install -Dm755 "${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
 	install -Dm644 "${srcdir}/${_pkgname}/LICENSE.md" "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE"
-	sed -i "s/Chat;/Chat;InstantMessaging;/" "${srcdir}/${_pkgname}/nix/xyz.diamondb.gtkcord4.desktop"
-	install -Dm644 "${srcdir}/${_pkgname}/nix/xyz.diamondb.gtkcord4.desktop" "${pkgdir}/usr/share/applications/gtkcord4.desktop"
-	install -Dm644 "${srcdir}/${_pkgname}/internal/icons/hicolor/scalable/apps/logo.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/gtkcord4.png"
+	sed -i "s/Chat;/Chat;InstantMessaging;/" "${srcdir}/${_pkgname}/nix/xyz.diamondb.${_pkgname}.desktop"
+	install -Dm644 "${srcdir}/${_pkgname}/nix/xyz.diamondb.${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
+	install -Dm644 "${srcdir}/${_pkgname}/internal/icons/hicolor/scalable/apps/logo.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${_pkgname}.png"
 }
