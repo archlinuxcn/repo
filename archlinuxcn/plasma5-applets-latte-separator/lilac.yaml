@@ -4,10 +4,6 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['flipee'])
-
-post_build: aur_post_build
-
 update_on:
-  - source: aur
-    aur: plasma5-applets-latte-separator
+  - source: manual
+    manual: 1
