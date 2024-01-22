@@ -2,7 +2,7 @@
 
 _pkgname=pylibjpeg-libjpeg
 pkgname=python-pylibjpeg-libjpeg
-pkgver=2.0.1
+pkgver=2.02
 pkgrel=1
 pkgdesc='A JPEG, JPEG-LS and JPEG XT plugin for pylibjpeg'
 arch=('x86_64')
