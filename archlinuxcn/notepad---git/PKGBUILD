@@ -2,7 +2,7 @@
 
 pkgname=notepad---git
 pkgver=2.12.r5.ga89e9c6
-pkgrel=2
+pkgrel=1
 pkgdesc="Notepad-- 是使用C++编写的轻量级文本编辑器, 简称ndd, 可以支持Window/Mac/Linux操作系统平台。"
 arch=('x86_64')
 url="https://gitee.com/cxasm/notepad--"
@@ -10,13 +10,17 @@ license=('GPL-3.0-or-later')
 provides=(${pkgname%-git} notepadplugin)
 conflicts=(${pkgname%-git})
 _qt=qt5
-depends=($_qt-base
-    $_qt-xmlpatterns
-    qscintilla-$_qt)
+depends=(
+    glibc
+    gcc-libs
+    hicolor-icon-theme
+    $_qt-base)
 makedepends=(cmake
     ninja
     git
-    $_qt-tools)
+    $_qt-tools
+    $_qt-xmlpatterns
+    qscintilla-$_qt)
 source=("${pkgname}::git+${url}.git")
 sha256sums=('SKIP')
 
@@ -40,7 +44,7 @@ build() {
     sed -i '7s/NotePad--/notepad--/' src/linux/usr/share/applications/NotePad--.desktop
 
 
-    cmake -D CMAKE_BUILD_TYPE=None \
+    cmake -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr \
         -B build \
         -G Ninja \
