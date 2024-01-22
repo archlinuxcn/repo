@@ -1,13 +1,12 @@
 maintainers:
   - github: Integral-Tech
 
-post_build: aur_post_build
+pre_build_script: |
+  update_pkgrel()
+  vcs_update()
+
+post_build_script: git_pkgbuild_commit()
 
 update_on:
   - source: github
     github: emacs-ng/emacs-ng
-      
-  - source: aur
-    aur: emacs-ng-git
-
-  - source: manual
