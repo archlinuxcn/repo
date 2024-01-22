@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=bioformats2raw
-pkgver=0.9.0
+pkgver=0.9.1
 pkgrel=1
 pkgdesc='Bio-Formats image file format to raw format converter'
 arch=('any')
@@ -18,7 +18,7 @@ makedepends=(
   java-environment
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/glencoesoftware/bioformats2raw/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('6262530af29a4c765e22038ecaa4a1cf0bdd97bd7c6a6f1580f052f0e1d7d14770a2fc4cccbc0f8c99b52c8b40929b94e59ffefeef94710bdaeab3163da3e37c')
+sha512sums=('a0f1c5e2579c0e15005019dd453398b9e46f6c96d088ca4c2cbf54be0b2c9bcd5dcab7cef45aec25f758e9bc95f858ff78c182c338968d8f48509b9ddc2b61fd')
 
 package() {
   cd "${pkgname}-${pkgver}"
