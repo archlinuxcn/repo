@@ -47,4 +47,5 @@ check() {
 package() {
   cd "${_pkgname}-${pkgver}/build"
   DESTDIR="$pkgdir" ninja install
+  install -Dm644 "$srcdir/${_pkgname}-${pkgver}/LICENSE" "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
 }
