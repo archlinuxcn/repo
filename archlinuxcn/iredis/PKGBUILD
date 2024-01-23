@@ -3,7 +3,7 @@
 _name=iredis
 pkgname=iredis
 pkgver=1.14.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Interactive Redis: A Terminal Client for Redis with AutoCompletion and Syntax Highlighting."
 arch=(any)
 url="https://github.com/laixintao/iredis"
@@ -11,7 +11,7 @@ license=('BSD-3-Clause')
 depends=('python' 'python-redis' 'python-packaging' 'python-prompt_toolkit' 'python-pygments' 'python-mistune' 'python-configobj' 'python-click' 'python-pendulum')
 makedepends=('python-setuptools' 'python-build' 'python-installer' 'python-wheel' 'python-poetry')
 source=("${_name}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/iredis-${pkgver}.tar.gz")
-sha256sums=('821336ab54e4cea7169ac51bd94f3daa45a3b9843b1adee1bf2ea3dd3230f184')
+sha512sums=('fc05709017fa869b0630682970a1648c01d2424dc626a197a3f789b68719f44db4e4be5aecfe568baa134df44d731e4b5832ef34709a070bf300b8330818e61e')
 
 build() {
   cd "${_name}-${pkgver}"
