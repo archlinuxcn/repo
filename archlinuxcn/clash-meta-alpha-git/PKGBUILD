@@ -11,8 +11,8 @@ url="https://github.com/MetaCubeX/Clash.Meta"
 license=('GPL3')
 depends=('glibc' 'clash-geoip')
 makedepends=('git' 'go')
-provides=('clash-meta')
-conflicts=('clash-meta')
+provides=('clash-meta' 'clash-meta-alpha')
+conflicts=('clash-meta' 'clash-meta-alpha')
 backup=('etc/clash-meta/config.yaml')
 source=("${_pkgname}::git+${url}.git#branch=Alpha"
         "${_pkgname}.service"
