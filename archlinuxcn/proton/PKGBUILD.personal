@@ -1,12 +1,17 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
+# By default use the same optimizations used by Valve and ignore makepkg,
+# to avoid build failures due to options incompatible with MingW cross-compilation.
+# If you set this switch to 'true', you are on your own.
+: ${_system_cflags:=false}
+
 pkgname=proton
-_srctag=8.0-4c
+_srctag=8.0-5c
 _commit=
-pkgver=8.0.4.3  # pkgver=${_srctag//-/.}
+pkgver=8.0.5.3  # pkgver=${_srctag//-/.}
 _geckover=2.47.3
-_monover=8.0.1
-pkgrel=3
+_monover=8.1.0
+pkgrel=1
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 url="https://github.com/ValveSoftware/Proton"
@@ -173,18 +178,18 @@ build() {
         --proton-sdk-image="" \
         --build-name="${pkgname}"
 
-    # By default export FLAGS used by proton and ignore makepkg
-    # This overrides FLAGS from makepkg.conf, if you comment these you are on your own
-    # If you want the "best" possible optimizations for your system you can use
-    # `-march=native` and remove the `-mtune=core-avx2` option.
-    export CFLAGS="-O2 -march=haswell -mtune=haswell -pipe -fno-semantic-interposition"
-    export CXXFLAGS="-O2 -march=haswell -mtune=haswell -pipe -fno-semantic-interposition"
-    export RUSTFLAGS="-C opt-level=2 -C target-cpu=haswell"
-    export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
+    if [[ x"${_system_cflags::1}" != "xt" ]] ; then
+      unset CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS
+    fi
+    : ${CFLAGS:="-O2 -march=haswell -mtune=haswell -pipe -fno-semantic-interposition"}
+    : ${CXXFLAGS:="-O2 -march=haswell -mtune=haswell -pipe -fno-semantic-interposition"}
+    : ${RUSTFLAGS:="-C opt-level=2 -C target-cpu=haswell"}
+    : ${LDFLAGS:="-Wl,-O1,--sort-common,--as-needed"}
+    export CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS
 
     # If using -march=native and the CPU supports AVX, launching a d3d9
     # game can cause an Unhandled exception. The cause seems to be the
-    # combination of AVX instructions and tree vectorization (implied by O3),
+    # combination of AVX instructions and tree vectorization (implied by O2),
     # all tested archictures from sandybridge to haswell are affected.
     # Since Wine 5.16 AVX is supported. Testing showed 32bit applications
     # crashing with AVX regardless, but 64bit applications worked just fine.
@@ -192,7 +197,7 @@ build() {
     # https://bugs.winehq.org/show_bug.cgi?id=45289
     # https://bugs.winehq.org/show_bug.cgi?id=43516
     # AVX is "hard" disabled for 32bit in any case.
-    # AVX2 for 64bit is disabled below.
+    # AVX2 for both 32bit and 64bit is disabled below.
     export CFLAGS+=" -mno-avx2"
     export CXXFLAGS+=" -mno-avx2"
 
@@ -259,7 +264,7 @@ package() {
 sha256sums=('SKIP'
             '08d318f3dd6440a8a777cf044ccab039b0d9c8809991d2180eb3c9f903135db3'
             '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
-            '83f65c9292137a740c4b8ea730b61cee0dbbb82e4eb3607590ba2f4377827464'
+            '4e3e8a40729e4c9e3e9e651cebe4f1aed8f9a4d22e991e6cd24608687f0eedd4'
             'SKIP'
             'SKIP'
             'SKIP'
