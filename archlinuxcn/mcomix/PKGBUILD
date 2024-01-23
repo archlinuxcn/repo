@@ -2,18 +2,19 @@
 # Contributor: Ray Powell <ray_al@xphoniexx.net>
 
 pkgname=mcomix
-pkgver=3.0.0
-pkgrel=2
-pkgdesc="A user-friendly, customizable image viewer specifically designed to handle comic books"
+pkgver=3.1.0
+pkgrel=1
+pkgdesc="GTK comic book viewer"
 arch=('any')
 url="https://sourceforge.net/p/mcomix/wiki/Home/"
-license=('GPL')
+license=('GPL-2.0-or-later')
 depends=('gtk3' 'python-cairo' 'python-gobject' 'python-pillow')
 makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel')
 optdepends=(
   'lhasa: for lha compressed comics'
   'libunrar: for rar compressed comics'
   'p7zip: for 7z compressed comics'
+  'python-chardet: for guessing filename encodings in archives'
   'python-pymupdf: for PDF comics'
   'unrar: for rar compressed comics'
   'unzip: for zip compressed comics'
@@ -21,7 +22,7 @@ optdepends=(
 source=(
   "https://downloads.sourceforge.net/project/${pkgname}/MComix-${pkgver}/${pkgname}-${pkgver}.tar.gz"
 )
-sha256sums=('2270c43d75e2878f64e4c886d5b013125c42894b364594d5ec979154c4dea004')
+sha256sums=('f9286eba7ffbc3ce9528135a9939823c425f3bbe9f74a639f8706fcc28b4c427')
 
 build() {
   cd "${pkgname}-${pkgver}"
