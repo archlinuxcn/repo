@@ -17,7 +17,7 @@ optdepends=(
 	'ripgrep: for file content searching'
 	'fzf: for directory jumping'
 	'zoxide: for directory jumping')
-makedepends=("git" "cargo")
+makedepends=("git" "rustup")
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("git+${url}.git")
