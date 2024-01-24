@@ -20,10 +20,11 @@ def pre_build():
             'python-configobj',
             'python-click',
             'python-pendulum',
-        ], depends_setuptools = False)
+        ],
+        pep517 = True,
+        depends_setuptools = False)
 
 def post_build():
-    git_add_files('PKGBUILD')
-    git_commit()
+    git_pkgbuild_commit()
     update_aur_repo()
 
