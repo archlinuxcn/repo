@@ -3,12 +3,16 @@ Description=Clash-Meta Daemon for %i.
 After=network.target NetworkManager.service systemd-networkd.service iwd.service
 
 [Service]
-Type=exec
-User=%i
-CapabilityBoundingSet=cap_net_admin
-AmbientCapabilities=cap_net_admin
-Restart=on-abort
-ExecStart=/usr/bin/clash-meta
+Type=simple
+User=clash-meta
+LimitNPROC=500
+LimitNOFILE=1000000
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_NET_RAW
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_NET_RAW
+Restart=always
+ExecStartPre=/usr/bin/sleep 1s
+ExecStart=/usr/bin/clash-meta -d /etc/clash-meta -f /etc/clash-meta/%i.yaml
+ExecReload=/bin/kill -HUP $MAINPID
 
 [Install]
 WantedBy=multi-user.target
