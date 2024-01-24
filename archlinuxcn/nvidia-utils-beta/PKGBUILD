@@ -5,7 +5,7 @@
 
 pkgbase=nvidia-utils-beta
 pkgname=('nvidia-utils-beta' 'opencl-nvidia-beta' 'nvidia-settings-beta')
-pkgver=545.29.06
+pkgver=550.40.07
 pkgrel=1
 pkgdesc='NVIDIA drivers utilities (beta version)'
 arch=('x86_64')
@@ -18,10 +18,10 @@ source=("https://us.download.nvidia.com/XFree86/Linux-${CARCH}/${pkgver}/${_pkg}
         'nvidia-utils.sysusers'
         'nvidia.rules'
         '120-nvidia-settings-change-desktop-paths.patch')
-sha256sums=('82bc55676add43416c146e70c624c8dc6af16cc04c7238680c56a30e0045b17b'
+sha256sums=('298936c727b7eefed95bb87eb8d24cfeef1f35fecac864d98e2694d37749a4ad'
             'be99ff3def641bb900c2486cce96530394c5dc60548fc4642f19d3a4c784134d'
             'd8d1caa5d72c71c6430c2a0d9ce1a674787e9272ccce28b9d5898ca24e60a167'
-            '4fbfd461f939f18786e79f8dba5fdb48be9f00f2ff4b1bb2f184dbce42dd6fc3'
+            '2b6a1512e3c35a2f10655b0cbc06451129804e7741a9868e986cb75c5575ade9'
             '6f0f4a23706241e9e37e0fe30a09bd30ca29bb446d8fe7861cb4959f0a010ef4')
 
 # create soname links
@@ -171,7 +171,7 @@ package_nvidia-utils-beta() {
     
     # Wayland/GBM
     install -D -m755 "libnvidia-allocator.so.${pkgver}" -t "${pkgdir}/usr/lib"
-    install -D -m755 libnvidia-egl-gbm.so.1.1.0         -t "${pkgdir}/usr/lib"
+    install -D -m755 libnvidia-egl-gbm.so.1.1.1         -t "${pkgdir}/usr/lib"
     install -D -m644 15_nvidia_gbm.json -t "${pkgdir}/usr/share/egl/egl_external_platform.d"
     install -d -m755 "${pkgdir}/usr/lib/gbm"
     ln -s "../libnvidia-allocator.so.${pkgver}" "${pkgdir}/usr/lib/gbm/nvidia-drm_gbm.so"
