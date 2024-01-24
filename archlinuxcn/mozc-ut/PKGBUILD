@@ -18,7 +18,7 @@ ENABLED_DICTIONARIES=(
 
 pkgname='mozc-ut'
 pkgver=2.29.5346.102.20240122
-pkgrel=1
+pkgrel=2
 pkgdesc='The Open Source edition of Google Japanese Input bundled with the UT dictionary'
 arch=('x86_64')
 url='https://github.com/google/mozc'
@@ -94,6 +94,7 @@ build() {
     cd ${pkgname}-git/src
 
     unset ANDROID_NDK_HOME
+    unset ANDROID_HOME
     export JAVA_HOME='/usr/lib/jvm/java-11-openjdk/'
     bazel build server:mozc_server gui/tool:mozc_tool --config oss_linux --compilation_mode opt
 }
