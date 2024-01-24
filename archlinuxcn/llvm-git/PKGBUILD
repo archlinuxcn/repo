@@ -12,7 +12,7 @@ url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
              'python-sphinx' 'lua53' 'python-recommonmark' 'python-setuptools' 'python-six'
-             'cuda' 'ocl-icd' 'opencl-headers' 'python-yaml'
+             'cuda' 'ocl-icd' 'opencl-headers' 'python-yaml' 'python-myst-parser'
              'swig' 'python' 'libunwind' 'spirv-headers-git'
              'python-sphinx-furo' 'python-sphinx-automodapi')
 
@@ -153,8 +153,6 @@ package_lld-git(){
     _fakeinstall fakeinstall/usr/share/doc/lld/*
     install -Dm644 "$srcdir"/llvm-project/lld/docs/ld.lld.1 "$pkgdir/usr/share/man/man1"
     install -Dm644 "$srcdir"/llvm-project/lld/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-    #cd $pkgdir/usr/share/doc/lld
-    #mv lld/* .
     rm -r "$pkgdir"/usr/share/doc/lld/html/{_sources,.buildinfo}
 }
 
