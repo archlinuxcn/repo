@@ -5,7 +5,7 @@
 
 pkgname='fcitx5-mozc-ut'
 pkgver=2.29.5346.102
-pkgrel=1
+pkgrel=2
 pkgdesc='Mozc module for Fcitx5'
 arch=('x86_64')
 url='https://github.com/fcitx/mozc'
@@ -29,6 +29,7 @@ build() {
     cd ${pkgname}-git/src
 
     unset ANDROID_NDK_HOME
+    unset ANDROID_HOME
     export JAVA_HOME='/usr/lib/jvm/java-11-openjdk/'
     bazel build unix/fcitx5:fcitx5-mozc.so unix/icons --config oss_linux --compilation_mode opt
 }
