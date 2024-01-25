@@ -3,19 +3,19 @@
 # Contributor: ful1e5 <kaizmandhu at gmail dot com>
 
 pkgname=bibata-cursor-theme
-pkgver=2.0.5
+pkgver=2.0.6
 pkgrel=1
 pkgdesc="Material Based Cursor Theme"
 arch=('any')
 url="https://github.com/ful1e5/Bibata_Cursor"
-license=('GPL3')
+license=('GPL-3.0-or-later')
 makedepends=('python-clickgen>=2.0.0')
 options=('!strip')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
         "$pkgname-$pkgver-bitmaps.zip::$url/releases/download/v$pkgver/bitmaps.zip")
 noextract=("$pkgname-$pkgver-bitmaps.zip")
-sha256sums=('deb4e2598ffedf21e96d961fccdc653236eb6c8c32e5b05dcfdb49563d4c93cf'
-            '0fd1c0eef4b52eaadca6611f69c0fa1abe2756be02bf163666f361544af3b67f')
+sha256sums=('a3095d6a49c2fef1f97963d3706cfcf19b2f29c0616f423f5a278714b60f2b19'
+            '651fd17ceec14ef1c148a32a96b83902e6a7f334396feca39f5eb15a7e1fef22')
 
 prepare() {
   bsdtar xvf "$pkgname-$pkgver-bitmaps.zip" -C "Bibata_Cursor-$pkgver"
