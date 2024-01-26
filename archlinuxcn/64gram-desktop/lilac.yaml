@@ -19,6 +19,9 @@ update_on:
     repo: extra
     from_pattern: ^(\d+\.\d+\.\d+)\..*
     to_pattern: \1
+  - source: alpm
+    alpm: libvpx
+    provided: libvpx.so
   - source: manual
     manual: 1.0.3
 
