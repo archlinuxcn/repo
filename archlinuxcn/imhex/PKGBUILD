@@ -12,11 +12,13 @@ arch=('x86_64')
 depends=( 'glfw'
           'hicolor-icon-theme' 'xdg-desktop-portal'
           'dbus'
-          'mbedtls' 'libmbedcrypto.so' 'libmbedtls.so' 'libmbedx509.so'
+          'mbedtls' 'libmbedcrypto.so'
           'curl' 'libcurl.so'
           'freetype2' 'libfreetype.so'
           'fmt' 'libfmt.so'
           'yara' 'libyara.so'
+          'file' 'libmagic.so'
+          'glvnd' 'glibc' 'gcc-libs'
           )
 makedepends=('git' 'cmake' 'ninja' 'llvm' 'nlohmann-json' 'librsvg' 'python' 'dotnet-runtime')
 optdepends=(
