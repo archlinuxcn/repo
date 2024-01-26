@@ -2,10 +2,10 @@
 
 pkgbase=linux-amd-znver2
 _srcname=linux
-gitver=v6.7.1
+gitver=v6.7.2
 patchver=20230105
 patchname=more-uarches-for-kernel-5.17+.patch
-pkgver=6.7.v.1
+pkgver=6.7.v.2
 pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
@@ -20,18 +20,14 @@ source=("git+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git#ta
         "${pkgbase}.preset"
 	# patch from our graysky archlinux colleague
 	"https://raw.githubusercontent.com/graysky2/kernel_compiler_patch/$patchver/$patchname"
-        # nested KVM svm patch
-        "flushbyasid.patch"
 )
 sha256sums=('SKIP'
             #config.x86_64
-            '2790adf1abdd2f231d695bcda4215feab9964291ba734efc994d0d4d9711f749'
+            'c80e911a9e3ff4f5c77b0505b99aee2c86f05449a3d1b6fadcfa1891bc4580c0'
             #.preset file
             'a7dda487e8277bfdf0dd0a6f578b219ae97de84b00df1822330e808c378df907'
             #grayskypatch
             '81ad663925a0aa5b5332a69bae7227393664bb81ee2e57a283e7f16e9ff75efe'
-            #flushbyasid.patch
-            '0878a970035793ca761c6f7499fb37cf04e6d9892758ca3fb9b99f846febfaf0'
 )
 
 _kernelname=${pkgbase#linux}
