@@ -31,3 +31,7 @@ update_on:
   - source: alpm
     alpm: freetype2
     provided: libfreetype.so
+  - source: alpm
+    alpm: llvm
+    from_pattern: ^(\d+).*
+    to_pattern: \1
