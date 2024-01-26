@@ -12,24 +12,22 @@ arch=('x86_64')
 license=('GPL-2.0-only')
 depends=('libbpf' 'bpf' 'libelf' 'zlib' 'systemd')
 makedepends=('python' 'meson' 'clang' 'llvm-libs' 'cargo')
-source=("${url}/archive/refs/tags/v${pkgver}.tar.gz"
-	"0001-scx-introduce-systemd-services.patch")
-sha512sums=('84dfc711ba9d51cd26c104caca1dcee3ce0be790be5b3a294ed47f4ef5fb20c58524b793d45b0970d61befa33adf8c8f3ca2b2f726d2ef335c80c11eee813387'
-            '007acfb68275a5b3e61aed4b0582c239f73250b979d2b5e0820367071bd34510f6f1b6b8a3dabb606b02478653578a7f0b9efee3b1808692374afba7aecb27c3')
+source=("${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('84dfc711ba9d51cd26c104caca1dcee3ce0be790be5b3a294ed47f4ef5fb20c58524b793d45b0970d61befa33adf8c8f3ca2b2f726d2ef335c80c11eee813387')
 options=('!lto')
 
-prepare() {
-	cd "${_pkgname}-${pkgver}/"
-
-	local src
-	for src in "${source[@]}"; do
-		src="${src%%::*}"
-		src="${src##*/}"
-		[[ ${src} = *.patch ]] || continue
-		echo "Applying patch ${src}..."
-		patch -Np1 <"../${src}"
-	done
-}
+# prepare() {
+# 	cd "${_pkgname}-${pkgver}/"
+#
+# 	local src
+# 	for src in "${source[@]}"; do
+# 		src="${src%%::*}"
+# 		src="${src##*/}"
+# 		[[ ${src} = *.patch ]] || continue
+# 		echo "Applying patch ${src}..."
+# 		patch -Np1 <"../${src}"
+# 	done
+# }
 
 build() {
 	cd "${_pkgname}-${pkgver}/"
