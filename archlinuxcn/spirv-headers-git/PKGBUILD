@@ -3,7 +3,7 @@
 
 _pkgname=SPIRV-Headers
 pkgname=spirv-headers-git
-epoch=1
+epoch=2
 pkgver=1.3.261.0.r15.g88bc5e3
 pkgrel=1
 pkgdesc='SPIR-V header files Git version'
@@ -14,7 +14,7 @@ source=("git+https://github.com/KhronosGroup/$_pkgname.git")
 sha1sums=('SKIP')
 makedepends=('git' 'cmake')
 conflicts=('spirv-headers')
-provides=("spirv-headers=1:$pkgver")
+provides=("spirv-headers=2:$pkgver")
 
 pkgver() {
     cd "$_pkgname"
