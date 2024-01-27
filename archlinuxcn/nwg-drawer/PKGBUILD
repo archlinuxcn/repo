@@ -2,7 +2,7 @@
 # Project: nwg-shell for sway, https://github.com/nwg-piotr/nwg-shell
 pkgname=('nwg-drawer')
 pkgver=0.4.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Application drawer for sway and other wlroots-based compositors"
 arch=('any')
 url="https://github.com/nwg-piotr/nwg-drawer"
@@ -33,4 +33,7 @@ package() {
   install -Dm644 -t "$pkgdir"/usr/share/"$pkgname"/desktop-directories/ "$pkgname"-"$pkgver"/desktop-directories/*
   install -Dm644 -t "$pkgdir"/usr/share/"$pkgname" "$pkgname"-"$pkgver"/drawer.css
   install -Dm755 -t "$pkgdir"/usr/bin "$pkgname"-"$pkgver"/bin/"$pkgname"
+  cd "$srcdir/$pkgname-$pkgver"
+  install -D -t "$pkgdir"/usr/share/licenses/"$pkgname" LICENSE
+  install -D -t "$pkgdir"/usr/share/doc/"$pkgname" README.md
 }
