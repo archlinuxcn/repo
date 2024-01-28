@@ -42,4 +42,9 @@ package() {
 	install -d "${pkgdir}/usr/lib/netdata/conf.d/"
 	cp -rv --no-preserve=ownership go.d{,.conf} "${pkgdir}/usr/lib/netdata/conf.d/"
 	install -Dm755 "go.d.plugin-${pkgver}/go.d.plugin" -t "${pkgdir}/usr/lib/netdata/plugins.d/"
+
+	cd "go.d.plugin-${pkgver}/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -d "${pkgdir}/usr/share/doc/${pkgname}/"
+	cp docs/* "${pkgdir}/usr/share/doc/${pkgname}/"
 }
