@@ -6,7 +6,7 @@
 
 _pkgname="hyprland"
 pkgname="${_pkgname}-hidpi-xprop-git"
-pkgver=0.34.0.r65.12d79d63
+pkgver=0.34.0.r74.df990c80
 pkgrel=1
 pkgdesc="A dynamic tiling Wayland compositor based on wlroots that doesn't sacrifice on its looks."
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
@@ -55,6 +55,7 @@ source=("${_pkgname}::git+https://github.com/hyprwm/Hyprland.git"
         "git+https://gitlab.freedesktop.org/wlroots/wlroots.git"
         "git+https://github.com/hyprwm/hyprland-protocols.git"
         "git+https://github.com/canihavesomecoffee/udis86.git"
+        "0001-Revert-compositor-send-WL_SURFACE_ERROR_INVALID_SIZE.patch"
         "0001-xwayland-support-HiDPI-scale.patch"
         "0002-Fix-configure_notify-event.patch"
         "0003-Fix-size-hints-under-Xwayland-scaling.patch")
@@ -64,6 +65,7 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
+            '7758eb3ca20b657e53b01c239c5234898342322f41af1cd9e9a8841fca2d5e2b'
             'b717f2f61aeb3bf670fe60424a8cd638d51e73dc66bd84277fada289bf2330d8'
             'acced048ce6359f4f9f894ee648e4c47fd5093db3fce285b60f73b9f80bb7ac9'
             '4e6b32ea58ecfd6a2cce7e5ddf09160136714de8b58e41a9919b30e06e998178')
@@ -84,7 +86,7 @@ prepare() {
 	git -c protocol.file.allow=always submodule update subprojects/hyprland-protocols
 	git -c protocol.file.allow=always submodule update subprojects/udis86
 	cd subprojects/wlroots
-	git revert -n 18595000f3a21502fd60bf213122859cc348f9af
+	patch -Np1 -i "${srcdir}"/0001-Revert-compositor-send-WL_SURFACE_ERROR_INVALID_SIZE.patch
 	patch -Np1 -i "${srcdir}"/0001-xwayland-support-HiDPI-scale.patch
 	patch -Np1 -i "${srcdir}"/0002-Fix-configure_notify-event.patch
 	patch -Np1 -i "${srcdir}"/0003-Fix-size-hints-under-Xwayland-scaling.patch
