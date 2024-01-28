@@ -6,7 +6,7 @@ pkgrel=1
 pkgdesc="Best-Effort Extent-Same, a btrfs deduplicator daemon"
 arch=('x86_64')
 url="https://github.com/Zygo/bees"
-license=('GPL3')
+license=('GPL-3.0-or-later')
 depends=('util-linux-libs' 'bash')
 makedepends=('git' 'make' 'gcc' 'discount' 'btrfs-progs' 'systemd')
 source=("$pkgname"::'git+https://github.com/zygo/bees.git#branch=master')
