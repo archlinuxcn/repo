@@ -1,4 +1,4 @@
-From e5d516fea7d3263ea80396a0dc6d1cf17b8c70d0 Mon Sep 17 00:00:00 2001
+From 411e6680ac0b4550a5568642e69887126b16f92d Mon Sep 17 00:00:00 2001
 From: Peter Cai <peter@typeblog.net>
 Date: Sun, 14 Aug 2022 10:38:32 -0400
 Subject: [PATCH 3/3] Revert "compositor: send WL_SURFACE_ERROR_INVALID_SIZE
@@ -12,10 +12,10 @@ XWayland scaling triggers the same case as libwayland-cursor.
  1 file changed, 5 insertions(+), 14 deletions(-)
 
 diff --git a/types/wlr_compositor.c b/types/wlr_compositor.c
-index f43641a2..e2434a80 100644
+index b2978775..40a025a4 100644
 --- a/types/wlr_compositor.c
 +++ b/types/wlr_compositor.c
-@@ -197,21 +197,12 @@ static void surface_finalize_pending(struct wlr_surface *surface) {
+@@ -209,21 +209,12 @@ static void surface_finalize_pending(struct wlr_surface *surface) {
  	if (!pending->viewport.has_src &&
  			(pending->buffer_width % pending->scale != 0 ||
  			pending->buffer_height % pending->scale != 0)) {
@@ -31,7 +31,7 @@ index f43641a2..e2434a80 100644
 -				"is not divisible by scale (%d)", pending->buffer_width,
 -				pending->buffer_height, pending->scale);
 -		} else {
--			wl_resource_post_error(surface->resource,
+-			wlr_surface_reject_pending(surface, surface->resource,
 -				WL_SURFACE_ERROR_INVALID_SIZE,
 -				"Buffer size (%dx%d) is not divisible by scale (%d)",
 -				pending->buffer_width, pending->buffer_height, pending->scale);
@@ -43,5 +43,5 @@ index f43641a2..e2434a80 100644
  
  	if (pending->viewport.has_dst) {
 -- 
-2.39.2
+2.43.0
 
