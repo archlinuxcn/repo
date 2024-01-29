@@ -1,4 +1,4 @@
-From bef37498d4c41e5dacd5ace72be61e7ff40e79cd Mon Sep 17 00:00:00 2001
+From a8556fa67c0eb2634b803c3c7141cca16661843d Mon Sep 17 00:00:00 2001
 From: Dario Nieuwenhuis <dirbaio@dirbaio.net>
 Date: Fri, 31 Jan 2020 22:57:48 +0100
 Subject: [PATCH 1/3] xwayland: add support for global scale factor
@@ -23,10 +23,10 @@ Co-authored-by: Antonin Décimo <antonin.decimo@gmail.com>
  5 files changed, 44 insertions(+), 13 deletions(-)
 
 diff --git a/include/wlr/xwayland/server.h b/include/wlr/xwayland/server.h
-index 7eb3bc2a..2ac21414 100644
+index fa16a3b0..f6b44201 100644
 --- a/include/wlr/xwayland/server.h
 +++ b/include/wlr/xwayland/server.h
-@@ -30,6 +30,8 @@ struct wlr_xwayland_server {
+@@ -31,6 +31,8 @@ struct wlr_xwayland_server {
  
  	time_t server_start;
  
@@ -36,10 +36,10 @@ index 7eb3bc2a..2ac21414 100644
  
  	int display;
 diff --git a/include/wlr/xwayland/xwayland.h b/include/wlr/xwayland/xwayland.h
-index c1dbc339..af2616d2 100644
+index cb9e35f0..698336be 100644
 --- a/include/wlr/xwayland/xwayland.h
 +++ b/include/wlr/xwayland/xwayland.h
-@@ -206,6 +206,8 @@ struct wlr_xwayland *wlr_xwayland_create(struct wl_display *wl_display,
+@@ -213,6 +213,8 @@ struct wlr_xwayland *wlr_xwayland_create_with_server(struct wl_display *display,
  
  void wlr_xwayland_destroy(struct wlr_xwayland *wlr_xwayland);
  
@@ -49,10 +49,10 @@ index c1dbc339..af2616d2 100644
  	uint8_t *pixels, uint32_t stride, uint32_t width, uint32_t height,
  	int32_t hotspot_x, int32_t hotspot_y);
 diff --git a/xwayland/server.c b/xwayland/server.c
-index aee15002..fd6de735 100644
+index 6dd42246..316cbb2d 100644
 --- a/xwayland/server.c
 +++ b/xwayland/server.c
-@@ -471,6 +471,8 @@ struct wlr_xwayland_server *wlr_xwayland_server_create(
+@@ -473,6 +473,8 @@ struct wlr_xwayland_server *wlr_xwayland_server_create(
  	server->wl_fd[0] = server->wl_fd[1] = -1;
  	server->wm_fd[0] = server->wm_fd[1] = -1;
  
@@ -62,11 +62,11 @@ index aee15002..fd6de735 100644
  	wl_signal_init(&server->events.ready);
  	wl_signal_init(&server->events.destroy);
 diff --git a/xwayland/xwayland.c b/xwayland/xwayland.c
-index 75c09f31..8545ffda 100644
+index 0ffc1fef..a7bc85a2 100644
 --- a/xwayland/xwayland.c
 +++ b/xwayland/xwayland.c
-@@ -127,6 +127,10 @@ struct wlr_xwayland *wlr_xwayland_create(struct wl_display *wl_display,
- 	return xwayland;
+@@ -169,6 +169,10 @@ error_shell_v1:
+ 	return NULL;
  }
  
 +void wlr_xwayland_set_scale(struct wlr_xwayland *xwayland, int32_t scale) {
@@ -77,7 +77,7 @@ index 75c09f31..8545ffda 100644
  		uint8_t *pixels, uint32_t stride, uint32_t width, uint32_t height,
  		int32_t hotspot_x, int32_t hotspot_y) {
 diff --git a/xwayland/xwm.c b/xwayland/xwm.c
-index 5f857f24..cfc2917c 100644
+index 9a6cf771..36a95f2f 100644
 --- a/xwayland/xwm.c
 +++ b/xwayland/xwm.c
 @@ -19,6 +19,14 @@
@@ -95,7 +95,7 @@ index 5f857f24..cfc2917c 100644
  static const char *const atom_map[ATOM_LAST] = {
  	[WL_SURFACE_ID] = "WL_SURFACE_ID",
  	[WL_SURFACE_SERIAL] = "WL_SURFACE_SERIAL",
-@@ -965,8 +973,13 @@ static void xwm_handle_create_notify(struct wlr_xwm *xwm,
+@@ -961,8 +969,13 @@ static void xwm_handle_create_notify(struct wlr_xwm *xwm,
  		return;
  	}
  
@@ -111,7 +111,7 @@ index 5f857f24..cfc2917c 100644
  }
  
  static void xwm_handle_destroy_notify(struct wlr_xwm *xwm,
-@@ -997,10 +1010,10 @@ static void xwm_handle_configure_request(struct wlr_xwm *xwm,
+@@ -993,10 +1006,10 @@ static void xwm_handle_configure_request(struct wlr_xwm *xwm,
  
  	struct wlr_xwayland_surface_configure_event wlr_event = {
  		.surface = surface,
@@ -126,7 +126,7 @@ index 5f857f24..cfc2917c 100644
  		.mask = mask,
  	};
  
-@@ -1015,14 +1028,16 @@ static void xwm_handle_configure_notify(struct wlr_xwm *xwm,
+@@ -1029,14 +1042,16 @@ static void xwm_handle_configure_notify(struct wlr_xwm *xwm,
  	}
  
  	bool geometry_changed =
@@ -148,8 +148,8 @@ index 5f857f24..cfc2917c 100644
 +		xsurface->height = unscale(xwm, ev->height);
  	}
  
- 	if (xsurface->override_redirect != ev->override_redirect) {
-@@ -1769,7 +1784,13 @@ void wlr_xwayland_surface_configure(struct wlr_xwayland_surface *xsurface,
+ 	xwm_update_override_redirect(xsurface, ev->override_redirect);
+@@ -1803,7 +1818,13 @@ void wlr_xwayland_surface_configure(struct wlr_xwayland_surface *xsurface,
  	uint32_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y |
  		XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT |
  		XCB_CONFIG_WINDOW_BORDER_WIDTH;
@@ -165,5 +165,5 @@ index 5f857f24..cfc2917c 100644
  
  	// If the window size did not change, then we cannot rely on
 -- 
-2.39.2
+2.43.0
 

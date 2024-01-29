@@ -1,4 +1,4 @@
-From 69c32e601c154adbc5ce0edd425cdbd7c9d5bddd Mon Sep 17 00:00:00 2001
+From ad3f762310560148b0ee459da7595d206046fe1f Mon Sep 17 00:00:00 2001
 From: Dario Nieuwenhuis <dirbaio@dirbaio.net>
 Date: Tue, 10 Mar 2020 23:21:11 +0100
 Subject: [PATCH 2/3] xwayland: add support for changing global scale factor on
@@ -17,10 +17,10 @@ Content-Transfer-Encoding: 8bit
  3 files changed, 49 insertions(+)
 
 diff --git a/include/xwayland/xwm.h b/include/xwayland/xwm.h
-index 3d540522..a97e0476 100644
+index 66108e2b..dc96fc01 100644
 --- a/include/xwayland/xwm.h
 +++ b/include/xwayland/xwm.h
-@@ -124,6 +124,7 @@ struct wlr_xwm {
+@@ -126,6 +126,7 @@ struct wlr_xwm {
  
  	const xcb_query_extension_reply_t *xfixes;
  	const xcb_query_extension_reply_t *xres;
@@ -28,7 +28,7 @@ index 3d540522..a97e0476 100644
  	uint32_t xfixes_major_version;
  #if HAVE_XCB_ERRORS
  	xcb_errors_context_t *errors_context;
-@@ -160,4 +161,6 @@ char *xwm_get_atom_name(struct wlr_xwm *xwm, xcb_atom_t atom);
+@@ -162,4 +163,6 @@ char *xwm_get_atom_name(struct wlr_xwm *xwm, xcb_atom_t atom);
  bool xwm_atoms_contains(struct wlr_xwm *xwm, xcb_atom_t *atoms,
  	size_t num_atoms, enum atom_name needle);
  
@@ -36,10 +36,10 @@ index 3d540522..a97e0476 100644
 +
  #endif
 diff --git a/xwayland/xwayland.c b/xwayland/xwayland.c
-index 8545ffda..983b6ca0 100644
+index a7bc85a2..4b933449 100644
 --- a/xwayland/xwayland.c
 +++ b/xwayland/xwayland.c
-@@ -129,6 +129,9 @@ struct wlr_xwayland *wlr_xwayland_create(struct wl_display *wl_display,
+@@ -171,6 +171,9 @@ error_shell_v1:
  
  void wlr_xwayland_set_scale(struct wlr_xwayland *xwayland, int32_t scale) {
  	xwayland->server->scale = scale;
@@ -50,7 +50,7 @@ index 8545ffda..983b6ca0 100644
  
  void wlr_xwayland_set_cursor(struct wlr_xwayland *xwayland,
 diff --git a/xwayland/xwm.c b/xwayland/xwm.c
-index cfc2917c..d71af10c 100644
+index 36a95f2f..040eef20 100644
 --- a/xwayland/xwm.c
 +++ b/xwayland/xwm.c
 @@ -17,6 +17,7 @@
@@ -72,7 +72,7 @@ index cfc2917c..d71af10c 100644
  static const char *const atom_map[ATOM_LAST] = {
  	[WL_SURFACE_ID] = "WL_SURFACE_ID",
  	[WL_SURFACE_SERIAL] = "WL_SURFACE_SERIAL",
-@@ -1907,6 +1912,7 @@ static void xwm_get_resources(struct wlr_xwm *xwm) {
+@@ -1941,6 +1946,7 @@ static void xwm_get_resources(struct wlr_xwm *xwm) {
  	xcb_prefetch_extension_data(xwm->xcb_conn, &xcb_xfixes_id);
  	xcb_prefetch_extension_data(xwm->xcb_conn, &xcb_composite_id);
  	xcb_prefetch_extension_data(xwm->xcb_conn, &xcb_res_id);
@@ -80,7 +80,7 @@ index cfc2917c..d71af10c 100644
  
  	size_t i;
  	xcb_intern_atom_cookie_t cookies[ATOM_LAST];
-@@ -1938,6 +1944,8 @@ static void xwm_get_resources(struct wlr_xwm *xwm) {
+@@ -1972,6 +1978,8 @@ static void xwm_get_resources(struct wlr_xwm *xwm) {
  		wlr_log(WLR_DEBUG, "xfixes not available");
  	}
  
@@ -89,9 +89,9 @@ index cfc2917c..d71af10c 100644
  	xcb_xfixes_query_version_cookie_t xfixes_cookie;
  	xcb_xfixes_query_version_reply_t *xfixes_reply;
  	xfixes_cookie =
-@@ -2341,3 +2349,38 @@ enum wlr_xwayland_icccm_input_model wlr_xwayland_icccm_input_model(
- 	}
- 	return WLR_ICCCM_INPUT_MODEL_NONE;
+@@ -2399,3 +2407,38 @@ void wlr_xwayland_set_workareas(struct wlr_xwayland *wlr_xwayland,
+ 			XCB_ATOM_CARDINAL, 32, 4 * num_workareas, data);
+ 	free(data);
  }
 +
 +typedef struct {
@@ -129,5 +129,5 @@ index cfc2917c..d71af10c 100644
 +	xcb_flush(xwm->xcb_conn);
 +}
 -- 
-2.39.2
+2.43.0
 
