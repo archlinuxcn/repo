@@ -9,45 +9,45 @@ arch=("i686" "x86_64" "aarch64")
 url="http://www.gnu.org/software/${_pkgname}"
 license=("GPL3")
 makedepends=("texinfo" "python" "guile" "ncurses" "expat" "xz" "mpfr"
-             "source-highlight" "boost" "readline")
+	"source-highlight" "boost" "readline")
 depends=("ncurses" "libncursesw.so" "expat" "xz" "mpfr" "source-highlight" "gdb-common=${pkgver}"
-         "readline" "libreadline.so" "guile" "python" "libelf")
+	"readline" "libreadline.so" "guile" "python" "libelf")
 source=(https://ftp.gnu.org/gnu/${_pkgname}/${_pkgname}-${pkgver}.tar.xz{,.sig})
-sha256sums=("fd5bebb7be1833abdb6e023c2f498a354498281df9d05523d8915babeb893f0a"
-            "SKIP")
+sha256sums=('fd5bebb7be1833abdb6e023c2f498a354498281df9d05523d8915babeb893f0a'
+            'SKIP')
 
 validpgpkeys=("F40ADB902B24264AA42E50BF92EDB04BFF325CF3") # Joel Brobecker <brobecker@adacore.com>
 options=("!emptydirs" "!lto")
 
 prepare() {
-  cd "${_pkgname}-${pkgver}/"
-  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
+	cd "${_pkgname}-${pkgver}/"
+	sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
 }
 
 build() {
-  cd "${_pkgname}-${pkgver}/"
+	cd "${_pkgname}-${pkgver}/"
 
-  mkdir -p build && cd build
-  ../configure \
-    --enable-targets=all \
-    --prefix=/build \
-    --enable-languages=all \
-    --enable-multilib \
-    --enable-interwork \
-    --with-system-readline \
-    --disable-nls \
-    --with-python=/usr/bin/python \
-    --with-system-gdbinit="/etc/${_pkgname}/gdbinit"
+	mkdir -p build && cd build
+	../configure \
+		--enable-targets=all \
+		--prefix=/build \
+		--enable-languages=all \
+		--enable-multilib \
+		--enable-interwork \
+		--with-system-readline \
+		--disable-nls \
+		--with-python=/usr/bin/python \
+		--with-system-gdbinit="/etc/${_pkgname}/gdbinit"
 
-  make
+	make
 }
 
 package() {
-  cd "${_pkgname}-${pkgver}/build/"
+	cd "${_pkgname}-${pkgver}/build/"
 
-  make DESTDIR="${pkgdir}" install
+	make DESTDIR="${pkgdir}" install
 
-  # Following files conflict with "gdb" package
-  install -Dm755 "${pkgdir}/build/bin/${_pkgname}" "${pkgdir}/usr/bin/${pkgname}"
-  rm -r "${pkgdir}/build/"
+	# Following files conflict with "gdb" package
+	install -Dm755 "${pkgdir}/build/bin/${_pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+	rm -r "${pkgdir}/build/"
 }
