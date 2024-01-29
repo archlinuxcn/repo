@@ -2,9 +2,9 @@ maintainers:
 - github: lilydjwg
 
 update_on:
-- source: regex
-  url: https://www.collectd.org/download.html
-  regex: "collectd-(\\S+?).tar.bz2"
+- source: github
+  github: collectd/collectd
+  use_latest_release: true
 - alias: perl
 - alias: python
 - alias: libssl
