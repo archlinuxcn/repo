@@ -1,30 +1,31 @@
 # Maintainer: Aviel Warschawski <mail@aviel.org>
 
 pkgname=gdb-multiarch
+_pkgname=${pkgname%-multiarch}
 pkgver=13.2
 pkgrel=2
-pkgdesc='The GNU Debugger for all gdb supported architectures (i386/arm/mips...)'
-arch=(i686 x86_64 aarch64)
-url='http://www.gnu.org/software/gdb/'
-license=(GPL3)
-makedepends=(glibc gcc-libs texinfo python guile ncurses expat xz mpfr
-             source-highlight boost readline)
-depends=(glibc ncurses libncursesw.so gcc-libs expat xz mpfr source-highlight gdb-common=$pkgver
-         readline libreadline.so guile python libelf)
-options=(!emptydirs)
-source=(https://ftp.gnu.org/gnu/gdb/gdb-13.2.tar.xz{,.sig})
-sha256sums=('fd5bebb7be1833abdb6e023c2f498a354498281df9d05523d8915babeb893f0a'
-            'SKIP')
-validpgpkeys=('F40ADB902B24264AA42E50BF92EDB04BFF325CF3') # Joel Brobecker <brobecker@adacore.com>
-options=(!lto)
+pkgdesc="The GNU Debugger for all gdb supported architectures (i386/arm/mips...)"
+arch=("i686" "x86_64" "aarch64")
+url="http://www.gnu.org/software/${_pkgname}"
+license=("GPL3")
+makedepends=("texinfo" "python" "guile" "ncurses" "expat" "xz" "mpfr"
+             "source-highlight" "boost" "readline")
+depends=("ncurses" "libncursesw.so" "expat" "xz" "mpfr" "source-highlight" "gdb-common=${pkgver}"
+         "readline" "libreadline.so" "guile" "python" "libelf")
+source=(https://ftp.gnu.org/gnu/${_pkgname}/${_pkgname}-${pkgver}.tar.xz{,.sig})
+sha256sums=("fd5bebb7be1833abdb6e023c2f498a354498281df9d05523d8915babeb893f0a"
+            "SKIP")
+
+validpgpkeys=("F40ADB902B24264AA42E50BF92EDB04BFF325CF3") # Joel Brobecker <brobecker@adacore.com>
+options=("!emptydirs" "!lto")
 
 prepare() {
-  cd gdb-$pkgver
+  cd "${_pkgname}-${pkgver}/"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
 }
 
 build() {
-  cd gdb-$pkgver
+  cd "${_pkgname}-${pkgver}/"
 
   mkdir -p build && cd build
   ../configure \
@@ -36,18 +37,17 @@ build() {
     --with-system-readline \
     --disable-nls \
     --with-python=/usr/bin/python \
-    --with-system-gdbinit=/etc/gdb/gdbinit
+    --with-system-gdbinit="/etc/${_pkgname}/gdbinit"
 
   make
 }
 
 package() {
-  cd gdb-$pkgver/build
+  cd "${_pkgname}-${pkgver}/build/"
 
-  make DESTDIR="$pkgdir" install
+  make DESTDIR="${pkgdir}" install
 
-  # Following files conflict with 'gdb' package
-  mkdir -p "$pkgdir"/usr/bin
-  mv "$pkgdir"/build/bin/gdb "$pkgdir"/usr/bin/gdb-multiarch
-  rm -r "$pkgdir"/build
+  # Following files conflict with "gdb" package
+  install -Dm755 "${pkgdir}/build/bin/${_pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+  rm -r "${pkgdir}/build/"
 }
