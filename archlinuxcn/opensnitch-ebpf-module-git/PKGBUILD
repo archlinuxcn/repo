@@ -7,7 +7,7 @@ pkgrel=1
 pkgdesc="eBPF process monitor module for opensnitch"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/evilsocket/${_pkgname}"
-license=('GPL3')
+license=('GPL-3.0-or-later')
 makedepends=('git' 'clang' 'llvm' 'libelf'
 	'bc' 'rsync' 'linux-headers' 'coreutils')
 depends=("${_pkgname}")
