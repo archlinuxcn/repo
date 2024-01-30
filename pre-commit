@@ -109,10 +109,10 @@ def git_ls_tree():
         return dirs, files, commits
 
 
-def git_open(filename):
+def git_open(filename, decode_errors='strict'):
     cmd = ['git', 'cat-file', 'blob', f'{GIT_BRANCH}:{filename}']
     with Popen(cmd, stdout=PIPE) as p:
-        return StringIO(readutf8(p.stdout))
+        return StringIO(p.stdout.read().decode('utf-8', errors=decode_errors))
 
 
 def git_listdir(path):
@@ -384,7 +384,8 @@ class RepoTreeTest(TestCase):
                 # PKGBUILD may be added later by lilac
                 continue
             pkgbuild_path = os.path.join(pkgpath(package), 'PKGBUILD')
-            with git_open(pkgbuild_path) as pkgbuild_file:
+            print('checking', pkgbuild_path)
+            with git_open(pkgbuild_path, decode_errors='replace') as pkgbuild_file:
                 pkgbuild = pkgbuild_file.read()
                 if not (('replaces' in pkgbuild) or ('groups' in pkgbuild)):
                     # only parse pkgbuild as srcinfo when necessory
