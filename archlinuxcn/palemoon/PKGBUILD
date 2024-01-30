@@ -6,9 +6,9 @@
 pkgname=palemoon
 _repo=Pale-Moon
 epoch=1
-pkgver=32.5.2
+pkgver=33.0.0
 # Commit ID can be found at https://repo.palemoon.org/MoonchildProductions/Pale-Moon/tags
-_commit=ae12e17cd3
+_commit=637e1ceec2
 pkgrel=1
 pkgdesc="Open source web browser based on Firefox focusing on efficiency."
 arch=('i686' 'x86_64')
@@ -22,18 +22,15 @@ optdepends=('libpulse: PulseAudio audio driver'
             'ffmpeg: various video and audio support')
 source=(git+"https://repo.palemoon.org/MoonchildProductions/${_repo}?signed#commit=${_commit}"
         git+"https://repo.palemoon.org/MoonchildProductions/UXP"
-        mozconfig.in
-        "mathops_operand_type_mismatch_for_shr.patch"::"https://git.videolan.org/?p=ffmpeg.git;a=patch;h=effadce6c756247ea8bae32dc13bb3e6f464f0eb")
+        mozconfig.in)
 validpgpkeys=('3DAD8CD107197488D2A2A0BD40481E7B8FCF9CEC'
               '3059E09144F56804F0FBF4E126B40624BDBFD9F3')
 sha1sums=('SKIP'
           'SKIP'
-          '999bbd13d2149a392d620901caf61ffeaf3f86b9'
-          '0202b18ac4afb56d3a3e5033a9872cdc3e13b422')
+          '999bbd13d2149a392d620901caf61ffeaf3f86b9')
 sha256sums=('SKIP'
             'SKIP'
-            '6fa73d13a3dc5dd5bb984bf2a37e2074ca256df7988f72289fb649a704405bc5'
-            'a50d7da9870a3fd801ad3a4d13d5c9b260acb094cf8bfa4afd95a54741173a7f')
+            '6fa73d13a3dc5dd5bb984bf2a37e2074ca256df7988f72289fb649a704405bc5')
 
 prepare() {
   sed 's#%SRCDIR%#'"${srcdir}"'#g' mozconfig.in > mozconfig
@@ -41,9 +38,6 @@ prepare() {
   git submodule init
   git config submodule.platform.url "${srcdir}/UXP"
   git -c protocol.file.allow=always submodule update
-  # Apply patch for mathops_operand_type_mismatch_for_shr.patch
-  cd "platform/media/ffvpx"
-  patch -p1 -i "${srcdir}/mathops_operand_type_mismatch_for_shr.patch"
 }
 
 build() {
