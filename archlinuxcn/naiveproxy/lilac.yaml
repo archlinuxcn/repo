@@ -1,13 +1,11 @@
-pre_build_script: aur_pre_build(maintainers=['rrenn'])
-
-post_build: aur_post_build
-
-update_on:
-  - source: aur
-    aur: naiveproxy
-  - source: manual
-    manual: 1.0
-
 maintainers:
   - github: yingziwu
   - github: dctxmei
+
+update_on:
+  - source: github
+    github: klzgrad/naiveproxy
+    use_latest_release: true
+  - source: manual
+    manual: 2
+
