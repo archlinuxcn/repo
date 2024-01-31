@@ -1,4 +1,5 @@
 from types import SimpleNamespace
+import re
 
 from lilaclib import *
 
@@ -9,9 +10,24 @@ def pre_build():
 
   sums = False
 
+  lib32_re = re.compile(r'\s+lib32-[\S]+')
+  ignore_until = None
+  ignore_count = 1
+
   for line in edit_file('PKGBUILD'):
+    line = lib32_re.sub('', line)
     if '$pkgname' in line:
       line = line.replace('$pkgname', '$_pkgname')
+
+    if ignore_until:
+      if ignore_until.fullmatch(line):
+        if ignore_count == 1:
+          ignore_until = None
+        else:
+          ignore_count -= 1
+          continue
+      else:
+        continue
 
     if line.startswith('pkgname='):
       line = '_pkgname=wine\npkgname=wine-for-wechat'
@@ -28,6 +44,12 @@ def pre_build():
       line += '\nprovides=(wine=$pkgver)\nconflicts=(wine)'
     elif line.startswith('  mv '):
       line += '\n  (cd $_pkgname && patch -p1 < ../wine-wechat.patch)'
+    elif line.strip() == '--enable-win64':
+      line += ' \\\n    --enable-archs=x86_64,i386\n'
+      ignore_until = re.compile(r'\s*make\s*')
+      ignore_count = 2
+    elif line.startswith('package()'):
+      ignore_until = re.compile(r'.*Wine-64.*')
 
     print(line)
 
