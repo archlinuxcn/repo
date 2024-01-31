@@ -74,7 +74,7 @@ def install(env, prefix, file):
   s = '"微软雅黑"="%s"' % fontname
   s = re.sub('[^\x00-\xff]', to_reg_char, s)
   subprocess.check_call([
-    'sed', '-i', '/\[Software\\\\Wine\\\\Fonts\\\\Replacements\]/a'+s,
+    'sed', '-i', r'/\[Software\\Wine\\Fonts\\Replacements\]/a'+s,
     prefix / 'user.reg',
   ], env=env)
 
