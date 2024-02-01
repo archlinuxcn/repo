@@ -94,7 +94,6 @@ build() {
 		-D xwayland=enabled \
 		-D systemd=enabled
 
-	ln -sf wlroots build/subprojects/wlroots/include/wlr
 	meson compile -C build
 }
 
