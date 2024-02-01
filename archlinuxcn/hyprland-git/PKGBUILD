@@ -73,10 +73,6 @@ prepare() {
 	git config submodule.subprojects/udis86.url "${srcdir}/udis86"
 	git config submodule.subprojects/tracy.url "${srcdir}/tracy"
 	git -c protocol.file.allow=always submodule update
-
-	cd subprojects/wlroots
-	sed -i 's/soversion = 12/soversion = 13/g' ../packagefiles/wlroots-meson-build.patch
-	patch -p1 <../packagefiles/wlroots-meson-build.patch
 }
 
 pkgver() {
