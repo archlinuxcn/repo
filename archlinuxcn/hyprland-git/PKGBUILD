@@ -102,9 +102,8 @@ package() {
 
 	meson install -C build --destdir "${pkgdir}"
 
-	rm -rf "${pkgdir}/usr/include/hyprland/wlroots/wlr/"
-
 	# resolve conflicts with system wlr
+	rm -rf "${pkgdir}/usr/include/wlr/"
 	rm -f "${pkgdir}/usr/lib/libwlroots.so"
 	rm -f "${pkgdir}/usr/lib/pkgconfig/wlroots.pc"
 
