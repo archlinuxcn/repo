@@ -2,9 +2,7 @@ maintainers:
     - github: farseerfc
     - github: roaldclark
 build_prefix: extra-x86_64
-pre_build_script: |
-    aur_pre_build(maintainers=['Morganamilo', 'andreas_baumann'])
-    run_cmd(['iconv', '-f', 'iso-8859-1', '-t', 'utf-8', 'PKGBUILD', '-o', 'PKGBUILD'])
+pre_build_script: aur_pre_build(maintainers=['Morganamilo', 'andreas_baumann'])
 post_build: aur_post_build
 update_on:
     - source: aur
@@ -46,4 +44,4 @@ update_on:
       alpm: gnupg
       repo: core
     - source: manual
-      manual: 1.0
+      manual: 1.1
