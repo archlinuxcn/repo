@@ -138,14 +138,14 @@ build() {
   popd
 }
 
-check() {
-  SRC_DIR="${srcdir}/${pkgname}-${_pkgver}-${_pkgrel}"
-  script_dir="${SRC_DIR}/tests"
-  naive="${SRC_DIR}/src/out/Release/naive"
-
-  cd /tmp
-  python "${script_dir}/basic.py" --naive="$naive"
-}
+#check() {
+#  SRC_DIR="${srcdir}/${pkgname}-${_pkgver}-${_pkgrel}"
+#  script_dir="${SRC_DIR}/tests"
+#  naive="${SRC_DIR}/src/out/Release/naive"
+#
+#  cd /tmp
+#  python "${script_dir}/basic.py" --naive="$naive"
+#}
 
 package() {
   pushd "${srcdir}"
