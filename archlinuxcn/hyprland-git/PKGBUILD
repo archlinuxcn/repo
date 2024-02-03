@@ -43,13 +43,13 @@ depends=(cairo
 	xorg-xwayland
 	libdisplay-info.so
 	tomlplusplus)
-makedepends=(cmake
-	jq
+makedepends=(
 	git
-	meson
+	cmake
 	ninja
-	pkgconf
-	vulkan-headers
+	gcc
+	meson
+	wayland-protocols
 	xorgproto)
 provides=("hyprland=${pkgver%%.r*}")
 conflicts=(hyprland)
@@ -67,6 +67,8 @@ sha256sums=('SKIP'
 
 prepare() {
 	cd Hyprland
+	rm -rf subprojects/wlroots subprojects/hyprland-protocols
+
 	git submodule init
 	git config submodule.wlroots.url "${srcdir}/wlroots"
 	git config submodule.subprojects/hyprland-protocols.url "${srcdir}/hyprland-protocols"
@@ -81,40 +83,41 @@ pkgver() {
 
 build() {
 	cd Hyprland
-
-	meson setup build \
-		--prefix /usr \
-		--libexecdir lib \
-		--sbindir bin \
-		--buildtype plain \
-		--wrap-mode nodownload \
-		-D b_lto=true \
-		-D b_pie=true \
-		-D default_library=shared \
-		-D xwayland=enabled \
-		-D systemd=enabled
-
-	meson compile -C build
+	mkdir -p build && cd build
+	cmake -G Ninja -DCMAKE_BUILD_TYPE=None -DCMAKE_SKIP_RPATH=ON -DCMAKE_INSTALL_PREFIX=/usr ..
+	ninja
 }
 
 package() {
 	cd Hyprland
 
-	meson install -C build --destdir "${pkgdir}"
+	meson install -C subprojects/wlroots/build --destdir "${pkgdir}/tmpwlr"
+	install -Dm755 build/Hyprland -t "${pkgdir}/usr/bin/"
 
-	# resolve conflicts with system wlr
-	rm -rf "${pkgdir}/usr/include/wlr/"
-	rm -f "${pkgdir}/usr/lib/libwlroots.so"
-	rm -f "${pkgdir}/usr/lib/pkgconfig/wlroots.pc"
+	pushd "${pkgdir}/usr/bin"
+	ln -sf Hyprland hyprland
+	popd
 
-	# resolve conflicts with xdg-desktop-portal-hyprland from repo
-	rm -rf "${pkgdir}/usr/share/xdg-desktop-portal/"
-	rm -rf "${pkgdir}/usr/share/hyprland-protocols/"
-	rm -f "${pkgdir}/usr/share/pkgconfig/hyprland-protocols.pc"
+	install -Dm755 build/{hyprctl/hyprctl,hyprpm/hyprpm} -t "${pkgdir}/usr/bin/"
+	install -Dm644 assets/*.png -t "${pkgdir}/usr/share/hyprland/"
 
-	# FIXME: meson.build shall install version.h
-	install -Dm644 src/version.h -t "${pkgdir}/usr/include/hyprland/src/"
+	install -Dm644 example/hyprland.desktop -t "${pkgdir}/usr/share/wayland-sessions"
+	install -Dm644 example/hyprland.conf -t "${pkgdir}/usr/share/hyprland"
 
-	# license
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 subprojects/wlroots/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-wlroots"
+	install -Dm644 subprojects/udis86/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-udis86"
+
+	install -Dm644 docs/*.1 -t "${pkgdir}/usr/share/man/man1/"
+	install -Dm755 ${pkgdir}/tmpwlr/usr/local/lib/libwlroots.so.* -t "${pkgdir}/usr/lib/"
+	install -d ${pkgdir}/usr/include/hyprland/{protocols,wlroots}
+
+	cp -R src "${pkgdir}/usr/include/hyprland/"
+	cp -R ${pkgdir}/tmpwlr/usr/local/include/* "${pkgdir}/usr/include/hyprland/wlroots/"
+
+	find "${pkgdir}/usr/include/hyprland/" -type f ! -name '*.h*' -delete
+	rm -rf "${pkgdir}/tmpwlr/"
+
+	cp protocols/*-protocol.h "${pkgdir}/usr/include/hyprland/protocols/"
+	install -Dm644 build/hyprland.pc -t "${pkgdir}/usr/share/pkgconfig/"
 }
