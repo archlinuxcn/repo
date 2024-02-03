@@ -2,8 +2,8 @@
 
 pkgname=python-medpy
 _pkgname=medpy
-pkgver=0.4.0
-pkgrel=10
+pkgver=0.5.0rc1
+pkgrel=1
 pkgdesc='Medical image processing in Python'
 arch=('x86_64')
 url='https://github.com/loli/medpy'
@@ -22,7 +22,7 @@ checkdepends=(
   python-nose
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/loli/medpy/archive/${pkgver}.tar.gz")
-sha512sums=('539570d99fc786b5c27f76046999b9d87e343f32c7442b34bc49c56831d2e93efe13a72f1f3577f96e8026ad4d4380994ede7882c9219d6ef8f5673bdb2ab91e')
+sha512sums=('5d02077a9b2d8b1cb45d5d13461ec6b8c88bc0f50fcf0269ee599f09e8985845cb315821a8a2599fa2cb15b8a84c559576e9ab0833d3f04f39d4a6c467a56a1b')
 
 build() {
   cd "${_pkgname}-${pkgver}"
