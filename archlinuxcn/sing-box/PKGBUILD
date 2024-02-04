@@ -1,7 +1,7 @@
 # Maintainer: everyx <lunt.luo#gmail.com>
 
 pkgname=sing-box
-pkgver=1.8.4
+pkgver=1.8.5
 pkgrel=1
 
 pkgdesc='The universal proxy platform.'
@@ -11,8 +11,10 @@ license=('GPL3 with name use or association addition')
 
 makedepends=('go')
 
-source=("$pkgname-$pkgver.tar.gz::https://github.com/SagerNet/sing-box/archive/v$pkgver.tar.gz")
-sha256sums=('949feec1da2bc9d43b6c766c1dfb6f71f737a221e5ce4220616a3900dfb40c82')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/SagerNet/sing-box/archive/v$pkgver.tar.gz"
+        "sing-box.rules")
+sha256sums=('0d5e6a7198c3a18491ac35807170715118df2c7b77fd02d16d7cfb5791e368ce'
+            '1365536e1875043b969e2e18d7313ab7c6f7f9f63387f25506bb04362b44f206')
 
 conflicts=("$pkgname-git" "$pkgname-beta")
 optdepends=('sing-geosite: sing-geosite database'
@@ -62,6 +64,7 @@ package() {
     install -Dm644 "release/config/$pkgname.service"  -t "$pkgdir/usr/lib/systemd/system"
     install -Dm644 "release/config/$pkgname@.service" -t "$pkgdir/usr/lib/systemd/system"
     install -Dm644 "release/config/$pkgname.sysusers"    "$pkgdir/usr/lib/sysusers.d/$pkgname.conf"
+    install -Dm644 "${srcdir}/sing-box.rules"            "$pkgdir/usr/share/polkit-1/rules.d/sing-box.rules"
 
     install -Dm644 completions/bash "${pkgdir}/usr/share/bash-completion/completions/${pkgname}.bash"
     install -Dm644 completions/fish "${pkgdir}/usr/share/fish/vendor_completions.d/${pkgname}.fish"
