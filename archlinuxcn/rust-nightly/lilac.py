@@ -24,7 +24,7 @@ STDS = [
 
 config_url = 'https://static.rust-lang.org/dist/channel-rust-nightly.toml'
 
-toolchain = {
+optdepends = {
   'x86_64-pc-windows-gnu': ['mingw-w64-gcc'],
   'i686-pc-windows-gnu': ['mingw-w64-gcc'],
   'i686-unknown-linux-gnu': [],
@@ -32,6 +32,11 @@ toolchain = {
   'wasm32-unknown-emscripten': ['emsdk', 'emscripten'],
   'wasm32-unknown-unknown': [],
   'aarch64-linux-android': ['android-ndk'],
+}
+provides = {
+  'i686-unknown-linux-gnu': ['lib32-rust-libs'],
+  'wasm32-unknown-unknown': ['rust-wasm'],
+  'x86_64-unknown-linux-musl': ['rust-musl'],
 }
 
 class Std:
@@ -42,7 +47,8 @@ class Std:
     self.url = data['xz_url']
     self.hash = data['xz_hash']
     self.target = target
-    self.optdepends = toolchain.get(target)
+    self.optdepends = optdepends.get(target)
+    self.provides = provides.get(target)
 
 PKGBUILD: str
 
