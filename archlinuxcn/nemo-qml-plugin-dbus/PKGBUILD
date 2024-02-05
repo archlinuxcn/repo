@@ -1,0 +1,25 @@
+# Maintainer: Yvaniak <ewen at philippot dot biz>
+# Contributor: éclairevoyant
+
+pkgname=nemo-qml-plugin-dbus
+pkgver=2.1.33
+pkgrel=1
+pkgdesc="Provides types to access D-Bus from QML"
+arch=('x86_64' 'aarch64')
+url="https://github.com/sailfishos/${pkgname}"
+license=('BSD-3-Clause OR LGPL-2.1-or-later')
+depends=('qt5-declarative')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('08d1bdc5eac5eba2197f2c1e04a7e851437724331215059db1d68828dbf3b0a8')
+
+build() {
+	cd "${pkgname}-${pkgver}/"
+	qmake src
+	make
+}
+
+package() {
+	cd "${pkgname}-${pkgver}/"
+	make INSTALL_ROOT="${pkgdir}" install
+	install -Dm644 license.{bsd,lgpl} -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
