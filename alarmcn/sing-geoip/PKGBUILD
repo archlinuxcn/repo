@@ -1,0 +1,43 @@
+# Maintainer: everyx <lunt.luo#gmail.com>
+
+pkgbase=sing-geoip
+pkgname=(sing-geoip-common sing-geoip-rule-set sing-geoip-db)
+pkgver=20240112
+pkgrel=1
+pkgdesc="GeoIP database and rule sets for sing-box"
+arch=('any')
+url="https://github.com/SagerNet/${pkgbase}"
+license=('GPL-3.0-or-later')
+makedepends=('go')
+_srcbase="${pkgbase}-${pkgver}"
+source=("${_srcbase}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('d3277611a2f0f4657c1bf4cb402543892d05155d481ee4e04b1c0ecc473df3fa')
+
+build() {
+	cd "${_srcbase}/" || exit
+	NO_SKIP=true go run -v .
+}
+
+package_sing-geoip-common() {
+	pkgdesc="sing-geosite (common files)"
+	install -Dm644 "${_srcbase}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgbase}/"
+}
+
+package_sing-geoip-rule-set() {
+	pkgdesc="sing-geoip (rule sets)"
+	depends=("${pkgbase}-common")
+	provides=("${pkgbase}")
+
+	install -dm755 "${pkgdir}/usr/share/${pkgbase}/rule-set/"
+	install -Dm644 ${_srcbase}/rule-set/* "${pkgdir}/usr/share/${pkgbase}/rule-set"
+}
+
+package_sing-geoip-db() {
+	pkgdesc="sing-geoip (database)"
+	depends=("${pkgbase}-common")
+	provides=("${pkgbase}")
+	replaces=("${pkgbase}")
+
+	install -dm755 "${pkgdir}/usr/share/${pkgbase}/"
+	install -Dm644 ${_srcbase}/*.db "${pkgdir}/usr/share/${pkgbase}/"
+}
