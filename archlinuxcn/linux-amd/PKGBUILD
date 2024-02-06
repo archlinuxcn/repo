@@ -2,11 +2,11 @@
 
 pkgbase=linux-amd
 _srcname=linux
-gitver=v6.7.3
+gitver=v6.7.4
 patchver=20230105
 patchname=more-uarches-for-kernel-5.17+.patch
-pkgver=6.7.v.3
-pkgrel=2
+pkgver=6.7.v.4
+pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
@@ -23,7 +23,7 @@ source=("git+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git#ta
 )
 sha256sums=('SKIP'
             #config.x86_64
-            '572572588342e5e51022110e8ff111842297587da462cddff50e6a7b10e122b7'
+            '601e01e4d8f51e66828efde92960066354f4c9dd745a9ec22d3d864774d21713'
             #.preset file
             '60c6ba602443e94a9eba3aeee9d194027d69bffaa428c6d055348ebf03681b5c'
             #grayskypatch
@@ -176,10 +176,6 @@ _package-headers() {
     mkdir -p "${pkgdir}"/usr/lib/modules/${_kernver}/build/`echo ${i} | sed 's|/Kconfig.*||'`
     cp ${i} "${pkgdir}/usr/lib/modules/${_kernver}/build/${i}"
   done
-
-  # Fix file conflict with -doc package
-  rm "${pkgdir}/usr/lib/modules/${_kernver}/build/Documentation/kbuild"/Kconfig.*-*
-  rm "${pkgdir}/usr/lib/modules/${_kernver}/build/Documentation/Kconfig"
 
   # Add objtool for CONFIG_STACK_VALIDATION
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/tools"
