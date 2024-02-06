@@ -1,7 +1,7 @@
 _name=7-zip
 pkgname=${_name}-full
 pkgver=23.01
-pkgrel=3
+pkgrel=4
 pkgdesc="File archiver with a high compression ratio (full package to replace p7zip)"
 url="https://7-zip.org/"
 license=('LGPL')
@@ -16,6 +16,7 @@ source=(
     "${url}a/7z${_sver}-linux-x64.tar.xz" # To get the manual
     '01-make.patch'
     '02-lib-load-path.patch'
+    '03-version-string.patch' # Fix for Ark https://invent.kde.org/utilities/ark/-/merge_requests/232
 )
 
 sha256sums=(
@@ -23,6 +24,7 @@ sha256sums=(
     '23babcab045b78016e443f862363e4ab63c77d75bc715c0b3463f6134cbcf318'
     '3c6b0ee8ecae06a4f0ff91205989e93e22d03a33e5b7cc6982396c32041fc0a8'
     '5b49bd8c22f2fcc4e6011adc36c2d7a3fb195ba86596b366974f7b6311d0df00'
+    '272d0d5ad64738e38f21b4596114824160318322c79a6eb1d69867c57c8f487e'
 )
 
 _msrc="${source[1]##*/}"
