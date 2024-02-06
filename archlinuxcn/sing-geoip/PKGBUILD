@@ -7,11 +7,14 @@ pkgrel=1
 pkgdesc="GeoIP database and rule sets for sing-box"
 arch=('any')
 url="https://github.com/SagerNet/${pkgbase}"
-license=('GPL-3.0-or-later')
 makedepends=('go')
 _srcbase="${pkgbase}-${pkgver}"
-source=("${_srcbase}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('d3277611a2f0f4657c1bf4cb402543892d05155d481ee4e04b1c0ecc473df3fa')
+source=(
+	"${_srcbase}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
+	"GeoLite2-End-User-License-Agreement.pdf"
+)
+sha256sums=('d3277611a2f0f4657c1bf4cb402543892d05155d481ee4e04b1c0ecc473df3fa'
+            'b9c7fbfcdd5b682b5635592281d72006df89d73f163308b7ef35a59f293b036e')
 
 build() {
 	cd "${_srcbase}/" || exit
@@ -20,24 +23,29 @@ build() {
 
 package_sing-geoip-common() {
 	pkgdesc="sing-geosite (common files)"
-	install -Dm644 "${_srcbase}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgbase}/"
+	license=('GPL-3.0-or-later')
+	install -Dm644 "${_srcbase}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
 
 package_sing-geoip-rule-set() {
 	pkgdesc="sing-geoip (rule sets)"
+	license=('LicenseRef-GeoLite2 End User License Agreement')
 	depends=("${pkgbase}-common")
 	provides=("${pkgbase}")
 
 	install -dm755 "${pkgdir}/usr/share/${pkgbase}/rule-set/"
 	install -Dm644 ${_srcbase}/rule-set/* "${pkgdir}/usr/share/${pkgbase}/rule-set"
+	install -Dm644 GeoLite2-End-User-License-Agreement.pdf -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
 
 package_sing-geoip-db() {
 	pkgdesc="sing-geoip (database)"
+	license=('LicenseRef-GeoLite2 End User License Agreement')
 	depends=("${pkgbase}-common")
 	provides=("${pkgbase}")
 	replaces=("${pkgbase}")
 
 	install -dm755 "${pkgdir}/usr/share/${pkgbase}/"
 	install -Dm644 ${_srcbase}/*.db "${pkgdir}/usr/share/${pkgbase}/"
+	install -Dm644 GeoLite2-End-User-License-Agreement.pdf -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
