@@ -3,8 +3,8 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=webkit2gtk-imgpaste
-pkgver=2.42.4
-pkgrel=2
+pkgver=2.42.5
+pkgrel=1
 pkgdesc="Web content engine for GTK (with patches for pasting images from clipboard)"
 url="https://webkitgtk.org"
 arch=(x86_64)
@@ -82,7 +82,7 @@ source=(
   GTK-MiniBrowser-should-hide-the-toolbar-when-using-full-screen.patch
   GTK-Disable-DMABuf-renderer-for-NVIDIA-proprietary-drivers.patch
 )
-sha256sums=('52288b30bda22373442cecb86f9c9a569ad8d4769a1f97b352290ed92a67ed86'
+sha256sums=('b64278c1f20b8cfdbfb5ff573c37d871aba74a1db26d9b39f74e8953fe61e749'
             'SKIP'
             '71b8a59c78d549fed0cd895207f49c7b3be40b236e96f4d7b9907a26521499bf'
             '20ebac2caf15fa546e6da00cb0fa90d5d37fcf7bfa883014d7d15eb4963d12d2'
@@ -129,6 +129,10 @@ build() {
   #     collect2: error: ld returned 1 exit status
   export CC=clang CXX=clang++
   LDFLAGS+=" -fuse-ld=lld"
+
+  # JITted code crashes when CET is used
+  CFLAGS+=' -fcf-protection=none'
+  CXXFLAGS+=' -fcf-protection=none'
 
   # Produce minimal debug info: 4.3 GB of debug data makes the
   # build too slow and is too much to package for debuginfod
