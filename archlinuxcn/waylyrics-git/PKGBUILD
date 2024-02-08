@@ -3,7 +3,7 @@
 pkgname=waylyrics-git
 _pkgname=waylyrics
 _appname="io.poly000.${_pkgname}"
-pkgver=0.1.0_r494.g87367a17
+pkgver=0.2.0_r508.g5e63a911
 pkgrel=2
 pkgdesc="general desktop lyrics with QQMusic/NetEase Cloud Music source"
 url="https://github.com/waylyrics/waylyrics"
@@ -39,8 +39,17 @@ prepare() {
 pkgver() {
     cd "${_pkgname}"
     export RUSTUP_TOOLCHAIN=stable
-    semver=$(cargo metadata --no-deps --format-version=1 | jq -r '.packages | .[0] | .version')
+    semver=$( cargo metadata --no-deps --format-version=1 |
+        jq -r '.packages | .[0] | .version' )
     echo "${semver}_r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+}
+
+check() {
+    cd "${_pkgname}"
+    export RUSTUP_TOOLCHAIN=stable
+    export WAYLYRICS_THEME_PRESETS_DIR="/usr/share/${_pkgname}/themes"
+    
+    cargo test --frozen
 }
 
 build() {
