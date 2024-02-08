@@ -1,0 +1,10 @@
+build_prefix: extra-x86_64
+pre_build_script: aur_pre_build(maintainers=['1ridic'])
+post_build: aur_post_build
+repo_makedepends:
+  - xcaddy
+update_on:
+  - source: aur
+    aur: caddy-naiveproxy
+maintainers:
+  - github: roaldclark
