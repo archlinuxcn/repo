@@ -3,7 +3,7 @@
 # Contributor: Kyle Brennan <kyle@metalspork.xyz>
 
 pkgname=resticprofile
-pkgver=0.24.0
+pkgver=0.25.0
 pkgrel=1
 pkgdesc="Configuration profiles manager and scheduler for restic backup"
 arch=("x86_64")
