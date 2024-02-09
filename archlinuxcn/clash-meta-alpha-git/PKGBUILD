@@ -8,7 +8,7 @@ pkgrel=1
 pkgdesc="Another Clash Kernel by MetaCubeX (git virsion)"
 arch=('x86_64' 'aarch64')
 url="https://github.com/MetaCubeX/Clash.Meta"
-license=('GPL3')
+license=('GPL-3.0-or-later')
 depends=('glibc' 'clash-geoip')
 makedepends=('git' 'go')
 provides=('clash-meta' 'clash-meta-alpha')
@@ -27,7 +27,7 @@ sha256sums=('SKIP'
             '50737592c7bd743fe8f543924034718337477a203fa11ef4272cae496df3769c'
             '90f7fdacecd5928e37865b4f841517f925c8bedc769f16f7a7a1e89b923f1fb9')
 pkgver() {
-    cd "${srcdir}"/"$_pkgname"
+    cd "${srcdir}"/"${_pkgname}"
     (
         set -o pipefail
         local date=$(TZ=UTC git log -1 --format='%cd' --date=short-local | sed 's/-//g')
@@ -37,27 +37,33 @@ pkgver() {
 }
 
 build() {
-    cd "${srcdir}"/"$_pkgname"
+    export GOPATH="${srcdir}"/gopath
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
+    export CGO_ENABLED=1
+    cd "${srcdir}"/"${_pkgname}"
     BUILDTIME=$(date -u)
-    GOOS=linux CGO_ENABLED=0 go build \
-               -trimpath \
-               -buildmode=pie \
-               -mod=readonly \
-               -modcacherw \
-               -ldflags "-linkmode external -extldflags \"${LDFLAGS}\" \
-    -X \"github.com/Dreamacro/clash/constant.Version=${pkgver}\" \
-    -X \"github.com/Dreamacro/clash/constant.BuildTime=${BUILDTIME}\" \
-    " \
-               -tags with_gvisor -o ${_pkgname}-${pkgver}
+    GOOS=linux go build \
+        -trimpath \
+        -buildmode=pie \
+        -mod=readonly \
+        -modcacherw \
+        -ldflags "-linkmode external -extldflags \"${LDFLAGS}\" \
+        -X \"github.com/Dreamacro/clash/constant.Version=${pkgver}\" \
+        -X \"github.com/Dreamacro/clash/constant.BuildTime=${BUILDTIME}\" \
+        " \
+        -tags with_gvisor -o ${_pkgname}-${pkgver}
 }
 package() {
     cd "${srcdir}"/"${_pkgname}"/
     install -Dm755 "${_pkgname}-${pkgver}" "${pkgdir}/usr/bin/clash-meta"
-    cd $srcdir
+    cd "${srcdir}"
     install -Dm644 ${_pkgname}.sysusers "${pkgdir}/usr/lib/sysusers.d/${_pkgname}.conf"
     install -Dm644 ${_pkgname}.tmpfiles "${pkgdir}/usr/lib/tmpfiles.d/${_pkgname}.conf"
     install -Dm644 "config.yaml" -t "${pkgdir}/etc/clash-meta"
-    install -Dm644 "clash-meta.service"  -t "${pkgdir}/usr/lib/systemd/system"
+    install -Dm644 "clash-meta.service" -t "${pkgdir}/usr/lib/systemd/system"
     install -Dm644 "clash-meta@.service" -t "${pkgdir}/usr/lib/systemd/system"
     ln -sf /etc/clash/Country.mmdb ${pkgdir}/etc/${_pkgname}/Country.mmdb
     #geosite.dat from community repo does not work
