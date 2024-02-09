@@ -5,15 +5,15 @@ ENABLE_FAKE_GNOME_SOFTWARE=0
 
 pkgname=pamac-aur
 pkgver=11.7.1
-pkgrel=1
+pkgrel=2
 _pkgfixver=$pkgver
 _pkgfixvercli=11.6.0
-_pkgrelcli=3
+_pkgrelcli=4
 
 _commit='73cef1dc85695a0e5b498e86b40ff047c9a8048f'
-_commitcli='177fb231b1e2494a696db9eb0629364bb1dc6753'
+_commitcli='3985c4d7e95312f79bb2a7f33766912c329f4697'
 sha256sums=('8ad0f52b088818a8d9401984ba3e30d5ecfdc49d89fe89b65af9491a3f9f6c69'
-            'bd98a58276eaeee0c1671ab6c18a8947eeb23e9fb6ae6507f627f9714d3aee4e')
+            '95b192d8bc71764e50f73394b068e78159d2b1d976a2ae22f943c51cfdd7b9ca')
 
 pkgdesc="A Gtk3 frontend, Package Manager based on libalpm with AUR and Appstream support"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -23,7 +23,7 @@ depends=('libnotify' 'libhandy' 'libadwaita' 'gtk4' 'desktop-file-utils' 'libpam
 
 optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
             'lxsession: needed for authentification in Xfce, LXDE etc.')
-makedepends=('gettext' 'itstool' 'vala' 'meson' 'ninja' 'gobject-introspection' 'xorgproto' 'asciidoc' 'git')
+makedepends=('gettext' 'itstool' 'vala' 'meson' 'ninja' 'gobject-introspection' 'xorgproto' 'asciidoc' 'git' 'systemd')
 conflicts=('pamac' 'pamac-tray-appindicator' 'pamac-cli')
 provides=("pamac=$_pkgfixver-$pkgrel" "pamac-cli=$_pkgfixvercli-$_pkgrelcli")
 options=(!emptydirs !strip)
