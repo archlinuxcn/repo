@@ -18,7 +18,7 @@ pkgname=(rust-nightly
          rust-std-nightly-aarch64-linux-android
          rust-std-nightly-x86_64-unknown-linux-musl
         )
-pkgver=1.77.0_20240201
+pkgver=1.78.0_20240209
 pkgrel=4
 epoch=4
 pkgdesc="A safe, concurrent, practical language from Mozilla (nightly version)"
@@ -28,31 +28,31 @@ license=('MIT' 'Apache')
 validpgpkeys=('108F66205EAEB0AAA8DD5E1C85AB96E6FA1BE5FE')
 makedepends=('git')
 source=(
-        'https://static.rust-lang.org/dist/2024-02-01/rust-nightly-x86_64-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-src-nightly.tar.xz'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-src-nightly.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2024-02-01/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2024-02-01/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-nightly-x86_64-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-src-nightly.tar.xz'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-src-nightly.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2024-02-09/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2024-02-09/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
 
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.xz'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-i686-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-i686-unknown-linux-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-i686-pc-windows-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-i686-pc-windows-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-x86_64-pc-windows-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-x86_64-pc-windows-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-wasm32-unknown-unknown.tar.xz'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-wasm32-unknown-unknown.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-aarch64-linux-android.tar.xz'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-aarch64-linux-android.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-x86_64-unknown-linux-musl.tar.xz'
-        'https://static.rust-lang.org/dist/2024-02-01/rust-std-nightly-x86_64-unknown-linux-musl.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.xz'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-i686-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-i686-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-i686-pc-windows-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-i686-pc-windows-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-x86_64-pc-windows-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-x86_64-pc-windows-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-wasm32-unknown-unknown.tar.xz'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-wasm32-unknown-unknown.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-aarch64-linux-android.tar.xz'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-aarch64-linux-android.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-x86_64-unknown-linux-musl.tar.xz'
+        'https://static.rust-lang.org/dist/2024-02-09/rust-std-nightly-x86_64-unknown-linux-musl.tar.xz.asc'
         'git+https://github.com/rust-lang/zsh-config')
 sha512sums=(
             'SKIP'
@@ -123,7 +123,7 @@ package_rust-nightly() {
               'rust-std-nightly-aarch64-linux-android: cross compile for aarch64-linux-android'
               'rust-std-nightly-x86_64-unknown-linux-musl: cross compile for x86_64-unknown-linux-musl'
               'cargo-nightly: Rust package manager')
-  provides=(rust=1.77.0)
+  provides=(rust=1.78.0)
   conflicts=(rust)
   options=(!strip)
 
@@ -153,7 +153,7 @@ package_rust-docs-nightly() {
   arch=('any')
   options=('!strip')
   optdepends=('rust-nightly: to compile and run the programs you can write using this documentation')
-  provides=('rust-doc=1.77.0')
+  provides=('rust-doc=1.78.0')
   conflicts=('rust-doc')
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/rust-docs
@@ -206,7 +206,7 @@ package_rust-miri-nightly() {
 package_cargo-nightly() {
   pkgdesc="Rust package manager (nightly version)"
   depends=('rust-nightly')
-  provides=('cargo=0.78.0')
+  provides=('cargo=0.79.0')
   conflicts=('rustup')
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/cargo
@@ -218,7 +218,7 @@ package_rust-src-nightly() {
   arch=('any')
   options=('!strip')
   optdepends=('rust-nightly')
-  provides=('rust-src=1.77.0')
+  provides=('rust-src=1.78.0')
   conflicts=('rust-src')
 
   cd rust-src-nightly/rust-src
@@ -232,6 +232,7 @@ package_rust-std-nightly-arm-unknown-linux-gnueabihf(){
   pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on arm-unknown-linux-gnueabihf)"
   arch=('any')
   options=('!strip' 'staticlibs')
+
 
 
   cd rust-std-nightly-arm-unknown-linux-gnueabihf
@@ -253,6 +254,7 @@ package_rust-std-nightly-armv7-unknown-linux-gnueabihf(){
   options=('!strip' 'staticlibs')
 
 
+
   cd rust-std-nightly-armv7-unknown-linux-gnueabihf
   chmod +x install.sh
   sed -i 's/\r//g' install.sh
@@ -270,6 +272,7 @@ package_rust-std-nightly-x86_64-unknown-linux-gnu(){
   pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on x86_64-unknown-linux-gnu)"
   arch=('any')
   options=('!strip' 'staticlibs')
+
 
 
   cd rust-std-nightly-x86_64-unknown-linux-gnu
@@ -291,6 +294,8 @@ package_rust-std-nightly-i686-unknown-linux-gnu(){
   options=('!strip' 'staticlibs')
 
 
+  optdepends=('lib32-rust-libs')
+
   cd rust-std-nightly-i686-unknown-linux-gnu
   chmod +x install.sh
   sed -i 's/\r//g' install.sh
@@ -310,6 +315,7 @@ package_rust-std-nightly-i686-pc-windows-gnu(){
   options=('!strip' 'staticlibs')
 
   optdepends=('mingw-w64-gcc')
+
 
   cd rust-std-nightly-i686-pc-windows-gnu
   chmod +x install.sh
@@ -331,6 +337,7 @@ package_rust-std-nightly-x86_64-pc-windows-gnu(){
 
   optdepends=('mingw-w64-gcc')
 
+
   cd rust-std-nightly-x86_64-pc-windows-gnu
   chmod +x install.sh
   sed -i 's/\r//g' install.sh
@@ -349,6 +356,8 @@ package_rust-std-nightly-wasm32-unknown-unknown(){
   arch=('any')
   options=('!strip' 'staticlibs')
 
+
+  optdepends=('rust-wasm')
 
   cd rust-std-nightly-wasm32-unknown-unknown
   chmod +x install.sh
@@ -370,6 +379,7 @@ package_rust-std-nightly-aarch64-linux-android(){
 
   optdepends=('android-ndk')
 
+
   cd rust-std-nightly-aarch64-linux-android
   chmod +x install.sh
   sed -i 's/\r//g' install.sh
@@ -388,6 +398,8 @@ package_rust-std-nightly-x86_64-unknown-linux-musl(){
   arch=('any')
   options=('!strip' 'staticlibs')
 
+
+  optdepends=('rust-musl')
 
   cd rust-std-nightly-x86_64-unknown-linux-musl
   chmod +x install.sh
