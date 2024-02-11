@@ -4,7 +4,7 @@
 options=(!lto)
 pkgname=("wezterm-git")
 pkgdesc="A terminal emulator implemented in Rust, using OpenGL ES 2 for rendering."
-pkgver=20240210.173228.67bdc06d
+pkgver=20240211.083735.b61c49fa
 pkgrel=1
 arch=("x86_64" "i686")
 url="https://github.com/wez/wezterm"
@@ -21,6 +21,7 @@ depends=(
   "xcb-util-wm"
 )
 makedepends=("cargo" "cmake" "git" "pkgconf" "python")
+options=(!lto)
 provides=("wezterm" "wezterm-gui" "wezterm-mux-server" "wezterm-shell-integration" "wezterm-terminfo")
 conflicts=("wezterm" "wezterm-bin" "wezterm-nightly-bin" "wezterm-shell-integration" "wezterm-terminfo")
 source=(
