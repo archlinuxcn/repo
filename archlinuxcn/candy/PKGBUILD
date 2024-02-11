@@ -2,8 +2,8 @@
 
 pkgname=candy
 pkgver=3.9.1
-pkgrel=1
-pkgdesc="Another virtual private network that supports point-to-point connections"
+pkgrel=2
+pkgdesc="Another virtual private network that supports peer-to-peer connections"
 url="https://github.com/lanthora/candy"
 license=('MIT')
 arch=('x86_64' 'aarch64' 'armv7h' 'riscv64')
