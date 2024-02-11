@@ -3,7 +3,7 @@
 
 pkgname=parallel-disk-usage
 _pkgname=pdu
-pkgver=0.9.1
+pkgver=0.9.2
 pkgrel=1
 pkgdesc="Summarize disk usage of the set of files, recursively for directories."
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -11,7 +11,7 @@ url="https://github.com/KSXGitHub/${pkgname}"
 license=('Apache')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('e34e59dcaa0cb3a490e2f5a82dd6f5c86849ed0323979c399eaa6acf05b4e3a2')
+sha256sums=('a620d8cd6dd24eab6f937597cc8bf2171edc50c5f4360be9eae9fb6dc2b7366b')
 
 build() {
 	cd "${pkgname}-${pkgver}/"
