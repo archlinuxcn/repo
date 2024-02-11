@@ -179,7 +179,7 @@ package_{{x.name}}(){
 {% if x.optdepends %}
   optdepends=({{' '.join("'%s'" % y for y in x.optdepends)}}){% end %}
 {% if x.provides %}
-  optdepends=({{' '.join("'%s'" % y for y in x.provides)}}){% end %}
+  provides=({{' '.join("'%s'" % y for y in x.provides)}}){% end %}
 
   cd {{x.name}}
   chmod +x install.sh{# Windows one isn't executable #}
