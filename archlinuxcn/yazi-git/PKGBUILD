@@ -17,7 +17,7 @@ optdepends=(
 	'ripgrep: for file content searching'
 	'fzf: for directory jumping'
 	'zoxide: for directory jumping')
-makedepends=("git" "rustup")
+makedepends=("git" "cargo")
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("git+${url}.git")
@@ -31,12 +31,16 @@ pkgver() {
 
 build() {
 	cd "${_pkgname}/"
-	export RUSTUP_TOOLCHAIN=stable
-	cargo build --release
+	YAZI_GEN_COMPLETIONS=true cargo build --release
 }
 
 package() {
 	cd "${_pkgname}/"
 	install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 	install -Dm755 "target/release/${_pkgname}" -t "${pkgdir}/usr/bin/"
+
+	cd "${_pkgname}-config/completions"
+	install -Dm644 "${_pkgname}.bash" "${pkgdir}/usr/share/bash-completion/completions/${_pkgname}"
+	install -Dm644 "${_pkgname}.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d/"
+	install -Dm644 "_${_pkgname}" -t "${pkgdir}/usr/share/zsh/site-functions/"
 }
