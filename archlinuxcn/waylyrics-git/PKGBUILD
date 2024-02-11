@@ -3,7 +3,7 @@
 pkgname=waylyrics-git
 _pkgname=waylyrics
 _appname="io.poly000.${_pkgname}"
-pkgver=0.2.2_r6.g3cbd52e7
+pkgver=0.2.2_r11.gc73cd610
 pkgrel=2
 pkgdesc="general desktop lyrics with QQMusic/NetEase Cloud Music source"
 url="https://github.com/waylyrics/waylyrics"
@@ -27,17 +27,14 @@ options=('!lto')
 
 prepare() {
     cd "${_pkgname}"
+
     export RUSTUP_TOOLCHAIN=stable
-
-    if which rustup
-    then rustup update stable
-    fi
-
     cargo fetch --locked --target ${CARCH}-unknown-linux-gnu
 }
 
 pkgver() {
     cd "${_pkgname}"
+
     export RUSTUP_TOOLCHAIN=stable
     semver=$( cargo metadata --no-deps --format-version=1 |
         jq -r '.packages | .[0] | .version' )
@@ -59,6 +56,7 @@ build() {
 
 check() {
     cd "${_pkgname}"
+
     export RUSTUP_TOOLCHAIN=stable
     export CARGO_TARGET_DIR=target
     export WAYLYRICS_THEME_PRESETS_DIR="/usr/share/${_pkgname}/themes"
