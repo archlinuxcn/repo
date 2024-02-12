@@ -1,6 +1,6 @@
 --- /usr/share/devtools/makepkg.conf.d/x86_64.conf	2024-02-10 08:01:05.000000000 +0800
-+++ riscv64.conf	2024-02-11 00:37:44.643963368 +0800
-@@ -35,14 +35,14 @@
++++ riscv64.conf	2024-02-12 10:07:10.892146821 +0800
+@@ -35,17 +35,16 @@
  # ARCHITECTURE, COMPILE FLAGS
  #########################################################################
  #
@@ -17,5 +17,9 @@
 -        -fstack-clash-protection -fcf-protection"
 +        -fstack-clash-protection"
  CXXFLAGS="$CFLAGS -Wp,-D_GLIBCXX_ASSERTIONS"
- LDFLAGS="-Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now \
-          -Wl,-z,pack-relative-relocs"
+-LDFLAGS="-Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now \
+-         -Wl,-z,pack-relative-relocs"
++LDFLAGS="-Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now"
+ LTOFLAGS="-flto=auto"
+ RUSTFLAGS=""
+ #-- Make Flags: change this for DistCC/SMP systems
