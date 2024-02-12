@@ -1,0 +1,13 @@
+build_prefix: extra-x86_64
+pre_build_script: |
+  aur_pre_build(maintainers=['dpawensza'])
+  add_depends(['python-urllib3'])
+  add_makedepends(['python-setuptools'])
+post_build: aur_post_build
+repo_depends:
+  - python-spotipy
+update_on:
+  - source: aur
+    aur: spotify_dl
+maintainers:
+  - github: roaldclark
