@@ -2,8 +2,8 @@
 
 pkgbase=sing-geoip
 pkgname=(sing-geoip-common sing-geoip-rule-set sing-geoip-db)
-pkgver=20240112
-pkgrel=4
+pkgver=20240212
+pkgrel=1
 pkgdesc="GeoIP database and rule sets for sing-box"
 arch=('any')
 url="https://github.com/SagerNet/${pkgbase}"
@@ -13,7 +13,7 @@ source=(
 	"${_srcbase}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
 	"GeoLite2-End-User-License-Agreement.pdf"
 )
-sha256sums=('d3277611a2f0f4657c1bf4cb402543892d05155d481ee4e04b1c0ecc473df3fa'
+sha256sums=('9c45705de8bff9ac875a332e5b2dc26b5658414f2da75b69e7e306931e6c1308'
             'b9c7fbfcdd5b682b5635592281d72006df89d73f163308b7ef35a59f293b036e')
 
 build() {
