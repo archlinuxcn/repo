@@ -10,12 +10,12 @@
 #
 
 pkgname=zfs-utils-git
-pkgver=2.2.99.r343.g6cc93ccde7
+pkgver=2.2.99.r344.ga0635ae731
 pkgrel=1
 epoch=2
 pkgdesc="Userspace utilities for the Zettabyte File System."
 arch=("i686" "x86_64" "aarch64")
-url='https://zfsonlinux.org/'
+url="https://zfsonlinux.org/"
 license=('CDDL')
 groups=('zfs-git')
 makedepends=('python' 'python-setuptools' 'python-cffi' 'git')
@@ -24,21 +24,21 @@ provides=("zfs-utils=${pkgver}")
 conflicts=('zfs-utils')
 backup=('etc/default/zfs'
         'etc/zfs/zed.d/zed.rc')
-source=('git+https://github.com/openzfs/zfs.git'
-        'zfs-node-permission.conf'
-        'zfs.initcpio.install'
-        'zfs.initcpio.hook'
-        'zfs.initcpio.zfsencryptssh.install')
+source=("git+https://github.com/openzfs/zfs.git"
+        "zfs-node-permission.conf"
+        "zfs.initcpio.install"
+        "zfs.initcpio.zfsencryptssh.install"
+        "zfs.initcpio.hook")
 sha256sums=('SKIP'
             '7ad45fd291aa582639725f14d88d7da5bd3d427012b25bddbe917ca6d1a07c1a'
             '2f09c742287f4738c7c09a9669f8055cd63d3b9474cd1f6d9447152d11a1b913'
-            '15b5acea44225b4364ec6472a08d3d48666d241fe84c142e1171cd3b78a5584f'
-            '93e6ac4e16f6b38b2fa397a63327bcf7001111e3a58eb5fb97c888098c932a51')
+            '93e6ac4e16f6b38b2fa397a63327bcf7001111e3a58eb5fb97c888098c932a51'
+            '15b5acea44225b4364ec6472a08d3d48666d241fe84c142e1171cd3b78a5584f')
 b2sums=('SKIP'
         '7eb3408b1354a4dd504000739101afc7ec0aed1afcdfa029552bf6989e9a8cd4a95b3d3563b3fb7902afa30a80fb01a3f5a2d5af82f9c734c48b5cc23aac25ca'
         'cb774227f157573f960bdb345e5b014c043a573c987d37a1db027b852d77a5eda1ee699612e1d8f4a2770897624889f1a3808116a171cc4c796a95e3caa43012'
-        '779c864611249c3f21d1864508d60cfe5e0f5541d74fb3093c6bdfa56be2c76f386ac1690d363beaee491c5132f5f6dbc01553aa408cda579ebca74b0e0fd1d0'
-        '04e2af875e194df393d6cff983efc3fdf02a03a745d1b0b1e4a745f873d910b4dd0a45db956c1b5b2d97e9d5bf724ef12e23f7a2be3d5c12be027eaccf42349a')
+        '04e2af875e194df393d6cff983efc3fdf02a03a745d1b0b1e4a745f873d910b4dd0a45db956c1b5b2d97e9d5bf724ef12e23f7a2be3d5c12be027eaccf42349a'
+        '779c864611249c3f21d1864508d60cfe5e0f5541d74fb3093c6bdfa56be2c76f386ac1690d363beaee491c5132f5f6dbc01553aa408cda579ebca74b0e0fd1d0')
 
 pkgver() {
     cd zfs
@@ -61,21 +61,20 @@ build() {
 
     cd zfs
 
-    ./configure \
-        --prefix=/usr \
-        --sysconfdir=/etc \
-        --sbindir=/usr/bin \
-        --with-mounthelperdir=/usr/bin \
-        --libdir=/usr/lib \
-        --datadir=/usr/share \
-        --includedir=/usr/include \
-        --with-udevdir=/usr/lib/udev \
-        --libexecdir=/usr/lib/zfs \
-        --with-config=user \
-        --enable-systemd \
-        --enable-pyzfs \
-        --with-zfsexecdir=/usr/lib/zfs \
-        --localstatedir=/var
+    ./configure --prefix=/usr \
+                --sysconfdir=/etc \
+                --sbindir=/usr/bin \
+                --with-mounthelperdir=/usr/bin \
+                --libdir=/usr/lib \
+                --datadir=/usr/share \
+                --includedir=/usr/include \
+                --with-udevdir=/usr/lib/udev \
+                --libexecdir=/usr/lib \
+                --localstatedir=/var \
+                --enable-pyzfz \
+                --enable-systemd \
+                --with-zfsexecdir=/usr/lib/zfs \
+                --with-config=user
     make
 }
 
@@ -85,9 +84,9 @@ package() {
     make DESTDIR="${pkgdir}" install
     install -D -m644 contrib/bash_completion.d/zfs "${pkgdir}"/usr/share/bash-completion/completions/zfs
 
-	# Fix for permissions being overwritten on /dev/zfs. Related issues:
-	# https://github.com/openzfs/zfs/issues/15146
-	# https://github.com/systemd/systemd/issues/28653
+    # Fix for permissions being overwritten on /dev/zfs. Related issues:
+    # https://github.com/openzfs/zfs/issues/15146
+    # https://github.com/systemd/systemd/issues/28653
     install -D -m644 "${srcdir}"/zfs-node-permission.conf "${pkgdir}"/usr/lib/tmpfiles.d/zfs-node-permission.conf
 
     # Remove uneeded files
