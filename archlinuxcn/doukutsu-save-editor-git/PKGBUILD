@@ -1,0 +1,46 @@
+# Maintainer: poly000 <1348292515@qq.com>
+
+pkgname=doukutsu-save-editor-git
+_pkgname=doukutsu-save-editor
+pkgver=r63.gb26926f
+pkgrel=1
+pkgdesc="CaveStory (doukutsu) save editor"
+url="https://github.com/poly000/${_pkgname}-rs"
+conflicts=('doukutsu-save-editor')
+provides=('doukutsu-save-editor')
+arch=('x86_64')
+license=('MIT')
+depends=('libxcb' 'libspeechd' 'libxkbcommon' 'gtk3' 'at-spi2-core')
+makedepends=('cargo' 'openssl')
+optdepends=()
+
+source=("git+${url}.git")
+
+sha256sums=('SKIP')
+
+prepare() {
+    cd "${_pkgname}-rs"
+
+    cargo fetch --locked --target ${CARCH}-unknown-linux-gnu
+}
+
+pkgver() {
+    cd "${_pkgname}-rs"
+
+    echo "r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd "${_pkgname}-rs"
+
+    export CARGO_TARGET_DIR=target
+
+    cargo build --frozen --release
+}
+
+package() {
+    cd "${_pkgname}-rs"
+
+    install -vDm755 "target/release/${_pkgname}" -t "${pkgdir}/usr/bin/"
+    install -vDm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
