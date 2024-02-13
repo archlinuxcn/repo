@@ -16,27 +16,12 @@ source=("${url}/archive/refs/tags/v${pkgver}.tar.gz")
 sha512sums=('84dfc711ba9d51cd26c104caca1dcee3ce0be790be5b3a294ed47f4ef5fb20c58524b793d45b0970d61befa33adf8c8f3ca2b2f726d2ef335c80c11eee813387')
 options=('!lto')
 
-# prepare() {
-# 	cd "${_pkgname}-${pkgver}/"
-#
-# 	local src
-# 	for src in "${source[@]}"; do
-# 		src="${src%%::*}"
-# 		src="${src##*/}"
-# 		[[ ${src} = *.patch ]] || continue
-# 		echo "Applying patch ${src}..."
-# 		patch -Np1 <"../${src}"
-# 	done
-# }
-
 build() {
-	cd "${_pkgname}-${pkgver}/"
-	arch-meson . build
+	arch-meson "${_pkgname}-${pkgver}/" build -Dcargo_home=$HOME/cargo-deps
 	meson compile -C build
 }
 
 package() {
-	cd "${_pkgname}-${pkgver}/"
 	meson install -C build --destdir "${pkgdir}"
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 "${_pkgname}-${pkgver}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
