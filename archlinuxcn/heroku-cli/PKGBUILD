@@ -4,7 +4,7 @@
 # Github Contributors: https://github.com/SampsonCrowley/arch_packages/contributors.md
 
 pkgname=heroku-cli
-pkgver=8.7.1
+pkgver=8.9.0
 pkgrel=1
 pkgdesc="CLI to manage Heroku apps and services with forced auto-update removed"
 arch=('any')
@@ -27,6 +27,8 @@ prepare() {
       pushd packages/cli
         # remove forced auto-update plugin
         sed -i "/oclif\/plugin-update/d" ./package.json
+        # remove pin to node 16
+        sed -i 's/"node": "~16.20.0"/"node": ">=16"/g' ./package.json
 
         # install dependencies, must be done with yarn as of 7.60
         yarn install
