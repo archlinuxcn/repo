@@ -1,3 +1,11 @@
+# Be sure to use `systemctl edit plexmediaserver` to modify this service with an override.conf because
+# direct changes will be overwritten by package updates.
+#
+# A user per service w/ shared group setup would have an override like:
+# [Service]
+# Group=sharedgroupname
+# UMask=002
+
 [Unit]
 Description=Plex Media Server
 After=network.target network-online.target
