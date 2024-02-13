@@ -1,14 +1,14 @@
 # Maintainer: Alexander F. Rødseth <xyproto@archlinux.org>
 
 pkgname=python-diffusers
-pkgver=0.26.2
+pkgver=0.26.3
 pkgrel=1
 pkgdesc='Pretrained diffusion models'
 arch=(x86_64)
 url='https://github.com/huggingface/diffusers'
 license=('Apache License 2.0')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/huggingface/diffusers/archive/refs/tags/v$pkgver.tar.gz")
-sha512sums=('2c45f1fe1c9ddf8eb6868872f86c7dec88ec39f3bd011149bd3ff7d255930bde09810b42c2b63dd8761cc783523773689d2482a5996428d4e0d4afd3c06a6782')
+sha512sums=('7d9346f8715aee6049f5d9aa88e9383e9f9a2c63d7d5ad634db15d6322cf55defbe3fc64e83c66a895e43505bbe5edde97eaf792b820020b0e86e095113f5297')
 depends=(
     'python-pillow'
     'python-requests'
