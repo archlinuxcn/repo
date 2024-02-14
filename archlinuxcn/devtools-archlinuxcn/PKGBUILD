@@ -1,17 +1,18 @@
 # Maintainer: Levente Polyak <anthraxx[at]archlinux[dot]org>
+# Maintainer: Christian Heusel <gromit@archlinux.org>
 # Contributor: Pierre Schmitz <pierre@archlinux.de>
 
 _pkgname=devtools
 pkgname=devtools-archlinuxcn
 epoch=1
-pkgver=1.0.4
-pkgrel=2
+pkgver=1.1.1
+pkgrel=1
 # curl https://api.github.com/repos/archlinuxcn/devtools/git/ref/tags/$pkgver-archlinuxcn1 | jq -r .object.sha
-_tag=ac4d056aa8254c8487ed93834a6d7e7b1e63e153
+_tag=1184c720ee2ed94963e9efa96d2583023e9d520b
 _upstream_pkgrel=1
 pkgdesc='Tools for Arch Linux package maintainers, archlinuxcn fork'
 arch=('any')
-license=('GPL')
+license=('GPL-3.0-or-later')
 url='https://gitlab.archlinux.org/archlinux/devtools'
 depends=(
   arch-install-scripts
@@ -19,7 +20,9 @@ depends=(
   bash
   binutils
   coreutils
+  curl
   diffutils
+  fakeroot
   findutils
   grep
   jq
@@ -38,7 +41,12 @@ makedepends=(
   asciidoc
   shellcheck
 )
-optdepends=('btrfs-progs: btrfs support')
+optdepends=(
+  'btrfs-progs: btrfs support'
+  'bat: pretty printing for pkgctl search'
+  'nvchecker: pkgctl version subcommand'
+  'pacman-contrib: support for the --update-checksums option'
+)
 provides=("devtools=$pkgver-$pkgrel")
 conflicts=("devtools")
 source=("$pkgname::git+https://github.com/archlinuxcn/devtools.git?signed#tag=$_tag")
