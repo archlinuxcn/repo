@@ -134,7 +134,8 @@ _use_llvm_lto=${_use_llvm_lto-none}
 
 # Use suffix -lto only when requested by the user
 # Enabled by default.
-# If you do not want the suffix -lto remove the "y" sign next to the flag.
+# y - enable -lto suffix
+# n - disable -lto suffix
 # https://github.com/CachyOS/linux-cachyos/issues/36
 _use_lto_suffix=${_use_lto_suffix-y}
 
@@ -155,16 +156,16 @@ _build_zfs=${_build_zfs-}
 # This does replace the requirement of nvidia-dkms
 _build_nvidia=${_build_nvidia-}
 
-if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] && [ -n "$_use_lto_suffix" ]; then
+if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] && [ "$_use_lto_suffix" = "y"  ]; then
     pkgsuffix=cachyos-${_cpusched}-lto
     pkgbase=linux-$pkgsuffix
 
-else
+elif [ -n "$_use_llvm_lto" ]  ||  [[ "$_use_lto_suffix" = "n" ]]; then
     pkgsuffix=cachyos-${_cpusched}
     pkgbase=linux-$pkgsuffix
 fi
 _major=6.7
-_minor=2
+_minor=4
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
@@ -219,14 +220,14 @@ fi
 # NVIDIA pre-build module support
 if [ -n "$_build_nvidia" ]; then
     source+=("https://us.download.nvidia.com/XFree86/Linux-x86_64/${_nv_ver}/${_nv_pkg}.run"
-             "$_patchsource/misc/nvidia/nvidia-drm-hotplug-workqueue.patch")
+             "$_patchsource/misc/nvidia/nvidia-drm-hotplug-workqueue.patch"
+             "$_patchsource/misc/nvidia/nvidia-drivers-470.223.02-gpl-pfn_valid.patch")
 fi
 
 ## List of CachyOS schedulers
 case "$_cpusched" in
-    cachyos) # CachyOS Scheduler (BORE + SCHED-EXT)
-        source+=("${_patchsource}/sched/0001-sched-ext.patch"
-                 "${_patchsource}/sched/0001-bore-cachy.patch");;
+    cachyos|sched-ext) ## SCHED-EXT
+        source+=("${_patchsource}/sched/0001-sched-ext.patch");;
     bore) ## BORE Scheduler
         source+=("${_patchsource}/sched/0001-bore-cachy.patch");;
     rt) ## EEVDF with RT patches
@@ -239,14 +240,7 @@ case "$_cpusched" in
     hardened) ## Hardened Patches with BORE Scheduler
         source+=("${_patchsource}/sched/0001-bore-cachy.patch"
                  "${_patchsource}/misc/0001-hardened.patch");;
-    sched-ext) ## SCHED-EXT
-        source+=("${_patchsource}/sched/0001-sched-ext.patch");;
 esac
-
-# BORE Tuning Sysctl
-if [ -n "$_bore_tuning_sysctl" ]; then
-    source+=("${_patchsource}/misc/bore-tuning-sysctl.patch")
-fi
 
 ## lrng patchset
 if [ -n "$_lrng_enable" ]; then
@@ -273,6 +267,7 @@ prepare() {
         src="${src##*/}"
         src="${src%.zst}"
         [[ $src = nvidia-drm-hotplug-workqueue.patch ]] && continue
+        [[ $src = nvidia-drivers-470.223.02-gpl-pfn_valid.patch ]] && continue
         [[ $src = *.patch ]] || continue
         echo "Applying patch $src..."
         patch -Np1 < "../$src"
@@ -304,12 +299,11 @@ prepare() {
     [ -z "$_cpusched" ] && _die "The value is empty. Choose the correct one again."
 
     case "$_cpusched" in
-        cachyos) scripts/config -e SCHED_BORE -e SCHED_CLASS_EXT;;
+        cachyos|sched-ext) scripts/config -e SCHED_CLASS_EXT;;
         bore|hardened) scripts/config -e SCHED_BORE;;
         eevdf) ;;
         rt) scripts/config -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -d PREEMPT_DYNAMIC -d PREEMPT_BUILD;;
         rt-bore) scripts/config -e SCHED_BORE -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -d PREEMPT_DYNAMIC -d PREEMPT_BUILD;;
-        sched-ext) scripts/config -e SCHED_CLASS_EXT;;
         *) _die "The value $_cpusched is invalid. Choose the correct one again.";;
     esac
 
@@ -641,6 +635,8 @@ prepare() {
         # Temporary fix for fbdev=1
         # https://forums.developer.nvidia.com/t/545-29-06-18-1-flip-event-timeout-error-on-startup-shutdown-and-sometimes-suspend-wayland-unusable/274788/21
         patch -Np0 -i "${srcdir}/nvidia-drm-hotplug-workqueue.patch" -d "${srcdir}/${_nv_pkg}"
+        # Temporary fix for nvidia module build
+        patch -Np2 --no-backup-if-mismatch -i "${srcdir}/nvidia-drivers-470.223.02-gpl-pfn_valid.patch" -d "${srcdir}/${_nv_pkg}/kernel"
     fi
 }
 
@@ -825,8 +821,8 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('4c1f480de0c1458aa67379cd02d35708f63850adb84a85061088de1f82b5d084bc7cf7da459a3f1e415544351d1f36a9a832277240774ae461cdde11687cbadd'
-        '9c7b52c103a8506c027a28e81779ecba972f3c85f8917359282a6183d04d04407950ba55d3db13b285b722aafb68f308b16733e575e6b2f6e77b08682c7e5dc4'
-        '43ef7a347878592740d9eb23b40a56083fa747f7700fa1e2c6d039d660c0b876d99bf1a3160e15d041fb13d45906cdb5defef034d4d0ae429911864239c94d8d'
-        'a89904cd7c7248ca97ace716330d76950edcbbbc9b9fb36e46841914c1ab6f0ec16549d308846b89b16df1943c652977983632808da59d8596fbe12e9e9e3f9f'
-        '95bae7723f6837b86f8897a006a7d191f56a10b9b6797f8d5f89388e4a5038c6d9cf4072d44e7e6fcd720d0270765f44fdc37f955dd43c29454cd86be022e64a')
+b2sums=('578114990b2987e2b241a7492bd4a69c46adfd613eba9715d63fd4565c19678dfab06b5107a0ff791e9a3190cb52b75a76d231aa39d4e7fba24e79f7f18935a1'
+        '5ce6df7f9a6a2e8c3e03846349d866c3219fa5a71ff7e84337597b74231e01b10ccf2aa548b3ef7cdcb986fafd1e367cc0d2a2b3f227d2953e61b7fb91bbb1e5'
+        '653926532b58b6ff84397496c8b247cae8f2fe48b5867ef85096522f9405daf9a32a2ba7cfe4230bf2f01d9ae5951322e96ef9a9e9ba04d4f050aedace1c48c7'
+        '72412dc5e291e70000d44f666ad332386e27870e832eb37375cfc13013eeffe01a9e417fa15dfa1008c96108db8ccec301a42f21174ee9957f1127b2db92e6ff'
+        '6c57d545797d7c82ec3e1200163b03a88fc700c3a1ea98b7bdf3722c4333f7f86a582ebef58f6e825e60303a3114663ad99e92ae783a2f0e7f8e93ff75f478c7')
