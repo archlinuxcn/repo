@@ -2,7 +2,7 @@
 
 pkgname=sqlacodegen
 _name=sqlacodegen
-pkgver=3.0.0rc3
+pkgver=3.0.0rc4
 pkgrel=1
 pkgdesc='Automatic model code generator for SQLAlchemy'
 arch=(any)
@@ -21,7 +21,7 @@ makedepends=(
 )
 
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/agronholm/sqlacodegen/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('a83a56cc21f15dd93c797353cd46f183211a5897934116611abdb6f48222b246c2bfb9fbe01e2705ccccf9c2b3f3107acc55fe5e0976a58119b19a2fa33ddab8')
+sha512sums=('d096c93645e06c0949b845438d0540412cd4fcc913a0b669a4d3503dba070846b9ea74d13c8a1c6909ac895f5615212b904348a696bde2569f2d7a64a6cef47e')
 
 build() {
   cd "${_name}-${pkgver}"
