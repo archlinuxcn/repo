@@ -10,10 +10,21 @@ conflicts=('doukutsu-save-editor')
 provides=('doukutsu-save-editor')
 arch=('x86_64')
 license=('MIT')
-depends=('libxcb' 'libspeechd' 'libxkbcommon' 'gtk3' 'at-spi2-core')
-makedepends=('cargo' 'openssl' 'git')
-optdepends=()
+depends=(
+    'libxcb'
+    'libxkbcommon'
 
+    'gtk3'
+    'glib2'
+
+    'gcc-libs'
+    'glibc'
+    
+    'at-spi2-core'
+)
+optdepends=(
+    'libspeechd: Screen Reader'
+)
 source=("git+${url}.git")
 
 sha256sums=('SKIP')
