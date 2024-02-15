@@ -4,7 +4,7 @@
 
 pkgbase=patool
 pkgname='patool'
-pkgver=2.1.1
+pkgver=2.2.0
 pkgrel=1
 pkgdesc="portable command line archive file manager"
 arch=('any')
@@ -19,7 +19,7 @@ optdepends=("lz4: extracting LZ4 archives"
     "zstd: extracting ZSTANDARD files")
 #source=("https://pypi.python.org/packages/source/p/$pkgbase/$pkgbase-$pkgver.tar.gz")
 source=("$pkgbase-$pkgver.tar.gz::https://github.com/wummel/patool/archive/upstream/${pkgver}.tar.gz")
-sha256sums=('1779b5de79db3b532861c8939356ed49431b62b6eb76a1a85f5dd4c54e1ae56f')
+sha256sums=('cbbb6e6803fb2828a2dbc40c6cd94a30c02c5a3a6b0ae2b04f316840a5593217')
 
 
 build() {
