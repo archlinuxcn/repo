@@ -7,7 +7,7 @@ epoch=
 pkgdesc="An Android OTA payload dumper written in Go"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/ssut/${pkgname}"
-license=('Apache')
+license=('Apache-2.0')
 makedepends=("go>=1.14")
 options=(!buildflags)
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/$pkgver.tar.gz")
