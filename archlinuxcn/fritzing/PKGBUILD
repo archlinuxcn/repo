@@ -11,7 +11,7 @@ pkgname=fritzing
 # while there is also "d" for development versions. This would not be correctly
 # parsed by `pkgver` anyway (d > b), so let's leave out the b suffix entirely.
 pkgver=1.0.2
-pkgrel=1
+pkgrel=2
 
 # Tag version can be obtained from github release page. Sometimes this is the
 # version number itself, sometimes some CD-magicnumber thing. There can be
@@ -35,7 +35,7 @@ arch=('aarch64' 'i686' 'x86_64')
 url=http://fritzing.org
 license=(GPL3)
 install=fritzing.install
-makedepends=('boost' 'git')
+makedepends=('boost' 'git' 'qt6-tools')
 depends=('libgit2' 'polyclipping' 'qt6-serialport' 'qt6-svg' 'quazip-qt6' 'ngspice')
 source=("git+https://github.com/fritzing/fritzing-app.git#commit=${_gitrev}"
         "git+https://github.com/fritzing/fritzing-parts.git#commit=${_partsrev}"
@@ -76,6 +76,9 @@ prepare() {
 
 build() {
   cd "${srcdir}"/fritzing-app
+
+  # build translations
+  /usr/lib/qt6/lrelease-pro phoenix.pro
 
   mkdir build && cd build
   qmake6 ..
