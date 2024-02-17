@@ -2,7 +2,7 @@
 # Contributor: Simon Conseil <contact+aur at saimon dot org>
 
 pkgname=pip-tools
-pkgver=7.3.0
+pkgver=7.4.0
 pkgrel=1
 pkgdesc='A set of tools to keep your pinned Python dependencies fresh'
 arch=(any)
@@ -14,7 +14,7 @@ source=("https://files.pythonhosted.org/packages/source/${pkgname::1}/$pkgname/$
         'pip-tools-bash-completion.sh'
         'pip-tools-zsh-completion.zsh'
         'pip-tools-fish-completion.fish')
-sha256sums=('8e9c99127fe024c025b46a0b2d15c7bd47f18f33226cf7330d35493663fc1d1d'
+sha256sums=('a92a6ddfa86ff389fe6ace381d463bc436e2c705bd71d52117c25af5ce867bb7'
             '12d90c4aab717d58a435610a3cdc94aa925b4f89f9f9f700a05c8cfa058f7960'
             '63f8d032a742ae33903040477c777922ec06241383d165c93803f1b41316ff51'
             '9c60407e485e71ded1d695455378fa4f09e76ecb8556d21c31f8610cb47cf525')
@@ -38,7 +38,8 @@ package() {
   install -Dm644 CHANGELOG.md CONTRIBUTING.md README.md \
     -t "$pkgdir/usr/share/doc/$pkgname"
   install -Dm644 img/*.svg -t "$pkgdir"/usr/share/doc/$pkgname/img
-  install -Dm644 examples/* -t "$pkgdir"/usr/share/doc/$pkgname/examples
+  install -Dm644 examples/*.in -t "$pkgdir"/usr/share/doc/$pkgname/examples
+  install -Dm644 examples/readme/* -t "$pkgdir"/usr/share/doc/$pkgname/examples/readme
 
   # Suppress warnings from deprecated Python distutils package
   sed -i -e 's@python$@python -W ignore:Setuptools is replacing distutils.:UserWarning:@' \
