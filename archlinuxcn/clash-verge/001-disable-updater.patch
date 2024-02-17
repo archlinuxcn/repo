@@ -1,15 +1,13 @@
-diff --git a/src-tauri/src/main.rs b/src-tauri/src/main.rs
-index 4740bda..55544ed 100644
 --- a/src-tauri/src/main.rs
 +++ b/src-tauri/src/main.rs
-@@ -105,10 +105,6 @@ fn main() -> std::io::Result<()> {
-             api::process::kill_children();
-             app_handle.exit(0);
+@@ -106,10 +106,6 @@
+         tauri::RunEvent::ExitRequested { api, .. } => {
+             api.prevent_exit();
          }
 -        tauri::RunEvent::Updater(tauri::UpdaterEvent::Downloaded) => {
 -            resolve::resolve_reset();
 -            api::process::kill_children();
 -        }
-         #[cfg(target_os = "macos")]
          tauri::RunEvent::WindowEvent { label, event, .. } => {
-             use tauri::Manager;
+             if label == "main" {
+                 match event {
