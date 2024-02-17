@@ -1,4 +1,5 @@
-# Maintainer: torculus <hidden> 
+# Maintainer: Kiri <kiri@vern.cc> 
+# Contributor: torculus <hidden> 
 # Contributor: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=video-trimmer
 pkgver=0.8.2
@@ -6,8 +7,19 @@ pkgrel=1
 pkgdesc="Trim videos quickly"
 arch=('x86_64')
 url="https://apps.gnome.org/VideoTrimmer"
-license=('GPL3')
-depends=('ffmpeg' 'gst-plugins-good' 'libadwaita')
+license=('GPL-3.0-or-later')
+depends=('ffmpeg' 
+         'gst-plugins-good'
+         'libadwaita'
+         'hicolor-icon-theme'
+         'dconf'
+         'glib2'
+         'gtk4'
+         'glibc'
+         'gdk-pixbuf2'
+         'cairo'
+         'gcc-libs'
+         'pango')
 makedepends=('blueprint-compiler' 'cargo' 'git' 'meson')
 checkdepends=('appstream-glib')
 source=("https://gitlab.gnome.org/YaLTeR/video-trimmer/-/archive/v$pkgver/$pkgname-v$pkgver.tar.gz")
