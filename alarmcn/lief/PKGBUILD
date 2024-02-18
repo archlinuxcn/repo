@@ -8,7 +8,7 @@ pkgdesc='Library to instrument executable formats'
 arch=(armv7h aarch64 x86_64)
 url='https://lief.quarkslab.com/'
 license=(apache)
-makedepends=(git cmake ninja mbedtls python python-build python-wheel
+makedepends=(git cmake ninja mbedtls python python-build python-installer python-wheel
              python-pydantic-core python-pydantic python-tomli python-scikit-build-core
              python-pyproject-metadata python-pathspec python-setuptools)
 provides=(libLIEF.so)
@@ -24,6 +24,8 @@ prepare() {
   rm cmake/strip.cmake
   # Don't strip
   echo > cmake/strip.cmake
+
+  sed -i 's/==.*//' api/python/build-requirements.txt
 }
 
 build() {
