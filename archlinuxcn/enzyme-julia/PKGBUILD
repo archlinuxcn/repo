@@ -16,8 +16,15 @@ url="https://enzyme.mit.edu"
 license=('Apache')
 depends=(llvm-libs-julia-git)
 makedepends=(cmake git $_clang llvm-julia-git)
-source=("https://github.com/EnzymeAD/Enzyme/archive/v${pkgver}.tar.gz")
-sha256sums=('03a604f9a6c3782490ae1c39714bb0205132c2122d692997b3511f185dd868aa')
+source=("https://github.com/EnzymeAD/Enzyme/archive/v${pkgver}.tar.gz"
+        0001-fix-gsl64-patching-script.patch)
+sha256sums=('03a604f9a6c3782490ae1c39714bb0205132c2122d692997b3511f185dd868aa'
+            '34644e0e64dae1b6ca5567373176fc9431b3ca7c4a87071a2e25e292215ab56b')
+
+prepare() {
+  cd Enzyme-$pkgver
+  patch -Np1 --no-backup-if-mismatch < ../0001-fix-gsl64-patching-script.patch
+}
 
 build() {
   if [[ -n $_versioned_llvm ]]; then
