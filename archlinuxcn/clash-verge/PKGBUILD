@@ -36,8 +36,6 @@ options=(!lto)
 prepare() {
 	mv ${pkgname}-rev-${pkgver} ${pkgname}-${pkgver}
 	cd $srcdir/${pkgname}-${pkgver}
-	patch --strip=1 <../001-disable-updater.patch
-
 	install -d src-tauri/sidecar
 	install -d src-tauri/resources
 	# empty files as placeholders
@@ -50,8 +48,6 @@ prepare() {
 	cd src-tauri
 	# only build the excutable
 	jq '.tauri.bundle.active = false' tauri.conf.json | sponge tauri.conf.json
-	# disable updater
-	jq '.tauri.updater.active = false' tauri.conf.json | sponge tauri.conf.json
 }
 
 build() {
