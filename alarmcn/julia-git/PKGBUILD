@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.11.0.DEV.1002.gbac3ba5697c
+pkgver=1.11.0.DEV.1012.g0a4b8108ee4
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -297,7 +297,17 @@ build_in() {
     make "${opts[@]}" debug
   fi
   # TODO docless build
-  JL_MAKEPKG_SRCDIR= make "${opts[@]}" docs
+  (
+    # doc build tries to read the remote for the current build directly
+    # Make it happy by setting the remote url temporarily
+    _orig_remote=$(git config --get remote.origin.url)
+    git config --set remote.origin.url https://github.com/JuliaLang/julia
+    if ! JL_MAKEPKG_SRCDIR= make "${opts[@]}" docs; then
+      git config --set remote.origin.url "$_orig_remote"
+      return 1
+    fi
+    git config --set remote.origin.url "$_orig_remote"
+  )
 
   # Check to detect issues like JuliaLang/julia#13820
   LD_PRELOAD= JL_MAKEPKG_SRCDIR= usr/bin/julia -e '0'
