@@ -18,7 +18,6 @@ def _get_new_version(major):
   return max_ver
 
 def pre_build():
-  return
   if _G.newver != _G.newvers[1]:
     raise ValueError('Upstream LLVM version mismatch, manual update required.')
   julia_ver_commit = _G.newvers[4]
