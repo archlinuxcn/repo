@@ -69,7 +69,7 @@ _patches=(
   0005-Support-loading-extensions-from-STDLIB.patch
   0006-julia-git-add-a-safeguard-for-bad-unwinding.patch
 )
-source=('git+https://github.com/JuliaLang/julia'
+source=('git+https://github.com/JuliaLang/julia#commit=aecd8fd379a53afa780bc8a8404728b6aa22d6bc'
         "${_patches[@]}"
         julia-compile-pkgs.jl
         julia-preinstall.sh
