@@ -260,6 +260,18 @@ EOF
   sed -i -e 's/\(symlink_system_library,CSL,libquadmath,[0-9]*\))/\1,ALLOW_FAILURE)/g' base/Makefile
 }
 
+_with_git_url_override() {
+  # doc build tries to read the remote for the current build directly
+  # Make it happy by setting the remote url temporarily
+  local _orig_remote=$(git config --get remote.origin.url)
+  git config remote.origin.url https://github.com/JuliaLang/julia
+  if ! "$@"; then
+    git config remote.origin.url "$_orig_remote"
+    return 1
+  fi
+  git config remote.origin.url "$_orig_remote"
+}
+
 build_in() {
   cd "$1"
 
@@ -297,17 +309,7 @@ build_in() {
     make "${opts[@]}" debug
   fi
   # TODO docless build
-  (
-    # doc build tries to read the remote for the current build directly
-    # Make it happy by setting the remote url temporarily
-    _orig_remote=$(git config --get remote.origin.url)
-    git config remote.origin.url https://github.com/JuliaLang/julia
-    if ! JL_MAKEPKG_SRCDIR= make "${opts[@]}" docs; then
-      git config remote.origin.url "$_orig_remote"
-      return 1
-    fi
-    git config remote.origin.url "$_orig_remote"
-  )
+  JL_MAKEPKG_SRCDIR= _with_git_url_override make "${opts[@]}" docs
 
   # Check to detect issues like JuliaLang/julia#13820
   LD_PRELOAD= JL_MAKEPKG_SRCDIR= usr/bin/julia -e '0'
@@ -360,9 +362,11 @@ package-julia-in() {
   # Delete precompiled environment since it seems to be picking up the one compiled
   # for the wrong julia build during document generation.
   rm -rf doc/deps/compiled
-  make install DESTDIR="$pkgdir" "${opts[@]}" JULIA_BUILD_MODE=debug
+  _with_git_url_override \
+    make install DESTDIR="$pkgdir" "${opts[@]}" JULIA_BUILD_MODE=debug
   rm -rf doc/deps/compiled
-  make install DESTDIR="$pkgdir" "${opts[@]}" JULIA_BUILD_MODE=release
+  _with_git_url_override \
+    make install DESTDIR="$pkgdir" "${opts[@]}" JULIA_BUILD_MODE=release
   # else
   #   make install-nodoc DESTDIR="$pkgdir" "${opts[@]}"
   #   # Manually install man pages
