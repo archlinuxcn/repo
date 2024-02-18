@@ -58,7 +58,7 @@ case "$CARCH" in
     depends_libs=("${depends_libs[@]}" openblas-git)
     ;;
 esac
-makedepends=("${depends_libs[@]}" llvm-julia gcc-fortran git patchelf python proot
+makedepends=("${depends_libs[@]}" llvm-julia-git gcc-fortran git patchelf python proot
              "${_soname_deps[@]}")
 options=('debug' '!strip' '!buildflags')
 _patches=(
@@ -93,7 +93,7 @@ sha512sums=('SKIP'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849')
 
-_versioned_llvm=15
+_versioned_llvm=
 
 pkgver() {
   cd julia
@@ -333,8 +333,8 @@ package-julia-in() {
 
   arch=('i686' 'x86_64' 'armv7h' 'aarch64')
   depends=("${depends_libs[@]}"
-           "llvm-libs-julia>=${llvm_maj_ver}.0"
-           "llvm-libs-julia<${next_llvm_maj}.0"
+           "llvm-libs-julia-git>=${llvm_maj_ver}.0"
+           "llvm-libs-julia-git<${next_llvm_maj}.0"
            hicolor-icon-theme xdg-utils)
   opts=("${@:2}")
 
