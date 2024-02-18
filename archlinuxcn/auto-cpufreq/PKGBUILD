@@ -3,8 +3,8 @@
 # Maintainer: Zhanibek Adilbekov <zhanibek.adilbekov@pm.me>
 # shellcheck disable=SC2034,2164,2154
 pkgname=auto-cpufreq
-pkgver=2.1.0
-pkgrel=4
+pkgver=2.2.0
+pkgrel=1
 pkgdesc="Automatic CPU speed & power optimizer"
 arch=('any')
 url="https://github.com/AdnanHodzic/auto-cpufreq"
@@ -29,10 +29,10 @@ prepare() {
 
 }
 
-sha256sums=('77a5ce9dc8044c5e5bf5770a6c3e16a252f8cef8c80ecc6eed9fefddc6ec825b'
+sha256sums=('d84d45a1638f5bff72b5ce7c1653886143cdbb4c6b198e63e054b6a18f7ade68'
             'b9233e3ae649cd1a0f91cb2d1f3ddc8eb48e475882a0d3ff5ab51295f0a30d56'
             'afe7e64dbde2ea599b319e8632d72a3c237b5c4275dd31d0f40e39719193a67b'
-            'c89514e12efcb161d678e6c0c978e08faf41a08625bd4a83b893c1e05cd8429e')
+            '1f6ee3f549a0fe4d818c8301d9e6a893bfb473ad3c0d9d0b93d38fd4a6635dc5')
 
 
 
