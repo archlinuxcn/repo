@@ -6,13 +6,12 @@ pkgdesc="LLVM.jl"
 url="https://github.com/maleadt/LLVM.jl.git"
 arch=(aarch64 armv7h x86_64)
 license=('MIT')
-makedepends=(git cmake)
-depends=(llvm-julia)
+makedepends=(git cmake llvm-julia-git)
 source=("git+https://github.com/maleadt/LLVM.jl.git#commit=$_commit")
 sha256sums=('SKIP')
 options=('debug')
 
-_versioned_llvm=15
+_versioned_llvm=
 
 build() {
   cd LLVM.jl/deps/LLVMExtra
@@ -37,8 +36,8 @@ package() {
   llvm_maj_ver=${BASH_REMATCH[1]}
   ((next_llvm_maj=llvm_maj_ver + 1))
 
-  _deps=("llvm-libs-julia>=${llvm_maj_ver}.0"
-         "llvm-libs-julia<${next_llvm_maj}.0")
+  _deps=("llvm-libs-julia-git>=${llvm_maj_ver}.0"
+         "llvm-libs-julia-git<${next_llvm_maj}.0")
 
   depends+=("${_deps[@]}")
 
