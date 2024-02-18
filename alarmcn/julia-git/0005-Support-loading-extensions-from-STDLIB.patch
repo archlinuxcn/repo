@@ -1,17 +1,17 @@
-From 6c9615feefd0bbcc3e44032858715ddd7310744e Mon Sep 17 00:00:00 2001
+From 271d0781e4050ae8b29a08de323f041f7ae1ab60 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 30 Aug 2023 09:28:03 -0400
 Subject: [PATCH 5/6] Support loading extensions from STDLIB
 
 ---
- base/loading.jl | 62 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+ base/loading.jl | 56 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
 diff --git a/base/loading.jl b/base/loading.jl
-index dc532a668b..6717bdf7c9 100644
+index 8bcaa4b2ab..1447166ebe 100644
 --- a/base/loading.jl
 +++ b/base/loading.jl
-@@ -970,6 +970,14 @@ end
+@@ -1023,6 +1023,14 @@ end
  # if there's a project file, look up `name` in its deps and return that
  # otherwise return `nothing` to indicate the caller should keep searching
  function implicit_manifest_deps_get(dir::String, where::PkgId, name::String)::Union{Nothing,PkgId}
@@ -25,17 +25,9 @@ index dc532a668b..6717bdf7c9 100644
 +function _implicit_manifest_deps_get(dir::String, where::PkgId, name::String)::Union{Nothing,PkgId}
      @assert where.uuid !== nothing
      project_file = entry_point_and_project_file(dir, where.name)[2]
-     project_file === nothing && return nothing # a project file is mandatory for a package with a uuid
-@@ -980,8 +988,42 @@ function implicit_manifest_deps_get(dir::String, where::PkgId, name::String)::Un
-     return PkgId(pkg_uuid, name)
- end
+     if project_file === nothing
+@@ -1052,6 +1060,34 @@ end
  
-+function _find_ext_path(project_path::String, extname::String)
-+    extfiledir = joinpath(project_path, "ext", extname, extname * ".jl")
-+    isfile(extfiledir) && return extfiledir
-+    return joinpath(project_path, "ext", extname * ".jl")
-+end
-+
  # look for an entry-point for `pkg` and return its path if UUID matches
  function implicit_manifest_uuid_path(dir::String, pkg::PkgId)::Union{Nothing,String}
 +    path = _implicit_manifest_uuid_path(dir, pkg)
@@ -57,7 +49,7 @@ index dc532a668b..6717bdf7c9 100644
 +            if exts !== nothing
 +                if pkg.name in keys(exts)
 +                    p = project_file_path(project_file)
-+                    return _find_ext_path(p, pkg.name)
++                    return find_ext_path(p, pkg.name)
 +                end
 +            end
 +        end
@@ -69,7 +61,7 @@ index dc532a668b..6717bdf7c9 100644
      path, project_file = entry_point_and_project_file(dir, pkg.name)
      if project_file === nothing
          pkg.uuid === nothing || return nothing
-@@ -1194,6 +1236,23 @@ const EXT_PRIMED = Dict{PkgId, PkgId}() # Extension -> Parent
+@@ -1309,6 +1345,23 @@ const EXT_PRIMED = Dict{PkgId, PkgId}() # Extension -> Parent
  const EXT_DORMITORY = Dict{PkgId,Vector{ExtensionId}}() # Trigger -> Extensions that can be triggered by it
  const EXT_DORMITORY_FAILED = ExtensionId[]
  
@@ -93,7 +85,7 @@ index dc532a668b..6717bdf7c9 100644
  function insert_extension_triggers(pkg::PkgId)
      pkg.uuid === nothing && return
      path_env_loc = locate_package_env(pkg)
-@@ -1202,6 +1261,9 @@ function insert_extension_triggers(pkg::PkgId)
+@@ -1317,6 +1370,9 @@ function insert_extension_triggers(pkg::PkgId)
      if path === nothing || env_loc === nothing
          return
      end
@@ -104,5 +96,5 @@ index dc532a668b..6717bdf7c9 100644
  end
  
 -- 
-2.42.0
+2.42.1
 

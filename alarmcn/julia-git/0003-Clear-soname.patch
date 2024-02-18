@@ -1,4 +1,4 @@
-From c2c74e03f2698426c43ffc8960a5ee8dc0ca75ec Mon Sep 17 00:00:00 2001
+From 8af5f08afc132bfe44013efb45fbd62261e1cbca Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
 Subject: [PATCH 3/6] Clear soname
@@ -68,7 +68,7 @@ index f2dee45a27..dfac42fd48 100644
  
  function __init__()
 diff --git a/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl b/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
-index f245759aaf..e5a4502723 100644
+index 08614880a9..23db63288e 100644
 --- a/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
 +++ b/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
 @@ -67,18 +67,18 @@ elseif Sys.isapple()
@@ -79,7 +79,7 @@ index f245759aaf..e5a4502723 100644
 -    const libbtf = "libbtf.so.2"
 -    const libcamd = "libcamd.so.3"
 -    const libccolamd = "libccolamd.so.3"
--    const libcholmod = "libcholmod.so.4"
+-    const libcholmod = "libcholmod.so.5"
 -    const libcolamd = "libcolamd.so.3"
 -    const libklu = "libklu.so.2"
 -    const libldl = "libldl.so.3"
@@ -103,5 +103,5 @@ index f245759aaf..e5a4502723 100644
  
  function __init__()
 -- 
-2.42.0
+2.42.1
 
