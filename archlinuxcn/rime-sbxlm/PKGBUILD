@@ -1,12 +1,16 @@
+# Maintainer: ZeekoZhu <vaezt@outlook.com>
+
 pkgname=rime-sbxlm
 pkgver=20231216
-pkgrel=2
+pkgrel=3
 pkgdesc='声笔系列码配置'
 arch=(any)
+url="https://gitee.com/sbxlm/sbxlm"
 source=('fetch-release.sh' 'sbxlm-init')
 license=('CC-BY-NC-4.0')
 sha256sums=('8a63e188b5f0601d881503d7d058362eda5fcfdfcf88fa6b4010c8f063c5689e'
             '38115af55a8cbe99901d9cdc187659cdcb8010d8f24cbe509a26eac24dffec85')
+depends=('bash')
 makedepends=('jq' 'unzip')
 optdepends=('librime-sbxlm-git' 'fcitx5-rime')
 replaces=('rime-sbxlm-sbfm' 'rime-sbxlm-sbkm' 'rime-sbxlm-sbzr' 'rime-sbxlm-sbxh')
