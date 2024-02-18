@@ -3,13 +3,14 @@
 
 pkgname=obs-studio
 pkgver=30.0.2
-pkgrel=2
+pkgrel=4
 pkgdesc="Free, open source software for live streaming and recording"
 arch=(aarch64 x86_64)
 url="https://obsproject.com"
 license=('GPL2')
 depends=('ffmpeg' 'jansson' 'libxinerama' 'libxkbcommon-x11' 'mbedtls' 'rnnoise' 'pciutils'
-         'qt6-svg' 'curl' 'jack' 'gtk-update-icon-cache' 'pipewire' 'libxcomposite')
+         'qt6-svg' 'curl' 'jack' 'gtk-update-icon-cache' 'pipewire' 'libxcomposite'
+         'libdatachannel')
 makedepends=('cmake' 'libfdk-aac' 'x264' 'swig' 'python' 'luajit' 'sndio')
 optdepends=('libfdk-aac: FDK AAC codec support'
             'libva-intel-driver: hardware encoding'
@@ -42,7 +43,7 @@ build() {
     -DENABLE_AJA=OFF \
     -DENABLE_JACK=ON \
     -DENABLE_LIBFDK=ON \
-    -DENABLE_WEBRTC=OFF \
+    -DENABLE_WEBRTC=ON \
     -DOBS_VERSION_OVERRIDE="$pkgver-$pkgrel" \
     -DCALM_DEPRECATION=ON \
     -Wno-dev
