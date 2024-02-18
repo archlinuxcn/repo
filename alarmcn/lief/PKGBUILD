@@ -35,11 +35,14 @@ build() {
   # the build time RPATH with it. Avoid it by not setting it during build time.
   # The python command below will run cmake configure again
   # but it should remember the flags we set here.
-  cmake . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1 \
+  cmake . -B build -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_SHARED_LIBS=On \
         -DCMAKE_SKIP_BUILD_RPATH=On \
         -DLIEF_PYTHON_API=On \
         -DLIEF_C_API=On \
+        -DLIEF_OPT_MBEDTLS_EXTERNAL=ON \
         -DLIEF_EXAMPLES=Off -G Ninja
+  cmake --build build
 
   cd api/python
   python -m build --wheel --no-isolation
