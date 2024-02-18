@@ -2,11 +2,11 @@
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 
 pkgname=(llvm-julia-git llvm-libs-julia-git)
-pkgver=15.0.7
-pkgrel=13
-_julia_rel=7
+pkgver=16.0.6
+pkgrel=1
+_julia_rel=3
 _julia_commit=
-_versioned_llvm=15
+_versioned_llvm=
 arch=(i686 x86_64 armv7h aarch64)
 url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
@@ -23,7 +23,7 @@ else
   source=(https://github.com/JuliaLang/llvm-project/archive/refs/tags/julia-$pkgver-$_julia_rel.tar.gz)
   repodir=llvm-project-julia-$pkgver-$_julia_rel
 fi
-sha256sums=('5c52b7f146e662f9dcd0b44f5bdc71cd30527aec0d165d9f172d18fa58f416fa')
+sha256sums=('e6529df9e3b3e629c50231c680bb3b0d283367f032ce6bcf2b7ba5d8dde91c10')
 
 if [[ -z $_versioned_llvm ]]; then
   _llvm_prefix=/usr
