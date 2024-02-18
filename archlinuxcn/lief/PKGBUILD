@@ -45,7 +45,7 @@ build() {
   python -m build --wheel --no-isolation
 }
 
-package-lief() {
+package_lief() {
   cd LIEF/build
 
   DESTDIR="${pkgdir}" ninja install
