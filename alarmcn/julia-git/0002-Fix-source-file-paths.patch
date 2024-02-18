@@ -1,20 +1,20 @@
-From 52ff351a0239de2545e6d1aa3a633cf4b0fbea5c Mon Sep 17 00:00:00 2001
+From 9dae3dcf692d1b18d3b5827ab287e4bd1f694595 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 19 Jul 2020 09:40:32 -0400
 Subject: [PATCH 2/6] Fix source file paths
 
 ---
- base/sysimg.jl          |  7 +++++++
- base/sysinfo.jl         |  2 +-
- etc/write_base_cache.jl |  6 +++++-
- src/ast.c               | 13 +++++++++++++
+ base/sysimg.jl              |  7 +++++++
+ base/sysinfo.jl             |  2 +-
+ contrib/write_base_cache.jl |  6 +++++-
+ src/ast.c                   | 13 +++++++++++++
  4 files changed, 26 insertions(+), 2 deletions(-)
 
 diff --git a/base/sysimg.jl b/base/sysimg.jl
-index 31efa933c1..decf1c251e 100644
+index 62241de9ff..e3ff79f6da 100644
 --- a/base/sysimg.jl
 +++ b/base/sysimg.jl
-@@ -72,6 +72,13 @@ let
+@@ -111,6 +111,13 @@ let
  
          print_time("Stdlibs total", tot_time_stdlib)
      end
@@ -29,10 +29,10 @@ index 31efa933c1..decf1c251e 100644
      # Clear global state
      empty!(Core.ARGS)
 diff --git a/base/sysinfo.jl b/base/sysinfo.jl
-index 2c96208848..f6f78c43a9 100644
+index 97e5e2a71b..f66f838e77 100644
 --- a/base/sysinfo.jl
 +++ b/base/sysinfo.jl
-@@ -52,7 +52,7 @@ A string containing the full path to the directory containing the `stdlib` packa
+@@ -53,7 +53,7 @@ A string containing the full path to the directory containing the `stdlib` packa
  global STDLIB::String = "$BINDIR/../share/julia/stdlib/v$(VERSION.major).$(VERSION.minor)" # for bootstrap
  # In case STDLIB change after julia is built, the variable below can be used
  # to update cached method locations to updated ones.
@@ -41,10 +41,10 @@ index 2c96208848..f6f78c43a9 100644
  
  # helper to avoid triggering precompile warnings
  
-diff --git a/etc/write_base_cache.jl b/etc/write_base_cache.jl
+diff --git a/contrib/write_base_cache.jl b/contrib/write_base_cache.jl
 index a81908b96a..4c463db143 100644
---- a/etc/write_base_cache.jl
-+++ b/etc/write_base_cache.jl
+--- a/contrib/write_base_cache.jl
++++ b/contrib/write_base_cache.jl
 @@ -2,7 +2,11 @@
  cachefile = ARGS[1]
  open(cachefile, "w") do io
@@ -59,10 +59,10 @@ index a81908b96a..4c463db143 100644
          write(io, filename)
          write(io, UInt64(sizeof(src)))
 diff --git a/src/ast.c b/src/ast.c
-index 89ee3f70bf..c5c3b0658e 100644
+index 8816c905ee..a3748ee21d 100644
 --- a/src/ast.c
 +++ b/src/ast.c
-@@ -783,6 +783,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v, int check_vali
+@@ -829,6 +829,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v, int check_vali
      return julia_to_scm_noalloc2(fl_ctx, v, check_valid);
  }
  
@@ -81,7 +81,7 @@ index 89ee3f70bf..c5c3b0658e 100644
  // Parse `text` starting at 0-based `offset` and attributing the content to
  // `filename`. Return an svec of (parsed_expr, final_offset)
  JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
-@@ -808,6 +820,7 @@ JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
+@@ -854,6 +866,7 @@ JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
      fl_context_t *fl_ctx = &ctx->fl;
      value_t fl_text = cvalue_static_cstrn(fl_ctx, text, text_len);
      fl_gc_handle(fl_ctx, &fl_text);
@@ -90,5 +90,5 @@ index 89ee3f70bf..c5c3b0658e 100644
                                                jl_string_len(filename));
      fl_gc_handle(fl_ctx, &fl_filename);
 -- 
-2.42.0
+2.42.1
 
