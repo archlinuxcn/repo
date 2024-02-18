@@ -1,0 +1,51 @@
+# Maintainer: everyx <lunt.luo#gmail.com>
+
+pkgbase=sing-geosite
+pkgname=(sing-geosite-db sing-geosite-rule-set sing-geosite-common)
+pkgver=20240105034708
+pkgrel=3
+pkgdesc="Geosite database and rule sets for sing-box"
+arch=('any')
+url="https://github.com/SagerNet/${pkgbase}"
+makedepends=('go')
+_srcbase="${pkgbase}-${pkgver}"
+source=(
+    "${_srcbase}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
+	"GeoLite2-End-User-License-Agreement.pdf"
+)
+sha256sums=('b4101866d5559596f072aae952cff82758e3a1be1cfae9e55d086d97d5d9413d'
+            'b9c7fbfcdd5b682b5635592281d72006df89d73f163308b7ef35a59f293b036e')
+
+build() {
+	cd "${_srcbase}" || exit
+	NO_SKIP=true go run -v .
+}
+
+package_sing-geosite-common() {
+	pkgdesc="sing-geosite (common files)"
+	license=('GPL-3.0-or-later')
+	install -Dm644 "${_srcbase}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgbase}/"
+}
+
+package_sing-geosite-rule-set() {
+	pkgdesc="sing-geosite (rule sets)"
+	license=('LicenseRef-GeoLite2 End User License Agreement')
+	depends=("${pkgbase}-common")
+	provides=("${pkgbase}")
+
+	install -dm755 "${pkgdir}/usr/share/${pkgbase}/rule-set"
+	install -Dm644 ${_srcbase}/rule-set/* "${pkgdir}/usr/share/${pkgbase}/rule-set"
+	install -Dm644 GeoLite2-End-User-License-Agreement.pdf -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
+
+package_sing-geosite-db() {
+	pkgdesc="sing-geosite (database)"
+	license=('LicenseRef-GeoLite2 End User License Agreement')
+	depends=("${pkgbase}-common")
+	replaces=("${pkgbase}")
+	provides=("${pkgbase}")
+
+	install -dm755 "${pkgdir}/usr/share/${pkgbase}"
+	install -Dm644 ${_srcbase}/*.db "${pkgdir}/usr/share/${pkgbase}/"
+	install -Dm644 GeoLite2-End-User-License-Agreement.pdf -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}

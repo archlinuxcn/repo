@@ -1,0 +1,10 @@
+maintainers:
+  - github: Integral-Tech
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: git_pkgbuild_commit()
+
+update_on:
+  - source: github
+    github: SagerNet/sing-geosite
+    use_latest_release: true
