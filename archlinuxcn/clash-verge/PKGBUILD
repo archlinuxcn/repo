@@ -28,11 +28,9 @@ makedepends=('cargo-tauri'
              'rust')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
 	    "${pkgname}.desktop"
-	    "001-disable-updater.patch"
 )
 sha512sums=('a1c59b197fc0b6a91f37d47b1f71933334addc68eb06eda3277cde3bcc2593169eda08e5033edfd4901607d5011cd0373465866e8dbb09fc08e96fe6649dfbcc'
-            '2066dacf2e5e0135e6403cbfb825efcdf08bbcdc781407e6bb1fbb85143817b2b1abef641d20390ff7e5b3e91a509933e9eb17a64f9de7671445ac6d5363a44a'
-            '82d7afef87af300eafea33c3956db636e8505501f206ddaf382017664c98567d72a88ae835c1e917ae73f4824cd3bd6acac24c1894a369c9289dafb100a2e6cb')
+            '2066dacf2e5e0135e6403cbfb825efcdf08bbcdc781407e6bb1fbb85143817b2b1abef641d20390ff7e5b3e91a509933e9eb17a64f9de7671445ac6d5363a44a')
 options=(!lto)
 
 prepare() {
