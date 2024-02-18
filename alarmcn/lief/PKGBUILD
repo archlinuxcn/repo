@@ -8,7 +8,9 @@ pkgdesc='Library to instrument executable formats'
 arch=(armv7h aarch64 x86_64)
 url='https://lief.quarkslab.com/'
 license=(apache)
-makedepends=(git cmake ninja mbedtls python python-setuptools)
+makedepends=(git cmake ninja mbedtls python python-build python-wheel
+             python-pydantic-core python-pydantic python-tomli python-scikit-build-core
+             python-pyproject-metadata python-pathspec python-setuptools)
 provides=(libLIEF.so)
 source=("git+https://github.com/lief-project/LIEF#tag=${pkgver}")
 md5sums=('SKIP')
