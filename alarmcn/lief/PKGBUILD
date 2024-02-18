@@ -1,13 +1,15 @@
 # Maintainer: Dobroslaw Kijowski [dobo] <dobo90_at_gmail.com>
 
-pkgname=lief
+pkgbase=lief
+pkgname=(lief python-lief)
 pkgver=0.14.1
 pkgrel=1
 pkgdesc='Library to instrument executable formats'
 arch=(armv7h aarch64 x86_64)
 url='https://lief.quarkslab.com/'
 license=(apache)
-makedepends=(git cmake ninja python python-setuptools)
+makedepends=(git cmake ninja mbedtls python python-setuptools)
+provides=(libLIEF.so)
 source=("git+https://github.com/lief-project/LIEF#tag=${pkgver}")
 md5sums=('SKIP')
 
@@ -38,15 +40,23 @@ build() {
         -DLIEF_PYTHON_API=On \
         -DLIEF_C_API=On \
         -DLIEF_EXAMPLES=Off -G Ninja
+
+  cd api/python
+  python -m build --wheel --no-isolation
 }
 
-package() {
-  cd LIEF
+package-lief() {
+  cd LIEF/build
 
-  (cd build
-   DESTDIR="${pkgdir}" ninja install)
+  DESTDIR="${pkgdir}" ninja install
+}
 
+package_python-lief() {
   pymin_ver=$(python -c 'import sys; print(sys.version_info.minor)')
   ((pynext_min=pymin_ver + 1))
-  depends+=("python>=3.${pymin_ver}.0" "python<3.${pynext_min}.0")
+  depends+=("python>=3.${pymin_ver}.0" "python<3.${pynext_min}.0" lief)
+
+  cd LIEF/api/python
+
+  python -m installer --destdir="$pkgdir" dist/*.whl
 }
