@@ -7,16 +7,15 @@ post_build: git_pkgbuild_commit
 time_limit_hours: 2
 
 repo_depends:
+  - llvm-julia-git
+  - llvm-julia-git: llvm-libs-julia-git
   - openspecfun-git
   - openblas-git: openblas64-git
   - openlibm-git
-  - llvm-julia
-  - llvm-julia: llvm-libs-julia
   - proot-git
 
 update_on_build:
-  - pkgbase: llvm-julia
-
+  - pkgbase: llvm-julia-git
 update_on:
   - source: vcs
     lilac_throttle: 6d
@@ -44,10 +43,10 @@ update_on:
   - source: alpmfiles
     pkgname: suitesparse
     strip_dir: true
-    filename: 'libcholmod.so.\d+'
+    filename: libcholmod.so.\d+
   - source: alpmfiles
     pkgname: libutf8proc
     strip_dir: true
-    filename: 'libutf8proc.so.\d+'
+    filename: libutf8proc.so.\d+
   - source: manual
     manual: 1
