@@ -1,7 +1,7 @@
 # Maintainer: Dobroslaw Kijowski [dobo] <dobo90_at_gmail.com>
 
 pkgname=lief
-pkgver=0.13.2
+pkgver=0.14.1
 pkgrel=1
 pkgdesc='Library to instrument executable formats'
 arch=(armv7h aarch64 x86_64)
@@ -34,16 +34,10 @@ build() {
   # The python command below will run cmake configure again
   # but it should remember the flags we set here.
   cmake . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1 \
-        -DCMAKE_SKIP_BUILD_RPATH=On -DLIEF_EXAMPLES=Off -G Ninja
-  # The python command invokes `make` with a manually set `-j` flag so it won't
-  # respect the one in `MAKEFLAGS`. Manually parse and supply the `-j` flag to setup.py.
-  _build_arg=
-  if [[ " ${MAKEFLAGS} " =~ [[:space:]]-j[[:space:]]*([0-9]*)[[:space:]] ]]; then
-    _build_arg=-j${BASH_REMATCH[1]}
-  fi
-  build_temp=$PWD/build
-  (cd api/python/
-   python setup.py build --build-temp=$build_temp $_build_arg)
+        -DCMAKE_SKIP_BUILD_RPATH=On \
+        -DLIEF_PYTHON_API=On \
+        -DLIEF_C_API=On \
+        -DLIEF_EXAMPLES=Off -G Ninja
 }
 
 package() {
@@ -51,8 +45,6 @@ package() {
 
   (cd build
    DESTDIR="${pkgdir}" ninja install)
-  (cd api/python/
-   python setup.py install --optimize=1 --root="${pkgdir}" --skip-build)
 
   pymin_ver=$(python -c 'import sys; print(sys.version_info.minor)')
   ((pynext_min=pymin_ver + 1))
