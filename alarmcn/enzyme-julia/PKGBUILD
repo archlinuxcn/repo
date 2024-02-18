@@ -1,6 +1,6 @@
 # Maintainer: Will Handley <wh260@cam.ac.uk> (aur.archlinux.org/account/wjhandley)
 
-_versioned_llvm=15
+_versioned_llvm=
 if [[ -n $_versioned_llvm ]]; then
   _clang=clang$_versioned_llvm
 else
@@ -14,7 +14,7 @@ pkgdesc="High-performance automatic differentiation of LLVM and MLIR."
 arch=(aarch64 x86_64)
 url="https://enzyme.mit.edu"
 license=('Apache')
-depends=(llvm-julia)
+depends=(llvm-julia-git)
 makedepends=(cmake git $_clang)
 source=("https://github.com/EnzymeAD/Enzyme/archive/v${pkgver}.tar.gz")
 sha256sums=('73163c6a9bd01554f62fe7e91c878e22316a0b21c18896dcf17481c70d2c2431')
