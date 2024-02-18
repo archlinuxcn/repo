@@ -25,7 +25,7 @@ build() {
     _clang_dir=/usr/lib/llvm$_versioned_llvm/lib/cmake/clang
   else
     _llvm_dir=/usr/lib/cmake/llvm
-    _clang_dir=/usr/liblib/cmake/clang
+    _clang_dir=/usr/lib/cmake/clang
   fi
   cmake -B build -S "Enzyme-$pkgver/enzyme" \
         -DCMAKE_BUILD_TYPE='RelWithDebInfo' \
