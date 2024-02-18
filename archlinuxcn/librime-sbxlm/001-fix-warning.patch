@@ -1,0 +1,15 @@
+diff --git a/tools/rime_api_console.cc b/tools/rime_api_console.cc
+index f61495b7..4e97e16d 100644
+--- a/tools/rime_api_console.cc
++++ b/tools/rime_api_console.cc
+@@ -181,7 +181,9 @@ void on_message(void* context_object,
+ }
+ 
+ int main(int argc, char *argv[]) {
+-  system("chcp 65001");
++  if (system("chcp 65001") != 0) {
++    printf("Error setting console code page to UTF-8.\n");
++  }
+   RimeApi* rime = rime_get_api();
+ 
+   RIME_STRUCT(RimeTraits, traits);
