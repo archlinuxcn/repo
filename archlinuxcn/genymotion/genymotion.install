@@ -1,9 +1,0 @@
-remove_slink(){
-    # if previous version install script created symbolic links
-    [[ -s /usr/local/bin/genymotion ]] && rm /usr/local/bin/genymotion
-    [[ -s /usr/local/bin/genymotion-shell ]] && rm /usr/local/bin/genymotion-shell
-}
-
-pre_install() {
-    remove_slink
-}
