@@ -1,0 +1,18 @@
+pkgname=julia-git-lazyarrays-src
+pkgver=1.8.3
+_commit=4acd7a3576c79069ae19aad90f90531f438d4c12
+pkgrel=1
+pkgdesc="LazyArrays.jl"
+url="https://github.com/JuliaArrays/LazyArrays.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaArrays/LazyArrays.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LazyArrays.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LazyArrays "${pkgdir}" "${pkgname}" julia-git
+}

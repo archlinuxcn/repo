@@ -1,0 +1,26 @@
+pkgname=julia-git-calcium_jll-src
+pkgver=0.401.100+0
+_commit=eb4bde9fc123970418e6b6fdbc48fd018ee9e16e
+pkgrel=1
+pkgdesc="Calcium_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Calcium_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git flint)
+source=("git+https://github.com/JuliaBinaryWrappers/Calcium_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'b6021fe9a00a3d9b7f38f8a23e4a90b3f528d5f376b5c25f4a43a1be5aaa5b7f')
+
+build() {
+  cd Calcium_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Calcium_jll ../jll.toml
+}
+
+package() {
+  cd Calcium_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Calcium_jll "${pkgdir}" "${pkgname}" julia-git
+}

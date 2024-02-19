@@ -1,0 +1,18 @@
+pkgname=julia-git-nemo-src
+pkgver=0.42.1
+_commit=a5a9c5c2d565a94ad8d75ed484848d2d60d19cb2
+pkgrel=1
+pkgdesc="Nemo.jl"
+url="https://github.com/Nemocas/Nemo.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/Nemocas/Nemo.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Nemo.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Nemo "${pkgdir}" "${pkgname}" julia-git
+}
