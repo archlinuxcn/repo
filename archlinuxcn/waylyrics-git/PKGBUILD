@@ -3,7 +3,7 @@
 pkgname=waylyrics-git
 _pkgname=waylyrics
 _appname="io.poly000.${_pkgname}"
-pkgver=0.2.6_r3.gd9f46f7e
+pkgver=0.2.7_r16.gc5b49c50
 pkgrel=2
 pkgdesc="the furry way to show desktop lyrics (git version)"
 url="https://github.com/waylyrics/waylyrics"
@@ -15,7 +15,10 @@ depends=('openssl' 'hicolor-icon-theme'
     # base
     'dbus' 'gcc-libs' 'glibc'
     # gtk4
-    'glib2' 'cairo' 'dconf' 'gtk4')
+    'glib2' 'cairo' 'dconf' 'gtk4'
+    # restart task
+    'sh'
+    )
 makedepends=('rust' 'git' 'jq' 'mimalloc')
 optdepends=()
 
