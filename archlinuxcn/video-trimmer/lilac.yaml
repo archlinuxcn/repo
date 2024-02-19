@@ -1,0 +1,17 @@
+maintainers:
+  - github: kiri2002
+
+build_prefix: extra-x86_64
+
+pre_build_script: |
+  update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: |
+  git_pkgbuild_commit()
+
+update_on:
+  - source: gitlab
+    gitlab: YaLTeR/video-trimmer
+    host: gitlab.gnome.org
+    use_latest_release: true
+    prefix: v
