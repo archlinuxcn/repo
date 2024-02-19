@@ -8,16 +8,8 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/JuliaOpt/NLopt.jl.git#commit=$_commit"
-        0001-Support-loading-extension-in-precompiled-package.patch)
-sha256sums=('SKIP'
-            '7643132cc0f633026f06305f95090a59f7899d5683930515d7265fb78b1b4976')
-
-prepare() {
-  cd NLopt.jl
-
-  patch -Np1 --no-backup-if-mismatch < "../0001-Support-loading-extension-in-precompiled-package.patch"
-}
+source=("git+https://github.com/JuliaOpt/NLopt.jl.git#commit=$_commit")
+sha256sums=('SKIP')
 
 package() {
   cd NLopt.jl
