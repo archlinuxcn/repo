@@ -1,0 +1,26 @@
+pkgname=julia-git-arb_jll-src
+pkgver=200.2300.0+0
+_commit=b5630f7c7658e173b48f2fe1456d51147100758a
+pkgrel=1
+pkgdesc="Arb_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Arb_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git flint)
+source=("git+https://github.com/JuliaBinaryWrappers/Arb_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '95bc1920d8f71816834a489fec85ef04ad5f32b062269adc42c8ea906359ba47')
+
+build() {
+  cd Arb_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Arb_jll ../jll.toml
+}
+
+package() {
+  cd Arb_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Arb_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,26 @@
+pkgname=julia-git-mpc_jll-src
+pkgver=1.2.1+0
+_commit=69c6c9e951714975d025786c55b380eeb099aa5b
+pkgrel=1
+pkgdesc="MPC_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/MPC_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libmpc)
+source=("git+https://github.com/JuliaBinaryWrappers/MPC_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '61142a8a28df77d84f8ade74ed3e839993297288623a9d27fd4dc1d8316eb864')
+
+build() {
+  cd MPC_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl MPC_jll ../jll.toml
+}
+
+package() {
+  cd MPC_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MPC_jll "${pkgdir}" "${pkgname}" julia-git
+}

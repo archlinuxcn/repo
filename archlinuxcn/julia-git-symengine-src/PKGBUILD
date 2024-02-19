@@ -1,0 +1,18 @@
+pkgname=julia-git-symengine-src
+pkgver=0.11.0
+_commit=a327565f07534197bd9e3add9a8686ddb46359bf
+pkgrel=1
+pkgdesc="SymEngine.jl"
+url="https://github.com/symengine/SymEngine.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/symengine/SymEngine.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SymEngine.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SymEngine "${pkgdir}" "${pkgname}" julia-git
+}

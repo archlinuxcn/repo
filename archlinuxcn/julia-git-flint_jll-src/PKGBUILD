@@ -1,0 +1,26 @@
+pkgname=julia-git-flint_jll-src
+pkgver=300.0.0+0
+_commit=9a5b6c9140d60305b05f433229621389c55d781a
+pkgrel=1
+pkgdesc="FLINT_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/FLINT_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git flint)
+source=("git+https://github.com/JuliaBinaryWrappers/FLINT_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            'f0073359a4fbeac23e305a8b72738c0a7c7d35800180abd34add16260e228fc8')
+
+build() {
+  cd FLINT_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl FLINT_jll ../jll.toml
+}
+
+package() {
+  cd FLINT_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh FLINT_jll "${pkgdir}" "${pkgname}" julia-git
+}
