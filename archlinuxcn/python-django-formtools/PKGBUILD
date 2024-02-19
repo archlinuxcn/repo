@@ -1,32 +1,30 @@
 _name=django-formtools
 pkgname=python-django-formtools
-pkgver=2.4.1
+pkgver=2.5.1
 pkgrel=1
 pkgdesc="A set of high-level abstractions for Django forms"
 arch=(any)
 url="https://django-formtools.readthedocs.io/en/latest/"
 license=('BSD')
-depends=('python-django' 'python-setuptools-scm')
-makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/django-formtools-2.4.1.tar.gz")
-sha256sums=('21f8d5dac737f1e636fa8a0a10969c1c32f525a6dfa27c29592827ba70d9643a')
+depends=('python-django')
+makedepends=('python-build'
+             'python-installer'
+             'python-wheel'
+             'python-setuptools'
+             'python-setuptools-scm')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha256sums=('47cb34552c6efca088863d693284d04fc36eaaf350eb21e1a1d935e0df523c93')
 
 build() {
-  cd "$srcdir/django-formtools-2.4.1"
-  python3 setup.py build
+  cd ${_name}-${pkgver}
+
+  SETUPTOOLS_SCM_PRETEND_VERSION=${pkgver} \
+                                python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "$srcdir/django-formtools-2.4.1"
-  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  cd ${_name}-${pkgver}
 
-  # make sure we don't install any world-writable or root-readable-only files
-  # we shouldn't need to fix ownership as we extract tarballs as a non-root user
-  # https://github.com/pypa/setuptools/issues/1328
-  # https://github.com/LonamiWebs/Telethon/issues/1605
-  chmod u=rwX,go=rX -R "$pkgdir"
-  # make sure we don't install annoying files
-  local _site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
-  rm -rf "$pkgdir/$_site_packages/tests/"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  install -Dm 644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
-
