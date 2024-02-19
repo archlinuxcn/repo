@@ -11,7 +11,7 @@ depends=(julia-git ffmpeg)
 source=("git+https://github.com/JuliaBinaryWrappers/FFMPEG_jll.jl.git#commit=$_commit"
         jll.toml)
 sha256sums=('SKIP'
-            'a804f8e67c15323ed21d5f91fc7e780d3738d236aa5d9854ea9d4a0c4a39c959')
+            'ed000cbc5ca7134e0fa79e8c3433125d92c534df953752041f16430e49c9c0a8')
 
 build() {
   cd FFMPEG_jll.jl
