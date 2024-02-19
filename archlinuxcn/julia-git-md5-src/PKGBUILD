@@ -1,0 +1,18 @@
+pkgname=julia-git-md5-src
+pkgver=0.2.3
+_commit=b503cd49ce6edd990b8b7123a89c25d1d71cfbb8
+pkgrel=1
+pkgdesc="MD5.jl"
+url="https://github.com/JuliaCrypto/MD5.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaCrypto/MD5.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd MD5.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MD5 "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-cgcoefficient-src
+pkgver=0.2.9
+_commit=d07d32d6565597e54436c3e4088a6b64541e4f3c
+pkgrel=1
+pkgdesc="CGcoefficient.jl"
+url="https://github.com/0382/CGcoefficient.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/0382/CGcoefficient.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd CGcoefficient.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh CGcoefficient "${pkgdir}" "${pkgname}" julia-git
+}
