@@ -8,8 +8,16 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/QuEraComputing/ParallelMergeCSR.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+source=("git+https://github.com/QuEraComputing/ParallelMergeCSR.jl.git#commit=$_commit"
+        removing-broken-type.patch)
+sha256sums=('SKIP'
+            'ade53ea6f67e88eee837914e466e736ab52cf14cb1935eb308a638f280abb175')
+
+prepare() {
+  cd ParallelMergeCSR.jl
+
+  patch -Np1 --no-backup-if-mismatch < ../removing-broken-type.patch
+}
 
 package() {
   cd ParallelMergeCSR.jl

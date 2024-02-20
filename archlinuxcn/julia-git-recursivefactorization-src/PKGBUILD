@@ -8,8 +8,15 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/JuliaLinearAlgebra/RecursiveFactorization.jl.git#commit=$_commit")
+source=("git+https://github.com/JuliaLinearAlgebra/RecursiveFactorization.jl.git#commit=$_commit"
+        dont-pick-threshold-based-on-register_size.patch)
 sha256sums=('SKIP')
+
+prepare() {
+  cd RecursiveFactorization.jl
+
+  patch -Np1 --no-backup-if-mismatch < ../dont-pick-threshold-based-on-register_size.patch
+}
 
 package() {
   cd RecursiveFactorization.jl

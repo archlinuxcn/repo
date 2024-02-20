@@ -1,0 +1,22 @@
+From c2063bfdbf1c6247a5fe3c6374f56793134d6423 Mon Sep 17 00:00:00 2001
+From: Chris Elrod <elrodc@gmail.com>
+Date: Wed, 3 Jan 2024 11:35:33 -0500
+Subject: [PATCH] don't pick threshold based on register_size
+
+---
+ src/lu.jl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/lu.jl b/src/lu.jl
+index ed462dd..61d7467 100644
+--- a/src/lu.jl
++++ b/src/lu.jl
+@@ -79,7 +79,7 @@ for (f, T) in [(:adjoint, :Adjoint), (:transpose, :Transpose)], lu in (:lu, :lu!
+ end
+ 
+ # AVX512 needs a smaller recursion limit
+-pick_threshold() = LoopVectorization.register_size() == 64 ? 48 : 40
++pick_threshold() = 40
+ 
+ recurse(::StridedArray) = true
+ recurse(_) = false
