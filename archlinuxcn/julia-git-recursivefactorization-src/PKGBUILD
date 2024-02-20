@@ -1,7 +1,7 @@
 pkgname=julia-git-recursivefactorization-src
 pkgver=0.2.21
 _commit=518200896214420bf3bf584a55af9cd1d04d57c6
-pkgrel=1
+pkgrel=2
 pkgdesc="RecursiveFactorization.jl"
 url="https://github.com/JuliaLinearAlgebra/RecursiveFactorization.jl.git"
 arch=('any')
@@ -10,7 +10,8 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaLinearAlgebra/RecursiveFactorization.jl.git#commit=$_commit"
         dont-pick-threshold-based-on-register_size.patch)
-sha256sums=('SKIP')
+sha256sums=('SKIP'
+            '1f01a99309465d9048e397a2aa746c77a4fd5136816fbc9f93dfc260dfacb574')
 
 prepare() {
   cd RecursiveFactorization.jl
