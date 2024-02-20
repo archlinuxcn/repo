@@ -8,8 +8,16 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/JuliaData/CSV.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+source=("git+https://github.com/JuliaData/CSV.jl.git#commit=$_commit"
+        0001-Fix-memory-buffer-support.patch)
+sha256sums=('SKIP'
+            '9c6ef625d2fefd37032c0fd3f6af144cec1886e3e910c70de1bb35125382fefa')
+
+prepare() {
+  cd CSV.jl
+
+  patch -Np1 --no-backup-if-mismatch < ../0001-Fix-memory-buffer-support.patch
+}
 
 package() {
   cd CSV.jl
