@@ -19,6 +19,7 @@ repo_depends:
   - coin-or-ipopt
   - cubature-git
   - gr-framework-git
+  - gperftools-dynamic-tls
   - highs
   - libbitshuffle
   - libddierckx-git
@@ -34,12 +35,14 @@ repo_depends:
   - julia-git-intelopenmp_jll-src
   - julia-git-mkl_jll-src
   - julia-git-pardiso-src
+  - julia-git-symengine_jll-src
 
 update_on_build:
   - pkgbase: julia-git
   - pkgbase: julia-git-intelopenmp_jll-src
   - pkgbase: julia-git-mkl_jll-src
   - pkgbase: julia-git-pardiso-src
+  - pkgbase: julia-git-symengine_jll-src
 
 update_on:
 ###=== JLPKG_UPDATE_ON_LIST {{
@@ -1181,8 +1184,6 @@ update_on:
     alpm: julia-git-symdict-src
   - alias: alpm-lilac
     alpm: julia-git-symengine-src
-  - alias: alpm-lilac
-    alpm: julia-git-symengine_jll-src
   - alias: alpm-lilac
     alpm: julia-git-tabletraits-src
   - alias: alpm-lilac
