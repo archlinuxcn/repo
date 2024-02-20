@@ -1,0 +1,25 @@
+From 6df354800555fa4cb39a7c38f33e5ad1bd37fcb0 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 20 Feb 2024 11:51:17 -0500
+Subject: [PATCH] Fix membuffer support
+
+---
+ src/lexer.jl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/lexer.jl b/src/lexer.jl
+index 458bf1b..9c74d9f 100644
+--- a/src/lexer.jl
++++ b/src/lexer.jl
+@@ -28,7 +28,7 @@ end
+ Closer() = Closer(true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, -1)
+ 
+ mutable struct ParseState
+-    l::Lexer{Base.GenericIOBuffer{Array{UInt8,1}},RawToken}
++    l::Lexer{IOBuffer,RawToken}
+     done::Bool # Remove this
+     lt::RawToken
+     t::RawToken
+-- 
+2.42.1
+
