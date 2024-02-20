@@ -1,7 +1,7 @@
-From c2063bfdbf1c6247a5fe3c6374f56793134d6423 Mon Sep 17 00:00:00 2001
+From 960f174b560f09ae324f3424a31d3adf190a2110 Mon Sep 17 00:00:00 2001
 From: Chris Elrod <elrodc@gmail.com>
 Date: Wed, 3 Jan 2024 11:35:33 -0500
-Subject: [PATCH] don't pick threshold based on register_size
+Subject: [PATCH 1/2] don't pick threshold based on register_size
 
 ---
  src/lu.jl | 2 +-
@@ -20,3 +20,6 @@ index ed462dd..61d7467 100644
  
  recurse(::StridedArray) = true
  recurse(_) = false
+-- 
+2.42.1
+

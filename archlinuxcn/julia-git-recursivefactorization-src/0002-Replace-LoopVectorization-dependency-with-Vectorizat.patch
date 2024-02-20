@@ -1,0 +1,55 @@
+From eb96d463007d8b4edad7c69ff4838412c2062ecc Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 20 Feb 2024 12:09:31 -0500
+Subject: [PATCH 2/2] Replace LoopVectorization dependency with
+ VectorizationBase
+
+---
+ Project.toml | 4 ++--
+ src/lu.jl    | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Project.toml b/Project.toml
+index f630477..52c19ca 100644
+--- a/Project.toml
++++ b/Project.toml
+@@ -5,7 +5,7 @@ version = "0.2.21"
+ 
+ [deps]
+ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+-LoopVectorization = "bdcacae8-1622-11e9-2a5c-532679323890"
++VectorizationBase = "3d5dd08c-fd9d-11e8-17fa-ed2836048c2f"
+ Polyester = "f517fe37-dbe3-4b94-8317-1923a5111588"
+ PrecompileTools = "aea7be01-6a6a-4083-8856-8a6e6704d82a"
+ StrideArraysCore = "7792a7ef-975c-4747-a70f-980b88e8d1da"
+@@ -13,7 +13,7 @@ TriangularSolve = "d5829a12-d9aa-46ab-831f-fb7c9ab06edf"
+ 
+ [compat]
+ LinearAlgebra = "1.5"
+-LoopVectorization = "0.10,0.11, 0.12"
++VectorizationBase = ">=0.20.34"
+ Polyester = "0.3.2,0.4.1, 0.5, 0.6, 0.7"
+ PrecompileTools = "1"
+ StrideArraysCore = "0.1.13, 0.2.1, 0.3, 0.4.1, 0.5"
+diff --git a/src/lu.jl b/src/lu.jl
+index 61d7467..eb95457 100644
+--- a/src/lu.jl
++++ b/src/lu.jl
+@@ -1,4 +1,4 @@
+-using LoopVectorization
++using VectorizationBase
+ using TriangularSolve: ldiv!
+ using LinearAlgebra: BlasInt, BlasFloat, LU, UnitLowerTriangular, checknonsingular, BLAS,
+     LinearAlgebra, Adjoint, Transpose, UpperTriangular, AbstractVecOrMat
+@@ -120,7 +120,7 @@ end
+ @inline function recurse!(A, ::Val{Pivot}, m, n, mnmin, ipiv, info, blocksize,
+     ::Val{true}) where {Pivot}
+     if length(A) * _sizeof(eltype(A)) >
+-       0.92 * LoopVectorization.VectorizationBase.cache_size(Val(2))
++       0.92 * VectorizationBase.cache_size(Val(2))
+         _recurse!(A, Val{Pivot}(), m, n, mnmin, ipiv, info, blocksize, Val(true))
+     else
+         _recurse!(A, Val{Pivot}(), m, n, mnmin, ipiv, info, blocksize, Val(false))
+-- 
+2.42.1
+
