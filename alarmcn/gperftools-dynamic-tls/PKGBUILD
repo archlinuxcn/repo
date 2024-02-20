@@ -1,0 +1,40 @@
+# Maintainer: Balló György <ballogyor+arch at gmail dot com>
+# Contributor: Dave Reisner <dreisner@archlinux.org>
+# Contributor: Alexander Rødseth <rodseth@gmail.com>
+# Contributor: Thomas Jost <schnouki@schnouki.net>
+# Contributor: JaDa <jada@archlinux.us>
+# Contributor: Joaquim Pedro <osmano807@gmail.com>
+# Contributor: Jan Rüegg <rggjan@gmail.com>
+
+pkgname=gperftools-dynamic-tls
+pkgver=2.15
+pkgrel=1
+pkgdesc='Fast, multi-threaded malloc and nifty performance analysis tools'
+arch=(aarch64 x86_64)
+url='https://github.com/gperftools/gperftools'
+license=('BSD-3-Clause')
+depends=('gcc-libs' 'glibc' 'libunwind')
+optdepends=('graphviz: pprof graph generation'
+            'perl: pprof and pprof-symbolize commands')
+source=("https://github.com/gperftools/gperftools/releases/download/gperftools-$pkgver/gperftools-$pkgver.tar.gz")
+sha256sums=('c69fef855628c81ef56f12e3c58f2b7ce1f326c0a1fe783e5cae0b88cbbe9a80')
+
+prepare() {
+  cd gperftools-$pkgver
+  find -type f -exec sed -i -e 's/ABSL_ATTRIBUTE_INITIAL_EXEC//g' {} \;
+}
+
+build() {
+  cd gperftools-$pkgver
+  ./configure --prefix=/usr --enable-frame-pointers --enable-libunwind
+  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+  make
+}
+
+package() {
+  provides+=(gperftools=$pkgver)
+  conflicts+=(gperftools=$pkgver)
+  cd gperftools-$pkgver
+  make DESTDIR="$pkgdir" install
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/gperftools/COPYING"
+}
