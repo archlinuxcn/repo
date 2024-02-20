@@ -2,7 +2,7 @@
 
 _pkgname=timm
 pkgname=python-timm
-pkgver=0.9.12
+pkgver=0.9.16
 pkgrel=1
 pkgdesc='PyTorch Image Models'
 arch=('any')
@@ -23,7 +23,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-$pkgver.tar.gz")
-sha512sums=('5e48f01741e9b612b33133322aee06a4af8cafa4e1db37fa134d061ce0d081f3eaa12375dd3cfce2d483d9938eb86bb2ed866c243453f6769a42426544037002')
+sha512sums=('ec3fc497460f629dc81bdb87fd5a76e7e69beaaef1ff02a31b80267b640d44d0a82bc99d7990b8ab0e51582821283607a6eaaa7d4ac209a85573ee6cd7e226fb')
 
 build() {
   cd "${_pkgname}-${pkgver}"
