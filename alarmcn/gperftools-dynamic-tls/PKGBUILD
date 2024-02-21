@@ -22,6 +22,7 @@ sha256sums=('c69fef855628c81ef56f12e3c58f2b7ce1f326c0a1fe783e5cae0b88cbbe9a80')
 prepare() {
   cd gperftools-$pkgver
   find -type f -exec sed -i -e 's/ABSL_ATTRIBUTE_INITIAL_EXEC//g' {} \;
+  find -type f -exec sed -i -e 's/__attribute__ *( *( *tls_model *( *"initial-exec" *) *) *)//g' {} \;
 }
 
 build() {

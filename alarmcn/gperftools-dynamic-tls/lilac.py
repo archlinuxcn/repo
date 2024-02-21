@@ -20,6 +20,7 @@ def pre_build():
       print("""prepare() {
   cd gperftools-$pkgver
   find -type f -exec sed -i -e 's/ABSL_ATTRIBUTE_INITIAL_EXEC//g' {} \;
+  find -type f -exec sed -i -e 's/__attribute__ *( *( *tls_model *( *"initial-exec" *) *) *)//g' {} \;
 }
 """)
     if line.startswith('package()'):
