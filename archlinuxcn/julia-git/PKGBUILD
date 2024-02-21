@@ -522,6 +522,7 @@ package_julia-git-package-env() {
   mkdir -p "${pkgdir}/usr/lib/julia/"
   cat > "${pkgdir}/usr/lib/julia/.package-precompile-env" <<EOF
 export JULIA_CPU_TARGET="${_cpu_target}"
+export JULIA_PRECOMPILE_NPROCESS=2
 EOF
 }
 
