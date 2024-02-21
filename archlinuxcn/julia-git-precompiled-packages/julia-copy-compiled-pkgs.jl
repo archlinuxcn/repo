@@ -3,6 +3,19 @@
 struct PkgInfo
     name::String
     sources::Dict{String,String}
+    deps::Vector{String}
+    weakdeps::Vector{String}
+end
+
+function read_deps(d, field)
+    deps = get(d, field, nothing)
+    if deps isa Dict{String, Any}
+        return [name for (name, uuid) in deps]
+    elseif deps isa Vector{String}
+        return deps
+    else
+        return String[]
+    end
 end
 
 function pkg_info(srcdir, pkg, d)
@@ -17,7 +30,7 @@ function pkg_info(srcdir, pkg, d)
             sources[k] = extsrc
         end
     end
-    return PkgInfo(pkg, sources)
+    return PkgInfo(pkg, sources, read_deps(d, "deps"), read_deps(d, "weakdeps"))
 end
 
 function get_pkginfo(stdlib_dir, pkg)
@@ -56,11 +69,33 @@ function copy_pkg_cache_for_src(name, src, compiled_dir, pkg_tgt_dir)
     end
 end
 
+function write_arch_deps(io, deps, name)
+    if isempty(deps)
+        return
+    end
+    print(io, "$(name)+=(")
+    isfirst = true
+    for dep in deps
+        if isfirst
+            isfirst = false
+        else
+            print(io, " ")
+        end
+        print(io, "julia-git-$(lowercase(dep))")
+    end
+    println(io, ")")
+    return
+end
+
 function copy_pkg_cache(info, compiled_dir, tgt_dir)
     pkg_tgt_dir = joinpath(tgt_dir, info.name)
     mkpath(pkg_tgt_dir)
     for (pkg, src) in info.sources
         copy_pkg_cache_for_src(pkg, src, compiled_dir, pkg_tgt_dir)
+    end
+    open(joinpath(tgt_dir, "package-$(info.name)_vars.sh"), "w") do io
+        write_arch_deps(io, info.deps, "depends")
+        write_arch_deps(io, info.weakdeps, "optdepends")
     end
 end
 
