@@ -2,7 +2,7 @@
 # Contributor: Oliver Rümpelein <arch@pheerai.de>
 
 pkgname=mergerfs
-pkgver=2.39.0
+pkgver=2.40.0
 pkgrel=1
 pkgdesc='Featureful union filesystem'
 arch=(x86_64)
@@ -13,10 +13,10 @@ license=(custom:ISC)
 optdepends=('fuse2: mount via fstab' 'mergerfs-tools-git: manage data in a pool')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
 #source=("$pkgname-$pkgver.tar.gz::$url/releases/download/$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('101e4ffe18719030ea06e9df38ff72928bc57addce42e52b019674479f533082')
+sha256sums=('dea6a23fe25044a393368fd38d263eb7e731423c34a20ddd6ba4f46688edcbaa')
 
 prepare() {
-  sed -i "s/VERSION=.*/VERSION=$pkgver/" $pkgname-$pkgver/buildtools/update-version
+  sed -i "s|^\(VERSION=\).*|\1$pkgver|" $pkgname-$pkgver/buildtools/update-version
 }
 
 build() {
