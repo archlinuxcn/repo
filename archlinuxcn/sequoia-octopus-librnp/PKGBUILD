@@ -1,6 +1,6 @@
 # Maintainer: AsamK <asamk@gmx.de>
 pkgname=sequoia-octopus-librnp
-pkgver=1.7.0
+pkgver=1.8.0
 pkgrel=1
 pkgdesc='A Sequoia-based OpenPGP Backend for Thunderbird'
 url="https://gitlab.com/sequoia-pgp/${pkgname}"
@@ -12,7 +12,7 @@ makedepends=('cargo' 'clang')
 install="${pkgname}.install"
 depends=('thunderbird')
 options=(!lto)
-sha256sums=('5093c9e69b88a11494335aa44900907f0e014ad556e4153330d655e734db1ed3'
+sha256sums=('c65decf33b62e0e3fd39b33fd9d83cb0494a7af192947033828b64cf81281b93'
             'aa2bda370a1e9b4a880e275291caac486db65095c34d013561d6127777589709')
 
 prepare () {
