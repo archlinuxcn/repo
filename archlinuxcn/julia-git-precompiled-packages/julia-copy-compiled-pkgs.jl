@@ -30,7 +30,10 @@ function pkg_info(srcdir, pkg, d)
             sources[k] = extsrc
         end
     end
-    return PkgInfo(pkg, sources, read_deps(d, "deps"), read_deps(d, "weakdeps"))
+    deps = read_deps(d, "deps")
+    weakdeps = read_deps(d, "weakdeps")
+    setdiff!(deps, weakdeps)
+    return PkgInfo(pkg, sources, deps, weakdeps)
 end
 
 function get_pkginfo(stdlib_dir, pkg)
