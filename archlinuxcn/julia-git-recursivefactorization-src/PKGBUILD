@@ -10,16 +10,16 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaLinearAlgebra/RecursiveFactorization.jl.git#commit=$_commit"
         0001-don-t-pick-threshold-based-on-register_size.patch
-        0002-Replace-LoopVectorization-dependency-with-Vectorizat.patch)
+        0002-Directly-import-VectorizationBase.patch)
 sha256sums=('SKIP'
             '242eb8d71f0b32ca79ea5ab8c1bbeba58ae98233c85a9597f76200b2367b1e0a'
-            '07d9545d9015e3d39022f9ef93ae7ec95739c40cee85a9c38d8e8cbbabffd5f8')
+            '89af8e6e361e2793c89590e542bc1fe2e8a8e9f86399d3414a4638cba5afee7f')
 
 prepare() {
   cd RecursiveFactorization.jl
 
   patch -Np1 --no-backup-if-mismatch < ../0001-don-t-pick-threshold-based-on-register_size.patch
-  patch -Np1 --no-backup-if-mismatch < ../0002-Replace-LoopVectorization-dependency-with-Vectorizat.patch
+  patch -Np1 --no-backup-if-mismatch < ../0002-Directly-import-VectorizationBase.patch
 }
 
 package() {
