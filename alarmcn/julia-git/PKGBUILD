@@ -70,26 +70,18 @@ _patches=(
   0006-julia-git-add-a-safeguard-for-bad-unwinding.patch
 )
 source=('git+https://github.com/JuliaLang/julia#commit=aecd8fd379a53afa780bc8a8404728b6aa22d6bc'
+        'git+https://github.com/yuyichao/archcn-julia-scripts'
         "${_patches[@]}"
-        julia-compile-pkgs.jl
-        julia-preinstall.sh
-        julia-postinstall.sh
-        julia-preinstall.hook
-        julia-postinstall.hook
         arch-source-translate.cpp
         sysp7z.diff)
 sha512sums=('SKIP'
+            'SKIP'
             '7de91f581f2bc79b3e062eecae12deacf9e3907572449e5a433309b36d6f276858ebf5b9796073c9bb36be8719ccd019839937750661375acea03cc3d64be072'
             '487a2b52f7a9326917a42cf666531502e847387e9b2935432653e095153d493a8ca6020f1b81291a242811719d634c2aef84294c7cdc1c3efa19c074859ad03b'
             '34afbb8ea0fc526c3e977ca8e7c3c89ecb41182bde5d9d5f454fdd2302b4575596d1c530297c5090f37a4d3021122b17b1f299e625dd566827b4e96f4406acca'
             '0ed3a47bb84ce784607a7820a4831711b98a5dd6b4ee817229fcc4a3fc34bac93dd253fb5f280a65e656e0415fd38c314231f4ae2070d8b0debcb10a974a5aa4'
             'f1e118d5f826a96be3acaa2f629cbd355c7ce18b94015e16c563ee96f1f5927c7e3744f2511446e9485479cf138c47df22573a967d034a42888902de7c3b9623'
             'bdd852df0dda2080748417f9bdb92b153951795909defbaea56853cd95d14a52e6adaec66a1c3e38a89d20b0f0bdfb9949a23fcff1e56c2e0e0e8868c95ba335'
-            '98d17280eabac8ebfb5d3aa7073e9c5df534d1ead834bbe821b11b9da3dc7135b69d98f8b488f429a2bcb5c764e6a96b6dc785d6ca3f47704a9d5304263a8a2e'
-            '62b29656f41f06cd36be4e38c5a8369e961e41d4be7327fe0dfd1baa4a5e61937754b64b6481ec6efa66ef86e9f67d2f96d31b3cec422ed3780a2eee256f08a9'
-            'c9510621d3bde76f1051ba9271857b194109d4c20f52f0e04f8acddac7be1cc17d8acb4fb062273ff9ce350ed102619b706122b999dd8f31c8bc17534b8faaa6'
-            'f1bb24e46c565a4142585e8e9a0b61f5cef4decaf8a5dc37dc7f5436f13a558c29dbd9cab4091da36858e08752b9900836fd2817de695273c0b0d30c7efb4047'
-            'a668a9bd01cec8f53f457d9124107a230260c79fd57cbce4c4bf80e3451758d8e67263faa3f9d8b3da0c10bffbe29e4032106881ebe682c7f66414d8989638be'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849')
 
@@ -400,13 +392,8 @@ package-julia-in() {
   conflicts=('julia' "${builtin_pkgs[@]}")
   replaces=("${builtin_pkgs[@]}")
 
-  install -Dm644 ../julia-compile-pkgs.jl "${pkgdir}/usr/lib/julia/"
-  install -Dm644 ../julia-preinstall.sh "${pkgdir}/usr/lib/julia/"
-  install -Dm755 ../julia-postinstall.sh "${pkgdir}/usr/lib/julia/"
-  sed -e "s|@VER@|$ver_short|g" ../julia-preinstall.hook |
-    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-preinstall.hook"
-  sed -e "s|@VER@|$ver_short|g" ../julia-postinstall.hook |
-    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-postinstall.hook"
+  "${srcdir}/archcn-pkg-scripts/install.sh" "${pkgdir}" "$ver_short"
+
   mkdir -p "${pkgdir}/usr/share/julia/compiled/v$ver_short"
 
   mkdir -p "${pkgdir}/usr/share/julia/contrib"

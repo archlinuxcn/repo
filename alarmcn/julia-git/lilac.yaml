@@ -19,6 +19,9 @@ update_on_build:
 update_on:
   - source: vcs
     lilac_throttle: 6d
+  - source: github
+    github: yuyichao/archcn-julia-scripts
+    branch: master
   - source: alpm
     alpm: curl
     provided: libcurl.so
