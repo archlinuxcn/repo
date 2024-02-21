@@ -2,11 +2,6 @@ BOLD='\033[1m'
 GREEN='\033[32m'
 RESET='\033[0m'
 
-msg_replug() {
-	echo -e "${BOLD}${GREEN}Replug${RESET} your tablet if it is connected. This will re-trigger the udev rules accordingly."
-	echo
-}
-
 msg_starting() {
 	echo "The daemon can be started with:"
 	echo -e "  $ ${GREEN}otd-daemon${RESET}"
@@ -35,7 +30,6 @@ post_install() {
 	echo -e "${BOLD}Welcome to OpenTabletDriver!${RESET}"
 	echo "In order to start using this driver, there are certain things that have to be configured manually."
 	echo
-	msg_replug
 	msg_starting
 	msg_modules
 	msg_faq
