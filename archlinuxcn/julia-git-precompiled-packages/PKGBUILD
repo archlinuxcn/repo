@@ -705,7 +705,7 @@ makedepends=(git julia-git-package-env julia-pkg-scripts makepkg-lint-disable-ho
              blas-openblas blas64-openblas)
 options=('debug' '!strip')
 source=(julia-copy-compiled-pkgs.jl)
-sha512sums=('189eb37ff1d56def7e71b71c0ed925a3d95ed6fbe9f4013a74dc5b140793a52e91fe7f4dcb05e560ea692b69b42fc3eae398d20dadefe49e32eefc69bc856980')
+sha512sums=('1575f5bbfb37d6a8dca20cf0b4e48999127044ac10bf46aa6f2b48c2e71c43bb5ef1d4733f39267ac2126e1345f9b622f9237853a91a60c93d3d19917453e6f3')
 
 pkgver() {
   date -u +%Y%m%d.%H%M%S
@@ -748,17 +748,12 @@ _package-jlpackage() {
   arch_compile_dir="${pkgdir}/usr/lib/julia/arch-compiled/"
   mkdir -p "$arch_compile_dir"
 
-  echo "Scanning $stdlib_dir/$jlpkg for dependencies"
-  _pkg_deps=$(julia "/usr/lib/julia/julia-list-deps.jl" "$stdlib_dir/$jlpkg")
-  echo "Deps: $_pkg_deps"
+  . "${srcdir}/arch-compiled/package-${jlpkg}_vars.sh"
 
-  for _dep in $_pkg_deps; do
-    depends+=("julia-git-${_dep,,}")
-  done
+  echo "Dependencies: ${depends[*]}"
+  echo "Optional dependencies: ${optdepends[*]}"
 
-  echo "Final dependencies: ${depends[*]}"
-
-  cp -r "${srcdir}/arch-compiled/$jlpkg" "${pkgdir}/usr/lib/julia/arch-compiled/$jlpkg"
+  cp -r "${srcdir}/arch-compiled/$jlpkg" "${arch_compile_dir}/$jlpkg"
 }
 
 if grep -q lint_pkgbuild /usr/bin/makepkg &> /dev/null; then
