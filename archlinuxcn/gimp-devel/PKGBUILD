@@ -3,7 +3,7 @@
 _pkgname=gimp
 pkgname=${_pkgname}-devel
 pkgver=2.99.18
-pkgrel=1
+pkgrel=2
 pkgdesc="GNU Image Manipulation Program (Development version)"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="https://www.gimp.org/"
@@ -15,7 +15,8 @@ makedepends=("appstream" "cmake" "glib-networking" "intltool" "libxslt"
              'alsa-lib' 'curl' 'ghostscript' 'libxpm'
              'libheif' 'libwebp' 'libmng' 'iso-codes' 'aalib' 'zlib' 'libjxl'
              'gjs'  'luajit' 'meson' 'gobject-introspection'
-             'gi-docgen' 'xorg-server-xvfb' 'vala' 'highway' 'meson' 'qoi-headers') #yelp-tools')
+             'gi-docgen' 'xorg-server-xvfb' 'vala' 'highway' 'meson' 'qoi-headers'
+             'cfitsio') #yelp-tools')
 checkdepends=('xorg-server-xvfb')
 optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cups print support'
             'alsa-lib: for MIDI event controller module'
@@ -32,7 +33,8 @@ optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cu
             'zlib: Compression routines'
             'gjs: JavaScript scripting support'
             'luajit: LUA scripting support'
-            'lua51-lgi: LUA scripting support')
+            'lua51-lgi: LUA scripting support'
+            'cfitsio: FITS support')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}=${pkgver}")
 source=("https://download.gimp.org/pub/gimp/v${pkgver%.*}/${_pkgname}-${pkgver}.tar.xz"
