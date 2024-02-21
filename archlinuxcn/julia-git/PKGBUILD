@@ -449,12 +449,12 @@ package-julia-in() {
       JULIA_CPU_TARGET="${_cpu_target}" \
       proot -b "${pkgdir}/usr/share/julia/:/usr/share/julia/" \
       "${pkgdir}/usr/bin/julia" --startup-file=no \
-      "${srcdir}/julia-compile-pkgs.jl" /usr/share/julia
+      "${srcdir}/archcn-julia-scripts/julia-compile-pkgs.jl" /usr/share/julia
   env JULIA_PRECOMPILE_STDLIB_DIR="/usr/share/julia/stdlib/v$ver_short" \
       JULIA_CPU_TARGET="${_cpu_target}" \
       proot -b "${pkgdir}/usr/share/julia/:/usr/share/julia/" \
       "${pkgdir}/usr/bin/julia-debug" --startup-file=no \
-      "${srcdir}/julia-compile-pkgs.jl" /usr/share/julia
+      "${srcdir}/archcn-julia-scripts/julia-compile-pkgs.jl" /usr/share/julia
   mkdir -p "${pkgdir}/usr/lib/julia/arch-compiled/julia/"
   mv "${pkgdir}/usr/share/julia/compiled/v$ver_short/"* \
      "${pkgdir}/usr/lib/julia/arch-compiled/julia/"
