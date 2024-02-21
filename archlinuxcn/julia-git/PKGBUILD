@@ -392,7 +392,7 @@ package-julia-in() {
   conflicts=('julia' "${builtin_pkgs[@]}")
   replaces=("${builtin_pkgs[@]}")
 
-  "${srcdir}/archcn-pkg-scripts/install.sh" "${pkgdir}" "$ver_short"
+  "${srcdir}/archcn-julia-scripts/install.sh" "${pkgdir}" "$ver_short"
 
   mkdir -p "${pkgdir}/usr/share/julia/compiled/v$ver_short"
 
