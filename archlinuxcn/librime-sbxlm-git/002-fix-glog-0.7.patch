@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4da802e1..47e4410a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -82,6 +82,8 @@ if(ENABLE_LOGGING)
+   find_package(Glog REQUIRED)
+   if(Glog_FOUND)
+     include_directories(${Glog_INCLUDE_PATH})
++    add_definitions(-DGLOG_USE_GLOG_EXPORT)
++    add_definitions(-DGLOG_USE_GFLAGS)
+   endif()
+   if(Glog_STATIC)
+     add_definitions(-DGOOGLE_GLOG_DLL_DECL=)
+@@ -262,4 +264,4 @@ if(BUILD_SHARED_LIBS)
+   if (BUILD_SAMPLE)
+     add_subdirectory(sample)
+   endif()
+-endif()
+\ No newline at end of file
++endif()
+diff --git a/src/rime/lever/deployment_tasks.cc b/src/rime/lever/deployment_tasks.cc
+index fb26fa58..eded1ead 100644
+--- a/src/rime/lever/deployment_tasks.cc
++++ b/src/rime/lever/deployment_tasks.cc
+@@ -627,7 +627,7 @@ bool CleanOldLogFiles::Run(Deployer* deployer) {
+   if (GetTempPathA(MAX_PATH, tmp))
+     dirs.push_back(tmp);
+ #else
+-  google::GetExistingTempDirectories(&dirs);
++  dirs = google::GetLoggingDirectories();
+ #endif  // _WIN32
+ #endif  // RIME_ENABLE_LOGGING
+   DLOG(INFO) << "scanning " << dirs.size() << " temp directory for log files.";

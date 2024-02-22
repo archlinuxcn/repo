@@ -21,15 +21,20 @@ conflicts=("$_pkgname")
 source=("git+https://github.com/sbxlmdsl/librime.git"
         "https://github.com/lotem/librime-octagram/archive/$_octagramcommit/librime-octagram-$_octagramcommit.tar.gz"
         "https://github.com/hchunhui/librime-lua/archive/$_luacommit/librime-lua-$_luacommit.tar.gz"
-        "./001-fix-warning.patch")
+        "./001-fix-warning.patch"
+        "./002-fix-glog-0.7.patch"
+      )
 sha512sums=('SKIP'
             '737d1c58982d2f79a6e8b2548eefa1dddc036dd6e6d5436e7d6b4f3adfa2e9d8e45b29a13c1b8207a93cb77f3b5dbd9d18436f44d4e8040eb95b962de582b386'
             '2a3d3b49d53066fe96dd008e8064718082225e6bf185574a25b8e98175d9936abcfa1fdc56e48f9c72a2deb46f8157d6132fd119ff8e0a3d52fbe9e2ea21386c'
-            'acff0ec596ddc66e3a6341ba92b33bdda7fe08573ce045bd5ac1223978c3a907239d2ad7b6a5d479a5ea82735a205e3312c5b7e5a2101cac40226d51b26eedf1')
+            'acff0ec596ddc66e3a6341ba92b33bdda7fe08573ce045bd5ac1223978c3a907239d2ad7b6a5d479a5ea82735a205e3312c5b7e5a2101cac40226d51b26eedf1'
+            'SKIP'
+          )
 
 prepare() {
   cd $_pkgname
   git apply ${srcdir}/001-fix-warning.patch 
+  git apply ${srcdir}/002-fix-glog-0.7.patch
   cd plugins
   ln -sf "$srcdir"/librime-octagram-$_octagramcommit librime-octagram
   ln -sf "$srcdir"/librime-lua-$_luacommit librime-lua
@@ -53,7 +58,7 @@ check() {
 }
 
 package() {
+  install -Dm644 "${_pkgname}/LICENSE" "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
   cd $_pkgname/build
   DESTDIR="$pkgdir" ninja install
-  install -Dm644 "${srcdir}/${_pkgname}/LICENSE" "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
 }
