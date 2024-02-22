@@ -1,0 +1,158 @@
+# Maintainer: Laurent Carlier <lordheavym@gmail.com>
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Jan de Groot <jgc@archlinux.org>
+# Contributor: Andreas Radke <andyrtr@archlinux.org>
+# Contributor: Dan Johansen <strit@manjaro.org>
+
+highmem=1
+
+_suffix=-asahi-edge
+
+pkgbase=mesa$_suffix
+pkgname=(
+	"vulkan-swrast$_suffix"
+	"mesa$_suffix"
+)
+pkgdesc="An open-source implementation of the OpenGL specification"
+_asahiver=20240214
+_commit=asahi-$_asahiver
+pkgver=24.1.0_pre$_asahiver
+pkgrel=1
+arch=('aarch64')
+makedepends=('python-mako' 'libxml2' 'libx11' 'xorgproto' 'libdrm' 'libxshmfence' 'libxxf86vm'
+             'libxdamage' 'libvdpau' 'libva' 'wayland' 'wayland-protocols' 'zstd' 'elfutils' 'llvm'
+             'libomxil-bellagio' 'libclc' 'clang' 'libglvnd' 'libunwind' 'lm_sensors' 'libxrandr'
+             'systemd' 'valgrind' 'glslang' 'vulkan-icd-loader' 'directx-headers' 'cmake' 'meson'
+             'rust' 'rust-bindgen' 'spirv-llvm-translator')
+url="https://www.mesa3d.org/"
+license=('custom')
+options=('debug' '!lto')
+source=(https://gitlab.freedesktop.org/asahi/mesa/-/archive/$_commit/mesa-$_commit.tar.gz
+        LICENSE)
+sha512sums=('e7a87a61badb44c08fbbaa1e21e1b8cc6bd2d4a837e3a183dd755fb4bc5faf7257a1b5a6c27dcaf8438402b0801a188ab6d20c7bb6a3eb92554a1c6377be3ed0'
+            'f9f0d0ccf166fe6cb684478b6f1e1ab1f2850431c06aa041738563eb1808a004e52cdec823c103c9e180f03ffc083e95974d291353f0220fe52ae6d4897fecc7')
+
+prepare() {
+  cd mesa-$_commit
+}
+
+build() {
+  # Build only minimal debug info to reduce size
+  CFLAGS+=' -g1'
+  CXXFLAGS+=' -g1'
+
+  arch-meson mesa-$_commit build \
+    --libdir=/usr/lib \
+    -D b_ndebug=false \
+    -D b_lto=false \
+    -D platforms=x11,wayland \
+    -D gallium-drivers=swrast,virgl,kmsro,asahi \
+    -D vulkan-drivers=swrast \
+    -D vulkan-layers= \
+    -D dri3=enabled \
+    -D egl=enabled \
+    -D gallium-extra-hud=true \
+    -D gallium-opencl=icd \
+    -D gallium-rusticl=true \
+    -D gallium-va=enabled \
+    -D gallium-vdpau=enabled \
+    -D gallium-xa=disabled \
+    -D gbm=enabled \
+    -D opengl=true \
+    -D gles1=enabled \
+    -D gles2=enabled \
+    -D glvnd=true \
+    -D glx=dri \
+    -D libunwind=disabled \
+    -D llvm=enabled \
+    -D lmsensors=enabled \
+    -D osmesa=true \
+    -D shared-glapi=enabled \
+    -D microsoft-clc=disabled \
+    -D valgrind=enabled \
+    -D android-libbacktrace=disabled
+
+  # Print config
+  meson configure build
+
+  ninja -C build
+  meson compile -C build
+
+  # fake installation to be seperated into packages
+  # outside of fakeroot but mesa doesn't need to chown/mod
+  DESTDIR="${srcdir}/fakeinstall" meson install -C build
+}
+
+_install() {
+  local src f dir
+  for src; do
+    f="${src#fakeinstall/}"
+    dir="${pkgdir}/${f%/*}"
+    install -m755 -d "${dir}"
+    mv -v "${src}" "${dir}/"
+  done
+}
+
+_package_vulkan-swrast() {
+  pkgdesc="Vulkan software rasteriser driver"
+  depends=('wayland' 'libx11' 'libxshmfence' 'libdrm' 'zstd' 'llvm-libs' 'systemd-libs' 'libunwind')
+  optdepends=('vulkan-mesa-layers: additional vulkan layers')
+  conflicts=('vulkan-mesa' 'vulkan-swrast')
+  replaces=('vulkan-mesa')
+  provides=('vulkan-driver' 'vulkan-swrast')
+
+  _install fakeinstall/usr/share/vulkan/icd.d/lvp_icd*.json
+  _install fakeinstall/usr/lib/libvulkan_lvp.so
+
+  install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
+}
+
+_package_mesa() {
+  depends=('libdrm' 'wayland' 'libxxf86vm' 'libxdamage' 'libxshmfence' 'libelf'
+           'libomxil-bellagio' 'libunwind' 'llvm-libs' 'lm_sensors' 'libglvnd'
+           'zstd' 'vulkan-icd-loader' 'spirv-llvm-translator')
+  depends+=('libsensors.so' 'libexpat.so' 'libvulkan.so')
+  optdepends=('opengl-man-pages: for the OpenGL API man pages')
+  provides=('mesa-libgl' 'opengl-driver' 'mesa')
+  conflicts=('mesa-libgl' 'mesa')
+  replaces=('mesa-libgl')
+
+  _install fakeinstall/usr/share/drirc.d/00-mesa-defaults.conf
+  _install fakeinstall/usr/share/glvnd/egl_vendor.d/50_mesa.json
+
+  # ati-dri, nouveau-dri, intel-dri, svga-dri, swrast, swr
+  _install fakeinstall/usr/lib/dri/*_dri.so
+  _install fakeinstall/usr/lib/dri/*_video.so
+  _install fakeinstall/usr/lib/vdpau
+  _install fakeinstall/usr/lib/gallium-pipe
+
+  _install fakeinstall/usr/lib/libMesa*
+  _install fakeinstall/usr/lib/libRusticl*
+  _install fakeinstall/usr/lib/lib{gbm,glapi}.so*
+  _install fakeinstall/usr/lib/libOSMesa.so*
+
+  _install fakeinstall/usr/include
+  rm -f fakeinstall/usr/lib/pkgconfig/{egl,gl}.pc
+  _install fakeinstall/usr/lib/pkgconfig
+
+  _install fakeinstall/etc
+
+  # libglvnd support
+  _install fakeinstall/usr/lib/libGLX_mesa.so*
+  _install fakeinstall/usr/lib/libEGL_mesa.so*
+
+  # indirect rendering
+  ln -s /usr/lib/libGLX_mesa.so.0 "${pkgdir}/usr/lib/libGLX_indirect.so.0"
+
+  # make sure there are no files left to install
+  find fakeinstall -depth -print0 | xargs -0 rmdir
+
+  install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
+}
+
+for _p in "${pkgname[@]}"; do
+  eval "package_$_p() {
+    $(declare -f "_package_${_p%$_suffix}")
+    _package_${_p%$_suffix}
+  }"
+done
