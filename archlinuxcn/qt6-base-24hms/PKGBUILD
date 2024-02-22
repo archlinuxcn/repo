@@ -2,14 +2,15 @@
 # Maintainer: Felix Yan <felixonmars@archlinux.org>
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
-pkgname=qt6-base-24hms
-_qtver=6.6.1
+pkgbase=qt6-base-24hms
+pkgname=(qt6-base-24hms)
+_qtver=6.6.2
 pkgver=${_qtver/-/}
-pkgrel=3.2
+pkgrel=0
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
-pkgdesc='A cross-platform application and UI framework. This package uses 24-hour notation HH:mm:ss in all locales.'
+pkgdesc='A cross-platform application and UI framework'
 depends=(libicui18n.so brotli
          dbus
          double-conversion
@@ -53,7 +54,7 @@ depends=(libicui18n.so brotli
          xdg-utils
          zlib
          zstd)
-makedepends=(python 'zstd>=1.5.2-7' alsa-lib
+makedepends=(python alsa-lib
              cmake
              cups
              freetds
@@ -81,17 +82,17 @@ provides=("qt6-base=$pkgver")
 conflicts=(qt6-base "qt6-3d>$pkgver" "qt6-5compat>$pkgver" "qt6-base>$pkgver" "qt6-charts>$pkgver" "qt6-connectivity>$pkgver" "qt6-datavis3d>$pkgver" "qt6-declarative>$pkgver" "qt6-doc>$pkgver" "qt6-examples>$pkgver" "qt6-imageformats>$pkgver" "qt6-lottie>$pkgver" "qt6-multimedia>$pkgver" "qt6-networkauth>$pkgver" "qt6-positioning>$pkgver" "qt6-quick3d>$pkgver" "qt6-quicktimeline>$pkgver" "qt6-remoteobjects>$pkgver" "qt6-scxml>$pkgver" "qt6-sensors>$pkgver" "qt6-serialbus>$pkgver" "qt6-serialport>$pkgver" "qt6-shadertools>$pkgver" "qt6-svg>$pkgver" "qt6-tools>$pkgver" "qt6-translations>$pkgver" "qt6-virtualkeyboard>$pkgver" "qt6-wayland>$pkgver" "qt6-webchannel>$pkgver" "qt6-webengine>$pkgver" "qt6-websockets>$pkgver" "qt6-webview>$pkgver" )
 _pkgfn=qtbase-everywhere-src-$_qtver
 source=(
-      oldherl-24hms.patch
+      oldherl-24h.patch
       'https://build.archlinuxcn.org/~oldherl/files/cldr/44/core.zip'
       'https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab'
       https://download.qt.io/official_releases/qt/${pkgver%.*}/$_qtver/submodules/$_pkgfn.tar.xz
         qt6-base-cflags.patch
         qt6-base-nostrip.patch)
 sha256sums=(
-      '97ab390edb9b8f452f42138f9dfb2184e5a2bf0a2dddd02c3b6afbc448bd6997'
+      '6ab571d50f0c17d31ed33bb2ebf6eadf41c18cbf2dd8cb5260b939915a139a28'
       'bd7f70adfe8a999cfa0f5d96145bf0a095b1a099024e4f451fa1afccf6e4aee6'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
-      '450c5b4677b2fe40ed07954d7f0f40690068e80a94c9df86c2c905ccd59d02f7'
+      'b89b426b9852a17d3e96230ab0871346574d635c7914480a2a27f98ff942677b'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
             '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
 
@@ -100,7 +101,7 @@ prepare() {
   patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
 
   cd $_pkgfn
-  patch -p1 -i ../oldherl-24hms.patch
+  patch -p1 -i ../oldherl-24h.patch
   cd util/locale_database
   echo "This is slow. It takes about 4 minutes on my desktop."
   ./cldr2qlocalexml.py ../../../ > ./24h.xml
@@ -131,7 +132,8 @@ build() {
   cmake --build build
 }
 
-package() {
+package_qt6-base-24h() {
+pkgdesc='A cross-platform application and UI framework. This package uses 24-hour notation in all locales.'
   depends+=(qt6-translations)
   DESTDIR="$pkgdir" cmake --install build
 
@@ -143,4 +145,18 @@ package() {
   while read _line; do
     ln -s $_line
   done < "$srcdir"/build/user_facing_tool_links.txt
+}
+
+nopackage_qt6-xcb-private-headers() {
+  pkgdesc='Private headers for Qt6 Xcb'
+
+  depends=("qt6-base=$pkgver")
+  optdepends=()
+  groups=()
+
+  cd $_pkgfn
+  install -d -m755 "$pkgdir"/usr/include/qt6xcb-private/{gl_integrations,nativepainting}
+  cp -r src/plugins/platforms/xcb/*.h "$pkgdir"/usr/include/qt6xcb-private/
+  cp -r src/plugins/platforms/xcb/gl_integrations/*.h "$pkgdir"/usr/include/qt6xcb-private/gl_integrations/
+  cp -r src/plugins/platforms/xcb/nativepainting/*.h "$pkgdir"/usr/include/qt6xcb-private/nativepainting/
 }
