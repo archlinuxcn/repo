@@ -77,7 +77,6 @@ optdepends=('freetds: MS SQL driver'
             'postgresql-libs: PostgreSQL driver'
             'qt6-wayland: to run Qt6 applications in a Wayland session'
             'unixodbc: ODBC driver')
-groups=(qt6)
 _pkgfn=${pkgbase/6-/}-everywhere-src-$_qtver
 source=(https://download.qt.io/official_releases/qt/${pkgver%.*}/$_qtver/submodules/$_pkgfn.tar.xz
         qt6-base-cflags.patch
