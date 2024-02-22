@@ -7,7 +7,7 @@ url="https://github.com/JuliaPy/PythonCall.jl.git"
 arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
-depends=(julia-git)
+depends=(julia-git python)
 source=("git+https://github.com/JuliaPy/PythonCall.jl.git#commit=$_commit"
         0001-Patch-for-ArchLinux-package.patch)
 sha256sums=('SKIP'
