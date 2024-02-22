@@ -1,17 +1,19 @@
 maintainers:
   - github: yuyichao
 
-pre_build_script: |
-  run_cmd(['sh', './get_pkg.sh', 'linux-asahi'])
-  run_cmd(['sh', './patch_pkg.sh'])
+# pre_build_script: |
+#   run_cmd(['sh', './get_pkg.sh', 'linux-asahi'])
+#   run_cmd(['sh', './patch_pkg.sh'])
 post_build_script: |
   git_add_files('.')
   git_commit()
 time_limit_hours: 2
 
 update_on:
-  - source: github
-    github: AsahiLinux/PKGBUILDs
-    path: linux-asahi
+  - source: manual
+    manual: 6.6.asahi15
+  # - source: github
+  #   github: AsahiLinux/PKGBUILDs
+  #   path: linux-asahi
   - source: manual
     manual: 1

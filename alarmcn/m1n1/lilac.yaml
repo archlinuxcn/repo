@@ -1,14 +1,16 @@
 maintainers:
   - github: yuyichao
 
-pre_build_script: run_cmd(['sh', './get_pkg.sh', 'm1n1'])
+# pre_build_script: run_cmd(['sh', './get_pkg.sh', 'm1n1'])
 post_build_script: |
   git_add_files('.')
   git_commit()
 
 update_on:
-  - source: github
-    github: AsahiLinux/PKGBUILDs
-    path: m1n1
+  - source: manual
+    manual: 1.4.11
+  # - source: github
+  #   github: AsahiLinux/PKGBUILDs
+  #   path: m1n1
   - source: manual
     manual: 1
