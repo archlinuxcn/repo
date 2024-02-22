@@ -3,7 +3,7 @@
 
 pkgname=firefox-beta-bin
 _pkgname=firefox-beta
-pkgver=124.0b1
+pkgver=124.0b2
 _major=${pkgver/rc*}
 _build=${pkgver/*rc}
 pkgrel=1
@@ -26,7 +26,7 @@ source=("https://archive.mozilla.org/pub/firefox/releases/$pkgver/linux-x86_64/e
         "$_pkgname.sh"
         "$pkgname.desktop"
         "policies.json")
-sha256sums=('00a3d387a9b66af6161768e45a4ccbf828d37fa9c72946e0e312e85776b3093c'
+sha256sums=('e14b4f9dab4ccbdda293e7808a101dcf90e231b5a90980a13dc7bf6d8fde8776'
             '4bec62032e49c28ff27750abddbdbdbb1a4b5cba719c39498968fe53adee790b'
             '210f13ea47c4b96387f26ee7fc4dfc5c192cfb169aef2a13303fbd1ee58b3761'
             '2d7e8d947c392142dba0c80a7e5ecfdf14f7783e24885ab417d4224574b8c4f8')
