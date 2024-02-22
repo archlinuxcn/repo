@@ -16,19 +16,24 @@ def pre_build():
     p = line.strip()
     conflict_string = conflict_string + '"' + p + '>$pkgver" '
 
-  prepare = False
+  in_prepare = False
+  in_build_qt6_base = False
   checks = ''
+  variant = '-24h'
   for line in edit_file('PKGBUILD'):
     if line.startswith('pkgrel='):
-      line = line + '.2'
+      line = line + '.3'
     elif line.startswith('pkgname='):
-      line = 'pkgname=qt6-base-24h'
-      checks = checks + '1'
-    elif line.startswith('pkgdesc='):
+      if line == "pkgname=(qt6-base qt6-xcb-private-headers)":
+        line = f"pkgname=(qt6-base{variant})"
+        checks = checks + '1'
+      else:
+        raise ValueError('PKGBUILD pkgname mismatch with preset')
+    elif in_build_qt6_base and line.strip().startswith('pkgdesc='):
       line = "pkgdesc='A cross-platform application and UI framework. This package uses 24-hour notation in all locales.'"
       checks = checks + 'b'
     elif line.startswith('makedepends=('):
-      line = line.replace('(', "(python 'zstd>=1.5.2-7' ")
+      line = line.replace('(', "(python ")
       checks = checks + '2'
     elif line.startswith('groups=('):
       line = '''
@@ -53,9 +58,9 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       ''')
       checks = checks + '7'
     elif line.startswith('prepare('):
-      prepare = True
+      in_prepare = True
       checks = checks + '8'
-    elif prepare and line.startswith('}'):
+    elif in_prepare and line.startswith('}'):
       line = '''
   cd $_pkgfn
   patch -p1 -i ../oldherl-24h.patch
@@ -64,8 +69,15 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
   ./cldr2qlocalexml.py ../../../ > ./24h.xml
   ./qlocalexml2cpp.py ./24h.xml ../../../iso-639-3.tab ../..
 ''' + line
-      prepare = False
+      in_prepare = False
       checks = checks + '9'
+    elif in_build_qt6_base and line.startswith('}'):
+      in_build_qt6_base = False
+      checks = checks + 'e'
+    elif line.startswith('package_qt6-base('):
+      line = line.replace('(', f'{variant}(')
+      in_build_qt6_base = True
+      checks = checks + 'd'
     elif line.startswith('package_'):
       # other split packages. do not build them.
       line = 'no' + line
@@ -75,7 +87,7 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       line = line.replace('=(', '=(libicui18n.so ')
       checks = checks + 'c'
     print(line)
-  if len(checks) != 10:
+  if len(checks) != 12:
     raise ValueError('PKGBUILD editing not completed. checks=' + checks)
 
 def post_build():
