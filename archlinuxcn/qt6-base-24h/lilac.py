@@ -44,7 +44,7 @@ provides=("qt6-base=$pkgver")
 conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       checks = checks + '4'
     elif line.startswith('_pkgfn='):
-      line = line.replace('${pkgname/6-/}', 'qtbase')
+      line = line.replace('${pkgbase/6-/}', 'qtbase')
       checks = checks + '5'
     elif line.startswith('source=('):
       line = line.replace('=(', '''=(
