@@ -23,6 +23,9 @@ def pre_build():
   for line in edit_file('PKGBUILD'):
     if line.startswith('pkgrel='):
       line = line + '.3'
+    elif line.startswith('pkgbase='):
+      line = f"pkgbase=qt6-base{variant}"
+      checks = checks + 'f'
     elif line.startswith('pkgname='):
       if line == "pkgname=(qt6-base qt6-xcb-private-headers)":
         line = f"pkgname=(qt6-base{variant})"
@@ -87,7 +90,7 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       line = line.replace('=(', '=(libicui18n.so ')
       checks = checks + 'c'
     print(line)
-  if len(checks) != 12:
+  if len(checks) != 13:
     raise ValueError('PKGBUILD editing not completed. checks=' + checks)
 
 def post_build():
