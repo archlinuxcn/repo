@@ -1,0 +1,25 @@
+# Maintainer: Hector Martin <marcan@marcan.st>
+
+pkgname=bankstown
+pkgver=1.1.0
+pkgrel=1
+pkgdesc='a barebones bass enhancer'
+arch=('aarch64')
+url='http://asahilinux.org'
+depends=('lv2')
+license=('MIT')
+makedepends=(rust)
+source=(
+  "bankstown-${pkgver}.tar.gz::https://github.com/chadmed/bankstown/archive/refs/tags/${pkgver}.tar.gz"
+)
+sha256sums=('e877508b73fe90774d74526d838f75e8ea278bdbcee0a1f92e3eca67ed734675')
+
+build() {
+  cd "${srcdir}/bankstown-${pkgver}"
+  make
+}
+
+package() {
+  cd "${srcdir}/bankstown-${pkgver}"
+  make LIBDIR=/usr/lib DESTDIR="${pkgdir}" install
+}

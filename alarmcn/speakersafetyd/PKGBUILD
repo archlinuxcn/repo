@@ -1,0 +1,26 @@
+# Maintainer: Hector Martin <marcan@marcan.st>
+
+pkgname=speakersafetyd
+pkgver=0.1.9
+commit=045dbfb5b59c6835d13278d85d874b83097fa083
+pkgrel=1
+pkgdesc='Asahi Linux speaker safety daemon'
+arch=('aarch64')
+url='http://asahilinux.org'
+depends=('alsa-lib')
+makedepends=('rust')
+license=('MIT')
+source=(
+  "speakersafetyd-${commit}.tar.gz::https://github.com/chadmed/speakersafetyd/archive/${commit}.tar.gz"
+)
+sha256sums=('df84178387acd5a579778269d3d50a64827d6a19455ff6eb81ce83df3ec253b9')
+
+build() {
+  cd "${srcdir}/speakersafetyd-${commit}"
+  make
+}
+
+package() {
+  cd "${srcdir}/speakersafetyd-${commit}"
+  make DESTDIR="${pkgdir}" UNITDIR=/usr/lib/systemd/system UDEVDIR=/usr/lib/udev/rules.d install
+}

@@ -1,16 +1,15 @@
 maintainers:
   - github: yuyichao
 
-# pre_build_script: run_cmd(['sh', './get_pkg.sh', 'asahi-desktop-meta'])
 post_build_script: |
   git_add_files('.')
   git_commit()
 
 update_on:
   - source: manual
-    manual: 3
+    manual: 0.1.9
   # - source: github
   #   github: AsahiLinux/PKGBUILDs
-  #   path: asahi-desktop-meta
+  #   path: bankstown
   - source: manual
-    manual: 2
+    manual: 1
