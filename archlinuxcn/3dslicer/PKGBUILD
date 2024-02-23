@@ -7,26 +7,47 @@ pkgrel=3
 pkgdesc='A free, open source and multi-platform software package widely used for medical, biomedical, and related imaging research'
 arch=('x86_64')
 url='https://www.slicer.org'
-license=('BSD')
+license=('BSD-3-Clause')
 depends=(
   bzip2
   curl
   dcmtk
+  fftw
+  gcc-libs
+  glibc
+  hwloc
   libarchive
   libffi
-  libxt
+  libglvnd
+  libice
+  libnsl
+  libpng
+  libsm
+  libtirpc
+  libx11
+  libxcrypt
+  libxcursor
+  libxext
+  libxfixes
+  libxrender
   openssl
+  rapidjson
   qt5-base
+  qt5-declarative
   qt5-multimedia
+  qt5-location
   qt5-script
   qt5-svg
   qt5-tools
+  qt5-webchannel
   qt5-webengine
   qt5-x11extras
   qt5-xmlpatterns
-  rapidjson
   sqlite
   teem
+  util-linux-libs
+  xz
+  zlib
 )
 makedepends=(
   cmake
