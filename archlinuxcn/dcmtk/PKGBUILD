@@ -9,14 +9,19 @@ pkgrel=2
 pkgdesc="A collection of libraries and applications implementing large parts the DICOM standard"
 arch=("x86_64")
 url="http://dicom.offis.de/dcmtk"
-license=("custom")
+license=(LicenseRef-dcmtk)
 depends=(
-  charls
+  gcc-libs
+  glibc
+  icu
+  libjpeg-turbo
+  libpng
   libsndfile
   libtiff.so
   libxml2
   openjpeg2
   openssl
+  zlib
 )
 makedepends=(
   cmake
