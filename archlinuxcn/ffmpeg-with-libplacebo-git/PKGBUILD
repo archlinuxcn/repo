@@ -6,7 +6,7 @@
 
 pkgname=ffmpeg-with-libplacebo-git
 pkgver=6.1.1
-pkgrel=15
+pkgrel=16
 epoch=2
 pkgdesc='Complete solution to record, convert and stream audio and video'
 arch=(x86_64)
@@ -17,60 +17,52 @@ depends=("libplacebo-git"
   aom
   bzip2
   cairo
+  dav1d
   fontconfig
+  freetype2
   fribidi
   glib2
   glibc
   gmp
   gnutls
   gsm
+  harfbuzz
   jack
   lame
-  libass.so
+  libass
   libavc1394
-  libbluray.so
-  libbs2b.so
-  libdav1d.so
+  libbluray
+  libbs2b
   libdrm
-  libfreetype.so
   libgl
-  libharfbuzz.so
   libiec61883
-  libjxl.so
+  libjxl
   libmodplug
-  libopenmpt.so
-  libplacebo.so
+  libopenmpt
+  libplacebo
   libpulse
-  librav1e.so
   libraw1394
-  librsvg-2.so
-  librubberband.so
+  librsvg
   libsoxr
   libssh
   libtheora
-  libva.so
-  libva-drm.so
-  libva-x11.so
+  libva
   libvdpau
-  libvidstab.so
-  libvorbisenc.so
-  libvorbis.so
-  libvpx.so
+  libvorbis
+  libvpx
   libwebp
   libx11
-  libx264.so
-  libx265.so
   libxcb
   libxext
   libxml2
   libxv
-  libxvidcore.so
-  libzimg.so
   ocl-icd
   onevpl
   opencore-amr
   openjpeg2
   opus
+  rav1e
+  rubberband
   sdl2
   snappy
   speex
@@ -78,9 +70,14 @@ depends=("libplacebo-git"
   svt-av1
   v4l-utils
   vapoursynth
+  vid.stab
   vmaf
   vulkan-icd-loader
+  x264
+  x265
+  xvidcore
   xz
+  zimg
   zlib
 )
 makedepends=(
@@ -224,6 +221,32 @@ build() {
 }
 
 package() {
+  depends+=(
+    libass.so
+    libbluray.so
+    libbs2b.so
+    libdav1d.so
+    libfreetype.so
+    libharfbuzz.so
+    libjxl.so
+    libopenmpt.so
+    libplacebo.so
+    librav1e.so
+    librsvg-2.so
+    librubberband.so
+    libva.so
+    libva-drm.so
+    libva-x11.so
+    libvidstab.so
+    libvorbisenc.so
+    libvorbis.so
+    libvpx.so
+    libx264.so
+    libx265.so
+    libxvidcore.so
+    libzimg.so
+  )
+
   make DESTDIR="${pkgdir}" -C ffmpeg install install-man
   install -Dm 755 ffmpeg/tools/qt-faststart "${pkgdir}"/usr/bin/
 }
