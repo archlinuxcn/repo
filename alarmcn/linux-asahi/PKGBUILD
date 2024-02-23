@@ -29,13 +29,19 @@ source=(
   https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
   config         # the main kernel config file
   config.edge    # overrides for linux-asahi-edge
+  0001-READ-COMMIT-MESSAGE-macaudio-Enable-first-round-of-m.patch
+  0002-READ-COMMIT-MESSAGE-macaudio-Enable-second-round-of-.patch
 )
 sha256sums=('1d8d82dcfd87fb7153d81f52d01789be226c79637898de2b7407019ec7d35c8e'
             '6c9a3baf939b50c2438a1b1a5617554ccc8880aac0dec14d0174251216882919'
-            '5cbdda1262f989a5247f4ef70690b569f9be8212bf8f576242bf6ac69036bddf')
+            '5cbdda1262f989a5247f4ef70690b569f9be8212bf8f576242bf6ac69036bddf'
+            '95a19c29c8ac22049a06fcb880bb7d8d72fb7a8dae206cf4b9b6da22df246637'
+            '2b08c2623b87a7e8bb16451d09db9f0cfe032c75054e1a0e6d345e5228028adc')
 b2sums=('f0cdce0421bb8637d52e82d2ff0b7e07c29e828783c7cb8733f1582916be81bfd14a0b6a98f51f633ee9da3d10aa1fff6b27c5779bd9fa55c1d04615173d6d4b'
         '8ff9f64748f9695479dfcbffc5b4f565229d17840e846d8cea59bccfddfc0d722725a937f80d57ad8bfbfa8a9dae2f886983a2db87e37930d84661e9f3f9c85e'
-        '01a8b3b7e3c7bd528f6d07d2b581b8a56688305d42fdd0b1555fd26319c4369e2357bcaa8434a1a5e3123aa9fdc6f1a24de4813b819397af89ba8d0c5e896228')
+        '01a8b3b7e3c7bd528f6d07d2b581b8a56688305d42fdd0b1555fd26319c4369e2357bcaa8434a1a5e3123aa9fdc6f1a24de4813b819397af89ba8d0c5e896228'
+        'bf1adcbbaf3dfb5a31c77f2ff8a467b91a304d8487dba866f9e18808d6a503940b794403e27ab3d065e8c97a3f138e819c2513fb16719321c72f5235aea6f1b5'
+        '9c761ddaa1cb1f1570ecc2f8e116c416fc57a0df952f0635b9a2fe1287988ce3e4e0b6e3025703a21637b8551784f9b1d5c6ae8faff188ebcd9361013e20b0a5')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
