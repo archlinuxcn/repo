@@ -22,17 +22,20 @@ url="http://www.kernel.org/"
 license=('GPL2')
 
 makedepends=(
-  bc dtc kmod libelf pahole cpio perl rustup rust-bindgen tar xz xmlto
+  bc dtc kmod libelf pahole cpio perl rustup tar xz xmlto clang
 )
 options=('!strip')
 source=(
   https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
   config         # the main kernel config file
+  config.edge    # overrides for linux-asahi-edge
 )
 sha256sums=('1d8d82dcfd87fb7153d81f52d01789be226c79637898de2b7407019ec7d35c8e'
-            'adbefe442c323be82bc534702efccbf7dcd6720dad926af93435e69b261e6817')
+            '46917e449d51ce37675442cd280892f6521b719bdb75a05b558d456ad7fc9193'
+            '5cbdda1262f989a5247f4ef70690b569f9be8212bf8f576242bf6ac69036bddf')
 b2sums=('f0cdce0421bb8637d52e82d2ff0b7e07c29e828783c7cb8733f1582916be81bfd14a0b6a98f51f633ee9da3d10aa1fff6b27c5779bd9fa55c1d04615173d6d4b'
-        'fe5b2ed51dc5a08c32487d85cf24eef9f76c1dd5865ad8b48f5fc49c33b7388ea8c346f357a931bcd48d4028dff73cde839e3450c2b07178f0b86934b70df729')
+        '8b3089d22d0b68e9b0c20a5e8f7ebe2626ef43cdc7053a94590ea3ca25417e76866e220ae98ff184e4912033d877eb89fd3c64bbe476889696220c5dd3b05e97'
+        '01a8b3b7e3c7bd528f6d07d2b581b8a56688305d42fdd0b1555fd26319c4369e2357bcaa8434a1a5e3123aa9fdc6f1a24de4813b819397af89ba8d0c5e896228')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
@@ -40,7 +43,12 @@ export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EP
 prepare() {
   cd $_srcname
 
-  rustup override set 1.71.1
+  rustup install 1.71.1
+  rustup component add rust-src
+  _path=$PATH
+  PATH="$HOME/.rustup/toolchains/1.71.1-$(uname -m)-unknown-linux-gnu/bin:$_path"
+  cargo install --locked --version 0.65.1 bindgen-cli
+  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.71.1-$(uname -m)-unknown-linux-gnu/bin:$_path"
 
   echo "Setting version..."
   echo "-$_asahirel-$pkgrel" > localversion.10-pkgrel
@@ -55,7 +63,7 @@ prepare() {
   done
 
   echo "Creating build directories..."
-  mkdir -p build/base
+  mkdir -p build/base build/edge
 
   echo "Setting config (base)..."
   cp ../config build/base/.config
@@ -63,23 +71,41 @@ prepare() {
   diff -u ../config build/base/.config || :
   make -s kernelrelease O=$PWD/build/base > build/base/version
 
+  echo "Setting config (edge)..."
+  cat build/base/.config ../config.edge > build/edge/.config
+  make olddefconfig prepare O=$PWD/build/edge
+  make -s kernelrelease O=$PWD/build/edge > build/edge/version
+
   echo "Prepared $pkgbase version $(<build/base/version)"
 }
 
 build() {
+  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.71.1-$(uname -m)-unknown-linux-gnu/bin:$PATH"
+
   cd $_srcname
   echo "Building base..."
   make all O=$PWD/build/base
+  echo "Copying objects..."
+  cp build/edge/.config{,.save}
+  touch build/base/.config
+  cp -urT build/{base,edge}
+  rm build/edge/init/version.o
+  make O=$PWD/build/edge oldconfig prepare
+  cp build/edge/.config{.save,}
+  echo "Building edge..."
+  make O=$PWD/build/edge oldconfig prepare
+  make O=$PWD/build/edge all
 }
 
-_origin_package_kernel() {
+_package_kernel() {
+  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.71.1-$(uname -m)-unknown-linux-gnu/bin:$PATH"
+
   pkgdesc="The $pkgdesc kernel and modules"
-  depends=(coreutils kmod initramfs $2 "m1n1>=$_m1n1_version" "mesa-asahi-edge>=24.1.0_pre20240214-1")
+  depends=(coreutils kmod initramfs $2 "m1n1>=$_m1n1_version")
   optdepends=('crda: to set the correct wireless channels of your country'
               'linux-firmware: firmware images needed for some devices')
   provides=(WIREGUARD-MODULE linux=${pkgver})
   replaces=(wireguard-arch)
-  conflicts=($pkgbase-edge)
 
   local kernver="$(<$O/version)"
   local modulesdir="$pkgdir/usr/lib/modules/$kernver"
@@ -99,13 +125,19 @@ _origin_package_kernel() {
   install -Dt "$modulesdir/dtbs" "$O"/arch/arm64/boot/dts/apple/*.dtb
 
   # remove build and source links
-  rm -f "$modulesdir"/{source,build}
+  rm "$modulesdir"/{source,build}
 }
 
 _package() {
   cd $_srcname
   export O="$PWD/build/base"
   _package_kernel "$pkgbase"
+}
+
+_package-edge() {
+  cd $_srcname
+  export O="$PWD/build/edge"
+  _package_kernel "$pkgbase-edge" "$pkgbase=$pkgver"
 }
 
 _package-headers() {
@@ -196,9 +228,16 @@ _package-headers() {
   mkdir -p "$pkgdir/usr/src"
   ln -sr "$builddir" "$pkgdir/usr/src/$pkgbase"
 
+  O=build/edge
+  local builddir2="$pkgdir/usr/lib/modules/$(<${O}/version)/build"
+  mkdir -p $builddir2
+  cp -rl $builddir/* $builddir2
+  cp --remove-destination $O/{.config,System.map,version,Module.symvers,vmlinux} $builddir2
+  rm -rf $builddir2/include/config
+  cp -r $O/include/config $builddir2/include/config
 }
 
-pkgname=("$pkgbase" "$pkgbase-headers")
+pkgname=("$pkgbase" "$pkgbase-headers" "$pkgbase-edge")
 for _p in "${pkgname[@]}"; do
   eval "package_$_p() {
     $(declare -f "_package${_p#$pkgbase}")
@@ -207,11 +246,3 @@ for _p in "${pkgname[@]}"; do
 done
 
 # vim:set ts=8 sts=2 sw=2 et:
-_package_kernel() {
-  _origin_package_kernel "$@"
-  cd "$srcdir/$_srcname"
-  local kernver="$(<$O/version)"
-  local modulesdir="$pkgdir/usr/lib/modules/$kernver"
-  install -Dm644 "$O/$(make -s image_name O="$O")" "$modulesdir/vmlinuz"
-  install -Dm644 "$O"/arch/arm64/boot/Image "$modulesdir/vmlinuz-nogz"
-}
