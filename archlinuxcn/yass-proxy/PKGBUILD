@@ -2,9 +2,9 @@
 # Contributor: Chilledheart <hukeyue@hotmail.com>
 
 pkgname=yass-proxy
-pkgver=1.7.0
+pkgver=1.7.1
 pkgrel=1
-_pkgver=1.7.0
+_pkgver=1.7.1
 _pkgrel=1
 pkgdesc="lightweight http/socks proxy"
 arch=(x86_64)
@@ -17,7 +17,7 @@ checkdepends=(curl)
 provides=(yass-proxy)
 conflicts=(yass-proxy-git)
 source=("https://github.com/Chilledheart/yass/releases/download/${_pkgver}/yass-${_pkgver}.tar.gz")
-sha256sums=('7120e2b99d05ecdd0de03b2148eda9d11986d5ba95945436be3d7d513881e265')
+sha256sums=('9f46ccb48619f37c4bc99493a2ff2141cb997aa355d4c14689c35961784a4df0')
 
 prepare() {
   SRC_DIR="${srcdir}/yass-${_pkgver}"
