@@ -12,43 +12,90 @@ url='http://gdcm.sourceforge.net'
 license=('BSD-3-Clause')
 depends=(
   charls
+  expat
+  gcc-libs
+  glibc
   libxml2
   openjpeg2
+  openssl
   poppler
   python
-# vtk
+  util-linux-libs
+  vtk
+  zlib
 )
 makedepends=(
+  adios2
+  boost
+  boost-libs
+  cgns
+  cli11
   cmake
-  doxygen
   docbook-xsl
+  doxygen
+  eigen
+  fast_float
+  ffmpeg
+  fmt
+  gdal
   git
+  gl2ps
   glew
+  glew
+  gnuplot
+  graphviz
   graphviz
   hdf5
+  hdf5
+  jsoncpp
+  libarchive
+  libharu
+  liblas
   libxslt
+  lz4
+  mariadb-libs
   netcdf
+  netcdf
+  opencascade
+  openimagedenoise
   openmpi
+  openmpi
+  openvdb
+  openvr
+  openxr
+  ospray
+  pdal
+  postgresql-libs
   proj
+  proj
+  python-mpi4py
   qt5-base
+  qt5-declarative
   qt5-multimedia
   swig
   texlive-latexextra
   utf8cpp
+  verdict
 )
 source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/malaterre/GDCM/archive/v${pkgver}.tar.gz"
+  "0001-fix-building-with-VTK.patch"
 )
-sha512sums=('a1c45434e925ddac293993014686865aecf1b6745013ed6a141b6ee1bdbe7ddef6abcfc2491583e63f33f4292617ee65412da4c41f38731409df9149903a8772')
+sha512sums=('a1c45434e925ddac293993014686865aecf1b6745013ed6a141b6ee1bdbe7ddef6abcfc2491583e63f33f4292617ee65412da4c41f38731409df9149903a8772'
+            '73a10de2ac729efe93a662841aa7e8e201d64716ff5a88806611afcbeb36ee81260ec439aab70d601a360dde1c34fa885a71d8178315d5add8c33dea5a1e001c')
 
-# disable vtk, see also https://sourceforge.net/p/gdcm/bugs/509/
+prepare() {
+  cd ${_pkgname}-${pkgver}
+  patch -p1 -i ${srcdir}/0001-fix-building-with-VTK.patch
+}
+
 build() {
   cmake \
     -B build \
     -S "${_pkgname}-${pkgver}" \
-    -DCHARLS_LIBRARY=/usr/lib/libcharls.so \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
+    -DEXPAT_LIBRARY=/usr/lib/libexpat.so \
     -DGDCMV2_0_COMPATIBILITY:BOOL=OFF \
     -DGDCM_BUILD_APPLICATIONS:BOOL=ON \
     -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=ON \
@@ -57,6 +104,7 @@ build() {
     -DGDCM_BUILD_TESTING:BOOL=OFF \
     -DGDCM_DOCUMENTATION:BOOL=OFF \
     -DGDCM_LEGACY_REMOVE:BOOL=ON \
+    -DGDCM_MANPAGES_USE_NONET=1 \
     -DGDCM_USE_SYSTEM_CHARLS:BOOL=ON \
     -DGDCM_USE_SYSTEM_EXPAT:BOOL=ON \
     -DGDCM_USE_SYSTEM_LIBXML2:BOOL=ON \
@@ -65,8 +113,9 @@ build() {
     -DGDCM_USE_SYSTEM_POPPLER:BOOL=ON \
     -DGDCM_USE_SYSTEM_UUID:BOOL=ON \
     -DGDCM_USE_SYSTEM_ZLIB:BOOL=ON \
-    -DGDCM_USE_VTK:BOOL=OFF \
-    -DGDCM_WRAP_PYTHON:BOOL=ON
+    -DGDCM_USE_VTK:BOOL=ON \
+    -DGDCM_WRAP_PYTHON:BOOL=ON \
+    -DVTKGDCM_WRAP_PYTHON:BOOL=ON
   make -C "build"
 }
 
@@ -80,9 +129,14 @@ package() {
   # fix python binding installation
   install -d "${pkgdir}${site_packages}"
   ln -s "/usr/lib/_gdcmswig.so" "${pkgdir}${site_packages}/_gdcmswig.so"
-  #ln -s "/usr/lib/vtkgdcmPython.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/vtkgdcmPython.so"
-  find "${pkgdir}/usr/lib" -type f -name "*.py" -exec mv -vf {} "${pkgdir}${site_packages}" \;
+  mv -v "${pkgdir}/usr/lib/gdcm.py" "${pkgdir}${site_packages}"
+  mv -v "${pkgdir}/usr/lib/gdcmswig.py" "${pkgdir}${site_packages}"
+  mv -v "${pkgdir}/usr/lib/vtkgdcm" "${pkgdir}${site_packages}"
+  find "${pkgdir}" -type d -name __pycache__ -exec rm -rf {} \;
   python -O -m compileall "${pkgdir}/usr/lib"
+  # install cmake file
+  mkdir -p "${pkgdir}/usr/lib/cmake"
+  mv -v "${pkgdir}/usr/lib/gdcm-3.0" "${pkgdir}/usr/lib/cmake"
 }
 # vim:set ts=2 sw=2 et:
 
