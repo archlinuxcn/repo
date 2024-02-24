@@ -71,7 +71,7 @@ _subarch=42
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 pkgbase=linux-ck-x64-v4
-pkgver=6.7.5
+pkgver=6.7.6
 _upstream=arch1
 pkgrel=1
 arch=(x86_64)
@@ -96,7 +96,7 @@ options=('!strip')
 _ckhrtimer=linux-6.7.y
 _commit=2545022ef4c3b71ad07031164c764d45b37af2a3
 
-_gcc_more_v=20221217
+_gcc_more_v=20240221.2
 source=(
   "https://www.kernel.org/pub/linux/kernel/v6.x/linux-$pkgver.tar".{xz,sign}
   config  # the main kernel config file
@@ -108,11 +108,11 @@ validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
-sha256sums=('29f6464061b8179cbb77fc5591e06a2199324e018c9ed730ca3e6dfb145539ff'
+sha256sums=('e489ec0e1370d089b446d565aded7a698093d2b7c4122a18f21edb6ef93d37d3'
             'SKIP'
-            '0f191864fd0d72c91b3f3b9e6ed6f38042bf3631ae394fedcf103c7d7755c793'
-            'ddda647fc993000167b12b0d0e5cc1663ecb029f7a32d7334a61de9f81429f3e'
-            'f1d586e111932890ad5e0df15d092fb9b3f87bae4ea17812aae9b0ec98fe2db0'
+            'd0e840aa2ae6d9552e741b195b8bb3c1830cc227e8e2a601419f9530c65ff3ba'
+            'c7a8e85778cb0f1df815531a7f86094f70a8035f5756dcb881f2156d7e328d72'
+            '1d3ac3e581cbc5108f882fcdc75d74f7f069654c71bad65febe5ba15a7a3a14f'
             '36981db4140b0c68c58855a9fefa336373501a0737005bbe824f6e7616808702')
 
 prepare() {
@@ -166,7 +166,7 @@ prepare() {
   # https://github.com/graysky2/kernel_gcc_patch
   # make sure to apply after olddefconfig to allow the next section
   msg2 "Patching to enable GCC optimization for other uarchs..."
-  patch -Np1 -i "$srcdir/kernel_compiler_patch-$_gcc_more_v/more-uarches-for-kernel-5.17+.patch"
+  patch -Np1 -i "$srcdir/kernel_compiler_patch-$_gcc_more_v/more-uarches-for-kernel-6.1.79-6.8-rc3.patch"
 
   if [ -n "$_subarch" ]; then
     # user wants a subarch so apply choice defined above interactively via 'yes'
@@ -203,6 +203,7 @@ prepare() {
 build() {
   cd linux-${pkgver}
   make LLVM=$_LLVM LLVM_IAS=$_LLVM all
+  make LLVM=$_LLVM LLVM_IAS=$_LLVM -C tools/bpf/bpftool vmlinux.h feature-clang-bpf-co-re=1
 }
 
 _package() {
@@ -260,7 +261,7 @@ _package-headers() {
 
   echo "Installing build files..."
   install -Dt "$builddir" -m644 .config Makefile Module.symvers System.map \
-    localversion.* version vmlinux
+    localversion.* version vmlinux tools/bpf/bpftool/vmlinux.h
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
   install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
   cp -t "$builddir" -a scripts
