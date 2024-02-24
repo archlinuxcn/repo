@@ -1,4 +1,4 @@
-# Maintainer: Ray Xu <i@xugr.me>
+# Maintainer: Ray Xu <megrxu@gmail.com>
 # Contributor: Xuanrui QI <me@xuanruiqi.com>
 
 # This PKGBUILD is forked off the PKGBUILD for rustup, which is 
@@ -9,11 +9,11 @@
 _pkgname=elan
 pkgname=${_pkgname}-lean
 pkgver=3.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A Lean version manager"
 arch=('x86_64' 'aarch64')
 url="https://github.com/leanprover/elan"
-license=('MIT' 'Apache')
+license=('MIT OR Apache-2.0')
 depends=('curl' 'xz')
 makedepends=('cargo')
 provides=('lean-community')
