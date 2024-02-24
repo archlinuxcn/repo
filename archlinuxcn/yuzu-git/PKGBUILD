@@ -2,14 +2,14 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-git
-pkgver=r26531.498c9bd96a
+pkgver=r26976.d1e0039bc8
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (master GIT version)"
 arch=('i686' 'x86_64')
 url="https://github.com/yuzu-emu/yuzu"
 license=('GPL2')
 depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'openssl' 'zstd' 'cubeb' 'dynarmic' 'enet' 'libinih' 'discord-rpc' 'cpp-httplib')
-makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'ninja' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'xbyak' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'python' 'gamemode' 'stb')
+makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'ninja' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'xbyak' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'python' 'gamemode' 'stb' 'vulkan-utility-libraries')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
@@ -80,7 +80,8 @@ build() {
     -DYUZU_USE_PRECOMPILED_HEADERS=OFF \
 	-DYUZU_USE_QT_MULTIMEDIA=ON \
     -DYUZU_DOWNLOAD_TIME_ZONE_DATA=ON \
-    -DYUZU_TESTS=OFF
+    -DYUZU_TESTS=OFF \
+    -DYUZU_USE_EXTERNAL_VULKAN_UTILITY_LIBRARIES=OFF 
  
  ninja
 }
