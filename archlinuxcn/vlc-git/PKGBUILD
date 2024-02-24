@@ -1,4 +1,6 @@
-# Maintainer: Andrew Crerar <crerar@archlinux.org>
+# Maintainer:
+# Contributor: Oliver Braunschweig <olt78 at web dot de>
+# Contributor: Andrew Crerar <crerar@archlinux.org>
 # Contributor: Rob McCathie <korrode at gmail>
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 # Contributor: Sarah Hay <sarahhay@mb.sympatico.ca>
@@ -8,39 +10,39 @@
 # Contributor: Arkham <arkham at archlinux dot us>
 # Contributor: MacWolf <macwolf at archlinux dot de>
 
-pkgname=vlc-git
-pkgver=4.0.0.r27260.g3b8438caad2
+pkgname="vlc-git"
+pkgdesc="Multi-platform MPEG, VCD/DVD, and DivX player"
+pkgver=4.0.0.r27910.g4a0b1e06de
 pkgrel=1
-pkgdesc="A multi-platform MPEG, VCD/DVD, and DivX player (GIT Version)"
-url='https://www.videolan.org/vlc/'
+url='https://code.videolan.org/videolan/vlc'
 arch=('i686' 'x86_64')
 license=('LGPL2.1' 'GPL2')
-depends=('a52dec' 'libdvbpsi' 'libxpm' 'libdca' 'libproxy' 'lua'
+depends=('a52dec' 'libdvbpsi' 'libxpm' 'libdca' 'libproxy' 'lua52'
          'libmatroska' 'taglib' 'libmpcdec' 'ffmpeg' 'faad2' 'libupnp' 'libmad'
-         'libmpeg2' 'xcb-util-keysyms' 'libtar' 'libxinerama' 'libsecret'
+         'libmpeg2' 'xcb-util-keysyms' 'libxinerama' 'libsecret'
          'libarchive' 'qt5-base' 'qt5-x11extras' 'qt5-svg' 'freetype2'
          'fribidi' 'harfbuzz' 'fontconfig' 'libxml2' 'gnutls' 'wayland-protocols'
          'libidn' 'aribb24' 'qt5-quickcontrols2' 'qt5-graphicaleffects' 'libmicrodns>=0.1.2'
          'libplacebo' 'libixml.so' 'qt5-wayland')
 makedepends=('gst-plugins-base-libs' 'live-media' 'libnotify' 'libbluray'
              'flac' 'libdc1394' 'libavc1394' 'libcaca' 'gtk3'
-             'librsvg' 'libgme' 'xosd' 'twolame' 'aalib' 'avahi' 'systemd-libs'
+             'librsvg' 'libgme' 'twolame' 'avahi' 'systemd-libs'
              'libmtp' 'libupnp' 'libmicrodns' 'libdvdcss' 'smbclient'
              'vcdimager' 'libssh2' 'mesa' 'protobuf' 'libnfs' 'mpg123'
              'libdvdread' 'libdvdnav' 'libogg' 'libshout' 'libmodplug' 'libvpx'
              'libvorbis' 'speex' 'opus' 'libtheora' 'libpng' 'libjpeg-turbo'
              'libx265.so' 'libx264.so' 'zvbi' 'libass' 'libkate' 'libtiger'
-             'sdl_image' 'libpulse' 'alsa-lib' 'jack' 'libsamplerate' 'libsoxr'
-             'lirc' 'libgoom2' 'projectm' 'git' 'aom' 'srt' 'chromaprint'
-             'vulkan-icd-loader' 'vulkan-headers' 'dav1d' 'flex' 'bison' 'aribb25' 'pcsclite'
+             'libpulse' 'alsa-lib' 'jack' 'libsamplerate' 'libsoxr'
+             'lirc' 'libgoom2' 'projectm' 'git' 'aom' 'srt'
+             'vulkan-headers' 'dav1d' 'flex' 'bison' 'xosd' 'aribb25' 'pcsclite'
              'libebur128' 'fluidsynth' 'samba' 'freerdp' 'libsidplayfp' 'rnnoise' 'aribb24' 'libcddb'
-             'libvncserver' 'shine' 'davs2' 'librist')
+             'libvncserver' 'shine' 'davs2' 'librist' 'autoconf' 'automake')
 optdepends=('avahi: service discovery using bonjour protocol'
             'gst-plugins-base-libs: for libgst plugins'
             'libdvdcss: decoding encrypted DVDs'
             'libavc1394: devices using the 1394ta AV/C'
             'libdc1394: IEEE 1394 access plugin'
-            'kwallet: kwallet keystore'
+            'kwallet5: kwallet keystore'
             'libva-vdpau-driver: vdpau backend nvidia'
             'libva-intel-driver: video backend intel'
             'libbluray: Blu-Ray video input'
@@ -79,8 +81,6 @@ optdepends=('avahi: service discovery using bonjour protocol'
             'libass: Subtitle support'
             'libkate: Kate codec'
             'libtiger: Tiger rendering for Kate streams'
-            'sdl_image: SDL image support'
-            'aalib: ASCII art video output'
             'libcaca: colored ASCII art video output'
             'libpulse: PulseAudio audio output'
             'alsa-lib: ALSA audio output'
@@ -99,23 +99,15 @@ optdepends=('avahi: service discovery using bonjour protocol'
             'dav1d: dav1d AV1 decoder')
 
 _name=vlc
-conflicts=("${_name}" 'vlc-dev' 'vlc-plugin' 'vlc-stable-git')
+conflicts=("${_name}")
 provides=("${_name}=${pkgver}")
 options=(!emptydirs)
 source=('git+https://code.videolan.org/videolan/vlc.git'
-        'lua53_compat.patch'
         'vlc-live-media-2021.patch'
-        'update-vlc-plugin-cache.hook'
-        '2419.patch'
-        '2419a.patch'
-        '2419b.patch')
-sha512sums=('SKIP'
-            '33cda373aa1fb3ee19a78748e2687f2b93c8662c9fda62ecd122a2e649df8edaceb54dda3991bc38c80737945a143a9e65baa2743a483bb737bb94cd590dc25f'
-            '322461cb5e89e4828483dd0a5c6595f99e767885ae9a1aa2e4d0514ac7354f2ee93b3e5c80993dcff7cd218d7af210374724337b3fc8bc196d35ef5e2b41695d'
-            '2f1015af384559bf4868bb989c06a7d281a8e32afb175ef397dbf1671bae3540a3a6b073a74ed77ed82e79a81f964a5a58a98c2a3f1b5e5cd5e9ea60d58c737f'
-            '79c70a2849879ef59b62f229bef2c3ef45f2ef0901bc256bdcae5f8c6215810a1bd9ddcbfe866b4a5f184155136b7cd606af5733fae6e432a44fa6d7788be06c'
-            'bc9bd02cab5fae2b140409bad092940e943acd9167cfb365b137f28d74d20d17e149aaf2132e9c0fbf8f225f1426c5cb9af8591ee3027b9773e3bd9db63f84b8'
-            '41698571fba52d05448effcde59b5b93ff70577e264bd8d2d4053534b7dc30464483512a65a65f9eee067551b78f40859eaac0974acb61fda146d7eaef8d7936')
+        'update-vlc-plugin-cache.hook')
+b2sums=('SKIP'
+        '76103422a1eaad40d33bfb7897bf25c1b5748729270974bec13f642f2861c4458f0dc07b5fb68d9ba4fae6e44d4a6c8e4d67af7ec10e0c117f1b804dd06868e3'
+        'fe3849f45fb91d3697573a9c23b90b78ff0bef5f94c42bc6e7c14427637f45f2fc86786803fb9b36c657ac2c50f6bf3c860cd763248711308ceab2bfcf7be49a')
 
 pkgver() {
   cd "${srcdir}/${_name}"
@@ -125,18 +117,11 @@ pkgver() {
 prepare() {
   cd "${srcdir}/${_name}"
 
-  sed -i 's/protobuf-lite = protobuf_lite_version/protobuf-lite/g' configure.ac
-
   ./bootstrap
 
   sed -e 's:truetype/ttf-dejavu:TTF:g' -i modules/visualization/projectm.cpp
   sed -e 's|-Werror-implicit-function-declaration||g' -i configure
-  patch -Np1 < "${srcdir}"/lua53_compat.patch
   patch -Np1 < "${srcdir}"/vlc-live-media-2021.patch
-  patch -Np1 < "${srcdir}"/2419.patch
-  patch -Np1 < "${srcdir}"/2419a.patch
-  patch -Np1 < "${srcdir}"/2419b.patch
-
   sed 's|whoami|echo builduser|g' -i configure
   sed 's|hostname -f|echo arch|g' -i configure
   autoreconf -vf
@@ -149,9 +134,12 @@ build() {
   export CPPFLAGS+=" -I/usr/include/samba-4.0"
   export CXXFLAGS+=" -std=c++17"
   export MPG123_CFLAGS+=" -DMPG123_NO_LARGENAME"
-  export LUAC=/usr/bin/luac
-  export LUA_LIBS="$(pkg-config --libs lua)"
+
+  # upstream doesn't support lua 5.4 yet: https://trac.videolan.org/vlc/ticket/25036
+  export LUAC=/usr/bin/luac5.2
+  export LUA_LIBS="$(pkg-config --libs lua5.2)"
   export RCC=/usr/bin/rcc-qt5
+  export PKG_CONFIG_PATH="/usr/lib/pkgconfig/:$PKG_CONFIG_PATH"
 
   ./configure --prefix=/usr \
               --sysconfdir=/etc \
@@ -170,7 +158,6 @@ build() {
               --enable-smbclient \
               --enable-sftp \
               --enable-nfs \
-              --enable-realrtsp \
               --enable-dvbpsi \
               --enable-gme \
               --enable-ogg \
@@ -208,14 +195,12 @@ build() {
               --enable-tiger \
               --enable-vdpau \
               --enable-wayland \
-              --enable-sdl-image \
               --enable-freetype \
               --enable-fribidi \
               --enable-harfbuzz \
               --enable-fontconfig \
               --enable-svg \
               --enable-svgdec \
-              --enable-aa \
               --enable-caca \
               --enable-pulse \
               --enable-alsa \
@@ -226,7 +211,6 @@ build() {
               --enable-chromecast \
               --enable-qt \
               --enable-skins2 \
-              --enable-libtar \
               --enable-ncurses \
               --enable-lirc \
               --enable-goom \
@@ -246,10 +230,10 @@ build() {
               --enable-libplacebo \
               --enable-vlc \
               --enable-aribsub \
-              --enable-aribcam \
               --enable-aom \
               --enable-srt \
-              --enable-dav1d
+              --enable-dav1d \
+              --disable-decklink
 
   # prevent excessive overlinking due to libtool
   sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
