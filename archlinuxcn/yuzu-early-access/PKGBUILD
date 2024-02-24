@@ -2,30 +2,30 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
-pkgver=4105
+pkgver=4165
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
 url="https://yuzu-emu.org/"
 license=('GPL2')
 depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'openssl' 'zstd' 'cubeb' 'dynarmic' 'enet' 'libinih' 'discord-rpc' 'cpp-httplib')
-makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'ninja' 'graphviz' 'doxygen' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'xbyak' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'clang' 'python' 'renderdoc' 'gamemode' 'vulkan-utility-libraries')
+makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'vulkan-utility-libraries' 'ninja' 'graphviz' 'doxygen' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'xbyak' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'clang' 'python' 'renderdoc' 'gamemode' 'perl' 'yasm')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
 source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz"
-"https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml"
-"https://github.com/pineappleEA/pineapple-src/releases/download/EA-${pkgver}/Windows-Yuzu-EA-${pkgver}.zip")
+        "https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml"
+        "https://github.com/pineappleEA/pineapple-src/releases/download/EA-${pkgver}/Windows-Yuzu-EA-${pkgver}.zip")
 options=('!buildflags') #[heavysink] Disable _FORTIFY_SOURCE for temporary fix for Bayonetta 3
-sha256sums=('6f1fc158ef9af88f4c25020f323910eb0b2ceee14cfb3ab36df6f0655d3a2e51'
+sha256sums=('d9ae31daa3a3db48ccd469d3159a6d054d41a51098c3f0a80c397a35127cc101'
             'e76ab2b3566d8135930e570ede5bed3da8f131270b60db818e453d248880bdf2'
-            'e584f1925851c5ebf172d87efae7e65c14d6c74f21612ab8b1ff7d81a04fa0fd')
+            'dcb10b8146e9fe1aca6a82bc502a7d83f00cef3bcf937c1a6b8fc2d1c4d0af89')
 
 prepare() {
   cd "$srcdir/yuzu-windows-msvc-early-access"
   tar -xvf *.tar.xz
   cd $(ls *.tar.xz | sed -e 's/.tar.xz//')
-  cp -R .git* $srcdir/pineapple-src-EA-${pkgver}/
+  cp -Rf .git* $srcdir/pineapple-src-EA-${pkgver}/
   
   cd $srcdir/pineapple-src-EA-${pkgver}
   for i in $(git config --file .gitmodules --get-regexp path | awk '{ print $2 }') ; do
@@ -37,6 +37,7 @@ prepare() {
   git submodule update --init --remote externals/libadrenotools
   git submodule update --init --remote --recursive externals/nx_tzdb
   git submodule update --init --remote externals/simpleini
+  git submodule update --init --remote externals/ffmpeg
 
  # sed -i -e '/#elif defined(__linux__) || defined(__FreeBSD__)/,/^ return true;/d' src/yuzu/util/util.cpp
 
@@ -55,6 +56,8 @@ prepare() {
   sed -i -e 's_^MimeType=.*_&application/x-nx-nsp;application/x-nx-xci;_' dist/yuzu.desktop
   sed -i -e 's| (%2)||' src/yuzu/aboutdialog.ui
 
+  perl -0777 -i.original -pe 's/(\s*target_compile_options\(video_core PRIVATE\s*-Wno-sign-conversion)/$1\n        -msse4.1/igs' src/video_core/CMakeLists.txt
+
   cp -f  $srcdir/yuzu.xml dist/yuzu.xml
 }
 build() {
@@ -71,18 +74,18 @@ build() {
     -DYUZU_USE_QT_WEB_ENGINE=ON \
     -DUSE_DISCORD_PRESENCE=ON \
     -DENABLE_QT_TRANSLATION=ON \
-    -DYUZU_USE_BUNDLED_FFMPEG=OFF \
+    -DYUZU_USE_BUNDLED_FFMPEG=ON \
     -DYUZU_USE_BUNDLED_QT=OFF \
     -DYUZU_USE_EXTERNAL_SDL2=OFF \
     -DSIRIT_USE_SYSTEM_SPIRV_HEADERS=ON \
     -DYUZU_CHECK_SUBMODULES=OFF \
     -DYUZU_USE_EXTERNAL_VULKAN_HEADERS=OFF \
+    -DYUZU_USE_EXTERNAL_VULKAN_UTILITY_LIBRARIES=OFF \
     -DYUZU_USE_FASTER_LD=OFF \
     -DYUZU_USE_PRECOMPILED_HEADERS=OFF \
 	-DYUZU_USE_QT_MULTIMEDIA=ON \
     -DYUZU_DOWNLOAD_TIME_ZONE_DATA=ON \
-    -DYUZU_TESTS=OFF \
-    -DYUZU_USE_EXTERNAL_VULKAN_UTILITY_LIBRARIES=OFF
+    -DYUZU_TESTS=OFF
   ninja
 }
 
@@ -92,3 +95,4 @@ package() {
 
     rm -rf $pkgdir/usr/lib $pkgdir/usr/include 
 }
+
