@@ -4,21 +4,21 @@
 
 _pkgbase='citra'
 pkgname="$_pkgbase-git"
-pkgver=r10004.8e2415f45
+pkgver=r10029.4f9fc88bb
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger (Master branch)"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra/"
 license=('GPL2')
-depends=('boost-libs' 'shared-mime-info' 'ffmpeg' 'libusb' 'sdl2' 'qt6-multimedia' 'libxkbcommon-x11' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'fmt' 'dynarmic' 'openal' 'cpp-httplib' 'crypto++' 'soundtouch' 'faad2')
-makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt6-tools' 'xbyak' 'cpp-jwt' 'qt6-wayland' 'desktop-file-utils' 'robin-map' 'glslang' 'spirv-headers' 'vulkan-memory-allocator' 'catch2')
+depends=('boost-libs' 'shared-mime-info' 'ffmpeg' 'libusb' 'sdl2' 'qt6-multimedia' 'libxkbcommon-x11' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'fmt' 'dynarmic' 'openal' 'crypto++' 'soundtouch' 'faad2')
+makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt6-tools' 'xbyak' 'cpp-jwt' 'qt6-wayland' 'desktop-file-utils' 'robin-map' 'glslang' 'spirv-headers' 'vulkan-memory-allocator' 'catch2' 'cpp-httplib')
 provides=('citra')
 conflicts=('citra')
 source=("git+https://github.com/citra-emu/citra.git"
 ext-lib.patch
 gc.patch)
 md5sums=('SKIP'
-         'e98ef49420beff90220679f95f980ea6'
+         'cd9e6be75ae839618f747ea6d653f349'
          'f151510cd1fc233992710405cbf44323')
 
 pkgver() {
@@ -35,7 +35,7 @@ prepare() {
     sed -i 's/OUTVAR ${BUILD_REPOSITORY}/OUTVAR "${BUILD_REPOSITORY}"/g' CMakeModules/GenerateBuildInfo.cmake
     sed -i 's/cpp-httplib::cpp-httplib/httplib::httplib/g' externals/CMakeLists.txt
     sed -i 's/CppHttp/httplib/g' externals/CMakeLists.txt
-    sed -i 's/0.14.1/0.14.0/g' externals/CMakeLists.txt
+    sed -i 's/0.14.1/0.15.3/g' externals/CMakeLists.txt
     sed -i 's/SPIRV/SPIRV SPIRV-Tools/' src/video_core/CMakeLists.txt
 
     git submodule update --init --remote externals/lodepng/lodepng
