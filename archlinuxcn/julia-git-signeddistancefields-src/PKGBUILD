@@ -1,0 +1,27 @@
+pkgname=julia-git-signeddistancefields-src
+pkgver=0.4.0
+_commit=68ed3f5214bf9c35981f0a0e83e848788b696e58
+pkgrel=1
+pkgdesc="SignedDistanceFields.jl"
+url="https://github.com/JuliaGraphics/SignedDistanceFields.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGraphics/SignedDistanceFields.jl.git#commit=$_commit"
+       Project.toml)
+sha256sums=('SKIP'
+            '732913d736f4bf81e47bf606e965279ad82d5b132ad9f1f6041fc23237fb9b10')
+
+prepare() {
+  cd SignedDistanceFields.jl
+
+  cp -n ../Project.toml .
+  rm REQUIRE
+}
+
+package() {
+  cd SignedDistanceFields.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SignedDistanceFields "${pkgdir}" "${pkgname}" julia-git
+}

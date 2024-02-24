@@ -1,0 +1,18 @@
+pkgname=julia-git-simplepolynomials-src
+pkgver=0.2.14
+_commit=7f8d6bc56a70d9f52789a493c6d4805cb4a7998b
+pkgrel=1
+pkgdesc="SimplePolynomials.jl"
+url="https://github.com/scheinerman/SimplePolynomials.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/scheinerman/SimplePolynomials.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SimplePolynomials.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SimplePolynomials "${pkgdir}" "${pkgname}" julia-git
+}

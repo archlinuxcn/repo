@@ -1,0 +1,18 @@
+pkgname=julia-git-findfirstfunctions-src
+pkgver=1.2.0
+_commit=591b3660bdb83da45082a3ef79d52386cc23b1f9
+pkgrel=1
+pkgdesc="FindFirstFunctions.jl"
+url="https://github.com/SciML/FindFirstFunctions.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/FindFirstFunctions.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd FindFirstFunctions.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh FindFirstFunctions "${pkgdir}" "${pkgname}" julia-git
+}

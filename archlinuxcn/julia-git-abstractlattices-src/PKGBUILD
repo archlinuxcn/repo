@@ -1,0 +1,18 @@
+pkgname=julia-git-abstractlattices-src
+pkgver=0.2.1
+_commit=ef634fdab7a3c63c03a547931a6726858029b95b
+pkgrel=1
+pkgdesc="AbstractLattices.jl"
+url="https://github.com/scheinerman/AbstractLattices.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/scheinerman/AbstractLattices.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd AbstractLattices.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh AbstractLattices "${pkgdir}" "${pkgname}" julia-git
+}

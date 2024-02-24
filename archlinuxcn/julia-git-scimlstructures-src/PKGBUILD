@@ -1,0 +1,18 @@
+pkgname=julia-git-scimlstructures-src
+pkgver=1.1.0
+_commit=56cf79e32902dd41a9a4030648188e065a5183a2
+pkgrel=1
+pkgdesc="SciMLStructures.jl"
+url="https://github.com/SciML/SciMLStructures.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/SciMLStructures.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SciMLStructures.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SciMLStructures "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-threadpools-src
+pkgver=2.1.1
+_commit=44730372b9b00ba38192e5d2850dfe24c20cdbeb
+pkgrel=1
+pkgdesc="ThreadPools.jl"
+url="https://github.com/tro3/ThreadPools.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/tro3/ThreadPools.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ThreadPools.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ThreadPools "${pkgdir}" "${pkgname}" julia-git
+}

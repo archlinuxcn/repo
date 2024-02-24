@@ -1,0 +1,18 @@
+pkgname=julia-git-delaunaytriangulation-src
+pkgver=0.8.10
+_commit=54a20f0a7b074080fb3ee4ef8d55b078500d6bed
+pkgrel=1
+pkgdesc="DelaunayTriangulation.jl"
+url="https://github.com/DanielVandH/DelaunayTriangulation.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/DanielVandH/DelaunayTriangulation.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd DelaunayTriangulation.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh DelaunayTriangulation "${pkgdir}" "${pkgname}" julia-git
+}

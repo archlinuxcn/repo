@@ -1,0 +1,18 @@
+pkgname=julia-git-permutations-src
+pkgver=0.4.18
+_commit=f5936a7f1422dbe87260fe20c7cc5e8d7197ac86
+pkgrel=1
+pkgdesc="Permutations.jl"
+url="https://github.com/scheinerman/Permutations.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/scheinerman/Permutations.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Permutations.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Permutations "${pkgdir}" "${pkgname}" julia-git
+}

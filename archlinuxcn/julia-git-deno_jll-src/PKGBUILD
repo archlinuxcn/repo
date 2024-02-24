@@ -1,0 +1,26 @@
+pkgname=julia-git-deno_jll-src
+pkgver=1.33.4+0
+_commit=673eec83cc16944f3d80407d888b4ed3889a6415
+pkgrel=1
+pkgdesc="Deno_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Deno_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git deno)
+source=("git+https://github.com/JuliaBinaryWrappers/Deno_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '7ffdf30c2bf9d4e291662f06519f9ac17d6ee5dd84c8632cd3e10d8c305917f7')
+
+build() {
+  cd Deno_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Deno_jll ../jll.toml
+}
+
+package() {
+  cd Deno_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Deno_jll "${pkgdir}" "${pkgname}" julia-git
+}

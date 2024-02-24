@@ -1,0 +1,18 @@
+pkgname=julia-git-simplegraphs-src
+pkgver=0.8.4
+_commit=916d99714b9200c39366c2025535e253cd051e73
+pkgrel=1
+pkgdesc="SimpleGraphs.jl"
+url="https://github.com/scheinerman/SimpleGraphs.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/scheinerman/SimpleGraphs.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SimpleGraphs.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SimpleGraphs "${pkgdir}" "${pkgname}" julia-git
+}

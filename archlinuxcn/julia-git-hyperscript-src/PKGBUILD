@@ -1,0 +1,18 @@
+pkgname=julia-git-hyperscript-src
+pkgver=0.0.4
+_commit=944d36dd6a63ea450ecd035d83da4abee177441a
+pkgrel=1
+pkgdesc="Hyperscript.jl"
+url="https://github.com/yurivish/Hyperscript.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/yurivish/Hyperscript.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Hyperscript.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Hyperscript "${pkgdir}" "${pkgname}" julia-git
+}

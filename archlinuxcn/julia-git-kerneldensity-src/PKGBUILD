@@ -1,0 +1,18 @@
+pkgname=julia-git-kerneldensity-src
+pkgver=0.6.7
+_commit=5edd8300e09b7658f68d898398ee895d4d604523
+pkgrel=1
+pkgdesc="KernelDensity.jl"
+url="https://github.com/JuliaStats/KernelDensity.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaStats/KernelDensity.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd KernelDensity.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh KernelDensity "${pkgdir}" "${pkgname}" julia-git
+}

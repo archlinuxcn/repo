@@ -1,0 +1,18 @@
+pkgname=julia-git-jsserve-src
+pkgver=2.3.0
+_commit=fea0488df645f597d4eba277a57beb675b00b45f
+pkgrel=1
+pkgdesc="JSServe.jl"
+url="https://github.com/SimonDanisch/JSServe.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SimonDanisch/JSServe.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd JSServe.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh JSServe "${pkgdir}" "${pkgname}" julia-git
+}
