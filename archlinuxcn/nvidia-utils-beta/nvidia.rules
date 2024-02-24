@@ -2,4 +2,4 @@
 # In case the DDX is not started, the device nodes are never created, so call
 # nvidia-modprobe in the udev rules to cover the Wayland/EGLStream and compute
 # case without a started display.
-KERNEL=="nvidia", RUN+="/usr/bin/nvidia-modprobe"
+KERNEL=="nvidia", DRIVER=="nvidia", RUN+="/usr/bin/nvidia-modprobe"
