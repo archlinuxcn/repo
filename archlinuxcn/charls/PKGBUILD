@@ -6,8 +6,11 @@ pkgrel=1
 pkgdesc='A C++ JPEG-LS library implementation'
 arch=('x86_64')
 url='https://github.com/team-charls/charls'
-license=('BSD')
-depends=('gcc-libs')
+license=('BSD-3-Clause')
+depends=(
+  gcc-libs
+  glibc
+)
 makedepends=('cmake')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/team-charls/charls/archive/${pkgver}.tar.gz")
 sha512sums=('4f1b587f008956ab6fb9d2473c37a7b1a842633113245be7f8bb29b8c64304a6d580a29fcfca97ba1ac75adedbaf89e29adc4ac9e4117e1af1aa5949dbd34df9')
@@ -20,6 +23,11 @@ build() {
     -DBUILD_SHARED_LIBS:BOOL=ON \
     -Wno-dev
   make -C "${pkgname}-${pkgver}/build"
+}
+
+check() {
+  cd "${pkgname}-${pkgver}/build"
+  ctest -v
 }
 
 package() {
