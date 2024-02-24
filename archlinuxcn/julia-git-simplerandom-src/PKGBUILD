@@ -1,0 +1,18 @@
+pkgname=julia-git-simplerandom-src
+pkgver=0.3.1
+_commit=a49fe8797e35eb1794b99fbccc6f1681ae26e089
+pkgrel=1
+pkgdesc="SimpleRandom.jl"
+url="https://github.com/scheinerman/SimpleRandom.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/scheinerman/SimpleRandom.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SimpleRandom.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SimpleRandom "${pkgdir}" "${pkgname}" julia-git
+}

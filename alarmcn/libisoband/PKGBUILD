@@ -1,0 +1,24 @@
+pkgname=libisoband
+pkgver=0.2.2
+pkgrel=1
+pkgdesc="A fork of wilkelabs isoband R package, with all R components removed to make the core available as a Julia package"
+arch=('aarch64' 'armv7h' 'x86_64')
+url="https://github.com/jkrumbiegel/isoband"
+license=('custom:MIT')
+source=("git+https://github.com/jkrumbiegel/isoband#commit=8c00505")
+sha256sums=('SKIP')
+
+build() {
+  cd isoband
+  g++ ${CXXFLAGS} ${LDFLAGS} -shared -std=c++11 -O3 \
+      -fPIC -o libisoband.so src/isoband.cpp
+}
+
+package() {
+  cd isoband
+
+  install -dm755 "$pkgdir/usr/include/isoband"
+  cp src/*.h "$pkgdir/usr/include/isoband"
+  install -Dm755 libisoband.so "$pkgdir/usr/lib/libisoband.so"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

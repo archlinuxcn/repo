@@ -1,0 +1,18 @@
+pkgname=julia-git-stablehashtraits-src
+pkgver=1.1.1
+_commit=a41c928cb7288fbbc158bb524a2187879d4151d0
+pkgrel=1
+pkgdesc="StableHashTraits.jl"
+url="https://github.com/beacon-biosignals/StableHashTraits.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/beacon-biosignals/StableHashTraits.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd StableHashTraits.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh StableHashTraits "${pkgdir}" "${pkgname}" julia-git
+}

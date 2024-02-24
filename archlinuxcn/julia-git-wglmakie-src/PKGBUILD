@@ -1,0 +1,18 @@
+pkgname=julia-git-wglmakie-src
+pkgver=0.8.16
+_commit=48df8fd181c71e257027ed9d6c682020e10fb193
+pkgrel=1
+pkgdesc="WGLMakie.jl"
+url="https://github.com/MakieOrg/Makie.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/MakieOrg/Makie.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Makie.jl/WGLMakie
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh WGLMakie "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,26 @@
+pkgname=julia-git-isoband_jll-src
+pkgver=0.2.3+0
+_commit=63ed1cc683bce14f77775a001faca95f99c4f050
+pkgrel=1
+pkgdesc="isoband_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/isoband_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libisoband)
+source=("git+https://github.com/JuliaBinaryWrappers/isoband_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('SKIP'
+            '1e7d482660cb9681fbc5f8e4af6e9564b9dedcef8aa02ba94fc60a4a2bf3beda')
+
+build() {
+  cd isoband_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl isoband_jll ../jll.toml
+}
+
+package() {
+  cd isoband_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh isoband_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-animations-src
+pkgver=0.4.1
+_commit=ece47eba5b098bb355c80924a9ae65f9cfbe3617
+pkgrel=1
+pkgdesc="Animations.jl"
+url="https://github.com/jkrumbiegel/Animations.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/jkrumbiegel/Animations.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Animations.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Animations "${pkgdir}" "${pkgname}" julia-git
+}

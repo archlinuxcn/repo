@@ -1,0 +1,18 @@
+pkgname=julia-git-lightxml-src
+pkgver=0.9.0
+_commit=768d3877b7ada58b5ec4851cafd87ff7db9452f6
+pkgrel=1
+pkgdesc="LightXML.jl"
+url="https://github.com/JuliaIO/LightXML.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/LightXML.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LightXML.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LightXML "${pkgdir}" "${pkgname}" julia-git
+}

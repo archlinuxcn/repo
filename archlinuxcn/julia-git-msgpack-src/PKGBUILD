@@ -1,0 +1,18 @@
+pkgname=julia-git-msgpack-src
+pkgver=1.2.0
+_commit=3ef9d1f9aeeb98238f2119e1a6ddf4fab3b31852
+pkgrel=1
+pkgdesc="MsgPack.jl"
+url="https://github.com/JuliaIO/MsgPack.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/MsgPack.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd MsgPack.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MsgPack "${pkgdir}" "${pkgname}" julia-git
+}

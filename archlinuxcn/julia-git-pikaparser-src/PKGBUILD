@@ -1,0 +1,18 @@
+pkgname=julia-git-pikaparser-src
+pkgver=0.6.1
+_commit=7c306a10cc7c0a6d332f017a37d9d6087ca168f2
+pkgrel=1
+pkgdesc="PikaParser.jl"
+url="https://github.com/LCSB-BioCore/PikaParser.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/LCSB-BioCore/PikaParser.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd PikaParser.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh PikaParser "${pkgdir}" "${pkgname}" julia-git
+}

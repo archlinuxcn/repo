@@ -1,0 +1,18 @@
+pkgname=julia-git-exactpredicates-src
+pkgver=2.2.5
+_commit=a1b984693f3a48176695d0a27af6075df0f825d3
+pkgrel=1
+pkgdesc="ExactPredicates.jl"
+url="https://github.com/lairez/ExactPredicates.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/lairez/ExactPredicates.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ExactPredicates.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ExactPredicates "${pkgdir}" "${pkgname}" julia-git
+}

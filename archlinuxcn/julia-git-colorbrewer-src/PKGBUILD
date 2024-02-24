@@ -1,0 +1,27 @@
+pkgname=julia-git-colorbrewer-src
+pkgver=0.4.0
+_commit=7ce0e173cfb0e64bd502ad7bff0f87bbe4360acc
+pkgrel=1
+pkgdesc="ColorBrewer.jl"
+url="https://github.com/timothyrenner/ColorBrewer.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/timothyrenner/ColorBrewer.jl.git#commit=$_commit"
+        Project.toml)
+sha256sums=('SKIP'
+            '3279fb6e77709dd3e627859693ebcda633d64a6ae7ec75ffa89a9cb2faf06e97')
+
+prepare() {
+  cd ColorBrewer.jl
+
+  cp -n ../Project.toml .
+  rm REQUIRE
+}
+
+package() {
+  cd ColorBrewer.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ColorBrewer "${pkgdir}" "${pkgname}" julia-git
+}

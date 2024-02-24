@@ -1,0 +1,18 @@
+pkgname=julia-git-widgetsbase-src
+pkgver=0.1.4
+_commit=0e824ada0e60f0845cdefee02a05b0e6c2528390
+pkgrel=1
+pkgdesc="WidgetsBase.jl"
+url="https://github.com/JuliaGizmos/WidgetsBase.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGizmos/WidgetsBase.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd WidgetsBase.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh WidgetsBase "${pkgdir}" "${pkgname}" julia-git
+}
