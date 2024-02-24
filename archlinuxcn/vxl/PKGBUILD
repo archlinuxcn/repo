@@ -6,13 +6,16 @@ pkgrel=1
 pkgdesc='A multi-platform collection of C++ software libraries for Computer Vision and Image Understanding'
 arch=('x86_64')
 url='https://github.com/vxl/vxl'
-license=('BSD')
+license=('BSD-3-Clause')
 depends=(
 #  ffmpeg
   freeglut
+  gcc-libs
+  glibc
   glu
   libdc1394
   libgeotiff
+  libjpeg-turbo
   libpng
   libtiff.so
   libxft
