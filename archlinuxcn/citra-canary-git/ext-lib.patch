@@ -81,7 +81,7 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
  else()
      set(CRYPTOPP_BUILD_DOCUMENTATION OFF CACHE BOOL "")
      set(CRYPTOPP_BUILD_TESTING OFF CACHE BOOL "")
-@@ -168,7 +169,14 @@ endif()
+@@ -151,7 +152,14 @@ endif()
  add_subdirectory(open_source_archives)
  
  # faad2
@@ -97,15 +97,15 @@ diff --color -rupN citra/externals/CMakeLists.txt citra/externals/CMakeLists.txt
  
  # Dynamic library headers
  add_library(library-headers INTERFACE)
-@@ -260,7 +268,7 @@ if (ENABLE_CUBEB)
+@@ -240,7 +248,7 @@ if (ENABLE_CUBEB)
  endif()
  
  # DiscordRPC
 -if (USE_DISCORD_PRESENCE)
 +if (USE_DISCORD_PRESENCE AND NOT TARGET DiscordRPC::discord-rpc)
-     add_subdirectory(discord-rpc EXCLUDE_FROM_ALL)
-     target_include_directories(discord-rpc INTERFACE ./discord-rpc/include)
- endif()
+     # rapidjson used by discord-rpc is old and doesn't correctly detect endianness for some platforms.
+     include(TestBigEndian)
+     test_big_endian(RAPIDJSON_BIG_ENDIAN)
 diff --color -rupN citra/externals/cmake-modules/CitraHandleSystemLibs.cmake citra/externals/cmake-modules/CitraHandleSystemLibs.cmake
 --- citra/externals/cmake-modules/CitraHandleSystemLibs.cmake	2023-01-20 00:44:13.712264461 +0800
 +++ citra/externals/cmake-modules/CitraHandleSystemLibs.cmake	2023-01-20 04:34:47.512808459 +0800
