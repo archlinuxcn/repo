@@ -2,7 +2,7 @@
 
 pkgname=cemu
 pkgver=2.0.487
-pkgrel=1
+pkgrel=2
 pkgdesc='Software to emulate Wii U games and applications on PC'
 arch=(x86_64)
 url=https://cemu.info
@@ -17,7 +17,7 @@ makedepends=(
 	# build setup
 	git 'cmake>=3.21.1' 'clang>=12' 'llvm>=12' ninja
 	# unbundled vcpkg
-	'boost>=1.79' 'glslang>=11.8' 'glm>=0.9.9.8' rapidjson
+	'boost>=1.79' 'glslang>=14' 'glm>=0.9.9.8' rapidjson
 	# direct cemu dependencies
 	nasm 'vulkan-headers>=1.3.240'
 	# wxwidgets
@@ -39,16 +39,13 @@ source=(
 	# cubeb submodules
 	git+https://github.com/arsenm/sanitizers-cmake#commit=aab6948fa863bc1cbe5d0850bc46b9ef02ed4c1a
 	git+https://github.com/google/googletest#commit=800f5422ac9d9e0ad59cd860a2ef3a679588acb4
-	# fix spirv linker error
-	fix-issue-1034.patch
 )
 sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'SKIP'
-            '2c6fbe790d5273586fa0c4e818e89ce08d9eb723fa6a1b5ba57160b7c6a7126b')
+            'SKIP')
 
 pkgver() {
 	cd Cemu
@@ -89,8 +86,6 @@ prepare() {
 
 	# gamelist column width improvement
 	sed -i '/InsertColumn/s/kListIconWidth/&+8/;/SetColumnWidth/s/last_col_width/&-1/' src/gui/components/wxGameList.cpp
-
-	git apply "${srcdir}/fix-issue-1034.patch"
 }
 
 build() {
