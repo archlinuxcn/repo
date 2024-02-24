@@ -1,0 +1,50 @@
+From 9ba64e80f0c48af4ad091ed354a9e8c59b8a5b23 Mon Sep 17 00:00:00 2001
+From: Hu Butui <hot123tea123@gmail.com>
+Date: Sat, 24 Feb 2024 13:25:48 +0800
+Subject: [PATCH] fix building with VTK
+
+---
+ Utilities/VTK/vtkGDCMTesting.cxx    | 1 -
+ Utilities/VTK/vtkImageColorViewer.h | 1 +
+ Utilities/VTK/vtkgdcm.i             | 1 -
+ 3 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/Utilities/VTK/vtkGDCMTesting.cxx b/Utilities/VTK/vtkGDCMTesting.cxx
+index 3d74802f0..a4e4ef1f2 100644
+--- a/Utilities/VTK/vtkGDCMTesting.cxx
++++ b/Utilities/VTK/vtkGDCMTesting.cxx
+@@ -14,7 +14,6 @@
+ #include "vtkGDCMTesting.h"
+ 
+ #include "vtkObjectFactory.h"
+-#include "vtkToolkits.h"
+ #include "gdcmTesting.h"
+ #include "gdcmFilename.h"
+ 
+diff --git a/Utilities/VTK/vtkImageColorViewer.h b/Utilities/VTK/vtkImageColorViewer.h
+index ad03febb0..d7325db61 100644
+--- a/Utilities/VTK/vtkImageColorViewer.h
++++ b/Utilities/VTK/vtkImageColorViewer.h
+@@ -56,6 +56,7 @@
+ #include "vtkgdcmModule.h"
+ #include "vtkObject.h"
+ #include "vtkVersion.h"
++#include "vtkLegacy.h"
+ 
+ class vtkAlgorithm;
+ class vtkAlgorithmOutput;
+diff --git a/Utilities/VTK/vtkgdcm.i b/Utilities/VTK/vtkgdcm.i
+index 0d7d1fcaa..ab2dd62e6 100644
+--- a/Utilities/VTK/vtkgdcm.i
++++ b/Utilities/VTK/vtkgdcm.i
+@@ -87,7 +87,6 @@
+ 
+ #include "vtkWindowToImageFilter.h"
+ 
+-#include "vtkToolkits.h" // VTK_DATA_ROOT
+ %}
+ 
+ //%typemap(csimports) vtkGDCMImageWriter %{
+-- 
+2.43.2
+
