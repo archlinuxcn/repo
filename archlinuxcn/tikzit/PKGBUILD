@@ -11,8 +11,10 @@ pkgrel=2
 pkgdesc='Allows the creation and modification of TeX diagrams written using the pgf/TikZ macro library'
 arch=('x86_64')
 url='https://tikzit.github.io'
-license=('GPL2')
+license=('GPL-2.0-or-later')
 depends=(
+  gcc-libs
+  glibc
   qt5-base
   poppler-qt5
   hicolor-icon-theme
