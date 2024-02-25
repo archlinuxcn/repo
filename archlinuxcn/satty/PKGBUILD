@@ -2,7 +2,7 @@
 
 pkgname=satty
 _pkgname=Satty
-pkgver=0.9.0
+pkgver=0.10.0
 pkgrel=1
 pkgdesc="A Screenshot Annotation Tool inspired by Swappy and Flameshot"
 url="https://github.com/gabm/satty"
@@ -21,7 +21,7 @@ depends=(
 )
 makedepends=(cargo)
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('7a9db19045a3f631f2d000186d3ad9acc4503e96a0dd7812a4bc24559848d69a')
+sha256sums=('3bf60df40bb29475d4a71cd11eb2f5573a88e88abfe04828fd9b8959ed648db3')
 
 _archive="$_pkgname-$pkgver"
 
