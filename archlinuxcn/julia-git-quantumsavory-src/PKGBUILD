@@ -1,0 +1,18 @@
+pkgname=julia-git-quantumsavory-src
+pkgver=0.3.3
+_commit=1a0b40d45b5cfefbc75c8ea317af7d95bd58be02
+pkgrel=1
+pkgdesc="QuantumSavory.jl"
+url="https://github.com/QuantumSavory/QuantumSavory.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/QuantumSavory/QuantumSavory.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd QuantumSavory.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh QuantumSavory "${pkgdir}" "${pkgname}" julia-git
+}

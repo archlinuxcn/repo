@@ -1,0 +1,18 @@
+pkgname=julia-git-sumtypes-src
+pkgver=0.5.6
+_commit=f870e95fc73dd39871fed62fd9023ec8775994ec
+pkgrel=1
+pkgdesc="SumTypes.jl"
+url="https://github.com/MasonProtter/SumTypes.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/MasonProtter/SumTypes.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SumTypes.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SumTypes "${pkgdir}" "${pkgname}" julia-git
+}

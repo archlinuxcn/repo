@@ -1,0 +1,18 @@
+pkgname=julia-git-quantumcumulants-src
+pkgver=0.2.25
+_commit=9420b7866bdf3213832e6c8dc9e4fd0aebf4fdd4
+pkgrel=1
+pkgdesc="QuantumCumulants.jl"
+url="https://github.com/qojulia/QuantumCumulants.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/qojulia/QuantumCumulants.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd QuantumCumulants.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh QuantumCumulants "${pkgdir}" "${pkgname}" julia-git
+}
