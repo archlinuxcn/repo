@@ -1,11 +1,11 @@
-# Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
+# Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=needrestart-git
-pkgver=3.6.r12.g280c1ae
-pkgrel=2
-pkgdesc='Restart daemons after library updates.'
+pkgver=3.6.r23.ga0e94ea
+pkgrel=1
+pkgdesc="Restart daemons after library updates."
 arch=('any')
 url="https://github.com/liske/needrestart"
-license=('GPL')
+license=('GPL-2.0-or-later')
 depends=('perl-module-find' 'perl-term-readkey' 'perl-proc-processtable'
          'perl-sort-naturally' 'perl-module-scandeps' 'perl-libintl-perl')
 makedepends=('git')
@@ -18,24 +18,24 @@ source=('git+https://github.com/liske/needrestart.git')
 sha256sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/${pkgname%-git}"
+  cd "${pkgname%-git}"
   git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
-  cd "$srcdir/${pkgname%-git}"
+  cd "${pkgname%-git}"
   find . -type f -exec sed -i 's/sbin/bin/g' {} \;
 }
 
 build() {
-  cd "$srcdir/${pkgname%-git}"
+  cd "${pkgname%-git}"
   unset PERL5LIB PERL_LOCAL_LIB_ROOT PERL_MB_OPT PERL_MM_OPT
   export PERL_MM_USE_DEFAULT=1 PERL_AUTOINSTALL=--skipdeps
   make
 }
 
 package() {
-  cd "$srcdir/${pkgname%-git}"
+  cd "${pkgname%-git}"
   unset PERL5LIB PERL_LOCAL_LIB_ROOT PERL_MB_OPT PERL_MM_OPT
   make DESTDIR="$pkgdir/" install
 
