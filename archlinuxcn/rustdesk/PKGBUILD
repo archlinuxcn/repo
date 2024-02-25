@@ -14,6 +14,7 @@ set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}"
 pkgver='1.2.3'
+_pkgver=$(sed 's/\./-/3' <<<${pkgver})
 pkgrel=2
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
 arch=('x86_64')
@@ -29,9 +30,9 @@ makedepends=("${_mdp[@]}" 'rust' 'python' 'python-yaml' 'python-toml')
 makedepends+=('ninja') # vcpkg build can use the latest ninja
 options=('!strip' '!makeflags' '!lto')
 install="${pkgname}.install"
-_srcdir="${pkgname}-${pkgver}"
+_srcdir="${pkgname}-${_pkgver}"
 source=(
-	"${_srcdir}.tar.gz::https://github.com/rustdesk/rustdesk/archive/refs/tags/${pkgver}.tar.gz"
+	"${_srcdir}.tar.gz::https://github.com/rustdesk/rustdesk/archive/refs/tags/${_pkgver}.tar.gz"
 )
 makedepends+=('vcpkg')
 if [ "${_opt_SYS_FLUTTER}" -eq 0 ]; then
@@ -50,7 +51,7 @@ if :; then
 fi
 if ! :; then
 	_srcdir="${_pkgname}"
-	source[0]="git+${_giturl}#tag=${pkgver}"
+	source[0]="git+${_giturl}#tag=${_pkgver}"
 fi
 md5sums=('801dab597be686334779f8fa7e4f1353'
          '97115fa5fc6d8d63bdf13dc57fc20861'
