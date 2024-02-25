@@ -1,0 +1,18 @@
+pkgname=julia-git-terminterface-src
+pkgver=0.3.3
+_commit=80238db00c82dff38e3748378e6fbc2eccecd8ff
+pkgrel=1
+pkgdesc="TermInterface.jl"
+url="https://github.com/JuliaSymbolics/TermInterface.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSymbolics/TermInterface.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd TermInterface.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh TermInterface "${pkgdir}" "${pkgname}" julia-git
+}

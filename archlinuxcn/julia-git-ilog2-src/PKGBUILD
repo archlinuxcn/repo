@@ -1,0 +1,18 @@
+pkgname=julia-git-ilog2-src
+pkgver=0.2.4
+_commit=47eb6a6ff37666e97e0cbad32fabbf6838faad07
+pkgrel=1
+pkgdesc="ILog2.jl"
+url="https://github.com/jlapeyre/ILog2.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/jlapeyre/ILog2.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ILog2.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ILog2 "${pkgdir}" "${pkgname}" julia-git
+}

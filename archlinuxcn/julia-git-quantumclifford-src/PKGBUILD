@@ -1,0 +1,18 @@
+pkgname=julia-git-quantumclifford-src
+pkgver=0.8.20
+_commit=3e78144485ce5b114ccb58a0182167fe0913638b
+pkgrel=1
+pkgdesc="QuantumClifford.jl"
+url="https://github.com/QuantumSavory/QuantumClifford.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/QuantumSavory/QuantumClifford.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd QuantumClifford.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh QuantumClifford "${pkgdir}" "${pkgname}" julia-git
+}
