@@ -11,7 +11,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=121.0.6167.184
+pkgver=122.0.6261.69
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
@@ -35,19 +35,21 @@ options=('!lto') # Chromium adds its own flags for ThinLTO
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
         https://gitlab.com/Matt.Jolly/chromium-patches/-/archive/${pkgver%%.*}/chromium-patches-${pkgver%%.*}.tar.bz2
+        support-ICU-74-in-LazyTextBreakIterator.patch
         REVERT-simplify-blink-NativeValueTraitsBase.patch
-        icu-74.patch
-        chromium-121-constexpr.patch
+        REVERT-use-v8-Array-Iterate-for-converting-script-wrappables.patch
+        chromium-constexpr.patch
         drop-flags-unsupported-by-clang16.patch
         compiler-rt-16.patch
         use-oauth2-client-switches-as-default.patch)
-sha256sums=('9fd6b82e7077ac26ec264bfcfc8ac8e0c2a0240378f035c9c0f34ad467aef09d'
+sha256sums=('f5bf4085ad3173883b45ea72b483d07f50ec3aa0f7546ac3837a9d26d0b4f9c0'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
-            'e9113c1ed2900b84b488e608774ce25212d3c60094abdae005d8a943df9b505e'
+            '1f6acf165578288dc84edc7d9dcfabf7d38f55153b63a37ee5afa929f0e2baad'
+            '8c256b2a9498a63706a6e7a55eadbeb8cc814be66a75e49aec3716c6be450c6c'
             '318df8f8662071cebcdf953698408058e17f59f184500b7e12e01a04a4206b50'
-            'ff9ebd86b0010e1c604d47303ab209b1d76c3e888c423166779cefbc22de297f'
-            '09677c39ff9b910c732a049252969bfa03587e70502765d68b0345bac396c0b2'
-            '8d1cdf3ddd8ff98f302c90c13953f39cd804b3479b13b69b8ef138ac57c83556'
+            '00e06b889e4face0ef41293233ce55bd52064ab040f1fdd84aa19525f8ac3601'
+            'a061f83e2b628927feb4dbc441eb54f8b8c3d81348e447cf3b90755d7cda5f54'
+            '53774fd7f807ad42f77d45cab9e5480cc2bcb0a5c5138110a434407521af9607'
             '8a2649dcc6ff8d8f24ddbe40dc2a171824f681c6f33c39c4792b645b87c9dcab'
             'e393174d7695d0bafed69e868c5fbfecf07aa6969f3b64596d0bae8b067e1711')
 
@@ -70,7 +72,7 @@ source=("${source[@]}"
         0001-ozone-wayland-implement-text_input_manager_v3.patch
         0001-ozone-wayland-implement-text_input_manager-fixes.patch)
 sha256sums=("${sha256sums[@]}"
-            'feb1039d4d5c13fbeb53736e0f0bbfea09c7d71af81bcc7b52d0fb42fd86a4a1'
+            '6c2405ca58cae05ea1c8116495d7885a0f42f44ca3d70b2bd8f11c27abb23c52'
             '9a5594293616e1390462af1f50276ee29fd6075ffab0e3f944f6346cb2eb8aec'
             '8ba5c67b7eb6cacd2dbbc29e6766169f0fca3bbb07779b1a0a76c913f17d343f'
             '2a44756404e13c97d000cc0d859604d6848163998ea2f838b3b9bb2c840967e3'
@@ -140,16 +142,15 @@ prepare() {
   patch -Np1 -i ../use-oauth2-client-switches-as-default.patch
 
   # Upstream fixes
-
-  # Fix build with ICU 74
-  patch -Np1 -i ../icu-74.patch
+  patch -Np1 -i ../support-ICU-74-in-LazyTextBreakIterator.patch
 
   # Fix "error: defaulted definition of equality comparison operator cannot
   # be declared constexpr because it invokes a non-constexpr comparison
-  # function" (patch from Fedora)
-  patch -Np1 -i ../chromium-121-constexpr.patch
+  # function" (patch for Chromium 121 from Fedora, later extended for 122)
+  patch -Np1 -i ../chromium-constexpr.patch
 
   # Revert usage of C++20 features which likely need newer clang
+  patch -Rp1 -i ../REVERT-use-v8-Array-Iterate-for-converting-script-wrappables.patch
   patch -Rp1 -i ../REVERT-simplify-blink-NativeValueTraitsBase.patch
 
   # Drop compiler flags that need newer clang
@@ -161,7 +162,6 @@ prepare() {
   # Fixes for building with libstdc++ instead of libc++
   patch -Np1 -i ../chromium-patches-*/chromium-114-ruy-include.patch
   patch -Np1 -i ../chromium-patches-*/chromium-117-material-color-include.patch
-  patch -Np1 -i ../chromium-patches-*/chromium-119-clang16.patch
 
   # Custom Patches
   sed -i '/^bool IsHevcProfileSupported(const VideoType& type) {$/{s++bool IsHevcProfileSupported(const VideoType\& type) { return true;+;h};${x;/./{x;q0};x;q1}' \
@@ -169,15 +169,15 @@ prepare() {
 
   # Implement text_input_manager_v3
   # https://chromium-review.googlesource.com/c/chromium/src/+/3750452
-  patch -Np1 -i ../0001-ozone-wayland-implement-text_input_manager_v3.patch
-  patch -Np1 -i ../0001-ozone-wayland-implement-text_input_manager-fixes.patch
+  #patch -Np1 -i ../0001-ozone-wayland-implement-text_input_manager_v3.patch
+  #patch -Np1 -i ../0001-ozone-wayland-implement-text_input_manager-fixes.patch
 
   # Enable VAAPI on Wayland
   # https://discourse.ubuntu.com/t/chromium-hardware-accelerated-build-for-intel-based-platforms-available-for-beta-testing/35625
   # https://git.launchpad.net/~chromium-team/chromium-browser/+git/snap-from-source/
   # patch -Np1 -i ../0001-enable-linux-unstable-deb-target.patch
-  patch -Np1 -i ../0001-adjust-buffer-format-order.patch
-  patch -Np1 -i ../0001-vaapi-flag-ozone-wayland.patch
+  #patch -Np1 -i ../0001-adjust-buffer-format-order.patch
+  #patch -Np1 -i ../0001-vaapi-flag-ozone-wayland.patch
 
   # Link to system tools required by the build
   mkdir -p third_party/node/linux/node-linux-x64/bin
