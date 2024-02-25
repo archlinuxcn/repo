@@ -4,7 +4,7 @@
 # Contributor: Paolo Stivanin <admin@polslinux.it>
 
 pkgname=winff
-pkgver=1.6.2
+pkgver=1.6.3
 pkgrel=1
 pkgdesc='GUI for ffmpeg written in Lazarus/GTK+2'
 url='https://github.com/WinFF/winff/'
