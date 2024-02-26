@@ -8,7 +8,7 @@
 
 _pkgbasename=x264
 pkgname=lib32-x264
-pkgver=0.164.r3095.baee400
+pkgver=0.164.r3108.31e19f9
 pkgrel=1
 epoch=3
 pkgdesc='Open Source H264/AVC video encoder (32 bit)'
@@ -40,7 +40,7 @@ replaces=(
     'lib32-libx264-10bit' 
     'lib32-libx264-all'
     )
-_commit=baee400fa9ced6f5481a728138fed6e867b0ff7f  # master
+_commit=31e19f92f00c7003fa115047ce50978bc98c3a0d  # master
 source=("git+https://git.videolan.org/git/x264.git#commit=${_commit}")
 sha256sums=('SKIP')
 
