@@ -9,8 +9,8 @@
 # Contributor: SandaruKasa <echo c2FuZGFydWthc2ErYXVyQHlhLnJ1Cg== | base64 -d>
 
 pkgname=stockfish
-pkgver=16
-pkgrel=2
+pkgver=16.1
+pkgrel=1
 epoch=1
 pkgdesc="A strong UCI chess engine"
 arch=('x86_64' 'i686' 'armv7h' 'aarch64')
@@ -18,7 +18,7 @@ url="https://stockfishchess.org/"
 license=('GPL3')
 depends=('glibc')
 source=("$pkgname-$pkgver.zip::https://github.com/official-stockfish/Stockfish/archive/sf_$pkgver.zip")
-sha512sums=('4c1ee8e36a8786392409fd0fa85d3751f6595b69529df09db3011229019a3f76b410dc84a077774ec1095c8a7bcde529db4cd0766f103ce94fc59fc186e6ee89')
+sha512sums=('bfaa5c644d2acb8538b1a2c72fdf58c6b0ba6cbb3a4e1a335391faa1529f1069eca888295bd4eef0e887860185a3e0e18529ab609829738c420a0c810be5cca4')
 
 build() {
   cd "Stockfish-sf_${pkgver}/src"
@@ -26,7 +26,11 @@ build() {
   if [[ "$CARCH" == "armv7h" ]]; then
     _arch=armv7
   elif [[ "$CARCH" == "aarch64" ]]; then
-    _arch=armv8
+    if grep -wq asimddp /proc/cpuinfo; then
+      _arch=armv8-dotprod
+    else
+      _arch=armv8
+    fi
   elif [[ "$CARCH" == "i686" ]]; then
     _arch=x86-32
   elif grep -wq avx512dq /proc/cpuinfo && grep -wq avx512vl /proc/cpuinfo && grep -wq avx512_vnni /proc/cpuinfo; then
