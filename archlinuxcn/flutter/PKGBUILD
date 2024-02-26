@@ -1,9 +1,9 @@
-# Maintainer: Fredy García <frealgagu at gmail dot com>
-# Co-Maintainer: Polarian <polarian@polarian.dev>
-# Contributor: Philip Goto <philip.goto@gmail.com>, WithTheBraid <info@braid.business>
+# Maintainer: WithTheBraid <info@braid.business>
+# Co-Maintainer: Polarian <polarian@polarian.dev>, Fredy García <frealgagu at gmail dot com>
+# Contributor: Philip Goto <philip.goto@gmail.com>
 
 pkgname=flutter
-pkgver=3.19.0
+pkgver=3.19.1
 pkgrel=1
 pkgdesc="A new mobile app SDK to help developers and designers build modern mobile apps for iOS and Android."
 arch=("x86_64" "aarch64")
@@ -41,7 +41,7 @@ source=(
   "${pkgname}.sh"
   "${pkgname}.csh"
 )
-sha256sums=('4cc1706fbd6e2a5c0ee34a6f8de875aae20904c9f47e18c88d2fcb25d9ea1a79'
+sha256sums=('d80ae3b41f4ce388345c9872483ed27553698c1c41c0ccf4a7dba27e31c36d60'
             '1dea1952d386c43948b9970382c2da5b65b7870684b8ad2ad89124e873aa485a'
             '7ef10d753cfaac52d243549764a793f44f8284a1f4b11715ccd2fa915b026a6f')
 
