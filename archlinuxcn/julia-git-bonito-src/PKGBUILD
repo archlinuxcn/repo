@@ -1,0 +1,18 @@
+pkgname=julia-git-bonito-src
+pkgver=3.0.4
+_commit=e2cf265d158e16cd6d97dff9f09488f32777794f
+pkgrel=1
+pkgdesc="Bonito.jl"
+url="https://github.com/SimonDanisch/Bonito.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SimonDanisch/Bonito.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Bonito.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Bonito "${pkgdir}" "${pkgname}" julia-git
+}
