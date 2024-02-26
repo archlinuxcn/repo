@@ -8,7 +8,7 @@ url='https://pyav.org'
 pkgver=11.0.0
 pkgrel=1
 arch=('x86_64')
-license=('BSD')
+license=('BSD-3-Clause')
 makedepends=(
   cython
   python-build
@@ -17,7 +17,7 @@ makedepends=(
   python-wheel
 )
 depends=(
-  ffmpeg4.4
+  ffmpeg
   python-numpy
   python-pillow
 )
@@ -26,8 +26,6 @@ sha512sums=('52791ec2823f58daa05475b8422733a49361c9d9072ce71815fc58edb78e2eed6c9
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  # https://github.com/PyAV-Org/PyAV/issues/817
-  PKG_CONFIG_PATH=/usr/lib/ffmpeg4.4/pkgconfig \
   python -m build --wheel --no-isolation --skip-dependency-check
 }
 
