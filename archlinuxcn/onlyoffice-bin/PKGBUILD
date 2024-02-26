@@ -2,7 +2,7 @@
 # Contributor: Mikalai Ramanovich < narod.ru: nikolay.romanovich >
 
 pkgname=onlyoffice-bin
-pkgver=8.0.0
+pkgver=8.0.1
 pkgrel=1
 pkgdesc='An office suite that combines text, spreadsheet and presentation editors'
 arch=('x86_64')
@@ -19,7 +19,7 @@ conflicts=('onlyoffice')
 options=('!strip' '!emptydirs')
 source=("onlyoffice-desktopeditors-${CARCH}-${pkgver}.deb"::"https://github.com/ONLYOFFICE/DesktopEditors/releases/download/v${pkgver}/onlyoffice-desktopeditors_amd64.deb")
 noextract=("onlyoffice-desktopeditors-${CARCH}-${pkgver}.deb")
-sha256sums=('62d4767e201130ac3c74e8003d760cf961709a129946c208050613c69a6edc5d')
+sha256sums=('5978cf746c3074ed77becc95613ba82e031e76c0034bc68ebd92fe73071c0564')
 
 prepare() {
     mkdir -p "onlyoffice-${pkgver}"
