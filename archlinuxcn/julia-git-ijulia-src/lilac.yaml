@@ -10,11 +10,9 @@ repo_depends:
   - julia-git-precompiletools-src
   - julia-git-preferences-src
   - julia-git-versionparsing-src
-  - julia-git-snoopcompile-src: julia-git-snoopprecompile-src
 update_on:
   - source: regex
-    url: 
-        https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/IJulia/version
+    url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/IJulia/version
     regex: 'version: *([^ ]*@[^ ]*)'
   - alias: alpm-lilac
     alpm: julia-git
