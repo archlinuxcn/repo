@@ -8,24 +8,13 @@ arch=('x86_64')
 url='https://github.com/vxl/vxl'
 license=('BSD-3-Clause')
 depends=(
-#  ffmpeg
-  freeglut
   gcc-libs
   glibc
-  glu
-  libdc1394
   libgeotiff
   libjpeg-turbo
   libpng
   libtiff.so
-  libxft
-  libxinerama
-  libxkbfile
-  libxmu
-  libxpm
-  libxres
-  libxss
-  libxt
+  zlib
 )
 makedepends=('cmake')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/vxl/vxl/archive/v${pkgver}.tar.gz")
@@ -34,13 +23,18 @@ sha512sums=('0b33e12557315058e7786c2049af3b01f1208e50660ccbc45f4d9a4dba4eeadfa5e
 build() {
   cmake \
     -B "build" \
-    -S "${pkgname}-${pkgver}" \
-    -DVXL_BUILD_CONTRIB:BOOL=ON \
-    -DVXL_BUILD_EXAMPLES:BOOL=OFF \
     -DBUILD_SHARED_LIBS=BOOL:ON \
     -DBUILD_TESTING:BOOL=OFF \
+    -DCMAKE_BUILD_TYPE=None \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
+    -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
+    -DVXL_BUILD_CONTRIB:BOOL=ON \
+    -DVXL_BUILD_DCMTK:BOOL=ON \
+    -DVXL_BUILD_EXAMPLES:BOOL=OFF \
+    -DVXL_FORCE_V3P_DCMTK:BOOL=ON \
+    -DVXL_FORCE_V3P_OPENJPEG2:BOOL=ON \
+    -DVXL_USE_DCMTK:BOOL=ON \
+    -S "${pkgname}-${pkgver}"
  make -C "build"
 }
 
@@ -50,4 +44,3 @@ package() {
   rm -rfv "${pkgdir}/usr/v3p"
 }
 # vim:set ts=2 sw=2 et:
-
