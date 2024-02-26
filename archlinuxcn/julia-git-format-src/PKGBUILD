@@ -1,0 +1,18 @@
+pkgname=julia-git-format-src
+pkgver=1.3.6
+_commit=7561f1308690cd6046ee75de806f4e210e76a283
+pkgrel=1
+pkgdesc="Format.jl"
+url="https://github.com/JuliaString/Format.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaString/Format.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Format.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Format "${pkgdir}" "${pkgname}" julia-git
+}
