@@ -8,7 +8,7 @@
 
 ## basic info
 pkgname="wine-staging-wow64"
-pkgver=9.2
+pkgver=9.3
 _pkgver="${pkgver/rc/-rc}"
 pkgrel=1
 pkgdesc="A compatibility layer for running Windows programs"
