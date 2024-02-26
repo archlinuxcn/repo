@@ -2,7 +2,7 @@
 
 _pkgbasename=vmaf
 pkgname=("lib32-$_pkgbasename" "lib32-lib$_pkgbasename")
-pkgver=2.3.1
+pkgver=3.0.0
 pkgrel=1
 pkgdesc='Perceptual video quality assessment algorithm based on multi-method fusion (32 bit)'
 arch=('x86_64')
@@ -17,11 +17,10 @@ makedepends=(
 #        'meson-cross-x86-linux-gnu>=1.0.4'
         'ninja'
         'nasm'
-#        'doxygen' # not needed, no docs produced
     )
-options=('!lto')
+# checkdepends=('vim')
 source=("https://github.com/Netflix/${_pkgbasename}/archive/v${pkgver}/${_pkgbasename}-${pkgver}.tar.gz")
-sha256sums=('8d60b1ddab043ada25ff11ced821da6e0c37fd7730dd81c24f1fc12be7293ef2')
+sha256sums=('7178c4833639e6b989ecae73131d02f70735fdb3fc2c7d84bc36c9c3461d93b1')
 
 prepare() {
     mkdir -p "${_pkgbasename}-${pkgver}/libvmaf/build"
@@ -32,18 +31,17 @@ build() {
     export CXX="g++ -m32"
     export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"   
 
-    cd "${_pkgbasename}-${pkgver}/libvmaf"
-    meson  build \
+    arch-meson -Denable_avx512='false' "${_pkgbasename}-${pkgver}/libvmaf" build \
         --prefix=/usr \
         --libdir=lib32 \
         -D enable_tests=false \
         -D enable_docs=false
 
-    ninja -v -C build
+    meson compile -C  build
 }
 
 # check() {
-#     ninja -v -C "${_pkgbasename}-${pkgver}/libvmaf/build" test
+#     meson test -C  build
 # }
 
 package_lib32-libvmaf() {
@@ -54,9 +52,7 @@ package_lib32-libvmaf() {
     )
     provides=(libvmaf.so "lib32-vmaf")
 
-    cd ${_pkgbasename}-${pkgver}/libvmaf
-
-    DESTDIR="$pkgdir" ninja -v -C "build" install
+    meson install -C build --destdir "$pkgdir"
     
     rm -r "$pkgdir"/usr/{include,bin}
 
@@ -72,9 +68,7 @@ package_lib32-vmaf() {
       "lib32-libvmaf"
     )
 
-    DESTDIR="$pkgdir" ninja -v -C "${_pkgbasename}-${pkgver}/libvmaf/build" install
-    
-    install -D -m755 "${_pkgbasename}-${pkgver}/libvmaf/build/tools"/vmaf -t "${pkgdir}/usr/bin"
+    meson install -C build --destdir "$pkgdir"
 
     # Use the same naming scheme as the one in the lib32-shaderc-git package for coherence
     # Arch wiki suggest to use the "-32" suffix for 32 bit executables: https://wiki.archlinux.org/index.php/32-bit_package_guidelines
