@@ -4,7 +4,7 @@
 
 pkgname=webkit2gtk-4.1-imgpaste
 pkgver=2.42.5
-pkgrel=1
+pkgrel=2
 pkgdesc="Web content engine for GTK (with patches for pasting images from clipboard)"
 url="https://webkitgtk.org"
 arch=(x86_64)
