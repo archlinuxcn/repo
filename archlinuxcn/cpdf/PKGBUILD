@@ -10,9 +10,10 @@ pkgrel=1
 pkgdesc='Powerful, free tools to manipulate PDF files including merge, encrypt, decrypt, scale, crop, rotate, bookmarks, stamp, logos, page numbers'
 arch=('x86_64')
 url='http://community.coherentpdf.com'
-license=('custom')
+license=('LicenseRef-cpdf')
 depends=(
   glibc
+  zstd
 )
 makedepends=(
   camlpdf
