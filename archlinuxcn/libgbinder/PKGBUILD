@@ -4,7 +4,7 @@
 # This PKGBUILD is base on the AUR repo libgbinder, by Danct12 <danct12@disroot.org>
 
 pkgname='libgbinder'
-pkgver=1.1.36
+pkgver=1.1.37
 pkgrel=1
 pkgdesc='GLib-style interface to binder'
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -12,7 +12,7 @@ url='https://github.com/mer-hybris/libgbinder'
 license=('BSD-3-Clause')
 depends=('libglibutil' 'glib2')
 source=("${pkgname}-${pkgver}.tar.gz"::"${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('5727b25299286e8238a9b526fec9f72d631f584cabb21021d9f12e550059fe746e1165d5bb47ba79db52e2ccb5a3ce96dbd97761df78f13cf7e9a1554d1c3876')
+sha512sums=('e925e44af156725435f246b308c08cf9cd4eb0b37daf6a891af26234f8795493090ff6d1cf43d9501108a8449337b8e06298599e2ed6231267551f7cb8d492f3')
 
 build() {
   KEEP_SYMBOLS=1 make -C "${srcdir}/${pkgname}-${pkgver}" release pkgconfig
