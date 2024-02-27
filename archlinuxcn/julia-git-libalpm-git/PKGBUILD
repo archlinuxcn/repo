@@ -17,19 +17,9 @@ pkgver() {
   git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
 }
 
-build() {
-  cd LibALPM.jl
-
-  cat > deps/deps.jl <<EOF
-const libalpm = "/usr/lib/libalpm.so"
-check_deps() = nothing
-EOF
-}
-
 package() {
   cd LibALPM.jl
 
   . /usr/lib/julia/julia-install-pkg.sh LibALPM "${pkgdir}" "${pkgname}" julia-git
-  rm "${dest_dir}"/REQUIRE
   rm -rf "${dest_dir}"/travis
 }
