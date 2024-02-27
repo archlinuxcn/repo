@@ -15,12 +15,12 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz
 sha256sums=('8d09d8d95593e7642cbed4ea99c99eebe178a86a073aa6d6192da036f0ccf568')
 
 build() {
-    cd "${pkgname}-${pkgver}/"
-    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
-    make
+	cd "${pkgname}-${pkgver}/"
+	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
+	make
 }
 
 package() {
-    cd "${pkgname}-${pkgver}/"
-    make DESTDIR="${pkgdir}/" install
+	cd "${pkgname}-${pkgver}/"
+	make DESTDIR="${pkgdir}/" install
 }
