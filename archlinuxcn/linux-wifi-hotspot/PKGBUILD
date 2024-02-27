@@ -1,32 +1,35 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 # Contributor: Dimitris Kiziridis <ragouel at outlook dot com>
+
 pkgname=linux-wifi-hotspot
 pkgver=4.7.1
 pkgrel=1
 pkgdesc="Feature-rich wifi hotspot creator"
 arch=('x86_64' 'aarch64')
-url="https://github.com/lakinduakash/linux-wifi-hotspot"
-license=('BSD')
+url="https://github.com/lakinduakash/${pkgname}"
+license=('BSD-2-Clause')
 depends=('gtk3' 'hostapd' 'iproute2' 'iw' 'procps-ng' 'qrencode')
 optdepends=("dnsmasq: For 'NATed' or 'None' Internet sharing method"
-            "iptables: For 'NATed' or 'None' Internet sharing method"
-            'haveged: For random MAC generation'
-            'wireless_tools: if iw cannot recognize your adapter')
+	"iptables: For 'NATed' or 'None' Internet sharing method"
+	'haveged: For random MAC generation'
+	'wireless_tools: if iw cannot recognize your adapter')
 provides=('wihotspot' 'create_ap')
 conflicts=('wihotspot' 'create_ap')
 backup=('etc/create_ap.conf')
-install="$pkgname.install"
-source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+install="${pkgname}.install"
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 sha256sums=('bed063a6dd2592bbfbf423f7d45b92a38e44e3ac13cdc7ddd42a9c45f803e762')
 
 build() {
-  cd "$pkgname-$pkgver"
-  make
+	cd "${pkgname}-${pkgver}/"
+	make
 }
 
 package() {
-  cd "$pkgname-$pkgver"
-  make DESTDIR="$pkgdir" install
+	cd "${pkgname}-${pkgver}/"
+	make DESTDIR="${pkgdir}" install
 
-  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+    install -d "${pkgdir}/usr/share/doc/${pkgname}/"
+	cp -r docs/* "${pkgdir}/usr/share/doc/${pkgname}/"
 }

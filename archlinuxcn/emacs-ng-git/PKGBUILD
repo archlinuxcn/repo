@@ -7,68 +7,69 @@
 # Contributor: Renchi Raju <renchi@green.tam.uiuc.edu>
 
 pkgname=emacs-ng-git
+_pkgname=${pkgname%-git}
 pkgver=r171840.g46ae8bdd0d4
 pkgrel=1
 epoch=1
 pkgdesc="A new approach to Emacs - Including TypeScript, Threading, Async I/O, and WebRender"
 arch=(x86_64)
-url="https://emacs-ng.github.io/emacs-ng/"
-license=(GPL3)
+url="https://${_pkgname}.github.io/${_pkgname}/"
+license=('GPL-3.0-or-later')
 depends=(texinfo libjpeg-turbo libtiff librsvg gpm giflib libxpm libotf m17n-lib gtk3 gnutls
-         jansson cairo harfbuzz ncurses libxml2 libxt zlib libgccjit)
+	jansson cairo harfbuzz ncurses libxml2 libxt zlib libgccjit)
 makedepends=(git rustup python texlive-core clang)
-provides=(emacs emacs-ng)
-conflicts=(emacs emacs-ng)
-source=("git+https://github.com/emacs-ng/emacs-ng.git")
+provides=("emacs" "${_pkgname}")
+conflicts=("emacs" "${_pkgname}")
+source=("git+https://github.com/${_pkgname}/${_pkgname}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-  cd emacs-ng
-  printf "r%s.g%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 prepare() {
-  cd emacs-ng
-  rustup install "$(cat rust-toolchain)"
-  ./autogen.sh
+	cd "${_pkgname}/"
+	rustup install "$(cat rust-toolchain)"
+	./autogen.sh
 }
 
 build() {
-  cd emacs-ng
-  RUSTUP_TOOLCHAIN=$(cat rust-toolchain)
-  ./configure CFLAGS="-Wl,-rpath,shared -Wl,--disable-new-dtags" \
-    --prefix=/usr \
-    --sysconfdir=/etc \
-    --libexecdir=/usr/lib \
-    --localstatedir=/var \
-    --with-json \
-    --with-modules \
-    --with-compress-install \
-    --with-threads \
-    --with-included-regex \
-    --with-zlib \
-    --with-libsystemd \
-    --with-rsvg \
-    --without-imagemagick \
-    --with-gpm \
-    --without-xaw3d \
-    --with-dbus \
-    --without-pop \
-    --with-mailutils \
-    --with-gsettings \
-    --disable-build-details
+	cd "${_pkgname}/"
+	RUSTUP_TOOLCHAIN=$(cat rust-toolchain)
+	./configure CFLAGS="-Wl,-rpath,shared -Wl,--disable-new-dtags" \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--libexecdir=/usr/lib \
+		--localstatedir=/var \
+		--with-json \
+		--with-modules \
+		--with-compress-install \
+		--with-threads \
+		--with-included-regex \
+		--with-zlib \
+		--with-libsystemd \
+		--with-rsvg \
+		--without-imagemagick \
+		--with-gpm \
+		--without-xaw3d \
+		--with-dbus \
+		--without-pop \
+		--with-mailutils \
+		--with-gsettings \
+		--disable-build-details
 
-  make V=1 PATH="$HOME/.rustup/toolchains/${RUSTUP_TOOLCHAIN}-$(uname -m)-unknown-linux-gnu/bin:$PATH" bootstrap
+	make V=1 PATH="$HOME/.rustup/toolchains/${RUSTUP_TOOLCHAIN}-$(uname -m)-unknown-linux-gnu/bin:$PATH" bootstrap
 }
 
 package() {
-  cd emacs-ng
-  make DESTDIR="$pkgdir" install
+	cd "${_pkgname}/"
+	make DESTDIR="${pkgdir}" install
 
-  # remove conflict with ctags package
-  mv "$pkgdir"/usr/bin/{ctags,ctags.emacs}
-  mv "$pkgdir"/usr/share/man/man1/{ctags.1.gz,ctags.emacs.1}
+	# remove conflict with ctags package
+	mv ${pkgdir}/usr/bin/{ctags,ctags.emacs}
+	mv ${pkgdir}/usr/share/man/man1/{ctags.1.gz,ctags.emacs.1}
 
-  # fix user/root permissions on usr/share files
-  find "$pkgdir"/usr/share/emacs -exec chown root:root {} \;
+	# fix user/root permissions on usr/share files
+	find ${pkgdir}/usr/share/emacs -exec chown root:root {} \;
 }

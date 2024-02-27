@@ -6,8 +6,8 @@ pkgver=0.12.1.r2.g0d5b933
 pkgrel=1
 pkgdesc="Language server for Typst"
 arch=('i686' 'x86_64')
-url="https://github.com/nvarner/typst-lsp"
-license=('Apache' 'MIT')
+url="https://github.com/nvarner/${_pkgname}"
+license=('Apache-2.0 OR MIT')
 depends=('openssl')
 makedepends=('git' 'rust')
 conflicts=("${_pkgname}")
@@ -40,5 +40,5 @@ package() {
 		--root "${pkgdir}/usr" \
 		--path .
 
-	install -Dm644 "LICENSE-MIT.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 LICENSE-{Apache-2.0,MIT}.txt -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }

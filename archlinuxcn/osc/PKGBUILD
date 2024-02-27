@@ -10,8 +10,8 @@ pkgver=1.6.1
 pkgrel=1
 pkgdesc="Command line client for the openSUSE Build Service"
 arch=(any)
-url="https://github.com/openSUSE/osc"
-license=('GPL2')
+url="https://github.com/openSUSE/${pkgname}"
+license=('GPL-2.0-or-later')
 depends=('python'
 	'python-m2crypto'
 	'python-distro'
@@ -27,13 +27,13 @@ optdepends=('obs-build: required to run local builds'
 conflicts=('osc-git' 'osc-bash-completion' 'zsh-completion-osc')
 replaces=('osc-bash-completion' 'zsh-completion-osc')
 source=("${pkgname}-${pkgver}::https://github.com/openSUSE/${pkgname}/archive/${pkgver}.tar.gz"
-	"_osc"
-	0001-Add-sb2install-support-to-osc.patch
-	0002-Support-osc-copyprj-in-api-by-Islam-Amer-usage-osc-c.patch
-	0003-Support-synchronous-copyproj.patch
-	0004-Add-p-to-copyprj-to-enable-copying-of-prjconf.patch
-	0005-Add-support-for-rebuild-and-chroot-only-in-build.-re.patch
-	0006-Add-architecture-and-scheduler-maps.patch
+	"_${pkgname}"
+	"0001-Add-sb2install-support-to-osc.patch"
+	"0002-Support-osc-copyprj-in-api-by-Islam-Amer-usage-osc-c.patch"
+	"0003-Support-synchronous-copyproj.patch"
+	"0004-Add-p-to-copyprj-to-enable-copying-of-prjconf.patch"
+	"0005-Add-support-for-rebuild-and-chroot-only-in-build.-re.patch"
+	"0006-Add-architecture-and-scheduler-maps.patch"
 )
 sha256sums=('da8d0317271335c91780ed397fd61b8d4bafff0e4e8b41f6bf88441e87c78bc8'
             '2b045e03d2fdce12683ceb9792d491a32f00b256045456412e7bc18c8726218a'
@@ -46,28 +46,32 @@ sha256sums=('da8d0317271335c91780ed397fd61b8d4bafff0e4e8b41f6bf88441e87c78bc8'
 
 prepare() {
 	# Add 'Arch_Core' and 'Arch_Extra' as osc build targets
-	sed -i "s|SLE_11_SP2|SLE_11_SP2 Arch_Core Arch_Extra|" _osc
-	cd "${pkgname}-${pkgver}"
+	sed -i "s|SLE_11_SP2|SLE_11_SP2 Arch_Core Arch_Extra|" "_${pkgname}"
+	cd "${pkgname}-${pkgver}/"
 
-	for patch in "$srcdir"/*.patch; do
+	for patch in ${srcdir}/*.patch; do
 		patch -p1 -i $patch
 	done
 
 	# Fix version
-	sed -e "s/    version = \"%(describe:tags=true)\"/    version = \"$pkgver\"/" \
-		-i osc/util/git_version.py
+	sed -e "s/    version = \"%(describe:tags=true)\"/    version = \"${pkgver}\"/" \
+		-i "${pkgname}/util/git_version.py"
 }
 
 build() {
-	cd "${pkgname}-${pkgver}"
+	cd "${pkgname}-${pkgver}/"
 	python setup.py build
 }
 
 package() {
-	cd "${pkgname}-${pkgver}"
+	cd "${pkgname}-${pkgver}/"
 	python setup.py install --root="${pkgdir}/" --optimize=1 --prefix=/usr
 
-	install -Dm644 contrib/complete.sh "${pkgdir}/usr/share/bash-completion/completions/osc"
-	install -Dm755 contrib/osc.complete "${pkgdir}/usr/lib/osc/complete"
-	install -Dm644 ../_osc "${pkgdir}/usr/share/zsh/site-functions/_osc"
+	install -Dm644 "contrib/complete.sh" "${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
+	install -Dm755 "contrib/${pkgname}.complete" "${pkgdir}/usr/lib/${pkgname}/complete"
+	install -Dm644 "../_${pkgname}" -t "${pkgdir}/usr/share/zsh/site-functions/"
+
+	install -Dm644 COPYING -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -d "${pkgdir}/usr/share/doc/${pkgname}"
+	cp -r doc/* "${pkgdir}/usr/share/doc/${pkgname}/"
 }

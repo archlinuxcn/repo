@@ -1,27 +1,26 @@
 # Maintainer: madmurphy <madmurphy333 AT gmail DOT com>
 
-pkgname='nautilus-metadata-editor'
-pkgver='43.0.1'
+pkgname=nautilus-metadata-editor
+pkgver=43.0.1
 pkgrel=2
-pkgdesc='Nautilus extension with simple Metadata Editor'
+pkgdesc="Nautilus extension with simple Metadata Editor"
 arch=('i686' 'x86_64')
 url="https://github.com/nvlgit/${pkgname}-extension"
-license=('GPL')
+license=('GPL-3.0-or-later')
 depends=("glib2" "gtk4" "libadwaita" "libnautilus-extension" "taglib")
 makedepends=('meson' 'vala')
 conflicts=("${pkgname}-git" "${pkgname}-bin")
-source=("https://github.com/nvlgit/${pkgname}-extension/archive/refs/tags/${pkgver}.tar.gz")
+source=("${pkgname}-${pkgver}::https://github.com/nvlgit/${pkgname}-extension/archive/refs/tags/${pkgver}.tar.gz")
 install="${pkgname}.install"
 sha256sums=('22e25d2bfc0b64abc7cbbfc928b4e742204d59c6c90c5c614586d8f47494af44')
 
 build() {
-	cd "${srcdir}/${pkgname}-extension-${pkgver}"
+	cd "${pkgname}-extension-${pkgver}/"
 	meson builddir --prefix=/usr
 	ninja -C builddir
 }
 
 package() {
-	cd "${srcdir}/${pkgname}-extension-${pkgver}"
-	DESTDIR="$pkgdir" meson install -C builddir
+	cd "${pkgname}-extension-${pkgver}/"
+	DESTDIR="${pkgdir}" meson install -C builddir
 }
-

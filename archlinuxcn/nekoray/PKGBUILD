@@ -1,60 +1,62 @@
 # Maintainer: Chi_Tang <me@chitang.dev>
-pkgname='nekoray'
+# Maintainer: Integral <integral@member.fsf.org>
+
+pkgname=nekoray
 pkgver=3.26
 pkgrel=2
 pkgdesc='Qt based cross-platform GUI proxy configuration manager (backend: v2ray / sing-box)'
 arch=('x86_64')
 url='https://matsuridayo.github.io'
-license=('GPL')
+license=('GPL-3.0-or-later')
 makedepends=('cmake' 'git' 'ninja' 'go')
 depends=(
- 'qt6-base' 'qt6-svg' 'qt6-tools'
- 'protobuf' 'yaml-cpp' 'zxing-cpp'
+	'qt6-base' 'qt6-svg' 'qt6-tools'
+	'protobuf' 'yaml-cpp' 'zxing-cpp'
 )
 
 optdepends=(
-    'v2ray-domain-list-community: geosite data for NekoRay'
-    'v2ray-geoip: geoip data for NekoRay'
-    # AUR
-    'sing-geoip: geoip data for NekoBox'
-    'sing-geosite: geosite data for NekoBox'
+	'v2ray-domain-list-community: geosite data for NekoRay'
+	'v2ray-geoip: geoip data for NekoRay'
+	# AUR
+	'sing-geoip: geoip data for NekoBox'
+	'sing-geosite: geosite data for NekoBox'
 )
 
 source=(
-    "nekoray::git+https://github.com/MatsuriDayo/nekoray.git#tag=${pkgver}"
-    'nekoray.desktop'
+	"git+https://github.com/MatsuriDayo/${pkgname}.git#tag=${pkgver}"
+	"${pkgname}.desktop"
 )
+
 sha512sums=('SKIP'
             'c8ad5a0cf5d813e1e35b827f92d526c022d529d34dd4019066b550c8f0dbdb89b0fb62e6bfc650e8c18acac826591e858eff3b2e5e6c6f5014f0f4b50f1fa88b')
 
 build() {
-    cd "${srcdir}"
-    cd "${srcdir}/nekoray"
-   	git submodule init
-   	git submodule update
-    bash libs/get_source.sh
-    mkdir build
-    cd build
-    cmake -GNinja -DQT_VERSION_MAJOR=6 -DNKR_PACKAGE=ON ..
-    ninja
-    cd "${srcdir}/nekoray"
-    GOOS=linux GOARCH=amd64 ./libs/build_go.sh
+	cd "${pkgname}/"
+	git submodule init
+	git submodule update
+	bash libs/get_source.sh
+
+	mkdir build
+	cd build
+	cmake -GNinja -DQT_VERSION_MAJOR=6 -DNKR_PACKAGE=ON ..
+	ninja
+
+	cd ..
+	GOOS=linux GOARCH=amd64 ./libs/build_go.sh
 }
 
 package() {
-    install -dm755 ${pkgdir}/usr/lib/nekoray
-    install -dm755 ${pkgdir}/usr/bin
-    install -dm755 ${pkgdir}/usr/share/pixmaps
-    install -dm755 ${pkgdir}/usr/share/applications
-    # assets
-    install -Dm644 ${srcdir}/nekoray.desktop ${pkgdir}/usr/share/applications/nekoray.desktop
-    install -Dm644 ${srcdir}/nekoray/res/public/nekoray.png ${pkgdir}/usr/share/pixmaps/
-    install -Dm644 ${srcdir}/nekoray/res/public/nekobox.png ${pkgdir}/usr/share/pixmaps/
-    # core
-    install -Dm755 ${srcdir}/nekoray/deployment/linux64/nekobox_core ${pkgdir}/usr/lib/nekoray/
-    install -Dm755 ${srcdir}/nekoray/deployment/linux64/nekoray_core ${pkgdir}/usr/lib/nekoray/
-    # app
-    install -Dm755 ${srcdir}/nekoray/build/nekoray ${pkgdir}/usr/lib/nekoray/
+	install -dm755 "${pkgdir}/usr/bin/"
 
-    ln -s  /usr/lib/nekoray/nekoray ${pkgdir}/usr/bin/nekoray
+	# assets
+	install -Dm644 "${pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
+	install -Dm644 ${pkgname}/res/public/{nekoray,nekobox}.png -t "${pkgdir}/usr/share/pixmaps/"
+
+	# core
+	install -Dm755 ${pkgname}/deployment/linux64/{nekoray,nekobox}_core -t "${pkgdir}/usr/lib/${pkgname}/"
+
+	# app
+	install -Dm755 "${pkgname}/build/${pkgname}" -t "${pkgdir}/usr/lib/${pkgname}/"
+
+	ln -s "/usr/lib/${pkgname}/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
 }

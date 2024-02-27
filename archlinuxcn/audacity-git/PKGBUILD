@@ -4,12 +4,13 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=audacity-git
+_pkgname=${pkgname%-git}
 pkgver=3.4.2.r364.g50ebc5ccf3
 pkgrel=1
 pkgdesc="A program that lets you manipulate digital audio waveforms"
 arch=('i686' 'x86_64')
 url="https://www.audacityteam.org/"
-license=('GPL2' 'CCPL')
+license=('(GPL-3.0-only OR GPL-2.0-or-later) AND CC-BY-3.0')
 groups=('pro-audio-git')
 depends=(
 	'alsa-lib'
@@ -44,13 +45,13 @@ depends=(
 )
 makedepends=('cmake' 'git' 'nasm' 'rapidjson' 'vst3sdk' 'xcb-util' 'xcb-util-cursor' 'xcb-util-keysyms' 'gtkmm3' 'libxkbcommon-x11' 'opusfile')
 optdepends=('ffmpeg: additional import/export capabilities')
-provides=('audacity')
-conflicts=('audacity')
-source=("git+https://github.com/audacity/audacity.git")
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("git+https://github.com/${_pkgname}/${_pkgname}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-	cd audacity
+	cd "${_pkgname}/"
 	git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g' | cut -d'.' -f2-
 }
 
@@ -67,7 +68,7 @@ build() {
 		-D audacity_use_wxwidgets=system
 	)
 
-	cmake -S audacity -B build "${cmake_args[@]}"
+	cmake -S ${_pkgname} -B build "${cmake_args[@]}"
 	cmake --build build
 }
 

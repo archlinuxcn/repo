@@ -1,33 +1,33 @@
-
 pkgname=spotify-qt-git
+_pkgname=${pkgname%-git}
 pkgver=3.11.r16.g17ffb7d4
 pkgrel=1
 pkgdesc="Lightweight Spotify client using Qt"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
-url="https://github.com/kraxarn/spotify-qt"
-license=("GPL3")
-depends=(qt5-base qt5-svg hicolor-icon-theme)
-makedepends=(git cmake gcc make)
+url="https://github.com/kraxarn/${_pkgname}"
+license=("GPL-3.0-or-later")
+depends=('qt5-base' 'qt5-svg' 'hicolor-icon-theme')
+makedepends=('git' 'cmake')
 optdepends=(
 	"librespot: Recommended playback client"
 	"spotifyd: Recommended playback client"
 )
-conflicts=("spotify-qt")
-source=("$pkgname::git+$url#branch=master")
+conflicts=("${_pkgname}")
+source=("git+${url}.git")
 sha256sums=("SKIP")
 
 pkgver() {
-    cd "$pkgname"
-    git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+	cd "${_pkgname}/"
+	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
-	cd "$pkgname"
+	cd "${_pkgname}/"
 	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
 	make $MAKEFLAGS
 }
 
 package() {
-	cd "$pkgname"
-	make DESTDIR="$pkgdir" install
+	cd "${_pkgname}/"
+	make DESTDIR="${pkgdir}" install
 }

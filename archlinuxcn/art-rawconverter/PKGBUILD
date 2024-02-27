@@ -1,35 +1,42 @@
 # Maintainer: René Wagner <rwa at clttr dot info>
+
 pkgname=art-rawconverter
+_pkgname=ART
 pkgver=1.21.1
 pkgrel=1
 pkgdesc="raw image converter ART (forked from RawTherapee with ease of use in mind)"
 arch=('i686' 'x86_64' 'aarch64')
 url="https://bitbucket.org/agriggio/art/wiki/Home"
-license=('GPL3')
-depends=('opencolorio' 'lensfun' 'libraw' 'exiv2' 'fftw' 'gtk3' 'glibmm' 'gtkmm3' 'lcms2' 'libcanberra' 'libiptcdata' 'desktop-file-utils' 'mimalloc' 'openmp') 
-optdepends=('perl-image-exiftool: metadata support for CR3 images' 'art-rawconverter-imageio: add support for additional image formats' 'lcms2-ff: lcms2 with fast-float plugin for improved export speed' )
+license=('GPL-3.0-or-later')
+depends=('opencolorio' 'lensfun' 'libraw' 'exiv2' 'fftw' 'gtk3' 'glibmm' 'gtkmm3' 'lcms2' 'libcanberra' 'libiptcdata' 'desktop-file-utils' 'mimalloc' 'openmp')
+optdepends=('perl-image-exiftool: metadata support for CR3 images'
+	'art-rawconverter-imageio: add support for additional image formats'
+	'lcms2-ff: lcms2 with fast-float plugin for improved export speed')
 makedepends=('pkgconf' 'cmake' 'git' 'gcc' 'hicolor-icon-theme' 'fakeroot')
-conflicts=('art-rawconverter-git')
-source=("${pkgname}_${pkgver}::git+https://bitbucket.org/agriggio/art.git#tag=${pkgver}")
-sha256sums=('SKIP')
+source=("https://bitbucket.org/agriggio/art/downloads/${_pkgname}-${pkgver}.tar.xz")
+sha256sums=('099dd26ce16e4d3ad86fd6d71bb9b0555f2f332a2a2642afd5dab670a7deba6d')
 
 build() {
-	mkdir -p "$srcdir/${pkgname}_${pkgver}_build"
-	cd "$srcdir/${pkgname}_${pkgver}_build"
+	mkdir build/
+	cd build/
 
-	cmake "../${pkgname}_${pkgver}" \
-	-DCMAKE_INSTALL_PREFIX=/usr \
-	-DCMAKE_BUILD_TYPE=Release \
-	-DPROC_TARGET_NUMBER="2" \
-	-DWITH_LTO="ON" \
-	-DENABLE_LIBRAW="ON" \
-	-DENABLE_OCIO="ON" \
- 	-DBUILD_SHARED="ON"
+	cmake "../${_pkgname}-${pkgver}/" \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DPROC_TARGET_NUMBER="2" \
+		-DWITH_LTO="ON" \
+		-DENABLE_LIBRAW="ON" \
+		-DENABLE_OCIO="ON" \
+		-DBUILD_SHARED="ON"
 
 	make
 }
 
 package() {
-	cd "$srcdir/${pkgname}_${pkgver}_build"
-	make DESTDIR="$pkgdir/" install
+	cd build/
+	make DESTDIR="${pkgdir}" install
+
+	cd "../${_pkgname}-${pkgver}/"
+	install -Dm644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	cp -r licenses/* "${pkgdir}/usr/share/licenses/${pkgname}/"
 }

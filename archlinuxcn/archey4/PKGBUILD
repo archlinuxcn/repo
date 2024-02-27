@@ -5,8 +5,8 @@ pkgver=4.14.2.0
 pkgrel=1
 pkgdesc="A simple system information tool written in Python"
 arch=('any')
-url="https://github.com/HorlogeSkynet/archey4.git"
-license=('GPLv3')
+url="https://github.com/HorlogeSkynet/${pkgname}"
+license=('GPL-3.0-or-later')
 groups=('utils')
 depends=('python>=3.6' 'python-distro' 'python-netifaces')
 makedepends=('python-setuptools')
@@ -20,12 +20,12 @@ provides=('archey')
 conflicts=('archey-git' 'archey2' 'archey3-git' 'pyarchey')
 install="${pkgname}.install"
 backup=("etc/${pkgname}/config.json")
-source=("${pkgname}_${pkgver}-${pkgrel}.tar.gz::https://github.com/HorlogeSkynet/${pkgname}/archive/v${pkgver}.tar.gz")
+source=("${pkgname}_${pkgver}-${pkgrel}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 md5sums=('2983cc4cfc467524a22b5281ce3413db')
 sha1sums=('ba9a5c9525a6c397b0e22b22302783abd88ca7ee')
 
 build() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
+	cd "${pkgname}-${pkgver}/"
 
 	# Prepare the manual page.
 	sed \
@@ -37,7 +37,7 @@ build() {
 }
 
 package() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
+	cd "${pkgname}-${pkgver}/"
 
 	python3 setup.py -q install \
 		--root="$pkgdir" \
@@ -45,13 +45,13 @@ package() {
 		--skip-build
 
 	# Configuration file.
-	install -D -m0644 config.json "${pkgdir}/etc/${pkgname}/config.json"
+	install -D -m0644 config.json -t "${pkgdir}/etc/${pkgname}/"
 
 	# Manual page.
-	install -D -m0644 dist/archey.1 "${pkgdir}/usr/share/man/man1/archey.1"
+	install -D -m0644 dist/archey.1 -t "${pkgdir}/usr/share/man/man1/"
 
 	# Meta-data files.
-	install -D -m0644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-	install -D -m0644 README.md "${pkgdir}/usr/share/${pkgname}/README.md"
-	install -D -m0644 COPYRIGHT.md "${pkgdir}/usr/share/${pkgname}/COPYRIGHT.md"
+	install -D -m0644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -D -m0644 README.md -t "${pkgdir}/usr/share/${pkgname}/"
+	install -D -m0644 COPYRIGHT.md -t "${pkgdir}/usr/share/${pkgname}/"
 }

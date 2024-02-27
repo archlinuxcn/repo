@@ -4,12 +4,13 @@
 # Contributor: ledti <antergist at gmail dot com>
 
 pkgname=obs-studio-git
+_pkgname=${pkgname%-git}
 pkgver=30.1.0.beta3.r4.g193019d
 pkgrel=1
 pkgdesc="Free and open source software for video recording and live streaming."
 arch=("i686" "x86_64")
-url="https://github.com/obsproject/obs-studio"
-license=("GPL2")
+url="https://github.com/obsproject/${_pkgname}"
+license=("GPL-2.0-or-later")
 depends=("ffmpeg" "jansson" "libxinerama" "libxkbcommon-x11" "mbedtls"
 	"qt6-svg" "curl" "jack" "gtk-update-icon-cache"
 	"speexdsp" "pciutils" "libajantv2" "librist" "onevpl"
@@ -28,24 +29,24 @@ optdepends=("libfdk-aac: FDK AAC codec support"
 	"pipewire: Pipewire capture"
 	"pipewire-media-session: Pipewire capture"
 	"xdg-desktop-portal: Pipewire capture")
-provides=("obs-studio=$pkgver")
-conflicts=("obs-studio")
-source=("${pkgname}::git+https://github.com/obsproject/obs-studio.git#branch=master"
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("git+https://github.com/obsproject/${_pkgname}.git"
 	"git+https://github.com/Mixer/ftl-sdk.git"
 	"git+https://github.com/obsproject/obs-browser.git"
 	"git+https://github.com/obsproject/obs-websocket.git"
 	"git+https://github.com/nayuki/QR-Code-generator.git"
 	"fix_python_binary_loading.patch")
-md5sums=("SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
+sha256sums=("SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
 	"051b90f05e26bff99236b8fb1ad377d1")
 
 pkgver() {
-	cd "${pkgname}/"
+	cd "${_pkgname}/"
 	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
-	cd "${pkgname}/"
+	cd "${_pkgname}/"
 	gitconf="protocol.file.allow=always"
 
 	patch -Np1 <"${srcdir}/fix_python_binary_loading.patch"
@@ -60,7 +61,7 @@ prepare() {
 }
 
 build() {
-	cd "${pkgname}/"
+	cd "${_pkgname}/"
 	mkdir -p build && cd build
 
 	cmake \
@@ -75,7 +76,7 @@ build() {
 }
 
 package() {
-	cd "${pkgname}/build/"
+	cd "${_pkgname}/build/"
 	make install DESTDIR="${pkgdir}"
 }
 

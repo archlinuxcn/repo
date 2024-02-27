@@ -7,14 +7,13 @@ pkgrel=1
 pkgdesc="Qt client for netease cloud music"
 arch=('x86_64')
 url="https://github.com/hypengw/Qcm"
-license=('GPL2')
+license=('GPL-2.0-or-later')
 depends=(
 	'qt6-base'
 	'hicolor-icon-theme'
 	'curl'
 	'openssl'
 	'qt6-tools'
-	'qt6-multimedia'
 	'qt6-declarative'
 	'qt6-shadertools'
 	'gcc-libs'
@@ -36,21 +35,20 @@ depends=(
 	'graphite'
 	'lz4'
 	'libgpg-error'
-	'ffmpeg'
-	'qt6-5compat'
-	'glibmm')
+	'ffmpeg')
 makedepends=(
 	'git'
 	'cmake'
 	'extra-cmake-modules'
 	'ninja')
 provides=("${_pkgname}")
+conflicts=("${_pkgname}")
 source=("git+${url}.git")
 sha256sums=('SKIP')
 
 pkgver() {
 	cd Qcm
-	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 build() {

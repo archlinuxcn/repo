@@ -3,35 +3,37 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=kitemmodels-git
+_pkgname=${pkgname%-git}
 pkgver=6.0.0_r703.g9020498
 pkgrel=1
-pkgdesc='Models for Qt Model/View system'
+pkgdesc="Models for Qt Model/View system"
 arch=($CARCH)
-url='https://community.kde.org/Frameworks'
-license=(LGPL)
+url="https://community.kde.org/Frameworks"
+license=('LGPL-2.0-or-later')
 depends=(qt6-base)
 makedepends=(git extra-cmake-modules-git python-pyqt6 clang doxygen qt6-tools sip qt6-declarative)
-conflicts=(${pkgname%-git})
-provides=(${pkgname%-git})
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
 optdepends=('python-pyqt6: for the Python bindings' 'qt6-declarative: QML bindings')
 groups=(kf6-git)
-source=("git+https://github.com/KDE/${pkgname%-git}.git")
+source=("git+https://github.com/KDE/${_pkgname}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-  cd ${pkgname%-git}
-  _ver="$(grep -m1 'set(KF_VERSION' CMakeLists.txt | cut -d '"' -f2 | tr - .)"
-  echo "${_ver}_r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+	cd "${_pkgname}/"
+	_ver="$(grep -m1 'set(KF_VERSION' CMakeLists.txt | cut -d '"' -f2 | tr - .)"
+	echo "${_ver}_r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
 }
 
 build() {
-  cmake -B build -S ${pkgname%-git} \
-    -DQT_MAJOR_VERSION=6 \
-    -DBUILD_TESTING=OFF \
-    -DBUILD_QCH=ON
-  cmake --build build
+	cmake -B build -S "${_pkgname}" \
+		-DQT_MAJOR_VERSION=6 \
+		-DBUILD_TESTING=OFF \
+		-DBUILD_QCH=ON
+
+	cmake --build build
 }
 
 package() {
-  DESTDIR="$pkgdir" cmake --install build
+	DESTDIR="${pkgdir}" cmake --install build
 }

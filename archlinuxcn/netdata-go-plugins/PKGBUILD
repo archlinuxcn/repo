@@ -5,42 +5,46 @@ pkgver=0.58.0
 pkgrel=1
 pkgdesc="netdata go.d plugin"
 url="https://github.com/netdata/go.d.plugin"
-license=('GPL3')
+license=('GPL-3.0-or-later')
 arch=('x86_64')
 depends=('glibc')
 makedepends=('go')
 install=netdata-go-plugins.install
 source=(
-    "$pkgname-$pkgver.tar.gz::https://github.com/netdata/go.d.plugin/archive/v$pkgver.tar.gz"
-    "$pkgname-$pkgver-config.tar.gz::https://github.com/netdata/go.d.plugin/releases/download/v$pkgver/config.tar.gz")
-b2sums=('e0fc2b4dd2652114c428cdeba3ab3a2c62094520ef35c7aa29ef3fa5e3c579e19fcea52e6b0a906872671679bbf84a9238f89af9b0d2c7e214c1495c9609903c'
-        '3283f5a924010fb8e853d3ab6b98bae9b73b892eb449bdf1398142e4a2e70da68543a542322697cbcb0e37401c579addcf06288a05e908d5e332d3fa13d82a1d')
+	"${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
+	"${pkgname}-${pkgver}-config.tar.gz::${url}/releases/download/v${pkgver}/config.tar.gz")
+sha512sums=('cab04ea45008b668a6103a6d147e4f96e55a132f13e5ca3054b5ea6cff263dba048a9f7f52f4781495425f9a9cbb9e43786047188b0165ca1071c7c216486e12'
+            'f971d3a3ce52750efdcf165b1125779264c031a896409d4494672481aef28c76789fa5495199e96c9e68032cba5386f73ccc8c2f659a919272de1c2d60414d8a')
 
 prepare() {
-    mkdir -p "$srcdir/build"
-    export GOPATH="$srcdir/build"
-    export GOFLAGS="-buildmode=pie -mod=readonly -modcacherw"
+	mkdir build
+	export GOPATH="${srcdir}/build/"
+	export GOFLAGS="-buildmode=pie -mod=readonly -modcacherw"
 
-    cd "$srcdir/go.d.plugin-$pkgver"
-    go mod download
+	cd "go.d.plugin-${pkgver}/"
+	go mod download
 }
 
 build() {
-    export CGO_CPPFLAGS="${CPPFLAGS}"
-    export CGO_CFLAGS="${CFLAGS}"
-    export CGO_CXXFLAGS="${CXXFLAGS}"
-    export CGO_LDFLAGS="${LDFLAGS}"
-    export GOPATH="$srcdir"
-    export GOLDFLAGS="-linkmode=external -compressdwarf=false -X main.version=$pkgver"
-    export GOFLAGS="-buildmode=pie -mod=readonly -modcacherw"
+	export CGO_CPPFLAGS="${CPPFLAGS}"
+	export CGO_CFLAGS="${CFLAGS}"
+	export CGO_CXXFLAGS="${CXXFLAGS}"
+	export CGO_LDFLAGS="${LDFLAGS}"
+	export GOPATH="${srcdir}"
+	export GOLDFLAGS="-linkmode=external -compressdwarf=false -X main.version=${pkgver}"
+	export GOFLAGS="-buildmode=pie -mod=readonly -modcacherw"
 
-    cd "$srcdir/go.d.plugin-$pkgver"
-    go build -v -ldflags="$GOLDFLAGS" -o go.d.plugin ./cmd/godplugin
+	cd "go.d.plugin-${pkgver}/"
+	go build -v -ldflags="$GOLDFLAGS" -o go.d.plugin ./cmd/godplugin
 }
 
 package() {
-    mkdir -p "$pkgdir/usr/lib/netdata/conf.d/"
-    cp -rv --no-preserve=ownership "$srcdir/go.d.conf" "$srcdir/go.d" "$pkgdir/usr/lib/netdata/conf.d/"
+	install -d "${pkgdir}/usr/lib/netdata/conf.d/"
+	cp -rv --no-preserve=ownership go.d{,.conf} "${pkgdir}/usr/lib/netdata/conf.d/"
+	install -Dm755 "go.d.plugin-${pkgver}/go.d.plugin" -t "${pkgdir}/usr/lib/netdata/plugins.d/"
 
-    install -Dm755 "$srcdir/go.d.plugin-$pkgver/go.d.plugin" -t "$pkgdir/usr/lib/netdata/plugins.d/"
+	cd "go.d.plugin-${pkgver}/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -d "${pkgdir}/usr/share/doc/${pkgname}/"
+	cp docs/* "${pkgdir}/usr/share/doc/${pkgname}/"
 }
