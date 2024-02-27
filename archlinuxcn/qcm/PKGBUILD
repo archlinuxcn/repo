@@ -1,0 +1,80 @@
+# Maintainer: Kimiblock Zhou <pn3535 at icloud dot com>
+
+pkgname=qcm
+pkgver=1.0.2
+pkgrel=1
+pkgdesc="Qt client for netease cloud music"
+arch=('x86_64')
+url="https://github.com/hypengw/Qcm"
+license=('GPL-2.0-or-later')
+depends=(
+	'qt6-base'
+	'hicolor-icon-theme'
+	'curl'
+	'openssl'
+	'qt6-tools'
+	'qt6-declarative'
+	'qt6-shadertools'
+	'gcc-libs'
+	'glibc'
+	'dbus'
+	'libnghttp2'
+	'libidn2'
+	'krb5'
+	'zstd'
+	'zlib'
+	'qt6-wayland'
+	'libx11'
+	'libxkbcommon'
+	'libpng'
+	'freetype2'
+	'icu'
+	'pcre2'
+	'gnutls'
+	'graphite'
+	'lz4'
+	'libgpg-error'
+	'ffmpeg')
+makedepends=(
+	'git'
+	'cmake'
+	'extra-cmake-modules'
+	'ninja')
+source=("git+${url}.git#tag=v${pkgver}")
+sha256sums=('SKIP')
+
+build() {
+	export TERM=xterm
+	if [ -d Qcm/build ]; then
+		_info "Deleting ${srcdir}/Qcm/build"
+		rm -rf Qcm/build/
+	fi
+
+	_info "Starting Build..."
+	cd Qcm
+	git submodule update --init
+	mkdir build
+	cd build
+	cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release
+	ninja
+}
+
+package() {
+	_info "Copying files"
+    cd Qcm
+	install -Dm644 "app/assets/Qcm.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/io.github.hypengw.Qcm.svg"
+	install -Dm644 "app/assets/Qcm.desktop" -t "${pkgdir}/usr/share/applications/"
+	install -Dm755 "build/app/Qcm" -t "${pkgdir}/usr/bin/"
+}
+
+_info() {
+	if [ -f /usr/bin/pamac ]; then
+		echo "  ==> [Info]: $@"
+	else
+		all_off="$(tput sgr0)"
+		bold="${all_off}$(tput bold)"
+		blue="${bold}$(tput setaf 4)"
+		yellow="${bold}$(tput setaf 3)"
+		printf "${blue}==>${yellow} [Info]:${bold} $1${all_off}\n"
+	fi
+}
