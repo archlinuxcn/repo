@@ -1,0 +1,53 @@
+From 3ce8dcf6bf696cd8ac3354f5a96796e651a5eb07 Mon Sep 17 00:00:00 2001
+From: lilydjwg <lilydjwg@gmail.com>
+Date: Wed, 27 Jul 2022 01:14:05 +0800
+Subject: [PATCH] use double to zoom to exact 200% etc
+
+---
+ src/imv.c      | 2 +-
+ src/viewport.c | 2 +-
+ src/viewport.h | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/imv.c b/src/imv.c
+index 8380a12..c66d54a 100644
+--- a/src/imv.c
++++ b/src/imv.c
+@@ -1711,7 +1711,7 @@ static void command_zoom(struct list *args, const char *argstr, void *data)
+     if (!strcmp(str, "actual")) {
+       imv_viewport_scale_to_actual(imv->view, imv->current_image);
+     } else {
+-      long int amount = strtol(args->items[1], NULL, 10);
++      double amount = strtod(args->items[1], NULL);
+       imv_viewport_zoom(imv->view, imv->current_image, IMV_ZOOM_KEYBOARD, 0, 0, amount);
+     }
+   }
+diff --git a/src/viewport.c b/src/viewport.c
+index 095bf71..1544583 100644
+--- a/src/viewport.c
++++ b/src/viewport.c
+@@ -135,7 +135,7 @@ void imv_viewport_move(struct imv_viewport *view, int x, int y,
+ }
+ 
+ void imv_viewport_zoom(struct imv_viewport *view, const struct imv_image *image,
+-                       enum imv_zoom_source src, int mouse_x, int mouse_y, int amount)
++                       enum imv_zoom_source src, int mouse_x, int mouse_y, double amount)
+ {
+   double prev_scale = view->scale;
+   int x, y;
+diff --git a/src/viewport.h b/src/viewport.h
+index a24113c..7abc318 100644
+--- a/src/viewport.h
++++ b/src/viewport.h
+@@ -59,7 +59,7 @@ void imv_viewport_move(struct imv_viewport *view, int x, int y,
+ /* Zoom the view by the given amount. imv_image* is used to get the image
+  * dimensions */
+ void imv_viewport_zoom(struct imv_viewport *view, const struct imv_image *image,
+-                       enum imv_zoom_source, int mouse_x, int mouse_y, int amount);
++                       enum imv_zoom_source, int mouse_x, int mouse_y, double amount);
+ 
+ /* Rotate the view by the given number of degrees */
+ void imv_viewport_rotate_by(struct imv_viewport *view, double degrees);
+-- 
+2.44.0
+

@@ -1,0 +1,29 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Alexander F. Rødseth <xyproto@archlinux.org>
+# Contributor: Harry Jeffery <harry@exec64.co.uk>
+
+pkgname=imv-lily
+pkgver=4.5.0
+pkgrel=1
+pkgdesc="Image viewer for Wayland and X11 (with lilydjwg's patches)"
+url='https://sr.ht/~exec64/imv/'
+arch=(x86_64)
+license=(GPL)
+depends=(freeimage glu libheif libinih librsvg libxkbcommon libxkbcommon-x11 pango)
+makedepends=(asciidoc cmake cmocka meson)
+conflicts=(renameutils imv)
+provides=(imv=$pkgver)
+source=("imv-$pkgver.tar.gz::https://git.sr.ht/~exec64/imv/archive/v$pkgver.tar.gz"
+        0001-use-double-to-zoom-to-exact-200-etc.patch)
+b2sums=('100174071049ee711a868832ea297cc7fd43450145db9e71a631afb97d7d77574f37501b749734f47b3f2699d159ed05e5159fd9060c6f0a5de18b92708d9e9c'
+        '1c27f03cf4faa6ce807a86c9d2e949a6500086fcae7720195cf70a8b2de921a94eca61dc0078d1a2c535bc75f8b74ecea1135ee4b2bb12185418e809b00cae4f')
+
+build() {
+  export CFLAGS+=' -w'
+  arch-meson build imv-v$pkgver -D libnsgif=disabled
+  ninja -C build
+}
+
+package() {
+  DESTDIR="$pkgdir" ninja -C build install
+}
