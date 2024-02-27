@@ -14,7 +14,7 @@ license=('GPL3')
 depends=('lxc' 'python-gbinder' 'python-gobject' 'nftables' 'dnsmasq' 'gtk3' 'dbus-python')
 makedepends=('git')
 optdepends=('waydroid-image: Android image for use with ${_pkgname}'
-            'python-pyclip: share clipboard with container')
+	'python-pyclip: share clipboard with container')
 install="${_pkgname}.install"
 source=("git+$url.git")
 sha256sums=('SKIP')
@@ -22,12 +22,12 @@ provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 
 pkgver() {
-  cd "${_pkgname}/"
-  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+	cd "${_pkgname}/"
+	git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 package() {
-  cd "${_pkgname}/"
-  make DESTDIR="${pkgdir}/" install
-  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
+	cd "${_pkgname}/"
+	make DESTDIR="${pkgdir}/" install
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 }
