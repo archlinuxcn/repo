@@ -1,0 +1,32 @@
+From 3fbdbff2d49c00a09626ddd9b56c188d44e9000b Mon Sep 17 00:00:00 2001
+From: Hu Butui <hot123tea123@gmail.com>
+Date: Tue, 27 Feb 2024 09:05:17 +0800
+Subject: [PATCH] add GLOG_USE_GLOG_EXPORT definition
+
+---
+ torchtext/csrc/CMakeLists.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/torchtext/csrc/CMakeLists.txt b/torchtext/csrc/CMakeLists.txt
+index 5d67bba8a..3ab60b186 100644
+--- a/torchtext/csrc/CMakeLists.txt
++++ b/torchtext/csrc/CMakeLists.txt
+@@ -46,6 +46,7 @@ function (define_library name source include_dirs link_libraries compile_defs)
+   add_library(${name} SHARED ${source})
+   target_include_directories(${name} PRIVATE ${include_dirs})
+   target_link_libraries(${name} ${link_libraries})
++  list(APPEND compile_defs "GLOG_USE_GLOG_EXPORT")
+   target_compile_definitions(${name} PRIVATE ${compile_defs})
+   set_target_properties(${name} PROPERTIES PREFIX "")
+   if (MSVC)
+@@ -85,6 +86,7 @@ if (BUILD_TORCHTEXT_PYTHON_EXTENSION)
+   endif()
+   function(define_extension name sources include_dirs link_libraries definitions)
+     add_library(${name} SHARED ${sources})
++    list(APPEND definitions "GLOG_USE_GLOG_EXPORT")
+     target_compile_definitions(${name} PRIVATE "${definitions}")
+     target_include_directories(
+       ${name} PRIVATE ${Python_INCLUDE_DIR} ${include_dirs})
+-- 
+2.43.2
+
