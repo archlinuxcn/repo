@@ -1,11 +1,13 @@
 # Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
 # Contributor: Dimitris Kiziridis <ragouel at outlook dot com>
-pkgname=linux-wifi-hotspot
+
+pkgname=linux-wifi-hotspot-git
+_pkgname=${pkgname%-git}
 pkgver=4.7.1.r3.g75f48a9
 pkgrel=1
 pkgdesc="Feature-rich wifi hotspot creator"
 arch=('x86_64' 'aarch64')
-url="https://github.com/lakinduakash/linux-wifi-hotspot"
+url="https://github.com/lakinduakash/${_pkgname}"
 license=('BSD')
 depends=('dnsmasq' 'gtk3' 'hostapd' 'iproute2' 'iw' 'procps-ng' 'qrencode')
 makedepends=('git')
@@ -15,23 +17,23 @@ optdepends=('haveged: For random MAC generation'
 provides=('wihotspot' 'create_ap')
 conflicts=('wihotspot' 'create_ap')
 backup=('etc/create_ap.conf')
-install="${pkgname}.install"
+install="${_pkgname}.install"
 source=("git+${url}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-  cd "${pkgname}"
+  cd "${_pkgname}/"
   git describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
-  cd "${pkgname}"
+  cd "${_pkgname}/"
   make
 }
 
 package() {
-  cd "${pkgname}"
+  cd "${_pkgname}/"
   make DESTDIR="${pkgdir}" install
 
-  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 }
