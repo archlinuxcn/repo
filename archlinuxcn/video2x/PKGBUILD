@@ -29,32 +29,23 @@ optdepends=(
 )
 source=(
 	"${pkgname}-${_pkgver}.tar.gz::https://github.com/k4yt3x/${pkgname}/archive/${_pkgver}.tar.gz"
-	"etc_config_file.patch"
 	"${pkgname}.yaml"
 )
 sha256sums=('a372027fb09c45f6624db8839b46fa34b4c3c639ba19fe9d192f9ef0a4ed9c46'
-            '9d027d3f8ca5bdf4e7c543fe5cd18e5024cf7ce0e74c2d52db0a3d1ca27fcc5e'
             'dae9fb91b965d27a868ab71e36c8d6633f0c4be770c8f70c2ea41bc957b7c796')
 
-prepare() {
-	cd "${pkgname}-${_pkgver}/src/"
-	patch "${pkgname}.py" "${srcdir}/etc_config_file.patch"
-}
-
 package() {
-	cd "${pkgname}-${_pkgver}/src/"
+	cd "${pkgname}-${_pkgver}/"
 
 	install -d "${pkgdir}/usr/share/${pkgname}/wrappers/"
 	install -d "${pkgdir}/usr/bin/"
 
-	for file in image_cleaner.py upscaler.py "${pkgname}.py" exceptions.py bilogger.py progress_monitor.py; do
+	for file in video2x/*.py; do
 		install -Dm755 "${file}" -t "${pkgdir}/usr/share/${pkgname}/"
-	done
-
-	for file in wrappers/*.py; do
-		install -Dm755 "${file}" -t "${pkgdir}/usr/share/${pkgname}/wrappers/"
 	done
 
 	install -Dm644 "${srcdir}/${pkgname}.yaml" -t "${pkgdir}/etc/"
 	ln -s "/usr/share/${pkgname}/${pkgname}.py" "${pkgdir}/usr/bin/${pkgname}"
+	install -d "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 licenses/* "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
