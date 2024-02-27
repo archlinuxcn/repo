@@ -20,14 +20,14 @@ sha256sums=('69fccf8df6e7285d4df5033eed8748f4eae13b407488906dcf4810a277d557b8'
             '4b01938615a34127236a21ee0ffa20bbb179c8bfcc5ecef872fc5a246727d2e1')
 
 prepare() {
-	cd ssr
+	cd "ssr-${pkgver}/"
 	mkdir -p build
 
 	patch -p1 -i ../ffmpeg5.patch # Fix build with ffmpeg 5
 }
 
 build() {
-	cd ssr/build
+	cd "ssr-${pkgver}/build/"
 	# fPIC is only required for qt5 + gcc5
 	#CXXFLAGS="$CXXFLAGS -fPIC"
 	#./configure --prefix=/usr --disable-assert --with-qt5
@@ -40,6 +40,6 @@ build() {
 	make
 }
 package() {
-	cd ssr/build
+	cd "ssr-${pkgver}/build/"
 	make DESTDIR="${pkgdir}" install
 }
