@@ -2,8 +2,8 @@
 # Contributor: Metal A-wing <1 at 233 dot email>
 
 pkgname=deno
-pkgver=1.40.4
-_commit=49214d309fc373a80a02f57545131b15f7813a98
+pkgver=1.40.5
+_commit=2c97831fec0d335a474c4a599a5df345a23ef036
 pkgrel=1
 pkgdesc="A secure runtime for JavaScript and TypeScript"
 arch=(aarch64 x86_64)
@@ -27,7 +27,7 @@ build() {
 
 check() {
   cd $pkgname
-  ./target/release/deno run cli/tests/testdata/run/002_hello.ts
+  ./target/release/deno run tests/testdata/run/002_hello.ts
 }
 
 package() {
