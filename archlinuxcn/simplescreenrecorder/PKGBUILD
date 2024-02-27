@@ -19,8 +19,6 @@ source=("git+https://github.com/MaartenBaert/ssr.git#tag=$pkgver"
 sha256sums=('SKIP'
             '4b01938615a34127236a21ee0ffa20bbb179c8bfcc5ecef872fc5a246727d2e1')
 
-install=simplescreenrecorder.install
-
 prepare() {
   cd ssr
   mkdir -p build
