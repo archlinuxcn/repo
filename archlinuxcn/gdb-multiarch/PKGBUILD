@@ -11,7 +11,7 @@ makedepends=(glibc gcc-libs texinfo python guile ncurses expat xz mpfr
              source-highlight boost readline)
 depends=(glibc ncurses libncursesw.so gcc-libs expat xz mpfr source-highlight gdb-common=$pkgver
          readline libreadline.so guile python libelf)
-options=(!emptydirs)
+options=(!emptydirs !lto)
 source=(https://ftp.gnu.org/gnu/gdb/gdb-14.1.tar.xz{,.sig})
 sha256sums=('d66df51276143451fcbff464cc8723d68f1e9df45a6a2d5635a54e71643edb80'
             'SKIP')
