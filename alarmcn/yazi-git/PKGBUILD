@@ -46,7 +46,7 @@ package() {
 		convert assets/logo.png -resize "${r}x${r}" "$pkgdir/usr/share/icons/hicolor/${r}x${r}/apps/yazi.png"
 	done
 
-	cd "${_pkgname}-config/completions"
+	cd "${_pkgname}-boot/completions"
 	install -Dm644 "${_pkgname}.bash" "${pkgdir}/usr/share/bash-completion/completions/${_pkgname}"
 	install -Dm644 "${_pkgname}.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d/"
 	install -Dm644 "_${_pkgname}" -t "${pkgdir}/usr/share/zsh/site-functions/"
