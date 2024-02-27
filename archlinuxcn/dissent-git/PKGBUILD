@@ -1,7 +1,7 @@
 # Maintainer: txtsd <aur.archlinux@ihavea.quest>
 
-pkgname=gtkcord4-git
-_pkgname=gtkcord4
+pkgname=dissent-git
+_pkgname=${pkgname%-git}
 pkgver=0.0.19.r16.g3987299
 pkgrel=1
 pkgdesc="Discord client written in go and gtk4"
@@ -9,8 +9,8 @@ arch=('x86_64' 'aarch64')
 url="https://github.com/diamondburned/${_pkgname}"
 license=('GPL-3.0-or-later')
 depends=('gtk4' 'gobject-introspection' 'libadwaita')
-provides=("${_pkgname}")
-conflicts=("${_pkgname}")
+provides=("${_pkgname}" "gtkcord4")
+conflicts=("${_pkgname}" "gtkcord4")
 makedepends=('git' 'go')
 source=("git+${url}.git")
 sha256sums=('SKIP')
@@ -40,10 +40,10 @@ build() {
 
 package() {
 	cd "${_pkgname}/build/"
+	install -Dm755 "${_pkgname}" -t "${pkgdir}/usr/bin/"
 
-	install -Dm755 "${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
-	install -Dm644 "${srcdir}/${_pkgname}/LICENSE.md" "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE"
-	sed -i "s/Chat;/Chat;InstantMessaging;/" "${srcdir}/${_pkgname}/nix/xyz.diamondb.${_pkgname}.desktop"
-	install -Dm644 "${srcdir}/${_pkgname}/nix/xyz.diamondb.${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
-	install -Dm644 "${srcdir}/${_pkgname}/internal/icons/hicolor/scalable/apps/logo.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${_pkgname}.png"
+	cd ..
+	install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
+	install -Dm644 "nix/so.libdb.${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
+	install -Dm644 "internal/icons/hicolor/scalable/apps/so.libdb.Dissent.Devel.svg" -t "${pkgdir}/usr/share/icons/hicolor/scalable/apps/"
 }
