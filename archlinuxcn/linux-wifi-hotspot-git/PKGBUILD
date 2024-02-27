@@ -14,8 +14,8 @@ makedepends=('git')
 optdepends=('haveged: For random MAC generation'
 	'wireless_tools: if iw cannot recognize your adapter'
 	'bash-completion: for bash completions')
-provides=('wihotspot' 'create_ap')
-conflicts=('wihotspot' 'create_ap')
+provides=('wihotspot' 'create_ap' "${_pkgname}")
+conflicts=('wihotspot' 'create_ap' "${_pkgname}")
 backup=('etc/create_ap.conf')
 install="${_pkgname}.install"
 source=("git+${url}.git")
