@@ -37,8 +37,12 @@ source=("git+https://github.com/obsproject/${_pkgname}.git"
 	"git+https://github.com/obsproject/obs-websocket.git"
 	"git+https://github.com/nayuki/QR-Code-generator.git"
 	"fix_python_binary_loading.patch")
-sha256sums=("SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
-	"051b90f05e26bff99236b8fb1ad377d1")
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'bdfbd062f080bc925588aec1989bb1df34bf779cc2fc08ac27236679cf612abd')
 
 pkgver() {
 	cd "${_pkgname}/"
