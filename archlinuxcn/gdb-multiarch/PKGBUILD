@@ -1,7 +1,8 @@
 # Maintainer: Aviel Warschawski <mail@aviel.org>
+
 pkgname=gdb-multiarch
-pkgver=13.2
-pkgrel=2
+pkgver=14.1
+pkgrel=1
 pkgdesc='The GNU Debugger for all gdb supported architectures (i386/arm/mips...)'
 arch=(i686 x86_64)
 url='http://www.gnu.org/software/gdb/'
@@ -11,8 +12,8 @@ makedepends=(glibc gcc-libs texinfo python guile ncurses expat xz mpfr
 depends=(glibc ncurses libncursesw.so gcc-libs expat xz mpfr source-highlight gdb-common=$pkgver
          readline libreadline.so guile python libelf)
 options=(!emptydirs)
-source=(https://ftp.gnu.org/gnu/gdb/gdb-13.2.tar.xz{,.sig})
-sha256sums=('fd5bebb7be1833abdb6e023c2f498a354498281df9d05523d8915babeb893f0a'
+source=(https://ftp.gnu.org/gnu/gdb/gdb-14.1.tar.xz{,.sig})
+sha256sums=('d66df51276143451fcbff464cc8723d68f1e9df45a6a2d5635a54e71643edb80'
             'SKIP')
 validpgpkeys=('F40ADB902B24264AA42E50BF92EDB04BFF325CF3') # Joel Brobecker <brobecker@adacore.com>
 
@@ -33,7 +34,6 @@ build() {
     --enable-interwork \
     --with-system-readline \
     --disable-nls \
-    --disable-sim \
     --with-python=/usr/bin/python \
     --with-system-gdbinit=/etc/gdb/gdbinit
 
