@@ -8,7 +8,7 @@ pkgrel=1
 pkgdesc="An unofficial WhatsApp desktop application for linux"
 url="https://github.com/eneshecan/${_pkgname}"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
-license=('GPL3')
+license=('GPL-3.0-or-later')
 depends=('gtkmm3' 'webkit2gtk' 'libayatana-appindicator' 'libcanberra' 'gst-plugins-base' 'gst-plugins-good' 'gst-plugins-bad' 'gst-libav')
 makedepends=('cmake' 'git')
 optdepends=('hunspell-en_us: spell-checking')
@@ -24,7 +24,7 @@ pkgver() {
 
 build() {
 	cd "${_pkgname}/"
-	cmake -DCMAKE_BUILD_TYPE=None -DCMAKE_INSTALL_PREFIX=/usr .
+	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
 	make
 }
 

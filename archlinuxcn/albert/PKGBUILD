@@ -8,57 +8,56 @@ pkgrel=1
 pkgdesc="A sophisticated standalone keyboard launcher"
 arch=('x86_64')
 url="https://github.com/albertlauncher"
-license=('GPL')
+license=('LicenseRef-Albert')
 depends=('hicolor-icon-theme' 'qt6-5compat' 'qt6-declarative' 'qt6-scxml' 'qt6-shadertools' 'qt6-svg')
 makedepends=('cmake' 'git' 'libqalculate' 'pybind11' 'python')
 optdepends=('ddgr: duckduckgo search plugin'
-            'libarchive: documentation plugin'
-            'libqalculate: calculator plugin'
-            'python: python extension'
-            'python-docker: docker plugin'
-            'python-googletrans: google translate plugin'
-            'python-pylatexenc: TeX plugin'
-            'python-urllib3: python web plugins'
-            'python-virtualbox: virtualbox plugin')
-source=("https://github.com/albertlauncher/albert/releases/download/v${pkgver}/v${pkgver}.tar.gz")
+	'libarchive: documentation plugin'
+	'libqalculate: calculator plugin'
+	'python: python extension'
+	'python-docker: docker plugin'
+	'python-googletrans: google translate plugin'
+	'python-pylatexenc: TeX plugin'
+	'python-urllib3: python web plugins'
+	'python-virtualbox: virtualbox plugin')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/albertlauncher/${pkgname}/releases/download/v${pkgver}/v${pkgver}.tar.gz")
+sha512sums=('35b10c8f364099c975c5ab5fba42c22dde5d630cff42c54aeaed019f1762d201110c7d76b40e32a8a43b7a7db1af6ace7468d73d58d2e175ab561a67dd046448')
 
 build() {
-  mkdir -p build
-  cd build
+	mkdir -p build
+	cd build
 
-  cmake ../$pkgname \
-    -DCMAKE_BUILD_TYPE=MinSizeRel \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=lib \
-    -DCMAKE_FIND_PACKAGE_RESOLVE_SYMLINKS=ON \
-    -DQHOTKEY_INSTALL=OFF \
-    -DBUILD_APPLICATIONS_XDG=ON \
-    -DBUILD_CALCULATOR_QALCULATE=ON \
-    -DBUILD_CHROMIUM=ON \
-    -DBUILD_CLIPBOARD=ON \
-    -DBUILD_DATETIME=ON \
-    -DBUILD_DEBUG=OFF \
-    -DBUILD_FILES=ON \
-    -DBUILD_HASH=ON \
-    -DBUILD_PYTHON=ON \
-    -DBUILD_QMLBOXMODEL=ON \
-    -DBUILD_SNIPPETS=ON \
-    -DBUILD_SSH=ON \
-    -DBUILD_SYSTEM=ON \
-    -DBUILD_TEMPLATE=OFF \
-    -DBUILD_TERMINAL=ON \
-    -DBUILD_URLHANDLER=ON \
-    -DBUILD_WEBSEARCH=ON \
-    -DBUILD_WIDGETSBOXMODEL=ON
+	cmake "../${pkgname}" \
+		-DCMAKE_BUILD_TYPE=MinSizeRel \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_FIND_PACKAGE_RESOLVE_SYMLINKS=ON \
+		-DQHOTKEY_INSTALL=OFF \
+		-DBUILD_APPLICATIONS_XDG=ON \
+		-DBUILD_CALCULATOR_QALCULATE=ON \
+		-DBUILD_CHROMIUM=ON \
+		-DBUILD_CLIPBOARD=ON \
+		-DBUILD_DATETIME=ON \
+		-DBUILD_DEBUG=OFF \
+		-DBUILD_FILES=ON \
+		-DBUILD_HASH=ON \
+		-DBUILD_PYTHON=ON \
+		-DBUILD_QMLBOXMODEL=ON \
+		-DBUILD_SNIPPETS=ON \
+		-DBUILD_SSH=ON \
+		-DBUILD_SYSTEM=ON \
+		-DBUILD_TEMPLATE=OFF \
+		-DBUILD_TERMINAL=ON \
+		-DBUILD_URLHANDLER=ON \
+		-DBUILD_WEBSEARCH=ON \
+		-DBUILD_WIDGETSBOXMODEL=ON
 
-  make
+	make
 }
-
 
 package() {
-  cd build
+	cd build
 
-  make DESTDIR="$pkgdir/" install
+	make DESTDIR="${pkgdir}/" install
+	install -Dm644 "../${pkgname}/LICENSE.md" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
-
-sha512sums=('35b10c8f364099c975c5ab5fba42c22dde5d630cff42c54aeaed019f1762d201110c7d76b40e32a8a43b7a7db1af6ace7468d73d58d2e175ab561a67dd046448')

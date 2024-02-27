@@ -6,12 +6,12 @@ pkgver=0.5.1.r3.gd0a1c2c
 pkgrel=1
 pkgdesc="Native Gtk client for Lemmy (alpha state)"
 arch=('x86_64')
-url="https://github.com/lemmy-gtk/lemoa"
-license=('GPL')
+url="https://github.com/lemmy-gtk/${_pkgname}"
+license=('GPL-3.0-or-later')
 makedepends=('git' 'rust' 'gtk4' 'libadwaita')
 depends=('gtk4' 'openssl' 'cairo')
-provides=('lemoa')
-conflicts=('lemoa')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
 source=("git+${url}.git")
 sha256sums=('SKIP')
 

@@ -7,13 +7,14 @@
 # Contributor: Kyle Manna <kyle(at)kylemanna(dot)com>
 
 pkgname=linux-apfs-rw-dkms-git
+_pkgname=${pkgname%-dkms-git}
 epoch=1
 pkgver=r292.41af006
 pkgrel=1
 pkgdesc="Experimental APFS kernel module with Write support (DKMS)"
 arch=('any')
-url="https://github.com/linux-apfs/linux-apfs-rw"
-license=('GPL2')
+url="https://github.com/linux-apfs/${_pkgname}"
+license=('GPL-2.0-only')
 depends=('dkms')
 makedepends=('git')
 source=("git+${url}.git"
@@ -27,15 +28,14 @@ prepare() {
 }
 
 pkgver() {
-  cd "$srcdir/linux-apfs-rw"
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 package() {
-  cd "$srcdir/linux-apfs-rw"
-  dkms_version=$(grep PACKAGE_VERSION dkms.conf | sed -r 's#PACKAGE_VERSION="([0-9.]+)"#\1#')
-  dkms_dir="${pkgdir}/usr/src/linux-apfs-rw-$dkms_version/"
-  make version
-  install -Ddm755 "${dkms_dir}"
-  cp -dr --no-preserve=ownership * "$dkms_dir"
+	cd "${_pkgname}/"
+	dkms_version=$(grep PACKAGE_VERSION dkms.conf | sed -r 's#PACKAGE_VERSION="([0-9.]+)"#\1#')
+	dkms_dir="${pkgdir}/usr/src/linux-apfs-rw-${dkms_version}/"
+	install -Ddm755 "${dkms_dir}"
+	cp -dr --no-preserve=ownership * "${dkms_dir}"
 }

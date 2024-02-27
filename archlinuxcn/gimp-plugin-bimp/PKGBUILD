@@ -1,29 +1,25 @@
 # Contributor: Lex Black <autumn-wind at web dot de>
 # Contributor: Lara Maia <lara@craft.net.br>
 
-_pkgname=bimp
 pkgname=gimp-plugin-bimp
+_pkgname=bimp
 pkgver=2.6
 pkgrel=2
-pkgdesc='Batch Image Manipulation Plugin for GIMP'
+pkgdesc="Batch Image Manipulation Plugin for GIMP"
 arch=('x86_64' 'i686')
-url='http://www.alessandrofrancesconi.it/projects/bimp/'
-license=('GPL')
+url="http://www.alessandrofrancesconi.it/projects/${_pkgname}/"
+license=('GPL-2.0-or-later')
 depends=('gimp')
-source=(${_pkgname}-${pkgver}.tar.gz::https://github.com/alessandrofrancesconi/${pkgname}/archive/v$pkgver.tar.gz)
-md5sums=('e88c978abde481d2124ba9d73a56e14b')
-
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/alessandrofrancesconi/${pkgname}/archive/v${pkgver}.tar.gz")
+sha256sums=('a8abef0f432e9fc8188dc4e8bdceab9a822641f8b8119f4feb70cc51457cf884')
 
 build() {
-    cd $pkgname-$pkgver
-
-    make
+	cd "${pkgname}-${pkgver}/"
+	make
 }
 
 package() {
-    cd $pkgname-$pkgver
-
-    mkdir -p "$pkgdir"/usr/lib/gimp/2.0/plug-ins/
-    cp ./bin/bimp "$pkgdir"/usr/lib/gimp/2.0/plug-ins/
-    cp -Rf ./bimp-locale/  "$pkgdir"/usr/lib/gimp/2.0/plug-ins/
+	cd "${pkgname}-${pkgver}/"
+	install -Dm755 "bin/${_pkgname}" -t "${pkgdir}/usr/lib/gimp/2.0/plug-ins/"
+	cp -Rf "${_pkgname}-locale/" "${pkgdir}/usr/lib/gimp/2.0/plug-ins/"
 }

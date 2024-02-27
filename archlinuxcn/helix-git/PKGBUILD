@@ -9,7 +9,7 @@ pkgrel=1
 pkgdesc="A post-modern modal text editor"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://helix-editor.com"
-license=('MPL2')
+license=('MPL-2.0')
 depends=('hicolor-icon-theme')
 makedepends=('cargo' 'git')
 optdepends=(
@@ -36,7 +36,7 @@ optdepends=(
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 install="${_pkgname}.install"
-source=("git+https://github.com/helix-editor/helix.git")
+source=("git+https://github.com/helix-editor/${_pkgname}.git")
 sha256sums=('SKIP')
 options=('!lto')
 
@@ -48,8 +48,8 @@ pkgver() {
 prepare() {
 	cd "${_pkgname}/"
 	# NOTE: we are renaming hx to helix so there is no conflict with hex (providing hx)
-	sed -i "s|hx|helix|g" contrib/completion/hx.*
-	sed -i 's|hx|helix|g' contrib/Helix.desktop
+	sed -i "s|hx|${_pkgname}|g" contrib/completion/hx.*
+	sed -i "s|hx|${_pkgname}|g" contrib/Helix.desktop
 	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
 
@@ -60,24 +60,28 @@ build() {
 
 package() {
 	cd "${_pkgname}/"
-	install -Dm 755 "target/release/hx" -t "${pkgdir}/usr/lib/${_pkgname}/"
-	install -vdm 755 "${pkgdir}/usr/bin"
+	install -Dm755 "target/release/hx" -t "${pkgdir}/usr/lib/${_pkgname}/"
+	install -d "${pkgdir}/usr/bin/"
 	ln -sv "/usr/lib/${_pkgname}/hx" "${pkgdir}/usr/bin/${_pkgname}"
-	install -Dm 644 "README.md" -t "${pkgdir}/usr/share/doc/${_pkgname}"
+	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${_pkgname}/"
 
 	local runtime_dir="${pkgdir}/usr/lib/${_pkgname}/runtime"
-	mkdir -p "${runtime_dir}/grammars"
-	cp -r "runtime/queries" "${runtime_dir}"
-	cp -r "runtime/themes" "${runtime_dir}"
-	find "runtime/grammars" -type f -name '*.so' -exec \
-		install -Dm 755 {} -t "${runtime_dir}/grammars" \;
-	install -Dm 644 runtime/tutor -t "${runtime_dir}"
+	install -d "${runtime_dir}/grammars"
 
-	install -Dm 644 "contrib/completion/hx.bash" "${pkgdir}/usr/share/bash-completion/completions/${_pkgname}"
-	install -Dm 644 "contrib/completion/hx.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/${_pkgname}.fish"
-	install -Dm 644 "contrib/completion/hx.zsh" "${pkgdir}/usr/share/zsh/site-functions/_${_pkgname}"
-	install -Dm 644 "contrib/Helix.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
-	install -Dm 644 "contrib/${_pkgname}.png" -t "${pkgdir}/usr/share/icons/hicolor/256x256/apps"
+	cp -r runtime/{queries,themes} "${runtime_dir}"
+
+	find "runtime/grammars" -type f -name '*.so' -exec \
+		install -Dm755 {} -t "${runtime_dir}/grammars" \;
+	install -Dm644 "runtime/tutor" -t "${runtime_dir}"
+
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
+
+	cd contrib/
+	install -Dm644 "completion/hx.bash" "${pkgdir}/usr/share/bash-completion/completions/${_pkgname}"
+	install -Dm644 "completion/hx.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/${_pkgname}.fish"
+	install -Dm644 "completion/hx.zsh" "${pkgdir}/usr/share/zsh/site-functions/_${_pkgname}"
+	install -Dm644 "Helix.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
+	install -Dm644 "${_pkgname}.png" -t "${pkgdir}/usr/share/icons/hicolor/256x256/apps/"
 }
 
 # vim: ts=2 sw=2 et:

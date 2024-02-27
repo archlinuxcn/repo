@@ -4,45 +4,46 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=kate-git
+_pkgname=${pkgname%-git}
 pkgver=23.11.70_r20959.g91066be0c
 pkgrel=1
 pkgdesc="Advanced Text Editor"
 groups=(kde-applications-git kde-utilities-git)
-url="https://www.kde.org/applications/utilities/kate/"
+url="https://www.kde.org/applications/utilities/${_pkgname}/"
 depends=(knewstuff ktexteditor kactivities kuserfeedback hicolor-icon-theme)
 optdepends=('konsole-git: open a terminal in Kate'
-            'clang: C and C++ LSP support'
-            'python-language-server: Python LSP support'
-            'texlab: LaTeX LSP support'
-            'rust: Rust LSP support')
+	'clang: C and C++ LSP support'
+	'python-language-server: Python LSP support'
+	'texlab: LaTeX LSP support'
+	'rust: Rust LSP support')
 arch=(x86_64)
-license=(GPL LGPL FDL)
+license=('LGPL-2.1-or-later')
 makedepends=(extra-cmake-modules-git kdoctools plasma-framework knewstuff kitemmodels ktexteditor kactivities kuserfeedback git)
-provides=('kate')
-conflicts=('kate' 'kdesdk-kate' 'kdebase-kwrite')
-source=(git+https://invent.kde.org/utilities/kate.git)
+provides=("${_pkgname}")
+conflicts=("${_pkgname}" "kdesdk-${_pkgname}" "kdebase-kwrite")
+source=("git+https://invent.kde.org/utilities/${_pkgname}.git")
 md5sums=('SKIP')
 
 pkgver() {
-  cd kate
-  _major_ver="$(grep -m1 'set *(RELEASE_SERVICE_VERSION_MAJOR' CMakeLists.txt | cut -d '"' -f2)"
-  _minor_ver="$(grep -m1 'set *(RELEASE_SERVICE_VERSION_MINOR' CMakeLists.txt | cut -d '"' -f2)"
-  _micro_ver="$(grep -m1 'set *(RELEASE_SERVICE_VERSION_MICRO' CMakeLists.txt | cut -d '"' -f2)"
-  echo "${_major_ver}.${_minor_ver}.${_micro_ver}_r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+	cd "${_pkgname}/"
+	_major_ver="$(grep -m1 'set *(RELEASE_SERVICE_VERSION_MAJOR' CMakeLists.txt | cut -d '"' -f2)"
+	_minor_ver="$(grep -m1 'set *(RELEASE_SERVICE_VERSION_MINOR' CMakeLists.txt | cut -d '"' -f2)"
+	_micro_ver="$(grep -m1 'set *(RELEASE_SERVICE_VERSION_MICRO' CMakeLists.txt | cut -d '"' -f2)"
+	echo "${_major_ver}.${_minor_ver}.${_micro_ver}_r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
 }
 
 prepare() {
-  mkdir -p build
+	mkdir -p build
 }
 
 build() {
-  cd build
-  cmake -B build -S ../kate \
-    -DBUILD_TESTING=OFF
-  cmake --build build
+	cd build
+	cmake -B build -S "../${_pkgname}" \
+		-DBUILD_TESTING=OFF
+	cmake --build build
 }
 
 package() {
-  cd build
-  DESTDIR="$pkgdir" cmake --install build
+	cd build
+	DESTDIR="${pkgdir}" cmake --install build
 }

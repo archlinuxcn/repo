@@ -1,57 +1,39 @@
-# This is an example PKGBUILD file. Use this as a start to creating your own,
-# and remove these comments. For more information, see 'man PKGBUILD'.
-# NOTE: Please fill out the license field for your package! If it is unknown,
-# then please put 'unknown'.
+# Maintainer: Integral <integral@member.fsf.org>
 
-# Maintainer: Your Name <youremail@domain.com>
 pkgname=payload-dumper-go
 pkgver=1.2.2
 pkgrel=2
 epoch=
-pkgdesc="An Android OTA payload dumper written in Go."
-arch=(x86_64)
-url="https://github.com/ssut/payload-dumper-go"
-license=('Apache')
-groups=()
-depends=()
+pkgdesc="An Android OTA payload dumper written in Go"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/ssut/${pkgname}"
+license=('Apache-2.0')
 makedepends=("go>=1.14")
-checkdepends=()
-optdepends=()
-provides=()
-conflicts=()
-replaces=()
-backup=()
 options=(!buildflags)
-install=
-changelog=
-source=(
-	$pkgname-$pkgver.tar.gz::https://github.com/ssut/$pkgname/archive/refs/tags/$pkgver.tar.gz
-)
-noextract=()
-md5sums=(SKIP)
-validpgpkeys=()
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/$pkgver.tar.gz")
+sha256sums=('7f80f6c29ad8b835d71f361ba073988a27a33043acec37eea9d9430c1fb04b57')
 
 prepare() {
-	export GOPATH="$srcdir"/gopath
+	export GOPATH="${srcdir}/gopath"
 
-	cd "$srcdir/$pkgname-$pkgver"
+	cd "${pkgname}-${pkgver}/"
 	go mod tidy
 	go mod download
 }
 
 build() {
-	export GOPATH="$srcdir"/gopath
+	export GOPATH="${srcdir}/gopath"
 	export CGO_CPPFLAGS="${CPPFLAGS}"
 	export CGO_CFLAGS="${CFLAGS}"
 	export CGO_CXXFLAGS="${CXXFLAGS}"
 	export CGO_LDFLAGS="${LDFLAGS}"
 
-	cd "$srcdir/$pkgname-$pkgver"
-
-	CGO_ENABLE=0 go build -trimpath -o ./$pkgname .
+	cd "${pkgname}-${pkgver}/"
+	CGO_ENABLE=0 go build -trimpath -o "${pkgname}" .
 }
 
 package() {
-	install -Dt "$pkgdir/usr/bin/" -m755 "$srcdir/$pkgname-$pkgver/$pkgname"
-	install -Dt "$pkgdir/usr/share/$pkgname/" -m644 "$srcdir/$pkgname-$pkgver/LICENSE"
+	cd "${pkgname}-${pkgver}/"
+	install -Dm755 "${pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/${pkgname}/"
 }

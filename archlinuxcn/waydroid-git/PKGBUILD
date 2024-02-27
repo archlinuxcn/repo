@@ -3,32 +3,31 @@
 # Contributor: Danct12 <danct12@disroot.org>
 # Contributor: Bart Ribbers <bribbers@disroot.org>
 
-_pkgname=waydroid
-pkgname=$_pkgname-git
+pkgname=waydroid-git
+_pkgname=${pkgname%-git}
 pkgver=1.4.2.r7.g3e6872c
 pkgrel=1
 pkgdesc="A container-based approach to boot a full Android system on a regular Linux system"
 arch=('any')
-url="https://github.com/waydroid/waydroid"
-license=('GPL3')
+url="https://github.com/${_pkgname}/${_pkgname}"
+license=('GPL-3.0-or-later')
 depends=('lxc' 'python-gbinder' 'python-gobject' 'nftables' 'dnsmasq' 'gtk3' 'dbus-python')
 makedepends=('git')
-optdepends=('waydroid-image: Android image for use with waydroid'
-            'python-pyclip: share clipboard with container')
-install="$_pkgname.install"
+optdepends=('waydroid-image: Android image for use with ${_pkgname}'
+	'python-pyclip: share clipboard with container')
+install="${_pkgname}.install"
 source=("git+$url.git")
 sha256sums=('SKIP')
-provides=("$_pkgname")
-conflicts=("$_pkgname")
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
 
 pkgver() {
-  cd "$_pkgname"
-  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+	cd "${_pkgname}/"
+	git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 package() {
-  cd "$_pkgname"
-  make DESTDIR="$pkgdir/" install
-
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+	cd "${_pkgname}/"
+	make DESTDIR="${pkgdir}/" install
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 }

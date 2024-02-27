@@ -2,41 +2,42 @@
 # Contributor: Lukas Jirkovsky <l.jirkovsky AT gmail.com>
 
 pkgname=rawtherapee-git
+_pkgname=${pkgname%-git}
 pkgver=5.10.r64.g6dd99ca3d
 pkgrel=1
 epoch=1
 pkgdesc="A powerful cross-platform raw image processing program"
-arch=(x86_64 i686 pentium4 arm armv6h armv7h aarch64)
+arch=('x86_64' 'i686' 'pentium4' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.rawtherapee.com/"
-license=(GPL3)
-depends=(fftw gtk3 glibmm gtkmm3 lcms2 lensfun libcanberra
-         libiptcdata desktop-file-utils hicolor-icon-theme exiv2)
-makedepends=(cmake git)
-provides=(rawtherapee)
-conflicts=(rawtherapee)
-source=("${pkgname%-git}::git+https://github.com/Beep6581/RawTherapee.git#branch=dev")
+license=('GPL-3.0-or-later')
+depends=('fftw' 'gtk3' 'glibmm' 'gtkmm3' 'lcms2' 'lensfun' 'libcanberra'
+	'libiptcdata' 'desktop-file-utils' 'hicolor-icon-theme' 'exiv2')
+makedepends=('cmake' 'git')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("${_pkgname}::git+https://github.com/Beep6581/RawTherapee.git")
 sha256sums=('SKIP')
 
 pkgver() {
-  cd "${srcdir}/rawtherapee"
-  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+	cd "${_pkgname}/"
+	git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
-  cd "${srcdir}/${pkgname%-git}"
-  mkdir -p build
+	cd "${_pkgname}/"
+	mkdir -p build
 }
 
 build() {
-  cd "${srcdir}/${pkgname%-git}/build"
-  cmake .. \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release
+	cd "${_pkgname}/build/"
+	cmake .. \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_BUILD_TYPE=Release
 
-  make
+	make
 }
 
 package() {
-  cd "${srcdir}/${pkgname%-git}/build"
-  make DESTDIR="${pkgdir}/" install
+	cd "${_pkgname}/build/"
+	make DESTDIR="${pkgdir}/" install
 }

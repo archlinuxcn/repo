@@ -9,7 +9,7 @@ pkgrel=1
 pkgdesc='The GNU Compiler Collection - cross compiler for 32bit and 64bit RISC-V bare-metal'
 arch=('i686' 'x86_64')
 url='http://gcc.gnu.org/'
-license=(GPL LGPL FDL)
+license=('GPL-3.0-or-later WITH GCC-exception-3.1 AND GFDL-1.3-or-later')
 depends=("${_target}-binutils" 'zlib' 'libmpc')
 options=(!emptydirs !strip)
 source=("https://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.xz"
@@ -100,4 +100,6 @@ package() {
 	rm -r "${pkgdir}/usr/share/man/man7"
 	rm -r "${pkgdir}/usr/share/info"
 	rm ${pkgdir}/usr/lib/libcc1.*
+
+	install -Dm644 "${srcdir}/${_basedir}/COPYING" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
