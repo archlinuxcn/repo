@@ -2,6 +2,7 @@
 
 pkgname=video2x
 pkgver=4.8.1
+_pkgver=${pkgver/.beta/-beta}
 pkgrel=2
 pkgdesc="Machine learning video/GIF/image upscaling"
 url="https://${pkgname}.org/"
@@ -27,7 +28,7 @@ optdepends=(
 	"waifu2x-converter-cpp: C++ implemenation of waifu2x working on all platforms"
 )
 source=(
-	"${pkgname}-${pkgver}::https://github.com/k4yt3x/${pkgname}/archive/${pkgver}.tar.gz"
+	"${pkgname}-${_pkgver}.tar.gz::https://github.com/k4yt3x/${pkgname}/archive/${_pkgver}.tar.gz"
 	"etc_config_file.patch"
 	"${pkgname}.yaml"
 )
@@ -36,12 +37,12 @@ sha256sums=('a372027fb09c45f6624db8839b46fa34b4c3c639ba19fe9d192f9ef0a4ed9c46'
             'dae9fb91b965d27a868ab71e36c8d6633f0c4be770c8f70c2ea41bc957b7c796')
 
 prepare() {
-	cd "${pkgname}-${pkgver}/src/"
+	cd "${pkgname}-${_pkgver}/src/"
 	patch "${pkgname}.py" "${srcdir}/etc_config_file.patch"
 }
 
 package() {
-	cd "${pkgname}-${pkgver}/src/"
+	cd "${pkgname}-${_pkgver}/src/"
 
 	install -d "${pkgdir}/usr/share/${pkgname}/wrappers/"
 	install -d "${pkgdir}/usr/bin/"
