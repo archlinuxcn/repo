@@ -53,9 +53,9 @@ pkgver() {
 
 build() {
 	export TERM=xterm
-	if [ -d "${srcdir}"/Qcm/build ]; then
+	if [ -d Qcm/build ]; then
 		_info "Deleting ${srcdir}/Qcm/build"
-		rm -r "${srcdir}"/Qcm/build
+		rm -rf Qcm/build/
 	fi
 
 	_info "Starting Build..."
@@ -69,9 +69,10 @@ build() {
 
 package() {
 	_info "Copying files"
-	install -Dm644 "${srcdir}/Qcm/app/assets/Qcm.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/io.github.hypengw.Qcm.svg"
-	install -Dm644 "${srcdir}/Qcm/app/assets/Qcm.desktop" "${pkgdir}/usr/share/applications/Qcm.desktop"
-	install -Dm755 "${srcdir}/Qcm/build/app/Qcm" "${pkgdir}/usr/bin/Qcm"
+	cd Qcm
+	install -Dm644 "app/assets/Qcm.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/io.github.hypengw.Qcm.svg"
+	install -Dm644 "app/assets/Qcm.desktop" -t "${pkgdir}/usr/share/applications/"
+	install -Dm755 "build/app/Qcm" -t "${pkgdir}/usr/bin/"
 }
 
 _info() {
