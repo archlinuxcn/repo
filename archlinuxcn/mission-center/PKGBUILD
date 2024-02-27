@@ -2,6 +2,7 @@
 
 pkgname=mission-center
 pkgver=0.4.4
+_pkgver=$(sed 's/\./-/3' <<<${pkgver})
 pkgrel=1
 pkgdesc="Monitor your CPU, Memory, Disk, Network and GPU usage"
 arch=('x86_64')
@@ -11,11 +12,11 @@ depends=('dmidecode' 'libadwaita' 'nvtop')
 makedepends=('blueprint-compiler' 'cargo' 'meson')
 checkdepends=('appstream-glib')
 options=('!lto')
-source=("${url}/-/archive/v${pkgver}/${pkgname}-v${pkgver}.tar.gz")
+source=("${url}/-/archive/v${_pkgver}/${pkgname}-v${_pkgver}.tar.gz")
 sha256sums=('ba0fca8620a6385ad3933d8a372b5f4d4daef5773ad2489629b85ba053c4a3e4')
 
 prepare() {
-	cd "${pkgname}-v${pkgver}/"
+	cd "${pkgname}-v${_pkgver}/"
 	export CARGO_HOME="$srcdir/cargo-home"
 	export RUSTUP_TOOLCHAIN=stable
 	cargo fetch --target "$CARCH-unknown-linux-gnu"
@@ -24,7 +25,7 @@ prepare() {
 build() {
 	export CARGO_HOME="${srcdir}/cargo-home"
 	export RUSTUP_TOOLCHAIN=stable
-	arch-meson "${pkgname}-v${pkgver}" build
+	arch-meson "${pkgname}-v${_pkgver}" build
 	meson compile -C build
 }
 
