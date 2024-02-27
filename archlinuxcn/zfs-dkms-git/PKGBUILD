@@ -16,7 +16,7 @@ epoch=2
 pkgdesc='Kernel modules for the Zettabyte File System.'
 arch=('any')
 url='https://zfsonlinux.org/'
-license=('CDDL')
+license=('CDDL-1.0')
 groups=('zfs-git')
 makedepends=('git')
 provides=("ZFS-MODULE=${pkgver}" "SPL-MODULE=${pkgver}" "${pkgname%-git}=${pkgver}" 'spl-dkms')
