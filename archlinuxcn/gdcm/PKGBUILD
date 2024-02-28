@@ -90,6 +90,7 @@ prepare() {
 }
 
 build() {
+  local python_version=$(python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
   cmake \
     -B build \
     -S "${_pkgname}-${pkgver}" \
@@ -103,6 +104,7 @@ build() {
     -DGDCM_BUILD_SHARED_LIBS:BOOL=ON \
     -DGDCM_BUILD_TESTING:BOOL=OFF \
     -DGDCM_DOCUMENTATION:BOOL=OFF \
+    -DGDCM_INSTALL_PYTHONMODULE_DIR=lib/${python_version}/site-packages \
     -DGDCM_LEGACY_REMOVE:BOOL=ON \
     -DGDCM_MANPAGES_USE_NONET=1 \
     -DGDCM_USE_SYSTEM_CHARLS:BOOL=ON \
@@ -114,6 +116,7 @@ build() {
     -DGDCM_USE_SYSTEM_UUID:BOOL=ON \
     -DGDCM_USE_SYSTEM_ZLIB:BOOL=ON \
     -DGDCM_USE_VTK:BOOL=ON \
+    -DGDCM_VTK_INSTALL_PYTHONMODULE_DIR=lib/${python_version}/site-packages \
     -DGDCM_WRAP_PYTHON:BOOL=ON \
     -DVTKGDCM_WRAP_PYTHON:BOOL=ON
   make -C "build"
@@ -125,18 +128,7 @@ package() {
   install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/Copyright.txt" "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
 
   make -C "${srcdir}/build" DESTDIR="${pkgdir}" install
-
-  # fix python binding installation
-  install -d "${pkgdir}${site_packages}"
-  ln -s "/usr/lib/_gdcmswig.so" "${pkgdir}${site_packages}/_gdcmswig.so"
-  mv -v "${pkgdir}/usr/lib/gdcm.py" "${pkgdir}${site_packages}"
-  mv -v "${pkgdir}/usr/lib/gdcmswig.py" "${pkgdir}${site_packages}"
-  mv -v "${pkgdir}/usr/lib/vtkgdcm" "${pkgdir}${site_packages}"
-  find "${pkgdir}" -type d -name __pycache__ -exec rm -rf {} \;
   python -O -m compileall "${pkgdir}/usr/lib"
-  # install cmake file
-  mkdir -p "${pkgdir}/usr/lib/cmake"
-  mv -v "${pkgdir}/usr/lib/gdcm-3.0" "${pkgdir}/usr/lib/cmake"
 }
 # vim:set ts=2 sw=2 et:
 
