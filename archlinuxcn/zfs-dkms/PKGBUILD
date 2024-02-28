@@ -13,7 +13,7 @@ provides=("ZFS-MODULE=${pkgver}" "SPL-MODULE=${pkgver}")
 # ambiguous, provided for backwards compat, pls don't use
 provides+=('zfs')
 source=("https://github.com/zfsonlinux/zfs/releases/download/zfs-${pkgver}/zfs-${pkgver}.tar.gz"{,.asc}
-        "0001-only-build-the-module-in-dkms.conf.patch")
+	"0001-only-build-the-module-in-dkms.conf.patch")
 sha256sums=('30a512f34ec5c841b8b2b32cc9c1a03fd49391b26c9164d3fb30573fb5d81ac3'
             'SKIP'
             '8d5c31f883a906ab42776dcda79b6c89f904d8f356ade0dab5491578a6af55a5')
@@ -49,7 +49,8 @@ package() {
 	depends=("zfs-utils=${pkgver}" 'dkms')
 	cd "zfs-${pkgver}/"
 
-	dkmsdir="${pkgdir}/usr/src/zfs-${pkgver}/"
+	dkmsdir="${pkgdir}/usr/src/zfs-${pkgver}"
+	install -d ${dkmsdir}/{config,scripts}
 	cp -a configure dkms.conf Makefile.in META zfs_config.h.in zfs.release.in include/ module/ "${dkmsdir}/"
 	install -Dm644 config/compile config/config.* config/missing config/*sh "${dkmsdir}/config/"
 	install -Dm755 scripts/enum-extract.pl scripts/dkms.postbuild "${dkmsdir}/scripts/"
