@@ -6,7 +6,7 @@ pkgrel=1
 pkgdesc='Extras to run docker as non-root'
 arch=('any')
 url='https://docs.docker.com/engine/security/rootless'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
   docker
   rootlesskit
@@ -34,3 +34,5 @@ package() {
   install -Dm644 "${srcdir}/docker.socket" "${pkgdir}/usr/lib/systemd/user/docker.socket"
   install -Dm644 "${srcdir}/99-docker-rootless.conf" "${pkgdir}/usr/lib/sysctl.d/99-docker-rootless.conf"
 }
+# vim:set ts=2 sw=2 et:
+
