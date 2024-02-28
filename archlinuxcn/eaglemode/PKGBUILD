@@ -3,14 +3,15 @@
 
 pkgname=eaglemode
 pkgver=0.96.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Visit almost everything in your PC simply by zooming in"
 arch=('i686' 'x86_64')
 url="http://eaglemode.sourceforge.net/"
 license=('GPL3')
 depends=('desktop-file-utils' 'gtk2' 'hicolor-icon-theme' 'libtiff'
-         'libpng' 'librsvg' 'poppler-glib' 'xdg-utils' 'xine-lib' 'xz')
-optdepends=('perl: Fetching stock market info for the emStocks plugin')
+         'libpng' 'librsvg' 'poppler-glib' 'xdg-utils' 'vlc' 'xz')
+optdepends=('perl: Fetching stock market info for the emStocks plugin'
+            'htmldoc: Rendering HTML documents')
 makedepends=('perl')
 source=(https://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2)
 sha256sums=('14884270c821ccb83b39d72ca2ef61070ee421aa8b55414400a524f6ec1134dc')
