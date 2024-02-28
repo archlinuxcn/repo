@@ -1,7 +1,7 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 
 pkgname=mission-center
-pkgver=0.4.4
+pkgver=0.4.4.2
 _pkgver=$(sed 's/\./-/3' <<<${pkgver})
 pkgrel=1
 pkgdesc="Monitor your CPU, Memory, Disk, Network and GPU usage"
@@ -13,7 +13,7 @@ makedepends=('blueprint-compiler' 'cargo' 'meson')
 checkdepends=('appstream-glib')
 options=('!lto')
 source=("${url}/-/archive/v${_pkgver}/${pkgname}-v${_pkgver}.tar.gz")
-sha256sums=('ba0fca8620a6385ad3933d8a372b5f4d4daef5773ad2489629b85ba053c4a3e4')
+sha256sums=('fa3f23c44eb7a0ef522567f579b0c8c611f6bfeda03755e96867a19c62155def')
 
 prepare() {
 	cd "${pkgname}-v${_pkgver}/"
