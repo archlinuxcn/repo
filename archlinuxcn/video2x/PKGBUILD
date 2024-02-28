@@ -1,9 +1,9 @@
 # Maintainer : Antoine Viallon <antoine+aur@lesviallon.fr>
 
 pkgname=video2x
-pkgver=4.8.1
+pkgver=5.0.0.beta6
 _pkgver=${pkgver/.beta/-beta}
-pkgrel=2
+pkgrel=1
 pkgdesc="Machine learning video/GIF/image upscaling"
 url="https://${pkgname}.org/"
 arch=("any")
@@ -31,7 +31,7 @@ source=(
 	"${pkgname}-${_pkgver}.tar.gz::https://github.com/k4yt3x/${pkgname}/archive/${_pkgver}.tar.gz"
 	"${pkgname}.yaml"
 )
-sha256sums=('a372027fb09c45f6624db8839b46fa34b4c3c639ba19fe9d192f9ef0a4ed9c46'
+sha256sums=('6fd01242986265dfedd59cfa589c0649e1036d4bcc959af4427067acc3e23d8c'
             'dae9fb91b965d27a868ab71e36c8d6633f0c4be770c8f70c2ea41bc957b7c796')
 
 package() {
