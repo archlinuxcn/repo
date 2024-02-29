@@ -13,20 +13,13 @@ makedepends=('git' 'clang' 'llvm' 'libelf'
 depends=("${_pkgname}")
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
-source=("git+https://github.com/evilsocket/${_pkgname}.git"
-	"0001-Build-with-Archlinux.patch")
-sha256sums=('SKIP'
-            '446c029de1cbd39308575e346511d80ee160d2dea575d64fddc7835fc3040460')
+source=("git+https://github.com/evilsocket/${_pkgname}.git")
+sha256sums=('SKIP')
 options=('!strip') # we're stripping with llvm-strip
 
 pkgver() {
 	cd "${_pkgname}/"
 	git describe --long | sed 's/^v//;s/-rc./rc/;s/\([^-]*-\)g/r\1/;s/-/./g'
-}
-
-prepare() {
-	cd "${_pkgname}/ebpf_prog/"
-	patch Makefile <"${srcdir}/0001-Build-with-Archlinux.patch"
 }
 
 build() {
