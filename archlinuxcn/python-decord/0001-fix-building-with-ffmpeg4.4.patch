@@ -1,0 +1,44 @@
+From d2dcf17a0856a386e00c08aceaadb9eb09bb92e4 Mon Sep 17 00:00:00 2001
+From: Butui Hu <hot123tea123@gmail.com>
+Date: Fri, 1 Mar 2024 11:32:36 +0800
+Subject: [PATCH] fix building with ffmpeg4.4
+
+---
+ cmake/util/FindFFmpeg.cmake | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/cmake/util/FindFFmpeg.cmake b/cmake/util/FindFFmpeg.cmake
+index 21befef..fd72320 100644
+--- a/cmake/util/FindFFmpeg.cmake
++++ b/cmake/util/FindFFmpeg.cmake
+@@ -18,7 +18,7 @@
+ #
+ 
+ if (FFMPEG_DIR)
+-  set(FFMPEG_INCLUDE_DIR ${FFMPEG_DIR}/include)
++  set(FFMPEG_INCLUDE_DIR ${FFMPEG_DIR}/include/ffmpeg4.4)
+   if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+     # Mac OS X specific code
+     set(FFMPEG_LIBRARIES
+@@ -31,12 +31,12 @@ if (FFMPEG_DIR)
+     )
+   elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+     set(FFMPEG_LIBRARIES
+-      ${FFMPEG_DIR}/lib/libavformat.so
+-      ${FFMPEG_DIR}/lib/libavfilter.so
+-      ${FFMPEG_DIR}/lib/libavcodec.so
+-      ${FFMPEG_DIR}/lib/libavutil.so
+-      ${FFMPEG_DIR}/lib/libavdevice.so
+-      ${FFMPEG_DIR}/lib/libswresample.so
++      ${FFMPEG_DIR}/lib/ffmpeg4.4/libavformat.so
++      ${FFMPEG_DIR}/lib/ffmpeg4.4/libavfilter.so
++      ${FFMPEG_DIR}/lib/ffmpeg4.4/libavcodec.so
++      ${FFMPEG_DIR}/lib/ffmpeg4.4/libavutil.so
++      ${FFMPEG_DIR}/lib/ffmpeg4.4/libavdevice.so
++      ${FFMPEG_DIR}/lib/ffmpeg4.4/libswresample.so
+     )
+   else()
+     set(FFMPEG_LIBRARIES
+-- 
+2.44.0
+

@@ -7,14 +7,11 @@ pkgrel=5
 pkgdesc="An efficient video loader for deep learning with smart shuffling that's super easy to digest"
 arch=('x86_64')
 url='https://github.com/dmlc/decord'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
-  ffmpeg
-  libavcodec.so
-  libavfilter.so
-  libavformat.so
-  libavutil.so
-  libswresample.so
+  ffmpeg4.4
+  glibc
+  gcc-libs
   python-numpy
 )
 makedepends=(
@@ -22,64 +19,74 @@ makedepends=(
   cmake
   cuda
   cython
-  gcc12
   git
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
+  chrpath
 )
-source=("${_pkgname}-${pkgver}::git+https://github.com/dmlc/decord.git#tag=v${pkgver}")
-sha512sums=('SKIP')
+source=("${_pkgname}-${pkgver}::git+https://github.com/dmlc/decord.git#tag=v${pkgver}"
+        "0001-fix-building-with-ffmpeg4.4.patch"
+)
+sha512sums=('SKIP'
+            'e4b8450ee48583b40f99bf9c981e1f37529c16ba002f6781187621fb6b94d3856db34e90c4c1fd88978601deb88d1e0d31f161232882651c6c6cd61dd91da45a')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
   git submodule update --init --recursive
-  # fix building with ffmpeg
-  sed -i "21i#include <libavcodec/bsf.h>" "src/video/ffmpeg/ffmpeg_common.h"
-  # fix const pointer convert issue
-  sed -i "s,AVCodec \*dec,const AVCodec \*dec," "src/video/video_reader.cc"
-  sed -i "165s,fmt_ctx_,(AVInputFormat\*)fmt_ctx_," "src/video/video_reader.cc"
+  # fix building with ffmpeg4.4
+  patch -p1 -i ${srcdir}/0001-fix-building-with-ffmpeg4.4.patch
   cp -a "${srcdir}/${_pkgname}-${pkgver}" "${srcdir}/${_pkgname}-cuda-${pkgver}"
-  # build with gcc12
-  export CC=gcc-12
-  export CXX=g++-12
 }
 
 build() {
   # building without CUDA
-  cmake -B "${srcdir}/${_pkgname}-${pkgver}/build" -S "${srcdir}/${_pkgname}-${pkgver}" \
-    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
-    -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
-    -DUSE_CUDA:BOOL=OFF
-  make -C "${srcdir}/${_pkgname}-${pkgver}/build"
+  cmake \
+    -B "${srcdir}/${_pkgname}-${pkgver}/build" \
+    -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_SKIP_INSTALL_RPATH=ON \
+    -DFFMPEG_DIR=/usr \
+    -DUSE_CUDA=OFF \
+    -S "${srcdir}/${_pkgname}-${pkgver}"
+  make -C "${srcdir}/${_pkgname}-${pkgver}/build" VERBOSE=1
   cd "${srcdir}/${_pkgname}-${pkgver}/python"
-  python setup.py build
+  python -m build --wheel --no-isolation
 
   # building with CUDA
-  cmake -B "${srcdir}/${_pkgname}-cuda-${pkgver}/build" -S "${srcdir}/${_pkgname}-cuda-${pkgver}" \
-    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
-    -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
-    -DUSE_CUDA:BOOL=ON
-  make -C "${srcdir}/${_pkgname}-cuda-${pkgver}/build"
+  cmake \
+    -B "${srcdir}/${_pkgname}-cuda-${pkgver}/build" \
+    -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_CXX_COMPILER=/opt/cuda/bin/g++ \
+    -DCMAKE_C_COMPILER=/opt/cuda/bin/gcc \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_SKIP_INSTALL_RPATH=ON \
+    -DFFMPEG_DIR=/usr \
+    -DUSE_CUDA=ON \
+    -S "${srcdir}/${_pkgname}-cuda-${pkgver}"
+  make -C "${srcdir}/${_pkgname}-cuda-${pkgver}/build" VERBOSE=1
   cd "${srcdir}/${_pkgname}-cuda-${pkgver}/python"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package_python-decord() {
   cd "${srcdir}/${_pkgname}-${pkgver}/python"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
-  mv -vf "${pkgdir}/usr/${_pkgname}/libdecord.so" "${pkgdir}/usr/lib"
-  rm -rf "${pkgdir}/usr/${_pkgname}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
 }
 
 package_python-decord-cuda() {
   pkgdesc="${pkgdesc} (with CUDA)"
-  depends+=(cuda libcudart.so)
+  depends+=(
+    cuda
+    libcudart.so
+    nvidia-utils
+  )
   provides=(python-decord=${pkgver})
   conflicts=(python-decord)
 
   cd "${srcdir}/${_pkgname}-cuda-${pkgver}/python"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
-  mv -vf "${pkgdir}/usr/${_pkgname}/libdecord.so" "${pkgdir}/usr/lib"
-  chrpath --delete "${pkgdir}/usr/lib/libdecord.so"
-  rm -rf "${pkgdir}/usr/${_pkgname}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  find ${pkgdir} -type f -name "*.so" -exec chrpath --delete {} \;
 }
 # vim:set ts=2 sw=2 et:
