@@ -1,6 +1,6 @@
 _name=hstspreload
 pkgname=python-hstspreload-latest
-pkgver=2024.2.1
+pkgver=2024.3.1
 pkgrel=1
 pkgdesc="Chromium HSTS Preload list as a Python package"
 arch=(any)
@@ -10,16 +10,16 @@ depends=('python')
 makedepends=('python-setuptools')
 conflicts=('python-hstspreload')
 provides=('python-hstspreload')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/hstspreload-2024.2.1.tar.gz")
-sha256sums=('e2150419a546a9970c2b116b984ea6e8f6a00902f41b75f528a0da086a4480b8')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/hstspreload-2024.3.1.tar.gz")
+sha256sums=('14c4dd20f352a5ef42320740700d364f841c8a3b2026d77e3e6f16f8c1ad2afb')
 
 build() {
-  cd "$srcdir/hstspreload-2024.2.1"
+  cd "$srcdir/hstspreload-2024.3.1"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/hstspreload-2024.2.1"
+  cd "$srcdir/hstspreload-2024.3.1"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install any world-writable or root-readable-only files
