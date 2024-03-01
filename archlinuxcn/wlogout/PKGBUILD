@@ -1,6 +1,6 @@
 # Maintainer: Haden Collins <collinshaden@gmail.com>
 pkgname='wlogout'
-pkgver=1.2
+pkgver=1.2.1
 pkgrel=1
 pkgdesc="Logout menu for wayland"
 arch=('x86_64')
@@ -10,7 +10,6 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/ArtsyMacaw/$pkgname/release
 validpgpkeys=("F4FDB18A9937358364B276E9E25D679AF73C6D2F")
 makedepends=("meson" "git" "scdoc")
 depends=("gtk3" "gobject-introspection" "gtk-layer-shell")
-optdepends=("swaylock: default buttons")
 build() {
     cd $srcdir
     meson setup build --prefix /usr
@@ -21,5 +20,5 @@ package() {
     DESTDIR="$pkgdir" ninja -C build install
     install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
-md5sums=('8a4695ad3f6451fe5f43960bcf8f14d4'
+md5sums=('705a12400cc99284a087a7975c09da50'
          'SKIP')
