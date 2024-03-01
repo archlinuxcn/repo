@@ -1,5 +1,5 @@
-# Maintainer: ThatOneCalculator <kainoa@t1c.dev>
-# Based on the xdg-desktop-portal-wlr-git PKGBUILD
+# Maintainer: Caleb Maclennan <caleb@alerque.com>
+# Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=xdg-desktop-portal-hyprland-git
 _pkgname="${pkgname%-git}"
@@ -10,37 +10,54 @@ pkgdesc="xdg-desktop-portal backend for hyprland"
 url="https://github.com/hyprwm/${_pkgname}"
 arch=('x86_64')
 license=('MIT')
+depends=('hyprlang'
+	'libinih'
+	'pipewire'
+	'qt6-base'
+	'qt6-wayland'
+	'sdbus-cpp'
+	'util-linux-libs'
+	'wlroots'
+	'xdg-desktop-portal')
+makedepends=('git'
+	'cmake'
+	'wayland'
+	'wayland-protocols')
+optdepends=('grim: required for the screenshot portal to function'
+	'slurp: support for interactive mode for the screenshot portal')
 provides=("${_pkgname}" "xdg-desktop-portal-impl" "xdg-desktop-portal-wlr")
 conflicts=("${_pkgname}" "xdg-desktop-portal-wlr")
-depends=('xdg-desktop-portal' 'pipewire' 'libinih' 'qt6-base' 'qt6-wayland' 'pango' 'hyprlang' 'libdrm')
-makedepends=('git' 'meson' 'wayland-protocols' 'wayland' 'scdoc' 'cmake' 'sdbus-cpp')
-optdepends=(
-	"grim: required for the screenshot portal to function"
-	"slurp: support for interactive mode for the screenshot portal; one of the built-in chooser options for the screencast portal"
-	"bemenu: one of the built-in chooser options for the screencast portal"
-	"wofi: one of the built-in chooser options for the screencast portal"
-	"hyprland: the Hyprland compositor"
-)
-source=("git+${url}.git")
-sha256sums=('SKIP')
-options=('!makeflags' '!buildflags' '!strip')
+source=("git+${url}.git"
+	"git+https://github.com/hyprwm/hyprland-protocols.git"
+	"hyprland-portals.conf") # TODO move this to hyprland where it belongs
+sha256sums=('SKIP'
+            'SKIP'
+            '20bc215211f16a361086d59fa051df7337d95f91c695a29d8c5d23d40407fad5')
 
 pkgver() {
 	cd "${_pkgname}/"
 	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
+prepare() {
+	cd "${_pkgname}/subprojects/"
+	rm -rf hyprland-protocols sdbus-cpp
+	ln -sfT "${srcdir}/hyprland-protocols/" hyprland-protocols
+}
+
 build() {
 	cd "${_pkgname}/"
-	git submodule update --init
-	arch-meson build
-	ninja -C build
-	make -C hyprland-share-picker all
+	cmake -B build \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D CMAKE_INSTALL_LIBEXECDIR=/usr/lib \
+		-D CMAKE_BUILD_TYPE=Release
+
+	cmake --build build
 }
 
 package() {
 	cd "${_pkgname}/"
-	DESTDIR="${pkgdir}" ninja -C build install
-	install -Dm755 hyprland-share-picker/build/hyprland-share-picker -t "${pkgdir}/usr/bin/"
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "${srcdir}/hyprland-portals.conf" -t "${pkgdir}/usr/share/xdg-desktop-portal/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
