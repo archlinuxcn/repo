@@ -7,13 +7,17 @@ pkgrel=2
 pkgdesc='Python wrapping for google-crc32c'
 arch=('x86_64')
 url='https://github.com/googleapis/python-crc32c'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
+  glibc
   google-crc32c
   python
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/googleapis/python-crc32c/archive/refs/tags/v${pkgver}.tar.gz")
@@ -21,11 +25,11 @@ sha512sums=('11b504e5f16b184d103acf2dcbc3ddbf9159951848240ea53577b06eb8daf71a9c8
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
 }
 # vim:set ts=2 sw=2 et:
