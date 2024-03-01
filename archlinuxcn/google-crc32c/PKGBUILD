@@ -7,7 +7,7 @@ pkgrel=2
 pkgdesc='CRC32C implementation with support for CPU-specific acceleration instructions'
 arch=('x86_64')
 url='https://github.com/google/crc32c'
-license=('BSD')
+license=('BSD-3-clause')
 depends=(
   gcc-libs
 )
@@ -32,3 +32,5 @@ package() {
   make DESTDIR="${pkgdir}" -C build install
   install -Dm644 "${_pkgname}-${pkgver}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
+# vim:set ts=2 sw=2 et:
+
