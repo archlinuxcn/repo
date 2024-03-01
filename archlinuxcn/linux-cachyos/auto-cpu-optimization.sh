@@ -13,7 +13,7 @@ check_gcc() {
 check_gcc
 
 # Get CPU type from GCC and convert to uppercase
-MARCH=CONFIG_GENERIC_CPU3
+MARCH=$(gcc -Q -march=native --help=target|grep -m1 march=|awk '{print toupper($2)}')
 
 # Check for specific CPU types and set MARCH variable accordingly
 case $MARCH in
