@@ -6,11 +6,11 @@
 
 pkgname=python2
 pkgver=2.7.18
-pkgrel=10
+pkgrel=11
 _pybasever=2.7
 pkgdesc="A high-level scripting language"
 arch=('x86_64' 'aarch64')
-license=('PSF')
+license=('PSF-2.0')
 url="https://www.python.org/"
 depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl-1.1'  'sqlite' 'zlib')
 makedepends=('tk' 'bluez-libs')
@@ -150,7 +150,4 @@ package() {
 
   # clean-up reference to build directory
   sed -i "s#${srcdir}/Python-${pkgver}:##" "${pkgdir}"/usr/lib/python${_pybasever}/config/Makefile
-
-  # license
-  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
 }
