@@ -8,13 +8,12 @@ pkgrel=1
 pkgdesc='AI Toolkit for Healthcare Imaging'
 arch=('x86_64')
 url='https://monai.io'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
   python-pytorch-cuda
   python-numpy
 )
 makedepends=(
-  gcc10
   python-build
   python-installer
   python-setuptools
@@ -37,20 +36,22 @@ optdepends=(
   python-transformers
   tensorboard
 )
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Project-MONAI/MONAI/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('78c96361ac204cf9199e2c332d2a1751e7e3fb01edfd09e96ef68b3ecf0cea548eb4151dc5d064342397a970a8b8a8815427a7dbe0e39aaeb96f69505c7adba1')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Project-MONAI/MONAI/archive/refs/tags/${pkgver}.tar.gz"
+        "0001-fix-building-torch-extension-with-glog.patch"
+)
+sha512sums=('757e96639d734fc031f8fa0bbd6399034c67930b9520cca02d0b0884b23c92de7e18eb3a1256aa210ed3a5cc1d4f53ef94ca9c2ca0626340acee380ff08cca88'
+            '7096cc49314e366e60ce07e76709a6ccf13221cf95f01267a91ac5668e65935ede33eb28f957a561d16c5ff42f45a5b0bd65d869be0ef96f9ed61b9517157343')
 
 prepare() {
-  # disable building MONAI extension due to nvcc issue
-  export BUILD_MONAI=1
-  export FORCE_CUDA=1
-  export TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST}
-  export CC=gcc-10
-  export CXX=g++-10
+  cd ${_pkgname}-${pkgver}
+  patch -p1 -i ${srcdir}/0001-fix-building-torch-extension-with-glog.patch
 }
 
 build() {
   cd "${_pkgname}-${pkgver}"
+  BUILD_MONAI=1 \
+  FORCE_CUDA=1  \
+  TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
   python -m build --wheel --no-isolation -x
 }
 
