@@ -2,15 +2,17 @@
 
 pkgname=itk-snap-bin
 _pkgname=itk-snap
-pkgver=4.0.1
-_date=20230320
-pkgrel=2
+pkgver=4.0.2
+_date=20230925
+pkgrel=1
 pkgdesc="A software application used to segment structures in 3D medical images"
 arch=('x86_64')
 url="https://www.itksnap.org"
-license=('GPL')
+license=('GPL-3.0-or-later')
 depends=(
+  gcc-libs
   glib2
+  glibc
 )
 makedepends=(
   gendesk
@@ -18,10 +20,10 @@ makedepends=(
 provides=('itk-snap')
 conflicts=('itk-snap')
 source=(
-    "${pkgname}-${pkgver}.tar.gz::https://sourceforge.net/projects/itk-snap/files/itk-snap/${pkgver}/itksnap-${pkgver}-${_date}-Linux-gcc64.tar.gz"
+    "${pkgname}-${pkgver}.tar.gz::https://sourceforge.net/projects/itk-snap/files/itk-snap/${pkgver}/itksnap-${pkgver}-Linux-gcc64.tar.gz"
     "${_pkgname}.png::https://github.com/pyushkevich/itksnap/raw/master/GUI/Qt/Resources/logo_square.png"
 )
-sha512sums=('d7821bdd1b54a900aa8accd1cb270dc518ef92758c7c0e582c49d9f6027cef2ee4fea2639375a83bca450f8d8c123b0ecb87698f3d2d4c9c4828d101c08019d8'
+sha512sums=('241051e9a8f5142f8c0b9608d6c0184f61f22e9f39d799870febd6793b44bb76fccc222b6292287736b68437fa7a92d260a33662320e2a14a3acc76d67e30e46'
             '7d7866a4f28ee645cf4a454488d197a776475d2959d0f9d4d34cf534f34a73ffbb1b92430518f36948b4c25b736990693be07dd345600ed8292e526e2846fca1')
 
 prepare() {
