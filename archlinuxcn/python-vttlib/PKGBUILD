@@ -1,0 +1,31 @@
+# Maintainer: Caleb Maclennan <caleb@alerque.com>
+
+_pipname=vttLib
+pkgname=python-${_pipname,,}
+pkgver=0.12.0
+pkgrel=2
+pkgdesc='Dump, merge and compile Visual TrueType data in UFO3 with FontTools'
+arch=(any)
+url="https://github.com/daltonmaag/$_pipname"
+license=(MIT)
+_py_deps=(fonttools
+          fs # for fonttools[ufo]
+          pyparsing
+          ufolib2)
+depends=(python
+         "${_py_deps[@]/#/python-}")
+makedepends=(python-{build,installer,wheel}
+             python-setuptools-scm)
+_archive=$_pipname-$pkgver
+source=("https://files.pythonhosted.org/packages/source/${_pipname::1}/$_pipname/$_archive.tar.gz")
+sha256sums=('76c1422de87473a81679f55161027b60afdca838666dcb20e0bc380b01c7c216')
+
+build() {
+	cd "$_archive"
+	python -m build -wn
+}
+
+package() {
+	cd "$_archive"
+	python -m installer -d "$pkgdir" dist/*.whl
+}
