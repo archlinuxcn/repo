@@ -1,9 +1,10 @@
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
-pkgver=2.13.12
+pkgdesc="A note taking and to-do application with synchronization capabilities"
+pkgver=2.14.17
 groups=('joplin')
 pkgrel=1
-_electronVersion=25
+_electronVersion=26
 depends=("electron${_electronVersion}" "nodejs" "libvips")
 optdepends=('libappindicator-gtk3: for tray icon')
 arch=('x86_64')
@@ -18,13 +19,14 @@ source=(
 sha256sums=(
     'SKIP'
     'SKIP'
-    '82dd8bf31f6e97c88c60b359d18538c659369942ccda5c0b0831a96dea50d7b3'
+    '9d202222d103fbac87bcfad050e76476a5fd8270f5e9cb0c160fdb710e53b3b9'
 )
 
 _setup_env() {
     export YARN_CACHE_FOLDER="${srcdir}/yarn-cache"
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
-    export npm_config_build_from_source=true
+    #export npm_config_build_from_source=true
+    export SHARP_IGNORE_GLOBAL_LIBVIPS=1
 }
 
 prepare() {
@@ -46,9 +48,6 @@ build() {
     _setup_env
 
     cd "${srcdir}/joplin-${pkgver}"
-
-    # Fix "Error: Cannot find module '../../vendor/...'" error
-    sed -i '/^\/vendor\/$/d' .gitignore
 
     yarn install
 }
