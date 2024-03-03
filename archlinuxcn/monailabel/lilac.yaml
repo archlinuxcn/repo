@@ -4,8 +4,8 @@ maintainers:
 build_prefix: extra-x86_64
 
 repo_depends:
-  - itk-git
-  - itk-git: python-itk-git
+  - itk
+  - itk: python-itk
   - python-dicomweb-client
   - python-einops
   - python-expiring-dict
@@ -29,6 +29,6 @@ update_on:
     github: Project-MONAI/MONAILabel
     use_latest_release: true
   - source: manual
-    manual: 7
+    manual: 8
   - alias: python
 # vim:set ts=2 sw=2 et:
