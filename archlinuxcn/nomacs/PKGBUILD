@@ -5,7 +5,7 @@
 _plugins_ver=3.16
 pkgname=nomacs
 pkgver=3.17.2295
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="A Qt image viewer"
 arch=(x86_64)
@@ -34,6 +34,7 @@ build() {
   cmake -B build -S ImageLounge -Wno-dev \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DQT_VERSION_MAJOR=5 \
     -DUSE_SYSTEM_QUAZIP=ON \
     -DENABLE_AVIF=ON \
     -DENABLE_TRANSLATIONS=ON
