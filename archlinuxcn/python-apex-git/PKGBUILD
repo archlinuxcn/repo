@@ -8,7 +8,7 @@ pkgrel=1
 pkgdesc="A PyTorch Extension for easy mixed precision and distributed training"
 arch=('x86_64')
 url="https://github.com/NVIDIA/apex"
-license=('BSD')
+license=('BSD-3-Clause')
 depends=(python-pytorch-cuda)
 makedepends=(
   git
@@ -20,8 +20,16 @@ makedepends=(
 )
 provides=(python-apex=${pkgver})
 conflicts=(python-apex)
-source=("${pkgname}::git+https://github.com/NVIDIA/apex.git")
-sha512sums=('SKIP')
+source=("${pkgname}::git+https://github.com/NVIDIA/apex.git"
+        "0001-fix-building-torch-extension-with-glog.patch"
+)
+sha512sums=('SKIP'
+            '3d40481858d3e5b2005ab2ba4fb19197b2b14da060fd95afae4045213257c74de78bf2f74e11118093dea2de593822da1d7fdfc531754dc832e581f02d0bfd8d')
+
+prepare() {
+  cd "${srcdir}/${pkgname}"
+  patch -p1 -i "${srcdir}/0001-fix-building-torch-extension-with-glog.patch"
+}
 
 pkgver() {
   cd "${srcdir}/${pkgname}"
