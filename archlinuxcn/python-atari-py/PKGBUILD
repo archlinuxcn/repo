@@ -6,36 +6,35 @@ _pkgname=atari-py
 pkgver=0.2.9
 pkgrel=3
 pkgdesc='A python interface for the Arcade Learning Environment (Modified by OpenAI)'
-arch=('any')
+arch=('x86_64')
 url='https://github.com/openai/atari-py'
-license=('GPL')
+license=('GPL-2.0-or-later')
 depends=(
+  gcc-libs
+  glibc
   python-numpy
   python-six
+  zlib
 )
 makedepends=(
   cmake
+  python-build
+  python-installer
   python-setuptools
-)
-checkdepends=(
-  python-nose
+  python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/openai/atari-py/archive/${pkgver}.tar.gz")
 sha256sums=('0b9940e6685b704f7fa1bee91745fd9bc6fa1fa0d6844f6c42a8fe8a2d6144b3')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
-  python setup.py build_ext --inplace
-}
-
-check() {
-  cd "${_pkgname}-${pkgver}"
-  nosetests -v
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rf "${pkgdir}${site_packages}/atari_py/ale_interface/build"
 }
 # vim:set ts=2 sw=2 et:
