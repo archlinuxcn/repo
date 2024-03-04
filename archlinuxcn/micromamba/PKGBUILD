@@ -1,7 +1,7 @@
 # Maintainer: Guillaume Dolle  <dev at gdolle.com>
 pkgname=micromamba
-pkgver=1.5.6
-pkgrel=2
+pkgver=1.5.7
+pkgrel=1
 pkgdesc="C++ tiny version of mamba, the fast conda package installer"
 arch=('aarch64' 'armv7h' 'i686' 'x86_64')
 url="https://github.com/mamba-org/mamba"
@@ -12,7 +12,7 @@ depends=('libarchive.so' 'libcurl.so' 'libsolv' 'libfmt.so'
 makedepends=('gtest' 'termcolor' 'cmake' 'cli11' 'nlohmann-json'
              'ghc-filesystem' 'tl-expected')
 source=(micromamba-${pkgver}.tar.gz::https://github.com/mamba-org/mamba/archive/refs/tags/micromamba-${pkgver}.tar.gz )
-sha256sums=('aabff23746d634255681d4bb249740214e8405c12caee9682e0ee0c22e423e4a')
+sha256sums=('bdc6d1d5ff8af77c5f12bbe79636cdc34f06dcf0694830a47a0c196833b8a186')
 provides=('micromamba')
 conflict=('micromamba' 'micromamba-bin')
 
