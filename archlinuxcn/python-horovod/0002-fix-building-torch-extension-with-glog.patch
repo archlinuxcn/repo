@@ -1,0 +1,24 @@
+From b4a923c3017d77c45124a2209e6e8d64a926ad43 Mon Sep 17 00:00:00 2001
+From: Hu Butui <hot123tea123@gmail.com>
+Date: Mon, 4 Mar 2024 14:26:28 +0800
+Subject: [PATCH] fix building torch extension with glog
+
+---
+ CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2c127190..7666647b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -74,6 +74,7 @@ list(APPEND SOURCES "${PROJECT_SOURCE_DIR}/horovod/common/common.cc"
+ 
+ # Default Macro
+ add_definitions(-DEIGEN_MPL2_ONLY=1)
++add_definitions(-DGLOG_USE_GLOG_EXPORT)
+ 
+ # Remove platform default std
+ string(REGEX REPLACE  "-std=[^ ]+" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+-- 
+2.43.2
+
