@@ -8,8 +8,10 @@ pkgrel=8
 pkgdesc="FAIR's next-generation platform for object detection and segmentation"
 arch=('x86_64')
 url='https://github.com/facebookresearch/detectron2'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
+  gcc-libs
+  glibc
   python-cloudpickle
   python-future
   python-fvcore
@@ -22,6 +24,7 @@ depends=(
   python-pillow
   python-pycocotools
   python-pydot
+  python-shapely
   python-sympy
   python-tabulate
   python-termcolor
@@ -32,32 +35,41 @@ depends=(
 makedepends=(
   cuda
   numactl
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
   python-pytorch-cuda
 )
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/facebookresearch/detectron2/archive/v${pkgver}.tar.gz")
-sha256sums=('9757fed05fa32acc2116ea038185f08409d5e854573e70f41909a358b70d1004')
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/facebookresearch/detectron2/archive/v${pkgver}.tar.gz"
+        "0001-fix-building-torch-extension-with-glog.patch"
+)
+sha256sums=('9757fed05fa32acc2116ea038185f08409d5e854573e70f41909a358b70d1004'
+            'b658be8e329604a2cdb9529b40c1389719054da61a831b76f7ee203c8bec2537')
 
 prepare() {
-  cp -a "${_pkgname}-${pkgver}" "python-${_pkgname}-${pkgver}" 
-  cp -a "${_pkgname}-${pkgver}" "python-${_pkgname}-cuda-${pkgver}" 
+  cd ${_pkgname}-${pkgver}
+  patch -p1 -i "${srcdir}/0001-fix-building-torch-extension-with-glog.patch"
+  cp -a "${srcdir}/${_pkgname}-${pkgver}" "${srcdir}/python-${_pkgname}-${pkgver}"
+  cp -a "${srcdir}/${_pkgname}-${pkgver}" "${srcdir}/python-${_pkgname}-cuda-${pkgver}"
 }
 
 build() {
-  cd "python-${_pkgname}-${pkgver}"
-  python setup.py build
+  cd "${srcdir}/python-${_pkgname}-${pkgver}"
+  python -m build --wheel --no-isolation
 
   cd "${srcdir}/python-${_pkgname}-cuda-${pkgver}"
   TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
-  FORCE_CUDA=1 python setup.py build
+  FORCE_CUDA=1 \
+  python -m build --wheel --no-isolation
 }
 
 package_python-detectron2() {
   depends+=(
     python-pytorch
   )
-  cd "${pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  cd "${srcdir}/python-${_pkgname}-${pkgver}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   # remove unused files
   local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   rm -rfv ${pkgdir}${site_packages}/tools
@@ -72,9 +84,10 @@ package_python-detectron2-cuda() {
   )
   provides=(python-detectron2=${pkgver})
   conflicts=(python-detectron2)
-  cd "${pkgname}-${pkgver}"
+  cd "${srcdir}/python-${_pkgname}-cuda-${pkgver}"
   TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
-  FORCE_CUDA=1 python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  FORCE_CUDA=1 \
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   # remove unused files
   local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   rm -rfv ${pkgdir}${site_packages}/tools
