@@ -2,22 +2,21 @@
 # Maintainer: Christian Hoff <https://github.com/choff>
 # Contributor: Tobias Martin <tm-x at gmx dot net>
 
-_commit=13a93a4f7c17de5c5b9ab354aaf34b230583110e
+_commit=44e5ba79f515b3cd22d96b4e3ab0f74d5361eb79
 
 pkgname=binder_linux-dkms
-pkgver=6.7
+pkgver=6.8
 pkgrel=1
 arch=("x86_64")
 url='https://github.com/choff/anbox-modules'
 pkgdesc='Android kernel driver fork by @choff in DKMS format, binder only.'
-license=("GPL3")
+license=('GPL-2.0-only')
 conflicts=("anbox-modules-dkms")
 depends=("dkms")
-makedepends=("git")
 source=(
-    "git+${url}.git#commit=${_commit}"
+    "binder_linux-dkms-${pkgver}.tar.gz::https://github.com/choff/anbox-modules/archive/${_commit}.tar.gz"
 )
-sha256sums=('SKIP')
+sha256sums=('8cd9b4f010e5e3d1374f6031c8f679a857f4b2db72158dc6e6267fcbbb5dd159')
 # prepare(){
 #     cd "${srcdir}/anbox-modules"
 #     for diff_file in "${srcdir}/"*.diff
@@ -27,5 +26,5 @@ sha256sums=('SKIP')
 # }
 package(){
     install -dm755 "${pkgdir}/usr/src/binder-1"
-    cp -r "${srcdir}/anbox-modules/binder/"* "${pkgdir}/usr/src/binder-1/"
+    cp -r "${srcdir}/anbox-modules-${_commit}/binder/"* "${pkgdir}/usr/src/binder-1/"
 }
