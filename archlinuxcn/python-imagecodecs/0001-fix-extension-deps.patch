@@ -1,8 +1,17 @@
+From d02152619bbd4976563dd67da1fefcf6203597a5 Mon Sep 17 00:00:00 2001
+From: Butui Hu <hot123tea123@gmail.com>
+Date: Mon, 4 Mar 2024 11:20:53 +0800
+Subject: [PATCH] fix extension deps
+
+---
+ setup.py | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
+
 diff --git a/setup.py b/setup.py
-index e527a75..2156d26 100644
+index e527a75..3ea18db 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -233,24 +233,20 @@ def customize_build_default(EXTENSIONS, OPTIONS):
+@@ -233,24 +233,19 @@ def customize_build_default(EXTENSIONS, OPTIONS):
      import platform
  
      del EXTENSIONS['apng']  # apng patch not commonly available
@@ -18,7 +27,6 @@ index e527a75..2156d26 100644
      del EXTENSIONS['mozjpeg']  # Win32 only
      del EXTENSIONS['sperr']  # sperr not commonly available
 -    del EXTENSIONS['zlibng']  # zlib-ng library not commonly available
-+    del EXTENSIONS['jpegxl']
  
 -    if 'arch' not in platform.platform():
 -        del EXTENSIONS['jpegls']  # CharLS 2.1 library not commonly available
@@ -33,3 +41,6 @@ index e527a75..2156d26 100644
  
      if sys.platform == 'win32':
          EXTENSIONS['bz2']['libraries'] = ['libbz2']
+-- 
+2.44.0
+

@@ -7,15 +7,15 @@ pkgrel=2
 pkgdesc='Image transformation, compression, and decompression codecs'
 arch=('x86_64')
 url='https://github.com/cgohlke/imagecodecs'
-license=('BSD')
+license=('BSD-3-Clause')
 depends=(
   blosc
   blosc2
   brotli
   brunsli
-  cfitsio
   charls
   giflib
+  glibc
   jxrlib
   lcms2
   lerc
@@ -24,18 +24,20 @@ depends=(
   libdeflate
   libheif
   libjpeg-turbo
-  # libjxl
-  libmng
+  libjxl
   libpng
   libtiff
   libwebp
+  lz4
   lzfse
   openjpeg2
   python-numpy
   snappy
+  xz
   zfp
   zlib-ng
   zopfli
+  zstd
 )
 makedepends=(
   cython
@@ -45,14 +47,14 @@ makedepends=(
   python-wheel
 )
 source=("${_name}-${pkgver}.tar.gz::https://github.com/cgohlke/imagecodecs/archive/v${pkgver}.tar.gz"
-        "0001.fix-deps.patch"
+        "0001-fix-extension-deps.patch"
 )
 sha256sums=('6af69181a3fe828f9fea5fd440af1b88610fd05665665e6885c3a84c1055b648'
-            '3f698523d4f941bc83a2c58b1aa55bcac0484e284f5d6b1b00da2dcfc5caa14b')
+            'f4086c9d7541bc7e9925ebadfe3313addd971da42bdc33ca84e41c9f47e323d2')
 
 prepare() {
   cd "${_name}-${pkgver}"
-  patch -p1 -i "${srcdir}/0001.fix-deps.patch"
+  patch -p1 -i "${srcdir}/0001-fix-extension-deps.patch"
 }
 
 build() {
