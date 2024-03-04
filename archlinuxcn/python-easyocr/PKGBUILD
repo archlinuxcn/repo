@@ -7,7 +7,7 @@ pkgrel=1
 pkgdesc='End-to-End Multi-Lingual Optical Character Recognition (OCR) Solution for 80+ supported languages'
 arch=('any')
 url='https://github.com/jaidedai/easyocr'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
   python-bidi
   python-numpy
@@ -16,22 +16,26 @@ depends=(
   python-pytorch
   python-scikit-image
   python-scipy
+  python-six
   python-torchvision
   python-yaml
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/JaidedAI/EasyOCR/archive/refs/tags/v${pkgver}.tar.gz")
 sha512sums=('d337e4f463764623d492968216320c894c24b551898c621966dfb92c18277d676389b3cb0154da4a56a9c3a6416675157e53d3be00876a69969330d36077b546')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
 }
 # vim:set ts=2 sw=2 et:
