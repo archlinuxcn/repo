@@ -9,7 +9,7 @@
 pkgname="wine-wow64"
 pkgver=9.3
 _pkgver="${pkgver/rc/-rc}"
-pkgrel=1
+pkgrel=2
 pkgdesc="A compatibility layer for running Windows programs"
 url="https://www.winehq.org"
 license=(LGPL)
@@ -93,9 +93,6 @@ package() {
   make prefix="$pkgdir"/usr \
     libdir="$pkgdir"/usr/lib \
     dlldir="$pkgdir"/usr/lib/wine install
-
-  i686-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/i386-windows/*.dll
-  x86_64-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.dll
 
   ln -sf /usr/bin/wine "$pkgdir"/usr/bin/wine64
 
