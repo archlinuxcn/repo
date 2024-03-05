@@ -1,0 +1,36 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+# Contributor: Carlos Aznarán <caznaranl@uni.pe>
+# Contributor: Simon Legner <Simon.Legner@gmail.com>
+
+_pkgname=snuggs
+pkgname=python-snuggs
+pkgver=1.4.7
+pkgrel=1
+pkgdesc="S-expressions for Numpy"
+url="https://github.com/mapbox/snuggs"
+license=('MIT')
+arch=('any')
+depends=(
+  python-numpy
+  python-pyparsing
+)
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
+source=(${_pkgname}-${pkgver}.tar.gz::https://github.com/mapbox/snuggs/archive/refs/tags/${pkgver}.tar.gz)
+sha512sums=('c1f40e521d1b0cf15075b22b04000c74ecbd0522cdd820b8c159aac812924d877349b3f3bca93b09eed5b025a34c26665a41c7a52a8145419558b115cf8ef361')
+
+build() {
+  cd ${_pkgname}-${pkgver}
+  python -m build --wheel --skip-dependency-check --no-isolation
+}
+
+package() {
+  cd ${_pkgname}-${pkgver}
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  install -Dm 644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

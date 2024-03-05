@@ -1,0 +1,49 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+# Contributor: Carlos Aznarán <caznaranl@uni.pe>
+# Contributor: Simon Legner <Simon.Legner@gmail.com>
+
+_pkgname=rasterio
+pkgname=python-rasterio
+pkgver=1.3.9
+pkgrel=1
+pkgdesc="Fast and direct raster I/O for use with Numpy and SciPy"
+url="https://github.com/rasterio/rasterio"
+license=('LicenseRef-rasterio')
+arch=('x86_64')
+depends=(
+  gcc-libs
+  gdal
+  glibc
+  python-affine
+  python-attrs
+  python-click
+  python-click-plugins
+  python-cligj
+  python-numpy
+  python-setuptools
+  python-snuggs
+)
+makedepends=(
+  python-build
+  python-installer
+  cython
+  python-wheel
+)
+optdepends=('ipython: for ipython support'
+  'python-boto3: for s3 support'
+  'python-matplotlib: for plotting support'
+  'python-swiftclient: for OpenStack support')
+source=(${_pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz)
+sha512sums=('4e360446acdd8b243fa8acae38f9351c48fcb8ca99068fd547c92654a786dc3bd81f7e96147786686d95b786a366b3fdd4554f45ab23208a3a874c208f2a4e8f')
+
+build() {
+  cd ${_pkgname}-${pkgver}
+  python -m build --wheel --skip-dependency-check --no-isolation
+}
+
+package() {
+  cd ${_pkgname}-${pkgver}
+  PYTHONPYCACHEPREFIX="${PWD}/.cache/cpython/" python -m installer --destdir="${pkgdir}" dist/*.whl
+  install -Dm 644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

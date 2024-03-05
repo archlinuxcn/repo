@@ -1,0 +1,37 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+# Contributor: Kyle Manna <kyle[at]kylemanna[d0t]com>
+
+_pkgname=affine
+pkgname=python-affine
+pkgver=2.4.0
+pkgrel=1
+pkgdesc="Python package for matrices describing affine transformation of the plane"
+arch=('any')
+url='https://github.com/rasterio/affine'
+license=('BSD-3-Clause')
+makedepends=(
+  python-build
+  python-installer
+  python-wheel
+  python-flit-core
+)
+depends=(
+  python
+)
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/rasterio/affine/archive/refs/tags/${pkgver}.tar.gz")
+sha512sums=('0fbd7ac01b7401a8e9f3959bf9f0961999a9276995ae1dc25d4789d3d3eaad4cfdcb02c43bdd30abd31d8059288a459ce067ca35d2754cb119668256062377b0')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+  install -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE.txt
+  # delete tests dir
+  local site_packages=$(python -c 'import site; print(site.getsitepackages()[0])')
+  rm -rfv "${pkgdir}${site_packages}/affine/tests"
+}
+# vim:set ts=2 sw=2 et:
