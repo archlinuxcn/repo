@@ -1,6 +1,6 @@
 pkgname=sunshine
-pkgver=0.21.0
-pkgrel=2
+pkgver=0.22.0
+pkgrel=1
 pkgdesc="A self-hosted GameStream host for Moonlight."
 arch=('x86_64' 'aarch64')
 url=https://app.lizardbyte.dev
@@ -22,6 +22,7 @@ depends=('avahi'
          'libxfixes'
          'libxrandr'
          'libxtst'
+         'miniupnpc'
          'numactl'
          'openssl'
          'opus'
@@ -44,25 +45,10 @@ sha256sums=('SKIP')
 
 prepare() {
     cd "$pkgname"
-    # Skip submodules that we don't want
-    git rm -f third-party/ffmpeg-windows-x86_64
-    git rm -f third-party/ffmpeg-macos-x86_64
-    git rm -f third-party/ffmpeg-macos-aarch64
-    git rm -f third-party/ViGEmClient
-
-    if [[ $CARCH == "x86_64" ]]; then
-        git rm -f third-party/ffmpeg-linux-aarch64
-    elif [[ $CARCH == "aarch64" ]]; then
-        git rm -f third-party/ffmpeg-linux-x86_64
-    fi
     git submodule update --recursive --init
 }
 
 build() {
-    pushd "$pkgname"
-    npm install
-    popd
-
     export BRANCH="master"
     export BUILD_VERSION="${pkgver}"
     export COMMIT="$(git rev-parse HEAD)"
@@ -74,6 +60,7 @@ build() {
         -S "$pkgname" \
         -B build \
         -Wno-dev \
+        -D BUILD_WERROR=ON \
         -D CMAKE_INSTALL_PREFIX=/usr \
         -D SUNSHINE_EXECUTABLE_PATH=/usr/bin/sunshine \
         -D SUNSHINE_ASSETS_DIR="share/sunshine"
