@@ -10,12 +10,45 @@ pkgver=24.04.70.r19660
 pkgrel=1
 pkgdesc="A non-linear video editor for Linux using the MLT video framework. KF5 Frameworks (Latest Applications GIT Version)"
 arch=('i686' 'x86_64')
-url="http://www.kdenlive.org/"
+url="http://www.${_pkgname}.org/"
 license=('GPL-3.0-only')
-depends=('kfilemetadata5' 'knewstuff5' 'knotifyconfig5'
-	'mlt' 'hicolor-icon-theme' 'purpose5' 'qt5-networkauth' 'python'
-)
-makedepends=('extra-cmake-modules' 'kdoctools5' 'git' 'v4l-utils')
+depends=('breeze-icons'
+         'frei0r-plugins'
+         'karchive'
+         'kbookmarks'
+         'kcodecs'
+         'kcolorscheme'
+         'kcompletion'
+         'kconfig'
+         'kconfigwidgets'
+         'kcoreaddons'
+         'kcrash'
+         'kdbusaddons'
+         'kfilemetadata'
+         'kguiaddons'
+         'ki18n'
+         'kiconthemes'
+         'kio'
+         'kitemviews'
+         'knewstuff'
+         'knotifications'
+         'knotifyconfig'
+         'ktextwidgets'
+         'kwidgetsaddons'
+         'kxmlgui'
+         'mlt'
+         'purpose'
+         'qt6-base'
+         'qt6-declarative'
+         'qt6-multimedia'
+         'qt6-networkauth'
+         'qt6-svg'
+         'solid')
+makedepends=('git'
+             'doxygen'
+             'extra-cmake-modules'
+             'kdoctools'
+             'qt6-tools')
 optdepends=('ffmpeg: for FFmpeg plugin'
 	'cdrkit: for creation of DVD ISO images'
 	'dvdauthor: for creation of DVD'
@@ -32,16 +65,8 @@ optdepends=('ffmpeg: for FFmpeg plugin'
 	'python-vosk-bin: open source speech recognition')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
-#source=(${pkgname}::git://anongit.kde.org/kdenlive)
-#source=(git://anongit.kde.org/kdenlive)
-#The git repo has changed recently. To update your git repo to the new one
-#and save yourself from downloading the entire repo again, do:
-#git remote set-url https://invent.kde.org/multimedia/kdenlive
-#in the kdenlive git directory
 source=("git+https://invent.kde.org/multimedia/${_pkgname}.git")
 sha1sums=('SKIP')
-#install=$pkgname.install
-#options=(debug !strip)
 
 pkgver() {
 	cd "${_pkgname}/"
@@ -52,8 +77,6 @@ pkgver() {
 prepare() {
 	mkdir -p build
 }
-
-#To get debug info, change -DCMAKE_BUILD_TYPE=Release to either "Debug" or "RelWithDebInfo"
 
 build() {
 	cd build
