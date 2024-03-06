@@ -8,8 +8,29 @@ pkgdesc="Archiving Tool"
 arch=('x86_64')
 url="https://apps.kde.org/ark/"
 license=('GPL-2.0-or-later')
-depends=('kparts5' 'kpty5' 'libarchive' 'libzip' 'hicolor-icon-theme')
-makedepends=('git' 'extra-cmake-modules' 'kdoctools5')
+depends=('kcolorscheme'
+	'kcompletion'
+	'kconfig'
+	'kconfigwidgets'
+	'kcoreaddons'
+	'kcrash'
+	'kdbusaddons'
+	'kfilemetadata'
+	'ki18n'
+	'kio'
+	'kjobwidgets'
+	'kparts'
+	'kpty'
+	'kservice'
+	'kwidgetsaddons'
+	'kwindowsystem'
+	'kxmlgui'
+	'libarchive'
+	'libzip'
+	'qt6-base'
+	'sh'
+	'zlib')
+makedepends=('git' 'extra-cmake-modules' 'kdoctools')
 optdepends=('p7zip: 7Z format support'
 	'unrar: RAR decompression support'
 	'unarchiver: RAR format support'
