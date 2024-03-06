@@ -8,8 +8,26 @@ pkgdesc="Client for YouTube Music"
 arch=('x86_64' 'aarch64')
 url="https://invent.kde.org/plasma-mobile/audiotube"
 license=('GPL-2.0-or-later')
-depends=("futuresql-git" "gst-plugins-good" "kcrash5" "ki18n5" "kirigami2" "purpose5" "python-ytmusicapi" "qt5-imageformats" "yt-dlp")
-makedepends=('git' 'extra-cmake-modules' 'pybind11' 'qt5-svg' 'python-ytmusicapi' 'kirigami-addons5')
+depends=('futuresql-qt6'
+         'kcoreaddons'
+         'kcrash'
+         'ki18n'
+         'kirigami-addons'
+         'kwindowsystem'
+         'purpose'
+         'python'
+         'python-ytmusicapi'
+         'qt6-5compat'
+         'qt6-base'
+         'qt6-declarative'
+         'qt6-imageformats'
+         'qt6-multimedia'
+         'qt6-svg'
+         'yt-dlp')
+makedepends=('git'
+             'extra-cmake-modules'
+             'pybind11'
+             'qcoro-qt6')
 provides=('audiotube')
 conflicts=('audiotube')
 source=("git+${url}.git")
