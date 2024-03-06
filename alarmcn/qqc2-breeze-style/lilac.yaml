@@ -4,9 +4,6 @@ maintainers:
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build_script: git_pkgbuild_commit()
 
-repo_makedepends:
-  - extra-cmake-modules-git
-
 update_on:
   - source: github
     github: KDE/qqc2-breeze-style

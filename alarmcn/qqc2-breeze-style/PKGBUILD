@@ -7,8 +7,8 @@ pkgdesc="Breeze inspired QQC2 Style"
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://invent.kde.org/plasma/qqc2-breeze-style"
 license=('GPL3')
-depends=('qt6-base' 'qt6-declarative' 'qt6-quickcontrols2' 'kirigami2' 'kiconthemes5')
-makedepends=('git' 'extra-cmake-modules-git' 'qt6-tools')
+depends=('qt6-base' 'qt6-declarative' 'qt6-quickcontrols2' 'kirigami' 'kiconthemes')
+makedepends=('git' 'extra-cmake-modules' 'qt6-tools')
 source=("git+${url}.git#tag=v${pkgver}")
 md5sums=('SKIP')
 
