@@ -13,52 +13,52 @@ license=('LGPL')
 groups=('kf6-git')
 depends=('cmake')
 makedepends=(
-  'git'
-  'python-sphinx'
-  'python-requests'
+	'git'
+	'python-sphinx'
+	'python-requests'
 )
 checkdepends=(
-  'reuse'
-  'qt5-tools'
-  'qt5-base'
-  'qt5-declarative'
+	'reuse'
+	'qt5-tools'
+	'qt5-base'
+	'qt5-declarative'
 )
 conflicts=("${_pkgname}")
 provides=("${_pkgname}=${pkgver%%.r*}")
 optdepends=(
- 'python-pyxdg: to generate fastlane metadata for Android apps'
- 'python-requests: to generate fastlane metadata for Android apps'
- 'python-yaml: to generate fastlane metadata for Android apps'
- 'clang: for clang support'
+	'python-pyxdg: to generate fastlane metadata for Android apps'
+	'python-requests: to generate fastlane metadata for Android apps'
+	'python-yaml: to generate fastlane metadata for Android apps'
+	'clang: for clang support'
 )
 source=("git+https://invent.kde.org/frameworks/${_pkgname}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-  cd "${_pkgname}/"
-  _ver="$(cat CMakeLists.txt | grep -m1 'set(VERSION' | grep -o "[[:digit:]]*" | paste -sd'.')"
-  echo "${_ver}.r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+	cd "${_pkgname}/"
+	_ver="$(cat CMakeLists.txt | grep -m1 'set(VERSION' | grep -o "[[:digit:]]*" | paste -sd'.')"
+	echo "${_ver}.r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 prepare() {
-  sed 's|frameworks/||g' -i "${_pkgname}/tests/KDEFetchTranslations/CMakeLists.txt"
+	sed 's|frameworks/||g' -i "${_pkgname}/tests/KDEFetchTranslations/CMakeLists.txt"
 }
 
 build() {
-  cmake -S "${_pkgname}" -B build \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DBUILD_QTHELP_DOCS=ON \
-    -DBUILD_TESTING=ON \
+	cmake -S "${_pkgname}" -B build \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DBUILD_QTHELP_DOCS=ON \
+		-DBUILD_TESTING=ON
 
-  cmake --build build
+	cmake --build build
 }
 
 check() {
-  cd build
-  ctest --output-on-failure -E ECMPoQmToolsTest
+	cd build
+	ctest --output-on-failure -E ECMPoQmToolsTest
 }
 
 package() {
-  DESTDIR="${pkgdir}" cmake --install build
+	DESTDIR="${pkgdir}" cmake --install build
 }
