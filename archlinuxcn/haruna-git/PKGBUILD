@@ -5,11 +5,27 @@ _pkgname=${pkgname%-git}
 pkgver=0.12.2.r26.g623664d
 pkgrel=1
 pkgdesc="A Qt/QML video player built on top of libmpv"
-url="https://invent.kde.org/multimedia/haruna"
+url="https://invent.kde.org/multimedia/${_pkgname}"
 arch=('x86_64')
 license=('GPL-3.0-or-later')
-depends=('breeze' 'kfilemetadata5' 'kio-extras' 'mpv' 'qqc2-desktop-style5')
-makedepends=('extra-cmake-modules' 'git' 'kdoctools5')
+depends=('breeze'
+	'ffmpeg'
+	'kconfig'
+	'kconfigwidgets'
+	'kcoreaddons'
+	'kdeclarative'
+	'kfilemetadata'
+	'ki18n'
+	'kio'
+	'kirigami'
+	'kwindowsystem'
+	'mpvqt'
+	'qt6-base'
+	'qt6-declarative'
+	'qt6-quickcontrols2')
+makedepends=('git'
+	'extra-cmake-modules'
+	'kdoctools')
 optdepends=('yt-dlp: for video-sharing websites playback'
 	'youtube-dl: for video-sharing websites playback')
 provides=("${_pkgname}")
