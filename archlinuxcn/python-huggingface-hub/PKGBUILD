@@ -2,7 +2,7 @@
 
 _pkgname=huggingface_hub
 pkgname=python-huggingface-hub
-pkgver=0.21.3
+pkgver=0.21.4
 pkgrel=1
 epoch=1
 pkgdesc='All the open source things related to the Hugging Face Hub'
@@ -33,7 +33,7 @@ optdepends=(
   python-tensorflow
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/huggingface/huggingface_hub/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('0b560d88cf109213148405caa2606f0356015866b6c603264693e4cb62c055ab58a101d256a6d8a0dc1049c769b04cbfce8b9420183a3c15c26d105906e8b08a')
+sha512sums=('886e553c474b59a47d1c5e04c7429ca5c1eb6bcb88a0f7ed6f1396d43c3195bb1f376093384f40497f18fb2220e3e0d9c4b7787c009b84d1d38b6d706307f67f')
 
 build() {
   cd "${_pkgname}-${pkgver}"
