@@ -1,5 +1,5 @@
 do_setcap() {
-  sudo setcap cap_sys_admin+p /usr/bin/$(readlink $(which sunshine))
+  setcap cap_sys_admin+p /usr/bin/$(readlink $(which sunshine))
 }
 
 post_install() {
