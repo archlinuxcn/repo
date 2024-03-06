@@ -8,17 +8,39 @@ _pkgname=${pkgname%-git}
 pkgver=23.11.70_r20959.g91066be0c
 pkgrel=1
 pkgdesc="Advanced Text Editor"
-groups=(kde-applications-git kde-utilities-git)
+groups=('kde-applications-git' 'kde-utilities-git')
 url="https://www.kde.org/applications/utilities/${_pkgname}/"
-depends=(knewstuff ktexteditor kactivities kuserfeedback hicolor-icon-theme)
+depends=('kbookmarks'
+	'kcolorscheme'
+	'kcompletion'
+	'kconfig'
+	'kconfigwidgets'
+	'kcoreaddons'
+	'kcrash'
+	'kdbusaddons'
+	'kguiaddons'
+	'ki18n'
+	'kiconthemes'
+	'kio'
+	'knewstuff'
+	'kparts'
+	'kservice'
+	'ktexteditor'
+	'ktextwidgets'
+	'kuserfeedback'
+	'kwidgetsaddons'
+	'kwindowsystem'
+	'kxmlgui'
+	'qt6-base'
+	'syntax-highlighting')
 optdepends=('konsole-git: open a terminal in Kate'
 	'clang: C and C++ LSP support'
 	'python-language-server: Python LSP support'
 	'texlab: LaTeX LSP support'
 	'rust: Rust LSP support')
-arch=(x86_64)
+arch=('x86_64')
 license=('LGPL-2.1-or-later')
-makedepends=(extra-cmake-modules-git kdoctools plasma-framework knewstuff kitemmodels ktexteditor kactivities kuserfeedback git)
+makedepends=('extra-cmake-modules' 'kdoctools' 'git')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}" "kdesdk-${_pkgname}" "kdebase-kwrite")
 source=("git+https://invent.kde.org/utilities/${_pkgname}.git")
