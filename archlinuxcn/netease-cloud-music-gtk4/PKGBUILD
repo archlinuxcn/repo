@@ -1,8 +1,8 @@
 # Maintainer: HaoCheng <ch1994@outlook.com>
 pkgname=netease-cloud-music-gtk4
 _pkgname=netease-cloud-music-gtk
-pkgver=2.3.0
-pkgrel=2
+pkgver=2.3.1
+pkgrel=1
 pkgdesc="Linux 平台下基于 Rust + GTK4 开发的网易云音乐播放器"
 arch=('x86_64')
 url="https://github.com/gmg137/netease-cloud-music-gtk"
@@ -24,7 +24,7 @@ conflicts=(
 source=(
 	"https://github.com/gmg137/$_pkgname/archive/$pkgver.tar.gz"
 )
-sha256sums=('490abb90327464a9e854d9951dda95d07cb6e6724d5fa37e799284909e494fbc')
+sha256sums=('e520bc3bdebd0b9522fa26fdd5991de278947552d968b9c8217ff87305990039')
 
 prepare(){
 	cd $_pkgname-$pkgver
