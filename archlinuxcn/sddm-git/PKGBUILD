@@ -4,7 +4,7 @@
 _pkgbase="sddm"
 pkgname="$_pkgbase-git"
 pkgver=0.21.0.14.gae072f90
-pkgrel=2
+pkgrel=3
 pkgdesc="The Simple Desktop Display Manager"
 arch=("x86_64")
 url="https://github.com/sddm/sddm"
@@ -37,14 +37,29 @@ backup=('usr/share/sddm/scripts/Xsetup'
         'etc/pam.d/sddm'
         'etc/pam.d/sddm-autologin'
         'etc/pam.d/sddm-greeter')
-source=("git+https://github.com/sddm/sddm.git#branch=develop")
-sha256sums=('SKIP')
+source=("git+https://github.com/sddm/sddm.git#branch=develop"
+        '0001-Revert-cmake-remove-the-final-Arch-PAM-modules.patch')
+sha256sums=('SKIP'
+            '8939dabe3dd539ff44cf3e5740a1a4a518836ae147fbe54f163bd9f0b10ccc6e')
 
 pkgver() {
-	cd $_pkgbase
-	#_ver="$(cat CMakeLists.txt | grep -m3 -e _VERSION_MAJOR -e _VERSION_MINOR -e _VERSION_PATCH | grep -o "[[:digit:]]*" | paste -sd'.')"
-        #echo "${_ver}.r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
-	git describe --tags --long | sed 's/^v//;s/-/./g'
+  cd $_pkgbase
+  #_ver="$(cat CMakeLists.txt | grep -m3 -e _VERSION_MAJOR -e _VERSION_MINOR -e _VERSION_PATCH | grep -o "[[:digit:]]*" | paste -sd'.')"
+  #echo "${_ver}.r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+  git describe --tags --long | sed 's/^v//;s/-/./g'
+}
+
+prepare() {
+  cd $_pkgbase
+
+  local src
+   for src in "${source[@]}"; do
+     src="${src%%::*}"
+     src="${src##*/}"
+     [[ $src = *.patch ]] || continue
+     echo "Applying patch $src..."
+     patch -Np1 < "../$src"
+   done
 }
 
 build() {

@@ -1,0 +1,144 @@
+From 1159c7d0ccc28cdcf3a299afd43ea737a993a7d3 Mon Sep 17 00:00:00 2001
+From: Piotr Gorski <lucjan.lucjanov@gmail.com>
+Date: Tue, 5 Mar 2024 22:30:38 +0100
+Subject: [PATCH] Revert "cmake: remove the final (Arch) PAM modules"
+
+This reverts commit ae072f901671b68861da9577e3e12e350a9053d5.
+
+Signed-off-by: Piotr Gorski <lucjan.lucjanov@gmail.com>
+---
+ CMakeLists.txt                     |  1 +
+ services/CMakeLists.txt            | 18 ++++++++++++++++++
+ services/sddm-autologin-tally2.pam | 13 +++++++++++++
+ services/sddm-autologin.pam        | 13 +++++++++++++
+ services/sddm-greeter.pam.in       | 17 +++++++++++++++++
+ services/sddm.pam                  | 15 +++++++++++++++
+ 6 files changed, 77 insertions(+)
+ create mode 100644 services/sddm-autologin-tally2.pam
+ create mode 100644 services/sddm-autologin.pam
+ create mode 100644 services/sddm-greeter.pam.in
+ create mode 100644 services/sddm.pam
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4e84543..1b8a147 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -19,6 +19,7 @@ option(ENABLE_JOURNALD "Enable logging to journald" ON)
+ option(NO_SYSTEMD "Disable systemd support" OFF)
+ option(USE_ELOGIND "Use elogind instead of logind" OFF)
+ option(BUILD_WITH_QT6 "Build with Qt 6" OFF)
++option(INSTALL_PAM_CONFIGURATION "Install PAM configuration files" ON)
+ 
+ set(CMAKE_CXX_STANDARD 17)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+diff --git a/services/CMakeLists.txt b/services/CMakeLists.txt
+index f542c55..5406f8b 100644
+--- a/services/CMakeLists.txt
++++ b/services/CMakeLists.txt
+@@ -11,3 +11,21 @@ if(DEFINED SYSTEMD_TMPFILES_DIR)
+     configure_file(sddm-tmpfiles.conf.in sddm-tmpfiles.conf)
+     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/sddm-tmpfiles.conf" DESTINATION "${SYSTEMD_TMPFILES_DIR}" RENAME sddm.conf)
+ endif()
++
++if(USE_ELOGIND)
++    set(LOGIND_PAM_MODULE "pam_elogind.so")
++else()
++    set(LOGIND_PAM_MODULE "pam_systemd.so")
++endif()
++configure_file("${CMAKE_CURRENT_SOURCE_DIR}/sddm-greeter.pam.in" "${CMAKE_CURRENT_BINARY_DIR}/sddm-greeter.pam")
++
++if(INSTALL_PAM_CONFIGURATION)
++    if(HAVE_PAM_FAILLOCK)
++        install(FILES sddm-autologin.pam DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/pam.d RENAME sddm-autologin)
++    else()
++        install(FILES sddm-autologin-tally2.pam DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/pam.d RENAME sddm-autologin)
++    endif()
++
++    install(FILES sddm.pam DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/pam.d RENAME sddm)
++    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/sddm-greeter.pam" DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/pam.d RENAME sddm-greeter)
++endif()
+diff --git a/services/sddm-autologin-tally2.pam b/services/sddm-autologin-tally2.pam
+new file mode 100644
+index 0000000..99729bc
+--- /dev/null
++++ b/services/sddm-autologin-tally2.pam
+@@ -0,0 +1,13 @@
++#%PAM-1.0
++auth        required    pam_env.so
++auth        required    pam_tally2.so file=/var/log/tallylog onerr=succeed
++auth        required    pam_shells.so
++auth        required    pam_nologin.so
++auth        required    pam_permit.so
++-auth       optional    pam_gnome_keyring.so
++-auth       optional    pam_kwallet5.so
++account     include     system-local-login
++password    include     system-local-login
++session     include     system-local-login
++-session    optional    pam_gnome_keyring.so auto_start
++-session    optional    pam_kwallet5.so auto_start
+diff --git a/services/sddm-autologin.pam b/services/sddm-autologin.pam
+new file mode 100644
+index 0000000..b42991e
+--- /dev/null
++++ b/services/sddm-autologin.pam
+@@ -0,0 +1,13 @@
++#%PAM-1.0
++auth        required    pam_env.so
++auth        required    pam_faillock.so preauth
++auth        required    pam_shells.so
++auth        required    pam_nologin.so
++auth        required    pam_permit.so
++-auth       optional    pam_gnome_keyring.so
++-auth       optional    pam_kwallet5.so
++account     include     system-local-login
++password    include     system-local-login
++session     include     system-local-login
++-session    optional    pam_gnome_keyring.so auto_start
++-session    optional    pam_kwallet5.so auto_start
+diff --git a/services/sddm-greeter.pam.in b/services/sddm-greeter.pam.in
+new file mode 100644
+index 0000000..d41792d
+--- /dev/null
++++ b/services/sddm-greeter.pam.in
+@@ -0,0 +1,17 @@
++#%PAM-1.0
++
++# Load environment from /etc/environment and ~/.pam_environment
++auth		required pam_env.so
++
++# Always let the greeter start without authentication
++auth		required pam_permit.so
++
++# No action required for account management
++account		required pam_permit.so
++
++# Can't change password
++password	required pam_deny.so
++
++# Setup session
++session		required pam_unix.so
++session		optional @LOGIND_PAM_MODULE@
+diff --git a/services/sddm.pam b/services/sddm.pam
+new file mode 100644
+index 0000000..df11003
+--- /dev/null
++++ b/services/sddm.pam
+@@ -0,0 +1,15 @@
++#%PAM-1.0
++
++auth        include     system-login
++-auth       optional    pam_gnome_keyring.so
++-auth       optional    pam_kwallet5.so
++
++account     include     system-login
++
++password    include     system-login
++-password   optional    pam_gnome_keyring.so    use_authtok
++
++session     optional    pam_keyinit.so          force revoke
++session     include     system-login
++-session    optional    pam_gnome_keyring.so    auto_start
++-session    optional    pam_kwallet5.so         auto_start
+-- 
+2.43.0.232.ge79552d197
+
