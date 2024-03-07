@@ -8,17 +8,15 @@ arch=('x86_64' 'i686' 'i486' 'pentium4' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://invent.kde.org/plasma/plasma-mobile"
 license=('LGPL-2.0-or-later')
 depends=(
-	plasma-nano
-	plasma-nm
-	plasma-pa
-	powerdevil
-	modemmanager-qt5
-	plasma-wayland-session
-	qqc2-breeze-style
-	qt5-feedback
-	kirigami-addons
-	maliit-keyboard
-	kpipewire
+	'plasma-nm'
+	'plasma-pa'
+	'powerdevil'
+	'modemmanager-qt'
+	'qqc2-breeze-style'
+	'kuserfeedback'
+	'kirigami-addons'
+	'maliit-keyboard'
+	'kpipewire'
 )
 optdepends=(
 	'plasma-mobile-nm: Mobile networking settings modules for WiFi, etc.'
