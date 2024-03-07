@@ -8,16 +8,8 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/julia-vscode/CSTParser.jl.git#commit=$_commit"
-        0001-Fix-membuffer-support.patch)
-sha256sums=('SKIP'
-            '9a963865d14164cd45398ebb9c0697804f803df6c6edb841efd8aa103468165b')
-
-prepare() {
-  cd CSTParser.jl
-
-  patch -Np1 --no-backup-if-mismatch < ../0001-Fix-membuffer-support.patch
-}
+source=("git+https://github.com/julia-vscode/CSTParser.jl.git#commit=$_commit")
+sha256sums=('SKIP')
 
 package() {
   cd CSTParser.jl
