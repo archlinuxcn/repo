@@ -1,0 +1,29 @@
+# Maintainer: Vlad Zahorodnii <contact@vladzahorodnii.com>
+
+pkgname=kwin-effects-cube-git
+pkgver=1.0.0.r0.3606d40
+pkgrel=1
+pkgdesc='Desktop cube effect for KWin'
+arch=('x86_64')
+url='https://github.com/zzag/kwin-effects-cube'
+license=('GPL3')
+depends=('kwin>=5.25.0' qt6-quick3d)
+makedepends=(extra-cmake-modules)
+source=("${pkgname}::git+https://github.com/zzag/kwin-effects-cube.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "${pkgname}"
+    git describe --long --tags | sed 's/\([^-]*-\)g/r\1/;s/-/./g'
+}
+
+build() {
+    cmake -B build -S "${pkgname}" \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_LIBDIR=lib
+    cmake --build build
+}
+
+package() {
+    DESTDIR="${pkgdir}" cmake --build build --target install
+}
