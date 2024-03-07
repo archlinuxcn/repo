@@ -8,7 +8,7 @@ arch=('x86_64')
 url='https://github.com/zzag/kwin-effects-cube'
 license=('GPL3')
 depends=('kwin>=5.25.0' qt6-quick3d)
-makedepends=(extra-cmake-modules)
+makedepends=(extra-cmake-modules git)
 source=("${pkgname}::git+https://github.com/zzag/kwin-effects-cube.git")
 sha256sums=('SKIP')
 
