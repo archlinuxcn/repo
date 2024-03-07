@@ -7,12 +7,15 @@ pkgrel=2
 pkgdesc='Cross-platform GUI library which renders in a web browser'
 arch=('any')
 url='https://github.com/dddomodossola/remi'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
   python
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 optdepends=(
   'python-pywebview: for standalone app'
@@ -22,13 +25,13 @@ sha256sums=('362375d60e4e460a88c9f2198a83ae7a6476a32987d2fc97154211be829331f5')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   rm -rf "${pkgdir}${site_packages}/test"
   install -dm755 "${pkgdir}/usr/share/doc/${pkgname}"
   mv -vf "examples" "${pkgdir}/usr/share/doc/${pkgname}"
