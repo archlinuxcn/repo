@@ -12,10 +12,12 @@ optdepends=('docker' 'gitea')
 makedepends=('go')
 source=("act_runner-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
         'act_runner.service'
-        'act_runner.sysusers')
+        'act_runner.sysusers'
+        'act_runner.tmpfiles')
 sha256sums=('8dbc7da07752d7ed8900581963045f3dcbfe02c52cb560acefd88099b8daf136'
             'ffcd415415b68a2902c942eaf0b13b11d184974434e333735e31ce14cdab3b57'
-            'f0de2d8076ff59db8f5686addc096fc29e02190bfb7b44329979b3d9e1ad292f')
+            'f0de2d8076ff59db8f5686addc096fc29e02190bfb7b44329979b3d9e1ad292f'
+            '86885e9226ffb7bc3dbb105dc2e10630c41717212c804e19413acf3974c8b347')
 
 build() {
     cd "$pkgname"
