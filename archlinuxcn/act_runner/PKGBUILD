@@ -3,7 +3,7 @@
 
 pkgname=act_runner
 pkgver=0.2.6
-pkgrel=1
+pkgrel=2
 pkgdesc="Runner for Gitea based on Gitea fork of act"
 arch=('x86_64')
 url="https://gitea.com/gitea/act_runner"
