@@ -1,10 +1,10 @@
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
 pkgdesc="A note taking and to-do application with synchronization capabilities"
-pkgver=2.14.17
+pkgver=2.14.19
 groups=('joplin')
 pkgrel=1
-_electronVersion=26
+_electronVersion=27
 depends=("electron${_electronVersion}" "nodejs" "libvips")
 optdepends=('libappindicator-gtk3: for tray icon')
 arch=('x86_64')
@@ -19,7 +19,7 @@ source=(
 sha256sums=(
     'SKIP'
     'SKIP'
-    '9d202222d103fbac87bcfad050e76476a5fd8270f5e9cb0c160fdb710e53b3b9'
+    'ec65d5bbd790c65a0f6f4b7ed6838e13bcda5a4ec63488262a28db4b047b7050'
 )
 
 _setup_env() {
