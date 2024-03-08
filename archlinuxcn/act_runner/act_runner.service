@@ -5,24 +5,16 @@ Documentation=https://gitea.com/gitea/act_runner
 After=docker.service
 
 [Service]
+Type=exec
+User=act_runner
 Environment=HOME=/var/lib/act_runner
+WorkingDirectory=/var/lib/act_runner
 ExecStart=/usr/bin/act_runner daemon -c /etc/act_runner/act_runner.yaml
 ExecReload=/usr/bin/kill -s HUP $MAINPID
-User=act_runner
-WorkingDirectory=/var/lib/act_runner
-TimeoutSec=0
-RestartSec=2
 Restart=always
+RestartSec=2
 StartLimitBurst=3
 StartLimitInterval=60s
-LimitNOFILE=infinity
-LimitNPROC=infinity
-LimitCORE=infinity
-TasksMax=infinity
-Delegate=yes
-Type=notify
-NotifyAccess=all
-KillMode=mixed
 
 [Install]
 WantedBy=default.target

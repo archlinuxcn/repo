@@ -10,17 +10,18 @@ url="https://gitea.com/gitea/act_runner"
 license=('MIT')
 optdepends=('docker' 'gitea')
 makedepends=('go')
+backup=('etc/act_runner/act_runner.yaml')
 source=("act_runner-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
         'act_runner.service'
         'act_runner.sysusers'
         'act_runner.tmpfiles')
 sha256sums=('8dbc7da07752d7ed8900581963045f3dcbfe02c52cb560acefd88099b8daf136'
-            'ffcd415415b68a2902c942eaf0b13b11d184974434e333735e31ce14cdab3b57'
+            '0211027d0fe34635b1ad7bc301c941a1ae40d2c9c72eef66b552c9bc2ded8cf2'
             'f0de2d8076ff59db8f5686addc096fc29e02190bfb7b44329979b3d9e1ad292f'
             '86885e9226ffb7bc3dbb105dc2e10630c41717212c804e19413acf3974c8b347')
 
 build() {
-    cd "$pkgname"
+    cd "${pkgname}"
     # https://wiki.archlinux.org/title/Go_package_guidelines#Supporting_debug_packages
     export CGO_CPPFLAGS="${CPPFLAGS}"
     export CGO_CFLAGS="${CFLAGS}"
@@ -28,8 +29,8 @@ build() {
     export CGO_LDFLAGS="${LDFLAGS}"
     export GOPATH="${srcdir}"
     export GOFLAGS="-buildmode=pie -mod=readonly -modcacherw"
-    go build -ldflags "-compressdwarf=false -linkmode external -X 'main.version=$pkgver'" .
-    ./act_runner generate-config > "$srcdir/act_runner.yaml"
+    go build -ldflags "-compressdwarf=false -linkmode external -X gitea.com/gitea/act_runner/internal/pkg/ver.version=$pkgver"
+    "${srcdir}/act_runner/act_runner" generate-config > "$srcdir/act_runner.yaml"
 }
 
 package() {
