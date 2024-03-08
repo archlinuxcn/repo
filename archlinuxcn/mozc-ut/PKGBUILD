@@ -17,33 +17,32 @@ ENABLED_DICTIONARIES=(
 )
 
 pkgname='mozc-ut'
-pkgver=2.29.5374.102.20240211
+pkgver=2.29.5400.102.20240308
 pkgrel=1
 pkgdesc='The Open Source edition of Google Japanese Input bundled with the UT dictionary'
 arch=('x86_64')
 url='https://github.com/google/mozc'
-license=('Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND CC-BY-SA-3.0 AND CC-BY-SA-4.0 AND GPL-2.0-only AND GPL-2.0-or-later AND LGPL-3.0-only AND MIT AND NAIST-2003 AND Unicode-3.0')
+license=('Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND CC-BY-SA-3.0 AND CC-BY-SA-4.0 AND GPL-2.0-only AND GPL-2.0-or-later AND MIT AND NAIST-2003 AND Unicode-3.0 AND LicenseRef-Okinawa-Dictionary')
 depends=('qt6-base')
 makedepends=('bazel' 'git' 'python' 'rsync' 'ruby' 'wget')
 optdepends=('fcitx5-mozc-ut: Fcitx5 integration'
-            'fcitx-mozc-ut: Fcitx integration'
             'ibus-mozc: IBus integration'
             'emacs-mozc: Emacs integration')
-provides=('mozc=2.29.5374.102')
+provides=('mozc=2.29.5400.102')
 conflicts=('mozc')
 options=(!distcc !ccache)
-source=("${pkgname}-git::git+https://github.com/google/mozc.git#commit=c2fcbf6515c5884437977de46187c16a8cb7bb50"
+source=("${pkgname}-git::git+https://github.com/google/mozc.git#commit=e87c83febda07ffd93fcbfc4ea67562f40423005"
         'git+https://github.com/utuhiro78/merge-ut-dictionaries.git#commit=a3d6fc4005aff2092657ebca98b9de226e1c617f'
         'git+https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git#commit=4e548e6356b874c76e8db438bf4d8a0b452f2435'
-        'git+https://github.com/utuhiro78/mozcdic-ut-edict2.git#commit=b2eec665b81214082d61acee1c5a1b5b115baf1a'
-        'git+https://github.com/utuhiro78/mozcdic-ut-jawiki.git#commit=6e08b8c823f3d2d09064ad2080e7a16552a7b473'
+        'git+https://github.com/utuhiro78/mozcdic-ut-edict2.git#commit=16283aa0c2d394a3a000eca4fa3e95eb365698c6'
+        'git+https://github.com/utuhiro78/mozcdic-ut-jawiki.git#commit=bd82687d32ae838f1e163d3d2c6ad18740af53f2'
         'git+https://github.com/utuhiro78/mozcdic-ut-neologd.git#commit=bf9d0d217107f2fb2e7d1a26648ef429d9fdcd27'
-        'git+https://github.com/utuhiro78/mozcdic-ut-personal-names.git#commit=8a500f82c553936cbdd33b85955120e731069d44'
+        'git+https://github.com/utuhiro78/mozcdic-ut-personal-names.git#commit=6cc099cefc928bc37854c538e030114df3d5b42d'
         'git+https://github.com/utuhiro78/mozcdic-ut-place-names.git#commit=a847a02e0137ab9e2fdbbaaf120826f870408ca6'
         'git+https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git#commit=ee94f6546ce52edfeec0fd203030f52d4d99656f'
         'git+https://github.com/utuhiro78/mozcdic-ut-sudachidict.git#commit=55f61c3fca81dec661c36c73eb29b2631c8ed618'
-        'https://dumps.wikimedia.org/jawiki/20240201/jawiki-20240201-all-titles-in-ns0.gz')
-noextract=('jawiki-20240201-all-titles-in-ns0.gz')
+        'https://dumps.wikimedia.org/jawiki/20240301/jawiki-20240301-all-titles-in-ns0.gz')
+noextract=('jawiki-20240301-all-titles-in-ns0.gz')
 sha256sums=('SKIP'
             'SKIP'
             'SKIP'
@@ -54,7 +53,7 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            '6058ffb12f6d090717092d4174b6ab9fbd76a2e9798eb0d8cc09b330a2dc9760')
+            'b6afec2803d9fcd2e994e2e8556a7665d5b32bf17b4d503d15309829fbc5b995')
 
 prepare() {
     cd ${pkgname}-git/src
@@ -69,7 +68,7 @@ prepare() {
     # Use a dated snapshot for the JAWiki dump data
     sed -i -e '/wget/d' count_word_hits.rb
     sed -i -e "s|filename = \"jawiki-|filename = \"${srcdir}/jawiki-|g" count_word_hits.rb
-    sed -i -e 's|jawiki-[a-z0-9]\{6,8\}|jawiki-20240201|g' count_word_hits.rb apply_word_hits.rb
+    sed -i -e 's|jawiki-[a-z0-9]\{6,8\}|jawiki-20240301|g' count_word_hits.rb apply_word_hits.rb
 
     # Compile the UT dictionary
     printf '\nCompiling the UT dictionary...\n\n'
@@ -102,9 +101,32 @@ build() {
 package() {
     cd ${pkgname}-git/src
 
-    install -Dm644 ../LICENSE                                   "${pkgdir}"/usr/share/licenses/mozc/LICENSE
-    install -Dm644 data/installer/credits_en.html               "${pkgdir}"/usr/share/licenses/mozc/Submodules
+    # BSD-3-Clause
+    sed -n 67,94p data/installer/credits_en.html > Mozc
+    install -Dm644 Mozc "${pkgdir}"/usr/share/licenses/mozc/Mozc
+    # BSD-3-Clause
+    sed -n 317,344p data/installer/credits_en.html > Breakpad
+    install -Dm644 Breakpad "${pkgdir}"/usr/share/licenses/mozc/Breakpad
+    # NAIST-2003
+    sed -n 355,424p data/installer/credits_en.html > IPAdic
+    install -Dm644 IPAdic "${pkgdir}"/usr/share/licenses/mozc/IPAdic
+    # BSD-2-Clause
+    sed -n 435,457p data/installer/credits_en.html > Japanese-Usage-Dictionary
+    install -Dm644 Japanese-Usage-Dictionary "${pkgdir}"/usr/share/licenses/mozc/Japanese-Usage-Dictionary
+    # Public Domain Data
+    sed -n 468,470p data/installer/credits_en.html > Okinawa-Dictionary
+    install -Dm644 Okinawa-Dictionary "${pkgdir}"/usr/share/licenses/mozc/Okinawa-Dictionary
+    # BSD-3-Clause
+    sed -n 481,513p data/installer/credits_en.html > Protocol-Buffers
+    install -Dm644 Protocol-Buffers "${pkgdir}"/usr/share/licenses/mozc/Protocol-Buffers
+    # MIT
+    sed -n 698,704p data/installer/credits_en.html > Tamachi-Phonetic-Kanji-Alphabet
+    install -Dm644 Tamachi-Phonetic-Kanji-Alphabet "${pkgdir}"/usr/share/licenses/mozc/Tamachi-Phonetic-Kanji-Alphabet
+    # MIT
+    sed -n 762,782p data/installer/credits_en.html > Windows-Implementation-Library
+    sed -i -e 's|^[ \t]*||g' Windows-Implementation-Library
+    install -Dm644 Windows-Implementation-Library "${pkgdir}"/usr/share/licenses/mozc/Windows-Implementation-Library
 
-    install -Dm755 bazel-bin/server/mozc_server                 "${pkgdir}"/usr/lib/mozc/mozc_server
-    install -Dm755 bazel-bin/gui/tool/mozc_tool                 "${pkgdir}"/usr/lib/mozc/mozc_tool
+    install -Dm644 bazel-bin/server/mozc_server "${pkgdir}"/usr/lib/mozc/mozc_server
+    install -Dm644 bazel-bin/gui/tool/mozc_tool "${pkgdir}"/usr/lib/mozc/mozc_tool
 }
