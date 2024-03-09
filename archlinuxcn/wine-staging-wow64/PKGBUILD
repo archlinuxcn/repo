@@ -6,11 +6,10 @@
 # https://gitlab.winehq.org/wine/wine-staging
 # https://github.com/wine-staging/wine-staging
 
-## basic info
 pkgname="wine-staging-wow64"
-pkgver=9.3
+pkgver=9.4
 _pkgver="${pkgver/rc/-rc}"
-pkgrel=2
+pkgrel=1
 pkgdesc="A compatibility layer for running Windows programs"
 url="https://www.winehq.org"
 license=(LGPL)
@@ -34,12 +33,14 @@ depends=(
   v4l-utils             #lib32-v4l-utils
   desktop-file-utils
   libgphoto2
-  samba
-  sane
 
   # with-wayland
   libxkbcommon
   wayland
+)
+_spacehogs=(
+  samba
+  sane
 )
 makedepends=(
   # staging
@@ -57,11 +58,15 @@ makedepends=(
   opencl-headers
   perl
   vulkan-headers
+
+  "${_spacehogs[@]}"
 )
 optdepends=(
   alsa-lib              #lib32-alsa-lib
   cups
   dosbox
+
+  "${_spacehogs[@]}"
 )
 
 provides=(
@@ -99,8 +104,8 @@ build() {
     --disable-tests \
     --prefix=/usr \
     --libdir=/usr/lib \
-    --enable-archs=x86_64,i386 \
-    --with-wayland
+    --with-wayland \
+    --enable-archs=x86_64,i386
   make
 }
 
