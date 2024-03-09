@@ -11,7 +11,7 @@ arch=('x86_64' 'aarch64' 'riscv64')
 url="https://helix-editor.com"
 license=('MPL2')
 depends=('hicolor-icon-theme')
-makedepends=('cargo' 'git')
+makedepends=('rustup' 'git')
 optdepends=(
 	'bash-language-server: for Bash language support'
 	'clang: for C/C++ language support'
@@ -47,6 +47,8 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
+	rustup default stable
+
 	# NOTE: we are renaming hx to helix so there is no conflict with hex (providing hx)
 	sed -i "s|hx|helix|g" contrib/completion/hx.*
 	sed -i 's|hx|helix|g' contrib/Helix.desktop
