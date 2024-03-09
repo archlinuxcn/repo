@@ -17,7 +17,7 @@ optdepends=(
 	'ripgrep: for file content searching'
 	'fzf: for directory jumping'
 	'zoxide: for directory jumping')
-makedepends=("git" "cargo" "imagemagick")
+makedepends=("git" "rustup" "imagemagick")
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("git+${url}.git")
@@ -27,6 +27,10 @@ options=('!lto')
 pkgver() {
 	cd "${_pkgname}/"
 	git describe --long --tags --match="v[0-9]*" --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+prepare() {
+	rustup default stable
 }
 
 build() {
