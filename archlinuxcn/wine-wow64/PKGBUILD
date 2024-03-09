@@ -7,9 +7,9 @@
 # https://github.com/wine-staging/wine-staging
 
 pkgname="wine-wow64"
-pkgver=9.3
+pkgver=9.4
 _pkgver="${pkgver/rc/-rc}"
-pkgrel=2
+pkgrel=1
 pkgdesc="A compatibility layer for running Windows programs"
 url="https://www.winehq.org"
 license=(LGPL)
@@ -33,12 +33,14 @@ depends=(
   v4l-utils             #lib32-v4l-utils
   desktop-file-utils
   libgphoto2
-  samba
-  sane
 
   # with-wayland
   libxkbcommon
   wayland
+)
+_spacehogs=(
+  samba
+  sane
 )
 makedepends=(
   libcups               #lib32-libcups
@@ -53,11 +55,15 @@ makedepends=(
   opencl-headers
   perl
   vulkan-headers
+
+  "${_spacehogs[@]}"
 )
 optdepends=(
   alsa-lib              #lib32-alsa-lib
   cups
   dosbox
+
+  "${_spacehogs[@]}"
 )
 
 provides=("wine=$pkgver")
@@ -73,7 +79,7 @@ source=(
   "30-win32-aliases.conf"
   "wine-binfmt.conf"
 )
-b2sums=('fa6f0c73f0886918b035557a37c0553feeea5692ae15e8d67fc4360c59c1bbab9f7f93e58ae29a41800da50b961b49957cf2d060d6b5da34bd956bf7cb3e5fab'
+b2sums=('bd65086e6f6e11bc6c7cd65dba6e6997911851f1a2f25cad0b4f8100d695df3c76b0799768ab9047dfd5d8afc7c749a5e5c88003d2f4ca69f417387cc06d527d'
         '45db34fb35a679dc191b4119603eba37b8008326bd4f7d6bd422fbbb2a74b675bdbc9f0cc6995ed0c564cf088b7ecd9fbe2d06d42ff8a4464828f3c4f188075b'
         'e9de76a32493c601ab32bde28a2c8f8aded12978057159dd9bf35eefbf82f2389a4d5e30170218956101331cf3e7452ae82ad0db6aad623651b0cc2174a61588')
 
