@@ -36,5 +36,5 @@ package() {
 	cd ..
 	install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 	install -Dm644 "nix/so.libdb.${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
-	install -Dm644 "internal/icons/hicolor/scalable/apps/so.libdb.${_pkgname}.Devel.svg" -t "${pkgdir}/usr/share/icons/hicolor/scalable/apps/"
+	install -Dm644 "internal/icons/hicolor/scalable/apps/so.libdb.${pkgname}.Devel.svg" -t "${pkgdir}/usr/share/icons/hicolor/scalable/apps/"
 }
