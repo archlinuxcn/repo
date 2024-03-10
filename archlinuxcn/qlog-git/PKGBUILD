@@ -3,7 +3,7 @@
 _pkgname=qlog
 pkgname="$_pkgname-git"
 pkgver=0.32.0.r0.g4c1699b
-pkgrel=1
+pkgrel=2
 pkgdesc="Amateur radio logbook software"
 arch=("x86_64")
 url="https://github.com/foldynl/QLog"
@@ -14,6 +14,7 @@ depends=(
   'qt6-webengine'
   'qtkeychain-qt6'
   'qt6-serialport'
+  'qt6-websockets'
   'hamlib'
 )
 makedepends=(
