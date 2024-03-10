@@ -2,7 +2,7 @@
 # Contributor: sukanka<su975853527 AT gmail dot com>
 
 pkgname=clash-verge
-pkgver=1.5.5
+pkgver=1.5.6
 pkgrel=1
 pkgdesc="A Clash Meta GUI based on Tauri, Continuation of Clash Verge"
 arch=('x86_64' 'aarch64')
@@ -29,7 +29,7 @@ makedepends=('cargo-tauri'
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
 	    "${pkgname}.desktop"
 )
-sha512sums=('a3dfb17654f370057396432967e520bc80f18c0436fedd416d66a7e0c7e452109d2f629b7af5c816321451b9d36a27ec5c6a0977ad1ee9b473721b2af8b91fda'
+sha512sums=('cfc0da781f58e49aba2d102a3191c78f630e5fd73af7b96db02a1acb4e5fb3921d9050753c11ffb97560b3c47093b935f3e1e7f5388136db8a19c22efca16203'
             '2066dacf2e5e0135e6403cbfb825efcdf08bbcdc781407e6bb1fbb85143817b2b1abef641d20390ff7e5b3e91a509933e9eb17a64f9de7671445ac6d5363a44a')
 options=(!lto)
 
