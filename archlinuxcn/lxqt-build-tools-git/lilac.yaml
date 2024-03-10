@@ -6,10 +6,6 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build: vcs_update
-
-post_build: git_pkgbuild_commit
-
 # Repeated `github` keys are not by a mistake!
 # During the 0.6.0 release period, upstream pushes the commit for 0.6.0
 # first [1], and then the 0.6.0 tag. Lilac builds for that commit and creates
@@ -24,3 +20,5 @@ update_on:
   - source: github
     github: lxqt/lxqt-build-tools
     use_max_tag: true
+  - source: aur
+    aur: lxqt-build-tools-git
