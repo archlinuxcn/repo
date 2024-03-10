@@ -4,22 +4,29 @@
 
 pkgbase=qt-installer-framework
 pkgname=(qt-installer-framework qt-installer-framework-docs)
-pkgver=4.6.1
+pkgver=4.7.0
 pkgrel=1
 pkgdesc='The Qt Installer Framework used for the Qt SDK installer'
 arch=('x86_64')
 url='http://qt-project.org/wiki/Qt-Installer-Framework'
-license=('FDL' 'LGPL')
+license=('GFDL-1.3-only' 'LicenseRef-GPL3-EXCEPT')
 makedepends=('qt5-tools' 'qt5-declarative' 'clang')
-source=("${pkgbase}-${pkgver}.tar.gz"::"https://github.com/qtproject/installer-framework/archive/${pkgver}.tar.gz")
-sha256sums=('ff2199ceb9ae996eebf18b0b737ee4fcf26c748988bb38cf7571115c21554d08')
+source=("${pkgbase}-${pkgver}.tar.gz"::"https://github.com/qtproject/installer-framework/archive/${pkgver}.tar.gz"
+        "componentalias_const_qjsonarray.patch")
+sha256sums=('bb5cccd294fa357ca6571397e22adb8e88bf6827adf96d02152b95f01d4c4cb9'
+            '7190ba7321dde12b4b13963f1b6d94f10299766980578f2498f21f985a4f2e46')
+
+prepare() {
+  cd "installer-framework-${pkgver}"
+  patch -p1 -i "${srcdir}/componentalias_const_qjsonarray.patch"
+}
 
 build() {
   # Build tools and libraries
   cd "installer-framework-${pkgver}"
   qmake .
   make
-  make docs
+  make html_docs_ifw
 }
 
 package_qt-installer-framework() {
@@ -62,6 +69,4 @@ package_qt-installer-framework-docs() {
   # Install documentation
   install -m 755 -d "${pkgdir}/usr/share/doc/${pkgbase}"
   cp -a "doc/html" "${pkgdir}/usr/share/doc/${pkgbase}"
-  install -m 755 -d "${pkgdir}/usr/share/doc/qt"
-  install -m 644 -t "${pkgdir}/usr/share/doc/qt" "doc/ifw.qch"
 }
