@@ -26,6 +26,8 @@ build() {
     source ~/.ghcup/env
     ghcup install stack latest
     # stack upgrade
+    # -Wl,-z,pack-relative-relocs is not supported by ld.gold
+    export LDFLAGS="-Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now"
     stack build --ghc-options="-j$(nproc)"
     ./manpage
 }
