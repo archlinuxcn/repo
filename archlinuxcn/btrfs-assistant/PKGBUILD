@@ -25,5 +25,10 @@ build() {
 
 package() {
 	make -C build DESTDIR="${pkgdir}" install
+
+	# Desktop file (Wayland)
 	install -Dm644 "${pkgname}-wayland.desktop" -t "${pkgdir}/usr/share/applications/"
+
+	# License
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
