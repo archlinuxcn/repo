@@ -11,8 +11,12 @@ depends=('qt6-base' 'qt6-svg' 'ttf-font' 'polkit' 'util-linux' 'btrfs-progs' 'di
 optdepends=('snapper' 'btrfsmaintenance')
 makedepends=('git' 'cmake' 'qt6-tools')
 backup=("etc/${pkgname}.conf")
-source=("${url}/-/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('2e82c5fca35e29452fc74a9ba17b987b03862dc2e8b3da02b351d9c763bf5cf5')
+source=(
+	"${url}/-/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz"
+	"${pkgname}-wayland.desktop"
+)
+sha256sums=('2e82c5fca35e29452fc74a9ba17b987b03862dc2e8b3da02b351d9c763bf5cf5'
+            'bdf2b2f899ecd27f4e38352b1ee306a18581fb521acc9bff37970f3afdade46e')
 
 build() {
 	cmake -B build -S "${pkgname}-${pkgver}/" -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
@@ -21,4 +25,5 @@ build() {
 
 package() {
 	make -C build DESTDIR="${pkgdir}" install
+	install -Dm644 "${pkgname}-wayland.desktop" -t "${pkgdir}/usr/share/applications/"
 }
