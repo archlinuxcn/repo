@@ -27,14 +27,3 @@ index 89b4755ac8b3..94b457385663 100644
      # TODO(crbug.com/1235145): Investigate why/if this should be needed.
      if (is_win) {
        cflags += [ "/clang:-ffp-contract=off" ]
-@@ -802,10 +784,6 @@ config("compiler") {
-       if (is_apple) {
-         ldflags += [ "-Wcrl,object_path_lto" ]
-       }
--
--      # We only use one version of LLVM within a build so there's no need to
--      # upgrade debug info, which can be expensive since it runs the verifier.
--      ldflags += [ "-Wl,-mllvm,-disable-auto-upgrade-debug-info" ]
-     }
- 
-     # TODO(https://crbug.com/1211155): investigate why this isn't effective on

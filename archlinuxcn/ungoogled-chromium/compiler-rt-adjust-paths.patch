@@ -18,17 +18,13 @@ index d4de2e0cca0..57359c32121 100644
          } else {
            assert(false)  # Unhandled cpu type
          }
-@@ -166,6 +169,15 @@ template("clang_lib") {
+@@ -166,6 +169,11 @@ template("clang_lib") {
          assert(false)  # Unhandled target platform
        }
  
-+      # Bit of a hack to make this find builtins from compiler-rt 16
++      # Bit of a hack to make this find builtins from compiler-rt >= 16
 +      if (is_linux || is_chromeos) {
-+        if (clang_version == "16") {
-+          _dir = "linux"
-+        } else {
-+          _suffix = ""
-+        }
++        _dir = "linux"
 +      }
 +
        _clang_lib_dir = "$clang_base_path/lib/clang/$clang_version/lib"
