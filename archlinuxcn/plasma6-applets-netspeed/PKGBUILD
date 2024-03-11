@@ -1,8 +1,8 @@
 # Maintainer: Iyán Méndez Veiga <me (at) iyanmv (dot) com>
 pkgname=plasma6-applets-netspeed
-pkgver=2.0.r7.gdb8ff30
-_commit="db8ff307fd4e6748fd988ecc77e473c828b47f9c"
-pkgrel=2
+_pkgname=plasma-applet-netspeed-widget
+pkgver=3.1
+pkgrel=1
 pkgdesc="Plasma 6 widget that displays the currently used network bandwidth"
 arch=('any')
 url="https://github.com/dfaust/plasma-applet-netspeed-widget"
@@ -16,18 +16,13 @@ depends=(
 makedepends=(
     'cmake'
     'extra-cmake-modules'
-    'git'
 )
-source=("${pkgname}::git+https://github.com/dfaust/plasma-applet-netspeed-widget#commit=${_commit}")
-b2sums=(SKIP)
-
-pkgver() {
-    cd "$pkgname"
-    git describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
-}
+optdepends=('kdeplasma-addons: support to launch a user defined application when the applet is clicked')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/dfaust/plasma-applet-netspeed-widget/archive/refs/tags/v${pkgver}.tar.gz")
+b2sums=('1f54130cb59b355be2b240d3e01d0b9abea9fd76f8843c190098e15bb630092742ce604c8567fd8952069e165d0ac2853dcf0203fc022de7b54ac3dc1229e8ca')
 
 build() {
-    cmake -B build -S ${pkgname} \
+    cmake -B build -S ${_pkgname}-${pkgver} \
         -DCMAKE_BUILD_TYPE='None' \
         -DCMAKE_INSTALL_PREFIX='/usr' \
         -Wno-dev
