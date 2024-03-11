@@ -30,5 +30,5 @@ package() {
 	install -Dm644 "${pkgname}-wayland.desktop" -t "${pkgdir}/usr/share/applications/"
 
 	# License
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 "${pkgname}-${pkgver}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
