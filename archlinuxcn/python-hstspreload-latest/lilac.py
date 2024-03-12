@@ -6,6 +6,7 @@ def pre_build():
     provides = ['python-hstspreload'],
     conflicts = ['python-hstspreload'],
     depends_setuptools = False,
+    license = 'BSD-3-Clause',
   )
 
 def post_build():
