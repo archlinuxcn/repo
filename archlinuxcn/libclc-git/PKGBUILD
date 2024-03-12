@@ -17,12 +17,12 @@ source=('llvm-project-git::git+https://github.com/llvm/llvm-project.git')
 md5sums=('SKIP')
 
 pkgver() {
-  cd llvm-project-git/llvm
+  cd llvm-project-git/cmake/Modules
   local _pkgver=$(awk -F 'MAJOR |MINOR |PATCH |)' \
           'BEGIN { ORS="." ; i=0 } \
            /set\(LLVM_VERSION_/ { print $2 ; i++ ; if (i==2) ORS="" } \
            END { print "\n" }' \
-           CMakeLists.txt)_r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+           LLVMVersion.cmake)_r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)
   echo "${_pkgver}"
 
 }
