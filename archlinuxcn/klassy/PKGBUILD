@@ -3,7 +3,7 @@
 
 pkgname=klassy
 pkgver=5.0.breeze5.27.11
-pkgrel=1
+pkgrel=2
 pkgdesc='Highly customizable binary Window Decoration, Application Style and Global Theme plugin for recent versions of the KDE Plasma desktop.'
 arch=(x86_64)
 url="https://github.com/paulmcauley/klassy"
@@ -15,7 +15,7 @@ optdepends=('kcmutils5: for klassy-settings')
 provides=()
 conflicts=()
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('e91e9a4695fa8bee0d7b53df59225f96fe1470d8afdc22a28baee5433b2fc0fc')
+sha256sums=('4b2f7ab45291919fbcc2e35ec87c9ed0944ef66a3935fd44c96575a064202282')
 
 build() {
   export CMAKE_PREFIX_PATH="/usr/lib/cmake/plasma5"
