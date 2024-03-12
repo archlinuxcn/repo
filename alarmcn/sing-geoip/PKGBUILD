@@ -2,7 +2,7 @@
 
 pkgbase=sing-geoip
 pkgname=(sing-geoip-common sing-geoip-rule-set sing-geoip-db)
-pkgver=20240212
+pkgver=20240312
 pkgrel=1
 pkgdesc="GeoIP database and rule sets for sing-box"
 arch=('any')
@@ -11,7 +11,7 @@ license=('GPL-3.0-or-later')
 makedepends=('go')
 _srcbase="${pkgbase}-${pkgver}"
 source=("${_srcbase}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('9c45705de8bff9ac875a332e5b2dc26b5658414f2da75b69e7e306931e6c1308')
+sha256sums=('794740e0073fa248a9a69b8ca55d24347743664e51546572488b89b0e0e404c0')
 
 build() {
 	cd "${_srcbase}/" || exit
