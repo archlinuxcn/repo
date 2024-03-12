@@ -9,7 +9,7 @@
 # Contributor (Parabola): Luke R. <g4jc@openmailbox.org>
 
 pkgbase=linux-libre
-pkgver=6.7.8
+pkgver=6.8
 pkgrel=1
 pkgdesc='Linux Libre'
 url='https://linux-libre.fsfla.org/'
@@ -30,14 +30,15 @@ makedepends=(
   graphviz
   imagemagick
   python-sphinx
+  python-yaml
   texlive-latexextra
 )
 options=('!strip')
 _srcname=linux-${pkgver}
-source=("https://linux-libre.fsfla.org/pub/linux-libre/releases/${pkgver}-gnu/linux-libre-${pkgver}-gnu.tar.xz"{,.sign}
+source=("https://linux-libre.fsfla.org/pub/linux-libre/releases/${pkgver}-gnu/linux-libre-${pkgver}-gnu.tar.lz"{,.sign}
         'https://repo.parabola.nu/other/linux-libre/logos/logo_linux_'{clut224.ppm,vga16.ppm,mono.pbm}{,.sig}
         'config')
-sha256sums=('2834077fa3a86a65b584457d92a0089b14b48a52ea64e77bf3334d275144b604'
+sha256sums=('f6c64e8ea831ffb71dedd1311e168fc7b142b025ec5fafa22ff6aedd9925bbe7'
             'SKIP'
             'bfd4a7f61febe63c880534dcb7c31c5b932dde6acf991810b41a939a93535494'
             'SKIP'
@@ -45,7 +46,7 @@ sha256sums=('2834077fa3a86a65b584457d92a0089b14b48a52ea64e77bf3334d275144b604'
             'SKIP'
             '13bd7a8d9ed6b6bc971e4cd162262c5a20448a83796af39ce394d827b0e5de74'
             'SKIP'
-            'f9a499b920f3d3dd248568e46de7f4baa44b2bb528a4d84305200bd08e1625b9')
+            '2513e5ed3d13f1ab1a1e874ec8d1cf0b995cec6779a5676b20e12498963fcf2f')
 validpgpkeys=('474402C8C582DAFBE389C427BCB7CF877E7D47A7'  # Alexandre Oliva
               '6DB9C4B4F0D8C0DC432CF6E4227CA7C556B2BA78') # David P.
 
