@@ -38,12 +38,13 @@ pkgver() {
 
 build() {
 	cd "${_pkgname}/"
-	make all
+	cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
+	cmake --build ./build --config Release --target "${_pkgname}"
 }
 
 package() {
 	cd "${_pkgname}/"
-	install -Dm755 "build/${_pkgname}" -t "${pkgdir}/usr/bin/"
+	DESTDIR="${pkgdir}" cmake --install ./build
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${pkgname}/"
 }
