@@ -40,7 +40,8 @@ build() {
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DSLEEF_BUILD_TESTS=Off \
-    -DSLEEF_BUILD_QUAD=On
+    -DSLEEF_BUILD_QUAD=On \
+    -DBUILD_SHARED_LIBS=On
   make
 }
 
