@@ -69,7 +69,7 @@ package_klassy-git() {
 
 package_klassy-qt5-git() {
   provides=("${_pkgname}-qt5")
-  conflicts=("${_pkgname}" "${_pkgname}-qt5")
+  conflicts=("${_pkgname}-qt5")
   depends=("${_pkgname}-git"
            breeze-icons
            gcc-libs
