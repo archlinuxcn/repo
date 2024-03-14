@@ -1,0 +1,15 @@
+pre_build_script: |
+  update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+  - source: regex
+    url: 'https://api.github.com/repos/MY1L/Unicode/releases/tags/NotoUni7'
+    # NotoUnicode-7.3.otf
+    regex: '"name": ?"NotoUnicode-([\d\.]+)\.otf"'
+
+maintainers:
+  - github: rocka
