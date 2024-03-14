@@ -6,11 +6,12 @@
 
 pkgname=otf-unifont
 pkgver=15.1.05
-pkgrel=1
+pkgrel=2
 pkgdesc="OpenType version of the GNU Unifont"
 url="https://unifoundry.com/unifont.html"
 arch=('any')
 license=('OFL-1.1 OR GPL-2.0-or-later WITH Font-exception-2.0')
+provides=('emoji-font')
 source=("https://unifoundry.com/pub/unifont/unifont-${pkgver}/unifont-${pkgver}.tar.gz"{,.sig})
 sha256sums=('d275f55f4358750e0f86305b92e87b88eb330aa46c15f553d2edf047fb1c23fa'
             'SKIP')
