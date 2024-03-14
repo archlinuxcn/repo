@@ -9,7 +9,7 @@ update_on:
   - source: github
     github: mpv-player/mpv
     branch: master
-  - alias: alpm
+  - source: alpm
     alpm: libplacebo
     provided: libplacebo.so
   - source: alpm
@@ -21,25 +21,25 @@ update_on:
   - source: alpm
     alpm: shaderc
     provided: libshaderc_shared.so
-  - alias: alpm
+  - source: alpm
     alpm: ffmpeg
     provided: libavcodec.so
-  - alias: alpm
+  - source: alpm
     alpm: ffmpeg
     provided: libavutil.so
-  - alias: alpm
+  - source: alpm
     alpm: ffmpeg
     provided: libavformat.so
-  - alias: alpm
+  - source: alpm
     alpm: ffmpeg
     provided: libavdevice.so
-  - alias: alpm
+  - source: alpm
     alpm: ffmpeg
     provided: libavfilter.so
-  - alias: alpm
+  - source: alpm
     alpm: ffmpeg
     provided: libswresample.so
-  - alias: alpm
+  - source: alpm
     alpm: ffmpeg
     provided: libswscale.so
   - source: alpm
