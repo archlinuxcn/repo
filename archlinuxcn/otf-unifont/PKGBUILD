@@ -6,7 +6,7 @@
 
 pkgname=otf-unifont
 pkgver=15.1.05
-pkgrel=2
+pkgrel=3
 pkgdesc="OpenType version of the GNU Unifont"
 url="https://unifoundry.com/unifont.html"
 arch=('any')
