@@ -7,7 +7,7 @@ pkgrel=2
 pkgdesc='A Python Perceptual Image Hashing Module'
 arch=('any')
 url='https://github.com/JohannesBuchner/imagehash'
-license=('BSD')
+license=('BSD-3-Clause')
 depends=(
   python-numpy
   python-pillow
@@ -15,7 +15,12 @@ depends=(
   python-scipy
   python-six
 )
-makedepends=(python-setuptools)
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
 checkdepends=(python-pytest)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/JohannesBuchner/imagehash/archive/v${pkgver}.tar.gz"
 )
@@ -23,7 +28,7 @@ sha512sums=('21c1610289cd373b20bf8b4894ca2e3a4185936e8f22e58d317aeaee4ac5ecd6ebd
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 check() {
@@ -33,7 +38,7 @@ check() {
 
 package() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   rm -rfv "${pkgdir}/usr/images"
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
