@@ -35,7 +35,7 @@ def pre_build():
       else:
         raise ValueError('PKGBUILD pkgname mismatch with preset')
     elif in_build_qt6_base and line.strip().startswith('pkgdesc='):
-      line = "pkgdesc='A cross-platform application and UI framework. This package uses {variant_desc} in all locales.'"
+      line = f"pkgdesc='A cross-platform application and UI framework. This package uses {variant_desc} in all locales.'"
       checks = checks + 'b'
     elif line.startswith('makedepends=('):
       line = line.replace('(', "(python ")
