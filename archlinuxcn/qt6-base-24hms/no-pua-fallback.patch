@@ -1,0 +1,95 @@
+From fc33fea999365c36ed446eee0db0d59d94be306b Mon Sep 17 00:00:00 2001
+From: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
+Date: Fri, 10 Feb 2023 08:14:26 +0100
+Subject: [PATCH] Don't do font merging for PUA characters
+
+The "Private Use Area" are subsets of Unicode which are not
+considered regular characters, but reserved for fonts to provide
+custom glyphs.
+
+If these were used and the main font did not have support for them,
+we would look them up in other fonts and sometimes display an
+arbitrary selection of glyphs, based on whatever existed on the
+platform. This is unexpected and different from how native apps
+work on Windows, for instance.
+
+[ChangeLog][QtGui][Text] Font merging (automatic assignment of
+alternative fonts) is no longer applied for characters in the
+Private Use Areas of Unicode.
+
+Pick-to: 6.5
+Fixes: QTBUG-110502
+Change-Id: Id2c63786aafda59bf170e0d7263eb78a391fe46d
+Reviewed-by: Tor Arne Vestbø <tor.arne.vestbo@qt.io>
+---
+
+diff --git a/src/gui/text/qfontengine.cpp b/src/gui/text/qfontengine.cpp
+index 6b764de..5035b61 100644
+--- a/src/gui/text/qfontengine.cpp
++++ b/src/gui/text/qfontengine.cpp
+@@ -1862,7 +1862,8 @@
+                 && ucs4 != QChar::LineSeparator
+                 && ucs4 != QChar::LineFeed
+                 && ucs4 != QChar::CarriageReturn
+-                && ucs4 != QChar::ParagraphSeparator) {
++                && ucs4 != QChar::ParagraphSeparator
++                && QChar::category(ucs4) != QChar::Other_PrivateUse) {
+             if (!m_fallbackFamiliesQueried)
+                 const_cast<QFontEngineMulti *>(this)->ensureFallbackFamiliesQueried();
+             for (int x = 1, n = qMin(m_engines.size(), 256); x < n; ++x) {
+diff --git a/tests/auto/gui/text/qtextscriptengine/tst_qtextscriptengine.cpp b/tests/auto/gui/text/qtextscriptengine/tst_qtextscriptengine.cpp
+index f28478d..d3267d0 100644
+--- a/tests/auto/gui/text/qtextscriptengine/tst_qtextscriptengine.cpp
++++ b/tests/auto/gui/text/qtextscriptengine/tst_qtextscriptengine.cpp
+@@ -56,6 +56,9 @@
+ 
+     void shapingDisabledDevanagari();
+     void shapingDisabledLatin();
++
++    void privateUseArea();
++
+ private:
+     bool haveTestFonts;
+ };
+@@ -1312,5 +1315,41 @@
+     QCOMPARE(noShapingRuns.first().glyphIndexes().size(), normalRuns.first().glyphIndexes().size());
+ }
+ 
++void tst_QTextScriptEngine::privateUseArea()
++{
++    QString privateUseAreaString = QString::fromUtf8("");
++
++    QFont font;
++    QList<QGlyphRun> withFontMerging;
++    {
++        QTextLayout layout;
++        layout.setText(privateUseAreaString);
++        layout.setFont(font);
++        layout.beginLayout();
++        layout.createLine();
++        layout.endLayout();
++
++        withFontMerging = layout.glyphRuns();
++    }
++
++    font.setStyleStrategy(QFont::NoFontMerging);
++    QList<QGlyphRun> withoutFontMerging;
++    {
++        QTextLayout layout;
++        layout.setText(privateUseAreaString);
++        layout.setFont(font);
++        layout.beginLayout();
++        layout.createLine();
++        layout.endLayout();
++
++        withoutFontMerging = layout.glyphRuns();
++    }
++
++    QCOMPARE(withFontMerging.size(), withoutFontMerging.size());
++
++    for (int i = 0; i < withFontMerging.size(); ++i)
++        QCOMPARE(withFontMerging.at(i).glyphIndexes(), withoutFontMerging.at(i).glyphIndexes());
++}
++
+ QTEST_MAIN(tst_QTextScriptEngine)
+ #include "tst_qtextscriptengine.moc"

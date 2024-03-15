@@ -24,7 +24,7 @@ def pre_build():
   variant_desc = '24-hour HH:mm:ss notation'
   for line in edit_file('PKGBUILD'):
     if line.startswith('pkgrel='):
-      line = line + '.3'
+      line = line + '.4'
     elif line.startswith('pkgbase='):
       line = f"pkgbase=qt6-base{variant}"
       checks = checks + 'f'
@@ -51,6 +51,7 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
     elif line.startswith('source=('):
       line = line.replace('=(', f'''=(
       oldherl{variant}.patch
+      no-pua-fallback.patch
       'https://build.archlinuxcn.org/~oldherl/files/cldr/44/core.zip'
       'https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab'
       ''')
@@ -58,6 +59,7 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
     elif line.startswith('sha256sums=('):
       line = line.replace('=(', f'''=(
       '{variant_sha256}'
+      'b2cefcd7f1297dc4703dc5c541fb284d4979bbfed3376fa1ba525417be7492d0'
       'bd7f70adfe8a999cfa0f5d96145bf0a095b1a099024e4f451fa1afccf6e4aee6'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
       ''')
@@ -69,6 +71,8 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       line = f'''
   cd $_pkgfn
   patch -p1 -i ../oldherl{variant}.patch
+  # revert this patch to enable font fallback in PUA, QTBUG-110502
+  patch -R -p1 -i ../no-pua-fallback.patch
   cd util/locale_database
   echo "This is slow. It takes about 4 minutes on my desktop."
   ./cldr2qlocalexml.py ../../../ > ./24h.xml
