@@ -17,16 +17,16 @@
 _accent=1
 
 pkgname=catppuccin-kde-theme
-pkgver=0.2.4
-pkgrel=3
+pkgver=0.2.6
+pkgrel=1
 pkgdesc="Soothing pastel theme for KDE"
 url="https://github.com/catppuccin/kde"
 license=('MIT')
 arch=('any')
-makedepends=("kpackage5" "plasma-desktop")
+makedepends=("kpackage" "plasma-desktop")
 source=("$pkgname-$pkgver.tar.gz::https://github.com/catppuccin/kde/archive/refs/tags/v$pkgver.tar.gz"
         color.sh)
-sha256sums=('bbf03f16ecfef6fd45eaa405443cd3de04596caa07361aa6e8c2d190acbb1f6c'
+sha256sums=('17fb25cd9347cd3d70e4647498b09bf951b0d27ae1c138b280ebdfd8649114a1'
             '0aad253fb7686fd15cee5c47138411ca80eb017fba046d6cb7054212294d4c7b')
 
 build() {
