@@ -7,8 +7,9 @@ pkgrel=1
 pkgdesc='Official APIs for the MS-COCO dataset'
 arch=(x86_64)
 url='https://pypi.org/project/pycocotools'
-license=(BSD)
+license=('BSD-2-Clause')
 depends=(
+  glibc
   python-matplotlib
   python-numpy
 )
