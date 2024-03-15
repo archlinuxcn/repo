@@ -65,6 +65,7 @@ package_klassy-git() {
   provides=("${_pkgname}")
   conflicts=("${_pkgname}")
   DESTDIR="${pkgdir}" cmake --install build
+  install -Dm644 "${_pkgname}-${pkgver}/LICENSES/MIT.txt" "${pkgdir}/usr/share/licenses/${_pkgname}-git/MIT.txt"
 }
 
 package_klassy-qt5-git() {
@@ -86,4 +87,5 @@ package_klassy-qt5-git() {
            qt5-svg)
   DESTDIR="${pkgdir}" cmake --install build5
   rm -r "${pkgdir}/usr/share/"{color-schemes,kstyle}
+  install -Dm644 "${_pkgname}-${pkgver}/LICENSES/MIT.txt" "${pkgdir}/usr/share/licenses/${_pkgname}-qt5-git/MIT.txt"
 }
