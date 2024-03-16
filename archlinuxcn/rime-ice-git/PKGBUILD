@@ -20,6 +20,7 @@ arch=("any")
 url="https://github.com/iDvel/rime-ice"
 license=("GPL-3.0-or-later")
 
+depends=("lua" "librime")
 makedepends=("git" "librime" "rime-prelude" "sed")
 
 source=("${_pkgbase}::git+${url}.git")
