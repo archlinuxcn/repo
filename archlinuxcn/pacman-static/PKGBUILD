@@ -3,20 +3,20 @@
 # All my PKGBUILDs are managed at https://github.com/eli-schwartz/pkgbuilds
 
 pkgname=pacman-static
-pkgver=6.0.2
-_cares_ver=1.25.0
-_nghttp2_ver=1.59.0
-_curlver=8.5.0
-_sslver=3.2.0
+pkgver=6.1.0
+_cares_ver=1.27.0
+_nghttp2_ver=1.60.0
+_curlver=8.6.0
+_sslver=3.2.1
 _zlibver=1.3.1
-_xzver=5.4.5
+_xzver=5.6.1
 _bzipver=1.0.8
 _zstdver=1.5.5
 _libarchive_ver=3.7.2
-_gpgerrorver=1.47
+_gpgerrorver=1.48
 _libassuanver=2.5.6
 _gpgmever=1.23.2
-pkgrel=23
+pkgrel=1
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i486' 'i686' 'pentium4' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
@@ -26,13 +26,14 @@ makedepends=('meson' 'musl' 'kernel-headers-musl')
 options=('!emptydirs')
 
 # pacman
-source=("https://sources.archlinux.org/other/pacman/pacman-${pkgver}.tar.xz"{,.sig}
-        pacman-always-create-directories-from-debugedit.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/efd0c24c07b86be014a4edb5a8ece021b87e3900.patch
-        pacman-always-create-directories-from-debugedit-fixup.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/86981383a2f4380bda26311831be94cdc743649b.patch
-        pacman-fix-unique-source-paths.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/478af273dfe24ded197ec54ae977ddc3719d74a0.patch
-        pacman-strip-include-o-files-similar-to-kernel-modules.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/de11824527ec4e2561e161ac40a5714ec943543c.patch
-        pacman-fix-compatibility-with-bash-5.2-patsub_replacement.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/0e938f188692c710be36f9dd9ea7b94381aed1b4.patch
-        pacman-fix-order-of-fakechroot-fakeroot-nesting.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/05f283b5ad8f5b8f995076e93a27c8772076f872.patch)
+source=("https://gitlab.archlinux.org/pacman/pacman/-/releases/v$pkgver/downloads/pacman-$pkgver.tar.xz"{,.sig}
+        revertme-makepkg-remove-libdepends-and-libprovides.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/354a300cd26bb1c7e6551473596be5ecced921de.patch
+        "$pkgname-fix-msg-unknown-key.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/6bb95c8856437513ee0ab19226bc090d6fd0fb06.patch"
+        "$pkgname-man-gitlab.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/95f148c2222db608a0d72d5c5577d0c71e7fa199.patch"
+        "$pkgname-make-aligned-titles.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/5e0496260b7d3f9c9fcf2b1c4899e4dbcc20ff03.patch"
+        "$pkgname-repo-add-parseopts.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/0571ee82bff0edbd5ffac2228d4e6ac510b9008e.patch"
+        "$pkgname-drop-result-warn.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/111eed0251238a9d3f90e76d62f2ac01aeccce48.patch"
+        "$pkgname-fix-debugedit.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/bae9594ac1806ce30f2af1de27c49bb101a00d44.patch")
 
 validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@archlinux.org>
               'B8151B117037781095514CA7BBDFFC92306B1121') # Andrew Gregory (pacman) <andrew@archlinux.org>
@@ -61,7 +62,7 @@ validpgpkeys+=('8657ABB260F056B1E5190839D9C4D26D0E604491'  # Matt Caswell <matt@
 source+=("https://zlib.net/zlib-${_zlibver}.tar.gz"{,.asc})
 validpgpkeys+=('5ED46A6721D365587791E2AA783FCD8E58BCAFBA') # Mark Adler <madler@alumni.caltech.edu>
 # xz
-source+=("https://tukaani.org/xz/xz-${_xzver}.tar.gz"{,.sig})
+source+=("https://github.com/tukaani-project/xz/releases/download/v${_xzver}/xz-${_xzver}.tar.gz"{,.sig})
 validpgpkeys+=('3690C240CE51B4670D30AD1C38EE757D69184620'  # Lasse Collin <lasse.collin@tukaani.org>
               '22D465F2B4C173803B20C6DE59FCF207FEA7F445') # Jia Tan <jiat0218@gmail.com>
 # bzip2
@@ -85,32 +86,33 @@ source+=("https://github.com/libarchive/libarchive/releases/download/v${_libarch
 validpgpkeys+=('A5A45B12AD92D964B89EEE2DEC560C81CEC2276E'  # Martin Matuska <mm@FreeBSD.org>
               'DB2C7CF1B4C265FAEF56E3FC5848A18B8F14184B') # Martin Matuska <martin@matuska.org>
 
-sha512sums=('9d76fb58c3a50e89a4b92b1f9e3bfdecca3f69e05022ea88fbd34f9df540c4fc688ad4f8b27e77eedb791aa682c27037abe65c789c6d9ee393bae5b620c3df13'
+sha512sums=('da5e78506e0505aac47def4b658a8cd6012be90c7ad7f7343da2edca2df5bd019091eec0a297f79c6f2fc264c139f139175778015d928cace26cb81c87d0477b'
             'SKIP'
-            'cb9e16c231ddbc4d296642941b58cbdd9e76d3f49e53e118819047917550373e44444575af593c02018beededbfa9d7e8a93a14859be43c630b18701ec8bab28'
-            '67f28a6da5e4852c291e0a2e4c6ccce358e961ebe5e8a8cb7277322512ad08815efcbe09f9310cc4ea021900aaae65a9fcf56f5e51cd1fb8af99a06fc962aceb'
-            'eea39274ca3935a7bc45c81eb9d5dd72f816cd8c7260b77a3a4fd9cdbcdd7643166d643628fd583d987218cadf4fa90ac394947d8aae8af84e1b69d2d3533e45'
-            'ddd217c235c375e59e130a21aefeb531a3f6624f4e3937de75370d42c39063b2e14196e2d7fcbaa1745c93fd31454793dda031132e299f08aae6cf7b89d5d6fc'
-            '8b0ab45c1bb6bd8da0c7e31c2c880fb74c8cbfe03c68ea3c9022fed6028d46b4a4ce94aaf158218576df9dcb01922c984cc29aa43469fafad15322f83bd82a29'
-            '4c76fcd3472dea62772155ec0c2ecd49270a4717a3f06964836f4d575378f42ef71b2176f14f1693f15476c85081d593c072108915968467005aa0ff7a1c6741'
-            '0725f302957520893ac454997adc6d6e71dc9b520c62390477fe8c5dd5c64d02415023266814cfec859bf562159e4a42eeb7d7312c5871739a3d57ed7430820b'
-            'f73ffc45c17f1e952ea5fae8a1d9e1508427f21c821ff470ff0b728cc4a1e21d1274f95d9192c22f704bc7e0f58a633608cfdc1704dfe8950902fdfc3dfa2e1c'
+            '1a108c4384b6104e627652488659de0b1ac3330640fc3250f0a283af7c5884daab187c1efc024b2545262da1911d2b0b7b0d5e4e5b68bb98db25a760c9f1fb1a'
+            'b50a8c7734c884f2a645eba18a42081d8d6becf77cef04467ac1b755dcf58f8e79fc9a65cb9b2fda11ca87f1150a685adcf2d11b4a20441472b2f68e830c9394'
+            'fb79497bd2ea6d12a2234aa6b0acae0341cbdf1bd6358c4eb5e20548f4edf6b7159abcae0635574b1b0e1e05e34e73f11afa463f32f43bcb156bef3d5e2a3663'
+            '22ee8654ee131292eb124170544bf15aeb70922049c5447f33c5e211a6b489bde9feb6fc1ef3022ad09b7b5d781edad1c233110cea1b6638e4f7a3bf9b716d09'
+            '35e1b7f37dc440317c2f1530f0d8ce2c8cd1ef4ddc0d68a22e89f792e53ce9f48719abd9661378b31496b780ad493dbc13a73770385a7af35595941007971aa5'
+            '8adb3696579e3b771a7a61dd6ff013afb1444bbb087a0a71f3971da4d51e6b304ad631cbafe8187c837bd763b1a3298e2bd19605438d515743a73ff24192e33f'
+            '2ff45ed5e27b1d90524ec0de45acf55891b6f5bf7242dbfeec5c370b7c5d6e35eb49254b19f2a2d194dbab38fa27bca34afaf6175888a911a105237f2bab8d19'
+            '5e6365d9118596d41848930de70f4a918d72463920184df60a7e1678c3a6c9cf1416236888e7e34395c87f41bba00a114994ba5a6e73f6a389769abf1b5cc842'
+            'd0bffeeabdc5f1d4cececd46bd495b8224a64eaaf6d2a91c5475517440effe0e096146a1ebf19ece07367198be576c61b11961d5e4c3f601c5c5529ce4fcb46a'
             'SKIP'
-            '1ff70e8fd5f233b373dea2a031d46698c03ed35f384c2eacbe9368f9daed65e91d7f45ade350c3ac3dd3d662c913b17cdc8702a0c23879b0c78fbd396fd0b926'
+            '43fdb6b81b394f3382d353d5f57673b2b3d26cfe34b25d08a526bc0597f508d5298e5a7088d0736d1f139cad19cd922affa51533c3a5a4bb5f2de68891c2958d'
             'SKIP'
-            'ba3ac38365fd0c50f1eaf1693b6200a0d66f01ff53c2d3bb0358643cd83fc0c61fc3b84c0658cf74b6ae91d7d8a9da7291697bd9be3063ada8a9df879e58ed52'
+            'bab2b2419319f1feffaba4692f03edbf13b44d1090c6e075a2d69dad67a2d51e64e6edbf83456a26c83900a726d20d2c4ee4ead9c94b322fd0b536f3b5a863c4'
             'SKIP'
             'b1873dbb7a49460b007255689102062756972de5cc2d38b12cc9f389b6be412da6797579b1acd3717a8cd2ee118fd9801b94e55f063d4328f050f0876a5eb53c'
             'b5887ea77417fae49b6cb1e9fa782d3021f268d5219701d87a092235964f73fa72a31428b630445517f56f2bb69dcbbb24119ef9dbf8b4e40a753369a9f9a16f'
             '580677aad97093829090d4b605ac81c50327e74a6c2de0b85dd2e8525553f3ddde17556ea46f8f007f89e435493c9a20bc997d1ef1c1c2c23274528e3c46b94f'
             'SKIP'
-            '91f8f548c915de0ed79cee13ce0336b51c1cebf2eb142fa1efecfd07771c662c99cad3730540fcb712057ab274130e13b87960f6b4c62f0bd9477f27a303fb2b'
+            '8af100eb83288f032e4813be2bf8de7d733c8761f77f078776c1391709241ad8fe3192d107664786e2543677915c5eeb3fe7add5c53b48b50c10a9de7c9f4fda'
             'SKIP'
             '083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3'
             'SKIP'
             'c2d88b2c2050262f85be32877142c94e36a8ee451890f579cd2426c7de565fb22d21c369bad11f306093f0b356e935cef5a8ff5a2b0c007ade0f7e7eb944d2a5'
             'SKIP'
-            'bbb4b15dae75856ee5b1253568674b56ad155524ae29a075cb5b0a7e74c4af685131775c3ea2226fff2f84ef80855e77aa661645d002b490a795c7ae57b66a30'
+            '3e9ea99cfb7d706791eb3349a9356b6bc44a53ef8bfa9a4e89afb5203dad5af3f466a039a1764361c0c7f697a6fa668a21d05ceaeb8e44ec5a11d6468998adf2'
             'SKIP'
             'dcca942d222a2c226a7e34ba7988ee0c3c55bd6032166eb472caf2053db89aeeea7a40e93d8c2887c7ee73c5f838e8b0725e8cfb595accc1606646559362f7ee'
             'SKIP'
@@ -118,39 +120,6 @@ sha512sums=('9d76fb58c3a50e89a4b92b1f9e3bfdecca3f69e05022ea88fbd34f9df540c4fc688
             'SKIP'
             'a21bebb27b808cb7d2ed13a70739904a1b7b55661d8dea83c9897a0129cf71e20c962f13666c571782ff0f4f753ca885619c2097d9e7691c2dee4e6e4b9a2971'
             'SKIP')
-b2sums=('648f62307e413cb352ed92e92df1ace510c1fc5e9ddd254baeef071e89cb7dae1786a95d29c5f69e8b03b1a8cfe3cd65671588dc362c8d3b281c092393aad54c'
-        'SKIP'
-        'b916ed6aa7deb1091b204d09187a3d9006c74976725ba81027841885276f2261415db7688359910ee8cbfd696e8dc310560cfbad2d3c0d88ad263425a6e1aa82'
-        '8f781728405ae2590302171d0e6b0d723b00861e3a37be6678d8ad40e91217b513241a19a2a9912260ad0ec699eeb53b7c59aaa6c27f2c22cbb9443556bbf9de'
-        'bb41ad66821bb5499825a7411b0ce8001092106d1dfc6d3b5ae10e1da8bc269e1775883520154496a2dc833fffaf11032466ecbadc123365eb2e6fa48bba4f3e'
-        '64e042cbac411b323038504f843fcf786689a0b6d63b2d8ea5bb3431998dae1e98656923ac96b5ec99c03494aaab1ad8f60d2614b03947df5f607c43411060da'
-        'ce420c696f4a8b4f3f64b4e9c4cdef0ea0225900145f10834314fcc8c371f84352453bd4c6c613f979f81d14453732c248a2a225c4bf5e2c678c9548ced11b31'
-        '0dcdefcc7b4c15a408712c50b6371b76197a577d5069501225b8815c401fda8a40d897b51afe8f93ff54d0f1ac7f2a9054f016c5e5cb25d5cc2fe89b3819977b'
-        '0a1471c3686fcf8a896183e71e7a1c000e9397fc1831054dc87ab8860ff5d8ce2ec5ede0ba916edc7fcf94f3361b2f91e623303cbb1f6c08310f5bfbfe6cebfe'
-        'a4f4b493e1331ade27504238c3e520e1ffaa525baf99442c88de3aeda1eb06a12ec804a5f0f699fb8acd469ccd2b3d08f5c32b4d01d50cfdc31097665087fce9'
-        'SKIP'
-        '31dabc25452f91e71e6367d340a89711ea9d55180a4c5e2c1a5a0f4e2ffeed56952e95c9eba21bca65cfa6643910cf2c979c76b6efea6c8758c71edf501c4991'
-        'SKIP'
-        '776123929796d2eb0f3974bf6ee3a55df9187231632837576bf5ded7b5917f052683cdfc756693c1bee6fe1ffc7c3cb1ebcf833018d3caf51886f4f4e7a495f1'
-        'SKIP'
-        '928c0cb15cca44bb7f194db9f95985f6c50aacd3e22fe2eb60ece26ed76469289f10d303c645a48407f3d6435ac66f25dd3c4cbc56fdc5dfd9ea2566feda9ff8'
-        'c72172cf57389718b4722c3482ddaf9c2fc02aafe391c68edeb92d41fd6345a0a98f6fd63ddf01b33fe59a7a3f270ff1ccad432feba578b7b7e0170cd1dea7ef'
-        '872ef9cc41ba57e9809ab5714ffa15cc9d3ef6c4a948c57107f800fc373bcfe2475136407203cb9aa33b189994336f36f2757b7a582e065ad477bfd49260184b'
-        'SKIP'
-        '647c8227080a7f37e3321e778d7f52ccb9da3810f2be81b2d2b46001605b22cef6e724f9b3facfada26a12b24401c9a11449d6066443849b37b28e0eaa199315'
-        'SKIP'
-        '22ab3acd84f4db8c3d6f59340c252faedfd4447cea00dafbd652e65b6cf8a20adf6835c22e58563004cfafdb15348c924996230b4b23cae42da5e25eeac4bdad'
-        'SKIP'
-        '2c2dc95f227e661ada23d8f6141bcd293505ce14e605f946ae00d4d4ac37d10b4eb08279ef7560618c67caf266431f76686fda5ae1921d698a6a93bbaf9a0052'
-        'SKIP'
-        'bc04efa0686b1b7d7cdce045fc080c090c1abec60349b673c2e1ce27900483aea090eb6ebcb3fb49a4eed36f18156a12413d5446f739475632f4ed2a2481ff27'
-        'SKIP'
-        '462af1eab69e157f65f8134a492cde01dd1e0ee00609f2c2585e742fb9c5532b3fd96054b4fb7449e305690f70aa7a120085db42e2de2e3b0ef8b1603e7e5846'
-        'SKIP'
-        '563e470e861c7cc64ecb3e8dd0a0ed8436bc0867105093abcec09f4d1e1dd95cbf64c8161cf8500b9842583b57f6583efff63e5111234e36fda1e6fbedce2f78'
-        'SKIP'
-        '7221db4811a965ee61d879a2603480363628a19995a351b572d099be9f35576d76f0b0822f9a5a47d9929bc094d4444fd8eafcb4a073e39bb3aa797d4b926ca5'
-        'SKIP')
 
 export LDFLAGS="$LDFLAGS -static"
 export CC=musl-gcc
@@ -305,8 +274,8 @@ build() {
     ./configure --prefix="${srcdir}"/temp/usr \
                 --disable-shared \
                 --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt \
-                --disable-{dict,gopher,imap,imaps,ldap,ldaps,manual,pop3,pop3s,rtsp,scp,sftp,smb,smbs,smtp,smtps,telnet,tftp} \
-                --without-{brotli,libidn2,librtmp,libssh2} \
+                --disable-{dict,gopher,imap,ldap,ldaps,manual,pop3,rtsp,smb,smtp,telnet,tftp} \
+                --without-{brotli,libidn2,librtmp,libssh2,libpsl} \
                 --disable-libcurl-option \
                 --with-openssl \
                 --enable-ares="${srcdir}"/temp/usr
@@ -377,4 +346,3 @@ package() {
         "${pkgdir}"/usr/lib/pacman/lib/pkgconfig/*.pc \
         "${pkgdir}"/usr/lib/pacman/bin/*
 }
-
