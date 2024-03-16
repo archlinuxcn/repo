@@ -16,6 +16,7 @@ optdepends=(
 )
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('78d03e0c7971fe715da7e89c6e848112eedb993f04625e720997156c74578d42')
+options=('!lto')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
