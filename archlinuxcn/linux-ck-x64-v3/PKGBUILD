@@ -71,7 +71,7 @@ _subarch=41
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 pkgbase=linux-ck-x64-v3
-pkgver=6.8
+pkgver=6.8.1
 _upstream=arch1
 pkgrel=1
 arch=(x86_64)
@@ -89,7 +89,10 @@ makedepends=(
   xz
 )
 [[ -n "$_clangbuild" ]] && makedepends+=(clang llvm lld python)
-options=('!strip')
+options=(
+  !debug
+  !strip
+)
 
 # https://ck-hack.blogspot.com/2021/08/514-and-future-of-muqss-and-ck-once.html
 # acknowledgment to xanmod for initially keeping the hrtimer patches up to date
@@ -108,10 +111,10 @@ validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
-sha256sums=('c969dea4e8bb6be991bbf7c010ba0e0a5643a3a8d8fb0a2aaa053406f1e965f3'
+sha256sums=('8d0c8936e3140a0fbdf511ad7a9f21121598f3656743898f47bb9052d37cff68'
             'SKIP'
-            '03e735507e01dd3fb845d3a9dfa9a7a7286fcb57d213b4b116dcba7e088407f0'
-            '1edc3ce4e5cb716d6a89ebd1bc24b4509e65d9f18899f59e4c40e5d3ad4233ba'
+            'c2b00c84c4b543db431e06604d939a62f93107d18369f4d9860dc8062b01ab45'
+            '376db82b4613c3942932fde99d54c3dea1e4b29ab23d8b86daa6414327e6244d'
             '1d3ac3e581cbc5108f882fcdc75d74f7f069654c71bad65febe5ba15a7a3a14f'
             '111adfc5b9c7d3bfd7d1a06286e7bee853dd1f51ecca3948eed39710eaf51381')
 
