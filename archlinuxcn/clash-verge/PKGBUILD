@@ -3,7 +3,7 @@
 
 pkgname=clash-verge
 pkgver=1.5.8
-pkgrel=2
+pkgrel=3
 pkgdesc="A Clash Meta GUI based on Tauri, Continuation of Clash Verge"
 arch=('x86_64' 'aarch64')
 url="https://github.com/clash-verge-rev/clash-verge-rev"
@@ -65,7 +65,7 @@ package() {
 	install -d ${pkgdir}/usr/lib/${pkgname}/resources
 	ln -sf /etc/clash/Country.mmdb -t ${pkgdir}/usr/lib/${pkgname}/resources
 
-	install -Dm644 src/assets/image/logo.svg ${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg
+	install -Dm644 src/assets/image/logo.bak.svg ${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg
 
 	install -Dm644 ${srcdir}/${pkgname}.desktop -t ${pkgdir}/usr/share/applications
 }
