@@ -1,4 +1,4 @@
-From 2d343432a019a1b46d0a2f0573a866a4447fa950 Mon Sep 17 00:00:00 2001
+From fcf0a79f9b57fa276752826b4f5ba6d93fb8af1f Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 30 Dec 2022 16:15:59 -0500
 Subject: [PATCH 4/7] Use libc for libssp
@@ -8,10 +8,10 @@ Subject: [PATCH 4/7] Use libc for libssp
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
-index bd7a0571f9..62992090b9 100644
+index a57b275b18..c9a2b65bf1 100644
 --- a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 +++ b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
-@@ -48,7 +48,7 @@ else
+@@ -47,7 +47,7 @@ else
      const libstdcxx = "libstdc++.so.6"
      const libgomp = "libgomp.so.1"
      if libc(HostPlatform()) != "musl"

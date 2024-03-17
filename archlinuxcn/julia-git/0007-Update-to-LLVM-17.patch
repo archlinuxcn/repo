@@ -1,4 +1,4 @@
-From a110566e3b3880a5d8b98ec2747b35e149489eb4 Mon Sep 17 00:00:00 2001
+From 739e32d4b1a5c27fdbbcb22f2b4e232b1f07e761 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 13 Mar 2024 11:13:25 -0400
 Subject: [PATCH 7/7] Update to LLVM 17
@@ -189,13 +189,13 @@ index 72895e9a80..4ee50dafc6 100644
  
  ifeq ($(OS),WINNT)
 diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
-index 11c2578f70..8c64dad7f8 100644
+index 880d193ea1..0ce5c7d8ff 100644
 --- a/src/aotcompile.cpp
 +++ b/src/aotcompile.cpp
-@@ -4,7 +4,11 @@
- #include "platform.h"
+@@ -5,7 +5,11 @@
  
  // target support
+ #include "llvm/Support/CodeGen.h"
 +#if JL_LLVM_VERSION >= 170000
 +#include <llvm/TargetParser/Triple.h>
 +#else
@@ -204,7 +204,7 @@ index 11c2578f70..8c64dad7f8 100644
  #include <llvm/ADT/Statistic.h>
  #include <llvm/Analysis/TargetLibraryInfo.h>
  #include <llvm/Analysis/TargetTransformInfo.h>
-@@ -695,7 +699,11 @@ static FunctionInfo getFunctionWeight(const Function &F)
+@@ -696,7 +700,11 @@ static FunctionInfo getFunctionWeight(const Function &F)
          auto val = F.getFnAttribute("julia.mv.clones").getValueAsString();
          // base16, so must be at most 4 * length bits long
          // popcount gives number of clones
@@ -216,7 +216,7 @@ index 11c2578f70..8c64dad7f8 100644
      }
      info.weight += info.insts;
      // more basic blocks = more complex than just sum of insts,
-@@ -1438,7 +1446,9 @@ static SmallVector<AOTOutputs, 16> add_output(Module &M, TargetMachine &TM, Stri
+@@ -1439,7 +1447,9 @@ static SmallVector<AOTOutputs, 16> add_output(Module &M, TargetMachine &TM, Stri
          for (unsigned i = 0; i < threads; i++) {
              std::function<void()> func = [&, i]() {
                  LLVMContext ctx;
@@ -226,7 +226,7 @@ index 11c2578f70..8c64dad7f8 100644
                  // Lazily deserialize the entire module
                  timers[i].deserialize.startTimer();
                  auto EM = getLazyBitcodeModule(MemoryBufferRef(StringRef(serialized.data(), serialized.size()), "Optimized"), ctx);
-@@ -1641,7 +1651,9 @@ void jl_dump_native_impl(void *native_code,
+@@ -1643,7 +1653,9 @@ void jl_dump_native_impl(void *native_code,
      if (z) {
          JL_TIMING(NATIVE_AOT, NATIVE_Sysimg);
          LLVMContext Context;
@@ -236,7 +236,7 @@ index 11c2578f70..8c64dad7f8 100644
          Module sysimgM("sysimg", Context);
          sysimgM.setTargetTriple(TheTriple.str());
          sysimgM.setDataLayout(DL);
-@@ -1778,7 +1790,9 @@ void jl_dump_native_impl(void *native_code,
+@@ -1786,7 +1798,9 @@ void jl_dump_native_impl(void *native_code,
      {
          JL_TIMING(NATIVE_AOT, NATIVE_Metadata);
          LLVMContext Context;
@@ -246,7 +246,7 @@ index 11c2578f70..8c64dad7f8 100644
          Module metadataM("metadata", Context);
          metadataM.setTargetTriple(TheTriple.str());
          metadataM.setDataLayout(DL);
-@@ -2028,12 +2042,16 @@ void jl_get_llvmf_defn_impl(jl_llvmf_dump_t* dump, jl_method_instance_t *mi, siz
+@@ -2036,12 +2050,16 @@ void jl_get_llvmf_defn_impl(jl_llvmf_dump_t* dump, jl_method_instance_t *mi, siz
                      global.second->setLinkage(GlobalValue::ExternalLinkage);
                  } else {
                      auto p = literal_static_pointer_val(global.first, global.second->getValueType());
@@ -264,7 +264,7 @@ index 11c2578f70..8c64dad7f8 100644
                      auto alias = GlobalAlias::create(elty, 0, GlobalValue::PrivateLinkage, global.second->getName() + ".jit", p, global.second->getParent());
                      global.second->setInitializer(ConstantExpr::getBitCast(alias, global.second->getValueType()));
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index 0fcc838905..2fe8b38d36 100644
+index 53714cebcb..68409ab19a 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
 @@ -260,7 +260,9 @@ static GlobalVariable *emit_plt_thunk(
@@ -379,7 +379,7 @@ index b17b174dd8..dd48bf85c1 100644
                  originalAlloca->mutateType(decayed->getType());
                  recursively_adjust_ptr_type(originalAlloca, 0, AddressSpace::Derived);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 260fb68691..d2e9d1b07b 100644
+index 80a1dd64aa..22ff2cc1b5 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -22,7 +22,11 @@
@@ -395,7 +395,7 @@ index 260fb68691..d2e9d1b07b 100644
  #include <llvm/Support/TargetSelect.h>
  #include <llvm/Object/SymbolSize.h>
  
-@@ -2172,7 +2176,11 @@ static Value *emit_inttoptr(jl_codectx_t &ctx, Value *v, Type *ty)
+@@ -2208,7 +2212,11 @@ static Value *emit_inttoptr(jl_codectx_t &ctx, Value *v, Type *ty)
          auto ptr = I->getOperand(0);
          if (ty->getPointerAddressSpace() == ptr->getType()->getPointerAddressSpace())
              return ctx.builder.CreateBitCast(ptr, ty);
@@ -407,7 +407,7 @@ index 260fb68691..d2e9d1b07b 100644
              return ctx.builder.CreateAddrSpaceCast(ptr, ty);
      }
      ++EmittedIntToPtrs;
-@@ -4788,7 +4796,9 @@ static jl_cgval_t emit_call_specfun_other(jl_codectx_t &ctx, bool is_opaque_clos
+@@ -4824,7 +4832,9 @@ static jl_cgval_t emit_call_specfun_other(jl_codectx_t &ctx, bool is_opaque_clos
          break;
      case jl_returninfo_t::SRet:
          result = emit_static_alloca(ctx, getAttributeAtIndex(returninfo.attrs, 1, Attribute::StructRet).getValueAsType());
@@ -417,7 +417,7 @@ index 260fb68691..d2e9d1b07b 100644
          argvals[idx] = result;
          idx++;
          break;
-@@ -6646,7 +6656,9 @@ static void emit_cfunc_invalidate(
+@@ -6686,7 +6696,9 @@ static void emit_cfunc_invalidate(
      case jl_returninfo_t::SRet: {
          if (return_roots) {
              Value *root1 = gf_thunk->arg_begin() + 1; // root1 has type [n x {}*]*
@@ -427,7 +427,7 @@ index 260fb68691..d2e9d1b07b 100644
              root1 = ctx.builder.CreateConstInBoundsGEP2_32(get_returnroots_type(ctx, return_roots), root1, 0, 0);
              ctx.builder.CreateStore(gf_ret, root1);
          }
-@@ -7069,11 +7081,15 @@ static Function* gen_cfun_wrapper(
+@@ -7109,11 +7121,15 @@ static Function* gen_cfun_wrapper(
                  if (jlfunc_sret) {
                      result = emit_static_alloca(ctx, getAttributeAtIndex(returninfo.attrs, 1, Attribute::StructRet).getValueAsType());
                      setName(ctx.emission_context, result, "sret");
@@ -443,7 +443,7 @@ index 260fb68691..d2e9d1b07b 100644
                  }
              }
              args.push_back(result);
-@@ -7133,7 +7149,9 @@ static Function* gen_cfun_wrapper(
+@@ -7173,7 +7189,9 @@ static Function* gen_cfun_wrapper(
              theFptr = ctx.builder.CreateSelect(age_ok, theFptr, gf_thunk);
          }
  
@@ -453,7 +453,7 @@ index 260fb68691..d2e9d1b07b 100644
          CallInst *call = ctx.builder.CreateCall(
              returninfo.decl.getFunctionType(),
              theFptr, ArrayRef<Value*>(args));
-@@ -7505,7 +7523,9 @@ static Function *gen_invoke_wrapper(jl_method_instance_t *lam, jl_value_t *jlret
+@@ -7545,7 +7563,9 @@ static Function *gen_invoke_wrapper(jl_method_instance_t *lam, jl_value_t *jlret
      case jl_returninfo_t::Ghosts:
          break;
      case jl_returninfo_t::SRet:
@@ -463,7 +463,7 @@ index 260fb68691..d2e9d1b07b 100644
          result = ctx.builder.CreateAlloca(getAttributeAtIndex(f.attrs, 1, Attribute::StructRet).getValueAsType());
          setName(ctx.emission_context, result, "sret");
          args[idx] = result;
-@@ -7800,8 +7820,6 @@ static jl_returninfo_t get_specsig_function(jl_codectx_t &ctx, Module *M, Value
+@@ -7840,8 +7860,6 @@ static jl_returninfo_t get_specsig_function(jl_codectx_t &ctx, Module *M, Value
  
  static void emit_sret_roots(jl_codectx_t &ctx, bool isptr, Value *Src, Type *T, Value *Shadow, Type *ShadowT, unsigned count)
  {
@@ -472,7 +472,7 @@ index 260fb68691..d2e9d1b07b 100644
      unsigned emitted = TrackWithShadow(Src, T, isptr, Shadow, ShadowT, ctx.builder); //This comes from Late-GC-Lowering??
      assert(emitted == count); (void)emitted; (void)count;
  }
-@@ -7809,6 +7827,10 @@ static void emit_sret_roots(jl_codectx_t &ctx, bool isptr, Value *Src, Type *T,
+@@ -7849,6 +7867,10 @@ static void emit_sret_roots(jl_codectx_t &ctx, bool isptr, Value *Src, Type *T,
  static DISubroutineType *
  get_specsig_di(jl_codectx_t &ctx, jl_debugcache_t &debuginfo, jl_value_t *rt, jl_value_t *sig, DIBuilder &dbuilder)
  {
@@ -483,7 +483,7 @@ index 260fb68691..d2e9d1b07b 100644
      size_t nargs = jl_nparams(sig); // TODO: if this is a Varargs function, our debug info for the `...` var may be misleading
      SmallVector<Metadata*, 0> ditypes(nargs + 1);
      ditypes[0] = julia_type_to_di(ctx, debuginfo, rt, &dbuilder, false);
-@@ -9922,7 +9944,9 @@ char jl_using_perf_jitevents = 0;
+@@ -9962,7 +9984,9 @@ char jl_using_perf_jitevents = 0;
  
  int jl_is_timing_passes = 0;
  
@@ -493,7 +493,7 @@ index 260fb68691..d2e9d1b07b 100644
  
  extern "C" void jl_init_llvm(void)
  {
-@@ -9973,6 +9997,7 @@ extern "C" void jl_init_llvm(void)
+@@ -10013,6 +10037,7 @@ extern "C" void jl_init_llvm(void)
      if (clopt && clopt->getNumOccurrences() == 0)
          cl::ProvidePositionalOption(clopt, "4", 1);
  
@@ -501,7 +501,7 @@ index 260fb68691..d2e9d1b07b 100644
      // we want the opaque-pointers to be opt-in, per LLVMContext, for this release
      // so change the default value back to pre-14.x, without changing the NumOccurrences flag for it
      clopt = llvmopts.lookup("opaque-pointers");
-@@ -9981,6 +10006,7 @@ extern "C" void jl_init_llvm(void)
+@@ -10021,6 +10046,7 @@ extern "C" void jl_init_llvm(void)
      } else {
          jl_opaque_ptrs_set = 1;
      }
@@ -893,7 +893,7 @@ index 5df4f52aca..275de5cef3 100644
                  }
                  if (cast<PointerType>(store_ty)->getAddressSpace() != AddressSpace::Tracked)
 diff --git a/src/llvm-codegen-shared.h b/src/llvm-codegen-shared.h
-index 2c60907ca0..0dcde867fe 100644
+index b355dd0543..e8ca62f519 100644
 --- a/src/llvm-codegen-shared.h
 +++ b/src/llvm-codegen-shared.h
 @@ -193,7 +193,11 @@ static inline llvm::Value *emit_bitcast_with_builder(llvm::IRBuilder<> &builder,
@@ -909,7 +909,7 @@ index 2c60907ca0..0dcde867fe 100644
      }
      else {
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index b35f64be81..ed6f59d326 100644
+index a6178d95d5..55efa37fcc 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
 @@ -706,11 +706,15 @@ void LateLowerGCFrame::LiftSelect(State &S, SelectInst *SI) {
@@ -1017,7 +1017,7 @@ index b35f64be81..ed6f59d326 100644
                  //Value *Elem = ExtractScalar(Base, true, Idxs, SI);
                  Value *shadowStore = new StoreInst(Elem, slotAddress, SI);
 diff --git a/src/llvm-lower-handlers.cpp b/src/llvm-lower-handlers.cpp
-index 15866d0855..68092c3cf3 100644
+index d6d4793f3c..0c4edd5fd0 100644
 --- a/src/llvm-lower-handlers.cpp
 +++ b/src/llvm-lower-handlers.cpp
 @@ -8,7 +8,11 @@
