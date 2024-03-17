@@ -9,7 +9,7 @@
 # Contributor (Parabola): Luke R. <g4jc@openmailbox.org>
 
 pkgbase=linux-libre
-pkgver=6.8
+pkgver=6.8.1
 pkgrel=1
 pkgdesc='Linux Libre'
 url='https://linux-libre.fsfla.org/'
@@ -33,12 +33,15 @@ makedepends=(
   python-yaml
   texlive-latexextra
 )
-options=('!strip')
-_srcname=linux-${pkgver}
-source=("https://linux-libre.fsfla.org/pub/linux-libre/releases/${pkgver}-gnu/linux-libre-${pkgver}-gnu.tar.lz"{,.sign}
+options=('!debug' '!strip')
+_srcname=linux-${pkgver%.*}
+source=("https://linux-libre.fsfla.org/pub/linux-libre/releases/${pkgver}-gnu/linux-libre-${pkgver%.*}-gnu.tar.lz"{,.sign}
+        "http://linux-libre.fsfla.org/pub/linux-libre/releases/${pkgver}-gnu/patch-${pkgver%.*}-gnu-${pkgver}-gnu.xz"{,.sign}
         'https://repo.parabola.nu/other/linux-libre/logos/logo_linux_'{clut224.ppm,vga16.ppm,mono.pbm}{,.sig}
         'config')
 sha256sums=('f6c64e8ea831ffb71dedd1311e168fc7b142b025ec5fafa22ff6aedd9925bbe7'
+            'SKIP'
+            'd53481e3fe0332c2a4204c5a8cc9cdda71a27555fdc60c374025ad0dce05ca5f'
             'SKIP'
             'bfd4a7f61febe63c880534dcb7c31c5b932dde6acf991810b41a939a93535494'
             'SKIP'
@@ -46,7 +49,7 @@ sha256sums=('f6c64e8ea831ffb71dedd1311e168fc7b142b025ec5fafa22ff6aedd9925bbe7'
             'SKIP'
             '13bd7a8d9ed6b6bc971e4cd162262c5a20448a83796af39ce394d827b0e5de74'
             'SKIP'
-            '2513e5ed3d13f1ab1a1e874ec8d1cf0b995cec6779a5676b20e12498963fcf2f')
+            'ba856df7368d47778c9523985579b42745be60009fa2222538a5ac4b8eb27232')
 validpgpkeys=('474402C8C582DAFBE389C427BCB7CF877E7D47A7'  # Alexandre Oliva
               '6DB9C4B4F0D8C0DC432CF6E4227CA7C556B2BA78') # David P.
 
@@ -65,15 +68,15 @@ prepare() {
   echo "${pkgbase#linux}" > localversion.20-pkgname
   sed -i 's|^-libre||'      localversion.20-pkgname # minimize diff
 
-  local src
-  declare -n per_arch_source=source_${CARCH}
-  for src in "${source[@]}" "${per_arch_source[@]}"; do
-    src="${src%%::*}"
-    src="${src##*/}"
-    # *.zst n/a
-    [[ $src = *.patch ]] || continue
-    echo "Applying patch $src..."
-    patch -Np1 < "../$src"
+  local _src
+  ln -sf "patch-${pkgver%.*}-gnu-${pkgver}-gnu" "../patch-${pkgver%.*}-gnu-${pkgver}-gnu.patch"
+  for _src in "${source[@]}" "../patch-${pkgver%.*}-gnu-${pkgver}-gnu.patch"
+  do
+    _src="${_src%%::*}"
+    _src="${_src##*/}"
+    [[ $_src = *.patch ]] || continue
+    echo "Applying patch $_src..."
+    patch -Np1 < "../$_src"
   done
 
   echo "Setting config..."
