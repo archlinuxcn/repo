@@ -1,4 +1,4 @@
-From 739e32d4b1a5c27fdbbcb22f2b4e232b1f07e761 Mon Sep 17 00:00:00 2001
+From 25929c67e3dc4b10e89a07f6e4014664480f5d18 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 13 Mar 2024 11:13:25 -0400
 Subject: [PATCH 7/7] Update to LLVM 17
@@ -7,7 +7,7 @@ Subject: [PATCH 7/7] Update to LLVM 17
  src/APInt-C.cpp                   |  54 +++++++++++++++
  src/APInt-C.h                     |  18 ++++-
  src/Makefile                      |   7 +-
- src/aotcompile.cpp                |  18 +++++
+ src/aotcompile.cpp                |  19 ++++++
  src/ccall.cpp                     |   2 +
  src/cgutils.cpp                   |  28 +++++++-
  src/codegen.cpp                   |  32 ++++++++-
@@ -28,7 +28,7 @@ Subject: [PATCH 7/7] Update to LLVM 17
  src/processor.cpp                 |   8 +++
  src/runtime_ccall.cpp             |   5 ++
  src/runtime_intrinsics.c          |  12 ++++
- 24 files changed, 392 insertions(+), 15 deletions(-)
+ 24 files changed, 393 insertions(+), 15 deletions(-)
 
 diff --git a/src/APInt-C.cpp b/src/APInt-C.cpp
 index 22b3beef99..e73399c2ec 100644
@@ -189,7 +189,7 @@ index 72895e9a80..4ee50dafc6 100644
  
  ifeq ($(OS),WINNT)
 diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
-index 880d193ea1..0ce5c7d8ff 100644
+index 880d193ea1..2e34e89579 100644
 --- a/src/aotcompile.cpp
 +++ b/src/aotcompile.cpp
 @@ -5,7 +5,11 @@
@@ -236,7 +236,15 @@ index 880d193ea1..0ce5c7d8ff 100644
          Module sysimgM("sysimg", Context);
          sysimgM.setTargetTriple(TheTriple.str());
          sysimgM.setDataLayout(DL);
-@@ -1786,7 +1798,9 @@ void jl_dump_native_impl(void *native_code,
+@@ -1690,6 +1702,7 @@ void jl_dump_native_impl(void *native_code,
+         JL_TIMING(NATIVE_AOT, NATIVE_Setup);
+         dataM.setTargetTriple(TheTriple.str());
+         dataM.setDataLayout(DL);
++        dataM.setPICLevel(PICLevel::BigPIC);
+         auto &Context = dataM.getContext();
+ 
+         Type *T_psize = dataM.getDataLayout().getIntPtrType(Context)->getPointerTo();
+@@ -1786,7 +1799,9 @@ void jl_dump_native_impl(void *native_code,
      {
          JL_TIMING(NATIVE_AOT, NATIVE_Metadata);
          LLVMContext Context;
@@ -246,7 +254,7 @@ index 880d193ea1..0ce5c7d8ff 100644
          Module metadataM("metadata", Context);
          metadataM.setTargetTriple(TheTriple.str());
          metadataM.setDataLayout(DL);
-@@ -2036,12 +2050,16 @@ void jl_get_llvmf_defn_impl(jl_llvmf_dump_t* dump, jl_method_instance_t *mi, siz
+@@ -2036,12 +2051,16 @@ void jl_get_llvmf_defn_impl(jl_llvmf_dump_t* dump, jl_method_instance_t *mi, siz
                      global.second->setLinkage(GlobalValue::ExternalLinkage);
                  } else {
                      auto p = literal_static_pointer_val(global.first, global.second->getValueType());
