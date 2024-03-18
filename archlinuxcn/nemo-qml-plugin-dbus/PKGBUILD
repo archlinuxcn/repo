@@ -2,15 +2,15 @@
 # Contributor: éclairevoyant
 
 pkgname=nemo-qml-plugin-dbus
-pkgver=2.1.33
-pkgrel=2
+pkgver=2.1.34
+pkgrel=1
 pkgdesc="Provides types to access D-Bus from QML"
 arch=('x86_64' 'aarch64')
 url="https://github.com/sailfishos/${pkgname}"
 license=('BSD-3-Clause OR LGPL-2.1-or-later')
 depends=('qt5-declarative')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('08d1bdc5eac5eba2197f2c1e04a7e851437724331215059db1d68828dbf3b0a8')
+sha256sums=('eac29f45182ebf4c8f759da7e5c6f6d79342ffc3543feb4a9d1b0db28e211cb6')
 
 build() {
 	cd "${pkgname}-${pkgver}/"
