@@ -1,0 +1,18 @@
+pkgname=julia-git-chainrulestestutils-src
+pkgver=1.12.0
+_commit=ebfe4c1cba28cf463fdd1d052167e5c0371afcf5
+pkgrel=1
+pkgdesc="ChainRulesTestUtils.jl"
+url="https://github.com/JuliaDiff/ChainRulesTestUtils.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaDiff/ChainRulesTestUtils.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ChainRulesTestUtils.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ChainRulesTestUtils "${pkgdir}" "${pkgname}" julia-git
+}
