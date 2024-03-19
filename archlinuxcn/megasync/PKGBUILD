@@ -7,7 +7,7 @@
 # Contributor: Hexchain Tong <i at hexchain dot org>
 
 pkgname=megasync
-pkgver=4.12.2.0
+pkgver=5.2.0.0
 pkgrel=1
 pkgdesc='Official MEGA desktop application for syncing with MEGA Cloud Drive'
 arch=('x86_64')
@@ -18,13 +18,13 @@ depends=('c-ares' 'crypto++' 'curl' 'ffmpeg' 'freeimage' 'icu' 'libmediainfo'
          'qt5-base' 'qt5-quickcontrols' 'qt5-svg' 'qt5-x11extras' 'sqlite' 'zlib'
          'hicolor-icon-theme')
 makedepends=('git' 'doxygen' 'lsb-release' 'qt5-tools' 'swig')
-source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_OSX"
+source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_Linux"
         'meganz-sdk'::'git+https://github.com/meganz/sdk.git'
         '010-megasync-libpdfium.patch'
         '020-megasync-ffmpeg.patch')
 sha256sums=('SKIP'
             'SKIP'
-            '99c9e5fc8fd169aabe155293ad7ca3349ed35222d020a3c0592b5b788016c966'
+            '9a1c1b15f99a5858f91f892a17f80dc3ad08850b90e07d8226f1f2412c97025a'
             '49690421d98e8f61a600ee1ec97adc3e4d1cbe2f736fcf56056da23d02db378b')
 
 prepare() {
