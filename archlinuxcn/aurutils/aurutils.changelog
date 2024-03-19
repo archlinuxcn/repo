@@ -1,3 +1,52 @@
+## 19
+
+* `aur-build`
+  + add `--cleanbuild`
+  + do not shell quote `--status` paths
+  + early check for buildscript
+
+* `aur-chroot`
+  + do not shell quote `--status` paths
+
+* `aur-depends`
+  + only include `Self` targets for command-line arguments (`--table`, #1136)
+  + verify dependency version requirements (`--verify`)
+
+* `aur-graph`
+  + prevent unwanted matches in certain URLs (#1134)
+
+* `aur-repo`
+  + add `-m` / `--missing`
+  + add `--ignore`, `--ignore-by`
+  + do not shell quote `--status` paths
+  + fix invalid output with `--json --search` (#1126)
+
+* `aur-sync`
+  + document `aur-view` options
+  + detect local repositories with `--chroot` configuration (#1135)
+  + add `--clean` / `-C`, `--cleanbuild`
+    - default build command changed to `aur build --syncdeps`
+  + add `aur-sync--filter` helper (#1136, #1140)
+
+* `aur(1)`
+  + use `git-clean -ixd` to clean directories with `aur-gc`
+
+* `perl`
+  + add `Depends.pm`, `Repo.pm`
+
+## 18.5
+
+* `aur-repo`
+  + prefix pacman.conf in error messages (#1118)
+
+* `aur-build`
+  + propagate `--pacman-conf` to local repository upgrade
+
+## 18.4
+
+* `aur-repo`
+  + fix incomplete output with `--search` (`--json`, #1120)
+
 ## 18.3
 
 * `aur-build--pkglist`
