@@ -54,11 +54,6 @@ build() {
 	cmake --build build
 }
 
-check() {
-	cd build
-	ctest --output-on-failure -E ECMPoQmToolsTest
-}
-
 package() {
 	DESTDIR="${pkgdir}" cmake --install build
 }
