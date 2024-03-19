@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.12.0.DEV.210.g1d532f4fc79
+pkgver=1.12.0.DEV.211.ga9611ce6acd
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -60,13 +60,15 @@ case "$CARCH" in
 esac
 makedepends=("${depends_libs[@]}" llvm-julia-git gcc-fortran git patchelf python proot
              "${_soname_deps[@]}")
-options=('debug' '!strip' '!buildflags')
+# Both debug and strip cause pacman to edit the ELF files and breaking them
+# for loading.
+options=('!debug' '!strip' '!buildflags')
 _patches=(
   0001-Force-enable-GDB-debug-info-registration.patch
   0002-Fix-source-file-paths.patch
   0003-Clear-soname.patch
   0004-Use-libc-for-libssp.patch
-  0005-Support-loading-extensions-from-STDLIB.patch
+  # 0005-Support-loading-extensions-from-STDLIB.patch
   0006-julia-git-add-a-safeguard-for-bad-unwinding.patch
   0007-Update-to-LLVM-17.patch
 )
@@ -81,7 +83,6 @@ sha512sums=('SKIP'
             'd8d35576b262d29821f3bc4361d61f2da44dec90667be097904ba49a536b8c106d78092ffa9c5176dfec2a1d0369f15fab258f575b3f0395510cce42e9eb85f9'
             '89bc2448d00139d8419859678fa30f94e9c545cf5ff139e1167a3b916d6f4a0724bb17ca943f011c060cfcee0dd0e1ddeb65671c0a33ad1db08d9355dc6884d3'
             '6f00148aced419e2ce5d8abf287bdc6981640bb6a8bb62220b1d752ae13522c08ec99c57b534dfee185bfca263f809865f2b6e2e9579d620c0934499681100e0'
-            'f081bf904f186f6d427d3c335c9d1f68d278d7a8c97424f0207d2c7d876a6a61e4bfbcb255ba37a2aa4294f5e552899a6738e805aaeab2f98c7d0ecfed6c1680'
             'eefcbe0654d7d8229cd63a3215714ddaf566d87e601c785a17330760aad77f9129bb81fa499e99b15879fa0f0fb97cf7f0ea411e5e4a974be04659fe690ebbf6'
             '0592412ad17567be3cbab65d3626117d811140b534a4cce6f1b704ebfcfdfe57e7e9953a0ebe6b5fb3e1a69102ce60c6293afbb3b151387fd8c8f4718bd52b19'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
@@ -446,7 +447,7 @@ package-julia-in() {
   )
 
   # The ones that julia build system build does not seem to work at the moment.
-  rm -rf "${pkgdir}/usr/share/julia/compiled/v$ver_short/"*
+  # rm -rf "${pkgdir}/usr/share/julia/compiled/v$ver_short/"*
   env JULIA_PRECOMPILE_STDLIB_DIR="/usr/share/julia/stdlib/v$ver_short" \
       JULIA_CPU_TARGET="${_cpu_target}" \
       proot -b "${pkgdir}/usr/share/julia/:/usr/share/julia/" \
