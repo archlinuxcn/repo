@@ -7,38 +7,33 @@ pkgrel=1
 pkgdesc='Medical image processing in Python'
 arch=('x86_64')
 url='https://github.com/loli/medpy'
-license=('GPL')
+license=('GPL-3.0-or-later')
 depends=(
   boost-libs
+  gcc-libs
+  glibc
   python-numpy
   python-scipy
   python-simpleitk
 )
 makedepends=(
   boost
+  python-build
+  python-installer
   python-setuptools
-)
-checkdepends=(
-  python-nose
+  python-wheel
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/loli/medpy/archive/${pkgver}.tar.gz")
 sha512sums=('5d02077a9b2d8b1cb45d5d13461ec6b8c88bc0f50fcf0269ee599f09e8985845cb315821a8a2599fa2cb15b8a84c559576e9ab0833d3f04f39d4a6c467a56a1b')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
-  python setup.py build_ext --inplace
-}
-
-check() {
-  local python_version=$(python -c 'import sys; print("".join(map(str, sys.version_info[:2])))')
-  cd "${_pkgname}-${pkgver}"
-  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-cpython-${python_version}" nosetests -v
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
