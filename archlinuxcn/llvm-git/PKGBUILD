@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-
+# Maintainer: Solomon Choina <shlomochoina@gmail.com>
 # Based on LordHeavy's LLVM
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'spirv-llvm-translator-git' 'llvm-libs-git' 'llvm-git')
@@ -9,19 +9,24 @@ pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
 url="https://llvm.org/"
-license=('custom:Apache 2.0 with LLVM Exception')
+license=('Apache-2.0 WITH LLVM-exception')
 makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
              'python-sphinx' 'lua53' 'python-recommonmark' 'python-setuptools' 'python-six'
              'cuda' 'ocl-icd' 'opencl-headers' 'python-yaml' 'python-myst-parser'
              'swig' 'python' 'libunwind' 'spirv-headers-git'
-             'python-sphinx-furo' 'python-sphinx-automodapi')
+             'python-sphinx-furo' 'python-sphinx-automodapi' 'python-pexpect'
+             'python-psutil' 'spirv-tools' 'tensorflow')
 
 source=("llvm-project::git+https://github.com/llvm/llvm-project.git"
-        "llvm-config.h")
+        "git+https://github.com/KhronosGroup/SPIRV-LLVM-Translator.git"
+        "llvm-config.h"
+        )
 
 md5sums=('SKIP'
+         'SKIP'
          '295c343dcd457dc534662f011d7cff1a')
 sha512sums=('SKIP'
+            'SKIP'
             '75e743dea28b280943b3cc7f8bbb871b57d110a7f2b9da2e6845c1c36bf170dd883fca54e463f5f49e0c3effe07fbd0db0f8cf5a12a2469d3f792af21a73fcdd')
 options=('staticlibs' '!emptydirs') # 'debug' takes way too long to scan for the source files...
 
@@ -35,7 +40,7 @@ _python_optimize() {
 }
 
 pkgver() {
-    cd llvm-project/llvm
+    cd llvm-project/cmake/Modules
 
     # This will almost match the output of `llvm-config --version` when the
     # LLVM_APPEND_VC_REV cmake flag is turned on. The only difference is
@@ -44,7 +49,7 @@ pkgver() {
                         'BEGIN { ORS="." ; i=0 } \
              /set\(LLVM_VERSION_/ { print $2 ; i++ ; if (i==2) ORS="" } \
              END { print "\n" }' \
-                        CMakeLists.txt)_r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+                        LLVMVersion.cmake)_r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)
     echo "$_pkgver"
 }
 
@@ -53,9 +58,7 @@ prepare() {
     # llvm-project contains a lot of stuff, remove parts that aren't used by this package
     rm -rf "$srcdir"/fakeinstall
 
-  cd llvm/projects
-  git clone https://github.com/KhronosGroup/SPIRV-LLVM-Translator.git
-
+  cp -r $srcdir/SPIRV-LLVM-Translator llvm/projects
 }
 
 build() {
@@ -123,7 +126,7 @@ package_lldb-git() {
 
     pkgdesc="Next generation, high-performance debugger (git version)"
     url="https://lldb.llvm.org/"
-    depends=("clang-git=$pkgver-$pkgrel" "llvm-libs-git=$pkgver-$pkgrel" "lua53" "zstd")
+    depends=("clang-git=$pkgver-$pkgrel" "llvm-libs-git=$pkgver-$pkgrel" "lua53" "zstd" "libxml2" "python")
     provides=("lldb=$pkgver")
     replaces=('lldb-svn')
     optdepends=('lua53: scripting support')
@@ -159,7 +162,7 @@ package_lld-git(){
 package_polly-git() {
     pkgdesc="Polly is a high-level loop and data-locality optimizer and optimization infrastructure for LLVM"
     url="https://polly.llvm.org/"
-    depends=("llvm-libs-git=$pkgver-$pkgrel")
+    depends=("llvm-libs-git=$pkgver-$pkgrel" 'glibc' 'gcc-libs')
     provides=("polly=$pkgver")
     replaces=('polly-svn')
     conflicts=('polly' 'polly-svn')
@@ -195,7 +198,7 @@ package_clang-git() {
 
     pkgdesc="C language family frontend for LLVM (git version)"
     url="http://clang.llvm.org/"
-    depends=("llvm-libs-git=$pkgver-$pkgrel" 'gcc' "compiler-rt-git=$pkgver-$pkgrel")
+    depends=("llvm-libs-git=$pkgver-$pkgrel" 'gcc' "compiler-rt-git=$pkgver-$pkgrel" "python-yaml")
     optdepends=('llvm-git: refered by some clang-headers'
                 'python: for scan-view and git-clang-format'
                 'perl: for scanbuild, c++-analyzer, and ccc-analyzer')
@@ -278,7 +281,7 @@ package_spirv-llvm-translator-git() {
 
 package_llvm-git() {
     pkgdesc="Collection of modular and reusable compiler and toolchain technologies (git version)"
-    depends=("llvm-libs-git=$pkgver-$pkgrel" 'perl' 'python-yaml' 'python-psutil' 'python-pygments')
+    depends=("llvm-libs-git=$pkgver-$pkgrel" 'perl' 'python-yaml' 'python-psutil' 'python-pygments' 'libxml2' 'zstd' 'libedit' 'libffi')
     optdepends=('python-setuptools: for using lit (LLVM Integrated Tester)')
     provides=("llvm=$pkgver")
     replaces=('llvm-svn')
