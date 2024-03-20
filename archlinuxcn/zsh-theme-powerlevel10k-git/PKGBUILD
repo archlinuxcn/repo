@@ -1,0 +1,39 @@
+# Maintainer: Roman Perepelitsa <roman.perepelitsa@gmail.com>
+# Maintainer: Integral <integral@member.fsf.org>
+
+pkgname=zsh-theme-powerlevel10k-git
+_pkgname=${pkgname%-git}
+pkgver=r3918.25e5f59
+pkgrel=1
+pkgdesc='Powerlevel10k is a theme for Zsh. It emphasizes speed, flexibility and out-of-the-box experience.'
+arch=('aarch64' 'i686' 'x86_64')
+url="https://github.com/romkatv/powerlevel10k"
+license=('MIT')
+depends=('glibc' 'zsh')
+makedepends=('git' 'cmake' 'wget')
+optdepends=(
+	'ttf-meslo-nerd-font-powerlevel10k: terminal font recommended by powerlevel10k'
+	'powerline-fonts: patched fonts for powerline'
+	'awesome-terminal-fonts: icon package'
+)
+install="${_pkgname}.install"
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd powerlevel10k
+	git describe --long --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+build() {
+	cd powerlevel10k/gitstatus
+	./build -w
+}
+
+package() {
+	find powerlevel10k -type f -exec install -D '{}' "${pkgdir}/usr/share/zsh-theme-{}" ';'
+	make -C "${pkgdir}/usr/share/${_pkgname}/" zwc minify
+	install -Dm644 "powerlevel10k/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
