@@ -7,8 +7,9 @@ pkgrel=2
 pkgdesc='Neuroimaging in Python FMRI analysis package'
 arch=('x86_64')
 url='http://nipy.org/nipy'
-license=('BSD')
+license=('BSD-3-Clause')
 depends=(
+  openblas
   python-nibabel
   python-numpy
   python-scipy
@@ -16,7 +17,6 @@ depends=(
   python-transforms3d
 )
 makedepends=(
-  openblas
   cmake
   cython
   git
