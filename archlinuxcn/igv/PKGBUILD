@@ -1,21 +1,22 @@
-# maintainer: Kiri <kiri@vern.cc>
+# Maintainer: Kiri <kiri@vern.cc>
 # Contributor: Decrypted Epsilon <decrypted.epsilon@gmail.com>
 # Contributor: Stefan Husmann <stefan-husmann@t-online.de>
 # Contributor:  Piotr Balwierz <parseByHuman(surname at email_service_of_google)>
 # Co-maintainer: Rhinoceros <https://aur.archlinux.org/account/rhinoceros>
 
 pkgname=igv
-pkgver=2.16.2
+pkgver=2.17.3
 pkgrel=1
 pkgdesc="High-performance visualization tool for interactive exploration of large, integrated genomic datasets. From Broad Institute. https://doi.org/10.1093/bioinformatics/btac830"
 arch=('any')
 url="https://igv.org"
 license=('MIT')
-makedepends=('jdk11-openjdk'
-             'gendesk')
-depends=('jre11-openjdk')
+makedepends=('jdk17-openjdk'
+             'gendesk'
+             'gradle')
+depends=('java-runtime>=17')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/igvteam/igv/archive/v${pkgver}.tar.gz")
-sha256sums=('d08e785d9d44f4e3c16dfe22514133fa0a80d067b677c0cc3c64d2e3d2c12d21')
+sha256sums=('81ab0164014612ff37eea6c7673072fb38ba65b527c05c1197f605c3e9cf3c39')
 
 prepare() {
     # generate /usr/bin entry
@@ -41,9 +42,9 @@ EOF
 }
 
 build() {
-    export PATH=/usr/lib/jvm/java-11-openjdk/bin/:$PATH
+    export PATH=/usr/lib/jvm/java-17-openjdk/bin/:$PATH
     cd ${srcdir}/${pkgname}-${pkgver}
-    ./gradlew createDist
+    gradle createDist
 }
 
 package() {
@@ -60,5 +61,5 @@ package() {
     install -Dm644 igv.args ${pkgdir}/usr/share/${pkgname}/igv.args
     install -Dm644 lib/*jar -t ${pkgdir}/usr/share/java/${pkgname}
     install -Dm644 lib/genomes/* -t ${pkgdir}/usr/share/${pkgname}/lib/genomes
-    ln -s ${pkgdir}/usr/share/java/${pkgname}/*  ${pkgdir}/usr/share/${pkgname}/lib
+    ln -sr ${pkgdir}/usr/share/java/${pkgname}/* ${pkgdir}/usr/share/${pkgname}/lib
 }
