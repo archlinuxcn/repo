@@ -4,7 +4,7 @@
 # Contributor: Kuan-Yen Chou <kuanyenchou@gmail.com>
 
 pkgname=vcpkg
-pkgver=2024.02.14
+pkgver=2024.03.19
 pkgrel=1
 pkgdesc='C++ library manager for Windows, Linux, and MacOS'
 depends=('curl' 'zip' 'unzip')
@@ -28,7 +28,7 @@ source_aarch64=(
     'vcpkg-aarch64.sh'
 )
 sha256sums=(
-    '0e42992ab8dce9712758597c4f13bb5ea06f60c83a27e346628b981497eb70f1'
+    '9d167ba0f37b7b61ace5a3a399fb9af0a588dcd725b1ba3ef8c6aee4acbfa8f3'
     '02a6d2bca471adedfc7acc9ba57860d976ec5115b282cb1a96341850e1c7b221'
 )
 sha256sums_x86_64=(
