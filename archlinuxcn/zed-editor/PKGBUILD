@@ -13,9 +13,8 @@ BUILDENV+=(!check)
 
 pkgname=zed-editor
 pkgver=0.127.3
-_pkgver=$pkgver-pre
-pkgrel=1
-pkgdesc='high-performance, multiplayer code editor from the creators of Atom and Tree-sitter (linux pre-release series)'
+pkgrel=3
+pkgdesc='high-performance, multiplayer code editor from the creators of Atom and Tree-sitter'
 arch=(x86_64)
 url=https://zed.dev
 _url="https://github.com/zed-industries/zed"
@@ -24,10 +23,10 @@ depends=(alsa-lib libasound.so
          fontconfig
          gcc-libs # libgcc_s.so libstdc++.so
          glibc # libc.so libm.so
-         libgit2 libgit2.so
-         libxau libXau.so
+         # libgit2 libgit2.so
+         # libxau libXau.so
          libxcb # libxcb-xkb.so
-         libxdmcp libXdmcp.so
+         # libxdmcp libXdmcp.so
          libxkbcommon # libxkbcommon.so
          libxkbcommon-x11 # libxkbcommon-x11.so
          openssl libcrypto.so libssl.so
@@ -40,10 +39,10 @@ depends=(alsa-lib libasound.so
 makedepends=(cargo
              vulkan-headers
              vulkan-validation-layers)
-_archive="zed-$_pkgver"
-source=("$_url/archive/v$_pkgver/$_archive.tar.gz"
+_archive="zed-$pkgver"
+source=("$_url/archive/v$pkgver/$_archive.tar.gz"
         "https://github.com/livekit/protocol/archive/${_tags[protocol]}/protocol-${_tags[protocol]}.tar.gz")
-sha256sums=('a49402fd2375e376a29487af5b32716a72c64787b9f998decde912a5100b21b4'
+sha256sums=('3e0639f6af594aa8df57ccfaa09c6afcb98733fa09e18257f702ae99c85fd51e'
             'cd26bc1015fa0b79154c23a385441ae81e9a4385211cf2989eb939ae83d0e414')
 
 prepare() {
