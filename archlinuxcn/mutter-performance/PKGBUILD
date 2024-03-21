@@ -11,8 +11,8 @@
 
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441' '3304' '3327' '3373')
-_merge_requests_to_use=('1441' '3304' '3327' '3373')
+# Merge Requests List: ('579' '1441' '3304' '3373')
+_merge_requests_to_use=('1441' '3304' '3373')
 
 ## Disable building the DOCS package (Enabled if not set)
 # Remember to unset this variable when producing .SRCINFO
@@ -31,12 +31,12 @@ else
   pkgname=(mutter-performance mutter-performance-docs)
 fi
 epoch=1
-pkgver=45.4
+pkgver=45.5
 pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
-license=(GPL)
+license=('GPL-2.0-or-later')
 depends=(
   colord
   dconf
@@ -74,16 +74,14 @@ makedepends=(
 if [ -n "$_enable_check" ]; then
   checkdepends=(gnome-session xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
 fi
-_commit=919e71b113cc03c0fe1de7777393a19947f7b9f9  # tags/45.4^0
+_commit=4e8ccf5f9c177595aac11895ed50a4e35d5087e4  # tags/45.5^0
 source=("$pkgname::git+https://gitlab.gnome.org/GNOME/mutter.git#commit=$_commit"
         'mr1441.patch'
         'mr3304.patch'
-        'mr3327.patch'
         'mr3373.patch')
 sha256sums=('SKIP'
             '8d082a002e3506f67cf40c9ea03119e9e24f6c02238e633265a51992501e9799'
             '1339a8235b54a218c109a1d5e0992b3dca0f7610beb98fab0c27f0d68e026e16'
-            '2bf8e12fe60a35469352510cc14a76603722441c1cb47ae9548a79712a01a762'
             '3e1f07b696ad37b1c639a524c092cd9259444bc6156542901ccaec936bea240f')
 
 pkgver() {
@@ -174,15 +172,6 @@ prepare() {
   # Status: 2
   # Comment: This fixes three issues that were preventing GPU copies on the Nvidia proprietary driver.
   pick_mr '3304' 'mr3304.patch' 'patch'
-
-  # Title: backends/native: Fix the issue where KMS thread fails to acquire realtime on boot
-  # Author: Agustín Dall'Alba <gnome@dallalba.com.ar>
-  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3327
-  # Type: 3
-  # Status: 2
-  # Comment: Remove G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START to fix the issue where KMS thread
-  #          fails to acquire realtime priority on boot when the shell starts before the rtkit daemon.
-  pick_mr '3327' 'mr3327.patch' 'patch'
 
   # Title: kms/crtc: Increase default deadline evasion to 1000 microseconds
   # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
