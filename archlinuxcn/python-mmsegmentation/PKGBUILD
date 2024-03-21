@@ -8,13 +8,18 @@ epoch=1
 pkgdesc='OpenMMLab Semantic Segmentation Toolbox and Benchmark'
 arch=('any')
 url='https://github.com/open-mmlab/mmsegmentation'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
   python-matplotlib
+  python-mmengine
   python-mmpretrain
   python-mmcv
   python-numpy
+  python-opencv
+  python-pillow
   python-prettytable
+  python-pytorch
+  python-scipy
 )
 makedepends=(
   python-build
