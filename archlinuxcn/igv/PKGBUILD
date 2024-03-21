@@ -11,10 +11,8 @@ pkgdesc="High-performance visualization tool for interactive exploration of larg
 arch=('any')
 url="https://igv.org"
 license=('MIT')
-makedepends=('jdk17-openjdk'
-             'gendesk'
-             'gradle')
-depends=('java-runtime>=17')
+makedepends=('gendesk' 'gradle' 'jdk17-openjdk')
+depends=('java-runtime>=17' 'sh')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/igvteam/igv/archive/v${pkgver}.tar.gz")
 sha256sums=('81ab0164014612ff37eea6c7673072fb38ba65b527c05c1197f605c3e9cf3c39')
 
