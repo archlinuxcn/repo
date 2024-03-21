@@ -51,12 +51,21 @@ optdepends=(
 )
 
 replaces=("waybar-hyprland-git")
-source=("git+${url}.git")
-sha256sums=('SKIP')
+source=(
+	"git+${url}.git"
+	"https://patch-diff.githubusercontent.com/raw/Alexays/Waybar/pull/2919.patch"
+)
+sha256sums=('SKIP'
+            '74cc9ba63879ccf63690197b89d90167f8023ed1fee98eabdd49c095187293ed')
 
 pkgver() {
 	cd "${_pkgname}/"
 	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+	cd "${_pkgname}/"
+	patch -p1 <../2919.patch
 }
 
 build() {
