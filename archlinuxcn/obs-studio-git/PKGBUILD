@@ -8,42 +8,29 @@ _pkgname=${pkgname%-git}
 pkgver=30.1.0.rc1.r11.g725f495
 pkgrel=1
 epoch=1
-pkgdesc="Free and open source software for video recording and live streaming."
+pkgdesc="Free, open source software for live streaming and recording"
 arch=("i686" "x86_64")
-url="https://github.com/obsproject/${_pkgname}"
+url="https://obsproject.com/"
 license=("GPL-2.0-or-later")
-depends=("ffmpeg" "jansson" "libxinerama" "libxkbcommon-x11" "mbedtls"
-	"qt6-svg" "curl" "jack" "gtk-update-icon-cache"
-	"speexdsp" "pciutils" "libajantv2" "librist" "onevpl"
-	"libdatachannel")
-makedepends=("asio" "cmake" "git" "libdatachannel" "libfdk-aac" "libxcomposite" "nlohmann-json" "onevpl" "websocketpp" "x264"
-	"vlc" "swig" "luajit" "nlohmann-json" "python" "cef-minimal-obs-bin" "wayland"
-	"websocketpp" "qt6-wayland" "pipewire" "xdg-desktop-portal" "qrcodegencpp-cmake")
-optdepends=("libfdk-aac: FDK AAC codec support"
-	"libxcomposite: XComposite capture support"
-	"libva-intel-driver: hardware encoding"
-	"libva-mesa-driver: hardware encoding"
-	"vlc: VLC Media Source"
-	"luajit: Lua scripting"
-	"python: Python scripting"
-	"v4l2loopback-dkms: Virtual webcam"
-	"pipewire: Pipewire capture"
-	"pipewire-media-session: Pipewire capture"
-	"xdg-desktop-portal: Pipewire capture")
+depends=('ffmpeg' 'jansson' 'libxinerama' 'libxkbcommon-x11' 'mbedtls' 'rnnoise' 'pciutils'
+	'qt6-svg' 'curl' 'jack' 'gtk-update-icon-cache' 'pipewire' 'libxcomposite'
+	'libdatachannel')
+makedepends=('git' 'cmake' 'libfdk-aac' 'x264' 'swig' 'python' 'luajit' 'sndio')
+optdepends=('libfdk-aac: FDK AAC codec support'
+	'libva-intel-driver: hardware encoding'
+	'libva-mesa-driver: hardware encoding'
+	'luajit: scripting support'
+	'python: scripting support'
+	'sndio: Sndio input client'
+	'v4l2loopback-dkms: virtual camera support')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("git+https://github.com/obsproject/${_pkgname}.git"
-	"git+https://github.com/Mixer/ftl-sdk.git"
-	"git+https://github.com/obsproject/obs-browser.git"
-	"git+https://github.com/obsproject/obs-websocket.git"
-	"git+https://github.com/nayuki/QR-Code-generator.git"
-	"fix_python_binary_loading.patch")
+	"fix_python_binary_loading.patch"
+	"ignore_unused_submodules.patch")
 sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'bdfbd062f080bc925588aec1989bb1df34bf779cc2fc08ac27236679cf612abd')
+            'bdfbd062f080bc925588aec1989bb1df34bf779cc2fc08ac27236679cf612abd'
+            '60b0ee1f78df632e1a8c13cb0a7a5772b2a4b092c4a2a78f23464a7d239557c3')
 
 pkgver() {
 	cd "${_pkgname}/"
@@ -52,37 +39,27 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
-	gitconf="protocol.file.allow=always"
-
 	patch -Np1 <"${srcdir}/fix_python_binary_loading.patch"
-	git config "submodule.plugins/obs-outputs/ftl-sdk.url" "${srcdir}/ftl-sdk"
-	git config "submodule.plugins/obs-browser.url" "${srcdir}/obs-browser"
-	git config "submodule.plugins/obs-websocket.url" "${srcdir}/obs-websocket"
-	git -c ${gitconf} submodule update
-
-	cd "plugins/obs-websocket/"
-	git config "submodule.deps/qr.url" "${srcdir}/QR-Code-generator"
-	git -c ${gitconf} submodule update
+	patch -Np1 <"${srcdir}/ignore_unused_submodules.patch"
 }
 
 build() {
-	cd "${_pkgname}/"
-	mkdir -p build && cd build
-
-	cmake \
-		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DCMAKE_INSTALL_LIBDIR=lib \
-		-DBUILD_BROWSER=ON \
-		-DCEF_ROOT_DIR="/opt/cef-obs" \
+	cmake -B build -S "${_pkgname}/" \
+		-DCMAKE_INSTALL_PREFIX="/usr" \
+		-DENABLE_BROWSER=OFF \
+		-DENABLE_VST=ON \
+		-DENABLE_VLC=OFF \
+		-DENABLE_NEW_MPEGTS_OUTPUT=OFF \
+		-DENABLE_AJA=OFF \
+		-DENABLE_JACK=ON \
+		-DENABLE_LIBFDK=ON \
+		-DENABLE_WEBRTC=ON \
 		-DCALM_DEPRECATION=ON \
-		..
+		-Wno-dev
 
-	make
+	cmake --build build
 }
 
 package() {
-	cd "${_pkgname}/build/"
-	make install DESTDIR="${pkgdir}"
+	DESTDIR="${pkgdir}" cmake --install build
 }
-
-# vim: ts=2:sw=2:expandtab
