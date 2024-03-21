@@ -10,3 +10,7 @@ post_build_script: git_pkgbuild_commit()
 update_on:
   - source: gitlab
     gitlab: schmiddi-on-mobile/flare
+
+  - source: alpm
+    alpm: libadwaita
+    provides: libadwaita-1.so
