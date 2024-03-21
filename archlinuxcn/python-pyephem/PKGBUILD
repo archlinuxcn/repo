@@ -4,11 +4,11 @@
 
 pkgname=('python-pyephem')
 pkgver=4.1.5
-pkgrel=1
+pkgrel=2
 pkgdesc="PyEphem provides scientific-grade astronomical computations"
 arch=('i686' 'x86_64')
 url="http://rhodesmill.org/pyephem/"
-license=('GPL' 'LGPL')
+license=('MIT')
 makedepends=('python' 
   'python-setuptools')
 options=(!emptydirs)
