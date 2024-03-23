@@ -4,16 +4,15 @@
 pkgname=python-ufonormalizer
 _pyname=${pkgname#python-}
 pkgver=0.6.1
-pkgrel=3
-pkgdesc='A tool that will normalize XML and other data inside of a UFO'
+pkgrel=4
+pkgdesc="A tool that will normalize XML and other data inside of a UFO"
 arch=(any)
 url="https://github.com/unified-font-object/ufoNormalizer"
-license=(BSD-3-Clause)
-depends=(python
-         python-setuptools-scm)
-makedepends=(python-{build,installer,wheel})
+license=('BSD-3-Clause')
+depends=(python python-setuptools-scm)
+makedepends=(python-{build,installer,pytest-runner,wheel})
 _archive="$_pyname-$pkgver"
-source=("https://files.pythonhosted.org/packages/source/${_pyname::1}/$_pyname/$_archive.zip")
+source=("$_pyname-$pkgver.zip::https://files.pythonhosted.org/packages/source/u/$_pyname/$_pyname-$pkgver.zip")
 sha256sums=('e61110e75a500083f265385b1354b578610f9542e3bbbeedb98a2a6155e4aa6c')
 
 prepare() {
@@ -24,17 +23,16 @@ prepare() {
 
 build() {
 	cd "$_archive"
-	python -m build -wn
+	python -m build --wheel --no-isolation
 }
 
 check() {
 	cd "$_archive"
-	export PYTHONPATH="$PWD/build/lib"
-	python -m unittest discover
+	python setup.py pytest
 }
 
 package() {
 	cd "$_archive"
-	python -m installer -d "$pkgdir" dist/*.whl
+	python -m installer --destdir="$pkgdir" dist/*.whl
 	install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE.txt
 }
