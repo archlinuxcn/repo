@@ -1,6 +1,6 @@
 # Maintainer: Jguer <pkgbuilds at jguer.space>
 pkgname=yay
-pkgver=12.3.4
+pkgver=12.3.5
 pkgrel=1
 pkgdesc="Yet another yogurt. Pacman wrapper and AUR helper written in go."
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64' 'riscv64')
@@ -8,7 +8,7 @@ url="https://github.com/Jguer/yay"
 options=(!lto)
 license=('GPL-3.0-or-later')
 depends=(
-  'pacman>5'
+  'pacman>6.1'
   'git'
 )
 optdepends=(
@@ -17,7 +17,7 @@ optdepends=(
 )
 makedepends=('go>=1.21')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Jguer/yay/archive/v${pkgver}.tar.gz")
-sha256sums=('b69b87a5cc11d54892494d99ccd84109b20d83a94c0388c58cbb3c0d93861670')
+sha256sums=('2fb6121a6eb4c5e6afaf22212b2ed15022500a4bc34bb3dc0f9782c1d43c3962')
 
 build() {
   export GOPATH="$srcdir"/gopath
@@ -25,7 +25,6 @@ build() {
   export CGO_CFLAGS="${CFLAGS}"
   export CGO_CXXFLAGS="${CXXFLAGS}"
   export CGO_LDFLAGS="${LDFLAGS}"
-  export GOFLAGS="${GOFLAGS} $(pacman -T 'libalpm.so=14-64' > /dev/null && echo "-tags=next")"
   export CGO_ENABLED=1
 
   cd "$srcdir/$pkgname-$pkgver"
