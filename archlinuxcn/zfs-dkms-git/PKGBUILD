@@ -20,7 +20,6 @@ license=('CDDL-1.0')
 groups=('zfs-git')
 depends=('dkms')
 makedepends=('git')
-optdepends=("zfs-utils-git=${epoch}:${pkgver}")
 provides=("ZFS-MODULE=${pkgver}" "SPL-MODULE=${pkgver}")
 # ambiguous, provided for backwards compat, pls don't use
 provides+=('zfs')
