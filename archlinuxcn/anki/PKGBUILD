@@ -20,7 +20,7 @@ declare -gA _caches=(
 
 pkgname=anki
 pkgver=23.12.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
 license=('AGPL3')
@@ -55,11 +55,10 @@ makedepends=(
     'ninja'
     'git'
     'cargo'
-    'python-installer' # TODO: could use either wheel or installer, both are not needed afaik
+    'python-installer'
     'python-wheel'
     'nodejs>=18'
     'yarn'
-    'mold'
 )
 optdepends=(
     'lame: record sound'
@@ -137,7 +136,10 @@ build() {
     export CARGO_HOME="$srcdir/${_caches[cargo]}"    # do not litter in ~
     export RELEASE=2	        # anki-internal variable for optimization
     				# set to "1" for faster but less optimized build
-    mold -run ./ninja wheels -v # use mold as linker to allow for LTO
+    # use fat LTO objects, allows for LTO, needed for rust crate "ring"
+    # See https://gitlab.archlinux.org/archlinux/packaging/packages/pacman/-/issues/20 and https://github.com/briansmith/ring/issues/1444
+    export CFLAGS+=' -ffat-lto-objects'
+    ./ninja wheels -v
 }
 
 package() {
