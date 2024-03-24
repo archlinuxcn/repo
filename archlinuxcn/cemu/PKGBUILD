@@ -1,7 +1,7 @@
 # Maintainer: Jeremy Kescher <jeremy@kescher.at>
 
 pkgname=cemu
-pkgver=2.0.513
+pkgver=2.0.518
 pkgrel=1
 pkgdesc='Software to emulate Wii U games and applications on PC'
 arch=(x86_64)
@@ -11,11 +11,11 @@ options+=(!strip)
 depends=(
 	# unbundled vcpkg
 	'boost-libs>=1.79' 'fmt' 'libzip>=1.9.2' 'libpng>=1.6.37' 'pugixml>=1.12.1' 'sdl2>=2.0.22' 'wxwidgets-gtk3>=3.2' 'wayland' 'wayland-protocols'
-	'llvm-libs>=12'
+	'llvm-libs>=17'
 )
 makedepends=(
 	# build setup
-	git 'cmake>=3.21.1' 'clang>=12' 'llvm>=12' ninja
+	git 'cmake>=3.21.1' 'clang>=17' 'llvm>=17' ninja
 	# unbundled vcpkg
 	'boost>=1.79' 'glslang>=14' 'glm>=0.9.9.8' rapidjson
 	# direct cemu dependencies
@@ -31,7 +31,7 @@ optdepends=(
 )
 install=cemu.install
 source=(
-	git+https://github.com/cemu-project/Cemu#tag=v2.0-72
+	git+https://github.com/cemu-project/Cemu#tag=v2.0-73
 	# submodules
 	git+https://github.com/mozilla/cubeb#commit=dc511c6b3597b6384d28949285b9289e009830ea
 	git+https://github.com/ocornut/imgui#commit=8a44c31c95c8e0217f6e1fc814cbbbcca4981f14
