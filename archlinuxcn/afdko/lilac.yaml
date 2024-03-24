@@ -1,0 +1,19 @@
+maintainers:
+  - github: Zenvie
+    email: 905560c0-14ad-4f93-9702-bc46dfcf9a82@simplelogin.com
+
+build_prefix: extra-x86_64
+
+pre_build_script: aur_pre_build(maintainers=['alerque'])
+
+post_build: aur_post_build
+
+repo_depends:
+  - python-ufonormalizer
+
+update_on:
+  - source: aur
+    aur: afdko
+  - alias: python
+  - source: manual
+    manual: 2

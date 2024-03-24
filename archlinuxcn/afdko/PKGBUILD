@@ -1,0 +1,65 @@
+# Maintainer: Caleb Maclennan <caleb@alerque.com>
+# Contributor: William Turner <willtur.will@gmail.com>
+
+pkgname=afdko
+pkgver=4.0.1
+pkgrel=3
+pkgdesc="Adobe Font Development Kit for OpenType"
+arch=(x86_64)
+url="https://github.com/adobe-type-tools/afdko"
+license=('Apache-2.0')
+_py_deps=(booleanoperations
+          brotli # for fonttools[woff]
+          defcon
+          fontmath
+          fontpens # for defcon[pens]
+          fonttools
+          fs # for fonttools[ufo]
+          lxml # for defcon[lxml] and fonttools[lxml]
+          tqdm
+          ufonormalizer
+          ufoprocessor
+          unicodedata2 # for fonttools[unicode]
+          zopfli) # for fonttools[woff]
+depends=(gcc-libs
+         glibc
+         libxml2
+         python
+         "${_py_deps[@]/#/python-}")
+makedepends=(cmake
+             git # Upstream Issue: https://github.com/adobe-type-tools/afdko/issues/1407
+             ninja
+             python-{build,installer,wheel}
+             python-{scikit-build,setuptools-scm})
+checkdepends=(python-{pytest,virtualenv})
+conflicts=(spot-client)
+_archive="$pkgname-$pkgver"
+source=("$_archive.tar.gz::$url/releases/download/$pkgver/$_archive.tar.gz")
+sha256sums=('22dd90f0f7b4bc6eacbe8cddb0d72a484cf3f2d6cb474b0e3496de161177f019')
+
+prepare () {
+    cd "$_archive"
+    sed -i '/"wheel",/d;/"cmake",/d;/"ninja"/d;s/"scikit-build",/"scikit-build"/' pyproject.toml
+    sed -i -e 's/==/>=/g;s/,<=[0-9.]\+//' requirements.txt
+    sed -i -E "/'(wheel|cmake|ninja)',?$/d" setup.py
+}
+
+build() {
+    cd "$_archive"
+    python -m build --wheel --no-isolation
+}
+
+check() {
+    cd "$_archive"
+    virtualenv pyvenv --system-site-packages
+    source pyvenv/bin/activate
+    python -m pip install .
+    python -m pytest tests
+    deactivate
+}
+
+package() {
+    cd "$_archive"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+    install -Dm0644  -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE.md
+}
