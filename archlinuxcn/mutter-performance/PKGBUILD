@@ -281,7 +281,6 @@ _pick() {
 package_mutter-performance() {
   provides=(mutter libmutter-14.so)
   conflicts=(mutter)
-  groups=(gnome)
 
   meson install -C build --destdir "$pkgdir"
 
