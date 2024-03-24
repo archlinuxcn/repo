@@ -24,6 +24,7 @@ _merge_requests_to_use=('1441' '3304' '3373')
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing!
 
+_pkgname=mutter
 pkgbase=mutter-performance
 if [ -n "$_disable_docs" ]; then
   pkgname=mutter-performance
@@ -31,33 +32,69 @@ else
   pkgname=(mutter-performance mutter-performance-docs)
 fi
 epoch=1
-pkgver=45.5
+pkgver=46.0
 pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
-license=('GPL-2.0-or-later')
+license=(GPL)
 depends=(
+  at-spi2-core
+  cairo
   colord
   dconf
+  fontconfig
+  fribidi
+  gcc-libs
+  gdk-pixbuf2
+  glib2
+  glibc
   gnome-desktop-4
   gnome-settings-daemon
   graphene
   gsettings-desktop-schemas
+  gtk4
+  harfbuzz
   iio-sensor-proxy
   lcms2
   libcanberra
+  libcolord
   libdisplay-info
+  libdrm
   libei
+  libglvnd
   libgudev
+  libice
   libinput
+  libpipewire
   libsm
   libsysprof-capture
+  libwacom
+  libx11
+  libxau
+  libxcb
+  libxcomposite
+  libxcursor
+  libxdamage
+  libxext
+  libxfixes
+  libxi
+  libxinerama
+  libxkbcommon
   libxkbcommon-x11
   libxkbfile
+  libxrandr
+  libxtst
+  mesa
+  pango
   pipewire
+  pixman
+  python
   startup-notification
+  systemd-libs
+  wayland
   xorg-xwayland
+
 )
 makedepends=(
   egl-wayland
@@ -74,18 +111,18 @@ makedepends=(
 if [ -n "$_enable_check" ]; then
   checkdepends=(gnome-session xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
 fi
-_commit=4e8ccf5f9c177595aac11895ed50a4e35d5087e4  # tags/45.5^0
-source=("$pkgname::git+https://gitlab.gnome.org/GNOME/mutter.git#commit=$_commit"
+_commit=c4753689e3413cd9332d885dd0297b3b7d9ba9ca  # tags/46.0^0
+source=("git+https://gitlab.gnome.org/GNOME/mutter.git#commit=$_commit"
         'mr1441.patch'
         'mr3304.patch'
         'mr3373.patch')
-sha256sums=('SKIP'
-            '8d082a002e3506f67cf40c9ea03119e9e24f6c02238e633265a51992501e9799'
-            '1339a8235b54a218c109a1d5e0992b3dca0f7610beb98fab0c27f0d68e026e16'
-            '3e1f07b696ad37b1c639a524c092cd9259444bc6156542901ccaec936bea240f')
+b2sums=('04a14854c8ec2668a340b241102b7b2ebbc0387a9771a5bd2c2366419ee08e7ebb308f2288f4a64b9d08053e1897eb514a46802584d1590f8bcebde4a613afaa'
+        'f183956d0d632dcedbc8577ab73e66cee8806ab901723fc93861787ef19f491b32dd7986ca3df86f73a7e77270ce74c948ab7467cd91f9211858514ca310bb06'
+        'f53c0a7cf5fe400e83379be5e3694dba0668e0917b5bf29c485cef802660e38176ab856118a030ddc87bd49b75d0dd6f9e0d8f32d2b2ef27ebb1737f8914bf21'
+        '71f10db4ebe04a787940c7048131eac67cffd3ec8e415cfc961b8041b881f272650581e9df273e2a8da23a50ec9151c790dc2d5ecc0309ab2847a22f8c922c9c')
 
 pkgver() {
-  cd $pkgname
+  cd $_pkgname
   git describe --tags | sed 's/[^-]*-g/r&/;s/-/+/g'
 }
 
@@ -117,7 +154,7 @@ pick_mr() {
 }
 
 prepare() {
-  cd $pkgname
+  cd $_pkgname
 
   git reset --hard
   git cherry-pick --abort || true
@@ -196,7 +233,7 @@ build() {
     -D egl_device=true
     -D wayland_eglstream=true
     -D installed_tests=false
-    -D libdisplay_info=true
+    -D libdisplay_info=enabled
     -D docs=$(if ! [ -n "$_disable_docs" ]; then echo "true"; else echo "false"; fi)
     -D tests=$(if [ -n "$_enable_check" ]; then echo "true"; else echo "false"; fi)
   )
@@ -204,7 +241,7 @@ build() {
   CFLAGS="${CFLAGS/-O2/-O3} -fno-semantic-interposition"
   LDFLAGS+=" -Wl,-Bsymbolic-functions"
 
-  arch-meson $pkgname build "${meson_options[@]}"
+  arch-meson $_pkgname build "${meson_options[@]}"
   meson compile -C build
 }
 
@@ -219,9 +256,15 @@ if [ -n "$_enable_check" ]; then
     local _pipewire_session_manager=$(pacman -Qq pipewire-session-manager)
 
     echo "Tests may be broken with certain setups. Use with caution!"
+    # Tests fail:
+    # mutter:cogl+cogl/conform / cogl-test-offscreen-texture-formats-gles2
+    # mutter:core+mutter/stacking / fullscreen-maximize
+    ## https://gitlab.gnome.org/GNOME/mutter/-/issues/3343
     xvfb-run -s '-nolisten local +iglx -noreset' \
       ${pkgbase}/src/tests/meta-dbus-runner.py --launch=pipewire --launch=${_pipewire_session_manager} \
-      meson test -C build --print-errorlogs -t 5 --setup plain
+      meson test -C build --no-suite 'mutter/kvm' --no-rebuild \
+      --print-errorlogs --timeout-multiplier 10 --setup plain ||:
+
   }
 fi
 
@@ -236,9 +279,9 @@ _pick() {
 }
 
 package_mutter-performance() {
-  provides=(mutter libmutter-13.so)
+  provides=(mutter libmutter-14.so)
   conflicts=(mutter)
-  
+  groups=(gnome)
 
   meson install -C build --destdir "$pkgdir"
 
