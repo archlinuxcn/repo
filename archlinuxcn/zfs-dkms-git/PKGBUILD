@@ -62,7 +62,7 @@ build() {
 }
 
 package() {
-	depends=("zfs-utils-git=${epoch}:${pkgver}" 'dkms')
+	depends=("zfs-utils-git=${epoch}:${pkgver}" 'dkms' 'perl')
 	cd zfs
 
 	dkmsdir="${pkgdir}/usr/src/zfs"
