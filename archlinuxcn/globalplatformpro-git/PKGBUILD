@@ -8,7 +8,7 @@ pkgdesc="Manage applets and keys on JavaCard-s like a pro"
 arch=('any')
 url="https://github.com/martinpaljak/GlobalPlatformPro"
 license=('LGPL-3.0-or-later AND MIT')
-depends=('java-runtime-headless>=17' 'pcsclite')
+depends=('java-runtime-headless>=17' 'pcsclite' 'bash')
 makedepends=('git' 'java-environment=17' 'maven' 'which')
 conflicts=('globalplatformpro')
 provides=('globalplatformpro')
@@ -17,7 +17,7 @@ source=(
   'gpp'
 )
 b2sums=('SKIP'
-        'a7ebe2cd9b22bf6824e6cadaeba991e90b441c010824ba6fc0566f2fcfc6b33fd00108ddfebad8b0e1763fc22bcc89d4d43a3d6a032277e7bd1b52fa95cd1cc8')
+        '0fd110a0431ab4bf35adc83ff7205c7eae71ea8cda04520a01e7aa5c045010282357ad9d61dcee414728a225fad640fc4275165bd05457f451de76437bbae976')
 
 pkgver() {
   cd $_pkgname
@@ -30,7 +30,7 @@ prepare() {
 
 build() {
   cd $_pkgname
-  ./mvnw package # Use maven wrapper because Arch Linux has too old maven in repo
+  ./mvnw package # FIXME: Use maven wrapper because Arch Linux has too old maven in repo
 }
 
 package() {
@@ -39,4 +39,6 @@ package() {
   cd $_pkgname
   install -d "$pkgdir"/usr/share/java/globalplatformpro/
   install -m 644 tool/target/gp.jar "$pkgdir"/usr/share/java/globalplatformpro/
+  install -d "$pkgdir"/usr/share/licenses/"$pkgname"
+  install -m 644 README.md "$pkgdir"/usr/share/licenses/"$pkgname"
 }

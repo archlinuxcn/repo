@@ -36,9 +36,6 @@ prepare() {
     # use arch-packaged .NET version rather than forcing this version
     rm global.json
 
-    # use absolute path to global dotnet exe
-    sed -i "s|? \"dotnet\"|? \"$(command -v dotnet)\"|" scripts/common.cake
-
     export DOTNET_NOLOGO=1
 
     dotnet tool restore

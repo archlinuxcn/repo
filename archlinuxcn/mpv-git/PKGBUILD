@@ -13,7 +13,7 @@ depends=(
         'glibc' 'gcc-libs' 'bash'
         'libx11' 'libxext' 'libxrandr' 'libxss' 'libxinerama' 'libxv' 'libxpresent'
         'desktop-file-utils' 'hicolor-icon-theme' 'xdg-utils' 'luajit' 'mujs'
-        'libgl' 'libdvdnav' 'uchardet' 'mesa' 'libdrm' 'libcaca'
+        'libgl' 'libdvdnav' 'libdvdread' 'uchardet' 'mesa' 'libdrm' 'libcaca'
         'zlib' 'vapoursynth' 'sdl2' 'libsixel' 'libcdio-paranoia' 'libcdio'
 
         'libva' 'libva.so' 'libva-x11.so' 'libva-wayland.so' 'libva-drm.so'
@@ -72,6 +72,7 @@ build() {
         '-Dlua=enabled' '-Dlua=luajit'
         '-Ddvbin=enabled'
         '-Dsdl2=enabled'
+        '-Ddvdnav=enabled'
     )
     
     local _other_os_flags=(
@@ -110,7 +111,6 @@ build() {
     
     cd "$srcdir/mpv"
     arch-meson . build \
-        --buildtype=debugoptimized \
         -Dlibmpv=true \
         -Ddefault_library=shared \
         "${_opt_extra_flags[@]}" \
@@ -129,5 +129,5 @@ package() {
 
 check() {
     cd "$srcdir/mpv"
-    meson test -C build --print-errorlogs --no-suite ffmpeg
+    meson test -C build --print-errorlogs --no-suite ffmpeg # ffmpeg testsuite need fixed ffmpeg version
 }

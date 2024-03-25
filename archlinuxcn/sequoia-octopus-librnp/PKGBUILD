@@ -11,7 +11,7 @@ license=('LGPL-2.0-or-later')
 makedepends=('cargo' 'clang')
 install="${pkgname}.install"
 depends=('thunderbird')
-options=(!lto)
+options=(!lto) # FIXME: linker error
 sha256sums=('000540e3fc558faad756a17040cdf5a0ba4cbb23c8500ab778134e899af8c800'
             'aa2bda370a1e9b4a880e275291caac486db65095c34d013561d6127777589709')
 

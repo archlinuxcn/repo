@@ -9,7 +9,7 @@ pkgdesc="Tools to generate special DNS records (SSHFP, TLSA, OPENPGPKEY, IPSECKE
 arch=(any)
 url="https://github.com/letoams/hash-slinger"
 license=('GPL-2.0-or-later')
-depends=('python-dnspython' 'python-m2crypto' 'unbound')
+depends=('python' 'python-dnspython' 'python-m2crypto' 'unbound')
 makedepends=('xmlto')
 optdepends=('openssh: for sshfp'
             'python-gnupg: for openpgpkey'

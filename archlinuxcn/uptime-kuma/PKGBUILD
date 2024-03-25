@@ -8,7 +8,7 @@ arch=('x86_64')
 url="https://github.com/louislam/uptime-kuma"
 license=('MIT')
 depends=('nodejs' 'sqlite')
-makedepends=('npm' 'chromium')
+makedepends=('npm' 'chromium' 'jq')
 optdepends=(
             'cloudflared: reverse proxy with Cloudflare tunnel'
 )
@@ -28,7 +28,11 @@ build() {
 package() {
     npm install \
         --build-from-source --sqlite=/usr \
-        -g --prefix "${pkgdir}/usr" "${srcdir}/${pkgname}-${pkgver}.tar.gz"
+        -g --prefix "${pkgdir}/usr" --cache "${srcdir}/npm-cache" \
+        "${srcdir}/${pkgname}-${pkgver}.tar.gz"
+    
+    install -d ${pkgdir}/usr/lib/node_modules/uptime-kuma/dist/
+    cp -r ${srcdir}/${pkgname}-${pkgver}/dist/* -t ${pkgdir}/usr/lib/node_modules/uptime-kuma/dist/
 
     # npm gives ownership of ALL FILES to build user
     # https://bugs.archlinux.org/task/63396
@@ -36,9 +40,20 @@ package() {
     
     # Remove references to $pkgdir
     find "$pkgdir" -type f -name package.json -print0 | xargs -0 sed -i "/_where/d"
-    
-    install -d ${pkgdir}/usr/lib/node_modules/uptime-kuma/dist/
-    cp -r ${srcdir}/${pkgname}-${pkgver}/dist/* -t ${pkgdir}/usr/lib/node_modules/uptime-kuma/dist/
+
+    # Remove references to $srcdir
+    local tmppackage="$(mktemp)"
+    local pkgjson="$pkgdir/usr/lib/node_modules/$pkgname/package.json"
+    jq '.|=with_entries(select(.key|test("_.+")|not))' "$pkgjson" > "$tmppackage"
+    mv "$tmppackage" "$pkgjson"
+    chmod 644 "$pkgjson"
+
+    find "$pkgdir" -type f -name package.json | while read pkgjson; do
+            local tmppackage="$(mktemp)"
+            jq 'del(.man)' "$pkgjson" > "$tmppackage"
+            mv "$tmppackage" "$pkgjson"
+            chmod 644 "$pkgjson"
+    done
     
     install -d ${pkgdir}/usr/lib/systemd/system
     install -Dm644 "${srcdir}/uptime-kuma.service" ${pkgdir}/usr/lib/systemd/system/uptime-kuma.service

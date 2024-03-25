@@ -31,6 +31,7 @@ b2sums=('a44a4b3739b1ed4a597713ca2ef7adb33f1ab7130322a419ee88517addfbf0edf01ef59
 
 prepare() {
   cd $pkgname-$pkgver
+  # FIXME: https://github.com/Aetf/kmscon/issues/58
   patch -Np1 -i ../fix-backspace.patch
   sed 's/>=4.1.0/>=4.0.0/' -i meson.build
 }
@@ -52,6 +53,4 @@ check() {
 package() {
   meson install -C build --destdir="$pkgdir"
   install -Dm644 $pkgname-$pkgver/COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
-#  install -d "$pkgdir/usr/lib/systemd/system"
-#  cp docs/kmscon{,vt@}.service "$pkgdir/usr/lib/systemd/system/"
 }
