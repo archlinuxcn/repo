@@ -20,7 +20,7 @@ declare -gA _caches=(
 
 pkgname=anki
 pkgver=23.12.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
 license=('AGPL3')
@@ -59,6 +59,7 @@ makedepends=(
     'python-wheel'
     'nodejs>=18'
     'yarn'
+    'mold'
 )
 optdepends=(
     'lame: record sound'
@@ -108,10 +109,12 @@ prepare() {
     pacman -Qo $(which cargo) | grep -q rustup && rustup update
     # fetch rust packages
     export CARGO_HOME="$srcdir/${_caches[cargo]}"       # do not litter in ~
+    rm -rf "$CARGO_HOME" # force remove to avoid stale files
     cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 
     # fetch node packages already in prepare()
     export YARN_CACHE_FOLDER="$srcdir/${_caches[yarn]}" # do not litter in ~
+    rm -rf "$YARN_CACHE_FOLDER" # force remove to avoid stale files
     yarn install --immutable --modules-folder out/node_modules
     ln -sf out/node_modules ./
 
@@ -136,10 +139,13 @@ build() {
     export CARGO_HOME="$srcdir/${_caches[cargo]}"    # do not litter in ~
     export RELEASE=2	        # anki-internal variable for optimization
     				# set to "1" for faster but less optimized build
+    # if you want to use your linker of choice, comment out the following lines and disbale the mold line
+    # This appears to create issues for memory-constrained (<= 8GB) systems
     # use fat LTO objects, allows for LTO, needed for rust crate "ring"
     # See https://gitlab.archlinux.org/archlinux/packaging/packages/pacman/-/issues/20 and https://github.com/briansmith/ring/issues/1444
-    export CFLAGS+=' -ffat-lto-objects'
-    ./ninja wheels -v
+    # export CFLAGS+=' -ffat-lto-objects'
+    # ./ninja wheels -v
+    mold -run ./ninja wheels -v
 }
 
 package() {
