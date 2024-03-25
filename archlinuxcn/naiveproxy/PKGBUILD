@@ -3,9 +3,9 @@
 
 pkgname=naiveproxy
 pkgdesc="A Proxy using Chrome's network stack to camouflage traffic with strong censorship resistence and low detectablility."
-pkgver=122.0.6261.43_1
+pkgver=123.0.6312.40_1
 pkgrel=1
-_pkgver=122.0.6261.43
+_pkgver=123.0.6312.40
 _pkgrel=1
 arch=('x86_64')
 url='https://github.com/klzgrad/naiveproxy'
@@ -14,8 +14,8 @@ depends=("gcc-libs" "glibc")
 makedepends=("ninja" "gn" "ccache" "python")
 checkdepends=("python" "openssl")
 
-_PGO_PATH='chrome-linux-6261-1707846690-1391fcc4772c0b31e214f533af5cafa87e4ccf40.profdata'
-_clang_path='clang-llvmorg-18-init-16072-gc4146121e940-5.tgz'
+_PGO_PATH='chrome-linux-6312-1710232336-55ec5e20adb987a833d822fa3c03ffde72e6a2bb-33fd71f0cc028eebdc456b115c2cc23a6c31514b.profdata'
+_clang_path='clang-llvmorg-19-init-2319-g7c4c2746-1.tgz'
 
 source=(
   "naiveproxy.service"
@@ -31,17 +31,17 @@ noextract=(
 )
 
 sha1sums=('4c18f44ba51d40bfd7e6ae8ecb30b8e812acb8e8'
-          '013b31ae43e309bc6560b61e8b4196f8f14f738f'
-          '3727d7da81b1480d60e593a7d6878d981b35c4f6'
-          '068d7196c38da64e7c178279c9ca9b98abd44752'
-          '1391fcc4772c0b31e214f533af5cafa87e4ccf40'
-          'cf4fc057822fe49e588cae42748342f63af1f435')
+  '013b31ae43e309bc6560b61e8b4196f8f14f738f'
+  '3727d7da81b1480d60e593a7d6878d981b35c4f6'
+  '8eef0118d7e68842879472ca45a9b0865a832d0e'
+  '55ec5e20adb987a833d822fa3c03ffde72e6a2bb'
+  'be7739ba7ac11e57131176ed2131cdaab7acee1d')
 sha256sums=('c05026423ca08e2c712745b717c23395e344f2c99b2dad30beed8e26922d268f'
-            'daa0f591233625730168f3ea006f1d5a7e439e26b35a1051d957e394aa8a4440'
-            '5bc9ef361e6303e151b6e63deb31b47e24a4f34ade4d8f092a04bc98e89a2edb'
-            'c45fbec6390791678490b7f5df7441c120eda4af92c1aaa6c15dbe5b4ca649b6'
-            '3ee58646307e2b06c5c12eb7995b0a017c981aa7eec64a85f0be5140f8d24d9f'
-            '63009892f985488f9152bc064b43e9d3be197c437f2469b83efce6293887442b')
+  'daa0f591233625730168f3ea006f1d5a7e439e26b35a1051d957e394aa8a4440'
+  '5bc9ef361e6303e151b6e63deb31b47e24a4f34ade4d8f092a04bc98e89a2edb'
+  '75b67e44c45e9ac5a73688e17252ed6ae8dcb937f9cb9a184c8cd1585a0ceee3'
+  'c4a3404493b1a6c7a0a4db558e74c19e7f20fea861a65cbae95198c1f620e5ca'
+  'e065dbcaf9ce5d3fdc6fb3dea1c195b1fc8a0da08cfd40b27ed88857a106e992')
 
 backup=('etc/naiveproxy/config.json')
 provides=('naiveproxy')
@@ -50,16 +50,17 @@ conflicts=('naiveproxy-git' 'naiveproxy-bin')
 prepare() {
   SRC_DIR="${srcdir}/${pkgname}-${_pkgver}-${_pkgrel}/src"
 
-  mkdir -p ${SRC_DIR}/chrome/build/pgo_profiles
-  cp ${_PGO_PATH} ${SRC_DIR}/chrome/build/pgo_profiles/
+  mkdir -p "${SRC_DIR}/chrome/build/pgo_profiles"
+  cp ${_PGO_PATH} "${SRC_DIR}/chrome/build/pgo_profiles/"
 
-  mkdir -p ${SRC_DIR}/third_party/llvm-build/Release+Asserts
-  tar xzf ${_clang_path} -C ${SRC_DIR}/third_party/llvm-build/Release+Asserts/
+  mkdir -p "${SRC_DIR}/third_party/llvm-build/Release+Asserts"
+  tar xzf ${_clang_path} -C "${SRC_DIR}/third_party/llvm-build/Release+Asserts/"
 }
 
 build() {
   SRC_DIR="${srcdir}/${pkgname}-${_pkgver}-${_pkgrel}/src"
-  pushd ${SRC_DIR}
+
+  cd "${SRC_DIR}"
 
   export TMPDIR="$PWD/tmp"
   rm -rf "$TMPDIR"
@@ -79,16 +80,10 @@ build() {
   export CCACHE_CPP2=yes
   CCACHE=ccache
 
-  WITH_CLANG=Linux_x64
-  WITH_PGO=linux
-  WITH_GN=linux
-
   pushd "tools/clang/scripts"
   CLANG_REVISION=$($PYTHON -c 'import update; print(update.PACKAGE_VERSION)')
   popd
-  echo $CLANG_REVISION >third_party/llvm-build/Release+Asserts/cr_build_revision
-
-  PGO_PATH=$(cat chrome/build/$WITH_PGO.pgo.txt)
+  echo "$CLANG_REVISION" >third_party/llvm-build/Release+Asserts/cr_build_revision
 
   flags="$flags
     cc_wrapper=\"$CCACHE\""
@@ -118,48 +113,43 @@ build() {
     use_nss_certs=false
   '
 
-  # use system clang
-  # disable clang plugins
-  # build without afdo.prof
-  # flags="$flags"'
-  #   clang_base_path=""
-  #   clang_use_chrome_plugins=false
-  #   clang_use_default_sample_profile=false'
+  # Disable CFI icall for linux x64
+  # See https://github.com/llvm/llvm-project/issues/86430
+  flags="$flags"'
+    use_cfi_icall=false'
 
   rm -rf "./$out"
   mkdir -p out
 
   export DEPOT_TOOLS_WIN_TOOLCHAIN=0
 
-  gn gen "$out" --args="$flags $EXTRA_FLAGS" --script-executable=$PYTHON
+  gn gen "$out" "--args=$flags $EXTRA_FLAGS" "--script-executable=$PYTHON"
 
   ninja -C "$out" naive
-
-  popd
 }
 
-#check() {
-#  SRC_DIR="${srcdir}/${pkgname}-${_pkgver}-${_pkgrel}"
-#  script_dir="${SRC_DIR}/tests"
-#  naive="${SRC_DIR}/src/out/Release/naive"
-#
-#  cd /tmp
-#  python "${script_dir}/basic.py" --naive="$naive"
-#}
+check() {
+  SRC_DIR="${srcdir}/${pkgname}-${_pkgver}-${_pkgrel}"
+  script_dir="${SRC_DIR}/tests"
+  naive="${SRC_DIR}/src/out/Release/naive"
+
+  cd /tmp
+  python "${script_dir}/basic.py" --naive="$naive"
+}
 
 package() {
   pushd "${srcdir}"
-  install -Dm644 naiveproxy.service ${pkgdir}/usr/lib/systemd/system/naiveproxy.service
-  install -Dm644 naiveproxy@.service ${pkgdir}/usr/lib/systemd/system/naiveproxy@.service
-  install -Dm644 naiveproxy.sysusers ${pkgdir}/usr/lib/sysusers.d/naiveproxy.conf
+  install -Dm644 naiveproxy.service "${pkgdir}/usr/lib/systemd/system/naiveproxy.service"
+  install -Dm644 naiveproxy@.service "${pkgdir}/usr/lib/systemd/system/naiveproxy@.service"
+  install -Dm644 naiveproxy.sysusers "${pkgdir}/usr/lib/sysusers.d/naiveproxy.conf"
   popd
 
   pushd "${srcdir}/${pkgname}-${_pkgver}-${_pkgrel}"
-  install -d -m750 -o 0 -g 287 ${pkgdir}/etc/naiveproxy
-  install -Dm644 src/config.json ${pkgdir}/etc/naiveproxy/config.json
-  install -Dm755 src/out/Release/naive ${pkgdir}/usr/bin/naiveproxy
-  install -Dm644 README.md ${pkgdir}/usr/share/doc/naiveproxy/README.md
-  install -Dm644 USAGE.txt ${pkgdir}/usr/share/doc/naiveproxy/USAGE.txt
-  install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/naiveproxy/LICENSE
+  install -d -m750 -o 0 -g 287 "${pkgdir}/etc/naiveproxy"
+  install -Dm644 src/config.json "${pkgdir}/etc/naiveproxy/config.json"
+  install -Dm755 src/out/Release/naive "${pkgdir}/usr/bin/naiveproxy"
+  install -Dm644 README.md "${pkgdir}/usr/share/doc/naiveproxy/README.md"
+  install -Dm644 USAGE.txt "${pkgdir}/usr/share/doc/naiveproxy/USAGE.txt"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/naiveproxy/LICENSE"
   popd
 }
