@@ -128,6 +128,26 @@
        if (!devToolsDir.existsSync()) {
          throw Exception('Could not find directory at ${devToolsDir.path}');
        }
+--- ./packages/flutter_tools/lib/src/commands/create_base.dart.orig
++++ ./packages/flutter_tools/lib/src/commands/create_base.dart
+@@ -2,6 +2,8 @@
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+
++import 'dart:io' as io show Platform;
++
+ import 'package:meta/meta.dart';
+ import 'package:uuid/uuid.dart';
+
+@@ -391,7 +393,7 @@
+       'linuxIdentifier': linuxIdentifier,
+       'windowsIdentifier': windowsIdentifier,
+       'description': projectDescription,
+-      'dartSdk': '$flutterRoot/bin/cache/dart-sdk',
++      'dartSdk': io.Platform.environment['DART_ROOT'] ?? '/opt/dart-sdk',
+       'androidMinApiLevel': android_common.minApiLevel,
+       'androidSdkVersion': kAndroidSdkMinVersion,
+       'pluginClass': pluginClass,
 --- ./packages/flutter_tools/lib/src/dart/pub.dart.orig
 +++ ./packages/flutter_tools/lib/src/dart/pub.dart
 @@ -545,9 +545,7 @@
