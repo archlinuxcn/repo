@@ -2,7 +2,7 @@
 
 pkgbase=sing-geosite
 pkgname=(sing-geosite-db sing-geosite-rule-set sing-geosite-common)
-pkgver=20240316051411
+pkgver=20240324094850
 pkgrel=1
 pkgdesc="Geosite database and rule sets for sing-box"
 arch=('any')
@@ -13,7 +13,7 @@ source=(
     "${_srcbase}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
 	"GeoLite2-End-User-License-Agreement.pdf"
 )
-sha256sums=('411a4d70de3cf3942009f07eaff51820965527bc2974552b1b23333e724964b6'
+sha256sums=('3368c7844e50eedca16bedc6c3882be943d39a20ca338b6717994aaa85e5207d'
             'b9c7fbfcdd5b682b5635592281d72006df89d73f163308b7ef35a59f293b036e')
 
 build() {
