@@ -7,8 +7,9 @@ pkgrel=1
 pkgdesc='A scikit-learn compatible neural network library that wraps pytorch'
 arch=(any)
 url=https://github.com/skorch-dev/skorch
-license=(BSD)
+license=('BSD-3-Clause')
 depends=(
+  python-matplotlib
   python-numpy
   python-pandas
   python-pytorch
@@ -16,24 +17,23 @@ depends=(
   python-scipy
   python-tabulate
   python-tqdm)
-makedepends=(python-setuptools)
-checkdepends=(flake8 python-flaky python-pytest python-pytest-cov)
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
 source=("${_pkgname}-${pkgver}.tar.gz"::"https://github.com/skorch-dev/skorch/archive/v${pkgver}.tar.gz")
 sha512sums=('a350cd96b529ec9f29a37caa1b1c18cbebb1bd2e47ff6a16fb4ee7ca2395afa3ce5a9b46f699d96655d3d23f27ab4636271540e1a989d907e032339ae54bd8d5')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
-}
-
-check() {
-  cd "${_pkgname}-${pkgver}"
-  pytest -v
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
