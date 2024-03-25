@@ -124,7 +124,7 @@
 -      const String devToolsDirPath = 'dart-sdk/bin/resources/devtools';
 -      final Directory devToolsDir = getCacheDir(devToolsDirPath, shouldCreate: false);
 +      final String dartSdkRoot = io.Platform.environment['DART_ROOT'] ?? '/opt/dart-sdk';
-+      final Directory devToolsDir = _fileSystem.directory(dartSdkRoot + 'bin/resources/devtools');
++      final Directory devToolsDir = _fileSystem.directory(dartSdkRoot + '/bin/resources/devtools');
        if (!devToolsDir.existsSync()) {
          throw Exception('Could not find directory at ${devToolsDir.path}');
        }
