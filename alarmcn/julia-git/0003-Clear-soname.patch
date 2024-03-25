@@ -1,7 +1,7 @@
-From c2c74e03f2698426c43ffc8960a5ee8dc0ca75ec Mon Sep 17 00:00:00 2001
+From 5dc8e8968a78de0eceb8cf338af580582876b440 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
-Subject: [PATCH 3/6] Clear soname
+Subject: [PATCH 3/7] Clear soname
 
 ---
  stdlib/LibGit2_jll/src/LibGit2_jll.jl         |  2 +-
@@ -12,10 +12,10 @@ Subject: [PATCH 3/6] Clear soname
  5 files changed, 18 insertions(+), 18 deletions(-)
 
 diff --git a/stdlib/LibGit2_jll/src/LibGit2_jll.jl b/stdlib/LibGit2_jll/src/LibGit2_jll.jl
-index ff625a6494..3a3a9a6643 100644
+index c24d3c20f4..d36b6c3409 100644
 --- a/stdlib/LibGit2_jll/src/LibGit2_jll.jl
 +++ b/stdlib/LibGit2_jll/src/LibGit2_jll.jl
-@@ -23,7 +23,7 @@ if Sys.iswindows()
+@@ -22,7 +22,7 @@ if Sys.iswindows()
  elseif Sys.isapple()
      const libgit2 = "@rpath/libgit2.1.7.dylib"
  else
@@ -25,10 +25,10 @@ index ff625a6494..3a3a9a6643 100644
  
  function __init__()
 diff --git a/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl b/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl
-index a809f7a912..724369cc39 100644
+index 351cbe0e37..3e68a7f248 100644
 --- a/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl
 +++ b/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl
-@@ -23,7 +23,7 @@ if Sys.iswindows()
+@@ -22,7 +22,7 @@ if Sys.iswindows()
  elseif Sys.isapple()
      const libssh2 = "@rpath/libssh2.1.dylib"
  else
@@ -38,10 +38,10 @@ index a809f7a912..724369cc39 100644
  
  function __init__()
 diff --git a/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl b/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl
-index e46da42a9a..360fe2956b 100644
+index 6367213e2c..47d878063c 100644
 --- a/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl
 +++ b/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl
-@@ -31,9 +31,9 @@ elseif Sys.isapple()
+@@ -30,9 +30,9 @@ elseif Sys.isapple()
      const libmbedtls = "@rpath/libmbedtls.14.dylib"
      const libmbedx509 = "@rpath/libmbedx509.1.dylib"
  else
@@ -55,10 +55,10 @@ index e46da42a9a..360fe2956b 100644
  
  function __init__()
 diff --git a/stdlib/OpenLibm_jll/src/OpenLibm_jll.jl b/stdlib/OpenLibm_jll/src/OpenLibm_jll.jl
-index f2dee45a27..dfac42fd48 100644
+index 297cd25512..21d94be081 100644
 --- a/stdlib/OpenLibm_jll/src/OpenLibm_jll.jl
 +++ b/stdlib/OpenLibm_jll/src/OpenLibm_jll.jl
-@@ -22,7 +22,7 @@ if Sys.iswindows()
+@@ -21,7 +21,7 @@ if Sys.iswindows()
  elseif Sys.isapple()
      const libopenlibm = "@rpath/libopenlibm.4.dylib"
  else
@@ -68,10 +68,10 @@ index f2dee45a27..dfac42fd48 100644
  
  function __init__()
 diff --git a/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl b/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
-index f245759aaf..e5a4502723 100644
+index e5edfa7699..4211f2fd58 100644
 --- a/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
 +++ b/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
-@@ -67,18 +67,18 @@ elseif Sys.isapple()
+@@ -66,18 +66,18 @@ elseif Sys.isapple()
      const libsuitesparseconfig = "@rpath/libsuitesparseconfig.7.dylib"
      const libumfpack = "@rpath/libumfpack.6.dylib"
  else
@@ -79,7 +79,7 @@ index f245759aaf..e5a4502723 100644
 -    const libbtf = "libbtf.so.2"
 -    const libcamd = "libcamd.so.3"
 -    const libccolamd = "libccolamd.so.3"
--    const libcholmod = "libcholmod.so.4"
+-    const libcholmod = "libcholmod.so.5"
 -    const libcolamd = "libcolamd.so.3"
 -    const libklu = "libklu.so.2"
 -    const libldl = "libldl.so.3"
@@ -103,5 +103,5 @@ index f245759aaf..e5a4502723 100644
  
  function __init__()
 -- 
-2.42.0
+2.44.0
 

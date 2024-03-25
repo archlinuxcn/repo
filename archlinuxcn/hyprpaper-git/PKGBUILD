@@ -2,12 +2,12 @@
 
 pkgname=hyprpaper-git
 _pkgname="${pkgname%-git}"
-pkgver=0.6.0.r3.g43b6e9d
+pkgver=0.6.0.r13.gef2ab4a
 pkgrel=1
 pkgdesc="A blazing fast wayland wallpaper utility with IPC controls."
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/hyprwm/${_pkgname}"
-license=('BSD')
+license=('BSD-3-Clause')
 depends=(
 	wayland
 	libglvnd
@@ -38,12 +38,13 @@ pkgver() {
 
 build() {
 	cd "${_pkgname}/"
-	make all
+	cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
+	cmake --build ./build --config Release --target "${_pkgname}"
 }
 
 package() {
 	cd "${_pkgname}/"
-	install -Dm755 "build/${_pkgname}" -t "${pkgdir}/usr/bin/"
+	DESTDIR="${pkgdir}" cmake --install ./build
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${pkgname}/"
 }

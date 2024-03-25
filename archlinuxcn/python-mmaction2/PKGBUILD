@@ -3,11 +3,11 @@
 _pkgname=mmaction2
 pkgname=python-mmaction2
 pkgver=1.2.0
-pkgrel=1
+pkgrel=2
 pkgdesc="OpenMMLab's Next Generation Action Understanding Toolbox and Benchmark"
 arch=('any')
 url='https://github.com/open-mmlab/mmaction2'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
   python-matplotlib
   python-mmcv
@@ -15,6 +15,7 @@ depends=(
   python-opencv
   python-pillow
   python-pytorch
+  python-scipy
   python-torchvision
 )
 makedepends=(

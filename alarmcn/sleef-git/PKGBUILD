@@ -2,8 +2,8 @@
 
 pkgname=sleef-git
 _realver=3.4.1
-pkgver=3.5.1.85.gdf84fc7
-pkgrel=2
+pkgver=3.6.14.g60e76d2
+pkgrel=1
 pkgdesc='SIMD Library for Evaluating Elementary Functions, vectorized libm and DFT'
 arch=('aarch64' 'i686' 'x86_64')
 url="https://sleef.org"
@@ -39,8 +39,9 @@ build() {
   cmake .. \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DBUILD_TESTS=Off \
-    -DBUILD_QUAD=On
+    -DSLEEF_BUILD_TESTS=Off \
+    -DSLEEF_BUILD_QUAD=On \
+    -DBUILD_SHARED_LIBS=On
   make
 }
 

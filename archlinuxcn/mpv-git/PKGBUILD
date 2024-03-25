@@ -3,16 +3,17 @@
 
 pkgname=mpv-git
 _gitname=mpv
-pkgver=0.37.0_230_gd90a5ff17a
-pkgrel=3
+pkgver=0.37.0_679_ga46ce9e28c
+pkgrel=1
 pkgdesc='A free, open source, and cross-platform media player (with all possible libs)'
 arch=('x86_64')
 license=('GPL-3.0-or-later AND LGPL-2.1-or-later')
 url='https://mpv.io/'
 depends=(
+        'glibc' 'gcc-libs' 'bash'
         'libx11' 'libxext' 'libxrandr' 'libxss' 'libxinerama' 'libxv' 'libxpresent'
         'desktop-file-utils' 'hicolor-icon-theme' 'xdg-utils' 'luajit' 'mujs'
-        'libgl' 'libdvdnav' 'uchardet' 'mesa' 'libdrm' 'libcaca'
+        'libgl' 'libdvdnav' 'libdvdread' 'uchardet' 'mesa' 'libdrm' 'libcaca'
         'zlib' 'vapoursynth' 'sdl2' 'libsixel' 'libcdio-paranoia' 'libcdio'
 
         'libva' 'libva.so' 'libva-x11.so' 'libva-wayland.so' 'libva-drm.so'
@@ -29,12 +30,16 @@ depends=(
         'libass' 'libass.so'
         'lcms2' 'liblcms2.so'
         'vulkan-icd-loader' 'libvulkan.so'
-        'ffmpeg-with-libplacebo-git' 'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so' 'libavutil.so' 'libswresample.so' 'libswscale.so'
-        'libplacebo-git' 'libplacebo.so'
-        'libpipewire'
+        'ffmpeg' 'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so' 'libavutil.so' 'libswresample.so' 'libswscale.so'
+        'libplacebo' 'libplacebo.so'
+        'libpipewire' 'libpipewire-0.3.so'
+        'libpulse' 'libpulse.so'
+        'libvdpau' 'libvdpau.so'
+
+        # for development
+        'wayland-protocols' 'ffnvcodec-headers'
 )
-makedepends=('git' 'python-docutils' 'vulkan-headers' 'wayland-protocols'
-             'ffnvcodec-headers' 'meson' 'pulseaudio' 'openal'
+makedepends=('git' 'python-docutils' 'vulkan-headers' 'meson' 'openal'
 )
 optdepends=('youtube-dl: for video-sharing websites playback'
             'yt-dlp: for video-sharing websites playback'
@@ -67,6 +72,7 @@ build() {
         '-Dlua=enabled' '-Dlua=luajit'
         '-Ddvbin=enabled'
         '-Dsdl2=enabled'
+        '-Ddvdnav=enabled'
     )
     
     local _other_os_flags=(
@@ -101,12 +107,10 @@ build() {
         '-Degl-android=disabled' # Android
         '-Dandroid-media-ndk=disabled' # Android
         '-Doss-audio=disabled' # Not Linux
-        '-Drpi-mmal=disabled' # RPI only
     )
     
     cd "$srcdir/mpv"
     arch-meson . build \
-        --buildtype=debugoptimized \
         -Dlibmpv=true \
         -Ddefault_library=shared \
         "${_opt_extra_flags[@]}" \
@@ -125,5 +129,5 @@ package() {
 
 check() {
     cd "$srcdir/mpv"
-    meson test -C build --print-errorlogs --no-suite ffmpeg
+    meson test -C build --print-errorlogs --no-suite ffmpeg # ffmpeg testsuite need fixed ffmpeg version
 }

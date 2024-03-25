@@ -1,0 +1,39 @@
+From 190fd6a6a5f14255ca43cbf7f2f53f7dec8f6825 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Mon, 26 Feb 2024 09:03:22 -0500
+Subject: [PATCH] MTK 2
+
+---
+ src/diffeq.jl | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/diffeq.jl b/src/diffeq.jl
+index e23e755..bb1d387 100644
+--- a/src/diffeq.jl
++++ b/src/diffeq.jl
+@@ -1,11 +1,11 @@
+ # Relevant parts of ODESystem interface
+ MTK.get_iv(me::AbstractMeanfieldEquations) = me.iv
+-MTK.states(me::AbstractMeanfieldEquations) = me.states
++MTK.unknowns(me::AbstractMeanfieldEquations) = me.states
+ 
+ function MTK.equations(me::AbstractMeanfieldEquations)
+     # Get the MTK variables
+     varmap = me.varmap
+-    vs = MTK.states(me)
++    vs = MTK.unknowns(me)
+     vhash = map(hash, vs)
+ 
+     # Substitute conjugate variables by explicit conj
+@@ -68,7 +68,7 @@ end
+ function MTK.equations(me::AbstractIndexedMeanfieldEquations)
+     # Get the MTK variables
+     varmap = me.varmap
+-    vs = MTK.states(me)
++    vs = MTK.unknowns(me)
+     vhash = map(hash, vs)
+ 
+     # Substitute conjugate variables by explicit conj
+-- 
+2.44.0
+

@@ -1,7 +1,7 @@
 # Maintainer: seth <getchoo at tuta dot io>
 
 pkgname=joshuto
-pkgver=0.9.6
+pkgver=0.9.8
 pkgrel=1
 pkgdesc="ranger-like terminal file manager written in Rust"
 arch=('x86_64' 'aarch64')
@@ -15,11 +15,12 @@ optdepends=(
 	'wl-clipboard: for clipboard support on Wayland'
 )
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('78d03e0c7971fe715da7e89c6e848112eedb993f04625e720997156c74578d42')
+sha256sums=('877d841b2e26d26d0f0f2e6f1dab3ea2fdda38c345abcd25085a3f659c24e013')
+options=('!lto')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
-	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	cargo fetch --target "$CARCH-unknown-linux-gnu"
 }
 
 build() {

@@ -3,12 +3,14 @@
 _pkgname=PhiK
 pkgname=python-phik
 pkgver=0.12.4
-pkgrel=1
+pkgrel=2
 pkgdesc='Phi_K correlation analyzer library'
 arch=('x86_64')
 url='https://github.com/kaveio/phik'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
+  gcc-libs
+  glibc
   python-joblib
   python-matplotlib
   python-numpy

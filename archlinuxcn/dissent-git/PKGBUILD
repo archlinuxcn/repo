@@ -1,0 +1,49 @@
+# Maintainer: txtsd <aur.archlinux@ihavea.quest>
+
+pkgname=dissent-git
+_pkgname=${pkgname%-git}
+pkgver=0.0.22.r5.g7996a6f
+pkgrel=1
+pkgdesc="Discord client written in go and gtk4"
+arch=('x86_64' 'aarch64')
+url="https://github.com/diamondburned/${_pkgname}"
+license=('GPL-3.0-or-later')
+depends=('gtk4' 'gobject-introspection' 'libadwaita')
+provides=("${_pkgname}" "gtkcord4")
+conflicts=("${_pkgname}" "gtkcord4")
+makedepends=('git' 'go')
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 --match 'v[0-9]*' |
+		sed -e 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+	cd "${_pkgname}/"
+	mkdir -p build
+}
+
+build() {
+	cd "${_pkgname}/"
+
+	export CGO_CPPFLAGS="${CPPFLAGS}"
+	export CGO_CFLAGS="${CFLAGS}"
+	export CGO_CXXFLAGS="${CXXFLAGS}"
+	export CGO_LDFLAGS="${LDFLAGS}"
+	export GOPATH="${srcdir}/go"
+	export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+	go build -o build
+}
+
+package() {
+	cd "${_pkgname}/build/"
+	install -Dm755 "${_pkgname}" -t "${pkgdir}/usr/bin/"
+
+	cd ..
+	install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
+	install -Dm644 "nix/so.libdb.${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
+	install -Dm644 "internal/icons/hicolor/scalable/apps/so.libdb.${_pkgname}.Devel.svg" -t "${pkgdir}/usr/share/icons/hicolor/scalable/apps/"
+}

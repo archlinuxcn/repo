@@ -1,0 +1,18 @@
+pkgname=julia-git-gridlayoutbase-src
+pkgver=0.10.2
+_commit=64bf0e59c41255b09e8d53d1dc23c2b8debe2a1f
+pkgrel=1
+pkgdesc="GridLayoutBase.jl"
+url="https://github.com/jkrumbiegel/GridLayoutBase.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/jkrumbiegel/GridLayoutBase.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd GridLayoutBase.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh GridLayoutBase "${pkgdir}" "${pkgname}" julia-git
+}

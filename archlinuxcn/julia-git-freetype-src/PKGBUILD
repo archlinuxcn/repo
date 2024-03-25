@@ -1,0 +1,18 @@
+pkgname=julia-git-freetype-src
+pkgver=4.1.1
+_commit=daf6bea0b5ea2d00468e01f5df87e71581d498c7
+pkgrel=1
+pkgdesc="FreeType.jl"
+url="https://github.com/JuliaGraphics/FreeType.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGraphics/FreeType.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd FreeType.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh FreeType "${pkgdir}" "${pkgname}" julia-git
+}

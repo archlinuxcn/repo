@@ -3,28 +3,35 @@
 _CUDA_ARCH_LIST="60;61;62;70;72;75;80;86;89;90"
 pkgname=python-nvidia-dali
 _pkgname=dali
-pkgver=1.34.0
-pkgrel=1
+pkgver=1.35.0
+pkgrel=2
 pkgdesc='A library containing both highly optimized building blocks and an execution engine for data pre-processing in deep learning applications'
 arch=('x86_64')
 url='https://github.com/NVIDIA/DALI'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
+  abseil-cpp
+  cfitsio
   cuda
   ffmpeg
+  gcc-libs
+  glibc
   libcudart.so
+  libsndfile
   libtar
+  libtiff
   lmdb
   opencv
+  protobuf
   python-astunparse
   python-dm-tree
   python-gast
+  python-six
 )
 makedepends=(
   python-build
   python-installer
   python-wheel
-  cfitsio
   clang
   cmake
   git

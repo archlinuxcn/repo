@@ -1,0 +1,25 @@
+From 2a626445bef2dc7cddf0446e88b30830fd60ea61 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 18 Feb 2024 18:43:54 -0500
+Subject: [PATCH] fix gsl64 patching script
+
+---
+ enzyme/BCLoad/fixgsl64.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/enzyme/BCLoad/fixgsl64.sh b/enzyme/BCLoad/fixgsl64.sh
+index 6879923e..039989b4 100755
+--- a/enzyme/BCLoad/fixgsl64.sh
++++ b/enzyme/BCLoad/fixgsl64.sh
+@@ -13,7 +13,7 @@ sed -i.bu "s/cblas_\(.*\) (/cblas_\164_ (/g" cblas/*.c
+ sed -i.bu "1s/^/#include <stdint.h>\n/" cblas/*.c
+     ;;
+   *)
+-sed "s/int/int64_t/g" -i cblas/*.c
++sed "s/\bint\b/int64_t/g" -i cblas/*.c
+ sed "s/gsl\//gsl64\//g" -i cblas/*.c cblas/*.h gsl_math.h gsl_precision.h gsl_pow_int.h gsl_minmax.h
+ sed "s/cblas_\(.*\) (/cblas_\164_ (/g" -i cblas/*.c
+ sed "1s/^/#include <stdint.h>\n/" -i cblas/*.c
+-- 
+2.42.1
+

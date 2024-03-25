@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
+import importlib.util
 import os
 import shutil
+import sys
 import tarfile
 import tempfile
-import sys
-import importlib.util
-from operator import itemgetter
 
 from lilaclib import *
+from operator import itemgetter
 
 
 def get_latest_release_tag_from_github(repo_name: str):
@@ -96,12 +96,12 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if line.startswith('_pkgver'):
             line = '_pkgver={}'.format(_pkgver)
-        if line.startswith('_pkgrel'):
+        elif line.startswith('_pkgrel'):
             line = '_pkgrel={}'.format(_pkgrel)
-        if line.startswith('_PGO_PATH'):
-            line = '_PGO_PATH={}'.format(_PGO_PATH)
-        if line.startswith('_clang_path'):
-            line = '_clang_path={}'.format(_clang_path)
+        elif line.startswith('_PGO_PATH'):
+            line = '_PGO_PATH=\'{}\''.format(_PGO_PATH)
+        elif line.startswith('_clang_path'):
+            line = '_clang_path=\'{}\''.format(_clang_path)
         print(line)
 
     update_pkgver_and_pkgrel(pkgver, updpkgsums=True)

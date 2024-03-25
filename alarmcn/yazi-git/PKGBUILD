@@ -2,8 +2,8 @@
 
 pkgname=yazi-git
 _pkgname=yazi
-pkgver=0.2.2.r10.g9d9d954
-pkgrel=2
+pkgver=0.2.4.r12.gf8e0aee
+pkgrel=1
 pkgdesc="Blazing fast terminal file manager written in Rust, based on async I/O."
 url="https://github.com/sxyazi/yazi"
 arch=("x86_64" "aarch64" "riscv64")
@@ -17,7 +17,7 @@ optdepends=(
 	'ripgrep: for file content searching'
 	'fzf: for directory jumping'
 	'zoxide: for directory jumping')
-makedepends=("git" "cargo")
+makedepends=("git" "rustup" "imagemagick")
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("git+${url}.git")
@@ -26,16 +26,32 @@ options=('!lto')
 
 pkgver() {
 	cd "${_pkgname}/"
-	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+	git describe --long --tags --match="v[0-9]*" --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+prepare() {
+	rustup default stable
 }
 
 build() {
 	cd "${_pkgname}/"
-	cargo build --release
+	YAZI_GEN_COMPLETIONS=true cargo build --release
 }
 
 package() {
 	cd "${_pkgname}/"
 	install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 	install -Dm755 "target/release/${_pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm644 "assets/yazi.desktop" -t "${pkgdir}/usr/share/applications/"
+
+	local r
+	for r in 16 24 32 48 64 128 256; do
+		install -dm755 "${pkgdir}/usr/share/icons/hicolor/${r}x${r}/apps/"
+		convert assets/logo.png -resize "${r}x${r}" "$pkgdir/usr/share/icons/hicolor/${r}x${r}/apps/yazi.png"
+	done
+
+	cd "${_pkgname}-boot/completions"
+	install -Dm644 "${_pkgname}.bash" "${pkgdir}/usr/share/bash-completion/completions/${_pkgname}"
+	install -Dm644 "${_pkgname}.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d/"
+	install -Dm644 "_${_pkgname}" -t "${pkgdir}/usr/share/zsh/site-functions/"
 }

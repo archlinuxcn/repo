@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.11.0.DEV.1002.gbac3ba5697c
+pkgver=1.12.0.DEV.216.g5c891de4bc7
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -58,9 +58,11 @@ case "$CARCH" in
     depends_libs=("${depends_libs[@]}" openblas-git)
     ;;
 esac
-makedepends=("${depends_libs[@]}" llvm-julia gcc-fortran git patchelf python proot
+makedepends=("${depends_libs[@]}" llvm-julia-git gcc-fortran git patchelf python proot
              "${_soname_deps[@]}")
-options=('debug' '!strip' '!buildflags')
+# Both debug and strip cause pacman to edit the ELF files and breaking them
+# for loading.
+options=('!debug' '!strip' '!buildflags')
 _patches=(
   0001-Force-enable-GDB-debug-info-registration.patch
   0002-Fix-source-file-paths.patch
@@ -68,32 +70,26 @@ _patches=(
   0004-Use-libc-for-libssp.patch
   0005-Support-loading-extensions-from-STDLIB.patch
   0006-julia-git-add-a-safeguard-for-bad-unwinding.patch
+  0007-Update-to-LLVM-17.patch
 )
 source=('git+https://github.com/JuliaLang/julia'
+        'git+https://github.com/yuyichao/archcn-julia-scripts'
         "${_patches[@]}"
-        julia-compile-pkgs.jl
-        julia-preinstall.sh
-        julia-postinstall.sh
-        julia-preinstall.hook
-        julia-postinstall.hook
         arch-source-translate.cpp
         sysp7z.diff)
 sha512sums=('SKIP'
-            '6c9c4245f1e24d2a86fedcd6180b95a39b3f3e924cac39c711734a9e48ac7af16d6800f81f45ddfaa793e7cfff9a68fb68c20aaac9b575f52c260c58d3895845'
-            'a0d9b9e742901962d534dce5dde134cf5730d529252201c0915802074c26605f3189e92a847e0c2548ecc21431d49baccf8e10fa26e9441a1cc01710196bc7d9'
-            '3348061db5de15644ec80b950159bf27f6fd8cd8a241ded7e3a9c31870bdbf7120d5e2d2ed352c6fa58e640774b596d2f46a97f841992c5e17db6d0262f6e9f4'
-            '7cfb24ba0a0495d1150b7577c6d0b6a2285362e4edafd991beb06b783c7ebe7e5541caa16ee52c9628a6454435597538d3874b4a085e766be0882744f26f4af5'
-            '45a8a318dab9ad7846122a291dfc2f219dc017f2ee8d51fc29e2cac79a5dc6bd0690aacc37ccc6bbf655e93684a0a3b062eacab99e4de8bb956d2c4d575d2be0'
-            'd2b58f480bdf1af16d71eeb85dd7108f8536a1eadfed6d8ce55b99654dec33a17c2ba559ba9b2c6e7f109f38f144ac17e663113040009de11eda98a999d325ae'
-            '98d17280eabac8ebfb5d3aa7073e9c5df534d1ead834bbe821b11b9da3dc7135b69d98f8b488f429a2bcb5c764e6a96b6dc785d6ca3f47704a9d5304263a8a2e'
-            '62b29656f41f06cd36be4e38c5a8369e961e41d4be7327fe0dfd1baa4a5e61937754b64b6481ec6efa66ef86e9f67d2f96d31b3cec422ed3780a2eee256f08a9'
-            'c9510621d3bde76f1051ba9271857b194109d4c20f52f0e04f8acddac7be1cc17d8acb4fb062273ff9ce350ed102619b706122b999dd8f31c8bc17534b8faaa6'
-            'f1bb24e46c565a4142585e8e9a0b61f5cef4decaf8a5dc37dc7f5436f13a558c29dbd9cab4091da36858e08752b9900836fd2817de695273c0b0d30c7efb4047'
-            'a668a9bd01cec8f53f457d9124107a230260c79fd57cbce4c4bf80e3451758d8e67263faa3f9d8b3da0c10bffbe29e4032106881ebe682c7f66414d8989638be'
+            'SKIP'
+            'e710acbc1df7f966d09a2d749bee2ef5871a2e6a0cac953ebd4ca9ad903084652359fc71734f72ba9c6f3874a65652539b74b27952e8d5322f1b509a5d7d6a05'
+            'd8d35576b262d29821f3bc4361d61f2da44dec90667be097904ba49a536b8c106d78092ffa9c5176dfec2a1d0369f15fab258f575b3f0395510cce42e9eb85f9'
+            '89bc2448d00139d8419859678fa30f94e9c545cf5ff139e1167a3b916d6f4a0724bb17ca943f011c060cfcee0dd0e1ddeb65671c0a33ad1db08d9355dc6884d3'
+            '6f00148aced419e2ce5d8abf287bdc6981640bb6a8bb62220b1d752ae13522c08ec99c57b534dfee185bfca263f809865f2b6e2e9579d620c0934499681100e0'
+            'f081bf904f186f6d427d3c335c9d1f68d278d7a8c97424f0207d2c7d876a6a61e4bfbcb255ba37a2aa4294f5e552899a6738e805aaeab2f98c7d0ecfed6c1680'
+            'eefcbe0654d7d8229cd63a3215714ddaf566d87e601c785a17330760aad77f9129bb81fa499e99b15879fa0f0fb97cf7f0ea411e5e4a974be04659fe690ebbf6'
+            '0592412ad17567be3cbab65d3626117d811140b534a4cce6f1b704ebfcfdfe57e7e9953a0ebe6b5fb3e1a69102ce60c6293afbb3b151387fd8c8f4718bd52b19'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849')
 
-_versioned_llvm=15
+_versioned_llvm=
 
 pkgver() {
   cd julia
@@ -260,6 +256,18 @@ EOF
   sed -i -e 's/\(symlink_system_library,CSL,libquadmath,[0-9]*\))/\1,ALLOW_FAILURE)/g' base/Makefile
 }
 
+_with_git_url_override() {
+  # doc build tries to read the remote for the current build directly
+  # Make it happy by setting the remote url temporarily
+  local _orig_remote=$(git config --get remote.origin.url)
+  git config remote.origin.url https://github.com/JuliaLang/julia
+  if ! "$@"; then
+    git config remote.origin.url "$_orig_remote"
+    return 1
+  fi
+  git config remote.origin.url "$_orig_remote"
+}
+
 build_in() {
   cd "$1"
 
@@ -297,7 +305,7 @@ build_in() {
     make "${opts[@]}" debug
   fi
   # TODO docless build
-  JL_MAKEPKG_SRCDIR= make "${opts[@]}" docs
+  JL_MAKEPKG_SRCDIR= _with_git_url_override make "${opts[@]}" docs
 
   # Check to detect issues like JuliaLang/julia#13820
   LD_PRELOAD= JL_MAKEPKG_SRCDIR= usr/bin/julia -e '0'
@@ -333,8 +341,8 @@ package-julia-in() {
 
   arch=('i686' 'x86_64' 'armv7h' 'aarch64')
   depends=("${depends_libs[@]}"
-           "llvm-libs-julia>=${llvm_maj_ver}.0"
-           "llvm-libs-julia<${next_llvm_maj}.0"
+           "llvm-libs-julia-git>=${llvm_maj_ver}.0"
+           "llvm-libs-julia-git<${next_llvm_maj}.0"
            hicolor-icon-theme xdg-utils)
   opts=("${@:2}")
 
@@ -350,9 +358,11 @@ package-julia-in() {
   # Delete precompiled environment since it seems to be picking up the one compiled
   # for the wrong julia build during document generation.
   rm -rf doc/deps/compiled
-  make install DESTDIR="$pkgdir" "${opts[@]}" JULIA_BUILD_MODE=debug
+  _with_git_url_override \
+    make install DESTDIR="$pkgdir" "${opts[@]}" JULIA_BUILD_MODE=debug
   rm -rf doc/deps/compiled
-  make install DESTDIR="$pkgdir" "${opts[@]}" JULIA_BUILD_MODE=release
+  _with_git_url_override \
+    make install DESTDIR="$pkgdir" "${opts[@]}" JULIA_BUILD_MODE=release
   # else
   #   make install-nodoc DESTDIR="$pkgdir" "${opts[@]}"
   #   # Manually install man pages
@@ -386,13 +396,8 @@ package-julia-in() {
   conflicts=('julia' "${builtin_pkgs[@]}")
   replaces=("${builtin_pkgs[@]}")
 
-  install -Dm644 ../julia-compile-pkgs.jl "${pkgdir}/usr/lib/julia/"
-  install -Dm644 ../julia-preinstall.sh "${pkgdir}/usr/lib/julia/"
-  install -Dm755 ../julia-postinstall.sh "${pkgdir}/usr/lib/julia/"
-  sed -e "s|@VER@|$ver_short|g" ../julia-preinstall.hook |
-    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-preinstall.hook"
-  sed -e "s|@VER@|$ver_short|g" ../julia-postinstall.hook |
-    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-postinstall.hook"
+  "${srcdir}/archcn-julia-scripts/install.sh" "${pkgdir}" "$ver_short"
+
   mkdir -p "${pkgdir}/usr/share/julia/compiled/v$ver_short"
 
   mkdir -p "${pkgdir}/usr/share/julia/contrib"
@@ -443,17 +448,17 @@ package-julia-in() {
   )
 
   # The ones that julia build system build does not seem to work at the moment.
-  rm -rf "${pkgdir}/usr/share/julia/compiled/v$ver_short/"*
+  # rm -rf "${pkgdir}/usr/share/julia/compiled/v$ver_short/"*
   env JULIA_PRECOMPILE_STDLIB_DIR="/usr/share/julia/stdlib/v$ver_short" \
       JULIA_CPU_TARGET="${_cpu_target}" \
       proot -b "${pkgdir}/usr/share/julia/:/usr/share/julia/" \
       "${pkgdir}/usr/bin/julia" --startup-file=no \
-      "${srcdir}/julia-compile-pkgs.jl" /usr/share/julia
+      "${srcdir}/archcn-julia-scripts/julia-compile-pkgs.jl" /usr/share/julia
   env JULIA_PRECOMPILE_STDLIB_DIR="/usr/share/julia/stdlib/v$ver_short" \
       JULIA_CPU_TARGET="${_cpu_target}" \
       proot -b "${pkgdir}/usr/share/julia/:/usr/share/julia/" \
       "${pkgdir}/usr/bin/julia-debug" --startup-file=no \
-      "${srcdir}/julia-compile-pkgs.jl" /usr/share/julia
+      "${srcdir}/archcn-julia-scripts/julia-compile-pkgs.jl" /usr/share/julia
   mkdir -p "${pkgdir}/usr/lib/julia/arch-compiled/julia/"
   mv "${pkgdir}/usr/share/julia/compiled/v$ver_short/"* \
      "${pkgdir}/usr/lib/julia/arch-compiled/julia/"
@@ -521,6 +526,7 @@ package_julia-git-package-env() {
   mkdir -p "${pkgdir}/usr/lib/julia/"
   cat > "${pkgdir}/usr/lib/julia/.package-precompile-env" <<EOF
 export JULIA_CPU_TARGET="${_cpu_target}"
+export JULIA_PRECOMPILE_NPROCESS=3
 EOF
 }
 

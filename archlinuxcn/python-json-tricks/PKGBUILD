@@ -4,11 +4,11 @@
 _pkgname=pyjson_tricks
 pkgname=python-json-tricks
 pkgver=3.17.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Extra features for Python's JSON"
 arch=('any')
 url='https://github.com/mverleg/pyjson_tricks'
-license=('BSD')
+license=('BSD-3-Clause')
 depends=(
   python
 )
@@ -18,7 +18,10 @@ optdepends=(
   python-pytz
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 checkdepends=(
   python-pytest
@@ -31,7 +34,7 @@ sha1sums=('884eba1efe60f0bf4953a3df58b27fd7cf8ca9d5')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 check() {
@@ -41,7 +44,7 @@ check() {
 
 package() {
   cd "$srcdir"/pyjson_tricks-$pkgver
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 # vim:set ts=2 sw=2 et:

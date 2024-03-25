@@ -1,12 +1,12 @@
 # Maintainer: ich <remove dashes in s-c--25-ni at gmail dot com>
 
 pkgname=libadwaita-without-adwaita-git
-pkgver=1.4.2
-pkgrel=9
+pkgver=1.4.4
+pkgrel=10
 url="https://gnome.pages.gitlab.gnome.org/libadwaita"
 pkgdesc='libadwaita; Includes a patch to not overwrite the system theme'
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
-license=('LGPL')
+license=(LGPL-2.1-or-later)
 
 provides=("libadwaita=${pkgver}" "libadwaita-1.so=0-64")
 conflicts=('libadwaita')

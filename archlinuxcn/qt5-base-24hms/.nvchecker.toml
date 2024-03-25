@@ -1,0 +1,6 @@
+[qt5-base]
+source = 'git'
+git = 'git://code.qt.io/qt/qtbase.git'
+include_regex = 'v5.*-lts-lgpl'
+from_pattern = 'v(\d.+)-lts-lgpl'
+to_pattern = '\1'

@@ -1,0 +1,35 @@
+From 1ec7790ec0f38468a1da9e003bdd14c3b652c3bc Mon Sep 17 00:00:00 2001
+From: Phillip Weinberg <weinbe58@gmail.com>
+Date: Thu, 7 Dec 2023 10:35:44 -0500
+Subject: [PATCH] removing broken type.
+
+---
+ src/ParallelMergeCSR.jl | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/src/ParallelMergeCSR.jl b/src/ParallelMergeCSR.jl
+index 88985d8..b37c12b 100644
+--- a/src/ParallelMergeCSR.jl
++++ b/src/ParallelMergeCSR.jl
+@@ -8,7 +8,6 @@ using LinearAlgebra: Adjoint,
+                      transpose, 
+                      fill!
+ using SparseArrays: AbstractSparseMatrixCSC,
+-                    DenseInputVecOrMat,
+                     getcolptr,
+                     nonzeros,
+                     rowvals, 
+@@ -82,11 +81,11 @@ end
+ for (T, t) in ((Adjoint, adjoint), (Transpose, transpose))
+     @eval begin
+     """
+-        mul!(C::StridedVecOrMat, xA::$($T){<:Any,<:AbstractSparseMatrixCSC}, B::DenseInputVecOrMat, α::Number, β::Number)
++        mul!(C::AbstractArray, xA::$($T){<:Any,<:AbstractSparseMatrixCSC}, B::AbstractArray, α::Number, β::Number)
+     Performs the operation C = xABα + Cβ where xA is an `AbstractSparseMatrixCSC` that has been wrapped by `$($T)`
+     (accomplishable by calling `$($t)` on the CSC matrix).
+     """
+-        function mul!(C::StridedVecOrMat, xA::$T{<:Any,<:AbstractSparseMatrixCSC}, B::DenseInputVecOrMat, α::Number, β::Number)
++        function mul!(C::AbstractArray, xA::$T{<:Any,<:AbstractSparseMatrixCSC}, B::AbstractArray, α::Number, β::Number)
+             # obtains the original matrix underneath the "lazy wrapper"
+             A = xA.parent
+             size(A, 2) == size(C, 1) || throw(DimensionMismatch())

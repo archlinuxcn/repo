@@ -1,0 +1,11 @@
+post_install() {
+  ln -sf "/usr/share/doc/renpy" "/usr/share/renpy/doc"
+}
+
+post_upgrade() {
+  post_install
+}
+
+pre_remove() {
+  rm "/usr/share/renpy/doc"
+}

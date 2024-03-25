@@ -5,11 +5,11 @@
 
 pkgname=xrestop
 pkgver=0.6
-pkgrel=1
+pkgrel=2
 pkgdesc="Uses the X-Resource extension to provide 'top' like statistics"
 arch=('x86_64')
 url="http://freedesktop.org/wiki/Software/xrestop"
-license=('GPL')
+license=('GPL-2.0-or-later')
 depends=('libxres' 'ncurses')
 source=(https://xorg.freedesktop.org/archive/individual/app/$pkgname-$pkgver.tar.gz)
 md5sums=('1c11bc50190bdc6091bc72ed2991300f')

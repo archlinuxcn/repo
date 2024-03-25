@@ -1,13 +1,17 @@
 # Maintainer: Dobroslaw Kijowski [dobo] <dobo90_at_gmail.com>
 
-pkgname=lief
-pkgver=0.13.2
-pkgrel=1
+pkgbase=lief
+pkgname=(lief python-lief)
+pkgver=0.14.1
+pkgrel=2
 pkgdesc='Library to instrument executable formats'
 arch=(armv7h aarch64 x86_64)
 url='https://lief.quarkslab.com/'
 license=(apache)
-makedepends=(git cmake ninja python python-setuptools)
+makedepends=(git cmake ninja mbedtls python python-build python-installer python-wheel
+             python-pydantic-core python-pydantic python-tomli python-scikit-build-core
+             python-pyproject-metadata python-pathspec python-setuptools)
+provides=(libLIEF.so)
 source=("git+https://github.com/lief-project/LIEF#tag=${pkgver}")
 md5sums=('SKIP')
 
@@ -20,6 +24,8 @@ prepare() {
   rm cmake/strip.cmake
   # Don't strip
   echo > cmake/strip.cmake
+
+  sed -i 's/==.*//' api/python/build-requirements.txt
 }
 
 build() {
@@ -33,28 +39,31 @@ build() {
   # the build time RPATH with it. Avoid it by not setting it during build time.
   # The python command below will run cmake configure again
   # but it should remember the flags we set here.
-  cmake . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1 \
-        -DCMAKE_SKIP_BUILD_RPATH=On -DLIEF_EXAMPLES=Off -G Ninja
-  # The python command invokes `make` with a manually set `-j` flag so it won't
-  # respect the one in `MAKEFLAGS`. Manually parse and supply the `-j` flag to setup.py.
-  _build_arg=
-  if [[ " ${MAKEFLAGS} " =~ [[:space:]]-j[[:space:]]*([0-9]*)[[:space:]] ]]; then
-    _build_arg=-j${BASH_REMATCH[1]}
-  fi
-  build_temp=$PWD/build
-  (cd api/python/
-   python setup.py build --build-temp=$build_temp $_build_arg)
+  cmake . -B build -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_SHARED_LIBS=On \
+        -DCMAKE_SKIP_BUILD_RPATH=On \
+        -DLIEF_PYTHON_API=On \
+        -DLIEF_C_API=On \
+        -DLIEF_OPT_MBEDTLS_EXTERNAL=ON \
+        -DLIEF_EXAMPLES=Off -G Ninja
+  cmake --build build
+
+  cd api/python
+  python -m build --wheel --no-isolation
 }
 
-package() {
-  cd LIEF
+package_lief() {
+  cd LIEF/build
 
-  (cd build
-   DESTDIR="${pkgdir}" ninja install)
-  (cd api/python/
-   python setup.py install --optimize=1 --root="${pkgdir}" --skip-build)
+  DESTDIR="${pkgdir}" ninja install
+}
 
+package_python-lief() {
   pymin_ver=$(python -c 'import sys; print(sys.version_info.minor)')
   ((pynext_min=pymin_ver + 1))
-  depends+=("python>=3.${pymin_ver}.0" "python<3.${pynext_min}.0")
+  depends+=("python>=3.${pymin_ver}.0" "python<3.${pynext_min}.0" lief)
+
+  cd LIEF/api/python
+
+  python -m installer --destdir="$pkgdir" dist/*.whl
 }

@@ -3,12 +3,13 @@
 pkgname=python-mmpycocotools
 _pkgname=mmpycocotools
 pkgver=12.0.3
-pkgrel=5
+pkgrel=6
 pkgdesc='Official APIs for the MS-COCO dataset (openmm lab fork)'
 arch=(x86_64)
 url='https://pypi.org/project/mmpycocotools'
-license=(BSD)
+license=('BSD-2-Clause')
 depends=(
+  glibc
   python-matplotlib
   python-numpy
 )
@@ -32,6 +33,8 @@ sha512sums=('8eb699757531edbb689f28895d0613d1f7bea88a6a6fadb4d4d30021ba7af8bd9e7
 prepare() {
   # fix https://github.com/open-mmlab/cocoapi/issues/29
   sed -i "s,np.float,float,g" "${_pkgname}-${pkgver}/pycocotools/cocoeval.py"
+  # fix building with cython >= 3
+  sed -i "/distutils/d" "${_pkgname}-${pkgver}/pycocotools/_mask.pyx"
 }
 
 build() {

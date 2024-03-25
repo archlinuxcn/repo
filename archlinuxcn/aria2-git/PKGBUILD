@@ -8,56 +8,59 @@
 # Contributor: Daniel J Griffiths <ghost1227 at archlinux dot us>
 
 pkgname=aria2-git
+_pkgname=${pkgname%-git}
 pkgver=1.37.0.r10.ga8cb271b0
 pkgrel=2
 pkgdesc='Download utility that supports HTTP(S), FTP, BitTorrent, and Metalink'
 arch=('i686' 'x86_64')
-url='https://aria2.github.io/'
-license=('GPL')
+url="https://${_pkgname}.github.io/"
+license=('GPL-2.0-or-later AND (OpenSSL OR LicenseRef-SSLeay)')
 depends=('gnutls' 'libxml2' 'sqlite' 'c-ares' 'ca-certificates' 'libssh2')
 makedepends=('git')
 checkdepends=('cppunit')
-conflicts=('aria2')
-provides=("aria2=${pkgver%.*}")
-source=("$pkgname::git+https://github.com/tatsuhiro-t/aria2.git")
+conflicts=("${_pkgname}")
+provides=("${_pkgname}=${pkgver%.*}")
+source=("${_pkgname}::git+https://github.com/tatsuhiro-t/${_pkgname}.git")
 sha256sums=('SKIP')
 
-
 pkgver() {
-  cd "$pkgname"
-  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/release.//'
+	cd "${_pkgname}/"
+	git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/release.//'
 }
 
 prepare() {
-  cd "$pkgname"
-  autoreconf -i
+	cd "${_pkgname}/"
+	autoreconf -i
 }
 
 build() {
-  cd "$pkgname"
+	cd "${_pkgname}/"
 
-  ./configure \
-    --prefix=/usr \
-    --enable-libaria2 \
-    --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt
+	./configure \
+		--prefix=/usr \
+		--enable-libaria2 \
+		--with-ca-bundle=/etc/ssl/certs/ca-certificates.crt
 
-  make
+	make
 }
 
 check() {
-  cd "$pkgname"
-  # https://github.com/aria2/aria2/issues/1476
-  # Upstream states "I don't see any issues with aria2 code."
-  make check || echo "Ignoring test failures"
+	cd "${_pkgname}/"
+
+	# https://github.com/aria2/aria2/issues/1476
+	# Upstream states "I don't see any issues with aria2 code."
+	make check || echo "Ignoring test failures"
 }
 
 package() {
-  cd "$pkgname"
-  make DESTDIR="$pkgdir" install
+	cd "${_pkgname}/"
+	make DESTDIR="${pkgdir}" install
 
-  # add bash completion
-  install -d "$pkgdir"/usr/share/bash-completion/completions
-  install -m644 "$pkgdir"/usr/share/doc/aria2/bash_completion/aria2c \
-    "$pkgdir"/usr/share/bash-completion/completions
-  rm -rf "$pkgdir"/usr/share/doc/aria2/bash_completion
+	# add bash completion
+	install -d "${pkgdir}/usr/share/bash-completion/completions"
+	install -m644 "${pkgdir}/usr/share/doc/${_pkgname}/bash_completion/aria2c" \
+		"${pkgdir}/usr/share/bash-completion/completions"
+
+	rm -rf "${pkgdir}/usr/share/doc/${pkgname}/bash_completion"
+	install -Dm644 {COPYING,LICENSE.OpenSSL} -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }

@@ -1,8 +1,8 @@
 diff --git a/include/sway/commands.h b/include/sway/commands.h
-index 3fde0893ac..c4f3939108 100644
+index 27058587..dde5c62f 100644
 --- a/include/sway/commands.h
 +++ b/include/sway/commands.h
-@@ -291,6 +291,11 @@ sway_cmd seat_cmd_pointer_constraint;
+@@ -310,6 +310,11 @@ sway_cmd seat_cmd_pointer_constraint;
  sway_cmd seat_cmd_shortcuts_inhibitor;
  sway_cmd seat_cmd_xcursor_theme;
  
@@ -15,10 +15,10 @@ index 3fde0893ac..c4f3939108 100644
  sway_cmd cmd_ipc_events;
  sway_cmd cmd_ipc_event_cmd;
 diff --git a/include/sway/config.h b/include/sway/config.h
-index 85605ce410..64f167dbc8 100644
+index f9da1967..fa1879cd 100644
 --- a/include/sway/config.h
 +++ b/include/sway/config.h
-@@ -528,6 +528,7 @@ struct sway_config {
+@@ -515,6 +515,7 @@ struct sway_config {
  	enum sway_fowa focus_on_window_activation;
  	enum sway_popup_during_fullscreen popup_during_fullscreen;
  	enum xwayland_mode xwayland;
@@ -27,10 +27,10 @@ index 85605ce410..64f167dbc8 100644
  	// swaybg
  	char *swaybg_command;
 diff --git a/sway/commands.c b/sway/commands.c
-index 6a56ff5a9d..c00be6eb82 100644
+index 6becf3c8..740cdfbc 100644
 --- a/sway/commands.c
 +++ b/sway/commands.c
-@@ -97,6 +97,7 @@ static struct cmd_handler handlers[] = {
+@@ -98,6 +98,7 @@ static const struct cmd_handler handlers[] = {
  	{ "unbindsym", cmd_unbindsym },
  	{ "workspace", cmd_workspace },
  	{ "workspace_auto_back_and_forth", cmd_ws_auto_back_and_forth },
@@ -38,7 +38,7 @@ index 6a56ff5a9d..c00be6eb82 100644
  };
  
  /* Config-time only commands. Keep alphabetized */
-@@ -105,7 +106,6 @@ static struct cmd_handler config_handlers[] = {
+@@ -108,7 +109,6 @@ static const struct cmd_handler config_handlers[] = {
  	{ "swaybg_command", cmd_swaybg_command },
  	{ "swaynag_command", cmd_swaynag_command },
  	{ "workspace_layout", cmd_workspace_layout },
@@ -47,10 +47,10 @@ index 6a56ff5a9d..c00be6eb82 100644
  
  /* Runtime-only commands. Keep alphabetized */
 diff --git a/sway/commands/xwayland.c b/sway/commands/xwayland.c
-index 6ca2692317..1c4218c444 100644
+index 584a8e3a..1c4218c4 100644
 --- a/sway/commands/xwayland.c
 +++ b/sway/commands/xwayland.c
-@@ -4,27 +4,39 @@
+@@ -4,29 +4,39 @@
  #include "sway/server.h"
  #include "util.h"
  
@@ -82,6 +82,8 @@ index 6ca2692317..1c4218c444 100644
 +		config->handler_context.leftovers.argc = 0;
 +		config->handler_context.leftovers.argv = NULL;
  
+-	// config->xwayland is reset to the previous value on reload in
+-	// load_main_config()
 -	if (config->reloading && config->xwayland != xwayland) {
 -		return cmd_results_new(CMD_FAILURE,
 -				"xwayland can only be enabled/disabled at launch");
@@ -109,7 +111,7 @@ index 6ca2692317..1c4218c444 100644
  		"sway hasn't been built with Xwayland support");
 diff --git a/sway/commands/xwayland/disable.c b/sway/commands/xwayland/disable.c
 new file mode 100644
-index 0000000000..e6efe3edd3
+index 00000000..e6efe3ed
 --- /dev/null
 +++ b/sway/commands/xwayland/disable.c
 @@ -0,0 +1,15 @@
@@ -130,7 +132,7 @@ index 0000000000..e6efe3edd3
 +}
 diff --git a/sway/commands/xwayland/enable.c b/sway/commands/xwayland/enable.c
 new file mode 100644
-index 0000000000..8dc47434a2
+index 00000000..8dc47434
 --- /dev/null
 +++ b/sway/commands/xwayland/enable.c
 @@ -0,0 +1,15 @@
@@ -151,7 +153,7 @@ index 0000000000..8dc47434a2
 +
 diff --git a/sway/commands/xwayland/force.c b/sway/commands/xwayland/force.c
 new file mode 100644
-index 0000000000..a9374a8025
+index 00000000..a9374a80
 --- /dev/null
 +++ b/sway/commands/xwayland/force.c
 @@ -0,0 +1,15 @@
@@ -172,7 +174,7 @@ index 0000000000..a9374a8025
 +
 diff --git a/sway/commands/xwayland/scale.c b/sway/commands/xwayland/scale.c
 new file mode 100644
-index 0000000000..f462fea5de
+index 00000000..f462fea5
 --- /dev/null
 +++ b/sway/commands/xwayland/scale.c
 @@ -0,0 +1,31 @@
@@ -208,10 +210,10 @@ index 0000000000..f462fea5de
 +	return NULL;
 +}
 diff --git a/sway/config.c b/sway/config.c
-index fe811d273f..60ece51687 100644
+index e91c0c8b..501e3a89 100644
 --- a/sway/config.c
 +++ b/sway/config.c
-@@ -244,6 +244,7 @@ static void config_defaults(struct sway_config *config) {
+@@ -248,6 +248,7 @@ static void config_defaults(struct sway_config *config) {
  	config->focus_on_window_activation = FOWA_URGENT;
  	config->popup_during_fullscreen = POPUP_SMART;
  	config->xwayland = XWAYLAND_MODE_LAZY;
@@ -220,10 +222,10 @@ index fe811d273f..60ece51687 100644
  	config->titlebar_border_thickness = 1;
  	config->titlebar_h_padding = 5;
 diff --git a/sway/desktop/xwayland.c b/sway/desktop/xwayland.c
-index 2554d0e468..10954413af 100644
+index 9f3f4d5f..53b619a3 100644
 --- a/sway/desktop/xwayland.c
 +++ b/sway/desktop/xwayland.c
-@@ -680,6 +680,8 @@ void handle_xwayland_ready(struct wl_listener *listener, void *data) {
+@@ -887,6 +887,8 @@ void handle_xwayland_ready(struct wl_listener *listener, void *data) {
  		wl_container_of(listener, server, xwayland_ready);
  	struct sway_xwayland *xwayland = &server->xwayland;
  
@@ -233,12 +235,12 @@ index 2554d0e468..10954413af 100644
  	int err = xcb_connection_has_error(xcb_conn);
  	if (err) {
 diff --git a/sway/meson.build b/sway/meson.build
-index 226e6458f6..33773281e7 100644
+index d937e425..3c208289 100644
 --- a/sway/meson.build
 +++ b/sway/meson.build
-@@ -191,6 +191,11 @@ sway_sources = files(
- 	'commands/output/toggle.c',
+@@ -203,6 +203,11 @@ sway_sources = files(
  	'commands/output/transform.c',
+ 	'commands/output/unplug.c',
  
 +	'commands/xwayland/enable.c',
 +	'commands/xwayland/disable.c',

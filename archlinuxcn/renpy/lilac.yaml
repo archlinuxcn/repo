@@ -1,0 +1,12 @@
+build_prefix: extra-x86_64
+pre_build_script: aur_pre_build(maintainers=['patlefort'])
+post_build: aur_post_build
+repo_depends:
+  - python-pygame-sdl2-git
+  - python-sphinx_rtd_dark_mode
+update_on:
+  - source: aur
+    aur: renpy
+  - alias: python
+maintainers:
+  - github: roaldclark

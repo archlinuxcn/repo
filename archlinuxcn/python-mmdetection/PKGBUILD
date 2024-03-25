@@ -3,16 +3,23 @@
 _pkgname=mmdetection
 pkgname=python-mmdetection
 pkgver=3.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc='OpenMMLab Detection Toolbox and Benchmark'
 arch=('any')
 url='https://github.com/open-mmlab/mmdetection'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
+  python-addict
+  python-matplotlib
+  python-mmengine
+  python-opencv
+  python-pillow
   python-mmcv
   python-numpy
   python-mmpycocotools
   python-pytorch
+  python-scipy
+  python-six
   python-terminaltables
   python-torchvision
 )

@@ -1,0 +1,18 @@
+pkgname=julia-git-interfaces-src
+pkgver=0.3.0
+_commit=1ac336756fd6e84614532a830e720eabee3eb71d
+pkgrel=2
+pkgdesc="Interfaces.jl"
+url="https://github.com/rafaqz/Interfaces.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/rafaqz/Interfaces.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Interfaces.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Interfaces "${pkgdir}" "${pkgname}" julia-git
+}

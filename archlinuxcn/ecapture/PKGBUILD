@@ -1,6 +1,6 @@
 # Maintainer: Y7n05h < echo WTduMDVoQHk3bjA1aC5kZXY= | base64 -d >
 pkgname=ecapture
-pkgver=0.7.3
+pkgver=0.7.5
 pkgrel=1
 pkgdesc="capture SSL/TLS text content without CA cert using eBPF"
 arch=("x86_64" "aarch64")

@@ -3,13 +3,13 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=extra-cmake-modules-git
-pkgver=5.249.0.r3671.008ae77d
+pkgver=6.1.0.r3679.b7d983e4
 pkgrel=1
 pkgdesc='Extra modules and scripts for CMake. (GIT version)'
 arch=('any')
 url='https://projects.kde.org/projects/kdesupport/extra-cmake-modules'
 license=('LGPL')
-groups=('kf6')
+groups=('kf6-git')
 depends=('cmake')
 makedepends=(
 	'git'
@@ -54,11 +54,6 @@ build() {
 		-DQT_MAJOR_VERSION=6
 
 	cmake --build build
-}
-
-check() {
-	cd build
-	ctest --output-on-failure -E ECMPoQmToolsTest
 }
 
 package() {

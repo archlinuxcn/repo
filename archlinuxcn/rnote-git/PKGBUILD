@@ -3,12 +3,12 @@
 
 pkgname=rnote-git
 _pkgname=${pkgname%-git}
-pkgver=0.9.4.r32.gb959642b
+pkgver=0.10.1.r8.g46cc2e58
 pkgrel=1
 pkgdesc="A simple drawing application to create handwritten notes"
 arch=('x86_64')
 url="https://github.com/flxzt/rnote"
-license=('GPL3')
+license=('GPL-3.0-or-later')
 depends=('gtk4' 'glib2' 'libadwaita' 'poppler-glib' 'gstreamer' 'alsa-lib')
 makedepends=('meson' 'cargo' 'cmake' 'clang' 'git')
 provides=("${_pkgname}")

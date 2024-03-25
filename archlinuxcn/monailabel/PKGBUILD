@@ -3,12 +3,12 @@
 _pkgname=MONAILabel
 pkgname=monailabel
 pkgver=0.8.0
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc='An intelligent open source image labeling and learning tool'
 arch=('any')
 url='https://github.com/Project-MONAI/MONAILabel'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
   python-aiofiles
   python-bcrypt

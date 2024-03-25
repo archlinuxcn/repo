@@ -3,20 +3,23 @@
 pkgname=python-imagecorruptions
 _pkgname=imagecorruptions
 pkgver=1.1.2
-pkgrel=3
+pkgrel=4
 pkgdesc='Python package to corrupt arbitrary images'
 arch=(any)
 url='https://github.com/bethgelab/imagecorruptions'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
-  opencv
   python-numpy
+  python-opencv
   python-pillow
   python-scikit-image
   python-scipy
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/bethgelab/imagecorruptions/archive/v${pkgver}.tar.gz")
@@ -24,11 +27,11 @@ sha512sums=('8f903ae552007d8019e37677de49d3903e5e868fc400c4cdb07d9e20891343d139a
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
 }
 # vim:set ts=2 sw=2 et:

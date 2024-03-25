@@ -2,11 +2,11 @@
 
 pkgname=raw2ometiff
 pkgver=0.7.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Raw format to OME-TIFF converter'
 arch=('any')
 url='https://github.com/glencoesoftware/raw2ometiff'
-license=('GPL')
+license=('GPL-2.0-or-later')
 depends=(
   bash
   blosc

@@ -1,0 +1,16 @@
+pre_build_script: |
+  update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+  - source: gitea
+    gitea: gitea/act_runner
+    use_max_tag: true
+    # v0.2.6
+    include_regex: ^v\d+\.\d+\.\d+$
+
+maintainers:
+  - github: rocka

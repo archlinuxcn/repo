@@ -3,12 +3,12 @@
 pkgname=python-lvis-git
 _pkgname=lvis
 _pkgver=0.5.3
-pkgver=0.5.3.r21.da5f65d
+pkgver=0.5.3.r24.7d7f07d
 pkgrel=2
 pkgdesc='Python API for LVIS Dataset'
 arch=('any')
 url='https://github.com/lvis-dataset/lvis-api'
-license=('BSD')
+license=('BSD-3-Clause')
 depends=(
   python-opencv
   python-cycler
@@ -21,10 +21,13 @@ depends=(
   python-six
 )
 makedepends=(
-  git
   cython
+  git
+  python-build
+  python-installer
   python-pip
   python-setuptools
+  python-wheel
 )
 checkdepends=(
   hdf5
@@ -48,7 +51,7 @@ pkgver() {
 
 build() {
   cd "${_pkgname}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 check() {
@@ -58,7 +61,7 @@ check() {
 
 package() {
   cd "${_pkgname}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:

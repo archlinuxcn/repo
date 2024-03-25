@@ -1,0 +1,34 @@
+# Maintainer: Chocobo1 <chocobo1 AT archlinux DOT net>
+# Previous maintainer: Luis Martinez <luis dot martinez at disroot dot org>
+# Contributor: Filipe Laíns (FFY00) <lains@archlinux.org>
+
+pkgname=tree-sitter-git
+_pkgname=${pkgname%-git}
+pkgver=0.22.2.r18.gb7fcf98
+pkgrel=1
+pkgdesc="An incremental parsing system for programming tools"
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+url="https://${_pkgname}.github.io/${_pkgname}"
+license=('MIT')
+makedepends=('git')
+provides=("${_pkgname}=$pkgver" "lib${_pkgname}.so")
+conflicts=("${_pkgname}")
+options=('staticlibs')
+source=("git+https://github.com/${_pkgname}/${_pkgname}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+build() {
+	cd "${_pkgname}/"
+	make
+}
+
+package() {
+	cd "${_pkgname}/"
+	make DESTDIR="${pkgdir}" PREFIX=/usr install
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}

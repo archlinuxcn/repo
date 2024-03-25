@@ -1,0 +1,15 @@
+maintainers:
+  - github: Integral-Tech
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: git_pkgbuild_commit()
+
+update_on:
+  - source: github
+    github: hypengw/Qcm
+    use_latest_release: true
+    prefix: v
+
+  - source: alpm
+    alpm: qt6-base
+    strip_release: true

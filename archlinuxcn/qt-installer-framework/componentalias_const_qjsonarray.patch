@@ -1,0 +1,12 @@
+diff -Naur installer-framework-4.7.0.orig/src/libs/installer/componentalias.cpp installer-framework-4.7.0/src/libs/installer/componentalias.cpp
+--- installer-framework-4.7.0.orig/src/libs/installer/componentalias.cpp	2024-02-15 07:00:18.000000000 +0100
++++ installer-framework-4.7.0/src/libs/installer/componentalias.cpp	2024-03-10 03:21:06.850953720 +0100
+@@ -295,7 +295,7 @@
+     const QJsonObject docJsonObject = doc.object();
+ 
+     const QJsonArray aliases = docJsonObject.value(QLatin1String("alias-packages")).toArray();
+-    for (auto &it : aliases) {
++    for (const auto &it : aliases) {
+         AliasData data;
+         data.insert(QLatin1String("source"), QVariant::fromValue(source));
+ 

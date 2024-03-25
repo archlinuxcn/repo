@@ -2,7 +2,7 @@
 
 _pkgname=pylibjpeg-openjpeg
 pkgname=python-pylibjpeg-openjpeg
-pkgver=2.1.1
+pkgver=2.2.1
 pkgrel=1
 pkgdesc='A J2K and JP2 plugin for pylibjpeg'
 arch=('x86_64')
@@ -18,7 +18,7 @@ makedepends=(
   python-installer
 )
 source=("${pkgname}::git+https://github.com/pydicom/pylibjpeg-openjpeg.git#tag=v${pkgver}")
-sha512sums=('SKIP')
+sha512sums=('c2356f42f96c822309daaf8ed275dac2c4f7e4794155f47fd886f8b666ced0819adaf7f385e87d6b3d60bcea532aa1ea86cf34fa0258e11cace9153973e3950b')
 
 prepare() {
   cd "${pkgname}"

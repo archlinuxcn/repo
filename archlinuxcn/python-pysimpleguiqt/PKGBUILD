@@ -3,8 +3,8 @@
 
 _pkgname=PySimpleGUIQt
 pkgname=python-pysimpleguiqt
-pkgver=0.35.0
-pkgrel=4
+pkgver=5.0.0
+pkgrel=1
 pkgdesc='Python GUIs for Humans (Qt port)'
 arch=('any')
 license=('LGPL3')
@@ -16,7 +16,7 @@ makedepends=(
   python-setuptools
 )
 source=(${pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz)
-sha256sums=('2c18ea261554235a2cdaee76e616d0adc148501e89bf4112a798f2a69bf3c8b5')
+sha256sums=('ec7619a98327e8ea54f8332ef94d60bf70a79c8afbb01c46919fee40ec32fb19')
 
 build() {
   cd "${_pkgname}-${pkgver}"

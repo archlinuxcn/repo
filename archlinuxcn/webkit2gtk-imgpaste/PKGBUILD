@@ -3,8 +3,8 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=webkit2gtk-imgpaste
-pkgver=2.42.4
-pkgrel=2
+pkgver=2.44.0
+pkgrel=1
 pkgdesc="Web content engine for GTK (with patches for pasting images from clipboard)"
 url="https://webkitgtk.org"
 arch=(x86_64)
@@ -79,15 +79,11 @@ source=(
   $url/releases/webkitgtk-$pkgver.tar.xz{,.asc}
   EnlargeObjectSize.patch
   PasteBoardGtk.patch
-  GTK-MiniBrowser-should-hide-the-toolbar-when-using-full-screen.patch
-  GTK-Disable-DMABuf-renderer-for-NVIDIA-proprietary-drivers.patch
 )
-sha256sums=('52288b30bda22373442cecb86f9c9a569ad8d4769a1f97b352290ed92a67ed86'
+sha256sums=('c66530e41ba59b1edba4ee89ef20b2188e273bed0497e95084729e3cfbe30c87'
             'SKIP'
             '71b8a59c78d549fed0cd895207f49c7b3be40b236e96f4d7b9907a26521499bf'
-            '20ebac2caf15fa546e6da00cb0fa90d5d37fcf7bfa883014d7d15eb4963d12d2'
-            'a921d6be1303e9f23474971f381886fd291ec5bb1a7ff1e85acede8cfb88bef2'
-            '655f3b2c96355ac83c4fa1fc6048e3256bbfdbfb9727e1e18c5af12613536206')
+            '20ebac2caf15fa546e6da00cb0fa90d5d37fcf7bfa883014d7d15eb4963d12d2')
 validpgpkeys=(
   'D7FCF61CF9A2DEAB31D81BD3F3D322D0EC4582C3'  # Carlos Garcia Campos <cgarcia@igalia.com>
   '5AA3BC334FD7E3369E7C77B291C559DBE4C9123B'  # Adrián Pérez de Castro <aperez@igalia.com>
@@ -98,13 +94,6 @@ prepare() {
 
   patch -Np1 -i ../PasteBoardGtk.patch
   patch -Np1 -i ../EnlargeObjectSize.patch
-  # Requested by eworm
-  # https://github.com/WebKit/WebKit/pull/17909
-  patch -Np1 -i ../GTK-MiniBrowser-should-hide-the-toolbar-when-using-full-screen.patch
-
-  # https://bugs.archlinux.org/task/79783
-  # https://github.com/WebKit/WebKit/pull/18614
-  patch -Np1 -i ../GTK-Disable-DMABuf-renderer-for-NVIDIA-proprietary-drivers.patch
 }
 
 build() {
@@ -115,7 +104,8 @@ build() {
     -DCMAKE_INSTALL_LIBDIR=lib
     -DCMAKE_INSTALL_LIBEXECDIR=lib
     -DCMAKE_SKIP_RPATH=ON
-    -DUSE_AVIF=ON
+    -DUSE_GTK4=OFF
+    -DUSE_LIBBACKTRACE=OFF
     -DUSE_SOUP2=ON
     -DENABLE_DOCUMENTATION=ON
     -DENABLE_MINIBROWSER=ON
@@ -129,6 +119,10 @@ build() {
   #     collect2: error: ld returned 1 exit status
   export CC=clang CXX=clang++
   LDFLAGS+=" -fuse-ld=lld"
+
+  # JITted code crashes when CET is used
+  CFLAGS+=' -fcf-protection=none'
+  CXXFLAGS+=' -fcf-protection=none'
 
   # Produce minimal debug info: 4.3 GB of debug data makes the
   # build too slow and is too much to package for debuginfod
@@ -160,7 +154,7 @@ package() {
   rm -r "$pkgdir/usr/bin"
 
   mkdir -p doc/usr/share
-  mv {"$pkgdir",doc}/usr/share/gtk-doc
+  mv {"$pkgdir",doc}/usr/share/doc
 
   cd webkitgtk-$pkgver
   find Source -name 'COPYING*' -or -name 'LICENSE*' -print0 | sort -z |

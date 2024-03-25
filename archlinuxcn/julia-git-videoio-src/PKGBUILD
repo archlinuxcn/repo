@@ -1,0 +1,18 @@
+pkgname=julia-git-videoio-src
+pkgver=1.1.0
+_commit=6f965b620b1c2760a6756ee44faa96a5ccbc3d43
+pkgrel=2
+pkgdesc="VideoIO.jl"
+url="https://github.com/JuliaIO/VideoIO.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/VideoIO.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd VideoIO.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh VideoIO "${pkgdir}" "${pkgname}" julia-git
+}

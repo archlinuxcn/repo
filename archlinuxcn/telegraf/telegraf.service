@@ -3,12 +3,17 @@ Description=Plugin-driven server agent for reporting metrics into InfluxDB
 After=network.target
 
 [Service]
+Type=notify
 User=telegraf
 Group=telegraf
+DynamicUser=yes
 ExecStart=/usr/bin/telegraf -config /etc/telegraf/telegraf.conf -config-directory /etc/telegraf/telegraf.d
 ExecReload=/bin/kill -HUP $MAINPID
-KillMode=control-group
 Restart=on-failure
+RestartForceExitStatus=SIGPIPE
+KillMode=mixed
+TimeoutStopSec=5
+LimitMEMLOCK=8M:8M
 
 [Install]
 WantedBy=multi-user.target

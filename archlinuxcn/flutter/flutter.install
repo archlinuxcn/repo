@@ -1,13 +1,6 @@
 pre_upgrade() {
-  NEW=$1
-  OLD=$2
-
-  if [[ "$OLD" == "3.7"* || "$OLD" == "3.6"* ]]; then
-    echo "Cleaning up previous flutter installation."
-    rm -rf "/opt/flutter"
-  fi
-
-  rm -rf "/opt/flutter/.git"
+  echo "Cleaning up previous flutter installation."
+  rm -rf "/opt/flutter"
 }
 
 post_upgrade() {
@@ -20,10 +13,5 @@ post_upgrade() {
       groupdel "flutterusers"
     fi
   fi
-  
-  mv "/opt/flutter/.git-refs" "/opt/flutter/.git"
 }
 
-post_install() {
-  mv "/opt/flutter/.git-refs" "/opt/flutter/.git"
-}

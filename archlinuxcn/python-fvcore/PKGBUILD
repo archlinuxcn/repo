@@ -4,12 +4,17 @@
 _pkgname=fvcore
 pkgname=python-fvcore
 pkgver=0.1.5.post20221221
-pkgrel=2
+pkgrel=3
 pkgdesc="Collection of common code that's shared among different research projects in FAIR computer vision team."
 arch=('any')
 url="https://github.com/facebookresearch/fvcore"
-license=('Apache')
-makedepends=(python-setuptools)
+license=('Apache-2.0')
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
 depends=(
   python-iopath
   python-numpy
@@ -26,11 +31,11 @@ sha256sums=('f2fb0bb90572ae651c11c78e20493ed19b2240550a7e4bbb2d6de87bdd037860')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
 }
 # vim:set ts=2 sw=2 et:

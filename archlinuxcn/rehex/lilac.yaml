@@ -1,0 +1,11 @@
+build_prefix: extra-x86_64
+pre_build_script: |
+  aur_pre_build(maintainers=['zocker_160'])
+  add_depends(['botan2'])
+  add_makedepends(['git'])
+post_build: aur_post_build
+update_on:
+  - source: aur
+    aur: rehex
+maintainers:
+  - github: roaldclark

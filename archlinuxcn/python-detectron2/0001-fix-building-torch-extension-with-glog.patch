@@ -1,0 +1,24 @@
+From ee088502ef194ae818341596c173a76005bdfd51 Mon Sep 17 00:00:00 2001
+From: Butui Hu <hot123tea123@gmail.com>
+Date: Mon, 4 Mar 2024 21:37:13 +0800
+Subject: [PATCH] fix building torch extension with glog
+
+---
+ setup.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/setup.py b/setup.py
+index 173d012..7602ef0 100644
+--- a/setup.py
++++ b/setup.py
+@@ -90,6 +90,7 @@ def get_extensions():
+ 
+     include_dirs = [extensions_dir]
+ 
++    define_macros += [("GLOG_USE_GLOG_EXPORT", None)]
+     ext_modules = [
+         extension(
+             "detectron2._C",
+-- 
+2.44.0
+

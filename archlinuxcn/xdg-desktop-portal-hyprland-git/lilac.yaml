@@ -10,3 +10,7 @@ post_build_script: git_pkgbuild_commit()
 update_on:
   - source: github
     github: hyprwm/xdg-desktop-portal-hyprland
+
+  - source: alpm
+    alpm: sdbus-cpp
+    provided: libsdbus-c++.so

@@ -3,12 +3,12 @@
 
 buildarch=8
 
-_rcver=6.4
+_rcver=6.6
 #_rcrel=3
-_asahirel=10
-pkgrel=1
+_asahirel=15
+pkgrel=3
 
-_m1n1_version=1.2.8
+_m1n1_version=1.4.11
 
 pkgbase=linux-asahi
 #_commit_id=asahi-${_nextver}-${_asahirel}
@@ -22,26 +22,39 @@ url="http://www.kernel.org/"
 license=('GPL2')
 
 makedepends=(
-  bc dtc kmod libelf pahole cpio perl rust rust-src rust-bindgen tar xz xmlto
+  bc dtc kmod libelf pahole cpio perl rustup tar xz xmlto clang
 )
 options=('!strip')
 source=(
   https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
   config         # the main kernel config file
   config.edge    # overrides for linux-asahi-edge
+  0001-READ-COMMIT-MESSAGE-macaudio-Enable-first-round-of-m.patch
+  0002-READ-COMMIT-MESSAGE-macaudio-Enable-second-round-of-.patch
 )
-sha256sums=('4913b6bb7f0197983b5e1ab53689166f70cd5bbce8c0ee5925325172b5687666'
-            '8d72b8f6d9fcaeb5f61ae8a0f808c6c1d9bcd5870411655ba289f72eb8444fcf'
-            '5cbdda1262f989a5247f4ef70690b569f9be8212bf8f576242bf6ac69036bddf')
-b2sums=('ca6e9ca9dca3f402b57643ed2f90d48a000716b7661f3e1f28e55547ec85102a0610b9afd2ed40cd775121fdd79273522a94473c338a6cd5eab7617f7b7bde8a'
-        '05ca3e30b041e8a60b304f5ee1ed9d2c2882b9de7e8d8e95b192e06dab09f4a4d219b1d67838380048e9a806edbcf5538a8db6cb900e4657a6ff4f2028a2661d'
-        '01a8b3b7e3c7bd528f6d07d2b581b8a56688305d42fdd0b1555fd26319c4369e2357bcaa8434a1a5e3123aa9fdc6f1a24de4813b819397af89ba8d0c5e896228')
+sha256sums=('1d8d82dcfd87fb7153d81f52d01789be226c79637898de2b7407019ec7d35c8e'
+            '6c9a3baf939b50c2438a1b1a5617554ccc8880aac0dec14d0174251216882919'
+            '5cbdda1262f989a5247f4ef70690b569f9be8212bf8f576242bf6ac69036bddf'
+            '95a19c29c8ac22049a06fcb880bb7d8d72fb7a8dae206cf4b9b6da22df246637'
+            '2b08c2623b87a7e8bb16451d09db9f0cfe032c75054e1a0e6d345e5228028adc')
+b2sums=('f0cdce0421bb8637d52e82d2ff0b7e07c29e828783c7cb8733f1582916be81bfd14a0b6a98f51f633ee9da3d10aa1fff6b27c5779bd9fa55c1d04615173d6d4b'
+        '8ff9f64748f9695479dfcbffc5b4f565229d17840e846d8cea59bccfddfc0d722725a937f80d57ad8bfbfa8a9dae2f886983a2db87e37930d84661e9f3f9c85e'
+        '01a8b3b7e3c7bd528f6d07d2b581b8a56688305d42fdd0b1555fd26319c4369e2357bcaa8434a1a5e3123aa9fdc6f1a24de4813b819397af89ba8d0c5e896228'
+        'bf1adcbbaf3dfb5a31c77f2ff8a467b91a304d8487dba866f9e18808d6a503940b794403e27ab3d065e8c97a3f138e819c2513fb16719321c72f5235aea6f1b5'
+        '9c761ddaa1cb1f1570ecc2f8e116c416fc57a0df952f0635b9a2fe1287988ce3e4e0b6e3025703a21637b8551784f9b1d5c6ae8faff188ebcd9361013e20b0a5')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
 
 prepare() {
   cd $_srcname
+
+  rustup install 1.71.1
+  rustup component add rust-src
+  _path=$PATH
+  PATH="$HOME/.rustup/toolchains/1.71.1-$(uname -m)-unknown-linux-gnu/bin:$_path"
+  cargo install --locked --version 0.65.1 bindgen-cli
+  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.71.1-$(uname -m)-unknown-linux-gnu/bin:$_path"
 
   echo "Setting version..."
   echo "-$_asahirel-$pkgrel" > localversion.10-pkgrel
@@ -54,12 +67,6 @@ prepare() {
     echo "Applying patch $src..."
     patch -Np1 < "../$src"
   done
-
-  # Fix for newer bindgen versions
-  sed -i -e s/blacklist/blocklist/ \
-    -e s/whitelist/allowlist/ \
-    -e s/--size_t-is-usize// \
-    rust/Makefile
 
   echo "Creating build directories..."
   mkdir -p build/base build/edge
@@ -79,6 +86,8 @@ prepare() {
 }
 
 build() {
+  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.71.1-$(uname -m)-unknown-linux-gnu/bin:$PATH"
+
   cd $_srcname
   echo "Building base..."
   make all O=$PWD/build/base
@@ -94,7 +103,9 @@ build() {
   make O=$PWD/build/edge all
 }
 
-_origin_package_kernel() {
+_package_kernel() {
+  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.71.1-$(uname -m)-unknown-linux-gnu/bin:$PATH"
+
   pkgdesc="The $pkgdesc kernel and modules"
   depends=(coreutils kmod initramfs $2 "m1n1>=$_m1n1_version")
   optdepends=('crda: to set the correct wireless channels of your country'
@@ -120,7 +131,7 @@ _origin_package_kernel() {
   install -Dt "$modulesdir/dtbs" "$O"/arch/arm64/boot/dts/apple/*.dtb
 
   # remove build and source links
-  rm "$modulesdir"/{source,build}
+  rm -f "$modulesdir"/{source,build}
 }
 
 _package() {
@@ -241,11 +252,3 @@ for _p in "${pkgname[@]}"; do
 done
 
 # vim:set ts=8 sts=2 sw=2 et:
-_package_kernel() {
-  _origin_package_kernel "$@"
-  cd "$srcdir/$_srcname"
-  local kernver="$(<$O/version)"
-  local modulesdir="$pkgdir/usr/lib/modules/$kernver"
-  install -Dm644 "$O/$(make -s image_name O="$O")" "$modulesdir/vmlinuz"
-  install -Dm644 "$O"/arch/arm64/boot/Image "$modulesdir/vmlinuz-nogz"
-}

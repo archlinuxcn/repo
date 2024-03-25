@@ -1,0 +1,18 @@
+pkgname=julia-git-mods-src
+pkgver=2.2.4
+_commit=6c5b3beff07ae3c5a3d35d4c041cce59d1f55dff
+pkgrel=1
+pkgdesc="Mods.jl"
+url="https://github.com/scheinerman/Mods.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/scheinerman/Mods.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Mods.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Mods "${pkgdir}" "${pkgname}" julia-git
+}

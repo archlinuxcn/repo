@@ -1,17 +1,16 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-lily
-pkgver=6.5.2
-pkgrel=2
+pkgver=6.8.1
+pkgrel=1
 pkgdesc='Linux-lily'
 url="https://www.kernel.org/"
 arch=(x86_64)
-license=(GPL2)
+license=(GPL-2.0-only)
 makedepends=(
   bc
   cpio
   gettext
-  git
   libelf
   pahole
   perl
@@ -24,21 +23,24 @@ makedepends=(
   # graphviz
   # imagemagick
   # python-sphinx
+  # python-yaml
   # texlive-latexextra
 )
 options=('strip' 'debug')
 STRIP_BINARIES=-S
 _srcname=archlinux-linux
 source=(
-  # "$_srcname::git+https://github.com/archlinux/linux?signed#tag=$_srctag"
+  # https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
+  # $url/releases/download/$_srctag/linux-$_srctag.patch.zst{,.sig}
   # config  # the main kernel config file
 )
 validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
-  A2FF3A36AAA56654109064AB19802F8B0D70FC30  # Jan Alexander Steffens (heftig)
-  C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
+  83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
+# https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
+sha256sums=()
 b2sums=()
 
 export KBUILD_BUILD_HOST=archlinux
@@ -47,25 +49,18 @@ export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EP
 # to remove the plus sign
 export LOCALVERSION= 
 
-_make() {
-  test -s version
-  make KERNELRELEASE="$(<version)" "$@"
-}
-
 prepare() {
   cd $_srcname
 
   echo "Setting version..."
   echo "-$pkgrel" > localversion.10-pkgrel
   echo "${pkgbase#linux}" > localversion.20-pkgname
-  # make defconfig
-  make -s kernelrelease > version
-  # make mrproper
 
   local src
   for src in "${source[@]}"; do
     src="${src%%::*}"
     src="${src##*/}"
+    src="${src%.zst}"
     [[ $src = *.patch ]] || continue
     echo "Applying patch $src..."
     patch -Np1 < "../$src"
@@ -73,16 +68,18 @@ prepare() {
 
   echo "Setting config..."
   # cp ../config .config
-  _make olddefconfig
+  make olddefconfig
   # diff -u ../config .config || :
 
+  make -s kernelrelease > version
   echo "Prepared $pkgbase version $(<version)"
 }
 
 build() {
   cd $_srcname
-  _make all
-  # _make htmldocs
+  make all
+  make -C tools/bpf/bpftool vmlinux.h feature-clang-bpf-co-re=1
+  # make htmldocs
 }
 
 _package() {
@@ -101,6 +98,7 @@ _package() {
     KSMBD-MODULE
     VIRTUALBOX-GUEST-MODULES
     WIREGUARD-MODULE
+    UKSMD-BUILTIN
   )
   replaces=(
     virtualbox-guest-modules-lily
@@ -114,7 +112,7 @@ _package() {
   echo "Installing boot image..."
   # systemd expects to find the kernel here to allow hibernation
   # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab8128dcf99161d2344
-  install -Dm644 "$(_make -s image_name)" "$modulesdir/vmlinuz"
+  install -Dm644 "$(make -s image_name)" "$modulesdir/vmlinuz"
 
   # Used by mkinitcpio to name the kernel
   echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
@@ -122,8 +120,8 @@ _package() {
   echo "Installing modules..."
   make INSTALL_MOD_PATH="$pkgdir/usr" DEPMOD=/bin/true modules_install
 
-  # remove build and source links
-  rm "$modulesdir"/{source,build}
+  # remove build link
+  rm "$modulesdir"/build
 
   msg2 "Generating debug symbol files..."
   export dbgdir="$pkgdir-debug/usr/lib/debug"
@@ -155,7 +153,7 @@ _package-headers() {
 
   echo "Installing build files..."
   install -Dt "$builddir" -m644 .config Makefile Module.symvers System.map \
-    localversion.* version vmlinux
+    localversion.* version vmlinux tools/bpf/bpftool/vmlinux.h
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
   install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
   cp -t "$builddir" -a scripts

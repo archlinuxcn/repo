@@ -1,14 +1,16 @@
 maintainers:
   - github: yuyichao
 
-pre_build_script: run_cmd(['bash', './get_pkg.sh', 'alsa-ucm-conf-asahi'])
+# pre_build_script: run_cmd(['bash', './get_pkg.sh', 'alsa-ucm-conf-asahi'])
 post_build_script: |
   git_add_files('.')
   git_commit()
 
 update_on:
-  - source: github
-    github: AsahiLinux/PKGBUILDs
-    path: alsa-ucm-conf-asahi
+  - source: manual
+    manual: 5
+  # - source: github
+  #   github: AsahiLinux/PKGBUILDs
+  #   path: alsa-ucm-conf-asahi
   - source: manual
     manual: 2

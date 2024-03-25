@@ -3,12 +3,12 @@
 # Contributor: joyfulgirl <joyfulgirl (at) archlinux.us>
 
 pkgname=pspp
-pkgver=2.0.0
+pkgver=2.0.1
 pkgrel=1
 pkgdesc='Statistical analysis program. Free replacement for SPSS'
 arch=('x86_64')
 url='http://www.gnu.org/software/pspp'
-license=('GPL3')
+license=('GPL-3.0-or-later')
 depends=(
   gsl
   gtksourceview3
@@ -26,7 +26,7 @@ options=('!libtool' '!emptydirs')
 source=("${pkgname}-${pkgver}.tar.gz::https://ftp.gnu.org/gnu/pspp/${pkgname}-${pkgver}.tar.gz"
         "${pkgname}-${pkgver}.tar.gz.sig::https://ftp.gnu.org/gnu/pspp/${pkgname}-${pkgver}.tar.gz.sig"
 )
-sha256sums=('a8f6cb886af5b083843579bcd6fb191c054acce28cc68b58e7c5f09996a2d8df'
+sha256sums=('8edbb0f09e8cf8010cad9e0559e0230d7fc5aae4721c756c350554df33024c00'
             'SKIP')
 validpgpkeys=('C2D1AB061656AAC54B5E975485199DE8C6648E90')
 build() {

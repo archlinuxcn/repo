@@ -1,0 +1,18 @@
+pkgname=julia-git-suppressor-src
+pkgver=0.2.6
+_commit=f0404e768703122f651ff54a67143dd0d60a2f8e
+pkgrel=2
+pkgdesc="Suppressor.jl"
+url="https://github.com/JuliaIO/Suppressor.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/Suppressor.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Suppressor.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Suppressor "${pkgdir}" "${pkgname}" julia-git
+}

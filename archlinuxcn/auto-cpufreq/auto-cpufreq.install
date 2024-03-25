@@ -9,19 +9,12 @@ post_install() {
 
     echo -e 'To view live log, run:\n'
     echo -e 'auto-cpufreq --stats\n'
-
-    echo -e 'If the GNOME Power Profiles daemon is installed, it must be masked manually as it conflicts with auto-cpufreq.service:\n'
-    echo -e 'sudo systemctl mask power-profiles-daemon.service\n'
 }
 
 post_upgrade() {	
-    echo -e "\nauto-cpufreq $1 installed\n"
-
-    echo -e 'Reload systemd manager configuration:\n'
-    echo -e 'systemctl daemon-reload\n'
-
-    echo -e 'Restart auto-cpufreq daemon service:\n'
-    echo -e 'systemctl restart auto-cpufreq\n'
+    systemctl daemon-reload
+    systemctl restart auto-cpufreq
+    echo -e 'auto-cpufreq has been restarted\n'
 }
 
 post_remove() {

@@ -2,11 +2,11 @@
 
 pkgbase=linux-amd
 _srcname=linux
-gitver=v6.7.2
-patchver=20230105
-patchname=more-uarches-for-kernel-5.17+.patch
-pkgver=6.7.v.2
-pkgrel=3
+gitver=v6.8.1
+patchver=20240221.2
+patchname=more-uarches-for-kernel-6.8-rc4+.patch
+pkgver=6.8.v.1
+pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
@@ -23,11 +23,11 @@ source=("git+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git#ta
 )
 sha256sums=('SKIP'
             #config.x86_64
-            '63f7c46e9d4fbbf62e91d1fb5024e5f7043d6c6a09133ce590a0424ea9c89ec6'
+            '15d0643bfcd2f3b54d800294de22b093509be779ea1d80d2d0ded09ef1cb614c'
             #.preset file
             '60c6ba602443e94a9eba3aeee9d194027d69bffaa428c6d055348ebf03681b5c'
             #grayskypatch
-            '81ad663925a0aa5b5332a69bae7227393664bb81ee2e57a283e7f16e9ff75efe'
+            'd69232afd0dd6982ae941cf2d1f577f4be2011e3bb847d1db37952acf416b5d3'
 )
 
 _kernelname=${pkgbase#linux}
@@ -51,9 +51,6 @@ prepare() {
    echo "Applying $patch"
    git apply $patch || exit 2
   done <<< $(ls ../*.patch)
-
-  # git revert faulty commit
-  git revert c09c4f31998bac -n
 
   # get kernel version
   msg2 "Preparing kernel"
@@ -176,10 +173,6 @@ _package-headers() {
     mkdir -p "${pkgdir}"/usr/lib/modules/${_kernver}/build/`echo ${i} | sed 's|/Kconfig.*||'`
     cp ${i} "${pkgdir}/usr/lib/modules/${_kernver}/build/${i}"
   done
-
-  # Fix file conflict with -doc package
-  rm "${pkgdir}/usr/lib/modules/${_kernver}/build/Documentation/kbuild"/Kconfig.*-*
-  rm "${pkgdir}/usr/lib/modules/${_kernver}/build/Documentation/Kconfig"
 
   # Add objtool for CONFIG_STACK_VALIDATION
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/tools"

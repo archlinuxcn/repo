@@ -1,0 +1,16 @@
+# For the "reverse-proxy with auto TLS certificate", add entries as follows.
+# Don't forget to set `CLOUDFLARE_API_TOKEN`, e.g., in /var/lib/caddy/envfile
+#
+# example.com {
+# 	reverse_proxy localhost:8080
+# 	tls {
+# 		dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+# 	}
+# }
+#
+# example.net {
+# 	reverse_proxy localhost:8800
+# 	tls {
+# 		dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+# 	}
+# }

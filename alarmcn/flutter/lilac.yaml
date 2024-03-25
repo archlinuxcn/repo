@@ -1,7 +1,10 @@
 maintainers:
   - github: Integral-Tech
 
-pre_build_script: aur_pre_build(maintainers=['frealgagu','WithTheBraid','PolarianDev'])
+pre_build_script: |
+  aur_pre_build(maintainers=['frealgagu','WithTheBraid','PolarianDev'])
+  run_cmd(['updpkgsums'])
+
 post_build: aur_post_build
 
 update_on:

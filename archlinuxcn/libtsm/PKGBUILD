@@ -22,6 +22,7 @@ b2sums=('4d81d5a19003ca1487e85bcea22604990e88770484a08a072105a2f193a0c7aa40832c9
 
 prepare() {
   cd $pkgname-$pkgver
+  # FIXME: https://github.com/Aetf/kmscon/issues/58
   patch -Np1 -i ../fix-backspace.patch
 }
 
@@ -30,7 +31,7 @@ build() {
     -G Ninja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DBUILD_TESTING=ON \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo # libtsm deny None build type.
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo # FIXME: libtsm deny None build type.
   ninja -C build
 }
 

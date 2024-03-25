@@ -1,0 +1,19 @@
+--- a/plugins/CMakeLists.txt.orig	2022-09-24 09:05:46.308250388 +0100
++++ b/plugins/CMakeLists.txt	2022-09-24 09:06:04.978206849 +0100
+@@ -61,7 +61,6 @@
+   add_subdirectory(sndio)
+   add_subdirectory(obs-vst)
+ 
+-  check_obs_browser()
+ elseif(OS_FREEBSD)
+   add_subdirectory(linux-capture)
+   add_subdirectory(linux-pulseaudio)
+@@ -84,8 +83,6 @@
+ 
+ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/obs-websocket/CMakeLists.txt)
+   add_subdirectory(obs-websocket)
+-else()
+-  obs_status(FATAL_ERROR "obs-websocket submodule not available.")
+ endif()
+ 
+ add_subdirectory(image-source)

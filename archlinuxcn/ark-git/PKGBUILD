@@ -2,14 +2,35 @@
 
 pkgname=ark-git
 _pkgname=${pkgname%-git}
-pkgver=24.01.80.r19.gb8445fa
+pkgver=24.01.90.r79.gd9f9ee5
 pkgrel=1
 pkgdesc="Archiving Tool"
 arch=('x86_64')
 url="https://apps.kde.org/ark/"
-license=('GPL')
-depends=('kparts5' 'kpty5' 'libarchive' 'libzip' 'hicolor-icon-theme')
-makedepends=('git' 'extra-cmake-modules' 'kdoctools5')
+license=('GPL-2.0-or-later')
+depends=('kcolorscheme'
+	'kcompletion'
+	'kconfig'
+	'kconfigwidgets'
+	'kcoreaddons'
+	'kcrash'
+	'kdbusaddons'
+	'kfilemetadata'
+	'ki18n'
+	'kio'
+	'kjobwidgets'
+	'kparts'
+	'kpty'
+	'kservice'
+	'kwidgetsaddons'
+	'kwindowsystem'
+	'kxmlgui'
+	'libarchive'
+	'libzip'
+	'qt6-base'
+	'sh'
+	'zlib')
+makedepends=('git' 'extra-cmake-modules' 'kdoctools')
 optdepends=('p7zip: 7Z format support'
 	'unrar: RAR decompression support'
 	'unarchiver: RAR format support'

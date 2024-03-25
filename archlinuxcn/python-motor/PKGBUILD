@@ -3,11 +3,11 @@
 _pkgname=motor
 pkgname=python-motor
 pkgver=3.3.2
-pkgrel=1
+pkgrel=2
 pkgdesc='The async Python driver for MongoDB and Tornado or asyncio'
 arch=('any')
 url='https://github.com/mongodb/motor'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
   python-pymongo
 )

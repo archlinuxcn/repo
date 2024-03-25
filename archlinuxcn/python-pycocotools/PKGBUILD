@@ -3,12 +3,13 @@
 pkgname=python-pycocotools
 _pkgname=pycocotools
 pkgver=2.0.7
-pkgrel=1
+pkgrel=2
 pkgdesc='Official APIs for the MS-COCO dataset'
 arch=(x86_64)
 url='https://pypi.org/project/pycocotools'
-license=(BSD)
+license=('BSD-2-Clause')
 depends=(
+  glibc
   python-matplotlib
   python-numpy
 )

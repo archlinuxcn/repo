@@ -6,11 +6,11 @@ pkgver=3.17.0
 pkgrel=2
 pkgdesc="A Vim-inspired note-taking application, especially for Markdown."
 arch=(x86_64 i686 armv7h aarch64)
-url="https://vnotex.github.io/vnote/en_us/"
-license=(LGPL3)
+url="https://vnotex.github.io/${pkgname}/en_us/"
+license=('LGPL-3.0-or-later')
 depends=(qt5-webengine qt5-svg qt5-x11extras)
 makedepends=(git)
-source=("git+https://github.com/vnotex/vnote.git#tag=v${pkgver}"
+source=("git+https://github.com/vnotex/${pkgname}.git#tag=v${pkgver}"
         "vnotex-vtextedit::git+https://github.com/vnotex/vtextedit"
         "vnotex-QHotkey::git+https://github.com/vnotex/QHotkey.git"
         "vnotex-syntax-highlighting::git+https://github.com/vnotex/syntax-highlighting"
@@ -24,8 +24,7 @@ sha256sums=('SKIP'
             'SKIP')
 
 prepare() {
-  cd "${pkgname}"
-
+  cd "${pkgname}/"
   install -d build
 
   git submodule init
@@ -43,11 +42,11 @@ prepare() {
 
 build() {
   cd "${pkgname}/build"
-  qmake-qt5 ../vnote.pro
+  qmake-qt5 "../${pkgname}.pro"
   make
 }
 
 package() {
   cd "${pkgname}/build"
-  make INSTALL_ROOT="$pkgdir" install
+  make INSTALL_ROOT="${pkgdir}" install
 }

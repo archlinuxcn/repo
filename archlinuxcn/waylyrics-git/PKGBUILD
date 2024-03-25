@@ -3,9 +3,9 @@
 pkgname=waylyrics-git
 _pkgname=waylyrics
 _appname="io.poly000.${_pkgname}"
-pkgver=0.1.0_r464.g11055b0c
+pkgver=0.2.13_r3.g28b25298
 pkgrel=2
-pkgdesc="general desktop lyrics with QQMusic/NetEase Cloud Music source"
+pkgdesc="the furry way to show desktop lyrics (git version)"
 url="https://github.com/waylyrics/waylyrics"
 conflicts=('waylyrics')
 provides=('waylyrics')
@@ -15,9 +15,14 @@ depends=('openssl' 'hicolor-icon-theme'
     # base
     'dbus' 'gcc-libs' 'glibc'
     # gtk4
-    'glib2' 'cairo' 'dconf' 'gtk4')
-makedepends=('rust' 'git' 'jq' 'mimalloc')
-optdepends=()
+    'glib2' 'cairo' 'dconf' 'gtk4'
+    # restart task
+    'sh'
+    # i18n
+    'gettext'
+    'mimalloc')
+makedepends=('rust' 'git' 'jq')
+optdepends=('breeze-icons: better tray-icon icons')
 
 source=("git+${url}.git")
 
@@ -27,20 +32,18 @@ options=('!lto')
 
 prepare() {
     cd "${_pkgname}"
+
     export RUSTUP_TOOLCHAIN=stable
-
-    if which rustup
-    then rustup update stable
-    fi
-
     cargo fetch --locked --target ${CARCH}-unknown-linux-gnu
 }
 
 pkgver() {
     cd "${_pkgname}"
+
     export RUSTUP_TOOLCHAIN=stable
-    semver=$(cargo metadata --no-deps --format-version=1 | jq -r '.packages | .[0] | .version')
-    echo "${semver}_r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+    semver=$( cargo metadata --no-deps --format-version=1 |
+        jq -r '.packages | .[0] | .version' )
+    echo "${semver}_r$(git rev-list --count v${semver}..HEAD).g$(git rev-parse --short HEAD)"
 }
 
 build() {
@@ -52,7 +55,18 @@ build() {
     # template files
     export WAYLYRICS_THEME_PRESETS_DIR="/usr/share/${_pkgname}/themes"
 
-    cargo build --frozen --release
+    cargo build --frozen --release --all-targets
+}
+
+
+check() {
+    cd "${_pkgname}"
+
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    export WAYLYRICS_THEME_PRESETS_DIR="/usr/share/${_pkgname}/themes"
+    
+    cargo test --frozen --release
 }
 
 package() {
@@ -66,6 +80,16 @@ package() {
     install -vdm755 "${pkgdir}/usr/share/${_pkgname}/themes"
     cp -arv themes/* "${pkgdir}/usr/share/${_pkgname}/themes/"
     cp -arv res/* "${pkgdir}/usr/share/"
+    
+    # Locale files
+    (
+        cd locales
+        for po in $(find . -type f -name '*.po')
+        do
+            mkdir -p "${pkgdir}/usr/share/locale/${po#/*}" 
+            msgfmt -o "${pkgdir}/usr/share/locale/${po%.po}.mo" ${po}
+        done
+    )
 
     # License
     install -vDm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"

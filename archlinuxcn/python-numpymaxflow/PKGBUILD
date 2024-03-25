@@ -3,12 +3,14 @@
 _pkgname=numpymaxflow
 pkgname=python-numpymaxflow
 pkgver=0.0.6
-pkgrel=1
+pkgrel=2
 pkgdesc='Numpy-based implementation of Max-flow/Min-cut (graphcut) for 2D/3D data'
 arch=('x86_64')
 url='https://github.com/masadcv/numpymaxflow'
-license=('BSD')
+license=('BSD-3-Clause')
 depends=(
+  gcc-libs
+  glibc
   python-numpy
 )
 makedepends=(

@@ -1,0 +1,22 @@
+#!/hint/bash
+
+_verlte() { printf '%s\n' "$1" "$2" | sort -C -V; }
+_verlt() { ! _verlte "$2" "$1"; }
+
+_ln() { rm -rf "$2" && ln -sf "$1" "$2"; }
+
+_setup_env()
+{
+	export PATH="${srcdir}/flutter/bin:$PATH"
+	export FLUTTER_ENGINE="${srcdir}/flutter-engine"
+	
+	if [[ ! -v _engine_version ]]; then
+		_engine_version="$(git -C "${FLUTTER_ENGINE}" describe --tags)"
+	fi
+	
+	if [[ -n "$_engine_version" ]] && _verlt "$_engine_version" '3.16.0'; then
+		export ARCH_FLUTTER_OPTS='--local-engine=arch_release --no-version-check --suppress-analytics'
+	else
+		export ARCH_FLUTTER_OPTS='--local-engine=arch_release --local-engine-host=arch_release --no-version-check --suppress-analytics'
+	fi
+}

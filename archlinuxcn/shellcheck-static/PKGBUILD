@@ -4,18 +4,18 @@
 
 _hkgname=ShellCheck
 pkgname=shellcheck-static
-pkgver=0.9.0
+pkgver=0.10.0
 pkgrel=1
 pkgdesc="Shell script analysis tool (static version not depending on GHC libraries)"
 url="https://www.shellcheck.net"
-license=("GPL")
+license=("GPL-3.0-or-later")
 arch=('x86_64')
 depends=('gmp')
 makedepends=('curl' 'pandoc')
 provides=("shellcheck=$pkgver")
 conflicts=(shellcheck)
 source=("$_hkgname-$pkgver.tar.gz::https://github.com/koalaman/shellcheck/archive/v$pkgver.tar.gz")
-sha512sums=('5931842b3b496c2a73db2576e89eede042a30e14dd98dec8fa36d58243acd1143a35645dd973f8c24f189ce760c746efd3d527209c2f9f1d044af372f2b9afea')
+sha512sums=('5677ad24602f666bb83358947b740a25fb80afbb991e5fc8436dfa8e970b1e6a828cf7d53fcd24f855764437c6799e194989467a2931e21165d43bc474d57061')
 
 build() {
     cd shellcheck-$pkgver
@@ -26,6 +26,8 @@ build() {
     source ~/.ghcup/env
     ghcup install stack latest
     # stack upgrade
+    # -Wl,-z,pack-relative-relocs is not supported by ld.gold
+    export LDFLAGS="-Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now"
     stack build --ghc-options="-j$(nproc)"
     ./manpage
 }

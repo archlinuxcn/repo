@@ -72,7 +72,7 @@ _per_gov=${_per_gov-}
 _tcp_bbr3=${_tcp_bbr3-y}
 
 ### Running with a 1000HZ, 750Hz, 600 Hz, 500Hz, 300Hz, 250Hz and 100Hz tick rate
-_HZ_ticks=${_HZ_ticks-500}
+_HZ_ticks=${_HZ_ticks-1000}
 
 ## Choose between perodic, idle or full
 ### Full tickless can give higher performances in various cases but, depending on hardware, lower consistency.
@@ -106,9 +106,6 @@ _hugepage=${_hugepage-always}
 ## Enable DAMON
 _damon=${_damon-}
 
-## Enable Linux Random Number Generator
-_lrng_enable=${_lrng_enable-}
-
 # CPU compiler optimizations - Defaults to prompt at kernel config if left empty
 # AMD CPUs : "k8" "k8sse3" "k10" "barcelona" "bobcat" "jaguar" "bulldozer" "piledriver" "steamroller" "excavator" "zen" "zen2" "zen3" "zen4"
 # Intel CPUs : "mpsc"(P4 & older Netburst based Xeon) "atom" "core2" "nehalem" "westmere" "silvermont" "sandybridge" "ivybridge" "haswell" "broadwell" "skylake" "skylakex" "cannonlake" "icelake" "goldmont" "goldmontplus" "cascadelake" "cooperlake" "tigerlake" "sapphirerapids" "rocketlake" "alderlake"
@@ -122,9 +119,6 @@ _processor_opt=${_processor_opt-}
 
 _use_auto_optimization=${_use_auto_optimization-y}
 
-# disable debug to lower the size of the kernel
-_disable_debug=${_disable_debug-}
-
 # Clang LTO mode, only available with the "llvm" compiler - options are "none", "full" or "thin".
 # ATTENTION - one of three predefined values should be selected!
 # "full: uses 1 thread for Linking, slow and uses more memory, theoretically with the highest performance gains."
@@ -134,7 +128,8 @@ _use_llvm_lto=${_use_llvm_lto-none}
 
 # Use suffix -lto only when requested by the user
 # Enabled by default.
-# If you do not want the suffix -lto remove the "y" sign next to the flag.
+# y - enable -lto suffix
+# n - disable -lto suffix
 # https://github.com/CachyOS/linux-cachyos/issues/36
 _use_lto_suffix=${_use_lto_suffix-y}
 
@@ -143,7 +138,6 @@ _use_lto_suffix=${_use_lto_suffix-y}
 # scheme used by CONFIG_CFI_CLANG. kCFI doesn't require LTO, doesn't
 # alter function references to point to a jump table, and won't break
 # function address equality.
-# ATTENTION!: kCFI is only available in llvm 16
 _use_kcfi=${_use_kcfi-}
 
 # Build the zfs module in to the kernel
@@ -155,31 +149,31 @@ _build_zfs=${_build_zfs-}
 # This does replace the requirement of nvidia-dkms
 _build_nvidia=${_build_nvidia-}
 
-if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] && [ -n "$_use_lto_suffix" ]; then
+if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] && [ "$_use_lto_suffix" = "y"  ]; then
     pkgsuffix=cachyos-lto
     pkgbase=linux-$pkgsuffix
 
-else
+elif [ -n "$_use_llvm_lto" ]  ||  [[ "$_use_lto_suffix" = "n" ]]; then
     pkgsuffix=cachyos
     pkgbase=linux-$pkgsuffix
 fi
-_major=6.7
-_minor=0
+_major=6.8
+_minor=1
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
-#_stable=${_major}.${_minor}
-_stable=${_major}
+_stable=${_major}.${_minor}
+#_stable=${_major}
 #_stablerc=${_major}-${_rcver}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
-pkgdesc='Linux EEVDF-BORE scheduler Kernel by CachyOS with other patches and improvements'
+pkgdesc='Linux SCHED-EXT + Cachy Sauce Kernel by CachyOS with other patches and improvements'
 pkgrel=3
 _kernver=$pkgver-$pkgrel
 arch=('x86_64' 'x86_64_v3')
 url="https://github.com/CachyOS/linux-cachyos"
-license=('GPL2')
-options=('!strip')
+license=('GPL-2.0-only')
+options=('!strip' '!debug')
 makedepends=('bc' 'libelf' 'pahole' 'cpio' 'perl' 'tar' 'xz' 'zstd' 'gcc' 'gcc-libs' 'glibc' 'binutils' 'make' 'patch' 'python')
 # LLVM makedepends
 if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] || [ -n "$_use_kcfi" ]; then
@@ -192,12 +186,12 @@ if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] || [ -n "$_use_k
     )
 fi
 
-if [ "$_cpusched" = "sched-ext" ]; then
+if [[ "$_cpusched" = "sched-ext" || "$_cpusched" = "cachyos" ]]; then
     depends+=(scx-scheds)
 fi
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=545.29.06
+_nv_ver=550.67
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 source=(
     "https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.xz"
@@ -213,19 +207,19 @@ fi
 # ZFS support
 if [ -n "$_build_zfs" ]; then
     makedepends+=(git)
-    source+=("git+https://github.com/cachyos/zfs.git#commit=2d940c7c29a0ba5f84f50ea9773dea237e27bb08")
+    source+=("git+https://github.com/cachyos/zfs.git#commit=6a58cf0ba7a3db11a5acf041cc503e8b7afb0b56")
 fi
 
 # NVIDIA pre-build module support
 if [ -n "$_build_nvidia" ]; then
     source+=("https://us.download.nvidia.com/XFree86/Linux-x86_64/${_nv_ver}/${_nv_pkg}.run"
-             "$_patchsource/misc/nvidia/nvidia-drm-hotplug-workqueue.patch")
+             "${_patchsource}/misc/nvidia/0001-NVIDIA-take-modeset-ownership-early.patch")
 fi
 
-## ToDo: Adjust for new Scheduler Changes
+## List of CachyOS schedulers
 case "$_cpusched" in
-    cachyos) # CachyOS Scheduler (EEVDF + BORE)
-        source+=("${_patchsource}/sched/0001-bore-cachy.patch");;
+    cachyos|sched-ext) ## SCHED-EXT
+        source+=("${_patchsource}/sched/0001-sched-ext.patch");;
     bore) ## BORE Scheduler
         source+=("${_patchsource}/sched/0001-bore-cachy.patch");;
     rt) ## EEVDF with RT patches
@@ -238,15 +232,7 @@ case "$_cpusched" in
     hardened) ## Hardened Patches with BORE Scheduler
         source+=("${_patchsource}/sched/0001-bore-cachy.patch"
                  "${_patchsource}/misc/0001-hardened.patch");;
-    sched-ext) ## Sched-ext with BORE
-        source+=("${_patchsource}/sched/0001-sched-ext.patch"
-                 "${_patchsource}/sched/0001-bore-cachy.patch");;
 esac
-
-## lrng patchset
-if [ -n "$_lrng_enable" ]; then
-    source+=("${_patchsource}/misc/0001-lrng.patch")
-fi
 
 export KBUILD_BUILD_HOST=cachyos
 export KBUILD_BUILD_USER=$pkgbase
@@ -267,7 +253,7 @@ prepare() {
         src="${src%%::*}"
         src="${src##*/}"
         src="${src%.zst}"
-        [[ $src = nvidia-drm-hotplug-workqueue.patch ]] && continue
+        [[ $src = 0001-NVIDIA-take-modeset-ownership-early.patch ]] && continue
         [[ $src = *.patch ]] || continue
         echo "Applying patch $src..."
         patch -Np1 < "../$src"
@@ -299,11 +285,11 @@ prepare() {
     [ -z "$_cpusched" ] && _die "The value is empty. Choose the correct one again."
 
     case "$_cpusched" in
-        bore|hardened|cachyos) scripts/config -e SCHED_BORE;;
+        cachyos|sched-ext) scripts/config -e SCHED_CLASS_EXT;;
+        bore|hardened) scripts/config -e SCHED_BORE;;
         eevdf) ;;
         rt) scripts/config -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -d PREEMPT_DYNAMIC -d PREEMPT_BUILD;;
         rt-bore) scripts/config -e SCHED_BORE -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -d PREEMPT_DYNAMIC -d PREEMPT_BUILD;;
-        sched-ext) scripts/config -e SCHED_BORE -e SCHED_CLASS_EXT;;
         *) _die "The value $_cpusched is invalid. Choose the correct one again.";;
     esac
 
@@ -477,100 +463,6 @@ prepare() {
             -e DAMON_LRU_SORT
     fi
 
-    ### Enable LRNG
-    if [ -n "$_lrng_enable" ]; then
-        echo "Enabling Linux Random Number Generator ..."
-        scripts/config -d RANDOM_DEFAULT_IMPL \
-            -e LRNG \
-            -e LRNG_SHA256 \
-            -e LRNG_COMMON_DEV_IF \
-            -e LRNG_DRNG_ATOMIC \
-            -e LRNG_SYSCTL \
-            -e LRNG_RANDOM_IF \
-            -e LRNG_AIS2031_NTG1_SEEDING_STRATEGY \
-            -m LRNG_KCAPI_IF \
-            -m LRNG_HWRAND_IF \
-            -e LRNG_DEV_IF \
-            -e LRNG_RUNTIME_ES_CONFIG \
-            -e LRNG_IRQ_DFLT_TIMER_ES \
-            -d LRNG_SCHED_DFLT_TIMER_ES \
-            -e LRNG_TIMER_COMMON \
-            -d LRNG_COLLECTION_SIZE_256 \
-            -d LRNG_COLLECTION_SIZE_512 \
-            -e LRNG_COLLECTION_SIZE_1024 \
-            -d LRNG_COLLECTION_SIZE_2048 \
-            -d LRNG_COLLECTION_SIZE_4096 \
-            -d LRNG_COLLECTION_SIZE_8192 \
-            --set-val LRNG_COLLECTION_SIZE 1024 \
-            -e LRNG_HEALTH_TESTS \
-            --set-val LRNG_RCT_CUTOFF 31 \
-            --set-val LRNG_APT_CUTOFF 325 \
-            -e LRNG_IRQ \
-            -e LRNG_CONTINUOUS_COMPRESSION_ENABLED \
-            -d LRNG_CONTINUOUS_COMPRESSION_DISABLED \
-            -e LRNG_ENABLE_CONTINUOUS_COMPRESSION \
-            -e LRNG_SWITCHABLE_CONTINUOUS_COMPRESSION \
-            --set-val LRNG_IRQ_ENTROPY_RATE 256 \
-            -e LRNG_JENT \
-            --set-val LRNG_JENT_ENTROPY_RATE 16 \
-            -e LRNG_CPU \
-            --set-val LRNG_CPU_FULL_ENT_MULTIPLIER 1 \
-            --set-val LRNG_CPU_ENTROPY_RATE 8 \
-            -e LRNG_SCHED \
-            --set-val LRNG_SCHED_ENTROPY_RATE 4294967295 \
-            -e LRNG_DRNG_CHACHA20 \
-            -m LRNG_DRBG \
-            -m LRNG_DRNG_KCAPI \
-            -e LRNG_SWITCH \
-            -e LRNG_SWITCH_HASH \
-            -m LRNG_HASH_KCAPI \
-            -e LRNG_SWITCH_DRNG \
-            -m LRNG_SWITCH_DRBG \
-            -m LRNG_SWITCH_DRNG_KCAPI \
-            -e LRNG_DFLT_DRNG_CHACHA20 \
-            -d LRNG_DFLT_DRNG_DRBG \
-            -d LRNG_DFLT_DRNG_KCAPI \
-            -e LRNG_TESTING_MENU \
-            -d LRNG_RAW_HIRES_ENTROPY \
-            -d LRNG_RAW_JIFFIES_ENTROPY \
-            -d LRNG_RAW_IRQ_ENTROPY \
-            -d LRNG_RAW_RETIP_ENTROPY \
-            -d LRNG_RAW_REGS_ENTROPY \
-            -d LRNG_RAW_ARRAY \
-            -d LRNG_IRQ_PERF \
-            -d LRNG_RAW_SCHED_HIRES_ENTROPY \
-            -d LRNG_RAW_SCHED_PID_ENTROPY \
-            -d LRNG_RAW_SCHED_START_TIME_ENTROPY \
-            -d LRNG_RAW_SCHED_NVCSW_ENTROPY \
-            -d LRNG_SCHED_PERF \
-            -d LRNG_ACVT_HASH \
-            -d LRNG_RUNTIME_MAX_WO_RESEED_CONFIG \
-            -d LRNG_TEST_CPU_ES_COMPRESSION \
-            -e LRNG_SELFTEST \
-            -d LRNG_SELFTEST_PANIC \
-            -d LRNG_RUNTIME_FORCE_SEEDING_DISABLE
-    fi
-
-    ### Disable DEBUG
-    # Doesn't work with sched-ext
-    # More infos here: https://github.com/CachyOS/linux-cachyos/issues/187
-    if [[ "$_cpusched" != "sched-ext" &&  -n "$_disable_debug" ]]; then
-        scripts/config -d DEBUG_INFO \
-            -d DEBUG_INFO_BTF \
-            -d DEBUG_INFO_DWARF4 \
-            -d DEBUG_INFO_DWARF5 \
-            -d PAHOLE_HAS_SPLIT_BTF \
-            -d DEBUG_INFO_BTF_MODULES \
-            -d SLUB_DEBUG \
-            -d PM_DEBUG \
-            -d PM_ADVANCED_DEBUG \
-            -d PM_SLEEP_DEBUG \
-            -d ACPI_DEBUG \
-            -d SCHED_DEBUG \
-            -d LATENCYTOP \
-            -d DEBUG_PREEMPT
-    fi
-
     echo "Enable USER_NS_UNPRIVILEGED"
     scripts/config -e USER_NS
 
@@ -632,15 +524,15 @@ prepare() {
         cd "${srcdir}"
         sh "${_nv_pkg}.run" --extract-only
 
-        # Temporary fix for fbdev=1
-        # https://forums.developer.nvidia.com/t/545-29-06-18-1-flip-event-timeout-error-on-startup-shutdown-and-sometimes-suspend-wayland-unusable/274788/21
-        patch -Np0 -i "${srcdir}/nvidia-drm-hotplug-workqueue.patch" -d "${srcdir}/${_nv_pkg}"
+        # Temporary fix for nvidia module
+        patch -Np2 --no-backup-if-mismatch -i "${srcdir}/0001-NVIDIA-take-modeset-ownership-early.patch" -d "${srcdir}/${_nv_pkg}/kernel"
     fi
 }
 
 build() {
     cd ${srcdir}/${_srcname}
     make ${BUILD_FLAGS[*]} -j$(nproc) all
+    make -C tools/bpf/bpftool vmlinux.h feature-clang-bpf-co-re=1
 
     if [ -n "$_build_nvidia" ]; then
         cd "${srcdir}/${_nv_pkg}/kernel"
@@ -709,7 +601,7 @@ _package-headers() {
 
     echo "Installing build files..."
     install -Dt "$builddir" -m644 .config Makefile Module.symvers System.map \
-        localversion.* version vmlinux
+        localversion.* version vmlinux tools/bpf/bpftool/vmlinux.h
     install -Dt "$builddir/kernel" -m644 kernel/Makefile
     install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
     cp -t "$builddir" -a scripts
@@ -819,8 +711,8 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('cecdbd19905e43e485ab73b352ced18b37f2a138c97a6956cadcda5d3d271001117dc1cf896b166ff019fc7f405f9539e2ed0d6112b0890efb04d182adf4fd0e'
-        'da55af914e4d3e694009d534e89c8b73b23c174662a4bab6857b3e6ad51bb03a8d9ea7439e2dca2329fbeccbc6894e52ad90538649471e5b24328ecef7485575'
+b2sums=('2b518f8f39b4dcea1c580cb0664d59c165db989422fd6fd6b65d3dd1e4548bc6e0cedfc95c2584ae56f69ac1a1d3de6552ee61e77b08799a5275934a453ab929'
+        '8178cdd3224ca5b7ef9e971fdb403b57d4f4e44d3b9de31cf118bc1b195cf5d376b424cd5a5013c10182116b9ed18d09b893633ccf2486454d60bcced32149a0'
         '43ef7a347878592740d9eb23b40a56083fa747f7700fa1e2c6d039d660c0b876d99bf1a3160e15d041fb13d45906cdb5defef034d4d0ae429911864239c94d8d'
-        'eb1c88690fbe64dc0ef8f61bfb6f5aa83c82babee21dc66a423c6c471710cd944438f87a5f7b26e6643ab0e2f36fe8202db6e6ec651161e0d06d60064e638fac'
-        '784371c03cce8d01eff2b94d55d084f73deedbad8724dba394c7a5b354d338f31c3114e16937afcaf40ec3e39608e0a905c4724c910bc85195a0fb985f62a626')
+        '5a02cc06ec593f62c497445058bf9d4aeb13b5ab11a56f72712ddc6a5457a3e9fcab9e3fbc1b4e30bca39b846b3969dc3e97e90bfd1f7be5ec8356de89faee00'
+        '76b2dd6cf11ec1a8281556106b4458885e603e307c26f706b06dcdd8f8766ff045ae404a8cb197ac1d0ecd1bcdfef3d81a9ee492c371d0aaea4b8048cae6d384')

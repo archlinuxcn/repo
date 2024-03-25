@@ -3,21 +3,24 @@
 _pkgname=mmpose
 pkgname=python-mmpose
 pkgver=1.3.1
-pkgrel=1
+pkgrel=2
 pkgdesc='OpenMMLab Pose Estimation Toolbox and Benchmark'
 arch=('any')
 url='https://github.com/open-mmlab/mmpose'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
   python-chumpy
   python-json-tricks
   python-matplotlib
   python-mmcv
+  python-mmengine
   python-munkres
   python-numpy
   python-opencv
   python-pillow
   python-pytorch
+  python-scipy
+  python-six
   python-torchvision
   python-xcocotools
 )

@@ -1,0 +1,24 @@
+From c03cfb4b154370cfd670aad2c0783f59abebc931 Mon Sep 17 00:00:00 2001
+From: Butui Hu <hot123tea123@gmail.com>
+Date: Sun, 3 Mar 2024 22:24:24 +0800
+Subject: [PATCH] fix building torch extension with glog
+
+---
+ setup.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/setup.py b/setup.py
+index b90d9d09..2c2a44f2 100644
+--- a/setup.py
++++ b/setup.py
+@@ -109,6 +109,7 @@ def get_extensions():
+     if extension is None or not sources:
+         return []  # compile nothing
+ 
++    define_macros += [("GLOG_USE_GLOG_EXPORT", None)]
+     ext_modules = [
+         extension(
+             name="monai._C",
+-- 
+2.44.0
+

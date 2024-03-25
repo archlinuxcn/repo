@@ -4,6 +4,9 @@ maintainers:
 pre_build_script: |
     update_pkgver_and_pkgrel(_G.newver)
 
+# for python-scikit-build-core
+build_prefix: archlinuxcn-aarch64
+
 post_build: git_pkgbuild_commit
 
 update_on:
@@ -11,5 +14,5 @@ update_on:
     github: lief-project/LIEF
     use_max_tag: true
   - source: manual
-    manual: 1
+    manual: 2
   - alias: python

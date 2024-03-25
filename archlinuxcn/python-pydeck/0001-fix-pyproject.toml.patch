@@ -1,0 +1,24 @@
+From b35d84df74af6076a91538470d0687864eb95c79 Mon Sep 17 00:00:00 2001
+From: Butui Hu <hot123tea123@gmail.com>
+Date: Sat, 23 Mar 2024 23:13:33 +0800
+Subject: [PATCH] fix pyproject.toml
+
+---
+ pyproject.toml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index fc6ff22..70592d7 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -2,6 +2,7 @@
+ name = "pydeck"
+ version = "0.8.0b4"
+ requires-python = ">=3.7"
++dynamic = ["description", "readme", "license", "authors", "keywords", "classifiers", "dependencies", "optional-dependencies"]
+ 
+ [build-system]
+ requires = [
+-- 
+2.44.0
+

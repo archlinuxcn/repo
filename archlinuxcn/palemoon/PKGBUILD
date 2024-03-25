@@ -6,9 +6,9 @@
 pkgname=palemoon
 _repo=Pale-Moon
 epoch=1
-pkgver=33.0.0
+pkgver=33.0.1
 # Commit ID can be found at https://repo.palemoon.org/MoonchildProductions/Pale-Moon/tags
-_commit=637e1ceec2
+_commit=d2b24ace7a
 pkgrel=1
 pkgdesc="Open source web browser based on Firefox focusing on efficiency."
 arch=('i686' 'x86_64')
@@ -43,6 +43,8 @@ prepare() {
 build() {
   cd ${_repo}
 
+  # Remove option not supported by ld.gold to prevent configure failure
+  export LDFLAGS="${LDFLAGS/-Wl,-z,pack-relative-relocs/}"
   export MOZBUILD_STATE_PATH="${srcdir}/mozbuild"
   export MOZCONFIG="${srcdir}/mozconfig"
   export CPPFLAGS="${CPPFLAGS} -O2 -Wno-format-overflow"

@@ -1,0 +1,18 @@
+pkgname=julia-git-automa-src
+pkgver=1.0.3
+_commit=cfaa5294326b342428a051399a360b99322ce4cc
+pkgrel=1
+pkgdesc="Automa.jl"
+url="https://github.com/BioJulia/Automa.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/BioJulia/Automa.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Automa.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Automa "${pkgdir}" "${pkgname}" julia-git
+}

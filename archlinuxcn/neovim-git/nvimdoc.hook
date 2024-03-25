@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Type = Path
+Target = usr/share/nvim/site/pack/dist/start/*/doc/
+
+[Action]
+Description = Updating Neovim help tags...
+Exec = /usr/share/libalpm/scripts/nvimdoc
+When = PostTransaction

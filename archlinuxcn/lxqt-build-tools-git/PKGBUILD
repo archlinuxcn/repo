@@ -2,21 +2,22 @@
 
 _pkgname=lxqt-build-tools
 pkgname=$_pkgname-git
-pkgver=0.13.0
+pkgver=0.13.0.r4.g91db61d
 pkgrel=1
 pkgdesc='Tools to build LXQt and components maintained by the project.'
 arch=('any')
-url='https://github.com/lxde/lxqt-build-tools'
+url='https://github.com/lxqt/lxqt-build-tools'
 license=('BSD')
-makedepends=('git' 'cmake' 'qt5-base')
+makedepends=('git' 'qt6-base')
+depends=('cmake')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
-source=("git+https://github.com/lxde/lxqt-build-tools.git")
+source=("git+${url}.git")
 sha256sums=("SKIP")
 
 pkgver() {
   cd "$_pkgname"
-  git describe --always | sed "s/-/./g"
+  git describe --always | sed 's/-/.r/;s/-/./'
 }
 
 build() {

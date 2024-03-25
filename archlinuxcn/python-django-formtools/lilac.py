@@ -1,4 +1,4 @@
 from lilaclib import *
 
 def pre_build():
-  pypi_pre_build(depends = ['python-django', 'python-setuptools-scm'], depends_setuptools = False)
+  update_pkgver_and_pkgrel(_G.newver.lstrip("v"))
