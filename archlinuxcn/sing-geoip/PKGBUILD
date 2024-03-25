@@ -3,7 +3,7 @@
 pkgbase=sing-geoip
 pkgname=(sing-geoip-rule-set sing-geoip-db)
 pkgver=20240312
-pkgrel=3
+pkgrel=4
 pkgdesc="GeoIP Database and Rule Set for sing-box"
 arch=(any)
 url="https://github.com/SagerNet/$pkgbase"
@@ -11,19 +11,11 @@ license=(CC-BY-SA-4.0 GPL-3.0-or-later)
 
 makedepends=(git)
 
-source=("geoip.db::$url/releases/download/$pkgver/geoip.db")
-sha256sums=('77879a4239ed28a9835e7db1d7f55dd3f9540904714125cb39cc3425e61b7fd4')
-
 prepare() {
-  git clone --depth 1 --branch rule-set $url
-}
-
-package_sing-geoip-rule-set() {
-  pkgdesc="sing-geoip (rule-set)"
-  provides=($pkgbase)
-
-  install -dm755 "$pkgdir/usr/share/sing-box/$pkgname"
-  install -Dm644 $pkgbase/*.srs "$pkgdir/usr/share/sing-box/$pkgname"
+  mkdir release
+  mkdir rule-set
+  git clone --depth 1 --branch release $url release
+  git clone --depth 1 --branch rule-set $url rule-set
 }
 
 package_sing-geoip-db() {
@@ -31,5 +23,13 @@ package_sing-geoip-db() {
   provides=($pkgbase)
 
   install -dm755 "$pkgdir/usr/share/sing-box"
-  install -Dm644 geoip.db "$pkgdir/usr/share/sing-box"
+  install -Dm644 release/geoip.db "$pkgdir/usr/share/sing-box"
+}
+
+package_sing-geoip-rule-set() {
+  pkgdesc="sing-geoip (rule-set)"
+  provides=($pkgbase)
+
+  install -dm755 "$pkgdir/usr/share/sing-box/$pkgname"
+  install -Dm644 rule-set/geoip-*.srs "$pkgdir/usr/share/sing-box/$pkgname"
 }
