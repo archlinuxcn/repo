@@ -36,8 +36,7 @@ sha512sums=('12684a222e06d0abbab03f6196021c262416ca9ed48526dd5343432a314c2615866
 prepare() {
   cd $_archive
   export RUSTUP_TOOLCHAIN=stable
-  cargo update
-  cargo fetch --target "$CARCH-unknown-linux-gnu"
+  cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
 
 build() {
