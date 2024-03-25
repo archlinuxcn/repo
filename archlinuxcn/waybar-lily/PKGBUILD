@@ -47,7 +47,6 @@ build() {
     cd "Waybar-$pkgver"
     meson setup --prefix=/usr \
           --buildtype=plain \
-          --auto-features=enabled \
           --wrap-mode=nodownload \
           -Dcpp_std=c++20 \
           -Dexperimental=true \
