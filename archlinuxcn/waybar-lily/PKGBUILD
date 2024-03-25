@@ -10,28 +10,29 @@ arch=('x86_64')
 url="https://github.com/Alexays/Waybar/"
 license=('MIT')
 depends=(
-    'gtkmm3'
-    'libjsoncpp.so'
-    'libsigc++'
     'fmt'
-    'wayland'
-    'libdate-tz.so'
-    'libspdlog.so'
     'gtk-layer-shell'
-    'libpulse'
-    'libnl'
+    'gtkmm3'
+    'libdate-tz.so'
     'libdbusmenu-gtk3'
+    'libjsoncpp.so'
+    'libnl'
+    'libpulse'
+    'libsigc++'
+    'libspdlog.so'
     'libxkbcommon'
+    'wayland'
 )
 makedepends=(
-    'cmake'
     'catch2'
+    'cmake'
     'meson'
+    'python-packaging' # gdbus-codegen
     'scdoc' # For generating manpages
     'wayland-protocols'
 )
 backup=(
-    etc/xdg/waybar/config
+    etc/xdg/waybar/config.jsonc
     etc/xdg/waybar/style.css
 )
 optdepends=(
@@ -44,19 +45,20 @@ conflicts=(waybar)
 
 build() {
     cd "Waybar-$pkgver"
-    # TODO tests depend on catch2 v3
     meson setup --prefix=/usr \
           --buildtype=plain \
+          --auto-features=enabled \
           --wrap-mode=nodownload \
+          -Dcpp_std=c++20 \
           -Dexperimental=true \
           -Dcava=disabled \
           -Dtests=disabled \
           build
-    ninja -C build
+    meson compile -C build
 }
 
 package() {
     cd "Waybar-$pkgver"
-    DESTDIR="$pkgdir" ninja -C build install
+    meson install -C build --destdir "$pkgdir"
     install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
 }
