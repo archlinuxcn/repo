@@ -1,6 +1,6 @@
 # Maintainer: Alynx Zhou <alynx.zhou@gmail.com>
 pkgname=gnome-shell-extension-fixed-ime-list
-pkgver=8
+pkgver=11
 pkgrel=1
 pkgdesc="Make the IME list in fixed sequence instead of MRU."
 arch=('any')
@@ -8,7 +8,7 @@ url="https://github.com/AlynxZhou/gnome-shell-extension-fixed-ime-list"
 license=('GPL')
 depends=('gnome-shell')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha512sums=('d54e2cfbc5c4427f772c7be906b7445eccb3dc83a0414b9b6841eabeb5828f9c4b535ab344b43c549e04f8085f0310fea2ee34cdcb89ce3a9b6f269129421228')
+sha512sums=('697a6c1b2d0e01803acc2b1cd0c605d31122213b5b8e107b5424cf01b4efdeba5effa1988a2d062a583d0bcd4e7786a48a276469d68898ccf858504e525368ab')
 
 package() {
     _uuid="fixedimelist@alynx.one"
@@ -17,4 +17,3 @@ package() {
     cd "${srcdir}/${pkgname}-${pkgver}"
     cp -a * "${pkgdir}/usr/share/gnome-shell/extensions/${_uuid}"
 }
-
