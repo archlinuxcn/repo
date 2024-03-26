@@ -9,7 +9,7 @@ arch=(any)
 url="https://github.com/stormwarning/$pkgname"
 license=(ISC)
 depends=(stylelint)
-makedepends=(git npm)
+makedepends=(git)
 
 prepare() {
   git clone --depth 1 --branch v$pkgver $url
@@ -17,8 +17,8 @@ prepare() {
 
 package() {
   cd $pkgname
-  install -Dm644 -t "$pkgdir"/usr/lib/node_modules/$pkgname {groups,index}.js\
+  install -Dm644 -t "$pkgdir/usr/lib/node_modules/$pkgname" {groups,index}.js\
     package.json
-  install -Dm644 -t "$pkgdir"/usr/share/doc/$pkgname {CHANGELOG,README}.md
-  install -Dm644 -t "$pkgdir"/usr/share/licenses/$pkgname LICENSE.txt
+  install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" {CHANGELOG,README}.md
+  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
 }
