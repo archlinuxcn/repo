@@ -1,0 +1,42 @@
+# Maintainer: Chih-Hsuan Yen <yan12125@gmail.com>
+# Maintainer: Integral <integral@member.fsf.org>
+
+pkgname=apfsprogs-git
+_pkgname=${pkgname%-git}
+pkgver=r348.f9e48ce
+pkgrel=1
+pkgdesc="Experimental APFS tools for linux"
+arch=('x86_64' 'aarch64' 'riscv64')
+license=('GPL-2.0-only')
+url="https://github.com/eafer/${_pkgname}"
+makedepends=('git')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+_progs=('mkapfs' 'apfs-snap' 'apfsck')
+
+pkgver() {
+	cd "${_pkgname}/"
+	(
+		set -o pipefail
+		git describe --long --abbrev=7 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+			printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+	)
+}
+
+build() {
+	cd "${_pkgname}/"
+
+	for prog in "${_progs[@]}"; do
+		make -C "${prog}"
+	done
+}
+
+package() {
+	cd "${_pkgname}/"
+
+	for prog in "${_progs[@]}"; do
+		make DESTDIR="${pkgdir}" BINDIR=/usr/bin MANDIR=/usr/share/man/man8/ -C "${prog}" install
+	done
+}
