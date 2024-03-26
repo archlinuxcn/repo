@@ -17,6 +17,8 @@ url="https://github.com/linux-apfs/${_pkgname}"
 license=('GPL-2.0-only')
 depends=('dkms')
 makedepends=('git')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
 source=("git+${url}.git"
 	"version.patch")
 sha256sums=('SKIP'
