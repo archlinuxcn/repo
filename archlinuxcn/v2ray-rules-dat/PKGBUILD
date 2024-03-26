@@ -1,11 +1,10 @@
 # Maintainer: Zenvie <134689569+Zenvie@users.noreply.github.com>
-# Contributor: Chenrry666 <chengruichen3@gmail.com>
 # Contributor: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=v2ray-rules-dat
 pkgver=202403252209
-pkgrel=1
-pkgdesc="Enhanced edition of V2Ray rules dat files, compatible with Xray and Hysteria."
+pkgrel=2
+pkgdesc="Enhanced edition of V2Ray rules dat files"
 arch=(any)
 url="https://github.com/Loyalsoldier/$pkgname"
 license=(CC-BY-SA-4.0 MIT GPL-3.0-or-later)
@@ -13,27 +12,23 @@ license=(CC-BY-SA-4.0 MIT GPL-3.0-or-later)
 provides=(v2ray-domain-list-community v2ray-geoip)
 conflicts=(v2ray-domain-list-community v2ray-geoip)
 
-makedepends=(git)
-
-source=("LICENSE::https://raw.githubusercontent.com/Loyalsoldier/domain-list-custom/master/LICENSE")
-sha256sums=('35f18e0331a1ecd1835400c50e3b367c2ce09f6c13d91c4a0f3cb11f71d3bbc3')
+source=("$url/releases/download/$pkgver/geoip.dat"
+        "$url/releases/download/$pkgver/geosite.dat"
+        "$url/releases/download/$pkgver/geoip.dat.sha256sum"
+        "$url/releases/download/$pkgver/geosite.dat.sha256sum"
+        "https://raw.githubusercontent.com/Loyalsoldier/domain-list-custom/master/LICENSE")
+sha256sums=('6e0e73e3656b83f0fad9cb61a8f33b6c896e8cb1cb2db1502f0691640680fe88'
+            '61935a9a4e396c6719b994a77631f07b555009f713a245f03ddf8fcfa55e8372'
+            '52475e5dd7f7d7f4f1dd2adf7bc51550d641a138ebe0aaae53585d4e58c3afbb'
+            '69c10f35705f5994c867b7b8a8c81d8db0ced4dccc3f14f3ce8e83eec5c43ace' 
+            '35f18e0331a1ecd1835400c50e3b367c2ce09f6c13d91c4a0f3cb11f71d3bbc3')
 
 prepare() {
-  git clone --depth 1 --branch release $url release
+  sha256sum -c *.dat.sha256sum
 }
 
 package() {  
   install -dm755 "$pkgdir/usr/share/v2ray"
-  install -Dm644 "release/geoip.dat"   "$pkgdir/usr/share/v2ray/geoip.dat"
-  install -Dm644 "release/geosite.dat" "$pkgdir/usr/share/v2ray/geosite.dat"
-
-  install -dm755 "$pkgdir/usr/share/xray"
-  ln -s "/usr/share/v2ray/geoip.dat" "$pkgdir/usr/share/xray/geoip.dat"
-  ln -s "/usr/share/v2ray/geosite.dat" "$pkgdir/usr/share/xray/geosite.dat"
-
-  install -dm755 "$pkgdir/usr/share/hysteria"
-  ln -s "/usr/share/v2ray/geoip.dat" "$pkgdir/usr/share/hysteria/geoip.dat"
-  ln -s "/usr/share/v2ray/geosite.dat" "$pkgdir/usr/share/hysteria/geosite.dat"
-
+  install -Dm644 *.dat "$pkgdir/usr/share/v2ray"
   install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
 }
