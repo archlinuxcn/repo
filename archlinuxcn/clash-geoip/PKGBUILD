@@ -14,5 +14,5 @@ source=("$url/raw/release/country.mmdb")
 sha256sums=('15cd3c51840c1d4849f7933c81e5d35525b5ed980229f6a97af7e4be67126fe7')
 
 package() {
-    install -Dm644 country.mmdb "$pkgdir/etc/clash/country.mmdb"
+  install -Dm644 country.mmdb "$pkgdir/etc/clash/Country.mmdb"
 }
