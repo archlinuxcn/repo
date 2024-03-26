@@ -8,4 +8,5 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if line.strip().startswith('install -Dm644 LICENSE'):
             print('install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"')
-        print(line)
+        else:
+            print(line)
