@@ -4,7 +4,7 @@
 pkgname=clash-meta-alpha-git
 _pkgname=clash-meta
 pkgver=20240326.r0.g0b4662e4
-pkgrel=2
+pkgrel=3
 pkgdesc="Another Clash Kernel (git virsion)"
 arch=(x86_64)
 url="https://github.com/MetaCubeX/mihomo"
@@ -14,17 +14,18 @@ makedepends=(git go)
 provides=(clash-meta clash-meta-alpha)
 conflicts=(clash-meta clash-meta-alpha)
 backup=('etc/clash-meta/config.yaml')
-source=()
-sha256sums=()
+source=("https://raw.githubusercontent.com/MetaCubeX/Meta-Docs/main/docs/example/yaml")
+sha256sums=('25a125934bf524b340ec0bfe9be258f41b3ee55b0b23555f1c83ea3a3e776c4f')
 
 prepare() {
     cd $srcdir
     git clone --depth 1 --branch Alpha $url $pkgname
+    mv yaml $pkgname/config.yaml
 }
 
 pkgver() {
     cd "$srcdir/$pkgname"
-    git log --pretty=format:"%ad.%h" --date=format:"%Y%m%d"
+    TZ=UTC git log --pretty=format:"%cd.%h" --date=format:"%Y%m%d"
 }
 
 build() {
@@ -65,7 +66,7 @@ package() {
     install -Dm755 "$pkgname-$pkgver"      "$pkgdir/usr/bin/clash-meta"
     install -Dm644 "$_pkgname.sysusers"    "$pkgdir/usr/lib/sysusers.d/$_pkgname.conf"
     install -Dm644 "$_pkgname.tmpfiles"    "$pkgdir/usr/lib/tmpfiles.d/$_pkgname.conf"
-    install -Dm644 docs/config.yaml        "$pkgdir/etc/clash-meta/config.yaml"
+    install -Dm644 config.yaml             "$pkgdir/etc/clash-meta/config.yaml"
     install -Dm644 .github/mihomo.service  "$pkgdir/usr/lib/systemd/system/clash-meta.service"
     ln -s          /etc/clash/Country.mmdb "$pkgdir/etc/$_pkgname/Country.mmdb"
 }
