@@ -1,0 +1,96 @@
+# Maintainer: Kiri <kiri@vern.cc>
+# Contributor: Polarian <polarian@polarian.dev>
+
+pkgname=saber
+pkgver=0.21.2
+pkgrel=1
+pkgdesc="The cross-platform notes app built for handwriting"
+arch=('x86_64')
+url="https://github.com/saber-notes/saber"
+license=('GPL-3.0-or-later')
+depends=('at-spi2-core'
+         'bash'
+         'cairo'
+         'fontconfig'
+         'gcc-libs'
+         'glib2'
+         'glibc'
+         'gtk3'
+         'libepoxy'
+         'libsecret'
+         'pango'
+         'hicolor-icon-theme')
+makedepends=('clang'
+             'cmake'
+             'fvm'
+             'ninja'
+             'patchelf')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
+        "0001-Modify-.desktop-for-Arch-Linux.patch"
+        "saber.sh")
+sha256sums=('54fca828a75728faf77ed699a8ca910445e70920fbbaa896c929a6221c164ac3'
+            '93e6e067fefad597117d7f6889df204082898b79dcd29853eaa5c879ab35b2df'
+            'a193df48dcff375178c415b40007c50517c97cc1b148bb0d1ee073042924aa27')
+
+prepare() {
+    cd "${pkgname}-${pkgver}"
+    fvm global stable
+
+    # Disable analytics and enable linux desktop
+    fvm flutter --no-version-check config --no-analytics
+    fvm flutter --no-version-check config --enable-linux-desktop
+
+    # Patch source to allow for better .desktop naming
+    patch -p1 -i "$srcdir/0001-Modify-.desktop-for-Arch-Linux.patch"
+
+    # Pull dependencies within prepare, allowing for offline builds later on
+    fvm flutter --no-version-check pub get
+}
+
+build() {
+    cd "${pkgname}-${pkgver}"
+    fvm flutter --no-version-check build linux --release --prefixed-errors
+
+    # Copy icon to source directory for installing
+    cp assets/icon/resized/icon-512x512.png ./saber.png
+}
+
+package() {
+    # Copy icon to source directory for installing
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    # Build directory for the final executable
+    cd "${srcdir}/${pkgname}-${pkgver}/build/linux/x64/release/bundle"
+
+    # Install application, licence and desktop file (with assets)
+    install -Dm 755 saber "${pkgdir}/usr/share/${pkgname}/saber"
+    install -Dm 644 lib/* -t "${pkgdir}/usr/lib/${pkgname}"
+    cp -rdp --no-preserve=ownership data "${pkgdir}/usr/share/${pkgname}/data"
+    ln -sr "${pkgdir}/usr/lib/${pkgname}" "${pkgdir}/usr/share/${pkgname}/lib"
+
+    # Copy wrapper script to /usr/bin
+    install -Dm 755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+
+    # Desktop entry
+    install -Dm 644 -t "${pkgdir}/usr/share/applications" "${srcdir}/${pkgname}-${pkgver}/saber.desktop"
+
+    # Install images
+    cd "${srcdir}/${pkgname}-${pkgver}/assets/icon/resized"
+    for res in 16x16 24x24 32x32 48x48 64x64 128x128 256x256 512x512
+        do
+            install -Dm 644 icon-${res}.png "${pkgdir}/usr/share/icons/hicolor/${res}/apps/${pkgname}.png"
+        done
+
+    #fix rpath which cause "Insecure RUNPATH" or "outside of a valid path"
+    #"Insecure RUNPATH"
+    cd "${pkgdir}/usr/lib/${pkgname}"
+    patchelf --remove-rpath "libdynamic_color_plugin.so"
+    patchelf --remove-rpath "libflutter_secure_storage_linux_plugin.so"
+    patchelf --remove-rpath "libgtk_plugin.so"
+    patchelf --remove-rpath "libirondash_engine_context_plugin.so"
+    patchelf --remove-rpath "libscreen_retriever_plugin.so"
+    patchelf --remove-rpath "liburl_launcher_linux_plugin.so"
+    patchelf --remove-rpath "libwindow_manager_plugin.so"
+    patchelf --remove-rpath "libyaru_window_linux_plugin.so"
+    patchelf --set-rpath '$ORIGIN' "libprinting_plugin.so"
+    patchelf --set-rpath '$ORIGIN' "libsuper_native_extensions_plugin.so"
+}
