@@ -2,7 +2,7 @@
 
 pkgname=clash-meta
 pkgver=1.18.1
-pkgrel=4
+pkgrel=5
 pkgdesc="Another Clash Kernel"
 arch=(x86_64)
 url="https://github.com/MetaCubeX/mihomo"
@@ -10,12 +10,19 @@ license=(GPL-3.0-or-later)
 depends=(clash-geoip glibc)
 makedepends=(go)
 backup=('etc/clash-meta/config.yaml')
-source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('ddca7b6c9131ee067b906cc91360837a0e5bdee08a89851226aaed0adc71c086')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
+        "https://raw.githubusercontent.com/MetaCubeX/Meta-Docs/main/docs/example/yaml"
+        "https://raw.githubusercontent.com/MetaCubeX/mihomo/Alpha/.github/mihomo.service")
+        # Please remove the line once the upstream Meta branch contains mihomo.service file
+sha256sums=('ddca7b6c9131ee067b906cc91360837a0e5bdee08a89851226aaed0adc71c086'
+            '25a125934bf524b340ec0bfe9be258f41b3ee55b0b23555f1c83ea3a3e776c4f'
+            '7d2f6de01adbb5dbe7e0d2a00582467faafdb08dce74dd32675cfd94dcbae014')
 
 prepare(){
     cd "$srcdir"
     mv mihomo-$pkgver $pkgname
+    mv yaml           $pkgname/config.yaml
+    mv mihomo.service $pkgname/mihomo.service
 }
 
 build(){
@@ -43,7 +50,7 @@ build(){
     sed -i -e '/Description/s/mihomo/Clash-Meta/' \
            -e "s/mihomo/$_pkgname/g"              \
            -e "/^Type=simple/a User=$_pkgname"    \
-           -e "/^Type=simple/a Group=$_pkgname"   .github/mihomo.service
+           -e "/^Type=simple/a Group=$_pkgname"   mihomo.service
 }
 
 check() {
@@ -56,7 +63,7 @@ package() {
     install -Dm755 "$pkgname-$pkgver"      "$pkgdir/usr/bin/clash-meta"
     install -Dm644 "$_pkgname.sysusers"    "$pkgdir/usr/lib/sysusers.d/$_pkgname.conf"
     install -Dm644 "$_pkgname.tmpfiles"    "$pkgdir/usr/lib/tmpfiles.d/$_pkgname.conf"
-    install -Dm644 docs/config.yaml        "$pkgdir/etc/clash-meta/config.yaml"
-    install -Dm644 .github/mihomo.service  "$pkgdir/usr/lib/systemd/system/clash-meta.service"
+    install -Dm644 config.yaml             "$pkgdir/etc/clash-meta/config.yaml"
+    install -Dm644 mihomo.service          "$pkgdir/usr/lib/systemd/system/clash-meta.service"
     ln -s          /etc/clash/Country.mmdb "$pkgdir/etc/$_pkgname/Country.mmdb"
 }
