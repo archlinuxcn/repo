@@ -10,15 +10,8 @@ url='https://github.com/DaanDeMeyer/reproc'
 license=('MIT')
 provides=('libreproc.so' 'libreproc++.so')
 makedepends=('cmake')
-source=("${url}/archive/v${pkgver}.tar.gz"
-        "fix-gcc13-build.patch")
-sha256sums=('55c780f7faa5c8cabd83ebbb84b68e5e0e09732de70a129f6b3c801e905415dd'
-            'b6b06e3726de562cd108ee0db665b09befe55de719dea84fc8606be895c30ba0')
-
-prepare() {
-  cd "${pkgname}-${pkgver}"
-  patch -p1 -i "${srcdir}"/fix-gcc13-build.patch
-}
+source=("${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('55c780f7faa5c8cabd83ebbb84b68e5e0e09732de70a129f6b3c801e905415dd')
 
 build() {
   cmake \
@@ -42,5 +35,3 @@ package() {
   install -D --mode=644 "${srcdir}/${pkgname}-${pkgver}"/LICENSE \
     "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 }
-
-# vim:set ts=2 sw=2 et:
