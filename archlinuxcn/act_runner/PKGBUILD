@@ -2,8 +2,8 @@
 # Contributor: Manuel Gugger <mdgdot[at]tutanota[dot]com>
 
 pkgname=act_runner
-pkgver=0.2.6
-pkgrel=4
+pkgver=0.2.8
+pkgrel=1
 pkgdesc="Runner for Gitea based on Gitea fork of act"
 arch=('x86_64')
 url="https://gitea.com/gitea/act_runner"
@@ -15,7 +15,7 @@ source=("act_runner-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
         'act_runner.service'
         'act_runner.sysusers'
         'act_runner.tmpfiles')
-sha256sums=('8dbc7da07752d7ed8900581963045f3dcbfe02c52cb560acefd88099b8daf136'
+sha256sums=('40b3c0b253be3d7c065c18088148c8192f252aedebd6bbb7ba0669b1b497814a'
             '0211027d0fe34635b1ad7bc301c941a1ae40d2c9c72eef66b552c9bc2ded8cf2'
             'f0de2d8076ff59db8f5686addc096fc29e02190bfb7b44329979b3d9e1ad292f'
             '86885e9226ffb7bc3dbb105dc2e10630c41717212c804e19413acf3974c8b347')
