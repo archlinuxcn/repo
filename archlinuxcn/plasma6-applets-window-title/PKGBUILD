@@ -1,0 +1,30 @@
+# Maintainer: Rocket Aaron <i at rocka dot me>
+
+_repo=plasma6-window-title-applet
+pkgname=plasma6-applets-window-title
+pkgver=0.5
+pkgrel=1
+pkgdesc='Plasma 6 Window Title applet'
+url='https://github.com/dhruv8sh/plasma6-window-title-applet'
+license=('GPL-2.0-or-later')
+arch=('any')
+depends=('plasma-workspace')
+makedepends=('cmake' 'extra-cmake-modules')
+conflicts=('plasma5-applets-window-title')
+replaces=('plasma5-applets-window-title')
+source=("$_repo-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
+        "CMakeLists.txt")
+sha256sums=('45911175f115d6961a200759eee4bce20f7991b20ced24036a486dae2759d055'
+            '83714e18c7ed971aef0a58bb9546248d04376b9aeeb53b7b5c824eae0ed62d5b')
+
+build() {
+  local _src="$srcdir/$_repo-$pkgver"
+  cp "$srcdir/CMakeLists.txt" "$_src"
+  cmake -S "$_src" -B build \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}
