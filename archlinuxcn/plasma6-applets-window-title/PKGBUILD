@@ -2,7 +2,7 @@
 
 _repo=plasma6-window-title-applet
 pkgname=plasma6-applets-window-title
-pkgver=0.5
+pkgver=0.21
 pkgrel=1
 pkgdesc='Plasma 6 Window Title applet'
 url='https://github.com/dhruv8sh/plasma6-window-title-applet'
@@ -14,7 +14,7 @@ conflicts=('plasma5-applets-window-title')
 replaces=('plasma5-applets-window-title')
 source=("$_repo-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
         "CMakeLists.txt")
-sha256sums=('45911175f115d6961a200759eee4bce20f7991b20ced24036a486dae2759d055'
+sha256sums=('78aef0972adbb337b5b0c413c74852c555f7183e27db387e2023d5e27ebeb89a'
             '83714e18c7ed971aef0a58bb9546248d04376b9aeeb53b7b5c824eae0ed62d5b')
 
 build() {
