@@ -2,7 +2,7 @@
 
 pkgname=clash-meta
 pkgver=1.18.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Another Clash Kernel"
 arch=(x86_64)
 url="https://github.com/MetaCubeX/mihomo"
@@ -17,8 +17,8 @@ sha256sums=('49855c53e5717932b9cb933e7f42f58155b52a42bf7db7f35f1fb1d4baa7ee00'
 
 prepare(){
     cd "$srcdir"
-    mv mihomo-$pkgver $pkgname
-    mv yaml           $pkgname/config.yaml
+    mv "mihomo-$pkgver" "$pkgname"
+    mv yaml             "$pkgname/config.yaml"
 }
 
 build() {
@@ -38,7 +38,7 @@ build() {
         -X \"github.com/metacubex/mihomo/constant.Version=${pkgver}\" \
         -X \"github.com/metacubex/mihomo/constant.BuildTime=${BUILDTIME}\" \
         " \
-        -tags with_gvisor -o $pkgname-$pkgver
+        -tags with_gvisor -o "$pkgname-$pkgver"
 
     echo "u $_pkgname - \"Clash-Meta Service\" - -"        >  "$_pkgname.sysusers"
     echo "d /etc/$_pkgname     0755 $_pkgname $_pkgname -" >  "$_pkgname.tmpfiles"
