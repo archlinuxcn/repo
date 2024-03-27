@@ -1,4 +1,4 @@
-From 25929c67e3dc4b10e89a07f6e4014664480f5d18 Mon Sep 17 00:00:00 2001
+From 50386dedce01af154fdbe576de961b210a285b7a Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 13 Mar 2024 11:13:25 -0400
 Subject: [PATCH 7/7] Update to LLVM 17
@@ -272,7 +272,7 @@ index 880d193ea1..2e34e89579 100644
                      auto alias = GlobalAlias::create(elty, 0, GlobalValue::PrivateLinkage, global.second->getName() + ".jit", p, global.second->getParent());
                      global.second->setInitializer(ConstantExpr::getBitCast(alias, global.second->getValueType()));
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index 53714cebcb..68409ab19a 100644
+index 2d4343a00a..acea9db93f 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
 @@ -260,7 +260,9 @@ static GlobalVariable *emit_plt_thunk(
@@ -286,7 +286,7 @@ index 53714cebcb..68409ab19a 100644
          functype,
          ptr, ArrayRef<Value*>(args));
 diff --git a/src/cgutils.cpp b/src/cgutils.cpp
-index b17b174dd8..dd48bf85c1 100644
+index 8385b5682a..5ede416a8b 100644
 --- a/src/cgutils.cpp
 +++ b/src/cgutils.cpp
 @@ -60,7 +60,11 @@ static Value *decay_derived(jl_codectx_t &ctx, Value *V)
@@ -325,7 +325,7 @@ index b17b174dd8..dd48bf85c1 100644
          ++EmittedPointerBitcast;
          return ctx.builder.CreateBitCast(v, jl_value_addr);
      }
-@@ -1006,6 +1018,7 @@ static void emit_memcpy_llvm(jl_codectx_t &ctx, Value *dst, jl_aliasinfo_t const
+@@ -1008,6 +1020,7 @@ static void emit_memcpy_llvm(jl_codectx_t &ctx, Value *dst, jl_aliasinfo_t const
      if (sz == 0)
          return;
      assert(align_dst && "align must be specified");
@@ -333,7 +333,7 @@ index b17b174dd8..dd48bf85c1 100644
      // If the types are small and simple, use load and store directly.
      // Going through memcpy can cause LLVM (e.g. SROA) to create bitcasts between float and int
      // that interferes with other optimizations.
-@@ -1037,7 +1050,7 @@ static void emit_memcpy_llvm(jl_codectx_t &ctx, Value *dst, jl_aliasinfo_t const
+@@ -1039,7 +1052,7 @@ static void emit_memcpy_llvm(jl_codectx_t &ctx, Value *dst, jl_aliasinfo_t const
              dst = emit_bitcast(ctx, dst, srcty);
          }
          else if (dstel->isSized() && dstel->isSingleValueType() &&
@@ -342,7 +342,7 @@ index b17b174dd8..dd48bf85c1 100644
              directel = dstel;
              src = emit_bitcast(ctx, src, dstty);
          }
-@@ -1052,6 +1065,7 @@ static void emit_memcpy_llvm(jl_codectx_t &ctx, Value *dst, jl_aliasinfo_t const
+@@ -1054,6 +1067,7 @@ static void emit_memcpy_llvm(jl_codectx_t &ctx, Value *dst, jl_aliasinfo_t const
              return;
          }
      }
@@ -350,7 +350,7 @@ index b17b174dd8..dd48bf85c1 100644
      ++EmittedMemcpys;
  
      // the memcpy intrinsic does not allow to specify different alias tags
-@@ -3463,7 +3477,11 @@ static void recursively_adjust_ptr_type(llvm::Value *Val, unsigned FromAS, unsig
+@@ -3465,7 +3479,11 @@ static void recursively_adjust_ptr_type(llvm::Value *Val, unsigned FromAS, unsig
      for (auto *User : Val->users()) {
          if (isa<GetElementPtrInst>(User)) {
              GetElementPtrInst *Inst = cast<GetElementPtrInst>(User);
@@ -362,7 +362,7 @@ index b17b174dd8..dd48bf85c1 100644
              recursively_adjust_ptr_type(Inst, FromAS, ToAS);
          }
          else if (isa<IntrinsicInst>(User)) {
-@@ -3472,7 +3490,11 @@ static void recursively_adjust_ptr_type(llvm::Value *Val, unsigned FromAS, unsig
+@@ -3474,7 +3492,11 @@ static void recursively_adjust_ptr_type(llvm::Value *Val, unsigned FromAS, unsig
          }
          else if (isa<BitCastInst>(User)) {
              BitCastInst *Inst = cast<BitCastInst>(User);
@@ -374,7 +374,7 @@ index b17b174dd8..dd48bf85c1 100644
              recursively_adjust_ptr_type(Inst, FromAS, ToAS);
          }
      }
-@@ -3519,7 +3541,11 @@ static Value *boxed(jl_codectx_t &ctx, const jl_cgval_t &vinfo, bool is_promotab
+@@ -3521,7 +3543,11 @@ static Value *boxed(jl_codectx_t &ctx, const jl_cgval_t &vinfo, bool is_promotab
                  Value *decayed = decay_derived(ctx, box);
                  AllocaInst *originalAlloca = cast<AllocaInst>(vinfo.V);
                  box->takeName(originalAlloca);
@@ -387,7 +387,7 @@ index b17b174dd8..dd48bf85c1 100644
                  originalAlloca->mutateType(decayed->getType());
                  recursively_adjust_ptr_type(originalAlloca, 0, AddressSpace::Derived);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 80a1dd64aa..22ff2cc1b5 100644
+index 75b5995d0a..325e2adcb3 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -22,7 +22,11 @@
@@ -403,7 +403,7 @@ index 80a1dd64aa..22ff2cc1b5 100644
  #include <llvm/Support/TargetSelect.h>
  #include <llvm/Object/SymbolSize.h>
  
-@@ -2208,7 +2212,11 @@ static Value *emit_inttoptr(jl_codectx_t &ctx, Value *v, Type *ty)
+@@ -2210,7 +2214,11 @@ static Value *emit_inttoptr(jl_codectx_t &ctx, Value *v, Type *ty)
          auto ptr = I->getOperand(0);
          if (ty->getPointerAddressSpace() == ptr->getType()->getPointerAddressSpace())
              return ctx.builder.CreateBitCast(ptr, ty);
@@ -415,7 +415,7 @@ index 80a1dd64aa..22ff2cc1b5 100644
              return ctx.builder.CreateAddrSpaceCast(ptr, ty);
      }
      ++EmittedIntToPtrs;
-@@ -4824,7 +4832,9 @@ static jl_cgval_t emit_call_specfun_other(jl_codectx_t &ctx, bool is_opaque_clos
+@@ -4826,7 +4834,9 @@ static jl_cgval_t emit_call_specfun_other(jl_codectx_t &ctx, bool is_opaque_clos
          break;
      case jl_returninfo_t::SRet:
          result = emit_static_alloca(ctx, getAttributeAtIndex(returninfo.attrs, 1, Attribute::StructRet).getValueAsType());
@@ -425,7 +425,7 @@ index 80a1dd64aa..22ff2cc1b5 100644
          argvals[idx] = result;
          idx++;
          break;
-@@ -6686,7 +6696,9 @@ static void emit_cfunc_invalidate(
+@@ -6688,7 +6698,9 @@ static void emit_cfunc_invalidate(
      case jl_returninfo_t::SRet: {
          if (return_roots) {
              Value *root1 = gf_thunk->arg_begin() + 1; // root1 has type [n x {}*]*
@@ -435,7 +435,7 @@ index 80a1dd64aa..22ff2cc1b5 100644
              root1 = ctx.builder.CreateConstInBoundsGEP2_32(get_returnroots_type(ctx, return_roots), root1, 0, 0);
              ctx.builder.CreateStore(gf_ret, root1);
          }
-@@ -7109,11 +7121,15 @@ static Function* gen_cfun_wrapper(
+@@ -7111,11 +7123,15 @@ static Function* gen_cfun_wrapper(
                  if (jlfunc_sret) {
                      result = emit_static_alloca(ctx, getAttributeAtIndex(returninfo.attrs, 1, Attribute::StructRet).getValueAsType());
                      setName(ctx.emission_context, result, "sret");
@@ -451,7 +451,7 @@ index 80a1dd64aa..22ff2cc1b5 100644
                  }
              }
              args.push_back(result);
-@@ -7173,7 +7189,9 @@ static Function* gen_cfun_wrapper(
+@@ -7175,7 +7191,9 @@ static Function* gen_cfun_wrapper(
              theFptr = ctx.builder.CreateSelect(age_ok, theFptr, gf_thunk);
          }
  
@@ -461,7 +461,7 @@ index 80a1dd64aa..22ff2cc1b5 100644
          CallInst *call = ctx.builder.CreateCall(
              returninfo.decl.getFunctionType(),
              theFptr, ArrayRef<Value*>(args));
-@@ -7545,7 +7563,9 @@ static Function *gen_invoke_wrapper(jl_method_instance_t *lam, jl_value_t *jlret
+@@ -7548,7 +7566,9 @@ static Function *gen_invoke_wrapper(jl_method_instance_t *lam, jl_value_t *jlret
      case jl_returninfo_t::Ghosts:
          break;
      case jl_returninfo_t::SRet:
@@ -471,7 +471,7 @@ index 80a1dd64aa..22ff2cc1b5 100644
          result = ctx.builder.CreateAlloca(getAttributeAtIndex(f.attrs, 1, Attribute::StructRet).getValueAsType());
          setName(ctx.emission_context, result, "sret");
          args[idx] = result;
-@@ -7840,8 +7860,6 @@ static jl_returninfo_t get_specsig_function(jl_codectx_t &ctx, Module *M, Value
+@@ -7843,8 +7863,6 @@ static jl_returninfo_t get_specsig_function(jl_codectx_t &ctx, Module *M, Value
  
  static void emit_sret_roots(jl_codectx_t &ctx, bool isptr, Value *Src, Type *T, Value *Shadow, Type *ShadowT, unsigned count)
  {
@@ -480,7 +480,7 @@ index 80a1dd64aa..22ff2cc1b5 100644
      unsigned emitted = TrackWithShadow(Src, T, isptr, Shadow, ShadowT, ctx.builder); //This comes from Late-GC-Lowering??
      assert(emitted == count); (void)emitted; (void)count;
  }
-@@ -7849,6 +7867,10 @@ static void emit_sret_roots(jl_codectx_t &ctx, bool isptr, Value *Src, Type *T,
+@@ -7852,6 +7870,10 @@ static void emit_sret_roots(jl_codectx_t &ctx, bool isptr, Value *Src, Type *T,
  static DISubroutineType *
  get_specsig_di(jl_codectx_t &ctx, jl_debugcache_t &debuginfo, jl_value_t *rt, jl_value_t *sig, DIBuilder &dbuilder)
  {
@@ -491,7 +491,7 @@ index 80a1dd64aa..22ff2cc1b5 100644
      size_t nargs = jl_nparams(sig); // TODO: if this is a Varargs function, our debug info for the `...` var may be misleading
      SmallVector<Metadata*, 0> ditypes(nargs + 1);
      ditypes[0] = julia_type_to_di(ctx, debuginfo, rt, &dbuilder, false);
-@@ -9962,7 +9984,9 @@ char jl_using_perf_jitevents = 0;
+@@ -9965,7 +9987,9 @@ char jl_using_perf_jitevents = 0;
  
  int jl_is_timing_passes = 0;
  
@@ -501,7 +501,7 @@ index 80a1dd64aa..22ff2cc1b5 100644
  
  extern "C" void jl_init_llvm(void)
  {
-@@ -10013,6 +10037,7 @@ extern "C" void jl_init_llvm(void)
+@@ -10016,6 +10040,7 @@ extern "C" void jl_init_llvm(void)
      if (clopt && clopt->getNumOccurrences() == 0)
          cl::ProvidePositionalOption(clopt, "4", 1);
  
@@ -509,7 +509,7 @@ index 80a1dd64aa..22ff2cc1b5 100644
      // we want the opaque-pointers to be opt-in, per LLVMContext, for this release
      // so change the default value back to pre-14.x, without changing the NumOccurrences flag for it
      clopt = llvmopts.lookup("opaque-pointers");
-@@ -10021,6 +10046,7 @@ extern "C" void jl_init_llvm(void)
+@@ -10024,6 +10049,7 @@ extern "C" void jl_init_llvm(void)
      } else {
          jl_opaque_ptrs_set = 1;
      }
@@ -546,7 +546,7 @@ index c2a55f23d1..8df09fde02 100644
                                  const char *name = DisInfo.lookupSymbolName(imm);
                                  if (name)
 diff --git a/src/intrinsics.cpp b/src/intrinsics.cpp
-index 3a98850ddc..67d2ef30e0 100644
+index c2450d359b..633024b578 100644
 --- a/src/intrinsics.cpp
 +++ b/src/intrinsics.cpp
 @@ -4,6 +4,10 @@ namespace JL_I {
@@ -561,7 +561,7 @@ index 3a98850ddc..67d2ef30e0 100644
  
  //Mark our stats as being from intrinsics irgen
 diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
-index b7fb975515..89364d4d53 100644
+index 5f9d7f8a3c..ea70701c24 100644
 --- a/src/jitlayers.cpp
 +++ b/src/jitlayers.cpp
 @@ -28,7 +28,11 @@
@@ -576,7 +576,7 @@ index b7fb975515..89364d4d53 100644
  #include <llvm/Support/TargetSelect.h>
  #include <llvm/Object/SymbolSize.h>
  
-@@ -1475,9 +1479,11 @@ struct JuliaOJIT::DLSymOptimizer {
+@@ -1478,9 +1482,11 @@ struct JuliaOJIT::DLSymOptimizer {
                      if (named) {
                          auto T = GV.getValueType();
                          assert(T->isPointerTy());
@@ -588,7 +588,7 @@ index b7fb975515..89364d4d53 100644
                          init = GlobalAlias::create(T, 0, GlobalValue::PrivateLinkage, GV.getName() + ".jit", init, &M);
                      }
                      GV.setInitializer(init);
-@@ -1528,9 +1534,11 @@ struct JuliaOJIT::DLSymOptimizer {
+@@ -1531,9 +1537,11 @@ struct JuliaOJIT::DLSymOptimizer {
                          if (named) {
                              auto T = CI->getType();
                              assert(T->isPointerTy());
@@ -600,7 +600,7 @@ index b7fb975515..89364d4d53 100644
                              init = GlobalAlias::create(T, 0, GlobalValue::PrivateLinkage, CI->getName() + ".jit", init, &M);
                          }
                          // DCE and SimplifyCFG will kill the branching structure around
-@@ -1574,6 +1582,7 @@ void fixupTM(TargetMachine &TM) {
+@@ -1577,6 +1585,7 @@ void fixupTM(TargetMachine &TM) {
      }
  }
  
@@ -608,7 +608,7 @@ index b7fb975515..89364d4d53 100644
  extern int jl_opaque_ptrs_set;
  void SetOpaquePointer(LLVMContext &ctx) {
      if (jl_opaque_ptrs_set)
-@@ -1584,6 +1593,7 @@ void SetOpaquePointer(LLVMContext &ctx) {
+@@ -1587,6 +1596,7 @@ void SetOpaquePointer(LLVMContext &ctx) {
      ctx.setOpaquePointers(true);
  #endif
  }
@@ -616,7 +616,7 @@ index b7fb975515..89364d4d53 100644
  
  llvm::DataLayout jl_create_datalayout(TargetMachine &TM) {
      // Mark our address spaces as non-integral
-@@ -1606,7 +1616,9 @@ JuliaOJIT::JuliaOJIT()
+@@ -1609,7 +1619,9 @@ JuliaOJIT::JuliaOJIT()
      DLSymOpt(std::make_unique<DLSymOptimizer>(false)),
      ContextPool([](){
          auto ctx = std::make_unique<LLVMContext>();
@@ -626,7 +626,7 @@ index b7fb975515..89364d4d53 100644
          return orc::ThreadSafeContext(std::move(ctx));
      }),
  #ifdef JL_USE_JITLINK
-@@ -1731,6 +1743,25 @@ JuliaOJIT::JuliaOJIT()
+@@ -1734,6 +1746,25 @@ JuliaOJIT::JuliaOJIT()
  
  #ifdef MSAN_EMUTLS_WORKAROUND
      orc::SymbolMap msan_crt;
@@ -652,7 +652,7 @@ index b7fb975515..89364d4d53 100644
      msan_crt[mangle("__emutls_get_address")] = JITEvaluatedSymbol::fromPointer(msan_workaround::getTLSAddress, JITSymbolFlags::Exported);
      msan_crt[mangle("__emutls_v.__msan_param_tls")] = JITEvaluatedSymbol::fromPointer(
          reinterpret_cast<void *>(static_cast<uintptr_t>(msan_workaround::MSanTLS::param)), JITSymbolFlags::Exported);
-@@ -1748,11 +1779,16 @@ JuliaOJIT::JuliaOJIT()
+@@ -1751,11 +1782,16 @@ JuliaOJIT::JuliaOJIT()
          reinterpret_cast<void *>(static_cast<uintptr_t>(msan_workaround::MSanTLS::va_arg_overflow_size)), JITSymbolFlags::Exported);
      msan_crt[mangle("__emutls_v.__msan_origin_tls")] = JITEvaluatedSymbol::fromPointer(
          reinterpret_cast<void *>(static_cast<uintptr_t>(msan_workaround::MSanTLS::origin)), JITSymbolFlags::Exported);
@@ -669,7 +669,7 @@ index b7fb975515..89364d4d53 100644
      cantFail(JD.define(orc::absoluteSymbols(asan_crt)));
  #endif
  }
-@@ -1767,7 +1803,11 @@ orc::SymbolStringPtr JuliaOJIT::mangle(StringRef Name)
+@@ -1770,7 +1806,11 @@ orc::SymbolStringPtr JuliaOJIT::mangle(StringRef Name)
  
  void JuliaOJIT::addGlobalMapping(StringRef Name, uint64_t Addr)
  {
@@ -681,7 +681,7 @@ index b7fb975515..89364d4d53 100644
  }
  
  void JuliaOJIT::addModule(orc::ThreadSafeModule TSM)
-@@ -1813,7 +1853,11 @@ void JuliaOJIT::addModule(orc::ThreadSafeModule TSM)
+@@ -1816,7 +1856,11 @@ void JuliaOJIT::addModule(orc::ThreadSafeModule TSM)
          }
      }
      for (auto &Sym : *Lookups) {
@@ -693,7 +693,7 @@ index b7fb975515..89364d4d53 100644
          (void) Sym;
      }
  }
-@@ -1842,6 +1886,48 @@ Error JuliaOJIT::addObjectFile(orc::JITDylib &JD, std::unique_ptr<MemoryBuffer>
+@@ -1845,6 +1889,48 @@ Error JuliaOJIT::addObjectFile(orc::JITDylib &JD, std::unique_ptr<MemoryBuffer>
      return LockLayer.add(JD.getDefaultResourceTracker(), std::move(Obj));
  }
  
@@ -742,7 +742,7 @@ index b7fb975515..89364d4d53 100644
  JL_JITSymbol JuliaOJIT::findSymbol(StringRef Name, bool ExportedSymbolsOnly)
  {
      orc::JITDylib* SearchOrders[3] = {&JD, &GlobalJD, &ExternalJD};
-@@ -1857,7 +1943,7 @@ JL_JITSymbol JuliaOJIT::findUnmangledSymbol(StringRef Name)
+@@ -1860,7 +1946,7 @@ JL_JITSymbol JuliaOJIT::findUnmangledSymbol(StringRef Name)
      return findSymbol(getMangledName(Name), true);
  }
  
@@ -751,7 +751,7 @@ index b7fb975515..89364d4d53 100644
  {
      orc::JITDylib* SearchOrders[3] = {&ExternalJD, &GlobalJD, &JD};
      ArrayRef<orc::JITDylib*> SearchOrder = ArrayRef<orc::JITDylib*>(&SearchOrders[0], ExternalJDOnly ? 1 : 3);
-@@ -1872,7 +1958,7 @@ uint64_t JuliaOJIT::getGlobalValueAddress(StringRef Name)
+@@ -1875,7 +1961,7 @@ uint64_t JuliaOJIT::getGlobalValueAddress(StringRef Name)
          consumeError(addr.takeError());
          return 0;
      }
@@ -760,7 +760,7 @@ index b7fb975515..89364d4d53 100644
  }
  
  uint64_t JuliaOJIT::getFunctionAddress(StringRef Name)
-@@ -1882,8 +1968,9 @@ uint64_t JuliaOJIT::getFunctionAddress(StringRef Name)
+@@ -1885,8 +1971,9 @@ uint64_t JuliaOJIT::getFunctionAddress(StringRef Name)
          consumeError(addr.takeError());
          return 0;
      }
@@ -771,7 +771,7 @@ index b7fb975515..89364d4d53 100644
  
  StringRef JuliaOJIT::getFunctionAtAddress(uint64_t Addr, jl_code_instance_t *codeinst)
  {
-@@ -1923,8 +2010,13 @@ llvm_orc_registerJITLoaderGDBAllocAction(const char *Data, size_t Size);
+@@ -1926,8 +2013,13 @@ llvm_orc_registerJITLoaderGDBAllocAction(const char *Data, size_t Size);
  void JuliaOJIT::enableJITDebuggingSupport()
  {
      orc::SymbolMap GDBFunctions;
@@ -785,7 +785,7 @@ index b7fb975515..89364d4d53 100644
      cantFail(JD.define(orc::absoluteSymbols(GDBFunctions)));
      if (TM->getTargetTriple().isOSBinFormatMachO())
          ObjectLayer.addPlugin(cantFail(orc::GDBJITDebugInfoRegistrationPlugin::Create(ES, JD, TM->getTargetTriple())));
-@@ -2050,7 +2142,11 @@ void jl_merge_module(orc::ThreadSafeModule &destTSM, orc::ThreadSafeModule srcTS
+@@ -2053,7 +2145,11 @@ void jl_merge_module(orc::ThreadSafeModule &destTSM, orc::ThreadSafeModule srcTS
                  }
                  // Reparent the global variable:
                  SG.removeFromParent();
@@ -797,7 +797,7 @@ index b7fb975515..89364d4d53 100644
                  // Comdat is owned by the Module
                  SG.setComdat(nullptr);
              }
-@@ -2097,7 +2193,11 @@ void jl_merge_module(orc::ThreadSafeModule &destTSM, orc::ThreadSafeModule srcTS
+@@ -2100,7 +2196,11 @@ void jl_merge_module(orc::ThreadSafeModule &destTSM, orc::ThreadSafeModule srcTS
                      }
                  }
                  SG.removeFromParent();
@@ -1118,7 +1118,7 @@ index d2650d6875..b2f58ca79f 100644
  #include <llvm/IR/Function.h>
  #include <llvm/IR/Instructions.h>
 diff --git a/src/llvm-remove-addrspaces.cpp b/src/llvm-remove-addrspaces.cpp
-index e291e47b59..1bac0c9d9c 100644
+index 3e3315cd43..dc9642ca1e 100644
 --- a/src/llvm-remove-addrspaces.cpp
 +++ b/src/llvm-remove-addrspaces.cpp
 @@ -44,6 +44,9 @@ public:
@@ -1246,7 +1246,7 @@ index 25be49d6d2..56f8487d8f 100644
  
  #include "julia.h"
 diff --git a/src/runtime_intrinsics.c b/src/runtime_intrinsics.c
-index ff479a4d30..0ad5a87acf 100644
+index 9abe9828fb..e76e70826f 100644
 --- a/src/runtime_intrinsics.c
 +++ b/src/runtime_intrinsics.c
 @@ -9,6 +9,7 @@
@@ -1257,7 +1257,7 @@ index ff479a4d30..0ad5a87acf 100644
  
  const unsigned int host_char_bit = 8;
  
-@@ -1576,6 +1577,16 @@ bi_iintrinsic_cnvtb_fast(LLVMAShr, ashr_op, ashr_int, , 1)
+@@ -1574,6 +1575,16 @@ bi_iintrinsic_cnvtb_fast(LLVMAShr, ashr_op, ashr_int, , 1)
  //un_iintrinsic_fast(LLVMByteSwap, bswap_op, bswap_int, u)
  un_iintrinsic_slow(LLVMByteSwap, bswap_int, u)
  //#define ctpop_op(a) __builtin_ctpop(a)
@@ -1274,7 +1274,7 @@ index ff479a4d30..0ad5a87acf 100644
  //uu_iintrinsic_fast(LLVMCountPopulation, ctpop_op, ctpop_int, u)
  uu_iintrinsic_slow(LLVMCountPopulation, ctpop_int, u)
  //#define ctlz_op(a) __builtin_ctlz(a)
-@@ -1584,6 +1595,7 @@ uu_iintrinsic_slow(LLVMCountLeadingZeros, ctlz_int, u)
+@@ -1582,6 +1593,7 @@ uu_iintrinsic_slow(LLVMCountLeadingZeros, ctlz_int, u)
  //#define cttz_op(a) __builtin_cttz(a)
  //uu_iintrinsic_fast(LLVMCountTrailingZeros, cttz_op, cttz_int, u)
  uu_iintrinsic_slow(LLVMCountTrailingZeros, cttz_int, u)

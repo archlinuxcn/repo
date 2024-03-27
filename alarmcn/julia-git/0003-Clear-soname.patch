@@ -1,4 +1,4 @@
-From 5dc8e8968a78de0eceb8cf338af580582876b440 Mon Sep 17 00:00:00 2001
+From 8b5b008688eb31d2f4ee1ae471be07ecc124a050 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
 Subject: [PATCH 3/7] Clear soname
@@ -12,14 +12,14 @@ Subject: [PATCH 3/7] Clear soname
  5 files changed, 18 insertions(+), 18 deletions(-)
 
 diff --git a/stdlib/LibGit2_jll/src/LibGit2_jll.jl b/stdlib/LibGit2_jll/src/LibGit2_jll.jl
-index c24d3c20f4..d36b6c3409 100644
+index 15d303dfea..57aa44008b 100644
 --- a/stdlib/LibGit2_jll/src/LibGit2_jll.jl
 +++ b/stdlib/LibGit2_jll/src/LibGit2_jll.jl
 @@ -22,7 +22,7 @@ if Sys.iswindows()
  elseif Sys.isapple()
-     const libgit2 = "@rpath/libgit2.1.7.dylib"
+     const libgit2 = "@rpath/libgit2.1.8.dylib"
  else
--    const libgit2 = "libgit2.so.1.7"
+-    const libgit2 = "libgit2.so.1.8"
 +    const libgit2 = "libgit2.so"
  end
  
