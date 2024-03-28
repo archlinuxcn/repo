@@ -3,8 +3,8 @@
 
 pkgname=clash-meta-alpha-git
 _pkgname=clash-meta
-pkgver=20240326.r0.g0b4662e4
-pkgrel=4
+pkgver=2024032719.82517e6
+pkgrel=5
 pkgdesc="Another Clash Kernel (git virsion)"
 arch=(x86_64)
 url="https://github.com/MetaCubeX/mihomo"
@@ -18,14 +18,13 @@ source=("https://raw.githubusercontent.com/MetaCubeX/Meta-Docs/main/docs/example
 sha256sums=('25a125934bf524b340ec0bfe9be258f41b3ee55b0b23555f1c83ea3a3e776c4f')
 
 prepare() {
-    cd "$srcdir"
     git clone --depth 1 --branch Alpha "$url" "$pkgname"
     mv yaml "$pkgname/config.yaml"
 }
 
 pkgver() {
-    cd "$srcdir/$pkgname"
-    TZ=UTC git log --pretty=format:"%cd.%h" --date=format:"%Y%m%d"
+    cd "$pkgname"
+    TZ=UTC git log --pretty=format:"%cd.%h" --date=format:"%Y%m%d%H"
 }
 
 build() {
@@ -34,7 +33,7 @@ build() {
     export CGO_CXXFLAGS="${CXXFLAGS}"
     export CGO_LDFLAGS="${LDFLAGS}"
     export CGO_ENABLED=1
-    cd "$srcdir/$pkgname"
+    cd "$pkgname"
     BUILDTIME=$(date -u)
     GOOS=linux go build \
         -trimpath \
@@ -57,12 +56,12 @@ build() {
 }
 
 check() {
-    cd "$srcdir/$pkgname"
+    cd "$pkgname"
     go test ./...
 }
 
 package() {
-    cd "$srcdir/$pkgname"
+    cd "$pkgname"
     install -Dm755 "$pkgname-$pkgver"      "$pkgdir/usr/bin/clash-meta"
     install -Dm644 "$_pkgname.sysusers"    "$pkgdir/usr/lib/sysusers.d/$_pkgname.conf"
     install -Dm644 "$_pkgname.tmpfiles"    "$pkgdir/usr/lib/tmpfiles.d/$_pkgname.conf"
