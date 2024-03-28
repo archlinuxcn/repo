@@ -7,6 +7,9 @@
 
 set -e
 
+# this is required in case people try to run with `aur/dart-sdk-dev` instead of `extra/dart`
+DART_BINARY=$(readlink $(which dart))
+export DART_ROOT=${DART_ROOT:-${DART_BINARY/\/bin\/dart/}}
 export FLUTTER_ROOT="${FLUTTER_ROOT:-/usr/lib/flutter}"
 
 FLUTTER_TOOLS_DIR="$FLUTTER_ROOT/packages/flutter_tools"

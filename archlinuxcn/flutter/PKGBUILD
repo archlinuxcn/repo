@@ -6,19 +6,21 @@ pkgbase=flutter
 _group=flutter
 groups=("$_group")
 pkgver=3.19.4
-_dartver=3.3.2
+_dartver=(3.2.0 4.0.0)
 _enginever=a5c24f538d05aaf66f7972fb23959d8cafb9f95a
 _materialfontsver=3012db47f3130e62f7cc0beabff968a33cbec8d8
 _gradlewver=fd5c1f2c013565a3bea56ada6df9d2b8e96d56aa
 _flutterarch=$(uname -m | sed s/aarch64/arm64/ | sed s/x86_64/x64/)
-pkgrel=16
+pkgrel=18
 pkgdesc="A new mobile app SDK to help developers and designers build modern mobile apps for iOS and Android."
 _pkgdesc="Flutter SDK component"
 arch=("x86_64" "aarch64")
 url="https://${_group}.dev"
 license=('BSD-3-Clause')
 makedepends=(
-	"dart>=${_dartver}"
+	"dart>=${_dartver[0]}"
+	# this breaks using the aur/dart-sdk-dev package
+	# "dart<${_dartver[1]}"
 	"jq"
 	"gradle"
 	"unzip"
@@ -42,7 +44,7 @@ source=(
 sha256sums=('089f924c72f28d25851382d70db83df83c64746713f6a8ca08879a1530adb8ca'
             'd721fc48f534af8f804bb4a9f2cb1d304627a9f73881b3f61d829a9f1e33164f'
             'de0d3567d83bd756841b19ccf879efc02749d8a45cf18d94cd71ec1d366c9024'
-            '54db9347ac6467b806fff70f62b2709276a0ca4d82468ae8357d5520db0ad04a'
+            'ee77173114fa746624cebce1b163c92dd3d14f142c35e1a7614074b26663ecfc'
             '688a7d6a3c220cf09f7e48af46f1ef1b01d251679962c825eded0b3fa4fc2ab1'
             '544d08716332a9f9358b21010d468b84a9edff0da7bbb1baf0cf4d6322821ea5'
             'a5f19e68e9e4790d017dc4988e715f51c44548df5615aae6106d1a0c84fe49f1'
@@ -50,6 +52,31 @@ sha256sums=('089f924c72f28d25851382d70db83df83c64746713f6a8ca08879a1530adb8ca'
             '1578e819b6ee479b6db7a095bcfa74372d3ff555642c6d6ea7112e97bb6f2027')
 
 prepare() {
+  # this is required in case people try to build with `aur/dart-sdk-dev` instead of `extra/dart`
+  DART_BINARY=$(readlink $(which dart))
+  DART_ROOT=${DART_ROOT:-${DART_BINARY/\/bin\/dart/}}
+
+  if [ "${DART_ROOT}" != "/opt/dart-sdk" ]; then
+    echo -e "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n"
+
+    echo -e "  WARNING !!!\n"
+
+    echo -e "  Your default Dart SDK does not seem to be installed into\n"
+    echo -e "    /opt/dart-sdk\n"
+    echo -e "  Please consider using the original 'extra/dart' package"
+    echo -e "  from the Arch Linux package repositories. We otherwise"
+    echo -e "  cannot ensure the Flutter tool will work as expected.\n\n"
+    echo -e "  Dart executable:	$(which dart)"
+    echo -e "  Resolved Dart SDK:	${DART_ROOT}"
+
+    echo -e "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n"
+  fi
+
+  if [[ ! "$DART_ROOT" =~ ^\/opt\/ && ! "$DART_ROOT" =~ ^\/usr\/ ]]; then
+    echo "FATAL: DART_ROOT is neither in /opt nor /usr. You must use a system wide Dart installation for this package. Exiting."
+    exit 1
+  fi
+
   mv "${srcdir}/${_group}-${pkgver/.hotfix/+hotfix}" "${srcdir}/${_group}"
   patch -p1 -i "${srcdir}/system-dart.patch" -d "${srcdir}/${_group}"
   patch -p1 -i "${srcdir}/gradle-user-home.patch" -d "${srcdir}/${_group}"
@@ -69,8 +96,8 @@ prepare() {
 	"frameworkRevision": "archlinuxaur0000000000000000000000000000",
 	"frameworkCommitDate": "2038-01-19 03:14:08",
 	"engineRevision": "$(cat "${srcdir}/${_group}/bin/internal/engine.version")",
-	"dartSdkVersion": "$_dartver",
-	"devToolsVersion": $(jq '.version' < /opt/dart-sdk/bin/resources/devtools/version.json),
+	"dartSdkVersion": "$(dart --version | awk '{print $4}')",
+	"devToolsVersion": $(jq '.version' < ${DART_ROOT}/bin/resources/devtools/version.json),
 	"flutterVersion": "$pkgver"
 }
 EOF
@@ -141,7 +168,8 @@ _package-target-linux() {
   depends=(
 	"${_group}-tool=${pkgver}"
 	"${_group}-engine-linux=${pkgver}"
-	"dart>=${_dartver}"
+	"dart>=${_dartver[0]}"
+	# "dart<${_dartver[1]}"
 	"clang"
 	"cmake"
         "ninja"
@@ -209,7 +237,8 @@ _package-tool() {
   depends=(
 	"${_group}-common=${pkgver}"
 	# TODO: completely compile Flutter tool standalone and drop dependency
-	"dart>=${_dartver}"
+	"dart>=${_dartver[0]}"
+	# "dart<${_dartver[1]}"
 	# commands first
 	"bash"
 	"curl"
@@ -243,7 +272,8 @@ _package-devel() {
   pkgdesc="${_pkgdesc} - CLI tool (for application development)"
   depends=(
 	"${_group}-tool=${pkgver}"
-	"dart>=${_dartver}"
+	"dart>=${_dartver[0]}"
+	# "dart<${_dartver[1]}"
   )
   replaces=("${_group}-tool-developer")
 
@@ -266,11 +296,15 @@ _package-intellij-patch() {
         "intellij-idea-ultimate-edition"
   )
 
+  # this is required in case people try to build with `aur/dart-sdk-dev` instead of `extra/dart`
+  DART_BINARY=$(readlink $(which dart))
+  DART_ROOT=${DART_ROOT:-${DART_BINARY/\/bin\/dart/}}
+
   install -dm755 "${pkgdir}/usr/lib/${_group}/bin/cache"
   
-  ln -sf "${DART_ROOT:-"/opt/dart-sdk"}/bin/dart" "${pkgdir}/usr/lib/${_group}/bin/dart"
   # * not my fault grumble * : The IntelliJ Flutter plugin enforces this relative Dart SDK
-  ln -sf "${DART_ROOT:-"/opt/dart-sdk"}" "${pkgdir}/usr/lib/${_group}/bin/cache/dart-sdk"
+  ln -sf "${DART_ROOT}/bin/dart" "${pkgdir}/usr/lib/${_group}/bin/dart"
+  ln -sf "${DART_ROOT}" "${pkgdir}/usr/lib/${_group}/bin/cache/dart-sdk"
 }
 
 pkgname=("${_group}" "${_group}-common" "${_group}-gradle" "${_group}-tool" "${_group}-devel" "${_group}-target-linux" "${_group}-target-android" "${_group}-target-web" "${_group}-intellij-patch")
