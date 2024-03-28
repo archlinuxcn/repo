@@ -80,17 +80,25 @@ package() {
             install -Dm 644 icon-${res}.png "${pkgdir}/usr/share/icons/hicolor/${res}/apps/${pkgname}.png"
         done
 
-    #fix rpath which cause "Insecure RUNPATH" or "outside of a valid path"
-    #"Insecure RUNPATH"
+    # Fix rpath which cause "Insecure RUNPATH" or "outside of a valid path"
+    # Fix .so files using patchelf
     cd "${pkgdir}/usr/lib/${pkgname}"
-    patchelf --remove-rpath "libdynamic_color_plugin.so"
-    patchelf --remove-rpath "libflutter_secure_storage_linux_plugin.so"
-    patchelf --remove-rpath "libgtk_plugin.so"
-    patchelf --remove-rpath "libirondash_engine_context_plugin.so"
-    patchelf --remove-rpath "libscreen_retriever_plugin.so"
-    patchelf --remove-rpath "liburl_launcher_linux_plugin.so"
-    patchelf --remove-rpath "libwindow_manager_plugin.so"
-    patchelf --remove-rpath "libyaru_window_linux_plugin.so"
-    patchelf --set-rpath '$ORIGIN' "libprinting_plugin.so"
-    patchelf --set-rpath '$ORIGIN' "libsuper_native_extensions_plugin.so"
+    for file in *.so; do
+        PATCHELF_OUTPUT=$(patchelf --print-rpath $file)
+        echo "Checking $file: $PATCHELF_OUTPUT"
+    # Skip file if PATCHELF_OUTPUT does not contain CURRENT_DIR
+        if [[ ! $PATCHELF_OUTPUT =~ $CURRENT_DIR ]]; then
+            echo "Skipping $file"
+            continue
+        fi
+    # Remove rpath if it not contain ORIGIN before
+        if [[ ! $PATCHELF_OUTPUT =~ 'ORIGIN' ]]; then
+            echo "Removing rpath for $file"
+            patchelf --remove-rpath $file
+            continue
+        fi
+    # Set rpath to ORIGIN if it contain ORIGIN before
+        echo "Setting ORIGIN rpath for $file"
+        patchelf --set-rpath '$ORIGIN' $file
+    done
 }
