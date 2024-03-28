@@ -23,3 +23,7 @@ package() {
 
   JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh TimeZones "${pkgdir}" "${pkgname}" julia-git
 }
+
+echo "TimeZones.jl:  -----  _commit=($_commit)"
+echo "TimeZones.jl:  -----  pkgver=($pkgver)"
+echo "TimeZones.jl:  -----  sha256sums=(${sha256sums[*]})"
