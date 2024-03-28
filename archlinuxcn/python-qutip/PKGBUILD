@@ -10,8 +10,8 @@ arch=("aarch64" "x86_64")
 url="http://qutip.org/index.html"
 license=('BSD')
 depends=("python-setuptools" "python-numpy" "python-scipy"
-         "python-matplotlib" "cython" "python-pip")
-makedepends=("gcc-fortran" "openmp")
+         "python-matplotlib" "python-pip" "python-install")
+makedepends=("gcc-fortran" "cython")
 optdepends=(
   "blas: Needed for installing Fortran Monte Carlo solver."
   "mayavi: Needed for using the Bloch3d class."
@@ -19,7 +19,6 @@ optdepends=(
   "texlive-bin: Needed if using LaTeX in figures."
   "python-nose: For running tests."
   "python-scikit-umfpack: Faster (~2-5x) steady state calculations."
-  "openmp: For OPENMP support"
 )
 
 source=("https://github.com/qutip/qutip/archive/v$pkgver.tar.gz")
@@ -28,7 +27,7 @@ sha256sums=('e03cd0d943e6d1b44010b6a0c92c2ea794b323b246f10bba67573534165c2de5')
 build() {
   cd qutip-$pkgver
 
-  python setup.py build --with-openmp
+  python setup.py build
 }
 
 package() {
