@@ -1,0 +1,29 @@
+From 4ba43ff9f1f9b522ab4a124f04fe949e776a9999 Mon Sep 17 00:00:00 2001
+From: Polarian <polarian@polarian.dev>
+Date: Wed, 31 May 2023 21:19:50 +0100
+Subject: [PATCH] Modify .desktop for Arch Linux
+
+---
+ flatpak/com.adilhanney.saber.desktop => saber.desktop | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+ rename flatpak/com.adilhanney.saber.desktop => saber.desktop (91%)
+
+diff --git a/flatpak/com.adilhanney.saber.desktop b/saber.desktop
+similarity index 91%
+rename from flatpak/com.adilhanney.saber.desktop
+rename to saber.desktop
+index c6c6fe4a..c7f8017d 100644
+--- a/flatpak/com.adilhanney.saber.desktop
++++ b/saber.desktop
+@@ -7,7 +7,7 @@ Comment=A cross-platform libre handwritten notes app.
+ Comment[cs]=Volně dostupná multiplatformní aplikace pro ručně psané poznámky
+ Categories=Office;WordProcessor;
+ 
+-Icon=com.adilhanney.saber
++Icon=saber
+ Exec=saber
+ Terminal=false
+ StartupWMClass=saber
+-- 
+2.40.1
+
