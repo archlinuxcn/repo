@@ -2,7 +2,7 @@
 
 pkgname=dnspeep
 pkgver=0.1.3
-pkgrel=2
+pkgrel=3
 pkgdesc='Spy on the DNS queries your computer is making'
 url='https://github.com/jvns/dnspeep'
 arch=('x86_64')
@@ -13,6 +13,9 @@ provides=('dnspeep')
 conflicts=('dnspeep-bin')
 source=("$url/archive/v$pkgver.tar.gz")
 sha512sums=('82dafdf415678eeff1112a0114806e9e2edb8fea6fd2b7642df2384fcb995a69c80a9674745fcd7fc1baed7a72ecf27756f3a7f0cdf494e6ff9a7e4812e24bc9')
+# options added per https://bbs.archlinux.org/viewtopic.php?id=294150
+# and https://gitlab.archlinux.org/archlinux/packaging/packages/pacman/-/issues/20#note_172172
+options=('!lto')
 
 # per https://wiki.archlinux.org/title/Rust_package_guidelines#Prepare
 prepare() {
