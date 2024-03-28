@@ -4,8 +4,8 @@
 pkgname=clash-meta-alpha-git
 _pkgname=clash-meta
 pkgver=2024032719.82517e6
-pkgrel=5
-pkgdesc="Another Clash Kernel (git virsion)"
+pkgrel=6
+pkgdesc="Another Clash Kernel by MetaCubeX (git virsion)"
 arch=(x86_64)
 url="https://github.com/MetaCubeX/mihomo"
 license=(GPL-3.0-or-later)
@@ -14,17 +14,17 @@ makedepends=(git go)
 provides=(clash-meta clash-meta-alpha)
 conflicts=(clash-meta clash-meta-alpha)
 backup=('etc/clash-meta/config.yaml')
-source=("https://raw.githubusercontent.com/MetaCubeX/Meta-Docs/main/docs/example/yaml")
-sha256sums=('25a125934bf524b340ec0bfe9be258f41b3ee55b0b23555f1c83ea3a3e776c4f')
-
-prepare() {
-    git clone --depth 1 --branch Alpha "$url" "$pkgname"
-    mv yaml "$pkgname/config.yaml"
-}
+source=("$_pkgname::git+$url.git#branch=Alpha")
+sha256sums=('SKIP')
 
 pkgver() {
-    cd "$pkgname"
-    TZ=UTC git log --pretty=format:"%cd.%h" --date=format:"%Y%m%d%H"
+    cd "$_pkgname"
+    TZ=UTC git log -1 --pretty=format:"%cd.%h" --date=format:"%Y%m%d%H"
+}
+
+prepare() {
+    cd "$_pkgname"
+    mv .github/mihomo.service "$_pkgname.service"
 }
 
 build() {
@@ -33,18 +33,19 @@ build() {
     export CGO_CXXFLAGS="${CXXFLAGS}"
     export CGO_LDFLAGS="${LDFLAGS}"
     export CGO_ENABLED=1
-    cd "$pkgname"
-    BUILDTIME=$(date -u)
+    cd "$_pkgname"
+    BUILDTIME=$(date -u --rfc-3339=seconds)
+    LDFLAGS="-linkmode external -extldflags \"${LDFLAGS}\""
+    OTHER_FLAGS="-X \"github.com/metacubex/mihomo/constant.Version=${pkgver}\" \
+                 -X \"github.com/metacubex/mihomo/constant.BuildTime=${BUILDTIME}\""
     GOOS=linux go build \
         -trimpath \
         -buildmode=pie \
         -mod=readonly \
         -modcacherw \
-        -ldflags "-linkmode external -extldflags \"${LDFLAGS}\" \
-        -X \"github.com/metacubex/mihomo/constant.Version=${pkgver}\" \
-        -X \"github.com/metacubex/mihomo/constant.BuildTime=${BUILDTIME}\" \
-        " \
-        -tags with_gvisor -o "$pkgname-$pkgver"
+        -ldflags "$LDFLAGS $OTHER_FLAGS" \
+        -tags with_gvisor \
+        -o "$_pkgname-$pkgver"
 
     echo "u $_pkgname - \"Clash-Meta Service\" - -"        >  "$_pkgname.sysusers"
     echo "d /etc/$_pkgname     0755 $_pkgname $_pkgname -" >  "$_pkgname.tmpfiles"
@@ -52,20 +53,20 @@ build() {
     sed -i -e '/Description/s/mihomo/Clash-Meta/' \
            -e "s/mihomo/$_pkgname/g"              \
            -e "/^Type=simple/a User=$_pkgname"    \
-           -e "/^Type=simple/a Group=$_pkgname"   .github/mihomo.service
+           -e "/^Type=simple/a Group=$_pkgname"   "$_pkgname.service"
 }
 
 check() {
-    cd "$pkgname"
+    cd "$_pkgname"
     go test ./...
 }
 
 package() {
-    cd "$pkgname"
-    install -Dm755 "$pkgname-$pkgver"      "$pkgdir/usr/bin/clash-meta"
+    cd "$_pkgname"
+    install -Dm755 "$_pkgname-$pkgver"     "$pkgdir/usr/bin/clash-meta"
     install -Dm644 "$_pkgname.sysusers"    "$pkgdir/usr/lib/sysusers.d/$_pkgname.conf"
     install -Dm644 "$_pkgname.tmpfiles"    "$pkgdir/usr/lib/tmpfiles.d/$_pkgname.conf"
-    install -Dm644 config.yaml             "$pkgdir/etc/clash-meta/config.yaml"
-    install -Dm644 .github/mihomo.service  "$pkgdir/usr/lib/systemd/system/clash-meta.service"
+    install -Dm644 docs/config.yaml        "$pkgdir/etc/clash-meta/config.yaml"
+    install -Dm644 "$_pkgname.service"     "$pkgdir/usr/lib/systemd/system/$_pkgname.service"
     ln -s          /etc/clash/Country.mmdb "$pkgdir/etc/$_pkgname/Country.mmdb"
 }

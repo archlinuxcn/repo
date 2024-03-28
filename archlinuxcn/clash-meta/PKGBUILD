@@ -2,23 +2,19 @@
 
 pkgname=clash-meta
 pkgver=1.18.2
-pkgrel=5
-pkgdesc="Another Clash Kernel"
+pkgrel=6
+pkgdesc="Another Clash Kernel by MetaCubeX"
 arch=(x86_64)
 url="https://github.com/MetaCubeX/mihomo"
 license=(GPL-3.0-or-later)
 depends=(clash-geoip glibc)
 makedepends=(go)
 backup=('etc/clash-meta/config.yaml')
-source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
-        "https://raw.githubusercontent.com/MetaCubeX/Meta-Docs/main/docs/example/yaml")
-sha256sums=('49855c53e5717932b9cb933e7f42f58155b52a42bf7db7f35f1fb1d4baa7ee00'
-            '25a125934bf524b340ec0bfe9be258f41b3ee55b0b23555f1c83ea3a3e776c4f')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('49855c53e5717932b9cb933e7f42f58155b52a42bf7db7f35f1fb1d4baa7ee00')
 
 prepare() {
-    cd "$srcdir"
     mv "mihomo-$pkgver"       "$pkgname"
-    mv yaml                   "$pkgname/config.yaml"
     cd "$pkgname"
     mv .github/mihomo.service "$pkgname.service"
 }
@@ -29,7 +25,7 @@ build() {
     export CGO_CXXFLAGS="${CXXFLAGS}"
     export CGO_LDFLAGS="${LDFLAGS}"
     export CGO_ENABLED=1
-    cd "$srcdir/$pkgname"
+    cd "$pkgname"
     BUILDTIME=$(date -u --rfc-3339=seconds)
     LDFLAGS="-linkmode external -extldflags \"${LDFLAGS}\""
     OTHER_FLAGS="-X \"github.com/metacubex/mihomo/constant.Version=${pkgver}\" \
@@ -53,16 +49,16 @@ build() {
 }
 
 check() {
-    cd "$srcdir/$pkgname"
+    cd "$pkgname"
     go test ./...
 }
 
 package() {
-    cd "$srcdir/$pkgname"
+    cd "$pkgname"
     install -Dm755 "$pkgname-$pkgver"      "$pkgdir/usr/bin/clash-meta"
     install -Dm644 "$pkgname.sysusers"     "$pkgdir/usr/lib/sysusers.d/$pkgname.conf"
     install -Dm644 "$pkgname.tmpfiles"     "$pkgdir/usr/lib/tmpfiles.d/$pkgname.conf"
-    install -Dm644 config.yaml             "$pkgdir/etc/clash-meta/config.yaml"
+    install -Dm644 docs/config.yaml        "$pkgdir/etc/clash-meta/config.yaml"
     install -Dm644 "$pkgname.service"      "$pkgdir/usr/lib/systemd/system/$pkgname.service"
     ln -s          /etc/clash/Country.mmdb "$pkgdir/etc/$pkgname/Country.mmdb"
 }
