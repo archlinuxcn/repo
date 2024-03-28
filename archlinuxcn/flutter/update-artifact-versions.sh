@@ -2,7 +2,7 @@
 
 rm -f *.zip *.tar.gz
 
-readonly ENGINE_VERSION="$(jq -r .engineRevision src/flutter/bin/cache/flutter.version.json)"
+readonly ENGINE_VERSION="$(cat src/flutter/bin/internal/engine.version)"
 
 readonly MATERIAL_FONTS_VERSION="$(cat src/flutter/bin/internal/material_fonts.version | cut -d '/' -f4)"
 readonly GRADLE_WRAPPER_VERSION="$(cat src/flutter/bin/internal/gradle_wrapper.version | cut -d '/' -f3)"
