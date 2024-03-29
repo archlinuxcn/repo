@@ -1,0 +1,18 @@
+pkgname=julia-git-vectorinterface-src
+pkgver=0.4.4
+_commit=131ec00664d8aba3c2036bd5632fb3a2a7b4d24c
+pkgrel=1
+pkgdesc="VectorInterface.jl"
+url="https://github.com/Jutho/VectorInterface.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/Jutho/VectorInterface.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd VectorInterface.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh VectorInterface "${pkgdir}" "${pkgname}" julia-git
+}
