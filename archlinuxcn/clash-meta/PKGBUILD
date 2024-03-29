@@ -2,7 +2,7 @@
 
 pkgname=clash-meta
 pkgver=1.18.2
-pkgrel=7
+pkgrel=8
 pkgdesc="Another Clash Kernel by MetaCubeX"
 arch=(x86_64)
 url="https://github.com/MetaCubeX/mihomo"
@@ -26,6 +26,7 @@ build() {
     export CGO_LDFLAGS="${LDFLAGS}"
     export CGO_ENABLED=1
     cd "$pkgname"
+    NAME=clash-meta
     BUILDTIME=$(date -u --rfc-3339=seconds)
     LDFLAGS="-linkmode external -extldflags \"${LDFLAGS}\""
     OTHER_FLAGS="-X \"github.com/metacubex/mihomo/constant.Version=${pkgver}\" \
