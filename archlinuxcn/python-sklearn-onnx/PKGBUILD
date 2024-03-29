@@ -7,7 +7,7 @@ pkgrel=1
 pkgdesc='Convert scikit-learn models and pipelines to ONNX'
 arch=('any')
 url='https://github.com/onnx/sklearn-onnx'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
   python-numpy
   python-scipy
@@ -17,18 +17,23 @@ depends=(
   python-onnxconverter-common
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/onnx/sklearn-onnx/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=('8f1ebd1d285eabd532cd877615aa260624b732598baeb38b0710fa01af341c2d')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
+# vim:set ts=2 sw=2 et:
+
