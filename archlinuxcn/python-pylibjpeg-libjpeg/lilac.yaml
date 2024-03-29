@@ -6,7 +6,8 @@ build_prefix: extra-x86_64
 update_on:
   - source: github
     github: pydicom/pylibjpeg-libjpeg
-    use_latest_release: true
+    use_max_tag: true
+    ignored: v2.02
   - source: manual
     manual: 1
   - alias: python
