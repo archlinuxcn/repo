@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # adapted by lnl from project's repo
 
 # To debug the tool, you can pass the following env to enable debug
