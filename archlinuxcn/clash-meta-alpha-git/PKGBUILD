@@ -1,10 +1,9 @@
-# Maintainer: sukanka <su975853527 at gmail dot com>
 # Maintainer: Roald Clark <roaldclark at gmail dot com>
 
 pkgname=clash-meta-alpha-git
 _pkgname=clash-meta
 pkgver=2024032823.11f0983e
-pkgrel=1
+pkgrel=2
 pkgdesc="Another Clash Kernel by MetaCubeX (git virsion)"
 arch=(x86_64)
 url="https://github.com/MetaCubeX/mihomo"
@@ -34,6 +33,7 @@ build() {
     export CGO_LDFLAGS="${LDFLAGS}"
     export CGO_ENABLED=1
     cd "$_pkgname"
+    NAME=clash-meta
     BUILDTIME=$(date -u --rfc-3339=seconds)
     LDFLAGS="-linkmode external -extldflags \"${LDFLAGS}\""
     OTHER_FLAGS="-X \"github.com/metacubex/mihomo/constant.Version=${pkgver}\" \
