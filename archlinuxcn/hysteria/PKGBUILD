@@ -3,13 +3,15 @@
 _pkgbase=hysteria
 pkgname=$_pkgbase
 pkgver=2.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A powerful, lightning fast and censorship resistant proxy'
 arch=('x86_64')
 url="https://hysteria.network/"
 license=('MIT')
 depends=('glibc')
 makedepends=('go' 'git')
+optdepends=('v2ray-rules-dat: geoip/geosite data originating from V2Ray'
+            'meta-rules-dat: geoip/geosite data originating from MetaCubeX')
 install=$_pkgbase.install
 source=("$_pkgbase-git"::"git+https://github.com/apernet/hysteria.git#tag=app/v$pkgver"
         hysteria@.service
