@@ -1,8 +1,8 @@
 # Maintainer: sukanka <su975853527 at gmail dot com>
 
 pkgname=clash-meta
-pkgver=1.18.2
-pkgrel=8
+pkgver=1.18.3
+pkgrel=1
 pkgdesc="Another Clash Kernel by MetaCubeX"
 arch=(x86_64)
 url="https://github.com/MetaCubeX/mihomo"
@@ -11,7 +11,7 @@ depends=(clash-geoip glibc)
 makedepends=(go)
 backup=('etc/clash-meta/config.yaml')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('49855c53e5717932b9cb933e7f42f58155b52a42bf7db7f35f1fb1d4baa7ee00')
+sha256sums=('d070c4b464650093c6a29ef475f1cf5beec7c4b93e7704ca01eaf01f6a56a020')
 
 prepare() {
     mv "mihomo-$pkgver"       "$pkgname"
