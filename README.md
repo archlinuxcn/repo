@@ -8,12 +8,13 @@ For detailed information in Chinese, [visit here](https://www.archlinuxcn.org/ar
 
 ### Usage
 
-Append (adding to the end of the file) to /etc/pacman.conf:
+Add repo:
 
 ```
 [archlinuxcn]
 Server = https://repo.archlinuxcn.org/$arch
 ```
+to your /etc/pacman.conf .
 
 For mirrors (strongly recommended for users in China), see https://github.com/archlinuxcn/mirrorlist-repo.
 
