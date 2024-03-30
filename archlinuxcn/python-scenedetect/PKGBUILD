@@ -7,11 +7,12 @@ pkgrel=1
 pkgdesc='Python and OpenCV-based scene cut/transition detection program & library'
 arch=('any')
 url='http://scenedetect.com'
-license=('BSD')
+license=('BSD-3-Clause')
 depends=(
   python-click
   python-numpy
   python-opencv
+  python-platformdirs
   python-tqdm
 )
 makedepends=(
