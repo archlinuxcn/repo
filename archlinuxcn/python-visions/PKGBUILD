@@ -7,35 +7,40 @@ pkgrel=3
 pkgdesc='Type System for Data Analysis in Python'
 arch=('any')
 url='https://github.com/dylan-profiler/visions'
-license=('BSD')
+license=('BSD-4-Clause')
 depends=(
   python-attrs
+  python-matplotlib
   python-multimethod
   python-networkx
   python-numpy
   python-pandas
+  python-pillow
   python-tangled-up-in-unicode
 )
 makedepends=(
   mypy
   python-black
+  python-build
+  python-installer
   python-isort
   python-recommonmark
   python-setuptools
   python-sphinx-autodoc-typehints
   python-sphinx_rtd_theme
+  python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/dylan-profiler/visions/archive/v${pkgver}.tar.gz")
 sha512sums=('63cb9be79c694a5440ce2e644275002800ee866e0de4d525e19ae0d9cba7bb2aa691c4dd8fa7e0b3362ff5eb5943688ab5d35ea091a8ceab7c68c9eda454128d')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
