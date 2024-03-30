@@ -9,9 +9,8 @@ pkgdesc="QuTiP is open-source software for simulating the dynamics of open quant
 arch=("aarch64" "x86_64")
 url="http://qutip.org/index.html"
 license=('BSD')
-depends=("python-setuptools" "python-numpy" "python-scipy"
-         "python-matplotlib" "python-pip" "python-install")
-makedepends=("gcc-fortran" "cython")
+depends=("python-numpy" "python-scipy" "python-matplotlib")
+makedepends=("gcc-fortran" "cython" "python-setuptools" "python-pip" "python-installer")
 optdepends=(
   "blas: Needed for installing Fortran Monte Carlo solver."
   "mayavi: Needed for using the Bloch3d class."
