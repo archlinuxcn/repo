@@ -7,12 +7,15 @@ pkgrel=2
 pkgdesc='Development tool to measure, monitor and analyze the memory behavior of Python objects in a running Python application'
 arch=('any')
 url='https://github.com/pympler/pympler'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
   python
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/pympler/pympler/archive/refs/tags/${pkgver}.tar.gz"
@@ -21,11 +24,11 @@ sha512sums=('cee9029f29302fb135912ee168e3e7590d8fadd700dee0be208664610b94c6d5507
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
 }
 # vim:set ts=2 sw=2 et:
