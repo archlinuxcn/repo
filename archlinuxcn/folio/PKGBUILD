@@ -1,0 +1,46 @@
+# Maintainer: Kiri <kiri@vern.cc>
+
+pkgname=folio
+_name=Folio
+pkgver=24.09
+pkgrel=1
+pkgdesc="A pretty note-taking app for GNOME"
+arch=('x86_64' 'aarch64')
+url="https://github.com/toolstack/Folio"
+license=('GPL-3.0-only')
+depends=('libadwaita'
+         'gtksourceview5'
+         'libgee'
+         'gtk4'
+         'hicolor-icon-theme'
+         'dconf'
+         'pango'
+         'glib2'
+         'glibc'
+         'sh')
+makedepends=('meson'
+             'ninja'
+             'gobject-introspection'
+             'blueprint-compiler'
+             'python-gobject'
+             'python-packaging'
+             'vala')
+checkdepends=('appstream-glib')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
+        "folio.sh")
+sha256sums=('d04b2a2009dd801b57e374e28cd8f10769f3a2b02f59efe8be0e7a048b71f699'
+            'bc7370d74d9581ef5301753a4ef72018c1e66af852bc5a9fc5fe602408705d6b')
+
+build() {
+  arch-meson "${_name}-${pkgver}" build
+  meson compile -C build
+}
+
+check() {
+  meson test -C build --print-errorlogs
+}
+
+package() {
+  meson install -C build --destdir "$pkgdir"
+  install -Dm 755 folio.sh ${pkgdir}/usr/bin/folio
+}
