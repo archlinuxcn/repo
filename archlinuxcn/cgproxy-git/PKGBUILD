@@ -1,18 +1,21 @@
-# Maintainer: Fancy Zhang <springzfx@gmail.com>
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: Fancy Zhang <springzfx@gmail.com>
+
 pkgname=cgproxy-git
 pkgver=v0.20.r0.g86fe42e
 pkgrel=2
 pkgdesc="A transparent proxy program powered by cgroup2 and tproxy"
 arch=('x86_64')
 url="https://github.com/springzfx/cgproxy"
-license=('GPL')
-makedepends=('git' 'cmake' 'nlohmann-json' 'clang' 'bpf' 'libbpf')
-depends=('libbpf' 'iproute2' 'which')
+license=('GPL-2.0-only')
+makedepends=('git' 'cmake' 'ninja' 'nlohmann-json' 'clang' 'bpf')
+depends=('libbpf' 'libbpf.so' 'iproute2' 'which' 'glibc' 'gcc-libs' 'bash')
 provides=('cgproxy')
 conflicts=('cgproxy')
+backup=('etc/cgproxy/config.json')
 
 source=("${pkgname}::git+https://github.com/springzfx/cgproxy#branch=master")
-md5sums=('SKIP')
+b2sums=('SKIP')
 
 pkgver() {
   cd "$pkgname"
@@ -22,23 +25,29 @@ pkgver() {
   )
 }
 
-backup=('etc/cgproxy/config.json')
-install="cgproxy.install"
+prepare() {
+  cd "${srcdir}/${pkgname}"
+  # PR 52
+  git cherry-pick -n d7990c0c2f1a1add5f863d35c670ec6aa720f1d3^..0b2c9a4c8264c2c4464ac38b12a60b96adf364f6
+  # PR 53
+  #git cherry-pick -n 3e68415864bacfe7fdbb73c08f403f867b440253^..4a76b6834a04bd28d4a16651ac05891aad48a615
+}
 
 build(){
-    mkdir -p "${srcdir}/${pkgname}/build"
-    cd "${srcdir}/${pkgname}/build"
-    cmake -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_INSTALL_PREFIX=/usr \
-          -Dbuild_execsnoop_dl=ON \
-          -Dbuild_static=OFF \
-          .. 
-    make
+  cd "${srcdir}/${pkgname}"
+
+  cmake -S . -B build \
+    -G Ninja \
+    -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -Dbuild_execsnoop_dl=ON \
+    -Dbuild_static=OFF
+  ninja -C build
 }
 
 package_cgproxy-git(){
-    cd "${srcdir}/$pkgname"/build
-    make DESTDIR=$pkgdir install
+  cd "${srcdir}/$pkgname"
+  DESTDIR=$pkgdir ninja -C build install
 }
 
 
