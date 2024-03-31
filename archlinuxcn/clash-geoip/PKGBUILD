@@ -1,7 +1,7 @@
 # Maintainer: Dct Mei <dctxmei@yandex.com>
 
 pkgname=clash-geoip
-pkgver=20240330
+pkgver=20240331
 pkgver() {
   date +'%Y%m%d'
 }
