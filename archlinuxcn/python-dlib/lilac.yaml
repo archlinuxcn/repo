@@ -4,5 +4,8 @@ maintainers:
 pre_build_script: aur_pre_build(maintainers=['petronny','AutoUpdateBot'])
 post_build: aur_post_build
 
+repo_makedepends:
+  - ccache-ext
+
 update_on:
   - source: aur
