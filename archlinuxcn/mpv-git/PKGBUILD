@@ -3,7 +3,7 @@
 
 pkgname=mpv-git
 _gitname=mpv
-pkgver=0.37.0_690_g7ab1080749
+pkgver=0.37.0_709_g765a43a0ff
 pkgrel=1
 pkgdesc='A free, open source, and cross-platform media player (with all possible libs)'
 arch=('x86_64')
@@ -84,6 +84,7 @@ build() {
         '-Dgl-cocoa=disabled' # macOS
         '-Dcocoa=disabled' # macOS
         '-Daudiounit=disabled' # macOS
+        '-Davfoundation=disabled' # macOS
         '-Dvideotoolbox-gl=disabled' # macOS and iOS
         '-Dvideotoolbox-pl=disabled' # macOS and iOS
         '-Dcoreaudio=disabled' # iOS
