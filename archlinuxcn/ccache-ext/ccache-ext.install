@@ -1,0 +1,12 @@
+# arg 1:  the old package version
+post_remove() {
+	# Clear symlinks
+	echo "Clear extra ccache symlinks..."
+	for file in /usr/lib/ccache/bin/*; do
+		if ! pacman -Qo $file >/dev/null 2>&1
+		then
+			echo "remove: $file"
+			rm $file
+		fi
+	done
+}

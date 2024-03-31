@@ -1,0 +1,37 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Type = File
+Target = usr/bin/update-ccache-links
+Target = usr/bin/c++
+Target = usr/bin/cc
+Target = usr/bin/clang
+Target = usr/bin/clang++
+Target = usr/bin/g++
+Target = usr/bin/gcc
+Target = usr/bin/c++-[0-9]*
+Target = usr/bin/cc-[0-9]*
+Target = usr/bin/clang-[0-9]*
+Target = usr/bin/clang++-[0-9]*
+Target = usr/bin/g++-[0-9]*
+Target = usr/bin/gcc-[0-9]*
+Target = usr/bin/*-c++
+Target = usr/bin/*-cc
+Target = usr/bin/*-clang
+Target = usr/bin/*-clang++
+Target = usr/bin/*-g++
+Target = usr/bin/*-gcc
+Target = usr/bin/*-c++-[0-9]*
+Target = usr/bin/*-cc-[0-9]*
+Target = usr/bin/*-clang-[0-9]*
+Target = usr/bin/*-clang++-[0-9]*
+Target = usr/bin/*-g++-[0-9]*
+Target = usr/bin/*-gcc-[0-9]*
+Target = opt/cuda/bin/nvcc
+
+[Action]
+Description = Updating ccache links...
+When = PostTransaction
+Depends = ccache
+Exec = /usr/bin/update-ccache-links
