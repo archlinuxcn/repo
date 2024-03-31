@@ -3,7 +3,7 @@
 # Contributor: Philip <philip1731 protonmail ch>
 
 pkgname=qucs-s
-pkgver=24.1.0
+pkgver=24.2.1
 pkgrel=1
 pkgdesc="A spin-off of Qucs that supports other free SPICE circuit simulators like ngspice with the same Qucs GUI"
 arch=('x86_64' 'i686')
@@ -23,6 +23,8 @@ depends=('glibc'
 makedepends=('cmake'
              'qt6-tools'
              'ninja'
+             'gperf'
+             'dos2unix'
              )
 optdepends=('qucs: Qucsator simulation backend'
             'xyce-serial: SPICE-compatible simulation backend'
@@ -31,14 +33,15 @@ optdepends=('qucs: Qucsator simulation backend'
             'octave: high-level language for post-simulation data processing'
             )
 source=(https://github.com/ra3xdh/qucs_s/releases/download/$pkgver/$pkgname-$pkgver.tar.gz)
-b2sums=('73fbce57a2e76ca80edf29e1b711b1345d5f39c24d8d45288fc02a58e0d5eebdb02ab448ad05ab84fa030142ca6ca5384a033c264ce4c53615106fb1d29b5c73')
+b2sums=('30ec44183d62459dfe63a8d9686890b21dd15051ce4f38c916e72f760d9b88766494eae0c30495f2b4f122f390115f0c2eaabf2143427b4ca4f1b984cf21f515')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
   mkdir -p build
   cmake -S . -B build \
     -G Ninja \
-    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DWITH_QT6=ON
 	
   ninja -C build
 }
