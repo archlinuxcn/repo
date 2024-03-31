@@ -1,0 +1,29 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+
+pkgname=greaseweazle
+pkgver=1.16.3
+pkgrel=1
+pkgdesc="Tools for accessing a floppy drive at the raw flux level"
+arch=('x86_64')
+url="https://github.com/keirf/greaseweazle"
+license=('Unlicense')
+makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools-scm')
+depends=('glibc' 'python' 'python-crcmod' 'python-bitarray' 'python-pyserial' 'python-requests')
+optdepends=('capsimage: Read IPF files')
+source=("https://github.com/keirf/$pkgname/releases/download/v$pkgver/$pkgname-$pkgver.zip")
+b2sums=('01c51c87e87950e66ff5ff2298a804a1af84b6e4baf5c019d26c70cd0bf8e627633ed989a7620e6286f678df057be2fc402a02498d722ede61ef72ff79c18156')
+
+build() {
+	cd "$pkgname-$pkgver"
+	python -m build --wheel --no-isolation
+
+	# use systemd access gain
+        sed 's/, MODE:="0666"/, TAG+="uaccess"/g' -i scripts/49-greaseweazle.rules
+}
+
+package() {
+	cd "$pkgname-$pkgver"
+	python -m installer --destdir="$pkgdir" dist/*.whl
+
+	install -Dm644 scripts/49-greaseweazle.rules "$pkgdir/usr/lib/udev/rules.d/49-greaseweazle.rules"
+}
