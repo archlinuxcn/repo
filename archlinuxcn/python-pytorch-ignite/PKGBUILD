@@ -2,7 +2,7 @@
 
 pkgname=python-pytorch-ignite
 _pkgname=ignite
-pkgver=0.4.13
+pkgver=0.5.0.post2
 pkgrel=1
 pkgdesc='High-level library to help with training and evaluating neural networks in PyTorch flexibly and transparently'
 arch=('any')
@@ -16,7 +16,7 @@ makedepends=(
 )
 
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/pytorch/ignite/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('f370237057a901129816f8b311e98cfd622163424815c55d31af282ef856c362243de036c11343a47d384f9b8ef23d05b7cfe2470b27111ab15d0f4c660264fe')
+sha512sums=('9e53b6160631a0402761bdcefd980a6dbbd7ad6d404834bfe7c1251ba05bfc6723e99bb2b84e9d0984b9b7babf140e4a4cbc23776b58d7c864235c855e5cd90f')
 
 build() {
   cd "${_pkgname}-${pkgver}"
