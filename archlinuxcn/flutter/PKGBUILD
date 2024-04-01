@@ -11,7 +11,7 @@ _enginever=e76c956498841e1ab458577d3892003e553e4f3c
 _materialfontsver=3012db47f3130e62f7cc0beabff968a33cbec8d8
 _gradlewver=fd5c1f2c013565a3bea56ada6df9d2b8e96d56aa
 _flutterarch=$(uname -m | sed s/aarch64/arm64/ | sed s/x86_64/x64/)
-pkgrel=2
+pkgrel=5
 pkgdesc="A new mobile app SDK to help developers and designers build modern mobile apps for iOS and Android."
 _pkgdesc="Flutter SDK component"
 arch=("x86_64" "aarch64")
@@ -147,7 +147,15 @@ _package() {
 _package-common() {
   pkgdesc="${_pkgdesc} - common SDK files and pub cache"
   install="${_group}-common.install"
-  conflicts=("${_group}<=3.19.3")
+  conflicts=(
+        "${_group}<${pkgver}"
+        "${_group}-engine-common<${pkgver}"
+        "${_group}-intellij-patch<${pkgver}"
+        "${_group}-gradle<${pkgver}"
+        "${_group}-engine-android<${pkgver}"
+        "${_group}-engine-linux<${pkgver}"
+        "${_group}-engine-web<${pkgver}"
+  )
 
   install -Dm644 "${srcdir}/${_group}/LICENSE" "${pkgdir}/usr/share/licenses/${_group}/LICENSE"
 
@@ -233,6 +241,7 @@ _package-gradle() {
   )
   conflicts=(
 	"${_group}-gradle"
+	"${_group}-target-android<${pkgver}"
   )
 
   install -dm755 "${pkgdir}/usr/lib/${_group}/bin/cache/artifacts"
@@ -259,6 +268,7 @@ _package-tool() {
 	"zip"
 	"glu" # libGLU.so.1 required for flutter test
   )
+  conflicts=("${_group}-devel<${pkgver}" "${_group}-target-android<${pkgver}" "${_group}-target-linux<${pkgver}" "${_group}-target-web<${pkgver}")
 
 
   install -dm755 "${pkgdir}/usr/lib/${_group}"
@@ -288,6 +298,7 @@ _package-devel() {
 	# "dart<${_dartver[1]}"
   )
   replaces=("${_group}-tool-developer")
+  conflicts=("${_group}<${pkgver}")
 
   install -dm755 "${pkgdir}/usr/lib/${_group}"
   install -dm755 "${pkgdir}/usr/lib/${_group}/packages/flutter_tools"
@@ -303,9 +314,9 @@ _package-intellij-patch() {
   pkgdesc="${_pkgdesc} - IntelliJ Flutter plugin hotfix"
   depends=("${_group}-common=${pkgver}")
   optdepends=(
-	"android-studio"
-        "intellij-idea-community-edition"
-        "intellij-idea-ultimate-edition"
+    "android-studio"
+    "intellij-idea-community-edition"
+    "intellij-idea-ultimate-edition"
   )
 
   # this is required in case people try to build with `aur/dart-sdk-dev` instead of `extra/dart`
