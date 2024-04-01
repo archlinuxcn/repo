@@ -10,4 +10,9 @@ def pre_build():
             line = "license=('GPL-2.0-only')"
         print(line)
 
+    for line in edit_file('config'):
+        print(line)
+        if line.startswith('CONFIG_DRM_AMD_SECURE_DISPLAY'):
+            print('CONFIG_AMD_PRIVATE_COLOR=y')
+
     run_cmd(['updpkgsums'])
