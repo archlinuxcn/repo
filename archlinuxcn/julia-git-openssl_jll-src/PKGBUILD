@@ -1,6 +1,6 @@
 pkgname=julia-git-openssl_jll-src
-pkgver=3.0.13+0
-_commit=70a7675eef0a9fa4e1fbf175ee71d76c6afd1180
+pkgver=3.0.13+1
+_commit=6e5c3ad2f1cb699c078389b04198b26cfd604b34
 pkgrel=1
 pkgdesc="OpenSSL_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/OpenSSL_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git openssl)
 source=("git+https://github.com/JuliaBinaryWrappers/OpenSSL_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('44e0c2808554a696ea57e10d468a911f94c84b04a07ae7d6ab8529048f9c7490'
             '7d42825e988c297a42e958583064b46785ef746b9adec17448844f797a4c7713')
 
 build() {
