@@ -1,6 +1,6 @@
 pkgname=julia-git-blockarrays-src
-pkgver=0.16.40
-_commit=f87ad0cc8e3b562614e92dba0dd21990906d3076
+pkgver=0.16.42
+_commit=2c86412d209c20ed5b87863126ae16d4eb8cd677
 pkgrel=1
 pkgdesc="BlockArrays.jl"
 url="https://github.com/JuliaArrays/BlockArrays.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaArrays/BlockArrays.jl.git#commit=$_commit")
-sha256sums=('5ea6e83bcac527ebef178b24aabd6c41b4a5c1f7930db15469c62fc9e2ef8014')
+sha256sums=('1ec2eff6713be53910312d6762432ba583215e2700a69f8086ec201761260a9a')
 
 package() {
   cd BlockArrays.jl
