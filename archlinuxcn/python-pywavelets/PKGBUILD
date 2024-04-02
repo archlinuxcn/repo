@@ -3,7 +3,7 @@
 # Contributor: Francois Boulogne <fboulogne at april dot org>
 _base=pywavelets
 pkgname=python-${_base}
-pkgver=1.5.0
+pkgver=1.6.0
 pkgrel=1
 pkgdesc="Wavelet transform module"
 arch=(x86_64)
@@ -13,7 +13,7 @@ depends=(python-numpy)
 makedepends=(python-build python-installer meson-python python-setuptools python-wheel cython)
 # checkdepends=(python-pytest python-matplotlib) # python-scipy
 source=(${_base::3}t-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('b430c6adf941fe5d1e63d42f5bd6861ddf5a1c6eab95e3731e96466cb98f6f1bc463c699ebfceeb97ec6a11c9c396296a3729e23a4e5bf8fbf49c31745a62dfe')
+sha512sums=('48a1b498a1698c740b6d4805e32ea4692044790ad9f86e62e63719582b1b896aceb05f57020c1662837cf4dcc36a569160d16b3bd4e92a1400cedbaae46c0873')
 
 build() {
   cd ${_base::3}t-${pkgver}
