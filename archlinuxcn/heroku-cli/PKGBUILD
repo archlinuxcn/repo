@@ -4,7 +4,7 @@
 # Github Contributors: https://github.com/SampsonCrowley/arch_packages/contributors.md
 
 pkgname=heroku-cli
-pkgver=8.10.0
+pkgver=8.11.1
 pkgrel=1
 pkgdesc="CLI to manage Heroku apps and services with forced auto-update removed"
 arch=('any')
@@ -15,8 +15,8 @@ makedepends=('yarn' 'git' 'npm')
 optdepends=('git: Deploying to Heroku')
 conflicts=('heroku-cli-bin' 'heroku-client-standalone' 'heroku-toolbelt' 'ruby-heroku')
 source=("git+https://github.com/heroku/cli.git#commit=v${pkgver}")
-sha256sums=('SKIP')
-sha512sums=('SKIP')
+sha256sums=('d9138827a59b6ddf630da902f543ca5a088ac13e50e2b8eb33aaad915edb1b4f')
+sha512sums=('21aa184176143bed3376d4d6bff9df848e49bf55d6e8cae321e37d353c56065a761c27ee32c6fdd1d05c7cb2efb7d3acd7a182572733def604b47d7393b1d82b')
 options=('!strip')
 provides=('heroku' 'heroku-cli')
 
