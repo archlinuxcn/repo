@@ -1,0 +1,19 @@
+pre_build_script: |
+  update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: |
+  git_pkgbuild_commit()
+
+update_on:
+  - source: gitlab
+    host: gitlab.gnome.org
+    gitlab: GNOME/zenity
+    use_max_tag: true
+    # 3.44.3
+    include_regex: ^3(\.\d+)+
+    # 3.90.0
+    # 3.99.91
+    exclude_regex: ^3\.9\d.*
+
+maintainers:
+  - github: rocka

@@ -1,0 +1,37 @@
+# Maintainer: Rocket Aaron <i at rocka dot me>
+# Contributor: Sich <little_sich@tuta.io>
+# Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Contributor: Jan de Groot <jgc@archlinux.org>
+
+_pkgname=zenity
+pkgname="${_pkgname}-gtk3"
+pkgver=3.44.3
+pkgrel=1
+pkgdesc='Display graphical dialog boxes from shell scripts. (GTK3 version)'
+url='https://gitlab.gnome.org/GNOME/zenity'
+arch=(x86_64)
+license=(LGPL-2.1-or-later)
+depends=('gtk3' 'libnotify')
+makedepends=('meson' 'yelp-tools')
+optdepends=('perl: gdialog wrapper')
+conflicts=('zenity')
+provides=('zenity')
+source=("https://gitlab.gnome.org/GNOME/zenity/-/archive/${pkgver}/zenity-${pkgver}.tar.gz")
+sha256sums=('1982ee2dbb06d234b8f7ef1873604e42e27bc784901d86196e1431b62bd549dc')
+
+build() {
+  local meson_options=(
+    -D libnotify=true
+  )
+
+  arch-meson "${_pkgname}-${pkgver}" build "${meson_options[@]}"
+  meson compile -C build
+}
+
+check() {
+  meson test -C build --print-errorlogs
+}
+
+package() {
+  meson install -C build --destdir "$pkgdir"
+}
