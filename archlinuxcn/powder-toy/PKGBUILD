@@ -13,7 +13,7 @@ pkgname=powder-toy
 _appexe="${pkgname}"
 _appid=uk.co.powdertoy.tpt
 _appvendor=powdertoy
-pkgver=98.1.364
+pkgver=98.2.365
 pkgrel=1
 pkgdesc="Desktop version of the classic falling sand physics sandbox, simulates air pressure, velocity & heat!"
 arch=(x86_64 i686)
@@ -23,7 +23,7 @@ url="https://powdertoy.co.uk/"
 license=('GPL3')
 install="${pkgname}.install"
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/The-Powder-Toy/The-Powder-Toy/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('56cf0e3de4352a00dc6cd02d2b1d732b249f02d3b56444c07e88411b0d70ed50')
+sha256sums=('21900b6b022535d0e56126b023538cc4f44b64feceafb5640492618a42a60080')
 
 build() {
   cd "The-Powder-Toy-${pkgver}"
