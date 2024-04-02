@@ -4,8 +4,8 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-lily
 _pkgname=telegram-desktop
-pkgver=4.15.2
-pkgrel=3
+pkgver=4.16.0
+pkgrel=1
 pkgdesc="Official Telegram Desktop client with megumifox & lily's patch"
 arch=('x86_64')
 url="https://desktop.telegram.org/"
@@ -31,12 +31,12 @@ source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver
         "0003-make-blockquote-markup-less-distractive.patch"
         "0004-Drop-usage-of-Qt-6.5-colorScheme-API-on-Linux.patch"
         "warn-before-delete-all-2.patch")
-sha512sums=('6e65183d5e77d17e11d0c70e1654373e69f6243f2879cf403701e23acd5aed9df6c6892a1c7c83fd975a858e90e20d73824d0754a2f96ad5af6e3de6515e2627'
+sha512sums=('877e86ef328ae96cedd01aa7e406c498e8c2f88aeafae68d0945b7945912a8544215eb42f468949749e8f4d2ebbee1133f36bceca2b7adc1d4a4bfb4b58a5656'
             '13b1b0f34b0937a98aa61fed776318717c659358794c0ffa8b1af00c5c80fe195a11816db9183eee8e8e02f76c72f10c723093a24a9c0de249af18dcf2755126'
-            '31d7a4c091abae49631598f2f41c8382550312e080fca784ed5a19cbaef0c6cdf2a2a4ffeffd78cd41f32dd49fb60ead2c12b3febce7cdf9a9ede6ea3c938a2b'
-            '89a12954a70451b195a9b565fc3306a03d5fb5d94d3c7cb8690dec8d6710db95f4ba5ac356e5d9a48235ab077c39bd73e76a55eb708f444d795b939507af415d'
-            '891a58e7d1a4d4a27a17a2b56bd614d87d22322f2f6e1247665b2b873c5c6d78336de04bc7a11feceb7cd8f1a2f79a858ad2520352644e808634e2989a17357d'
-            'af73d95bbb806a5d5c791872e7083e33e83f21b18396687f6e7d8b1ca60da41faaab45b291006e4c471f847e260a28ac5e196f1422f209f9c64540b11a7374c6')
+            '70c09627e13e01a8caac807738435ccbb39926ef7bc7517dc1f32c83a9c9fb49db1d0f3203fe6154566f032f9c9784ad3cf920bb27dd44f4630fc794d7b40f77'
+            '6464564292143033d74c029e000b3af80ad2f20a3bbd908ffe3fd2f6d6f10da76ba2e6850029aa1f43f8a2d94572be140ee3759e4e4cd51fd73f1a8096f26a7e'
+            'c67c1123042efc6515fb821b6438edcfc6d77dd08fd82c8513e4e0b0da7c0ee3e9f9ea0118d65584b7c837b906a8eb9759c125a9298d3b4b1e4491357f3eccb1'
+            '891a58e7d1a4d4a27a17a2b56bd614d87d22322f2f6e1247665b2b873c5c6d78336de04bc7a11feceb7cd8f1a2f79a858ad2520352644e808634e2989a17357d')
 
 prepare() {
     patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-Use-font-from-environment-variables.patch
