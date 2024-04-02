@@ -2,8 +2,8 @@
 
 pkgbase=sing-geosite
 pkgname=(sing-geosite-db sing-geosite-rule-set)
-pkgver=20240324094850
-pkgrel=7
+pkgver=20240402003241
+pkgrel=1
 pkgdesc="Geosite Database and Rule Set for sing-box"
 arch=(any)
 url="https://github.com/SagerNet/$pkgbase"
@@ -11,18 +11,24 @@ license=(MIT GPL-3.0-or-later)
 
 makedepends=(git)
 
-source=("$url/releases/download/$pkgver/geosite.db"
-        "$url/releases/download/$pkgver/geosite.db.sha256sum"
-        "https://raw.githubusercontent.com/v2fly/domain-list-community/master/LICENSE")
-sha256sums=('56d12105bcdcfecf9a209a34a3c43d54ad4458928e1addec819bcd6995cfd47a'
-            '9ff64cf0b47db78cfd848afc4fa13201170a32ceef20d77732843015d1fcef87'
+source=("${pkgver}-geosite.db::$url/releases/download/$pkgver/geosite.db"
+        "${pkgver}-geosite.db.sha256sum::$url/releases/download/$pkgver/geosite.db.sha256sum"
+        "${pkgver}-geosite-cn.db::$url/releases/download/$pkgver/geosite-cn.db"
+        "${pkgver}-geosite-cn.db.sha256sum::$url/releases/download/$pkgver/geosite-cn.db.sha256sum"
+        "${pkgver}-LICENSE::https://raw.githubusercontent.com/v2fly/domain-list-community/master/LICENSE")
+sha256sums=('3e7a0b6bda5344e43af6ace71210b359e82abe719120e647174fb6522c6b0c2b'
+            '34408d4b7287f605b0b9b8f80062e37c6e8b26b547d891772e607afd25fdc1d0'
+            'f00abbbe77e6f947343098b25f00bc42a2dec1b7e9af3739f093d2204149bc56'
+            '30a44d6597df71cbf82d40114e76b399e8c9235f72e2f859ba9072cdb051f508'
             'b9d84a22870d3f21c91a4c6e410c9cc51d00902f5233ad0c84011479244bf7d2')
 
 prepare() {
-  sha256sum -c geosite.db.sha256sum
+  mv ${pkgver}-geosite.db geosite.db
+  mv ${pkgver}-geosite-cn.db geosite-cn.db
+  sha256sum -c ${pkgver}-geosite.db.sha256sum
+  sha256sum -c ${pkgver}-geosite-cn.db.sha256sum
 
-  mkdir rule-set
-  git clone --depth 1 --branch rule-set $url rule-set
+  rm -rf rule-set && git clone --depth 1 --branch rule-set $url rule-set
 }
 
 package_sing-geosite-db() {
@@ -31,7 +37,8 @@ package_sing-geosite-db() {
 
   install -dm755 "$pkgdir/usr/share/sing-box"
   install -Dm644 geosite.db "$pkgdir/usr/share/sing-box"
-  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 geosite-cn.db "$pkgdir/usr/share/sing-box"
+  install -Dm644 ${pkgver}-LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
 package_sing-geosite-rule-set() {
