@@ -1,0 +1,15 @@
+[xorg-xwayland]
+#source = "gitlab"
+#gitlab = "xorg/xserver"
+#host = "gitlab.freedesktop.org"
+
+#source = "git"
+#git = "https://gitlab.freedesktop.org/xorg/xserver.git"
+#branch = "server-21.1-branch"
+#include_regex = "xorg-server"
+#use_max_tag = true
+#ignore = "YGWIN-6_8_1-MERGE"
+
+source = "regex"
+regex = "xwayland-([\\d.]+)\\."
+url = "https://gitlab.freedesktop.org/xorg/xserver/-/tags"
