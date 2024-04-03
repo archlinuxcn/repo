@@ -1,12 +1,7 @@
-# Maintainer: BlackEagle
-# Contributor: Christian Hesse <mail@eworm.de>
-# Contributor: ruario
-# Contributor: RobertMe
-# Contributor: Skunnyk
-# Contributor: totoloco
+# Maintainer: MojArch
 
 pkgname=opera-developer
-pkgver=109.0.5076.0
+pkgver=110.0.5117.0
 pkgrel=1
 pkgdesc='A fast and secure web browser and Internet suite - developer stream'
 arch=('x86_64')
@@ -23,7 +18,7 @@ source=(
     "opera"
     "default"
 )
-sha256sums=('fe7a0734f4c7017b56232c3c88bd3252da7cb0c1511b69bbe4a8b2f539385755'
+sha256sums=('590caea3f99608b2414ec483f7825acc9a83297b9e57e5016325433740055348'
             '508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
             '99fc0d2822edd14e234d451995db47148125e4580221a292598959421d131231')
 
