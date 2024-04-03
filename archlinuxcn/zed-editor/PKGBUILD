@@ -12,8 +12,8 @@ declare -gA _tags=(
 BUILDENV+=(!check)
 
 pkgname=zed-editor
-pkgver=0.128.3
-pkgrel=3
+pkgver=0.129.1
+pkgrel=1
 pkgdesc='A high-performance, multiplayer code editor from the creators of Atom and Tree-sitter'
 arch=(x86_64)
 url=https://zed.dev
@@ -40,11 +40,12 @@ makedepends=(cargo
              gendesk
              vulkan-headers
              vulkan-validation-layers)
-optdepends=('rust-analyzer: improved Rust language support')
+optdepends=('clang: improved C/C++ language support'
+            'rust-analyzer: improved Rust language support')
 _archive="zed-$pkgver"
 source=("$_url/archive/v$pkgver/$_archive.tar.gz"
         "https://github.com/livekit/protocol/archive/${_tags[protocol]}/protocol-${_tags[protocol]}.tar.gz")
-sha256sums=('e2ea2a9cef10444abd5a1731f2f885aa0966d0fee158aa493b88136211429d25'
+sha256sums=('0b7b5d99094eb5aa48b8f7e8e927b4dd43b2b1ab50ed59f9a073d168acd3955c'
             'cd26bc1015fa0b79154c23a385441ae81e9a4385211cf2989eb939ae83d0e414')
 
 prepare() {
