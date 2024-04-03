@@ -1,14 +1,8 @@
-# Maintainer: Darius Niminenn <root@dnim.dev>
-# Contributor: BlackEagle
-# Contributor: Christian Hesse <mail@eworm.de>
-# Contributor: ruario
-# Contributor: RobertMe
-# Contributor: Skunnyk
-# Contributor: totoloco
+# Maintainer: MojArch
 
 pkgname=opera-beta
 pkgver=109.0.5097.24
-pkgrel=1
+pkgrel=2
 pkgdesc='A fast and secure web browser and Internet suite - beta stream'
 arch=('x86_64')
 url='https://www.opera.com/computer'
