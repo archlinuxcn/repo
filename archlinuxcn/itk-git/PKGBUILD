@@ -15,7 +15,7 @@ depends=(
   eigen
   expat
   fftw
-  gdcm
+  #gdcm
   hdf5
   intel-oneapi-mkl
   libpng
@@ -27,8 +27,9 @@ makedepends=(
   gcc12
   git
   gtest
+  python
   subversion
-  swig
+#  swig
 )
 options=(!emptydirs)
 source=("${_pkgname}::git+https://github.com/InsightSoftwareConsortium/ITK.git")
@@ -64,13 +65,13 @@ build() {
     -DITK_USE_SYSTEM_EIGEN=ON
     -DITK_USE_SYSTEM_EXPAT=ON
     -DITK_USE_SYSTEM_FFTW=ON
-    -DITK_USE_SYSTEM_GDCM=ON
+    -DITK_USE_SYSTEM_GDCM=OFF
     -DITK_USE_SYSTEM_GOOGLETEST=ON
     -DITK_USE_SYSTEM_HDF5=ON
     -DITK_USE_SYSTEM_JPEG=ON
     -DITK_USE_SYSTEM_MINC=OFF
     -DITK_USE_SYSTEM_PNG=ON
-    -DITK_USE_SYSTEM_SWIG=ON
+    -DITK_USE_SYSTEM_SWIG=OFF
     -DITK_USE_SYSTEM_TIFF=ON
     -DITK_USE_SYSTEM_VXL=OFF
     -DITK_USE_SYSTEM_ZLIB=ON
