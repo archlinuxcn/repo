@@ -1,8 +1,8 @@
-# Maintainer: Carl Smedstad <carl.smedstad at protonmail dot com>
+# Maintainer: Carl Smedstad <carsme@archlinux.org>
 
 pkgname=satty
 _pkgname=Satty
-pkgver=0.11.3
+pkgver=0.12.0
 pkgrel=1
 pkgdesc="A Screenshot Annotation Tool inspired by Swappy and Flameshot"
 url="https://github.com/gabm/satty"
@@ -10,6 +10,7 @@ arch=(x86_64)
 license=(MPL-2.0)
 depends=(
   cairo
+  fontconfig
   gcc-libs
   gdk-pixbuf2
   glib2
@@ -21,7 +22,7 @@ depends=(
 )
 makedepends=(cargo)
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('0cb87510ea8bc2d12c3d556e7719139f40d7e610078de8239529689c2c052ae4')
+sha256sums=('42403b36e7babe245de2bebc78d4bebab68aeaa4594b28bb9d83f44808e52920')
 
 _archive="$_pkgname-$pkgver"
 
