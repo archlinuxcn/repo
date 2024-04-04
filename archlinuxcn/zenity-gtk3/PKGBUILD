@@ -5,8 +5,8 @@
 
 _pkgname=zenity
 pkgname="${_pkgname}-gtk3"
-pkgver=3.44.3
-pkgrel=2
+pkgver=3.44.4
+pkgrel=1
 pkgdesc='Display graphical dialog boxes from shell scripts. (GTK3 version)'
 url='https://gitlab.gnome.org/GNOME/zenity'
 arch=(x86_64)
@@ -17,7 +17,7 @@ optdepends=('perl: gdialog wrapper')
 conflicts=('zenity')
 provides=('zenity')
 source=("https://gitlab.gnome.org/GNOME/zenity/-/archive/${pkgver}/zenity-${pkgver}.tar.gz")
-sha256sums=('1982ee2dbb06d234b8f7ef1873604e42e27bc784901d86196e1431b62bd549dc')
+sha256sums=('e7b334867d4e11053e6e52e5d51b7a983dc549f93cb3fda757e40309b16bc57b')
 
 build() {
   local meson_options=(
