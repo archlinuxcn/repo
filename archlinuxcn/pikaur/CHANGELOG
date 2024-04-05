@@ -2170,3 +2170,19 @@ Sun Feb 4 03:52:54 2024 +0100
     *  2023-08-28 a030d77 Fredrik Magnusson chore(locale, makefile): add Swedish localization (#754)
     *  2023-08-20 113a5e1 Bundy01 chore(locale): update es.po and fr.po (#750)
     *  2023-08-21 aa8998d detiam chore(privilege): add 'ALL_PROXY' to PRESERVE_ENV (#749)
+
+
+Fri Apr 5 02:41:34 2024 +0200
+-------------------------------------------------
+1.19            Release 1.19
+    
+    Notable changes:
+    *  2024-04-05 5b08d34 actionless feat(main, search_cli, print_dept): implement --list/-l (fixes #777)
+    *  2024-04-02 76f67f8 actionless feat(news, install_cli): confirm reading Arch news (fixes: #618)
+    *  2024-03-28 7003fd1 Drommer chore(locale): update for Ukrainian and other translations. (#780)
+    *  2024-03-26 65d986c actionless fix(getpkgbuild: clone_repo_pkgs): use `.base` instead of `.name` (fixes #779)
+    *  2024-03-17 ad7edcd actionless fix(args): set preserve_env to "" if it's empty (fixes #775)
+    *  2024-03-17 b881313 actionless feat(install_cli: build_pkgs): add new prompt for DependencyNotBuiltYetError causing dependency cycle
+    *  2024-02-17 3ff6194 actionless feat(install_cli, build, aur_dep,conflicts): when resolving AUR deps add to recovery prompt an option to skip check() func and its deps (fixes #774)
+    *  2024-02-17 40694dc actionless fix(aur_deps: find_dep_graph_to): avoid recursion (fixes #774)
+    *  2024-02-09 de46955 actionless feat(install_cli: build_pkgs): mark already built pkgs between restart of whole installation loop (fixes #772)
