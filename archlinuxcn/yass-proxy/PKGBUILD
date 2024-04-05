@@ -2,9 +2,9 @@
 # Contributor: Chilledheart <hukeyue@hotmail.com>
 
 pkgname=yass-proxy
-pkgver=1.8.1
-pkgrel=4
-_pkgver=1.8.1
+pkgver=1.8.2
+pkgrel=1
+_pkgver=1.8.2
 _pkgrel=1
 pkgdesc="lightweight http/socks proxy"
 arch=(x86_64)
@@ -17,16 +17,13 @@ checkdepends=(curl)
 provides=(yass-proxy)
 conflicts=(yass-proxy-git)
 source=("https://github.com/Chilledheart/yass/releases/download/${_pkgver}/yass-${_pkgver}.tar.bz2"
-        "fortify.patch"
        )
-sha256sums=('b6be8f8b6351505df64f1ed1ad6d25c28abeb67ea87d4727c92cc0369d992c1f'
-            '63f3c95ad39bf178d92b26458c30baf15b513a8c3be7e00200985e0721e2ea41'
+sha256sums=('003f1ae8a399166f3d99d11c20a62fd1e05201965cf521c9830a55bc8acc099a'
        )
 
 prepare() {
   SRC_DIR="${srcdir}/yass-${_pkgver}"
   pushd $SRC_DIR
-  patch --forward --strip=1 --input=../fortify.patch
   cd tools
   go build
   cd ..
