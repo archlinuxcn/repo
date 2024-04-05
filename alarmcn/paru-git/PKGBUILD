@@ -42,7 +42,7 @@ build() {
 		_features+="generate,"
 	fi
 
-	cargo build --frozen --features "${_features:-}" --release --target-dir target
+	PARU_VERSION=${pkgver} cargo build --frozen --features "${_features:-}" --release --target-dir target
 	./scripts/mkmo locale/
 }
 
