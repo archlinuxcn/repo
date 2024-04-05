@@ -11,18 +11,20 @@ url="https://github.com/sched-ext/${_pkgname}"
 arch=('x86_64')
 license=('GPL-2.0-only')
 depends=('libbpf' 'bpf' 'libelf' 'zlib' 'systemd')
-makedepends=('python' 'meson' 'clang' 'llvm-libs' 'cargo' 'jq')
+makedepends=('git' 'python' 'meson' 'clang' 'llvm' 'cargo' 'jq')
 backup=('etc/default/scx')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 sha512sums=('a1c0f5e279f0c119ac310874fc82ef9247dcb06419fbc6327e8f70d809059924c28637c35d4c2c5bd478fd116f5c8af5c65994fddc95f941b31d0b3929385869')
 options=('!lto')
 
 build() {
-	arch-meson "${_pkgname}-${pkgver}/" build -Dcargo_home=$HOME/cargo-deps
+	cd "${_pkgname}-${pkgver}/"
+	arch-meson . build -Dcargo_home=$HOME/cargo-deps --auto-features auto
 	meson compile -C build
 }
 
 package() {
+	cd "${_pkgname}-${pkgver}/"
 	meson install -C build --destdir "${pkgdir}"
-	install -Dm644 "${_pkgname}-${pkgver}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
