@@ -1,0 +1,13 @@
+pre_build_script: |
+  aur_pre_build(maintainers=['z3ntu'])
+
+post_build_script: |
+  aur_post_build()
+
+update_on:
+  # GitHub: https://github.com/z3ntu/kde-thumbnailer-apk
+  - source: aur
+    aur: kde-thumbnailer-apk
+
+maintainers:
+  - github: rocka
