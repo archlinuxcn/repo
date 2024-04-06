@@ -7,7 +7,7 @@ pkgrel=1
 pkgdesc='Populate library namespace without incurring immediate import costs'
 arch=('any')
 url='https://github.com/scientific-python/lazy_loader'
-license=('BSD')
+license=('BSD-3-Clause')
 depends=(
   python
 )
@@ -16,6 +16,7 @@ makedepends=(
   python-build
   python-wheel
   python-installer
+  python-setuptools
 )
 checkdepends=(
   python-pytest
