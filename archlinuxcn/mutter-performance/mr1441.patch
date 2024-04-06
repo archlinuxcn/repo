@@ -1,7 +1,7 @@
 Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
 Source: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
-Commit: da8a124878f5549c253c9efcfa0a29d9d352688f
-Last Updated: 03/18/24 (Mutter 46.0)
+Commit: c8d1c9273bfb654ac2e35135a2754e3e0860cf79
+Last Updated: 04/04/24 (Mutter 46.0+r12)
 ---
 
 Use triple buffering if and when the previous frame is running late.
@@ -875,7 +875,7 @@ index 74340140639f14a6913dec269f014e7be42d6db0..f6b19520bec5c13b8685bea139a48b13
                          MetaKmsFlags   flags,
                          GError       **error);
 diff --git a/src/backends/native/meta-onscreen-native.c b/src/backends/native/meta-onscreen-native.c
-index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a571e38b6 100644
+index 32cbff412242ffa22f211c930506195fa2cecfa6..0254505ba50a91bf369d0f1258308910cf424dec 100644
 --- a/src/backends/native/meta-onscreen-native.c
 +++ b/src/backends/native/meta-onscreen-native.c
 @@ -75,7 +75,7 @@ typedef struct _MetaOnscreenNativeSecondaryGpuState
@@ -1068,10 +1068,10 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
  static void
  apply_transform (MetaCrtcKms            *crtc_kms,
                   MetaKmsPlaneAssignment *kms_plane_assignment,
-@@ -521,13 +556,21 @@ meta_onscreen_native_flip_crtc (CoglOnscreen           *onscreen,
-       graphene_rect_t src_rect;
-       MtkRectangle dst_rect;
- 
+@@ -520,13 +555,21 @@ meta_onscreen_native_flip_crtc (CoglOnscreen           *onscreen,
+   switch (renderer_gpu_data->mode)
+     {
+     case META_RENDERER_NATIVE_MODE_GBM:
 -      buffer = onscreen_native->gbm.next_fb;
 +      g_set_object (&onscreen_native->gbm.posted_fb,
 +                    onscreen_native->gbm.next_fb);
@@ -1094,7 +1094,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
                                       &dst_rect);
          }
        else
-@@ -915,12 +958,17 @@ static MetaDrmBufferDumb *
+@@ -914,12 +957,17 @@ static MetaDrmBufferDumb *
  secondary_gpu_get_next_dumb_buffer (MetaOnscreenNativeSecondaryGpuState *secondary_gpu_state)
  {
    MetaDrmBufferDumb *current_dumb_fb;
@@ -1116,7 +1116,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
  }
  
  static MetaDrmBuffer *
-@@ -1253,10 +1301,17 @@ swap_buffer_result_feedback (const MetaKmsFeedback *kms_feedback,
+@@ -1252,10 +1300,17 @@ swap_buffer_result_feedback (const MetaKmsFeedback *kms_feedback,
      g_warning ("Page flip failed: %s", error->message);
  
    frame_info = cogl_onscreen_peek_head_frame_info (onscreen);
@@ -1137,7 +1137,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
  }
  
  static const MetaKmsResultListenerVtable swap_buffer_result_listener_vtable = {
-@@ -1277,30 +1332,35 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1276,30 +1331,35 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
    CoglRendererEGL *cogl_renderer_egl = cogl_renderer->winsys;
    MetaRendererNativeGpuData *renderer_gpu_data = cogl_renderer_egl->platform;
    MetaRendererNative *renderer_native = renderer_gpu_data->renderer_native;
@@ -1182,7 +1182,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
    secondary_gpu_fb =
      update_secondary_gpu_state_pre_swap_buffers (onscreen,
                                                   rectangles,
-@@ -1359,7 +1419,17 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1358,7 +1418,17 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
    switch (renderer_gpu_data->mode)
      {
      case META_RENDERER_NATIVE_MODE_GBM:
@@ -1201,7 +1201,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
        if (onscreen_native->secondary_gpu_state)
          g_set_object (&onscreen_native->gbm.next_fb, secondary_gpu_fb);
        else
-@@ -1373,6 +1443,9 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1372,6 +1442,9 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
  #endif
      }
  
@@ -1211,7 +1211,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
    /*
     * If we changed EGL context, cogl will have the wrong idea about what is
     * current, making it fail to set it when it needs to. Avoid that by making
-@@ -1382,12 +1455,78 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1381,12 +1454,78 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
    if (egl_context_changed)
      _cogl_winsys_egl_ensure_current (cogl_display);
  
@@ -1292,7 +1292,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
        kms_update = meta_frame_native_ensure_kms_update (frame_native,
                                                          kms_device);
        meta_kms_update_add_result_listener (kms_update,
-@@ -1402,15 +1541,13 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1401,15 +1540,13 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
                                        onscreen_native->crtc,
                                        kms_update,
                                        META_KMS_ASSIGN_PLANE_FLAG_NONE,
@@ -1310,7 +1310,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
        return;
      }
  
-@@ -1430,8 +1567,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1429,8 +1566,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
            kms_update = meta_frame_native_steal_kms_update (frame_native);
            meta_renderer_native_queue_mode_set_update (renderer_native,
                                                        kms_update);
@@ -1319,7 +1319,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
            return;
          }
        else if (meta_renderer_native_has_pending_mode_set (renderer_native))
-@@ -1445,8 +1580,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1444,8 +1579,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
  
            meta_frame_native_steal_kms_update (frame_native);
            meta_renderer_native_post_mode_set_updates (renderer_native);
@@ -1328,7 +1328,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
            return;
          }
        break;
-@@ -1462,8 +1595,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1461,8 +1594,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
                                                        kms_update);
  
            meta_renderer_native_post_mode_set_updates (renderer_native);
@@ -1337,7 +1337,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
            return;
          }
        break;
-@@ -1478,7 +1609,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1477,7 +1608,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
    kms_update = meta_frame_native_steal_kms_update (frame_native);
    meta_kms_device_post_update (kms_device, kms_update,
                                 META_KMS_UPDATE_FLAG_NONE);
@@ -1345,7 +1345,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
  }
  
  gboolean
-@@ -1549,7 +1679,7 @@ scanout_result_feedback (const MetaKmsFeedback *kms_feedback,
+@@ -1548,7 +1678,7 @@ scanout_result_feedback (const MetaKmsFeedback *kms_feedback,
  
        g_warning ("Direct scanout page flip failed: %s", error->message);
  
@@ -1354,7 +1354,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
                                    onscreen);
        clutter_stage_view_add_redraw_clip (view, NULL);
        clutter_stage_view_schedule_update_now (view);
-@@ -1559,7 +1689,7 @@ scanout_result_feedback (const MetaKmsFeedback *kms_feedback,
+@@ -1558,7 +1688,7 @@ scanout_result_feedback (const MetaKmsFeedback *kms_feedback,
    frame_info->flags |= COGL_FRAME_INFO_FLAG_SYMBOLIC;
  
    meta_onscreen_native_notify_frame_complete (onscreen);
@@ -1363,7 +1363,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
  }
  
  static const MetaKmsResultListenerVtable scanout_result_listener_vtable = {
-@@ -1611,6 +1741,18 @@ meta_onscreen_native_direct_scanout (CoglOnscreen   *onscreen,
+@@ -1610,6 +1740,18 @@ meta_onscreen_native_direct_scanout (CoglOnscreen   *onscreen,
        return FALSE;
      }
  
@@ -1382,7 +1382,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
    renderer_gpu_data = meta_renderer_native_get_gpu_data (renderer_native,
                                                           render_gpu);
  
-@@ -1726,11 +1868,7 @@ meta_onscreen_native_before_redraw (CoglOnscreen *onscreen,
+@@ -1725,11 +1867,7 @@ meta_onscreen_native_before_redraw (CoglOnscreen *onscreen,
                                      ClutterFrame *frame)
  {
    MetaOnscreenNative *onscreen_native = META_ONSCREEN_NATIVE (onscreen);
@@ -1394,7 +1394,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
    maybe_update_frame_sync (onscreen_native, frame);
  }
  
-@@ -1846,22 +1984,79 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
+@@ -1845,22 +1983,79 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
    MetaKmsDevice *kms_device = meta_kms_crtc_get_device (kms_crtc);
    MetaFrameNative *frame_native = meta_frame_native_from_frame (frame);
    MetaKmsUpdate *kms_update;
@@ -1482,7 +1482,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
    meta_kms_update_add_result_listener (kms_update,
                                         &finish_frame_result_listener_vtable,
                                         NULL,
-@@ -1884,7 +2079,19 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
+@@ -1883,7 +2078,19 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
    meta_kms_update_set_flushing (kms_update, kms_crtc);
    meta_kms_device_post_update (kms_device, kms_update,
                                 META_KMS_UPDATE_FLAG_NONE);
@@ -1503,7 +1503,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
  }
  
  static gboolean
-@@ -2790,8 +2997,11 @@ meta_onscreen_native_dispose (GObject *object)
+@@ -2789,8 +2996,11 @@ meta_onscreen_native_dispose (GObject *object)
      {
      case META_RENDERER_NATIVE_MODE_GBM:
        g_clear_object (&onscreen_native->gbm.next_fb);
@@ -1516,7 +1516,7 @@ index e40b03f3eaf3436450095270244559192c477c2a..9617d00161ea735fb2a8cc24ab2db02a
        break;
      case META_RENDERER_NATIVE_MODE_SURFACELESS:
        g_assert_not_reached ();
-@@ -2825,6 +3035,10 @@ meta_onscreen_native_dispose (GObject *object)
+@@ -2824,6 +3034,10 @@ meta_onscreen_native_dispose (GObject *object)
  
    g_clear_object (&onscreen_native->output);
    g_clear_object (&onscreen_native->crtc);

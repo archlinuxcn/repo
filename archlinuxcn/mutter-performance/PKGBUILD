@@ -32,12 +32,12 @@ else
   pkgname=(mutter-performance mutter-performance-docs)
 fi
 epoch=1
-pkgver=46.0
+pkgver=46.0+r19+gc0ae617b3
 pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
-license=(GPL)
+license=('GPL-2.0-or-later')
 depends=(
   at-spi2-core
   cairo
@@ -111,13 +111,13 @@ makedepends=(
 if [ -n "$_enable_check" ]; then
   checkdepends=(gnome-session xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
 fi
-_commit=c4753689e3413cd9332d885dd0297b3b7d9ba9ca  # tags/46.0^0
+_commit=c0ae617b3ff86f5a4ad773d606e7bcdd7672139e  # tags/46.0^19
 source=("git+https://gitlab.gnome.org/GNOME/mutter.git#commit=$_commit"
         'mr1441.patch'
         'mr3304.patch'
         'mr3373.patch')
-b2sums=('04a14854c8ec2668a340b241102b7b2ebbc0387a9771a5bd2c2366419ee08e7ebb308f2288f4a64b9d08053e1897eb514a46802584d1590f8bcebde4a613afaa'
-        'f183956d0d632dcedbc8577ab73e66cee8806ab901723fc93861787ef19f491b32dd7986ca3df86f73a7e77270ce74c948ab7467cd91f9211858514ca310bb06'
+b2sums=('118cb0ba40f1a14163ea848c49487869bccfaa8f1cdb0423005e22ecea53c90154ff4512c2a885af7eaca0b170819ea19aeca1b03a34c1e2ae04dce702ce83e7'
+        '75fb3ae1d4149c1cd82ae5cc23335e6d517665ba0527c6cbe112585706fa5191fb67e3264402527229185c0f6fc6638bb604243bb7c8123b7acc0b0a4379ba7e'
         'f53c0a7cf5fe400e83379be5e3694dba0668e0917b5bf29c485cef802660e38176ab856118a030ddc87bd49b75d0dd6f9e0d8f32d2b2ef27ebb1737f8914bf21'
         '71f10db4ebe04a787940c7048131eac67cffd3ec8e415cfc961b8041b881f272650581e9df273e2a8da23a50ec9151c790dc2d5ecc0309ab2847a22f8c922c9c')
 
@@ -281,6 +281,7 @@ _pick() {
 package_mutter-performance() {
   provides=(mutter libmutter-14.so)
   conflicts=(mutter)
+  
 
   meson install -C build --destdir "$pkgdir"
 
