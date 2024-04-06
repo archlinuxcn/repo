@@ -70,8 +70,10 @@ build() {
 package() {
 	_info "Copying files"
 	cd Qcm
-	install -Dm644 "app/assets/Qcm.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/io.github.hypengw.Qcm.svg"
-	install -Dm644 "app/assets/Qcm.desktop" -t "${pkgdir}/usr/share/applications/"
+
+	local APP_ID=io.github.hypengw.Qcm
+	install -Dm644 "app/assets/Qcm.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${APP_ID}.svg"
+	install -Dm644 "app/assets/Qcm.desktop" "${pkgdir}/usr/share/applications/${APP_ID}.desktop"
 	install -Dm755 "build/app/Qcm" -t "${pkgdir}/usr/bin/"
 }
 
