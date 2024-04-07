@@ -1,0 +1,48 @@
+# Maintainer: edward-p <edward at edward-p dot xyz>
+
+pkgname=einat-ebpf-git
+_pkgname=einat-ebpf
+_target=einat
+pkgver=0.1.0.r8.g9e6f8e6
+pkgrel=1
+pkgdesc="eBPF-based Endpoint-Independent NAT"
+arch=('x86_64')
+url="https://github.com/EHfive/einat-ebpf"
+license=('GPL-2.0-or-later')
+depends=('glibc' 'gcc-libs' 'zlib' 'libelf')
+provides=('einat')
+conflicts=('einat')
+makedepends=('git' 'cargo' 'clang')
+source=("$_pkgname::git+https://github.com/EHfive/einat-ebpf.git")
+sha512sums=('SKIP')
+options=(!lto !debug)
+
+pkgver(){
+  cd "$_pkgname"
+  git describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd "$_pkgname"
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+  cd "$_pkgname"
+  cargo build --release --features ipv6 --frozen
+}
+
+check() {
+  cd "$_pkgname"
+  cargo test --frozen
+}
+
+package() {
+  cd "$_pkgname"
+  install -Dm 755 "target/release/$_target" -t "$pkgdir/usr/bin"
+  install -Dm 644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
+  install -Dm 644 config.sample.toml -t "$pkgdir/usr/share/doc/$pkgname"
+}
+
+# vim: ts=2 sw=2 et:
+
