@@ -54,18 +54,14 @@ pkgver() {
 	echo "${_major_ver}.${_minor_ver}.${_micro_ver}_r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
 }
 
-prepare() {
-	mkdir -p build
-}
-
 build() {
-	cd build
-	cmake -B build -S "../${_pkgname}" \
+	cmake -B build -S "${_pkgname}" \
+		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DBUILD_TESTING=OFF
+
 	cmake --build build
 }
 
 package() {
-	cd build
 	DESTDIR="${pkgdir}" cmake --install build
 }
