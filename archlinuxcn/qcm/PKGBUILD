@@ -43,40 +43,30 @@ makedepends=(
 source=("git+${url}.git#tag=v${pkgver}")
 sha256sums=('05c0d60b16a4985fbe42a57bf4f5196ef6a12f7a059bb8c1e48aa80edc17b1c1')
 
-build() {
-	export TERM=xterm
-	if [ -d Qcm/build ]; then
-		_info "Deleting ${srcdir}/Qcm/build"
-		rm -rf Qcm/build/
+prepare() {
+	cd Qcm
+	if [ -d build ]; then
+		echo "Deleting ${srcdir}/Qcm/build..."
+		rm -rf build
 	fi
 
-	_info "Starting Build..."
-	cd Qcm
 	git submodule update --init
 	mkdir build
-	cd build
+}
+
+build() {
+	cd Qcm/build
+	echo "Starting Build..."
 	cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release
 	ninja
 }
 
 package() {
-	_info "Copying files"
+	echo "Copying files..."
 	cd Qcm
 
 	local APP_ID=io.github.hypengw.Qcm
 	install -Dm644 "app/assets/Qcm.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${APP_ID}.svg"
 	install -Dm644 "app/assets/Qcm.desktop" "${pkgdir}/usr/share/applications/${APP_ID}.desktop"
 	install -Dm755 "build/app/Qcm" -t "${pkgdir}/usr/bin/"
-}
-
-_info() {
-	if [ -f /usr/bin/pamac ]; then
-		echo "  ==> [Info]: $@"
-	else
-		all_off="$(tput sgr0)"
-		bold="${all_off}$(tput bold)"
-		blue="${bold}$(tput setaf 4)"
-		yellow="${bold}$(tput setaf 3)"
-		printf "${blue}==>${yellow} [Info]:${bold} $1${all_off}\n"
-	fi
 }
