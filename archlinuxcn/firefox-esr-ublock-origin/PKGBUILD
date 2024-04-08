@@ -3,7 +3,7 @@
 
 pkgname=firefox-esr-ublock-origin
 _pkgname=uBlock
-pkgver=1.57.0
+pkgver=1.57.2
 pkgrel=1
 pkgdesc='Efficient blocker add-on for various browsers. Fast, potent, and lean'
 arch=('any')
@@ -14,7 +14,7 @@ depends=('firefox-esr')
 makedepends=('git' 'npm' 'python' 'strip-nondeterminism' 'zip')
 source=("git+$url.git#commit=$pkgver?signed"
         "git+https://github.com/uBlockOrigin/uAssets.git")
-b2sums=('d363c533756665da3a8286b1ccb48290a01d2f82d22e23e910e71d48188e43c709d21e790eaf194c9c82c0ea4815f302905672970664e0be19f8114855169579'
+b2sums=('4d9815c11807e280ee43f255c7f97ac40e2657d7022a4107ff8f9989a2a0896c465d3503470de41a85cc9d05ea2f5cfd2169619beb17b0aca7419395dfd4a062'
         'SKIP')
 validpgpkeys=('603B28AA5D6CD687A554347425E1490B761470C2') # Raymond Hill <rhill@raymondhill.net>
 
