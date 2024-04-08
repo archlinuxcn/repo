@@ -150,17 +150,26 @@
        'pluginClass': pluginClass,
 --- ./packages/flutter_tools/lib/src/dart/pub.dart.orig
 +++ ./packages/flutter_tools/lib/src/dart/pub.dart
-@@ -545,9 +545,7 @@
+@@ -3,6 +3,7 @@
+ // found in the LICENSE file.
+
+ import 'dart:async';
++import 'dart:io' as io show Platform;
+
+ import 'package:meta/meta.dart';
+ import 'package:package_config/package_config.dart';
+@@ -545,10 +546,7 @@
    List<String> _computePubCommand() {
      // TODO(zanderso): refactor to use artifacts.
      final String sdkPath = _fileSystem.path.joinAll(<String>[
 -      Cache.flutterRoot!,
 -      'bin',
 -      'cache',
-+      '/opt',
-       'dart-sdk',
+-      'dart-sdk',
++      io.Platform.environment['DART_ROOT'] ?? '/opt/dart-sdk',
        'bin',
        'dart',
+     ]);
 --- ./packages/flutter_tools/lib/src/dart/language_version.dart.orig
 +++ ./packages/flutter_tools/lib/src/dart/language_version.dart
 @@ -3,6 +3,7 @@
