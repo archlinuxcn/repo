@@ -7,30 +7,29 @@ _pkgname=${pkgname%-git}
 pkgver=6.1.0_r1319.g1aaacb22
 pkgrel=1
 pkgdesc="Configuration system"
-arch=($CARCH)
+arch=('x86_64' 'aarch64' 'riscv64')
 url="https://community.kde.org/Frameworks"
-license=('LGPL-2.0-or-later')
-depends=(qt6-base)
-makedepends=(git extra-cmake-modules-git qt6-tools clang python-pyqt6 doxygen sip qt6-declarative)
+license=('LGPL-2.0-only AND LGPL-3.0-only')
+depends=('glibc' 'gcc-libs' 'qt6-base' 'qt6-declarative')
+makedepends=('git' 'extra-cmake-modules-git' 'qt6-tools' 'doxygen' 'qt6-doc')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
-optdepends=('python-pyqt6: for the Python bindings')
-groups=(kf6-git)
-source=("git+https://github.com/KDE/${_pkgname}.git")
+groups=('kf6-git')
+source=("git+https://invent.kde.org/frameworks/${_pkgname}.git")
 sha256sums=('SKIP')
 
 pkgver() {
 	cd "${_pkgname}/"
-	_ver="$(grep -m1 'set(KF_VERSION' CMakeLists.txt | cut -d '"' -f2 | tr - .)"
-	echo "${_ver}_r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 build() {
 	cmake -B build -S "${_pkgname}/" \
-		-DQT_MAJOR_VERSION=6 \
+		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBEXECDIR=lib \
 		-DBUILD_TESTING=OFF \
 		-DBUILD_QCH=ON
+
 	cmake --build build
 }
 
