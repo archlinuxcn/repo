@@ -5,9 +5,9 @@
 
 pkgname=wlr-randr
 pkgver=0.4.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Utility to manage outputs of a Wayland compositor'
-arch=('x86_64')
+arch=('x86_64' 'aarch64')
 url='https://sr.ht/~emersion/wlr-randr'
 _url='https://git.sr.ht/~emersion/wlr-randr'
 license=('MIT')
