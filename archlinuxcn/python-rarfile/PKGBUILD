@@ -1,11 +1,11 @@
-# Maintainer: 
+# Maintainer: Bao Trinh <qubidt at gmail dot com>
 # Contributor: Mark Wagie <mark dot wagie at proton dot me>
 # Contributor: Sebastien Leduc <sebastien@sleduc.fr>
 # Contributor: Cedric Girard <girard.cedric@gmail.com>
 pkgname=python-rarfile
 _name=${pkgname#python-}
-pkgver=4.1
-pkgrel=2
+pkgver=4.2
+pkgrel=1
 pkgdesc="Python module for RAR archive reading"
 arch=('any')
 url="https://github.com/markokr/rarfile"
@@ -27,7 +27,7 @@ checkdepends=('python-pytest'
               'python-cryptography'
               'python-pycryptodome')
 source=("$_name-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('50cd9e283263e2b3b2762e3027f29989e0f641e8df7eb74bcba974df2f805860')
+sha256sums=('dcf487b64541c07a47888d51fd199a96aae320e735a8ed923d698c4e6062f39f')
 
 build() {
   cd "$_name-$pkgver"
