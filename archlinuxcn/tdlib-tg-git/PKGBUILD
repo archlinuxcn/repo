@@ -1,0 +1,36 @@
+# Maintainer: xiliuya <xiliuya@aliyun.com>
+# Maintainer: Integral <integral@member.fsf.org>
+
+pkgname=tdlib-tg-git
+_pkgname=${pkgname%-git}
+pkgver=1.8.0.r4336.g404761c52
+pkgrel=1
+pkgdesc="Cross-platform library for building Telegram clients"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://core.telegram.org/tdlib"
+license=('BSL-1.0')
+provides=("${_pkgname}")
+depends=('gcc-libs' 'zlib' 'openssl')
+makedepends=('git' 'gperf' 'cmake')
+source=("${_pkgname}::git+https://github.com/tdlib/td.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+prepare() {
+	mkdir -p "${_pkgname}/build/"
+}
+
+build() {
+	cd "${_pkgname}/build/"
+	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
+	cmake --build .
+}
+
+package() {
+	cd "${_pkgname}/"
+	DESTDIR="${pkgdir}" cmake --install build
+}
