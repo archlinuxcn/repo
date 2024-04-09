@@ -1,4 +1,4 @@
-From 85940d36c31b6382c58089c8f874663fc5eacddb Mon Sep 17 00:00:00 2001
+From b8d160f963b692f8a0519436f511a353564ba729 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 19 Jul 2020 09:40:32 -0400
 Subject: [PATCH 2/7] Fix source file paths
@@ -29,7 +29,7 @@ index 62241de9ff..e3ff79f6da 100644
      # Clear global state
      empty!(Core.ARGS)
 diff --git a/base/sysinfo.jl b/base/sysinfo.jl
-index 9bdff36734..8e9b616850 100644
+index 484ac4d01d..ddb079cc1c 100644
 --- a/base/sysinfo.jl
 +++ b/base/sysinfo.jl
 @@ -55,7 +55,7 @@ A string containing the full path to the directory containing the `stdlib` packa
@@ -59,10 +59,10 @@ index a81908b96a..4c463db143 100644
          write(io, filename)
          write(io, UInt64(sizeof(src)))
 diff --git a/src/ast.c b/src/ast.c
-index d39ee35e80..b907a6b1d5 100644
+index 0971f4ab16..b54c98bcf2 100644
 --- a/src/ast.c
 +++ b/src/ast.c
-@@ -813,6 +813,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v, int check_vali
+@@ -825,6 +825,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v, int check_vali
      return julia_to_scm_noalloc2(fl_ctx, v, check_valid);
  }
  
@@ -81,7 +81,7 @@ index d39ee35e80..b907a6b1d5 100644
  // Parse `text` starting at 0-based `offset` and attributing the content to
  // `filename`. Return an svec of (parsed_expr, final_offset)
  JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
-@@ -838,6 +850,7 @@ JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
+@@ -850,6 +862,7 @@ JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
      fl_context_t *fl_ctx = &ctx->fl;
      value_t fl_text = cvalue_static_cstrn(fl_ctx, text, text_len);
      fl_gc_handle(fl_ctx, &fl_text);

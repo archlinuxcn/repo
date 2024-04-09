@@ -1,4 +1,4 @@
-From 50386dedce01af154fdbe576de961b210a285b7a Mon Sep 17 00:00:00 2001
+From 13b8136e509f0a32ae0b7d44b116bb49b454c059 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 13 Mar 2024 11:13:25 -0400
 Subject: [PATCH 7/7] Update to LLVM 17
@@ -171,7 +171,7 @@ index 816d40ccc6..a44d922a40 100644
  //uint8_t getSwappedBytes_8(uint8_t Value); // no-op
  //uint16_t getSwappedBytes_16(uint16_t Value);
 diff --git a/src/Makefile b/src/Makefile
-index 72895e9a80..4ee50dafc6 100644
+index 323aaea61c..f360ed7d7d 100644
 --- a/src/Makefile
 +++ b/src/Makefile
 @@ -77,9 +77,10 @@ else
@@ -189,7 +189,7 @@ index 72895e9a80..4ee50dafc6 100644
  
  ifeq ($(OS),WINNT)
 diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
-index 880d193ea1..2e34e89579 100644
+index edef391af6..c1a83317ea 100644
 --- a/src/aotcompile.cpp
 +++ b/src/aotcompile.cpp
 @@ -5,7 +5,11 @@
@@ -387,7 +387,7 @@ index 8385b5682a..5ede416a8b 100644
                  originalAlloca->mutateType(decayed->getType());
                  recursively_adjust_ptr_type(originalAlloca, 0, AddressSpace::Derived);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 75b5995d0a..325e2adcb3 100644
+index 744c3dd983..d1c19e0fd5 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -22,7 +22,11 @@
@@ -561,7 +561,7 @@ index c2450d359b..633024b578 100644
  
  //Mark our stats as being from intrinsics irgen
 diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
-index 5f9d7f8a3c..ea70701c24 100644
+index eee2879ef0..0b47dfca50 100644
 --- a/src/jitlayers.cpp
 +++ b/src/jitlayers.cpp
 @@ -28,7 +28,11 @@
@@ -576,7 +576,7 @@ index 5f9d7f8a3c..ea70701c24 100644
  #include <llvm/Support/TargetSelect.h>
  #include <llvm/Object/SymbolSize.h>
  
-@@ -1478,9 +1482,11 @@ struct JuliaOJIT::DLSymOptimizer {
+@@ -1487,9 +1491,11 @@ struct JuliaOJIT::DLSymOptimizer {
                      if (named) {
                          auto T = GV.getValueType();
                          assert(T->isPointerTy());
@@ -588,7 +588,7 @@ index 5f9d7f8a3c..ea70701c24 100644
                          init = GlobalAlias::create(T, 0, GlobalValue::PrivateLinkage, GV.getName() + ".jit", init, &M);
                      }
                      GV.setInitializer(init);
-@@ -1531,9 +1537,11 @@ struct JuliaOJIT::DLSymOptimizer {
+@@ -1540,9 +1546,11 @@ struct JuliaOJIT::DLSymOptimizer {
                          if (named) {
                              auto T = CI->getType();
                              assert(T->isPointerTy());
@@ -600,7 +600,7 @@ index 5f9d7f8a3c..ea70701c24 100644
                              init = GlobalAlias::create(T, 0, GlobalValue::PrivateLinkage, CI->getName() + ".jit", init, &M);
                          }
                          // DCE and SimplifyCFG will kill the branching structure around
-@@ -1577,6 +1585,7 @@ void fixupTM(TargetMachine &TM) {
+@@ -1586,6 +1594,7 @@ void fixupTM(TargetMachine &TM) {
      }
  }
  
@@ -608,7 +608,7 @@ index 5f9d7f8a3c..ea70701c24 100644
  extern int jl_opaque_ptrs_set;
  void SetOpaquePointer(LLVMContext &ctx) {
      if (jl_opaque_ptrs_set)
-@@ -1587,6 +1596,7 @@ void SetOpaquePointer(LLVMContext &ctx) {
+@@ -1596,6 +1605,7 @@ void SetOpaquePointer(LLVMContext &ctx) {
      ctx.setOpaquePointers(true);
  #endif
  }
@@ -616,7 +616,7 @@ index 5f9d7f8a3c..ea70701c24 100644
  
  llvm::DataLayout jl_create_datalayout(TargetMachine &TM) {
      // Mark our address spaces as non-integral
-@@ -1609,7 +1619,9 @@ JuliaOJIT::JuliaOJIT()
+@@ -1618,7 +1628,9 @@ JuliaOJIT::JuliaOJIT()
      DLSymOpt(std::make_unique<DLSymOptimizer>(false)),
      ContextPool([](){
          auto ctx = std::make_unique<LLVMContext>();
@@ -626,7 +626,7 @@ index 5f9d7f8a3c..ea70701c24 100644
          return orc::ThreadSafeContext(std::move(ctx));
      }),
  #ifdef JL_USE_JITLINK
-@@ -1734,6 +1746,25 @@ JuliaOJIT::JuliaOJIT()
+@@ -1754,6 +1766,25 @@ JuliaOJIT::JuliaOJIT()
  
  #ifdef MSAN_EMUTLS_WORKAROUND
      orc::SymbolMap msan_crt;
@@ -652,7 +652,7 @@ index 5f9d7f8a3c..ea70701c24 100644
      msan_crt[mangle("__emutls_get_address")] = JITEvaluatedSymbol::fromPointer(msan_workaround::getTLSAddress, JITSymbolFlags::Exported);
      msan_crt[mangle("__emutls_v.__msan_param_tls")] = JITEvaluatedSymbol::fromPointer(
          reinterpret_cast<void *>(static_cast<uintptr_t>(msan_workaround::MSanTLS::param)), JITSymbolFlags::Exported);
-@@ -1751,11 +1782,16 @@ JuliaOJIT::JuliaOJIT()
+@@ -1771,11 +1802,16 @@ JuliaOJIT::JuliaOJIT()
          reinterpret_cast<void *>(static_cast<uintptr_t>(msan_workaround::MSanTLS::va_arg_overflow_size)), JITSymbolFlags::Exported);
      msan_crt[mangle("__emutls_v.__msan_origin_tls")] = JITEvaluatedSymbol::fromPointer(
          reinterpret_cast<void *>(static_cast<uintptr_t>(msan_workaround::MSanTLS::origin)), JITSymbolFlags::Exported);
@@ -669,7 +669,7 @@ index 5f9d7f8a3c..ea70701c24 100644
      cantFail(JD.define(orc::absoluteSymbols(asan_crt)));
  #endif
  }
-@@ -1770,7 +1806,11 @@ orc::SymbolStringPtr JuliaOJIT::mangle(StringRef Name)
+@@ -1790,7 +1826,11 @@ orc::SymbolStringPtr JuliaOJIT::mangle(StringRef Name)
  
  void JuliaOJIT::addGlobalMapping(StringRef Name, uint64_t Addr)
  {
@@ -681,7 +681,7 @@ index 5f9d7f8a3c..ea70701c24 100644
  }
  
  void JuliaOJIT::addModule(orc::ThreadSafeModule TSM)
-@@ -1816,7 +1856,11 @@ void JuliaOJIT::addModule(orc::ThreadSafeModule TSM)
+@@ -1836,7 +1876,11 @@ void JuliaOJIT::addModule(orc::ThreadSafeModule TSM)
          }
      }
      for (auto &Sym : *Lookups) {
@@ -693,7 +693,7 @@ index 5f9d7f8a3c..ea70701c24 100644
          (void) Sym;
      }
  }
-@@ -1845,6 +1889,48 @@ Error JuliaOJIT::addObjectFile(orc::JITDylib &JD, std::unique_ptr<MemoryBuffer>
+@@ -1865,6 +1909,48 @@ Error JuliaOJIT::addObjectFile(orc::JITDylib &JD, std::unique_ptr<MemoryBuffer>
      return LockLayer.add(JD.getDefaultResourceTracker(), std::move(Obj));
  }
  
@@ -742,7 +742,7 @@ index 5f9d7f8a3c..ea70701c24 100644
  JL_JITSymbol JuliaOJIT::findSymbol(StringRef Name, bool ExportedSymbolsOnly)
  {
      orc::JITDylib* SearchOrders[3] = {&JD, &GlobalJD, &ExternalJD};
-@@ -1860,7 +1946,7 @@ JL_JITSymbol JuliaOJIT::findUnmangledSymbol(StringRef Name)
+@@ -1880,7 +1966,7 @@ JL_JITSymbol JuliaOJIT::findUnmangledSymbol(StringRef Name)
      return findSymbol(getMangledName(Name), true);
  }
  
@@ -751,7 +751,7 @@ index 5f9d7f8a3c..ea70701c24 100644
  {
      orc::JITDylib* SearchOrders[3] = {&ExternalJD, &GlobalJD, &JD};
      ArrayRef<orc::JITDylib*> SearchOrder = ArrayRef<orc::JITDylib*>(&SearchOrders[0], ExternalJDOnly ? 1 : 3);
-@@ -1875,7 +1961,7 @@ uint64_t JuliaOJIT::getGlobalValueAddress(StringRef Name)
+@@ -1895,7 +1981,7 @@ uint64_t JuliaOJIT::getGlobalValueAddress(StringRef Name)
          consumeError(addr.takeError());
          return 0;
      }
@@ -760,7 +760,7 @@ index 5f9d7f8a3c..ea70701c24 100644
  }
  
  uint64_t JuliaOJIT::getFunctionAddress(StringRef Name)
-@@ -1885,8 +1971,9 @@ uint64_t JuliaOJIT::getFunctionAddress(StringRef Name)
+@@ -1905,8 +1991,9 @@ uint64_t JuliaOJIT::getFunctionAddress(StringRef Name)
          consumeError(addr.takeError());
          return 0;
      }
@@ -771,7 +771,7 @@ index 5f9d7f8a3c..ea70701c24 100644
  
  StringRef JuliaOJIT::getFunctionAtAddress(uint64_t Addr, jl_code_instance_t *codeinst)
  {
-@@ -1926,8 +2013,13 @@ llvm_orc_registerJITLoaderGDBAllocAction(const char *Data, size_t Size);
+@@ -1946,8 +2033,13 @@ llvm_orc_registerJITLoaderGDBAllocAction(const char *Data, size_t Size);
  void JuliaOJIT::enableJITDebuggingSupport()
  {
      orc::SymbolMap GDBFunctions;
@@ -785,7 +785,7 @@ index 5f9d7f8a3c..ea70701c24 100644
      cantFail(JD.define(orc::absoluteSymbols(GDBFunctions)));
      if (TM->getTargetTriple().isOSBinFormatMachO())
          ObjectLayer.addPlugin(cantFail(orc::GDBJITDebugInfoRegistrationPlugin::Create(ES, JD, TM->getTargetTriple())));
-@@ -2053,7 +2145,11 @@ void jl_merge_module(orc::ThreadSafeModule &destTSM, orc::ThreadSafeModule srcTS
+@@ -2073,7 +2165,11 @@ void jl_merge_module(orc::ThreadSafeModule &destTSM, orc::ThreadSafeModule srcTS
                  }
                  // Reparent the global variable:
                  SG.removeFromParent();
@@ -797,7 +797,7 @@ index 5f9d7f8a3c..ea70701c24 100644
                  // Comdat is owned by the Module
                  SG.setComdat(nullptr);
              }
-@@ -2100,7 +2196,11 @@ void jl_merge_module(orc::ThreadSafeModule &destTSM, orc::ThreadSafeModule srcTS
+@@ -2120,7 +2216,11 @@ void jl_merge_module(orc::ThreadSafeModule &destTSM, orc::ThreadSafeModule srcTS
                      }
                  }
                  SG.removeFromParent();
