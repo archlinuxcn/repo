@@ -3,6 +3,10 @@ maintainers:
 
 time_limit_hours: 2
 
+pre_build_script: |
+  aur_pre_build(maintainers=['ptr1337','sir_lucjan'])
+  run_cmd(['updpkgsums'])
+
 post_build: aur_post_build
 
 repo_depends:
@@ -11,6 +15,3 @@ repo_depends:
 update_on:
   - source: aur
     aur: linux-cachyos
-
-  - source: manual
-    manual: 1
