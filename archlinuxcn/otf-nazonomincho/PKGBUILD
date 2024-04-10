@@ -1,0 +1,16 @@
+# Contributor: Coelacanthus <CoelacanthusHex@gmail.com>
+
+pkgname=otf-nazonomincho
+pkgver=0.009
+pkgrel=2
+pkgdesc='A customized version of Hanazono Mincho.'
+url='https://github.com/ge9/NazonoMincho'
+arch=('any')
+license=('OFL-1.1')
+source=(NanoMin-otf-$pkgver.zip::https://github.com/ge9/NazonoMincho/releases/download/$pkgver/NazoMin-otf.zip
+        )
+b2sums=('963202a27aeb916e0c0ac115009371338934620da31f09cf9a34ce3446e01afec3bfc9961f84c81e4106191a6178586360d0bfd65950655f117f8184d243eba0')
+
+package() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF" NazoMin*.otf
+}
