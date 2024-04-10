@@ -34,6 +34,8 @@ pkgname=(
     otf-shanggu-sans-jp-hw
     ttf-shanggu-sans-jp-hw-vf
     otf-shanggu-sans-jp-hw-vf
+    ttc-shanggu-sans
+    otc-shanggu-sans
     ttc-shanggu-sans-vf
     otc-shanggu-sans-vf
     ttf-shanggu-serif
@@ -68,11 +70,13 @@ pkgname=(
     otf-shanggu-serif-jp-hw
     ttf-shanggu-serif-jp-hw-vf
     otf-shanggu-serif-jp-hw-vf
+    ttc-shanggu-serif
+    otc-shanggu-serif
     ttc-shanggu-serif-vf
     otc-shanggu-serif-vf
 )
 pkgver=1.020
-pkgrel=1
+pkgrel=2
 pkgdesc='基於思源的傳承字形（舊字形）字體。'
 url='https://github.com/GuiWonder/Shanggu'
 arch=('any')
@@ -95,7 +99,7 @@ source=($pkgbase-$pkgver-ShangguSansTTFs.7z::$url/releases/download/$pkgver/Shan
         $pkgbase-$pkgver-ShangguSerif-VF_OTFs.7z::$url/releases/download/$pkgver/ShangguSerif-VF_OTFs.7z
         $pkgbase-$pkgver-ShangguSerif-VF_OTCTTC.7z::$url/releases/download/$pkgver/ShangguSerif-VF_OTCTTC.7z
         )
-noextract=($pkgbase-$pkgver-Shanggu{Sans,Serif}OTCs.7z)
+noextract=($pkgbase-$pkgver-Shanggu{Sans,Serif}{OTC,TTC}s.7z)
 b2sums=('4c232eceeb7150b333550ae268c0461a6b0cec98a37124c682f812e854d6d72767f9f611e3f83c0424ac939ca8d668d7f6bc8c9b8955ebe4185c074ea151b380'
         '2b062ec362fa0552273c92a86ea7ddd10ab9527495e2dc7663bd1e544d81f0dd5a674cdd5a591dd2868c0bce08bf0b1b09026a5be8f40bf63c42546e2753afb0'
         'f44a69cad9e65eddf5d6dc819b36c70ef59e07ba9d805a48011437ae0b74219bca51543a0f6465f2d7141f9d041007ec395b9adc3c748571a81e461b302f1f45'
@@ -254,6 +258,14 @@ package_ttc-shanggu-sans-vf() {
     install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" ShangguSans/LICENSE.txt
 }
 package_otc-shanggu-sans-vf() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" ShangguSans-VF.otf.ttc
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" ShangguSans/LICENSE.txt
+}
+package_ttc-shanggu-sans() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" SansTTCs/*.ttc
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" ShangguSans/LICENSE.txt
+}
+package_otc-shanggu-sans() {
     install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" SansOTCs/*.ttc
     install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" ShangguSans/LICENSE.txt
 }
@@ -390,6 +402,14 @@ package_ttc-shanggu-serif-vf() {
     install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" ShangguSerif/LICENSE.txt
 }
 package_otc-shanggu-serif-vf() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" ShangguSerif-VF.otf.ttc
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" ShangguSerif/LICENSE.txt
+}
+package_ttc-shanggu-serif() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" SansTTCs/*.ttc
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" ShangguSerif/LICENSE.txt
+}
+package_otc-shanggu-serif() {
     install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" SansOTCs/*.ttc
     install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" ShangguSerif/LICENSE.txt
 }
