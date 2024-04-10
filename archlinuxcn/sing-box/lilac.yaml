@@ -1,12 +1,13 @@
-pre_build_script: aur_pre_build(maintainers=['everyx'])
-
-post_build: aur_post_build
-
-update_on:
-  - source: aur
-    aur: sing-box
-  - source: manual
-    manual: 1.0.0
-
 maintainers:
   - github: dctxmei
+  - github: everyx
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+  - source: github
+    github: SagerNet/sing-box
+    use_latest_release: true
