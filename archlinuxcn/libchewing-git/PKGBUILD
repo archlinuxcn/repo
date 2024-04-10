@@ -3,7 +3,7 @@
 
 _pkgname=libchewing
 pkgname=libchewing-git
-pkgver=0.7.0.r0.gb543774
+pkgver=0.7.0.r11.g7e70549
 pkgrel=1
 epoch=1
 pkgdesc='Intelligent Chinese phonetic input method'
@@ -13,7 +13,7 @@ license=('LGPL2.1')
 conflicts=("$_pkgname")
 provides=("$_pkgname")
 depends=('sqlite')
-makedepends=('cmake' 'git')
+makedepends=('cmake' 'git' 'rust')
 source=("git+https://github.com/chewing/libchewing/")
 md5sums=('SKIP')
 
@@ -45,6 +45,8 @@ check() {
   cd $_pkgname/build
   # parallel testing is broken (https://github.com/chewing/libchewing/issues/293)
   make -j1 check
+  # Additional tests added in https://github.com/chewing/libchewing/pull/387
+  cargo test
 }
 
 package() {
