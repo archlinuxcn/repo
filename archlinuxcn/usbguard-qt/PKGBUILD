@@ -1,0 +1,31 @@
+# Maintainer: Kazel <address at domain dot tld>
+
+pkgname=usbguard-qt
+pkgver=0.8.1
+pkgrel=1
+pkgdesc="USBGuard Qt GUI"
+arch=("x86_64")
+url="https://gitlab.com/WheelchairArtist/${pkgname}"
+license=('GPL-2.0-or-later')
+replaces=('usbguard-applet-qt')
+conflicts=('usbguard-applet-qt')
+depends=("usbguard" "qt6-base")
+source=("${url}/-/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz")
+sha512sums=('2bec04ab7c45c50f89d24402f59d9850238e6f74ca6e06a0d1ef530e3eacf531ef00db0a79ea55a83c7b27917ce0ad96a208209194559bc077bc90d2e587d429')
+
+prepare() {
+	cd "${pkgname}-${pkgver}/src/"
+	qmake6 -o Makefile usbguard-qt.pro
+}
+
+build() {
+	cd "${pkgname}-${pkgver}/src/"
+	make
+}
+
+package() {
+	cd "${pkgname}-${pkgver}/src/"
+	install -Dm755 -o root -g root "${pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm644 -o root -g root "${pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
+	install -Dm644 -o root -g root "resources/usbguard-icon.svg" "${pkgdir}/usr/share/pixmaps/${pkgname}.svg"
+}
