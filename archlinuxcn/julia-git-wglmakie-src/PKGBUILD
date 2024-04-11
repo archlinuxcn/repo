@@ -1,6 +1,6 @@
 pkgname=julia-git-wglmakie-src
-pkgver=0.9.8
-_commit=91a0a6c09b694fb10d4ca37663183211dafbb1e3
+pkgver=0.9.9
+_commit=0e28ea88a7cdae4a6161893e60b93aa9321baaab
 pkgrel=1
 pkgdesc="WGLMakie.jl"
 url="https://github.com/MakieOrg/Makie.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/MakieOrg/Makie.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('167bbc125736411a88162ff3a4a01e28b2e12d67adf9d2778a3c40cb1f95aac1')
 
 package() {
   cd Makie.jl/WGLMakie
