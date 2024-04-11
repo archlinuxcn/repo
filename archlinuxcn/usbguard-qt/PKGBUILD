@@ -25,7 +25,7 @@ build() {
 
 package() {
 	cd "${pkgname}-${pkgver}/src/"
-	install -Dm755 -o root -g root "${pkgname}" -t "${pkgdir}/usr/bin/"
-	install -Dm644 -o root -g root "${pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
-	install -Dm644 -o root -g root "resources/usbguard-icon.svg" "${pkgdir}/usr/share/pixmaps/${pkgname}.svg"
+	install -Dm755 "${pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm644 "${pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
+	install -Dm644 resources/usbguard-icon{,-warning,-inactive}.svg -t "${pkgdir}/usr/share/icons/hicolor/scalable/apps/"
 }
