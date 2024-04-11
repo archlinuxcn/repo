@@ -1,7 +1,7 @@
 pkgname=julia-git-stringdistances-src
-pkgver=0.11.2
-_commit=dbcc9fe8d048c07dd276c9f5606e464d69301b53
-pkgrel=2
+pkgver=0.11.3
+_commit=d47e43a757a0e7902a35b6d3a044a55f6c803921
+pkgrel=1
 pkgdesc="StringDistances.jl"
 url="https://github.com/matthieugomez/StringDistances.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/matthieugomez/StringDistances.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('17990457daf6daa292430c1a92dc7eb795c4b5a1f237f1934472ce7f440086c4')
 
 package() {
   cd StringDistances.jl
