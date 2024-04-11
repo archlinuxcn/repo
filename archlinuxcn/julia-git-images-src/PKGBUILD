@@ -1,7 +1,7 @@
 pkgname=julia-git-images-src
-pkgver=0.26.0
-_commit=ef6acdcfd9f4fefb4dd2aa884a43016322ed4715
-pkgrel=2
+pkgver=0.26.1
+_commit=bd6179a6205ae6238cf0e0292e6facb9c9e2ee15
+pkgrel=1
 pkgdesc="Images.jl"
 url="https://github.com/JuliaImages/Images.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaImages/Images.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('5036609e111e5ed66b635df85564fccba3909ab19fdf472bdd43115ee95bea6c')
 
 package() {
   cd Images.jl
