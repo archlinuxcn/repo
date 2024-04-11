@@ -1,6 +1,6 @@
 pkgname=julia-git-fzf_jll-src
-pkgver=0.43.0+0
-_commit=a909792b5b0cf24f394f813b8399c24b45b9290f
+pkgver=0.49.0+0
+_commit=f4c0359118eccfeab5d18e97fe198368674a8d97
 pkgrel=1
 pkgdesc="fzf_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/fzf_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git fzf)
 source=("git+https://github.com/JuliaBinaryWrappers/fzf_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('2c57b85322557133e2dc36f6e399571da94db89ca9c8cd3f2bc50bebb60db057'
             '7c626056540869553bbec976eaccdc722ad5905d726860992311680a9009682d')
 
 build() {
