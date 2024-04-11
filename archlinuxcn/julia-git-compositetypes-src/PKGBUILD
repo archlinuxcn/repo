@@ -1,7 +1,7 @@
 pkgname=julia-git-compositetypes-src
-pkgver=0.1.3
-_commit=a4e0ab33e397268eec33461286270d5751f0c52e
-pkgrel=2
+pkgver=0.1.4
+_commit=597b58dbe6a8b12bd40a82bd0e53460a7a598f4c
+pkgrel=1
 pkgdesc="CompositeTypes.jl"
 url="https://github.com/JuliaApproximation/CompositeTypes.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaApproximation/CompositeTypes.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('1f77c46fb0c0af8c1f9710f4d463bfe18af849703a70f8892b27ca5b1be71cfa')
 
 package() {
   cd CompositeTypes.jl
