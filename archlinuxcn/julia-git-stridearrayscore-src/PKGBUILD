@@ -1,6 +1,6 @@
 pkgname=julia-git-stridearrayscore-src
-pkgver=0.5.2
-_commit=9bdfc7121ba85d6ef686331a9de9b65bb7582529
+pkgver=0.5.3
+_commit=b53305e6d0992f978c08f2759b73d06510022bab
 pkgrel=1
 pkgdesc="StrideArraysCore.jl"
 url="https://github.com/JuliaSIMD/StrideArraysCore.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSIMD/StrideArraysCore.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('ac3dda1120c33645f5336e875891fa7018691e9aa150544db33166a4e2a42d7f')
 
 package() {
   cd StrideArraysCore.jl
