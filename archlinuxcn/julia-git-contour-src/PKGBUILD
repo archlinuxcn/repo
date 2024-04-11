@@ -1,7 +1,7 @@
 pkgname=julia-git-contour-src
-pkgver=0.6.2
-_commit=0160a4137bab2bb05480a01769b847cf5073caa5
-pkgrel=2
+pkgver=0.6.3
+_commit=6d155559af262cd7e218d9a7a87b34bfe16bf9c1
+pkgrel=1
 pkgdesc="Contour.jl"
 url="https://github.com/JuliaGeometry/Contour.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGeometry/Contour.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('3d50e710590948c756ed6ec42e24d65b4b1742dc1f04fcd96e0868fe46f43d56')
 
 package() {
   cd Contour.jl
