@@ -1,0 +1,37 @@
+[Unit]
+Description=eBPF-based Endpoint-Independent NAT
+Documentation=https://github.com/EHfive/einat-ebpf
+Requires=modprobe@cls_bpf.service
+Requires=modprobe@act_bpf.service
+Wants=network.target
+Wants=network-online.target
+After=networkt.target
+After=network-online.target
+After=modprobe@cls_bpf.service
+After=modprobe@act_bpf.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/einat --config /etc/einat/config.toml
+# Environment
+User=einat
+DynamicUser=yes
+CapabilityBoundingSet=CAP_NET_ADMIN
+# TODO: CAP_BPF instead CAP_SYS_ADMIN?
+CapabilityBoundingSet=CAP_SYS_ADMIN
+NoNewPrivileges=yes
+# Sandboxing
+ProtectSystem=strict
+ProtectHome=yes
+ConfigurationDirectory=einat
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+LockPersonality=yes
+RestrictRealtime=yes
+PrivateMounts=yes
+# TODO: SystemCallFilter
+
+[Install]
+WantedBy=multi-user.target
