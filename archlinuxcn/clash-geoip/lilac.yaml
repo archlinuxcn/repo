@@ -1,5 +1,5 @@
 pre_build_script: |
-    vcs_update()
+    update_pkgver_and_pkgrel(_G.newver)
 
 post_build_script: |
     git_pkgbuild_commit()
@@ -7,10 +7,10 @@ post_build_script: |
 
 update_on:
   - source: github
-    github: MetaCubeX/meta-rules-dat
-    branch: release
+    github: Loyalsoldier/geoip
+    use_latest_release: true
   - source: manual
-    manual: 2
+    manual: 2.1
 
 maintainers:
   - github: dctxmei
