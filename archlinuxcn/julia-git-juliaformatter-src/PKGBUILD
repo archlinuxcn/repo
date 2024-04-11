@@ -1,6 +1,6 @@
 pkgname=julia-git-juliaformatter-src
-pkgver=1.0.54
-_commit=e610eb476459a8be60600b34a022bddcc01f7092
+pkgver=1.0.56
+_commit=73c0539b53e261c067051c1fa6d5ff0b5846b1fa
 pkgrel=1
 pkgdesc="JuliaFormatter.jl"
 url="https://github.com/domluna/JuliaFormatter.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/domluna/JuliaFormatter.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('1117029aef9b2f89e0995d8fac61d9f7fea439b6a232de9bc1c45ef25dc5849c')
 
 package() {
   cd JuliaFormatter.jl
