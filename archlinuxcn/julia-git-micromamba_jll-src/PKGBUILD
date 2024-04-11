@@ -1,7 +1,7 @@
 pkgname=julia-git-micromamba_jll-src
-pkgver=1.4.9+0
-_commit=9a8a2d343641e9079755dea48c966e8546225800
-pkgrel=2
+pkgver=1.5.8+0
+_commit=cb956890e8a393f2f07f1f79a4c5849b51560073
+pkgrel=1
 pkgdesc="micromamba_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/micromamba_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git micromamba)
 source=("git+https://github.com/JuliaBinaryWrappers/micromamba_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('3f14ecca0464ea56f44ca68a3593b80d8c6d2f07b8638fa3d5ac66a313846f4e'
             '20dbacda0dfb44cc3e7ff9420e069d78849b1905e27098cda9d38083b30c672d')
 
 build() {
