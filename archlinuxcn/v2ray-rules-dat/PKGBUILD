@@ -2,7 +2,7 @@
 # Contributor: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=v2ray-rules-dat
-pkgver=202404102211
+pkgver=202404112209
 pkgrel=1
 pkgdesc="Enhanced edition of V2Ray rules dat files"
 arch=(any)
@@ -17,10 +17,10 @@ source=("$url/releases/download/$pkgver/geoip.dat"
         "$url/releases/download/$pkgver/geoip.dat.sha256sum"
         "$url/releases/download/$pkgver/geosite.dat.sha256sum"
         "https://raw.githubusercontent.com/Loyalsoldier/domain-list-custom/master/LICENSE")
-sha256sums=('4b90d8af7dcb680927b134e52ce57d105cdd7d162ab59cc908d1c08f6d082515'
-            '9db3610b595fe13637bbe0fb3f6d06df58d0c36f08e579ef1a5ee2b5acf695b2'
-            'a177fcd0575a5e3f44dc160183ba6812fed3523c0f1433e2d6f0ad19801a25d3'
-            '62017451385c5828b558069aa83e2982bb488e8ac3f003827c2f1301178446c5'
+sha256sums=('8747981cd3d1c803244fcd4bee3f10e9e2d92c62901c5174158d10d173520f72'
+            'ed812f7a4b40035338d9d5d6adfc3324d2cd4e4231536d0473fefbc7967852ab'
+            '302a1c08dabb4b095135c11f7ef6f7a3db5f3dbad4e52e86496953220c754de0'
+            'e435df96875a862a3ad3fe7593dcadfa86d2ae149c0e4e6cc196ba1844a54cc4'
             '35f18e0331a1ecd1835400c50e3b367c2ce09f6c13d91c4a0f3cb11f71d3bbc3')
 
 prepare() {
